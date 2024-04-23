@@ -1,11 +1,9 @@
-import { caminoDefineComponent, isEventWithTarget } from '@/utils/vue-tsx-utils'
-import { HelpTooltip } from '../_ui/help-tooltip'
+import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { dateFormat } from '@/utils'
-import { Tag } from '../_ui/tag'
-import { computed, onMounted, ref, watch } from 'vue'
+import { DeepReadonly, FunctionalComponent, computed, onMounted, ref, watch } from 'vue'
 import { EntrepriseDocument, EntrepriseDocumentId, EntrepriseId, entrepriseDocumentIdValidator, isEntrepriseId } from 'camino-common/src/entreprise'
 import { DocumentsTypes, EntrepriseDocumentType, EntrepriseDocumentTypeId } from 'camino-common/src/static/documentsTypes'
-import { getEntries, getKeys, isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools'
+import { getEntries, getEntriesHardcore, getKeys, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined, map, stringArrayEquals } from 'camino-common/src/typescript-tools'
 import { AddEntrepriseDocumentPopup } from '../entreprise/add-entreprise-document-popup'
 import { AsyncData, getDownloadRestRoute } from '@/api/client-rest'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
@@ -14,9 +12,11 @@ import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
 import { getEntrepriseDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/entrepriseDocuments'
 import { EtapeId } from 'camino-common/src/etape'
 import { LoadingElement } from '../_ui/functional-loader'
-import { ButtonIcon } from '../_ui/button-icon'
 import { ApiClient } from '@/api/api-client'
 import { Alert } from '../_ui/alert'
+import { DsfrButtonIcon, DsfrLink } from '../_ui/dsfr-button'
+import { DsfrSelect, Item } from '../_ui/dsfr-select'
+import { SelectedEntrepriseDocument } from 'camino-common/src/permissions/etape-form'
 
 type Entreprise = { id: EntrepriseId; nom: string }
 
@@ -26,9 +26,9 @@ interface Props {
     demarcheTypeId: DemarcheTypeId
     etapeTypeId: EtapeTypeId
   }
-  completeUpdate: (etapeEntrepriseDocumentIds: EntrepriseDocumentId[], complete: boolean) => void
-  entreprises: Entreprise[]
-  etapeId: EtapeId
+  completeUpdate: (etapeEntrepriseDocuments: SelectedEntrepriseDocument[]) => void
+  entreprises: DeepReadonly<Entreprise[]>
+  etapeId: EtapeId | null
   apiClient: Pick<ApiClient, 'creerEntrepriseDocument' | 'getEntrepriseDocuments' | 'getEtapeEntrepriseDocuments' | 'uploadTempDocument'>
 }
 
@@ -44,9 +44,12 @@ export const EntrepriseDocumentsEdit = caminoDefineComponent<Props>(['completeUp
   const loadEtapeEntrepriseDocuments = async () => {
     etapeEntrepriseDocumentIds.value = { status: 'LOADING' }
     try {
-      const etapeDocuments = await props.apiClient.getEtapeEntrepriseDocuments(props.etapeId)
-
-      etapeEntrepriseDocumentIds.value = { status: 'LOADED', value: etapeDocuments.map(({ id }) => id) }
+      if (isNotNullNorUndefined(props.etapeId)) {
+        const etapeDocuments = await props.apiClient.getEtapeEntrepriseDocuments(props.etapeId)
+        etapeEntrepriseDocumentIds.value = { status: 'LOADED', value: etapeDocuments.map(({ id }) => id) }
+      } else {
+        etapeEntrepriseDocumentIds.value = { status: 'LOADED', value: [] }
+      }
     } catch (e: any) {
       console.error('error', e)
       etapeEntrepriseDocumentIds.value = {
@@ -80,7 +83,7 @@ export const EntrepriseDocumentsEdit = caminoDefineComponent<Props>(['completeUp
 const InternalEntrepriseDocumentsEdit = caminoDefineComponent<Props & { etapeEntrepriseDocumentIds: EntrepriseDocumentId[] }>(
   ['completeUpdate', 'tde', 'entreprises', 'etapeId', 'apiClient', 'etapeEntrepriseDocumentIds'],
   props => {
-    const entreprisesEntrepriseDocumentsIndex = ref<Record<EntrepriseId, { entreprisedocuments: InnerEntrepriseDocument[] }>>({})
+    const entreprisesEntrepriseDocumentsIndex = ref<Record<EntrepriseId, InnerEntrepriseDocument[]>>({})
     const etapeEntrepriseDocumentIds = ref<EntrepriseDocumentId[]>(props.etapeEntrepriseDocumentIds)
 
     const addPopup = ref<{ open: false } | { open: true; entrepriseId: EntrepriseId; entrepriseDocumentTypeId: EntrepriseDocumentTypeId }>({ open: false })
@@ -104,7 +107,9 @@ const InternalEntrepriseDocumentsEdit = caminoDefineComponent<Props & { etapeEnt
           loadingEntrepriseDocuments[entreprise.id] = await props.apiClient.getEntrepriseDocuments(entreprise.id)
         }
         entrepriseDocuments.value = { status: 'LOADED', value: loadingEntrepriseDocuments }
-        await reset()
+
+        indexReset()
+        entreprisedocumentsReset()
       } catch (e: any) {
         console.error('error', e)
         entrepriseDocuments.value = {
@@ -114,40 +119,13 @@ const InternalEntrepriseDocumentsEdit = caminoDefineComponent<Props & { etapeEnt
       }
     }
 
-    const complete = computed<boolean>(() => {
-      const entreprisedocuments: EntrepriseDocument[] = []
-      const documents = entrepriseDocuments.value
-      if (documents.status === 'LOADED') {
-        props.entreprises.forEach(entreprise => {
-          documents.value[entreprise.id]?.forEach(document => {
-            if (etapeEntrepriseDocumentIds.value.some(id => id === document.id)) {
-              entreprisedocuments.push(document)
-            }
-          })
-        })
-
-        return tdeEntrepriseDocuments.value.every(
-          tdeEntrepriseDocument => tdeEntrepriseDocument.optionnel || entreprisedocuments.find(({ entreprise_document_type_id }) => entreprise_document_type_id === tdeEntrepriseDocument.id)
-        )
-      }
-
-      return false
-    })
-
-    const reset = async () => {
-      indexReset()
-      entreprisedocumentsReset()
-    }
-
     const indexReset = () => {
       const entrepriseDocumentsLoaded = entrepriseDocuments.value
       if (entrepriseDocumentsLoaded.status === 'LOADED') {
         entreprisesEntrepriseDocumentsIndex.value = {}
 
         props.entreprises.forEach(e => {
-          entreprisesEntrepriseDocumentsIndex.value[e.id] = {
-            entreprisedocuments: [],
-          }
+          entreprisesEntrepriseDocumentsIndex.value[e.id] = []
 
           tdeEntrepriseDocuments.value.forEach(type => {
             const documents = entrepriseDocumentsLoaded.value[e.id]?.filter(d => d.entreprise_document_type_id === type.id) ?? []
@@ -157,14 +135,14 @@ const InternalEntrepriseDocumentsEdit = caminoDefineComponent<Props & { etapeEnt
 
             if (entrepriseDocumentIds.length) {
               entrepriseDocumentIds.forEach(id => {
-                entreprisesEntrepriseDocumentsIndex.value[e.id].entreprisedocuments.push({
+                entreprisesEntrepriseDocumentsIndex.value[e.id].push({
                   id,
                   entrepriseDocumentType: type,
                   documents,
                 })
               })
             } else if (!type.optionnel) {
-              entreprisesEntrepriseDocumentsIndex.value[e.id].entreprisedocuments.push({
+              entreprisesEntrepriseDocumentsIndex.value[e.id].push({
                 id: '',
                 entrepriseDocumentType: type,
                 documents,
@@ -175,168 +153,158 @@ const InternalEntrepriseDocumentsEdit = caminoDefineComponent<Props & { etapeEnt
       }
     }
 
-    const entreprisedocumentAdd = (entrepriseId: EntrepriseId, event: Event) => {
-      if (isEventWithTarget(event) && entrepriseDocuments.value.status === 'LOADED') {
-        const typeId = event.target.value
-        const type = tdeEntrepriseDocuments.value.find(jt => jt.id === typeId)
-        const documents = entrepriseDocuments.value.value[entrepriseId]?.filter(d => d.entreprise_document_type_id === typeId) ?? []
-
-        if (type) {
-          entreprisesEntrepriseDocumentsIndex.value[entrepriseId].entreprisedocuments.push({
-            id: '',
-            entrepriseDocumentType: type,
-            documents,
-          })
-        }
-      }
-    }
-
     const completeUpdate = () => {
-      props.completeUpdate(etapeEntrepriseDocumentIds.value, complete.value)
+      props.completeUpdate(
+        getEntriesHardcore(entreprisesEntrepriseDocumentsIndex.value).flatMap(([entrepriseId, innerEntrepriseDocument]) =>
+          innerEntrepriseDocument
+            .filter((document): document is Omit<InnerEntrepriseDocument, 'id'> & { id: EntrepriseDocumentId } => isNotNullNorUndefinedNorEmpty(document.id))
+            .map(innerDocument => ({ entrepriseId, id: innerDocument.id, documentTypeId: innerDocument.entrepriseDocumentType.id }))
+        )
+      )
     }
 
-    const entreprisedocumentsUpdate = (entreprisedocument: InnerEntrepriseDocument, entrepriseId: EntrepriseId, event: Event) => {
-      if (isEventWithTarget(event)) {
-        if (event.target.value === 'newDocument') {
-          addPopup.value = { open: true, entrepriseId, entrepriseDocumentTypeId: entreprisedocument.entrepriseDocumentType.id }
-        } else {
-          entreprisedocument.id = entrepriseDocumentIdValidator.parse(event.target.value)
-          entreprisedocumentsReset()
-          completeUpdate()
-        }
+    const entreprisedocumentsUpdate = (entreprisedocument: InnerEntrepriseDocument, entrepriseId: EntrepriseId) => (documentId: EntrepriseDocumentId | 'newDocument' | null) => {
+      if (documentId === 'newDocument') {
+        addPopup.value = { open: true, entrepriseId, entrepriseDocumentTypeId: entreprisedocument.entrepriseDocumentType.id }
+      } else {
+        entreprisedocument.id = documentId ?? ''
+        entreprisedocumentsReset()
       }
     }
 
     const entreprisedocumentRemove = (entrepriseId: EntrepriseId, index: number) => {
-      const documentToRemove = entreprisesEntrepriseDocumentsIndex.value[entrepriseId].entreprisedocuments[index]
-      const docsOfSameTypeFound = entreprisesEntrepriseDocumentsIndex.value[entrepriseId].entreprisedocuments.filter(
-        ({ entrepriseDocumentType }) => entrepriseDocumentType === documentToRemove.entrepriseDocumentType
-      )
+      const documentToRemove = entreprisesEntrepriseDocumentsIndex.value[entrepriseId][index]
+      const docsOfSameTypeFound = entreprisesEntrepriseDocumentsIndex.value[entrepriseId].filter(({ entrepriseDocumentType }) => entrepriseDocumentType === documentToRemove.entrepriseDocumentType)
       if (docsOfSameTypeFound.length > 1) {
-        entreprisesEntrepriseDocumentsIndex.value[entrepriseId].entreprisedocuments.splice(index, 1)
+        entreprisesEntrepriseDocumentsIndex.value[entrepriseId].splice(index, 1)
       } else {
-        entreprisesEntrepriseDocumentsIndex.value[entrepriseId].entreprisedocuments[index].id = ''
+        entreprisesEntrepriseDocumentsIndex.value[entrepriseId][index].id = ''
       }
 
       entreprisedocumentsReset()
-      completeUpdate()
     }
 
     const entreprisedocumentsReset = () => {
       etapeEntrepriseDocumentIds.value = []
 
       getKeys(entreprisesEntrepriseDocumentsIndex.value, isEntrepriseId).forEach(eId => {
-        entreprisesEntrepriseDocumentsIndex.value[eId].entreprisedocuments.forEach(({ id }) => {
+        entreprisesEntrepriseDocumentsIndex.value[eId].forEach(({ id }) => {
           if (isNullOrUndefined(id) || id === '') return
 
           etapeEntrepriseDocumentIds.value.push(id)
         })
       })
+      completeUpdate()
     }
 
-    watch(() => complete.value, completeUpdate)
     watch(
       () => props.entreprises,
-      async () => {
-        await loadEntrepriseDocuments()
-      },
-      { deep: true }
+      async (old, newValue) => {
+        if (
+          !stringArrayEquals(
+            old.map(({ id }) => id),
+            newValue.map(({ id }) => id)
+          )
+        ) {
+          await loadEntrepriseDocuments()
+        }
+      }
     )
-    watch(() => props.tde, reset, { deep: true })
-
     onMounted(async () => {
       await loadEntrepriseDocuments()
-      completeUpdate()
     })
+
+    const addEntrepriseDocumentType = (entrepriseId: EntrepriseId) => (entrepriseDocumentTypeId: EntrepriseDocumentTypeId | null) => {
+      const entrepriseDocumentType = tdeEntrepriseDocuments.value.find(({ id }) => id === entrepriseDocumentTypeId)
+      if (isNotNullNorUndefined(entrepriseDocumentType)) {
+        const entrepriseDocumentsLoaded = entrepriseDocuments.value
+        if (entrepriseDocumentsLoaded.status === 'LOADED') {
+          const documents = entrepriseDocumentsLoaded.value[entrepriseId]?.filter(d => d.entreprise_document_type_id === entrepriseDocumentTypeId) ?? []
+
+          entreprisesEntrepriseDocumentsIndex.value[entrepriseId].push({ id: '', documents, entrepriseDocumentType })
+        }
+      }
+    }
 
     return () => (
       <>
         {props.entreprises.length ? (
           <div>
             {getEntries(entreprisesEntrepriseDocumentsIndex.value, isEntrepriseId).map(([eId, e]) => (
-              <div key={eId} class="mb-xs">
-                <div class="flex">
-                  <h4>{entreprisesNoms.value[eId]}</h4>
-                </div>
+              <div key={eId} class="fr-table fr-mb-0">
+                <table style={{ display: 'table' }}>
+                  <caption>{entreprisesNoms.value[eId]}</caption>
+                  <thead>
+                    <tr>
+                      <th scope="col">Nom</th>
+                      <th scope="col"></th>
+                      <th scope="col" style={{ display: 'flex', justifyContent: 'end' }}>
+                        Action
+                      </th>
+                    </tr>
+                  </thead>
 
-                {e.entreprisedocuments.map((j, index) => (
-                  <div key={j.id}>
-                    <div class="tablet-blobs">
-                      <div class="tablet-blob-1-3 flex flex-center">
-                        {isNotNullNorUndefined(j.id) && j.id !== '' ? (
-                          <a
-                            class="mt-s"
-                            href={getDownloadRestRoute('/fichiers/:documentId', { documentId: j.id })}
-                            title={`Télécharger le document ${j.entrepriseDocumentType.nom} - nouvelle fenêtre`}
-                            target="_blank"
-                          >
-                            {j.entrepriseDocumentType.nom}
-                          </a>
-                        ) : (
-                          <h5 class="mt-s">{j.entrepriseDocumentType.nom}</h5>
-                        )}
-                        <span>
-                          {isNotNullNorUndefined(j.entrepriseDocumentType) && isNotNullNorUndefined(j.entrepriseDocumentType.description) ? (
-                            <HelpTooltip text={j.entrepriseDocumentType.description} class="ml-xs" />
-                          ) : null}
-                        </span>
-                        {isNotNullNorUndefined(j.id) && j.id !== '' ? null : <Tag mini color="bg-warning" class="ml-xs" text="Manquant" />}
-                      </div>
-                      <div class="tablet-blob-2-3">
-                        <div class="flex mb-s">
-                          <select class="p-s" value={j.id} onChange={event => entreprisedocumentsUpdate(j, eId, event)}>
-                            {j.documents.length ? (
-                              <>
-                                {j.documents.map(d => (
-                                  <option key={d.id} value={d.id} disabled={etapeEntrepriseDocumentIds.value.some(id => id === d.id)}>
-                                    {DocumentsTypes[d.entreprise_document_type_id].nom} : {d.description} ({dateFormat(d.date)})
-                                  </option>
-                                ))}
-                              </>
+                  <tbody>
+                    {e.map((j, index) => (
+                      <tr key={j.id}>
+                        <td>
+                          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'start' }}>
+                            {isNotNullNorUndefined(j.id) && j.id !== '' ? (
+                              <DsfrLink
+                                icon={null}
+                                href={getDownloadRestRoute('/download/entrepriseDocuments/:documentId', { documentId: j.id })}
+                                title={`Télécharger le document ${j.entrepriseDocumentType.nom} - nouvelle fenêtre`}
+                                target="_blank"
+                                label={j.entrepriseDocumentType.nom}
+                              />
                             ) : (
-                              <option></option>
+                              <div class="fr-text--md">{j.entrepriseDocumentType.nom}</div>
                             )}
-                            <option value="newDocument">Ajouter un nouveau document d'entreprise</option>
-                          </select>
-
+                            {isNotNullNorUndefined(j.entrepriseDocumentType.description) ? (
+                              <span class="fr-text--xs" style={{ maxWidth: '300px' }}>
+                                {j.entrepriseDocumentType.description}
+                              </span>
+                            ) : null}
+                          </div>
+                        </td>
+                        <td>
+                          <EntrepriseSelect entrepriseDocuments={j} onEntrepriseDocumentSelect={entreprisedocumentsUpdate(j, eId)} etapeEntrepriseDocumentIds={etapeEntrepriseDocumentIds.value} />
+                        </td>
+                        <td style={{ textAlign: 'right' }}>
                           {isNotNullNorUndefined(j.id) && j.id !== '' ? (
-                            <div class="flex-right flex flex-center ml-s">
-                              <ButtonIcon class="btn-border py-s px-m rnd-xs" onClick={() => entreprisedocumentRemove(eId, index)} icon="delete" title="Supprime le document d’entreprise" />
-                            </div>
+                            <DsfrButtonIcon
+                              icon="fr-icon-delete-bin-line"
+                              class="fr-ml-1w"
+                              title={`Supprimer le document d’entreprise ${j.entrepriseDocumentType.nom}`}
+                              onClick={() => entreprisedocumentRemove(eId, index)}
+                              buttonType="secondary"
+                              buttonSize="sm"
+                            />
                           ) : null}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-                <div>
-                  <div class="tablet-blobs">
-                    <div class="tablet-blob-1-3">
-                      <h5 class="mt-s">Ajouter un document d'entreprise existant</h5>
-                    </div>
-                    <div class="tablet-blob-2-3">
-                      <select class="p-s mb-s" value="undefined" onChange={event => entreprisedocumentAdd(eId, event)}>
-                        <option value="undefined" disabled>
-                          Sélectionner un type de document d'entreprise
-                        </option>
-                        {tdeEntrepriseDocuments.value.map(jt => (
-                          <option
-                            key={jt.id}
-                            value={jt.id}
-                            disabled={e.entreprisedocuments.some(entreprisedocument => jt.id === entreprisedocument.entrepriseDocumentType.id && entreprisedocument.id === '')}
-                          >
-                            {jt.nom}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
-                </div>
+                        </td>
+                      </tr>
+                    ))}
+                    {isNotNullNorUndefinedNorEmpty(tdeEntrepriseDocuments.value) ? (
+                      <tr>
+                        <td>
+                          <DsfrSelect
+                            items={map(tdeEntrepriseDocuments.value, ({ id, nom }) => ({ id, label: nom }))}
+                            legend={{ main: 'Ajouter un nouveau type de document', visible: false }}
+                            valueChanged={addEntrepriseDocumentType(eId)}
+                            initialValue={null}
+                          />
+                        </td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                    ) : null}
+                  </tbody>
+                </table>
               </div>
             ))}
           </div>
         ) : (
-          <Alert title="Aucun titulaire ou amodiataire associé à cette étape." type="warning" small />
+          <Alert class="fr-mt-2w" title="Aucun titulaire ou amodiataire associé à cette étape." type="warning" small />
         )}
         {addPopup.value.open ? (
           <AddEntrepriseDocumentPopup
@@ -350,7 +318,32 @@ const InternalEntrepriseDocumentsEdit = caminoDefineComponent<Props & { etapeEnt
                 const newDocumentId = await props.apiClient.creerEntrepriseDocument(entrepriseId, entrepriseDocumentInput, tempDocumentName)
 
                 etapeEntrepriseDocumentIds.value.push(newDocumentId)
-                await loadEntrepriseDocuments()
+                const documentsToUpdate = entreprisesEntrepriseDocumentsIndex.value[entrepriseId].filter(({ entrepriseDocumentType }) => entrepriseDocumentType.id === entrepriseDocumentInput.typeId)
+
+                if (isNotNullNorUndefined(documentsToUpdate) && documentsToUpdate.length > 0) {
+                  documentsToUpdate.forEach(({ documents }) =>
+                    documents.push({
+                      id: newDocumentId,
+                      description: entrepriseDocumentInput.description,
+                      date: entrepriseDocumentInput.date,
+                      entreprise_document_type_id: entrepriseDocumentInput.typeId,
+                      entreprise_id: entrepriseId,
+                      can_delete_document: true,
+                    })
+                  )
+
+                  if (documentsToUpdate.length === 1) {
+                    documentsToUpdate[0].id = newDocumentId
+                  } else {
+                    const documentNotSet = documentsToUpdate.find(({ id }) => id === '')
+                    if (isNotNullNorUndefined(documentNotSet)) {
+                      documentNotSet.id = newDocumentId
+                    } else {
+                      documentsToUpdate[0].id = newDocumentId
+                    }
+                  }
+                }
+
                 completeUpdate()
 
                 return newDocumentId
@@ -363,3 +356,33 @@ const InternalEntrepriseDocumentsEdit = caminoDefineComponent<Props & { etapeEnt
     )
   }
 )
+
+const EntrepriseSelect: FunctionalComponent<{
+  entrepriseDocuments: InnerEntrepriseDocument
+  etapeEntrepriseDocumentIds: EntrepriseDocumentId[]
+  onEntrepriseDocumentSelect: (id: EntrepriseDocumentId | 'newDocument' | null) => void
+}> = props => {
+  const options: Item<EntrepriseDocumentId | 'newDocument'>[] = [
+    ...props.entrepriseDocuments.documents.map(d => ({
+      id: d.id,
+      label: `${DocumentsTypes[d.entreprise_document_type_id].nom} : ${d.description} (${dateFormat(d.date)})`,
+      disabled: props.etapeEntrepriseDocumentIds.some(id => id === d.id),
+    })),
+    { id: 'newDocument', label: "Ajouter un nouveau document d'entreprise", disabled: false },
+  ]
+
+  const legend = `Choix du document pour ${props.entrepriseDocuments.entrepriseDocumentType}`
+
+  return (
+    <>
+      {isNotNullNorUndefinedNorEmpty(options) ? (
+        <DsfrSelect
+          initialValue={props.entrepriseDocuments.id === '' ? entrepriseDocumentIdValidator.parse('') : props.entrepriseDocuments.id}
+          items={options}
+          legend={{ main: legend, visible: false }}
+          valueChanged={props.onEntrepriseDocumentSelect}
+        />
+      ) : null}
+    </>
+  )
+}

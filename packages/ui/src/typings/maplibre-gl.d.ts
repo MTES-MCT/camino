@@ -1,9 +1,14 @@
 import * as maplibre from 'maplibre-gl'
+import { DeepReadonly } from 'vue'
 
 export class CaminoMapLibre extends maplibre.Map {
-  getSource(id: string): maplibre.GeoJSONSource
+  getSource(id: string): CaminoGeoJSONSource
 }
 
-declare module 'maplibre' {
-  export declare class CaminoMapLibre extends maplibre.Map {}
+export class CaminoLngLatBounds extends maplibre.LngLatBounds {
+  extend(obj: DeepReadonly<maplibre.LngLatLike | maplibre.LngLatBoundsLike>): this
+}
+
+export class CaminoGeoJSONSource extends maplibre.GeoJSONSource {
+  setData(data: string | DeepReadonly<maplibre.GeoJSON>): this
 }

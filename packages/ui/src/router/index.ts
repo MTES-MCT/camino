@@ -4,7 +4,7 @@ import store from '../store'
 import { Dashboard } from '../components/dashboard'
 import { DGTMStatsFull } from '../components/dashboard/dgtm-stats-full'
 import { Titres } from '../components/titres'
-import EtapeEdition from '../components/etape-edition.vue'
+import { EtapeEdition } from '../components/etape-edition'
 
 const TitreCreation = async () => {
   const { TitreCreation } = await import('../components/titre-creation')
@@ -487,14 +487,6 @@ router.beforeEach(async (to, from, next) => {
   document.title = typeof to.meta.title === 'string' ? `${to.meta.title} - Camino` : 'le cadastre minier numérique ouvert - Camino'
 
   next()
-})
-
-router.afterEach((to, from) => {
-  // si on enlève l’erreur dans le beforeEach, cela va enlever l’erreur et tenter d’afficher l’ancien composant qui va
-  // potentiellement regénérer une erreur. Il faut donc attendre que la route soit changée pour l’enlever.
-  if (store.state.error && to.name !== from.name) {
-    store.dispatch('errorRemove')
-  }
 })
 
 export default router

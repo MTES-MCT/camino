@@ -153,7 +153,12 @@ export const getMostRecentValuePropFromEtapeFondamentaleValide = <
 export const getDemarcheByIdOrSlugValidator = z.object({
   demarche_id: demarcheIdValidator,
   demarche_slug: demarcheSlugValidator,
+  demarche_type_id: demarcheTypeIdValidator,
+  demarche_description: z.string().nullable(),
   titre_id: titreIdValidator,
+  titre_slug: titreSlugValidator,
+  titre_type_id: titreTypeIdValidator,
+  titre_nom: z.string(),
 })
 
 export type GetDemarcheByIdOrSlugValidator = z.infer<typeof getDemarcheByIdOrSlugValidator>

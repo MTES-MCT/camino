@@ -9,7 +9,7 @@ type Props<T extends string> = {
   required?: boolean
   orientation?: 'vertical' | 'horizontal'
   valueChanged: (value: T) => void
-  initialValue?: string | null
+  initialValue?: T | null
   elements: { itemId: T; legend: { main: string; description?: string } }[]
 }
 

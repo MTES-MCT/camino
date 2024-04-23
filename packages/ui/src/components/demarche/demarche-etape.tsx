@@ -31,6 +31,8 @@ import { RemoveEtapePopup } from './remove-etape-popup'
 import { SDOMZoneId } from 'camino-common/src/static/sdom'
 import { DeposeEtapePopup } from './depose-etape-popup'
 import { ApiClient } from '@/api/api-client'
+import { TitreGetDemarche } from 'camino-common/src/titres'
+import { GetEtapeDocumentsByEtapeId, documentTypeIdComplementaireObligatoireASL, documentTypeIdComplementaireObligatoireDAE, etapeDocumentIdValidator, needAslAndDae } from 'camino-common/src/etape'
 // Il ne faut pas utiliser de literal dans le 'in' il n'y aura jamais d'erreur typescript
 const fondamentalePropsName = 'fondamentale'
 
@@ -41,6 +43,7 @@ type Props = {
     administrationsLocales: AdministrationId[]
     demarche_type_id: DemarcheTypeId
     sdom_zones: SDOMZoneId[]
+    etapes: TitreGetDemarche['etapes']
   }
   titre: {
     typeId: TitreTypeId
@@ -97,11 +100,50 @@ export const DemarcheEtape = defineComponent<Props>(props => {
     deposePopupVisible.value = !deposePopupVisible.value
   }
 
-  const canDownloadZip = computed<boolean>(() => props.etape.etape_type_id === ETAPES_TYPES.demande && (props.etape.entreprises_documents.length > 0 || props.etape.documents.length > 0))
+  const canDownloadZip = computed<boolean>(() => props.etape.etape_type_id === ETAPES_TYPES.demande && (props.etape.entreprises_documents.length > 0 || props.etape.etape_documents.length > 0))
 
   const canEditOrDeleteEtape = computed<boolean>(() =>
     canEditEtape(props.user, props.etape.etape_type_id, props.etape.etape_statut_id, props.demarche.titulaires, props.demarche.administrationsLocales, props.demarche.demarche_type_id, props.titre)
   )
+
+  const daeDocument = computed<GetEtapeDocumentsByEtapeId['dae']>(() => {
+    if (needAslAndDae({ etapeTypeId: props.etape.etape_type_id, demarcheTypeId: props.demarche.demarche_type_id, titreTypeId: props.titre.typeId }, props.etape.etape_statut_id, props.user)) {
+      const daeEtape = props.demarche.etapes.find(({ etape_type_id }) => etape_type_id === 'dae')
+      if (isNotNullNorUndefined(daeEtape)) {
+        return {
+          id: etapeDocumentIdValidator.parse('daeId'),
+          date: daeEtape.date,
+          description: '',
+          arrete_prefectoral: '',
+          public_lecture: false,
+          entreprises_lecture: true,
+          etape_statut_id: daeEtape.etape_statut_id,
+          etape_document_type_id: documentTypeIdComplementaireObligatoireDAE,
+        }
+      }
+    }
+
+    return null
+  })
+
+  const aslDocument = computed<GetEtapeDocumentsByEtapeId['asl']>(() => {
+    if (needAslAndDae({ etapeTypeId: props.etape.etape_type_id, demarcheTypeId: props.demarche.demarche_type_id, titreTypeId: props.titre.typeId }, props.etape.etape_statut_id, props.user)) {
+      const aslEtape = props.demarche.etapes.find(({ etape_type_id }) => etape_type_id === 'asl')
+      if (isNotNullNorUndefined(aslEtape)) {
+        return {
+          id: etapeDocumentIdValidator.parse('aslId'),
+          date: aslEtape.date,
+          description: '',
+          public_lecture: false,
+          entreprises_lecture: true,
+          etape_statut_id: aslEtape.etape_statut_id,
+          etape_document_type_id: documentTypeIdComplementaireObligatoireASL,
+        }
+      }
+    }
+
+    return null
+  })
 
   const isDeposable = computed<boolean>(() =>
     fondamentalePropsName in props.etape
@@ -116,13 +158,12 @@ export const DemarcheEtape = defineComponent<Props>(props => {
             substances: props.etape.fondamentale.substances,
             duree: props.etape.fondamentale.duree,
             geojson4326Perimetre: props.etape.fondamentale.perimetre?.geojson4326_perimetre ?? null,
-            decisionsAnnexesContenu: props.etape.decisions_annexes_contenu,
-            decisionsAnnexesSections: props.etape.decisions_annexes_sections,
           },
-          // TODO 2023-11-15 hack pas très propres en attendant de pouvoir supprimer le code vue
-          props.etape.documents.map(document => ({ typeId: document.document_type_id, fichier: true })),
+          props.etape.etape_documents,
           props.etape.entreprises_documents,
-          props.demarche.sdom_zones
+          props.demarche.sdom_zones,
+          daeDocument.value,
+          aslDocument.value
         )
       : false
   )
@@ -258,7 +299,7 @@ export const DemarcheEtape = defineComponent<Props>(props => {
         />
       ) : null}
 
-      <EtapeDocuments etapeDocuments={props.etape.documents} entrepriseDocuments={props.etape.entreprises_documents} titulaires={props.demarche.titulaires} user={props.user} />
+      <EtapeDocuments etapeDocuments={props.etape.etape_documents} entrepriseDocuments={props.etape.entreprises_documents} titulaires={props.demarche.titulaires} user={props.user} />
 
       {removePopupVisible.value ? (
         <RemoveEtapePopup
@@ -271,17 +312,7 @@ export const DemarcheEtape = defineComponent<Props>(props => {
           titreNom={props.titre.nom}
         />
       ) : null}
-      {deposePopupVisible.value ? (
-        <DeposeEtapePopup
-          close={closeDeposePopup}
-          apiClient={props.apiClient}
-          demarcheTypeId={props.demarche.demarche_type_id}
-          etapeTypeId={props.etape.etape_type_id}
-          id={props.etape.id}
-          titreTypeId={props.titre.typeId}
-          titreNom={props.titre.nom}
-        />
-      ) : null}
+      {deposePopupVisible.value ? <DeposeEtapePopup close={closeDeposePopup} apiClient={props.apiClient} id={props.etape.id} /> : null}
     </div>
   )
 })

@@ -9,9 +9,22 @@ import { DeepReadonly, getKeys } from 'camino-common/src/typescript-tools.js'
 import { getSections, Section } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
 import { ETAPE_HERITAGE_PROPS, isHeritageProps } from 'camino-common/src/heritage.js'
 import { EtapeTypeId, EtapesTypes } from 'camino-common/src/static/etapesTypes.js'
+import { CaminoDate } from 'camino-common/src/date.js'
+import { EtapeId } from 'camino-common/src/etape.js'
 
-const titreEtapeHeritagePropsBuild = (date: string, titreEtapes?: ITitreEtape[] | null) => {
-  const titreEtapesFiltered = titreEtapesSortAscByOrdre(titreEtapes?.filter(e => EtapesTypes[e.typeId].fondamentale && e.date <= date) ?? [])
+const titreEtapeHeritagePropsBuild = (date: CaminoDate, titreEtapes: ITitreEtape[] | null, etapeId: EtapeId | null) => {
+  const titreEtapesFiltered = titreEtapesSortAscByOrdre(
+    titreEtapes?.filter(e => {
+      if (e.id === etapeId) {
+        return false
+      }
+      if (EtapesTypes[e.typeId].fondamentale && e.date <= date) {
+        return true
+      }
+
+      return false
+    }) ?? []
+  )
 
   const heritageProps = ETAPE_HERITAGE_PROPS.reduce((acc: IHeritageProps, id) => {
     acc[id] = { actif: !!titreEtapesFiltered.length }
@@ -46,7 +59,14 @@ const titreEtapeHeritagePropsBuild = (date: string, titreEtapes?: ITitreEtape[] 
   return newTitreEtape
 }
 
-const titreEtapeHeritageContenuBuild = (date: string, etapeTypeId: EtapeTypeId, titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId, titreEtapes?: ITitreEtape[] | null) => {
+const titreEtapeHeritageContenuBuild = (
+  date: CaminoDate,
+  etapeTypeId: EtapeTypeId,
+  titreTypeId: TitreTypeId,
+  demarcheTypeId: DemarcheTypeId,
+  titreEtapes: ITitreEtape[] | null,
+  etapeId: EtapeId | null
+) => {
   if (!titreEtapes) {
     titreEtapes = []
   }
@@ -58,7 +78,7 @@ const titreEtapeHeritageContenuBuild = (date: string, etapeTypeId: EtapeTypeId, 
     typeId: etapeTypeId,
   } as ITitreEtape
 
-  let titreEtapesFiltered = titreEtapesSortDescByOrdre(titreEtapes.filter(te => te.date < date))
+  let titreEtapesFiltered = titreEtapesSortDescByOrdre(titreEtapes.filter(te => te.date < date && te.id !== etapeId))
 
   titreEtapesFiltered.splice(0, 0, titreEtape)
 
@@ -105,18 +125,25 @@ const titreEtapeHeritageContenuBuild = (date: string, etapeTypeId: EtapeTypeId, 
   return { contenu, heritageContenu }
 }
 
-export const titreEtapeHeritageBuild = (date: string, etapeTypeId: EtapeTypeId, titreDemarche: ITitreDemarche, titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId) => {
+export const titreEtapeHeritageBuild = (
+  date: CaminoDate,
+  etapeTypeId: EtapeTypeId,
+  titreDemarche: ITitreDemarche,
+  titreTypeId: TitreTypeId,
+  demarcheTypeId: DemarcheTypeId,
+  etapeId: EtapeId | null
+) => {
   let titreEtape = {} as ITitreEtape
 
   const etapeType = EtapesTypes[etapeTypeId]
 
   if (etapeType.fondamentale) {
-    titreEtape = titreEtapeHeritagePropsBuild(date, titreDemarche.etapes)
+    titreEtape = titreEtapeHeritagePropsBuild(date, titreDemarche.etapes ?? [], etapeId)
   }
 
   const sections = getSections(titreTypeId, demarcheTypeId, etapeType.id)
   if (sections?.length) {
-    const { contenu, heritageContenu } = titreEtapeHeritageContenuBuild(date, etapeTypeId, titreTypeId, demarcheTypeId, titreDemarche.etapes)
+    const { contenu, heritageContenu } = titreEtapeHeritageContenuBuild(date, etapeTypeId, titreTypeId, demarcheTypeId, titreDemarche.etapes ?? [], etapeId)
 
     titreEtape.contenu = contenu
     titreEtape.heritageContenu = heritageContenu

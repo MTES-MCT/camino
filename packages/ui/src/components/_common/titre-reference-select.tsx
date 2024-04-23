@@ -39,7 +39,7 @@ export const TitreReferenceSelect = caminoDefineComponent<Props>(['initialValues
   }
 
   return () => (
-    <div class="fr-input-group">
+    <div class="fr-input-group fr-mb-0">
       <label class="fr-label fr-mb-1w" for="references">
         Références
       </label>

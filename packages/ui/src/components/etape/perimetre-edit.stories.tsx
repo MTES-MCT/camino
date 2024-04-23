@@ -21,10 +21,10 @@ export default meta
 const geojsonImportAction = action('geojsonImport')
 const uploadTempDocumentAction = action('uploadTempDocumentAction')
 const getGeojsonByGeoSystemeIdAction = action('getGeojsonByGeoSystemeId')
-const completeUpdateAction = action('completeUpdate')
 const onEtapeChangeAction = action('onEtapeChange')
 const onPointsChangeAction = action('onPointsChange')
 const onForagesChangeAction = action('onForagesChange')
+const onHeritageChangeAction = action('onHeritageChange')
 
 const perimetre: FeatureMultiPolygon = {
   type: 'Feature',
@@ -73,10 +73,6 @@ const apiClient: Pick<ApiClient, 'uploadTempDocument' | 'geojsonImport' | 'getGe
   },
 }
 
-const completeUpdate = (value: boolean) => {
-  completeUpdateAction(value)
-}
-
 const onEtapeChange = (geojsonInformations: GeojsonInformations) => {
   onEtapeChangeAction(geojsonInformations)
 }
@@ -85,6 +81,9 @@ const onPointsChange = (geojson4326Points: FeatureCollectionPoints) => {
 }
 const onForagesChange = (geojson4326Forages: FeatureCollectionForages) => {
   onForagesChangeAction(geojson4326Forages)
+}
+const onHeritageChange = (heritage: Props['etape']['heritageProps']['perimetre']) => {
+  onHeritageChangeAction(heritage)
 }
 const etapeNoHeritage: Props['etape'] = {
   typeId: 'mfr',
@@ -107,21 +106,36 @@ export const EmptyNoHeritage: StoryFn = () => (
     etape={etapeNoHeritage}
     titreTypeId="arm"
     titreSlug={titreSlug}
-    completeUpdate={completeUpdate}
     onEtapeChange={onEtapeChange}
     onPointsChange={onPointsChange}
     onForagesChange={onForagesChange}
+    onHeritageChange={onHeritageChange}
   />
 )
 const etapeEmptyHeritage: Props['etape'] = {
   ...etapeNoHeritage,
   typeId: 'dpu',
-  heritageProps: { perimetre: { actif: true, etape: { date: toCaminoDate('2023-01-01'), typeId: EtapesTypes.mfr.id, geojson4326Perimetre: null, geojson4326Points: null, surface: null } } },
+  heritageProps: {
+    perimetre: {
+      actif: true,
+      etape: {
+        date: toCaminoDate('2023-01-01'),
+        typeId: EtapesTypes.mfr.id,
+        geojson4326Perimetre: null,
+        geojson4326Points: null,
+        geojsonOriginePerimetre: null,
+        geojsonOriginePoints: null,
+        geojsonOrigineGeoSystemeId: null,
+        geojson4326Forages: null,
+        geojsonOrigineForages: null,
+        surface: null,
+      },
+    },
+  },
 }
 export const EmptyHeritage: StoryFn = () => (
   <PerimetreEdit
     initTab="points"
-    completeUpdate={completeUpdate}
     onEtapeChange={onEtapeChange}
     apiClient={apiClient}
     etape={etapeEmptyHeritage}
@@ -129,6 +143,7 @@ export const EmptyHeritage: StoryFn = () => (
     titreSlug={titreSlug}
     onPointsChange={onPointsChange}
     onForagesChange={onForagesChange}
+    onHeritageChange={onHeritageChange}
   />
 )
 
@@ -146,6 +161,8 @@ const etapeHeritage: Props['etape'] = {
         geojsonOriginePerimetre: perimetre,
         geojsonOriginePoints: null,
         geojsonOrigineGeoSystemeId: '4326',
+        geojson4326Forages: null,
+        geojsonOrigineForages: null,
       },
     },
   },
@@ -153,7 +170,6 @@ const etapeHeritage: Props['etape'] = {
 export const Heritage: StoryFn = () => (
   <PerimetreEdit
     initTab="points"
-    completeUpdate={completeUpdate}
     onEtapeChange={onEtapeChange}
     apiClient={apiClient}
     etape={etapeHeritage}
@@ -161,6 +177,7 @@ export const Heritage: StoryFn = () => (
     titreSlug={titreSlug}
     onPointsChange={onPointsChange}
     onForagesChange={onForagesChange}
+    onHeritageChange={onHeritageChange}
   />
 )
 
@@ -176,7 +193,6 @@ const etape: Props['etape'] = {
 export const FilledNoHeritage: StoryFn = () => (
   <PerimetreEdit
     initTab="points"
-    completeUpdate={completeUpdate}
     onEtapeChange={onEtapeChange}
     apiClient={apiClient}
     etape={etape}
@@ -184,6 +200,7 @@ export const FilledNoHeritage: StoryFn = () => (
     titreSlug={titreSlug}
     onPointsChange={onPointsChange}
     onForagesChange={onForagesChange}
+    onHeritageChange={onHeritageChange}
   />
 )
 
@@ -199,7 +216,6 @@ const etapeLegacy: Props['etape'] = {
 export const LegacyGeoSysteme: StoryFn = () => (
   <PerimetreEdit
     initTab="points"
-    completeUpdate={completeUpdate}
     onEtapeChange={onEtapeChange}
     apiClient={apiClient}
     etape={etapeLegacy}
@@ -207,6 +223,7 @@ export const LegacyGeoSysteme: StoryFn = () => (
     titreSlug={titreSlug}
     onPointsChange={onPointsChange}
     onForagesChange={onForagesChange}
+    onHeritageChange={onHeritageChange}
   />
 )
 
@@ -303,7 +320,6 @@ const etapeWithForages: Props['etape'] = {
 export const WithForages: StoryFn = () => (
   <PerimetreEdit
     initTab="points"
-    completeUpdate={completeUpdate}
     onEtapeChange={onEtapeChange}
     apiClient={apiClient}
     etape={etapeWithForages}
@@ -311,5 +327,6 @@ export const WithForages: StoryFn = () => (
     titreSlug={titreSlug}
     onPointsChange={onPointsChange}
     onForagesChange={onForagesChange}
+    onHeritageChange={onHeritageChange}
   />
 )

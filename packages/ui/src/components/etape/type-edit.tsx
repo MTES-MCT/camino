@@ -1,64 +1,45 @@
-import { EtapesStatuts, EtapeStatutId, ETAPES_STATUTS, isStatut } from 'camino-common/src/static/etapesStatuts'
+import { EtapesStatuts, EtapeStatutId, ETAPES_STATUTS } from 'camino-common/src/static/etapesStatuts'
 import { EtapesTypes, ETAPES_TYPES, EtapeType, EtapeTypeId } from 'camino-common/src/static/etapesTypes'
-import { computed, ref, FunctionalComponent, watch } from 'vue'
-import { caminoDefineComponent, isEventWithTarget } from '@/utils/vue-tsx-utils'
+import { computed, ref, FunctionalComponent, watch, HTMLAttributes } from 'vue'
+import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { DemarcheId } from 'camino-common/src/demarche'
 import { EtapeApiClient } from './etape-api-client'
 import { CaminoDate } from 'camino-common/src/date'
 import { EtapeId, EtapeTypeEtapeStatutWithMainStep } from 'camino-common/src/etape'
 import { AsyncData } from '@/api/client-rest'
 import { LoadingElement } from '../_ui/functional-loader'
-import { isNotNullNorUndefined, isNullOrUndefinedOrEmpty, onlyUnique } from 'camino-common/src/typescript-tools'
+import { NonEmptyArray, isNonEmptyArray, isNotNullNorUndefined, isNullOrUndefinedOrEmpty, map, onlyUnique } from 'camino-common/src/typescript-tools'
 import { Alert } from '../_ui/alert'
 import { TypeAheadSingle } from '../_ui/typeahead-single'
+import { DsfrSelect, Item } from '../_ui/dsfr-select'
 
 type Props = {
   etape: {
     statutId: EtapeStatutId | null
     typeId: EtapeTypeId | null
     id?: EtapeId | null
+    date: CaminoDate
   }
-  etapeDate: CaminoDate
   demarcheId: DemarcheId
   apiClient: Pick<EtapeApiClient, 'getEtapesTypesEtapesStatuts'>
   onEtapeChange: (statutId: EtapeStatutId | null, typeId: EtapeTypeId | null) => void
-}
+} & Pick<HTMLAttributes, 'class'>
 
 interface SelectStatutProps {
   statutId: EtapeStatutId | null
-  statutIds: EtapeStatutId[]
+  statutIds: NonEmptyArray<EtapeStatutId>
   onStatutChange: (statutId: EtapeStatutId | null) => void
 }
 
-const SelectStatut: FunctionalComponent<SelectStatutProps> = (props: SelectStatutProps): JSX.Element => {
-  const etapeStatutIdSelected: EtapeStatutId | null = props.statutId
+const SelectStatut: FunctionalComponent<SelectStatutProps> = (props: SelectStatutProps): JSX.Element | null => {
+  const items: NonEmptyArray<Item<EtapeStatutId>> = map(props.statutIds, statutId => ({ id: statutId, label: EtapesStatuts[statutId].nom, disabled: props.statutId === statutId }))
 
-  return (
-    <div>
-      <div class="tablet-blobs">
-        <div class="tablet-blob-1-3 tablet-pt-s pb-s">
-          <h5>Statut</h5>
-        </div>
-        <div class="mb tablet-blob-2-3">
-          <select onChange={event => props.onStatutChange(isEventWithTarget(event) && isStatut(event.target.value) ? event.target.value : null)} class="p-s">
-            {props.statutIds.length > 1 && etapeStatutIdSelected === null ? <option value={null} selected={true}></option> : null}
-            {props.statutIds.map(etapeStatutId => {
-              const etapeStatut = EtapesStatuts[etapeStatutId]
+  const initialValue = isNotNullNorUndefined(props.statutId) ? props.statutId : props.statutIds.length === 1 ? props.statutIds[0] : null
 
-              return (
-                <option key={etapeStatut.id} value={etapeStatut.id} selected={etapeStatutIdSelected === etapeStatut.id} disabled={etapeStatutIdSelected === etapeStatut.id}>
-                  {etapeStatut.nom}
-                </option>
-              )
-            })}
-          </select>
-        </div>
-      </div>
-    </div>
-  )
+  return <DsfrSelect initialValue={initialValue} items={items} legend={{ main: 'Statut' }} required={true} id="select-etape-statut-id" valueChanged={props.onStatutChange} />
 }
 
-export const TypeEdit = caminoDefineComponent<Props>(['etape', 'etapeDate', 'demarcheId', 'apiClient', 'onEtapeChange'], props => {
+export const TypeEdit = caminoDefineComponent<Props>(['etape', 'apiClient', 'onEtapeChange', 'demarcheId', 'class'], props => {
   const etapeTypeSearch = ref<string>('')
   const etapeTypeId = ref<EtapeTypeId | null>(props.etape.typeId ?? null)
   const etapeStatutId = ref<EtapeStatutId | null>(props.etape.statutId)
@@ -66,7 +47,7 @@ export const TypeEdit = caminoDefineComponent<Props>(['etape', 'etapeDate', 'dem
   const possibleEtapes = ref<AsyncData<EtapeTypeEtapeStatutWithMainStep[]>>({ status: 'LOADING' })
   const possibleStatuts = ref<EtapeStatutId[]>([])
   watch(
-    () => props.etapeDate,
+    () => props.etape.date,
     async newEtapeDate => {
       try {
         possibleEtapes.value = { status: 'LOADED', value: await props.apiClient.getEtapesTypesEtapesStatuts(props.demarcheId, props.etape?.id ?? null, newEtapeDate) }
@@ -110,54 +91,52 @@ export const TypeEdit = caminoDefineComponent<Props>(['etape', 'etapeDate', 'dem
 
   return () => (
     <LoadingElement
+      class={props.class}
       data={possibleEtapes.value}
       renderItem={items => (
         <>
           {noItemsText.value === null ? (
-            <>
-              <div class="tablet-blobs">
-                <div class="tablet-blob-1-3 tablet-pt-s pb-s">
-                  <h5>Type</h5>
-                </div>
-                <div class="mb tablet-blob-2-3">
-                  <TypeAheadSingle
-                    overrideItem={etapeTypeExistante.value}
-                    disabled={isNotNullNorUndefined(props.etape.typeId)}
-                    props={{
-                      id: 'select-etape-type',
-                      placeholder: '',
-                      items: [...items]
-                        .sort((a, _b) => (a.mainStep ? -1 : 1))
-                        .map(({ etapeTypeId }) => EtapesTypes[etapeTypeId])
-                        .filter(({ nom }) => {
-                          return nom.toLowerCase().includes(etapeTypeSearch.value)
-                        })
-                        .filter(onlyUnique),
-                      minInputLength: 0,
-                      itemKey: 'id',
-                      itemChipLabel: item => item.nom,
-                      displayItemInList: item => displayItemInList(item, items),
-                      onSelectItem: (type: EtapeType | undefined) => {
-                        if (type) {
-                          etapeTypeSearch.value = ''
-                          possibleStatuts.value = items.filter(({ etapeTypeId }) => etapeTypeId === type.id).map(({ etapeStatutId }) => etapeStatutId)
-                          if (possibleStatuts.value.length === 1) {
-                            etapeStatutId.value = possibleStatuts.value[0]
-                          } else {
-                            etapeStatutId.value = null
-                          }
-
-                          etapeTypeId.value = type.id
-                          props.onEtapeChange(etapeStatutId.value, etapeTypeId.value)
+            <div class={props.class}>
+              <div class="fr-input-group">
+                <label class="fr-label fr-mb-1w" for="select-etape-type">
+                  Type *
+                </label>
+                <TypeAheadSingle
+                  overrideItem={etapeTypeExistante.value}
+                  disabled={isNotNullNorUndefined(etapeTypeId.value)}
+                  props={{
+                    id: 'select-etape-type',
+                    placeholder: '',
+                    items: [...items]
+                      .sort((a, _b) => (a.mainStep ? -1 : 1))
+                      .map(({ etapeTypeId }) => EtapesTypes[etapeTypeId])
+                      .filter(({ nom }) => {
+                        return nom.toLowerCase().includes(etapeTypeSearch.value)
+                      })
+                      .filter(onlyUnique),
+                    minInputLength: 0,
+                    itemKey: 'id',
+                    itemChipLabel: item => item.nom,
+                    displayItemInList: item => displayItemInList(item, items),
+                    onSelectItem: (type: EtapeType | undefined) => {
+                      if (type) {
+                        etapeTypeSearch.value = ''
+                        possibleStatuts.value = items.filter(({ etapeTypeId }) => etapeTypeId === type.id).map(({ etapeStatutId }) => etapeStatutId)
+                        if (possibleStatuts.value.length === 1) {
+                          etapeStatutId.value = possibleStatuts.value[0]
+                        } else {
+                          etapeStatutId.value = null
                         }
-                      },
-                      onInput: (searchTerm: string) => (etapeTypeSearch.value = searchTerm),
-                    }}
-                  />
-                </div>
-              </div>
 
-              {(etapeTypeId.value === ETAPES_TYPES.demande && etapeStatutId.value === ETAPES_STATUTS.EN_CONSTRUCTION) || possibleStatuts.value.length === 0 ? null : (
+                        etapeTypeId.value = type.id
+                        props.onEtapeChange(etapeStatutId.value, etapeTypeId.value)
+                      }
+                    },
+                    onInput: (searchTerm: string) => (etapeTypeSearch.value = searchTerm),
+                  }}
+                />
+              </div>
+              {(etapeTypeId.value === ETAPES_TYPES.demande && etapeStatutId.value === ETAPES_STATUTS.EN_CONSTRUCTION) || !isNonEmptyArray(possibleStatuts.value) ? null : (
                 <SelectStatut
                   statutIds={possibleStatuts.value}
                   statutId={etapeStatutId.value}
@@ -167,14 +146,9 @@ export const TypeEdit = caminoDefineComponent<Props>(['etape', 'etapeDate', 'dem
                   }}
                 />
               )}
-            </>
-          ) : (
-            <div class="dsfr tablet-blobs">
-              <div class="tablet-blob-1-3"></div>
-              <div class="mb tablet-blob-2-3">
-                <Alert type="warning" title={noItemsText.value} description="Veuillez modifier la date pour pouvoir choisir une étape." />
-              </div>
             </div>
+          ) : (
+            <Alert type="warning" class="fr-mt-2w" title={noItemsText.value} description="Veuillez modifier la date pour pouvoir choisir une étape." />
           )}
         </>
       )}

@@ -6,10 +6,11 @@ import { AdministrationId, ADMINISTRATION_IDS } from '../static/administrations.
 import { test, expect } from 'vitest'
 import { TestUser, testBlankUser } from '../tests-utils.js'
 import { TitreStatutId } from '../static/titresStatuts.js'
-import { EntrepriseId, newEntrepriseId } from '../entreprise.js'
+import { EntrepriseId, entrepriseIdValidator, newEntrepriseId } from '../entreprise.js'
 import { EtapeStatutId } from '../static/etapesStatuts.js'
 import { SubstanceLegaleId } from '../static/substancesLegales.js'
 import { FeatureMultiPolygon } from '../perimetre.js'
+import { toCaminoDate } from '../date.js'
 
 test.each<{ etapeTypeId: EtapeTypeId; demarcheTypeId: DemarcheTypeId; titreTypeId: TitreTypeId; optional: boolean }>([
   { etapeTypeId: 'mfr', demarcheTypeId: 'oct', titreTypeId: 'arm', optional: false },
@@ -243,14 +244,10 @@ const etapeComplete: Parameters<typeof isEtapeComplete>[0] = {
   substances: ['auru'],
   geojson4326Perimetre: multiPolygonWith4Points,
   duree: 4,
+  statutId: 'fai',
 }
 
-const armDocuments: Parameters<typeof isEtapeComplete>[3] = [
-  { typeId: 'car', fichier: true },
-  { typeId: 'dom', fichier: true },
-  { typeId: 'for', fichier: true },
-  { typeId: 'jpa', fichier: true },
-]
+const armDocuments: Parameters<typeof isEtapeComplete>[3] = [{ etape_document_type_id: 'car' }, { etape_document_type_id: 'dom' }, { etape_document_type_id: 'for' }, { etape_document_type_id: 'jpa' }]
 const armEntrepriseDocuments: Parameters<typeof isEtapeComplete>[4] = [
   { entreprise_document_type_id: 'cur' },
   { entreprise_document_type_id: 'jid' },
@@ -261,13 +258,13 @@ const armEntrepriseDocuments: Parameters<typeof isEtapeComplete>[4] = [
 ]
 
 const axmDocuments: Parameters<typeof isEtapeComplete>[3] = [
-  { typeId: 'car', fichier: true },
-  { typeId: 'lem', fichier: true },
-  { typeId: 'idm', fichier: true },
-  { typeId: 'mes', fichier: true },
-  { typeId: 'met', fichier: true },
-  { typeId: 'sch', fichier: true },
-  { typeId: 'prg', fichier: true },
+  { etape_document_type_id: 'car' },
+  { etape_document_type_id: 'lem' },
+  { etape_document_type_id: 'idm' },
+  { etape_document_type_id: 'mes' },
+  { etape_document_type_id: 'met' },
+  { etape_document_type_id: 'sch' },
+  { etape_document_type_id: 'prg' },
 ]
 
 const axmEntrepriseDocuments: Parameters<typeof isEtapeComplete>[4] = [
@@ -281,8 +278,24 @@ const axmEntrepriseDocuments: Parameters<typeof isEtapeComplete>[4] = [
   { entreprise_document_type_id: 'jct' },
 ]
 
+test('teste la complétude d’une demande d’AXM faite par un utilisateur entreprises', () => {
+  expect(
+    isEtapeComplete(
+      { ...etapeComplete, statutId: 'aco' },
+      'axm',
+      'oct',
+      axmDocuments,
+      axmEntrepriseDocuments,
+      [],
+      { arrete_prefectoral: '', date: toCaminoDate('2024-01-01'), description: null, entreprises_lecture: true, etape_document_type_id: 'arp', etape_statut_id: 'fai', public_lecture: true },
+      { date: toCaminoDate('2024-04-22'), description: null, entreprises_lecture: true, etape_document_type_id: 'let', etape_statut_id: 'fai', public_lecture: true },
+      { ...testBlankUser, role: 'entreprise', entreprises: [{ id: entrepriseIdValidator.parse('id1'), nom: 'nomEntreprise' }] }
+    )
+  ).toStrictEqual({ valid: true })
+})
+
 test('teste la complétude d’une demande d’ARM', () => {
-  expect(isEtapeComplete(etapeComplete, 'arm', 'oct', armDocuments, armEntrepriseDocuments, [])).toStrictEqual({ valid: true })
+  expect(isEtapeComplete(etapeComplete, 'arm', 'oct', armDocuments, armEntrepriseDocuments, [], null, null, { ...testBlankUser, role: 'super' })).toStrictEqual({ valid: true })
 })
 
 test.each<[SubstanceLegaleId[], EtapeTypeId, TitreTypeId, Parameters<typeof isEtapeComplete>[3], Parameters<typeof isEtapeComplete>[4], boolean]>([
@@ -300,7 +313,7 @@ test.each<[SubstanceLegaleId[], EtapeTypeId, TitreTypeId, Parameters<typeof isEt
     typeId: etapeType,
   }
 
-  const result = isEtapeComplete(titreEtape, titreType, 'oct', testDocuments, entrepriseDocuments, [])
+  const result = isEtapeComplete(titreEtape, titreType, 'oct', testDocuments, entrepriseDocuments, [], null, null, { ...testBlankUser, role: 'super' })
 
   const errorLabel = 'au moins une substance doit être renseignée'
 
@@ -329,7 +342,7 @@ test.each<[FeatureMultiPolygon | null, EtapeTypeId, TitreTypeId, Parameters<type
     typeId: etapeType,
   }
 
-  const result = isEtapeComplete(titreEtape, titreType, 'oct', documents, entrepriseDocuments, [])
+  const result = isEtapeComplete(titreEtape, titreType, 'oct', documents, entrepriseDocuments, [], null, null, { ...testBlankUser, role: 'super' })
 
   const errorLabel = 'le périmètre doit être renseigné'
   if (error) {
@@ -344,7 +357,7 @@ test.each<[FeatureMultiPolygon | null, EtapeTypeId, TitreTypeId, Parameters<type
 })
 
 test('[DEPRECATED] une demande d’ARM mécanisée a des documents obligatoires supplémentaires', () => {
-  const errors = isEtapeComplete({ ...etapeComplete, contenu: { arm: { mecanise: true } } }, 'arm', 'oct', armDocuments, armEntrepriseDocuments, [])
+  const errors = isEtapeComplete({ ...etapeComplete, contenu: { arm: { mecanise: true } } }, 'arm', 'oct', armDocuments, armEntrepriseDocuments, [], null, null, { ...testBlankUser, role: 'super' })
   expect(errors).toMatchInlineSnapshot(`
     {
       "errors": [
@@ -363,7 +376,10 @@ test('une demande d’ARM mécanisée a des documents obligatoires supplémentai
     'oct',
     armDocuments,
     armEntrepriseDocuments,
-    []
+    [],
+    null,
+    null,
+    { ...testBlankUser, role: 'super' }
   )
   expect(errors).toMatchInlineSnapshot(`
     {
@@ -392,7 +408,7 @@ test.each<[number | undefined | null, EtapeTypeId, TitreTypeId, Parameters<typeo
     typeId: etapeType,
   }
 
-  const result = isEtapeComplete(titreEtape, titreType, 'oct', documents, entreprisedocuments, [])
+  const result = isEtapeComplete(titreEtape, titreType, 'oct', documents, entreprisedocuments, [], null, null, { ...testBlankUser, role: 'super' })
 
   const errorLabel = 'la durée doit être renseignée'
   if (error) {

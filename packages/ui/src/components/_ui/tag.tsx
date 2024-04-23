@@ -1,33 +1,7 @@
-import { Couleur } from 'camino-common/src/static/couleurs'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { FunctionalComponent, HTMLAttributes } from 'vue'
 import { UseLinkOptions } from 'vue-router'
 import { CaminoRouterLink } from '../../router/camino-router-link'
-
-type Props = {
-  color?: `bg-${Couleur}`
-  mini?: boolean
-  text: string
-} & HTMLAttributes
-
-/**
- * @deprecated use DsfrTag
- */
-export const Tag: FunctionalComponent<Props> = props => {
-  let css: string = props.color ?? 'bg-neutral'
-
-  if (props.mini ?? false) {
-    css += ' py-xxs px-xs'
-  } else {
-    css += ' py-xs px-s'
-  }
-
-  return (
-    <span class="bold cap-first small">
-      <span class={`${css} rnd-xs color-bg box`}>{props.text}</span>
-    </span>
-  )
-}
 
 type DsfrTagProps = {
   ariaLabel: string

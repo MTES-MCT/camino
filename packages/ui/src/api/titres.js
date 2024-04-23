@@ -1,8 +1,6 @@
 import gql from 'graphql-tag'
 import { apiGraphQLFetch } from './_client'
 
-import { fragmentTitres } from './fragments/titre'
-
 export const titres = apiGraphQLFetch(
   gql`
     query Titres(
@@ -42,13 +40,44 @@ export const titres = apiGraphQLFetch(
         facadesMaritimes: $facadesMaritimes
       ) {
         elements {
-          ...titres
+          id
+          slug
+          nom
+          typeId
+          titreStatutId
+          substances
+          activitesEnConstruction
+          activitesAbsentes
+          titulaires {
+            id
+            nom
+            adresse
+            codePostal
+            commune
+            legalSiren
+            legalEtranger
+          }
+          amodiataires {
+            id
+            nom
+            adresse
+            codePostal
+            commune
+            legalSiren
+            legalEtranger
+          }
+          communes {
+            id
+          }
+          secteursMaritime
+          references {
+            referenceTypeId
+            nom
+          }
         }
         total
       }
     }
-
-    ${fragmentTitres}
   `
 )
 

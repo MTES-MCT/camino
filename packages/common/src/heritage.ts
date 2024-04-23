@@ -8,7 +8,7 @@ export type EtapeHeritageProps = z.infer<typeof etapeHeritagePropsValidator>
 
 export const isHeritageProps = (value: string): value is EtapeHeritageProps => ETAPE_HERITAGE_PROPS.includes(value)
 
-export const mappingHeritagePropsNameEtapePropsName = {
+const mappingHeritagePropsNameEtapePropsName = {
   titulaires: ['titulaires'],
   amodiataires: ['amodiataires'],
   dateDebut: ['dateDebut'],
@@ -16,6 +16,7 @@ export const mappingHeritagePropsNameEtapePropsName = {
   duree: ['duree'],
   substances: ['substances'],
   perimetre: ['geojson4326Perimetre', 'geojson4326Points', 'surface', 'geojsonOriginePerimetre', 'geojsonOriginePoints', 'geojsonOrigineGeoSystemeId', 'geojson4326Forages', 'geojsonOrigineForages'],
-} as const satisfies Record<EtapeHeritageProps, Readonly<string[]>>
+  contenu: ['contenu'],
+} as const satisfies Record<EtapeHeritageProps | 'contenu', Readonly<string[]>>
 
 export type MappingHeritagePropsNameEtapePropsName = typeof mappingHeritagePropsNameEtapePropsName

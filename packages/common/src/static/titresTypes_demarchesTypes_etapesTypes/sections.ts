@@ -932,7 +932,6 @@ const basicElementValidator = z.object({
 })
 
 export const dateElementValidator = basicElementValidator.extend({ type: z.literal('date') })
-export const fileElementValidator = basicElementValidator.extend({ type: z.literal('file') })
 export const textElementValidator = basicElementValidator.extend({ type: z.enum(['text', 'textarea']) })
 export const urlElementValidator = basicElementValidator.extend({ type: z.literal('url') })
 export const numberElementValidator = basicElementValidator.extend({ type: z.enum(['number', 'integer']), uniteId: uniteIdValidator.optional() })
@@ -957,7 +956,6 @@ const selectElementValidator = z.union([selectElementWithMetasValidator, selectE
 type SelectElement = z.infer<typeof selectElementValidator>
 
 const sectionsElementValidator = z.union([
-  fileElementValidator,
   dateElementValidator,
   textElementValidator,
   urlElementValidator,
@@ -1016,6 +1014,20 @@ export const getElementValeurs = (element: DeepReadonly<SelectElement>): { id: s
   }
 
   return []
+}
+
+export const getElementWithValue = (sectionsWithValue: SectionWithValue[], sectionId: string, elementId: string): ElementWithValue | null => {
+  for (const section of sectionsWithValue) {
+    if (section.id === sectionId) {
+      for (const element of section.elements) {
+        if (element.id === elementId) {
+          return element
+        }
+      }
+    }
+  }
+
+  return null
 }
 
 export const getSectionsWithValue = (sections: DeepReadonly<Section[]>, contenu: Contenu): SectionWithValue[] => {

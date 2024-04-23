@@ -21,3 +21,115 @@ export interface IGetEtapeByIdDbQuery {
   result: IGetEtapeByIdDbResult;
 }
 
+/** 'GetEtapeDocumentsDb' parameters type */
+export type IGetEtapeDocumentsDbParams = void;
+
+/** 'GetEtapeDocumentsDb' return type */
+export interface IGetEtapeDocumentsDbResult {
+  description: string | null;
+  etape_document_type_id: string;
+  etape_id: string;
+  id: string;
+}
+
+/** 'GetEtapeDocumentsDb' query type */
+export interface IGetEtapeDocumentsDbQuery {
+  params: IGetEtapeDocumentsDbParams;
+  result: IGetEtapeDocumentsDbResult;
+}
+
+/** 'GetLargeobjectIdByEtapeDocumentIdInternal' parameters type */
+export interface IGetLargeobjectIdByEtapeDocumentIdInternalParams {
+  etapeDocumentId: string;
+}
+
+/** 'GetLargeobjectIdByEtapeDocumentIdInternal' return type */
+export interface IGetLargeobjectIdByEtapeDocumentIdInternalResult {
+  entreprises_lecture: boolean;
+  etape_id: string;
+  largeobject_id: number | null;
+  public_lecture: boolean;
+}
+
+/** 'GetLargeobjectIdByEtapeDocumentIdInternal' query type */
+export interface IGetLargeobjectIdByEtapeDocumentIdInternalQuery {
+  params: IGetLargeobjectIdByEtapeDocumentIdInternalParams;
+  result: IGetLargeobjectIdByEtapeDocumentIdInternalResult;
+}
+
+/** 'GetEtapeDataForEditionDb' parameters type */
+export interface IGetEtapeDataForEditionDbParams {
+  etapeId: string;
+}
+
+/** 'GetEtapeDataForEditionDb' return type */
+export interface IGetEtapeDataForEditionDbResult {
+  demarche_entreprises_lecture: boolean;
+  demarche_id: string;
+  demarche_public_lecture: boolean;
+  demarche_type_id: string;
+  etape_slug: string | null;
+  etape_statut_id: string;
+  etape_type_id: string;
+  titre_public_lecture: boolean;
+  titre_type_id: string;
+}
+
+/** 'GetEtapeDataForEditionDb' query type */
+export interface IGetEtapeDataForEditionDbQuery {
+  params: IGetEtapeDataForEditionDbParams;
+  result: IGetEtapeDataForEditionDbResult;
+}
+
+/** 'GetAdministrationsLocalesByEtapeId' parameters type */
+export interface IGetAdministrationsLocalesByEtapeIdParams {
+  etapeId: string;
+}
+
+/** 'GetAdministrationsLocalesByEtapeId' return type */
+export interface IGetAdministrationsLocalesByEtapeIdResult {
+  administrations_locales: Json;
+}
+
+/** 'GetAdministrationsLocalesByEtapeId' query type */
+export interface IGetAdministrationsLocalesByEtapeIdQuery {
+  params: IGetAdministrationsLocalesByEtapeIdParams;
+  result: IGetAdministrationsLocalesByEtapeIdResult;
+}
+
+/** 'GetTitulairesAmodiatairesTitreEtape' parameters type */
+export interface IGetTitulairesAmodiatairesTitreEtapeParams {
+  etapeId: string;
+}
+
+/** 'GetTitulairesAmodiatairesTitreEtape' return type */
+export interface IGetTitulairesAmodiatairesTitreEtapeResult {
+  id: string;
+}
+
+/** 'GetTitulairesAmodiatairesTitreEtape' query type */
+export interface IGetTitulairesAmodiatairesTitreEtapeQuery {
+  params: IGetTitulairesAmodiatairesTitreEtapeParams;
+  result: IGetTitulairesAmodiatairesTitreEtapeResult;
+}
+
+/** 'GetEtapeByDemarcheIdAndEtapeTypeIdDb' parameters type */
+export interface IGetEtapeByDemarcheIdAndEtapeTypeIdDbParams {
+  demarcheId: string;
+  etapeTypeId: string;
+}
+
+/** 'GetEtapeByDemarcheIdAndEtapeTypeIdDb' return type */
+export interface IGetEtapeByDemarcheIdAndEtapeTypeIdDbResult {
+  contenu: Json | null;
+  date: string;
+  etape_id: string;
+  etape_statut_id: string;
+}
+
+/** 'GetEtapeByDemarcheIdAndEtapeTypeIdDb' query type */
+export interface IGetEtapeByDemarcheIdAndEtapeTypeIdDbQuery {
+  params: IGetEtapeByDemarcheIdAndEtapeTypeIdDbParams;
+  result: IGetEtapeByDemarcheIdAndEtapeTypeIdDbResult;
+}
+

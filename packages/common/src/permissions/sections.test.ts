@@ -80,17 +80,6 @@ describe('sectionElementWithValueCompleteValidate', () => {
   ])('Pour élément date', (value, optionnel, expectedComplete) => {
     expect(sectionElementWithValueCompleteValidate({ type: 'date', value, optionnel })).toEqual(expectedComplete)
   })
-
-  test.each<[string | null, ElementWithValue['optionnel'], boolean]>([
-    ['', false, false],
-    [null, false, false],
-    ['fileId', false, true],
-    [null, true, true],
-    [null, undefined, false],
-    ['fileId', undefined, true],
-  ])('Pour élément file', (value, optionnel, expectedComplete) => {
-    expect(sectionElementWithValueCompleteValidate({ type: 'file', value, optionnel })).toEqual(expectedComplete)
-  })
 })
 
 describe('sectionsWithValueCompleteValidate', () => {

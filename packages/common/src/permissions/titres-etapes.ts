@@ -11,18 +11,18 @@ import { canAdministrationEtapeTypeId } from '../static/administrationsTitresTyp
 
 import { TitreStatutId } from '../static/titresStatuts.js'
 import { EntrepriseDocument, EntrepriseId } from '../entreprise.js'
-import { Section, getSections } from '../static/titresTypes_demarchesTypes_etapesTypes/sections.js'
+import { getSections } from '../static/titresTypes_demarchesTypes_etapesTypes/sections.js'
 import { getEntrepriseDocuments } from '../static/titresTypes_demarchesTypes_etapesTypes/entrepriseDocuments.js'
 import { SDOMZoneId } from '../static/sdom.js'
-import { documentTypeIdsBySdomZonesGet } from '../static/titresTypes_demarchesTypes_etapesTypes/sdom.js'
-import { DeepReadonly, NonEmptyArray, isNonEmptyArray, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined } from '../typescript-tools.js'
-import { DocumentsTypes, DocumentType, DocumentTypeId, EntrepriseDocumentTypeId } from '../static/documentsTypes.js'
+import { NonEmptyArray, isNonEmptyArray, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined } from '../typescript-tools.js'
+import { DocumentType, EntrepriseDocumentTypeId } from '../static/documentsTypes.js'
 import { SubstanceLegaleId } from '../static/substancesLegales.js'
 import { isDocumentsComplete } from './documents.js'
-import { getDocuments } from '../static/titresTypes_demarchesTypes_etapesTypes/documents.js'
-import { Contenu, contenuCompleteValidate, sectionsWithValueCompleteValidate } from './sections.js'
-import { SectionWithValue } from '../sections.js'
+import { contenuCompleteValidate, sectionsWithValueCompleteValidate } from './sections.js'
+import { ElementWithValue, SectionWithValue } from '../sections.js'
 import { FeatureMultiPolygon } from '../perimetre.js'
+import { EtapeDocument, GetEtapeDocumentsByEtapeId, GetEtapeDocumentsByEtapeIdAslDocument, GetEtapeDocumentsByEtapeIdDaeDocument, needAslAndDae } from '../etape.js'
+import { getDocumentsTypes } from './etape-form.js'
 
 export const dureeOptionalCheck = (etapeTypeId: EtapeTypeId, demarcheTypeId: DemarcheTypeId, titreTypeId: TitreTypeId): boolean => {
   if (titreTypeId !== 'axm' && titreTypeId !== 'arm') {
@@ -143,27 +143,29 @@ const canCreateOrEditEtape = (
 
 type IsEtapeCompleteEtape = {
   typeId: EtapeTypeId
+  statutId: EtapeStatutId
   /** 
-   @deprecated use sectionsWithValue
+   @deprecated use sectionsWithValue/
   */
-  contenu?: Contenu
+  contenu?: Record<string, Record<string, ElementWithValue['value']>>
   sectionsWithValue?: SectionWithValue[]
-  decisionsAnnexesSections?: DeepReadonly<Section[]> | null
-  decisionsAnnexesContenu?: Contenu
   geojson4326Perimetre?: null | FeatureMultiPolygon
   substances?: null | SubstanceLegaleId[]
   duree?: number | null
 }
+
+// TODO 2024-04-17 utiliser toutes les stepIsComplete
 export const isEtapeComplete = (
   titreEtape: IsEtapeCompleteEtape,
   titreTypeId: TitreTypeId,
   demarcheTypeId: DemarcheTypeId,
-  documents: { typeId: DocumentTypeId; fichier?: unknown; fichierNouveau?: unknown }[] | null | undefined,
+  documents: Pick<EtapeDocument, 'etape_document_type_id'>[],
   entrepriseDocuments: Pick<EntrepriseDocument, 'entreprise_document_type_id'>[],
-  sdomZones: SDOMZoneId[] | null | undefined
+  sdomZones: SDOMZoneId[] | null | undefined,
+  daeDocument: Omit<GetEtapeDocumentsByEtapeIdDaeDocument, 'id'> | null,
+  aslDocument: Omit<GetEtapeDocumentsByEtapeIdAslDocument, 'id'> | null,
+  user: User
 ): { valid: true } | { valid: false; errors: NonEmptyArray<string> } => {
-  const documentsTypes = getDocuments(titreTypeId, demarcheTypeId, titreEtape.typeId)
-
   const errors: string[] = []
   const sections = getSections(titreTypeId, demarcheTypeId, titreEtape.typeId)
   // les éléments non optionnel des sections sont renseignés
@@ -180,37 +182,27 @@ export const isEtapeComplete = (
     }
   }
 
-  // les décisions annexes sont complètes
-  if (titreEtape.decisionsAnnexesSections) {
-    errors.push(...contenuCompleteValidate(titreEtape.decisionsAnnexesSections, titreEtape.decisionsAnnexesContenu))
+  if (needAslAndDae({ etapeTypeId: titreEtape.typeId, demarcheTypeId, titreTypeId }, titreEtape.statutId, user)) {
+    if (isNullOrUndefined(daeDocument)) {
+      errors.push('L’arrêté préfectoral de la mission autorité environnementale est obligatoire')
+    }
+    if (isNullOrUndefined(aslDocument)) {
+      errors.push('La lettre de décision du propriétaire du sol est obligatoire')
+    }
   }
 
-  const dts: DocumentType[] = [...documentsTypes]
-  if (isNotNullNorUndefined(sdomZones)) {
-    // Ajoute les documents obligatoires en fonction des zones du SDOM
-    const documentTypeIds = documentTypeIdsBySdomZonesGet(sdomZones, titreTypeId, demarcheTypeId, titreEtape.typeId)
-
-    documentTypeIds?.forEach(dtId => dts.push({ id: dtId, nom: DocumentsTypes[dtId].nom, optionnel: false }))
+  let contenu = titreEtape.contenu
+  if (isNullOrUndefined(contenu) && isNotNullNorUndefinedNorEmpty(titreEtape.sectionsWithValue)) {
+    contenu = titreEtape.sectionsWithValue.reduce(
+      (accSection, section) => ({ ...accSection, [section.id]: section.elements.reduce((accElement, element) => ({ ...accElement, [element.id]: element.value }), {}) }),
+      {}
+    )
   }
+  const dts: DocumentType[] = getDocumentsTypes({ ...titreEtape, contenu: contenu ?? {} }, demarcheTypeId, titreTypeId, sdomZones ?? [])
 
-  // les fichiers obligatoires sont tous renseignés et complets
-  if (isNonEmptyArray(dts)) {
-    // ajoute des documents obligatoires pour les arm mécanisées
-    if (
-      (titreTypeId === 'arm' && titreEtape.contenu && titreEtape.contenu.arm && titreEtape.contenu?.arm?.mecanise === true) ||
-      (titreEtape.sectionsWithValue &&
-        titreEtape.sectionsWithValue.some(section => section.id === 'arm' && section.elements.some(element => element.id === 'mecanise' && element.type === 'radio' && (element.value ?? false))))
-    ) {
-      dts
-        .filter(dt => ['doe', 'dep'].includes(dt.id))
-        .forEach(dt => {
-          dt.optionnel = false
-        })
-    }
-    const documentsErrors = isDocumentsComplete(documents ?? [], dts)
-    if (!documentsErrors.valid) {
-      errors.push(...documentsErrors.errors)
-    }
+  const documentsErrors = isDocumentsComplete(documents ?? [], dts)
+  if (!documentsErrors.valid) {
+    errors.push(...documentsErrors.errors)
   }
 
   // les documents d'entreprise obligatoires sont tous présents
@@ -266,17 +258,12 @@ export const isEtapeDeposable = (
     administrationsLocales: AdministrationId[]
   },
   demarcheTypeId: DemarcheTypeId,
-  titreEtape: IsEtapeCompleteEtape & { statutId: EtapeStatutId },
-  documents:
-    | {
-        typeId: DocumentTypeId
-        fichier?: unknown
-        fichierNouveau?: unknown
-      }[]
-    | null
-    | undefined,
+  titreEtape: IsEtapeCompleteEtape,
+  etapeDocuments: Pick<EtapeDocument, 'etape_document_type_id'>[],
   entrepriseDocuments: Pick<EntrepriseDocument, 'entreprise_document_type_id'>[],
-  sdomZones: SDOMZoneId[] | null | undefined
+  sdomZones: SDOMZoneId[] | null | undefined,
+  daeDocument: GetEtapeDocumentsByEtapeId['dae'],
+  aslDocument: GetEtapeDocumentsByEtapeId['asl']
 ): boolean => {
   if (titreEtape.typeId === ETAPES_TYPES.demande && titreEtape.statutId === ETAPES_STATUTS.EN_CONSTRUCTION) {
     if (
@@ -291,7 +278,7 @@ export const isEtapeDeposable = (
         'modification'
       )
     ) {
-      const complete = isEtapeComplete(titreEtape, titre.typeId, demarcheTypeId, documents, entrepriseDocuments, sdomZones)
+      const complete = isEtapeComplete(titreEtape, titre.typeId, demarcheTypeId, etapeDocuments, entrepriseDocuments, sdomZones, daeDocument, aslDocument, user)
       if (!complete.valid) {
         console.warn(complete.errors)
 
@@ -304,3 +291,5 @@ export const isEtapeDeposable = (
 
   return false
 }
+
+export const canDeleteEtapeDocument = (etapeStatutId: EtapeStatutId | null): boolean => etapeStatutId === null || etapeStatutId === ETAPES_STATUTS.EN_CONSTRUCTION

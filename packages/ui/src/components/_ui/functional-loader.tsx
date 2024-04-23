@@ -6,7 +6,7 @@ import styles from './functional-loader.module.css'
 type Props<T> = {
   data: AsyncData<T>
   renderItem: (item: T) => JSX.Element | null
-} & HTMLAttributes
+} & Pick<HTMLAttributes, 'class' | 'style'>
 
 export const LoadingElement = <T,>(props: Props<T>) => {
   return (
@@ -14,7 +14,7 @@ export const LoadingElement = <T,>(props: Props<T>) => {
       {props.data.status === 'LOADED' ? (
         props.renderItem(props.data.value)
       ) : (
-        <div class={`${props.data.status === 'LOADING' ? styles['top-level'] : ''}`} style={'display: flex; justify-content: center'}>
+        <div class={`${props.data.status === 'LOADING' ? styles['top-level'] : ''} ${props.class}`} style={'display: flex; justify-content: center'}>
           {props.data.status === 'ERROR' ? (
             <div>
               <HelpTooltip icon="error-warning" text={props.data.message} />

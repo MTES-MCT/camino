@@ -64,10 +64,6 @@ export const fieldsFormat = (fields: IFields, parent: string) => {
 
   // pour calculer la propriété « déposable » sur les étapes
   if (['etapes', 'etape'].includes(parent)) {
-    if (!fields.documents) {
-      fields.documents = { id: {} }
-    }
-
     if (!fields.demarche) {
       fields.demarche = { id: {} }
     }

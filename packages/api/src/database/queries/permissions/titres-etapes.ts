@@ -1,10 +1,8 @@
 import { QueryBuilder } from 'objection'
 
-import Documents from '../../models/documents.js'
 import TitresEtapes from '../../models/titres-etapes.js'
 import Entreprises from '../../models/entreprises.js'
 
-import { documentsQueryModify } from './documents.js'
 import { administrationsTitresQuery } from './administrations.js'
 import { entreprisesQueryModify, entreprisesTitresQuery } from './entreprises.js'
 import { titresDemarchesQueryModify } from './titres-demarches.js'
@@ -70,10 +68,6 @@ export const titresEtapesQueryModify = (q: QueryBuilder<TitresEtapes, TitresEtap
 
   q.modifyGraph('demarche', b => {
     titresDemarchesQueryModify(b as QueryBuilder<TitresDemarches, TitresDemarches | TitresDemarches[]>, user)
-  })
-
-  q.modifyGraph('documents', b => {
-    documentsQueryModify(b as QueryBuilder<Documents, Documents | Documents[]>, user)
   })
 
   q.modifyGraph('titulaires', b => {

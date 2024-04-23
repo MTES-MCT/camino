@@ -1,4 +1,4 @@
-import { ITitreEtape, ITitreDemarche, ITitre, IDocument, ITitreEntreprise } from '../../types.js'
+import { ITitreEtape, ITitreDemarche, ITitre, ITitreEntreprise } from '../../types.js'
 
 import { titreDemarcheUpdatedEtatValidate } from './titre-demarche-etat-validate.js'
 import { heritageContenuValidate } from './utils/heritage-contenu-validate.js'
@@ -11,6 +11,7 @@ import { User } from 'camino-common/src/roles.js'
 import { SDOMZoneId } from 'camino-common/src/static/sdom.js'
 import { getSections } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
 import { EntrepriseDocument } from 'camino-common/src/entreprise.js'
+import { EtapeDocument, GetEtapeDocumentsByEtapeIdAslDocument, GetEtapeDocumentsByEtapeIdDaeDocument } from 'camino-common/src/etape.js'
 const numberProps = ['duree', 'surface'] as unknown as [keyof ITitreEtape]
 
 const dateProps = ['date', 'dateDebut', 'dateFin'] as unknown as [keyof ITitreEtape]
@@ -19,13 +20,15 @@ export const titreEtapeUpdationValidate = (
   titreEtape: ITitreEtape,
   titreDemarche: ITitreDemarche,
   titre: ITitre,
-  documents: IDocument[] | null | undefined,
+  documents: Pick<EtapeDocument, 'etape_document_type_id'>[],
   entrepriseDocuments: Pick<EntrepriseDocument, 'entreprise_document_type_id'>[],
   sdomZones: SDOMZoneId[] | null | undefined,
   user: User,
+  daeDocument: Omit<GetEtapeDocumentsByEtapeIdDaeDocument, 'id'> | null,
+  aslDocument: Omit<GetEtapeDocumentsByEtapeIdAslDocument, 'id'> | null,
   titreEtapeOld?: ITitreEtape
 ) => {
-  const errors = []
+  const errors: string[] = []
 
   const sections = getSections(titre.typeId, titreDemarche.typeId, titreEtape.typeId)
 
@@ -106,7 +109,17 @@ export const titreEtapeUpdationValidate = (
 
   // 4. si l’étape n’est pas en cours de construction
   if (titreEtape.statutId !== 'aco') {
-    const etapeComplete = isEtapeComplete(titreEtape, titre.typeId, titreDemarche.typeId, documents, entrepriseDocuments, sdomZones)
+    const etapeComplete = isEtapeComplete(
+      { ...titreEtape, contenu: titreEtape.contenu ?? {} },
+      titre.typeId,
+      titreDemarche.typeId,
+      documents,
+      entrepriseDocuments,
+      sdomZones,
+      daeDocument,
+      aslDocument,
+      user
+    )
     if (!etapeComplete.valid) {
       errors.push(...etapeComplete.errors)
     }

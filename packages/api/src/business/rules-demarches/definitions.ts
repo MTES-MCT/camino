@@ -12,6 +12,7 @@ import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { ArmRenProMachine } from './arm/ren-pro.machine.js'
 import { PrmOctMachine } from './prm/oct.machine.js'
+import { DeepReadonly } from 'camino-common/src/typescript-tools.js'
 
 interface DemarcheDefinitionCommon {
   titreTypeId: TitreTypeId
@@ -107,7 +108,7 @@ export const demarchesDefinitions: DemarcheDefinition[] = [
 export const demarcheDefinitionFind = (
   titreTypeId: TitreTypeId,
   demarcheTypeId: DemarcheTypeId,
-  titreEtapes: Pick<ITitreEtape, 'date' | 'typeId'>[] | undefined,
+  titreEtapes: DeepReadonly<Pick<ITitreEtape, 'date' | 'typeId'>[]> | undefined,
   demarcheId: DemarcheId
 ): DemarcheDefinition | undefined => {
   const date = titreDemarcheDepotDemandeDateFind(titreEtapes)

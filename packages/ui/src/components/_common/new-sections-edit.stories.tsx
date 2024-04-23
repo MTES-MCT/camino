@@ -6,8 +6,7 @@ import { UNITES, Unite, Unites } from 'camino-common/src/static/unites'
 import { ActiviteSectionElement, ActivitesTypes, isSubstancesFiscales } from 'camino-common/src/static/activitesTypes'
 import { getSectionsWithValue } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections'
 import { SubstancesFiscale } from 'camino-common/src/static/substancesFiscales'
-import { DeepReadonly } from 'vue'
-import { NonEmptyArray } from 'camino-common/src/typescript-tools'
+import { DeepReadonly, NonEmptyArray } from 'camino-common/src/typescript-tools'
 
 const meta: Meta = {
   title: 'Components/Common/SectionsEdit',

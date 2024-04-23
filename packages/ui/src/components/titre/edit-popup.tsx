@@ -28,7 +28,7 @@ export const EditPopup = caminoDefineComponent<Props>(['titre', 'close', 'apiCli
   const content = () => (
     <form>
       <DsfrInput id="titre_nom" legend={{ main: 'Nom' }} type={{ type: 'text' }} valueChanged={nomChange} initialValue={nom.value} required={true} />
-      <TitreReferenceSelect initialValues={props.titre.references} onUpdateReferences={onUpdateReferences} />
+      <TitreReferenceSelect class="fr-mt-3w" initialValues={props.titre.references} onUpdateReferences={onUpdateReferences} />
     </form>
   )
 

@@ -1,6 +1,5 @@
 import './styles/styles.css'
 import { createApp, ref } from 'vue'
-import { sync } from 'vuex-router-sync'
 import * as Sentry from '@sentry/vue'
 import { BrowserTracing } from '@sentry/browser'
 
@@ -60,14 +59,10 @@ const checkEventSource = () => {
 checkEventSource()
 Promise.resolve().then(async (): Promise<void> => {
   import('./styles/dsfr/dsfr.css')
-  sync(store, router)
   const [configFromJson, user, entreprises]: [CaminoConfig, User, Entreprise[]] = await Promise.all([getWithJson('/config', {}), getWithJson('/moi', {}), getWithJson('/rest/entreprises', {})])
   const app = createApp(App)
   app.provide(userKey, user)
   app.provide(entreprisesKey, ref(entreprises))
-  // TODO 2024-03-04 à supprimer quand on a plus etape-edition.vue
-  app.config.globalProperties.user = user
-  app.config.globalProperties.entreprises = entreprises
   if (isNotNullNorUndefined(configFromJson.CAMINO_STAGE)) {
     try {
       if (!configFromJson.SENTRY_DSN) throw new Error('dsn manquant')

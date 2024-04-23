@@ -1,12 +1,12 @@
 import { GraphQLResolveInfo } from 'graphql'
 
-import { Context, IContenu, IDecisionAnnexeContenu, IDocument, ITitre, ITitreEtape } from '../../../types.js'
+import { Context, ITitre, ITitreEtape } from '../../../types.js'
 
-import { titreEtapeCreate, titreEtapeGet, titreEtapeUpdate, titreEtapeUpsert } from '../../../database/queries/titres-etapes.js'
+import { titreEtapeGet, titreEtapeUpdate, titreEtapeUpsert } from '../../../database/queries/titres-etapes.js'
 import { titreDemarcheGet } from '../../../database/queries/titres-demarches.js'
 import { titreGet } from '../../../database/queries/titres.js'
 
-import titreEtapeUpdateTask from '../../../business/titre-etape-update.js'
+import { titreEtapeUpdateTask } from '../../../business/titre-etape-update.js'
 import { titreEtapeHeritageBuild } from './_titre-etape.js'
 import { titreEtapeUpdationValidate } from '../../../business/validations/titre-etape-updation-validate.js'
 
@@ -14,27 +14,25 @@ import { fieldsBuild } from './_fields-build.js'
 import { titreDemarcheUpdatedEtatValidate } from '../../../business/validations/titre-demarche-etat-validate.js'
 import { titreEtapeFormat } from '../../_format/titres-etapes.js'
 import { userSuper } from '../../../database/user-super.js'
-import { documentsLier } from './documents.js'
-import { contenuElementFilesCreate, contenuElementFilesDelete, contenuFilesPathGet, sectionsContenuAndFilesGet } from '../../../business/utils/contenu-element-file-process.js'
-import { documentCreate, documentsGet } from '../../../database/queries/documents.js'
 import { titreEtapeAdministrationsEmailsSend, titreEtapeUtilisateursEmailsSend } from './_titre-etape-email.js'
-import { objectClone } from '../../../tools/index.js'
-import { newDocumentId } from '../../../database/models/_format/id-create.js'
-import fileRename from '../../../tools/file-rename.js'
-import { documentFilePathFind } from '../../../tools/documents/document-path-find.js'
 import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts.js'
-import { EtapeTypeId, isEtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
+import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
 import { isNonEmptyArray, isNotNullNorUndefined, isNullOrUndefined, onlyUnique } from 'camino-common/src/typescript-tools.js'
 import { isBureauDEtudes, isEntreprise, User } from 'camino-common/src/roles.js'
 import { CaminoDate, toCaminoDate } from 'camino-common/src/date.js'
 import { titreEtapeFormatFields } from '../../_format/_fields.js'
-import { canCreateEtape, canEditDates, canEditDuree, canEditEtape, isEtapeDeposable } from 'camino-common/src/permissions/titres-etapes.js'
+import { canCreateEtape, canEditDates, canEditDuree, canEditEtape } from 'camino-common/src/permissions/titres-etapes.js'
 import { TitresStatutIds } from 'camino-common/src/static/titresStatuts.js'
-import { getSections, SectionElement } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
-import { isDocumentTypeId } from 'camino-common/src/static/documentsTypes.js'
-import { EtapeId } from 'camino-common/src/etape.js'
+import {
+  EtapeId,
+  documentComplementaireAslEtapeDocumentModificationValidator,
+  documentComplementaireDaeEtapeDocumentModificationValidator,
+  etapeDocumentModificationValidator,
+  needAslAndDae,
+  tempEtapeDocumentValidator,
+} from 'camino-common/src/etape.js'
 import { getEntrepriseDocuments } from '../../rest/entreprises.queries.js'
-import { deleteTitreEtapeEntrepriseDocument, getEntrepriseDocumentIdsByEtapeId, insertTitreEtapeEntrepriseDocument } from '../../../database/queries/titres-etapes.queries.js'
+import { deleteTitreEtapeEntrepriseDocument, insertEtapeDocuments, insertTitreEtapeEntrepriseDocument, updateEtapeDocuments } from '../../../database/queries/titres-etapes.queries.js'
 import { EntrepriseDocument, EntrepriseId } from 'camino-common/src/entreprise.js'
 import { Pool } from 'pg'
 import { convertPoints, getGeojsonInformation } from '../../rest/perimetre.queries.js'
@@ -45,8 +43,11 @@ import { FieldsEtape } from '../../../database/queries/_options'
 import { canHaveForages } from 'camino-common/src/permissions/titres.js'
 import { GEO_SYSTEME_IDS } from 'camino-common/src/static/geoSystemes.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
+import { getEtapeByDemarcheIdAndEtapeTypeId } from '../../rest/etapes.queries.js'
+import { DemarcheId } from 'camino-common/src/demarche.js'
+import { z } from 'zod'
 
-const statutIdAndDateGet = (etape: ITitreEtape, user: User, depose = false): { date: CaminoDate; statutId: EtapeStatutId } => {
+export const statutIdAndDateGet = (etape: ITitreEtape, user: User, depose = false): { date: CaminoDate; statutId: EtapeStatutId } => {
   const result = { date: etape.date, statutId: etape.statutId }
 
   if (depose) {
@@ -69,9 +70,6 @@ const etape = async ({ id }: { id: EtapeId }, { user }: Context, info: GraphQLRe
   try {
     const fields: FieldsEtape = fieldsBuild(info)
 
-    if (isNullOrUndefined(fields.documents)) {
-      fields.documents = { id: {} }
-    }
     if (isNullOrUndefined(fields.titulaires)) {
       fields.titulaires = { id: {} }
     }
@@ -126,7 +124,7 @@ const etape = async ({ id }: { id: EtapeId }, { user }: Context, info: GraphQLRe
   }
 }
 
-const etapeHeritage = async ({ date, titreDemarcheId, typeId }: { date: string; titreDemarcheId: string; typeId: EtapeTypeId }, { user }: Context) => {
+const etapeHeritage = async ({ date, titreDemarcheId, typeId, etapeId }: { date: CaminoDate; titreDemarcheId: DemarcheId; typeId: EtapeTypeId; etapeId: EtapeId | null }, { user }: Context) => {
   try {
     let titreDemarche = await titreDemarcheGet(titreDemarcheId, { fields: {} }, user)
 
@@ -146,7 +144,7 @@ const etapeHeritage = async ({ date, titreDemarcheId, typeId }: { date: string; 
       userSuper
     )
 
-    const titreEtape = titreEtapeHeritageBuild(date, typeId, titreDemarche!, titreDemarche!.titre!.typeId, titreDemarche!.typeId)
+    const titreEtape = titreEtapeHeritageBuild(date, typeId, titreDemarche!, titreDemarche!.titre!.typeId, titreDemarche!.typeId, etapeId)
     const titreTypeId = titreDemarche?.titre?.typeId
     if (!titreTypeId) {
       throw new Error(`le type du titre de l'étape ${titreEtape.id} n'est pas chargé`)
@@ -189,7 +187,7 @@ const getForagesProperties = async (
   }
 }
 
-const etapeCreer = async ({ etape }: { etape: ITitreEtape }, context: Context, info: GraphQLResolveInfo) => {
+const etapeCreer = async ({ etape }: { etape: ITitreEtape & { etapeDocuments: unknown } }, context: Context, info: GraphQLResolveInfo) => {
   try {
     const user = context.user
     if (!user) {
@@ -223,9 +221,15 @@ const etapeCreer = async ({ etape }: { etape: ITitreEtape }, context: Context, i
     const entrepriseDocuments: EntrepriseDocument[] = await validateAndGetEntrepriseDocuments(context.pool, etape, titreDemarche.titre, user)
     delete etape.entrepriseDocumentIds
 
-    const documentIds = etape.documentIds || []
-    const documents = documentIds.length ? await documentsGet({ ids: documentIds }, { fields: { id: {} } }, userSuper) : null
-    delete etape.documentIds
+    const etapeDocumentsParsed = z.array(tempEtapeDocumentValidator).safeParse(etape.etapeDocuments)
+
+    if (!etapeDocumentsParsed.success) {
+      console.warn(etapeDocumentsParsed.error)
+      throw new Error('Les documents envoyés ne sont pas conformes')
+    }
+
+    const etapeDocuments = etapeDocumentsParsed.data
+    delete etape.etapeDocuments
 
     const sdomZones: SDOMZoneId[] = []
     if (isNotNullNorUndefined(etape.geojson4326Perimetre)) {
@@ -258,7 +262,7 @@ const etapeCreer = async ({ etape }: { etape: ITitreEtape }, context: Context, i
 
     etape = { ...etape, ...(await getForagesProperties(titreTypeId, etape.geojsonOrigineGeoSystemeId, etape.geojsonOrigineForages, context.pool)) }
 
-    const rulesErrors = titreEtapeUpdationValidate(etape, titreDemarche, titreDemarche.titre, documents, entrepriseDocuments, sdomZones, user)
+    const rulesErrors = titreEtapeUpdationValidate(etape, titreDemarche, titreDemarche.titre, etapeDocuments, entrepriseDocuments, sdomZones, user, null, null)
     if (rulesErrors.length) {
       throw new Error(rulesErrors.join(', '))
     }
@@ -271,11 +275,6 @@ const etapeCreer = async ({ etape }: { etape: ITitreEtape }, context: Context, i
       throw new Error('droits insuffisants pour créer cette étape')
     }
 
-    const sections = getSections(titreTypeId, titreDemarche.typeId, etape.typeId)
-
-    const { contenu, newFiles } = sectionsContenuAndFilesGet(etape.contenu, sections)
-    etape.contenu = contenu
-
     if (!canEditDuree(titreTypeId, titreDemarche.typeId)) {
       etape.duree = null
     }
@@ -287,13 +286,10 @@ const etapeCreer = async ({ etape }: { etape: ITitreEtape }, context: Context, i
 
     let etapeUpdated: ITitreEtape = await titreEtapeUpsert(etape, user!, titreDemarche.titreId)
 
+    await insertEtapeDocuments(context.pool, etapeUpdated.id, etapeDocuments)
     for (const document of entrepriseDocuments) {
       await insertTitreEtapeEntrepriseDocument(context.pool, { titre_etape_id: etapeUpdated.id, entreprise_document_id: document.id })
     }
-
-    await contenuElementFilesCreate(newFiles, 'demarches', etapeUpdated.id)
-
-    await documentsLier(context, documentIds, etapeUpdated.id)
 
     try {
       await titreEtapeUpdateTask(context.pool, etapeUpdated.id, etapeUpdated.titreDemarcheId, user)
@@ -349,7 +345,7 @@ const validateAndGetEntrepriseDocuments = async (
   return entrepriseDocuments
 }
 
-const etapeModifier = async ({ etape }: { etape: ITitreEtape }, context: Context, info: GraphQLResolveInfo) => {
+const etapeModifier = async ({ etape }: { etape: ITitreEtape & { etapeDocuments: unknown; daeDocument: unknown; aslDocument: unknown } }, context: Context, info: GraphQLResolveInfo) => {
   try {
     const user = context.user
     if (!user) {
@@ -360,7 +356,6 @@ const etapeModifier = async ({ etape }: { etape: ITitreEtape }, context: Context
       etape.id,
       {
         fields: {
-          documents: { id: {} },
           titulaires: { id: {} },
           amodiataires: { id: {} },
           demarche: { titre: { pointsEtape: { id: {} } } },
@@ -413,9 +408,38 @@ const etapeModifier = async ({ etape }: { etape: ITitreEtape }, context: Context
     const entrepriseDocuments: EntrepriseDocument[] = await validateAndGetEntrepriseDocuments(context.pool, etape, titreDemarche.titre, user)
     delete etape.entrepriseDocumentIds
 
-    const documentIds = etape.documentIds || []
-    const documents = documentIds.length ? await documentsGet({ ids: documentIds }, { fields: { id: {} } }, userSuper) : null
-    delete etape.documentIds
+    const etapeDocumentsParsed = z.array(etapeDocumentModificationValidator).safeParse(etape.etapeDocuments)
+
+    if (!etapeDocumentsParsed.success) {
+      console.warn(etapeDocumentsParsed.error)
+      throw new Error('Les documents envoyés ne sont pas conformes')
+    }
+
+    const etapeDocuments = etapeDocumentsParsed.data
+    delete etape.etapeDocuments
+
+    const needToCreateAslAndDae = needAslAndDae({ etapeTypeId: etape.typeId, demarcheTypeId: titreDemarche.typeId, titreTypeId: titreDemarche.titre.typeId }, etape.statutId, user)
+    let daeDocument = null
+    let aslDocument = null
+    if (needToCreateAslAndDae) {
+      const daeDocumentParsed = documentComplementaireDaeEtapeDocumentModificationValidator.nullable().safeParse(etape.daeDocument)
+      if (!daeDocumentParsed.success) {
+        console.warn(daeDocumentParsed.error)
+        throw new Error('L’arrêté préfectoral n’est pas conforme')
+      }
+
+      daeDocument = daeDocumentParsed.data
+
+      const aslDocumentParsed = documentComplementaireAslEtapeDocumentModificationValidator.nullable().safeParse(etape.aslDocument)
+      if (!aslDocumentParsed.success) {
+        console.warn(aslDocumentParsed.error)
+        throw new Error('La lettre du propriétaire du sol n’est pas conforme')
+      }
+
+      aslDocument = aslDocumentParsed.data
+    }
+    delete etape.daeDocument
+    delete etape.aslDocument
 
     const sdomZones: SDOMZoneId[] = []
     if (isNotNullNorUndefined(etape.geojson4326Perimetre)) {
@@ -454,23 +478,10 @@ const etapeModifier = async ({ etape }: { etape: ITitreEtape }, context: Context
 
     etape = { ...etape, ...(await getForagesProperties(titreTypeId, etape.geojsonOrigineGeoSystemeId, etape.geojsonOrigineForages, context.pool)) }
 
-    const rulesErrors = titreEtapeUpdationValidate(etape, titreDemarche, titreDemarche.titre, documents, entrepriseDocuments, sdomZones, user, titreEtapeOld)
+    const rulesErrors = titreEtapeUpdationValidate(etape, titreDemarche, titreDemarche.titre, etapeDocuments, entrepriseDocuments, sdomZones, user, daeDocument, aslDocument, titreEtapeOld)
 
     if (rulesErrors.length) {
       throw new Error(rulesErrors.join(', '))
-    }
-
-    await documentsLier(context, documentIds, etape.id, titreEtapeOld)
-
-    const sections = getSections(titreTypeId, titreDemarche.typeId, etape.typeId)
-
-    const { contenu, newFiles } = sectionsContenuAndFilesGet(etape.contenu, sections)
-    etape.contenu = contenu
-
-    if (titreEtapeOld.decisionsAnnexesSections) {
-      const { contenu: decisionsAnnexesContenu, newFiles: decisionsAnnexesNewFiles } = sectionsContenuAndFilesGet(etape.decisionsAnnexesContenu, titreEtapeOld.decisionsAnnexesSections)
-      etape.decisionsAnnexesContenu = decisionsAnnexesContenu as IDecisionAnnexeContenu
-      await contenuElementFilesCreate(decisionsAnnexesNewFiles, 'demarches', etape.id)
     }
 
     if (!canEditDuree(titreTypeId, titreDemarche.typeId)) {
@@ -484,27 +495,51 @@ const etapeModifier = async ({ etape }: { etape: ITitreEtape }, context: Context
 
     let etapeUpdated: ITitreEtape = await titreEtapeUpsert(etape, user!, titreDemarche.titreId)
 
+    await updateEtapeDocuments(context.pool, user, etapeUpdated.id, etapeUpdated.statutId, etapeDocuments)
     await deleteTitreEtapeEntrepriseDocument(context.pool, { titre_etape_id: etapeUpdated.id })
     for (const document of entrepriseDocuments) {
       await insertTitreEtapeEntrepriseDocument(context.pool, { titre_etape_id: etapeUpdated.id, entreprise_document_id: document.id })
     }
 
-    await contenuElementFilesCreate(newFiles, 'demarches', etapeUpdated.id)
+    if (needToCreateAslAndDae) {
+      if (daeDocument !== null) {
+        const daeEtapeInDb = await getEtapeByDemarcheIdAndEtapeTypeId(context.pool, 'dae', titreDemarche.id)
 
-    // après le recalcule de l’héritage, on recharge toutes les étapes de la démarche pour pouvoir récuperer
-    // tous les fichiers tjrs présents dans le contenu de chaque étape
-    const demarche = await titreDemarcheGet(etapeUpdated.titreDemarcheId, { fields: { etapes: { id: {} } } }, userSuper)
-    await contenuElementFilesDelete('demarches', etapeUpdated.id, sections, etape => etape.contenu, demarche!.etapes, titreEtapeOld.contenu)
+        const daeEtape = await titreEtapeUpsert(
+          {
+            id: daeEtapeInDb?.etape_id ?? undefined,
+            typeId: 'dae',
+            statutId: daeDocument.etape_statut_id,
+            titreDemarcheId: titreDemarche.id,
+            date: daeDocument.date,
+            contenu: {
+              mea: { arrete: daeDocument.arrete_prefectoral },
+            },
+          },
+          user!,
+          titreDemarche.titreId
+        )
 
-    if (titreEtapeOld.decisionsAnnexesSections) {
-      await contenuElementFilesDelete(
-        'demarches',
-        etapeUpdated.id,
-        titreEtapeOld.decisionsAnnexesSections,
-        etape => etape.decisionsAnnexesContenu,
-        demarche!.etapes,
-        titreEtapeOld.decisionsAnnexesContenu
-      )
+        await updateEtapeDocuments(context.pool, user, daeEtape.id, etape.statutId, [daeDocument])
+      }
+
+      if (aslDocument !== null) {
+        const aslEtapeInDb = await getEtapeByDemarcheIdAndEtapeTypeId(context.pool, 'asl', titreDemarche.id)
+
+        const aslEtape = await titreEtapeUpsert(
+          {
+            id: aslEtapeInDb?.etape_id ?? undefined,
+            typeId: 'asl',
+            statutId: aslDocument.etape_statut_id,
+            titreDemarcheId: titreDemarche.id,
+            date: aslDocument.date,
+          },
+          user!,
+          titreDemarche.titreId
+        )
+
+        await updateEtapeDocuments(context.pool, user, aslEtape.id, etape.statutId, [aslDocument])
+      }
     }
 
     await titreEtapeUpdateTask(context.pool, etapeUpdated.id, etapeUpdated.titreDemarcheId, user)
@@ -515,155 +550,6 @@ const etapeModifier = async ({ etape }: { etape: ITitreEtape }, context: Context
     etapeUpdated = await titreEtapeGet(etapeUpdated.id, { fields }, user)
 
     return titreEtapeFormat(etapeUpdated!)
-  } catch (e) {
-    console.error(e)
-
-    throw e
-  }
-}
-
-const etapeDeposer = async ({ id }: { id: EtapeId }, { user, pool }: Context) => {
-  try {
-    if (!user) {
-      throw new Error("l'étape n'existe pas")
-    }
-
-    const titreEtape = await titreEtapeGet(id, { fields: { id: {} } }, user)
-
-    if (isNullOrUndefined(titreEtape)) throw new Error("l'étape n'existe pas")
-    const titreEtapeOld = objectClone(titreEtape)
-
-    const titreDemarche = await titreDemarcheGet(
-      titreEtape.titreDemarcheId,
-      {
-        fields: {
-          titre: { pointsEtape: { id: {} }, titulaires: { id: {} } },
-        },
-      },
-      userSuper
-    )
-
-    if (!titreDemarche) throw new Error("la démarche n'existe pas")
-    if (!titreDemarche.titre) throw new Error("le titre n'est pas chargé")
-    if (titreDemarche.titre.administrationsLocales === undefined) throw new Error('les administrations locales du titre ne sont pas chargées')
-    if (titreDemarche.titre.titulaires === undefined) throw new Error('les titulaires du titre ne sont pas chargés')
-
-    const sdomZones: SDOMZoneId[] = []
-    if (isNotNullNorUndefined(titreEtape.geojson4326Perimetre)) {
-      const { sdom } = await getGeojsonInformation(pool, titreEtape.geojson4326Perimetre.geometry)
-
-      sdomZones.push(...sdom)
-    }
-
-    const entrepriseDocuments = await getEntrepriseDocumentIdsByEtapeId({ titre_etape_id: titreEtape.id }, pool, userSuper)
-    // TODO 2023-06-14 TS 5.1 n’arrive pas réduire le type de titreDemarche.titre
-    const deposable = isEtapeDeposable(
-      user,
-      { ...titreDemarche.titre, titulaires: titreDemarche.titre.titulaires ?? [], administrationsLocales: titreDemarche.titre.administrationsLocales ?? [] },
-      titreDemarche.typeId,
-      titreEtape,
-      titreEtape.documents,
-      entrepriseDocuments,
-      sdomZones
-    )
-    if (!deposable) throw new Error('droits insuffisants')
-
-    const statutIdAndDate = statutIdAndDateGet(titreEtape, user, true)
-
-    let decisionsAnnexesContenu: IDecisionAnnexeContenu | null = null
-    if (titreEtape.decisionsAnnexesSections && titreEtape.decisionsAnnexesContenu) {
-      decisionsAnnexesContenu = titreEtape.decisionsAnnexesContenu
-    }
-
-    await titreEtapeUpdate(
-      titreEtape.id,
-      {
-        ...statutIdAndDate,
-        decisionsAnnexesSections: null,
-        decisionsAnnexesContenu: null,
-      },
-      user,
-      titreDemarche.titreId
-    )
-    const etapeUpdated = await titreEtapeGet(
-      titreEtape.id,
-      {
-        fields: { id: {} },
-      },
-      user
-    )
-
-    // Si il y a des décisions annexes, il faut générer une étape par décision
-    if (decisionsAnnexesContenu) {
-      for (const etapeTypeId of Object.keys(decisionsAnnexesContenu!)) {
-        if (!isEtapeTypeId(etapeTypeId)) {
-          throw new Error(`l'étapeTypeId ${etapeTypeId} n'existe pas`)
-        }
-        const decisionAnnexesElements =
-          titreEtape.decisionsAnnexesSections
-            ?.filter(({ id }) => id === etapeTypeId)
-            .flatMap(({ elements }) => elements)
-            ?.filter(isNotNullNorUndefined) ?? []
-
-        const decisionContenu = decisionsAnnexesContenu![etapeTypeId]
-        let etapeDecisionAnnexe: Partial<ITitreEtape> = {
-          typeId: etapeTypeId,
-          titreDemarcheId: titreDemarche.id,
-          date: toCaminoDate(decisionContenu.date),
-          statutId: decisionContenu.statutId,
-        }
-
-        const contenu =
-          decisionAnnexesElements.filter((element): element is Required<SectionElement & { sectionId: string }> => element.type !== 'file' && isNotNullNorUndefined(element.sectionId)) ?? []
-
-        if (isNotNullNorUndefined(contenu)) {
-          etapeDecisionAnnexe.contenu = contenu.reduce<IContenu>((acc, e) => {
-            if (isNullOrUndefined(acc[e.sectionId])) {
-              acc[e.sectionId] = {}
-            }
-            acc[e.sectionId][e.id] = decisionContenu[e.id]
-
-            return acc
-          }, {})
-        }
-
-        etapeDecisionAnnexe = await titreEtapeCreate(etapeDecisionAnnexe as ITitreEtape, userSuper, titreDemarche.titreId)
-
-        const documentTypeIds = decisionAnnexesElements.filter(({ type }) => type === 'file').map(({ id }) => id) ?? []
-        for (const documentTypeId of documentTypeIds) {
-          const fileName = decisionContenu[documentTypeId]
-
-          if (isDocumentTypeId(documentTypeId)) {
-            const id = newDocumentId(decisionContenu.date, documentTypeId)
-            const document: IDocument = {
-              id,
-              typeId: documentTypeId,
-              date: decisionContenu.date,
-              fichier: true,
-              entreprisesLecture: true,
-              titreEtapeId: etapeDecisionAnnexe.id,
-              fichierTypeId: 'pdf',
-            }
-
-            const filePath = `${contenuFilesPathGet('demarches', titreEtape.id)}/${fileName}`
-
-            const newDocumentPath = documentFilePathFind(document, true)
-
-            await fileRename(filePath, newDocumentPath)
-
-            await documentCreate(document)
-          }
-        }
-      }
-    }
-
-    await titreEtapeUpdateTask(pool, etapeUpdated.id, etapeUpdated.titreDemarcheId, user)
-
-    await titreEtapeAdministrationsEmailsSend(etapeUpdated, titreDemarche.typeId, titreDemarche.titreId, titreDemarche.titre!.typeId, user!, titreEtapeOld)
-
-    const titreUpdated = await titreGet(titreDemarche.titreId, { fields: { id: {} } }, user)
-
-    return { slug: titreUpdated?.slug }
   } catch (e) {
     console.error(e)
 
@@ -740,4 +626,4 @@ const etapeSupprimer = async ({ id }: { id: EtapeId }, { user, pool }: Context) 
   }
 }
 
-export { etape, etapeHeritage, etapeCreer, etapeModifier, etapeSupprimer, etapeDeposer }
+export { etape, etapeHeritage, etapeCreer, etapeModifier, etapeSupprimer }

@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-types */
 import { ZodType, z } from 'zod'
 import {
-  documentIdValidator,
   entrepriseDocumentIdValidator,
   entrepriseDocumentInputValidator,
   etapeEntrepriseDocumentValidator,
@@ -26,7 +25,7 @@ import {
 } from './titres.js'
 import { adminUserNotNullValidator, userValidator } from './roles.js'
 import { caminoAnneeValidator, caminoDateValidator } from './date.js'
-import { etapeIdOrSlugValidator, etapeIdValidator, etapeTypeEtapeStatutWithMainStepValidator } from './etape.js'
+import { etapeDocumentIdValidator, etapeIdOrSlugValidator, etapeIdValidator, etapeTypeEtapeStatutWithMainStepValidator, getEtapeDocumentsByEtapeIdValidator } from './etape.js'
 import {
   statistiquesDGTMValidator,
   statistiquesDataGouvValidator,
@@ -95,6 +94,7 @@ const IDS = [
   '/rest/etapesTypes/:demarcheId/:date',
   '/rest/demarches/:demarcheId/geojson',
   '/rest/etapes/:etapeId/geojson',
+  '/rest/etapes/:etapeId/etapeDocuments',
   '/rest/etapes/:etapeId/entrepriseDocuments',
   '/rest/etapes/:etapeId',
   '/rest/etapes/:etapeId/depot',
@@ -119,7 +119,6 @@ const IDS = [
   '/activites',
   '/utilisateurs',
   '/etape/zip/:etapeId',
-  '/etape/:etapeId/:fichierNom',
   '/entreprises',
   // NE PAS TOUCHER CES ROUTES, UTILISÉES PAR D'AUTRES
 ] as const
@@ -177,6 +176,7 @@ export const CaminoRestRoutes = {
   '/rest/etapesTypes/:demarcheId/:date': { params: { demarcheId: demarcheIdValidator, date: caminoDateValidator }, get: { output: z.array(etapeTypeEtapeStatutWithMainStepValidator) } },
   '/rest/demarches/:demarcheId/geojson': { params: { demarcheId: demarcheIdOrSlugValidator }, get: { output: perimetreInformationsValidator } },
   '/rest/etapes/:etapeId/geojson': { params: { etapeId: etapeIdOrSlugValidator }, get: { output: perimetreInformationsValidator } },
+  '/rest/etapes/:etapeId/etapeDocuments': { params: { etapeId: etapeIdValidator }, get: { output: getEtapeDocumentsByEtapeIdValidator } },
   '/rest/etapes/:etapeId/entrepriseDocuments': { params: { etapeId: etapeIdValidator }, get: { output: z.array(etapeEntrepriseDocumentValidator) } },
   '/rest/etapes/:etapeId': { params: { etapeId: etapeIdValidator }, delete: true },
   '/rest/etapes/:etapeId/depot': { params: { etapeId: etapeIdValidator }, put: { input: z.void(), output: z.void() } },
@@ -197,10 +197,10 @@ export const CaminoRestRoutes = {
   },
   '/deconnecter': { get: { output: z.string() } },
   '/changerMotDePasse': { get: { output: z.string() } },
-  '/download/fichiers/:documentId': { params: { documentId: z.union([documentIdValidator, entrepriseDocumentIdValidator]) }, download: true },
+  '/download/fichiers/:documentId': { params: { documentId: etapeDocumentIdValidator }, newDownload: true },
   '/download/entrepriseDocuments/:documentId': { params: { documentId: entrepriseDocumentIdValidator }, newDownload: true },
   '/download/activiteDocuments/:documentId': { params: { documentId: activiteDocumentIdValidator }, newDownload: true },
-  '/fichiers/:documentId': { params: { documentId: z.union([documentIdValidator, entrepriseDocumentIdValidator]) }, download: true },
+  '/fichiers/:documentId': { params: { documentId: etapeDocumentIdValidator }, newDownload: true },
   '/titres/:id': { params: { id: titreIdValidator }, download: true },
   '/titres': { download: true },
   '/titres_qgis': { download: true },
@@ -209,7 +209,6 @@ export const CaminoRestRoutes = {
   '/activites': { download: true },
   '/utilisateurs': { download: true },
   '/etape/zip/:etapeId': { params: { etapeId: etapeIdValidator }, download: true },
-  '/etape/:etapeId/:fichierNom': { params: { etapeId: etapeIdValidator, fichierNom: z.string() }, download: true },
   '/entreprises': { download: true },
 } as const satisfies { [k in CaminoRestRoute]: CaminoRoute<k> }
 

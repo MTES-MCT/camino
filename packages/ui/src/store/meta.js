@@ -6,15 +6,6 @@ const state = {
   elementsSelectedIndex: {},
 }
 
-const idsFind = (element, definition) =>
-  definition.ids
-    ? definition.ids.reduce((ids, id) => {
-        ids[id] = element[id]
-
-        return ids
-      }, {})
-    : { id: element.id }
-
 const getters = {
   elements: state => id => state.elementsIndex[id],
   elementSelected: state => id => state.elementsSelectedIndex[id],
@@ -23,8 +14,6 @@ const getters = {
 const actions = {
   async get({ dispatch, commit, state }, id) {
     try {
-      commit('loadingAdd', 'metaGet', { root: true })
-
       if (metasIndex[id]) {
         const definition = metasIndex[id]
         const elements = await definition.get()
@@ -39,9 +28,7 @@ const actions = {
         }
       }
     } catch (e) {
-      dispatch('apiError', e, { root: true })
-    } finally {
-      commit('loadingRemove', 'metaGet', { root: true })
+      console.error(e)
     }
   },
 

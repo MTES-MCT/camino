@@ -68,6 +68,72 @@ export interface IGetEntrepriseDocumentLargeObjectIdsByEtapeIdQueryQuery {
   result: IGetEntrepriseDocumentLargeObjectIdsByEtapeIdQueryResult;
 }
 
+/** 'UpdateEtapeDocumentFileDb' parameters type */
+export interface IUpdateEtapeDocumentFileDbParams {
+  id: string;
+  largeobject_id: number;
+}
+
+/** 'UpdateEtapeDocumentFileDb' return type */
+export type IUpdateEtapeDocumentFileDbResult = void;
+
+/** 'UpdateEtapeDocumentFileDb' query type */
+export interface IUpdateEtapeDocumentFileDbQuery {
+  params: IUpdateEtapeDocumentFileDbParams;
+  result: IUpdateEtapeDocumentFileDbResult;
+}
+
+/** 'UpdateEtapeDocumentInfoDb' parameters type */
+export interface IUpdateEtapeDocumentInfoDbParams {
+  description?: string | null | void;
+  entreprises_lecture: boolean;
+  id: string;
+  public_lecture: boolean;
+}
+
+/** 'UpdateEtapeDocumentInfoDb' return type */
+export type IUpdateEtapeDocumentInfoDbResult = void;
+
+/** 'UpdateEtapeDocumentInfoDb' query type */
+export interface IUpdateEtapeDocumentInfoDbQuery {
+  params: IUpdateEtapeDocumentInfoDbParams;
+  result: IUpdateEtapeDocumentInfoDbResult;
+}
+
+/** 'DeleteEtapeDocumentsDb' parameters type */
+export interface IDeleteEtapeDocumentsDbParams {
+  ids: readonly (string)[];
+}
+
+/** 'DeleteEtapeDocumentsDb' return type */
+export type IDeleteEtapeDocumentsDbResult = void;
+
+/** 'DeleteEtapeDocumentsDb' query type */
+export interface IDeleteEtapeDocumentsDbQuery {
+  params: IDeleteEtapeDocumentsDbParams;
+  result: IDeleteEtapeDocumentsDbResult;
+}
+
+/** 'InsertEtapeDocumentDb' parameters type */
+export interface IInsertEtapeDocumentDbParams {
+  description?: string | null | void;
+  entreprises_lecture: boolean;
+  etape_document_type_id: string;
+  etape_id: string;
+  id: string;
+  largeobject_id: number;
+  public_lecture: boolean;
+}
+
+/** 'InsertEtapeDocumentDb' return type */
+export type IInsertEtapeDocumentDbResult = void;
+
+/** 'InsertEtapeDocumentDb' query type */
+export interface IInsertEtapeDocumentDbQuery {
+  params: IInsertEtapeDocumentDbParams;
+  result: IInsertEtapeDocumentDbResult;
+}
+
 /** 'GetTitulairesByEtapeIdQueryDb' parameters type */
 export interface IGetTitulairesByEtapeIdQueryDbParams {
   etapeId: string;
@@ -111,10 +177,11 @@ export interface IGetDocumentsByEtapeIdQueryParams {
 
 /** 'GetDocumentsByEtapeIdQuery' return type */
 export interface IGetDocumentsByEtapeIdQueryResult {
-  description: string;
-  document_type_id: string;
+  description: string | null;
   entreprises_lecture: boolean;
+  etape_document_type_id: string;
   id: string;
+  largeobject_id: number | null;
   public_lecture: boolean;
 }
 

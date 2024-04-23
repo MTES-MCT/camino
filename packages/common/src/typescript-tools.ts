@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/ban-types */
+
 export type NotNullableKeys<T> = { [K in keyof T]: NonNullable<T[K]> }
 
 export type Nullable<T> = { [P in keyof T]: T[P] | null }
@@ -5,20 +7,35 @@ export function isNotNullNorUndefined<T>(value: T | null | undefined): value is 
   return !isNullOrUndefined(value)
 }
 
-export const isNotNullNorUndefinedNorEmpty = <U>(value: U[] | null | undefined): value is NonEmptyArray<U> => {
-  if (!isNullOrUndefined(value)) {
-    return isNonEmptyArray(value)
+export function isNotNullNorUndefinedNorEmpty<U>(value: DeepReadonly<U[]> | null | undefined): value is DeepReadonly<NonEmptyArray<U>>
+export function isNotNullNorUndefinedNorEmpty<U>(value: U[] | null | undefined): value is NonEmptyArray<U>
+export function isNotNullNorUndefinedNorEmpty(value: string | null | undefined): value is string
+export function isNotNullNorUndefinedNorEmpty(value: string | DeepReadonly<any[]> | null | undefined) {
+  if (Array.isArray(value)) {
+    if (!isNullOrUndefined(value)) {
+      return isNonEmptyArray(value)
+    }
+  } else if (typeof value === 'string') {
+    return value !== null && value !== undefined && value.trim() !== ''
   }
 
   return false
 }
 
-export const isNullOrUndefinedOrEmpty = <U>(value: U[] | null | undefined): value is null | undefined => {
-  if (isNullOrUndefined(value)) {
+export function isNullOrUndefinedOrEmpty<U>(value: DeepReadonly<U[]> | null | undefined): value is null | undefined
+export function isNullOrUndefinedOrEmpty(value: string | null | undefined): value is null | undefined
+export function isNullOrUndefinedOrEmpty(value: string | DeepReadonly<any[]> | null | undefined) {
+  if (value === null || value === undefined) {
     return true
   }
 
-  return Array.isArray(value) && value.length === 0
+  if (Array.isArray(value)) {
+    return value.length === 0
+  } else if (typeof value === 'string') {
+    return value.trim() === ''
+  }
+
+  return false
 }
 
 export const isNullOrUndefined = <T>(value: T | null | undefined): value is null | undefined => {
@@ -45,9 +62,75 @@ export const getEntries = <T extends string, U>(object: Record<T, U>, filter: (k
 // @ts-ignore use with caution
 export const getEntriesHardcore = <T extends string, U>(object: Record<T, U>): [T, U][] => Object.entries<U>(object)
 
-export type DeepReadonly<T> = {
-  readonly [K in keyof T]: DeepReadonly<T[K]>
+declare const RefSymbol: unique symbol
+interface Ref<T = any> {
+  value: T
+  /**
+   * Type differentiator only.
+   * We need this to be in public d.ts but don't want it to show up in IDE
+   * autocomplete, so we use a private Symbol instead.
+   */
+  [RefSymbol]: true
 }
+
+// export type DeepReadonly<T> = {
+//   readonly [K in keyof T]: DeepReadonly<T[K]>
+// }
+
+type Primitive = string | number | boolean | bigint | symbol | undefined | null
+type Builtin = Primitive | Function | Date | Error | RegExp
+// DeepReadonly from vue
+export type DeepReadonly<T> = T extends Builtin
+  ? T
+  : T extends Map<infer K, infer V>
+  ? ReadonlyMap<DeepReadonly<K>, DeepReadonly<V>>
+  : T extends ReadonlyMap<infer K, infer V>
+  ? ReadonlyMap<DeepReadonly<K>, DeepReadonly<V>>
+  : T extends WeakMap<infer K, infer V>
+  ? WeakMap<DeepReadonly<K>, DeepReadonly<V>>
+  : T extends Set<infer U>
+  ? ReadonlySet<DeepReadonly<U>>
+  : T extends ReadonlySet<infer U>
+  ? ReadonlySet<DeepReadonly<U>>
+  : T extends WeakSet<infer U>
+  ? WeakSet<DeepReadonly<U>>
+  : T extends Promise<infer U>
+  ? Promise<DeepReadonly<U>>
+  : T extends Ref<infer U>
+  ? Readonly<Ref<DeepReadonly<U>>>
+  : T extends {}
+  ? {
+      readonly [K in keyof T]: DeepReadonly<T[K]>
+    }
+  : Readonly<T>
+
+type Mutable<T> = {
+  -readonly [P in keyof T]: T[P]
+}
+
+export type DeepMutable<T> = T extends Builtin
+  ? T
+  : T extends Map<infer K, infer V>
+  ? Map<DeepMutable<K>, DeepMutable<V>>
+  : T extends ReadonlyMap<infer K, infer V>
+  ? Map<DeepMutable<K>, DeepMutable<V>>
+  : T extends WeakMap<infer K, infer V>
+  ? WeakMap<DeepMutable<K>, DeepMutable<V>>
+  : T extends Set<infer U>
+  ? Set<DeepMutable<U>>
+  : T extends ReadonlySet<infer U>
+  ? Set<DeepMutable<U>>
+  : T extends WeakSet<infer U>
+  ? WeakSet<DeepMutable<U>>
+  : T extends Promise<infer U>
+  ? Promise<DeepMutable<U>>
+  : T extends Ref<infer U>
+  ? Mutable<Ref<DeepMutable<U>>>
+  : T extends {}
+  ? {
+      -readonly [K in keyof T]: DeepMutable<T[K]>
+    }
+  : Mutable<T>
 
 export const exhaustiveCheck = (param: never): never => {
   throw new Error(`Unreachable case: ${JSON.stringify(param)}`)
@@ -55,6 +138,12 @@ export const exhaustiveCheck = (param: never): never => {
 export type NonEmptyArray<T> = [T, ...T[]]
 export const isNonEmptyArray = <T>(arr: T[]): arr is NonEmptyArray<T> => {
   return arr.length > 0
+}
+
+export const map = <T, U>(array: DeepReadonly<NonEmptyArray<T>>, transform: (item: DeepReadonly<T>) => U): NonEmptyArray<U> => {
+  const [first, ...rest] = array
+
+  return [transform(first), ...rest.map(transform)]
 }
 
 export const isTrue = <T extends true>(_t: T) => {}
@@ -77,4 +166,8 @@ export const memoize = <T>(fn: SimplePromiseFn<T>): Memoized<T> => {
 
     return cache
   }) as Memoized<T>
+}
+
+export const stringArrayEquals = (array1: string[], array2: string[]): boolean => {
+  return array1.length === array2.length && array1.every((value, index) => array2[index] === value)
 }

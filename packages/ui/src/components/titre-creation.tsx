@@ -201,17 +201,17 @@ export const PureTitreCreation = defineComponent<Props>(props => {
         ) : null}
 
         {isNotNullNorUndefined(titreDemande.value.typeId) && !entrepriseOuBureauDEtudeCheck.value ? (
-          <TitreReferenceSelect initialValues={titreDemande.value.references ?? []} onUpdateReferences={onUpdateReferences} />
+          <TitreReferenceSelect class="fr-mt-3w" initialValues={titreDemande.value.references ?? []} onUpdateReferences={onUpdateReferences} />
         ) : null}
 
         {isNotNullNorUndefined(titreDemande.value.typeId) && isNotNullNorUndefined(linkConfig.value) ? (
-          <div class="fr-mb-3w">
+          <div class="fr-mt-3w">
             <label class="fr-label fr-mb-1w">Titre {linkConfig.value.count === 'multiple' ? 's' : ''} à l’origine de cette nouvelle demande</label>
             <TitresLink config={titreLinkConfig.value} loadLinkableTitres={loadLinkableTitresByTypeId.value} onSelectTitres={onSelectTitres} />
           </div>
         ) : null}
 
-        <div style={{ display: 'flex', alignItems: 'center' }}>
+        <div style={{ display: 'flex', alignItems: 'center' }} class="fr-mt-3w">
           <DsfrButton title="Enregistrer" onClick={save} disabled={!complete.value || savingTitre.value.status === 'LOADING'} type="submit" class="fr-mr-1w" />
           <LoadingElement data={savingTitre.value} renderItem={() => null} />
         </div>

@@ -1,7 +1,7 @@
 import { computed, Ref, ref, watch, defineComponent } from 'vue'
 import styles from './typeahead.module.css'
 import { isEventWithTarget, random } from '@/utils/vue-tsx-utils'
-import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
+import { DeepReadonly, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
 
 type TypeAheadRecord = Record<string | symbol | number, any>
 
@@ -12,7 +12,7 @@ type Props<T extends TypeAheadRecord, K extends keyof T> = {
     id?: string
     itemKey: K
     placeholder: string
-    items: T[]
+    items: DeepReadonly<T[]>
     minInputLength: number
     alwaysOpen?: boolean
     itemChipLabel: (key: T) => string

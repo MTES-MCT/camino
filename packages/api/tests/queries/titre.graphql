@@ -58,9 +58,6 @@ fragment etape on Etape {
     ...entreprise
   }
   substances
-  documents {
-    ...document
-  }
 }
 
 fragment entreprise on Entreprise {
@@ -98,9 +95,4 @@ fragment utilisateur on Utilisateur {
   telephoneMobile
   telephoneFixe
   role
-}
-
-fragment document on Document {
-  id
-  fichier
 }

@@ -51,12 +51,10 @@ import {
 } from './entreprises.queries.js'
 import { newEnterpriseDocumentId } from '../../database/models/_format/id-create.js'
 import { isGuyane } from 'camino-common/src/static/pays.js'
-import { LargeObjectManager } from 'pg-large-object'
-import { createReadStream } from 'node:fs'
-import { join } from 'node:path'
 import { NewDownload } from './fichiers'
-import { TempDocumentName } from 'camino-common/src/document.js'
 import Decimal from 'decimal.js'
+
+import { createLargeObject } from '../../database/largeobjects.js'
 
 const conversion = (substanceFiscale: SubstanceFiscale, quantite: IContenuValeur): Decimal => {
   if (typeof quantite !== 'number') {
@@ -427,43 +425,6 @@ export const getEntrepriseDocuments = (pool: Pool) => async (req: JWTRequest<Use
   } else {
     const entrepriseDocuments = await getEntrepriseDocumentsQuery([], [entrepriseIdParsed.data], pool, user)
     res.json(entrepriseDocuments)
-  }
-}
-
-const bufferSize = 16384
-
-export const createLargeObject = async (pool: Pool, tmpFileName: TempDocumentName): Promise<number> => {
-  const client = await pool.connect()
-  try {
-    const man = new LargeObjectManager({ pg: client })
-
-    await client.query('BEGIN')
-
-    const [oid, stream] = await man.createAndWritableStreamAsync(bufferSize)
-
-    const promise = new Promise<number>((resolve, reject) => {
-      const pathFrom = join(process.cwd(), `/files/tmp/${tmpFileName}`)
-      const fileStream = createReadStream(pathFrom)
-      fileStream.on('error', function (e) {
-        reject(e)
-      })
-      fileStream.pipe(stream)
-      stream.on('finish', function () {
-        client.query('COMMIT')
-        resolve(oid)
-      })
-      stream.on('error', function (e) {
-        reject(e)
-      })
-    })
-
-    return await promise
-  } catch (e: any) {
-    await client.query('ROLLBACK')
-    console.error(e)
-    throw new Error('error during largeobject creation')
-  } finally {
-    client.release()
   }
 }
 

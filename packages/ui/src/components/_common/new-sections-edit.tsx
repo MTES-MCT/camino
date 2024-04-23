@@ -1,8 +1,7 @@
-import { computed, defineComponent, ref, watch } from 'vue'
-import { ElementWithValue, isNumberElement, SectionWithValue } from 'camino-common/src/sections'
-import { exhaustiveCheck, isNonEmptyArray } from 'camino-common/src/typescript-tools'
+import { computed, defineComponent, ref, watch, DeepReadonly } from 'vue'
+import { ElementWithValue, isNumberElement, isRadioElement, SectionWithValue } from 'camino-common/src/sections'
+import { exhaustiveCheck, isNonEmptyArray, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined } from 'camino-common/src/typescript-tools'
 import { numberFormat } from 'camino-common/src/number'
-import { InputDate } from '../_ui/dsfr-input-date'
 import { sectionElementWithValueCompleteValidate, sectionsWithValueCompleteValidate } from 'camino-common/src/permissions/sections'
 import { DsfrInput } from '../_ui/dsfr-input'
 import { DsfrTextarea } from '../_ui/dsfr-textarea'
@@ -11,43 +10,54 @@ import { DsfrInputCheckboxes } from '../_ui/dsfr-input-checkboxes'
 import { capitalize } from 'camino-common/src/strings'
 import { DsfrInputRadio } from '../_ui/dsfr-input-radio'
 import { DsfrSelect } from '../_ui/dsfr-select'
+import { useState } from '../../utils/vue-tsx-utils'
+import { CaminoDate } from 'camino-common/src/date'
 
 interface Props {
-  sectionsWithValue: SectionWithValue[]
-  completeUpdate: (complete: boolean, newContenu: SectionWithValue[]) => void
+  sectionsWithValue: DeepReadonly<SectionWithValue[]>
+  completeUpdate: (complete: boolean, newContenu: Props['sectionsWithValue']) => void
 }
 
 export const SectionsEdit = defineComponent<Props>(props => {
-  const sectionsWithValue = ref<SectionWithValue[]>([])
+  const [sectionsWithValue, setSectionsWithValue] = useState<DeepReadonly<SectionWithValue[]>>([])
 
   watch(
     () => props.sectionsWithValue,
     () => {
-      sectionsWithValue.value = [...props.sectionsWithValue]
+      setSectionsWithValue([...props.sectionsWithValue])
       props.completeUpdate(sectionsWithValueCompleteValidate(props.sectionsWithValue).length === 0, props.sectionsWithValue)
     },
     { immediate: true }
   )
 
-  const onValueChange = (elementIndex: number, sectionIndex: number) => (elementWithValue: ElementWithValue) => {
-    const newSection = { ...sectionsWithValue.value[sectionIndex] }
-
-    newSection.elements = [...newSection.elements]
-    newSection.elements.splice(elementIndex, 1, elementWithValue)
-
-    const newSectionsWithValue: SectionWithValue[] = [...sectionsWithValue.value]
-    newSectionsWithValue.splice(sectionIndex, 1, newSection)
+  const onValueChange = (elementIndex: number, sectionIndex: number) => (elementWithValue: DeepReadonly<ElementWithValue>) => {
+    const newSectionsWithValue: DeepReadonly<SectionWithValue[]> = sectionsWithValue.value.map((section, index) => {
+      if (index === sectionIndex) {
+        return {
+          ...section,
+          elements: section.elements.map((element, oldElementIndex) => {
+            if (oldElementIndex === elementIndex) {
+              return elementWithValue
+            } else {
+              return element
+            }
+          }),
+        }
+      } else {
+        return section
+      }
+    })
+    setSectionsWithValue(newSectionsWithValue)
 
     const complete: boolean = sectionsWithValueCompleteValidate(newSectionsWithValue).length === 0
-    sectionsWithValue.value = newSectionsWithValue
     props.completeUpdate(complete, newSectionsWithValue)
   }
 
   return () => (
     <div>
       {sectionsWithValue.value.map((sectionWithValue, sectionIndex) => (
-        <fieldset key={sectionWithValue.id} class="fr-fieldset" aria-labelledby={sectionWithValue.nom ? `${sectionWithValue.id}-legend` : undefined}>
-          {sectionWithValue.nom ? (
+        <fieldset key={sectionWithValue.id} class="fr-fieldset" aria-labelledby={isNotNullNorUndefinedNorEmpty(sectionWithValue.nom) ? `${sectionWithValue.id}-legend` : undefined}>
+          {isNotNullNorUndefinedNorEmpty(sectionWithValue.nom) ? (
             <legend class="fr-fieldset__legend" id={`${sectionWithValue.id}-legend`}>
               {sectionWithValue.nom}
             </legend>
@@ -67,21 +77,21 @@ export const SectionsEdit = defineComponent<Props>(props => {
 SectionsEdit.props = ['sectionsWithValue', 'completeUpdate']
 
 interface SectionElementEditProps {
-  element: ElementWithValue
-  onValueChange: (value: ElementWithValue) => void
+  element: DeepReadonly<ElementWithValue>
+  onValueChange: (value: SectionElementEditProps['element']) => void
 }
-const SectionElementEdit = defineComponent<SectionElementEditProps>(props => {
+export const SectionElementEdit = defineComponent<SectionElementEditProps>(props => {
   let sectionElementEditInput: JSX.Element | null = null
 
   const complete = ref<boolean>(sectionElementWithValueCompleteValidate(props.element))
 
-  const onValueChange = (value: ElementWithValue) => {
+  const onValueChange = (value: DeepReadonly<ElementWithValue>) => {
     complete.value = sectionElementWithValueCompleteValidate(value)
     props.onValueChange(value)
   }
 
   const info = computed<string>(() => {
-    return element.id === 'volumeGranulatsExtrait' && element.value && isNumberElement(element) ? `Soit l’équivalent de ${numberFormat((element.value ?? 0) * 1.5)} tonnes` : ''
+    return element.id === 'volumeGranulatsExtrait' && isNumberElement(element) && isNotNullNorUndefined(element.value) ? `Soit l’équivalent de ${numberFormat(element.value * 1.5)} tonnes` : ''
   })
 
   const required = !(props.element.optionnel ?? false)
@@ -101,10 +111,11 @@ const SectionElementEdit = defineComponent<SectionElementEditProps>(props => {
       break
     case 'date':
       sectionElementEditInput = (
-        <InputDate
+        <DsfrInput
+          type={{ type: 'date' }}
           required={required}
           initialValue={element.value}
-          dateChanged={date => {
+          valueChanged={(date: CaminoDate | null) => {
             onValueChange({ ...element, value: date })
           }}
           legend={{ main: element.nom ?? '', description: element.description }}
@@ -145,7 +156,7 @@ const SectionElementEdit = defineComponent<SectionElementEditProps>(props => {
             { legend: { main: 'Oui' }, itemId: 'oui' },
             { legend: { main: 'Non' }, itemId: 'non' },
           ]}
-          initialValue={props.element.value === null ? null : props.element.value ? 'oui' : 'non'}
+          initialValue={isNullOrUndefined(props.element.value) || !isRadioElement(props.element) ? null : props.element.value ? 'oui' : 'non'}
         />
       )
       break
@@ -184,11 +195,7 @@ const SectionElementEdit = defineComponent<SectionElementEditProps>(props => {
 
       break
     }
-    case 'file':
-      // TODO 2023-09-12 non géré car pas appelé dans les étapes encore
-      // Le jour où on migre les étapes pour appeler ce code, il faut réfléchir à comment gérer le fichier
-      throw new Error('NOT YET IMPLEMENTED')
-    // break
+
     default:
       exhaustiveCheck(element)
   }

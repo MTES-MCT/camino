@@ -13,6 +13,7 @@ import { EntrepriseId } from 'camino-common/src/entreprise'
 import { SubstanceLegaleId } from 'camino-common/src/static/substancesLegales'
 import { TitreTypeTypeId } from 'camino-common/src/static/titresTypesTypes'
 import { getWithJson } from '../../api/client-rest'
+import { DeepReadonly } from 'vue'
 
 interface InputDemarcheCreation {
   titreId: string
@@ -58,7 +59,7 @@ export interface DemarcheApiClient {
   createDemarche: (demarche: InputDemarcheCreation) => Promise<DemarcheSlug>
   updateDemarche: (demarche: InputDemarcheUpdation) => Promise<DemarcheSlug>
   deleteDemarche: (demarcheId: DemarcheId) => Promise<void>
-  getDemarcheByIdOrSlug: (demarcheIdOrSlug: DemarcheIdOrSlug) => Promise<GetDemarcheByIdOrSlugValidator>
+  getDemarcheByIdOrSlug: (demarcheIdOrSlug: DemarcheIdOrSlug) => Promise<DeepReadonly<GetDemarcheByIdOrSlugValidator>>
   getDemarches: (params: GetDemarchesParams) => Promise<{ elements: GetDemarchesDemarche[]; total: number }>
 }
 

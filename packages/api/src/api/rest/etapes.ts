@@ -1,30 +1,40 @@
 import { z } from 'zod'
 import { CaminoRequest, CustomResponse } from './express-type.js'
-import { EtapeTypeEtapeStatutWithMainStep, etapeIdValidator, EtapeId } from 'camino-common/src/etape.js'
+import { EtapeTypeEtapeStatutWithMainStep, etapeIdValidator, EtapeId, GetEtapeDocumentsByEtapeId, needAslAndDae, documentTypeIdComplementaireObligatoireDAE } from 'camino-common/src/etape.js'
 import { DemarcheId, demarcheIdValidator } from 'camino-common/src/demarche.js'
 import { HTTP_STATUS } from 'camino-common/src/http.js'
 import { CaminoDate, caminoDateValidator } from 'camino-common/src/date.js'
 import { titreDemarcheGet } from '../../database/queries/titres-demarches.js'
 import { userSuper } from '../../database/user-super.js'
-import { titreEtapeGet } from '../../database/queries/titres-etapes.js'
+import { titreEtapeGet, titreEtapeUpdate } from '../../database/queries/titres-etapes.js'
 import { demarcheDefinitionFind } from '../../business/rules-demarches/definitions.js'
 import { etapeTypeDateFinCheck } from '../_format/etapes-types.js'
 import { User } from 'camino-common/src/roles.js'
-import { canCreateEtape } from 'camino-common/src/permissions/titres-etapes.js'
+import { canCreateEtape, isEtapeDeposable } from 'camino-common/src/permissions/titres-etapes.js'
 import { TitresStatutIds } from 'camino-common/src/static/titresStatuts.js'
 import { CaminoMachines } from '../../business/rules-demarches/machines.js'
 import { titreEtapesSortAscByOrdre } from '../../business/utils/titre-etapes-sort.js'
 import { Etape, TitreEtapeForMachine, titreEtapeForMachineValidator, toMachineEtapes } from '../../business/rules-demarches/machine-common.js'
 import { EtapesTypes, EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
-import { isNotNullNorUndefined, onlyUnique } from 'camino-common/src/typescript-tools.js'
+import { SimplePromiseFn, isNotNullNorUndefined, isNullOrUndefined, memoize, onlyUnique } from 'camino-common/src/typescript-tools.js'
 import { getEtapesTDE, isTDEExist } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/index.js'
 import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts.js'
 import { getEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStatuts.js'
 import { DemarchesTypes } from 'camino-common/src/static/demarchesTypes.js'
 import { Pool } from 'pg'
-import { EtapeEntrepriseDocument } from 'camino-common/src/entreprise.js'
-import { getEntrepriseDocumentIdsByEtapeId } from '../../database/queries/titres-etapes.queries.js'
-import { etapeDeposer, etapeSupprimer } from '../graphql/resolvers/titres-etapes.js'
+import { EntrepriseId, EtapeEntrepriseDocument } from 'camino-common/src/entreprise.js'
+import { getDocumentsByEtapeId, getEntrepriseDocumentIdsByEtapeId } from '../../database/queries/titres-etapes.queries.js'
+import { etapeSupprimer, statutIdAndDateGet } from '../graphql/resolvers/titres-etapes.js'
+import { GetEtapeDataForEdition, administrationsLocalesByEtapeId, entreprisesTitulairesOuAmoditairesByEtapeId, getEtapeByDemarcheIdAndEtapeTypeId, getEtapeDataForEdition } from './etapes.queries.js'
+import { SDOMZoneId } from 'camino-common/src/static/sdom.js'
+import { objectClone } from '../../tools/index.js'
+import { titreEtapeAdministrationsEmailsSend } from '../graphql/resolvers/_titre-etape-email.js'
+import { getGeojsonInformation } from './perimetre.queries.js'
+import { titreEtapeUpdateTask } from '../../business/titre-etape-update.js'
+import { valeurFind } from 'camino-common/src/sections.js'
+import { getElementWithValue, getSections, getSectionsWithValue } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
+import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
+import { AdministrationId } from 'camino-common/src/static/administrations.js'
 
 export const getEtapeEntrepriseDocuments =
   (pool: Pool) =>
@@ -38,6 +48,119 @@ export const getEtapeEntrepriseDocuments =
       try {
         const result = await getEntrepriseDocumentIdsByEtapeId({ titre_etape_id: etapeIdParsed.data }, pool, user)
         res.json(result)
+      } catch (e) {
+        res.sendStatus(HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR)
+        console.error(e)
+      }
+    }
+  }
+
+const getDaeDocument = async (
+  pool: Pool,
+  user: User,
+  titreTypeId: SimplePromiseFn<TitreTypeId>,
+  titresAdministrationsLocales: SimplePromiseFn<AdministrationId[]>,
+  entreprisesTitulairesOuAmodiataires: SimplePromiseFn<EntrepriseId[]>,
+  etapeData: GetEtapeDataForEdition
+) => {
+  const daeEtape = await getEtapeByDemarcheIdAndEtapeTypeId(pool, 'dae', etapeData.demarche_id)
+  if (isNotNullNorUndefined(daeEtape)) {
+    const daeEtapeDocuments = await getDocumentsByEtapeId(daeEtape.etape_id, pool, user, titreTypeId, titresAdministrationsLocales, entreprisesTitulairesOuAmodiataires, etapeData.etape_type_id, {
+      demarche_type_id: etapeData.demarche_type_id,
+      entreprises_lecture: etapeData.demarche_entreprises_lecture,
+      public_lecture: etapeData.demarche_public_lecture,
+      titre_public_lecture: etapeData.titre_public_lecture,
+    })
+
+    const daeArreteDocument = daeEtapeDocuments.find(({ etape_document_type_id }) => etape_document_type_id === documentTypeIdComplementaireObligatoireDAE)
+    if (isNotNullNorUndefined(daeArreteDocument)) {
+      const sectionsWithValue = getSectionsWithValue(getSections(etapeData.titre_type_id, etapeData.demarche_type_id, 'dae'), daeEtape.contenu)
+      const elementWithValue = getElementWithValue(sectionsWithValue, 'mea', 'arrete')
+      const arrete_prefectoral = isNotNullNorUndefined(elementWithValue) ? valeurFind(elementWithValue) : null
+
+      return {
+        id: daeArreteDocument.id,
+        date: daeEtape.date,
+        etape_statut_id: daeEtape.etape_statut_id,
+        arrete_prefectoral,
+        description: daeArreteDocument.description,
+        entreprises_lecture: daeArreteDocument.entreprises_lecture,
+        public_lecture: daeArreteDocument.public_lecture,
+        etape_document_type_id: documentTypeIdComplementaireObligatoireDAE,
+      }
+    }
+  }
+
+  return null
+}
+
+const getAslDocument = async (
+  pool: Pool,
+  user: User,
+  titreTypeId: SimplePromiseFn<TitreTypeId>,
+  titresAdministrationsLocales: SimplePromiseFn<AdministrationId[]>,
+  entreprisesTitulairesOuAmodiataires: SimplePromiseFn<EntrepriseId[]>,
+  etapeData: GetEtapeDataForEdition
+): Promise<GetEtapeDocumentsByEtapeId['asl'] | null> => {
+  const aslEtape = await getEtapeByDemarcheIdAndEtapeTypeId(pool, 'asl', etapeData.demarche_id)
+  if (isNotNullNorUndefined(aslEtape)) {
+    const aslEtapeDocuments = await getDocumentsByEtapeId(aslEtape.etape_id, pool, user, titreTypeId, titresAdministrationsLocales, entreprisesTitulairesOuAmodiataires, etapeData.etape_type_id, {
+      demarche_type_id: etapeData.demarche_type_id,
+      entreprises_lecture: etapeData.demarche_entreprises_lecture,
+      public_lecture: etapeData.demarche_public_lecture,
+      titre_public_lecture: etapeData.titre_public_lecture,
+    })
+
+    const aslEtapeDocumentTypeId = 'let'
+
+    const aslLettreDocument = aslEtapeDocuments.find(({ etape_document_type_id }) => etape_document_type_id === aslEtapeDocumentTypeId)
+    if (isNotNullNorUndefined(aslLettreDocument)) {
+      return {
+        id: aslLettreDocument.id,
+        date: aslEtape.date,
+        etape_statut_id: aslEtape.etape_statut_id,
+        description: aslLettreDocument.description,
+        entreprises_lecture: aslLettreDocument.entreprises_lecture,
+        public_lecture: aslLettreDocument.public_lecture,
+        etape_document_type_id: aslEtapeDocumentTypeId,
+      }
+    }
+  }
+
+  return null
+}
+
+export const getEtapeDocuments =
+  (pool: Pool) =>
+  async (req: CaminoRequest, res: CustomResponse<GetEtapeDocumentsByEtapeId>): Promise<void> => {
+    const etapeIdParsed = etapeIdValidator.safeParse(req.params.etapeId)
+    const user = req.auth
+
+    if (!etapeIdParsed.success) {
+      res.sendStatus(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
+    } else {
+      try {
+        const etapeData = await getEtapeDataForEdition(pool, etapeIdParsed.data)
+
+        const titreTypeId = memoize(() => Promise.resolve(etapeData.titre_type_id))
+        const administrationsLocales = memoize(() => administrationsLocalesByEtapeId(etapeIdParsed.data, pool))
+        const entreprisesTitulairesOuAmodiataires = memoize(() => entreprisesTitulairesOuAmoditairesByEtapeId(etapeIdParsed.data, pool))
+
+        const result = await getDocumentsByEtapeId(etapeIdParsed.data, pool, user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires, etapeData.etape_type_id, {
+          demarche_type_id: etapeData.demarche_type_id,
+          entreprises_lecture: etapeData.demarche_entreprises_lecture,
+          public_lecture: etapeData.demarche_public_lecture,
+          titre_public_lecture: etapeData.titre_public_lecture,
+        })
+
+        let dae: null | GetEtapeDocumentsByEtapeId['dae'] = null
+        let asl: null | GetEtapeDocumentsByEtapeId['asl'] = null
+        if (needAslAndDae({ etapeTypeId: etapeData.etape_type_id, demarcheTypeId: etapeData.demarche_type_id, titreTypeId: etapeData.titre_type_id }, etapeData.etape_statut_id, user)) {
+          dae = await getDaeDocument(pool, user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires, etapeData)
+          asl = await getAslDocument(pool, user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires, etapeData)
+        }
+
+        res.json({ etapeDocuments: result, asl, dae })
       } catch (e) {
         res.sendStatus(HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR)
         console.error(e)
@@ -70,7 +193,117 @@ export const deposeEtape = (pool: Pool) => async (req: CaminoRequest, res: Custo
     res.sendStatus(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
   } else {
     try {
-      await etapeDeposer({ id: etapeId.data }, { pool, user })
+      const id = etapeId.data
+
+      if (!user) {
+        throw new Error("l'étape n'existe pas")
+      }
+
+      const titreEtape = await titreEtapeGet(id, { fields: { id: {} } }, user)
+
+      if (isNullOrUndefined(titreEtape)) throw new Error("l'étape n'existe pas")
+      const titreEtapeOld = objectClone(titreEtape)
+
+      const titreDemarche = await titreDemarcheGet(
+        titreEtape.titreDemarcheId,
+        {
+          fields: {
+            titre: { pointsEtape: { id: {} }, titulaires: { id: {} }, amodiataires: { id: {} } },
+          },
+        },
+        userSuper
+      )
+
+      if (!titreDemarche) throw new Error("la démarche n'existe pas")
+
+      const titre = titreDemarche.titre
+      if (isNullOrUndefined(titre)) throw new Error("le titre n'est pas chargé")
+      if (isNullOrUndefined(titre.administrationsLocales)) throw new Error('les administrations locales du titre ne sont pas chargées')
+
+      if (isNullOrUndefined(titre.titulaires)) throw new Error('les titulaires du titre ne sont pas chargés')
+      if (isNullOrUndefined(titre.amodiataires)) throw new Error('les amodiataires du titre ne sont pas chargés')
+      if (isNullOrUndefined(titreEtape.slug)) throw new Error("le slug de l'étape est obligatoire")
+
+      const sdomZones: SDOMZoneId[] = []
+      if (isNotNullNorUndefined(titreEtape.geojson4326Perimetre)) {
+        const { sdom } = await getGeojsonInformation(pool, titreEtape.geojson4326Perimetre.geometry)
+
+        sdomZones.push(...sdom)
+      }
+      const titreTypeId = memoize(() => Promise.resolve(titre.typeId))
+      const administrationsLocales = memoize(() => Promise.resolve(titre.administrationsLocales ?? []))
+      const entreprisesTitulairesOuAmodiataires = memoize(() => {
+        return Promise.resolve([...(titre.titulaires ?? []).map(({ id }) => id), ...(titre.amodiataires ?? []).map(({ id }) => id)])
+      })
+      const etapeDocuments = await getDocumentsByEtapeId(id, pool, user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires, titreEtape.typeId, {
+        demarche_type_id: titreDemarche.typeId,
+        entreprises_lecture: titreDemarche.entreprisesLecture ?? false,
+        public_lecture: titreDemarche.publicLecture ?? false,
+        titre_public_lecture: titre.publicLecture ?? false,
+      })
+
+      const entrepriseDocuments = await getEntrepriseDocumentIdsByEtapeId({ titre_etape_id: titreEtape.id }, pool, userSuper)
+
+      const daeDocument = await getDaeDocument(pool, user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires, {
+        demarche_entreprises_lecture: titreDemarche.entreprisesLecture ?? false,
+        demarche_public_lecture: titreDemarche.publicLecture ?? false,
+        demarche_id: titreDemarche.id,
+        demarche_type_id: titreDemarche.typeId,
+        etape_statut_id: titreEtape.statutId,
+        etape_type_id: titreEtape.typeId,
+        titre_public_lecture: titre.publicLecture ?? false,
+        titre_type_id: titre.typeId,
+        etape_slug: titreEtape.slug,
+      })
+
+      const aslDocument = await getAslDocument(pool, user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires, {
+        demarche_entreprises_lecture: titreDemarche.entreprisesLecture ?? false,
+        demarche_public_lecture: titreDemarche.publicLecture ?? false,
+        demarche_id: titreDemarche.id,
+        demarche_type_id: titreDemarche.typeId,
+        etape_statut_id: titreEtape.statutId,
+        etape_type_id: titreEtape.typeId,
+        titre_public_lecture: titre.publicLecture ?? false,
+        titre_type_id: titre.typeId,
+        etape_slug: titreEtape.slug,
+      })
+
+      // TODO 2023-06-14 TS 5.1 n’arrive pas réduire le type de titre
+      const deposable = isEtapeDeposable(
+        user,
+        { ...titre, titulaires: titre.titulaires ?? [], administrationsLocales: titre.administrationsLocales ?? [] },
+        titreDemarche.typeId,
+        { ...titreEtape, contenu: titreEtape.contenu ?? {} },
+        etapeDocuments,
+        entrepriseDocuments,
+        sdomZones,
+        daeDocument,
+        aslDocument
+      )
+      if (!deposable) throw new Error('droits insuffisants')
+
+      const statutIdAndDate = statutIdAndDateGet(titreEtape, user, true)
+
+      await titreEtapeUpdate(
+        titreEtape.id,
+        {
+          ...statutIdAndDate,
+        },
+        user,
+        titreDemarche.titreId
+      )
+      const etapeUpdated = await titreEtapeGet(
+        titreEtape.id,
+        {
+          fields: { id: {} },
+        },
+        user
+      )
+
+      await titreEtapeUpdateTask(pool, etapeUpdated.id, etapeUpdated.titreDemarcheId, user)
+
+      await titreEtapeAdministrationsEmailsSend(etapeUpdated, titreDemarche.typeId, titreDemarche.titreId, titreDemarche.titre!.typeId, user!, titreEtapeOld)
+
       res.sendStatus(HTTP_STATUS.HTTP_STATUS_NO_CONTENT)
     } catch (e) {
       res.sendStatus(HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR)

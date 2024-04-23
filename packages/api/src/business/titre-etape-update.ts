@@ -23,7 +23,7 @@ import { titresEtapesDepotCreate } from './processes/titres-demarches-depot-crea
 import type { UserNotNull } from 'camino-common/src/roles.js'
 import type { Pool } from 'pg'
 
-const titreEtapeUpdate = async (pool: Pool, titreEtapeId: EtapeId | null, titreDemarcheId: DemarcheId, user: UserNotNull) => {
+export const titreEtapeUpdateTask = async (pool: Pool, titreEtapeId: EtapeId | null, titreDemarcheId: DemarcheId, user: UserNotNull) => {
   try {
     console.info()
     console.info('- - -')
@@ -92,5 +92,3 @@ const titreEtapeUpdate = async (pool: Pool, titreEtapeId: EtapeId | null, titreD
     throw e
   }
 }
-
-export default titreEtapeUpdate

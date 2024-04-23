@@ -4,7 +4,6 @@
 # import * from 'geojsons.graphql'
 # import * from 'metas.graphql'
 # import * from 'territoires.graphql'
-# import * from 'documents.graphql'
 # import * from 'titres-demarches.graphql'
 
 "Étape d'une démarche effectuée sur un titre minier"
@@ -66,19 +65,11 @@ type Etape {
   "Zones du SDOM"
   sdomZones: [String]
 
-  "Documents relatifs à l'étape"
-  documents: [Document]
-
   heritageProps: HeritageProps
 
   heritageContenu: Json
 
   contenu: Json
-
-  "Les sections des décisions annexes nécessaires à la demande"
-  decisionsAnnexesSections: Json
-  "Le contenu des décisions annexes nécessaires à la demande"
-  decisionsAnnexesContenu: Json
 
   notes: String
 
@@ -176,9 +167,40 @@ input InputEtapeCreation {
   heritageProps: InputHeritageProps
   heritageContenu: Json
   contenu: Json
-  documentIds: [ID]
+  etapeDocuments: [InputEtapeDocumentCreation]
   entrepriseDocumentIds: [ID]
   notes: String
+}
+
+input DaeDocument {
+  id: String
+  temp_document_name: String
+  etape_document_type_id: String!
+  description: String
+  public_lecture: Boolean!
+  entreprises_lecture: Boolean!
+  etape_statut_id: String!
+  date: String!
+  arrete_prefectoral: String
+}
+
+input AslDocument {
+  id: String
+  temp_document_name: String
+  etape_document_type_id: String!
+  description: String
+  public_lecture: Boolean!
+  entreprises_lecture: Boolean!
+  etape_statut_id: String!
+  date: String!
+}
+
+input InputEtapeDocumentCreation {
+  temp_document_name: String!
+  etape_document_type_id: String!
+  description: String
+  public_lecture: Boolean!
+  entreprises_lecture: Boolean!
 }
 
 input InputEtapeModification {
@@ -197,9 +219,8 @@ input InputEtapeModification {
   heritageProps: InputHeritageProps
   heritageContenu: Json
   contenu: Json
-  documentIds: [ID]
+  etapeDocuments: [InputEtapeDocumentModification]
   entrepriseDocumentIds: [ID]
-  decisionsAnnexesContenu: Json
   notes: String
   geojson4326Perimetre: Json
   geojson4326Points: Json
@@ -207,6 +228,17 @@ input InputEtapeModification {
   geojsonOriginePerimetre: Json
   geojsonOrigineForages: Json
   geojsonOrigineGeoSystemeId: String
+  daeDocument: DaeDocument
+  aslDocument: AslDocument
+}
+
+input InputEtapeDocumentModification {
+  id: ID
+  temp_document_name: String
+  etape_document_type_id: String!
+  description: String
+  public_lecture: Boolean!
+  entreprises_lecture: Boolean!
 }
 
 input InputEtapeFiltre {

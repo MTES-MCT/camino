@@ -19,7 +19,7 @@ describe('valide l’étape avant de l’enregistrer', () => {
       typeId: 'arm',
     } as unknown as ITitre
 
-    let errors = titreEtapeUpdationValidate(titreEtape, titreDemarche, titre, [], [], [], userSuper)
+    let errors = titreEtapeUpdationValidate(titreEtape, titreDemarche, titre, [], [], [], userSuper, null, null)
     expect(errors).not.toContain("une autorisation de recherche ne peut pas inclure d'amodiataires")
     expect(errors).not.toContain("une autorisation d'exploitation ne peut pas inclure d'amodiataires")
 
@@ -28,7 +28,7 @@ describe('valide l’étape avant de l’enregistrer', () => {
       amodiataires: [{ id: 'foo', nom: 'bar', operateur: true }],
     } as unknown as ITitreEtape
 
-    errors = titreEtapeUpdationValidate(titreEtape, titreDemarche, titre, [], [], [], userSuper)
+    errors = titreEtapeUpdationValidate(titreEtape, titreDemarche, titre, [], [], [], userSuper, null, null)
     expect(errors).toContain("une autorisation de recherche ne peut pas inclure d'amodiataires")
 
     // // AXM
@@ -42,7 +42,7 @@ describe('valide l’étape avant de l’enregistrer', () => {
       typeId: 'axm',
     } as unknown as ITitre
 
-    errors = titreEtapeUpdationValidate(titreEtape, titreDemarche, titre, [], [], [], userSuper)
+    errors = titreEtapeUpdationValidate(titreEtape, titreDemarche, titre, [], [], [], userSuper, null, null)
     expect(errors).not.toContain("une autorisation d'exploitation ne peut pas inclure d'amodiataires")
     expect(errors).not.toContain("une autorisation de recherche ne peut pas inclure d'amodiataires")
 
@@ -51,7 +51,7 @@ describe('valide l’étape avant de l’enregistrer', () => {
       amodiataires: [{ id: 'foo', nom: 'bar', operateur: true }],
     } as unknown as ITitreEtape
 
-    errors = titreEtapeUpdationValidate(titreEtape, titreDemarche, titre, [], [], [], userSuper)
+    errors = titreEtapeUpdationValidate(titreEtape, titreDemarche, titre, [], [], [], userSuper, null, null)
     expect(errors).toContain("une autorisation d'exploitation ne peut pas inclure d'amodiataires")
   })
 })
