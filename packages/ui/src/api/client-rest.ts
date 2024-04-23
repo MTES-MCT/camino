@@ -11,6 +11,7 @@ import {
   PostRestRoutes,
   PutRestRoutes,
 } from 'camino-common/src/rest'
+import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { DeepReadonly } from 'vue'
 import { z } from 'zod'
 
@@ -46,12 +47,14 @@ const callFetch = async <T extends CaminoRestRoute>(
     headers: { 'Content-Type': 'application/json' },
   }
 
-  const fetched = await fetch(url, body ? { ...defaultOptions, body: JSON.stringify(body) } : defaultOptions)
+  const fetched = await fetch(url, isNotNullNorUndefined(body) ? { ...defaultOptions, body: JSON.stringify(body) } : defaultOptions)
   if (fetched.ok) {
     if (fetched.status === 200) {
       const body = await fetched.json()
+
       return body
     }
+
     return
   }
   if (fetched.status === HTTP_STATUS.HTTP_STATUS_UNAUTHORIZED) {
@@ -65,19 +68,19 @@ export const getWithJson = async <T extends GetRestRoutes>(
   path: T,
   params: CaminoRestParams<T>,
   searchParams: Record<string, string | string[]> = {}
-): Promise<z.infer<(typeof CaminoRestRoutes)[T]['get']['output']>> => await callFetch(path, params, 'get', searchParams)
+): Promise<z.infer<(typeof CaminoRestRoutes)[T]['get']['output']>> => callFetch(path, params, 'get', searchParams)
 
 export const deleteWithJson = async <T extends DeleteRestRoutes>(path: T, params: CaminoRestParams<T>, searchParams: Record<string, string | string[]> = {}): Promise<void> =>
-  await callFetch(path, params, 'delete', searchParams)
+  callFetch(path, params, 'delete', searchParams)
 
 export const postWithJson = async <T extends PostRestRoutes>(
   path: T,
   params: CaminoRestParams<T>,
   body: z.infer<(typeof CaminoRestRoutes)[T]['post']['input']>
-): Promise<z.infer<(typeof CaminoRestRoutes)[T]['post']['output']>> => await callFetch(path, params, 'post', {}, body)
+): Promise<z.infer<(typeof CaminoRestRoutes)[T]['post']['output']>> => callFetch(path, params, 'post', {}, body)
 
 export const putWithJson = async <T extends PutRestRoutes>(
   path: T,
   params: CaminoRestParams<T>,
   body: DeepReadonly<z.infer<(typeof CaminoRestRoutes)[T]['put']['input']>>
-): Promise<z.infer<(typeof CaminoRestRoutes)[T]['put']['output']>> => await callFetch(path, params, 'put', {}, body)
+): Promise<z.infer<(typeof CaminoRestRoutes)[T]['put']['output']>> => callFetch(path, params, 'put', {}, body)

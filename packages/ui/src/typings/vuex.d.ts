@@ -1,4 +1,4 @@
-import { DeepMutable, NonEmptyArray } from 'camino-common/src/typescript-tools'
+import { DeepMutable } from 'camino-common/src/typescript-tools'
 import { Store } from 'vuex'
 
 /* eslint-disable no-unused-vars */

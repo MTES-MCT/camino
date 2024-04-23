@@ -1,11 +1,12 @@
+import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { FunctionalComponent } from 'vue'
 
 interface Props {
   duree?: number
 }
 export const PropDuree: FunctionalComponent<Props> = props => {
-  const ans = props.duree ? Math.floor(props.duree / 12) : null
-  const mois = props.duree ? Math.floor(props.duree % 12) : null
+  const ans = isNotNullNorUndefined(props.duree) ? Math.floor(props.duree / 12) : 0
+  const mois = isNotNullNorUndefined(props.duree) ? Math.floor(props.duree % 12) : 0
 
   return (
     <span>

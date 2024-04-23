@@ -1,4 +1,4 @@
-import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
+import { isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools'
 import { Router } from 'vue-router'
 
 export const initMatomo = async (options: { router: Router; host: string; siteId: string; environnement: string }) => {
@@ -37,7 +37,10 @@ const bootstrap = (host: string, trackerFileName: string): Promise<unknown> => {
     script.defer = true
     script.src = filename
 
-    const head = document.head || document.getElementsByTagName('head')[0]
+    let head = document.head
+    if (isNullOrUndefined(head)) {
+      head = document.getElementsByTagName('head')[0]
+    }
     head.appendChild(script)
 
     script.onload = resolve

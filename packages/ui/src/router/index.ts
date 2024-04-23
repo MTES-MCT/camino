@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
-import store from '../store'
 
 import { Dashboard } from '../components/dashboard'
 import { DGTMStatsFull } from '../components/dashboard/dgtm-stats-full'
@@ -8,120 +7,148 @@ import { EtapeEdition } from '../components/etape-edition'
 
 const TitreCreation = async () => {
   const { TitreCreation } = await import('../components/titre-creation')
+
   return TitreCreation
 }
 
 const Activite = async () => {
   const { Activite } = await import('../components/activite')
+
   return Activite
 }
 
 const ActiviteEdition = async () => {
   const { ActiviteEdition } = await import('../components/activite-edition')
+
   return ActiviteEdition
 }
 const Activites = async () => {
   const { Activites } = await import('../components/activites')
+
   return Activites
 }
 const Demarches = async () => {
   const { Demarches } = await import('../components/demarches')
+
   return Demarches
 }
 const Demarche = async () => {
   const { Demarche } = await import('../components/demarche')
+
   return Demarche
 }
 const Travaux = async () => {
   const { Travaux } = await import('../components/travaux')
+
   return Travaux
 }
 
 const Titre = async () => {
   const { Titre } = await import('../components/titre')
+
   return Titre
 }
 
 const Utilisateur = async () => {
   const { Utilisateur } = await import('../components/utilisateur')
+
   return Utilisateur
 }
 const Utilisateurs = async () => {
   const { Utilisateurs } = await import('../components/utilisateurs')
+
   return Utilisateurs
 }
 const Entreprise = async () => {
   const { Entreprise } = await import('../components/entreprise')
+
   return Entreprise
 }
 const Entreprises = async () => {
   const { Entreprises } = await import('../components/entreprises')
+
   return Entreprises
 }
 const Administration = async () => {
   const { Administration } = await import('../components/administration')
+
   return Administration
 }
 const Administrations = async () => {
   const { Administrations } = await import('../components/administrations')
+
   return Administrations
 }
 const Meta = async () => {
   const { Meta } = await import('../components/meta')
+
   return Meta
 }
 
 const MetaTitre = async () => {
   const { MetaTitre } = await import('../components/meta-titre')
+
   return MetaTitre
 }
 const MetaDemarche = async () => {
   const { MetaDemarche } = await import('../components/meta-demarche')
+
   return MetaDemarche
 }
 const MetaEtape = async () => {
   const { MetaEtape } = await import('../components/meta-etape')
+
   return MetaEtape
 }
 const MetaActivite = async () => {
   const { MetaActivite } = await import('../components/meta-activite')
+
   return MetaActivite
 }
 const Metas = async () => {
   const { Metas } = await import('../components/metas')
+
   return Metas
 }
 const CaminoError = async () => {
   const { CaminoError } = await import('../components/error')
+
   return CaminoError
 }
 const StatistiquesGlobales = async () => {
   const { Globales } = await import('../components/statistiques/globales')
+
   return Globales
 }
 const Statistiques = async () => {
   const { Statistiques } = await import('../components/statistiques')
+
   return Statistiques
 }
 const StatsGuyane = async () => {
   const { Guyane } = await import('../components/statistiques/guyane')
+
   return Guyane
 }
 const StatistiquesGranulatsMarins = async () => {
   const { GranulatsMarins } = await import('../components/statistiques/granulats-marins')
+
   return GranulatsMarins
 }
 const StatistiquesMinerauxMetauxMetropole = async () => {
   const { MinerauxMetauxMetropole } = await import('../components/statistiques/mineraux-metaux-metropole')
+
   return MinerauxMetauxMetropole
 }
 const Journaux = async () => {
   const { Journaux } = await import('../components/journaux')
+
   return Journaux
 }
 
 const About = async () => {
   const { About } = await import('../components/content/about')
+
   return About
 }
 
@@ -466,7 +493,7 @@ const router = createRouter({
   linkExactActiveClass: 'exact-active',
   scrollBehavior(to, from, savedPosition) {
     if (savedPosition) {
-      return new Promise((resolve, reject) => {
+      return new Promise(resolve => {
         setTimeout(() => {
           resolve(savedPosition)
         }, 500)

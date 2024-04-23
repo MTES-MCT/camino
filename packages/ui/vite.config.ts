@@ -3,7 +3,6 @@ import { defineConfig } from 'vite'
 import { nodeResolve } from '@rollup/plugin-node-resolve'
 import dotenv from 'dotenv'
 import path from 'path'
-import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 import inject from '@rollup/plugin-inject'
 import { visualizer } from 'rollup-plugin-visualizer'
@@ -14,7 +13,7 @@ dotenv.config({ path: path.resolve(process.cwd(), '../../.env') })
 const commitHash = process.env.GIT_SHA ? process.env.GIT_SHA : execSync('git rev-parse --short HEAD').toString()
 
 export default defineConfig({
-  plugins: [vue(), vueJsx(), visualizer()],
+  plugins: [vueJsx(), visualizer()],
   root: 'src',
   resolve: {
     alias: {

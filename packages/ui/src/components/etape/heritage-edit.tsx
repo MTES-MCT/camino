@@ -1,4 +1,4 @@
-import { dateFormat } from '@/utils'
+import { dateFormat } from 'camino-common/src/date'
 import { DeepReadonly, HTMLAttributes, defineComponent } from 'vue'
 import { EtapeWithHeritage, HeritageProp } from 'camino-common/src/etape'
 import { MappingHeritagePropsNameEtapePropsName } from 'camino-common/src/heritage'

@@ -172,8 +172,6 @@ export const Table = defineComponent(
 
 export const DisplayColumn = (props: { data: ComponentColumnData | TextColumnData }): JSX.Element => {
   if (isComponentColumnData(props.data)) {
-    const myComp = props.data.component
-
     if (props.data.value !== undefined) {
       return (
         <myComp {...props.data.props} class={props.data.class ?? ''}>

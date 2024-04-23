@@ -7,11 +7,11 @@ type Props = {
   color?: `bg-${Couleur}` | `bg-domaine-${DomaineId}`
   text: string
   noCapitalize?: boolean
-} & HTMLAttributes
+} & Pick<HTMLAttributes, 'class' | 'style'>
 
 export const Pill: FunctionalComponent<Props> = props => {
   let text = capitalize(props.text)
-  if (props.noCapitalize) {
+  if (props.noCapitalize ?? false) {
     text = props.text
   }
 

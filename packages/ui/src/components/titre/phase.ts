@@ -4,7 +4,7 @@ import { TitreGetDemarche } from 'camino-common/src/titres'
 import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts'
 import { isEtapeStatusOk } from 'camino-common/src/static/etapesStatuts'
 import { isEtapeDecision } from 'camino-common/src/static/etapesTypes'
-import { isNotNullNorUndefined, isNullOrUndefined, isNullOrUndefinedOrEmpty, OmitDistributive, onlyUnique } from 'camino-common/src/typescript-tools'
+import { isNotNullNorUndefined, isNullOrUndefined, isNullOrUndefinedOrEmpty, OmitDistributive } from 'camino-common/src/typescript-tools'
 import { DemarcheSlug } from 'camino-common/src/demarche'
 import { isTravaux } from 'camino-common/src/static/demarchesTypes'
 
@@ -51,6 +51,7 @@ export const phaseWithAlterations = (demarches: TitreGetDemarche[], currentDate:
       .filter(isNotNullNorUndefined)
     const foundAlterations = demarchesAlterationsForThisPhase.map(demarche => ({ ...demarche, events: [] }))
     demarchesUsed.push(...foundAlterations.map(({ slug }) => slug))
+
     return [phase, ...foundAlterations]
   })
 

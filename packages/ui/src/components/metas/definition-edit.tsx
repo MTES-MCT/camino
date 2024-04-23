@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
+
 import { computed, defineComponent, onMounted, onUnmounted, ref } from 'vue'
 import { MetaIndexTable, metasIndex } from '@/store/metas-definitions'
 import { useStore } from 'vuex'

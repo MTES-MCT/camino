@@ -8,8 +8,8 @@ export interface JournauxApiClient {
 
 export const journauxApiClient: JournauxApiClient = {
   // TODO 2023-06-22 check with zod?
-  getJournaux: async (params: JournauxQueryParams): Promise<Journaux> => {
-    return await apiGraphQLFetch(gql`
+  getJournaux: async (params: JournauxQueryParams): Promise<Journaux> =>
+    apiGraphQLFetch(gql`
       query Journaux($page: Int!, $recherche: String, $titresIds: [String]) {
         journaux(page: $page, recherche: $recherche, titresIds: $titresIds) {
           elements {
@@ -31,6 +31,5 @@ export const journauxApiClient: JournauxApiClient = {
       }
     `)({
       ...params,
-    })
-  },
+    }),
 }

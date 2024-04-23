@@ -2,7 +2,6 @@ import { apiGraphQLFetch } from '@/api/_client'
 import { deleteWithJson, getWithJson, putWithJson } from '@/api/client-rest'
 import { CaminoDate, caminoDateValidator } from 'camino-common/src/date'
 import { DemarcheId, demarcheIdValidator, demarcheSlugValidator } from 'camino-common/src/demarche'
-import { tempDocumentNameValidator } from 'camino-common/src/document'
 import { entrepriseDocumentIdValidator, entrepriseIdValidator } from 'camino-common/src/entreprise'
 import {
   EtapeId,
@@ -12,7 +11,6 @@ import {
   GetEtapeDocumentsByEtapeId,
   documentComplementaireAslEtapeDocumentModificationValidator,
   documentComplementaireDaeEtapeDocumentModificationValidator,
-  etapeDocumentIdValidator,
   etapeDocumentModificationValidator,
   etapeIdValidator,
   etapeSlugValidator,
@@ -20,7 +18,6 @@ import {
 import { km2Validator } from 'camino-common/src/number'
 import { featureCollectionForagesValidator, featureCollectionPointsValidator, featureMultiPolygonValidator } from 'camino-common/src/perimetre'
 import { demarcheTypeIdValidator } from 'camino-common/src/static/demarchesTypes'
-import { documentTypeIdValidator } from 'camino-common/src/static/documentsTypes'
 import { etapeStatutIdValidator } from 'camino-common/src/static/etapesStatuts'
 import { EtapeTypeId, etapeTypeIdValidator } from 'camino-common/src/static/etapesTypes'
 import { geoSystemeIdValidator } from 'camino-common/src/static/geoSystemes'
@@ -338,6 +335,7 @@ export const etapeApiClient: EtapeApiClient = {
       return result.data
     }
     console.log(result.error.message)
+
     return graphqlEtapeValidator.parse(data)
   },
   getEtapeHeritagePotentiel: async (titreDemarcheId: DemarcheId, date: CaminoDate, typeId: EtapeTypeId, etapeId: EtapeId | null) => {
@@ -425,6 +423,7 @@ export const etapeApiClient: EtapeApiClient = {
       typeId,
       etapeId,
     })
+
     return heritageValidator.parse(data)
   },
 

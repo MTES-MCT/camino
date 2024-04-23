@@ -105,6 +105,7 @@ export const activiteApiClient: ActiviteApiClient = {
     `)({
       ...params,
     })
+
     return data
   },
   getActivite: async (activiteIdOrSlug: ActiviteIdOrSlug) => {

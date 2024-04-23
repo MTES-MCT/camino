@@ -74,6 +74,7 @@ export const demarcheApiClient: DemarcheApiClient = {
     `)({
       demarche,
     })
+
     return value.slug
   },
 
@@ -165,6 +166,7 @@ export const demarcheApiClient: DemarcheApiClient = {
     `)({
       ...params,
     })
+
     return data
   },
 }

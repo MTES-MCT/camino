@@ -43,6 +43,7 @@ export const apiClient: ApiClient = {
   ...perimetreApiClient,
   uploadTempDocument: async (document: File) => {
     const tempDocumentName = await uploadCall(document, _progress => {})
+
     return tempDocumentName
   },
 }

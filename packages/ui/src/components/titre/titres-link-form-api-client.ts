@@ -33,13 +33,9 @@ export interface TitresLinkFormApiClient {
 }
 
 export const titresLinkFormApiClient: TitresLinkFormApiClient = {
-  linkTitres: async (titreId: TitreId, titreFromIds: TitreId[]): Promise<TitreLinks> => {
-    return await postWithJson('/rest/titres/:id/titreLiaisons', { id: titreId }, titreFromIds)
-  },
+  linkTitres: async (titreId: TitreId, titreFromIds: TitreId[]): Promise<TitreLinks> => postWithJson('/rest/titres/:id/titreLiaisons', { id: titreId }, titreFromIds),
 
-  loadTitreLinks: async (titreId: TitreId) => {
-    return await getWithJson('/rest/titres/:id/titreLiaisons', { id: titreId })
-  },
+  loadTitreLinks: async (titreId: TitreId) => getWithJson('/rest/titres/:id/titreLiaisons', { id: titreId }),
 
   loadLinkableTitres: (titreTypeId: TitreTypeId, demarches: { demarche_type_id: DemarcheTypeId }[]) => async () => {
     const linkConfig = getLinkConfig(titreTypeId, demarches)
@@ -66,6 +62,7 @@ export const titresLinkFormApiClient: TitresLinkFormApiClient = {
         typesIds: [titreTypeFrom.typeId],
         domainesIds: [titreTypeFrom.domaineId],
       })
+
       return result.elements
     } else {
       return []

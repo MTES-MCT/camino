@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
+
 import { metasIndex } from './metas-definitions'
 import { nextTick } from 'vue'
 
@@ -12,7 +14,7 @@ const getters = {
 }
 
 const actions = {
-  async get({ dispatch, commit, state }, id) {
+  async get({ _dispatch, commit, state }, id) {
     try {
       if (metasIndex[id]) {
         const definition = metasIndex[id]

@@ -3,7 +3,7 @@ import { TitreId, TitreIdOrSlug } from 'camino-common/src/validators/titres'
 import { deleteWithJson, getWithJson, postWithJson } from '../../api/client-rest'
 import { CaminoDate } from 'camino-common/src/date'
 import { CommuneId } from 'camino-common/src/static/communes'
-import { Entreprise, EntrepriseId } from 'camino-common/src/entreprise'
+import { EntrepriseId } from 'camino-common/src/entreprise'
 import { apiGraphQLFetch } from '@/api/_client'
 import gql from 'graphql-tag'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
@@ -185,6 +185,7 @@ export const titreApiClient: TitreApiClient = {
         }
       `
     )(params)
+
     return { elements, total }
   },
   getTitresForCarte: async params => {
@@ -241,6 +242,7 @@ export const titreApiClient: TitreApiClient = {
         }
       `
     )(params)
+
     return result
   },
   getTitresWithPerimetreForCarte: async params => {
@@ -298,6 +300,7 @@ export const titreApiClient: TitreApiClient = {
         }
       `
     )(params)
+
     return result
   },
   titresRechercherByNom: async noms => {
@@ -317,6 +320,7 @@ export const titreApiClient: TitreApiClient = {
         }
       `
     )({ noms })
+
     return result
   },
 
@@ -334,6 +338,7 @@ export const titreApiClient: TitreApiClient = {
       `,
       cacheKey
     )({ titresIds })
+
     return result
   },
 

@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
+
 import { caminoDefineComponent, isEventWithTarget } from '@/utils/vue-tsx-utils'
 import { CaminoDate, getAnnee, getDay, getMois, isCaminoDate, toCaminoDate } from 'camino-common/src/date'
 import { ref } from 'vue'

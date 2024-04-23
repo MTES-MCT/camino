@@ -5,7 +5,7 @@ import { clustersBuild, layersBuild, zones, TitreWithPerimetre, CaminoMarkerClus
 import { DomaineId, isDomaineId } from 'camino-common/src/static/domaines'
 import { Router, onBeforeRouteLeave } from 'vue-router'
 import { Layer, LayerGroup, Marker, layerGroup } from 'leaflet'
-import { getEntriesHardcore, getKeys, isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
+import { getEntriesHardcore, getKeys, isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools'
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { DsfrButton } from '../_ui/dsfr-button'
 import { routerQueryToNumber, routerQueryToNumberArray } from '@/router/camino-router-link'
@@ -138,20 +138,20 @@ export const CaminoTitresMap = caminoDefineComponent<Props>(['titres', 'updateCa
   const titresPreferencesUpdate = async (params: { center?: [number, number]; zoom?: number; bbox?: [number, number, number, number] }) => {
     let ourParam = { ...savedParams.value }
     if (ourParam === null) {
-      if (!params.center || !params.zoom || !params.bbox) {
+      if (isNullOrUndefined(params.center) || isNullOrUndefined(params.zoom) || isNullOrUndefined(params.bbox)) {
         console.error('Les paramètres ne sont pas initialisés et ne sont pas tous là')
       } else {
         ourParam = { centre: params.center, zoom: params.zoom, perimetre: params.bbox }
       }
     } else {
-      if (params.zoom) {
+      if (isNotNullNorUndefined(params.zoom)) {
         ourParam.zoom = params.zoom
       }
-      if (params.center) {
+      if (isNotNullNorUndefined(params.center)) {
         ourParam.centre = params.center
       }
 
-      if (params.bbox) {
+      if (isNotNullNorUndefined(params.bbox)) {
         ourParam.perimetre = params.bbox
       }
     }

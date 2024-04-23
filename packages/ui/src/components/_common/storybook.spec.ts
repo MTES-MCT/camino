@@ -43,7 +43,7 @@ describe('Common Storybook Tests', async () => {
     test.skipIf(name?.includes('NoStoryshots')).each(
       Object.entries(compose(storyFile))
         .map(([name, story]) => ({ name, story }))
-        .filter(env => name?.includes('NoStoryshots') || !env.name?.includes('NoSnapshot'))
+        .filter(env => (name ?? '').includes('NoStoryshots') || !(env.name ?? '').includes('NoSnapshot'))
     )('$name', async value => {
       setSeed(12)
       try {

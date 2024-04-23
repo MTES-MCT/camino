@@ -1,4 +1,5 @@
 import { caminoDefineComponent, isEventWithTarget, random } from '@/utils/vue-tsx-utils'
+import { isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
 
 export type Props = {
   id?: string
@@ -22,7 +23,7 @@ export const DsfrInputCheckbox = caminoDefineComponent<Props>(['id', 'initialVal
       <input onInput={updateFromEvent} disabled={props.disabled ?? false} checked={props.initialValue ?? false} name="archive" id={id} type="checkbox" />
       <label class="fr-label" for={id}>
         {props.legend.main}
-        {props.legend.description ? <span class="fr-hint-text">{props.legend.description}</span> : null}
+        {isNotNullNorUndefinedNorEmpty(props.legend.description) ? <span class="fr-hint-text">{props.legend.description}</span> : null}
       </label>
     </div>
   )

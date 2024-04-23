@@ -1,5 +1,4 @@
-import { dateFormat } from '@/utils'
-import { CaminoDate } from 'camino-common/src/date'
+import { CaminoDate, dateFormat } from 'camino-common/src/date'
 import { FunctionalComponent } from 'vue'
 
 interface Props {

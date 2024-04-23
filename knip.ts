@@ -40,7 +40,7 @@ const config = {
     },
     "packages/ui": {
       "entry": "src/index.ts",
-      "project": ["src/**/*.tsx","src/**/*.ts", "src/**/*.js", "src/**/*.vue"],
+      "project": ["src/**/*.tsx","src/**/*.ts", "src/**/*.js"],
       ignoreDependencies: ["@vitest/coverage-v8",
       "@babel/eslint-parser",
       "@sentry/tracing",
