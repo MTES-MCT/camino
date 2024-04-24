@@ -30,7 +30,7 @@ exports[`getDocuments surcharge 2`] = `
   },
   {
     "id": "doe",
-    "nom": "Dossier \\"Loi sur l'eau\\"",
+    "nom": "Dossier "Loi sur l'eau"",
     "optionnel": true,
   },
   {
@@ -87,7 +87,7 @@ exports[`getDocuments surcharge 2`] = `
   },
   {
     "id": "rec",
-    "nom": "Récépissé \\"Loi sur l'eau\\"",
+    "nom": "Récépissé "Loi sur l'eau"",
     "optionnel": true,
   },
   {

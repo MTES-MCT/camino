@@ -283,7 +283,7 @@ test('getDocumentsTypes', () => {
       {
         "description": undefined,
         "id": "doe",
-        "nom": "Dossier \\"Loi sur l'eau\\"",
+        "nom": "Dossier "Loi sur l'eau"",
         "optionnel": true,
       },
       {
@@ -341,7 +341,7 @@ test('getDocumentsTypes', () => {
       },
       {
         "id": "rec",
-        "nom": "Récépissé \\"Loi sur l'eau\\"",
+        "nom": "Récépissé "Loi sur l'eau"",
         "optionnel": true,
       },
     ]
@@ -379,7 +379,7 @@ test('getDocumentsTypes', () => {
       {
         "description": undefined,
         "id": "doe",
-        "nom": "Dossier \\"Loi sur l'eau\\"",
+        "nom": "Dossier "Loi sur l'eau"",
         "optionnel": false,
       },
       {
@@ -437,7 +437,7 @@ test('getDocumentsTypes', () => {
       },
       {
         "id": "rec",
-        "nom": "Récépissé \\"Loi sur l'eau\\"",
+        "nom": "Récépissé "Loi sur l'eau"",
         "optionnel": true,
       },
     ]
@@ -473,7 +473,7 @@ test('getDocumentsTypes', () => {
       },
       {
         "id": "doe",
-        "nom": "Dossier \\"Loi sur l'eau\\"",
+        "nom": "Dossier "Loi sur l'eau"",
         "optionnel": true,
       },
       {
@@ -530,7 +530,7 @@ test('getDocumentsTypes', () => {
       },
       {
         "id": "rec",
-        "nom": "Récépissé \\"Loi sur l'eau\\"",
+        "nom": "Récépissé "Loi sur l'eau"",
         "optionnel": true,
       },
       {
@@ -621,7 +621,7 @@ test('getDocumentsTypes', () => {
       },
       {
         "id": "doe",
-        "nom": "Dossier \\"Loi sur l'eau\\"",
+        "nom": "Dossier "Loi sur l'eau"",
         "optionnel": true,
       },
       {
@@ -678,7 +678,7 @@ test('getDocumentsTypes', () => {
       },
       {
         "id": "rec",
-        "nom": "Récépissé \\"Loi sur l'eau\\"",
+        "nom": "Récépissé "Loi sur l'eau"",
         "optionnel": true,
       },
       {

@@ -92,7 +92,7 @@ describe('sectionsWithValueCompleteValidate', () => {
   test('les sections ne sont pas complètes', () => {
     expect(sectionsWithValueCompleteValidate([{ nom: 'section', elements: [{ nom: 'element', type: 'text', optionnel: false, value: '' }] }])).toMatchInlineSnapshot(`
       [
-        "l’élément \\"element\\" de la section \\"section\\" est obligatoire",
+        "l’élément "element" de la section "section" est obligatoire",
       ]
     `)
     expect(
@@ -114,10 +114,10 @@ describe('sectionsWithValueCompleteValidate', () => {
       ])
     ).toMatchInlineSnapshot(`
       [
-        "l’élément \\"element1\\" de la section \\"section1\\" est obligatoire",
-        "l’élément \\"element2\\" de la section \\"section1\\" est obligatoire",
-        "l’élément \\"element1\\" de la section \\"section2\\" est obligatoire",
-        "l’élément \\"element2\\" de la section \\"section2\\" est obligatoire",
+        "l’élément "element1" de la section "section1" est obligatoire",
+        "l’élément "element2" de la section "section1" est obligatoire",
+        "l’élément "element1" de la section "section2" est obligatoire",
+        "l’élément "element2" de la section "section2" est obligatoire",
       ]
     `)
   })

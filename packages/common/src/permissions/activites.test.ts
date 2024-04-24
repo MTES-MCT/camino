@@ -209,7 +209,7 @@ describe('isActiviteDocumentsComplete', () => {
     expect(isActiviteDocumentsComplete([], ACTIVITES_TYPES_IDS["rapport d'exploitation (permis et concessions W)"])).toMatchInlineSnapshot(`
       {
         "errors": [
-          "le document \\"rgr\\" est obligatoire",
+          "le document "rgr" est obligatoire",
         ],
         "valid": false,
       }
@@ -311,7 +311,7 @@ describe('isActiviteComplete', () => {
     ).toMatchInlineSnapshot(`
       {
         "errors": [
-          "l’élément \\"element\\" de la section \\"section\\" est obligatoire",
+          "l’élément "element" de la section "section" est obligatoire",
         ],
         "valid": false,
       }
@@ -326,7 +326,7 @@ describe('isActiviteComplete', () => {
     expect(isActiviteComplete([], ACTIVITES_TYPES_IDS["rapport d'exploitation (permis et concessions W)"], [])).toMatchInlineSnapshot(`
       {
         "errors": [
-          "le document \\"rgr\\" est obligatoire",
+          "le document "rgr" est obligatoire",
         ],
         "valid": false,
       }

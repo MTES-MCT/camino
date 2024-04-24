@@ -4,7 +4,7 @@ const activitesSectionsProd = require('./activites.sections.json')
 
 test('getSections erreurs', () => {
   expect(() => getSections(undefined, undefined, undefined)).toThrowErrorMatchingInlineSnapshot(
-    '"il manque des éléments pour trouver les sections titreTypeId: \'undefined\', demarcheId: undefined, etapeTypeId: undefined"'
+    `[Error: il manque des éléments pour trouver les sections titreTypeId: 'undefined', demarcheId: undefined, etapeTypeId: undefined]`
   )
 })
 

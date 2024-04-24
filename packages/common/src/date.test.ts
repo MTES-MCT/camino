@@ -32,9 +32,9 @@ test('dateFormat', () => {
 test('getAnnee', () => {
   expect(getAnnee(toCaminoDate('2022-12-01'))).toBe('2022')
   expect(getAnnee(toCaminoDate('1812-01-02'))).toBe('1812')
-  expect(() => getAnnee(toCaminoDate('toto'))).toThrowErrorMatchingInlineSnapshot(`"Invalid date string: toto"`)
-  expect(() => getAnnee(toCaminoDate('12'))).toThrowErrorMatchingInlineSnapshot(`"Invalid date string: 12"`)
-  expect(() => getAnnee(toCaminoDate('20220'))).toThrowErrorMatchingInlineSnapshot(`"Invalid date string: 20220"`)
+  expect(() => getAnnee(toCaminoDate('toto'))).toThrowErrorMatchingInlineSnapshot(`[Error: Invalid date string: toto]`)
+  expect(() => getAnnee(toCaminoDate('12'))).toThrowErrorMatchingInlineSnapshot(`[Error: Invalid date string: 12]`)
+  expect(() => getAnnee(toCaminoDate('20220'))).toThrowErrorMatchingInlineSnapshot(`[Error: Invalid date string: 20220]`)
 })
 
 test('getMois', () => {
@@ -61,9 +61,9 @@ test('toCaminoAnnee', () => {
   expect(toCaminoAnnee('1812')).toBe('1812')
   expect(toCaminoAnnee(2022)).toBe('2022')
   expect(toCaminoAnnee(1812)).toBe('1812')
-  expect(() => toCaminoAnnee('toto')).toThrowErrorMatchingInlineSnapshot(`"l'année toto n'est pas une année valide"`)
-  expect(() => toCaminoAnnee('12')).toThrowErrorMatchingInlineSnapshot(`"l'année 12 n'est pas une année valide"`)
-  expect(() => toCaminoAnnee('20220')).toThrowErrorMatchingInlineSnapshot(`"l'année 20220 n'est pas une année valide"`)
+  expect(() => toCaminoAnnee('toto')).toThrowErrorMatchingInlineSnapshot(`[Error: l'année toto n'est pas une année valide]`)
+  expect(() => toCaminoAnnee('12')).toThrowErrorMatchingInlineSnapshot(`[Error: l'année 12 n'est pas une année valide]`)
+  expect(() => toCaminoAnnee('20220')).toThrowErrorMatchingInlineSnapshot(`[Error: l'année 20220 n'est pas une année valide]`)
 })
 
 test('daysBetween', () => {

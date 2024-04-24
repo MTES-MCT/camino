@@ -361,8 +361,8 @@ test('[DEPRECATED] une demande d’ARM mécanisée a des documents obligatoires 
   expect(errors).toMatchInlineSnapshot(`
     {
       "errors": [
-        "le document \\"dep\\" est obligatoire",
-        "le document \\"doe\\" est obligatoire",
+        "le document "dep" est obligatoire",
+        "le document "doe" est obligatoire",
       ],
       "valid": false,
     }
@@ -384,8 +384,8 @@ test('une demande d’ARM mécanisée a des documents obligatoires supplémentai
   expect(errors).toMatchInlineSnapshot(`
     {
       "errors": [
-        "le document \\"dep\\" est obligatoire",
-        "le document \\"doe\\" est obligatoire",
+        "le document "dep" est obligatoire",
+        "le document "doe" est obligatoire",
       ],
       "valid": false,
     }
