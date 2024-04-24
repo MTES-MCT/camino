@@ -60,7 +60,7 @@ test/api-integration:
 ifndef CI
 	npm run test:integration -w packages/api
 else
-	npm run test:integration -w packages/api -- api/rest/perimetre.test.integration.ts --coverage
+	npm run test:integration -w packages/api -- --coverage
 endif
 
 lint/ui:
