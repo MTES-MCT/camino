@@ -62,7 +62,8 @@ class DbManager {
     console.info(output.stdout)
     console.error(output.stderr)
     if (output.status !== 0) {
-      throw new Error(`Migration went wrong: '${output}'`)
+      console.error(`migration went wrong ${output.status}`)
+      throw new Error(`Migration went wrong:`)
     }
   }
 
