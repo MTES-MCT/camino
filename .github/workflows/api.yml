@@ -12,52 +12,52 @@ on:
         description: 'le token docker'
         required: true
 jobs:
-  # type:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Checkout
-  #       uses: actions/checkout@v4
-  #     - name: Use Node.js
-  #       uses: actions/setup-node@v4
-  #       with:
-  #         node-version: '20.12.2'
-  #         cache: 'npm'
-  #     - name: Install
-  #       run: make install
-  #     - name: Build
-  #       run: make build/api
-  # lint:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Checkout
-  #       uses: actions/checkout@v4
-  #     - name: Use Node.js
-  #       uses: actions/setup-node@v4
-  #       with:
-  #         node-version: '20.12.2'
-  #         cache: 'npm'
-  #     - name: Install
-  #       run: make install
-  #     - name: Lint
-  #       run: make lint/api
-  # unit-test:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Checkout
-  #       uses: actions/checkout@v4
-  #     - name: Use Node.js
-  #       uses: actions/setup-node@v4
-  #       with:
-  #         node-version: '20.12.2'
-  #         cache: 'npm'
-  #     - name: Install
-  #       run: make install
-  #     - name: Unit tests
-  #       run: make test/api-unit
-  #     - uses: codecov/codecov-action@v4
-  #       with:
-  #         token: ${{ secrets.CODECOV_TOKEN }}
-  #         flags: api-unit, api
+  type:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.12.2'
+          cache: 'npm'
+      - name: Install
+        run: make install
+      - name: Build
+        run: make build/api
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.12.2'
+          cache: 'npm'
+      - name: Install
+        run: make install
+      - name: Lint
+        run: make lint/api
+  unit-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.12.2'
+          cache: 'npm'
+      - name: Install
+        run: make install
+      - name: Unit tests
+        run: make test/api-unit
+      - uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          flags: api-unit, api
   integration-test:
       runs-on: ubuntu-latest
       services:
@@ -98,70 +98,70 @@ jobs:
           with:
             token: ${{ secrets.CODECOV_TOKEN }}
             flags: api-integration, api
-  # check-queries:
-  #     runs-on: ubuntu-latest
-  #     services:
-  #       postgres:
-  #         image: postgis/postgis:15-3.3
-  #         env:
-  #           POSTGRES_USER: postgres
-  #           POSTGRES_PASSWORD: password
-  #           POSTGRES_DB: camino
-  #           PGUSER: postgres
-  #           PGPASSWORD: password
-  #         options: >-
-  #           --health-cmd pg_isready
-  #           --health-interval 10s
-  #           --health-timeout 5s
-  #           --health-retries 5
-  #         ports:
-  #           # Maps tcp port 5432 on service container to the host
-  #           - 5432:5432
-  #     steps:
-  #       - name: Checkout
-  #         uses: actions/checkout@v4
-  #       - name: Use Node.js
-  #         uses: actions/setup-node@v4
-  #         with:
-  #           node-version: '20.12.2'
-  #           cache: 'npm'
-  #       - name: Npm install
-  #         run: make install
-  #       - uses: cardinalby/export-env-action@v2
-  #         with:
-  #           envFile: '.env-example'    
-  #           expand: 'true'
-  #       - name: Migrate database and check queries
-  #         run: | 
-  #           make db/migrate
-  #           make db/check-queries
-  #           if [ ! -z  "$(git status --porcelain)" ]; then 
-  #           echo "Lancer 'make db/check-queries' sur sa machine et commiter les changements"
-  #           echo "BEGIN Git diff"
-  #           git diff
-  #           echo "END Git diff"
-  #           exit 1; 
-  #           fi
-  #         env:
-  #           PGHOST: localhost
-  #           PGPORT: 5432
-  #           PGUSER: postgres
-  #           PGPASSWORD: password  
-  #           PGDATABASE: camino   
-  # build:
-  #   needs: [unit-test, integration-test, lint, type, check-queries]
-  #   runs-on: ubuntu-latest
+  check-queries:
+      runs-on: ubuntu-latest
+      services:
+        postgres:
+          image: postgis/postgis:15-3.3
+          env:
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: password
+            POSTGRES_DB: camino
+            PGUSER: postgres
+            PGPASSWORD: password
+          options: >-
+            --health-cmd pg_isready
+            --health-interval 10s
+            --health-timeout 5s
+            --health-retries 5
+          ports:
+            # Maps tcp port 5432 on service container to the host
+            - 5432:5432
+      steps:
+        - name: Checkout
+          uses: actions/checkout@v4
+        - name: Use Node.js
+          uses: actions/setup-node@v4
+          with:
+            node-version: '20.12.2'
+            cache: 'npm'
+        - name: Npm install
+          run: make install
+        - uses: cardinalby/export-env-action@v2
+          with:
+            envFile: '.env-example'    
+            expand: 'true'
+        - name: Migrate database and check queries
+          run: | 
+            make db/migrate
+            make db/check-queries
+            if [ ! -z  "$(git status --porcelain)" ]; then 
+            echo "Lancer 'make db/check-queries' sur sa machine et commiter les changements"
+            echo "BEGIN Git diff"
+            git diff
+            echo "END Git diff"
+            exit 1; 
+            fi
+          env:
+            PGHOST: localhost
+            PGPORT: 5432
+            PGUSER: postgres
+            PGPASSWORD: password  
+            PGDATABASE: camino   
+  build:
+    needs: [unit-test, integration-test, lint, type, check-queries]
+    runs-on: ubuntu-latest
 
-  #   steps:
-  #     - name: Checkout
-  #       uses: actions/checkout@v4
-  #     - name: Build Docker image
-  #       run: docker build -t caminofr/camino-api:${GITHUB_SHA} -f Dockerfile.api .
-  #     - name: Login to Docker Hub
-  #       uses: docker/login-action@v3
-  #       with:
-  #         username: ${{ secrets.DOCKER_USERNAME }}
-  #         password: ${{ secrets.DOCKER_TOKEN }}
-  #     - name: Push Docker image to the Docker Hub
-  #       if: github.ref == 'refs/heads/master'
-  #       run: docker push caminofr/camino-api:${GITHUB_SHA}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Build Docker image
+        run: docker build -t caminofr/camino-api:${GITHUB_SHA} -f Dockerfile.api .
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_TOKEN }}
+      - name: Push Docker image to the Docker Hub
+        if: github.ref == 'refs/heads/master'
+        run: docker push caminofr/camino-api:${GITHUB_SHA}
