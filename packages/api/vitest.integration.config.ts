@@ -6,7 +6,10 @@ export default defineConfig({
   test: {
     include: ['**/*.test.integration.ts'],
     poolOptions: {
-      threads: { maxThreads: 1 },
+      threads: {
+        minThreads: 1,
+        maxThreads: 1,
+      },
     },
     setupFiles: path.resolve(__dirname, './tests/vitestSetup.ts'),
     testTimeout: 10000,
