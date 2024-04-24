@@ -7,6 +7,7 @@ import knex, { Knex } from 'knex'
 import pg, { Client } from 'pg'
 import { knexSnakeCaseMappers, Model } from 'objection'
 import { config } from '../src/config/index.js'
+import { spawnSync } from 'node:child_process'
 
 class DbManager {
   private readonly dbName: string
@@ -44,7 +45,25 @@ class DbManager {
     }
     Model.knex(this.knexInstance!)
     knexInstanceSet(this.knexInstance!)
-    await this.knexInstance!.migrate.latest()
+
+    const output = spawnSync(
+      'npx',
+      ['knex', 'migrate:latest', '--migrations-directory', 'src/knex/migrations', '--connection', `postgres://${DbManager.getPgUser()}:${DbManager.getPgPassword()}@localhost/${this.dbName}`],
+      {
+        encoding: 'utf-8',
+        env: {
+          PATH: process.env.PATH,
+          NODE_OPTIONS: '--loader ts-node/esm/transpile-only',
+        },
+      }
+    )
+
+    if (output.status !== 0) {
+      throw new Error(`Migration went wrong: '${output}'`)
+    }
+
+    console.info(output.stdout)
+    console.error(output.stderr)
   }
 
   private getPool(): pg.Pool {
