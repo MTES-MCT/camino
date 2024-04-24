@@ -209,7 +209,7 @@ describe('trie les étapes', () => {
     ]
 
     expect(() => titreEtapesSortAscByDate(etapes, newDemarcheId(), DEMARCHES_TYPES_IDS.Octroi, TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX)).toThrowErrorMatchingInlineSnapshot(
-      `"l'état bof est inconnu"`
+      `[Error: l'état bof est inconnu]`
     )
   })
 
