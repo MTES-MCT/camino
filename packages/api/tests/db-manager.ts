@@ -52,18 +52,18 @@ class DbManager {
       {
         encoding: 'utf-8',
         env: {
+          ...process.env,
           PATH: process.env.PATH,
           NODE_OPTIONS: '--loader ts-node/esm/transpile-only',
         },
       }
     )
 
+    console.info(output.stdout)
+    console.error(output.stderr)
     if (output.status !== 0) {
       throw new Error(`Migration went wrong: '${output}'`)
     }
-
-    console.info(output.stdout)
-    console.error(output.stderr)
   }
 
   private getPool(): pg.Pool {

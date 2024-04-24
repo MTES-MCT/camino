@@ -8,7 +8,6 @@
 - [Node.js](https://nodejs.org/)
 - [Express.js](http://expressjs.com)
 - [PostgreSQL](https://www.postgresql.org/)
-- [Express-GraphQL](https://github.com/graphql/express-graphql)
 - [Knex.js](https://knexjs.org/)
 - [Objection.js](http://vincit.github.io/objection.js/)
 - [Eslint](https://eslint.org/)
