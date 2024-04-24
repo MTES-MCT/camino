@@ -13,6 +13,7 @@ import { getCurrent } from 'camino-common/src/date.js'
 import type { Pool } from 'pg'
 import { getTitreTypeType } from 'camino-common/src/static/titresTypes.js'
 import { TitresTypesTypes } from 'camino-common/src/static/titresTypesTypes.js'
+import { isNotNullNorUndefinedNorEmpty, isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
 const emailConfirmationDepotSend = async (
   emails: string[],
   params: {
@@ -36,9 +37,9 @@ const titreEtapeDepotConfirmationEmailsSend = async (titreDemarche: ITitreDemarc
   const titreTypeNom = TitresTypesTypes[getTitreTypeType(titreDemarche.titre!.typeId)].nom
 
   for (const titulaire of titulaires) {
-    const emails = titulaire.utilisateurs?.map(u => u.email).filter(email => !!email) as string[]
+    const emails = titulaire.utilisateurs?.map(u => u.email).filter(isNotNullNorUndefinedNorEmpty) ?? []
 
-    if (emails?.length) {
+    if (isNotNullNorUndefinedNorEmpty(emails)) {
       await emailConfirmationDepotSend(emails, {
         titreTypeNom,
         titulaireNom: titulaire.nom ?? '',
@@ -68,7 +69,7 @@ export const titreDemarcheDepotCheck = (titreDemarche: ITitreDemarche): boolean 
 }
 
 const titreEtapeDepotCreate = async (pool: Pool, titreDemarche: ITitreDemarche) => {
-  let titreEtapeDepot = {
+  let titreEtapeDepot: ITitreEtape | undefined = {
     titreDemarcheId: titreDemarche.id,
     typeId: 'mdp',
     statutId: 'fai',
@@ -76,12 +77,15 @@ const titreEtapeDepotCreate = async (pool: Pool, titreDemarche: ITitreDemarche) 
   } as ITitreEtape
 
   titreEtapeDepot = await titreEtapeUpsert(titreEtapeDepot, userSuper, titreDemarche.titreId)
+  if (isNullOrUndefined(titreEtapeDepot)) {
+    throw new Error("Une erreur est survenue lors de la mise à jour d'une étape")
+  }
   await titreEtapeUpdateTask(pool, titreEtapeDepot.id, titreEtapeDepot.titreDemarcheId, userSuper)
   await titreEtapeAdministrationsEmailsSend(titreEtapeDepot, titreDemarche.typeId, titreDemarche.titreId, titreDemarche.titre!.typeId, userSuper)
 
   const titulaires = titreDemarche.titre?.titulaires
 
-  if (titulaires?.length) {
+  if (isNotNullNorUndefinedNorEmpty(titulaires)) {
     await titreEtapeDepotConfirmationEmailsSend(titreDemarche, titulaires)
   }
 }

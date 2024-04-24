@@ -96,14 +96,19 @@ export const titreDemandeCreer = (pool: Pool) => async (req: CaminoRequest, res:
         }
 
         const updatedTitreEtape = await titreEtapeUpsert(titreEtape, user, titreId)
-        await titreEtapeUpdateTask(pool, updatedTitreEtape.id, titreEtape.titreDemarcheId, user)
+        if (isNullOrUndefined(updatedTitreEtape)) {
+          console.error("Une erreur est survenue lors de l'insert de l'étape")
+          res.sendStatus(HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR)
+        } else {
+          await titreEtapeUpdateTask(pool, updatedTitreEtape.id, titreEtape.titreDemarcheId, user)
 
-        const titreEtapeId = updatedTitreEtape.id
+          const titreEtapeId = updatedTitreEtape.id
 
-        // on abonne l’utilisateur au titre
-        await utilisateurTitreCreate({ utilisateurId: user.id, titreId })
+          // on abonne l’utilisateur au titre
+          await utilisateurTitreCreate({ utilisateurId: user.id, titreId })
 
-        res.json(titreEtapeId)
+          res.json(titreEtapeId)
+        }
       }
     }
   } catch (e) {
