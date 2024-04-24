@@ -24,15 +24,6 @@ export type CaminoDate = z.infer<typeof caminoDateValidator>
 
 export type CaminoDateFormated = string & { __camino: 'DateFormated' }
 
-export const isCaminoDate = (date: string): date is CaminoDate => {
-  try {
-    toCaminoDate(date)
-
-    return true
-  } catch {
-    return false
-  }
-}
 export const toCaminoDate = (date: Date | string): CaminoDate => {
   if (typeof date === 'string') {
     const parsedDate = caminoDateValidator.safeParse(date)
@@ -60,14 +51,6 @@ export type CaminoAnnee = z.infer<typeof caminoAnneeValidator>
 
 export const getAnnee = (date: CaminoDate): CaminoAnnee => {
   return toCaminoAnnee(date.substring(0, 4))
-}
-
-export const getMois = (date: CaminoDate): number => {
-  return Number(date.substring(5, 7))
-}
-
-export const getDay = (date: CaminoDate): number => {
-  return Number(date.substring(8, 10))
 }
 
 export const dateFormat = (date: CaminoDate | null | undefined): CaminoDateFormated => {
