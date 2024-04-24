@@ -4,7 +4,6 @@ import { computed, ref } from 'vue'
 import { FunctionalPopup } from '../_ui/functional-popup'
 import { uiEntrepriseDocumentInputValidator } from './entreprise-api-client'
 import { DocumentsTypes, EntrepriseDocumentTypeId, EntrepriseDocumentTypeIds, sortedEntrepriseDocumentTypes } from 'camino-common/src/static/documentsTypes'
-import { InputDate } from '../_ui/dsfr-input-date'
 import { CaminoDate } from 'camino-common/src/date'
 import { InputFile } from '../_ui/dsfr-input-file'
 import { ApiClient } from '@/api/api-client'
@@ -58,8 +57,10 @@ export const AddEntrepriseDocumentPopup = caminoDefineComponent<Props>(['close',
         </fieldset>
       )}
 
-      <InputDate id="add-entreprise-document-date" legend={{ main: 'Date de délivrance du document' }} dateChanged={dateChange} />
       <fieldset class="fr-fieldset" id="text">
+        <div class="fr-fieldset__element">
+          <DsfrInput legend={{ main: 'Date de délivrance du document' }} type={{ type: 'date' }} valueChanged={dateChange} />
+        </div>
         <div class="fr-fieldset__element">
           <InputFile accept={['pdf']} uploadFile={fileChange} />
         </div>
