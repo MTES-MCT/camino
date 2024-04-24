@@ -7,3 +7,5 @@ users:
     ssh: https://github.com/MichaelBitard.keys
   - nom: vmaubert
     ssh: https://github.com/vmaubert.keys
+  - nom: asafine
+    ssh: https://github.com/anis.keys
