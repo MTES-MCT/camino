@@ -60,7 +60,8 @@
     "lint-staged": "^13.2.2",
     "semantic-release": "^21.0.5",
     "semantic-release-mattermost": "^1.1.1",
-    "vue": "3.3.4"
+    "vue": "3.3.4",
+    "typescript": "5.4.5"
   },
   "release": {
     "branches": [

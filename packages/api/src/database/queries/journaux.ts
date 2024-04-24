@@ -83,7 +83,7 @@ export const upsertJournalCreate = async (
   relations: RelationExpression<TitresEtapes>,
   userId: string,
   titreId: TitreId
-): Promise<ITitreEtape> => {
+): Promise<ITitreEtape | undefined> => {
   const oldValue = isNotNullNorUndefined(id) ? await TitresEtapes.query().findById(id).withGraphFetched(relations).returning('*') : undefined
 
   // BUG Objection
@@ -96,7 +96,7 @@ export const upsertJournalCreate = async (
   let differences: any
   let operation: 'create' | 'update' = 'create'
 
-  if (oldValue) {
+  if (isNotNullNorUndefined(oldValue)) {
     differences = diffPatcher.diff(oldValue, newValue)
 
     // si il n’y a pas de différences, alors on ne journal plus cette modification
@@ -106,13 +106,15 @@ export const upsertJournalCreate = async (
     operation = 'update'
   }
 
-  await Journaux.query().insert({
-    elementId: newValue.id,
-    utilisateurId: userId,
-    operation,
-    differences,
-    titreId,
-  })
+  if (isNotNullNorUndefined(newValue)) {
+    await Journaux.query().insert({
+      elementId: newValue.id,
+      utilisateurId: userId,
+      operation,
+      differences,
+      titreId,
+    })
+  }
 
   return newValue
 }

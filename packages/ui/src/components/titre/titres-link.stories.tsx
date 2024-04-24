@@ -7,6 +7,7 @@ import { titreIdValidator } from 'camino-common/src/validators/titres'
 
 const meta: Meta = {
   title: 'Components/Titre/TitresLink',
+  // @ts-ignore
   component: TitresLink,
 }
 export default meta

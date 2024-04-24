@@ -3,23 +3,25 @@ import { TypeAheadSingle } from '../_ui/typeahead-single'
 import { DeepReadonly, isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { DocumentTypeId, DocumentsTypes } from 'camino-common/src/static/documentsTypes'
 
-type Props<T extends DocumentTypeId> = {
+type Props = {
   alwaysOpen?: boolean
-  documentTypeIds: DeepReadonly<T[]>
-  initialValue?: T
-  documentTypeIdSelected: (documentTypeId: T | null) => void
+  documentTypeIds: DeepReadonly<DocumentTypeId[]>
+  initialValue?: DocumentTypeId
+  documentTypeIdSelected: (documentTypeId: DocumentTypeId | null) => void
 }
 
-export const DocumentTypeTypeahead = defineComponent(<T extends DocumentTypeId>(props: Props<T>) => {
-  const documentTypeSelected = ref<{ id: T; nom: string } | null>(props.initialValue ? DocumentsTypes[props.initialValue] : null) as Ref<{ id: T; nom: string } | null>
-  const documentTypeUpdate = async (documentType: { id: T; nom: string } | undefined) => {
+type DocumentLabel = { id: DocumentTypeId; nom: string }
+
+export const DocumentTypeTypeahead = defineComponent<Props>(props => {
+  const documentTypeSelected = ref<DocumentLabel | null>(props.initialValue ? DocumentsTypes[props.initialValue] : null) as Ref<DocumentLabel | null>
+  const documentTypeUpdate = async (documentType: DocumentLabel | undefined) => {
     documentTypeSelected.value = documentType ?? null
     props.documentTypeIdSelected(isNotNullNorUndefined(documentType) ? documentType.id : null)
   }
 
-  const sortedByUs = computed<DeepReadonly<{ id: T; nom: string }[]>>(() => [...props.documentTypeIds].map(dtId => DocumentsTypes[dtId]).sort((a, b) => a.nom.localeCompare(b.nom)))
+  const sortedByUs = computed<DeepReadonly<DocumentLabel[]>>(() => [...props.documentTypeIds].map(dtId => DocumentsTypes[dtId]).sort((a, b) => a.nom.localeCompare(b.nom)))
 
-  const documentTypeFiltered = ref<DeepReadonly<{ id: T; nom: string }[]>>(sortedByUs.value) as Ref<DeepReadonly<{ id: T; nom: string }[]>>
+  const documentTypeFiltered = ref<DeepReadonly<DocumentLabel[]>>(sortedByUs.value) as Ref<DeepReadonly<DocumentLabel[]>>
   const documentTypeOnInput = (search: string) => {
     const formatedSearch = search.trim().toLowerCase()
 
