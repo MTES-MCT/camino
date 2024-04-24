@@ -1,7 +1,10 @@
 import { graphQLCall } from '../../../../tests/_utils/index.js'
 import { dbManager } from '../../../../tests/db-manager.js'
-import { expect, test, describe, afterAll, beforeAll } from 'vitest'
+import { vi, expect, test, describe, afterAll, beforeAll } from 'vitest'
 import type { Pool } from 'pg'
+
+console.info = vi.fn()
+console.error = vi.fn()
 
 let dbPool: Pool
 beforeAll(async () => {
