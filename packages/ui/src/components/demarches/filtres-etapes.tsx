@@ -1,5 +1,4 @@
 import { EtapeType, EtapeTypeId, EtapesTypes } from 'camino-common/src/static/etapesTypes'
-import { InputDate } from '../_ui/input-date'
 import { Icon } from '@/components/_ui/icon'
 import { ButtonIcon } from '@/components/_ui/button-icon'
 import { getEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStatuts'
@@ -11,6 +10,7 @@ import { EtapeStatutId, isStatut } from 'camino-common/src/static/etapesStatuts'
 import { isEventWithTarget } from '@/utils/vue-tsx-utils'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { TypeAheadSingle } from '../_ui/typeahead-single'
+import { DsfrInput } from '../_ui/dsfr-input'
 
 export type FilterEtapeValue = {
   typeId: EtapeTypeId | ''
@@ -35,13 +35,13 @@ export const FiltresEtapes = defineComponent<Props>(props => {
   )
   const clonedValues = ref<FilterEtapeValue[]>(props.initialValues.map(value => ({ ...value })))
   const fullFilter = computed(() => caminoFiltres[props.filter])
-  const dateDebutChanged = (n: number, date: CaminoDate | null) => {
+  const dateDebutChanged = (n: number) => (date: CaminoDate | null) => {
     if (date !== clonedValues.value[n].dateDebut) {
       clonedValues.value[n].dateDebut = date
       props.valuesSelected(clonedValues.value)
     }
   }
-  const dateFinChanged = (n: number, date: CaminoDate | null) => {
+  const dateFinChanged = (n: number) => (date: CaminoDate | null) => {
     if (date !== clonedValues.value[n].dateFin) {
       clonedValues.value[n].dateFin = date
       props.valuesSelected(clonedValues.value)
@@ -117,8 +117,8 @@ export const FiltresEtapes = defineComponent<Props>(props => {
                   <h5 class="mb-0">Après le</h5>
                   <p class="h6 italic mb-0">Optionnel</p>
                 </div>
-                <div class="blob-3-4">
-                  <InputDate initialValue={value.dateDebut} dateChanged={date => dateDebutChanged(n, date)} />
+                <div class="blob-3-4 dsfr">
+                  <DsfrInput initialValue={value.dateDebut} legend={{ main: '' }} type={{ type: 'date' }} valueChanged={dateDebutChanged(n)} />
                 </div>
               </div>
               <div class="blobs mb-s">
@@ -126,8 +126,8 @@ export const FiltresEtapes = defineComponent<Props>(props => {
                   <h5 class="mb-0">Avant le</h5>
                   <p class="h6 italic mb-0">Optionnel</p>
                 </div>
-                <div class="blob-3-4">
-                  <InputDate initialValue={value.dateFin} dateChanged={date => dateFinChanged(n, date)} />
+                <div class="blob-3-4 dsfr">
+                  <DsfrInput initialValue={value.dateFin} legend={{ main: '' }} type={{ type: 'date' }} valueChanged={dateFinChanged(n)} />
                 </div>
               </div>
             </div>
