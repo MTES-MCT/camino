@@ -12,6 +12,9 @@ import { EmailTemplateId } from '../../tools/api-mailjet/types.js'
 import { vi, afterEach, describe, expect, test } from 'vitest'
 import { newTitreId } from '../../database/models/_format/id-create.js'
 import Titres from '../../database/models/titres.js'
+import { Pool } from 'pg'
+import { getEntrepriseUtilisateurs } from '../../api/rest/entreprises.queries'
+import { entrepriseIdValidator } from 'camino-common/src/entreprise'
 
 vi.mock('../../database/queries/titres', () => ({
   titresGet: vi.fn(),
@@ -48,6 +51,11 @@ vi.mock('../../tools/api-mailjet/emails', () => ({
   emailsWithTemplateSend: vi.fn().mockImplementation(a => a),
 }))
 
+vi.mock('../../api/rest/entreprises.queries', () => ({
+  __esModule: true,
+  getEntrepriseUtilisateurs: vi.fn().mockResolvedValue(true),
+}))
+
 const titresToutesActivites = [
   {
     id: newTitreId('h-cx-courdemanges-1988'),
@@ -69,6 +77,7 @@ const anneesBuildMock = vi.mocked(anneesBuild, true)
 const titreActivitesBuildMock = vi.mocked(titreActivitesBuild, true)
 const emailsSendMock = vi.mocked(emailsSend, true)
 const emailsWithTemplateSendMock = vi.mocked(emailsWithTemplateSend, true)
+const getEntrepriseUtilisateursMock = vi.mocked(getEntrepriseUtilisateurs, true)
 
 console.info = vi.fn()
 afterEach(() => {
@@ -79,7 +88,7 @@ describe("activités d'un titre", () => {
     {
       id: newTitreId('h-cx-courdemanges-1988'),
       activites: [],
-      titulaires: [{ utilisateurs: [{ email: 'email' }] }],
+      titulaireIds: [entrepriseIdValidator.parse('titulaireId')],
       communes: [],
       demarches: [],
       secteursMaritime: [],
@@ -91,14 +100,16 @@ describe("activités d'un titre", () => {
     titreActiviteTypeCheckMock.mockReturnValue(true)
     anneesBuildMock.mockReturnValue([2018])
     titreActivitesBuildMock.mockReturnValue([{ titreId: titresSansActivite[0].id }] as ITitreActivite[])
+    getEntrepriseUtilisateursMock.mockResolvedValue([{ email: 'email' }])
 
-    const titresActivitesNew = await titresActivitesUpdate()
+    const titresActivitesNew = await titresActivitesUpdate(undefined as unknown as Pool)
 
     expect(titresActivitesNew.length).toEqual(8)
 
     expect(canHaveActiviteTypeId).toHaveBeenCalledTimes(8)
     expect(titresActivitesUpsert).toHaveBeenCalled()
     expect(titreActivitesBuild).toHaveBeenCalled()
+    expect(getEntrepriseUtilisateurs).toHaveBeenCalled()
     expect(emailsWithTemplateSendMock).toHaveBeenCalledWith(['email'], EmailTemplateId.ACTIVITES_NOUVELLES, expect.any(Object))
   })
 
@@ -108,13 +119,14 @@ describe("activités d'un titre", () => {
     anneesBuildMock.mockReturnValue([2018])
     titreActivitesBuildMock.mockReturnValue([])
 
-    const titresActivitesNew = await titresActivitesUpdate()
+    const titresActivitesNew = await titresActivitesUpdate(undefined as unknown as Pool)
 
     expect(titresActivitesNew.length).toEqual(0)
 
     expect(canHaveActiviteTypeId).toHaveBeenCalledTimes(8)
     expect(titreActivitesBuild).toHaveBeenCalled()
     expect(titresActivitesUpsert).not.toHaveBeenCalled()
+    expect(getEntrepriseUtilisateurs).not.toHaveBeenCalled()
     expect(emailsSendMock).not.toHaveBeenCalled()
   })
 
@@ -123,13 +135,14 @@ describe("activités d'un titre", () => {
     titreActiviteTypeCheckMock.mockReturnValue(false)
     anneesBuildMock.mockReturnValue([2018])
 
-    const titresActivitesNew = await titresActivitesUpdate()
+    const titresActivitesNew = await titresActivitesUpdate(undefined as unknown as Pool)
 
     expect(titresActivitesNew.length).toEqual(0)
 
     expect(canHaveActiviteTypeId).toHaveBeenCalledTimes(8)
     expect(titreActivitesBuild).not.toHaveBeenCalled()
     expect(titresActivitesUpsert).not.toHaveBeenCalled()
+    expect(getEntrepriseUtilisateurs).not.toHaveBeenCalled()
   })
 
   test('ne met pas à jour de titre si les activités ne sont valables sur aucune année', async () => {
@@ -137,12 +150,13 @@ describe("activités d'un titre", () => {
     titreActiviteTypeCheckMock.mockReturnValue(false)
     anneesBuildMock.mockReturnValue([])
 
-    const titresActivitesNew = await titresActivitesUpdate()
+    const titresActivitesNew = await titresActivitesUpdate(undefined as unknown as Pool)
 
     expect(titresActivitesNew.length).toEqual(0)
 
     expect(canHaveActiviteTypeId).not.toHaveBeenCalled()
     expect(titreActivitesBuild).not.toHaveBeenCalled()
     expect(titresActivitesUpsert).not.toHaveBeenCalled()
+    expect(getEntrepriseUtilisateurs).not.toHaveBeenCalled()
   })
 })

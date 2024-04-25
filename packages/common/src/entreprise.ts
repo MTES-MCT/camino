@@ -15,6 +15,8 @@ export const entrepriseIdValidator = z.string().brand<'EntrepriseId'>()
 export type EntrepriseId = z.infer<typeof entrepriseIdValidator>
 export const isEntrepriseId = (eid: string): eid is EntrepriseId => entrepriseIdValidator.safeParse(eid).success
 
+export const entrepriseEtablissementIdValidator = z.string().brand<'EntrepriseEtablissementId'>()
+
 export const sirenValidator = z
   .string()
   .regex(/^[0-9]{9}$/)
@@ -38,13 +40,13 @@ export const entrepriseModificationValidator = z.object({
   archive: z.boolean().optional(),
 })
 
-// TODO 2023-05-15 pas certain de l’utilité de la date de fin
-type EntrepriseEtablissement = { id: string; dateDebut: CaminoDate; dateFin: CaminoDate | null; nom: string }
+export const entrepriseEtablissementValidator = z.object({
+  id: entrepriseEtablissementIdValidator,
+  date_debut: caminoDateValidator,
+  date_fin: caminoDateValidator.nullable(),
+  nom: z.string(),
+})
 
-interface Titulaire {
-  id: EntrepriseId
-  nom: string
-}
 export interface TitreEntreprise {
   id: TitreId
   slug: string
@@ -57,7 +59,7 @@ export interface TitreEntreprise {
   typeId: TitreTypeId
   titreStatutId: TitreStatutId
   substances: SubstanceLegaleId[]
-  titulaires: Titulaire[]
+  titulaireIds: EntrepriseId[]
   activitesAbsentes: number | null
   activitesEnConstruction: number | null
 }
@@ -75,18 +77,15 @@ export const entrepriseValidator = z.object({ id: entrepriseIdValidator, legal_s
 export type Entreprise = z.infer<typeof entrepriseValidator>
 
 export const entrepriseTypeValidator = entrepriseValidator.extend({
-  telephone: z.string(),
-  email: z.string(),
-  legalForme: z.string(),
-  adresse: z.string(),
-  codePostal: z.string(),
-  commune: z.string(),
-  url: z.string(),
+  telephone: z.string().nullable(),
+  email: z.string().nullable(),
+  legal_forme: z.string().nullable(),
+  adresse: z.string().nullable(),
+  code_postal: z.string().nullable(),
+  commune: z.string().nullable(),
+  url: z.string().nullable(),
   archive: z.boolean(),
-  titulaireTitres: z.array(z.custom<TitreEntreprise>()),
-  amodiataireTitres: z.array(z.custom<TitreEntreprise>()),
-  utilisateurs: z.array(z.custom<Utilisateur>()),
-  etablissements: z.array(z.custom<EntrepriseEtablissement>()),
+  etablissements: z.array(entrepriseEtablissementValidator),
 })
 
 export type EntrepriseType = z.infer<typeof entrepriseTypeValidator>

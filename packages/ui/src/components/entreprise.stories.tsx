@@ -2,13 +2,12 @@ import { PureEntreprise } from './entreprise'
 import { Meta, StoryFn } from '@storybook/vue3'
 import { action } from '@storybook/addon-actions'
 import { toCaminoAnnee, toCaminoDate } from 'camino-common/src/date'
-import { Entreprise, EntrepriseDocument, EntrepriseType, entrepriseIdValidator, newEntrepriseId, toEntrepriseDocumentId } from 'camino-common/src/entreprise'
+import { Entreprise, EntrepriseDocument, EntrepriseType, entrepriseIdValidator, newEntrepriseId, toEntrepriseDocumentId, entrepriseEtablissementIdValidator } from 'camino-common/src/entreprise'
 import { tempDocumentNameValidator } from 'camino-common/src/document'
 import { testBlankUser } from 'camino-common/src/tests-utils'
-import { toCommuneId } from 'camino-common/src/static/communes'
-import { toUtilisateurId } from 'camino-common/src/roles'
-import { titreIdValidator } from 'camino-common/src/validators/titres'
 import { ApiClient } from '@/api/api-client'
+import { CaminoHttpError } from '@/api/client-rest'
+import { HTTP_STATUS } from 'camino-common/src/http'
 
 const meta: Meta = {
   title: 'Components/Entreprise',
@@ -47,20 +46,17 @@ const entrepriseDocuments: EntrepriseDocument[] = [
   },
 ]
 const entreprise: EntrepriseType = {
-  id: newEntrepriseId(''),
+  id: newEntrepriseId('anotherEntrepriseId'),
   nom: 'nom entreprise',
   telephone: 'telephone',
   email: 'email@entreprise.fr',
   legal_siren: 'siren',
-  legalForme: 'forme',
+  legal_forme: 'forme',
   adresse: 'adresse',
-  codePostal: 'code postal',
+  code_postal: 'code postal',
   commune: 'commune',
   url: 'http://urlentreprise',
   archive: false,
-  titulaireTitres: [],
-  amodiataireTitres: [],
-  utilisateurs: [],
   etablissements: [],
 }
 
@@ -86,10 +82,7 @@ const apiClient: Pick<
   getFiscaliteEntreprise: data => {
     getFiscaliteEntrepriseAction(data)
 
-    return Promise.resolve({
-      redevanceCommunale: 0,
-      redevanceDepartementale: 0,
-    })
+    return Promise.reject(new CaminoHttpError('because reasons', HTTP_STATUS.HTTP_STATUS_FORBIDDEN))
   },
   modifierEntreprise: entreprise => {
     modifierEntrepriseAction(entreprise)
@@ -113,156 +106,49 @@ const apiClient: Pick<
   },
 }
 
-export const Loading: StoryFn = () => <PureEntreprise currentYear={annee} entrepriseId={entreprise.id} apiClient={{ ...apiClient, getEntreprise: () => new Promise(() => ({})) }} user={null} />
+const entreprises: Entreprise[] = [
+  {
+    id: entrepriseIdValidator.parse(''),
+    nom: 'Nom entreprise',
+    legal_siren: '',
+  },
+  {
+    id: entrepriseIdValidator.parse('entrepriseId'),
+    nom: 'Nom entreprise',
+    legal_siren: '',
+  },
+]
 
-export const NonConnecte: StoryFn = () => <PureEntreprise currentYear={annee} entrepriseId={entreprise.id} apiClient={apiClient} user={null} />
+export const Loading: StoryFn = () => (
+  <PureEntreprise currentYear={annee} entrepriseId={entreprise.id} apiClient={{ ...apiClient, getEntreprise: () => new Promise(() => ({})) }} user={null} entreprises={entreprises} />
+)
+
+export const NonConnecte: StoryFn = () => <PureEntreprise currentYear={annee} entrepriseId={entreprise.id} apiClient={apiClient} user={null} entreprises={entreprises} />
 
 const completeEntreprise: EntrepriseType = {
-  id: newEntrepriseId('any'),
+  id: newEntrepriseId('fr-entrepriseIdAny'),
   nom: 'An Entreprise',
   legal_siren: 'SIREN',
-  legalForme: 'SAS, société par actions simplifiée',
+  legal_forme: 'SAS, société par actions simplifiée',
   adresse: '21 par ici',
-  codePostal: '38240',
-  commune: 'CETTE COMUNE',
+  code_postal: '38240',
+  commune: 'CETTE COMMUNE',
   email: 'email',
   telephone: 'telephone',
   url: 'url',
   archive: false,
   etablissements: [
     {
-      id: '',
+      id: entrepriseEtablissementIdValidator.parse(''),
       nom: 'Nouvel établissement',
-      dateDebut: toCaminoDate('2013-09-16'),
-      dateFin: null,
+      date_debut: toCaminoDate('2013-09-16'),
+      date_fin: null,
     },
     {
-      id: '',
+      id: entrepriseEtablissementIdValidator.parse(''),
       nom: 'Ancien établissement',
-      dateDebut: toCaminoDate('2013-02-01'),
-      dateFin: toCaminoDate('2013-09-15'),
-    },
-  ],
-  utilisateurs: [
-    {
-      id: toUtilisateurId('anId'),
-      nom: 'Nom user',
-      prenom: 'Prénon',
-      email: 'email@plop.wu',
-      entreprises: [
-        {
-          id: newEntrepriseId('1'),
-          nom: 'Nom entreprise',
-        },
-      ] as Entreprise[],
-      role: 'entreprise',
-    },
-    {
-      id: toUtilisateurId('anotherId'),
-      nom: 'Other user',
-      prenom: 'Other prenom',
-      email: 'anotheremail@nothing.wu',
-      entreprises: [
-        {
-          id: 'fr-791652399',
-          nom: 'Nom entreprise',
-        },
-      ] as Entreprise[],
-      role: 'entreprise',
-    },
-  ],
-  titulaireTitres: [
-    {
-      id: titreIdValidator.parse('idTitre1'),
-      slug: 'slugTitre1',
-      nom: 'titre 1 nom',
-      typeId: 'arm',
-      titreStatutId: 'ech',
-      substances: ['auru'],
-      activitesEnConstruction: null,
-      activitesAbsentes: null,
-      titulaires: [
-        {
-          id: entrepriseIdValidator.parse(''),
-          nom: 'Nom entreprise',
-        },
-      ],
-      communes: [
-        {
-          id: toCommuneId('97300'),
-        },
-      ],
-    },
-    {
-      id: titreIdValidator.parse('idTitre2'),
-      slug: 'slugtitre',
-      nom: 'NomTitre',
-      typeId: 'axm',
-      titreStatutId: 'ech',
-      substances: ['auru'],
-      activitesEnConstruction: 0,
-      activitesAbsentes: 0,
-      titulaires: [
-        {
-          id: entrepriseIdValidator.parse('entrepriseId'),
-          nom: 'Nom entreprise',
-        },
-      ],
-      communes: [
-        {
-          id: toCommuneId('97300'),
-        },
-      ],
-      references: [
-        {
-          referenceTypeId: 'dea',
-          nom: 'plop/toto',
-        },
-      ],
-    },
-    {
-      id: titreIdValidator.parse('idTitre3'),
-      slug: 'slug3',
-      nom: 'Nom titre 3',
-      typeId: 'arm',
-      titreStatutId: 'ech',
-      substances: ['auru'],
-      activitesEnConstruction: null,
-      activitesAbsentes: null,
-      titulaires: [
-        {
-          id: entrepriseIdValidator.parse('idEntreprise'),
-          nom: 'Nom entreprise',
-        },
-      ],
-      communes: [
-        {
-          id: toCommuneId('97300'),
-        },
-      ],
-    },
-  ],
-  amodiataireTitres: [
-    {
-      id: titreIdValidator.parse('idTitre3'),
-      slug: 'slug3',
-      nom: 'Nom titre 3',
-      typeId: 'arm',
-      titreStatutId: 'ech',
-      substances: ['auru'],
-      activitesEnConstruction: null,
-      activitesAbsentes: null,
-      titulaires: [
-        {
-          id: entrepriseIdValidator.parse('idEntreprise'),
-          nom: 'Nom entreprise',
-        },
-      ],
-      communes: [
-        {
-          id: toCommuneId('97300'),
-        },
-      ],
+      date_debut: toCaminoDate('2013-02-01'),
+      date_fin: toCaminoDate('2013-09-15'),
     },
   ],
 }
@@ -271,6 +157,7 @@ export const Complet: StoryFn = () => (
   <PureEntreprise
     currentYear={annee}
     entrepriseId={completeEntreprise.id}
+    entreprises={entreprises}
     apiClient={{
       ...apiClient,
       getEntreprise: entrepriseId => {

@@ -66,7 +66,7 @@ export const visibleCheck = async (
     etapeTypeId
   )
 
-  await Titres.query().insertGraph(titre, options.titres.update)
+  await Titres.query().upsertGraph(titre, options.titres.update)
 
   const res = await graphQLCall(
     pool,

@@ -240,10 +240,10 @@ type can<T, Method extends 'post' | 'get' | 'put' | 'delete' | 'download' | 'new
     : never
   : never
 
-type CaminoRestRouteList<Route, Method extends 'post' | 'get' | 'put' | 'delete' | 'download' | 'newDownload'> = Route extends readonly [infer First, ...infer Rest]
+type CaminoRestRouteList<Route, Method extends 'post' | 'get' | 'put' | 'delete' | 'download' | 'newDownload'> = Route extends readonly [infer First, ...infer Remaining]
   ? First extends can<First, Method>
-    ? [First, ...CaminoRestRouteList<Rest, Method>]
-    : CaminoRestRouteList<Rest, Method>
+    ? [First, ...CaminoRestRouteList<Remaining, Method>]
+    : CaminoRestRouteList<Remaining, Method>
   : []
 
 export type GetRestRoutes = CaminoRestRouteList<typeof IDS, 'get'>[number]

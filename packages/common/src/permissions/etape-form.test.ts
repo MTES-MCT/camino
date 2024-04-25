@@ -191,14 +191,14 @@ test('entrepriseDocumentsStepIsVisible', () => {
   expect(entrepriseDocumentsStepIsVisible({ typeId: 'cod' }, 'oct', 'axm')).toBe(false)
 })
 test('entrepriseDocumentsStepIsComplete', () => {
-  expect(entrepriseDocumentsStepIsComplete({ typeId: 'asl', titulaires: [], amodiataires: [], contenu: {} }, 'oct', 'axm', [])).toBe(true)
-  expect(entrepriseDocumentsStepIsComplete({ typeId: 'mfr', titulaires: [], amodiataires: [], contenu: {} }, 'oct', 'axm', [])).toBe(true)
+  expect(entrepriseDocumentsStepIsComplete({ typeId: 'asl', titulaireIds: [], amodiataireIds: [], contenu: {} }, 'oct', 'axm', [])).toBe(true)
+  expect(entrepriseDocumentsStepIsComplete({ typeId: 'mfr', titulaireIds: [], amodiataireIds: [], contenu: {} }, 'oct', 'axm', [])).toBe(true)
 
-  expect(entrepriseDocumentsStepIsComplete({ typeId: 'mfr', titulaires: [{ ...entreprise1, operateur: false }], amodiataires: [], contenu: {} }, 'oct', 'axm', [])).toBe(false)
-  expect(entrepriseDocumentsStepIsComplete({ typeId: 'mfr', titulaires: [], amodiataires: [{ ...entreprise1, operateur: false }], contenu: {} }, 'oct', 'axm', [])).toBe(false)
+  expect(entrepriseDocumentsStepIsComplete({ typeId: 'mfr', titulaireIds: [entreprise1.id], amodiataireIds: [], contenu: {} }, 'oct', 'axm', [])).toBe(false)
+  expect(entrepriseDocumentsStepIsComplete({ typeId: 'mfr', titulaireIds: [], amodiataireIds: [entreprise1.id], contenu: {} }, 'oct', 'axm', [])).toBe(false)
 
   expect(
-    entrepriseDocumentsStepIsComplete({ typeId: 'mfr', titulaires: [], amodiataires: [{ ...entreprise1, operateur: false }], contenu: { arm: { mecanise: false } } }, 'oct', 'arm', [
+    entrepriseDocumentsStepIsComplete({ typeId: 'mfr', titulaireIds: [], amodiataireIds: [entreprise1.id], contenu: { arm: { mecanise: false } } }, 'oct', 'arm', [
       {
         id: entrepriseDocumentIdValidator.parse('idatf'),
         documentTypeId: 'atf',

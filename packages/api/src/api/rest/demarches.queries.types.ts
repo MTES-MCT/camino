@@ -8,6 +8,7 @@ export interface IGetEtapesByDemarcheIdDbParams {
 
 /** 'GetEtapesByDemarcheIdDb' return type */
 export interface IGetEtapesByDemarcheIdDbResult {
+  amodiataire_ids: Json;
   communes: Json;
   contenu: Json | null;
   date: string;
@@ -34,6 +35,7 @@ export interface IGetEtapesByDemarcheIdDbResult {
   slug: string | null;
   substances: Json;
   surface: number | null;
+  titulaire_ids: Json;
 }
 
 /** 'GetEtapesByDemarcheIdDb' query type */

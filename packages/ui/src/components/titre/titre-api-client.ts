@@ -27,10 +27,7 @@ export type TitreForTable = {
   substances: SubstanceLegaleId[]
   activitesEnConstruction: number | null
   activitesAbsentes: number | null
-  titulaires: {
-    id: EntrepriseId
-    nom: string
-  }[]
+  titulaireIds: EntrepriseId[]
   communes?: { id: CommuneId }[]
   secteursMaritime?: SecteursMaritimes[]
   references?: { referenceTypeId: ReferenceTypeId; nom: string }[]
@@ -166,10 +163,7 @@ export const titreApiClient: TitreApiClient = {
             substances
             activitesEnConstruction
             activitesAbsentes
-            titulaires {
-              id
-              nom
-            }
+            titulaireIds
             communes {
               id
             }
@@ -224,14 +218,7 @@ export const titreApiClient: TitreApiClient = {
             nom
             typeId
             titreStatutId
-            titulaires {
-              id
-              nom
-            }
-            amodiataires {
-              id
-              nom
-            }
+            titulaireIds
             geojson4326Centre
           }
           total
@@ -278,14 +265,7 @@ export const titreApiClient: TitreApiClient = {
             nom
             typeId
             titreStatutId
-            titulaires {
-              id
-              nom
-            }
-            amodiataires {
-              id
-              nom
-            }
+            titulaireIds
 
             geojson4326Centre
             geojson4326Perimetre

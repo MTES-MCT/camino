@@ -2,7 +2,7 @@ import { Meta, StoryFn } from '@storybook/vue3'
 import { DemarcheEtape } from './demarche-etape'
 import { EtapesTypesEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStatuts'
 import { toCaminoDate } from 'camino-common/src/date'
-import { EtapeEntrepriseDocument, entrepriseDocumentIdValidator, entrepriseIdValidator } from 'camino-common/src/entreprise'
+import { Entreprise, EtapeEntrepriseDocument, entrepriseDocumentIdValidator, entrepriseIdValidator } from 'camino-common/src/entreprise'
 import { titreSlugValidator } from 'camino-common/src/validators/titres'
 import { Router } from 'vue-router'
 import { action } from '@storybook/addon-actions'
@@ -27,6 +27,12 @@ const routerPushAction = action('routerPushAction')
 const deleteEtapeAction = action('deleteEtapeAction')
 const deposeEtapeAction = action('deposeEtapeAction')
 const getGeojsonByGeoSystemeIdAction = action('getGeojsonByGeoSystemeId')
+
+const entreprises: Entreprise[] = [
+  { id: entrepriseIdValidator.parse('titulaire1'), nom: 'titulaire1', legal_siren: '' },
+  { id: entrepriseIdValidator.parse('titulaire2'), nom: 'titulaire2', legal_siren: '' },
+  { id: entrepriseIdValidator.parse('amodiataire1'), nom: 'amodiataire1', legal_siren: '' },
+]
 
 const apiClient: Pick<ApiClient, 'deleteEtape' | 'deposeEtape' | 'getGeojsonByGeoSystemeId'> = {
   deleteEtape: etapeId => {
@@ -176,10 +182,7 @@ export const NoSnapshotDemande: StoryFn = () => (
     titre={{ titreStatutId: 'val', typeId: 'arm', nom: 'nom du titre', slug: titreSlug }}
     demarche={{
       demarche_type_id: 'oct',
-      titulaires: [
-        { id: entrepriseIdValidator.parse('titulaire1'), nom: 'titulaire1' },
-        { id: entrepriseIdValidator.parse('titulaire2'), nom: 'titulaire2' },
-      ],
+      titulaireIds: [entrepriseIdValidator.parse('titulaire1'), entrepriseIdValidator.parse('titulaire2')],
       administrationsLocales: [],
       sdom_zones: [],
       etapes: [],
@@ -187,6 +190,7 @@ export const NoSnapshotDemande: StoryFn = () => (
     user={{ ...testBlankUser, role: 'super' }}
     router={routerPushMock}
     apiClient={apiClient}
+    entreprises={entreprises}
     etape={{
       id: etapeIdValidator.parse('etapeId'),
       notes: null,
@@ -200,11 +204,8 @@ export const NoSnapshotDemande: StoryFn = () => (
         duree: 12,
         date_fin: null,
         substances: ['auru', 'arge'],
-        titulaires: [
-          { id: entrepriseIdValidator.parse('titulaire1'), nom: 'titulaire1', operateur: false },
-          { id: entrepriseIdValidator.parse('titulaire2'), nom: 'titulaire2', operateur: true },
-        ],
-        amodiataires: [{ id: entrepriseIdValidator.parse('amodiataire1'), nom: 'Amodiataire 1', operateur: false }],
+        titulaireIds: [entrepriseIdValidator.parse('titulaire1'), entrepriseIdValidator.parse('titulaire2')],
+        amodiataireIds: [entrepriseIdValidator.parse('amodiataire1')],
         perimetre: {
           geojson4326_points: null,
           geojson4326_perimetre: {
@@ -302,10 +303,7 @@ export const DemandeMultipleEntreprisesDocuments: StoryFn = () => (
     titre={{ titreStatutId: 'val', typeId: 'arm', nom: 'nom du titre', slug: titreSlug }}
     demarche={{
       demarche_type_id: 'oct',
-      titulaires: [
-        { id: entrepriseIdValidator.parse('titulaire1'), nom: 'titulaire1' },
-        { id: entrepriseIdValidator.parse('titulaire2'), nom: 'titulaire2' },
-      ],
+      titulaireIds: [entrepriseIdValidator.parse('titulaire1'), entrepriseIdValidator.parse('titulaire2')],
       administrationsLocales: [],
       sdom_zones: [],
       etapes: [],
@@ -313,6 +311,7 @@ export const DemandeMultipleEntreprisesDocuments: StoryFn = () => (
     user={{ ...testBlankUser, role: 'super' }}
     router={routerPushMock}
     apiClient={apiClient}
+    entreprises={entreprises}
     etape={{
       id: etapeIdValidator.parse('etapeId'),
       slug: etapeSlugValidator.parse('etape-slug'),
@@ -326,12 +325,8 @@ export const DemandeMultipleEntreprisesDocuments: StoryFn = () => (
         duree: 12,
         date_fin: null,
         substances: ['auru', 'arge'],
-        titulaires: [
-          { id: entrepriseIdValidator.parse('titulaire1'), nom: 'titulaire1', operateur: false },
-          { id: entrepriseIdValidator.parse('titulaire2'), nom: 'titulaire2', operateur: true },
-        ],
-
-        amodiataires: [{ id: entrepriseIdValidator.parse('amodiataire1'), nom: 'Amodiataire 1', operateur: false }],
+        titulaireIds: [entrepriseIdValidator.parse('titulaire1'), entrepriseIdValidator.parse('titulaire2')],
+        amodiataireIds: [entrepriseIdValidator.parse('amodiataire1')],
         perimetre: null,
       },
       sections_with_values: [
@@ -375,10 +370,11 @@ export const DemandeMultipleEntreprisesDocuments: StoryFn = () => (
 export const DemandeNoMap: StoryFn = () => (
   <DemarcheEtape
     titre={{ titreStatutId: 'val', typeId: 'arm', nom: 'nom du titre', slug: titreSlug }}
-    demarche={{ demarche_type_id: 'oct', titulaires: [{ id: entrepriseIdValidator.parse('titulaire1'), nom: 'titulaire1' }], administrationsLocales: [], sdom_zones: [], etapes: [] }}
+    demarche={{ demarche_type_id: 'oct', titulaireIds: [entrepriseIdValidator.parse('titulaire1')], administrationsLocales: [], sdom_zones: [], etapes: [] }}
     user={{ ...testBlankUser, role: 'super' }}
     router={routerPushMock}
     apiClient={apiClient}
+    entreprises={entreprises}
     etape={{
       id: etapeIdValidator.parse('etapeId'),
       notes: null,
@@ -392,12 +388,8 @@ export const DemandeNoMap: StoryFn = () => (
         duree: 12,
         date_fin: null,
         substances: ['auru', 'arge'],
-        titulaires: [
-          { id: entrepriseIdValidator.parse('titulaire1'), nom: 'titulaire1', operateur: false },
-          { id: entrepriseIdValidator.parse('titulaire2'), nom: 'titulaire2', operateur: true },
-        ],
-
-        amodiataires: [{ id: entrepriseIdValidator.parse('amodiataire1'), nom: 'Amodiataire 1', operateur: false }],
+        titulaireIds: [entrepriseIdValidator.parse('titulaire1'), entrepriseIdValidator.parse('titulaire2')],
+        amodiataireIds: [entrepriseIdValidator.parse('amodiataire1')],
         perimetre: null,
       },
       sections_with_values: [
@@ -425,10 +417,11 @@ export const DemandeNoMap: StoryFn = () => (
 export const DemandeNonDeposable: StoryFn = () => (
   <DemarcheEtape
     titre={{ titreStatutId: 'val', typeId: 'arm', nom: 'nom du titre', slug: titreSlug }}
-    demarche={{ demarche_type_id: 'oct', titulaires: [], administrationsLocales: [], sdom_zones: [], etapes: [] }}
+    demarche={{ demarche_type_id: 'oct', titulaireIds: [], administrationsLocales: [], sdom_zones: [], etapes: [] }}
     user={{ ...testBlankUser, role: 'super' }}
     router={routerPushMock}
     apiClient={apiClient}
+    entreprises={entreprises}
     etape={{
       id: etapeIdValidator.parse('etapeId'),
       slug: etapeSlugValidator.parse('etape-slug'),
@@ -442,11 +435,8 @@ export const DemandeNonDeposable: StoryFn = () => (
         duree: 12,
         date_fin: null,
         substances: ['auru', 'arge'],
-        titulaires: [
-          { id: entrepriseIdValidator.parse('titulaire1'), nom: 'titulaire1', operateur: false },
-          { id: entrepriseIdValidator.parse('titulaire2'), nom: 'titulaire2', operateur: true },
-        ],
-        amodiataires: [{ id: entrepriseIdValidator.parse('amodiataire1'), nom: 'Amodiataire 1', operateur: false }],
+        titulaireIds: [entrepriseIdValidator.parse('titulaire1'), entrepriseIdValidator.parse('titulaire2')],
+        amodiataireIds: [entrepriseIdValidator.parse('amodiataire1')],
         perimetre: null,
       },
       sections_with_values: [{ id: 'arm', elements: [{ id: 'mecanise', type: 'radio', value: true, nom: 'Mécanisation' }], nom: 'Arm' }],
@@ -495,10 +485,11 @@ const demandeArmMecaniseNonDeposable: FeatureMultiPolygon = {
 export const DemandeArmMecaniseNonDeposable: StoryFn = () => (
   <DemarcheEtape
     titre={{ titreStatutId: 'val', typeId: 'arm', nom: 'nom du titre', slug: titreSlug }}
-    demarche={{ demarche_type_id: 'oct', titulaires: [{ id: entrepriseIdValidator.parse('entrepriseId'), nom: 'titulaire1' }], administrationsLocales: [], sdom_zones: [], etapes: [] }}
+    demarche={{ demarche_type_id: 'oct', titulaireIds: [entrepriseIdValidator.parse('titulaire1')], administrationsLocales: [], sdom_zones: [], etapes: [] }}
     user={{ ...testBlankUser, role: 'super' }}
     router={routerPushMock}
     apiClient={apiClient}
+    entreprises={entreprises}
     initTab="points"
     etape={{
       id: etapeIdValidator.parse('etapeId'),
@@ -513,11 +504,8 @@ export const DemandeArmMecaniseNonDeposable: StoryFn = () => (
         duree: 12,
         date_fin: null,
         substances: ['auru', 'arge'],
-        titulaires: [
-          { id: entrepriseIdValidator.parse('titulaire1'), nom: 'titulaire1', operateur: false },
-          { id: entrepriseIdValidator.parse('titulaire2'), nom: 'titulaire2', operateur: true },
-        ],
-        amodiataires: [{ id: entrepriseIdValidator.parse('amodiataire1'), nom: 'Amodiataire 1', operateur: false }],
+        titulaireIds: [entrepriseIdValidator.parse('titulaire1'), entrepriseIdValidator.parse('titulaire2')],
+        amodiataireIds: [entrepriseIdValidator.parse('amodiataire1')],
         perimetre: {
           geojson4326_points: null,
           geojson4326_perimetre: demandeArmMecaniseNonDeposable,
@@ -579,10 +567,11 @@ const demandeArmMecaniseDeposable: FeatureMultiPolygon = {
 export const DemandeArmMecaniseDeposable: StoryFn = () => (
   <DemarcheEtape
     titre={{ titreStatutId: 'val', typeId: 'arm', nom: 'nom du titre', slug: titreSlug }}
-    demarche={{ demarche_type_id: 'oct', titulaires: [{ id: entrepriseIdValidator.parse('entrepriseId'), nom: 'titulaire1' }], administrationsLocales: [], sdom_zones: [], etapes: [] }}
+    demarche={{ demarche_type_id: 'oct', titulaireIds: [entrepriseIdValidator.parse('titulaire1')], administrationsLocales: [], sdom_zones: [], etapes: [] }}
     user={{ ...testBlankUser, role: 'super' }}
     router={routerPushMock}
     apiClient={apiClient}
+    entreprises={entreprises}
     initTab="points"
     etape={{
       id: etapeIdValidator.parse('etapeId'),
@@ -597,11 +586,8 @@ export const DemandeArmMecaniseDeposable: StoryFn = () => (
         duree: 12,
         date_fin: null,
         substances: ['auru', 'arge'],
-        titulaires: [
-          { id: entrepriseIdValidator.parse('titulaire1'), nom: 'titulaire1', operateur: false },
-          { id: entrepriseIdValidator.parse('titulaire2'), nom: 'titulaire2', operateur: true },
-        ],
-        amodiataires: [{ id: entrepriseIdValidator.parse('amodiataire1'), nom: 'Amodiataire 1', operateur: false }],
+        titulaireIds: [entrepriseIdValidator.parse('titulaire1'), entrepriseIdValidator.parse('titulaire2')],
+        amodiataireIds: [entrepriseIdValidator.parse('amodiataire1')],
         perimetre: {
           geojson4326_perimetre: demandeArmMecaniseDeposable,
           geojson4326_points: null,
@@ -667,10 +653,11 @@ const demandeArmNonMecaniseDeposable: FeatureMultiPolygon = {
 export const DemandeArmNonMecaniseDeposable: StoryFn = () => (
   <DemarcheEtape
     titre={{ titreStatutId: 'val', typeId: 'arm', nom: 'nom du titre', slug: titreSlug }}
-    demarche={{ demarche_type_id: 'oct', titulaires: [{ id: entrepriseIdValidator.parse('entrepriseId'), nom: 'titulaire1' }], administrationsLocales: [], sdom_zones: [], etapes: [] }}
+    demarche={{ demarche_type_id: 'oct', titulaireIds: [entrepriseIdValidator.parse('titulaire1')], administrationsLocales: [], sdom_zones: [], etapes: [] }}
     user={{ ...testBlankUser, role: 'super' }}
     router={routerPushMock}
     apiClient={apiClient}
+    entreprises={entreprises}
     initTab="points"
     etape={{
       id: etapeIdValidator.parse('etapeId'),
@@ -685,11 +672,8 @@ export const DemandeArmNonMecaniseDeposable: StoryFn = () => (
         duree: 12,
         date_fin: null,
         substances: ['auru', 'arge'],
-        titulaires: [
-          { id: entrepriseIdValidator.parse('titulaire1'), nom: 'titulaire1', operateur: false },
-          { id: entrepriseIdValidator.parse('titulaire2'), nom: 'titulaire2', operateur: true },
-        ],
-        amodiataires: [{ id: entrepriseIdValidator.parse('amodiataire1'), nom: 'Amodiataire 1', operateur: false }],
+        titulaireIds: [entrepriseIdValidator.parse('titulaire1'), entrepriseIdValidator.parse('titulaire2')],
+        amodiataireIds: [entrepriseIdValidator.parse('amodiataire1')],
         perimetre: {
           geojson4326_points: null,
           geojson4326_perimetre: demandeArmNonMecaniseDeposable,
@@ -715,7 +699,7 @@ export const DemandeArmNonMecaniseDeposable: StoryFn = () => (
 export const Depot: StoryFn = () => (
   <DemarcheEtape
     titre={{ titreStatutId: 'val', typeId: 'arm', nom: 'nom du titre', slug: titreSlug }}
-    demarche={{ demarche_type_id: 'oct', titulaires: [{ id: entrepriseIdValidator.parse('titulaire1'), nom: 'titulaire1' }], administrationsLocales: [], sdom_zones: [], etapes: [] }}
+    demarche={{ demarche_type_id: 'oct', titulaireIds: [entrepriseIdValidator.parse('titulaire1')], administrationsLocales: [], sdom_zones: [], etapes: [] }}
     router={routerPushMock}
     user={{ ...testBlankUser, role: 'super' }}
     etape={{
@@ -730,13 +714,14 @@ export const Depot: StoryFn = () => (
       entreprises_documents: entrepriseDocuments,
     }}
     apiClient={apiClient}
+    entreprises={entreprises}
   />
 )
 
 export const AvisDefavorable: StoryFn = () => (
   <DemarcheEtape
     titre={{ titreStatutId: 'val', typeId: 'arm', nom: 'nom du titre', slug: titreSlug }}
-    demarche={{ demarche_type_id: 'oct', titulaires: [], administrationsLocales: [], sdom_zones: [], etapes: [] }}
+    demarche={{ demarche_type_id: 'oct', titulaireIds: [], administrationsLocales: [], sdom_zones: [], etapes: [] }}
     user={{ ...testBlankUser, role: 'super' }}
     router={routerPushMock}
     etape={{
@@ -752,6 +737,7 @@ export const AvisDefavorable: StoryFn = () => (
       entreprises_documents: [],
     }}
     apiClient={apiClient}
+    entreprises={entreprises}
   />
 )
 
@@ -776,10 +762,11 @@ const demandeAvecSeulementPerimetre: FeatureMultiPolygon = {
 export const DemandeAvecSeulementPerimetre: StoryFn = () => (
   <DemarcheEtape
     titre={{ titreStatutId: 'val', typeId: 'arm', nom: 'nom du titre', slug: titreSlug }}
-    demarche={{ demarche_type_id: 'oct', titulaires: [], administrationsLocales: [], sdom_zones: [], etapes: [] }}
+    demarche={{ demarche_type_id: 'oct', titulaireIds: [], administrationsLocales: [], sdom_zones: [], etapes: [] }}
     user={{ ...testBlankUser, role: 'super' }}
     router={routerPushMock}
     apiClient={apiClient}
+    entreprises={entreprises}
     initTab="points"
     etape={{
       id: etapeIdValidator.parse('etapeId'),
@@ -794,8 +781,8 @@ export const DemandeAvecSeulementPerimetre: StoryFn = () => (
         duree: null,
         date_fin: null,
         substances: [],
-        titulaires: [],
-        amodiataires: [],
+        titulaireIds: [],
+        amodiataireIds: [],
         perimetre: {
           geojson4326_points: null,
           geojson4326_perimetre: demandeAvecSeulementPerimetre,
@@ -839,15 +826,16 @@ const demandeAvecGrosseNote: FeatureMultiPolygon = {
 export const DemandeAvecGrosseNote: StoryFn = () => (
   <DemarcheEtape
     titre={{ titreStatutId: 'val', typeId: 'arm', nom: 'nom du titre', slug: titreSlug }}
-    demarche={{ demarche_type_id: 'oct', titulaires: [], administrationsLocales: [], sdom_zones: [], etapes: [] }}
+    demarche={{ demarche_type_id: 'oct', titulaireIds: [], administrationsLocales: [], sdom_zones: [], etapes: [] }}
     user={{ ...testBlankUser, role: 'super' }}
     router={routerPushMock}
     apiClient={apiClient}
+    entreprises={entreprises}
     initTab="points"
     etape={{
       id: etapeIdValidator.parse('etapeId'),
       slug: etapeSlugValidator.parse('etape-slug'),
-      notes: 'Ceci est une énorme note sur plusieurs lignes.\n Une seconde ligne.\n Incertitudes: \n * date \n * substances \n * titulaires',
+      notes: 'Ceci est une énorme note sur plusieurs lignes.\n Une seconde ligne.\n Incertitudes: \n * date \n * substances \n * titulaireIds',
       etape_type_id: EtapesTypesEtapesStatuts.demande.EN_CONSTRUCTION.etapeTypeId,
       etape_statut_id: EtapesTypesEtapesStatuts.demande.EN_CONSTRUCTION.etapeStatutId,
       date,
@@ -857,8 +845,8 @@ export const DemandeAvecGrosseNote: StoryFn = () => (
         duree: null,
         date_fin: null,
         substances: [],
-        titulaires: [],
-        amodiataires: [],
+        titulaireIds: [],
+        amodiataireIds: [],
         perimetre: {
           geojson4326_points: null,
           geojson4326_perimetre: demandeAvecGrosseNote,
@@ -886,7 +874,7 @@ export const AxmDeposableAvecDaeEtAsl: StoryFn = () => (
     titre={{ titreStatutId: 'dmi', typeId: 'axm', nom: 'nom du titre', slug: titreSlug }}
     demarche={{
       demarche_type_id: 'oct',
-      titulaires: [{ id: entrepriseIdValidator.parse('entrepriseId'), nom: 'nom entreprise' }],
+      titulaireIds: [entrepriseIdValidator.parse('titulaire1')],
       administrationsLocales: [],
       sdom_zones: [],
       etapes: [
@@ -916,9 +904,10 @@ export const AxmDeposableAvecDaeEtAsl: StoryFn = () => (
         },
       ],
     }}
-    user={{ ...testBlankUser, role: 'entreprise', entreprises: [{ id: entrepriseIdValidator.parse('entrepriseId'), nom: 'nom entreprise' }] }}
+    user={{ ...testBlankUser, role: 'entreprise', entreprises: [{ id: entrepriseIdValidator.parse('titulaire1'), nom: 'nom entreprise' }] }}
     router={routerPushMock}
     apiClient={apiClient}
+    entreprises={entreprises}
     initTab="points"
     etape={{
       id: etapeIdValidator.parse('etapeId'),
@@ -933,8 +922,8 @@ export const AxmDeposableAvecDaeEtAsl: StoryFn = () => (
         duree: 4,
         date_fin: null,
         substances: ['auru'],
-        titulaires: [{ id: entrepriseIdValidator.parse('entrepriseId'), operateur: false, nom: 'nom entreprise' }],
-        amodiataires: [],
+        titulaireIds: [entrepriseIdValidator.parse('titulaire1')],
+        amodiataireIds: [],
         perimetre: {
           geojson4326_points: null,
           geojson4326_perimetre: demandeAvecGrosseNote,

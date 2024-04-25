@@ -6,18 +6,18 @@ import { CaminoDate } from 'camino-common/src/date'
 import { SubstancesEdit } from './substances-edit'
 import { dureeOptionalCheck as titreEtapesDureeOptionalCheck, canEditAmodiataires, canEditTitulaires, canEditDuree, canEditDates } from 'camino-common/src/permissions/titres-etapes'
 
-import { EtapeEntreprise, EtapeWithHeritage, HeritageProp } from 'camino-common/src/etape'
+import { EtapeWithHeritage, HeritageProp } from 'camino-common/src/etape'
 import { DomaineId } from 'camino-common/src/static/domaines'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
 import { getDomaineId, TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { watch, computed, ref, DeepReadonly, defineComponent } from 'vue'
-import { Entreprise } from 'camino-common/src/entreprise'
+import { Entreprise, EntrepriseId } from 'camino-common/src/entreprise'
 import { User } from 'camino-common/src/roles'
 import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
 import { SubstanceLegaleId } from 'camino-common/src/static/substancesLegales'
 import { DsfrInput } from '../_ui/dsfr-input'
 
-export type EtapeFondamentaleEdit = Pick<EtapeWithHeritage, 'typeId' | 'dateDebut' | 'dateFin' | 'duree' | 'titulaires' | 'amodiataires' | 'substances' | 'duree' | 'heritageProps'>
+export type EtapeFondamentaleEdit = Pick<EtapeWithHeritage, 'typeId' | 'dateDebut' | 'dateFin' | 'duree' | 'titulaireIds' | 'amodiataireIds' | 'substances' | 'duree' | 'heritageProps'>
 interface Props {
   etape: DeepReadonly<EtapeFondamentaleEdit>
   demarcheTypeId: DemarcheTypeId
@@ -67,10 +67,10 @@ export const FondamentalesEdit = defineComponent<Props>(props => {
   const updateDateFinHeritage = (dateFinHeritage: DeepReadonly<HeritageProp<Pick<EtapeWithHeritage, 'dateFin' | 'typeId' | 'date'>>>) => {
     setEditedEtape({ ...editedEtape.value, heritageProps: { ...editedEtape.value.heritageProps, dateFin: dateFinHeritage } })
   }
-  const updateTitulairesHeritage = (titulairesHeritage: DeepReadonly<HeritageProp<Pick<EtapeWithHeritage, 'titulaires' | 'typeId' | 'date'>>>) => {
+  const updateTitulairesHeritage = (titulairesHeritage: DeepReadonly<HeritageProp<Pick<EtapeWithHeritage, 'titulaireIds' | 'typeId' | 'date'>>>) => {
     setEditedEtape({ ...editedEtape.value, heritageProps: { ...editedEtape.value.heritageProps, titulaires: titulairesHeritage } })
   }
-  const updateAmodiatairesHeritage = (amodiatairesHeritage: DeepReadonly<HeritageProp<Pick<EtapeWithHeritage, 'amodiataires' | 'typeId' | 'date'>>>) => {
+  const updateAmodiatairesHeritage = (amodiatairesHeritage: DeepReadonly<HeritageProp<Pick<EtapeWithHeritage, 'amodiataireIds' | 'typeId' | 'date'>>>) => {
     setEditedEtape({ ...editedEtape.value, heritageProps: { ...editedEtape.value.heritageProps, amodiataires: amodiatairesHeritage } })
   }
 
@@ -87,24 +87,16 @@ export const FondamentalesEdit = defineComponent<Props>(props => {
 
   const domaineId = computed<DomaineId>(() => getDomaineId(props.titreTypeId))
 
-  const titulairesUpdate = (titulaires: DeepReadonly<EtapeEntreprise[]>) => {
-    const newTitulaires = titulaires.map(titulaire => ({
-      id: titulaire.id,
-      operateur: titulaire.operateur,
-    }))
-    setEditedEtape({ ...editedEtape.value, titulaires: newTitulaires })
+  const titulairesUpdate = (titulaireIds: DeepReadonly<EntrepriseId[]>) => {
+    setEditedEtape({ ...editedEtape.value, titulaireIds })
   }
 
-  const amodiatairesUpdate = (amodiataires: DeepReadonly<EtapeEntreprise[]>) => {
-    const newAmodiataires = amodiataires.map(amodiataire => ({
-      id: amodiataire.id,
-      operateur: amodiataire.operateur,
-    }))
-    setEditedEtape({ ...editedEtape.value, amodiataires: newAmodiataires })
+  const amodiatairesUpdate = (amodiataireIds: DeepReadonly<EntrepriseId[]>) => {
+    setEditedEtape({ ...editedEtape.value, amodiataireIds })
   }
 
-  const getEntrepriseNom = (etapeEntreprise: EtapeEntreprise): string => {
-    const entreprise = props.entreprises.find(({ id }) => id === etapeEntreprise.id)
+  const getEntrepriseNom = (entrepriseId: EntrepriseId): string => {
+    const entreprise = props.entreprises.find(({ id }) => id === entrepriseId)
 
     if (!entreprise) {
       return ''
@@ -202,17 +194,17 @@ export const FondamentalesEdit = defineComponent<Props>(props => {
                 updateHeritage={updateTitulairesHeritage}
                 prop={editedEtape.value.heritageProps.titulaires}
                 propId="titulaires"
-                hasHeritage={isNotNullNorUndefinedNorEmpty(editedEtape.value.heritageProps.titulaires.etape?.titulaires)}
+                hasHeritage={isNotNullNorUndefinedNorEmpty(editedEtape.value.heritageProps.titulaires.etape?.titulaireIds)}
                 write={() => (
                   <AutocompleteEntreprise
                     allEntities={props.entreprises}
-                    selectedEntities={editedEtape.value.titulaires}
-                    nonSelectableEntities={editedEtape.value.amodiataires.map(({ id }) => id)}
+                    selectedEntities={editedEtape.value.titulaireIds}
+                    nonSelectableEntities={editedEtape.value.amodiataireIds}
                     name="titulaires"
                     onEntreprisesUpdate={titulairesUpdate}
                   />
                 )}
-                read={heritagePropEtape => <div>{heritagePropEtape?.titulaires.map(t => <DsfrTag key={t.id} class="fr-mr-1w" ariaLabel={getEntrepriseNom(t)} />)}</div>}
+                read={heritagePropEtape => <div>{heritagePropEtape?.titulaireIds.map(id => <DsfrTag key={id} class="fr-mr-1w" ariaLabel={getEntrepriseNom(id)} />)}</div>}
               />
             </div>
           </>
@@ -228,18 +220,18 @@ export const FondamentalesEdit = defineComponent<Props>(props => {
               <HeritageEdit
                 updateHeritage={updateAmodiatairesHeritage}
                 prop={editedEtape.value.heritageProps.amodiataires}
-                hasHeritage={isNotNullNorUndefinedNorEmpty(editedEtape.value.heritageProps.amodiataires.etape?.amodiataires)}
+                hasHeritage={isNotNullNorUndefinedNorEmpty(editedEtape.value.heritageProps.amodiataires.etape?.amodiataireIds)}
                 propId="amodiataires"
                 write={() => (
                   <AutocompleteEntreprise
                     allEntities={props.entreprises}
-                    selectedEntities={editedEtape.value.amodiataires}
-                    nonSelectableEntities={editedEtape.value.titulaires.map(({ id }) => id)}
+                    selectedEntities={editedEtape.value.amodiataireIds}
+                    nonSelectableEntities={editedEtape.value.titulaireIds}
                     name="amodiataires"
                     onEntreprisesUpdate={amodiatairesUpdate}
                   />
                 )}
-                read={heritagePropEtape => <div>{heritagePropEtape?.amodiataires.map(t => <DsfrTag key={t.id} class="fr-mr-1w" ariaLabel={getEntrepriseNom(t)} />)}</div>}
+                read={heritagePropEtape => <div>{heritagePropEtape?.amodiataireIds.map(id => <DsfrTag key={id} class="fr-mr-1w" ariaLabel={getEntrepriseNom(id)} />)}</div>}
               />
             </div>
           </>

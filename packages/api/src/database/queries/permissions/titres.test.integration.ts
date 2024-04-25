@@ -1,9 +1,9 @@
-import { IEntreprise, ITitre, ITitreDemarche } from '../../../types.js'
+import { ITitre, ITitreDemarche } from '../../../types.js'
 
 import { dbManager } from '../../../../tests/db-manager.js'
 
 import Titres from '../../models/titres.js'
-import { idGenerate, newDemarcheId, newEtapeId, newTitreId } from '../../models/_format/id-create.js'
+import { newDemarcheId, newEtapeId, newTitreId } from '../../models/_format/id-create.js'
 import { titresArmEnDemandeQuery, titresConfidentielSelect, titresQueryModify, titresVisibleByEntrepriseQuery } from './titres.js'
 import { userSuper } from '../../user-super.js'
 import { beforeAll, expect, afterAll, test, describe, vi } from 'vitest'
@@ -14,6 +14,7 @@ import { DemarcheStatutId } from 'camino-common/src/static/demarchesStatuts.js'
 import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts.js'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
 import { toCaminoDate } from 'camino-common/src/date.js'
+import { entrepriseIdValidator } from 'camino-common/src/entreprise'
 
 console.info = vi.fn()
 console.error = vi.fn()
@@ -30,16 +31,12 @@ describe('titresQueryModify', () => {
     test.each([
       [false, false],
       [true, true],
-    ])('Vérifie la visibilité d’un titre par une entreprise', async (withTitulaire, visible) => {
-      const mockEntreprise1 = {
-        id: idGenerate(),
-        nom: 'monEntrepriseNom',
-      } as IEntreprise
-
+    ])('Vérifie la visibilité d’un titre par un titulaire', async (withTitulaire, visible) => {
       const id = newTitreId()
       const demarcheId = newDemarcheId()
       const etapeId = newEtapeId()
 
+      const entrepriseId1 = entrepriseIdValidator.parse('entrepriseId1')
       const mockTitre: Omit<ITitre, 'id'> = {
         nom: 'titre1',
         typeId: 'arm',
@@ -57,7 +54,7 @@ describe('titresQueryModify', () => {
                 date: toCaminoDate('2020-01-01'),
                 typeId: 'mfr',
                 statutId: 'fai',
-                titulaires: withTitulaire ? [mockEntreprise1] : [],
+                titulaireIds: withTitulaire ? [entrepriseId1] : [],
               },
             ],
           } as ITitreDemarche,
@@ -67,7 +64,50 @@ describe('titresQueryModify', () => {
       await Titres.query().insertGraph(mockTitre)
 
       const q = Titres.query()
-      titresVisibleByEntrepriseQuery(q, [mockEntreprise1.id])
+      titresVisibleByEntrepriseQuery(q, [entrepriseId1])
+
+      const res = await q
+
+      expect(res).toHaveLength(visible ? 1 : 0)
+    })
+
+    test.each([
+      [false, false],
+      [true, true],
+    ])('Vérifie la visibilité d’un titre par un amodiataire', async (withAmodiataire, visible) => {
+      const id = newTitreId()
+      const demarcheId = newDemarcheId()
+      const etapeId = newEtapeId()
+
+      const entrepriseId2 = entrepriseIdValidator.parse('entrepriseId2')
+      const mockTitre: Omit<ITitre, 'id'> = {
+        nom: 'titre1',
+        typeId: 'arm',
+        titreStatutId: 'ind',
+        propsTitreEtapesIds: { amodiataires: etapeId },
+        demarches: [
+          {
+            id: demarcheId,
+            titreId: id,
+            typeId: 'oct',
+            etapes: [
+              {
+                id: etapeId,
+                titreDemarcheId: demarcheId,
+                date: toCaminoDate('2020-01-01'),
+                typeId: 'mfr',
+                statutId: 'fai',
+                amodiataireIds: withAmodiataire ? [entrepriseId2] : [],
+              },
+            ],
+          } as ITitreDemarche,
+        ],
+      }
+
+      await Titres.query().insertGraph(mockTitre)
+
+      const q = Titres.query()
+      titresVisibleByEntrepriseQuery(q, [entrepriseId2])
 
       const res = await q
 
@@ -170,15 +210,11 @@ describe('titresQueryModify', () => {
       [true, true, 'arm', 'dmi', false],
       [true, false, 'arm', 'dmi', false],
     ])('Vérifie si le titre est confidentiel', async (publicLecture, withTitulaire, typeId, statutId, confidentiel) => {
-      const mockEntreprise1 = {
-        id: idGenerate(),
-        nom: 'monEntrepriseNom',
-      } as IEntreprise
-
       const etapeId = newEtapeId()
       const demarcheId = newDemarcheId()
       const id = newTitreId()
 
+      const entrepriseId1 = entrepriseIdValidator.parse('entrepriseId1')
       const mockTitre: ITitre = {
         id,
         nom: 'titre1',
@@ -199,7 +235,7 @@ describe('titresQueryModify', () => {
                 date: toCaminoDate('2020-01-01'),
                 typeId: 'mcr',
                 statutId: 'fav',
-                titulaires: withTitulaire ? [mockEntreprise1] : [],
+                titulaireIds: withTitulaire ? [entrepriseId1] : [],
               },
             ],
           } as ITitreDemarche,
@@ -208,7 +244,7 @@ describe('titresQueryModify', () => {
 
       await Titres.query().insertGraph(mockTitre)
 
-      const q = Titres.query().where('id', id).modify(titresConfidentielSelect, [mockEntreprise1.id])
+      const q = Titres.query().where('id', id).modify(titresConfidentielSelect, [entrepriseId1])
 
       const res = await q
 

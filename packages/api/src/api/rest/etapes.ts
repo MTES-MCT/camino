@@ -208,7 +208,7 @@ export const deposeEtape = (pool: Pool) => async (req: CaminoRequest, res: Custo
         titreEtape.titreDemarcheId,
         {
           fields: {
-            titre: { pointsEtape: { id: {} }, titulaires: { id: {} }, amodiataires: { id: {} } },
+            titre: { pointsEtape: { id: {} }, titulairesEtape: { id: {} }, amodiatairesEtape: { id: {} } },
           },
         },
         userSuper
@@ -220,8 +220,8 @@ export const deposeEtape = (pool: Pool) => async (req: CaminoRequest, res: Custo
       if (isNullOrUndefined(titre)) throw new Error("le titre n'est pas chargé")
       if (isNullOrUndefined(titre.administrationsLocales)) throw new Error('les administrations locales du titre ne sont pas chargées')
 
-      if (isNullOrUndefined(titre.titulaires)) throw new Error('les titulaires du titre ne sont pas chargés')
-      if (isNullOrUndefined(titre.amodiataires)) throw new Error('les amodiataires du titre ne sont pas chargés')
+      if (isNullOrUndefined(titre.titulaireIds)) throw new Error('les titulaires du titre ne sont pas chargés')
+      if (isNullOrUndefined(titre.amodiataireIds)) throw new Error('les amodiataires du titre ne sont pas chargés')
       if (isNullOrUndefined(titreEtape.slug)) throw new Error("le slug de l'étape est obligatoire")
 
       const sdomZones: SDOMZoneId[] = []
@@ -233,7 +233,7 @@ export const deposeEtape = (pool: Pool) => async (req: CaminoRequest, res: Custo
       const titreTypeId = memoize(() => Promise.resolve(titre.typeId))
       const administrationsLocales = memoize(() => Promise.resolve(titre.administrationsLocales ?? []))
       const entreprisesTitulairesOuAmodiataires = memoize(() => {
-        return Promise.resolve([...(titre.titulaires ?? []).map(({ id }) => id), ...(titre.amodiataires ?? []).map(({ id }) => id)])
+        return Promise.resolve([...(titre.titulaireIds ?? []), ...(titre.amodiataireIds ?? [])])
       })
       const etapeDocuments = await getDocumentsByEtapeId(id, pool, user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires, titreEtape.typeId, {
         demarche_type_id: titreDemarche.typeId,
@@ -271,7 +271,7 @@ export const deposeEtape = (pool: Pool) => async (req: CaminoRequest, res: Custo
       // TODO 2023-06-14 TS 5.1 n’arrive pas réduire le type de titre
       const deposable = isEtapeDeposable(
         user,
-        { ...titre, titulaires: titre.titulaires ?? [], administrationsLocales: titre.administrationsLocales ?? [] },
+        { ...titre, titulaires: titre.titulaireIds ?? [], administrationsLocales: titre.administrationsLocales ?? [] },
         titreDemarche.typeId,
         { ...titreEtape, contenu: titreEtape.contenu ?? {} },
         etapeDocuments,
@@ -341,7 +341,7 @@ const demarcheEtapesTypesGet = async (titreDemarcheId: DemarcheId, date: CaminoD
         titre: {
           demarches: { etapes: { id: {} } },
           pointsEtape: { id: {} },
-          titulaires: { id: {} },
+          titulairesEtape: { id: {} },
         },
         etapes: { id: {} },
       },
@@ -350,6 +350,9 @@ const demarcheEtapesTypesGet = async (titreDemarcheId: DemarcheId, date: CaminoD
   )
 
   if (!titreDemarche) throw new Error("la démarche n'existe pas")
+  if (isNullOrUndefined(titreDemarche.titre?.titulaireIds)) {
+    throw new Error("la démarche n'est pas complète")
+  }
 
   const titre = titreDemarche.titre!
 
@@ -389,7 +392,7 @@ const demarcheEtapesTypesGet = async (titreDemarcheId: DemarcheId, date: CaminoD
       user,
       etapeTypeId,
       titreEtapeId && etapeTypeId === titreEtape?.typeId ? titreEtape?.statutId ?? null : null,
-      titre.titulaires ?? [],
+      titre.titulaireIds ?? [],
       titre.administrationsLocales ?? [],
       titreDemarche.typeId,
       {

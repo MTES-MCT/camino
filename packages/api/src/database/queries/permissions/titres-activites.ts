@@ -18,12 +18,7 @@ export const titresActivitesQueryModify = (q: QueryBuilder<TitresActivites, Titr
     // vérifie que l'utilisateur a les permissions sur les titres
     const entreprisesIds = user.entreprises.map(e => e.id)
 
-    q.whereExists(
-      entreprisesTitresQuery(entreprisesIds, 'titre', {
-        isTitulaire: true,
-        isAmodiataire: true,
-      })
-    )
+    q.whereExists(entreprisesTitresQuery(entreprisesIds, 'titre'))
   } else if (!isSuper(user)) {
     // sinon, aucune activité n'est visible
     q.where(false)

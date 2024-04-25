@@ -26,10 +26,7 @@ export const WithEntitiesAlreadyPresent: StoryFn = () => (
       { id: newEntrepriseId('optionId5'), nom: 'optionNom5', legal_siren: null },
       { id: newEntrepriseId('optionId10'), nom: 'optionNom10', legal_siren: null },
     ]}
-    selectedEntities={[
-      { id: newEntrepriseId('optionId10'), operateur: false },
-      { id: newEntrepriseId('optionId2'), operateur: true },
-    ]}
+    selectedEntities={[newEntrepriseId('optionId10'), newEntrepriseId('optionId2')]}
     nonSelectableEntities={[newEntrepriseId('optionId1')]}
     onEntreprisesUpdate={onEntreprisesUpdate}
   />

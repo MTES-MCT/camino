@@ -3,7 +3,8 @@ import { emailsWithTemplateSend } from '../../tools/api-mailjet/emails.js'
 import { EmailTemplateId } from '../../tools/api-mailjet/types.js'
 import { vi, describe, expect, test, afterEach } from 'vitest'
 import { getCurrent, toCaminoDate } from 'camino-common/src/date.js'
-import { ITitreActivite } from '../../types.js'
+import { entrepriseIdValidator } from 'camino-common/src/entreprise'
+import { activiteIdValidator } from 'camino-common/src/activite'
 
 vi.mock('../../tools/api-mailjet/emails', () => ({
   __esModule: true,
@@ -19,33 +20,31 @@ describe('relance les opérateurs des activités qui vont se fermer automatiquem
     vi.restoreAllMocks()
   })
   test('envoie un email aux opérateurs', async () => {
-    const date = '2022-01-01'
+    const date = toCaminoDate('2022-01-01')
 
     const email = 'toto.huhu@foo.com'
 
-    const activites = [
+    const titresActivites = await checkDateAndSendEmail(() => Promise.resolve([{ email }]), toCaminoDate('2022-03-18'), [
       {
         date,
-        typeId: 'gra',
+        id: activiteIdValidator.parse('activiteId'),
         titre: {
-          titulaires: [{ utilisateurs: [{ email: 'toto.huhu@foo.com' }] }],
+          titulaireIds: [entrepriseIdValidator.parse('titulaire1')],
         },
       },
-    ] as ITitreActivite[]
-    const titresActivites = await checkDateAndSendEmail(toCaminoDate('2022-03-18'), activites)
+    ])
 
     expect(emailsWithTemplateSendMock).toBeCalledWith([email], EmailTemplateId.ACTIVITES_RELANCE, expect.any(Object))
     expect(titresActivites.length).toEqual(1)
   })
 
   test('n’envoie pas d’email aux opérateurs', async () => {
-    const activites = [
+    const titresActivites = await checkDateAndSendEmail(() => Promise.resolve([]), getCurrent(), [
       {
-        date: '1000-01-01',
-        typeId: 'gra',
+        date: toCaminoDate('1000-01-01'),
+        id: activiteIdValidator.parse('activiteId'),
       },
-    ] as ITitreActivite[]
-    const titresActivites = await checkDateAndSendEmail(getCurrent(), activites)
+    ])
 
     expect(titresActivites.length).toEqual(0)
   })

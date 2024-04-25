@@ -5,8 +5,6 @@ import {
   IDeleteTitreEtapeEntrepriseDocumentInternalQuery,
   IGetEntrepriseDocumentIdsByEtapeIdQueryQuery,
   IGetEntrepriseDocumentLargeObjectIdsByEtapeIdQueryQuery,
-  IGetTitulairesByEtapeIdQueryDbQuery,
-  IGetAmodiatairesByEtapeIdQueryDbQuery,
   IInsertTitreEtapeEntrepriseDocumentInternalQuery,
   IGetDocumentsByEtapeIdQueryQuery,
   IInsertEtapeDocumentDbQuery,
@@ -16,7 +14,6 @@ import {
 } from './titres-etapes.queries.types.js'
 import { EtapeDocument, EtapeDocumentId, EtapeDocumentModification, etapeDocumentValidator, EtapeDocumentWithFileModification, EtapeId, TempEtapeDocument } from 'camino-common/src/etape.js'
 import { EntrepriseDocumentId, entrepriseDocumentValidator, EntrepriseId, EtapeEntrepriseDocument, etapeEntrepriseDocumentValidator } from 'camino-common/src/entreprise.js'
-import { EntreprisesByEtapeId, entreprisesByEtapeIdValidator } from 'camino-common/src/demarche.js'
 import { Pool } from 'pg'
 import { User } from 'camino-common/src/roles.js'
 import { canSeeEntrepriseDocuments } from 'camino-common/src/permissions/entreprises.js'
@@ -163,37 +160,6 @@ insert into etapes_documents (id, etape_document_type_id, etape_id, description,
     values ($ id !, $ etape_document_type_id !, $ etape_id !, $ description, $ public_lecture !, $ entreprises_lecture !, $ largeobject_id !)
 `
 
-export const getTitulairesByEtapeIdQuery = async (etapeId: EtapeId, pool: Pool): Promise<EntreprisesByEtapeId[]> => {
-  return dbQueryAndValidate(getTitulairesByEtapeIdQueryDb, { etapeId }, pool, entreprisesByEtapeIdValidator)
-}
-
-const getTitulairesByEtapeIdQueryDb = sql<Redefine<IGetTitulairesByEtapeIdQueryDbQuery, { etapeId: EtapeId }, EntreprisesByEtapeId>>`
-select
-    e.id,
-    e.nom,
-    tt.operateur
-from
-    titres_titulaires tt
-    join entreprises e on e.id = tt.entreprise_id
-where
-    tt.titre_etape_id = $ etapeId !
-`
-
-export const getAmodiatairesByEtapeIdQuery = async (etapeId: EtapeId, pool: Pool): Promise<EntreprisesByEtapeId[]> => {
-  return dbQueryAndValidate(getAmodiatairesByEtapeIdQueryDb, { etapeId }, pool, entreprisesByEtapeIdValidator)
-}
-
-const getAmodiatairesByEtapeIdQueryDb = sql<Redefine<IGetAmodiatairesByEtapeIdQueryDbQuery, { etapeId: EtapeId }, EntreprisesByEtapeId>>`
-select
-    e.id,
-    e.nom,
-    tt.operateur
-from
-    titres_amodiataires tt
-    join entreprises e on e.id = tt.entreprise_id
-where
-    tt.titre_etape_id = $ etapeId !
-`
 const etapeDocumentLargeObjectIdValidator = z.number().brand('EtapeDocumentLargeObjectId')
 
 const getDocumentsByEtapeIdQueryValidator = etapeDocumentValidator.extend({ largeobject_id: etapeDocumentLargeObjectIdValidator })

@@ -1,7 +1,6 @@
 import { Model, Pojo, QueryContext, ref } from 'objection'
 
 import { ITitre } from '../../types.js'
-import Entreprises from './entreprises.js'
 import TitresDemarches from './titres-demarches.js'
 import TitresEtapes from './titres-etapes.js'
 import { idGenerate } from './_format/id-create.js'
@@ -61,31 +60,21 @@ class Titres extends Model {
       },
     },
 
-    titulaires: {
-      relation: Model.ManyToManyRelation,
-      modelClass: Entreprises,
+    titulairesEtape: {
+      relation: Model.BelongsToOneRelation,
+      modelClass: TitresEtapes,
       join: {
         from: ref('titres.propsTitreEtapesIds:titulaires').castText(),
-        through: {
-          from: 'titresTitulaires.titreEtapeId',
-          to: 'titresTitulaires.entrepriseId',
-          extra: ['operateur'],
-        },
-        to: 'entreprises.id',
+        to: 'titresEtapes.id',
       },
     },
 
-    amodiataires: {
-      relation: Model.ManyToManyRelation,
-      modelClass: Entreprises,
+    amodiatairesEtape: {
+      relation: Model.BelongsToOneRelation,
+      modelClass: TitresEtapes,
       join: {
         from: ref('titres.propsTitreEtapesIds:amodiataires').castText(),
-        through: {
-          from: 'titresAmodiataires.titreEtapeId',
-          to: 'titresAmodiataires.entrepriseId',
-          extra: ['operateur'],
-        },
-        to: 'entreprises.id',
+        to: 'titresEtapes.id',
       },
     },
 
@@ -115,6 +104,22 @@ class Titres extends Model {
       this.substances = undefined
     } else {
       this.substances = this.substancesEtape.substances
+    }
+
+    if (this.titulairesEtape === null) {
+      this.titulaireIds = []
+    } else if (this.titulairesEtape === undefined) {
+      this.titulaireIds = undefined
+    } else {
+      this.titulaireIds = this.titulairesEtape.titulaireIds
+    }
+
+    if (this.amodiatairesEtape === null) {
+      this.amodiataireIds = []
+    } else if (this.amodiatairesEtape === undefined) {
+      this.amodiataireIds = undefined
+    } else {
+      this.amodiataireIds = this.amodiatairesEtape.amodiataireIds
     }
 
     // Les secteurs et les administrations locales dépendent du périmètre du titre

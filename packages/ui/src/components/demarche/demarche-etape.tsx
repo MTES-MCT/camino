@@ -10,7 +10,7 @@ import { EtapeStatut } from '../_common/etape-statut'
 import { PropDuree } from '../etape/prop-duree'
 import { SubstancesLegale } from 'camino-common/src/static/substancesLegales'
 import { EtapePropEntreprisesItem, EtapePropItem } from '../etape/etape-prop-item'
-import { DemarcheEtape as CommonDemarcheEtape, EntreprisesByEtapeId } from 'camino-common/src/demarche'
+import { DemarcheEtape as CommonDemarcheEtape } from 'camino-common/src/demarche'
 import { DsfrPerimetre, TabId } from '../_common/dsfr-perimetre'
 import { TitreSlug } from 'camino-common/src/validators/titres'
 import { Router } from 'vue-router'
@@ -34,13 +34,14 @@ import { ApiClient } from '@/api/api-client'
 import { TitreGetDemarche } from 'camino-common/src/titres'
 import { GetEtapeDocumentsByEtapeId, documentTypeIdComplementaireObligatoireASL, documentTypeIdComplementaireObligatoireDAE, etapeDocumentIdValidator, needAslAndDae } from 'camino-common/src/etape'
 import { Unites } from 'camino-common/src/static/unites'
+import { EntrepriseId, Entreprise } from 'camino-common/src/entreprise'
 // Il ne faut pas utiliser de literal dans le 'in' il n'y aura jamais d'erreur typescript
 const fondamentalePropsName = 'fondamentale'
 
 type Props = {
   etape: OmitDistributive<CommonDemarcheEtape, 'ordre'>
   demarche: {
-    titulaires: Pick<EntreprisesByEtapeId, 'id' | 'nom'>[]
+    titulaireIds: EntrepriseId[]
     administrationsLocales: AdministrationId[]
     demarche_type_id: DemarcheTypeId
     sdom_zones: SDOMZoneId[]
@@ -55,6 +56,7 @@ type Props = {
   apiClient: Pick<ApiClient, 'deleteEtape' | 'deposeEtape' | 'getGeojsonByGeoSystemeId'>
   router: Pick<Router, 'push'>
   user: User
+  entreprises: Entreprise[]
   initTab?: TabId
 }
 
@@ -86,6 +88,12 @@ export const DemarcheEtape = defineComponent<Props>(props => {
     return false
   })
 
+  const entreprisesIndex = props.entreprises.reduce<Record<EntrepriseId, string>>((acc, entreprise) => {
+    acc[entreprise.id] = entreprise.nom
+
+    return acc
+  }, {})
+
   const removePopupVisible = ref<boolean>(false)
   const removePopupOpen = () => {
     removePopupVisible.value = true
@@ -104,7 +112,7 @@ export const DemarcheEtape = defineComponent<Props>(props => {
   const canDownloadZip = computed<boolean>(() => props.etape.entreprises_documents.length + props.etape.etape_documents.length > 1)
 
   const canEditOrDeleteEtape = computed<boolean>(() =>
-    canEditEtape(props.user, props.etape.etape_type_id, props.etape.etape_statut_id, props.demarche.titulaires, props.demarche.administrationsLocales, props.demarche.demarche_type_id, props.titre)
+    canEditEtape(props.user, props.etape.etape_type_id, props.etape.etape_statut_id, props.demarche.titulaireIds, props.demarche.administrationsLocales, props.demarche.demarche_type_id, props.titre)
   )
 
   const daeDocument = computed<GetEtapeDocumentsByEtapeId['dae']>(() => {
@@ -150,7 +158,7 @@ export const DemarcheEtape = defineComponent<Props>(props => {
     fondamentalePropsName in props.etape
       ? isEtapeDeposable(
           props.user,
-          { typeId: props.titre.typeId, titreStatutId: props.titre.titreStatutId, titulaires: props.demarche.titulaires, administrationsLocales: props.demarche.administrationsLocales },
+          { typeId: props.titre.typeId, titreStatutId: props.titre.titreStatutId, titulaires: props.demarche.titulaireIds, administrationsLocales: props.demarche.administrationsLocales },
           props.demarche.demarche_type_id,
           {
             statutId: props.etape.etape_statut_id,
@@ -233,8 +241,8 @@ export const DemarcheEtape = defineComponent<Props>(props => {
                 {(props.etape.fondamentale.substances?.length ?? 0) > 0 ? (
                   <EtapePropItem title="Substances" text={(props.etape.fondamentale.substances ?? []).map(s => capitalize(SubstancesLegale[s].nom)).join(', ')} />
                 ) : null}
-                <EtapePropEntreprisesItem title="Titulaire" entreprises={props.etape.fondamentale.titulaires} />
-                <EtapePropEntreprisesItem title="Amodiataire" entreprises={props.etape.fondamentale.amodiataires} />
+                <EtapePropEntreprisesItem title="Titulaire" entreprises={props.etape.fondamentale.titulaireIds?.map(id => ({ id, nom: entreprisesIndex[id] })) ?? []} />
+                <EtapePropEntreprisesItem title="Amodiataire" entreprises={props.etape.fondamentale.amodiataireIds?.map(id => ({ id, nom: entreprisesIndex[id] })) ?? []} />
                 {isNotNullNorUndefined(props.etape.fondamentale.perimetre) && isNotNullNorUndefined(props.etape.fondamentale.perimetre.surface) ? (
                   <EtapePropItem title="Surface" text={`${numberFormat(props.etape.fondamentale.perimetre.surface)} km² environ`} />
                 ) : null}
@@ -299,7 +307,7 @@ export const DemarcheEtape = defineComponent<Props>(props => {
         />
       ) : null}
 
-      <EtapeDocuments etapeDocuments={props.etape.etape_documents} entrepriseDocuments={props.etape.entreprises_documents} titulaires={props.demarche.titulaires} user={props.user} />
+      <EtapeDocuments etapeDocuments={props.etape.etape_documents} entrepriseDocuments={props.etape.entreprises_documents} user={props.user} entreprises={props.entreprises} />
 
       {removePopupVisible.value ? (
         <RemoveEtapePopup
@@ -318,4 +326,4 @@ export const DemarcheEtape = defineComponent<Props>(props => {
 })
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-DemarcheEtape.props = ['demarche', 'titre', 'router', 'user', 'etape', 'apiClient', 'initTab']
+DemarcheEtape.props = ['demarche', 'titre', 'router', 'user', 'entreprises', 'etape', 'apiClient', 'initTab']

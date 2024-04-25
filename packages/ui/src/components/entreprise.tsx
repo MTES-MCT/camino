@@ -1,17 +1,13 @@
 import { Card } from './_ui/card'
-import { TableAuto } from './_ui/table-auto'
-import { TitresTable } from './titres/table'
 import { EntrepriseEditPopup } from './entreprise/edit-popup'
 import { dateFormat, CaminoAnnee, getCurrentAnnee, toCaminoAnnee } from 'camino-common/src/date'
 import { EntrepriseFiscalite } from './entreprise/entreprise-fiscalite'
 
-import { utilisateursColonnes, utilisateursLignesBuild } from './utilisateurs/table'
-import { fiscaliteVisible as fiscaliteVisibleFunc } from 'camino-common/src/fiscalite'
 import { User } from 'camino-common/src/roles'
 import { computed, onMounted, watch, defineComponent, ref, inject } from 'vue'
 import { useRoute } from 'vue-router'
 import { canEditEntreprise, canSeeEntrepriseDocuments } from 'camino-common/src/permissions/entreprises'
-import { EntrepriseType, newEntrepriseId, EntrepriseId } from 'camino-common/src/entreprise'
+import { EntrepriseType, newEntrepriseId, EntrepriseId, Entreprise as CommonEntreprise } from 'camino-common/src/entreprise'
 import { EntrepriseDocuments } from './entreprise/entreprise-documents'
 import { AsyncData } from '../api/client-rest'
 import { LoadingElement } from './_ui/functional-loader'
@@ -19,13 +15,16 @@ import { CaminoError } from './error'
 import { ButtonIcon } from './_ui/button-icon'
 import { ApiClient, apiClient } from '@/api/api-client'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
-import { userKey } from '@/moi'
+import { userKey, entreprisesKey } from '@/moi'
+import { DsfrLink } from './_ui/dsfr-button'
+import { canReadUtilisateurs } from 'camino-common/src/permissions/utilisateurs'
 
 export const Entreprise = defineComponent({
   setup() {
     const vueRoute = useRoute()
     const entrepriseId = ref<EntrepriseId | undefined>(newEntrepriseId(vueRoute.params.id.toString()))
     const user = inject(userKey)
+    const entreprises = inject(entreprisesKey, ref([]))
 
     watch(
       () => vueRoute.params.id,
@@ -43,7 +42,7 @@ export const Entreprise = defineComponent({
     return () => (
       <>
         {entrepriseId.value ? (
-          <PureEntreprise currentYear={anneeCourante} entrepriseId={entrepriseId.value} apiClient={apiClient} user={user} />
+          <PureEntreprise currentYear={anneeCourante} entrepriseId={entrepriseId.value} apiClient={apiClient} user={user} entreprises={entreprises.value} />
         ) : (
           <CaminoError couleur="error" message="Impossible d’afficher une entreprise sans identifiant" />
         )}
@@ -54,6 +53,7 @@ export const Entreprise = defineComponent({
 
 interface Props {
   entrepriseId: EntrepriseId
+  entreprises: CommonEntreprise[]
   apiClient: Pick<
     ApiClient,
     'getEntreprise' | 'deleteEntrepriseDocument' | 'getEntrepriseDocuments' | 'getFiscaliteEntreprise' | 'modifierEntreprise' | 'creerEntreprise' | 'creerEntrepriseDocument' | 'uploadTempDocument'
@@ -83,25 +83,7 @@ export const PureEntreprise = defineComponent<Props>(props => {
   })
 
   const entreprise = ref<AsyncData<EntrepriseType>>({ status: 'LOADING' })
-  const utilisateursLignes = computed(() => {
-    if (entreprise.value.status === 'LOADED') {
-      return utilisateursLignesBuild(entreprise.value.value.utilisateurs)
-    }
-
-    return []
-  })
   const editPopup = ref(false)
-
-  const fiscaliteVisible = computed<boolean>(() => {
-    if (entreprise.value.status === 'LOADED') {
-      return fiscaliteVisibleFunc(props.user, props.entrepriseId, [
-        ...entreprise.value.value.titulaireTitres.map(({ typeId }) => ({ type_id: typeId })),
-        ...entreprise.value.value.amodiataireTitres.map(({ typeId }) => ({ type_id: typeId })),
-      ])
-    }
-
-    return false
-  })
 
   const refreshEntreprise = async () => {
     try {
@@ -152,7 +134,7 @@ export const PureEntreprise = defineComponent<Props>(props => {
                       <h5>Forme juridique</h5>
                     </div>
                     <div class="tablet-blob-3-4">
-                      <p>{item.legalForme}</p>
+                      <p>{item.legal_forme}</p>
                     </div>
                   </div>
 
@@ -167,7 +149,7 @@ export const PureEntreprise = defineComponent<Props>(props => {
                       <ul class="list-sans">
                         {item.etablissements?.map(e => (
                           <li key={e.id}>
-                            <h6 class="inline-block">{dateFormat(e.dateDebut)}</h6>: {e.nom}
+                            <h6 class="inline-block">{dateFormat(e.date_debut)}</h6>: {e.nom}
                           </li>
                         ))}
                       </ul>
@@ -182,7 +164,7 @@ export const PureEntreprise = defineComponent<Props>(props => {
                       <p>
                         {item.adresse}
                         <br />
-                        {item.codePostal} {item.commune}
+                        {item.code_postal} {item.commune}
                       </p>
                     </div>
                   </div>
@@ -204,7 +186,7 @@ export const PureEntreprise = defineComponent<Props>(props => {
                     </div>
                     <div class="tablet-blob-3-4">
                       <p class="word-break">
-                        {item.email ? (
+                        {isNotNullNorUndefined(item.email) ? (
                           <a href={`mailto:${item.email}`} class="btn small bold py-xs px-s rnd">
                             {item.email}
                           </a>
@@ -221,7 +203,7 @@ export const PureEntreprise = defineComponent<Props>(props => {
                     </div>
                     <div class="tablet-blob-3-4">
                       <p class="word-break">
-                        {item.url ? (
+                        {isNotNullNorUndefined(item.url) ? (
                           <a href={item.url} class="btn small bold py-xs px-s rnd">
                             {item.url}
                           </a>
@@ -240,49 +222,43 @@ export const PureEntreprise = defineComponent<Props>(props => {
                       <p>{item.archive ? 'Oui' : 'Non'}</p>
                     </div>
                   </div>
+
+                  {canReadUtilisateurs(props.user) ? (
+                    <div class="tablet-blobs">
+                      <div class="tablet-blob-1-4">
+                        <h5>Utilisateurs de l'entreprise</h5>
+                      </div>
+                      <div class="tablet-blob-3-4">
+                        <p>
+                          <DsfrLink to={{ name: 'utilisateurs', query: { entreprisesIds: props.entrepriseId } }} icon={null} title="Voir les utilisateurs" disabled={false} />
+                        </p>
+                      </div>
+                    </div>
+                  ) : null}
+
+                  <div class="tablet-blobs">
+                    <div class="tablet-blob-1-4">
+                      <h5>Titres de l'entreprise</h5>
+                    </div>
+                    <div class="tablet-blob-3-4">
+                      <p>
+                        <DsfrLink to={{ name: 'titres', query: { entreprisesIds: props.entrepriseId, vueId: 'table' } }} icon={null} title="Voir les titres" disabled={false} />
+                      </p>
+                    </div>
+                  </div>
                 </div>
                 {canSeeEntrepriseDocuments(props.user, props.entrepriseId) ? <EntrepriseDocuments user={props.user} apiClient={props.apiClient} entrepriseId={props.entrepriseId} /> : null}
               </>
             )}
           />
-          {fiscaliteVisible.value ? (
-            <div class="mb-xxl">
-              <div class="line-neutral width-full mb-xxl" />
-              <h3>Fiscalité</h3>
-              <EntrepriseFiscalite
-                getFiscaliteEntreprise={async (annee: CaminoAnnee) => {
-                  if (isNotNullNorUndefined(item.id)) {
-                    return props.apiClient.getFiscaliteEntreprise(annee, item.id)
-                  }
+          <EntrepriseFiscalite
+            getFiscaliteEntreprise={async (annee: CaminoAnnee) => {
+              return props.apiClient.getFiscaliteEntreprise(annee, props.entrepriseId)
+            }}
+            anneeCourante={annees.value[annees.value.length - 1]}
+            annees={annees.value}
+          />
 
-                  return { redevanceCommunale: 0, redevanceDepartementale: 0 }
-                }}
-                anneeCourante={annees.value[annees.value.length - 1]}
-                annees={annees.value}
-              />
-            </div>
-          ) : null}
-
-          {item.utilisateurs.length ? (
-            <div class="mb-xxl">
-              <div class="line-neutral width-full mb-xxl" />
-              <TableAuto caption="Utilisateurs" class="width-full-p" columns={utilisateursColonnes} rows={utilisateursLignes.value} initialSort={'firstColumnAsc'} />
-            </div>
-          ) : null}
-
-          {item.titulaireTitres.length ? (
-            <div class="mb-xxl">
-              <div class="line-neutral width-full mb-xxl" />
-              <TitresTable caption="Titres miniers et autorisations" titres={item.titulaireTitres} user={props.user} />
-            </div>
-          ) : null}
-
-          {item.amodiataireTitres.length ? (
-            <div class="mb-xxl">
-              <div class="line width-full my-xxl" />
-              <TitresTable caption="Titres miniers et autorisations (amodiataire)" titres={item.amodiataireTitres} user={props.user} />
-            </div>
-          ) : null}
           {editPopup.value ? (
             <EntrepriseEditPopup
               apiClient={{
@@ -304,4 +280,4 @@ export const PureEntreprise = defineComponent<Props>(props => {
 })
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-PureEntreprise.props = ['entrepriseId', 'user', 'apiClient', 'currentYear']
+PureEntreprise.props = ['entrepriseId', 'entreprises', 'user', 'apiClient', 'currentYear']

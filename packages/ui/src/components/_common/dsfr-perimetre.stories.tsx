@@ -98,7 +98,7 @@ export const DefaultNoSnapshot: StoryFn = () => (
                 slug: titreSlugValidator.parse('slug-du-titre'),
                 titreStatutId: TitresStatutIds.Echu,
                 typeId: TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_SOUTERRAIN,
-                titulaires: [],
+                titulaireIds: [],
                 geojson4326_perimetre: {
                   type: 'Feature',
                   properties: {},

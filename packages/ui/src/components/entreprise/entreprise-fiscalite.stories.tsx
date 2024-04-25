@@ -2,6 +2,7 @@ import { EntrepriseFiscalite } from './entreprise-fiscalite'
 import { Meta, StoryFn } from '@storybook/vue3'
 import type { Fiscalite } from 'camino-common/src/validators/fiscalite'
 import { CaminoAnnee, toCaminoAnnee } from 'camino-common/src/date'
+import { CaminoHttpError } from '@/api/client-rest'
 
 const meta: Meta = {
   title: 'Components/Entreprise/Fiscalite',
@@ -65,4 +66,12 @@ export const Loading: StoryFn = () => (
 
 export const WithError: StoryFn = () => (
   <EntrepriseFiscalite getFiscaliteEntreprise={() => Promise.reject(new Error('because reasons'))} anneeCourante={toCaminoAnnee('2021')} annees={[toCaminoAnnee('2021'), toCaminoAnnee('2022')]} />
+)
+
+export const WithUnauthorized: StoryFn = () => (
+  <EntrepriseFiscalite
+    getFiscaliteEntreprise={() => Promise.reject(new CaminoHttpError('because reasons', 403))}
+    anneeCourante={toCaminoAnnee('2021')}
+    annees={[toCaminoAnnee('2021'), toCaminoAnnee('2022')]}
+  />
 )

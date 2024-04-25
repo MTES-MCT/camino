@@ -1,10 +1,9 @@
 import { QueryBuilder } from 'objection'
 
 import TitresEtapes from '../../models/titres-etapes.js'
-import Entreprises from '../../models/entreprises.js'
 
 import { administrationsTitresQuery } from './administrations.js'
-import { entreprisesQueryModify, entreprisesTitresQuery } from './entreprises.js'
+import { entreprisesTitresQuery } from './entreprises.js'
 import { titresDemarchesQueryModify } from './titres-demarches.js'
 import TitresDemarches from '../../models/titres-demarches.js'
 import Journaux from '../../models/journaux.js'
@@ -55,12 +54,7 @@ export const titresEtapesQueryModify = (q: QueryBuilder<TitresEtapes, TitresEtap
           const etapeTypeIdsEntreprisePublic: EtapeTypeId[] = etapesTypes.filter(({ entreprises_lecture }) => entreprises_lecture).map(({ id }) => id)
           c.whereIn('titresEtapes.typeId', etapeTypeIdsEntreprisePublic)
 
-          c.whereExists(
-            entreprisesTitresQuery(entreprisesIds, 'demarche:titre', {
-              isTitulaire: true,
-              isAmodiataire: true,
-            })
-          )
+          c.whereExists(entreprisesTitresQuery(entreprisesIds, 'demarche:titre'))
         })
       }
     })
@@ -68,14 +62,6 @@ export const titresEtapesQueryModify = (q: QueryBuilder<TitresEtapes, TitresEtap
 
   q.modifyGraph('demarche', b => {
     titresDemarchesQueryModify(b as QueryBuilder<TitresDemarches, TitresDemarches | TitresDemarches[]>, user)
-  })
-
-  q.modifyGraph('titulaires', b => {
-    entreprisesQueryModify(b as QueryBuilder<Entreprises, Entreprises | Entreprises[]>, user).select('titresTitulaires.operateur')
-  })
-
-  q.modifyGraph('amodiataires', b => {
-    entreprisesQueryModify(b as QueryBuilder<Entreprises, Entreprises | Entreprises[]>, user).select('titresAmodiataires.operateur')
   })
 
   q.modifyGraph('journaux', b => {

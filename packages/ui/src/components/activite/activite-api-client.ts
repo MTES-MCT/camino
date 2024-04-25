@@ -7,6 +7,7 @@ import gql from 'graphql-tag'
 import { deleteWithJson, getWithJson, putWithJson } from '../../api/client-rest'
 import { SectionWithValue } from 'camino-common/src/sections'
 import { DeepReadonly } from 'vue'
+import { EntrepriseId } from 'camino-common/src/entreprise'
 
 export interface UiGraphqlActivite {
   id: string
@@ -18,9 +19,7 @@ export interface UiGraphqlActivite {
   titre: {
     id: string
     nom: string
-    titulaires: {
-      nom: string
-    }[]
+    titulaireIds: EntrepriseId[]
   }
 }
 
@@ -89,14 +88,7 @@ export const activiteApiClient: ActiviteApiClient = {
             titre {
               id
               nom
-              titulaires {
-                id
-                nom
-              }
-              amodiataires {
-                id
-                nom
-              }
+              titulaireIds
             }
           }
           total

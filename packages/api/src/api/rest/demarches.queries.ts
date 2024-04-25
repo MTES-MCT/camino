@@ -19,6 +19,7 @@ import { featureCollectionForagesValidator, featureCollectionPointsValidator, fe
 import { etapeHeritagePropsValidator } from 'camino-common/src/heritage.js'
 import { getDemarcheByIdOrSlugValidator as commonGetDemarcheByIdOrSlugValidator } from 'camino-common/src/titres.js'
 import { geoSystemeIdValidator } from 'camino-common/src/static/geoSystemes.js'
+import { entrepriseIdValidator } from 'camino-common/src/entreprise.js'
 
 const getEtapesByDemarcheIdDbValidator = z.object({
   id: etapeIdValidator,
@@ -47,6 +48,8 @@ const getEtapesByDemarcheIdDbValidator = z.object({
   geojson_origine_geo_systeme_id: geoSystemeIdValidator.nullable(),
   geojson4326_forages: featureCollectionForagesValidator.nullable(),
   geojson_origine_forages: featureCollectionForagesValidator.nullable(),
+  titulaire_ids: z.array(entrepriseIdValidator),
+  amodiataire_ids: z.array(entrepriseIdValidator),
 })
 
 export const getEtapesByDemarcheId = async (pool: Pool, demarcheId: DemarcheId) => {
@@ -80,7 +83,9 @@ select
     e.geojson_origine_perimetre,
     e.geojson_origine_geo_systeme_id,
     e.geojson4326_forages,
-    e.geojson_origine_forages
+    e.geojson_origine_forages,
+    e.titulaire_ids,
+    e.amodiataire_ids
 from
     titres_etapes e
 where

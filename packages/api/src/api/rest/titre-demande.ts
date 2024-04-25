@@ -1,4 +1,4 @@
-import { ITitreEtape, ITitreEntreprise } from '../../types.js'
+import { ITitreEtape } from '../../types.js'
 import { titreCreate, titreGet, titresGet } from '../../database/queries/titres.js'
 import { titreDemarcheCreate } from '../../database/queries/titres-demarches.js'
 import { titreEtapeUpsert } from '../../database/queries/titres-etapes.js'
@@ -85,14 +85,13 @@ export const titreDemandeCreer = (pool: Pool) => async (req: CaminoRequest, res:
         const date = toCaminoDate(new Date())
         const titreDemarcheId = updatedTitre.demarches![0].id
 
-        const titulaire = { id: titreDemande.entrepriseId } as ITitreEntreprise
         const titreEtape: Omit<ITitreEtape, 'id'> = {
           titreDemarcheId,
           typeId: 'mfr',
           statutId: 'aco',
           date,
           duree: titreDemande.typeId === 'arm' ? 4 : undefined,
-          titulaires: [titulaire],
+          titulaireIds: [titreDemande.entrepriseId],
         }
 
         const updatedTitreEtape = await titreEtapeUpsert(titreEtape, user, titreId)

@@ -1,25 +1,24 @@
 import { useState } from '@/utils/vue-tsx-utils'
 import { DeepReadonly, computed, defineComponent, watch } from 'vue'
-import { EtapeEntreprise } from 'camino-common/src/etape'
 import { EntrepriseId, Entreprise } from 'camino-common/src/entreprise'
 import { isNullOrUndefinedOrEmpty, stringArrayEquals } from 'camino-common/src/typescript-tools'
 import { TypeAheadSmartMultiple } from '../_ui/typeahead-smart-multiple'
 
 interface Props {
   nonSelectableEntities?: DeepReadonly<EntrepriseId[]>
-  selectedEntities?: DeepReadonly<EtapeEntreprise[]>
+  selectedEntities?: DeepReadonly<EntrepriseId[]>
   allEntities: DeepReadonly<Entreprise[]>
   name: 'titulaires' | 'amodiataires'
-  onEntreprisesUpdate: (entreprise: DeepReadonly<EtapeEntreprise[]>) => void
+  onEntreprisesUpdate: (entreprise: DeepReadonly<EntrepriseId[]>) => void
 }
 export const AutocompleteEntreprise = defineComponent<Props>(props => {
-  const [mySelectedEntities, setMySelectedEntities] = useState<DeepReadonly<EtapeEntreprise[]>>(props.selectedEntities ?? [])
+  const [mySelectedEntities, setMySelectedEntities] = useState<DeepReadonly<EntrepriseId[]>>(props.selectedEntities ?? [])
 
   watch(
     () => props.selectedEntities,
     (newEntities, oldEntities) => {
-      if (!stringArrayEquals(newEntities?.map(({ id }) => id) ?? [], oldEntities?.map(({ id }) => id) ?? [])) {
-        setMySelectedEntities(newEntities?.map(entity => ({ ...entity })) ?? [])
+      if (!stringArrayEquals(newEntities?.map(id => id) ?? [], oldEntities?.map(id => id) ?? [])) {
+        setMySelectedEntities(newEntities ?? [])
       }
     }
   )
@@ -35,15 +34,14 @@ export const AutocompleteEntreprise = defineComponent<Props>(props => {
   })
 
   const onSelectEntreprises = (entreprises: { id: EntrepriseId }[]) => {
-    // TODO 2024-04-22 virer opérateur
-    setMySelectedEntities(entreprises.map(entity => ({ ...entity, operateur: false })) ?? [])
+    setMySelectedEntities(entreprises.map(entity => entity.id) ?? [])
   }
 
   return () => (
     <TypeAheadSmartMultiple
       filter={{
         name: props.name,
-        value: mySelectedEntities.value.map(({ id }) => id),
+        value: mySelectedEntities.value.map(id => id),
         elements: selectableEntities.value,
         lazy: false,
       }}

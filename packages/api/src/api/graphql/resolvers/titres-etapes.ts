@@ -70,12 +70,6 @@ const etape = async ({ id }: { id: EtapeId }, { user }: Context, info: GraphQLRe
   try {
     const fields: FieldsEtape = fieldsBuild(info)
 
-    if (isNullOrUndefined(fields.titulaires)) {
-      fields.titulaires = { id: {} }
-    }
-    if (isNullOrUndefined(fields.amodiataires)) {
-      fields.amodiataires = { id: {} }
-    }
     if (isNullOrUndefined(fields.demarche)) {
       fields.demarche = { titre: { pointsEtape: { id: {} } } }
     }
@@ -91,13 +85,19 @@ const etape = async ({ id }: { id: EtapeId }, { user }: Context, info: GraphQLRe
     if (isNullOrUndefined(titreEtape)) {
       throw new Error("l'étape n'existe pas")
     }
-    if (!titreEtape.titulaires || !titreEtape.demarche || !titreEtape.demarche.titre || titreEtape.demarche.titre.administrationsLocales === undefined || !titreEtape.demarche.titre.titreStatutId) {
+    if (
+      isNullOrUndefined(titreEtape.titulaireIds) ||
+      !titreEtape.demarche ||
+      !titreEtape.demarche.titre ||
+      titreEtape.demarche.titre.administrationsLocales === undefined ||
+      !titreEtape.demarche.titre.titreStatutId
+    ) {
       throw new Error('la démarche n’est pas chargée complètement')
     }
 
     // Cette route est utilisée que par l’ancienne interface qui permet d’éditer une étape. Graphql permet de récupérer trop de champs si on ne fait pas ça.
     if (
-      !canEditEtape(user, titreEtape.typeId, titreEtape.statutId, titreEtape.titulaires, titreEtape.demarche.titre.administrationsLocales ?? [], titreEtape.demarche.typeId, {
+      !canEditEtape(user, titreEtape.typeId, titreEtape.statutId, titreEtape.titulaireIds ?? [], titreEtape.demarche.titre.administrationsLocales ?? [], titreEtape.demarche.typeId, {
         typeId: titreEtape.demarche.titre.typeId,
         titreStatutId: titreEtape.demarche.titre.titreStatutId,
       })
@@ -135,10 +135,7 @@ const etapeHeritage = async ({ date, titreDemarcheId, typeId, etapeId }: { date:
       {
         fields: {
           titre: { id: {} },
-          etapes: {
-            titulaires: { id: {} },
-            amodiataires: { id: {} },
-          },
+          etapes: { id: {} },
         },
       },
       userSuper
@@ -205,6 +202,8 @@ const etapeCreer = async ({ etape }: { etape: ITitreEtape & { etapeDocuments: un
           titre: {
             demarches: { etapes: { id: {} } },
             pointsEtape: { id: {} },
+            titulairesEtape: { id: {} },
+            amodiatairesEtape: { id: {} },
           },
           etapes: { id: {} },
         },
@@ -267,7 +266,7 @@ const etapeCreer = async ({ etape }: { etape: ITitreEtape & { etapeDocuments: un
       throw new Error(rulesErrors.join(', '))
     }
     if (
-      !canCreateEtape(user, etape.typeId, etape.statutId, titreDemarche.titre.titulaires ?? [], titreDemarche.titre.administrationsLocales ?? [], titreDemarche.typeId, {
+      !canCreateEtape(user, etape.typeId, etape.statutId, titreDemarche.titre.titulaireIds ?? [], titreDemarche.titre.administrationsLocales ?? [], titreDemarche.typeId, {
         typeId: titreDemarche.titre.typeId,
         titreStatutId: titreDemarche.titre.titreStatutId ?? TitresStatutIds.Indetermine,
       })
@@ -316,23 +315,23 @@ const etapeCreer = async ({ etape }: { etape: ITitreEtape & { etapeDocuments: un
 
 const validateAndGetEntrepriseDocuments = async (
   pool: Pool,
-  etape: Pick<ITitreEtape, 'heritageProps' | 'titulaires' | 'amodiataires' | 'entrepriseDocumentIds'>,
-  titre: Pick<ITitre, 'titulaires' | 'amodiataires'>,
+  etape: Pick<ITitreEtape, 'heritageProps' | 'titulaireIds' | 'amodiataireIds' | 'entrepriseDocumentIds'>,
+  titre: Pick<ITitre, 'titulaireIds' | 'amodiataireIds'>,
   user: User
 ): Promise<EntrepriseDocument[]> => {
   const entrepriseDocuments: EntrepriseDocument[] = []
 
   // si l’héritage est désactivé => on récupère les titulaires sur l’étape
   // sinon on les trouve sur le titre
-  const titulaires = !(etape.heritageProps?.titulaires.actif ?? false) ? etape.titulaires : titre.titulaires
-  const amodiataires = !(etape.heritageProps?.amodiataires.actif ?? false) ? etape.amodiataires : titre.amodiataires
+  const titulaires = !(etape.heritageProps?.titulaires.actif ?? false) ? etape.titulaireIds : titre.titulaireIds
+  const amodiataires = !(etape.heritageProps?.amodiataires.actif ?? false) ? etape.amodiataireIds : titre.amodiataireIds
   if (etape.entrepriseDocumentIds && isNonEmptyArray(etape.entrepriseDocumentIds)) {
     let entrepriseIds: EntrepriseId[] = []
     if (titulaires) {
-      entrepriseIds.push(...titulaires.map(({ id }) => id))
+      entrepriseIds.push(...titulaires)
     }
     if (amodiataires) {
-      entrepriseIds.push(...amodiataires.map(({ id }) => id))
+      entrepriseIds.push(...amodiataires)
     }
     entrepriseIds = entrepriseIds.filter(onlyUnique)
 
@@ -359,8 +358,6 @@ const etapeModifier = async ({ etape }: { etape: ITitreEtape & { etapeDocuments:
       etape.id,
       {
         fields: {
-          titulaires: { id: {} },
-          amodiataires: { id: {} },
           demarche: { titre: { pointsEtape: { id: {} } } },
         },
       },
@@ -368,15 +365,13 @@ const etapeModifier = async ({ etape }: { etape: ITitreEtape & { etapeDocuments:
     )
 
     if (isNullOrUndefined(titreEtapeOld)) throw new Error("l'étape n'existe pas")
-    if (!titreEtapeOld.titulaires) {
-      throw new Error('Les titulaires de l’étape ne sont pas chargés')
-    }
+
     if (!titreEtapeOld.demarche || !titreEtapeOld.demarche.titre || titreEtapeOld.demarche.titre.administrationsLocales === undefined || !titreEtapeOld.demarche.titre.titreStatutId) {
       throw new Error('la démarche n’est pas chargée complètement')
     }
 
     if (
-      !canEditEtape(user, titreEtapeOld.typeId, titreEtapeOld.statutId, titreEtapeOld.titulaires, titreEtapeOld.demarche.titre.administrationsLocales ?? [], titreEtapeOld.demarche.typeId, {
+      !canEditEtape(user, titreEtapeOld.typeId, titreEtapeOld.statutId, titreEtapeOld.titulaireIds ?? [], titreEtapeOld.demarche.titre.administrationsLocales ?? [], titreEtapeOld.demarche.typeId, {
         typeId: titreEtapeOld.demarche.titre.typeId,
         titreStatutId: titreEtapeOld.demarche.titre.titreStatutId,
       })
@@ -393,8 +388,8 @@ const etapeModifier = async ({ etape }: { etape: ITitreEtape & { etapeDocuments:
         fields: {
           titre: {
             demarches: { etapes: { id: {} } },
-            titulaires: { id: {} },
-            amodiataires: { id: {} },
+            titulairesEtape: { id: {} },
+            amodiatairesEtape: { id: {} },
           },
           etapes: { id: {} },
         },
@@ -403,6 +398,7 @@ const etapeModifier = async ({ etape }: { etape: ITitreEtape & { etapeDocuments:
     )
 
     if (!titreDemarche || !titreDemarche.titre) throw new Error("le titre n'existe pas")
+    if (isNullOrUndefined(titreDemarche.titre.titulaireIds) || isNullOrUndefined(titreDemarche.titre.amodiataireIds)) throw new Error('la démarche n’est pas chargée complètement')
 
     const { statutId, date } = statutIdAndDateGet(etape, user!)
     etape.statutId = statutId
@@ -578,7 +574,6 @@ const etapeSupprimer = async ({ id }: { id: EtapeId }, { user, pool }: Context) 
       id,
       {
         fields: {
-          titulaires: { id: {} },
           demarche: { titre: { pointsEtape: { id: {} } } },
         },
       },
@@ -586,15 +581,12 @@ const etapeSupprimer = async ({ id }: { id: EtapeId }, { user, pool }: Context) 
     )
 
     if (isNullOrUndefined(titreEtape)) throw new Error("l'étape n'existe pas")
-    if (!titreEtape.titulaires) {
-      throw new Error('Les titulaires de l’étape ne sont pas chargés')
-    }
     if (!titreEtape.demarche || !titreEtape.demarche.titre || titreEtape.demarche.titre.administrationsLocales === undefined || !titreEtape.demarche.titre.titreStatutId) {
       throw new Error('la démarche n’est pas chargée complètement')
     }
 
     if (
-      !canEditEtape(user, titreEtape.typeId, titreEtape.statutId, titreEtape.titulaires, titreEtape.demarche.titre.administrationsLocales ?? [], titreEtape.demarche.typeId, {
+      !canEditEtape(user, titreEtape.typeId, titreEtape.statutId, titreEtape.titulaireIds ?? [], titreEtape.demarche.titre.administrationsLocales ?? [], titreEtape.demarche.typeId, {
         typeId: titreEtape.demarche.titre.typeId,
         titreStatutId: titreEtape.demarche.titre.titreStatutId,
       })

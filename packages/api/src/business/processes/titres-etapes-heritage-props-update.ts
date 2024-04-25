@@ -16,10 +16,7 @@ export const titresEtapesHeritagePropsUpdate = async (user: UserNotNull, titresD
     { titresDemarchesIds },
     {
       fields: {
-        etapes: {
-          titulaires: { id: {} },
-          amodiataires: { id: {} },
-        },
+        etapes: { id: {} },
       },
     },
     userSuper

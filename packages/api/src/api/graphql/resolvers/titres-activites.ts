@@ -15,7 +15,7 @@ import { userSuper } from '../../../database/user-super.js'
 import { titreGet } from '../../../database/queries/titres.js'
 import { isBureauDEtudes, isEntreprise } from 'camino-common/src/roles.js'
 import { AdministrationId } from 'camino-common/src/static/administrations.js'
-import { isNonEmptyArray, memoize, onlyUnique } from 'camino-common/src/typescript-tools.js'
+import { isNonEmptyArray, isNullOrUndefined, memoize, onlyUnique } from 'camino-common/src/typescript-tools.js'
 import { getGestionnairesByTitreTypeId } from 'camino-common/src/static/administrationsTitresTypes.js'
 import { getCurrent } from 'camino-common/src/date.js'
 import { canReadActivites, isActiviteDeposable } from 'camino-common/src/permissions/activites.js'
@@ -191,18 +191,22 @@ export const activiteDeposer = async ({ id }: { id: ActiviteId }, { user, pool }
       activiteRes.titreId,
       {
         fields: {
-          titulaires: { id: {} },
-          amodiataires: { id: {} },
+          titulairesEtape: { id: {} },
+          amodiatairesEtape: { id: {} },
           pointsEtape: { id: {} },
         },
       },
       userSuper
     )) as ITitre
 
-    const userEntreprisesId = isEntreprise(user) || isBureauDEtudes(user) ? user.entreprises.map(e => e.id) : []
-    const isAmodiataire = titre.amodiataires?.some(t => userEntreprisesId.some(id => id === t.id))
+    if (isNullOrUndefined(titre.titulaireIds) || isNullOrUndefined(titre.amodiataireIds)) {
+      throw new Error('Le titre n’est pas complètement chargé')
+    }
 
-    const entreprisesIds = isAmodiataire ? titre.amodiataires?.map(t => t.id) : titre.titulaires?.map(t => t.id)
+    const userEntreprisesId = isEntreprise(user) || isBureauDEtudes(user) ? user.entreprises.map(e => e.id) : []
+    const isAmodiataire = titre.amodiataireIds?.some(amodiataireId => userEntreprisesId.some(id => id === amodiataireId))
+
+    const entreprisesIds = isAmodiataire ? titre.amodiataireIds : titre.titulaireIds
 
     let utilisateurs: IUtilisateur[] = []
     if (entreprisesIds?.length) {

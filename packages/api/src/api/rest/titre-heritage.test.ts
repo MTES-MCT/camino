@@ -12,14 +12,8 @@ describe('getMostRecentValueProp', () => {
         date_fin: toCaminoDate('2032-08-18'),
         duree: 240,
         substances: [],
-        titulaires: [
-          {
-            id: entrepriseIdValidator.parse('fr-791652399'),
-            nom: 'AMAZONE GOLD',
-            operateur: false,
-          },
-        ],
-        amodiataires: null,
+        titulaireIds: [entrepriseIdValidator.parse('fr-791652399')],
+        amodiataireIds: null,
         perimetre: null,
       },
       etape_statut_id: 'acc',
@@ -33,14 +27,8 @@ describe('getMostRecentValueProp', () => {
         date_fin: null,
         duree: 240,
         substances: [],
-        titulaires: [
-          {
-            id: entrepriseIdValidator.parse('fr-310380811'),
-            nom: 'GARROT-CHAILLAC',
-            operateur: false,
-          },
-        ],
-        amodiataires: null,
+        titulaireIds: [entrepriseIdValidator.parse('fr-310380811')],
+        amodiataireIds: null,
         perimetre: null,
       },
       etape_statut_id: 'acc',

@@ -117,7 +117,7 @@ export const entrepriseDocumentsStepIsVisible = (etape: Pick<EtapeWithHeritage, 
   return getEntrepriseDocuments(titreTypeId, demarcheTypeId, etape.typeId).length > 0
 }
 export const entrepriseDocumentsStepIsComplete = (
-  etape: DeepReadonly<Pick<EtapeWithHeritage, 'typeId' | 'contenu' | 'titulaires' | 'amodiataires'>>,
+  etape: DeepReadonly<Pick<EtapeWithHeritage, 'typeId' | 'contenu' | 'titulaireIds' | 'amodiataireIds'>>,
   demarcheTypeId: DemarcheTypeId,
   titreTypeId: TitreTypeId,
   entreprisesDocuments: DeepReadonly<SelectedEntrepriseDocument[]>
@@ -128,7 +128,7 @@ export const entrepriseDocumentsStepIsComplete = (
 
   const documentTypes = getEntrepriseDocuments(titreTypeId, demarcheTypeId, etape.typeId)
 
-  const entrepriseIds = [...etape.titulaires, ...etape.amodiataires].map(({ id }) => id).filter(onlyUnique)
+  const entrepriseIds = [...etape.titulaireIds, ...etape.amodiataireIds].filter(onlyUnique)
 
   return entrepriseIds.every(eId =>
     documentTypes.every(({ optionnel, id }) => optionnel || entreprisesDocuments.some(({ documentTypeId, entrepriseId }) => documentTypeId === id && entrepriseId === eId))

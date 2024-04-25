@@ -5,16 +5,19 @@ import { activitesUrlGet } from '../utils/urls-get.js'
 import { EmailTemplateId } from '../../tools/api-mailjet/types.js'
 import { CaminoDate, anneePrecedente, dateAddDays, dateAddMonths, getAnnee, getCurrent } from 'camino-common/src/date.js'
 import { ITitreActivite } from '../../types.js'
-import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
+import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools.js'
 import { ActivitesTypesId } from 'camino-common/src/static/activitesTypes.js'
 import { ActivitesStatutId } from 'camino-common/src/static/activitesStatuts.js'
+import { GetEntrepriseUtilisateurs, getEntrepriseUtilisateurs } from '../../api/rest/entreprises.queries.js'
+import { Pool } from 'pg'
+import { EntrepriseId } from 'camino-common/src/entreprise.js'
 
 const ACTIVITES_DELAI_RELANCE_JOURS = 14
 
 const activiteStatutsIds: ActivitesStatutId[] = ['abs', 'enc']
 const activiteTypesIds: ActivitesTypesId[] = ['gra', 'grx', 'pma', 'pmb', 'pmc', 'pmd', 'wrp']
 
-export const titresActivitesRelanceSend = async (aujourdhui = getCurrent()) => {
+export const titresActivitesRelanceSend = async (pool: Pool, aujourdhui = getCurrent()) => {
   console.info()
   console.info('relance des activités des titres…')
 
@@ -22,17 +25,21 @@ export const titresActivitesRelanceSend = async (aujourdhui = getCurrent()) => {
     { statutsIds: activiteStatutsIds, typesIds: activiteTypesIds },
     {
       fields: {
-        titre: { titulaires: { utilisateurs: { id: {} } } },
+        titre: { titulairesEtape: { id: {} } },
       },
     },
     userSuper
   )
 
-  return checkDateAndSendEmail(aujourdhui, activites)
+  return checkDateAndSendEmail((titulaireId: EntrepriseId) => getEntrepriseUtilisateurs(pool, titulaireId), aujourdhui, activites)
 }
 
 // Visible only for tests
-export const checkDateAndSendEmail = async (aujourdhui: CaminoDate, activites: ITitreActivite[]) => {
+export const checkDateAndSendEmail = async (
+  getEmailsByEntrepriseId: (entrepriseId: EntrepriseId) => Promise<GetEntrepriseUtilisateurs[]>,
+  aujourdhui: CaminoDate,
+  activites: (Pick<ITitreActivite, 'date' | 'id'> & { titre?: { titulaireIds?: EntrepriseId[] | undefined | null } | undefined | null })[]
+) => {
   const dateDelai = dateAddDays(aujourdhui, ACTIVITES_DELAI_RELANCE_JOURS)
 
   const titresActivitesRelanceToSend = activites.filter(({ date }) => dateDelai === dateAddMonths(date, 3))
@@ -40,23 +47,27 @@ export const checkDateAndSendEmail = async (aujourdhui: CaminoDate, activites: I
     // envoi d’email aux opérateurs pour les relancer ACTIVITES_DELAI_RELANCE_JOURS jours avant la fermeture automatique de l’activité
     const emails = new Set<string>()
     for (const activite of titresActivitesRelanceToSend) {
-      const titre = activite.titre!
-      titre.titulaires?.forEach(titulaire =>
-        titulaire.utilisateurs?.forEach(({ email }) => {
-          if (isNotNullNorUndefined(email)) {
+      const titre = activite.titre
+
+      if (isNotNullNorUndefined(titre) && isNotNullNorUndefinedNorEmpty(titre.titulaireIds)) {
+        const utilisateursByEntreprise = await Promise.all(titre.titulaireIds.map(getEmailsByEntrepriseId))
+
+        utilisateursByEntreprise.flat().forEach(({ email }) => {
+          if (isNotNullNorUndefinedNorEmpty(email)) {
             emails.add(email)
           }
         })
-      )
-    }
-    if (emails.size) {
-      await emailsWithTemplateSend([...emails], EmailTemplateId.ACTIVITES_RELANCE, {
-        activitesUrl: activitesUrlGet({
-          activiteTypesIds,
-          activiteStatutsIds,
-          annees: [anneePrecedente(getAnnee(aujourdhui))],
-        }),
-      })
+      }
+
+      if (emails.size) {
+        await emailsWithTemplateSend([...emails], EmailTemplateId.ACTIVITES_RELANCE, {
+          activitesUrl: activitesUrlGet({
+            activiteTypesIds,
+            activiteStatutsIds,
+            annees: [anneePrecedente(getAnnee(aujourdhui))],
+          }),
+        })
+      }
     }
 
     console.info('titre / activités (relance) ->', titresActivitesRelanceToSend.map(ta => ta.id).join(', '))

@@ -1,4 +1,4 @@
-import { EntrepriseId } from 'camino-common/src/entreprise'
+import { EntrepriseType } from 'camino-common/src/entreprise'
 import { isSuper, User } from 'camino-common/src/roles'
 import { defineComponent, ref } from 'vue'
 import { FunctionalPopup } from '../_ui/functional-popup'
@@ -9,13 +9,7 @@ import { DsfrInputCheckbox } from '../_ui/dsfr-input-checkbox'
 interface Props {
   close: () => void
   user: User
-  entreprise: {
-    id: EntrepriseId
-    telephone?: string
-    email?: string
-    url?: string
-    archive?: boolean
-  }
+  entreprise: Pick<EntrepriseType, 'id' | 'telephone' | 'email' | 'url' | 'archive'>
   apiClient: Pick<EntrepriseApiClient, 'modifierEntreprise'>
 }
 

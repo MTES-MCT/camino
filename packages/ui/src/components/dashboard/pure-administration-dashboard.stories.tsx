@@ -1,7 +1,7 @@
 import { PureAdministrationDashboard } from './pure-administration-dashboard'
 import { Meta, StoryFn } from '@storybook/vue3'
 import { CommonTitreAdministration } from 'camino-common/src/titres'
-import { statistiquesDGTMFake, titresDreal } from './testData'
+import { entreprises, statistiquesDGTMFake, titresDreal } from './testData'
 import { testBlankUser } from 'camino-common/src/tests-utils'
 import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations'
 const meta: Meta = {
@@ -15,6 +15,7 @@ export default meta
 export const Ok: StoryFn = () => (
   <PureAdministrationDashboard
     user={{ ...testBlankUser, role: 'admin', administrationId: ADMINISTRATION_IDS.BRGM }}
+    entreprises={entreprises}
     apiClient={{
       getAdministrationTitres: () => Promise.resolve(titresDreal),
       getDgtmStats: () =>
@@ -43,6 +44,7 @@ export const OkWithoutBlockedTitres: StoryFn = () => (
         }),
     }}
     user={{ ...testBlankUser, role: 'admin', administrationId: ADMINISTRATION_IDS.BRGM }}
+    entreprises={entreprises}
   />
 )
 
@@ -50,12 +52,14 @@ export const DGTMNoSnapshot: StoryFn = () => (
   <PureAdministrationDashboard
     apiClient={{ getAdministrationTitres: () => Promise.resolve(titresDreal), getDgtmStats: () => Promise.resolve(statistiquesDGTMFake) }}
     user={{ ...testBlankUser, role: 'admin', administrationId: ADMINISTRATION_IDS['DGTM - GUYANE'] }}
+    entreprises={entreprises}
   />
 )
 
 export const Loading: StoryFn = () => (
   <PureAdministrationDashboard
     user={{ ...testBlankUser, role: 'admin', administrationId: ADMINISTRATION_IDS.BRGM }}
+    entreprises={entreprises}
     apiClient={{
       getAdministrationTitres: () => new Promise<CommonTitreAdministration[]>(_resolve => {}),
       getDgtmStats: () =>
@@ -83,5 +87,6 @@ export const WithError: StoryFn = () => (
         }),
     }}
     user={{ ...testBlankUser, role: 'admin', administrationId: ADMINISTRATION_IDS.BRGM }}
+    entreprises={entreprises}
   />
 )

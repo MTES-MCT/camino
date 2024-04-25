@@ -9,12 +9,12 @@ export const fieldsTitreAdd = <T extends { titre?: FieldsTitre }>(fields: T): T 
     }
   }
 
-  if (!fields.titre.titulaires) {
-    fields.titre.titulaires = { id: {} }
+  if (!fields.titre.titulairesEtape) {
+    fields.titre.titulairesEtape = { id: {} }
   }
 
-  if (!fields.titre.amodiataires) {
-    fields.titre.amodiataires = { id: {} }
+  if (!fields.titre.amodiatairesEtape) {
+    fields.titre.amodiatairesEtape = { id: {} }
   }
 
   return fields

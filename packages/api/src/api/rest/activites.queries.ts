@@ -223,12 +223,12 @@ from
     entreprises e,
     titres_activites ta
     join titres t on t.id = ta.titre_id
-    left join titres_titulaires tt on tt.titre_etape_id = t.props_titre_etapes_ids ->> 'titulaires'
-    left join titres_amodiataires tta on tta.titre_etape_id = t.props_titre_etapes_ids ->> 'amodiataires'
+    left join titres_etapes etape_titulaires on etape_titulaires.id = t.props_titre_etapes_ids ->> 'titulaires'
+    left join titres_etapes etape_amodiataires on etape_amodiataires.id = t.props_titre_etapes_ids ->> 'amodiataires'
 where (ta.id = $ activiteId !
     or ta.slug = $ activiteId !)
-and (tt.entreprise_id = e.id
-    or tta.entreprise_id = e.id)
+and (etape_titulaires.titulaire_ids ? e.id
+    or etape_amodiataires.amodiataire_ids ? e.id)
 `
 
 const getActiviteDocumentsInternal = sql<Redefine<IGetActiviteDocumentsInternalQuery, { activiteId: ActiviteId }, ActiviteDocument>>`

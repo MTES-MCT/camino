@@ -7,7 +7,6 @@ import { ITitreEtape } from '../../types.js'
 import { heritagePropsFormat, heritageContenuFormat } from './_format/titre-etape-heritage.js'
 import { idGenerate } from './_format/id-create.js'
 import TitresDemarches from './titres-demarches.js'
-import Entreprises from './entreprises.js'
 import Journaux from './journaux.js'
 import { etapeSlugValidator } from 'camino-common/src/etape.js'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
@@ -42,6 +41,8 @@ class TitresEtapes extends Model {
       heritageProps: { type: ['object', 'null'] },
       archive: { type: 'boolean' },
       substances: { type: ['array', 'null'] },
+      titulaireIds: { type: ['array', 'null'] },
+      amodiataireIds: { type: ['array', 'null'] },
       communes: { type: ['array', 'null'] },
       forets: { type: ['array', 'null'] },
       secteursMaritime: { type: ['array', 'null'] },
@@ -61,33 +62,6 @@ class TitresEtapes extends Model {
       },
     },
 
-    titulaires: {
-      relation: Model.ManyToManyRelation,
-      modelClass: Entreprises,
-      join: {
-        from: 'titresEtapes.id',
-        through: {
-          from: 'titresTitulaires.titreEtapeId',
-          to: 'titresTitulaires.entrepriseId',
-          extra: ['operateur'],
-        },
-        to: 'entreprises.id',
-      },
-    },
-
-    amodiataires: {
-      relation: Model.ManyToManyRelation,
-      modelClass: Entreprises,
-      join: {
-        from: 'titresEtapes.id',
-        through: {
-          from: 'titresAmodiataires.titreEtapeId',
-          to: 'titresAmodiataires.entrepriseId',
-          extra: ['operateur'],
-        },
-        to: 'entreprises.id',
-      },
-    },
     journaux: {
       relation: Model.HasManyRelation,
       modelClass: Journaux,
@@ -159,22 +133,6 @@ class TitresEtapes extends Model {
   }
 
   public $parseJson(json: Pojo) {
-    if (json.amodiatairesIds) {
-      json.amodiataires = json.amodiatairesIds.map((id: string) => ({ id }))
-      delete json.amodiatairesIds
-    }
-
-    if (json.titulairesIds) {
-      json.titulaires = json.titulairesIds.map((id: string) => ({ id }))
-      delete json.titulairesIds
-    }
-
-    if (json.substancesIds) {
-      json.substances = json.substancesIds.map((id: string) => ({ id }))
-
-      delete json.substancesIds
-    }
-
     delete json.modification
     delete json.suppression
     json = super.$parseJson(json)

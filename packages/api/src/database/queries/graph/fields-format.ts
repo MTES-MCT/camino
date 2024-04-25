@@ -11,7 +11,7 @@ interface IFields {
 
 // ajoute des propriétés requises par /database/queries/_format
 export const fieldsFormat = (fields: IFields, parent: string) => {
-  const isParentTitre = ['titres', 'titre', 'amodiataireTitres', 'titulaireTitres'].includes(parent)
+  const isParentTitre = ['titres', 'titre'].includes(parent)
 
   // supprime la propriété `coordonnees`
   fieldsToRemove.forEach(key => {
@@ -44,6 +44,17 @@ export const fieldsFormat = (fields: IFields, parent: string) => {
       fields.substancesEtape = { id: {} }
 
       delete fields.substances
+    }
+
+    if (fields.titulaireIds) {
+      fields.titulairesEtape = { id: {} }
+
+      delete fields.titulaireIds
+    }
+    if (fields.amodiataireIds) {
+      fields.amodiatairesEtape = { id: {} }
+
+      delete fields.amodiataireIds
     }
 
     // supprime certaines propriétés

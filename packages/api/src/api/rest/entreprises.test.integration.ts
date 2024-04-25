@@ -196,26 +196,17 @@ describe('getEntreprise', () => {
     expect(tested.body).toMatchInlineSnapshot(`
       {
         "adresse": null,
-        "amodiataireTitres": [],
         "archive": false,
-        "categorie": null,
-        "cedex": null,
-        "codePostal": null,
+        "code_postal": null,
         "commune": null,
-        "dateCreation": null,
         "email": null,
         "etablissements": [],
         "id": "nouvelle-entreprise-id",
-        "legalEtranger": null,
-        "legalForme": null,
-        "legalSiren": null,
+        "legal_forme": null,
         "legal_siren": null,
         "nom": "nouvelle-entreprise-id",
-        "paysId": null,
         "telephone": null,
-        "titulaireTitres": [],
         "url": null,
-        "utilisateurs": [],
       }
     `)
   })

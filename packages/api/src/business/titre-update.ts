@@ -13,7 +13,7 @@ const titreUpdate = async (pool: Pool, titreId: TitreId) => {
 
     const titresPublicUpdated = await titresPublicUpdate(pool, [titreId])
 
-    const titresActivitesCreated = await titresActivitesUpdate([titreId])
+    const titresActivitesCreated = await titresActivitesUpdate(pool, [titreId])
     const titresUpdatedIndex = await titresSlugsUpdate([titreId])
 
     logsUpdate({

@@ -1,4 +1,4 @@
-import { HTTP_STATUS } from 'camino-common/src/http'
+import { HTTP_STATUS, HttpStatus } from 'camino-common/src/http'
 import {
   CaminoRestParams,
   CaminoRestRoute,
@@ -17,6 +17,14 @@ import { z } from 'zod'
 
 type Loading = { status: 'LOADING' }
 type Error = { status: 'ERROR'; message: string }
+export class CaminoHttpError extends Error {
+  public readonly statusCode: HttpStatus
+  constructor(errorMessage: string, statusCode: HttpStatus) {
+    super(errorMessage)
+
+    this.statusCode = statusCode
+  }
+}
 
 export type AsyncData<T> = Loading | { status: 'LOADED'; value: T } | Error
 
@@ -61,7 +69,8 @@ const callFetch = async <T extends CaminoRestRoute>(
     window.location.replace('/oauth2/sign_in?rd=' + encodeURIComponent(window.location.href))
   }
   console.error(`Une erreur s'est produite lors de la récupération des données ${await fetched.text()}`)
-  throw new Error(`Une erreur s'est produite lors de la récupération des données`)
+  // TODO 2024-05-02 améliorer la gestion du status http
+  throw new CaminoHttpError(`Une erreur s'est produite lors de la récupération des données`, fetched.status as HttpStatus)
 }
 
 export const getWithJson = async <T extends GetRestRoutes>(

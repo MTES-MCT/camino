@@ -20,11 +20,8 @@ type Entreprise {
   email: String
   etablissements: [EntrepriseEtablissement]
   utilisateurs: [Utilisateur]
-  titulaireTitres: [Titre]
-  amodiataireTitres: [Titre]
 
   archive: Boolean
-  operateur: Boolean
 }
 
 type EntrepriseEtablissement {

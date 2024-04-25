@@ -1,4 +1,4 @@
-import { ITitreEtape, ITitreDemarche, ITitre, ITitreEntreprise } from '../../types.js'
+import { ITitreEtape, ITitreDemarche, ITitre } from '../../types.js'
 
 import { titreDemarcheUpdatedEtatValidate } from './titre-demarche-etat-validate.js'
 import { heritageContenuValidate } from './utils/heritage-contenu-validate.js'
@@ -10,7 +10,7 @@ import { canEditAmodiataires, canEditDates, canEditDuree, canEditTitulaires, isE
 import { User } from 'camino-common/src/roles.js'
 import { SDOMZoneId } from 'camino-common/src/static/sdom.js'
 import { getSections } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
-import { EntrepriseDocument } from 'camino-common/src/entreprise.js'
+import { EntrepriseDocument, EntrepriseId } from 'camino-common/src/entreprise.js'
 import { EtapeDocument, GetEtapeDocumentsByEtapeIdAslDocument, GetEtapeDocumentsByEtapeIdDaeDocument } from 'camino-common/src/etape.js'
 const numberProps = ['duree', 'surface'] as unknown as [keyof ITitreEtape]
 
@@ -50,18 +50,11 @@ export const titreEtapeUpdationValidate = (
     }
   }
 
-  if (titreEtapeOld && !titreEtapeOld.titulaires) {
-    throw new Error('les titulaires ne sont pas chargés')
-  }
-  if (!canEditTitulaires(titre.typeId, user) && entreprisesHaveChanged(titreEtape.titulaires, titreEtapeOld?.titulaires)) {
+  if (!canEditTitulaires(titre.typeId, user) && entreprisesHaveChanged(titreEtape.titulaireIds ?? [], titreEtapeOld?.titulaireIds ?? [])) {
     errors.push(`une autorisation ${titre.typeId === 'arm' ? 'de recherche' : "d'exploitation"} ne peut pas inclure de titulaires`)
   }
 
-  if (titreEtapeOld && !titreEtapeOld.amodiataires) {
-    throw new Error('les amodiataires ne sont pas chargés')
-  }
-
-  if (!canEditAmodiataires(titre.typeId, user) && entreprisesHaveChanged(titreEtape.amodiataires, titreEtapeOld?.amodiataires)) {
+  if (!canEditAmodiataires(titre.typeId, user) && entreprisesHaveChanged(titreEtape.amodiataireIds ?? [], titreEtapeOld?.amodiataireIds ?? [])) {
     errors.push(`une autorisation ${titre.typeId === 'arm' ? 'de recherche' : "d'exploitation"} ne peut pas inclure d'amodiataires`)
   }
 
@@ -144,18 +137,10 @@ const titreEtapeUpdationBusinessValidate = (titreEtape: ITitreEtape, titreDemarc
   return errors
 }
 
-const entreprisesHaveChanged = (newValue: ITitreEntreprise[] | undefined | null, oldValue: ITitreEntreprise[] | undefined | null): boolean => {
-  if (!newValue && !oldValue) {
-    return false
-  }
-
-  if ((newValue?.length ?? 0) !== (oldValue?.length ?? 0)) {
+const entreprisesHaveChanged = (newValue: EntrepriseId[], oldValue: EntrepriseId[]): boolean => {
+  if (newValue.length !== oldValue.length) {
     return true
   }
 
-  if (!newValue || newValue.length === 0) {
-    return false
-  }
-
-  return newValue.some((v, i) => oldValue?.[i].id !== v.id || oldValue?.[i].operateur !== v.operateur)
+  return newValue.some((v, i) => oldValue?.[i] !== v)
 }

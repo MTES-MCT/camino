@@ -3,7 +3,9 @@ import { sql } from '@pgtyped/runtime'
 import { Redefine, dbQueryAndValidate } from '../../pg-database.js'
 import {
   IDeleteEntrepriseDocumentQueryQuery,
+  IGetEntrepriseDbQuery,
   IGetEntrepriseDocumentsInternalQuery,
+  IGetEntrepriseUtilisateursDbQuery,
   IGetEntreprisesDbQuery,
   IGetLargeobjectIdByEntrepriseDocumentIdInternalQuery,
   IInsertEntrepriseDocumentInternalQuery,
@@ -12,7 +14,6 @@ import {
   EntrepriseDocument,
   EntrepriseDocumentId,
   EntrepriseId,
-  Entreprise,
   entrepriseDocumentIdValidator,
   entrepriseDocumentValidator,
   entrepriseIdValidator,
@@ -141,19 +142,89 @@ where id = $ id
     and entreprise_id = $ entrepriseId !
 `
 
-export const getEntreprises = async (pool: Pool) => {
-  return dbQueryAndValidate(getEntreprisesDb, undefined, pool, entrepriseValidator)
+// TODO 2024-04-25 supprimer archive de la table entreprises et mettre un autocomplete pour sélectionner le titulaire lors de la création d’un titre
+const getEntreprisesValidor = entrepriseValidator.extend({
+  adresse: z.string().nullable(),
+  legal_etranger: z.string().nullable(),
+  code_postal: z.string().nullable(),
+  commune: z.string().nullable(),
+  categorie: z.string().nullable(),
+})
+const getEntrepriseValidor = getEntreprisesValidor.extend({
+  telephone: z.string().nullable(),
+  email: z.string().nullable(),
+  url: z.string().nullable(),
+  legal_forme: z.string().nullable(),
+  archive: z.boolean(),
+})
+
+export type GetEntreprises = z.infer<typeof getEntreprisesValidor>
+type GetEntreprise = z.infer<typeof getEntrepriseValidor>
+
+export const getEntreprise = async (pool: Pool, entreprise_id: EntrepriseId): Promise<GetEntreprise | null> => {
+  const result = await dbQueryAndValidate(getEntrepriseDb, { entreprise_id }, pool, getEntrepriseValidor)
+  if (result.length === 1) {
+    return result[0]
+  }
+
+  return null
 }
 
-const getEntreprisesDb = sql<Redefine<IGetEntreprisesDbQuery, void, Entreprise>>`
+const getEntrepriseDb = sql<Redefine<IGetEntrepriseDbQuery, { entreprise_id: EntrepriseId }, GetEntreprise>>`
 select
     id,
     nom,
-    legal_siren
+    legal_siren,
+    adresse,
+    legal_etranger,
+    code_postal,
+    commune,
+    categorie,
+    telephone,
+    email,
+    url,
+    legal_forme,
+    archive
 from
     entreprises
 where
-    archive is false
+    id = $ entreprise_id !
+`
+
+export const getEntreprises = async (pool: Pool) => {
+  return dbQueryAndValidate(getEntreprisesDb, undefined, pool, getEntreprisesValidor)
+}
+
+const getEntreprisesDb = sql<Redefine<IGetEntreprisesDbQuery, void, GetEntreprises>>`
+select
+    id,
+    nom,
+    legal_siren,
+    adresse,
+    legal_etranger,
+    code_postal,
+    commune,
+    categorie
+from
+    entreprises
 order by
     nom
+`
+
+const getEntrepriseUtilisateursValidator = z.object({
+  email: z.string().nullable(),
+})
+export type GetEntrepriseUtilisateurs = z.infer<typeof getEntrepriseUtilisateursValidator>
+export const getEntrepriseUtilisateurs = async (pool: Pool, entreprise_id: EntrepriseId) => {
+  return dbQueryAndValidate(getEntrepriseUtilisateursDb, { entreprise_id }, pool, getEntrepriseUtilisateursValidator)
+}
+
+const getEntrepriseUtilisateursDb = sql<Redefine<IGetEntrepriseUtilisateursDbQuery, { entreprise_id: EntrepriseId }, GetEntrepriseUtilisateurs>>`
+select
+    u.email
+from
+    utilisateurs__entreprises ue
+    join utilisateurs u on u.id = ue.utilisateur_id
+where
+    ue.entreprise_id = $ entreprise_id !
 `

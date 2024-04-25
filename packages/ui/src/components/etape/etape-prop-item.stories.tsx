@@ -14,16 +14,14 @@ export const WithItem: StoryFn = () => <EtapePropItem title="Domaine" item={<Dom
 
 export const WithText: StoryFn = () => <EtapePropItem title="Date de début" text="Valeur textuelle" />
 
-export const WithOneEntreprise: StoryFn = () => (
-  <EtapePropEntreprisesItem title="Titulaire" entreprises={[{ id: entrepriseIdValidator.parse('entrepriseId'), nom: "Nom de l'entreprise", operateur: false }]} />
-)
+export const WithOneEntreprise: StoryFn = () => <EtapePropEntreprisesItem title="Titulaire" entreprises={[{ id: entrepriseIdValidator.parse('entrepriseId'), nom: "Nom de l'entreprise" }]} />
 
 export const WithMultipleEntreprises: StoryFn = () => (
   <EtapePropEntreprisesItem
     title="Titulaire"
     entreprises={[
-      { id: entrepriseIdValidator.parse('entrepriseId'), nom: "Nom de l'entreprise", operateur: false },
-      { id: entrepriseIdValidator.parse('entrepriseId2'), nom: 'Nom de la nouvelle entreprise', operateur: true },
+      { id: entrepriseIdValidator.parse('entrepriseId'), nom: "Nom de l'entreprise" },
+      { id: entrepriseIdValidator.parse('entrepriseId2'), nom: 'Nom de la nouvelle entreprise' },
     ]}
   />
 )

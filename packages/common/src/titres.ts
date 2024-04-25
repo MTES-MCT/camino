@@ -10,7 +10,7 @@ import { demarcheStatutIdValidator } from './static/demarchesStatuts.js'
 import { demarcheTypeIdValidator } from './static/demarchesTypes.js'
 import { TitreId, titreIdValidator, titreSlugValidator } from './validators/titres.js'
 import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from './typescript-tools.js'
-import { entrepriseIdValidator } from './entreprise.js'
+import { EntrepriseId, entrepriseIdValidator } from './entreprise.js'
 
 const commonTitreValidator = z.object({
   id: titreIdValidator,
@@ -20,11 +20,7 @@ const commonTitreValidator = z.object({
   titre_statut_id: titreStatutIdValidator,
   administrations_locales: z.array(administrationIdValidator.brand('administrationLocale')),
   references: z.array(titreReferenceValidator),
-  titulaires: z.array(
-    z.object({
-      nom: z.string().optional(),
-    })
-  ),
+  titulaireIds: z.array(entrepriseIdValidator),
 })
 
 /** @deprecated use CommonRestTitre */
@@ -35,7 +31,7 @@ export interface CommonTitre {
   typeId: TitreTypeId
   titreStatutId: TitreStatutId
   references: TitreReference[]
-  titulaires: { nom?: string }[]
+  titulaireIds: EntrepriseId[]
 }
 
 export type CommonRestTitre = z.infer<typeof commonTitreValidator>
@@ -126,7 +122,7 @@ export type TitrePropTitreEtapeFindDemarche<F extends Pick<DemarcheEtape, 'etape
 }
 
 export const getMostRecentValuePropFromEtapeFondamentaleValide = <
-  P extends 'titulaires' | 'amodiataires' | 'perimetre' | 'substances',
+  P extends 'titulaireIds' | 'amodiataireIds' | 'perimetre' | 'substances',
   F extends Pick<DemarcheEtapeFondamentale, 'etape_statut_id' | 'etape_type_id' | 'ordre' | 'fondamentale'>,
   NF extends Pick<DemarcheEtapeNonFondamentale, 'etape_statut_id' | 'etape_type_id' | 'ordre'>,
 >(

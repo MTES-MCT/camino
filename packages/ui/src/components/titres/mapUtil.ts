@@ -9,6 +9,7 @@ import { dsfrVariableCouleurParDomaine } from '../_common/domaine'
 import { capitalize } from 'camino-common/src/strings'
 import { GeojsonPoint, MultiPolygon } from 'camino-common/src/perimetre'
 import { isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
+import { Entreprise, EntrepriseId } from 'camino-common/src/entreprise'
 
 const leafletCoordinatesFind = (geojson: { coordinates: [number, number] }) => {
   const coordinates = geojson.coordinates
@@ -128,11 +129,15 @@ const svgDomaineAnchor = (domaineId: DomaineId): string => {
 }
 
 export type LayerWithTitreId = Layer & { titreId: TitreId }
-export const layersBuild = (titres: TitreWithPerimetre[], router: Pick<Router, 'push'>, markersAlreadyInMap: TitreId[] = [], geojsonAlreadyInMap: TitreId[] = []) => {
+export const layersBuild = (titres: TitreWithPerimetre[], router: Pick<Router, 'push'>, entreprises: Entreprise[], markersAlreadyInMap: TitreId[] = [], geojsonAlreadyInMap: TitreId[] = []) => {
   const div = document.createElement('div')
   const titleName = document.createElement('div')
   const listeTitulaires = document.createElement('ul')
   titleName.className = 'fr-text--lead'
+  const entreprisesIndex = entreprises.reduce<Record<EntrepriseId, string>>((acc, entreprise) => {
+    acc[entreprise.id] = entreprise.nom
+    return acc
+  }, {})
 
   return titres.reduce<{ geojsons: Record<TitreId, GeoJSON>; markers: CaminoMarker[] }>(
     ({ geojsons, markers }, titre) => {
@@ -175,7 +180,7 @@ export const layersBuild = (titres: TitreWithPerimetre[], router: Pick<Router, '
           const titreStatutBaseElement = document.getElementById(`titre_statut_${titre.titreStatutId}`)
           const titreStatutElement = titreStatutBaseElement?.cloneNode(true) as unknown as HTMLElement
           titreStatutElement.removeAttribute('id')
-          const popupHtmlTitulaires = isNotNullNorUndefinedNorEmpty(titre.titulaires) ? titre.titulaires.map(tt => `<li>${tt.nom}</li>`).join('') : ''
+          const popupHtmlTitulaires = isNotNullNorUndefinedNorEmpty(titre.titulaireIds) ? titre.titulaireIds.map(id => `<li>${entreprisesIndex[id]}</li>`).join('') : ''
 
           div.innerHTML = ''
           titleName.textContent = titre.nom ? titre.nom : ''

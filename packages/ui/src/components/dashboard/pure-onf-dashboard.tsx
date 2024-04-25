@@ -9,8 +9,10 @@ import { CommonTitreONF } from 'camino-common/src/titres'
 import { daysBetween, toCaminoDate } from 'camino-common/src/date'
 import { ComponentColumnData, TableRow, TextColumnData } from '../_ui/table'
 import { DashboardApiClient } from './dashboard-api-client'
+import { Entreprise, EntrepriseId } from 'camino-common/src/entreprise'
 interface Props {
   apiClient: Pick<DashboardApiClient, 'getOnfTitres'>
+  entreprises: Entreprise[]
 }
 
 const columns = [
@@ -65,7 +67,7 @@ const dateCell = (date: string) => ({
   value: date,
 })
 
-const titresLignesBuild = (titres: CommonTitreONF[]): TableRow<Columns>[] => {
+const titresLignesBuild = (titres: CommonTitreONF[], entreprisesIndex: Record<EntrepriseId, string>): TableRow<Columns>[] => {
   return titres.map(titre => {
     let delai = ''
     if (titre.dateCARM !== '' && titre.dateReceptionONF !== '') {
@@ -75,7 +77,7 @@ const titresLignesBuild = (titres: CommonTitreONF[]): TableRow<Columns>[] => {
       nom: nomCell(titre),
       statut: statutCell(titre),
       references: referencesCell(titre),
-      titulaires: titulairesCell(titre),
+      titulaires: titulairesCell(titre, entreprisesIndex),
       dateCompletudePTMG: dateCell(titre.dateCompletudePTMG),
       dateReceptionONF: dateCell(titre.dateReceptionONF),
       dateCARM: dateCell(titre.dateCARM),
@@ -94,11 +96,28 @@ export const PureONFDashboard = defineComponent<Props>(props => {
   const status = ref<'LOADING' | 'LOADED' | 'ERROR'>('LOADING')
   const onfTitres = ref<TableRow[]>([])
   const onfTitresBloques = ref<TableRow[]>([])
+
+  const entreprisesIndex = props.entreprises.reduce<Record<EntrepriseId, string>>((acc, entreprise) => {
+    acc[entreprise.id] = entreprise.nom
+
+    return acc
+  }, {})
+
   onMounted(async () => {
     try {
       const titres = await props.apiClient.getOnfTitres()
-      onfTitres.value.push(...titresLignesBuild(titres.filter(titre => !titre.enAttenteDeONF)))
-      onfTitresBloques.value.push(...titresLignesBuild(titres.filter(titre => titre.enAttenteDeONF)))
+      onfTitres.value.push(
+        ...titresLignesBuild(
+          titres.filter(titre => !titre.enAttenteDeONF),
+          entreprisesIndex
+        )
+      )
+      onfTitresBloques.value.push(
+        ...titresLignesBuild(
+          titres.filter(titre => titre.enAttenteDeONF),
+          entreprisesIndex
+        )
+      )
       status.value = 'LOADED'
     } catch (e) {
       console.error('error', e)
@@ -138,4 +157,4 @@ export const PureONFDashboard = defineComponent<Props>(props => {
 })
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-PureONFDashboard.props = ['apiClient']
+PureONFDashboard.props = ['apiClient', 'entreprises']

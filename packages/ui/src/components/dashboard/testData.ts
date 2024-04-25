@@ -1,8 +1,27 @@
 import { toCaminoDate, toCaminoAnnee } from 'camino-common/src/date'
+import { Entreprise, entrepriseIdValidator } from 'camino-common/src/entreprise'
 import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes'
 import { StatistiquesDGTM } from 'camino-common/src/statistiques'
 import { CommonTitreAdministration } from 'camino-common/src/titres'
 import { titreIdValidator, titreSlugValidator } from 'camino-common/src/validators/titres'
+
+export const entreprises: Entreprise[] = [
+  {
+    id: entrepriseIdValidator.parse('Titulaire1'),
+    nom: 'Titulaire 1',
+    legal_siren: '',
+  },
+  {
+    id: entrepriseIdValidator.parse('Titulaire8'),
+    nom: 'Titulaire 8',
+    legal_siren: '',
+  },
+  {
+    id: entrepriseIdValidator.parse('Titulaire3'),
+    nom: 'Titulaire 3',
+    legal_siren: '',
+  },
+]
 
 export const titresDreal: CommonTitreAdministration[] = [
   {
@@ -12,11 +31,7 @@ export const titresDreal: CommonTitreAdministration[] = [
     type_id: 'prm',
     titre_statut_id: 'dmi',
     references: [],
-    titulaires: [
-      {
-        nom: 'Titulaire1',
-      },
-    ],
+    titulaireIds: [entrepriseIdValidator.parse('Titulaire1')],
     enAttenteDeAdministration: false,
     prochainesEtapes: [],
     derniereEtape: { date: toCaminoDate('2022-01-01'), etapeTypeId: 'mcr' },
@@ -34,11 +49,7 @@ export const titresDreal: CommonTitreAdministration[] = [
       },
       { nom: '2010-000', referenceTypeId: 'ptm' },
     ],
-    titulaires: [
-      {
-        nom: 'Titulaire3',
-      },
-    ],
+    titulaireIds: [entrepriseIdValidator.parse('Titulaire3')],
     enAttenteDeAdministration: true,
     prochainesEtapes: [ETAPES_TYPES.depotDeLaDemande],
     derniereEtape: { date: toCaminoDate('2022-01-01'), etapeTypeId: 'mcr' },
@@ -50,11 +61,7 @@ export const titresDreal: CommonTitreAdministration[] = [
     type_id: 'prm',
     titre_statut_id: 'dmi',
     references: [],
-    titulaires: [
-      {
-        nom: 'Titulaire1',
-      },
-    ],
+    titulaireIds: [entrepriseIdValidator.parse('Titulaire1')],
     enAttenteDeAdministration: false,
     prochainesEtapes: [],
     derniereEtape: { date: toCaminoDate('2022-01-01'), etapeTypeId: 'mcr' },
@@ -72,11 +79,7 @@ export const titresDreal: CommonTitreAdministration[] = [
       },
       { nom: '2010-000', referenceTypeId: 'ptm' },
     ],
-    titulaires: [
-      {
-        nom: 'Titulaire 8',
-      },
-    ],
+    titulaireIds: [entrepriseIdValidator.parse('Titulaire8')],
     enAttenteDeAdministration: false,
     prochainesEtapes: [],
     derniereEtape: { date: toCaminoDate('2022-01-01'), etapeTypeId: 'mcr' },

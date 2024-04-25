@@ -11,19 +11,17 @@ import { TitreId } from 'camino-common/src/validators/titres.js'
 import { EtapeId, EtapeIdOrSlug } from 'camino-common/src/etape.js'
 
 const titresEtapesQueryBuild = ({ fields }: { fields?: FieldsEtape }, user: User) => {
-  const graph = fields ? graphBuild(fields, 'etapes', fieldsFormat) : options.titresEtapes.graph
+  const graph = fields ? graphBuild(fields, 'etapes', fieldsFormat) : '[]'
 
   const q = TitresEtapes.query().withGraphFetched(graph)
 
   titresEtapesQueryModify(q, user)
 
-  // console.info(q.toKnexQuery().toString())
-
   return q
 }
 
 // utilisé dans le daily et le resolver des documents uniquement
-const titreEtapeGet = async (titreEtapeId: EtapeIdOrSlug, { fields, fetchHeritage }: { fields?: FieldsEtape; fetchHeritage?: boolean }, user: User) => {
+export const titreEtapeGet = async (titreEtapeId: EtapeIdOrSlug, { fields, fetchHeritage }: { fields?: FieldsEtape; fetchHeritage?: boolean }, user: User) => {
   const q = titresEtapesQueryBuild({ fields }, user)
 
   q.context({ fetchHeritage })
@@ -37,7 +35,7 @@ const titreEtapeGet = async (titreEtapeId: EtapeIdOrSlug, { fields, fetchHeritag
 }
 
 // utilisé dans le daily uniquement
-const titresEtapesGet = async (
+export const titresEtapesGet = async (
   {
     titresEtapesIds,
     etapesTypesIds,
@@ -69,19 +67,17 @@ const titresEtapesGet = async (
   return q
 }
 
-const titreEtapeCreate = async (titreEtape: Omit<ITitreEtape, 'id'>, user: UserNotNull, titreId: TitreId) => {
-  const newValue = await TitresEtapes.query().insertAndFetch(titreEtape).withGraphFetched(options.titresEtapes.graph)
+export const titreEtapeCreate = async (titreEtape: Omit<ITitreEtape, 'id'>, user: UserNotNull, titreId: TitreId) => {
+  const newValue = await TitresEtapes.query().insertAndFetch(titreEtape).withGraphFetched('[]')
 
   await createJournalCreate(newValue.id, user.id, titreId)
 
   return newValue
 }
 
-const titreEtapeUpdate = async (id: EtapeId, titreEtape: Partial<DBTitresEtapes>, user: UserNotNull, titreId: TitreId): Promise<TitresEtapes> => {
+export const titreEtapeUpdate = async (id: EtapeId, titreEtape: Partial<DBTitresEtapes>, user: UserNotNull, titreId: TitreId): Promise<TitresEtapes> => {
   return patchJournalCreate(id, titreEtape, user.id, titreId)
 }
 
-const titreEtapeUpsert = async (titreEtape: Partial<Pick<ITitreEtape, 'id'>> & Omit<ITitreEtape, 'id'>, user: UserNotNull, titreId: TitreId) =>
-  upsertJournalCreate(titreEtape.id, titreEtape, options.titresEtapes.update, options.titresEtapes.graph, user.id, titreId)
-
-export { titresEtapesGet, titreEtapeGet, titreEtapeCreate, titreEtapeUpdate, titreEtapeUpsert }
+export const titreEtapeUpsert = async (titreEtape: Partial<Pick<ITitreEtape, 'id'>> & Omit<ITitreEtape, 'id'>, user: UserNotNull, titreId: TitreId) =>
+  upsertJournalCreate(titreEtape.id, titreEtape, options.titresEtapes.update, '[]', user.id, titreId)

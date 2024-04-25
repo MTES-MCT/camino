@@ -1,6 +1,6 @@
 import { FunctionalComponent, capitalize, computed, defineComponent, ref } from 'vue'
 import { getMostRecentValuePropFromEtapeFondamentaleValide, TitreGet, TitreGetDemarche } from 'camino-common/src/titres'
-import { DemarcheEtapeFondamentale, DemarcheSlug, EntreprisesByEtapeId, getDemarcheContenu } from 'camino-common/src/demarche'
+import { DemarcheEtapeFondamentale, DemarcheSlug, getDemarcheContenu } from 'camino-common/src/demarche'
 import { DemarchesTypes, isTravaux } from 'camino-common/src/static/demarchesTypes'
 import { DemarcheStatut } from '@/components/_common/demarche-statut'
 import { isNonEmptyArray, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined, onlyUnique } from 'camino-common/src/typescript-tools'
@@ -21,6 +21,7 @@ import { DemarcheEditPopup } from './demarche-edit-popup'
 import { DemarcheRemovePopup } from './demarche-remove-popup'
 import { Forets } from 'camino-common/src/static/forets'
 import { SDOMZones } from 'camino-common/src/static/sdom'
+import { Entreprise, EntrepriseId } from 'camino-common/src/entreprise'
 import { isDemarcheStatutNonStatue, isDemarcheStatutNonValide } from 'camino-common/src/static/demarchesStatuts'
 import { numberFormat } from 'camino-common/src/number'
 
@@ -33,6 +34,7 @@ type Props = {
   demarcheDeleted: () => Promise<void>
   router: Pick<Router, 'push'>
   user: User
+  entreprises: Entreprise[]
   initTab?: TabId
 }
 
@@ -83,12 +85,18 @@ export const TitreDemarche = defineComponent<Props>(props => {
     return [...administrationLocales, ...administrationGestionnaires].filter(onlyUnique)
   })
 
-  const titulaires = computed<EntreprisesByEtapeId[] | null>(() => {
-    return getMostRecentValuePropFromEtapeFondamentaleValide('titulaires', demarchesAsc.value)
+  const entreprisesIndex = props.entreprises.reduce<Record<EntrepriseId, string>>((acc, entreprise) => {
+    acc[entreprise.id] = entreprise.nom
+
+    return acc
+  }, {})
+
+  const titulaires = computed<EntrepriseId[] | null>(() => {
+    return getMostRecentValuePropFromEtapeFondamentaleValide('titulaireIds', demarchesAsc.value)
   })
 
-  const amodiataires = computed<EntreprisesByEtapeId[] | null>(() => {
-    return getMostRecentValuePropFromEtapeFondamentaleValide('amodiataires', demarchesAsc.value)
+  const amodiataires = computed<EntrepriseId[] | null>(() => {
+    return getMostRecentValuePropFromEtapeFondamentaleValide('amodiataireIds', demarchesAsc.value)
   })
 
   const substances = computed<SubstanceLegaleId[] | null>(() => {
@@ -159,8 +167,8 @@ export const TitreDemarche = defineComponent<Props>(props => {
                   <EtapePropItem title={`Substance${substances.value.length > 1 ? 's' : ''}`} text={substances.value.map(substance => capitalize(SubstancesLegale[substance].nom)).join(', ')} />
                 ) : null}
 
-                <EtapePropEntreprisesItem title="Titulaire" entreprises={titulaires.value} />
-                <EtapePropEntreprisesItem title="Amodiataire" entreprises={amodiataires.value} />
+                <EtapePropEntreprisesItem title="Titulaire" entreprises={titulaires.value?.map(id => ({ id, nom: entreprisesIndex[id] })) ?? []} />
+                <EtapePropEntreprisesItem title="Amodiataire" entreprises={amodiataires.value?.map(id => ({ id, nom: entreprisesIndex[id] })) ?? []} />
                 <EtapePropAdministrationsItem administrations={administrations.value} />
 
                 {Object.entries(getDemarcheContenu(demarche.value.etapes, props.titre.titre_type_id)).map(([label, value]) => (
@@ -209,11 +217,12 @@ export const TitreDemarche = defineComponent<Props>(props => {
                           etape={etape}
                           router={props.router}
                           user={props.user}
+                          entreprises={props.entreprises}
                           titre={{ typeId: props.titre.titre_type_id, titreStatutId: props.titre.titre_statut_id, slug: props.titre.slug, nom: props.titre.nom }}
                           demarche={{
                             administrationsLocales: getAdministrationsLocales(perimetre.value?.communes.map(({ id }) => id) ?? [], perimetre.value?.secteurs_maritimes ?? []),
                             demarche_type_id: demarche.value.demarche_type_id,
-                            titulaires: titulaires.value ?? [],
+                            titulaireIds: titulaires.value ?? [],
                             sdom_zones: perimetre.value?.sdom_zones ?? [],
                             etapes: demarche.value.etapes,
                           }}
@@ -266,7 +275,7 @@ export const TitreDemarche = defineComponent<Props>(props => {
 })
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-TitreDemarche.props = ['titre', 'demarches', 'currentDemarcheSlug', 'apiClient', 'user', 'router', 'initTab', 'demarcheCreatedOrUpdated', 'demarcheDeleted']
+TitreDemarche.props = ['titre', 'demarches', 'currentDemarcheSlug', 'apiClient', 'user', 'entreprises', 'router', 'initTab', 'demarcheCreatedOrUpdated', 'demarcheDeleted']
 
 const DisplayLocalisation: FunctionalComponent<Pick<DemarcheEtapeFondamentale['fondamentale'], 'perimetre'>> = props => {
   if (isNullOrUndefined(props.perimetre)) {

@@ -11,7 +11,7 @@ describe('valide l’étape avant de l’enregistrer', () => {
     // ARM
     let titreEtape = {
       typeId: 'mfr',
-      amodiataires: [],
+      amodiataireIds: [],
     } as unknown as ITitreEtape
 
     let titre = {
@@ -25,16 +25,16 @@ describe('valide l’étape avant de l’enregistrer', () => {
 
     titreEtape = {
       typeId: 'mfr',
-      amodiataires: [{ id: 'foo', nom: 'bar', operateur: true }],
+      amodiataireIds: ['foo'],
     } as unknown as ITitreEtape
 
     errors = titreEtapeUpdationValidate(titreEtape, titreDemarche, titre, [], [], [], userSuper, null, null)
     expect(errors).toContain("une autorisation de recherche ne peut pas inclure d'amodiataires")
 
-    // // AXM
+    // AXM
     titreEtape = {
       typeId: 'mfr',
-      amodiataires: [],
+      amodiataireIds: [],
     } as unknown as ITitreEtape
 
     titre = {
@@ -48,7 +48,7 @@ describe('valide l’étape avant de l’enregistrer', () => {
 
     titreEtape = {
       typeId: 'mfr',
-      amodiataires: [{ id: 'foo', nom: 'bar', operateur: true }],
+      amodiataireIds: ['foo'],
     } as unknown as ITitreEtape
 
     errors = titreEtapeUpdationValidate(titreEtape, titreDemarche, titre, [], [], [], userSuper, null, null)

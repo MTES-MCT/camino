@@ -4,18 +4,13 @@ import { knex } from '../../../knex.js'
 
 import Entreprises from '../../models/entreprises.js'
 import Utilisateurs from '../../models/utilisateurs.js'
-import Titres from '../../models/titres.js'
 
-import { titresQueryModify } from './titres.js'
 import { utilisateursQueryModify } from './utilisateurs.js'
 import { User } from 'camino-common/src/roles.js'
+import TitresEtapes from '../../models/titres-etapes.js'
 
 export const entreprisesQueryModify = (q: QueryBuilder<Entreprises, Entreprises | Entreprises[]>, user: User) => {
   q.select('entreprises.*')
-
-  q.modifyGraph('titulaireTitres', a => titresQueryModify(a as QueryBuilder<Titres, Titres | Titres[]>, user))
-
-  q.modifyGraph('amodiataireTitres', a => titresQueryModify(a as QueryBuilder<Titres, Titres | Titres[]>, user))
 
   q.modifyGraph('utilisateurs', b => {
     utilisateursQueryModify(b as QueryBuilder<Utilisateurs, Utilisateurs | Utilisateurs[]>, user)
@@ -24,38 +19,19 @@ export const entreprisesQueryModify = (q: QueryBuilder<Entreprises, Entreprises 
   return q
 }
 
-export const entreprisesTitresQuery = (entreprisesIds: string[], titreAlias: string, { isTitulaire, isAmodiataire }: { isTitulaire?: boolean; isAmodiataire?: boolean } = {}) => {
-  const q = Entreprises.query().whereIn('entreprises.id', entreprisesIds)
+export const entreprisesTitresQuery = (entreprisesIds: string[], titreAlias: string) => {
+  // Nous sommes obligés d’utiliser l’opérateur intersect, car on ne peut pas utiliser l’opérateur |? avec knex à cause du ? qui n’est pas escape
+  const titulairesQuery = TitresEtapes.query()
+    .alias('te_titulaires')
+    .select(knex.raw('jsonb_array_elements(??)', ['te_titulaires.titulaireIds']))
+    .whereRaw('?? ->> ? = ??', [`${titreAlias}.propsTitreEtapesIds`, 'titulaires', 'te_titulaires.id'])
+    .intersect(knex.raw('select jsonb_array_elements(?)', [JSON.stringify(entreprisesIds)]) as unknown as any)
 
-  if (isTitulaire ?? false) {
-    q.modify(entreprisesTitulairesModify, entreprisesIds, titreAlias)
-  }
+  const amodiatairesQuery = TitresEtapes.query()
+    .alias('te_amodiataires')
+    .select(knex.raw('jsonb_array_elements(??)', ['te_amodiataires.amodiataireIds']))
+    .whereRaw('?? ->> ? = ??', [`${titreAlias}.propsTitreEtapesIds`, 'amodiataires', 'te_amodiataires.id'])
+    .intersect(knex.raw('select jsonb_array_elements(?)', [JSON.stringify(entreprisesIds)]) as unknown as any)
 
-  if (isAmodiataire ?? false) {
-    q.modify(entreprisesAmodiatairesModify, entreprisesIds, titreAlias)
-  }
-
-  q.where(c => {
-    if (isTitulaire ?? false) {
-      c.orWhereNotNull('t_t.entrepriseId')
-    }
-
-    if (isAmodiataire ?? false) {
-      c.orWhereNotNull('t_a.entrepriseId')
-    }
-  })
-
-  return q
-}
-
-const entreprisesTitulairesModify = (q: QueryBuilder<Entreprises, Entreprises | Entreprises[]>, entreprisesIds: string[], titreAlias: string) => {
-  q.leftJoin('titresTitulaires as t_t', b => {
-    b.on(knex.raw('?? ->> ? = ??', [`${titreAlias}.propsTitreEtapesIds`, 'titulaires', 't_t.titreEtapeId'])).onIn('t_t.entrepriseId', entreprisesIds)
-  })
-}
-
-const entreprisesAmodiatairesModify = (q: QueryBuilder<Entreprises, Entreprises | Entreprises[]>, entreprisesIds: string[], titreAlias: string) => {
-  q.leftJoin('titresAmodiataires as t_a', b => {
-    b.on(knex.raw('?? ->> ? = ??', [`${titreAlias}.propsTitreEtapesIds`, 'amodiataires', 't_a.titreEtapeId'])).onIn('t_a.entrepriseId', entreprisesIds)
-  })
+  return titulairesQuery.union(amodiatairesQuery)
 }
