@@ -120,6 +120,16 @@ exports[`substances > peut voir toutes les substances 1`] = `
     },
     {
       "description": null,
+      "id": "gehp",
+      "nom": "gîtes géothermiques haute puissance",
+    },
+    {
+      "description": null,
+      "id": "gebp",
+      "nom": "gîtes géothermiques basse puissance",
+    },
+    {
+      "description": null,
       "id": "geom",
       "nom": "activités géothermiques de minime importance",
     },
