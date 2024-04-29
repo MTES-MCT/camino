@@ -47,7 +47,7 @@ describe('Storybook Tests', async () => {
       Object.entries(compose(storyFile))
         .map(([name, story]) => ({ name, story }))
         .filter(env => (name ?? '').includes('NoStoryshots') || !(env.name ?? '').includes('NoSnapshot'))
-    )('$name', async value => {
+    )('$name', async (value: { story: any; name: string }) => {
       setSeed(12)
       try {
         // @ts-ignore

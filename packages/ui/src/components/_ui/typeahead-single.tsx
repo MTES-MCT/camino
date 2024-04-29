@@ -5,7 +5,7 @@ import { DeepReadonly, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } fr
 
 type TypeAheadRecord = Record<string | symbol | number, any>
 
-type Props<T extends TypeAheadRecord, K extends keyof T> = {
+type Props<T extends TypeAheadRecord, K extends keyof DeepReadonly<T>> = {
   overrideItem: (Pick<T, K> & Partial<Omit<T, K>>) | null
   disabled?: boolean
   props: {
@@ -15,18 +15,21 @@ type Props<T extends TypeAheadRecord, K extends keyof T> = {
     items: DeepReadonly<T[]>
     minInputLength: number
     alwaysOpen?: boolean
-    itemChipLabel: (key: T) => string
-    displayItemInList?: (item: T) => JSX.Element
-    onSelectItem: (item: T | undefined) => void
+    itemChipLabel: (key: DeepReadonly<T>) => string
+    displayItemInList?: (item: DeepReadonly<T>) => JSX.Element
+    onSelectItem: (item: DeepReadonly<T> | undefined) => void
     onInput?: (item: string) => void
   }
 }
 
-export const TypeAheadSingle = defineComponent(<T extends TypeAheadRecord, K extends keyof T>(props: Props<T, K>) => {
+export const TypeAheadSingle = defineComponent(<T extends TypeAheadRecord, K extends keyof DeepReadonly<T>>(props: Props<T, K>) => {
   const id = props.props.id ?? `typeahead_${(random() * 1000).toFixed()}`
   const wrapperId = computed(() => `${id}_wrapper`)
-  const getItem = (item: (Pick<T, K> & Partial<Omit<T, K>>) | null): T | null => props.props.items.find(i => i[props.props.itemKey] === item?.[props.props.itemKey]) ?? null
-  const selectedItem: Ref<T | null> = ref<T | null>(getItem(props.overrideItem))
+  const getItem = (item: (Pick<T, K> & Partial<Omit<T, K>>) | null): DeepReadonly<T> | null =>
+    props.props.items.find(i => {
+      return i[props.props.itemKey] === item?.[props.props.itemKey]
+    }) ?? null
+  const selectedItem = ref<DeepReadonly<T> | null>(getItem(props.overrideItem)) as Ref<DeepReadonly<T> | null>
 
   const initItem = getItem(props.overrideItem)
   const input = ref<string>(initItem !== null ? props.props.itemChipLabel(initItem) : '')
@@ -101,7 +104,7 @@ export const TypeAheadSingle = defineComponent(<T extends TypeAheadRecord, K ext
   const currentSelection = computed(() => {
     return isListVisible.value && currentSelectionIndex.value < notSelectedItems.value.length ? notSelectedItems.value[currentSelectionIndex.value] : undefined
   })
-  const selectItem = (item: T) => {
+  const selectItem = (item: DeepReadonly<T>) => {
     input.value = props.props.itemChipLabel(item)
 
     currentSelectionIndex.value = 0

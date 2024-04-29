@@ -7,7 +7,7 @@
     "inlineSources": false,
     "lib": ["es2020", "dom"],
     "module": "ES2020",
-    "moduleResolution": "Node",
+    "moduleResolution": "Bundler",
     "noFallthroughCasesInSwitch": true,
     "noImplicitAny": true,
     "noImplicitReturns": true,

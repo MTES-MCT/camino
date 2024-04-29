@@ -57,7 +57,7 @@ describe('toMachineEtapes', () => {
           date: '2022-01-01',
         } as unknown as TitreEtapeForMachine,
       ])
-    ).toThrowErrorMatchingInlineSnapshot(`"l'état iii est inconnu"`)
+    ).toThrowErrorMatchingInlineSnapshot(`[Error: l'état iii est inconnu]`)
   })
 
   test('emet une erreur si le type de le statut est inconnu', () => {
@@ -70,6 +70,6 @@ describe('toMachineEtapes', () => {
           date: '2022-01-01',
         } as unknown as TitreEtapeForMachine,
       ])
-    ).toThrowErrorMatchingInlineSnapshot(`"le status ffi est inconnu, {\\"id\\":\\"id\\",\\"typeId\\":\\"mfr\\",\\"statutId\\":\\"ffi\\",\\"date\\":\\"2022-01-01\\"}"`)
+    ).toThrowErrorMatchingInlineSnapshot(`[Error: le status ffi est inconnu, {"id":"id","typeId":"mfr","statutId":"ffi","date":"2022-01-01"}]`)
   })
 })

@@ -3,15 +3,14 @@ import { TitresTypesTypes } from 'camino-common/src/static/titresTypesTypes'
 import { getDomaineId, getTitreTypeType } from 'camino-common/src/static/titresTypes'
 import { titresRechercherByReferences } from '@/api/titres'
 import { useRouter } from 'vue-router'
-import { ref, FunctionalComponent } from 'vue'
-import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
+import { ref, FunctionalComponent, DeepReadonly, defineComponent } from 'vue'
 import { titreApiClient, TitreForTitresRerchercherByNom } from '../titre/titre-api-client'
 import { capitalize } from 'camino-common/src/strings'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { CaminoAnnee, getAnnee } from 'camino-common/src/date'
 import { TypeAheadSingle } from '../_ui/typeahead-single'
 
-export const QuickAccessTitre = caminoDefineComponent<{ id: string; onSelectTitre: () => void }>(['id', 'onSelectTitre'], props => {
+export const QuickAccessTitre = defineComponent<{ id: string; onSelectTitre: () => void }>(props => {
   const router = useRouter()
   const titres = ref<TitreForTitresRerchercherByNom[]>([])
 
@@ -29,7 +28,7 @@ export const QuickAccessTitre = caminoDefineComponent<{ id: string; onSelectTitr
     titres.value.splice(0, titres.value.length, ...searchTitres.elements)
   }
 
-  const onSelectedTitre = (titre: TitreForTitresRerchercherByNom | undefined) => {
+  const onSelectedTitre = (titre: DeepReadonly<TitreForTitresRerchercherByNom> | undefined) => {
     if (titre) {
       router.push({ name: 'titre', params: { id: titre.id } })
       props.onSelectTitre()
@@ -39,15 +38,18 @@ export const QuickAccessTitre = caminoDefineComponent<{ id: string; onSelectTitr
   return () => <PureQuickAccessTitre titres={titres.value} onSearch={search} onSelectedTitre={onSelectedTitre} id={props.id} />
 })
 
+// @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
+QuickAccessTitre.props = ['id', 'onSelectTitre']
+
 interface Props {
   id?: string
   titres: TitreForTitresRerchercherByNom[]
-  onSelectedTitre: (titre: TitreForTitresRerchercherByNom | undefined) => void
+  onSelectedTitre: (titre: DeepReadonly<TitreForTitresRerchercherByNom> | undefined) => void
   alwaysOpen?: boolean
   onSearch: (searchTerm: string) => void
 }
 interface DisplayTitreProps {
-  titre: Pick<TitreForTitresRerchercherByNom, 'nom' | 'typeId' | 'demarches'>
+  titre: DeepReadonly<Pick<TitreForTitresRerchercherByNom, 'nom' | 'typeId' | 'demarches'>>
 }
 export const DisplayTitre: FunctionalComponent<DisplayTitreProps> = props => {
   let annee: CaminoAnnee | null = null
@@ -69,8 +71,8 @@ export const DisplayTitre: FunctionalComponent<DisplayTitreProps> = props => {
   )
 }
 
-export const PureQuickAccessTitre = caminoDefineComponent<Props>(['id', 'titres', 'onSelectedTitre', 'onSearch', 'alwaysOpen'], props => {
-  const display = (titre: TitreForTitresRerchercherByNom) => {
+export const PureQuickAccessTitre = defineComponent<Props>(props => {
+  const display = (titre: DeepReadonly<TitreForTitresRerchercherByNom>) => {
     return <DisplayTitre titre={titre} />
   }
 
@@ -86,7 +88,7 @@ export const PureQuickAccessTitre = caminoDefineComponent<Props>(['id', 'titres'
   }
 
   const overrideItem = ref<TitreForTitresRerchercherByNom | null>(null)
-  const selectItem = (item: TitreForTitresRerchercherByNom | undefined) => {
+  const selectItem = (item: DeepReadonly<TitreForTitresRerchercherByNom> | undefined) => {
     overrideItem.value = null
     props.onSelectedTitre(item)
   }
@@ -119,3 +121,6 @@ export const PureQuickAccessTitre = caminoDefineComponent<Props>(['id', 'titres'
     </div>
   )
 })
+
+// @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
+PureQuickAccessTitre.props = ['id', 'titres', 'onSelectedTitre', 'onSearch', 'alwaysOpen']

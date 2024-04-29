@@ -284,7 +284,10 @@ const etapeCreer = async ({ etape }: { etape: ITitreEtape & { etapeDocuments: un
       etape.dateFin = null
     }
 
-    let etapeUpdated: ITitreEtape = await titreEtapeUpsert(etape, user!, titreDemarche.titreId)
+    let etapeUpdated: ITitreEtape | undefined = await titreEtapeUpsert(etape, user!, titreDemarche.titreId)
+    if (isNullOrUndefined(etapeUpdated)) {
+      throw new Error("Une erreur est survenue lors de la création de l'étape")
+    }
 
     await insertEtapeDocuments(context.pool, etapeUpdated.id, etapeDocuments)
     for (const document of entrepriseDocuments) {
@@ -493,8 +496,10 @@ const etapeModifier = async ({ etape }: { etape: ITitreEtape & { etapeDocuments:
       etape.dateFin = titreEtapeOld.dateFin
     }
 
-    let etapeUpdated: ITitreEtape = await titreEtapeUpsert(etape, user!, titreDemarche.titreId)
-
+    let etapeUpdated: ITitreEtape | undefined = await titreEtapeUpsert(etape, user!, titreDemarche.titreId)
+    if (isNullOrUndefined(etapeUpdated)) {
+      throw new Error("Une erreur est survenue lors de la modification de l'étape")
+    }
     await updateEtapeDocuments(context.pool, user, etapeUpdated.id, etapeUpdated.statutId, etapeDocuments)
     await deleteTitreEtapeEntrepriseDocument(context.pool, { titre_etape_id: etapeUpdated.id })
     for (const document of entrepriseDocuments) {
@@ -519,6 +524,9 @@ const etapeModifier = async ({ etape }: { etape: ITitreEtape & { etapeDocuments:
           user!,
           titreDemarche.titreId
         )
+        if (isNullOrUndefined(daeEtape)) {
+          throw new Error("impossible d'intégrer le document lié à la DAE")
+        }
 
         await updateEtapeDocuments(context.pool, user, daeEtape.id, etape.statutId, [daeDocument])
       }
@@ -538,6 +546,9 @@ const etapeModifier = async ({ etape }: { etape: ITitreEtape & { etapeDocuments:
           titreDemarche.titreId
         )
 
+        if (isNullOrUndefined(aslEtape)) {
+          throw new Error("impossible d'intégrer le document lié à la ASL")
+        }
         await updateEtapeDocuments(context.pool, user, aslEtape.id, etape.statutId, [aslDocument])
       }
     }

@@ -73,7 +73,7 @@ describe('trie les étapes', () => {
 
     const titreEtapesMemesDatesOrdreAscResult = titreEtapesMemesDatesOrdreDesc.slice().reverse()
 
-    expect(titreEtapesSortAscByDate(titreEtapesMemesDatesOrdreDesc, newDemarcheId(), 'oct', 'arm')).toMatchObject(titreEtapesMemesDatesOrdreAscResult)
+    expect(titreEtapesSortAscByDate(titreEtapesMemesDatesOrdreDesc, newDemarcheId(), 'oct', 'arm')).toStrictEqual(titreEtapesMemesDatesOrdreAscResult)
   })
 
   test('des étapes avec les mêmes dates sont triées par ordre de type croissant', () => {
@@ -209,7 +209,7 @@ describe('trie les étapes', () => {
     ]
 
     expect(() => titreEtapesSortAscByDate(etapes, newDemarcheId(), DEMARCHES_TYPES_IDS.Octroi, TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX)).toThrowErrorMatchingInlineSnapshot(
-      `"l'état bof est inconnu"`
+      `[Error: l'état bof est inconnu]`
     )
   })
 

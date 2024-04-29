@@ -1,5 +1,4 @@
-import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
-import { computed, onMounted, ref } from 'vue'
+import { computed, defineComponent, onMounted, ref } from 'vue'
 import { AsyncData } from '@/api/client-rest'
 import { LoadingElement } from '@/components/_ui/functional-loader'
 import { TitreLink } from 'camino-common/src/titres'
@@ -7,15 +6,15 @@ import { LinkableTitre, TitresLinkConfig } from '@/components/titre/titres-link-
 import { TitreStatut } from '../_common/titre-statut'
 import { TypeAheadSingle } from '../_ui/typeahead-single'
 import { TypeAheadMultiple } from '../_ui/typeahead-multiple'
-import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
+import { DeepReadonly, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
 
 interface Props {
   config: TitresLinkConfig
   loadLinkableTitres: () => Promise<LinkableTitre[]>
   onSelectTitres: (titres: TitreLink[]) => void
 }
-export const TitresLink = caminoDefineComponent<Props>(['config', 'loadLinkableTitres', 'onSelectTitres'], props => {
-  const display = (item: LinkableTitre) => {
+export const TitresLink = defineComponent<Props>(props => {
+  const display = (item: DeepReadonly<LinkableTitre>) => {
     return (
       <div class="flex flex-center dsfr">
         <TitreStatut titreStatutId={item.titreStatutId} />
@@ -75,7 +74,7 @@ export const TitresLink = caminoDefineComponent<Props>(['config', 'loadLinkableT
     search.value = searchLabel.toLowerCase()
   }
 
-  const getDateDebutEtDateFin = (titre: LinkableTitre): string => {
+  const getDateDebutEtDateFin = (titre: DeepReadonly<LinkableTitre>): string => {
     const dateDebut = titre.demarches
       .filter(({ demarcheDateDebut }) => !!demarcheDateDebut)
       .map(({ demarcheDateDebut }) => demarcheDateDebut)
@@ -137,3 +136,6 @@ export const TitresLink = caminoDefineComponent<Props>(['config', 'loadLinkableT
     />
   )
 })
+
+// @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
+TitresLink.props = ['config', 'loadLinkableTitres', 'onSelectTitres']

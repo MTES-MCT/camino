@@ -12,7 +12,7 @@ describe('teste isDocumentsComplete', () => {
     expect(errors).toMatchInlineSnapshot(`
       {
         "errors": [
-          "le document \\"arr\\" est obligatoire",
+          "le document "arr" est obligatoire",
         ],
         "valid": false,
       }
@@ -32,7 +32,7 @@ describe('teste isDocumentsComplete', () => {
     expect(errors).toMatchInlineSnapshot(`
       {
         "errors": [
-          "le document \\"arr\\" est obligatoire",
+          "le document "arr" est obligatoire",
         ],
         "valid": false,
       }

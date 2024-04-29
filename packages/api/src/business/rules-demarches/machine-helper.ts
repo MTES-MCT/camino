@@ -3,7 +3,7 @@ import { CaminoCommonContext, DBEtat, Etape, Intervenant, intervenants, tags } f
 import { DemarchesStatutsIds, DemarcheStatutId } from 'camino-common/src/static/demarchesStatuts.js'
 import { CaminoDate } from 'camino-common/src/date.js'
 
-type CaminoState<CaminoContext extends CaminoCommonContext, CaminoEvent extends EventObject> = MachineSnapshot<CaminoContext, CaminoEvent, any, any, any, any>
+type CaminoState<CaminoContext extends CaminoCommonContext, CaminoEvent extends EventObject> = MachineSnapshot<CaminoContext, CaminoEvent, any, any, any, any, any>
 
 export abstract class CaminoMachine<CaminoContext extends CaminoCommonContext, CaminoEvent extends EventObject> {
   public readonly machine: StateMachine<CaminoContext, CaminoEvent, any, any, any, any, any, any, any, any, any, EventObject, any>

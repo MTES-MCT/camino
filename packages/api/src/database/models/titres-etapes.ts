@@ -48,7 +48,6 @@ class TitresEtapes extends Model {
       administrationsLocales: { type: ['array', 'null'] },
       sdomZones: { type: ['array', 'null'] },
       notes: { type: ['string', 'null'] },
-      geojson4326Perimetre: { type: ['object', 'null'] },
     },
   }
 
@@ -117,8 +116,7 @@ class TitresEtapes extends Model {
       const rawLine = await context.transaction.raw(`select ST_GeomFromGeoJSON('${JSON.stringify(this.geojson4326Perimetre.geometry)}'::text)`)
       this.geojson4326Perimetre = rawLine.rows[0].st_geomfromgeojson
     }
-
-    return super.$beforeInsert(context)
+    await super.$beforeInsert(context)
   }
 
   async $beforeUpdate(opt: ModelOptions, context: QueryContext) {
