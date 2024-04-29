@@ -61,6 +61,7 @@ databaseInit(pool).then(() => {
     max: 100, // Limit each IP to 100 requests per `window` (here, per 1 minute)
     standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
     legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+    validate: false, // TODO 2024-04-29 : disable https://express-rate-limit.mintlify.app/reference/error-codes#err-erl-unexpected-x-forwarded-for en version 7, on pourra désactiver juste ça
     skip: (request: any, _response: any) => {
       // On n'applique pas de rate limiting sur le televersement des fichiers
       return request.url.startsWith('/televersement')
