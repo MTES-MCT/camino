@@ -2,19 +2,12 @@ import { PureAdministrationDashboard } from './pure-administration-dashboard'
 import { Meta, StoryFn } from '@storybook/vue3'
 import { CommonTitreAdministration } from 'camino-common/src/titres'
 import { statistiquesDGTMFake, titresDreal } from './testData'
-import { vueRouter } from 'storybook-vue3-router'
 import { testBlankUser } from 'camino-common/src/tests-utils'
 import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations'
 const meta: Meta = {
   title: 'Components/Dashboard/Administration',
   component: PureAdministrationDashboard,
-  decorators: [
-    vueRouter([
-      { name: 'titre', params: { id: 'fourth-slug' } },
-      { name: 'Stats DGTM', params: {} },
-    ]),
-    () => ({ template: '<div class="dsfr"><story/></div>' }),
-  ],
+  decorators: [() => ({ template: '<div class="dsfr"><story/></div>' })],
 }
 export default meta
 

@@ -4,18 +4,10 @@ import { TitreEntreprise, entrepriseIdValidator, newEntrepriseId } from 'camino-
 import { testBlankUser } from 'camino-common/src/tests-utils'
 import { toCommuneId } from 'camino-common/src/static/communes'
 import { titreIdValidator } from 'camino-common/src/validators/titres'
-import { vueRouter } from 'storybook-vue3-router'
 
 const meta: Meta = {
   title: 'Components/Dashboard/Entreprise',
   component: PureEntrepriseDashboard,
-  decorators: [
-    vueRouter([
-      { name: 'titre', params: { id: 'fourth-slug' } },
-      { name: 'Stats DGTM', params: {} },
-      { name: 'titre-creation', params: {} },
-    ]),
-  ],
 }
 export default meta
 

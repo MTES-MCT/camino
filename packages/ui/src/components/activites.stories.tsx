@@ -1,4 +1,3 @@
-import { vueRouter } from 'storybook-vue3-router'
 import { PureActivites } from './activites'
 import { Meta, StoryFn } from '@storybook/vue3'
 import { action } from '@storybook/addon-actions'
@@ -12,7 +11,6 @@ const meta: Meta = {
   title: 'Components/Activites',
   // @ts-ignore
   component: PureActivites,
-  decorators: [vueRouter([{ name: 'activites' }, { name: 'activite' }])],
 }
 export default meta
 

@@ -1,13 +1,11 @@
 import { Journal } from 'camino-common/src/journaux'
 import { PureJournaux } from './journaux'
 import { Meta, StoryFn } from '@storybook/vue3'
-import { vueRouter } from 'storybook-vue3-router'
 import { ApiClient } from '@/api/api-client'
 
 const meta: Meta = {
   title: 'Components/Journaux',
   component: PureJournaux,
-  decorators: [vueRouter([{ name: 'etape', params: { id: 'unIdDelement' } }])],
 }
 export default meta
 

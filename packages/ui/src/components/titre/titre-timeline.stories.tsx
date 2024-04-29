@@ -1,14 +1,13 @@
 import { Meta, StoryFn } from '@storybook/vue3'
 import { demarcheSlugValidator } from 'camino-common/src/demarche'
 import { toCaminoDate } from 'camino-common/src/date'
-import { vueRouter } from 'storybook-vue3-router'
 import { Phase, TitreTimeline } from './titre-timeline'
 import { titreSlugValidator } from 'camino-common/src/validators/titres'
 
 const meta: Meta = {
   title: 'Components/Titre/Timeline',
   component: TitreTimeline,
-  decorators: [() => ({ template: '<div class="dsfr"><story/></div>' }), vueRouter([{ name: 'titre' }])],
+  decorators: [() => ({ template: '<div class="dsfr"><story/></div>' })],
 }
 export default meta
 const defaultPhasesWithAlterations: Phase = [

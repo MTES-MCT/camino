@@ -1,5 +1,4 @@
 import { Meta, StoryFn } from '@storybook/vue3'
-import { vueRouter } from 'storybook-vue3-router'
 import { PureTitreCreation } from './titre-creation'
 import { testBlankUser } from 'camino-common/src/tests-utils'
 import { ApiClient } from '@/api/api-client'
@@ -14,7 +13,6 @@ const meta: Meta = {
   title: 'Components/TitreCreation',
   // @ts-ignore
   component: PureTitreCreation,
-  decorators: [vueRouter([{ name: 'meta' }])],
 }
 export default meta
 

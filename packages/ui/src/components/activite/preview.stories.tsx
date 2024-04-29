@@ -4,7 +4,6 @@ import { Activite, activiteIdValidator, activiteSlugValidator } from 'camino-com
 import { toCaminoAnnee, toCaminoDate } from 'camino-common/src/date'
 import { ACTIVITES_STATUTS_IDS } from 'camino-common/src/static/activitesStatuts'
 import { ACTIVITES_TYPES_IDS } from 'camino-common/src/static/activitesTypes'
-import { vueRouter } from 'storybook-vue3-router'
 import { ActiviteApiClient } from './activite-api-client'
 import { action } from '@storybook/addon-actions'
 
@@ -12,7 +11,6 @@ const meta: Meta = {
   title: 'Components/Activite/Preview',
   // @ts-ignore en attente de la mise à jour de @storybook/vue3
   component: Preview,
-  decorators: [vueRouter([{ path: '/activites/:activiteId/edition' }])],
 }
 export default meta
 

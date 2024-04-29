@@ -3,7 +3,6 @@ import { Meta, StoryFn } from '@storybook/vue3'
 import { action } from '@storybook/addon-actions'
 import { testBlankUser } from 'camino-common/src/tests-utils'
 
-import { vueRouter } from 'storybook-vue3-router'
 import { RouteLocationRaw } from 'vue-router'
 import { entrepriseIdValidator } from 'camino-common/src/entreprise'
 import { ApiClient } from '../api/api-client'
@@ -12,7 +11,6 @@ const meta: Meta = {
   title: 'Components/Entreprises',
   // @ts-ignore
   component: PureEntreprises,
-  decorators: [vueRouter([{ name: 'entreprises' }, { name: 'entreprise' }])],
 }
 export default meta
 

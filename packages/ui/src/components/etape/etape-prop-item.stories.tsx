@@ -2,12 +2,11 @@ import { Meta, StoryFn } from '@storybook/vue3'
 import { EtapePropEntreprisesItem, EtapePropItem, EtapePropAdministrationsItem } from './etape-prop-item'
 import { Domaine } from '../_common/domaine'
 import { entrepriseIdValidator } from 'camino-common/src/entreprise'
-import { vueRouter } from 'storybook-vue3-router'
 
 const meta: Meta = {
   title: 'Components/Etape/PropItem',
   component: EtapePropItem,
-  decorators: [() => ({ template: '<div class="dsfr"><story/></div>' }), vueRouter([{ name: 'entreprise' }, { name: 'administration' }])],
+  decorators: [() => ({ template: '<div class="dsfr"><story/></div>' })],
 }
 export default meta
 

@@ -1,7 +1,6 @@
 import { action } from '@storybook/addon-actions'
 import { Filters } from './filters'
 import { Meta, StoryFn } from '@storybook/vue3'
-import { vueRouter } from 'storybook-vue3-router'
 import { allCaminoFiltres } from './camino-filtres'
 import { RouteLocationRaw } from 'vue-router'
 import { ApiClient } from '../../../api/api-client'
@@ -10,7 +9,6 @@ const meta: Meta = {
   title: 'Components/Ui/Filters/Filters',
   // @ts-ignore
   component: Filters,
-  decorators: [vueRouter([{ name: '/plop' }])],
 }
 export default meta
 
@@ -36,7 +34,7 @@ export const Loading: StoryFn = () => (
     entreprises={[]}
     apiClient={{ ...apiClient, getTitresByIds: () => new Promise(() => ({})) }}
     updateUrlQuery={{ push }}
-    route={{ query: { titresIds: ['toto'] }, name: '/plop' }}
+    route={{ query: { titresIds: ['toto'] }, name: 'dashboard' }}
     toggle={action('toggle')}
     validate={action('validate')}
   />
@@ -48,7 +46,7 @@ export const ClosedWithoutValue: StoryFn = () => (
     filters={['nomsAdministration']}
     apiClient={apiClient}
     updateUrlQuery={{ push }}
-    route={{ query: {}, name: '/plop' }}
+    route={{ query: {}, name: 'dashboard' }}
     toggle={action('toggle')}
     validate={action('validate')}
   />
@@ -59,7 +57,7 @@ export const AllFiltersClosedWithValues: StoryFn = () => (
     entreprises={[]}
     filters={allCaminoFiltres}
     updateUrlQuery={{ push }}
-    route={{ query: { nomsAdministration: 'test', substancesIds: ['arge', 'auru'] }, name: '/plop' }}
+    route={{ query: { nomsAdministration: 'test', substancesIds: ['arge', 'auru'] }, name: 'dashboard' }}
     toggle={action('toggle')}
     validate={action('validate')}
     opened={false}
@@ -72,7 +70,7 @@ export const AllFiltersOpenedWithValues: StoryFn = () => (
     entreprises={[]}
     filters={allCaminoFiltres}
     updateUrlQuery={{ push }}
-    route={{ query: { nomsAdministration: 'test', substancesIds: ['arge', 'auru'] }, name: '/plop' }}
+    route={{ query: { nomsAdministration: 'test', substancesIds: ['arge', 'auru'] }, name: 'dashboard' }}
     toggle={action('toggle')}
     validate={action('validate')}
     opened={true}
@@ -85,7 +83,7 @@ export const CustomOpenedWithValues: StoryFn = () => (
     entreprises={[]}
     filters={['nomsAdministration', 'substancesIds']}
     updateUrlQuery={{ push }}
-    route={{ query: { nomsAdministration: 'test', substancesIds: ['arge', 'auru'] }, name: '/plop' }}
+    route={{ query: { nomsAdministration: 'test', substancesIds: ['arge', 'auru'] }, name: 'dashboard' }}
     toggle={action('toggle')}
     validate={action('validate')}
     opened={true}
@@ -98,7 +96,7 @@ export const Opened: StoryFn = () => (
     entreprises={[]}
     filters={allCaminoFiltres}
     updateUrlQuery={{ push }}
-    route={{ query: {}, name: '/plop' }}
+    route={{ query: {}, name: 'dashboard' }}
     apiClient={apiClient}
     toggle={action('toggle')}
     validate={action('validate')}

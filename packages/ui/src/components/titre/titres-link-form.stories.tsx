@@ -4,14 +4,13 @@ import { TitreLink, TitreLinks } from 'camino-common/src/titres'
 import { LinkableTitre } from '@/components/titre/titres-link-form-api-client'
 import { testBlankUser } from 'camino-common/src/tests-utils'
 import { toCaminoDate } from 'camino-common/src/date'
-import { vueRouter } from 'storybook-vue3-router'
 import { titreIdValidator } from 'camino-common/src/validators/titres'
 
 const meta: Meta = {
   title: 'Components/Titre/TitresLinkForm',
   component: TitresLinkForm,
   argTypes: {},
-  decorators: [() => ({ template: '<div class="dsfr"><story/></div>' }), vueRouter([{ name: 'titre' }])],
+  decorators: [() => ({ template: '<div class="dsfr"><story/></div>' })],
 }
 export default meta
 
