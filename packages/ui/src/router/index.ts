@@ -85,26 +85,6 @@ const Meta = async () => {
   return Meta
 }
 
-const MetaTitre = async () => {
-  const { MetaTitre } = await import('../components/meta-titre')
-
-  return MetaTitre
-}
-const MetaDemarche = async () => {
-  const { MetaDemarche } = await import('../components/meta-demarche')
-
-  return MetaDemarche
-}
-const MetaEtape = async () => {
-  const { MetaEtape } = await import('../components/meta-etape')
-
-  return MetaEtape
-}
-const MetaActivite = async () => {
-  const { MetaActivite } = await import('../components/meta-activite')
-
-  return MetaActivite
-}
 const Metas = async () => {
   const { Metas } = await import('../components/metas')
 
@@ -315,42 +295,6 @@ const routes = [
     component: Metas,
     meta: {
       title: 'Métas',
-      menuSection: 'metas',
-    },
-  },
-  {
-    path: '/metas/titre',
-    name: 'meta-titre',
-    component: MetaTitre,
-    meta: {
-      title: 'Métas des titres',
-      menuSection: 'metas',
-    },
-  },
-  {
-    path: '/metas/demarche',
-    name: 'meta-demarche',
-    component: MetaDemarche,
-    meta: {
-      title: 'Métas des démarches',
-      menuSection: 'metas',
-    },
-  },
-  {
-    path: '/metas/etape',
-    name: 'meta-etape',
-    component: MetaEtape,
-    meta: {
-      title: 'Métas des étapes',
-      menuSection: 'metas',
-    },
-  },
-  {
-    path: '/metas/activite',
-    name: 'meta-activite',
-    component: MetaActivite,
-    meta: {
-      title: 'Métas des activités',
       menuSection: 'metas',
     },
   },

@@ -3,23 +3,18 @@ import '@gouvfr/dsfr/dist/component/navigation/navigation.module'
 import '@gouvfr/dsfr/dist/component/tab/tab.module'
 
 import { defineComponent, computed, ref, onMounted, inject } from 'vue'
-import { Messages } from './components/_ui/messages'
 import { Header } from './components/page/header'
 import { Footer } from './components/page/footer'
 import { MapPattern } from './components/_map/pattern'
 import { IconSprite } from './components/_ui/iconSprite'
 
-import { useStore } from 'vuex'
 import { RouterView, useRoute } from 'vue-router'
 import { isNullOrUndefined } from 'camino-common/src/typescript-tools'
 import { userKey } from './moi'
 export const App = defineComponent(() => {
-  const store = useStore()
   const route = useRoute()
 
   const loaded = ref<boolean>(false)
-
-  const messages = computed<{ type: 'error' | 'success'; value: string }[]>(() => store.state.messages)
 
   const currentMenuSection = computed(() => route.meta?.menuSection)
 
@@ -51,10 +46,6 @@ export const App = defineComponent(() => {
       </main>
 
       <Footer displayNewsletter={displayNewsletter.value} version={version.value} />
-
-      <div class="messages">
-        <Messages messages={messages.value} />
-      </div>
     </div>
   )
 })

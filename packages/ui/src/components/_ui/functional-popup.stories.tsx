@@ -4,6 +4,7 @@ import { action } from '@storybook/addon-actions'
 
 const meta: Meta = {
   title: 'Components/UI/Popup',
+  // @ts-ignore
   component: FunctionalPopup,
 }
 export default meta
@@ -21,7 +22,30 @@ export const Main: StoryFn = () => (
       action: () => {
         doStuff()
 
-        return Promise.resolve()
+        return new Promise<void>(resolve => setTimeout(() => resolve(), 5000))
+      },
+    }}
+    content={() => (
+      <div>
+        <div class="bg-warning color-bg p-s mb-l">
+          <span class="bold"> Attention </span>: cette opération est définitive et ne peut pas être annulée.
+        </div>
+      </div>
+    )}
+  />
+)
+
+export const SaveError: StoryFn = () => (
+  <FunctionalPopup
+    id="mainId"
+    close={close}
+    title="Titre de la popup"
+    canValidate={true}
+    validate={{
+      action: () => {
+        doStuff()
+
+        return Promise.reject(new Error('erreur'))
       },
     }}
     content={() => (

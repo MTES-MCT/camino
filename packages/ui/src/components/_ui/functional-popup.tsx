@@ -1,8 +1,9 @@
 import { AsyncData } from '@/api/client-rest'
-import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
-import { Teleport, computed, onBeforeUnmount, onMounted, ref } from 'vue'
+import { Teleport, computed, defineComponent, onBeforeUnmount, onMounted, ref } from 'vue'
 import { LoadingElement } from './functional-loader'
 import type { JSX } from 'vue/jsx-runtime'
+import { Alert } from './alert'
+
 interface Props {
   id?: string
   title: string
@@ -15,7 +16,7 @@ interface Props {
   canValidate: boolean
 }
 
-export const FunctionalPopup = caminoDefineComponent<Props>(['id', 'title', 'content', 'close', 'validate', 'canValidate'], (props: Props) => {
+export const FunctionalPopup = defineComponent<Props>((props: Props) => {
   const canValidate = computed<boolean>(() => {
     return props.canValidate
   })
@@ -87,35 +88,42 @@ export const FunctionalPopup = caminoDefineComponent<Props>(['id', 'title', 'con
                       <span class="fr-icon-arrow-right-line fr-icon--lg" aria-hidden="true"></span>
                       {props.title}
                     </h1>
-                    <div class="fr-container">{props.content()}</div>
+                    <div class="fr-container">
+                      {props.content()}
+                      {validateProcess.value.status === 'ERROR' ? <Alert small={true} type="error" title={validateProcess.value.message} /> : null}
+                    </div>
                   </div>
-                  <LoadingElement
-                    data={validateProcess.value}
-                    renderItem={() => (
-                      <div class="fr-modal__footer">
-                        <ul class="fr-btns-group fr-btns-group--right fr-btns-group--inline-reverse fr-btns-group--inline-lg fr-btns-group--icon-left">
-                          <li>
-                            <button
-                              class={['fr-btn', 'fr-icon-check-line', 'fr-btn--icon-left', !canValidate.value ? 'disabled' : '']}
-                              disabled={!canValidate.value}
-                              onClick={e => {
-                                e.stopPropagation()
 
-                                return validate()
-                              }}
-                            >
-                              {text}
-                            </button>
-                          </li>
-                          <li>
-                            <button class="fr-btn fr-icon-arrow-go-back-fill fr-btn--icon-left fr-btn--secondary" aria-controls={id} onClick={props.close}>
-                              Annuler
-                            </button>
-                          </li>
-                        </ul>
-                      </div>
-                    )}
-                  />
+                  <div class="fr-modal__footer">
+                    <div style={{ display: 'flex', width: '100%', justifyContent: 'end', alignItems: 'center', gap: '1rem' }}>
+                      {validateProcess.value.status !== 'ERROR' ? <LoadingElement data={validateProcess.value} renderItem={() => null} /> : null}
+                      <ul class="fr-btns-group fr-btns-group--right fr-btns-group--inline-reverse fr-btns-group--inline-lg fr-btns-group--icon-left" style={{ width: 'auto' }}>
+                        <li>
+                          <button
+                            class={['fr-btn', 'fr-icon-check-line', 'fr-btn--icon-left', !canValidate.value ? 'disabled' : '']}
+                            disabled={!canValidate.value || validateProcess.value.status === 'LOADING'}
+                            onClick={e => {
+                              e.stopPropagation()
+
+                              return validate()
+                            }}
+                          >
+                            {text}
+                          </button>
+                        </li>
+                        <li>
+                          <button
+                            class="fr-btn fr-icon-arrow-go-back-fill fr-btn--icon-left fr-btn--secondary"
+                            disabled={validateProcess.value.status === 'LOADING'}
+                            aria-controls={id}
+                            onClick={props.close}
+                          >
+                            Annuler
+                          </button>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -125,3 +133,6 @@ export const FunctionalPopup = caminoDefineComponent<Props>(['id', 'title', 'con
     </Teleport>
   )
 })
+
+// @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
+FunctionalPopup.props = ['id', 'title', 'content', 'close', 'validate', 'canValidate']

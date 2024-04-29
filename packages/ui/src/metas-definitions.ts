@@ -392,26 +392,6 @@ export const metasIndex = {
       },
     ],
   },
-
-  titre: {
-    nom: 'Titre',
-    linkName: 'meta-titre',
-  },
-
-  demarche: {
-    nom: 'Démarche',
-    linkName: 'meta-demarche',
-  },
-
-  etape: {
-    nom: 'Étape',
-    linkName: 'meta-etape',
-  },
-
-  activite: {
-    nom: 'Activité',
-    linkName: 'meta-activite',
-  },
 } as const
 
 export type MetaIndexTable = keyof typeof metasIndex

@@ -1,10 +1,9 @@
-import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
-import { TransitionGroup } from 'vue'
+import { TransitionGroup, defineComponent } from 'vue'
 
 interface Props {
   messages: { type: 'error' | 'success'; value: string | Error }[]
 }
-export const Messages = caminoDefineComponent<Props>(['messages'], props => {
+export const Messages = defineComponent<Props>(props => {
   return () => (
     <TransitionGroup name="slide-bottom" tag="div">
       {props.messages.map((message, index) => (
@@ -15,3 +14,6 @@ export const Messages = caminoDefineComponent<Props>(['messages'], props => {
     </TransitionGroup>
   )
 })
+
+// @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
+Messages.props = ['messages']

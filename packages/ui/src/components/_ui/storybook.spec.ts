@@ -24,8 +24,6 @@ vi.mock('vue-router', () => ({
   })),
 }))
 
-vi.mock('vuex', () => ({ useStore: vi.fn() }))
-
 const compose = (entry: StoryFile): ReturnType<typeof composeStories<StoryFile>> => {
   try {
     return composeStories(entry)

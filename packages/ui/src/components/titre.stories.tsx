@@ -312,7 +312,7 @@ const apiClient: PropsApiClient = {
   deleteEtape: etapeId => {
     deleteEtapeAction(etapeId)
 
-    return Promise.resolve()
+    return Promise.reject(new Error('Nope'))
   },
 
   deposeEtape: etapeId => {

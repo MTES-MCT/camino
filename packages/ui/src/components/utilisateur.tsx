@@ -3,13 +3,12 @@ import { Card } from './_ui/card'
 import { User } from 'camino-common/src/roles'
 import { QGisToken } from './utilisateur/qgis-token'
 import { AsyncData } from '@/api/client-rest'
-import { useStore } from 'vuex'
 import { useRoute, useRouter } from 'vue-router'
 import { UtilisateurApiClient, utilisateurApiClient } from './utilisateur/utilisateur-api-client'
 import { LoadingElement } from './_ui/functional-loader'
 import { RemovePopup } from './utilisateur/remove-popup'
 import { canDeleteUtilisateur } from 'camino-common/src/permissions/utilisateurs'
-import { caminoDefineComponent, isEventWithTarget } from '../utils/vue-tsx-utils'
+import { isEventWithTarget } from '../utils/vue-tsx-utils'
 import { PermissionDisplay } from './utilisateur/permission-edit'
 import { UtilisateurToEdit } from 'camino-common/src/utilisateur'
 import { Utilisateur as ApiUser, Entreprise } from 'camino-common/src/entreprise'
@@ -20,7 +19,6 @@ import { entreprisesKey, userKey } from '@/moi'
 
 export const Utilisateur = defineComponent({
   setup() {
-    const store = useStore()
     const route = useRoute()
     const router = useRouter()
 
@@ -34,39 +32,11 @@ export const Utilisateur = defineComponent({
         window.location.replace(`/apiUrl/rest/utilisateurs/${userId}/delete`)
       } else {
         await utilisateurApiClient.removeUtilisateur(userId)
-        store.dispatch(
-          'messageAdd',
-          {
-            value: `l'utilisateur a été supprimé`,
-            type: 'success',
-          },
-          { root: true }
-        )
         router.push({ name: 'utilisateurs' })
       }
     }
     const updateUtilisateur = async (utilisateur: UtilisateurToEdit) => {
-      try {
-        await utilisateurApiClient.updateUtilisateur(utilisateur)
-
-        store.dispatch(
-          'messageAdd',
-          {
-            value: `le rôle a bien été modifié`,
-            type: 'success',
-          },
-          { root: true }
-        )
-      } catch (e) {
-        store.dispatch(
-          'messageAdd',
-          {
-            value: `Erreur lors de la modification du rôle de l'utilisateur`,
-            type: 'error',
-          },
-          { root: true }
-        )
-      }
+      await utilisateurApiClient.updateUtilisateur(utilisateur)
     }
     const passwordUpdate = () => {
       window.location.replace('/apiUrl/changerMotDePasse')
@@ -98,7 +68,7 @@ export interface Props {
   passwordUpdate: () => void
 }
 
-export const PureUtilisateur = caminoDefineComponent<Props>(['user', 'utilisateurId', 'apiClient', 'passwordUpdate', 'entreprises'], props => {
+export const PureUtilisateur = defineComponent<Props>(props => {
   watch(
     () => props.utilisateurId,
     _newId => {
@@ -290,3 +260,6 @@ export const PureUtilisateur = caminoDefineComponent<Props>(['user', 'utilisateu
     </div>
   )
 })
+
+// @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
+PureUtilisateur.props = ['user', 'utilisateurId', 'apiClient', 'passwordUpdate', 'entreprises']
