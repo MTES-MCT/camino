@@ -73,7 +73,7 @@ describe('trie les étapes', () => {
 
     const titreEtapesMemesDatesOrdreAscResult = titreEtapesMemesDatesOrdreDesc.slice().reverse()
 
-    expect(titreEtapesSortAscByDate(titreEtapesMemesDatesOrdreDesc, newDemarcheId(), 'oct', 'arm')).toMatchObject(titreEtapesMemesDatesOrdreAscResult)
+    expect(titreEtapesSortAscByDate(titreEtapesMemesDatesOrdreDesc, newDemarcheId(), 'oct', 'arm')).toStrictEqual(titreEtapesMemesDatesOrdreAscResult)
   })
 
   test('des étapes avec les mêmes dates sont triées par ordre de type croissant', () => {

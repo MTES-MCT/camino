@@ -182,7 +182,7 @@ describe('titre', () => {
     const res = await graphQLCall(dbPool, titreQuery, { id: 'titre-id' }, undefined)
 
     expect(res.body.errors).toBe(undefined)
-    expect(res.body.data).toMatchObject({ titre: null })
+    expect(res.body.data).toStrictEqual({ titre: null })
   })
 
   test('ne peut voir que les démarches qui sont en "lecture publique" (utilisateur anonyme)', async () => {
