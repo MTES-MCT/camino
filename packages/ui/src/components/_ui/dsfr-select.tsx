@@ -1,7 +1,7 @@
 import { NonEmptyArray, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
 import { isEventWithTarget, random } from '../../utils/vue-tsx-utils'
 import { DeepReadonly, HTMLAttributes } from 'vue'
-
+import type { JSX } from 'vue/jsx-runtime'
 export type Item<T> = { id: T; label: string; disabled?: boolean }
 type Props<T, Items extends DeepReadonly<NonEmptyArray<Item<T>>>> = {
   id?: string

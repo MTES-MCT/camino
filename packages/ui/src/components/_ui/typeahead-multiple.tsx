@@ -3,7 +3,7 @@ import styles from './typeahead.module.css'
 import { isEventWithTarget, random } from '@/utils/vue-tsx-utils'
 import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
 import { DsfrTag } from './tag'
-
+import type { JSX } from 'vue/jsx-runtime'
 type TypeAheadRecord = Record<string | symbol | number, any>
 
 type Props<T extends TypeAheadRecord, K extends keyof T> = {

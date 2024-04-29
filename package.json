@@ -52,15 +52,15 @@
     "vue": "bug npm avec les workspaces : https://github.com/npm/cli/issues/4834"
   },
   "overrides": {
-    "vue": "3.3.4"
+    "vue": "3.4.26"
   },
   "devDependencies": {
     "@types/react": "file:stub/types__react",
-    "husky": "^8.0.3",
-    "lint-staged": "^13.2.2",
-    "semantic-release": "^21.0.5",
-    "semantic-release-mattermost": "^1.1.1",
-    "vue": "3.3.4",
+    "husky": "^9.0.11",
+    "lint-staged": "^15.2.2",
+    "semantic-release": "^23.0.8",
+    "semantic-release-mattermost": "^1.2.1",
+    "vue": "3.4.26",
     "typescript": "5.4.5"
   },
   "release": {

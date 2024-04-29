@@ -1,7 +1,6 @@
 import express from 'express'
 import { CaminoRequest } from '../api/rest/express-type'
 
-import { graphqlUploadExpress } from 'graphql-upload'
 import { isDefault } from 'camino-common/src/roles.js'
 import { Server, Upload } from '@tus/server'
 import { FileStore } from '@tus/file-store'
@@ -69,9 +68,3 @@ export const restUpload = () => {
 
   return uploadServer
 }
-
-// Téléversement graphQL
-export const graphqlUpload = graphqlUploadExpress({
-  maxFileSize: Infinity,
-  maxFiles: 10,
-})

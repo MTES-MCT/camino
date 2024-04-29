@@ -3,6 +3,7 @@ import { FunctionalComponent, HTMLAttributes } from 'vue'
 import { EntreprisesByEtapeId } from 'camino-common/src/demarche'
 import { CaminoRouterLink } from '../../router/camino-router-link'
 import { AdministrationId, Administrations } from 'camino-common/src/static/administrations'
+import type { JSX } from 'vue/jsx-runtime'
 
 const textProp = 'text'
 

@@ -2,7 +2,7 @@ import { capitalize } from 'camino-common/src/strings'
 import { FunctionalComponent } from 'vue'
 import { Downloads, Props as DownloadProps } from './downloads'
 import { DownloadRestRoutes } from 'camino-common/src/rest'
-
+import type { JSX } from 'vue/jsx-runtime'
 export type Props = {
   nom: string
   renderButton: (() => JSX.Element) | null

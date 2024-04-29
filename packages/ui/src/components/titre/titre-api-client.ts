@@ -123,203 +123,195 @@ export const titreApiClient: TitreApiClient = {
     return getWithJson('/rest/titres/:titreId', { titreId })
   },
   getTitresForTable: async params => {
-    const { elements, total } = await apiGraphQLFetch(
-      gql`
-        query TitresForTable(
-          $page: Int
-          $colonne: String
-          $ordre: String
-          $titresIds: [ID!]
-          $typesIds: [ID!]
-          $domainesIds: [ID!]
-          $statutsIds: [ID!]
-          $substancesIds: [ID!]
-          $entreprisesIds: [ID!]
-          $references: String
-          $communes: String
-          $departements: [String]
-          $regions: [String]
-          $facadesMaritimes: [String]
+    const { elements, total } = await apiGraphQLFetch(gql`
+      query TitresForTable(
+        $page: Int
+        $colonne: String
+        $ordre: String
+        $titresIds: [ID!]
+        $typesIds: [ID!]
+        $domainesIds: [ID!]
+        $statutsIds: [ID!]
+        $substancesIds: [ID!]
+        $entreprisesIds: [ID!]
+        $references: String
+        $communes: String
+        $departements: [String]
+        $regions: [String]
+        $facadesMaritimes: [String]
+      ) {
+        titres(
+          intervalle: 10
+          page: $page
+          colonne: $colonne
+          ordre: $ordre
+          ids: $titresIds
+          typesIds: $typesIds
+          domainesIds: $domainesIds
+          statutsIds: $statutsIds
+          substancesIds: $substancesIds
+          entreprisesIds: $entreprisesIds
+          references: $references
+          communes: $communes
+          departements: $departements
+          regions: $regions
+          facadesMaritimes: $facadesMaritimes
         ) {
-          titres(
-            intervalle: 10
-            page: $page
-            colonne: $colonne
-            ordre: $ordre
-            ids: $titresIds
-            typesIds: $typesIds
-            domainesIds: $domainesIds
-            statutsIds: $statutsIds
-            substancesIds: $substancesIds
-            entreprisesIds: $entreprisesIds
-            references: $references
-            communes: $communes
-            departements: $departements
-            regions: $regions
-            facadesMaritimes: $facadesMaritimes
-          ) {
-            elements {
+          elements {
+            id
+            slug
+            nom
+            typeId
+            titreStatutId
+            substances
+            activitesEnConstruction
+            activitesAbsentes
+            titulaires {
               id
-              slug
               nom
-              typeId
-              titreStatutId
-              substances
-              activitesEnConstruction
-              activitesAbsentes
-              titulaires {
-                id
-                nom
-              }
-              communes {
-                id
-              }
-              secteursMaritime
-              references {
-                referenceTypeId
-                nom
-              }
             }
-            total
+            communes {
+              id
+            }
+            secteursMaritime
+            references {
+              referenceTypeId
+              nom
+            }
           }
+          total
         }
-      `
-    )(params)
+      }
+    `)(params)
 
     return { elements, total }
   },
   getTitresForCarte: async params => {
     // TODO 2023-07-20 si zoom > 7 alors autre appel
-    const result = await apiGraphQLFetch(
-      gql`
-        query TitresForCarte(
-          $titresIds: [ID!]
-          $typesIds: [ID!]
-          $domainesIds: [ID!]
-          $statutsIds: [ID!]
-          $substancesIds: [ID!]
-          $entreprisesIds: [ID!]
-          $references: String
-          $communes: String
-          $departements: [String]
-          $regions: [String]
-          $facadesMaritimes: [String]
-          $perimetre: [Float!]
+    const result = await apiGraphQLFetch(gql`
+      query TitresForCarte(
+        $titresIds: [ID!]
+        $typesIds: [ID!]
+        $domainesIds: [ID!]
+        $statutsIds: [ID!]
+        $substancesIds: [ID!]
+        $entreprisesIds: [ID!]
+        $references: String
+        $communes: String
+        $departements: [String]
+        $regions: [String]
+        $facadesMaritimes: [String]
+        $perimetre: [Float!]
+      ) {
+        titres(
+          ids: $titresIds
+          typesIds: $typesIds
+          domainesIds: $domainesIds
+          statutsIds: $statutsIds
+          substancesIds: $substancesIds
+          entreprisesIds: $entreprisesIds
+          references: $references
+          communes: $communes
+          departements: $departements
+          regions: $regions
+          facadesMaritimes: $facadesMaritimes
+          perimetre: $perimetre
+          demandeEnCours: true
         ) {
-          titres(
-            ids: $titresIds
-            typesIds: $typesIds
-            domainesIds: $domainesIds
-            statutsIds: $statutsIds
-            substancesIds: $substancesIds
-            entreprisesIds: $entreprisesIds
-            references: $references
-            communes: $communes
-            departements: $departements
-            regions: $regions
-            facadesMaritimes: $facadesMaritimes
-            perimetre: $perimetre
-            demandeEnCours: true
-          ) {
-            elements {
+          elements {
+            id
+            slug
+            nom
+            typeId
+            titreStatutId
+            titulaires {
               id
-              slug
               nom
-              typeId
-              titreStatutId
-              titulaires {
-                id
-                nom
-              }
-              amodiataires {
-                id
-                nom
-              }
-              geojson4326Centre
             }
-            total
+            amodiataires {
+              id
+              nom
+            }
+            geojson4326Centre
           }
+          total
         }
-      `
-    )(params)
+      }
+    `)(params)
 
     return result
   },
   getTitresWithPerimetreForCarte: async params => {
-    const result = await apiGraphQLFetch(
-      gql`
-        query TitresWithPerimetreForCarte(
-          $titresIds: [ID!]
-          $typesIds: [ID!]
-          $domainesIds: [ID!]
-          $statutsIds: [ID!]
-          $substancesIds: [ID!]
-          $entreprisesIds: [ID!]
-          $references: String
-          $communes: String
-          $departements: [String]
-          $regions: [String]
-          $facadesMaritimes: [String]
-          $perimetre: [Float!]
+    const result = await apiGraphQLFetch(gql`
+      query TitresWithPerimetreForCarte(
+        $titresIds: [ID!]
+        $typesIds: [ID!]
+        $domainesIds: [ID!]
+        $statutsIds: [ID!]
+        $substancesIds: [ID!]
+        $entreprisesIds: [ID!]
+        $references: String
+        $communes: String
+        $departements: [String]
+        $regions: [String]
+        $facadesMaritimes: [String]
+        $perimetre: [Float!]
+      ) {
+        titres(
+          ids: $titresIds
+          typesIds: $typesIds
+          domainesIds: $domainesIds
+          statutsIds: $statutsIds
+          substancesIds: $substancesIds
+          entreprisesIds: $entreprisesIds
+          references: $references
+          communes: $communes
+          departements: $departements
+          regions: $regions
+          facadesMaritimes: $facadesMaritimes
+          perimetre: $perimetre
+          demandeEnCours: true
         ) {
-          titres(
-            ids: $titresIds
-            typesIds: $typesIds
-            domainesIds: $domainesIds
-            statutsIds: $statutsIds
-            substancesIds: $substancesIds
-            entreprisesIds: $entreprisesIds
-            references: $references
-            communes: $communes
-            departements: $departements
-            regions: $regions
-            facadesMaritimes: $facadesMaritimes
-            perimetre: $perimetre
-            demandeEnCours: true
-          ) {
-            elements {
+          elements {
+            id
+            slug
+            nom
+            typeId
+            titreStatutId
+            titulaires {
               id
-              slug
               nom
-              typeId
-              titreStatutId
-              titulaires {
-                id
-                nom
-              }
-              amodiataires {
-                id
-                nom
-              }
-
-              geojson4326Centre
-              geojson4326Perimetre
             }
-            total
+            amodiataires {
+              id
+              nom
+            }
+
+            geojson4326Centre
+            geojson4326Perimetre
           }
+          total
         }
-      `
-    )(params)
+      }
+    `)(params)
 
     return result
   },
   titresRechercherByNom: async noms => {
-    const result = await apiGraphQLFetch(
-      gql`
-        query TitresRechercherByNom($noms: String) {
-          titres(intervalle: 20, noms: $noms) {
-            elements {
-              id
-              nom
-              typeId
-              demarches {
-                demarcheDateDebut
-              }
+    const result = await apiGraphQLFetch(gql`
+      query TitresRechercherByNom($noms: String) {
+        titres(intervalle: 20, noms: $noms) {
+          elements {
+            id
+            nom
+            typeId
+            demarches {
+              demarcheDateDebut
             }
           }
         }
-      `
-    )({ noms })
+      }
+    `)({ noms })
 
     return result
   },

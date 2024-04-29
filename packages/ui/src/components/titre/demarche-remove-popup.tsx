@@ -6,6 +6,7 @@ import { DemarcheApiClient } from './demarche-api-client'
 import { Alert } from '@/components/_ui/alert'
 import { DemarcheId } from 'camino-common/src/demarche'
 import { FunctionalComponent } from 'vue'
+import type { JSX } from 'vue/jsx-runtime'
 
 export interface Props {
   titreTypeId: TitreTypeId

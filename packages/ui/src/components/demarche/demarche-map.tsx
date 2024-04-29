@@ -15,7 +15,7 @@ import { TitreTypeId, getDomaineId } from 'camino-common/src/static/titresTypes'
 import { Router } from 'vue-router'
 import { canHaveForages } from 'camino-common/src/permissions/titres'
 import { capitalize } from 'camino-common/src/strings'
-import { CaminoLngLatBounds, CaminoMapLibre } from '@/typings/maplibre-gl'
+import { CaminoLngLatBounds, CaminoMapLibre, CaminoStyleSpecification } from '@/typings/maplibre-gl'
 
 const contoursSourceName = 'Contours'
 const pointsSourceName = 'Points'
@@ -387,7 +387,7 @@ export const DemarcheMap = defineComponent<Props>(props => {
   }
 
   onMounted(() => {
-    const style: StyleSpecification = {
+    const style: CaminoStyleSpecification = {
       version: 8,
       glyphs: 'https://etalab-tiles.fr/fonts/{fontstack}/{range}.pbf',
       sources: {
@@ -427,7 +427,7 @@ export const DemarcheMap = defineComponent<Props>(props => {
       const mapLibre: CaminoMapLibre = new Map({
         container: mapRef.value,
         cooperativeGestures: true,
-        style,
+        style: style as StyleSpecification,
         center: bounds.value.getCenter().toArray(),
         zoom: 16,
       }) as CaminoMapLibre

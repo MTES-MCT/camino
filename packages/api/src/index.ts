@@ -20,7 +20,7 @@ import { restWithPool } from './server/rest.js'
 import { graphql } from './server/graphql.js'
 import { authJwt } from './server/auth-jwt.js'
 import { authBasic } from './server/auth-basic.js'
-import { restUpload, graphqlUpload, uploadAllowedMiddleware } from './server/upload.js'
+import { restUpload, uploadAllowedMiddleware } from './server/upload.js'
 import { databaseInit } from './database/init.js'
 
 import { consoleOverride } from './config/logger.js'
@@ -109,7 +109,7 @@ databaseInit(pool).then(() => {
 
   app.use('/televersement', uploadAllowedMiddleware, restUpload())
 
-  app.use('/', graphqlUpload, graphql(pool))
+  app.use('/', graphql(pool))
 
   if (isNotNullNorUndefined(config().API_SENTRY_URL)) {
     app.use(Sentry.Handlers.errorHandler())

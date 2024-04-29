@@ -12,6 +12,7 @@ import { NonEmptyArray, isNonEmptyArray, isNotNullNorUndefined, isNullOrUndefine
 import { Alert } from '../_ui/alert'
 import { TypeAheadSingle } from '../_ui/typeahead-single'
 import { DsfrSelect, Item } from '../_ui/dsfr-select'
+import type { JSX } from 'vue/jsx-runtime'
 
 type Props = {
   etape: {

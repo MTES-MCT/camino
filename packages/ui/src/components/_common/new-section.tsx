@@ -3,6 +3,7 @@ import { SectionWithValue } from 'camino-common/src/sections'
 import { FunctionalComponent } from 'vue'
 import { SectionElement } from './new-section-element'
 import { isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
+import type { JSX } from 'vue/jsx-runtime'
 
 export const Sections = (props: { sections: SectionWithValue[] }): JSX.Element | null => {
   return props.sections?.length ? (

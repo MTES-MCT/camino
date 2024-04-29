@@ -1,5 +1,5 @@
 import { FunctionalComponent, ButtonHTMLAttributes } from 'vue'
-
+import type { JSX } from 'vue/jsx-runtime'
 type Props = {
   onClick: () => void
   title: string

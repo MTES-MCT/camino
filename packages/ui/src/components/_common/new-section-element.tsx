@@ -2,6 +2,7 @@ import { ElementWithValue, isNumberElement, valeurFind } from 'camino-common/src
 import { FunctionalComponent } from 'vue'
 import { numberFormat } from 'camino-common/src/number'
 import { isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
+import type { JSX } from 'vue/jsx-runtime'
 
 interface Props {
   element: ElementWithValue

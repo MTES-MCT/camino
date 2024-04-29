@@ -1,5 +1,4 @@
 import GraphQLJSON from 'graphql-type-json'
-import { GraphQLUpload } from 'graphql-upload'
 
 import { titres, titreCreer, titre } from './resolvers/titres.js'
 
@@ -44,7 +43,6 @@ import { journaux } from './resolvers/journaux.js'
 export default {
   //  types
   Json: GraphQLJSON,
-  FileUpload: GraphQLUpload,
 
   //  queries
   etape,

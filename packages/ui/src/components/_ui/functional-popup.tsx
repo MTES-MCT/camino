@@ -2,7 +2,7 @@ import { AsyncData } from '@/api/client-rest'
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { Teleport, computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { LoadingElement } from './functional-loader'
-
+import type { JSX } from 'vue/jsx-runtime'
 interface Props {
   id?: string
   title: string

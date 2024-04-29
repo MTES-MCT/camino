@@ -17,7 +17,7 @@ import {
   ChartType,
 } from 'chart.js'
 import { ref, onMounted, onUnmounted } from 'vue'
-
+import type { JSX } from 'vue/jsx-runtime'
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 
 Chart.register(LinearScale, PieController, ArcElement, BarController, CategoryScale, BarElement, LineController, PointElement, LineElement, Filler, Legend, Tooltip, Title)

@@ -4,6 +4,7 @@ import { ChartConfiguration } from 'chart.js'
 import { AsyncData } from '@/api/client-rest'
 import { defineAsyncComponent } from 'vue'
 import { ButtonIcon } from '../_ui/button-icon'
+import type { JSX } from 'vue/jsx-runtime'
 
 interface Props<T> {
   data: AsyncData<T>

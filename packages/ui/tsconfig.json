@@ -10,6 +10,7 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "jsx": "preserve",
+    "jsxImportSource": "vue",
     "noErrorTruncation": true,
     "lib": [
       "esnext",

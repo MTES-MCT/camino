@@ -212,13 +212,7 @@ export const FondamentalesEdit = caminoDefineComponent<Props>(['etape', 'demarch
                     onEntreprisesUpdate={titulairesUpdate}
                   />
                 )}
-                read={heritagePropEtape => (
-                  <div>
-                    {heritagePropEtape?.titulaires.map(t => (
-                      <DsfrTag key={t.id} class="fr-mr-1w" ariaLabel={getEntrepriseNom(t)} />
-                    ))}
-                  </div>
-                )}
+                read={heritagePropEtape => <div>{heritagePropEtape?.titulaires.map(t => <DsfrTag key={t.id} class="fr-mr-1w" ariaLabel={getEntrepriseNom(t)} />)}</div>}
               />
             </div>
           </>
@@ -245,13 +239,7 @@ export const FondamentalesEdit = caminoDefineComponent<Props>(['etape', 'demarch
                     onEntreprisesUpdate={amodiatairesUpdate}
                   />
                 )}
-                read={heritagePropEtape => (
-                  <div>
-                    {heritagePropEtape?.amodiataires.map(t => (
-                      <DsfrTag key={t.id} class="fr-mr-1w" ariaLabel={getEntrepriseNom(t)} />
-                    ))}
-                  </div>
-                )}
+                read={heritagePropEtape => <div>{heritagePropEtape?.amodiataires.map(t => <DsfrTag key={t.id} class="fr-mr-1w" ariaLabel={getEntrepriseNom(t)} />)}</div>}
               />
             </div>
           </>

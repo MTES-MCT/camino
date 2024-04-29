@@ -12,7 +12,7 @@ import { DsfrInputRadio } from '../_ui/dsfr-input-radio'
 import { DsfrSelect } from '../_ui/dsfr-select'
 import { useState } from '../../utils/vue-tsx-utils'
 import { CaminoDate } from 'camino-common/src/date'
-
+import type { JSX } from 'vue/jsx-runtime'
 interface Props {
   sectionsWithValue: DeepReadonly<SectionWithValue[]>
   completeUpdate: (complete: boolean, newContenu: Props['sectionsWithValue']) => void

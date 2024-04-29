@@ -42,23 +42,21 @@ export const titresLinkFormApiClient: TitresLinkFormApiClient = {
 
     if (linkConfig) {
       const titreTypeFrom = TitresTypes[linkConfig.typeId]
-      const result = await apiGraphQLFetch(
-        gql`
-          query Titres($typesIds: [ID!], $domainesIds: [ID!]) {
-            titres(typesIds: $typesIds, domainesIds: $domainesIds, statutsIds: ["ech", "mod", "val"]) {
-              elements {
-                id
-                nom
-                titreStatutId
-                demarches {
-                  demarcheDateDebut
-                  demarcheDateFin
-                }
+      const result = await apiGraphQLFetch(gql`
+        query Titres($typesIds: [ID!], $domainesIds: [ID!]) {
+          titres(typesIds: $typesIds, domainesIds: $domainesIds, statutsIds: ["ech", "mod", "val"]) {
+            elements {
+              id
+              nom
+              titreStatutId
+              demarches {
+                demarcheDateDebut
+                demarcheDateFin
               }
             }
           }
-        `
-      )({
+        }
+      `)({
         typesIds: [titreTypeFrom.typeId],
         domainesIds: [titreTypeFrom.domaineId],
       })
