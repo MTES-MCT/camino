@@ -2,7 +2,7 @@ import { computed, Ref, ref, watch, defineComponent } from 'vue'
 import styles from './typeahead.module.css'
 import { isEventWithTarget, random } from '@/utils/vue-tsx-utils'
 import { DeepReadonly, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
-
+import type { JSX } from 'vue/jsx-runtime'
 type TypeAheadRecord = Record<string | symbol | number, any>
 
 type Props<T extends TypeAheadRecord, K extends keyof DeepReadonly<T>> = {

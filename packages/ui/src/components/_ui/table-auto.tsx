@@ -21,14 +21,14 @@ export const TableAuto = caminoDefineComponent<Props>(['caption', 'rows', 'colum
     props.initialSort === 'noSort'
       ? null
       : props.initialSort === 'firstColumnAsc'
-      ? {
-          colonne: props.columns[0].id,
-          ordre: 'asc',
-        }
-      : {
-          colonne: props.initialSort.colonne,
-          ordre: props.initialSort.ordre,
-        }
+        ? {
+            colonne: props.columns[0].id,
+            ordre: 'asc',
+          }
+        : {
+            colonne: props.initialSort.colonne,
+            ordre: props.initialSort.ordre,
+          }
   )
 
   const myRows = reactive<TableRow[]>([...props.rows])

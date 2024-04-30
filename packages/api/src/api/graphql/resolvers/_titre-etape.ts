@@ -93,15 +93,18 @@ const titreEtapeHeritageContenuBuild = (
   titreEtape.heritageContenu = sections.reduce((heritageContenu: IHeritageContenu, section) => {
     if (!section.elements?.length) return heritageContenu
 
-    heritageContenu[section.id] = section.elements?.reduce((acc: { [elementId: string]: IHeritageElement }, element) => {
-      acc[element.id] = {
-        actif: !!titreEtapesFiltered.find(
-          e => e.id !== titreEtape.id && etapeSectionsDictionary[e.id] && etapeSectionsDictionary[e.id].find(s => s.id === section.id && s.elements?.find(el => el.id === element.id))
-        ),
-      }
+    heritageContenu[section.id] = section.elements?.reduce(
+      (acc: { [elementId: string]: IHeritageElement }, element) => {
+        acc[element.id] = {
+          actif: !!titreEtapesFiltered.find(
+            e => e.id !== titreEtape.id && etapeSectionsDictionary[e.id] && etapeSectionsDictionary[e.id].find(s => s.id === section.id && s.elements?.find(el => el.id === element.id))
+          ),
+        }
 
-      return acc
-    }, {} as { [elementId: string]: IHeritageElement })
+        return acc
+      },
+      {} as { [elementId: string]: IHeritageElement }
+    )
 
     return heritageContenu
   }, {})

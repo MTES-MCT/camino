@@ -1,6 +1,6 @@
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { FunctionalComponent, HTMLAttributes } from 'vue'
-
+import type { JSX } from 'vue/jsx-runtime'
 interface Props {
   title: () => JSX.Element
   content: () => JSX.Element

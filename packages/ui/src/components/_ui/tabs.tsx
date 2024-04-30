@@ -3,7 +3,7 @@ import { Ref, defineComponent, nextTick, onBeforeUnmount, ref } from 'vue'
 import { DsfrIcon } from './dsfrIconSpriteType'
 import { NonEmptyArray } from 'camino-common/src/typescript-tools'
 import { random } from '../../utils/vue-tsx-utils'
-
+import type { JSX } from 'vue/jsx-runtime'
 export type Tab<TabId extends string> = { icon: DsfrIcon; title: string; id: TabId; renderContent: () => JSX.Element }
 
 type Props<TabId extends string> = {

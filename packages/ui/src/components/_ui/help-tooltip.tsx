@@ -2,7 +2,7 @@ import { Icon as IconType } from './iconSpriteType'
 import { Icon } from './icon'
 import { FunctionalComponent, HTMLAttributes } from 'vue'
 import styles from './help-tooltip.module.css'
-
+import type { JSX } from 'vue/jsx-runtime'
 interface Props {
   icon?: IconType
   text: string

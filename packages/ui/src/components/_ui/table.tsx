@@ -4,7 +4,7 @@ import { RouteLocationNormalizedLoaded, onBeforeRouteLeave } from 'vue-router'
 import { AsyncData } from '../../api/client-rest'
 import { DemarcheIdOrSlug } from 'camino-common/src/demarche'
 import { NonEmptyArray } from 'camino-common/src/typescript-tools'
-
+import type { JSX } from 'vue/jsx-runtime'
 type SortOrder = 'asc' | 'desc'
 
 export interface TableSortEvent {

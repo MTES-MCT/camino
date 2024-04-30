@@ -1,6 +1,6 @@
 import { CaminoRoutePaths } from '@/router'
 import { FunctionalComponent, AnchorHTMLAttributes } from 'vue'
-
+import type { JSX } from 'vue/jsx-runtime'
 type Props = {
   to: CaminoRoutePaths
   title: string

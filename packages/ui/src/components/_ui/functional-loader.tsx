@@ -2,7 +2,7 @@ import { AsyncData } from '@/api/client-rest'
 import { HelpTooltip } from '@/components/_ui/help-tooltip'
 import { HTMLAttributes } from 'vue'
 import styles from './functional-loader.module.css'
-
+import type { JSX } from 'vue/jsx-runtime'
 type Props<T> = {
   data: AsyncData<T>
   renderItem: (item: T) => JSX.Element | null

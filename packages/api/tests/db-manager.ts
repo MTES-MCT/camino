@@ -48,7 +48,7 @@ class DbManager {
 
     const output = spawnSync(
       'npx',
-      ['-y', 'knex', 'migrate:latest', '--migrations-directory', 'src/knex/migrations', '--connection', `postgres://${DbManager.getPgUser()}:${DbManager.getPgPassword()}@localhost/${this.dbName}`],
+      ['knex', 'migrate:latest', '--migrations-directory', 'src/knex/migrations', '--connection', `postgres://${DbManager.getPgUser()}:${DbManager.getPgPassword()}@localhost/${this.dbName}`],
       {
         encoding: 'utf-8',
         env: {

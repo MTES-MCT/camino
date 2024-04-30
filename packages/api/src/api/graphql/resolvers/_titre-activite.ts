@@ -129,15 +129,18 @@ export const titreActiviteAdministrationsEmailsGet = (
     return []
   }
 
-  const activitesTypesEmailsByAdministrationId = (administrationsActivitesTypesEmails ?? []).reduce<Record<AdministrationId, GetActiviteTypeEmailsByAdministrationIds[]>>((acc, a) => {
-    if (!acc[a.administration_id]) {
-      acc[a.administration_id] = []
-    }
+  const activitesTypesEmailsByAdministrationId = (administrationsActivitesTypesEmails ?? []).reduce<Record<AdministrationId, GetActiviteTypeEmailsByAdministrationIds[]>>(
+    (acc, a) => {
+      if (!acc[a.administration_id]) {
+        acc[a.administration_id] = []
+      }
 
-    acc[a.administration_id].push(a)
+      acc[a.administration_id].push(a)
 
-    return acc
-  }, {} as Record<AdministrationId, GetActiviteTypeEmailsByAdministrationIds[]>)
+      return acc
+    },
+    {} as Record<AdministrationId, GetActiviteTypeEmailsByAdministrationIds[]>
+  )
 
   // Si production > 0, envoyer à toutes les administrations liées au titre
   // sinon envoyer seulement aux minitères et aux DREAL

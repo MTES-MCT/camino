@@ -6,6 +6,7 @@ import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { DsfrToggle } from '../_ui/dsfr-toggle'
 import { EtapesTypes } from 'camino-common/src/static/etapesTypes'
 import { capitalize } from 'camino-common/src/strings'
+import type { JSX } from 'vue/jsx-runtime'
 
 type EtapeHeritageEdit = Pick<EtapeWithHeritage, 'typeId' | 'date'>
 type Props<P extends keyof MappingHeritagePropsNameEtapePropsName, T extends EtapeHeritageEdit> = {

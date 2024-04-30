@@ -1,4 +1,3 @@
 {
-  "upgrade": true,
-  "reject": ["graphql-upload", "express-jwt"]
+  "upgrade": true
 }

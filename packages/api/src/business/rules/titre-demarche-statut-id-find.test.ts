@@ -13,7 +13,7 @@ const etapesBuild = (etapesProps: Partial<ITitreEtape>[]): TitreEtapeForMachine[
       ({
         ...etapeProps,
         ordre: i + 1,
-      } as unknown as TitreEtapeForMachine)
+      }) as unknown as TitreEtapeForMachine
   )
 
 describe("statut d'une démarche", () => {

@@ -2,6 +2,7 @@ import type { Icon as IconType } from './iconSpriteType'
 import type { DsfrIcon as DsfrIconType } from './dsfrIconSpriteType'
 import { FunctionalComponent, HTMLAttributes } from 'vue'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
+import type { JSX } from 'vue/jsx-runtime'
 
 export type Size = 'S' | 'M'
 type Props = {

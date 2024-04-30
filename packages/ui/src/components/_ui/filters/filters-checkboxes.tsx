@@ -9,6 +9,7 @@ import { CheckboxesCaminoFiltres } from './camino-filtres'
 import { caminoFiltres } from 'camino-common/src/filters'
 import { isEventWithTarget } from '@/utils/vue-tsx-utils'
 import { DemarcheStatut } from '../../_common/demarche-statut'
+import type { JSX } from 'vue/jsx-runtime'
 
 type Props = {
   filter: CheckboxesCaminoFiltres
