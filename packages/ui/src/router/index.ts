@@ -450,6 +450,7 @@ const routes = [
   // pour avoir une uniformité entre toutes les start-ups
   {
     path: '/stats',
+    name: 'statistiquesbetagouv',
     redirect: 'statistiques',
   },
   {

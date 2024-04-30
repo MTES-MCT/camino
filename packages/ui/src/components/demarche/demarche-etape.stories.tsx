@@ -6,7 +6,6 @@ import { EtapeEntrepriseDocument, entrepriseDocumentIdValidator, entrepriseIdVal
 import { titreSlugValidator } from 'camino-common/src/validators/titres'
 import { Router } from 'vue-router'
 import { action } from '@storybook/addon-actions'
-import { vueRouter } from 'storybook-vue3-router'
 import { testBlankUser } from 'camino-common/src/tests-utils'
 import { EtapeDocument, etapeDocumentIdValidator, etapeIdValidator, etapeSlugValidator } from 'camino-common/src/etape'
 import { DOCUMENTS_TYPES_IDS } from 'camino-common/src/static/documentsTypes'
@@ -17,7 +16,7 @@ const meta: Meta = {
   title: 'Components/Demarche/Etape',
   // @ts-ignore
   component: DemarcheEtape,
-  decorators: [vueRouter([{ name: 'entreprise' }, { name: 'etape-edition' }]), () => ({ template: '<div class="dsfr"><story/></div>' })],
+  decorators: [() => ({ template: '<div class="dsfr"><story/></div>' })],
 }
 
 export default meta

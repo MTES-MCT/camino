@@ -4,12 +4,10 @@ import { newEntrepriseId } from 'camino-common/src/entreprise'
 import { testBlankUser } from 'camino-common/src/tests-utils'
 import { PermissionDisplay } from './permission-edit'
 import { toUtilisateurId } from 'camino-common/src/roles'
-import { vueRouter } from 'storybook-vue3-router'
 
 const meta: Meta = {
   title: 'Components/Utilisateur/Permissions',
   component: PermissionDisplay,
-  decorators: [vueRouter([{ name: 'entreprise' }])],
 }
 export default meta
 

@@ -4,7 +4,6 @@ import { newEntrepriseId } from 'camino-common/src/entreprise'
 import { testBlankUser } from 'camino-common/src/tests-utils'
 import { PureUtilisateurs } from './utilisateurs'
 import { toUtilisateurId } from 'camino-common/src/roles'
-import { vueRouter } from 'storybook-vue3-router'
 import { RouteLocationRaw } from 'vue-router'
 import { ApiClient } from '../api/api-client'
 
@@ -12,7 +11,6 @@ const meta: Meta = {
   title: 'Components/Utilisateurs',
   // @ts-ignore
   component: PureUtilisateurs,
-  decorators: [vueRouter([{ name: 'utilisateurs' }, { name: 'utilisateur' }])],
 }
 export default meta
 

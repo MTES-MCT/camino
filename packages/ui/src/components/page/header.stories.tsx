@@ -1,28 +1,10 @@
 import { Header } from './header'
 import { Meta, StoryFn } from '@storybook/vue3'
 import { testBlankUser } from 'camino-common/src/tests-utils'
-import { vueRouter } from 'storybook-vue3-router'
 
 const meta: Meta = {
   title: 'Components/Page/Header',
   component: Header,
-  decorators: [
-    vueRouter([
-      { name: 'administration' },
-      { name: 'utilisateurs' },
-      { name: 'titres' },
-      { name: 'homepage' },
-      { name: 'dashboard' },
-      { name: 'activites' },
-      { name: 'travaux' },
-      { name: 'demarches' },
-      { name: 'administrations' },
-      { name: 'entreprises' },
-      { name: 'metas' },
-      { name: 'journaux' },
-      { name: 'statistiques' },
-    ]),
-  ],
 }
 export default meta
 

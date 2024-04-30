@@ -1,7 +1,7 @@
 import { describe, expect, test, vi } from 'vitest'
 import type { Meta, StoryFn } from '@storybook/vue3'
 import { render } from '@testing-library/vue'
-import { composeStories } from '@storybook/testing-vue3'
+import { composeStories } from '@storybook/vue3'
 import { h } from 'vue'
 import { setSeed } from './utils/vue-tsx-utils'
 
@@ -47,7 +47,7 @@ describe('Storybook Tests', async () => {
       Object.entries(compose(storyFile))
         .map(([name, story]) => ({ name, story }))
         .filter(env => (name ?? '').includes('NoStoryshots') || !(env.name ?? '').includes('NoSnapshot'))
-    )('$name', async (value: { story: any; name: string }) => {
+    )('$name', async value => {
       setSeed(12)
       try {
         // @ts-ignore

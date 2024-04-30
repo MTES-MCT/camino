@@ -1,5 +1,4 @@
 import { Meta, StoryFn } from '@storybook/vue3'
-import { vueRouter } from 'storybook-vue3-router'
 import { PureTitre } from './titre'
 import { action } from '@storybook/addon-actions'
 import { caminoDateValidator, toCaminoDate } from 'camino-common/src/date'
@@ -20,18 +19,6 @@ const meta: Meta = {
   title: 'Components/Titre',
   // @ts-ignore en attente du support par @storybook/vue3
   component: PureTitre,
-  decorators: [
-    vueRouter([
-      { name: 'titre' },
-      { name: 'demarche' },
-      { name: 'activites' },
-      { name: 'administration' },
-      { name: 'entreprise' },
-      { name: 'etape-creation' },
-      { name: 'etape-edition' },
-      { name: 'journaux' },
-    ]),
-  ],
 }
 export default meta
 

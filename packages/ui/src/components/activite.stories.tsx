@@ -4,7 +4,6 @@ import { Activite, ActiviteId, ActiviteIdOrSlug, activiteDocumentIdValidator, ac
 import { toCaminoAnnee, toCaminoDate } from 'camino-common/src/date'
 import { ACTIVITES_STATUTS_IDS } from 'camino-common/src/static/activitesStatuts'
 import { ACTIVITES_TYPES_IDS } from 'camino-common/src/static/activitesTypes'
-import { vueRouter } from 'storybook-vue3-router'
 import { ActiviteApiClient } from './activite/activite-api-client'
 import { action } from '@storybook/addon-actions'
 import { testBlankUser } from 'camino-common/src/tests-utils'
@@ -13,7 +12,6 @@ const meta: Meta = {
   title: 'Components/Activite',
   // @ts-ignore en attente de la mise à jour de @storybook/vue3
   component: PureActivite,
-  decorators: [vueRouter([{ name: 'titre', path: '/titre/:id' }, { name: 'activite', path: '/activites/:id/edition' }, { path: '/' }])],
 }
 export default meta
 

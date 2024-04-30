@@ -1,6 +1,5 @@
 import { Meta, StoryFn } from '@storybook/vue3'
 import { action } from '@storybook/addon-actions'
-import { vueRouter } from 'storybook-vue3-router'
 import { Props, PureEtapeEdition } from './etape-edition'
 import { EntrepriseDocumentId, EntrepriseId, EtapeEntrepriseDocument, entrepriseDocumentIdValidator, entrepriseIdValidator, toEntrepriseDocumentId } from 'camino-common/src/entreprise'
 import { DemarcheId, demarcheIdOrSlugValidator, demarcheIdValidator, demarcheSlugValidator } from 'camino-common/src/demarche'
@@ -17,7 +16,6 @@ const meta: Meta = {
   title: 'Components/EtapeEdition',
   // @ts-ignore
   component: PureEtapeEdition,
-  decorators: [vueRouter([{ name: 'titre' }])],
 }
 export default meta
 

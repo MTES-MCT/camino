@@ -3,14 +3,13 @@ import { EtapeEntrepriseDocument, entrepriseDocumentIdValidator, entrepriseIdVal
 import { EtapeDocuments } from './etape-documents'
 import { testBlankUser } from 'camino-common/src/tests-utils'
 import { EtapeDocument, etapeDocumentIdValidator } from 'camino-common/src/etape'
-import { vueRouter } from 'storybook-vue3-router'
 import { toCaminoDate } from 'camino-common/src/date'
 import { EntreprisesByEtapeId } from 'camino-common/src/demarche'
 
 const meta: Meta = {
   title: 'Components/Etape/EtapeDocuments',
   component: EtapeDocuments,
-  decorators: [() => ({ template: '<div class="dsfr"><story/></div>' }), vueRouter([{ name: 'entreprise' }])],
+  decorators: [() => ({ template: '<div class="dsfr"><story/></div>' })],
 }
 export default meta
 

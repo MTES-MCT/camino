@@ -6,12 +6,10 @@ import { AdministrationId, ADMINISTRATION_IDS } from 'camino-common/src/static/a
 import { ACTIVITES_TYPES_IDS } from 'camino-common/src/static/activitesTypes'
 import { testBlankUser } from 'camino-common/src/tests-utils'
 import { toUtilisateurId } from 'camino-common/src/roles'
-import { vueRouter } from 'storybook-vue3-router'
 
 const meta: Meta = {
   title: 'Components/Administration',
   component: PureAdministration,
-  decorators: [vueRouter([{ name: 'utilisateur', params: { id: 'jeanmichel' } }, { name: '/plop' }])],
 }
 export default meta
 const administrationActiviteTypeEmailUpdateAction = action('administrationActiviteTypeEmailUpdate')

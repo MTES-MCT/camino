@@ -3,7 +3,6 @@ import { PurePage } from './page'
 import { action } from '@storybook/addon-actions'
 import { RouteLocationRaw } from 'vue-router'
 import { ApiClient } from '@/api/api-client'
-import { vueRouter } from 'storybook-vue3-router'
 import { filtres as demarchesFiltres } from '../demarches'
 import { filtres as travauxFiltres } from '../travaux'
 import { demarcheSlugValidator } from 'camino-common/src/demarche'
@@ -12,7 +11,6 @@ const meta: Meta = {
   title: 'Components/Demarches/Page',
   // @ts-ignore
   component: PurePage,
-  decorators: [vueRouter([{ name: 'demarches' }, { name: 'titre' }])],
 }
 export default meta
 

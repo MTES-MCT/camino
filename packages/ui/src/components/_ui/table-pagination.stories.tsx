@@ -7,16 +7,12 @@ import { TitreTypeTypeNom } from '../_common/titre-type-type-nom'
 import { Statut } from '../_common/statut'
 import { Column, TableRow } from './table'
 import { action } from '@storybook/addon-actions'
-import { vueRouter } from 'storybook-vue3-router'
 import { AsyncData } from '@/api/client-rest'
-
-const customRoutes = [...Array(11)].map((_, row) => ({ name: `elementlink${row}`, params: { id: `elementslug${row}` }, value: `elementslug${row}` }))
 
 const meta: Meta = {
   title: 'Components/UI/Table',
   // @ts-ignore
   component: TablePagination,
-  decorators: [vueRouter([...customRoutes, { name: '/plop' }])],
 }
 export default meta
 
@@ -99,7 +95,7 @@ export const Loading: StoryFn = () => (
     columns={columns}
     data={{ status: 'LOADING' }}
     caption="Test de pagination"
-    route={{ query: { page: '3', intervalle: '10' }, name: '/plop' }}
+    route={{ query: { page: '3', intervalle: '10' }, name: 'dashboard' }}
     updateParams={action('updateParams')}
   />
 )
@@ -109,25 +105,25 @@ export const WithError: StoryFn = () => (
     columns={columns}
     data={{ status: 'ERROR', message: 'une erreur' }}
     caption="Test de pagination"
-    route={{ query: { page: '3', intervalle: '10' }, name: '/plop' }}
+    route={{ query: { page: '3', intervalle: '10' }, name: 'dashboard' }}
     updateParams={action('updateParams')}
   />
 )
 
 export const Pagination: StoryFn = () => (
-  <TablePagination columns={columns} data={rows} caption="Test de pagination" route={{ query: { page: '3', intervalle: '10' }, name: '/plop' }} updateParams={action('updateParams')} />
+  <TablePagination columns={columns} data={rows} caption="Test de pagination" route={{ query: { page: '3', intervalle: '10' }, name: 'dashboard' }} updateParams={action('updateParams')} />
 )
 
 export const PaginationAuDebut: StoryFn = () => (
-  <TablePagination columns={columns} data={rows} caption="Test de pagination" route={{ query: { page: '1', intervalle: '10' }, name: '/plop' }} updateParams={action('updateParams')} />
+  <TablePagination columns={columns} data={rows} caption="Test de pagination" route={{ query: { page: '1', intervalle: '10' }, name: 'dashboard' }} updateParams={action('updateParams')} />
 )
 
 export const PaginationALaFin: StoryFn = () => (
-  <TablePagination columns={columns} data={rows} caption="Test de pagination" route={{ query: { page: '20', intervalle: '10' }, name: '/plop' }} updateParams={action('updateParams')} />
+  <TablePagination columns={columns} data={rows} caption="Test de pagination" route={{ query: { page: '20', intervalle: '10' }, name: 'dashboard' }} updateParams={action('updateParams')} />
 )
 
 export const PaginationAuMilieu: StoryFn = () => (
-  <TablePagination columns={columns} data={rows} caption="Test de pagination" route={{ query: { page: '8', intervalle: '10' }, name: '/plop' }} updateParams={action('updateParams')} />
+  <TablePagination columns={columns} data={rows} caption="Test de pagination" route={{ query: { page: '8', intervalle: '10' }, name: 'dashboard' }} updateParams={action('updateParams')} />
 )
 
 export const NeCassePasSiPasPaginationFausse: StoryFn = () => (
@@ -135,7 +131,7 @@ export const NeCassePasSiPasPaginationFausse: StoryFn = () => (
     columns={columns}
     data={{ status: 'LOADED', value: { total: 1, rows: [rows.value.rows[0]] } }}
     caption="Test de pagination"
-    route={{ query: { page: '5', intervalle: '10' }, name: '/plop' }}
+    route={{ query: { page: '5', intervalle: '10' }, name: 'dashboard' }}
     updateParams={action('updateParams')}
   />
 )
@@ -145,7 +141,7 @@ export const PetitePagination: StoryFn = () => (
     columns={columns}
     data={{ status: 'LOADED', value: { total: 16, rows: rows.value.rows.slice(0, 10) } }}
     caption="Test de pagination"
-    route={{ query: { page: '1', intervalle: '10' }, name: '/plop' }}
+    route={{ query: { page: '1', intervalle: '10' }, name: 'dashboard' }}
     updateParams={action('updateParams')}
   />
 )
