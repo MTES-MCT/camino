@@ -6,7 +6,6 @@ import { BrowserTracing } from '@sentry/browser'
 import { App } from './app'
 
 import router from './router'
-import store from './store'
 import { CaminoConfig } from 'camino-common/src/static/config'
 import { getWithJson } from './api/client-rest'
 import { initMatomo } from './stats/matomo'
@@ -97,6 +96,5 @@ Promise.resolve().then(async (): Promise<void> => {
     }
   }
   app.use(router)
-  app.use(store)
   app.mount('app-root')
 })

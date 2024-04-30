@@ -9,7 +9,6 @@ import { utilisateursColonnes, utilisateursLignesBuild } from './utilisateurs/ta
 import { fiscaliteVisible as fiscaliteVisibleFunc } from 'camino-common/src/fiscalite'
 import { User } from 'camino-common/src/roles'
 import { computed, onMounted, watch, defineComponent, ref, inject } from 'vue'
-import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
 import { canEditEntreprise, canSeeEntrepriseDocuments } from 'camino-common/src/permissions/entreprises'
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
@@ -25,7 +24,6 @@ import { userKey } from '@/moi'
 
 export const Entreprise = defineComponent({
   setup() {
-    const store = useStore()
     const vueRoute = useRoute()
     const entrepriseId = ref<EntrepriseId | undefined>(newEntrepriseId(vueRoute.params.id.toString()))
     const user = inject(userKey)
@@ -43,42 +41,10 @@ export const Entreprise = defineComponent({
     )
     const anneeCourante = getCurrentAnnee()
 
-    const apiClientRef = ref<
-      Pick<
-        ApiClient,
-        'getEntreprise' | 'deleteEntrepriseDocument' | 'getEntrepriseDocuments' | 'getFiscaliteEntreprise' | 'modifierEntreprise' | 'creerEntreprise' | 'creerEntrepriseDocument' | 'uploadTempDocument'
-      >
-    >({
-      ...apiClient,
-      modifierEntreprise: async entreprise => {
-        try {
-          await apiClient.modifierEntreprise(entreprise)
-          store.dispatch(
-            'messageAdd',
-            {
-              value: `l'entreprise a été modifiée`,
-              type: 'success',
-            },
-            { root: true }
-          )
-        } catch (e) {
-          console.error(e)
-          store.dispatch(
-            'messageAdd',
-            {
-              value: `Erreur lors de la modification de l'entreprise`,
-              type: 'error',
-            },
-            { root: true }
-          )
-        }
-      },
-    })
-
     return () => (
       <>
         {entrepriseId.value ? (
-          <PureEntreprise currentYear={anneeCourante} entrepriseId={entrepriseId.value} apiClient={apiClientRef.value} user={user} />
+          <PureEntreprise currentYear={anneeCourante} entrepriseId={entrepriseId.value} apiClient={apiClient} user={user} />
         ) : (
           <CaminoError couleur="error" message="Impossible d’afficher une entreprise sans identifiant" />
         )}

@@ -5,10 +5,10 @@ import { testBlankUser } from 'camino-common/src/tests-utils'
 import { PureUtilisateur, Props } from './utilisateur'
 import { toUtilisateurId } from 'camino-common/src/roles'
 
-const meta: Meta = {
+const meta: Meta<typeof PureUtilisateur> = {
   title: 'Components/Utilisateur',
+  // @ts-ignore
   component: PureUtilisateur,
-  argTypes: {},
 }
 export default meta
 

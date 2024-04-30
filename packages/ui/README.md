@@ -9,7 +9,6 @@
 ## Technologies
 
 - [Vue.js](https://v3.vuejs.org/)
-- [Vuex](https://vuex.vuejs.org/)
 - [Leaflet.js](https://leafletjs.com/)
 - [graphql-react](https://github.com/jaydenseric/graphql-react)
 - [vite](https://vitejs.dev/)

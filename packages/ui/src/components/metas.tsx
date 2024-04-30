@@ -5,7 +5,7 @@ import { canReadMetas } from 'camino-common/src/permissions/metas'
 import { CaminoAccessError } from './error'
 import { User } from 'camino-common/src/roles'
 import { Column, TableRow } from './_ui/table'
-import { metasIndex } from '@/store/metas-definitions'
+import { metasIndex } from '@/metas-definitions'
 import { userKey } from '@/moi'
 const metasColonnes = [
   {
@@ -21,7 +21,7 @@ const metasLignesBuild = (): Promise<{ values: TableRow[]; total: number }> => {
       nom: { value: element.nom },
     }
 
-    const link = 'linkName' in element ? { name: element.linkName } : { name: 'meta', params: { id } }
+    const link = { name: 'meta', params: { id } }
 
     return {
       id,

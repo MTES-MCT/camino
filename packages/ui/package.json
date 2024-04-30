@@ -88,8 +88,7 @@
     "vite": "^5.2.10",
     "vitest": "^1.5.2",
     "vue": "^3.4.26",
-    "vue-router": "^4.3.2",
-    "vuex": "^4.1.0"
+    "vue-router": "^4.3.2"
   },
   "eslintConfig": {
     "root": true,

@@ -1,15 +1,15 @@
-import { computed, defineComponent, inject, onBeforeUnmount, onMounted, watch } from 'vue'
-import { MetaIndexTable, metasIndex } from '../store/metas-definitions'
+import { computed, defineComponent, inject, onMounted, ref, watch } from 'vue'
+import { MetaIndexTable, metasIndex } from '../metas-definitions'
 import { canReadMetas } from 'camino-common/src/permissions/metas'
-import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
 import { capitalize } from 'camino-common/src/strings'
 import { userKey } from '@/moi'
-import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
+import { isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools'
 export const Meta = defineComponent(() => {
-  const store = useStore()
   const route = useRoute()
   const user = inject(userKey)
+
+  const values = ref<{ [key in MetaIndexTable]?: unknown[] }>({})
 
   const id = computed<MetaIndexTable>(() => {
     return route.params.id as unknown as MetaIndexTable
@@ -22,15 +22,35 @@ export const Meta = defineComponent(() => {
   onMounted(async () => {
     await get()
   })
-  onBeforeUnmount(() => {
-    store.commit('meta/reset')
-  })
+
   const definition = computed(() => {
     return metasIndex[id.value]
   })
 
+  const getDef = async (id: MetaIndexTable) => {
+    try {
+      if (isNotNullNorUndefined(metasIndex[id])) {
+        const definition = metasIndex[id]
+        if ('get' in definition) {
+          const elements = await definition.get()
+          values.value = { ...values.value, [id]: elements }
+        }
+        if ('colonnes' in definition) {
+          for (const colonne of definition.colonnes) {
+            if ('type' in colonne && colonne.type === 'entities' && isNotNullNorUndefined(colonne.entities) && isNullOrUndefined(values.value[colonne.entities])) {
+              const entities = await metasIndex[colonne.entities].get()
+
+              values.value = { ...values.value, [colonne.entities]: entities }
+            }
+          }
+        }
+      }
+    } catch (e) {
+      console.error(e)
+    }
+  }
   const elements = computed(() => {
-    return store.getters['meta/elements'](id.value)
+    return values.value[id.value]
   })
 
   const get = async () => {
@@ -38,7 +58,7 @@ export const Meta = defineComponent(() => {
       // TODO 2024-04-16 afficher une jolie alerte dans la page
       console.error('impossible d’accéder à cette page')
     } else {
-      await store.dispatch('meta/get', id.value)
+      await getDef(id.value)
     }
   }
 
@@ -86,7 +106,7 @@ export const Meta = defineComponent(() => {
                     ) : null}
                   </tr>
 
-                  {elements.value.map((element: any) => (
+                  {elements.value?.map((element: any) => (
                     <tr key={elementKeyFind(element)}>
                       {'colonnes' in definition.value ? (
                         <>

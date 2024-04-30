@@ -3,7 +3,6 @@ import { Liste, Params } from './_common/liste'
 import { RouteLocationNormalizedLoaded, Router, useRouter } from 'vue-router'
 import { canCreateEntreprise } from 'camino-common/src/permissions/utilisateurs'
 import { User } from 'camino-common/src/roles'
-import { useStore } from 'vuex'
 import { EntrepriseAddPopup } from './entreprise/add-popup'
 import { entrepriseApiClient } from './entreprise/entreprise-api-client'
 import { Entreprise, Siren } from 'camino-common/src/entreprise'
@@ -109,7 +108,6 @@ PureEntreprises.props = ['currentRoute', 'updateUrlQuery', 'apiClient', 'user', 
 
 export const Entreprises = defineComponent(() => {
   const router = useRouter()
-  const store = useStore()
   const user = inject(userKey)
   const entreprises = inject(entreprisesKey, ref([]))
 
@@ -117,16 +115,10 @@ export const Entreprises = defineComponent(() => {
     return {
       ...apiClient,
       creerEntreprise: async (siren: Siren) => {
-        try {
-          await entrepriseApiClient.creerEntreprise(siren)
-          const newEntreprises = await getWithJson('/rest/entreprises', {})
-          entreprises.value = newEntreprises
-
-          store.dispatch('messageAdd', { value: `l'entreprise a été créée`, type: 'success' }, { root: true })
-          router.push({ name: 'entreprise', params: { id: `fr-${siren}` } })
-        } catch (e) {
-          store.dispatch('messageAdd', { value: `erreur lors de la création de l'entreprise`, type: 'error' }, { root: true })
-        }
+        await entrepriseApiClient.creerEntreprise(siren)
+        const newEntreprises = await getWithJson('/rest/entreprises', {})
+        entreprises.value = newEntreprises
+        router.push({ name: 'entreprise', params: { id: `fr-${siren}` } })
       },
     }
   }

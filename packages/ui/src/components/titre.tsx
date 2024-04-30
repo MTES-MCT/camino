@@ -3,7 +3,6 @@ import { Router, useRouter } from 'vue-router'
 import { LoadingElement } from './_ui/functional-loader'
 import { DemarcheEtapeFondamentale, DemarcheSlug, demarcheSlugValidator } from 'camino-common/src/demarche'
 import { AsyncData } from '@/api/client-rest'
-import { useStore } from 'vuex'
 import { User, isAdministration, isEntrepriseOrBureauDEtude, isSuper } from 'camino-common/src/roles'
 import { capitalize } from 'camino-common/src/strings'
 import { TitresTypes } from 'camino-common/src/static/titresTypes'
@@ -39,7 +38,6 @@ import { getGestionnairesByTitreTypeId } from 'camino-common/src/static/administ
 import { DemarcheEditPopup } from './titre/demarche-edit-popup'
 import { PhaseWithAlterations, phaseWithAlterations } from './titre/phase'
 import { SecteursMaritimes } from 'camino-common/src/static/facades'
-import { EtapeId } from 'camino-common/src/etape'
 import { userKey } from '@/moi'
 
 const activitesSort: TableSortEvent = {
@@ -49,7 +47,6 @@ const activitesSort: TableSortEvent = {
 
 export const Titre = defineComponent(() => {
   const router = useRouter()
-  const store = useStore()
 
   const user = inject(userKey)
 
@@ -70,26 +67,7 @@ export const Titre = defineComponent(() => {
     return demarcheSlugValidator.optional().parse(Array.isArray(demarcheId) ? demarcheId[0] : demarcheId) ?? null
   })
 
-  const overriddenApiClient: ApiClient = {
-    ...apiClient,
-    deleteEtape: async (titreEtapeId: EtapeId) => {
-      try {
-        await apiClient.deleteEtape(titreEtapeId)
-      } catch (e) {
-        store.dispatch(
-          'messageAdd',
-          {
-            value: `Impossible de supprimer cette étape`,
-            type: 'error',
-          },
-          { root: true }
-        )
-        throw e
-      }
-    },
-  }
-
-  return () => <PureTitre user={user} titreIdOrSlug={titreIdOrSlug.value} currentDemarcheSlug={currentDemarcheSlug.value} apiClient={overriddenApiClient} router={router} currentDate={getCurrent()} />
+  return () => <PureTitre user={user} titreIdOrSlug={titreIdOrSlug.value} currentDemarcheSlug={currentDemarcheSlug.value} apiClient={apiClient} router={router} currentDate={getCurrent()} />
 })
 
 interface Props {
