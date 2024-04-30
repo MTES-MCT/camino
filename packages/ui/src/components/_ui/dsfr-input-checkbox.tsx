@@ -1,5 +1,6 @@
-import { caminoDefineComponent, isEventWithTarget, random } from '@/utils/vue-tsx-utils'
+import { isEventWithTarget, random } from '@/utils/vue-tsx-utils'
 import { isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
+import { defineComponent } from 'vue'
 
 export type Props = {
   id?: string
@@ -9,7 +10,7 @@ export type Props = {
   initialValue?: boolean | null
 }
 
-export const DsfrInputCheckbox = caminoDefineComponent<Props>(['id', 'initialValue', 'valueChanged', 'legend', 'disabled'], props => {
+export const DsfrInputCheckbox = defineComponent<Props>(props => {
   const id = props.id ?? `checkbox_${(random() * 1000).toFixed()}`
 
   const updateFromEvent = (e: Event) => {
@@ -28,3 +29,5 @@ export const DsfrInputCheckbox = caminoDefineComponent<Props>(['id', 'initialVal
     </div>
   )
 })
+// @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
+DsfrInputCheckbox.props = ['id', 'initialValue', 'valueChanged', 'legend', 'disabled']

@@ -90,24 +90,36 @@ const Pagination: FunctionalComponent<PaginationProps> = props => {
     <nav role="navigation" class="fr-pagination" aria-label="Pagination">
       <ul class="fr-pagination__list">
         <li>
-          <CaminoRouterLink
-            isDisabled={currentActivePageNumber === 1}
-            class="fr-pagination__link fr-pagination__link--first"
-            to={{ name: props.route.name ?? undefined, query: { ...props.route.query, page: 1 } }}
-            title="Première page"
-          >
-            Première page
-          </CaminoRouterLink>
+          {currentActivePageNumber === 1 ? (
+            <CaminoRouterLink isDisabled={true} class="fr-pagination__link fr-pagination__link--first" to="" title="Première page">
+              Première page
+            </CaminoRouterLink>
+          ) : (
+            <CaminoRouterLink
+              isDisabled={false}
+              class="fr-pagination__link fr-pagination__link--first"
+              to={{ name: props.route.name ?? undefined, query: { ...props.route.query, page: 1 } }}
+              title="Première page"
+            >
+              Première page
+            </CaminoRouterLink>
+          )}
         </li>
         <li>
-          <CaminoRouterLink
-            isDisabled={currentActivePageNumber === 1}
-            class="fr-pagination__link fr-pagination__link--prev fr-pagination__link--lg-label"
-            to={{ name: props.route.name ?? undefined, query: { ...props.route.query, page: currentActivePageNumber - 1 } }}
-            title="Page précédente"
-          >
-            Page précédente
-          </CaminoRouterLink>
+          {currentActivePageNumber === 1 ? (
+            <CaminoRouterLink isDisabled={true} class="fr-pagination__link fr-pagination__link--prev fr-pagination__link--lg-label" to="" title="Page précédente">
+              Page précédente
+            </CaminoRouterLink>
+          ) : (
+            <CaminoRouterLink
+              isDisabled={false}
+              class="fr-pagination__link fr-pagination__link--prev fr-pagination__link--lg-label"
+              to={{ name: props.route.name ?? undefined, query: { ...props.route.query, page: currentActivePageNumber - 1 } }}
+              title="Page précédente"
+            >
+              Page précédente
+            </CaminoRouterLink>
+          )}
         </li>
         <Page route={props.route} pageNumber={1} currentActivePage={currentActivePageNumber} />
         {start > 2 ? (
@@ -130,24 +142,36 @@ const Pagination: FunctionalComponent<PaginationProps> = props => {
 
         <Page route={props.route} pageNumber={props.totalNumberOfPages} currentActivePage={currentActivePageNumber} />
         <li>
-          <CaminoRouterLink
-            isDisabled={currentActivePageNumber === props.totalNumberOfPages}
-            class="fr-pagination__link fr-pagination__link--next fr-pagination__link--lg-label"
-            to={{ name: props.route.name ?? undefined, query: { ...props.route.query, page: currentActivePageNumber + 1 } }}
-            title="Page suivante"
-          >
-            Page suivante
-          </CaminoRouterLink>
+          {currentActivePageNumber === props.totalNumberOfPages ? (
+            <CaminoRouterLink isDisabled={true} class="fr-pagination__link fr-pagination__link--next fr-pagination__link--lg-label" to="" title="Page suivante">
+              Page suivante
+            </CaminoRouterLink>
+          ) : (
+            <CaminoRouterLink
+              isDisabled={false}
+              class="fr-pagination__link fr-pagination__link--next fr-pagination__link--lg-label"
+              to={{ name: props.route.name ?? undefined, query: { ...props.route.query, page: currentActivePageNumber + 1 } }}
+              title="Page suivante"
+            >
+              Page suivante
+            </CaminoRouterLink>
+          )}
         </li>
         <li>
-          <CaminoRouterLink
-            isDisabled={currentActivePageNumber === props.totalNumberOfPages}
-            class="fr-pagination__link fr-pagination__link--last"
-            to={{ name: props.route.name ?? undefined, query: { ...props.route.query, page: props.totalNumberOfPages } }}
-            title="Dernière page"
-          >
-            Dernière page
-          </CaminoRouterLink>
+          {currentActivePageNumber === props.totalNumberOfPages ? (
+            <CaminoRouterLink isDisabled={true} class="fr-pagination__link fr-pagination__link--last" to="" title="Dernière page">
+              Dernière page
+            </CaminoRouterLink>
+          ) : (
+            <CaminoRouterLink
+              isDisabled={false}
+              class="fr-pagination__link fr-pagination__link--last"
+              to={{ name: props.route.name ?? undefined, query: { ...props.route.query, page: props.totalNumberOfPages } }}
+              title="Dernière page"
+            >
+              Dernière page
+            </CaminoRouterLink>
+          )}
         </li>
       </ul>
     </nav>
@@ -170,6 +194,7 @@ const Page: FunctionalComponent<PageProps> = (props: PageProps) => {
       <CaminoRouterLink
         class="fr-pagination__link"
         {...ariaProps}
+        isDisabled={false}
         to={{ name: props.route.name ?? undefined, query: { ...props.route.query, page: props.pageNumber } }}
         title={`Page ${props.pageNumber}`}
       >

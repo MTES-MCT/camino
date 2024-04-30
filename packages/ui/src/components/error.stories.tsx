@@ -4,7 +4,6 @@ import { Meta, StoryFn } from '@storybook/vue3'
 const meta: Meta = {
   title: 'Components/Error',
   component: CaminoError,
-  argTypes: {},
 }
 export default meta
 

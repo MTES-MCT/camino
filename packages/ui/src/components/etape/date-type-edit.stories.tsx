@@ -7,6 +7,7 @@ import { EtapeId } from 'camino-common/src/etape'
 
 const meta: Meta = {
   title: 'Components/Etape/DateTypeEdit',
+  // @ts-ignore @storybook/vue3 n'aime pas les composants tsx
   component: DateTypeEdit,
   decorators: [() => ({ template: '<div class="dsfr"><story/></div>' })],
 }

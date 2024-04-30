@@ -9,7 +9,7 @@ import { action } from '@storybook/addon-actions'
 
 const meta: Meta = {
   title: 'Components/Activite/Preview',
-  // @ts-ignore en attente de la mise à jour de @storybook/vue3
+  // @ts-ignore @storybook/vue3 n'aime pas les composants tsx
   component: Preview,
 }
 export default meta

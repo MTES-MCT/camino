@@ -4,6 +4,7 @@ import { TitreReferenceSelect } from './titre-reference-select'
 
 const meta: Meta = {
   title: 'Components/Common/TitreReferenceSelect',
+  // @ts-ignore @storybook/vue3 n'aime pas les composants tsx
   component: TitreReferenceSelect,
   decorators: [() => ({ template: '<div class="dsfr"><story/></div>' })],
 }

@@ -1,6 +1,6 @@
-import { caminoDefineComponent, random } from '@/utils/vue-tsx-utils'
+import { random } from '@/utils/vue-tsx-utils'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
-import { ref } from 'vue'
+import { defineComponent, ref } from 'vue'
 
 type Props = {
   id?: string
@@ -10,7 +10,7 @@ type Props = {
   initialValue: boolean
 }
 
-export const DsfrToggle = caminoDefineComponent<Props>(['id', 'initialValue', 'valueChanged', 'legendLabel', 'legendHint'], props => {
+export const DsfrToggle = defineComponent<Props>(props => {
   const id = props.id ?? `toggle_${(random() * 1000).toFixed()}`
 
   const toggled = ref<boolean>(props.initialValue)
@@ -38,3 +38,6 @@ export const DsfrToggle = caminoDefineComponent<Props>(['id', 'initialValue', 'v
     </div>
   )
 })
+
+// @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
+DsfrToggle.props = ['id', 'initialValue', 'valueChanged', 'legendLabel', 'legendHint']

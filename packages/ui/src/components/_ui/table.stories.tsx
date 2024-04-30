@@ -9,7 +9,7 @@ import { action } from '@storybook/addon-actions'
 
 const meta: Meta = {
   title: 'Components/UI/Table',
-  // @ts-ignore
+  // @ts-ignore @storybook/vue3 n'aime pas les composants tsx
   component: Table,
 }
 export default meta

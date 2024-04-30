@@ -1,5 +1,5 @@
-import { caminoDefineComponent, useState } from '@/utils/vue-tsx-utils'
-import { DeepReadonly, computed, watch } from 'vue'
+import { useState } from '@/utils/vue-tsx-utils'
+import { DeepReadonly, computed, defineComponent, watch } from 'vue'
 import { EtapeEntreprise } from 'camino-common/src/etape'
 import { EntrepriseId, Entreprise } from 'camino-common/src/entreprise'
 import { isNullOrUndefinedOrEmpty, stringArrayEquals } from 'camino-common/src/typescript-tools'
@@ -12,7 +12,7 @@ interface Props {
   name: 'titulaires' | 'amodiataires'
   onEntreprisesUpdate: (entreprise: DeepReadonly<EtapeEntreprise[]>) => void
 }
-export const AutocompleteEntreprise = caminoDefineComponent<Props>(['onEntreprisesUpdate', 'nonSelectableEntities', 'selectedEntities', 'allEntities', 'name'], props => {
+export const AutocompleteEntreprise = defineComponent<Props>(props => {
   const [mySelectedEntities, setMySelectedEntities] = useState<DeepReadonly<EtapeEntreprise[]>>(props.selectedEntities ?? [])
 
   watch(
@@ -51,3 +51,6 @@ export const AutocompleteEntreprise = caminoDefineComponent<Props>(['onEntrepris
     />
   )
 })
+
+// @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
+AutocompleteEntreprise.props = ['onEntreprisesUpdate', 'nonSelectableEntities', 'selectedEntities', 'allEntities', 'name']

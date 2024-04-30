@@ -4,7 +4,7 @@ import { DocumentTypeTypeahead } from './document-type-typeahead'
 
 const meta: Meta = {
   title: 'Components/Common/DocumentTypeTypeahead',
-  // @ts-ignore
+  // @ts-ignore @storybook/vue3 n'aime pas les composants tsx
   component: DocumentTypeTypeahead,
 }
 export default meta

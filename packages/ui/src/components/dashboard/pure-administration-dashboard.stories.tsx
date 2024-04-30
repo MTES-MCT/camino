@@ -6,6 +6,7 @@ import { testBlankUser } from 'camino-common/src/tests-utils'
 import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations'
 const meta: Meta = {
   title: 'Components/Dashboard/Administration',
+  // @ts-ignore @storybook/vue3 n'aime pas les composants tsx
   component: PureAdministrationDashboard,
   decorators: [() => ({ template: '<div class="dsfr"><story/></div>' })],
 }

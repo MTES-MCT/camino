@@ -5,7 +5,6 @@ import { action } from '@storybook/addon-actions'
 const meta: Meta = {
   title: 'Components/UI/Chip',
   component: Chip,
-  argTypes: {},
 }
 export default meta
 

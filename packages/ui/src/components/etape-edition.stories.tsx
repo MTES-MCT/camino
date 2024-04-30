@@ -14,7 +14,7 @@ import { UiEntrepriseDocumentInput } from './entreprise/entreprise-api-client'
 
 const meta: Meta = {
   title: 'Components/EtapeEdition',
-  // @ts-ignore
+  // @ts-ignore @storybook/vue3 n'aime pas les composants tsx
   component: PureEtapeEdition,
 }
 export default meta

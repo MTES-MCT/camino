@@ -5,6 +5,7 @@ import { activiteIdValidator } from 'camino-common/src/activite'
 
 const meta: Meta = {
   title: 'Components/Activite/DeposePopup',
+  // @ts-ignore @storybook/vue3 n'aime pas les composants tsx
   component: ActiviteDeposePopup,
 }
 export default meta

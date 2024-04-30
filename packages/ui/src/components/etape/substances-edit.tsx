@@ -1,6 +1,6 @@
-import { caminoDefineComponent, useState } from '@/utils/vue-tsx-utils'
+import { useState } from '@/utils/vue-tsx-utils'
 import { SubstancesLegales, SubstancesLegale, SubstanceLegaleId } from 'camino-common/src/static/substancesLegales'
-import { DeepReadonly, computed, watch } from 'vue'
+import { DeepReadonly, computed, defineComponent, watch } from 'vue'
 import { HeritageEdit } from '@/components/etape/heritage-edit'
 import { DomaineId } from 'camino-common/src/static/domaines'
 import { EtapePropsFromHeritagePropName, EtapeWithHeritage, HeritageProp } from 'camino-common/src/etape'
@@ -17,7 +17,7 @@ export type Props = {
   updateSubstances: (substances: DeepReadonly<SubstanceLegaleId[]>) => void
   updateHeritage: (subtances: Props['heritageSubstances']) => void
 }
-export const SubstancesEdit = caminoDefineComponent<Props>(['substances', 'heritageSubstances', 'domaineId', 'updateSubstances', 'updateHeritage'], props => {
+export const SubstancesEdit = defineComponent<Props>(props => {
   const [editedSubstances, setEditedSubstances] = useState<DeepReadonly<(SubstanceLegaleId | undefined)[]>>(isNullOrUndefinedOrEmpty(props.substances) ? [undefined] : props.substances)
   const [heritageActif, setHeritageActif] = useState<Props['heritageSubstances']>(props.heritageSubstances)
 
@@ -168,3 +168,6 @@ export const SubstancesEdit = caminoDefineComponent<Props>(['substances', 'herit
     </div>
   )
 })
+
+// @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
+SubstancesEdit.props = ['substances', 'heritageSubstances', 'domaineId', 'updateSubstances', 'updateHeritage']

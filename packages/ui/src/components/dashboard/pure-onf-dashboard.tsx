@@ -1,4 +1,4 @@
-import { markRaw, onMounted, ref } from 'vue'
+import { defineComponent, markRaw, onMounted, ref } from 'vue'
 import { TableAuto } from '../_ui/table-auto'
 import { DateComponent } from '../_ui/date'
 
@@ -8,7 +8,6 @@ import { CaminoError } from '@/components/error'
 import { CommonTitreONF } from 'camino-common/src/titres'
 import { daysBetween, toCaminoDate } from 'camino-common/src/date'
 import { ComponentColumnData, TableRow, TextColumnData } from '../_ui/table'
-import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { DashboardApiClient } from './dashboard-api-client'
 interface Props {
   apiClient: Pick<DashboardApiClient, 'getOnfTitres'>
@@ -91,7 +90,7 @@ const titresLignesBuild = (titres: CommonTitreONF[]): TableRow<Columns>[] => {
   })
 }
 
-export const PureONFDashboard = caminoDefineComponent<Props>(['apiClient'], props => {
+export const PureONFDashboard = defineComponent<Props>(props => {
   const status = ref<'LOADING' | 'LOADED' | 'ERROR'>('LOADING')
   const onfTitres = ref<TableRow[]>([])
   const onfTitresBloques = ref<TableRow[]>([])
@@ -137,3 +136,6 @@ export const PureONFDashboard = caminoDefineComponent<Props>(['apiClient'], prop
     </div>
   )
 })
+
+// @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
+PureONFDashboard.props = ['apiClient']

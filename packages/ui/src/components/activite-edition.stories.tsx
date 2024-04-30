@@ -7,7 +7,7 @@ import { Activite, activiteIdOrSlugValidator, activiteIdValidator, activiteSlugV
 
 const meta: Meta = {
   title: 'Components/Activite/Edition',
-  // @ts-ignore
+  // @ts-ignore @storybook/vue3 n'aime pas les composants tsx
   component: PureActiviteEdition,
 }
 export default meta

@@ -7,6 +7,7 @@ import { titreIdValidator } from 'camino-common/src/validators/titres'
 
 const meta: Meta = {
   title: 'Components/Dashboard/Entreprise',
+  // @ts-ignore @storybook/vue3 n'aime pas les composants tsx
   component: PureEntrepriseDashboard,
 }
 export default meta

@@ -7,6 +7,7 @@ import { PointsImportPopup } from './points-import-popup'
 
 const meta: Meta = {
   title: 'Components/Etape/ImportPoints',
+  // @ts-ignore @storybook/vue3 n'aime pas les composants tsx
   component: PointsImportPopup,
 }
 export default meta

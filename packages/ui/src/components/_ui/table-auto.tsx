@@ -1,5 +1,4 @@
-import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
-import { reactive, ref, watch } from 'vue'
+import { defineComponent, reactive, ref, watch } from 'vue'
 import { InitialSort, TableRow, TableSortEvent, DisplayColumn } from './table'
 
 export interface Column<T = string> {
@@ -16,7 +15,7 @@ interface Props {
   columns: readonly Column[]
   initialSort: InitialSort | 'noSort' | 'firstColumnAsc'
 }
-export const TableAuto = caminoDefineComponent<Props>(['caption', 'rows', 'columns', 'initialSort'], props => {
+export const TableAuto = defineComponent<Props>(props => {
   const sort = ref<TableSortEvent | null>(
     props.initialSort === 'noSort'
       ? null
@@ -146,3 +145,6 @@ export const TableAuto = caminoDefineComponent<Props>(['caption', 'rows', 'colum
     </div>
   )
 })
+
+// @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
+TableAuto.props = ['caption', 'rows', 'columns', 'initialSort']

@@ -7,6 +7,7 @@ import { action } from '@storybook/addon-actions'
 
 const meta: Meta = {
   title: 'Components/Administration/ActivitesTypesEmails',
+  // @ts-ignore @storybook/vue3 n'aime pas les composants tsx
   component: ActivitesTypesEmails,
 }
 export default meta

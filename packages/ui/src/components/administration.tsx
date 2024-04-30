@@ -17,7 +17,6 @@ import { Departement, Departements } from 'camino-common/src/static/departement'
 import { Region, Regions } from 'camino-common/src/static/region'
 import { computed, defineComponent, inject, onMounted, ref } from 'vue'
 import { AsyncData } from '@/api/client-rest'
-import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { userKey } from '@/moi'
 
@@ -46,7 +45,7 @@ interface Props {
   user: User
   apiClient: Pick<ApiClient, 'administrationActivitesTypesEmails' | 'administrationUtilisateurs' | 'administrationActiviteTypeEmailUpdate' | 'administrationActiviteTypeEmailDelete'>
 }
-export const PureAdministration = caminoDefineComponent<Props>(['administrationId', 'user', 'apiClient'], props => {
+export const PureAdministration = defineComponent<Props>(props => {
   const administration = computed<Adm>(() => Administrations[props.administrationId])
   const type = computed<AdministrationType>(() => ADMINISTRATION_TYPES[administration.value.typeId])
   const departement = computed<Departement | undefined>(() => {
@@ -274,3 +273,6 @@ export const PureAdministration = caminoDefineComponent<Props>(['administrationI
     </div>
   )
 })
+
+// @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
+PureAdministration.props = ['administrationId', 'user', 'apiClient']

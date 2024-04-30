@@ -10,7 +10,7 @@ import { testBlankUser } from 'camino-common/src/tests-utils'
 
 const meta: Meta = {
   title: 'Components/Activite',
-  // @ts-ignore en attente de la mise à jour de @storybook/vue3
+  // @ts-ignore @storybook/vue3 n'aime pas les composants tsx
   component: PureActivite,
 }
 export default meta

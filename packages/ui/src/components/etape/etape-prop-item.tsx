@@ -37,7 +37,7 @@ export const EtapePropEntreprisesItem: FunctionalComponent<{ title: string; entr
       {props.entreprises?.map(entreprise => {
         return (
           <li>
-            <CaminoRouterLink to={{ name: 'entreprise', params: { id: entreprise.id } }} title={entreprise.nom} class="fr-link">
+            <CaminoRouterLink to={{ name: 'entreprise', params: { id: entreprise.id } }} isDisabled={false} title={entreprise.nom} class="fr-link">
               {capitalize(entreprise.nom)}
             </CaminoRouterLink>
             {entreprise.operateur ? ' (opérateur)' : ''}
@@ -61,7 +61,7 @@ export const EtapePropAdministrationsItem: FunctionalComponent<{ administrations
 
         return (
           <li>
-            <CaminoRouterLink to={{ name: 'administration', params: { id: administration.id } }} title={administration.nom} class="fr-link">
+            <CaminoRouterLink to={{ name: 'administration', params: { id: administration.id } }} isDisabled={false} title={administration.nom} class="fr-link">
               {capitalize(administration.abreviation)}
             </CaminoRouterLink>
           </li>

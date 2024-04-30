@@ -7,7 +7,7 @@ import { ApiClient } from '../../../api/api-client'
 
 const meta: Meta = {
   title: 'Components/Ui/Filters/Filters',
-  // @ts-ignore
+  // @ts-ignore @storybook/vue3 n'aime pas les composants tsx
   component: Filters,
 }
 export default meta

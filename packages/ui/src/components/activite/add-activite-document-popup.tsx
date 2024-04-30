@@ -1,5 +1,5 @@
-import { caminoDefineComponent, updateFromEvent } from '@/utils/vue-tsx-utils'
-import { computed, ref } from 'vue'
+import { updateFromEvent } from '@/utils/vue-tsx-utils'
+import { computed, defineComponent, ref } from 'vue'
 import { FunctionalPopup } from '../_ui/functional-popup'
 import { ActiviteDocumentTypeIds, DocumentsTypes } from 'camino-common/src/static/documentsTypes'
 import { InputFile } from '../_ui/dsfr-input-file'
@@ -17,7 +17,7 @@ interface Props {
   apiClient: Pick<ApiClient, 'uploadTempDocument'>
 }
 
-export const AddActiviteDocumentPopup = caminoDefineComponent<Props>(['close', 'apiClient', 'activiteTypeId'], props => {
+export const AddActiviteDocumentPopup = defineComponent<Props>(props => {
   const activiteDocumentTypes = activitesTypesDocumentsTypes[props.activiteTypeId].map(({ documentTypeId }) => documentTypeId)
   const activiteDocumentTypeId = ref<(typeof ActiviteDocumentTypeIds)[number] | null>(activiteDocumentTypes.length === 1 ? activiteDocumentTypes[0] : null)
   const activiteDocumentFile = ref<File | null>(null)
@@ -109,3 +109,6 @@ export const AddActiviteDocumentPopup = caminoDefineComponent<Props>(['close', '
     </>
   )
 })
+
+// @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
+AddActiviteDocumentPopup.props = ['close', 'apiClient', 'activiteTypeId']

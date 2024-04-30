@@ -6,7 +6,7 @@ import { entrepriseIdValidator } from 'camino-common/src/entreprise'
 
 const meta: Meta = {
   title: 'Components/Ui/InputAutocomplete',
-  // @ts-ignore
+  // @ts-ignore @storybook/vue3 n'aime pas les composants tsx
   component: InputAutocomplete,
 }
 export default meta

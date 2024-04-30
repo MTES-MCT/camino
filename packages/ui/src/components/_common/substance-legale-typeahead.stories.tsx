@@ -4,7 +4,7 @@ import { SubstanceLegaleTypeahead } from './substance-legale-typeahead'
 
 const meta: Meta = {
   title: 'Components/Common/SubstanceLegaleTypeahead',
-  // @ts-ignore
+  // @ts-ignore @storybook/vue3 n'aime pas les composants tsx
   component: SubstanceLegaleTypeahead,
 }
 export default meta

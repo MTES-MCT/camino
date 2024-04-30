@@ -11,7 +11,7 @@ import { AsyncData } from '@/api/client-rest'
 
 const meta: Meta = {
   title: 'Components/UI/Table',
-  // @ts-ignore
+  // @ts-ignore @storybook/vue3 n'aime pas les composants tsx
   component: TablePagination,
 }
 export default meta

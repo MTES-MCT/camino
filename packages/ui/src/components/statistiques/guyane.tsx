@@ -1,4 +1,4 @@
-import { FunctionalComponent, Ref, ref, computed, onMounted } from 'vue'
+import { FunctionalComponent, Ref, ref, computed, onMounted, defineComponent } from 'vue'
 import { getWithJson, AsyncData } from '@/api/client-rest'
 import { StatistiquesGuyane, StatistiquesGuyaneActivite, StatistiquesGuyaneData } from 'camino-common/src/statistiques'
 import { GuyaneActivite } from './guyane-activite'
@@ -8,7 +8,6 @@ import { LoadingElement } from '@/components/_ui/functional-loader'
 import { CHART_COLORS } from '../_charts/utils'
 import { ChartConfiguration, ChartData } from 'chart.js'
 import { anneePrecedente, anneeSuivante, CaminoAnnee, CaminoDate, getAnnee, getCurrent, isAnnee, toCaminoDate } from 'camino-common/src/date'
-import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import styles from './statistiques.module.css'
 import { numberFormat } from 'camino-common/src/number'
 
@@ -222,7 +221,7 @@ interface Props {
   getStats: () => Promise<StatistiquesGuyane>
   currentDate: CaminoDate
 }
-export const PureGuyane = caminoDefineComponent<Props>(['getStats', 'currentDate'], props => {
+export const PureGuyane = defineComponent<Props>(props => {
   const currentDate = props.currentDate
   const data = ref<AsyncData<StatistiquesGuyane>>({
     status: 'LOADING',
@@ -455,3 +454,6 @@ export const PureGuyane = caminoDefineComponent<Props>(['getStats', 'currentDate
     </div>
   )
 })
+
+// @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
+PureGuyane.props = ['getStats', 'currentDate']

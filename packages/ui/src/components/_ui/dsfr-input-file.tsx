@@ -1,6 +1,6 @@
-import { caminoDefineComponent, isEventWithTarget } from '@/utils/vue-tsx-utils'
+import { isEventWithTarget } from '@/utils/vue-tsx-utils'
 import { FileUploadType } from 'camino-common/src/static/documentsTypes'
-import { ref } from 'vue'
+import { defineComponent, ref } from 'vue'
 
 interface Props {
   accept: FileUploadType[]
@@ -11,7 +11,7 @@ const isDragEvent = (e: Event): e is DragEvent => {
   return 'dataTransfer' in e
 }
 
-export const InputFile = caminoDefineComponent<Props>(['accept', 'uploadFile'], props => {
+export const InputFile = defineComponent<Props>(props => {
   const inputValue = ref<FileList | null>(null)
   const uploadFile = (e: Event) => {
     if (isEventWithTarget(e)) {
@@ -59,3 +59,6 @@ export const InputFile = caminoDefineComponent<Props>(['accept', 'uploadFile'], 
     </div>
   )
 })
+
+// @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
+InputFile.props = ['accept', 'uploadFile']

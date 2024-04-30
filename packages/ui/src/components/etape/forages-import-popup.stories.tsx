@@ -7,6 +7,7 @@ import { ForagesImportPopup } from './forages-import-popup'
 
 const meta: Meta = {
   title: 'Components/Etape/ImportForages',
+  // @ts-ignore @storybook/vue3 n'aime pas les composants tsx
   component: ForagesImportPopup,
 }
 export default meta

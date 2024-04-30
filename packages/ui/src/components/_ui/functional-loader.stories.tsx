@@ -4,7 +4,7 @@ import { AsyncData } from '@/api/client-rest'
 
 const meta: Meta = {
   title: 'Components/UI/FunctionalLoader',
-  // @ts-ignore il a besoin d'un FunctionalComponent mais on peut pas le rendre générique
+  // @ts-ignore @storybook/vue3 n'aime pas les composants tsx
   component: LoadingElement,
 }
 export default meta

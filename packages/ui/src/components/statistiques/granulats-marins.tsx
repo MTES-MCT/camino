@@ -1,7 +1,7 @@
 import { defineComponent, onMounted, ref } from 'vue'
 import { GranulatsMarinsActivite } from './granulats-marins-activite'
 import { ConfigurableChart } from '../_charts/configurable-chart'
-import { caminoDefineComponent, isEventWithTarget } from '@/utils/vue-tsx-utils'
+import { isEventWithTarget } from '@/utils/vue-tsx-utils'
 import { StatistiqueGranulatsMarinsStatAnnee, StatistiquesGranulatsMarins } from 'camino-common/src/statistiques.js'
 import { AsyncData, getWithJson } from '@/api/client-rest'
 import { LoadingElement } from '../_ui/functional-loader'
@@ -117,7 +117,7 @@ interface Props {
   currentDate?: CaminoDate
   getStatistiques: () => Promise<StatistiquesGranulatsMarins>
 }
-export const PureGranulatsMarins = caminoDefineComponent<Props>(['currentDate', 'getStatistiques'], props => {
+export const PureGranulatsMarins = defineComponent<Props>(props => {
   const statistiquesGranulatsMarins = ref<
     AsyncData<{
       raw: StatistiquesGranulatsMarins
@@ -549,3 +549,6 @@ export const PureGranulatsMarins = caminoDefineComponent<Props>(['currentDate', 
     </>
   )
 })
+
+// @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
+PureGranulatsMarins.props = ['currentDate', 'getStatistiques']

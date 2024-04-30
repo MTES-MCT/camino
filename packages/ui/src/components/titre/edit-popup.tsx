@@ -1,7 +1,6 @@
-import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { EditableTitre } from 'camino-common/src/titres'
 import { TitreReference } from 'camino-common/src/titres-references'
-import { ref } from 'vue'
+import { defineComponent, ref } from 'vue'
 import { FunctionalPopup } from '../_ui/functional-popup'
 import { DsfrInput } from '../_ui/dsfr-input'
 import { TitreApiClient } from './titre-api-client'
@@ -14,7 +13,7 @@ interface Props {
   reload: () => Promise<void>
 }
 
-export const EditPopup = caminoDefineComponent<Props>(['titre', 'close', 'apiClient', 'reload'], props => {
+export const EditPopup = defineComponent<Props>(props => {
   const nom = ref(props.titre.nom)
   const references = ref<TitreReference[]>([...props.titre.references])
 
@@ -52,3 +51,6 @@ export const EditPopup = caminoDefineComponent<Props>(['titre', 'close', 'apiCli
     />
   )
 })
+
+// @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
+EditPopup.props = ['titre', 'close', 'apiClient', 'reload']

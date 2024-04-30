@@ -6,8 +6,8 @@ import { newEntrepriseId } from 'camino-common/src/entreprise'
 
 const meta: Meta = {
   title: 'Components/Entreprise/Edition',
+  // @ts-ignore @storybook/vue3 n'aime pas les composants tsx
   component: EntrepriseEditPopup,
-  argTypes: {},
 }
 export default meta
 

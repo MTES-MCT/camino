@@ -10,7 +10,7 @@ import { DeepReadonly, NonEmptyArray } from 'camino-common/src/typescript-tools'
 
 const meta: Meta = {
   title: 'Components/Common/SectionsEdit',
-  // @ts-ignore
+  // @ts-ignore @storybook/vue3 n'aime pas les composants tsx
   component: SectionsEdit,
   decorators: [() => ({ template: '<div class="dsfr"><story/></div>' })],
 }

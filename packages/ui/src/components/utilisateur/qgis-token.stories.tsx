@@ -3,6 +3,7 @@ import { QGisToken } from './qgis-token'
 
 const meta: Meta = {
   title: 'Components/Utilisateur/QGISToken',
+  // @ts-ignore @storybook/vue3 n'aime pas les composants tsx
   component: QGisToken,
   argTypes: {},
 }

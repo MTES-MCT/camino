@@ -1,8 +1,7 @@
-import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { FunctionalPopup } from '../_ui/functional-popup'
 import { InputFile } from '../_ui/dsfr-input-file'
 import { GeoSystemeId, GeoSystemes } from 'camino-common/src/static/geoSystemes'
-import { ref } from 'vue'
+import { defineComponent, ref } from 'vue'
 import { ApiClient } from '@/api/api-client'
 import { FeatureCollectionForages } from 'camino-common/src/perimetre'
 import { Alert } from '../_ui/alert'
@@ -17,7 +16,7 @@ interface Props {
   close: () => void
 }
 
-export const ForagesImportPopup = caminoDefineComponent<Props>(['apiClient', 'close', 'result', 'geoSystemeId'], props => {
+export const ForagesImportPopup = defineComponent<Props>(props => {
   const importFile = ref<File | null>(null)
 
   const fileChange = async (file: File) => {
@@ -101,3 +100,6 @@ export const ForagesImportPopup = caminoDefineComponent<Props>(['apiClient', 'cl
     />
   )
 })
+
+// @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
+ForagesImportPopup.props = ['apiClient', 'close', 'result', 'geoSystemeId']

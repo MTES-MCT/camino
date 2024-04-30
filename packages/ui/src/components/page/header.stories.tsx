@@ -4,6 +4,7 @@ import { testBlankUser } from 'camino-common/src/tests-utils'
 
 const meta: Meta = {
   title: 'Components/Page/Header',
+  // @ts-ignore @storybook/vue3 n'aime pas les composants tsx
   component: Header,
 }
 export default meta

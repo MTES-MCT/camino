@@ -1,8 +1,7 @@
-import { computed, FunctionalComponent, onMounted, ref } from 'vue'
+import { computed, defineComponent, FunctionalComponent, onMounted, ref } from 'vue'
 import { Role, User } from 'camino-common/src/roles'
 import { canReadActivites } from 'camino-common/src/permissions/activites'
 import { QuickAccessTitre } from '@/components/page/quick-access-titre'
-import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { DsfrButtonIcon } from '../_ui/dsfr-button'
 import { isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
 import { MenuSection } from '../../router'
@@ -63,7 +62,7 @@ const HeaderLinks: FunctionalComponent<Pick<Props, 'user' | 'routePath'> & { use
   )
 }
 
-export const Header = caminoDefineComponent<Props>(['user', 'currentMenuSection', 'routePath'], props => {
+export const Header = defineComponent<Props>(props => {
   const getAriaCurrent = (link: LinkList): { 'aria-current'?: true } => (link.sublinks.some(({ path }) => path === props.currentMenuSection) ? { 'aria-current': true } : {})
 
   const getAriaPage = (link: Link): { 'aria-current'?: 'page' } => {
@@ -234,3 +233,6 @@ export const Header = caminoDefineComponent<Props>(['user', 'currentMenuSection'
     </div>
   )
 })
+
+// @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
+Header.props = ['user', 'currentMenuSection', 'routePath']

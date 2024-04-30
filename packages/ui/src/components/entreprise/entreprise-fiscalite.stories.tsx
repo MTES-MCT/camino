@@ -5,8 +5,8 @@ import { CaminoAnnee, toCaminoAnnee } from 'camino-common/src/date'
 
 const meta: Meta = {
   title: 'Components/Entreprise/Fiscalite',
+  // @ts-ignore @storybook/vue3 n'aime pas les composants tsx
   component: EntrepriseFiscalite,
-  argTypes: {},
 }
 export default meta
 

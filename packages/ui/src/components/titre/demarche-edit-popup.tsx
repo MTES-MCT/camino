@@ -1,9 +1,9 @@
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
-import { computed, ref } from 'vue'
+import { computed, defineComponent, ref } from 'vue'
 import { FunctionalPopup } from '../_ui/functional-popup'
 import { DemarcheTypeId, isDemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
 import { getDemarchesTypesByTitreType } from 'camino-common/src/static/titresTypesDemarchesTypes'
-import { caminoDefineComponent, isEventWithTarget } from '@/utils/vue-tsx-utils'
+import { isEventWithTarget } from '@/utils/vue-tsx-utils'
 import { DemarcheApiClient } from './demarche-api-client'
 import { DemarcheId, DemarcheSlug } from 'camino-common/src/demarche'
 import { DsfrInput } from '../_ui/dsfr-input'
@@ -25,7 +25,7 @@ export interface Props {
 }
 
 // TODO 2023-12-19: question POH, pour ajouter des travaux, on propose de mettre un radio bouton dans cette popup. Est-ce encore d'actualité ?
-export const DemarcheEditPopup = caminoDefineComponent<Props>(['demarche', 'titreNom', 'titreTypeId', 'tabId', 'apiClient', 'close', 'reload'], props => {
+export const DemarcheEditPopup = defineComponent<Props>(props => {
   const typeId = ref<DemarcheTypeId | null>(props.demarche.typeId ?? null)
   const description = ref<string>(props.demarche.description ?? '')
 
@@ -96,3 +96,6 @@ export const DemarcheEditPopup = caminoDefineComponent<Props>(['demarche', 'titr
 
   return () => <FunctionalPopup title={title.value} content={content} close={props.close} validate={{ action: save }} canValidate={!!typeId.value} />
 })
+
+// @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
+DemarcheEditPopup.props = ['demarche', 'titreNom', 'titreTypeId', 'tabId', 'apiClient', 'close', 'reload']

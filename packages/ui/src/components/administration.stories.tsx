@@ -9,6 +9,7 @@ import { toUtilisateurId } from 'camino-common/src/roles'
 
 const meta: Meta = {
   title: 'Components/Administration',
+  // @ts-ignore @storybook/vue3 n'aime pas les composants tsx
   component: PureAdministration,
 }
 export default meta

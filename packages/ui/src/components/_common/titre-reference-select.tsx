@@ -1,5 +1,4 @@
-import { ref } from 'vue'
-import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
+import { defineComponent, ref } from 'vue'
 import { DsfrSelect } from '../_ui/dsfr-select'
 import { NonEmptyArray, isNullOrUndefined } from 'camino-common/src/typescript-tools'
 import { ReferenceTypeId, sortedReferencesTypes } from 'camino-common/src/static/referencesTypes'
@@ -16,7 +15,7 @@ const isTitreReference = (value: EditableTitreReference): value is TitreReferenc
   return value.nom !== null && value.referenceTypeId !== null
 }
 
-export const TitreReferenceSelect = caminoDefineComponent<Props>(['initialValues', 'onUpdateReferences'], props => {
+export const TitreReferenceSelect = defineComponent<Props>(props => {
   const references = ref<EditableTitreReference[]>([...(props.initialValues ?? [])])
   const referenceAdd = () => {
     references.value.push({ referenceTypeId: null, nom: null })
@@ -57,3 +56,6 @@ export const TitreReferenceSelect = caminoDefineComponent<Props>(['initialValues
     </div>
   )
 })
+
+// @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
+TitreReferenceSelect.props = ['initialValues', 'onUpdateReferences']

@@ -5,7 +5,6 @@ import { CaminoDate, toCaminoDate } from 'camino-common/src/date'
 const meta: Meta = {
   title: 'Components/UI/Date',
   component: DateComponent,
-  argTypes: {},
 }
 export default meta
 

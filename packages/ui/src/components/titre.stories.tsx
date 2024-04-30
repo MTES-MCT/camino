@@ -17,7 +17,7 @@ import { titreIdValidator, titreSlugValidator, TitreIdOrSlug } from 'camino-comm
 
 const meta: Meta = {
   title: 'Components/Titre',
-  // @ts-ignore en attente du support par @storybook/vue3
+  // @ts-ignore @storybook/vue3 n'aime pas les composants tsx
   component: PureTitre,
 }
 export default meta
