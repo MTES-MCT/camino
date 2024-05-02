@@ -1,5 +1,4 @@
-import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
-import { FunctionalComponent, onMounted, ref } from 'vue'
+import { FunctionalComponent, defineComponent, onMounted, ref } from 'vue'
 import { LoadingElement } from '@/components/_ui/functional-loader'
 import { AsyncData, getDownloadRestRoute } from '@/api/client-rest'
 import { EntrepriseDocument, EntrepriseDocumentId, EntrepriseId } from 'camino-common/src/entreprise'
@@ -18,7 +17,7 @@ interface Props {
   user: User
   entrepriseId: EntrepriseId
 }
-export const EntrepriseDocuments = caminoDefineComponent<Props>(['apiClient', 'entrepriseId', 'user'], props => {
+export const EntrepriseDocuments = defineComponent<Props>(props => {
   const data = ref<AsyncData<EntrepriseDocument[]>>({ status: 'LOADING' })
 
   const addPopup = ref<boolean>(false)
@@ -147,3 +146,6 @@ export const EntrepriseDocumentLink: FunctionalComponent<EntrepriseDocumentLinkP
     </a>
   )
 }
+
+// @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
+EntrepriseDocuments.props = ['apiClient', 'entrepriseId', 'user']

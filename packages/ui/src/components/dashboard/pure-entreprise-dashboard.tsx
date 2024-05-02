@@ -1,4 +1,4 @@
-import { onMounted, ref } from 'vue'
+import { defineComponent, onMounted, ref } from 'vue'
 import { fiscaliteVisible } from 'camino-common/src/fiscalite'
 import { User } from 'camino-common/src/roles'
 import { Entreprise, EntrepriseId, TitreEntreprise } from 'camino-common/src/entreprise'
@@ -7,7 +7,6 @@ import { LoadingElement } from '../_ui/functional-loader'
 import { AsyncData } from '@/api/client-rest'
 import { TableAuto } from '../_ui/table-auto'
 import { TableRow } from '../_ui/table'
-import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { DashboardApiClient } from './dashboard-api-client'
 import { PageContentHeader } from '../_common/page-header-content'
 import { DemandeTitreButton } from '../_common/demande-titre-button'
@@ -32,7 +31,7 @@ const fiscaliteVisibleForAtLeastOneEntreprise = (user: User, entreprises: Pick<E
   )
 }
 
-export const PureEntrepriseDashboard = caminoDefineComponent<Props>(['user', 'entreprises', 'apiClient', 'displayActivites'], props => {
+export const PureEntrepriseDashboard = defineComponent<Props>(props => {
   const data = ref<AsyncData<TitreEntreprise[]>>({ status: 'LOADING' })
 
   const entrepriseTitres = (entreprises: TitreEntreprise[]): TableRow[] => titresLignesBuild(entreprises, props.displayActivites)
@@ -110,3 +109,6 @@ export const PureEntrepriseDashboard = caminoDefineComponent<Props>(['user', 'en
     </div>
   )
 })
+
+// @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
+PureEntrepriseDashboard.props = ['user', 'entreprises', 'apiClient', 'displayActivites']

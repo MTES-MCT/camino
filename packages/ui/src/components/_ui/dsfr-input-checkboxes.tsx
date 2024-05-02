@@ -1,6 +1,6 @@
-import { caminoDefineComponent, random } from '@/utils/vue-tsx-utils'
+import { random } from '@/utils/vue-tsx-utils'
 import { DsfrInputCheckbox, Props as InputCheckboxProps } from './dsfr-input-checkbox'
-import { ref, watch } from 'vue'
+import { defineComponent, ref, watch } from 'vue'
 import { isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
 
 type Props = {
@@ -11,7 +11,7 @@ type Props = {
   elements: (Omit<InputCheckboxProps, 'disabled' | 'id' | 'valueChanged'> & { itemId: string })[]
 }
 
-export const DsfrInputCheckboxes = caminoDefineComponent<Props>(['id', 'valueChanged', 'legend', 'disabled', 'elements'], props => {
+export const DsfrInputCheckboxes = defineComponent<Props>(props => {
   const id = props.id ?? `checkboxes_${(random() * 1000).toFixed()}`
 
   const values = ref<string[]>([])
@@ -55,3 +55,6 @@ export const DsfrInputCheckboxes = caminoDefineComponent<Props>(['id', 'valueCha
     </fieldset>
   )
 })
+
+// @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
+DsfrInputCheckboxes.props = ['id', 'valueChanged', 'legend', 'disabled', 'elements']

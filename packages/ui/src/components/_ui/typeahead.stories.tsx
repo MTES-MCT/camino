@@ -5,7 +5,7 @@ import { TypeAheadMultiple } from './typeahead-multiple'
 
 const meta: Meta = {
   title: 'Components/UI/TypeAhead',
-  // @ts-ignore il n'aime pas le côté générique du composant
+  // @ts-ignore @storybook/vue3 n'aime pas les composants tsx
   component: TypeAheadSingle,
 }
 export default meta

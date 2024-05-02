@@ -1,17 +1,16 @@
 import { AsyncData } from '@/api/client-rest'
 import { QGISToken } from 'camino-common/src/utilisateur'
-import { ref } from 'vue'
+import { defineComponent, ref } from 'vue'
 import { Pill } from '../_ui/pill'
 import { LoadingElement } from '../_ui/functional-loader'
 import { Messages } from '@/components/_ui/messages'
 import { UtilisateurApiClient } from './utilisateur-api-client'
-import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 
 interface Props {
   apiClient: Pick<UtilisateurApiClient, 'getQGISToken'>
 }
 
-export const QGisToken = caminoDefineComponent<Props>(['apiClient'], props => {
+export const QGisToken = defineComponent<Props>(props => {
   const data = ref<AsyncData<QGISToken> | null>(null)
   const messages = ref<{ type: 'error' | 'success'; value: string }[]>([])
 
@@ -68,3 +67,6 @@ export const QGisToken = caminoDefineComponent<Props>(['apiClient'], props => {
     </>
   )
 })
+
+// @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
+QGisToken.props = ['apiClient']

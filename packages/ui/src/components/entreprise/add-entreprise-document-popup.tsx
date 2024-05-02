@@ -1,6 +1,6 @@
-import { caminoDefineComponent, updateFromEvent } from '@/utils/vue-tsx-utils'
+import { updateFromEvent } from '@/utils/vue-tsx-utils'
 import { EntrepriseId } from 'camino-common/src/entreprise'
-import { computed, ref } from 'vue'
+import { computed, defineComponent, ref } from 'vue'
 import { FunctionalPopup } from '../_ui/functional-popup'
 import { uiEntrepriseDocumentInputValidator } from './entreprise-api-client'
 import { DocumentsTypes, EntrepriseDocumentTypeId, EntrepriseDocumentTypeIds, sortedEntrepriseDocumentTypes } from 'camino-common/src/static/documentsTypes'
@@ -16,7 +16,7 @@ interface Props {
   apiClient: Pick<ApiClient, 'creerEntrepriseDocument' | 'uploadTempDocument'>
 }
 // TODO 2024-04-22 Utiliser un DsfrSelect
-export const AddEntrepriseDocumentPopup = caminoDefineComponent<Props>(['close', 'entrepriseId', 'apiClient', 'lockedEntrepriseDocumentTypeId'], props => {
+export const AddEntrepriseDocumentPopup = defineComponent<Props>(props => {
   const entrepriseDocumentTypeId = ref<(typeof EntrepriseDocumentTypeIds)[number] | null>(props.lockedEntrepriseDocumentTypeId ?? null)
   const documentDate = ref<CaminoDate | null>(null)
   const entrepriseDocumentFile = ref<File | null>(null)
@@ -98,3 +98,6 @@ export const AddEntrepriseDocumentPopup = caminoDefineComponent<Props>(['close',
     />
   )
 })
+
+// @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
+AddEntrepriseDocumentPopup.props = ['close', 'entrepriseId', 'apiClient', 'lockedEntrepriseDocumentTypeId']

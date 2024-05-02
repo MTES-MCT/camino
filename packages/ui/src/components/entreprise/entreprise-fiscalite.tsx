@@ -1,5 +1,4 @@
-import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
-import { onMounted, ref } from 'vue'
+import { defineComponent, onMounted, ref } from 'vue'
 import { montantNetTaxeAurifere, fraisGestion } from 'camino-common/src/fiscalite'
 import type { Fiscalite } from 'camino-common/src/validators/fiscalite'
 import { LoadingElement } from '@/components/_ui/functional-loader'
@@ -12,7 +11,7 @@ interface Props {
   anneeCourante: CaminoAnnee
   annees: CaminoAnnee[]
 }
-export const EntrepriseFiscalite = caminoDefineComponent<Props>(['anneeCourante', 'annees', 'getFiscaliteEntreprise'], props => {
+export const EntrepriseFiscalite = defineComponent<Props>(props => {
   const tabId = ref<CaminoAnnee>(props.anneeCourante)
   const data = ref<AsyncData<Fiscalite>>({ status: 'LOADING' })
 
@@ -91,3 +90,6 @@ export const EntrepriseFiscalite = caminoDefineComponent<Props>(['anneeCourante'
     </div>
   )
 })
+
+// @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
+EntrepriseFiscalite.props = ['anneeCourante', 'annees', 'getFiscaliteEntreprise']

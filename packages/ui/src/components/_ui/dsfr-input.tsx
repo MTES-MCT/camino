@@ -1,7 +1,7 @@
-import { caminoDefineComponent, isEventWithTarget, random } from '@/utils/vue-tsx-utils'
+import { isEventWithTarget, random } from '@/utils/vue-tsx-utils'
 import { CaminoDate, caminoDateValidator } from 'camino-common/src/date'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
-import { ref } from 'vue'
+import { defineComponent, ref } from 'vue'
 
 type TextInputType = {
   type: 'text'
@@ -47,7 +47,7 @@ const isTextProps = (props: Props): props is BaseProps & TextProps => props.type
 const isNumberProps = (props: Props): props is BaseProps & NumberProps => props.type.type === 'number'
 const isDateProps = (props: Props): props is BaseProps & DateProps => props.type.type === 'date'
 
-export const DsfrInput = caminoDefineComponent<Props>(['id', 'initialValue', 'valueChanged', 'legend', 'disabled', 'required', 'type'], props => {
+export const DsfrInput = defineComponent<Props>(props => {
   const id = props.id ?? `input_${(random() * 1000).toFixed()}`
 
   const value = ref(props.initialValue)
@@ -97,3 +97,6 @@ export const DsfrInput = caminoDefineComponent<Props>(['id', 'initialValue', 'va
     </div>
   )
 })
+
+// @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
+DsfrInput.props = ['id', 'initialValue', 'valueChanged', 'legend', 'disabled', 'required', 'type']

@@ -142,6 +142,7 @@ export const TitreTimeline: FunctionalComponent<Props> = props => {
                         {...getAriaCurrent(demarche.slug, props.currentDemarcheSlug)}
                         key={demarche.slug}
                         to={{ name: 'titre', params: { id: props.titreSlug }, query: { demarcheSlug: demarche.slug } }}
+                        isDisabled={false}
                         title={capitalize(DemarchesTypes[demarche.demarche_type_id].nom)}
                         class="fr-link"
                       >
@@ -193,6 +194,7 @@ const DemarchePhase = defineComponent<{
     <CaminoRouterLink
       {...getAriaCurrent(props.phase.slug, props.currentDemarcheSlug)}
       to={{ name: 'titre', params: { id: props.titreSlug }, query: { demarcheSlug: props.phase.slug } }}
+      isDisabled={false}
       title={capitalize(DemarchesTypes[props.phase.demarche_type_id].nom)}
       style={{ minWidth: `${minWidth}px` }}
       class={`${style.phase} ${isOntoRootElement.value && !isOntoChildElement.value ? style.phaseHover : ''}`}
@@ -228,9 +230,10 @@ const DemarcheEvent: FunctionalComponent<{
     'aria-describedby': tooltipId,
     ...getAriaCurrent(props.demarche.slug, props.currentDemarcheSlug),
     to: { name: 'titre', params: { id: props.titreSlug }, query: { demarcheSlug: props.demarche.slug } },
+    isDisabled: false,
     title: capitalize(DemarchesTypes[props.demarche.demarche_type_id].nom),
     anchorHTMLAttributes: { onMouseenter: props.onMouseenter, onMouseleave: props.onMouseleave },
-  }
+  } as const
 
   return (
     <>

@@ -5,6 +5,7 @@ import { statistiquesDGTMFake } from './testData'
 
 const meta: Meta = {
   title: 'Components/Dashboard/DGTMStatsFull',
+  // @ts-ignore @storybook/vue3 n'aime pas les composants tsx
   component: DGTMStatsFull,
   argTypes: {
     getEntreprisesTitres: { name: 'function', required: true },

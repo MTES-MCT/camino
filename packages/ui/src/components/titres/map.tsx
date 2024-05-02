@@ -1,12 +1,11 @@
-import { ref, Ref, computed, onMounted, watch } from 'vue'
-import { CaminoMap } from '../_map/index'
+import { ref, Ref, computed, onMounted, watch, defineComponent, DefineComponent } from 'vue'
+import { CaminoMap, Props as CaminoMapProps } from '../_map/index'
 import { leafletGeojsonBoundsGet } from '../_map/leaflet'
 import { clustersBuild, layersBuild, zones, TitreWithPerimetre, CaminoMarkerClusterGroup, LayerWithTitreId } from './mapUtil'
 import { DomaineId, isDomaineId } from 'camino-common/src/static/domaines'
 import { Router, onBeforeRouteLeave } from 'vue-router'
 import { Layer, LayerGroup, Marker, layerGroup } from 'leaflet'
 import { getEntriesHardcore, getKeys, isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools'
-import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { DsfrButton } from '../_ui/dsfr-button'
 import { routerQueryToNumber, routerQueryToNumberArray } from '@/router/camino-router-link'
 import { TitreId } from 'camino-common/src/validators/titres'
@@ -25,7 +24,7 @@ interface Props {
 const isLayerWithTitreId = (layer: Layer): layer is LayerWithTitreId => 'titreId' in layer
 
 type ZoneId = keyof typeof zones
-export const CaminoTitresMap = caminoDefineComponent<Props>(['titres', 'updateCarte', 'router', 'loading'], props => {
+export const CaminoTitresMap = defineComponent<Props>(props => {
   const zoneId = ref<ZoneId>('fr')
   const savedParams = computed<TitreCarteParams>(() => {
     const route = props.router.currentRoute.value
@@ -53,7 +52,7 @@ export const CaminoTitresMap = caminoDefineComponent<Props>(['titres', 'updateCa
     { immediate: true }
   )
 
-  const map = ref<typeof CaminoMap | null>(null)
+  const map = ref<DefineComponent<CaminoMapProps> | null>(null)
 
   const geojsons = ref<Record<TitreId, Layer>>({})
   const clusters = ref<CaminoMarkerClusterGroup[]>([]) as Ref<CaminoMarkerClusterGroup[]>
@@ -223,3 +222,6 @@ export const CaminoTitresMap = caminoDefineComponent<Props>(['titres', 'updateCa
     </div>
   )
 })
+
+// @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
+CaminoTitresMap.props = ['titres', 'updateCarte', 'router', 'loading']

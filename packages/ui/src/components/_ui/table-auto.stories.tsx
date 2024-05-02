@@ -9,6 +9,7 @@ import { TableRow } from './table'
 
 const meta: Meta = {
   title: 'Components/UI/Table',
+  // @ts-ignore @storybook/vue3 n'aime pas les composants tsx
   component: TableAuto,
 }
 export default meta

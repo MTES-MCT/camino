@@ -5,8 +5,8 @@ import { newEntrepriseId } from 'camino-common/src/entreprise'
 
 const meta: Meta = {
   title: 'Components/Etape/AutoCompleteEntreprise',
+  // @ts-ignore @storybook/vue3 n'aime pas les composants tsx
   component: AutocompleteEntreprise,
-  argTypes: {},
 }
 export default meta
 

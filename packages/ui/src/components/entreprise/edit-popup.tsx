@@ -1,7 +1,6 @@
-import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { EntrepriseId } from 'camino-common/src/entreprise'
 import { isSuper, User } from 'camino-common/src/roles'
-import { ref } from 'vue'
+import { defineComponent, ref } from 'vue'
 import { FunctionalPopup } from '../_ui/functional-popup'
 import { EntrepriseApiClient } from './entreprise-api-client'
 import { DsfrInput } from '../_ui/dsfr-input'
@@ -20,7 +19,7 @@ interface Props {
   apiClient: Pick<EntrepriseApiClient, 'modifierEntreprise'>
 }
 
-export const EntrepriseEditPopup = caminoDefineComponent<Props>(['close', 'user', 'entreprise', 'apiClient'], props => {
+export const EntrepriseEditPopup = defineComponent<Props>(props => {
   const telephone = ref(props.entreprise.telephone ?? '')
   const email = ref(props.entreprise.email ?? '')
   const url = ref(props.entreprise.url ?? '')
@@ -60,3 +59,6 @@ export const EntrepriseEditPopup = caminoDefineComponent<Props>(['close', 'user'
 
   return () => <FunctionalPopup title="Modification d'une entreprise" content={content} close={props.close} validate={{ action: save }} canValidate={true} />
 })
+
+// @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
+EntrepriseEditPopup.props = ['close', 'user', 'entreprise', 'apiClient']

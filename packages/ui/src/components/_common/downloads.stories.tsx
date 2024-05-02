@@ -4,7 +4,7 @@ import { PureDownloads } from './downloads'
 
 const meta: Meta = {
   title: 'Components/Common/Downloads',
-  // @ts-ignore
+  // @ts-ignore @storybook/vue3 n'aime pas les composants tsx
   component: PureDownloads,
   decorators: [() => ({ template: '<div class="dsfr"><story/></div>' })],
 }

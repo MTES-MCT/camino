@@ -4,7 +4,7 @@ import { action } from '@storybook/addon-actions'
 
 const meta: Meta = {
   title: 'Components/Common/GeoSystemeTypeahead',
-  // @ts-ignore
+  // @ts-ignore @storybook/vue3 n'aime pas les composants tsx
   component: GeoSystemeTypeahead,
 }
 export default meta

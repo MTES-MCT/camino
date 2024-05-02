@@ -1,4 +1,4 @@
-import { caminoDefineComponent, useState } from '@/utils/vue-tsx-utils'
+import { useState } from '@/utils/vue-tsx-utils'
 import { DsfrTag } from '../_ui/tag'
 import { HeritageEdit } from './heritage-edit'
 import { AutocompleteEntreprise } from './autocomplete-entreprise'
@@ -10,7 +10,7 @@ import { EtapeEntreprise, EtapeWithHeritage, HeritageProp } from 'camino-common/
 import { DomaineId } from 'camino-common/src/static/domaines'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
 import { getDomaineId, TitreTypeId } from 'camino-common/src/static/titresTypes'
-import { watch, computed, ref, DeepReadonly } from 'vue'
+import { watch, computed, ref, DeepReadonly, defineComponent } from 'vue'
 import { Entreprise } from 'camino-common/src/entreprise'
 import { User } from 'camino-common/src/roles'
 import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
@@ -34,7 +34,7 @@ const dureeToMois = (duree: number | null | undefined) => {
   return isNotNullNorUndefined(duree) && duree > 0 ? Math.floor(duree % 12) : 0
 }
 
-export const FondamentalesEdit = caminoDefineComponent<Props>(['etape', 'demarcheTypeId', 'titreTypeId', 'user', 'entreprises', 'completeUpdate'], props => {
+export const FondamentalesEdit = defineComponent<Props>(props => {
   const [editedEtape, setEditedEtape] = useState(props.etape)
 
   const ans = ref<number>(dureeToAns(editedEtape.value.duree))
@@ -256,3 +256,6 @@ export const FondamentalesEdit = caminoDefineComponent<Props>(['etape', 'demarch
     </div>
   )
 })
+
+// @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
+FondamentalesEdit.props = ['etape', 'demarcheTypeId', 'titreTypeId', 'user', 'entreprises', 'completeUpdate']

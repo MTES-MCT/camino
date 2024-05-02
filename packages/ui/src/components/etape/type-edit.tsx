@@ -1,7 +1,6 @@
 import { EtapesStatuts, EtapeStatutId, ETAPES_STATUTS } from 'camino-common/src/static/etapesStatuts'
 import { EtapesTypes, ETAPES_TYPES, EtapeType, EtapeTypeId } from 'camino-common/src/static/etapesTypes'
-import { computed, ref, FunctionalComponent, watch, HTMLAttributes } from 'vue'
-import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
+import { computed, ref, FunctionalComponent, watch, HTMLAttributes, defineComponent } from 'vue'
 import { DemarcheId } from 'camino-common/src/demarche'
 import { EtapeApiClient } from './etape-api-client'
 import { CaminoDate } from 'camino-common/src/date'
@@ -40,7 +39,7 @@ const SelectStatut: FunctionalComponent<SelectStatutProps> = (props: SelectStatu
   return <DsfrSelect initialValue={initialValue} items={items} legend={{ main: 'Statut' }} required={true} id="select-etape-statut-id" valueChanged={props.onStatutChange} />
 }
 
-export const TypeEdit = caminoDefineComponent<Props>(['etape', 'apiClient', 'onEtapeChange', 'demarcheId', 'class'], props => {
+export const TypeEdit = defineComponent<Props>(props => {
   const etapeTypeSearch = ref<string>('')
   const etapeTypeId = ref<EtapeTypeId | null>(props.etape.typeId ?? null)
   const etapeStatutId = ref<EtapeStatutId | null>(props.etape.statutId)
@@ -156,3 +155,6 @@ export const TypeEdit = caminoDefineComponent<Props>(['etape', 'apiClient', 'onE
     />
   )
 })
+
+// @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
+TypeEdit.props = ['etape', 'apiClient', 'onEtapeChange', 'demarcheId', 'class']

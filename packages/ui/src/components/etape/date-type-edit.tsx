@@ -1,8 +1,8 @@
-import { caminoDefineComponent, useState } from '@/utils/vue-tsx-utils'
+import { useState } from '@/utils/vue-tsx-utils'
 import { CaminoDate } from 'camino-common/src/date'
 import { EtapeId } from 'camino-common/src/etape'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
-import { watch, DeepReadonly } from 'vue'
+import { watch, DeepReadonly, defineComponent } from 'vue'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { TypeEdit } from './type-edit'
 import { DemarcheId } from 'camino-common/src/demarche'
@@ -36,7 +36,7 @@ export const dateTypeStepIsComplete = (etape: EtapeDateTypeEdit, user: User): bo
   return isNotNullNorUndefined(etape.date) && isNotNullNorUndefined(etape.typeId) && isNotNullNorUndefined(etape.statutId)
 }
 
-export const DateTypeEdit = caminoDefineComponent<Props>(['etape', 'demarcheId', 'apiClient', 'completeUpdate'], props => {
+export const DateTypeEdit = defineComponent<Props>(props => {
   const [date, setDate] = useState(props.etape.date)
   const [typeStatut, setTypeStatut] = useState({ etapeTypeId: props.etape.typeId, etapeStatutId: props.etape.statutId })
 
@@ -70,3 +70,6 @@ export const DateTypeEdit = caminoDefineComponent<Props>(['etape', 'demarcheId',
     </div>
   )
 })
+
+// @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
+DateTypeEdit.props = ['etape', 'demarcheId', 'apiClient', 'completeUpdate']

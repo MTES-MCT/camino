@@ -14,7 +14,7 @@ import { FeatureMultiPolygon } from 'camino-common/src/perimetre'
 
 const meta: Meta = {
   title: 'Components/Demarche/Etape',
-  // @ts-ignore
+  // @ts-ignore @storybook/vue3 n'aime pas les composants tsx
   component: DemarcheEtape,
   decorators: [() => ({ template: '<div class="dsfr"><story/></div>' })],
 }

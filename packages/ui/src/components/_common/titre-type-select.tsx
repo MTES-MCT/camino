@@ -3,8 +3,7 @@ import { User } from 'camino-common/src/roles'
 import { DomaineId, sortedDomaines } from 'camino-common/src/static/domaines'
 import { getDomaineId, getTitreTypeType, getTitreTypeTypeByDomaineId, TitreTypeId, toTitreTypeId } from 'camino-common/src/static/titresTypes'
 import { TitresTypesTypes, TitreTypeTypeId } from 'camino-common/src/static/titresTypesTypes'
-import { computed, onMounted, ref } from 'vue'
-import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
+import { computed, defineComponent, onMounted, ref } from 'vue'
 import { DsfrSelect } from '../_ui/dsfr-select'
 import { NonEmptyArray, isNonEmptyArray, isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 
@@ -14,7 +13,7 @@ interface Props {
   onUpdateTitreTypeId: (titreTypeId: TitreTypeId | null) => void
 }
 
-export const TitreTypeSelect = caminoDefineComponent<Props>(['titreTypeId', 'user', 'onUpdateTitreTypeId'], props => {
+export const TitreTypeSelect = defineComponent<Props>(props => {
   const domaineRef = ref<DomaineId | null>(props.titreTypeId ? getDomaineId(props.titreTypeId) : null)
   const titreTypeType = ref<TitreTypeTypeId | null>(props.titreTypeId ? getTitreTypeType(props.titreTypeId) : null)
 
@@ -80,3 +79,6 @@ export const TitreTypeSelect = caminoDefineComponent<Props>(['titreTypeId', 'use
     </>
   )
 })
+
+// @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
+TitreTypeSelect.props = ['titreTypeId', 'user', 'onUpdateTitreTypeId']

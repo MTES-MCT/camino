@@ -11,7 +11,6 @@ import { User } from 'camino-common/src/roles'
 import { computed, onMounted, watch, defineComponent, ref, inject } from 'vue'
 import { useRoute } from 'vue-router'
 import { canEditEntreprise, canSeeEntrepriseDocuments } from 'camino-common/src/permissions/entreprises'
-import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { EntrepriseType, newEntrepriseId, EntrepriseId } from 'camino-common/src/entreprise'
 import { EntrepriseDocuments } from './entreprise/entreprise-documents'
 import { AsyncData } from '../api/client-rest'
@@ -63,7 +62,7 @@ interface Props {
   currentYear: CaminoAnnee
 }
 
-export const PureEntreprise = caminoDefineComponent<Props>(['entrepriseId', 'user', 'apiClient', 'currentYear'], props => {
+export const PureEntreprise = defineComponent<Props>(props => {
   watch(
     () => props.entrepriseId,
     async _newEntrepriseId => {
@@ -303,3 +302,6 @@ export const PureEntreprise = caminoDefineComponent<Props>(['entrepriseId', 'use
     />
   )
 })
+
+// @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
+PureEntreprise.props = ['entrepriseId', 'user', 'apiClient', 'currentYear']

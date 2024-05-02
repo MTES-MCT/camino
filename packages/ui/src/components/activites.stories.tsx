@@ -9,7 +9,7 @@ import { toCaminoAnnee } from 'camino-common/src/date'
 
 const meta: Meta = {
   title: 'Components/Activites',
-  // @ts-ignore
+  // @ts-ignore @storybook/vue3 n'aime pas les composants tsx
   component: PureActivites,
 }
 export default meta

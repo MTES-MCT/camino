@@ -1,6 +1,5 @@
-import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { canLinkTitres, getLinkConfig } from 'camino-common/src/permissions/titres'
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, defineComponent, onMounted, ref, watch } from 'vue'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { User } from 'camino-common/src/roles'
 import { AdministrationId } from 'camino-common/src/static/administrations'
@@ -26,7 +25,7 @@ export interface Props {
   }
   apiClient: Pick<ApiClient, 'loadTitreLinks' | 'loadLinkableTitres' | 'linkTitres'>
 }
-export const TitresLinkForm = caminoDefineComponent<Props>(['apiClient', 'titre', 'user'], props => {
+export const TitresLinkForm = defineComponent<Props>(props => {
   const mode = ref<'read' | 'edit'>('read')
   const selectedTitres = ref<TitreLink[]>([])
   const titresLinks = ref<AsyncData<TitreLinks>>({ status: 'LOADING' })
@@ -161,3 +160,6 @@ export const TitresLinkForm = caminoDefineComponent<Props>(['apiClient', 'titre'
     </div>
   )
 })
+
+// @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
+TitresLinkForm.props = ['apiClient', 'titre', 'user']

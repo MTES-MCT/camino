@@ -9,6 +9,7 @@ import { EtapeApiClient } from './etape-api-client'
 
 const meta: Meta = {
   title: 'Components/Etape/TypeEdit',
+  // @ts-ignore @storybook/vue3 n'aime pas les composants tsx
   component: TypeEdit,
   decorators: [() => ({ template: '<div class="dsfr"><story/></div>' })],
 }

@@ -1,12 +1,12 @@
 import { isEntrepriseOrBureauDetudeRole, Role, User, UserNotNull, isAdministration, isSuper, isEntrepriseOrBureauDEtude, isAdministrationRole } from 'camino-common/src/roles'
-import { computed, ref } from 'vue'
+import { computed, defineComponent, ref } from 'vue'
 import { Administrations, isAdministrationId, sortedAdministrations } from 'camino-common/src/static/administrations'
 import { Entreprise, EntrepriseId } from 'camino-common/src/entreprise'
 import { UtilisateurToEdit } from 'camino-common/src/utilisateur'
 import { AsyncData } from '@/api/client-rest'
 import { LoadingElement } from '../_ui/functional-loader'
 import { canEditPermission, getAssignableRoles } from 'camino-common/src/permissions/utilisateurs'
-import { caminoDefineComponent, isEventWithTarget } from '@/utils/vue-tsx-utils'
+import { isEventWithTarget } from '@/utils/vue-tsx-utils'
 import { UtilisateurApiClient } from './utilisateur-api-client'
 import { Pill } from '../_ui/pill'
 import { TypeAheadSmartMultiple, Element } from '../_ui/typeahead-smart-multiple'
@@ -20,7 +20,7 @@ interface Props {
   entreprises: Entreprise[]
 }
 
-export const PermissionDisplay = caminoDefineComponent<Props>(['user', 'utilisateur', 'apiClient', 'entreprises'], props => {
+export const PermissionDisplay = defineComponent<Props>(props => {
   const mode = ref<'read' | 'edit'>('read')
 
   const updateUtilisateur = async (utilisateur: UtilisateurToEdit) => {
@@ -113,7 +113,7 @@ type PermissionEditProps = {
   cancelEdition: () => void
 }
 
-const PermissionEdit = caminoDefineComponent<PermissionEditProps>(['user', 'utilisateur', 'entreprises', 'updateUtilisateur', 'cancelEdition'], props => {
+const PermissionEdit = defineComponent<PermissionEditProps>(props => {
   const updatingUtilisateur = ref<UtilisateurToEdit>({
     id: props.utilisateur.id,
     role: props.utilisateur.role,
@@ -242,3 +242,9 @@ const PermissionEdit = caminoDefineComponent<PermissionEditProps>(['user', 'util
     </div>
   )
 })
+
+// @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
+PermissionEdit.props = ['user', 'utilisateur', 'entreprises', 'updateUtilisateur', 'cancelEdition']
+
+// @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
+PermissionDisplay.props = ['user', 'utilisateur', 'apiClient', 'entreprises']

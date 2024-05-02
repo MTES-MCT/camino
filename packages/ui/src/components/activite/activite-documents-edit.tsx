@@ -1,11 +1,10 @@
-import { caminoDefineComponent } from '../../utils/vue-tsx-utils'
 import { ActivitesTypesId } from 'camino-common/src/static/activitesTypes'
 import { ActiviteDocument, ActiviteDocumentId, TempActiviteDocument } from 'camino-common/src/activite'
 import { DocumentsTypes } from 'camino-common/src/static/documentsTypes'
 import { ApiClient } from '@/api/api-client'
 import { ActiviteDocumentLink } from './preview'
 import { DsfrButtonIcon } from '../_ui/dsfr-button'
-import { ref, watch } from 'vue'
+import { defineComponent, ref, watch } from 'vue'
 import { isActiviteDocumentsComplete } from 'camino-common/src/permissions/activites'
 import { AddActiviteDocumentPopup } from './add-activite-document-popup'
 import { activitesTypesDocumentsTypes } from 'camino-common/src/static/activitesTypesDocumentsTypes'
@@ -19,7 +18,7 @@ interface Props {
 
 const isTempActiviteDocument = (activiteDocument: ActiviteDocument | TempActiviteDocument): activiteDocument is TempActiviteDocument => 'tempDocumentName' in activiteDocument
 const isActiviteDocument = (activiteDocument: ActiviteDocument | TempActiviteDocument): activiteDocument is ActiviteDocument => !isTempActiviteDocument(activiteDocument)
-export const ActiviteDocumentsEdit = caminoDefineComponent<Props>(['activiteDocuments', 'completeUpdate', 'activiteTypeId', 'apiClient'], props => {
+export const ActiviteDocumentsEdit = defineComponent<Props>(props => {
   const addPopup = ref<boolean>(false)
 
   const documents = ref<(ActiviteDocument | TempActiviteDocument)[]>([])
@@ -103,3 +102,6 @@ export const ActiviteDocumentsEdit = caminoDefineComponent<Props>(['activiteDocu
     </div>
   )
 })
+
+// @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
+ActiviteDocumentsEdit.props = ['activiteDocuments', 'completeUpdate', 'activiteTypeId', 'apiClient']

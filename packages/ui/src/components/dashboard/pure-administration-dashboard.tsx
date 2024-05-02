@@ -1,4 +1,4 @@
-import { computed, markRaw, onMounted, ref } from 'vue'
+import { computed, defineComponent, markRaw, onMounted, ref } from 'vue'
 import { TableAuto } from '../_ui/table-auto'
 import { List } from '../_ui/list'
 import { PureDGTMStats } from './pure-dgtm-stats'
@@ -8,7 +8,6 @@ import { LoadingElement } from '@/components/_ui/functional-loader'
 import { AsyncData } from '@/api/client-rest'
 import { EtapesTypes } from 'camino-common/src/static/etapesTypes'
 import { Column, ComponentColumnData, TableRow, TextColumnData } from '../_ui/table'
-import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { DashboardApiClient } from './dashboard-api-client'
 import { AdminUserNotNull, isAdministrationAdmin, isAdministrationEditeur } from 'camino-common/src/roles'
 import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations'
@@ -35,7 +34,7 @@ const columns = [nomColumn, typeColumn, statutAutoColumn, referencesColumn, titu
 
 const columnsEnAttente = [nomColumn, typeColumn, statutAutoColumn, titulairesColumn, derniereEtapeColumn, prochainesEtapesColumn] as const
 
-export const PureAdministrationDashboard = caminoDefineComponent<Props>(['apiClient', 'user'], props => {
+export const PureAdministrationDashboard = defineComponent<Props>(props => {
   const isDGTM = computed<boolean>(() => {
     return (isAdministrationAdmin(props.user) || isAdministrationEditeur(props.user)) && props.user.administrationId === ADMINISTRATION_IDS['DGTM - GUYANE']
   })
@@ -108,7 +107,7 @@ export const PureAdministrationDashboard = caminoDefineComponent<Props>(['apiCli
         <>
           <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' }}>
             <h2>Statistiques</h2>
-            <CaminoRouterLink to={{ name: 'Stats DGTM' }} title="Voir la page de statistiques DGTM">
+            <CaminoRouterLink to={{ name: 'Stats DGTM' }} isDisabled={false} title="Voir la page de statistiques DGTM">
               Voir plus
             </CaminoRouterLink>
           </div>
@@ -141,3 +140,6 @@ export const PureAdministrationDashboard = caminoDefineComponent<Props>(['apiCli
     </div>
   )
 })
+
+// @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
+PureAdministrationDashboard.props = ['apiClient', 'user']

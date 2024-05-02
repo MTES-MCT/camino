@@ -1,7 +1,6 @@
-import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { sirenValidator } from 'camino-common/src/entreprise'
 import { User } from 'camino-common/src/roles'
-import { ref } from 'vue'
+import { defineComponent, ref } from 'vue'
 import { FunctionalPopup } from '../_ui/functional-popup'
 import { EntrepriseApiClient } from './entreprise-api-client'
 import { DsfrInput } from '../_ui/dsfr-input'
@@ -11,7 +10,7 @@ interface Props {
   user: User
   apiClient: Pick<EntrepriseApiClient, 'creerEntreprise'>
 }
-export const EntrepriseAddPopup = caminoDefineComponent<Props>(['close', 'user', 'apiClient'], props => {
+export const EntrepriseAddPopup = defineComponent<Props>(props => {
   const siren = ref('')
   const sirenChange = (value: string) => {
     siren.value = value
@@ -33,3 +32,6 @@ export const EntrepriseAddPopup = caminoDefineComponent<Props>(['close', 'user',
     />
   )
 })
+
+// @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
+EntrepriseAddPopup.props = ['close', 'user', 'apiClient']

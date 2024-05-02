@@ -5,7 +5,7 @@ import { NonEmptyArray } from 'camino-common/src/typescript-tools'
 
 const meta: Meta = {
   title: 'Components/UI/Tabs',
-  // @ts-ignore @storybook/vue3 n'aime pas les composants tsx génériques
+  // @ts-ignore @storybook/vue3 n'aime pas les composants tsx
   component: Tabs,
 }
 export default meta

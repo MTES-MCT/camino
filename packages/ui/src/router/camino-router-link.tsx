@@ -1,5 +1,4 @@
-import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
-import { computed, LinkHTMLAttributes, AnchorHTMLAttributes } from 'vue'
+import { computed, LinkHTMLAttributes, AnchorHTMLAttributes, defineComponent } from 'vue'
 import { LocationQueryValue, useLink, UseLinkOptions } from 'vue-router'
 
 export const routerQueryToNumber = (value: LocationQueryValue | LocationQueryValue[], defaultValue: number): number => {
@@ -30,8 +29,8 @@ type Props = {
   title: string
   class?: LinkHTMLAttributes['class']
   anchorHTMLAttributes?: AnchorHTMLAttributes
-} & ({ isDisabled: true; to: '' } | ({ isDisabled?: false } & Omit<UseLinkOptions, 'replace'>))
-export const CaminoRouterLink = caminoDefineComponent<Props>(['to', 'title', 'class', 'isDisabled', 'anchorHTMLAttributes'], (props, ctx) => {
+} & ({ isDisabled: true; to: '' } | ({ isDisabled: false } & Omit<UseLinkOptions, 'replace'>))
+export const CaminoRouterLink = defineComponent<Props>((props, ctx) => {
   const { href, navigate } = useLink(props)
   const formatedProps = computed<LinkHTMLAttributes>(() => {
     if (props.isDisabled ?? false) {
@@ -47,3 +46,6 @@ export const CaminoRouterLink = caminoDefineComponent<Props>(['to', 'title', 'cl
     </a>
   )
 })
+
+// @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
+CaminoRouterLink.props = ['to', 'title', 'class', 'isDisabled', 'anchorHTMLAttributes']

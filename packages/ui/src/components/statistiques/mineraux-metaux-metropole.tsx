@@ -4,7 +4,7 @@ import { ChartWithExport } from '../_charts/chart-with-export'
 
 import { LoadingElement } from '@/components/_ui/functional-loader'
 import { CaminoAnnee, isAnnee } from 'camino-common/src/date'
-import { ref, onMounted, FunctionalComponent } from 'vue'
+import { ref, onMounted, FunctionalComponent, defineComponent } from 'vue'
 import { ChartConfiguration, ChartData, ChartDataset } from 'chart.js'
 import { SubstancesFiscale, SUBSTANCES_FISCALES_IDS } from 'camino-common/src/static/substancesFiscales'
 import { Unites } from 'camino-common/src/static/unites'
@@ -12,7 +12,6 @@ import { onlyUnique } from 'camino-common/src/typescript-tools'
 import { RegionId, isRegionId, Regions } from 'camino-common/src/static/region'
 import { CHART_COLORS, nextColor } from '../_charts/utils'
 import styles from './mineraux-metaux-metropole.module.css'
-import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { numberFormat } from 'camino-common/src/number'
 import statsStyles from './statistiques.module.css'
 
@@ -252,7 +251,7 @@ interface Props {
   getStats: () => Promise<StatistiquesMinerauxMetauxMetropole>
 }
 
-export const PureMinerauxMetauxMetropole = caminoDefineComponent<Props>(['getStats'], props => {
+export const PureMinerauxMetauxMetropole = defineComponent<Props>(props => {
   const data = ref<AsyncData<StatistiquesMinerauxMetauxMetropole>>({
     status: 'LOADING',
   })
@@ -545,3 +544,5 @@ export const PureMinerauxMetauxMetropole = caminoDefineComponent<Props>(['getSta
     </div>
   )
 })
+// @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
+PureMinerauxMetauxMetropole.props = ['getStats']

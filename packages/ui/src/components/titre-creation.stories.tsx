@@ -11,7 +11,7 @@ import { toCaminoDate } from 'camino-common/src/date'
 
 const meta: Meta = {
   title: 'Components/TitreCreation',
-  // @ts-ignore
+  // @ts-ignore @storybook/vue3 n'aime pas les composants tsx
   component: PureTitreCreation,
 }
 export default meta

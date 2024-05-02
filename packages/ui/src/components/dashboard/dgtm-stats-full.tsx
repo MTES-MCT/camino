@@ -1,4 +1,4 @@
-import { onMounted, ref } from 'vue'
+import { defineComponent, onMounted, ref } from 'vue'
 
 import { StatistiquesDGTM } from 'camino-common/src/statistiques'
 import { AsyncData, getWithJson } from '@/api/client-rest'
@@ -12,12 +12,11 @@ import {
   producteursOrChartConfiguration,
   avisAXMChartConfiguration,
 } from './dgtm-stats'
-import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 
 interface Props {
   getDgtmStats?: () => Promise<StatistiquesDGTM>
 }
-export const DGTMStatsFull = caminoDefineComponent<Props>(['getDgtmStats'], props => {
+export const DGTMStatsFull = defineComponent<Props>(props => {
   const data = ref<AsyncData<StatistiquesDGTM>>({ status: 'LOADING' })
 
   const charts = [sdomChartConfiguration, depotChartConfiguration, delaiChartConfiguration, delaiPerConcessionChartConfiguration, producteursOrChartConfiguration, avisAXMChartConfiguration]
@@ -50,3 +49,6 @@ export const DGTMStatsFull = caminoDefineComponent<Props>(['getDgtmStats'], prop
     </div>
   )
 })
+
+// @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
+DGTMStatsFull.props = ['getDgtmStats']

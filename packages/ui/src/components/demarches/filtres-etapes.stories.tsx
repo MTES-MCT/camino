@@ -5,7 +5,7 @@ import { toCaminoDate } from 'camino-common/src/date'
 
 const meta: Meta = {
   title: 'Components/Demarches/FiltresEtapes',
-  // @ts-ignore
+  // @ts-ignore @storybook/vue3 n'aime pas les composants tsx
   component: FiltresEtapes,
 }
 export default meta

@@ -67,7 +67,7 @@ type DsfrLinkProps = {
   style?: HTMLAttributes['style']
   class?: HTMLAttributes['class']
 } & (
-  | { to: UseLinkOptions['to']; disabled: boolean }
+  | { to: UseLinkOptions['to']; disabled: false }
   | { href: HTMLAnchorElement['href']; download?: HTMLAnchorElement['download']; target?: HTMLAnchorElement['target']; rel?: HTMLAnchorElement['rel'] }
 )
 export const DsfrLink: FunctionalComponent<DsfrLinkProps> = props => {

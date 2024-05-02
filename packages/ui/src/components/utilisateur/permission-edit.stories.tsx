@@ -7,6 +7,7 @@ import { toUtilisateurId } from 'camino-common/src/roles'
 
 const meta: Meta = {
   title: 'Components/Utilisateur/Permissions',
+  // @ts-ignore @storybook/vue3 n'aime pas les composants tsx
   component: PermissionDisplay,
 }
 export default meta

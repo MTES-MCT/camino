@@ -1,8 +1,7 @@
-import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { FunctionalPopup } from '../_ui/functional-popup'
 import { InputFile } from '../_ui/dsfr-input-file'
 import { GeoSystemes, GeoSystemeId } from 'camino-common/src/static/geoSystemes'
-import { ref } from 'vue'
+import { defineComponent, ref } from 'vue'
 import { ApiClient } from '@/api/api-client'
 import { GeojsonInformations } from 'camino-common/src/perimetre'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
@@ -23,7 +22,7 @@ interface Props {
 type FileType = 'geojson' | 'shp' | 'csv'
 
 const defaultGeoSystemeId = GeoSystemes[4326].id
-export const PerimetreImportPopup = caminoDefineComponent<Props>(['apiClient', 'close', 'result', 'titreTypeId', 'titreSlug'], props => {
+export const PerimetreImportPopup = defineComponent<Props>(props => {
   const systemeGeographique = ref<GeoSystemeId>(defaultGeoSystemeId)
 
   const importFile = ref<File | null>(null)
@@ -119,3 +118,6 @@ export const PerimetreImportPopup = caminoDefineComponent<Props>(['apiClient', '
     />
   )
 })
+
+// @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
+PerimetreImportPopup.props = ['apiClient', 'close', 'result', 'titreTypeId', 'titreSlug']

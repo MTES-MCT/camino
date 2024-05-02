@@ -7,6 +7,7 @@ import { ACTIVITES_TYPES_IDS } from 'camino-common/src/static/activitesTypes'
 
 const meta: Meta = {
   title: 'Components/Activite/Document/Ajout',
+  // @ts-ignore @storybook/vue3 n'aime pas les composants tsx
   component: AddActiviteDocumentPopup,
 }
 export default meta

@@ -1,16 +1,15 @@
-import { onMounted, ref } from 'vue'
+import { defineComponent, onMounted, ref } from 'vue'
 import { StatistiquesDGTM } from 'camino-common/src/statistiques'
 import { AsyncData } from '@/api/client-rest'
 import { ChartWithExport } from '@/components/_charts/chart-with-export'
 import { sdomChartConfiguration, depotChartConfiguration, delaiChartConfiguration } from './dgtm-stats'
-import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { DashboardApiClient } from './dashboard-api-client'
 
 interface Props {
   apiClient: Pick<DashboardApiClient, 'getDgtmStats'>
 }
 
-export const PureDGTMStats = caminoDefineComponent<Props>(['apiClient'], props => {
+export const PureDGTMStats = defineComponent<Props>(props => {
   const data = ref<AsyncData<StatistiquesDGTM>>({ status: 'LOADING' })
 
   onMounted(async () => {
@@ -34,3 +33,5 @@ export const PureDGTMStats = caminoDefineComponent<Props>(['apiClient'], props =
     </div>
   )
 })
+// @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
+PureDGTMStats.props = ['apiClient']

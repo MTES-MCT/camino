@@ -7,7 +7,7 @@ import { toUtilisateurId } from 'camino-common/src/roles'
 
 const meta: Meta<typeof PureUtilisateur> = {
   title: 'Components/Utilisateur',
-  // @ts-ignore
+  // @ts-ignore @storybook/vue3 n'aime pas les composants tsx
   component: PureUtilisateur,
 }
 export default meta

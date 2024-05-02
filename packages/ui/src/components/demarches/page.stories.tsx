@@ -9,7 +9,7 @@ import { demarcheSlugValidator } from 'camino-common/src/demarche'
 
 const meta: Meta = {
   title: 'Components/Demarches/Page',
-  // @ts-ignore
+  // @ts-ignore @storybook/vue3 n'aime pas les composants tsx
   component: PurePage,
 }
 export default meta

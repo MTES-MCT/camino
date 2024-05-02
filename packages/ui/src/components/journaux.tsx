@@ -1,4 +1,3 @@
-import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { Journaux as JournauxData } from 'camino-common/src/journaux'
 import { defineComponent, markRaw } from 'vue'
 import { TableRow } from './_ui/table'
@@ -63,7 +62,7 @@ const lignes = (journaux: JournauxData): TableRow<ColonneId>[] => {
 
 const filtres = ['titresIds'] as const satisfies readonly CaminoFiltre[]
 
-export const PureJournaux = caminoDefineComponent<Props>(['apiClient'], props => {
+export const PureJournaux = defineComponent<Props>(props => {
   const router = useRouter()
 
   const getData = async (event: Params<string>) => {
@@ -89,3 +88,5 @@ export const PureJournaux = caminoDefineComponent<Props>(['apiClient'], props =>
     />
   )
 })
+// @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
+PureJournaux.props = ['apiClient']

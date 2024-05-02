@@ -1,12 +1,11 @@
 import emailValidator from 'email-validator'
-import { ref, computed } from 'vue'
+import { ref, computed, defineComponent } from 'vue'
 import { ActivitesTypes, ActivitesTypesId } from 'camino-common/src/static/activitesTypes'
 import { User } from 'camino-common/src/roles'
 import { canEditEmails } from 'camino-common/src/permissions/administrations'
 import { Administration, AdministrationId, Administrations } from 'camino-common/src/static/administrations'
 import { AdministrationActiviteTypeEmail } from 'camino-common/src/administrations'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
-import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { ButtonIcon } from '../_ui/button-icon'
 
 interface Props {
@@ -17,7 +16,7 @@ interface Props {
   emailDelete: (administrationId: AdministrationId, administrationActiviteTypeEmail: AdministrationActiviteTypeEmail) => void
 }
 
-export const ActivitesTypesEmails = caminoDefineComponent<Props>(['administrationId', 'user', 'activitesTypesEmails', 'emailUpdate', 'emailDelete'], props => {
+export const ActivitesTypesEmails = defineComponent<Props>(props => {
   const administration = computed<Administration>(() => Administrations[props.administrationId])
   const activiteTypeNew = ref<{
     activiteTypeId: ActivitesTypesId | null
@@ -146,3 +145,6 @@ export const ActivitesTypesEmails = caminoDefineComponent<Props>(['administratio
     </div>
   )
 })
+
+// @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
+ActivitesTypesEmails.props = ['administrationId', 'user', 'activitesTypesEmails', 'emailUpdate', 'emailDelete']

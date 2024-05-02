@@ -9,7 +9,7 @@ import { ApiClient } from '../api/api-client'
 
 const meta: Meta = {
   title: 'Components/Entreprises',
-  // @ts-ignore
+  // @ts-ignore @storybook/vue3 n'aime pas les composants tsx
   component: PureEntreprises,
 }
 export default meta

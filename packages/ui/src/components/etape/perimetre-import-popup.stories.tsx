@@ -9,6 +9,7 @@ import { km2Validator } from 'camino-common/src/number'
 
 const meta: Meta = {
   title: 'Components/Etape/ImportPerimetre',
+  // @ts-ignore @storybook/vue3 n'aime pas les composants tsx
   component: PerimetreImportPopup,
 }
 export default meta

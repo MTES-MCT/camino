@@ -6,7 +6,7 @@ import { MapPattern } from '@/components/_map/pattern'
 
 const meta: Meta = {
   title: 'Components/Ui/Filters/FiltersCheckboxes',
-  // @ts-ignore
+  // @ts-ignore @storybook/vue3 n'aime pas les composants tsx
   component: FiltersCheckboxes,
 }
 export default meta

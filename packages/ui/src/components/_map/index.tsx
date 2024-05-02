@@ -1,14 +1,13 @@
 import type { LatLngBoundsExpression, LatLngExpression, Layer, LayersControlEvent, LeafletEvent, Control, Map } from 'leaflet'
 
-import { ref, onMounted, markRaw, watch } from 'vue'
+import { ref, onMounted, markRaw, watch, defineComponent } from 'vue'
 import { FeatureGroup, LayerGroup, layerGroup } from 'leaflet'
-import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { displayPerimeterZoomMaxLevel } from './util'
 
 import './leaflet'
 import { isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools'
 
-interface Props {
+export interface Props {
   markerLayers: Layer[]
   geojsonLayers: Layer[]
   mapUpdate: (data: { center?: [number, number]; zoom?: number; bbox?: [number, number, number, number] }) => void
@@ -17,7 +16,7 @@ interface Props {
   maxMarkers?: number
 }
 
-export const CaminoMap = caminoDefineComponent<Props>(['maxMarkers', 'markerLayers', 'geojsonLayers', 'mapUpdate', 'additionalOverlayLayers', 'loading'], (props, { expose }) => {
+export const CaminoMap = defineComponent<Props>((props, { expose }) => {
   const map = ref<HTMLDivElement | null>(null)
   const leafletComponent = ref<Map | null>(null)
   const updateBboxOnly = ref<boolean>(false)
@@ -336,3 +335,6 @@ export const CaminoMap = caminoDefineComponent<Props>(['maxMarkers', 'markerLaye
 
   return () => <div ref={map} />
 })
+
+// @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
+CaminoMap.props = ['maxMarkers', 'markerLayers', 'geojsonLayers', 'mapUpdate', 'additionalOverlayLayers', 'loading']
