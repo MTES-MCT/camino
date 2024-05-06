@@ -274,8 +274,8 @@ const etapeCreer = async ({ etape }: { etape: ITitreEtape & { etapeDocuments: un
       throw new Error('droits insuffisants pour créer cette étape')
     }
 
-    if (!(await checkEntreprisesExist(context.pool, [...etape.titulaireIds ?? [], ...etape.amodiataireIds ?? []]))) {
-      throw new Error('certaines entreprises n\'existent pas');
+    if (!(await checkEntreprisesExist(context.pool, [...(etape.titulaireIds ?? []), ...(etape.amodiataireIds ?? [])]))) {
+      throw new Error("certaines entreprises n'existent pas")
     }
 
     if (!canEditDuree(titreTypeId, titreDemarche.typeId)) {
@@ -496,8 +496,8 @@ const etapeModifier = async ({ etape }: { etape: ITitreEtape & { etapeDocuments:
       etape.dateFin = titreEtapeOld.dateFin
     }
 
-    if (!(await checkEntreprisesExist(context.pool, [...etape.titulaireIds ?? [], ...etape.amodiataireIds ?? []]))) {
-      throw new Error('certaines entreprises n\'existent pas');
+    if (!(await checkEntreprisesExist(context.pool, [...(etape.titulaireIds ?? []), ...(etape.amodiataireIds ?? [])]))) {
+      throw new Error("certaines entreprises n'existent pas")
     }
 
     let etapeUpdated: ITitreEtape | undefined = await titreEtapeUpsert(etape, user!, titreDemarche.titreId)

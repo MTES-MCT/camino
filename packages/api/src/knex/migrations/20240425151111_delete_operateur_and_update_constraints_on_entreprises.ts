@@ -52,7 +52,6 @@ export const up = async (knex: Knex) => {
   await knex.raw('UPDATE entreprises SET archive = false WHERE archive IS NULL')
   await knex.raw('ALTER TABLE entreprises ALTER COLUMN archive SET NOT NULL')
   await knex.raw('ALTER TABLE entreprises ALTER COLUMN archive SET DEFAULT false')
-
 }
 
 export const down = () => ({})

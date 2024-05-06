@@ -221,7 +221,7 @@ describe('etapeCreer', () => {
       }
     )
 
-    expect(res.body.errors[0].message).toBe('certaines entreprises n\'existent pas')
+    expect(res.body.errors[0].message).toBe("certaines entreprises n'existent pas")
   })
 
   test('ne peut pas créer une étape mfr avec un statut fai avec un champ obligatoire manquant (utilisateur super)', async () => {

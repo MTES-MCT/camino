@@ -157,7 +157,7 @@ describe('etapeModifier', () => {
     expect(res.body.errors).toBe(undefined)
   })
 
-  test('ne peut pas modifier une étape avec des entreprises qui n\'existent pas', async () => {
+  test("ne peut pas modifier une étape avec des entreprises qui n'existent pas", async () => {
     const { titreDemarcheId, titreEtapeId } = await etapeCreate()
     const res = await graphQLCall(
       dbPool,
@@ -195,7 +195,7 @@ describe('etapeModifier', () => {
       userSuper
     )
 
-    expect(res.body.errors[0].message).toBe('certaines entreprises n\'existent pas')
+    expect(res.body.errors[0].message).toBe("certaines entreprises n'existent pas")
   })
 
   test("peut supprimer un document d'une demande en construction (utilisateur super)", async () => {
@@ -351,7 +351,6 @@ describe('etapeModifier', () => {
 
     expect(res.body.errors[0].message).toBe("l'étape n'existe pas")
   })
-
 
   test('peut modifier une étape MEN sur un titre ARM en tant que PTMG (utilisateur admin)', async () => {
     const { titreDemarcheId, titreEtapeId } = await etapeCreate('men')

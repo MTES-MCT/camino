@@ -230,20 +230,23 @@ where
     ue.entreprise_id = $ entreprise_id !
 `
 
-
-const checkEntreprisesExistValidator = z.object({id: entrepriseIdValidator})
+const checkEntreprisesExistValidator = z.object({ id: entrepriseIdValidator })
 export const checkEntreprisesExist = async (pool: Pool, entrepriseIds: DeepReadonly<EntrepriseId[]>): Promise<boolean> => {
   if (entrepriseIds.length === 0) {
-    return true;
+    return true
   }
 
-
   const unique = [...entrepriseIds].filter(onlyUnique)
-  const result = await dbQueryAndValidate(checkEntreprisesExistQuery, { entrepriseIds: unique }, pool, checkEntreprisesExistValidator);
-  
-  return result.length === unique.length;
+  const result = await dbQueryAndValidate(checkEntreprisesExistQuery, { entrepriseIds: unique }, pool, checkEntreprisesExistValidator)
+
+  return result.length === unique.length
 }
 
 const checkEntreprisesExistQuery = sql<Redefine<ICheckEntreprisesExistQueryQuery, { entrepriseIds: EntrepriseId[] }, z.infer<typeof checkEntreprisesExistValidator>>>`
-SELECT id FROM entreprises WHERE id IN $$ entrepriseIds
+SELECT
+    id
+FROM
+    entreprises
+WHERE
+    id IN $$ entrepriseIds
 `
