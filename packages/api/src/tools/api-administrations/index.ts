@@ -1,6 +1,6 @@
 // https://etablissements-publics.api.gouv.fr
 import { DepartementId } from 'camino-common/src/static/departement.js'
-import { Administration, AdministrationId, AdministrationTypeId } from 'camino-common/src/static/administrations.js'
+import { Administration, AdministrationId, AdministrationTypeId, administrationIdValidator, administrationTypeIdValidator } from 'camino-common/src/static/administrations.js'
 import { config } from '../../config/index.js'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
 
@@ -26,7 +26,7 @@ interface IOrganisme {
   }[]
 }
 
-const organismeFetch = async (departementId: string, nom: 'paris_ppp' | 'prefecture') => {
+const organismeFetch = async (departementId: DepartementId, nom: 'paris_ppp' | 'prefecture') => {
   console.info(`API administration: requête ${departementId}, ${nom}`)
 
   const response = await fetch(`${API_ADMINISTRATION_URL}/v3/departements/${departementId}/${nom}`, {
@@ -49,7 +49,7 @@ const organismeFetch = async (departementId: string, nom: 'paris_ppp' | 'prefect
   return result
 }
 
-const organismeDepartementCall = async (departementId: string, nom: 'paris_ppp' | 'prefecture') => {
+const organismeDepartementCall = async (departementId: DepartementId, nom: 'paris_ppp' | 'prefecture') => {
   try {
     return await organismeFetch(departementId, nom)
   } catch (err: any) {
@@ -79,8 +79,8 @@ const organismeFormat = (e: IOrganisme, departementId: DepartementId) => {
     .join(', ')
 
   const organisme: Administration = {
-    id: p.id.replace(/prefecture|paris_ppp/, 'pre') as AdministrationId,
-    typeId: p.pivotLocal.replace(/prefecture|paris_ppp/, 'pre') as AdministrationTypeId,
+    id: administrationIdValidator.parse(p.id.replace(/prefecture|paris_ppp/, 'pre')),
+    typeId: administrationTypeIdValidator.parse(p.pivotLocal.replace(/prefecture|paris_ppp/, 'pre')),
     nom: p.nom,
     abreviation: p.nom,
     adresse1,
