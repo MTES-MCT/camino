@@ -1,9 +1,9 @@
 import { IApiSirenEtablissement, IApiSirenUniteLegalePeriode, IApiSirenUnionUniteLegalePeriodeEtablissmentUnite, IApiSirenUnionUniteLegaleEtablissmentUnite, IApiSirenUniteLegale } from './types.js'
 import { IEntrepriseEtablissement, IEntreprise } from '../../types.js'
 
-import inseePays from './definitions/pays.js'
-import inseeCategoriesJuridiques from './definitions/categories-juridiques.js'
-import inseeTypesVoies from './definitions/voies.js'
+import {pays as paysInsee} from './definitions/pays.js'
+import {categoriesJuridiques} from './definitions/categories-juridiques.js'
+import {voies} from './definitions/voies.js'
 
 import { checkCodePostal } from 'camino-common/src/static/departement.js'
 import { toCaminoDate } from 'camino-common/src/date.js'
@@ -114,7 +114,7 @@ export const entrepriseFormat = ({ uniteLegale, adresseEtablissement: adresse, s
   }
 
   if (adresse.typeVoieEtablissement) {
-    const typeVoie = inseeTypesVoies.find(t => t.id === adresse.typeVoieEtablissement)
+    const typeVoie = voies.find(t => t.id === adresse.typeVoieEtablissement)
     if (typeVoie) {
       entreprise.adresse += `${typeVoie.nom} `
     }
@@ -143,7 +143,7 @@ export const entrepriseFormat = ({ uniteLegale, adresseEtablissement: adresse, s
   }
 
   if (uniteLegale.categorieJuridiqueUniteLegale) {
-    const categorie = inseeCategoriesJuridiques.find(c => c.code === uniteLegale.categorieJuridiqueUniteLegale)
+    const categorie = categoriesJuridiques.find(c => c.code === uniteLegale.categorieJuridiqueUniteLegale)
     if (categorie) {
       entreprise.legalForme = categorie.nom
     } else {
@@ -152,7 +152,7 @@ export const entrepriseFormat = ({ uniteLegale, adresseEtablissement: adresse, s
   }
 
   if (adresse.codePaysEtrangerEtablissement) {
-    const pays = inseePays.find(p => p.cog === adresse.codePaysEtrangerEtablissement)
+    const pays = paysInsee.find(p => p.cog === adresse.codePaysEtrangerEtablissement)
     if (pays) {
       entreprise.paysId = pays.codeiso2
     } else {

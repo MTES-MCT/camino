@@ -1,5 +1,4 @@
 // https://etablissements-publics.api.gouv.fr
-import errorLog from '../error-log.js'
 import { DepartementId } from 'camino-common/src/static/departement.js'
 import { Administration, AdministrationId, AdministrationTypeId } from 'camino-common/src/static/administrations.js'
 import { config } from '../../config/index.js'
@@ -55,7 +54,7 @@ const organismeDepartementCall = async (departementId: string, nom: 'paris_ppp' 
     return await organismeFetch(departementId, nom)
   } catch (err: any) {
     const error = isNotNullNorUndefined(err.error) ? `${err.error}: ${err.error_description}` : err
-    errorLog(`API administrations ${departementId} ${nom}:`, error)
+    console.error(`API administrations ${departementId} ${nom}: ${error}`)
 
     return null
   }
