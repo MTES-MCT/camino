@@ -1,9 +1,9 @@
 import { IApiSirenEtablissement, IApiSirenUniteLegalePeriode, IApiSirenUnionUniteLegalePeriodeEtablissmentUnite, IApiSirenUnionUniteLegaleEtablissmentUnite, IApiSirenUniteLegale } from './types.js'
 import { IEntrepriseEtablissement, IEntreprise } from '../../types.js'
 
-import {pays as paysInsee} from './definitions/pays.js'
-import {categoriesJuridiques} from './definitions/categories-juridiques.js'
-import {voies} from './definitions/voies.js'
+import { pays as paysInsee } from './definitions/pays.js'
+import { categoriesJuridiques } from './definitions/categories-juridiques.js'
+import { voies } from './definitions/voies.js'
 
 import { checkCodePostal } from 'camino-common/src/static/departement.js'
 import { toCaminoDate } from 'camino-common/src/date.js'

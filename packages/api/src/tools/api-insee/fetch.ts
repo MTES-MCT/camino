@@ -1,5 +1,5 @@
-// https://api.insee.fr/catalogue/site/themes/wso2/subthemes/insee/pages/item-info.jag?name=Sirene&version=V3&provider=insee
-
+// https://api.insee.fr/catalogue/site/themes/wso2/subthemes/insee/pages/item-info.jag?name=Sirene&version=V3.11&provider=insee
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { IApiSirenQueryTypes, IApiSirenQueryToken, IApiSirenEtablissement, IApiSirenUniteLegale } from './types.js'
 
 import { CaminoDate, dateAddDays, daysBetween, getCurrent } from 'camino-common/src/date.js'
@@ -34,8 +34,7 @@ export const tokenInitialize = async (tokenFetchCall = tokenFetch, today = getCu
     return apiToken.token
   } catch (e: any) {
     console.error(
-      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-      `API Insee: impossible de générer le token de l'API INSEE ${(e.header && e.header.message) || (e.fault && `${e.fault.message}: ${e.fault.description}`) || (e.error && `${e.error}: ${e.error_description}`) || e.message || e}`,
+      `API Insee: impossible de générer le token de l'API INSEE ${(e.header && e.header.message) || (e.fault && `${e.fault.message}: ${e.fault.description}`) || (e.error && `${e.error}: ${e.error_description}`) || e.message || e}`
     )
 
     throw e
@@ -71,9 +70,7 @@ const tokenFetch = async (): Promise<IApiSirenQueryToken | null> => {
     return result
   } catch (e: any) {
     console.error(
-      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-      `API Insee: tokenFetch ${(e.header && e.header.message) || (e.fault && `${e.fault.message}: ${e.fault.description}`) || (e.error && `${e.error}: ${e.error_description}`) || e.message || e}`,
-      
+      `API Insee: tokenFetch ${(e.header && e.header.message) || (e.fault && `${e.fault.message}: ${e.fault.description}`) || (e.error && `${e.error}: ${e.error_description}`) || e.message || e}`
     )
 
     return null
@@ -89,7 +86,6 @@ const typeFetch = async (type: 'siren' | 'siret', q: string) => {
 
     console.info(`API Insee: requête ${type}, ids: ${q}`)
 
-    // https://api.insee.fr/catalogue/site/themes/wso2/subthemes/insee/pages/item-info.jag?name=Sirene&version=V3.11&provider=insee
     const response = await fetch(`${API_INSEE_URL}/entreprises/sirene/V3.11/${type}/?q=${q}`, {
       method: 'GET',
       headers: {
@@ -115,9 +111,7 @@ const typeFetch = async (type: 'siren' | 'siret', q: string) => {
     return result
   } catch (e: any) {
     console.error(
-            // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-
-      `API Insee: typeFetch ${(e.header && e.header.message) || (e.fault && `${e.fault.message}: ${e.fault.description}`) || (e.error && `${e.error}: ${e.error_description}`) || e.message || e}`,      
+      `API Insee: typeFetch ${(e.header && e.header.message) || (e.fault && `${e.fault.message}: ${e.fault.description}`) || (e.error && `${e.error}: ${e.error_description}`) || e.message || e}`
     )
 
     return null
@@ -131,9 +125,7 @@ const typeMultiFetch = async (type: 'siren' | 'siret', field: 'etablissements' |
     return (result && result[field]) || []
   } catch (e: any) {
     console.error(
-            // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-
-      `API Insee: ${type} get ${ids.join(', ')} ${JSON.stringify((e.header && e.header.message) || (e.fault && `${e.fault.message}: ${e.fault.description}`) || (e.error && `${e.error}: ${e.error_description}`) || e.message || e)}`,
+      `API Insee: ${type} get ${ids.join(', ')} ${JSON.stringify((e.header && e.header.message) || (e.fault && `${e.fault.message}: ${e.fault.description}`) || (e.error && `${e.error}: ${e.error_description}`) || e.message || e)}`
     )
 
     return null
