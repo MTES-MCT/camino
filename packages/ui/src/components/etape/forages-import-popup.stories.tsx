@@ -35,3 +35,5 @@ const apiClient: Pick<ApiClient, 'uploadTempDocument' | 'geojsonForagesImport'> 
 }
 
 export const Default: StoryFn = () => <ForagesImportPopup close={close} apiClient={apiClient} result={resultAction} geoSystemeId="2154" />
+
+export const CsvSelected: StoryFn = () => <ForagesImportPopup close={close} apiClient={apiClient} result={resultAction} geoSystemeId="2154" initialSelectedFileType="csv" />

@@ -201,16 +201,26 @@ export const getDemarcheContenu = (etapes: (Pick<DemarcheEtapeCommon, 'sections_
       if (pxgSectionWithValue !== undefined) {
         if (volume === null) {
           const volumeElementWithValue = pxgSectionWithValue.elements.find(({ id }) => id === 'volume')
-          if (volumeElementWithValue !== undefined && isNotNullNorUndefined(volumeElementWithValue.value)) {
+          if (
+            isNotNullNorUndefined(volumeElementWithValue) &&
+            isNotNullNorUndefined(volumeElementWithValue.value) &&
+            volumeElementWithValue.type === 'number' &&
+            isNotNullNorUndefined(volumeElementWithValue.uniteId)
+          ) {
             volume = volumeElementWithValue.value
-            contenu[volumeElementWithValue.nom ?? ''] = `${volume} m³`
+            contenu[volumeElementWithValue.nom ?? ''] = `${volume} ${Unites[volumeElementWithValue.uniteId].symbole}`
           }
         }
         if (debit === null) {
           const debitElementWithValue = pxgSectionWithValue.elements.find(({ id }) => id === 'debit')
-          if (debitElementWithValue !== undefined && isNotNullNorUndefined(debitElementWithValue.value)) {
+          if (
+            isNotNullNorUndefined(debitElementWithValue) &&
+            isNotNullNorUndefined(debitElementWithValue.value) &&
+            debitElementWithValue.type === 'number' &&
+            isNotNullNorUndefined(debitElementWithValue.uniteId)
+          ) {
             debit = debitElementWithValue.value
-            contenu[debitElementWithValue.nom ?? ''] = `${debit} m³/h`
+            contenu[debitElementWithValue.nom ?? ''] = `${debit} ${Unites[debitElementWithValue.uniteId].symbole}`
           }
         }
       }
