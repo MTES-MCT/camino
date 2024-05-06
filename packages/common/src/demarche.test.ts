@@ -269,7 +269,7 @@ test('getDemarcheContenu pxg', () => {
               id: 'pxg',
               nom: 'Propriétés de la concession',
               elements: [
-                { id: 'volume', nom: 'Volume maximum de pompage', optionnel: true, type: 'number', value: 3000000, description: 'm³' },
+                { id: 'volume', nom: 'Volume maximum de pompage', optionnel: true, type: 'number', value: 3000000, description: 'm³', uniteId: 'm3x' },
                 {
                   id: 'debit',
                   nom: 'Débit volumique maximal de pompage',
@@ -277,6 +277,7 @@ test('getDemarcheContenu pxg', () => {
                   description: '',
                   optionnel: true,
                   value: 300,
+                  uniteId: 'm3h',
                 },
               ],
             },

@@ -302,11 +302,18 @@ describe('getSectionsWithValue', () => {
                   "symbole": "km³",
                 },
                 {
+                  "id": "m3h",
+                  "nom": "mètre cube par heure",
+                  "referenceUniteId": null,
+                  "referenceUniteRatio": null,
+                  "symbole": "m³/h",
+                },
+                {
                   "id": "m3a",
                   "nom": "mètre cube par an",
                   "referenceUniteId": null,
                   "referenceUniteRatio": null,
-                  "symbole": "m³ / an",
+                  "symbole": "m³/an",
                 },
                 {
                   "id": "m3x",
@@ -374,7 +381,7 @@ describe('getSectionsWithValue', () => {
                   "nom": "tonnes par an",
                   "referenceUniteId": null,
                   "referenceUniteRatio": null,
-                  "symbole": "t / an",
+                  "symbole": "t/an",
                 },
                 {
                   "id": "vmd",

@@ -16,7 +16,7 @@ import { TitreSlug } from 'camino-common/src/validators/titres'
 import { Router } from 'vue-router'
 import { numberFormat } from 'camino-common/src/number'
 import { OmitDistributive, getValues, isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
-import { isNumberElement, valeurFind } from 'camino-common/src/sections'
+import { valeurFind } from 'camino-common/src/sections'
 import { EtapeDocuments } from '../etape/etape-documents'
 import { User } from 'camino-common/src/roles'
 import styles from './demarche-etape.module.css'
@@ -33,6 +33,7 @@ import { DeposeEtapePopup } from './depose-etape-popup'
 import { ApiClient } from '@/api/api-client'
 import { TitreGetDemarche } from 'camino-common/src/titres'
 import { GetEtapeDocumentsByEtapeId, documentTypeIdComplementaireObligatoireASL, documentTypeIdComplementaireObligatoireDAE, etapeDocumentIdValidator, needAslAndDae } from 'camino-common/src/etape'
+import { Unites } from 'camino-common/src/static/unites'
 // Il ne faut pas utiliser de literal dans le 'in' il n'y aura jamais d'erreur typescript
 const fondamentalePropsName = 'fondamentale'
 
@@ -260,11 +261,10 @@ export const DemarcheEtape = defineComponent<Props>(props => {
                                     {valeurFind(element)}
                                   </a>
                                 ) : (
-                                  valeurFind(element)
+                                  <>
+                                    {valeurFind(element)} {element.type === 'number' && isNotNullNorUndefined(element.uniteId) ? Unites[element.uniteId].symbole : null}
+                                  </>
                                 )}
-                                {element.id === 'volumeGranulatsExtrait' && element.value !== null && isNumberElement(element) ? (
-                                  <span>m3. Soit l’équivalent de {numberFormat(element.value * 1.5)} tonnes.</span>
-                                ) : null}
                               </p>
                             )}
                           </>
