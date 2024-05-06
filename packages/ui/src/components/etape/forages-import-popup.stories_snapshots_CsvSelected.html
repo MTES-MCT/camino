@@ -1,0 +1,70 @@
+<!--teleport start-->
+<div class="dsfr">
+  <dialog id="monId" class="fr-modal fr-modal--opened" open="" aria-modal="true" role="dialog" aria-labelledby="monId-title" style="z-index: 1000001;">
+    <div class="fr-container fr-container--fluid fr-container-md">
+      <div class="fr-grid-row fr-grid-row--center">
+        <div class="fr-col-12 fr-col-md-8 fr-col-lg-6">
+          <div class="fr-modal__body">
+            <div class="fr-modal__header"><button class="fr-btn--close fr-btn" aria-controls="monId" title="Fermer">Fermer</button></div>
+            <div class="fr-modal__content">
+              <h1 id="monId-title" class="fr-modal__title"><span class="fr-icon-arrow-right-line fr-icon--lg" aria-hidden="true"></span>Modification des forages</h1>
+              <div class="fr-container">
+                <form>
+                  <fieldset class="fr-fieldset fr-mt-2w" id="geographic">
+                    <div class="fr-fieldset__element">
+                      <div class="fr-select-group"><label class="fr-label" for="type">Système géographique</label>
+                        <div id="typeahead_271_wrapper" class="_typeahead_8eddf1 dsfr">
+                          <div class="flex"><input id="typeahead_271" type="text" name="typeahead_271" disabled="" class="_typeahead-input_8eddf1 fr-input" placeholder="" autocomplete="off"></div>
+                          <!---->
+                        </div>
+                      </div>
+                    </div>
+                  </fieldset>
+                  <fieldset class="fr-fieldset" id="radio_670" aria-labelledby="radio_670-legend">
+                    <legend class="fr-fieldset__legend--regular fr-fieldset__legend" id="radio_670-legend">Type de fichier
+                      <!---->
+                    </legend>
+                    <div class="fr-fieldset__element fr-fieldset__element--inline">
+                      <div class="fr-radio-group"><input type="radio" id="radio_670-0" name="radio_670"><label class="fr-label" for="radio_670-0">csv
+                          <!---->
+                        </label></div>
+                    </div>
+                    <div class="fr-fieldset__element fr-fieldset__element--inline">
+                      <div class="fr-radio-group"><input type="radio" id="radio_670-1" name="radio_670"><label class="fr-label" for="radio_670-1">geojson
+                          <!---->
+                        </label></div>
+                    </div>
+                    <div class="fr-fieldset__element fr-fieldset__element--inline">
+                      <div class="fr-radio-group"><input type="radio" id="radio_670-2" name="radio_670"><label class="fr-label" for="radio_670-2">shape
+                          <!---->
+                        </label></div>
+                    </div>
+                  </fieldset>
+                  <div class="fr-alert fr-alert--info fr-alert--sm">
+                    <p>Vous pouvez déposer un fichier de forages pour modifier ou supprimer les propriétés des forages. Ils doivent avoir les champs suivants : "nom" (nous vous conseillons de ne pas dépasser 3 caractères), "description", "type" (rejet, captage ou piézomètre), "profondeur" (en NGF), "x", "y". Seul le champ description peut être vide.</p>
+                  </div>
+                  <fieldset class="fr-fieldset" id="fichier">
+                    <div class="fr-fieldset__element">
+                      <div class="fr-upload-group"><label class="fr-label" for="file-upload">Ajouter un fichier<span class="fr-hint-text">Taille maximale : 100 Mo. Format<!----> supporté<!----> : csv.</span></label><input class="fr-upload" type="file" id="file-upload" name="file-upload" accept=".csv"></div>
+                    </div>
+                  </fieldset>
+                </form>
+                <!---->
+              </div>
+            </div>
+            <div class="fr-modal__footer">
+              <div style="display: flex; width: 100%; justify-content: end; align-items: center; gap: 1rem;">
+                <!---->
+                <ul class="fr-btns-group fr-btns-group--right fr-btns-group--inline-reverse fr-btns-group--inline-lg fr-btns-group--icon-left" style="width: auto;">
+                  <li><button class="fr-btn fr-icon-check-line fr-btn--icon-left disabled" disabled="">Importer</button></li>
+                  <li><button class="fr-btn fr-icon-arrow-go-back-fill fr-btn--icon-left fr-btn--secondary" aria-controls="monId">Annuler</button></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </dialog>
+</div>
+<!--teleport end-->

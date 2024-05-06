@@ -9,9 +9,12 @@ import { GeoSystemeTypeahead } from '../_common/geosysteme-typeahead'
 import { DsfrInputRadio } from '../_ui/dsfr-input-radio'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 
+type FileType = 'geojson' | 'shp' | 'csv'
+
 interface Props {
   apiClient: Pick<ApiClient, 'uploadTempDocument' | 'geojsonForagesImport'>
   geoSystemeId: GeoSystemeId
+  initialSelectedFileType?: FileType
   result: (value: { geojson4326: FeatureCollectionForages; origin: FeatureCollectionForages } | Error) => void
   close: () => void
 }
@@ -23,8 +26,7 @@ export const ForagesImportPopup = defineComponent<Props>(props => {
     importFile.value = file
   }
 
-  type FileType = 'geojson' | 'shp' | 'csv'
-  const fileType = ref<FileType | null>(null)
+  const fileType = ref<FileType | null>(props.initialSelectedFileType ?? null)
   const fileTypeSelected = (value: FileType) => {
     fileType.value = value
   }
@@ -45,6 +47,7 @@ export const ForagesImportPopup = defineComponent<Props>(props => {
         legend={{ main: 'Type de fichier' }}
         orientation="horizontal"
         valueChanged={fileTypeSelected}
+        initialValue={props.initialSelectedFileType}
         elements={[
           { legend: { main: 'csv' }, itemId: 'csv' },
           { legend: { main: 'geojson' }, itemId: 'geojson' },
@@ -60,7 +63,7 @@ export const ForagesImportPopup = defineComponent<Props>(props => {
             title={
               <>
                 Vous pouvez déposer un fichier de forages pour modifier ou supprimer les propriétés des forages. Ils doivent avoir les champs suivants : "nom" (nous vous conseillons de ne pas dépasser
-                3 caractères), "description", "type" (rejet ou captage), "profondeur" (en NGF)
+                3 caractères), "description", "type" (rejet, captage ou piézomètre), "profondeur" (en NGF)
                 {fileType.value !== 'csv' ? '. ' : `, ${GeoSystemes[props.geoSystemeId].uniteId === 'deg' ? '"longitude", "latitude". ' : '"x", "y". '}`}
                 Seul le champ description peut être vide.
               </>
@@ -102,4 +105,4 @@ export const ForagesImportPopup = defineComponent<Props>(props => {
 })
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-ForagesImportPopup.props = ['apiClient', 'close', 'result', 'geoSystemeId']
+ForagesImportPopup.props = ['apiClient', 'close', 'result', 'geoSystemeId', 'initialSelectedFileType']
