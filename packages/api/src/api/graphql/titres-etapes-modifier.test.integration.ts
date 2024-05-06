@@ -157,6 +157,47 @@ describe('etapeModifier', () => {
     expect(res.body.errors).toBe(undefined)
   })
 
+  test('ne peut pas modifier une étape avec des entreprises qui n\'existent pas', async () => {
+    const { titreDemarcheId, titreEtapeId } = await etapeCreate()
+    const res = await graphQLCall(
+      dbPool,
+      etapeModifierQuery,
+      {
+        etape: {
+          id: titreEtapeId,
+          typeId: 'mfr',
+          statutId: 'aco',
+          titulaireIds: ['inexistant'],
+          titreDemarcheId,
+          date: '2018-01-01',
+          heritageProps: ETAPE_HERITAGE_PROPS.reduce(
+            (acc, prop) => {
+              acc[prop] = { actif: false }
+
+              return acc
+            },
+            {} as {
+              [key: string]: { actif: boolean }
+            }
+          ),
+          heritageContenu: {
+            arm: {
+              mecanise: { actif: false },
+              franchissements: { actif: false },
+            },
+          },
+          contenu: {
+            arm: { mecanise: true, franchissements: 3 },
+          },
+          etapeDocuments: [],
+        },
+      },
+      userSuper
+    )
+
+    expect(res.body.errors[0].message).toBe('certaines entreprises n\'existent pas')
+  })
+
   test("peut supprimer un document d'une demande en construction (utilisateur super)", async () => {
     const { titreDemarcheId, titreEtapeId } = await etapeCreate()
 
@@ -310,6 +351,7 @@ describe('etapeModifier', () => {
 
     expect(res.body.errors[0].message).toBe("l'étape n'existe pas")
   })
+
 
   test('peut modifier une étape MEN sur un titre ARM en tant que PTMG (utilisateur admin)', async () => {
     const { titreDemarcheId, titreEtapeId } = await etapeCreate('men')

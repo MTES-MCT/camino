@@ -3,7 +3,7 @@ import { Model, Pojo } from 'objection'
 import { IEntreprise } from '../../types.js'
 import EntreprisesEtablissements from './entreprises-etablissements.js'
 import Utilisateurs from './utilisateurs.js'
-import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
+import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
 
 interface Entreprises extends IEntreprise {}
 

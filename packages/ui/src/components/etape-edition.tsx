@@ -39,7 +39,7 @@ export const EtapeEdition = defineComponent(() => {
 
   return () => (
     <>
-      {isNotNullNorUndefined(demarcheIdOrSlug.value) || isNotNullNorUndefined(etapeIdOrSlug.value) ? (
+      {isNotNullNorUndefined(user) && (isNotNullNorUndefined(demarcheIdOrSlug.value) || isNotNullNorUndefined(etapeIdOrSlug.value)) ? (
         <PureEtapeEdition etapeIdOrSlug={etapeIdOrSlug.value} demarcheIdOrSlug={demarcheIdOrSlug.value} user={user} entreprises={entreprises.value} apiClient={apiClient} goToDemarche={goToDemarche} />
       ) : (
         <CaminoAccessError user={user} />

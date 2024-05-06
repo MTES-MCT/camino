@@ -2,6 +2,7 @@
 import { sql } from '@pgtyped/runtime'
 import { Redefine, dbQueryAndValidate } from '../../pg-database.js'
 import {
+  ICheckEntreprisesExistQueryQuery,
   IDeleteEntrepriseDocumentQueryQuery,
   IGetEntrepriseDbQuery,
   IGetEntrepriseDocumentsInternalQuery,
@@ -21,7 +22,7 @@ import {
 } from 'camino-common/src/entreprise.js'
 import { EntrepriseDocumentTypeId } from 'camino-common/src/static/documentsTypes.js'
 import { CaminoDate } from 'camino-common/src/date.js'
-import { NonEmptyArray, isNonEmptyArray } from 'camino-common/src/typescript-tools.js'
+import { DeepReadonly, NonEmptyArray, isNonEmptyArray, onlyUnique } from 'camino-common/src/typescript-tools.js'
 import { Pool } from 'pg'
 import { canSeeEntrepriseDocuments } from 'camino-common/src/permissions/entreprises.js'
 import { User } from 'camino-common/src/roles.js'
@@ -227,4 +228,22 @@ from
     join utilisateurs u on u.id = ue.utilisateur_id
 where
     ue.entreprise_id = $ entreprise_id !
+`
+
+
+const checkEntreprisesExistValidator = z.object({id: entrepriseIdValidator})
+export const checkEntreprisesExist = async (pool: Pool, entrepriseIds: DeepReadonly<EntrepriseId[]>): Promise<boolean> => {
+  if (entrepriseIds.length === 0) {
+    return true;
+  }
+
+
+  const unique = [...entrepriseIds].filter(onlyUnique)
+  const result = await dbQueryAndValidate(checkEntreprisesExistQuery, { entrepriseIds: unique }, pool, checkEntreprisesExistValidator);
+  
+  return result.length === unique.length;
+}
+
+const checkEntreprisesExistQuery = sql<Redefine<ICheckEntreprisesExistQueryQuery, { entrepriseIds: EntrepriseId[] }, z.infer<typeof checkEntreprisesExistValidator>>>`
+SELECT id FROM entreprises WHERE id IN $$ entrepriseIds
 `

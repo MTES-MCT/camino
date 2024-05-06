@@ -140,3 +140,19 @@ export interface IGetEntrepriseUtilisateursDbQuery {
   result: IGetEntrepriseUtilisateursDbResult;
 }
 
+/** 'CheckEntreprisesExistQuery' parameters type */
+export interface ICheckEntreprisesExistQueryParams {
+  entrepriseIds: readonly (string | null | void)[];
+}
+
+/** 'CheckEntreprisesExistQuery' return type */
+export interface ICheckEntreprisesExistQueryResult {
+  id: string;
+}
+
+/** 'CheckEntreprisesExistQuery' query type */
+export interface ICheckEntreprisesExistQueryQuery {
+  params: ICheckEntreprisesExistQueryParams;
+  result: ICheckEntreprisesExistQueryResult;
+}
+

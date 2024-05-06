@@ -31,7 +31,7 @@ import {
   needAslAndDae,
   tempEtapeDocumentValidator,
 } from 'camino-common/src/etape.js'
-import { getEntrepriseDocuments } from '../../rest/entreprises.queries.js'
+import { checkEntreprisesExist, getEntrepriseDocuments } from '../../rest/entreprises.queries.js'
 import { deleteTitreEtapeEntrepriseDocument, insertEtapeDocuments, insertTitreEtapeEntrepriseDocument, updateEtapeDocuments } from '../../../database/queries/titres-etapes.queries.js'
 import { EntrepriseDocument, EntrepriseId } from 'camino-common/src/entreprise.js'
 import { Pool } from 'pg'
@@ -274,6 +274,10 @@ const etapeCreer = async ({ etape }: { etape: ITitreEtape & { etapeDocuments: un
       throw new Error('droits insuffisants pour créer cette étape')
     }
 
+    if (!(await checkEntreprisesExist(context.pool, [...etape.titulaireIds ?? [], ...etape.amodiataireIds ?? []]))) {
+      throw new Error('certaines entreprises n\'existent pas');
+    }
+
     if (!canEditDuree(titreTypeId, titreDemarche.typeId)) {
       etape.duree = null
     }
@@ -490,6 +494,10 @@ const etapeModifier = async ({ etape }: { etape: ITitreEtape & { etapeDocuments:
     if (!canEditDates(titreTypeId, titreDemarche.typeId, etape.typeId, user)) {
       etape.dateDebut = titreEtapeOld.dateDebut
       etape.dateFin = titreEtapeOld.dateFin
+    }
+
+    if (!(await checkEntreprisesExist(context.pool, [...etape.titulaireIds ?? [], ...etape.amodiataireIds ?? []]))) {
+      throw new Error('certaines entreprises n\'existent pas');
     }
 
     let etapeUpdated: ITitreEtape | undefined = await titreEtapeUpsert(etape, user!, titreDemarche.titreId)

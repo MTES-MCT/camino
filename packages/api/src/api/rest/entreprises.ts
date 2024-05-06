@@ -390,8 +390,6 @@ export const getEntreprise = (pool: Pool) => async (req: JWTRequest<User>, res: 
         res.sendStatus(HTTP_STATUS.HTTP_STATUS_NOT_FOUND)
       } else {
         const etablissements = await getEntrepriseEtablissements(pool, parsed.data)
-        // FIXME dans le front virer les utilisateurs et remplacer par un lien
-        // FIXME dans le front virer les titres et remplacer par un lien
         const entrepriseType: EntrepriseType = {
           ...entreprise,
           etablissements: etablissements ?? [],

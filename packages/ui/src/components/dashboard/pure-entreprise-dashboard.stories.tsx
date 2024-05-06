@@ -95,7 +95,7 @@ export const OkWithoutFiscalite: StoryFn = () => (
     user={{ role: 'super', ...testBlankUser }}
     displayActivites={true}
     entreprises={[]}
-    allEntreprises={[]}
+    allEntreprises={allEntreprises}
     apiClient={{
       getEntreprisesTitres: () =>
         Promise.resolve([

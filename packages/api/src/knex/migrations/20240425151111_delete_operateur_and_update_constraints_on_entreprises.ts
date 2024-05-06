@@ -3,6 +3,7 @@ import { EtapeId } from 'camino-common/src/etape'
 import { Knex } from 'knex'
 
 export const up = async (knex: Knex) => {
+  // migrer titres_titulaires et titres_amodiataires vers titres_etapes
   await knex.raw("ALTER TABLE titres_etapes ADD COLUMN titulaire_ids JSONB DEFAULT '[]'::jsonb NOT NULL")
   await knex.raw("ALTER TABLE titres_etapes ADD COLUMN amodiataire_ids JSONB DEFAULT '[]'::jsonb NOT NULL")
 
@@ -43,8 +44,15 @@ export const up = async (knex: Knex) => {
   }
 
   await knex.schema.dropTable('titres_titulaires')
+  await knex.schema.dropTable('titres_amodiataires')
 
-  return knex.schema.dropTable('titres_amodiataires')
+  // rendre obligatoires certaines colonnes d'entreprises et entreprises_etablissements (pour typage)
+  await knex.raw('ALTER TABLE entreprises_etablissements ALTER COLUMN date_debut SET NOT NULL')
+  await knex.raw('ALTER TABLE entreprises_etablissements ALTER COLUMN nom SET NOT NULL')
+  await knex.raw('UPDATE entreprises SET archive = false WHERE archive IS NULL')
+  await knex.raw('ALTER TABLE entreprises ALTER COLUMN archive SET NOT NULL')
+  await knex.raw('ALTER TABLE entreprises ALTER COLUMN archive SET DEFAULT false')
+
 }
 
 export const down = () => ({})
