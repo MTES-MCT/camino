@@ -3,6 +3,7 @@ import '../init.js'
 import { organismesDepartementsGet } from '../tools/api-administrations/index.js'
 import { Administrations } from 'camino-common/src/static/administrations.js'
 import { DepartementId } from 'camino-common/src/static/departement.js'
+import { isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools.js'
 import { readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 
@@ -22,7 +23,7 @@ const administrationsUpdate = async () => {
 
   const newAdministrations = await organismesDepartementsGet(departementsIds)
 
-  if (!newAdministrations) return
+  if (isNullOrUndefinedOrEmpty(newAdministrations)) return
 
   const administrations = { ...Administrations }
 
@@ -31,7 +32,6 @@ const administrationsUpdate = async () => {
     // @ts-ignore
     administrations[a.id] = a
   })
-  
 
   const administrationFile = join(process.cwd(), '../common/src/static/administrations.ts')
   const data = readFileSync(administrationFile, {

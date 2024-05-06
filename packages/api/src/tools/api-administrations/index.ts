@@ -1,6 +1,6 @@
 // https://etablissements-publics.api.gouv.fr
 import { DepartementId } from 'camino-common/src/static/departement.js'
-import { Administration, AdministrationId, AdministrationTypeId, administrationIdValidator, administrationTypeIdValidator } from 'camino-common/src/static/administrations.js'
+import { Administration, administrationIdValidator, administrationTypeIdValidator } from 'camino-common/src/static/administrations.js'
 import { config } from '../../config/index.js'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
 
@@ -29,6 +29,7 @@ interface IOrganisme {
 const organismeFetch = async (departementId: DepartementId, nom: 'paris_ppp' | 'prefecture') => {
   console.info(`API administration: requête ${departementId}, ${nom}`)
 
+  // TODO 2024-05-06 cette API (https://api.gouv.fr/les-api/api_etablissements_publics) est dépréciée il faut migrer vers https://api.gouv.fr/les-api/api-annuaire-administration-services-publics
   const response = await fetch(`${API_ADMINISTRATION_URL}/v3/departements/${departementId}/${nom}`, {
     method: 'GET',
     headers: {
@@ -78,9 +79,17 @@ const organismeFormat = (e: IOrganisme, departementId: DepartementId) => {
     }, [])
     .join(', ')
 
+  const administrationIdParsed = administrationIdValidator.safeParse(p.id.replace(/prefecture|paris_ppp/, 'pre'))
+  const administrationTypeIdParsed = administrationTypeIdValidator.safeParse(p.pivotLocal.replace(/prefecture|paris_ppp/, 'pre'))
+
+  if (!administrationIdParsed.success || !administrationTypeIdParsed.success) {
+    console.warn(`L'administration avec l'id ${p.id} est inconnue (${p.nom})`)
+
+    return null
+  }
   const organisme: Administration = {
-    id: administrationIdValidator.parse(p.id.replace(/prefecture|paris_ppp/, 'pre')),
-    typeId: administrationTypeIdValidator.parse(p.pivotLocal.replace(/prefecture|paris_ppp/, 'pre')),
+    id: administrationIdParsed.data,
+    typeId: administrationTypeIdParsed.data,
     nom: p.nom,
     abreviation: p.nom,
     adresse1,
@@ -117,5 +126,5 @@ export const organismesDepartementsGet = async (departementsIdsNoms: { departeme
     organismesDepartements.push(await organismeDepartementGet(departementId, nom))
   }
 
-  return organismesDepartements.filter((o): o is Administration => !!o)
+  return organismesDepartements.filter(isNotNullNorUndefined)
 }
