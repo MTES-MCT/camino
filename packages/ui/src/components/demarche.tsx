@@ -9,7 +9,7 @@ export const Demarche = defineComponent(() => {
   onMounted(async () => {
     const { demarche_slug, titre_id } = await apiClient.getDemarcheByIdOrSlug(demarcheIdOrSlugValidator.parse(router.currentRoute.value.params.demarcheId))
 
-    router.push({ name: 'titre', params: { id: titre_id }, query: { demarche_slug } })
+    router.push({ name: 'titre', params: { id: titre_id }, query: { demarcheSlug: demarche_slug } })
   })
 
   return () => null

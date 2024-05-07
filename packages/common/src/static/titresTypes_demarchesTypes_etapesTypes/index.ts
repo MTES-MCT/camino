@@ -2179,6 +2179,7 @@ const TDE = {
     [DEMARCHES_TYPES_IDS.ExtensionDePerimetre]: [
       ETAPES_TYPES.demande,
       ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.recevabiliteDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.demandeDeComplements,
