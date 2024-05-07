@@ -1,5 +1,4 @@
 export const testEnv = {
-  SENTRY_DSN: 'plop',
   API_MATOMO_URL: 'plop',
   API_MATOMO_ID: 'plop',
   API_HOST: 'plop',

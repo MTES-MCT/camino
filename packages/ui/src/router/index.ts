@@ -1,9 +1,19 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 
 import { Dashboard } from '../components/dashboard'
-import { DGTMStatsFull } from '../components/dashboard/dgtm-stats-full'
 import { Titres } from '../components/titres'
-import { EtapeEdition } from '../components/etape-edition'
+
+const DGTMStatsFull = async () => {
+  const { DGTMStatsFull } = await import('../components/dashboard/dgtm-stats-full')
+
+  return DGTMStatsFull
+}
+
+const EtapeEdition = async () => {
+  const { EtapeEdition } = await import('../components/etape-edition')
+
+  return EtapeEdition
+}
 
 const TitreCreation = async () => {
   const { TitreCreation } = await import('../components/titre-creation')

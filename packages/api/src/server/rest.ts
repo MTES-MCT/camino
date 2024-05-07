@@ -88,7 +88,6 @@ type Transform<Route> = (Route extends GetRestRoutes ? { get: RestGetCall<Route>
 const getConfig = (_pool: Pool) => async (_req: CaminoRequest, res: CustomResponse<CaminoConfig>) => {
   const caminoConfig: CaminoConfig = {
     CAMINO_STAGE: config().CAMINO_STAGE,
-    SENTRY_DSN: config().SENTRY_DSN,
     API_MATOMO_URL: config().API_MATOMO_URL,
     API_MATOMO_ID: config().API_MATOMO_ID,
   }

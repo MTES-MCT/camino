@@ -12,7 +12,6 @@ describe('config', () => {
       {
         "API_MATOMO_ID": "plop",
         "API_MATOMO_URL": "plop",
-        "SENTRY_DSN": "plop",
       }
     `)
   })
