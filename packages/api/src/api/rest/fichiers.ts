@@ -13,6 +13,7 @@ import { DocumentsTypes } from 'camino-common/src/static/documentsTypes.js'
 import { slugify } from 'camino-common/src/strings.js'
 import { administrationsLocalesByEtapeId, entreprisesTitulairesOuAmoditairesByEtapeId, getEtapeDataForEdition, getLargeobjectIdByEtapeDocumentId } from './etapes.queries.js'
 import { memoize } from 'camino-common/src/typescript-tools.js'
+import { EtapesTypes } from 'camino-common/src/static/etapesTypes'
 export type NewDownload = (params: Record<string, unknown>, user: User, pool: Pool) => Promise<{ loid: number | null; fileName: string }>
 
 export const DOWNLOADS_DIRECTORY = 'downloads'
@@ -39,7 +40,7 @@ export const etapeTelecharger =
     const entrepriseDocuments = await getEntrepriseDocumentLargeObjectIdsByEtapeId({ titre_etape_id: etapeId }, pool, user)
 
     if (!documents.length && !entrepriseDocuments.length) {
-      throw new Error("aucun document n'a été trouvé pour cette demande")
+      throw new Error(`aucun document n'a été trouvé pour l'étape "${EtapesTypes[etapeData.etape_type_id].nom}"`)
     }
 
     const zip = new JSZip()

@@ -101,7 +101,7 @@ export const DemarcheEtape = defineComponent<Props>(props => {
     deposePopupVisible.value = !deposePopupVisible.value
   }
 
-  const canDownloadZip = computed<boolean>(() => props.etape.etape_type_id === ETAPES_TYPES.demande && (props.etape.entreprises_documents.length > 0 || props.etape.etape_documents.length > 0))
+  const canDownloadZip = computed<boolean>(() => props.etape.entreprises_documents.length + props.etape.etape_documents.length > 1)
 
   const canEditOrDeleteEtape = computed<boolean>(() =>
     canEditEtape(props.user, props.etape.etape_type_id, props.etape.etape_statut_id, props.demarche.titulaires, props.demarche.administrationsLocales, props.demarche.demarche_type_id, props.titre)
@@ -198,7 +198,7 @@ export const DemarcheEtape = defineComponent<Props>(props => {
             {canDownloadZip.value ? (
               <PureDownloads
                 class="fr-mr-1v"
-                downloadTitle="Télécharger l’ensemble de la demande dans un fichier .zip"
+                downloadTitle={`Télécharger l’ensemble des documents de l'étape "${EtapesTypes[props.etape.etape_type_id].nom}" dans un fichier .zip`}
                 downloadRoute="/etape/zip/:etapeId"
                 params={{ etapeId: props.etape.id }}
                 formats={['pdf']}
