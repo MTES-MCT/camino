@@ -9,7 +9,6 @@ import { DashboardApiClient, dashboardApiClient } from '@/components/dashboard/d
 import { JournauxApiClient, journauxApiClient } from '@/components/journaux/journaux-api-client'
 import { ActiviteApiClient, activiteApiClient } from '@/components/activite/activite-api-client'
 import { TempDocumentName } from 'camino-common/src/document'
-import { uploadCall } from './_upload'
 import { PerimetreApiClient, perimetreApiClient } from '../components/titre/perimetre-api-client'
 
 export interface ApiClient
@@ -42,6 +41,7 @@ export const apiClient: ApiClient = {
   ...demarcheApiClient,
   ...perimetreApiClient,
   uploadTempDocument: async (document: File) => {
+    const { uploadCall } = await import('./_upload')
     const tempDocumentName = await uploadCall(document, _progress => {})
 
     return tempDocumentName
