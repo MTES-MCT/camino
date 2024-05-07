@@ -41,6 +41,7 @@ export const apiClient: ApiClient = {
   ...demarcheApiClient,
   ...perimetreApiClient,
   uploadTempDocument: async (document: File) => {
+    // on l'importe en async ici pour éviter d'intégrer @uppy dans le bundle principal (index)
     const { uploadCall } = await import('./_upload')
     const tempDocumentName = await uploadCall(document, _progress => {})
 
