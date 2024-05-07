@@ -21,23 +21,6 @@ export interface IGetEtapeByIdDbQuery {
   result: IGetEtapeByIdDbResult;
 }
 
-/** 'GetEtapeDocumentsDb' parameters type */
-export type IGetEtapeDocumentsDbParams = void;
-
-/** 'GetEtapeDocumentsDb' return type */
-export interface IGetEtapeDocumentsDbResult {
-  description: string | null;
-  etape_document_type_id: string;
-  etape_id: string;
-  id: string;
-}
-
-/** 'GetEtapeDocumentsDb' query type */
-export interface IGetEtapeDocumentsDbQuery {
-  params: IGetEtapeDocumentsDbParams;
-  result: IGetEtapeDocumentsDbResult;
-}
-
 /** 'GetLargeobjectIdByEtapeDocumentIdInternal' parameters type */
 export interface IGetLargeobjectIdByEtapeDocumentIdInternalParams {
   etapeDocumentId: string;
@@ -47,7 +30,7 @@ export interface IGetLargeobjectIdByEtapeDocumentIdInternalParams {
 export interface IGetLargeobjectIdByEtapeDocumentIdInternalResult {
   entreprises_lecture: boolean;
   etape_id: string;
-  largeobject_id: number | null;
+  largeobject_id: number;
   public_lecture: boolean;
 }
 
