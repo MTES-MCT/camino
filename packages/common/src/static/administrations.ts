@@ -166,7 +166,7 @@ export const ADMINISTRATION_IDS = {
   'PRÉFECTURE - GUYANE': 'pre-97302-01',
   'PRÉFECTURE - RÉUNION': 'pre-97411-01',
   'PRÉFECTURE - MAYOTTE': 'pre-97611-01',
-} as const satisfies Record<string, (typeof IDS)[number]>
+} as const satisfies Record<string, AdministrationId>
 
 export const isAdministrationId = (id: string | string[] | null | undefined): id is AdministrationId => {
   return typeof id !== 'object' && Object.values(ADMINISTRATION_IDS).includes(id)
