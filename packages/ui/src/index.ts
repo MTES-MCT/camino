@@ -1,7 +1,6 @@
 import './styles/styles.css'
 import { createApp, ref } from 'vue'
-import * as Sentry from '@sentry/vue'
-import { BrowserTracing } from '@sentry/browser'
+import { browserTracingIntegration, init } from '@sentry/vue'
 
 import { App } from './app'
 
@@ -65,14 +64,14 @@ Promise.resolve().then(async (): Promise<void> => {
   if (isNotNullNorUndefined(configFromJson.CAMINO_STAGE)) {
     try {
       if (!configFromJson.SENTRY_DSN) throw new Error('dsn manquant')
-      Sentry.init({
+      init({
         app,
         dsn: configFromJson.SENTRY_DSN,
         environment: configFromJson.CAMINO_STAGE,
         autoSessionTracking: false,
         integrations: [
-          new BrowserTracing({
-            routingInstrumentation: Sentry.vueRouterInstrumentation(router),
+          browserTracingIntegration({
+            router,
             tracingOrigins: ['localhost', /^\//],
           }),
         ],
