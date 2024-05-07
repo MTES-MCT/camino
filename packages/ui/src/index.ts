@@ -1,6 +1,5 @@
 import './styles/styles.css'
 import { createApp, ref } from 'vue'
-import { browserTracingIntegration, init } from '@sentry/vue'
 
 import { App } from './app'
 
@@ -62,25 +61,6 @@ Promise.resolve().then(async (): Promise<void> => {
   app.provide(userKey, user)
   app.provide(entreprisesKey, ref(entreprises))
   if (isNotNullNorUndefined(configFromJson.CAMINO_STAGE)) {
-    try {
-      if (!configFromJson.SENTRY_DSN) throw new Error('dsn manquant')
-      init({
-        app,
-        dsn: configFromJson.SENTRY_DSN,
-        environment: configFromJson.CAMINO_STAGE,
-        autoSessionTracking: false,
-        integrations: [
-          browserTracingIntegration({
-            router,
-            tracingOrigins: ['localhost', /^\//],
-          }),
-        ],
-        release: `camino-ui-${caminoApplicationVersion}`,
-        logErrors: true,
-      })
-    } catch (e) {
-      console.error('erreur : Sentry :', e)
-    }
     try {
       if (!configFromJson.API_MATOMO_URL || !configFromJson.API_MATOMO_ID || !configFromJson.CAMINO_STAGE) throw new Error('host et/ou siteId manquant(s)')
 

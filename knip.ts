@@ -43,7 +43,6 @@ const config = {
       "project": ["src/**/*.tsx","src/**/*.ts", "src/**/*.js"],
       ignoreDependencies: ["@vitest/coverage-v8",
       "@babel/eslint-parser",
-      "@sentry/tracing",
       "@storybook/builder-vite",
       "@storybook/testing-library",
       "@vue/eslint-config-prettier",

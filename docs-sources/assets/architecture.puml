@@ -42,7 +42,6 @@ API --> Cerbere
 API --> Insee
 API --> Matomo: statistiques
 API --> Administrations: cron
-UI --> Sentry: erreurs
 API --> Sentry: erreurs
 API --> Mailjet: envoie mail
 Matomo <-- UI: statistiques
