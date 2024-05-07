@@ -4,9 +4,6 @@ import { EtapeId } from 'camino-common/src/etape'
 import { Knex } from 'knex'
 
 export const up = async (knex: Knex) => {
-  // TODO 20-03-2024 rendre largeobject_id not null après la migration
-  // await knex.raw('ALTER TABLE etapes_documents ALTER COLUMN largeobject_id SET NOT NULL')
-
   await knex.raw(
     'CREATE TABLE etapes_documents (id character varying(255) NOT NULL, etape_document_type_id character varying(3) NOT NULL, etape_id character varying(255) NOT NULL, description character varying(1024), public_lecture boolean NOT NULL, entreprises_lecture boolean NOT NULL, largeobject_id oid)'
   )

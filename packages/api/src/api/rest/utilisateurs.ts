@@ -73,7 +73,7 @@ export const updateUtilisateurPermission = (_pool: Pool) => async (req: CaminoRe
 
 export type KeycloakAccessTokenResponse = { access_token: string }
 
-export const getKeycloakApiToken = async (): Promise<string> => {
+const getKeycloakApiToken = async (): Promise<string> => {
   const client_id = config().KEYCLOAK_API_CLIENT_ID
   const client_secret = config().KEYCLOAK_API_CLIENT_SECRET
   const url = config().KEYCLOAK_URL

@@ -181,7 +181,7 @@ export interface IGetDocumentsByEtapeIdQueryResult {
   entreprises_lecture: boolean;
   etape_document_type_id: string;
   id: string;
-  largeobject_id: number | null;
+  largeobject_id: number;
   public_lecture: boolean;
 }
 

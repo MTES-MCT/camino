@@ -1,5 +1,5 @@
 /* eslint-disable no-restricted-syntax */
-import { EtapeDocumentId, EtapeId, EtapeIdOrSlug, etapeIdValidator, etapeDocumentIdValidator, etapeSlugValidator } from 'camino-common/src/etape.js'
+import { EtapeDocumentId, EtapeId, EtapeIdOrSlug, etapeIdValidator, etapeSlugValidator } from 'camino-common/src/etape.js'
 import { EtapeTypeId, etapeTypeIdValidator } from 'camino-common/src/static/etapesTypes.js'
 import { Pool } from 'pg'
 import { z } from 'zod'
@@ -10,14 +10,12 @@ import {
   IGetEtapeByDemarcheIdAndEtapeTypeIdDbQuery,
   IGetEtapeByIdDbQuery,
   IGetEtapeDataForEditionDbQuery,
-  IGetEtapeDocumentsDbQuery,
   IGetLargeobjectIdByEtapeDocumentIdInternalQuery,
   IGetTitulairesAmodiatairesTitreEtapeQuery,
 } from './etapes.queries.types.js'
 import { DemarcheId, demarcheIdValidator } from 'camino-common/src/demarche.js'
 import { sdomZoneIdValidator } from 'camino-common/src/static/sdom.js'
 import { multiPolygonValidator } from 'camino-common/src/perimetre.js'
-import { documentTypeIdValidator } from 'camino-common/src/static/documentsTypes.js'
 import { demarcheTypeIdValidator } from 'camino-common/src/static/demarchesTypes.js'
 import { titreTypeIdValidator } from 'camino-common/src/static/titresTypes.js'
 import { AdministrationId, administrationIdValidator } from 'camino-common/src/static/administrations.js'
@@ -55,28 +53,6 @@ from
 where (id = $ etapeId !
     or slug = $ etapeId !)
 and archive is false
-`
-
-const etapeDocumentValidator = z.object({
-  id: etapeDocumentIdValidator,
-  description: z.string(),
-  etape_id: etapeIdValidator,
-  etape_document_type_id: documentTypeIdValidator,
-})
-
-type EtapeDocument = z.infer<typeof etapeDocumentValidator>
-export const getEtapeDocuments = async (pool: Pool): Promise<EtapeDocument[]> => {
-  return dbQueryAndValidate(getEtapeDocumentsDb, undefined, pool, etapeDocumentValidator)
-}
-
-const getEtapeDocumentsDb = sql<Redefine<IGetEtapeDocumentsDbQuery, undefined, EtapeDocument>>`
-select
-    d.id,
-    d.description,
-    d.etape_id,
-    d.etape_document_type_id
-from
-    etapes_documents d
 `
 
 const loidByEtapeDocumentIdValidator = z.object({
