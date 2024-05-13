@@ -231,7 +231,7 @@ export const PureAdministration = defineComponent<Props>(props => {
           renderItem={item => (
             <div class="mb-xxl">
               <div class="line-neutral width-full mb-xxl" />
-              <TableAuto caption="Utilisateurs" class="width-full-p" columns={utilisateursColonnes} rows={utilisateursLignesBuild(item)} initialSort={'firstColumnAsc'} />
+              <TableAuto caption="Utilisateurs" columns={utilisateursColonnes} rows={utilisateursLignesBuild(item)} initialSort={'firstColumnAsc'} />
             </div>
           )}
         />

@@ -1,5 +1,6 @@
 import { DomaineId } from 'camino-common/src/static/domaines'
 import { TitreTypeTypeId } from 'camino-common/src/static/titresTypesTypes'
+import { capitalize } from 'camino-common/src/strings'
 import { FunctionalComponent } from 'vue'
 
 export type Props = {
@@ -15,7 +16,7 @@ export const FiltresTypes: FunctionalComponent<Props> = (props: Props) => {
       <svg width="24" height="24" class="mr-s mb--xs">
         <rect width="24" height="24" class={`svg-fill-pattern-${props.element.id}`} />
       </svg>
-      <span class="cap-first h6 bold">{props.element.nom}</span>
+      <span class="h6 bold">{capitalize(props.element.nom)}</span>
     </span>
   )
 }

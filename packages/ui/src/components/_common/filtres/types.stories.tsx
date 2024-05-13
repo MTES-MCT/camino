@@ -11,13 +11,13 @@ const meta: Meta<typeof FiltresTypes> = {
 export default meta
 
 export const AllTypes: StoryFn<Props> = () => (
-  <div style="height:100%;width:100%;background:white">
+  <div style="height:100%;width:100%;background:white" class="fr-table">
     <MapPattern />
     <table>
-      <tr>
+      <thead>
         <th>Types</th>
         <th>Rendu</th>
-      </tr>
+      </thead>
       {Object.values(TITRES_TYPES_TYPES_IDS).map(type => (
         <tr>
           <td>{type}</td>

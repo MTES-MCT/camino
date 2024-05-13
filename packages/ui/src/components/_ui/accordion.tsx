@@ -45,7 +45,6 @@ export const DeprecatedAccordion = defineComponent<Props>((props, context) => {
             'border-b-s': props.opened || props.slotSub,
             'accordion-header': true,
             flex: true,
-            'btn-alt': true,
             'py-s': true,
             'px-s': true,
           }}

@@ -6,6 +6,9 @@ import { TitresTypes as TT, TitreTypeId } from 'camino-common/src/static/titresT
 import { TitresTypesTypes } from 'camino-common/src/static/titresTypesTypes'
 import { Domaine as CaminoDomaine } from '@/components/_common/domaine'
 import { Icon } from '@/components/_ui/icon'
+import { Column, TableAuto } from '../_ui/table-auto'
+import { TableRow } from '../_ui/table'
+import { capitalize } from 'camino-common/src/strings'
 
 interface Props {
   administrationId: AdministrationId
@@ -14,7 +17,6 @@ interface Props {
 type AdministrationTitresTypes = {
   titreTypeId: TitreTypeId
   domaineId: DomaineId
-  titreTypeTypeNom: string
   gestionnaire: boolean
   associee: boolean
 }
@@ -26,19 +28,73 @@ const titresTypes = (administrationId: AdministrationId): AdministrationTitresTy
     return {
       titreTypeId: att.titreTypeId,
       domaineId: titreType.domaineId,
-      titreTypeTypeNom: TitresTypesTypes[titreType.typeId].nom,
       gestionnaire: att.gestionnaire,
       associee: att.associee,
     }
   })
 }
+const colonnes = [
+  {
+    id: 'domaine',
+    name: 'Domaine',
+    noSort: true,
+  },
+  {
+    id: 'titreTypeId',
+    name: 'Type de titre',
+    noSort: true,
+  },
+  {
+    id: 'gestionnaire',
+    name: 'Gestionnaire',
+    noSort: true,
+  },
+  {
+    id: 'associee',
+    name: 'Associée',
+    noSort: true,
+  },
+] as const satisfies readonly Column[]
 
+const rows = (entries: AdministrationTitresTypes[]): TableRow[] =>
+  entries.map(titreType => {
+    const columns: TableRow['columns'] = {
+      domaine: { component: CaminoDomaine, props: { domaineId: TT[titreType.titreTypeId].domaineId }, value: TT[titreType.titreTypeId].domaineId },
+      titreTypeId: { value: capitalize(TitresTypesTypes[TT[titreType.titreTypeId].typeId].nom) },
+      gestionnaire: {
+        component: Icon,
+        props: {
+          name: titreType.gestionnaire ? 'checkbox' : 'checkbox-blank',
+          size: 'M',
+          role: 'img',
+          'aria-label': titreType.gestionnaire ? 'Est gestionnaire de ce type de titre' : 'N’est pas gestionnaire de ce type de titre',
+        },
+        value: `${titreType.gestionnaire}`,
+      },
+      associee: {
+        component: Icon,
+        props: {
+          name: titreType.associee ? 'checkbox' : 'checkbox-blank',
+          size: 'M',
+          role: 'img',
+          'aria-label': titreType.associee ? 'Est associée à ce type de titre' : 'N’est pas associée à ce type de titre',
+        },
+        value: `${titreType.associee}`,
+      },
+    }
+
+    return {
+      id: titreType.titreTypeId,
+      link: null,
+      columns,
+    }
+  })
 export const TitresTypes: FunctionalComponent<Props> = props => (
-  <div class="mb-xxl">
+  <div>
     <h3>Administration gestionnaire ou associée</h3>
 
     <div class="h6">
-      <ul class="list-prefix">
+      <ul>
         <li>
           Un utilisateur d'une <b>administration gestionnaire</b> peut créer et modifier les titres et leur contenu.
         </li>
@@ -48,45 +104,7 @@ export const TitresTypes: FunctionalComponent<Props> = props => (
       </ul>
     </div>
 
-    <div class="line width-full" />
-    <div class="width-full-p">
-      <div class="overflow-scroll-x mb">
-        <table>
-          <tr>
-            <th>Domaine</th>
-            <th>Type de titre</th>
-            <th>Gestionnaire</th>
-            <th>Associée</th>
-          </tr>
-
-          {titresTypes(props.administrationId).map(titreType => (
-            <tr key={titreType.titreTypeId}>
-              <td class="dsfr">
-                <CaminoDomaine domaineId={titreType.domaineId} class="mt-s" />
-              </td>
-              <td>
-                <span class="small bold cap-first mt-s">{titreType.titreTypeTypeNom}</span>
-              </td>
-              <td>
-                <Icon
-                  name={titreType.gestionnaire ? 'checkbox' : 'checkbox-blank'}
-                  size="M"
-                  role="img"
-                  aria-label={titreType.gestionnaire ? 'Est gestionnaire de ce type de titre' : 'N’est pas gestionnaire de ce type de titre'}
-                />
-              </td>
-              <td>
-                <Icon
-                  name={titreType.associee ? 'checkbox' : 'checkbox-blank'}
-                  size="M"
-                  role="img"
-                  aria-label={titreType.associee ? 'Est associée à ce type de titre' : 'N’est pas associée à ce type de titre'}
-                />
-              </td>
-            </tr>
-          ))}
-        </table>
-      </div>
-    </div>
+    <hr />
+    <TableAuto caption="" columns={colonnes} rows={rows(titresTypes(props.administrationId))} initialSort={'firstColumnAsc'} />
   </div>
 )

@@ -81,16 +81,16 @@ export const ActivitesTypesEmails = defineComponent<Props>(props => {
         </div>
       </div>
 
-      <div class="line width-full" />
+      <hr />
 
-      <div class="width-full-p">
-        <div class="overflow-scroll-x mb">
-          <table>
-            <tr>
+      <div>
+        <div class="overflow-scroll-x fr-table fr-table--no-caption">
+          <table style={{ display: 'table' }}>
+            <thead>
               <th>Type d'activité</th>
               <th>Email</th>
               {canEditEmailsComp.value ? <th>Actions</th> : null}
-            </tr>
+            </thead>
             {canEditEmailsComp.value ? (
               <tr>
                 <td>

@@ -312,7 +312,7 @@ export const Filters = defineComponent((props: Props) => {
                         </span>
                       ))}
                     </div>
-                    <ButtonIcon class="flex-right btn-alt p-m" onClick={labelsReset} icon="close" title="Réinitialiser les filtres" />
+                    <ButtonIcon class="btn-alt p-m" style={{ marginLeft: 'auto' }} onClick={labelsReset} icon="close" title="Réinitialiser les filtres" />
                   </div>
                 ) : null}
               </>
