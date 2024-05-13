@@ -252,13 +252,17 @@ export const BigExample: StoryFn = () => (
 )
 
 export const OneDemarcheNoPhase: StoryFn = () => (
-  <TitreTimeline
-    titreSlug={titreSlugValidator.parse('slug-titre')}
-    phasesWithAlterations={[[{ slug: demarcheSlugValidator.parse('slug-demarche11'), demarche_type_id: 'pr2', demarche_date_debut: null }]]}
-    currentDemarcheSlug={demarcheSlugValidator.parse('slug-demarche2')}
-  />
+  <div>
+    <TitreTimeline
+      titreSlug={titreSlugValidator.parse('slug-titre')}
+      phasesWithAlterations={[[{ slug: demarcheSlugValidator.parse('slug-demarche11'), demarche_type_id: 'pr2', demarche_date_debut: null }]]}
+      currentDemarcheSlug={demarcheSlugValidator.parse('slug-demarche2')}
+    />
+  </div>
 )
 
 export const NoDemarcheNoPhase: StoryFn = () => (
-  <TitreTimeline titreSlug={titreSlugValidator.parse('slug-titre')} phasesWithAlterations={[]} currentDemarcheSlug={demarcheSlugValidator.parse('slug-demarche2')} />
+  <div>
+    <TitreTimeline titreSlug={titreSlugValidator.parse('slug-titre')} phasesWithAlterations={[]} currentDemarcheSlug={demarcheSlugValidator.parse('slug-demarche2')} />
+  </div>
 )
