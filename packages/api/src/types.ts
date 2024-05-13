@@ -128,8 +128,6 @@ interface ICommune {
   surface?: number | null
 }
 
-export const DOCUMENTS_REPERTOIRES = ['demarches', 'tmp'] as const
-
 interface IEntrepriseEtablissement {
   id: string
   entrepriseId: string

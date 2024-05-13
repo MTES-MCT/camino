@@ -995,9 +995,10 @@ export const AxmDeposableAvecDaeEtAsl: StoryFn = () => (
 export const DemandeAvecForage: StoryFn = () => (
   <DemarcheEtape
     titre={{ titreStatutId: 'val', typeId: 'pxg', nom: 'nom du titre', slug: titreSlug }}
-    demarche={{ demarche_type_id: 'oct', titulaires: [], administrationsLocales: [], sdom_zones: [], etapes: [] }}
+    demarche={{ demarche_type_id: 'oct', titulaireIds: [], administrationsLocales: [], sdom_zones: [], etapes: [] }}
     user={{ ...testBlankUser, role: 'super' }}
     router={routerPushMock}
+    entreprises={entreprises}
     apiClient={apiClient}
     initTab="points"
     etape={{
@@ -1013,8 +1014,8 @@ export const DemandeAvecForage: StoryFn = () => (
         duree: null,
         date_fin: null,
         substances: [],
-        titulaires: [],
-        amodiataires: [],
+        titulaireIds: [],
+        amodiataireIds: [],
         perimetre: {
           geojson4326_points: null,
           geojson4326_perimetre: demandeAvecGrosseNote,
