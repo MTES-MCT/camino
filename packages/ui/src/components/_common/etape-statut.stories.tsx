@@ -1,6 +1,7 @@
 import { Meta, StoryFn } from '@storybook/vue3'
-import { EtapeStatut } from './etape-statut'
+import { AvisStatut, EtapeStatut } from './etape-statut'
 import { EtapesStatuts } from 'camino-common/src/static/etapesStatuts'
+import { AvisStatutIds } from 'camino-common/src/static/avisTypes'
 
 const meta: Meta = {
   title: 'Components/Common/EtapeStatut',
@@ -20,6 +21,20 @@ export const All: StoryFn = () => (
           <td>{statut.nom}</td>
           <td>
             <EtapeStatut etapeStatutId={statut.id} />
+          </td>
+        </tr>
+      ))}
+    </table>
+    <table>
+      <tr>
+        <th>Statut des avis</th>
+        <th>Rendu</th>
+      </tr>
+      {AvisStatutIds.map(statutId => (
+        <tr>
+          <td>{statutId}</td>
+          <td>
+            <AvisStatut avisStatutId={statutId} />
           </td>
         </tr>
       ))}

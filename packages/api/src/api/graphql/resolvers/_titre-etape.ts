@@ -10,7 +10,7 @@ import { getSections, Section } from 'camino-common/src/static/titresTypes_demar
 import { ETAPE_HERITAGE_PROPS, isHeritageProps } from 'camino-common/src/heritage.js'
 import { EtapeTypeId, EtapesTypes } from 'camino-common/src/static/etapesTypes.js'
 import { CaminoDate } from 'camino-common/src/date.js'
-import { EtapeId } from 'camino-common/src/etape.js'
+import { EtapeId, EtapeWithHeritage } from 'camino-common/src/etape.js'
 
 const titreEtapeHeritagePropsBuild = (date: CaminoDate, titreEtapes: ITitreEtape[] | null, etapeId: EtapeId | null) => {
   const titreEtapesFiltered = titreEtapesSortAscByOrdre(

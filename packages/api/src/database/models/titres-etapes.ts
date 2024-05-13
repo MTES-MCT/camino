@@ -126,6 +126,10 @@ class TitresEtapes extends Model {
   }
 
   public $formatDatabaseJson(json: Pojo) {
+    delete json.entrepriseDocumentIds
+    delete json.etapeDocuments
+    delete json.daeDocument
+    delete json.aslDocument
     delete json.modification
     delete json.suppression
     json = super.$formatDatabaseJson(json)

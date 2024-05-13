@@ -219,6 +219,10 @@ const EtapeDocumentsLoaded = defineComponent<EtapeDocumentsLoadedProps>(props =>
   }
   const removeDocument = (documentIndex: number) => {
     etapeDocuments.value.splice(documentIndex, 1)
+    // On recalcule les index
+    etapeDocuments.value.forEach((a, index) => {
+      a.index = index
+    })
   }
 
   const getNom = (documentTypeId: DocumentTypeId) => {

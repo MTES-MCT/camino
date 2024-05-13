@@ -25,17 +25,6 @@ export interface Props {
   completeUpdate: (etape: Props['etape']) => void
 }
 
-export const dateTypeStepIsVisible = (user: User): boolean => {
-  return isSuper(user) || isAdministrationAdmin(user) || isAdministrationEditeur(user)
-}
-export const dateTypeStepIsComplete = (etape: EtapeDateTypeEdit, user: User): boolean => {
-  if (!dateTypeStepIsVisible(user)) {
-    return true
-  }
-
-  return isNotNullNorUndefined(etape.date) && isNotNullNorUndefined(etape.typeId) && isNotNullNorUndefined(etape.statutId)
-}
-
 export const DateTypeEdit = defineComponent<Props>(props => {
   const [date, setDate] = useState(props.etape.date)
   const [typeStatut, setTypeStatut] = useState({ etapeTypeId: props.etape.typeId, etapeStatutId: props.etape.statutId })

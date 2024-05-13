@@ -28,6 +28,7 @@ import { FeatureCollectionForages, FeatureCollectionPoints, FeatureMultiPolygon,
 import { EtapeHeritageProps } from 'camino-common/src/heritage'
 import { GeoSystemeId } from 'camino-common/src/static/geoSystemes'
 import { ElementWithValue } from 'camino-common/src/sections'
+import { KM2 } from 'camino-common/src/number'
 
 enum TitreEtapesTravauxTypes {
   DemandeAutorisationOuverture = 'wfa',
@@ -239,7 +240,7 @@ export interface ITitreEtapePerimetre {
   geojsonOrigineGeoSystemeId: GeoSystemeId | null | undefined
   geojson4326Forages: FeatureCollectionForages | null | undefined
   geojsonOrigineForages: FeatureCollectionForages | null | undefined
-  surface: number | null | undefined
+  surface: KM2 | null | undefined
 }
 type ITitreEtape = {
   id: EtapeId
@@ -260,6 +261,7 @@ type ITitreEtape = {
   amodiataireIds?: EntrepriseId[] | null
   administrationsLocales?: AdministrationId[] | null
   entrepriseDocumentIds?: EntrepriseDocumentId[] | null
+  etapeDocuments?: unknown[]
   communes?: ICommune[] | null
   forets?: ForetId[] | null
   sdomZones?: SDOMZoneId[] | null

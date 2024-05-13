@@ -73,6 +73,13 @@ const heritageContenuValidator = z
   .nullable()
   .transform(nullToDefault({}))
 
+
+  export type HeritageContenu = z.infer<typeof heritageContenuValidator>
+  export const heritageValidator = z.object({
+    heritageProps: heritagePropsValidator,
+    heritageContenu: heritageContenuValidator,
+  })
+
 export const graphqlEtapeValidator = z.object({
   id: etapeIdValidator,
   slug: etapeSlugValidator,
@@ -157,6 +164,9 @@ export const flattenEtapeValidator = graphqlEtapeValidator
   })
 
 export type FlattenEtape = z.infer<typeof flattenEtapeValidator>
+
+export type GraphqlEtape = z.infer<typeof graphqlEtapeValidator>
+
 const graphqlInputHeritagePropValidator = z.object({
   actif: z.boolean(),
 })

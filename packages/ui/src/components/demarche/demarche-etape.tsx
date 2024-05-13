@@ -167,19 +167,14 @@ export const DemarcheEtape = defineComponent<Props>(props => {
           props.user,
           { typeId: props.titre.typeId, titreStatutId: props.titre.titreStatutId, titulaires: props.demarche.titulaireIds, administrationsLocales: props.demarche.administrationsLocales },
           props.demarche.demarche_type_id,
-          {
-            typeId: props.etape.etape_type_id,
-            isBrouillon: props.etape.is_brouillon,
-            sectionsWithValue: props.etape.sections_with_values,
-            substances: props.etape.fondamentale.substances,
-            duree: props.etape.fondamentale.duree,
-            geojson4326Perimetre: props.etape.fondamentale.perimetre?.geojson4326_perimetre ?? null,
-          },
+          props.etape,
           props.etape.etape_documents,
           props.etape.entreprises_documents,
           props.demarche.sdom_zones,
+          props.communes,
           daeDocument.value,
-          aslDocument.value
+          aslDocument.value,
+          avisDocument.value
         )
       : false
   )
@@ -195,7 +190,7 @@ export const DemarcheEtape = defineComponent<Props>(props => {
             {props.etape.is_brouillon ? <Badge class="fr-ml-1w" systemLevel="new" ariaLabel={`Brouillon de l'étape ${EtapesTypes[props.etape.etape_type_id].nom}`} label="Brouillon" /> : null}
           </div>
 
-          <div style={{ display: 'flex' }}>
+            <div style={{ display: 'flex' }}>
             {canEditOrDeleteEtape.value ? (
               <>
                 {/* TODO 2024-05-16: retirer la condition 'est une demande' pour ne conserver que 'est un brouillon' */}
@@ -226,6 +221,7 @@ export const DemarcheEtape = defineComponent<Props>(props => {
             ) : null}
           </div>
         </div>
+
 
         {displayEtapeStatus(props.etape.etape_type_id, props.etape.etape_statut_id) ? <EtapeStatut etapeStatutId={props.etape.etape_statut_id} /> : null}
         <div class="fr-mt-1w">

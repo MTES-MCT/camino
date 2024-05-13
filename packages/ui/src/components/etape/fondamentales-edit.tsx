@@ -4,7 +4,7 @@ import { HeritageEdit } from './heritage-edit'
 import { AutocompleteEntreprises } from './autocomplete-entreprises'
 import { CaminoDate } from 'camino-common/src/date'
 import { SubstancesEdit } from './substances-edit'
-import { dureeOptionalCheck as titreEtapesDureeOptionalCheck, canEditAmodiataires, canEditTitulaires, canEditDuree, canEditDates } from 'camino-common/src/permissions/titres-etapes'
+import { isDureeOptional as titreEtapesDureeOptionalCheck, canEditAmodiataires, canEditTitulaires, canEditDuree, canEditDates } from 'camino-common/src/permissions/titres-etapes'
 
 import { DomaineId } from 'camino-common/src/static/domaines'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'

@@ -10,20 +10,14 @@ import { canAdministrationEtapeTypeId } from '../static/administrationsTitresTyp
 
 import { TitreStatutId } from '../static/titresStatuts.js'
 import { EntrepriseDocument, EntrepriseId } from '../entreprise.js'
-import { getSections } from '../static/titresTypes_demarchesTypes_etapesTypes/sections.js'
-import { getEntrepriseDocuments } from '../static/titresTypes_demarchesTypes_etapesTypes/entrepriseDocuments.js'
 import { SDOMZoneId } from '../static/sdom.js'
-import { NonEmptyArray, isNonEmptyArray, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined } from '../typescript-tools.js'
-import { DocumentType, EntrepriseDocumentTypeId } from '../static/documentsTypes.js'
-import { SubstanceLegaleId } from '../static/substancesLegales.js'
-import { isDocumentsComplete } from './documents.js'
-import { contenuCompleteValidate, sectionsWithValueCompleteValidate } from './sections.js'
-import { ElementWithValue, SectionWithValue } from '../sections.js'
-import { FeatureMultiPolygon } from '../perimetre.js'
-import { EtapeDocument, GetEtapeDocumentsByEtapeId, GetEtapeDocumentsByEtapeIdAslDocument, GetEtapeDocumentsByEtapeIdDaeDocument, needAslAndDae } from '../etape.js'
-import { getDocumentsTypes } from './etape-form.js'
+import { DeepReadonly, NonEmptyArray, isNonEmptyArray } from '../typescript-tools.js'
+import { EtapeAvis, EtapeDocument, EtapeWithHeritage, GetEtapeDocumentsByEtapeId, GetEtapeDocumentsByEtapeIdAslDocument, GetEtapeDocumentsByEtapeIdDaeDocument, TempEtapeAvis } from '../etape.js'
+import { dateTypeStepIsComplete, entrepriseDocumentsStepIsComplete, etapeAvisStepIsComplete, etapeDocumentsStepIsComplete, fondamentaleStepIsComplete, perimetreStepIsComplete, sectionsStepIsComplete } from './etape-form.js'
+import { CommuneId } from '../static/communes.js'
+import { GraphqlEtape, GraphqlEtapeCreation} from '../etape-form.js'
 
-export const dureeOptionalCheck = (etapeTypeId: EtapeTypeId, demarcheTypeId: DemarcheTypeId, titreTypeId: TitreTypeId): boolean => {
+export const isDureeOptional = (etapeTypeId: EtapeTypeId, demarcheTypeId: DemarcheTypeId, titreTypeId: TitreTypeId): boolean => {
   if (titreTypeId !== 'axm' && titreTypeId !== 'arm') {
     return true
   }
@@ -154,106 +148,126 @@ const canCreateOrEditEtape = (
   return false
 }
 
-type IsEtapeCompleteEtape = {
-  typeId: EtapeTypeId
-  isBrouillon: boolean
-  /**
-   @deprecated use sectionsWithValue/
-  */
-  contenu?: Record<string, Record<string, ElementWithValue['value']>>
-  sectionsWithValue?: SectionWithValue[]
-  geojson4326Perimetre?: null | FeatureMultiPolygon
-  substances?: null | SubstanceLegaleId[]
-  duree?: number | null
-}
+export type EtapeComplete = Omit<GraphqlEtape, 'id' | 'slug' | 'demarche' | 'heritageProps' > & Pick<GraphqlEtapeCreation, 'heritageProps'>
+
 
 // TODO 2024-04-17 utiliser toutes les stepIsComplete
 export const isEtapeComplete = (
-  titreEtape: IsEtapeCompleteEtape,
+  etape: DeepReadonly<EtapeComplete>,
+  heritage: DeepReadonly<Pick<EtapeWithHeritage, 'heritageProps' | 'heritageContenu'>>,
   titreTypeId: TitreTypeId,
   demarcheTypeId: DemarcheTypeId,
   documents: Pick<EtapeDocument, 'etape_document_type_id'>[],
-  entrepriseDocuments: Pick<EntrepriseDocument, 'entreprise_document_type_id'>[],
+  entrepriseDocuments: Pick<EntrepriseDocument, 'entreprise_document_type_id' | 'entreprise_id'>[],
   sdomZones: SDOMZoneId[] | null | undefined,
+  communes: CommuneId[],
   daeDocument: Omit<GetEtapeDocumentsByEtapeIdDaeDocument, 'id'> | null,
   aslDocument: Omit<GetEtapeDocumentsByEtapeIdAslDocument, 'id'> | null,
+  avisDocuments: Pick<EtapeAvis, 'avis_type_id'>[],
   user: User
 ): { valid: true } | { valid: false; errors: NonEmptyArray<string> } => {
-  const errors: string[] = []
-  const sections = getSections(titreTypeId, demarcheTypeId, titreEtape.typeId)
-  // les éléments non optionnel des sections sont renseignés
-  const hasAtLeasOneSectionMandatory: boolean = sections.some(section => {
-    return section.elements.some(element => (element.optionnel ?? true) === false)
-  })
-  if (hasAtLeasOneSectionMandatory) {
-    if (isNotNullNorUndefined(titreEtape.contenu)) {
-      errors.push(...contenuCompleteValidate(sections, titreEtape.contenu))
-    } else if (isNotNullNorUndefinedNorEmpty(titreEtape.sectionsWithValue)) {
-      errors.push(...sectionsWithValueCompleteValidate(titreEtape.sectionsWithValue))
-    } else {
-      errors.push('les contenus ne sont pas présents dans l’étape alors que les sections ont des éléments obligatoires')
-    }
-  }
-
-  if (needAslAndDae({ etapeTypeId: titreEtape.typeId, demarcheTypeId, titreTypeId }, titreEtape.isBrouillon, user)) {
-    if (isNullOrUndefined(daeDocument)) {
-      errors.push('L’arrêté préfectoral de la mission autorité environnementale est obligatoire')
-    }
-    if (isNullOrUndefined(aslDocument)) {
-      errors.push('La lettre de décision du propriétaire du sol est obligatoire')
-    }
-  }
-
-  let contenu = titreEtape.contenu
-  if (isNullOrUndefined(contenu) && isNotNullNorUndefinedNorEmpty(titreEtape.sectionsWithValue)) {
-    contenu = titreEtape.sectionsWithValue.reduce(
-      (accSection, section) => ({ ...accSection, [section.id]: section.elements.reduce((accElement, element) => ({ ...accElement, [element.id]: element.value }), {}) }),
-      {}
-    )
-  }
-  const dts: DocumentType[] = getDocumentsTypes({ ...titreEtape }, demarcheTypeId, titreTypeId, sdomZones ?? [], contenu?.arm?.mecanise === true)
-
-  const documentsErrors = isDocumentsComplete(documents ?? [], dts)
-  if (!documentsErrors.valid) {
-    errors.push(...documentsErrors.errors)
-  }
-
-  // les documents d'entreprise obligatoires sont tous présents
-  const entrepriseDocumentsTypes = getEntrepriseDocuments(titreTypeId, demarcheTypeId, titreEtape.typeId)
-
-  const entrepriseDocumentsTypesIds: EntrepriseDocumentTypeId[] = []
-  if (entrepriseDocuments.length) {
-    for (const entrepriseDocumentType of entrepriseDocuments) {
-      if (!entrepriseDocumentsTypes.map(({ id }) => id).includes(entrepriseDocumentType.entreprise_document_type_id)) {
-        errors.push(`impossible de lier un document d'entreprise de type ${entrepriseDocumentType.entreprise_document_type_id}`)
-      }
-      entrepriseDocumentsTypesIds.push(entrepriseDocumentType.entreprise_document_type_id)
-    }
-  }
-  entrepriseDocumentsTypes
-    .filter(({ optionnel }) => !optionnel)
-    .forEach(jt => {
-      if (!entrepriseDocumentsTypesIds.includes(jt.id)) {
-        errors.push(`le document d'entreprise « ${jt.nom} » obligatoire est manquant`)
-      }
-    })
-
-  // Si c’est une demande d’AEX ou d’ARM, certaines informations sont obligatoires
-  if (titreEtape.typeId === 'mfr' && ['arm', 'axm'].includes(titreTypeId)) {
-    // le périmètre doit être défini
-    if (isNullOrUndefined(titreEtape.geojson4326Perimetre)) {
-      errors.push('le périmètre doit être renseigné')
+  const flattenedEtape = flattenEtapeWithHeritage(titreTypeId, demarcheTypeId, etape, heritage)
+  const isCompleteChecks = [
+    dateTypeStepIsComplete(flattenedEtape, user),
+    fondamentaleStepIsComplete(flattenedEtape, demarcheTypeId, titreTypeId),
+    sectionsStepIsComplete(flattenedEtape, demarcheTypeId, titreTypeId),
+    perimetreStepIsComplete(flattenedEtape),
+    etapeDocumentsStepIsComplete(
+      flattenedEtape,
+      demarcheTypeId,
+      titreTypeId,
+      documents,
+      sdomZones ?? [],
+      daeDocument,
+      aslDocument,
+      user
+    ),
+    entrepriseDocumentsStepIsComplete(flattenedEtape, demarcheTypeId, titreTypeId, entrepriseDocuments.map(ed => ({documentTypeId: ed.entreprise_document_type_id, entrepriseId: ed.entreprise_id}))),
+    etapeAvisStepIsComplete(flattenedEtape, avisDocuments, titreTypeId, communes),
+  ];
+  const errors: string[] = isCompleteChecks.reduce<string[]>((acc, c) => {
+    if (!c.valid) {
+      acc.push(...c.errors)
     }
 
-    // il doit exister au moins une substance
-    if (!titreEtape.substances || !titreEtape.substances.length || !titreEtape.substances.some(substanceId => !!substanceId)) {
-      errors.push('au moins une substance doit être renseignée')
-    }
-  }
+    return acc
+  }, [])
 
-  if ((isNullOrUndefined(titreEtape.duree) || titreEtape.duree === 0) && !dureeOptionalCheck(titreEtape.typeId, demarcheTypeId, titreTypeId)) {
-    errors.push('la durée doit être renseignée')
-  }
+  // FIXME: vérifier que toute la logique ci-dessous est respectée par le nouveau code ci-dessus
+  // const sections = getSections(titreTypeId, demarcheTypeId, titreEtape.typeId)
+  // // les éléments non optionnel des sections sont renseignés
+  // const hasAtLeasOneSectionMandatory: boolean = sections.some(section => {
+  //   return section.elements.some(element => (element.optionnel ?? true) === false)
+  // })
+  // if (hasAtLeasOneSectionMandatory) {
+  //   if (isNotNullNorUndefined(titreEtape.contenu)) {
+  //     errors.push(...contenuCompleteValidate(sections, titreEtape.contenu))
+  //   } else if (isNotNullNorUndefinedNorEmpty(titreEtape.sectionsWithValue)) {
+  //     errors.push(...sectionsWithValueCompleteValidate(titreEtape.sectionsWithValue))
+  //   } else {
+  //     errors.push('les contenus ne sont pas présents dans l’étape alors que les sections ont des éléments obligatoires')
+  //   }
+  // }
+
+  // if (needAslAndDae({ etapeTypeId: titreEtape.typeId, demarcheTypeId, titreTypeId }, titreEtape.statutId, user)) {
+  //   if (isNullOrUndefined(daeDocument)) {
+  //     errors.push('L’arrêté préfectoral de la mission autorité environnementale est obligatoire')
+  //   }
+  //   if (isNullOrUndefined(aslDocument)) {
+  //     errors.push('La lettre de décision du propriétaire du sol est obligatoire')
+  //   }
+  // }
+
+  // let contenu = titreEtape.contenu
+  // if (isNullOrUndefined(contenu) && isNotNullNorUndefinedNorEmpty(titreEtape.sectionsWithValue)) {
+  //   contenu = titreEtape.sectionsWithValue.reduce(
+  //     (accSection, section) => ({ ...accSection, [section.id]: section.elements.reduce((accElement, element) => ({ ...accElement, [element.id]: element.value }), {}) }),
+  //     {}
+  //   )
+  // }
+  // const dts: DocumentType[] = getDocumentsTypes({ ...titreEtape }, demarcheTypeId, titreTypeId, sdomZones ?? [], contenu?.arm?.mecanise === true)
+
+  // const documentsErrors = isDocumentsComplete(documents ?? [], dts)
+  // if (!documentsErrors.valid) {
+  //   errors.push(...documentsErrors.errors)
+  // }
+
+  // // les documents d'entreprise obligatoires sont tous présents
+  // const entrepriseDocumentsTypes = getEntrepriseDocuments(titreTypeId, demarcheTypeId, titreEtape.typeId)
+
+  // const entrepriseDocumentsTypesIds: EntrepriseDocumentTypeId[] = []
+  // if (entrepriseDocuments.length) {
+  //   for (const entrepriseDocumentType of entrepriseDocuments) {
+  //     if (!entrepriseDocumentsTypes.map(({ id }) => id).includes(entrepriseDocumentType.entreprise_document_type_id)) {
+  //       errors.push(`impossible de lier un document d'entreprise de type ${entrepriseDocumentType.entreprise_document_type_id}`)
+  //     }
+  //     entrepriseDocumentsTypesIds.push(entrepriseDocumentType.entreprise_document_type_id)
+  //   }
+  // }
+  // entrepriseDocumentsTypes
+  //   .filter(({ optionnel }) => !optionnel)
+  //   .forEach(jt => {
+  //     if (!entrepriseDocumentsTypesIds.includes(jt.id)) {
+  //       errors.push(`le document d'entreprise « ${jt.nom} » obligatoire est manquant`)
+  //     }
+  //   })
+
+  // // Si c’est une demande d’AEX ou d’ARM, certaines informations sont obligatoires
+  // if (titreEtape.typeId === 'mfr' && ['arm', 'axm'].includes(titreTypeId)) {
+  //   // le périmètre doit être défini
+  //   if (isNullOrUndefined(titreEtape.geojson4326Perimetre)) {
+  //     errors.push('le périmètre doit être renseigné')
+  //   }
+
+  //   // il doit exister au moins une substance
+  //   if (!titreEtape.substances || !titreEtape.substances.length || !titreEtape.substances.some(substanceId => !!substanceId)) {
+  //     errors.push('au moins une substance doit être renseignée')
+  //   }
+  // }
+
+  // if ((isNullOrUndefined(titreEtape.duree) || titreEtape.duree === 0) && !isDureeOptional(titreEtape.typeId, demarcheTypeId, titreTypeId)) {
+  //   errors.push('la durée doit être renseignée')
+  // }
 
   if (isNonEmptyArray(errors)) {
     return { valid: false, errors }
@@ -271,12 +285,14 @@ export const isEtapeDeposable = (
     administrationsLocales: AdministrationId[]
   },
   demarcheTypeId: DemarcheTypeId,
-  titreEtape: IsEtapeCompleteEtape,
+  titreEtape: DeepReadonly<GraphqlEtape>,
   etapeDocuments: Pick<EtapeDocument, 'etape_document_type_id'>[],
-  entrepriseDocuments: Pick<EntrepriseDocument, 'entreprise_document_type_id'>[],
+  entrepriseDocuments: Pick<EntrepriseDocument, 'entreprise_document_type_id' | 'entreprise_id'>[],
   sdomZones: SDOMZoneId[] | null | undefined,
+  communes: CommuneId[],
   daeDocument: GetEtapeDocumentsByEtapeId['dae'],
-  aslDocument: GetEtapeDocumentsByEtapeId['asl']
+  aslDocument: GetEtapeDocumentsByEtapeId['asl'],
+  avisDocuments: (EtapeAvis | TempEtapeAvis)[]
 ): boolean => {
   if (titreEtape.typeId === ETAPES_TYPES.demande && titreEtape.isBrouillon) {
     if (
@@ -291,7 +307,21 @@ export const isEtapeDeposable = (
         'modification'
       )
     ) {
-      const complete = isEtapeComplete(titreEtape, titre.typeId, demarcheTypeId, etapeDocuments, entrepriseDocuments, sdomZones, daeDocument, aslDocument, user)
+      // FIXME On ne peut pas se baser sur le defaultHeritageProps car on ne sait pas quelles étapes seront déposable à l’avenir, il faut doncl’ajouter en param.
+      const complete = isEtapeComplete(
+        titreEtape,
+        { heritageProps: defaultHeritageProps, heritageContenu: {} },
+        titre.typeId,
+        demarcheTypeId,
+        etapeDocuments,
+        entrepriseDocuments,
+        sdomZones,
+        communes,
+        daeDocument,
+        aslDocument,
+        avisDocuments,
+        user
+      )
       if (!complete.valid) {
         console.warn(complete.errors)
 

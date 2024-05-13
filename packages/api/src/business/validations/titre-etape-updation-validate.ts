@@ -6,23 +6,28 @@ import { propsNumbersCheck } from './utils/props-numbers-check.js'
 import { contenuNumbersCheck } from './utils/contenu-numbers-check.js'
 import { propsDatesCheck } from './utils/props-dates-check.js'
 import { contenuDatesCheck } from './utils/contenu-dates-check.js'
-import { canEditAmodiataires, canEditDates, canEditDuree, canEditTitulaires, isEtapeComplete } from 'camino-common/src/permissions/titres-etapes.js'
+import { EtapeComplete, canEditAmodiataires, canEditDates, canEditDuree, canEditTitulaires, isEtapeComplete } from 'camino-common/src/permissions/titres-etapes.js'
 import { User } from 'camino-common/src/roles.js'
 import { SDOMZoneId } from 'camino-common/src/static/sdom.js'
 import { getSections } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
 import { EntrepriseDocument, EntrepriseId } from 'camino-common/src/entreprise.js'
-import { EtapeDocument, GetEtapeDocumentsByEtapeIdAslDocument, GetEtapeDocumentsByEtapeIdDaeDocument } from 'camino-common/src/etape.js'
-const numberProps = ['duree', 'surface'] as unknown as [keyof ITitreEtape]
+import { EtapeAvis, EtapeDocument, EtapeWithHeritage, GetEtapeDocumentsByEtapeIdAslDocument, GetEtapeDocumentsByEtapeIdDaeDocument } from 'camino-common/src/etape.js'
+import { CommuneId } from 'camino-common/src/static/communes.js'
+import { DeepReadonly } from 'camino-common/src/typescript-tools.js'
+const numberProps = ['duree', 'surface'] as const satisfies (keyof ITitreEtape)[]
 
-const dateProps = ['date', 'dateDebut', 'dateFin'] as unknown as [keyof ITitreEtape]
+const dateProps = ['date', 'dateDebut', 'dateFin'] as const satisfies (keyof ITitreEtape)[]
 
 export const titreEtapeUpdationValidate = (
-  titreEtape: ITitreEtape,
+  titreEtape: EtapeComplete,
+  heritage: DeepReadonly<Pick<EtapeWithHeritage, 'heritageProps' | 'heritageContenu'>>,
   titreDemarche: ITitreDemarche,
   titre: ITitre,
   documents: Pick<EtapeDocument, 'etape_document_type_id'>[],
-  entrepriseDocuments: Pick<EntrepriseDocument, 'entreprise_document_type_id'>[],
+  avisDocuments: Pick<EtapeAvis, 'avis_type_id'>[],
+  entrepriseDocuments: Pick<EntrepriseDocument, 'entreprise_document_type_id' | 'entreprise_id'>[],
   sdomZones: SDOMZoneId[] | null | undefined,
+  communes: CommuneId[] | null | undefined,
   user: User,
   daeDocument: Omit<GetEtapeDocumentsByEtapeIdDaeDocument, 'id'> | null,
   aslDocument: Omit<GetEtapeDocumentsByEtapeIdAslDocument, 'id'> | null,
@@ -73,7 +78,7 @@ export const titreEtapeUpdationValidate = (
     }
 
     // 2. les champs date ne peuvent avoir une date invalide
-    const errorsDates = propsDatesCheck<ITitreEtape>(dateProps, titreEtape)
+    const errorsDates = propsDatesCheck(dateProps, titreEtape)
     if (errorsDates) {
       errors.push(errorsDates)
     }
@@ -103,14 +108,35 @@ export const titreEtapeUpdationValidate = (
   // 4. si l’étape n’est pas en cours de construction
   if (!titreEtape.isBrouillon) {
     const etapeComplete = isEtapeComplete(
-      { ...titreEtape, contenu: titreEtape.contenu ?? {} },
+      {
+        ...titreEtape,
+        geojson4326Perimetre: titreEtape.geojson4326Perimetre ?? null,
+        geojson4326Points: titreEtape.geojson4326Points ?? null,
+        geojsonOriginePerimetre: titreEtape.geojsonOriginePerimetre ?? null,
+        geojsonOriginePoints: titreEtape.geojsonOriginePoints ?? null,
+        geojson4326Forages: titreEtape.geojson4326Forages ?? null,
+        geojsonOrigineForages: titreEtape.geojsonOrigineForages ?? null,
+        geojsonOrigineGeoSystemeId: titreEtape.geojsonOrigineGeoSystemeId ?? null,
+        surface: titreEtape.surface ?? null,
+        notes: titreEtape.notes ?? null,
+        duree: titreEtape.duree ?? null,
+        dateDebut: titreEtape.dateDebut ?? null,
+        dateFin: titreEtape.dateFin ?? null,
+        amodiataireIds: titreEtape.amodiataireIds ?? [],
+        titulaireIds: titreEtape.titulaireIds ?? [],
+        substances: titreEtape.substances ?? [],
+        contenu: titreEtape.contenu ?? {},
+      },
+      heritage,
       titre.typeId,
       titreDemarche.typeId,
       documents,
       entrepriseDocuments,
       sdomZones,
+      communes ?? [],
       daeDocument,
       aslDocument,
+      avisDocuments,
       user
     )
     if (!etapeComplete.valid) {
@@ -125,7 +151,11 @@ export const titreEtapeUpdationValidate = (
   return titreEtapeUpdationBusinessValidate(titreEtape, titreDemarche, titre)
 }
 
-const titreEtapeUpdationBusinessValidate = (titreEtape: ITitreEtape, titreDemarche: ITitreDemarche, titre: ITitre) => {
+const titreEtapeUpdationBusinessValidate = (
+  titreEtape: Pick<Partial<ITitreEtape>, 'id'> & Pick<ITitreEtape, 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'communes' | 'surface' | 'isBrouillon'>,
+  titreDemarche: ITitreDemarche,
+  titre: ITitre
+) => {
   const errors = []
   // 1. la date de l'étape est possible
   // en fonction de l'ordre des types d'étapes de la démarche

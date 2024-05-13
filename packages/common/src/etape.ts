@@ -1,20 +1,21 @@
 import { CaminoDate, caminoDateValidator } from './date.js'
 import { EntrepriseId } from './entreprise.js'
 import { EtapeHeritageProps, MappingHeritagePropsNameEtapePropsName } from './heritage.js'
-import { AdministrationId } from './static/administrations.js'
 import { DOCUMENTS_TYPES_IDS, documentTypeIdValidator } from './static/documentsTypes.js'
 import { EtapeStatutId, etapeStatutIdValidator } from './static/etapesStatuts.js'
 import { EtapeTypeId, etapeTypeIdValidator } from './static/etapesTypes.js'
 import { SubstanceLegaleId } from './static/substancesLegales.js'
 import { z } from 'zod'
-import { FeatureCollectionForages, FeatureCollectionPoints, FeatureMultiPolygon } from './perimetre.js'
-import { KM2 } from './number.js'
-import { GeoSystemeId } from './static/geoSystemes.js'
 import { tempDocumentNameValidator } from './document.js'
+import { DeepReadonly, OmitDistributive } from './typescript-tools.js'
+import { getSections } from './static/titresTypes_demarchesTypes_etapesTypes/sections.js'
 import { ElementWithValue } from './sections.js'
 import { DemarcheTypeId } from './static/demarchesTypes.js'
 import { TitreTypeId } from './static/titresTypes.js'
 import { User, isEntrepriseOrBureauDEtude } from './roles.js'
+import { avisStatutIdValidator, avisTypeIdValidator } from './static/avisTypes.js'
+import { GraphqlEtape } from './etape-form.js'
+import { EtapeComplete } from './permissions/titres-etapes.js'
 
 export const etapeIdValidator = z.string().brand<'EtapeId'>()
 export type EtapeId = z.infer<typeof etapeIdValidator>
@@ -25,43 +26,14 @@ export type EtapeSlug = z.infer<typeof etapeSlugValidator>
 export const etapeIdOrSlugValidator = z.union([etapeIdValidator, etapeSlugValidator])
 export type EtapeIdOrSlug = z.infer<typeof etapeIdOrSlugValidator>
 
-type HeritageProp<T> = { actif: boolean; etape?: T | null }
-
-// TODO 2023-06-14 Utiliser seulement par l’ui, à bouger dedans
-type Etape = {
-  id: EtapeId | null
-  contenu: Record<string, Record<string, ElementWithValue['value']>>
-  date: CaminoDate | null
-  typeId: EtapeTypeId | null
-  statutId: EtapeStatutId | null
-  isBrouillon: boolean
-  substances: SubstanceLegaleId[]
-  titulaireIds: EntrepriseId[]
-  amodiataireIds: EntrepriseId[]
-  administrations?: AdministrationId[]
-  communes?: string[]
-
-  geojson4326Perimetre: FeatureMultiPolygon | null
-  geojson4326Points: FeatureCollectionPoints | null
-  geojsonOriginePerimetre: FeatureMultiPolygon | null
-  geojsonOriginePoints: FeatureCollectionPoints | null
-  geojsonOrigineGeoSystemeId: GeoSystemeId | null
-  geojson4326Forages: FeatureCollectionForages | null
-  geojsonOrigineForages: FeatureCollectionForages | null
-  surface: KM2 | null
-
-  notes: null | string
-  duree: number | null
-  dateDebut: CaminoDate | null
-  dateFin: CaminoDate | null
-}
+export type HeritageProp<T> = { actif: boolean; etape?: T | null }
 
 type EtapePropsFromHeritagePropName<key extends EtapeHeritageProps> = MappingHeritagePropsNameEtapePropsName[key][number]
 
-type EtapeWithHeritage = InternalEtapeWithHeritage<EtapeHeritageProps, Omit<Etape, 'typeId' | 'date' | 'statutId'> & { typeId: EtapeTypeId; date: CaminoDate; statutId: EtapeStatutId }>
+export type EtapeWithHeritage = InternalEtapeWithHeritage<EtapeHeritageProps, Omit<GraphqlEtape, 'typeId' | 'date' | 'statutId'> & { typeId: EtapeTypeId; date: CaminoDate; statutId: EtapeStatutId }>
 
 type HeritageContenu = Record<string, Record<string, HeritageProp<Pick<EtapeWithHeritage, 'contenu' | 'typeId' | 'date'>>>>
-type InternalEtapeWithHeritage<HeritagePropsKeys extends EtapeHeritageProps, T extends Pick<Etape, 'date' | EtapePropsFromHeritagePropName<HeritagePropsKeys>> & { typeId: EtapeTypeId }> = T & {
+type InternalEtapeWithHeritage<HeritagePropsKeys extends EtapeHeritageProps, T extends Pick<GraphqlEtape, 'date' | EtapePropsFromHeritagePropName<HeritagePropsKeys>> & { typeId: EtapeTypeId }> = T & {
   heritageProps: {
     [key in HeritagePropsKeys]: HeritageProp<Pick<T, 'typeId' | 'date' | EtapePropsFromHeritagePropName<key>>>
   }
@@ -113,6 +85,25 @@ export const getEtapeDocumentsByEtapeIdValidator = z.object({
 })
 
 export type GetEtapeDocumentsByEtapeId = z.infer<typeof getEtapeDocumentsByEtapeIdValidator>
+
+
+export const etapeAvisIdValidator = z.string().brand('EtapeAvis')
+const etapeAvisValidator = z.object({
+  id: etapeAvisIdValidator,
+  avis_type_id: avisTypeIdValidator,
+  date: caminoDateValidator,
+  avis_statut_id: avisStatutIdValidator,
+  description: z.string()
+})
+export type EtapeAvis = z.infer<typeof etapeAvisValidator>
+
+export const tempEtapeAvisValidator = etapeAvisValidator.omit({ id: true }).extend({ temp_document_name: tempDocumentNameValidator })
+export type TempEtapeAvis = z.infer<typeof tempEtapeAvisValidator>
+
+const etapeAvisWithFileModificationValidator = etapeAvisValidator.extend({ temp_document_name: tempDocumentNameValidator.optional() })
+export type EtapeAvisWithFileModification = z.infer<typeof etapeAvisWithFileModificationValidator>
+export const etapeAvisModificationValidator = z.union([etapeAvisWithFileModificationValidator, tempEtapeAvisValidator])
+export type EtapeAvisModification = z.infer<typeof etapeAvisModificationValidator>
 
 export const needAslAndDae = (
   tde: {

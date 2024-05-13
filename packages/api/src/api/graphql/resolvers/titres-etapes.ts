@@ -21,20 +21,21 @@ import { titreEtapeFormatFields } from '../../_format/_fields.js'
 import { canCreateEtape, canEditDates, canEditDuree, canEditEtape } from 'camino-common/src/permissions/titres-etapes.js'
 import { TitresStatutIds } from 'camino-common/src/static/titresStatuts.js'
 import {
-  EtapeId,
-  documentComplementaireAslEtapeDocumentModificationValidator,
-  documentComplementaireDaeEtapeDocumentModificationValidator,
-  etapeDocumentModificationValidator,
-  needAslAndDae,
-  tempEtapeDocumentValidator,
+    EtapeAvis,
+    EtapeId,
+    documentComplementaireAslEtapeDocumentModificationValidator,
+    documentComplementaireDaeEtapeDocumentModificationValidator,
+    etapeDocumentModificationValidator,
+    needAslAndDae,
+    tempEtapeDocumentValidator,
 } from 'camino-common/src/etape.js'
 import { checkEntreprisesExist, getEntrepriseDocuments } from '../../rest/entreprises.queries.js'
 import { deleteTitreEtapeEntrepriseDocument, insertEtapeDocuments, insertTitreEtapeEntrepriseDocument, updateEtapeDocuments } from '../../../database/queries/titres-etapes.queries.js'
 import { EntrepriseDocument, EntrepriseId } from 'camino-common/src/entreprise.js'
 import { Pool } from 'pg'
-import { convertPoints, getGeojsonInformation } from '../../rest/perimetre.queries.js'
+import { GetGeojsonInformation, convertPoints, getGeojsonInformation } from '../../rest/perimetre.queries.js'
 import { SDOMZoneId } from 'camino-common/src/static/sdom.js'
-import { getSecteurMaritime } from 'camino-common/src/static/facades.js'
+import { SecteursMaritimesIds, getSecteurMaritime } from 'camino-common/src/static/facades.js'
 import { FeatureCollectionPoints, FeatureMultiPolygon, equalGeojson } from 'camino-common/src/perimetre.js'
 import { FieldsEtape } from '../../../database/queries/_options'
 import { canHaveForages } from 'camino-common/src/permissions/titres.js'
@@ -43,6 +44,9 @@ import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { getEtapeByDemarcheIdAndEtapeTypeId } from '../../rest/etapes.queries.js'
 import { DemarcheId } from 'camino-common/src/demarche.js'
 import { z } from 'zod'
+import { CommuneId } from 'camino-common/src/static/communes.js'
+import { GraphqlEtape, graphqlEtapeCreationValidator } from 'camino-common/src/etape-form.js'
+import { KM2 } from 'camino-common/src/number.js'
 
 export const etape = async ({ id }: { id: EtapeId }, { user }: Context, info: GraphQLResolveInfo) => {
   try {
@@ -145,10 +149,10 @@ export const arePointsOnPerimeter = (perimetre: FeatureMultiPolygon, points: Fea
 
 const getForagesProperties = async (
   titreTypeId: TitreTypeId,
-  geojsonOrigineGeoSystemeId: ITitreEtape['geojsonOrigineGeoSystemeId'],
-  geojsonOrigineForages: ITitreEtape['geojsonOrigineForages'],
+  geojsonOrigineGeoSystemeId: GraphqlEtape['geojsonOrigineGeoSystemeId'],
+  geojsonOrigineForages: GraphqlEtape['geojsonOrigineForages'],
   pool: Pool
-): Promise<Pick<ITitreEtape, 'geojson4326Forages' | 'geojsonOrigineForages'>> => {
+): Promise<Pick<GraphqlEtape, 'geojson4326Forages' | 'geojsonOrigineForages'>> => {
   if (canHaveForages(titreTypeId) && isNotNullNorUndefined(geojsonOrigineForages) && isNotNullNorUndefined(geojsonOrigineGeoSystemeId)) {
     return {
       geojson4326Forages: await convertPoints(pool, geojsonOrigineGeoSystemeId, GEO_SYSTEME_IDS.WGS84, geojsonOrigineForages),
@@ -161,14 +165,61 @@ const getForagesProperties = async (
     geojsonOrigineForages: null,
   }
 }
+type TotoType = {
+  secteursMaritime: SecteursMaritimesIds[]
+  sdomZones: SDOMZoneId[]
+  surface: KM2 | null
+} & Pick<GraphqlEtape, 'geojson4326Forages' | 'geojsonOrigineForages'> &
+  Pick<GetGeojsonInformation, 'communes' | 'forets'>
+const otot = async (
+  pool: Pool,
+  geojson4326Perimetre: GraphqlEtape['geojson4326Perimetre'],
+  geojsonOriginePerimetre: GraphqlEtape['geojsonOriginePerimetre'],
+  geojsonOriginePoints: GraphqlEtape['geojsonOriginePoints'],
+  titreTypeId: TitreTypeId,
+  geojsonOrigineGeoSystemeId: GraphqlEtape['geojsonOrigineGeoSystemeId'],
+  geojsonOrigineForages: GraphqlEtape['geojsonOrigineForages']
+): Promise<TotoType> => {
+  if (isNotNullNorUndefined(geojson4326Perimetre)) {
+    if (isNotNullNorUndefined(geojsonOriginePerimetre) && isNotNullNorUndefined(geojsonOriginePoints)) {
+      if (!arePointsOnPerimeter(geojsonOriginePerimetre, geojsonOriginePoints)) {
+        throw new Error(`les points doivent être sur le périmètre`)
+      }
+    }
+    const { communes, sdom, surface, forets, secteurs } = await getGeojsonInformation(pool, geojson4326Perimetre.geometry)
+    const { geojson4326Forages } = await getForagesProperties(titreTypeId, geojsonOrigineGeoSystemeId, geojsonOrigineForages, pool)
+    return {
+      surface: surface,
+      communes: communes,
+      forets: forets,
+      secteursMaritime: secteurs,
+      sdomZones: sdom,
+      geojson4326Forages,
+      geojsonOrigineForages,
+    }
 
-export const etapeCreer = async ({ etape }: { etape: Omit<ITitreEtape, 'isBrouillon'> & { etapeDocuments: unknown } }, context: Context, info: GraphQLResolveInfo) => {
+    // communeIds.push(...communes.map(({ id }) => id))
+  } else {
+    return {
+      communes: [],
+      forets: [],
+      secteursMaritime: [],
+      sdomZones: [],
+      surface: null,
+      geojson4326Forages: null,
+      geojsonOrigineForages: null,
+    }
+  }
+}
+
+export const etapeCreer = async ({ etape: etapeNotParsed }: { etape: unknown }, context: Context, info: GraphQLResolveInfo) => {
   try {
     const user = context.user
     if (!user) {
       throw new Error("la démarche n'existe pas")
     }
 
+    const etape = graphqlEtapeCreationValidator.parse(etapeNotParsed)
     let titreDemarche = await titreDemarcheGet(etape.titreDemarcheId, { fields: {} }, user)
 
     if (!titreDemarche) throw new Error("la démarche n'existe pas")
@@ -191,8 +242,12 @@ export const etapeCreer = async ({ etape }: { etape: Omit<ITitreEtape, 'isBrouil
 
     if (!titreDemarche || !titreDemarche.titre) throw new Error("le titre n'existe pas")
 
+    const titreTypeId = titreDemarche?.titre?.typeId
+    if (!titreTypeId) {
+      throw new Error(`le type du titre de la ${titreDemarche.id} n'est pas chargé`)
+    }
+
     const entrepriseDocuments: EntrepriseDocument[] = await validateAndGetEntrepriseDocuments(context.pool, etape, titreDemarche.titre, user)
-    delete etape.entrepriseDocumentIds
 
     const etapeDocumentsParsed = z.array(tempEtapeDocumentValidator).safeParse(etape.etapeDocuments)
 
@@ -202,49 +257,19 @@ export const etapeCreer = async ({ etape }: { etape: Omit<ITitreEtape, 'isBrouil
     }
 
     const etapeDocuments = etapeDocumentsParsed.data
-    delete etape.etapeDocuments
 
-    const sdomZones: SDOMZoneId[] = []
-    if (isNotNullNorUndefined(etape.geojson4326Perimetre)) {
-      if (isNotNullNorUndefined(etape.geojsonOriginePerimetre) && isNotNullNorUndefined(etape.geojsonOriginePoints)) {
-        if (!arePointsOnPerimeter(etape.geojsonOriginePerimetre, etape.geojsonOriginePoints)) {
-          throw new Error(`les points doivent être sur le périmètre`)
-        }
-      }
-      const { communes, sdom, surface, forets, secteurs } = await getGeojsonInformation(context.pool, etape.geojson4326Perimetre.geometry)
-      etape.surface = surface
+    // FIXME
+    const avisDocuments: EtapeAvis[] = []
 
-      etape.communes = communes
-      etape.forets = forets
-      etape.secteursMaritime = secteurs.map(id => getSecteurMaritime(id))
-      etape.sdomZones = sdom
-
-      sdomZones.push(...sdom)
-    } else {
-      etape.communes = []
-      etape.forets = []
-      etape.secteursMaritime = []
-      etape.sdomZones = []
-      etape.surface = null
-    }
-
-    const titreTypeId = titreDemarche?.titre?.typeId
-    if (!titreTypeId) {
-      throw new Error(`le type du titre de la ${titreDemarche.id} n'est pas chargé`)
-    }
-
-    const etapeToSave: ITitreEtape = {
-      ...etape,
-      isBrouillon: canBeBrouillon(etape.typeId),
-      ...(await getForagesProperties(titreTypeId, etape.geojsonOrigineGeoSystemeId, etape.geojsonOrigineForages, context.pool)),
-    }
-
-    const rulesErrors = titreEtapeUpdationValidate(etapeToSave, titreDemarche, titreDemarche.titre, etapeDocuments, entrepriseDocuments, sdomZones, user, null, null)
+    const isBrouillon = canBeBrouillon(etape.typeId)
+    const plop = await otot(context.pool, etape.geojson4326Perimetre, etape.geojsonOriginePerimetre, etape.geojsonOriginePoints, titreTypeId, etape.geojsonOrigineGeoSystemeId, etape.geojsonOrigineForages)
+    const titreEtapeHeritage = titreEtapeHeritageBuild(etape.date, etape.typeId, titreDemarche, titreTypeId, titreDemarche.typeId, null)
+    const rulesErrors = titreEtapeUpdationValidate({...etape, ...plop, isBrouillon}, titreEtapeHeritage, titreDemarche, titreDemarche.titre, etapeDocuments, avisDocuments, entrepriseDocuments, plop.sdomZones, plop.communes.map(({id}) => id), user, null, null)
     if (rulesErrors.length) {
       throw new Error(rulesErrors.join(', '))
     }
     if (
-      !canCreateEtape(user, etape.typeId, etapeToSave.isBrouillon, titreDemarche.titre.titulaireIds ?? [], titreDemarche.titre.administrationsLocales ?? [], titreDemarche.typeId, {
+      !canCreateEtape(user, etape.typeId, isBrouillon, titreDemarche.titre.titulaireIds ?? [], titreDemarche.titre.administrationsLocales ?? [], titreDemarche.typeId, {
         typeId: titreDemarche.titre.typeId,
         titreStatutId: titreDemarche.titre.titreStatutId ?? TitresStatutIds.Indetermine,
       })
@@ -265,7 +290,7 @@ export const etapeCreer = async ({ etape }: { etape: Omit<ITitreEtape, 'isBrouil
       etape.dateFin = null
     }
 
-    let etapeUpdated: ITitreEtape | undefined = await titreEtapeUpsert(etapeToSave, user!, titreDemarche.titreId)
+    let etapeUpdated: ITitreEtape | undefined = await titreEtapeUpsert({...etape, ...plop, isBrouillon}, user!, titreDemarche.titreId)
     if (isNullOrUndefined(etapeUpdated)) {
       throw new Error("Une erreur est survenue lors de la création de l'étape")
     }
@@ -399,7 +424,10 @@ export const etapeModifier = async (
     const etapeDocuments = etapeDocumentsParsed.data
     delete etape.etapeDocuments
 
-    const needToCreateAslAndDae = needAslAndDae({ etapeTypeId: etape.typeId, demarcheTypeId: titreDemarche.typeId, titreTypeId: titreDemarche.titre.typeId }, titreEtapeOld.isBrouillon, user)
+    // FIXME
+    const avisDocuments: EtapeAvis[] = []
+
+    const needToCreateAslAndDae = needAslAndDae({ etapeTypeId: etape.typeId, demarcheTypeId: titreDemarche.typeId, titreTypeId: titreDemarche.titre.typeId }, etape.statutId, user)
     let daeDocument = null
     let aslDocument = null
     if (needToCreateAslAndDae) {
@@ -419,10 +447,9 @@ export const etapeModifier = async (
 
       aslDocument = aslDocumentParsed.data
     }
-    delete etape.daeDocument
-    delete etape.aslDocument
 
     const sdomZones: SDOMZoneId[] = []
+    const communeIds: CommuneId[] = []
     if (isNotNullNorUndefined(etape.geojson4326Perimetre)) {
       if (isNotNullNorUndefined(etape.geojsonOriginePerimetre) && isNotNullNorUndefined(etape.geojsonOriginePoints)) {
         if (!arePointsOnPerimeter(etape.geojsonOriginePerimetre, etape.geojsonOriginePoints)) {
@@ -443,6 +470,7 @@ export const etapeModifier = async (
       etape.secteursMaritime = secteurs.map(id => getSecteurMaritime(id))
       etape.sdomZones = sdom
 
+      communeIds.push(...communes.map(({ id }) => id))
       sdomZones.push(...sdom)
     } else {
       etape.communes = []
@@ -462,7 +490,20 @@ export const etapeModifier = async (
       ...(await getForagesProperties(titreTypeId, etape.geojsonOrigineGeoSystemeId, etape.geojsonOrigineForages, context.pool)),
     }
 
-    const rulesErrors = titreEtapeUpdationValidate(etapeToSave, titreDemarche, titreDemarche.titre, etapeDocuments, entrepriseDocuments, sdomZones, user, daeDocument, aslDocument, titreEtapeOld)
+    const rulesErrors = titreEtapeUpdationValidate(
+      etapeToSave,
+      titreDemarche,
+      titreDemarche.titre,
+      etapeDocuments,
+      avisDocuments,
+      entrepriseDocuments,
+      sdomZones,
+      communeIds,
+      user,
+      daeDocument,
+      aslDocument,
+      titreEtapeOld
+    )
 
     if (rulesErrors.length) {
       throw new Error(rulesErrors.join(', '))

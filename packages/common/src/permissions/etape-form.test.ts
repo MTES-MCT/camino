@@ -23,30 +23,30 @@ test('fondamentaleStepIsVisible', () => {
 })
 
 test('fondamentaleStepIsComplete', () => {
-  expect(fondamentaleStepIsComplete({ duree: { value: 0, heritee: false, etapeHeritee: null }, substances: { value: [], heritee: false, etapeHeritee: null }, typeId: 'aac' }, 'amo', 'prr')).toBe(true)
+  expect(fondamentaleStepIsComplete({ duree: { value: 0, heritee: false, etapeHeritee: null }, substances: { value: [], heritee: false, etapeHeritee: null }, typeId: 'aac' }, 'amo', 'prr').valid).toBe(true)
 
-  expect(fondamentaleStepIsComplete({ duree: { value: 0, heritee: false, etapeHeritee: null }, substances: { value: [], heritee: false, etapeHeritee: null }, typeId: 'dpu' }, 'amo', 'prr')).toBe(true)
-  expect(fondamentaleStepIsComplete({ duree: { value: 0, heritee: false, etapeHeritee: null }, substances: { value: [], heritee: false, etapeHeritee: null }, typeId: 'mfr' }, 'amo', 'prr')).toBe(
+  expect(fondamentaleStepIsComplete({ duree: { value: 0, heritee: false, etapeHeritee: null }, substances: { value: [], heritee: false, etapeHeritee: null }, typeId: 'dpu' }, 'amo', 'prr').valid).toBe(true)
+  expect(fondamentaleStepIsComplete({ duree: { value: 0, heritee: false, etapeHeritee: null }, substances: { value: [], heritee: false, etapeHeritee: null }, typeId: 'mfr' }, 'amo', 'prr').valid).toBe(
     false
   )
 
   expect(
-    fondamentaleStepIsComplete({ duree: { value: 0, heritee: false, etapeHeritee: null }, substances: { value: ['auru'], heritee: false, etapeHeritee: null }, typeId: 'mfr' }, 'oct', 'prr')
+    fondamentaleStepIsComplete({ duree: { value: 0, heritee: false, etapeHeritee: null }, substances: { value: ['auru'], heritee: false, etapeHeritee: null }, typeId: 'mfr' }, 'oct', 'prr').valid
   ).toBe(true)
   expect(
-    fondamentaleStepIsComplete({ duree: { value: 2, heritee: false, etapeHeritee: null }, substances: { value: ['auru'], heritee: false, etapeHeritee: null }, typeId: 'mfr' }, 'oct', 'arm')
+    fondamentaleStepIsComplete({ duree: { value: 2, heritee: false, etapeHeritee: null }, substances: { value: ['auru'], heritee: false, etapeHeritee: null }, typeId: 'mfr' }, 'oct', 'arm').valid
   ).toBe(true)
   expect(
-    fondamentaleStepIsComplete({ duree: { value: 0, heritee: false, etapeHeritee: null }, substances: { value: ['auru'], heritee: false, etapeHeritee: null }, typeId: 'mfr' }, 'oct', 'arm')
+    fondamentaleStepIsComplete({ duree: { value: 0, heritee: false, etapeHeritee: null }, substances: { value: ['auru'], heritee: false, etapeHeritee: null }, typeId: 'mfr' }, 'oct', 'arm').valid
   ).toBe(false)
-  expect(fondamentaleStepIsComplete({ duree: { value: 2, heritee: false, etapeHeritee: null }, substances: { value: [], heritee: false, etapeHeritee: null }, typeId: 'mfr' }, 'oct', 'arm')).toBe(
+  expect(fondamentaleStepIsComplete({ duree: { value: 2, heritee: false, etapeHeritee: null }, substances: { value: [], heritee: false, etapeHeritee: null }, typeId: 'mfr' }, 'oct', 'arm').valid).toBe(
     false
   )
 
   expect(
-    fondamentaleStepIsComplete({ duree: { value: 0, heritee: false, etapeHeritee: null }, substances: { value: ['auru'], heritee: false, etapeHeritee: null }, typeId: 'mfr' }, 'mut', 'arm')
+    fondamentaleStepIsComplete({ duree: { value: 0, heritee: false, etapeHeritee: null }, substances: { value: ['auru'], heritee: false, etapeHeritee: null }, typeId: 'mfr' }, 'mut', 'arm').valid
   ).toBe(true)
-  expect(fondamentaleStepIsComplete({ duree: { value: 0, heritee: false, etapeHeritee: null }, substances: { value: [], heritee: false, etapeHeritee: null }, typeId: 'mfr' }, 'mut', 'arm')).toBe(
+  expect(fondamentaleStepIsComplete({ duree: { value: 0, heritee: false, etapeHeritee: null }, substances: { value: [], heritee: false, etapeHeritee: null }, typeId: 'mfr' }, 'mut', 'arm').valid).toBe(
     false
   )
 })
@@ -57,8 +57,8 @@ test('sectionsStepIsVisible', () => {
 })
 
 test('sectionsStepIsComplete', () => {
-  expect(sectionsStepIsComplete({ typeId: 'mfr', contenu: {} }, 'oct', 'arm')).toBe(false)
-  expect(sectionsStepIsComplete({ typeId: 'mfr', contenu: { arm: { mecanise: { value: true, heritee: false, etapeHeritee: null } } } }, 'oct', 'arm')).toBe(true)
+  expect(sectionsStepIsComplete({ typeId: 'mfr', contenu: {} }, 'oct', 'arm').valid).toBe(false)
+  expect(sectionsStepIsComplete({ typeId: 'mfr', contenu: { arm: { mecanise: { value: true, heritee: false, etapeHeritee: null } } } }, 'oct', 'arm').valid).toBe(true)
 })
 
 test('perimetreStepIsVisible', () => {
@@ -84,7 +84,7 @@ test('perimetreStepIsComplete', () => {
         heritee: false,
         etapeHeritee: null,
       },
-    })
+    }).valid
   ).toBe(false)
   expect(
     perimetreStepIsComplete({
@@ -103,7 +103,7 @@ test('perimetreStepIsComplete', () => {
         heritee: false,
         etapeHeritee: null,
       },
-    })
+    }).valid
   ).toBe(true)
   expect(
     perimetreStepIsComplete({
@@ -122,7 +122,7 @@ test('perimetreStepIsComplete', () => {
         heritee: false,
         etapeHeritee: null,
       },
-    })
+    }).valid
   ).toBe(true)
   expect(
     perimetreStepIsComplete({
@@ -141,7 +141,7 @@ test('perimetreStepIsComplete', () => {
         heritee: false,
         etapeHeritee: null,
       },
-    })
+    }).valid
   ).toBe(true)
 })
 
@@ -217,27 +217,27 @@ const axmDocumentsComplete = [
 
 const entreprise1 = { id: entrepriseIdValidator.parse('id1'), nom: 'entrepriseNom' }
 test('etapeDocumentsStepIsComplete', () => {
-  expect(etapeDocumentsStepIsComplete({ typeId: 'asl', contenu: {}, isBrouillon: false }, 'oct', 'axm', [], [], null, null, null)).toBe(false)
+  expect(etapeDocumentsStepIsComplete({ typeId: 'asl', contenu: {}, isBrouillon: false }, 'oct', 'axm', [], [], null, null, null).valid).toBe(false)
   expect(
     etapeDocumentsStepIsComplete(
       { typeId: 'asl', contenu: {}, isBrouillon: false },
       'oct',
       'axm',
-      [{ id: etapeDocumentIdValidator.parse('idDoc1'), description: null, entreprises_lecture: true, public_lecture: true, etape_document_type_id: documentTypeIdComplementaireObligatoireASL }],
+      [{ etape_document_type_id: documentTypeIdComplementaireObligatoireASL }],
       [],
       null,
       null,
       null
-    )
+    ).valid
   ).toBe(true)
 
-  expect(etapeDocumentsStepIsComplete({ typeId: 'mfr', contenu: {}, isBrouillon: true }, 'oct', 'axm', axmDocumentsComplete, [], null, null, { ...testBlankUser, role: 'super' })).toBe(true)
+  expect(etapeDocumentsStepIsComplete({ typeId: 'mfr', contenu: {}, isBrouillon: true }, 'oct', 'axm', axmDocumentsComplete, [], null, null, { ...testBlankUser, role: 'super' }).valid).toBe(true)
   expect(
     etapeDocumentsStepIsComplete({ typeId: 'mfr', contenu: {}, isBrouillon: true }, 'oct', 'axm', axmDocumentsComplete, [], null, null, {
       ...testBlankUser,
       role: 'entreprise',
       entreprises: [entreprise1],
-    })
+    }).valid
   ).toBe(false)
 
   expect(
@@ -255,7 +255,6 @@ test('etapeDocumentsStepIsComplete', () => {
         etape_statut_id: 'exe',
         public_lecture: true,
         etape_document_type_id: documentTypeIdComplementaireObligatoireDAE,
-        id: etapeDocumentIdValidator.parse('daeId'),
       },
       {
         date: toCaminoDate('2023-02-02'),
@@ -264,10 +263,9 @@ test('etapeDocumentsStepIsComplete', () => {
         etape_statut_id: 'exe',
         public_lecture: true,
         etape_document_type_id: documentTypeIdComplementaireObligatoireASL,
-        id: etapeDocumentIdValidator.parse('aslId'),
       },
       { ...testBlankUser, role: 'entreprise', entreprises: [entreprise1] }
-    )
+    ).valid
   ).toBe(true)
 })
 
@@ -284,7 +282,7 @@ test('entrepriseDocumentsStepIsComplete', () => {
       'axm',
       []
     )
-  ).toBe(true)
+  .valid).toBe(true)
   expect(
     entrepriseDocumentsStepIsComplete(
       { typeId: 'mfr', titulaires: { value: [], heritee: false, etapeHeritee: null }, amodiataires: { value: [], heritee: false, etapeHeritee: null }, contenu: {} },
@@ -292,7 +290,7 @@ test('entrepriseDocumentsStepIsComplete', () => {
       'axm',
       []
     )
-  ).toBe(true)
+  .valid).toBe(true)
 
   expect(
     entrepriseDocumentsStepIsComplete(
@@ -301,7 +299,7 @@ test('entrepriseDocumentsStepIsComplete', () => {
       'axm',
       []
     )
-  ).toBe(false)
+  .valid).toBe(false)
   expect(
     entrepriseDocumentsStepIsComplete(
       { typeId: 'mfr', titulaires: { value: [], heritee: false, etapeHeritee: null }, amodiataires: { value: [entreprise1.id], heritee: false, etapeHeritee: null }, contenu: {} },
@@ -309,7 +307,7 @@ test('entrepriseDocumentsStepIsComplete', () => {
       'axm',
       []
     )
-  ).toBe(false)
+  .valid).toBe(false)
 
   expect(
     entrepriseDocumentsStepIsComplete(
@@ -323,38 +321,33 @@ test('entrepriseDocumentsStepIsComplete', () => {
       'arm',
       [
         {
-          id: entrepriseDocumentIdValidator.parse('idatf'),
+          
           documentTypeId: 'atf',
           entrepriseId: entreprise1.id,
         },
         {
-          id: entrepriseDocumentIdValidator.parse('idcur'),
           documentTypeId: 'cur',
           entrepriseId: entreprise1.id,
         },
 
         {
-          id: entrepriseDocumentIdValidator.parse('idjid'),
           documentTypeId: 'jid',
           entrepriseId: entreprise1.id,
         },
         {
-          id: entrepriseDocumentIdValidator.parse('idjct'),
           documentTypeId: 'jct',
           entrepriseId: entreprise1.id,
         },
         {
-          id: entrepriseDocumentIdValidator.parse('idkbi'),
           documentTypeId: 'kbi',
           entrepriseId: entreprise1.id,
         },
         {
-          id: entrepriseDocumentIdValidator.parse('idjcf'),
           documentTypeId: 'jcf',
           entrepriseId: entreprise1.id,
         },
       ]
-    )
+    ).valid
   ).toBe(true)
 })
 

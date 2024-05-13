@@ -1,16 +1,18 @@
 import { TitreTypeId } from '../static/titresTypes.js'
 import { EtapeTypeId } from '../static/etapesTypes.js'
 import { DemarcheTypeId } from '../static/demarchesTypes.js'
-import { canCreateEtape, canEditEtape, canEditAmodiataires, canEditDates, canEditDuree, canEditTitulaires, dureeOptionalCheck, isEtapeComplete, canDeleteEtape } from './titres-etapes.js'
-import { AdministrationId, ADMINISTRATION_IDS } from '../static/administrations.js'
-import { test, expect } from 'vitest'
-import { TestUser, testBlankUser } from '../tests-utils.js'
-import { TitreStatutId } from '../static/titresStatuts.js'
-import { EntrepriseId, entrepriseIdValidator, newEntrepriseId } from '../entreprise.js'
-import { SubstanceLegaleId } from '../static/substancesLegales.js'
-import { FeatureMultiPolygon } from '../perimetre.js'
-import { toCaminoDate } from '../date.js'
-import { EntrepriseUserNotNull } from '../roles.js'
+import { test, expect } from 'vitest';
+import { caminoDateValidator, toCaminoDate } from '../date.js';
+import { EntrepriseId, newEntrepriseId, entrepriseIdValidator } from '../entreprise.js';
+import { etapeIdValidator } from '../etape.js';
+import { FeatureMultiPolygon } from '../perimetre.js';
+import { EntrepriseUserNotNull } from '../roles.js';
+import { ADMINISTRATION_IDS, AdministrationId } from '../static/administrations.js';
+import { SubstanceLegaleId } from '../static/substancesLegales.js';
+import { TitreStatutId } from '../static/titresStatuts.js';
+import { TestUser, testBlankUser } from '../tests-utils.js';
+import { isDureeOptional, canEditDuree, canEditDates, canEditAmodiataires, canEditTitulaires, canCreateEtape, canEditEtape, canDeleteEtape, isEtapeComplete } from './titres-etapes.js';
+
 
 test.each<{ etapeTypeId: EtapeTypeId; demarcheTypeId: DemarcheTypeId; titreTypeId: TitreTypeId; optional: boolean }>([
   { etapeTypeId: 'mfr', demarcheTypeId: 'oct', titreTypeId: 'arm', optional: false },
@@ -18,8 +20,8 @@ test.each<{ etapeTypeId: EtapeTypeId; demarcheTypeId: DemarcheTypeId; titreTypeI
   { etapeTypeId: 'dex', demarcheTypeId: 'oct', titreTypeId: 'axm', optional: true },
   { etapeTypeId: 'mfr', demarcheTypeId: 'oct', titreTypeId: 'prm', optional: true },
   { etapeTypeId: 'mfr', demarcheTypeId: 'dep', titreTypeId: 'arm', optional: true },
-])('dureeOptionalCheck $etapeTypeId | $demarcheTypeId | $titreTypeId | $optional', ({ etapeTypeId, demarcheTypeId, titreTypeId, optional }) => {
-  expect(dureeOptionalCheck(etapeTypeId, demarcheTypeId, titreTypeId)).toEqual(optional)
+])('isDureeOptional $etapeTypeId | $demarcheTypeId | $titreTypeId | $optional', ({ etapeTypeId, demarcheTypeId, titreTypeId, optional }) => {
+  expect(isDureeOptional(etapeTypeId, demarcheTypeId, titreTypeId)).toEqual(optional)
 })
 
 test.each<{ titreTypeId: TitreTypeId; demarcheTypeId: DemarcheTypeId; canEdit: boolean }>([
@@ -245,16 +247,42 @@ const multiPolygonWith4Points: FeatureMultiPolygon = {
     ],
   },
 }
+
+// FIXME: PAS SÛR DE MON COUP
+// typeId: 'mfr',
+// substances: ['auru'],
+// geojson4326Perimetre: multiPolygonWith4Points,
+// duree: 4,
+// statutId: 'fai'
+
 const etapeComplete: Parameters<typeof isEtapeComplete>[0] = {
+  id: etapeIdValidator.parse('etape-id'),
+  contenu: {},
+  date: caminoDateValidator.parse('2023-02-01'),
   typeId: 'mfr',
+  statutId: 'fai',
   substances: ['auru'],
+  titulaireIds: [],
+  amodiataireIds: [],
+
   geojson4326Perimetre: multiPolygonWith4Points,
+  geojson4326Points: null,
+  geojsonOriginePerimetre: null,
+  geojsonOriginePoints: null,
+  geojsonOrigineGeoSystemeId: null,
+  geojson4326Forages: null,
+  geojsonOrigineForages: null,
+  surface: null,
+
+  notes: null,
   duree: 4,
+  dateDebut: toCaminoDate(new Date(2024, 0, 5)),
+  dateFin: toCaminoDate(new Date(2024, 3, 5)),
   isBrouillon: false,
 }
 
-const armDocuments: Parameters<typeof isEtapeComplete>[3] = [{ etape_document_type_id: 'car' }, { etape_document_type_id: 'dom' }, { etape_document_type_id: 'for' }, { etape_document_type_id: 'jpa' }]
-const armEntrepriseDocuments: Parameters<typeof isEtapeComplete>[4] = [
+const armDocuments: Parameters<typeof isEtapeComplete>[4] = [{ etape_document_type_id: 'car' }, { etape_document_type_id: 'dom' }, { etape_document_type_id: 'for' }, { etape_document_type_id: 'jpa' }]
+const armEntrepriseDocuments: Parameters<typeof isEtapeComplete>[5] = [
   { entreprise_document_type_id: 'cur' },
   { entreprise_document_type_id: 'jid' },
   { entreprise_document_type_id: 'jct' },
@@ -263,7 +291,7 @@ const armEntrepriseDocuments: Parameters<typeof isEtapeComplete>[4] = [
   { entreprise_document_type_id: 'atf' },
 ]
 
-const axmDocuments: Parameters<typeof isEtapeComplete>[3] = [
+const axmDocuments: Parameters<typeof isEtapeComplete>[4] = [
   { etape_document_type_id: 'car' },
   { etape_document_type_id: 'lem' },
   { etape_document_type_id: 'idm' },
@@ -273,7 +301,7 @@ const axmDocuments: Parameters<typeof isEtapeComplete>[3] = [
   { etape_document_type_id: 'prg' },
 ]
 
-const axmEntrepriseDocuments: Parameters<typeof isEtapeComplete>[4] = [
+const axmEntrepriseDocuments: Parameters<typeof isEtapeComplete>[5] = [
   { entreprise_document_type_id: 'lis' },
   { entreprise_document_type_id: 'jac' },
   { entreprise_document_type_id: 'bil' },
@@ -304,7 +332,7 @@ test('teste la complétude d’une demande d’ARM', () => {
   expect(isEtapeComplete(etapeComplete, 'arm', 'oct', armDocuments, armEntrepriseDocuments, [], null, null, { ...testBlankUser, role: 'super' })).toStrictEqual({ valid: true })
 })
 
-test.each<[SubstanceLegaleId[], EtapeTypeId, TitreTypeId, Parameters<typeof isEtapeComplete>[3], Parameters<typeof isEtapeComplete>[4], boolean]>([
+test.each<[SubstanceLegaleId[], EtapeTypeId, TitreTypeId, Parameters<typeof isEtapeComplete>[4], Parameters<typeof isEtapeComplete>[5], boolean]>([
   [[], 'mfr', 'arm', armDocuments, armEntrepriseDocuments, true],
   [[], 'mfr', 'axm', armDocuments, armEntrepriseDocuments, true],
   [[], 'rde', 'arm', armDocuments, [], false],
@@ -334,7 +362,7 @@ test.each<[SubstanceLegaleId[], EtapeTypeId, TitreTypeId, Parameters<typeof isEt
   }
 })
 
-test.each<[FeatureMultiPolygon | null, EtapeTypeId, TitreTypeId, Parameters<typeof isEtapeComplete>[3], Parameters<typeof isEtapeComplete>[4], boolean]>([
+test.each<[FeatureMultiPolygon | null, EtapeTypeId, TitreTypeId, Parameters<typeof isEtapeComplete>[4], Parameters<typeof isEtapeComplete>[5], boolean]>([
   [null, 'mfr', 'arm', armDocuments, armEntrepriseDocuments, true],
   [null, 'mfr', 'axm', axmDocuments, axmEntrepriseDocuments, true],
   [null, 'rde', 'arm', armDocuments, [], false],
@@ -398,7 +426,7 @@ test('une demande d’ARM mécanisée a des documents obligatoires supplémentai
   `)
 })
 
-test.each<[number | undefined | null, EtapeTypeId, TitreTypeId, Parameters<typeof isEtapeComplete>[3], Parameters<typeof isEtapeComplete>[4], boolean]>([
+test.each<[number | undefined | null, EtapeTypeId, TitreTypeId, Parameters<typeof isEtapeComplete>[4], Parameters<typeof isEtapeComplete>[5], boolean]>([
   [undefined, 'mfr', 'arm', armDocuments, armEntrepriseDocuments, true],
   [null, 'mfr', 'axm', axmDocuments, axmEntrepriseDocuments, true],
   [0, 'mfr', 'axm', axmDocuments, axmEntrepriseDocuments, true],

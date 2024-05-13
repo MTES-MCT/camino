@@ -5,6 +5,7 @@ import { DemarcheId } from 'camino-common/src/demarche'
 import { entrepriseIdValidator } from 'camino-common/src/entreprise'
 import { EtapeId, EtapeIdOrSlug, EtapeTypeEtapeStatutWithMainStep, GetEtapeDocumentsByEtapeId } from 'camino-common/src/etape'
 import {
+  EtapeAvis,
   FlattenEtape,
   GraphqlEtapeCreation,
   GraphqlEtapeModification,
@@ -99,6 +100,7 @@ export interface EtapeApiClient {
     titreTypeId: TitreTypeId,
     demarcheTypeId: DemarcheTypeId
   ) => Promise<DeepReadonly<CoreEtapeCreationOrModification>>
+  getEtapeAvisByEtapeId: (etapeId: EtapeId) => Promise<EtapeAvis[]>
   getEtape: (etapeIdOrSlug: EtapeIdOrSlug) => Promise<DeepReadonly<{ etape: FlattenEtape; demarche: GetDemarcheByIdOrSlugValidator }>>
   etapeCreer: (etape: DeepReadonly<GraphqlEtapeCreation>) => Promise<EtapeId>
   etapeModifier: (etape: DeepReadonly<GraphqlEtapeModification>) => Promise<EtapeId>
@@ -115,6 +117,10 @@ export const etapeApiClient: EtapeApiClient = {
   },
 
   getEtapeDocumentsByEtapeId: async etapeId => getWithJson('/rest/etapes/:etapeId/etapeDocuments', { etapeId }),
+  getEtapeAvisByEtapeId: async etapeId => {
+    //FIXME
+    return []
+  },
 
   getEtape: async etapeIdOrSlug => {
     const data = await apiGraphQLFetch(gql`
