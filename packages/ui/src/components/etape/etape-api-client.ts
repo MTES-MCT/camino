@@ -34,12 +34,6 @@ const contenuValidator = z
   .nullable()
   .transform(nullToDefault({}))
 const dureeValidator = z.number().nullable()
-const entrepriseValidator = z.array(
-  z.object({
-    id: entrepriseIdValidator,
-    operateur: z.boolean().nullable(),
-  })
-)
 
 const defaultHeritageProps = {
   dateDebut: { actif: false },
@@ -57,8 +51,8 @@ const heritagePropsValidator = z
     dateDebut: z.object({ actif: z.boolean(), etape: z.object({ typeId: etapeTypeIdValidator, date: caminoDateValidator, dateDebut: caminoDateValidator.nullable() }).nullable() }),
     dateFin: z.object({ actif: z.boolean(), etape: z.object({ typeId: etapeTypeIdValidator, date: caminoDateValidator, dateFin: caminoDateValidator.nullable() }).nullable() }),
     substances: z.object({ actif: z.boolean(), etape: z.object({ typeId: etapeTypeIdValidator, date: caminoDateValidator, substances: z.array(substanceLegaleIdValidator) }).nullable() }),
-    titulaires: z.object({ actif: z.boolean(), etape: z.object({ typeId: etapeTypeIdValidator, date: caminoDateValidator, titulaires: entrepriseValidator }).nullable() }),
-    amodiataires: z.object({ actif: z.boolean(), etape: z.object({ typeId: etapeTypeIdValidator, date: caminoDateValidator, amodiataires: entrepriseValidator }).nullable() }),
+    titulaires: z.object({ actif: z.boolean(), etape: z.object({ typeId: etapeTypeIdValidator, date: caminoDateValidator, titulaireIds: z.array(entrepriseIdValidator) }).nullable() }),
+    amodiataires: z.object({ actif: z.boolean(), etape: z.object({ typeId: etapeTypeIdValidator, date: caminoDateValidator, amodiataireIds: z.array(entrepriseIdValidator) }).nullable() }),
     perimetre: z.object({
       actif: z.boolean(),
       etape: z
@@ -113,8 +107,8 @@ const graphqlEtapeValidator = z.object({
   substances: z.array(substanceLegaleIdValidator),
   typeId: etapeTypeIdValidator,
   statutId: etapeStatutIdValidator,
-  titulaires: entrepriseValidator,
-  amodiataires: entrepriseValidator,
+  titulaireIds: z.array(entrepriseIdValidator),
+  amodiataireIds: z.array(entrepriseIdValidator),
   geojson4326Perimetre: featureMultiPolygonValidator.nullable(),
   geojson4326Points: featureCollectionPointsValidator.nullable(),
   geojsonOriginePoints: featureCollectionPointsValidator.nullable(),
@@ -161,8 +155,8 @@ const graphqlEtapeCreationValidator = graphqlEtapeValidator
     geojsonOriginePerimetre: true,
     geojsonOrigineForages: true,
     geojsonOrigineGeoSystemeId: true,
-    titulaires: true,
-    amodiataires: true,
+    titulaireIds: true,
+    amodiataireIds: true,
     notes: true,
     contenu: true,
   })
@@ -235,14 +229,8 @@ export const etapeApiClient: EtapeApiClient = {
           surface
           typeId
           statutId
-          titulaires {
-            id
-            operateur
-          }
-          amodiataires {
-            id
-            operateur
-          }
+          titulaireIds
+          amodiataireIds
           geojson4326Perimetre
           geojson4326Points
           geojsonOriginePoints
@@ -306,10 +294,7 @@ export const etapeApiClient: EtapeApiClient = {
               etape {
                 date
                 typeId
-                titulaires {
-                  id
-                  operateur
-                }
+                titulaireIds
               }
               actif
             }
@@ -317,10 +302,7 @@ export const etapeApiClient: EtapeApiClient = {
               etape {
                 date
                 typeId
-                amodiataires {
-                  id
-                  operateur
-                }
+                amodiataireIds
               }
               actif
             }
@@ -394,10 +376,7 @@ export const etapeApiClient: EtapeApiClient = {
               etape {
                 date
                 typeId
-                titulaires {
-                  id
-                  operateur
-                }
+                titulaireIds
               }
               actif
             }
@@ -405,10 +384,7 @@ export const etapeApiClient: EtapeApiClient = {
               etape {
                 date
                 typeId
-                amodiataires {
-                  id
-                  operateur
-                }
+                amodiataireIds
               }
               actif
             }

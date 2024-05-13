@@ -9,8 +9,8 @@ export type EtapeHeritageProps = z.infer<typeof etapeHeritagePropsValidator>
 export const isHeritageProps = (value: string): value is EtapeHeritageProps => ETAPE_HERITAGE_PROPS.includes(value)
 
 const mappingHeritagePropsNameEtapePropsName = {
-  titulaires: ['titulaires'],
-  amodiataires: ['amodiataires'],
+  titulaires: ['titulaireIds'],
+  amodiataires: ['amodiataireIds'],
   dateDebut: ['dateDebut'],
   dateFin: ['dateFin'],
   duree: ['duree'],

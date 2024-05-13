@@ -58,11 +58,7 @@ const heritageProps: EtapeWithHeritage['heritageProps'] = {
     etape: {
       date: toCaminoDate('2022-01-01'),
       typeId: 'mfr',
-      amodiataires: [
-        { id: entreprises[0].id, operateur: false },
-        { id: entreprises[1].id, operateur: false },
-        { id: entreprises[2].id, operateur: false },
-      ],
+      amodiataireIds: [entreprises[0].id, entreprises[1].id, entreprises[2].id],
     },
   },
   perimetre: {
@@ -99,8 +95,8 @@ const etape: Props['etape'] = {
   dateFin: null,
   duree: 4,
   substances: ['arse'],
-  titulaires: [{ id: newEntrepriseId('optionId1'), operateur: true }],
-  amodiataires: [],
+  titulaireIds: [newEntrepriseId('optionId1')],
+  amodiataireIds: [],
   notes: 'Super notes de cette story',
   geojson4326Forages: null,
   geojson4326Perimetre: null,

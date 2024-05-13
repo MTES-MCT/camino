@@ -27,7 +27,7 @@ import { SectionWithValue } from 'camino-common/src/sections.js'
 import { getDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/documents.js'
 import { getSections, getSectionsWithValue } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
 import { OmitDistributive, isNonEmptyArray, isNotNullNorUndefined, memoize } from 'camino-common/src/typescript-tools.js'
-import { getEntrepriseDocumentIdsByEtapeId, getDocumentsByEtapeId, getTitulairesByEtapeIdQuery, getAmodiatairesByEtapeIdQuery } from '../../database/queries/titres-etapes.queries.js'
+import { getEntrepriseDocumentIdsByEtapeId, getDocumentsByEtapeId } from '../../database/queries/titres-etapes.queries.js'
 import { getAdministrationsLocales } from 'camino-common/src/administrations.js'
 import { getEntrepriseDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/entrepriseDocuments.js'
 import { isEtapeTypeIdFondamentale } from 'camino-common/src/static/etapesTypes.js'
@@ -121,29 +121,29 @@ export const getTitre = async (pool: Pool, user: User, idOrSlug: TitreIdOrSlug):
             }
           }
 
-          let titulaires = null
+          let titulaireIds = null
           if (!(etape.heritage_props?.titulaires?.actif ?? false)) {
-            const titulairesDb = await getTitulairesByEtapeIdQuery(etape.id, pool)
+            const titulaireIdsDb = etape.titulaire_ids
 
-            if (titulairesDb.length > 0) {
-              titulaires = titulairesDb
+            if (titulaireIdsDb.length > 0) {
+              titulaireIds = titulaireIdsDb
             }
           }
 
-          let amodiataires = null
+          let amodiataireIds = null
           if (!(etape.heritage_props?.amodiataires?.actif ?? false)) {
-            const amodiatairesDb = await getAmodiatairesByEtapeIdQuery(etape.id, pool)
+            const amodiataireIdsDb = etape.amodiataire_ids
 
-            if (amodiatairesDb.length > 0) {
-              amodiataires = amodiatairesDb
+            if (amodiataireIdsDb.length > 0) {
+              amodiataireIds = amodiataireIdsDb
             }
           }
 
           const etapeFondamentale: Omit<DemarcheEtapeFondamentale, 'etape_documents'> = {
             etape_type_id: etape.etape_type_id,
             fondamentale: {
-              amodiataires,
-              titulaires,
+              amodiataireIds,
+              titulaireIds,
               date_debut: isNotNullNorUndefined(etape.date_debut) && !(etape.heritage_props?.dateDebut?.actif ?? false) ? etape.date_debut : null,
               date_fin: isNotNullNorUndefined(etape.date_fin) && !(etape.heritage_props?.dateFin?.actif ?? false) ? etape.date_fin : null,
               duree: isNotNullNorUndefined(etape.duree) && !(etape.heritage_props?.duree?.actif ?? false) ? etape.duree : null,
@@ -180,8 +180,8 @@ export const getTitre = async (pool: Pool, user: User, idOrSlug: TitreIdOrSlug):
     }
 
     const perimetre = getMostRecentValuePropFromEtapeFondamentaleValide('perimetre', superDemarches)
-    const titulaires = getMostRecentValuePropFromEtapeFondamentaleValide('titulaires', superDemarches)
-    const amodiataires = getMostRecentValuePropFromEtapeFondamentaleValide('amodiataires', superDemarches)
+    const titulaires = getMostRecentValuePropFromEtapeFondamentaleValide('titulaireIds', superDemarches)
+    const amodiataires = getMostRecentValuePropFromEtapeFondamentaleValide('amodiataireIds', superDemarches)
 
     const administrationsLocales = memoize(() => {
       return Promise.resolve(
@@ -192,7 +192,7 @@ export const getTitre = async (pool: Pool, user: User, idOrSlug: TitreIdOrSlug):
       )
     })
     const entreprisesTitulairesOuAmodiataires = memoize(() => {
-      return Promise.resolve([...(titulaires ?? []).map(({ id }) => id), ...(amodiataires ?? []).map(({ id }) => id)])
+      return Promise.resolve([...(titulaires ?? []), ...(amodiataires ?? [])])
     })
 
     if (!(await canReadTitre(user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires, titre))) {
@@ -375,12 +375,12 @@ select distinct
 from
     entreprises e,
     titres t
-    left join titres_titulaires tt on tt.titre_etape_id = t.props_titre_etapes_ids ->> 'titulaires'
-    left join titres_amodiataires tta on tta.titre_etape_id = t.props_titre_etapes_ids ->> 'amodiataires'
+    left join titres_etapes etape_titulaires on etape_titulaires.id = t.props_titre_etapes_ids ->> 'titulaires'
+    left join titres_etapes etape_amodiataires on etape_amodiataires.id = t.props_titre_etapes_ids ->> 'amodiataires'
 where
     t.id = $ titreId !
-    and (tt.entreprise_id = e.id
-        or tta.entreprise_id = e.id)
+    and (etape_titulaires.titulaire_ids ? e.id
+        or etape_amodiataires.amodiataire_ids ? e.id)
 `
 
 export const getAdministrationsLocalesByTitreId = async (pool: Pool, titreId: TitreId): Promise<AdministrationId[]> => {

@@ -10,9 +10,6 @@ export const heritagePropsFormat = async (heritageProps: IHeritageProps) => {
   for (const propId of getKeys(heritageProps, isHeritageProps)) {
     if (heritageProps[propId]?.etapeId) {
       const fields: FieldsEtape = { id: {} }
-      if (propId === 'titulaires' || propId === 'amodiataires') {
-        fields[propId] = { id: {} }
-      }
 
       const titreEtape = await titreEtapeGet(newEtapeId(heritageProps[propId].etapeId!), { fields }, userSuper)
 

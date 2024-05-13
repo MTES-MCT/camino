@@ -47,24 +47,7 @@ export const titres = apiGraphQLFetch(gql`
         substances
         activitesEnConstruction
         activitesAbsentes
-        titulaires {
-          id
-          nom
-          adresse
-          codePostal
-          commune
-          legalSiren
-          legalEtranger
-        }
-        amodiataires {
-          id
-          nom
-          adresse
-          codePostal
-          commune
-          legalSiren
-          legalEtranger
-        }
+        titulaireIds
         communes {
           id
         }

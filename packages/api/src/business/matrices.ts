@@ -4,7 +4,6 @@ import { titresActivitesGet } from '../database/queries/titres-activites.js'
 import { apiOpenfiscaCalculate, apiOpenfiscaConstantsFetch, OpenfiscaConstants, OpenfiscaResponse, OpenfiscaTarifs } from '../tools/api-openfisca/index.js'
 import { bodyBuilder, toFiscalite } from '../api/rest/entreprises.js'
 import { userSuper } from '../database/user-super.js'
-import { entreprisesGet } from '../database/queries/entreprises.js'
 import { fraisGestion } from 'camino-common/src/fiscalite.js'
 import type { Fiscalite } from 'camino-common/src/validators/fiscalite.js'
 import { ICommune, ITitre } from '../types.js'
@@ -19,6 +18,8 @@ import { CaminoAnnee, caminoAnneeToNumber, anneePrecedente as previousYear, anne
 
 import { Decimal } from 'decimal.js'
 import { REGION_IDS } from 'camino-common/src/static/region.js'
+import { EntrepriseId } from 'camino-common/src/entreprise'
+import { getEntreprises, GetEntreprises } from '../api/rest/entreprises.queries'
 
 const sips = {
   cayenne: {
@@ -157,10 +158,11 @@ const titulaireToString = (titulaire: Titulaire): string => {
 // VISIBLE FOR TESTING
 export const buildMatrices = (
   result: OpenfiscaResponse,
-  titres: Pick<ITitre, 'id' | 'slug' | 'titulaires' | 'communes'>[],
+  titres: Pick<ITitre, 'id' | 'slug' | 'titulaireIds' | 'communes'>[],
   annee: number,
   openfiscaConstants: OpenfiscaConstants,
-  communes: Commune[]
+  communes: Commune[],
+  entreprises: Record<EntrepriseId, GetEntreprises>
 ): {
   matrice1121: Matrice1121[]
   matrice1122: Matrice1122[]
@@ -209,10 +211,10 @@ export const buildMatrices = (
           sip = 'kourou'
         }
 
-        if (titre.titulaires?.length !== 1) {
+        if (titre.titulaireIds?.length !== 1) {
           throw new Error(`Un seul titulaire doit être présent sur le titre ${titre.id}`)
         }
-        const titulaireTitre = titre.titulaires[0]
+        const titulaireTitre = entreprises[titre.titulaireIds[0]]
 
         return {
           communePrincipale: communes.find(({ id }) => id === communePrincipale.id) ?? communePrincipale,
@@ -224,9 +226,9 @@ export const buildMatrices = (
           titulaire: {
             nom: titulaireTitre.nom ?? '',
             rue: titulaireTitre.adresse ?? '',
-            codepostal: titulaireTitre.codePostal ?? '',
+            codepostal: titulaireTitre.code_postal ?? '',
             commune: titulaireTitre.commune ?? '',
-            siren: titulaireTitre.legalSiren ?? '',
+            siren: titulaireTitre.legal_siren ?? '',
           },
           titreLabel,
           departementLabel: departement,
@@ -404,8 +406,8 @@ export const matrices = async (annee: CaminoAnnee, pool: Pool) => {
       fields: {
         substancesEtape: { id: {} },
         communes: { id: {} },
-        titulaires: { id: {} },
-        amodiataires: { id: {} },
+        titulairesEtape: { id: {} },
+        amodiatairesEtape: { id: {} },
         activites: { id: {} },
       },
     },
@@ -413,16 +415,16 @@ export const matrices = async (annee: CaminoAnnee, pool: Pool) => {
   )
 
   titres.forEach(titre => {
-    if (!titre.titulaires) {
+    if (!titre.titulaireIds) {
       throw new Error('titulaires non chargés')
     }
-    if (!titre.amodiataires) {
+    if (!titre.amodiataireIds) {
       throw new Error('amodiataires non chargés')
     }
     if (!titre.activites) {
       throw new Error('activites non chargées')
     }
-    if (titre.amodiataires.length + titre.titulaires.length > 1 && titre.activites.length > 0) {
+    if (titre.amodiataireIds.length + titre.titulaireIds.length > 1 && titre.activites.length > 0) {
       console.info('titre avec plusieurs titulaires/amodiataires', `https://camino.beta.gouv.fr/titres/${titre.slug}`)
     }
   })
@@ -448,7 +450,12 @@ export const matrices = async (annee: CaminoAnnee, pool: Pool) => {
     userSuper
   )
 
-  const entreprises = await entreprisesGet({}, { fields: { id: {} } }, userSuper)
+  const entreprises = await getEntreprises(pool)
+  const entreprisesIndex = entreprises.reduce<Record<EntrepriseId, GetEntreprises>>((acc, entreprise) => {
+    acc[entreprise.id] = entreprise
+
+    return acc
+  }, {})
 
   const communesIds = titres
     .flatMap(({ communes }) => communes?.map(({ id }) => id))
@@ -462,7 +469,7 @@ export const matrices = async (annee: CaminoAnnee, pool: Pool) => {
 
     const openfiscaConstants = await apiOpenfiscaConstantsFetch(anneeNumber)
 
-    const { matrice1121, matrice1122, matrice1403, matrice1404, rawLines } = buildMatrices(result, titres, anneeNumber, openfiscaConstants, communes)
+    const { matrice1121, matrice1122, matrice1403, matrice1404, rawLines } = buildMatrices(result, titres, anneeNumber, openfiscaConstants, communes, entreprisesIndex)
 
     const { totalRedevanceDesMines, totalMontantNetTaxeMiniereOrGuyane, fraisGestionFiscaliteDirecteLocale } = matrice1121.reduce<{
       totalRedevanceDesMines: Decimal

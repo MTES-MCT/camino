@@ -9,6 +9,7 @@ import { getEntriesHardcore, getKeys, isNotNullNorUndefined, isNullOrUndefined }
 import { DsfrButton } from '../_ui/dsfr-button'
 import { routerQueryToNumber, routerQueryToNumberArray } from '@/router/camino-router-link'
 import { TitreId } from 'camino-common/src/validators/titres'
+import { Entreprise } from 'camino-common/src/entreprise'
 export type TitreCarteParams = {
   zoom: number
   centre: [number, number]
@@ -16,6 +17,7 @@ export type TitreCarteParams = {
 } | null
 interface Props {
   titres: { hash: string; titres: TitreWithPerimetre[] }
+  entreprises: Entreprise[]
   updateCarte: (params: TitreCarteParams) => void
   router: Router
   loading: boolean
@@ -81,7 +83,7 @@ export const CaminoTitresMap = defineComponent<Props>(props => {
     const titreIdsToBeOnMap = titres.map(({ id }) => id)
     const markersTitreIdsAlreadyInMap = Object.values(layerIdToTitreIdDisplayed.value)
     const geojsonsTitreIdsAlreadyInMap = Object.keys(geojsons.value) as TitreId[]
-    const { geojsons: geojsonLayer, markers: markersLayer } = layersBuild(titres, props.router, markersTitreIdsAlreadyInMap, geojsonsTitreIdsAlreadyInMap)
+    const { geojsons: geojsonLayer, markers: markersLayer } = layersBuild(titres, props.router, props.entreprises, markersTitreIdsAlreadyInMap, geojsonsTitreIdsAlreadyInMap)
 
     if (clusters.value.length === 0) {
       const clustersBuilt = clustersBuild()
@@ -224,4 +226,4 @@ export const CaminoTitresMap = defineComponent<Props>(props => {
 })
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-CaminoTitresMap.props = ['titres', 'updateCarte', 'router', 'loading']
+CaminoTitresMap.props = ['titres', 'updateCarte', 'router', 'loading', 'entreprises']

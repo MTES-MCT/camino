@@ -5,16 +5,8 @@ import { newEntrepriseId } from 'camino-common/src/entreprise.js'
 import { toCommuneId } from 'camino-common/src/static/communes.js'
 import { newTitreId } from '../../database/models/_format/id-create.js'
 
-const entreprise = {
-  id: newEntrepriseId('entrepriseId'),
-  categorie: 'PME',
-  nom: 'ma companie',
-}
-const entreprise2 = {
-  id: newEntrepriseId('entrepriseId2'),
-  categorie: 'PME',
-  nom: 'une compagnie non concernée',
-}
+const entrepriseId = newEntrepriseId('entrepriseId')
+const entreprise2Id = newEntrepriseId('entrepriseId2')
 
 describe("extrait la réponse venant d'openFisca", () => {
   test('récupère les bonnes valeurs', () => {
@@ -41,7 +33,15 @@ describe("extrait la réponse venant d'openFisca", () => {
 
 describe('construit le corps de la requête pour openFisca', () => {
   test('sans activités', () => {
-    expect(bodyBuilder([], [], [], 2022, [entreprise])).toEqual({
+    expect(
+      bodyBuilder([], [], [], 2022, [
+        {
+          id: entrepriseId,
+          categorie: 'PME',
+          nom: 'ma companie',
+        },
+      ])
+    ).toEqual({
       articles: {},
       communes: {},
       titres: {},
@@ -66,11 +66,11 @@ describe('construit le corps de la requête pour openFisca', () => {
         contenu: { renseignements: { environnement: 1000 } },
       },
     ]
-    const titres: Pick<Titres, 'titulaires' | 'amodiataires' | 'substances' | 'communes' | 'id'>[] = [
+    const titres: Pick<Titres, 'titulaireIds' | 'amodiataireIds' | 'substances' | 'communes' | 'id'>[] = [
       {
         substances: ['auru'],
-        titulaires: [entreprise2],
-        amodiataires: [],
+        titulaireIds: [entreprise2Id],
+        amodiataireIds: [],
         communes: [
           {
             id: toCommuneId('97310'),
@@ -87,14 +87,14 @@ describe('construit le corps de la requête pour openFisca', () => {
             surface: 6036587,
           },
         ],
-        titulaires: [entreprise2],
-        amodiataires: [],
+        titulaireIds: [entreprise2Id],
+        amodiataireIds: [],
         id: newTitreId('titre1'),
       },
       {
         substances: ['auru', 'scoc'],
-        titulaires: [entreprise],
-        amodiataires: [],
+        titulaireIds: [entrepriseId],
+        amodiataireIds: [],
         communes: [
           {
             id: toCommuneId('97310'),
@@ -105,8 +105,8 @@ describe('construit le corps de la requête pour openFisca', () => {
       },
       {
         substances: ['auru', 'scoc'],
-        titulaires: [entreprise],
-        amodiataires: [entreprise2],
+        titulaireIds: [entrepriseId],
+        amodiataireIds: [entreprise2Id],
         communes: [
           {
             id: toCommuneId('97310'),
@@ -117,8 +117,8 @@ describe('construit le corps de la requête pour openFisca', () => {
       },
       {
         substances: ['auru', 'scoc'],
-        titulaires: [entreprise2],
-        amodiataires: [],
+        titulaireIds: [entreprise2Id],
+        amodiataireIds: [],
         communes: [
           {
             id: toCommuneId('97310'),
@@ -129,8 +129,8 @@ describe('construit le corps de la requête pour openFisca', () => {
       },
       {
         substances: ['auru', 'scoc'],
-        titulaires: [entreprise],
-        amodiataires: [],
+        titulaireIds: [entrepriseId],
+        amodiataireIds: [],
         communes: [
           {
             id: toCommuneId('97311'),
@@ -141,6 +141,19 @@ describe('construit le corps de la requête pour openFisca', () => {
       },
     ]
 
-    expect(bodyBuilder(activitesAnnuelles, activitesTrimestrielles, titres, 2022, [entreprise, entreprise2])).toMatchSnapshot()
+    expect(
+      bodyBuilder(activitesAnnuelles, activitesTrimestrielles, titres, 2022, [
+        {
+          id: entrepriseId,
+          categorie: 'PME',
+          nom: 'ma companie',
+        },
+        {
+          id: entreprise2Id,
+          categorie: 'PME',
+          nom: 'une compagnie non concernée',
+        },
+      ])
+    ).toMatchSnapshot()
   })
 })

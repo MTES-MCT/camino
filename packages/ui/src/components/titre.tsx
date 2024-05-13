@@ -38,7 +38,8 @@ import { getGestionnairesByTitreTypeId } from 'camino-common/src/static/administ
 import { DemarcheEditPopup } from './titre/demarche-edit-popup'
 import { PhaseWithAlterations, phaseWithAlterations } from './titre/phase'
 import { SecteursMaritimes } from 'camino-common/src/static/facades'
-import { userKey } from '@/moi'
+import { userKey, entreprisesKey } from '@/moi'
+import { Entreprise } from 'camino-common/src/entreprise'
 
 const activitesSort: TableSortEvent = {
   colonne: activitesColonneIdAnnee,
@@ -49,6 +50,7 @@ export const Titre = defineComponent(() => {
   const router = useRouter()
 
   const user = inject(userKey)
+  const entreprises = inject(entreprisesKey, ref([]))
 
   const titreIdOrSlug = computed<TitreIdOrSlug | null>(() => {
     const idOrSlug = Array.isArray(router.currentRoute.value.params.id) ? router.currentRoute.value.params.id[0] : router.currentRoute.value.params.id
@@ -67,11 +69,22 @@ export const Titre = defineComponent(() => {
     return demarcheSlugValidator.optional().parse(Array.isArray(demarcheId) ? demarcheId[0] : demarcheId) ?? null
   })
 
-  return () => <PureTitre user={user} titreIdOrSlug={titreIdOrSlug.value} currentDemarcheSlug={currentDemarcheSlug.value} apiClient={apiClient} router={router} currentDate={getCurrent()} />
+  return () => (
+    <PureTitre
+      user={user}
+      entreprises={entreprises.value}
+      titreIdOrSlug={titreIdOrSlug.value}
+      currentDemarcheSlug={currentDemarcheSlug.value}
+      apiClient={apiClient}
+      router={router}
+      currentDate={getCurrent()}
+    />
+  )
 })
 
 interface Props {
   user: User
+  entreprises: Entreprise[]
   titreIdOrSlug: TitreIdOrSlug | null
   currentDemarcheSlug: DemarcheSlug | null
   currentDate: CaminoDate
@@ -171,10 +184,10 @@ export const PureTitre = defineComponent<Props>(props => {
             () => Promise.resolve(titre.titre_type_id),
             () => Promise.resolve(administrations.value),
             () => {
-              const titulaires = getMostRecentValuePropFromEtapeFondamentaleValide('titulaires', titre.demarches) ?? []
-              const amodiataires = getMostRecentValuePropFromEtapeFondamentaleValide('amodiataires', titre.demarches) ?? []
+              const titulaires = getMostRecentValuePropFromEtapeFondamentaleValide('titulaireIds', titre.demarches) ?? []
+              const amodiataires = getMostRecentValuePropFromEtapeFondamentaleValide('amodiataireIds', titre.demarches) ?? []
 
-              return Promise.resolve([...titulaires, ...amodiataires].map(({ id }) => id))
+              return Promise.resolve([...titulaires, ...amodiataires])
             }
           ))
       } else {
@@ -426,6 +439,7 @@ export const PureTitre = defineComponent<Props>(props => {
                   demarches={titre.demarches}
                   currentDemarcheSlug={props.currentDemarcheSlug}
                   user={props.user}
+                  entreprises={props.entreprises}
                   apiClient={customApiClient.value}
                   router={props.router}
                   initTab={props.initTab}
@@ -455,4 +469,4 @@ export const PureTitre = defineComponent<Props>(props => {
 })
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-PureTitre.props = ['user', 'titreIdOrSlug', 'apiClient', 'router', 'initTab', 'currentDemarcheSlug', 'currentDate']
+PureTitre.props = ['user', 'entreprises', 'titreIdOrSlug', 'apiClient', 'router', 'initTab', 'currentDemarcheSlug', 'currentDate']

@@ -17,6 +17,7 @@ import { canReadActivites } from 'camino-common/src/permissions/activites'
 import { TableRow } from './_ui/table'
 import { titresDownloadFormats } from 'camino-common/src/filters'
 import { TitresStatutIds } from 'camino-common/src/static/titresStatuts'
+import { EntrepriseId } from 'camino-common/src/entreprise'
 import { DemandeTitreButton } from './_common/demande-titre-button'
 import { entreprisesKey, userKey } from '@/moi'
 
@@ -40,6 +41,11 @@ export const Titres = defineComponent({
     const router = useRouter()
     const user = inject(userKey)
     const entreprises = inject(entreprisesKey, ref([]))
+    const entreprisesIndex = entreprises.value.reduce<Record<EntrepriseId, string>>((acc, entreprise) => {
+      acc[entreprise.id] = entreprise.nom
+
+      return acc
+    }, {})
 
     const data = ref<AsyncData<true>>({ status: 'LOADING' })
     const titresForTable = ref<AsyncData<{ rows: TableRow[]; total: number }>>({ status: 'LOADING' })
@@ -74,7 +80,7 @@ export const Titres = defineComponent({
       titresForTable.value = { status: 'LOADING' }
       try {
         const titres = await titreApiClient.getTitresForTable({ ...paramsForTable.value, ...paramsFiltres.value })
-        titresForTable.value = { status: 'LOADED', value: { total: titres.total, rows: titresLignesBuild(titres.elements, activitesCol.value) } }
+        titresForTable.value = { status: 'LOADED', value: { total: titres.total, rows: titresLignesBuild(titres.elements, activitesCol.value, entreprisesIndex) } }
         total.value = titres.total
         data.value = { status: 'LOADED', value: true }
       } catch (e: any) {
@@ -144,6 +150,7 @@ export const Titres = defineComponent({
         renderContent: () => (
           <CaminoTitresMap
             titres={titresForCarte.value}
+            entreprises={entreprises.value}
             loading={data.value.status === 'LOADING'}
             router={router}
             updateCarte={async params => {

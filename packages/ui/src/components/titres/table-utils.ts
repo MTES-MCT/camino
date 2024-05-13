@@ -17,6 +17,7 @@ import { ComponentColumnData, TableRow, TextColumnData, Column } from '../_ui/ta
 import { Column as AutoColumn } from '../_ui/table-auto'
 import { TitreStatut } from '../_common/titre-statut'
 import { TitreForTable } from '../titre/titre-api-client'
+import { EntrepriseId } from 'camino-common/src/entreprise'
 
 const ordreStatut: { [key in TitreStatutId]: number } = {
   dmi: 0,
@@ -141,15 +142,17 @@ export const referencesCell = (titre: { references?: { nom: string; referenceTyp
     value: references,
   }
 }
-export const titulairesCell = (titre: { titulaires?: { nom?: string }[] }) => ({
-  component: markRaw(List),
-  props: {
-    elements: titre.titulaires?.map(({ nom }) => nom ?? ''),
-    mini: true,
-  },
-  class: 'mb--xs',
-  value: titre.titulaires?.map(({ nom }) => nom ?? '').join(', '),
-})
+export const titulairesCell = (titre: { titulaireIds?: EntrepriseId[] }, entreprisesIndex: Record<EntrepriseId, string>) => {
+  return {
+    component: markRaw(List),
+    props: {
+      elements: titre.titulaireIds?.map(id => entreprisesIndex[id]),
+      mini: true,
+    },
+    class: 'mb--xs',
+    value: titre.titulaireIds?.map(id => entreprisesIndex[id] ?? '').join(', '),
+  }
+}
 const domaineCell = (titre: { domaineId: DomaineId }) => ({
   component: markRaw(CaminoDomaine),
   props: { domaineId: titre.domaineId },
@@ -171,8 +174,8 @@ const activitesCell = (titre: { activitesAbsentes: number | null; activitesEnCon
   },
   value: (titre?.activitesAbsentes ?? 0) + (titre?.activitesEnConstruction ?? 0),
 })
-export const titresLignesBuild = (titres: TitreForTable[], activitesCol: boolean): TableRow[] =>
-  titres.map(titre => {
+export const titresLignesBuild = (titres: TitreForTable[], activitesCol: boolean, entreprisesIndex: Record<EntrepriseId, string>): TableRow[] => {
+  return titres.map(titre => {
     const departements: Departement[] = [...(titre.communes?.map(({ id }) => toDepartementId(id)) ?? []), ...getDepartementsBySecteurs(titre.secteursMaritime ?? [])]
       .filter(onlyUnique)
       .map(departementId => Departements[departementId])
@@ -192,7 +195,7 @@ export const titresLignesBuild = (titres: TitreForTable[], activitesCol: boolean
         },
         value: titre.substances?.map(substanceId => SubstancesLegale[substanceId].nom).join(', '),
       },
-      titulaires: titulairesCell(titre),
+      titulaires: titulairesCell(titre, entreprisesIndex),
       regions: {
         component: markRaw(List),
         props: {
@@ -222,3 +225,4 @@ export const titresLignesBuild = (titres: TitreForTable[], activitesCol: boolean
       columns,
     }
   })
+}

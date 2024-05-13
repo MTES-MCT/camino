@@ -21,6 +21,8 @@ import { getCommunesIndex } from '../../../database/queries/communes.js'
 import { getDemarcheContenu } from 'camino-common/src/demarche.js'
 import { getSections, getSectionsWithValue } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
 import { DemarchesTypes } from 'camino-common/src/static/demarchesTypes.js'
+import { GetEntreprises, getEntreprises } from '../entreprises.queries.js'
+import { EntrepriseId } from 'camino-common/src/entreprise.js'
 
 const getFacadesMaritimeCell = (secteursMaritime: SecteursMaritimes[], separator: string): string =>
   getFacadesComputed(secteursMaritime)
@@ -53,6 +55,12 @@ export const titresTableFormat = async (pool: Pool, titres: ITitre[]) => {
     pool,
     titres.flatMap(titre => titre.communes?.map(({ id }) => id) ?? [])
   )
+  const entreprises = await getEntreprises(pool)
+  const entreprisesIndex = entreprises.reduce<Record<EntrepriseId, GetEntreprises>>((acc, entreprise) => {
+    acc[entreprise.id] = entreprise
+
+    return acc
+  }, {})
 
   return titres.map(titre => {
     if (!titre.secteursMaritime) {
@@ -90,14 +98,14 @@ export const titresTableFormat = async (pool: Pool, titres: ITitre[]) => {
       departements: departements.join(separator),
       regions: regions.join(separator),
       administrations_noms: titre.administrations?.map(id => Administrations[id].nom).join(separator),
-      titulaires_noms: titre.titulaires?.map(e => e.nom).join(separator),
-      titulaires_adresses: titre.titulaires?.map(e => `${e.adresse} ${e.codePostal} ${e.commune}`).join(separator),
-      titulaires_legal: titre.titulaires?.map(e => e.legalEtranger || e.legalSiren).join(separator),
-      titulaires_categorie: titre.titulaires?.map(e => e.categorie).join(separator),
-      amodiataires_noms: titre.amodiataires?.map(e => e.nom).join(separator),
-      amodiataires_adresses: titre.amodiataires?.map(e => `${e.adresse} ${e.codePostal} ${e.commune}`).join(separator),
-      amodiataires_legal: titre.amodiataires?.map(e => e.legalEtranger || e.legalSiren).join(separator),
-      amodiataires_categorie: titre.amodiataires?.map(e => e.categorie).join(separator),
+      titulaires_noms: titre.titulaireIds?.map(id => entreprisesIndex[id]?.nom ?? '').join(separator),
+      titulaires_adresses: titre.titulaireIds?.map(id => `${entreprisesIndex[id]?.adresse} ${entreprisesIndex[id]?.code_postal} ${entreprisesIndex[id]?.commune}`).join(separator),
+      titulaires_legal: titre.titulaireIds?.map(id => entreprisesIndex[id]?.legal_etranger ?? entreprisesIndex[id]?.legal_siren).join(separator),
+      titulaires_categorie: titre.titulaireIds?.map(id => entreprisesIndex[id]?.categorie ?? '').join(separator),
+      amodiataires_noms: titre.amodiataireIds?.map(id => entreprisesIndex[id]?.nom ?? '').join(separator),
+      amodiataires_adresses: titre.amodiataireIds?.map(id => `${entreprisesIndex[id]?.adresse} ${entreprisesIndex[id]?.code_postal} ${entreprisesIndex[id]?.commune}`).join(separator),
+      amodiataires_legal: titre.amodiataireIds?.map(id => entreprisesIndex[id]?.legal_etranger ?? entreprisesIndex[id]?.legal_siren).join(separator),
+      amodiataires_categorie: titre.amodiataireIds?.map(id => entreprisesIndex[id]?.categorie ?? '').join(separator),
 
       geojson: JSON.stringify(titre.geojson4326Perimetre),
       ...titreReferences,
@@ -108,7 +116,7 @@ export const titresTableFormat = async (pool: Pool, titres: ITitre[]) => {
   })
 }
 
-export const titreGeojsonPropertiesFormat = (communesIndex: Record<CommuneId, string>, titre: ITitre) => {
+export const titreGeojsonPropertiesFormat = (communesIndex: Record<CommuneId, string>, entreprisesIndex: Record<EntrepriseId, GetEntreprises>, titre: ITitre) => {
   if (!titre.secteursMaritime) {
     throw new Error('les secteurs maritimes ne sont pas chargés')
   }
@@ -134,10 +142,10 @@ export const titreGeojsonPropertiesFormat = (communesIndex: Record<CommuneId, st
     departements,
     regions,
     administrations_noms: titre.administrations?.map(id => Administrations[id].nom),
-    titulaires_noms: titre.titulaires?.map(e => e.nom) || null,
-    titulaires_legal: titre.titulaires?.map(e => e.legalEtranger || e.legalSiren) || null,
-    amodiataires_noms: titre.amodiataires?.map(e => e.nom) || null,
-    amodiataires_legal: titre.amodiataires?.map(e => e.legalEtranger || e.legalSiren) || null,
+    titulaires_noms: titre.titulaireIds?.map(id => entreprisesIndex[id]?.nom) || null,
+    titulaires_legal: titre.titulaireIds?.map(id => entreprisesIndex[id]?.legal_etranger ?? entreprisesIndex[id]?.legal_siren) || null,
+    amodiataires_noms: titre.amodiataireIds?.map(id => entreprisesIndex[id]?.nom) || null,
+    amodiataires_legal: titre.amodiataireIds?.map(id => entreprisesIndex[id]?.legal_etranger ?? entreprisesIndex[id]?.legal_siren) || null,
     references: titre.references && titre.references.map(reference => `${ReferencesTypes[reference.referenceTypeId].nom}: ${reference.nom}`),
     ...titreContenuTableFormat(titre),
   }
@@ -159,6 +167,12 @@ export const titresGeojsonFormat = async (pool: Pool, titres: ITitre[]): Promise
     pool,
     titres.flatMap(titre => titre.communes?.map(({ id }) => id) ?? [])
   )
+  const entreprises = await getEntreprises(pool)
+  const entreprisesIndex = entreprises.reduce<Record<EntrepriseId, GetEntreprises>>((acc, entreprise) => {
+    acc[entreprise.id] = entreprise
+
+    return acc
+  }, {})
 
   return {
     type: 'FeatureCollection',
@@ -168,7 +182,7 @@ export const titresGeojsonFormat = async (pool: Pool, titres: ITitre[]): Promise
           ? {
               type: 'Feature',
               geometry: titre.geojson4326Perimetre,
-              properties: titreGeojsonPropertiesFormat(communesIndex, titre),
+              properties: titreGeojsonPropertiesFormat(communesIndex, entreprisesIndex, titre),
             }
           : null
       )

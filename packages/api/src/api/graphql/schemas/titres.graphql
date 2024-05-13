@@ -51,10 +51,10 @@ type Titre {
   substances: [String!]
 
   "Titualires du titre dans son dernier état de validité"
-  titulaires: [Entreprise]
+  titulaireIds: [String]
 
   "Amodiataires du titre dans son dernier état de validité"
-  amodiataires: [Entreprise]
+  amodiataireIds: [String]
 
   "Administrations gestionnaires ou locales en charge du titre dans son dernier état de validité"
   administrations: [String]

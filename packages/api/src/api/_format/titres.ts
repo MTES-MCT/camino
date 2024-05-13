@@ -1,6 +1,5 @@
 import { ITitre, ITitreDemarche } from '../../types.js'
 
-import { entrepriseFormat } from './entreprises.js'
 import { titreActiviteFormat } from './titres-activites.js'
 import { titreDemarcheFormat } from './titres-demarches.js'
 import { titreFormatFields } from './_fields.js'
@@ -53,10 +52,6 @@ export const titreFormat = (t: ITitre, fields: FieldsTitre = titreFormatFields) 
   if (fields.administrations) {
     t.administrations = titreAdministrationsGet(t)
   }
-
-  t.titulaires = t.titulaires?.map(entrepriseFormat)
-
-  t.amodiataires = t.amodiataires?.map(entrepriseFormat)
 
   return t
 }

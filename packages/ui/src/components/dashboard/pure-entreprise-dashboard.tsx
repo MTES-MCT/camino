@@ -15,13 +15,14 @@ import { DsfrLink } from '../_ui/dsfr-button'
 
 interface Props {
   user: User
-  entreprises: Pick<Entreprise, 'id' | 'nom'>[]
+  entreprises: Pick<Entreprise, 'id'>[]
   // TODO 2022-03-22: type the graphql
   apiClient: Pick<DashboardApiClient, 'getEntreprisesTitres'>
   displayActivites: boolean
+  allEntreprises: Entreprise[]
 }
 
-const fiscaliteVisibleForAtLeastOneEntreprise = (user: User, entreprises: Pick<Entreprise, 'id' | 'nom'>[], items: TitreEntreprise[]) => {
+const fiscaliteVisibleForAtLeastOneEntreprise = (user: User, entreprises: Pick<Entreprise, 'id'>[], items: TitreEntreprise[]) => {
   return entreprises.some(({ id }) =>
     fiscaliteVisible(
       user,
@@ -34,7 +35,13 @@ const fiscaliteVisibleForAtLeastOneEntreprise = (user: User, entreprises: Pick<E
 export const PureEntrepriseDashboard = defineComponent<Props>(props => {
   const data = ref<AsyncData<TitreEntreprise[]>>({ status: 'LOADING' })
 
-  const entrepriseTitres = (entreprises: TitreEntreprise[]): TableRow[] => titresLignesBuild(entreprises, props.displayActivites)
+  const entreprisesIndex = props.allEntreprises.reduce<Record<EntrepriseId, string>>((acc, entreprise) => {
+    acc[entreprise.id] = entreprise.nom
+
+    return acc
+  }, {})
+
+  const entrepriseTitres = (entreprises: TitreEntreprise[]): TableRow[] => titresLignesBuild(entreprises, props.displayActivites, entreprisesIndex)
   const entrepriseUrl = (entrepriseId: EntrepriseId) => `/entreprises/${entrepriseId}`
 
   const columns = titresColonnes.filter(({ id }) => (props.displayActivites ? true : id !== 'activites'))
@@ -71,8 +78,8 @@ export const PureEntrepriseDashboard = defineComponent<Props>(props => {
                             disabled={false}
                             icon={null}
                             to={entrepriseUrl(props.entreprises[0].id)}
-                            label={props.entreprises[0].nom}
-                            title={`Page de l’entreprise ${props.entreprises[0].nom}`}
+                            label={entreprisesIndex[props.entreprises[0].id]}
+                            title={`Page de l’entreprise ${entreprisesIndex[props.entreprises[0].id]}`}
                           />
                         </>
                       ) : (
@@ -85,15 +92,8 @@ export const PureEntrepriseDashboard = defineComponent<Props>(props => {
                                 item.map(({ typeId }) => ({ type_id: typeId }))
                               )
                             )
-                            .map(entreprise => (
-                              <DsfrLink
-                                disabled={false}
-                                class="fr-mr-1w"
-                                icon={null}
-                                to={entrepriseUrl(entreprise.id)}
-                                label={entreprise.nom}
-                                title={`Page de l’entreprise ${props.entreprises[0].nom}`}
-                              />
+                            .map(({ id }) => (
+                              <DsfrLink disabled={false} class="fr-mr-1w" icon={null} to={entrepriseUrl(id)} label={entreprisesIndex[id]} title={`Page de l’entreprise ${entreprisesIndex[id]}`} />
                             ))}
                         </>
                       )}
@@ -111,4 +111,4 @@ export const PureEntrepriseDashboard = defineComponent<Props>(props => {
 })
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-PureEntrepriseDashboard.props = ['user', 'entreprises', 'apiClient', 'displayActivites']
+PureEntrepriseDashboard.props = ['user', 'entreprises', 'apiClient', 'displayActivites', 'allEntreprises']

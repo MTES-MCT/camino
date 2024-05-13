@@ -102,11 +102,15 @@ export const titresFiltersQueryModify = (
     if (name === 'titre') {
       q.leftJoinRelated('titre')
     }
-    q.leftJoinRelated(jointureFormat(name, '[titulaires, amodiataires]'))
+
+    q.leftJoinRelated(jointureFormat(name, 'titulairesEtape'))
+    q.leftJoinRelated(jointureFormat(name, 'amodiatairesEtape'))
 
     q.where(b => {
-      b.whereIn(fieldFormat(name, 'titulaires.id'), entreprisesIds)
-      b.orWhereIn(fieldFormat(name, 'amodiataires.id'), entreprisesIds)
+      entreprisesIds.forEach(s => {
+        b.orWhereRaw(`?? @> '["${s}"]'::jsonb`, [fieldFormat(name, 'titulairesEtape.titulaireIds')])
+        b.orWhereRaw(`?? @> '["${s}"]'::jsonb`, [fieldFormat(name, 'amodiatairesEtape.amodiataireIds')])
+      })
     })
   }
 

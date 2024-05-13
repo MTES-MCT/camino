@@ -31,7 +31,7 @@ describe("valeur d'une propriété pour une étape", () => {
                 typeId: 'aac',
                 statutId: 'acc',
                 date: toCaminoDate('1000-01-01'),
-                titulaires: [],
+                titulaireIds: [],
                 ordre: 1,
                 communes: null,
                 surface: null,
@@ -41,7 +41,7 @@ describe("valeur d'une propriété pour une étape", () => {
                 typeId: 'aac',
                 statutId: 'acc',
                 date: toCaminoDate('1000-01-01'),
-                titulaires: [{ id: 'fr-xxxxxxxxx' }],
+                titulaireIds: ['fr-xxxxxxxxx'],
                 ordre: 1,
                 communes: null,
                 surface: null,
@@ -51,7 +51,7 @@ describe("valeur d'une propriété pour une étape", () => {
         ] as ITitreDemarche[],
         'pxm'
       )
-    ).toEqual([{ id: 'fr-xxxxxxxxx' }])
+    ).toEqual(['fr-xxxxxxxxx'])
   })
 
   test("retourne la propriété de l'étape antérieure qui contient la propriété voulue", () => {
@@ -112,7 +112,7 @@ describe("valeur d'une propriété pour une étape", () => {
                 id: 'demarche-02-etape-01',
                 date: '1000-01-01',
                 statutId: 'acc',
-                titulaires: null,
+                titulaireIds: null,
                 typeId: 'aac',
                 surface: 0,
                 ordre: 1,

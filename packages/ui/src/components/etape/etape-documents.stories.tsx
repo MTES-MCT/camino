@@ -1,10 +1,9 @@
 import { Meta, StoryFn } from '@storybook/vue3'
-import { EtapeEntrepriseDocument, entrepriseDocumentIdValidator, entrepriseIdValidator } from 'camino-common/src/entreprise'
+import { Entreprise, EtapeEntrepriseDocument, entrepriseDocumentIdValidator, entrepriseIdValidator } from 'camino-common/src/entreprise'
 import { EtapeDocuments } from './etape-documents'
 import { testBlankUser } from 'camino-common/src/tests-utils'
 import { EtapeDocument, etapeDocumentIdValidator } from 'camino-common/src/etape'
 import { toCaminoDate } from 'camino-common/src/date'
-import { EntreprisesByEtapeId } from 'camino-common/src/demarche'
 
 const meta: Meta = {
   title: 'Components/Etape/EtapeDocuments',
@@ -39,14 +38,16 @@ const documents: EtapeDocument[] = [
 
 const titulaireId1 = entrepriseIdValidator.parse('titulaire1')
 const titulaireId2 = entrepriseIdValidator.parse('titulaire2')
-const titulaires: Pick<EntreprisesByEtapeId, 'id' | 'nom'>[] = [
+const entreprises: Entreprise[] = [
   {
     id: titulaireId1,
     nom: 'Entreprise 1',
+    legal_siren: '',
   },
   {
     id: titulaireId2,
     nom: 'Une autre entreprise',
+    legal_siren: '',
   },
 ]
 
@@ -74,17 +75,17 @@ const entrepriseDocuments: EtapeEntrepriseDocument[] = [
   },
 ]
 
-export const Empty: StoryFn = () => <EtapeDocuments etapeDocuments={[]} entrepriseDocuments={[]} titulaires={[]} user={null} />
-export const NotConnected: StoryFn = () => <EtapeDocuments etapeDocuments={documents} entrepriseDocuments={[]} titulaires={titulaires} user={null} />
-export const UserSuper: StoryFn = () => <EtapeDocuments etapeDocuments={documents} entrepriseDocuments={entrepriseDocuments} titulaires={titulaires} user={{ ...testBlankUser, role: 'super' }} />
+export const Empty: StoryFn = () => <EtapeDocuments etapeDocuments={[]} entrepriseDocuments={[]} entreprises={entreprises} user={null} />
+export const NotConnected: StoryFn = () => <EtapeDocuments etapeDocuments={documents} entrepriseDocuments={[]} entreprises={entreprises} user={null} />
+export const UserSuper: StoryFn = () => <EtapeDocuments etapeDocuments={documents} entrepriseDocuments={entrepriseDocuments} entreprises={entreprises} user={{ ...testBlankUser, role: 'super' }} />
 export const UserAdministration: StoryFn = () => (
-  <EtapeDocuments etapeDocuments={documents} entrepriseDocuments={entrepriseDocuments} titulaires={titulaires} user={{ ...testBlankUser, role: 'admin', administrationId: 'aut-mrae-guyane-01' }} />
+  <EtapeDocuments etapeDocuments={documents} entrepriseDocuments={entrepriseDocuments} entreprises={entreprises} user={{ ...testBlankUser, role: 'admin', administrationId: 'aut-mrae-guyane-01' }} />
 )
 export const UserEntreprise: StoryFn = () => (
   <EtapeDocuments
     etapeDocuments={documents}
     entrepriseDocuments={entrepriseDocuments}
-    titulaires={titulaires}
+    entreprises={entreprises}
     user={{ ...testBlankUser, role: 'entreprise', entreprises: [{ id: entrepriseIdValidator.parse('entrepriseId'), nom: 'nom' }] }}
   />
 )

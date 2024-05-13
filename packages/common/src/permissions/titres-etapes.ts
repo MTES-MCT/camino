@@ -91,31 +91,31 @@ export const canCreateEtape = (
   user: User,
   etapeTypeId: EtapeTypeId,
   etapeStatutId: EtapeStatutId | null,
-  titulaires: { id: EntrepriseId }[],
+  titulaireIds: EntrepriseId[],
   titresAdministrationsLocales: AdministrationId[],
   demarcheTypeId: DemarcheTypeId,
   titre: { typeId: TitreTypeId; titreStatutId: TitreStatutId }
 ): boolean => {
-  return canCreateOrEditEtape(user, etapeTypeId, etapeStatutId, titulaires, titresAdministrationsLocales, demarcheTypeId, titre, 'creation')
+  return canCreateOrEditEtape(user, etapeTypeId, etapeStatutId, titulaireIds, titresAdministrationsLocales, demarcheTypeId, titre, 'creation')
 }
 
 export const canEditEtape = (
   user: User,
   etapeTypeId: EtapeTypeId,
   etapeStatutId: EtapeStatutId | null,
-  titulaires: { id: EntrepriseId }[],
+  titulaireIds: EntrepriseId[],
   titresAdministrationsLocales: AdministrationId[],
   demarcheTypeId: DemarcheTypeId,
   titre: { typeId: TitreTypeId; titreStatutId: TitreStatutId }
 ): boolean => {
-  return canCreateOrEditEtape(user, etapeTypeId, etapeStatutId, titulaires, titresAdministrationsLocales, demarcheTypeId, titre, 'modification')
+  return canCreateOrEditEtape(user, etapeTypeId, etapeStatutId, titulaireIds, titresAdministrationsLocales, demarcheTypeId, titre, 'modification')
 }
 
 const canCreateOrEditEtape = (
   user: User,
   etapeTypeId: EtapeTypeId,
   etapeStatutId: EtapeStatutId | null,
-  titulaires: { id: EntrepriseId }[],
+  titulaireIds: EntrepriseId[],
   titresAdministrationsLocales: AdministrationId[],
   demarcheTypeId: DemarcheTypeId,
   titre: { typeId: TitreTypeId; titreStatutId: TitreStatutId },
@@ -134,7 +134,7 @@ const canCreateOrEditEtape = (
       etapeTypeId === ETAPES_TYPES.demande &&
       etapeStatutId === ETAPES_STATUTS.EN_CONSTRUCTION &&
       TITRES_TYPES_IDS_DEMAT.includes(titre.typeId) &&
-      titulaires.some(({ id }) => user.entreprises?.some(entreprise => id === entreprise.id))
+      titulaireIds.some(id => user.entreprises?.some(entreprise => id === entreprise.id))
     )
   }
 
@@ -254,7 +254,7 @@ export const isEtapeDeposable = (
   titre: {
     typeId: TitreTypeId
     titreStatutId: TitreStatutId
-    titulaires: { id: EntrepriseId }[]
+    titulaires: EntrepriseId[]
     administrationsLocales: AdministrationId[]
   },
   demarcheTypeId: DemarcheTypeId,

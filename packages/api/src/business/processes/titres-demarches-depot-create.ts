@@ -1,4 +1,4 @@
-import type { ITitreDemarche, ITitreEntreprise, ITitreEtape } from '../../types.js'
+import type { ITitreDemarche, ITitreEtape } from '../../types.js'
 
 import { titreEtapeUpsert } from '../../database/queries/titres-etapes.js'
 import { titreDemarcheGet } from '../../database/queries/titres-demarches.js'
@@ -13,7 +13,9 @@ import { getCurrent } from 'camino-common/src/date.js'
 import type { Pool } from 'pg'
 import { getTitreTypeType } from 'camino-common/src/static/titresTypes.js'
 import { TitresTypesTypes } from 'camino-common/src/static/titresTypesTypes.js'
-import { isNotNullNorUndefinedNorEmpty, isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
+import { NonEmptyArray, isNonEmptyArray, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
+import { getEntreprise, getEntrepriseUtilisateurs } from '../../api/rest/entreprises.queries.js'
+
 const emailConfirmationDepotSend = async (
   emails: string[],
   params: {
@@ -31,22 +33,18 @@ const emailConfirmationDepotSend = async (
 }
 
 // envoie un email de confirmation à l’opérateur
-const titreEtapeDepotConfirmationEmailsSend = async (titreDemarche: ITitreDemarche, titulaires: ITitreEntreprise[]) => {
+const titreEtapeDepotConfirmationEmailsSend = async (titreDemarche: ITitreDemarche, titulaires: { nom: string; emails: NonEmptyArray<string> }[]) => {
   const titreUrl = titreUrlGet(titreDemarche.titreId)
   const titreNom = titreDemarche.titre!.nom
   const titreTypeNom = TitresTypesTypes[getTitreTypeType(titreDemarche.titre!.typeId)].nom
 
   for (const titulaire of titulaires) {
-    const emails = titulaire.utilisateurs?.map(u => u.email).filter(isNotNullNorUndefinedNorEmpty) ?? []
-
-    if (isNotNullNorUndefinedNorEmpty(emails)) {
-      await emailConfirmationDepotSend(emails, {
-        titreTypeNom,
-        titulaireNom: titulaire.nom ?? '',
-        titreUrl,
-        titreNom,
-      })
-    }
+    await emailConfirmationDepotSend(titulaire.emails, {
+      titreTypeNom,
+      titulaireNom: titulaire.nom ?? '',
+      titreUrl,
+      titreNom,
+    })
   }
 }
 
@@ -83,9 +81,22 @@ const titreEtapeDepotCreate = async (pool: Pool, titreDemarche: ITitreDemarche) 
   await titreEtapeUpdateTask(pool, titreEtapeDepot.id, titreEtapeDepot.titreDemarcheId, userSuper)
   await titreEtapeAdministrationsEmailsSend(titreEtapeDepot, titreDemarche.typeId, titreDemarche.titreId, titreDemarche.titre!.typeId, userSuper)
 
-  const titulaires = titreDemarche.titre?.titulaires
+  const titulaireIds = titreDemarche.titre?.titulaireIds
 
-  if (isNotNullNorUndefinedNorEmpty(titulaires)) {
+  if (isNotNullNorUndefinedNorEmpty(titulaireIds)) {
+    const titulaires: { nom: string; emails: NonEmptyArray<string> }[] = []
+    for (const titulaireId of titulaireIds) {
+      const entreprise = await getEntreprise(pool, titulaireId)
+      if (isNotNullNorUndefined(entreprise)) {
+        const utilisateurs = await getEntrepriseUtilisateurs(pool, titulaireId)
+
+        const emails = utilisateurs.map(({ email }) => email).filter((email): email is string => isNotNullNorUndefinedNorEmpty(email))
+        if (isNonEmptyArray(emails)) {
+          titulaires.push({ nom: entreprise.nom, emails })
+        }
+      }
+    }
+
     await titreEtapeDepotConfirmationEmailsSend(titreDemarche, titulaires)
   }
 }
@@ -99,7 +110,7 @@ export const titresEtapesDepotCreate = async (pool: Pool, demarcheId: string) =>
       fields: {
         etapes: { id: {} },
         titre: {
-          titulaires: { utilisateurs: { id: {} } },
+          titulairesEtape: { id: {} },
         },
       },
     },

@@ -2,10 +2,10 @@ import { buildMatrices } from './matrices.js'
 import { ITitre } from '../types.js'
 import { newEntrepriseId } from 'camino-common/src/entreprise.js'
 import { describe, expect, test } from 'vitest'
-import { checkCodePostal } from 'camino-common/src/static/departement.js'
 import { toCommuneId } from 'camino-common/src/static/communes.js'
 import { newTitreId } from '../database/models/_format/id-create.js'
 import { titreSlugValidator } from 'camino-common/src/validators/titres.js'
+import { checkCodePostal } from 'camino-common/src/static/departement'
 describe('matrices', () => {
   test('buildMatrices', () => {
     const openFiscaResponse = {
@@ -84,17 +84,14 @@ describe('matrices', () => {
         '97358': { articles: ['titre2-auru-97358'] },
       },
     }
-    const titres: Pick<ITitre, 'id' | 'slug' | 'titulaires' | 'communes'>[] = [
+
+    const entreprise1Id = newEntrepriseId('id1')
+    const entreprise2Id = newEntrepriseId('id2')
+    const entreprise3Id = newEntrepriseId('id3')
+    const titres: Pick<ITitre, 'id' | 'slug' | 'titulaireIds' | 'communes'>[] = [
       {
         id: newTitreId('titre1'),
-        titulaires: [
-          {
-            id: newEntrepriseId(''),
-            nom: 'titulaire1',
-            adresse: 'ladresse1',
-            legalSiren: 'legalSiren1',
-          },
-        ],
+        titulaireIds: [entreprise1Id],
         slug: titreSlugValidator.parse('slug-titre-1'),
         communes: [
           {
@@ -104,14 +101,7 @@ describe('matrices', () => {
       },
       {
         id: newTitreId('titre2'),
-        titulaires: [
-          {
-            id: newEntrepriseId(''),
-            nom: 'titulaire2',
-            adresse: 'ladresse2',
-            legalSiren: 'legalSiren2',
-          },
-        ],
+        titulaireIds: [entreprise2Id],
         slug: titreSlugValidator.parse('slug-titre-2'),
         communes: [
           {
@@ -124,16 +114,7 @@ describe('matrices', () => {
       },
       {
         id: newTitreId('titre3'),
-        titulaires: [
-          {
-            id: newEntrepriseId(''),
-            nom: 'titulaire3',
-            adresse: 'ladresse3',
-            codePostal: checkCodePostal('97311'),
-            commune: 'Saint-Laurent-du-Maroni',
-            legalSiren: 'legalSiren3',
-          },
-        ],
+        titulaireIds: [entreprise3Id],
         slug: titreSlugValidator.parse('slug-titre-3'),
         communes: [
           {
@@ -142,7 +123,6 @@ describe('matrices', () => {
         ],
       },
     ]
-
     expect(
       buildMatrices(
         openFiscaResponse,
@@ -204,7 +184,39 @@ describe('matrices', () => {
             id: toCommuneId('97310'),
             nom: 'Roura',
           },
-        ]
+        ],
+        {
+          [entreprise1Id]: {
+            id: entreprise1Id,
+            nom: 'titulaire1',
+            adresse: 'ladresse1',
+            legal_siren: 'legalSiren1',
+            legal_etranger: null,
+            code_postal: null,
+            commune: null,
+            categorie: null,
+          },
+          [entreprise2Id]: {
+            id: entreprise2Id,
+            nom: 'titulaire2',
+            adresse: 'ladresse2',
+            legal_siren: 'legalSiren2',
+            legal_etranger: null,
+            code_postal: null,
+            commune: null,
+            categorie: null,
+          },
+          [entreprise3Id]: {
+            id: entreprise3Id,
+            nom: 'titulaire3',
+            adresse: 'ladresse3',
+            legal_siren: 'legalSiren3',
+            legal_etranger: null,
+            code_postal: checkCodePostal('97311'),
+            commune: 'Saint-Laurent-du-Maroni',
+            categorie: null,
+          },
+        }
       )
     ).toMatchSnapshot()
   })

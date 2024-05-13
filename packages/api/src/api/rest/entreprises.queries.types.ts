@@ -75,12 +75,45 @@ export interface IDeleteEntrepriseDocumentQueryQuery {
   result: IDeleteEntrepriseDocumentQueryResult;
 }
 
+/** 'GetEntrepriseDb' parameters type */
+export interface IGetEntrepriseDbParams {
+  entreprise_id: string;
+}
+
+/** 'GetEntrepriseDb' return type */
+export interface IGetEntrepriseDbResult {
+  adresse: string | null;
+  archive: boolean;
+  categorie: string | null;
+  code_postal: string | null;
+  commune: string | null;
+  email: string | null;
+  id: string;
+  legal_etranger: string | null;
+  legal_forme: string | null;
+  legal_siren: string | null;
+  nom: string;
+  telephone: string | null;
+  url: string | null;
+}
+
+/** 'GetEntrepriseDb' query type */
+export interface IGetEntrepriseDbQuery {
+  params: IGetEntrepriseDbParams;
+  result: IGetEntrepriseDbResult;
+}
+
 /** 'GetEntreprisesDb' parameters type */
 export type IGetEntreprisesDbParams = void;
 
 /** 'GetEntreprisesDb' return type */
 export interface IGetEntreprisesDbResult {
+  adresse: string | null;
+  categorie: string | null;
+  code_postal: string | null;
+  commune: string | null;
   id: string;
+  legal_etranger: string | null;
   legal_siren: string | null;
   nom: string;
 }
@@ -89,5 +122,37 @@ export interface IGetEntreprisesDbResult {
 export interface IGetEntreprisesDbQuery {
   params: IGetEntreprisesDbParams;
   result: IGetEntreprisesDbResult;
+}
+
+/** 'GetEntrepriseUtilisateursDb' parameters type */
+export interface IGetEntrepriseUtilisateursDbParams {
+  entreprise_id: string;
+}
+
+/** 'GetEntrepriseUtilisateursDb' return type */
+export interface IGetEntrepriseUtilisateursDbResult {
+  email: string | null;
+}
+
+/** 'GetEntrepriseUtilisateursDb' query type */
+export interface IGetEntrepriseUtilisateursDbQuery {
+  params: IGetEntrepriseUtilisateursDbParams;
+  result: IGetEntrepriseUtilisateursDbResult;
+}
+
+/** 'CheckEntreprisesExistQuery' parameters type */
+export interface ICheckEntreprisesExistQueryParams {
+  entrepriseIds: readonly (string | null | void)[];
+}
+
+/** 'CheckEntreprisesExistQuery' return type */
+export interface ICheckEntreprisesExistQueryResult {
+  id: string;
+}
+
+/** 'CheckEntreprisesExistQuery' query type */
+export interface ICheckEntreprisesExistQueryQuery {
+  params: ICheckEntreprisesExistQueryParams;
+  result: ICheckEntreprisesExistQueryResult;
 }
 

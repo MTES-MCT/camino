@@ -145,12 +145,10 @@ async function createTitreWithEtapes(nomTitre: string, etapes: Omit<ITitreEtape,
     titreId: titre.id,
     typeId: 'oct',
   })
-  const etapesCrees = await titreEtapesCreate(titreDemarche, etapes)
 
-  await knex('titresTitulaires').insert({
-    titreEtapeId: etapesCrees[0].id,
-    entrepriseId: entreprises[0].id,
-  })
+  const [firstEtape, ...remainingEtapes] = etapes
+
+  const etapesCrees = await titreEtapesCreate(titreDemarche, [{ ...firstEtape, titulaireIds: [entreprises[0].id] }, ...remainingEtapes])
 
   await knex('titres')
     .update({ propsTitreEtapesIds: { titulaires: etapesCrees[0].id, points: etapesCrees[0].id } })
@@ -474,13 +472,13 @@ describe('getTitre', () => {
                 "etape_statut_id": "fai",
                 "etape_type_id": "mfr",
                 "fondamentale": {
-                  "amodiataires": null,
+                  "amodiataireIds": null,
                   "date_debut": null,
                   "date_fin": null,
                   "duree": null,
                   "perimetre": null,
                   "substances": [],
-                  "titulaires": null,
+                  "titulaireIds": null,
                 },
                 "id": "titre-etape-id",
                 "notes": null,

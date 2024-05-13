@@ -75,9 +75,7 @@ export const titresONF = (_pool: Pool) => async (req: CaminoRequest, res: Custom
             titre_statut_id: titre.titreStatutId,
             type_id: titre.typeId,
             references,
-            titulaires: titre.titulaires.map(entreprise => ({
-              nom: entreprise.nom ?? '',
-            })),
+            titulaireIds: titre.titulaireIds,
             dateCompletudePTMG,
             dateReceptionONF,
             dateCARM,
@@ -91,7 +89,7 @@ export const titresONF = (_pool: Pool) => async (req: CaminoRequest, res: Custom
   }
 }
 
-type TitreSanitize = NotNullableKeys<Required<Pick<ITitre, 'slug' | 'titulaires' | 'titreStatutId' | 'typeId'>>> & Pick<ITitre, 'id' | 'nom'>
+type TitreSanitize = NotNullableKeys<Required<Pick<ITitre, 'slug' | 'titulaireIds' | 'titreStatutId' | 'typeId'>>> & Pick<ITitre, 'id' | 'nom'>
 type TitreDemarcheSanitize = NotNullableKeys<Required<Pick<ITitreDemarche, 'etapes' | 'typeId'>>>
 
 type TitreArmAvecOctroi = {
@@ -119,7 +117,7 @@ async function titresArmAvecOctroi(user: User, administrationId: AdministrationI
     { ...filters, ids: titresAutorisesIds, colonne: 'nom' },
     {
       fields: {
-        titulaires: { id: {} },
+        titulairesEtape: { id: {} },
         demarches: { etapes: { id: {} } },
       },
     },
@@ -137,7 +135,7 @@ async function titresArmAvecOctroi(user: User, administrationId: AdministrationI
 
       const references = titre.references
 
-      if (!titre.titulaires) {
+      if (!titre.titulaireIds) {
         throw new Error('les titulaires ne sont pas chargés')
       }
 
@@ -175,7 +173,7 @@ async function titresArmAvecOctroi(user: User, administrationId: AdministrationI
   return titresAvecOctroiArm
 }
 
-type AdministrationTitreSanitize = NotNullableKeys<Required<Pick<ITitre, 'slug' | 'titulaires' | 'titreStatutId'>>> &
+type AdministrationTitreSanitize = NotNullableKeys<Required<Pick<ITitre, 'slug' | 'titulaireIds' | 'titreStatutId'>>> &
   Pick<ITitre, 'typeId' | 'id' | 'nom' | 'activitesEnConstruction' | 'activitesAbsentes'>
 
 type TitreAdministrationAvecReferences = {
@@ -222,7 +220,7 @@ export const titresAdministrations = (_pool: Pool) => async (req: CaminoRequest,
         { ...filters, ids: titresAutorisesIds, colonne: 'nom' },
         {
           fields: {
-            titulaires: { id: {} },
+            titulairesEtape: { id: {} },
             activites: { id: {} },
             demarches: { etapes: { id: {} } },
           },
@@ -236,7 +234,7 @@ export const titresAdministrations = (_pool: Pool) => async (req: CaminoRequest,
             return null
           }
 
-          if (!titre.titulaires) {
+          if (!titre.titulaireIds) {
             throw new Error('les titulaires ne sont pas chargés')
           }
 
@@ -306,7 +304,7 @@ export const titresAdministrations = (_pool: Pool) => async (req: CaminoRequest,
             titre_statut_id: titre.titreStatutId,
             type_id: titre.typeId,
             references,
-            titulaires: titre.titulaires,
+            titulaireIds: titre.titulaireIds,
             enAttenteDeAdministration,
             derniereEtape,
             prochainesEtapes,

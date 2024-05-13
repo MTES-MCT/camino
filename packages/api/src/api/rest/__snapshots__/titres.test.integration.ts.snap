@@ -22,26 +22,8 @@ exports[`titresAdministration > teste la récupération des données pour les Ad
   ],
   "slug": Any<String>,
   "titre_statut_id": "mod",
-  "titulaires": [
-    {
-      "adresse": null,
-      "archive": false,
-      "categorie": null,
-      "cedex": null,
-      "codePostal": null,
-      "commune": null,
-      "dateCreation": null,
-      "email": null,
-      "id": "plop",
-      "legalEtranger": null,
-      "legalForme": null,
-      "legalSiren": null,
-      "nom": "Mon Entreprise",
-      "operateur": null,
-      "paysId": null,
-      "telephone": null,
-      "url": null,
-    },
+  "titulaireIds": [
+    "plop",
   ],
   "type_id": "arm",
 }
@@ -69,26 +51,8 @@ exports[`titresAdministration > teste la récupération des données pour les Ad
   ],
   "slug": Any<String>,
   "titre_statut_id": "mod",
-  "titulaires": [
-    {
-      "adresse": null,
-      "archive": false,
-      "categorie": null,
-      "cedex": null,
-      "codePostal": null,
-      "commune": null,
-      "dateCreation": null,
-      "email": null,
-      "id": "plop",
-      "legalEtranger": null,
-      "legalForme": null,
-      "legalSiren": null,
-      "nom": "Mon Entreprise",
-      "operateur": null,
-      "paysId": null,
-      "telephone": null,
-      "url": null,
-    },
+  "titulaireIds": [
+    "plop",
   ],
   "type_id": "arm",
 }
@@ -110,10 +74,8 @@ exports[`titresONF > teste la récupération des données pour l'ONF 1`] = `
   ],
   "slug": Any<String>,
   "titre_statut_id": "mod",
-  "titulaires": [
-    {
-      "nom": "Mon Entreprise",
-    },
+  "titulaireIds": [
+    "plop",
   ],
   "type_id": "arm",
 }
@@ -135,10 +97,8 @@ exports[`titresONF > teste la récupération des données pour l'ONF 2`] = `
   ],
   "slug": Any<String>,
   "titre_statut_id": "mod",
-  "titulaires": [
-    {
-      "nom": "Mon Entreprise",
-    },
+  "titulaireIds": [
+    "plop",
   ],
   "type_id": "arm",
 }

@@ -52,12 +52,12 @@ type Etape {
   substances: [String!]
 
   "Titulaires du titre dans son dernier état de validité"
-  titulaires: [Entreprise]
+  titulaireIds: [String]
 
   # import * from 'scalars.graphql'
 
   "Amodiataires du titre dans son dernier état de validité"
-  amodiataires: [Entreprise]
+  amodiataireIds: [String]
 
   "Administrations en charge du titre"
   administrations: [String]
@@ -115,10 +115,10 @@ type EtapeHeritage {
   geojsonOrigineForages: Json
 
   "Titulaires du titre dans son dernier état de validité"
-  titulaires: [Entreprise]
+  titulaireIds: [String]
 
   "Amodiataires du titre dans son dernier état de validité"
-  amodiataires: [Entreprise]
+  amodiataireIds: [String]
 
   contenu: Json
 
@@ -162,8 +162,8 @@ input InputEtapeCreation {
   geojsonOriginePerimetre: Json
   geojsonOrigineForages: Json
   geojsonOrigineGeoSystemeId: String
-  titulaires: [InputEtapeEntreprise!]
-  amodiataires: [InputEtapeEntreprise!]
+  titulaireIds: [String!]
+  amodiataireIds: [String!]
   heritageProps: InputHeritageProps
   heritageContenu: Json
   contenu: Json
@@ -214,8 +214,8 @@ input InputEtapeModification {
   dateDebut: String
   dateFin: String
   substances: [String!]
-  titulaires: [InputEtapeEntreprise!]
-  amodiataires: [InputEtapeEntreprise!]
+  titulaireIds: [String!]
+  amodiataireIds: [String!]
   heritageProps: InputHeritageProps
   heritageContenu: Json
   contenu: Json
@@ -260,9 +260,4 @@ input InputHeritageProps {
 
 input InputHeritageProp {
   actif: Boolean
-}
-
-input InputEtapeEntreprise {
-  id: ID!
-  operateur: Boolean
 }

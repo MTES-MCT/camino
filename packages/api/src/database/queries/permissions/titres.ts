@@ -3,24 +3,18 @@ import { QueryBuilder, raw } from 'objection'
 import Titres from '../../models/titres.js'
 import TitresDemarches from '../../models/titres-demarches.js'
 import TitresActivites from '../../models/titres-activites.js'
-import Entreprises from '../../models/entreprises.js'
 
 import { titresActivitesQueryModify } from './titres-activites.js'
 import { titresDemarchesQueryModify } from './titres-demarches.js'
 import { administrationsTitresQuery } from './administrations.js'
-import { entreprisesQueryModify, entreprisesTitresQuery } from './entreprises.js'
+import { entreprisesTitresQuery } from './entreprises.js'
 import TitresEtapes from '../../models/titres-etapes.js'
 import { isAdministration, isBureauDEtudes, isEntreprise, isSuper, User } from 'camino-common/src/roles.js'
 import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools.js'
 
 export const titresVisibleByEntrepriseQuery = (q: QueryBuilder<Titres, Titres | Titres[]>, entreprisesIds: string[]) => {
   // titres dont il est titulaire ou amodiataire
-  q.whereExists(
-    entreprisesTitresQuery(entreprisesIds, 'titres', {
-      isTitulaire: true,
-      isAmodiataire: true,
-    })
-  )
+  q.whereExists(entreprisesTitresQuery(entreprisesIds, 'titres'))
 }
 
 export const titresArmEnDemandeQuery = (q: QueryBuilder<Titres, Titres | Titres[]>) => {
@@ -124,14 +118,6 @@ export const titresQueryModify = (q: QueryBuilder<Titres, Titres | Titres[]>, us
   // visibilité des activités
   q.modifyGraph('activites', b => {
     titresActivitesQueryModify(b as QueryBuilder<TitresActivites, TitresActivites | TitresActivites[]>, user)
-  })
-
-  q.modifyGraph('titulaires', b => {
-    entreprisesQueryModify(b as QueryBuilder<Entreprises, Entreprises | Entreprises[]>, user).select('titresTitulaires.operateur')
-  })
-
-  q.modifyGraph('amodiataires', b => {
-    entreprisesQueryModify(b as QueryBuilder<Entreprises, Entreprises | Entreprises[]>, user).select('titresAmodiataires.operateur')
   })
 
   return q

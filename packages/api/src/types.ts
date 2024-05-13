@@ -128,8 +128,6 @@ interface ICommune {
   surface?: number | null
 }
 
-export const DOCUMENTS_REPERTOIRES = ['demarches', 'tmp'] as const
-
 interface IEntrepriseEtablissement {
   id: string
   entrepriseId: string
@@ -156,14 +154,7 @@ interface IEntreprise {
   telephone?: string | null
   url?: string | null
   etablissements?: IEntrepriseEtablissement[] | null
-  utilisateurs?: IUtilisateur[] | null
-  titulaireTitres?: ITitre[] | null
-  amodiataireTitres?: ITitre[] | null
   archive?: boolean | null
-}
-
-interface ITitreEntreprise extends IEntreprise {
-  operateur?: boolean
 }
 
 export interface ITitreTitre {
@@ -182,8 +173,10 @@ interface ITitre {
   activitesAbsentes?: number | null
   substancesEtape?: ITitreEtape | null
   substances?: SubstanceLegaleId[] | null
-  titulaires?: ITitreEntreprise[] | null
-  amodiataires?: ITitreEntreprise[] | null
+  titulairesEtape?: ITitreEtape | null
+  titulaireIds?: EntrepriseId[] | null
+  amodiatairesEtape?: ITitreEtape | null
+  amodiataireIds?: EntrepriseId[] | null
   administrationsLocales?: AdministrationId[] | null
   administrations?: AdministrationId[] | null
   surface?: number | null
@@ -262,8 +255,8 @@ type ITitreEtape = {
   dateDebut?: CaminoDate | null
   dateFin?: CaminoDate | null
   substances?: SubstanceLegaleId[] | null
-  titulaires?: ITitreEntreprise[] | null
-  amodiataires?: ITitreEntreprise[] | null
+  titulaireIds?: EntrepriseId[] | null
+  amodiataireIds?: EntrepriseId[] | null
   administrationsLocales?: AdministrationId[] | null
   entrepriseDocumentIds?: EntrepriseDocumentId[] | null
   communes?: ICommune[] | null
@@ -380,7 +373,6 @@ export {
   ITitreDemarche,
   ITitreEtape,
   ITitreEtapeFiltre,
-  ITitreEntreprise,
   IUtilisateur,
   IUtilisateurTitre,
   IPropId,

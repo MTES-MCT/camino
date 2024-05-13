@@ -183,12 +183,12 @@ from
     titres_etapes te
     join titres_demarches td on td.id = te.titre_demarche_id
     join titres t on t.id = td.titre_id
-    left join titres_titulaires tt on tt.titre_etape_id = t.props_titre_etapes_ids ->> 'titulaires'
-    left join titres_amodiataires tta on tta.titre_etape_id = t.props_titre_etapes_ids ->> 'amodiataires'
+    left join titres_etapes etape_titulaires on etape_titulaires.id = t.props_titre_etapes_ids ->> 'titulaires'
+    left join titres_etapes etape_amodiataires on etape_amodiataires.id = t.props_titre_etapes_ids ->> 'amodiataires'
 where
     te.id = $ etapeId !
-    and (tt.entreprise_id = e.id
-        or tta.entreprise_id = e.id)
+    and (etape_titulaires.titulaire_ids ? e.id
+        or etape_amodiataires.amodiataire_ids ? e.id)
 `
 
 const getEtapeByDemarcheIdAndEtapeTypeIdValidator = z.object({

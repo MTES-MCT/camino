@@ -10,10 +10,12 @@ import { activitesUrlGet } from '../utils/urls-get.js'
 import { EmailTemplateId } from '../../tools/api-mailjet/types.js'
 import { CaminoDate, getCurrent } from 'camino-common/src/date.js'
 import { sortedActivitesTypes } from 'camino-common/src/static/activitesTypes.js'
-import { isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
+import { isNotNullNorUndefinedNorEmpty, isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
 import { canHaveActiviteTypeId } from 'camino-common/src/permissions/titres.js'
+import { Pool } from 'pg'
+import { getEntrepriseUtilisateurs } from '../../api/rest/entreprises.queries.js'
 
-export const titresActivitesUpdate = async (titresIds?: string[], aujourdhui: CaminoDate = getCurrent()) => {
+export const titresActivitesUpdate = async (pool: Pool, titresIds?: string[], aujourdhui: CaminoDate = getCurrent()) => {
   console.info()
   console.info('activités des titres…')
 
@@ -26,7 +28,7 @@ export const titresActivitesUpdate = async (titresIds?: string[], aujourdhui: Ca
         },
         pointsEtape: { id: {} },
         activites: { id: {} },
-        titulaires: { utilisateurs: { id: {} } },
+        titulairesEtape: { id: {} },
       },
     },
     userSuper
@@ -69,17 +71,20 @@ export const titresActivitesUpdate = async (titresIds?: string[], aujourdhui: Ca
     for (const activite of titresActivitesCreated) {
       const titre = titres.find(({ id }) => id === activite.titreId)
 
-      if (!titre) {
+      if (isNullOrUndefined(titre)) {
         console.error(`titre inconnu : ${activite.titreId}`)
         continue
       }
-      titre.titulaires?.forEach(titulaire =>
-        titulaire.utilisateurs?.forEach(({ email }) => {
-          if (isNotNullNorUndefined(email)) {
+
+      if (isNotNullNorUndefinedNorEmpty(titre.titulaireIds)) {
+        const utilisateursByEntreprise = await Promise.all(titre.titulaireIds.map(titulaireId => getEntrepriseUtilisateurs(pool, titulaireId)))
+
+        utilisateursByEntreprise.flat().forEach(({ email }) => {
+          if (isNotNullNorUndefinedNorEmpty(email)) {
             emails.add(email)
           }
         })
-      )
+      }
     }
 
     // envoi d’email aux opérateurs pour les prévenir de l’ouverture des déclarations

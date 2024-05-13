@@ -1,7 +1,7 @@
 /* eslint-disable sql/no-unsafe-query */
 import { dbManager } from '../../../tests/db-manager.js'
 import { graphQLCall, queryImport } from '../../../tests/_utils/index.js'
-import { titreCreate } from '../../database/queries/titres.js'
+import options from '../../database/queries/_options.js'
 import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations.js'
 import { ITitre } from '../../types.js'
 import { userSuper } from '../../database/user-super'
@@ -14,6 +14,7 @@ import { entrepriseUpsert } from '../../database/queries/entreprises.js'
 import { newEntrepriseId } from 'camino-common/src/entreprise.js'
 import { communeIdValidator } from 'camino-common/src/static/communes.js'
 import type { Knex } from 'knex'
+import Titres from '../../database/models/titres'
 
 console.info = vi.fn()
 console.error = vi.fn()
@@ -168,7 +169,7 @@ describe('titre', () => {
       publicLecture: true,
       propsTitreEtapesIds: {},
     }
-    await titreCreate(titrePublicLecture, {})
+    await Titres.query().upsertGraph(titrePublicLecture, options.titres.update)
     const res = await graphQLCall(dbPool, titreQuery, { id: 'titre-id' }, undefined)
 
     expect(res.body.errors).toBe(undefined)
@@ -178,7 +179,7 @@ describe('titre', () => {
   })
 
   test('ne peut pas voir un titre qui n\'est pas en "lecture publique" (utilisateur anonyme)', async () => {
-    await titreCreate(titrePublicLectureFalse, {})
+    await Titres.query().upsertGraph(titrePublicLectureFalse, options.titres.update)
     const res = await graphQLCall(dbPool, titreQuery, { id: 'titre-id' }, undefined)
 
     expect(res.body.errors).toBe(undefined)
@@ -186,7 +187,7 @@ describe('titre', () => {
   })
 
   test('ne peut voir que les démarches qui sont en "lecture publique" (utilisateur anonyme)', async () => {
-    await titreCreate(titreDemarchesPubliques, {})
+    await Titres.query().upsertGraph(titreDemarchesPubliques, options.titres.update)
     const res = await graphQLCall(dbPool, titreQuery, { id: 'titre-id' }, undefined)
 
     expect(res.body.errors).toBe(undefined)
@@ -201,7 +202,7 @@ describe('titre', () => {
   })
 
   test('ne peut voir que les étapes qui sont en "lecture publique" (utilisateur anonyme)', async () => {
-    await titreCreate(titreEtapesPubliques, {})
+    await Titres.query().upsertGraph(titreEtapesPubliques, options.titres.update)
     const res = await graphQLCall(dbPool, titreQuery, { id: 'titre-id' }, undefined)
 
     expect(res.body.errors).toBe(undefined)
@@ -220,7 +221,7 @@ describe('titre', () => {
   })
 
   test('ne peut pas voir certaines étapes (utilisateur DGTM)', async () => {
-    await titreCreate(titreEtapesPubliques, {})
+    await Titres.query().upsertGraph(titreEtapesPubliques, options.titres.update)
     const res = await graphQLCall(dbPool, titreQuery, { id: 'titre-id' }, { role: 'admin', administrationId: ADMINISTRATION_IDS['DGTM - GUYANE'] })
 
     expect(res.body.errors).toBe(undefined)
@@ -244,7 +245,7 @@ describe('titre', () => {
   })
 
   test('ne peut pas voir certaines étapes (utilisateur ONF)', async () => {
-    await titreCreate(titreEtapesPubliques, {})
+    await Titres.query().upsertGraph(titreEtapesPubliques, options.titres.update)
     const res = await graphQLCall(
       dbPool,
       titreQuery,
@@ -306,7 +307,7 @@ describe('titres', () => {
             statutId: 'acc',
             date: toCaminoDate('2020-02-02'),
             administrationsLocales: ['dea-guyane-01'],
-            titulaires: [{ id: entrepriseId1 }],
+            titulaireIds: [entrepriseId1],
             communes: [{ id: communeId }],
           },
         ],
@@ -322,7 +323,7 @@ describe('titres', () => {
       archive: false,
     })
 
-    await titreCreate(titre, {})
+    await Titres.query().upsertGraph(titre, options.titres.update)
 
     const res = await graphQLCall(
       dbPool,
@@ -357,7 +358,7 @@ describe('titres', () => {
       archive: false,
     })
 
-    await titreCreate(titre, {})
+    await Titres.query().upsertGraph(titre, options.titres.update)
 
     const res = await graphQLCall(
       dbPool,
@@ -394,7 +395,7 @@ describe('titres', () => {
 
     const nomCommune = 'NOM DE COMMUNE'
 
-    await titreCreate(titre, {})
+    await Titres.query().upsertGraph(titre, options.titres.update)
     await knexStuff.raw(`insert into communes (id, nom) values ('${communeId}', '${nomCommune}')`)
 
     const res = await graphQLCall(

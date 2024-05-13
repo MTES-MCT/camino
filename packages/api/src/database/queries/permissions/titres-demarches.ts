@@ -33,12 +33,7 @@ export const titresDemarchesQueryModify = (q: QueryBuilder<TitresDemarches, Titr
         b.orWhere(c => {
           c.where('titresDemarches.entreprisesLecture', true)
 
-          c.whereExists(
-            entreprisesTitresQuery(entreprisesIds, 'titre', {
-              isTitulaire: true,
-              isAmodiataire: true,
-            })
-          )
+          c.whereExists(entreprisesTitresQuery(entreprisesIds, 'titre'))
         })
       }
     })

@@ -29,14 +29,6 @@ export type DemarcheSlug = z.infer<typeof demarcheSlugValidator>
 export const demarcheIdOrSlugValidator = z.union([demarcheIdValidator, demarcheSlugValidator])
 export type DemarcheIdOrSlug = z.infer<typeof demarcheIdOrSlugValidator>
 
-export const entreprisesByEtapeIdValidator = z.object({
-  id: entrepriseIdValidator,
-  nom: z.string(),
-  operateur: z.coerce.boolean(),
-})
-
-export type EntreprisesByEtapeId = z.infer<typeof entreprisesByEtapeIdValidator>
-
 const demarcheEtapeCommonValidator = z.object({
   etape_statut_id: etapeStatutIdValidator,
   date: caminoDateValidator,
@@ -74,8 +66,8 @@ const demarcheEtapeFondamentaleValidator = z.intersection(
       date_fin: caminoDateValidator.nullable(),
       duree: z.number().nullable(),
       substances: z.array(substanceLegaleIdValidator).nullable(),
-      titulaires: z.array(entreprisesByEtapeIdValidator).nullable(),
-      amodiataires: z.array(entreprisesByEtapeIdValidator).nullable(),
+      titulaireIds: z.array(entrepriseIdValidator).nullable(),
+      amodiataireIds: z.array(entrepriseIdValidator).nullable(),
       perimetre: etapePerimetreValidator.nullable(),
     }),
   }),

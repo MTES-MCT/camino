@@ -29,11 +29,6 @@ export type EtapeIdOrSlug = z.infer<typeof etapeIdOrSlugValidator>
 
 export type HeritageProp<T> = { actif: boolean; etape?: T | null }
 
-export interface EtapeEntreprise {
-  id: EntrepriseId
-  operateur: boolean | null
-}
-
 // TODO 2023-06-14 Utiliser seulement par l’ui, à bouger dedans
 export type Etape = {
   id: EtapeId | null
@@ -42,8 +37,8 @@ export type Etape = {
   typeId: EtapeTypeId | null
   statutId: EtapeStatutId | null
   substances: SubstanceLegaleId[]
-  titulaires: EtapeEntreprise[]
-  amodiataires: EtapeEntreprise[]
+  titulaireIds: EntrepriseId[]
+  amodiataireIds: EntrepriseId[]
   administrations?: AdministrationId[]
   communes?: string[]
 
@@ -154,8 +149,8 @@ export const flattenEtapeWithHeritage = (
 ): DeepReadonly<EtapeWithHeritage> => {
   const substances: Readonly<SubstanceLegaleId[]> = heritage.heritageProps.substances.actif ? heritage.heritageProps.substances.etape?.substances ?? [] : etape.substances
   const duree: number | null = heritage.heritageProps.duree.actif ? heritage.heritageProps.duree.etape?.duree ?? null : etape.duree
-  const amodiataires: DeepReadonly<EtapeEntreprise[]> = heritage.heritageProps.amodiataires.actif ? heritage.heritageProps.amodiataires.etape?.amodiataires ?? [] : etape.amodiataires
-  const titulaires: DeepReadonly<EtapeEntreprise[]> = heritage.heritageProps.titulaires.actif ? heritage.heritageProps.titulaires.etape?.titulaires ?? [] : etape.titulaires
+  const amodiataireIds: DeepReadonly<EntrepriseId[]> = heritage.heritageProps.amodiataires.actif ? heritage.heritageProps.amodiataires.etape?.amodiataireIds ?? [] : etape.amodiataireIds
+  const titulaireIds: DeepReadonly<EntrepriseId[]> = heritage.heritageProps.titulaires.actif ? heritage.heritageProps.titulaires.etape?.titulaireIds ?? [] : etape.titulaireIds
   const dateDebut: CaminoDate | null = heritage.heritageProps.dateDebut.actif ? heritage.heritageProps.dateDebut.etape?.dateDebut ?? null : etape.dateDebut
   const dateFin: CaminoDate | null = heritage.heritageProps.dateFin.actif ? heritage.heritageProps.dateFin.etape?.dateFin ?? null : etape.dateFin
 
@@ -200,5 +195,5 @@ export const flattenEtapeWithHeritage = (
     }
   }
 
-  return { ...etape, ...heritage, substances, duree, amodiataires, titulaires, dateDebut, dateFin, ...perimetre, contenu: newContenu }
+  return { ...etape, ...heritage, substances, duree, amodiataireIds, titulaireIds, dateDebut, dateFin, ...perimetre, contenu: newContenu }
 }

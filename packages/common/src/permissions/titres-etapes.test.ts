@@ -82,7 +82,7 @@ test.each<{
   user: TestUser
   etapeTypeId: EtapeTypeId
   etapeStatutId: EtapeStatutId | null
-  titreTitulaires: { id: EntrepriseId }[]
+  titreTitulaires: EntrepriseId[]
   titresAdministrationsLocales: AdministrationId[]
   demarcheTypeId: DemarcheTypeId
   titre: { typeId: TitreTypeId; titreStatutId: TitreStatutId }
@@ -132,7 +132,7 @@ test.each<{
     user: { role: 'entreprise', entreprises: [{ id: newEntrepriseId('1'), nom: 'nom' }] },
     etapeTypeId: 'mfr',
     etapeStatutId: null,
-    titreTitulaires: [{ id: newEntrepriseId('1') }],
+    titreTitulaires: [newEntrepriseId('1')],
     titresAdministrationsLocales: [],
     demarcheTypeId: 'ren',
     titre: { typeId: 'apc', titreStatutId: 'dmc' },
@@ -142,7 +142,7 @@ test.each<{
     user: { role: 'entreprise', entreprises: [{ id: newEntrepriseId('1'), nom: 'nom' }] },
     etapeTypeId: 'mfr',
     etapeStatutId: 'aco',
-    titreTitulaires: [{ id: newEntrepriseId('1') }],
+    titreTitulaires: [newEntrepriseId('1')],
     titresAdministrationsLocales: [],
     demarcheTypeId: 'oct',
     titre: { typeId: 'arm', titreStatutId: 'dmc' },

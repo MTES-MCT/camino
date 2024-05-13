@@ -391,10 +391,7 @@ const EtapeEditFormInternal = defineComponent<
   }
 
   const titulairesAndAmodiataires = computed<Entreprise[]>(() => {
-    const titulaireIds = props.etape.titulaires.map(({ id }) => id)
-    const amodiatairesIds = props.etape.amodiataires.map(({ id }) => id)
-
-    return props.entreprises.filter(({ id }) => titulaireIds.includes(id) || amodiatairesIds.includes(id))
+    return props.entreprises.filter(({ id }) => props.etape.titulaireIds.includes(id) || props.etape.amodiataireIds.includes(id))
   })
 
   const isHelpVisible = computed<boolean>(() => {

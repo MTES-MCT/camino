@@ -194,6 +194,36 @@ describe('etapeCreer', () => {
     expect(res.body.errors[0].message).toBe('statut de l\'étape "fai" invalide pour une type d\'étape ede pour une démarche de type octroi')
   })
 
+  test('ne peut pas créer une étape avec des titulaires inexistants', async () => {
+    const titreDemarcheId = await demarcheCreate()
+
+    const res = await graphQLCall(
+      dbPool,
+      etapeCreerQuery,
+      {
+        etape: {
+          typeId: 'ede',
+          statutId: 'fav',
+          titreDemarcheId,
+          titulaireIds: ['inexistant'],
+          date: '2018-01-01',
+          heritageContenu: {
+            deal: { motifs: { actif: false }, agent: { actif: false } },
+          },
+          contenu: {
+            deal: { motifs: 'motif', agent: 'agent' },
+          },
+          etapeDocuments: [],
+        },
+      },
+      {
+        role: 'super',
+      }
+    )
+
+    expect(res.body.errors[0].message).toBe("certaines entreprises n'existent pas")
+  })
+
   test('ne peut pas créer une étape mfr avec un statut fai avec un champ obligatoire manquant (utilisateur super)', async () => {
     const titreDemarcheId = await demarcheCreate()
     const dom = testDocumentCreateTemp('dom')

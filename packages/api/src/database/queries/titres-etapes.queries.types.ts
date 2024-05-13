@@ -134,42 +134,6 @@ export interface IInsertEtapeDocumentDbQuery {
   result: IInsertEtapeDocumentDbResult;
 }
 
-/** 'GetTitulairesByEtapeIdQueryDb' parameters type */
-export interface IGetTitulairesByEtapeIdQueryDbParams {
-  etapeId: string;
-}
-
-/** 'GetTitulairesByEtapeIdQueryDb' return type */
-export interface IGetTitulairesByEtapeIdQueryDbResult {
-  id: string;
-  nom: string;
-  operateur: boolean | null;
-}
-
-/** 'GetTitulairesByEtapeIdQueryDb' query type */
-export interface IGetTitulairesByEtapeIdQueryDbQuery {
-  params: IGetTitulairesByEtapeIdQueryDbParams;
-  result: IGetTitulairesByEtapeIdQueryDbResult;
-}
-
-/** 'GetAmodiatairesByEtapeIdQueryDb' parameters type */
-export interface IGetAmodiatairesByEtapeIdQueryDbParams {
-  etapeId: string;
-}
-
-/** 'GetAmodiatairesByEtapeIdQueryDb' return type */
-export interface IGetAmodiatairesByEtapeIdQueryDbResult {
-  id: string;
-  nom: string;
-  operateur: boolean | null;
-}
-
-/** 'GetAmodiatairesByEtapeIdQueryDb' query type */
-export interface IGetAmodiatairesByEtapeIdQueryDbQuery {
-  params: IGetAmodiatairesByEtapeIdQueryDbParams;
-  result: IGetAmodiatairesByEtapeIdQueryDbResult;
-}
-
 /** 'GetDocumentsByEtapeIdQuery' parameters type */
 export interface IGetDocumentsByEtapeIdQueryParams {
   titre_etape_id: string;

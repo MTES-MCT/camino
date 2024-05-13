@@ -35,17 +35,19 @@ import {
   EntrepriseDocumentId,
   newEntrepriseId,
   Entreprise,
+  entrepriseValidator,
+  entrepriseTypeValidator,
 } from 'camino-common/src/entreprise.js'
 import { isSuper, User } from 'camino-common/src/roles.js'
 import { canCreateEntreprise, canEditEntreprise, canSeeEntrepriseDocuments } from 'camino-common/src/permissions/entreprises.js'
 import { emailCheck } from '../../tools/email-check.js'
 import { apiInseeEntrepriseAndEtablissementsGet } from '../../tools/api-insee/index.js'
-import { entrepriseFormat } from '../_format/entreprises.js'
 import { Pool } from 'pg'
 import {
   deleteEntrepriseDocument as deleteEntrepriseDocumentQuery,
   getEntrepriseDocuments as getEntrepriseDocumentsQuery,
   getEntreprises,
+  getEntreprise as getEntrepriseQuery,
   getLargeobjectIdByEntrepriseDocumentId,
   insertEntrepriseDocument,
 } from './entreprises.queries.js'
@@ -55,6 +57,8 @@ import { NewDownload } from './fichiers'
 import Decimal from 'decimal.js'
 
 import { createLargeObject } from '../../database/largeobjects.js'
+import { z } from 'zod'
+import { getEntrepriseEtablissements } from './entreprises-etablissements.queries.js'
 
 const conversion = (substanceFiscale: SubstanceFiscale, quantite: IContenuValeur): Decimal => {
   if (typeof quantite !== 'number') {
@@ -69,7 +73,7 @@ const conversion = (substanceFiscale: SubstanceFiscale, quantite: IContenuValeur
 export const bodyBuilder = (
   activitesAnnuelles: Pick<TitresActivites, 'titreId' | 'contenu'>[],
   activitesTrimestrielles: Pick<TitresActivites, 'titreId' | 'contenu'>[],
-  titres: Pick<Titres, 'titulaires' | 'amodiataires' | 'substances' | 'communes' | 'id'>[],
+  titres: Pick<Titres, 'titulaireIds' | 'amodiataireIds' | 'substances' | 'communes' | 'id'>[],
   annee: number,
   entreprises: Pick<IEntreprise, 'id' | 'categorie' | 'nom'>[]
 ) => {
@@ -91,10 +95,10 @@ export const bodyBuilder = (
     if (isNullOrUndefined(titre.communes)) {
       throw new Error(`les communes du titre ${activite.titreId} ne sont pas chargées`)
     }
-    if (isNullOrUndefined(titre.titulaires)) {
+    if (isNullOrUndefined(titre.titulaireIds)) {
       throw new Error(`les titulaires du titre ${activite.titreId} ne sont pas chargées`)
     }
-    if (isNullOrUndefined(titre.amodiataires)) {
+    if (isNullOrUndefined(titre.amodiataireIds)) {
       throw new Error(`les amodiataires du titre ${activite.titreId} ne sont pas chargés`)
     }
 
@@ -102,11 +106,11 @@ export const bodyBuilder = (
     // https://trello.com/c/2WJcnFRw/321-featfiscalit%C3%A9-les-titres-avec-un-seul-titulaire-et-un-seul-amodiataire-sont-g%C3%A9r%C3%A9s
     let entrepriseId: null | string = null
     let amodiataire = false
-    if (titre.amodiataires.length === 1) {
-      entrepriseId = titre.amodiataires[0].id
+    if (titre.amodiataireIds.length === 1) {
+      entrepriseId = titre.amodiataireIds[0]
       amodiataire = true
-    } else if (titre.titulaires.length === 1) {
-      entrepriseId = titre.titulaires[0].id
+    } else if (titre.titulaireIds.length === 1) {
+      entrepriseId = titre.titulaireIds[0]
     } else {
       throw new Error(`plusieurs entreprises liées au titre ${activite.titreId}, cas non géré`)
     }
@@ -373,9 +377,7 @@ export const creerEntreprise = (_pool: Pool) => async (req: JWTRequest<User>, re
     }
   }
 }
-export const getEntreprise = (_pool: Pool) => async (req: JWTRequest<User>, res: CustomResponse<EntrepriseType>) => {
-  const user = req.auth
-
+export const getEntreprise = (pool: Pool) => async (req: JWTRequest<User>, res: CustomResponse<EntrepriseType>) => {
   const parsed = entrepriseIdValidator.safeParse(req.params.entrepriseId)
 
   if (!parsed.success) {
@@ -383,26 +385,17 @@ export const getEntreprise = (_pool: Pool) => async (req: JWTRequest<User>, res:
     res.sendStatus(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
   } else {
     try {
-      // TODO 2023-05-15: utiliser pg-typed
-      const entreprise = await entrepriseGet(
-        parsed.data,
-        {
-          fields: {
-            etablissements: { id: {} },
-            utilisateurs: { id: {} },
-            titulaireTitres: { id: {} },
-            amodiataireTitres: { id: {} },
-          },
-        },
-        user
-      )
-
-      if (!entreprise) {
+      const entreprise = await getEntrepriseQuery(pool, parsed.data)
+      if (isNullOrUndefined(entreprise)) {
         res.sendStatus(HTTP_STATUS.HTTP_STATUS_NOT_FOUND)
       } else {
-        // TODO 2023-05-15: utiliser pg-typed
-        // @ts-ignore
-        res.json({ ...entrepriseFormat(entreprise), legal_siren: entreprise.legalSiren })
+        const etablissements = await getEntrepriseEtablissements(pool, parsed.data)
+        const entrepriseType: EntrepriseType = {
+          ...entreprise,
+          etablissements: etablissements ?? [],
+        }
+
+        res.json(entrepriseTypeValidator.parse(entrepriseType))
       }
     } catch (e) {
       console.error(e)
@@ -520,8 +513,8 @@ export const fiscalite = (_pool: Pool) => async (req: JWTRequest<User>, res: Cus
         { entreprisesIds: [parsed.data] },
         {
           fields: {
-            titulaires: { id: {} },
-            amodiataires: { id: {} },
+            titulairesEtape: { id: {} },
+            amodiatairesEtape: { id: {} },
             substancesEtape: { id: {} },
             pointsEtape: { id: {} },
           },
@@ -590,5 +583,5 @@ export const entrepriseDocumentDownload: NewDownload = async (params, user, pool
 
 export const getAllEntreprises = (pool: Pool) => async (_req: JWTRequest<User>, res: CustomResponse<Entreprise[]>) => {
   const allEntreprises = await getEntreprises(pool)
-  res.json(allEntreprises)
+  res.json(z.array(entrepriseValidator).parse(allEntreprises))
 }

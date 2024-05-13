@@ -39,7 +39,7 @@ export const EtapeEdition = defineComponent(() => {
 
   return () => (
     <>
-      {isNotNullNorUndefined(demarcheIdOrSlug.value) || isNotNullNorUndefined(etapeIdOrSlug.value) ? (
+      {isNotNullNorUndefined(user) && (isNotNullNorUndefined(demarcheIdOrSlug.value) || isNotNullNorUndefined(etapeIdOrSlug.value)) ? (
         <PureEtapeEdition etapeIdOrSlug={etapeIdOrSlug.value} demarcheIdOrSlug={demarcheIdOrSlug.value} user={user} entreprises={entreprises.value} apiClient={apiClient} goToDemarche={goToDemarche} />
       ) : (
         <CaminoAccessError user={user} />
@@ -117,8 +117,8 @@ export const PureEtapeEdition = defineComponent<Props>(props => {
               typeId: null,
               statutId: null,
               substances: [],
-              titulaires: [],
-              amodiataires: [],
+              titulaireIds: [],
+              amodiataireIds: [],
               geojson4326Perimetre: null,
               geojson4326Points: null,
               geojsonOriginePerimetre: null,

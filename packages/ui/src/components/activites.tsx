@@ -15,7 +15,7 @@ import { UiGraphqlActivite } from './activite/activite-api-client'
 import { ActivitesTypes } from 'camino-common/src/static/activitesTypes'
 import { capitalize } from 'camino-common/src/strings'
 import { entreprisesKey, userKey } from '@/moi'
-import { Entreprise } from 'camino-common/src/entreprise'
+import { Entreprise, EntrepriseId } from 'camino-common/src/entreprise'
 
 export const activitesColonneIdAnnee = 'annee'
 
@@ -48,19 +48,25 @@ const activitesColonnes = [
   },
 ] as const satisfies readonly Column[]
 
-const activitesLignesBuild = (activites: UiGraphqlActivite[]): TableRow[] =>
-  activites.map(activite => {
+const activitesLignesBuild = (activites: UiGraphqlActivite[], entreprises: Entreprise[]): TableRow[] => {
+  const entreprisesIndex = entreprises.reduce<Record<EntrepriseId, string>>((acc, entreprise) => {
+    acc[entreprise.id] = entreprise.nom
+
+    return acc
+  }, {})
+
+  return activites.map(activite => {
     const activiteStatut = ActivitesStatuts[activite.activiteStatutId]
     const columns = {
       titre: { value: activite.titre.nom },
       titulaires: {
         component: markRaw(List),
         props: {
-          elements: activite.titre.titulaires.map(({ nom }) => nom),
+          elements: activite.titre.titulaireIds.map(id => entreprisesIndex[id]),
           mini: true,
         },
         class: 'mb--xs',
-        value: activite.titre.titulaires.map(({ nom }) => nom).join(', '),
+        value: activite.titre.titulaireIds.map(id => entreprisesIndex[id]).join(', '),
       },
       annee: { value: activite.annee },
       activite_type: { value: capitalize(ActivitesTypes[activite.typeId].nom) },
@@ -83,6 +89,7 @@ const activitesLignesBuild = (activites: UiGraphqlActivite[]): TableRow[] =>
       columns,
     }
   })
+}
 
 interface Props {
   user: User
@@ -96,7 +103,7 @@ export const PureActivites = defineComponent<Props>(props => {
   const getData = async (params: Params<string>) => {
     const activites = await props.apiClient.getActivites({ ordre: params.ordre, colonne: params.colonne, page: params.page, ...params.filtres })
 
-    return { total: activites.total, values: activitesLignesBuild(activites.elements) }
+    return { total: activites.total, values: activitesLignesBuild(activites.elements, props.entreprises) }
   }
 
   return () => (

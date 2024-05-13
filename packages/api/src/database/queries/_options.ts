@@ -29,34 +29,18 @@ const utilisateursTitres = {
   graph: `[utilisateur]`,
 }
 
-const titresEtapesRelateTrue = ['titulaires', 'amodiataires']
-
-const titresEtapesRelateFalse = ['titulaires.etablissements', 'titulaires.utilisateurs', 'amodiataires.etablissements', 'amodiataires.utilisateurs']
-
 const titresEtapes = {
-  graph: `[
-    titulaires.${entreprises.graph},
-    amodiataires.${entreprises.graph}
-  ]`,
-
   update: {
-    relate: titresEtapesRelateTrue,
-    unrelate: titresEtapesRelateTrue,
-    noInsert: titresEtapesRelateFalse,
-    noUpdate: titresEtapesRelateFalse,
-    noDelete: titresEtapesRelateFalse,
     insertMissing: true,
   },
 }
 
-const titresDemarchesRelateTrue = [...titresEtapesRelateTrue.map(k => `etapes.${k}`)]
+const titresDemarchesRelateTrue = ['etapes']
 
 const titresDemarchesRelateFalse: string[] = []
 
 const titresDemarches = {
-  graph: `[
-     etapes.${titresEtapes.graph},
-  ]`,
+  graph: `[etapes]`,
 
   update: {
     relate: titresDemarchesRelateTrue,
@@ -81,22 +65,10 @@ const titresActivites = {
 
 const titresRelateTrue = [...titresActivitesRelateTrue.map(k => `activites.${k}`), ...titresDemarchesRelateTrue.map(k => `demarches.${k}`)]
 
-const titresRelateFalse = [
-  'substancesEtape',
-  'pointsEtape',
-  'titulaires',
-  'titulaires.etablissements',
-  'titulaires.utilisateurs',
-  'amodiataires',
-  'amodiataires.etablissements',
-  'amodiataires.utilisateurs',
-  ...titresDemarchesRelateFalse.map(k => `demarches.${k}`),
-]
+const titresRelateFalse = ['substancesEtape', 'pointsEtape', 'titulairesEtape', 'amodiatairesEtape', ...titresDemarchesRelateFalse.map(k => `demarches.${k}`)]
 
 const titres = {
   graph: `[
-    titulaires.${entreprises.graph},
-    amodiataires.${entreprises.graph},
     demarches(orderDesc).${titresDemarches.graph},
     activites(orderDesc).${titresActivites.graph},
    ]`,
@@ -131,7 +103,6 @@ export type FieldId = { id?: Record<string, never> }
 export type FieldsEntreprise = FieldId & {
   utilisateurs?: FieldsUtilisateur
   etablissements?: FieldId
-  titulaireTitres?: FieldId
   amodiataireTitres?: FieldId
 }
 
@@ -139,8 +110,6 @@ export type FieldsUtilisateur = FieldId & {
   entreprises?: FieldsEntreprise
 }
 export type FieldsTitre = FieldId & {
-  titulaires?: FieldsEntreprise
-  amodiataires?: FieldsEntreprise
   demarches?: FieldsDemarche
   substances?: FieldId
   surface?: FieldId
@@ -154,6 +123,8 @@ export type FieldsTitre = FieldId & {
 
   pointsEtape?: FieldId
   substancesEtape?: FieldId
+  titulairesEtape?: FieldId
+  amodiatairesEtape?: FieldId
 }
 export type FieldsDemarche = FieldId & {
   titre?: FieldsTitre
@@ -161,8 +132,6 @@ export type FieldsDemarche = FieldId & {
 }
 
 export type FieldsEtape = FieldId & {
-  titulaires?: FieldsEntreprise
-  amodiataires?: FieldsEntreprise
   demarche?: FieldsDemarche
 }
 

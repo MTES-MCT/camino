@@ -1,8 +1,8 @@
 import { capitalize } from 'camino-common/src/strings'
 import { FunctionalComponent, HTMLAttributes } from 'vue'
-import { EntreprisesByEtapeId } from 'camino-common/src/demarche'
 import { CaminoRouterLink } from '../../router/camino-router-link'
 import { AdministrationId, Administrations } from 'camino-common/src/static/administrations'
+import { EntrepriseId } from 'camino-common/src/entreprise'
 import type { JSX } from 'vue/jsx-runtime'
 
 const textProp = 'text'
@@ -28,7 +28,7 @@ export const EtapePropItem: FunctionalComponent<Props> = props => {
   )
 }
 
-export const EtapePropEntreprisesItem: FunctionalComponent<{ title: string; entreprises: EntreprisesByEtapeId[] | null }> = props => {
+export const EtapePropEntreprisesItem: FunctionalComponent<{ title: string; entreprises: { id: EntrepriseId; nom: string }[] | null }> = props => {
   if (props.entreprises === null || props.entreprises.length === 0) {
     return null
   }
@@ -40,7 +40,6 @@ export const EtapePropEntreprisesItem: FunctionalComponent<{ title: string; entr
             <CaminoRouterLink to={{ name: 'entreprise', params: { id: entreprise.id } }} isDisabled={false} title={entreprise.nom} class="fr-link">
               {capitalize(entreprise.nom)}
             </CaminoRouterLink>
-            {entreprise.operateur ? ' (opérateur)' : ''}
           </li>
         )
       })}

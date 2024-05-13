@@ -1,9 +1,9 @@
-import { Model, Pojo, ref } from 'objection'
+import { Model, Pojo } from 'objection'
 
 import { IEntreprise } from '../../types.js'
 import EntreprisesEtablissements from './entreprises-etablissements.js'
 import Utilisateurs from './utilisateurs.js'
-import Titres from './titres.js'
+import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
 
 interface Entreprises extends IEntreprise {}
 
@@ -56,41 +56,15 @@ class Entreprises extends Model {
         to: 'utilisateurs.id',
       },
     },
-
-    titulaireTitres: {
-      relation: Model.ManyToManyRelation,
-      modelClass: Titres,
-      join: {
-        from: 'entreprises.id',
-        through: {
-          from: 'titresTitulaires.entrepriseId',
-          to: 'titresTitulaires.titreEtapeId',
-        },
-        to: ref('titres.propsTitreEtapesIds:titulaires').castText(),
-      },
-    },
-
-    amodiataireTitres: {
-      relation: Model.ManyToManyRelation,
-      modelClass: Titres,
-      join: {
-        from: 'entreprises.id',
-        through: {
-          from: 'titresAmodiataires.entrepriseId',
-          to: 'titresAmodiataires.titreEtapeId',
-        },
-        to: ref('titres.propsTitreEtapesIds:amodiataires').castText(),
-      },
-    },
   })
 
   public $parseJson(json: Pojo) {
     json = super.$parseJson(json)
-    if (json.id) {
+    if (isNotNullNorUndefined(json.id)) {
       json.id = json.id.toLowerCase()
     }
 
-    if (json.utilisateursIds) {
+    if (Array.isArray(json.utilisateursIds) && json.utilisateursIds.length > 0) {
       json.utilisateurs = json.utilisateursIds.map((id: string) => ({
         id,
       }))

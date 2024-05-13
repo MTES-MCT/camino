@@ -25,11 +25,16 @@ export const Ok: StoryFn = () => (
   <EntrepriseEditPopup
     close={close}
     user={{ ...testBlankUser, role: 'admin', administrationId: 'aut-97300-01' }}
-    entreprise={{ id: newEntrepriseId('id'), telephone: '0102030405' }}
+    entreprise={{ id: newEntrepriseId('id'), telephone: '0102030405', email: null, archive: false, url: null }}
     apiClient={apiClient}
   />
 )
 
 export const Super: StoryFn = () => (
-  <EntrepriseEditPopup close={close} user={{ ...testBlankUser, role: 'super' }} entreprise={{ id: newEntrepriseId('id'), telephone: '0102030405' }} apiClient={apiClient} />
+  <EntrepriseEditPopup
+    close={close}
+    user={{ ...testBlankUser, role: 'super' }}
+    entreprise={{ id: newEntrepriseId('id'), telephone: '0102030405', email: null, archive: false, url: null }}
+    apiClient={apiClient}
+  />
 )

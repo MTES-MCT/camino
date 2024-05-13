@@ -2,7 +2,7 @@ import { PureActivites } from './activites'
 import { Meta, StoryFn } from '@storybook/vue3'
 import { action } from '@storybook/addon-actions'
 import { ApiClient } from '@/api/api-client'
-import { newEntrepriseId } from 'camino-common/src/entreprise'
+import { Entreprise, entrepriseIdValidator, newEntrepriseId } from 'camino-common/src/entreprise'
 import { RouteLocationRaw } from 'vue-router'
 import { testBlankUser } from 'camino-common/src/tests-utils'
 import { toCaminoAnnee } from 'camino-common/src/date'
@@ -19,7 +19,14 @@ const pushRouteAction = action('pushRoute')
 
 const updateUrlQuery = { push: (values: RouteLocationRaw) => Promise.resolve(pushRouteAction(values)) }
 
-const entreprises = [{ id: newEntrepriseId('id'), nom: 'Entreprise1', legal_siren: null }]
+const entreprises: Entreprise[] = [
+  { id: newEntrepriseId('id'), nom: 'Entreprise1', legal_siren: null },
+  ...[...Array(10).keys()].map(value => ({
+    id: entrepriseIdValidator.parse(`xx-${value}`),
+    nom: `Nom de l'entreprise ${value}`,
+    legal_siren: null,
+  })),
+]
 const apiClient: Pick<ApiClient, 'getActivites' | 'titresRechercherByNom' | 'getTitresByIds'> = {
   titresRechercherByNom: () => {
     return Promise.resolve({ elements: [] })
@@ -43,12 +50,7 @@ const apiClient: Pick<ApiClient, 'getActivites' | 'titresRechercherByNom' | 'get
         titre: {
           id: 'titreId',
           nom: `Nom Du Titre ${value}`,
-          titulaires: [
-            {
-              id: 'xx-123456789',
-              nom: `Nom de l'entreprise ${value}`,
-            },
-          ],
+          titulaireIds: [entrepriseIdValidator.parse(`xx-${value}`)],
           amodiataires: [],
         },
       })),

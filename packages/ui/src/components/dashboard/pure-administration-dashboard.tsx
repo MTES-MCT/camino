@@ -14,10 +14,12 @@ import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations'
 import { PageContentHeader } from '../_common/page-header-content'
 import { CaminoRouterLink } from '../../router/camino-router-link'
 import { DsfrSeparator } from '../_ui/dsfr-separator'
+import { Entreprise, EntrepriseId } from 'camino-common/src/entreprise'
 
 interface Props {
   apiClient: Pick<DashboardApiClient, 'getAdministrationTitres' | 'getDgtmStats'>
   user: AdminUserNotNull
+  entreprises: Entreprise[]
 }
 
 const derniereEtapeColumn: Column<'derniereEtape'> = {
@@ -38,6 +40,7 @@ export const PureAdministrationDashboard = defineComponent<Props>(props => {
   const isDGTM = computed<boolean>(() => {
     return (isAdministrationAdmin(props.user) || isAdministrationEditeur(props.user)) && props.user.administrationId === ADMINISTRATION_IDS['DGTM - GUYANE']
   })
+
   const data = ref<
     AsyncData<{
       administrationTitres: TableRow[]
@@ -57,7 +60,7 @@ export const PureAdministrationDashboard = defineComponent<Props>(props => {
     class: 'mb--xs',
     value: titre.prochainesEtapes?.map(id => EtapesTypes[id].nom).join(', '),
   })
-  const titresLignesBuild = (titres: CommonTitreAdministration[]): TableRow<Columns>[] => {
+  const titresLignesBuild = (titres: CommonTitreAdministration[], entreprisesIndex: Record<EntrepriseId, string>): TableRow<Columns>[] => {
     return titres.map(titre => {
       const columns: {
         [key in Columns]: ComponentColumnData | TextColumnData
@@ -66,7 +69,7 @@ export const PureAdministrationDashboard = defineComponent<Props>(props => {
         type: typeCell(titre.type_id),
         statut: statutCell(titre),
         references: referencesCell(titre),
-        titulaires: titulairesCell(titre),
+        titulaires: titulairesCell(titre, entreprisesIndex),
         derniereEtape: {
           value: titre.derniereEtape ? `${EtapesTypes[titre.derniereEtape.etapeTypeId].nom} (${titre.derniereEtape.date})` : '',
         },
@@ -83,12 +86,24 @@ export const PureAdministrationDashboard = defineComponent<Props>(props => {
 
   onMounted(async () => {
     try {
+      const entreprisesIndex = props.entreprises.reduce<Record<EntrepriseId, string>>((acc, entreprise) => {
+        acc[entreprise.id] = entreprise.nom
+
+        return acc
+      }, {})
+
       const titres = await props.apiClient.getAdministrationTitres()
       data.value = {
         status: 'LOADED',
         value: {
-          administrationTitres: titresLignesBuild(titres.filter(titre => !titre.enAttenteDeAdministration)),
-          administrationTitresBloques: titresLignesBuild(titres.filter(titre => titre.enAttenteDeAdministration)),
+          administrationTitres: titresLignesBuild(
+            titres.filter(titre => !titre.enAttenteDeAdministration),
+            entreprisesIndex
+          ),
+          administrationTitresBloques: titresLignesBuild(
+            titres.filter(titre => titre.enAttenteDeAdministration),
+            entreprisesIndex
+          ),
         },
       }
     } catch (e: any) {
@@ -142,4 +157,4 @@ export const PureAdministrationDashboard = defineComponent<Props>(props => {
 })
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-PureAdministrationDashboard.props = ['apiClient', 'user']
+PureAdministrationDashboard.props = ['apiClient', 'user', 'entreprises']

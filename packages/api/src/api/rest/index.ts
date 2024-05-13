@@ -6,7 +6,6 @@ import { entreprisesGet } from '../../database/queries/entreprises.js'
 import { titreFormat, titresFormat } from '../_format/titres.js'
 import { titreDemarcheFormat } from '../_format/titres-demarches.js'
 import { titreActiviteFormat } from '../_format/titres-activites.js'
-import { entrepriseFormat } from '../_format/entreprises.js'
 
 import { tableConvert } from './_convert.js'
 import { fileNameCreate } from '../../tools/file-name-create.js'
@@ -25,6 +24,8 @@ import { getCommunesIndex } from '../../database/queries/communes.js'
 import { FeatureCollection, GeojsonFeaturePoint } from 'camino-common/src/perimetre.js'
 import { FieldsTitre } from '../../database/queries/_options'
 import { titresValidator, demarchesValidator, activitesValidator, entreprisesValidator } from '../../business/utils/filters.js'
+import { GetEntreprises, getEntreprises } from './entreprises.queries.js'
+import { EntrepriseId } from 'camino-common/src/entreprise.js'
 
 const formatCheck = (formats: string[], format: string) => {
   if (!formats.includes(format)) {
@@ -34,8 +35,8 @@ const formatCheck = (formats: string[], format: string) => {
 
 const titreFields: FieldsTitre = {
   substancesEtape: { id: {} },
-  titulaires: { id: {} },
-  amodiataires: { id: {} },
+  titulairesEtape: { id: {} },
+  amodiatairesEtape: { id: {} },
   pointsEtape: { id: {} },
   demarches: {
     etapes: {
@@ -65,6 +66,12 @@ export const titre =
     const titreFormatted = titreFormat(titre)
 
     const communesIndex = await getCommunesIndex(pool, titreFormatted.communes?.map(({ id }) => id) ?? [])
+    const entreprises = await getEntreprises(pool)
+    const entreprisesIndex = entreprises.reduce<Record<EntrepriseId, GetEntreprises>>((acc, entreprise) => {
+      acc[entreprise.id] = entreprise
+
+      return acc
+    }, {})
 
     if (titreFormatted.pointsEtape === undefined) {
       throw new Error('Le périmètre du titre n’est pas chargé')
@@ -80,7 +87,7 @@ export const titre =
       type: 'FeatureCollection',
       features: [titreFormatted.pointsEtape.geojson4326Perimetre, ...geojson4326Points],
 
-      properties: titreGeojsonPropertiesFormat(communesIndex, titreFormatted),
+      properties: titreGeojsonPropertiesFormat(communesIndex, entreprisesIndex, titreFormatted),
     }
 
     return {
@@ -176,8 +183,8 @@ export const demarches =
         fields: {
           titre: {
             id: {},
-            titulaires: { id: {} },
-            amodiataires: { id: {} },
+            titulairesEtape: { id: {} },
+            amodiatairesEtape: { id: {} },
           },
           etapes: {
             id: {},
@@ -268,15 +275,13 @@ export const entreprises =
 
     const entreprises = await entreprisesGet({ noms: params.nomsEntreprise }, {}, user)
 
-    const entreprisesFormatted = entreprises.map(entrepriseFormat)
-
     let contenu
 
     switch (params.format) {
       case 'csv':
       case 'xlsx':
       case 'ods':
-        contenu = tableConvert('entreprises', entreprisesFormatTable(entreprisesFormatted), params.format)
+        contenu = tableConvert('entreprises', entreprisesFormatTable(entreprises), params.format)
         break
       default:
         exhaustiveCheck(params.format)

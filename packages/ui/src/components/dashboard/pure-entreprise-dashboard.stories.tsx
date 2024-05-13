@@ -1,6 +1,6 @@
 import { PureEntrepriseDashboard } from './pure-entreprise-dashboard'
 import { Meta, StoryFn } from '@storybook/vue3'
-import { TitreEntreprise, entrepriseIdValidator, newEntrepriseId } from 'camino-common/src/entreprise'
+import { Entreprise, TitreEntreprise, entrepriseIdValidator, newEntrepriseId } from 'camino-common/src/entreprise'
 import { testBlankUser } from 'camino-common/src/tests-utils'
 import { toCommuneId } from 'camino-common/src/static/communes'
 import { titreIdValidator } from 'camino-common/src/validators/titres'
@@ -12,6 +12,21 @@ const meta: Meta = {
 }
 export default meta
 
+const allEntreprises: Entreprise[] = [
+  {
+    id: entrepriseIdValidator.parse('fr-793025370'),
+    nom: 'NINOR',
+    legal_siren: '',
+  },
+  {
+    id: entrepriseIdValidator.parse('fr-838049344'),
+    nom: "CHAMB'OR",
+    legal_siren: '',
+  },
+  { id: newEntrepriseId('id'), nom: 'entreprise1', legal_siren: '' },
+  { id: newEntrepriseId('id2'), nom: 'entreprise2', legal_siren: '' },
+]
+
 const titres: TitreEntreprise[] = [
   {
     id: titreIdValidator.parse('jp25TIfyQiXM987fAGc2DX4N'),
@@ -22,12 +37,7 @@ const titres: TitreEntreprise[] = [
     substances: ['ferx'],
     activitesEnConstruction: 2,
     activitesAbsentes: 3,
-    titulaires: [
-      {
-        id: entrepriseIdValidator.parse('fr-793025370'),
-        nom: 'NINOR',
-      },
-    ],
+    titulaireIds: [entrepriseIdValidator.parse('fr-793025370')],
     communes: [{ id: toCommuneId('57000') }],
     references: [
       {
@@ -45,12 +55,7 @@ const titres: TitreEntreprise[] = [
     substances: ['auru'],
     activitesEnConstruction: 1,
     activitesAbsentes: null,
-    titulaires: [
-      {
-        id: entrepriseIdValidator.parse('fr-838049344'),
-        nom: "CHAMB'OR",
-      },
-    ],
+    titulaireIds: [entrepriseIdValidator.parse('fr-838049344')],
     communes: [{ id: toCommuneId('97300') }],
     references: [
       {
@@ -69,7 +74,8 @@ export const Ok: StoryFn = () => (
   <PureEntrepriseDashboard
     user={{ role: 'super', ...testBlankUser }}
     displayActivites={true}
-    entreprises={[{ id: newEntrepriseId('id'), nom: 'entreprise1' }]}
+    entreprises={[{ id: newEntrepriseId('id') }]}
+    allEntreprises={allEntreprises}
     apiClient={{ getEntreprisesTitres: () => Promise.resolve(titres) }}
   />
 )
@@ -78,10 +84,8 @@ export const OkWithMultipleEntreprises: StoryFn = () => (
   <PureEntrepriseDashboard
     user={{ role: 'super', ...testBlankUser }}
     displayActivites={true}
-    entreprises={[
-      { id: newEntrepriseId('id'), nom: 'entreprise1' },
-      { id: newEntrepriseId('id2'), nom: 'entreprise2' },
-    ]}
+    entreprises={[{ id: newEntrepriseId('id') }, { id: newEntrepriseId('id2') }]}
+    allEntreprises={allEntreprises}
     apiClient={{ getEntreprisesTitres: () => Promise.resolve(titres) }}
   />
 )
@@ -91,6 +95,7 @@ export const OkWithoutFiscalite: StoryFn = () => (
     user={{ role: 'super', ...testBlankUser }}
     displayActivites={true}
     entreprises={[]}
+    allEntreprises={allEntreprises}
     apiClient={{
       getEntreprisesTitres: () =>
         Promise.resolve([
@@ -103,12 +108,7 @@ export const OkWithoutFiscalite: StoryFn = () => (
             substances: ['auru'],
             activitesEnConstruction: null,
             activitesAbsentes: null,
-            titulaires: [
-              {
-                id: entrepriseIdValidator.parse('fr-838049344'),
-                nom: "CHAMB'OR",
-              },
-            ],
+            titulaireIds: [entrepriseIdValidator.parse('fr-838049344')],
             communes: [{ id: toCommuneId('97300') }],
             references: [
               {
@@ -130,7 +130,8 @@ export const OkWithoutActivities: StoryFn = () => (
   <PureEntrepriseDashboard
     user={{ role: 'super', ...testBlankUser }}
     displayActivites={false}
-    entreprises={[{ id: newEntrepriseId('id'), nom: 'entreprise1' }]}
+    entreprises={[{ id: newEntrepriseId('id') }]}
+    allEntreprises={allEntreprises}
     apiClient={{ getEntreprisesTitres: () => Promise.resolve(titres) }}
   />
 )
@@ -139,7 +140,8 @@ export const Loading: StoryFn = () => (
   <PureEntrepriseDashboard
     user={{ role: 'super', ...testBlankUser }}
     displayActivites={false}
-    entreprises={[{ id: newEntrepriseId('id'), nom: 'entreprise1' }]}
+    entreprises={[{ id: newEntrepriseId('id') }]}
+    allEntreprises={allEntreprises}
     apiClient={{ getEntreprisesTitres: () => new Promise<TitreEntreprise[]>(_resolve => {}) }}
   />
 )
@@ -148,7 +150,8 @@ export const WithError: StoryFn = () => (
   <PureEntrepriseDashboard
     user={{ role: 'super', ...testBlankUser }}
     displayActivites={false}
-    entreprises={[{ id: newEntrepriseId('id'), nom: 'entreprise1' }]}
+    entreprises={[{ id: newEntrepriseId('id') }]}
+    allEntreprises={allEntreprises}
     apiClient={{ getEntreprisesTitres: () => Promise.reject(new Error('because reasons')) }}
   />
 )

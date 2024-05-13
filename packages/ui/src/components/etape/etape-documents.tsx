@@ -3,15 +3,14 @@ import { EtapeDocument, EtapeDocumentId } from 'camino-common/src/etape'
 import { User, isAdministration, isSuper } from 'camino-common/src/roles'
 import { DocumentTypeId, DocumentsTypes } from 'camino-common/src/static/documentsTypes'
 import { getDownloadRestRoute } from '../../api/client-rest'
-import { EtapeEntrepriseDocument } from 'camino-common/src/entreprise'
-import { EntreprisesByEtapeId } from 'camino-common/src/demarche'
+import { Entreprise, EntrepriseId, EtapeEntrepriseDocument } from 'camino-common/src/entreprise'
 import { EntrepriseDocumentLink } from '../entreprise/entreprise-documents'
 import { isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools'
 
 interface Props {
   etapeDocuments: EtapeDocument[]
   entrepriseDocuments: EtapeEntrepriseDocument[]
-  titulaires: Pick<EntreprisesByEtapeId, 'id' | 'nom'>[]
+  entreprises: Entreprise[]
   user: User
 }
 
@@ -37,6 +36,12 @@ export const EtapeDocuments: FunctionalComponent<Props> = props => {
   if (isNullOrUndefinedOrEmpty(props.etapeDocuments) && isNullOrUndefinedOrEmpty(props.entrepriseDocuments)) {
     return null
   }
+
+  const entreprisesIndex = props.entreprises.reduce<Record<EntrepriseId, string>>((acc, entreprise) => {
+    acc[entreprise.id] = entreprise.nom
+
+    return acc
+  }, {})
 
   return (
     <div style={{ overflowX: 'auto' }}>
@@ -66,7 +71,7 @@ export const EtapeDocuments: FunctionalComponent<Props> = props => {
                   <EntrepriseDocumentLink
                     documentId={item.id}
                     documentTypeId={item.entreprise_document_type_id}
-                    label={`${props.titulaires.find(entreprise => entreprise.id === item.entreprise_id)?.nom ?? ''} - ${DocumentsTypes[item.entreprise_document_type_id].nom} - (${item.date})`}
+                    label={`${entreprisesIndex[item.entreprise_id] ?? ''} - ${DocumentsTypes[item.entreprise_document_type_id].nom} - (${item.date})`}
                   />
                 </td>
                 <td>{item.description}</td>

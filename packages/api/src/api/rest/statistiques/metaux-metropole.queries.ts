@@ -107,8 +107,8 @@ select
 from
     titres_activites ta
     join titres t on t.id = ta.titre_id
-    left join titres_titulaires tt on t.props_titre_etapes_ids ->> 'titulaires' = tt.titre_etape_id
-    left join entreprises e_t on e_t.id = tt.entreprise_id
+    left join titres_etapes etape_titulaires on etape_titulaires.id = t.props_titre_etapes_ids ->> 'titulaires'
+    left join entreprises e_t on etape_titulaires.titulaire_ids ? e_t.id
 where
     ta.activite_statut_id = 'dep'
     and (ta.contenu -> 'substancesFiscales' ? $ bauxite

@@ -8,6 +8,8 @@ import { DeepReadonly, isNotNullNorUndefined, isNullOrUndefined } from 'camino-c
 import { Pool } from 'pg'
 import { getCommunesIndex } from '../../../database/queries/communes.js'
 import { ActivitesTypes } from 'camino-common/src/static/activitesTypes.js'
+import { getEntreprises } from '../entreprises.queries.js'
+import { EntrepriseId } from 'camino-common/src/entreprise.js'
 
 const titreActiviteContenuFormat = (contenu: IContenu, sections: DeepReadonly<Section[]>) =>
   sections.reduce((resSections: Index<IContenuValeur>, section) => {
@@ -39,6 +41,12 @@ export const titresActivitesFormatTable = async (pool: Pool, activites: ITitreAc
     pool,
     activites.flatMap(({ titre }) => titre?.communes?.map(({ id }) => id) ?? [])
   )
+  const entreprises = await getEntreprises(pool)
+  const entreprisesIndex = entreprises.reduce<Record<EntrepriseId, string>>((acc, entreprise) => {
+    acc[entreprise.id] = entreprise.nom
+
+    return acc
+  }, {})
 
   return activites.map(activite => {
     const activiteType = ActivitesTypes[activite.typeId]
@@ -54,7 +62,7 @@ export const titresActivitesFormatTable = async (pool: Pool, activites: ITitreAc
       titre_nom: activite.titre.nom,
       type: activiteType.nom,
       statut: ActivitesStatuts[activite.activiteStatutId].nom,
-      titulaires: activite.titre.titulaires?.map(({ nom }) => nom).join(';'),
+      titulaires: activite.titre.titulaireIds?.map(id => entreprisesIndex[id] ?? '').join(';'),
       communes: activite.titre.communes?.map(({ id }) => communesIndex[id]).join(';'),
       annee: activite.annee,
       periode: getPeriode(activiteType.frequenceId, activite.periodeId),
