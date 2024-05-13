@@ -9,7 +9,6 @@ const meta: Meta = {
   title: 'Components/Titre/AbonnerButton',
   // @ts-ignore storybook est encore perdu avec les tsx
   component: TitreAbonnerButton,
-  decorators: [() => ({ template: '<div class="dsfr"><story/></div>' })],
 }
 export default meta
 

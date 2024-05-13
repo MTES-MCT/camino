@@ -15,7 +15,6 @@ import { capitalize } from 'camino-common/src/strings'
 interface Props {
   administrationId: AdministrationId
 }
-// Domaine	Type de titre	Statut de titre	Titres	Démarches	Étapes
 const restrictionEditionColonnes = [
   {
     id: 'domaine',

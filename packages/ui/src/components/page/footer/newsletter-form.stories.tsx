@@ -7,26 +7,10 @@ const meta: Meta = {
 }
 export default meta
 
-export const NonAbonné: StoryFn = () => (
-  <div class="dsfr">
-    <PureNewsletterForm state={'NOT_SUBSCRIBED'} onEmailInput={() => ({})} onSubscribe={() => ({})} />
-  </div>
-)
+export const NonAbonné: StoryFn = () => <PureNewsletterForm state={'NOT_SUBSCRIBED'} onEmailInput={() => ({})} onSubscribe={() => ({})} />
 
-export const Abonné: StoryFn = () => (
-  <div class="dsfr">
-    <PureNewsletterForm state={'SUBSCRIBED'} onEmailInput={() => ({})} onSubscribe={() => ({})} />
-  </div>
-)
+export const Abonné: StoryFn = () => <PureNewsletterForm state={'SUBSCRIBED'} onEmailInput={() => ({})} onSubscribe={() => ({})} />
 
-export const EnCours: StoryFn = () => (
-  <div class="dsfr">
-    <PureNewsletterForm state={'SUBSCRIBING'} onEmailInput={() => ({})} onSubscribe={() => ({})} />
-  </div>
-)
+export const EnCours: StoryFn = () => <PureNewsletterForm state={'SUBSCRIBING'} onEmailInput={() => ({})} onSubscribe={() => ({})} />
 
-export const Error: StoryFn = () => (
-  <div class="dsfr">
-    <PureNewsletterForm state={'ERROR'} onEmailInput={() => ({})} onSubscribe={() => ({})} />
-  </div>
-)
+export const Error: StoryFn = () => <PureNewsletterForm state={'ERROR'} onEmailInput={() => ({})} onSubscribe={() => ({})} />

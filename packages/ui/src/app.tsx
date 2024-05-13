@@ -35,7 +35,7 @@ export const App = defineComponent(() => {
   })
 
   return () => (
-    <div class="dsfr">
+    <div>
       <MapPattern />
       <IconSprite />
 

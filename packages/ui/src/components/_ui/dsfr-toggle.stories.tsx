@@ -6,7 +6,6 @@ const meta: Meta = {
   title: 'Components/UI/Dsfr/Toggle',
   // @ts-ignore @storybook/vue3 n'aime pas les composants tsx
   component: DsfrToggle,
-  decorators: [() => ({ template: '<div class="dsfr"><story/></div>' })],
 }
 export default meta
 const valueChangedAction = action('valueChanged')

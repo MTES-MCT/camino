@@ -208,7 +208,7 @@ export const CaminoTitresMap = defineComponent<Props>(props => {
   )
 
   return () => (
-    <div class="dsfr" style={{ backgroundColor: 'var(--background-alt-blue-france)' }}>
+    <div style={{ backgroundColor: 'var(--background-alt-blue-france)' }}>
       <CaminoMap ref={map} loading={props.loading} markerLayers={clusters.value} geojsonLayers={[geojsonLayers.value]} mapUpdate={titresPreferencesUpdate} class="map map-view mb-s" />
 
       <ul class="fr-btns-group fr-btns-group--inline fr-btns-group--sm fr-btns-group--center">

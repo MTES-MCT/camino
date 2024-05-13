@@ -6,7 +6,6 @@ const meta: Meta = {
   title: 'Components/Statistiques/GranulatsMarins',
   // @ts-ignore @storybook/vue3 n'aime pas les composants tsx
   component: PureGranulatsMarins,
-  decorators: [() => ({ template: '<div class="dsfr"><story/></div>' })],
 }
 export default meta
 

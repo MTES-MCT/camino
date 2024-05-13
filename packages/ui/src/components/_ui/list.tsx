@@ -6,7 +6,7 @@ interface Props {
 }
 export const List: FunctionalComponent<Props> = props => {
   return (
-    <span class="dsfr">
+    <span>
       <ul>
         {props.elements?.map(element => (
           <li key={element} class={[props.mini ?? false ? 'fr-text--xs' : null]}>

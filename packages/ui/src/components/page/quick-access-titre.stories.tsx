@@ -8,7 +8,6 @@ const meta: Meta = {
   title: 'Components/Page/QuickAccessTitre',
   // @ts-ignore
   component: PureQuickAccessTitre,
-  decorators: [() => ({ template: '<div class="dsfr"><story/></div>' })],
 }
 export default meta
 

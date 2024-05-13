@@ -6,7 +6,6 @@ const meta: Meta = {
   title: 'Components/UI/Dsfr/InputCheckboxes',
   // @ts-ignore @storybook/vue3 n'aime pas les composants tsx
   component: DsfrInputCheckboxes,
-  decorators: [() => ({ template: '<div class="dsfr"><story/></div>' })],
 }
 export default meta
 

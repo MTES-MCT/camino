@@ -7,7 +7,6 @@ import { titreSlugValidator } from 'camino-common/src/validators/titres'
 const meta: Meta = {
   title: 'Components/Titre/Timeline',
   component: TitreTimeline,
-  decorators: [() => ({ template: '<div class="dsfr"><story/></div>' })],
 }
 export default meta
 const defaultPhasesWithAlterations: Phase = [

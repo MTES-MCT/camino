@@ -146,7 +146,7 @@ export const PureEtapeEdition = defineComponent<Props>(props => {
   })
 
   return () => (
-    <div class="dsfr">
+    <div>
       <LoadingElement
         data={asyncData.value}
         renderItem={({ etape, demarche, perimetre }) => (

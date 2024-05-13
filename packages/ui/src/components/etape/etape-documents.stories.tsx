@@ -8,7 +8,6 @@ import { toCaminoDate } from 'camino-common/src/date'
 const meta: Meta = {
   title: 'Components/Etape/EtapeDocuments',
   component: EtapeDocuments,
-  decorators: [() => ({ template: '<div class="dsfr"><story/></div>' })],
 }
 export default meta
 

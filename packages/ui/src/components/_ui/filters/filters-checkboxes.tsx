@@ -25,7 +25,7 @@ function DrawComponent(filter: CheckboxesCaminoFiltres, index: number): JSX.Elem
   switch (component) {
     case 'FiltreDomaine':
       return (
-        <div class="dsfr" style={{ display: 'flex', alignItems: 'baseline' }}>
+        <div style={{ display: 'flex', alignItems: 'baseline' }}>
           <DomaineComp domaineId={fullFilter.elements[index].id} />
           <div class="h6 bold fr-pl-1w">{capitalize(fullFilter.elements[index].nom)}</div>
         </div>
@@ -41,13 +41,13 @@ function DrawComponent(filter: CheckboxesCaminoFiltres, index: number): JSX.Elem
       )
     case 'FiltresTitresStatuts':
       return (
-        <div class="dsfr">
+        <div>
           <TitreStatutComp titreStatutId={fullFilter.elements[index].id} />
         </div>
       )
     case 'FiltresDemarchesStatuts':
       return (
-        <div class="dsfr">
+        <div>
           <DemarcheStatut demarcheStatutId={fullFilter.elements[index].id} />
         </div>
       )

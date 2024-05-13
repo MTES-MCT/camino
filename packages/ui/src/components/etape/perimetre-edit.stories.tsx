@@ -14,7 +14,6 @@ const meta: Meta = {
   title: 'Components/Etape/PerimetreEdit',
   // @ts-ignore
   component: PerimetreEdit,
-  decorators: [() => ({ template: '<div class="dsfr"><story/></div>' })],
 }
 export default meta
 

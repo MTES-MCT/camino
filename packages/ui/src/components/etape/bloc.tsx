@@ -11,7 +11,7 @@ type Props = {
 export const Bloc: FunctionalComponent<Props> = (props, context) => {
   return (
     <div>
-      <div class="dsfr">
+      <div>
         <h2 class="cap-first fr-pt-6w">{props.step.name}</h2>
         {!props.complete ? <Badge badgeSize="sm" systemLevel="error" ariaLabel="Incomplet" /> : null}
 

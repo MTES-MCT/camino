@@ -121,7 +121,7 @@ export const PureActiviteEdition = defineComponent<Props>(props => {
   }
 
   return () => (
-    <div class="dsfr">
+    <div>
       <h1>Activité</h1>
       <LoadingElement
         data={data.value}

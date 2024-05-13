@@ -14,7 +14,7 @@
     "lint:check": "prettier --check src && eslint --ext .js,.ts,.tsx src --max-warnings=0",
     "storybook": "storybook dev -p 6006",
     "storybook:build": "storybook build",
-    "generate-icon-types": "ts-node --transpile-only scripts/generateIconTypes.ts"
+    "generate-icon-types": "node --loader ts-node/esm/transpile-only ./scripts/generateIconTypes.ts"
   },
   "overrides": {
     "vue": "3.3.4"
@@ -103,13 +103,8 @@
       "P": "readonly",
       "dsfr": "readonly"
     },
-    "extends": [
-      "standard",
-      "prettier"
-    ],
-    "ignorePatterns": [
-      "!.storybook"
-    ],
+    "extends": ["standard", "prettier"],
+    "ignorePatterns": ["!.storybook"],
     "rules": {
       "camelcase": 0,
       "no-unused-vars": 0,
@@ -121,14 +116,8 @@
         "parserOptions": {
           "project": true
         },
-        "files": [
-          "*.tsx",
-          "*.ts",
-          "*.js"
-        ],
-        "extends": [
-          "plugin:@typescript-eslint/recommended"
-        ],
+        "files": ["*.tsx", "*.ts", "*.js"],
+        "extends": ["plugin:@typescript-eslint/recommended"],
         "rules": {
           "camelcase": 0,
           "newline-before-return": 0,
@@ -177,9 +166,7 @@
       }
     }
   },
-  "browserslist": [
-    "supports es6-module"
-  ],
+  "browserslist": ["supports es6-module"],
   "dependencies": {
     "zod": "^3.23.4"
   }

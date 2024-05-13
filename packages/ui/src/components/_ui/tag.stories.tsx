@@ -5,7 +5,6 @@ import { action } from '@storybook/addon-actions'
 const meta: Meta = {
   title: 'Components/UI/Tag',
   component: DsfrTag,
-  decorators: [() => ({ template: '<div class="dsfr"><story/></div>' })],
 }
 export default meta
 

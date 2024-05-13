@@ -67,7 +67,7 @@ export const Preview = defineComponent<Props>(props => {
   }))
 
   return () => (
-    <div class="dsfr">
+    <div>
       <div class="fr-p-2w fr-tile--shadow" style={{ border: '1px solid var(--grey-900-175)' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div style={{ display: 'flex', justifyContent: 'start', alignItems: 'center', gap: '1.5rem' }}>

@@ -18,7 +18,7 @@ setup(app => {
 export const decorators: Decorator[] = [
   story => ({
     components: { story, IconSprite },
-    template: '<div class="page">' + '<main class="dsfr">' + '<div><IconSprite /><story /></div>' + '</main>' + '</div>',
+    template: '<div>' + '<main>' + '<div><IconSprite /><story /></div>' + '</main>' + '</div>',
   }),
   vueRouter(allRoutes),
 ]

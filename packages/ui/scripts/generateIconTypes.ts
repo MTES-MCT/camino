@@ -1,8 +1,10 @@
-const fs = require('fs')
-const path = require('path')
-const readline = require('readline')
-const iconExtractor = /id="icon-([^ ]*)"/
+import fs from 'node:fs'
+import path from 'node:path'
+import readline from 'node:readline'
+import { fileURLToPath } from 'url'
 
+const iconExtractor = /id="icon-([^ ]*)"/
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const fileName = 'iconSprite.tsx'
 function generateTypes(): void {
   function getIconSpritePath(): string {

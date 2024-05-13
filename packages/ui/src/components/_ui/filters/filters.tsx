@@ -379,7 +379,7 @@ export const Filters = defineComponent((props: Props) => {
               ))}
             </div>
 
-            <div class="dsfr">
+            <div>
               <CaminoRouterLink isDisabled={false} class="fr-btn fr-mb-2w" to={urlQuery.value} title="Valider les filtres" anchorHTMLAttributes={{ onClick: props.toggle }}>
                 Valider
               </CaminoRouterLink>

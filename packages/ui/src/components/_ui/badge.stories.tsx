@@ -5,7 +5,6 @@ import { CouleursIllustratives } from 'camino-common/src/static/couleurs'
 const meta: Meta = {
   title: 'Components/UI/Badge',
   component: Badge,
-  decorators: [() => ({ template: '<div class="dsfr"><story/></div>' })],
 }
 export default meta
 

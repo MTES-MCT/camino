@@ -268,7 +268,7 @@ export const EtapeEditForm = defineComponent<Props>(props => {
   }
 
   return () => (
-    <form class="dsfr" onSubmit={e => e.preventDefault()}>
+    <form onSubmit={e => e.preventDefault()}>
       {dateTypeStepIsVisible(props.user) ? (
         <Bloc step={{ name: 'Informations principales', help: null }} complete={dateTypeStepIsComplete(etape.value, props.user)}>
           <DateTypeEdit etape={props.etape} apiClient={props.apiClient} completeUpdate={dateTypeCompleteUpdate} demarcheId={props.demarcheId} />

@@ -6,7 +6,6 @@ import { entrepriseIdValidator } from 'camino-common/src/entreprise'
 const meta: Meta = {
   title: 'Components/Etape/PropItem',
   component: EtapePropItem,
-  decorators: [() => ({ template: '<div class="dsfr"><story/></div>' })],
 }
 export default meta
 

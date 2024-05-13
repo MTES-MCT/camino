@@ -16,7 +16,7 @@ interface Props {
 export const TitresLink = defineComponent<Props>(props => {
   const display = (item: DeepReadonly<LinkableTitre>) => {
     return (
-      <div class="flex flex-center dsfr">
+      <div class="flex flex-center">
         <TitreStatut titreStatutId={item.titreStatutId} />
         <span class="cap-first bold ml-m">{item.nom}</span>
         <span class="ml-m" style="margin-left: auto">

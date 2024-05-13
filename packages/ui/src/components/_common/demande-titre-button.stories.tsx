@@ -6,7 +6,6 @@ import { testBlankUser } from 'camino-common/src/tests-utils'
 const meta: Meta = {
   title: 'Components/Common/DemandeTitreButton',
   component: DemandeTitreButton,
-  decorators: [() => ({ template: '<div class="dsfr"><story/></div>' })],
 }
 export default meta
 
