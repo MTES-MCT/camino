@@ -127,6 +127,7 @@ export const FondamentalesEdit = defineComponent<Props>(props => {
             hasHeritage={isNotNullNorUndefined(editedEtape.value.heritageProps.duree.etape?.duree)}
             prop={editedEtape.value.heritageProps.duree}
             propId="duree"
+            label="Durée"
             write={() => (
               <div style={{ display: 'flex' }}>
                 <DsfrInput legend={{ main: `Durée (années)${!dureeOptionalCheck.value ? ' *' : ''}` }} type={{ type: 'number' }} valueChanged={updateAnsDuree} initialValue={ans.value} />
@@ -166,6 +167,7 @@ export const FondamentalesEdit = defineComponent<Props>(props => {
             updateHeritage={updateDateDebutHeritage}
             prop={editedEtape.value.heritageProps.dateDebut}
             propId="dateDebut"
+            label="Date de début"
             hasHeritage={isNotNullNorUndefined(editedEtape.value.heritageProps.dateDebut.etape?.dateDebut)}
             write={() => <DsfrInput type={{ type: 'date' }} legend={{ main: 'Date de début' }} initialValue={props.etape.dateDebut} valueChanged={dateDebutChanged} />}
             read={heritagePropEtape => <DsfrInput type={{ type: 'date' }} legend={{ main: 'Date de début' }} initialValue={heritagePropEtape?.dateDebut} valueChanged={() => {}} disabled={true} />}
@@ -177,6 +179,7 @@ export const FondamentalesEdit = defineComponent<Props>(props => {
             updateHeritage={updateDateFinHeritage}
             prop={editedEtape.value.heritageProps.dateFin}
             propId="dateFin"
+            label="Date d’échéance"
             hasHeritage={isNotNullNorUndefined(editedEtape.value.heritageProps.dateFin.etape?.dateFin)}
             write={() => <DsfrInput type={{ type: 'date' }} legend={{ main: 'Date d’échéance' }} initialValue={props.etape.dateFin} valueChanged={dateFinChanged} />}
             read={heritagePropEtape => <DsfrInput type={{ type: 'date' }} legend={{ main: 'Date d’échéance' }} initialValue={heritagePropEtape?.dateFin} valueChanged={() => {}} disabled={true} />}
@@ -184,57 +187,65 @@ export const FondamentalesEdit = defineComponent<Props>(props => {
         ) : null}
 
         {canEditTitulaires(props.titreTypeId, props.user) ? (
-          <>
-            <div class="fr-input-group">
-              <label class="fr-label" for="filters_autocomplete_titulaires">
-                <h6>Titulaires</h6>
-              </label>
-
-              <HeritageEdit
-                updateHeritage={updateTitulairesHeritage}
-                prop={editedEtape.value.heritageProps.titulaires}
-                propId="titulaires"
-                hasHeritage={isNotNullNorUndefinedNorEmpty(editedEtape.value.heritageProps.titulaires.etape?.titulaireIds)}
-                write={() => (
-                  <AutocompleteEntreprise
-                    allEntities={props.entreprises}
-                    selectedEntities={editedEtape.value.titulaireIds}
-                    nonSelectableEntities={editedEtape.value.amodiataireIds}
-                    name="titulaires"
-                    onEntreprisesUpdate={titulairesUpdate}
-                  />
-                )}
-                read={heritagePropEtape => <div>{heritagePropEtape?.titulaireIds.map(id => <DsfrTag key={id} class="fr-mr-1w" ariaLabel={getEntrepriseNom(id)} />)}</div>}
-              />
-            </div>
-          </>
+          <HeritageEdit
+            updateHeritage={updateTitulairesHeritage}
+            prop={editedEtape.value.heritageProps.titulaires}
+            propId="titulaires"
+            label="Titulaires"
+            hasHeritage={isNotNullNorUndefinedNorEmpty(editedEtape.value.heritageProps.titulaires.etape?.titulaireIds)}
+            write={() => (
+              <div class="fr-input-group fr-mb-0">
+                <label class="fr-label" for="filters_autocomplete_titulaires">
+                  Titulaires
+                </label>
+                <AutocompleteEntreprise
+                  class="fr-mt-1w"
+                  allEntities={props.entreprises}
+                  selectedEntities={editedEtape.value.titulaireIds}
+                  nonSelectableEntities={editedEtape.value.amodiataireIds}
+                  name="titulaires"
+                  onEntreprisesUpdate={titulairesUpdate}
+                />
+              </div>
+            )}
+            read={heritagePropEtape => (
+              <div class="fr-input-group fr-input-group--disabled fr-mb-0">
+                <label class="fr-label">Titulaires</label>
+                <div class="fr-mt-1w">{heritagePropEtape?.titulaireIds.map(id => <DsfrTag key={id} class="fr-mr-1w" ariaLabel={getEntrepriseNom(id)} />)}</div>
+              </div>
+            )}
+          />
         ) : null}
 
         {canEditAmodiataires(props.titreTypeId, props.user) ? (
-          <>
-            <div class="fr-input-group">
-              <label class="fr-label" for="filters_autocomplete_amodiataires">
-                <h6>Amodiataires</h6>
-              </label>
-
-              <HeritageEdit
-                updateHeritage={updateAmodiatairesHeritage}
-                prop={editedEtape.value.heritageProps.amodiataires}
-                hasHeritage={isNotNullNorUndefinedNorEmpty(editedEtape.value.heritageProps.amodiataires.etape?.amodiataireIds)}
-                propId="amodiataires"
-                write={() => (
-                  <AutocompleteEntreprise
-                    allEntities={props.entreprises}
-                    selectedEntities={editedEtape.value.amodiataireIds}
-                    nonSelectableEntities={editedEtape.value.titulaireIds}
-                    name="amodiataires"
-                    onEntreprisesUpdate={amodiatairesUpdate}
-                  />
-                )}
-                read={heritagePropEtape => <div>{heritagePropEtape?.amodiataireIds.map(id => <DsfrTag key={id} class="fr-mr-1w" ariaLabel={getEntrepriseNom(id)} />)}</div>}
-              />
-            </div>
-          </>
+          <HeritageEdit
+            updateHeritage={updateAmodiatairesHeritage}
+            prop={editedEtape.value.heritageProps.amodiataires}
+            hasHeritage={isNotNullNorUndefinedNorEmpty(editedEtape.value.heritageProps.amodiataires.etape?.amodiataireIds)}
+            propId="amodiataires"
+            label="Amodiataires"
+            write={() => (
+              <div class="fr-input-group fr-mb-0">
+                <label class="fr-label" for="filters_autocomplete_amodiataires">
+                  Amodiataires
+                </label>
+                <AutocompleteEntreprise
+                  class="fr-mt-1w"
+                  allEntities={props.entreprises}
+                  selectedEntities={editedEtape.value.amodiataireIds}
+                  nonSelectableEntities={editedEtape.value.titulaireIds}
+                  name="amodiataires"
+                  onEntreprisesUpdate={amodiatairesUpdate}
+                />
+              </div>
+            )}
+            read={heritagePropEtape => (
+              <div class="fr-input-group fr-input-group--disabled fr-mb-0">
+                <label class="fr-label">Amodiataires</label>
+                <div class="fr-mt-1w">{heritagePropEtape?.amodiataireIds.map(id => <DsfrTag key={id} class="fr-mr-1w" ariaLabel={getEntrepriseNom(id)} />)}</div>
+              </div>
+            )}
+          />
         ) : null}
 
         <SubstancesEdit

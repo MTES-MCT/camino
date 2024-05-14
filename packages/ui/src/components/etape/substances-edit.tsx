@@ -104,18 +104,22 @@ export const SubstancesEdit = defineComponent<Props>(props => {
   }
 
   return () => (
-    <div>
-      <h6>Substances</h6>
-      <HeritageEdit
-        prop={heritageActif.value}
-        propId="substances"
-        hasHeritage={isNotNullNorUndefinedNorEmpty(heritageActif.value.etape?.substances)}
-        write={() => (
+    <HeritageEdit
+      prop={heritageActif.value}
+      propId="substances"
+      label="Substances"
+      hasHeritage={isNotNullNorUndefinedNorEmpty(heritageActif.value.etape?.substances)}
+      write={() => (
+        <div class="fr-input-group fr-mb-0">
+          <label class="fr-label" for={`typeahead_substances_${editedSubstances.value.length - 1}`}>
+            Substances
+          </label>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             {editedSubstances.value.map((substance, n) => (
               <div key={substance ?? ''}>
-                <div style={{ display: 'flex' }} class="fr-mt-2w">
+                <div style={{ display: 'flex' }} class="fr-mt-1w">
                   <SubstanceLegaleTypeahead
+                    id={`typeahead_substances_${n}`}
                     initialValue={substance}
                     substanceLegaleIds={isNotNullNorUndefined(substance) ? [...substancesToDisplay.value, substance] : substancesToDisplay.value}
                     substanceLegaleSelected={substanceUpdate(n)}
@@ -155,17 +159,20 @@ export const SubstancesEdit = defineComponent<Props>(props => {
               <DsfrButtonIcon onClick={substanceAdd} buttonType="primary" icon="fr-icon-add-line" title="Ajouter une substance" class="fr-mt-2w" style={{ alignSelf: 'end' }} />
             ) : null}
           </div>
-        )}
-        read={() => (
-          <>
+        </div>
+      )}
+      read={() => (
+        <div class="fr-input-group fr-input-group--disabled fr-mb-0">
+          <label class="fr-label">Substances</label>
+          <div class="fr-mt-1w">
             {substanceNoms.value.map(sub => (
               <DsfrTag class="fr-mr-1w" ariaLabel={capitalize(sub)} />
             ))}
-          </>
-        )}
-        updateHeritage={updateHeritage}
-      />
-    </div>
+          </div>
+        </div>
+      )}
+      updateHeritage={updateHeritage}
+    />
   )
 })
 

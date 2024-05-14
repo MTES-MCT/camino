@@ -153,6 +153,7 @@ export const PerimetreEdit = defineComponent<Props>(props => {
         updateHeritage={updateHeritage}
         hasHeritage={isNotNullNorUndefined(props.etape.heritageProps.perimetre.etape?.geojson4326Perimetre)}
         propId="perimetre"
+        label={null}
         write={() => (
           <div>
             <DsfrButton onClick={openPerimetrePopup} title="Importer un périmètre" />
