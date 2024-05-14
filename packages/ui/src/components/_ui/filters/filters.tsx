@@ -295,11 +295,12 @@ export const Filters = defineComponent((props: Props) => {
               <>
                 {labels.value.length ? (
                   <div class={['flex', opened.value ? 'border-b-s' : null]}>
-                    <div class="px-m pt-m pb-s">
+                    <div class="px-m pt-m pb-s flex" style={{ flexWrap: 'wrap' }}>
                       {labels.value.map(label => (
                         <span
                           key={`${label.id}-${label.valueName}`}
-                          class={['rnd-m', 'box', 'btn-flash', 'h6', 'pl-s', 'pr-xs', 'py-xs', 'bold', 'mr-xs', 'mb-xs', opened.value ? 'pr-s' : 'pr-xs']}
+                          class={['flex', 'rnd-m', 'box', 'btn-flash', 'h6', 'pl-s', 'pr-xs', 'py-xs', 'bold', 'mr-xs', 'mb-xs', opened.value ? 'pr-s' : 'pr-xs']}
+                          style={{ alignItems: 'center' }}
                           onClick={() => labelRemove(label)}
                         >
                           {label.name} : {isNotNullNorUndefined(label.valueName) ? label.valueName : label.value}{' '}

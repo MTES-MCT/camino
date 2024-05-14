@@ -25,7 +25,7 @@ export const SectionElement: FunctionalComponent<Props> = (props: Props): JSX.El
             {valeurFind(props.element)}
           </a>
         ) : (
-          <p class={`cap-first ${hasDescription ? 'mb-s' : ''}`}>
+          <p class={`${hasDescription ? 'mb-s' : ''}`}>
             {props.element.id === 'jorf' && props.element.value !== null && props.element.value !== '' ? (
               <a target="_blank" rel="noopener noreferrer" href={`https://www.legifrance.gouv.fr/jorf/id/${valeurFind(props.element)}`} title={`Légifrance - Lien externe`}>
                 {valeurFind(props.element)}

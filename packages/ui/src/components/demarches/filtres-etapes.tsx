@@ -102,7 +102,7 @@ export const FiltresEtapes = defineComponent<Props>(props => {
                   <p class="h6 italic mb-0">Optionnel</p>
                 </div>
                 <div class="blob-3-4">
-                  <select class="p-s mr-s cap-first" onChange={event => statutValueSelected(n, event)}>
+                  <select class="p-s mr-s" onChange={event => statutValueSelected(n, event)}>
                     <option value="">–</option>
                     {getEtapesStatuts(value.typeId).map(statut => (
                       <option key={statut.id} value={statut.id} selected={value.statutId === statut.id}>

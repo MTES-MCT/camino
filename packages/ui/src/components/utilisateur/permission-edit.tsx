@@ -12,6 +12,7 @@ import { Pill } from '../_ui/pill'
 import { TypeAheadSmartMultiple, Element } from '../_ui/typeahead-smart-multiple'
 import { ButtonIcon } from '../_ui/button-icon'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
+import { capitalize } from 'camino-common/src/strings'
 
 interface Props {
   user: User
@@ -178,8 +179,8 @@ const PermissionEdit = defineComponent<PermissionEditProps>(props => {
               <ul class="list-inline mb-0 tablet-pt-s">
                 {assignableRoles.map(role => (
                   <li key={role} class="mb-xs">
-                    <button class={`btn-flash small py-xs px-s pill cap-first mr-xs ${updatingUtilisateur.value.role === role ? 'active' : ''}`} onClick={() => roleToggle(role)}>
-                      {role}
+                    <button class={`btn-flash small py-xs px-s pill mr-xs ${updatingUtilisateur.value.role === role ? 'active' : ''}`} onClick={() => roleToggle(role)}>
+                      {capitalize(role)}
                     </button>
                   </li>
                 ))}

@@ -6,6 +6,7 @@ import { canEditEmails } from 'camino-common/src/permissions/administrations'
 import { Administration, AdministrationId, Administrations } from 'camino-common/src/static/administrations'
 import { AdministrationActiviteTypeEmail } from 'camino-common/src/administrations'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
+import { capitalize } from 'camino-common/src/strings'
 import { ButtonIcon } from '../_ui/button-icon'
 
 interface Props {
@@ -124,7 +125,7 @@ export const ActivitesTypesEmails = defineComponent<Props>(props => {
             {props.activitesTypesEmails.map(activiteTypeEmail => (
               <tr key={activiteTypeEmail.activite_type_id + activiteTypeEmail.email}>
                 <td>
-                  <span class="cap-first">{activiteTypeIdLabelize(activiteTypeEmail.activite_type_id)}</span>
+                  <span>{capitalize(activiteTypeIdLabelize(activiteTypeEmail.activite_type_id))}</span>
                 </td>
                 <td>{activiteTypeEmail.email}</td>
                 {canEditEmailsComp.value ? (

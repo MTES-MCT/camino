@@ -105,9 +105,7 @@ export const FiltersCheckboxes = defineComponent((props: Props) => {
 
   return () => (
     <div class="mb">
-      <h5>{fullFilter.name}</h5>
-      <hr class="mb-s" />
-
+      {fullFilter.name}
       <ul class="list-sans" style={{ listStyleType: 'none' }}>
         {fullFilter.elements.map((element, index) => (
           <li key={element.id}>

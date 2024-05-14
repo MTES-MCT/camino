@@ -142,7 +142,14 @@
             }
           ],
           "@typescript-eslint/no-empty-function": 0,
-          "@typescript-eslint/strict-boolean-expressions": "error"
+          "@typescript-eslint/strict-boolean-expressions": "error",
+          "no-restricted-imports": ["error", {
+            "paths": [{
+              "name": "vue",
+              "importNames": ["capitalize"],
+              "message": "Please use capitalize from camino-common/src/strings"
+            }]
+          }]
         }
       }
     ],

@@ -3,16 +3,6 @@
 -------------------------------
 */
 
-input[type='text'],
-input[type='email'],
-input[type='search'],
-input[type='password'],
-input[type='tel'],
-input[type='number'],
-input[type='date'],
-input[type='url'],
-select,
-textarea,
 .input {
   width: 100%;
   border: 0 none;
@@ -20,32 +10,6 @@ textarea,
   height: auto;
   color: inherit;
   box-shadow: 0 2px 0 0 var(--dsfr-g600);
-}
-
-textarea {
-  /* http://stackoverflow.com/a/5196591/2112538 */
-  vertical-align: top;
-  resize: vertical;
-  height: auto;
-}
-
-textarea:focus,
-input:focus,
-select:focus {
-  border-right: var(--unit-s) solid var(--dsfr-bf500);
-}
-
-input[type='text'].bg-bg,
-input[type='email'].bg-bg,
-input[type='search'].bg-bg,
-input[type='password'].bg-bg,
-input[type='tel'].bg-bg,
-input[type='number'].bg-bg,
-input[type='date'].bg-bg,
-input[type='url'].bg-bg,
-select.bg-bg,
-textarea.bg-bg {
-  background-color: var(--color-bg);
 }
 
 input.success {
@@ -56,24 +20,6 @@ input.error {
   border-right: var(--unit-s) solid var(--color-error);
 }
 
-input:disabled,
-textarea:disabled,
-select:disabled,
 .input-disabled {
   background-color: var(--color-alt-transparent);
-}
-
-input.bg-bg:disabled,
-textarea.bg-bg:disabled,
-select.bg-bg:disabled {
-  background-color: var(--color-bg-transparent);
-}
-
-*::placeholder {
-  font-style: italic;
-  color: var(--color-neutral);
-}
-
-[type='file'] {
-  display: none;
 }

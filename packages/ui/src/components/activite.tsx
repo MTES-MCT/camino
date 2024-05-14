@@ -9,6 +9,7 @@ import { canReadActivites } from 'camino-common/src/permissions/activites'
 import { User } from 'camino-common/src/roles'
 import { CaminoAccessError } from './error'
 import { userKey } from '@/moi'
+import { capitalize } from 'camino-common/src/strings'
 
 export const Activite = defineComponent(() => {
   const router = useRouter()
@@ -90,9 +91,7 @@ export const PureActivite = defineComponent<Props>(props => {
             renderItem={activite => (
               <div>
                 <h6>
-                  <router-link to={{ name: 'titre', params: { id: activite.titre.slug } }} class="cap-first">
-                    {activite.titre.nom}
-                  </router-link>
+                  <router-link to={{ name: 'titre', params: { id: activite.titre.slug } }}>{capitalize(activite.titre.nom)}</router-link>
                 </h6>
 
                 <Preview key={activite.id} activite={activite} apiClient={apiClient} />

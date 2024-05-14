@@ -4,6 +4,7 @@ import { FunctionalComponent } from 'vue'
 import { SectionElement } from './new-section-element'
 import { isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
 import type { JSX } from 'vue/jsx-runtime'
+import { capitalize } from 'camino-common/src/strings'
 
 export const Sections = (props: { sections: SectionWithValue[] }): JSX.Element | null => {
   return props.sections?.length ? (
@@ -32,7 +33,7 @@ export const NewSection: FunctionalComponent<Props> = (props: Props): JSX.Elemen
 
   return (
     <div>
-      {isNotNullNorUndefinedNorEmpty(props.section.nom) && entete ? <h4 class="cap-first">{props.section.nom}</h4> : null}
+      {isNotNullNorUndefinedNorEmpty(props.section.nom) && entete ? <h4>{capitalize(props.section.nom)}</h4> : null}
 
       {elements.map(e => (
         <SectionElement key={e.id} element={e} />
