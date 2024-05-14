@@ -312,7 +312,7 @@ export const PureTitre = defineComponent<Props>(props => {
   }
 
   return () => (
-    <div class="dsfr">
+    <div>
       <LoadingElement
         data={titreData.value}
         renderItem={titre => (

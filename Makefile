@@ -31,7 +31,7 @@ ifndef CI
 	npm run db:watch -w packages/api
 else
 	npm run db:check -w packages/api
-endif 
+endif
 
 test: test/ui test/api test/common
 test/api: test/api-unit test/api-integration
@@ -87,7 +87,7 @@ ifndef CI
 else
 	npm run lint --workspace=packages/common
 endif
-	
+
 
 lint: lint/ui lint/api lint/common
 
@@ -130,7 +130,7 @@ else
 	@echo 'lancement du backend en mode dev(local)'
 	npm run dev -w packages/api
 endif
-	
+
 
 start/ui:
 ifdef CAMINO_STAGE
@@ -140,7 +140,7 @@ else
 	@echo 'lancement du frontend en mode dev(local)'
 	npm run dev -w packages/ui
 endif
-	
+
 
 ifeq (${INPUT_ENV}, dev)
 CD_TOKEN:=${CD_TOKEN_DEV}
@@ -194,18 +194,16 @@ dsfr/generate_keycloak:
 	rm dsfr-v1.10.2.zip
 dsfr/generate:
 	mkdir tmp
-	cp packages/ui/node_modules/@gouvfr/dsfr/dist/dsfr.css tmp/_dsfr.scss
-	cp packages/ui/node_modules/@gouvfr/dsfr/dist/utility/utility.css tmp/_utility.scss
+	cp node_modules/@gouvfr/dsfr/dist/dsfr.css tmp/_dsfr.scss
+	cp node_modules/@gouvfr/dsfr/dist/utility/utility.css tmp/_utility.scss
 	sed -i 's/..\/icons/.\/icons/g' tmp/_utility.scss
 	sed -n "/\@font-face {/,/}/p" tmp/_dsfr.scss > tmp/font-face.scss
 	sed -i "/\@font-face {/,/}/d" tmp/_dsfr.scss
-	echo "@import './font-face.scss'; .dsfr { @import './_dsfr.scss'; @import './_utility.scss'}" > tmp/dsfr.scss
+	echo "@import './font-face.scss'; @import './_dsfr.scss'; @import './_utility.scss'" > tmp/dsfr.scss
 	npx sass --no-source-map tmp/dsfr.scss packages/ui/src/styles/dsfr/dsfr.css
 	rm -r tmp
-	sed -i 's/.dsfr :root/:root/g' packages/ui/src/styles/dsfr/dsfr.css
-	sed -i 's/.dsfr body/body/g' packages/ui/src/styles/dsfr/dsfr.css
-	cp -r packages/ui/node_modules/@gouvfr/dsfr/dist/icons packages/ui/src/styles/dsfr/
-	cp -r packages/ui/node_modules/@gouvfr/dsfr/dist/fonts packages/ui/src/styles/dsfr/
+	cp -r node_modules/@gouvfr/dsfr/dist/icons packages/ui/src/styles/dsfr/
+	cp -r node_modules/@gouvfr/dsfr/dist/fonts packages/ui/src/styles/dsfr/
 	$(MAKE) icons/generate
 	$(MAKE) dsfr/generate_keycloak
 

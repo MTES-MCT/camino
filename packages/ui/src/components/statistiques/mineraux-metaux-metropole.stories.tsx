@@ -7,7 +7,6 @@ const meta: Meta = {
   title: 'Components/Statistiques/MinerauxMetauxMetropole',
   // @ts-ignore @storybook/vue3 n'aime pas les composants tsx
   component: PureMinerauxMetauxMetropole,
-  decorators: [() => ({ template: '<div class="dsfr"><story/></div>' })],
 }
 export default meta
 

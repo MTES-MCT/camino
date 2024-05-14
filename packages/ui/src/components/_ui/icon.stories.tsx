@@ -54,7 +54,7 @@ export const AllIcons: StoryFn = () => (
 )
 
 export const AllDsfrIcons: StoryFn = () => (
-  <div style="height:100%;width:100%;background:white" class="dsfr">
+  <div style="height:100%;width:100%;background:white">
     <table>
       <tr>
         <th>Name</th>
@@ -80,8 +80,4 @@ export const AllDsfrIcons: StoryFn = () => (
   </div>
 )
 
-export const DsfrIconColor: StoryFn = () => (
-  <div class="dsfr">
-    <DsfrIcon name={`fr-icon-calendar-2-fill`} color="text-title-blue-france" />
-  </div>
-)
+export const DsfrIconColor: StoryFn = () => <DsfrIcon name={`fr-icon-calendar-2-fill`} color="text-title-blue-france" />

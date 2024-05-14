@@ -6,7 +6,6 @@ import { entrepriseIdValidator } from 'camino-common/src/entreprise'
 const meta: Meta = {
   title: 'Components/Etape/PropItem',
   component: EtapePropItem,
-  decorators: [() => ({ template: '<div class="dsfr"><story/></div>' })],
 }
 export default meta
 
@@ -25,9 +24,17 @@ export const WithMultipleEntreprises: StoryFn = () => (
     ]}
   />
 )
-export const WithNoEntreprise: StoryFn = () => <EtapePropEntreprisesItem title="Titulaire" entreprises={[]} />
+export const WithNoEntreprise: StoryFn = () => (
+  <div>
+    <EtapePropEntreprisesItem title="Titulaire" entreprises={[]} />
+  </div>
+)
 
 export const WithOneAdministration: StoryFn = () => <EtapePropAdministrationsItem administrations={['aut-mrae-guyane-01']} />
 
 export const WithMultipleAdministrations: StoryFn = () => <EtapePropAdministrationsItem administrations={['aut-97300-01', 'aut-mrae-guyane-01']} />
-export const WithNoAdministration: StoryFn = () => <EtapePropAdministrationsItem administrations={[]} />
+export const WithNoAdministration: StoryFn = () => (
+  <div>
+    <EtapePropAdministrationsItem administrations={[]} />
+  </div>
+)

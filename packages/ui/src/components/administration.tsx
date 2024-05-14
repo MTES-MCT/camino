@@ -19,6 +19,7 @@ import { computed, defineComponent, inject, onMounted, ref } from 'vue'
 import { AsyncData } from '@/api/client-rest'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { userKey } from '@/moi'
+import { capitalize } from 'camino-common/src/strings'
 
 export const Administration = defineComponent(() => {
   const route = useRoute()
@@ -102,7 +103,7 @@ export const PureAdministration = defineComponent<Props>(props => {
       <h1>{administration.value.abreviation}</h1>
       <Card
         class="mb-xxl"
-        title={() => <span class="cap-first">{administration.value.nom}</span>}
+        title={() => <span>{capitalize(administration.value.nom)}</span>}
         content={() => (
           <div class="px-m pt-m border-b-s">
             <div class="tablet-blobs">
@@ -231,7 +232,7 @@ export const PureAdministration = defineComponent<Props>(props => {
           renderItem={item => (
             <div class="mb-xxl">
               <div class="line-neutral width-full mb-xxl" />
-              <TableAuto caption="Utilisateurs" class="width-full-p" columns={utilisateursColonnes} rows={utilisateursLignesBuild(item)} initialSort={'firstColumnAsc'} />
+              <TableAuto caption="Utilisateurs" columns={utilisateursColonnes} rows={utilisateursLignesBuild(item)} initialSort={'firstColumnAsc'} />
             </div>
           )}
         />

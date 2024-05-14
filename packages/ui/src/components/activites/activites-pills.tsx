@@ -11,7 +11,7 @@ export const ActivitesPills: FunctionalComponent<Props> = props => {
   return (
     <span>
       {(isNotNullNorUndefined(props.activitesAbsentes) && props.activitesAbsentes !== 0) || (isNotNullNorUndefined(props.activitesEnConstruction) && props.activitesEnConstruction !== 0) ? (
-        <div class="dsfr">
+        <div>
           <ul class="fr-badges-group">
             {isNotNullNorUndefined(props.activitesAbsentes) && props.activitesAbsentes !== 0 ? (
               <li>

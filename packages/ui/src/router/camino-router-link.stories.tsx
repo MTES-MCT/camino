@@ -9,7 +9,7 @@ const meta: Meta = {
 export default meta
 
 export const Default: StoryFn = () => (
-  <div class="dsfr">
+  <div>
     <CaminoRouterLink title="Titre du lien" to="/about" isDisabled={false}>
       Link
     </CaminoRouterLink>

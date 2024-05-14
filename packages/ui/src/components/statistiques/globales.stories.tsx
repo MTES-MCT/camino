@@ -5,7 +5,6 @@ import { Meta, StoryFn } from '@storybook/vue3'
 const meta: Meta = {
   title: 'Components/Statistiques/GlobalesNoStoryshots',
   component: PureGlobales,
-  decorators: [() => ({ template: '<div class="dsfr"><story/></div>' })],
 }
 export default meta
 

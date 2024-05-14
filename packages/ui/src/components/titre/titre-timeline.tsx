@@ -1,4 +1,4 @@
-import { capitalize, defineComponent, Fragment, FunctionalComponent, ref } from 'vue'
+import { defineComponent, Fragment, FunctionalComponent, ref } from 'vue'
 import { DemarcheSlug } from 'camino-common/src/demarche'
 import style from './titre-timeline.module.css'
 import { CaminoRouterLink } from '@/router/camino-router-link'
@@ -10,6 +10,7 @@ import { TitreGetDemarche } from 'camino-common/src/titres'
 import { TitreSlug } from 'camino-common/src/validators/titres'
 import { TravauxIcone } from './travaux-icone'
 import { DsfrSeparator } from '../_ui/dsfr-separator'
+import { capitalize } from 'camino-common/src/strings'
 
 type NoPhase = [[Pick<PhaseWithDateDebut, 'slug' | 'demarche_type_id'> & { demarche_date_debut: null }]]
 export type Phase = [PhaseWithDateDebut, ...DemarcheAlteration[]][]

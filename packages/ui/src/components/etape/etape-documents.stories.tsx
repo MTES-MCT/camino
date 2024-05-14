@@ -8,7 +8,6 @@ import { toCaminoDate } from 'camino-common/src/date'
 const meta: Meta = {
   title: 'Components/Etape/EtapeDocuments',
   component: EtapeDocuments,
-  decorators: [() => ({ template: '<div class="dsfr"><story/></div>' })],
 }
 export default meta
 
@@ -75,7 +74,11 @@ const entrepriseDocuments: EtapeEntrepriseDocument[] = [
   },
 ]
 
-export const Empty: StoryFn = () => <EtapeDocuments etapeDocuments={[]} entrepriseDocuments={[]} entreprises={entreprises} user={null} />
+export const Empty: StoryFn = () => (
+  <div>
+    <EtapeDocuments etapeDocuments={[]} entrepriseDocuments={[]} entreprises={entreprises} user={null} />
+  </div>
+)
 export const NotConnected: StoryFn = () => <EtapeDocuments etapeDocuments={documents} entrepriseDocuments={[]} entreprises={entreprises} user={null} />
 export const UserSuper: StoryFn = () => <EtapeDocuments etapeDocuments={documents} entrepriseDocuments={entrepriseDocuments} entreprises={entreprises} user={{ ...testBlankUser, role: 'super' }} />
 export const UserAdministration: StoryFn = () => (

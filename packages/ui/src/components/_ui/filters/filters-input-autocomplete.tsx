@@ -63,10 +63,9 @@ export const InputAutocomplete = defineComponent<Props>(props => {
   }
 
   return () => (
-    <div class="mb">
-      <h5>{filter.value.name}</h5>
-      <hr class="mb-s" />
-      <TypeAheadSmartMultiple filter={filterFull.value} onSelectItems={onSelectItems} />
+    <div class="fr-mb-2w">
+      <span>{filter.value.name}</span>
+      <TypeAheadSmartMultiple class="fr-mt-1w" filter={filterFull.value} onSelectItems={onSelectItems} />
     </div>
   )
 })

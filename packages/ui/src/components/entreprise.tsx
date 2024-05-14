@@ -109,7 +109,7 @@ export const PureEntreprise = defineComponent<Props>(props => {
           <h1>{item.nom}</h1>
           <Card
             class="mb-xxl"
-            title={() => <span class="cap-first"> Profil </span>}
+            title={() => <span> Profil </span>}
             buttons={() => {
               if (canEditEntreprise(props.user, props.entrepriseId)) {
                 return <ButtonIcon class="btn py-s px-m" onClick={() => (editPopup.value = !editPopup.value)} title="Modifier l’entreprise" icon="pencil" />

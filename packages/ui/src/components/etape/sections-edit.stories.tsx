@@ -7,7 +7,6 @@ const meta: Meta = {
   title: 'Components/Etape/SectionsEdit',
   // @ts-ignore
   component: SectionsEdit,
-  decorators: [() => ({ template: '<div class="dsfr"><story/></div>' })],
 }
 export default meta
 

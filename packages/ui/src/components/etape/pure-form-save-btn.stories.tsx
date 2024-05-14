@@ -6,7 +6,6 @@ const meta: Meta = {
   title: 'Components/Etape/FormSaveBtn',
   // @ts-ignore
   component: PureFormSaveBtn,
-  decorators: [() => ({ template: '<div class="dsfr"><story/></div>' })],
 }
 export default meta
 

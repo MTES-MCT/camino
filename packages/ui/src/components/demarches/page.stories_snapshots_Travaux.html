@@ -1,5 +1,5 @@
-<div class="fr-container">
-  <div class="dsfr">
+<div>
+  <div>
     <div class="fr-grid-row">
       <div class="fr-col-12 fr-col-md-6">
         <h1>Travaux</h1>
@@ -22,7 +22,7 @@
     </div>
   </div>
   <div class="mb-s">
-    <div class="flex flex-direction-column rnd-s border bg-bg"><button class="rnd-s accordion-header flex btn-alt py-s px-s" title="Déplier l’accordéon" aria-label="Déplier l’accordéon">
+    <div class="flex flex-direction-column rnd-s border bg-bg"><button class="rnd-s accordion-header flex py-s px-s" title="Déplier l’accordéon" aria-label="Déplier l’accordéon">
         <div>
           <div style="display: flex; align-items: center;">
             <div>Filtres</div>
@@ -41,221 +41,197 @@
               <div class="tablet-blobs mt">
                 <div class="tablet-blob-1-2 large-blob-1-3">
                   <div>
-                    <div class="mb">
-                      <h5>Références</h5>
-                      <hr class="mb-s"><input class="p-xs" type="text" placeholder="Référence DGEC, DEAL, DEB, BRGM, Ifremer, …">
+                    <div class="fr-input-group fr-mb-2w" style="margin-bottom: 0px;"><label class="fr-label" for="input_271">Références
+                        <!---->
+                        <!---->
+                      </label><input placeholder="Référence DGEC, DEAL, DEB, BRGM, Ifremer, …" class="fr-input" name="input_271" id="input_271" type="text">
+                      <!---->
                     </div>
                   </div>
                   <div>
-                    <div class="mb">
-                      <h5>Noms</h5>
-                      <hr class="mb-s">
-                      <div id="filters_autocomplete_Noms_wrapper" class="_typeahead_8eddf1 dsfr">
+                    <div class="fr-mb-2w"><span>Noms</span>
+                      <div id="filters_autocomplete_Noms_wrapper" class="_typeahead_8eddf1 fr-mt-1w">
                         <div style="display: flex; max-height: unset; flex-wrap: wrap; gap: 8px; outline-offset: 2px; outline-width: 2px; outline-color: rgb(10, 118, 246);" class="fr-input _fake-input_8eddf1"><input id="filters_autocomplete_Noms" type="text" name="filters_autocomplete_Noms" class="_typeahead-input_8eddf1" style="outline: none;" placeholder="Noms" autocomplete="off"></div>
                         <!---->
                       </div>
                     </div>
                   </div>
                   <div>
-                    <div class="mb">
-                      <h5>Entreprises</h5>
-                      <hr class="mb-s">
-                      <div id="filters_autocomplete_Entreprises_wrapper" class="_typeahead_8eddf1 dsfr">
+                    <div class="fr-mb-2w"><span>Entreprises</span>
+                      <div id="filters_autocomplete_Entreprises_wrapper" class="_typeahead_8eddf1 fr-mt-1w">
                         <div style="display: flex; max-height: unset; flex-wrap: wrap; gap: 8px; outline-offset: 2px; outline-width: 2px; outline-color: rgb(10, 118, 246);" class="fr-input _fake-input_8eddf1"><input id="filters_autocomplete_Entreprises" type="text" name="filters_autocomplete_Entreprises" class="_typeahead-input_8eddf1" style="outline: none;" placeholder="Entreprises" autocomplete="off"></div>
                         <!---->
                       </div>
                     </div>
                   </div>
                   <div>
-                    <div class="mb">
-                      <h5>Substances</h5>
-                      <hr class="mb-s">
-                      <div id="filters_autocomplete_Substances_wrapper" class="_typeahead_8eddf1 dsfr">
+                    <div class="fr-mb-2w"><span>Substances</span>
+                      <div id="filters_autocomplete_Substances_wrapper" class="_typeahead_8eddf1 fr-mt-1w">
                         <div style="display: flex; max-height: unset; flex-wrap: wrap; gap: 8px; outline-offset: 2px; outline-width: 2px; outline-color: rgb(10, 118, 246);" class="fr-input _fake-input_8eddf1"><input id="filters_autocomplete_Substances" type="text" name="filters_autocomplete_Substances" class="_typeahead-input_8eddf1" style="outline: none;" placeholder="Substances" autocomplete="off"></div>
                         <!---->
                       </div>
                     </div>
                   </div><button class="btn-border small px-s p-xs rnd-xs mb">Tout effacer</button>
                 </div>
-                <div class="mb tablet-blob-1-2 large-blob-1-3">
-                  <h5>Domaines</h5>
-                  <hr class="mb-s">
-                  <ul class="list-sans">
-                    <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="c">
-                        <div class="dsfr" style="display: flex; align-items: baseline;">
+                <div class="mb tablet-blob-1-2 large-blob-1-3">Domaines<ul class="list-sans" style="list-style-type: none;">
+                    <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="fr-mr-1v" value="c">
+                        <div style="display: flex; align-items: baseline;">
                           <p class="fr-tag fr-tag--md mono" title="Domaine carrières" aria-label="Domaine carrières" style="min-width: 2rem; color: black;">C</p>
                           <div class="h6 bold fr-pl-1w">Carrières</div>
                         </div>
                       </label></li>
-                    <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="f">
-                        <div class="dsfr" style="display: flex; align-items: baseline;">
+                    <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="fr-mr-1v" value="f">
+                        <div style="display: flex; align-items: baseline;">
                           <p class="fr-tag fr-tag--md mono" title="Domaine combustibles fossiles" aria-label="Domaine combustibles fossiles" style="min-width: 2rem; color: black;">F</p>
                           <div class="h6 bold fr-pl-1w">Combustibles fossiles</div>
                         </div>
                       </label></li>
-                    <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="r">
-                        <div class="dsfr" style="display: flex; align-items: baseline;">
+                    <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="fr-mr-1v" value="r">
+                        <div style="display: flex; align-items: baseline;">
                           <p class="fr-tag fr-tag--md mono" title="Domaine éléments radioactifs" aria-label="Domaine éléments radioactifs" style="min-width: 2rem; color: black;">R</p>
                           <div class="h6 bold fr-pl-1w">Éléments radioactifs</div>
                         </div>
                       </label></li>
-                    <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="g">
-                        <div class="dsfr" style="display: flex; align-items: baseline;">
+                    <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="fr-mr-1v" value="g">
+                        <div style="display: flex; align-items: baseline;">
                           <p class="fr-tag fr-tag--md mono" title="Domaine géothermie" aria-label="Domaine géothermie" style="min-width: 2rem; color: black;">G</p>
                           <div class="h6 bold fr-pl-1w">Géothermie</div>
                         </div>
                       </label></li>
-                    <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="w">
-                        <div class="dsfr" style="display: flex; align-items: baseline;">
+                    <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="fr-mr-1v" value="w">
+                        <div style="display: flex; align-items: baseline;">
                           <p class="fr-tag fr-tag--md mono" title="Domaine granulats marins" aria-label="Domaine granulats marins" style="min-width: 2rem; color: black;">W</p>
                           <div class="h6 bold fr-pl-1w">Granulats marins</div>
                         </div>
                       </label></li>
-                    <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="h">
-                        <div class="dsfr" style="display: flex; align-items: baseline;">
+                    <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="fr-mr-1v" value="h">
+                        <div style="display: flex; align-items: baseline;">
                           <p class="fr-tag fr-tag--md mono" title="Domaine hydrocarbures liquides ou gazeux" aria-label="Domaine hydrocarbures liquides ou gazeux" style="min-width: 2rem; color: black;">H</p>
                           <div class="h6 bold fr-pl-1w">Hydrocarbures liquides ou gazeux</div>
                         </div>
                       </label></li>
-                    <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="m">
-                        <div class="dsfr" style="display: flex; align-items: baseline;">
+                    <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="fr-mr-1v" value="m">
+                        <div style="display: flex; align-items: baseline;">
                           <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
                           <div class="h6 bold fr-pl-1w">Minéraux et métaux</div>
                         </div>
                       </label></li>
-                    <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="s">
-                        <div class="dsfr" style="display: flex; align-items: baseline;">
+                    <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="fr-mr-1v" value="s">
+                        <div style="display: flex; align-items: baseline;">
                           <p class="fr-tag fr-tag--md mono" title="Domaine stockages souterrains" aria-label="Domaine stockages souterrains" style="min-width: 2rem; color: black;">S</p>
                           <div class="h6 bold fr-pl-1w">Stockages souterrains</div>
                         </div>
                       </label></li>
-                  </ul><button class="btn-border small px-s p-xs rnd-xs mr-xs">Aucun</button><button class="btn-border small px-s p-xs rnd-xs mr-xs">Tous</button>
-                </div>
-                <div class="mb tablet-blob-1-2 large-blob-1-3">
-                  <h5>Types de titre</h5>
-                  <hr class="mb-s">
-                  <ul class="list-sans">
-                    <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="ax"><span><svg width="24" height="24" class="mr-s mb--xs"><rect width="24" height="24" class="svg-fill-pattern-ax"></rect></svg><span class="cap-first h6 bold">autorisation d'exploitation</span></span></label></li>
-                    <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="ap"><span><svg width="24" height="24" class="mr-s mb--xs"><rect width="24" height="24" class="svg-fill-pattern-ap"></rect></svg><span class="cap-first h6 bold">autorisation de prospections préalables</span></span></label></li>
-                    <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="ar"><span><svg width="24" height="24" class="mr-s mb--xs"><rect width="24" height="24" class="svg-fill-pattern-ar"></rect></svg><span class="cap-first h6 bold">autorisation de recherches</span></span></label></li>
-                    <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="cx"><span><svg width="24" height="24" class="mr-s mb--xs"><rect width="24" height="24" class="svg-fill-pattern-cx"></rect></svg><span class="cap-first h6 bold">concession</span></span></label></li>
-                    <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="in"><span><svg width="24" height="24" class="mr-s mb--xs"><rect width="24" height="24" class="svg-fill-pattern-in"></rect></svg><span class="cap-first h6 bold">indéterminé</span></span></label></li>
-                    <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="px"><span><svg width="24" height="24" class="mr-s mb--xs"><rect width="24" height="24" class="svg-fill-pattern-px"></rect></svg><span class="cap-first h6 bold">permis d'exploitation</span></span></label></li>
-                    <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="pc"><span><svg width="24" height="24" class="mr-s mb--xs"><rect width="24" height="24" class="svg-fill-pattern-pc"></rect></svg><span class="cap-first h6 bold">permis exclusif de carrières</span></span></label></li>
-                    <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="pr"><span><svg width="24" height="24" class="mr-s mb--xs"><rect width="24" height="24" class="svg-fill-pattern-pr"></rect></svg><span class="cap-first h6 bold">permis exclusif de recherches</span></span></label></li>
-                  </ul><button class="btn-border small px-s p-xs rnd-xs mr-xs">Aucun</button><button class="btn-border small px-s p-xs rnd-xs mr-xs">Tous</button>
-                </div>
-                <div class="mb tablet-blob-1-2 large-blob-1-3">
-                  <h5>Statuts de titre</h5>
-                  <hr class="mb-s">
-                  <ul class="list-sans">
-                    <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="dmc">
-                        <div class="dsfr">
+                  </ul><button class="fr-btn fr-btn--tertiary fr-btn--sm fr-mr-1w" title="Aucun" aria-label="Aucun" type="button">Aucun</button><button class="fr-btn fr-btn--tertiary fr-btn--sm" title="Tous" aria-label="Tous" type="button">Tous</button></div>
+                <div class="mb tablet-blob-1-2 large-blob-1-3">Types de titre<ul class="list-sans" style="list-style-type: none;">
+                    <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="fr-mr-1v" value="ax"><span><svg width="24" height="24" class="mr-s mb--xs"><rect width="24" height="24" class="svg-fill-pattern-ax"></rect></svg><span class="h6 bold">Autorisation d'exploitation</span></span></label></li>
+                    <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="fr-mr-1v" value="ap"><span><svg width="24" height="24" class="mr-s mb--xs"><rect width="24" height="24" class="svg-fill-pattern-ap"></rect></svg><span class="h6 bold">Autorisation de prospections préalables</span></span></label></li>
+                    <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="fr-mr-1v" value="ar"><span><svg width="24" height="24" class="mr-s mb--xs"><rect width="24" height="24" class="svg-fill-pattern-ar"></rect></svg><span class="h6 bold">Autorisation de recherches</span></span></label></li>
+                    <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="fr-mr-1v" value="cx"><span><svg width="24" height="24" class="mr-s mb--xs"><rect width="24" height="24" class="svg-fill-pattern-cx"></rect></svg><span class="h6 bold">Concession</span></span></label></li>
+                    <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="fr-mr-1v" value="in"><span><svg width="24" height="24" class="mr-s mb--xs"><rect width="24" height="24" class="svg-fill-pattern-in"></rect></svg><span class="h6 bold">Indéterminé</span></span></label></li>
+                    <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="fr-mr-1v" value="px"><span><svg width="24" height="24" class="mr-s mb--xs"><rect width="24" height="24" class="svg-fill-pattern-px"></rect></svg><span class="h6 bold">Permis d'exploitation</span></span></label></li>
+                    <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="fr-mr-1v" value="pc"><span><svg width="24" height="24" class="mr-s mb--xs"><rect width="24" height="24" class="svg-fill-pattern-pc"></rect></svg><span class="h6 bold">Permis exclusif de carrières</span></span></label></li>
+                    <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="fr-mr-1v" value="pr"><span><svg width="24" height="24" class="mr-s mb--xs"><rect width="24" height="24" class="svg-fill-pattern-pr"></rect></svg><span class="h6 bold">Permis exclusif de recherches</span></span></label></li>
+                  </ul><button class="fr-btn fr-btn--tertiary fr-btn--sm fr-mr-1w" title="Aucun" aria-label="Aucun" type="button">Aucun</button><button class="fr-btn fr-btn--tertiary fr-btn--sm" title="Tous" aria-label="Tous" type="button">Tous</button></div>
+                <div class="mb tablet-blob-1-2 large-blob-1-3">Statuts de titre<ul class="list-sans" style="list-style-type: none;">
+                    <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="fr-mr-1v" value="dmc">
+                        <div>
                           <p style="z-index: unset; margin-bottom: 0px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;" class="fr-badge fr-badge--md fr-badge--beige-gris-galet" title="demande classée" aria-label="demande classée">demande classée</p>
                         </div>
                       </label></li>
-                    <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="dmi">
-                        <div class="dsfr">
+                    <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="fr-mr-1v" value="dmi">
+                        <div>
                           <p style="z-index: unset; margin-bottom: 0px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;" class="fr-badge fr-badge--md fr-badge--orange-terre-battue" title="demande initiale" aria-label="demande initiale">demande initiale</p>
                         </div>
                       </label></li>
-                    <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="ech">
-                        <div class="dsfr">
+                    <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="fr-mr-1v" value="ech">
+                        <div>
                           <p style="z-index: unset; margin-bottom: 0px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;" class="fr-badge fr-badge--md fr-badge--beige-gris-galet" title="échu" aria-label="échu">échu</p>
                         </div>
                       </label></li>
-                    <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="ind">
-                        <div class="dsfr">
+                    <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="fr-mr-1v" value="ind">
+                        <div>
                           <p style="z-index: unset; margin-bottom: 0px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;" class="fr-badge fr-badge--md fr-badge--beige-gris-galet" title="indéterminé" aria-label="indéterminé">indéterminé</p>
                         </div>
                       </label></li>
-                    <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="mod">
-                        <div class="dsfr">
+                    <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="fr-mr-1v" value="mod">
+                        <div>
                           <p style="z-index: unset; margin-bottom: 0px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;" class="fr-badge fr-badge--md fr-badge--green-bourgeon" title="valide - modification en instance" aria-label="valide - modification en instance">valide - modification en instance</p>
                         </div>
                       </label></li>
-                    <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="sup">
-                        <div class="dsfr">
+                    <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="fr-mr-1v" value="sup">
+                        <div>
                           <p style="z-index: unset; margin-bottom: 0px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;" class="fr-badge fr-badge--md fr-badge--green-bourgeon" title="valide - survie provisoire" aria-label="valide - survie provisoire">valide - survie provisoire</p>
                         </div>
                       </label></li>
-                    <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="val">
-                        <div class="dsfr">
+                    <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="fr-mr-1v" value="val">
+                        <div>
                           <p style="z-index: unset; margin-bottom: 0px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;" class="fr-badge fr-badge--md fr-badge--green-bourgeon" title="valide" aria-label="valide">valide</p>
                         </div>
                       </label></li>
-                  </ul><button class="btn-border small px-s p-xs rnd-xs mr-xs">Aucun</button><button class="btn-border small px-s p-xs rnd-xs mr-xs">Tous</button>
-                </div>
-                <div class="mb tablet-blob-1-2 large-blob-1-3">
-                  <h5>Types de travaux</h5>
-                  <hr class="mb-s">
-                  <ul class="list-sans">
-                    <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="aom"><span class="cap-first h6 bold">Autorisation d'ouverture de travaux</span></label></li>
-                    <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="dam"><span class="cap-first h6 bold">Déclaration d'arrêt définitif des travaux</span></label></li>
-                    <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="dot"><span class="cap-first h6 bold">Déclaration d'ouverture de travaux</span></label></li>
-                  </ul><button class="btn-border small px-s p-xs rnd-xs mr-xs">Aucun</button><button class="btn-border small px-s p-xs rnd-xs mr-xs">Tous</button>
-                </div>
-                <div class="mb tablet-blob-1-2 large-blob-1-3">
-                  <h5>Statuts de démarche</h5>
-                  <hr class="mb-s">
-                  <ul class="list-sans">
-                    <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="acc">
-                        <div class="dsfr">
+                  </ul><button class="fr-btn fr-btn--tertiary fr-btn--sm fr-mr-1w" title="Aucun" aria-label="Aucun" type="button">Aucun</button><button class="fr-btn fr-btn--tertiary fr-btn--sm" title="Tous" aria-label="Tous" type="button">Tous</button></div>
+                <div class="mb tablet-blob-1-2 large-blob-1-3">Types de travaux<ul class="list-sans" style="list-style-type: none;">
+                    <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="fr-mr-1v" value="aom"><span class="h6 bold">Autorisation d'ouverture de travaux</span></label></li>
+                    <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="fr-mr-1v" value="dam"><span class="h6 bold">Déclaration d'arrêt définitif des travaux</span></label></li>
+                    <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="fr-mr-1v" value="dot"><span class="h6 bold">Déclaration d'ouverture de travaux</span></label></li>
+                  </ul><button class="fr-btn fr-btn--tertiary fr-btn--sm fr-mr-1w" title="Aucun" aria-label="Aucun" type="button">Aucun</button><button class="fr-btn fr-btn--tertiary fr-btn--sm" title="Tous" aria-label="Tous" type="button">Tous</button></div>
+                <div class="mb tablet-blob-1-2 large-blob-1-3">Statuts de démarche<ul class="list-sans" style="list-style-type: none;">
+                    <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="fr-mr-1v" value="acc">
+                        <div>
                           <p style="z-index: unset; margin-bottom: 0px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;" class="fr-badge fr-badge--md fr-badge--green-bourgeon" title="accepté" aria-label="accepté">accepté</p>
                         </div>
                       </label></li>
-                    <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="cls">
-                        <div class="dsfr">
+                    <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="fr-mr-1v" value="cls">
+                        <div>
                           <p style="z-index: unset; margin-bottom: 0px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;" class="fr-badge fr-badge--md fr-badge--beige-gris-galet" title="classé sans suite" aria-label="classé sans suite">classé sans suite</p>
                         </div>
                       </label></li>
-                    <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="dep">
-                        <div class="dsfr">
+                    <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="fr-mr-1v" value="dep">
+                        <div>
                           <p style="z-index: unset; margin-bottom: 0px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;" class="fr-badge fr-badge--md fr-badge--orange-terre-battue" title="déposé" aria-label="déposé">déposé</p>
                         </div>
                       </label></li>
-                    <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="des">
-                        <div class="dsfr">
+                    <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="fr-mr-1v" value="des">
+                        <div>
                           <p style="z-index: unset; margin-bottom: 0px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;" class="fr-badge fr-badge--md fr-badge--beige-gris-galet" title="désisté" aria-label="désisté">désisté</p>
                         </div>
                       </label></li>
-                    <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="eco">
-                        <div class="dsfr">
+                    <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="fr-mr-1v" value="eco">
+                        <div>
                           <p style="z-index: unset; margin-bottom: 0px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;" class="fr-badge fr-badge--md fr-badge--orange-terre-battue" title="en construction" aria-label="en construction">en construction</p>
                         </div>
                       </label></li>
-                    <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="ins">
-                        <div class="dsfr">
+                    <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="fr-mr-1v" value="ins">
+                        <div>
                           <p style="z-index: unset; margin-bottom: 0px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;" class="fr-badge fr-badge--md fr-badge--orange-terre-battue" title="en instruction" aria-label="en instruction">en instruction</p>
                         </div>
                       </label></li>
-                    <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="fpm">
-                        <div class="dsfr">
+                    <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="fr-mr-1v" value="fpm">
+                        <div>
                           <p style="z-index: unset; margin-bottom: 0px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;" class="fr-badge fr-badge--md fr-badge--green-bourgeon" title="fin de la police des mines" aria-label="fin de la police des mines">fin de la police des mines</p>
                         </div>
                       </label></li>
-                    <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="ind">
-                        <div class="dsfr">
+                    <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="fr-mr-1v" value="ind">
+                        <div>
                           <p style="z-index: unset; margin-bottom: 0px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;" class="fr-badge fr-badge--md fr-badge--beige-gris-galet" title="indéterminé" aria-label="indéterminé">indéterminé</p>
                         </div>
                       </label></li>
-                    <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="ini">
-                        <div class="dsfr">
+                    <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="fr-mr-1v" value="ini">
+                        <div>
                           <p style="z-index: unset; margin-bottom: 0px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;" class="fr-badge fr-badge--md fr-badge--orange-terre-battue" title="initié" aria-label="initié">initié</p>
                         </div>
                       </label></li>
-                    <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="rej">
-                        <div class="dsfr">
+                    <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="fr-mr-1v" value="rej">
+                        <div>
                           <p style="z-index: unset; margin-bottom: 0px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;" class="fr-badge fr-badge--md fr-badge--purple-glycine" title="rejeté" aria-label="rejeté">rejeté</p>
                         </div>
                       </label></li>
-                    <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="ter">
-                        <div class="dsfr">
+                    <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="fr-mr-1v" value="ter">
+                        <div>
                           <p style="z-index: unset; margin-bottom: 0px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;" class="fr-badge fr-badge--md fr-badge--green-bourgeon" title="terminé" aria-label="terminé">terminé</p>
                         </div>
                       </label></li>
-                  </ul><button class="btn-border small px-s p-xs rnd-xs mr-xs">Aucun</button><button class="btn-border small px-s p-xs rnd-xs mr-xs">Tous</button>
-                </div>
+                  </ul><button class="fr-btn fr-btn--tertiary fr-btn--sm fr-mr-1w" title="Aucun" aria-label="Aucun" type="button">Aucun</button><button class="fr-btn fr-btn--tertiary fr-btn--sm" title="Tous" aria-label="Tous" type="button">Tous</button></div>
                 <div class="mb tablet-blob-1-2 large-blob-1-3">
                   <h5>Types d'étapes incluses</h5>
                   <hr class="mb-s"><button class="btn rnd-xs py-s px-m full-x flex mb-s h6" title="Ajouter un type d’étape" aria-label="Ajouter un type d’étape"><span class="mt-xxs">Ajouter un type d'étape</span><svg style="display: block;" xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="#666" class="flex-right">
@@ -269,15 +245,15 @@
                     </svg></button>
                 </div>
               </div>
-              <div class="dsfr"><a href="/mocked-href" title="Valider les filtres" class="fr-btn fr-mb-2w" aria-label="Valider les filtres">Valider</a></div>
+              <div><a href="/mocked-href" title="Valider les filtres" class="fr-btn fr-mb-2w" aria-label="Valider les filtres">Valider</a></div>
             </div>
           </div>
         </transition-stub>
       </div>
     </div>
   </div>
-  <div class="dsfr">
-    <div class="dsfr">
+  <div>
+    <div>
       <div class="fr-table fr-table--no-caption" style="overflow: auto;">
         <table style="display: table; min-width: 100%;">
           <caption>Travaux</caption>
@@ -312,7 +288,7 @@
               <td>
                 <div class="bg-success inline-block small bold color-bg pill py-xs px-s">Fin de la police des mines</div>
               </td>
-              <td><span class="dsfr"><ul><li class="fr-text--xs">RNTM : Ref 0</li></ul></span></td>
+              <td><span class=""><ul><li class="fr-text--xs">RNTM : Ref 0</li></ul></span></td>
             </tr>
             <tr>
               <td><a class="fr-link" to="{name:titre,params:{id:slug-1},query:{demarcheSlug:slug1}}" type="primary"><span class="">Nom 1</span></a></td>
@@ -331,7 +307,7 @@
               <td>
                 <div class="bg-neutral inline-block small bold color-bg pill py-xs px-s">Désisté</div>
               </td>
-              <td><span class="dsfr"><ul><li class="fr-text--xs">RNTM : Ref 1</li></ul></span></td>
+              <td><span class=""><ul><li class="fr-text--xs">RNTM : Ref 1</li></ul></span></td>
             </tr>
             <tr>
               <td><a class="fr-link" to="{name:titre,params:{id:slug-2},query:{demarcheSlug:slug2}}" type="primary"><span class="">Nom 2</span></a></td>
@@ -350,7 +326,7 @@
               <td>
                 <div class="bg-success inline-block small bold color-bg pill py-xs px-s">Fin de la police des mines</div>
               </td>
-              <td><span class="dsfr"><ul><li class="fr-text--xs">RNTM : Ref 2</li></ul></span></td>
+              <td><span class=""><ul><li class="fr-text--xs">RNTM : Ref 2</li></ul></span></td>
             </tr>
             <tr>
               <td><a class="fr-link" to="{name:titre,params:{id:slug-3},query:{demarcheSlug:slug3}}" type="primary"><span class="">Nom 3</span></a></td>
@@ -369,7 +345,7 @@
               <td>
                 <div class="bg-neutral inline-block small bold color-bg pill py-xs px-s">Désisté</div>
               </td>
-              <td><span class="dsfr"><ul><li class="fr-text--xs">RNTM : Ref 3</li></ul></span></td>
+              <td><span class=""><ul><li class="fr-text--xs">RNTM : Ref 3</li></ul></span></td>
             </tr>
             <tr>
               <td><a class="fr-link" to="{name:titre,params:{id:slug-4},query:{demarcheSlug:slug4}}" type="primary"><span class="">Nom 4</span></a></td>
@@ -388,7 +364,7 @@
               <td>
                 <div class="bg-success inline-block small bold color-bg pill py-xs px-s">Fin de la police des mines</div>
               </td>
-              <td><span class="dsfr"><ul><li class="fr-text--xs">RNTM : Ref 4</li></ul></span></td>
+              <td><span class=""><ul><li class="fr-text--xs">RNTM : Ref 4</li></ul></span></td>
             </tr>
             <tr>
               <td><a class="fr-link" to="{name:titre,params:{id:slug-5},query:{demarcheSlug:slug5}}" type="primary"><span class="">Nom 5</span></a></td>
@@ -407,7 +383,7 @@
               <td>
                 <div class="bg-neutral inline-block small bold color-bg pill py-xs px-s">Désisté</div>
               </td>
-              <td><span class="dsfr"><ul><li class="fr-text--xs">RNTM : Ref 5</li></ul></span></td>
+              <td><span class=""><ul><li class="fr-text--xs">RNTM : Ref 5</li></ul></span></td>
             </tr>
             <tr>
               <td><a class="fr-link" to="{name:titre,params:{id:slug-6},query:{demarcheSlug:slug6}}" type="primary"><span class="">Nom 6</span></a></td>
@@ -426,7 +402,7 @@
               <td>
                 <div class="bg-success inline-block small bold color-bg pill py-xs px-s">Fin de la police des mines</div>
               </td>
-              <td><span class="dsfr"><ul><li class="fr-text--xs">RNTM : Ref 6</li></ul></span></td>
+              <td><span class=""><ul><li class="fr-text--xs">RNTM : Ref 6</li></ul></span></td>
             </tr>
             <tr>
               <td><a class="fr-link" to="{name:titre,params:{id:slug-7},query:{demarcheSlug:slug7}}" type="primary"><span class="">Nom 7</span></a></td>
@@ -445,7 +421,7 @@
               <td>
                 <div class="bg-neutral inline-block small bold color-bg pill py-xs px-s">Désisté</div>
               </td>
-              <td><span class="dsfr"><ul><li class="fr-text--xs">RNTM : Ref 7</li></ul></span></td>
+              <td><span class=""><ul><li class="fr-text--xs">RNTM : Ref 7</li></ul></span></td>
             </tr>
             <tr>
               <td><a class="fr-link" to="{name:titre,params:{id:slug-8},query:{demarcheSlug:slug8}}" type="primary"><span class="">Nom 8</span></a></td>
@@ -464,7 +440,7 @@
               <td>
                 <div class="bg-success inline-block small bold color-bg pill py-xs px-s">Fin de la police des mines</div>
               </td>
-              <td><span class="dsfr"><ul><li class="fr-text--xs">RNTM : Ref 8</li></ul></span></td>
+              <td><span class=""><ul><li class="fr-text--xs">RNTM : Ref 8</li></ul></span></td>
             </tr>
             <tr>
               <td><a class="fr-link" to="{name:titre,params:{id:slug-9},query:{demarcheSlug:slug9}}" type="primary"><span class="">Nom 9</span></a></td>
@@ -483,7 +459,7 @@
               <td>
                 <div class="bg-neutral inline-block small bold color-bg pill py-xs px-s">Désisté</div>
               </td>
-              <td><span class="dsfr"><ul><li class="fr-text--xs">RNTM : Ref 9</li></ul></span></td>
+              <td><span class=""><ul><li class="fr-text--xs">RNTM : Ref 9</li></ul></span></td>
             </tr>
           </tbody>
         </table>

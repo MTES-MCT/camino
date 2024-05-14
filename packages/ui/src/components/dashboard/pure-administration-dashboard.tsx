@@ -116,7 +116,7 @@ export const PureAdministrationDashboard = defineComponent<Props>(props => {
   })
 
   return () => (
-    <div class="dsfr">
+    <div>
       <PageContentHeader nom="Tableau de bord" download={null} renderButton={null} />
       {isDGTM.value ? (
         <>

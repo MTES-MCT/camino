@@ -10,6 +10,7 @@ import { caminoFiltres } from 'camino-common/src/filters'
 import { isEventWithTarget } from '@/utils/vue-tsx-utils'
 import { DemarcheStatut } from '../../_common/demarche-statut'
 import type { JSX } from 'vue/jsx-runtime'
+import { DsfrButton } from '../dsfr-button'
 
 type Props = {
   filter: CheckboxesCaminoFiltres
@@ -24,7 +25,7 @@ function DrawComponent(filter: CheckboxesCaminoFiltres, index: number): JSX.Elem
   switch (component) {
     case 'FiltreDomaine':
       return (
-        <div class="dsfr" style={{ display: 'flex', alignItems: 'baseline' }}>
+        <div style={{ display: 'flex', alignItems: 'baseline' }}>
           <DomaineComp domaineId={fullFilter.elements[index].id} />
           <div class="h6 bold fr-pl-1w">{capitalize(fullFilter.elements[index].nom)}</div>
         </div>
@@ -40,18 +41,18 @@ function DrawComponent(filter: CheckboxesCaminoFiltres, index: number): JSX.Elem
       )
     case 'FiltresTitresStatuts':
       return (
-        <div class="dsfr">
+        <div>
           <TitreStatutComp titreStatutId={fullFilter.elements[index].id} />
         </div>
       )
     case 'FiltresDemarchesStatuts':
       return (
-        <div class="dsfr">
+        <div>
           <DemarcheStatut demarcheStatutId={fullFilter.elements[index].id} />
         </div>
       )
     case 'FiltresLabel':
-      return <span class="cap-first h6 bold">{fullFilter.elements[index].nom}</span>
+      return <span class="h6 bold">{capitalize(fullFilter.elements[index].nom)}</span>
     default:
       exhaustiveCheck(component)
 
@@ -104,10 +105,8 @@ export const FiltersCheckboxes = defineComponent((props: Props) => {
 
   return () => (
     <div class="mb">
-      <h5>{fullFilter.name}</h5>
-      <hr class="mb-s" />
-
-      <ul class="list-sans">
+      {fullFilter.name}
+      <ul class="list-sans" style={{ listStyleType: 'none' }}>
         {fullFilter.elements.map((element, index) => (
           <li key={element.id}>
             <label style={{ display: 'flex', flexDirection: 'row' }}>
@@ -116,7 +115,7 @@ export const FiltersCheckboxes = defineComponent((props: Props) => {
                 // @ts-ignore typescript est perdu ici, probablement un distributive union à supprimer
                 checked={selectedValues.value.includes(element.id)}
                 type="checkbox"
-                class="mr-s"
+                class="fr-mr-1v"
                 onChange={event => checkboxToggle(event)}
               />
               {DrawComponent(props.filter, index)}
@@ -124,12 +123,8 @@ export const FiltersCheckboxes = defineComponent((props: Props) => {
           </li>
         ))}
       </ul>
-      <button ref="button" class="btn-border small px-s p-xs rnd-xs mr-xs" onClick={() => checkboxesSelect('none')}>
-        Aucun
-      </button>
-      <button ref="button" class="btn-border small px-s p-xs rnd-xs mr-xs" onClick={() => checkboxesSelect('all')}>
-        Tous
-      </button>
+      <DsfrButton title="Aucun" class="fr-mr-1w" buttonType="tertiary" buttonSize="sm" onClick={() => checkboxesSelect('none')} />
+      <DsfrButton title="Tous" buttonType="tertiary" buttonSize="sm" onClick={() => checkboxesSelect('all')} />
     </div>
   )
 })

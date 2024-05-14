@@ -128,7 +128,7 @@ export const TypeAheadMultiple = defineComponent(<T extends TypeAheadRecord, K e
   }
 
   return () => (
-    <div id={wrapperId.value} class={[styles.typeahead, 'dsfr']}>
+    <div id={wrapperId.value} class={[styles.typeahead]}>
       <div style={{ display: 'flex', maxHeight: 'unset', flexWrap: 'wrap', gap: '8px', outlineOffset: '2px', outlineWidth: '2px', outlineColor: '#0a76f6' }} class={['fr-input', styles['fake-input']]}>
         {selectedItems.value.map(item => {
           return <DsfrTag key={item[props.props.itemKey]} ariaLabel={props.props.itemChipLabel(item)} tagSize="sm" onClicked={unselectItem(item)} />

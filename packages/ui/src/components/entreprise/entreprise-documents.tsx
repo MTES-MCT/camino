@@ -42,7 +42,7 @@ export const EntrepriseDocuments = defineComponent<Props>(props => {
   })
 
   return () => (
-    <div class="dsfr" style={{ overflowX: 'auto' }}>
+    <div style={{ overflowX: 'auto' }}>
       <div class="fr-container">
         <div class="fr-table">
           <table style={{ display: 'table' }}>

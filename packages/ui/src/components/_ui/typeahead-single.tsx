@@ -124,7 +124,7 @@ export const TypeAheadSingle = defineComponent(<T extends TypeAheadRecord, K ext
   }
 
   return () => (
-    <div id={wrapperId.value} class={[styles.typeahead, 'dsfr']}>
+    <div id={wrapperId.value} class={[styles.typeahead]}>
       <div class={['flex']}>
         <input
           id={id}
@@ -133,7 +133,7 @@ export const TypeAheadSingle = defineComponent(<T extends TypeAheadRecord, K ext
           type="text"
           name={id}
           disabled={props.disabled}
-          class={[styles['typeahead-input'], 'fr-input']}
+          class={'fr-input'}
           placeholder={props.props.placeholder}
           autocomplete="off"
           onInput={onInput}

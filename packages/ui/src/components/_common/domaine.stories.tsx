@@ -8,7 +8,6 @@ const meta: Meta = {
   argTypes: {
     domaineId: { name: 'string', required: false },
   },
-  decorators: [() => ({ template: '<div class="dsfr"><story/></div>' })],
 }
 export default meta
 

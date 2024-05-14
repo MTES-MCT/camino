@@ -102,7 +102,7 @@ export const Table = defineComponent(
     })
 
     return () => (
-      <div class="dsfr">
+      <div>
         <div class="fr-table fr-table--no-caption" style={{ overflow: 'auto' }}>
           <table style={{ display: 'table', minWidth: '100%' }}>
             <caption>{props.caption}</caption>

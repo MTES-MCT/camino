@@ -35,14 +35,14 @@ export const App = defineComponent(() => {
   })
 
   return () => (
-    <div class="page relative">
+    <div>
       <MapPattern />
       <IconSprite />
 
       <Header user={user} currentMenuSection={currentMenuSection.value} routePath={route.fullPath} />
 
-      <main class="main" role="main">
-        <div class="container">{loaded.value ? <RouterView /> : null}</div>
+      <main role="main">
+        <div class="fr-container">{loaded.value ? <RouterView /> : null}</div>
       </main>
 
       <Footer displayNewsletter={displayNewsletter.value} version={version.value} />

@@ -263,7 +263,7 @@ export const DemarcheEtape = defineComponent<Props>(props => {
                                 {valeurFind(element)}
                               </a>
                             ) : (
-                              <p class="cap-first">
+                              <p>
                                 {element.id === 'jorf' && element.value !== null && element.value !== '' ? (
                                   <a target="_blank" rel="noopener noreferrer" href={`https://www.legifrance.gouv.fr/jorf/id/${valeurFind(element)}`} title={`Légifrance - Lien externe`}>
                                     {valeurFind(element)}

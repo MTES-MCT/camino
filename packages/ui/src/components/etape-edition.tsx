@@ -146,7 +146,7 @@ export const PureEtapeEdition = defineComponent<Props>(props => {
   })
 
   return () => (
-    <div class="dsfr">
+    <div>
       <LoadingElement
         data={asyncData.value}
         renderItem={({ etape, demarche, perimetre }) => (
@@ -154,9 +154,8 @@ export const PureEtapeEdition = defineComponent<Props>(props => {
             <div>
               <DsfrLink to={{ name: 'titre', params: { id: demarche.titre_slug } }} disabled={false} title={demarche.titre_nom} icon={null} />
               <span> {'>'} </span>
-              <span class="cap-first">
-                {' '}
-                {DemarchesTypes[demarche.demarche_type_id].nom} {demarche.demarche_description}{' '}
+              <span>
+                {capitalize(DemarchesTypes[demarche.demarche_type_id].nom)} {demarche.demarche_description}{' '}
               </span>
             </div>
 

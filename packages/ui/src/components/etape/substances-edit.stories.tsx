@@ -8,7 +8,6 @@ const meta: Meta = {
   title: 'Components/Etape/SubstancesEdit',
   // @ts-ignore @storybook/vue3 n'aime pas les composants tsx
   component: SubstancesEdit,
-  decorators: [() => ({ template: '<div class="dsfr"><story/></div>' })],
 }
 export default meta
 

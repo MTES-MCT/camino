@@ -11,7 +11,6 @@ const meta: Meta = {
   title: 'Components/Activite/ActiviteDocumentsEdit',
   // @ts-ignore @storybook/vue3 n'aime pas les composants tsx
   component: ActiviteDocumentsEdit,
-  decorators: [() => ({ template: '<div class="dsfr"><story/></div>' })],
 }
 export default meta
 

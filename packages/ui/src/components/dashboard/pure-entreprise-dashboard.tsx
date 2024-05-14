@@ -59,7 +59,7 @@ export const PureEntrepriseDashboard = defineComponent<Props>(props => {
   })
 
   return () => (
-    <div class="dsfr">
+    <div>
       <PageContentHeader nom="Mes Titres" download={null} renderButton={() => <DemandeTitreButton user={props.user} />} />
       <LoadingElement
         data={data.value}

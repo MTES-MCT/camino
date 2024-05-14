@@ -5,7 +5,6 @@ import { DsfrLink } from './dsfr-button'
 const meta: Meta = {
   title: 'Components/UI/Alert',
   component: Alert,
-  decorators: [() => ({ template: '<div class="dsfr"><story/></div>' })],
 }
 export default meta
 

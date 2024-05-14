@@ -4,7 +4,6 @@ import { TravauxIcone } from './travaux-icone'
 const meta: Meta = {
   title: 'Components/Titre/TravauxIcone',
   component: TravauxIcone,
-  decorators: [() => ({ template: '<div class="dsfr"><story/></div>' })],
 }
 export default meta
 

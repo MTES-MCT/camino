@@ -67,14 +67,15 @@ export const Preview = defineComponent<Props>(props => {
   }))
 
   return () => (
-    <div class="dsfr">
+    <div>
       <div class="fr-p-2w fr-tile--shadow" style={{ border: '1px solid var(--grey-900-175)' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div style={{ display: 'flex', justifyContent: 'start', alignItems: 'center', gap: '1.5rem' }}>
             <h3 class="fr-mb-0">{capitalize(activiteType.value.nom)}</h3>
             <h5 class="fr-mb-0">
-              <span class="cap-first">
-                {props.activite.periode_id && activiteType.value.frequenceId ? <span>{getPeriode(activiteType.value.frequenceId, props.activite.periode_id)}</span> : null} {props.activite.annee}
+              <span>
+                {props.activite.periode_id && activiteType.value.frequenceId ? <span>{capitalize(getPeriode(activiteType.value.frequenceId, props.activite.periode_id))}</span> : null}{' '}
+                {props.activite.annee}
               </span>
             </h5>
           </div>

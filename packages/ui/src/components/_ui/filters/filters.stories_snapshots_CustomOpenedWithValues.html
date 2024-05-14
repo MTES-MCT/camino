@@ -1,5 +1,5 @@
 <div class="mb-s">
-  <div class="flex flex-direction-column rnd-s border bg-bg"><button class="rnd-t-s border-b-s accordion-header flex btn-alt py-s px-s" title="Replier l’accordéon" aria-label="Replier l’accordéon">
+  <div class="flex flex-direction-column rnd-s border bg-bg"><button class="rnd-t-s border-b-s accordion-header flex py-s px-s" title="Replier l’accordéon" aria-label="Replier l’accordéon">
       <div>
         <div style="display: flex; align-items: center;">
           <div>Filtres</div>
@@ -11,7 +11,7 @@
         </svg></div>
     </button>
     <div class="flex border-b-s">
-      <div class="px-m pt-m pb-s"><span class="rnd-m box btn-flash h6 pl-s pr-xs py-xs bold mr-xs mb-xs pr-s">Nom : test <!----></span><span class="rnd-m box btn-flash h6 pl-s pr-xs py-xs bold mr-xs mb-xs pr-s">Substances : argent <!----></span><span class="rnd-m box btn-flash h6 pl-s pr-xs py-xs bold mr-xs mb-xs pr-s">Substances : or <!----></span></div><button title="Réinitialiser les filtres" aria-label="Réinitialiser les filtres" class="flex-right btn-alt p-m"><svg style="display: block;" xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="#666">
+      <div class="px-m pt-m pb-s flex" style="flex-wrap: wrap;"><span class="flex rnd-m box btn-flash h6 pl-s pr-xs py-xs bold mr-xs mb-xs pr-s" style="align-items: center;">Nom : test <!----></span><span class="flex rnd-m box btn-flash h6 pl-s pr-xs py-xs bold mr-xs mb-xs pr-s" style="align-items: center;">Substances : argent <!----></span><span class="flex rnd-m box btn-flash h6 pl-s pr-xs py-xs bold mr-xs mb-xs pr-s" style="align-items: center;">Substances : or <!----></span></div><button title="Réinitialiser les filtres" aria-label="Réinitialiser les filtres" class="btn-alt p-m" style="margin-left: auto;"><svg style="display: block;" xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="#666">
           <use href="#icon-close"></use>
         </svg></button>
     </div>
@@ -22,16 +22,16 @@
             <div class="tablet-blobs mt">
               <div class="tablet-blob-1-2 large-blob-1-3">
                 <div>
-                  <div class="mb">
-                    <h5>Nom</h5>
-                    <hr class="mb-s"><input class="p-xs" type="text" placeholder="Nom de l'administration">
+                  <div class="fr-input-group fr-mb-2w" style="margin-bottom: 0px;"><label class="fr-label" for="input_271">Nom
+                      <!---->
+                      <!---->
+                    </label><input placeholder="Nom de l'administration" class="fr-input" name="input_271" id="input_271" type="text">
+                    <!---->
                   </div>
                 </div>
                 <div>
-                  <div class="mb">
-                    <h5>Substances</h5>
-                    <hr class="mb-s">
-                    <div id="filters_autocomplete_Substances_wrapper" class="_typeahead_8eddf1 dsfr">
+                  <div class="fr-mb-2w"><span>Substances</span>
+                    <div id="filters_autocomplete_Substances_wrapper" class="_typeahead_8eddf1 fr-mt-1w">
                       <div style="display: flex; max-height: unset; flex-wrap: wrap; gap: 8px; outline-offset: 2px; outline-width: 2px; outline-color: rgb(10, 118, 246);" class="fr-input _fake-input_8eddf1"><button class="fr-tag fr-tag--sm fr-tag--dismiss" title="argent">argent</button><button class="fr-tag fr-tag--sm fr-tag--dismiss" title="or">or</button><input id="filters_autocomplete_Substances" type="text" name="filters_autocomplete_Substances" class="_typeahead-input_8eddf1" style="outline: none;" placeholder="Substances" autocomplete="off"></div>
                       <!---->
                     </div>
@@ -39,7 +39,7 @@
                 </div><button class="btn-border small px-s p-xs rnd-xs mb">Tout effacer</button>
               </div>
             </div>
-            <div class="dsfr"><a href="/mocked-href" title="Valider les filtres" class="fr-btn fr-mb-2w" aria-label="Valider les filtres">Valider</a></div>
+            <div><a href="/mocked-href" title="Valider les filtres" class="fr-btn fr-mb-2w" aria-label="Valider les filtres">Valider</a></div>
           </div>
         </div>
       </transition-stub>

@@ -43,7 +43,7 @@ export const Tabs = defineComponent(<TabId extends string>(props: Props<TabId>) 
   })
 
   return () => (
-    <div class="dsfr">
+    <div>
       <div class="fr-tabs">
         <ul class="fr-tabs__list" role="tablist" aria-label={props.tabsTitle}>
           {props.tabs.map(tab => (

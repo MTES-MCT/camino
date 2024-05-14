@@ -10,7 +10,6 @@ const meta: Meta = {
   title: 'Components/Etape/FondamentalesEdit',
   // @ts-ignore @storybook/vue3 n'aime pas les composants tsx
   component: FondamentalesEdit,
-  decorators: [() => ({ template: '<div class="dsfr"><story/></div>' })],
 }
 export default meta
 

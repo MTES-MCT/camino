@@ -131,7 +131,7 @@ export const Header = defineComponent<Props>(props => {
   }
 
   return () => (
-    <div class="dsfr" style={{ paddingBottom: '20px' }}>
+    <div style={{ paddingBottom: '20px' }}>
       <header role="banner" class="fr-header">
         <div class="fr-header__body">
           <div class="fr-container">

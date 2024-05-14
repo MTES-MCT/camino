@@ -6,11 +6,7 @@
     "npm": ">=10.2.4"
   },
   "description": "Le cadastre minier numérique ouvert",
-  "workspaces": [
-    "packages/api",
-    "packages/common",
-    "packages/ui"
-  ],
+  "workspaces": ["packages/api", "packages/common", "packages/ui"],
   "private": true,
   "repository": {
     "type": "git",
@@ -25,7 +21,7 @@
     "prepare": "husky install",
     "test": "npm run test --workspaces",
     "lint": "npm run lint --workspaces",
-    "knip": "npx --yes knip@5.0.1"
+    "knip": "npx --yes knip@5.15.1"
   },
   "lint-staged": {
     "packages/ui/src/**/*.{js,ts,tsx}": [
@@ -64,9 +60,7 @@
     "typescript": "5.4.5"
   },
   "release": {
-    "branches": [
-      "prod"
-    ],
+    "branches": ["prod"],
     "plugins": [
       "@semantic-release/commit-analyzer",
       "@semantic-release/release-notes-generator",

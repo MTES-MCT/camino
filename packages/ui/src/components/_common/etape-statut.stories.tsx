@@ -9,7 +9,7 @@ const meta: Meta = {
 export default meta
 
 export const All: StoryFn = () => (
-  <div style="height:100%;width:100%;background:white" class="dsfr">
+  <div style="height:100%;width:100%;background:white">
     <table>
       <tr>
         <th>Statut d'étape</th>

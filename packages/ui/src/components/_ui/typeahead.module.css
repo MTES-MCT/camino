@@ -2,22 +2,9 @@
   position: relative;
   width: 100%;
 }
-input.typeahead-input {
-  margin-bottom: 0;
-
-  width: auto;
-  flex-grow: 1;
-  appearance: none;
-  border: 0;
-  box-shadow: 0 0 0 0;
-}
 
 .fake-input:focus-within {
   outline-style: solid;
-}
-
-input.typeahead-input:focus {
-  border-right: 0;
 }
 
 .typeahead .typeahead-list {

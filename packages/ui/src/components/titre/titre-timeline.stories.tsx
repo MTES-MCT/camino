@@ -7,7 +7,6 @@ import { titreSlugValidator } from 'camino-common/src/validators/titres'
 const meta: Meta = {
   title: 'Components/Titre/Timeline',
   component: TitreTimeline,
-  decorators: [() => ({ template: '<div class="dsfr"><story/></div>' })],
 }
 export default meta
 const defaultPhasesWithAlterations: Phase = [
@@ -253,13 +252,17 @@ export const BigExample: StoryFn = () => (
 )
 
 export const OneDemarcheNoPhase: StoryFn = () => (
-  <TitreTimeline
-    titreSlug={titreSlugValidator.parse('slug-titre')}
-    phasesWithAlterations={[[{ slug: demarcheSlugValidator.parse('slug-demarche11'), demarche_type_id: 'pr2', demarche_date_debut: null }]]}
-    currentDemarcheSlug={demarcheSlugValidator.parse('slug-demarche2')}
-  />
+  <div>
+    <TitreTimeline
+      titreSlug={titreSlugValidator.parse('slug-titre')}
+      phasesWithAlterations={[[{ slug: demarcheSlugValidator.parse('slug-demarche11'), demarche_type_id: 'pr2', demarche_date_debut: null }]]}
+      currentDemarcheSlug={demarcheSlugValidator.parse('slug-demarche2')}
+    />
+  </div>
 )
 
 export const NoDemarcheNoPhase: StoryFn = () => (
-  <TitreTimeline titreSlug={titreSlugValidator.parse('slug-titre')} phasesWithAlterations={[]} currentDemarcheSlug={demarcheSlugValidator.parse('slug-demarche2')} />
+  <div>
+    <TitreTimeline titreSlug={titreSlugValidator.parse('slug-titre')} phasesWithAlterations={[]} currentDemarcheSlug={demarcheSlugValidator.parse('slug-demarche2')} />
+  </div>
 )

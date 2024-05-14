@@ -8,6 +8,8 @@ import { TypeAheadSingle } from '../_ui/typeahead-single'
 import { TypeAheadMultiple } from '../_ui/typeahead-multiple'
 import { DeepReadonly, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
 
+import { capitalize } from 'camino-common/src/strings'
+
 interface Props {
   config: TitresLinkConfig
   loadLinkableTitres: () => Promise<LinkableTitre[]>
@@ -16,9 +18,9 @@ interface Props {
 export const TitresLink = defineComponent<Props>(props => {
   const display = (item: DeepReadonly<LinkableTitre>) => {
     return (
-      <div class="flex flex-center dsfr">
+      <div class="flex flex-center">
         <TitreStatut titreStatutId={item.titreStatutId} />
-        <span class="cap-first bold ml-m">{item.nom}</span>
+        <span class="bold ml-m">{capitalize(item.nom)}</span>
         <span class="ml-m" style="margin-left: auto">
           {getDateDebutEtDateFin(item)}
         </span>

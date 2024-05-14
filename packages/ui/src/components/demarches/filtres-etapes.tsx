@@ -102,7 +102,7 @@ export const FiltresEtapes = defineComponent<Props>(props => {
                   <p class="h6 italic mb-0">Optionnel</p>
                 </div>
                 <div class="blob-3-4">
-                  <select class="p-s mr-s cap-first" onChange={event => statutValueSelected(n, event)}>
+                  <select class="p-s mr-s" onChange={event => statutValueSelected(n, event)}>
                     <option value="">–</option>
                     {getEtapesStatuts(value.typeId).map(statut => (
                       <option key={statut.id} value={statut.id} selected={value.statutId === statut.id}>
@@ -117,7 +117,7 @@ export const FiltresEtapes = defineComponent<Props>(props => {
                   <h5 class="mb-0">Après le</h5>
                   <p class="h6 italic mb-0">Optionnel</p>
                 </div>
-                <div class="blob-3-4 dsfr">
+                <div class="blob-3-4">
                   <DsfrInput initialValue={value.dateDebut} legend={{ main: '' }} type={{ type: 'date' }} valueChanged={dateDebutChanged(n)} />
                 </div>
               </div>
@@ -126,7 +126,7 @@ export const FiltresEtapes = defineComponent<Props>(props => {
                   <h5 class="mb-0">Avant le</h5>
                   <p class="h6 italic mb-0">Optionnel</p>
                 </div>
-                <div class="blob-3-4 dsfr">
+                <div class="blob-3-4">
                   <DsfrInput initialValue={value.dateFin} legend={{ main: '' }} type={{ type: 'date' }} valueChanged={dateFinChanged(n)} />
                 </div>
               </div>

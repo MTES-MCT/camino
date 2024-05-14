@@ -36,7 +36,7 @@ export const HeritageEdit = defineComponent(<P extends keyof MappingHeritageProp
       {!props.prop.actif ? props.write() : <div>{props.hasHeritage && isNotNullNorUndefined(props.prop.etape) ? props.read(props.prop.etape) : <div class="border p-s mb-s">Non renseigné</div>}</div>}
 
       {isNotNullNorUndefined(props.prop.etape) ? (
-        <div class="dsfr">
+        <div>
           <DsfrToggle
             initialValue={props.prop.actif}
             valueChanged={updateHeritage}

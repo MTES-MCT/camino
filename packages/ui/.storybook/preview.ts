@@ -11,7 +11,6 @@ import { IconSprite } from '../src/components/_ui/iconSprite'
 import { allRoutes } from '../src/utils/storybook-test-utils'
 import { vueRouter } from 'storybook-vue3-router'
 
-
 setup(app => {
   app.component('router-link', h('a', { type: 'primary', href: 'href_for_storybook_in_preview.js' }))
 })
@@ -19,9 +18,9 @@ setup(app => {
 export const decorators: Decorator[] = [
   story => ({
     components: { story, IconSprite },
-    template: '<div class="page">' + '<main class="main">' + '<div class="container"><IconSprite /><story /></div>' + '</main>' + '</div>',
+    template: '<div>' + '<main>' + '<div><IconSprite /><story /></div>' + '</main>' + '</div>',
   }),
-  vueRouter(allRoutes)
+  vueRouter(allRoutes),
 ]
 
 const preview: Preview = {
@@ -34,7 +33,7 @@ const preview: Preview = {
       },
     },
   },
-  decorators: decorators
+  decorators: decorators,
 }
 
 export default preview

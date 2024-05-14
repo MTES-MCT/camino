@@ -180,7 +180,7 @@ export const PureTitreCreation = defineComponent<Props>(props => {
   }
 
   return () => (
-    <div class="dsfr">
+    <div>
       <h1>Demande de titre</h1>
 
       <form

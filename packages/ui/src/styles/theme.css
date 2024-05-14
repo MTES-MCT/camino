@@ -3,14 +3,6 @@
 -------------------------------
 */
 
-[v-cloak] {
-  display: none;
-}
-
-html {
-  overflow-x: hidden;
-}
-
 .logo {
   height: calc(var(--unit) * 2.3333);
 }
@@ -55,19 +47,6 @@ html {
   margin-top: calc(var(--unit) * 2);
   margin-bottom: calc(var(--unit) * 2);
   background: var(--dsfr-bf500);
-}
-
-.sticky-header {
-  top: 0;
-  z-index: 1;
-  position: sticky;
-  background-color: var(--color-bg);
-}
-
-.banner {
-  background: #f7f7da;
-  z-index: 1;
-  border-bottom: dashed 1px var(--color-text);
 }
 
 .header-menu {
@@ -173,18 +152,6 @@ html {
   line-height: calc(var(--unit) * 1.25);
 }
 
-ul.li-mb-s > li {
-  margin-bottom: var(--unit-s);
-}
-
-ul.li-sep > li {
-  &:not(:last-child)::after {
-    content: '—';
-    color: grey;
-    display: block;
-  }
-}
-
 .span-tab {
   color: var(--color-text);
   background-color: var(--color-neutral);
@@ -225,10 +192,6 @@ ul.li-sep > li {
   background-color: var(--color-bg);
   width: 100%;
   border-bottom: var(--unit-px) solid var(--color-alt);
-}
-
-h6.color {
-  color: var(--color-info);
 }
 
 @media (--viewport-tablet) {

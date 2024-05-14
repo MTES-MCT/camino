@@ -183,7 +183,7 @@ export const Titres = defineComponent({
 
     return () => (
       <div>
-        <div class="dsfr">
+        <div>
           <PageContentHeader
             nom="Titres miniers et autorisations"
             download={
@@ -208,7 +208,7 @@ export const Titres = defineComponent({
           }}
         />
 
-        <div class="dsfr dsfr-container">
+        <div>
           {tabId.value ? (
             <Tabs
               initTab={tabId.value}

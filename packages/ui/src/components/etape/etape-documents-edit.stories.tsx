@@ -13,7 +13,6 @@ const meta: Meta = {
   title: 'Components/Etape/EtapeDocumentsEdit',
   // @ts-ignore
   component: EtapeDocumentsEdit,
-  decorators: [() => ({ template: '<div class="dsfr"><story/></div>' })],
 }
 export default meta
 
@@ -154,12 +153,12 @@ export const ArmMecanise: StoryFn = () => (
   />
 )
 
-export const ArmMecaniseDynamic: StoryObj<{ mecanise: boolean }> = {
+export const ArmMecaniseDynamicNoSnapshot: StoryObj<{ mecanise: boolean }> = {
   render: function Component(args: { mecanise: boolean }) {
     const [, setArgs] = useArgs()
 
     return () => (
-      <>
+      <div>
         <button onClick={() => setArgs({ mecanise: !args.mecanise })}> Change la mécanisation </button>
         <EtapeDocumentsEdit
           apiClient={apiClient}
@@ -171,7 +170,7 @@ export const ArmMecaniseDynamic: StoryObj<{ mecanise: boolean }> = {
           completeUpdate={completeUpdateAction}
           user={{ ...testBlankUser, role: 'super' }}
         />
-      </>
+      </div>
     )
   },
   args: {
