@@ -1,6 +1,7 @@
 import { getTitreTypeType, TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { TitresTypesTypes } from 'camino-common/src/static/titresTypesTypes'
-import { capitalize, FunctionalComponent } from 'vue'
+import { capitalize } from 'camino-common/src/strings'
+import { FunctionalComponent } from 'vue'
 
 interface Props {
   titreTypeId: TitreTypeId

@@ -1,4 +1,4 @@
-import { FunctionalComponent, capitalize, computed, defineComponent, ref } from 'vue'
+import { FunctionalComponent, computed, defineComponent, ref } from 'vue'
 import { getMostRecentValuePropFromEtapeFondamentaleValide, TitreGet, TitreGetDemarche } from 'camino-common/src/titres'
 import { DemarcheEtapeFondamentale, DemarcheSlug, getDemarcheContenu } from 'camino-common/src/demarche'
 import { DemarchesTypes, isTravaux } from 'camino-common/src/static/demarchesTypes'
@@ -24,6 +24,7 @@ import { SDOMZones } from 'camino-common/src/static/sdom'
 import { Entreprise, EntrepriseId } from 'camino-common/src/entreprise'
 import { isDemarcheStatutNonStatue, isDemarcheStatutNonValide } from 'camino-common/src/static/demarchesStatuts'
 import { numberFormat } from 'camino-common/src/number'
+import { capitalize } from 'camino-common/src/strings'
 
 type Props = {
   titre: Pick<TitreGet, 'id' | 'slug' | 'titre_type_id' | 'titre_statut_id' | 'nom'>
