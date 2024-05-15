@@ -686,7 +686,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   border-right-color: #fff;
 }
 
-.dsfr .leaflet-container a {
+.leaflet-container a {
   background-image: inherit;
   background-size: inherit;
   background-position: inherit;
@@ -694,17 +694,17 @@ svg.leaflet-image-layer.leaflet-interactive path {
   transition: inherit;
 }
 
-.dsfr .leaflet-container a[href]:hover {
+.leaflet-container a[href]:hover {
   background-color: #f4f4f4;
 }
 
-.dsfr .leaflet-container .leaflet-control-fullscreen-button {
+.leaflet-container .leaflet-control-fullscreen-button {
   background-image: url(/img/leaflet/fullscreen@2x.png);
   background-size: 26px 52px;
   background-position: 2px 2px;
 }
 
-.dsfr .leaflet-container .leaflet-control-layers-toggle {
+.leaflet-container .leaflet-control-layers-toggle {
   background-image: url(/img/leaflet/layers-2x.png);
   background-size: 26px 26px;
   background-position: 50% 50%;
