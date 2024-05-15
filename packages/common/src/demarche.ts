@@ -10,7 +10,7 @@ import { etapeStatutIdValidator } from './static/etapesStatuts.js'
 import { sectionWithValueValidator } from './sections.js'
 import { etapeDocumentValidator, etapeIdValidator, etapeSlugValidator } from './etape.js'
 import { sdomZoneIdValidator } from './static/sdom.js'
-import { numberFormat } from './number.js'
+import { km2Validator, numberFormat } from './number.js'
 import { DeviseId, deviseIdValidator, DEVISES_IDS, Devises } from './static/devise.js'
 import { TITRES_TYPES_TYPES_IDS } from './static/titresTypesTypes.js'
 import { UniteId, uniteIdValidator, UNITE_IDS, Unites } from './static/unites.js'
@@ -51,7 +51,7 @@ const etapePerimetreValidator = z.object({
   geojson_origine_geo_systeme_id: geoSystemeIdValidator,
   geojson4326_forages: featureCollectionForagesValidator.nullable(),
   geojson_origine_forages: featureCollectionForagesValidator.nullable(),
-  surface: z.number(),
+  surface: km2Validator.nullable(),
   communes: z.array(z.object({ id: communeIdValidator, nom: z.string() })),
   secteurs_maritimes: z.array(secteurMaritimeValidator),
   sdom_zones: z.array(sdomZoneIdValidator),

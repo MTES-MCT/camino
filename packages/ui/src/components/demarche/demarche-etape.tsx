@@ -303,6 +303,7 @@ export const DemarcheEtape = defineComponent<Props>(props => {
             geojson_origine_geo_systeme_id: props.etape.fondamentale.perimetre.geojson_origine_geo_systeme_id,
             geojson4326_forages: props.etape.fondamentale.perimetre.geojson4326_forages,
             geojson_origine_forages: props.etape.fondamentale.perimetre.geojson_origine_forages,
+            surface: props.etape.fondamentale.perimetre.surface
           }}
         />
       ) : null}

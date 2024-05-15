@@ -22,7 +22,7 @@ import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { TitreSlug } from 'camino-common/src/validators/titres'
 import { SDOMZoneIds, SDOMZones } from 'camino-common/src/static/sdom'
-import { Nullable, isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
+import { Nullable, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
 import { Entreprise } from 'camino-common/src/entreprise'
 import { AsyncData } from '../../api/client-rest'
 import { DemarcheId } from 'camino-common/src/demarche'
@@ -472,7 +472,7 @@ const EtapeEditFormInternal = defineComponent<
         <Bloc
           step={{
             name: 'Documents d’entreprise',
-            help: isHelpVisible.value
+            help: isHelpVisible.value && isNotNullNorUndefinedNorEmpty(titulairesAndAmodiataires.value)
               ? "Les documents d’entreprise sont des documents propres à l'entreprise, et pourront être réutilisés pour la création d'un autre dossier et mis à jour si nécessaire. Ces documents d’entreprise sont consultables dans la fiche entreprise de votre société. Cette section permet de protéger et de centraliser les informations d'ordre privé relatives à la société et à son personnel."
               : null,
           }}

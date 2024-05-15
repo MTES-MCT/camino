@@ -67,13 +67,12 @@ const DisplayPerimetre: FunctionalComponent<DisplayPerimetreProps> = props => {
             geojson_origine_geo_systeme_id: props.etape.geojsonOrigineGeoSystemeId,
             geojson4326_forages: props.etape.geojson4326Forages ?? null,
             geojson_origine_forages: props.etape.geojsonOrigineForages ?? null,
+            surface: props.surface ?? null
           }}
           titreSlug={props.titreSlug}
           titreTypeId={props.titreTypeId}
           initTab={props.initTab ?? 'carte'}
         />
-
-        {props.surface ? <div class="fr-text--md">Surface : {props.surface} Km²</div> : null}
       </div>
     )
   }

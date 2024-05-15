@@ -7,7 +7,7 @@ import { TableAuto, Column } from '../_ui/table-auto'
 import { FeatureCollectionForages, FeatureCollectionPoints, FeatureMultiPolygon } from 'camino-common/src/perimetre'
 import { TitreSlug } from 'camino-common/src/validators/titres'
 import { capitalize } from 'camino-common/src/strings'
-import { indexToLetter, toDegresMinutes } from 'camino-common/src/number'
+import { KM2, indexToLetter, toDegresMinutes } from 'camino-common/src/number'
 import { NotNullableKeys, isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { GeoSystemeTypeahead } from './geosysteme-typeahead'
 
@@ -15,6 +15,7 @@ interface Props {
   geojson_origine_points: DeepReadonly<FeatureCollectionPoints>
   geojson_origine_forages: DeepReadonly<FeatureCollectionForages> | null
   geo_systeme_id: GeoSystemeId
+  surface: KM2 | null
   titreSlug: TitreSlug
   maxRows: number
 }
@@ -54,7 +55,7 @@ const geoJsonToArray = (perimetre: DeepReadonly<FeatureCollectionPoints | Featur
   })
 }
 
-const TablePoints: FunctionalComponent<Pick<Props, 'geo_systeme_id' | 'geojson_origine_points' | 'maxRows' | 'titreSlug'> & { caption: string }> = props => {
+const TablePoints: FunctionalComponent<Pick<Props, 'geo_systeme_id' | 'geojson_origine_points' | 'maxRows' | 'titreSlug' | 'surface'> & { caption: string }> = props => {
   const uniteId = GeoSystemes[props.geo_systeme_id].uniteId
 
   const columns: Column<string>[] = [
@@ -92,15 +93,19 @@ const TablePoints: FunctionalComponent<Pick<Props, 'geo_systeme_id' | 'geojson_o
     <div style={{ display: 'flex', flexDirection: 'column' }}>
       <TableAuto caption={props.caption} class="fr-mb-1w" columns={columns} rows={rowsToDisplay} initialSort="noSort" />
 
-      <DsfrLink
-        style={{ alignSelf: 'end' }}
-        href={`data:${contentTypes.csv};charset=utf-8,${csvContent}`}
-        download={`points-${props.titreSlug}.csv`}
-        icon="fr-icon-download-line"
-        buttonType="secondary"
-        title="Télécharge les points au format csv"
-        label=".csv"
-      />
+      <div style={{display: 'flex'}}>
+        {isNotNullNorUndefined(props.surface) ? <div class="fr-text--md">Surface : {props.surface} Km²</div> : null}
+        <DsfrLink
+          style={{ marginLeft: 'auto' }}
+          href={`data:${contentTypes.csv};charset=utf-8,${csvContent}`}
+          download={`points-${props.titreSlug}.csv`}
+          icon="fr-icon-download-line"
+          buttonType="secondary"
+          title="Télécharge les points au format csv"
+          label=".csv"
+        />
+      </div>
+
     </div>
   )
 }
@@ -155,7 +160,7 @@ export const TabCaminoTable = defineComponent<Props>(props => {
 })
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-TabCaminoTable.props = ['geojson_origine_points', 'geojson_origine_forages', 'geo_systeme_id', 'titreSlug', 'maxRows']
+TabCaminoTable.props = ['geojson_origine_points', 'geojson_origine_forages', 'geo_systeme_id', 'titreSlug', 'maxRows', 'surface']
 
 export const transformMultipolygonToPoints = (geojson_perimetre: DeepReadonly<FeatureMultiPolygon>): DeepReadonly<FeatureCollectionPoints> => {
   const currentPoints: (FeatureCollectionPoints['features'][0] & { properties: { latitude: string; longitude: string } })[] = []
