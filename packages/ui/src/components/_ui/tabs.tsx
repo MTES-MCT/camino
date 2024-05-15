@@ -1,7 +1,7 @@
-import { Ref, defineComponent, nextTick, onBeforeUnmount, ref } from 'vue'
+import { Ref, computed, defineComponent, onBeforeUnmount, onMounted, ref } from 'vue'
 
 import { DsfrIcon } from './dsfrIconSpriteType'
-import { NonEmptyArray } from 'camino-common/src/typescript-tools'
+import { NonEmptyArray, isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { random } from '../../utils/vue-tsx-utils'
 import type { JSX } from 'vue/jsx-runtime'
 export type Tab<TabId extends string> = { icon: DsfrIcon; title: string; id: TabId; renderContent: () => JSX.Element }
@@ -14,47 +14,65 @@ type Props<TabId extends string> = {
 }
 
 export const Tabs = defineComponent(<TabId extends string>(props: Props<TabId>) => {
-  const currentTab = ref<TabId>(props.initTab) as Ref<TabId>
+  const currentTabId = ref<TabId>(props.initTab) as Ref<TabId>
+  const tabsListRef = ref<HTMLElement>()
 
-  const events = ref<{ [key in TabId]?: () => void }>({}) as Ref<{ [key in TabId]?: () => void }>
   const idSuffix = `${(random() * 1000).toFixed()}`
+  const getHtmlTabId = (tabId: TabId) => `tabpanel-${tabId}-${idSuffix}-panel`
 
-  // TODO 2023-11-22 il faudrait supprimer le js du DSFR et utiliser le notre, avec la 1.10.2 on se retrouvait avec un bug sur les statistiques, tous les tabs étaient cliquées quand on unmountait le composant. Pas très future-proof
-  nextTick(() => {
-    props.tabs.forEach(tab => {
-      const tabElement = document.getElementById(`tabpanel-${tab.id}-${idSuffix}-panel`)
-      if (tabElement) {
-        events.value[tab.id] = () => {
-          currentTab.value = tab.id
-          props.tabClicked(tab.id)
-        }
-        tabElement.addEventListener('dsfr.disclose', events.value[tab.id] ?? (() => {}))
-      }
-    })
+  const panelHeight = ref<number>(0)
+
+  const observer = new ResizeObserver(entries => {
+    panelHeight.value = entries[0].borderBoxSize[0].blockSize
+  })
+
+  const tabsHeight = computed<string>(() => {
+    const currentTabRef = document.getElementById(getHtmlTabId(currentTabId.value))
+    if (isNotNullNorUndefined(tabsListRef.value) && isNotNullNorUndefined(currentTabRef)) {
+      const listHeight = Math.round(tabsListRef.value.getClientRects()[0]?.height ?? 0)
+
+      return panelHeight.value + listHeight + 'px'
+    }
+    return 'auto'
+  })
+
+  const tabsIndex = props.tabs.reduce<Record<TabId, number>>((acc, tab, index) => ({ ...acc, [tab.id]: index }), {} as Record<TabId, number>)
+
+  const observeCurrentTab = () => {
+    const currentTabRef = document.getElementById(getHtmlTabId(currentTabId.value))
+    if (isNotNullNorUndefined(currentTabRef)) {
+      observer.observe(currentTabRef)
+    }
+  }
+  const onTabClick = (tabId: TabId) => () => {
+    observer.disconnect()
+    currentTabId.value = tabId
+    props.tabClicked(tabId)
+    observeCurrentTab()
+  }
+
+  onMounted(() => {
+    observeCurrentTab()
   })
 
   onBeforeUnmount(() => {
-    props.tabs.forEach(tab => {
-      const tabElement = document.getElementById(`tabpanel-${tab.id}-${idSuffix}-panel`)
-      if (tabElement) {
-        tabElement.removeEventListener('dsfr.disclose', events.value[tab.id] ?? (() => {}))
-      }
-    })
+    observer.disconnect()
   })
 
   return () => (
     <div>
-      <div class="fr-tabs">
-        <ul class="fr-tabs__list" role="tablist" aria-label={props.tabsTitle}>
+      <div class="fr-tabs" style={{ '--tabs-height': tabsHeight.value }}>
+        <ul class="fr-tabs__list" ref={tabsListRef} role="tablist" aria-label={props.tabsTitle}>
           {props.tabs.map(tab => (
             <li role="presentation">
               <button
                 id={`tabpanel-${tab.id}-${idSuffix}`}
                 class={['fr-tabs__tab', tab.icon, 'fr-tabs__tab--icon-left']}
-                tabindex={props.initTab === tab.id ? '0' : '-1'}
+                tabindex={currentTabId.value === tab.id ? '0' : '-1'}
                 role="tab"
+                onClick={onTabClick(tab.id)}
                 aria-label={tab.title}
-                aria-selected={props.initTab === tab.id ? 'true' : 'false'}
+                aria-selected={currentTabId.value === tab.id ? 'true' : 'false'}
                 aria-controls={`tabpanel-${tab.id}-${idSuffix}-panel`}
               >
                 {tab.title}
@@ -64,13 +82,19 @@ export const Tabs = defineComponent(<TabId extends string>(props: Props<TabId>) 
         </ul>
         {props.tabs.map(tab => (
           <div
-            id={`tabpanel-${tab.id}-${idSuffix}-panel`}
-            class={['fr-tabs__panel', tab.id === props.initTab ? 'fr-tabs__panel--selected' : undefined]}
+            id={getHtmlTabId(tab.id)}
+            class={{
+              'fr-tabs__panel': true,
+              'fr-tabs__panel--selected': tab.id === currentTabId.value,
+              'fr-tabs__panel--direction-start': tabsIndex[tab.id] < tabsIndex[currentTabId.value],
+              'fr-tabs__panel--direction-end': tabsIndex[tab.id] > tabsIndex[currentTabId.value],
+            }}
             role="tabpanel"
+            key={tab.id}
             aria-labelledby={`tabpanel-${tab.id}-${idSuffix}`}
             tabindex="0"
           >
-            {currentTab.value === tab.id ? tab.renderContent() : null}
+            {currentTabId.value === tab.id ? tab.renderContent() : null}
           </div>
         ))}
       </div>

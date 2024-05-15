@@ -47,6 +47,21 @@ describe('UI Storybook Tests', async () => {
       try {
         // @ts-ignore
         window.dsfr = null
+        class ResizeObserver {
+          observe() {
+            // do nothing
+          }
+
+          unobserve() {
+            // do nothing
+          }
+
+          disconnect() {
+            // do nothing
+          }
+        }
+
+        global.ResizeObserver = ResizeObserver
         const mounted = render(value.story(), {
           global: {
             components: { 'router-link': (props, { slots }) => h('a', { ...props, type: 'primary', to: JSON.stringify(props.to).replaceAll('"', '') }, slots) },
