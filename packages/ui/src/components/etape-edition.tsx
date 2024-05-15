@@ -2,7 +2,7 @@ import { DeepReadonly, computed, defineComponent, inject, onMounted, ref } from 
 import { useRouter } from 'vue-router'
 import { ApiClient, apiClient } from '../api/api-client'
 import { DemarcheId, DemarcheIdOrSlug, demarcheIdOrSlugValidator } from 'camino-common/src/demarche'
-import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
+import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
 import { Alert } from './_ui/alert'
 import { EtapeIdOrSlug, etapeIdOrSlugValidator } from 'camino-common/src/etape'
 import { entreprisesKey, userKey } from '../moi'
@@ -145,6 +145,17 @@ export const PureEtapeEdition = defineComponent<Props>(props => {
     }
   })
 
+  const octroiNom = computed(() => {
+    let nom = ''
+    if (asyncData.value.status === 'LOADED') {
+      const { demarche } = asyncData.value.value
+      nom = capitalize(DemarchesTypes[demarche.demarche_type_id].nom)
+      if (isNotNullNorUndefinedNorEmpty(demarche.demarche_description)) {
+        nom += ` ${demarche.demarche_description}`
+      }
+    }
+    return nom
+  })
   return () => (
     <div>
       <LoadingElement
@@ -154,9 +165,8 @@ export const PureEtapeEdition = defineComponent<Props>(props => {
             <div>
               <DsfrLink to={{ name: 'titre', params: { id: demarche.titre_slug } }} disabled={false} title={demarche.titre_nom} icon={null} />
               <span> {'>'} </span>
-              <span>
-                {capitalize(DemarchesTypes[demarche.demarche_type_id].nom)} {demarche.demarche_description}{' '}
-              </span>
+
+              <DsfrLink to={{ name: 'demarche', params: { demarcheId: demarche.demarche_slug } }} disabled={false} title={octroiNom.value} icon={null} />
             </div>
 
             <h1 class="fr-mt-5w">{etape.typeId !== null ? `Étape - ${capitalize(EtapesTypes[etape.typeId].nom)}` : 'Création d’une étape'}</h1>
