@@ -83,7 +83,7 @@ export const DefaultNoSnapshot: StoryFn = () => (
         geojson_origine_geo_systeme_id: '4326',
         geojson4326_forages: null,
         geojson_origine_forages: null,
-        surface: km2Validator.parse(3)
+        surface: km2Validator.parse(3),
       }}
       calculateNeighbours={true}
       apiClient={{
@@ -150,7 +150,7 @@ export const NoNeighborsNoSnapshot: StoryFn = () => (
         geojson_origine_geo_systeme_id: '4326',
         geojson4326_forages: null,
         geojson_origine_forages: null,
-        surface: km2Validator.parse(3)
+        surface: km2Validator.parse(3),
       }}
       calculateNeighbours={false}
       apiClient={apiClientMock}
@@ -196,7 +196,7 @@ export const PolygonWithLacuneNoSnapshot: StoryFn = () => (
         geojson_origine_geo_systeme_id: '4326',
         geojson4326_forages: null,
         geojson_origine_forages: null,
-        surface: km2Validator.parse(3)
+        surface: km2Validator.parse(3),
       }}
       calculateNeighbours={true}
       apiClient={apiClientMock}
@@ -238,7 +238,7 @@ export const BigNoSnapshot: StoryFn = () => (
         geojson_origine_geo_systeme_id: '4326',
         geojson4326_forages: null,
         geojson_origine_forages: null,
-        surface: km2Validator.parse(3)
+        surface: km2Validator.parse(3),
       }}
       titreSlug={titreSlugValidator.parse('titre-slug')}
       router={{
@@ -304,7 +304,7 @@ export const MultipleNoSnapshot: StoryFn = () => (
         geojson4326_points: null,
         geojson4326_forages: null,
         geojson_origine_forages: null,
-        surface: km2Validator.parse(3)
+        surface: km2Validator.parse(3),
       }}
       titreSlug={titreSlugValidator.parse('titre-slug')}
       router={{
@@ -392,7 +392,7 @@ export const MultiplePolygonWithLacuneTableau: StoryFn = () => (
         geojson_origine_geo_systeme_id: '4326',
         geojson4326_forages: null,
         geojson_origine_forages: null,
-        surface: km2Validator.parse(3)
+        surface: km2Validator.parse(3),
       }}
       calculateNeighbours={true}
       apiClient={apiClientMock}
@@ -429,7 +429,7 @@ export const CustomPoints: StoryFn = () => (
         geojson_origine_geo_systeme_id: '4326',
         geojson4326_forages: null,
         geojson_origine_forages: null,
-        surface: km2Validator.parse(3)
+        surface: km2Validator.parse(3),
       }}
       initTab="points"
       calculateNeighbours={false}
@@ -457,7 +457,7 @@ export const CustomPointsWithoutNameAndDesc: StoryFn = () => (
         geojson_origine_geo_systeme_id: '4326',
         geojson4326_forages: null,
         geojson_origine_forages: null,
-        surface: km2Validator.parse(3)
+        surface: km2Validator.parse(3),
       }}
       initTab="points"
       calculateNeighbours={false}
@@ -484,7 +484,7 @@ export const CustomPointsWithAnotherGeoSysteme: StoryFn = () => (
         geojson_origine_geo_systeme_id: '2154',
         geojson4326_forages: null,
         geojson_origine_forages: null,
-        surface: km2Validator.parse(3)
+        surface: km2Validator.parse(3),
       }}
       initTab="points"
       calculateNeighbours={false}
@@ -511,7 +511,7 @@ export const CustomPointsWithAnotherLegacyGeoSysteme: StoryFn = () => (
         geojson_origine_geo_systeme_id: GEO_SYSTEME_IDS.RGFG95,
         geojson4326_forages: null,
         geojson_origine_forages: null,
-        surface: km2Validator.parse(3)
+        surface: km2Validator.parse(3),
       }}
       initTab="points"
       calculateNeighbours={false}
@@ -536,7 +536,7 @@ export const WithForages: StoryFn = () => (
       geojson_origine_geo_systeme_id: GEO_SYSTEME_IDS.RGFG95,
       geojson4326_forages,
       geojson_origine_forages: geojson4326_forages,
-      surface: km2Validator.parse(4)
+      surface: km2Validator.parse(4),
     }}
     initTab="points"
     calculateNeighbours={false}

@@ -472,9 +472,10 @@ const EtapeEditFormInternal = defineComponent<
         <Bloc
           step={{
             name: 'Documents d’entreprise',
-            help: isHelpVisible.value && isNotNullNorUndefinedNorEmpty(titulairesAndAmodiataires.value)
-              ? "Les documents d’entreprise sont des documents propres à l'entreprise, et pourront être réutilisés pour la création d'un autre dossier et mis à jour si nécessaire. Ces documents d’entreprise sont consultables dans la fiche entreprise de votre société. Cette section permet de protéger et de centraliser les informations d'ordre privé relatives à la société et à son personnel."
-              : null,
+            help:
+              isHelpVisible.value && isNotNullNorUndefinedNorEmpty(titulairesAndAmodiataires.value)
+                ? "Les documents d’entreprise sont des documents propres à l'entreprise, et pourront être réutilisés pour la création d'un autre dossier et mis à jour si nécessaire. Ces documents d’entreprise sont consultables dans la fiche entreprise de votre société. Cette section permet de protéger et de centraliser les informations d'ordre privé relatives à la société et à son personnel."
+                : null,
           }}
           complete={entrepriseDocumentsStepIsComplete(etapeFlattened.value, props.demarcheTypeId, props.titreTypeId, props.documents.entrepriseDocuments)}
         >

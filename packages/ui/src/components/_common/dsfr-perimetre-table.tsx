@@ -93,7 +93,7 @@ const TablePoints: FunctionalComponent<Pick<Props, 'geo_systeme_id' | 'geojson_o
     <div style={{ display: 'flex', flexDirection: 'column' }}>
       <TableAuto caption={props.caption} class="fr-mb-1w" columns={columns} rows={rowsToDisplay} initialSort="noSort" />
 
-      <div style={{display: 'flex'}}>
+      <div style={{ display: 'flex' }}>
         {isNotNullNorUndefined(props.surface) ? <div class="fr-text--md">Surface : {props.surface} Km²</div> : null}
         <DsfrLink
           style={{ marginLeft: 'auto' }}
@@ -105,7 +105,6 @@ const TablePoints: FunctionalComponent<Pick<Props, 'geo_systeme_id' | 'geojson_o
           label=".csv"
         />
       </div>
-
     </div>
   )
 }

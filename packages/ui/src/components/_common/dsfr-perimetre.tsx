@@ -120,12 +120,11 @@ const TabCaminoMap = defineComponent<TabCaminoMapProps>(props => {
     <div style={{ display: 'flex', flexDirection: 'column' }}>
       <DemarcheMap perimetre={props.perimetre} titreTypeId={props.titreTypeId} style={{ minHeight: '400px' }} class="fr-mb-1w" maxMarkers={maxRows} neighbours={neighbours} />
       <div style={{ display: 'flex' }}>
-
         {isNotNullNorUndefined(props.perimetre.surface) ? <div class="fr-text--md">Surface : {props.perimetre.surface} Km²</div> : null}
         {props.perimetre.geojson_origine_geo_systeme_id !== '4326' ? (
           <DsfrLink
             class="fr-mr-2w"
-            style={{marginLeft: 'auto'}}
+            style={{ marginLeft: 'auto' }}
             href={`data:${contentTypes.geojson};charset=utf-8,${encodeURI(JSON.stringify(geojson_origine.value))}`}
             download={`perimetre-${props.titreSlug}-${props.perimetre.geojson_origine_geo_systeme_id}.geojson`}
             icon="fr-icon-download-line"
@@ -137,7 +136,7 @@ const TabCaminoMap = defineComponent<TabCaminoMapProps>(props => {
         <DsfrLink
           href={`data:${contentTypes.geojson};charset=utf-8,${encodeURI(JSON.stringify(geojson_4326.value))}`}
           download={`perimetre-${props.titreSlug}-4326.geojson`}
-          style={{marginLeft: 'auto'}}
+          style={{ marginLeft: 'auto' }}
           icon="fr-icon-download-line"
           buttonType="secondary"
           title="Télécharge le périmètre au format geojson dans le référentiel 4326"
