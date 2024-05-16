@@ -1,6 +1,5 @@
 import '@gouvfr/dsfr/dist/core/core.module'
 import '@gouvfr/dsfr/dist/component/navigation/navigation.module'
-import '@gouvfr/dsfr/dist/component/tab/tab.module'
 
 import { defineComponent, computed, ref, onMounted, inject } from 'vue'
 import { Header } from './components/page/header'
