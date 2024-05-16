@@ -2,8 +2,10 @@ import { Ref, computed, defineComponent, ref } from 'vue'
 import { TypeAheadSingle } from '../_ui/typeahead-single'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { SubstanceLegaleId, SubstancesLegale } from 'camino-common/src/static/substancesLegales'
+import { random } from '@/utils/vue-tsx-utils'
 
 type Props = {
+  id?: string
   alwaysOpen?: boolean
   substanceLegaleIds: SubstanceLegaleId[]
   initialValue?: SubstanceLegaleId
@@ -16,6 +18,8 @@ export const SubstanceLegaleTypeahead = defineComponent((props: Props) => {
     substanceSelected.value = substance ?? null
     props.substanceLegaleSelected(isNotNullNorUndefined(substance) ? substance.id : null)
   }
+
+  const id = props.id ?? `typeahead_substances_${(random() * 1000).toFixed()}`
 
   const sortedByUs = computed<{ id: SubstanceLegaleId; nom: string }[]>(() => [...props.substanceLegaleIds].map(sId => SubstancesLegale[sId]).sort((a, b) => a.nom.localeCompare(b.nom)))
 
@@ -35,6 +39,7 @@ export const SubstanceLegaleTypeahead = defineComponent((props: Props) => {
       overrideItem={substanceSelected.value}
       props={{
         alwaysOpen: props.alwaysOpen,
+        id,
         items: substancesFiltered.value,
         itemChipLabel: item => item.nom,
         itemKey: 'id',
@@ -48,4 +53,4 @@ export const SubstanceLegaleTypeahead = defineComponent((props: Props) => {
 })
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-SubstanceLegaleTypeahead.props = ['substanceLegaleIds', 'substanceLegaleSelected', 'alwaysOpen', 'initialValue']
+SubstanceLegaleTypeahead.props = ['id', 'substanceLegaleIds', 'substanceLegaleSelected', 'alwaysOpen', 'initialValue']

@@ -10,6 +10,7 @@ import { TabCaminoTable, transformMultipolygonToPoints } from './dsfr-perimetre-
 import { OmitDistributive, isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { GeoSystemeId } from 'camino-common/src/static/geoSystemes'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
+import { KM2 } from 'camino-common/src/number'
 export type TabId = 'carte' | 'points'
 
 type Props = {
@@ -21,6 +22,7 @@ type Props = {
     geojson_origine_points: FeatureCollectionPoints | null
     geojson4326_forages: FeatureCollectionForages | null
     geojson_origine_forages: FeatureCollectionForages | null
+    surface: KM2 | null
   }>
   titreSlug: TitreSlug
   titreTypeId: TitreTypeId
@@ -70,6 +72,7 @@ export const DsfrPerimetre = defineComponent<Props>((props: Props) => {
           titreSlug={props.titreSlug}
           geo_systeme_id={props.perimetre.geojson_origine_geo_systeme_id}
           geojson_origine_forages={props.perimetre.geojson_origine_forages}
+          surface={props.perimetre.surface}
           maxRows={maxRows}
         />
       ),
@@ -87,6 +90,7 @@ type TabCaminoMapProps = OmitDistributive<Props, 'perimetre'> & {
     geojson_origine_perimetre: FeatureMultiPolygon
     geojson_origine_points: FeatureCollectionPoints
     geojson4326_forages: FeatureCollectionForages | null
+    surface: KM2 | null
   }>
 }
 const TabCaminoMap = defineComponent<TabCaminoMapProps>(props => {
@@ -115,10 +119,12 @@ const TabCaminoMap = defineComponent<TabCaminoMapProps>(props => {
   return () => (
     <div style={{ display: 'flex', flexDirection: 'column' }}>
       <DemarcheMap perimetre={props.perimetre} titreTypeId={props.titreTypeId} style={{ minHeight: '400px' }} class="fr-mb-1w" maxMarkers={maxRows} neighbours={neighbours} />
-      <div style={{ alignSelf: 'end' }}>
+      <div style={{ display: 'flex' }}>
+        {isNotNullNorUndefined(props.perimetre.surface) ? <div class="fr-text--md">Surface : {props.perimetre.surface} Km²</div> : null}
         {props.perimetre.geojson_origine_geo_systeme_id !== '4326' ? (
           <DsfrLink
             class="fr-mr-2w"
+            style={{ marginLeft: 'auto' }}
             href={`data:${contentTypes.geojson};charset=utf-8,${encodeURI(JSON.stringify(geojson_origine.value))}`}
             download={`perimetre-${props.titreSlug}-${props.perimetre.geojson_origine_geo_systeme_id}.geojson`}
             icon="fr-icon-download-line"
@@ -130,6 +136,7 @@ const TabCaminoMap = defineComponent<TabCaminoMapProps>(props => {
         <DsfrLink
           href={`data:${contentTypes.geojson};charset=utf-8,${encodeURI(JSON.stringify(geojson_4326.value))}`}
           download={`perimetre-${props.titreSlug}-4326.geojson`}
+          style={{ marginLeft: 'auto' }}
           icon="fr-icon-download-line"
           buttonType="secondary"
           title="Télécharge le périmètre au format geojson dans le référentiel 4326"

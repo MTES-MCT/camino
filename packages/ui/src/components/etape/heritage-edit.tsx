@@ -1,5 +1,5 @@
 import { dateFormat } from 'camino-common/src/date'
-import { DeepReadonly, HTMLAttributes, defineComponent } from 'vue'
+import { DeepReadonly, HTMLAttributes } from 'vue'
 import { EtapeWithHeritage, HeritageProp } from 'camino-common/src/etape'
 import { MappingHeritagePropsNameEtapePropsName } from 'camino-common/src/heritage'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
@@ -7,6 +7,8 @@ import { DsfrToggle } from '../_ui/dsfr-toggle'
 import { EtapesTypes } from 'camino-common/src/static/etapesTypes'
 import { capitalize } from 'camino-common/src/strings'
 import type { JSX } from 'vue/jsx-runtime'
+import { DsfrInput } from '@/components/_ui/dsfr-input'
+import { random } from '../../utils/vue-tsx-utils'
 
 type EtapeHeritageEdit = Pick<EtapeWithHeritage, 'typeId' | 'date'>
 type Props<P extends keyof MappingHeritagePropsNameEtapePropsName, T extends EtapeHeritageEdit> = {
@@ -15,12 +17,13 @@ type Props<P extends keyof MappingHeritagePropsNameEtapePropsName, T extends Eta
   hasHeritage: boolean
   write: () => JSX.Element
   read: (heritagePropEtape?: DeepReadonly<T>) => JSX.Element
+  label: string | null
 
   class?: HTMLAttributes['class']
   updateHeritage: (update: Props<P, T>['prop']) => void
 }
 
-export const HeritageEdit = defineComponent(<P extends keyof MappingHeritagePropsNameEtapePropsName, T extends EtapeHeritageEdit>(props: Props<P, T>) => {
+export const HeritageEdit = <P extends keyof MappingHeritagePropsNameEtapePropsName, T extends EtapeHeritageEdit>(props: Props<P, T>) => {
   const updateHeritage = () => {
     const etape = props.prop.etape
     const newHeritage = !props.prop.actif
@@ -31,9 +34,30 @@ export const HeritageEdit = defineComponent(<P extends keyof MappingHeritageProp
     }
   }
 
-  return () => (
-    <div class={['mb-s', props.class]}>
-      {!props.prop.actif ? props.write() : <div>{props.hasHeritage && isNotNullNorUndefined(props.prop.etape) ? props.read(props.prop.etape) : <div class="border p-s mb-s">Non renseigné</div>}</div>}
+  const dummyValueChanged = () => {}
+  // TODO 2024-05-14 WTF! Sans la clé il récupère un ancien input et le modifie que à moitié. Le bug est présent sur le champ « Durée » quand on a passe d’une valeur saisie à un héritage Non Renseigné
+  const dummyKey = `empty_input_${(random() * 1000).toFixed()}`
+
+  return (
+    <div class={['fr-mb-1w', props.class]}>
+      {!props.prop.actif ? (
+        props.write()
+      ) : (
+        <div>
+          {props.hasHeritage && isNotNullNorUndefined(props.prop.etape) ? (
+            props.read(props.prop.etape)
+          ) : (
+            <DsfrInput
+              key={dummyKey}
+              type={{ type: 'text' }}
+              disabled={true}
+              initialValue={'Non renseigné'}
+              legend={{ main: props.label ?? '', visible: props.label !== null }}
+              valueChanged={dummyValueChanged}
+            />
+          )}
+        </div>
+      )}
 
       {isNotNullNorUndefined(props.prop.etape) ? (
         <div>
@@ -46,7 +70,4 @@ export const HeritageEdit = defineComponent(<P extends keyof MappingHeritageProp
       ) : null}
     </div>
   )
-})
-
-// @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-HeritageEdit.props = ['prop', 'propId', 'write', 'read', 'display', 'class', 'updateHeritage', 'hasHeritage']
+}

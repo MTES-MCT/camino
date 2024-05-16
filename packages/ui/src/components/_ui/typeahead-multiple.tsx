@@ -140,7 +140,6 @@ export const TypeAheadMultiple = defineComponent(<T extends TypeAheadRecord, K e
           value={input.value}
           type="text"
           name={id}
-          class={[styles['typeahead-input']]}
           style={{ outline: 'none' }}
           placeholder={props.props.placeholder}
           autocomplete="off"

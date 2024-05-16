@@ -20,6 +20,7 @@ import { etapeHeritagePropsValidator } from 'camino-common/src/heritage.js'
 import { getDemarcheByIdOrSlugValidator as commonGetDemarcheByIdOrSlugValidator } from 'camino-common/src/titres.js'
 import { geoSystemeIdValidator } from 'camino-common/src/static/geoSystemes.js'
 import { entrepriseIdValidator } from 'camino-common/src/entreprise.js'
+import { km2Validator } from 'camino-common/src/number.js'
 
 const getEtapesByDemarcheIdDbValidator = z.object({
   id: etapeIdValidator,
@@ -37,7 +38,7 @@ const getEtapesByDemarcheIdDbValidator = z.object({
   date_debut: caminoDateValidator.nullable(),
   date_fin: caminoDateValidator.nullable(),
   duree: z.number().nullable(),
-  surface: z.number().nullable(),
+  surface: km2Validator.nullable(),
   contenu: contenuValidator.nullable(),
   sdom_zones: z.array(sdomZoneIdValidator).nullable(),
   forets: z.array(foretIdValidator).nullable(),

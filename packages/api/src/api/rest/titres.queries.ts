@@ -115,7 +115,7 @@ export const getTitre = async (pool: Pool, user: User, idOrSlug: TitreIdOrSlug):
                 communes,
                 secteurs_maritimes: etape.secteurs_maritime ?? [],
                 sdom_zones: etape.sdom_zones ?? [],
-                surface: etape.surface ?? 0,
+                surface: etape.surface,
                 forets: etape.forets ?? [],
               }
             }

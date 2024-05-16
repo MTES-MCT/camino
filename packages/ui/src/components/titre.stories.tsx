@@ -14,6 +14,7 @@ import { etapeIdValidator, etapeSlugValidator } from 'camino-common/src/etape'
 import { EtapesTypesEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStatuts'
 import { Entreprise, entrepriseIdValidator } from 'camino-common/src/entreprise'
 import { titreIdValidator, titreSlugValidator, TitreIdOrSlug } from 'camino-common/src/validators/titres'
+import { km2Validator } from 'camino-common/src/number'
 
 const meta: Meta = {
   title: 'Components/Titre',
@@ -209,7 +210,7 @@ const titre: TitreGet = {
               geojson_origine_geo_systeme_id: '4326',
               geojson4326_forages: null,
               geojson_origine_forages: null,
-              surface: 0,
+              surface: km2Validator.parse(0),
               communes: [],
               sdom_zones: [],
               forets: [],

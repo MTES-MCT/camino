@@ -35,6 +35,7 @@ export default defineConfig({
   // => https://github.com/avkonst/hookstate/issues/118
   define: {
     applicationVersion: JSON.stringify(commitHash),
+    __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: 'false',
     // mode dev
     'process.env': {},
   },

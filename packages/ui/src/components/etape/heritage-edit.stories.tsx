@@ -19,6 +19,7 @@ export const HeritageDisabled: StoryFn = () => (
     updateHeritage={updateHeritage}
     prop={{ actif: false, etape: { date: toCaminoDate('2024-01-01'), typeId: 'mfr', dateDebut: toCaminoDate('2022-01-01') } }}
     propId="dateDebut"
+    label="Date de début"
     hasHeritage={true}
     write={() => <DsfrInput legend={{ main: '' }} type={{ type: 'date' }} valueChanged={dateChangedAction} class="mb-s" />}
     read={heritagePropEtape => <div class="border p-s mb-s bold">{heritagePropEtape?.dateDebut !== undefined ? dateFormat(heritagePropEtape.dateDebut) : 'Pas de date'}</div>}
@@ -30,6 +31,7 @@ export const HeritageEnabled: StoryFn = () => (
     updateHeritage={updateHeritage}
     prop={{ actif: true, etape: { date: toCaminoDate('2024-01-01'), typeId: 'mfr', dateDebut: toCaminoDate('2022-01-01') } }}
     propId="dateDebut"
+    label="Date de début"
     hasHeritage={true}
     write={() => <DsfrInput legend={{ main: '' }} type={{ type: 'date' }} valueChanged={dateChangedAction} class="mb-s" />}
     read={heritagePropEtape => <div class="border p-s mb-s bold">{heritagePropEtape?.dateDebut !== undefined ? dateFormat(heritagePropEtape.dateDebut) : 'Pas de date'}</div>}
@@ -41,6 +43,7 @@ export const HeritageEnabledWithoutValue: StoryFn = () => (
     updateHeritage={updateHeritage}
     prop={{ actif: true, etape: { date: toCaminoDate('2024-01-01'), typeId: 'mfr', dateDebut: null } }}
     propId="dateDebut"
+    label="Date de début"
     hasHeritage={false}
     write={() => <DsfrInput legend={{ main: '' }} type={{ type: 'date' }} valueChanged={dateChangedAction} class="mb-s" />}
     read={heritagePropEtape => <div class="border p-s mb-s bold">{heritagePropEtape?.dateDebut !== undefined ? dateFormat(heritagePropEtape.dateDebut) : 'Pas de date'}</div>}
@@ -52,6 +55,7 @@ export const NoHeritage: StoryFn = () => (
     updateHeritage={updateHeritage}
     prop={{ actif: false }}
     propId="dateDebut"
+    label="Date de début"
     hasHeritage={false}
     write={() => <DsfrInput legend={{ main: '' }} type={{ type: 'date' }} valueChanged={dateChangedAction} class="mb-s" />}
     read={() => <div class="border p-s mb-s bold">Pas de date</div>}
