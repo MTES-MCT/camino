@@ -51,6 +51,7 @@ export interface IGetEtapeDataForEditionDbResult {
   demarche_id: string;
   demarche_public_lecture: boolean;
   demarche_type_id: string;
+  etape_is_brouillon: boolean;
   etape_slug: string | null;
   etape_statut_id: string;
   etape_type_id: string;

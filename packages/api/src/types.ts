@@ -246,6 +246,7 @@ type ITitreEtape = {
   slug?: EtapeSlug
   typeId: EtapeTypeId
   statutId: EtapeStatutId
+  isBrouillon: boolean
   ordre?: number | null
   date: CaminoDate
   duree?: number | null

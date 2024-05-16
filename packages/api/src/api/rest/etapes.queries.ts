@@ -120,6 +120,7 @@ const getEtapeDataForEditionValidator = z.object({
   demarche_entreprises_lecture: z.boolean(),
   titre_public_lecture: z.boolean(),
   etape_slug: etapeSlugValidator,
+  etape_is_brouillon: z.boolean(),
 })
 
 export type GetEtapeDataForEdition = z.infer<typeof getEtapeDataForEditionValidator>
@@ -134,7 +135,8 @@ select
     td.public_lecture as demarche_public_lecture,
     td.entreprises_lecture as demarche_entreprises_lecture,
     t.public_lecture as titre_public_lecture,
-    te.slug as etape_slug
+    te.slug as etape_slug,
+    te.is_brouillon as etape_is_brouillon
 from
     titres_etapes te
     join titres_demarches td on td.id = te.titre_demarche_id

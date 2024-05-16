@@ -30,6 +30,9 @@ type Etape {
   "Statut de l'étape"
   statutId: ID!
 
+  "Est en construction"
+  isBrouillon: Boolean
+
   "Ordre chronologique de l'étape"
   ordre: Int!
 

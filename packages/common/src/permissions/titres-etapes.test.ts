@@ -7,7 +7,6 @@ import { test, expect } from 'vitest'
 import { TestUser, testBlankUser } from '../tests-utils.js'
 import { TitreStatutId } from '../static/titresStatuts.js'
 import { EntrepriseId, entrepriseIdValidator, newEntrepriseId } from '../entreprise.js'
-import { EtapeStatutId } from '../static/etapesStatuts.js'
 import { SubstanceLegaleId } from '../static/substancesLegales.js'
 import { FeatureMultiPolygon } from '../perimetre.js'
 import { toCaminoDate } from '../date.js'
@@ -81,7 +80,7 @@ test.each<{ titreTypeId: TitreTypeId; user: TestUser; canEdit: boolean }>([
 test.each<{
   user: TestUser
   etapeTypeId: EtapeTypeId
-  etapeStatutId: EtapeStatutId | null
+  isBrouillon: boolean
   titreTitulaires: EntrepriseId[]
   titresAdministrationsLocales: AdministrationId[]
   demarcheTypeId: DemarcheTypeId
@@ -91,7 +90,7 @@ test.each<{
   {
     user: { role: 'super' },
     etapeTypeId: 'mfr',
-    etapeStatutId: null,
+    isBrouillon: false,
     titreTitulaires: [],
     titresAdministrationsLocales: [],
     demarcheTypeId: 'ren',
@@ -101,7 +100,7 @@ test.each<{
   {
     user: { role: 'defaut' },
     etapeTypeId: 'mfr',
-    etapeStatutId: null,
+    isBrouillon: false,
     titreTitulaires: [],
     titresAdministrationsLocales: [],
     demarcheTypeId: 'ren',
@@ -111,7 +110,7 @@ test.each<{
   {
     user: { role: 'editeur', administrationId: 'ope-brgm-01' },
     etapeTypeId: 'mfr',
-    etapeStatutId: null,
+    isBrouillon: false,
     titreTitulaires: [],
     titresAdministrationsLocales: [],
     demarcheTypeId: 'ren',
@@ -121,7 +120,7 @@ test.each<{
   {
     user: { role: 'lecteur', administrationId: 'ope-brgm-01' },
     etapeTypeId: 'mfr',
-    etapeStatutId: null,
+    isBrouillon: false,
     titreTitulaires: [],
     titresAdministrationsLocales: [],
     demarcheTypeId: 'ren',
@@ -131,7 +130,7 @@ test.each<{
   {
     user: { role: 'entreprise', entreprises: [{ id: newEntrepriseId('1'), nom: 'nom' }] },
     etapeTypeId: 'mfr',
-    etapeStatutId: null,
+    isBrouillon: false,
     titreTitulaires: [newEntrepriseId('1')],
     titresAdministrationsLocales: [],
     demarcheTypeId: 'ren',
@@ -141,7 +140,7 @@ test.each<{
   {
     user: { role: 'entreprise', entreprises: [{ id: newEntrepriseId('1'), nom: 'nom' }] },
     etapeTypeId: 'mfr',
-    etapeStatutId: 'aco',
+    isBrouillon: true,
     titreTitulaires: [newEntrepriseId('1')],
     titresAdministrationsLocales: [],
     demarcheTypeId: 'oct',
@@ -151,7 +150,7 @@ test.each<{
   {
     user: { role: 'admin', administrationId: 'ope-brgm-01' },
     etapeTypeId: 'mfr',
-    etapeStatutId: 'aco',
+    isBrouillon: true,
     titreTitulaires: [],
     titresAdministrationsLocales: ['ope-brgm-01'],
     demarcheTypeId: 'oct',
@@ -161,7 +160,7 @@ test.each<{
   {
     user: { role: 'editeur', administrationId: 'ope-brgm-01' },
     etapeTypeId: 'mfr',
-    etapeStatutId: 'aco',
+    isBrouillon: true,
     titreTitulaires: [],
     titresAdministrationsLocales: ['ope-brgm-01'],
     demarcheTypeId: 'oct',
@@ -171,7 +170,7 @@ test.each<{
   {
     user: { role: 'lecteur', administrationId: 'ope-brgm-01' },
     etapeTypeId: 'mfr',
-    etapeStatutId: 'aco',
+    isBrouillon: true,
     titreTitulaires: [],
     titresAdministrationsLocales: ['ope-brgm-01'],
     demarcheTypeId: 'oct',
@@ -181,7 +180,7 @@ test.each<{
   {
     user: { role: 'admin', administrationId: ADMINISTRATION_IDS['DGTM - GUYANE'] },
     etapeTypeId: 'mfr',
-    etapeStatutId: null,
+    isBrouillon: false,
     titreTitulaires: [],
     titresAdministrationsLocales: ['ope-brgm-01'],
     demarcheTypeId: 'oct',
@@ -191,7 +190,7 @@ test.each<{
   {
     user: { role: 'admin', administrationId: ADMINISTRATION_IDS['GENDARMERIE NATIONALE - GUYANE'] },
     etapeTypeId: 'aca',
-    etapeStatutId: null,
+    isBrouillon: false,
     titreTitulaires: [],
     titresAdministrationsLocales: ['ope-brgm-01'],
     demarcheTypeId: 'oct',
@@ -200,8 +199,8 @@ test.each<{
   },
 ])(
   'canCreateEtape $user | $etapeTypeId | $etapeStatutId | $titreTitulaires | $titresAdministrationsLocales | $demarcheTypeId | $titre | $canCreate',
-  ({ user, etapeTypeId, etapeStatutId, titreTitulaires, titresAdministrationsLocales, demarcheTypeId, titre, canCreate }) => {
-    expect(canCreateEtape({ ...user, ...testBlankUser }, etapeTypeId, etapeStatutId, titreTitulaires, titresAdministrationsLocales, demarcheTypeId, titre)).toEqual(canCreate)
+  ({ user, etapeTypeId, isBrouillon, titreTitulaires, titresAdministrationsLocales, demarcheTypeId, titre, canCreate }) => {
+    expect(canCreateEtape({ ...user, ...testBlankUser }, etapeTypeId, isBrouillon, titreTitulaires, titresAdministrationsLocales, demarcheTypeId, titre)).toEqual(canCreate)
   }
 )
 
@@ -219,7 +218,7 @@ test.each<{
   { administrationId: 'min-mtes-dgaln-01', titreTypeId: 'arm', canEdit: true },
   { administrationId: 'ope-onf-973-01', titreTypeId: 'arm', canEdit: true },
 ])('un utilisateur admin d’une administration peut modifier une étape mcr sur un titre: $canEdit', ({ administrationId, titreTypeId, canEdit }) => {
-  expect(canEditEtape({ role: 'admin', administrationId, ...testBlankUser }, 'mcr', 'fai', [], [], 'oct', { typeId: titreTypeId, titreStatutId: 'val' })).toBe(canEdit)
+  expect(canEditEtape({ role: 'admin', administrationId, ...testBlankUser }, 'mcr', false, [], [], 'oct', { typeId: titreTypeId, titreStatutId: 'val' })).toBe(canEdit)
 })
 
 const multiPolygonWith4Points: FeatureMultiPolygon = {
@@ -244,7 +243,7 @@ const etapeComplete: Parameters<typeof isEtapeComplete>[0] = {
   substances: ['auru'],
   geojson4326Perimetre: multiPolygonWith4Points,
   duree: 4,
-  statutId: 'fai',
+  isBrouillon: false
 }
 
 const armDocuments: Parameters<typeof isEtapeComplete>[3] = [{ etape_document_type_id: 'car' }, { etape_document_type_id: 'dom' }, { etape_document_type_id: 'for' }, { etape_document_type_id: 'jpa' }]
@@ -281,7 +280,7 @@ const axmEntrepriseDocuments: Parameters<typeof isEtapeComplete>[4] = [
 test('teste la complétude d’une demande d’AXM faite par un utilisateur entreprises', () => {
   expect(
     isEtapeComplete(
-      { ...etapeComplete, statutId: 'aco' },
+      { ...etapeComplete, isBrouillon: true },
       'axm',
       'oct',
       axmDocuments,

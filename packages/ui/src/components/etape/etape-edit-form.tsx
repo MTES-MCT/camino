@@ -48,6 +48,7 @@ import {
 import { EtapeAlerte, PureFormSaveBtn } from './pure-form-save-btn'
 import { TitresStatuts } from 'camino-common/src/static/titresStatuts'
 import { DeposeEtapePopup } from '../demarche/depose-etape-popup'
+import { canBeBrouillon } from 'camino-common/src/static/etapesTypes'
 
 export type Props = {
   etape: DeepReadonly<Etape & Pick<Nullable<EtapeWithHeritage>, 'heritageContenu' | 'heritageProps'>>
@@ -115,6 +116,7 @@ export const EtapeEditForm = defineComponent<Props>(props => {
         statutId: props.etape.statutId,
         heritageProps: props.etape.heritageProps,
         heritageContenu: props.etape.heritageContenu,
+        isBrouillon: props.etape.isBrouillon
       }
       setHeritage(heritageComplete)
       heritageData.value = { status: 'LOADED', value: heritageComplete }
@@ -143,7 +145,7 @@ export const EtapeEditForm = defineComponent<Props>(props => {
 
   const dateTypeCompleteUpdate = async (etapeDateType: EtapeDateTypeEdit) => {
     if (isNotNullNorUndefined(etapeDateType.typeId) && isNotNullNorUndefined(etapeDateType.statutId)) {
-      setEtape({ ...etape.value, date: etapeDateType.date, typeId: etapeDateType.typeId, statutId: etapeDateType.statutId })
+      setEtape({ ...etape.value, date: etapeDateType.date, typeId: etapeDateType.typeId, statutId: etapeDateType.statutId, isBrouillon: etape.value.isBrouillon || canBeBrouillon(etapeDateType.typeId) })
       await reloadHeritage(props.demarcheId, etapeDateType)
     }
   }
@@ -184,7 +186,7 @@ export const EtapeEditForm = defineComponent<Props>(props => {
 
   const demandeEnConstruction = computed<boolean>(() => {
     if (heritageData.value.status === 'LOADED') {
-      return heritageData.value.value.typeId === 'mfr' && heritageData.value.value.statutId === 'aco'
+      return heritageData.value.value.typeId === 'mfr' && etape.value.isBrouillon
     }
 
     return false
@@ -292,7 +294,7 @@ export const EtapeEditForm = defineComponent<Props>(props => {
                 alertes={alertes.value}
                 canSave={canSave.value}
                 canDepose={canDepose.value}
-                showDepose={item.typeId === 'mfr' && item.statutId === 'aco'}
+                showDepose={item.typeId === 'mfr' && etape.value.isBrouillon}
                 save={saveAndReroute}
                 depose={depose}
               />
@@ -463,7 +465,7 @@ const EtapeEditFormInternal = defineComponent<
             sdomZoneIds={props.perimetre.sdomZoneIds}
             user={props.user}
             contenu={etapeFlattened.value.contenu}
-            etapeStatutId={etapeFlattened.value.statutId}
+            isBrouillon={etapeFlattened.value.isBrouillon}
           />
         </Bloc>
       ) : null}

@@ -2,7 +2,6 @@ import { ETAPES_TYPES, EtapeTypeId } from '../static/etapesTypes.js'
 import { TitreTypeId } from '../static/titresTypes.js'
 import { DEMARCHES_TYPES_IDS, DemarcheTypeId, isDemarcheTypeWithPhase } from '../static/demarchesTypes.js'
 import { isAdministrationAdmin, isAdministrationEditeur, isBureauDEtudes, isEntreprise, isSuper, User } from '../roles.js'
-import { EtapeStatutId, ETAPES_STATUTS } from '../static/etapesStatuts.js'
 import { TITRES_TYPES_IDS_DEMAT } from './titres.js'
 import { AdministrationId } from '../static/administrations.js'
 import { isGestionnaire } from '../static/administrationsTitresTypes.js'
@@ -90,31 +89,31 @@ export const canEditDuree = (titreTypeId: TitreTypeId, demarcheTypeId: DemarcheT
 export const canCreateEtape = (
   user: User,
   etapeTypeId: EtapeTypeId,
-  etapeStatutId: EtapeStatutId | null,
+  isBrouillon: boolean,
   titulaireIds: EntrepriseId[],
   titresAdministrationsLocales: AdministrationId[],
   demarcheTypeId: DemarcheTypeId,
   titre: { typeId: TitreTypeId; titreStatutId: TitreStatutId }
 ): boolean => {
-  return canCreateOrEditEtape(user, etapeTypeId, etapeStatutId, titulaireIds, titresAdministrationsLocales, demarcheTypeId, titre, 'creation')
+  return canCreateOrEditEtape(user, etapeTypeId, isBrouillon, titulaireIds, titresAdministrationsLocales, demarcheTypeId, titre, 'creation')
 }
 
 export const canEditEtape = (
   user: User,
   etapeTypeId: EtapeTypeId,
-  etapeStatutId: EtapeStatutId | null,
+  isBrouillon: boolean,
   titulaireIds: EntrepriseId[],
   titresAdministrationsLocales: AdministrationId[],
   demarcheTypeId: DemarcheTypeId,
   titre: { typeId: TitreTypeId; titreStatutId: TitreStatutId }
 ): boolean => {
-  return canCreateOrEditEtape(user, etapeTypeId, etapeStatutId, titulaireIds, titresAdministrationsLocales, demarcheTypeId, titre, 'modification')
+  return canCreateOrEditEtape(user, etapeTypeId, isBrouillon, titulaireIds, titresAdministrationsLocales, demarcheTypeId, titre, 'modification')
 }
 
 const canCreateOrEditEtape = (
   user: User,
   etapeTypeId: EtapeTypeId,
-  etapeStatutId: EtapeStatutId | null,
+  isBrouillon: boolean,
   titulaireIds: EntrepriseId[],
   titresAdministrationsLocales: AdministrationId[],
   demarcheTypeId: DemarcheTypeId,
@@ -132,7 +131,7 @@ const canCreateOrEditEtape = (
       (user.entreprises?.length ?? 0) > 0 &&
       demarcheTypeId === DEMARCHES_TYPES_IDS.Octroi &&
       etapeTypeId === ETAPES_TYPES.demande &&
-      etapeStatutId === ETAPES_STATUTS.EN_CONSTRUCTION &&
+      isBrouillon &&
       TITRES_TYPES_IDS_DEMAT.includes(titre.typeId) &&
       titulaireIds.some(id => user.entreprises?.some(entreprise => id === entreprise.id))
     )
@@ -143,8 +142,8 @@ const canCreateOrEditEtape = (
 
 type IsEtapeCompleteEtape = {
   typeId: EtapeTypeId
-  statutId: EtapeStatutId
-  /** 
+  isBrouillon: boolean
+  /**
    @deprecated use sectionsWithValue/
   */
   contenu?: Record<string, Record<string, ElementWithValue['value']>>
@@ -182,7 +181,7 @@ export const isEtapeComplete = (
     }
   }
 
-  if (needAslAndDae({ etapeTypeId: titreEtape.typeId, demarcheTypeId, titreTypeId }, titreEtape.statutId, user)) {
+  if (needAslAndDae({ etapeTypeId: titreEtape.typeId, demarcheTypeId, titreTypeId }, titreEtape.isBrouillon, user)) {
     if (isNullOrUndefined(daeDocument)) {
       errors.push('L’arrêté préfectoral de la mission autorité environnementale est obligatoire')
     }
@@ -265,12 +264,12 @@ export const isEtapeDeposable = (
   daeDocument: GetEtapeDocumentsByEtapeId['dae'],
   aslDocument: GetEtapeDocumentsByEtapeId['asl']
 ): boolean => {
-  if (titreEtape.typeId === ETAPES_TYPES.demande && titreEtape.statutId === ETAPES_STATUTS.EN_CONSTRUCTION) {
+  if (titreEtape.typeId === ETAPES_TYPES.demande && titreEtape.isBrouillon){
     if (
       canCreateOrEditEtape(
         user,
         titreEtape.typeId,
-        titreEtape.statutId,
+        titreEtape.isBrouillon,
         titre.titulaires,
         titre.administrationsLocales,
         demarcheTypeId,
@@ -292,4 +291,4 @@ export const isEtapeDeposable = (
   return false
 }
 
-export const canDeleteEtapeDocument = (etapeStatutId: EtapeStatutId | null): boolean => etapeStatutId === null || etapeStatutId === ETAPES_STATUTS.EN_CONSTRUCTION
+export const canDeleteEtapeDocument = (isBrouillon: boolean): boolean => isBrouillon

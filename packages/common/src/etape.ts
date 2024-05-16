@@ -36,6 +36,7 @@ export type Etape = {
   date: CaminoDate | null
   typeId: EtapeTypeId | null
   statutId: EtapeStatutId | null
+  isBrouillon: boolean
   substances: SubstanceLegaleId[]
   titulaireIds: EntrepriseId[]
   amodiataireIds: EntrepriseId[]
@@ -121,10 +122,10 @@ export const needAslAndDae = (
     demarcheTypeId: DemarcheTypeId
     titreTypeId: TitreTypeId
   },
-  etapeStatutId: EtapeStatutId,
+  isBrouillon: boolean,
   user: User
 ): boolean => {
-  return tde.etapeTypeId === 'mfr' && tde.demarcheTypeId === 'oct' && tde.titreTypeId === 'axm' && isEntrepriseOrBureauDEtude(user) && etapeStatutId === 'aco'
+  return tde.etapeTypeId === 'mfr' && tde.demarcheTypeId === 'oct' && tde.titreTypeId === 'axm' && isEntrepriseOrBureauDEtude(user) && isBrouillon
 }
 
 export const tempEtapeDocumentValidator = etapeDocumentValidator.omit({ id: true }).extend({ temp_document_name: tempDocumentNameValidator })

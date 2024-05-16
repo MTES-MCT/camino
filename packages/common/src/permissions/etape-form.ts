@@ -87,7 +87,7 @@ export const etapeDocumentsStepIsVisible = (etape: Pick<EtapeWithHeritage, 'type
   return getDocuments(titreTypeId, demarcheTypeId, etape.typeId).length > 0
 }
 export const etapeDocumentsStepIsComplete = (
-  etape: DeepReadonly<Pick<EtapeWithHeritage, 'typeId' | 'contenu' | 'statutId'>>,
+  etape: DeepReadonly<Pick<EtapeWithHeritage, 'typeId' | 'contenu' | 'isBrouillon'>>,
   demarcheTypeId: DemarcheTypeId,
   titreTypeId: TitreTypeId,
   etapeDocuments: DeepReadonly<(EtapeDocument | TempEtapeDocument)[]>,
@@ -103,7 +103,7 @@ export const etapeDocumentsStepIsComplete = (
   const documentTypes = getDocumentsTypes({ contenu: etape.contenu, typeId: etape.typeId }, demarcheTypeId, titreTypeId, sdomZoneIds)
 
   if (documentTypes.every(({ optionnel, id }) => optionnel || etapeDocuments.some(({ etape_document_type_id }) => etape_document_type_id === id))) {
-    if (needAslAndDae({ etapeTypeId: etape.typeId, demarcheTypeId, titreTypeId }, etape.statutId, user)) {
+    if (needAslAndDae({ etapeTypeId: etape.typeId, demarcheTypeId, titreTypeId }, etape.isBrouillon, user)) {
       return isNotNullNorUndefined(daeDocument) && isNotNullNorUndefined(aslDocument)
     }
 

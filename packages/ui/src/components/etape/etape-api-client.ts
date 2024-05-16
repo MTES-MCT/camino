@@ -107,6 +107,7 @@ const graphqlEtapeValidator = z.object({
   substances: z.array(substanceLegaleIdValidator),
   typeId: etapeTypeIdValidator,
   statutId: etapeStatutIdValidator,
+  isBrouillon: z.boolean(),
   titulaireIds: z.array(entrepriseIdValidator),
   amodiataireIds: z.array(entrepriseIdValidator),
   geojson4326Perimetre: featureMultiPolygonValidator.nullable(),
@@ -229,6 +230,7 @@ export const etapeApiClient: EtapeApiClient = {
           surface
           typeId
           statutId
+          isBrouillon
           titulaireIds
           amodiataireIds
           geojson4326Perimetre

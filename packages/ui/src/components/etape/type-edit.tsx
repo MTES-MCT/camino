@@ -1,5 +1,5 @@
-import { EtapesStatuts, EtapeStatutId, ETAPES_STATUTS } from 'camino-common/src/static/etapesStatuts'
-import { EtapesTypes, ETAPES_TYPES, EtapeType, EtapeTypeId } from 'camino-common/src/static/etapesTypes'
+import { EtapesStatuts, EtapeStatutId } from 'camino-common/src/static/etapesStatuts'
+import { EtapesTypes, EtapeType, EtapeTypeId } from 'camino-common/src/static/etapesTypes'
 import { computed, ref, FunctionalComponent, watch, HTMLAttributes, defineComponent } from 'vue'
 import { DemarcheId } from 'camino-common/src/demarche'
 import { EtapeApiClient } from './etape-api-client'
@@ -136,7 +136,7 @@ export const TypeEdit = defineComponent<Props>(props => {
                   }}
                 />
               </div>
-              {(etapeTypeId.value === ETAPES_TYPES.demande && etapeStatutId.value === ETAPES_STATUTS.EN_CONSTRUCTION) || !isNonEmptyArray(possibleStatuts.value) ? null : (
+              {!isNonEmptyArray(possibleStatuts.value) ? null : (
                 <SelectStatut
                   statutIds={possibleStatuts.value}
                   statutId={etapeStatutId.value}

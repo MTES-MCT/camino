@@ -66,7 +66,7 @@ type Phase = { dateDebut: CaminoDate; dateFin: CaminoDate | null }
 type IntermediateTitrePhase = Phase & { demarcheId: DemarcheId; dateDeFinParDefaut?: true }
 export const titrePhasesFind = (titreDemarches: TitreDemarchePhaseFind[], titreTypeId: TitreTypeId): { [key in DemarcheId]?: Phase } => {
   const sortedDemarches = titreDemarcheSortAsc(titreDemarches).map(demarche => {
-    return { ...demarche, etapes: demarche.etapes?.filter(({ statutId }) => statutId !== ETAPES_STATUTS.EN_CONSTRUCTION) }
+    return { ...demarche, etapes: demarche.etapes?.filter(({ isBrouillon }) => !isBrouillon) }
   })
 
   const titreDemarcheAnnulation = titreDemarcheAnnulationFind(titreDemarches)
@@ -168,7 +168,7 @@ export const titrePhasesFind = (titreDemarches: TitreDemarchePhaseFind[], titreT
   }, {})
 }
 
-export type TitreEtapePhaseFind = Pick<ITitreEtape, 'titreDemarcheId' | 'ordre' | 'typeId' | 'dateFin' | 'duree' | 'dateDebut' | 'date' | 'statutId' | 'geojson4326Perimetre'>
+export type TitreEtapePhaseFind = Pick<ITitreEtape, 'titreDemarcheId' | 'ordre' | 'typeId' | 'dateFin' | 'duree' | 'dateDebut' | 'date' | 'statutId' | 'geojson4326Perimetre' | 'isBrouillon'>
 export type TitreDemarchePhaseFind = Pick<ITitreDemarche, 'statutId' | 'ordre' | 'typeId' | 'id' | 'titreId' | 'demarcheDateDebut' | 'demarcheDateFin'> & { etapes?: TitreEtapePhaseFind[] }
 
 const titreDemarcheNormaleDateFinAndDureeFind = (titreEtapes: TitreEtapePhaseFind[]): { duree: number; dateFin: CaminoDate | null | undefined } => {

@@ -89,7 +89,7 @@ export const getEntrepriseDocumentLargeObjectIdsByEtapeId = async (params: { tit
   return result.filter(r => canSeeEntrepriseDocuments(user, r.entreprise_id))
 }
 
-export const updateEtapeDocuments = async (pool: Pool, _user: User, titre_etape_id: EtapeId, etapeStatutId: EtapeStatutId, etapeDocuments: EtapeDocumentModification[]) => {
+export const updateEtapeDocuments = async (pool: Pool, _user: User, titre_etape_id: EtapeId, isBrouillon: boolean, etapeDocuments: EtapeDocumentModification[]) => {
   const documentsInDb = await dbQueryAndValidate(getDocumentsByEtapeIdQuery, { titre_etape_id }, pool, getDocumentsByEtapeIdQueryValidator)
 
   const etapeDocumentToUpdate = etapeDocuments.filter((document): document is EtapeDocumentWithFileModification => 'id' in document)
@@ -115,7 +115,7 @@ export const updateEtapeDocuments = async (pool: Pool, _user: User, titre_etape_
     await insertEtapeDocuments(pool, titre_etape_id, toInsertDocuments)
   }
   if (isNotNullNorUndefinedNorEmpty(toDeleteDocuments)) {
-    if (!canDeleteEtapeDocument(etapeStatutId)) {
+    if (!canDeleteEtapeDocument(isBrouillon)) {
       throw new Error('Impossible de supprimer les documents')
     }
 

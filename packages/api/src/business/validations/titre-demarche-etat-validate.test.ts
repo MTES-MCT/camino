@@ -1,3 +1,4 @@
+// FIXME: corriger les tests unitaires pour prendre en compte le remplacement de statutId: aco par isBrouillon: true (tous les impacts hors tests ont été faits, normalement...)
 import { ITitre, ITitreEtape } from '../../types.js'
 
 import { titreDemarcheUpdatedEtatValidate } from './titre-demarche-etat-validate.js'
@@ -16,7 +17,7 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
         typeId: 'arm',
         demarches: [{ typeId: 'oct' }],
       } as ITitre,
-      { typeId: 'mfr', date: '2030-01-01' } as Pick<Required<ITitreEtape>, 'id' | 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'titreDemarcheId' | 'communes'>,
+      { typeId: 'mfr', date: '2030-01-01' } as Pick<Required<ITitreEtape>, 'id' | 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'titreDemarcheId' | 'communes' | 'isBrouillon'>,
       newDemarcheId(),
       null
     )
@@ -31,10 +32,10 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
         typeId: 'arm',
         demarches: [{ typeId: 'pro' }, { typeId: 'oct' }],
       } as ITitre,
-      { id: newEtapeId(), typeId: 'mdp', statutId: 'fai', date: toCaminoDate('2022-05-04'), communes: null, contenu: null, ordre: 1, surface: null },
+      { id: newEtapeId(), typeId: 'mdp', statutId: 'fai', isBrouillon: false, date: toCaminoDate('2022-05-04'), communes: null, contenu: null, ordre: 1, surface: null },
       newDemarcheId(),
 
-      [{ id: newEtapeId('1'), typeId: 'mfr', statutId: 'fai', date: toCaminoDate('2022-05-03'), communes: null, contenu: null, ordre: 1, surface: null }]
+      [{ id: newEtapeId('1'), typeId: 'mfr', statutId: 'fai', isBrouillon: false, date: toCaminoDate('2022-05-03'), communes: null, contenu: null, ordre: 1, surface: null }]
     )
 
     expect(valid).toHaveLength(0)
@@ -51,6 +52,7 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
         id: newEtapeId('1'),
         typeId: 'mfr',
         statutId: 'fai',
+        isBrouillon: false,
         date: toCaminoDate('2022-05-04'),
         communes: null,
         contenu: null,
@@ -60,8 +62,8 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
       newDemarcheId(),
 
       [
-        { id: newEtapeId('1'), typeId: 'mfr', date: toCaminoDate('2022-05-03'), statutId: 'fai', communes: null, contenu: null, ordre: 1, surface: null },
-        { id: newEtapeId('2'), typeId: 'mdp', date: toCaminoDate('2022-05-04'), statutId: 'fai', communes: null, contenu: null, ordre: 2, surface: null },
+        { id: newEtapeId('1'), typeId: 'mfr', date: toCaminoDate('2022-05-03'), statutId: 'fai', isBrouillon: false, communes: null, contenu: null, ordre: 1, surface: null },
+        { id: newEtapeId('2'), typeId: 'mdp', date: toCaminoDate('2022-05-04'), statutId: 'fai', isBrouillon: false, communes: null, contenu: null, ordre: 2, surface: null },
       ]
     )
 
@@ -75,10 +77,10 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
         typeId: 'arm',
         demarches: [{ typeId: 'oct' }],
       } as ITitre,
-      { id: '1', typeId: 'mfr' } as Pick<Required<ITitreEtape>, 'id' | 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'titreDemarcheId' | 'communes'>,
+      { id: '1', typeId: 'mfr' } as Pick<Required<ITitreEtape>, 'id' | 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'titreDemarcheId' | 'communes' | 'isBrouillon'>,
       newDemarcheId(),
 
-      [{ id: '1', typeId: 'mfr', date: '2000-01-01' }] as Pick<Required<ITitreEtape>, 'id' | 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'titreDemarcheId' | 'communes'>[],
+      [{ id: '1', typeId: 'mfr', date: '2000-01-01' }] as Pick<Required<ITitreEtape>, 'id' | 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'titreDemarcheId' | 'communes' | 'isBrouillon'>[],
       false
     )
 
@@ -92,7 +94,7 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
         typeId: 'arm',
         demarches: [{ typeId: 'oct' }],
       } as ITitre,
-      { id: '1', typeId: 'mfr' } as Pick<Required<ITitreEtape>, 'id' | 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'titreDemarcheId' | 'communes'>,
+      { id: '1', typeId: 'mfr', isBrouillon: false } as Pick<Required<ITitreEtape>, 'id' | 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'titreDemarcheId' | 'communes' | 'isBrouillon'>,
       newDemarcheId(),
 
       []
@@ -109,7 +111,7 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
           typeId: 'arm',
           demarches: [{ typeId: 'pro' }],
         } as ITitre,
-        { id: '1', typeId: 'mfr' } as Pick<Required<ITitreEtape>, 'id' | 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'titreDemarcheId' | 'communes'>,
+        { id: '1', typeId: 'mfr' } as Pick<Required<ITitreEtape>, 'id' | 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'titreDemarcheId' | 'communes' | 'isBrouillon'>,
         newDemarcheId(),
 
         []
@@ -122,7 +124,7 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
         {
           typeId: 'arm',
         } as ITitre,
-        { id: '1', typeId: 'mfr' } as Pick<Required<ITitreEtape>, 'id' | 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'titreDemarcheId' | 'communes'>,
+        { id: '1', typeId: 'mfr' } as Pick<Required<ITitreEtape>, 'id' | 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'titreDemarcheId' | 'communes' | 'isBrouillon'>,
         newDemarcheId(),
 
         []
@@ -137,10 +139,10 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
         typeId: 'arm',
         demarches: [{ typeId: 'oct' }],
       } as ITitre,
-      { id: '1', typeId: 'mfr' } as Pick<Required<ITitreEtape>, 'id' | 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'titreDemarcheId' | 'communes'>,
+      { id: '1', typeId: 'mfr' } as Pick<Required<ITitreEtape>, 'id' | 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'titreDemarcheId' | 'communes' | 'isBrouillon'>,
       newDemarcheId(),
 
-      [{ id: '1', typeId: 'mfr' }] as Pick<Required<ITitreEtape>, 'id' | 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'titreDemarcheId' | 'communes'>[],
+      [{ id: '1', typeId: 'mfr' }] as Pick<Required<ITitreEtape>, 'id' | 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'titreDemarcheId' | 'communes' | 'isBrouillon'>[],
       true
     )
 
@@ -158,7 +160,7 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
           },
         ],
       } as ITitre,
-      { typeId: 'mfr', date: '1030-01-01' } as Pick<Required<ITitreEtape>, 'id' | 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'titreDemarcheId' | 'communes'>,
+      { typeId: 'mfr', date: '1030-01-01' } as Pick<Required<ITitreEtape>, 'id' | 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'titreDemarcheId' | 'communes' | 'isBrouillon'>,
       newDemarcheId()
     )
 
@@ -176,7 +178,7 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
           },
         ],
       } as ITitre,
-      { typeId: 'mfr', date: '1030-01-01', statutId: 'fai' } as Pick<Required<ITitreEtape>, 'id' | 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'titreDemarcheId' | 'communes'>,
+      { typeId: 'mfr', date: '1030-01-01', statutId: 'fai' } as Pick<Required<ITitreEtape>, 'id' | 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'titreDemarcheId' | 'communes' | 'isBrouillon'>,
       newDemarcheId()
     )
 
@@ -190,7 +192,7 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
         typeId: 'axm',
         demarches: [{ typeId: 'oct' }],
       } as ITitre,
-      { typeId: 'mfr', statutId: 'aco', date: '2030-01-01' } as Pick<Required<ITitreEtape>, 'id' | 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'titreDemarcheId' | 'communes'>,
+      { typeId: 'mfr', statutId: 'fai', isBrouillon: true, date: '2030-01-01' } as Pick<Required<ITitreEtape>, 'id' | 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'titreDemarcheId' | 'communes' | 'isBrouillon'>,
       newDemarcheId()
     )
 
@@ -204,10 +206,10 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
         typeId: 'axm',
         demarches: [{ typeId: 'oct' }],
       } as ITitre,
-      { typeId: 'mfr', statutId: 'aco' } as Pick<Required<ITitreEtape>, 'id' | 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'titreDemarcheId' | 'communes'>,
+      { typeId: 'mfr', statutId: 'fai', isBrouillon: true } as Pick<Required<ITitreEtape>, 'id' | 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'titreDemarcheId' | 'communes' | 'isBrouillon'>,
       newDemarcheId(),
 
-      [{ id: '1', typeId: 'dae', statutId: 'exe' }] as Pick<Required<ITitreEtape>, 'id' | 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'titreDemarcheId' | 'communes'>[]
+      [{ id: '1', typeId: 'dae', statutId: 'exe', isBrouillon: false }] as Pick<Required<ITitreEtape>, 'id' | 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'titreDemarcheId' | 'communes' | 'isBrouillon'>[]
     )
 
     expect(valid).toHaveLength(0)
@@ -220,13 +222,13 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
         typeId: 'axm',
         demarches: [{ typeId: 'oct' }],
       } as ITitre,
-      { id: '1', typeId: 'mfr', statutId: 'aco' } as Pick<Required<ITitreEtape>, 'id' | 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'titreDemarcheId' | 'communes'>,
+      { id: '1', typeId: 'mfr', statutId: 'fai', isBrouillon: true } as Pick<Required<ITitreEtape>, 'id' | 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'titreDemarcheId' | 'communes' | 'isBrouillon'>,
       newDemarcheId(),
 
       [
-        { id: '1', typeId: 'mfr', statutId: 'aco' },
+        { id: '1', typeId: 'mfr', statutId: 'fai', isBrouillon: true },
         { id: '2', typeId: 'dae' },
-      ] as Pick<Required<ITitreEtape>, 'id' | 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'titreDemarcheId' | 'communes'>[]
+      ] as Pick<Required<ITitreEtape>, 'id' | 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'titreDemarcheId' | 'communes' | 'isBrouillon'>[]
     )
 
     expect(valid).toHaveLength(0)
@@ -240,13 +242,13 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
           typeId: 'axm',
           demarches: [{ typeId: 'oct' }],
         } as ITitre,
-        { id: '3', typeId: 'mfr', statutId: 'aco' } as Pick<Required<ITitreEtape>, 'id' | 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'titreDemarcheId' | 'communes'>,
+        { id: '3', typeId: 'mfr', statutId: 'fai', isBrouillon: true } as Pick<Required<ITitreEtape>, 'id' | 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'titreDemarcheId' | 'communes' | 'isBrouillon'>,
         newDemarcheId(),
 
         [
-          { id: '1', typeId: 'mfr', statutId: 'aco' },
+          { id: '1', typeId: 'mfr', statutId: 'fai', isBrouillon: true },
           { id: '2', typeId: 'dae' },
-        ] as Pick<Required<ITitreEtape>, 'id' | 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'titreDemarcheId' | 'communes'>[]
+        ] as Pick<Required<ITitreEtape>, 'id' | 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'titreDemarcheId' | 'communes' | 'isBrouillon'>[]
       )
     ).toContain('il y a déjà une demande en construction')
   })
@@ -263,6 +265,7 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
           typeId: 'aaa' as EtapeTypeId,
           date: toCaminoDate('2022-01-01'),
           statutId: 'fai',
+          isBrouillon: false,
           communes: null,
           contenu: null,
           ordre: 1,
@@ -273,8 +276,9 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
         [
           {
             id: newEtapeId('1'),
-            typeId: EtapesTypesEtapesStatuts.demande.EN_CONSTRUCTION.etapeTypeId,
-            statutId: EtapesTypesEtapesStatuts.demande.EN_CONSTRUCTION.etapeStatutId,
+            typeId: EtapesTypesEtapesStatuts.demande.FAIT.etapeTypeId,
+            statutId: EtapesTypesEtapesStatuts.demande.FAIT.etapeStatutId,
+            isBrouillon: true,
             date: toCaminoDate('2021-01-01'),
             communes: null,
             contenu: null,

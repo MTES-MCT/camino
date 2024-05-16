@@ -270,7 +270,6 @@ export const EtapesTypesEtapesStatuts = {
   enregistrementDeLaDemande: { FAIT: { etapeTypeId: 'men', etapeStatutId: 'fai' } },
   priseEnChargeParLOfficeNationalDesForets: { FAIT: { etapeTypeId: 'meo', etapeStatutId: 'fai' } },
   demande: {
-    EN_CONSTRUCTION: { etapeTypeId: 'mfr', etapeStatutId: 'aco' },
     FAIT: { etapeTypeId: 'mfr', etapeStatutId: 'fai' },
   },
   demandeDinformations_AvisDeLOfficeNationalDesForets_: { FAIT: { etapeTypeId: 'mia', etapeStatutId: 'fai' } },

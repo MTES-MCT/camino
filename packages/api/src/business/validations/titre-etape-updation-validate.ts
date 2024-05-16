@@ -101,7 +101,7 @@ export const titreEtapeUpdationValidate = (
   }
 
   // 4. si l’étape n’est pas en cours de construction
-  if (titreEtape.statutId !== 'aco') {
+  if (!titreEtape.isBrouillon) {
     const etapeComplete = isEtapeComplete(
       { ...titreEtape, contenu: titreEtape.contenu ?? {} },
       titre.typeId,

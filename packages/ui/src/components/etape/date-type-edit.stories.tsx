@@ -20,7 +20,6 @@ const apiClient: Props['apiClient'] = {
 
     return Promise.resolve([
       { etapeTypeId: 'mfr', etapeStatutId: 'fai', mainStep: true },
-      { etapeTypeId: 'mfr', etapeStatutId: 'aco', mainStep: true },
       { etapeTypeId: 'mdp', etapeStatutId: 'fai', mainStep: true },
     ])
   },
@@ -36,10 +35,6 @@ export const WithTypeId: StoryFn = () => (
 
 export const WithTypeIdAndStatutId: StoryFn = () => (
   <DateTypeEdit apiClient={apiClient} demarcheId={demarcheId} etape={{ date: toCaminoDate('2023-01-01'), id: null, statutId: 'fai', typeId: 'mfr' }} completeUpdate={completeUpdate} />
-)
-
-export const EnConstruction: StoryFn = () => (
-  <DateTypeEdit apiClient={apiClient} demarcheId={demarcheId} etape={{ date: toCaminoDate('2023-01-01'), id: null, statutId: 'aco', typeId: 'mfr' }} completeUpdate={completeUpdate} />
 )
 
 export const Loading: StoryFn = () => (

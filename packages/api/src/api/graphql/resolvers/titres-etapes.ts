@@ -15,21 +15,20 @@ import { titreDemarcheUpdatedEtatValidate } from '../../../business/validations/
 import { titreEtapeFormat } from '../../_format/titres-etapes.js'
 import { userSuper } from '../../../database/user-super.js'
 import { titreEtapeAdministrationsEmailsSend, titreEtapeUtilisateursEmailsSend } from './_titre-etape-email.js'
-import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts.js'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
 import { isNonEmptyArray, isNotNullNorUndefined, isNullOrUndefined, onlyUnique } from 'camino-common/src/typescript-tools.js'
-import { isBureauDEtudes, isEntreprise, User } from 'camino-common/src/roles.js'
-import { CaminoDate, toCaminoDate } from 'camino-common/src/date.js'
+import { User } from 'camino-common/src/roles.js'
+import { CaminoDate } from 'camino-common/src/date.js'
 import { titreEtapeFormatFields } from '../../_format/_fields.js'
 import { canCreateEtape, canEditDates, canEditDuree, canEditEtape } from 'camino-common/src/permissions/titres-etapes.js'
 import { TitresStatutIds } from 'camino-common/src/static/titresStatuts.js'
 import {
-  EtapeId,
-  documentComplementaireAslEtapeDocumentModificationValidator,
-  documentComplementaireDaeEtapeDocumentModificationValidator,
-  etapeDocumentModificationValidator,
-  needAslAndDae,
-  tempEtapeDocumentValidator,
+    EtapeId,
+    documentComplementaireAslEtapeDocumentModificationValidator,
+    documentComplementaireDaeEtapeDocumentModificationValidator,
+    etapeDocumentModificationValidator,
+    needAslAndDae,
+    tempEtapeDocumentValidator,
 } from 'camino-common/src/etape.js'
 import { checkEntreprisesExist, getEntrepriseDocuments } from '../../rest/entreprises.queries.js'
 import { deleteTitreEtapeEntrepriseDocument, insertEtapeDocuments, insertTitreEtapeEntrepriseDocument, updateEtapeDocuments } from '../../../database/queries/titres-etapes.queries.js'
@@ -47,24 +46,6 @@ import { getEtapeByDemarcheIdAndEtapeTypeId } from '../../rest/etapes.queries.js
 import { DemarcheId } from 'camino-common/src/demarche.js'
 import { z } from 'zod'
 
-export const statutIdAndDateGet = (etape: ITitreEtape, user: User, depose = false): { date: CaminoDate; statutId: EtapeStatutId } => {
-  const result = { date: etape.date, statutId: etape.statutId }
-
-  if (depose) {
-    if (etape.typeId !== 'mfr') {
-      throw new Error('seules les demandes peuvent être déposées')
-    }
-
-    result.statutId = 'fai'
-    if (isEntreprise(user) || isBureauDEtudes(user)) {
-      result.date = toCaminoDate(new Date())
-    }
-  } else if (etape.typeId === 'mfr' && !etape.statutId) {
-    result.statutId = 'aco'
-  }
-
-  return result
-}
 
 const etape = async ({ id }: { id: EtapeId }, { user }: Context, info: GraphQLResolveInfo) => {
   try {
@@ -97,7 +78,7 @@ const etape = async ({ id }: { id: EtapeId }, { user }: Context, info: GraphQLRe
 
     // Cette route est utilisée que par l’ancienne interface qui permet d’éditer une étape. Graphql permet de récupérer trop de champs si on ne fait pas ça.
     if (
-      !canEditEtape(user, titreEtape.typeId, titreEtape.statutId, titreEtape.titulaireIds ?? [], titreEtape.demarche.titre.administrationsLocales ?? [], titreEtape.demarche.typeId, {
+      !canEditEtape(user, titreEtape.typeId, titreEtape.isBrouillon, titreEtape.titulaireIds ?? [], titreEtape.demarche.titre.administrationsLocales ?? [], titreEtape.demarche.typeId, {
         typeId: titreEtape.demarche.titre.typeId,
         titreStatutId: titreEtape.demarche.titre.titreStatutId,
       })
@@ -213,10 +194,6 @@ const etapeCreer = async ({ etape }: { etape: ITitreEtape & { etapeDocuments: un
 
     if (!titreDemarche || !titreDemarche.titre) throw new Error("le titre n'existe pas")
 
-    const { statutId, date } = statutIdAndDateGet(etape, user!)
-    etape.statutId = statutId
-    etape.date = date
-
     const entrepriseDocuments: EntrepriseDocument[] = await validateAndGetEntrepriseDocuments(context.pool, etape, titreDemarche.titre, user)
     delete etape.entrepriseDocumentIds
 
@@ -266,7 +243,7 @@ const etapeCreer = async ({ etape }: { etape: ITitreEtape & { etapeDocuments: un
       throw new Error(rulesErrors.join(', '))
     }
     if (
-      !canCreateEtape(user, etape.typeId, etape.statutId, titreDemarche.titre.titulaireIds ?? [], titreDemarche.titre.administrationsLocales ?? [], titreDemarche.typeId, {
+      !canCreateEtape(user, etape.typeId, etape.isBrouillon, titreDemarche.titre.titulaireIds ?? [], titreDemarche.titre.administrationsLocales ?? [], titreDemarche.typeId, {
         typeId: titreDemarche.titre.typeId,
         titreStatutId: titreDemarche.titre.titreStatutId ?? TitresStatutIds.Indetermine,
       })
@@ -375,7 +352,7 @@ const etapeModifier = async ({ etape }: { etape: ITitreEtape & { etapeDocuments:
     }
 
     if (
-      !canEditEtape(user, titreEtapeOld.typeId, titreEtapeOld.statutId, titreEtapeOld.titulaireIds ?? [], titreEtapeOld.demarche.titre.administrationsLocales ?? [], titreEtapeOld.demarche.typeId, {
+      !canEditEtape(user, titreEtapeOld.typeId, titreEtapeOld.isBrouillon, titreEtapeOld.titulaireIds ?? [], titreEtapeOld.demarche.titre.administrationsLocales ?? [], titreEtapeOld.demarche.typeId, {
         typeId: titreEtapeOld.demarche.titre.typeId,
         titreStatutId: titreEtapeOld.demarche.titre.titreStatutId,
       })
@@ -404,10 +381,6 @@ const etapeModifier = async ({ etape }: { etape: ITitreEtape & { etapeDocuments:
     if (!titreDemarche || !titreDemarche.titre) throw new Error("le titre n'existe pas")
     if (isNullOrUndefined(titreDemarche.titre.titulaireIds) || isNullOrUndefined(titreDemarche.titre.amodiataireIds)) throw new Error('la démarche n’est pas chargée complètement')
 
-    const { statutId, date } = statutIdAndDateGet(etape, user!)
-    etape.statutId = statutId
-    etape.date = date
-
     const entrepriseDocuments: EntrepriseDocument[] = await validateAndGetEntrepriseDocuments(context.pool, etape, titreDemarche.titre, user)
     delete etape.entrepriseDocumentIds
 
@@ -421,7 +394,7 @@ const etapeModifier = async ({ etape }: { etape: ITitreEtape & { etapeDocuments:
     const etapeDocuments = etapeDocumentsParsed.data
     delete etape.etapeDocuments
 
-    const needToCreateAslAndDae = needAslAndDae({ etapeTypeId: etape.typeId, demarcheTypeId: titreDemarche.typeId, titreTypeId: titreDemarche.titre.typeId }, etape.statutId, user)
+    const needToCreateAslAndDae = needAslAndDae({ etapeTypeId: etape.typeId, demarcheTypeId: titreDemarche.typeId, titreTypeId: titreDemarche.titre.typeId }, etape.isBrouillon, user)
     let daeDocument = null
     let aslDocument = null
     if (needToCreateAslAndDae) {
@@ -504,7 +477,7 @@ const etapeModifier = async ({ etape }: { etape: ITitreEtape & { etapeDocuments:
     if (isNullOrUndefined(etapeUpdated)) {
       throw new Error("Une erreur est survenue lors de la modification de l'étape")
     }
-    await updateEtapeDocuments(context.pool, user, etapeUpdated.id, etapeUpdated.statutId, etapeDocuments)
+    await updateEtapeDocuments(context.pool, user, etapeUpdated.id, etapeUpdated.isBrouillon, etapeDocuments)
     await deleteTitreEtapeEntrepriseDocument(context.pool, { titre_etape_id: etapeUpdated.id })
     for (const document of entrepriseDocuments) {
       await insertTitreEtapeEntrepriseDocument(context.pool, { titre_etape_id: etapeUpdated.id, entreprise_document_id: document.id })
@@ -519,6 +492,7 @@ const etapeModifier = async ({ etape }: { etape: ITitreEtape & { etapeDocuments:
             id: daeEtapeInDb?.etape_id ?? undefined,
             typeId: 'dae',
             statutId: daeDocument.etape_statut_id,
+            isBrouillon: false,
             titreDemarcheId: titreDemarche.id,
             date: daeDocument.date,
             contenu: {
@@ -532,7 +506,7 @@ const etapeModifier = async ({ etape }: { etape: ITitreEtape & { etapeDocuments:
           throw new Error("impossible d'intégrer le document lié à la DAE")
         }
 
-        await updateEtapeDocuments(context.pool, user, daeEtape.id, etape.statutId, [daeDocument])
+        await updateEtapeDocuments(context.pool, user, daeEtape.id, etape.isBrouillon, [daeDocument])
       }
 
       if (aslDocument !== null) {
@@ -543,6 +517,7 @@ const etapeModifier = async ({ etape }: { etape: ITitreEtape & { etapeDocuments:
             id: aslEtapeInDb?.etape_id ?? undefined,
             typeId: 'asl',
             statutId: aslDocument.etape_statut_id,
+            isBrouillon: false,
             titreDemarcheId: titreDemarche.id,
             date: aslDocument.date,
           },
@@ -553,7 +528,7 @@ const etapeModifier = async ({ etape }: { etape: ITitreEtape & { etapeDocuments:
         if (isNullOrUndefined(aslEtape)) {
           throw new Error("impossible d'intégrer le document lié à la ASL")
         }
-        await updateEtapeDocuments(context.pool, user, aslEtape.id, etape.statutId, [aslDocument])
+        await updateEtapeDocuments(context.pool, user, aslEtape.id, etape.isBrouillon, [aslDocument])
       }
     }
 
@@ -594,7 +569,7 @@ const etapeSupprimer = async ({ id }: { id: EtapeId }, { user, pool }: Context) 
     }
 
     if (
-      !canEditEtape(user, titreEtape.typeId, titreEtape.statutId, titreEtape.titulaireIds ?? [], titreEtape.demarche.titre.administrationsLocales ?? [], titreEtape.demarche.typeId, {
+      !canEditEtape(user, titreEtape.typeId, titreEtape.isBrouillon, titreEtape.titulaireIds ?? [], titreEtape.demarche.titre.administrationsLocales ?? [], titreEtape.demarche.typeId, {
         typeId: titreEtape.demarche.titre.typeId,
         titreStatutId: titreEtape.demarche.titre.titreStatutId,
       })

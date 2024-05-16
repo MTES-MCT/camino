@@ -51,6 +51,7 @@ const getEtapesByDemarcheIdDbValidator = z.object({
   geojson_origine_forages: featureCollectionForagesValidator.nullable(),
   titulaire_ids: z.array(entrepriseIdValidator),
   amodiataire_ids: z.array(entrepriseIdValidator),
+  is_brouillon: z.boolean()
 })
 
 export const getEtapesByDemarcheId = async (pool: Pool, demarcheId: DemarcheId) => {
@@ -86,7 +87,8 @@ select
     e.geojson4326_forages,
     e.geojson_origine_forages,
     e.titulaire_ids,
-    e.amodiataire_ids
+    e.amodiataire_ids,
+    e.is_brouillon
 from
     titres_etapes e
 where

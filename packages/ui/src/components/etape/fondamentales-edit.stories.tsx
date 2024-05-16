@@ -16,7 +16,8 @@ export default meta
 const etape: EtapeWithHeritage = {
   id: etapeIdValidator.parse('id'),
   heritageContenu: {},
-  statutId: 'aco',
+  statutId: 'fai',
+  isBrouillon: true,
   typeId: 'mfr',
   contenu: {},
   date: toCaminoDate('2022-02-02'),

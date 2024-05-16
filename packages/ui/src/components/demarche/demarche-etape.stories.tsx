@@ -197,6 +197,7 @@ export const NoSnapshotDemande: StoryFn = () => (
       slug: etapeSlugValidator.parse('etape-slug'),
       etape_type_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeTypeId,
       etape_statut_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeStatutId,
+      is_brouillon: false,
       date,
 
       fondamentale: {
@@ -317,7 +318,7 @@ export const DemandeMultipleEntreprisesDocuments: StoryFn = () => (
       slug: etapeSlugValidator.parse('etape-slug'),
       etape_type_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeTypeId,
       etape_statut_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeStatutId,
-
+      is_brouillon: false,
       date,
       notes: 'Super note',
       fondamentale: {
@@ -381,7 +382,7 @@ export const DemandeNoMap: StoryFn = () => (
       slug: etapeSlugValidator.parse('etape-slug'),
       etape_type_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeTypeId,
       etape_statut_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeStatutId,
-
+      is_brouillon: false,
       date,
       fondamentale: {
         date_debut: toCaminoDate('2023-10-25'),
@@ -426,8 +427,9 @@ export const DemandeNonDeposable: StoryFn = () => (
       id: etapeIdValidator.parse('etapeId'),
       slug: etapeSlugValidator.parse('etape-slug'),
       notes: null,
-      etape_type_id: EtapesTypesEtapesStatuts.demande.EN_CONSTRUCTION.etapeTypeId,
-      etape_statut_id: EtapesTypesEtapesStatuts.demande.EN_CONSTRUCTION.etapeStatutId,
+      etape_type_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeTypeId,
+      etape_statut_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeStatutId,
+      is_brouillon: true,
       date,
 
       fondamentale: {
@@ -495,8 +497,9 @@ export const DemandeArmMecaniseNonDeposable: StoryFn = () => (
       id: etapeIdValidator.parse('etapeId'),
       slug: etapeSlugValidator.parse('etape-slug'),
       notes: null,
-      etape_type_id: EtapesTypesEtapesStatuts.demande.EN_CONSTRUCTION.etapeTypeId,
-      etape_statut_id: EtapesTypesEtapesStatuts.demande.EN_CONSTRUCTION.etapeStatutId,
+      etape_type_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeTypeId,
+      etape_statut_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeStatutId,
+      is_brouillon: true,
       date,
 
       fondamentale: {
@@ -577,8 +580,9 @@ export const DemandeArmMecaniseDeposable: StoryFn = () => (
       id: etapeIdValidator.parse('etapeId'),
       slug: etapeSlugValidator.parse('etape-slug'),
       notes: null,
-      etape_type_id: EtapesTypesEtapesStatuts.demande.EN_CONSTRUCTION.etapeTypeId,
-      etape_statut_id: EtapesTypesEtapesStatuts.demande.EN_CONSTRUCTION.etapeStatutId,
+      etape_type_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeTypeId,
+      etape_statut_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeStatutId,
+      is_brouillon: true,
       date,
 
       fondamentale: {
@@ -663,8 +667,9 @@ export const DemandeArmNonMecaniseDeposable: StoryFn = () => (
       id: etapeIdValidator.parse('etapeId'),
       slug: etapeSlugValidator.parse('etape-slug'),
       notes: null,
-      etape_type_id: EtapesTypesEtapesStatuts.demande.EN_CONSTRUCTION.etapeTypeId,
-      etape_statut_id: EtapesTypesEtapesStatuts.demande.EN_CONSTRUCTION.etapeStatutId,
+      etape_type_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeTypeId,
+      etape_statut_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeStatutId,
+      is_brouillon: true,
       date,
 
       fondamentale: {
@@ -708,6 +713,7 @@ export const Depot: StoryFn = () => (
       notes: null,
       etape_type_id: EtapesTypesEtapesStatuts.depotDeLaDemande.FAIT.etapeTypeId,
       etape_statut_id: EtapesTypesEtapesStatuts.depotDeLaDemande.FAIT.etapeStatutId,
+      is_brouillon: false,
       date,
       sections_with_values: [],
       etape_documents: documents,
@@ -730,6 +736,7 @@ export const AvisDefavorable: StoryFn = () => (
       notes: null,
       etape_type_id: EtapesTypesEtapesStatuts.avisDGTMServiceAmenagementUrbanismeConstructionLogement_AUCL_.DEFAVORABLE.etapeTypeId,
       etape_statut_id: EtapesTypesEtapesStatuts.avisDGTMServiceAmenagementUrbanismeConstructionLogement_AUCL_.DEFAVORABLE.etapeStatutId,
+      is_brouillon: false,
       date,
       sections_with_values: [],
 
@@ -772,8 +779,9 @@ export const DemandeAvecSeulementPerimetre: StoryFn = () => (
       id: etapeIdValidator.parse('etapeId'),
       slug: etapeSlugValidator.parse('etape-slug'),
       notes: null,
-      etape_type_id: EtapesTypesEtapesStatuts.demande.EN_CONSTRUCTION.etapeTypeId,
-      etape_statut_id: EtapesTypesEtapesStatuts.demande.EN_CONSTRUCTION.etapeStatutId,
+      etape_type_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeTypeId,
+      etape_statut_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeStatutId,
+      is_brouillon: true,
       date,
 
       fondamentale: {
@@ -836,8 +844,9 @@ export const DemandeAvecGrosseNote: StoryFn = () => (
       id: etapeIdValidator.parse('etapeId'),
       slug: etapeSlugValidator.parse('etape-slug'),
       notes: 'Ceci est une énorme note sur plusieurs lignes.\n Une seconde ligne.\n Incertitudes: \n * date \n * substances \n * titulaireIds',
-      etape_type_id: EtapesTypesEtapesStatuts.demande.EN_CONSTRUCTION.etapeTypeId,
-      etape_statut_id: EtapesTypesEtapesStatuts.demande.EN_CONSTRUCTION.etapeStatutId,
+      etape_type_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeTypeId,
+      etape_statut_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeStatutId,
+      is_brouillon: true,
       date,
 
       fondamentale: {
@@ -885,6 +894,7 @@ export const AxmDeposableAvecDaeEtAsl: StoryFn = () => (
           etape_documents: [],
           etape_statut_id: 'exe',
           etape_type_id: 'dae',
+          is_brouillon: false,
           notes: null,
           sections_with_values: [],
           ordre: 1,
@@ -897,6 +907,7 @@ export const AxmDeposableAvecDaeEtAsl: StoryFn = () => (
           etape_documents: [],
           etape_statut_id: 'exe',
           etape_type_id: 'asl',
+          is_brouillon: false,
           notes: null,
           sections_with_values: [],
           ordre: 2,
@@ -913,8 +924,9 @@ export const AxmDeposableAvecDaeEtAsl: StoryFn = () => (
       id: etapeIdValidator.parse('etapeId'),
       slug: etapeSlugValidator.parse('etape-slug'),
       notes: '',
-      etape_type_id: EtapesTypesEtapesStatuts.demande.EN_CONSTRUCTION.etapeTypeId,
-      etape_statut_id: EtapesTypesEtapesStatuts.demande.EN_CONSTRUCTION.etapeStatutId,
+      etape_type_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeTypeId,
+      etape_statut_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeStatutId,
+      is_brouillon: true,
       date,
 
       fondamentale: {
@@ -1005,8 +1017,9 @@ export const DemandeAvecForage: StoryFn = () => (
       id: etapeIdValidator.parse('etapeId'),
       slug: etapeSlugValidator.parse('etape-slug'),
       notes: '',
-      etape_type_id: EtapesTypesEtapesStatuts.demande.EN_CONSTRUCTION.etapeTypeId,
-      etape_statut_id: EtapesTypesEtapesStatuts.demande.EN_CONSTRUCTION.etapeStatutId,
+      etape_type_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeTypeId,
+      etape_statut_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeStatutId,
+      is_brouillon: true,
       date,
 
       fondamentale: {

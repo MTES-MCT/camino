@@ -23,7 +23,7 @@ const etapesDatesStatutsBuild = (titreDemarche: ITitreDemarche) => {
   const etapes = titreEtapesSortDescByOrdre(titreDemarche.etapes)
 
   return etapes
-    .filter(e => e.statutId !== 'aco')
+    .filter(e => !e.isBrouillon)
     .reduce((etapesDatesStatuts, etape) => {
       const type = EtapesTypes[etape.typeId]
 

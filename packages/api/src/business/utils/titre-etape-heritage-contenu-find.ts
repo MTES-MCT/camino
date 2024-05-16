@@ -50,7 +50,7 @@ export const heritageContenuFind = (
 }
 
 export const titreEtapeHeritageContenuFind = (
-  titreEtapes: Omit<ITitreEtape, 'titreDemarcheId'>[],
+  titreEtapes: Omit<ITitreEtape, 'titreDemarcheId' | 'isBrouillon'>[],
   titreEtape: Pick<ITitreEtape, 'id' | 'contenu' | 'heritageContenu'>,
   etapeSectionsDictionary: Index<DeepReadonly<Section[]>>
 ) => {

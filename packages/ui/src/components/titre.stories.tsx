@@ -159,6 +159,7 @@ const titre: TitreGet = {
           slug: etapeSlugValidator.parse('etape-slug'),
           etape_type_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeTypeId,
           etape_statut_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeStatutId,
+          is_brouillon: false,
           date,
           ordre: 1,
           fondamentale: {

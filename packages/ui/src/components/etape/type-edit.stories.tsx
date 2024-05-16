@@ -19,7 +19,6 @@ const apiClientMock: Pick<EtapeApiClient, 'getEtapesTypesEtapesStatuts'> = {
   getEtapesTypesEtapesStatuts: () => {
     return Promise.resolve([
       { etapeStatutId: ETAPES_STATUTS.FAIT, etapeTypeId: ETAPES_TYPES.demande, mainStep: false },
-      { etapeStatutId: 'aco', etapeTypeId: ETAPES_TYPES.demande, mainStep: false },
       { etapeStatutId: ETAPES_STATUTS.FAIT, etapeTypeId: 'css', mainStep: false },
       { etapeStatutId: ETAPES_STATUTS.FAIT, etapeTypeId: 'mdp', mainStep: true },
       { etapeStatutId: ETAPES_STATUTS.FAIT, etapeTypeId: 'apd', mainStep: true },
@@ -71,7 +70,7 @@ export const DemandeEnConstruction: StoryFn = () => (
     apiClient={apiClientMock}
     demarcheId={demarcheIdValidator.parse('demarcheID')}
     etape={{
-      statutId: ETAPES_STATUTS.EN_CONSTRUCTION,
+      statutId: ETAPES_STATUTS.FAIT,
       typeId: ETAPES_TYPES.demande,
       date: toCaminoDate('2022-01-01'),
     }}

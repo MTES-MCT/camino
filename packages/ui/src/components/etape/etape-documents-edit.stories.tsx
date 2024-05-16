@@ -65,7 +65,7 @@ export const Empty: StoryFn = () => (
     etapeId={etapeIdValidator.parse('etapeId')}
     sdomZoneIds={[]}
     tde={{ titreTypeId: 'arm', demarcheTypeId: 'oct', etapeTypeId: 'mfr' }}
-    etapeStatutId="fai"
+    isBrouillon={false}
     completeUpdate={completeUpdateAction}
     user={{ ...testBlankUser, role: 'super' }}
   />
@@ -77,7 +77,7 @@ export const Rempli: StoryFn = () => (
     etapeId={etapeIdValidator.parse('etapeId')}
     sdomZoneIds={[]}
     tde={{ titreTypeId: 'arm', demarcheTypeId: 'oct', etapeTypeId: 'mfr' }}
-    etapeStatutId="fai"
+    isBrouillon={false}
     completeUpdate={completeUpdateAction}
     user={{ ...testBlankUser, role: 'super' }}
   />
@@ -134,7 +134,7 @@ export const Complet: StoryFn = () => (
     etapeId={etapeIdValidator.parse('etapeId')}
     sdomZoneIds={[]}
     tde={{ titreTypeId: 'arm', demarcheTypeId: 'oct', etapeTypeId: 'mfr' }}
-    etapeStatutId="fai"
+    isBrouillon={false}
     completeUpdate={completeUpdateAction}
     user={{ ...testBlankUser, role: 'super' }}
   />
@@ -147,7 +147,7 @@ export const ArmMecanise: StoryFn = () => (
     etapeId={etapeIdValidator.parse('etapeId')}
     sdomZoneIds={[]}
     tde={{ titreTypeId: 'arm', demarcheTypeId: 'oct', etapeTypeId: 'mfr' }}
-    etapeStatutId="fai"
+    isBrouillon={false}
     completeUpdate={completeUpdateAction}
     user={{ ...testBlankUser, role: 'super' }}
   />
@@ -166,7 +166,7 @@ export const ArmMecaniseDynamicNoSnapshot: StoryObj<{ mecanise: boolean }> = {
           etapeId={etapeIdValidator.parse('etapeId')}
           sdomZoneIds={[]}
           tde={{ titreTypeId: 'arm', demarcheTypeId: 'oct', etapeTypeId: 'mfr' }}
-          etapeStatutId="fai"
+          isBrouillon={false}
           completeUpdate={completeUpdateAction}
           user={{ ...testBlankUser, role: 'super' }}
         />
@@ -185,7 +185,7 @@ export const EnConstruction: StoryFn = () => (
     etapeId={etapeIdValidator.parse('etapeId')}
     sdomZoneIds={[]}
     tde={{ titreTypeId: 'arm', demarcheTypeId: 'oct', etapeTypeId: 'mfr' }}
-    etapeStatutId="aco"
+    isBrouillon={true}
     completeUpdate={completeUpdateAction}
     user={{ ...testBlankUser, role: 'super' }}
   />
@@ -197,7 +197,7 @@ export const OctroiAxmUtilisateurSuper: StoryFn = () => (
     etapeId={etapeIdValidator.parse('etapeId')}
     sdomZoneIds={[]}
     tde={{ titreTypeId: 'axm', demarcheTypeId: 'oct', etapeTypeId: 'mfr' }}
-    etapeStatutId="aco"
+    isBrouillon={false}
     completeUpdate={completeUpdateAction}
     user={{ ...testBlankUser, role: 'super' }}
   />
@@ -210,7 +210,7 @@ export const OctroiAxmUtilisateurEntreprise: StoryFn = () => (
     etapeId={etapeIdValidator.parse('etapeId')}
     sdomZoneIds={[]}
     tde={{ titreTypeId: 'axm', demarcheTypeId: 'oct', etapeTypeId: 'mfr' }}
-    etapeStatutId="aco"
+    isBrouillon={false}
     completeUpdate={completeUpdateAction}
     user={{ ...testBlankUser, role: 'entreprise', entreprises: [{ id: entrepriseIdValidator.parse('idEntreprise1'), nom: 'entreprise 1' }] }}
   />
@@ -287,7 +287,7 @@ export const OctroiAxmUtilisateurEntrepriseComplet: StoryFn = () => (
     etapeId={etapeIdValidator.parse('etapeId')}
     sdomZoneIds={[]}
     tde={{ titreTypeId: 'axm', demarcheTypeId: 'oct', etapeTypeId: 'mfr' }}
-    etapeStatutId="aco"
+    isBrouillon={true}
     completeUpdate={completeUpdateAction}
     user={{ ...testBlankUser, role: 'entreprise', entreprises: [{ id: entrepriseIdValidator.parse('idEntreprise1'), nom: 'entreprise 1' }] }}
   />
@@ -300,7 +300,7 @@ export const SdomZone: StoryFn = () => (
     etapeId={etapeIdValidator.parse('etapeId')}
     sdomZoneIds={['1', '2']}
     tde={{ titreTypeId: 'axm', demarcheTypeId: 'oct', etapeTypeId: 'mfr' }}
-    etapeStatutId="fai"
+    isBrouillon={false}
     completeUpdate={completeUpdateAction}
     user={{ ...testBlankUser, role: 'super' }}
   />
@@ -313,7 +313,7 @@ export const PasDeDocumentsObligatoires: StoryFn = () => (
     etapeId={etapeIdValidator.parse('etapeId')}
     sdomZoneIds={['1', '2']}
     tde={{ titreTypeId: 'prm', demarcheTypeId: 'pro', etapeTypeId: 'mfr' }}
-    etapeStatutId="fai"
+    isBrouillon={false}
     completeUpdate={completeUpdateAction}
     user={{ ...testBlankUser, role: 'super' }}
   />
@@ -326,7 +326,7 @@ export const Loading: StoryFn = () => (
     etapeId={etapeIdValidator.parse('etapeId')}
     sdomZoneIds={[]}
     tde={{ titreTypeId: 'arm', demarcheTypeId: 'oct', etapeTypeId: 'mfr' }}
-    etapeStatutId="fai"
+    isBrouillon={false}
     completeUpdate={completeUpdateAction}
     user={{ ...testBlankUser, role: 'super' }}
   />
@@ -338,7 +338,7 @@ export const WithError: StoryFn = () => (
     etapeId={etapeIdValidator.parse('etapeId')}
     sdomZoneIds={[]}
     tde={{ titreTypeId: 'arm', demarcheTypeId: 'oct', etapeTypeId: 'mfr' }}
-    etapeStatutId="fai"
+    isBrouillon={false}
     completeUpdate={completeUpdateAction}
     user={{ ...testBlankUser, role: 'super' }}
   />

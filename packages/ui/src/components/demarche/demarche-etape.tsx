@@ -112,11 +112,11 @@ export const DemarcheEtape = defineComponent<Props>(props => {
   const canDownloadZip = computed<boolean>(() => props.etape.entreprises_documents.length + props.etape.etape_documents.length > 1)
 
   const canEditOrDeleteEtape = computed<boolean>(() =>
-    canEditEtape(props.user, props.etape.etape_type_id, props.etape.etape_statut_id, props.demarche.titulaireIds, props.demarche.administrationsLocales, props.demarche.demarche_type_id, props.titre)
+    canEditEtape(props.user, props.etape.etape_type_id, props.etape.is_brouillon, props.demarche.titulaireIds, props.demarche.administrationsLocales, props.demarche.demarche_type_id, props.titre)
   )
 
   const daeDocument = computed<GetEtapeDocumentsByEtapeId['dae']>(() => {
-    if (needAslAndDae({ etapeTypeId: props.etape.etape_type_id, demarcheTypeId: props.demarche.demarche_type_id, titreTypeId: props.titre.typeId }, props.etape.etape_statut_id, props.user)) {
+    if (needAslAndDae({ etapeTypeId: props.etape.etape_type_id, demarcheTypeId: props.demarche.demarche_type_id, titreTypeId: props.titre.typeId }, props.etape.is_brouillon, props.user)) {
       const daeEtape = props.demarche.etapes.find(({ etape_type_id }) => etape_type_id === 'dae')
       if (isNotNullNorUndefined(daeEtape)) {
         return {
@@ -136,7 +136,7 @@ export const DemarcheEtape = defineComponent<Props>(props => {
   })
 
   const aslDocument = computed<GetEtapeDocumentsByEtapeId['asl']>(() => {
-    if (needAslAndDae({ etapeTypeId: props.etape.etape_type_id, demarcheTypeId: props.demarche.demarche_type_id, titreTypeId: props.titre.typeId }, props.etape.etape_statut_id, props.user)) {
+    if (needAslAndDae({ etapeTypeId: props.etape.etape_type_id, demarcheTypeId: props.demarche.demarche_type_id, titreTypeId: props.titre.typeId }, props.etape.is_brouillon, props.user)) {
       const aslEtape = props.demarche.etapes.find(({ etape_type_id }) => etape_type_id === 'asl')
       if (isNotNullNorUndefined(aslEtape)) {
         return {
@@ -161,8 +161,8 @@ export const DemarcheEtape = defineComponent<Props>(props => {
           { typeId: props.titre.typeId, titreStatutId: props.titre.titreStatutId, titulaires: props.demarche.titulaireIds, administrationsLocales: props.demarche.administrationsLocales },
           props.demarche.demarche_type_id,
           {
-            statutId: props.etape.etape_statut_id,
             typeId: props.etape.etape_type_id,
+            isBrouillon: props.etape.is_brouillon,
             sectionsWithValue: props.etape.sections_with_values,
             substances: props.etape.fondamentale.substances,
             duree: props.etape.fondamentale.duree,
@@ -188,7 +188,8 @@ export const DemarcheEtape = defineComponent<Props>(props => {
           <div style={{ display: 'flex' }}>
             {canEditOrDeleteEtape.value ? (
               <>
-                {props.etape.etape_type_id === ETAPES_TYPES.demande && props.etape.etape_statut_id === ETAPES_STATUTS.EN_CONSTRUCTION ? (
+                /* TODO 2024-05-16: retirer la condition 'est une demande' pour ne conserver que 'est un brouillon' */
+                {props.etape.etape_type_id === ETAPES_TYPES.demande && props.etape.is_brouillon ? (
                   <DsfrButton class="fr-mr-1v" buttonType="primary" label="Déposer" title="Déposer la demande" onClick={deposePopupOpen} disabled={!isDeposable.value} />
                 ) : null}
                 <DsfrLink
@@ -216,6 +217,7 @@ export const DemarcheEtape = defineComponent<Props>(props => {
           </div>
         </div>
 
+        {/* FIXME je pense qu’il ne faut pas afficher le statut si on est en brouillon et mettre un truc pour dire que c’est un brouillon */}
         {displayEtapeStatus(props.etape.etape_type_id, props.etape.etape_statut_id) ? <EtapeStatut etapeStatutId={props.etape.etape_statut_id} /> : null}
         <div class="fr-mt-1w">
           <DsfrIcon name="fr-icon-calendar-line" color="text-title-blue-france" /> {dateFormat(props.etape.date)}

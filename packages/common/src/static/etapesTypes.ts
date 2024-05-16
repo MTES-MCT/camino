@@ -1899,4 +1899,9 @@ const ETAPES_DECISIONS_IDS = [
   ETAPES_TYPES.avenantALautorisationDeRechercheMiniere,
 ] as const satisfies Readonly<EtapeTypeId[]>
 
+const ETAPES_BROUILLONS_IDS = [
+  ETAPES_TYPES.demande
+] as const satisfies Readonly<EtapeTypeId[]>
+
 export const isEtapeDecision = (etapeTypeId: EtapeTypeId): boolean => ETAPES_DECISIONS_IDS.includes(etapeTypeId)
+export const canBeBrouillon = (etapeTypeId: EtapeTypeId): boolean => ETAPES_BROUILLONS_IDS.includes(etapeTypeId)

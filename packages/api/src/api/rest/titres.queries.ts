@@ -84,6 +84,7 @@ export const getTitre = async (pool: Pool, user: User, idOrSlug: TitreIdOrSlug):
           id: etape.id,
           slug: etape.slug,
           etape_statut_id: etape.etape_statut_id,
+          is_brouillon: etape.is_brouillon,
           sections_with_values: contenu,
           entreprises_documents: entrepriseDocuments,
         }
