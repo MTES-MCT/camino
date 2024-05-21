@@ -15,7 +15,7 @@ import { titreDemarcheUpdatedEtatValidate } from '../../../business/validations/
 import { titreEtapeFormat } from '../../_format/titres-etapes.js'
 import { userSuper } from '../../../database/user-super.js'
 import { titreEtapeAdministrationsEmailsSend, titreEtapeUtilisateursEmailsSend } from './_titre-etape-email.js'
-import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
+import { EtapeTypeId, canBeBrouillon } from 'camino-common/src/static/etapesTypes.js'
 import { isNonEmptyArray, isNotNullNorUndefined, isNullOrUndefined, onlyUnique } from 'camino-common/src/typescript-tools.js'
 import { User } from 'camino-common/src/roles.js'
 import { CaminoDate } from 'camino-common/src/date.js'
@@ -23,12 +23,12 @@ import { titreEtapeFormatFields } from '../../_format/_fields.js'
 import { canCreateEtape, canEditDates, canEditDuree, canEditEtape } from 'camino-common/src/permissions/titres-etapes.js'
 import { TitresStatutIds } from 'camino-common/src/static/titresStatuts.js'
 import {
-    EtapeId,
-    documentComplementaireAslEtapeDocumentModificationValidator,
-    documentComplementaireDaeEtapeDocumentModificationValidator,
-    etapeDocumentModificationValidator,
-    needAslAndDae,
-    tempEtapeDocumentValidator,
+  EtapeId,
+  documentComplementaireAslEtapeDocumentModificationValidator,
+  documentComplementaireDaeEtapeDocumentModificationValidator,
+  etapeDocumentModificationValidator,
+  needAslAndDae,
+  tempEtapeDocumentValidator,
 } from 'camino-common/src/etape.js'
 import { checkEntreprisesExist, getEntrepriseDocuments } from '../../rest/entreprises.queries.js'
 import { deleteTitreEtapeEntrepriseDocument, insertEtapeDocuments, insertTitreEtapeEntrepriseDocument, updateEtapeDocuments } from '../../../database/queries/titres-etapes.queries.js'
@@ -46,8 +46,7 @@ import { getEtapeByDemarcheIdAndEtapeTypeId } from '../../rest/etapes.queries.js
 import { DemarcheId } from 'camino-common/src/demarche.js'
 import { z } from 'zod'
 
-
-const etape = async ({ id }: { id: EtapeId }, { user }: Context, info: GraphQLResolveInfo) => {
+export const etape = async ({ id }: { id: EtapeId }, { user }: Context, info: GraphQLResolveInfo) => {
   try {
     const fields: FieldsEtape = fieldsBuild(info)
 
@@ -105,7 +104,7 @@ const etape = async ({ id }: { id: EtapeId }, { user }: Context, info: GraphQLRe
   }
 }
 
-const etapeHeritage = async ({ date, titreDemarcheId, typeId, etapeId }: { date: CaminoDate; titreDemarcheId: DemarcheId; typeId: EtapeTypeId; etapeId: EtapeId | null }, { user }: Context) => {
+export const etapeHeritage = async ({ date, titreDemarcheId, typeId, etapeId }: { date: CaminoDate; titreDemarcheId: DemarcheId; typeId: EtapeTypeId; etapeId: EtapeId | null }, { user }: Context) => {
   try {
     let titreDemarche = await titreDemarcheGet(titreDemarcheId, { fields: {} }, user)
 
@@ -165,7 +164,7 @@ const getForagesProperties = async (
   }
 }
 
-const etapeCreer = async ({ etape }: { etape: ITitreEtape & { etapeDocuments: unknown } }, context: Context, info: GraphQLResolveInfo) => {
+export const etapeCreer = async ({ etape }: { etape: Omit<ITitreEtape, 'isBrouillon'> & { etapeDocuments: unknown } }, context: Context, info: GraphQLResolveInfo) => {
   try {
     const user = context.user
     if (!user) {
@@ -236,14 +235,18 @@ const etapeCreer = async ({ etape }: { etape: ITitreEtape & { etapeDocuments: un
       throw new Error(`le type du titre de la ${titreDemarche.id} n'est pas chargé`)
     }
 
-    etape = { ...etape, ...(await getForagesProperties(titreTypeId, etape.geojsonOrigineGeoSystemeId, etape.geojsonOrigineForages, context.pool)) }
+    const etapeToSave: ITitreEtape = {
+      ...etape,
+      isBrouillon: canBeBrouillon(etape.typeId),
+      ...(await getForagesProperties(titreTypeId, etape.geojsonOrigineGeoSystemeId, etape.geojsonOrigineForages, context.pool)),
+    }
 
-    const rulesErrors = titreEtapeUpdationValidate(etape, titreDemarche, titreDemarche.titre, etapeDocuments, entrepriseDocuments, sdomZones, user, null, null)
+    const rulesErrors = titreEtapeUpdationValidate(etapeToSave, titreDemarche, titreDemarche.titre, etapeDocuments, entrepriseDocuments, sdomZones, user, null, null)
     if (rulesErrors.length) {
       throw new Error(rulesErrors.join(', '))
     }
     if (
-      !canCreateEtape(user, etape.typeId, etape.isBrouillon, titreDemarche.titre.titulaireIds ?? [], titreDemarche.titre.administrationsLocales ?? [], titreDemarche.typeId, {
+      !canCreateEtape(user, etape.typeId, etapeToSave.isBrouillon, titreDemarche.titre.titulaireIds ?? [], titreDemarche.titre.administrationsLocales ?? [], titreDemarche.typeId, {
         typeId: titreDemarche.titre.typeId,
         titreStatutId: titreDemarche.titre.titreStatutId ?? TitresStatutIds.Indetermine,
       })
@@ -264,7 +267,7 @@ const etapeCreer = async ({ etape }: { etape: ITitreEtape & { etapeDocuments: un
       etape.dateFin = null
     }
 
-    let etapeUpdated: ITitreEtape | undefined = await titreEtapeUpsert(etape, user!, titreDemarche.titreId)
+    let etapeUpdated: ITitreEtape | undefined = await titreEtapeUpsert(etapeToSave, user!, titreDemarche.titreId)
     if (isNullOrUndefined(etapeUpdated)) {
       throw new Error("Une erreur est survenue lors de la création de l'étape")
     }
@@ -328,7 +331,11 @@ const validateAndGetEntrepriseDocuments = async (
   return entrepriseDocuments
 }
 
-const etapeModifier = async ({ etape }: { etape: ITitreEtape & { etapeDocuments: unknown; daeDocument: unknown; aslDocument: unknown } }, context: Context, info: GraphQLResolveInfo) => {
+export const etapeModifier = async (
+  { etape }: { etape: Omit<ITitreEtape, 'isBrouillon'> & { etapeDocuments: unknown; daeDocument: unknown; aslDocument: unknown } },
+  context: Context,
+  info: GraphQLResolveInfo
+) => {
   try {
     const user = context.user
     if (!user) {
@@ -394,7 +401,7 @@ const etapeModifier = async ({ etape }: { etape: ITitreEtape & { etapeDocuments:
     const etapeDocuments = etapeDocumentsParsed.data
     delete etape.etapeDocuments
 
-    const needToCreateAslAndDae = needAslAndDae({ etapeTypeId: etape.typeId, demarcheTypeId: titreDemarche.typeId, titreTypeId: titreDemarche.titre.typeId }, etape.isBrouillon, user)
+    const needToCreateAslAndDae = needAslAndDae({ etapeTypeId: etape.typeId, demarcheTypeId: titreDemarche.typeId, titreTypeId: titreDemarche.titre.typeId }, titreEtapeOld.isBrouillon, user)
     let daeDocument = null
     let aslDocument = null
     if (needToCreateAslAndDae) {
@@ -451,10 +458,13 @@ const etapeModifier = async ({ etape }: { etape: ITitreEtape & { etapeDocuments:
     if (!titreTypeId) {
       throw new Error(`le type du titre de la ${titreDemarche.id} n'est pas chargé`)
     }
+    const etapeToSave: ITitreEtape = {
+      ...etape,
+      isBrouillon: titreEtapeOld.isBrouillon,
+      ...(await getForagesProperties(titreTypeId, etape.geojsonOrigineGeoSystemeId, etape.geojsonOrigineForages, context.pool)),
+    }
 
-    etape = { ...etape, ...(await getForagesProperties(titreTypeId, etape.geojsonOrigineGeoSystemeId, etape.geojsonOrigineForages, context.pool)) }
-
-    const rulesErrors = titreEtapeUpdationValidate(etape, titreDemarche, titreDemarche.titre, etapeDocuments, entrepriseDocuments, sdomZones, user, daeDocument, aslDocument, titreEtapeOld)
+    const rulesErrors = titreEtapeUpdationValidate(etapeToSave, titreDemarche, titreDemarche.titre, etapeDocuments, entrepriseDocuments, sdomZones, user, daeDocument, aslDocument, titreEtapeOld)
 
     if (rulesErrors.length) {
       throw new Error(rulesErrors.join(', '))
@@ -473,7 +483,7 @@ const etapeModifier = async ({ etape }: { etape: ITitreEtape & { etapeDocuments:
       throw new Error("certaines entreprises n'existent pas")
     }
 
-    let etapeUpdated: ITitreEtape | undefined = await titreEtapeUpsert(etape, user!, titreDemarche.titreId)
+    let etapeUpdated: ITitreEtape | undefined = await titreEtapeUpsert(etapeToSave, user!, titreDemarche.titreId)
     if (isNullOrUndefined(etapeUpdated)) {
       throw new Error("Une erreur est survenue lors de la modification de l'étape")
     }
@@ -506,7 +516,7 @@ const etapeModifier = async ({ etape }: { etape: ITitreEtape & { etapeDocuments:
           throw new Error("impossible d'intégrer le document lié à la DAE")
         }
 
-        await updateEtapeDocuments(context.pool, user, daeEtape.id, etape.isBrouillon, [daeDocument])
+        await updateEtapeDocuments(context.pool, user, daeEtape.id, titreEtapeOld.isBrouillon, [daeDocument])
       }
 
       if (aslDocument !== null) {
@@ -528,13 +538,13 @@ const etapeModifier = async ({ etape }: { etape: ITitreEtape & { etapeDocuments:
         if (isNullOrUndefined(aslEtape)) {
           throw new Error("impossible d'intégrer le document lié à la ASL")
         }
-        await updateEtapeDocuments(context.pool, user, aslEtape.id, etape.isBrouillon, [aslDocument])
+        await updateEtapeDocuments(context.pool, user, aslEtape.id, titreEtapeOld.isBrouillon, [aslDocument])
       }
     }
 
     await titreEtapeUpdateTask(context.pool, etapeUpdated.id, etapeUpdated.titreDemarcheId, user)
 
-    await titreEtapeAdministrationsEmailsSend(etape, titreDemarche.typeId, titreDemarche.titreId, titreDemarche.titre.typeId, user, titreEtapeOld)
+    await titreEtapeAdministrationsEmailsSend(etapeToSave, titreDemarche.typeId, titreDemarche.titreId, titreDemarche.titre.typeId, user, titreEtapeOld)
 
     const fields = fieldsBuild(info)
     etapeUpdated = await titreEtapeGet(etapeUpdated.id, { fields }, user)
@@ -547,7 +557,7 @@ const etapeModifier = async ({ etape }: { etape: ITitreEtape & { etapeDocuments:
   }
 }
 
-const etapeSupprimer = async ({ id }: { id: EtapeId }, { user, pool }: Context) => {
+export const etapeSupprimer = async ({ id }: { id: EtapeId }, { user, pool }: Context) => {
   try {
     if (!user) {
       throw new Error("l'étape n'existe pas")
@@ -593,7 +603,7 @@ const etapeSupprimer = async ({ id }: { id: EtapeId }, { user, pool }: Context) 
 
     if (!titreDemarche.titre) throw new Error("le titre n'existe pas")
 
-    const rulesErrors = titreDemarcheUpdatedEtatValidate(titreDemarche.typeId, titreDemarche.titre, titreEtape, titreDemarche.id, titreDemarche.etapes!, true)
+    const rulesErrors = titreDemarcheUpdatedEtatValidate(titreDemarche.typeId, titreDemarche.titre, titreEtape, titreDemarche.id, titreDemarche.etapes, true)
 
     if (rulesErrors.length) {
       throw new Error(rulesErrors.join(', '))
@@ -611,5 +621,3 @@ const etapeSupprimer = async ({ id }: { id: EtapeId }, { user, pool }: Context) 
     throw e
   }
 }
-
-export { etape, etapeHeritage, etapeCreer, etapeModifier, etapeSupprimer }

@@ -42,9 +42,11 @@ const writePhasesForTest = async () => {
       date: CaminoDate
       duree: number | null
       statut_id: EtapeStatutId
+      is_brouillon: boolean
       geojson4326_perimetre: NonNullable<unknown> | null
     }[]
-  } = await knex.raw(`select te.titre_demarche_id, te.ordre, te.type_id as etape_type_id, te.date_fin, te.date_debut, te.date, te.duree, te.statut_id, te.geojson4326_perimetre from titres_etapes te
+  } =
+    await knex.raw(`select te.titre_demarche_id, te.ordre, te.type_id as etape_type_id, te.date_fin, te.date_debut, te.date, te.duree, te.statut_id, te.geojson4326_perimetre, te.is_brouillon from titres_etapes te
     where te.archive is false
     group by te.id`)
 
@@ -75,6 +77,7 @@ const writePhasesForTest = async () => {
         dateDebut: etapeDb.date_debut,
         date: etapeDb.date,
         statutId: etapeDb.statut_id,
+        isBrouillon: etapeDb.is_brouillon,
         geojson4326Perimetre: isNotNullNorUndefined(etapeDb.geojson4326_perimetre)
           ? {
               type: 'Feature',

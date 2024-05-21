@@ -79,3 +79,10 @@ const ETAPES_STATUTS_OK_IDS = [
 ] as const satisfies Readonly<EtapeStatutId[]>
 
 export const isEtapeStatusOk = (etapeStatutId: EtapeStatutId): boolean => ETAPES_STATUTS_OK_IDS.includes(etapeStatutId)
+
+const EtapesFondamentalesStatutsOkIds = [
+  ETAPES_STATUTS.ACCEPTE,
+  ETAPES_STATUTS.FAIT,
+  ETAPES_STATUTS.FAVORABLE,
+]
+export const isFondamentalesStatutOk = (etapeStatutId: EtapeStatutId): boolean => EtapesFondamentalesStatutsOkIds.includes(etapeStatutId)

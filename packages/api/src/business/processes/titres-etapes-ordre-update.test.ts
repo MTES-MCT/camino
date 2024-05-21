@@ -1,26 +1,51 @@
 import { titresEtapesOrdreUpdateVisibleForTesting } from './titres-etapes-ordre-update.js'
 import { titreEtapeUpdate } from '../../database/queries/titres-etapes.js'
 
-import TitresDemarches from '../../database/models/titres-demarches.js'
 import { userSuper } from '../../database/user-super.js'
 import { vi, afterEach, describe, expect, test } from 'vitest'
-import { newEtapeId } from '../../database/models/_format/id-create.js'
+import { newDemarcheId, newEtapeId } from '../../database/models/_format/id-create.js'
+import { caminoDateValidator } from 'camino-common/src/date.js'
+import { DemarcheId } from 'camino-common/src/demarche.js'
+import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes.js'
+import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
+import { TitreId, titreIdValidator } from 'camino-common/src/validators/titres.js'
+import { TitreEtapeForMachine } from '../rules-demarches/machine-common.js'
 vi.mock('../../database/queries/titres-etapes', () => ({
   titreEtapeUpdate: vi.fn().mockResolvedValue(true),
 }))
 
-const titresDemarchesEtapes = {
-  '': {
+const demarcheId = newDemarcheId()
+const titresDemarchesEtapes: {
+  [key: DemarcheId]: {
+    etapes: TitreEtapeForMachine[]
+    id: DemarcheId
+    typeId: DemarcheTypeId
+    titreTypeId: TitreTypeId
+    titreId: TitreId
+  }
+} = {
+  [demarcheId]: {
+    id: demarcheId,
+    typeId: 'amo',
+    titreTypeId: 'apc',
+    titreId: titreIdValidator.parse('titreId'),
     etapes: [
-      { id: newEtapeId(), ordre: 1, date: '1988-03-06', typeId: 'aac', statutId: 'acc', surface: 0, communes: null },
-      { id: newEtapeId(), ordre: 1, date: '1988-03-08', typeId: 'aac', statutId: 'acc', surface: 0, communes: null },
+      { id: newEtapeId(), ordre: 1, date: caminoDateValidator.parse('1988-03-06'), typeId: 'aac', statutId: 'acc', isBrouillon: false, surface: 0, communes: null },
+      { id: newEtapeId(), ordre: 1, date: caminoDateValidator.parse('1988-03-08'), typeId: 'aac', statutId: 'acc', isBrouillon: false, surface: 0, communes: null },
     ],
-    titre: null,
-  } as TitresDemarches,
+  },
 }
 
-const titresDemarchesEtapesVides = {
-  '': { etapes: [], titre: { typeId: '' } } as unknown as TitresDemarches,
+const titresDemarchesEtapesVides: {
+  [key: DemarcheId]: {
+    etapes: TitreEtapeForMachine[]
+    id: DemarcheId
+    typeId: DemarcheTypeId
+    titreTypeId: TitreTypeId
+    titreId: TitreId
+  }
+} = {
+  [demarcheId]: { id: demarcheId, typeId: 'amo', titreTypeId: 'apc', titreId: titreIdValidator.parse('titreId'), etapes: [] },
 }
 
 console.info = vi.fn()

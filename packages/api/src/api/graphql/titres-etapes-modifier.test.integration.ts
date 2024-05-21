@@ -12,7 +12,7 @@ import { toCaminoDate } from 'camino-common/src/date.js'
 import { afterAll, beforeEach, beforeAll, describe, test, expect, vi } from 'vitest'
 import type { Pool } from 'pg'
 import { ETAPE_HERITAGE_PROPS } from 'camino-common/src/heritage.js'
-import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
+import { EtapeTypeId, canBeBrouillon } from 'camino-common/src/static/etapesTypes.js'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
 import { idGenerate } from '../../database/models/_format/id-create.js'
 import { copyFileSync, mkdirSync } from 'fs'
@@ -61,13 +61,15 @@ async function etapeCreate(typeId?: EtapeTypeId) {
     typeId: 'oct',
   })
 
+  const myTypeId = isNotNullNorUndefined(typeId) ? typeId : 'mfr'
   const titreEtape = await titreEtapeCreate(
     {
-      typeId: isNotNullNorUndefined(typeId) ? typeId : 'mfr',
+      typeId: myTypeId,
       statutId: 'fai',
       ordre: 1,
       titreDemarcheId: titreDemarche.id,
       date: toCaminoDate('2018-01-01'),
+      isBrouillon: canBeBrouillon(myTypeId),
     },
     userSuper,
     titre.id
@@ -117,7 +119,7 @@ describe('etapeModifier', () => {
     expect(res.body.errors[0].message).toBe("l'étape n'existe pas")
   })
 
-  test('peut modifier une étape mfr avec un statut aco (utilisateur super)', async () => {
+  test('peut modifier une étape mfr en brouillon (utilisateur super)', async () => {
     const { titreDemarcheId, titreEtapeId } = await etapeCreate()
     const res = await graphQLCall(
       dbPool,
@@ -126,7 +128,7 @@ describe('etapeModifier', () => {
         etape: {
           id: titreEtapeId,
           typeId: 'mfr',
-          statutId: 'aco',
+          statutId: 'fai',
           titreDemarcheId,
           date: '2018-01-01',
           heritageProps: ETAPE_HERITAGE_PROPS.reduce(
@@ -166,7 +168,7 @@ describe('etapeModifier', () => {
         etape: {
           id: titreEtapeId,
           typeId: 'mfr',
-          statutId: 'aco',
+          statutId: 'fai',
           titulaireIds: ['inexistant'],
           titreDemarcheId,
           date: '2018-01-01',
@@ -198,7 +200,7 @@ describe('etapeModifier', () => {
     expect(res.body.errors[0].message).toBe("certaines entreprises n'existent pas")
   })
 
-  test("peut supprimer un document d'une demande en construction (utilisateur super)", async () => {
+  test("peut supprimer un document d'une demande en brouillon (utilisateur super)", async () => {
     const { titreDemarcheId, titreEtapeId } = await etapeCreate()
 
     const documentToInsert = testDocumentCreateTemp('aac')
@@ -206,7 +208,7 @@ describe('etapeModifier', () => {
     const etape = {
       id: titreEtapeId,
       typeId: 'mfr',
-      statutId: 'aco',
+      statutId: 'fai',
       titreDemarcheId,
       date: '2018-01-01',
       heritageProps: ETAPE_HERITAGE_PROPS.reduce(
@@ -255,7 +257,7 @@ describe('etapeModifier', () => {
     expect(res.body.errors).toBe(undefined)
   })
 
-  test("ne peut pas supprimer un document obligatoire d'une étape qui n'est pas en construction (utilisateur super)", async () => {
+  test("ne peut pas supprimer un document obligatoire d'une étape qui n'est pas en brouillon (utilisateur super)", async () => {
     const { titreDemarcheId, titreEtapeId } = await etapeCreate('dae')
     const dir = `${process.cwd()}/files/tmp/`
 

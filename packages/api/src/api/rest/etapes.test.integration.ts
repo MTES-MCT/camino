@@ -43,7 +43,7 @@ test('getEtapesTypesEtapesStatusWithMainStep', async () => {
   expect(tested.body).toMatchInlineSnapshot(`
     [
       {
-        "etapeStatutId": "aco",
+        "etapeStatutId": "fai",
         "etapeTypeId": "mfr",
         "mainStep": true,
       },
@@ -53,37 +53,12 @@ test('getEtapesTypesEtapesStatusWithMainStep', async () => {
         "mainStep": true,
       },
       {
-        "etapeStatutId": "aco",
-        "etapeTypeId": "mfr",
-        "mainStep": true,
-      },
-      {
         "etapeStatutId": "fai",
         "etapeTypeId": "mfr",
         "mainStep": true,
       },
       {
-        "etapeStatutId": "aco",
-        "etapeTypeId": "mfr",
-        "mainStep": true,
-      },
-      {
         "etapeStatutId": "fai",
-        "etapeTypeId": "mfr",
-        "mainStep": true,
-      },
-      {
-        "etapeStatutId": "aco",
-        "etapeTypeId": "mfr",
-        "mainStep": true,
-      },
-      {
-        "etapeStatutId": "fai",
-        "etapeTypeId": "mfr",
-        "mainStep": true,
-      },
-      {
-        "etapeStatutId": "aco",
         "etapeTypeId": "mfr",
         "mainStep": true,
       },

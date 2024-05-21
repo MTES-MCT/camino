@@ -11,6 +11,7 @@ import { PaysId } from 'camino-common/src/static/pays.js'
 import { communeIdValidator } from 'camino-common/src/static/communes.js'
 import { z } from 'zod'
 import { etapeIdValidator } from 'camino-common/src/etape.js'
+import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools.js'
 export interface Etape {
   // TODO 2022-07-28 : ceci pourrait être réduit en utilisant les états de 'trad'
   etapeTypeId: EtapeTypeId
@@ -36,6 +37,7 @@ export const titreEtapeForMachineValidator = z.object({
   heritageContenu: z.any().nullable(),
   communes: z.array(z.object({ id: communeIdValidator })).nullable(),
   surface: z.number().nullable(),
+  isBrouillon: z.boolean(),
 })
 
 export type TitreEtapeForMachine = z.infer<typeof titreEtapeForMachineValidator>
@@ -44,6 +46,7 @@ export const toMachineEtapes = (etapes: (Pick<Partial<TitreEtapeForMachine>, 'or
   // TODO 2022-10-12 si on appelle titreEtapesSortAscByOrdre on se retrouve avec une grosse dépendance cyclique
   return etapes
     .slice()
+    .filter(dbEtape => !dbEtape.isBrouillon)
     .sort((a, b) => a.ordre! - b.ordre!)
     .map(dbEtape => toMachineEtape(dbEtape))
 }
@@ -68,10 +71,10 @@ const toMachineEtape = (dbEtape: Omit<TitreEtapeForMachine, 'id' | 'ordre'>): Et
     etapeTypeId: typeId,
     etapeStatutId: statutId,
   }
-  if (dbEtape.contenu) {
+  if (isNotNullNorUndefined(dbEtape.contenu)) {
     machineEtape.contenu = dbEtape.contenu
   }
-  if (dbEtape.communes?.length) {
+  if (isNotNullNorUndefinedNorEmpty(dbEtape.communes)) {
     machineEtape.paysId = Regions[Departements[toDepartementId(dbEtape.communes[0].id)].regionId].paysId
   }
   if (dbEtape.surface !== null) {

@@ -829,7 +829,7 @@ export const AxmEnZoneDuSdom: StoryFn = () => (
           slug: etapeSlugValidator.parse('etape-slug'),
           typeId: 'mfr',
           statutId: 'fai',
-          isBrouillon: false,
+          isBrouillon: true,
           titreDemarcheId: demarcheIdValidator.parse('demarche-id'),
           date: caminoDateValidator.parse('2023-02-01'),
           dateDebut: null,

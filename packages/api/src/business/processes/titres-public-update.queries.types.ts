@@ -1,24 +1,12 @@
 /** Types generated for queries found in "src/business/processes/titres-public-update.queries.ts" */
 
-/** 'GetTitrePublicUpdateDataDb' parameters type */
-export interface IGetTitrePublicUpdateDataDbParams {
-  titreIds: readonly (string | null | void)[];
-}
+/** Query 'GetTitrePublicUpdateDataDb' is invalid, so its result is assigned type 'never'.
+ *  */
+export type IGetTitrePublicUpdateDataDbResult = never;
 
-/** 'GetTitrePublicUpdateDataDb' return type */
-export interface IGetTitrePublicUpdateDataDbResult {
-  has_demarche_public: boolean;
-  id: string;
-  public_lecture: boolean;
-  titre_statut_id: string;
-  titre_type_id: string;
-}
-
-/** 'GetTitrePublicUpdateDataDb' query type */
-export interface IGetTitrePublicUpdateDataDbQuery {
-  params: IGetTitrePublicUpdateDataDbParams;
-  result: IGetTitrePublicUpdateDataDbResult;
-}
+/** Query 'GetTitrePublicUpdateDataDb' is invalid, so its parameters are assigned type 'never'.
+ *  */
+export type IGetTitrePublicUpdateDataDbParams = never;
 
 /** 'UpdateTitrePublicLectureDb' parameters type */
 export interface IUpdateTitrePublicLectureDbParams {

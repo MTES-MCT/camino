@@ -86,6 +86,7 @@ const titreEtapesPubliques: ITitre = {
           titreDemarcheId: newDemarcheId('titre-id-demarche-id'),
           statutId: 'acc',
           date: toCaminoDate('2020-02-02'),
+          isBrouillon: false,
         },
         {
           id: newEtapeId('titre-id-demarche-id-eof'),
@@ -94,6 +95,7 @@ const titreEtapesPubliques: ITitre = {
           titreDemarcheId: newDemarcheId('titre-id-demarche-id'),
           statutId: 'acc',
           date: toCaminoDate('2020-02-02'),
+          isBrouillon: false,
         },
         {
           id: newEtapeId('titre-id-demarche-id-edm'),
@@ -102,6 +104,7 @@ const titreEtapesPubliques: ITitre = {
           titreDemarcheId: newDemarcheId('titre-id-demarche-id'),
           statutId: 'acc',
           date: toCaminoDate('2020-02-02'),
+          isBrouillon: false,
         },
         {
           id: newEtapeId('titre-id-demarche-id-ede'),
@@ -110,6 +113,7 @@ const titreEtapesPubliques: ITitre = {
           titreDemarcheId: newDemarcheId('titre-id-demarche-id'),
           statutId: 'acc',
           date: toCaminoDate('2020-02-02'),
+          isBrouillon: false,
         },
         {
           id: newEtapeId('titre-id-demarche-id-pfd'),
@@ -118,6 +122,7 @@ const titreEtapesPubliques: ITitre = {
           titreDemarcheId: newDemarcheId('titre-id-demarche-id'),
           statutId: 'acc',
           date: toCaminoDate('2020-02-02'),
+          isBrouillon: false,
         },
         {
           id: newEtapeId('titre-id-demarche-id-pfc'),
@@ -126,6 +131,7 @@ const titreEtapesPubliques: ITitre = {
           titreDemarcheId: newDemarcheId('titre-id-demarche-id'),
           statutId: 'acc',
           date: toCaminoDate('2020-02-02'),
+          isBrouillon: false,
         },
         {
           id: newEtapeId('titre-id-demarche-id-vfd'),
@@ -134,6 +140,7 @@ const titreEtapesPubliques: ITitre = {
           titreDemarcheId: newDemarcheId('titre-id-demarche-id'),
           statutId: 'acc',
           date: toCaminoDate('2020-02-02'),
+          isBrouillon: false,
         },
         {
           id: newEtapeId('titre-id-demarche-id-vfc'),
@@ -142,6 +149,7 @@ const titreEtapesPubliques: ITitre = {
           titreDemarcheId: newDemarcheId('titre-id-demarche-id'),
           statutId: 'acc',
           date: toCaminoDate('2020-02-02'),
+          isBrouillon: false,
         },
         {
           id: newEtapeId('titre-id-demarche-id-dpu'),
@@ -151,6 +159,7 @@ const titreEtapesPubliques: ITitre = {
           statutId: 'acc',
           date: toCaminoDate('2020-02-02'),
           administrationsLocales: ['dea-guyane-01'],
+          isBrouillon: false,
         },
       ],
     },
@@ -309,6 +318,7 @@ describe('titres', () => {
             administrationsLocales: ['dea-guyane-01'],
             titulaireIds: [entrepriseId1],
             communes: [{ id: communeId }],
+            isBrouillon: false,
           },
         ],
       },

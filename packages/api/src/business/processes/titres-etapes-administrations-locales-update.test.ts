@@ -35,6 +35,7 @@ describe("administrations d'une étape", () => {
         statutId: 'fai',
         date: toCaminoDate('2022-01-01'),
         typeId: 'dpu',
+        isBrouillon: false,
         communes: [
           {
             id: toCommuneId('97300'),
@@ -48,6 +49,7 @@ describe("administrations d'une étape", () => {
         statutId: 'fai',
         date: toCaminoDate('2022-01-01'),
         typeId: 'aac',
+        isBrouillon: false,
         communes: [
           {
             id: toCommuneId('87000'),
@@ -70,6 +72,7 @@ describe("administrations d'une étape", () => {
         titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-oct01'),
         typeId: 'dpu',
         statutId: 'acc',
+        isBrouillon: false,
         ordre: 2,
         date: toCaminoDate('1988-03-11'),
         communes: [
@@ -93,6 +96,7 @@ describe("administrations d'une étape", () => {
         titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-oct01'),
         typeId: 'dpu',
         statutId: 'acc',
+        isBrouillon: false,
         ordre: 2,
         date: toCaminoDate('1988-03-11'),
         communes: [],
@@ -110,6 +114,7 @@ describe("administrations d'une étape", () => {
       id: newEtapeId('h-cx-courdemanges-1988-oct01-dpu01'),
       titreDemarcheId: newDemarcheId(),
       statutId: 'fai',
+      isBrouillon: false,
       date: toCaminoDate('2022-01-01'),
       typeId: 'dpu',
       communes: [],
@@ -126,6 +131,7 @@ describe("administrations d'une étape", () => {
   test("supprime une administration si l'étape ne la contient plus dans ses communes", async () => {
     const titreEtape: ITitreEtape = {
       statutId: 'fai',
+      isBrouillon: false,
       date: toCaminoDate('2022-01-01'),
       id: newEtapeId('h-cx-courdemanges-1988-oct01-dpu01'),
       titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-oct01'),

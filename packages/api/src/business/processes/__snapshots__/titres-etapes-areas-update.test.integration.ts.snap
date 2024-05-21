@@ -98,6 +98,7 @@ exports[`titresEtapesAreasUpdate > met à jour les communes, forêts et zone du 
     "heritageContenu": null,
     "heritageProps": null,
     "id": "titreEtapeIdUniquePourMiseAJourAreas",
+    "isBrouillon": true,
     "notes": null,
     "ordre": 0,
     "sdomZones": [
@@ -105,7 +106,7 @@ exports[`titresEtapesAreasUpdate > met à jour les communes, forêts et zone du 
     ],
     "secteursMaritime": [],
     "slug": "titreDemarcheIdUniquePourMiseAJourAreas-mfr99",
-    "statutId": "aco",
+    "statutId": "fai",
     "substances": [],
     "surface": null,
     "titreDemarcheId": "titreDemarcheIdUniquePourMiseAJourAreas",
@@ -232,6 +233,7 @@ exports[`titresEtapesAreasUpdate > met à jour les communes, forêts et zone du 
       "heritageContenu": null,
       "heritageProps": null,
       "id": "titreEtapeIdUniquePourMiseAJourAreas",
+      "isBrouillon": true,
       "notes": null,
       "ordre": 0,
       "sdomZones": [
@@ -239,7 +241,7 @@ exports[`titresEtapesAreasUpdate > met à jour les communes, forêts et zone du 
       ],
       "secteursMaritime": [],
       "slug": "titreDemarcheIdUniquePourMiseAJourAreas-mfr99",
-      "statutId": "aco",
+      "statutId": "fai",
       "substances": [],
       "surface": null,
       "titreDemarcheId": "titreDemarcheIdUniquePourMiseAJourAreas",

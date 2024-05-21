@@ -7,6 +7,7 @@ describe('getMostRecentValueProp', () => {
   test('retourne le dernier titulaire même si les étapes ne sont pas dans le bon ordre', () => {
     const dpu: TitrePropTitreEtapeFindDemarcheEtape = {
       etape_type_id: 'dpu',
+      is_brouillon: false,
       fondamentale: {
         date_debut: null,
         date_fin: toCaminoDate('2032-08-18'),
@@ -22,6 +23,7 @@ describe('getMostRecentValueProp', () => {
 
     const dex: TitrePropTitreEtapeFindDemarcheEtape = {
       etape_type_id: 'dex',
+      is_brouillon: false,
       fondamentale: {
         date_debut: null,
         date_fin: null,

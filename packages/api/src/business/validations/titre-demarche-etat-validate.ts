@@ -46,7 +46,7 @@ export const titreDemarcheUpdatedEtatValidate = (
   titreDemarcheEtapes?: Pick<ITitreEtape, 'id' | 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'communes' | 'surface' | 'isBrouillon'>[] | null,
   suppression = false
 ): string[] => {
-  let titreDemarcheEtapesNew = titreDemarcheEtapesBuild(titreEtape, suppression, titreDemarcheEtapes)
+  const titreDemarcheEtapesNew = titreDemarcheEtapesBuild(titreEtape, suppression, titreDemarcheEtapes)
   const demarcheDefinition = demarcheDefinitionFind(titre.typeId, demarcheTypeId, titreDemarcheEtapesNew, demarcheId)
   const titreDemarchesErrors: string[] = []
 
@@ -82,9 +82,6 @@ export const titreDemarcheUpdatedEtatValidate = (
     }
 
     return ['il y a déjà une demande en construction']
-  } else {
-    // on supprime les étapes en construction de la liste des étapes, car elle ne doivent pas ếtre prises en compte par l’arbre
-    titreDemarcheEtapesNew = titreDemarcheEtapesNew.filter(te => !te.isBrouillon)
   }
 
   // vérifie que toutes les étapes existent dans l’arbre

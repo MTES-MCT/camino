@@ -67,6 +67,7 @@ describe("construction des activités d'un titre", () => {
             date: toCaminoDate('2018-01-01'),
             typeId: 'dpu',
             statutId: 'fai',
+            isBrouillon: false,
             substances: ['auru', 'nacl'],
             surface: null,
             ordre: 1,

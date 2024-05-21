@@ -17,7 +17,10 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
         typeId: 'arm',
         demarches: [{ typeId: 'oct' }],
       } as ITitre,
-      { typeId: 'mfr', date: '2030-01-01' } as Pick<Required<ITitreEtape>, 'id' | 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'titreDemarcheId' | 'communes' | 'isBrouillon'>,
+      { typeId: 'mfr', date: '2030-01-01', isBrouillon: true } as Pick<
+        Required<ITitreEtape>,
+        'id' | 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'titreDemarcheId' | 'communes' | 'isBrouillon'
+      >,
       newDemarcheId(),
       null
     )
@@ -77,7 +80,7 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
         typeId: 'arm',
         demarches: [{ typeId: 'oct' }],
       } as ITitre,
-      { id: '1', typeId: 'mfr' } as Pick<Required<ITitreEtape>, 'id' | 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'titreDemarcheId' | 'communes' | 'isBrouillon'>,
+      { id: '1', typeId: 'mfr', isBrouillon: true } as Pick<Required<ITitreEtape>, 'id' | 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'titreDemarcheId' | 'communes' | 'isBrouillon'>,
       newDemarcheId(),
 
       [{ id: '1', typeId: 'mfr', date: '2000-01-01' }] as Pick<Required<ITitreEtape>, 'id' | 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'titreDemarcheId' | 'communes' | 'isBrouillon'>[],
@@ -94,7 +97,7 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
         typeId: 'arm',
         demarches: [{ typeId: 'oct' }],
       } as ITitre,
-      { id: '1', typeId: 'mfr', isBrouillon: false } as Pick<Required<ITitreEtape>, 'id' | 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'titreDemarcheId' | 'communes' | 'isBrouillon'>,
+      { id: '1', typeId: 'mfr', isBrouillon: true } as Pick<Required<ITitreEtape>, 'id' | 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'titreDemarcheId' | 'communes' | 'isBrouillon'>,
       newDemarcheId(),
 
       []
@@ -178,7 +181,10 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
           },
         ],
       } as ITitre,
-      { typeId: 'mfr', date: '1030-01-01', statutId: 'fai' } as Pick<Required<ITitreEtape>, 'id' | 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'titreDemarcheId' | 'communes' | 'isBrouillon'>,
+      { typeId: 'mfr', date: '1030-01-01', statutId: 'fai' } as Pick<
+        Required<ITitreEtape>,
+        'id' | 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'titreDemarcheId' | 'communes' | 'isBrouillon'
+      >,
       newDemarcheId()
     )
 
@@ -192,7 +198,10 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
         typeId: 'axm',
         demarches: [{ typeId: 'oct' }],
       } as ITitre,
-      { typeId: 'mfr', statutId: 'fai', isBrouillon: true, date: '2030-01-01' } as Pick<Required<ITitreEtape>, 'id' | 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'titreDemarcheId' | 'communes' | 'isBrouillon'>,
+      { typeId: 'mfr', statutId: 'fai', isBrouillon: true, date: '2030-01-01' } as Pick<
+        Required<ITitreEtape>,
+        'id' | 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'titreDemarcheId' | 'communes' | 'isBrouillon'
+      >,
       newDemarcheId()
     )
 
@@ -206,10 +215,16 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
         typeId: 'axm',
         demarches: [{ typeId: 'oct' }],
       } as ITitre,
-      { typeId: 'mfr', statutId: 'fai', isBrouillon: true } as Pick<Required<ITitreEtape>, 'id' | 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'titreDemarcheId' | 'communes' | 'isBrouillon'>,
+      { typeId: 'mfr', statutId: 'fai', isBrouillon: true } as Pick<
+        Required<ITitreEtape>,
+        'id' | 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'titreDemarcheId' | 'communes' | 'isBrouillon'
+      >,
       newDemarcheId(),
 
-      [{ id: '1', typeId: 'dae', statutId: 'exe', isBrouillon: false }] as Pick<Required<ITitreEtape>, 'id' | 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'titreDemarcheId' | 'communes' | 'isBrouillon'>[]
+      [{ id: '1', typeId: 'dae', statutId: 'exe', isBrouillon: false }] as Pick<
+        Required<ITitreEtape>,
+        'id' | 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'titreDemarcheId' | 'communes' | 'isBrouillon'
+      >[]
     )
 
     expect(valid).toHaveLength(0)
@@ -222,7 +237,10 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
         typeId: 'axm',
         demarches: [{ typeId: 'oct' }],
       } as ITitre,
-      { id: '1', typeId: 'mfr', statutId: 'fai', isBrouillon: true } as Pick<Required<ITitreEtape>, 'id' | 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'titreDemarcheId' | 'communes' | 'isBrouillon'>,
+      { id: '1', typeId: 'mfr', statutId: 'fai', isBrouillon: true } as Pick<
+        Required<ITitreEtape>,
+        'id' | 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'titreDemarcheId' | 'communes' | 'isBrouillon'
+      >,
       newDemarcheId(),
 
       [
@@ -242,7 +260,10 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
           typeId: 'axm',
           demarches: [{ typeId: 'oct' }],
         } as ITitre,
-        { id: '3', typeId: 'mfr', statutId: 'fai', isBrouillon: true } as Pick<Required<ITitreEtape>, 'id' | 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'titreDemarcheId' | 'communes' | 'isBrouillon'>,
+        { id: '3', typeId: 'mfr', statutId: 'fai', isBrouillon: true } as Pick<
+          Required<ITitreEtape>,
+          'id' | 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'titreDemarcheId' | 'communes' | 'isBrouillon'
+        >,
         newDemarcheId(),
 
         [
@@ -289,6 +310,7 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
             id: newEtapeId('2'),
             typeId: EtapesTypesEtapesStatuts.decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_.REQUIS.etapeTypeId,
             statutId: EtapesTypesEtapesStatuts.decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_.REQUIS.etapeStatutId,
+            isBrouillon: false,
             date: toCaminoDate('2021-01-02'),
             communes: null,
             contenu: null,

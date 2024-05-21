@@ -11,6 +11,7 @@ describe('toMachineEtapes', () => {
           typeId: 'mfr',
           statutId: 'fai',
           date: toCaminoDate('2022-01-01'),
+          isBrouillon: false,
           communes: [],
           ordre: 0,
           surface: null,
@@ -30,6 +31,7 @@ describe('toMachineEtapes', () => {
         {
           typeId: 'mfr',
           statutId: 'fai',
+          isBrouillon: false,
           date: toCaminoDate('2022-01-01'),
           contenu: { arm: { mecanise: true } },
           communes: [],
@@ -45,6 +47,23 @@ describe('toMachineEtapes', () => {
         contenu: { arm: { mecanise: true } },
       },
     ])
+  })
+
+  test('filtre les étapes en brouillon', () => {
+    expect(
+      toMachineEtapes([
+        {
+          typeId: 'mfr',
+          statutId: 'fai',
+          isBrouillon: true,
+          date: toCaminoDate('2022-01-01'),
+          contenu: { arm: { mecanise: true } },
+          communes: [],
+          ordre: 0,
+          surface: null,
+        },
+      ])
+    ).toEqual([])
   })
 
   test('emet une erreur si le type de l’étape est inconnu', () => {

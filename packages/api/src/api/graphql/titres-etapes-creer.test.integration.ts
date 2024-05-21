@@ -10,7 +10,6 @@ import { userSuper } from '../../database/user-super'
 import { afterAll, beforeEach, beforeAll, describe, test, expect, vi } from 'vitest'
 import type { Pool } from 'pg'
 import { ETAPE_HERITAGE_PROPS } from 'camino-common/src/heritage.js'
-import { testDocumentCreateTemp } from '../../../tests/_utils/administrations-permissions.js'
 
 vi.mock('../../tools/dir-create', () => ({
   __esModule: true,
@@ -224,13 +223,8 @@ describe('etapeCreer', () => {
     expect(res.body.errors[0].message).toBe("certaines entreprises n'existent pas")
   })
 
-  test('ne peut pas créer une étape mfr avec un statut fai avec un champ obligatoire manquant (utilisateur super)', async () => {
+  test('peut créer une étape mfr en brouillon avec un champ obligatoire manquant (utilisateur super)', async () => {
     const titreDemarcheId = await demarcheCreate()
-    const dom = testDocumentCreateTemp('dom')
-    const forDoc = testDocumentCreateTemp('for')
-    const jpa = testDocumentCreateTemp('jpa')
-    const car = testDocumentCreateTemp('car')
-
     const res = await graphQLCall(
       dbPool,
       etapeCreerQuery,
@@ -238,61 +232,6 @@ describe('etapeCreer', () => {
         etape: {
           typeId: 'mfr',
           statutId: 'fai',
-          titreDemarcheId,
-          date: '2018-01-01',
-          duree: 10,
-          heritageProps: ETAPE_HERITAGE_PROPS.reduce(
-            (acc, prop) => {
-              acc[prop] = { actif: false }
-
-              return acc
-            },
-            {} as {
-              [key: string]: { actif: boolean }
-            }
-          ),
-          heritageContenu: {
-            arm: {
-              mecanise: { actif: true },
-              franchissements: { actif: true },
-            },
-          },
-          substances: ['auru'],
-          etapeDocuments: [dom, forDoc, jpa, car],
-          geojson4326Perimetre: {
-            type: 'Feature',
-            properties: {},
-            geometry: {
-              type: 'MultiPolygon',
-              coordinates: [
-                [
-                  [
-                    [1, 2],
-                    [2, 3],
-                  ],
-                ],
-              ],
-            },
-          },
-        },
-      },
-      userSuper
-    )
-
-    expect(res.body.errors[0].message).toMatchInlineSnapshot(
-      "\"impossible d’éditer la durée, le document d'entreprise « Attestation fiscale » obligatoire est manquant, le document d'entreprise « Curriculum vitae » obligatoire est manquant, le document d'entreprise « Justificatif d’identité » obligatoire est manquant, le document d'entreprise « Justificatif des capacités techniques » obligatoire est manquant, le document d'entreprise « Kbis » obligatoire est manquant, le document d'entreprise « Justificatif des capacités financières » obligatoire est manquant\""
-    )
-  })
-
-  test('peut créer une étape mfr avec un statut aco avec un champ obligatoire manquant (utilisateur super)', async () => {
-    const titreDemarcheId = await demarcheCreate()
-    const res = await graphQLCall(
-      dbPool,
-      etapeCreerQuery,
-      {
-        etape: {
-          typeId: 'mfr',
-          statutId: 'aco',
           titreDemarcheId,
           date: '2018-01-01',
           heritageProps: ETAPE_HERITAGE_PROPS.reduce(

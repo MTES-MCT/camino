@@ -287,6 +287,7 @@ describe('getEntrepriseDocument', () => {
         titreDemarcheId: titreDemarche.id,
         date: toCaminoDate('2022-01-01'),
         ordre: 1,
+        isBrouillon: false,
       },
       userSuper,
       titre.id

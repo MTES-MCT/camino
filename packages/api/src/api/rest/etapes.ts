@@ -284,17 +284,17 @@ export const deposeEtape = (pool: Pool) => async (req: CaminoRequest, res: Custo
       )
       if (!deposable) throw new Error('droits insuffisants')
 
-      if ( !canBeBrouillon(titreEtape.typeId)) {
+      if (!canBeBrouillon(titreEtape.typeId)) {
         throw new Error('cette étape ne peut-être déposée')
       }
 
-     const date = isEntreprise(user) || isBureauDEtudes(user) ? getCurrent() :  titreEtape.date
+      const date = isEntreprise(user) || isBureauDEtudes(user) ? getCurrent() : titreEtape.date
 
       await titreEtapeUpdate(
         titreEtape.id,
         {
           date,
-          isBrouillon: false
+          isBrouillon: false,
         },
         user,
         titreDemarche.titreId
@@ -395,18 +395,10 @@ const demarcheEtapesTypesGet = async (titreDemarcheId: DemarcheId, date: CaminoD
   }
 
   return etapesTypes.filter(({ etapeTypeId }) =>
-    canCreateEtape(
-      user,
-      etapeTypeId,
-      true,
-      titre.titulaireIds ?? [],
-      titre.administrationsLocales ?? [],
-      titreDemarche.typeId,
-      {
-        typeId: titre.typeId,
-        titreStatutId: titre.titreStatutId ?? TitresStatutIds.Indetermine,
-      }
-    )
+    canCreateEtape(user, etapeTypeId, true, titre.titulaireIds ?? [], titre.administrationsLocales ?? [], titreDemarche.typeId, {
+      typeId: titre.typeId,
+      titreStatutId: titre.titreStatutId ?? TitresStatutIds.Indetermine,
+    })
   )
 }
 

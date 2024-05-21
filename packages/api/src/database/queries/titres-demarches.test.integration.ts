@@ -36,7 +36,8 @@ describe('teste les requêtes sur les démarches', () => {
         const etape = await TitresEtapes.query().insert({
           titreDemarcheId: demarche.id,
           typeId: 'mfr',
-          statutId: 'aco',
+          statutId: 'fai',
+          isBrouillon: true,
           date: toCaminoDate('2020-02-02'),
         })
         expect(etape.archive).toBeFalsy()

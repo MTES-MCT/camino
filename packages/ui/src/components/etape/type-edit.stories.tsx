@@ -25,19 +25,6 @@ const apiClientMock: Pick<EtapeApiClient, 'getEtapesTypesEtapesStatuts'> = {
     ])
   },
 }
-export const Simple: StoryFn = () => (
-  <TypeEdit
-    onEtapeChange={onEtapeChange}
-    demarcheId={demarcheIdValidator.parse('demarcheID')}
-    apiClient={apiClientMock}
-    etape={{
-      statutId: ETAPES_STATUTS.FAIT,
-      typeId: ETAPES_TYPES.demande,
-      date: toCaminoDate('2022-01-01'),
-    }}
-  />
-)
-
 export const DemandeAvecUnSeulStatut: StoryFn = () => (
   <TypeEdit
     onEtapeChange={onEtapeChange}
@@ -58,19 +45,6 @@ export const DemandeSansStatut: StoryFn = () => (
     demarcheId={demarcheIdValidator.parse('demarcheID')}
     etape={{
       statutId: null,
-      typeId: ETAPES_TYPES.demande,
-      date: toCaminoDate('2022-01-01'),
-    }}
-  />
-)
-
-export const DemandeEnConstruction: StoryFn = () => (
-  <TypeEdit
-    onEtapeChange={onEtapeChange}
-    apiClient={apiClientMock}
-    demarcheId={demarcheIdValidator.parse('demarcheID')}
-    etape={{
-      statutId: ETAPES_STATUTS.FAIT,
       typeId: ETAPES_TYPES.demande,
       date: toCaminoDate('2022-01-01'),
     }}
