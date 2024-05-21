@@ -1,6 +1,6 @@
 import GraphQLJSON from 'graphql-type-json'
 
-import { titres, titreCreer, titre } from './resolvers/titres.js'
+import { titres, titreCreer } from './resolvers/titres.js'
 
 import { etape, etapeHeritage, etapeCreer, etapeModifier, etapeSupprimer } from './resolvers/titres-etapes.js'
 
@@ -62,7 +62,6 @@ export default {
   titresTypes,
   unites,
   version,
-  titre,
   titres,
   substances,
   utilisateur,

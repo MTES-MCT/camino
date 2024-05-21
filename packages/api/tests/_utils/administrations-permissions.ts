@@ -79,27 +79,28 @@ export const visibleCheck = async (
   )
 
   expect(res.body.errors).toBe(undefined)
+  const titreRes = res.body.data.titres.elements[0] ?? null
   if (cible === 'titres') {
     if (visible) {
-      expect(res.body.data.titre).not.toBeNull()
-      expect(res.body.data.titre.id).toEqual(titre.id)
+      expect(titreRes).not.toBeNull()
+      expect(titreRes.id).toEqual(titre.id)
     } else {
-      expect(res.body.data.titre).toBeNull()
+      expect(titreRes).toBeNull()
     }
   } else if (cible === 'demarches') {
     if (visible) {
-      expect(res.body.data.titre.demarches).not.toBeNull()
-      expect(res.body.data.titre.demarches![0]).not.toBeNull()
-      expect(res.body.data.titre.demarches![0]!.id).toEqual(titre.demarches![0]!.id)
+      expect(titreRes.demarches).not.toBeNull()
+      expect(titreRes.demarches![0]).not.toBeNull()
+      expect(titreRes.demarches![0]!.id).toEqual(titre.demarches![0]!.id)
     } else {
-      expect(res.body.data.titre ? res.body.data.titre.demarches : []).toEqual([])
+      expect(titreRes ? titreRes.demarches : []).toEqual([])
     }
   } else if (cible === 'etapes') {
     if (visible) {
-      expect(res.body.data.titre.demarches![0]!.etapes).not.toBeNull()
-      expect(res.body.data.titre.demarches![0]!.etapes![0]!.id).toEqual(titre.demarches![0]!.etapes![0]!.id)
+      expect(titreRes.demarches![0]!.etapes).not.toBeNull()
+      expect(titreRes.demarches![0]!.etapes![0]!.id).toEqual(titre.demarches![0]!.etapes![0]!.id)
     } else {
-      expect(res.body.data.titre.demarches![0]!.etapes).toEqual([])
+      expect(titreRes.demarches![0]!.etapes).toEqual([])
     }
   }
 }
