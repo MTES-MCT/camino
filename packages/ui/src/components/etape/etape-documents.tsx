@@ -16,8 +16,8 @@ interface Props {
 
 export const VisibilityLabel = {
   public: 'Public',
-  entreprises: 'Visible seulement par les entreprises titulaires',
-  administrations: 'Visible seulement par les administrations',
+  entreprises: 'Visible par les administrations et les entreprises titulaires',
+  administrations: 'Visible par les administrations',
 }
 
 export const getVisibilityLabel = (etapeDocument: Pick<EtapeDocument, 'public_lecture' | 'entreprises_lecture'>): string => {
