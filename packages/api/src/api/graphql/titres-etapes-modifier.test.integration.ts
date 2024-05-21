@@ -405,26 +405,3 @@ describe('etapeModifier', () => {
     expect(res.body.errors[0].message).toBe("l'étape n'existe pas")
   })
 })
-
-describe('etapeSupprimer', () => {
-  const etapeSupprimerQuery = queryImport('titre-etape-supprimer')
-
-  test.each([undefined, 'admin' as Role])('ne peut pas supprimer une étape (utilisateur %s)', async (role: Role | undefined) => {
-    const res = await graphQLCall(dbPool, etapeSupprimerQuery, { id: '' }, role && isAdministrationRole(role) ? { role, administrationId: 'ope-onf-973-01' } : undefined)
-
-    expect(res.body.errors[0].message).toBe("l'étape n'existe pas")
-  })
-
-  test('ne peut pas supprimer une étape inexistante (utilisateur super)', async () => {
-    const res = await graphQLCall(dbPool, etapeSupprimerQuery, { id: 'toto' }, userSuper)
-
-    expect(res.body.errors[0].message).toBe("l'étape n'existe pas")
-  })
-
-  test('peut supprimer une étape (utilisateur super)', async () => {
-    const { titreEtapeId } = await etapeCreate()
-    const res = await graphQLCall(dbPool, etapeSupprimerQuery, { id: titreEtapeId }, userSuper)
-
-    expect(res.body.errors).toBe(undefined)
-  })
-})

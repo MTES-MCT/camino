@@ -183,9 +183,6 @@ type Mutation {
   "Modifie une étape et met à jour le titre minier"
   etapeModifier(etape: InputEtapeModification!): Etape
 
-  "Supprime une étape et met à jour le titre minier"
-  etapeSupprimer(id: ID!): TitreSlug
-
   "Dépose une activité"
   activiteDeposer(id: ID!): Activite
 }

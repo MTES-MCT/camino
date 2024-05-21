@@ -10,7 +10,7 @@ import { titreEtapeGet, titreEtapeUpdate } from '../../database/queries/titres-e
 import { demarcheDefinitionFind } from '../../business/rules-demarches/definitions.js'
 import { etapeTypeDateFinCheck } from '../_format/etapes-types.js'
 import { User, isBureauDEtudes, isEntreprise } from 'camino-common/src/roles.js'
-import { canCreateEtape, isEtapeDeposable } from 'camino-common/src/permissions/titres-etapes.js'
+import { canCreateEtape, isEtapeDeposable, canEditEtape } from 'camino-common/src/permissions/titres-etapes.js'
 import { TitresStatutIds } from 'camino-common/src/static/titresStatuts.js'
 import { CaminoMachines } from '../../business/rules-demarches/machines.js'
 import { titreEtapesSortAscByOrdre } from '../../business/utils/titre-etapes-sort.js'
@@ -34,7 +34,7 @@ import { valeurFind } from 'camino-common/src/sections.js'
 import { getElementWithValue, getSections, getSectionsWithValue } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { AdministrationId } from 'camino-common/src/static/administrations.js'
-import { etapeSupprimer } from '../graphql/resolvers/titres-etapes.js'
+import { titreDemarcheUpdatedEtatValidate } from '../../business/validations/titre-demarche-etat-validate.js'
 
 export const getEtapeEntrepriseDocuments =
   (pool: Pool) =>
@@ -174,10 +174,63 @@ export const deleteEtape = (pool: Pool) => async (req: CaminoRequest, res: Custo
   const etapeId = etapeIdValidator.safeParse(req.params.etapeId)
   if (!etapeId.success) {
     res.sendStatus(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
+  } else if (isNullOrUndefined(user)) {
+    res.sendStatus(HTTP_STATUS.HTTP_STATUS_NOT_FOUND)
   } else {
     try {
-      await etapeSupprimer({ id: etapeId.data }, { pool, user })
-      res.sendStatus(HTTP_STATUS.HTTP_STATUS_NO_CONTENT)
+      const titreEtape = await titreEtapeGet(
+        etapeId.data,
+        {
+          fields: {
+            demarche: { titre: { pointsEtape: { id: {} } } },
+          },
+        },
+        user
+      )
+
+      if (isNullOrUndefined(titreEtape)) {
+        res.sendStatus(HTTP_STATUS.HTTP_STATUS_NOT_FOUND)
+      } else {
+        if (!titreEtape.demarche || !titreEtape.demarche.titre || titreEtape.demarche.titre.administrationsLocales === undefined || !titreEtape.demarche.titre.titreStatutId) {
+          throw new Error('la démarche n’est pas chargée complètement')
+        }
+
+        if (
+          !canEditEtape(user, titreEtape.typeId, titreEtape.isBrouillon, titreEtape.titulaireIds ?? [], titreEtape.demarche.titre.administrationsLocales ?? [], titreEtape.demarche.typeId, {
+            typeId: titreEtape.demarche.titre.typeId,
+            titreStatutId: titreEtape.demarche.titre.titreStatutId,
+          })
+        )
+          throw new Error('droits insuffisants')
+
+        const titreDemarche = await titreDemarcheGet(
+          titreEtape.titreDemarcheId,
+          {
+            fields: {
+              titre: {
+                demarches: { etapes: { id: {} } },
+              },
+              etapes: { id: {} },
+            },
+          },
+          userSuper
+        )
+
+        if (!titreDemarche) throw new Error("la démarche n'existe pas")
+
+        if (!titreDemarche.titre) throw new Error("le titre n'existe pas")
+
+        const rulesErrors = titreDemarcheUpdatedEtatValidate(titreDemarche.typeId, titreDemarche.titre, titreEtape, titreDemarche.id, titreDemarche.etapes!, true)
+
+        if (rulesErrors.length) {
+          throw new Error(rulesErrors.join(', '))
+        }
+        await titreEtapeUpdate(etapeId.data, { archive: true }, user, titreDemarche.titreId)
+
+        await titreEtapeUpdateTask(pool, null, titreEtape.titreDemarcheId, user)
+
+        res.sendStatus(HTTP_STATUS.HTTP_STATUS_NO_CONTENT)
+      }
     } catch (e) {
       res.sendStatus(HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR)
       console.error(e)
