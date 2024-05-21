@@ -1,12 +1,16 @@
+import { Alert } from '@/components/_ui/alert'
 import type { RouteRecordRaw } from 'vue-router'
-const CaminoError = async () => {
-  const { CaminoError } = await import('../components/error')
-
-  return CaminoError
-}
 
 export const allRoutes: RouteRecordRaw[] = [
-  { path: '/', component: CaminoError },
+  {
+    path: '/',
+    component: Alert,
+    props: {
+      type: 'error',
+      title: 'Page introuvable',
+      small: true,
+    },
+  },
   // TODO 2024-04-29 : on recopie toutes les routes de router/index.ts
   {
     path: '/dashboard',

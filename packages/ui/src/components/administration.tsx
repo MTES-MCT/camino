@@ -1,4 +1,3 @@
-import { CaminoError } from './error'
 import { apiClient, ApiClient } from '@/api/api-client'
 import { useRoute } from 'vue-router'
 
@@ -20,6 +19,7 @@ import { AsyncData } from '@/api/client-rest'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { userKey } from '@/moi'
 import { capitalize } from 'camino-common/src/strings'
+import { Alert } from './_ui/alert'
 
 export const Administration = defineComponent(() => {
   const route = useRoute()
@@ -36,7 +36,11 @@ export const Administration = defineComponent(() => {
 
   return () => (
     <>
-      {administrationId.value ? <PureAdministration administrationId={administrationId.value} user={user} apiClient={apiClient} /> : <CaminoError message="Administration inconnue" couleur="error" />}
+      {administrationId.value ? (
+        <PureAdministration administrationId={administrationId.value} user={user} apiClient={apiClient} />
+      ) : (
+        <Alert title="Administration inconnue" type="error" small={true} />
+      )}
     </>
   )
 })

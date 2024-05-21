@@ -2,6 +2,7 @@ import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 
 import { Dashboard } from '../components/dashboard'
 import { Titres } from '../components/titres'
+import { Alert } from '@/components/_ui/alert'
 
 const DGTMStatsFull = async () => {
   const { DGTMStatsFull } = await import('../components/dashboard/dgtm-stats-full')
@@ -99,11 +100,6 @@ const Metas = async () => {
   const { Metas } = await import('../components/metas')
 
   return Metas
-}
-const CaminoError = async () => {
-  const { CaminoError } = await import('../components/error')
-
-  return CaminoError
 }
 const StatistiquesGlobales = async () => {
   const { Globales } = await import('../components/statistiques/globales')
@@ -424,14 +420,15 @@ const routes = [
   {
     path: '/:pathMatch(.*)*',
     name: 'erreur',
-    component: CaminoError,
+    component: Alert,
     meta: {
       title: 'Erreur',
       menuSection: null,
     },
     props: {
-      couleur: 'error',
-      message: 'Page introuvable',
+      type: 'error',
+      title: 'Page introuvable',
+      small: true,
     },
   },
 ] as const satisfies Readonly<(Omit<RouteRecordRaw, 'children'> & { children?: Readonly<RouteRecordRaw['children']> })[]>

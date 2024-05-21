@@ -4,12 +4,12 @@ import { DateComponent } from '../_ui/date'
 
 import { nomColumn, nomCell, referencesColumn, statutAutoColumn, titulairesColumn, statutCell, referencesCell, titulairesCell } from '@/components/titres/table-utils'
 
-import { CaminoError } from '@/components/error'
 import { CommonTitreONF } from 'camino-common/src/titres'
 import { daysBetween, toCaminoDate } from 'camino-common/src/date'
 import { ComponentColumnData, TableRow, TextColumnData } from '../_ui/table'
 import { DashboardApiClient } from './dashboard-api-client'
 import { Entreprise, EntrepriseId } from 'camino-common/src/entreprise'
+import { Alert } from '../_ui/alert'
 interface Props {
   apiClient: Pick<DashboardApiClient, 'getOnfTitres'>
   entreprises: Entreprise[]
@@ -151,7 +151,7 @@ export const PureONFDashboard = defineComponent<Props>(props => {
         </div>
       ) : null}
 
-      {status.value === 'ERROR' ? <CaminoError couleur="error" message="Le serveur est inaccessible, veuillez réessayer plus tard" /> : null}
+      {status.value === 'ERROR' ? <Alert type="error" small={true} title="Le serveur est inaccessible, veuillez réessayer plus tard" /> : null}
     </div>
   )
 })
