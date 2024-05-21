@@ -420,15 +420,10 @@ const routes = [
   {
     path: '/:pathMatch(.*)*',
     name: 'erreur',
-    component: Alert,
+    component: <Alert type="error" title="Page Introuvable" small={true} />,
     meta: {
       title: 'Erreur',
       menuSection: null,
-    },
-    props: {
-      type: 'error',
-      title: 'Page introuvable',
-      small: true,
     },
   },
 ] as const satisfies Readonly<(Omit<RouteRecordRaw, 'children'> & { children?: Readonly<RouteRecordRaw['children']> })[]>

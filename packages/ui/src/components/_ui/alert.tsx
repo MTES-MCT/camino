@@ -1,4 +1,4 @@
-import { FunctionalComponent, HTMLAttributes } from 'vue'
+import type { FunctionalComponent, HTMLAttributes } from 'vue'
 import type { JSX } from 'vue/jsx-runtime'
 type SmallProps = {
   small: true

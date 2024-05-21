@@ -14,5 +14,3 @@ export const CaminoAccessError: FunctionalComponent<CaminoAccessErrorProps> = pr
     return <Alert small={true} title="Vous n’avez pas accès à cette page, veuillez vous connecter" type="info" />
   }
 }
-// Demandé par le router car utilisé dans un import asynchrone /shrug
-CaminoAccessError.displayName = 'CaminoAccessError'
