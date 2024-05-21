@@ -26,9 +26,6 @@ const getStats = async (): Promise<StatistiquesGuyane> => {
 
 export const Guyane: FunctionalComponent = () => <PureGuyane getStats={getStats} currentDate={getCurrent()} />
 
-// Demandé par le router car utilisé dans un import asynchrone /shrug
-Guyane.displayName = 'Guyane'
-
 const defaultConfiguration = (data: ChartData): ChartConfiguration => ({
   type: 'bar',
   data,

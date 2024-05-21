@@ -18,8 +18,6 @@ import statsStyles from './statistiques.module.css'
 const getStats = async (): Promise<StatistiquesMinerauxMetauxMetropole> => getWithJson('/rest/statistiques/minerauxMetauxMetropole', {})
 
 export const MinerauxMetauxMetropole: FunctionalComponent = () => <PureMinerauxMetauxMetropole getStats={getStats} />
-// Demandé par le router car utilisé dans un import asynchrone /shrug
-MinerauxMetauxMetropole.displayName = 'MinerauxMetauxMetropole'
 const bauxiteChartConfiguration = (data: StatistiquesMinerauxMetauxMetropole): ChartConfiguration => {
   const annees: CaminoAnnee[] = Object.keys(data.substances.aloh).filter(isAnnee)
   const chartData: ChartData = {
