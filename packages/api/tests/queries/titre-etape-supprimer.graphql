@@ -1,5 +1,0 @@
-mutation EtapeSupprimer($id: ID!) {
-  etapeSupprimer(id: $id) {
-    slug
-  }
-}

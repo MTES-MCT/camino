@@ -2,16 +2,14 @@ import { GraphQLResolveInfo } from 'graphql'
 
 import { Context, ITitre, ITitreEtape } from '../../../types.js'
 
-import { titreEtapeGet, titreEtapeUpdate, titreEtapeUpsert } from '../../../database/queries/titres-etapes.js'
+import { titreEtapeGet, titreEtapeUpsert } from '../../../database/queries/titres-etapes.js'
 import { titreDemarcheGet } from '../../../database/queries/titres-demarches.js'
-import { titreGet } from '../../../database/queries/titres.js'
 
 import { titreEtapeUpdateTask } from '../../../business/titre-etape-update.js'
 import { titreEtapeHeritageBuild } from './_titre-etape.js'
 import { titreEtapeUpdationValidate } from '../../../business/validations/titre-etape-updation-validate.js'
 
 import { fieldsBuild } from './_fields-build.js'
-import { titreDemarcheUpdatedEtatValidate } from '../../../business/validations/titre-demarche-etat-validate.js'
 import { titreEtapeFormat } from '../../_format/titres-etapes.js'
 import { userSuper } from '../../../database/user-super.js'
 import { titreEtapeAdministrationsEmailsSend, titreEtapeUtilisateursEmailsSend } from './_titre-etape-email.js'
@@ -550,71 +548,6 @@ export const etapeModifier = async (
     etapeUpdated = await titreEtapeGet(etapeUpdated.id, { fields }, user)
 
     return titreEtapeFormat(etapeUpdated!)
-  } catch (e) {
-    console.error(e)
-
-    throw e
-  }
-}
-
-export const etapeSupprimer = async ({ id }: { id: EtapeId }, { user, pool }: Context) => {
-  try {
-    if (!user) {
-      throw new Error("l'étape n'existe pas")
-    }
-
-    const titreEtape = await titreEtapeGet(
-      id,
-      {
-        fields: {
-          demarche: { titre: { pointsEtape: { id: {} } } },
-        },
-      },
-      user
-    )
-
-    if (isNullOrUndefined(titreEtape)) throw new Error("l'étape n'existe pas")
-    if (!titreEtape.demarche || !titreEtape.demarche.titre || titreEtape.demarche.titre.administrationsLocales === undefined || !titreEtape.demarche.titre.titreStatutId) {
-      throw new Error('la démarche n’est pas chargée complètement')
-    }
-
-    if (
-      !canEditEtape(user, titreEtape.typeId, titreEtape.isBrouillon, titreEtape.titulaireIds ?? [], titreEtape.demarche.titre.administrationsLocales ?? [], titreEtape.demarche.typeId, {
-        typeId: titreEtape.demarche.titre.typeId,
-        titreStatutId: titreEtape.demarche.titre.titreStatutId,
-      })
-    )
-      throw new Error('droits insuffisants')
-
-    const titreDemarche = await titreDemarcheGet(
-      titreEtape.titreDemarcheId,
-      {
-        fields: {
-          titre: {
-            demarches: { etapes: { id: {} } },
-          },
-          etapes: { id: {} },
-        },
-      },
-      userSuper
-    )
-
-    if (!titreDemarche) throw new Error("la démarche n'existe pas")
-
-    if (!titreDemarche.titre) throw new Error("le titre n'existe pas")
-
-    const rulesErrors = titreDemarcheUpdatedEtatValidate(titreDemarche.typeId, titreDemarche.titre, titreEtape, titreDemarche.id, titreDemarche.etapes, true)
-
-    if (rulesErrors.length) {
-      throw new Error(rulesErrors.join(', '))
-    }
-    await titreEtapeUpdate(id, { archive: true }, user, titreDemarche.titreId)
-
-    await titreEtapeUpdateTask(pool, null, titreEtape.titreDemarcheId, user)
-
-    const titreUpdated = await titreGet(titreDemarche.titreId, { fields: { id: {} } }, user)
-
-    return { slug: titreUpdated?.slug }
   } catch (e) {
     console.error(e)
 
