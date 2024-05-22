@@ -150,7 +150,7 @@
     "rules": {
       "camelcase": 0,
       "sql/format": [
-        2,
+        0,
         {
           "ignoreExpressions": false,
           "ignoreInline": true,
