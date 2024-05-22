@@ -182,9 +182,7 @@ describe('titre', () => {
     const res = await graphQLCall(dbPool, titreQuery, { id: 'titre-id' }, undefined)
 
     expect(res.body.errors).toBe(undefined)
-    expect(res.body.data).toMatchObject({
-      titre: { id: 'titre-id' },
-    })
+    expect(res.body.data.titres.elements[0]).toMatchObject({ id: 'titre-id' })
   })
 
   test('ne peut pas voir un titre qui n\'est pas en "lecture publique" (utilisateur anonyme)', async () => {
@@ -192,7 +190,7 @@ describe('titre', () => {
     const res = await graphQLCall(dbPool, titreQuery, { id: 'titre-id' }, undefined)
 
     expect(res.body.errors).toBe(undefined)
-    expect(res.body.data).toStrictEqual({ titre: null })
+    expect(res.body.data.titres.elements[0]).toBeUndefined()
   })
 
   test('ne peut voir que les démarches qui sont en "lecture publique" (utilisateur anonyme)', async () => {
@@ -200,14 +198,12 @@ describe('titre', () => {
     const res = await graphQLCall(dbPool, titreQuery, { id: 'titre-id' }, undefined)
 
     expect(res.body.errors).toBe(undefined)
-    expect(res.body.data).toMatchObject({
-      titre: {
-        id: newTitreId('titre-id'),
-        demarches: [{ id: 'titre-id-demarche-oct' }],
-      },
+    expect(res.body.data.titres.elements[0]).toMatchObject({
+      id: newTitreId('titre-id'),
+      demarches: [{ id: 'titre-id-demarche-oct' }],
     })
 
-    expect(res.body.data.titre.demarches.length).toEqual(1)
+    expect(res.body.data.titres.elements[0].demarches.length).toEqual(1)
   })
 
   test('ne peut voir que les étapes qui sont en "lecture publique" (utilisateur anonyme)', async () => {
@@ -215,18 +211,16 @@ describe('titre', () => {
     const res = await graphQLCall(dbPool, titreQuery, { id: 'titre-id' }, undefined)
 
     expect(res.body.errors).toBe(undefined)
-    expect(res.body.data).toMatchObject({
-      titre: {
-        id: newTitreId('titre-id'),
-        demarches: [
-          {
-            id: 'titre-id-demarche-id',
-            etapes: [{ id: 'titre-id-demarche-id-dpu' }],
-          },
-        ],
-      },
+    expect(res.body.data.titres.elements[0]).toMatchObject({
+      id: newTitreId('titre-id'),
+      demarches: [
+        {
+          id: 'titre-id-demarche-id',
+          etapes: [{ id: 'titre-id-demarche-id-dpu' }],
+        },
+      ],
     })
-    expect(res.body.data.titre.demarches[0].etapes.length).toEqual(1)
+    expect(res.body.data.titres.elements[0].demarches[0].etapes.length).toEqual(1)
   })
 
   test('ne peut pas voir certaines étapes (utilisateur DGTM)', async () => {
@@ -234,9 +228,9 @@ describe('titre', () => {
     const res = await graphQLCall(dbPool, titreQuery, { id: 'titre-id' }, { role: 'admin', administrationId: ADMINISTRATION_IDS['DGTM - GUYANE'] })
 
     expect(res.body.errors).toBe(undefined)
-    expect(res.body.data.titre.demarches[0].etapes).toHaveLength(8)
+    expect(res.body.data.titres.elements[0].demarches[0].etapes).toHaveLength(8)
     expect(
-      res.body.data.titre.demarches[0].etapes.map(({ id }: { id: string }) => ({
+      res.body.data.titres.elements[0].demarches[0].etapes.map(({ id }: { id: string }) => ({
         id,
       }))
     ).toEqual(
@@ -266,9 +260,9 @@ describe('titre', () => {
     )
 
     expect(res.body.errors).toBe(undefined)
-    expect(res.body.data.titre.demarches[0].etapes.length).toEqual(9)
+    expect(res.body.data.titres.elements[0].demarches[0].etapes.length).toEqual(9)
     expect(
-      res.body.data.titre.demarches[0].etapes.map(({ id }: { id: string }) => ({
+      res.body.data.titres.elements[0].demarches[0].etapes.map(({ id }: { id: string }) => ({
         id,
       }))
     ).toEqual(

@@ -15,26 +15,6 @@ import { RegionId } from 'camino-common/src/static/region.js'
 import { FacadesMaritimes } from 'camino-common/src/static/facades.js'
 import { isTitreType } from 'camino-common/src/static/titresTypes.js'
 
-/**
- * TODO 2022-07-12 enlever cette fonction et nettoyer les tests d'intégration
- * @deprecated Not used by frontend anymore, only by integration tests
- */
-export const titre = async ({ id }: { id: string }, { user }: Context, info: GraphQLResolveInfo) => {
-  try {
-    const fields = fieldsBuild(info)
-
-    const titre = await titreGet(id, { fields, fetchHeritage: true }, user)
-
-    if (!titre) return null
-
-    return titreFormat(titre, fields)
-  } catch (e) {
-    console.error(e)
-
-    throw e
-  }
-}
-
 export const titres = async (
   {
     intervalle,

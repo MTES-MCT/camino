@@ -1,6 +1,8 @@
 query Titre($id: ID!) {
-  titre(id: $id) {
-    ...titre
+  titres(ids: [$id]) {
+    elements {
+      ...titre
+    }
   }
 }
 
