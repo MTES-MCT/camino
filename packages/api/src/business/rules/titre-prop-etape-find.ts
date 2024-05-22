@@ -13,6 +13,7 @@ import { titreDemarcheSortAsc } from '../utils/titre-elements-sort-asc.js'
 import { titreEtapesSortDescByOrdre } from '../utils/titre-etapes-sort.js'
 import { isEtapeDecision } from 'camino-common/src/static/etapesTypes.js'
 import { isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
+import { ETAPES_STATUTS } from 'camino-common/src/static/etapesStatuts.js'
 
 const etapeAmodiataireFind = (date: CaminoDate, titreEtape: ITitreEtape, titreDemarches: Pick<ITitreDemarche, 'demarcheDateDebut' | 'demarcheDateFin' | 'id'>[]) => {
   const titreDemarche = titreDemarches.find(td => td.id === titreEtape.titreDemarcheId)
@@ -29,15 +30,19 @@ const etapeAmodiataireFind = (date: CaminoDate, titreEtape: ITitreEtape, titreDe
 
   return false
 }
-
+const etapesStatutAccepteeFaitOuFavorable = [ETAPES_STATUTS.ACCEPTE, ETAPES_STATUTS.FAIT, ETAPES_STATUTS.FAVORABLE]
 const etapeValideCheck = (titreEtape: ITitreEtape, titreDemarcheTypeId: DemarcheTypeId, titreStatutId: TitreStatutId, propId?: IPropId) => {
   // si l'étape est une demande et que le titre est en demande initiale (statut réservé au octroi)
   if (titreEtape.typeId === 'mfr' && titreStatutId === 'dmi') {
     return true
   }
 
+  if (titreEtape.isBrouillon) {
+    return false
+  }
+
   // si l'étape n'a pas le statut acceptée, fait ou favorable
-  if (!['acc', 'fai', 'fav'].includes(titreEtape.statutId)) {
+  if (!etapesStatutAccepteeFaitOuFavorable.includes(titreEtape.statutId)) {
     return false
   }
 

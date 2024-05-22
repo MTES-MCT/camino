@@ -237,7 +237,7 @@ describe("statut d'une démarche", () => {
   })
 
   test("une démarche d'octroi dont l'étape la plus récente est mfr a le statut “en construction”", () => {
-    expect(titreDemarcheStatutIdFind('oct', etapesBuild([{ typeId: 'mfr', statutId: 'aco' }]), 'pxm', newDemarcheId())).toEqual('eco')
+    expect(titreDemarcheStatutIdFind('oct', etapesBuild([{ typeId: 'mfr', statutId: 'fai', isBrouillon: true }]), 'pxm', newDemarcheId())).toEqual('eco')
   })
 
   test("une démarche d'octroi dont l'étape la plus récente est mcr a le statut “en instruction”", () => {

@@ -16,6 +16,7 @@ describe('getMostRecentValuePropFromEtapeFondamentaleValide', () => {
         perimetre: null,
       },
       etape_statut_id: 'acc',
+      is_brouillon: false,
       ordre: 2,
     }
 
@@ -31,6 +32,7 @@ describe('getMostRecentValuePropFromEtapeFondamentaleValide', () => {
         perimetre: null,
       },
       etape_statut_id: 'acc',
+      is_brouillon: false,
       ordre: 1,
     }
 

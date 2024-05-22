@@ -88,6 +88,7 @@ const perimetre: FeatureMultiPolygon = {
 const etape: Props['etape'] = {
   id: etapeIdValidator.parse('id'),
   statutId: 'fai',
+  isBrouillon: false,
   typeId: 'mfr',
   contenu: { arm: { mecanise: true, franchissements: 2 } },
   date: toCaminoDate('2022-02-02'),
@@ -147,7 +148,6 @@ const etapeEditFormApiClient: Props['apiClient'] = {
 
     return Promise.resolve([
       { etapeTypeId: 'mfr', etapeStatutId: 'fai', mainStep: true },
-      { etapeTypeId: 'mfr', etapeStatutId: 'aco', mainStep: true },
       { etapeTypeId: 'mdp', etapeStatutId: 'fai', mainStep: true },
     ])
   },

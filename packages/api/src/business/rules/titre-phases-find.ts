@@ -10,7 +10,7 @@ import { CaminoDate, dateAddMonths, isBefore, toCaminoDate } from 'camino-common
 import { titreDemarcheSortAsc } from '../utils/titre-elements-sort-asc.js'
 import { ETAPES_STATUTS } from 'camino-common/src/static/etapesStatuts.js'
 import { isDemarcheStatutNonStatue } from 'camino-common/src/static/demarchesStatuts.js'
-import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes.js'
+import { ETAPES_TYPES, EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
 import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools.js'
 const DATE_PAR_DEFAUT_TITRE_INFINI = toCaminoDate('2018-12-31')
 /**
@@ -66,7 +66,7 @@ type Phase = { dateDebut: CaminoDate; dateFin: CaminoDate | null }
 type IntermediateTitrePhase = Phase & { demarcheId: DemarcheId; dateDeFinParDefaut?: true }
 export const titrePhasesFind = (titreDemarches: TitreDemarchePhaseFind[], titreTypeId: TitreTypeId): { [key in DemarcheId]?: Phase } => {
   const sortedDemarches = titreDemarcheSortAsc(titreDemarches).map(demarche => {
-    return { ...demarche, etapes: demarche.etapes?.filter(({ statutId }) => statutId !== ETAPES_STATUTS.EN_CONSTRUCTION) }
+    return { ...demarche, etapes: demarche.etapes?.filter(({ isBrouillon }) => !isBrouillon) }
   })
 
   const titreDemarcheAnnulation = titreDemarcheAnnulationFind(titreDemarches)
@@ -168,9 +168,9 @@ export const titrePhasesFind = (titreDemarches: TitreDemarchePhaseFind[], titreT
   }, {})
 }
 
-export type TitreEtapePhaseFind = Pick<ITitreEtape, 'titreDemarcheId' | 'ordre' | 'typeId' | 'dateFin' | 'duree' | 'dateDebut' | 'date' | 'statutId' | 'geojson4326Perimetre'>
+export type TitreEtapePhaseFind = Pick<ITitreEtape, 'titreDemarcheId' | 'ordre' | 'typeId' | 'dateFin' | 'duree' | 'dateDebut' | 'date' | 'statutId' | 'geojson4326Perimetre' | 'isBrouillon'>
 export type TitreDemarchePhaseFind = Pick<ITitreDemarche, 'statutId' | 'ordre' | 'typeId' | 'id' | 'titreId' | 'demarcheDateDebut' | 'demarcheDateFin'> & { etapes?: TitreEtapePhaseFind[] }
-
+const etapeTypesIds: EtapeTypeId[] = ['dpu', 'dup', 'rpu', 'dex', 'dux', 'def', 'sco', 'aco']
 const titreDemarcheNormaleDateFinAndDureeFind = (titreEtapes: TitreEtapePhaseFind[]): { duree: number; dateFin: CaminoDate | null | undefined } => {
   const titreEtapesSorted = titreEtapesSortDescByOrdre(titreEtapes)
 
@@ -186,7 +186,7 @@ const titreDemarcheNormaleDateFinAndDureeFind = (titreEtapes: TitreEtapePhaseFin
     return { dateFin: desistementDemandeur.date, duree: 0 }
   }
 
-  const titreEtapeHasDateFinOrDuree = titreEtapesSorted.find(({ typeId, dateFin, duree }) => ['dpu', 'dup', 'rpu', 'dex', 'dux', 'def', 'sco', 'aco'].includes(typeId) && (dateFin || duree))
+  const titreEtapeHasDateFinOrDuree = titreEtapesSorted.find(({ typeId, dateFin, duree }) => etapeTypesIds.includes(typeId) && (dateFin || duree))
 
   if (!titreEtapeHasDateFinOrDuree) {
     const etapeClassementSansSuite = titreEtapesSorted.find(({ typeId }) => typeId === ETAPES_TYPES.classementSansSuite)

@@ -325,6 +325,7 @@ const titreBuild = (
             ordre: 0,
             titreDemarcheId: newDemarcheId(`${titreId}-demarche-id`),
             statutId: 'enc',
+            isBrouillon: false,
             date: toCaminoDate('2020-01-01'),
             administrationsLocales: administrationIdLocale ? [administrationIdLocale] : [],
           },

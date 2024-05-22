@@ -31,6 +31,7 @@ export type DemarcheIdOrSlug = z.infer<typeof demarcheIdOrSlugValidator>
 
 const demarcheEtapeCommonValidator = z.object({
   etape_statut_id: etapeStatutIdValidator,
+  is_brouillon: z.boolean(),
   date: caminoDateValidator,
   id: etapeIdValidator,
   ordre: z.number(),

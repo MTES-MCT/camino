@@ -8,10 +8,11 @@ import { TitreEtapeForMachine, toMachineEtapes } from '../rules-demarches/machin
 import { DemarcheStatutId, DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { DemarcheTypeId, TravauxIds } from 'camino-common/src/static/demarchesTypes.js'
+import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
 
-const titreEtapesDecisivesCommunesTypes = ['css', 'abd', 'and']
+const titreEtapesDecisivesCommunesTypes: EtapeTypeId[] = ['css', 'abd', 'and']
 
-const titreEtapesDecisivesDemandesTypes = [
+const titreEtapesDecisivesDemandesTypes: EtapeTypeId[] = [
   'mfr',
   'mdp',
   'men',
@@ -33,13 +34,13 @@ const titreEtapesDecisivesDemandesTypes = [
   ...titreEtapesDecisivesCommunesTypes,
 ]
 
-const titreDemarchesDemandesTypes = ['oct', 'pro', 'pr1', 'pr2', 'pre', 'ren', 'fus', 'exp', 'exs', 'mut', 'vut', 'amo', 'res', 'ces', 'dep', 'vus', 'vct']
+const titreDemarchesDemandesTypes: DemarcheTypeId[] = ['oct', 'pro', 'pr1', 'pr2', 'pre', 'ren', 'fus', 'exp', 'exs', 'mut', 'vut', 'amo', 'res', 'ces', 'dep', 'vct']
 
 const titreDemarchesTravauxTypes = ['aom', 'dam', 'dot'] as const satisfies readonly TravauxIds[]
 
-const titreEtapesDecisivesUnilateralesTypes = ['ide', 'spp', 'dup', 'dux', 'aof', 'aco', ...titreEtapesDecisivesCommunesTypes]
+const titreEtapesDecisivesUnilateralesTypes: EtapeTypeId[] = ['ide', 'spp', 'dup', 'dux', 'aof', 'aco', ...titreEtapesDecisivesCommunesTypes]
 
-const titreDemarchesUnilateralesTypes = ['ret', 'prr', 'dec']
+const titreDemarchesUnilateralesTypes: DemarcheTypeId[] = ['ret', 'prr', 'dec']
 
 const titresDemarcheCommunesStatutIdFind = (titreEtapeRecent: Pick<ITitreEtape, 'typeId' | 'statutId'>): DemarcheStatutId | null => {
   //  - le type de l’étape est classement sans suite (css)

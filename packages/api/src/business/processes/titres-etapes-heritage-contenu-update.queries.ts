@@ -32,6 +32,7 @@ const getEtapesByDemarcheValidator = z.object({
   communes: z.array(communeValidator.pick({ id: true })).nullable(),
   surface: z.number().nullable(),
   type_id: etapeTypeIdValidator.nullable(),
+  is_brouillon: z.boolean().nullable(),
 })
 
 export const getDemarches = async (
@@ -60,7 +61,7 @@ export const getDemarches = async (
       statutId: DemarcheStatutId
     }
   }>((acc, row) => {
-    if (!acc[row.demarche_id]) {
+    if (!isNotNullNorUndefined(acc[row.demarche_id])) {
       acc[row.demarche_id] = {
         etapes: [],
         id: row.demarche_id,
@@ -71,12 +72,20 @@ export const getDemarches = async (
       }
     }
 
-    if (isNotNullNorUndefined(row.id) && isNotNullNorUndefined(row.ordre) && isNotNullNorUndefined(row.type_id) && isNotNullNorUndefined(row.statut_id) && isNotNullNorUndefined(row.date)) {
+    if (
+      isNotNullNorUndefined(row.id) &&
+      isNotNullNorUndefined(row.ordre) &&
+      isNotNullNorUndefined(row.type_id) &&
+      isNotNullNorUndefined(row.statut_id) &&
+      isNotNullNorUndefined(row.date) &&
+      isNotNullNorUndefined(row.is_brouillon)
+    ) {
       acc[row.demarche_id].etapes.push({
         id: row.id,
         ordre: row.ordre,
         typeId: row.type_id,
         statutId: row.statut_id,
+        isBrouillon: row.is_brouillon,
         date: row.date,
         contenu: row.contenu,
         heritageContenu: row.heritage_contenu,
@@ -100,11 +109,12 @@ SELECT
     etape.date,
     etape.contenu,
     etape.surface,
+    etape.is_brouillon,
     etape.heritage_contenu,
     demarche.id as demarche_id,
     demarche.type_id as demarche_type_id,
     demarche.statut_id as demarche_statut_id,
-    etape.communes as communes
+    etape.communes
 from
     titres_demarches demarche
     left join titres_etapes etape on (etape.titre_demarche_id = demarche.id

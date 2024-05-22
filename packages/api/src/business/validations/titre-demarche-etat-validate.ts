@@ -41,12 +41,12 @@ const titreDemarcheEtapesBuild = <T extends Pick<Partial<ITitreEtape>, 'id'>>(ti
 export const titreDemarcheUpdatedEtatValidate = (
   demarcheTypeId: DemarcheTypeId,
   titre: ITitre,
-  titreEtape: Pick<Partial<ITitreEtape>, 'id'> & Pick<ITitreEtape, 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'communes' | 'surface'>,
+  titreEtape: Pick<Partial<ITitreEtape>, 'id'> & Pick<ITitreEtape, 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'communes' | 'surface' | 'isBrouillon'>,
   demarcheId: DemarcheId,
-  titreDemarcheEtapes?: Pick<ITitreEtape, 'id' | 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'communes' | 'surface'>[] | null,
+  titreDemarcheEtapes?: Pick<ITitreEtape, 'id' | 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'communes' | 'surface' | 'isBrouillon'>[] | null,
   suppression = false
 ): string[] => {
-  let titreDemarcheEtapesNew = titreDemarcheEtapesBuild(titreEtape, suppression, titreDemarcheEtapes)
+  const titreDemarcheEtapesNew = titreDemarcheEtapesBuild(titreEtape, suppression, titreDemarcheEtapes)
   const demarcheDefinition = demarcheDefinitionFind(titre.typeId, demarcheTypeId, titreDemarcheEtapesNew, demarcheId)
   const titreDemarchesErrors: string[] = []
 
@@ -68,7 +68,7 @@ export const titreDemarcheUpdatedEtatValidate = (
   }
 
   // si on essaye d’ajouter ou de modifier une demande non déposée
-  if (titreEtape.typeId === 'mfr' && titreEtape.statutId !== 'fai' && !suppression) {
+  if (titreEtape.typeId === 'mfr' && titreEtape.isBrouillon && !suppression) {
     const etapesDemande = titreDemarcheEtapes?.filter(te => te.typeId === 'mfr')
 
     // si c’est la création de la première demande, pas besoin de faire de vérification avec l’arbre
@@ -82,9 +82,6 @@ export const titreDemarcheUpdatedEtatValidate = (
     }
 
     return ['il y a déjà une demande en construction']
-  } else {
-    // on supprime les étapes en construction de la liste des étapes, car elle ne doivent pas ếtre prises en compte par l’arbre
-    titreDemarcheEtapesNew = titreDemarcheEtapesNew.filter(te => te.statutId !== 'aco')
   }
 
   // vérifie que toutes les étapes existent dans l’arbre

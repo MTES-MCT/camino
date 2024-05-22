@@ -49,6 +49,7 @@ beforeAll(async () => {
       {
         typeId: 'mfr',
         statutId: 'fai',
+        isBrouillon: false,
         date: toCaminoDate('2022-01-01'),
         ordre: 0,
         administrationsLocales: [ADMINISTRATION_IDS['DGTM - GUYANE']],
@@ -57,18 +58,21 @@ beforeAll(async () => {
       {
         typeId: 'mdp',
         statutId: 'fai',
+        isBrouillon: false,
         date: toCaminoDate('2022-02-01'),
         ordre: 1,
       },
       {
         typeId: 'pfd',
         statutId: 'fai',
+        isBrouillon: false,
         date: toCaminoDate('2022-02-10'),
         ordre: 2,
       },
       {
         typeId: 'mcp',
         statutId: 'com',
+        isBrouillon: false,
         date: toCaminoDate('2022-03-10'),
         ordre: 3,
       },
@@ -81,6 +85,7 @@ beforeAll(async () => {
       {
         typeId: 'mfr',
         statutId: 'fai',
+        isBrouillon: false,
         date: toCaminoDate('2022-01-01'),
         ordre: 0,
         administrationsLocales: [ADMINISTRATION_IDS['DGTM - GUYANE']],
@@ -88,12 +93,14 @@ beforeAll(async () => {
       {
         typeId: 'mdp',
         statutId: 'fai',
+        isBrouillon: false,
         date: toCaminoDate('2022-02-01'),
         ordre: 1,
       },
       {
         typeId: 'pfd',
         statutId: 'fai',
+        isBrouillon: false,
         date: toCaminoDate('2022-02-10'),
         ordre: 2,
       },
@@ -481,6 +488,7 @@ describe('getTitre', () => {
                   "titulaireIds": null,
                 },
                 "id": "titre-etape-id",
+                "is_brouillon": false,
                 "notes": null,
                 "ordre": 0,
                 "sections_with_values": [

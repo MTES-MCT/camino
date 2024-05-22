@@ -86,6 +86,7 @@ export const getTitre = async (pool: Pool, user: User, idOrSlug: TitreIdOrSlug):
           etape_statut_id: etape.etape_statut_id,
           sections_with_values: contenu,
           entreprises_documents: entrepriseDocuments,
+          is_brouillon: etape.is_brouillon,
         }
         if (isEtapeTypeIdFondamentale(etape.etape_type_id)) {
           let perimetre: DemarcheEtapeFondamentale['fondamentale']['perimetre'] = null

@@ -11,6 +11,7 @@ import { demarcheTypeIdValidator } from './static/demarchesTypes.js'
 import { TitreId, titreIdValidator, titreSlugValidator } from './validators/titres.js'
 import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from './typescript-tools.js'
 import { EntrepriseId, entrepriseIdValidator } from './entreprise.js'
+import { isFondamentalesStatutOk } from './static/etapesStatuts.js'
 
 const commonTitreValidator = z.object({
   id: titreIdValidator,
@@ -115,16 +116,16 @@ export const utilisateurTitreAbonneValidator = z.object({ abonne: z.boolean() })
  * @public pour les tests
  */
 export type TitrePropTitreEtapeFindDemarcheEtape =
-  | Pick<DemarcheEtapeNonFondamentale, 'etape_statut_id' | 'etape_type_id' | 'ordre'>
-  | Pick<DemarcheEtapeFondamentale, 'etape_statut_id' | 'etape_type_id' | 'fondamentale' | 'ordre'>
-export type TitrePropTitreEtapeFindDemarche<F extends Pick<DemarcheEtape, 'etape_statut_id' | 'etape_type_id' | 'ordre'>> = Pick<TitreGetDemarche, 'ordre'> & {
+  | Pick<DemarcheEtapeNonFondamentale, 'etape_statut_id' | 'etape_type_id' | 'ordre' | 'is_brouillon'>
+  | Pick<DemarcheEtapeFondamentale, 'etape_statut_id' | 'etape_type_id' | 'fondamentale' | 'ordre' | 'is_brouillon'>
+export type TitrePropTitreEtapeFindDemarche<F extends Pick<DemarcheEtape, 'etape_statut_id' | 'etape_type_id' | 'ordre' | 'is_brouillon'>> = Pick<TitreGetDemarche, 'ordre'> & {
   etapes: F[]
 }
 
 export const getMostRecentValuePropFromEtapeFondamentaleValide = <
   P extends 'titulaireIds' | 'amodiataireIds' | 'perimetre' | 'substances',
-  F extends Pick<DemarcheEtapeFondamentale, 'etape_statut_id' | 'etape_type_id' | 'ordre' | 'fondamentale'>,
-  NF extends Pick<DemarcheEtapeNonFondamentale, 'etape_statut_id' | 'etape_type_id' | 'ordre'>,
+  F extends Pick<DemarcheEtapeFondamentale, 'etape_statut_id' | 'etape_type_id' | 'ordre' | 'fondamentale' | 'is_brouillon'>,
+  NF extends Pick<DemarcheEtapeNonFondamentale, 'etape_statut_id' | 'etape_type_id' | 'ordre' | 'is_brouillon'>,
 >(
   propId: P,
   titreDemarches: TitrePropTitreEtapeFindDemarche<F | NF>[]
@@ -134,7 +135,7 @@ export const getMostRecentValuePropFromEtapeFondamentaleValide = <
   for (const titreDemarche of titreDemarchesDesc) {
     const titreEtapeDesc = [...titreDemarche.etapes].sort((a, b) => b.ordre - a.ordre)
     for (const titreEtape of titreEtapeDesc) {
-      if ('fondamentale' in titreEtape && ['acc', 'fai', 'fav', 'aco'].includes(titreEtape.etape_statut_id)) {
+      if ('fondamentale' in titreEtape && isFondamentalesStatutOk(titreEtape.etape_statut_id) && !titreEtape.is_brouillon) {
         const value = titreEtape.fondamentale[propId]
         if ((Array.isArray(value) && isNotNullNorUndefinedNorEmpty(value)) || (!Array.isArray(value) && isNotNullNorUndefined(value))) {
           return value

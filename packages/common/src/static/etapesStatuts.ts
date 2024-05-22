@@ -1,7 +1,7 @@
 import { Couleur } from './couleurs.js'
 import { z } from 'zod'
 
-const IDS = ['acc', 'dre', 'enc', 'fai', 'dep', 'exe', 'req', 'com', 'inc', 'fav', 'def', 'fre', 'ajo', 'rej', 'ter', 'aco', 'nul', 'pro'] as const
+const IDS = ['acc', 'dre', 'enc', 'fai', 'dep', 'exe', 'req', 'com', 'inc', 'fav', 'def', 'fre', 'ajo', 'rej', 'ter', 'nul', 'pro'] as const
 export const ETAPES_STATUTS = {
   ACCEPTE: 'acc',
   DEFAVORABLE_AVEC_RESERVES: 'dre',
@@ -18,7 +18,6 @@ export const ETAPES_STATUTS = {
   AJOURNE: 'ajo',
   REJETE: 'rej',
   TERMINE: 'ter',
-  EN_CONSTRUCTION: 'aco',
   NON_APPLICABLE: 'nul',
   PROGRAMME: 'pro',
 } as const satisfies Record<string, EtapeStatutId>
@@ -38,7 +37,6 @@ export interface EtapeStatut<T = EtapeStatutId> {
 // TODO 2023-10-24 utiliser les couleurs de Sarah
 export const EtapesStatuts: { [key in EtapeStatutId]: EtapeStatut<key> } = {
   acc: { id: 'acc', nom: 'accepté', couleur: 'success', description: "La demande a fait l’objet d’une décision favorable de l'administration." },
-  aco: { id: 'aco', nom: 'en construction', couleur: 'warning' },
   ajo: { id: 'ajo', nom: 'ajourné', couleur: 'warning' },
   com: { id: 'com', nom: 'complet', couleur: 'success' },
   def: { id: 'def', nom: 'défavorable', couleur: 'error' },
@@ -81,3 +79,6 @@ const ETAPES_STATUTS_OK_IDS = [
 ] as const satisfies Readonly<EtapeStatutId[]>
 
 export const isEtapeStatusOk = (etapeStatutId: EtapeStatutId): boolean => ETAPES_STATUTS_OK_IDS.includes(etapeStatutId)
+
+const EtapesFondamentalesStatutsOkIds = [ETAPES_STATUTS.ACCEPTE, ETAPES_STATUTS.FAIT, ETAPES_STATUTS.FAVORABLE]
+export const isFondamentalesStatutOk = (etapeStatutId: EtapeStatutId): boolean => EtapesFondamentalesStatutsOkIds.includes(etapeStatutId)

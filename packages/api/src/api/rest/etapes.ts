@@ -3,19 +3,19 @@ import { CaminoRequest, CustomResponse } from './express-type.js'
 import { EtapeTypeEtapeStatutWithMainStep, etapeIdValidator, EtapeId, GetEtapeDocumentsByEtapeId, needAslAndDae, documentTypeIdComplementaireObligatoireDAE } from 'camino-common/src/etape.js'
 import { DemarcheId, demarcheIdValidator } from 'camino-common/src/demarche.js'
 import { HTTP_STATUS } from 'camino-common/src/http.js'
-import { CaminoDate, caminoDateValidator } from 'camino-common/src/date.js'
+import { CaminoDate, caminoDateValidator, getCurrent } from 'camino-common/src/date.js'
 import { titreDemarcheGet } from '../../database/queries/titres-demarches.js'
 import { userSuper } from '../../database/user-super.js'
 import { titreEtapeGet, titreEtapeUpdate } from '../../database/queries/titres-etapes.js'
 import { demarcheDefinitionFind } from '../../business/rules-demarches/definitions.js'
 import { etapeTypeDateFinCheck } from '../_format/etapes-types.js'
-import { User } from 'camino-common/src/roles.js'
+import { User, isBureauDEtudes, isEntreprise } from 'camino-common/src/roles.js'
 import { canCreateEtape, isEtapeDeposable } from 'camino-common/src/permissions/titres-etapes.js'
 import { TitresStatutIds } from 'camino-common/src/static/titresStatuts.js'
 import { CaminoMachines } from '../../business/rules-demarches/machines.js'
 import { titreEtapesSortAscByOrdre } from '../../business/utils/titre-etapes-sort.js'
 import { Etape, TitreEtapeForMachine, titreEtapeForMachineValidator, toMachineEtapes } from '../../business/rules-demarches/machine-common.js'
-import { EtapesTypes, EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
+import { canBeBrouillon, EtapesTypes, EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
 import { SimplePromiseFn, isNotNullNorUndefined, isNullOrUndefined, memoize, onlyUnique } from 'camino-common/src/typescript-tools.js'
 import { getEtapesTDE, isTDEExist } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/index.js'
 import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts.js'
@@ -24,7 +24,6 @@ import { DemarchesTypes } from 'camino-common/src/static/demarchesTypes.js'
 import { Pool } from 'pg'
 import { EntrepriseId, EtapeEntrepriseDocument } from 'camino-common/src/entreprise.js'
 import { getDocumentsByEtapeId, getEntrepriseDocumentIdsByEtapeId } from '../../database/queries/titres-etapes.queries.js'
-import { etapeSupprimer, statutIdAndDateGet } from '../graphql/resolvers/titres-etapes.js'
 import { GetEtapeDataForEdition, administrationsLocalesByEtapeId, entreprisesTitulairesOuAmoditairesByEtapeId, getEtapeByDemarcheIdAndEtapeTypeId, getEtapeDataForEdition } from './etapes.queries.js'
 import { SDOMZoneId } from 'camino-common/src/static/sdom.js'
 import { objectClone } from '../../tools/index.js'
@@ -35,6 +34,7 @@ import { valeurFind } from 'camino-common/src/sections.js'
 import { getElementWithValue, getSections, getSectionsWithValue } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { AdministrationId } from 'camino-common/src/static/administrations.js'
+import { etapeSupprimer } from '../graphql/resolvers/titres-etapes.js'
 
 export const getEtapeEntrepriseDocuments =
   (pool: Pool) =>
@@ -155,7 +155,7 @@ export const getEtapeDocuments =
 
         let dae: null | GetEtapeDocumentsByEtapeId['dae'] = null
         let asl: null | GetEtapeDocumentsByEtapeId['asl'] = null
-        if (needAslAndDae({ etapeTypeId: etapeData.etape_type_id, demarcheTypeId: etapeData.demarche_type_id, titreTypeId: etapeData.titre_type_id }, etapeData.etape_statut_id, user)) {
+        if (needAslAndDae({ etapeTypeId: etapeData.etape_type_id, demarcheTypeId: etapeData.demarche_type_id, titreTypeId: etapeData.titre_type_id }, etapeData.etape_is_brouillon, user)) {
           dae = await getDaeDocument(pool, user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires, etapeData)
           asl = await getAslDocument(pool, user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires, etapeData)
         }
@@ -254,6 +254,7 @@ export const deposeEtape = (pool: Pool) => async (req: CaminoRequest, res: Custo
         titre_public_lecture: titre.publicLecture ?? false,
         titre_type_id: titre.typeId,
         etape_slug: titreEtape.slug,
+        etape_is_brouillon: titreEtape.isBrouillon,
       })
 
       const aslDocument = await getAslDocument(pool, user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires, {
@@ -266,6 +267,7 @@ export const deposeEtape = (pool: Pool) => async (req: CaminoRequest, res: Custo
         titre_public_lecture: titre.publicLecture ?? false,
         titre_type_id: titre.typeId,
         etape_slug: titreEtape.slug,
+        etape_is_brouillon: titreEtape.isBrouillon,
       })
 
       // TODO 2023-06-14 TS 5.1 n’arrive pas réduire le type de titre
@@ -282,12 +284,17 @@ export const deposeEtape = (pool: Pool) => async (req: CaminoRequest, res: Custo
       )
       if (!deposable) throw new Error('droits insuffisants')
 
-      const statutIdAndDate = statutIdAndDateGet(titreEtape, user, true)
+      if (!canBeBrouillon(titreEtape.typeId)) {
+        throw new Error('cette étape ne peut-être déposée')
+      }
+
+      const date = isEntreprise(user) || isBureauDEtudes(user) ? getCurrent() : titreEtape.date
 
       await titreEtapeUpdate(
         titreEtape.id,
         {
-          ...statutIdAndDate,
+          date,
+          isBrouillon: false,
         },
         user,
         titreDemarche.titreId
@@ -388,18 +395,10 @@ const demarcheEtapesTypesGet = async (titreDemarcheId: DemarcheId, date: CaminoD
   }
 
   return etapesTypes.filter(({ etapeTypeId }) =>
-    canCreateEtape(
-      user,
-      etapeTypeId,
-      titreEtapeId && etapeTypeId === titreEtape?.typeId ? titreEtape?.statutId ?? null : null,
-      titre.titulaireIds ?? [],
-      titre.administrationsLocales ?? [],
-      titreDemarche.typeId,
-      {
-        typeId: titre.typeId,
-        titreStatutId: titre.titreStatutId ?? TitresStatutIds.Indetermine,
-      }
-    )
+    canCreateEtape(user, etapeTypeId, true, titre.titulaireIds ?? [], titre.administrationsLocales ?? [], titreDemarche.typeId, {
+      typeId: titre.typeId,
+      titreStatutId: titre.titreStatutId ?? TitresStatutIds.Indetermine,
+    })
   )
 }
 

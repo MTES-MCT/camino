@@ -8,6 +8,7 @@ import { DemarcheId } from 'camino-common/src/demarche.js'
 import { Pool } from 'pg'
 import { TitreId } from 'camino-common/src/validators/titres.js'
 import { TitreEtapeForMachine, titreEtapeForMachineValidator } from '../rules-demarches/machine-common.js'
+import { isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools.js'
 
 export const titresEtapesOrdreUpdate = async (pool: Pool, user: UserNotNull, demarcheId?: DemarcheId) => {
   console.info()
@@ -33,7 +34,7 @@ export const titresEtapesOrdreUpdateVisibleForTesting = async (
   const titresEtapesIdsUpdated: string[] = []
 
   for (const titreDemarche of Object.values(titresDemarches)) {
-    if (titreDemarche.etapes) {
+    if (isNotNullNorUndefinedNorEmpty(titreDemarche.etapes)) {
       const etapesMachine = titreDemarche.etapes.map(etape => titreEtapeForMachineValidator.parse(etape))
 
       const etapes = titreEtapesSortAscByDate(etapesMachine, titreDemarche.id, titreDemarche.typeId, titreDemarche.titreTypeId)

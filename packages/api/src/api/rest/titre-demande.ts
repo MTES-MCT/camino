@@ -88,7 +88,8 @@ export const titreDemandeCreer = (pool: Pool) => async (req: CaminoRequest, res:
         const titreEtape: Omit<ITitreEtape, 'id'> = {
           titreDemarcheId,
           typeId: 'mfr',
-          statutId: 'aco',
+          statutId: 'fai',
+          isBrouillon: true,
           date,
           duree: titreDemande.typeId === 'arm' ? 4 : undefined,
           titulaireIds: [titreDemande.entrepriseId],

@@ -116,6 +116,7 @@ export const PureEtapeEdition = defineComponent<Props>(props => {
               date: null,
               typeId: null,
               statutId: null,
+              isBrouillon: false,
               substances: [],
               titulaireIds: [],
               amodiataireIds: [],
