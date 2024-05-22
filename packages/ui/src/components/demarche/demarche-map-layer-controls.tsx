@@ -37,7 +37,7 @@ type LayersControlProps = {
   overlays: OverlayName[]
 }
 
-export const sdomOverlayName = 'SDOM (schéma départemental d’orientation minière)'
+const sdomOverlayName = 'SDOM (schéma départemental d’orientation minière)'
 
 export const overlayLayers = [
   'SDOM',
@@ -52,7 +52,7 @@ export const overlayLayers = [
   contourForagesName,
   contourForagesLabel,
 ] as const
-export const overlayLayerIdValidator = z.enum(overlayLayers)
+const overlayLayerIdValidator = z.enum(overlayLayers)
 export type OverlayLayerId = z.infer<typeof overlayLayerIdValidator>
 
 export const overlayNames = [
@@ -64,7 +64,7 @@ export const overlayNames = [
   foragesSourceName,
   'Titres valides',
 ] as const
-export const overlayNameValidator = z.enum(overlayNames)
+const overlayNameValidator = z.enum(overlayNames)
 export type OverlayName = z.infer<typeof overlayNameValidator>
 
 export const overlayMapNames = {

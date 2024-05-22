@@ -2,12 +2,6 @@ import { DeepReadonly, readonly, ref, Ref } from 'vue'
 
 export const isEventWithTarget = (event: any): event is FocusEvent & { target: HTMLInputElement } => event.target
 
-export const updateFromEvent = (e: Event, myRef: Ref<string | null>) => {
-  if (isEventWithTarget(e)) {
-    myRef.value = e.target.value
-  }
-}
-
 let seed = Math.random()
 // USED Only for testing
 export const setSeed = (value: number): void => {
