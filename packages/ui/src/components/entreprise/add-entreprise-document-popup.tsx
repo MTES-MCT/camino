@@ -1,4 +1,3 @@
-import { updateFromEvent } from '@/utils/vue-tsx-utils'
 import { EntrepriseId } from 'camino-common/src/entreprise'
 import { computed, defineComponent, ref } from 'vue'
 import { FunctionalPopup } from '../_ui/functional-popup'
@@ -8,6 +7,8 @@ import { CaminoDate } from 'camino-common/src/date'
 import { InputFile } from '../_ui/dsfr-input-file'
 import { ApiClient } from '@/api/api-client'
 import { DsfrInput } from '../_ui/dsfr-input'
+import { DsfrSelect } from '../_ui/dsfr-select'
+import { DeepReadonly, map } from 'camino-common/src/typescript-tools'
 
 interface Props {
   close: () => void
@@ -15,9 +16,8 @@ interface Props {
   lockedEntrepriseDocumentTypeId?: EntrepriseDocumentTypeId
   apiClient: Pick<ApiClient, 'creerEntrepriseDocument' | 'uploadTempDocument'>
 }
-// TODO 2024-04-22 Utiliser un DsfrSelect
 export const AddEntrepriseDocumentPopup = defineComponent<Props>(props => {
-  const entrepriseDocumentTypeId = ref<(typeof EntrepriseDocumentTypeIds)[number] | null>(props.lockedEntrepriseDocumentTypeId ?? null)
+  const entrepriseDocumentTypeId = ref<DeepReadonly<(typeof EntrepriseDocumentTypeIds)[number]> | null>(props.lockedEntrepriseDocumentTypeId ?? null)
   const documentDate = ref<CaminoDate | null>(null)
   const entrepriseDocumentFile = ref<File | null>(null)
   const documentDescription = ref<string>('')
@@ -34,25 +34,17 @@ export const AddEntrepriseDocumentPopup = defineComponent<Props>(props => {
     documentDate.value = date
   }
 
-  const typeChange = (e: Event) => updateFromEvent(e, entrepriseDocumentTypeId)
+  const documentsTypes = map(sortedEntrepriseDocumentTypes, edt => ({ id: edt.id, label: edt.nom }))
+
+  const typeChange = (e: DeepReadonly<EntrepriseDocumentTypeId> | null) => {
+    entrepriseDocumentTypeId.value = e
+  }
   const content = () => (
     <form>
       {props.lockedEntrepriseDocumentTypeId ? null : (
         <fieldset class="fr-fieldset" id="text">
           <div class="fr-fieldset__element">
-            <div class="fr-select-group">
-              <label class="fr-label" for="type">
-                Type de document
-              </label>
-              <select class="fr-select" name="type" onChange={typeChange}>
-                <option value="" selected disabled hidden>
-                  Selectionnez un type de document
-                </option>
-                {sortedEntrepriseDocumentTypes.map(edt => {
-                  return <option value={edt.id}>{edt.nom}</option>
-                })}
-              </select>
-            </div>
+            <DsfrSelect legend={{ main: 'Type de document', placeholder: 'Selectionnez un type de document' }} initialValue={null} items={documentsTypes} valueChanged={typeChange} />
           </div>
         </fieldset>
       )}

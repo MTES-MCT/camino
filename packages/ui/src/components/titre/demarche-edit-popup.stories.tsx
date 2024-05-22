@@ -44,7 +44,7 @@ export const Edit: StoryFn = () => (
       typeId: 'amo',
       description: 'description',
     }}
-    titreTypeId={'apc'}
+    titreTypeId={'cxf'}
     titreNom="Nom du titre"
     tabId="demarches"
   />

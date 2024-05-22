@@ -1,18 +1,18 @@
 import { isEntrepriseOrBureauDetudeRole, Role, User, UserNotNull, isAdministration, isSuper, isEntrepriseOrBureauDEtude, isAdministrationRole } from 'camino-common/src/roles'
 import { computed, defineComponent, ref } from 'vue'
-import { Administrations, isAdministrationId, sortedAdministrations } from 'camino-common/src/static/administrations'
+import { AdministrationId, Administrations, sortedAdministrations } from 'camino-common/src/static/administrations'
 import { Entreprise, EntrepriseId } from 'camino-common/src/entreprise'
 import { UtilisateurToEdit } from 'camino-common/src/utilisateur'
 import { AsyncData } from '@/api/client-rest'
 import { LoadingElement } from '../_ui/functional-loader'
 import { canEditPermission, getAssignableRoles } from 'camino-common/src/permissions/utilisateurs'
-import { isEventWithTarget } from '@/utils/vue-tsx-utils'
 import { UtilisateurApiClient } from './utilisateur-api-client'
 import { Pill } from '../_ui/pill'
 import { TypeAheadSmartMultiple, Element } from '../_ui/typeahead-smart-multiple'
 import { ButtonIcon } from '../_ui/button-icon'
-import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
+import { isNotNullNorUndefined, map } from 'camino-common/src/typescript-tools'
 import { capitalize } from 'camino-common/src/strings'
+import { DsfrSelect } from '../_ui/dsfr-select'
 
 interface Props {
   user: User
@@ -140,9 +140,9 @@ const PermissionEdit = defineComponent<PermissionEditProps>(props => {
     return true
   })
 
-  const selectAdministration = (e: Event) => {
-    if (isEventWithTarget(e) && isAdministrationId(e.target.value)) {
-      updatingUtilisateur.value.administrationId = e.target.value
+  const selectAdministration = (e: AdministrationId | null) => {
+    if (isNotNullNorUndefined(e)) {
+      updatingUtilisateur.value.administrationId = e
     }
   }
 
@@ -216,13 +216,12 @@ const PermissionEdit = defineComponent<PermissionEditProps>(props => {
               </div>
 
               <div class="tablet-blob-3-4 mb">
-                <select placeholder="Administration" onChange={selectAdministration} value={updatingUtilisateur.value.administrationId} class="p-s mr-s">
-                  {sortedAdministrations.map(a => (
-                    <option key={a.id} value={a.id}>
-                      {a.abreviation}
-                    </option>
-                  ))}
-                </select>
+                <DsfrSelect
+                  items={map(sortedAdministrations, admin => ({ id: admin.id, label: admin.abreviation }))}
+                  initialValue={updatingUtilisateur.value.administrationId}
+                  legend={{ main: '' }}
+                  valueChanged={selectAdministration}
+                />
               </div>
             </div>
           ) : null}

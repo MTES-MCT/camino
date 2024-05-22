@@ -1,7 +1,6 @@
 import { defineComponent, onMounted, ref } from 'vue'
 import { GranulatsMarinsActivite } from './granulats-marins-activite'
 import { ConfigurableChart } from '../_charts/configurable-chart'
-import { isEventWithTarget } from '@/utils/vue-tsx-utils'
 import { StatistiqueGranulatsMarinsStatAnnee, StatistiquesGranulatsMarins } from 'camino-common/src/statistiques.js'
 import { AsyncData, getWithJson } from '@/api/client-rest'
 import { LoadingElement } from '../_ui/functional-loader'
@@ -9,6 +8,9 @@ import { CaminoDate, getAnnee, getCurrent, toCaminoDate } from 'camino-common/sr
 import type { ChartConfiguration } from 'chart.js'
 import { numberFormat } from 'camino-common/src/number'
 import styles from './statistiques.module.css'
+import { DsfrSelect } from '../_ui/dsfr-select'
+import { isNonEmptyArray, map } from 'camino-common/src/typescript-tools'
+import { DsfrSeparator } from '../_ui/dsfr-separator'
 
 const ids = ['titresPrw', 'titresPxw', 'titresCxw', 'concessionsValides'] as const
 
@@ -125,13 +127,13 @@ export const PureGranulatsMarins = defineComponent<Props>(props => {
       statsAnneesAfter2010: StatistiqueGranulatsMarinsStatAnnee[]
     }>
   >({ status: 'LOADING' })
-  const anneeActive = ref(0)
+  const anneeActive = ref<number>(0)
   const currentDate = props.currentDate ? props.currentDate : getCurrent()
   const anneeCurrent = Number(getAnnee(currentDate))
 
-  const anneeSelect = (event: Event) => {
-    if (isEventWithTarget(event)) {
-      anneeActive.value = Number(event.target.value)
+  const anneeSelect = (annee: number | null) => {
+    if (annee !== null) {
+      anneeActive.value = annee
     }
   }
   const suggestedMaxTitres = (titreType: (typeof ids)[number], annees: StatistiqueGranulatsMarinsStatAnnee[]) => {
@@ -373,8 +375,7 @@ export const PureGranulatsMarins = defineComponent<Props>(props => {
           />
         </div>
 
-        <div class="line-neutral width-full mb-xl" />
-        <h5>Sélectionner une année</h5>
+        <DsfrSeparator />
 
         <LoadingElement
           data={statistiquesGranulatsMarins.value}
@@ -389,20 +390,17 @@ export const PureGranulatsMarins = defineComponent<Props>(props => {
               }
             })
 
-            // TODO 2023-09-13 utiliser le dsfrSelect un fois la PR https://github.com/MTES-MCT/camino/pull/635 mergée
-            return (
-              <>
-                <select class="p-s mb-l full" onChange={anneeSelect}>
-                  {annees.map(annee => (
-                    <option key={annee.id} value={annee.id} selected={anneeActive.value === annee.id}>
-                      {annee.nom}
-                    </option>
-                  ))}
-                </select>
-
-                <GranulatsMarinsActivite statistiqueGranulatsMarins={item.statistiques[anneeActive.value]} enConstruction={annees.find(t => t.id === anneeActive.value)?.enConstruction} />
-              </>
-            )
+            if (isNonEmptyArray(annees)) {
+              const anneesLabel = map(annees, annee => ({ id: annee.id, label: annee.nom }))
+              return (
+                <>
+                  <DsfrSelect legend={{ main: 'Sélectionner une année' }} items={anneesLabel} initialValue={anneeActive.value} valueChanged={anneeSelect} />
+                  <GranulatsMarinsActivite statistiqueGranulatsMarins={item.statistiques[anneeActive.value]} enConstruction={annees.find(t => t.id === anneeActive.value)?.enConstruction} />
+                </>
+              )
+            } else {
+              return null
+            }
           }}
         />
 
