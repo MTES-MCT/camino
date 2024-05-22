@@ -36,51 +36,13 @@ export const insertTitreEtapeEntrepriseDocument = async (pool: Pool, params: { t
 
 const insertTitreEtapeEntrepriseDocumentInternal = sql<Redefine<IInsertTitreEtapeEntrepriseDocumentInternalQuery, { titre_etape_id: EtapeId; entreprise_document_id: EntrepriseDocumentId }, void>>`
 insert into titres_etapes_entreprises_documents (titre_etape_id, entreprise_document_id)
-    values ($ titre_etape_id, $ entreprise_document_id) perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8", LANG = (unset) are supported
-        and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8", LANG = (unset) are supported
-        and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8", LANG = (unset) are supported
-        and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8", LANG = (unset) are supported
-        and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8", LANG = (unset) are supported
-        and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8", LANG = (unset) are supported
-        and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8", LANG = (unset) are supported
-        and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8", LANG = (unset) are supported
-        and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8", LANG = (unset) are supported
-        and installed on your system. perl: warning: Falling back to the standard locale ("C").
-perl: warning: Setting locale failed.
-perl: warning: Please check that your locale settings:
-	LC_ALL = "C.UTF-8",
-	LANG = (unset)
-    are supported and installed on your system.
-perl: warning: Falling back to the standard locale ("C").
+    values ($ titre_etape_id, $ entreprise_document_id)
 `
 export const deleteTitreEtapeEntrepriseDocument = async (pool: Pool, params: { titre_etape_id: EtapeId }) => dbQueryAndValidate(deleteTitreEtapeEntrepriseDocumentInternal, params, pool, z.void())
 
 const deleteTitreEtapeEntrepriseDocumentInternal = sql<Redefine<IDeleteTitreEtapeEntrepriseDocumentInternalQuery, { titre_etape_id: EtapeId }, void>>`
 delete from titres_etapes_entreprises_documents
-where titre_etape_id = $ titre_etape_id perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8", LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").
-perl: warning: Setting locale failed.
-perl: warning: Please check that your locale settings:
-	LC_ALL = "C.UTF-8",
-	LANG = (unset)
-    are supported and installed on your system.
-perl: warning: Falling back to the standard locale ("C").
+where titre_etape_id = $ titre_etape_id
 `
 
 const getEntrepriseDocumentIdsByEtapeIdQuery = sql<Redefine<IGetEntrepriseDocumentIdsByEtapeIdQueryQuery, { titre_etape_id: EtapeId }, EtapeEntrepriseDocument>>`
@@ -94,30 +56,7 @@ from
     titres_etapes_entreprises_documents teed
     join entreprises_documents ed on ed.id = teed.entreprise_document_id
 where
-    teed.titre_etape_id = $ titre_etape_id perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8", LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").
-perl: warning: Setting locale failed.
-perl: warning: Please check that your locale settings:
-	LC_ALL = "C.UTF-8",
-	LANG = (unset)
-    are supported and installed on your system.
-perl: warning: Falling back to the standard locale ("C").
+    teed.titre_etape_id = $ titre_etape_id
 `
 
 export const getEntrepriseDocumentIdsByEtapeId = async (params: { titre_etape_id: EtapeId }, pool: Pool, user: User): Promise<EtapeEntrepriseDocument[]> => {
@@ -141,30 +80,7 @@ from
     titres_etapes_entreprises_documents teed
     join entreprises_documents ed on ed.id = teed.entreprise_document_id
 where
-    teed.titre_etape_id = $ titre_etape_id perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8", LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").
-perl: warning: Setting locale failed.
-perl: warning: Please check that your locale settings:
-	LC_ALL = "C.UTF-8",
-	LANG = (unset)
-    are supported and installed on your system.
-perl: warning: Falling back to the standard locale ("C").
+    teed.titre_etape_id = $ titre_etape_id
 `
 
 export const getEntrepriseDocumentLargeObjectIdsByEtapeId = async (params: { titre_etape_id: EtapeId }, pool: Pool, user: User): Promise<EntrepriseDocumentLargeObjectId[]> => {
@@ -212,30 +128,7 @@ update
 set
     largeobject_id = $ largeobject_id !
 where
-    id = $ id ! perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8", LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").
-perl: warning: Setting locale failed.
-perl: warning: Please check that your locale settings:
-	LC_ALL = "C.UTF-8",
-	LANG = (unset)
-    are supported and installed on your system.
-perl: warning: Falling back to the standard locale ("C").
+    id = $ id !
 `
 const updateEtapeDocumentInfoDb = sql<Redefine<IUpdateEtapeDocumentInfoDbQuery, { id: EtapeDocumentId; public_lecture: boolean; entreprises_lecture: boolean; description: string | null }, void>>`
 update
@@ -245,57 +138,11 @@ set
     entreprises_lecture = $ entreprises_lecture !,
     description = $ description
 where
-    id = $ id ! perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8", LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").
-perl: warning: Setting locale failed.
-perl: warning: Please check that your locale settings:
-	LC_ALL = "C.UTF-8",
-	LANG = (unset)
-    are supported and installed on your system.
-perl: warning: Falling back to the standard locale ("C").
+    id = $ id !
 `
 const deleteEtapeDocumentsDb = sql<Redefine<IDeleteEtapeDocumentsDbQuery, { ids: EtapeDocumentId[] }, void>>`
 delete from etapes_documents
-where id in $$ ids ! perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8", LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").
-perl: warning: Setting locale failed.
-perl: warning: Please check that your locale settings:
-	LC_ALL = "C.UTF-8",
-	LANG = (unset)
-    are supported and installed on your system.
-perl: warning: Falling back to the standard locale ("C").
+where id in $$ ids !
 `
 
 export const insertEtapeDocuments = async (pool: Pool, titre_etape_id: EtapeId, etapeDocuments: TempEtapeDocument[]) => {
@@ -310,22 +157,7 @@ const insertEtapeDocumentDb = sql<
   Redefine<IInsertEtapeDocumentDbQuery, { etape_id: EtapeId; id: EtapeDocumentId; largeobject_id: LargeObjectId } & Omit<TempEtapeDocument, 'temp_document_name'>, void>
 >`
 insert into etapes_documents (id, etape_document_type_id, etape_id, description, public_lecture, entreprises_lecture, largeobject_id)
-    values ($ id !, $ etape_document_type_id !, $ etape_id !, $ description, $ public_lecture !, $ entreprises_lecture !, $ largeobject_id !) perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8", LANG = (unset) are supported
-        and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8", LANG = (unset) are supported
-        and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8", LANG = (unset) are supported
-        and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8", LANG = (unset) are supported
-        and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8", LANG = (unset) are supported
-        and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8", LANG = (unset) are supported
-        and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8", LANG = (unset) are supported
-        and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8", LANG = (unset) are supported
-        and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8", LANG = (unset) are supported
-        and installed on your system. perl: warning: Falling back to the standard locale ("C").
-perl: warning: Setting locale failed.
-perl: warning: Please check that your locale settings:
-	LC_ALL = "C.UTF-8",
-	LANG = (unset)
-    are supported and installed on your system.
-perl: warning: Falling back to the standard locale ("C").
+    values ($ id !, $ etape_document_type_id !, $ etape_id !, $ description, $ public_lecture !, $ entreprises_lecture !, $ largeobject_id !)
 `
 
 const etapeDocumentLargeObjectIdValidator = z.number().brand('EtapeDocumentLargeObjectId')
@@ -344,30 +176,7 @@ select
 from
     etapes_documents d
 where
-    d.etape_id = $ titre_etape_id ! perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8", LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").
-perl: warning: Setting locale failed.
-perl: warning: Please check that your locale settings:
-	LC_ALL = "C.UTF-8",
-	LANG = (unset)
-    are supported and installed on your system.
-perl: warning: Falling back to the standard locale ("C").
+    d.etape_id = $ titre_etape_id !
 `
 export const getEtapeDocumentLargeObjectIdsByEtapeId = async (
   titre_etape_id: EtapeId,

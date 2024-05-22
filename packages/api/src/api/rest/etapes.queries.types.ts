@@ -1,50 +1,119 @@
 /** Types generated for queries found in "src/api/rest/etapes.queries.ts" */
+export type Json = null | boolean | number | string | Json[] | { [key: string]: Json };
 
-/** Query 'GetEtapeByIdDb' is invalid, so its result is assigned type 'never'.
- *  */
-export type IGetEtapeByIdDbResult = never;
+/** 'GetEtapeByIdDb' parameters type */
+export interface IGetEtapeByIdDbParams {
+  etapeId: string;
+}
 
-/** Query 'GetEtapeByIdDb' is invalid, so its parameters are assigned type 'never'.
- *  */
-export type IGetEtapeByIdDbParams = never;
+/** 'GetEtapeByIdDb' return type */
+export interface IGetEtapeByIdDbResult {
+  demarche_id: string;
+  etape_id: string;
+  etape_type_id: string;
+  geojson4326_perimetre: Json | null;
+  sdom_zones: Json;
+}
 
-/** Query 'GetLargeobjectIdByEtapeDocumentIdInternal' is invalid, so its result is assigned type 'never'.
- *  */
-export type IGetLargeobjectIdByEtapeDocumentIdInternalResult = never;
+/** 'GetEtapeByIdDb' query type */
+export interface IGetEtapeByIdDbQuery {
+  params: IGetEtapeByIdDbParams;
+  result: IGetEtapeByIdDbResult;
+}
 
-/** Query 'GetLargeobjectIdByEtapeDocumentIdInternal' is invalid, so its parameters are assigned type 'never'.
- *  */
-export type IGetLargeobjectIdByEtapeDocumentIdInternalParams = never;
+/** 'GetLargeobjectIdByEtapeDocumentIdInternal' parameters type */
+export interface IGetLargeobjectIdByEtapeDocumentIdInternalParams {
+  etapeDocumentId: string;
+}
 
-/** Query 'GetEtapeDataForEditionDb' is invalid, so its result is assigned type 'never'.
- *  */
-export type IGetEtapeDataForEditionDbResult = never;
+/** 'GetLargeobjectIdByEtapeDocumentIdInternal' return type */
+export interface IGetLargeobjectIdByEtapeDocumentIdInternalResult {
+  entreprises_lecture: boolean;
+  etape_id: string;
+  largeobject_id: number;
+  public_lecture: boolean;
+}
 
-/** Query 'GetEtapeDataForEditionDb' is invalid, so its parameters are assigned type 'never'.
- *  */
-export type IGetEtapeDataForEditionDbParams = never;
+/** 'GetLargeobjectIdByEtapeDocumentIdInternal' query type */
+export interface IGetLargeobjectIdByEtapeDocumentIdInternalQuery {
+  params: IGetLargeobjectIdByEtapeDocumentIdInternalParams;
+  result: IGetLargeobjectIdByEtapeDocumentIdInternalResult;
+}
 
-/** Query 'GetAdministrationsLocalesByEtapeId' is invalid, so its result is assigned type 'never'.
- *  */
-export type IGetAdministrationsLocalesByEtapeIdResult = never;
+/** 'GetEtapeDataForEditionDb' parameters type */
+export interface IGetEtapeDataForEditionDbParams {
+  etapeId: string;
+}
 
-/** Query 'GetAdministrationsLocalesByEtapeId' is invalid, so its parameters are assigned type 'never'.
- *  */
-export type IGetAdministrationsLocalesByEtapeIdParams = never;
+/** 'GetEtapeDataForEditionDb' return type */
+export interface IGetEtapeDataForEditionDbResult {
+  demarche_entreprises_lecture: boolean;
+  demarche_id: string;
+  demarche_public_lecture: boolean;
+  demarche_type_id: string;
+  etape_is_brouillon: boolean;
+  etape_slug: string | null;
+  etape_statut_id: string;
+  etape_type_id: string;
+  titre_public_lecture: boolean;
+  titre_type_id: string;
+}
 
-/** Query 'GetTitulairesAmodiatairesTitreEtape' is invalid, so its result is assigned type 'never'.
- *  */
-export type IGetTitulairesAmodiatairesTitreEtapeResult = never;
+/** 'GetEtapeDataForEditionDb' query type */
+export interface IGetEtapeDataForEditionDbQuery {
+  params: IGetEtapeDataForEditionDbParams;
+  result: IGetEtapeDataForEditionDbResult;
+}
 
-/** Query 'GetTitulairesAmodiatairesTitreEtape' is invalid, so its parameters are assigned type 'never'.
- *  */
-export type IGetTitulairesAmodiatairesTitreEtapeParams = never;
+/** 'GetAdministrationsLocalesByEtapeId' parameters type */
+export interface IGetAdministrationsLocalesByEtapeIdParams {
+  etapeId: string;
+}
 
-/** Query 'GetEtapeByDemarcheIdAndEtapeTypeIdDb' is invalid, so its result is assigned type 'never'.
- *  */
-export type IGetEtapeByDemarcheIdAndEtapeTypeIdDbResult = never;
+/** 'GetAdministrationsLocalesByEtapeId' return type */
+export interface IGetAdministrationsLocalesByEtapeIdResult {
+  administrations_locales: Json;
+}
 
-/** Query 'GetEtapeByDemarcheIdAndEtapeTypeIdDb' is invalid, so its parameters are assigned type 'never'.
- *  */
-export type IGetEtapeByDemarcheIdAndEtapeTypeIdDbParams = never;
+/** 'GetAdministrationsLocalesByEtapeId' query type */
+export interface IGetAdministrationsLocalesByEtapeIdQuery {
+  params: IGetAdministrationsLocalesByEtapeIdParams;
+  result: IGetAdministrationsLocalesByEtapeIdResult;
+}
+
+/** 'GetTitulairesAmodiatairesTitreEtape' parameters type */
+export interface IGetTitulairesAmodiatairesTitreEtapeParams {
+  etapeId: string;
+}
+
+/** 'GetTitulairesAmodiatairesTitreEtape' return type */
+export interface IGetTitulairesAmodiatairesTitreEtapeResult {
+  id: string;
+}
+
+/** 'GetTitulairesAmodiatairesTitreEtape' query type */
+export interface IGetTitulairesAmodiatairesTitreEtapeQuery {
+  params: IGetTitulairesAmodiatairesTitreEtapeParams;
+  result: IGetTitulairesAmodiatairesTitreEtapeResult;
+}
+
+/** 'GetEtapeByDemarcheIdAndEtapeTypeIdDb' parameters type */
+export interface IGetEtapeByDemarcheIdAndEtapeTypeIdDbParams {
+  demarcheId: string;
+  etapeTypeId: string;
+}
+
+/** 'GetEtapeByDemarcheIdAndEtapeTypeIdDb' return type */
+export interface IGetEtapeByDemarcheIdAndEtapeTypeIdDbResult {
+  contenu: Json | null;
+  date: string;
+  etape_id: string;
+  etape_statut_id: string;
+}
+
+/** 'GetEtapeByDemarcheIdAndEtapeTypeIdDb' query type */
+export interface IGetEtapeByDemarcheIdAndEtapeTypeIdDbQuery {
+  params: IGetEtapeByDemarcheIdAndEtapeTypeIdDbParams;
+  result: IGetEtapeByDemarcheIdAndEtapeTypeIdDbResult;
+}
 

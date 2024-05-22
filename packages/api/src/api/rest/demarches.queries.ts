@@ -95,31 +95,7 @@ where
     e.titre_demarche_id = $ demarcheId !
     and e.archive is false
 order by
-    date desc perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").
-perl: warning: Setting locale failed.
-perl: warning: Please check that your locale settings:
-	LC_ALL = "C.UTF-8",
-	LANG = (unset)
-    are supported and installed on your system.
-perl: warning: Falling back to the standard locale ("C").
+    date desc
 `
 
 const getDemarcheByIdOrSlugValidator = commonGetDemarcheByIdOrSlugValidator.extend({
@@ -150,29 +126,5 @@ from
     join titres t on t.id = td.titre_id
 where (td.id = $ idOrSlug !
     or td.slug = $ idOrSlug !)
-and td.archive is false perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-LANG = (unset) are supported
-and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-LANG = (unset) are supported
-and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-LANG = (unset) are supported
-and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-LANG = (unset) are supported
-and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-LANG = (unset) are supported
-and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-LANG = (unset) are supported
-and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-LANG = (unset) are supported
-and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-LANG = (unset) are supported
-and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-LANG = (unset) are supported
-and installed on your system. perl: warning: Falling back to the standard locale ("C").
-perl: warning: Setting locale failed.
-perl: warning: Please check that your locale settings:
-	LC_ALL = "C.UTF-8",
-	LANG = (unset)
-    are supported and installed on your system.
-perl: warning: Falling back to the standard locale ("C").
+and td.archive is false
 `

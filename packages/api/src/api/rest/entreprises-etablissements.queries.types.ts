@@ -1,10 +1,21 @@
 /** Types generated for queries found in "src/api/rest/entreprises-etablissements.queries.ts" */
 
-/** Query 'GetEntrepriseEtablissementsDb' is invalid, so its result is assigned type 'never'.
- *  */
-export type IGetEntrepriseEtablissementsDbResult = never;
+/** 'GetEntrepriseEtablissementsDb' parameters type */
+export interface IGetEntrepriseEtablissementsDbParams {
+  entreprise_id: string;
+}
 
-/** Query 'GetEntrepriseEtablissementsDb' is invalid, so its parameters are assigned type 'never'.
- *  */
-export type IGetEntrepriseEtablissementsDbParams = never;
+/** 'GetEntrepriseEtablissementsDb' return type */
+export interface IGetEntrepriseEtablissementsDbResult {
+  date_debut: string;
+  date_fin: string | null;
+  id: string;
+  nom: string;
+}
+
+/** 'GetEntrepriseEtablissementsDb' query type */
+export interface IGetEntrepriseEtablissementsDbQuery {
+  params: IGetEntrepriseEtablissementsDbParams;
+  result: IGetEntrepriseEtablissementsDbResult;
+}
 

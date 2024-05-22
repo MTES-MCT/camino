@@ -1,18 +1,33 @@
 /** Types generated for queries found in "src/api/rest/journal.queries.ts" */
 
-/** Query 'GetLastJournalInternal' is invalid, so its result is assigned type 'never'.
- *  */
-export type IGetLastJournalInternalResult = never;
+/** 'GetLastJournalInternal' parameters type */
+export interface IGetLastJournalInternalParams {
+  titreId?: string | null | void;
+}
 
-/** Query 'GetLastJournalInternal' is invalid, so its parameters are assigned type 'never'.
- *  */
-export type IGetLastJournalInternalParams = never;
+/** 'GetLastJournalInternal' return type */
+export interface IGetLastJournalInternalResult {
+  date: string | null;
+}
 
-/** Query 'GetTitresModifiesByMonthDb' is invalid, so its result is assigned type 'never'.
- *  */
-export type IGetTitresModifiesByMonthDbResult = never;
+/** 'GetLastJournalInternal' query type */
+export interface IGetLastJournalInternalQuery {
+  params: IGetLastJournalInternalParams;
+  result: IGetLastJournalInternalResult;
+}
 
-/** Query 'GetTitresModifiesByMonthDb' is invalid, so its parameters are assigned type 'never'.
- *  */
-export type IGetTitresModifiesByMonthDbParams = never;
+/** 'GetTitresModifiesByMonthDb' parameters type */
+export type IGetTitresModifiesByMonthDbParams = void;
+
+/** 'GetTitresModifiesByMonthDb' return type */
+export interface IGetTitresModifiesByMonthDbResult {
+  mois: string | null;
+  quantite: string | null;
+}
+
+/** 'GetTitresModifiesByMonthDb' query type */
+export interface IGetTitresModifiesByMonthDbQuery {
+  params: IGetTitresModifiesByMonthDbParams;
+  result: IGetTitresModifiesByMonthDbResult;
+}
 

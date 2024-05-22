@@ -26,31 +26,7 @@ where
     titre_id = $ titreId
 order by
     date desc
-LIMIT 1 perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").
-perl: warning: Setting locale failed.
-perl: warning: Please check that your locale settings:
-	LC_ALL = "C.UTF-8",
-	LANG = (unset)
-    are supported and installed on your system.
-perl: warning: Falling back to the standard locale ("C").
+LIMIT 1
 `
 
 export const getTitresModifiesByMonth = async (pool: Pool): Promise<QuantiteParMois[]> => {
@@ -68,29 +44,5 @@ where
 group by
     mois
 order by
-    mois perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").
-perl: warning: Setting locale failed.
-perl: warning: Please check that your locale settings:
-	LC_ALL = "C.UTF-8",
-	LANG = (unset)
-    are supported and installed on your system.
-perl: warning: Falling back to the standard locale ("C").
+    mois
 `

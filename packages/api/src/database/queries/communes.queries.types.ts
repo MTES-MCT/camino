@@ -1,18 +1,34 @@
 /** Types generated for queries found in "src/database/queries/communes.queries.ts" */
 
-/** Query 'GetCommunesInternal' is invalid, so its result is assigned type 'never'.
- *  */
-export type IGetCommunesInternalResult = never;
+/** 'GetCommunesInternal' parameters type */
+export interface IGetCommunesInternalParams {
+  ids: readonly (string | null | void)[];
+}
 
-/** Query 'GetCommunesInternal' is invalid, so its parameters are assigned type 'never'.
- *  */
-export type IGetCommunesInternalParams = never;
+/** 'GetCommunesInternal' return type */
+export interface IGetCommunesInternalResult {
+  id: string;
+  nom: string;
+}
 
-/** Query 'InsertCommuneInternal' is invalid, so its result is assigned type 'never'.
- *  */
-export type IInsertCommuneInternalResult = never;
+/** 'GetCommunesInternal' query type */
+export interface IGetCommunesInternalQuery {
+  params: IGetCommunesInternalParams;
+  result: IGetCommunesInternalResult;
+}
 
-/** Query 'InsertCommuneInternal' is invalid, so its parameters are assigned type 'never'.
- *  */
-export type IInsertCommuneInternalParams = never;
+/** 'InsertCommuneInternal' parameters type */
+export interface IInsertCommuneInternalParams {
+  id?: string | null | void;
+  nom?: string | null | void;
+}
+
+/** 'InsertCommuneInternal' return type */
+export type IInsertCommuneInternalResult = void;
+
+/** 'InsertCommuneInternal' query type */
+export interface IInsertCommuneInternalQuery {
+  params: IInsertCommuneInternalParams;
+  result: IInsertCommuneInternalResult;
+}
 

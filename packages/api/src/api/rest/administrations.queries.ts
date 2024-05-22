@@ -38,31 +38,7 @@ from
     utilisateurs u
 where
     u.administration_id = $ administrationId !
-    and keycloak_id is not null perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").
-perl: warning: Setting locale failed.
-perl: warning: Please check that your locale settings:
-	LC_ALL = "C.UTF-8",
-	LANG = (unset)
-    are supported and installed on your system.
-perl: warning: Falling back to the standard locale ("C").
+    and keycloak_id is not null
 `
 
 export const getActiviteTypeEmailsByAdministrationId = async (pool: Pool, administrationId: AdministrationId): Promise<AdministrationActiviteTypeEmail[]> => {
@@ -76,30 +52,7 @@ select
 from
     administrations__activites_types__emails
 where
-    administration_id = $ administrationId ! perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8", LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").
-perl: warning: Setting locale failed.
-perl: warning: Please check that your locale settings:
-	LC_ALL = "C.UTF-8",
-	LANG = (unset)
-    are supported and installed on your system.
-perl: warning: Falling back to the standard locale ("C").
+    administration_id = $ administrationId !
 `
 
 export const deleteAdministrationActiviteTypeEmail = async (pool: Pool, administrationId: AdministrationId, administrationActiviteTypeEmail: AdministrationActiviteTypeEmail): Promise<void> => {
@@ -112,31 +65,7 @@ const deleteAdministrationActiviteTypeEmailDb = sql<
 delete from administrations__activites_types__emails
 where administration_id = $ administrationId !
     and activite_type_id = $ activite_type_id !
-    and email = $ email ! perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").
-perl: warning: Setting locale failed.
-perl: warning: Please check that your locale settings:
-	LC_ALL = "C.UTF-8",
-	LANG = (unset)
-    are supported and installed on your system.
-perl: warning: Falling back to the standard locale ("C").
+    and email = $ email !
 `
 
 export const insertAdministrationActiviteTypeEmail = async (pool: Pool, administrationId: AdministrationId, administrationActiviteTypeEmail: AdministrationActiviteTypeEmail): Promise<void> => {
@@ -147,22 +76,7 @@ const insertAdministrationActiviteTypeEmailDb = sql<
   Redefine<IInsertAdministrationActiviteTypeEmailDbQuery, { administrationId: AdministrationId; activite_type_id: ActivitesTypesId; email: string }, void>
 >`
 insert into administrations__activites_types__emails (activite_type_id, administration_id, email)
-    VALUES ($ activite_type_id !, $ administrationId !, $ email !) perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8", LANG = (unset) are supported
-        and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8", LANG = (unset) are supported
-        and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8", LANG = (unset) are supported
-        and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8", LANG = (unset) are supported
-        and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8", LANG = (unset) are supported
-        and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8", LANG = (unset) are supported
-        and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8", LANG = (unset) are supported
-        and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8", LANG = (unset) are supported
-        and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8", LANG = (unset) are supported
-        and installed on your system. perl: warning: Falling back to the standard locale ("C").
-perl: warning: Setting locale failed.
-perl: warning: Please check that your locale settings:
-	LC_ALL = "C.UTF-8",
-	LANG = (unset)
-    are supported and installed on your system.
-perl: warning: Falling back to the standard locale ("C").
+    VALUES ($ activite_type_id !, $ administrationId !, $ email !)
 `
 
 const getActiviteTypeEmailsByAdministrationIdsValidator = administrationActiviteTypeEmailValidator.extend({ administration_id: administrationIdValidator })
@@ -182,28 +96,5 @@ select
 from
     administrations__activites_types__emails
 where
-    administration_id in $$ administrationIds ! perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8", LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").perl: warning: Setting locale failed. perl: warning: Please check that your locale settings: LC_ALL = "C.UTF-8",
-    LANG = (unset) are supported
-    and installed on your system. perl: warning: Falling back to the standard locale ("C").
-perl: warning: Setting locale failed.
-perl: warning: Please check that your locale settings:
-	LC_ALL = "C.UTF-8",
-	LANG = (unset)
-    are supported and installed on your system.
-perl: warning: Falling back to the standard locale ("C").
+    administration_id in $$ administrationIds !
 `

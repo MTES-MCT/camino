@@ -1,34 +1,88 @@
 /** Types generated for queries found in "src/api/rest/statistiques/evolution-titres.queries.ts" */
 
-/** Query 'GetDepotDb' is invalid, so its result is assigned type 'never'.
- *  */
-export type IGetDepotDbResult = never;
+/** 'GetDepotDb' parameters type */
+export interface IGetDepotDbParams {
+  anneeDepart?: number | null | void;
+  demarcheTypeIds: readonly (string | null | void)[];
+  departements: readonly (string | null | void)[];
+  etapeTypeId?: string | null | void;
+  titreTypeId?: string | null | void;
+}
 
-/** Query 'GetDepotDb' is invalid, so its parameters are assigned type 'never'.
- *  */
-export type IGetDepotDbParams = never;
+/** 'GetDepotDb' return type */
+export interface IGetDepotDbResult {
+  annee: string | null;
+  count: string | null;
+}
 
-/** Query 'GetOctroiDb' is invalid, so its result is assigned type 'never'.
- *  */
-export type IGetOctroiDbResult = never;
+/** 'GetDepotDb' query type */
+export interface IGetDepotDbQuery {
+  params: IGetDepotDbParams;
+  result: IGetDepotDbResult;
+}
 
-/** Query 'GetOctroiDb' is invalid, so its parameters are assigned type 'never'.
- *  */
-export type IGetOctroiDbParams = never;
+/** 'GetOctroiDb' parameters type */
+export interface IGetOctroiDbParams {
+  anneeDepart?: number | null | void;
+  demarcheTypeIds: readonly (string | null | void)[];
+  departements: readonly (string | null | void)[];
+  titreTypeId?: string | null | void;
+}
 
-/** Query 'GetSurfaceDb' is invalid, so its result is assigned type 'never'.
- *  */
-export type IGetSurfaceDbResult = never;
+/** 'GetOctroiDb' return type */
+export interface IGetOctroiDbResult {
+  annee: string | null;
+  count: string | null;
+}
 
-/** Query 'GetSurfaceDb' is invalid, so its parameters are assigned type 'never'.
- *  */
-export type IGetSurfaceDbParams = never;
+/** 'GetOctroiDb' query type */
+export interface IGetOctroiDbQuery {
+  params: IGetOctroiDbParams;
+  result: IGetOctroiDbResult;
+}
 
-/** Query 'GetEtapesTypesDecisionRefusDb' is invalid, so its result is assigned type 'never'.
- *  */
-export type IGetEtapesTypesDecisionRefusDbResult = never;
+/** 'GetSurfaceDb' parameters type */
+export interface IGetSurfaceDbParams {
+  anneeDepart?: number | null | void;
+  demarcheTypeIds: readonly (string | null | void)[];
+  departements: readonly (string | null | void)[];
+  titreTypeId?: string | null | void;
+}
 
-/** Query 'GetEtapesTypesDecisionRefusDb' is invalid, so its parameters are assigned type 'never'.
- *  */
-export type IGetEtapesTypesDecisionRefusDbParams = never;
+/** 'GetSurfaceDb' return type */
+export interface IGetSurfaceDbResult {
+  annee: string | null;
+  count: number | null;
+}
+
+/** 'GetSurfaceDb' query type */
+export interface IGetSurfaceDbQuery {
+  params: IGetSurfaceDbParams;
+  result: IGetSurfaceDbResult;
+}
+
+/** 'GetEtapesTypesDecisionRefusDb' parameters type */
+export interface IGetEtapesTypesDecisionRefusDbParams {
+  anneeDepart?: number | null | void;
+  demarcheStatutIds: readonly (string | null | void)[];
+  demarcheTypeIds: readonly (string | null | void)[];
+  departements: readonly (string | null | void)[];
+  etapeStatutFait?: string | null | void;
+  etapeStatutRejet?: string | null | void;
+  etapesTypesDecisionRefus: readonly (string | null | void)[];
+  etapeTypeClassementSansSuite?: string | null | void;
+  titreTypeId?: string | null | void;
+}
+
+/** 'GetEtapesTypesDecisionRefusDb' return type */
+export interface IGetEtapesTypesDecisionRefusDbResult {
+  annee: string | null;
+  count: string | null;
+}
+
+/** 'GetEtapesTypesDecisionRefusDb' query type */
+export interface IGetEtapesTypesDecisionRefusDbQuery {
+  params: IGetEtapesTypesDecisionRefusDbParams;
+  result: IGetEtapesTypesDecisionRefusDbResult;
+}
 

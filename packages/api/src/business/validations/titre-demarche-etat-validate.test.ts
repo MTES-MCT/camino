@@ -1,4 +1,3 @@
-// FIXME: corriger les tests unitaires pour prendre en compte le remplacement de statutId: aco par isBrouillon: true (tous les impacts hors tests ont été faits, normalement...)
 import { ITitre, ITitreEtape } from '../../types.js'
 
 import { titreDemarcheUpdatedEtatValidate } from './titre-demarche-etat-validate.js'

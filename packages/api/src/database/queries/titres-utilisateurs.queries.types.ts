@@ -1,10 +1,20 @@
 /** Types generated for queries found in "src/database/queries/titres-utilisateurs.queries.ts" */
 
-/** Query 'GetTitreUtilisateurDb' is invalid, so its result is assigned type 'never'.
- *  */
-export type IGetTitreUtilisateurDbResult = never;
+/** 'GetTitreUtilisateurDb' parameters type */
+export interface IGetTitreUtilisateurDbParams {
+  titreId: string;
+  userId: string;
+}
 
-/** Query 'GetTitreUtilisateurDb' is invalid, so its parameters are assigned type 'never'.
- *  */
-export type IGetTitreUtilisateurDbParams = never;
+/** 'GetTitreUtilisateurDb' return type */
+export interface IGetTitreUtilisateurDbResult {
+  titre_id: string;
+  utilisateur_id: string;
+}
+
+/** 'GetTitreUtilisateurDb' query type */
+export interface IGetTitreUtilisateurDbQuery {
+  params: IGetTitreUtilisateurDbParams;
+  result: IGetTitreUtilisateurDbResult;
+}
 

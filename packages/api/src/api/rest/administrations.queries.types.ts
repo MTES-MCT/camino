@@ -1,42 +1,90 @@
 /** Types generated for queries found in "src/api/rest/administrations.queries.ts" */
 
-/** Query 'GetUtilisateursByAdministrationIdDb' is invalid, so its result is assigned type 'never'.
- *  */
-export type IGetUtilisateursByAdministrationIdDbResult = never;
+/** 'GetUtilisateursByAdministrationIdDb' parameters type */
+export interface IGetUtilisateursByAdministrationIdDbParams {
+  administrationId: string;
+}
 
-/** Query 'GetUtilisateursByAdministrationIdDb' is invalid, so its parameters are assigned type 'never'.
- *  */
-export type IGetUtilisateursByAdministrationIdDbParams = never;
+/** 'GetUtilisateursByAdministrationIdDb' return type */
+export interface IGetUtilisateursByAdministrationIdDbResult {
+  administration_id: string | null;
+  email: string | null;
+  id: string;
+  nom: string | null;
+  prenom: string | null;
+  role: string;
+}
 
-/** Query 'GetActiviteTypeEmailsByAdministrationIdDb' is invalid, so its result is assigned type 'never'.
- *  */
-export type IGetActiviteTypeEmailsByAdministrationIdDbResult = never;
+/** 'GetUtilisateursByAdministrationIdDb' query type */
+export interface IGetUtilisateursByAdministrationIdDbQuery {
+  params: IGetUtilisateursByAdministrationIdDbParams;
+  result: IGetUtilisateursByAdministrationIdDbResult;
+}
 
-/** Query 'GetActiviteTypeEmailsByAdministrationIdDb' is invalid, so its parameters are assigned type 'never'.
- *  */
-export type IGetActiviteTypeEmailsByAdministrationIdDbParams = never;
+/** 'GetActiviteTypeEmailsByAdministrationIdDb' parameters type */
+export interface IGetActiviteTypeEmailsByAdministrationIdDbParams {
+  administrationId: string;
+}
 
-/** Query 'DeleteAdministrationActiviteTypeEmailDb' is invalid, so its result is assigned type 'never'.
- *  */
-export type IDeleteAdministrationActiviteTypeEmailDbResult = never;
+/** 'GetActiviteTypeEmailsByAdministrationIdDb' return type */
+export interface IGetActiviteTypeEmailsByAdministrationIdDbResult {
+  activite_type_id: string;
+  email: string;
+}
 
-/** Query 'DeleteAdministrationActiviteTypeEmailDb' is invalid, so its parameters are assigned type 'never'.
- *  */
-export type IDeleteAdministrationActiviteTypeEmailDbParams = never;
+/** 'GetActiviteTypeEmailsByAdministrationIdDb' query type */
+export interface IGetActiviteTypeEmailsByAdministrationIdDbQuery {
+  params: IGetActiviteTypeEmailsByAdministrationIdDbParams;
+  result: IGetActiviteTypeEmailsByAdministrationIdDbResult;
+}
 
-/** Query 'InsertAdministrationActiviteTypeEmailDb' is invalid, so its result is assigned type 'never'.
- *  */
-export type IInsertAdministrationActiviteTypeEmailDbResult = never;
+/** 'DeleteAdministrationActiviteTypeEmailDb' parameters type */
+export interface IDeleteAdministrationActiviteTypeEmailDbParams {
+  activite_type_id: string;
+  administrationId: string;
+  email: string;
+}
 
-/** Query 'InsertAdministrationActiviteTypeEmailDb' is invalid, so its parameters are assigned type 'never'.
- *  */
-export type IInsertAdministrationActiviteTypeEmailDbParams = never;
+/** 'DeleteAdministrationActiviteTypeEmailDb' return type */
+export type IDeleteAdministrationActiviteTypeEmailDbResult = void;
 
-/** Query 'GetActiviteTypeEmailsByAdministrationIdsDb' is invalid, so its result is assigned type 'never'.
- *  */
-export type IGetActiviteTypeEmailsByAdministrationIdsDbResult = never;
+/** 'DeleteAdministrationActiviteTypeEmailDb' query type */
+export interface IDeleteAdministrationActiviteTypeEmailDbQuery {
+  params: IDeleteAdministrationActiviteTypeEmailDbParams;
+  result: IDeleteAdministrationActiviteTypeEmailDbResult;
+}
 
-/** Query 'GetActiviteTypeEmailsByAdministrationIdsDb' is invalid, so its parameters are assigned type 'never'.
- *  */
-export type IGetActiviteTypeEmailsByAdministrationIdsDbParams = never;
+/** 'InsertAdministrationActiviteTypeEmailDb' parameters type */
+export interface IInsertAdministrationActiviteTypeEmailDbParams {
+  activite_type_id: string;
+  administrationId: string;
+  email: string;
+}
+
+/** 'InsertAdministrationActiviteTypeEmailDb' return type */
+export type IInsertAdministrationActiviteTypeEmailDbResult = void;
+
+/** 'InsertAdministrationActiviteTypeEmailDb' query type */
+export interface IInsertAdministrationActiviteTypeEmailDbQuery {
+  params: IInsertAdministrationActiviteTypeEmailDbParams;
+  result: IInsertAdministrationActiviteTypeEmailDbResult;
+}
+
+/** 'GetActiviteTypeEmailsByAdministrationIdsDb' parameters type */
+export interface IGetActiviteTypeEmailsByAdministrationIdsDbParams {
+  administrationIds: readonly (string)[];
+}
+
+/** 'GetActiviteTypeEmailsByAdministrationIdsDb' return type */
+export interface IGetActiviteTypeEmailsByAdministrationIdsDbResult {
+  activite_type_id: string;
+  administration_id: string;
+  email: string;
+}
+
+/** 'GetActiviteTypeEmailsByAdministrationIdsDb' query type */
+export interface IGetActiviteTypeEmailsByAdministrationIdsDbQuery {
+  params: IGetActiviteTypeEmailsByAdministrationIdsDbParams;
+  result: IGetActiviteTypeEmailsByAdministrationIdsDbResult;
+}
 
