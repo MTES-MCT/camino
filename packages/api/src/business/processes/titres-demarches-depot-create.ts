@@ -55,7 +55,7 @@ export const titreDemarcheDepotCheck = (titreDemarche: ITitreDemarche): boolean 
   if (!demarcheDefinition) return false
   if (titreDemarche.titre!.typeId === 'arm' && titreDemarche.typeId === 'oct') {
     // Si on a pas de demande faite
-    if (!titreDemarche.etapes?.find(e => e.typeId === 'mfr' && !e.isBrouillon )) {
+    if (!titreDemarche.etapes?.find(e => e.typeId === 'mfr' && !e.isBrouillon)) {
       return false
     }
 
