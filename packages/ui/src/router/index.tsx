@@ -101,30 +101,11 @@ const Metas = async () => {
 
   return Metas
 }
-const StatistiquesGlobales = async () => {
-  const { Globales } = await import('../components/statistiques/globales')
 
-  return Globales
-}
 const Statistiques = async () => {
   const { Statistiques } = await import('../components/statistiques')
 
   return Statistiques
-}
-const StatsGuyane = async () => {
-  const { Guyane } = await import('../components/statistiques/guyane')
-
-  return Guyane
-}
-const StatistiquesGranulatsMarins = async () => {
-  const { GranulatsMarins } = await import('../components/statistiques/granulats-marins')
-
-  return GranulatsMarins
-}
-const StatistiquesMinerauxMetauxMetropole = async () => {
-  const { MinerauxMetauxMetropole } = await import('../components/statistiques/mineraux-metaux-metropole')
-
-  return MinerauxMetauxMetropole
 }
 const Journaux = async () => {
   const { Journaux } = await import('../components/journaux')
@@ -341,51 +322,13 @@ const routes = [
     },
   },
   {
-    path: '/statistiques',
+    path: '/statistiques/:tabId?',
     name: 'statistiques',
     component: Statistiques,
     meta: {
       menuSection: null,
-      title: 'Liste des statistiques',
+      title: 'Statistiques',
     },
-    children: [
-      {
-        path: 'guyane',
-        name: 'statistiques-guyane',
-        component: StatsGuyane,
-        meta: {
-          menuSection: null,
-          title: 'Statistiques de la Guyane',
-        },
-      },
-      {
-        path: 'globales',
-        name: 'statistiques-globales',
-        component: StatistiquesGlobales,
-        meta: {
-          menuSection: null,
-          title: 'Statistiques globales',
-        },
-      },
-      {
-        path: 'granulats-marins',
-        name: 'statistiques-granulats-marins',
-        component: StatistiquesGranulatsMarins,
-        meta: {
-          menuSection: null,
-          title: 'Statistiques des granulats marins',
-        },
-      },
-      {
-        path: 'mineraux-metaux-metropole',
-        name: 'statistiques-mineraux-metaux-metropole',
-        component: StatistiquesMinerauxMetauxMetropole,
-        meta: {
-          menuSection: null,
-          title: 'Statistiques minéraux métaux de l’Hexagone',
-        },
-      },
-    ],
   },
   {
     path: '/journaux',

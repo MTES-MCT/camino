@@ -143,31 +143,9 @@ export const allRoutes: RouteRecordRaw[] = [
     redirect: '/',
   },
   {
-    path: '/statistiques',
+    path: '/statistiques/:tabId?',
     name: 'statistiques',
     redirect: '/',
-    children: [
-      {
-        path: 'guyane',
-        name: 'statistiques-guyane',
-        redirect: '/',
-      },
-      {
-        path: 'globales',
-        name: 'statistiques-globales',
-        redirect: '/',
-      },
-      {
-        path: 'granulats-marins',
-        name: 'statistiques-granulats-marins',
-        redirect: '/',
-      },
-      {
-        path: 'mineraux-metaux-metropole',
-        name: 'statistiques-mineraux-metaux-metropole',
-        redirect: '/',
-      },
-    ],
   },
   {
     path: '/journaux',
