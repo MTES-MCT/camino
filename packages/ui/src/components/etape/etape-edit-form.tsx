@@ -116,7 +116,7 @@ export const EtapeEditForm = defineComponent<Props>(props => {
         statutId: props.etape.statutId,
         heritageProps: props.etape.heritageProps,
         heritageContenu: props.etape.heritageContenu,
-        isBrouillon: props.etape.isBrouillon
+        isBrouillon: props.etape.isBrouillon,
       }
       setHeritage(heritageComplete)
       heritageData.value = { status: 'LOADED', value: heritageComplete }
@@ -145,7 +145,13 @@ export const EtapeEditForm = defineComponent<Props>(props => {
 
   const dateTypeCompleteUpdate = async (etapeDateType: EtapeDateTypeEdit) => {
     if (isNotNullNorUndefined(etapeDateType.typeId) && isNotNullNorUndefined(etapeDateType.statutId)) {
-      setEtape({ ...etape.value, date: etapeDateType.date, typeId: etapeDateType.typeId, statutId: etapeDateType.statutId, isBrouillon: etape.value.isBrouillon || canBeBrouillon(etapeDateType.typeId) })
+      setEtape({
+        ...etape.value,
+        date: etapeDateType.date,
+        typeId: etapeDateType.typeId,
+        statutId: etapeDateType.statutId,
+        isBrouillon: etape.value.isBrouillon || canBeBrouillon(etapeDateType.typeId),
+      })
       await reloadHeritage(props.demarcheId, etapeDateType)
     }
   }

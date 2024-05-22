@@ -21,7 +21,7 @@ import { DocumentType, DocumentTypeId, DocumentsTypes } from 'camino-common/src/
 import { LoadingElement } from '../_ui/functional-loader'
 import { AsyncData } from '../../api/client-rest'
 import { DsfrButtonIcon } from '../_ui/dsfr-button'
-import { EtapeStatutId, EtapesStatuts } from 'camino-common/src/static/etapesStatuts'
+import { EtapesStatuts } from 'camino-common/src/static/etapesStatuts'
 import { canDeleteEtapeDocument } from 'camino-common/src/permissions/titres-etapes'
 import { getVisibilityLabel } from './etape-documents'
 import { AddEtapeDocumentPopup } from './add-etape-document-popup'

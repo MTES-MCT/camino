@@ -186,9 +186,7 @@ export const DemarcheEtape = defineComponent<Props>(props => {
             <div class="fr-text--lg fr-mb-0" style={{ color: 'var(--text-title-blue-france)', fontWeight: '500' }}>
               {capitalize(EtapesTypes[props.etape.etape_type_id].nom)}
             </div>
-            {props.etape.is_brouillon ? (
-            <Badge class="fr-ml-1w" systemLevel="new" ariaLabel={`Brouillon de l'étape ${EtapesTypes[props.etape.etape_type_id].nom}`} label="Brouillon" />
-            ): null}
+            {props.etape.is_brouillon ? <Badge class="fr-ml-1w" systemLevel="new" ariaLabel={`Brouillon de l'étape ${EtapesTypes[props.etape.etape_type_id].nom}`} label="Brouillon" /> : null}
           </div>
 
           <div style={{ display: 'flex' }}>
