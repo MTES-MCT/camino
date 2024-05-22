@@ -11,13 +11,13 @@ import { EntrepriseType, newEntrepriseId, EntrepriseId, Entreprise as CommonEntr
 import { EntrepriseDocuments } from './entreprise/entreprise-documents'
 import { AsyncData } from '../api/client-rest'
 import { LoadingElement } from './_ui/functional-loader'
-import { CaminoError } from './error'
 import { ButtonIcon } from './_ui/button-icon'
 import { ApiClient, apiClient } from '@/api/api-client'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { userKey, entreprisesKey } from '@/moi'
 import { DsfrLink } from './_ui/dsfr-button'
 import { canReadUtilisateurs } from 'camino-common/src/permissions/utilisateurs'
+import { Alert } from './_ui/alert'
 
 export const Entreprise = defineComponent({
   setup() {
@@ -44,7 +44,7 @@ export const Entreprise = defineComponent({
         {entrepriseId.value ? (
           <PureEntreprise currentYear={anneeCourante} entrepriseId={entrepriseId.value} apiClient={apiClient} user={user} entreprises={entreprises.value} />
         ) : (
-          <CaminoError couleur="error" message="Impossible d’afficher une entreprise sans identifiant" />
+          <Alert type="error" title="Impossible d’afficher une entreprise sans identifiant" small={true} />
         )}
       </>
     )

@@ -1,25 +1,16 @@
 import { FunctionalComponent } from 'vue'
-import { Couleur } from 'camino-common/src/static/couleurs'
 import { User } from 'camino-common/src/roles'
-
-interface Props {
-  couleur: Couleur
-  message: string
-}
-export const CaminoError: FunctionalComponent<Props> = props => <div class={`mb p-s color-bg bg-${props.couleur}`}>{props.message}</div>
+import { Alert } from './_ui/alert'
+import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 
 interface CaminoAccessErrorProps {
   user: User
 }
 
 export const CaminoAccessError: FunctionalComponent<CaminoAccessErrorProps> = props => {
-  if (props.user) {
-    return <div class={`mb p-s color-bg bg-error`}>Erreur: vous n'avez pas le droit d'accéder à ce contenu</div>
+  if (isNotNullNorUndefined(props.user)) {
+    return <Alert small={true} title="Erreur: vous n’avez pas le droit d’accéder à ce contenu" type="error" />
   } else {
-    return <div class={`mb p-s color-bg bg-info`}>Vous n'avez pas accès à cette page, veuillez vous connecter</div>
+    return <Alert small={true} title="Vous n’avez pas accès à cette page, veuillez vous connecter" type="info" />
   }
 }
-
-// Demandé par le router car utilisé dans un import asynchrone /shrug
-CaminoError.displayName = 'CaminoError'
-CaminoAccessError.displayName = 'CaminoAccessError'

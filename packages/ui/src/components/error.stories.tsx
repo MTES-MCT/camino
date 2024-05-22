@@ -1,13 +1,12 @@
-import { CaminoError } from './error'
+import { testBlankUser } from 'camino-common/src/tests-utils'
+import { CaminoAccessError } from './error'
 import { Meta, StoryFn } from '@storybook/vue3'
 
 const meta: Meta = {
   title: 'Components/Error',
-  component: CaminoError,
+  component: CaminoAccessError,
 }
 export default meta
 
-export const Success: StoryFn = () => <CaminoError couleur="success" message="Bravo c’est un succès" />
-export const Info: StoryFn = () => <CaminoError couleur="info" message="Message à caractère informatif" />
-export const Warning: StoryFn = () => <CaminoError couleur="warning" message="Attention danger" />
-export const Erreur: StoryFn = () => <CaminoError couleur="error" message="Erreur, c’est cassé." />
+export const NotConnected: StoryFn = () => <CaminoAccessError user={{ ...testBlankUser, role: 'super' }} />
+export const Forbidden: StoryFn = () => <CaminoAccessError user={undefined} />
