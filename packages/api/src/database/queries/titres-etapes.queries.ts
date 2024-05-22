@@ -28,7 +28,6 @@ import { CanReadDemarche } from '../../api/rest/permissions/demarches.js'
 import { newEtapeDocumentId } from '../models/_format/id-create.js'
 import { getCurrent } from 'camino-common/src/date.js'
 import { createLargeObject, LargeObjectId } from '../largeobjects.js'
-import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts.js'
 import { canDeleteEtapeDocument } from 'camino-common/src/permissions/titres-etapes.js'
 
 export const insertTitreEtapeEntrepriseDocument = async (pool: Pool, params: { titre_etape_id: EtapeId; entreprise_document_id: EntrepriseDocumentId }) =>

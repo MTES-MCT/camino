@@ -243,7 +243,7 @@ const etapeComplete: Parameters<typeof isEtapeComplete>[0] = {
   substances: ['auru'],
   geojson4326Perimetre: multiPolygonWith4Points,
   duree: 4,
-  isBrouillon: false
+  isBrouillon: false,
 }
 
 const armDocuments: Parameters<typeof isEtapeComplete>[3] = [{ etape_document_type_id: 'car' }, { etape_document_type_id: 'dom' }, { etape_document_type_id: 'for' }, { etape_document_type_id: 'jpa' }]

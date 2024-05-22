@@ -535,12 +535,12 @@ test('getDocumentsTypes', () => {
       },
       {
         "description": "la liste et la valeur du matériel d’extraction et de
-     traitement que le demandeur détient ou qu’il
+     traitement que le demandeur détient ou qu’il 
     envisage d’acquérir ainsi que, dans ce dernier
-     cas, le financement correspondant. Ces pièces
-    sont demandées au titre de la justification des
+     cas, le financement correspondant. Ces pièces 
+    sont demandées au titre de la justification des 
     capacités financières du
-    demandeur
+    demandeur 
     (décret 2001-204, art. 7)",
         "id": "idm",
         "nom": "Identification de matériel",
@@ -683,12 +683,12 @@ test('getDocumentsTypes', () => {
       },
       {
         "description": "la liste et la valeur du matériel d’extraction et de
-     traitement que le demandeur détient ou qu’il
+     traitement que le demandeur détient ou qu’il 
     envisage d’acquérir ainsi que, dans ce dernier
-     cas, le financement correspondant. Ces pièces
-    sont demandées au titre de la justification des
+     cas, le financement correspondant. Ces pièces 
+    sont demandées au titre de la justification des 
     capacités financières du
-    demandeur
+    demandeur 
     (décret 2001-204, art. 7)",
         "id": "idm",
         "nom": "Identification de matériel",

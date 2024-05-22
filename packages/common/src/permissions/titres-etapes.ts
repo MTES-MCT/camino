@@ -264,7 +264,7 @@ export const isEtapeDeposable = (
   daeDocument: GetEtapeDocumentsByEtapeId['dae'],
   aslDocument: GetEtapeDocumentsByEtapeId['asl']
 ): boolean => {
-  if (titreEtape.typeId === ETAPES_TYPES.demande && titreEtape.isBrouillon){
+  if (titreEtape.typeId === ETAPES_TYPES.demande && titreEtape.isBrouillon) {
     if (
       canCreateOrEditEtape(
         user,
