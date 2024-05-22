@@ -29,7 +29,7 @@ export const AvecDesDocumentsDejaPresents: StoryFn = () => (
     activiteTypeId={ACTIVITES_TYPES_IDS["rapport environnemental d'exploration"]}
     activiteDocuments={[
       {
-        activite_document_type_id: activitesTypesDocumentsTypes[ACTIVITES_TYPES_IDS["rapport environnemental d'exploration"]][0].documentTypeId,
+        activite_document_type_id: activitesTypesDocumentsTypes[ACTIVITES_TYPES_IDS["rapport environnemental d'exploration"]].documentTypeId,
         description: 'description',
         id: activiteDocumentIdValidator.parse('id1'),
       },

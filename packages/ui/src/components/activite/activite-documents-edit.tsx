@@ -8,6 +8,7 @@ import { defineComponent, ref, watch } from 'vue'
 import { isActiviteDocumentsComplete } from 'camino-common/src/permissions/activites'
 import { AddActiviteDocumentPopup } from './add-activite-document-popup'
 import { activitesTypesDocumentsTypes } from 'camino-common/src/static/activitesTypesDocumentsTypes'
+import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 
 interface Props {
   apiClient: Pick<ApiClient, 'uploadTempDocument'>
@@ -33,7 +34,7 @@ export const ActiviteDocumentsEdit = defineComponent<Props>(props => {
     { immediate: true }
   )
 
-  const hasDocumentTypes: boolean = activitesTypesDocumentsTypes[props.activiteTypeId].map(({ documentTypeId }) => documentTypeId).length > 0
+  const hasDocumentTypes: boolean = isNotNullNorUndefined(activitesTypesDocumentsTypes[props.activiteTypeId])
 
   const notifyChange = () => {
     const tempActiviteDocuments = documents.value.filter(isTempActiviteDocument)
