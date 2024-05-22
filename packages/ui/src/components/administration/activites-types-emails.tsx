@@ -1,13 +1,16 @@
 import emailValidator from 'email-validator'
-import { ref, computed, defineComponent } from 'vue'
+import { computed, defineComponent } from 'vue'
 import { ActivitesTypes, ActivitesTypesId } from 'camino-common/src/static/activitesTypes'
 import { User } from 'camino-common/src/roles'
 import { canEditEmails } from 'camino-common/src/permissions/administrations'
 import { Administration, AdministrationId, Administrations } from 'camino-common/src/static/administrations'
 import { AdministrationActiviteTypeEmail } from 'camino-common/src/administrations'
-import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
+import { NonEmptyArray, getValues, isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { capitalize } from 'camino-common/src/strings'
-import { ButtonIcon } from '../_ui/button-icon'
+import { DsfrInput } from '../_ui/dsfr-input'
+import { useState } from '@/utils/vue-tsx-utils'
+import { DsfrButtonIcon } from '../_ui/dsfr-button'
+import { DsfrSelect } from '../_ui/dsfr-select'
 
 interface Props {
   administrationId: AdministrationId
@@ -16,20 +19,29 @@ interface Props {
   emailUpdate: (administrationId: AdministrationId, administrationActiviteTypeEmail: AdministrationActiviteTypeEmail) => void
   emailDelete: (administrationId: AdministrationId, administrationActiviteTypeEmail: AdministrationActiviteTypeEmail) => void
 }
+const activiteTypeLabelize = (activiteType: { nom: string; id: string }) => {
+  return `${capitalize(activiteType.nom)} (${activiteType.id.toUpperCase()})`
+}
+const activiteTypeIdLabelize = (activiteTypeId: ActivitesTypesId) => {
+  const activiteType = ActivitesTypes[activiteTypeId]
 
+  return activiteTypeLabelize(activiteType)
+}
 export const ActivitesTypesEmails = defineComponent<Props>(props => {
   const administration = computed<Administration>(() => Administrations[props.administrationId])
-  const activiteTypeNew = ref<{
+
+  const [activiteType, setActiviteType] = useState<{
     activiteTypeId: ActivitesTypesId | null
     email: string | null
   }>({
     activiteTypeId: null,
     email: null,
   })
-  const activitesTypes = ref(Object.values(ActivitesTypes))
-
+  const activitesTypes = getValues(ActivitesTypes).map(activiteType => {
+    return { id: activiteType.id, label: activiteTypeLabelize(activiteType) }
+  }) as NonEmptyArray<{ id: ActivitesTypesId; label: string }>
   const activiteTypeNewActive = computed<boolean>(() => {
-    return isNotNullNorUndefined(activiteTypeNew.value.activiteTypeId) && isNotNullNorUndefined(activiteTypeNew.value.email) && emailValidator.validate(activiteTypeNew.value.email)
+    return isNotNullNorUndefined(activiteType.value.activiteTypeId) && isNotNullNorUndefined(activiteType.value.email) && emailValidator.validate(activiteType.value.email)
   })
 
   const isFullyNotifiable = computed(() => {
@@ -42,26 +54,22 @@ export const ActivitesTypesEmails = defineComponent<Props>(props => {
 
   const activiteTypeEmailUpdate = () => {
     if (!activiteTypeNewActive.value) return
-    const { email, activiteTypeId } = activiteTypeNew.value
+    const { email, activiteTypeId } = activiteType.value
     if (email !== null && activiteTypeId !== null) {
       props.emailUpdate(props.administrationId, { activite_type_id: activiteTypeId, email })
     }
-    activiteTypeNew.value.activiteTypeId = null
-    activiteTypeNew.value.email = null
+    setActiviteType({ activiteTypeId: null, email: null })
   }
 
   const activiteTypeEmailDelete = async (administrationActiviteTypeEmail: AdministrationActiviteTypeEmail) => {
     props.emailDelete(props.administrationId, administrationActiviteTypeEmail)
   }
 
-  const activiteTypeIdLabelize = (activiteTypeId: ActivitesTypesId) => {
-    const activiteType = ActivitesTypes[activiteTypeId]
-
-    return activiteTypeLabelize(activiteType)
+  const updateActiviteTypeEmail = (email: string) => {
+    setActiviteType({ activiteTypeId: activiteType.value.activiteTypeId, email })
   }
-
-  const activiteTypeLabelize = (activiteType: { nom: string; id: string }) => {
-    return activiteType.nom.charAt(0).toUpperCase() + activiteType.nom.slice(1) + ' (' + activiteType.id.toUpperCase() + ')'
+  const updateActiviteTypeId = (activiteTypeId: ActivitesTypesId | null) => {
+    setActiviteType({ activiteTypeId, email: activiteType.value.email })
   }
 
   return () => (
@@ -95,29 +103,13 @@ export const ActivitesTypesEmails = defineComponent<Props>(props => {
             {canEditEmailsComp.value ? (
               <tr>
                 <td>
-                  <select v-model={activiteTypeNew.value.activiteTypeId} class="py-xs px-s mr-s mt-xs">
-                    {activitesTypes.value.map(activiteType => (
-                      <option key={activiteType.id} value={activiteType.id}>
-                        {activiteTypeLabelize(activiteType)}
-                      </option>
-                    ))}
-                  </select>
+                  <DsfrSelect legend={{ main: 'Activité' }} items={activitesTypes} valueChanged={updateActiviteTypeId} initialValue={activiteType.value.activiteTypeId} />
                 </td>
                 <td>
-                  <input
-                    v-model={activiteTypeNew.value.email}
-                    type="email"
-                    class="py-xs mt-xs"
-                    placeholder="Email"
-                    onKeyup={key => {
-                      if (key.code === 'Enter') {
-                        activiteTypeEmailUpdate()
-                      }
-                    }}
-                  />
+                  <DsfrInput type={{ type: 'email' }} legend={{ main: 'Email' }} valueChanged={updateActiviteTypeEmail} initialValue={activiteType.value.email} />
                 </td>
-                <td>
-                  <ButtonIcon class="py-s px-m btn rnd-xs p-s" disabled={!activiteTypeNewActive.value} onClick={activiteTypeEmailUpdate} icon="plus" title="Ajouter un email pour un type d’activité" />
+                <td style={{ 'vertical-align': 'bottom' }}>
+                  <DsfrButtonIcon icon="fr-icon-add-line" title="Ajouter un email pour un type d'activité" onClick={activiteTypeEmailUpdate} disabled={!activiteTypeNewActive.value} />
                 </td>
               </tr>
             ) : null}
@@ -125,16 +117,16 @@ export const ActivitesTypesEmails = defineComponent<Props>(props => {
             {props.activitesTypesEmails.map(activiteTypeEmail => (
               <tr key={activiteTypeEmail.activite_type_id + activiteTypeEmail.email}>
                 <td>
-                  <span>{capitalize(activiteTypeIdLabelize(activiteTypeEmail.activite_type_id))}</span>
+                  <span>{activiteTypeIdLabelize(activiteTypeEmail.activite_type_id)}</span>
                 </td>
                 <td>{activiteTypeEmail.email}</td>
                 {canEditEmailsComp.value ? (
-                  <td>
-                    <ButtonIcon
-                      class="btn-border py-s px-m my--xs rnd-xs flex-right"
-                      onClick={() => activiteTypeEmailDelete(activiteTypeEmail)}
-                      icon="delete"
+                  <td style={{ 'vertical-align': 'bottom' }}>
+                    <DsfrButtonIcon
+                      icon="fr-icon-delete-bin-line"
                       title="Supprimer un email pour un type d’activité"
+                      onClick={() => activiteTypeEmailDelete(activiteTypeEmail)}
+                      buttonType="secondary"
                     />
                   </td>
                 ) : null}

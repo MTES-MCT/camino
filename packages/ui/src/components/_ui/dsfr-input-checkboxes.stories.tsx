@@ -15,22 +15,43 @@ export const Checked: StoryFn = () => (
   <DsfrInputCheckboxes
     legend={{ main: 'Label', description: 'Description' }}
     valueChanged={valueChangedAction}
-    elements={[
-      { legend: { main: 'checkbox1', description: 'avec description' }, initialValue: true, itemId: '1' },
-      { legend: { main: 'checkbox2' }, initialValue: true, itemId: '2' },
-      { legend: { main: 'checkbox3' }, initialValue: true, itemId: '3' },
-    ]}
+    elements={
+      [
+        { legend: { main: 'checkbox1', description: 'avec description' }, itemId: '1' },
+        { legend: { main: 'checkbox2' }, itemId: '2' },
+        { legend: { main: 'checkbox3' }, itemId: '3' },
+      ] as const
+    }
+    initialCheckedValue={['1', '2', '3']}
   />
 )
 export const NotChecked: StoryFn = () => (
   <DsfrInputCheckboxes
     legend={{ main: 'Label' }}
     valueChanged={valueChangedAction}
-    elements={[
-      { legend: { main: 'checkbox1' }, initialValue: false, itemId: '1' },
-      { legend: { main: 'checkbox2' }, initialValue: false, itemId: '2' },
-      { legend: { main: 'checkbox3' }, initialValue: false, itemId: '3' },
-    ]}
+    elements={
+      [
+        { legend: { main: 'checkbox1' }, itemId: '1' },
+        { legend: { main: 'checkbox2' }, itemId: '2' },
+        { legend: { main: 'checkbox3' }, itemId: '3' },
+      ] as const
+    }
+    initialCheckedValue={[]}
+  />
+)
+export const Small: StoryFn = () => (
+  <DsfrInputCheckboxes
+    legend={{ main: 'Label' }}
+    valueChanged={valueChangedAction}
+    size="sm"
+    elements={
+      [
+        { legend: { main: 'checkbox1' }, itemId: '1' },
+        { legend: { main: 'checkbox2' }, itemId: '2' },
+        { legend: { main: 'checkbox3' }, itemId: '3' },
+      ] as const
+    }
+    initialCheckedValue={[]}
   />
 )
 export const Disabled: StoryFn = () => (
@@ -38,10 +59,13 @@ export const Disabled: StoryFn = () => (
     legend={{ main: 'C’est désactivé' }}
     disabled={true}
     valueChanged={valueChangedAction}
-    elements={[
-      { legend: { main: 'checkbox1' }, initialValue: true, itemId: '1' },
-      { legend: { main: 'checkbox2' }, initialValue: false, itemId: '2' },
-      { legend: { main: 'checkbox3' }, initialValue: true, itemId: '3' },
-    ]}
+    elements={
+      [
+        { legend: { main: 'checkbox1' }, itemId: '1' },
+        { legend: { main: 'checkbox2' }, itemId: '2' },
+        { legend: { main: 'checkbox3' }, itemId: '3' },
+      ] as const
+    }
+    initialCheckedValue={['1', '3']}
   />
 )

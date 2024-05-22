@@ -75,6 +75,20 @@ export const Required: StoryFn = () => (
   />
 )
 
+export const Small: StoryFn = () => (
+  <DsfrInputRadio
+    id="input6"
+    size="sm"
+    required={true}
+    legend={{ main: '' }}
+    valueChanged={valueChangedAction}
+    elements={[
+      { legend: { main: 'checkbox1' }, itemId: '1' },
+      { legend: { main: 'checkbox2' }, itemId: '2' },
+      { legend: { main: 'checkbox3' }, itemId: '3' },
+    ]}
+  />
+)
 export const Horizontal: StoryFn = () => (
   <DsfrInputRadio
     id="input6"

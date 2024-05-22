@@ -1,8 +1,6 @@
-import { FunctionalComponent, HTMLAttributes, defineComponent, onMounted, ref, Ref, computed, watch, onUnmounted, DeepReadonly } from 'vue'
+import { HTMLAttributes, defineComponent, onMounted, ref, Ref, computed, watch, onUnmounted, DeepReadonly } from 'vue'
 import { FullscreenControl, Map, NavigationControl, StyleSpecification, LayerSpecification, LngLatBounds, SourceSpecification, Popup } from 'maplibre-gl'
 import 'maplibre-gl/dist/maplibre-gl.css'
-import { z } from 'zod'
-import { DsfrSeparator } from '../_ui/dsfr-separator'
 import { FeatureCollectionForages, FeatureCollectionPoints, FeatureMultiPolygon, ForageType, featureForagePropertiesValidator } from 'camino-common/src/perimetre'
 import { random } from '@/utils/vue-tsx-utils'
 import { TitresStatutIds } from 'camino-common/src/static/titresStatuts'
@@ -16,16 +14,25 @@ import { Router } from 'vue-router'
 import { canHaveForages } from 'camino-common/src/permissions/titres'
 import { capitalize } from 'camino-common/src/strings'
 import { CaminoLngLatBounds, CaminoMapLibre, CaminoStyleSpecification } from '@/typings/maplibre-gl'
-
-const contoursSourceName = 'Contours'
-const pointsSourceName = 'Points'
-const foragesSourceName = 'Forages'
-const contoursLineName = 'ContoursLine'
-const contourPointsName = 'ContoursPoints'
-const contourForagesName = 'ContoursForages'
-const contourForagesLabel = 'ContoursForagesLabel'
-const titresValidesFillName = 'TitresValidesFill'
-const titresValidesLineName = 'TitresValidesLine'
+import {
+  LayerId,
+  LayersControl,
+  OverlayLayerId,
+  OverlayName,
+  contourForagesLabel,
+  contourForagesName,
+  contourPointsName,
+  contoursLineName,
+  contoursSourceName,
+  foragesSourceName,
+  layers,
+  overlayLayers,
+  overlayMapNames,
+  overlayNames,
+  pointsSourceName,
+  titresValidesFillName,
+  titresValidesLineName,
+} from './demarche-map-layer-controls'
 
 type Props = {
   perimetre: DeepReadonly<{ geojson4326_perimetre: FeatureMultiPolygon; geojson4326_points: FeatureCollectionPoints; geojson4326_forages: FeatureCollectionForages | null }>
@@ -41,50 +48,6 @@ type Props = {
 }
 
 type TitreValideProperties = Pick<TitreWithPerimetre, 'nom' | 'slug' | 'typeId' | 'titreStatutId'> & { domaineColor: string }
-
-const baseMapNames = {
-  'OSM / fr': 'osm',
-  'OSM / hot': 'hot',
-  'Géoportail / Plan IGN': 'geoIGN',
-  'Géoportail / Photographies aériennes': 'geoAer',
-  'BRGM / Cartes géologiques 1/50 000': 'BRGMGeo',
-} as const satisfies Record<string, LayerId>
-
-const layers = ['osm', 'hot', 'geoIGN', 'geoAer', 'BRGMGeo'] as const
-const layerIdValidator = z.enum(layers)
-type LayerId = z.infer<typeof layerIdValidator>
-
-const sdomOverlayName = 'SDOM (schéma départemental d’orientation minière)'
-
-const overlayLayers = [
-  'SDOM',
-  'Facades',
-  'RedevanceArcheologiePreventive',
-  titresValidesFillName,
-  titresValidesLineName,
-  'ContoursFill',
-  contoursLineName,
-  contourPointsName,
-  'ContoursPointLabels',
-  contourForagesName,
-  contourForagesLabel,
-] as const
-const overlayLayerIdValidator = z.enum(overlayLayers)
-type OverlayLayerId = z.infer<typeof overlayLayerIdValidator>
-
-const overlayNames = [sdomOverlayName, 'Façades maritimes', 'Limite de la redevance d’archéologie préventive', contoursSourceName, pointsSourceName, foragesSourceName, 'Titres valides'] as const
-const overlayNameValidator = z.enum(overlayNames)
-type OverlayName = z.infer<typeof overlayNameValidator>
-
-const overlayMapNames = {
-  [sdomOverlayName]: ['SDOM'],
-  'Façades maritimes': ['Facades'],
-  'Limite de la redevance d’archéologie préventive': ['RedevanceArcheologiePreventive'],
-  [contoursSourceName]: [contoursLineName, 'ContoursFill'],
-  [pointsSourceName]: [contourPointsName, 'ContoursPointLabels'],
-  [foragesSourceName]: [contourForagesName, contourForagesLabel],
-  'Titres valides': [titresValidesLineName, titresValidesFillName],
-} as const satisfies Record<OverlayName, Readonly<OverlayLayerId[]>>
 
 const layersSourceSpecifications: Record<LayerId, SourceSpecification> = {
   osm: {
@@ -548,13 +511,15 @@ export const DemarcheMap = defineComponent<Props>(props => {
     })
   }
 
-  const toggleOverlayLayer = (overlayLayersToToggle: Readonly<OverlayLayerId[]>) => {
-    overlayLayersToToggle.forEach(overlayLayer => {
-      if (map.value?.getLayer(overlayLayer)) {
-        map.value?.removeLayer(overlayLayer)
-      } else {
-        map.value?.addLayer(overlayConfigs[overlayLayer])
-      }
+  const selectedOverlayLayerNames = (overlayLayersToActivate: Readonly<OverlayName[]>) => {
+    possibleOverlayLayers.value.forEach(layerName => {
+      overlayMapNames[layerName].forEach(overlayLayerId => {
+        if (map.value?.getLayer(overlayLayerId) && !overlayLayersToActivate.includes(layerName)) {
+          map.value?.removeLayer(overlayLayerId)
+        } else if (!map.value?.getLayer(overlayLayerId) && overlayLayersToActivate.includes(layerName)) {
+          map.value?.addLayer(overlayConfigs[overlayLayerId])
+        }
+      })
     })
 
     overlayLayers.forEach(overlayLayer => {
@@ -570,6 +535,18 @@ export const DemarcheMap = defineComponent<Props>(props => {
 
   const id = `${random()}`
 
+  const possibleOverlayLayers = computed<OverlayName[]>(() => {
+    return overlayNames.filter(name => {
+      if (isNullOrUndefined(props.neighbours) && name === 'Titres valides') {
+        return false
+      }
+      if (!canHaveForages(props.titreTypeId) && name === 'Forages') {
+        return false
+      }
+
+      return true
+    })
+  })
   return () => (
     <div ref={mapRef} class={props.class} style={{ minHeight: '400px' }}>
       <LayersControl
@@ -577,70 +554,12 @@ export const DemarcheMap = defineComponent<Props>(props => {
         style={{ display: layersControlVisible.value ? 'block' : 'none', zIndex: 3 }}
         onMouseleave={layerControlOnMouseleave}
         setLayer={selectLayer}
-        toggleOverlayLayer={toggleOverlayLayer}
+        selectedOverlayLayerNames={selectedOverlayLayerNames}
         defaultOverlayLayer={defaultOverlayLayer.value}
-        overlays={overlayNames.filter(name => {
-          if (isNullOrUndefined(props.neighbours) && name === 'Titres valides') {
-            return false
-          }
-          if (!canHaveForages(props.titreTypeId) && name === 'Forages') {
-            return false
-          }
-
-          return true
-        })}
+        overlays={possibleOverlayLayers.value}
       />
     </div>
   )
 })
-
-const LayersControl: FunctionalComponent<{
-  id: string
-  onMouseleave: HTMLAttributes['onMouseleave']
-  style: HTMLAttributes['style']
-  setLayer: (layer: LayerId) => void
-  toggleOverlayLayer: (overlay: Readonly<OverlayLayerId[]>) => void
-  defaultOverlayLayer: OverlayName[]
-  overlays: OverlayName[]
-}> = props => {
-  const selectLayer = (layer: LayerId) => {
-    return () => props.setLayer(layer)
-  }
-
-  const toggleOverlayLayer = (overlayLayerName: OverlayName) => {
-    return () => props.toggleOverlayLayer(overlayMapNames[overlayLayerName])
-  }
-
-  const defaultLayer = 'osm'
-
-  return (
-    <div class="maplibregl-ctrl-top-right" id={props.id}>
-      <div class="maplibregl-ctrl maplibregl-ctrl-group fr-p-2w" style={{ zIndex: 3 }}>
-        {Object.entries(baseMapNames).map(([name, layer]) => (
-          <div key={`${layer}-${props.id}`} class="fr-fieldset__element fr-mb-1v">
-            <div class="fr-radio-group fr-radio-group--sm">
-              <input type="radio" id={`radio-hint-${layer}-${props.id}`} name={`radio-layers-${props.id}`} onClick={selectLayer(layer)} checked={layer === defaultLayer} />
-              <label class="fr-label" for={`radio-hint-${layer}-${props.id}`}>
-                {name}
-              </label>
-            </div>
-          </div>
-        ))}
-        <DsfrSeparator />
-        {props.overlays.map((name, index) => (
-          <div key={index} class="fr-fieldset__element fr-mb-1v">
-            <div class="fr-checkbox-group fr-checkbox-group--sm">
-              <input type="checkbox" id={`checkbox-hint-${index}-${props.id}`} onClick={toggleOverlayLayer(name)} checked={props.defaultOverlayLayer.includes(name)} />
-              <label class="fr-label" for={`checkbox-hint-${index}-${props.id}`}>
-                {name}
-              </label>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  )
-}
-
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
 DemarcheMap.props = ['perimetre', 'class', 'style', 'maxMarkers', 'neighbours', 'router', 'titreTypeId']

@@ -8,7 +8,6 @@ import { UtilisateurApiClient, utilisateurApiClient } from './utilisateur/utilis
 import { LoadingElement } from './_ui/functional-loader'
 import { RemovePopup } from './utilisateur/remove-popup'
 import { canDeleteUtilisateur } from 'camino-common/src/permissions/utilisateurs'
-import { isEventWithTarget } from '../utils/vue-tsx-utils'
 import { PermissionDisplay } from './utilisateur/permission-edit'
 import { UtilisateurToEdit } from 'camino-common/src/utilisateur'
 import { Utilisateur as ApiUser, Entreprise } from 'camino-common/src/entreprise'
@@ -16,6 +15,7 @@ import { ButtonIcon } from './_ui/button-icon'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 
 import { entreprisesKey, userKey } from '@/moi'
+import { DsfrInputCheckbox } from './_ui/dsfr-input-checkbox'
 
 export const Utilisateur = defineComponent({
   setup() {
@@ -220,17 +220,7 @@ export const PureUtilisateur = defineComponent<Props>(props => {
                   </div>
                   <LoadingElement
                     data={subscription.value}
-                    renderItem={item => (
-                      <input
-                        onInput={e => {
-                          if (isEventWithTarget(e)) {
-                            updateSubscription(props.utilisateurId, e.target.checked)
-                          }
-                        }}
-                        type="checkbox"
-                        checked={!!item}
-                      />
-                    )}
+                    renderItem={item => <DsfrInputCheckbox legend={{ main: '' }} valueChanged={checked => updateSubscription(props.utilisateurId, checked)} initialValue={item} />}
                   />
                 </div>
                 <div class="tablet-blobs pb-m">

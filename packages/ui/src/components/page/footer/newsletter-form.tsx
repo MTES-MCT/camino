@@ -1,6 +1,7 @@
 import { defineComponent, FunctionalComponent, ref } from 'vue'
-import { isEventWithTarget } from '@/utils/vue-tsx-utils'
 import { utilisateurApiClient } from '@/components/utilisateur/utilisateur-api-client'
+import { DsfrInput } from '@/components/_ui/dsfr-input'
+import { DsfrButton } from '@/components/_ui/dsfr-button'
 
 type SubscribeState = 'NOT_SUBSCRIBED' | 'SUBSCRIBED' | 'SUBSCRIBING' | 'ERROR'
 
@@ -27,32 +28,18 @@ export const PureNewsletterForm: FunctionalComponent<Props> = ({ state, onEmailI
                   onSubscribe()
                 }}
               >
-                <div class="fr-input-group fr-input-group--error">
+                <div class="fr-input-group">
                   <label class="fr-label" for="newsletter-email">
                     {' '}
                     Votre adresse électronique (ex. : nom@domaine.fr){' '}
                   </label>
                   <div class="fr-input-wrap fr-input-wrap--addon">
-                    <input
-                      class={`fr-input ${state === 'ERROR' ? 'fr-input--error' : ''}`}
-                      title="Votre adresse électronique (ex. : nom@domaine.fr)"
-                      autocomplete="email"
-                      aria-describedby="newsletter-email-hint-text newsletter-email-messages"
-                      placeholder="Votre adresse électronique (ex. : nom@domaine.fr)"
-                      id="newsletter-email"
-                      type="email"
-                      onInput={event => (isEventWithTarget(event) ? onEmailInput(event.target.value) : null)}
+                    <DsfrInput
+                      legend={{ main: 'Votre adresse électronique (ex. : nom@domaine.fr)', placeholder: 'Votre adresse électronique (ex. : nom@domaine.fr)' }}
+                      type={{ type: 'email' }}
+                      valueChanged={onEmailInput}
                     />
-                    <button
-                      class={`fr-btn ${state === 'SUBSCRIBED' ? 'fr-btn--icon-left fr-icon-checkbox-circle-line' : ''}`}
-                      id="newsletter-button"
-                      title="S‘abonner à notre lettre d’information"
-                      disabled={state === 'SUBSCRIBING'}
-                      type="submit"
-                    >
-                      {' '}
-                      S'abonner
-                    </button>
+                    <DsfrButton title="S‘abonner à notre lettre d’information" label="S‘abonner" disabled={state === 'SUBSCRIBING'} type="submit" onClick={() => {}} />
                   </div>
                   {state === 'ERROR' ? (
                     <p id="text-input-error-desc-error" class="fr-error-text">

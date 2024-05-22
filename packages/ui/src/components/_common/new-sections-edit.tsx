@@ -171,8 +171,9 @@ export const SectionElementEdit = defineComponent<SectionElementEditProps>(props
         <DsfrInputCheckboxes
           legend={{ main: element.nom ?? '', description: element.description }}
           elements={element.options.map(option => {
-            return { itemId: option.id, legend: { main: capitalize(option.nom) }, initialValue: Array.isArray(props.element.value) && props.element.value.includes(option.id) }
+            return { itemId: option.id, legend: { main: capitalize(option.nom) } }
           })}
+          initialCheckedValue={(props.element.value ?? []) as string[]}
           valueChanged={newValues => onValueChange({ ...element, value: newValues })}
         />
       )

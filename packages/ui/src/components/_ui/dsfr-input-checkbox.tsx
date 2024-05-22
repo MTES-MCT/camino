@@ -5,6 +5,7 @@ import { defineComponent } from 'vue'
 export type Props = {
   id?: string
   legend: { main: string; description?: string }
+  size?: 'sm' | 'md'
   disabled?: boolean
   valueChanged: (value: boolean) => void
   initialValue?: boolean | null
@@ -20,7 +21,7 @@ export const DsfrInputCheckbox = defineComponent<Props>(props => {
   }
 
   return () => (
-    <div class="fr-checkbox-group">
+    <div class={['fr-checkbox-group', props.size === 'sm' ? 'fr-checkbox-group--sm' : null]}>
       <input onInput={updateFromEvent} disabled={props.disabled ?? false} checked={props.initialValue ?? false} name="archive" id={id} type="checkbox" />
       <label class="fr-label" for={id}>
         {props.legend.main}
@@ -30,4 +31,4 @@ export const DsfrInputCheckbox = defineComponent<Props>(props => {
   )
 })
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-DsfrInputCheckbox.props = ['id', 'initialValue', 'valueChanged', 'legend', 'disabled']
+DsfrInputCheckbox.props = ['id', 'initialValue', 'valueChanged', 'legend', 'disabled', 'size']

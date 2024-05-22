@@ -8,3 +8,4 @@ const meta: Meta = {
 export default meta
 
 export const Default: StoryFn = () => <DsfrSeparator />
+export const Small: StoryFn = () => <DsfrSeparator size="sm" />
