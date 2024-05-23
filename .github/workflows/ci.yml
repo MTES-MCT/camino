@@ -20,7 +20,7 @@ jobs:
           cache: 'npm'
       - name: Install
         run:  make install
-      - name: Lint
+      - name: Detect dead code
         run: make lint/detect-dead-code
   ui:
     uses: ./.github/workflows/ui.yml

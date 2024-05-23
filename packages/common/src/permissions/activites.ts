@@ -19,8 +19,8 @@ export const canReadActivites = (user: User) =>
     [ADMINISTRATION_TYPE_IDS.MINISTERE, ADMINISTRATION_TYPE_IDS.DEAL, ADMINISTRATION_TYPE_IDS.DREAL, ADMINISTRATION_TYPE_IDS.PREFECTURE].includes(Administrations[user.administrationId].typeId))
 
 export const canDeleteActiviteDocument = (activiteDocumentTypeId: ActiviteDocumentTypeId, activiteTypeId: ActivitesTypesId, activiteStatutId: ActivitesStatutId) => {
-  const documentType = [...activitesTypesDocumentsTypes[activiteTypeId]].find(({ documentTypeId }) => documentTypeId === activiteDocumentTypeId)
-  if (isNullOrUndefined(documentType) || documentType.optionnel) {
+  const documentType = activitesTypesDocumentsTypes[activiteTypeId]
+  if (isNullOrUndefined(documentType) || documentType.optionnel || documentType.documentTypeId !== activiteDocumentTypeId) {
     return true
   }
 
@@ -151,18 +151,16 @@ export const isActiviteDocumentsComplete = (
   activiteTypeId: ActivitesTypesId
 ): { valid: true } | { valid: false; errors: string[] } => {
   const errors = [] as string[]
-  const documentsTypes = [...activitesTypesDocumentsTypes[activiteTypeId]]
+  const activiteDocumentType = activitesTypesDocumentsTypes[activiteTypeId]
 
-  if (activiteDocuments.length > 0 && documentsTypes.length === 0) {
+  if (activiteDocuments.length > 0 && isNullOrUndefined(activiteDocumentType)) {
     errors.push(`impossible de lier un document`)
-  } else {
-    documentsTypes
-      .filter(dt => !dt.optionnel)
-      .forEach(dt => {
-        if (!activiteDocuments?.find(d => d.activite_document_type_id === dt.documentTypeId)) {
-          errors.push(`le document "${dt.documentTypeId}" est obligatoire`)
-        }
-      })
+  } else if (isNullOrUndefined(activiteDocumentType)) {
+    return { valid: true }
+  } else if (!activiteDocumentType.optionnel) {
+    if (!activiteDocuments?.find(d => d.activite_document_type_id === activiteDocumentType.documentTypeId)) {
+      errors.push(`le document "${activiteDocumentType.documentTypeId}" est obligatoire`)
+    }
   }
 
   if (isNonEmptyArray(errors)) {

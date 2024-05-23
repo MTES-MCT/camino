@@ -1,4 +1,3 @@
-import { updateFromEvent } from '@/utils/vue-tsx-utils'
 import { computed, defineComponent, ref } from 'vue'
 import { FunctionalPopup } from '../_ui/functional-popup'
 import { ActiviteDocumentTypeIds, DocumentsTypes } from 'camino-common/src/static/documentsTypes'
@@ -18,8 +17,7 @@ interface Props {
 }
 
 export const AddActiviteDocumentPopup = defineComponent<Props>(props => {
-  const activiteDocumentTypes = activitesTypesDocumentsTypes[props.activiteTypeId].map(({ documentTypeId }) => documentTypeId)
-  const activiteDocumentTypeId = ref<(typeof ActiviteDocumentTypeIds)[number] | null>(activiteDocumentTypes.length === 1 ? activiteDocumentTypes[0] : null)
+  const activiteDocumentTypeId = ref<(typeof ActiviteDocumentTypeIds)[number] | null>(activitesTypesDocumentsTypes[props.activiteTypeId]?.documentTypeId ?? null)
   const activiteDocumentFile = ref<File | null>(null)
   const documentDescription = ref<string>('')
   const tempDocumentName = ref<TempDocumentName | null>(null)
@@ -29,26 +27,6 @@ export const AddActiviteDocumentPopup = defineComponent<Props>(props => {
   }
   const content = () => (
     <form>
-      {activiteDocumentTypes.length === 1 ? null : (
-        <fieldset class="fr-fieldset" id="text">
-          <div class="fr-fieldset__element">
-            <div class="fr-select-group">
-              <label class="fr-label" for="type">
-                Type de document
-              </label>
-              <select class="fr-select" name="type" onChange={e => updateFromEvent(e, activiteDocumentTypeId)}>
-                <option value="" selected disabled hidden>
-                  Selectionnez un type de document
-                </option>
-                {activiteDocumentTypes.map(id => {
-                  return <option value={id}>{DocumentsTypes[id].nom}</option>
-                })}
-              </select>
-            </div>
-          </div>
-        </fieldset>
-      )}
-
       <fieldset class="fr-fieldset" id="text">
         <div class="fr-fieldset__element">
           <InputFile
@@ -76,11 +54,11 @@ export const AddActiviteDocumentPopup = defineComponent<Props>(props => {
 
   return () => (
     <>
-      {activiteDocumentTypes.length === 0 ? (
+      {activiteDocumentTypeId.value === null ? (
         <>{`L'activité ${ActivitesTypes[props.activiteTypeId].nom} n'a pas de documents associés, impossible d'ajouter des documents`}</>
       ) : (
         <FunctionalPopup
-          title={activiteDocumentTypes.length === 1 ? `Ajouter ${DocumentsTypes[activiteDocumentTypes[0]].nom}` : "Ajout d'un document"}
+          title={`Ajouter ${DocumentsTypes[activiteDocumentTypeId.value].nom}`}
           content={content}
           close={() => {
             const tempDocument: Nullable<TempActiviteDocument> = {

@@ -1,13 +1,14 @@
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { computed, defineComponent, ref } from 'vue'
 import { FunctionalPopup } from '../_ui/functional-popup'
-import { DemarcheTypeId, isDemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
+import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
 import { getDemarchesTypesByTitreType } from 'camino-common/src/static/titresTypesDemarchesTypes'
-import { isEventWithTarget } from '@/utils/vue-tsx-utils'
 import { DemarcheApiClient } from './demarche-api-client'
 import { DemarcheId, DemarcheSlug } from 'camino-common/src/demarche'
 import { DsfrInput } from '../_ui/dsfr-input'
 import { TitreId } from 'camino-common/src/validators/titres'
+import { DsfrSelect } from '../_ui/dsfr-select'
+import { isNonEmptyArray } from 'camino-common/src/typescript-tools'
 
 export interface Props {
   demarche: {
@@ -33,18 +34,14 @@ export const DemarcheEditPopup = defineComponent<Props>(props => {
     return `${props.demarche.id ? 'Modification de la' : "Ajout d'une"} démarche ${props.tabId === 'travaux' ? 'de travaux' : ''}`
   })
 
-  const types = computed(() => {
-    return getDemarchesTypesByTitreType(props.titreTypeId).filter(t => (props.tabId === 'travaux' ? t.travaux : !t.travaux))
+  const typesLabel = computed(() => {
+    return getDemarchesTypesByTitreType(props.titreTypeId)
+      .filter(t => (props.tabId === 'travaux' ? t.travaux : !t.travaux))
+      .map(t => ({ id: t.id, label: t.nom }))
   })
 
-  const selectDemarcheTypeId = (e: Event) => {
-    if (isEventWithTarget(e)) {
-      if (isDemarcheTypeId(e.target.value)) {
-        typeId.value = e.target.value
-      } else {
-        typeId.value = null
-      }
-    }
+  const selectDemarcheTypeId = (e: DemarcheTypeId | null) => {
+    typeId.value = e
   }
 
   const descriptionChange = (value: string) => {
@@ -52,24 +49,9 @@ export const DemarcheEditPopup = defineComponent<Props>(props => {
   }
   const content = () => (
     <form>
-      <div class="fr-input-group">
-        <label class="fr-label" for="demarcheType">
-          Type de la démarche *
-        </label>
-        <select class="fr-select" id="demarcheType" name="demarcheType" required disabled={!!props.demarche.id} onChange={selectDemarcheTypeId}>
-          {!props.demarche?.typeId ? (
-            <option value="" selected disabled hidden>
-              Selectionnez une option
-            </option>
-          ) : null}
-          {types.value.map(demarcheType => (
-            <option key={demarcheType.id} value={demarcheType.id} selected={props.demarche?.typeId === demarcheType.id}>
-              {demarcheType.nom}
-            </option>
-          ))}
-        </select>
-      </div>
-
+      {isNonEmptyArray(typesLabel.value) ? (
+        <DsfrSelect legend={{ main: 'Type de la démarche' }} required={true} disabled={!!props.demarche.id} items={typesLabel.value} initialValue={typeId.value} valueChanged={selectDemarcheTypeId} />
+      ) : null}
       <DsfrInput legend={{ main: 'Description' }} type={{ type: 'text' }} valueChanged={descriptionChange} initialValue={description.value} />
     </form>
   )

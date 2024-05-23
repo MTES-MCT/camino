@@ -4,7 +4,7 @@ import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { defineComponent, ref } from 'vue'
 
 type TextInputType = {
-  type: 'text'
+  type: 'text' | 'email'
 }
 
 type DateInputType = {
@@ -43,7 +43,7 @@ type DateProps = {
   initialValue?: CaminoDate | null
 }
 
-const isTextProps = (props: Props): props is BaseProps & TextProps => props.type.type === 'text'
+const isTextProps = (props: Props): props is BaseProps & TextProps => props.type.type === 'text' || props.type.type === 'email'
 const isNumberProps = (props: Props): props is BaseProps & NumberProps => props.type.type === 'number'
 const isDateProps = (props: Props): props is BaseProps & DateProps => props.type.type === 'date'
 
