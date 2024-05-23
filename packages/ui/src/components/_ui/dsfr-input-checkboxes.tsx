@@ -17,7 +17,6 @@ export const DsfrInputCheckboxes = defineComponent(<T extends string>(props: Pro
   const id = props.id ?? `checkboxes_${(random() * 1000).toFixed()}`
 
   const values = ref<DeepReadonly<T[]>>(props.elements.filter(element => props.initialCheckedValue.includes(element.itemId)).map(({ itemId }) => itemId)) as Ref<DeepReadonly<T[]>>
-  console.log('plop', JSON.stringify(values.value))
   watch(
     () => props.elements,
     () => {
