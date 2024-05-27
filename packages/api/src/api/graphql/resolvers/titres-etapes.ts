@@ -94,6 +94,8 @@ export const etape = async ({ id }: { id: EtapeId }, { user }: Context, info: Gr
 
     if (!titreDemarche) throw new Error("la démarche n'existe pas")
 
+
+
     return titreEtapeFormat(titreEtape)
   } catch (e) {
     console.error(e)

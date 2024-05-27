@@ -1,7 +1,7 @@
 import { isNullOrUndefined } from './typescript-tools'
 
 export const nullToDefault =
-  <Y>(defaultWhenNullOrUndefined: Y) =>
+  <Y>(defaultWhenNullOrUndefined: NoInfer<Y>) =>
   (val: null | undefined | Y): Y => {
     if (isNullOrUndefined(val)) {
       return defaultWhenNullOrUndefined

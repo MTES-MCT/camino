@@ -1,7 +1,5 @@
 import { dateFormat } from 'camino-common/src/date'
-import { DeepReadonly, HTMLAttributes } from 'vue'
-import { EtapeWithHeritage, HeritageProp } from 'camino-common/src/etape'
-import { MappingHeritagePropsNameEtapePropsName } from 'camino-common/src/heritage'
+import { HTMLAttributes } from 'vue'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { DsfrToggle } from '../_ui/dsfr-toggle'
 import { EtapesTypes } from 'camino-common/src/static/etapesTypes'
@@ -9,43 +7,45 @@ import { capitalize } from 'camino-common/src/strings'
 import type { JSX } from 'vue/jsx-runtime'
 import { DsfrInput } from '@/components/_ui/dsfr-input'
 import { random } from '../../utils/vue-tsx-utils'
+import { GenericHeritageValue } from './etape-api-client'
+import { z } from 'zod'
 
-type EtapeHeritageEdit = Pick<EtapeWithHeritage, 'typeId' | 'date'>
-type Props<P extends keyof MappingHeritagePropsNameEtapePropsName, T extends EtapeHeritageEdit> = {
-  prop: DeepReadonly<HeritageProp<T>>
-  propId: P
-  hasHeritage: boolean
+type Props<T extends z.ZodTypeAny> = {
+  prop: GenericHeritageValue<T>
   write: () => JSX.Element
-  read: (heritagePropEtape?: DeepReadonly<T>) => JSX.Element
+  read: (heritagePropEtape?: GenericHeritageValue<NoInfer<T>>['etapeHeritee']) => JSX.Element
   label: string | null
 
   class?: HTMLAttributes['class']
-  updateHeritage: (update: Props<P, T>['prop']) => void
+  updateHeritage: (update: GenericHeritageValue<T>) => void
 }
 
-export const HeritageEdit = <P extends keyof MappingHeritagePropsNameEtapePropsName, T extends EtapeHeritageEdit>(props: Props<P, T>) => {
+export const HeritageEdit = <T extends z.ZodTypeAny>(props: Props<T>) => {
   const updateHeritage = () => {
-    const etape = props.prop.etape
-    const newHeritage = !props.prop.actif
+    const etape = props.prop.etapeHeritee
+    const newHeritage = !props.prop.heritee
     if (!newHeritage) {
-      props.updateHeritage({ etape, actif: newHeritage })
+      props.updateHeritage({ ...props.prop, heritee: newHeritage })
     } else if (isNotNullNorUndefined(etape)) {
-      props.updateHeritage({ etape, actif: newHeritage })
+      props.updateHeritage({ ...props.prop, heritee: newHeritage, value: etape?.value ?? null })
     }
   }
+
 
   const dummyValueChanged = () => {}
   // TODO 2024-05-14 WTF! Sans la clé il récupère un ancien input et le modifie que à moitié. Le bug est présent sur le champ « Durée » quand on a passe d’une valeur saisie à un héritage Non Renseigné
   const dummyKey = `empty_input_${(random() * 1000).toFixed()}`
 
+  const etapeHeritee = props.prop.etapeHeritee ?? null
+
   return (
     <div class={['fr-mb-1w', props.class]}>
-      {!props.prop.actif ? (
+      {!props.prop.heritee ? (
         props.write()
       ) : (
         <div>
-          {props.hasHeritage && isNotNullNorUndefined(props.prop.etape) ? (
-            props.read(props.prop.etape)
+          { isNotNullNorUndefined(etapeHeritee?.value) ? (
+            props.read(etapeHeritee)
           ) : (
             <DsfrInput
               key={dummyKey}
@@ -59,12 +59,12 @@ export const HeritageEdit = <P extends keyof MappingHeritagePropsNameEtapePropsN
         </div>
       )}
 
-      {isNotNullNorUndefined(props.prop.etape) ? (
+      {isNotNullNorUndefined(etapeHeritee) ? (
         <div>
           <DsfrToggle
-            initialValue={props.prop.actif}
+            initialValue={props.prop.heritee}
             valueChanged={updateHeritage}
-            legendLabel={`Hériter de l’étape "${capitalize(EtapesTypes[props.prop.etape.typeId].nom)}" du ${dateFormat(props.prop.etape.date)}`}
+            legendLabel={`Hériter de l’étape "${capitalize(EtapesTypes[etapeHeritee.etapeTypeId].nom)}" du ${dateFormat(etapeHeritee.date)}`}
           />
         </div>
       ) : null}

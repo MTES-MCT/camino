@@ -49,9 +49,10 @@ import { EtapeAlerte, PureFormSaveBtn } from './pure-form-save-btn'
 import { TitresStatuts } from 'camino-common/src/static/titresStatuts'
 import { DeposeEtapePopup } from '../demarche/depose-etape-popup'
 import { canBeBrouillon } from 'camino-common/src/static/etapesTypes'
+import { FlattenEtape } from './etape-api-client'
 
 export type Props = {
-  etape: DeepReadonly<Etape & Pick<Nullable<EtapeWithHeritage>, 'heritageContenu' | 'heritageProps'>>
+  etape: DeepReadonly<Pick<Nullable<FlattenEtape>, 'id' | 'date' | 'typeId' | 'statutId'> & Omit<FlattenEtape, 'date' | 'typeId' | 'statutId' | 'id'>>
   demarcheId: DemarcheId
   demarcheTypeId: DemarcheTypeId
   titreTypeId: TitreTypeId
@@ -90,7 +91,6 @@ type EtapeEditFormDocuments = DeepReadonly<{
 type Heritage = DeepReadonly<Pick<EtapeWithHeritage, 'heritageProps' | 'heritageContenu' | 'date' | 'typeId' | 'statutId'>>
 export const EtapeEditForm = defineComponent<Props>(props => {
   const [etape, setEtape] = useState(props.etape)
-  const [heritage, setHeritage] = useState<DeepReadonly<Heritage> | null>(null)
   const [perimetreInfos, setPerimetreInfos] = useState<DeepReadonly<PerimetreInformations>>(props.perimetre)
 
   const [documents, setDocuments] = useState<EtapeEditFormDocuments>({
@@ -107,29 +107,28 @@ export const EtapeEditForm = defineComponent<Props>(props => {
       isNotNullNorUndefined(props.etape.date) &&
       isNotNullNorUndefined(props.etape.typeId) &&
       isNotNullNorUndefined(props.etape.statutId) &&
-      isNotNullNorUndefined(props.etape.heritageContenu) &&
-      isNotNullNorUndefined(props.etape.heritageProps)
+      isNotNullNorUndefined(props.etape.heritageContenu)
     ) {
-      const heritageComplete = {
-        date: props.etape.date,
-        typeId: props.etape.typeId,
-        statutId: props.etape.statutId,
-        heritageProps: props.etape.heritageProps,
-        heritageContenu: props.etape.heritageContenu,
-        isBrouillon: props.etape.isBrouillon,
-      }
-      setHeritage(heritageComplete)
-      heritageData.value = { status: 'LOADED', value: heritageComplete }
+      // FIXME inverser la condition
+      // const heritageComplete = {
+      //   date: props.etape.date,
+      //   typeId: props.etape.typeId,
+      //   statutId: props.etape.statutId,
+      //   heritageContenu: props.etape.heritageContenu,
+      //   isBrouillon: props.etape.isBrouillon,
+      // }
+      // setHeritage(heritageComplete)
+      // heritageData.value = { status: 'LOADED', value: heritageComplete }
     } else {
       await reloadHeritage(props.demarcheId, etape.value)
     }
   })
 
-  const reloadHeritage = async (demarcheId: DemarcheId, etape: Pick<Etape, 'date' | 'typeId' | 'statutId' | 'id'>) => {
-    if (isNotNullNorUndefined(etape.date) && isNotNullNorUndefined(etape.typeId) && isNotNullNorUndefined(etape.statutId)) {
+  const reloadHeritage = async (demarcheId: DemarcheId) => {
+    if (isNotNullNorUndefined(etape.value.date) && isNotNullNorUndefined(etape.value.typeId) && isNotNullNorUndefined(etape.value.statutId)) {
       try {
         heritageData.value = { status: 'LOADING' }
-        const value = await props.apiClient.getEtapeHeritagePotentiel(demarcheId, etape.date, etape.typeId, etape.id)
+        const value = await props.apiClient.getEtapeHeritagePotentiel(etape.value, demarcheId, etape.date, etape.typeId, etape.id)
         const heritageComplete = { ...value, date: etape.date, typeId: etape.typeId, statutId: etape.statutId }
         setHeritage(heritageComplete)
         heritageData.value = { status: 'LOADED', value: heritageComplete }
@@ -144,7 +143,7 @@ export const EtapeEditForm = defineComponent<Props>(props => {
   }
 
   const dateTypeCompleteUpdate = async (etapeDateType: EtapeDateTypeEdit) => {
-    if (isNotNullNorUndefined(etapeDateType.typeId) && isNotNullNorUndefined(etapeDateType.statutId)) {
+    if (isNotNullNorUndefined(etapeDateType.date) && isNotNullNorUndefined(etapeDateType.typeId) && isNotNullNorUndefined(etapeDateType.statutId)) {
       setEtape({
         ...etape.value,
         date: etapeDateType.date,
@@ -160,7 +159,7 @@ export const EtapeEditForm = defineComponent<Props>(props => {
     return heritageData.value.status === 'LOADED'
   })
 
-  const setEtapeAndDocument = (etape: DeepReadonly<EtapeWithHeritage>, documents: EtapeEditFormDocuments) => {
+  const setEtapeAndDocument = (etape: DeepReadonly<FlattenEtape>, documents: EtapeEditFormDocuments) => {
     setEtape(etape)
     setHeritage(etape)
     setDocuments(documents)
@@ -274,6 +273,12 @@ export const EtapeEditForm = defineComponent<Props>(props => {
   const closeDeposePopup = () => {
     etapeIdToDepose.value = null
   }
+  const etapeNotNullOrAllNull = computed<DeepReadonly<FlattenEtape> | null>(() => {
+    if (isNotNullNorUndefined(etape.value.date) && isNotNullNorUndefined(etape.value.typeId) && isNotNullNorUndefined(etape.value.statutId)) {
+      return {...etape.value, date: etape.value.date, typeId: etape.value.typeId, statutId: etape.value.statutId}
+    }
+    return null
+  })
 
   return () => (
     <form onSubmit={e => e.preventDefault()}>
@@ -282,14 +287,11 @@ export const EtapeEditForm = defineComponent<Props>(props => {
           <DateTypeEdit etape={props.etape} apiClient={props.apiClient} completeUpdate={dateTypeCompleteUpdate} demarcheId={props.demarcheId} />
         </Bloc>
       ) : null}
-      {stepInternalIsVisible.value ? (
-        <LoadingElement
-          data={heritageData.value}
-          renderItem={item => (
+      {isNotNullNorUndefined(etapeNotNullOrAllNull.value) ? (
             <>
               <EtapeEditFormInternal
                 {...props}
-                etape={isNotNullNorUndefined(heritage.value) ? { ...etape.value, ...heritage.value } : { ...etape.value, ...item }}
+                etape={etapeNotNullOrAllNull.value}
                 documents={documents.value}
                 setEtape={setEtapeAndDocument}
                 alertesUpdate={setPerimetreInfos}
@@ -300,7 +302,7 @@ export const EtapeEditForm = defineComponent<Props>(props => {
                 alertes={alertes.value}
                 canSave={canSave.value}
                 canDepose={canDepose.value}
-                showDepose={item.typeId === 'mfr' && etape.value.isBrouillon}
+                showDepose={etapeNotNullOrAllNull.value.typeId === 'mfr' && etape.value.isBrouillon}
                 save={saveAndReroute}
                 depose={depose}
               />
@@ -318,31 +320,91 @@ export const EtapeEditForm = defineComponent<Props>(props => {
                 />
               ) : null}
             </>
-          )}
-        />
       ) : null}
     </form>
   )
 })
 
+type EtapeEditFormCoreForDateTypeAndStatutProps = {
+  user: User
+  etape: DeepReadonly<Pick<Nullable<FlattenEtape>, 'date' | 'typeId' | 'statutId'> & Omit<FlattenEtape, 'date' | 'typeId' | 'statutId'>>
+  apiClient: Props['apiClient']
+  demarcheId: DemarcheId
+}
+const EtapeEditFormCoreForDateTypeAndStatut = defineComponent<EtapeEditFormCoreForDateTypeAndStatutProps>(props => {
+  const [etape, setEtape] = useState(props.etape)
+  const dateTypeCompleteUpdate = async (etapeDateType: EtapeDateTypeEdit) => {
+    if (isNotNullNorUndefined(etapeDateType.typeId) && isNotNullNorUndefined(etapeDateType.statutId)) {
+      setEtape({
+        ...etape.value,
+        date: etapeDateType.date,
+        typeId: etapeDateType.typeId,
+        statutId: etapeDateType.statutId,
+        isBrouillon: etape.value.isBrouillon || canBeBrouillon(etapeDateType.typeId),
+      })
+    }
+  }
+
+  // FIXME manage reloadHeritage
+  const etapeNotNullOrAllNull = computed<DeepReadonly<FlattenEtape> | null>(() => {
+    if (isNotNullNorUndefined(etape.value.date) && isNotNullNorUndefined(etape.value.typeId) && isNotNullNorUndefined(etape.value.statutId)) {
+      return {...etape.value, date: etape.value.date, typeId: etape.value.typeId, statutId: etape.value.statutId}
+    }
+    return null
+  })
+  return () => (
+    <>
+      {dateTypeStepIsVisible(props.user) ? (
+        <Bloc step={{ name: 'Informations principales', help: null }} complete={dateTypeStepIsComplete(etape.value, props.user)}>
+          <DateTypeEdit etape={props.etape} apiClient={props.apiClient} completeUpdate={dateTypeCompleteUpdate} demarcheId={props.demarcheId} />
+        </Bloc>
+      ) : null}
+      {etapeNotNullOrAllNull.value !== null ? (
+        <>
+            <EtapeEditFormInternal {...props} etape={etapeNotNullOrAllNull.value} documents={documents.value} setEtape={setEtapeAndDocument} alertesUpdate={setPerimetreInfos} />
+          <PureFormSaveBtn
+            class="fr-mt-2w fr-pt-2w fr-pb-2w"
+            style={{ position: 'sticky', bottom: 0, background: 'white', zIndex: 100000 }}
+            alertes={alertes.value}
+            canSave={canSave.value}
+            canDepose={canDepose.value}
+            showDepose={item.typeId === 'mfr' && etape.value.isBrouillon}
+            save={saveAndReroute}
+            depose={depose}
+          />
+          {isNotNullNorUndefined(etapeIdToDepose.value) ? (
+            <DeposeEtapePopup
+              close={closeDeposePopup}
+              apiClient={{
+                ...props.apiClient,
+                deposeEtape: async titreEtapeId => {
+                  await props.apiClient.deposeEtape(titreEtapeId)
+                  props.goToDemarche(props.demarcheId)
+                },
+              }}
+              id={etapeIdToDepose.value}
+            />
+          ) : null}
+        </>
+      ) : null}
+    </>
+  )
+})
+
 const EtapeEditFormInternal = defineComponent<
   {
-    etape: DeepReadonly<EtapeWithHeritage>
+    etape: DeepReadonly<FlattenEtape>
     documents: EtapeEditFormDocuments
-    setEtape: (etape: DeepReadonly<EtapeWithHeritage>, documents: EtapeEditFormDocuments) => void
+    setEtape: (etape: DeepReadonly<FlattenEtape>, documents: EtapeEditFormDocuments) => void
     alertesUpdate: (alertes: PerimetreInformations) => void
   } & Omit<Props, 'etape'>
 >(props => {
-  const etapeFlattened = computed<DeepReadonly<EtapeWithHeritage>>(() => {
-    return flattenEtapeWithHeritage(props.titreTypeId, props.demarcheTypeId, props.etape, props.etape)
-  })
-
   const documentsCompleteUpdate = (
     etapeDocuments: (EtapeDocument | TempEtapeDocument)[],
     daeDocument: DocumentComplementaireDaeEtapeDocumentModification | null,
     aslDocument: DocumentComplementaireAslEtapeDocumentModification | null
   ) => {
-    props.setEtape(etapeFlattened.value, {
+    props.setEtape(props.etape, {
       ...props.documents,
       etapeDocuments,
       daeDocument,
@@ -351,18 +413,26 @@ const EtapeEditFormInternal = defineComponent<
   }
 
   const entrepriseDocumentsCompleteUpdate = (entrepriseDocuments: DeepReadonly<SelectedEntrepriseDocument[]>) => {
-    props.setEtape(etapeFlattened.value, { ...props.documents, entrepriseDocuments })
+    props.setEtape(props.etape, { ...props.documents, entrepriseDocuments })
   }
 
   const onEtapePerimetreChange = (perimetreInfos: GeojsonInformations) => {
     props.setEtape(
       {
-        ...etapeFlattened.value,
-        geojson4326Perimetre: perimetreInfos.geojson4326_perimetre,
-        geojson4326Points: perimetreInfos.geojson4326_points,
-        geojsonOriginePerimetre: perimetreInfos.geojson_origine_perimetre,
-        geojsonOriginePoints: perimetreInfos.geojson_origine_points,
-        geojsonOrigineGeoSystemeId: perimetreInfos.geojson_origine_geo_systeme_id,
+        ...props.etape,
+        perimetre: {
+          ...props.etape.perimetre,
+          value: {
+            geojson4326Forages: isNotNullNorUndefined(props.etape.perimetre.value) ? props.etape.perimetre.value.geojson4326Forages : null,
+            geojsonOrigineForages: isNotNullNorUndefined(props.etape.perimetre.value) ? props.etape.perimetre.value.geojsonOrigineForages : null,
+            geojson4326Perimetre: perimetreInfos.geojson4326_perimetre,
+            geojson4326Points: perimetreInfos.geojson4326_points,
+            geojsonOriginePerimetre: perimetreInfos.geojson_origine_perimetre,
+            geojsonOriginePoints: perimetreInfos.geojson_origine_points,
+            geojsonOrigineGeoSystemeId: perimetreInfos.geojson_origine_geo_systeme_id,
+            surface: perimetreInfos.surface,
+          },
+        },
       },
       props.documents
     )
@@ -374,24 +444,28 @@ const EtapeEditFormInternal = defineComponent<
     props.setEtape(
       {
         ...props.etape,
-        heritageProps: { ...props.etape.heritageProps, perimetre },
+        perimetre,
       },
       props.documents
     )
   }
   const onEtapePointsChange = (geojson4326Points: FeatureCollectionPoints, geojsonOriginePoints: FeatureCollectionPoints) => {
-    props.setEtape({ ...etapeFlattened.value, geojson4326Points, geojsonOriginePoints }, props.documents)
+    if (isNotNullNorUndefined(props.etape.perimetre.value)) {
+      props.setEtape({ ...props.etape, perimetre: { ...props.etape.perimetre, value: { ...props.etape.perimetre.value, geojson4326Points, geojsonOriginePoints } } }, props.documents)
+    }
   }
   const onEtapeForagesChange = (geojson4326Forages: FeatureCollectionForages, geojsonOrigineForages: FeatureCollectionForages) => {
-    props.setEtape({ ...etapeFlattened.value, geojson4326Forages, geojsonOrigineForages }, props.documents)
+    if (isNotNullNorUndefined(props.etape.perimetre.value)) {
+      props.setEtape({ ...props.etape, perimetre: { ...props.etape.perimetre, value: { ...props.etape.perimetre.value, geojson4326Forages, geojsonOrigineForages } } }, props.documents)
+    }
   }
 
   const sectionCompleteUpdate = (sectionsEtape: SectionsEditEtape) => {
-    props.setEtape({ ...etapeFlattened.value, contenu: sectionsEtape.contenu, heritageContenu: sectionsEtape.heritageContenu }, props.documents)
+    props.setEtape({ ...props.etape, contenu: sectionsEtape.contenu, heritageContenu: sectionsEtape.heritageContenu }, props.documents)
   }
 
   const onUpdateNotes = (notes: string) => {
-    props.setEtape({ ...etapeFlattened.value, notes }, props.documents)
+    props.setEtape({ ...props.etape, notes }, props.documents)
   }
 
   const fondamentalesCompleteUpdate = (etapeFondamentale: DeepReadonly<EtapeFondamentaleEdit>) => {
@@ -399,7 +473,7 @@ const EtapeEditFormInternal = defineComponent<
   }
 
   const titulairesAndAmodiataires = computed<Entreprise[]>(() => {
-    return props.entreprises.filter(({ id }) => props.etape.titulaireIds.includes(id) || props.etape.amodiataireIds.includes(id))
+    return props.entreprises.filter(({ id }) => props.etape.titulaires.value.includes(id) || props.etape.amodiataires.value.includes(id))
   })
 
   const isHelpVisible = computed<boolean>(() => {
@@ -408,10 +482,10 @@ const EtapeEditFormInternal = defineComponent<
 
   return () => (
     <div>
-      {fondamentaleStepIsVisible(etapeFlattened.value.typeId) ? (
-        <Bloc step={{ name: 'Propriétés', help: null }} complete={fondamentaleStepIsComplete(etapeFlattened.value, props.demarcheTypeId, props.titreTypeId)}>
+      {fondamentaleStepIsVisible(props.etape.typeId) ? (
+        <Bloc step={{ name: 'Propriétés', help: null }} complete={fondamentaleStepIsComplete(props.etape, props.demarcheTypeId, props.titreTypeId)}>
           <FondamentalesEdit
-            etape={etapeFlattened.value}
+            etape={props.etape}
             demarcheTypeId={props.demarcheTypeId}
             titreTypeId={props.titreTypeId}
             user={props.user}
@@ -421,22 +495,22 @@ const EtapeEditFormInternal = defineComponent<
         </Bloc>
       ) : null}
 
-      {sectionsStepIsVisible(etapeFlattened.value, props.demarcheTypeId, props.titreTypeId) ? (
+      {sectionsStepIsVisible(props.etape, props.demarcheTypeId, props.titreTypeId) ? (
         <Bloc
           step={{
             name: 'Propriétés spécifiques',
             help: isHelpVisible.value ? 'Ce bloc permet de savoir si la prospection est mécanisée ou non et s’il y a des franchissements de cours d’eau (si oui, combien ?)' : null,
           }}
-          complete={sectionsStepIsComplete(etapeFlattened.value, props.demarcheTypeId, props.titreTypeId)}
+          complete={sectionsStepIsComplete(props.etape, props.demarcheTypeId, props.titreTypeId)}
         >
-          <SectionsEdit etape={etapeFlattened.value} titreTypeId={props.titreTypeId} demarcheTypeId={props.demarcheTypeId} completeUpdate={sectionCompleteUpdate} />
+          <SectionsEdit etape={props.etape} titreTypeId={props.titreTypeId} demarcheTypeId={props.demarcheTypeId} completeUpdate={sectionCompleteUpdate} />
         </Bloc>
       ) : null}
 
-      {perimetreStepIsVisible(etapeFlattened.value) ? (
-        <Bloc step={{ name: 'Périmètre', help: null }} complete={perimetreStepIsComplete(etapeFlattened.value)}>
+      {perimetreStepIsVisible(props.etape) ? (
+        <Bloc step={{ name: 'Périmètre', help: null }} complete={perimetreStepIsComplete(props.etape)}>
           <PerimetreEdit
-            etape={etapeFlattened.value}
+            etape={props.etape}
             titreTypeId={props.titreTypeId}
             titreSlug={props.titreSlug}
             apiClient={props.apiClient}
@@ -449,11 +523,11 @@ const EtapeEditFormInternal = defineComponent<
         </Bloc>
       ) : null}
 
-      {etapeDocumentsStepIsVisible(etapeFlattened.value, props.demarcheTypeId, props.titreTypeId) ? (
+      {etapeDocumentsStepIsVisible(props.etape, props.demarcheTypeId, props.titreTypeId) ? (
         <Bloc
           step={{ name: 'Liste des documents', help: null }}
           complete={etapeDocumentsStepIsComplete(
-            etapeFlattened.value,
+            props.etape,
             props.demarcheTypeId,
             props.titreTypeId,
             props.documents.etapeDocuments,
@@ -465,18 +539,18 @@ const EtapeEditFormInternal = defineComponent<
         >
           <EtapeDocumentsEdit
             apiClient={props.apiClient}
-            tde={{ titreTypeId: props.titreTypeId, demarcheTypeId: props.demarcheTypeId, etapeTypeId: etapeFlattened.value.typeId }}
-            etapeId={etapeFlattened.value.id}
+            tde={{ titreTypeId: props.titreTypeId, demarcheTypeId: props.demarcheTypeId, etapeTypeId: props.etape.typeId }}
+            etapeId={props.etape.id}
             completeUpdate={documentsCompleteUpdate}
             sdomZoneIds={props.perimetre.sdomZoneIds}
             user={props.user}
-            contenu={etapeFlattened.value.contenu}
-            isBrouillon={etapeFlattened.value.isBrouillon}
+            contenu={props.etape.contenu}
+            isBrouillon={props.etape.isBrouillon}
           />
         </Bloc>
       ) : null}
 
-      {entrepriseDocumentsStepIsVisible(etapeFlattened.value, props.demarcheTypeId, props.titreTypeId) ? (
+      {entrepriseDocumentsStepIsVisible(props.etape, props.demarcheTypeId, props.titreTypeId) ? (
         <Bloc
           step={{
             name: 'Documents d’entreprise',
@@ -485,12 +559,12 @@ const EtapeEditFormInternal = defineComponent<
                 ? "Les documents d’entreprise sont des documents propres à l'entreprise, et pourront être réutilisés pour la création d'un autre dossier et mis à jour si nécessaire. Ces documents d’entreprise sont consultables dans la fiche entreprise de votre société. Cette section permet de protéger et de centraliser les informations d'ordre privé relatives à la société et à son personnel."
                 : null,
           }}
-          complete={entrepriseDocumentsStepIsComplete(etapeFlattened.value, props.demarcheTypeId, props.titreTypeId, props.documents.entrepriseDocuments)}
+          complete={entrepriseDocumentsStepIsComplete(props.etape, props.demarcheTypeId, props.titreTypeId, props.documents.entrepriseDocuments)}
         >
           <EntrepriseDocumentsEdit
             entreprises={titulairesAndAmodiataires.value}
             apiClient={props.apiClient}
-            tde={{ titreTypeId: props.titreTypeId, demarcheTypeId: props.demarcheTypeId, etapeTypeId: etapeFlattened.value.typeId }}
+            tde={{ titreTypeId: props.titreTypeId, demarcheTypeId: props.demarcheTypeId, etapeTypeId: props.etape.typeId }}
             etapeId={props.etape.id}
             completeUpdate={entrepriseDocumentsCompleteUpdate}
           />

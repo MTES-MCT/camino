@@ -23,7 +23,7 @@ import { EtapeTypeId, etapeTypeIdValidator } from 'camino-common/src/static/etap
 import { geoSystemeIdValidator } from 'camino-common/src/static/geoSystemes'
 import { substanceLegaleIdValidator } from 'camino-common/src/static/substancesLegales'
 import { titreTypeIdValidator } from 'camino-common/src/static/titresTypes'
-import { DeepReadonly } from 'camino-common/src/typescript-tools'
+import { DeepReadonly, isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { titreIdValidator, titreSlugValidator } from 'camino-common/src/validators/titres'
 import { nullToDefault } from 'camino-common/src/zod-tools'
 import gql from 'graphql-tag'
@@ -36,23 +36,25 @@ const contenuValidator = z
 const dureeValidator = z.number().nullable()
 
 const defaultHeritageProps = {
-  dateDebut: { actif: false },
-  dateFin: { actif: false },
-  duree: { actif: false },
-  perimetre: { actif: false },
-  substances: { actif: false },
-  titulaires: { actif: false },
-  amodiataires: { actif: false },
-}
+  duree: { actif: false, etape: null },
+  perimetre: { actif: false, etape: null },
+  dateDebut: { actif: false, etape: null },
+  dateFin: { actif: false, etape: null },
+  substances: { actif: false, etape: null },
+  titulaires: { actif: false, etape: null },
+  amodiataires: { actif: false, etape: null },
+} as const
 
+const substancesValidator = z.array(substanceLegaleIdValidator)
+const entreprisesValidator = z.array(entrepriseIdValidator)
 const heritagePropsValidator = z
   .object({
     duree: z.object({ actif: z.boolean(), etape: z.object({ typeId: etapeTypeIdValidator, date: caminoDateValidator, duree: dureeValidator }).nullable() }),
     dateDebut: z.object({ actif: z.boolean(), etape: z.object({ typeId: etapeTypeIdValidator, date: caminoDateValidator, dateDebut: caminoDateValidator.nullable() }).nullable() }),
     dateFin: z.object({ actif: z.boolean(), etape: z.object({ typeId: etapeTypeIdValidator, date: caminoDateValidator, dateFin: caminoDateValidator.nullable() }).nullable() }),
-    substances: z.object({ actif: z.boolean(), etape: z.object({ typeId: etapeTypeIdValidator, date: caminoDateValidator, substances: z.array(substanceLegaleIdValidator) }).nullable() }),
-    titulaires: z.object({ actif: z.boolean(), etape: z.object({ typeId: etapeTypeIdValidator, date: caminoDateValidator, titulaireIds: z.array(entrepriseIdValidator) }).nullable() }),
-    amodiataires: z.object({ actif: z.boolean(), etape: z.object({ typeId: etapeTypeIdValidator, date: caminoDateValidator, amodiataireIds: z.array(entrepriseIdValidator) }).nullable() }),
+    substances: z.object({ actif: z.boolean(), etape: z.object({ typeId: etapeTypeIdValidator, date: caminoDateValidator, substances: substancesValidator }).nullable() }),
+    titulaires: z.object({ actif: z.boolean(), etape: z.object({ typeId: etapeTypeIdValidator, date: caminoDateValidator, titulaireIds: entreprisesValidator }).nullable() }),
+    amodiataires: z.object({ actif: z.boolean(), etape: z.object({ typeId: etapeTypeIdValidator, date: caminoDateValidator, amodiataireIds: entreprisesValidator }).nullable() }),
     perimetre: z.object({
       actif: z.boolean(),
       etape: z
@@ -85,6 +87,32 @@ const heritageValidator = z.object({
   heritageProps: heritagePropsValidator,
   heritageContenu: heritageContenuValidator,
 })
+const perimetreObjectValidator = z.object({
+  geojson4326Perimetre: featureMultiPolygonValidator.nullable(),
+  geojson4326Points: featureCollectionPointsValidator.nullable(),
+  geojsonOriginePoints: featureCollectionPointsValidator.nullable(),
+  geojsonOriginePerimetre: featureMultiPolygonValidator.nullable(),
+  geojsonOrigineGeoSystemeId: geoSystemeIdValidator.nullable(),
+  geojson4326Forages: featureCollectionForagesValidator.nullable(),
+  geojsonOrigineForages: featureCollectionForagesValidator.nullable(),
+  surface: km2Validator.nullable(),
+})
+
+export const makeFlattenValidator = <T extends z.ZodTypeAny>(schema: T) =>
+  z.object({
+    value: schema,
+    heritee: z.boolean(),
+    etapeHeritee: z
+      .object({
+        etapeTypeId: etapeTypeIdValidator,
+        date: caminoDateValidator,
+        value: schema,
+      })
+      .nullable(),
+  })
+
+// TODO 2024-05-23 : C'est étrange ce que nous retourne zod ici, du coup on ne peut pas mettre le deepreadonly sur prop et consort
+export type GenericHeritageValue<T extends z.ZodTypeAny> = z.infer<ReturnType<typeof makeFlattenValidator<T>>>
 const graphqlEtapeValidator = z.object({
   id: etapeIdValidator,
   slug: etapeSlugValidator,
@@ -125,7 +153,37 @@ const graphqlEtapeValidator = z.object({
   heritageContenu: heritageContenuValidator,
 })
 
-type GraphqlEtape = z.infer<typeof graphqlEtapeValidator>
+// type GraphqlEtape = z.infer<typeof graphqlEtapeValidator>
+
+const flattenEtapeValidator = graphqlEtapeValidator
+  .omit({
+    heritageProps: true,
+    duree: true,
+    surface: true,
+    geojson4326Perimetre: true,
+    geojson4326Points: true,
+    geojsonOriginePoints: true,
+    geojsonOriginePerimetre: true,
+    geojsonOrigineGeoSystemeId: true,
+    geojson4326Forages: true,
+    geojsonOrigineForages: true,
+    dateDebut: true,
+    dateFin: true,
+    substances: true,
+    titulaireIds: true,
+    amodiataireIds: true,
+  })
+  .extend({
+    duree: makeFlattenValidator(dureeValidator),
+    perimetre: makeFlattenValidator(perimetreObjectValidator.nullable()),
+    dateDebut: makeFlattenValidator(caminoDateValidator.nullable()),
+    dateFin: makeFlattenValidator(caminoDateValidator.nullable()),
+    substances: makeFlattenValidator(substancesValidator),
+    titulaires: makeFlattenValidator(entreprisesValidator),
+    amodiataires: makeFlattenValidator(entreprisesValidator),
+  })
+
+export type FlattenEtape = z.infer<typeof flattenEtapeValidator>
 
 const graphqlInputHeritagePropValidator = z.object({
   actif: z.boolean(),
@@ -188,7 +246,7 @@ export interface EtapeApiClient {
     typeId: EtapeTypeId,
     etapeId: EtapeId | null
   ) => Promise<DeepReadonly<Pick<EtapeWithHeritage, 'heritageProps' | 'heritageContenu'>>>
-  getEtape: (etapeIdOrSlug: EtapeIdOrSlug) => Promise<DeepReadonly<GraphqlEtape>>
+  getEtape: (etapeIdOrSlug: EtapeIdOrSlug) => Promise<DeepReadonly<{etape: FlattenEtape, demarche: FIXME}>>
   etapeCreer: (etape: DeepReadonly<GraphqlEtapeCreation>) => Promise<EtapeId>
   etapeModifier: (etape: DeepReadonly<GraphqlEtapeModification>) => Promise<EtapeId>
 }
@@ -316,11 +374,112 @@ export const etapeApiClient: EtapeApiClient = {
     `)({ id: etapeIdOrSlug })
     const result = graphqlEtapeValidator.safeParse(data)
     if (result.success) {
-      return result.data
-    }
-    console.log(result.error.message)
+      const graphqlEtape = result.data
 
-    return graphqlEtapeValidator.parse(data)
+      const flattenEtape: FlattenEtape = {
+        ...graphqlEtape,
+        duree: {
+          value: graphqlEtape.heritageProps.duree.actif ? graphqlEtape.heritageProps.duree.etape?.duree ?? null : graphqlEtape.duree,
+          heritee: graphqlEtape.heritageProps.duree.actif,
+          etapeHeritee: isNotNullNorUndefined(graphqlEtape.heritageProps.duree.etape)
+            ? {
+                etapeTypeId: graphqlEtape.heritageProps.duree.etape.typeId,
+                date: graphqlEtape.heritageProps.duree.etape.date,
+                value: graphqlEtape.heritageProps.duree.etape.duree,
+              }
+            : null,
+        },
+        perimetre: {
+          value: graphqlEtape.heritageProps.perimetre.actif
+            ? isNotNullNorUndefined(graphqlEtape.heritageProps.perimetre.etape)
+              ? { ...graphqlEtape.heritageProps.perimetre.etape }
+              : null
+            : { ...graphqlEtape },
+
+          heritee: graphqlEtape.heritageProps.perimetre.actif,
+          etapeHeritee: isNotNullNorUndefined(graphqlEtape.heritageProps.perimetre.etape)
+            ? {
+                etapeTypeId: graphqlEtape.heritageProps.perimetre.etape.typeId,
+                date: graphqlEtape.heritageProps.perimetre.etape.date,
+                value: { ...graphqlEtape.heritageProps.perimetre.etape },
+              }
+            : null,
+        },
+        dateDebut: {
+          value: graphqlEtape.heritageProps.dateDebut.actif ? graphqlEtape.heritageProps.dateDebut.etape?.dateDebut ?? null : graphqlEtape.dateDebut,
+          heritee: graphqlEtape.heritageProps.dateDebut.actif,
+          etapeHeritee: isNotNullNorUndefined(graphqlEtape.heritageProps.dateDebut.etape)
+            ? {
+                etapeTypeId: graphqlEtape.heritageProps.dateDebut.etape.typeId,
+                date: graphqlEtape.heritageProps.dateDebut.etape.date,
+                value: graphqlEtape.heritageProps.dateDebut.etape.dateDebut,
+              }
+            : null,
+        },
+        dateFin: {
+          value: graphqlEtape.heritageProps.dateFin.actif ? graphqlEtape.heritageProps.dateFin.etape?.dateFin ?? null : graphqlEtape.dateFin,
+          heritee: graphqlEtape.heritageProps.dateFin.actif,
+          etapeHeritee: isNotNullNorUndefined(graphqlEtape.heritageProps.dateFin.etape)
+            ? {
+                etapeTypeId: graphqlEtape.heritageProps.dateFin.etape.typeId,
+                date: graphqlEtape.heritageProps.dateFin.etape.date,
+                value: graphqlEtape.heritageProps.dateFin.etape.dateFin,
+              }
+            : null,
+        },
+        substances: {
+          value: graphqlEtape.heritageProps.substances.actif
+            ? isNotNullNorUndefined(graphqlEtape.heritageProps.substances.etape)
+              ? graphqlEtape.heritageProps.substances.etape.substances
+              : []
+            : graphqlEtape.substances,
+
+          heritee: graphqlEtape.heritageProps.substances.actif,
+          etapeHeritee: isNotNullNorUndefined(graphqlEtape.heritageProps.substances.etape)
+            ? {
+                etapeTypeId: graphqlEtape.heritageProps.substances.etape.typeId,
+                date: graphqlEtape.heritageProps.substances.etape.date,
+                value: graphqlEtape.heritageProps.substances.etape.substances,
+              }
+            : null,
+        },
+        amodiataires: {
+          value: graphqlEtape.heritageProps.amodiataires.actif
+            ? isNotNullNorUndefined(graphqlEtape.heritageProps.amodiataires.etape)
+              ? graphqlEtape.heritageProps.amodiataires.etape.amodiataireIds
+              : []
+            : graphqlEtape.amodiataireIds,
+
+          heritee: graphqlEtape.heritageProps.amodiataires.actif,
+          etapeHeritee: isNotNullNorUndefined(graphqlEtape.heritageProps.amodiataires.etape)
+            ? {
+                etapeTypeId: graphqlEtape.heritageProps.amodiataires.etape.typeId,
+                date: graphqlEtape.heritageProps.amodiataires.etape.date,
+                value: graphqlEtape.heritageProps.amodiataires.etape.amodiataireIds,
+              }
+            : null,
+        },
+        titulaires: {
+          value: graphqlEtape.heritageProps.titulaires.actif
+            ? isNotNullNorUndefined(graphqlEtape.heritageProps.titulaires.etape)
+              ? graphqlEtape.heritageProps.titulaires.etape.titulaireIds
+              : []
+            : graphqlEtape.titulaireIds,
+
+          heritee: graphqlEtape.heritageProps.titulaires.actif,
+          etapeHeritee: isNotNullNorUndefined(graphqlEtape.heritageProps.titulaires.etape)
+            ? {
+                etapeTypeId: graphqlEtape.heritageProps.titulaires.etape.typeId,
+                date: graphqlEtape.heritageProps.titulaires.etape.date,
+                value: graphqlEtape.heritageProps.titulaires.etape.titulaireIds,
+              }
+            : null,
+        },
+      }
+      return flattenEtapeValidator.parse(flattenEtape)
+    }
+    console.warn(result.error.message)
+    throw result.error
   },
   getEtapeHeritagePotentiel: async (titreDemarcheId: DemarcheId, date: CaminoDate, typeId: EtapeTypeId, etapeId: EtapeId | null) => {
     const data = await apiGraphQLFetch(gql`
