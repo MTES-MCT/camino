@@ -1,4 +1,4 @@
-import { defineComponent, markRaw, onMounted, ref } from 'vue'
+import { FunctionalComponent, computed, defineComponent, markRaw, onMounted, ref } from 'vue'
 import { TableAuto } from '../_ui/table-auto'
 import { DateComponent } from '../_ui/date'
 
@@ -9,7 +9,8 @@ import { daysBetween, toCaminoDate } from 'camino-common/src/date'
 import { ComponentColumnData, TableRow, TextColumnData } from '../_ui/table'
 import { DashboardApiClient } from './dashboard-api-client'
 import { Entreprise, EntrepriseId } from 'camino-common/src/entreprise'
-import { Alert } from '../_ui/alert'
+import { AsyncData } from '@/api/client-rest'
+import { LoadingElement } from '../_ui/functional-loader'
 interface Props {
   apiClient: Pick<DashboardApiClient, 'getOnfTitres'>
   entreprises: Entreprise[]
@@ -93,68 +94,60 @@ const titresLignesBuild = (titres: CommonTitreONF[], entreprisesIndex: Record<En
 }
 
 export const PureONFDashboard = defineComponent<Props>(props => {
-  const status = ref<'LOADING' | 'LOADED' | 'ERROR'>('LOADING')
-  const onfTitres = ref<TableRow[]>([])
-  const onfTitresBloques = ref<TableRow[]>([])
+  const onfTitres = ref<AsyncData<CommonTitreONF[]>>({ status: 'LOADING' })
 
+  onMounted(async () => {
+    onfTitres.value = { status: 'LOADING' }
+    try {
+      const titres = await props.apiClient.getOnfTitres()
+      onfTitres.value = { status: 'LOADED', value: titres }
+    } catch (e: any) {
+      console.error('error', e)
+      onfTitres.value = { status: 'ERROR', message: e.message ?? '' }
+    }
+  })
+
+  return () => (
+    <div>
+      <h1>Tableau de bord ONF</h1>
+
+      <LoadingElement data={onfTitres.value} renderItem={items => <LoadedPureOnfDashboard titres={items} entreprises={props.entreprises} />} />
+    </div>
+  )
+})
+
+const LoadedPureOnfDashboard: FunctionalComponent<{ titres: CommonTitreONF[]; entreprises: Entreprise[] }> = props => {
   const entreprisesIndex = props.entreprises.reduce<Record<EntrepriseId, string>>((acc, entreprise) => {
     acc[entreprise.id] = entreprise.nom
 
     return acc
   }, {})
 
-  onMounted(async () => {
-    try {
-      const titres = await props.apiClient.getOnfTitres()
-      onfTitres.value.push(
-        ...titresLignesBuild(
-          titres.filter(titre => !titre.enAttenteDeONF),
-          entreprisesIndex
-        )
-      )
-      onfTitresBloques.value.push(
-        ...titresLignesBuild(
-          titres.filter(titre => titre.enAttenteDeONF),
-          entreprisesIndex
-        )
-      )
-      status.value = 'LOADED'
-    } catch (e) {
-      console.error('error', e)
-      status.value = 'ERROR'
-    }
-  })
-
-  return () => (
-    <div>
-      <div class="desktop-blobs">
-        <div class="desktop-blob-2-3">
-          <h1 class="mt-xs mb-xxl">Tableau de bord ONF</h1>
-        </div>
-      </div>
-      {status.value === 'LOADING' ? (
-        <div class="loaders fixed p">
-          <div class="loader" />
-        </div>
-      ) : null}
-
-      {status.value === 'LOADED' ? (
-        <div>
-          {onfTitresBloques.value.length > 0 ? (
-            <>
-              <div class="line-neutral width-full mb-l"></div>
-              <TableAuto caption="ARM en attente" class="mb-xxl" columns={columns.slice(0, 5)} rows={onfTitresBloques.value} initialSort={{ colonne: initialColumnId, ordre: 'asc' }} />
-            </>
-          ) : null}
-          <div class="line-neutral width-full mb-l"></div>
-          <TableAuto caption="ARM en cours d’instruction" columns={columns} rows={onfTitres.value} initialSort={{ colonne: initialColumnId, ordre: 'asc' }} class="width-full-p" />
-        </div>
-      ) : null}
-
-      {status.value === 'ERROR' ? <Alert type="error" small={true} title="Le serveur est inaccessible, veuillez réessayer plus tard" /> : null}
-    </div>
+  const onfTitresNonBloques = computed<TableRow[]>(() =>
+    titresLignesBuild(
+      props.titres.filter(titre => !titre.enAttenteDeONF),
+      entreprisesIndex
+    )
   )
-})
+
+  const onfTitresBloques = computed<TableRow[]>(() =>
+    titresLignesBuild(
+      props.titres.filter(titre => titre.enAttenteDeONF),
+      entreprisesIndex
+    )
+  )
+
+  return (
+    <>
+      {onfTitresBloques.value.length > 0 ? (
+        <>
+          <TableAuto caption="ARM en attente" columns={columns.slice(0, 5)} rows={onfTitresBloques.value} initialSort={{ colonne: initialColumnId, ordre: 'asc' }} />
+        </>
+      ) : null}
+      <TableAuto caption="ARM en cours d’instruction" columns={columns} rows={onfTitresNonBloques.value} initialSort={{ colonne: initialColumnId, ordre: 'asc' }} />
+    </>
+  )
+}
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
 PureONFDashboard.props = ['apiClient', 'entreprises']
