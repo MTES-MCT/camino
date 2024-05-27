@@ -391,6 +391,13 @@ describe('getSectionsWithValue', () => {
                   "referenceUniteRatio": 100000,
                   "symbole": "x 100 000 m³",
                 },
+                {
+                  "id": "kwa",
+                  "nom": "kilowatt",
+                  "referenceUniteId": null,
+                  "referenceUniteRatio": null,
+                  "symbole": "kW",
+                },
               ],
               "type": "select",
               "valeursMetasNom": "unites",

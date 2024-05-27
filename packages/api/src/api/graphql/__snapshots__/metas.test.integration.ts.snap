@@ -1000,6 +1000,10 @@ exports[`statuts > peut voir tous les statuts 1`] = `
       "id": "vmd",
       "nom": "100 000 mètres cubes",
     },
+    {
+      "id": "kwa",
+      "nom": "kilowatt",
+    },
   ],
 }
 `;

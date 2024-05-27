@@ -1,5 +1,5 @@
 import { z } from 'zod'
-const IDS = ['deg', 'gon', 'km3', 'm3a', 'm3x', 'met', 'mgr', 'mkc', 'mkg', 'mtc', 'mtk', 'mtt', 'txa', 'vmd', 'm3h'] as const
+const IDS = ['deg', 'gon', 'km3', 'm3a', 'm3x', 'met', 'mgr', 'mkc', 'mkg', 'mtc', 'mtk', 'mtt', 'txa', 'vmd', 'm3h', 'kwa'] as const
 
 export const UNITE_IDS = {
   degré: 'deg',
@@ -17,6 +17,7 @@ export const UNITE_IDS = {
   tonne: 'mtt',
   'tonnes par an': 'txa',
   '100 000 mètres cubes': 'vmd',
+  kilowatt: 'kwa',
 } as const satisfies Record<string, UniteId>
 
 export interface Unite<T = UniteId> {
@@ -49,6 +50,7 @@ export const Unites: { [key in UniteId]: Unite<key> } = {
   mtt: { id: 'mtt', nom: 'tonne', symbole: 't', referenceUniteId: 'mkg', referenceUniteRatio: 1000, openfiscaId: 't' },
   txa: { id: 'txa', nom: 'tonnes par an', symbole: 't/an', referenceUniteId: null, referenceUniteRatio: null },
   vmd: { id: 'vmd', nom: '100 000 mètres cubes', symbole: 'x 100 000 m³', referenceUniteId: 'm3x', referenceUniteRatio: 100000, openfiscaId: '100km3' },
+  kwa: { id: 'kwa', nom: 'kilowatt', symbole: 'kW', referenceUniteId: null, referenceUniteRatio: null },
 }
 
 export const fromUniteFiscaleToUnite = (unite: UniteId, value: number): number => {
