@@ -1,5 +1,5 @@
 import type { LatLngExpression, Icon, DivIcon, GeoJSONOptions, DivIconOptions, MarkerOptions } from 'leaflet'
-import type { GeoJsonObject } from 'geojson'
+import type { GeoJsonObject, LineString } from 'geojson'
 import 'leaflet.markercluster'
 import 'leaflet-gesture-handling'
 import 'leaflet-fullscreen'
@@ -28,4 +28,4 @@ export const leafletGeojsonBuild = (geojson: GeoJsonObject | undefined, options?
 export const leafletGeojsonCenterFind = (geojson: GeoJsonObject | undefined) => L.geoJSON(geojson).getBounds().getCenter()
 
 export const leafletDivIconBuild = (divIconOptions: DivIconOptions) => L.divIcon(divIconOptions)
-export const leafletGeojsonBoundsGet = (zone: GeoJsonObject | undefined) => L.geoJSON(zone).getBounds()
+export const leafletGeojsonBoundsGet = (zone: LineString) => L.geoJSON(zone).getBounds()

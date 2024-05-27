@@ -1,7 +1,7 @@
 import { ref, Ref, computed, onMounted, watch, defineComponent, DefineComponent } from 'vue'
 import { CaminoMap, Props as CaminoMapProps } from '../_map/index'
 import { leafletGeojsonBoundsGet } from '../_map/leaflet'
-import { clustersBuild, layersBuild, zones, TitreWithPerimetre, CaminoMarkerClusterGroup, LayerWithTitreId } from './mapUtil'
+import { clustersBuild, layersBuild, zones, TitreWithPerimetre, CaminoMarkerClusterGroup, LayerWithTitreId, regionsCoordinates } from './mapUtil'
 import { DomaineId, isDomaineId } from 'camino-common/src/static/domaines'
 import { Router, onBeforeRouteLeave } from 'vue-router'
 import { Layer, LayerGroup, Marker, layerGroup } from 'leaflet'
@@ -10,6 +10,10 @@ import { DsfrButton } from '../_ui/dsfr-button'
 import { routerQueryToNumber, routerQueryToNumberArray } from '@/router/camino-router-link'
 import { TitreId } from 'camino-common/src/validators/titres'
 import { Entreprise } from 'camino-common/src/entreprise'
+import { User, isAdministration } from 'camino-common/src/roles'
+import { RegionId } from 'camino-common/src/static/region'
+import { Administrations } from 'camino-common/src/static/administrations'
+import { Departements } from 'camino-common/src/static/departement'
 export type TitreCarteParams = {
   zoom: number
   centre: [number, number]
@@ -18,6 +22,7 @@ export type TitreCarteParams = {
 interface Props {
   titres: { hash: string; titres: TitreWithPerimetre[] }
   entreprises: Entreprise[]
+  user: User
   updateCarte: (params: TitreCarteParams) => void
   router: Router
   loading: boolean
@@ -27,7 +32,7 @@ const isLayerWithTitreId = (layer: Layer): layer is LayerWithTitreId => 'titreId
 
 type ZoneId = keyof typeof zones
 export const CaminoTitresMap = defineComponent<Props>(props => {
-  const zoneId = ref<ZoneId>('fr')
+  const zoneId = ref<ZoneId | null>(null)
   const savedParams = computed<TitreCarteParams>(() => {
     const route = props.router.currentRoute.value
 
@@ -60,12 +65,22 @@ export const CaminoTitresMap = defineComponent<Props>(props => {
   const clusters = ref<CaminoMarkerClusterGroup[]>([]) as Ref<CaminoMarkerClusterGroup[]>
   const geojsonLayers = ref<LayerGroup>(layerGroup([])) as Ref<LayerGroup>
 
-  const zone = computed(() => {
-    return zones[zoneId.value]
-  })
+  let initialCoordinates: [[number, number], [number, number]] = zones.fr.coordinates
+  if (isAdministration(props.user)) {
+    const administration = Administrations[props.user.administrationId]
+    let regionId: RegionId | null = administration.regionId ?? null
+    if (isNotNullNorUndefined(administration.departementId)) {
+      regionId = Departements[administration.departementId].regionId
+    }
+
+    if (isNotNullNorUndefined(regionId)) {
+      initialCoordinates = regionsCoordinates[regionId]
+    }
+  }
+  const boundsCoordinates = ref<[[number, number], [number, number]]>(initialCoordinates)
 
   const bounds = computed(() => {
-    return leafletGeojsonBoundsGet(zone.value)
+    return leafletGeojsonBoundsGet({ type: 'LineString', coordinates: boundsCoordinates.value })
   })
 
   const init = () => {
@@ -172,6 +187,7 @@ export const CaminoTitresMap = defineComponent<Props>(props => {
   const mapCenter = (newZoneId: ZoneId) => {
     if (zoneId.value !== newZoneId) {
       zoneId.value = newZoneId
+      boundsCoordinates.value = zones[newZoneId].coordinates
     }
 
     boundsFit()
@@ -226,4 +242,4 @@ export const CaminoTitresMap = defineComponent<Props>(props => {
 })
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-CaminoTitresMap.props = ['titres', 'updateCarte', 'router', 'loading', 'entreprises']
+CaminoTitresMap.props = ['titres', 'updateCarte', 'router', 'loading', 'entreprises', 'user']

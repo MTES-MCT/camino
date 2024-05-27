@@ -153,6 +153,7 @@ export const Titres = defineComponent({
             entreprises={entreprises.value}
             loading={data.value.status === 'LOADING'}
             router={router}
+            user={user}
             updateCarte={async params => {
               paramsForCarte.value = params
               reloadTitres('carte')
