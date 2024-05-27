@@ -4,6 +4,7 @@ import { DemarchesStatutsIds, isDemarcheStatutNonStatue, isDemarcheStatutNonVali
 import { isDemarcheTypeOctroi, DemarchesTypes } from 'camino-common/src/static/demarchesTypes.js'
 import { TitresStatutIds, TitreStatutId } from 'camino-common/src/static/titresStatuts.js'
 import { CaminoDate } from 'camino-common/src/date.js'
+import { isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
 
 export type TitreStatutIdFindDemarche = Pick<ITitreDemarche, 'typeId' | 'statutId' | 'demarcheDateDebut' | 'demarcheDateFin'>
 export const titreStatutIdFind = (aujourdhui: CaminoDate, demarches: TitreStatutIdFindDemarche[] | null | undefined): TitreStatutId => {
@@ -27,6 +28,12 @@ export const titreStatutIdFind = (aujourdhui: CaminoDate, demarches: TitreStatut
     // -> le statut du titre est demande classée
     if (isDemarcheStatutNonValide(titreDemarches[0].statutId)) {
       return TitresStatutIds.DemandeClassee
+    }
+
+    // si elle est statuée valide mais que sa phase n’est pas encore valide
+    // -> le statut du titre est demande initiale
+    if (isNullOrUndefined(titreDemarches[0].demarcheDateDebut) && isNullOrUndefined(titreDemarches[0].demarcheDateFin)) {
+      return TitresStatutIds.DemandeInitiale
     }
   }
 
