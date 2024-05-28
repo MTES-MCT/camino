@@ -13,9 +13,10 @@ import { titreGet } from '../../../database/queries/titres.js'
 import { titreDemarcheUpdate as titreDemarcheUpdateTask } from '../../../business/titre-demarche-update.js'
 import { titreDemarcheUpdationValidate } from '../../../business/validations/titre-demarche-updation-validate.js'
 import { isDemarcheTypeId, isTravaux } from 'camino-common/src/static/demarchesTypes.js'
-import { canCreateTravaux, canCreateOrEditDemarche, canDeleteDemarche } from 'camino-common/src/permissions/titres-demarches.js'
+import { canCreateTravaux, canEditDemarche, canDeleteDemarche, canCreateDemarche } from 'camino-common/src/permissions/titres-demarches.js'
 import { isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
 import { userSuper } from '../../../database/user-super.js'
+import { getDemarchesByTitreId } from '../../rest/titres.queries.js'
 
 export const demarches = async (
   {
@@ -146,10 +147,12 @@ export const demarcheCreer = async ({ demarche }: { demarche: ITitreDemarche }, 
       throw new Error('le statut du titre est obligatoire')
     }
 
-    if (isTravaux(demarche.typeId) && !canCreateTravaux(user, titre.typeId, titre.administrationsLocales ?? [])) {
+    const demarches = await getDemarchesByTitreId(pool, demarche.titreId)
+
+    if (isTravaux(demarche.typeId) && !canCreateTravaux(user, titre.typeId, titre.administrationsLocales ?? [], demarches)) {
       throw new Error('droits insuffisants')
     }
-    if (!isTravaux(demarche.typeId) && !canCreateOrEditDemarche(user, titre.typeId, titre.titreStatutId, titre.administrationsLocales ?? [])) {
+    if (!isTravaux(demarche.typeId) && !canCreateDemarche(user, titre.typeId, titre.titreStatutId, titre.administrationsLocales ?? [], demarches)) {
       throw new Error('droits insuffisants')
     }
 
@@ -184,7 +187,7 @@ export const demarcheModifier = async ({ demarche }: { demarche: ITitreDemarche 
     if (isNullOrUndefined(titre)) throw new Error("le titre n'existe pas")
     if (isNullOrUndefined(titre.administrationsLocales)) throw new Error('les administrations locales ne sont pas chargées')
 
-    if (!canCreateOrEditDemarche(user, titre.typeId, titre.titreStatutId, titre.administrationsLocales)) throw new Error('droits insuffisants')
+    if (!canEditDemarche(user, titre.typeId, titre.titreStatutId, titre.administrationsLocales)) throw new Error('droits insuffisants')
 
     if (demarcheOld.titreId !== demarche.titreId) throw new Error('le titre n’existe pas')
 

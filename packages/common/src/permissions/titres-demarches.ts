@@ -7,8 +7,24 @@ import { AdministrationId, Administrations } from '../static/administrations.js'
 import { getEtapesTDE } from '../static/titresTypes_demarchesTypes_etapesTypes/index.js'
 import { DemarcheTypeId } from '../static/demarchesTypes.js'
 import { canCreateEtape } from './titres-etapes.js'
+import { TitreGetDemarche } from '../titres.js'
+import { isNullOrUndefined } from '../typescript-tools.js'
 
-export const canCreateOrEditDemarche = (user: User, titreTypeId: TitreTypeId, titreStatutId: TitreStatutId, administrationsLocales: AdministrationId[]): boolean => {
+const hasOneDemarcheWithoutPhase = (demarches: Pick<TitreGetDemarche, 'demarche_date_debut'>[]): boolean => {
+  // Si il y a une seule démarche et qu’elle n’a pas encore créée de phase, alors on ne peut pas créer une deuxième démarche
+  return demarches.length === 1 && isNullOrUndefined(demarches[0].demarche_date_debut)
+}
+export const canCreateDemarche = (
+  user: User,
+  titreTypeId: TitreTypeId,
+  titreStatutId: TitreStatutId,
+  administrationsLocales: AdministrationId[],
+  demarches: Pick<TitreGetDemarche, 'demarche_date_debut'>[]
+): boolean => {
+  return !hasOneDemarcheWithoutPhase(demarches) && canEditDemarche(user, titreTypeId, titreStatutId, administrationsLocales)
+}
+
+export const canEditDemarche = (user: User, titreTypeId: TitreTypeId, titreStatutId: TitreStatutId, administrationsLocales: AdministrationId[]): boolean => {
   if (isSuper(user)) {
     return true
   } else if (isAdministrationAdmin(user) || isAdministrationEditeur(user)) {
@@ -36,7 +52,11 @@ export const canDeleteDemarche = (user: User, titreTypeId: TitreTypeId, titreSta
   return false
 }
 
-export const canCreateTravaux = (user: User, titreTypeId: TitreTypeId, administrations: AdministrationId[]): boolean => {
+export const canCreateTravaux = (user: User, titreTypeId: TitreTypeId, administrations: AdministrationId[], demarches: Pick<TitreGetDemarche, 'demarche_date_debut'>[]): boolean => {
+  if (hasOneDemarcheWithoutPhase(demarches)) {
+    return false
+  }
+
   if (isSuper(user)) {
     return true
   } else if (isAdministrationAdmin(user) || isAdministrationEditeur(user)) {

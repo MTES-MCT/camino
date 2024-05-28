@@ -54,7 +54,7 @@ export const getTitre = async (pool: Pool, user: User, idOrSlug: TitreIdOrSlug):
     const titreDateLastModified = await getDateLastJournal(pool, titre.id)
     const titreDoublon = titre.titre_doublon_id !== null && titre.titre_doublon_nom !== null ? { id: titre.titre_doublon_id, nom: titre.titre_doublon_nom } : null
 
-    const demarchesFromDatabase = await dbQueryAndValidate(getDemarchesByTitreIdQueryDb, { titreId: titre.id }, pool, getDemarchesByTitreIdQueryDbValidator)
+    const demarchesFromDatabase = await getDemarchesByTitreId(pool, titre.id)
 
     const titreTypeId = memoize(() => Promise.resolve(titre.titre_type_id))
 
@@ -319,6 +319,9 @@ const getDemarchesByTitreIdQueryDbValidator = z.object({
 })
 type GetDemarchesByTitreIdQueryDb = z.infer<typeof getDemarchesByTitreIdQueryDbValidator>
 
+export const getDemarchesByTitreId = async (pool: Pool, titreId: TitreId) => {
+  return dbQueryAndValidate(getDemarchesByTitreIdQueryDb, { titreId }, pool, getDemarchesByTitreIdQueryDbValidator)
+}
 const getDemarchesByTitreIdQueryDb = sql<Redefine<IGetDemarchesByTitreIdQueryDbQuery, { titreId: TitreId }, GetDemarchesByTitreIdQueryDb>>`
 select
     d.id,

@@ -16,7 +16,7 @@ import { ApiClient } from '@/api/api-client'
 import { SubstanceLegaleId, SubstancesLegale } from 'camino-common/src/static/substancesLegales'
 import { territoiresFind } from 'camino-common/src/territoires'
 import { DsfrButton, DsfrButtonIcon, DsfrLink } from '../_ui/dsfr-button'
-import { canCreateEtapeByDemarche, canCreateOrEditDemarche, canDeleteDemarche } from 'camino-common/src/permissions/titres-demarches'
+import { canCreateDemarche, canCreateEtapeByDemarche, canEditDemarche, canDeleteDemarche, canCreateTravaux } from 'camino-common/src/permissions/titres-demarches'
 import { DemarcheEditPopup } from './demarche-edit-popup'
 import { DemarcheRemovePopup } from './demarche-remove-popup'
 import { Forets } from 'camino-common/src/static/forets'
@@ -129,18 +129,23 @@ export const TitreDemarche = defineComponent<Props>(props => {
     deleteDemarchePopup.value = false
   }
 
+  const canCreateDemarcheOrTravaux = computed<boolean>(() => {
+    return (
+      canCreateDemarche(props.user, props.titre.titre_type_id, props.titre.titre_statut_id, administrations.value, props.demarches) ||
+      canCreateTravaux(props.user, props.titre.titre_type_id, administrations.value, props.demarches)
+    )
+  })
+
   return () => (
     <>
       {demarche.value !== null ? (
         <div>
           <div class="fr-grid-row fr-grid-row--middle">
             <h2 style={{ margin: 0 }}>{`${capitalize(DemarchesTypes[demarche.value.demarche_type_id].nom)}`}</h2>
-            <DemarcheStatut class="fr-ml-2w" demarcheStatutId={demarche.value.demarche_statut_id} />
-            {canCreateOrEditDemarche(props.user, props.titre.titre_type_id, props.titre.titre_statut_id, administrations.value) ? (
-              <>
-                <DsfrButton style={{ marginLeft: 'auto' }} buttonType="primary" title="Ajouter une démarche" onClick={openAddDemarchePopup} />
-                <DsfrButtonIcon icon="fr-icon-pencil-line" style={{ marginRight: 0 }} class="fr-ml-2w" buttonType="secondary" title="Modifier la description" onClick={openEditDemarchePopup} />
-              </>
+            <DemarcheStatut class="fr-ml-2w" demarcheStatutId={demarche.value.demarche_statut_id} style={{ marginRight: 'auto' }} />
+            {canCreateDemarcheOrTravaux.value ? <DsfrButton buttonType="primary" title="Ajouter une démarche" onClick={openAddDemarchePopup} /> : null}
+            {canEditDemarche(props.user, props.titre.titre_type_id, props.titre.titre_statut_id, administrations.value) ? (
+              <DsfrButtonIcon icon="fr-icon-pencil-line" style={{ marginRight: 0 }} class="fr-ml-2w" buttonType="secondary" title="Modifier la description" onClick={openEditDemarchePopup} />
             ) : null}
             {canDeleteDemarche(props.user, props.titre.titre_type_id, props.titre.titre_statut_id, administrations.value, demarche.value) ? (
               <DsfrButtonIcon icon="fr-icon-delete-bin-line" class="fr-ml-2w" buttonType="secondary" title="Supprimer la démarche" onClick={openDeleteDemarchePopup} />
