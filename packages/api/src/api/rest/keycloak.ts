@@ -17,7 +17,7 @@ export const logout = (_pool: Pool) => async (req: CaminoRequest, res: CustomRes
 
     const oauthLogoutUrl = new URL(`${uiUrl}/oauth2/sign_out`)
     oauthLogoutUrl.searchParams.append('rd', keycloakLogoutUrl.href)
-
+    res.clearCookie('shouldBeConnected')
     res.redirect(oauthLogoutUrl.href)
   }
 }
