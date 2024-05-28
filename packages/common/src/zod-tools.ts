@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { isNullOrUndefined } from './typescript-tools'
+import { isNullOrUndefined } from './typescript-tools.js'
 import { caminoDateValidator } from './date.js'
 import { etapeTypeIdValidator } from './static/etapesTypes.js'
 

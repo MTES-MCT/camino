@@ -422,6 +422,7 @@ export const etapeApiClient: EtapeApiClient = {
     const heritageData: DeepReadonly<z.infer<typeof heritageValidator>> = heritageValidator.parse(data)
     const flattenEtape: DeepReadonly<CoreEtapeCreationOrModification> = {
       ...etape,
+      heritageContenu: heritageData.heritageContenu,
       duree: {
         value: heritageData.heritageProps.duree.actif ? heritageData.heritageProps.duree.etape?.duree ?? null : etape.duree.value,
         heritee: heritageData.heritageProps.duree.actif,

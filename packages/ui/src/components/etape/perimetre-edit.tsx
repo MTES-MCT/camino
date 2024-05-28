@@ -128,8 +128,6 @@ export const PerimetreEdit = defineComponent<Props>(props => {
     }
   }
 
-  // const mutableEtape = ref(flattenEtapeValidator.parse({...props.etape}))
-  // FIXME
   return () => (
     <div>
       <HeritageEdit
