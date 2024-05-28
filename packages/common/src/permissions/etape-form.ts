@@ -1,5 +1,6 @@
 import { EntrepriseDocumentId, EntrepriseId } from '../entreprise.js'
-import { DocumentComplementaireAslEtapeDocumentModification, DocumentComplementaireDaeEtapeDocumentModification, EtapeDocument, EtapeWithHeritage, TempEtapeDocument, needAslAndDae } from '../etape.js'
+import { FlattenEtape } from '../etape-form.js'
+import { DocumentComplementaireAslEtapeDocumentModification, DocumentComplementaireDaeEtapeDocumentModification, EtapeDocument, TempEtapeDocument, needAslAndDae } from '../etape.js'
 import { User } from '../roles.js'
 import { DemarcheTypeId } from '../static/demarchesTypes.js'
 import { EntrepriseDocumentTypeId } from '../static/documentsTypes.js'
@@ -18,21 +19,22 @@ export const fondamentaleStepIsVisible = (etapeTypeId: EtapeTypeId): boolean => 
   return EtapesTypes[etapeTypeId].fondamentale
 }
 
-export const fondamentaleStepIsComplete = (flattened: DeepReadonly<Pick<EtapeWithHeritage, 'typeId' | 'duree' | 'substances'>>, demarcheTypeId: DemarcheTypeId, titreTypeId: TitreTypeId): boolean => {
+export const fondamentaleStepIsComplete = (flattened: DeepReadonly<Pick<FlattenEtape, 'typeId' | 'duree' | 'substances'>>, demarcheTypeId: DemarcheTypeId, titreTypeId: TitreTypeId): boolean => {
   if (!fondamentaleStepIsVisible(flattened.typeId)) {
     return true
   }
 
   return (
     flattened.typeId !== ETAPES_TYPES.demande ||
-    (isNotNullNorUndefinedNorEmpty(flattened.substances) && (dureeOptionalCheck(flattened.typeId, demarcheTypeId, titreTypeId) || (isNotNullNorUndefined(flattened.duree) && flattened.duree > 0)))
+    (isNotNullNorUndefinedNorEmpty(flattened.substances.value) &&
+      (dureeOptionalCheck(flattened.typeId, demarcheTypeId, titreTypeId) || (isNotNullNorUndefined(flattened.duree.value) && flattened.duree.value > 0)))
   )
 }
 
-export const sectionsStepIsVisible = (etape: Pick<EtapeWithHeritage, 'typeId'>, demarcheTypeId: DemarcheTypeId, titreTypeId: TitreTypeId): boolean => {
+export const sectionsStepIsVisible = (etape: Pick<FlattenEtape, 'typeId'>, demarcheTypeId: DemarcheTypeId, titreTypeId: TitreTypeId): boolean => {
   return getSections(titreTypeId, demarcheTypeId, etape.typeId).length > 0
 }
-export const sectionsStepIsComplete = (etape: DeepReadonly<Pick<EtapeWithHeritage, 'typeId' | 'contenu'>>, demarcheTypeId: DemarcheTypeId, titreTypeId: TitreTypeId): boolean => {
+export const sectionsStepIsComplete = (etape: DeepReadonly<Pick<FlattenEtape, 'typeId' | 'contenu'>>, demarcheTypeId: DemarcheTypeId, titreTypeId: TitreTypeId): boolean => {
   if (!sectionsStepIsVisible(etape, demarcheTypeId, titreTypeId)) {
     return true
   }
@@ -43,23 +45,18 @@ export const sectionsStepIsComplete = (etape: DeepReadonly<Pick<EtapeWithHeritag
   return sectionsWithValueCompleteValidate(sectionsWithValue).length === 0
 }
 
-export const perimetreStepIsVisible = (etape: Pick<EtapeWithHeritage, 'typeId'>): boolean => {
+export const perimetreStepIsVisible = (etape: Pick<FlattenEtape, 'typeId'>): boolean => {
   return EtapesTypes[etape.typeId].fondamentale
 }
-export const perimetreStepIsComplete = (etape: DeepReadonly<Pick<EtapeWithHeritage, 'typeId' | 'geojson4326Perimetre'>>): boolean => {
+export const perimetreStepIsComplete = (etape: DeepReadonly<Pick<FlattenEtape, 'typeId' | 'perimetre'>>): boolean => {
   if (!perimetreStepIsVisible(etape)) {
     return true
   }
 
-  return etape.typeId !== 'mfr' || isNotNullNorUndefined(etape.geojson4326Perimetre)
+  return etape.typeId !== 'mfr' || isNotNullNorUndefined(etape.perimetre.value?.geojson4326Perimetre)
 }
 
-export const getDocumentsTypes = (
-  etape: DeepReadonly<Pick<EtapeWithHeritage, 'typeId' | 'contenu'>>,
-  demarcheTypeId: DemarcheTypeId,
-  titreTypeId: TitreTypeId,
-  sdomZoneIds: DeepReadonly<SDOMZoneId[]>
-) => {
+export const getDocumentsTypes = (etape: DeepReadonly<Pick<FlattenEtape, 'typeId' | 'contenu'>>, demarcheTypeId: DemarcheTypeId, titreTypeId: TitreTypeId, sdomZoneIds: DeepReadonly<SDOMZoneId[]>) => {
   const dts = getDocuments(titreTypeId, demarcheTypeId, etape.typeId)
 
   // si la démarche est mécanisée il faut ajouter des documents obligatoires
@@ -83,11 +80,11 @@ export const getDocumentsTypes = (
   return dts
 }
 
-export const etapeDocumentsStepIsVisible = (etape: Pick<EtapeWithHeritage, 'typeId'>, demarcheTypeId: DemarcheTypeId, titreTypeId: TitreTypeId): boolean => {
+export const etapeDocumentsStepIsVisible = (etape: Pick<FlattenEtape, 'typeId'>, demarcheTypeId: DemarcheTypeId, titreTypeId: TitreTypeId): boolean => {
   return getDocuments(titreTypeId, demarcheTypeId, etape.typeId).length > 0
 }
 export const etapeDocumentsStepIsComplete = (
-  etape: DeepReadonly<Pick<EtapeWithHeritage, 'typeId' | 'contenu' | 'isBrouillon'>>,
+  etape: DeepReadonly<Pick<FlattenEtape, 'typeId' | 'contenu' | 'isBrouillon'>>,
   demarcheTypeId: DemarcheTypeId,
   titreTypeId: TitreTypeId,
   etapeDocuments: DeepReadonly<(EtapeDocument | TempEtapeDocument)[]>,
@@ -113,11 +110,11 @@ export const etapeDocumentsStepIsComplete = (
   return false
 }
 
-export const entrepriseDocumentsStepIsVisible = (etape: Pick<EtapeWithHeritage, 'typeId'>, demarcheTypeId: DemarcheTypeId, titreTypeId: TitreTypeId): boolean => {
+export const entrepriseDocumentsStepIsVisible = (etape: Pick<FlattenEtape, 'typeId'>, demarcheTypeId: DemarcheTypeId, titreTypeId: TitreTypeId): boolean => {
   return getEntrepriseDocuments(titreTypeId, demarcheTypeId, etape.typeId).length > 0
 }
 export const entrepriseDocumentsStepIsComplete = (
-  etape: DeepReadonly<Pick<EtapeWithHeritage, 'typeId' | 'contenu' | 'titulaireIds' | 'amodiataireIds'>>,
+  etape: DeepReadonly<Pick<FlattenEtape, 'typeId' | 'contenu' | 'titulaires' | 'amodiataires'>>,
   demarcheTypeId: DemarcheTypeId,
   titreTypeId: TitreTypeId,
   entreprisesDocuments: DeepReadonly<SelectedEntrepriseDocument[]>
@@ -128,7 +125,7 @@ export const entrepriseDocumentsStepIsComplete = (
 
   const documentTypes = getEntrepriseDocuments(titreTypeId, demarcheTypeId, etape.typeId)
 
-  const entrepriseIds = [...etape.titulaireIds, ...etape.amodiataireIds].filter(onlyUnique)
+  const entrepriseIds = [...etape.titulaires.value, ...etape.amodiataires.value].filter(onlyUnique)
 
   return entrepriseIds.every(eId =>
     documentTypes.every(({ optionnel, id }) => optionnel || entreprisesDocuments.some(({ documentTypeId, entrepriseId }) => documentTypeId === id && entrepriseId === eId))

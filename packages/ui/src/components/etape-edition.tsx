@@ -91,17 +91,7 @@ export const PureEtapeEdition = defineComponent<Props>(props => {
   onMounted(async () => {
     try {
       if (isNotNullNorUndefined(props.etapeIdOrSlug)) {
-        const etape = await props.apiClient.getEtape(props.etapeIdOrSlug)
-        const demarche = {
-          demarche_description: etape.demarche.description,
-          demarche_id: etape.titreDemarcheId,
-          demarche_slug: etape.demarche.slug,
-          demarche_type_id: etape.demarche.typeId,
-          titre_id: etape.demarche.titre.id,
-          titre_nom: etape.demarche.titre.nom,
-          titre_slug: etape.demarche.titre.slug,
-          titre_type_id: etape.demarche.titre.typeId,
-        }
+        const { etape, demarche } = await props.apiClient.getEtape(props.etapeIdOrSlug)
 
         const perimetre = await props.apiClient.getPerimetreInfosByEtapeId(etape.id)
         setAsyncData({ status: 'LOADED', value: { etape, demarche, perimetre } })
@@ -119,17 +109,16 @@ export const PureEtapeEdition = defineComponent<Props>(props => {
               statutId: null,
               isBrouillon: false,
               notes: null,
-              substances: {value: [], heritee: false, etapeHeritee: null},
-              titulaires: {value: [], heritee: false, etapeHeritee: null},
-              amodiataires: {value: [], heritee: false, etapeHeritee: null},
-              perimetre: {value: null, heritee: false, etapeHeritee: null},
-              duree: {value: null, heritee: false, etapeHeritee: null},
-              dateDebut: {value: null, heritee: false, etapeHeritee: null},
-              dateFin: {value: null, heritee: false, etapeHeritee: null},
+              substances: { value: [], heritee: false, etapeHeritee: null },
+              titulaires: { value: [], heritee: false, etapeHeritee: null },
+              amodiataires: { value: [], heritee: false, etapeHeritee: null },
+              perimetre: { value: null, heritee: false, etapeHeritee: null },
+              duree: { value: null, heritee: false, etapeHeritee: null },
+              dateDebut: { value: null, heritee: false, etapeHeritee: null },
+              dateFin: { value: null, heritee: false, etapeHeritee: null },
               heritageContenu: {},
               slug: null,
               titreDemarcheId: demarche.demarche_id,
-              demarche,
             },
             demarche,
             perimetre,

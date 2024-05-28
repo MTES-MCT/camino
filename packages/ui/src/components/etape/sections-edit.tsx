@@ -1,14 +1,15 @@
 import { DeepReadonly, computed, defineComponent, watch } from 'vue'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
-import { EtapeWithHeritage, HeritageContenu } from 'camino-common/src/etape'
+import { HeritageContenu } from 'camino-common/src/etape'
 import { getSections, getSectionsWithValue } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections'
 import { isNotNullNorUndefinedNorEmpty, isNullOrUndefined } from 'camino-common/src/typescript-tools'
 import { useState } from '../../utils/vue-tsx-utils'
 import { ElementWithValue, SectionWithValue } from 'camino-common/src/sections'
 import { ElementHeritage, SectionElementWithValueEdit } from './section-element-with-value-edit'
+import { FlattenEtape } from 'camino-common/src/etape-form'
 
-export type SectionsEditEtape = DeepReadonly<Pick<EtapeWithHeritage, 'typeId' | 'heritageContenu' | 'contenu'>>
+export type SectionsEditEtape = DeepReadonly<Pick<FlattenEtape, 'typeId' | 'heritageContenu' | 'contenu'>>
 type Props = {
   titreTypeId: TitreTypeId
   demarcheTypeId: DemarcheTypeId

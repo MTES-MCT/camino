@@ -1,10 +1,12 @@
 import { FondamentalesEdit } from './fondamentales-edit'
 import { Meta, StoryFn } from '@storybook/vue3'
-import { EtapeWithHeritage, etapeIdValidator } from 'camino-common/src/etape'
+import { etapeIdValidator, etapeSlugValidator } from 'camino-common/src/etape'
 import { newEntrepriseId } from 'camino-common/src/entreprise'
 import { toCaminoDate } from 'camino-common/src/date'
 import { testBlankUser } from 'camino-common/src/tests-utils'
 import { action } from '@storybook/addon-actions'
+import { FlattenEtape } from 'camino-common/src/etape-form'
+import { demarcheIdValidator } from 'camino-common/src/demarche'
 
 const meta: Meta = {
   title: 'Components/Etape/FondamentalesEdit',
@@ -13,61 +15,56 @@ const meta: Meta = {
 }
 export default meta
 
-const etape: EtapeWithHeritage = {
+const etape: FlattenEtape = {
   id: etapeIdValidator.parse('id'),
+  slug: etapeSlugValidator.parse('slug'),
+  titreDemarcheId: demarcheIdValidator.parse('demarcheId'),
   heritageContenu: {},
   statutId: 'fai',
   isBrouillon: true,
   typeId: 'mfr',
   contenu: {},
   date: toCaminoDate('2022-02-02'),
-  dateDebut: toCaminoDate('2022-02-02'),
-  dateFin: null,
-  duree: 4,
-  substances: ['arse'],
-  titulaireIds: [newEntrepriseId('optionId1')],
-  amodiataireIds: [],
+  dateDebut: { value: toCaminoDate('2022-02-02'), heritee: false, etapeHeritee: null },
+  dateFin: { value: null, heritee: false, etapeHeritee: null },
+  duree: {
+    value: 4,
+    heritee: false,
+    etapeHeritee: {
+      date: toCaminoDate('2022-01-01'),
+      etapeTypeId: 'mfr',
+      value: 12,
+    },
+  },
+  substances: {
+    value: ['arge'],
+    heritee: true,
+    etapeHeritee: {
+      date: toCaminoDate('2022-01-01'),
+      etapeTypeId: 'mfr',
+      value: ['arge'],
+    },
+  },
+  titulaires: {
+    value: [newEntrepriseId('optionId1')],
+    heritee: false,
+    etapeHeritee: null,
+  },
+  amodiataires: { value: [], heritee: false, etapeHeritee: null },
   notes: null,
-  geojson4326Forages: null,
-  geojson4326Perimetre: null,
-  geojson4326Points: null,
-  surface: null,
-  geojsonOriginePerimetre: null,
-  geojsonOriginePoints: null,
-  geojsonOrigineGeoSystemeId: null,
-  geojsonOrigineForages: null,
-  heritageProps: {
-    dateDebut: {
-      actif: false,
+  perimetre: {
+    value: {
+      geojson4326Forages: null,
+      geojson4326Perimetre: null,
+      geojson4326Points: null,
+      surface: null,
+      geojsonOriginePerimetre: null,
+      geojsonOriginePoints: null,
+      geojsonOrigineGeoSystemeId: null,
+      geojsonOrigineForages: null,
     },
-    dateFin: {
-      actif: false,
-    },
-    duree: {
-      actif: false,
-      etape: {
-        date: toCaminoDate('2022-01-01'),
-        typeId: 'mfr',
-        duree: 12,
-      },
-    },
-    substances: {
-      actif: true,
-      etape: {
-        date: toCaminoDate('2022-01-01'),
-        typeId: 'mfr',
-        substances: ['arge'],
-      },
-    },
-    titulaires: {
-      actif: false,
-    },
-    amodiataires: {
-      actif: false,
-    },
-    perimetre: {
-      actif: false,
-    },
+    heritee: false,
+    etapeHeritee: null,
   },
 }
 

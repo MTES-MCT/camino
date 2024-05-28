@@ -2,10 +2,13 @@ import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 
 import { Dashboard } from '../components/dashboard'
 import { Titres } from '../components/titres'
-import { Alert } from '@/components/_ui/alert'
 import { isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools'
 import { CaminoRouteNames, routesDefinitions } from './routes'
+const PageIntrouvableAlert = async () => {
+  const { PageIntrouvableAlert } = await import('@/components/_ui/alert')
 
+  return PageIntrouvableAlert
+}
 const DGTMStatsFull = async () => {
   const { DGTMStatsFull } = await import('../components/dashboard/dgtm-stats-full')
 
@@ -244,7 +247,7 @@ const routes = {
   },
   erreur: {
     ...routesDefinitions.erreur,
-    component: <Alert type="error" title="Page Introuvable" small={true} />,
+    component: PageIntrouvableAlert,
   },
 } as const satisfies { [key in CaminoRouteNames]: Readonly<Omit<RouteRecordRaw, 'children'>> }
 

@@ -1,32 +1,28 @@
 import { apiGraphQLFetch } from '@/api/_client'
 import { deleteWithJson, getWithJson, putWithJson } from '@/api/client-rest'
 import { CaminoDate, caminoDateValidator } from 'camino-common/src/date'
-import { DemarcheId, demarcheIdValidator, demarcheSlugValidator } from 'camino-common/src/demarche'
-import { entrepriseDocumentIdValidator, entrepriseIdValidator } from 'camino-common/src/entreprise'
+import { DemarcheId } from 'camino-common/src/demarche'
+import { entrepriseIdValidator } from 'camino-common/src/entreprise'
+import { EtapeId, EtapeIdOrSlug, EtapeTypeEtapeStatutWithMainStep, GetEtapeDocumentsByEtapeId } from 'camino-common/src/etape'
 import {
-  EtapeId,
-  EtapeIdOrSlug,
-  EtapeTypeEtapeStatutWithMainStep,
-  EtapeWithHeritage,
-  GetEtapeDocumentsByEtapeId,
-  documentComplementaireAslEtapeDocumentModificationValidator,
-  documentComplementaireDaeEtapeDocumentModificationValidator,
-  etapeDocumentModificationValidator,
-  etapeIdValidator,
-  etapeSlugValidator,
-} from 'camino-common/src/etape'
+  FlattenEtape,
+  GraphqlEtapeCreation,
+  GraphqlEtapeModification,
+  flattenEtapeValidator,
+  graphqlEtapeCreationValidator,
+  graphqlEtapeModificationValidator,
+  graphqlEtapeValidator,
+} from 'camino-common/src/etape-form'
 import { km2Validator } from 'camino-common/src/number'
 import { featureCollectionForagesValidator, featureCollectionPointsValidator, featureMultiPolygonValidator } from 'camino-common/src/perimetre'
-import { demarcheTypeIdValidator } from 'camino-common/src/static/demarchesTypes'
-import { etapeStatutIdValidator } from 'camino-common/src/static/etapesStatuts'
-import { EtapeTypeId, etapeTypeIdValidator } from 'camino-common/src/static/etapesTypes'
+import { etapeTypeIdValidator } from 'camino-common/src/static/etapesTypes'
 import { geoSystemeIdValidator } from 'camino-common/src/static/geoSystemes'
 import { substanceLegaleIdValidator } from 'camino-common/src/static/substancesLegales'
-import { titreTypeIdValidator } from 'camino-common/src/static/titresTypes'
-import { DeepReadonly, isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
-import { titreIdValidator, titreSlugValidator } from 'camino-common/src/validators/titres'
+import { GetDemarcheByIdOrSlugValidator } from 'camino-common/src/titres'
+import { DeepReadonly, Nullable, isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { nullToDefault } from 'camino-common/src/zod-tools'
 import gql from 'graphql-tag'
+import { DistributiveOmit } from 'maplibre-gl'
 import { z } from 'zod'
 
 const contenuValidator = z
@@ -87,166 +83,15 @@ const heritageValidator = z.object({
   heritageProps: heritagePropsValidator,
   heritageContenu: heritageContenuValidator,
 })
-const perimetreObjectValidator = z.object({
-  geojson4326Perimetre: featureMultiPolygonValidator.nullable(),
-  geojson4326Points: featureCollectionPointsValidator.nullable(),
-  geojsonOriginePoints: featureCollectionPointsValidator.nullable(),
-  geojsonOriginePerimetre: featureMultiPolygonValidator.nullable(),
-  geojsonOrigineGeoSystemeId: geoSystemeIdValidator.nullable(),
-  geojson4326Forages: featureCollectionForagesValidator.nullable(),
-  geojsonOrigineForages: featureCollectionForagesValidator.nullable(),
-  surface: km2Validator.nullable(),
-})
 
-export const makeFlattenValidator = <T extends z.ZodTypeAny>(schema: T) =>
-  z.object({
-    value: schema,
-    heritee: z.boolean(),
-    etapeHeritee: z
-      .object({
-        etapeTypeId: etapeTypeIdValidator,
-        date: caminoDateValidator,
-        value: schema,
-      })
-      .nullable(),
-  })
-
-// TODO 2024-05-23 : C'est étrange ce que nous retourne zod ici, du coup on ne peut pas mettre le deepreadonly sur prop et consort
-export type GenericHeritageValue<T extends z.ZodTypeAny> = z.infer<ReturnType<typeof makeFlattenValidator<T>>>
-const graphqlEtapeValidator = z.object({
-  id: etapeIdValidator,
-  slug: etapeSlugValidator,
-  titreDemarcheId: demarcheIdValidator,
-  demarche: z.object({
-    slug: demarcheSlugValidator,
-    typeId: demarcheTypeIdValidator,
-    description: z.string().nullable(),
-    titre: z.object({
-      id: titreIdValidator,
-      slug: titreSlugValidator,
-      nom: z.string(),
-      typeId: titreTypeIdValidator,
-    }),
-  }),
-  date: caminoDateValidator,
-  dateDebut: caminoDateValidator.nullable(),
-  dateFin: caminoDateValidator.nullable(),
-  duree: dureeValidator,
-  substances: z.array(substanceLegaleIdValidator),
-  typeId: etapeTypeIdValidator,
-  statutId: etapeStatutIdValidator,
-  isBrouillon: z.boolean(),
-  titulaireIds: z.array(entrepriseIdValidator),
-  amodiataireIds: z.array(entrepriseIdValidator),
-  geojson4326Perimetre: featureMultiPolygonValidator.nullable(),
-  geojson4326Points: featureCollectionPointsValidator.nullable(),
-  geojsonOriginePoints: featureCollectionPointsValidator.nullable(),
-  geojsonOriginePerimetre: featureMultiPolygonValidator.nullable(),
-  geojsonOrigineGeoSystemeId: geoSystemeIdValidator.nullable(),
-  geojson4326Forages: featureCollectionForagesValidator.nullable(),
-  geojsonOrigineForages: featureCollectionForagesValidator.nullable(),
-  surface: km2Validator.nullable(),
-  // Record<string, Record<string, ElementWithValue['value']>>
-  contenu: contenuValidator,
-  notes: z.string().nullable(),
-  heritageProps: heritagePropsValidator,
-  heritageContenu: heritageContenuValidator,
-})
-
-// type GraphqlEtape = z.infer<typeof graphqlEtapeValidator>
-
-const flattenEtapeValidator = graphqlEtapeValidator
-  .omit({
-    heritageProps: true,
-    duree: true,
-    surface: true,
-    geojson4326Perimetre: true,
-    geojson4326Points: true,
-    geojsonOriginePoints: true,
-    geojsonOriginePerimetre: true,
-    geojsonOrigineGeoSystemeId: true,
-    geojson4326Forages: true,
-    geojsonOrigineForages: true,
-    dateDebut: true,
-    dateFin: true,
-    substances: true,
-    titulaireIds: true,
-    amodiataireIds: true,
-  })
-  .extend({
-    duree: makeFlattenValidator(dureeValidator),
-    perimetre: makeFlattenValidator(perimetreObjectValidator.nullable()),
-    dateDebut: makeFlattenValidator(caminoDateValidator.nullable()),
-    dateFin: makeFlattenValidator(caminoDateValidator.nullable()),
-    substances: makeFlattenValidator(substancesValidator),
-    titulaires: makeFlattenValidator(entreprisesValidator),
-    amodiataires: makeFlattenValidator(entreprisesValidator),
-  })
-
-export type FlattenEtape = z.infer<typeof flattenEtapeValidator>
-
-const graphqlInputHeritagePropValidator = z.object({
-  actif: z.boolean(),
-})
-
-const graphqlInputHeritagePropsValidator = z.object({
-  dateDebut: graphqlInputHeritagePropValidator,
-  dateFin: graphqlInputHeritagePropValidator,
-  duree: graphqlInputHeritagePropValidator,
-  perimetre: graphqlInputHeritagePropValidator,
-  substances: graphqlInputHeritagePropValidator,
-  titulaires: graphqlInputHeritagePropValidator,
-  amodiataires: graphqlInputHeritagePropValidator,
-})
-
-const graphqlEtapeCreationValidator = graphqlEtapeValidator
-  .pick({
-    typeId: true,
-    statutId: true,
-    date: true,
-    duree: true,
-    dateDebut: true,
-    dateFin: true,
-    substances: true,
-    geojson4326Perimetre: true,
-    geojson4326Points: true,
-    geojsonOriginePoints: true,
-    geojsonOriginePerimetre: true,
-    geojsonOrigineForages: true,
-    geojsonOrigineGeoSystemeId: true,
-    titulaireIds: true,
-    amodiataireIds: true,
-    notes: true,
-    contenu: true,
-  })
-  .extend({
-    titreDemarcheId: demarcheIdValidator,
-    heritageProps: graphqlInputHeritagePropsValidator,
-    heritageContenu: z.record(z.string(), z.record(z.string(), z.object({ actif: z.boolean() }))),
-    etapeDocuments: z.array(etapeDocumentModificationValidator),
-    entrepriseDocumentIds: z.array(entrepriseDocumentIdValidator),
-  })
-
-type GraphqlEtapeCreation = z.infer<typeof graphqlEtapeCreationValidator>
-
-const graphqlEtapeModificationValidator = graphqlEtapeCreationValidator.extend({
-  id: etapeIdValidator,
-  daeDocument: documentComplementaireDaeEtapeDocumentModificationValidator.nullable(),
-  aslDocument: documentComplementaireAslEtapeDocumentModificationValidator.nullable(),
-})
-type GraphqlEtapeModification = z.infer<typeof graphqlEtapeModificationValidator>
+export type CoreEtapeCreationOrModification = Pick<Nullable<FlattenEtape>, 'id' | 'slug'> & DistributiveOmit<FlattenEtape, 'id' | 'slug'>
 export interface EtapeApiClient {
   getEtapesTypesEtapesStatuts: (titreDemarcheId: DemarcheId, titreEtapeId: EtapeId | null, date: CaminoDate) => Promise<EtapeTypeEtapeStatutWithMainStep[]>
   deleteEtape: (titreEtapeId: EtapeId) => Promise<void>
   deposeEtape: (titreEtapeId: EtapeId) => Promise<void>
   getEtapeDocumentsByEtapeId: (etapeId: EtapeId) => Promise<GetEtapeDocumentsByEtapeId>
-  getEtapeHeritagePotentiel: (
-    titreDemarcheId: DemarcheId,
-    date: CaminoDate,
-    typeId: EtapeTypeId,
-    etapeId: EtapeId | null
-  ) => Promise<DeepReadonly<Pick<EtapeWithHeritage, 'heritageProps' | 'heritageContenu'>>>
-  getEtape: (etapeIdOrSlug: EtapeIdOrSlug) => Promise<DeepReadonly<{etape: FlattenEtape, demarche: FIXME}>>
+  getEtapeHeritagePotentiel: (etape: DeepReadonly<CoreEtapeCreationOrModification>, titreDemarcheId: DemarcheId) => Promise<DeepReadonly<CoreEtapeCreationOrModification>>
+  getEtape: (etapeIdOrSlug: EtapeIdOrSlug) => Promise<DeepReadonly<{ etape: FlattenEtape; demarche: GetDemarcheByIdOrSlugValidator }>>
   etapeCreer: (etape: DeepReadonly<GraphqlEtapeCreation>) => Promise<EtapeId>
   etapeModifier: (etape: DeepReadonly<GraphqlEtapeModification>) => Promise<EtapeId>
 }
@@ -476,12 +321,25 @@ export const etapeApiClient: EtapeApiClient = {
             : null,
         },
       }
-      return flattenEtapeValidator.parse(flattenEtape)
+
+      const demarche: GetDemarcheByIdOrSlugValidator = {
+        demarche_description: graphqlEtape.demarche.description,
+        demarche_id: graphqlEtape.titreDemarcheId,
+        demarche_slug: graphqlEtape.demarche.slug,
+        demarche_type_id: graphqlEtape.demarche.typeId,
+        titre_id: graphqlEtape.demarche.titre.id,
+        titre_nom: graphqlEtape.demarche.titre.nom,
+        titre_slug: graphqlEtape.demarche.titre.slug,
+        titre_type_id: graphqlEtape.demarche.titre.typeId,
+      }
+
+      // On flatten ici pour enlever les champs supplémentaires qu'il y'a par exemple dans perimetre
+      return { etape: flattenEtapeValidator.parse(flattenEtape), demarche }
     }
     console.warn(result.error.message)
     throw result.error
   },
-  getEtapeHeritagePotentiel: async (titreDemarcheId: DemarcheId, date: CaminoDate, typeId: EtapeTypeId, etapeId: EtapeId | null) => {
+  getEtapeHeritagePotentiel: async (etape, titreDemarcheId) => {
     const data = await apiGraphQLFetch(gql`
       query EtapeHeritage($titreDemarcheId: ID!, $date: String!, $typeId: ID!, $etapeId: ID) {
         etapeHeritage(titreDemarcheId: $titreDemarcheId, date: $date, typeId: $typeId, etapeId: $etapeId) {
@@ -556,12 +414,113 @@ export const etapeApiClient: EtapeApiClient = {
       }
     `)({
       titreDemarcheId,
-      date,
-      typeId,
-      etapeId,
+      date: etape.date,
+      typeId: etape.typeId,
+      etapeId: etape.id,
     })
 
-    return heritageValidator.parse(data)
+    const heritageData: DeepReadonly<z.infer<typeof heritageValidator>> = heritageValidator.parse(data)
+    const flattenEtape: DeepReadonly<CoreEtapeCreationOrModification> = {
+      ...etape,
+      duree: {
+        value: heritageData.heritageProps.duree.actif ? heritageData.heritageProps.duree.etape?.duree ?? null : etape.duree.value,
+        heritee: heritageData.heritageProps.duree.actif,
+        etapeHeritee: isNotNullNorUndefined(heritageData.heritageProps.duree.etape)
+          ? {
+              etapeTypeId: heritageData.heritageProps.duree.etape.typeId,
+              date: heritageData.heritageProps.duree.etape.date,
+              value: heritageData.heritageProps.duree.etape.duree,
+            }
+          : null,
+      },
+      perimetre: {
+        value: heritageData.heritageProps.perimetre.actif
+          ? isNotNullNorUndefined(heritageData.heritageProps.perimetre.etape)
+            ? { ...heritageData.heritageProps.perimetre.etape }
+            : null
+          : etape.perimetre.value,
+
+        heritee: heritageData.heritageProps.perimetre.actif,
+        etapeHeritee: isNotNullNorUndefined(heritageData.heritageProps.perimetre.etape)
+          ? {
+              etapeTypeId: heritageData.heritageProps.perimetre.etape.typeId,
+              date: heritageData.heritageProps.perimetre.etape.date,
+              value: { ...heritageData.heritageProps.perimetre.etape },
+            }
+          : null,
+      },
+      dateDebut: {
+        value: heritageData.heritageProps.dateDebut.actif ? heritageData.heritageProps.dateDebut.etape?.dateDebut ?? null : etape.dateDebut.value,
+        heritee: heritageData.heritageProps.dateDebut.actif,
+        etapeHeritee: isNotNullNorUndefined(heritageData.heritageProps.dateDebut.etape)
+          ? {
+              etapeTypeId: heritageData.heritageProps.dateDebut.etape.typeId,
+              date: heritageData.heritageProps.dateDebut.etape.date,
+              value: heritageData.heritageProps.dateDebut.etape.dateDebut,
+            }
+          : null,
+      },
+      dateFin: {
+        value: heritageData.heritageProps.dateFin.actif ? heritageData.heritageProps.dateFin.etape?.dateFin ?? null : etape.dateFin.value,
+        heritee: heritageData.heritageProps.dateFin.actif,
+        etapeHeritee: isNotNullNorUndefined(heritageData.heritageProps.dateFin.etape)
+          ? {
+              etapeTypeId: heritageData.heritageProps.dateFin.etape.typeId,
+              date: heritageData.heritageProps.dateFin.etape.date,
+              value: heritageData.heritageProps.dateFin.etape.dateFin,
+            }
+          : null,
+      },
+      substances: {
+        value: heritageData.heritageProps.substances.actif
+          ? isNotNullNorUndefined(heritageData.heritageProps.substances.etape)
+            ? heritageData.heritageProps.substances.etape.substances
+            : []
+          : etape.substances.value,
+
+        heritee: heritageData.heritageProps.substances.actif,
+        etapeHeritee: isNotNullNorUndefined(heritageData.heritageProps.substances.etape)
+          ? {
+              etapeTypeId: heritageData.heritageProps.substances.etape.typeId,
+              date: heritageData.heritageProps.substances.etape.date,
+              value: heritageData.heritageProps.substances.etape.substances,
+            }
+          : null,
+      },
+      amodiataires: {
+        value: heritageData.heritageProps.amodiataires.actif
+          ? isNotNullNorUndefined(heritageData.heritageProps.amodiataires.etape)
+            ? heritageData.heritageProps.amodiataires.etape.amodiataireIds
+            : []
+          : etape.amodiataires.value,
+
+        heritee: heritageData.heritageProps.amodiataires.actif,
+        etapeHeritee: isNotNullNorUndefined(heritageData.heritageProps.amodiataires.etape)
+          ? {
+              etapeTypeId: heritageData.heritageProps.amodiataires.etape.typeId,
+              date: heritageData.heritageProps.amodiataires.etape.date,
+              value: heritageData.heritageProps.amodiataires.etape.amodiataireIds,
+            }
+          : null,
+      },
+      titulaires: {
+        value: heritageData.heritageProps.titulaires.actif
+          ? isNotNullNorUndefined(heritageData.heritageProps.titulaires.etape)
+            ? heritageData.heritageProps.titulaires.etape.titulaireIds
+            : []
+          : etape.titulaires.value,
+
+        heritee: heritageData.heritageProps.titulaires.actif,
+        etapeHeritee: isNotNullNorUndefined(heritageData.heritageProps.titulaires.etape)
+          ? {
+              etapeTypeId: heritageData.heritageProps.titulaires.etape.typeId,
+              date: heritageData.heritageProps.titulaires.etape.date,
+              value: heritageData.heritageProps.titulaires.etape.titulaireIds,
+            }
+          : null,
+      },
+    }
+    return flattenEtape
   },
 
   etapeCreer: async etape => {

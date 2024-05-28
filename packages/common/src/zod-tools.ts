@@ -1,4 +1,7 @@
+import { z } from 'zod'
 import { isNullOrUndefined } from './typescript-tools'
+import { caminoDateValidator } from './date.js'
+import { etapeTypeIdValidator } from './static/etapesTypes.js'
 
 export const nullToDefault =
   <Y>(defaultWhenNullOrUndefined: NoInfer<Y>) =>
@@ -9,3 +12,16 @@ export const nullToDefault =
 
     return val
   }
+
+export const makeFlattenValidator = <T extends z.ZodTypeAny>(schema: T) =>
+  z.object({
+    value: schema,
+    heritee: z.boolean(),
+    etapeHeritee: z
+      .object({
+        etapeTypeId: etapeTypeIdValidator,
+        date: caminoDateValidator,
+        value: schema,
+      })
+      .nullable(),
+  })

@@ -3,35 +3,35 @@ import { SubstancesLegales, SubstancesLegale, SubstanceLegaleId } from 'camino-c
 import { DeepReadonly, computed, defineComponent, watch } from 'vue'
 import { HeritageEdit } from '@/components/etape/heritage-edit'
 import { DomaineId } from 'camino-common/src/static/domaines'
-import { EtapePropsFromHeritagePropName, EtapeWithHeritage, HeritageProp } from 'camino-common/src/etape'
-import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools'
+import { isNotNullNorUndefined, isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools'
 import { DsfrButtonIcon } from '../_ui/dsfr-button'
 import { SubstanceLegaleTypeahead } from '../_common/substance-legale-typeahead'
 import { DsfrTag } from '../_ui/tag'
 import { capitalize } from 'camino-common/src/strings'
+import { FlattenEtape } from 'camino-common/src/etape-form'
 
 export type Props = {
-  substances: DeepReadonly<SubstanceLegaleId[]>
-  heritageSubstances: DeepReadonly<HeritageProp<Pick<EtapeWithHeritage, 'typeId' | 'date' | EtapePropsFromHeritagePropName<'substances'>>>>
+  substances: DeepReadonly<FlattenEtape['substances']>
   domaineId: DomaineId
-  updateSubstances: (substances: DeepReadonly<SubstanceLegaleId[]>) => void
-  updateHeritage: (subtances: Props['heritageSubstances']) => void
+  updateSubstances: (substances: DeepReadonly<FlattenEtape['substances']>) => void
 }
+
+type SubstancesEditables = Pick<FlattenEtape['substances'], 'heritee' | 'etapeHeritee'> & { value: (SubstanceLegaleId | undefined)[] }
 export const SubstancesEdit = defineComponent<Props>(props => {
-  const [editedSubstances, setEditedSubstances] = useState<DeepReadonly<(SubstanceLegaleId | undefined)[]>>(isNullOrUndefinedOrEmpty(props.substances) ? [undefined] : props.substances)
-  const [heritageActif, setHeritageActif] = useState<Props['heritageSubstances']>(props.heritageSubstances)
+  const [editedSubstances, setEditedSubstances] = useState<DeepReadonly<SubstancesEditables>>(
+    isNullOrUndefinedOrEmpty(props.substances.value) ? { ...props.substances, value: [undefined] } : props.substances
+  )
 
-  const substancesLength = computed<number>(() => editedSubstances.value.filter(substanceId => substanceId).length)
+  const substancesLength = computed<number>(() => editedSubstances.value.value.filter(substanceId => substanceId).length)
 
-  const updateHeritage = (actif: Props['heritageSubstances']) => {
-    setHeritageActif(actif)
-    props.updateHeritage(actif)
+  const updateHeritage = (substanceHeritageValue: DeepReadonly<FlattenEtape['substances']>) => {
+    setEditedSubstances(substanceHeritageValue)
   }
 
   watch(
     () => editedSubstances.value,
     () => {
-      props.updateSubstances(editedSubstances.value.filter(isNotNullNorUndefined))
+      props.updateSubstances({ ...editedSubstances.value, value: editedSubstances.value.value.filter(isNotNullNorUndefined) })
     },
     { deep: true }
   )
@@ -39,28 +39,29 @@ export const SubstancesEdit = defineComponent<Props>(props => {
   const substancesToDisplay = computed<SubstanceLegaleId[]>(() => {
     return SubstancesLegales.filter(({ domaineIds }) => domaineIds.includes(props.domaineId))
       .sort((a, b) => a.nom.localeCompare(b.nom))
-      .filter(({ id }) => !editedSubstances.value.some(substanceId => substanceId === id))
+      .filter(({ id }) => !editedSubstances.value.value.some(substanceId => substanceId === id))
       .map(({ id }) => id)
   })
 
   const substanceNoms = computed<string[]>(() => {
-    return props.heritageSubstances.etape?.substances.filter((substanceId): substanceId is SubstanceLegaleId => !!substanceId).map(substanceId => SubstancesLegale[substanceId].nom) || []
+    return props.substances.etapeHeritee?.value.filter((substanceId): substanceId is SubstanceLegaleId => !!substanceId).map(substanceId => SubstancesLegale[substanceId].nom) || []
   })
 
   const substanceAdd = (): void => {
-    setEditedSubstances([...editedSubstances.value, undefined])
+    setEditedSubstances({ ...editedSubstances.value, value: [...editedSubstances.value.value, undefined] })
   }
 
   const substanceRemove = (index: number) => (): void => {
-    setEditedSubstances(editedSubstances.value.filter((_, myIndex) => index !== myIndex))
+    setEditedSubstances({ ...editedSubstances.value, value: editedSubstances.value.value.filter((_, myIndex) => index !== myIndex) })
   }
 
   const substanceMoveDown = (index: number) => () => {
-    const mySubstance = editedSubstances.value[index]
-    const myPrevious = editedSubstances.value[index + 1]
+    const mySubstance = editedSubstances.value.value[index]
+    const myPrevious = editedSubstances.value.value[index + 1]
 
-    setEditedSubstances(
-      editedSubstances.value.map((substance, myIndex) => {
+    setEditedSubstances({
+      ...editedSubstances.value,
+      value: editedSubstances.value.value.map((substance, myIndex) => {
         if (myIndex === index) {
           return myPrevious
         } else if (myIndex === index + 1) {
@@ -68,16 +69,17 @@ export const SubstancesEdit = defineComponent<Props>(props => {
         }
 
         return substance
-      })
-    )
+      }),
+    })
   }
 
   const substanceMoveUp = (index: number) => () => {
-    const mySubstance = editedSubstances.value[index]
-    const myPrevious = editedSubstances.value[index - 1]
+    const mySubstance = editedSubstances.value.value[index]
+    const myPrevious = editedSubstances.value.value[index - 1]
 
-    setEditedSubstances(
-      editedSubstances.value.map((substance, myIndex) => {
+    setEditedSubstances({
+      ...editedSubstances.value,
+      value: editedSubstances.value.value.map((substance, myIndex) => {
         if (myIndex === index) {
           return myPrevious
         } else if (myIndex === index - 1) {
@@ -85,37 +87,36 @@ export const SubstancesEdit = defineComponent<Props>(props => {
         }
 
         return substance
-      })
-    )
+      }),
+    })
   }
 
   const substanceUpdate = (index: number) => (id: SubstanceLegaleId | null) => {
     if (id !== null) {
-      setEditedSubstances(
-        editedSubstances.value.map((substance, myIndex) => {
+      setEditedSubstances({
+        ...editedSubstances.value,
+        value: editedSubstances.value.value.map((substance, myIndex) => {
           if (myIndex === index) {
             return id
           }
 
           return substance
-        })
-      )
+        }),
+      })
     }
   }
 
   return () => (
     <HeritageEdit
-      prop={heritageActif.value}
-      propId="substances"
+      prop={{ ...editedSubstances.value, value: editedSubstances.value.value.filter(isNotNullNorUndefined) }}
       label="Substances"
-      hasHeritage={isNotNullNorUndefinedNorEmpty(heritageActif.value.etape?.substances)}
       write={() => (
         <div class="fr-input-group fr-mb-0">
-          <label class="fr-label" for={`typeahead_substances_${editedSubstances.value.length - 1}`}>
+          <label class="fr-label" for={`typeahead_substances_${editedSubstances.value.value.length - 1}`}>
             Substances
           </label>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
-            {editedSubstances.value.map((substance, n) => (
+            {editedSubstances.value.value.map((substance, n) => (
               <div key={substance ?? ''}>
                 <div style={{ display: 'flex' }} class="fr-mt-1w">
                   <SubstanceLegaleTypeahead
@@ -155,7 +156,7 @@ export const SubstancesEdit = defineComponent<Props>(props => {
               </div>
             ))}
 
-            {editedSubstances.value.every(substanceId => isNotNullNorUndefined(substanceId)) ? (
+            {editedSubstances.value.value.every(substanceId => isNotNullNorUndefined(substanceId)) ? (
               <DsfrButtonIcon onClick={substanceAdd} buttonType="primary" icon="fr-icon-add-line" title="Ajouter une substance" class="fr-mt-2w" style={{ alignSelf: 'end' }} />
             ) : null}
           </div>

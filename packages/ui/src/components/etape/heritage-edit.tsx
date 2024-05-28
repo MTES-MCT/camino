@@ -1,36 +1,45 @@
 import { dateFormat } from 'camino-common/src/date'
 import { HTMLAttributes } from 'vue'
-import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
+import { DeepReadonly, isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { DsfrToggle } from '../_ui/dsfr-toggle'
 import { EtapesTypes } from 'camino-common/src/static/etapesTypes'
 import { capitalize } from 'camino-common/src/strings'
 import type { JSX } from 'vue/jsx-runtime'
 import { DsfrInput } from '@/components/_ui/dsfr-input'
 import { random } from '../../utils/vue-tsx-utils'
-import { GenericHeritageValue } from './etape-api-client'
-import { z } from 'zod'
+import { FlattenEtape } from 'camino-common/src/etape-form'
+import { ElementWithValueAndHeritage } from 'camino-common/src/sections'
 
-type Props<T extends z.ZodTypeAny> = {
-  prop: GenericHeritageValue<T>
+type HeritagePossible =
+  | FlattenEtape['perimetre']
+  | FlattenEtape['dateDebut']
+  | FlattenEtape['dateFin']
+  | FlattenEtape['titulaires']
+  | FlattenEtape['amodiataires']
+  | FlattenEtape['duree']
+  | FlattenEtape['substances']
+  | ElementWithValueAndHeritage['value']
+type Props<T extends DeepReadonly<HeritagePossible>> = {
+  prop: T
+  // prop: DeepReadonly<GenericHeritageValue<T>>
   write: () => JSX.Element
-  read: (heritagePropEtape?: GenericHeritageValue<NoInfer<T>>['etapeHeritee']) => JSX.Element
+  read: (heritagePropEtape?: NoInfer<T>['etapeHeritee']) => JSX.Element
   label: string | null
 
   class?: HTMLAttributes['class']
-  updateHeritage: (update: GenericHeritageValue<T>) => void
+  updateHeritage: (update: NoInfer<T>) => void
 }
 
-export const HeritageEdit = <T extends z.ZodTypeAny>(props: Props<T>) => {
+export const HeritageEdit = <T extends DeepReadonly<HeritagePossible>>(props: Props<T>) => {
   const updateHeritage = () => {
     const etape = props.prop.etapeHeritee
     const newHeritage = !props.prop.heritee
     if (!newHeritage) {
       props.updateHeritage({ ...props.prop, heritee: newHeritage })
     } else if (isNotNullNorUndefined(etape)) {
-      props.updateHeritage({ ...props.prop, heritee: newHeritage, value: etape?.value ?? null })
+      props.updateHeritage({ ...props.prop, value: etape?.value ?? null, heritee: newHeritage })
     }
   }
-
 
   const dummyValueChanged = () => {}
   // TODO 2024-05-14 WTF! Sans la clé il récupère un ancien input et le modifie que à moitié. Le bug est présent sur le champ « Durée » quand on a passe d’une valeur saisie à un héritage Non Renseigné
@@ -44,7 +53,7 @@ export const HeritageEdit = <T extends z.ZodTypeAny>(props: Props<T>) => {
         props.write()
       ) : (
         <div>
-          { isNotNullNorUndefined(etapeHeritee?.value) ? (
+          {isNotNullNorUndefined(etapeHeritee?.value) ? (
             props.read(etapeHeritee)
           ) : (
             <DsfrInput

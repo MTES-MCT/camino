@@ -1,7 +1,7 @@
 import { DeepReadonly, FunctionalComponent } from 'vue'
 import { EtapeWithHeritage, HeritageProp } from 'camino-common/src/etape'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
-import { ElementWithValue } from 'camino-common/src/sections'
+import { ElementWithValue, ElementWithValueAndHeritage } from 'camino-common/src/sections'
 import { HeritageEdit } from './heritage-edit'
 import { SectionElement } from '../_common/new-section-element'
 import { SectionElementEdit } from '../_common/new-sections-edit'
@@ -14,32 +14,49 @@ type Props = {
   updateElement: (element: Props['elementWithValue']) => void
   updateHeritage: (etape: Props['elementHeritage']) => void
 }
+
 export const SectionElementWithValueEdit: FunctionalComponent<Props> = props => {
-  const read = (etape?: DeepReadonly<Pick<EtapeWithHeritage, 'contenu' | 'typeId' | 'date'>>) => {
-    if (isNotNullNorUndefined(etape)) {
-      // @ts-ignore regarder si on peut narrow l'élément value
-      return <SectionElement element={{ ...props.elementWithValue, value: etape.contenu[props.sectionId]?.[props.elementWithValue.id] }} />
-    } else {
-      return <></>
-    }
+  const valueWithHeritage: DeepReadonly<ElementWithValueAndHeritage> = {
+    ...props.elementWithValue,
+    // @ts-ignore ici, typescript ne peut pas voir que props.elementWithValue.value est du même type que props.elementHeritage.etape.contenu... il faut que l'on change notre modèle de donnée en amont
+    value: {
+      value: props.elementHeritage.actif ? props.elementHeritage.etape?.contenu[props.sectionId]?.[props.elementWithValue.id] ?? null : props.elementWithValue.value,
+      heritee: props.elementHeritage.actif,
+      etapeHeritee: isNotNullNorUndefined(props.elementHeritage.etape)
+        ? { date: props.elementHeritage.etape.date, etapeTypeId: props.elementHeritage.etape.typeId, value: props.elementHeritage.etape.contenu[props.sectionId]?.[props.elementWithValue.id] }
+        : null,
+    },
   }
 
   const write = () => {
     return <SectionElementEdit element={props.elementWithValue} onValueChange={props.updateElement} />
   }
 
-  const heritageValue = props.elementHeritage.etape?.contenu?.[props.sectionId]?.[props.elementWithValue.id]
-  const hasHeritageValue: boolean = isNotNullNorUndefined(heritageValue) && (!Array.isArray(heritageValue) || heritageValue.length > 0)
+  const updateHeritage = (heritage: DeepReadonly<ElementWithValueAndHeritage['value']>) => {
+    if (heritage.heritee) {
+      // @ts-ignore regarder si on peut narrow l'élément value
+      props.updateElement({ ...props.elementWithValue, value: heritage.value })
+    }
+    props.updateHeritage({
+      actif: heritage.heritee,
+      etape: props.elementHeritage.etape,
+    })
+  }
 
   return (
     <HeritageEdit
-      prop={props.elementHeritage}
+      prop={valueWithHeritage.value}
       label={props.elementWithValue.nom ?? ''}
-      hasHeritage={hasHeritageValue}
-      propId="contenu"
-      read={read}
+      read={etape => {
+        if (isNotNullNorUndefined(etape)) {
+          // @ts-ignore regarder si on peut narrow l'élément value
+          return <SectionElement element={{ ...props.elementWithValue, value: etape.value }} />
+        } else {
+          return <></>
+        }
+      }}
       write={write}
-      updateHeritage={props.updateHeritage}
+      updateHeritage={updateHeritage}
     />
   )
 }

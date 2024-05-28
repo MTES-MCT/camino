@@ -1,19 +1,18 @@
 import { EtapeEditForm, Props } from './etape-edit-form'
 import { Meta, StoryFn } from '@storybook/vue3'
-import { EtapeId, EtapeWithHeritage, etapeIdValidator } from 'camino-common/src/etape'
+import { EtapeId, etapeIdValidator, etapeSlugValidator } from 'camino-common/src/etape'
 import { Entreprise, EntrepriseDocumentId, EntrepriseId, EtapeEntrepriseDocument, entrepriseDocumentIdValidator, entrepriseIdValidator, newEntrepriseId } from 'camino-common/src/entreprise'
 import { CaminoDate, toCaminoDate } from 'camino-common/src/date'
 import { testBlankUser } from 'camino-common/src/tests-utils'
 import { action } from '@storybook/addon-actions'
 import { DemarcheId, demarcheIdValidator } from 'camino-common/src/demarche'
 import { titreSlugValidator } from 'camino-common/src/validators/titres'
-import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
 import { FeatureMultiPolygon } from 'camino-common/src/perimetre'
 import { TempDocumentName, tempDocumentNameValidator } from 'camino-common/src/document'
 import { UiEntrepriseDocumentInput } from '../entreprise/entreprise-api-client'
 
 const meta: Meta = {
-  title: 'Components/Etape/Edition',
+  title: 'Components/Etape/EditForm',
   // @ts-ignore
   component: EtapeEditForm,
   argTypes: {},
@@ -21,50 +20,6 @@ const meta: Meta = {
 export default meta
 
 const entreprises: Entreprise[] = [...Array(10)].map((_e, i) => ({ id: entrepriseIdValidator.parse(`entrepriseId${i}`), nom: `Nom de l'entreprise ${i}`, legal_siren: `legal_siren${i}` }))
-
-const heritageProps: EtapeWithHeritage['heritageProps'] = {
-  dateDebut: {
-    actif: false,
-  },
-  dateFin: {
-    actif: false,
-    etape: {
-      date: toCaminoDate('2022-01-01'),
-      typeId: 'mfr',
-      dateFin: toCaminoDate('2022-01-01'),
-    },
-  },
-  duree: {
-    actif: false,
-    etape: {
-      date: toCaminoDate('2022-01-01'),
-      typeId: 'mfr',
-      duree: 12,
-    },
-  },
-  substances: {
-    actif: true,
-    etape: {
-      date: toCaminoDate('2022-01-01'),
-      typeId: 'mfr',
-      substances: ['arge'],
-    },
-  },
-  titulaires: {
-    actif: false,
-  },
-  amodiataires: {
-    actif: true,
-    etape: {
-      date: toCaminoDate('2022-01-01'),
-      typeId: 'mfr',
-      amodiataireIds: [entreprises[0].id, entreprises[1].id, entreprises[2].id],
-    },
-  },
-  perimetre: {
-    actif: false,
-  },
-}
 
 const perimetre: FeatureMultiPolygon = {
   type: 'Feature',
@@ -87,28 +42,67 @@ const perimetre: FeatureMultiPolygon = {
 
 const etape: Props['etape'] = {
   id: etapeIdValidator.parse('id'),
+  slug: etapeSlugValidator.parse('slug'),
+  titreDemarcheId: demarcheIdValidator.parse('demarcheId'),
   statutId: 'fai',
   isBrouillon: false,
   typeId: 'mfr',
-  contenu: { arm: { mecanise: true, franchissements: 2 } },
+  contenu: {},
   date: toCaminoDate('2022-02-02'),
-  dateDebut: toCaminoDate('2022-02-02'),
-  dateFin: null,
-  duree: 4,
-  substances: ['arse'],
-  titulaireIds: [newEntrepriseId('optionId1')],
-  amodiataireIds: [],
+  dateDebut: { value: toCaminoDate('2022-02-02'), heritee: false, etapeHeritee: null },
+  dateFin: {
+    value: null,
+    heritee: false,
+    etapeHeritee: {
+      date: toCaminoDate('2022-01-01'),
+      etapeTypeId: 'mfr',
+      value: toCaminoDate('2022-01-01'),
+    },
+  },
+  duree: {
+    value: 4,
+    heritee: false,
+    etapeHeritee: {
+      date: toCaminoDate('2022-01-01'),
+      etapeTypeId: 'mfr',
+      value: 12,
+    },
+  },
+  substances: {
+    value: ['arge'],
+    heritee: true,
+    etapeHeritee: {
+      date: toCaminoDate('2022-01-01'),
+      etapeTypeId: 'mfr',
+      value: ['arge'],
+    },
+  },
+  titulaires: { value: [newEntrepriseId('optionId1')], heritee: false, etapeHeritee: null },
+  amodiataires: {
+    value: [entreprises[0].id, entreprises[1].id, entreprises[2].id],
+    heritee: true,
+    etapeHeritee: {
+      date: toCaminoDate('2022-01-01'),
+      etapeTypeId: 'mfr',
+      value: [entreprises[0].id, entreprises[1].id, entreprises[2].id],
+    },
+  },
   notes: 'Super notes de cette story',
-  geojson4326Forages: null,
-  geojson4326Perimetre: null,
-  geojson4326Points: null,
-  surface: null,
-  geojsonOriginePerimetre: null,
-  geojsonOriginePoints: null,
-  geojsonOrigineGeoSystemeId: null,
-  geojsonOrigineForages: null,
-  heritageContenu: null,
-  heritageProps: null,
+  perimetre: {
+    value: {
+      geojson4326Forages: null,
+      geojson4326Perimetre: null,
+      geojson4326Points: null,
+      surface: null,
+      geojsonOriginePerimetre: null,
+      geojsonOriginePoints: null,
+      geojsonOrigineGeoSystemeId: null,
+      geojsonOrigineForages: null,
+    },
+    heritee: false,
+    etapeHeritee: null,
+  },
+  heritageContenu: {},
 }
 
 const goToDemarcheAction = action('goToDemarche')
@@ -151,12 +145,50 @@ const etapeEditFormApiClient: Props['apiClient'] = {
       { etapeTypeId: 'mdp', etapeStatutId: 'fai', mainStep: true },
     ])
   },
-  getEtapeHeritagePotentiel(titreDemarcheId: DemarcheId, date: CaminoDate, typeId: EtapeTypeId) {
-    getEtapeHeritagePotentielAction(titreDemarcheId, date, typeId)
-
+  getEtapeHeritagePotentiel(etape, titreDemarcheId) {
+    getEtapeHeritagePotentielAction(etape, titreDemarcheId)
     return Promise.resolve({
+      ...etape,
+      duree: {
+        value: etape.duree.value,
+        heritee: false,
+        etapeHeritee: {
+          date: toCaminoDate('2022-01-01'),
+          etapeTypeId: 'mfr',
+          value: 12,
+        },
+      },
+      substances: {
+        value: ['arge'],
+        heritee: true,
+        etapeHeritee: {
+          date: toCaminoDate('2022-01-01'),
+          etapeTypeId: 'mfr',
+          value: ['arge'],
+        },
+      },
+      dateDebut: { value: etape.dateDebut.value, heritee: false, etapeHeritee: null },
+      titulaires: { value: etape.titulaires.value, heritee: false, etapeHeritee: null },
+      amodiataires: {
+        value: [entreprises[0].id, entreprises[1].id, entreprises[2].id],
+        heritee: true,
+        etapeHeritee: {
+          date: toCaminoDate('2022-01-01'),
+          etapeTypeId: 'mfr',
+          value: [entreprises[0].id, entreprises[1].id, entreprises[2].id],
+        },
+      },
+      perimetre: { value: etape.perimetre.value, heritee: false, etapeHeritee: null },
+      dateFin: {
+        value: etape.dateFin.value,
+        heritee: false,
+        etapeHeritee: {
+          date: toCaminoDate('2022-01-01'),
+          etapeTypeId: 'mfr',
+          value: toCaminoDate('2022-01-01'),
+        },
+      },
       heritageContenu: { arm: { mecanise: { actif: false }, franchissements: { actif: false } } },
-      heritageProps,
     })
   },
   geojsonImport(body, geoSystemeId) {
@@ -210,7 +242,11 @@ export const Default: StoryFn = () => (
     demarcheTypeId="oct"
     titreSlug={titreSlugValidator.parse('titre-slug')}
     titreTypeId="arm"
-    etape={etape}
+    etape={{
+      ...etape,
+
+      contenu: { arm: { mecanise: true, franchissements: 2 } },
+    }}
     user={{
       role: 'super',
       ...testBlankUser,
@@ -229,7 +265,23 @@ export const EtapeModification: StoryFn = () => (
     titreSlug={titreSlugValidator.parse('titre-slug')}
     titreTypeId="cxw"
     perimetre={{ sdomZoneIds: [], superposition_alertes: [] }}
-    etape={{ ...etape, geojson4326Perimetre: perimetre, geojsonOriginePerimetre: perimetre, geojsonOrigineGeoSystemeId: '4326' }}
+    etape={{
+      ...etape,
+      perimetre: {
+        value: {
+          geojson4326Perimetre: perimetre,
+          geojsonOriginePerimetre: perimetre,
+          geojsonOrigineGeoSystemeId: '4326',
+          geojson4326Forages: null,
+          geojson4326Points: null,
+          geojsonOrigineForages: null,
+          geojsonOriginePoints: null,
+          surface: null,
+        },
+        heritee: false,
+        etapeHeritee: null,
+      },
+    }}
     user={{
       role: 'super',
       ...testBlankUser,

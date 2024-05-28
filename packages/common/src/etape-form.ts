@@ -1,18 +1,24 @@
-import { z } from "zod"
-import { caminoDateValidator } from "./date"
-import { demarcheIdValidator, demarcheSlugValidator } from "./demarche"
-import { entrepriseIdValidator, entrepriseDocumentIdValidator } from "./entreprise"
-import { etapeIdValidator, etapeSlugValidator, etapeDocumentModificationValidator, documentComplementaireDaeEtapeDocumentModificationValidator, documentComplementaireAslEtapeDocumentModificationValidator } from "./etape"
-import { km2Validator } from "./number"
-import { featureMultiPolygonValidator, featureCollectionPointsValidator, featureCollectionForagesValidator } from "./perimetre"
-import { demarcheTypeIdValidator } from "./static/demarchesTypes"
-import { etapeStatutIdValidator } from "./static/etapesStatuts"
-import { etapeTypeIdValidator } from "./static/etapesTypes"
-import { geoSystemeIdValidator } from "./static/geoSystemes"
-import { substanceLegaleIdValidator } from "./static/substancesLegales"
-import { titreTypeIdValidator } from "./static/titresTypes"
-import { titreIdValidator, titreSlugValidator } from "./validators/titres"
-import { nullToDefault } from "./zod-tools"
+import { z } from 'zod'
+import { caminoDateValidator } from './date'
+import { demarcheIdValidator, demarcheSlugValidator } from './demarche'
+import { entrepriseDocumentIdValidator, entrepriseIdValidator } from './entreprise'
+import {
+  documentComplementaireAslEtapeDocumentModificationValidator,
+  documentComplementaireDaeEtapeDocumentModificationValidator,
+  etapeDocumentModificationValidator,
+  etapeIdValidator,
+  etapeSlugValidator,
+} from './etape'
+import { km2Validator } from './number'
+import { featureCollectionForagesValidator, featureCollectionPointsValidator, featureMultiPolygonValidator } from './perimetre'
+import { demarcheTypeIdValidator } from './static/demarchesTypes'
+import { etapeStatutIdValidator } from './static/etapesStatuts'
+import { etapeTypeIdValidator } from './static/etapesTypes'
+import { geoSystemeIdValidator } from './static/geoSystemes'
+import { substanceLegaleIdValidator } from './static/substancesLegales'
+import { titreTypeIdValidator } from './static/titresTypes'
+import { titreIdValidator, titreSlugValidator } from './validators/titres'
+import { makeFlattenValidator, nullToDefault } from './zod-tools'
 
 const contenuValidator = z
   .record(z.string(), z.record(z.string(), z.union([caminoDateValidator, z.string(), z.number(), z.boolean(), z.array(z.string())]).nullable()))
@@ -21,7 +27,13 @@ const contenuValidator = z
 const dureeValidator = z.number().nullable()
 
 export const defaultHeritageProps = {
-  dateDebut: { actif: false, etape: null},  dateFin: { actif: false, etape: null},  duree: { actif: false, etape: null},  perimetre: { actif: false, etape: null},  substances: { actif: false, etape: null},  titulaires: { actif: false, etape: null},  amodiataires: { actif: false, etape: null},
+  dateDebut: { actif: false, etape: null },
+  dateFin: { actif: false, etape: null },
+  duree: { actif: false, etape: null },
+  perimetre: { actif: false, etape: null },
+  substances: { actif: false, etape: null },
+  titulaires: { actif: false, etape: null },
+  amodiataires: { actif: false, etape: null },
 }
 
 const heritagePropsValidator = z
@@ -103,11 +115,52 @@ export const graphqlEtapeValidator = z.object({
   notes: z.string().nullable(),
   heritageProps: heritagePropsValidator,
   heritageContenu: heritageContenuValidator,
-  isBrouillon: z.boolean()
+  isBrouillon: z.boolean(),
 })
 
 export type GraphqlEtape = z.infer<typeof graphqlEtapeValidator>
 
+export const perimetreObjectValidator = z.object({
+  geojson4326Perimetre: featureMultiPolygonValidator.nullable(),
+  geojson4326Points: featureCollectionPointsValidator.nullable(),
+  geojsonOriginePoints: featureCollectionPointsValidator.nullable(),
+  geojsonOriginePerimetre: featureMultiPolygonValidator.nullable(),
+  geojsonOrigineGeoSystemeId: geoSystemeIdValidator.nullable(),
+  geojson4326Forages: featureCollectionForagesValidator.nullable(),
+  geojsonOrigineForages: featureCollectionForagesValidator.nullable(),
+  surface: km2Validator.nullable(),
+})
+
+export const flattenEtapeValidator = graphqlEtapeValidator
+  .omit({
+    heritageProps: true,
+    duree: true,
+    surface: true,
+    geojson4326Perimetre: true,
+    geojson4326Points: true,
+    geojsonOriginePoints: true,
+    geojsonOriginePerimetre: true,
+    geojsonOrigineGeoSystemeId: true,
+    geojson4326Forages: true,
+    geojsonOrigineForages: true,
+    dateDebut: true,
+    dateFin: true,
+    substances: true,
+    titulaireIds: true,
+    amodiataireIds: true,
+    demarche: true,
+  })
+  .extend({
+    duree: makeFlattenValidator(dureeValidator),
+    perimetre: makeFlattenValidator(perimetreObjectValidator.nullable()),
+    dateDebut: makeFlattenValidator(caminoDateValidator.nullable()),
+    dateFin: makeFlattenValidator(caminoDateValidator.nullable()),
+    substances: makeFlattenValidator(z.array(substanceLegaleIdValidator)),
+    titulaires: makeFlattenValidator(z.array(entrepriseIdValidator)),
+    amodiataires: makeFlattenValidator(z.array(entrepriseIdValidator)),
+  })
+
+export type FlattenEtape = z.infer<typeof flattenEtapeValidator>
 const graphqlInputHeritagePropValidator = z.object({
   actif: z.boolean(),
 })

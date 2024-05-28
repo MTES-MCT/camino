@@ -28,3 +28,9 @@ export const Alert: FunctionalComponent<Props> = props => {
     )
   }
 }
+
+export const PageIntrouvableAlert: FunctionalComponent = () => {
+  return <Alert type="error" title="Page Introuvable" small={true} />
+}
+// Demandé par le router car utilisé dans un import asynchrone /shrug
+PageIntrouvableAlert.displayName = 'Page introuvable'
