@@ -49,6 +49,7 @@ test('crsUrnValidator', () => {
   expect(crsUrnValidator.safeParse('urn:ogc:def:crs:EPSG:1.32:2972').success).toBe(true)
   expect(crsUrnValidator.safeParse('urn:ogc:def:crs:EPSG::PLOP').success).toBe(false)
   expect(crsUrnValidator.safeParse('urn:ogc:def:crs:EPSG::').success).toBe(false)
+  expect(crsUrnValidator.safeParse('urn:ogc:def:crs:EPSG::27572').success).toBe(true)
 })
 test('featureForagePropertiesValidator', () => {
   const featureForageProperties: z.infer<typeof featureForagePropertiesValidator> = {

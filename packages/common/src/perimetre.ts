@@ -63,7 +63,7 @@ export const crsUrnValidator = z.custom<`urn:ogc:def:crs:EPSG:${string}:${GeoSys
     return false
   }
 
-  return geoSystemeIdValidator.safeParse(val.substring(val.length - 4)).success
+  return geoSystemeIdValidator.safeParse(val.substring(val.lastIndexOf(':') + 1)).success
 })
 
 const featureCollectionValidator = z.object({
