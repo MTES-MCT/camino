@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "test": "vitest --environment node --root src/",
-    "build": "tsc",
+    "build": "tsc --incremental",
     "format": "prettier --write src && eslint --fix src",
     "lint": "prettier --check src && eslint src"
   },
