@@ -10,7 +10,7 @@ import { DsfrTag } from '../_ui/tag'
 import { capitalize } from 'camino-common/src/strings'
 import { FlattenEtape } from 'camino-common/src/etape-form'
 
-export type Props = {
+type Props = {
   substances: DeepReadonly<FlattenEtape['substances']>
   domaineId: DomaineId
   updateSubstances: (substances: DeepReadonly<FlattenEtape['substances']>) => void

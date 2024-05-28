@@ -12,8 +12,6 @@ import { KM2 } from './number.js'
 import { GeoSystemeId } from './static/geoSystemes.js'
 import { tempDocumentNameValidator } from './document.js'
 import { ElementWithValue } from './sections.js'
-import { DeepReadonly } from './typescript-tools.js'
-import { getSections } from './static/titresTypes_demarchesTypes_etapesTypes/sections.js'
 import { DemarcheTypeId } from './static/demarchesTypes.js'
 import { TitreTypeId } from './static/titresTypes.js'
 import { User, isEntrepriseOrBureauDEtude } from './roles.js'
@@ -30,7 +28,7 @@ export type EtapeIdOrSlug = z.infer<typeof etapeIdOrSlugValidator>
 export type HeritageProp<T> = { actif: boolean; etape?: T | null }
 
 // TODO 2023-06-14 Utiliser seulement par l’ui, à bouger dedans
-export type Etape = {
+type Etape = {
   id: EtapeId | null
   contenu: Record<string, Record<string, ElementWithValue['value']>>
   date: CaminoDate | null
@@ -58,7 +56,7 @@ export type Etape = {
   dateFin: CaminoDate | null
 }
 
-export type EtapePropsFromHeritagePropName<key extends EtapeHeritageProps> = MappingHeritagePropsNameEtapePropsName[key][number]
+type EtapePropsFromHeritagePropName<key extends EtapeHeritageProps> = MappingHeritagePropsNameEtapePropsName[key][number]
 
 export type EtapeWithHeritage = InternalEtapeWithHeritage<EtapeHeritageProps, Omit<Etape, 'typeId' | 'date' | 'statutId'> & { typeId: EtapeTypeId; date: CaminoDate; statutId: EtapeStatutId }>
 
@@ -141,60 +139,3 @@ export type DocumentComplementaireDaeEtapeDocumentModification = z.infer<typeof 
 
 export const documentComplementaireAslEtapeDocumentModificationValidator = etapeDocumentModificationValidator.and(documentComplementaireObligatoireASLValidator)
 export type DocumentComplementaireAslEtapeDocumentModification = z.infer<typeof documentComplementaireAslEtapeDocumentModificationValidator>
-
-export const flattenEtapeWithHeritage = (
-  titreTypeId: TitreTypeId,
-  demarcheTypeId: DemarcheTypeId,
-  etape: DeepReadonly<Etape>,
-  heritage: DeepReadonly<Pick<EtapeWithHeritage, 'heritageProps' | 'heritageContenu' | 'typeId' | 'date' | 'statutId'>>
-): DeepReadonly<EtapeWithHeritage> => {
-  const substances: Readonly<SubstanceLegaleId[]> = heritage.heritageProps.substances.actif ? heritage.heritageProps.substances.etape?.substances ?? [] : etape.substances
-  const duree: number | null = heritage.heritageProps.duree.actif ? heritage.heritageProps.duree.etape?.duree ?? null : etape.duree
-  const amodiataireIds: DeepReadonly<EntrepriseId[]> = heritage.heritageProps.amodiataires.actif ? heritage.heritageProps.amodiataires.etape?.amodiataireIds ?? [] : etape.amodiataireIds
-  const titulaireIds: DeepReadonly<EntrepriseId[]> = heritage.heritageProps.titulaires.actif ? heritage.heritageProps.titulaires.etape?.titulaireIds ?? [] : etape.titulaireIds
-  const dateDebut: CaminoDate | null = heritage.heritageProps.dateDebut.actif ? heritage.heritageProps.dateDebut.etape?.dateDebut ?? null : etape.dateDebut
-  const dateFin: CaminoDate | null = heritage.heritageProps.dateFin.actif ? heritage.heritageProps.dateFin.etape?.dateFin ?? null : etape.dateFin
-
-  let perimetre: DeepReadonly<Pick<Etape, EtapePropsFromHeritagePropName<'perimetre'>>> = {
-    geojson4326Perimetre: etape.geojson4326Perimetre,
-    geojson4326Points: etape.geojson4326Points,
-    geojsonOriginePerimetre: etape.geojsonOriginePerimetre,
-    geojsonOriginePoints: etape.geojsonOriginePoints,
-    geojsonOrigineGeoSystemeId: etape.geojsonOrigineGeoSystemeId,
-    geojson4326Forages: etape.geojson4326Forages,
-    geojsonOrigineForages: etape.geojsonOrigineForages,
-    surface: etape.surface,
-  }
-  if (heritage.heritageProps.perimetre.actif) {
-    perimetre = {
-      geojson4326Perimetre: heritage.heritageProps.perimetre.etape?.geojson4326Perimetre ?? null,
-      geojson4326Points: heritage.heritageProps.perimetre.etape?.geojson4326Points ?? null,
-      geojsonOriginePerimetre: heritage.heritageProps.perimetre.etape?.geojsonOriginePerimetre ?? null,
-      geojsonOriginePoints: heritage.heritageProps.perimetre.etape?.geojsonOriginePoints ?? null,
-      geojsonOrigineGeoSystemeId: heritage.heritageProps.perimetre.etape?.geojsonOrigineGeoSystemeId ?? null,
-      geojson4326Forages: heritage.heritageProps.perimetre.etape?.geojson4326Forages ?? null,
-      geojsonOrigineForages: heritage.heritageProps.perimetre.etape?.geojsonOrigineForages ?? null,
-      surface: heritage.heritageProps.perimetre.etape?.surface ?? null,
-    }
-  }
-
-  const sections = getSections(titreTypeId, demarcheTypeId, heritage.typeId)
-
-  let newContenu: DeepReadonly<Etape['contenu']> = {}
-  for (const section of sections) {
-    newContenu = { ...newContenu, [section.id]: {} }
-    for (const element of section.elements) {
-      newContenu = {
-        ...newContenu,
-        [section.id]: {
-          ...newContenu[section.id],
-          [element.id]: heritage.heritageContenu[section.id]?.[element.id]?.actif
-            ? heritage.heritageContenu[section.id][element.id].etape?.contenu[section.id]?.[element.id] ?? null
-            : etape.contenu[section.id]?.[element.id] ?? null,
-        },
-      }
-    }
-  }
-
-  return { ...etape, ...heritage, substances, duree, amodiataireIds, titulaireIds, dateDebut, dateFin, ...perimetre, contenu: newContenu }
-}

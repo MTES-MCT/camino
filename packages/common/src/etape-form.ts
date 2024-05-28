@@ -26,7 +26,7 @@ const contenuValidator = z
   .transform(nullToDefault({}))
 const dureeValidator = z.number().nullable()
 
-export const defaultHeritageProps = {
+const defaultHeritageProps = {
   dateDebut: { actif: false, etape: null },
   dateFin: { actif: false, etape: null },
   duree: { actif: false, etape: null },
@@ -73,11 +73,6 @@ const heritageContenuValidator = z
   .nullable()
   .transform(nullToDefault({}))
 
-export type HeritageContenu = z.infer<typeof heritageContenuValidator>
-export const heritageValidator = z.object({
-  heritageProps: heritagePropsValidator,
-  heritageContenu: heritageContenuValidator,
-})
 export const graphqlEtapeValidator = z.object({
   id: etapeIdValidator,
   slug: etapeSlugValidator,
@@ -118,9 +113,7 @@ export const graphqlEtapeValidator = z.object({
   isBrouillon: z.boolean(),
 })
 
-export type GraphqlEtape = z.infer<typeof graphqlEtapeValidator>
-
-export const perimetreObjectValidator = z.object({
+const perimetreObjectValidator = z.object({
   geojson4326Perimetre: featureMultiPolygonValidator.nullable(),
   geojson4326Points: featureCollectionPointsValidator.nullable(),
   geojsonOriginePoints: featureCollectionPointsValidator.nullable(),
