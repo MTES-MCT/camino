@@ -10,6 +10,7 @@ import { capitalize } from 'camino-common/src/strings'
 import { GeojsonPoint, MultiPolygon } from 'camino-common/src/perimetre'
 import { isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
 import { Entreprise, EntrepriseId } from 'camino-common/src/entreprise'
+import { REGION_IDS, RegionId } from 'camino-common/src/static/region'
 
 const leafletCoordinatesFind = (geojson: { coordinates: [number, number] }) => {
   const coordinates = geojson.coordinates
@@ -19,11 +20,85 @@ const leafletCoordinatesFind = (geojson: { coordinates: [number, number] }) => {
     lat: coordinates[1],
   }
 }
+
+export const regionsCoordinates = {
+  [REGION_IDS['Auvergne-Rhône-Alpes']]: [
+    [1.6767, 47.3135],
+    [8.05888, 44.0947],
+  ],
+  [REGION_IDS['Bourgogne-Franche-Comté']]: [
+    [2.43281, 48.7518],
+    [7.61855, 45.8748],
+  ],
+  [REGION_IDS.Bretagne]: [
+    [-6.1227, 49.2643],
+    [-0.847, 46.9604],
+  ],
+  [REGION_IDS['Centre-Val de Loire']]: [
+    [-0.20478, 49.2364],
+    [3.6911, 46.082],
+  ],
+  [REGION_IDS.Corse]: [
+    [43, 8],
+    [41.3, 10.3],
+  ],
+  [REGION_IDS['Grand Est']]: [
+    [2.4767, 46.0504],
+    [8.807, 50.36781],
+  ],
+  [REGION_IDS.Guadeloupe]: [
+    [-61.99099, 16.54896],
+    [-61.0809, 15.8889],
+  ],
+  [REGION_IDS.Guyane]: [
+    [-55, 6],
+    [-51, 2],
+  ],
+  [REGION_IDS['Hauts-de-France']]: [
+    [0.7737, 51.238],
+    [4.75514, 48.7052],
+  ],
+  [REGION_IDS['La Réunion']]: [
+    [55.0667443, -20.814978],
+    [55.97294, -21.4697],
+  ],
+  [REGION_IDS.Martinique]: [
+    [-61.44022, 14.9367],
+    [-60.6146, 14.31359],
+  ],
+  [REGION_IDS.Mayotte]: [
+    [44.81316, -12.5722],
+    [45.48503, -13.0706],
+  ],
+  [REGION_IDS.Normandie]: [
+    [-2.88915, 50.32793],
+    [1.98169, 48.1257],
+  ],
+  [REGION_IDS['Nouvelle-Aquitaine']]: [
+    [-2.142071, 47.2883],
+    [2.44759, 42.4752],
+  ],
+  [REGION_IDS.Occitanie]: [
+    [-0.38563, 45.3292],
+    [4.95648, 42.297],
+  ],
+  [REGION_IDS['Pays de la Loire']]: [
+    [-2.73269, 48.8376],
+    [1.0683, 46.1369],
+  ],
+  [REGION_IDS["Provence-Alpes-Côte d'Azur"]]: [
+    [4.17411, 45.144],
+    [8.1894, 42.869],
+  ],
+  [REGION_IDS['Île-de-France']]: [
+    [1.35898, 49.3419],
+    [3.671916, 48.0665],
+  ],
+} as const satisfies Record<RegionId, [[number, number], [number, number]]>
 export const zones = {
   fr: {
     id: 'fr',
     name: 'Hexagone',
-    type: 'LineString',
     coordinates: [
       [-5, 41],
       [10, 51],
@@ -32,16 +107,11 @@ export const zones = {
   gf: {
     id: 'gf',
     name: 'Guyane',
-    type: 'LineString',
-    coordinates: [
-      [-55, 6],
-      [-51, 2],
-    ],
+    coordinates: regionsCoordinates[REGION_IDS.Guyane],
   },
   oi: {
     id: 'oi',
     name: 'Océan Indien',
-    type: 'LineString',
     coordinates: [
       [39, -23],
       [58, -13],
@@ -50,13 +120,12 @@ export const zones = {
   an: {
     id: 'an',
     name: 'Antilles',
-    type: 'LineString',
     coordinates: [
       [-64, 15],
       [-59, 16],
     ],
   },
-} as const
+} as const satisfies { [id: string]: { id: string; name: string; coordinates: [[number, number], [number, number]] } }
 
 const L = window.L
 
