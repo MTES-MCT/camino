@@ -18,7 +18,7 @@ import {
 import { demarcheDefinitionFind } from '../../business/rules-demarches/definitions.js'
 import { CaminoRequest, CustomResponse } from './express-type.js'
 import { userSuper } from '../../database/user-super.js'
-import { NotNullableKeys, isNullOrUndefined, onlyUnique } from 'camino-common/src/typescript-tools.js'
+import { NotNullableKeys, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined, onlyUnique } from 'camino-common/src/typescript-tools.js'
 import TitresTitres from '../../database/models/titres--titres.js'
 import { titreAdministrationsGet } from '../_format/titres.js'
 import { canDeleteTitre, canEditTitre, canLinkTitres } from 'camino-common/src/permissions/titres.js'
@@ -33,7 +33,7 @@ import { isAdministration, User } from 'camino-common/src/roles.js'
 import { canCreateOrEditDemarche, canCreateTravaux } from 'camino-common/src/permissions/titres-demarches.js'
 import { utilisateurTitreCreate, utilisateurTitreDelete } from '../../database/queries/utilisateurs.js'
 import titreUpdateTask from '../../business/titre-update.js'
-import { getTitre as getTitreDb } from './titres.queries.js'
+import { getDoublonsByTitreId, getTitre as getTitreDb } from './titres.queries.js'
 import type { Pool } from 'pg'
 import { z } from 'zod'
 import { TitresStatutIds } from 'camino-common/src/static/titresStatuts.js'
@@ -397,7 +397,7 @@ const titreLinksGet = async (titreId: string, link: 'titreToId' | 'titreFromId',
   }
 }
 
-export const removeTitre = (_pool: Pool) => async (req: CaminoRequest, res: CustomResponse<void>) => {
+export const removeTitre = (pool: Pool) => async (req: CaminoRequest, res: CustomResponse<void>) => {
   const user = req.auth
 
   const titreId = titreIdValidator.safeParse(req.params.titreId)
@@ -421,6 +421,15 @@ export const removeTitre = (_pool: Pool) => async (req: CaminoRequest, res: Cust
       res.sendStatus(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
     } else {
       await titreArchive(titreId.data)
+      await titreUpdateTask(pool, titreId.data)
+      if (isNotNullNorUndefined(titreOld.doublonTitreId)) {
+        await titreUpdateTask(pool, titreOld.doublonTitreId)
+      }
+
+      const doublonIds: TitreId[] = await getDoublonsByTitreId(pool, titreId.data)
+      if (isNotNullNorUndefinedNorEmpty(doublonIds)) {
+        doublonIds.forEach(async id => titreUpdateTask(pool, id))
+      }
       res.sendStatus(HTTP_STATUS.HTTP_STATUS_NO_CONTENT)
     }
   }

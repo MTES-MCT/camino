@@ -189,7 +189,7 @@ interface ITitre {
   activites?: ITitreActivite[] | null
   publicLecture?: boolean | null
   propsTitreEtapesIds: IPropsTitreEtapesIds
-  doublonTitreId?: string | null
+  doublonTitreId?: TitreId | null
   confidentiel?: boolean | null
 
   geojson4326Centre?: GeojsonPoint | null

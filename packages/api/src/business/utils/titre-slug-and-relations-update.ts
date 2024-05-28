@@ -90,7 +90,7 @@ const relationsSlugsUpdate = async (parent: any, relations: (ITitreRelation<Dema
 
 export const titreSlugAndRelationsUpdate = async (titre: ITitre): Promise<{ hasChanged: boolean; slug: TitreSlug }> => {
   let slug = titreSlugFind(titre)
-  let doublonTitreId: string | null = null
+  let doublonTitreId: TitreId | null = null
   let hasChanged = false
 
   const titreWithTheSameSlug = await titresGet({ slugs: [slug] }, { fields: { id: {} } }, userSuper)
@@ -104,7 +104,7 @@ export const titreSlugAndRelationsUpdate = async (titre: ITitre): Promise<{ hasC
     }
   }
 
-  if (titre.slug !== slug) {
+  if (titre.slug !== slug || (titre.doublonTitreId ?? null) !== doublonTitreId) {
     await titreUpdate(titre.id, { slug, doublonTitreId })
     hasChanged = true
   }
