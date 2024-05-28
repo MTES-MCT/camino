@@ -244,7 +244,8 @@ const proprietesGeothermieForages: Section[] = [
     nom: "Propriétés du permis d'exploitation",
     elements: [
       { id: 'debit', nom: 'Débit volumique maximal de pompage', type: 'number', optionnel: true, uniteId: 'm3h', description: `(${Unites.m3h.symbole})` },
-      { id: 'volume', nom: 'Volume maximum de pompage', type: 'number', optionnel: true, uniteId: 'm3x', description: `(${Unites.m3x.symbole})` },
+      { id: 'volume', nom: 'Volume annuel maximum de pompage', type: 'number', optionnel: true, uniteId: 'm3a', description: `(${Unites.m3a.symbole})` },
+      { id: 'puissancePrimaire', nom: 'Puissance primaire', type: 'number', optionnel: true, uniteId: 'kwa', description: `${Unites.kwa.symbole}` },
     ],
   },
 ]
