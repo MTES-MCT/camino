@@ -1,10 +1,8 @@
 const config = {
   ignore: [
-    ".history/**",
     "packages/api/knexfile.ts",
     "**/knex/migrations/*",
     "packages/api/src/knex/migration-stub.ts",
-    "packages/common/src/**/*.test.ts",
     "packages/api/src/tools/phases/tests-creation.ts",
     "packages/api/src/**/*.queries.types.ts",
   ],
@@ -19,7 +17,6 @@ const config = {
     "pgtyped-config.ci.json",
     "pgtyped-config.json",
     "scp",
-    "ssh",
     "tar",
   ],
 
@@ -36,7 +33,6 @@ const config = {
     },
     "packages/api": {
       entry: ["src/index.ts", "src/scripts/*"],
-      project: "**/*.ts",
       ignoreDependencies: [
         // TODO 2023-12-28 ces dépendances semblent être "shadow" par les définitions bourrines .d.ts qu'on a mise
         "graphql-scalars",
@@ -53,8 +49,6 @@ const config = {
       ],
     },
     "packages/ui": {
-      entry: "src/index.ts",
-      project: ["src/**/*.tsx", "src/**/*.ts", "src/**/*.js"],
       ignoreDependencies: [
         "@vitest/coverage-v8",
         "@babel/eslint-parser",
