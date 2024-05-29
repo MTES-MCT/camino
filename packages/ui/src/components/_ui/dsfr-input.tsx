@@ -1,3 +1,4 @@
+import { createDebounce } from '@/utils/debounce'
 import { isEventWithTarget, random } from '@/utils/vue-tsx-utils'
 import { CaminoDate, caminoDateValidator } from 'camino-common/src/date'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
@@ -50,6 +51,8 @@ const isDateProps = (props: Props): props is BaseProps & DateProps => props.type
 export const DsfrInput = defineComponent<Props>(props => {
   const id = props.id ?? `input_${(random() * 1000).toFixed()}`
 
+  const debounce = createDebounce()
+
   const value = ref(props.initialValue)
   const updateFromEvent = (e: Event) => {
     if (isEventWithTarget(e)) {
@@ -64,7 +67,7 @@ export const DsfrInput = defineComponent<Props>(props => {
         const dateParsed = caminoDateValidator.safeParse(e.target.value)
         const newValue = dateParsed.success ? dateParsed.data : null
         value.value = newValue
-        props.valueChanged(newValue)
+        debounce(() => props.valueChanged(newValue))
       }
     }
   }

@@ -2,6 +2,7 @@ import { Domaine } from '@/components/_common/domaine'
 import { TitresTypesTypes } from 'camino-common/src/static/titresTypesTypes'
 import { getDomaineId, getTitreTypeType } from 'camino-common/src/static/titresTypes'
 import { titresRechercherByReferences } from '@/api/titres'
+import { createDebounce } from '@/utils/debounce'
 import { useRouter } from 'vue-router'
 import { ref, FunctionalComponent, DeepReadonly, defineComponent } from 'vue'
 import { titreApiClient, TitreForTitresRerchercherByNom } from '../titre/titre-api-client'
@@ -74,17 +75,6 @@ export const DisplayTitre: FunctionalComponent<DisplayTitreProps> = props => {
 export const PureQuickAccessTitre = defineComponent<Props>(props => {
   const display = (titre: DeepReadonly<TitreForTitresRerchercherByNom>) => {
     return <DisplayTitre titre={titre} />
-  }
-
-  const createDebounce = () => {
-    let timeout: ReturnType<typeof setTimeout>
-
-    return function (fnc: () => void, delayMs = 500) {
-      clearTimeout(timeout)
-      timeout = setTimeout(() => {
-        fnc()
-      }, delayMs)
-    }
   }
 
   const overrideItem = ref<TitreForTitresRerchercherByNom | null>(null)
