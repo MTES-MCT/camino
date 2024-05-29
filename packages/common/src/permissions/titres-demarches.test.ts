@@ -1,10 +1,11 @@
 import { describe, expect, test } from 'vitest'
 import { AdministrationId } from '../static/administrations.js'
-import { canCreateOrEditDemarche, canCreateTravaux, canDeleteDemarche } from './titres-demarches.js'
+import { canEditDemarche, canCreateTravaux, canDeleteDemarche, canCreateDemarche } from './titres-demarches.js'
 import { testBlankUser, TestUser } from '../tests-utils.js'
 import { TitresStatutIds } from '../static/titresStatuts.js'
+import { caminoDateValidator } from '../date.js'
 
-describe('canCreateOrEditDemarche', () => {
+describe('canEditDemarche', () => {
   test.each<[AdministrationId, boolean]>([
     ['dre-ile-de-france-01', false],
     ['dea-guadeloupe-01', false],
@@ -12,24 +13,24 @@ describe('canCreateOrEditDemarche', () => {
     ['pre-42218-01', false],
     ['ope-ptmg-973-01', true],
     ['dea-guyane-01', false],
-  ])('Vérifie si l’administration peut créer des démarches', async (administrationId, creation) => {
-    expect(canCreateOrEditDemarche({ role: 'admin', administrationId, ...testBlankUser }, 'arm', TitresStatutIds.Valide, [])).toEqual(creation)
+  ])('Vérifie si l’administration peut modifier des démarches', async (administrationId, creation) => {
+    expect(canEditDemarche({ role: 'admin', administrationId, ...testBlankUser }, 'arm', TitresStatutIds.Valide, [])).toEqual(creation)
   })
 
-  test('Une administration locale peut créer des démarches', () => {
-    expect(canCreateOrEditDemarche({ role: 'admin', administrationId: 'dea-guyane-01', ...testBlankUser }, 'axm', TitresStatutIds.Valide, ['dea-guyane-01'])).toEqual(true)
+  test('Une administration locale peut modifier des démarches', () => {
+    expect(canEditDemarche({ role: 'admin', administrationId: 'dea-guyane-01', ...testBlankUser }, 'axm', TitresStatutIds.Valide, ['dea-guyane-01'])).toEqual(true)
   })
 
-  test('Le PTMG ne peut pas créer de démarche sur une ARM classée', () => {
-    expect(canCreateOrEditDemarche({ role: 'admin', administrationId: 'ope-ptmg-973-01', ...testBlankUser }, 'arm', TitresStatutIds.DemandeClassee, [])).toEqual(false)
+  test('Le PTMG ne peut pas modifier de démarche sur une ARM classée', () => {
+    expect(canEditDemarche({ role: 'admin', administrationId: 'ope-ptmg-973-01', ...testBlankUser }, 'arm', TitresStatutIds.DemandeClassee, [])).toEqual(false)
   })
 
   test.each<[TestUser, boolean]>([
     [{ role: 'super' }, true],
     [{ role: 'entreprise', entreprises: [] }, false],
     [{ role: 'defaut' }, false],
-  ])('Vérifie si un profil peut créer des démarches', async (user, creation) => {
-    expect(canCreateOrEditDemarche({ ...user, ...testBlankUser }, 'arm', TitresStatutIds.Valide, [])).toEqual(creation)
+  ])('Vérifie si un profil peut modifier des démarches', async (user, creation) => {
+    expect(canEditDemarche({ ...user, ...testBlankUser }, 'arm', TitresStatutIds.Valide, [])).toEqual(creation)
   })
 })
 
@@ -62,6 +63,23 @@ describe('canDeleteDemarche', () => {
   })
 })
 
+describe('canCreateDemarche', () => {
+  test('Une administration locale peut créer des démarches si il n’y a pas d’octroi en cours de construction', () => {
+    expect(
+      canCreateDemarche(
+        { role: 'admin', administrationId: 'dea-guyane-01', ...testBlankUser },
+        'axm',
+        TitresStatutIds.Valide,
+        ['dea-guyane-01'],
+        [{ demarche_date_debut: caminoDateValidator.parse('2023-01-01') }]
+      )
+    ).toEqual(true)
+  })
+  test('Une administration locale ne peut pas créer de démarche si il y a un octroi en cours de construction', () => {
+    expect(canCreateDemarche({ role: 'admin', administrationId: 'dea-guyane-01', ...testBlankUser }, 'axm', TitresStatutIds.Valide, ['dea-guyane-01'], [{ demarche_date_debut: null }])).toEqual(false)
+  })
+})
+
 describe('canCreateTravaux', () => {
   test.each<[AdministrationId, boolean]>([
     ['dre-ile-de-france-01', false],
@@ -71,11 +89,15 @@ describe('canCreateTravaux', () => {
     ['ope-ptmg-973-01', false],
     ['dea-guyane-01', false],
   ])('Vérifie si l’administration peut créer des travaux', async (administrationId, creation) => {
-    expect(canCreateTravaux({ role: 'admin', administrationId, ...testBlankUser }, 'arm', [])).toEqual(creation)
+    expect(canCreateTravaux({ role: 'admin', administrationId, ...testBlankUser }, 'arm', [], [])).toEqual(creation)
   })
 
   test('La DGTM peut créer des travaux sur les AXM', () => {
-    expect(canCreateTravaux({ role: 'admin', administrationId: 'dea-guyane-01', ...testBlankUser }, 'axm', [])).toEqual(true)
+    expect(canCreateTravaux({ role: 'admin', administrationId: 'dea-guyane-01', ...testBlankUser }, 'axm', [], [{ demarche_date_debut: caminoDateValidator.parse('2023-01-01') }])).toEqual(true)
+  })
+
+  test('La DGTM ne peut pas créer des travaux sur les AXM si l’octroi n’est pas encore valide', () => {
+    expect(canCreateTravaux({ role: 'admin', administrationId: 'dea-guyane-01', ...testBlankUser }, 'axm', [], [{ demarche_date_debut: null }])).toEqual(false)
   })
 
   test.each<[TestUser, boolean]>([
@@ -83,6 +105,6 @@ describe('canCreateTravaux', () => {
     [{ role: 'entreprise', entreprises: [] }, false],
     [{ role: 'defaut' }, false],
   ])('Vérifie si un profil peut créer des travaux', async (user, creation) => {
-    expect(canCreateTravaux({ ...user, ...testBlankUser }, 'arm', [])).toEqual(creation)
+    expect(canCreateTravaux({ ...user, ...testBlankUser }, 'arm', [], [])).toEqual(creation)
   })
 })

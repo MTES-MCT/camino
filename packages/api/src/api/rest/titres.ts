@@ -30,7 +30,7 @@ import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts.j
 import { ETAPES_TYPES, EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
 import { CaminoDate, getCurrent } from 'camino-common/src/date.js'
 import { isAdministration, User } from 'camino-common/src/roles.js'
-import { canCreateOrEditDemarche, canCreateTravaux } from 'camino-common/src/permissions/titres-demarches.js'
+import { canEditDemarche, canCreateTravaux } from 'camino-common/src/permissions/titres-demarches.js'
 import { utilisateurTitreCreate, utilisateurTitreDelete } from '../../database/queries/utilisateurs.js'
 import titreUpdateTask from '../../business/titre-update.js'
 import { getTitre as getTitreDb } from './titres.queries.js'
@@ -195,7 +195,7 @@ export const titresAdministrations = (_pool: Pool) => async (req: CaminoRequest,
       const titresAutorises = await titresGet(
         filters,
         {
-          fields: { pointsEtape: { id: {} } },
+          fields: { pointsEtape: { id: {} }, demarches: { id: {} } },
         },
         user
       )
@@ -209,10 +209,19 @@ export const titresAdministrations = (_pool: Pool) => async (req: CaminoRequest,
             throw new Error('les administrations locales doivent être chargées')
           }
 
+          if (titre.demarches === undefined) {
+            throw new Error('les démarches doivent être chargées')
+          }
+
           return (
             canEditTitre(user, titre.typeId, titre.titreStatutId) ||
-            canCreateOrEditDemarche(user, titre.typeId, titre.titreStatutId, titre.administrationsLocales ?? []) ||
-            canCreateTravaux(user, titre.typeId, titre.administrationsLocales ?? [])
+            canEditDemarche(user, titre.typeId, titre.titreStatutId, titre.administrationsLocales ?? []) ||
+            canCreateTravaux(
+              user,
+              titre.typeId,
+              titre.administrationsLocales ?? [],
+              titre.demarches.map(({ demarcheDateDebut }) => ({ demarche_date_debut: demarcheDateDebut ?? null }))
+            )
           )
         })
         .map(({ id }) => id)

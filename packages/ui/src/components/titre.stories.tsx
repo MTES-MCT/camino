@@ -127,7 +127,7 @@ const titresTo: TitreLink[] = [{ id: titreIdValidator.parse('id10'), nom: 'Titre
 const titresFrom: TitreLink[] = [linkableTitres[0]]
 
 const demarcheSlug = demarcheSlugValidator.parse('slug-demarche-1')
-const titre: TitreGet = {
+const titre = {
   id: titreIdValidator.parse('id-du-titre'),
   nom: 'Nom du titre',
   slug: titreSlugValidator.parse('slug-du-titre'),
@@ -225,7 +225,7 @@ const titre: TitreGet = {
       ],
     },
   ],
-}
+} as const satisfies TitreGet
 
 const apiClient: PropsApiClient = {
   editTitre: (...params) => {
@@ -699,5 +699,33 @@ export const Lenoncourt: StoryFn = () => (
     router={routerPushMock}
     apiClient={lenoncourtApiClient}
     titreIdOrSlug={titreIdValidator.parse('s7RvqvCAgKs4DxkQBYV93cVx')}
+  />
+)
+
+export const TitreAvecUneSeuleDemarcheEnConstruction: StoryFn = () => (
+  <PureTitre
+    entreprises={entreprises}
+    currentDate={currentDate}
+    currentDemarcheSlug={demarcheSlug}
+    initTab="points"
+    user={{ ...testBlankUser, role: 'super' }}
+    router={routerPushMock}
+    apiClient={{
+      ...apiClient,
+      getTitreById: (titreIdOrSlug: TitreIdOrSlug) => {
+        getTitreAction(titreIdOrSlug)
+
+        return Promise.resolve({
+          ...titre,
+          demarches: [
+            {
+              ...titre.demarches[0],
+              demarche_date_debut: null,
+            },
+          ],
+        })
+      },
+    }}
+    titreIdOrSlug={titre.id}
   />
 )
