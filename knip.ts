@@ -1,30 +1,7 @@
 const config = {
-  ignore: [
-    ".history/**",
-    "packages/api/knexfile.ts",
-    "**/knex/migrations/*",
-    "packages/api/src/knex/migration-stub.ts",
-    "packages/common/src/**/*.test.ts",
-    "packages/api/src/tools/phases/tests-creation.ts",
-    "packages/api/src/**/*.queries.types.ts",
-  ],
-  ignoreBinaries: [
-    "eslint",
-    "prettier",
-    "createdb",
-    "dropdb",
-    "npm-check-updates",
-    "pg_dump",
-    "pg_restore",
-    "pgtyped-config.ci.json",
-    "pgtyped-config.json",
-    "scp",
-    "ssh",
-    "tar",
-  ],
-
   workspaces: {
     ".": {
+      ignoreBinaries: ["eslint", "prettier"],
       ignoreDependencies: [
         // TODO 2023-12-28 knip voit pas les override dependencies
         "vue",
@@ -35,8 +12,25 @@ const config = {
       ],
     },
     "packages/api": {
-      entry: ["src/index.ts", "src/scripts/*"],
-      project: "**/*.ts",
+      ignoreBinaries: [
+        "createdb",
+        "dropdb",
+        "npm-check-updates",
+        "pg_dump",
+        "pg_restore",
+        "pgtyped-config.ci.json",
+        "pgtyped-config.json",
+        "scp",
+        "tar",
+      ],
+      ignore: ["knexfile.ts", "src/**/*.queries.types.ts"],
+      entry: [
+        "src/index.ts",
+        "src/scripts/*",
+        "src/tools/phases/tests-creation.ts",
+        "src/knex/migration-stub.ts",
+        "src/knex/migrations/*",
+      ],
       ignoreDependencies: [
         // TODO 2023-12-28 ces dépendances semblent être "shadow" par les définitions bourrines .d.ts qu'on a mise
         "graphql-scalars",
@@ -53,8 +47,7 @@ const config = {
       ],
     },
     "packages/ui": {
-      entry: "src/index.ts",
-      project: ["src/**/*.tsx", "src/**/*.ts", "src/**/*.js"],
+      ignoreBinaries: ["npm-check-updates"],
       ignoreDependencies: [
         "@vitest/coverage-v8",
         "@babel/eslint-parser",
