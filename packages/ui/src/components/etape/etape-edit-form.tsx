@@ -35,9 +35,12 @@ import {
 import { EtapeAlerte, PureFormSaveBtn } from './pure-form-save-btn'
 import { TitresStatuts } from 'camino-common/src/static/titresStatuts'
 import { DeposeEtapePopup } from '../demarche/depose-etape-popup'
-import { canBeBrouillon } from 'camino-common/src/static/etapesTypes'
+import { EtapeTypeId, canBeBrouillon } from 'camino-common/src/static/etapesTypes'
 import { CoreEtapeCreationOrModification } from './etape-api-client'
 import { FlattenEtape } from 'camino-common/src/etape-form'
+import { AsyncData } from '@/api/client-rest'
+import { CaminoDate } from 'camino-common/src/date'
+import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts'
 
 export type Props = {
   etape: DeepReadonly<Pick<Nullable<FlattenEtape>, 'id' | 'date' | 'typeId' | 'statutId' | 'slug'> & Omit<FlattenEtape, 'date' | 'typeId' | 'statutId' | 'id' | 'slug'>>
@@ -77,7 +80,7 @@ type EtapeEditFormDocuments = DeepReadonly<{
 }>
 
 export const EtapeEditForm = defineComponent<Props>(props => {
-  const [etape, setEtape] = useState(props.etape)
+  const [etape, setEtape] = useState<AsyncData<CoreEtapeCreationOrModification | null>>({ status: 'LOADING' })
   const [perimetreInfos, setPerimetreInfos] = useState<DeepReadonly<PerimetreInformations>>(props.perimetre)
 
   const [documents, setDocuments] = useState<EtapeEditFormDocuments>({
@@ -87,43 +90,38 @@ export const EtapeEditForm = defineComponent<Props>(props => {
     aslDocument: null,
   })
   onMounted(async () => {
-    if (
-      isNullOrUndefined(props.etape.id) ||
-      isNullOrUndefined(props.etape.date) ||
-      isNullOrUndefined(props.etape.typeId) ||
-      isNullOrUndefined(props.etape.statutId) ||
-      isNullOrUndefined(props.etape.heritageContenu)
-    ) {
-      await reloadHeritage(props.demarcheId)
+    if (isNotNullNorUndefined(props.etape.date) && isNotNullNorUndefined(props.etape.typeId) && isNotNullNorUndefined(props.etape.statutId)) {
+      setEtape({ status: 'LOADED', value: { ...props.etape, date: props.etape.date, typeId: props.etape.typeId, statutId: props.etape.statutId } })
     }
   })
 
-  const reloadHeritage = async (demarcheId: DemarcheId) => {
-    if (isNotNullNorUndefined(etapeNotNullOrAllNull.value)) {
-      try {
-        const value = await props.apiClient.getEtapeHeritagePotentiel(etapeNotNullOrAllNull.value, demarcheId)
-        setEtape(value)
-      } catch (e: any) {
-        console.error('error', e)
-        // FIXME gérer les erreurs
-        // heritageData.value = {
-        //   status: 'ERROR',
-        //   message: e.message ?? "Une erreur s'est produite",
-        // }
-      }
+  const reloadHeritage = async (date: CaminoDate, typeId: EtapeTypeId, statutId: EtapeStatutId) => {
+    const currentEtape = etape.value.status === 'LOADED' && isNotNullNorUndefined(etape.value.value) ? etape.value.value : props.etape
+    setEtape({ status: 'LOADING' })
+    try {
+      const value = await props.apiClient.getEtapeHeritagePotentiel(
+        {
+          ...currentEtape,
+          date,
+          typeId,
+          statutId,
+          isBrouillon: canBeBrouillon(typeId),
+        },
+        props.demarcheId
+      )
+      setEtape({ status: 'LOADED', value })
+    } catch (e: any) {
+      console.error('error', e)
+      setEtape({
+        status: 'ERROR',
+        message: e.message ?? "Une erreur s'est produite",
+      })
     }
   }
 
   const dateTypeCompleteUpdate = async (etapeDateType: EtapeDateTypeEdit) => {
     if (isNotNullNorUndefined(etapeDateType.date) && isNotNullNorUndefined(etapeDateType.typeId) && isNotNullNorUndefined(etapeDateType.statutId)) {
-      setEtape({
-        ...etape.value,
-        date: etapeDateType.date,
-        typeId: etapeDateType.typeId,
-        statutId: etapeDateType.statutId,
-        isBrouillon: etape.value.isBrouillon || canBeBrouillon(etapeDateType.typeId),
-      })
-      await reloadHeritage(props.demarcheId)
+      await reloadHeritage(etapeDateType.date, etapeDateType.typeId, etapeDateType.statutId)
     }
   }
 
