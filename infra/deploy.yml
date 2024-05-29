@@ -20,4 +20,8 @@
         path: /usr/local/bin/docker-compose
         state: absent
       become: True
-
+    - name: 2024-05-29 -> Remove old keycloak-franceconnect (remove this once run through the prod)
+      ansible.builtin.file:
+        path: /srv/www/camino/keycloak-bcrypt-1.6.0.jar
+        state: absent
+      become: True
