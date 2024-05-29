@@ -188,6 +188,7 @@ export const CaminoMap = defineComponent<Props>((props, { expose }) => {
     if (map.value !== null) {
       const leafletComponentOnMounted = markRaw(
         L.map(map.value, {
+          zoomSnap: 0,
           zoomControl: true,
           zoomAnimation: false,
           doubleClickZoom: false,
