@@ -46,7 +46,7 @@ export const HeritageEdit = <T extends DeepReadonly<HeritagePossible>>(props: Pr
   const dummyKey = `empty_input_${(random() * 1000).toFixed()}`
 
   const etapeHeritee = props.prop.etapeHeritee ?? null
- console.log('COUCOU', props.prop)
+  console.log('COUCOU', props.prop)
   return (
     <div class={['fr-mb-1w', props.class]}>
       {!props.prop.heritee ? (
