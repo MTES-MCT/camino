@@ -21,11 +21,10 @@ type HeritagePossible =
   | ElementWithValueAndHeritage['value']
 type Props<T extends DeepReadonly<HeritagePossible>> = {
   prop: T
-  // prop: DeepReadonly<GenericHeritageValue<T>>
   write: () => JSX.Element
   read: (heritagePropEtape?: NoInfer<T>['etapeHeritee']) => JSX.Element
   label: string | null
-
+  hasHeritageValue: boolean
   class?: HTMLAttributes['class']
   updateHeritage: (update: NoInfer<T>) => void
 }
@@ -48,11 +47,12 @@ export const HeritageEdit = <T extends DeepReadonly<HeritagePossible>>(props: Pr
   const etapeHeritee = props.prop.etapeHeritee ?? null
   return (
     <div class={['fr-mb-1w', props.class]}>
+      {JSON.stringify(etapeHeritee)}
       {!props.prop.heritee ? (
         props.write()
       ) : (
         <div>
-          {isNotNullNorUndefined(etapeHeritee?.value) ? (
+          {props.hasHeritageValue ? (
             props.read(etapeHeritee)
           ) : (
             <DsfrInput

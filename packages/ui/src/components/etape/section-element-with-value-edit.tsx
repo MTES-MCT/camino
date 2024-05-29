@@ -1,6 +1,6 @@
 import { DeepReadonly, FunctionalComponent } from 'vue'
 import { EtapeWithHeritage, HeritageProp } from 'camino-common/src/etape'
-import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
+import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
 import { ElementWithValue, ElementWithValueAndHeritage } from 'camino-common/src/sections'
 import { HeritageEdit } from './heritage-edit'
 import { SectionElement } from '../_common/new-section-element'
@@ -43,10 +43,14 @@ export const SectionElementWithValueEdit: FunctionalComponent<Props> = props => 
     })
   }
 
+  const heritageValue = valueWithHeritage.value.etapeHeritee?.value ?? null
+  const hasHeritageValue: boolean = isNotNullNorUndefined(heritageValue) && Array.isArray(heritageValue) ? isNotNullNorUndefinedNorEmpty(heritageValue) : isNotNullNorUndefined(heritageValue)
+
   return (
     <HeritageEdit
       prop={valueWithHeritage.value}
       label={props.elementWithValue.nom ?? ''}
+      hasHeritageValue={hasHeritageValue}
       read={etape => {
         if (isNotNullNorUndefined(etape)) {
           // @ts-ignore regarder si on peut narrow l'élément value

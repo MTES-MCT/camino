@@ -17,6 +17,7 @@ const updateHeritage = action('updateHeritage')
 export const HeritageDisabled: StoryFn = () => (
   <HeritageEdit
     updateHeritage={updateHeritage}
+    hasHeritageValue={true}
     prop={{ value: null, heritee: false, etapeHeritee: { date: toCaminoDate('2024-01-01'), etapeTypeId: 'mfr', value: toCaminoDate('2022-01-01') } }}
     label="Date de début"
     write={() => <DsfrInput legend={{ main: '' }} type={{ type: 'date' }} valueChanged={dateChangedAction} class="mb-s" />}
@@ -27,6 +28,7 @@ export const HeritageDisabled: StoryFn = () => (
 export const HeritageEnabled: StoryFn = () => (
   <HeritageEdit
     updateHeritage={updateHeritage}
+    hasHeritageValue={true}
     prop={{ value: toCaminoDate('2022-01-01'), heritee: true, etapeHeritee: { date: toCaminoDate('2024-01-01'), etapeTypeId: 'mfr', value: toCaminoDate('2022-01-01') } }}
     label="Date de début"
     write={() => <DsfrInput legend={{ main: '' }} type={{ type: 'date' }} valueChanged={dateChangedAction} class="mb-s" />}
@@ -37,6 +39,7 @@ export const HeritageEnabled: StoryFn = () => (
 export const HeritageEnabledWithoutValue: StoryFn = () => (
   <HeritageEdit
     updateHeritage={updateHeritage}
+    hasHeritageValue={false}
     prop={{ value: toCaminoDate('2024-01-01'), heritee: true, etapeHeritee: { date: toCaminoDate('2024-01-01'), etapeTypeId: 'mfr', value: null } }}
     label="Date de début"
     write={() => <DsfrInput legend={{ main: '' }} type={{ type: 'date' }} valueChanged={dateChangedAction} class="mb-s" />}
@@ -47,6 +50,7 @@ export const HeritageEnabledWithoutValue: StoryFn = () => (
 export const NoHeritage: StoryFn = () => (
   <HeritageEdit
     updateHeritage={updateHeritage}
+    hasHeritageValue={false}
     prop={{ value: null, heritee: false, etapeHeritee: null }}
     label="Date de début"
     write={() => <DsfrInput legend={{ main: '' }} type={{ type: 'date' }} valueChanged={dateChangedAction} class="mb-s" />}

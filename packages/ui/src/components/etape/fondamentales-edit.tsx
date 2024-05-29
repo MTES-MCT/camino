@@ -12,7 +12,7 @@ import { getDomaineId, TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { watch, computed, ref, DeepReadonly, defineComponent } from 'vue'
 import { Entreprise, EntrepriseId } from 'camino-common/src/entreprise'
 import { User } from 'camino-common/src/roles'
-import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
+import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
 import { DsfrInput } from '../_ui/dsfr-input'
 import { FlattenEtape } from 'camino-common/src/etape-form'
 
@@ -38,9 +38,9 @@ export const FondamentalesEdit = defineComponent<Props>(props => {
 
   const ans = ref<number>(dureeToAns(editedEtape.value.duree.value))
   const mois = ref<number>(dureeToMois(editedEtape.value.duree.value))
-  // // TODO 2024-04-03 ceci devrait disparaitre le jour où on retravaille l'héritage props
+  // FIXME si on modifie le périmètre puis les substances ça ne fonctionn pas, car ce watch est commenté. MAIS si on le décommente on a une boucle infine
   // watch(() => props.etape, () => {
-  //   editedEtape.value = props.etape
+  //   setEditedEtape(props.etape)
   // })
 
   const dateDebutChanged = (dateDebut: CaminoDate | null) => {
@@ -119,6 +119,7 @@ export const FondamentalesEdit = defineComponent<Props>(props => {
         {canEditDuree(props.titreTypeId, props.demarcheTypeId) ? (
           <HeritageEdit
             updateHeritage={updateDureeHeritage}
+            hasHeritageValue={isNotNullNorUndefined(props.etape.duree.etapeHeritee?.value)}
             prop={editedEtape.value.duree}
             label="Durée"
             write={() => (
@@ -158,6 +159,7 @@ export const FondamentalesEdit = defineComponent<Props>(props => {
         {canEditDates(props.titreTypeId, props.demarcheTypeId, editedEtape.value.typeId, props.user) ? (
           <HeritageEdit
             updateHeritage={updateDateDebutHeritage}
+            hasHeritageValue={isNotNullNorUndefined(props.etape.dateDebut.etapeHeritee?.value)}
             prop={editedEtape.value.dateDebut}
             label="Date de début"
             write={() => <DsfrInput type={{ type: 'date' }} legend={{ main: 'Date de début' }} initialValue={props.etape.dateDebut.value} valueChanged={dateDebutChanged} />}
@@ -168,6 +170,7 @@ export const FondamentalesEdit = defineComponent<Props>(props => {
         {canEditDates(props.titreTypeId, props.demarcheTypeId, editedEtape.value.typeId, props.user) ? (
           <HeritageEdit
             updateHeritage={updateDateFinHeritage}
+            hasHeritageValue={isNotNullNorUndefined(props.etape.dateFin.etapeHeritee?.value)}
             prop={editedEtape.value.dateFin}
             label="Date d’échéance"
             write={() => <DsfrInput type={{ type: 'date' }} legend={{ main: 'Date d’échéance' }} initialValue={props.etape.dateFin.value} valueChanged={dateFinChanged} />}
@@ -178,6 +181,7 @@ export const FondamentalesEdit = defineComponent<Props>(props => {
         {canEditTitulaires(props.titreTypeId, props.user) ? (
           <HeritageEdit
             updateHeritage={updateTitulairesHeritage}
+            hasHeritageValue={isNotNullNorUndefinedNorEmpty(props.etape.titulaires.etapeHeritee?.value)}
             prop={editedEtape.value.titulaires}
             label="Titulaires"
             write={() => (
@@ -207,6 +211,7 @@ export const FondamentalesEdit = defineComponent<Props>(props => {
         {canEditAmodiataires(props.titreTypeId, props.user) ? (
           <HeritageEdit
             updateHeritage={updateAmodiatairesHeritage}
+            hasHeritageValue={isNotNullNorUndefinedNorEmpty(props.etape.amodiataires.etapeHeritee?.value)}
             prop={editedEtape.value.amodiataires}
             label="Amodiataires"
             write={() => (

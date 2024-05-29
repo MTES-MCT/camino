@@ -3,7 +3,7 @@ import { SubstancesLegales, SubstancesLegale, SubstanceLegaleId } from 'camino-c
 import { DeepReadonly, computed, defineComponent, watch } from 'vue'
 import { HeritageEdit } from '@/components/etape/heritage-edit'
 import { DomaineId } from 'camino-common/src/static/domaines'
-import { isNotNullNorUndefined, isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools'
+import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools'
 import { DsfrButtonIcon } from '../_ui/dsfr-button'
 import { SubstanceLegaleTypeahead } from '../_common/substance-legale-typeahead'
 import { DsfrTag } from '../_ui/tag'
@@ -109,6 +109,7 @@ export const SubstancesEdit = defineComponent<Props>(props => {
   return () => (
     <HeritageEdit
       prop={{ ...editedSubstances.value, value: editedSubstances.value.value.filter(isNotNullNorUndefined) }}
+      hasHeritageValue={isNotNullNorUndefinedNorEmpty(editedSubstances.value.etapeHeritee?.value)}
       label="Substances"
       write={() => (
         <div class="fr-input-group fr-mb-0">

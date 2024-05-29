@@ -133,6 +133,7 @@ export const PerimetreEdit = defineComponent<Props>(props => {
       <HeritageEdit
         prop={props.etape.perimetre}
         updateHeritage={updateHeritage}
+        hasHeritageValue={isNotNullNorUndefined(props.etape.perimetre.etapeHeritee?.value?.geojson4326Perimetre)}
         label={null}
         write={() => (
           <div>
