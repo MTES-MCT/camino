@@ -290,9 +290,20 @@ export const DemarcheMap = defineComponent<Props>(props => {
   watch(
     () => props.perimetre,
     () => {
-      map.value?.getSource(contoursSourceName).setData(props.perimetre.geojson4326_perimetre)
-      map.value?.getSource(pointsSourceName).setData(points.value)
-      map.value?.getSource(foragesSourceName).setData(forages.value)
+      const contoursSource = map.value?.getSource(contoursSourceName)
+      if (isNotNullNorUndefined(contoursSource)) {
+        contoursSource.setData(props.perimetre.geojson4326_perimetre)
+      }
+
+      const pointsSource = map.value?.getSource(pointsSourceName)
+      if (isNotNullNorUndefined(pointsSource)) {
+        pointsSource?.setData(points.value)
+      }
+
+      const foragesSource = map.value?.getSource(foragesSourceName)
+      if (isNotNullNorUndefined(foragesSourceName)) {
+        foragesSource?.setData(forages.value)
+      }
     }
   )
 
@@ -325,24 +336,27 @@ export const DemarcheMap = defineComponent<Props>(props => {
           typesIds: [],
         })
 
-        map.value?.getSource('TitresValides').setData({
-          type: 'FeatureCollection',
-          features: res.elements
-            .filter(({ slug }) => slug !== props.neighbours?.titreSlug)
-            .filter(titreValide => isNotNullNorUndefined(titreValide.geojson4326Perimetre))
-            .map(titreValide => {
-              const properties: TitreValideProperties = {
-                slug: titreValide.slug,
-                nom: titreValide.nom,
-                typeId: titreValide.typeId,
-                titreStatutId: titreValide.titreStatutId,
-                domaineColor: couleurParDomaine[getDomaineId(titreValide.typeId)],
-              }
+        const titreValidesSource = map.value?.getSource('TitresValides')
+        if (isNotNullNorUndefined(titreValidesSource)) {
+          titreValidesSource.setData({
+            type: 'FeatureCollection',
+            features: res.elements
+              .filter(({ slug }) => slug !== props.neighbours?.titreSlug)
+              .filter(titreValide => isNotNullNorUndefined(titreValide.geojson4326Perimetre))
+              .map(titreValide => {
+                const properties: TitreValideProperties = {
+                  slug: titreValide.slug,
+                  nom: titreValide.nom,
+                  typeId: titreValide.typeId,
+                  titreStatutId: titreValide.titreStatutId,
+                  domaineColor: couleurParDomaine[getDomaineId(titreValide.typeId)],
+                }
 
-              // TODO 2023-12-04 un jour on espère pouvoir virer le ! parce que le filter l'empêche
-              return { type: 'Feature', properties, geometry: titreValide.geojson4326Perimetre! }
-            }),
-        })
+                // TODO 2023-12-04 un jour on espère pouvoir virer le ! parce que le filter l'empêche
+                return { type: 'Feature', properties, geometry: titreValide.geojson4326Perimetre! }
+              }),
+          })
+        }
       } catch (e) {
         console.error(e)
       }

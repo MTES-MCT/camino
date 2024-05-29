@@ -4,7 +4,7 @@ import { DeepReadonly } from 'vue'
 export type CaminoMapOptions = maplibre.MapOptions & { style: CaminoStyleSpecification }
 export class CaminoMapLibre extends maplibre.Map {
   constructor(options: maplibre.MapOptions)
-  getSource(id: string): CaminoGeoJSONSource
+  getSource(id: string): CaminoGeoJSONSource | undefined
 }
 
 export class CaminoLngLatBounds extends maplibre.LngLatBounds {

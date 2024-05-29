@@ -424,8 +424,8 @@ export const etapeApiClient: EtapeApiClient = {
       ...etape,
       heritageContenu: heritageData.heritageContenu,
       duree: {
-        value: heritageData.heritageProps.duree.actif ? heritageData.heritageProps.duree.etape?.duree ?? null : etape.duree.value,
-        heritee: heritageData.heritageProps.duree.actif,
+        value: etape.duree.heritee ? heritageData.heritageProps.duree.etape?.duree ?? null : etape.duree.value,
+        heritee: etape.duree.heritee && isNotNullNorUndefined(heritageData.heritageProps.duree.etape),
         etapeHeritee: isNotNullNorUndefined(heritageData.heritageProps.duree.etape)
           ? {
               etapeTypeId: heritageData.heritageProps.duree.etape.typeId,
@@ -435,13 +435,9 @@ export const etapeApiClient: EtapeApiClient = {
           : null,
       },
       perimetre: {
-        value: heritageData.heritageProps.perimetre.actif
-          ? isNotNullNorUndefined(heritageData.heritageProps.perimetre.etape)
-            ? { ...heritageData.heritageProps.perimetre.etape }
-            : null
-          : etape.perimetre.value,
+        value: etape.perimetre.heritee ? (isNotNullNorUndefined(heritageData.heritageProps.perimetre.etape) ? { ...heritageData.heritageProps.perimetre.etape } : null) : etape.perimetre.value,
 
-        heritee: heritageData.heritageProps.perimetre.actif,
+        heritee: etape.perimetre.heritee && isNotNullNorUndefined(heritageData.heritageProps.perimetre.etape),
         etapeHeritee: isNotNullNorUndefined(heritageData.heritageProps.perimetre.etape)
           ? {
               etapeTypeId: heritageData.heritageProps.perimetre.etape.typeId,
@@ -451,8 +447,8 @@ export const etapeApiClient: EtapeApiClient = {
           : null,
       },
       dateDebut: {
-        value: heritageData.heritageProps.dateDebut.actif ? heritageData.heritageProps.dateDebut.etape?.dateDebut ?? null : etape.dateDebut.value,
-        heritee: heritageData.heritageProps.dateDebut.actif,
+        value: etape.dateDebut.heritee ? heritageData.heritageProps.dateDebut.etape?.dateDebut ?? null : etape.dateDebut.value,
+        heritee: etape.dateDebut.heritee && isNotNullNorUndefined(heritageData.heritageProps.dateDebut.etape),
         etapeHeritee: isNotNullNorUndefined(heritageData.heritageProps.dateDebut.etape)
           ? {
               etapeTypeId: heritageData.heritageProps.dateDebut.etape.typeId,
@@ -462,8 +458,8 @@ export const etapeApiClient: EtapeApiClient = {
           : null,
       },
       dateFin: {
-        value: heritageData.heritageProps.dateFin.actif ? heritageData.heritageProps.dateFin.etape?.dateFin ?? null : etape.dateFin.value,
-        heritee: heritageData.heritageProps.dateFin.actif,
+        value: etape.dateFin.heritee ? heritageData.heritageProps.dateFin.etape?.dateFin ?? null : etape.dateFin.value,
+        heritee: etape.dateFin.heritee && isNotNullNorUndefined(heritageData.heritageProps.dateFin.etape),
         etapeHeritee: isNotNullNorUndefined(heritageData.heritageProps.dateFin.etape)
           ? {
               etapeTypeId: heritageData.heritageProps.dateFin.etape.typeId,
@@ -473,13 +469,9 @@ export const etapeApiClient: EtapeApiClient = {
           : null,
       },
       substances: {
-        value: heritageData.heritageProps.substances.actif
-          ? isNotNullNorUndefined(heritageData.heritageProps.substances.etape)
-            ? heritageData.heritageProps.substances.etape.substances
-            : []
-          : etape.substances.value,
+        value: etape.substances.heritee ? (isNotNullNorUndefined(heritageData.heritageProps.substances.etape) ? heritageData.heritageProps.substances.etape.substances : []) : etape.substances.value,
 
-        heritee: heritageData.heritageProps.substances.actif,
+        heritee: etape.substances.heritee && isNotNullNorUndefined(heritageData.heritageProps.substances.etape),
         etapeHeritee: isNotNullNorUndefined(heritageData.heritageProps.substances.etape)
           ? {
               etapeTypeId: heritageData.heritageProps.substances.etape.typeId,
@@ -489,13 +481,13 @@ export const etapeApiClient: EtapeApiClient = {
           : null,
       },
       amodiataires: {
-        value: heritageData.heritageProps.amodiataires.actif
+        value: etape.amodiataires.heritee
           ? isNotNullNorUndefined(heritageData.heritageProps.amodiataires.etape)
             ? heritageData.heritageProps.amodiataires.etape.amodiataireIds
             : []
           : etape.amodiataires.value,
 
-        heritee: heritageData.heritageProps.amodiataires.actif,
+        heritee: etape.amodiataires.heritee && isNotNullNorUndefined(heritageData.heritageProps.amodiataires.etape),
         etapeHeritee: isNotNullNorUndefined(heritageData.heritageProps.amodiataires.etape)
           ? {
               etapeTypeId: heritageData.heritageProps.amodiataires.etape.typeId,
@@ -505,13 +497,9 @@ export const etapeApiClient: EtapeApiClient = {
           : null,
       },
       titulaires: {
-        value: heritageData.heritageProps.titulaires.actif
-          ? isNotNullNorUndefined(heritageData.heritageProps.titulaires.etape)
-            ? heritageData.heritageProps.titulaires.etape.titulaireIds
-            : []
-          : etape.titulaires.value,
+        value: etape.titulaires.heritee ? (isNotNullNorUndefined(heritageData.heritageProps.titulaires.etape) ? heritageData.heritageProps.titulaires.etape.titulaireIds : []) : etape.titulaires.value,
 
-        heritee: heritageData.heritageProps.titulaires.actif,
+        heritee: etape.titulaires.heritee && isNotNullNorUndefined(heritageData.heritageProps.titulaires.etape),
         etapeHeritee: isNotNullNorUndefined(heritageData.heritageProps.titulaires.etape)
           ? {
               etapeTypeId: heritageData.heritageProps.titulaires.etape.typeId,
