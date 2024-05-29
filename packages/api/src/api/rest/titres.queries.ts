@@ -5,6 +5,7 @@ import { Redefine, dbQueryAndValidate } from '../../pg-database.js'
 import {
   IGetAdministrationsLocalesByTitreIdDbQuery,
   IGetDemarchesByTitreIdQueryDbQuery,
+  IGetDoublonsByTitreIdDbQuery,
   IGetTitreByIdOrSlugDbQuery,
   IGetTitreInternalQuery,
   IGetTitulairesAmodiatairesByTitreIdDbQuery,
@@ -300,8 +301,8 @@ from
     titres t
     left join titres t_doublon on t_doublon.id = t.doublon_titre_id
 where
-    t.id = $ id !
-    or t.slug = $ id !
+    (t.id = $ id !
+    or t.slug = $ id !) AND t.archive is false
 LIMIT 1
 `
 
@@ -415,3 +416,17 @@ from
 where
     t.id = $ titreId !
 `
+export const getDoublonsByTitreId = async (pool: Pool, titreId: TitreId): Promise<TitreId[]> => {
+  const result = await dbQueryAndValidate(getDoublonsByTitreIdDb, { titreId }, pool, z.object({ titre_id: titreIdValidator }))
+
+  return result.map(({ titre_id }) => titre_id)
+}
+
+const getDoublonsByTitreIdDb = sql<Redefine<IGetDoublonsByTitreIdDbQuery, { titreId: TitreId }, { titre_id: TitreId }>>`
+  select
+    t.id as titre_id
+  from titres t
+  where
+    t.doublon_titre_id = $ titreId !
+    and t.archive is false
+  `

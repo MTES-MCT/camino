@@ -102,3 +102,19 @@ export interface IGetAdministrationsLocalesByTitreIdDbQuery {
   result: IGetAdministrationsLocalesByTitreIdDbResult;
 }
 
+/** 'GetDoublonsByTitreIdDb' parameters type */
+export interface IGetDoublonsByTitreIdDbParams {
+  titreId: string;
+}
+
+/** 'GetDoublonsByTitreIdDb' return type */
+export interface IGetDoublonsByTitreIdDbResult {
+  titre_id: string;
+}
+
+/** 'GetDoublonsByTitreIdDb' query type */
+export interface IGetDoublonsByTitreIdDbQuery {
+  params: IGetDoublonsByTitreIdDbParams;
+  result: IGetDoublonsByTitreIdDbResult;
+}
+

@@ -408,6 +408,7 @@ describe('getTitre', () => {
       titreStatutId: 'ind',
       slug: titreSlugValidator.parse('arm-slug'),
       propsTitreEtapesIds: {},
+      archive: false,
     })
 
     const tested = await restCall(dbPool, '/rest/titres/:titreId', { titreId }, userSuper)
@@ -428,6 +429,24 @@ describe('getTitre', () => {
       }
     `)
   })
+  test('ne peut pas récupérer un titre archivé', async () => {
+    const titreId = newTitreId('archive-titre-id')
+    await Titres.query().insert({
+      id: titreId,
+      nom: 'mon nouveau titre',
+      typeId: 'arm',
+      titreStatutId: 'ind',
+      slug: titreSlugValidator.parse('arm-slug'),
+      propsTitreEtapesIds: {},
+      archive: true,
+    })
+
+    const tested = await restCall(dbPool, '/rest/titres/:titreId', { titreId }, userSuper)
+
+    expect(tested.statusCode).toBe(404)
+    expect(tested.body).toMatchInlineSnapshot(`{}`)
+  })
+
   test('peut récupérer un titre avec des administrations locales', async () => {
     const titreId = newTitreId('titre-id')
     await Titres.query().insert({
@@ -437,6 +456,7 @@ describe('getTitre', () => {
       slug: titreSlugValidator.parse('slug'),
       titreStatutId: 'val',
       propsTitreEtapesIds: {},
+      archive: false,
     })
 
     const demarcheId = newDemarcheId('demarche-id')
