@@ -20,6 +20,7 @@ import { TitresStatutIds } from 'camino-common/src/static/titresStatuts'
 import { EntrepriseId } from 'camino-common/src/entreprise'
 import { DemandeTitreButton } from './_common/demande-titre-button'
 import { entreprisesKey, userKey } from '@/moi'
+import { CaminoRouteNames, CaminoVueRouter } from '@/router/routes'
 
 const defaultFilterByAdministrationUser: Pick<TitreFiltresParams, 'domainesIds' | 'typesIds' | 'statutsIds'> = {
   domainesIds: ['m', 'w', 'g'],
@@ -63,7 +64,11 @@ export const Titres = defineComponent({
       })
 
     if (noFilter && isAdministration(user)) {
-      router.push({ name: router.currentRoute.value.name ?? 'titres', query: { ...router.currentRoute.value.query, ...defaultFilterByAdministrationUser } })
+      router.push({
+        name: router.currentRoute.value.name ?? 'titres',
+        query: { ...router.currentRoute.value.query, ...defaultFilterByAdministrationUser },
+        params: router.currentRoute.value.params,
+      } as CaminoVueRouter<CaminoRouteNames>)
     }
 
     const reloadTitres = async (vueId: TabId) => {
@@ -224,7 +229,7 @@ export const Titres = defineComponent({
                     delete query.perimetre
                     delete query.centre
                   }
-                  await router.push({ name: router.currentRoute.value.name ?? undefined, query })
+                  await router.push({ name: router.currentRoute.value.name ?? undefined, query, params: router.currentRoute.value.params } as CaminoVueRouter<CaminoRouteNames>)
                   if (newTabId === 'table') {
                     paramsForCarte.value = null
                     reloadTitres(newTabId)

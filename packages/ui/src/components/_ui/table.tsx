@@ -5,6 +5,7 @@ import { AsyncData } from '../../api/client-rest'
 import { DemarcheIdOrSlug } from 'camino-common/src/demarche'
 import { NonEmptyArray } from 'camino-common/src/typescript-tools'
 import type { JSX } from 'vue/jsx-runtime'
+import { CaminoRouteLocation, CaminoRouteNames, CaminoVueRouter } from '@/router/routes'
 type SortOrder = 'asc' | 'desc'
 
 export interface TableSortEvent {
@@ -58,7 +59,7 @@ const isComponentColumnData = (columnRow: ComponentColumnData | TextColumnData):
 }
 
 interface Props<ColumnId> {
-  route: Pick<RouteLocationNormalizedLoaded, 'query' | 'name'>
+  route: CaminoRouteLocation
   columns: readonly Column<ColumnId>[]
   rows: AsyncData<{ rows: TableRow[]; total: number }>
   caption: string
@@ -115,7 +116,13 @@ export const Table = defineComponent(
                     ) : sortParams.value.column === col.id ? (
                       <CaminoRouterLink
                         class={['fr-link', 'fr-link--icon-right', sortParams.value.order === 'asc' ? 'fr-icon-arrow-down-fill' : 'fr-icon-arrow-up-fill']}
-                        to={{ name: props.route.name ?? undefined, query: { ...props.route.query, page: 1, ordre: sortParams.value.order === 'asc' ? 'desc' : 'asc' } }}
+                        to={
+                          {
+                            name: props.route.name ?? undefined,
+                            query: { ...props.route.query, page: 1, ordre: sortParams.value.order === 'asc' ? 'desc' : 'asc' },
+                            params: props.route.params,
+                          } as CaminoVueRouter<CaminoRouteNames>
+                        }
                         isDisabled={false}
                         title={sortParams.value.order === 'asc' ? `Trier par la colonne ${col.name} par ordre descendant` : `Trier par la colonne ${col.name} par ordre ascendant`}
                       >
@@ -125,7 +132,13 @@ export const Table = defineComponent(
                       <CaminoRouterLink
                         class={['fr-link']}
                         isDisabled={false}
-                        to={{ name: props.route.name ?? undefined, query: { ...props.route.query, page: 1, colonne: col.id, ordre: 'asc' } }}
+                        to={
+                          {
+                            name: props.route.name ?? undefined,
+                            query: { ...props.route.query, page: 1, colonne: col.id, ordre: 'asc' },
+                            params: props.route.params,
+                          } as CaminoVueRouter<CaminoRouteNames>
+                        }
                         title={`Trier par la colonne ${col.name}`}
                       >
                         {col.name === '' ? '-' : col.name}

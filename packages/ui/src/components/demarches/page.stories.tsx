@@ -58,18 +58,18 @@ export const Loading: StoryFn = () => (
     travaux
     updateUrlQuery={updateUrlQuery}
     entreprises={[]}
-    currentRoute={{ name: 'demarches', query: { titresIds: ['id1'] } }}
+    currentRoute={{ name: 'demarches', query: { titresIds: ['id1'] }, params: {} }}
     apiClient={{ ...apiClient, getDemarches: () => new Promise(() => ({})), getTitresByIds: () => new Promise(() => ({})) }}
     filtres={demarchesFiltres}
   />
 )
 
 export const Travaux: StoryFn = () => (
-  <PurePage travaux entreprises={[]} updateUrlQuery={updateUrlQuery} currentRoute={{ name: 'demarches', query: {} }} apiClient={apiClient} filtres={travauxFiltres} />
+  <PurePage travaux entreprises={[]} updateUrlQuery={updateUrlQuery} currentRoute={{ name: 'demarches', query: {}, params: {} }} apiClient={apiClient} filtres={travauxFiltres} />
 )
 
 export const Demarches: StoryFn = () => (
-  <PurePage travaux={false} entreprises={[]} updateUrlQuery={updateUrlQuery} currentRoute={{ name: 'demarches', query: {} }} apiClient={apiClient} filtres={demarchesFiltres} />
+  <PurePage travaux={false} entreprises={[]} updateUrlQuery={updateUrlQuery} currentRoute={{ name: 'demarches', query: {}, params: {} }} apiClient={apiClient} filtres={demarchesFiltres} />
 )
 
 export const WithError: StoryFn = () => (
@@ -77,7 +77,7 @@ export const WithError: StoryFn = () => (
     travaux
     updateUrlQuery={updateUrlQuery}
     entreprises={[]}
-    currentRoute={{ name: 'demarches', query: { titresIds: ['id1'] } }}
+    currentRoute={{ name: 'demarches', query: { titresIds: ['id1'] }, params: {} }}
     apiClient={{ ...apiClient, getTitresByIds: () => Promise.reject(new Error('Cassé')), getDemarches: () => Promise.reject(new Error('Cassé')) }}
     filtres={demarchesFiltres}
   />

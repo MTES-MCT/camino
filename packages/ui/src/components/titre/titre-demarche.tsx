@@ -207,7 +207,7 @@ export const TitreDemarche = defineComponent<Props>(props => {
                   icon={null}
                   disabled={false}
                   title="Ajouter une étape"
-                  to={{ name: 'etape-creation', query: { 'demarche-id': demarche.value.slug } }}
+                  to={{ name: 'etapeCreation', params: {}, query: { 'demarche-id': demarche.value.slug } }}
                 />
               ) : null}
             </div>

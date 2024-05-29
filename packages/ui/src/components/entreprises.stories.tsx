@@ -46,9 +46,15 @@ const apiClient: Pick<ApiClient, 'creerEntreprise' | 'titresRechercherByNom' | '
 }
 
 export const NonConnecte: StoryFn = () => (
-  <PureEntreprises entreprises={entreprises} apiClient={apiClient} user={null} currentRoute={{ name: 'entreprises', query: {} }} updateUrlQuery={updateUrlQuery} />
+  <PureEntreprises entreprises={entreprises} apiClient={apiClient} user={null} currentRoute={{ name: 'entreprises', query: {}, params: {} }} updateUrlQuery={updateUrlQuery} />
 )
 
 export const canCreateEntreprise: StoryFn = () => (
-  <PureEntreprises entreprises={entreprises} apiClient={apiClient} user={{ role: 'super', ...testBlankUser }} currentRoute={{ name: 'entreprises', query: {} }} updateUrlQuery={updateUrlQuery} />
+  <PureEntreprises
+    entreprises={entreprises}
+    apiClient={apiClient}
+    user={{ role: 'super', ...testBlankUser }}
+    currentRoute={{ name: 'entreprises', query: {}, params: {} }}
+    updateUrlQuery={updateUrlQuery}
+  />
 )

@@ -30,7 +30,7 @@ export const TitreCreation = defineComponent(() => {
 
   const goToEtape = async (titreEtapeId: EtapeId) => {
     await router.push({
-      name: 'etape-edition',
+      name: 'etapeEdition',
       params: { id: titreEtapeId },
     })
   }

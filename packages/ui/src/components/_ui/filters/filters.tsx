@@ -7,7 +7,7 @@ import { ButtonIcon } from '@/components/_ui/button-icon'
 import { FiltresEtapes, FilterEtapeValue } from '../../demarches/filtres-etapes'
 import { EtapesStatuts } from 'camino-common/src/static/etapesStatuts'
 import { EtapeTypeId, EtapesTypes } from 'camino-common/src/static/etapesTypes'
-import { RouteLocationNormalizedLoaded, Router, onBeforeRouteLeave } from 'vue-router'
+import { Router, onBeforeRouteLeave } from 'vue-router'
 import {
   AutocompleteCaminoFiltres,
   CheckboxesCaminoFiltres,
@@ -30,12 +30,13 @@ import { LoadingElement } from '../functional-loader'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { Entreprise } from 'camino-common/src/entreprise'
 import { DeprecatedAccordion } from '../accordion'
+import { CaminoRouteLocation, CaminoRouteNames, CaminoVueRouter } from '@/router/routes'
 
 type FormatedLabel = { id: CaminoFiltre; name: string; value: string | string[] | FilterEtapeValue; valueName?: string | string[] }
 
 type Props = {
   filters: readonly CaminoFiltre[]
-  route: Pick<RouteLocationNormalizedLoaded, 'query' | 'name'>
+  route: CaminoRouteLocation
   updateUrlQuery: Pick<Router, 'push'>
   subtitle?: string
   opened?: boolean
@@ -71,7 +72,7 @@ const etapesLabelFormat = (filter: EtapeCaminoFiltres, values: FilterEtapeValue[
     })
 }
 
-export const getInitialFiltres = (route: Pick<RouteLocationNormalizedLoaded, 'query' | 'name'>, filters: readonly CaminoFiltre[]) => {
+export const getInitialFiltres = (route: CaminoRouteLocation, filters: readonly CaminoFiltre[]) => {
   const allValues = {
     administrationTypesIds: caminoFiltres.administrationTypesIds.validator.parse(routerQueryToStringArray(route.query.administrationTypesIds)),
     nomsAdministration: routerQueryToString(route.query.nomsAdministration, ''),
@@ -114,7 +115,7 @@ export const Filters = defineComponent((props: Props) => {
     return props.opened ?? false
   })
 
-  const urlQuery = computed(() => {
+  const urlQuery = computed<CaminoVueRouter<CaminoRouteNames>>(() => {
     const filtres = { ...nonValidatedValues.value }
     // TODO 2023-08-21 regarder du côté des zod redefine si on peut pas faire ça directement dans le validator
     if ('etapesInclues' in nonValidatedValues.value) {
@@ -124,7 +125,7 @@ export const Filters = defineComponent((props: Props) => {
       filtres.etapesExclues = JSON.stringify(nonValidatedValues.value.etapesExclues)
     }
 
-    return { name: props.route.name ?? undefined, query: { ...props.route.query, page: 1, ...filtres } }
+    return { name: props.route.name ?? undefined, query: { ...props.route.query, page: 1, ...filtres }, params: {} } as CaminoVueRouter<CaminoRouteNames>
   })
 
   onBeforeRouteLeave(() => {

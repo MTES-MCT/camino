@@ -58,10 +58,24 @@ const apiClient: Pick<ApiClient, 'getActivites' | 'titresRechercherByNom' | 'get
   },
 }
 
-export const NotConnected: StoryFn = () => <PureActivites entreprises={entreprises} user={null} apiClient={apiClient} currentRoute={{ name: 'activites', query: {} }} updateUrlQuery={updateUrlQuery} />
+export const NotConnected: StoryFn = () => (
+  <PureActivites entreprises={entreprises} user={null} apiClient={apiClient} currentRoute={{ name: 'activites', query: {}, params: {} }} updateUrlQuery={updateUrlQuery} />
+)
 export const Forbidden: StoryFn = () => (
-  <PureActivites entreprises={entreprises} user={{ ...testBlankUser, role: 'defaut' }} apiClient={apiClient} currentRoute={{ name: 'activites', query: {} }} updateUrlQuery={updateUrlQuery} />
+  <PureActivites
+    entreprises={entreprises}
+    user={{ ...testBlankUser, role: 'defaut' }}
+    apiClient={apiClient}
+    currentRoute={{ name: 'activites', query: {}, params: {} }}
+    updateUrlQuery={updateUrlQuery}
+  />
 )
 export const Full: StoryFn = () => (
-  <PureActivites entreprises={entreprises} user={{ ...testBlankUser, role: 'super' }} apiClient={apiClient} currentRoute={{ name: 'activites', query: {} }} updateUrlQuery={updateUrlQuery} />
+  <PureActivites
+    entreprises={entreprises}
+    user={{ ...testBlankUser, role: 'super' }}
+    apiClient={apiClient}
+    currentRoute={{ name: 'activites', query: {}, params: {} }}
+    updateUrlQuery={updateUrlQuery}
+  />
 )

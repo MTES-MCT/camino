@@ -1,18 +1,18 @@
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
-import { FunctionalComponent, HTMLAttributes } from 'vue'
-import { UseLinkOptions } from 'vue-router'
+import { HTMLAttributes } from 'vue'
 import { CaminoRouterLink } from '../../router/camino-router-link'
+import { CaminoRouteNames, CaminoVueRouter } from '@/router/routes'
 
-type DsfrTagProps = {
+type DsfrTagProps<T extends CaminoRouteNames> = {
   ariaLabel: string
   label?: string
   tagSize?: 'sm' | 'md'
   class?: HTMLAttributes['class']
   style?: HTMLAttributes['style']
-  to?: UseLinkOptions['to']
+  to?: CaminoVueRouter<T>
   onClicked?: () => void
 }
-export const DsfrTag: FunctionalComponent<DsfrTagProps> = props => {
+export const DsfrTag = <T extends CaminoRouteNames>(props: DsfrTagProps<T>) => {
   const classes = ['fr-tag', `fr-tag--${props.tagSize ?? 'md'}`, props.class]
 
   const clicked = (e: MouseEvent) => {

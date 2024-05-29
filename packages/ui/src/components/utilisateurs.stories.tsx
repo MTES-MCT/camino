@@ -70,13 +70,13 @@ export const Loading: StoryFn = () => (
       getUtilisateurs: () => new Promise(() => ({})),
     }}
     entreprises={[entreprise]}
-    currentRoute={{ name: 'utilisateurs', query: {} }}
+    currentRoute={{ name: 'utilisateurs', query: {}, params: {} }}
     updateUrlQuery={updateUrlQuery}
   />
 )
 
 export const NotConnected: StoryFn = () => (
-  <PureUtilisateurs entreprises={[entreprise]} user={null} apiClient={apiClientMock} currentRoute={{ name: 'utilisateurs', query: {} }} updateUrlQuery={updateUrlQuery} />
+  <PureUtilisateurs entreprises={[entreprise]} user={null} apiClient={apiClientMock} currentRoute={{ name: 'utilisateurs', query: {}, params: {} }} updateUrlQuery={updateUrlQuery} />
 )
 
 export const Forbidden: StoryFn = () => (
@@ -84,7 +84,7 @@ export const Forbidden: StoryFn = () => (
     entreprises={[entreprise]}
     user={{ ...testBlankUser, role: 'defaut' }}
     apiClient={apiClientMock}
-    currentRoute={{ name: 'utilisateurs', query: {} }}
+    currentRoute={{ name: 'utilisateurs', query: {}, params: {} }}
     updateUrlQuery={updateUrlQuery}
   />
 )
@@ -97,7 +97,7 @@ export const WithError: StoryFn = () => (
       ...apiClientMock,
       getUtilisateurs: () => Promise.reject(new Error('Cassé')),
     }}
-    currentRoute={{ name: 'utilisateurs', query: {} }}
+    currentRoute={{ name: 'utilisateurs', query: {}, params: {} }}
     updateUrlQuery={updateUrlQuery}
   />
 )
@@ -107,7 +107,7 @@ export const Connected: StoryFn = () => (
     entreprises={[entreprise]}
     user={{ ...testBlankUser, role: 'super' }}
     apiClient={apiClientMock}
-    currentRoute={{ name: 'utilisateurs', query: {} }}
+    currentRoute={{ name: 'utilisateurs', query: {}, params: {} }}
     updateUrlQuery={updateUrlQuery}
   />
 )

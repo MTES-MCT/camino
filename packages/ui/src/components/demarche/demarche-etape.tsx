@@ -199,7 +199,7 @@ export const DemarcheEtape = defineComponent<Props>(props => {
                 <DsfrLink
                   icon={'fr-icon-pencil-line'}
                   disabled={false}
-                  to={{ name: 'etape-edition', params: { id: props.etape.slug } }}
+                  to={{ name: 'etapeEdition', params: { id: props.etape.slug } }}
                   class="fr-mr-1v"
                   buttonType="secondary"
                   title="Modifier l’étape"

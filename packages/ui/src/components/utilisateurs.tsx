@@ -2,7 +2,7 @@ import { defineComponent, inject, ref } from 'vue'
 import { Liste, Params } from './_common/liste'
 import { User } from 'camino-common/src/roles'
 import { canReadUtilisateurs } from 'camino-common/src/permissions/utilisateurs'
-import { RouteLocationNormalizedLoaded, Router, useRouter } from 'vue-router'
+import { Router, useRouter } from 'vue-router'
 import { CaminoAccessError } from './error'
 import { utilisateursColonnes, utilisateursLignesBuild } from './utilisateurs/table'
 import { ApiClient, apiClient } from '../api/api-client'
@@ -10,11 +10,12 @@ import { TableRow } from './_ui/table'
 import { utilisateursDownloadFormats, utilisateursFiltresNames } from 'camino-common/src/filters'
 import { entreprisesKey, userKey } from '@/moi'
 import { Entreprise } from 'camino-common/src/entreprise'
+import { CaminoRouteLocation } from '@/router/routes'
 
 interface Props {
   user: User
   apiClient: Pick<ApiClient, 'getUtilisateurs' | 'titresRechercherByNom' | 'getTitresByIds'>
-  currentRoute: Pick<RouteLocationNormalizedLoaded, 'query' | 'name'>
+  currentRoute: CaminoRouteLocation
   updateUrlQuery: Pick<Router, 'push'>
   entreprises: Entreprise[]
 }

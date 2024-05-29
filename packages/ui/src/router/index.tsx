@@ -4,6 +4,7 @@ import { Dashboard } from '../components/dashboard'
 import { Titres } from '../components/titres'
 import { Alert } from '@/components/_ui/alert'
 import { isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools'
+import { CaminoRouteNames, routesDefinitions } from './routes'
 
 const DGTMStatsFull = async () => {
   const { DGTMStatsFull } = await import('../components/dashboard/dgtm-stats-full')
@@ -128,256 +129,129 @@ declare module 'vue-router' {
     title: string
   }
 }
-
-const routes = [
-  {
-    path: '/dashboard',
-    name: 'dashboard',
+const routes = {
+  dashboard: {
+    ...routesDefinitions.dashboard,
     component: Dashboard,
-    meta: {
-      title: 'Tableau de bord',
-      menuSection: 'dashboard',
-    },
   },
-  {
-    path: '/dashboard/dgtmstats',
-    name: 'Stats DGTM',
+  statsDGTM: {
+    ...routesDefinitions.statsDGTM,
     component: DGTMStatsFull,
-    meta: {
-      title: 'Statistiques de la DGTM',
-      menuSection: 'dashboard',
-    },
   },
-  {
-    path: '/titres',
-    name: 'titres',
+  titres: {
+    ...routesDefinitions.titres,
     component: Titres,
-    meta: {
-      title: 'Titres',
-      menuSection: 'titres',
-    },
   },
-  {
-    path: '/titres/creation',
-    name: 'titre-creation',
+  titreCreation: {
+    ...routesDefinitions.titreCreation,
     component: TitreCreation,
-    meta: {
-      title: "Création d'un titre",
-      menuSection: 'titres',
-    },
   },
-  {
-    path: '/titres/:id',
-    name: 'titre',
+  titre: {
+    ...routesDefinitions.titre,
     component: Titre,
-    meta: {
-      title: 'Détail du titre',
-      menuSection: 'titres',
-    },
   },
-  {
-    path: '/demarches',
-    name: 'demarches',
+  demarches: {
+    ...routesDefinitions.demarches,
     component: Demarches,
-    meta: {
-      title: 'Liste des démarches',
-      menuSection: 'demarches',
-    },
   },
-  {
-    path: '/demarches/:demarcheId',
-    name: 'demarche',
+  demarche: {
+    ...routesDefinitions.demarche,
     component: Demarche,
   },
-  {
-    path: '/travaux',
-    name: 'travaux',
+  travaux: {
+    ...routesDefinitions.travaux,
     component: Travaux,
-    meta: {
-      title: 'Liste des travaux',
-      menuSection: 'travaux',
-    },
   },
-  {
-    path: '/etapes/:id',
-    name: 'etape',
+  etape: {
+    ...routesDefinitions.etape,
     redirect: to => {
-      return { name: 'etape-edition', params: { id: to.params.id } }
+      return { name: 'etapeEdition', params: { id: to.params.id } }
     },
   },
-  {
-    path: '/etapes/creation',
-    name: 'etape-creation',
+  etapeCreation: {
+    ...routesDefinitions.etapeCreation,
     component: EtapeEdition,
-    meta: {
-      title: "Création d'une étape",
-      menuSection: 'titres',
-    },
   },
-  {
-    path: '/etapes/:id/edition',
-    name: 'etape-edition',
+  etapeEdition: {
+    ...routesDefinitions.etapeEdition,
     component: EtapeEdition,
-    meta: {
-      title: "Édition d'une étape",
-      menuSection: 'titres',
-    },
   },
-  {
-    path: '/utilisateurs',
-    name: 'utilisateurs',
+  utilisateurs: {
+    ...routesDefinitions.utilisateurs,
     component: Utilisateurs,
-    meta: {
-      title: 'Liste des utilisateurs',
-      menuSection: 'utilisateurs',
-    },
   },
-  {
-    path: '/utilisateurs/:id',
-    name: 'utilisateur',
+  utilisateur: {
+    ...routesDefinitions.utilisateur,
     component: Utilisateur,
-    meta: {
-      title: "Détail d'un utilisateur",
-      menuSection: 'utilisateurs',
-    },
   },
-  {
-    path: '/entreprises',
-    name: 'entreprises',
+  entreprises: {
+    ...routesDefinitions.entreprises,
     component: Entreprises,
-    meta: {
-      title: 'Liste des entreprises',
-      menuSection: 'entreprises',
-    },
   },
-  {
-    path: '/entreprises/:id',
-    name: 'entreprise',
+  entreprise: {
+    ...routesDefinitions.entreprise,
     component: Entreprise,
-    meta: {
-      title: "Détail d'une entreprise",
-      menuSection: 'entreprises',
-    },
   },
-  {
-    path: '/administrations',
-    name: 'administrations',
+  administrations: {
+    ...routesDefinitions.administrations,
     component: Administrations,
-    meta: {
-      title: 'Liste des administrations',
-      menuSection: 'administrations',
-    },
   },
-  {
-    path: '/administrations/:id',
-    name: 'administration',
+  administration: {
+    ...routesDefinitions.administration,
     component: Administration,
-    meta: {
-      title: "Détail d'une administration",
-      menuSection: 'administrations',
-    },
   },
-  {
-    path: '/metas',
-    name: 'metas',
+  metas: {
+    ...routesDefinitions.metas,
     component: Metas,
-    meta: {
-      title: 'Métas',
-      menuSection: 'metas',
-    },
   },
-  {
-    path: '/metas/:id',
-    name: 'meta',
+  meta: {
+    ...routesDefinitions.meta,
     component: Meta,
-    meta: {
-      title: "Détail d'une méta",
-      menuSection: 'metas',
-    },
   },
-  {
-    path: '/activites',
-    name: 'activites',
+  activites: {
+    ...routesDefinitions.activites,
     component: Activites,
-    meta: {
-      title: 'Liste des activités',
-      menuSection: 'activites',
-    },
   },
-  {
-    path: '/activites/:activiteId',
-    name: 'activite',
+  activite: {
+    ...routesDefinitions.activite,
     component: Activite,
-    meta: {
-      title: "Détail d'une activité",
-      menuSection: 'activites',
-    },
   },
-  {
-    path: '/activites/:activiteId/edition',
-    name: 'activite-edition',
+  activiteEdition: {
+    ...routesDefinitions.activiteEdition,
     component: ActiviteEdition,
-    meta: {
-      title: "Édition de l'activité",
-      menuSection: 'activites',
-    },
   },
-  {
-    path: '/statistiques/:tabId?',
-    name: 'statistiques',
+  statistiques: {
+    ...routesDefinitions.statistiques,
     component: Statistiques,
-    meta: {
-      menuSection: null,
-      title: 'Statistiques',
-    },
   },
-  {
-    path: '/journaux',
-    name: 'journaux',
+  journaux: {
+    ...routesDefinitions.journaux,
     component: Journaux,
-    meta: {
-      menuSection: 'journaux',
-      title: 'Journaux',
-    },
   },
   // url /stats : demande de Samuel
   // pour avoir une uniformité entre toutes les start-ups
-  {
-    path: '/stats',
-    name: 'statistiquesbetagouv',
+  statistiquesbetagouv: {
+    ...routesDefinitions.statistiquesbetagouv,
     redirect: 'statistiques',
   },
-  {
-    path: '/a-propos',
-    name: 'a-propos',
+  aPropos: {
+    ...routesDefinitions.aPropos,
     component: About,
-    meta: {
-      title: 'À propos',
-      menuSection: null,
-    },
   },
-  {
-    name: 'homepage',
-    path: '/',
+  homepage: {
+    ...routesDefinitions.homepage,
     redirect: { name: 'dashboard', replace: true },
   },
-  {
-    path: '/:pathMatch(.*)*',
-    name: 'erreur',
+  erreur: {
+    ...routesDefinitions.erreur,
     component: <Alert type="error" title="Page Introuvable" small={true} />,
-    meta: {
-      title: 'Erreur',
-      menuSection: null,
-    },
   },
-] as const satisfies Readonly<Omit<RouteRecordRaw, 'children'>[]>
-
-export type CaminoRoutePaths = (typeof routes)[number]['path']
+} as const satisfies { [key in CaminoRouteNames]: Readonly<Omit<RouteRecordRaw, 'children'>> }
 
 const history = createWebHistory()
 
 const router = createRouter({
-  routes: routes as Readonly<RouteRecordRaw[]>,
+  routes: Object.values(routes) as Readonly<RouteRecordRaw[]>,
   history,
   linkActiveClass: 'active',
   linkExactActiveClass: 'exact-active',

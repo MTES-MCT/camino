@@ -32,7 +32,7 @@ export const Utilisateur = defineComponent({
         window.location.replace(`/apiUrl/rest/utilisateurs/${userId}/delete`)
       } else {
         await utilisateurApiClient.removeUtilisateur(userId)
-        router.push({ name: 'utilisateurs' })
+        router.push({ name: 'utilisateurs', params: {} })
       }
     }
     const updateUtilisateur = async (utilisateur: UtilisateurToEdit) => {

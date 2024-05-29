@@ -1,6 +1,6 @@
 import { TablePagination, getInitialParams } from '../_ui/table-pagination'
 import { Filtres } from './filtres'
-import { RouteLocationNormalizedLoaded, Router } from 'vue-router'
+import { Router } from 'vue-router'
 import { Column, TableRow } from '../_ui/table'
 import { PageContentHeader, type Props as PageContentHeaderProps } from './page-header-content'
 import { computed, defineComponent, onMounted, ref, Ref } from 'vue'
@@ -10,6 +10,7 @@ import { CaminoFiltre, caminoFiltres } from 'camino-common/src/filters'
 import { ApiClient } from '../../api/api-client'
 import { AsyncData } from '../../api/client-rest'
 import { Entreprise } from 'camino-common/src/entreprise'
+import { CaminoRouteLocation } from '@/router/routes'
 
 export type Params<ColumnId extends string> = {
   colonne: ColumnId
@@ -28,7 +29,7 @@ type Props<ColumnId extends string> = {
   listeFiltre: ListeFiltreProps | null
   colonnes: readonly Column<ColumnId>[]
   getData: (params: Params<ColumnId>) => Promise<{ values: TableRow<ColumnId>[]; total: number }>
-  route: Pick<RouteLocationNormalizedLoaded, 'query' | 'name'>
+  route: CaminoRouteLocation
 } & PageContentHeaderProps
 
 export const Liste = defineComponent(<ColumnId extends string>(props: Props<ColumnId>) => {

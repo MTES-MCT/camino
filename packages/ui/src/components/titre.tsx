@@ -373,7 +373,7 @@ export const PureTitre = defineComponent<Props>(props => {
                   icon={null}
                   title="Journaux du titre"
                   label="Journaux du titre"
-                  to={{ name: 'journaux', query: { [caminoFiltres.titresIds.id]: titre.id } }}
+                  to={{ name: 'journaux', params: {}, query: { [caminoFiltres.titresIds.id]: titre.id } }}
                 />
               ) : null}
             </div>
@@ -404,7 +404,7 @@ export const PureTitre = defineComponent<Props>(props => {
                             disabled={false}
                             icon={null}
                             title={`Remplir ${(titre.nb_activites_to_do ?? 0) > 1 ? "les rapports d'activités" : "le rapport d'activité"}`}
-                            to={{ name: 'activites', query: { [caminoFiltres.titresIds.id]: titre.id, ...activitesSort } }}
+                            to={{ name: 'activites', params: {}, query: { [caminoFiltres.titresIds.id]: titre.id, ...activitesSort } }}
                           />
                         </>
                       }
@@ -418,7 +418,7 @@ export const PureTitre = defineComponent<Props>(props => {
                       title="Consulter les rapports d'activités"
                       label="Consulter les rapports d'activités"
                       buttonType="secondary"
-                      to={{ name: 'activites', query: { [caminoFiltres.titresIds.id]: titre.id, ...activitesSort } }}
+                      to={{ name: 'activites', params: {}, query: { [caminoFiltres.titresIds.id]: titre.id, ...activitesSort } }}
                     />
                   ) : null}
                 </>
