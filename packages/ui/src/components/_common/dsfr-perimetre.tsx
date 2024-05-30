@@ -1,7 +1,6 @@
 import { defineComponent, HTMLAttributes, defineAsyncComponent, computed, DeepReadonly } from 'vue'
 import { Tab, Tabs } from '../_ui/tabs'
 import { TitreSlug } from 'camino-common/src/validators/titres'
-import { Router } from 'vue-router'
 import { FeatureCollection, FeatureCollectionForages, FeatureCollectionPoints, FeatureMultiPolygon } from 'camino-common/src/perimetre'
 import { DsfrLink } from '../_ui/dsfr-button'
 import { contentTypes } from 'camino-common/src/rest'
@@ -11,6 +10,7 @@ import { OmitDistributive, isNotNullNorUndefined } from 'camino-common/src/types
 import { GeoSystemeId } from 'camino-common/src/static/geoSystemes'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { KM2 } from 'camino-common/src/number'
+import { CaminoRouter } from '@/typings/vue-router'
 export type TabId = 'carte' | 'points'
 
 type Props = {
@@ -29,7 +29,7 @@ type Props = {
   initTab?: TabId
   class?: HTMLAttributes['class']
 } & (
-  | { calculateNeighbours: true; router: Pick<Router, 'push'>; apiClient: Pick<ApiClient, 'getTitresWithPerimetreForCarte' | 'getGeojsonByGeoSystemeId'> }
+  | { calculateNeighbours: true; router: Pick<CaminoRouter, 'push'>; apiClient: Pick<ApiClient, 'getTitresWithPerimetreForCarte' | 'getGeojsonByGeoSystemeId'> }
   | { apiClient: Pick<ApiClient, 'getGeojsonByGeoSystemeId'>; calculateNeighbours: false }
 )
 

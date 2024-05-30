@@ -7,7 +7,7 @@ import { GranulatsMarins } from './statistiques/granulats-marins'
 import { MinerauxMetauxMetropole } from './statistiques/mineraux-metaux-metropole'
 import { Globales } from './statistiques/globales'
 import { z } from 'zod'
-import type { Router } from 'vue-router'
+import { CaminoRouter } from '@/typings/vue-router'
 
 const tabIds = ['globales', 'guyane', 'granulats-marins', 'mineraux-metaux-metropole'] as const
 const tabIdValidator = z.enum(tabIds)
@@ -34,7 +34,7 @@ const tabs: NonEmptyArray<Tab<TabId>> = [
   },
 ]
 
-const routerReplaceTabId = (newTabId: TabId, router: Router) => {
+const routerReplaceTabId = (newTabId: TabId, router: CaminoRouter) => {
   const routeName = router.currentRoute.value.name
   if (isNotNullNorUndefined(routeName)) {
     router.replace({ name: routeName, params: { tabId: newTabId } })
@@ -43,8 +43,7 @@ const routerReplaceTabId = (newTabId: TabId, router: Router) => {
 
 export const Statistiques = defineComponent(() => {
   const router = useRouter()
-
-  const initTabIdParsed = tabIdValidator.safeParse(router.currentRoute.value.params.tabId)
+  const initTabIdParsed = tabIdValidator.safeParse('tabId' in router.currentRoute.value.params ? router.currentRoute.value.params.tabId : 'globales')
   const initTab: TabId = initTabIdParsed.success ? initTabIdParsed.data : 'globales'
   routerReplaceTabId(initTab, router)
 

@@ -1,5 +1,5 @@
 import { computed, defineComponent, onMounted, ref, watch, inject } from 'vue'
-import { Router, useRouter } from 'vue-router'
+import { useRouter } from 'vue-router'
 import { LoadingElement } from './_ui/functional-loader'
 import { DemarcheEtapeFondamentale, DemarcheSlug, demarcheSlugValidator } from 'camino-common/src/demarche'
 import { AsyncData } from '@/api/client-rest'
@@ -40,6 +40,7 @@ import { PhaseWithAlterations, phaseWithAlterations } from './titre/phase'
 import { SecteursMaritimes } from 'camino-common/src/static/facades'
 import { userKey, entreprisesKey } from '@/moi'
 import { Entreprise } from 'camino-common/src/entreprise'
+import { CaminoRouter } from '@/typings/vue-router'
 
 const activitesSort: TableSortEvent = {
   colonne: activitesColonneIdAnnee,
@@ -53,11 +54,15 @@ export const Titre = defineComponent(() => {
   const entreprises = inject(entreprisesKey, ref([]))
 
   const titreIdOrSlug = computed<TitreIdOrSlug | null>(() => {
-    const idOrSlug = Array.isArray(router.currentRoute.value.params.id) ? router.currentRoute.value.params.id[0] : router.currentRoute.value.params.id
-    const validated = titreIdOrSlugValidator.safeParse(idOrSlug)
+    const currentRoute = router.currentRoute.value
 
-    if (validated.success) {
-      return validated.data
+    if (currentRoute.name === 'titre' && 'id' in currentRoute.params) {
+      const idOrSlug = Array.isArray(currentRoute.params.id) ? currentRoute.params.id[0] : currentRoute.params.id
+      const validated = titreIdOrSlugValidator.safeParse(idOrSlug)
+
+      if (validated.success) {
+        return validated.data
+      }
     }
 
     return null
@@ -106,7 +111,7 @@ interface Props {
     | 'deleteDemarche'
     | 'getGeojsonByGeoSystemeId'
   >
-  router: Pick<Router, 'push' | 'replace'>
+  router: Pick<CaminoRouter, 'push' | 'replace'>
   initTab?: TabId
 }
 
@@ -121,12 +126,14 @@ export const PureTitre = defineComponent<Props>(props => {
   }
 
   const reloadAfterRemoveTitre = () => {
-    props.router.push({ name: 'homepage' })
+    props.router.push({ name: 'homepage', params: {} })
   }
 
   const demarcheCreatedOrUpdated = async (demarcheSlug: DemarcheSlug) => {
-    await retrieveTitre()
-    props.router.push({ name: 'titre', params: { id: props.titreIdOrSlug }, query: { demarcheSlug } })
+    if (props.titreIdOrSlug !== null) {
+      await retrieveTitre()
+      props.router.push({ name: 'titre', params: { id: props.titreIdOrSlug }, query: { demarcheSlug } })
+    }
   }
 
   const demarcheDeleted = async () => {

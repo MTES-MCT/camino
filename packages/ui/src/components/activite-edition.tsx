@@ -13,22 +13,32 @@ import { SectionsEdit } from './_common/new-sections-edit'
 import { DsfrButton, DsfrLink } from './_ui/dsfr-button'
 import { capitalize } from 'camino-common/src/strings'
 import { Alert } from './_ui/alert'
+import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 
 export const ActiviteEdition = defineComponent(() => {
   const router = useRouter()
 
-  const activiteId = computed<ActiviteIdOrSlug>(() => {
-    return activiteIdOrSlugValidator.parse(router.currentRoute.value.params.activiteId)
+  const activiteId = computed<ActiviteIdOrSlug | null>(() => {
+    const currentRoute = router.currentRoute.value
+    // TODO 2024-05-30: on ne devrait pas avoir à mettre la seconde condition, à voir pourquoi activiteId n'est pas inféré automatiquement
+    if (currentRoute.name === 'activite' && 'activiteId' in currentRoute.params) {
+      return activiteIdOrSlugValidator.parse(currentRoute.params.activiteId)
+    }
+    return null
   })
 
   return () => (
-    <PureActiviteEdition
-      apiClient={apiClient}
-      goBack={(activiteId: ActiviteId): void => {
-        router.push({ name: 'activite', params: { activiteId } })
-      }}
-      activiteId={activiteId.value}
-    />
+    <>
+      {isNotNullNorUndefined(activiteId.value) ? (
+        <PureActiviteEdition
+          apiClient={apiClient}
+          goBack={(activiteId: ActiviteId): void => {
+            router.push({ name: 'activite', params: { activiteId } })
+          }}
+          activiteId={activiteId.value}
+        />
+      ) : null}
+    </>
   )
 })
 

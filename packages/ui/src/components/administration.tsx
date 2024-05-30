@@ -22,7 +22,7 @@ import { capitalize } from 'camino-common/src/strings'
 import { Alert } from './_ui/alert'
 
 export const Administration = defineComponent(() => {
-  const route = useRoute()
+  const route = useRoute<'administration'>()
 
   const user = inject(userKey)
 

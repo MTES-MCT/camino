@@ -1,5 +1,5 @@
 import { DeepReadonly, computed, defineComponent, inject, onMounted, ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { ApiClient, apiClient } from '../api/api-client'
 import { DemarcheId, DemarcheIdOrSlug, demarcheIdOrSlugValidator } from 'camino-common/src/demarche'
 import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
@@ -23,14 +23,15 @@ import { CaminoAccessError } from './error'
 
 export const EtapeEdition = defineComponent(() => {
   const router = useRouter()
+  const route = useRoute<'etapeEdition'>()
   const user = inject(userKey)
   const entreprises = inject(entreprisesKey, ref([]))
 
   const demarcheIdOrSlug = computed<DemarcheIdOrSlug | null>(() => {
-    return demarcheIdOrSlugValidator.nullable().parse(router.currentRoute.value.query['demarche-id'] ?? null)
+    return demarcheIdOrSlugValidator.nullable().parse(route.query['demarche-id'] ?? null)
   })
   const etapeIdOrSlug = computed<EtapeIdOrSlug | null>(() => {
-    return etapeIdOrSlugValidator.nullable().parse(router.currentRoute.value.params.id ?? null)
+    return etapeIdOrSlugValidator.nullable().parse(route.params.id ?? null)
   })
 
   const goToDemarche = (demarcheId: DemarcheId) => {

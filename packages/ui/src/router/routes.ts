@@ -1,4 +1,4 @@
-import type { LocationQueryRaw, RouteLocationNormalizedLoaded, RouteRecordRaw } from 'vue-router'
+import type { LocationQueryRaw, RouteRecordRaw } from 'vue-router'
 
 // prettier-ignore
 const ROUTES = ['dashboard','statsDGTM','titres','titreCreation','titre','demarches','demarche','travaux','etape','etapeCreation','etapeEdition','utilisateurs','utilisateur','entreprises','entreprise','administrations','administration','metas','meta','activites','activite','activiteEdition','statistiques','journaux','statistiquesbetagouv','aPropos','homepage','erreur' ] as const
@@ -216,6 +216,12 @@ export const routesDefinitions = {
   },
 } as const satisfies { [key in CaminoRouteNames]: CaminoRoute<key> }
 export type CaminoRouteNames = (typeof ROUTES)[number]
-type RouterParamsNames<url> = url extends `${infer start}/${infer rest}` ? RouterParamsNames<start> & RouterParamsNames<rest> : url extends `:${infer param}` ? { [k in param]: string } : {} // eslint-disable-line @typescript-eslint/ban-types
-export type CaminoVueRouter<T extends CaminoRouteNames> = { name: T; params: RouterParamsNames<(typeof routesDefinitions)[T]['path']>; query?: LocationQueryRaw }
-export type CaminoRouteLocation = Pick<RouteLocationNormalizedLoaded, 'query' | 'name' | 'params'>
+type RouterParamsNames<url> = url extends `${infer start}/${infer rest}`
+  ? RouterParamsNames<start> & RouterParamsNames<rest>
+  : url extends `:${infer param}?`
+    ? { [k in param]?: string }
+    : url extends `:${infer param}`
+      ? { [k in param]: string }
+      : {} // eslint-disable-line @typescript-eslint/ban-types
+export type CaminoVueRoute<T extends CaminoRouteNames> = { name: T; params: RouterParamsNames<(typeof routesDefinitions)[T]['path']>; query?: LocationQueryRaw }
+export type CaminoRouteLocation = Required<CaminoVueRoute<CaminoRouteNames>>

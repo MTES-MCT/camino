@@ -1,11 +1,11 @@
 import { computed, defineComponent, watch } from 'vue'
 import { CaminoRouterLink, routerQueryToString } from '@/router/camino-router-link'
-import { RouteLocationNormalizedLoaded, onBeforeRouteLeave } from 'vue-router'
+import { onBeforeRouteLeave } from 'vue-router'
 import { AsyncData } from '../../api/client-rest'
 import { DemarcheIdOrSlug } from 'camino-common/src/demarche'
 import { NonEmptyArray } from 'camino-common/src/typescript-tools'
 import type { JSX } from 'vue/jsx-runtime'
-import { CaminoRouteLocation, CaminoRouteNames, CaminoVueRouter } from '@/router/routes'
+import { CaminoRouteLocation } from '@/router/routes'
 type SortOrder = 'asc' | 'desc'
 
 export interface TableSortEvent {
@@ -70,7 +70,7 @@ const isColumnId = <ColumnId extends string>(columns: readonly Column<ColumnId>[
   return columns.some(({ id }) => value === id)
 }
 
-export const getSortColumnFromRoute = <ColumnId extends string>(route: Pick<RouteLocationNormalizedLoaded, 'query'>, columns: readonly Column<ColumnId>[]): ColumnId => {
+export const getSortColumnFromRoute = <ColumnId extends string>(route: Pick<CaminoRouteLocation, 'query'>, columns: readonly Column<ColumnId>[]): ColumnId => {
   const value = routerQueryToString(route.query.colonne, columns[0].id)
   if (isColumnId(columns, value)) {
     return value
@@ -78,7 +78,7 @@ export const getSortColumnFromRoute = <ColumnId extends string>(route: Pick<Rout
     return columns[0].id
   }
 }
-export const getSortOrderFromRoute = (route: Pick<RouteLocationNormalizedLoaded, 'query'>): 'asc' | 'desc' => {
+export const getSortOrderFromRoute = (route: Pick<CaminoRouteLocation, 'query'>): 'asc' | 'desc' => {
   const value = routerQueryToString(route.query.ordre, 'asc')
   if (value !== 'asc' && value !== 'desc') {
     return 'asc'
@@ -116,13 +116,11 @@ export const Table = defineComponent(
                     ) : sortParams.value.column === col.id ? (
                       <CaminoRouterLink
                         class={['fr-link', 'fr-link--icon-right', sortParams.value.order === 'asc' ? 'fr-icon-arrow-down-fill' : 'fr-icon-arrow-up-fill']}
-                        to={
-                          {
-                            name: props.route.name ?? undefined,
-                            query: { ...props.route.query, page: 1, ordre: sortParams.value.order === 'asc' ? 'desc' : 'asc' },
-                            params: props.route.params,
-                          } as CaminoVueRouter<CaminoRouteNames>
-                        }
+                        to={{
+                          name: props.route.name ?? undefined,
+                          query: { ...props.route.query, page: 1, ordre: sortParams.value.order === 'asc' ? 'desc' : 'asc' },
+                          params: props.route.params,
+                        }}
                         isDisabled={false}
                         title={sortParams.value.order === 'asc' ? `Trier par la colonne ${col.name} par ordre descendant` : `Trier par la colonne ${col.name} par ordre ascendant`}
                       >
@@ -132,13 +130,11 @@ export const Table = defineComponent(
                       <CaminoRouterLink
                         class={['fr-link']}
                         isDisabled={false}
-                        to={
-                          {
-                            name: props.route.name ?? undefined,
-                            query: { ...props.route.query, page: 1, colonne: col.id, ordre: 'asc' },
-                            params: props.route.params,
-                          } as CaminoVueRouter<CaminoRouteNames>
-                        }
+                        to={{
+                          name: props.route.name ?? undefined,
+                          query: { ...props.route.query, page: 1, colonne: col.id, ordre: 'asc' },
+                          params: props.route.params,
+                        }}
                         title={`Trier par la colonne ${col.name}`}
                       >
                         {col.name === '' ? '-' : col.name}

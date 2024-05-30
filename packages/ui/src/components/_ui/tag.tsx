@@ -1,7 +1,7 @@
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { HTMLAttributes } from 'vue'
 import { CaminoRouterLink } from '../../router/camino-router-link'
-import { CaminoRouteNames, CaminoVueRouter } from '@/router/routes'
+import { CaminoRouteNames, CaminoVueRoute } from '@/router/routes'
 
 type DsfrTagProps<T extends CaminoRouteNames> = {
   ariaLabel: string
@@ -9,7 +9,7 @@ type DsfrTagProps<T extends CaminoRouteNames> = {
   tagSize?: 'sm' | 'md'
   class?: HTMLAttributes['class']
   style?: HTMLAttributes['style']
-  to?: CaminoVueRouter<T>
+  to?: CaminoVueRoute<T>
   onClicked?: () => void
 }
 export const DsfrTag = <T extends CaminoRouteNames>(props: DsfrTagProps<T>) => {

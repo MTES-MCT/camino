@@ -3,9 +3,9 @@ import { Meta, StoryFn } from '@storybook/vue3'
 import { action } from '@storybook/addon-actions'
 import { ApiClient } from '@/api/api-client'
 import { Entreprise, entrepriseIdValidator, newEntrepriseId } from 'camino-common/src/entreprise'
-import { RouteLocationRaw } from 'vue-router'
 import { testBlankUser } from 'camino-common/src/tests-utils'
 import { toCaminoAnnee } from 'camino-common/src/date'
+import { CaminoRouter } from '@/typings/vue-router'
 
 const meta: Meta = {
   title: 'Components/Activites',
@@ -17,7 +17,7 @@ export default meta
 const getActivitesAction = action('getActivites')
 const pushRouteAction = action('pushRoute')
 
-const updateUrlQuery = { push: (values: RouteLocationRaw) => Promise.resolve(pushRouteAction(values)) }
+const updateUrlQuery: Pick<CaminoRouter, 'push'> = { push: values => Promise.resolve(pushRouteAction(values)) }
 
 const entreprises: Entreprise[] = [
   { id: newEntrepriseId('id'), nom: 'Entreprise1', legal_siren: null },

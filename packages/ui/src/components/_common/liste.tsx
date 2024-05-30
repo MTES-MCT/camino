@@ -1,6 +1,5 @@
 import { TablePagination, getInitialParams } from '../_ui/table-pagination'
 import { Filtres } from './filtres'
-import { Router } from 'vue-router'
 import { Column, TableRow } from '../_ui/table'
 import { PageContentHeader, type Props as PageContentHeaderProps } from './page-header-content'
 import { computed, defineComponent, onMounted, ref, Ref } from 'vue'
@@ -11,6 +10,7 @@ import { ApiClient } from '../../api/api-client'
 import { AsyncData } from '../../api/client-rest'
 import { Entreprise } from 'camino-common/src/entreprise'
 import { CaminoRouteLocation } from '@/router/routes'
+import { CaminoRouter } from '@/typings/vue-router'
 
 export type Params<ColumnId extends string> = {
   colonne: ColumnId
@@ -21,7 +21,7 @@ export type Params<ColumnId extends string> = {
 
 type ListeFiltreProps = {
   filtres: readonly CaminoFiltre[]
-  updateUrlQuery: Pick<Router, 'push'>
+  updateUrlQuery: Pick<CaminoRouter, 'push'>
   apiClient: Pick<ApiClient, 'titresRechercherByNom' | 'getTitresByIds'>
   entreprises: Entreprise[]
 }

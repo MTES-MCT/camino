@@ -6,7 +6,6 @@ import { DemarcheStatut } from '@/components/_common/demarche-statut'
 import { isNonEmptyArray, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined, onlyUnique } from 'camino-common/src/typescript-tools'
 import { DemarcheEtape } from '@/components/demarche/demarche-etape'
 import { getAdministrationsLocales } from 'camino-common/src/administrations'
-import { Router } from 'vue-router'
 import { User } from 'camino-common/src/roles'
 import { DsfrPerimetre, TabId } from '@/components/_common/dsfr-perimetre'
 import { EtapePropAdministrationsItem, EtapePropEntreprisesItem, EtapePropItem } from '@/components/etape/etape-prop-item'
@@ -24,6 +23,7 @@ import { SDOMZones } from 'camino-common/src/static/sdom'
 import { Entreprise, EntrepriseId } from 'camino-common/src/entreprise'
 import { isDemarcheStatutNonStatue, isDemarcheStatutNonValide } from 'camino-common/src/static/demarchesStatuts'
 import { capitalize } from 'camino-common/src/strings'
+import { CaminoRouter } from '@/typings/vue-router'
 
 type Props = {
   titre: Pick<TitreGet, 'id' | 'slug' | 'titre_type_id' | 'titre_statut_id' | 'nom'>
@@ -32,7 +32,7 @@ type Props = {
   apiClient: Pick<ApiClient, 'deleteEtape' | 'deposeEtape' | 'getTitresWithPerimetreForCarte' | 'createDemarche' | 'updateDemarche' | 'deleteDemarche' | 'getGeojsonByGeoSystemeId'>
   demarcheCreatedOrUpdated: (demarcheSlug: DemarcheSlug) => Promise<void>
   demarcheDeleted: () => Promise<void>
-  router: Pick<Router, 'push'>
+  router: Pick<CaminoRouter, 'push'>
   user: User
   entreprises: Entreprise[]
   initTab?: TabId

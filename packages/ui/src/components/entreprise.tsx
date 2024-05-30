@@ -21,8 +21,8 @@ import { Alert } from './_ui/alert'
 
 export const Entreprise = defineComponent({
   setup() {
-    const vueRoute = useRoute()
-    const entrepriseId = ref<EntrepriseId | undefined>(newEntrepriseId(vueRoute.params.id.toString()))
+    const vueRoute = useRoute<'entreprise'>()
+    const entrepriseId = ref<EntrepriseId | undefined>(newEntrepriseId(vueRoute.params.id))
     const user = inject(userKey)
     const entreprises = inject(entreprisesKey, ref([]))
 
@@ -30,7 +30,7 @@ export const Entreprise = defineComponent({
       () => vueRoute.params.id,
       newRoute => {
         if (vueRoute.name === 'entreprise' && isNotNullNorUndefined(newRoute)) {
-          const newEid = newEntrepriseId(vueRoute.params.id.toString())
+          const newEid = newEntrepriseId(vueRoute.params.id)
           if (entrepriseId.value !== newEid) {
             entrepriseId.value = newEid
           }

@@ -1,11 +1,11 @@
 import { Meta, StoryFn } from '@storybook/vue3'
 import { PurePage } from './page'
 import { action } from '@storybook/addon-actions'
-import { RouteLocationRaw } from 'vue-router'
 import { ApiClient } from '@/api/api-client'
 import { filtres as demarchesFiltres } from '../demarches'
 import { filtres as travauxFiltres } from '../travaux'
 import { demarcheSlugValidator } from 'camino-common/src/demarche'
+import { CaminoRouter } from '@/typings/vue-router'
 
 const meta: Meta = {
   title: 'Components/Demarches/Page',
@@ -17,7 +17,7 @@ export default meta
 const getDemarchesAction = action('getDemarches')
 const pushRouteAction = action('pushRoute')
 
-const updateUrlQuery = { push: (values: RouteLocationRaw) => Promise.resolve(pushRouteAction(values)) }
+const updateUrlQuery: Pick<CaminoRouter, 'push'> = { push: values => Promise.resolve(pushRouteAction(values)) }
 
 const apiClient: Pick<ApiClient, 'getDemarches' | 'titresRechercherByNom' | 'getTitresByIds'> = {
   titresRechercherByNom: () => {

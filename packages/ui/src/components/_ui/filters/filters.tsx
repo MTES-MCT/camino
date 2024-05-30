@@ -7,7 +7,7 @@ import { ButtonIcon } from '@/components/_ui/button-icon'
 import { FiltresEtapes, FilterEtapeValue } from '../../demarches/filtres-etapes'
 import { EtapesStatuts } from 'camino-common/src/static/etapesStatuts'
 import { EtapeTypeId, EtapesTypes } from 'camino-common/src/static/etapesTypes'
-import { Router, onBeforeRouteLeave } from 'vue-router'
+import { onBeforeRouteLeave } from 'vue-router'
 import {
   AutocompleteCaminoFiltres,
   CheckboxesCaminoFiltres,
@@ -30,14 +30,15 @@ import { LoadingElement } from '../functional-loader'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { Entreprise } from 'camino-common/src/entreprise'
 import { DeprecatedAccordion } from '../accordion'
-import { CaminoRouteLocation, CaminoRouteNames, CaminoVueRouter } from '@/router/routes'
+import { CaminoRouteLocation, CaminoRouteNames, CaminoVueRoute } from '@/router/routes'
+import { CaminoRouter } from '@/typings/vue-router'
 
 type FormatedLabel = { id: CaminoFiltre; name: string; value: string | string[] | FilterEtapeValue; valueName?: string | string[] }
 
 type Props = {
   filters: readonly CaminoFiltre[]
   route: CaminoRouteLocation
-  updateUrlQuery: Pick<Router, 'push'>
+  updateUrlQuery: Pick<CaminoRouter, 'push'>
   subtitle?: string
   opened?: boolean
   validate: (param: { [key in Props['filters'][number]]: (typeof caminoFiltres)[key]['validator']['_output'] }) => void
@@ -115,7 +116,7 @@ export const Filters = defineComponent((props: Props) => {
     return props.opened ?? false
   })
 
-  const urlQuery = computed<CaminoVueRouter<CaminoRouteNames>>(() => {
+  const urlQuery = computed<CaminoVueRoute<CaminoRouteNames>>(() => {
     const filtres = { ...nonValidatedValues.value }
     // TODO 2023-08-21 regarder du côté des zod redefine si on peut pas faire ça directement dans le validator
     if ('etapesInclues' in nonValidatedValues.value) {
@@ -125,7 +126,7 @@ export const Filters = defineComponent((props: Props) => {
       filtres.etapesExclues = JSON.stringify(nonValidatedValues.value.etapesExclues)
     }
 
-    return { name: props.route.name ?? undefined, query: { ...props.route.query, page: 1, ...filtres }, params: {} } as CaminoVueRouter<CaminoRouteNames>
+    return { name: props.route.name ?? undefined, query: { ...props.route.query, page: 1, ...filtres }, params: {} }
   })
 
   onBeforeRouteLeave(() => {

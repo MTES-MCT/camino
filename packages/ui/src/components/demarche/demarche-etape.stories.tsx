@@ -4,7 +4,6 @@ import { EtapesTypesEtapesStatuts } from 'camino-common/src/static/etapesTypesEt
 import { toCaminoDate } from 'camino-common/src/date'
 import { Entreprise, EtapeEntrepriseDocument, entrepriseDocumentIdValidator, entrepriseIdValidator } from 'camino-common/src/entreprise'
 import { titreSlugValidator } from 'camino-common/src/validators/titres'
-import { Router } from 'vue-router'
 import { action } from '@storybook/addon-actions'
 import { testBlankUser } from 'camino-common/src/tests-utils'
 import { EtapeDocument, etapeDocumentIdValidator, etapeIdValidator, etapeSlugValidator } from 'camino-common/src/etape'
@@ -12,6 +11,7 @@ import { DOCUMENTS_TYPES_IDS } from 'camino-common/src/static/documentsTypes'
 import { ApiClient } from '@/api/api-client'
 import { FeatureMultiPolygon } from 'camino-common/src/perimetre'
 import { km2Validator } from 'camino-common/src/number'
+import { CaminoRouter } from '@/typings/vue-router'
 
 const meta: Meta = {
   title: 'Components/Demarche/Etape',
@@ -53,7 +53,7 @@ const apiClient: Pick<ApiClient, 'deleteEtape' | 'deposeEtape' | 'getGeojsonByGe
   },
 }
 
-const routerPushMock: Pick<Router, 'push'> = {
+const routerPushMock: Pick<CaminoRouter, 'push'> = {
   push: to => {
     routerPushAction(to)
 

@@ -1,6 +1,6 @@
 import { defineComponent, inject, ref } from 'vue'
 import { Liste, Params } from './_common/liste'
-import { Router, useRouter } from 'vue-router'
+import { useRouter } from 'vue-router'
 import { canCreateEntreprise } from 'camino-common/src/permissions/utilisateurs'
 import { User } from 'camino-common/src/roles'
 import { EntrepriseAddPopup } from './entreprise/add-popup'
@@ -14,6 +14,7 @@ import { entreprisesKey, userKey } from '@/moi'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { getWithJson } from '@/api/client-rest'
 import { CaminoRouteLocation } from '@/router/routes'
+import { CaminoRouter } from '@/typings/vue-router'
 
 const entreprisesColonnes = [
   {
@@ -32,7 +33,7 @@ type ColonneId = (typeof entreprisesColonnes)[number]['id']
 
 interface Props {
   currentRoute: CaminoRouteLocation
-  updateUrlQuery: Pick<Router, 'push'>
+  updateUrlQuery: Pick<CaminoRouter, 'push'>
   apiClient: Pick<ApiClient, 'creerEntreprise' | 'titresRechercherByNom' | 'getTitresByIds'>
   entreprises: Entreprise[]
   user: User

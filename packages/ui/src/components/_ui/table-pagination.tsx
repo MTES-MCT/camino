@@ -1,10 +1,10 @@
 import { computed, defineComponent, FunctionalComponent, HTMLAttributes, Ref, ref, watch } from 'vue'
 import { Column, getSortColumnFromRoute, getSortOrderFromRoute, Table, TableRow } from './table'
-import { onBeforeRouteLeave, RouteLocationNormalizedLoaded } from 'vue-router'
+import { onBeforeRouteLeave } from 'vue-router'
 import { CaminoRouterLink, routerQueryToNumber } from '@/router/camino-router-link'
 import { AsyncData } from '../../api/client-rest'
 import { LoadingElement } from './functional-loader'
-import { CaminoRouteLocation, CaminoRouteNames, CaminoVueRouter } from '@/router/routes'
+import { CaminoRouteLocation } from '@/router/routes'
 
 interface Props<ColumnId> {
   columns: readonly Column<ColumnId>[]
@@ -17,7 +17,7 @@ interface Props<ColumnId> {
   updateParams: (params: { page: number; colonne: ColumnId; ordre: 'asc' | 'desc' }) => void
 }
 
-export const getInitialParams = <ColumnId extends string>(route: Pick<RouteLocationNormalizedLoaded, 'query'>, columns: readonly Column<ColumnId>[]) => {
+export const getInitialParams = <ColumnId extends string>(route: Pick<CaminoRouteLocation, 'query'>, columns: readonly Column<ColumnId>[]) => {
   return {
     colonne: getSortColumnFromRoute(route, columns),
     page: getPageNumberFromRoute(route),
@@ -25,7 +25,7 @@ export const getInitialParams = <ColumnId extends string>(route: Pick<RouteLocat
   }
 }
 
-const getPageNumberFromRoute = (route: Pick<RouteLocationNormalizedLoaded, 'query'>) => routerQueryToNumber(route.query.page, 1)
+const getPageNumberFromRoute = (route: Pick<CaminoRouteLocation, 'query'>) => routerQueryToNumber(route.query.page, 1)
 export const TablePagination = defineComponent(<ColumnId extends string>(props: Props<ColumnId>) => {
   watch(
     () => props.data,
@@ -99,7 +99,7 @@ const Pagination: FunctionalComponent<PaginationProps> = props => {
             <CaminoRouterLink
               isDisabled={false}
               class="fr-pagination__link fr-pagination__link--first"
-              to={{ name: props.route.name ?? undefined, query: { ...props.route.query, page: 1 }, params: props.route.params } as CaminoVueRouter<CaminoRouteNames>}
+              to={{ name: props.route.name ?? undefined, query: { ...props.route.query, page: 1 }, params: props.route.params }}
               title="Première page"
             >
               Première page
@@ -115,7 +115,7 @@ const Pagination: FunctionalComponent<PaginationProps> = props => {
             <CaminoRouterLink
               isDisabled={false}
               class="fr-pagination__link fr-pagination__link--prev fr-pagination__link--lg-label"
-              to={{ name: props.route.name ?? undefined, query: { ...props.route.query, page: currentActivePageNumber - 1 }, params: props.route.params } as CaminoVueRouter<CaminoRouteNames>}
+              to={{ name: props.route.name ?? undefined, query: { ...props.route.query, page: currentActivePageNumber - 1 }, params: props.route.params }}
               title="Page précédente"
             >
               Page précédente
@@ -151,7 +151,7 @@ const Pagination: FunctionalComponent<PaginationProps> = props => {
             <CaminoRouterLink
               isDisabled={false}
               class="fr-pagination__link fr-pagination__link--next fr-pagination__link--lg-label"
-              to={{ name: props.route.name ?? undefined, params: props.route.params, query: { ...props.route.query, page: currentActivePageNumber + 1 } } as CaminoVueRouter<CaminoRouteNames>}
+              to={{ name: props.route.name ?? undefined, params: props.route.params, query: { ...props.route.query, page: currentActivePageNumber + 1 } }}
               title="Page suivante"
             >
               Page suivante
@@ -167,7 +167,7 @@ const Pagination: FunctionalComponent<PaginationProps> = props => {
             <CaminoRouterLink
               isDisabled={false}
               class="fr-pagination__link fr-pagination__link--last"
-              to={{ name: props.route.name ?? undefined, query: { ...props.route.query, page: props.totalNumberOfPages }, params: props.route.params } as CaminoVueRouter<CaminoRouteNames>}
+              to={{ name: props.route.name ?? undefined, query: { ...props.route.query, page: props.totalNumberOfPages }, params: props.route.params }}
               title="Dernière page"
             >
               Dernière page
@@ -196,7 +196,7 @@ const Page: FunctionalComponent<PageProps> = (props: PageProps) => {
         class="fr-pagination__link"
         {...ariaProps}
         isDisabled={false}
-        to={{ name: props.route.name ?? undefined, query: { ...props.route.query, page: props.pageNumber }, params: props.route.params } as CaminoVueRouter<CaminoRouteNames>}
+        to={{ name: props.route.name ?? undefined, query: { ...props.route.query, page: props.pageNumber }, params: props.route.params }}
         title={`Page ${props.pageNumber}`}
       >
         {props.pageNumber}

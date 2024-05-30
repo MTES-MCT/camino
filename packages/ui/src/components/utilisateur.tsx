@@ -19,7 +19,7 @@ import { DsfrInputCheckbox } from './_ui/dsfr-input-checkbox'
 
 export const Utilisateur = defineComponent({
   setup() {
-    const route = useRoute()
+    const route = useRoute<'utilisateur'>()
     const router = useRouter()
 
     const user = inject(userKey)

@@ -2,7 +2,6 @@ import { Meta, StoryFn } from '@storybook/vue3'
 import { PureTitre } from './titre'
 import { action } from '@storybook/addon-actions'
 import { caminoDateValidator, toCaminoDate } from 'camino-common/src/date'
-import { Router } from 'vue-router'
 import { ApiClient } from '@/api/api-client'
 import { testBlankUser } from 'camino-common/src/tests-utils'
 import { TitreGet, TitreLink, demarcheGetValidator, titreGetValidator } from 'camino-common/src/titres'
@@ -15,6 +14,7 @@ import { EtapesTypesEtapesStatuts } from 'camino-common/src/static/etapesTypesEt
 import { Entreprise, entrepriseIdValidator } from 'camino-common/src/entreprise'
 import { titreIdValidator, titreSlugValidator, TitreIdOrSlug } from 'camino-common/src/validators/titres'
 import { km2Validator } from 'camino-common/src/number'
+import { CaminoRouter } from '@/typings/vue-router'
 
 const meta: Meta = {
   title: 'Components/Titre',
@@ -60,7 +60,7 @@ type PropsApiClient = Pick<
   | 'deleteDemarche'
   | 'getGeojsonByGeoSystemeId'
 >
-const routerPushMock: Pick<Router, 'push' | 'replace'> = {
+const routerPushMock: Pick<CaminoRouter, 'push' | 'replace'> = {
   push: to => {
     routerPushAction(to)
 

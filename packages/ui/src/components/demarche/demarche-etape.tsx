@@ -13,7 +13,6 @@ import { EtapePropEntreprisesItem, EtapePropItem } from '../etape/etape-prop-ite
 import { DemarcheEtape as CommonDemarcheEtape } from 'camino-common/src/demarche'
 import { DsfrPerimetre, TabId } from '../_common/dsfr-perimetre'
 import { TitreSlug } from 'camino-common/src/validators/titres'
-import { Router } from 'vue-router'
 import { numberFormat } from 'camino-common/src/number'
 import { OmitDistributive, getValues, isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { valeurFind } from 'camino-common/src/sections'
@@ -36,6 +35,7 @@ import { GetEtapeDocumentsByEtapeId, documentTypeIdComplementaireObligatoireASL,
 import { Unites } from 'camino-common/src/static/unites'
 import { EntrepriseId, Entreprise } from 'camino-common/src/entreprise'
 import { Badge } from '../_ui/badge'
+import { CaminoRouter } from '@/typings/vue-router'
 // Il ne faut pas utiliser de literal dans le 'in' il n'y aura jamais d'erreur typescript
 const fondamentalePropsName = 'fondamentale'
 
@@ -55,7 +55,7 @@ type Props = {
     titreStatutId: TitreStatutId
   }
   apiClient: Pick<ApiClient, 'deleteEtape' | 'deposeEtape' | 'getGeojsonByGeoSystemeId'>
-  router: Pick<Router, 'push'>
+  router: Pick<CaminoRouter, 'push'>
   user: User
   entreprises: Entreprise[]
   initTab?: TabId

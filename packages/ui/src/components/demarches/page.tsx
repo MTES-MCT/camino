@@ -1,7 +1,7 @@
 import { defineComponent, inject, markRaw, ref } from 'vue'
 import { Liste, Params } from '../_common/liste'
 import { Column, TableRow } from '../_ui/table'
-import { Router, useRouter } from 'vue-router'
+import { useRouter } from 'vue-router'
 import { GetDemarchesDemarche } from '../titre/demarche-api-client'
 import { CaminoFiltre, demarchesDownloadFormats } from 'camino-common/src/filters'
 import { getDomaineId, getTitreTypeType } from 'camino-common/src/static/titresTypes'
@@ -18,6 +18,7 @@ import { ApiClient, apiClient } from '@/api/api-client'
 import { Entreprise } from 'camino-common/src/entreprise'
 import { entreprisesKey } from '@/moi'
 import { CaminoRouteLocation } from '@/router/routes'
+import { CaminoRouter } from '@/typings/vue-router'
 
 const demarchesColonnes = [
   { id: 'titreNom', name: 'Titre' },
@@ -35,7 +36,7 @@ interface PureProps {
   travaux: boolean
   filtres: readonly CaminoFiltre[]
   currentRoute: CaminoRouteLocation
-  updateUrlQuery: Pick<Router, 'push'>
+  updateUrlQuery: Pick<CaminoRouter, 'push'>
   apiClient: Pick<ApiClient, 'getDemarches' | 'titresRechercherByNom' | 'getTitresByIds'>
   entreprises: Entreprise[]
 }

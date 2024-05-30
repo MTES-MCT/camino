@@ -2,8 +2,8 @@ import { action } from '@storybook/addon-actions'
 import { Filters } from './filters'
 import { Meta, StoryFn } from '@storybook/vue3'
 import { allCaminoFiltres } from './camino-filtres'
-import { RouteLocationRaw } from 'vue-router'
 import { ApiClient } from '../../../api/api-client'
+import { CaminoRouter } from '@/typings/vue-router'
 
 const meta: Meta = {
   title: 'Components/Ui/Filters/Filters',
@@ -13,7 +13,7 @@ const meta: Meta = {
 export default meta
 
 const pushAction = action('push')
-const push = (params: RouteLocationRaw) => {
+const push: CaminoRouter['push'] = params => {
   pushAction(params)
 
   return Promise.resolve()

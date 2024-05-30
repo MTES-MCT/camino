@@ -4,7 +4,7 @@ import { getPeriode } from 'camino-common/src/static/frequence'
 import { ActivitesStatuts } from 'camino-common/src/static/activitesStatuts'
 import { Statut } from './_common/statut'
 import { List } from './_ui/list'
-import { Router, useRouter } from 'vue-router'
+import { useRouter } from 'vue-router'
 import { canReadActivites } from 'camino-common/src/permissions/activites'
 import { CaminoAccessError } from './error'
 import { User } from 'camino-common/src/roles'
@@ -17,6 +17,7 @@ import { capitalize } from 'camino-common/src/strings'
 import { entreprisesKey, userKey } from '@/moi'
 import { Entreprise, EntrepriseId } from 'camino-common/src/entreprise'
 import { CaminoRouteLocation } from '@/router/routes'
+import { CaminoRouter } from '@/typings/vue-router'
 
 export const activitesColonneIdAnnee = 'annee'
 
@@ -95,7 +96,7 @@ const activitesLignesBuild = (activites: UiGraphqlActivite[], entreprises: Entre
 interface Props {
   user: User
   currentRoute: CaminoRouteLocation
-  updateUrlQuery: Pick<Router, 'push'>
+  updateUrlQuery: Pick<CaminoRouter, 'push'>
   apiClient: Pick<ApiClient, 'getActivites' | 'titresRechercherByNom' | 'getTitresByIds'>
   entreprises: Entreprise[]
 }
