@@ -9,7 +9,7 @@ import { dureeOptionalCheck as titreEtapesDureeOptionalCheck, canEditAmodiataire
 import { DomaineId } from 'camino-common/src/static/domaines'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
 import { getDomaineId, TitreTypeId } from 'camino-common/src/static/titresTypes'
-import { watch, computed, ref, DeepReadonly, defineComponent } from 'vue'
+import { computed, ref, DeepReadonly, defineComponent } from 'vue'
 import { Entreprise, EntrepriseId } from 'camino-common/src/entreprise'
 import { User } from 'camino-common/src/roles'
 import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
@@ -38,56 +38,45 @@ export const FondamentalesEdit = defineComponent<Props>(props => {
 
   const ans = ref<number>(dureeToAns(editedEtape.value.duree.value))
   const mois = ref<number>(dureeToMois(editedEtape.value.duree.value))
-  // FIXME si on modifie le périmètre puis les substances ça ne fonctionn pas, car ce watch est commenté. MAIS si on le décommente on a une boucle infine
-  // watch(() => props.etape, () => {
-  //   setEditedEtape(props.etape)
-  // })
 
   const dateDebutChanged = (dateDebut: CaminoDate | null) => {
-    setEditedEtape({ ...editedEtape.value, dateDebut: { ...editedEtape.value.dateDebut, value: dateDebut } })
+    updateEtape({ dateDebut: { ...editedEtape.value.dateDebut, value: dateDebut } })
   }
 
   const dateFinChanged = (dateFin: CaminoDate | null) => {
-    setEditedEtape({ ...editedEtape.value, dateFin: { ...editedEtape.value.dateFin, value: dateFin } })
+    updateEtape({ dateFin: { ...editedEtape.value.dateFin, value: dateFin } })
   }
   const substancesChanged = (substances: DeepReadonly<FlattenEtape['substances']>) => {
-    setEditedEtape({ ...editedEtape.value, substances })
+    updateEtape({ substances })
   }
   const updateDureeHeritage = (duree: FlattenEtape['duree']) => {
-    setEditedEtape({ ...editedEtape.value, duree })
+    updateEtape({ duree })
   }
   const updateDateDebutHeritage = (dateDebut: FlattenEtape['dateDebut']) => {
-    setEditedEtape({ ...editedEtape.value, dateDebut })
+    updateEtape({ dateDebut })
   }
   const updateDateFinHeritage = (dateFin: FlattenEtape['dateFin']) => {
-    setEditedEtape({ ...editedEtape.value, dateFin })
+    updateEtape({ dateFin })
   }
   const updateTitulairesHeritage = (titulaires: DeepReadonly<FlattenEtape['titulaires']>) => {
-    setEditedEtape({ ...editedEtape.value, titulaires })
+    updateEtape({ titulaires })
   }
   const updateAmodiatairesHeritage = (amodiataires: DeepReadonly<FlattenEtape['amodiataires']>) => {
-    setEditedEtape({ ...editedEtape.value, amodiataires })
+    updateEtape({ amodiataires })
   }
 
   const dureeOptionalCheck = computed<boolean>(() => {
     return titreEtapesDureeOptionalCheck(editedEtape.value.typeId, props.demarcheTypeId, props.titreTypeId)
   })
 
-  watch(
-    () => editedEtape.value,
-    () => {
-      props.completeUpdate(editedEtape.value)
-    }
-  )
-
   const domaineId = computed<DomaineId>(() => getDomaineId(props.titreTypeId))
 
   const titulairesUpdate = (titulaireIds: DeepReadonly<EntrepriseId[]>) => {
-    setEditedEtape({ ...editedEtape.value, titulaires: { ...editedEtape.value.titulaires, value: titulaireIds } })
+    updateEtape({ titulaires: { ...editedEtape.value.titulaires, value: titulaireIds } })
   }
 
   const amodiatairesUpdate = (amodiataireIds: DeepReadonly<EntrepriseId[]>) => {
-    setEditedEtape({ ...editedEtape.value, amodiataires: { ...editedEtape.value.amodiataires, value: amodiataireIds } })
+    updateEtape({ amodiataires: { ...editedEtape.value.amodiataires, value: amodiataireIds } })
   }
 
   const getEntrepriseNom = (entrepriseId: EntrepriseId): string => {
@@ -101,7 +90,12 @@ export const FondamentalesEdit = defineComponent<Props>(props => {
   }
 
   const updateDuree = (): void => {
-    setEditedEtape({ ...editedEtape.value, duree: { ...editedEtape.value.duree, value: mois.value + ans.value * 12 } })
+    updateEtape({ duree: { ...editedEtape.value.duree, value: mois.value + ans.value * 12 } })
+  }
+
+  const updateEtape = (partialEtape: Partial<Props['etape']>) => {
+    setEditedEtape({ ...editedEtape.value, ...partialEtape })
+    props.completeUpdate({ ...props.etape, ...partialEtape })
   }
 
   const updateAnsDuree = (value: number | null) => {

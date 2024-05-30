@@ -47,7 +47,6 @@ export const HeritageEdit = <T extends DeepReadonly<HeritagePossible>>(props: Pr
   const etapeHeritee = props.prop.etapeHeritee ?? null
   return (
     <div class={['fr-mb-1w', props.class]}>
-      {JSON.stringify(etapeHeritee)}
       {!props.prop.heritee ? (
         props.write()
       ) : (
