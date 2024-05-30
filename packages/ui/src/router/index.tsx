@@ -404,7 +404,7 @@ router.beforeEach(async (to, from, next) => {
   document.title = typeof to.meta.title === 'string' ? `${to.meta.title} - Camino` : 'le cadastre minier numérique ouvert - Camino'
   // Ceci est pour empêcher de nettoyer les filtres quand on clique sur le menu.
   // Par exemple sur "titres et autorisations" , après avoir rajouter des filtres, si on clique à nouveau sur le menu, on perd tous les filtres
-  if (from.name === to.name && isNullOrUndefinedOrEmpty(Object.keys(to.query))) {
+  if (from.name === to.name && JSON.stringify(to.params) === JSON.stringify(from.params) && isNullOrUndefinedOrEmpty(Object.keys(to.query))) {
     next(false)
   } else {
     next()
