@@ -8,7 +8,6 @@ import { afterAll, beforeAll, test, expect, describe, vi } from 'vitest'
 import type { Pool } from 'pg'
 import { HTTP_STATUS } from 'camino-common/src/http.js'
 import { Role, isAdministrationRole } from 'camino-common/src/roles.js'
-import { etapeIdValidator } from 'camino-common/src/etape.js'
 import { titreEtapeCreate } from '../../database/queries/titres-etapes.js'
 
 console.info = vi.fn()
@@ -100,14 +99,35 @@ test('getEtapesTypesEtapesStatusWithMainStep', async () => {
 })
 describe('etapeSupprimer', () => {
   test.each([undefined, 'admin' as Role])('ne peut pas supprimer une étape (utilisateur %s)', async (role: Role | undefined) => {
-    const tested = await restDeleteCall(
-      dbPool,
-      '/rest/etapes/:etapeId',
-      { etapeId: etapeIdValidator.parse('toto') },
-      role && isAdministrationRole(role) ? { role, administrationId: 'ope-onf-973-01' } : undefined
+    const titre = await titreCreate(
+      {
+        nom: 'mon titre',
+        typeId: 'arm',
+        titreStatutId: 'ind',
+        propsTitreEtapesIds: {},
+      },
+      {}
     )
+    const titreDemarche = await titreDemarcheCreate({
+      titreId: titre.id,
+      typeId: 'oct',
+    })
 
-    expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_NOT_FOUND)
+    const titreEtape = await titreEtapeCreate(
+      {
+        typeId: 'mfr',
+        statutId: 'fai',
+        isBrouillon: true,
+        ordre: 1,
+        titreDemarcheId: titreDemarche.id,
+        date: toCaminoDate('2018-01-01'),
+      },
+      userSuper,
+      titre.id
+    )
+    const tested = await restDeleteCall(dbPool, '/rest/etapes/:etapeId', { etapeId: titreEtape.id }, role && isAdministrationRole(role) ? { role, administrationId: 'dea-guyane-01' } : undefined)
+
+    expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
   })
 
   test('peut supprimer une étape (utilisateur super)', async () => {

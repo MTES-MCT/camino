@@ -200,36 +200,37 @@ export const deleteEtape = (pool: Pool) => async (req: CaminoRequest, res: Custo
             typeId: titreEtape.demarche.titre.typeId,
             titreStatutId: titreEtape.demarche.titre.titreStatutId,
           })
-        )
-          throw new Error('droits insuffisants')
-
-        const titreDemarche = await titreDemarcheGet(
-          titreEtape.titreDemarcheId,
-          {
-            fields: {
-              titre: {
-                demarches: { etapes: { id: {} } },
+        ) {
+          res.sendStatus(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
+        } else {
+          const titreDemarche = await titreDemarcheGet(
+            titreEtape.titreDemarcheId,
+            {
+              fields: {
+                titre: {
+                  demarches: { etapes: { id: {} } },
+                },
+                etapes: { id: {} },
               },
-              etapes: { id: {} },
             },
-          },
-          userSuper
-        )
+            userSuper
+          )
 
-        if (!titreDemarche) throw new Error("la démarche n'existe pas")
+          if (!titreDemarche) throw new Error("la démarche n'existe pas")
 
-        if (!titreDemarche.titre) throw new Error("le titre n'existe pas")
+          if (!titreDemarche.titre) throw new Error("le titre n'existe pas")
 
-        const rulesErrors = titreDemarcheUpdatedEtatValidate(titreDemarche.typeId, titreDemarche.titre, titreEtape, titreDemarche.id, titreDemarche.etapes!, true)
+          const rulesErrors = titreDemarcheUpdatedEtatValidate(titreDemarche.typeId, titreDemarche.titre, titreEtape, titreDemarche.id, titreDemarche.etapes!, true)
 
-        if (rulesErrors.length) {
-          throw new Error(rulesErrors.join(', '))
+          if (rulesErrors.length) {
+            throw new Error(rulesErrors.join(', '))
+          }
+          await titreEtapeUpdate(etapeId.data, { archive: true }, user, titreDemarche.titreId)
+
+          await titreEtapeUpdateTask(pool, null, titreEtape.titreDemarcheId, user)
+
+          res.sendStatus(HTTP_STATUS.HTTP_STATUS_NO_CONTENT)
         }
-        await titreEtapeUpdate(etapeId.data, { archive: true }, user, titreDemarche.titreId)
-
-        await titreEtapeUpdateTask(pool, null, titreEtape.titreDemarcheId, user)
-
-        res.sendStatus(HTTP_STATUS.HTTP_STATUS_NO_CONTENT)
       }
     } catch (e) {
       res.sendStatus(HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR)
