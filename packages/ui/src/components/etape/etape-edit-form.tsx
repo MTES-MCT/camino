@@ -37,7 +37,7 @@ import { TitresStatuts } from 'camino-common/src/static/titresStatuts'
 import { DeposeEtapePopup } from '../demarche/depose-etape-popup'
 import { EtapeTypeId, canBeBrouillon } from 'camino-common/src/static/etapesTypes'
 import { CoreEtapeCreationOrModification } from './etape-api-client'
-import { FlattenEtape } from 'camino-common/src/etape-form'
+import { FlattenEtape, GraphqlEtapeCreation } from 'camino-common/src/etape-form'
 import { AsyncData } from '@/api/client-rest'
 import { CaminoDate } from 'camino-common/src/date'
 import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts'
@@ -188,29 +188,50 @@ export const EtapeEditForm = defineComponent<Props>(props => {
 
   const save = async () => {
     if (canSave.value && etape.value.status === 'LOADED' && isNotNullNorUndefined(etape.value.value)) {
+      const etapeValue = etape.value.value
       let etapeId: EtapeId | null
       const heritage = {
-        dateDebut: etape.value.value.dateDebut.value,
-        dateFin: etape.value.value.dateFin.value,
-        duree: etape.value.value.duree.value,
-        substances: etape.value.value.substances.value,
-        titulaireIds: etape.value.value.titulaires.value,
-        amodiataireIds: etape.value.value.amodiataires.value,
-        geojson4326Points: etape.value.value.perimetre.value?.geojson4326Points ?? null,
-        geojson4326Perimetre: etape.value.value.perimetre.value?.geojson4326Perimetre ?? null,
-        geojsonOriginePoints: etape.value.value.perimetre.value?.geojsonOriginePoints ?? null,
-        geojsonOrigineForages: etape.value.value.perimetre.value?.geojsonOrigineForages ?? null,
-        geojsonOriginePerimetre: etape.value.value.perimetre.value?.geojsonOriginePerimetre ?? null,
-        geojsonOrigineGeoSystemeId: etape.value.value.perimetre.value?.geojsonOrigineGeoSystemeId ?? null,
+        dateDebut: etapeValue.dateDebut.value,
+        dateFin: etapeValue.dateFin.value,
+        duree: etapeValue.duree.value,
+        substances: etapeValue.substances.value,
+        titulaireIds: etapeValue.titulaires.value,
+        amodiataireIds: etapeValue.amodiataires.value,
+        geojson4326Points: etapeValue.perimetre.value?.geojson4326Points ?? null,
+        geojson4326Perimetre: etapeValue.perimetre.value?.geojson4326Perimetre ?? null,
+        geojsonOriginePoints: etapeValue.perimetre.value?.geojsonOriginePoints ?? null,
+        geojsonOrigineForages: etapeValue.perimetre.value?.geojsonOrigineForages ?? null,
+        geojsonOriginePerimetre: etapeValue.perimetre.value?.geojsonOriginePerimetre ?? null,
+        geojsonOrigineGeoSystemeId: etapeValue.perimetre.value?.geojsonOrigineGeoSystemeId ?? null,
         heritageProps: {
-          dateDebut: { actif: etape.value.value.dateDebut.heritee },
-          dateFin: { actif: etape.value.value.dateFin.heritee },
-          duree: { actif: etape.value.value.duree.heritee },
-          perimetre: { actif: etape.value.value.perimetre.heritee },
-          substances: { actif: etape.value.value.substances.heritee },
-          titulaires: { actif: etape.value.value.titulaires.heritee },
-          amodiataires: { actif: etape.value.value.amodiataires.heritee },
+          dateDebut: { actif: etapeValue.dateDebut.heritee },
+          dateFin: { actif: etapeValue.dateFin.heritee },
+          duree: { actif: etapeValue.duree.heritee },
+          perimetre: { actif: etapeValue.perimetre.heritee },
+          substances: { actif: etapeValue.substances.heritee },
+          titulaires: { actif: etapeValue.titulaires.heritee },
+          amodiataires: { actif: etapeValue.amodiataires.heritee },
         },
+        contenu: Object.keys(etapeValue.contenu).reduce<DeepReadonly<GraphqlEtapeCreation['contenu']>>((sectionsAcc, section) => {
+          sectionsAcc = {
+            ...sectionsAcc,
+            [section]: Object.keys(etapeValue.contenu[section]).reduce<DeepReadonly<GraphqlEtapeCreation['contenu'][string]>>((elementsAcc, element) => {
+              elementsAcc = { ...elementsAcc, [element]: etapeValue.contenu[section][element].value }
+
+              return elementsAcc
+            }, {}),
+          }
+
+          return sectionsAcc
+        }, {}),
+        heritageContenu: Object.keys(etapeValue.contenu).reduce<DeepReadonly<GraphqlEtapeCreation['heritageContenu']>>((sectionsAcc, section) => {
+          return {
+            ...sectionsAcc,
+            [section]: Object.keys(etapeValue.contenu[section]).reduce<DeepReadonly<GraphqlEtapeCreation['heritageContenu'][string]>>((elementsAcc, element) => {
+              return { ...elementsAcc, [element]: { actif: etapeValue.contenu[section][element].heritee } }
+            }, {}),
+          }
+        }, {}),
       }
 
       if (isNotNullNorUndefined(props.etape.id)) {
@@ -386,7 +407,7 @@ const EtapeEditFormInternal = defineComponent<
   }
 
   const sectionCompleteUpdate = (sectionsEtape: SectionsEditEtape) => {
-    props.setEtape({ ...props.etape, contenu: sectionsEtape.contenu, heritageContenu: sectionsEtape.heritageContenu }, props.documents)
+    props.setEtape({ ...props.etape, contenu: sectionsEtape.contenu }, props.documents)
   }
 
   const onUpdateNotes = (notes: string) => {

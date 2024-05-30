@@ -58,7 +58,7 @@ test('sectionsStepIsVisible', () => {
 
 test('sectionsStepIsComplete', () => {
   expect(sectionsStepIsComplete({ typeId: 'mfr', contenu: {} }, 'oct', 'arm')).toBe(false)
-  expect(sectionsStepIsComplete({ typeId: 'mfr', contenu: { arm: { mecanise: true } } }, 'oct', 'arm')).toBe(true)
+  expect(sectionsStepIsComplete({ typeId: 'mfr', contenu: { arm: { mecanise: { value: true, heritee: false, etapeHeritee: null } } } }, 'oct', 'arm')).toBe(true)
 })
 
 test('perimetreStepIsVisible', () => {
@@ -317,7 +317,7 @@ test('entrepriseDocumentsStepIsComplete', () => {
         typeId: 'mfr',
         titulaires: { value: [], heritee: false, etapeHeritee: null },
         amodiataires: { value: [entreprise1.id], heritee: false, etapeHeritee: null },
-        contenu: { arm: { mecanise: false } },
+        contenu: { arm: { mecanise: { value: false, heritee: false, etapeHeritee: null } } },
       },
       'oct',
       'arm',
@@ -359,7 +359,7 @@ test('entrepriseDocumentsStepIsComplete', () => {
 })
 
 test('getDocumentsTypes', () => {
-  expect(getDocumentsTypes({ typeId: 'asl', contenu: {} }, 'oct', 'axm', [])).toMatchInlineSnapshot(`
+  expect(getDocumentsTypes({ typeId: 'asl' }, 'oct', 'axm', [], false)).toMatchInlineSnapshot(`
     [
       {
         "id": "dei",
@@ -375,7 +375,7 @@ test('getDocumentsTypes', () => {
     ]
   `)
 
-  expect(getDocumentsTypes({ typeId: 'mfr', contenu: {} }, 'oct', 'arm', [])).toMatchInlineSnapshot(`
+  expect(getDocumentsTypes({ typeId: 'mfr' }, 'oct', 'arm', [], false)).toMatchInlineSnapshot(`
     [
       {
         "id": "cam",
@@ -471,7 +471,7 @@ test('getDocumentsTypes', () => {
     ]
   `)
 
-  expect(getDocumentsTypes({ typeId: 'mfr', contenu: { arm: { mecanise: true } } }, 'oct', 'arm', [])).toMatchInlineSnapshot(`
+  expect(getDocumentsTypes({ typeId: 'mfr' }, 'oct', 'arm', [], true)).toMatchInlineSnapshot(`
     [
       {
         "id": "cam",
@@ -567,7 +567,7 @@ test('getDocumentsTypes', () => {
     ]
   `)
 
-  expect(getDocumentsTypes({ typeId: 'mfr', contenu: {} }, 'oct', 'axm', ['1'])).toMatchInlineSnapshot(`
+  expect(getDocumentsTypes({ typeId: 'mfr' }, 'oct', 'axm', ['1'], false)).toMatchInlineSnapshot(`
     [
       {
         "id": "cam",
@@ -659,12 +659,12 @@ test('getDocumentsTypes', () => {
       },
       {
         "description": "la liste et la valeur du matériel d’extraction et de
-     traitement que le demandeur détient ou qu’il 
+     traitement que le demandeur détient ou qu’il
     envisage d’acquérir ainsi que, dans ce dernier
-     cas, le financement correspondant. Ces pièces 
-    sont demandées au titre de la justification des 
+     cas, le financement correspondant. Ces pièces
+    sont demandées au titre de la justification des
     capacités financières du
-    demandeur 
+    demandeur
     (décret 2001-204, art. 7)",
         "id": "idm",
         "nom": "Identification de matériel",
@@ -715,7 +715,7 @@ test('getDocumentsTypes', () => {
     ]
   `)
 
-  expect(getDocumentsTypes({ typeId: 'mfr', contenu: {} }, 'oct', 'axm', ['2'])).toMatchInlineSnapshot(`
+  expect(getDocumentsTypes({ typeId: 'mfr' }, 'oct', 'axm', ['2'], false)).toMatchInlineSnapshot(`
     [
       {
         "id": "cam",
@@ -807,12 +807,12 @@ test('getDocumentsTypes', () => {
       },
       {
         "description": "la liste et la valeur du matériel d’extraction et de
-     traitement que le demandeur détient ou qu’il 
+     traitement que le demandeur détient ou qu’il
     envisage d’acquérir ainsi que, dans ce dernier
-     cas, le financement correspondant. Ces pièces 
-    sont demandées au titre de la justification des 
+     cas, le financement correspondant. Ces pièces
+    sont demandées au titre de la justification des
     capacités financières du
-    demandeur 
+    demandeur
     (décret 2001-204, art. 7)",
         "id": "idm",
         "nom": "Identification de matériel",

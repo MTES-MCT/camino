@@ -1,61 +1,58 @@
-import { DeepReadonly, computed, defineComponent, watch } from 'vue'
+import { DeepReadonly, computed, defineComponent } from 'vue'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
-import { HeritageContenu } from 'camino-common/src/etape'
-import { getSections, getSectionsWithValue } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections'
-import { isNotNullNorUndefinedNorEmpty, isNullOrUndefined } from 'camino-common/src/typescript-tools'
+import { getSections } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections'
+import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
 import { useState } from '../../utils/vue-tsx-utils'
-import { ElementWithValue, SectionWithValue } from 'camino-common/src/sections'
-import { ElementHeritage, SectionElementWithValueEdit } from './section-element-with-value-edit'
+import { SectionWithValue, ElementWithValue } from 'camino-common/src/sections'
+import { SectionElementWithValueEdit } from './section-element-with-value-edit'
 import { FlattenEtape } from 'camino-common/src/etape-form'
 
-export type SectionsEditEtape = DeepReadonly<Pick<FlattenEtape, 'typeId' | 'heritageContenu' | 'contenu'>>
+export type SectionsEditEtape = DeepReadonly<Pick<FlattenEtape, 'typeId' | 'contenu'>>
 type Props = {
   titreTypeId: TitreTypeId
   demarcheTypeId: DemarcheTypeId
-  etape: SectionsEditEtape
+  etape: DeepReadonly<SectionsEditEtape>
   completeUpdate: (etape: Props['etape']) => void
 }
 
 export const SectionsEdit = defineComponent<Props>(props => {
   const [editedEtape, setEditedEtape] = useState(props.etape)
 
-  const updateElement = (sectionId: string) => (element: DeepReadonly<ElementWithValue>) => {
-    setEditedEtape({ ...editedEtape.value, contenu: { ...editedEtape.value.contenu, [sectionId]: { ...editedEtape.value.contenu[sectionId], [element.id]: element.value } } })
+  const updateElement = (sectionId: string, elementId: string) => (element: DeepReadonly<FlattenEtape['contenu'][string][string]>) => {
+    updateEtape({ contenu: { ...editedEtape.value.contenu, [sectionId]: { ...editedEtape.value.contenu[sectionId], [elementId]: element } } })
   }
-  const updateHeritage = (sectionId: string, elementId: string) => (heritage: ElementHeritage) => {
-    setEditedEtape({ ...editedEtape.value, heritageContenu: { ...editedEtape.value.heritageContenu, [sectionId]: { ...editedEtape.value.heritageContenu[sectionId], [elementId]: heritage } } })
+
+  const updateEtape = (partialEtape: Partial<Props['etape']>) => {
+    setEditedEtape({ ...editedEtape.value, ...partialEtape })
+    props.completeUpdate({ ...props.etape, ...partialEtape })
   }
 
   const sections = computed(() => {
     return getSections(props.titreTypeId, props.demarcheTypeId, props.etape.typeId)
   })
 
-  const sectionsWithValue = computed<SectionWithValue[]>(() => {
-    return getSectionsWithValue(sections.value, editedEtape.value.contenu)
-  })
+  const sectionsWithValue = computed<DeepReadonly<SectionWithValue[]>>(() => {
+    const sectionList = Object.keys(editedEtape.value.contenu).reduce<DeepReadonly<SectionWithValue[]>>((accSections, section) => {
+      const sectionStatic = sections.value.find(s => s.id === section)
+      if (isNotNullNorUndefined(sectionStatic)) {
+        const elements = Object.keys(editedEtape.value.contenu[section]).reduce<DeepReadonly<ElementWithValue[]>>((accElements, element) => {
+          const elementStatic = sectionStatic.elements.find(e => e.id === element)
+          if (isNotNullNorUndefined(elementStatic)) {
+            // @ts-ignore
+            const elementWithValue: DeepReadonly<ElementWithValue> = { ...elementStatic, value: editedEtape.value.contenu[section][element].value }
 
-  watch(
-    () => editedEtape.value,
-    () => {
-      props.completeUpdate(editedEtape.value)
-    }
-  )
+            return [...accElements, elementWithValue]
+          }
+          return accElements
+        }, [])
 
-  const heritageContenu = computed<DeepReadonly<HeritageContenu>>(() => {
-    let heritage: DeepReadonly<HeritageContenu> = { ...editedEtape.value.heritageContenu }
-    for (const section of sectionsWithValue.value) {
-      if (isNullOrUndefined(heritage[section.id])) {
-        heritage = { ...heritage, [section.id]: {} }
+        return [...accSections, { elements, id: sectionStatic.id, nom: sectionStatic.nom }]
       }
-      for (const element of section.elements) {
-        if (isNullOrUndefined(heritage[section.id][element.id])) {
-          heritage = { ...heritage, [section.id]: { ...heritage[section.id], [element.id]: { actif: false } } }
-        }
-      }
-    }
+      return accSections
+    }, [])
 
-    return heritage
+    return sectionList
   })
 
   return () => (
@@ -69,10 +66,9 @@ export const SectionsEdit = defineComponent<Props>(props => {
               <SectionElementWithValueEdit
                 key={elementWithValue.id}
                 elementWithValue={elementWithValue}
-                elementHeritage={heritageContenu.value[sectionWithValue.id][elementWithValue.id]}
+                elementHeritage={props.etape.contenu[sectionWithValue.id][elementWithValue.id]}
                 sectionId={sectionWithValue.id}
-                updateElement={updateElement(sectionWithValue.id)}
-                updateHeritage={updateHeritage(sectionWithValue.id, elementWithValue.id)}
+                updateElement={updateElement(sectionWithValue.id, elementWithValue.id)}
               />
             ))}
           </div>

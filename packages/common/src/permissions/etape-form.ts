@@ -56,11 +56,17 @@ export const perimetreStepIsComplete = (etape: DeepReadonly<Pick<FlattenEtape, '
   return etape.typeId !== 'mfr' || isNotNullNorUndefined(etape.perimetre.value?.geojson4326Perimetre)
 }
 
-export const getDocumentsTypes = (etape: DeepReadonly<Pick<FlattenEtape, 'typeId' | 'contenu'>>, demarcheTypeId: DemarcheTypeId, titreTypeId: TitreTypeId, sdomZoneIds: DeepReadonly<SDOMZoneId[]>) => {
+export const getDocumentsTypes = (
+  etape: DeepReadonly<Pick<FlattenEtape, 'typeId'>>,
+  demarcheTypeId: DemarcheTypeId,
+  titreTypeId: TitreTypeId,
+  sdomZoneIds: DeepReadonly<SDOMZoneId[]>,
+  isArmMecanise: boolean
+) => {
   const dts = getDocuments(titreTypeId, demarcheTypeId, etape.typeId)
 
   // si la démarche est mécanisée il faut ajouter des documents obligatoires
-  if (isNotNullNorUndefined(etape.contenu) && isNotNullNorUndefined(etape.contenu.arm) && etape.contenu.arm.mecanise === true) {
+  if (isArmMecanise) {
     for (const documentType of dts) {
       if (['doe', 'dep'].includes(documentType.id)) {
         documentType.optionnel = false
@@ -97,7 +103,7 @@ export const etapeDocumentsStepIsComplete = (
     return true
   }
 
-  const documentTypes = getDocumentsTypes({ contenu: etape.contenu, typeId: etape.typeId }, demarcheTypeId, titreTypeId, sdomZoneIds)
+  const documentTypes = getDocumentsTypes({ typeId: etape.typeId }, demarcheTypeId, titreTypeId, sdomZoneIds, etape.contenu?.arm?.mecanise?.value === true)
 
   if (documentTypes.every(({ optionnel, id }) => optionnel || etapeDocuments.some(({ etape_document_type_id }) => etape_document_type_id === id))) {
     if (needAslAndDae({ etapeTypeId: etape.typeId, demarcheTypeId, titreTypeId }, etape.isBrouillon, user)) {

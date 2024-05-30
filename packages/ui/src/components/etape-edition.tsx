@@ -116,7 +116,6 @@ export const PureEtapeEdition = defineComponent<Props>(props => {
               duree: { value: null, heritee: false, etapeHeritee: null },
               dateDebut: { value: null, heritee: false, etapeHeritee: null },
               dateFin: { value: null, heritee: false, etapeHeritee: null },
-              heritageContenu: {},
               slug: null,
               titreDemarcheId: demarche.demarche_id,
             },

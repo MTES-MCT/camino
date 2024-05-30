@@ -8,7 +8,6 @@ import type { JSX } from 'vue/jsx-runtime'
 import { DsfrInput } from '@/components/_ui/dsfr-input'
 import { random } from '../../utils/vue-tsx-utils'
 import { FlattenEtape } from 'camino-common/src/etape-form'
-import { ElementWithValueAndHeritage } from 'camino-common/src/sections'
 
 type HeritagePossible =
   | FlattenEtape['perimetre']
@@ -18,7 +17,8 @@ type HeritagePossible =
   | FlattenEtape['amodiataires']
   | FlattenEtape['duree']
   | FlattenEtape['substances']
-  | ElementWithValueAndHeritage['value']
+  | FlattenEtape['contenu'][string][string]
+
 type Props<T extends DeepReadonly<HeritagePossible>> = {
   prop: T
   write: () => JSX.Element
@@ -31,12 +31,12 @@ type Props<T extends DeepReadonly<HeritagePossible>> = {
 
 export const HeritageEdit = <T extends DeepReadonly<HeritagePossible>>(props: Props<T>) => {
   const updateHeritage = () => {
-    const etape = props.prop.etapeHeritee
+    const etapeHeritee = props.prop.etapeHeritee
     const newHeritage = !props.prop.heritee
     if (!newHeritage) {
       props.updateHeritage({ ...props.prop, heritee: newHeritage })
-    } else if (isNotNullNorUndefined(etape)) {
-      props.updateHeritage({ ...props.prop, value: etape?.value ?? null, heritee: newHeritage })
+    } else if (isNotNullNorUndefined(etapeHeritee)) {
+      props.updateHeritage({ ...props.prop, value: etapeHeritee?.value ?? null, heritee: newHeritage })
     }
   }
 

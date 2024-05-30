@@ -12,7 +12,6 @@ import {
 } from './static/titresTypes_demarchesTypes_etapesTypes/sections.js'
 import { z } from 'zod'
 import { DeepReadonly, isNotNullNorUndefined } from './typescript-tools.js'
-import { makeFlattenValidator } from './zod-tools.js'
 
 const dateElementWithValueValidator = dateElementValidator.extend({ value: caminoDateValidator.nullable() })
 
@@ -44,33 +43,6 @@ const elementWithValueValidator = z.union([
   selectElementWithValueValidator,
 ])
 
-const dateElementWithValueAndHeritageValidator = dateElementValidator.extend({ value: makeFlattenValidator(caminoDateValidator.nullable()) })
-
-const textElementWithValueAndHeritageValidator = textElementValidator.extend({ value: makeFlattenValidator(z.string().nullable()) })
-
-const urlElementWithValueAndHeritageValidator = urlElementValidator.extend({ value: makeFlattenValidator(z.string().nullable()) })
-
-const numberElementWithValueAndHeritageValidator = numberElementValidator.extend({ value: makeFlattenValidator(z.number().nullable()) })
-
-const radioElementWithValueAndHeritageValidator = radioElementValidator.extend({ value: makeFlattenValidator(z.boolean().nullable()) })
-
-const checkboxElementWithValueAndHeritageValidator = checkboxElementValidator.extend({ value: makeFlattenValidator(z.boolean().nullable()) })
-
-const checkboxesElementWithValueAndHeritageValidator = checkboxesElementValidator.extend({ value: makeFlattenValidator(z.array(z.string())) })
-
-const selectElementWithValueAndHeritageValidator = selectElementWithOptionsValidator.extend({ value: makeFlattenValidator(z.string().nullable()) })
-const elementWithValueAndHeritageValidator = z.union([
-  dateElementWithValueAndHeritageValidator,
-  textElementWithValueAndHeritageValidator,
-  urlElementWithValueAndHeritageValidator,
-  numberElementWithValueAndHeritageValidator,
-  radioElementWithValueAndHeritageValidator,
-  checkboxElementWithValueAndHeritageValidator,
-  checkboxesElementWithValueAndHeritageValidator,
-  selectElementWithValueAndHeritageValidator,
-])
-
-export type ElementWithValueAndHeritage = z.infer<typeof elementWithValueAndHeritageValidator>
 export type ElementWithValue = z.infer<typeof elementWithValueValidator>
 
 export const isNumberElement = (element: DeepReadonly<ElementWithValue>): element is DeepReadonly<NumberElementWithValue> => {

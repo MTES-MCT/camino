@@ -127,6 +127,8 @@ const perimetreObjectValidator = z.object({
 export const flattenEtapeValidator = graphqlEtapeValidator
   .omit({
     heritageProps: true,
+    heritageContenu: true,
+    contenu: true,
     duree: true,
     surface: true,
     geojson4326Perimetre: true,
@@ -151,6 +153,7 @@ export const flattenEtapeValidator = graphqlEtapeValidator
     substances: makeFlattenValidator(z.array(substanceLegaleIdValidator)),
     titulaires: makeFlattenValidator(z.array(entrepriseIdValidator)),
     amodiataires: makeFlattenValidator(z.array(entrepriseIdValidator)),
+    contenu: z.record(z.string(), z.record(z.string(), makeFlattenValidator(z.union([caminoDateValidator, z.string(), z.number(), z.boolean(), z.array(z.string())]).nullable()))),
   })
 
 export type FlattenEtape = z.infer<typeof flattenEtapeValidator>

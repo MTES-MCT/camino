@@ -197,7 +197,7 @@ export const isEtapeComplete = (
       {}
     )
   }
-  const dts: DocumentType[] = getDocumentsTypes({ ...titreEtape, contenu: contenu ?? {} }, demarcheTypeId, titreTypeId, sdomZones ?? [])
+  const dts: DocumentType[] = getDocumentsTypes({ ...titreEtape }, demarcheTypeId, titreTypeId, sdomZones ?? [], contenu?.arm?.mecanise === true)
 
   const documentsErrors = isDocumentsComplete(documents ?? [], dts)
   if (!documentsErrors.valid) {

@@ -320,6 +320,27 @@ export const etapeApiClient: EtapeApiClient = {
               }
             : null,
         },
+
+        contenu: Object.keys(graphqlEtape.heritageContenu).reduce<FlattenEtape['contenu']>((accSection, section) => {
+          accSection[section] = Object.keys(graphqlEtape.heritageContenu[section]).reduce<FlattenEtape['contenu'][string]>((accElement, element) => {
+            const elementHeritage = graphqlEtape.heritageContenu[section][element] ?? { actif: false, etape: null }
+            accElement[element] = {
+              value: elementHeritage.actif ? elementHeritage.etape?.contenu[section]?.[element] ?? null : graphqlEtape.contenu[section]?.[element] ?? null,
+              heritee: elementHeritage.actif,
+              etapeHeritee: isNotNullNorUndefined(elementHeritage.etape)
+                ? {
+                    etapeTypeId: elementHeritage.etape.typeId,
+                    date: elementHeritage.etape.date,
+                    value: elementHeritage.etape.contenu[section]?.[element] ?? null,
+                  }
+                : null,
+            }
+
+            return accElement
+          }, {})
+
+          return accSection
+        }, {}),
       }
 
       const demarche: GetDemarcheByIdOrSlugValidator = {
@@ -422,7 +443,31 @@ export const etapeApiClient: EtapeApiClient = {
     const heritageData: DeepReadonly<z.infer<typeof heritageValidator>> = heritageValidator.parse(data)
     const flattenEtape: DeepReadonly<CoreEtapeCreationOrModification> = {
       ...etape,
-      heritageContenu: heritageData.heritageContenu,
+      contenu: Object.keys(heritageData.heritageContenu).reduce<DeepReadonly<FlattenEtape['contenu']>>((accSection, section) => {
+        const newSection = Object.keys(heritageData.heritageContenu[section]).reduce<DeepReadonly<FlattenEtape['contenu'][string]>>((accElement, element) => {
+          const elementHeritage = heritageData.heritageContenu[section]?.[element] ?? { actif: false, etape: null }
+          const currentHeritage: DeepReadonly<FlattenEtape['contenu'][string][string]> = etape.contenu[section]?.[element] ?? { value: null, heritee: false, etapeHeritee: null }
+          return {
+            ...accElement,
+            [element]: {
+              value: currentHeritage.heritee ? elementHeritage.etape?.contenu?.[section]?.[element] ?? null : currentHeritage.value,
+              heritee: currentHeritage.heritee && isNotNullNorUndefined(elementHeritage.etape),
+              etapeHeritee: isNotNullNorUndefined(elementHeritage.etape)
+                ? {
+                    etapeTypeId: elementHeritage.etape.typeId,
+                    date: elementHeritage.etape.date,
+                    value: elementHeritage.etape.contenu[section]?.[element] ?? null,
+                  }
+                : null,
+            },
+          }
+        }, {})
+
+        return {
+          ...accSection,
+          [section]: newSection,
+        }
+      }, {}),
       duree: {
         value: etape.duree.heritee ? heritageData.heritageProps.duree.etape?.duree ?? null : etape.duree.value,
         heritee: etape.duree.heritee && isNotNullNorUndefined(heritageData.heritageProps.duree.etape),
