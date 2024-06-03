@@ -279,9 +279,8 @@ const apiClient: Props['apiClient'] = {
           heritee: false,
           etapeHeritee: null,
         },
-        contenu: {},
+        contenu: { arm: { mecanise: { value: null, heritee: false, etapeHeritee: null }, franchissements: { value: null, heritee: false, etapeHeritee: null } } },
         notes: null,
-        heritageContenu: {},
       },
       demarche: {
         demarche_slug: demarcheSlugValidator.parse('demarche-slug'),
@@ -370,7 +369,7 @@ export const AffichageAide: StoryFn = () => (
             substances: { value: [], heritee: false, etapeHeritee: null },
             titulaires: { value: [], heritee: false, etapeHeritee: null },
             amodiataires: { value: [], heritee: false, etapeHeritee: null },
-            contenu: {},
+            contenu: { arm: { mecanise: { value: null, heritee: false, etapeHeritee: null }, franchissements: { value: null, heritee: false, etapeHeritee: null } } },
             notes: null,
             perimetre: {
               value: {
@@ -560,7 +559,7 @@ export const DemandeArmComplete: StoryFn = () => (
             substances: { value: ['arge'], heritee: false, etapeHeritee: null },
             titulaires: { value: [entreprises[0].id], heritee: false, etapeHeritee: null },
             amodiataires: { value: [], heritee: false, etapeHeritee: null },
-            contenu: { arm: { mecanise: true, franchissements: 9 } },
+            contenu: { arm: { mecanise: { value: true, heritee: false, etapeHeritee: null }, franchissements: { value: 9, heritee: false, etapeHeritee: null } } },
             notes: null,
             perimetre: {
               value: {
@@ -719,7 +718,7 @@ export const ModificationDemandeHeritee: StoryFn = () => (
             isBrouillon: false,
             titreDemarcheId: demarcheIdValidator.parse('demarche-id'),
             date: caminoDateValidator.parse('2023-02-01'),
-            contenu: { arm: { mecanise: true, franchissements: 2 } },
+            contenu: { arm: { mecanise: { value: true, heritee: false, etapeHeritee: null }, franchissements: { value: 2, heritee: false, etapeHeritee: null } } },
             notes: null,
             ...modHeritageProps,
             amodiataires: {

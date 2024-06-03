@@ -446,7 +446,7 @@ export const etapeApiClient: EtapeApiClient = {
       contenu: Object.keys(heritageData.heritageContenu).reduce<DeepReadonly<FlattenEtape['contenu']>>((accSection, section) => {
         const newSection = Object.keys(heritageData.heritageContenu[section]).reduce<DeepReadonly<FlattenEtape['contenu'][string]>>((accElement, element) => {
           const elementHeritage = heritageData.heritageContenu[section]?.[element] ?? { actif: false, etape: null }
-          const currentHeritage: DeepReadonly<FlattenEtape['contenu'][string][string]> = etape.contenu[section]?.[element] ?? { value: null, heritee: false, etapeHeritee: null }
+          const currentHeritage: DeepReadonly<FlattenEtape['contenu'][string][string]> = etape.contenu[section]?.[element] ?? { value: null, heritee: true, etapeHeritee: null }
           return {
             ...accElement,
             [element]: {

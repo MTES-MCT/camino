@@ -19,7 +19,6 @@ const etape: FlattenEtape = {
   id: etapeIdValidator.parse('id'),
   slug: etapeSlugValidator.parse('slug'),
   titreDemarcheId: demarcheIdValidator.parse('demarcheId'),
-  heritageContenu: {},
   statutId: 'fai',
   isBrouillon: true,
   typeId: 'mfr',

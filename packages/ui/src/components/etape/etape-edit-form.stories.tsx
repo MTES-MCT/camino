@@ -47,7 +47,7 @@ const etape: Props['etape'] = {
   statutId: 'fai',
   isBrouillon: false,
   typeId: 'mfr',
-  contenu: {},
+  contenu: { arm: { mecanise: { value: null, heritee: false, etapeHeritee: null }, franchissements: { value: null, heritee: false, etapeHeritee: null } } },
   date: toCaminoDate('2022-02-02'),
   dateDebut: { value: toCaminoDate('2022-02-02'), heritee: false, etapeHeritee: null },
   dateFin: {
@@ -102,7 +102,6 @@ const etape: Props['etape'] = {
     heritee: false,
     etapeHeritee: null,
   },
-  heritageContenu: {},
 }
 
 const goToDemarcheAction = action('goToDemarche')
@@ -245,7 +244,7 @@ export const Default: StoryFn = () => (
     etape={{
       ...etape,
 
-      contenu: { arm: { mecanise: true, franchissements: 2 } },
+      contenu: { arm: { mecanise: { value: true, heritee: false, etapeHeritee: null }, franchissements: { value: 2, heritee: false, etapeHeritee: null } } },
     }}
     user={{
       role: 'super',
@@ -267,6 +266,7 @@ export const EtapeModification: StoryFn = () => (
     perimetre={{ sdomZoneIds: [], superposition_alertes: [] }}
     etape={{
       ...etape,
+      contenu: { cxx: { volume: { value: null, heritee: false, etapeHeritee: null }, volumeUniteId: { value: null, heritee: false, etapeHeritee: null } } },
       perimetre: {
         value: {
           geojson4326Perimetre: perimetre,

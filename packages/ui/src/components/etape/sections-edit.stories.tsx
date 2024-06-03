@@ -19,8 +19,7 @@ export const SansHeritage: StoryFn = () => (
     titreTypeId="arm"
     etape={{
       typeId: 'mfr',
-      heritageContenu: {},
-      contenu: { arm: { mecanise: true } },
+      contenu: { arm: { mecanise: { value: true, heritee: false, etapeHeritee: null }, franchissements: { value: null, heritee: false, etapeHeritee: null } } },
     }}
   />
 )
@@ -32,27 +31,12 @@ export const AvecHeritageActif: StoryFn = () => (
     titreTypeId="arm"
     etape={{
       typeId: 'mod',
-      heritageContenu: {
+      contenu: {
         arm: {
-          mecanise: {
-            actif: true,
-            etape: {
-              typeId: 'mfr',
-              date: toCaminoDate('2024-01-01'),
-              contenu: { arm: { mecanise: true } },
-            },
-          },
-          franchissements: {
-            actif: true,
-            etape: {
-              typeId: 'mfr',
-              date: toCaminoDate('2024-01-01'),
-              contenu: { arm: { franchissements: 2 } },
-            },
-          },
+          mecanise: { value: true, heritee: true, etapeHeritee: { etapeTypeId: 'mfr', date: toCaminoDate('2024-01-01'), value: true } },
+          franchissements: { value: 2, heritee: true, etapeHeritee: { etapeTypeId: 'mfr', date: toCaminoDate('2024-01-01'), value: 2 } },
         },
       },
-      contenu: {},
     }}
   />
 )
@@ -64,27 +48,12 @@ export const AvecHeritage: StoryFn = () => (
     titreTypeId="arm"
     etape={{
       typeId: 'mod',
-      heritageContenu: {
+      contenu: {
         arm: {
-          mecanise: {
-            actif: false,
-            etape: {
-              typeId: 'mfr',
-              date: toCaminoDate('2024-01-01'),
-              contenu: { arm: { mecanise: true } },
-            },
-          },
-          franchissements: {
-            actif: false,
-            etape: {
-              typeId: 'mfr',
-              date: toCaminoDate('2024-01-01'),
-              contenu: { arm: { franchissements: 2 } },
-            },
-          },
+          mecanise: { value: false, heritee: false, etapeHeritee: { etapeTypeId: 'mfr', date: toCaminoDate('2024-01-01'), value: true } },
+          franchissements: { value: null, heritee: false, etapeHeritee: { etapeTypeId: 'mfr', date: toCaminoDate('2024-01-01'), value: 2 } },
         },
       },
-      contenu: { arm: { mecanise: false } },
     }}
   />
 )
@@ -96,30 +65,26 @@ export const DecisionJorf: StoryFn = () => (
     titreTypeId="pcc"
     etape={{
       typeId: 'dpu',
-      heritageContenu: {
-        publication: {
-          jorf: {
-            actif: true,
-            etape: {
-              typeId: 'dex',
-              date: toCaminoDate('2000-05-16'),
-              contenu: {},
-            },
-          },
-          nor: {
-            actif: true,
-            etape: {
-              typeId: 'dex',
-              date: toCaminoDate('2000-05-16'),
-              contenu: {},
-            },
-          },
-        },
-      },
       contenu: {
         publication: {
-          nor: 'ECOI0000235A',
-          jorf: 'JORFTEXT000000399877',
+          nor: {
+            value: null,
+            heritee: true,
+            etapeHeritee: {
+              etapeTypeId: 'dex',
+              date: toCaminoDate('2000-05-16'),
+              value: null,
+            },
+          },
+          jorf: {
+            value: null,
+            heritee: true,
+            etapeHeritee: {
+              etapeTypeId: 'dex',
+              date: toCaminoDate('2000-05-16'),
+              value: null,
+            },
+          },
         },
       },
     }}
