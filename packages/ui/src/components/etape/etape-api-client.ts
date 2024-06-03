@@ -217,6 +217,7 @@ export const etapeApiClient: EtapeApiClient = {
         }
       }
     `)({ id: etapeIdOrSlug })
+    // TODO 2024-06-02 ce code est à remonter dans l'api
     const result = graphqlEtapeValidator.safeParse(data)
     if (result.success) {
       const graphqlEtape = result.data
@@ -440,6 +441,7 @@ export const etapeApiClient: EtapeApiClient = {
       etapeId: etape.id,
     })
 
+    // TODO 2024-06-02 on a du code métier dans notre api, on fusionne étape avec l'héritage
     const heritageData: DeepReadonly<z.infer<typeof heritageValidator>> = heritageValidator.parse(data)
     const flattenEtape: DeepReadonly<CoreEtapeCreationOrModification> = {
       ...etape,

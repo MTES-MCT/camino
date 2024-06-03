@@ -9,6 +9,7 @@ import { sortedDevises } from '../devise.js'
 import { z } from 'zod'
 import { ElementWithValue, SectionWithValue } from '../../sections.js'
 import { Contenu } from '../../permissions/sections.js'
+import { FlattenEtape } from '../../etape-form.js'
 
 const gestionDeLaDemandeDeComplements: Section[] = [
   {
@@ -1031,13 +1032,16 @@ export const getElementWithValue = (sectionsWithValue: SectionWithValue[], secti
   return null
 }
 
-export const getSectionsWithValue = (sections: DeepReadonly<Section[]>, contenu: Contenu): SectionWithValue[] => {
+export const getSectionsWithValue = (sections: DeepReadonly<Section[]>, contenu: Contenu | FlattenEtape['contenu']): SectionWithValue[] => {
   const sectionsWithValue: SectionWithValue[] = []
 
   sections.forEach(section => {
     const elementsWithValue: ElementWithValue[] = []
     section.elements.forEach(element => {
       let value = contenu?.[section.id]?.[element.id] ?? null
+      if (isNotNullNorUndefined(value) && typeof value === 'object' && 'value' in value) {
+        value = value.value as Record<string, never>
+      }
 
       const optionsObject: { options?: { id: string; nom: string }[] } = {}
 

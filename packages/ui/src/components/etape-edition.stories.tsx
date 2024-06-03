@@ -681,30 +681,7 @@ export const ModificationDemandeHeritee: StoryFn = () => (
       getEtapeHeritagePotentiel(etape: DeepReadonly<CoreEtapeCreationOrModification>, titreDemarcheId: DemarcheId) {
         getEtapeHeritagePotentielAction(etape, titreDemarcheId)
 
-        return Promise.resolve({
-          ...etape,
-          heritageProps: modHeritageProps,
-          heritageContenu: {
-            arm: {
-              mecanise: {
-                actif: true,
-                etape: {
-                  date: toCaminoDate('2022-01-01'),
-                  typeId: 'mfr',
-                  contenu: { arm: { mecanise: true } },
-                },
-              },
-              franchissements: {
-                actif: true,
-                etape: {
-                  date: toCaminoDate('2022-01-01'),
-                  typeId: 'mfr',
-                  contenu: { arm: { franchissements: 2 } },
-                },
-              },
-            },
-          },
-        })
+        return Promise.reject(new Error("Cet appel ne doit être fait que lors de la création de l'étape ou pour la modification de la date"))
       },
       getEtape(etapeIdOrSlug) {
         getEtapeAction(etapeIdOrSlug)
@@ -718,7 +695,28 @@ export const ModificationDemandeHeritee: StoryFn = () => (
             isBrouillon: false,
             titreDemarcheId: demarcheIdValidator.parse('demarche-id'),
             date: caminoDateValidator.parse('2023-02-01'),
-            contenu: { arm: { mecanise: { value: true, heritee: false, etapeHeritee: null }, franchissements: { value: 2, heritee: false, etapeHeritee: null } } },
+            contenu: {
+              arm: {
+                mecanise: {
+                  value: true,
+                  heritee: true,
+                  etapeHeritee: {
+                    date: toCaminoDate('2022-01-01'),
+                    etapeTypeId: 'mfr',
+                    value: true,
+                  },
+                },
+                franchissements: {
+                  value: 2,
+                  heritee: true,
+                  etapeHeritee: {
+                    date: toCaminoDate('2022-01-01'),
+                    etapeTypeId: 'mfr',
+                    value: 2,
+                  },
+                },
+              },
+            },
             notes: null,
             ...modHeritageProps,
             amodiataires: {
