@@ -3,6 +3,38 @@ import { TitrePropTitreEtapeFindDemarcheEtape, getMostRecentValuePropFromEtapeFo
 import { toCaminoDate } from './date'
 import { entrepriseIdValidator } from './entreprise'
 describe('getMostRecentValuePropFromEtapeFondamentaleValide', () => {
+  test("retourne le titulaire de la demande même si elle est en brouillon, si elle est l'unique étape", () => {
+    const asl: TitrePropTitreEtapeFindDemarcheEtape = {
+      etape_type_id: 'asl',
+      etape_statut_id: 'fai',
+      is_brouillon: false,
+      ordre: 1,
+    }
+    const mfr: TitrePropTitreEtapeFindDemarcheEtape = {
+      etape_type_id: 'mfr',
+      fondamentale: {
+        date_debut: null,
+        date_fin: null,
+        duree: 240,
+        substances: [],
+        titulaireIds: [entrepriseIdValidator.parse('fr-310380811')],
+        amodiataireIds: null,
+        perimetre: null,
+      },
+      etape_statut_id: 'fai',
+      is_brouillon: true,
+      ordre: 1,
+    }
+
+    expect(
+      getMostRecentValuePropFromEtapeFondamentaleValide('titulaireIds', [
+        {
+          etapes: [asl, mfr],
+          ordre: 1,
+        },
+      ])
+    ).toStrictEqual(mfr.fondamentale.titulaireIds)
+  })
   test('retourne le dernier titulaire même si les étapes ne sont pas dans le bon ordre', () => {
     const dpu: TitrePropTitreEtapeFindDemarcheEtape = {
       etape_type_id: 'dpu',
