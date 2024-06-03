@@ -52,6 +52,8 @@ import { getDataGouvStats } from '../api/rest/statistiques/datagouv.js'
 import { addAdministrationActiviteTypeEmails, deleteAdministrationActiviteTypeEmails, getAdministrationActiviteTypeEmails, getAdministrationUtilisateurs } from '../api/rest/administrations.js'
 import { titreDemandeCreer } from '../api/rest/titre-demande.js'
 import { config } from '../config/index.js'
+import { addLog } from '../api/rest/logs.queries.js'
+import { HTTP_STATUS } from 'camino-common/src/http.js'
 
 interface IRestResolverResult {
   nom: string
@@ -170,16 +172,16 @@ export const restWithPool = (dbPool: Pool) => {
       }
       if ('post' in maRoute) {
         console.info(`POST ${route}`)
-        rest.post(route, restCatcher(maRoute.post(dbPool)))
+        rest.post(route, restCatcherWithMutation('post', maRoute.post(dbPool), dbPool))
       }
       if ('put' in maRoute) {
         console.info(`PUT ${route}`)
-        rest.put(route, restCatcher(maRoute.put(dbPool)))
+        rest.put(route, restCatcherWithMutation('put', maRoute.put(dbPool), dbPool))
       }
 
       if ('delete' in maRoute) {
         console.info(`delete ${route}`)
-        rest.delete(route, restCatcher(maRoute.delete(dbPool)))
+        rest.delete(route, restCatcherWithMutation('delete', maRoute.delete(dbPool), dbPool))
       }
 
       if ('download' in maRoute) {
@@ -212,6 +214,20 @@ type ExpressRoute = (req: CaminoRequest, res: express.Response, next: express.Ne
 const restCatcher = (expressCall: ExpressRoute) => async (req: CaminoRequest, res: express.Response, next: express.NextFunction) => {
   try {
     await expressCall(req, res, next)
+  } catch (e) {
+    console.error('catching error', e)
+    next(e)
+  }
+}
+const restCatcherWithMutation = (method: string, expressCall: ExpressRoute, pool: Pool) => async (req: CaminoRequest, res: express.Response, next: express.NextFunction) => {
+  const user = req.auth
+  try {
+    if (!user) {
+      res.sendStatus(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
+    } else {
+      await expressCall(req, res, next)
+      await addLog(pool, user.id, method, req.url, req.body)
+    }
   } catch (e) {
     console.error('catching error', e)
     next(e)

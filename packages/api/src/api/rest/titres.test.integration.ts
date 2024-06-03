@@ -294,7 +294,7 @@ describe('titreModifier', () => {
   test('ne peut pas modifier un titre (utilisateur anonyme)', async () => {
     const tested = await restPostCall(dbPool, '/rest/titres/:titreId', { titreId: id }, undefined, { id, nom: 'mon titre modifié', references: [] })
 
-    expect(tested.statusCode).toBe(404)
+    expect(tested.statusCode).toBe(403)
   })
 
   test("ne peut pas modifier un titre (un utilisateur 'entreprise')", async () => {
@@ -377,7 +377,7 @@ describe('titreSupprimer', () => {
   test('ne peut pas supprimer un titre (utilisateur anonyme)', async () => {
     const tested = await restDeleteCall(dbPool, '/rest/titres/:titreId', { titreId: id }, undefined)
 
-    expect(tested.statusCode).toBe(404)
+    expect(tested.statusCode).toBe(403)
   })
 
   test('peut supprimer un titre (utilisateur super)', async () => {
