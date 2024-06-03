@@ -1,7 +1,7 @@
 import { useState } from '@/utils/vue-tsx-utils'
 import { DsfrTag } from '../_ui/tag'
 import { HeritageEdit } from './heritage-edit'
-import { AutocompleteEntreprise } from './autocomplete-entreprise'
+import { AutocompleteEntreprises } from './autocomplete-entreprises'
 import { CaminoDate } from 'camino-common/src/date'
 import { SubstancesEdit } from './substances-edit'
 import { dureeOptionalCheck as titreEtapesDureeOptionalCheck, canEditAmodiataires, canEditTitulaires, canEditDuree, canEditDates } from 'camino-common/src/permissions/titres-etapes'
@@ -183,7 +183,7 @@ export const FondamentalesEdit = defineComponent<Props>(props => {
                 <label class="fr-label" for="filters_autocomplete_titulaires">
                   Titulaires
                 </label>
-                <AutocompleteEntreprise
+                <AutocompleteEntreprises
                   class="fr-mt-1w"
                   allEntities={props.entreprises}
                   selectedEntities={editedEtape.value.titulaires.value}
@@ -213,7 +213,7 @@ export const FondamentalesEdit = defineComponent<Props>(props => {
                 <label class="fr-label" for="filters_autocomplete_amodiataires">
                   Amodiataires
                 </label>
-                <AutocompleteEntreprise
+                <AutocompleteEntreprises
                   class="fr-mt-1w"
                   allEntities={props.entreprises}
                   selectedEntities={editedEtape.value.amodiataires.value}

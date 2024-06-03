@@ -11,7 +11,7 @@ interface Props {
   name: 'titulaires' | 'amodiataires'
   onEntreprisesUpdate: (entreprise: DeepReadonly<EntrepriseId[]>) => void
 }
-export const AutocompleteEntreprise = defineComponent<Props>(props => {
+export const AutocompleteEntreprises = defineComponent<Props>(props => {
   const [mySelectedEntities, setMySelectedEntities] = useState<DeepReadonly<EntrepriseId[]>>(props.selectedEntities ?? [])
 
   watch(
@@ -51,4 +51,4 @@ export const AutocompleteEntreprise = defineComponent<Props>(props => {
 })
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-AutocompleteEntreprise.props = ['onEntreprisesUpdate', 'nonSelectableEntities', 'selectedEntities', 'allEntities', 'name']
+AutocompleteEntreprises.props = ['onEntreprisesUpdate', 'nonSelectableEntities', 'selectedEntities', 'allEntities', 'name']
