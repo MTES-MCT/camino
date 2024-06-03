@@ -23,18 +23,32 @@ test('fondamentaleStepIsVisible', () => {
 })
 
 test('fondamentaleStepIsComplete', () => {
-  expect(fondamentaleStepIsComplete({ duree: 0, substances: [], typeId: 'aac' }, 'amo', 'prr')).toBe(true)
+  expect(fondamentaleStepIsComplete({ duree: { value: 0, heritee: false, etapeHeritee: null }, substances: { value: [], heritee: false, etapeHeritee: null }, typeId: 'aac' }, 'amo', 'prr')).toBe(true)
 
-  expect(fondamentaleStepIsComplete({ duree: 0, substances: [], typeId: 'dpu' }, 'amo', 'prr')).toBe(true)
-  expect(fondamentaleStepIsComplete({ duree: 0, substances: [], typeId: 'mfr' }, 'amo', 'prr')).toBe(false)
+  expect(fondamentaleStepIsComplete({ duree: { value: 0, heritee: false, etapeHeritee: null }, substances: { value: [], heritee: false, etapeHeritee: null }, typeId: 'dpu' }, 'amo', 'prr')).toBe(true)
+  expect(fondamentaleStepIsComplete({ duree: { value: 0, heritee: false, etapeHeritee: null }, substances: { value: [], heritee: false, etapeHeritee: null }, typeId: 'mfr' }, 'amo', 'prr')).toBe(
+    false
+  )
 
-  expect(fondamentaleStepIsComplete({ duree: 0, substances: ['auru'], typeId: 'mfr' }, 'oct', 'prr')).toBe(true)
-  expect(fondamentaleStepIsComplete({ duree: 2, substances: ['auru'], typeId: 'mfr' }, 'oct', 'arm')).toBe(true)
-  expect(fondamentaleStepIsComplete({ duree: 0, substances: ['auru'], typeId: 'mfr' }, 'oct', 'arm')).toBe(false)
-  expect(fondamentaleStepIsComplete({ duree: 2, substances: [], typeId: 'mfr' }, 'oct', 'arm')).toBe(false)
+  expect(
+    fondamentaleStepIsComplete({ duree: { value: 0, heritee: false, etapeHeritee: null }, substances: { value: ['auru'], heritee: false, etapeHeritee: null }, typeId: 'mfr' }, 'oct', 'prr')
+  ).toBe(true)
+  expect(
+    fondamentaleStepIsComplete({ duree: { value: 2, heritee: false, etapeHeritee: null }, substances: { value: ['auru'], heritee: false, etapeHeritee: null }, typeId: 'mfr' }, 'oct', 'arm')
+  ).toBe(true)
+  expect(
+    fondamentaleStepIsComplete({ duree: { value: 0, heritee: false, etapeHeritee: null }, substances: { value: ['auru'], heritee: false, etapeHeritee: null }, typeId: 'mfr' }, 'oct', 'arm')
+  ).toBe(false)
+  expect(fondamentaleStepIsComplete({ duree: { value: 2, heritee: false, etapeHeritee: null }, substances: { value: [], heritee: false, etapeHeritee: null }, typeId: 'mfr' }, 'oct', 'arm')).toBe(
+    false
+  )
 
-  expect(fondamentaleStepIsComplete({ duree: 0, substances: ['auru'], typeId: 'mfr' }, 'mut', 'arm')).toBe(true)
-  expect(fondamentaleStepIsComplete({ duree: 0, substances: [], typeId: 'mfr' }, 'mut', 'arm')).toBe(false)
+  expect(
+    fondamentaleStepIsComplete({ duree: { value: 0, heritee: false, etapeHeritee: null }, substances: { value: ['auru'], heritee: false, etapeHeritee: null }, typeId: 'mfr' }, 'mut', 'arm')
+  ).toBe(true)
+  expect(fondamentaleStepIsComplete({ duree: { value: 0, heritee: false, etapeHeritee: null }, substances: { value: [], heritee: false, etapeHeritee: null }, typeId: 'mfr' }, 'mut', 'arm')).toBe(
+    false
+  )
 })
 
 test('sectionsStepIsVisible', () => {
@@ -44,7 +58,7 @@ test('sectionsStepIsVisible', () => {
 
 test('sectionsStepIsComplete', () => {
   expect(sectionsStepIsComplete({ typeId: 'mfr', contenu: {} }, 'oct', 'arm')).toBe(false)
-  expect(sectionsStepIsComplete({ typeId: 'mfr', contenu: { arm: { mecanise: true } } }, 'oct', 'arm')).toBe(true)
+  expect(sectionsStepIsComplete({ typeId: 'mfr', contenu: { arm: { mecanise: { value: true, heritee: false, etapeHeritee: null } } } }, 'oct', 'arm')).toBe(true)
 })
 
 test('perimetreStepIsVisible', () => {
@@ -53,10 +67,82 @@ test('perimetreStepIsVisible', () => {
 })
 
 test('perimetreStepIsComplete', () => {
-  expect(perimetreStepIsComplete({ typeId: 'mfr', geojson4326Perimetre: null })).toBe(false)
-  expect(perimetreStepIsComplete({ typeId: 'mfr', geojson4326Perimetre: { type: 'Feature', properties: {}, geometry: { type: 'MultiPolygon', coordinates: [] } } })).toBe(true)
-  expect(perimetreStepIsComplete({ typeId: 'aac', geojson4326Perimetre: null })).toBe(true)
-  expect(perimetreStepIsComplete({ typeId: 'dpu', geojson4326Perimetre: null })).toBe(true)
+  expect(
+    perimetreStepIsComplete({
+      typeId: 'mfr',
+      perimetre: {
+        value: {
+          geojson4326Perimetre: null,
+          geojson4326Forages: null,
+          geojson4326Points: null,
+          geojsonOrigineForages: null,
+          geojsonOrigineGeoSystemeId: null,
+          geojsonOriginePerimetre: null,
+          geojsonOriginePoints: null,
+          surface: null,
+        },
+        heritee: false,
+        etapeHeritee: null,
+      },
+    })
+  ).toBe(false)
+  expect(
+    perimetreStepIsComplete({
+      typeId: 'mfr',
+      perimetre: {
+        value: {
+          geojson4326Perimetre: { type: 'Feature', properties: {}, geometry: { type: 'MultiPolygon', coordinates: [] } },
+          geojson4326Forages: null,
+          geojson4326Points: null,
+          geojsonOrigineForages: null,
+          geojsonOrigineGeoSystemeId: null,
+          geojsonOriginePerimetre: null,
+          geojsonOriginePoints: null,
+          surface: null,
+        },
+        heritee: false,
+        etapeHeritee: null,
+      },
+    })
+  ).toBe(true)
+  expect(
+    perimetreStepIsComplete({
+      typeId: 'aac',
+      perimetre: {
+        value: {
+          geojson4326Perimetre: null,
+          geojson4326Forages: null,
+          geojson4326Points: null,
+          geojsonOrigineForages: null,
+          geojsonOrigineGeoSystemeId: null,
+          geojsonOriginePerimetre: null,
+          geojsonOriginePoints: null,
+          surface: null,
+        },
+        heritee: false,
+        etapeHeritee: null,
+      },
+    })
+  ).toBe(true)
+  expect(
+    perimetreStepIsComplete({
+      typeId: 'dpu',
+      perimetre: {
+        value: {
+          geojson4326Perimetre: null,
+          geojson4326Forages: null,
+          geojson4326Points: null,
+          geojsonOrigineForages: null,
+          geojsonOrigineGeoSystemeId: null,
+          geojsonOriginePerimetre: null,
+          geojsonOriginePoints: null,
+          surface: null,
+        },
+        heritee: false,
+        etapeHeritee: null,
+      },
+    })
+  ).toBe(true)
 })
 
 test('etapeDocumentsStepIsVisible', () => {
@@ -191,51 +277,89 @@ test('entrepriseDocumentsStepIsVisible', () => {
   expect(entrepriseDocumentsStepIsVisible({ typeId: 'cod' }, 'oct', 'axm')).toBe(false)
 })
 test('entrepriseDocumentsStepIsComplete', () => {
-  expect(entrepriseDocumentsStepIsComplete({ typeId: 'asl', titulaireIds: [], amodiataireIds: [], contenu: {} }, 'oct', 'axm', [])).toBe(true)
-  expect(entrepriseDocumentsStepIsComplete({ typeId: 'mfr', titulaireIds: [], amodiataireIds: [], contenu: {} }, 'oct', 'axm', [])).toBe(true)
-
-  expect(entrepriseDocumentsStepIsComplete({ typeId: 'mfr', titulaireIds: [entreprise1.id], amodiataireIds: [], contenu: {} }, 'oct', 'axm', [])).toBe(false)
-  expect(entrepriseDocumentsStepIsComplete({ typeId: 'mfr', titulaireIds: [], amodiataireIds: [entreprise1.id], contenu: {} }, 'oct', 'axm', [])).toBe(false)
+  expect(
+    entrepriseDocumentsStepIsComplete(
+      { typeId: 'asl', titulaires: { value: [], heritee: false, etapeHeritee: null }, amodiataires: { value: [], heritee: false, etapeHeritee: null }, contenu: {} },
+      'oct',
+      'axm',
+      []
+    )
+  ).toBe(true)
+  expect(
+    entrepriseDocumentsStepIsComplete(
+      { typeId: 'mfr', titulaires: { value: [], heritee: false, etapeHeritee: null }, amodiataires: { value: [], heritee: false, etapeHeritee: null }, contenu: {} },
+      'oct',
+      'axm',
+      []
+    )
+  ).toBe(true)
 
   expect(
-    entrepriseDocumentsStepIsComplete({ typeId: 'mfr', titulaireIds: [], amodiataireIds: [entreprise1.id], contenu: { arm: { mecanise: false } } }, 'oct', 'arm', [
-      {
-        id: entrepriseDocumentIdValidator.parse('idatf'),
-        documentTypeId: 'atf',
-        entrepriseId: entreprise1.id,
-      },
-      {
-        id: entrepriseDocumentIdValidator.parse('idcur'),
-        documentTypeId: 'cur',
-        entrepriseId: entreprise1.id,
-      },
+    entrepriseDocumentsStepIsComplete(
+      { typeId: 'mfr', titulaires: { value: [entreprise1.id], heritee: false, etapeHeritee: null }, amodiataires: { value: [], heritee: false, etapeHeritee: null }, contenu: {} },
+      'oct',
+      'axm',
+      []
+    )
+  ).toBe(false)
+  expect(
+    entrepriseDocumentsStepIsComplete(
+      { typeId: 'mfr', titulaires: { value: [], heritee: false, etapeHeritee: null }, amodiataires: { value: [entreprise1.id], heritee: false, etapeHeritee: null }, contenu: {} },
+      'oct',
+      'axm',
+      []
+    )
+  ).toBe(false)
 
+  expect(
+    entrepriseDocumentsStepIsComplete(
       {
-        id: entrepriseDocumentIdValidator.parse('idjid'),
-        documentTypeId: 'jid',
-        entrepriseId: entreprise1.id,
+        typeId: 'mfr',
+        titulaires: { value: [], heritee: false, etapeHeritee: null },
+        amodiataires: { value: [entreprise1.id], heritee: false, etapeHeritee: null },
+        contenu: { arm: { mecanise: { value: false, heritee: false, etapeHeritee: null } } },
       },
-      {
-        id: entrepriseDocumentIdValidator.parse('idjct'),
-        documentTypeId: 'jct',
-        entrepriseId: entreprise1.id,
-      },
-      {
-        id: entrepriseDocumentIdValidator.parse('idkbi'),
-        documentTypeId: 'kbi',
-        entrepriseId: entreprise1.id,
-      },
-      {
-        id: entrepriseDocumentIdValidator.parse('idjcf'),
-        documentTypeId: 'jcf',
-        entrepriseId: entreprise1.id,
-      },
-    ])
+      'oct',
+      'arm',
+      [
+        {
+          id: entrepriseDocumentIdValidator.parse('idatf'),
+          documentTypeId: 'atf',
+          entrepriseId: entreprise1.id,
+        },
+        {
+          id: entrepriseDocumentIdValidator.parse('idcur'),
+          documentTypeId: 'cur',
+          entrepriseId: entreprise1.id,
+        },
+
+        {
+          id: entrepriseDocumentIdValidator.parse('idjid'),
+          documentTypeId: 'jid',
+          entrepriseId: entreprise1.id,
+        },
+        {
+          id: entrepriseDocumentIdValidator.parse('idjct'),
+          documentTypeId: 'jct',
+          entrepriseId: entreprise1.id,
+        },
+        {
+          id: entrepriseDocumentIdValidator.parse('idkbi'),
+          documentTypeId: 'kbi',
+          entrepriseId: entreprise1.id,
+        },
+        {
+          id: entrepriseDocumentIdValidator.parse('idjcf'),
+          documentTypeId: 'jcf',
+          entrepriseId: entreprise1.id,
+        },
+      ]
+    )
   ).toBe(true)
 })
 
 test('getDocumentsTypes', () => {
-  expect(getDocumentsTypes({ typeId: 'asl', contenu: {} }, 'oct', 'axm', [])).toMatchInlineSnapshot(`
+  expect(getDocumentsTypes({ typeId: 'asl' }, 'oct', 'axm', [], false)).toMatchInlineSnapshot(`
     [
       {
         "id": "dei",
@@ -251,7 +375,7 @@ test('getDocumentsTypes', () => {
     ]
   `)
 
-  expect(getDocumentsTypes({ typeId: 'mfr', contenu: {} }, 'oct', 'arm', [])).toMatchInlineSnapshot(`
+  expect(getDocumentsTypes({ typeId: 'mfr' }, 'oct', 'arm', [], false)).toMatchInlineSnapshot(`
     [
       {
         "id": "cam",
@@ -347,7 +471,7 @@ test('getDocumentsTypes', () => {
     ]
   `)
 
-  expect(getDocumentsTypes({ typeId: 'mfr', contenu: { arm: { mecanise: true } } }, 'oct', 'arm', [])).toMatchInlineSnapshot(`
+  expect(getDocumentsTypes({ typeId: 'mfr' }, 'oct', 'arm', [], true)).toMatchInlineSnapshot(`
     [
       {
         "id": "cam",
@@ -443,7 +567,7 @@ test('getDocumentsTypes', () => {
     ]
   `)
 
-  expect(getDocumentsTypes({ typeId: 'mfr', contenu: {} }, 'oct', 'axm', ['1'])).toMatchInlineSnapshot(`
+  expect(getDocumentsTypes({ typeId: 'mfr' }, 'oct', 'axm', ['1'], false)).toMatchInlineSnapshot(`
     [
       {
         "id": "cam",
@@ -591,7 +715,7 @@ test('getDocumentsTypes', () => {
     ]
   `)
 
-  expect(getDocumentsTypes({ typeId: 'mfr', contenu: {} }, 'oct', 'axm', ['2'])).toMatchInlineSnapshot(`
+  expect(getDocumentsTypes({ typeId: 'mfr' }, 'oct', 'axm', ['2'], false)).toMatchInlineSnapshot(`
     [
       {
         "id": "cam",

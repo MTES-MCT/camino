@@ -1,8 +1,9 @@
 import { action } from '@storybook/addon-actions'
-import { SubstancesEdit, Props } from './substances-edit'
+import { SubstancesEdit } from './substances-edit'
 import { Meta, StoryFn } from '@storybook/vue3'
 import { toCaminoDate } from 'camino-common/src/date'
 import { SubstancesLegale } from 'camino-common/src/static/substancesLegales'
+import { FlattenEtape } from 'camino-common/src/etape-form'
 
 const meta: Meta = {
   title: 'Components/Etape/SubstancesEdit',
@@ -12,30 +13,18 @@ const meta: Meta = {
 export default meta
 
 const updateSubstancesAction = action('updateSubstances')
-const updateHeritage = action('updateHeritage')
 
-const heritageProps: Props['heritageSubstances'] = {
-  actif: true,
-  etape: {
-    substances: [SubstancesLegale.auru.id, SubstancesLegale.arge.id],
-    date: toCaminoDate('2020-01-01'),
-    typeId: 'mfr',
-  },
+const heritageProps: FlattenEtape['substances']['etapeHeritee'] = {
+  value: [SubstancesLegale.auru.id, SubstancesLegale.arge.id],
+  date: toCaminoDate('2020-01-01'),
+  etapeTypeId: 'mfr',
 }
 export const SansHeritage: StoryFn = () => (
-  <SubstancesEdit
-    substances={[SubstancesLegale.auru.id]}
-    updateHeritage={updateHeritage}
-    updateSubstances={updateSubstancesAction}
-    domaineId="m"
-    heritageSubstances={{ ...heritageProps, actif: false }}
-  />
+  <SubstancesEdit substances={{ value: [SubstancesLegale.auru.id], heritee: false, etapeHeritee: heritageProps }} updateSubstances={updateSubstancesAction} domaineId="m" />
 )
 
 export const AvecHeritage: StoryFn = () => (
-  <SubstancesEdit substances={[SubstancesLegale.auru.id]} updateHeritage={updateHeritage} updateSubstances={updateSubstancesAction} domaineId="m" heritageSubstances={{ ...heritageProps }} />
+  <SubstancesEdit substances={{ value: heritageProps.value, heritee: true, etapeHeritee: heritageProps }} updateSubstances={updateSubstancesAction} domaineId="m" />
 )
 
-export const SansSubstance: StoryFn = () => (
-  <SubstancesEdit substances={[]} updateHeritage={updateHeritage} updateSubstances={updateSubstancesAction} domaineId="m" heritageSubstances={{ actif: false }} />
-)
+export const SansSubstance: StoryFn = () => <SubstancesEdit substances={{ value: [], heritee: false, etapeHeritee: null }} updateSubstances={updateSubstancesAction} domaineId="m" />

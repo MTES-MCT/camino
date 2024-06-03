@@ -2,6 +2,7 @@ import { Section } from '../static/titresTypes_demarchesTypes_etapesTypes/sectio
 import { ElementWithValue } from '../sections.js'
 import { DeepReadonly, isNullOrUndefined } from '../typescript-tools.js'
 
+// @deprecated ==> type better
 export type Contenu = { [key in string]?: { [secondKey in string]?: unknown } } | null
 
 // @deprecated => sectionsWithValueCompleteValidate

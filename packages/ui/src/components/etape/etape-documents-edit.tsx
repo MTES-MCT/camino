@@ -46,7 +46,7 @@ interface Props {
   ) => void
   etapeId: EtapeId | null
   apiClient: Pick<ApiClient, 'uploadTempDocument' | 'getEtapeDocumentsByEtapeId'>
-  contenu: DeepReadonly<{ arm?: { mecanise?: boolean } }>
+  contenu: DeepReadonly<{ arm?: { mecanise?: { value: boolean } } }>
   user: User
 }
 
@@ -101,7 +101,7 @@ const EtapeDocumentsLoaded = defineComponent<EtapeDocumentsLoadedProps>(props =>
   const addOrEditAslPopupOpen = ref<boolean>(false)
 
   const documentTypes = computed<DocumentType[]>(() => {
-    return getDocumentsTypes({ contenu: props.contenu, typeId: props.tde.etapeTypeId }, props.tde.demarcheTypeId, props.tde.titreTypeId, props.sdomZoneIds)
+    return getDocumentsTypes({ typeId: props.tde.etapeTypeId }, props.tde.demarcheTypeId, props.tde.titreTypeId, props.sdomZoneIds, props.contenu.arm?.mecanise?.value === true)
   })
 
   const needAslAndDaeCompute = computed<boolean>(() => {

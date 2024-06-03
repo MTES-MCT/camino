@@ -81,20 +81,24 @@ const onPointsChange = (geojson4326Points: FeatureCollectionPoints) => {
 const onForagesChange = (geojson4326Forages: FeatureCollectionForages) => {
   onForagesChangeAction(geojson4326Forages)
 }
-const onHeritageChange = (heritage: Props['etape']['heritageProps']['perimetre']) => {
+const onHeritageChange = (heritage: Props['etape']['perimetre']) => {
   onHeritageChangeAction(heritage)
 }
 const etapeNoHeritage: Props['etape'] = {
-  typeId: 'mfr',
-  heritageProps: { perimetre: { actif: false } },
-  geojson4326Perimetre: null,
-  geojson4326Points: null,
-  geojsonOriginePerimetre: null,
-  geojsonOriginePoints: null,
-  geojsonOrigineGeoSystemeId: null,
-  geojson4326Forages: null,
-  geojsonOrigineForages: null,
-  surface: null,
+  perimetre: {
+    value: {
+      geojson4326Perimetre: null,
+      geojson4326Points: null,
+      geojsonOriginePerimetre: null,
+      geojsonOriginePoints: null,
+      geojsonOrigineGeoSystemeId: null,
+      geojson4326Forages: null,
+      geojsonOrigineForages: null,
+      surface: null,
+    },
+    heritee: false,
+    etapeHeritee: null,
+  },
 }
 
 const titreSlug = titreSlugValidator.parse('titre-slug')
@@ -112,23 +116,22 @@ export const EmptyNoHeritage: StoryFn = () => (
   />
 )
 const etapeEmptyHeritage: Props['etape'] = {
-  ...etapeNoHeritage,
-  typeId: 'dpu',
-  heritageProps: {
-    perimetre: {
-      actif: true,
-      etape: {
-        date: toCaminoDate('2023-01-01'),
-        typeId: EtapesTypes.mfr.id,
-        geojson4326Perimetre: null,
-        geojson4326Points: null,
-        geojsonOriginePerimetre: null,
-        geojsonOriginePoints: null,
-        geojsonOrigineGeoSystemeId: null,
-        geojson4326Forages: null,
-        geojsonOrigineForages: null,
-        surface: null,
-      },
+  perimetre: {
+    value: {
+      geojson4326Perimetre: null,
+      geojson4326Points: null,
+      geojsonOriginePerimetre: null,
+      geojsonOriginePoints: null,
+      geojsonOrigineGeoSystemeId: null,
+      geojson4326Forages: null,
+      geojsonOrigineForages: null,
+      surface: null,
+    },
+    heritee: true,
+    etapeHeritee: {
+      date: toCaminoDate('2023-01-01'),
+      etapeTypeId: EtapesTypes.mfr.id,
+      value: null,
     },
   },
 }
@@ -147,13 +150,22 @@ export const EmptyHeritage: StoryFn = () => (
 )
 
 const etapeHeritage: Props['etape'] = {
-  ...etapeEmptyHeritage,
-  heritageProps: {
-    perimetre: {
-      actif: true,
-      etape: {
-        date: toCaminoDate('2023-01-01'),
-        typeId: EtapesTypes.mfr.id,
+  perimetre: {
+    value: {
+      geojson4326Perimetre: null,
+      geojson4326Points: null,
+      geojsonOriginePerimetre: null,
+      geojsonOriginePoints: null,
+      geojsonOrigineGeoSystemeId: null,
+      geojson4326Forages: null,
+      geojsonOrigineForages: null,
+      surface: null,
+    },
+    heritee: true,
+    etapeHeritee: {
+      date: toCaminoDate('2023-01-01'),
+      etapeTypeId: EtapesTypes.mfr.id,
+      value: {
         surface: km2Validator.parse(2),
         geojson4326Perimetre: perimetre,
         geojson4326Points: null,
@@ -181,13 +193,20 @@ export const Heritage: StoryFn = () => (
 )
 
 const etape: Props['etape'] = {
-  ...etapeEmptyHeritage,
-  geojson4326Perimetre: perimetre,
-  surface: km2Validator.parse(2),
-  geojsonOriginePerimetre: perimetre,
-  geojsonOriginePoints: null,
-  geojsonOrigineGeoSystemeId: '4326',
-  heritageProps: { perimetre: { actif: false } },
+  perimetre: {
+    value: {
+      geojson4326Points: null,
+      geojson4326Forages: null,
+      geojsonOrigineForages: null,
+      geojson4326Perimetre: perimetre,
+      surface: km2Validator.parse(2),
+      geojsonOriginePerimetre: perimetre,
+      geojsonOriginePoints: null,
+      geojsonOrigineGeoSystemeId: '4326',
+    },
+    heritee: false,
+    etapeHeritee: null,
+  },
 }
 export const FilledNoHeritage: StoryFn = () => (
   <PerimetreEdit
@@ -204,13 +223,20 @@ export const FilledNoHeritage: StoryFn = () => (
 )
 
 const etapeLegacy: Props['etape'] = {
-  ...etapeEmptyHeritage,
-  geojson4326Perimetre: perimetre,
-  surface: km2Validator.parse(2),
-  geojsonOriginePerimetre: perimetre,
-  geojsonOriginePoints: null,
-  geojsonOrigineGeoSystemeId: GEO_SYSTEME_IDS.RGFG95,
-  heritageProps: { perimetre: { actif: false } },
+  perimetre: {
+    value: {
+      geojson4326Points: null,
+      geojson4326Forages: null,
+      geojsonOrigineForages: null,
+      geojson4326Perimetre: perimetre,
+      surface: km2Validator.parse(2),
+      geojsonOriginePerimetre: perimetre,
+      geojsonOriginePoints: null,
+      geojsonOrigineGeoSystemeId: GEO_SYSTEME_IDS.RGFG95,
+    },
+    heritee: false,
+    etapeHeritee: null,
+  },
 }
 export const LegacyGeoSysteme: StoryFn = () => (
   <PerimetreEdit
@@ -306,15 +332,20 @@ const perimetreForages: FeatureMultiPolygon = {
 }
 
 const etapeWithForages: Props['etape'] = {
-  ...etapeEmptyHeritage,
-  geojson4326Perimetre: perimetreForages,
-  surface: km2Validator.parse(2),
-  geojsonOriginePerimetre: perimetreForages,
-  geojsonOriginePoints: null,
-  geojsonOrigineGeoSystemeId: '4326',
-  geojson4326Forages: geojsonForages,
-  geojsonOrigineForages: geojsonForages,
-  heritageProps: { perimetre: { actif: false } },
+  perimetre: {
+    value: {
+      geojson4326Points: null,
+      geojson4326Perimetre: perimetreForages,
+      surface: km2Validator.parse(2),
+      geojsonOriginePerimetre: perimetreForages,
+      geojsonOriginePoints: null,
+      geojsonOrigineGeoSystemeId: '4326',
+      geojson4326Forages: geojsonForages,
+      geojsonOrigineForages: geojsonForages,
+    },
+    heritee: false,
+    etapeHeritee: null,
+  },
 }
 export const WithForages: StoryFn = () => (
   <PerimetreEdit

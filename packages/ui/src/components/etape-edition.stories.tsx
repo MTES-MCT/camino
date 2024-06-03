@@ -3,14 +3,17 @@ import { action } from '@storybook/addon-actions'
 import { Props, PureEtapeEdition } from './etape-edition'
 import { EntrepriseDocumentId, EntrepriseId, EtapeEntrepriseDocument, entrepriseDocumentIdValidator, entrepriseIdValidator, toEntrepriseDocumentId } from 'camino-common/src/entreprise'
 import { DemarcheId, demarcheIdOrSlugValidator, demarcheIdValidator, demarcheSlugValidator } from 'camino-common/src/demarche'
-import { EtapeId, EtapeWithHeritage, etapeDocumentIdValidator, etapeIdOrSlugValidator, etapeIdValidator, etapeSlugValidator } from 'camino-common/src/etape'
+import { EtapeId, etapeDocumentIdValidator, etapeIdOrSlugValidator, etapeIdValidator, etapeSlugValidator } from 'camino-common/src/etape'
 import { titreIdValidator, titreSlugValidator } from 'camino-common/src/validators/titres'
 import { FeatureMultiPolygon, PerimetreInformations } from 'camino-common/src/perimetre'
 import { CaminoDate, caminoDateValidator, toCaminoDate } from 'camino-common/src/date'
 import { testBlankUser } from 'camino-common/src/tests-utils'
-import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
-import { tempDocumentNameValidator, TempDocumentName } from 'camino-common/src/document'
 import { UiEntrepriseDocumentInput } from './entreprise/entreprise-api-client'
+import { demarcheTypeIdValidator } from 'camino-common/src/static/demarchesTypes'
+import { DeepReadonly } from 'vue'
+import { CoreEtapeCreationOrModification } from './etape/etape-api-client'
+import { FlattenEtape } from 'camino-common/src/etape-form'
+import { tempDocumentNameValidator, TempDocumentName } from 'camino-common/src/document'
 
 const meta: Meta = {
   title: 'Components/EtapeEdition',
@@ -52,69 +55,6 @@ const entreprises = [
 const perimetreInformations: PerimetreInformations = {
   sdomZoneIds: ['1'],
   superposition_alertes: [{ nom: 'Titre Tutu', slug: titreSlugValidator.parse('slug-tutu'), titre_statut_id: 'mod' }],
-}
-
-const heritagePropsAllFalse: EtapeWithHeritage['heritageProps'] = {
-  dateDebut: {
-    actif: false,
-  },
-  dateFin: {
-    actif: false,
-  },
-  duree: {
-    actif: false,
-  },
-  substances: {
-    actif: false,
-  },
-  titulaires: {
-    actif: false,
-  },
-  amodiataires: {
-    actif: false,
-  },
-  perimetre: {
-    actif: false,
-  },
-}
-
-const heritageProps: EtapeWithHeritage['heritageProps'] = {
-  dateDebut: {
-    actif: false,
-  },
-  dateFin: {
-    actif: false,
-    etape: {
-      date: toCaminoDate('2022-01-01'),
-      typeId: 'mfr',
-      dateFin: toCaminoDate('2022-01-01'),
-    },
-  },
-  duree: {
-    actif: false,
-    etape: {
-      date: toCaminoDate('2022-01-01'),
-      typeId: 'mfr',
-      duree: 12,
-    },
-  },
-  substances: {
-    actif: true,
-    etape: {
-      date: toCaminoDate('2022-01-01'),
-      typeId: 'mfr',
-      substances: ['arge'],
-    },
-  },
-  titulaires: {
-    actif: false,
-  },
-  amodiataires: {
-    actif: false,
-  },
-  perimetre: {
-    actif: false,
-  },
 }
 
 const perimetre: FeatureMultiPolygon = {
@@ -229,12 +169,42 @@ const apiClient: Props['apiClient'] = {
       { etapeTypeId: 'mod', etapeStatutId: 'fai', mainStep: true },
     ])
   },
-  getEtapeHeritagePotentiel(titreDemarcheId: DemarcheId, date: CaminoDate, typeId: EtapeTypeId) {
-    getEtapeHeritagePotentielAction(titreDemarcheId, date, typeId)
-
+  getEtapeHeritagePotentiel(etape, titreDemarcheId) {
+    getEtapeHeritagePotentielAction(etape, titreDemarcheId)
     return Promise.resolve({
+      ...etape,
+      duree: {
+        value: etape.duree.value,
+        heritee: false,
+        etapeHeritee: {
+          date: toCaminoDate('2022-01-01'),
+          etapeTypeId: 'mfr',
+          value: 12,
+        },
+      },
+      substances: {
+        value: ['arge'],
+        heritee: true,
+        etapeHeritee: {
+          date: toCaminoDate('2022-01-01'),
+          etapeTypeId: 'mfr',
+          value: ['arge'],
+        },
+      },
+      dateDebut: { value: etape.dateDebut.value, heritee: false, etapeHeritee: null },
+      titulaires: { value: etape.titulaires.value, heritee: false, etapeHeritee: null },
+      amodiataires: { value: etape.amodiataires.value, heritee: false, etapeHeritee: null },
+      perimetre: { value: etape.perimetre.value, heritee: false, etapeHeritee: null },
+      dateFin: {
+        value: etape.dateFin.value,
+        heritee: false,
+        etapeHeritee: {
+          date: toCaminoDate('2022-01-01'),
+          etapeTypeId: 'mfr',
+          value: toCaminoDate('2022-01-01'),
+        },
+      },
       heritageContenu: { arm: { mecanise: { actif: false }, franchissements: { actif: false } } },
-      heritageProps,
     })
   },
   geojsonImport(body, geoSystemeId) {
@@ -279,51 +249,49 @@ const apiClient: Props['apiClient'] = {
   },
   getEtape(etapeIdOrSlug) {
     getEtapeAction(etapeIdOrSlug)
-
+    const demarcheId = demarcheIdValidator.parse('demarche-id')
     return Promise.resolve({
-      id: etapeIdValidator.parse('etape-id'),
-      slug: etapeSlugValidator.parse('etape-slug'),
-      typeId: 'mfr',
-      statutId: 'fai',
-      isBrouillon: false,
-      titreDemarcheId: demarcheIdValidator.parse('demarche-id'),
-      date: caminoDateValidator.parse('2023-02-01'),
-      dateDebut: null,
-      dateFin: null,
-      duree: null,
-      substances: [],
-      titulaireIds: [],
-      amodiataireIds: [],
-      contenu: {},
-      notes: null,
-      geojson4326Forages: null,
-      geojson4326Perimetre: null,
-      geojson4326Points: null,
-      geojsonOrigineForages: null,
-      geojsonOrigineGeoSystemeId: null,
-      geojsonOriginePerimetre: null,
-      geojsonOriginePoints: null,
-      surface: null,
-      demarche: {
-        slug: demarcheSlugValidator.parse('demarche-slug'),
-        typeId: 'oct',
-        description: 'Super description',
-        titre: {
-          id: titreIdValidator.parse('titre-id'),
-          slug: titreSlugValidator.parse('titre-slug'),
-          nom: 'Nom du titre',
-          typeId: 'arm',
+      etape: {
+        id: etapeIdValidator.parse('etape-id'),
+        slug: etapeSlugValidator.parse('etape-slug'),
+        typeId: 'mfr',
+        statutId: 'fai',
+        isBrouillon: false,
+        titreDemarcheId: demarcheId,
+        date: caminoDateValidator.parse('2023-02-01'),
+        dateDebut: { value: null, heritee: false, etapeHeritee: null },
+        dateFin: { value: null, heritee: false, etapeHeritee: null },
+        duree: { value: null, heritee: false, etapeHeritee: null },
+        substances: { value: [], heritee: false, etapeHeritee: null },
+        titulaires: { value: [], heritee: false, etapeHeritee: null },
+        amodiataires: { value: [], heritee: false, etapeHeritee: null },
+        perimetre: {
+          value: {
+            geojson4326Forages: null,
+            geojson4326Perimetre: null,
+            geojson4326Points: null,
+            geojsonOrigineForages: null,
+            geojsonOrigineGeoSystemeId: null,
+            geojsonOriginePerimetre: null,
+            geojsonOriginePoints: null,
+            surface: null,
+          },
+          heritee: false,
+          etapeHeritee: null,
         },
+        contenu: { arm: { mecanise: { value: null, heritee: false, etapeHeritee: null }, franchissements: { value: null, heritee: false, etapeHeritee: null } } },
+        notes: null,
       },
-      heritageContenu: {},
-      heritageProps: {
-        amodiataires: { actif: false },
-        dateDebut: { actif: false },
-        dateFin: { actif: false },
-        duree: { actif: false },
-        perimetre: { actif: false },
-        substances: { actif: false },
-        titulaires: { actif: false },
+      demarche: {
+        demarche_slug: demarcheSlugValidator.parse('demarche-slug'),
+        demarche_type_id: 'oct',
+        demarche_description: 'Super description',
+        demarche_id: demarcheId,
+
+        titre_id: titreIdValidator.parse('titre-id'),
+        titre_slug: titreSlugValidator.parse('titre-slug'),
+        titre_nom: 'Nom du titre',
+        titre_type_id: 'arm',
       },
     })
   },
@@ -385,51 +353,49 @@ export const AffichageAide: StoryFn = () => (
       ...apiClient,
       getEtape(etapeIdOrSlug) {
         getEtapeAction(etapeIdOrSlug)
-
+        const demarcheId = demarcheIdValidator.parse('demarche-id')
         return Promise.resolve({
-          id: etapeIdValidator.parse('etape-id'),
-          slug: etapeSlugValidator.parse('etape-slug'),
-          typeId: 'mfr',
-          statutId: 'fai',
-          isBrouillon: true,
-          titreDemarcheId: demarcheIdValidator.parse('demarche-id'),
-          date: caminoDateValidator.parse('2023-02-01'),
-          dateDebut: null,
-          dateFin: null,
-          duree: null,
-          substances: [],
-          titulaireIds: [],
-          amodiataireIds: [],
-          contenu: {},
-          notes: null,
-          geojson4326Forages: null,
-          geojson4326Perimetre: null,
-          geojson4326Points: null,
-          geojsonOrigineForages: null,
-          geojsonOrigineGeoSystemeId: null,
-          geojsonOriginePerimetre: null,
-          geojsonOriginePoints: null,
-          surface: null,
-          demarche: {
-            slug: demarcheSlugValidator.parse('demarche-slug'),
-            typeId: 'oct',
-            description: 'Super description',
-            titre: {
-              id: titreIdValidator.parse('titre-id'),
-              slug: titreSlugValidator.parse('titre-slug'),
-              nom: 'Nom du titre',
-              typeId: 'arm',
+          etape: {
+            id: etapeIdValidator.parse('etape-id'),
+            slug: etapeSlugValidator.parse('etape-slug'),
+            typeId: 'mfr',
+            statutId: 'fai',
+            isBrouillon: true,
+            titreDemarcheId: demarcheId,
+            date: caminoDateValidator.parse('2023-02-01'),
+            dateDebut: { value: null, heritee: false, etapeHeritee: null },
+            dateFin: { value: null, heritee: false, etapeHeritee: null },
+            duree: { value: null, heritee: false, etapeHeritee: null },
+            substances: { value: [], heritee: false, etapeHeritee: null },
+            titulaires: { value: [], heritee: false, etapeHeritee: null },
+            amodiataires: { value: [], heritee: false, etapeHeritee: null },
+            contenu: { arm: { mecanise: { value: null, heritee: false, etapeHeritee: null }, franchissements: { value: null, heritee: false, etapeHeritee: null } } },
+            notes: null,
+            perimetre: {
+              value: {
+                geojson4326Forages: null,
+                geojson4326Perimetre: null,
+                geojson4326Points: null,
+                geojsonOrigineForages: null,
+                geojsonOrigineGeoSystemeId: null,
+                geojsonOriginePerimetre: null,
+                geojsonOriginePoints: null,
+                surface: null,
+              },
+              heritee: false,
+              etapeHeritee: null,
             },
+            heritageContenu: {},
           },
-          heritageContenu: {},
-          heritageProps: {
-            amodiataires: { actif: false },
-            dateDebut: { actif: false },
-            dateFin: { actif: false },
-            duree: { actif: false },
-            perimetre: { actif: false },
-            substances: { actif: false },
-            titulaires: { actif: false },
+          demarche: {
+            demarche_id: demarcheId,
+            demarche_slug: demarcheSlugValidator.parse('demarche-slug'),
+            demarche_type_id: 'oct',
+            demarche_description: 'Super description',
+            titre_id: titreIdValidator.parse('titre-id'),
+            titre_slug: titreSlugValidator.parse('titre-slug'),
+            titre_nom: 'Nom du titre',
+            titre_type_id: 'arm',
           },
         })
       },
@@ -447,34 +413,23 @@ export const DemandeArmComplete: StoryFn = () => (
     entreprises={entreprises}
     apiClient={{
       ...apiClient,
-      getEtapeHeritagePotentiel(titreDemarcheId: DemarcheId, date: CaminoDate, typeId: EtapeTypeId) {
-        getEtapeHeritagePotentielAction(titreDemarcheId, date, typeId)
+      getEtapeHeritagePotentiel(etape, titreDemarcheId) {
+        getEtapeHeritagePotentielAction(etape, titreDemarcheId)
 
         return Promise.resolve({
-          heritageContenu: { arm: { mecanise: { actif: false }, franchissements: { actif: false } } },
-          heritageProps: {
-            dateDebut: {
-              actif: false,
-            },
-            dateFin: {
-              actif: false,
-            },
-            duree: {
-              actif: false,
-            },
-            substances: {
-              actif: false,
-            },
-            titulaires: {
-              actif: false,
-            },
-            amodiataires: {
-              actif: false,
-            },
-            perimetre: {
-              actif: false,
-            },
+          ...etape,
+          dateDebut: { value: etape.dateDebut.value, heritee: false, etapeHeritee: null },
+          dateFin: { value: etape.dateFin.value, heritee: false, etapeHeritee: null },
+          duree: { value: etape.duree.value, heritee: false, etapeHeritee: null },
+          substances: { value: etape.substances.value, heritee: false, etapeHeritee: null },
+          titulaires: { value: etape.titulaires.value, heritee: false, etapeHeritee: null },
+          amodiataires: { value: etape.amodiataires.value, heritee: false, etapeHeritee: null },
+          perimetre: {
+            value: etape.perimetre.value,
+            heritee: false,
+            etapeHeritee: null,
           },
+          heritageContenu: { arm: { mecanise: { actif: false }, franchissements: { actif: false } } },
         })
       },
       getEtapeEntrepriseDocuments(etapeId: EtapeId): Promise<EtapeEntrepriseDocument[]> {
@@ -588,51 +543,49 @@ export const DemandeArmComplete: StoryFn = () => (
       },
       getEtape(etapeIdOrSlug) {
         getEtapeAction(etapeIdOrSlug)
-
+        const demarcheId = demarcheIdValidator.parse('demarche-id')
         return Promise.resolve({
-          id: etapeIdValidator.parse('etape-id'),
-          slug: etapeSlugValidator.parse('etape-slug'),
-          typeId: 'mfr',
-          statutId: 'fai',
-          isBrouillon: true,
-          titreDemarcheId: demarcheIdValidator.parse('demarche-id'),
-          date: caminoDateValidator.parse('2023-02-01'),
-          dateDebut: null,
-          dateFin: null,
-          duree: 6,
-          substances: ['arge'],
-          titulaireIds: [entreprises[0].id],
-          amodiataireIds: [],
-          contenu: { arm: { mecanise: true, franchissements: 9 } },
-          notes: null,
-          geojson4326Forages: null,
-          geojson4326Perimetre: perimetre,
-          geojson4326Points: null,
-          geojsonOrigineForages: null,
-          geojsonOrigineGeoSystemeId: '4326',
-          geojsonOriginePerimetre: perimetre,
-          geojsonOriginePoints: null,
-          surface: null,
-          demarche: {
-            slug: demarcheSlugValidator.parse('demarche-slug'),
-            typeId: 'oct',
-            description: 'Super description',
-            titre: {
-              id: titreIdValidator.parse('titre-id'),
-              slug: titreSlugValidator.parse('titre-slug'),
-              nom: 'Nom du titre',
-              typeId: 'arm',
+          etape: {
+            id: etapeIdValidator.parse('etape-id'),
+            slug: etapeSlugValidator.parse('etape-slug'),
+            typeId: 'mfr',
+            statutId: 'fai',
+            isBrouillon: true,
+            titreDemarcheId: demarcheId,
+            date: caminoDateValidator.parse('2023-02-01'),
+            dateDebut: { value: null, heritee: false, etapeHeritee: null },
+            dateFin: { value: null, heritee: false, etapeHeritee: null },
+            duree: { value: 6, heritee: false, etapeHeritee: null },
+            substances: { value: ['arge'], heritee: false, etapeHeritee: null },
+            titulaires: { value: [entreprises[0].id], heritee: false, etapeHeritee: null },
+            amodiataires: { value: [], heritee: false, etapeHeritee: null },
+            contenu: { arm: { mecanise: { value: true, heritee: false, etapeHeritee: null }, franchissements: { value: 9, heritee: false, etapeHeritee: null } } },
+            notes: null,
+            perimetre: {
+              value: {
+                geojson4326Forages: null,
+                geojson4326Perimetre: perimetre,
+                geojson4326Points: null,
+                geojsonOrigineForages: null,
+                geojsonOrigineGeoSystemeId: '4326',
+                geojsonOriginePerimetre: perimetre,
+                geojsonOriginePoints: null,
+                surface: null,
+              },
+              heritee: false,
+              etapeHeritee: null,
             },
+            heritageContenu: {},
           },
-          heritageContenu: {},
-          heritageProps: {
-            amodiataires: { actif: false },
-            dateDebut: { actif: false },
-            dateFin: { actif: false },
-            duree: { actif: false },
-            perimetre: { actif: false },
-            substances: { actif: false },
-            titulaires: { actif: false },
+          demarche: {
+            demarche_id: demarcheId,
+            demarche_slug: demarcheSlugValidator.parse('demarche-slug'),
+            demarche_type_id: 'oct',
+            demarche_description: 'Super description',
+            titre_id: titreIdValidator.parse('titre-id'),
+            titre_slug: titreSlugValidator.parse('titre-slug'),
+            titre_nom: 'Nom du titre',
+            titre_type_id: 'arm',
           },
         })
       },
@@ -644,55 +597,54 @@ export const DemandeArmComplete: StoryFn = () => (
   />
 )
 
-const modHeritageProps: EtapeWithHeritage['heritageProps'] = {
+const modHeritageProps: Pick<FlattenEtape, 'dateDebut' | 'dateFin' | 'duree' | 'substances' | 'titulaires' | 'perimetre'> = {
   dateDebut: {
-    actif: true,
-    etape: {
+    value: toCaminoDate('2021-01-01'),
+    heritee: true,
+    etapeHeritee: {
       date: toCaminoDate('2022-01-01'),
-      typeId: 'mfr',
-      dateDebut: toCaminoDate('2021-01-01'),
+      etapeTypeId: 'mfr',
+      value: toCaminoDate('2021-01-01'),
     },
   },
   dateFin: {
-    actif: true,
-    etape: {
+    value: toCaminoDate('2022-01-01'),
+    heritee: true,
+    etapeHeritee: {
       date: toCaminoDate('2022-01-01'),
-      typeId: 'mfr',
-      dateFin: toCaminoDate('2022-01-01'),
+      etapeTypeId: 'mfr',
+      value: toCaminoDate('2022-01-01'),
     },
   },
   duree: {
-    actif: true,
-    etape: {
+    value: 12,
+    heritee: true,
+    etapeHeritee: {
       date: toCaminoDate('2022-01-01'),
-      typeId: 'mfr',
-      duree: 12,
+      etapeTypeId: 'mfr',
+      value: 12,
     },
   },
   substances: {
-    actif: true,
-    etape: {
+    value: ['arge'],
+    heritee: true,
+    etapeHeritee: {
       date: toCaminoDate('2022-01-01'),
-      typeId: 'mfr',
-      substances: ['arge'],
+      etapeTypeId: 'mfr',
+      value: ['arge'],
     },
   },
   titulaires: {
-    actif: true,
-    etape: {
+    value: [entreprises[0].id],
+    heritee: true,
+    etapeHeritee: {
       date: toCaminoDate('2022-01-01'),
-      typeId: 'mfr',
-      titulaireIds: [entreprises[0].id],
+      etapeTypeId: 'mfr',
+      value: [entreprises[0].id],
     },
   },
-  amodiataires: {
-    actif: false,
-  },
   perimetre: {
-    actif: true,
-    etape: {
-      date: toCaminoDate('2022-01-01'),
-      typeId: 'mfr',
+    value: {
       geojson4326Forages: null,
       geojson4326Perimetre: perimetre,
       geojson4326Points: null,
@@ -701,6 +653,21 @@ const modHeritageProps: EtapeWithHeritage['heritageProps'] = {
       geojsonOriginePerimetre: perimetre,
       geojsonOriginePoints: null,
       surface: null,
+    },
+    heritee: true,
+    etapeHeritee: {
+      date: toCaminoDate('2022-01-01'),
+      etapeTypeId: 'mfr',
+      value: {
+        geojson4326Forages: null,
+        geojson4326Perimetre: perimetre,
+        geojson4326Points: null,
+        geojsonOrigineForages: null,
+        geojsonOrigineGeoSystemeId: '4326',
+        geojsonOriginePerimetre: perimetre,
+        geojsonOriginePoints: null,
+        surface: null,
+      },
     },
   },
 }
@@ -711,92 +678,83 @@ export const ModificationDemandeHeritee: StoryFn = () => (
     entreprises={entreprises}
     apiClient={{
       ...apiClient,
-      getEtapeHeritagePotentiel(titreDemarcheId: DemarcheId, date: CaminoDate, typeId: EtapeTypeId) {
-        getEtapeHeritagePotentielAction(titreDemarcheId, date, typeId)
+      getEtapeHeritagePotentiel(etape: DeepReadonly<CoreEtapeCreationOrModification>, titreDemarcheId: DemarcheId) {
+        getEtapeHeritagePotentielAction(etape, titreDemarcheId)
 
-        return Promise.resolve({
-          heritageContenu: {
-            arm: {
-              mecanise: {
-                actif: true,
-                etape: {
-                  date: toCaminoDate('2022-01-01'),
-                  typeId: 'mfr',
-                  contenu: { arm: { mecanise: true } },
-                },
-              },
-              franchissements: {
-                actif: true,
-                etape: {
-                  date: toCaminoDate('2022-01-01'),
-                  typeId: 'mfr',
-                  contenu: { arm: { franchissements: 2 } },
-                },
-              },
-            },
-          },
-          heritageProps: modHeritageProps,
-        })
+        return Promise.reject(new Error("Cet appel ne doit être fait que lors de la création de l'étape ou pour la modification de la date"))
       },
       getEtape(etapeIdOrSlug) {
         getEtapeAction(etapeIdOrSlug)
 
         return Promise.resolve({
-          id: etapeIdValidator.parse('etape-id'),
-          slug: etapeSlugValidator.parse('etape-slug'),
-          typeId: 'mod',
-          statutId: 'fai',
-          isBrouillon: false,
-          titreDemarcheId: demarcheIdValidator.parse('demarche-id'),
-          date: caminoDateValidator.parse('2023-02-01'),
-          dateDebut: null,
-          dateFin: null,
-          duree: 6,
-          substances: [],
-          titulaireIds: [],
-          amodiataireIds: [],
-          contenu: {},
-          notes: null,
-          geojson4326Forages: null,
-          geojson4326Perimetre: null,
-          geojson4326Points: null,
-          geojsonOrigineForages: null,
-          geojsonOrigineGeoSystemeId: null,
-          geojsonOriginePerimetre: null,
-          geojsonOriginePoints: null,
-          surface: null,
+          etape: {
+            id: etapeIdValidator.parse('etape-id'),
+            slug: etapeSlugValidator.parse('etape-slug'),
+            typeId: 'mod',
+            statutId: 'fai',
+            isBrouillon: false,
+            titreDemarcheId: demarcheIdValidator.parse('demarche-id'),
+            date: caminoDateValidator.parse('2023-02-01'),
+            contenu: {
+              arm: {
+                mecanise: {
+                  value: true,
+                  heritee: true,
+                  etapeHeritee: {
+                    date: toCaminoDate('2022-01-01'),
+                    etapeTypeId: 'mfr',
+                    value: true,
+                  },
+                },
+                franchissements: {
+                  value: 2,
+                  heritee: true,
+                  etapeHeritee: {
+                    date: toCaminoDate('2022-01-01'),
+                    etapeTypeId: 'mfr',
+                    value: 2,
+                  },
+                },
+              },
+            },
+            notes: null,
+            ...modHeritageProps,
+            amodiataires: {
+              value: [],
+              heritee: false,
+              etapeHeritee: null,
+            },
+            heritageContenu: {
+              arm: {
+                mecanise: {
+                  actif: true,
+                  etape: {
+                    date: toCaminoDate('2022-01-01'),
+                    typeId: 'mfr',
+                    contenu: { arm: { mecanise: true } },
+                  },
+                },
+                franchissements: {
+                  actif: true,
+                  etape: {
+                    date: toCaminoDate('2022-01-01'),
+                    typeId: 'mfr',
+                    contenu: { arm: { franchissements: 2 } },
+                  },
+                },
+              },
+            },
+          },
           demarche: {
-            slug: demarcheSlugValidator.parse('demarche-slug'),
-            typeId: 'oct',
-            description: 'Super description',
-            titre: {
-              id: titreIdValidator.parse('titre-id'),
-              slug: titreSlugValidator.parse('titre-slug'),
-              nom: 'Nom du titre',
-              typeId: 'arm',
-            },
+            demarche_id: demarcheIdValidator.parse('demarche-id'),
+            demarche_type_id: demarcheTypeIdValidator.parse('oct'),
+            demarche_slug: demarcheSlugValidator.parse('demarche-slug'),
+            demarche_description: 'Super description',
+            titre_id: titreIdValidator.parse('titre-id'),
+            titre_slug: titreSlugValidator.parse('titre-slug'),
+            titre_nom: 'Nom du titre',
+            titre_type_id: 'arm',
           },
-          heritageContenu: {
-            arm: {
-              mecanise: {
-                actif: true,
-                etape: {
-                  date: toCaminoDate('2022-01-01'),
-                  typeId: 'mfr',
-                  contenu: { arm: { mecanise: true } },
-                },
-              },
-              franchissements: {
-                actif: true,
-                etape: {
-                  date: toCaminoDate('2022-01-01'),
-                  typeId: 'mfr',
-                  contenu: { arm: { franchissements: 2 } },
-                },
-              },
-            },
-          },
-          heritageProps: modHeritageProps,
         })
       },
     }}
@@ -813,54 +771,128 @@ export const AxmEnZoneDuSdom: StoryFn = () => (
     entreprises={entreprises}
     apiClient={{
       ...apiClient,
-      getEtapeHeritagePotentiel(titreDemarcheId: DemarcheId, date: CaminoDate, typeId: EtapeTypeId) {
-        getEtapeHeritagePotentielAction(titreDemarcheId, date, typeId)
+      getEtapeHeritagePotentiel(etape: DeepReadonly<CoreEtapeCreationOrModification>, titreDemarcheId: DemarcheId) {
+        getEtapeHeritagePotentielAction(etape, titreDemarcheId)
 
         return Promise.resolve({
+          ...etape,
+          dateDebut: {
+            value: null,
+            heritee: false,
+            etapeHeritee: null,
+          },
+          dateFin: {
+            value: null,
+            heritee: false,
+            etapeHeritee: null,
+          },
+          duree: {
+            value: 6,
+            heritee: false,
+            etapeHeritee: null,
+          },
+          substances: {
+            value: [],
+            heritee: false,
+            etapeHeritee: null,
+          },
+          titulaires: {
+            value: [],
+            heritee: false,
+            etapeHeritee: null,
+          },
+          amodiataires: {
+            value: [],
+            heritee: false,
+            etapeHeritee: null,
+          },
+          perimetre: {
+            value: {
+              geojson4326Forages: null,
+              geojson4326Perimetre: null,
+              geojson4326Points: null,
+              geojsonOrigineForages: null,
+              geojsonOrigineGeoSystemeId: null,
+              geojsonOriginePerimetre: null,
+              geojsonOriginePoints: null,
+              surface: null,
+            },
+            heritee: false,
+            etapeHeritee: null,
+          },
           heritageContenu: {},
-          heritageProps: heritagePropsAllFalse,
         })
       },
       getEtape(etapeIdOrSlug) {
         getEtapeAction(etapeIdOrSlug)
 
         return Promise.resolve({
-          id: etapeIdValidator.parse('etape-id'),
-          slug: etapeSlugValidator.parse('etape-slug'),
-          typeId: 'mfr',
-          statutId: 'fai',
-          isBrouillon: true,
-          titreDemarcheId: demarcheIdValidator.parse('demarche-id'),
-          date: caminoDateValidator.parse('2023-02-01'),
-          dateDebut: null,
-          dateFin: null,
-          duree: 6,
-          substances: [],
-          titulaireIds: [],
-          amodiataireIds: [],
-          contenu: {},
-          notes: null,
-          geojson4326Forages: null,
-          geojson4326Perimetre: null,
-          geojson4326Points: null,
-          geojsonOrigineForages: null,
-          geojsonOrigineGeoSystemeId: null,
-          geojsonOriginePerimetre: null,
-          geojsonOriginePoints: null,
-          surface: null,
-          demarche: {
-            slug: demarcheSlugValidator.parse('demarche-slug'),
-            typeId: 'oct',
-            description: 'Super description',
-            titre: {
-              id: titreIdValidator.parse('titre-id'),
-              slug: titreSlugValidator.parse('titre-slug'),
-              nom: 'Nom du titre',
-              typeId: 'axm',
+          etape: {
+            id: etapeIdValidator.parse('etape-id'),
+            slug: etapeSlugValidator.parse('etape-slug'),
+            typeId: 'mfr',
+            statutId: 'fai',
+            isBrouillon: true,
+            titreDemarcheId: demarcheIdValidator.parse('demarche-id'),
+            date: caminoDateValidator.parse('2023-02-01'),
+            dateDebut: {
+              value: null,
+              heritee: false,
+              etapeHeritee: null,
             },
+            dateFin: {
+              value: null,
+              heritee: false,
+              etapeHeritee: null,
+            },
+            duree: {
+              value: 6,
+              heritee: false,
+              etapeHeritee: null,
+            },
+            substances: {
+              value: [],
+              heritee: false,
+              etapeHeritee: null,
+            },
+            titulaires: {
+              value: [],
+              heritee: false,
+              etapeHeritee: null,
+            },
+            amodiataires: {
+              value: [],
+              heritee: false,
+              etapeHeritee: null,
+            },
+            perimetre: {
+              value: {
+                geojson4326Forages: null,
+                geojson4326Perimetre: null,
+                geojson4326Points: null,
+                geojsonOrigineForages: null,
+                geojsonOrigineGeoSystemeId: null,
+                geojsonOriginePerimetre: null,
+                geojsonOriginePoints: null,
+                surface: null,
+              },
+              heritee: false,
+              etapeHeritee: null,
+            },
+            contenu: {},
+            notes: null,
+            heritageContenu: {},
           },
-          heritageContenu: {},
-          heritageProps: heritagePropsAllFalse,
+          demarche: {
+            demarche_id: demarcheIdValidator.parse('demarche-id'),
+            demarche_type_id: demarcheTypeIdValidator.parse('oct'),
+            demarche_slug: demarcheSlugValidator.parse('demarche-slug'),
+            demarche_description: 'Super description',
+            titre_id: titreIdValidator.parse('titre-id'),
+            titre_slug: titreSlugValidator.parse('titre-slug'),
+            titre_nom: 'Nom du titre',
+            titre_type_id: 'axm',
+          },
         })
       },
     }}

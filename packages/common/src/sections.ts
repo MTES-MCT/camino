@@ -32,7 +32,6 @@ const checkboxesElementWithValueValidator = checkboxesElementValidator.extend({ 
 const selectElementWithValueValidator = selectElementWithOptionsValidator.extend({
   value: z.string().nullable(),
 })
-
 const elementWithValueValidator = z.union([
   dateElementWithValueValidator,
   textElementWithValueValidator,
