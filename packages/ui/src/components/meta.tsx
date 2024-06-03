@@ -6,13 +6,13 @@ import { capitalize } from 'camino-common/src/strings'
 import { userKey } from '@/moi'
 import { isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools'
 export const Meta = defineComponent(() => {
-  const route = useRoute()
+  const route = useRoute<'meta'>()
   const user = inject(userKey)
 
   const values = ref<{ [key in MetaIndexTable]?: unknown[] }>({})
 
   const id = computed<MetaIndexTable>(() => {
-    return route.params.id as unknown as MetaIndexTable
+    return route.params.id as MetaIndexTable
   })
 
   const loaded = computed<boolean>(() => {

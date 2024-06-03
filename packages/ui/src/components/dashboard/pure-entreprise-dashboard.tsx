@@ -42,7 +42,6 @@ export const PureEntrepriseDashboard = defineComponent<Props>(props => {
   }, {})
 
   const entrepriseTitres = (entreprises: TitreEntreprise[]): TableRow[] => titresLignesBuild(entreprises, props.displayActivites, entreprisesIndex)
-  const entrepriseUrl = (entrepriseId: EntrepriseId) => `/entreprises/${entrepriseId}`
 
   const columns = titresColonnes.filter(({ id }) => (props.displayActivites ? true : id !== 'activites'))
 
@@ -77,7 +76,7 @@ export const PureEntrepriseDashboard = defineComponent<Props>(props => {
                           <DsfrLink
                             disabled={false}
                             icon={null}
-                            to={entrepriseUrl(props.entreprises[0].id)}
+                            to={{ name: 'entreprise', params: { id: props.entreprises[0].id } }}
                             label={entreprisesIndex[props.entreprises[0].id]}
                             title={`Page de l’entreprise ${entreprisesIndex[props.entreprises[0].id]}`}
                           />
@@ -93,7 +92,14 @@ export const PureEntrepriseDashboard = defineComponent<Props>(props => {
                               )
                             )
                             .map(({ id }) => (
-                              <DsfrLink disabled={false} class="fr-mr-1w" icon={null} to={entrepriseUrl(id)} label={entreprisesIndex[id]} title={`Page de l’entreprise ${entreprisesIndex[id]}`} />
+                              <DsfrLink
+                                disabled={false}
+                                class="fr-mr-1w"
+                                icon={null}
+                                to={{ name: 'entreprise', params: { id } }}
+                                label={entreprisesIndex[id]}
+                                title={`Page de l’entreprise ${entreprisesIndex[id]}`}
+                              />
                             ))}
                         </>
                       )}

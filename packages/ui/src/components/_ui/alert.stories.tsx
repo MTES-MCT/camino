@@ -14,4 +14,4 @@ export const Erreur: StoryFn = () => <Alert type="error" title="Erreur" descript
 export const Info: StoryFn = () => <Alert type="info" title="Informations" description={<span class="fr-text--bold">Description en gras</span>} />
 export const InfoSansDescription: StoryFn = () => <Alert type="info" title="Informations" />
 export const InfoSmall: StoryFn = () => <Alert type="info" title="Informations" small={true} />
-export const InfoSmallLink: StoryFn = () => <Alert type="info" title={<DsfrLink icon={null} disabled={false} to={{ name: 'dashboard' }} title="le titre du lien" />} small={true} />
+export const InfoSmallLink: StoryFn = () => <Alert type="info" title={<DsfrLink icon={null} disabled={false} to={{ name: 'dashboard', params: {} }} title="le titre du lien" />} small={true} />

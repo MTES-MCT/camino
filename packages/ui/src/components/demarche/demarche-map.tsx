@@ -10,7 +10,6 @@ import { TitreWithPerimetre } from '../titres/mapUtil'
 import { isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools'
 import { couleurParDomaine } from '../_common/domaine'
 import { TitreTypeId, getDomaineId } from 'camino-common/src/static/titresTypes'
-import { Router } from 'vue-router'
 import { canHaveForages } from 'camino-common/src/permissions/titres'
 import { capitalize } from 'camino-common/src/strings'
 import { CaminoLngLatBounds, CaminoMapLibre, CaminoStyleSpecification } from '@/typings/maplibre-gl'
@@ -33,6 +32,7 @@ import {
   titresValidesFillName,
   titresValidesLineName,
 } from './demarche-map-layer-controls'
+import { CaminoRouter } from '@/typings/vue-router'
 
 type Props = {
   perimetre: DeepReadonly<{ geojson4326_perimetre: FeatureMultiPolygon; geojson4326_points: FeatureCollectionPoints; geojson4326_forages: FeatureCollectionForages | null }>
@@ -43,7 +43,7 @@ type Props = {
   neighbours: {
     apiClient: Pick<TitreApiClient, 'getTitresWithPerimetreForCarte'>
     titreSlug: TitreSlug
-    router: Pick<Router, 'push'>
+    router: Pick<CaminoRouter, 'push'>
   } | null
 }
 

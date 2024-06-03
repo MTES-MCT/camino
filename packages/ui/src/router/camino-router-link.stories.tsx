@@ -10,7 +10,7 @@ export default meta
 
 export const Default: StoryFn = () => (
   <div>
-    <CaminoRouterLink title="Titre du lien" to="/about" isDisabled={false}>
+    <CaminoRouterLink title="Titre du lien" to={{ name: 'aPropos', params: {} }} isDisabled={false}>
       Link
     </CaminoRouterLink>
   </div>

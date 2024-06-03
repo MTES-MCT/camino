@@ -4,8 +4,8 @@ import { newEntrepriseId } from 'camino-common/src/entreprise'
 import { testBlankUser } from 'camino-common/src/tests-utils'
 import { PureUtilisateurs } from './utilisateurs'
 import { toUtilisateurId } from 'camino-common/src/roles'
-import { RouteLocationRaw } from 'vue-router'
 import { ApiClient } from '../api/api-client'
+import { CaminoRouter } from '@/typings/vue-router'
 
 const meta: Meta = {
   title: 'Components/Utilisateurs',
@@ -18,7 +18,7 @@ const getUtilisateursAction = action('getUtilisateurs')
 
 const pushRouteAction = action('pushRoute')
 
-const updateUrlQuery = { push: (values: RouteLocationRaw) => Promise.resolve(pushRouteAction(values)) }
+const updateUrlQuery: Pick<CaminoRouter, 'push'> = { push: values => Promise.resolve(pushRouteAction(values)) }
 
 const entreprise = { id: newEntrepriseId('id'), nom: 'Entreprise1', legal_siren: null }
 const apiClientMock: Pick<ApiClient, 'getUtilisateurs' | 'titresRechercherByNom' | 'getTitresByIds'> = {
@@ -70,13 +70,13 @@ export const Loading: StoryFn = () => (
       getUtilisateurs: () => new Promise(() => ({})),
     }}
     entreprises={[entreprise]}
-    currentRoute={{ name: 'utilisateurs', query: {} }}
+    currentRoute={{ name: 'utilisateurs', query: {}, params: {} }}
     updateUrlQuery={updateUrlQuery}
   />
 )
 
 export const NotConnected: StoryFn = () => (
-  <PureUtilisateurs entreprises={[entreprise]} user={null} apiClient={apiClientMock} currentRoute={{ name: 'utilisateurs', query: {} }} updateUrlQuery={updateUrlQuery} />
+  <PureUtilisateurs entreprises={[entreprise]} user={null} apiClient={apiClientMock} currentRoute={{ name: 'utilisateurs', query: {}, params: {} }} updateUrlQuery={updateUrlQuery} />
 )
 
 export const Forbidden: StoryFn = () => (
@@ -84,7 +84,7 @@ export const Forbidden: StoryFn = () => (
     entreprises={[entreprise]}
     user={{ ...testBlankUser, role: 'defaut' }}
     apiClient={apiClientMock}
-    currentRoute={{ name: 'utilisateurs', query: {} }}
+    currentRoute={{ name: 'utilisateurs', query: {}, params: {} }}
     updateUrlQuery={updateUrlQuery}
   />
 )
@@ -97,7 +97,7 @@ export const WithError: StoryFn = () => (
       ...apiClientMock,
       getUtilisateurs: () => Promise.reject(new Error('Cassé')),
     }}
-    currentRoute={{ name: 'utilisateurs', query: {} }}
+    currentRoute={{ name: 'utilisateurs', query: {}, params: {} }}
     updateUrlQuery={updateUrlQuery}
   />
 )
@@ -107,7 +107,7 @@ export const Connected: StoryFn = () => (
     entreprises={[entreprise]}
     user={{ ...testBlankUser, role: 'super' }}
     apiClient={apiClientMock}
-    currentRoute={{ name: 'utilisateurs', query: {} }}
+    currentRoute={{ name: 'utilisateurs', query: {}, params: {} }}
     updateUrlQuery={updateUrlQuery}
   />
 )

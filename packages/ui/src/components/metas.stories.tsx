@@ -8,6 +8,6 @@ const meta: Meta = {
 }
 export default meta
 
-export const NotConnected: StoryFn = () => <PureMetas user={null} currentRoute={{ name: 'metas', query: {} }} />
-export const Forbidden: StoryFn = () => <PureMetas user={{ ...testBlankUser, role: 'defaut' }} currentRoute={{ name: 'metas', query: {} }} />
-export const Super: StoryFn = () => <PureMetas user={{ ...testBlankUser, role: 'super' }} currentRoute={{ name: 'metas', query: {} }} />
+export const NotConnected: StoryFn = () => <PureMetas user={null} currentRoute={{ name: 'metas', query: {}, params: {} }} />
+export const Forbidden: StoryFn = () => <PureMetas user={{ ...testBlankUser, role: 'defaut' }} currentRoute={{ name: 'metas', query: {}, params: {} }} />
+export const Super: StoryFn = () => <PureMetas user={{ ...testBlankUser, role: 'super' }} currentRoute={{ name: 'metas', query: {}, params: {} }} />

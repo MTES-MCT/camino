@@ -2,7 +2,6 @@ import { leafletGeojsonCenterFind, leafletGeojsonBuild, leafletMarkerBuild, leaf
 import { getDomaineId, getTitreTypeType } from 'camino-common/src/static/titresTypes'
 import { DomaineId, sortedDomaines } from 'camino-common/src/static/domaines'
 import type { DivIconOptions, GeoJSON, GeoJSONOptions, Layer, LeafletEventHandlerFnMap, Marker, MarkerClusterGroup, PopupOptions } from 'leaflet'
-import { Router } from 'vue-router'
 import { CommonTitre } from 'camino-common/src/titres'
 import { TitreId } from 'camino-common/src/validators/titres'
 import { dsfrVariableCouleurParDomaine } from '../_common/domaine'
@@ -11,6 +10,7 @@ import { GeojsonPoint, MultiPolygon } from 'camino-common/src/perimetre'
 import { isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
 import { Entreprise, EntrepriseId } from 'camino-common/src/entreprise'
 import { REGION_IDS, RegionId } from 'camino-common/src/static/region'
+import { CaminoRouter } from '@/typings/vue-router'
 
 const leafletCoordinatesFind = (geojson: { coordinates: [number, number] }) => {
   const coordinates = geojson.coordinates
@@ -198,7 +198,7 @@ const svgDomaineAnchor = (domaineId: DomaineId): string => {
 }
 
 export type LayerWithTitreId = Layer & { titreId: TitreId }
-export const layersBuild = (titres: TitreWithPerimetre[], router: Pick<Router, 'push'>, entreprises: Entreprise[], markersAlreadyInMap: TitreId[] = [], geojsonAlreadyInMap: TitreId[] = []) => {
+export const layersBuild = (titres: TitreWithPerimetre[], router: Pick<CaminoRouter, 'push'>, entreprises: Entreprise[], markersAlreadyInMap: TitreId[] = [], geojsonAlreadyInMap: TitreId[] = []) => {
   const div = document.createElement('div')
   const titleName = document.createElement('div')
   const listeTitulaires = document.createElement('ul')
@@ -258,7 +258,6 @@ export const layersBuild = (titres: TitreWithPerimetre[], router: Pick<Router, '
           div.appendChild(titreStatutElement)
           div.appendChild(listeTitulaires)
         }
-        const titreRoute = titre.slug ? { name: 'titre', params: { id: titre.slug } } : null
         if (!isMarkerAlreadyInMap) {
           const latLng = titre.geojson4326Centre ? leafletCoordinatesFind(titre.geojson4326Centre) : leafletGeojsonCenterFind(titre.geojson4326Perimetre)
           const marker = leafletMarkerBuild(latLng, icon)
@@ -269,8 +268,8 @@ export const layersBuild = (titres: TitreWithPerimetre[], router: Pick<Router, '
           marker.bindPopup(div, popupOptions)
           const methods: LeafletEventHandlerFnMap = {
             click() {
-              if (titreRoute) {
-                router.push(titreRoute)
+              if (titre.slug) {
+                router.push({ name: 'titre', params: { id: titre.slug } })
               }
             },
             mouseover(_e) {
@@ -294,8 +293,8 @@ export const layersBuild = (titres: TitreWithPerimetre[], router: Pick<Router, '
 
               layer.on({
                 click() {
-                  if (titreRoute) {
-                    router.push(titreRoute)
+                  if (titre.slug) {
+                    router.push({ name: 'titre', params: { id: titre.slug } })
                   }
                 },
                 mouseover(_e) {

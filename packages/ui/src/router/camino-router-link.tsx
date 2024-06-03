@@ -1,10 +1,11 @@
-import { computed, LinkHTMLAttributes, AnchorHTMLAttributes, defineComponent } from 'vue'
-import { LocationQueryValue, useLink, UseLinkOptions } from 'vue-router'
+import { computed, LinkHTMLAttributes, AnchorHTMLAttributes, defineComponent, SetupContext } from 'vue'
+import { LocationQueryValueRaw, useLink } from 'vue-router'
+import { CaminoRouteNames, CaminoVueRoute } from './routes'
 
-export const routerQueryToNumber = (value: LocationQueryValue | LocationQueryValue[], defaultValue: number): number => {
+export const routerQueryToNumber = (value: LocationQueryValueRaw | LocationQueryValueRaw[] | undefined, defaultValue: number): number => {
   return value !== undefined ? Number(value) : defaultValue
 }
-export const routerQueryToNumberArray = (value: LocationQueryValue | LocationQueryValue[], defaultValue: number[]): number[] => {
+export const routerQueryToNumberArray = (value: LocationQueryValueRaw | LocationQueryValueRaw[] | undefined, defaultValue: number[]): number[] => {
   if (value === undefined) {
     return defaultValue
   }
@@ -12,11 +13,11 @@ export const routerQueryToNumberArray = (value: LocationQueryValue | LocationQue
   return Array.isArray(value) ? value.map(value => Number(value)) : [Number(value)]
 }
 
-export const routerQueryToString = (value: LocationQueryValue | LocationQueryValue[], defaultValue: string): string => {
+export const routerQueryToString = (value: LocationQueryValueRaw | LocationQueryValueRaw[] | undefined, defaultValue: string): string => {
   return value !== undefined ? String(value) : defaultValue
 }
 
-export const routerQueryToStringArray = (value: LocationQueryValue | LocationQueryValue[]): string[] => {
+export const routerQueryToStringArray = (value: LocationQueryValueRaw | LocationQueryValueRaw[] | undefined): string[] => {
   if (value === undefined) {
     return []
   }
@@ -25,12 +26,12 @@ export const routerQueryToStringArray = (value: LocationQueryValue | LocationQue
   return Array.isArray(value) ? value.map(value => String(value)) : String(value).split(',')
 }
 
-type Props = {
+type Props<T extends CaminoRouteNames> = {
   title: string
   class?: LinkHTMLAttributes['class']
   anchorHTMLAttributes?: AnchorHTMLAttributes
-} & ({ isDisabled: true; to: '' } | ({ isDisabled: false } & Omit<UseLinkOptions, 'replace'>))
-export const CaminoRouterLink = defineComponent<Props>((props, ctx) => {
+} & ({ isDisabled: true; to: '' } | { isDisabled: false; to: CaminoVueRoute<T> })
+export const CaminoRouterLink = defineComponent(<T extends CaminoRouteNames>(props: Props<T>, ctx: SetupContext) => {
   const { href, navigate } = useLink(props)
   const formatedProps = computed<LinkHTMLAttributes>(() => {
     if (props.isDisabled ?? false) {

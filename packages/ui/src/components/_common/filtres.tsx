@@ -1,15 +1,16 @@
 import { defineComponent, ref } from 'vue'
 import { Filters, getInitialFiltres } from '../_ui/filters/filters'
-import { RouteLocationNormalizedLoaded, Router } from 'vue-router'
 import { CaminoFiltre, caminoFiltres } from 'camino-common/src/filters'
 import { ApiClient } from '../../api/api-client'
 import { Entreprise } from 'camino-common/src/entreprise'
+import { CaminoRouteLocation } from '@/router/routes'
+import { CaminoRouter } from '@/typings/vue-router'
 
 type Params = { [key in Props['filters'][number]]: (typeof caminoFiltres)[key]['validator']['_output'] }
 interface Props {
   filters: readonly CaminoFiltre[]
-  route: Pick<RouteLocationNormalizedLoaded, 'query' | 'name'>
-  updateUrlQuery: Pick<Router, 'push'>
+  route: CaminoRouteLocation
+  updateUrlQuery: Pick<CaminoRouter, 'push'>
   subtitle?: string
   toggle?: (open: boolean) => void
   paramsUpdate: (params: Params) => void

@@ -1,5 +1,6 @@
 import { FunctionalComponent } from 'vue'
 import { NewsletterForm } from './footer/newsletter-form'
+import { CaminoRouterLink } from '@/router/camino-router-link'
 
 interface Props {
   version: string
@@ -21,9 +22,9 @@ export const Footer: FunctionalComponent<Props> = (props: Props) => (
                   </a>
                 </li>
                 <li>
-                  <router-link class="fr-footer__top-link" to="/a-propos">
+                  <CaminoRouterLink isDisabled={false} title="À propos" class="fr-footer__top-link" to={{ name: 'aPropos', params: {} }}>
                     À propos
-                  </router-link>
+                  </CaminoRouterLink>
                 </li>
               </ul>
             </div>

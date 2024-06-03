@@ -122,7 +122,7 @@ export const PureAdministrationDashboard = defineComponent<Props>(props => {
         <>
           <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' }}>
             <h2>Statistiques</h2>
-            <CaminoRouterLink to={{ name: 'Stats DGTM' }} isDisabled={false} title="Voir la page de statistiques DGTM">
+            <CaminoRouterLink to={{ name: 'statsDGTM', params: {} }} isDisabled={false} title="Voir la page de statistiques DGTM">
               Voir plus
             </CaminoRouterLink>
           </div>

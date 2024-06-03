@@ -1,11 +1,12 @@
 import { ref, defineComponent, HTMLAttributes, watch } from 'vue'
-import { useRoute, RouteLocationNormalized, LocationQuery } from 'vue-router'
+import { useRoute } from 'vue-router'
 import { DsfrSelect, Item } from '../_ui/dsfr-select'
 import { DownloadRestRoutes, DownloadFormat, CaminoRestParams } from 'camino-common/src/rest'
 import { NonEmptyArray, isNonEmptyArray, isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { getDownloadRestRoute } from '@/api/client-rest'
 import { saveAs } from 'file-saver'
 import { DsfrButtonIcon } from '../_ui/dsfr-button'
+import { CaminoRouteLocation } from '@/router/routes'
 
 export const Downloads = defineComponent(<T extends DownloadRestRoutes>(props: Omit<Props<T>, 'route'>) => {
   const route = useRoute()
@@ -22,7 +23,7 @@ export interface Props<T extends DownloadRestRoutes> {
   formats: Readonly<NonEmptyArray<DownloadFormat>>
   downloadRoute: T
   params: CaminoRestParams<T>
-  route: Pick<RouteLocationNormalized, 'query'>
+  route: Pick<CaminoRouteLocation, 'query'>
   downloadTitle?: string
 }
 
@@ -75,7 +76,7 @@ export const PureDownloads = defineComponent(<T extends DownloadRestRoutes>(prop
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
 PureDownloads.props = ['formats', 'downloadRoute', 'params', 'route', 'id', 'downloadTitle', 'class']
 
-async function download<T extends DownloadRestRoutes>(selectedFormat: DownloadFormat | null, query: LocationQuery, props: Omit<Props<T>, 'formats' | 'route'>) {
+async function download<T extends DownloadRestRoutes>(selectedFormat: DownloadFormat | null, query: CaminoRouteLocation['query'], props: Omit<Props<T>, 'formats' | 'route'>) {
   if (selectedFormat !== null) {
     const url = getDownloadRestRoute(props.downloadRoute, props.params, { format: selectedFormat, ...query })
 

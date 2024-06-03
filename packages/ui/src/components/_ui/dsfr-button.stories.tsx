@@ -39,10 +39,10 @@ export const AllIcon: StoryFn = () => (
 
 export const Link: StoryFn = () => (
   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-    <DsfrLink disabled={false} icon={null} title="Titre" label="Label" to={{ name: 'dashboard' }} />
-    <DsfrLink disabled={false} icon="fr-icon-account-circle-fill" title="Titre" to={{ name: 'dashboard' }} />
-    <DsfrLink buttonType="primary" icon={null} disabled={false} title="Titre" to={{ name: 'dashboard' }} />
-    <DsfrLink buttonType="primary" disabled={false} icon="fr-icon-alert-fill" title="Titre" to={{ name: 'dashboard' }} />
-    <DsfrLink buttonType="primary" disabled={false} icon="fr-icon-alert-fill" title="Titre" to={{ name: 'dashboard' }} label={null} />
+    <DsfrLink disabled={false} icon={null} title="Titre" label="Label" to={{ name: 'dashboard', params: {} }} />
+    <DsfrLink disabled={false} icon="fr-icon-account-circle-fill" title="Titre" to={{ name: 'dashboard', params: {} }} />
+    <DsfrLink buttonType="primary" icon={null} disabled={false} title="Titre" to={{ name: 'dashboard', params: {} }} />
+    <DsfrLink buttonType="primary" disabled={false} icon="fr-icon-alert-fill" title="Titre" to={{ name: 'dashboard', params: {} }} />
+    <DsfrLink buttonType="primary" disabled={false} icon="fr-icon-alert-fill" title="Titre" to={{ name: 'dashboard', params: {} }} label={null} />
   </div>
 )

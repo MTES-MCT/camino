@@ -1,5 +1,5 @@
 import { computed, defineComponent, inject, onMounted, ref, watch } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { LoadingElement } from './_ui/functional-loader'
 import { ActiviteId, ActiviteIdOrSlug, activiteIdOrSlugValidator, Activite as CommonActivite } from 'camino-common/src/activite'
 import { AsyncData } from '@/api/client-rest'
@@ -13,10 +13,11 @@ import { capitalize } from 'camino-common/src/strings'
 
 export const Activite = defineComponent(() => {
   const router = useRouter()
+  const route = useRoute<'activite'>()
   const user = inject(userKey)
 
   const activiteId = computed<ActiviteIdOrSlug | null>(() => {
-    const idOrSlug = Array.isArray(router.currentRoute.value.params.activiteId) ? router.currentRoute.value.params.activiteId[0] : router.currentRoute.value.params.activiteId
+    const idOrSlug = route.params.activiteId
     const validated = activiteIdOrSlugValidator.safeParse(idOrSlug)
 
     if (validated.success) {

@@ -3,9 +3,9 @@ import { Meta, StoryFn } from '@storybook/vue3'
 import { action } from '@storybook/addon-actions'
 import { testBlankUser } from 'camino-common/src/tests-utils'
 
-import { RouteLocationRaw } from 'vue-router'
 import { entrepriseIdValidator } from 'camino-common/src/entreprise'
 import { ApiClient } from '../api/api-client'
+import { CaminoRouter } from '@/typings/vue-router'
 
 const meta: Meta = {
   title: 'Components/Entreprises',
@@ -17,7 +17,7 @@ export default meta
 const creerEntrepriseAction = action('creerEntreprise')
 const pushRouteAction = action('pushRoute')
 
-const updateUrlQuery = { push: (values: RouteLocationRaw) => Promise.resolve(pushRouteAction(values)) }
+const updateUrlQuery: Pick<CaminoRouter, 'push'> = { push: values => Promise.resolve(pushRouteAction(values)) }
 
 const entreprises = [
   { id: entrepriseIdValidator.parse('fr-899600233'), nom: '10 A', legal_siren: '899600233' },
@@ -46,9 +46,15 @@ const apiClient: Pick<ApiClient, 'creerEntreprise' | 'titresRechercherByNom' | '
 }
 
 export const NonConnecte: StoryFn = () => (
-  <PureEntreprises entreprises={entreprises} apiClient={apiClient} user={null} currentRoute={{ name: 'entreprises', query: {} }} updateUrlQuery={updateUrlQuery} />
+  <PureEntreprises entreprises={entreprises} apiClient={apiClient} user={null} currentRoute={{ name: 'entreprises', query: {}, params: {} }} updateUrlQuery={updateUrlQuery} />
 )
 
 export const canCreateEntreprise: StoryFn = () => (
-  <PureEntreprises entreprises={entreprises} apiClient={apiClient} user={{ role: 'super', ...testBlankUser }} currentRoute={{ name: 'entreprises', query: {} }} updateUrlQuery={updateUrlQuery} />
+  <PureEntreprises
+    entreprises={entreprises}
+    apiClient={apiClient}
+    user={{ role: 'super', ...testBlankUser }}
+    currentRoute={{ name: 'entreprises', query: {}, params: {} }}
+    updateUrlQuery={updateUrlQuery}
+  />
 )

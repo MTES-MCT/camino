@@ -19,7 +19,7 @@ import { DsfrInputCheckbox } from './_ui/dsfr-input-checkbox'
 
 export const Utilisateur = defineComponent({
   setup() {
-    const route = useRoute()
+    const route = useRoute<'utilisateur'>()
     const router = useRouter()
 
     const user = inject(userKey)
@@ -32,7 +32,7 @@ export const Utilisateur = defineComponent({
         window.location.replace(`/apiUrl/rest/utilisateurs/${userId}/delete`)
       } else {
         await utilisateurApiClient.removeUtilisateur(userId)
-        router.push({ name: 'utilisateurs' })
+        router.push({ name: 'utilisateurs', params: {} })
       }
     }
     const updateUtilisateur = async (utilisateur: UtilisateurToEdit) => {

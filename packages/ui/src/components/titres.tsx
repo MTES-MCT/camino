@@ -6,7 +6,7 @@ import { Tab, Tabs } from './_ui/tabs'
 import { PageContentHeader } from './_common/page-header-content'
 import { titreApiClient } from './titre/titre-api-client'
 import { AsyncData } from '@/api/client-rest'
-import { LocationQuery, useRouter } from 'vue-router'
+import { useRouter } from 'vue-router'
 import { routerQueryToString } from '@/router/camino-router-link'
 import { titresColonnes, titresLignesBuild } from './titres/table-utils'
 import type { TitreWithPerimetre } from './titres/mapUtil'
@@ -20,6 +20,7 @@ import { TitresStatutIds } from 'camino-common/src/static/titresStatuts'
 import { EntrepriseId } from 'camino-common/src/entreprise'
 import { DemandeTitreButton } from './_common/demande-titre-button'
 import { entreprisesKey, userKey } from '@/moi'
+import { CaminoRouteLocation } from '@/router/routes'
 
 const defaultFilterByAdministrationUser: Pick<TitreFiltresParams, 'domainesIds' | 'typesIds' | 'statutsIds'> = {
   domainesIds: ['m', 'w', 'g'],
@@ -63,7 +64,11 @@ export const Titres = defineComponent({
       })
 
     if (noFilter && isAdministration(user)) {
-      router.push({ name: router.currentRoute.value.name ?? 'titres', query: { ...router.currentRoute.value.query, ...defaultFilterByAdministrationUser } })
+      router.push({
+        name: router.currentRoute.value.name ?? 'titres',
+        query: { ...router.currentRoute.value.query, ...defaultFilterByAdministrationUser },
+        params: router.currentRoute.value.params,
+      })
     }
 
     const reloadTitres = async (vueId: TabId) => {
@@ -218,13 +223,13 @@ export const Titres = defineComponent({
               tabClicked={async newTabId => {
                 if (tabId.value !== newTabId) {
                   titresForCarte.value = { hash: '', titres: [] }
-                  const query: LocationQuery = { ...router.currentRoute.value.query, vueId: newTabId }
+                  const query: CaminoRouteLocation['query'] = { ...router.currentRoute.value.query, vueId: newTabId }
                   if (newTabId === 'table') {
                     delete query.zoom
                     delete query.perimetre
                     delete query.centre
                   }
-                  await router.push({ name: router.currentRoute.value.name ?? undefined, query })
+                  await router.push({ name: router.currentRoute.value.name ?? undefined, query, params: router.currentRoute.value.params })
                   if (newTabId === 'table') {
                     paramsForCarte.value = null
                     reloadTitres(newTabId)

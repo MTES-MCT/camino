@@ -21,8 +21,8 @@ import { Alert } from './_ui/alert'
 
 export const Entreprise = defineComponent({
   setup() {
-    const vueRoute = useRoute()
-    const entrepriseId = ref<EntrepriseId | undefined>(newEntrepriseId(vueRoute.params.id.toString()))
+    const vueRoute = useRoute<'entreprise'>()
+    const entrepriseId = ref<EntrepriseId | undefined>(newEntrepriseId(vueRoute.params.id))
     const user = inject(userKey)
     const entreprises = inject(entreprisesKey, ref([]))
 
@@ -30,7 +30,7 @@ export const Entreprise = defineComponent({
       () => vueRoute.params.id,
       newRoute => {
         if (vueRoute.name === 'entreprise' && isNotNullNorUndefined(newRoute)) {
-          const newEid = newEntrepriseId(vueRoute.params.id.toString())
+          const newEid = newEntrepriseId(vueRoute.params.id)
           if (entrepriseId.value !== newEid) {
             entrepriseId.value = newEid
           }
@@ -230,7 +230,7 @@ export const PureEntreprise = defineComponent<Props>(props => {
                       </div>
                       <div class="tablet-blob-3-4">
                         <p>
-                          <DsfrLink to={{ name: 'utilisateurs', query: { entreprisesIds: props.entrepriseId } }} icon={null} title="Voir les utilisateurs" disabled={false} />
+                          <DsfrLink to={{ name: 'utilisateurs', params: {}, query: { entreprisesIds: props.entrepriseId } }} icon={null} title="Voir les utilisateurs" disabled={false} />
                         </p>
                       </div>
                     </div>
@@ -242,7 +242,7 @@ export const PureEntreprise = defineComponent<Props>(props => {
                     </div>
                     <div class="tablet-blob-3-4">
                       <p>
-                        <DsfrLink to={{ name: 'titres', query: { entreprisesIds: props.entrepriseId, vueId: 'table' } }} icon={null} title="Voir les titres" disabled={false} />
+                        <DsfrLink to={{ name: 'titres', params: {}, query: { entreprisesIds: props.entrepriseId, vueId: 'table' } }} icon={null} title="Voir les titres" disabled={false} />
                       </p>
                     </div>
                   </div>

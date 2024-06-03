@@ -143,13 +143,28 @@
           ],
           "@typescript-eslint/no-empty-function": 0,
           "@typescript-eslint/strict-boolean-expressions": "error",
-          "no-restricted-imports": ["error", {
-            "paths": [{
-              "name": "vue",
-              "importNames": ["capitalize"],
-              "message": "Please use capitalize from camino-common/src/strings"
-            }]
-          }]
+          "no-restricted-imports": [
+            "error",
+            {
+              "paths": [
+                {
+                  "name": "vue",
+                  "importNames": ["capitalize"],
+                  "message": "Please use capitalize from camino-common/src/strings"
+                },
+                {
+                  "name": "vue-router",
+                  "importNames": ["Router"],
+                  "message": "Please use CaminoRouter"
+                },
+                {
+                  "name": "vue-router",
+                  "importNames": ["RouteLocationNormalized"],
+                  "message": "Please use CaminoRouteLocation"
+                }
+              ]
+            }
+          ]
         }
       }
     ],

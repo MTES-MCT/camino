@@ -1,12 +1,13 @@
 import { FunctionalComponent, defineComponent, inject } from 'vue'
 import { Liste } from './_common/liste'
-import { RouteLocationNormalizedLoaded, useRoute } from 'vue-router'
+import { useRoute } from 'vue-router'
 import { canReadMetas } from 'camino-common/src/permissions/metas'
 import { CaminoAccessError } from './error'
 import { User } from 'camino-common/src/roles'
 import { Column, TableRow } from './_ui/table'
 import { metasIndex } from '@/metas-definitions'
 import { userKey } from '@/moi'
+import { CaminoRouteLocation } from '@/router/routes'
 const metasColonnes = [
   {
     id: 'nom',
@@ -35,7 +36,7 @@ const metasLignesBuild = (): Promise<{ values: TableRow[]; total: number }> => {
 
 interface Props {
   user: User
-  currentRoute: Pick<RouteLocationNormalizedLoaded, 'name' | 'query'>
+  currentRoute: CaminoRouteLocation
 }
 export const PureMetas: FunctionalComponent<Props> = props => {
   if (canReadMetas(props.user)) {

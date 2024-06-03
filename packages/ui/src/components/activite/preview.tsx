@@ -89,7 +89,7 @@ export const Preview = defineComponent<Props>(props => {
                 label={null}
                 title="modifier l'activité"
                 icon="fr-icon-edit-line"
-                to={`/activites/${props.activite.slug}/edition`}
+                to={{ name: 'activiteEdition', params: { activiteId: props.activite.slug } }}
                 disabled={false}
               />
             ) : null}

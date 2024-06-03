@@ -3,7 +3,7 @@ import { CaminoMap, Props as CaminoMapProps } from '../_map/index'
 import { leafletGeojsonBoundsGet } from '../_map/leaflet'
 import { clustersBuild, layersBuild, zones, TitreWithPerimetre, CaminoMarkerClusterGroup, LayerWithTitreId, regionsCoordinates } from './mapUtil'
 import { DomaineId, isDomaineId } from 'camino-common/src/static/domaines'
-import { Router, onBeforeRouteLeave } from 'vue-router'
+import { onBeforeRouteLeave } from 'vue-router'
 import { Layer, LayerGroup, Marker, layerGroup } from 'leaflet'
 import { getEntriesHardcore, getKeys, isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools'
 import { DsfrButton } from '../_ui/dsfr-button'
@@ -14,6 +14,7 @@ import { User, isAdministration } from 'camino-common/src/roles'
 import { RegionId } from 'camino-common/src/static/region'
 import { Administrations } from 'camino-common/src/static/administrations'
 import { Departements } from 'camino-common/src/static/departement'
+import { CaminoRouter } from '@/typings/vue-router'
 export type TitreCarteParams = {
   zoom: number
   centre: [number, number]
@@ -24,7 +25,7 @@ interface Props {
   entreprises: Entreprise[]
   user: User
   updateCarte: (params: TitreCarteParams) => void
-  router: Router
+  router: CaminoRouter
   loading: boolean
 }
 
@@ -181,6 +182,7 @@ export const CaminoTitresMap = defineComponent<Props>(props => {
         // TODO 2023-07-20 ugly hack pour corriger la race condition au niveau de la gestions des tabs dsfr...
         vueId: 'carte',
       },
+      params: currentRoute.params,
     })
   }
 
