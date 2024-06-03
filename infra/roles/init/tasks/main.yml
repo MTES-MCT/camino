@@ -26,7 +26,7 @@
   block:
     - name: Install tools for apt
       ansible.builtin.apt:
-        name: 
+        name:
           - ca-certificates
           - curl
           - gnupg
@@ -75,4 +75,19 @@
         mode: u=rwx,g=rx,o=r
         owner: camino
         group: users
+      become: True
+- name: journalctl
+  block:
+    - name: Limite la taille maximum des fichiers de logs à 1GB
+      ansible.builtin.lineinfile:
+        path: /etc/systemd/journald.conf
+        regexp: '^SystemMaxUse='
+        line: SystemMaxUse=1G
+      become: True
+      register: limit_journal_size
+    - name: Redémarre systemd-journald
+      ansible.builtin.systemd_service:
+        state: restarted
+        name: systemd-journald
+      when: limit_journal_size.changed
       become: True
