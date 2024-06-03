@@ -1,7 +1,7 @@
 import { z } from 'zod'
 
 // prettier-ignore
-const IDS = ['3PI','AMO','BEL','BSL','BSM','CHA','CKA','CORA','COUN','CPG','DBR','EGY','FOS','FRG','GDS','KAW','LDD','LPS','MAL','MAN','MBV','MCA','MDF','MPA','MSO','NANC','PAP','PAR','PAUL','PTI','REG','RNNMAT','RNNNOU','RNNTRI','SAU','SGK','SLU','SMA','SPA','STE','STJ','ZDUARBAL','ZDUARMAT','ZDUGABAL','ZDUGAKOU','ZDUPAFAV','ZDUPAMAC'] as const
+const IDS = ['3PI','AMO','BEL','BSL','BSM','CHA','CKA','CORA','COUN','CPG','DBR','EGY','FOS','FRG','GDS','HSI','KAW','LDD','LPS','MAL','MAN','MCA','MDF','MPA','MSO','NANC','PAP','PAR','PAUL','PTI','REG','RNNMAT','RNNNOU','RNNTRI','SAU','SGK','SMA','SPA','STE','STJ','ZDUARBAL','ZDUARMAT','ZDUGABAL','ZDUGAKOU','ZDUPAFAV','ZDUPAMAC'] as const
 
 export const Forets = {
   '3PI': { id: '3PI', nom: '3 Pitons' },
@@ -30,7 +30,6 @@ export const Forets = {
   MCA: { id: 'MCA', nom: 'Montagne Cacao' },
   MDF: { id: 'MDF', nom: 'Montagne de Fer' },
   MSO: { id: 'MSO', nom: 'Montagne Soufflet' },
-  MBV: { id: 'MBV', nom: 'Montagnes bois violets' },
   NANC: { id: 'NANC', nom: 'Nancibo' },
   ZDUPAFAV: { id: 'ZDUPAFAV', nom: 'Palikur de Favard' },
   ZDUPAMAC: { id: 'ZDUPAMAC', nom: 'Palikur de Macouria' },
@@ -45,12 +44,12 @@ export const Forets = {
   RNNTRI: { id: 'RNNTRI', nom: 'RNN Trinite' },
   SAU: { id: 'SAU', nom: 'Saul' },
   SGK: { id: 'SGK', nom: 'Saut Grand Kanori' },
-  SLU: { id: 'SLU', nom: 'Saut Lucifer' },
   SPA: { id: 'SPA', nom: 'Sparouine' },
   STE: { id: 'STE', nom: 'Saint-Elie' },
   STJ: { id: 'STJ', nom: 'St Jean' },
   SMA: { id: 'SMA', nom: 'St Maurice' },
   FOS: { id: 'FOS', nom: 'Crique Fossée' },
+  HSI: { id: 'HSI', nom: 'Haut Sinnamary' },
 } as const satisfies Record<ForetId, { id: ForetId; nom: string }>
 
 export const foretIdValidator = z.enum(IDS)
