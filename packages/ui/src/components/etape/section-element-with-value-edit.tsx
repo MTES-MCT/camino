@@ -1,5 +1,4 @@
 import { DeepReadonly, FunctionalComponent } from 'vue'
-import { EtapeWithHeritage, HeritageProp } from 'camino-common/src/etape'
 import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
 import { ElementWithValue } from 'camino-common/src/sections'
 import { HeritageEdit } from './heritage-edit'
@@ -7,7 +6,6 @@ import { SectionElement } from '../_common/new-section-element'
 import { SectionElementEdit } from '../_common/new-sections-edit'
 import { FlattenEtape } from 'camino-common/src/etape-form'
 
-export type ElementHeritage = DeepReadonly<HeritageProp<Pick<EtapeWithHeritage, 'contenu' | 'typeId' | 'date'>>>
 type Props = {
   sectionId: string
   elementWithValue: DeepReadonly<ElementWithValue>
