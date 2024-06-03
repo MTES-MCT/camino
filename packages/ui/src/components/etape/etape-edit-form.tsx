@@ -106,7 +106,7 @@ export const EtapeEditForm = defineComponent<Props>(props => {
           date,
           typeId,
           statutId,
-          isBrouillon: canBeBrouillon(typeId),
+          isBrouillon: isNotNullNorUndefined(currentEtape.id) ? currentEtape.isBrouillon : canBeBrouillon(typeId),
         },
         props.demarcheId
       )
