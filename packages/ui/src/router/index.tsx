@@ -3,6 +3,7 @@ import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import { Dashboard } from '../components/dashboard'
 import { Titres } from '../components/titres'
 import { Alert } from '@/components/_ui/alert'
+import { isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools'
 
 const DGTMStatsFull = async () => {
   const { DGTMStatsFull } = await import('../components/dashboard/dgtm-stats-full')
@@ -369,9 +370,8 @@ const routes = [
       menuSection: null,
     },
   },
-] as const satisfies Readonly<(Omit<RouteRecordRaw, 'children'> & { children?: Readonly<RouteRecordRaw['children']> })[]>
+] as const satisfies Readonly<Omit<RouteRecordRaw, 'children'>[]>
 
-// TODO 2023-06-29 make children
 export type CaminoRoutePaths = (typeof routes)[number]['path']
 
 const history = createWebHistory()
@@ -402,8 +402,13 @@ router.isReady().then(async () => {})
 
 router.beforeEach(async (to, from, next) => {
   document.title = typeof to.meta.title === 'string' ? `${to.meta.title} - Camino` : 'le cadastre minier numérique ouvert - Camino'
-
-  next()
+  // Ceci est pour empêcher de nettoyer les filtres quand on clique sur le menu.
+  // Par exemple sur "titres et autorisations" , après avoir rajouter des filtres, si on clique à nouveau sur le menu, on perd tous les filtres
+  if (from.name === to.name && JSON.stringify(to.params) === JSON.stringify(from.params) && isNullOrUndefinedOrEmpty(Object.keys(to.query))) {
+    next(false)
+  } else {
+    next()
+  }
 })
 
 export default router

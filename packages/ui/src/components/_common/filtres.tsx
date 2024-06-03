@@ -37,9 +37,12 @@ export const Filtres = defineComponent((props: Props) => {
       // pour les prendre en compte lorsqu'on valide en appuyant sur "entrée"
       // met le focus sur le bouton de validation (dans la méthode close())
       close()
+      // TODO 2024-05-29 ici on clone car, par un hasard étrange, on se retrouve parfois avec la même référence d'objet qui est passée tout le temps, du coup validate est appelé avec la même valeur que filtresValues alors que ça vient de changer...'
+      // Il faut qu'on change ce comportement, probablement en faisant en sorte que les filtres utilisent le routeur, et que personne d'autre ne s'en serve pour calculer les filtres initiaux, mais utilisent plutôt les callback des filtres
+      const newParams = structuredClone(params)
 
-      filtresValues.value = params
-      props.paramsUpdate(params)
+      filtresValues.value = newParams
+      props.paramsUpdate(newParams)
     }
   }
 
