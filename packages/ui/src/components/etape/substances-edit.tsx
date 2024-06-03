@@ -22,7 +22,7 @@ export const SubstancesEdit = defineComponent<Props>(props => {
     isNullOrUndefinedOrEmpty(props.substances.value) ? { ...props.substances, value: [undefined] } : props.substances
   )
 
-  const substancesLength = computed<number>(() => editedSubstances.value.value.filter(substanceId => substanceId).length)
+  const substancesLength = computed<number>(() => editedSubstances.value.value.filter(isNotNullNorUndefined).length)
 
   const updateHeritage = (substanceHeritageValue: DeepReadonly<FlattenEtape['substances']>) => {
     setEditedSubstances(substanceHeritageValue)
