@@ -107,7 +107,7 @@ export const PureEntrepriseDashboard = defineComponent<Props>(props => {
                   }
                 />
               ) : null}
-              <TableAuto caption={`Vos titres`} columns={columns} rows={entrepriseTitres(item)} initialSort={{ colonne: 'statut', ordre: 'asc' }} class="width-full-p" />
+              <TableAuto class="fr-table--no-caption" caption="Vos titres" columns={columns} rows={entrepriseTitres(item)} initialSort={{ colonne: 'statut', ordre: 'asc' }} />
             </>
           )
         }}
