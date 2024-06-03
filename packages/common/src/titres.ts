@@ -133,9 +133,9 @@ export const getMostRecentValuePropFromEtapeFondamentaleValide = <
   const titreDemarchesDesc: TitrePropTitreEtapeFindDemarche<F | NF>[] = [...titreDemarches].sort((a, b) => b.ordre - a.ordre)
 
   for (const titreDemarche of titreDemarchesDesc) {
-    const titreEtapeDesc = [...titreDemarche.etapes].sort((a, b) => b.ordre - a.ordre)
+    const titreEtapeDesc = [...titreDemarche.etapes].sort((a, b) => b.ordre - a.ordre).filter((etape): etape is F => 'fondamentale' in etape)
     for (const titreEtape of titreEtapeDesc) {
-      if ('fondamentale' in titreEtape && isFondamentalesStatutOk(titreEtape.etape_statut_id) && !titreEtape.is_brouillon) {
+      if (isFondamentalesStatutOk(titreEtape.etape_statut_id) && (!titreEtape.is_brouillon || titreEtapeDesc.length === 1)) {
         const value = titreEtape.fondamentale[propId]
         if ((Array.isArray(value) && isNotNullNorUndefinedNorEmpty(value)) || (!Array.isArray(value) && isNotNullNorUndefined(value))) {
           return value
