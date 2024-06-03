@@ -2,7 +2,7 @@ import { FunctionalComponent, defineAsyncComponent, defineComponent, inject, onM
 import { useRouter } from 'vue-router'
 import { canReadActivites } from 'camino-common/src/permissions/activites'
 import { dashboardApiClient } from './dashboard/dashboard-api-client'
-import { User, isAdministration, isEntreprise } from 'camino-common/src/roles'
+import { User, isAdministration, isEntrepriseOrBureauDEtude } from 'camino-common/src/roles'
 import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations'
 import { entreprisesKey, userKey } from '@/moi'
 import { Entreprise } from 'camino-common/src/entreprise'
@@ -15,7 +15,7 @@ export const Dashboard = defineComponent({
     const entreprises = inject(entreprisesKey, ref([]))
 
     onMounted(async () => {
-      if (!isEntreprise(user) && !isAdministration(user)) {
+      if (!isEntrepriseOrBureauDEtude(user) && !isAdministration(user)) {
         router.replace({ name: 'titres' })
       }
     })
@@ -25,7 +25,7 @@ export const Dashboard = defineComponent({
 })
 
 const PureDashboard: FunctionalComponent<{ user: User; entreprises: Entreprise[] }> = props => {
-  if (isEntreprise(props.user)) {
+  if (isEntrepriseOrBureauDEtude(props.user)) {
     const PureEntrepriseDashboard = defineAsyncComponent(async () => {
       const { PureEntrepriseDashboard } = await import('@/components/dashboard/pure-entreprise-dashboard')
 
