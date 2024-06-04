@@ -9,14 +9,20 @@ import type { Pool } from 'pg'
 import { HTTP_STATUS } from 'camino-common/src/http.js'
 import { Role, isAdministrationRole } from 'camino-common/src/roles.js'
 import { titreEtapeCreate } from '../../database/queries/titres-etapes.js'
+import { entrepriseIdValidator } from 'camino-common/src/entreprise.js'
+import { TestUser, testBlankUser } from 'camino-common/src/tests-utils.js'
+import { entrepriseUpsert } from '../../database/queries/entreprises.js'
+import { Knex } from 'knex'
 
 console.info = vi.fn()
 console.error = vi.fn()
 
+let knex: Knex<any, unknown[]>
 let dbPool: Pool
 beforeAll(async () => {
-  const { pool } = await dbManager.populateDb()
+  const { knex: knexInstance, pool } = await dbManager.populateDb()
   dbPool = pool
+  knex = knexInstance
 })
 
 afterAll(async () => {
@@ -160,5 +166,57 @@ describe('etapeSupprimer', () => {
     const tested = await restDeleteCall(dbPool, '/rest/etapes/:etapeId', { etapeId: titreEtape.id }, userSuper)
 
     expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_NO_CONTENT)
+  })
+
+  test('un titulaire peut voir mais ne peut pas supprimer sa demande', async () => {
+    const titre = await titreCreate(
+      {
+        nom: 'mon titre',
+        typeId: 'arm',
+        titreStatutId: 'ind',
+        propsTitreEtapesIds: {},
+        publicLecture: false,
+      },
+      {}
+    )
+    const titreDemarche = await titreDemarcheCreate({
+      titreId: titre.id,
+      typeId: 'oct',
+      publicLecture: false,
+      entreprisesLecture: true,
+    })
+    const titulaireId1 = entrepriseIdValidator.parse('titulaireid1')
+    await entrepriseUpsert({
+      id: titulaireId1,
+      nom: 'Mon Entreprise',
+    })
+    const titreEtape = await titreEtapeCreate(
+      {
+        typeId: 'mfr',
+        statutId: 'fai',
+        isBrouillon: true,
+        ordre: 1,
+        titreDemarcheId: titreDemarche.id,
+        date: toCaminoDate('2018-01-01'),
+        titulaireIds: [titulaireId1],
+      },
+      userSuper,
+      titre.id
+    )
+    await knex('titres')
+      .update({ propsTitreEtapesIds: { titulaires: titreEtape.id } })
+      .where('id', titre.id)
+    const user: TestUser = {
+      ...testBlankUser,
+      role: 'entreprise',
+      entreprises: [{ id: titulaireId1, nom: 'titulaire1' }],
+    }
+
+    const getEtape = await restCall(dbPool, '/rest/titres/:titreId', { titreId: titre.id }, user)
+    expect(getEtape.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
+
+    const tested = await restDeleteCall(dbPool, '/rest/etapes/:etapeId', { etapeId: titreEtape.id }, user)
+
+    expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
   })
 })

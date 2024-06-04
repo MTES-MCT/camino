@@ -21,7 +21,7 @@ import { User } from 'camino-common/src/roles'
 import styles from './demarche-etape.module.css'
 import { DsfrButton, DsfrButtonIcon, DsfrLink } from '../_ui/dsfr-button'
 import { PureDownloads } from '../_common/downloads'
-import { canEditEtape, isEtapeDeposable } from 'camino-common/src/permissions/titres-etapes'
+import { canDeleteEtape, canEditEtape, isEtapeDeposable } from 'camino-common/src/permissions/titres-etapes'
 import { AdministrationId } from 'camino-common/src/static/administrations'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
 import { TitreStatutId } from 'camino-common/src/static/titresStatuts'
@@ -112,8 +112,14 @@ export const DemarcheEtape = defineComponent<Props>(props => {
 
   const canDownloadZip = computed<boolean>(() => props.etape.entreprises_documents.length + props.etape.etape_documents.length > 1)
 
-  const canEditOrDeleteEtape = computed<boolean>(() =>
-    canEditEtape(props.user, props.etape.etape_type_id, props.etape.is_brouillon, props.demarche.titulaireIds, props.demarche.administrationsLocales, props.demarche.demarche_type_id, props.titre)
+  const canDelete = computed<boolean>(() =>
+    canDeleteEtape(props.user, props.etape.etape_type_id, props.etape.is_brouillon, props.demarche.titulaireIds, props.demarche.administrationsLocales, props.demarche.demarche_type_id, props.titre)
+  )
+
+  const canEditOrDeleteEtape = computed<boolean>(
+    () =>
+      canEditEtape(props.user, props.etape.etape_type_id, props.etape.is_brouillon, props.demarche.titulaireIds, props.demarche.administrationsLocales, props.demarche.demarche_type_id, props.titre) ||
+      canDelete.value
   )
 
   const daeDocument = computed<GetEtapeDocumentsByEtapeId['dae']>(() => {
@@ -205,7 +211,7 @@ export const DemarcheEtape = defineComponent<Props>(props => {
                   title="Modifier l’étape"
                   label={null}
                 />
-                <DsfrButtonIcon icon={'fr-icon-delete-bin-line'} class="fr-mr-1v" buttonType="secondary" title="Supprimer l’étape" onClick={removePopupOpen} />
+                {canDelete.value ? <DsfrButtonIcon icon={'fr-icon-delete-bin-line'} class="fr-mr-1v" buttonType="secondary" title="Supprimer l’étape" onClick={removePopupOpen} /> : null}
               </>
             ) : null}
             {canDownloadZip.value ? (
