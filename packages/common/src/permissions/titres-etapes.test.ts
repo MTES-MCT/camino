@@ -1,7 +1,7 @@
 import { TitreTypeId } from '../static/titresTypes.js'
 import { EtapeTypeId } from '../static/etapesTypes.js'
 import { DemarcheTypeId } from '../static/demarchesTypes.js'
-import { canCreateEtape, canEditEtape, canEditAmodiataires, canEditDates, canEditDuree, canEditTitulaires, dureeOptionalCheck, isEtapeComplete } from './titres-etapes.js'
+import { canCreateEtape, canEditEtape, canEditAmodiataires, canEditDates, canEditDuree, canEditTitulaires, dureeOptionalCheck, isEtapeComplete, canDeleteEtape } from './titres-etapes.js'
 import { AdministrationId, ADMINISTRATION_IDS } from '../static/administrations.js'
 import { test, expect } from 'vitest'
 import { TestUser, testBlankUser } from '../tests-utils.js'
@@ -10,6 +10,7 @@ import { EntrepriseId, entrepriseIdValidator, newEntrepriseId } from '../entrepr
 import { SubstanceLegaleId } from '../static/substancesLegales.js'
 import { FeatureMultiPolygon } from '../perimetre.js'
 import { toCaminoDate } from '../date.js'
+import { EntrepriseUserNotNull } from '../roles.js'
 
 test.each<{ etapeTypeId: EtapeTypeId; demarcheTypeId: DemarcheTypeId; titreTypeId: TitreTypeId; optional: boolean }>([
   { etapeTypeId: 'mfr', demarcheTypeId: 'oct', titreTypeId: 'arm', optional: false },
@@ -219,6 +220,12 @@ test.each<{
   { administrationId: 'ope-onf-973-01', titreTypeId: 'arm', canEdit: true },
 ])('un utilisateur admin d’une administration peut modifier une étape mcr sur un titre: $canEdit', ({ administrationId, titreTypeId, canEdit }) => {
   expect(canEditEtape({ role: 'admin', administrationId, ...testBlankUser }, 'mcr', false, [], [], 'oct', { typeId: titreTypeId, titreStatutId: 'val' })).toBe(canEdit)
+})
+
+test('une entreprise peut modifier sa demande mais ne peut pas la supprimer', () => {
+  const user: EntrepriseUserNotNull = { ...testBlankUser, role: 'entreprise', entreprises: [{ id: entrepriseIdValidator.parse('entrepriseId'), nom: 'entreprise1' }] }
+  expect(canEditEtape(user, 'mfr', true, [user.entreprises[0].id], [], 'oct', { typeId: 'arm', titreStatutId: 'ind' })).toBe(true)
+  expect(canDeleteEtape(user, 'mfr', true, [user.entreprises[0].id], [], 'oct', { typeId: 'arm', titreStatutId: 'ind' })).toBe(false)
 })
 
 const multiPolygonWith4Points: FeatureMultiPolygon = {
