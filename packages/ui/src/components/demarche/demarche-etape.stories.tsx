@@ -448,6 +448,47 @@ export const DemandeNonDeposable: StoryFn = () => (
   />
 )
 
+export const DemandeNonSupprimable: StoryFn = () => (
+  <DemarcheEtape
+    titre={{ titreStatutId: 'val', typeId: 'arm', nom: 'nom du titre', slug: titreSlug }}
+    demarche={{ demarche_type_id: 'oct', titulaireIds: [entrepriseIdValidator.parse('titulaire1')], administrationsLocales: [], sdom_zones: [], etapes: [] }}
+    user={{
+      ...testBlankUser,
+      role: 'entreprise',
+      entreprises: [
+        {
+          id: entrepriseIdValidator.parse('titulaire1'),
+          nom: 'entreprise1',
+        },
+      ],
+    }}
+    router={routerPushMock}
+    apiClient={apiClient}
+    entreprises={entreprises}
+    etape={{
+      id: etapeIdValidator.parse('etapeId'),
+      slug: etapeSlugValidator.parse('etape-slug'),
+      notes: null,
+      etape_type_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeTypeId,
+      etape_statut_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeStatutId,
+      is_brouillon: true,
+      date,
+      fondamentale: {
+        date_debut: toCaminoDate('2023-10-25'),
+        duree: 12,
+        date_fin: null,
+        substances: ['auru', 'arge'],
+        titulaireIds: [entrepriseIdValidator.parse('titulaire1'), entrepriseIdValidator.parse('titulaire2')],
+        amodiataireIds: [entrepriseIdValidator.parse('amodiataire1')],
+        perimetre: null,
+      },
+      sections_with_values: [{ id: 'arm', elements: [{ id: 'mecanise', type: 'radio', value: true, nom: 'Mécanisation' }], nom: 'Arm' }],
+      etape_documents: [],
+      entreprises_documents: [],
+    }}
+  />
+)
+
 const demandeArmMecaniseNonDeposable: FeatureMultiPolygon = {
   properties: {},
   type: 'Feature',

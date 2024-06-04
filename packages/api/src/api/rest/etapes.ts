@@ -10,7 +10,7 @@ import { titreEtapeGet, titreEtapeUpdate } from '../../database/queries/titres-e
 import { demarcheDefinitionFind } from '../../business/rules-demarches/definitions.js'
 import { etapeTypeDateFinCheck } from '../_format/etapes-types.js'
 import { User, isBureauDEtudes, isEntreprise } from 'camino-common/src/roles.js'
-import { canCreateEtape, isEtapeDeposable, canEditEtape } from 'camino-common/src/permissions/titres-etapes.js'
+import { canCreateEtape, isEtapeDeposable, canDeleteEtape } from 'camino-common/src/permissions/titres-etapes.js'
 import { TitresStatutIds } from 'camino-common/src/static/titresStatuts.js'
 import { CaminoMachines } from '../../business/rules-demarches/machines.js'
 import { titreEtapesSortAscByOrdre } from '../../business/utils/titre-etapes-sort.js'
@@ -196,7 +196,7 @@ export const deleteEtape = (pool: Pool) => async (req: CaminoRequest, res: Custo
         }
 
         if (
-          !canEditEtape(user, titreEtape.typeId, titreEtape.isBrouillon, titreEtape.titulaireIds ?? [], titreEtape.demarche.titre.administrationsLocales ?? [], titreEtape.demarche.typeId, {
+          !canDeleteEtape(user, titreEtape.typeId, titreEtape.isBrouillon, titreEtape.titulaireIds ?? [], titreEtape.demarche.titre.administrationsLocales ?? [], titreEtape.demarche.typeId, {
             typeId: titreEtape.demarche.titre.typeId,
             titreStatutId: titreEtape.demarche.titre.titreStatutId,
           })

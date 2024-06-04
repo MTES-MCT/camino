@@ -98,6 +98,20 @@ export const canCreateEtape = (
   return canCreateOrEditEtape(user, etapeTypeId, isBrouillon, titulaireIds, titresAdministrationsLocales, demarcheTypeId, titre, 'creation')
 }
 
+export const canDeleteEtape = (
+  user: User,
+  etapeTypeId: EtapeTypeId,
+  isBrouillon: boolean,
+  titulaireIds: EntrepriseId[],
+  titresAdministrationsLocales: AdministrationId[],
+  demarcheTypeId: DemarcheTypeId,
+  titre: { typeId: TitreTypeId; titreStatutId: TitreStatutId }
+): boolean => {
+  return (
+    (isSuper(user) || isAdministrationAdmin(user) || isAdministrationEditeur(user)) && canEditEtape(user, etapeTypeId, isBrouillon, titulaireIds, titresAdministrationsLocales, demarcheTypeId, titre)
+  )
+}
+
 export const canEditEtape = (
   user: User,
   etapeTypeId: EtapeTypeId,

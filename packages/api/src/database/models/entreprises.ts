@@ -60,10 +60,10 @@ class Entreprises extends Model {
 
   public $parseJson(json: Pojo) {
     json = super.$parseJson(json)
+    // TODO 2024-06-03 à supprimer et vérifier que l'api sirene a bien des Ids en minuscule (lancer le monthly)
     if (isNotNullNorUndefined(json.id)) {
       json.id = json.id.toLowerCase()
     }
-
     if (Array.isArray(json.utilisateursIds) && json.utilisateursIds.length > 0) {
       json.utilisateurs = json.utilisateursIds.map((id: string) => ({
         id,
