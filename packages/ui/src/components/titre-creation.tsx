@@ -183,8 +183,10 @@ export const PureTitreCreation = defineComponent<Props>(props => {
       >
         {isNonEmptyArray(entreprises) ? (
           <div class="fr-mb-3w">
-            <label class="fr-label fr-mb-1w">Entreprise *</label>
-            <AutocompleteEntrepriseSingle initialValue={titreDemande.value.entrepriseId} items={entreprises} onUpdate={entrepriseUpdate} />
+            <label class="fr-label fr-mb-1w" for="input_entreprise">
+              Entreprise *
+            </label>
+            <AutocompleteEntrepriseSingle initialValue={titreDemande.value.entrepriseId} items={entreprises} onUpdate={entrepriseUpdate} id="input_entreprise" />
           </div>
         ) : (
           <Alert class="fr-mb-1w" small={true} type="error" title="Aucune entreprise associée à cet utilisateur" />

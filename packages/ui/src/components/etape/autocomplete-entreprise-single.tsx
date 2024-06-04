@@ -8,6 +8,7 @@ interface Props {
   initialValue?: DeepReadonly<EntrepriseId | null>
   items: DeepReadonly<Entreprise[]>
   onUpdate: (entreprise: DeepReadonly<EntrepriseId | null>) => void
+  id?: string
 }
 
 export const AutocompleteEntrepriseSingle = defineComponent<Props>(props => {
@@ -65,10 +66,11 @@ export const AutocompleteEntrepriseSingle = defineComponent<Props>(props => {
         minInputLength: 0,
         onSelectItem: onEntrepriseSelect,
         onInput: onSearch,
+        id: props.id,
       }}
     />
   )
 })
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-AutocompleteEntrepriseSingle.props = ['initialValue', 'items', 'onUpdate']
+AutocompleteEntrepriseSingle.props = ['initialValue', 'items', 'onUpdate', 'id']
