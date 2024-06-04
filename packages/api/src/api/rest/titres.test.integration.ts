@@ -20,6 +20,7 @@ import { titreSlugValidator } from 'camino-common/src/validators/titres.js'
 import TitresDemarches from '../../database/models/titres-demarches.js'
 import TitresEtapes from '../../database/models/titres-etapes.js'
 import Titres from '../../database/models/titres.js'
+import { ETAPE_IS_NOT_BROUILLON } from 'camino-common/src/etape.js'
 
 console.info = vi.fn()
 console.error = vi.fn()
@@ -49,7 +50,7 @@ beforeAll(async () => {
       {
         typeId: 'mfr',
         statutId: 'fai',
-        isBrouillon: false,
+        isBrouillon: ETAPE_IS_NOT_BROUILLON,
         date: toCaminoDate('2022-01-01'),
         ordre: 0,
         administrationsLocales: [ADMINISTRATION_IDS['DGTM - GUYANE']],
@@ -58,21 +59,21 @@ beforeAll(async () => {
       {
         typeId: 'mdp',
         statutId: 'fai',
-        isBrouillon: false,
+        isBrouillon: ETAPE_IS_NOT_BROUILLON,
         date: toCaminoDate('2022-02-01'),
         ordre: 1,
       },
       {
         typeId: 'pfd',
         statutId: 'fai',
-        isBrouillon: false,
+        isBrouillon: ETAPE_IS_NOT_BROUILLON,
         date: toCaminoDate('2022-02-10'),
         ordre: 2,
       },
       {
         typeId: 'mcp',
         statutId: 'com',
-        isBrouillon: false,
+        isBrouillon: ETAPE_IS_NOT_BROUILLON,
         date: toCaminoDate('2022-03-10'),
         ordre: 3,
       },
@@ -85,7 +86,7 @@ beforeAll(async () => {
       {
         typeId: 'mfr',
         statutId: 'fai',
-        isBrouillon: false,
+        isBrouillon: ETAPE_IS_NOT_BROUILLON,
         date: toCaminoDate('2022-01-01'),
         ordre: 0,
         administrationsLocales: [ADMINISTRATION_IDS['DGTM - GUYANE']],
@@ -93,14 +94,14 @@ beforeAll(async () => {
       {
         typeId: 'mdp',
         statutId: 'fai',
-        isBrouillon: false,
+        isBrouillon: ETAPE_IS_NOT_BROUILLON,
         date: toCaminoDate('2022-02-01'),
         ordre: 1,
       },
       {
         typeId: 'pfd',
         statutId: 'fai',
-        isBrouillon: false,
+        isBrouillon: ETAPE_IS_NOT_BROUILLON,
         date: toCaminoDate('2022-02-10'),
         ordre: 2,
       },

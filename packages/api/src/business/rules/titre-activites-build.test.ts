@@ -7,6 +7,7 @@ import { toCaminoDate } from 'camino-common/src/date.js'
 import { newDemarcheId, newEtapeId, newTitreId } from '../../database/models/_format/id-create.js'
 import { ACTIVITES_TYPES_IDS } from 'camino-common/src/static/activitesTypes.js'
 import { titreIdValidator } from 'camino-common/src/validators/titres.js'
+import { ETAPE_IS_NOT_BROUILLON } from 'camino-common/src/etape.js'
 
 const titreId = titreIdValidator.parse('titre-id')
 
@@ -67,7 +68,7 @@ describe("construction des activités d'un titre", () => {
             date: toCaminoDate('2018-01-01'),
             typeId: 'dpu',
             statutId: 'fai',
-            isBrouillon: false,
+            isBrouillon: ETAPE_IS_NOT_BROUILLON,
             substances: ['auru', 'nacl'],
             surface: null,
             ordre: 1,

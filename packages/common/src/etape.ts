@@ -1,21 +1,21 @@
 import { CaminoDate, caminoDateValidator } from './date.js'
-import { EntrepriseId } from './entreprise.js'
 import { EtapeHeritageProps, MappingHeritagePropsNameEtapePropsName } from './heritage.js'
 import { DOCUMENTS_TYPES_IDS, documentTypeIdValidator } from './static/documentsTypes.js'
 import { EtapeStatutId, etapeStatutIdValidator } from './static/etapesStatuts.js'
 import { EtapeTypeId, etapeTypeIdValidator } from './static/etapesTypes.js'
-import { SubstanceLegaleId } from './static/substancesLegales.js'
 import { z } from 'zod'
 import { tempDocumentNameValidator } from './document.js'
-import { DeepReadonly, OmitDistributive } from './typescript-tools.js'
-import { getSections } from './static/titresTypes_demarchesTypes_etapesTypes/sections.js'
-import { ElementWithValue } from './sections.js'
 import { DemarcheTypeId } from './static/demarchesTypes.js'
 import { TitreTypeId } from './static/titresTypes.js'
 import { User, isEntrepriseOrBureauDEtude } from './roles.js'
 import { avisStatutIdValidator, avisTypeIdValidator } from './static/avisTypes.js'
 import { GraphqlEtape } from './etape-form.js'
-import { EtapeComplete } from './permissions/titres-etapes.js'
+
+export const etapeBrouillonValidator = z.boolean().brand('EtapeBrouillon')
+export type EtapeBrouillon = z.infer<typeof etapeBrouillonValidator>
+
+export const ETAPE_IS_BROUILLON = true as EtapeBrouillon
+export const ETAPE_IS_NOT_BROUILLON = false as EtapeBrouillon
 
 export const etapeIdValidator = z.string().brand<'EtapeId'>()
 export type EtapeId = z.infer<typeof etapeIdValidator>
@@ -88,7 +88,7 @@ export type GetEtapeDocumentsByEtapeId = z.infer<typeof getEtapeDocumentsByEtape
 
 
 export const etapeAvisIdValidator = z.string().brand('EtapeAvis')
-const etapeAvisValidator = z.object({
+export const etapeAvisValidator = z.object({
   id: etapeAvisIdValidator,
   avis_type_id: avisTypeIdValidator,
   date: caminoDateValidator,
@@ -111,7 +111,7 @@ export const needAslAndDae = (
     demarcheTypeId: DemarcheTypeId
     titreTypeId: TitreTypeId
   },
-  isBrouillon: boolean,
+  isBrouillon: EtapeBrouillon,
   user: User
 ): boolean => {
   return tde.etapeTypeId === 'mfr' && tde.demarcheTypeId === 'oct' && tde.titreTypeId === 'axm' && isEntrepriseOrBureauDEtude(user) && isBrouillon

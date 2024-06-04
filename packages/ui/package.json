@@ -37,8 +37,8 @@
     "@types/geojson": "^7946.0.14",
     "@types/leaflet": "^1.9.12",
     "@types/leaflet.markercluster": "^1.5.4",
-    "@typescript-eslint/eslint-plugin": "^7.7.1",
-    "@typescript-eslint/parser": "^7.7.1",
+    "@typescript-eslint/eslint-plugin": "^7.12.0",
+    "@typescript-eslint/parser": "^7.12.0",
     "@uppy/core": "^3.10.1",
     "@uppy/tus": "^3.5.4",
     "@vitejs/plugin-vue-jsx": "^3.1.0",
@@ -104,8 +104,13 @@
       "P": "readonly",
       "dsfr": "readonly"
     },
-    "extends": ["standard", "prettier"],
-    "ignorePatterns": ["!.storybook"],
+    "extends": [
+      "standard",
+      "prettier"
+    ],
+    "ignorePatterns": [
+      "!.storybook"
+    ],
     "rules": {
       "camelcase": 0,
       "no-unused-vars": 0,
@@ -117,8 +122,14 @@
         "parserOptions": {
           "project": true
         },
-        "files": ["*.tsx", "*.ts", "*.js"],
-        "extends": ["plugin:@typescript-eslint/recommended"],
+        "files": [
+          "*.tsx",
+          "*.ts",
+          "*.js"
+        ],
+        "extends": [
+          "plugin:@typescript-eslint/recommended"
+        ],
         "rules": {
           "camelcase": 0,
           "newline-before-return": 0,
@@ -149,17 +160,23 @@
               "paths": [
                 {
                   "name": "vue",
-                  "importNames": ["capitalize"],
+                  "importNames": [
+                    "capitalize"
+                  ],
                   "message": "Please use capitalize from camino-common/src/strings"
                 },
                 {
                   "name": "vue-router",
-                  "importNames": ["Router"],
+                  "importNames": [
+                    "Router"
+                  ],
                   "message": "Please use CaminoRouter"
                 },
                 {
                   "name": "vue-router",
-                  "importNames": ["RouteLocationNormalized"],
+                  "importNames": [
+                    "RouteLocationNormalized"
+                  ],
                   "message": "Please use CaminoRouteLocation"
                 }
               ]
@@ -189,7 +206,9 @@
       }
     }
   },
-  "browserslist": ["supports es6-module"],
+  "browserslist": [
+    "supports es6-module"
+  ],
   "dependencies": {
     "zod": "^3.23.4"
   }

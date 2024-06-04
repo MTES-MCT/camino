@@ -5,7 +5,6 @@ import {
   DocumentComplementaireDaeEtapeDocumentModification,
   EtapeAvis,
   EtapeDocument,
- 
   TempEtapeAvis,
   TempEtapeDocument,
   needAslAndDae,
@@ -15,7 +14,7 @@ import { AvisTypeId, AvisTypes } from '../static/avisTypes.js'
 import { CommuneId } from '../static/communes'
 import { DemarcheTypeId } from '../static/demarchesTypes.js'
 import { DEPARTEMENT_IDS, toDepartementId } from '../static/departement.js'
-import { EntrepriseDocumentTypeId } from '../static/documentsTypes.js'
+import { DocumentsTypes, EntrepriseDocumentTypeId } from '../static/documentsTypes.js'
 import { DOMAINES_IDS } from '../static/domaines.js'
 import { ETAPES_TYPES, EtapeTypeId, EtapesTypes } from '../static/etapesTypes.js'
 import { SDOMZoneId } from '../static/sdom.js'
@@ -25,7 +24,7 @@ import { getDocuments } from '../static/titresTypes_demarchesTypes_etapesTypes/d
 import { getEntrepriseDocuments } from '../static/titresTypes_demarchesTypes_etapesTypes/entrepriseDocuments.js'
 import { documentTypeIdsBySdomZonesGet } from '../static/titresTypes_demarchesTypes_etapesTypes/sdom.js'
 import { getSections, getSectionsWithValue } from '../static/titresTypes_demarchesTypes_etapesTypes/sections.js'
-import { isNotNullNorUndefinedNorEmpty, isNotNullNorUndefined, DeepReadonly, onlyUnique, NonEmptyArray, isNonEmptyArray, isNullOrUndefinedOrEmpty, isNullOrUndefined } from '../typescript-tools.js'
+import { isNotNullNorUndefinedNorEmpty, DeepReadonly, onlyUnique, NonEmptyArray, isNonEmptyArray, isNullOrUndefinedOrEmpty, isNullOrUndefined, Nullable } from '../typescript-tools.js'
 import { sectionsWithValueCompleteValidate } from './sections.js'
 import { isDureeOptional } from './titres-etapes.js'
 
@@ -34,21 +33,21 @@ export type ValidReturn = { valid: true } | { valid: false; errors: NonEmptyArra
 export const dateTypeStepIsVisible = (user: User): boolean => {
   return isSuper(user) || isAdministrationAdmin(user) || isAdministrationEditeur(user)
 }
-export const dateTypeStepIsComplete = (etape: DeepReadonly<Pick<FlattenEtape, 'typeId' | 'date' | 'statutId'>>, user: User): ValidReturn => {
+export const dateTypeStepIsComplete = (etape: DeepReadonly<Nullable<Pick<FlattenEtape, 'typeId' | 'date' | 'statutId'>>>, user: User): ValidReturn => {
   if (!dateTypeStepIsVisible(user)) {
     return { valid: true }
   }
 
   const errors: string[] = []
-  if (isNotNullNorUndefined(etape.date)) {
+  if (isNullOrUndefined(etape.date)) {
     errors.push("La date de l'étape est obligatoire")
   }
 
-  if (isNotNullNorUndefined(etape.typeId)) {
+  if (isNullOrUndefined(etape.typeId)) {
     errors.push("Le type de l'étape est obligatoire")
   }
 
-  if (isNotNullNorUndefined(etape.statutId)) {
+  if (isNullOrUndefined(etape.statutId)) {
     errors.push("Le statut de l'étape est obligatoire")
   }
 
@@ -67,11 +66,7 @@ export const fondamentaleStepIsVisible = (etapeTypeId: EtapeTypeId): boolean => 
   return EtapesTypes[etapeTypeId].fondamentale
 }
 
-export const fondamentaleStepIsComplete = (
-  flattened: DeepReadonly<Pick<FlattenEtape, 'typeId' | 'duree' | 'substances'>>,
-  demarcheTypeId: DemarcheTypeId,
-  titreTypeId: TitreTypeId
-): ValidReturn => {
+export const fondamentaleStepIsComplete = (flattened: DeepReadonly<Pick<FlattenEtape, 'typeId' | 'duree' | 'substances'>>, demarcheTypeId: DemarcheTypeId, titreTypeId: TitreTypeId): ValidReturn => {
   if (!fondamentaleStepIsVisible(flattened.typeId)) {
     return { valid: true }
   }
@@ -85,7 +80,7 @@ export const fondamentaleStepIsComplete = (
     errors.push('Les substances sont obligatoires')
   }
 
-  if (!isDureeOptional(flattened.typeId, demarcheTypeId, titreTypeId) && (isNullOrUndefined(flattened.duree) || flattened.duree.value === 0)) {
+  if (!isDureeOptional(flattened.typeId, demarcheTypeId, titreTypeId) && (isNullOrUndefined(flattened.duree.value) || flattened.duree.value === 0)) {
     errors.push('la durée est obligatoire')
   }
 
@@ -96,11 +91,7 @@ export const fondamentaleStepIsComplete = (
   return { valid: true }
 }
 
-export const fondamentaleStepIsEnregistrable = (
-  flattened: DeepReadonly<Pick<FlattenEtape, 'typeId' | 'duree' | 'substances'>>,
-  demarcheTypeId: DemarcheTypeId,
-  titreTypeId: TitreTypeId
-): boolean => {
+export const fondamentaleStepIsEnregistrable = (flattened: DeepReadonly<Pick<FlattenEtape, 'typeId' | 'duree' | 'substances'>>, demarcheTypeId: DemarcheTypeId, titreTypeId: TitreTypeId): boolean => {
   return fondamentaleStepIsComplete(flattened, demarcheTypeId, titreTypeId).valid
 }
 
@@ -236,7 +227,7 @@ export const etapeDocumentsStepIsComplete = (
   etape: DeepReadonly<Pick<FlattenEtape, 'typeId' | 'contenu' | 'isBrouillon'>>,
   demarcheTypeId: DemarcheTypeId,
   titreTypeId: TitreTypeId,
-  etapeDocuments: DeepReadonly<Pick<(EtapeDocument | TempEtapeDocument), 'etape_document_type_id'>[]>,
+  etapeDocuments: DeepReadonly<Pick<EtapeDocument | TempEtapeDocument, 'etape_document_type_id'>[]>,
   sdomZoneIds: DeepReadonly<SDOMZoneId[]>,
   daeDocument: DeepReadonly<Omit<DocumentComplementaireDaeEtapeDocumentModification, 'id'>> | null,
   aslDocument: DeepReadonly<Omit<DocumentComplementaireAslEtapeDocumentModification, 'id'>> | null,
@@ -248,9 +239,12 @@ export const etapeDocumentsStepIsComplete = (
 
   const errors: string[] = []
   const documentTypes = getDocumentsTypes({ typeId: etape.typeId }, demarcheTypeId, titreTypeId, sdomZoneIds, etape.contenu?.arm?.mecanise?.value === true)
-  if (documentTypes.some(({ optionnel, id }) => !optionnel && etapeDocuments.every(({ etape_document_type_id }) => etape_document_type_id !== id))) {
-    errors.push('Il manque des documents obligatoires')
-  }
+
+  errors.push(
+    ...documentTypes
+      .filter(({ optionnel, id }) => !optionnel && etapeDocuments.every(({ etape_document_type_id }) => etape_document_type_id !== id))
+      .map(({ id }) => `le document "${DocumentsTypes[id].nom}" (${id}) est obligatoire`)
+  )
 
   if (needAslAndDae({ etapeTypeId: etape.typeId, demarcheTypeId, titreTypeId }, etape.isBrouillon, user)) {
     if (isNullOrUndefined(daeDocument)) {

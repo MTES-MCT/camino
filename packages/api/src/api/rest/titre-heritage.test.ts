@@ -3,11 +3,12 @@ import { TitrePropTitreEtapeFindDemarcheEtape } from 'camino-common/src/titres'
 import { getMostRecentEtapeFondamentaleValide } from './titre-heritage'
 import { entrepriseIdValidator } from 'camino-common/src/entreprise'
 import { toCaminoDate } from 'camino-common/src/date'
+import { ETAPE_IS_NOT_BROUILLON } from 'camino-common/src/etape'
 describe('getMostRecentValueProp', () => {
   test('retourne le dernier titulaire même si les étapes ne sont pas dans le bon ordre', () => {
     const dpu: TitrePropTitreEtapeFindDemarcheEtape = {
       etape_type_id: 'dpu',
-      is_brouillon: false,
+      is_brouillon: ETAPE_IS_NOT_BROUILLON,
       fondamentale: {
         date_debut: null,
         date_fin: toCaminoDate('2032-08-18'),
@@ -23,7 +24,7 @@ describe('getMostRecentValueProp', () => {
 
     const dex: TitrePropTitreEtapeFindDemarcheEtape = {
       etape_type_id: 'dex',
-      is_brouillon: false,
+      is_brouillon: ETAPE_IS_NOT_BROUILLON,
       fondamentale: {
         date_debut: null,
         date_fin: null,

@@ -20,15 +20,15 @@ const avis: EtapeAvis[] = [
     avis_type_id: 'confirmationAccordProprietaireDuSol',
     description: 'Une description',
     date: caminoDateValidator.parse('2023-02-01'),
-    avis_statut_id: 'Favorable'
+    avis_statut_id: 'Favorable',
   },
   {
     id: etapeAvisIdValidator.parse('id-car'),
     avis_type_id: 'lettreDeSaisineDesServices',
     description: 'Une description',
     date: caminoDateValidator.parse('2023-02-01'),
-    avis_statut_id: 'Non renseigné'
-  }
+    avis_statut_id: 'Non renseigné',
+  },
 ]
 
 const uploadTempDocumentAction = action('uploadTempDocument')
@@ -53,15 +53,18 @@ export const Empty: StoryFn = () => (
   <EtapeAvisEdit
     apiClient={{ ...apiClient, getEtapeAvisByEtapeId: () => Promise.resolve([]) }}
     etapeId={etapeIdValidator.parse('etapeId')}
+    communeIds={[]}
     tde={{ titreTypeId: 'arm', demarcheTypeId: 'oct', etapeTypeId: 'mfr' }}
-    completeUpdate={completeUpdateAction}
+    onChange={completeUpdateAction}
   />
 )
+// FIXME tester le cas des avis supplémentaires en fonction des communes
 export const Rempli: StoryFn = () => (
   <EtapeAvisEdit
     apiClient={apiClient}
     etapeId={etapeIdValidator.parse('etapeId')}
+    communeIds={[]}
     tde={{ titreTypeId: 'axm', demarcheTypeId: 'oct', etapeTypeId: 'ssr' }}
-    completeUpdate={completeUpdateAction}
+    onChange={completeUpdateAction}
   />
 )

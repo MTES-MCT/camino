@@ -10,6 +10,7 @@ import { afterAll, beforeAll, afterEach, describe, test, expect, vi } from 'vite
 import type { Pool } from 'pg'
 import { newEtapeId } from '../../database/models/_format/id-create.js'
 import TitresDemarches from '../../database/models/titres-demarches.js'
+import { ETAPE_IS_NOT_BROUILLON } from 'camino-common/src/etape.js'
 
 console.info = vi.fn()
 console.error = vi.fn()
@@ -233,7 +234,7 @@ describe('demarcheModifier', () => {
         statutId: 'acc',
         ordre: 1,
         date: toCaminoDate('2020-01-01'),
-        isBrouillon: false,
+        isBrouillon: ETAPE_IS_NOT_BROUILLON,
       },
       userSuper,
       titreId

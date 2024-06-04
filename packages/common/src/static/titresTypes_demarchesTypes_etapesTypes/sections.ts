@@ -940,6 +940,7 @@ const basicElementValidator = z.object({
   description: z.string().optional(),
   dateDebut: caminoDateValidator.optional(),
   dateFin: caminoDateValidator.optional(),
+  // TODO 2024-06-03: optionnel devrait être tout le temps présent avec une valeur
   optionnel: z.boolean().optional(),
 })
 

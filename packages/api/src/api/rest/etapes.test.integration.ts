@@ -13,6 +13,7 @@ import { entrepriseIdValidator } from 'camino-common/src/entreprise.js'
 import { TestUser, testBlankUser } from 'camino-common/src/tests-utils.js'
 import { entrepriseUpsert } from '../../database/queries/entreprises.js'
 import { Knex } from 'knex'
+import { ETAPE_IS_BROUILLON } from 'camino-common/src/etape.js'
 
 console.info = vi.fn()
 console.error = vi.fn()
@@ -123,7 +124,7 @@ describe('etapeSupprimer', () => {
       {
         typeId: 'mfr',
         statutId: 'fai',
-        isBrouillon: true,
+        isBrouillon: ETAPE_IS_BROUILLON,
         ordre: 1,
         titreDemarcheId: titreDemarche.id,
         date: toCaminoDate('2018-01-01'),
@@ -155,7 +156,7 @@ describe('etapeSupprimer', () => {
       {
         typeId: 'mfr',
         statutId: 'fai',
-        isBrouillon: true,
+        isBrouillon: ETAPE_IS_BROUILLON,
         ordre: 1,
         titreDemarcheId: titreDemarche.id,
         date: toCaminoDate('2018-01-01'),

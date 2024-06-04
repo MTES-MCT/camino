@@ -10,12 +10,13 @@ import { etapeStatutIdValidator } from 'camino-common/src/static/etapesStatuts.j
 import { TitreTypeId, titreTypeIdValidator } from 'camino-common/src/static/titresTypes.js'
 import { etapeTypeIdValidator } from 'camino-common/src/static/etapesTypes.js'
 import { TitreId, titreIdValidator } from 'camino-common/src/validators/titres.js'
-import { etapeIdValidator } from 'camino-common/src/etape.js'
+import { etapeBrouillonValidator, etapeIdValidator } from 'camino-common/src/etape.js'
 import { z } from 'zod'
 import { Pool } from 'pg'
 import { communeValidator } from 'camino-common/src/static/communes.js'
 import { TitreEtapeForMachine } from '../rules-demarches/machine-common.js'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
+import { km2Validator } from 'camino-common/src/number'
 
 const getEtapesByDemarcheValidator = z.object({
   contenu: z.any().nullable(),
@@ -30,9 +31,9 @@ const getEtapesByDemarcheValidator = z.object({
   titre_id: titreIdValidator,
   titre_type_id: titreTypeIdValidator,
   communes: z.array(communeValidator.pick({ id: true })).nullable(),
-  surface: z.number().nullable(),
+  surface: km2Validator.nullable(),
   type_id: etapeTypeIdValidator.nullable(),
-  is_brouillon: z.boolean().nullable(),
+  is_brouillon: etapeBrouillonValidator.nullable(),
 })
 
 export const getDemarches = async (

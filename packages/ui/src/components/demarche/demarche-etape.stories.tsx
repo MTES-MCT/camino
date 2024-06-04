@@ -6,7 +6,7 @@ import { Entreprise, EtapeEntrepriseDocument, entrepriseDocumentIdValidator, ent
 import { titreSlugValidator } from 'camino-common/src/validators/titres'
 import { action } from '@storybook/addon-actions'
 import { testBlankUser } from 'camino-common/src/tests-utils'
-import { EtapeDocument, etapeDocumentIdValidator, etapeIdValidator, etapeSlugValidator } from 'camino-common/src/etape'
+import { ETAPE_IS_BROUILLON, ETAPE_IS_NOT_BROUILLON, EtapeDocument, etapeDocumentIdValidator, etapeIdValidator, etapeSlugValidator } from 'camino-common/src/etape'
 import { DOCUMENTS_TYPES_IDS } from 'camino-common/src/static/documentsTypes'
 import { ApiClient } from '@/api/api-client'
 import { FeatureMultiPolygon } from 'camino-common/src/perimetre'
@@ -185,6 +185,7 @@ export const NoSnapshotDemande: StoryFn = () => (
       titulaireIds: [entrepriseIdValidator.parse('titulaire1'), entrepriseIdValidator.parse('titulaire2')],
       administrationsLocales: [],
       sdom_zones: [],
+      communes: [],
       etapes: [],
     }}
     user={{ ...testBlankUser, role: 'super' }}
@@ -197,7 +198,7 @@ export const NoSnapshotDemande: StoryFn = () => (
       slug: etapeSlugValidator.parse('etape-slug'),
       etape_type_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeTypeId,
       etape_statut_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeStatutId,
-      is_brouillon: false,
+      is_brouillon: ETAPE_IS_NOT_BROUILLON,
       date,
 
       fondamentale: {
@@ -295,6 +296,7 @@ export const NoSnapshotDemande: StoryFn = () => (
       sections_with_values: [{ id: 'arm', elements: [{ id: 'mecanise', type: 'radio', value: true, nom: 'Mécanisation' }], nom: 'Arm' }],
       etape_documents: [],
       entreprises_documents: [],
+      avis_documents: [],
     }}
   />
 )
@@ -307,6 +309,7 @@ export const DemandeMultipleEntreprisesDocuments: StoryFn = () => (
       titulaireIds: [entrepriseIdValidator.parse('titulaire1'), entrepriseIdValidator.parse('titulaire2')],
       administrationsLocales: [],
       sdom_zones: [],
+      communes: [],
       etapes: [],
     }}
     user={{ ...testBlankUser, role: 'super' }}
@@ -318,7 +321,7 @@ export const DemandeMultipleEntreprisesDocuments: StoryFn = () => (
       slug: etapeSlugValidator.parse('etape-slug'),
       etape_type_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeTypeId,
       etape_statut_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeStatutId,
-      is_brouillon: false,
+      is_brouillon: ETAPE_IS_NOT_BROUILLON,
       date,
       notes: 'Super note',
       fondamentale: {
@@ -364,6 +367,7 @@ export const DemandeMultipleEntreprisesDocuments: StoryFn = () => (
           description: 'Une description',
         },
       ],
+      avis_documents: [],
     }}
   />
 )
@@ -371,7 +375,7 @@ export const DemandeMultipleEntreprisesDocuments: StoryFn = () => (
 export const DemandeNoMap: StoryFn = () => (
   <DemarcheEtape
     titre={{ titreStatutId: 'val', typeId: 'arm', nom: 'nom du titre', slug: titreSlug }}
-    demarche={{ demarche_type_id: 'oct', titulaireIds: [entrepriseIdValidator.parse('titulaire1')], administrationsLocales: [], sdom_zones: [], etapes: [] }}
+    demarche={{ demarche_type_id: 'oct', titulaireIds: [entrepriseIdValidator.parse('titulaire1')], administrationsLocales: [], sdom_zones: [], etapes: [], communes: [] }}
     user={{ ...testBlankUser, role: 'super' }}
     router={routerPushMock}
     apiClient={apiClient}
@@ -382,7 +386,7 @@ export const DemandeNoMap: StoryFn = () => (
       slug: etapeSlugValidator.parse('etape-slug'),
       etape_type_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeTypeId,
       etape_statut_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeStatutId,
-      is_brouillon: false,
+      is_brouillon: ETAPE_IS_NOT_BROUILLON,
       date,
       fondamentale: {
         date_debut: toCaminoDate('2023-10-25'),
@@ -411,6 +415,7 @@ export const DemandeNoMap: StoryFn = () => (
       ],
       etape_documents: documents,
       entreprises_documents: entrepriseDocuments,
+      avis_documents: [],
     }}
   />
 )
@@ -418,7 +423,7 @@ export const DemandeNoMap: StoryFn = () => (
 export const DemandeNonDeposable: StoryFn = () => (
   <DemarcheEtape
     titre={{ titreStatutId: 'val', typeId: 'arm', nom: 'nom du titre', slug: titreSlug }}
-    demarche={{ demarche_type_id: 'oct', titulaireIds: [], administrationsLocales: [], sdom_zones: [], etapes: [] }}
+    demarche={{ demarche_type_id: 'oct', titulaireIds: [], administrationsLocales: [], sdom_zones: [], etapes: [], communes: [] }}
     user={{ ...testBlankUser, role: 'super' }}
     router={routerPushMock}
     apiClient={apiClient}
@@ -429,7 +434,7 @@ export const DemandeNonDeposable: StoryFn = () => (
       notes: null,
       etape_type_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeTypeId,
       etape_statut_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeStatutId,
-      is_brouillon: true,
+      is_brouillon: ETAPE_IS_BROUILLON,
       date,
 
       fondamentale: {
@@ -444,6 +449,7 @@ export const DemandeNonDeposable: StoryFn = () => (
       sections_with_values: [{ id: 'arm', elements: [{ id: 'mecanise', type: 'radio', value: true, nom: 'Mécanisation' }], nom: 'Arm' }],
       etape_documents: [],
       entreprises_documents: [],
+      avis_documents: [],
     }}
   />
 )
@@ -528,7 +534,7 @@ const demandeArmMecaniseNonDeposable: FeatureMultiPolygon = {
 export const DemandeArmMecaniseNonDeposable: StoryFn = () => (
   <DemarcheEtape
     titre={{ titreStatutId: 'val', typeId: 'arm', nom: 'nom du titre', slug: titreSlug }}
-    demarche={{ demarche_type_id: 'oct', titulaireIds: [entrepriseIdValidator.parse('titulaire1')], administrationsLocales: [], sdom_zones: [], etapes: [] }}
+    demarche={{ demarche_type_id: 'oct', titulaireIds: [entrepriseIdValidator.parse('titulaire1')], administrationsLocales: [], sdom_zones: [], etapes: [], communes: [] }}
     user={{ ...testBlankUser, role: 'super' }}
     router={routerPushMock}
     apiClient={apiClient}
@@ -540,7 +546,7 @@ export const DemandeArmMecaniseNonDeposable: StoryFn = () => (
       notes: null,
       etape_type_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeTypeId,
       etape_statut_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeStatutId,
-      is_brouillon: true,
+      is_brouillon: ETAPE_IS_BROUILLON,
       date,
 
       fondamentale: {
@@ -568,6 +574,7 @@ export const DemandeArmMecaniseNonDeposable: StoryFn = () => (
       sections_with_values: [{ id: 'arm', elements: [{ id: 'mecanise', type: 'radio', value: true, nom: 'Mécanisation' }], nom: 'Arm' }],
       etape_documents: documentsDemande,
       entreprises_documents: entrepriseDocumentsDemande,
+      avis_documents: []
     }}
   />
 )
@@ -611,7 +618,7 @@ const demandeArmMecaniseDeposable: FeatureMultiPolygon = {
 export const DemandeArmMecaniseDeposable: StoryFn = () => (
   <DemarcheEtape
     titre={{ titreStatutId: 'val', typeId: 'arm', nom: 'nom du titre', slug: titreSlug }}
-    demarche={{ demarche_type_id: 'oct', titulaireIds: [entrepriseIdValidator.parse('titulaire1')], administrationsLocales: [], sdom_zones: [], etapes: [] }}
+    demarche={{ demarche_type_id: 'oct', titulaireIds: [entrepriseIdValidator.parse('titulaire1')], administrationsLocales: [], sdom_zones: [], etapes: [], communes: [] }}
     user={{ ...testBlankUser, role: 'super' }}
     router={routerPushMock}
     apiClient={apiClient}
@@ -623,7 +630,7 @@ export const DemandeArmMecaniseDeposable: StoryFn = () => (
       notes: null,
       etape_type_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeTypeId,
       etape_statut_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeStatutId,
-      is_brouillon: true,
+      is_brouillon: ETAPE_IS_BROUILLON,
       date,
 
       fondamentale: {
@@ -655,6 +662,7 @@ export const DemandeArmMecaniseDeposable: StoryFn = () => (
         { id: etapeDocumentIdValidator.parse('idDep'), etape_document_type_id: 'dep', public_lecture: true, entreprises_lecture: true, description: null },
       ],
       entreprises_documents: entrepriseDocumentsDemande,
+      avis_documents: [],
     }}
   />
 )
@@ -698,7 +706,7 @@ const demandeArmNonMecaniseDeposable: FeatureMultiPolygon = {
 export const DemandeArmNonMecaniseDeposable: StoryFn = () => (
   <DemarcheEtape
     titre={{ titreStatutId: 'val', typeId: 'arm', nom: 'nom du titre', slug: titreSlug }}
-    demarche={{ demarche_type_id: 'oct', titulaireIds: [entrepriseIdValidator.parse('titulaire1')], administrationsLocales: [], sdom_zones: [], etapes: [] }}
+    demarche={{ demarche_type_id: 'oct', titulaireIds: [entrepriseIdValidator.parse('titulaire1')], administrationsLocales: [], sdom_zones: [], etapes: [], communes: [] }}
     user={{ ...testBlankUser, role: 'super' }}
     router={routerPushMock}
     apiClient={apiClient}
@@ -710,7 +718,7 @@ export const DemandeArmNonMecaniseDeposable: StoryFn = () => (
       notes: null,
       etape_type_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeTypeId,
       etape_statut_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeStatutId,
-      is_brouillon: true,
+      is_brouillon: ETAPE_IS_BROUILLON,
       date,
 
       fondamentale: {
@@ -738,6 +746,7 @@ export const DemandeArmNonMecaniseDeposable: StoryFn = () => (
       sections_with_values: [{ id: 'arm', elements: [{ id: 'mecanise', type: 'radio', value: false, nom: 'Mécanisation' }], nom: 'Arm' }],
       etape_documents: documentsDemande,
       entreprises_documents: entrepriseDocumentsDemande,
+      avis_documents: [],
     }}
   />
 )
@@ -745,7 +754,7 @@ export const DemandeArmNonMecaniseDeposable: StoryFn = () => (
 export const Depot: StoryFn = () => (
   <DemarcheEtape
     titre={{ titreStatutId: 'val', typeId: 'arm', nom: 'nom du titre', slug: titreSlug }}
-    demarche={{ demarche_type_id: 'oct', titulaireIds: [entrepriseIdValidator.parse('titulaire1')], administrationsLocales: [], sdom_zones: [], etapes: [] }}
+    demarche={{ demarche_type_id: 'oct', titulaireIds: [entrepriseIdValidator.parse('titulaire1')], administrationsLocales: [], sdom_zones: [], etapes: [], communes: [] }}
     router={routerPushMock}
     user={{ ...testBlankUser, role: 'super' }}
     etape={{
@@ -754,11 +763,12 @@ export const Depot: StoryFn = () => (
       notes: null,
       etape_type_id: EtapesTypesEtapesStatuts.depotDeLaDemande.FAIT.etapeTypeId,
       etape_statut_id: EtapesTypesEtapesStatuts.depotDeLaDemande.FAIT.etapeStatutId,
-      is_brouillon: false,
+      is_brouillon: ETAPE_IS_NOT_BROUILLON,
       date,
       sections_with_values: [],
       etape_documents: documents,
       entreprises_documents: entrepriseDocuments,
+      avis_documents: [],
     }}
     apiClient={apiClient}
     entreprises={entreprises}
@@ -768,7 +778,7 @@ export const Depot: StoryFn = () => (
 export const AvisDefavorable: StoryFn = () => (
   <DemarcheEtape
     titre={{ titreStatutId: 'val', typeId: 'arm', nom: 'nom du titre', slug: titreSlug }}
-    demarche={{ demarche_type_id: 'oct', titulaireIds: [], administrationsLocales: [], sdom_zones: [], etapes: [] }}
+    demarche={{ demarche_type_id: 'oct', titulaireIds: [], administrationsLocales: [], sdom_zones: [], etapes: [], communes: [] }}
     user={{ ...testBlankUser, role: 'super' }}
     router={routerPushMock}
     etape={{
@@ -777,12 +787,13 @@ export const AvisDefavorable: StoryFn = () => (
       notes: null,
       etape_type_id: EtapesTypesEtapesStatuts.avisDGTMServiceAmenagementUrbanismeConstructionLogement_AUCL_.DEFAVORABLE.etapeTypeId,
       etape_statut_id: EtapesTypesEtapesStatuts.avisDGTMServiceAmenagementUrbanismeConstructionLogement_AUCL_.DEFAVORABLE.etapeStatutId,
-      is_brouillon: false,
+      is_brouillon: ETAPE_IS_NOT_BROUILLON,
       date,
       sections_with_values: [],
 
       etape_documents: [],
       entreprises_documents: [],
+      avis_documents: []
     }}
     apiClient={apiClient}
     entreprises={entreprises}
@@ -810,7 +821,7 @@ const demandeAvecSeulementPerimetre: FeatureMultiPolygon = {
 export const DemandeAvecSeulementPerimetre: StoryFn = () => (
   <DemarcheEtape
     titre={{ titreStatutId: 'val', typeId: 'arm', nom: 'nom du titre', slug: titreSlug }}
-    demarche={{ demarche_type_id: 'oct', titulaireIds: [], administrationsLocales: [], sdom_zones: [], etapes: [] }}
+    demarche={{ demarche_type_id: 'oct', titulaireIds: [], administrationsLocales: [], sdom_zones: [], etapes: [], communes: [] }}
     user={{ ...testBlankUser, role: 'super' }}
     router={routerPushMock}
     apiClient={apiClient}
@@ -822,7 +833,7 @@ export const DemandeAvecSeulementPerimetre: StoryFn = () => (
       notes: null,
       etape_type_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeTypeId,
       etape_statut_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeStatutId,
-      is_brouillon: true,
+      is_brouillon: ETAPE_IS_BROUILLON,
       date,
 
       fondamentale: {
@@ -850,6 +861,7 @@ export const DemandeAvecSeulementPerimetre: StoryFn = () => (
       sections_with_values: [],
       etape_documents: [],
       entreprises_documents: [],
+      avis_documents: [],
     }}
   />
 )
@@ -875,7 +887,7 @@ const demandeAvecGrosseNote: FeatureMultiPolygon = {
 export const DemandeAvecGrosseNote: StoryFn = () => (
   <DemarcheEtape
     titre={{ titreStatutId: 'val', typeId: 'arm', nom: 'nom du titre', slug: titreSlug }}
-    demarche={{ demarche_type_id: 'oct', titulaireIds: [], administrationsLocales: [], sdom_zones: [], etapes: [] }}
+    demarche={{ demarche_type_id: 'oct', titulaireIds: [], administrationsLocales: [], sdom_zones: [], etapes: [], communes: [] }}
     user={{ ...testBlankUser, role: 'super' }}
     router={routerPushMock}
     apiClient={apiClient}
@@ -887,7 +899,7 @@ export const DemandeAvecGrosseNote: StoryFn = () => (
       notes: 'Ceci est une énorme note sur plusieurs lignes.\n Une seconde ligne.\n Incertitudes: \n * date \n * substances \n * titulaireIds',
       etape_type_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeTypeId,
       etape_statut_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeStatutId,
-      is_brouillon: true,
+      is_brouillon: ETAPE_IS_BROUILLON,
       date,
 
       fondamentale: {
@@ -915,6 +927,7 @@ export const DemandeAvecGrosseNote: StoryFn = () => (
       sections_with_values: [],
       etape_documents: [],
       entreprises_documents: [],
+      avis_documents: [],
     }}
   />
 )
@@ -933,9 +946,10 @@ export const AxmDeposableAvecDaeEtAsl: StoryFn = () => (
           id: etapeIdValidator.parse('idDae'),
           entreprises_documents: [],
           etape_documents: [],
+          avis_documents: [],
           etape_statut_id: 'exe',
           etape_type_id: 'dae',
-          is_brouillon: false,
+          is_brouillon: ETAPE_IS_NOT_BROUILLON,
           notes: null,
           sections_with_values: [],
           ordre: 1,
@@ -946,15 +960,17 @@ export const AxmDeposableAvecDaeEtAsl: StoryFn = () => (
           id: etapeIdValidator.parse('idAsl'),
           entreprises_documents: [],
           etape_documents: [],
+          avis_documents: [],
           etape_statut_id: 'exe',
           etape_type_id: 'asl',
-          is_brouillon: false,
+          is_brouillon: ETAPE_IS_NOT_BROUILLON,
           notes: null,
           sections_with_values: [],
           ordre: 2,
           slug: etapeSlugValidator.parse('slug-asl'),
         },
       ],
+      communes: [],
     }}
     user={{ ...testBlankUser, role: 'entreprise', entreprises: [{ id: entrepriseIdValidator.parse('titulaire1'), nom: 'nom entreprise' }] }}
     router={routerPushMock}
@@ -967,7 +983,7 @@ export const AxmDeposableAvecDaeEtAsl: StoryFn = () => (
       notes: '',
       etape_type_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeTypeId,
       etape_statut_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeStatutId,
-      is_brouillon: true,
+      is_brouillon: ETAPE_IS_BROUILLON,
       date,
 
       fondamentale: {
@@ -1041,6 +1057,7 @@ export const AxmDeposableAvecDaeEtAsl: StoryFn = () => (
           id: entrepriseDocumentIdValidator.parse('iddeb'),
         },
       ],
+      avis_documents: [],
     }}
   />
 )
@@ -1048,7 +1065,7 @@ export const AxmDeposableAvecDaeEtAsl: StoryFn = () => (
 export const DemandeAvecForage: StoryFn = () => (
   <DemarcheEtape
     titre={{ titreStatutId: 'val', typeId: 'pxg', nom: 'nom du titre', slug: titreSlug }}
-    demarche={{ demarche_type_id: 'oct', titulaireIds: [], administrationsLocales: [], sdom_zones: [], etapes: [] }}
+    demarche={{ demarche_type_id: 'oct', titulaireIds: [], administrationsLocales: [], sdom_zones: [], etapes: [], communes: [] }}
     user={{ ...testBlankUser, role: 'super' }}
     router={routerPushMock}
     entreprises={entreprises}
@@ -1060,7 +1077,7 @@ export const DemandeAvecForage: StoryFn = () => (
       notes: '',
       etape_type_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeTypeId,
       etape_statut_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeStatutId,
-      is_brouillon: true,
+      is_brouillon: ETAPE_IS_BROUILLON,
       date,
 
       fondamentale: {
@@ -1098,6 +1115,7 @@ export const DemandeAvecForage: StoryFn = () => (
       ],
       etape_documents: [],
       entreprises_documents: [],
+      avis_documents: [],
     }}
   />
 )

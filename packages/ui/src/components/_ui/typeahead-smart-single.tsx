@@ -11,9 +11,9 @@ type Props<T extends string> = {
 
 type TypeaheadValue<T> = { id: T; nom: string }
 
-export const TypeaheadSmartSingle = defineComponent(<T extends string,> (props: Props<T>) => {
-  const valueTypeSelected = ref<DeepReadonly<TypeaheadValue<T>> | null>(props.possibleValues.find(({id}) => props.initialValue === id) ?? null) as Ref<DeepReadonly<TypeaheadValue<T>> | null>
-  const onValueUpdate = async (value: DeepReadonly<TypeaheadValue<T>>| undefined) => {
+export const TypeaheadSmartSingle = defineComponent(<T extends string>(props: Props<T>) => {
+  const valueTypeSelected = ref<DeepReadonly<TypeaheadValue<T>> | null>(props.possibleValues.find(({ id }) => props.initialValue === id) ?? null) as Ref<DeepReadonly<TypeaheadValue<T>> | null>
+  const onValueUpdate = async (value: DeepReadonly<TypeaheadValue<T>> | undefined) => {
     valueTypeSelected.value = value ?? null
     props.valueIdSelected(isNotNullNorUndefined(value) ? value.id : null)
   }

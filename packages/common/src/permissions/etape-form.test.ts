@@ -1,21 +1,21 @@
 import { expect, test } from 'vitest'
 import {
-  entrepriseDocumentsStepIsComplete,
-  entrepriseDocumentsStepIsVisible,
-  etapeDocumentsStepIsComplete,
-  etapeDocumentsStepIsVisible,
-  fondamentaleStepIsComplete,
-  fondamentaleStepIsVisible,
-  getDocumentsTypes,
-  perimetreStepIsComplete,
-  perimetreStepIsVisible,
-  sectionsStepIsComplete,
-  sectionsStepIsVisible,
+    entrepriseDocumentsStepIsComplete,
+    entrepriseDocumentsStepIsVisible,
+    etapeDocumentsStepIsComplete,
+    etapeDocumentsStepIsVisible,
+    fondamentaleStepIsComplete,
+    fondamentaleStepIsVisible,
+    getDocumentsTypes,
+    perimetreStepIsComplete,
+    perimetreStepIsVisible,
+    sectionsStepIsComplete,
+    sectionsStepIsVisible,
 } from './etape-form'
-import { documentTypeIdComplementaireObligatoireASL, documentTypeIdComplementaireObligatoireDAE, etapeDocumentIdValidator } from '../etape'
+import { ETAPE_IS_BROUILLON, ETAPE_IS_NOT_BROUILLON, documentTypeIdComplementaireObligatoireASL, documentTypeIdComplementaireObligatoireDAE, etapeDocumentIdValidator } from '../etape'
 import { toCaminoDate } from '../date'
 import { testBlankUser } from '../tests-utils'
-import { entrepriseDocumentIdValidator, entrepriseIdValidator } from '../entreprise'
+import { entrepriseIdValidator } from '../entreprise'
 
 test('fondamentaleStepIsVisible', () => {
   expect(fondamentaleStepIsVisible('mfr')).toBe(true)
@@ -217,10 +217,10 @@ const axmDocumentsComplete = [
 
 const entreprise1 = { id: entrepriseIdValidator.parse('id1'), nom: 'entrepriseNom' }
 test('etapeDocumentsStepIsComplete', () => {
-  expect(etapeDocumentsStepIsComplete({ typeId: 'asl', contenu: {}, isBrouillon: false }, 'oct', 'axm', [], [], null, null, null).valid).toBe(false)
+  expect(etapeDocumentsStepIsComplete({ typeId: 'asl', contenu: {}, isBrouillon: ETAPE_IS_NOT_BROUILLON }, 'oct', 'axm', [], [], null, null, null).valid).toBe(false)
   expect(
     etapeDocumentsStepIsComplete(
-      { typeId: 'asl', contenu: {}, isBrouillon: false },
+      { typeId: 'asl', contenu: {}, isBrouillon: ETAPE_IS_NOT_BROUILLON },
       'oct',
       'axm',
       [{ etape_document_type_id: documentTypeIdComplementaireObligatoireASL }],
@@ -231,9 +231,9 @@ test('etapeDocumentsStepIsComplete', () => {
     ).valid
   ).toBe(true)
 
-  expect(etapeDocumentsStepIsComplete({ typeId: 'mfr', contenu: {}, isBrouillon: true }, 'oct', 'axm', axmDocumentsComplete, [], null, null, { ...testBlankUser, role: 'super' }).valid).toBe(true)
+  expect(etapeDocumentsStepIsComplete({ typeId: 'mfr', contenu: {}, isBrouillon: ETAPE_IS_BROUILLON}, 'oct', 'axm', axmDocumentsComplete, [], null, null, { ...testBlankUser, role: 'super' }).valid).toBe(true)
   expect(
-    etapeDocumentsStepIsComplete({ typeId: 'mfr', contenu: {}, isBrouillon: true }, 'oct', 'axm', axmDocumentsComplete, [], null, null, {
+    etapeDocumentsStepIsComplete({ typeId: 'mfr', contenu: {}, isBrouillon: ETAPE_IS_BROUILLON }, 'oct', 'axm', axmDocumentsComplete, [], null, null, {
       ...testBlankUser,
       role: 'entreprise',
       entreprises: [entreprise1],
@@ -242,7 +242,7 @@ test('etapeDocumentsStepIsComplete', () => {
 
   expect(
     etapeDocumentsStepIsComplete(
-      { typeId: 'mfr', contenu: {}, isBrouillon: true },
+      { typeId: 'mfr', contenu: {}, isBrouillon: ETAPE_IS_BROUILLON },
       'oct',
       'axm',
       axmDocumentsComplete,
@@ -321,7 +321,7 @@ test('entrepriseDocumentsStepIsComplete', () => {
       'arm',
       [
         {
-          
+
           documentTypeId: 'atf',
           entrepriseId: entreprise1.id,
         },
@@ -652,12 +652,12 @@ test('getDocumentsTypes', () => {
       },
       {
         "description": "la liste et la valeur du matériel d’extraction et de
-     traitement que le demandeur détient ou qu’il 
+     traitement que le demandeur détient ou qu’il
     envisage d’acquérir ainsi que, dans ce dernier
-     cas, le financement correspondant. Ces pièces 
-    sont demandées au titre de la justification des 
+     cas, le financement correspondant. Ces pièces
+    sont demandées au titre de la justification des
     capacités financières du
-    demandeur 
+    demandeur
     (décret 2001-204, art. 7)",
         "id": "idm",
         "nom": "Identification de matériel",
@@ -800,12 +800,12 @@ test('getDocumentsTypes', () => {
       },
       {
         "description": "la liste et la valeur du matériel d’extraction et de
-     traitement que le demandeur détient ou qu’il 
+     traitement que le demandeur détient ou qu’il
     envisage d’acquérir ainsi que, dans ce dernier
-     cas, le financement correspondant. Ces pièces 
-    sont demandées au titre de la justification des 
+     cas, le financement correspondant. Ces pièces
+    sont demandées au titre de la justification des
     capacités financières du
-    demandeur 
+    demandeur
     (décret 2001-204, art. 7)",
         "id": "idm",
         "nom": "Identification de matériel",

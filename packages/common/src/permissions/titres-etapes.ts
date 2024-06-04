@@ -12,10 +12,18 @@ import { TitreStatutId } from '../static/titresStatuts.js'
 import { EntrepriseDocument, EntrepriseId } from '../entreprise.js'
 import { SDOMZoneId } from '../static/sdom.js'
 import { DeepReadonly, NonEmptyArray, isNonEmptyArray } from '../typescript-tools.js'
-import { EtapeAvis, EtapeDocument, EtapeWithHeritage, GetEtapeDocumentsByEtapeId, GetEtapeDocumentsByEtapeIdAslDocument, GetEtapeDocumentsByEtapeIdDaeDocument, TempEtapeAvis } from '../etape.js'
-import { dateTypeStepIsComplete, entrepriseDocumentsStepIsComplete, etapeAvisStepIsComplete, etapeDocumentsStepIsComplete, fondamentaleStepIsComplete, perimetreStepIsComplete, sectionsStepIsComplete } from './etape-form.js'
+import { EtapeAvis, EtapeDocument, GetEtapeDocumentsByEtapeId, GetEtapeDocumentsByEtapeIdAslDocument, GetEtapeDocumentsByEtapeIdDaeDocument, TempEtapeAvis, TempEtapeDocument } from '../etape.js'
+import {
+  dateTypeStepIsComplete,
+  entrepriseDocumentsStepIsComplete,
+  etapeAvisStepIsComplete,
+  etapeDocumentsStepIsComplete,
+  fondamentaleStepIsComplete,
+  perimetreStepIsComplete,
+  sectionsStepIsComplete,
+} from './etape-form.js'
 import { CommuneId } from '../static/communes.js'
-import { GraphqlEtape, GraphqlEtapeCreation} from '../etape-form.js'
+import { FlattenEtape, GraphqlEtape, GraphqlEtapeCreation } from '../etape-form.js'
 
 export const isDureeOptional = (etapeTypeId: EtapeTypeId, demarcheTypeId: DemarcheTypeId, titreTypeId: TitreTypeId): boolean => {
   if (titreTypeId !== 'axm' && titreTypeId !== 'arm') {
@@ -148,43 +156,43 @@ const canCreateOrEditEtape = (
   return false
 }
 
-export type EtapeComplete = Omit<GraphqlEtape, 'id' | 'slug' | 'demarche' | 'heritageProps' > & Pick<GraphqlEtapeCreation, 'heritageProps'>
+export type EtapeComplete = Omit<GraphqlEtape, 'id' | 'slug' | 'demarche' | 'heritageProps'> & Pick<GraphqlEtapeCreation, 'heritageProps'>
+export type IsEtapeCompleteEtape = DeepReadonly<Pick<FlattenEtape, 'typeId' | 'date' | 'statutId' | 'duree' | 'contenu' | 'substances' | 'perimetre' | 'isBrouillon' | 'titulaires' | 'amodiataires'>>
+export type IsEtapeCompleteDocuments = DeepReadonly<Pick<EtapeDocument | TempEtapeDocument, 'etape_document_type_id'>[]>
+export type IsEtapeCompleteEntrepriseDocuments = DeepReadonly<Pick<EntrepriseDocument, 'entreprise_document_type_id' | 'entreprise_id'>[]>
+export type IsEtapeCompleteSdomZones = DeepReadonly<SDOMZoneId[]> | null | undefined
+export type IsEtapeCompleteCommunes = DeepReadonly<CommuneId[]>
+export type IsEtapeCompleteDaeDocument = DeepReadonly<Omit<GetEtapeDocumentsByEtapeIdDaeDocument, 'id'> | null>
+export type IsEtapeCompleteAslDocument = DeepReadonly<Omit<GetEtapeDocumentsByEtapeIdAslDocument, 'id'> | null>
+export type IsEtapeCompleteAvisDocuments = DeepReadonly<Pick<EtapeAvis, 'avis_type_id'>[]>
 
-
-// TODO 2024-04-17 utiliser toutes les stepIsComplete
 export const isEtapeComplete = (
-  etape: DeepReadonly<EtapeComplete>,
-  heritage: DeepReadonly<Pick<EtapeWithHeritage, 'heritageProps' | 'heritageContenu'>>,
+  etape: IsEtapeCompleteEtape,
   titreTypeId: TitreTypeId,
   demarcheTypeId: DemarcheTypeId,
-  documents: Pick<EtapeDocument, 'etape_document_type_id'>[],
-  entrepriseDocuments: Pick<EntrepriseDocument, 'entreprise_document_type_id' | 'entreprise_id'>[],
-  sdomZones: SDOMZoneId[] | null | undefined,
-  communes: CommuneId[],
-  daeDocument: Omit<GetEtapeDocumentsByEtapeIdDaeDocument, 'id'> | null,
-  aslDocument: Omit<GetEtapeDocumentsByEtapeIdAslDocument, 'id'> | null,
-  avisDocuments: Pick<EtapeAvis, 'avis_type_id'>[],
+  documents: IsEtapeCompleteDocuments,
+  entrepriseDocuments: IsEtapeCompleteEntrepriseDocuments,
+  sdomZones: IsEtapeCompleteSdomZones,
+  communes: IsEtapeCompleteCommunes,
+  daeDocument: IsEtapeCompleteDaeDocument,
+  aslDocument: IsEtapeCompleteAslDocument,
+  avisDocuments: IsEtapeCompleteAvisDocuments,
   user: User
 ): { valid: true } | { valid: false; errors: NonEmptyArray<string> } => {
-  const flattenedEtape = flattenEtapeWithHeritage(titreTypeId, demarcheTypeId, etape, heritage)
   const isCompleteChecks = [
-    dateTypeStepIsComplete(flattenedEtape, user),
-    fondamentaleStepIsComplete(flattenedEtape, demarcheTypeId, titreTypeId),
-    sectionsStepIsComplete(flattenedEtape, demarcheTypeId, titreTypeId),
-    perimetreStepIsComplete(flattenedEtape),
-    etapeDocumentsStepIsComplete(
-      flattenedEtape,
+    dateTypeStepIsComplete(etape, user),
+    fondamentaleStepIsComplete(etape, demarcheTypeId, titreTypeId),
+    sectionsStepIsComplete(etape, demarcheTypeId, titreTypeId),
+    perimetreStepIsComplete(etape),
+    etapeDocumentsStepIsComplete(etape, demarcheTypeId, titreTypeId, documents, sdomZones ?? [], daeDocument, aslDocument, user),
+    entrepriseDocumentsStepIsComplete(
+      etape,
       demarcheTypeId,
       titreTypeId,
-      documents,
-      sdomZones ?? [],
-      daeDocument,
-      aslDocument,
-      user
+      entrepriseDocuments.map(ed => ({ documentTypeId: ed.entreprise_document_type_id, entrepriseId: ed.entreprise_id }))
     ),
-    entrepriseDocumentsStepIsComplete(flattenedEtape, demarcheTypeId, titreTypeId, entrepriseDocuments.map(ed => ({documentTypeId: ed.entreprise_document_type_id, entrepriseId: ed.entreprise_id}))),
-    etapeAvisStepIsComplete(flattenedEtape, avisDocuments, titreTypeId, communes),
-  ];
+    etapeAvisStepIsComplete(etape, avisDocuments, titreTypeId, communes),
+  ]
   const errors: string[] = isCompleteChecks.reduce<string[]>((acc, c) => {
     if (!c.valid) {
       acc.push(...c.errors)
@@ -276,7 +284,36 @@ export const isEtapeComplete = (
   return { valid: true }
 }
 
+export type IsEtapeDeposableAvisDocuments = DeepReadonly<(EtapeAvis | TempEtapeAvis)[]>
 export const isEtapeDeposable = (
+  user: User,
+  titreTypeId: TitreTypeId,
+  demarcheTypeId: DemarcheTypeId,
+  titreEtape: DeepReadonly<Pick<FlattenEtape, 'typeId' | 'date' | 'statutId' | 'duree' | 'contenu' | 'substances' | 'perimetre' | 'isBrouillon' | 'titulaires' | 'amodiataires'>>,
+  etapeDocuments: IsEtapeCompleteDocuments,
+  entrepriseDocuments: IsEtapeCompleteEntrepriseDocuments,
+  sdomZones: IsEtapeCompleteSdomZones,
+  communes: IsEtapeCompleteCommunes,
+  daeDocument: IsEtapeCompleteDaeDocument,
+  aslDocument: IsEtapeCompleteAslDocument,
+  avisDocuments: IsEtapeDeposableAvisDocuments
+): boolean => {
+  if (titreEtape.typeId === ETAPES_TYPES.demande && titreEtape.isBrouillon) {
+    // FIXME On ne peut pas se baser sur le defaultHeritageProps car on ne sait pas quelles étapes seront déposable à l’avenir, il faut doncl’ajouter en param.
+    const complete = isEtapeComplete(titreEtape, titreTypeId, demarcheTypeId, etapeDocuments, entrepriseDocuments, sdomZones, communes, daeDocument, aslDocument, avisDocuments, user)
+    if (!complete.valid) {
+      console.warn(complete.errors)
+
+      return false
+    }
+
+    return true
+  }
+
+  return false
+}
+
+export const canDeposeEtape = (
   user: User,
   titre: {
     typeId: TitreTypeId
@@ -285,7 +322,7 @@ export const isEtapeDeposable = (
     administrationsLocales: AdministrationId[]
   },
   demarcheTypeId: DemarcheTypeId,
-  titreEtape: DeepReadonly<GraphqlEtape>,
+  titreEtape: DeepReadonly<Pick<FlattenEtape, 'typeId' | 'date' | 'statutId' | 'duree' | 'contenu' | 'substances' | 'perimetre' | 'isBrouillon' | 'titulaires' | 'amodiataires'>>,
   etapeDocuments: Pick<EtapeDocument, 'etape_document_type_id'>[],
   entrepriseDocuments: Pick<EntrepriseDocument, 'entreprise_document_type_id' | 'entreprise_id'>[],
   sdomZones: SDOMZoneId[] | null | undefined,
@@ -294,45 +331,19 @@ export const isEtapeDeposable = (
   aslDocument: GetEtapeDocumentsByEtapeId['asl'],
   avisDocuments: (EtapeAvis | TempEtapeAvis)[]
 ): boolean => {
-  if (titreEtape.typeId === ETAPES_TYPES.demande && titreEtape.isBrouillon) {
-    if (
-      canCreateOrEditEtape(
-        user,
-        titreEtape.typeId,
-        titreEtape.isBrouillon,
-        titre.titulaires,
-        titre.administrationsLocales,
-        demarcheTypeId,
-        { typeId: titre.typeId, titreStatutId: titre.titreStatutId },
-        'modification'
-      )
-    ) {
-      // FIXME On ne peut pas se baser sur le defaultHeritageProps car on ne sait pas quelles étapes seront déposable à l’avenir, il faut doncl’ajouter en param.
-      const complete = isEtapeComplete(
-        titreEtape,
-        { heritageProps: defaultHeritageProps, heritageContenu: {} },
-        titre.typeId,
-        demarcheTypeId,
-        etapeDocuments,
-        entrepriseDocuments,
-        sdomZones,
-        communes,
-        daeDocument,
-        aslDocument,
-        avisDocuments,
-        user
-      )
-      if (!complete.valid) {
-        console.warn(complete.errors)
-
-        return false
-      }
-
-      return true
-    }
-  }
-
-  return false
+  return (
+    isEtapeDeposable(user, titre.typeId, demarcheTypeId, titreEtape, etapeDocuments, entrepriseDocuments, sdomZones, communes, daeDocument, aslDocument, avisDocuments) &&
+    canCreateOrEditEtape(
+      user,
+      titreEtape.typeId,
+      titreEtape.isBrouillon,
+      titre.titulaires,
+      titre.administrationsLocales,
+      demarcheTypeId,
+      { typeId: titre.typeId, titreStatutId: titre.titreStatutId },
+      'modification'
+    )
+  )
 }
 
 export const canDeleteEtapeDocument = (isBrouillon: boolean): boolean => isBrouillon

@@ -4,7 +4,7 @@ import { titreEtapeHeritageContenuFind } from '../utils/titre-etape-heritage-con
 import { titreEtapesSortAscByOrdre, titreEtapesSortDescByOrdre } from '../utils/titre-etapes-sort.js'
 import { UserNotNull } from 'camino-common/src/roles.js'
 import { getSections, Section } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
-import { DeepReadonly } from 'camino-common/src/typescript-tools.js'
+import { DeepReadonly, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools.js'
 import { DemarcheId } from 'camino-common/src/demarche.js'
 import { Pool } from 'pg'
 import { getDemarches } from './titres-etapes-heritage-contenu-update.queries.js'
@@ -32,7 +32,7 @@ export const titresEtapesHeritageContenuUpdate = async (pool: Pool, user: UserNo
       }, {})
       const titreEtapes = titreEtapesSortAscByOrdre(titreDemarche.etapes?.filter(e => etapeSectionsDictionary[e.id]) ?? [])
 
-      if (titreEtapes) {
+      if (isNotNullNorUndefinedNorEmpty(titreEtapes)) {
         for (let index = 0; index < titreEtapes.length; index++) {
           const titreEtape = titreEtapes[index]
           const titreEtapesFiltered = titreEtapesSortDescByOrdre(titreEtapes.slice(0, index))

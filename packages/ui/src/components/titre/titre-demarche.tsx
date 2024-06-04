@@ -229,6 +229,7 @@ export const TitreDemarche = defineComponent<Props>(props => {
                             demarche_type_id: demarche.value.demarche_type_id,
                             titulaireIds: titulaires.value ?? [],
                             sdom_zones: perimetre.value?.sdom_zones ?? [],
+                            communes: perimetre.value?.communes?.map(({ id }) => id) ?? [],
                             etapes: demarche.value.etapes,
                           }}
                           apiClient={props.apiClient}

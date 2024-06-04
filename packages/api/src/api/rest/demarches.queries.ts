@@ -9,7 +9,7 @@ import { communeValidator } from 'camino-common/src/static/communes.js'
 import { secteurMaritimeValidator } from 'camino-common/src/static/facades.js'
 import { substanceLegaleIdValidator } from 'camino-common/src/static/substancesLegales.js'
 import { etapeTypeIdValidator } from 'camino-common/src/static/etapesTypes.js'
-import { etapeIdValidator, etapeSlugValidator } from 'camino-common/src/etape.js'
+import { etapeBrouillonValidator, etapeIdValidator, etapeSlugValidator } from 'camino-common/src/etape.js'
 import { etapeStatutIdValidator } from 'camino-common/src/static/etapesStatuts.js'
 import { contenuValidator } from './activites.queries.js'
 import { sdomZoneIdValidator } from 'camino-common/src/static/sdom.js'
@@ -51,7 +51,7 @@ const getEtapesByDemarcheIdDbValidator = z.object({
   geojson_origine_forages: featureCollectionForagesValidator.nullable(),
   titulaire_ids: z.array(entrepriseIdValidator),
   amodiataire_ids: z.array(entrepriseIdValidator),
-  is_brouillon: z.boolean(),
+  is_brouillon: etapeBrouillonValidator,
 })
 
 export const getEtapesByDemarcheId = async (pool: Pool, demarcheId: DemarcheId) => {

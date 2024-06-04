@@ -1,6 +1,14 @@
 import { z } from 'zod'
 import { CaminoRequest, CustomResponse } from './express-type.js'
-import { EtapeTypeEtapeStatutWithMainStep, etapeIdValidator, EtapeId, GetEtapeDocumentsByEtapeId, needAslAndDae, documentTypeIdComplementaireObligatoireDAE } from 'camino-common/src/etape.js'
+import {
+    EtapeTypeEtapeStatutWithMainStep,
+    etapeIdValidator,
+    EtapeId,
+    GetEtapeDocumentsByEtapeId,
+    needAslAndDae,
+    documentTypeIdComplementaireObligatoireDAE,
+    ETAPE_IS_NOT_BROUILLON,
+} from 'camino-common/src/etape.js'
 import { DemarcheId, demarcheIdValidator } from 'camino-common/src/demarche.js'
 import { HTTP_STATUS } from 'camino-common/src/http.js'
 import { CaminoDate, caminoDateValidator, getCurrent } from 'camino-common/src/date.js'
@@ -10,7 +18,7 @@ import { titreEtapeGet, titreEtapeUpdate } from '../../database/queries/titres-e
 import { demarcheDefinitionFind } from '../../business/rules-demarches/definitions.js'
 import { etapeTypeDateFinCheck } from '../_format/etapes-types.js'
 import { User, isBureauDEtudes, isEntreprise } from 'camino-common/src/roles.js'
-import { canCreateEtape, isEtapeDeposable, canDeleteEtape } from 'camino-common/src/permissions/titres-etapes.js'
+import { canCreateEtape, canDeposeEtape, canDeleteEtape } from 'camino-common/src/permissions/titres-etapes.js'
 import { TitresStatutIds } from 'camino-common/src/static/titresStatuts.js'
 import { CaminoMachines } from '../../business/rules-demarches/machines.js'
 import { titreEtapesSortAscByOrdre } from '../../business/utils/titre-etapes-sort.js'
@@ -325,7 +333,7 @@ export const deposeEtape = (pool: Pool) => async (req: CaminoRequest, res: Custo
       })
 
       // TODO 2023-06-14 TS 5.1 n’arrive pas réduire le type de titre
-      const deposable = isEtapeDeposable(
+      const deposable = canDeposeEtape(
         user,
         { ...titre, titulaires: titre.titulaireIds ?? [], administrationsLocales: titre.administrationsLocales ?? [] },
         titreDemarche.typeId,
@@ -333,8 +341,12 @@ export const deposeEtape = (pool: Pool) => async (req: CaminoRequest, res: Custo
         etapeDocuments,
         entrepriseDocuments,
         sdomZones,
+        // FIXME communes
+        [],
         daeDocument,
-        aslDocument
+        aslDocument,
+        // FIXME avisDocuments
+        []
       )
       if (!deposable) throw new Error('droits insuffisants')
 
@@ -348,7 +360,7 @@ export const deposeEtape = (pool: Pool) => async (req: CaminoRequest, res: Custo
         titreEtape.id,
         {
           date,
-          isBrouillon: false,
+          isBrouillon: ETAPE_IS_NOT_BROUILLON,
         },
         user,
         titreDemarche.titreId

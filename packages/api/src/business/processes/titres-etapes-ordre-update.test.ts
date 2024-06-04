@@ -10,6 +10,8 @@ import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { TitreId, titreIdValidator } from 'camino-common/src/validators/titres.js'
 import { TitreEtapeForMachine } from '../rules-demarches/machine-common.js'
+import { ETAPE_IS_NOT_BROUILLON } from 'camino-common/src/etape.js'
+import { km2Validator } from 'camino-common/src/number.js'
 vi.mock('../../database/queries/titres-etapes', () => ({
   titreEtapeUpdate: vi.fn().mockResolvedValue(true),
 }))
@@ -30,8 +32,8 @@ const titresDemarchesEtapes: {
     titreTypeId: 'apc',
     titreId: titreIdValidator.parse('titreId'),
     etapes: [
-      { id: newEtapeId(), ordre: 1, date: caminoDateValidator.parse('1988-03-06'), typeId: 'aac', statutId: 'acc', isBrouillon: false, surface: 0, communes: null },
-      { id: newEtapeId(), ordre: 1, date: caminoDateValidator.parse('1988-03-08'), typeId: 'aac', statutId: 'acc', isBrouillon: false, surface: 0, communes: null },
+      { id: newEtapeId(), ordre: 1, date: caminoDateValidator.parse('1988-03-06'), typeId: 'aac', statutId: 'acc', isBrouillon: ETAPE_IS_NOT_BROUILLON, surface: km2Validator.parse(0), communes: null },
+      { id: newEtapeId(), ordre: 1, date: caminoDateValidator.parse('1988-03-08'), typeId: 'aac', statutId: 'acc', isBrouillon: ETAPE_IS_NOT_BROUILLON, surface: km2Validator.parse(0), communes: null },
     ],
   },
 }

@@ -21,7 +21,7 @@ import { User } from 'camino-common/src/roles'
 import styles from './demarche-etape.module.css'
 import { DsfrButton, DsfrButtonIcon, DsfrLink } from '../_ui/dsfr-button'
 import { PureDownloads } from '../_common/downloads'
-import { canDeleteEtape, canEditEtape, isEtapeDeposable } from 'camino-common/src/permissions/titres-etapes'
+import { canDeleteEtape, canEditEtape } from 'camino-common/src/permissions/titres-etapes'
 import { AdministrationId } from 'camino-common/src/static/administrations'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
 import { TitreStatutId } from 'camino-common/src/static/titresStatuts'
@@ -36,6 +36,7 @@ import { Unites } from 'camino-common/src/static/unites'
 import { EntrepriseId, Entreprise } from 'camino-common/src/entreprise'
 import { Badge } from '../_ui/badge'
 import { CaminoRouter } from '@/typings/vue-router'
+import { CommuneId } from 'camino-common/src/static/communes'
 // Il ne faut pas utiliser de literal dans le 'in' il n'y aura jamais d'erreur typescript
 const fondamentalePropsName = 'fondamentale'
 
@@ -46,6 +47,7 @@ type Props = {
     administrationsLocales: AdministrationId[]
     demarche_type_id: DemarcheTypeId
     sdom_zones: SDOMZoneId[]
+    communes: CommuneId[]
     etapes: TitreGetDemarche['etapes']
   }
   titre: {
@@ -163,18 +165,43 @@ export const DemarcheEtape = defineComponent<Props>(props => {
 
   const isDeposable = computed<boolean>(() =>
     fondamentalePropsName in props.etape
-      ? isEtapeDeposable(
+      ? canDeposeEtape(
           props.user,
           { typeId: props.titre.typeId, titreStatutId: props.titre.titreStatutId, titulaires: props.demarche.titulaireIds, administrationsLocales: props.demarche.administrationsLocales },
           props.demarche.demarche_type_id,
-          props.etape,
+          {
+            amodiataires: { value: props.etape.fondamentale.amodiataireIds ?? [], heritee: false, etapeHeritee: null },
+            titulaires: { value: props.etape.fondamentale.titulaireIds ?? [], heritee: false, etapeHeritee: null },
+            contenu: {},
+            date: props.etape.date,
+            typeId: props.etape.etape_type_id,
+            duree: { value: props.etape.fondamentale.duree, heritee: false, etapeHeritee: null },
+            perimetre: {
+              value: {
+                geojson4326Forages: props.etape.fondamentale.perimetre?.geojson4326_forages ?? null,
+                geojson4326Perimetre: props.etape.fondamentale.perimetre?.geojson4326_perimetre ?? null,
+                geojson4326Points: props.etape.fondamentale.perimetre?.geojson4326_points ?? null,
+                geojsonOrigineForages: props.etape.fondamentale.perimetre?.geojson_origine_forages ?? null,
+                geojsonOrigineGeoSystemeId: props.etape.fondamentale.perimetre?.geojson_origine_geo_systeme_id ?? null,
+                geojsonOriginePoints: props.etape.fondamentale.perimetre?.geojson_origine_points ?? null,
+                geojsonOriginePerimetre: props.etape.fondamentale.perimetre?.geojson_origine_perimetre ?? null,
+                surface: props.etape.fondamentale.perimetre?.surface ?? null,
+              },
+              heritee: false,
+              etapeHeritee: null,
+            },
+            substances: { value: props.etape.fondamentale.substances ?? [], heritee: false, etapeHeritee: null },
+
+            isBrouillon: props.etape.is_brouillon,
+            statutId: props.etape.etape_statut_id,
+          },
           props.etape.etape_documents,
           props.etape.entreprises_documents,
           props.demarche.sdom_zones,
-          props.communes,
+          props.demarche.communes,
           daeDocument.value,
           aslDocument.value,
-          avisDocument.value
+          props.etape.avis_documents
         )
       : false
   )
@@ -190,7 +217,7 @@ export const DemarcheEtape = defineComponent<Props>(props => {
             {props.etape.is_brouillon ? <Badge class="fr-ml-1w" systemLevel="new" ariaLabel={`Brouillon de l'étape ${EtapesTypes[props.etape.etape_type_id].nom}`} label="Brouillon" /> : null}
           </div>
 
-            <div style={{ display: 'flex' }}>
+          <div style={{ display: 'flex' }}>
             {canEditOrDeleteEtape.value ? (
               <>
                 {/* TODO 2024-05-16: retirer la condition 'est une demande' pour ne conserver que 'est un brouillon' */}
@@ -221,7 +248,6 @@ export const DemarcheEtape = defineComponent<Props>(props => {
             ) : null}
           </div>
         </div>
-
 
         {displayEtapeStatus(props.etape.etape_type_id, props.etape.etape_statut_id) ? <EtapeStatut etapeStatutId={props.etape.etape_statut_id} /> : null}
         <div class="fr-mt-1w">

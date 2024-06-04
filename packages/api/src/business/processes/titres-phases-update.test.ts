@@ -6,6 +6,7 @@ import { ITitre } from '../../types.js'
 import { newDemarcheId, newEtapeId, newTitreId } from '../../database/models/_format/id-create.js'
 import { Pool } from 'pg'
 import { updateDatesDemarche } from './titres-phases-update.queries.js'
+import { ETAPE_IS_NOT_BROUILLON } from 'camino-common/src/etape.js'
 
 vi.mock('../../database/queries/titres', () => ({
   titresGet: vi.fn(),
@@ -51,7 +52,7 @@ describe("phases d'un titre", () => {
                 titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-oct01'),
                 typeId: 'dpu',
                 statutId: 'acc',
-                isBrouillon: false,
+                isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 ordre: 2,
                 date: toCaminoDate('2200-01-01'),
                 dateFin: toCaminoDate('2500-01-01'),
@@ -61,7 +62,7 @@ describe("phases d'un titre", () => {
                 titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-oct01'),
                 typeId: 'dex',
                 statutId: 'acc',
-                isBrouillon: false,
+                isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 ordre: 1,
                 date: toCaminoDate('2200-01-01'),
                 dateFin: toCaminoDate('2500-01-01'),
@@ -101,7 +102,7 @@ describe("phases d'un titre", () => {
                 titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-oct01'),
                 typeId: 'dpu',
                 statutId: 'acc',
-                isBrouillon: false,
+                isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 ordre: 2,
                 date: toCaminoDate('2200-01-01'),
                 dateFin: toCaminoDate('2500-01-01'),
@@ -111,7 +112,7 @@ describe("phases d'un titre", () => {
                 titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-oct01'),
                 typeId: 'dex',
                 statutId: 'acc',
-                isBrouillon: false,
+                isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 ordre: 1,
                 date: toCaminoDate('2200-01-01'),
                 dateFin: toCaminoDate('2500-01-01'),
@@ -179,7 +180,7 @@ describe("phases d'un titre", () => {
                 titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-oct01'),
                 typeId: 'dpu',
                 statutId: 'acc',
-                isBrouillon: false,
+                isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 ordre: 2,
                 date: toCaminoDate('2200-01-01'),
                 dateFin: toCaminoDate('2500-01-01'),
@@ -189,7 +190,7 @@ describe("phases d'un titre", () => {
                 titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-oct01'),
                 typeId: 'dex',
                 statutId: 'acc',
-                isBrouillon: false,
+                isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 ordre: 1,
                 date: toCaminoDate('2200-01-01'),
                 dateFin: toCaminoDate('2500-01-01'),

@@ -26,7 +26,7 @@ const apiClient: Pick<ApiClient, 'uploadTempDocument'> = {
   },
 }
 const avisTypeIds: NonEmptyArray<AvisTypeId> = getKeys(AvisTypes, (value): value is AvisTypeId => {
- return avisTypeIdValidator.safeParse(value).success
+  return avisTypeIdValidator.safeParse(value).success
 }) as NonEmptyArray<AvisTypeId>
 export const SansDocumentInitial: StoryFn = () => <AddEtapeAvisPopup close={close} apiClient={apiClient} initialAvis={null} avisTypeIds={avisTypeIds} />
 
@@ -38,7 +38,7 @@ export const DocumentInitialTemporaire: StoryFn = () => (
       avis_type_id: 'lettreDeSaisineDesServices',
       temp_document_name: tempDocumentNameValidator.parse('value'),
       date: toCaminoDate('2023-01-02'),
-      avis_statut_id: 'Favorable'
+      avis_statut_id: 'Favorable',
     }}
     apiClient={apiClient}
     avisTypeIds={avisTypeIds}

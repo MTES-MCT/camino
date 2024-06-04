@@ -14,7 +14,7 @@ import { checkTitreLinks } from '../../business/validations/titre-links-validate
 import { utilisateurTitreCreate } from '../../database/queries/utilisateurs.js'
 import { toCaminoDate } from 'camino-common/src/date.js'
 import { isNotNullNorUndefinedNorEmpty, isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
-import { EtapeId } from 'camino-common/src/etape.js'
+import { ETAPE_IS_BROUILLON, EtapeId } from 'camino-common/src/etape.js'
 import { titreDemandeValidator } from 'camino-common/src/titres.js'
 import { HTTP_STATUS } from 'camino-common/src/http.js'
 import { Pool } from 'pg'
@@ -89,7 +89,7 @@ export const titreDemandeCreer = (pool: Pool) => async (req: CaminoRequest, res:
           titreDemarcheId,
           typeId: 'mfr',
           statutId: 'fai',
-          isBrouillon: true,
+          isBrouillon: ETAPE_IS_BROUILLON,
           date,
           duree: titreDemande.typeId === 'arm' ? 4 : undefined,
           titulaireIds: [titreDemande.entrepriseId],

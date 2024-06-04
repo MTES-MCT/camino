@@ -8,6 +8,7 @@ import { titresEtapesQueryModify } from './titres-etapes.js'
 import TitresDemarches from '../../models/titres-demarches.js'
 import { toCaminoDate } from 'camino-common/src/date.js'
 import { beforeAll, expect, afterAll, test, describe, vi } from 'vitest'
+import { ETAPE_IS_BROUILLON } from 'camino-common/src/etape.js'
 console.info = vi.fn()
 console.error = vi.fn()
 
@@ -49,7 +50,7 @@ describe('titresEtapesQueryModify', () => {
           date: toCaminoDate('2022-03-09'),
           typeId: 'mfr',
           statutId: 'fai',
-          isBrouillon: true,
+          isBrouillon: ETAPE_IS_BROUILLON,
           titreDemarcheId,
           archive: false,
         },
@@ -58,7 +59,7 @@ describe('titresEtapesQueryModify', () => {
           date: toCaminoDate('2022-03-09'),
           typeId: 'mfr',
           statutId: 'fai',
-          isBrouillon: true,
+          isBrouillon: ETAPE_IS_BROUILLON,
           titreDemarcheId,
           archive: true,
         },

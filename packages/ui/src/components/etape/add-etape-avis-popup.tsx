@@ -25,9 +25,7 @@ export const AddEtapeAvisPopup = defineComponent<Props>(props => {
   const [avisDate, setAvisDate] = useState(props.initialAvis?.date ?? null)
   const [avisStatutId, setAvisStatutId] = useState(props.initialAvis?.avis_statut_id ?? null)
 
-  const tempAvisName = ref<TempDocumentName | undefined>(
-    isNotNullNorUndefined(props.initialAvis) && 'temp_document_name' in props.initialAvis ? props.initialAvis.temp_document_name : undefined
-  )
+  const tempAvisName = ref<TempDocumentName | undefined>(isNotNullNorUndefined(props.initialAvis) && 'temp_document_name' in props.initialAvis ? props.initialAvis.temp_document_name : undefined)
 
   const descriptionChange = (value: string) => {
     avisDescription.value = value
@@ -70,14 +68,14 @@ export const AddEtapeAvisPopup = defineComponent<Props>(props => {
         </div>
 
         <div class="fr-fieldset__element">
-          <DsfrSelect legend={{ main: 'Statut' }} items={map(AvisStatutIds, (avis) => ({id: avis, label: avis}) )} initialValue={avisStatutId.value} valueChanged={setAvisStatutId} />
+          <DsfrSelect legend={{ main: 'Statut' }} items={map(AvisStatutIds, avis => ({ id: avis, label: avis }))} initialValue={avisStatutId.value} valueChanged={setAvisStatutId} />
         </div>
       </fieldset>
     </form>
   )
 
   const tempAvis = computed<Nullable<Omit<TempEtapeAvis, 'temp_document_name'>>>(() => ({
-    avis_type_id : etapeAvisTypeId.value,
+    avis_type_id: etapeAvisTypeId.value,
     description: avisDescription.value,
     date: avisDate.value,
     avis_statut_id: avisStatutId.value,

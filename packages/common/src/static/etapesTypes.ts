@@ -1,6 +1,7 @@
 import { z } from 'zod'
 import { CaminoDate, toCaminoDate } from '../date.js'
 import { Definition } from '../definition.js'
+import { EtapeBrouillon } from '../etape.js'
 
 // prettier-ignore
 const IDS = ['abd', 'aca','aco','and','ane','anf','def','dex','dim', 'dpu', 'dup', 'dux','ihi', 'mfr','mod','mom','rca','rcb','rcd','rcm','rco','rcs','ria','rie','rif','rim','rio','rpu','sco', 'aac','aaf','abs','acd','acg','acl','aec','aep','afp','agn','aim','ama','ami','aof','aop','apd','ape','api','apl','apm','apn','apo','app','apu','apw','ari','ars','asl','ass','auc','cac','ccs','cim','cod','cps','css','dae','dec','des','ede','edm','eof','epc','epu','esb','ide','mca','mcb','mcd','mcm','mco','mcp','mcr','mcs','mdp','mec','men','meo','mia','mie','mif','mim','mio','mna','mnb','mnc','mnd','mni','mno','mns','mnv','ncl','nis','npp','pfc','pfd','pnr','ppc','ppu','pqr','rcg','rde','rpe','sas','sca','scg','scl','spe','spo','spp','ssr','vfc','vfd','wab','wac','wad','wae','wai','wal','wam','wao','wap','war','was','wat','wau','wce','wco','wda','wdc','wdd','wde','wdm','wdt','wfa','wfd','wfo','wfr','wmm','wmr','wmt','woe','wpa','wpb','wpc','wpo','wpp','wps','wrc','wrd','wre','wrl','wrt','wse','wss','wtp'] as const
@@ -1901,5 +1902,5 @@ const ETAPES_DECISIONS_IDS = [
 
 const ETAPES_BROUILLONS_IDS = [ETAPES_TYPES.demande] as const satisfies Readonly<EtapeTypeId[]>
 
-export const isEtapeDecision = (etapeTypeId: EtapeTypeId): boolean => ETAPES_DECISIONS_IDS.includes(etapeTypeId)
-export const canBeBrouillon = (etapeTypeId: EtapeTypeId): boolean => ETAPES_BROUILLONS_IDS.includes(etapeTypeId)
+export const isEtapeDecision = (etapeTypeId: EtapeTypeId): EtapeBrouillon => ETAPES_DECISIONS_IDS.includes(etapeTypeId) as EtapeBrouillon
+export const canBeBrouillon = (etapeTypeId: EtapeTypeId): EtapeBrouillon => ETAPES_BROUILLONS_IDS.includes(etapeTypeId) as EtapeBrouillon

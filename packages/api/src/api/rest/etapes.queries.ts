@@ -1,5 +1,5 @@
 /* eslint-disable no-restricted-syntax */
-import { EtapeDocumentId, EtapeId, EtapeIdOrSlug, etapeIdValidator, etapeSlugValidator } from 'camino-common/src/etape.js'
+import { EtapeDocumentId, EtapeId, EtapeIdOrSlug, etapeBrouillonValidator, etapeIdValidator, etapeSlugValidator } from 'camino-common/src/etape.js'
 import { EtapeTypeId, etapeTypeIdValidator } from 'camino-common/src/static/etapesTypes.js'
 import { Pool } from 'pg'
 import { z } from 'zod'
@@ -120,7 +120,7 @@ const getEtapeDataForEditionValidator = z.object({
   demarche_entreprises_lecture: z.boolean(),
   titre_public_lecture: z.boolean(),
   etape_slug: etapeSlugValidator,
-  etape_is_brouillon: z.boolean(),
+  etape_is_brouillon: etapeBrouillonValidator,
 })
 
 export type GetEtapeDataForEdition = z.infer<typeof getEtapeDataForEditionValidator>

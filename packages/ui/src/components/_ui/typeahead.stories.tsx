@@ -74,12 +74,24 @@ export const SingleWithInitialItem: StoryFn = () => (
 
 export const SmartSingle: StoryFn = () => (
   <TypeaheadSmartSingle
-  possibleValues={[{ id: 'id1', nom: 'Nom' }, { id: 'id2', nom: 'Autre nom' }]}
-  valueIdSelected={selectItems}
+    possibleValues={[
+      { id: 'id1', nom: 'Nom' },
+      { id: 'id2', nom: 'Autre nom' },
+    ]}
+    valueIdSelected={selectItems}
   />
 )
 
-export const SmartSingleWithInitialValue: StoryFn = () => <TypeaheadSmartSingle possibleValues={[{id: 'car', nom: "Document car"}, {id: 'doe', nom: 'documentDoe'}]} initialValue="car" valueIdSelected={selectItems} />
+export const SmartSingleWithInitialValue: StoryFn = () => (
+  <TypeaheadSmartSingle
+    possibleValues={[
+      { id: 'car', nom: 'Document car' },
+      { id: 'doe', nom: 'documentDoe' },
+    ]}
+    initialValue="car"
+    valueIdSelected={selectItems}
+  />
+)
 
 export const Multiple: StoryFn = () => (
   <TypeAheadMultiple

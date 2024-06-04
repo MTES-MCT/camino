@@ -1,9 +1,4 @@
-import {
-  EtapeAvis,
-  EtapeAvisModification,
-  EtapeId,
-  TempEtapeAvis,
-} from 'camino-common/src/etape'
+import { EtapeAvis, EtapeAvisModification, EtapeId, TempEtapeAvis } from 'camino-common/src/etape'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
@@ -26,9 +21,7 @@ interface Props {
     demarcheTypeId: DemarcheTypeId
     etapeTypeId: EtapeTypeId
   }
-  onChange: (
-    etapeAvis: (EtapeAvis | TempEtapeAvis)[]
-  ) => void
+  onChange: (etapeAvis: (EtapeAvis | TempEtapeAvis)[]) => void
   etapeId: EtapeId | null
   communeIds: DeepReadonly<CommuneId[]>
   apiClient: Pick<ApiClient, 'uploadTempDocument' | 'getEtapeAvisByEtapeId'>
@@ -79,11 +72,9 @@ const EtapeAvisLoaded = defineComponent<EtapeAvisLoadedProps>(props => {
 
   const addOrEditPopupOpen = ref<{ open: true; avisTypeIds: NonEmptyArray<AvisTypeId>; etapeAvis?: (EtapeAvis | TempEtapeAvis) & WithIndex } | { open: false }>({ open: false })
 
-
   const avisTypes = computed(() => {
     return getAvisTypes(props.tde.etapeTypeId, props.tde.titreTypeId, props.communeIds)
   })
-
 
   const completeRequiredAvis = computed<PropsTable['avis']>(() => {
     const avis: PropsTable['avis'] = etapeAvis.value.filter(({ avis_type_id }) => avisTypes.value.some(dt => dt.id === avis_type_id && !dt.optionnel))
@@ -91,9 +82,7 @@ const EtapeAvisLoaded = defineComponent<EtapeAvisLoadedProps>(props => {
     return avis
   })
   const emptyRequiredAvis = computed<AvisTypeId[]>(() => {
-    const avis = avisTypes.value
-      .filter(({ optionnel, id }) => !optionnel && !completeRequiredAvis.value.some(({ avis_type_id }) => avis_type_id === id))
-      .map(({ id }) => id)
+    const avis = avisTypes.value.filter(({ optionnel, id }) => !optionnel && !completeRequiredAvis.value.some(({ avis_type_id }) => avis_type_id === id)).map(({ id }) => id)
 
     return avis
   })
@@ -122,7 +111,6 @@ const EtapeAvisLoaded = defineComponent<EtapeAvisLoadedProps>(props => {
     addOrEditPopupOpen.value = { open: false }
   }
 
-
   const addAvis = (avisTypeId: AvisTypeId) => {
     addOrEditPopupOpen.value = { open: true, avisTypeIds: [avisTypeId] }
   }
@@ -144,29 +132,13 @@ const EtapeAvisLoaded = defineComponent<EtapeAvisLoadedProps>(props => {
   return () => (
     <>
       {isNotNullNorUndefinedNorEmpty(emptyRequiredAvis.value) || isNotNullNorUndefinedNorEmpty(completeRequiredAvis.value) ? (
-        <EtapeAvisTable
-          getNom={getNom}
-          add={addAvis}
-          edit={editAvis}
-          delete={removeAvis}
-          caption="Avis obligatoires"
-          emptyRequiredAvis={emptyRequiredAvis.value}
-          avis={completeRequiredAvis.value}
-        />
+        <EtapeAvisTable getNom={getNom} add={addAvis} edit={editAvis} delete={removeAvis} caption="Avis obligatoires" emptyRequiredAvis={emptyRequiredAvis.value} avis={completeRequiredAvis.value} />
       ) : null}
 
       {isNonEmptyArray(additionnalAvisTypeIds.value) ? (
         <>
           <div style={{ display: 'flex', flexDirection: 'column' }} class="fr-mt-3w">
-            <EtapeAvisTable
-              getNom={getNom}
-              add={addAvis}
-              edit={editAvis}
-              delete={removeAvis}
-              caption="Avis complémentaires"
-              emptyRequiredAvis={[]}
-              avis={additionnalAvis.value}
-            />
+            <EtapeAvisTable getNom={getNom} add={addAvis} edit={editAvis} delete={removeAvis} caption="Avis complémentaires" emptyRequiredAvis={[]} avis={additionnalAvis.value} />
             <DsfrButtonIcon
               style={{ alignSelf: 'end' }}
               class="fr-mt-1w"
@@ -178,12 +150,7 @@ const EtapeAvisLoaded = defineComponent<EtapeAvisLoadedProps>(props => {
             />
           </div>
           {addOrEditPopupOpen.value.open ? (
-            <AddEtapeAvisPopup
-              avisTypeIds={addOrEditPopupOpen.value.avisTypeIds}
-              apiClient={props.apiClient}
-              close={closeAddPopup}
-              initialAvis={addOrEditPopupOpen.value.etapeAvis || null}
-            />
+            <AddEtapeAvisPopup avisTypeIds={addOrEditPopupOpen.value.avisTypeIds} apiClient={props.apiClient} close={closeAddPopup} initialAvis={addOrEditPopupOpen.value.etapeAvis || null} />
           ) : null}
         </>
       ) : null}
@@ -204,7 +171,7 @@ const EtapeAvisTable: FunctionalComponent<PropsTable> = (props: PropsTable) => {
   const deleteAvis = (index: number) => () => {
     props.delete(index)
   }
-  const editAvis = (index: number ) => () => {
+  const editAvis = (index: number) => () => {
     props.edit(index)
   }
 
@@ -229,24 +196,20 @@ const EtapeAvisTable: FunctionalComponent<PropsTable> = (props: PropsTable) => {
               <td>{props.getNom(avis.avis_type_id)}</td>
               <td>{dateFormat(avis.date)}</td>
               <td style={{ whiteSpace: 'pre-line' }}>{avis.description}</td>
-              <td><AvisStatut avisStatutId={avis.avis_statut_id}/></td>
+              <td>
+                <AvisStatut avisStatutId={avis.avis_statut_id} />
+              </td>
               <td>
                 <div style={{ display: 'flex', justifyContent: 'end', alignItems: 'center' }}>
+                  <DsfrButtonIcon icon="fr-icon-edit-line" title={`Modifier l’avis de ${props.getNom(avis.avis_type_id)}`} onClick={editAvis(avis.index)} buttonType="secondary" buttonSize="sm" />
                   <DsfrButtonIcon
-                    icon="fr-icon-edit-line"
-                    title={`Modifier l’avis de ${props.getNom(avis.avis_type_id)}`}
-                    onClick={editAvis(avis.index)}
+                    icon="fr-icon-delete-bin-line"
+                    class="fr-ml-1w"
+                    title={`Supprimer l’avis de ${props.getNom(avis.avis_type_id)}`}
+                    onClick={deleteAvis(avis.index)}
                     buttonType="secondary"
                     buttonSize="sm"
                   />
-                    <DsfrButtonIcon
-                      icon="fr-icon-delete-bin-line"
-                      class="fr-ml-1w"
-                      title={`Supprimer l’avis de ${props.getNom(avis.avis_type_id)}`}
-                      onClick={deleteAvis(avis.index)}
-                      buttonType="secondary"
-                      buttonSize="sm"
-                    />
                 </div>
               </td>
             </tr>
@@ -258,13 +221,7 @@ const EtapeAvisTable: FunctionalComponent<PropsTable> = (props: PropsTable) => {
               <td>-</td>
               <td>-</td>
               <td style={{ display: 'flex', justifyContent: 'end' }}>
-                <DsfrButtonIcon
-                  icon="fr-icon-add-line"
-                  title={`Ajouter un document ${props.getNom(avisTypeId)}`}
-                  onClick={() => props.add(avisTypeId)}
-                  buttonType="secondary"
-                  buttonSize="sm"
-                />
+                <DsfrButtonIcon icon="fr-icon-add-line" title={`Ajouter un document ${props.getNom(avisTypeId)}`} onClick={() => props.add(avisTypeId)} buttonType="secondary" buttonSize="sm" />
               </td>
             </tr>
           ))}

@@ -46,7 +46,10 @@ import {
     etapeAvisStepIsEnregistrable,
     dateTypeStepIsComplete,
     dateTypeStepIsEnregistrable,
-    dateTypeStepIsVisible
+    dateTypeStepIsVisible,
+    etapeDocumentsStepIsEnregistrable,
+    fondamentaleStepIsEnregistrable,
+    perimetreStepIsEnregistrable,
 } from 'camino-common/src/permissions/etape-form'
 import { EtapeAlerte, PureFormSaveBtn } from './pure-form-save-btn'
 import { TitresStatuts } from 'camino-common/src/static/titresStatuts'
@@ -59,6 +62,7 @@ import { AsyncData } from '@/api/client-rest'
 import { CaminoDate } from 'camino-common/src/date'
 import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts'
 import { LoadingElement } from '../_ui/functional-loader'
+import { isEtapeDeposable } from 'camino-common/src/permissions/titres-etapes'
 
 export type Props = {
   etape: DeepReadonly<Pick<Nullable<FlattenEtape>, 'id' | 'date' | 'typeId' | 'statutId' | 'slug'> & Omit<FlattenEtape, 'date' | 'typeId' | 'statutId' | 'id' | 'slug'>>
@@ -179,61 +183,45 @@ export const EtapeEditForm = defineComponent<Props>(props => {
 
   const canSave = computed<boolean>(() => {
     if (etape.value.status === 'LOADED' && isNotNullNorUndefined(etape.value.value)) {
-      return (dateTypeStepIsComplete(etape.value.value, props.user) && etape.value.value.isBrouillon) || canDepose.value
+      if (!etape.value.value.isBrouillon) {
+        return (
+          dateTypeStepIsEnregistrable(etape.value.value, props.user) &&
+          fondamentaleStepIsEnregistrable(etape.value.value, props.demarcheTypeId, props.titreTypeId) &&
+          sectionsStepIsEnregistrable(etape.value.value, props.demarcheTypeId, props.titreTypeId) &&
+          perimetreStepIsEnregistrable(etape.value.value) &&
+          etapeDocumentsStepIsEnregistrable(
+            etape.value.value,
+            props.demarcheTypeId,
+            props.titreTypeId,
+            documents.value.etapeDocuments,
+            props.perimetre.sdomZoneIds,
+            documents.value.daeDocument,
+            documents.value.aslDocument,
+            props.user
+          ) &&
+          entrepriseDocumentsStepIsEnregistrable(etape.value.value, props.demarcheTypeId, props.titreTypeId, documents.value.entrepriseDocuments) &&
+          etapeAvisStepIsEnregistrable()
+        )
+      }
+      return dateTypeStepIsComplete(etape.value.value, props.user) && etape.value.value.isBrouillon
     }
-    return false
-  })
-
-  const canSave = computed<boolean>(() => {
-    if (demandeEnConstruction.value) {
-      return dateTypeStepIsComplete(etape.value, props.user).valid
-    }
-
-    if (isNotNullNorUndefined(heritage.value)) {
-      const etapeFlattened = flattenEtapeWithHeritage(props.titreTypeId, props.demarcheTypeId, etape.value, heritage.value)
-
-      return (
-        dateTypeStepIsEnregistrable(etapeFlattened, props.user) &&
-        fondamentaleStepIsEnregistrable(etapeFlattened, props.demarcheTypeId, props.titreTypeId) &&
-        sectionsStepIsEnregistrable(etapeFlattened, props.demarcheTypeId, props.titreTypeId) &&
-        perimetreStepIsEnregistrable(etapeFlattened) &&
-        etapeDocumentsStepIsEnregistrable(
-          etapeFlattened,
-          props.demarcheTypeId,
-          props.titreTypeId,
-          documents.value.etapeDocuments,
-          props.perimetre.sdomZoneIds,
-          documents.value.daeDocument,
-          documents.value.aslDocument,
-          props.user
-        ) &&
-        entrepriseDocumentsStepIsEnregistrable(etapeFlattened, props.demarcheTypeId, props.titreTypeId, documents.value.entrepriseDocuments)
-        && etapeAvisStepIsEnregistrable()
-      )
-    }
-
     return false
   })
 
   const canDepose = computed<boolean>(() => {
     if (etape.value.status === 'LOADED' && isNotNullNorUndefined(etape.value.value)) {
-      return (
-        dateTypeStepIsComplete(etapeFlattened.value, props.user).valid &&
-        fondamentaleStepIsComplete(etape.value.value, props.demarcheTypeId, props.titreTypeId).valid &&
-        sectionsStepIsComplete(etape.value.value, props.demarcheTypeId, props.titreTypeId).valid &&
-        perimetreStepIsComplete(etape.value.value).valid &&
-        etapeDocumentsStepIsComplete(
-          etape.value.value,
-          props.demarcheTypeId,
-          props.titreTypeId,
-          documents.value.etapeDocuments,
-          props.perimetre.sdomZoneIds,
-          documents.value.daeDocument,
-          documents.value.aslDocument,
-          props.user
-        ).valid &&
-        entrepriseDocumentsStepIsComplete(etape.value.value, props.demarcheTypeId, props.titreTypeId, documents.value.entrepriseDocuments).valid
-        && etapeAvisStepIsComplete(etapeFlattened, documents.value.avisDocuments, props.titreTypeId, props.perimetre.communes).valid
+      return isEtapeDeposable(
+        props.user,
+        props.titreTypeId,
+        props.demarcheTypeId,
+        etape.value.value,
+        documents.value.etapeDocuments,
+        documents.value.entrepriseDocuments.map(({ documentTypeId, entrepriseId }) => ({ entreprise_document_type_id: documentTypeId, entreprise_id: entrepriseId })),
+        props.perimetre.sdomZoneIds,
+        props.perimetre.communes,
+        documents.value.daeDocument,
+        documents.value.aslDocument,
+        documents.value.avisDocuments
       )
     }
 
@@ -337,17 +325,18 @@ export const EtapeEditForm = defineComponent<Props>(props => {
       {dateTypeStepIsVisible(props.user) ? (
         <Bloc
           step={{ name: 'Informations principales', help: null }}
-          complete={dateTypeStepIsComplete(
-            etape.value.status === 'LOADED' && etape.value.value !== null
-              ? etape.value.value
-              : {
-                  date: null,
-                  id: null,
-                  statutId: null,
-                  typeId: null,
-                },
-            props.user
-          ).valid}
+          complete={
+            dateTypeStepIsComplete(
+              etape.value.status === 'LOADED' && etape.value.value !== null
+                ? etape.value.value
+                : {
+                    date: null,
+                    statutId: null,
+                    typeId: null,
+                  },
+              props.user
+            ).valid
+          }
         >
           <DateTypeEdit etape={props.etape} apiClient={props.apiClient} completeUpdate={dateTypeCompleteUpdate} demarcheId={props.demarcheId} />
         </Bloc>
@@ -413,7 +402,7 @@ const EtapeEditFormInternal = defineComponent<
   }
 
   const avisCompleteUpdate = (avisDocuments: (EtapeAvis | TempEtapeAvis)[]) => {
-    props.setEtape(etapeFlattened.value, {
+    props.setEtape(props.etape, {
       ...props.documents,
       avisDocuments,
     })
@@ -533,16 +522,18 @@ const EtapeEditFormInternal = defineComponent<
       {etapeDocumentsStepIsVisible(props.etape, props.demarcheTypeId, props.titreTypeId) ? (
         <Bloc
           step={{ name: 'Liste des documents', help: null }}
-          complete={etapeDocumentsStepIsComplete(
-            props.etape,
-            props.demarcheTypeId,
-            props.titreTypeId,
-            props.documents.etapeDocuments,
-            props.perimetre.sdomZoneIds,
-            props.documents.daeDocument,
-            props.documents.aslDocument,
-            props.user
-          ).valid}
+          complete={
+            etapeDocumentsStepIsComplete(
+              props.etape,
+              props.demarcheTypeId,
+              props.titreTypeId,
+              props.documents.etapeDocuments,
+              props.perimetre.sdomZoneIds,
+              props.documents.daeDocument,
+              props.documents.aslDocument,
+              props.user
+            ).valid
+          }
         >
           <EtapeDocumentsEdit
             apiClient={props.apiClient}
@@ -557,24 +548,12 @@ const EtapeEditFormInternal = defineComponent<
         </Bloc>
       ) : null}
 
-      {etapeAvisStepIsVisible(etapeFlattened.value, props.titreTypeId, props.perimetre.communes) ? (
-        <Bloc step={{ name: 'Liste des avis', help: null }} complete={etapeAvisStepIsComplete(etapeFlattened.value, props.documents.avisDocuments, props.titreTypeId, props.perimetre.communes).valid}>
+      {etapeAvisStepIsVisible(props.etape, props.titreTypeId, props.perimetre.communes) ? (
+        <Bloc step={{ name: 'Liste des avis', help: null }} complete={etapeAvisStepIsComplete(props.etape, props.documents.avisDocuments, props.titreTypeId, props.perimetre.communes).valid}>
           <EtapeAvisEdit
             apiClient={props.apiClient}
-            tde={{ titreTypeId: props.titreTypeId, demarcheTypeId: props.demarcheTypeId, etapeTypeId: etapeFlattened.value.typeId }}
-            etapeId={etapeFlattened.value.id}
-            communeIds={props.perimetre.communes}
-            onChange={avisCompleteUpdate}
-          />
-        </Bloc>
-      ) : null}
-
-      {etapeAvisStepIsVisible(etapeFlattened.value, props.titreTypeId, props.perimetre.communes) ? (
-        <Bloc step={{ name: 'Liste des avis', help: null }} complete={etapeAvisStepIsComplete(etapeFlattened.value, props.documents.avisDocuments, props.titreTypeId, props.perimetre.communes).valid}>
-          <EtapeAvisEdit
-            apiClient={props.apiClient}
-            tde={{ titreTypeId: props.titreTypeId, demarcheTypeId: props.demarcheTypeId, etapeTypeId: etapeFlattened.value.typeId }}
-            etapeId={etapeFlattened.value.id}
+            tde={{ titreTypeId: props.titreTypeId, demarcheTypeId: props.demarcheTypeId, etapeTypeId: props.etape.typeId }}
+            etapeId={props.etape.id}
             communeIds={props.perimetre.communes}
             onChange={avisCompleteUpdate}
           />

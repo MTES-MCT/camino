@@ -4,6 +4,7 @@ import { getDemarches } from './titres-etapes-heritage-contenu-update.queries.js
 import { newDemarcheId, newEtapeId, newTitreId } from '../../database/models/_format/id-create.js'
 import { toCaminoDate } from 'camino-common/src/date.js'
 import { Pool } from 'pg'
+import { ETAPE_IS_NOT_BROUILLON } from 'camino-common/src/etape.js'
 
 vi.mock('./titres-etapes-heritage-contenu-update.queries', () => ({
   getDemarches: vi.fn().mockResolvedValue(true),
@@ -31,7 +32,7 @@ describe("statut des démarches d'un titre", () => {
             id: newEtapeId('h-cx-courdemanges-1988-oct01-dpu01'),
             typeId: 'dpu',
             statutId: 'acc',
-            isBrouillon: false,
+            isBrouillon: ETAPE_IS_NOT_BROUILLON,
             ordre: 2,
             date: toCaminoDate('1988-03-11'),
             communes: [],
@@ -43,7 +44,7 @@ describe("statut des démarches d'un titre", () => {
             id: newEtapeId('h-cx-courdemanges-1988-oct01-dex01'),
             typeId: 'dex',
             statutId: 'acc',
-            isBrouillon: false,
+            isBrouillon: ETAPE_IS_NOT_BROUILLON,
             ordre: 1,
             date: toCaminoDate('1988-03-06'),
             communes: [],
@@ -72,7 +73,7 @@ describe("statut des démarches d'un titre", () => {
             id: newEtapeId('h-cx-courdemanges-1988-oct01-dpu01'),
             typeId: 'dpu',
             statutId: 'acc',
-            isBrouillon: false,
+            isBrouillon: ETAPE_IS_NOT_BROUILLON,
             ordre: 2,
             date: toCaminoDate('1988-03-11'),
             communes: [],
@@ -84,7 +85,7 @@ describe("statut des démarches d'un titre", () => {
             id: newEtapeId('h-cx-courdemanges-1988-oct01-dex01'),
             typeId: 'dex',
             statutId: 'acc',
-            isBrouillon: false,
+            isBrouillon: ETAPE_IS_NOT_BROUILLON,
             ordre: 1,
             date: toCaminoDate('1988-03-06'),
             communes: [],

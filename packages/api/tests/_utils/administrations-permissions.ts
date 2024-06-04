@@ -22,7 +22,7 @@ import { ETAPE_HERITAGE_PROPS } from 'camino-common/src/heritage.js'
 import { GEO_SYSTEME_IDS } from 'camino-common/src/static/geoSystemes.js'
 import { DocumentTypeId } from 'camino-common/src/static/documentsTypes.js'
 import { copyFileSync, mkdirSync } from 'node:fs'
-import { TempEtapeDocument } from 'camino-common/src/etape.js'
+import { ETAPE_IS_NOT_BROUILLON, TempEtapeDocument } from 'camino-common/src/etape.js'
 import { tempDocumentNameValidator } from 'camino-common/src/document.js'
 
 const dir = `${process.cwd()}/files/tmp/`
@@ -326,7 +326,7 @@ const titreBuild = (
             ordre: 0,
             titreDemarcheId: newDemarcheId(`${titreId}-demarche-id`),
             statutId: 'enc',
-            isBrouillon: false,
+            isBrouillon: ETAPE_IS_NOT_BROUILLON,
             date: toCaminoDate('2020-01-01'),
             administrationsLocales: administrationIdLocale ? [administrationIdLocale] : [],
           },

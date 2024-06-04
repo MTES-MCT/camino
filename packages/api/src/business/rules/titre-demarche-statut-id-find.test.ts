@@ -7,6 +7,7 @@ import { toCaminoDate } from 'camino-common/src/date.js'
 import { describe, expect, test } from 'vitest'
 import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts.js'
 import { TitreEtapeForMachine } from '../rules-demarches/machine-common.js'
+import { ETAPE_IS_BROUILLON } from 'camino-common/src/etape.js'
 const etapesBuild = (etapesProps: Partial<ITitreEtape>[]): TitreEtapeForMachine[] =>
   etapesProps.map(
     (etapeProps, i) =>
@@ -237,7 +238,7 @@ describe("statut d'une démarche", () => {
   })
 
   test("une démarche d'octroi dont l'étape la plus récente est mfr a le statut “en construction”", () => {
-    expect(titreDemarcheStatutIdFind('oct', etapesBuild([{ typeId: 'mfr', statutId: 'fai', isBrouillon: true }]), 'pxm', newDemarcheId())).toEqual('eco')
+    expect(titreDemarcheStatutIdFind('oct', etapesBuild([{ typeId: 'mfr', statutId: 'fai', isBrouillon: ETAPE_IS_BROUILLON }]), 'pxm', newDemarcheId())).toEqual('eco')
   })
 
   test("une démarche d'octroi dont l'étape la plus récente est mcr a le statut “en instruction”", () => {

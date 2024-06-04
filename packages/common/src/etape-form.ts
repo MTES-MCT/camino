@@ -5,6 +5,7 @@ import { entrepriseDocumentIdValidator, entrepriseIdValidator } from './entrepri
 import {
   documentComplementaireAslEtapeDocumentModificationValidator,
   documentComplementaireDaeEtapeDocumentModificationValidator,
+  etapeBrouillonValidator,
   etapeDocumentModificationValidator,
   etapeIdValidator,
   etapeSlugValidator,
@@ -117,7 +118,7 @@ export const graphqlEtapeValidator = z.object({
   notes: z.string().nullable(),
   heritageProps: heritagePropsValidator,
   heritageContenu: heritageContenuValidator,
-  isBrouillon: z.boolean(),
+  isBrouillon: etapeBrouillonValidator,
 })
 
 const perimetreObjectValidator = z.object({

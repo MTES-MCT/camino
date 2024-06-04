@@ -3,9 +3,8 @@ import { deleteWithJson, getWithJson, putWithJson } from '@/api/client-rest'
 import { CaminoDate, caminoDateValidator } from 'camino-common/src/date'
 import { DemarcheId } from 'camino-common/src/demarche'
 import { entrepriseIdValidator } from 'camino-common/src/entreprise'
-import { EtapeId, EtapeIdOrSlug, EtapeTypeEtapeStatutWithMainStep, GetEtapeDocumentsByEtapeId } from 'camino-common/src/etape'
+import { EtapeAvis, EtapeId, EtapeIdOrSlug, EtapeTypeEtapeStatutWithMainStep, GetEtapeDocumentsByEtapeId } from 'camino-common/src/etape'
 import {
-  EtapeAvis,
   FlattenEtape,
   GraphqlEtapeCreation,
   GraphqlEtapeModification,
@@ -118,7 +117,7 @@ export const etapeApiClient: EtapeApiClient = {
 
   getEtapeDocumentsByEtapeId: async etapeId => getWithJson('/rest/etapes/:etapeId/etapeDocuments', { etapeId }),
   getEtapeAvisByEtapeId: async etapeId => {
-    //FIXME
+    // FIXME
     return []
   },
 

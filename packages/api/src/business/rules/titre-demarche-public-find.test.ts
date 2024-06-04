@@ -6,6 +6,7 @@ import { newDemarcheId, newEtapeId, newTitreId } from '../../database/models/_fo
 import { toCaminoDate } from 'camino-common/src/date.js'
 import { describe, expect, test } from 'vitest'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes.js'
+import { ETAPE_IS_NOT_BROUILLON } from 'camino-common/src/etape.js'
 const etapesBuild = (etapesProps: Partial<ITitreEtape>[]) =>
   etapesProps.map(
     (etapeProps, i) =>
@@ -590,7 +591,7 @@ describe("publicité d'une démarche", () => {
           demarcheDateDebut: toCaminoDate('2020-01-01'),
           demarcheDateFin: toCaminoDate('2021-01-01'),
           id: newDemarcheId(),
-          etapes: etapesBuild([{ typeId: 'mdp', statutId: 'fai', date: toCaminoDate('2017-01-01'), isBrouillon: false }]),
+          etapes: etapesBuild([{ typeId: 'mdp', statutId: 'fai', date: toCaminoDate('2017-01-01'), isBrouillon: ETAPE_IS_NOT_BROUILLON }]),
           titreId: newTitreId('titreId'),
         },
         'arm'
@@ -604,8 +605,8 @@ describe("publicité d'une démarche", () => {
           demarcheDateFin: toCaminoDate('2021-01-01'),
           id: newDemarcheId(),
           etapes: etapesBuild([
-            { typeId: 'mfr', statutId: 'fai', date: toCaminoDate('2020-01-01'), isBrouillon: false },
-            { typeId: 'mdp', statutId: 'fai', date: toCaminoDate('2020-01-02'), isBrouillon: false },
+            { typeId: 'mfr', statutId: 'fai', date: toCaminoDate('2020-01-01'), isBrouillon: ETAPE_IS_NOT_BROUILLON },
+            { typeId: 'mdp', statutId: 'fai', date: toCaminoDate('2020-01-02'), isBrouillon: ETAPE_IS_NOT_BROUILLON },
           ]),
           titreId: newTitreId('titreId'),
         },
@@ -622,7 +623,7 @@ describe("publicité d'une démarche", () => {
           demarcheDateDebut: toCaminoDate('2020-01-01'),
           demarcheDateFin: toCaminoDate('2021-01-01'),
           id: newDemarcheId(),
-          etapes: etapesBuild([{ typeId: 'mcr', date: toCaminoDate('2017-01-01'), isBrouillon: false }]),
+          etapes: etapesBuild([{ typeId: 'mcr', date: toCaminoDate('2017-01-01'), isBrouillon: ETAPE_IS_NOT_BROUILLON }]),
           titreId: newTitreId('titreId'),
         },
         'arm'
@@ -637,9 +638,9 @@ describe("publicité d'une démarche", () => {
           demarcheDateFin: toCaminoDate('2021-01-01'),
           id: newDemarcheId(),
           etapes: etapesBuild([
-            { typeId: 'mfr', statutId: 'fai', date: toCaminoDate('2020-01-01'), isBrouillon: false },
-            { typeId: 'mdp', statutId: 'fai', date: toCaminoDate('2020-01-02'), isBrouillon: false },
-            { typeId: 'mcr', statutId: 'fav', date: toCaminoDate('2020-01-03'), isBrouillon: false },
+            { typeId: 'mfr', statutId: 'fai', date: toCaminoDate('2020-01-01'), isBrouillon: ETAPE_IS_NOT_BROUILLON },
+            { typeId: 'mdp', statutId: 'fai', date: toCaminoDate('2020-01-02'), isBrouillon: ETAPE_IS_NOT_BROUILLON },
+            { typeId: 'mcr', statutId: 'fav', date: toCaminoDate('2020-01-03'), isBrouillon: ETAPE_IS_NOT_BROUILLON },
           ]),
           titreId: newTitreId('titreId'),
         },
@@ -657,8 +658,8 @@ describe("publicité d'une démarche", () => {
           demarcheDateFin: toCaminoDate('2021-01-01'),
           id: newDemarcheId(),
           etapes: etapesBuild([
-            { typeId: 'mcr', date: toCaminoDate('2017-01-01'), isBrouillon: false },
-            { typeId: 'eof', date: toCaminoDate('2017-01-01'), isBrouillon: false },
+            { typeId: 'mcr', date: toCaminoDate('2017-01-01'), isBrouillon: ETAPE_IS_NOT_BROUILLON },
+            { typeId: 'eof', date: toCaminoDate('2017-01-01'), isBrouillon: ETAPE_IS_NOT_BROUILLON },
           ]),
           titreId: newTitreId('titreId'),
         },
@@ -673,10 +674,10 @@ describe("publicité d'une démarche", () => {
           demarcheDateFin: toCaminoDate('2021-01-01'),
           id: newDemarcheId(),
           etapes: etapesBuild([
-            { typeId: 'mfr', statutId: 'fai', date: toCaminoDate('2020-01-01'), isBrouillon: false },
-            { typeId: 'mdp', statutId: 'fai', date: toCaminoDate('2020-01-02'), isBrouillon: false },
-            { typeId: 'mcr', statutId: 'fav', date: toCaminoDate('2020-01-03'), isBrouillon: false },
-            { typeId: 'eof', statutId: 'fai', date: toCaminoDate('2020-01-05'), isBrouillon: false },
+            { typeId: 'mfr', statutId: 'fai', date: toCaminoDate('2020-01-01'), isBrouillon: ETAPE_IS_NOT_BROUILLON },
+            { typeId: 'mdp', statutId: 'fai', date: toCaminoDate('2020-01-02'), isBrouillon: ETAPE_IS_NOT_BROUILLON },
+            { typeId: 'mcr', statutId: 'fav', date: toCaminoDate('2020-01-03'), isBrouillon: ETAPE_IS_NOT_BROUILLON },
+            { typeId: 'eof', statutId: 'fai', date: toCaminoDate('2020-01-05'), isBrouillon: ETAPE_IS_NOT_BROUILLON },
           ]),
           titreId: newTitreId('titreId'),
         },
@@ -693,7 +694,7 @@ describe("publicité d'une démarche", () => {
           demarcheDateDebut: toCaminoDate('2020-01-01'),
           demarcheDateFin: toCaminoDate('2021-01-01'),
           id: newDemarcheId(),
-          etapes: etapesBuild([{ typeId: 'css', date: toCaminoDate('2017-01-01'), isBrouillon: false }]),
+          etapes: etapesBuild([{ typeId: 'css', date: toCaminoDate('2017-01-01'), isBrouillon: ETAPE_IS_NOT_BROUILLON }]),
           titreId: newTitreId('titreId'),
         },
         'arm'
@@ -707,10 +708,10 @@ describe("publicité d'une démarche", () => {
           demarcheDateFin: toCaminoDate('2021-01-01'),
           id: newDemarcheId(),
           etapes: etapesBuild([
-            { typeId: 'mfr', statutId: 'fai', date: toCaminoDate('2020-01-01'), isBrouillon: false },
-            { typeId: 'mdp', statutId: 'fai', date: toCaminoDate('2020-01-02'), isBrouillon: false },
-            { typeId: 'mcr', statutId: 'fav', date: toCaminoDate('2020-01-03'), isBrouillon: false },
-            { typeId: 'css', statutId: 'fai', date: toCaminoDate('2020-01-05'), isBrouillon: false },
+            { typeId: 'mfr', statutId: 'fai', date: toCaminoDate('2020-01-01'), isBrouillon: ETAPE_IS_NOT_BROUILLON },
+            { typeId: 'mdp', statutId: 'fai', date: toCaminoDate('2020-01-02'), isBrouillon: ETAPE_IS_NOT_BROUILLON },
+            { typeId: 'mcr', statutId: 'fav', date: toCaminoDate('2020-01-03'), isBrouillon: ETAPE_IS_NOT_BROUILLON },
+            { typeId: 'css', statutId: 'fai', date: toCaminoDate('2020-01-05'), isBrouillon: ETAPE_IS_NOT_BROUILLON },
           ]),
           titreId: newTitreId('titreId'),
         },
@@ -728,7 +729,7 @@ describe("publicité d'une démarche", () => {
           demarcheDateDebut: toCaminoDate('2017-01-01'),
           demarcheDateFin: toCaminoDate('2021-01-01'),
           id: newDemarcheId(),
-          etapes: etapesBuild([{ typeId: 'des', date: toCaminoDate('2017-01-01'), isBrouillon: false }]),
+          etapes: etapesBuild([{ typeId: 'des', date: toCaminoDate('2017-01-01'), isBrouillon: ETAPE_IS_NOT_BROUILLON }]),
           titreId: newTitreId('titreId'),
         },
         'arm'
@@ -743,9 +744,9 @@ describe("publicité d'une démarche", () => {
           demarcheDateFin: toCaminoDate('2021-01-01'),
           id: newDemarcheId(),
           etapes: etapesBuild([
-            { typeId: 'mfr', statutId: 'fai', date: toCaminoDate('2020-01-01'), isBrouillon: false },
-            { typeId: 'mdp', statutId: 'fai', date: toCaminoDate('2020-01-02'), isBrouillon: false },
-            { typeId: 'des', statutId: 'fai', date: toCaminoDate('2020-01-05'), isBrouillon: false },
+            { typeId: 'mfr', statutId: 'fai', date: toCaminoDate('2020-01-01'), isBrouillon: ETAPE_IS_NOT_BROUILLON },
+            { typeId: 'mdp', statutId: 'fai', date: toCaminoDate('2020-01-02'), isBrouillon: ETAPE_IS_NOT_BROUILLON },
+            { typeId: 'des', statutId: 'fai', date: toCaminoDate('2020-01-05'), isBrouillon: ETAPE_IS_NOT_BROUILLON },
           ]),
           titreId: newTitreId('titreId'),
         },
@@ -764,7 +765,7 @@ describe("publicité d'une démarche", () => {
             demarcheDateDebut: toCaminoDate('2020-01-01'),
             demarcheDateFin: toCaminoDate('2021-01-01'),
             id: newDemarcheId(),
-            etapes: etapesBuild([{ typeId: etapeTypeId, isBrouillon: false }]),
+            etapes: etapesBuild([{ typeId: etapeTypeId, isBrouillon: ETAPE_IS_NOT_BROUILLON }]),
             titreId: newTitreId('titreId'),
           },
           'pcc'
@@ -781,7 +782,7 @@ describe("publicité d'une démarche", () => {
           demarcheDateDebut: toCaminoDate('2020-01-01'),
           demarcheDateFin: toCaminoDate('2021-01-01'),
           id: newDemarcheId(),
-          etapes: etapesBuild([{ typeId: 'ane', isBrouillon: false }]),
+          etapes: etapesBuild([{ typeId: 'ane', isBrouillon: ETAPE_IS_NOT_BROUILLON }]),
           titreId: newTitreId('WQaZgPfDcQw9tFliMgBIDH3Z'),
         },
         'pcc'
@@ -798,8 +799,8 @@ describe("publicité d'une démarche", () => {
           demarcheDateDebut: toCaminoDate('2020-01-01'),
           demarcheDateFin: null,
           etapes: etapesBuild([
-            { typeId: 'mfr', isBrouillon: false },
-            { typeId: 'mdp', isBrouillon: false },
+            { typeId: 'mfr', isBrouillon: ETAPE_IS_NOT_BROUILLON },
+            { typeId: 'mdp', isBrouillon: ETAPE_IS_NOT_BROUILLON },
           ]),
           titreId: newTitreId('titreId'),
         },
@@ -816,7 +817,7 @@ describe("publicité d'une démarche", () => {
           typeId: 'pr1',
           demarcheDateDebut: toCaminoDate('2020-01-01'),
           demarcheDateFin: null,
-          etapes: etapesBuild([{ typeId: 'mfr', isBrouillon: false }]),
+          etapes: etapesBuild([{ typeId: 'mfr', isBrouillon: ETAPE_IS_NOT_BROUILLON }]),
           titreId: newTitreId('titreId'),
         },
         'prm'

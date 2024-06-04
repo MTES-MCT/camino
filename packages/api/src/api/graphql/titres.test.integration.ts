@@ -15,6 +15,7 @@ import { newEntrepriseId } from 'camino-common/src/entreprise.js'
 import { communeIdValidator } from 'camino-common/src/static/communes.js'
 import type { Knex } from 'knex'
 import Titres from '../../database/models/titres'
+import { ETAPE_IS_NOT_BROUILLON } from 'camino-common/src/etape.js'
 
 console.info = vi.fn()
 console.error = vi.fn()
@@ -86,7 +87,7 @@ const titreEtapesPubliques: ITitre = {
           titreDemarcheId: newDemarcheId('titre-id-demarche-id'),
           statutId: 'acc',
           date: toCaminoDate('2020-02-02'),
-          isBrouillon: false,
+          isBrouillon: ETAPE_IS_NOT_BROUILLON,
         },
         {
           id: newEtapeId('titre-id-demarche-id-eof'),
@@ -95,7 +96,7 @@ const titreEtapesPubliques: ITitre = {
           titreDemarcheId: newDemarcheId('titre-id-demarche-id'),
           statutId: 'acc',
           date: toCaminoDate('2020-02-02'),
-          isBrouillon: false,
+          isBrouillon: ETAPE_IS_NOT_BROUILLON,
         },
         {
           id: newEtapeId('titre-id-demarche-id-edm'),
@@ -104,7 +105,7 @@ const titreEtapesPubliques: ITitre = {
           titreDemarcheId: newDemarcheId('titre-id-demarche-id'),
           statutId: 'acc',
           date: toCaminoDate('2020-02-02'),
-          isBrouillon: false,
+          isBrouillon: ETAPE_IS_NOT_BROUILLON,
         },
         {
           id: newEtapeId('titre-id-demarche-id-ede'),
@@ -113,7 +114,7 @@ const titreEtapesPubliques: ITitre = {
           titreDemarcheId: newDemarcheId('titre-id-demarche-id'),
           statutId: 'acc',
           date: toCaminoDate('2020-02-02'),
-          isBrouillon: false,
+          isBrouillon: ETAPE_IS_NOT_BROUILLON,
         },
         {
           id: newEtapeId('titre-id-demarche-id-pfd'),
@@ -122,7 +123,7 @@ const titreEtapesPubliques: ITitre = {
           titreDemarcheId: newDemarcheId('titre-id-demarche-id'),
           statutId: 'acc',
           date: toCaminoDate('2020-02-02'),
-          isBrouillon: false,
+          isBrouillon: ETAPE_IS_NOT_BROUILLON,
         },
         {
           id: newEtapeId('titre-id-demarche-id-pfc'),
@@ -131,7 +132,7 @@ const titreEtapesPubliques: ITitre = {
           titreDemarcheId: newDemarcheId('titre-id-demarche-id'),
           statutId: 'acc',
           date: toCaminoDate('2020-02-02'),
-          isBrouillon: false,
+          isBrouillon: ETAPE_IS_NOT_BROUILLON,
         },
         {
           id: newEtapeId('titre-id-demarche-id-vfd'),
@@ -140,7 +141,7 @@ const titreEtapesPubliques: ITitre = {
           titreDemarcheId: newDemarcheId('titre-id-demarche-id'),
           statutId: 'acc',
           date: toCaminoDate('2020-02-02'),
-          isBrouillon: false,
+          isBrouillon: ETAPE_IS_NOT_BROUILLON,
         },
         {
           id: newEtapeId('titre-id-demarche-id-vfc'),
@@ -149,7 +150,7 @@ const titreEtapesPubliques: ITitre = {
           titreDemarcheId: newDemarcheId('titre-id-demarche-id'),
           statutId: 'acc',
           date: toCaminoDate('2020-02-02'),
-          isBrouillon: false,
+          isBrouillon: ETAPE_IS_NOT_BROUILLON,
         },
         {
           id: newEtapeId('titre-id-demarche-id-dpu'),
@@ -159,7 +160,7 @@ const titreEtapesPubliques: ITitre = {
           statutId: 'acc',
           date: toCaminoDate('2020-02-02'),
           administrationsLocales: ['dea-guyane-01'],
-          isBrouillon: false,
+          isBrouillon: ETAPE_IS_NOT_BROUILLON,
         },
       ],
     },
@@ -312,7 +313,7 @@ describe('titres', () => {
             administrationsLocales: ['dea-guyane-01'],
             titulaireIds: [entrepriseId1],
             communes: [{ id: communeId }],
-            isBrouillon: false,
+            isBrouillon: ETAPE_IS_NOT_BROUILLON,
           },
         ],
       },

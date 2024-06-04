@@ -19,6 +19,7 @@ import { idGenerate } from '../../database/models/_format/id-create'
 import { insertTitreEtapeEntrepriseDocument } from '../../database/queries/titres-etapes.queries.js'
 import { titreSlugValidator } from 'camino-common/src/validators/titres.js'
 import type { Knex } from 'knex'
+import { ETAPE_IS_NOT_BROUILLON } from 'camino-common/src/etape.js'
 console.info = vi.fn()
 console.error = vi.fn()
 vi.mock('../../tools/api-insee/fetch', () => ({
@@ -287,7 +288,7 @@ describe('getEntrepriseDocument', () => {
         titreDemarcheId: titreDemarche.id,
         date: toCaminoDate('2022-01-01'),
         ordre: 1,
-        isBrouillon: false,
+        isBrouillon: ETAPE_IS_NOT_BROUILLON,
       },
       userSuper,
       titre.id

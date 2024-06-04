@@ -6,6 +6,7 @@ import { FeatureMultiPolygon, equalGeojson } from 'camino-common/src/perimetre.j
 import { exhaustiveCheck, isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
 import { ETAPE_HERITAGE_PROPS, EtapeHeritageProps } from 'camino-common/src/heritage.js'
 import { EntrepriseId } from 'camino-common/src/entreprise'
+import { km2Validator } from 'camino-common/src/number.js'
 
 const propertyArrayCheck = (newValue: string[], prevValue: string[], propId: string) => {
   if (prevValue?.length !== newValue?.length) {
@@ -104,7 +105,7 @@ export const titreEtapeHeritagePropsFind = (titreEtape: ITitreEtape, prevTitreEt
                 geojsonOriginePerimetre: prevTitreEtape.geojsonOriginePerimetre,
                 geojsonOrigineForages: prevTitreEtape.geojsonOrigineForages,
                 geojson4326Forages: prevTitreEtape.geojson4326Forages,
-                surface: prevTitreEtape.surface ?? 0,
+                surface: prevTitreEtape.surface ?? km2Validator.parse(0),
               }
               newTitreEtape = { ...newTitreEtape, ...perimetre }
               break

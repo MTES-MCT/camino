@@ -23,6 +23,7 @@ export function isNotNullNorUndefinedNorEmpty(value: string | DeepReadonly<any[]
 }
 
 export function isNullOrUndefinedOrEmpty<U>(value: DeepReadonly<U[]> | null | undefined): value is null | undefined
+export function isNullOrUndefinedOrEmpty<U>(value: U[] | null | undefined): value is null | undefined
 export function isNullOrUndefinedOrEmpty(value: string | null | undefined): value is null | undefined
 export function isNullOrUndefinedOrEmpty(value: string | DeepReadonly<any[]> | null | undefined) {
   if (value === null || value === undefined) {

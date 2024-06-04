@@ -3,6 +3,7 @@ import { ITitreDemarche } from '../../types.js'
 import { titreEtapePropFind } from './titre-etape-prop-find.js'
 import { vi, describe, expect, test } from 'vitest'
 import { toCaminoDate } from 'camino-common/src/date.js'
+import { ETAPE_IS_NOT_BROUILLON } from 'camino-common/src/etape.js'
 console.error = vi.fn()
 
 describe("valeur d'une propriété pour une étape", () => {
@@ -30,7 +31,7 @@ describe("valeur d'une propriété pour une étape", () => {
                 id: 'demarche-01-etape-01',
                 typeId: 'aac',
                 statutId: 'acc',
-                isBrouillon: false,
+                isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 date: toCaminoDate('1000-01-01'),
                 titulaireIds: [],
                 ordre: 1,
@@ -41,7 +42,7 @@ describe("valeur d'une propriété pour une étape", () => {
                 id: 'demarche-01-etape-02',
                 typeId: 'aac',
                 statutId: 'acc',
-                isBrouillon: false,
+                isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 date: toCaminoDate('1000-01-01'),
                 titulaireIds: ['fr-xxxxxxxxx'],
                 ordre: 1,
@@ -71,7 +72,7 @@ describe("valeur d'une propriété pour une étape", () => {
                 id: 'demarche-01-etape-01',
                 typeId: 'aac',
                 statutId: 'acc',
-                isBrouillon: false,
+                isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 surface: 0,
                 ordre: 1,
                 communes: null,
@@ -88,7 +89,7 @@ describe("valeur d'une propriété pour une étape", () => {
                 date: '1000-01-01',
                 typeId: 'aac',
                 statutId: 'acc',
-                isBrouillon: false,
+                isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 surface: 0,
                 ordre: 1,
                 communes: null,
@@ -116,7 +117,7 @@ describe("valeur d'une propriété pour une étape", () => {
                 id: 'demarche-02-etape-01',
                 date: '1000-01-01',
                 statutId: 'acc',
-                isBrouillon: false,
+                isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 titulaireIds: null,
                 typeId: 'aac',
                 surface: 0,

@@ -22,7 +22,7 @@ import { ActivitesTypesId } from 'camino-common/src/static/activitesTypes.js'
 import { CommuneId } from 'camino-common/src/static/communes.js'
 import { ForetId } from 'camino-common/src/static/forets.js'
 import { TitreId, TitreSlug } from 'camino-common/src/validators/titres.js'
-import { EtapeId, EtapeSlug } from 'camino-common/src/etape'
+import { EtapeBrouillon, EtapeId, EtapeSlug } from 'camino-common/src/etape'
 import { ActiviteId } from 'camino-common/src/activite.js'
 import { FeatureCollectionForages, FeatureCollectionPoints, FeatureMultiPolygon, GeojsonPoint, MultiPolygon } from 'camino-common/src/perimetre.js'
 import { EtapeHeritageProps } from 'camino-common/src/heritage'
@@ -247,7 +247,7 @@ type ITitreEtape = {
   slug?: EtapeSlug
   typeId: EtapeTypeId
   statutId: EtapeStatutId
-  isBrouillon: boolean
+  isBrouillon: EtapeBrouillon
   ordre?: number | null
   date: CaminoDate
   duree?: number | null

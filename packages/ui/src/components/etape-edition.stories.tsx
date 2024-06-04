@@ -3,7 +3,7 @@ import { action } from '@storybook/addon-actions'
 import { Props, PureEtapeEdition } from './etape-edition'
 import { EntrepriseDocumentId, EntrepriseId, EtapeEntrepriseDocument, entrepriseDocumentIdValidator, entrepriseIdValidator, toEntrepriseDocumentId } from 'camino-common/src/entreprise'
 import { DemarcheId, demarcheIdOrSlugValidator, demarcheIdValidator, demarcheSlugValidator } from 'camino-common/src/demarche'
-import { EtapeId, etapeDocumentIdValidator, etapeIdOrSlugValidator, etapeIdValidator, etapeSlugValidator } from 'camino-common/src/etape'
+import { ETAPE_IS_BROUILLON, ETAPE_IS_NOT_BROUILLON, EtapeId, etapeDocumentIdValidator, etapeIdOrSlugValidator, etapeIdValidator, etapeSlugValidator } from 'camino-common/src/etape'
 import { titreIdValidator, titreSlugValidator } from 'camino-common/src/validators/titres'
 import { FeatureMultiPolygon, PerimetreInformations } from 'camino-common/src/perimetre'
 import { CaminoDate, caminoDateValidator, toCaminoDate } from 'camino-common/src/date'
@@ -38,7 +38,7 @@ const creerEntrepriseDocumentAction = action('creerEntrepriseDocument')
 const goToDemarcheAction = action('goToDemarche')
 const etapeCreerAction = action('etapeCreer')
 const etapeModifierAction = action('etapeModifier')
-
+const getEtapeAvisByEtapeIdAction = action('getEtapeAvisByEtapeId')
 const entreprises = [
   { id: entrepriseIdValidator.parse('fr-899600233'), nom: '10 A', legal_siren: '899600233' },
   { id: entrepriseIdValidator.parse('fr-529770646'), nom: '2GRE', legal_siren: '529770646' },
@@ -55,6 +55,7 @@ const entreprises = [
 const perimetreInformations: PerimetreInformations = {
   sdomZoneIds: ['1'],
   superposition_alertes: [{ nom: 'Titre Tutu', slug: titreSlugValidator.parse('slug-tutu'), titre_statut_id: 'mod' }],
+  communes: [],
 }
 
 const perimetre: FeatureMultiPolygon = {
@@ -77,6 +78,10 @@ const perimetre: FeatureMultiPolygon = {
 }
 
 const apiClient: Props['apiClient'] = {
+  getEtapeAvisByEtapeId(etapeId) {
+    getEtapeAvisByEtapeIdAction(etapeId)
+    return Promise.resolve([])
+  },
   deposeEtape(etapeId) {
     deposeEtapeAction(etapeId)
 
@@ -256,7 +261,7 @@ const apiClient: Props['apiClient'] = {
         slug: etapeSlugValidator.parse('etape-slug'),
         typeId: 'mfr',
         statutId: 'fai',
-        isBrouillon: false,
+        isBrouillon: ETAPE_IS_NOT_BROUILLON,
         titreDemarcheId: demarcheId,
         date: caminoDateValidator.parse('2023-02-01'),
         dateDebut: { value: null, heritee: false, etapeHeritee: null },
@@ -360,7 +365,7 @@ export const AffichageAide: StoryFn = () => (
             slug: etapeSlugValidator.parse('etape-slug'),
             typeId: 'mfr',
             statutId: 'fai',
-            isBrouillon: true,
+            isBrouillon: ETAPE_IS_BROUILLON,
             titreDemarcheId: demarcheId,
             date: caminoDateValidator.parse('2023-02-01'),
             dateDebut: { value: null, heritee: false, etapeHeritee: null },
@@ -550,7 +555,7 @@ export const DemandeArmComplete: StoryFn = () => (
             slug: etapeSlugValidator.parse('etape-slug'),
             typeId: 'mfr',
             statutId: 'fai',
-            isBrouillon: true,
+            isBrouillon: ETAPE_IS_BROUILLON,
             titreDemarcheId: demarcheId,
             date: caminoDateValidator.parse('2023-02-01'),
             dateDebut: { value: null, heritee: false, etapeHeritee: null },
@@ -692,7 +697,7 @@ export const ModificationDemandeHeritee: StoryFn = () => (
             slug: etapeSlugValidator.parse('etape-slug'),
             typeId: 'mod',
             statutId: 'fai',
-            isBrouillon: false,
+            isBrouillon: ETAPE_IS_NOT_BROUILLON,
             titreDemarcheId: demarcheIdValidator.parse('demarche-id'),
             date: caminoDateValidator.parse('2023-02-01'),
             contenu: {
@@ -832,7 +837,7 @@ export const AxmEnZoneDuSdom: StoryFn = () => (
             slug: etapeSlugValidator.parse('etape-slug'),
             typeId: 'mfr',
             statutId: 'fai',
-            isBrouillon: true,
+            isBrouillon: ETAPE_IS_BROUILLON,
             titreDemarcheId: demarcheIdValidator.parse('demarche-id'),
             date: caminoDateValidator.parse('2023-02-01'),
             dateDebut: {

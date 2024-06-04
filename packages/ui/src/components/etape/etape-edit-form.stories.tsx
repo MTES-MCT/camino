@@ -1,6 +1,6 @@
 import { EtapeEditForm, Props } from './etape-edit-form'
 import { Meta, StoryFn } from '@storybook/vue3'
-import { EtapeId, etapeIdValidator, etapeSlugValidator } from 'camino-common/src/etape'
+import { ETAPE_IS_NOT_BROUILLON, EtapeId, etapeIdValidator, etapeSlugValidator } from 'camino-common/src/etape'
 import { Entreprise, EntrepriseDocumentId, EntrepriseId, EtapeEntrepriseDocument, entrepriseDocumentIdValidator, entrepriseIdValidator, newEntrepriseId } from 'camino-common/src/entreprise'
 import { CaminoDate, toCaminoDate } from 'camino-common/src/date'
 import { testBlankUser } from 'camino-common/src/tests-utils'
@@ -45,7 +45,7 @@ const etape: Props['etape'] = {
   slug: etapeSlugValidator.parse('slug'),
   titreDemarcheId: demarcheIdValidator.parse('demarcheId'),
   statutId: 'fai',
-  isBrouillon: false,
+  isBrouillon: ETAPE_IS_NOT_BROUILLON,
   typeId: 'mfr',
   contenu: { arm: { mecanise: { value: null, heritee: false, etapeHeritee: null }, franchissements: { value: null, heritee: false, etapeHeritee: null } } },
   date: toCaminoDate('2022-02-02'),
@@ -116,8 +116,13 @@ const getGeojsonByGeoSystemeIdAction = action('getGeojsonByGeoSystemeId')
 const getEtapeDocumentsByEtapeIdAction = action('getEtapeDocumentsByEtapeId')
 const getEtapeEntrepriseDocumentsAction = action('getEtapeEntrepriseDocuments')
 const creerEntrepriseDocumentAction = action('creerEntrepriseDocument')
+const getEtapeAvisByEtapeIdAction = action('getEtapeAvisByEtapeId')
 
 const etapeEditFormApiClient: Props['apiClient'] = {
+  getEtapeAvisByEtapeId(etapeId) {
+    getEtapeAvisByEtapeIdAction(etapeId)
+    return Promise.resolve([])
+  },
   deposeEtape(etapeId) {
     deposeEtapeAction(etapeId)
 
@@ -235,7 +240,7 @@ const etapeEditFormApiClient: Props['apiClient'] = {
 export const Default: StoryFn = () => (
   <EtapeEditForm
     initTab="points"
-    perimetre={{ sdomZoneIds: [], superposition_alertes: [] }}
+    perimetre={{ sdomZoneIds: [], superposition_alertes: [], communes: [] }}
     apiClient={etapeEditFormApiClient}
     demarcheId={demarcheIdValidator.parse('demarcheId')}
     demarcheTypeId="oct"
@@ -263,7 +268,7 @@ export const EtapeModification: StoryFn = () => (
     demarcheTypeId="oct"
     titreSlug={titreSlugValidator.parse('titre-slug')}
     titreTypeId="cxw"
-    perimetre={{ sdomZoneIds: [], superposition_alertes: [] }}
+    perimetre={{ sdomZoneIds: [], superposition_alertes: [], communes: [] }}
     etape={{
       ...etape,
       contenu: { cxx: { volume: { value: null, heritee: false, etapeHeritee: null }, volumeUniteId: { value: null, heritee: false, etapeHeritee: null } } },
