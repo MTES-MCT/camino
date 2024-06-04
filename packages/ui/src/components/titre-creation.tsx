@@ -5,7 +5,6 @@ import { canCreateTitre, getLinkConfig } from 'camino-common/src/permissions/tit
 import { computed, defineComponent, onMounted, ref, inject } from 'vue'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { LinkableTitre, TitresLinkConfig } from '@/components/titre/titres-link-form-api-client'
-import { DsfrSelect } from './_ui/dsfr-select'
 import { Entreprise, EntrepriseId } from 'camino-common/src/entreprise'
 import { Nullable, isNonEmptyArray, isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { ApiClient, apiClient } from '@/api/api-client'
@@ -21,6 +20,7 @@ import { TitreId } from 'camino-common/src/validators/titres'
 import { TitreDemande, titreDemandeValidator } from 'camino-common/src/titres'
 import { entreprisesKey, userKey } from '@/moi'
 import { Alert } from './_ui/alert'
+import { AutocompleteEntrepriseSingle } from './etape/autocomplete-entreprise-single'
 
 export const TitreCreation = defineComponent(() => {
   const router = useRouter()
@@ -59,11 +59,6 @@ type Props = {
   initialValue?: TitreDemande
 }
 export const PureTitreCreation = defineComponent<Props>(props => {
-  type EntrepriseInternal = {
-    id: EntrepriseId
-    label: string
-  }
-
   const titreDemande = ref<Nullable<TitreDemande>>(props.initialValue ?? { entrepriseId: null, references: [], typeId: null, nom: null, titreFromIds: [] })
 
   const titreLinkConfig = computed<TitresLinkConfig>(() => {
@@ -122,23 +117,21 @@ export const PureTitreCreation = defineComponent<Props>(props => {
     titreDemande.value.titreFromIds = titres.map(({ id }) => id)
   }
 
-  const entreprises: EntrepriseInternal[] = props.entreprises
-    .filter(entreprise => {
-      if (isSuper(props.user)) {
-        return true
-      }
+  const entreprises: Entreprise[] = props.entreprises.filter(entreprise => {
+    if (isSuper(props.user)) {
+      return true
+    }
 
-      if ((isAdministrationAdmin(props.user) || isAdministrationEditeur(props.user)) && canCreateTitre(props.user, null)) {
-        return true
-      }
+    if ((isAdministrationAdmin(props.user) || isAdministrationEditeur(props.user)) && canCreateTitre(props.user, null)) {
+      return true
+    }
 
-      if (isEntreprise(props.user) || isBureauDEtudes(props.user)) {
-        return props.user.entreprises.map(({ id }) => id).includes(entreprise.id)
-      }
+    if (isEntreprise(props.user) || isBureauDEtudes(props.user)) {
+      return props.user.entreprises.map(({ id }) => id).includes(entreprise.id)
+    }
 
-      return false
-    })
-    .map(({ id, nom }) => ({ id, label: nom }))
+    return false
+  })
 
   const entrepriseUpdate = (entrepriseId: EntrepriseId | null) => {
     titreDemande.value = {
@@ -189,7 +182,12 @@ export const PureTitreCreation = defineComponent<Props>(props => {
         }}
       >
         {isNonEmptyArray(entreprises) ? (
-          <DsfrSelect required={true} legend={{ main: 'Entreprise' }} initialValue={titreDemande.value.entrepriseId} items={entreprises} valueChanged={entrepriseUpdate} />
+          <div class="fr-mb-3w">
+            <label class="fr-label fr-mb-1w" for="input_entreprise">
+              Entreprise *
+            </label>
+            <AutocompleteEntrepriseSingle initialValue={titreDemande.value.entrepriseId} items={entreprises} onUpdate={entrepriseUpdate} id="input_entreprise" />
+          </div>
         ) : (
           <Alert class="fr-mb-1w" small={true} type="error" title="Aucune entreprise associée à cet utilisateur" />
         )}

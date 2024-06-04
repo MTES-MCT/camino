@@ -1,22 +1,22 @@
-import { AutocompleteEntreprise } from './autocomplete-entreprise'
+import { AutocompleteEntreprises } from './autocomplete-entreprises'
 import { Meta, StoryFn } from '@storybook/vue3'
 import { action } from '@storybook/addon-actions'
 import { newEntrepriseId } from 'camino-common/src/entreprise'
 
 const meta: Meta = {
-  title: 'Components/Etape/AutoCompleteEntreprise',
+  title: 'Components/Etape/AutoCompleteEntreprises',
   // @ts-ignore @storybook/vue3 n'aime pas les composants tsx
-  component: AutocompleteEntreprise,
+  component: AutocompleteEntreprises,
 }
 export default meta
 
 const onEntreprisesUpdate = action('onEntreprisesUpdate')
 export const Default: StoryFn = () => (
-  <AutocompleteEntreprise name="titulaires" allEntities={[{ id: newEntrepriseId('optionId1'), nom: 'optionNom1', legal_siren: null }]} onEntreprisesUpdate={onEntreprisesUpdate} />
+  <AutocompleteEntreprises name="titulaires" allEntities={[{ id: newEntrepriseId('optionId1'), nom: 'optionNom1', legal_siren: null }]} onEntreprisesUpdate={onEntreprisesUpdate} />
 )
 
 export const WithEntitiesAlreadyPresent: StoryFn = () => (
-  <AutocompleteEntreprise
+  <AutocompleteEntreprises
     name="amodiataires"
     allEntities={[
       { id: newEntrepriseId('optionId1'), nom: 'optionNom1', legal_siren: null },
