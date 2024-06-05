@@ -195,7 +195,7 @@ describe('etapeSupprimer', () => {
       {
         typeId: 'mfr',
         statutId: 'fai',
-        isBrouillon: true,
+        isBrouillon: ETAPE_IS_BROUILLON,
         ordre: 1,
         titreDemarcheId: titreDemarche.id,
         date: toCaminoDate('2018-01-01'),

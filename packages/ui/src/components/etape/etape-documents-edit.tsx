@@ -1,6 +1,7 @@
 import {
   DocumentComplementaireAslEtapeDocumentModification,
   DocumentComplementaireDaeEtapeDocumentModification,
+  EtapeBrouillon,
   EtapeDocument,
   EtapeDocumentModification,
   EtapeId,
@@ -37,7 +38,7 @@ interface Props {
     demarcheTypeId: DemarcheTypeId
     etapeTypeId: EtapeTypeId
   }
-  isBrouillon: boolean
+  isBrouillon: EtapeBrouillon
   sdomZoneIds: DeepReadonly<SDOMZoneId[]>
   completeUpdate: (
     etapeDocuments: (EtapeDocument | TempEtapeDocument)[],

@@ -457,7 +457,7 @@ export const DemandeNonDeposable: StoryFn = () => (
 export const DemandeNonSupprimable: StoryFn = () => (
   <DemarcheEtape
     titre={{ titreStatutId: 'val', typeId: 'arm', nom: 'nom du titre', slug: titreSlug }}
-    demarche={{ demarche_type_id: 'oct', titulaireIds: [entrepriseIdValidator.parse('titulaire1')], administrationsLocales: [], sdom_zones: [], etapes: [] }}
+    demarche={{ demarche_type_id: 'oct', titulaireIds: [entrepriseIdValidator.parse('titulaire1')], administrationsLocales: [], sdom_zones: [], communes: [], etapes: [] }}
     user={{
       ...testBlankUser,
       role: 'entreprise',
@@ -477,7 +477,7 @@ export const DemandeNonSupprimable: StoryFn = () => (
       notes: null,
       etape_type_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeTypeId,
       etape_statut_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeStatutId,
-      is_brouillon: true,
+      is_brouillon: ETAPE_IS_BROUILLON,
       date,
       fondamentale: {
         date_debut: toCaminoDate('2023-10-25'),
@@ -491,6 +491,7 @@ export const DemandeNonSupprimable: StoryFn = () => (
       sections_with_values: [{ id: 'arm', elements: [{ id: 'mecanise', type: 'radio', value: true, nom: 'Mécanisation' }], nom: 'Arm' }],
       etape_documents: [],
       entreprises_documents: [],
+      avis_documents: [],
     }}
   />
 )

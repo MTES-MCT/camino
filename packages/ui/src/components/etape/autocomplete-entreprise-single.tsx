@@ -6,7 +6,7 @@ import { TypeAheadSingle } from '../_ui/typeahead-single'
 
 interface Props {
   initialValue?: DeepReadonly<EntrepriseId | null>
-  items: DeepReadonly<Entreprise[]>
+  items: DeepReadonly<Entreprise>[]
   onUpdate: (entreprise: DeepReadonly<EntrepriseId | null>) => void
   id?: string
 }
@@ -35,7 +35,7 @@ export const AutocompleteEntrepriseSingle = defineComponent<Props>(props => {
     setCurrentEntrepriseId(entreprise?.id ?? null)
   }
 
-  const filteredItems = computed<Readonly<Entreprise[]>>(() => {
+  const filteredItems = computed<DeepReadonly<Entreprise>[]>(() => {
     if (currentSearch.value.length === 0) {
       return props.items
     }
