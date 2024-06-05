@@ -38,7 +38,7 @@ import { objectClone } from '../../tools/index.js'
 import { titreEtapeAdministrationsEmailsSend } from '../graphql/resolvers/_titre-etape-email.js'
 import { getGeojsonInformation } from './perimetre.queries.js'
 import { titreEtapeUpdateTask } from '../../business/titre-etape-update.js'
-import { valeurFind } from 'camino-common/src/sections.js'
+import { simpleContenuToFlattenedContenu, valeurFind } from 'camino-common/src/sections.js'
 import { getElementWithValue, getSections, getSectionsWithValue } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { AdministrationId } from 'camino-common/src/static/administrations.js'
@@ -337,7 +337,7 @@ export const deposeEtape = (pool: Pool) => async (req: CaminoRequest, res: Custo
         user,
         { ...titre, titulaires: titre.titulaireIds ?? [], administrationsLocales: titre.administrationsLocales ?? [] },
         titreDemarche.typeId,
-        { ...titreEtape, contenu: titreEtape.contenu ?? {} },
+        { ...titreEtape, contenu: simpleContenuToFlattenedContenu(titre.typeId, titreDemarche.typeId, titreEtape.typeId, titreEtape.contenu ?? {}, titreEtape.heritageContenu) },
         etapeDocuments,
         entrepriseDocuments,
         sdomZones,

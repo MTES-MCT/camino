@@ -152,44 +152,37 @@ const etapeEditFormApiClient: Props['apiClient'] = {
   getEtapeHeritagePotentiel(etape, titreDemarcheId) {
     getEtapeHeritagePotentielAction(etape, titreDemarcheId)
     return Promise.resolve({
-      ...etape,
-      duree: {
-        value: etape.duree.value,
-        heritee: false,
-        etapeHeritee: {
-          date: toCaminoDate('2022-01-01'),
-          etapeTypeId: 'mfr',
-          value: 12,
+      heritageProps: {
+        duree: {
+          actif: false,
+          etape: { date: toCaminoDate('2022-01-01'), typeId: 'mfr', duree: 12 },
         },
-      },
-      substances: {
-        value: ['arge'],
-        heritee: true,
-        etapeHeritee: {
-          date: toCaminoDate('2022-01-01'),
-          etapeTypeId: 'mfr',
-          value: ['arge'],
+        substances: {
+          actif: true,
+          etape: {
+            date: toCaminoDate('2022-01-01'),
+            typeId: 'mfr',
+            substances: ['arge'],
+          },
         },
-      },
-      dateDebut: { value: etape.dateDebut.value, heritee: false, etapeHeritee: null },
-      titulaires: { value: etape.titulaires.value, heritee: false, etapeHeritee: null },
-      amodiataires: {
-        value: [entreprises[0].id, entreprises[1].id, entreprises[2].id],
-        heritee: true,
-        etapeHeritee: {
-          date: toCaminoDate('2022-01-01'),
-          etapeTypeId: 'mfr',
-          value: [entreprises[0].id, entreprises[1].id, entreprises[2].id],
+        dateDebut: { actif: false, etape: null },
+        titulaires: { actif: false, etape: null },
+        amodiataires: {
+          actif: true,
+          etape: {
+            date: toCaminoDate('2022-01-01'),
+            typeId: 'mfr',
+            amodiataireIds: [entreprises[0].id, entreprises[1].id, entreprises[2].id],
+          },
         },
-      },
-      perimetre: { value: etape.perimetre.value, heritee: false, etapeHeritee: null },
-      dateFin: {
-        value: etape.dateFin.value,
-        heritee: false,
-        etapeHeritee: {
-          date: toCaminoDate('2022-01-01'),
-          etapeTypeId: 'mfr',
-          value: toCaminoDate('2022-01-01'),
+        perimetre: { actif: false, etape: null },
+        dateFin: {
+          actif: false,
+          etape: {
+            date: toCaminoDate('2022-01-01'),
+            typeId: 'mfr',
+            dateFin: toCaminoDate('2022-01-01'),
+          },
         },
       },
       heritageContenu: { arm: { mecanise: { actif: false }, franchissements: { actif: false } } },

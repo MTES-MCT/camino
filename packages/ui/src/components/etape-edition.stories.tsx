@@ -10,8 +10,6 @@ import { CaminoDate, caminoDateValidator, toCaminoDate } from 'camino-common/src
 import { testBlankUser } from 'camino-common/src/tests-utils'
 import { UiEntrepriseDocumentInput } from './entreprise/entreprise-api-client'
 import { demarcheTypeIdValidator } from 'camino-common/src/static/demarchesTypes'
-import { DeepReadonly } from 'vue'
-import { CoreEtapeCreationOrModification } from './etape/etape-api-client'
 import { FlattenEtape } from 'camino-common/src/etape-form'
 import { tempDocumentNameValidator, TempDocumentName } from 'camino-common/src/document'
 
@@ -177,36 +175,35 @@ const apiClient: Props['apiClient'] = {
   getEtapeHeritagePotentiel(etape, titreDemarcheId) {
     getEtapeHeritagePotentielAction(etape, titreDemarcheId)
     return Promise.resolve({
-      ...etape,
-      duree: {
-        value: etape.duree.value,
-        heritee: false,
-        etapeHeritee: {
-          date: toCaminoDate('2022-01-01'),
-          etapeTypeId: 'mfr',
-          value: 12,
+      heritageProps: {
+        duree: {
+          actif: false,
+          etape: {
+            date: toCaminoDate('2022-01-01'),
+            typeId: 'mfr',
+            duree: 12,
+          },
         },
-      },
-      substances: {
-        value: ['arge'],
-        heritee: true,
-        etapeHeritee: {
-          date: toCaminoDate('2022-01-01'),
-          etapeTypeId: 'mfr',
+        substances: {
           value: ['arge'],
+          actif: true,
+          etape: {
+            date: toCaminoDate('2022-01-01'),
+            typeId: 'mfr',
+            substances: ['arge'],
+          },
         },
-      },
-      dateDebut: { value: etape.dateDebut.value, heritee: false, etapeHeritee: null },
-      titulaires: { value: etape.titulaires.value, heritee: false, etapeHeritee: null },
-      amodiataires: { value: etape.amodiataires.value, heritee: false, etapeHeritee: null },
-      perimetre: { value: etape.perimetre.value, heritee: false, etapeHeritee: null },
-      dateFin: {
-        value: etape.dateFin.value,
-        heritee: false,
-        etapeHeritee: {
-          date: toCaminoDate('2022-01-01'),
-          etapeTypeId: 'mfr',
-          value: toCaminoDate('2022-01-01'),
+        dateDebut: { actif: false, etape: null },
+        titulaires: { actif: false, etape: null },
+        amodiataires: { actif: false, etape: null },
+        perimetre: { actif: false, etape: null },
+        dateFin: {
+          actif: false,
+          etape: {
+            date: toCaminoDate('2022-01-01'),
+            typeId: 'mfr',
+            dateFin: toCaminoDate('2022-01-01'),
+          },
         },
       },
       heritageContenu: { arm: { mecanise: { actif: false }, franchissements: { actif: false } } },
@@ -422,17 +419,17 @@ export const DemandeArmComplete: StoryFn = () => (
         getEtapeHeritagePotentielAction(etape, titreDemarcheId)
 
         return Promise.resolve({
-          ...etape,
-          dateDebut: { value: etape.dateDebut.value, heritee: false, etapeHeritee: null },
-          dateFin: { value: etape.dateFin.value, heritee: false, etapeHeritee: null },
-          duree: { value: etape.duree.value, heritee: false, etapeHeritee: null },
-          substances: { value: etape.substances.value, heritee: false, etapeHeritee: null },
-          titulaires: { value: etape.titulaires.value, heritee: false, etapeHeritee: null },
-          amodiataires: { value: etape.amodiataires.value, heritee: false, etapeHeritee: null },
+          heritageProps: {
+          dateDebut: { actif: false, etape: null },
+          dateFin: { actif: false, etape: null },
+          duree: { actif: false, etape: null },
+          substances: { actif: false, etape: null },
+          titulaires: { actif: false, etape: null },
+          amodiataires: { actif: false, etape: null },
           perimetre: {
-            value: etape.perimetre.value,
-            heritee: false,
-            etapeHeritee: null,
+            actif: false,
+            etape: null,
+          },
           },
           heritageContenu: { arm: { mecanise: { actif: false }, franchissements: { actif: false } } },
         })
@@ -683,7 +680,7 @@ export const ModificationDemandeHeritee: StoryFn = () => (
     entreprises={entreprises}
     apiClient={{
       ...apiClient,
-      getEtapeHeritagePotentiel(etape: DeepReadonly<CoreEtapeCreationOrModification>, titreDemarcheId: DemarcheId) {
+      getEtapeHeritagePotentiel(etape, titreDemarcheId) {
         getEtapeHeritagePotentielAction(etape, titreDemarcheId)
 
         return Promise.reject(new Error("Cet appel ne doit être fait que lors de la création de l'étape ou pour la modification de la date"))
@@ -776,54 +773,39 @@ export const AxmEnZoneDuSdom: StoryFn = () => (
     entreprises={entreprises}
     apiClient={{
       ...apiClient,
-      getEtapeHeritagePotentiel(etape: DeepReadonly<CoreEtapeCreationOrModification>, titreDemarcheId: DemarcheId) {
+      getEtapeHeritagePotentiel(etape, titreDemarcheId) {
         getEtapeHeritagePotentielAction(etape, titreDemarcheId)
 
         return Promise.resolve({
-          ...etape,
+          heritageProps: {
           dateDebut: {
-            value: null,
-            heritee: false,
-            etapeHeritee: null,
+            actif: false,
+            etape: null,
           },
           dateFin: {
-            value: null,
-            heritee: false,
-            etapeHeritee: null,
+            actif: false,
+            etape: null,
           },
           duree: {
-            value: 6,
-            heritee: false,
-            etapeHeritee: null,
+            actif: false,
+            etape: null,
           },
           substances: {
-            value: [],
-            heritee: false,
-            etapeHeritee: null,
+            actif: false,
+            etape: null,
           },
           titulaires: {
-            value: [],
-            heritee: false,
-            etapeHeritee: null,
+            actif: false,
+            etape: null,
           },
           amodiataires: {
-            value: [],
-            heritee: false,
-            etapeHeritee: null,
+            actif: false,
+            etape: null,
           },
           perimetre: {
-            value: {
-              geojson4326Forages: null,
-              geojson4326Perimetre: null,
-              geojson4326Points: null,
-              geojsonOrigineForages: null,
-              geojsonOrigineGeoSystemeId: null,
-              geojsonOriginePerimetre: null,
-              geojsonOriginePoints: null,
-              surface: null,
-            },
-            heritee: false,
-            etapeHeritee: null,
+            actif: false,
+            etape: null,
+          },
           },
           heritageContenu: {},
         })

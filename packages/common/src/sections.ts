@@ -4,6 +4,7 @@ import {
   checkboxElementValidator,
   checkboxesElementValidator,
   dateElementValidator,
+  getSections,
   numberElementValidator,
   radioElementValidator,
   selectElementWithOptionsValidator,
@@ -12,6 +13,10 @@ import {
 } from './static/titresTypes_demarchesTypes_etapesTypes/sections.js'
 import { z } from 'zod'
 import { DeepReadonly, isNotNullNorUndefined } from './typescript-tools.js'
+import { TitreTypeId } from './static/titresTypes.js'
+import { DemarcheTypeId } from './static/demarchesTypes.js'
+import { EtapeTypeId } from './static/etapesTypes.js'
+import { EtapeContenu, FlattenedContenu, HeritageContenu } from './etape-form.js'
 
 const dateElementWithValueValidator = dateElementValidator.extend({ value: caminoDateValidator.nullable() })
 
@@ -91,4 +96,31 @@ export const valeurFind = (element: ElementWithValue): string | '–' => {
   }
 
   return element.value
+}
+
+// FIXME add tests
+export const simpleContenuToFlattenedContenu = (titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId, etapeTypeId: EtapeTypeId, contenu: EtapeContenu, heritageContenu: HeritageContenu): FlattenedContenu => {
+  const sections = getSections(titreTypeId, demarcheTypeId, etapeTypeId)
+
+  return sections.reduce<FlattenedContenu>((accSection, section) => {
+    accSection[section.id] = section.elements.reduce<FlattenedContenu[string]>((accElement, element) => {
+      const elementHeritage = heritageContenu[section.id]?.[element.id] ?? { actif: false, etape: null }
+      const value = elementHeritage.actif ? elementHeritage.etape?.contenu[section.id]?.[element.id] ?? null : contenu?.[section.id]?.[element.id] ?? null
+      accElement[element.id] = {
+        value,
+        heritee: elementHeritage.actif,
+        etapeHeritee: isNotNullNorUndefined(elementHeritage.etape)
+          ? {
+              etapeTypeId: elementHeritage.etape.typeId,
+              date: elementHeritage.etape.date,
+              value: elementHeritage.etape.contenu[section.id]?.[element.id] ?? null,
+            }
+          : null,
+      }
+
+      return accElement
+    }, {})
+
+    return accSection
+  }, {})
 }
