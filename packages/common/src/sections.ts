@@ -99,7 +99,7 @@ export const valeurFind = (element: ElementWithValue): string | '–' => {
 }
 
 // FIXME add tests
-export const simpleContenuToFlattenedContenu = (titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId, etapeTypeId: EtapeTypeId, contenu: EtapeContenu, heritageContenu: HeritageContenu): FlattenedContenu => {
+export const simpleContenuToFlattenedContenu = (titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId, etapeTypeId: EtapeTypeId, contenu: EtapeContenu, heritageContenu: HeritageContenu ): FlattenedContenu => {
   const sections = getSections(titreTypeId, demarcheTypeId, etapeTypeId)
 
   return sections.reduce<FlattenedContenu>((accSection, section) => {

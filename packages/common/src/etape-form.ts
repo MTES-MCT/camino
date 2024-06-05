@@ -1,28 +1,27 @@
 import { z } from 'zod'
-import { caminoDateValidator } from './date'
-import { demarcheIdValidator, demarcheSlugValidator } from './demarche'
-import { entrepriseDocumentIdValidator, entrepriseIdValidator } from './entreprise'
+import { caminoDateValidator } from './date.js'
+import { demarcheIdValidator, demarcheSlugValidator } from './demarche.js'
+import { entrepriseDocumentIdValidator, entrepriseIdValidator } from './entreprise.js'
 import {
-  documentComplementaireAslEtapeDocumentModificationValidator,
-  documentComplementaireDaeEtapeDocumentModificationValidator,
-  etapeBrouillonValidator,
-  etapeDocumentModificationValidator,
-  etapeIdValidator,
-  etapeSlugValidator,
-} from './etape'
-import { km2Validator } from './number'
-import { featureCollectionForagesValidator, featureCollectionPointsValidator, featureMultiPolygonValidator } from './perimetre'
-import { demarcheTypeIdValidator } from './static/demarchesTypes'
-import { etapeStatutIdValidator } from './static/etapesStatuts'
-import { etapeTypeIdValidator } from './static/etapesTypes'
-import { geoSystemeIdValidator } from './static/geoSystemes'
-import { substanceLegaleIdValidator } from './static/substancesLegales'
-import { titreTypeIdValidator } from './static/titresTypes'
-import { titreIdValidator, titreSlugValidator } from './validators/titres'
-import { makeFlattenValidator, nullToDefault } from './zod-tools'
-import { simpleContenuToFlattenedContenu } from './sections'
-import { GetDemarcheByIdOrSlugValidator } from './titres'
-import { DeepReadonly, isNotNullNorUndefined } from './typescript-tools'
+    documentComplementaireAslEtapeDocumentModificationValidator,
+    documentComplementaireDaeEtapeDocumentModificationValidator,
+    etapeBrouillonValidator,
+    etapeDocumentModificationValidator,
+    etapeIdValidator,
+    etapeSlugValidator,
+} from './etape.js'
+import { km2Validator } from './number.js'
+import { featureCollectionForagesValidator, featureCollectionPointsValidator, featureMultiPolygonValidator } from './perimetre.js'
+import { demarcheTypeIdValidator } from './static/demarchesTypes.js'
+import { etapeStatutIdValidator } from './static/etapesStatuts.js'
+import { etapeTypeIdValidator } from './static/etapesTypes.js'
+import { geoSystemeIdValidator } from './static/geoSystemes.js'
+import { substanceLegaleIdValidator } from './static/substancesLegales.js'
+import { titreTypeIdValidator } from './static/titresTypes.js'
+import { titreIdValidator, titreSlugValidator } from './validators/titres.js'
+import { makeFlattenValidator, nullToDefault } from './zod-tools.js'
+import { simpleContenuToFlattenedContenu } from './sections.js'
+import { DeepReadonly, isNotNullNorUndefined } from './typescript-tools.js'
 
 const contenuValidator = z
   .record(z.string(), z.record(z.string(), z.union([caminoDateValidator, z.string(), z.number(), z.boolean(), z.array(z.string())]).nullable()))
@@ -70,7 +69,7 @@ const heritagePropsValidator = z
   .nullable()
   .transform(nullToDefault(defaultHeritageProps))
 
-const heritageContenuValidator = z
+export const heritageContenuValidator = z
   .record(
     z.string(),
     z.record(z.string(), z.object({ actif: z.boolean(), etape: z.object({ typeId: etapeTypeIdValidator, date: caminoDateValidator, contenu: contenuValidator }).nullable().optional() }))

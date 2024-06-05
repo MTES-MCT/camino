@@ -52,6 +52,7 @@ import {
 import { titreIdOrSlugValidator, titreIdValidator } from './validators/titres.js'
 import { administrationIdValidator } from './static/administrations.js'
 import { administrationActiviteTypeEmailValidator } from './administrations.js'
+import { flattenEtapeValidator } from './etape-form.js'
 
 type CaminoRoute<T extends string> = (keyof ZodParseUrlParams<T> extends never ? {} : { params: ZodParseUrlParams<T> }) & {
   get?: { output: ZodType }
@@ -96,7 +97,7 @@ const IDS = [
   '/rest/etapes/:etapeId/geojson',
   '/rest/etapes/:etapeId/etapeDocuments',
   '/rest/etapes/:etapeId/entrepriseDocuments',
-  '/rest/etapes/:etapeId',
+  '/rest/etapes/:etapeIdOrSlug',
   '/rest/etapes/:etapeId/depot',
   '/rest/activites/:activiteId',
   '/rest/geojson/import/:geoSystemeId',
@@ -178,7 +179,7 @@ export const CaminoRestRoutes = {
   '/rest/etapes/:etapeId/geojson': { params: { etapeId: etapeIdOrSlugValidator }, get: { output: perimetreInformationsValidator } },
   '/rest/etapes/:etapeId/etapeDocuments': { params: { etapeId: etapeIdValidator }, get: { output: getEtapeDocumentsByEtapeIdValidator } },
   '/rest/etapes/:etapeId/entrepriseDocuments': { params: { etapeId: etapeIdValidator }, get: { output: z.array(etapeEntrepriseDocumentValidator) } },
-  '/rest/etapes/:etapeId': { params: { etapeId: etapeIdValidator }, delete: true },
+  '/rest/etapes/:etapeIdOrSlug': { params: { etapeIdOrSlug: etapeIdOrSlugValidator }, delete: true, get: {output: flattenEtapeValidator} },
   '/rest/etapes/:etapeId/depot': { params: { etapeId: etapeIdValidator }, put: { input: z.void(), output: z.void() } },
   '/rest/activites/:activiteId': { params: { activiteId: activiteIdOrSlugValidator }, get: { output: activiteValidator }, put: { input: activiteEditionValidator, output: z.void() }, delete: true },
   '/rest/communes': { get: { output: z.array(communeValidator) } },

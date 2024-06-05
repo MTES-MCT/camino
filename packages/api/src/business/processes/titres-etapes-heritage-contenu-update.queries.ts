@@ -16,7 +16,7 @@ import { Pool } from 'pg'
 import { communeValidator } from 'camino-common/src/static/communes.js'
 import { TitreEtapeForMachine } from '../rules-demarches/machine-common.js'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
-import { km2Validator } from 'camino-common/src/number'
+import { km2Validator } from 'camino-common/src/number.js'
 
 const getEtapesByDemarcheValidator = z.object({
   contenu: z.any().nullable(),

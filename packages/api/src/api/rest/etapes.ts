@@ -1,13 +1,14 @@
 import { z } from 'zod'
 import { CaminoRequest, CustomResponse } from './express-type.js'
 import {
-    EtapeTypeEtapeStatutWithMainStep,
-    etapeIdValidator,
-    EtapeId,
-    GetEtapeDocumentsByEtapeId,
-    needAslAndDae,
-    documentTypeIdComplementaireObligatoireDAE,
-    ETAPE_IS_NOT_BROUILLON,
+  EtapeTypeEtapeStatutWithMainStep,
+  etapeIdValidator,
+  EtapeId,
+  GetEtapeDocumentsByEtapeId,
+  needAslAndDae,
+  documentTypeIdComplementaireObligatoireDAE,
+  ETAPE_IS_NOT_BROUILLON,
+  etapeIdOrSlugValidator,
 } from 'camino-common/src/etape.js'
 import { DemarcheId, demarcheIdValidator } from 'camino-common/src/demarche.js'
 import { HTTP_STATUS } from 'camino-common/src/http.js'
@@ -18,13 +19,13 @@ import { titreEtapeGet, titreEtapeUpdate } from '../../database/queries/titres-e
 import { demarcheDefinitionFind } from '../../business/rules-demarches/definitions.js'
 import { etapeTypeDateFinCheck } from '../_format/etapes-types.js'
 import { User, isBureauDEtudes, isEntreprise } from 'camino-common/src/roles.js'
-import { canCreateEtape, canDeposeEtape, canDeleteEtape } from 'camino-common/src/permissions/titres-etapes.js'
+import { canCreateEtape, canDeposeEtape, canDeleteEtape, canEditEtape } from 'camino-common/src/permissions/titres-etapes.js'
 import { TitresStatutIds } from 'camino-common/src/static/titresStatuts.js'
 import { CaminoMachines } from '../../business/rules-demarches/machines.js'
 import { titreEtapesSortAscByOrdre } from '../../business/utils/titre-etapes-sort.js'
 import { Etape, TitreEtapeForMachine, titreEtapeForMachineValidator, toMachineEtapes } from '../../business/rules-demarches/machine-common.js'
 import { canBeBrouillon, EtapesTypes, EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
-import { SimplePromiseFn, isNotNullNorUndefined, isNullOrUndefined, memoize, onlyUnique } from 'camino-common/src/typescript-tools.js'
+import { DeepReadonly, SimplePromiseFn, isNotNullNorUndefined, isNullOrUndefined, memoize, onlyUnique } from 'camino-common/src/typescript-tools.js'
 import { getEtapesTDE, isTDEExist } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/index.js'
 import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts.js'
 import { getEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStatuts.js'
@@ -43,6 +44,8 @@ import { getElementWithValue, getSections, getSectionsWithValue } from 'camino-c
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { AdministrationId } from 'camino-common/src/static/administrations.js'
 import { titreDemarcheUpdatedEtatValidate } from '../../business/validations/titre-demarche-etat-validate.js'
+import { FlattenEtape } from 'camino-common/src/etape-form.js'
+import { iTitreEtapeToFlattenEtape } from '../_format/titres-etapes.js'
 
 export const getEtapeEntrepriseDocuments =
   (pool: Pool) =>
@@ -179,7 +182,7 @@ export const getEtapeDocuments =
 export const deleteEtape = (pool: Pool) => async (req: CaminoRequest, res: CustomResponse<void>) => {
   const user = req.auth
 
-  const etapeId = etapeIdValidator.safeParse(req.params.etapeId)
+  const etapeId = etapeIdOrSlugValidator.safeParse(req.params.etapeIdOrSlug)
   if (!etapeId.success) {
     res.sendStatus(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
   } else if (isNullOrUndefined(user)) {
@@ -246,7 +249,48 @@ export const deleteEtape = (pool: Pool) => async (req: CaminoRequest, res: Custo
     }
   }
 }
+export const getEtape = (_pool: Pool) => async (req: CaminoRequest, res: CustomResponse<DeepReadonly<FlattenEtape>>) => {
+  const user = req.auth
 
+  const etapeId = etapeIdOrSlugValidator.safeParse(req.params.etapeIdOrSlug)
+  if (!etapeId.success) {
+    res.sendStatus(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
+  } else if (isNullOrUndefined(user)) {
+    res.sendStatus(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
+  } else {
+    try {
+      const titreEtape = await titreEtapeGet(etapeId.data, { fields: { demarche: { titre: { pointsEtape: { id: {} } } } }, fetchHeritage: true }, user)
+
+      if (isNullOrUndefined(titreEtape)) {
+        res.sendStatus(HTTP_STATUS.HTTP_STATUS_NOT_FOUND)
+      } else if (
+        isNullOrUndefined(titreEtape.titulaireIds) ||
+        isNullOrUndefined(titreEtape.demarche?.titre) ||
+        titreEtape.demarche.titre.administrationsLocales === undefined ||
+        isNullOrUndefined(titreEtape.demarche.titre.titreStatutId)
+      ) {
+        console.error('la démarche n’est pas chargée complètement')
+        res.sendStatus(HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR)
+        // Cette route est utilisée que par l’ancienne interface qui permet d’éditer une étape. Graphql permet de récupérer trop de champs si on ne fait pas ça
+      } else if (
+        !canEditEtape(user, titreEtape.typeId, titreEtape.isBrouillon, titreEtape.titulaireIds ?? [], titreEtape.demarche.titre.administrationsLocales ?? [], titreEtape.demarche.typeId, {
+          typeId: titreEtape.demarche.titre.typeId,
+          titreStatutId: titreEtape.demarche.titre.titreStatutId,
+        })
+      ) {
+        res.sendStatus(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
+      } else {
+      // FIXME FLATTEN ICI
+      res.json(iTitreEtapeToFlattenEtape(titreEtape))
+        // res.json(titreEtapeFormat(titreEtape))
+      }
+    } catch (e) {
+      console.error(e)
+
+      res.sendStatus(HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR)
+    }
+  }
+}
 export const deposeEtape = (pool: Pool) => async (req: CaminoRequest, res: CustomResponse<void>) => {
   const user = req.auth
 

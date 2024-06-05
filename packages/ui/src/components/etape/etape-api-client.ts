@@ -8,9 +8,7 @@ import {
     FlattenEtape,
     GraphqlEtapeCreation,
     GraphqlEtapeModification, graphqlEtapeCreationValidator,
-    graphqlEtapeModificationValidator,
-    graphqlEtapeToFlattenEtape,
-    graphqlEtapeValidator
+    graphqlEtapeModificationValidator
 } from 'camino-common/src/etape-form'
 import { km2Validator } from 'camino-common/src/number'
 import { featureCollectionForagesValidator, featureCollectionPointsValidator, featureMultiPolygonValidator } from 'camino-common/src/perimetre'
@@ -103,8 +101,8 @@ export interface EtapeApiClient {
 export const etapeApiClient: EtapeApiClient = {
   getEtapesTypesEtapesStatuts: async (demarcheId, etapeId, date) => getWithJson('/rest/etapesTypes/:demarcheId/:date', { demarcheId, date }, etapeId ? { etapeId } : {}),
 
-  deleteEtape: async etapeId => {
-    await deleteWithJson('/rest/etapes/:etapeId', { etapeId })
+  deleteEtape: async etapeIdOrSlug => {
+    await deleteWithJson('/rest/etapes/:etapeIdOrSlug', { etapeIdOrSlug })
   },
   deposeEtape: async etapeId => {
     await putWithJson('/rest/etapes/:etapeId/depot', { etapeId }, undefined)
@@ -117,136 +115,139 @@ export const etapeApiClient: EtapeApiClient = {
   },
 
   getEtape: async etapeIdOrSlug => {
-    const data = await apiGraphQLFetch(gql`
-      query Etape($id: ID!) {
-        etape(id: $id) {
-          id
-          slug
-          titreDemarcheId
-          demarche {
-            description
-            slug
-            typeId
-            titre {
-              id
-              slug
-              nom
-              typeId
-            }
-          }
-          date
-          dateDebut
-          dateFin
-          duree
-          surface
-          typeId
-          statutId
-          isBrouillon
-          titulaireIds
-          amodiataireIds
-          geojson4326Perimetre
-          geojson4326Points
-          geojsonOriginePoints
-          geojsonOriginePerimetre
-          geojsonOrigineGeoSystemeId
-          geojson4326Forages
-          geojsonOrigineForages
-          substances
-          contenu
-          notes
+    // const data = await apiGraphQLFetch(gql`
+    //   query Etape($id: ID!) {
+    //     etape(id: $id) {
+    //       id
+    //       slug
+    //       titreDemarcheId
+    //       demarche {
+    //         description
+    //         slug
+    //         typeId
+    //         titre {
+    //           id
+    //           slug
+    //           nom
+    //           typeId
+    //         }
+    //       }
+    //       date
+    //       dateDebut
+    //       dateFin
+    //       duree
+    //       surface
+    //       typeId
+    //       statutId
+    //       isBrouillon
+    //       titulaireIds
+    //       amodiataireIds
+    //       geojson4326Perimetre
+    //       geojson4326Points
+    //       geojsonOriginePoints
+    //       geojsonOriginePerimetre
+    //       geojsonOrigineGeoSystemeId
+    //       geojson4326Forages
+    //       geojsonOrigineForages
+    //       substances
+    //       contenu
+    //       notes
 
-          heritageProps {
-            dateDebut {
-              etape {
-                date
-                typeId
-                dateDebut
-              }
-              actif
-            }
-            dateFin {
-              etape {
-                date
-                typeId
-                dateFin
-              }
-              actif
-            }
-            duree {
-              etape {
-                date
-                typeId
-                duree
-              }
-              actif
-            }
-            perimetre {
-              etape {
-                date
-                typeId
-                geojson4326Perimetre
-                geojson4326Points
-                geojsonOriginePoints
-                geojsonOriginePerimetre
-                geojsonOrigineGeoSystemeId
-                geojson4326Forages
-                geojsonOrigineForages
-                surface
-              }
-              actif
-            }
-            substances {
-              etape {
-                date
-                typeId
-                substances
-              }
-              actif
-            }
-            titulaires {
-              etape {
-                date
-                typeId
-                titulaireIds
-              }
-              actif
-            }
-            amodiataires {
-              etape {
-                date
-                typeId
-                amodiataireIds
-              }
-              actif
-            }
-          }
+    //       heritageProps {
+    //         dateDebut {
+    //           etape {
+    //             date
+    //             typeId
+    //             dateDebut
+    //           }
+    //           actif
+    //         }
+    //         dateFin {
+    //           etape {
+    //             date
+    //             typeId
+    //             dateFin
+    //           }
+    //           actif
+    //         }
+    //         duree {
+    //           etape {
+    //             date
+    //             typeId
+    //             duree
+    //           }
+    //           actif
+    //         }
+    //         perimetre {
+    //           etape {
+    //             date
+    //             typeId
+    //             geojson4326Perimetre
+    //             geojson4326Points
+    //             geojsonOriginePoints
+    //             geojsonOriginePerimetre
+    //             geojsonOrigineGeoSystemeId
+    //             geojson4326Forages
+    //             geojsonOrigineForages
+    //             surface
+    //           }
+    //           actif
+    //         }
+    //         substances {
+    //           etape {
+    //             date
+    //             typeId
+    //             substances
+    //           }
+    //           actif
+    //         }
+    //         titulaires {
+    //           etape {
+    //             date
+    //             typeId
+    //             titulaireIds
+    //           }
+    //           actif
+    //         }
+    //         amodiataires {
+    //           etape {
+    //             date
+    //             typeId
+    //             amodiataireIds
+    //           }
+    //           actif
+    //         }
+    //       }
 
-          heritageContenu
-        }
-      }
-    `)({ id: etapeIdOrSlug })
+    //       heritageContenu
+    //     }
+    //   }
+    // `)({ id: etapeIdOrSlug })
+    const etape = await getWithJson('/rest/etapes/:etapeIdOrSlug', {etapeIdOrSlug})
+    const demarche = await getWithJson('/rest/demarches/:demarcheIdOrSlug', {demarcheIdOrSlug: etape.titreDemarcheId})
+    return {etape, demarche}
     // TODO 2024-06-02 ce code est à remonter dans l'api
-    const result = graphqlEtapeValidator.safeParse(data)
-    if (result.success) {
+    // const result = graphqlEtapeValidator.safeParse(data)
+    // if (result.success) {
 
-      const graphqlEtape = result.data
-      const etape = graphqlEtapeToFlattenEtape(graphqlEtape)
+    //   const graphqlEtape = result.data
+    //   const etape = graphqlEtapeToFlattenEtape(graphqlEtape)
 
-      const demarche: GetDemarcheByIdOrSlugValidator = {
-        demarche_description: graphqlEtape.demarche.description,
-        demarche_id: graphqlEtape.titreDemarcheId,
-        demarche_slug: graphqlEtape.demarche.slug,
-        demarche_type_id: graphqlEtape.demarche.typeId,
-        titre_id: graphqlEtape.demarche.titre.id,
-        titre_nom: graphqlEtape.demarche.titre.nom,
-        titre_slug: graphqlEtape.demarche.titre.slug,
-        titre_type_id: graphqlEtape.demarche.titre.typeId,
-      }
+    //   const demarche: GetDemarcheByIdOrSlugValidator = {
+    //     demarche_description: graphqlEtape.demarche.description,
+    //     demarche_id: graphqlEtape.titreDemarcheId,
+    //     demarche_slug: graphqlEtape.demarche.slug,
+    //     demarche_type_id: graphqlEtape.demarche.typeId,
+    //     titre_id: graphqlEtape.demarche.titre.id,
+    //     titre_nom: graphqlEtape.demarche.titre.nom,
+    //     titre_slug: graphqlEtape.demarche.titre.slug,
+    //     titre_type_id: graphqlEtape.demarche.titre.typeId,
+    //   }
 
-      return { etape , demarche }
-    }
-    console.warn(result.error.message)
-    throw result.error
+    //   return { etape , demarche }
+    // }
+    // console.warn(result.error.message)
+    // throw result.error
   },
   getEtapeHeritagePotentiel: async (etape, titreDemarcheId) => {
     const data = await apiGraphQLFetch(gql`

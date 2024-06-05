@@ -49,6 +49,7 @@ import { CommuneId } from 'camino-common/src/static/communes.js'
 import { GraphqlEtape, graphqlEtapeCreationValidator } from 'camino-common/src/etape-form.js'
 import { KM2 } from 'camino-common/src/number.js'
 
+// FIXME à supprimer, n'est plus utilisé ?
 export const etape = async ({ id }: { id: EtapeId }, { user }: Context, info: GraphQLResolveInfo) => {
   try {
     const fields: FieldsEtape = fieldsBuild(info)
