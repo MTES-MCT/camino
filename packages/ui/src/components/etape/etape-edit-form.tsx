@@ -108,7 +108,9 @@ export const EtapeEditForm = defineComponent<Props>(props => {
           statutId,
           isBrouillon: isNotNullNorUndefined(currentEtape.id) ? currentEtape.isBrouillon : canBeBrouillon(typeId),
         },
-        props.demarcheId
+        props.demarcheId,
+        props.titreTypeId,
+        props.demarcheTypeId
       )
       setEtape({ status: 'LOADED', value })
     } catch (e: any) {

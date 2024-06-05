@@ -1,6 +1,7 @@
 /* eslint-disable no-irregular-whitespace */
 import { test, expect } from 'vitest'
 import { getDemarcheContenu } from './demarche.js'
+import { proprietesGeothermieForagesElementIds } from './static/titresTypes_demarchesTypes_etapesTypes/sections.js'
 
 test('getDemarcheContenu arm', () => {
   expect(
@@ -279,6 +280,14 @@ test('getDemarcheContenu pxg', () => {
                   value: 300,
                   uniteId: 'm3h',
                 },
+                {
+                  id: proprietesGeothermieForagesElementIds['Profondeur du toit de la nappe'],
+                  nom: 'Profondeur du toit de la nappe',
+                  optionnel: true,
+                  type: 'number',
+                  value: 20000,
+                  description: 'm NGP',
+                },
               ],
             },
           ],
@@ -288,9 +297,10 @@ test('getDemarcheContenu pxg', () => {
       'pxg'
     )
   ).toMatchInlineSnapshot(`
-      {
-        "Débit volumique maximal de pompage": "300 m³/h",
-        "Volume maximum de pompage": "3000000 m³",
-      }
-    `)
+    {
+      "Débit volumique maximal de pompage": "300 m³/h",
+      "Profondeur du toit de la nappe": "20000 m NGP",
+      "Volume maximum de pompage": "3000000 m³",
+    }
+  `)
 })

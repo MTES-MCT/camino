@@ -239,7 +239,15 @@ const proprietesDuPermisDExploitation: Section[] = [
   },
 ]
 
-const proprietesGeothermieForages: Section[] = [
+export const proprietesGeothermieForagesElementIds = {
+  Debit: 'debit',
+  Volume: 'volume',
+  'Puissance primaire': 'puissancePrimaire',
+  'Profondeur du toit de la nappe': 'profondeurToitNappe',
+  'Profondeur de la base de la nappe': 'profondeurBaseNappe',
+} as const
+
+const proprietesGeothermieForages: (Section & { elements: { id: (typeof proprietesGeothermieForagesElementIds)[keyof typeof proprietesGeothermieForagesElementIds] }[] })[] = [
   {
     id: 'pxg',
     nom: "Propriétés du permis d'exploitation",
@@ -247,6 +255,8 @@ const proprietesGeothermieForages: Section[] = [
       { id: 'debit', nom: 'Débit volumique maximal de pompage', type: 'number', optionnel: true, uniteId: 'm3h', description: `(${Unites.m3h.symbole})` },
       { id: 'volume', nom: 'Volume annuel maximum de pompage', type: 'number', optionnel: true, uniteId: 'm3a', description: `(${Unites.m3a.symbole})` },
       { id: 'puissancePrimaire', nom: 'Puissance primaire', type: 'number', optionnel: true, uniteId: 'kwa', description: `${Unites.kwa.symbole}` },
+      { id: 'profondeurToitNappe', nom: 'Profondeur du toit de la nappe exploitée', type: 'number', optionnel: true, uniteId: 'met', description: `${Unites.met.symbole} NGF` },
+      { id: 'profondeurBaseNappe', nom: 'Profondeur de la base de la nappe exploitée', type: 'number', optionnel: true, uniteId: 'met', description: `${Unites.met.symbole} NGF` },
     ],
   },
 ]
