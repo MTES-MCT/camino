@@ -15,9 +15,12 @@ import {
 } from 'camino-common/src/etape-form'
 import { km2Validator } from 'camino-common/src/number'
 import { featureCollectionForagesValidator, featureCollectionPointsValidator, featureMultiPolygonValidator } from 'camino-common/src/perimetre'
+import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
 import { etapeTypeIdValidator } from 'camino-common/src/static/etapesTypes'
 import { geoSystemeIdValidator } from 'camino-common/src/static/geoSystemes'
 import { substanceLegaleIdValidator } from 'camino-common/src/static/substancesLegales'
+import { TitreTypeId } from 'camino-common/src/static/titresTypes'
+import { getSections } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections'
 import { GetDemarcheByIdOrSlugValidator } from 'camino-common/src/titres'
 import { DeepReadonly, Nullable, isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { nullToDefault } from 'camino-common/src/zod-tools'
@@ -90,7 +93,12 @@ export interface EtapeApiClient {
   deleteEtape: (titreEtapeId: EtapeId) => Promise<void>
   deposeEtape: (titreEtapeId: EtapeId) => Promise<void>
   getEtapeDocumentsByEtapeId: (etapeId: EtapeId) => Promise<GetEtapeDocumentsByEtapeId>
-  getEtapeHeritagePotentiel: (etape: DeepReadonly<CoreEtapeCreationOrModification>, titreDemarcheId: DemarcheId) => Promise<DeepReadonly<CoreEtapeCreationOrModification>>
+  getEtapeHeritagePotentiel: (
+    etape: DeepReadonly<CoreEtapeCreationOrModification>,
+    titreDemarcheId: DemarcheId,
+    titreTypeId: TitreTypeId,
+    demarcheTypeId: DemarcheTypeId
+  ) => Promise<DeepReadonly<CoreEtapeCreationOrModification>>
   getEtape: (etapeIdOrSlug: EtapeIdOrSlug) => Promise<DeepReadonly<{ etape: FlattenEtape; demarche: GetDemarcheByIdOrSlugValidator }>>
   etapeCreer: (etape: DeepReadonly<GraphqlEtapeCreation>) => Promise<EtapeId>
   etapeModifier: (etape: DeepReadonly<GraphqlEtapeModification>) => Promise<EtapeId>
@@ -222,6 +230,8 @@ export const etapeApiClient: EtapeApiClient = {
     if (result.success) {
       const graphqlEtape = result.data
 
+      const sections = getSections(graphqlEtape.demarche.titre.typeId, graphqlEtape.demarche.typeId, graphqlEtape.typeId)
+
       const flattenEtape: FlattenEtape = {
         ...graphqlEtape,
         duree: {
@@ -322,17 +332,17 @@ export const etapeApiClient: EtapeApiClient = {
             : null,
         },
 
-        contenu: Object.keys(graphqlEtape.heritageContenu).reduce<FlattenEtape['contenu']>((accSection, section) => {
-          accSection[section] = Object.keys(graphqlEtape.heritageContenu[section]).reduce<FlattenEtape['contenu'][string]>((accElement, element) => {
-            const elementHeritage = graphqlEtape.heritageContenu[section][element] ?? { actif: false, etape: null }
-            accElement[element] = {
-              value: elementHeritage.actif ? elementHeritage.etape?.contenu[section]?.[element] ?? null : graphqlEtape.contenu[section]?.[element] ?? null,
+        contenu: sections.reduce<FlattenEtape['contenu']>((accSection, section) => {
+          accSection[section.id] = section.elements.reduce<FlattenEtape['contenu'][string]>((accElement, element) => {
+            const elementHeritage = graphqlEtape.heritageContenu[section.id]?.[element.id] ?? { actif: false, etape: null }
+            accElement[element.id] = {
+              value: elementHeritage.actif ? elementHeritage.etape?.contenu[section.id]?.[element.id] ?? null : graphqlEtape.contenu[section.id]?.[element.id] ?? null,
               heritee: elementHeritage.actif,
               etapeHeritee: isNotNullNorUndefined(elementHeritage.etape)
                 ? {
                     etapeTypeId: elementHeritage.etape.typeId,
                     date: elementHeritage.etape.date,
-                    value: elementHeritage.etape.contenu[section]?.[element] ?? null,
+                    value: elementHeritage.etape.contenu[section.id]?.[element.id] ?? null,
                   }
                 : null,
             }
@@ -361,7 +371,7 @@ export const etapeApiClient: EtapeApiClient = {
     console.warn(result.error.message)
     throw result.error
   },
-  getEtapeHeritagePotentiel: async (etape, titreDemarcheId) => {
+  getEtapeHeritagePotentiel: async (etape, titreDemarcheId, titreTypeId, demarcheTypeId) => {
     const data = await apiGraphQLFetch(gql`
       query EtapeHeritage($titreDemarcheId: ID!, $date: String!, $typeId: ID!, $etapeId: ID) {
         etapeHeritage(titreDemarcheId: $titreDemarcheId, date: $date, typeId: $typeId, etapeId: $etapeId) {
@@ -443,22 +453,23 @@ export const etapeApiClient: EtapeApiClient = {
 
     // TODO 2024-06-02 on a du code métier dans notre api, on fusionne étape avec l'héritage
     const heritageData: DeepReadonly<z.infer<typeof heritageValidator>> = heritageValidator.parse(data)
+    const sections = getSections(titreTypeId, demarcheTypeId, etape.typeId)
     const flattenEtape: DeepReadonly<CoreEtapeCreationOrModification> = {
       ...etape,
-      contenu: Object.keys(heritageData.heritageContenu).reduce<DeepReadonly<FlattenEtape['contenu']>>((accSection, section) => {
-        const newSection = Object.keys(heritageData.heritageContenu[section]).reduce<DeepReadonly<FlattenEtape['contenu'][string]>>((accElement, element) => {
-          const elementHeritage = heritageData.heritageContenu[section]?.[element] ?? { actif: false, etape: null }
-          const currentHeritage: DeepReadonly<FlattenEtape['contenu'][string][string]> = etape.contenu[section]?.[element] ?? { value: null, heritee: true, etapeHeritee: null }
+      contenu: sections.reduce<DeepReadonly<FlattenEtape['contenu']>>((accSection, section) => {
+        const newSection = section.elements.reduce<DeepReadonly<FlattenEtape['contenu'][string]>>((accElement, element) => {
+          const elementHeritage = heritageData.heritageContenu[section.id]?.[element.id] ?? { actif: false, etape: null }
+          const currentHeritage: DeepReadonly<FlattenEtape['contenu'][string][string]> = etape.contenu[section.id]?.[element.id] ?? { value: null, heritee: true, etapeHeritee: null }
           return {
             ...accElement,
-            [element]: {
-              value: currentHeritage.heritee ? elementHeritage.etape?.contenu?.[section]?.[element] ?? null : currentHeritage.value,
+            [element.id]: {
+              value: currentHeritage.heritee ? elementHeritage.etape?.contenu?.[section.id]?.[element.id] ?? null : currentHeritage.value,
               heritee: currentHeritage.heritee && isNotNullNorUndefined(elementHeritage.etape),
               etapeHeritee: isNotNullNorUndefined(elementHeritage.etape)
                 ? {
                     etapeTypeId: elementHeritage.etape.typeId,
                     date: elementHeritage.etape.date,
-                    value: elementHeritage.etape.contenu[section]?.[element] ?? null,
+                    value: elementHeritage.etape.contenu[section.id]?.[element.id] ?? null,
                   }
                 : null,
             },
@@ -467,7 +478,7 @@ export const etapeApiClient: EtapeApiClient = {
 
         return {
           ...accSection,
-          [section]: newSection,
+          [section.id]: newSection,
         }
       }, {}),
       duree: {

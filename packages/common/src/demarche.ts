@@ -19,6 +19,7 @@ import { foretIdValidator } from './static/forets.js'
 import { featureCollectionForagesValidator, featureCollectionPointsValidator, featureMultiPolygonValidator } from './perimetre.js'
 import { geoSystemeIdValidator } from './static/geoSystemes.js'
 import { isNotNullNorUndefined } from './typescript-tools.js'
+import { proprietesGeothermieForagesElementIds } from './static/titresTypes_demarchesTypes_etapesTypes/sections.js'
 
 export const demarcheIdValidator = z.string().brand<'DemarcheId'>()
 export type DemarcheId = z.infer<typeof demarcheIdValidator>
@@ -187,13 +188,15 @@ export const getDemarcheContenu = (etapes: (Pick<DemarcheEtapeCommon, 'sections_
   } else if (titreTypeId === TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_GEOTHERMIE) {
     let volume: unknown | null = null
     let debit: unknown | null = null
+    const profondeurNappeToit: unknown | null = null
+    const profondeurNappeBase: unknown | null = null
     const contenu: Record<string, string> = {}
 
     for (const etape of etapes) {
       const pxgSectionWithValue = etape.sections_with_values.find(({ id }) => id === 'pxg')
       if (pxgSectionWithValue !== undefined) {
         if (volume === null) {
-          const volumeElementWithValue = pxgSectionWithValue.elements.find(({ id }) => id === 'volume')
+          const volumeElementWithValue = pxgSectionWithValue.elements.find(({ id }) => id === proprietesGeothermieForagesElementIds.Volume)
           if (
             isNotNullNorUndefined(volumeElementWithValue) &&
             isNotNullNorUndefined(volumeElementWithValue.value) &&
@@ -205,7 +208,7 @@ export const getDemarcheContenu = (etapes: (Pick<DemarcheEtapeCommon, 'sections_
           }
         }
         if (debit === null) {
-          const debitElementWithValue = pxgSectionWithValue.elements.find(({ id }) => id === 'debit')
+          const debitElementWithValue = pxgSectionWithValue.elements.find(({ id }) => id === proprietesGeothermieForagesElementIds.Debit)
           if (
             isNotNullNorUndefined(debitElementWithValue) &&
             isNotNullNorUndefined(debitElementWithValue.value) &&
@@ -214,6 +217,20 @@ export const getDemarcheContenu = (etapes: (Pick<DemarcheEtapeCommon, 'sections_
           ) {
             debit = debitElementWithValue.value
             contenu[debitElementWithValue.nom ?? ''] = `${debit} ${Unites[debitElementWithValue.uniteId].symbole}`
+          }
+        }
+        if (profondeurNappeToit === null) {
+          const elementWithValue = pxgSectionWithValue.elements.find(({ id }) => id === proprietesGeothermieForagesElementIds['Profondeur du toit de la nappe'])
+          if (isNotNullNorUndefined(elementWithValue) && isNotNullNorUndefined(elementWithValue.value) && elementWithValue.type === 'number') {
+            debit = elementWithValue.value
+            contenu[elementWithValue.nom ?? ''] = `${debit} ${elementWithValue.description}`
+          }
+        }
+        if (profondeurNappeBase === null) {
+          const elementWithValue = pxgSectionWithValue.elements.find(({ id }) => id === proprietesGeothermieForagesElementIds['Profondeur de la base de la nappe'])
+          if (isNotNullNorUndefined(elementWithValue) && isNotNullNorUndefined(elementWithValue.value) && elementWithValue.type === 'number') {
+            debit = elementWithValue.value
+            contenu[elementWithValue.nom ?? ''] = `${debit} ${elementWithValue.description}`
           }
         }
       }
