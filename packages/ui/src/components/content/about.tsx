@@ -31,8 +31,7 @@ export const About: FunctionalComponent = () => {
         </p>
         <p>
           Déposer une demande, actualiser les milliers de pages de dossiers papiers, tracer sa demande dans les multiples services de l’État impliqués, faire ses déclarations au bon moment et au bon
-          format, sont
-          <b>autant de démarches complexes et consommatrices de temps.</b>
+          format, sont <b>autant de démarches complexes et consommatrices de temps.</b>
         </p>
         <p>
           De son côté,
@@ -40,7 +39,7 @@ export const About: FunctionalComponent = () => {
           avec des systèmes d’information fermés, des tableaux de suivi pléthoriques, des archives papier et des gigaoctets de dossiers dispersés dans ses services nationaux et locaux.
         </p>
         <p>
-          <b> L’enregistrement, la consultation et la valorisation des données de l’administration des mines est impossible ou trop peu efficace </b>.
+          <b> L’enregistrement, la consultation et la valorisation des données de l’administration des mines est impossible ou trop peu efficace</b>.
         </p>
       </div>
       <p>
@@ -68,7 +67,7 @@ export const About: FunctionalComponent = () => {
 
         <AboutCard
           isSvg={true}
-          title="Les ong, les citoyens et leurs élus"
+          title="Les ONG, les citoyens et leurs élus"
           description="Ils pourront consulter à tout moment les dossiers et les données publiques, à l’échelle de leur territoire pour mieux contribuer, sans précipitation, aux procédures de participation
                           du public et suivre de manière transparente l’actualité des projets."
           imgSrc={earth}
@@ -153,7 +152,7 @@ export const About: FunctionalComponent = () => {
           isSvg={false}
           title="Après mines"
           description="L’arrêt de l’activité minière n’induit pas pour autant la disparition des phénomènes susceptibles d’affecter les terrains de surface situés dans l’emprise de l’ancienne exploitation.
-                                       Ainsi, durant la période qui suit l’exploitation, traditionnellement appelée «après-mine», des désordres peuvent se développer, parfois dès l’arrêt des travaux mais également beaucoup
+                                       Ainsi, durant la période qui suit l’exploitation, traditionnellement appelée «&nbsp;après-mine&nbsp;», des désordres peuvent se développer, parfois dès l’arrêt des travaux mais également beaucoup
                                        plus tardivement."
           imgSrc={apresmine}
         />
