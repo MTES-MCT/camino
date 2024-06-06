@@ -132,7 +132,12 @@ describe('etapeSupprimer', () => {
       userSuper,
       titre.id
     )
-    const tested = await restDeleteCall(dbPool, '/rest/etapes/:etapeId', { etapeId: titreEtape.id }, role && isAdministrationRole(role) ? { role, administrationId: 'dea-guyane-01' } : undefined)
+    const tested = await restDeleteCall(
+      dbPool,
+      '/rest/etapes/:etapeIdOrSlug',
+      { etapeIdOrSlug: titreEtape.id },
+      role && isAdministrationRole(role) ? { role, administrationId: 'dea-guyane-01' } : undefined
+    )
 
     expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
   })
@@ -164,7 +169,7 @@ describe('etapeSupprimer', () => {
       userSuper,
       titre.id
     )
-    const tested = await restDeleteCall(dbPool, '/rest/etapes/:etapeId', { etapeId: titreEtape.id }, userSuper)
+    const tested = await restDeleteCall(dbPool, '/rest/etapes/:etapeIdOrSlug', { etapeIdOrSlug: titreEtape.id }, userSuper)
 
     expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_NO_CONTENT)
   })
@@ -216,7 +221,7 @@ describe('etapeSupprimer', () => {
     const getEtape = await restCall(dbPool, '/rest/titres/:titreId', { titreId: titre.id }, user)
     expect(getEtape.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
 
-    const tested = await restDeleteCall(dbPool, '/rest/etapes/:etapeId', { etapeId: titreEtape.id }, user)
+    const tested = await restDeleteCall(dbPool, '/rest/etapes/:etapeIdOrSlug', { etapeIdOrSlug: titreEtape.id }, user)
 
     expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
   })

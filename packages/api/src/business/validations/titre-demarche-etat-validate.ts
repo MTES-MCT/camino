@@ -40,8 +40,8 @@ const titreDemarcheEtapesBuild = <T extends Pick<Partial<ITitreEtape>, 'id'>>(ti
 // est valide par rapport aux définitions des types d'étape
 export const titreDemarcheUpdatedEtatValidate = (
   demarcheTypeId: DemarcheTypeId,
-  titre: ITitre,
-  titreEtape: Pick<Partial<ITitreEtape>, 'id'> & Pick<ITitreEtape, 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'communes' | 'surface' | 'isBrouillon'>,
+  titre: Pick<ITitre, 'typeId' | 'demarches'>,
+  titreEtape: Pick<Partial<ITitreEtape>, 'id'> & Pick<ITitreEtape, 'statutId' | 'typeId' | 'date' | 'contenu' | 'surface' | 'communes' | 'isBrouillon'>,
   demarcheId: DemarcheId,
   titreDemarcheEtapes?: Pick<ITitreEtape, 'id' | 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'communes' | 'surface' | 'isBrouillon'>[] | null,
   suppression = false
@@ -68,6 +68,7 @@ export const titreDemarcheUpdatedEtatValidate = (
   }
 
   // si on essaye d’ajouter ou de modifier une demande non déposée
+  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   if (titreEtape.typeId === 'mfr' && titreEtape.isBrouillon && !suppression) {
     const etapesDemande = titreDemarcheEtapes?.filter(te => te.typeId === 'mfr')
 
@@ -86,7 +87,7 @@ export const titreDemarcheUpdatedEtatValidate = (
 
   // vérifie que toutes les étapes existent dans l’arbre
   try {
-    const etapes = titreDemarcheEtapesNew.map(etape => titreEtapeForMachineValidator.omit({ id: true }).partial({ ordre: true }).parse(etape))
+    const etapes = titreDemarcheEtapesNew.map(etape => titreEtapeForMachineValidator.omit({ id: true, ordre: true }).parse(etape))
     const ok = demarcheDefinition.machine.isEtapesOk(demarcheDefinition.machine.orderMachine(toMachineEtapes(etapes)))
     if (!ok) {
       titreDemarchesErrors.push('la démarche n’est pas valide')

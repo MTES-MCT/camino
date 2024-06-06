@@ -33,7 +33,7 @@ export const toDegresMinutes = (value: number): { degres: number; minutes: numbe
   }
 }
 
-export const km2Validator = z.number().brand('CAMINO_KM2')
+export const km2Validator = z.number().nonnegative().brand('CAMINO_KM2')
 export const m2Validator = z
   .number()
   .transform(value => parseInt(`${value}`))

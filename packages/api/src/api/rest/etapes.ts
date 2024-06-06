@@ -236,7 +236,7 @@ export const deleteEtape = (pool: Pool) => async (req: CaminoRequest, res: Custo
           if (rulesErrors.length) {
             throw new Error(rulesErrors.join(', '))
           }
-          await titreEtapeUpdate(etapeId.data, { archive: true }, user, titreDemarche.titreId)
+          await titreEtapeUpdate(titreEtape.id, { archive: true }, user, titreDemarche.titreId)
 
           await titreEtapeUpdateTask(pool, null, titreEtape.titreDemarcheId, user)
 
@@ -263,12 +263,7 @@ export const getEtape = (_pool: Pool) => async (req: CaminoRequest, res: CustomR
 
       if (isNullOrUndefined(titreEtape)) {
         res.sendStatus(HTTP_STATUS.HTTP_STATUS_NOT_FOUND)
-      } else if (
-        isNullOrUndefined(titreEtape.titulaireIds) ||
-        isNullOrUndefined(titreEtape.demarche?.titre) ||
-        titreEtape.demarche.titre.administrationsLocales === undefined ||
-        isNullOrUndefined(titreEtape.demarche.titre.titreStatutId)
-      ) {
+      } else if (isNullOrUndefined(titreEtape.titulaireIds) || isNullOrUndefined(titreEtape.demarche?.titre) || titreEtape.demarche.titre.administrationsLocales === undefined) {
         console.error('la démarche n’est pas chargée complètement')
         res.sendStatus(HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR)
         // Cette route est utilisée que par l’ancienne interface qui permet d’éditer une étape. Graphql permet de récupérer trop de champs si on ne fait pas ça
@@ -280,8 +275,8 @@ export const getEtape = (_pool: Pool) => async (req: CaminoRequest, res: CustomR
       ) {
         res.sendStatus(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
       } else {
-      // FIXME FLATTEN ICI
-      res.json(iTitreEtapeToFlattenEtape(titreEtape))
+        // FIXME FLATTEN ICI
+        res.json(iTitreEtapeToFlattenEtape(titreEtape))
         // res.json(titreEtapeFormat(titreEtape))
       }
     } catch (e) {
@@ -394,6 +389,7 @@ export const deposeEtape = (pool: Pool) => async (req: CaminoRequest, res: Custo
       )
       if (!deposable) throw new Error('droits insuffisants')
 
+      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       if (!canBeBrouillon(titreEtape.typeId)) {
         throw new Error('cette étape ne peut-être déposée')
       }

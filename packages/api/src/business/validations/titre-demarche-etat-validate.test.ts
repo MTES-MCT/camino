@@ -35,7 +35,7 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
         typeId: 'arm',
         demarches: [{ typeId: 'pro' }, { typeId: 'oct' }],
       } as ITitre,
-      { id: newEtapeId(), typeId: 'mdp', statutId: 'fai', isBrouillon: ETAPE_IS_NOT_BROUILLON, date: toCaminoDate('2022-05-04'), communes: null, contenu: null, ordre: 1, surface: null },
+      { id: newEtapeId(), typeId: 'mdp', statutId: 'fai', isBrouillon: ETAPE_IS_NOT_BROUILLON, date: toCaminoDate('2022-05-04'), communes: null, contenu: null, surface: null },
       newDemarcheId(),
 
       [{ id: newEtapeId('1'), typeId: 'mfr', statutId: 'fai', isBrouillon: ETAPE_IS_NOT_BROUILLON, date: toCaminoDate('2022-05-03'), communes: null, contenu: null, ordre: 1, surface: null }]
@@ -59,7 +59,6 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
         date: toCaminoDate('2022-05-04'),
         communes: null,
         contenu: null,
-        ordre: 1,
         surface: null,
       },
       newDemarcheId(),
@@ -295,7 +294,6 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
           isBrouillon: ETAPE_IS_NOT_BROUILLON,
           communes: null,
           contenu: null,
-          ordre: 1,
           surface: null,
         },
         newDemarcheId(),

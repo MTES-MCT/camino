@@ -23,7 +23,7 @@ import {
   sectionsStepIsComplete,
 } from './etape-form.js'
 import { CommuneId } from '../static/communes.js'
-import { FlattenEtape, GraphqlEtape, GraphqlEtapeCreation } from '../etape-form.js'
+import { FlattenEtape } from '../etape-form.js'
 
 export const isDureeOptional = (etapeTypeId: EtapeTypeId, demarcheTypeId: DemarcheTypeId, titreTypeId: TitreTypeId): boolean => {
   if (titreTypeId !== 'axm' && titreTypeId !== 'arm') {
@@ -156,7 +156,6 @@ const canCreateOrEditEtape = (
   return false
 }
 
-export type EtapeComplete = Omit<GraphqlEtape, 'id' | 'slug' | 'demarche' | 'heritageProps'> & Pick<GraphqlEtapeCreation, 'heritageProps'>
 export type IsEtapeCompleteEtape = DeepReadonly<Pick<FlattenEtape, 'typeId' | 'date' | 'statutId' | 'duree' | 'contenu' | 'substances' | 'perimetre' | 'isBrouillon' | 'titulaires' | 'amodiataires'>>
 export type IsEtapeCompleteDocuments = DeepReadonly<Pick<EtapeDocument | TempEtapeDocument, 'etape_document_type_id'>[]>
 export type IsEtapeCompleteEntrepriseDocuments = DeepReadonly<Pick<EntrepriseDocument, 'entreprise_document_type_id' | 'entreprise_id'>[]>
@@ -298,6 +297,7 @@ export const isEtapeDeposable = (
   aslDocument: IsEtapeCompleteAslDocument,
   avisDocuments: IsEtapeDeposableAvisDocuments
 ): boolean => {
+  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   if (titreEtape.typeId === ETAPES_TYPES.demande && titreEtape.isBrouillon) {
     // FIXME On ne peut pas se baser sur le defaultHeritageProps car on ne sait pas quelles étapes seront déposable à l’avenir, il faut doncl’ajouter en param.
     const complete = isEtapeComplete(titreEtape, titreTypeId, demarcheTypeId, etapeDocuments, entrepriseDocuments, sdomZones, communes, daeDocument, aslDocument, avisDocuments, user)

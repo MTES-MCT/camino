@@ -3,12 +3,12 @@ import { caminoDateValidator } from './date.js'
 import { demarcheIdValidator, demarcheSlugValidator } from './demarche.js'
 import { entrepriseDocumentIdValidator, entrepriseIdValidator } from './entreprise.js'
 import {
-    documentComplementaireAslEtapeDocumentModificationValidator,
-    documentComplementaireDaeEtapeDocumentModificationValidator,
-    etapeBrouillonValidator,
-    etapeDocumentModificationValidator,
-    etapeIdValidator,
-    etapeSlugValidator,
+  documentComplementaireAslEtapeDocumentModificationValidator,
+  documentComplementaireDaeEtapeDocumentModificationValidator,
+  etapeBrouillonValidator,
+  etapeDocumentModificationValidator,
+  etapeIdValidator,
+  etapeSlugValidator,
 } from './etape.js'
 import { km2Validator } from './number.js'
 import { featureCollectionForagesValidator, featureCollectionPointsValidator, featureMultiPolygonValidator } from './perimetre.js'
@@ -20,7 +20,7 @@ import { substanceLegaleIdValidator } from './static/substancesLegales.js'
 import { titreTypeIdValidator } from './static/titresTypes.js'
 import { titreIdValidator, titreSlugValidator } from './validators/titres.js'
 import { makeFlattenValidator, nullToDefault } from './zod-tools.js'
-import { simpleContenuToFlattenedContenu } from './sections.js'
+import { numberElementValueValidator, simpleContenuToFlattenedContenu } from './sections.js'
 import { DeepReadonly, isNotNullNorUndefined } from './typescript-tools.js'
 
 const contenuValidator = z
@@ -28,7 +28,7 @@ const contenuValidator = z
   .nullable()
   .transform(nullToDefault({}))
 export type EtapeContenu = z.infer<typeof contenuValidator>
-const dureeValidator = z.number().nullable()
+const dureeValidator = z.number().nonnegative().nullable()
 
 const defaultHeritageProps = {
   dateDebut: { actif: false, etape: null },
@@ -134,10 +134,9 @@ const perimetreObjectValidator = z.object({
   surface: km2Validator.nullable(),
 })
 
-export const flattenedContenuValidator = z.record(
-  z.string(),
-  z.record(z.string(), makeFlattenValidator(z.union([caminoDateValidator, z.string(), z.number(), z.boolean(), z.array(z.string())]).nullable()))
-)
+const flattenedContenuElementValidator = makeFlattenValidator(z.union([caminoDateValidator, z.string(), numberElementValueValidator, z.boolean(), z.array(z.string())]).nullable())
+export type FlattenedContenuElement = z.infer<typeof flattenedContenuElementValidator>
+export const flattenedContenuValidator = z.record(z.string(), z.record(z.string(), flattenedContenuElementValidator))
 export type FlattenedContenu = z.infer<typeof flattenedContenuValidator>
 
 export const flattenEtapeValidator = graphqlEtapeValidator

@@ -16,7 +16,7 @@ import { DeepReadonly, isNotNullNorUndefined } from './typescript-tools.js'
 import { TitreTypeId } from './static/titresTypes.js'
 import { DemarcheTypeId } from './static/demarchesTypes.js'
 import { EtapeTypeId } from './static/etapesTypes.js'
-import { EtapeContenu, FlattenedContenu, HeritageContenu } from './etape-form.js'
+import { EtapeContenu, FlattenEtape, FlattenedContenu, GraphqlEtapeCreation, HeritageContenu } from './etape-form.js'
 
 const dateElementWithValueValidator = dateElementValidator.extend({ value: caminoDateValidator.nullable() })
 
@@ -24,7 +24,8 @@ const textElementWithValueValidator = textElementValidator.extend({ value: z.str
 
 const urlElementWithValueValidator = urlElementValidator.extend({ value: z.string().nullable() })
 
-const numberElementWithValueValidator = numberElementValidator.extend({ value: z.number().nullable() })
+export const numberElementValueValidator = z.number().nonnegative().nullable()
+const numberElementWithValueValidator = numberElementValidator.extend({ value: numberElementValueValidator })
 type NumberElementWithValue = z.infer<typeof numberElementWithValueValidator>
 
 const radioElementWithValueValidator = radioElementValidator.extend({ value: z.boolean().nullable() })
@@ -99,7 +100,13 @@ export const valeurFind = (element: ElementWithValue): string | '–' => {
 }
 
 // FIXME add tests
-export const simpleContenuToFlattenedContenu = (titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId, etapeTypeId: EtapeTypeId, contenu: EtapeContenu, heritageContenu: HeritageContenu ): FlattenedContenu => {
+export const simpleContenuToFlattenedContenu = (
+  titreTypeId: TitreTypeId,
+  demarcheTypeId: DemarcheTypeId,
+  etapeTypeId: EtapeTypeId,
+  contenu: EtapeContenu,
+  heritageContenu: HeritageContenu
+): FlattenedContenu => {
   const sections = getSections(titreTypeId, demarcheTypeId, etapeTypeId)
 
   return sections.reduce<FlattenedContenu>((accSection, section) => {
@@ -122,5 +129,20 @@ export const simpleContenuToFlattenedContenu = (titreTypeId: TitreTypeId, demarc
     }, {})
 
     return accSection
+  }, {})
+}
+
+export const flattenContenuToSimpleContenu = (flattenContenu: FlattenEtape['contenu']): GraphqlEtapeCreation['contenu'] => {
+  return Object.keys(flattenContenu).reduce<GraphqlEtapeCreation['contenu']>((sectionsAcc, section) => {
+    sectionsAcc = {
+      ...sectionsAcc,
+      [section]: Object.keys(flattenContenu[section]).reduce<GraphqlEtapeCreation['contenu'][string]>((elementsAcc, element) => {
+        elementsAcc = { ...elementsAcc, [element]: flattenContenu[section][element].value }
+
+        return elementsAcc
+      }, {}),
+    }
+
+    return sectionsAcc
   }, {})
 }

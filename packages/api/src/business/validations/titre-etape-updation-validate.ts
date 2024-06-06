@@ -1,28 +1,23 @@
 import { ITitreEtape, ITitreDemarche, ITitre } from '../../types.js'
 
 import { titreDemarcheUpdatedEtatValidate } from './titre-demarche-etat-validate.js'
-import { heritageContenuValidate } from './utils/heritage-contenu-validate.js'
-import { propsNumbersCheck } from './utils/props-numbers-check.js'
 import { contenuNumbersCheck } from './utils/contenu-numbers-check.js'
-import { propsDatesCheck } from './utils/props-dates-check.js'
 import { contenuDatesCheck } from './utils/contenu-dates-check.js'
-import { EtapeComplete, canEditAmodiataires, canEditDates, canEditDuree, canEditTitulaires, isEtapeComplete } from 'camino-common/src/permissions/titres-etapes.js'
+import { canEditAmodiataires, canEditDates, canEditDuree, canEditTitulaires, isEtapeComplete } from 'camino-common/src/permissions/titres-etapes.js'
 import { User } from 'camino-common/src/roles.js'
 import { SDOMZoneId } from 'camino-common/src/static/sdom.js'
 import { getSections } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
 import { EntrepriseDocument, EntrepriseId } from 'camino-common/src/entreprise.js'
-import { EtapeAvis, EtapeDocument, EtapeWithHeritage, GetEtapeDocumentsByEtapeIdAslDocument, GetEtapeDocumentsByEtapeIdDaeDocument } from 'camino-common/src/etape.js'
+import { EtapeAvis, EtapeDocument, GetEtapeDocumentsByEtapeIdAslDocument, GetEtapeDocumentsByEtapeIdDaeDocument } from 'camino-common/src/etape.js'
 import { CommuneId } from 'camino-common/src/static/communes.js'
-import { DeepReadonly } from 'camino-common/src/typescript-tools.js'
-const numberProps = ['duree', 'surface'] as const satisfies (keyof ITitreEtape)[]
-
-const dateProps = ['date', 'dateDebut', 'dateFin'] as const satisfies (keyof ITitreEtape)[]
+import { isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
+import { FlattenEtape } from 'camino-common/src/etape-form.js'
+import { flattenContenuToSimpleContenu } from 'camino-common/src/sections.js'
 
 export const titreEtapeUpdationValidate = (
-  titreEtape: EtapeComplete,
-  heritage: DeepReadonly<Pick<EtapeWithHeritage, 'heritageProps' | 'heritageContenu'>>,
+  etape: Pick<Partial<FlattenEtape>, 'id'> & Omit<FlattenEtape, 'id'>,
   titreDemarche: ITitreDemarche,
-  titre: ITitre,
+  titre: Pick<ITitre, 'typeId' | 'demarches'>,
   documents: Pick<EtapeDocument, 'etape_document_type_id'>[],
   avisDocuments: Pick<EtapeAvis, 'avis_type_id'>[],
   entrepriseDocuments: Pick<EntrepriseDocument, 'entreprise_document_type_id' | 'entreprise_id'>[],
@@ -35,110 +30,59 @@ export const titreEtapeUpdationValidate = (
 ) => {
   const errors: string[] = []
 
-  const sections = getSections(titre.typeId, titreDemarche.typeId, titreEtape.typeId)
+  const sections = getSections(titre.typeId, titreDemarche.typeId, etape.typeId)
 
-  // le champ heritageContenu est cohérent avec les sections
-  const errorsHeritageContenu = heritageContenuValidate(sections, titreEtape.heritageContenu)
-
-  errors.push(...errorsHeritageContenu)
-
-  if (!(titreEtape.heritageProps?.duree?.actif ?? false) && !canEditDuree(titre.typeId, titreDemarche.typeId) && (titreEtape.duree ?? 0) !== (titreEtapeOld?.duree ?? 0)) {
+  if (!canEditDuree(titre.typeId, titreDemarche.typeId) && (etape.duree.value ?? 0) !== (titreEtapeOld?.duree ?? 0)) {
     errors.push('impossible d’éditer la durée')
   }
 
-  if (!canEditDates(titre.typeId, titreDemarche.typeId, titreEtape.typeId, user)) {
-    if ((titreEtape.dateDebut ?? '') !== (titreEtapeOld?.dateDebut ?? '')) {
+  if (!canEditDates(titre.typeId, titreDemarche.typeId, etape.typeId, user)) {
+    if ((etape.dateDebut.value ?? '') !== (titreEtapeOld?.dateDebut ?? '')) {
       errors.push('impossible d’éditer la date de début')
     }
-    if ((titreEtape.dateFin ?? '') !== (titreEtapeOld?.dateFin ?? '')) {
+    if ((etape.dateFin.value ?? '') !== (titreEtapeOld?.dateFin ?? '')) {
       errors.push('impossible d’éditer la date d’échéance')
     }
   }
 
-  if (!canEditTitulaires(titre.typeId, user) && entreprisesHaveChanged(titreEtape.titulaireIds ?? [], titreEtapeOld?.titulaireIds ?? [])) {
+  if (!canEditTitulaires(titre.typeId, user) && entreprisesHaveChanged(etape.titulaires.value ?? [], titreEtapeOld?.titulaireIds ?? [])) {
     errors.push(`une autorisation ${titre.typeId === 'arm' ? 'de recherche' : "d'exploitation"} ne peut pas inclure de titulaires`)
   }
 
-  if (!canEditAmodiataires(titre.typeId, user) && entreprisesHaveChanged(titreEtape.amodiataireIds ?? [], titreEtapeOld?.amodiataireIds ?? [])) {
+  if (!canEditAmodiataires(titre.typeId, user) && entreprisesHaveChanged(etape.amodiataires.value ?? [], titreEtapeOld?.amodiataireIds ?? [])) {
     errors.push(`une autorisation ${titre.typeId === 'arm' ? 'de recherche' : "d'exploitation"} ne peut pas inclure d'amodiataires`)
   }
 
   if (sections.length) {
-    // 1. les champs number ne peuvent avoir une durée négative
-    const errorsNumbers = propsNumbersCheck(numberProps, titreEtape)
-    if (errorsNumbers) {
-      errors.push(errorsNumbers)
-    }
-
-    if (titreEtape.contenu) {
-      const errorsContenu = contenuNumbersCheck(sections, titreEtape.contenu)
-      if (errorsContenu) {
+    if (isNotNullNorUndefined(etape.contenu)) {
+      const errorsContenu = contenuNumbersCheck(sections, etape.contenu)
+      if (isNotNullNorUndefined(errorsContenu)) {
         errors.push(errorsContenu)
       }
     }
 
-    // 2. les champs date ne peuvent avoir une date invalide
-    const errorsDates = propsDatesCheck(dateProps, titreEtape)
-    if (errorsDates) {
-      errors.push(errorsDates)
-    }
-
-    // 3. les champs date des sections ne peuvent avoir une date invalide
-    if (titreEtape.contenu) {
-      const errorsContenu = contenuDatesCheck(sections, titreEtape.contenu)
-      if (errorsContenu) {
+    if (isNotNullNorUndefined(etape.contenu)) {
+      const errorsContenu = contenuDatesCheck(sections, etape.contenu)
+      if (isNotNullNorUndefined(errorsContenu)) {
         errors.push(errorsContenu)
       }
     }
 
     if (
-      titreEtape.typeId !== 'mfr' &&
-      titreEtape.heritageContenu &&
-      titreEtape.heritageContenu.arm &&
-      titreEtape.heritageContenu.arm.mecanise &&
-      !titreEtape.heritageContenu.arm.mecanise.actif &&
-      titreEtape.contenu &&
-      titreEtape.contenu.arm &&
-      titreEtape.contenu.arm.mecanise
+      etape.typeId !== 'mfr' &&
+      isNotNullNorUndefined(etape.contenu.arm?.mecanise) &&
+      etape.contenu.arm.mecanise.value === true &&
+      !etape.contenu.arm.mecanise.heritee &&
+      (isNullOrUndefined(etape.contenu.arm.mecanise.etapeHeritee?.value) || etape.contenu.arm.mecanise.etapeHeritee.value === false)
     ) {
       errors.push('une demande non mécanisée ne peut pas devenir mécanisée')
     }
   }
 
   // 4. si l’étape n’est pas en cours de construction
-  if (!titreEtape.isBrouillon) {
-    const etapeComplete = isEtapeComplete(
-      {
-        ...titreEtape,
-        geojson4326Perimetre: titreEtape.geojson4326Perimetre ?? null,
-        geojson4326Points: titreEtape.geojson4326Points ?? null,
-        geojsonOriginePerimetre: titreEtape.geojsonOriginePerimetre ?? null,
-        geojsonOriginePoints: titreEtape.geojsonOriginePoints ?? null,
-        geojson4326Forages: titreEtape.geojson4326Forages ?? null,
-        geojsonOrigineForages: titreEtape.geojsonOrigineForages ?? null,
-        geojsonOrigineGeoSystemeId: titreEtape.geojsonOrigineGeoSystemeId ?? null,
-        surface: titreEtape.surface ?? null,
-        notes: titreEtape.notes ?? null,
-        duree: titreEtape.duree ?? null,
-        dateDebut: titreEtape.dateDebut ?? null,
-        dateFin: titreEtape.dateFin ?? null,
-        amodiataireIds: titreEtape.amodiataireIds ?? [],
-        titulaireIds: titreEtape.titulaireIds ?? [],
-        substances: titreEtape.substances ?? [],
-        contenu: titreEtape.contenu ?? {},
-      },
-      heritage,
-      titre.typeId,
-      titreDemarche.typeId,
-      documents,
-      entrepriseDocuments,
-      sdomZones,
-      communes ?? [],
-      daeDocument,
-      aslDocument,
-      avisDocuments,
-      user
-    )
+  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+  if (!etape.isBrouillon) {
+    const etapeComplete = isEtapeComplete(etape, titre.typeId, titreDemarche.typeId, documents, entrepriseDocuments, sdomZones, communes ?? [], daeDocument, aslDocument, avisDocuments, user)
     if (!etapeComplete.valid) {
       errors.push(...etapeComplete.errors)
     }
@@ -148,18 +92,30 @@ export const titreEtapeUpdationValidate = (
     return errors
   }
 
-  return titreEtapeUpdationBusinessValidate(titreEtape, titreDemarche, titre)
+  return titreEtapeUpdationBusinessValidate(etape, titreDemarche, titre, isNotNullNorUndefined(communes) ? communes.map(communeId => ({ id: communeId })) : communes)
 }
 
 const titreEtapeUpdationBusinessValidate = (
-  titreEtape: Pick<Partial<ITitreEtape>, 'id'> & Pick<ITitreEtape, 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'communes' | 'surface' | 'isBrouillon'>,
+  titreEtape: Pick<Partial<FlattenEtape>, 'id'> & Pick<FlattenEtape, 'statutId' | 'typeId' | 'date' | 'contenu' | 'perimetre' | 'isBrouillon'>,
   titreDemarche: ITitreDemarche,
-  titre: ITitre
+  titre: Pick<ITitre, 'typeId' | 'demarches'>,
+  communes: ITitreEtape['communes']
 ) => {
   const errors = []
   // 1. la date de l'étape est possible
   // en fonction de l'ordre des types d'étapes de la démarche
-  const demarcheUpdatedErrors = titreDemarcheUpdatedEtatValidate(titreDemarche.typeId, titre, titreEtape, titreDemarche.id, titreDemarche.etapes!)
+  const demarcheUpdatedErrors = titreDemarcheUpdatedEtatValidate(
+    titreDemarche.typeId,
+    titre,
+    {
+      ...titreEtape,
+      contenu: flattenContenuToSimpleContenu(titreEtape.contenu),
+      surface: titreEtape.perimetre.value?.surface ?? null,
+      communes,
+    },
+    titreDemarche.id,
+    titreDemarche.etapes!
+  )
   if (demarcheUpdatedErrors.length) {
     errors.push(...demarcheUpdatedErrors)
   }

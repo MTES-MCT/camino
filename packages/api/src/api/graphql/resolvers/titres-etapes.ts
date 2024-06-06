@@ -1,6 +1,6 @@
 import { GraphQLResolveInfo } from 'graphql'
 
-import { Context, ITitre, ITitreEtape } from '../../../types.js'
+import { Context, IHeritageContenu, IHeritageProps, ITitre, ITitreDemarche, ITitreEtape } from '../../../types.js'
 
 import { titreEtapeGet, titreEtapeUpsert } from '../../../database/queries/titres-etapes.js'
 import { titreDemarcheGet } from '../../../database/queries/titres-demarches.js'
@@ -10,7 +10,7 @@ import { titreEtapeHeritageBuild } from './_titre-etape.js'
 import { titreEtapeUpdationValidate } from '../../../business/validations/titre-etape-updation-validate.js'
 
 import { fieldsBuild } from './_fields-build.js'
-import { titreEtapeFormat } from '../../_format/titres-etapes.js'
+import { iTitreEtapeToFlattenEtape, titreEtapeFormat } from '../../_format/titres-etapes.js'
 import { userSuper } from '../../../database/user-super.js'
 import { titreEtapeAdministrationsEmailsSend, titreEtapeUtilisateursEmailsSend } from './_titre-etape-email.js'
 import { EtapeTypeId, canBeBrouillon } from 'camino-common/src/static/etapesTypes.js'
@@ -21,12 +21,13 @@ import { titreEtapeFormatFields } from '../../_format/_fields.js'
 import { canCreateEtape, canEditDates, canEditDuree, canEditEtape } from 'camino-common/src/permissions/titres-etapes.js'
 import { TitresStatutIds } from 'camino-common/src/static/titresStatuts.js'
 import {
-    ETAPE_IS_NOT_BROUILLON,
+  ETAPE_IS_NOT_BROUILLON,
   EtapeAvis,
   EtapeId,
   documentComplementaireAslEtapeDocumentModificationValidator,
   documentComplementaireDaeEtapeDocumentModificationValidator,
   etapeDocumentModificationValidator,
+  etapeIdValidator,
   needAslAndDae,
   tempEtapeDocumentValidator,
 } from 'camino-common/src/etape.js'
@@ -36,7 +37,7 @@ import { EntrepriseDocument, EntrepriseId } from 'camino-common/src/entreprise.j
 import { Pool } from 'pg'
 import { GetGeojsonInformation, convertPoints, getGeojsonInformation } from '../../rest/perimetre.queries.js'
 import { SDOMZoneId } from 'camino-common/src/static/sdom.js'
-import { SecteursMaritimesIds, getSecteurMaritime } from 'camino-common/src/static/facades.js'
+import { SecteursMaritimes, getSecteurMaritime } from 'camino-common/src/static/facades.js'
 import { FeatureCollectionPoints, FeatureMultiPolygon, equalGeojson } from 'camino-common/src/perimetre.js'
 import { FieldsEtape } from '../../../database/queries/_options'
 import { canHaveForages } from 'camino-common/src/permissions/titres.js'
@@ -46,8 +47,10 @@ import { getEtapeByDemarcheIdAndEtapeTypeId } from '../../rest/etapes.queries.js
 import { DemarcheId } from 'camino-common/src/demarche.js'
 import { z } from 'zod'
 import { CommuneId } from 'camino-common/src/static/communes.js'
-import { GraphqlEtape, graphqlEtapeCreationValidator } from 'camino-common/src/etape-form.js'
+import { FlattenEtape, GraphqlEtape, GraphqlEtapeCreation, graphqlEtapeCreationValidator } from 'camino-common/src/etape-form.js'
 import { KM2 } from 'camino-common/src/number.js'
+import { getSections } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
+import { ETAPE_HERITAGE_PROPS } from 'camino-common/src/heritage.js'
 
 // FIXME à supprimer, n'est plus utilisé ?
 export const etape = async ({ id }: { id: EtapeId }, { user }: Context, info: GraphQLResolveInfo) => {
@@ -167,13 +170,13 @@ const getForagesProperties = async (
     geojsonOrigineForages: null,
   }
 }
-type TotoType = {
-  secteursMaritime: SecteursMaritimesIds[]
+type PerimetreInfos = {
+  secteursMaritime: SecteursMaritimes[]
   sdomZones: SDOMZoneId[]
   surface: KM2 | null
 } & Pick<GraphqlEtape, 'geojson4326Forages' | 'geojsonOrigineForages'> &
   Pick<GetGeojsonInformation, 'communes' | 'forets'>
-const otot = async (
+const getPerimetreInfos = async (
   pool: Pool,
   geojson4326Perimetre: GraphqlEtape['geojson4326Perimetre'],
   geojsonOriginePerimetre: GraphqlEtape['geojsonOriginePerimetre'],
@@ -181,7 +184,7 @@ const otot = async (
   titreTypeId: TitreTypeId,
   geojsonOrigineGeoSystemeId: GraphqlEtape['geojsonOrigineGeoSystemeId'],
   geojsonOrigineForages: GraphqlEtape['geojsonOrigineForages']
-): Promise<TotoType> => {
+): Promise<PerimetreInfos> => {
   if (isNotNullNorUndefined(geojson4326Perimetre)) {
     if (isNotNullNorUndefined(geojsonOriginePerimetre) && isNotNullNorUndefined(geojsonOriginePoints)) {
       if (!arePointsOnPerimeter(geojsonOriginePerimetre, geojsonOriginePoints)) {
@@ -195,13 +198,11 @@ const otot = async (
       surface,
       communes,
       forets,
-      secteursMaritime: secteurs,
+      secteursMaritime: secteurs.map(s => getSecteurMaritime(s)),
       sdomZones: sdom,
       geojson4326Forages,
       geojsonOrigineForages,
     }
-
-    // communeIds.push(...communes.map(({ id }) => id))
   } else {
     return {
       communes: [],
@@ -212,6 +213,55 @@ const otot = async (
       geojson4326Forages: null,
       geojsonOrigineForages: null,
     }
+  }
+}
+
+const getFlattenEtape = async (
+  etape: GraphqlEtapeCreation,
+  demarche: ITitreDemarche,
+  titreTypeId: TitreTypeId,
+  pool: Pool
+): Promise<{ flattenEtape: FlattenEtape; isBrouillon: boolean; perimetreInfos: PerimetreInfos }> => {
+  const isBrouillon = canBeBrouillon(etape.typeId)
+  const perimetreInfos = await getPerimetreInfos(
+    pool,
+    etape.geojson4326Perimetre,
+    etape.geojsonOriginePerimetre,
+    etape.geojsonOriginePoints,
+    titreTypeId,
+    etape.geojsonOrigineGeoSystemeId,
+    etape.geojsonOrigineForages
+  )
+  const titreEtapeHeritage = titreEtapeHeritageBuild(etape.date, etape.typeId, demarche, titreTypeId, demarche.typeId, null)
+
+  const heritageProps = ETAPE_HERITAGE_PROPS.reduce<IHeritageProps>((acc, propId) => {
+    acc[propId] = {
+      actif: etape.heritageProps[propId].actif,
+      etape: titreEtapeHeritage.heritageProps?.[propId].etape,
+    }
+
+    return acc
+  }, {} as IHeritageProps)
+
+  const sections = getSections(titreTypeId, demarche.typeId, etape.typeId)
+  const heritageContenu = sections.reduce<IHeritageContenu>((accSections, section) => {
+    accSections[section.id] = section.elements.reduce<IHeritageContenu[string]>((accElements, element) => {
+      accElements[element.id] = {
+        actif: etape.heritageContenu[section.id]?.[element.id]?.actif ?? false,
+        etape: titreEtapeHeritage.heritageContenu?.[section.id]?.[element.id]?.etape ?? undefined,
+      }
+
+      return accElements
+    }, {})
+
+    return accSections
+  }, {})
+
+  // FIXME on peut mieux faire pour l'id ?
+  return {
+    flattenEtape: iTitreEtapeToFlattenEtape({ ...etape, demarche, ...perimetreInfos, isBrouillon, heritageProps, heritageContenu, id: etapeIdValidator.parse('newId') }),
+    isBrouillon,
+    perimetreInfos,
   }
 }
 
@@ -264,27 +314,17 @@ export const etapeCreer = async ({ etape: etapeNotParsed }: { etape: unknown }, 
     // FIXME
     const avisDocuments: EtapeAvis[] = []
 
-    const isBrouillon = canBeBrouillon(etape.typeId)
-    const plop = await otot(
-      context.pool,
-      etape.geojson4326Perimetre,
-      etape.geojsonOriginePerimetre,
-      etape.geojsonOriginePoints,
-      titreTypeId,
-      etape.geojsonOrigineGeoSystemeId,
-      etape.geojsonOrigineForages
-    )
-    const titreEtapeHeritage = titreEtapeHeritageBuild(etape.date, etape.typeId, titreDemarche, titreTypeId, titreDemarche.typeId, null)
+    const { flattenEtape, isBrouillon, perimetreInfos } = await getFlattenEtape(etape, titreDemarche, titreTypeId, context.pool)
+
     const rulesErrors = titreEtapeUpdationValidate(
-      { ...etape, ...plop, isBrouillon },
-      titreEtapeHeritage,
+      flattenEtape,
       titreDemarche,
       titreDemarche.titre,
       etapeDocuments,
       avisDocuments,
       entrepriseDocuments,
-      plop.sdomZones,
-      plop.communes.map(({ id }) => id),
+      perimetreInfos.sdomZones,
+      perimetreInfos.communes.map(({ id }) => id),
       user,
       null,
       null
@@ -314,7 +354,7 @@ export const etapeCreer = async ({ etape: etapeNotParsed }: { etape: unknown }, 
       etape.dateFin = null
     }
 
-    let etapeUpdated: ITitreEtape | undefined = await titreEtapeUpsert({ ...etape, ...plop, isBrouillon }, user!, titreDemarche.titreId)
+    let etapeUpdated: ITitreEtape | undefined = await titreEtapeUpsert({ ...etape, ...perimetreInfos, isBrouillon }, user!, titreDemarche.titreId)
     if (isNullOrUndefined(etapeUpdated)) {
       throw new Error("Une erreur est survenue lors de la création de l'étape")
     }
@@ -474,6 +514,8 @@ export const etapeModifier = async (
 
     const sdomZones: SDOMZoneId[] = []
     const communeIds: CommuneId[] = []
+
+    // FIXME on a toujours besoin de faire tout ça pour le périmètre ? C'est pas déjà fait par flattenEtape ?'
     if (isNotNullNorUndefined(etape.geojson4326Perimetre)) {
       if (isNotNullNorUndefined(etape.geojsonOriginePerimetre) && isNotNullNorUndefined(etape.geojsonOriginePoints)) {
         if (!arePointsOnPerimeter(etape.geojsonOriginePerimetre, etape.geojsonOriginePoints)) {
@@ -514,8 +556,10 @@ export const etapeModifier = async (
       ...(await getForagesProperties(titreTypeId, etape.geojsonOrigineGeoSystemeId ?? null, etape.geojsonOrigineForages ?? null, context.pool)),
     }
 
+    const { flattenEtape } = await getFlattenEtape(etape, titreDemarche, titreTypeId, context.pool)
+
     const rulesErrors = titreEtapeUpdationValidate(
-      etapeToSave,
+      flattenEtape,
       titreDemarche,
       titreDemarche.titre,
       etapeDocuments,

@@ -1,12 +1,28 @@
 import { FlattenEtape, flattenEtapeValidator, heritageContenuValidator } from 'camino-common/src/etape-form.js'
 import { simpleContenuToFlattenedContenu } from 'camino-common/src/sections.js'
-import { DeepReadonly, isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
+import { isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
 import { ITitreEtape } from '../../types.js'
 
 import { titreEtapeFormatFields } from './_fields.js'
 import { titreDemarcheFormat } from './titres-demarches.js'
 
-export const iTitreEtapeToFlattenEtape = (titreEtape: ITitreEtape): DeepReadonly<FlattenEtape> => {
+export const getPerimetreFromITitreEtape = (
+  titreEtape: Pick<
+    ITitreEtape,
+    'geojson4326Perimetre' | 'geojson4326Points' | 'geojsonOriginePerimetre' | 'geojsonOriginePoints' | 'geojson4326Forages' | 'geojsonOrigineForages' | 'geojsonOrigineGeoSystemeId' | 'surface'
+  >
+): FlattenEtape['perimetre']['value'] => ({
+  geojson4326Perimetre: titreEtape.geojson4326Perimetre ?? null,
+  geojson4326Points: titreEtape.geojson4326Points ?? null,
+  geojsonOriginePerimetre: titreEtape.geojsonOriginePerimetre ?? null,
+  geojsonOriginePoints: titreEtape.geojsonOriginePoints ?? null,
+  geojson4326Forages: titreEtape.geojson4326Forages ?? null,
+  geojsonOrigineForages: titreEtape.geojsonOrigineForages ?? null,
+  geojsonOrigineGeoSystemeId: titreEtape.geojsonOrigineGeoSystemeId ?? null,
+  surface: titreEtape.surface ?? null,
+})
+
+export const iTitreEtapeToFlattenEtape = (titreEtape: ITitreEtape): FlattenEtape => {
   const titreTypeId = titreEtape.demarche?.titre?.typeId
   const demarcheTypeId = titreEtape.demarche?.typeId
   const heritageProps = titreEtape.heritageProps
@@ -23,7 +39,7 @@ export const iTitreEtapeToFlattenEtape = (titreEtape: ITitreEtape): DeepReadonly
   }
 
   if (isNullOrUndefined(slug)) {
-    throw new Error("pas de slug")
+    throw new Error('pas de slug')
   }
   const contenu = simpleContenuToFlattenedContenu(titreTypeId, demarcheTypeId, titreEtape.typeId, titreEtape.contenu ?? {}, heritageContenuValidator.parse(heritageContenu))
   const flattenEtape: FlattenEtape = {
@@ -44,43 +60,16 @@ export const iTitreEtapeToFlattenEtape = (titreEtape: ITitreEtape): DeepReadonly
     perimetre: {
       value: heritageProps.perimetre.actif
         ? isNotNullNorUndefined(heritageProps.perimetre.etape)
-          ? {
-              geojson4326Perimetre: heritageProps.perimetre.etape.geojson4326Perimetre ?? null,
-              geojson4326Points: heritageProps.perimetre.etape.geojson4326Points ?? null,
-              geojsonOriginePerimetre: heritageProps.perimetre.etape.geojsonOriginePerimetre ?? null,
-              geojsonOriginePoints: heritageProps.perimetre.etape.geojsonOriginePoints ?? null,
-              geojson4326Forages: heritageProps.perimetre.etape.geojson4326Forages ?? null,
-              geojsonOrigineForages: heritageProps.perimetre.etape.geojsonOrigineForages ?? null,
-              geojsonOrigineGeoSystemeId: heritageProps.perimetre.etape.geojsonOrigineGeoSystemeId ?? null,
-              surface: heritageProps.perimetre.etape.surface ?? null,
-            }
+          ? getPerimetreFromITitreEtape(heritageProps.perimetre.etape)
           : null
-        : {
-            geojson4326Perimetre: titreEtape.geojson4326Perimetre ?? null,
-            geojson4326Points: titreEtape.geojson4326Points ?? null,
-            geojsonOriginePerimetre: titreEtape.geojsonOriginePerimetre ?? null,
-            geojsonOriginePoints: titreEtape.geojsonOriginePoints ?? null,
-            geojson4326Forages: titreEtape.geojson4326Forages ?? null,
-            geojsonOrigineForages: titreEtape.geojsonOrigineForages ?? null,
-            geojsonOrigineGeoSystemeId: titreEtape.geojsonOrigineGeoSystemeId ?? null,
-            surface: titreEtape.surface ?? null,
-          },
+        : getPerimetreFromITitreEtape(titreEtape),
 
       heritee: heritageProps.perimetre.actif,
       etapeHeritee: isNotNullNorUndefined(heritageProps.perimetre.etape)
         ? {
             etapeTypeId: heritageProps.perimetre.etape.typeId,
             date: heritageProps.perimetre.etape.date,
-            value: {
-              geojson4326Perimetre: heritageProps.perimetre.etape.geojson4326Perimetre ?? null,
-              geojson4326Points: heritageProps.perimetre.etape.geojson4326Points ?? null,
-              geojsonOriginePerimetre: heritageProps.perimetre.etape.geojsonOriginePerimetre ?? null,
-              geojsonOriginePoints: heritageProps.perimetre.etape.geojsonOriginePoints ?? null,
-              geojson4326Forages: heritageProps.perimetre.etape.geojson4326Forages ?? null,
-              geojsonOrigineForages: heritageProps.perimetre.etape.geojsonOrigineForages ?? null,
-              geojsonOrigineGeoSystemeId: heritageProps.perimetre.etape.geojsonOrigineGeoSystemeId ?? null,
-              surface: heritageProps.perimetre.etape.surface ?? null,
-            },
+            value: getPerimetreFromITitreEtape(heritageProps.perimetre.etape),
           }
         : null,
     },
