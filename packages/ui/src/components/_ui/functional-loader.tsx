@@ -1,8 +1,8 @@
 import { AsyncData } from '@/api/client-rest'
-import { HelpTooltip } from '@/components/_ui/help-tooltip'
 import { HTMLAttributes } from 'vue'
 import styles from './functional-loader.module.css'
 import type { JSX } from 'vue/jsx-runtime'
+import { Alert } from './alert'
 type Props<T> = {
   data: AsyncData<T>
   renderItem: (item: T) => JSX.Element | null
@@ -15,11 +15,7 @@ export const LoadingElement = <T,>(props: Props<T>) => {
         props.renderItem(props.data.value)
       ) : (
         <div class={`${props.data.status === 'LOADING' ? styles['top-level'] : ''} ${props.class}`} style={'display: flex; justify-content: center'}>
-          {props.data.status === 'ERROR' ? (
-            <div>
-              <HelpTooltip icon="error-warning" text={props.data.message} />
-            </div>
-          ) : null}
+          {props.data.status === 'ERROR' ? <Alert small={true} title={props.data.message} type="error" /> : null}
           {props.data.status === 'LOADING' ? <div class={styles.spinner}></div> : null}
         </div>
       )}
