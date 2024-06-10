@@ -85,7 +85,14 @@ export const emailsForAdministrationsGet = (
   return { subject, content, emails }
 }
 
-export const titreEtapeAdministrationsEmailsSend = async (etape: ITitreEtape, demarcheTypeId: string, titreId: string, titreTypeId: string, user: UserNotNull, oldEtape?: ITitreEtape) => {
+export const titreEtapeAdministrationsEmailsSend = async (
+  etape: Pick<ITitreEtape, 'typeId' | 'statutId'>,
+  demarcheTypeId: string,
+  titreId: string,
+  titreTypeId: string,
+  user: UserNotNull,
+  oldEtape?: ITitreEtape
+) => {
   const emailsForAdministrations = emailsForAdministrationsGet(etape, demarcheTypeId, titreId, titreTypeId, user, oldEtape)
 
   if (emailsForAdministrations) {

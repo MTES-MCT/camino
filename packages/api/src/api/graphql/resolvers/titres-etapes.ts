@@ -1,6 +1,6 @@
 import { GraphQLResolveInfo } from 'graphql'
 
-import { Context, IHeritageContenu, IHeritageProps, ITitre, ITitreDemarche, ITitreEtape } from '../../../types.js'
+import { Context, IHeritageContenu, IHeritageProps, ITitreDemarche, ITitreEtape } from '../../../types.js'
 
 import { titreEtapeGet, titreEtapeUpsert } from '../../../database/queries/titres-etapes.js'
 import { titreDemarcheGet } from '../../../database/queries/titres-demarches.js'
@@ -14,7 +14,7 @@ import { iTitreEtapeToFlattenEtape, titreEtapeFormat } from '../../_format/titre
 import { userSuper } from '../../../database/user-super.js'
 import { titreEtapeAdministrationsEmailsSend, titreEtapeUtilisateursEmailsSend } from './_titre-etape-email.js'
 import { EtapeTypeId, canBeBrouillon } from 'camino-common/src/static/etapesTypes.js'
-import { isNonEmptyArray, isNotNullNorUndefined, isNullOrUndefined, onlyUnique } from 'camino-common/src/typescript-tools.js'
+import { isNonEmptyArray, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined, onlyUnique } from 'camino-common/src/typescript-tools.js'
 import { User } from 'camino-common/src/roles.js'
 import { CaminoDate } from 'camino-common/src/date.js'
 import { titreEtapeFormatFields } from '../../_format/_fields.js'
@@ -23,22 +23,24 @@ import { TitresStatutIds } from 'camino-common/src/static/titresStatuts.js'
 import {
   ETAPE_IS_NOT_BROUILLON,
   EtapeAvis,
+  EtapeBrouillon,
   EtapeId,
   documentComplementaireAslEtapeDocumentModificationValidator,
   documentComplementaireDaeEtapeDocumentModificationValidator,
   etapeDocumentModificationValidator,
   etapeIdValidator,
+  etapeSlugValidator,
   needAslAndDae,
   tempEtapeDocumentValidator,
 } from 'camino-common/src/etape.js'
 import { checkEntreprisesExist, getEntrepriseDocuments } from '../../rest/entreprises.queries.js'
 import { deleteTitreEtapeEntrepriseDocument, insertEtapeDocuments, insertTitreEtapeEntrepriseDocument, updateEtapeDocuments } from '../../../database/queries/titres-etapes.queries.js'
-import { EntrepriseDocument, EntrepriseId } from 'camino-common/src/entreprise.js'
+import { EntrepriseDocument, EntrepriseDocumentId, EntrepriseId } from 'camino-common/src/entreprise.js'
 import { Pool } from 'pg'
 import { GetGeojsonInformation, convertPoints, getGeojsonInformation } from '../../rest/perimetre.queries.js'
 import { SDOMZoneId } from 'camino-common/src/static/sdom.js'
 import { SecteursMaritimes, getSecteurMaritime } from 'camino-common/src/static/facades.js'
-import { FeatureCollectionPoints, FeatureMultiPolygon, equalGeojson } from 'camino-common/src/perimetre.js'
+import { FeatureCollectionPoints, FeatureMultiPolygon } from 'camino-common/src/perimetre.js'
 import { FieldsEtape } from '../../../database/queries/_options'
 import { canHaveForages } from 'camino-common/src/permissions/titres.js'
 import { GEO_SYSTEME_IDS } from 'camino-common/src/static/geoSystemes.js'
@@ -46,8 +48,7 @@ import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { getEtapeByDemarcheIdAndEtapeTypeId } from '../../rest/etapes.queries.js'
 import { DemarcheId } from 'camino-common/src/demarche.js'
 import { z } from 'zod'
-import { CommuneId } from 'camino-common/src/static/communes.js'
-import { FlattenEtape, GraphqlEtape, GraphqlEtapeCreation, graphqlEtapeCreationValidator } from 'camino-common/src/etape-form.js'
+import { FlattenEtape, GraphqlEtape, GraphqlEtapeCreation, graphqlEtapeCreationValidator, graphqlEtapeModificationValidator } from 'camino-common/src/etape-form.js'
 import { KM2 } from 'camino-common/src/number.js'
 import { getSections } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
 import { ETAPE_HERITAGE_PROPS } from 'camino-common/src/heritage.js'
@@ -221,7 +222,7 @@ const getFlattenEtape = async (
   demarche: ITitreDemarche,
   titreTypeId: TitreTypeId,
   pool: Pool
-): Promise<{ flattenEtape: FlattenEtape; isBrouillon: boolean; perimetreInfos: PerimetreInfos }> => {
+): Promise<{ flattenEtape: FlattenEtape; isBrouillon: EtapeBrouillon; perimetreInfos: PerimetreInfos }> => {
   const isBrouillon = canBeBrouillon(etape.typeId)
   const perimetreInfos = await getPerimetreInfos(
     pool,
@@ -257,9 +258,18 @@ const getFlattenEtape = async (
     return accSections
   }, {})
 
-  // FIXME on peut mieux faire pour l'id ?
+  // FIXME on peut mieux faire pour l'id et le slug ?
   return {
-    flattenEtape: iTitreEtapeToFlattenEtape({ ...etape, demarche, ...perimetreInfos, isBrouillon, heritageProps, heritageContenu, id: etapeIdValidator.parse('newId') }),
+    flattenEtape: iTitreEtapeToFlattenEtape({
+      ...etape,
+      demarche,
+      ...perimetreInfos,
+      isBrouillon,
+      heritageProps,
+      heritageContenu,
+      id: etapeIdValidator.parse('newId'),
+      slug: etapeSlugValidator.parse('unknown'),
+    }),
     isBrouillon,
     perimetreInfos,
   }
@@ -300,7 +310,8 @@ export const etapeCreer = async ({ etape: etapeNotParsed }: { etape: unknown }, 
       throw new Error(`le type du titre de la ${titreDemarche.id} n'est pas chargé`)
     }
 
-    const entrepriseDocuments: EntrepriseDocument[] = await validateAndGetEntrepriseDocuments(context.pool, etape, titreDemarche.titre, user)
+    const { flattenEtape, isBrouillon, perimetreInfos } = await getFlattenEtape(etape, titreDemarche, titreTypeId, context.pool)
+    const entrepriseDocuments: EntrepriseDocument[] = await validateAndGetEntrepriseDocuments(context.pool, flattenEtape, etape.entrepriseDocumentIds, user)
 
     const etapeDocumentsParsed = z.array(tempEtapeDocumentValidator).safeParse(etape.etapeDocuments)
 
@@ -313,8 +324,6 @@ export const etapeCreer = async ({ etape: etapeNotParsed }: { etape: unknown }, 
 
     // FIXME
     const avisDocuments: EtapeAvis[] = []
-
-    const { flattenEtape, isBrouillon, perimetreInfos } = await getFlattenEtape(etape, titreDemarche, titreTypeId, context.pool)
 
     const rulesErrors = titreEtapeUpdationValidate(
       flattenEtape,
@@ -384,33 +393,26 @@ export const etapeCreer = async ({ etape: etapeNotParsed }: { etape: unknown }, 
   }
 }
 
-const validateAndGetEntrepriseDocuments = async (
-  pool: Pool,
-  etape: Pick<ITitreEtape, 'heritageProps' | 'titulaireIds' | 'amodiataireIds' | 'entrepriseDocumentIds'>,
-  titre: Pick<ITitre, 'titulaireIds' | 'amodiataireIds'>,
-  user: User
-): Promise<EntrepriseDocument[]> => {
+const validateAndGetEntrepriseDocuments = async (pool: Pool, etape: FlattenEtape, entrepriseDocumentIds: EntrepriseDocumentId[], user: User): Promise<EntrepriseDocument[]> => {
   const entrepriseDocuments: EntrepriseDocument[] = []
 
-  // si l’héritage est désactivé => on récupère les titulaires sur l’étape
-  // sinon on les trouve sur le titre
-  const titulaires = !(etape.heritageProps?.titulaires.actif ?? false) ? etape.titulaireIds : titre.titulaireIds
-  const amodiataires = !(etape.heritageProps?.amodiataires.actif ?? false) ? etape.amodiataireIds : titre.amodiataireIds
-  if (etape.entrepriseDocumentIds && isNonEmptyArray(etape.entrepriseDocumentIds)) {
+  const titulaires = etape.titulaires.value
+  const amodiataires = etape.amodiataires.value
+  if (isNotNullNorUndefinedNorEmpty(entrepriseDocumentIds)) {
     let entrepriseIds: EntrepriseId[] = []
-    if (titulaires) {
+    if (isNotNullNorUndefinedNorEmpty(titulaires)) {
       entrepriseIds.push(...titulaires)
     }
-    if (amodiataires) {
+    if (isNotNullNorUndefinedNorEmpty(amodiataires)) {
       entrepriseIds.push(...amodiataires)
     }
     entrepriseIds = entrepriseIds.filter(onlyUnique)
 
     if (isNonEmptyArray(entrepriseIds)) {
-      entrepriseDocuments.push(...(await getEntrepriseDocuments(etape.entrepriseDocumentIds, entrepriseIds, pool, user)))
+      entrepriseDocuments.push(...(await getEntrepriseDocuments(entrepriseDocumentIds, entrepriseIds, pool, user)))
     }
 
-    if (etape.entrepriseDocumentIds.length !== entrepriseDocuments.length) {
+    if (entrepriseDocumentIds.length !== entrepriseDocuments.length) {
       throw new Error("document d'entreprise incorrects")
     }
   }
@@ -418,17 +420,14 @@ const validateAndGetEntrepriseDocuments = async (
   return entrepriseDocuments
 }
 
-export const etapeModifier = async (
-  { etape }: { etape: Omit<ITitreEtape, 'isBrouillon'> & { etapeDocuments: unknown; daeDocument: unknown; aslDocument: unknown } },
-  context: Context,
-  info: GraphQLResolveInfo
-) => {
+export const etapeModifier = async ({ etape: etapeNotParsed }: { etape: unknown }, context: Context, info: GraphQLResolveInfo) => {
   try {
     const user = context.user
     if (!user) {
       throw new Error("l'étape n'existe pas")
     }
 
+    const etape = graphqlEtapeModificationValidator.parse(etapeNotParsed)
     const titreEtapeOld = await titreEtapeGet(
       etape.id,
       {
@@ -474,9 +473,13 @@ export const etapeModifier = async (
 
     if (!titreDemarche || !titreDemarche.titre) throw new Error("le titre n'existe pas")
     if (isNullOrUndefined(titreDemarche.titre.titulaireIds) || isNullOrUndefined(titreDemarche.titre.amodiataireIds)) throw new Error('la démarche n’est pas chargée complètement')
-
-    const entrepriseDocuments: EntrepriseDocument[] = await validateAndGetEntrepriseDocuments(context.pool, etape, titreDemarche.titre, user)
-    delete etape.entrepriseDocumentIds
+    const titreTypeId = titreDemarche?.titre?.typeId
+    if (!titreTypeId) {
+      throw new Error(`le type du titre de la ${titreDemarche.id} n'est pas chargé`)
+    }
+    const { flattenEtape, perimetreInfos } = await getFlattenEtape(etape, titreDemarche, titreTypeId, context.pool)
+    const entrepriseDocuments: EntrepriseDocument[] = await validateAndGetEntrepriseDocuments(context.pool, flattenEtape, etape.entrepriseDocumentIds, user)
+    // delete etape.entrepriseDocumentIds
 
     const etapeDocumentsParsed = z.array(etapeDocumentModificationValidator).safeParse(etape.etapeDocuments)
 
@@ -486,7 +489,7 @@ export const etapeModifier = async (
     }
 
     const etapeDocuments = etapeDocumentsParsed.data
-    delete etape.etapeDocuments
+    // delete etape.etapeDocuments
 
     // FIXME
     const avisDocuments: EtapeAvis[] = []
@@ -512,52 +515,6 @@ export const etapeModifier = async (
       aslDocument = aslDocumentParsed.data
     }
 
-    const sdomZones: SDOMZoneId[] = []
-    const communeIds: CommuneId[] = []
-
-    // FIXME on a toujours besoin de faire tout ça pour le périmètre ? C'est pas déjà fait par flattenEtape ?'
-    if (isNotNullNorUndefined(etape.geojson4326Perimetre)) {
-      if (isNotNullNorUndefined(etape.geojsonOriginePerimetre) && isNotNullNorUndefined(etape.geojsonOriginePoints)) {
-        if (!arePointsOnPerimeter(etape.geojsonOriginePerimetre, etape.geojsonOriginePoints)) {
-          throw new Error(`les points doivent être sur le périmètre`)
-        }
-      }
-
-      const { communes, sdom, surface, forets, secteurs } = await getGeojsonInformation(context.pool, etape.geojson4326Perimetre.geometry)
-
-      if (!equalGeojson(etape.geojson4326Perimetre.geometry, titreEtapeOld.geojson4326Perimetre?.geometry)) {
-        etape.surface = surface
-      } else {
-        etape.surface = titreEtapeOld.surface
-      }
-
-      etape.communes = communes
-      etape.forets = forets
-      etape.secteursMaritime = secteurs.map(id => getSecteurMaritime(id))
-      etape.sdomZones = sdom
-
-      communeIds.push(...communes.map(({ id }) => id))
-      sdomZones.push(...sdom)
-    } else {
-      etape.communes = []
-      etape.forets = []
-      etape.secteursMaritime = []
-      etape.sdomZones = []
-      etape.surface = null
-    }
-
-    const titreTypeId = titreDemarche?.titre?.typeId
-    if (!titreTypeId) {
-      throw new Error(`le type du titre de la ${titreDemarche.id} n'est pas chargé`)
-    }
-    const etapeToSave: ITitreEtape = {
-      ...etape,
-      isBrouillon: titreEtapeOld.isBrouillon,
-      ...(await getForagesProperties(titreTypeId, etape.geojsonOrigineGeoSystemeId ?? null, etape.geojsonOrigineForages ?? null, context.pool)),
-    }
-
-    const { flattenEtape } = await getFlattenEtape(etape, titreDemarche, titreTypeId, context.pool)
-
     const rulesErrors = titreEtapeUpdationValidate(
       flattenEtape,
       titreDemarche,
@@ -565,8 +522,8 @@ export const etapeModifier = async (
       etapeDocuments,
       avisDocuments,
       entrepriseDocuments,
-      sdomZones,
-      communeIds,
+      perimetreInfos.sdomZones,
+      perimetreInfos.communes.map(({ id }) => id),
       user,
       daeDocument,
       aslDocument,
@@ -578,19 +535,19 @@ export const etapeModifier = async (
     }
 
     if (!canEditDuree(titreTypeId, titreDemarche.typeId)) {
-      etape.duree = titreEtapeOld.duree
+      etape.duree = titreEtapeOld.duree ?? null
     }
 
     if (!canEditDates(titreTypeId, titreDemarche.typeId, etape.typeId, user)) {
-      etape.dateDebut = titreEtapeOld.dateDebut
-      etape.dateFin = titreEtapeOld.dateFin
+      etape.dateDebut = titreEtapeOld.dateDebut ?? null
+      etape.dateFin = titreEtapeOld.dateFin ?? null
     }
 
     if (!(await checkEntreprisesExist(context.pool, [...(etape.titulaireIds ?? []), ...(etape.amodiataireIds ?? [])]))) {
       throw new Error("certaines entreprises n'existent pas")
     }
 
-    let etapeUpdated: ITitreEtape | undefined = await titreEtapeUpsert(etapeToSave, user!, titreDemarche.titreId)
+    let etapeUpdated: ITitreEtape | undefined = await titreEtapeUpsert({ ...etape, ...perimetreInfos, isBrouillon: titreEtapeOld.isBrouillon }, user!, titreDemarche.titreId)
     if (isNullOrUndefined(etapeUpdated)) {
       throw new Error("Une erreur est survenue lors de la modification de l'étape")
     }
@@ -651,7 +608,7 @@ export const etapeModifier = async (
 
     await titreEtapeUpdateTask(context.pool, etapeUpdated.id, etapeUpdated.titreDemarcheId, user)
 
-    await titreEtapeAdministrationsEmailsSend(etapeToSave, titreDemarche.typeId, titreDemarche.titreId, titreDemarche.titre.typeId, user, titreEtapeOld)
+    await titreEtapeAdministrationsEmailsSend(etape, titreDemarche.typeId, titreDemarche.titreId, titreDemarche.titre.typeId, user, titreEtapeOld)
 
     const fields = fieldsBuild(info)
     etapeUpdated = await titreEtapeGet(etapeUpdated.id, { fields }, user)

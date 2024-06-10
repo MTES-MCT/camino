@@ -39,13 +39,14 @@ import { objectClone } from '../../tools/index.js'
 import { titreEtapeAdministrationsEmailsSend } from '../graphql/resolvers/_titre-etape-email.js'
 import { getGeojsonInformation } from './perimetre.queries.js'
 import { titreEtapeUpdateTask } from '../../business/titre-etape-update.js'
-import { simpleContenuToFlattenedContenu, valeurFind } from 'camino-common/src/sections.js'
+import { valeurFind } from 'camino-common/src/sections.js'
 import { getElementWithValue, getSections, getSectionsWithValue } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { AdministrationId } from 'camino-common/src/static/administrations.js'
 import { titreDemarcheUpdatedEtatValidate } from '../../business/validations/titre-demarche-etat-validate.js'
 import { FlattenEtape } from 'camino-common/src/etape-form.js'
 import { iTitreEtapeToFlattenEtape } from '../_format/titres-etapes.js'
+import { CommuneId } from 'camino-common/src/static/communes.js'
 
 export const getEtapeEntrepriseDocuments =
   (pool: Pool) =>
@@ -326,9 +327,11 @@ export const deposeEtape = (pool: Pool) => async (req: CaminoRequest, res: Custo
       if (isNullOrUndefined(titreEtape.slug)) throw new Error("le slug de l'étape est obligatoire")
 
       const sdomZones: SDOMZoneId[] = []
+      const communes: CommuneId[] = []
       if (isNotNullNorUndefined(titreEtape.geojson4326Perimetre)) {
-        const { sdom } = await getGeojsonInformation(pool, titreEtape.geojson4326Perimetre.geometry)
+        const { sdom, communes: communeFromGeoJson } = await getGeojsonInformation(pool, titreEtape.geojson4326Perimetre.geometry)
 
+        communes.push(...communeFromGeoJson.map(({ id }) => id))
         sdomZones.push(...sdom)
       }
       const titreTypeId = memoize(() => Promise.resolve(titre.typeId))
@@ -372,16 +375,16 @@ export const deposeEtape = (pool: Pool) => async (req: CaminoRequest, res: Custo
       })
 
       // TODO 2023-06-14 TS 5.1 n’arrive pas réduire le type de titre
+      const flattenEtape = iTitreEtapeToFlattenEtape(titreEtape)
       const deposable = canDeposeEtape(
         user,
         { ...titre, titulaires: titre.titulaireIds ?? [], administrationsLocales: titre.administrationsLocales ?? [] },
         titreDemarche.typeId,
-        { ...titreEtape, contenu: simpleContenuToFlattenedContenu(titre.typeId, titreDemarche.typeId, titreEtape.typeId, titreEtape.contenu ?? {}, titreEtape.heritageContenu) },
+        flattenEtape,
         etapeDocuments,
         entrepriseDocuments,
         sdomZones,
-        // FIXME communes
-        [],
+        communes,
         daeDocument,
         aslDocument,
         // FIXME avisDocuments
