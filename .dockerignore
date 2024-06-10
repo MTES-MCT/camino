@@ -12,6 +12,7 @@ infra/cd/.cargo_docker
 infra/cd/.cargo
 infra/cd/target
 packages/api/backups
+packages/api/backup_without_files.backup
 packages/api/sources
 packages/api/files
 packages/api/api-cache
