@@ -23,6 +23,7 @@ test("envoie un email sur un octroi d'AEX", () => {
     {
       typeId: 'mfr',
       statutId: 'fai',
+      isBrouillon: false,
     },
     'oct',
     'titreId',
@@ -39,6 +40,7 @@ test("envoie un email sur un octroi d'ARM", () => {
     {
       typeId: 'mdp',
       statutId: 'fai',
+      isBrouillon: false,
     },
     'oct',
     'titreId',
