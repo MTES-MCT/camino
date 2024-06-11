@@ -8,6 +8,7 @@
 node_modules
 /backups
 backup_without_files.sql
+backup_without_files.backup
 /dist
 /coverage
 /api-cache
