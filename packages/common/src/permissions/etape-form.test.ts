@@ -1,16 +1,16 @@
 import { expect, test } from 'vitest'
 import {
-    entrepriseDocumentsStepIsComplete,
-    entrepriseDocumentsStepIsVisible,
-    etapeDocumentsStepIsComplete,
-    etapeDocumentsStepIsVisible,
-    fondamentaleStepIsComplete,
-    fondamentaleStepIsVisible,
-    getDocumentsTypes,
-    perimetreStepIsComplete,
-    perimetreStepIsVisible,
-    sectionsStepIsComplete,
-    sectionsStepIsVisible,
+  entrepriseDocumentsStepIsComplete,
+  entrepriseDocumentsStepIsVisible,
+  etapeDocumentsStepIsComplete,
+  etapeDocumentsStepIsVisible,
+  fondamentaleStepIsComplete,
+  fondamentaleStepIsVisible,
+  getDocumentsTypes,
+  perimetreStepIsComplete,
+  perimetreStepIsVisible,
+  sectionsStepIsComplete,
+  sectionsStepIsVisible,
 } from './etape-form'
 import { ETAPE_IS_BROUILLON, ETAPE_IS_NOT_BROUILLON, documentTypeIdComplementaireObligatoireASL, documentTypeIdComplementaireObligatoireDAE, etapeDocumentIdValidator } from '../etape'
 import { toCaminoDate } from '../date'
@@ -23,12 +23,16 @@ test('fondamentaleStepIsVisible', () => {
 })
 
 test('fondamentaleStepIsComplete', () => {
-  expect(fondamentaleStepIsComplete({ duree: { value: 0, heritee: false, etapeHeritee: null }, substances: { value: [], heritee: false, etapeHeritee: null }, typeId: 'acg' }, 'amo', 'prr').valid).toBe(true)
+  expect(
+    fondamentaleStepIsComplete({ duree: { value: 0, heritee: false, etapeHeritee: null }, substances: { value: [], heritee: false, etapeHeritee: null }, typeId: 'acg' }, 'amo', 'prr').valid
+  ).toBe(true)
 
-  expect(fondamentaleStepIsComplete({ duree: { value: 0, heritee: false, etapeHeritee: null }, substances: { value: [], heritee: false, etapeHeritee: null }, typeId: 'dpu' }, 'amo', 'prr').valid).toBe(true)
-  expect(fondamentaleStepIsComplete({ duree: { value: 0, heritee: false, etapeHeritee: null }, substances: { value: [], heritee: false, etapeHeritee: null }, typeId: 'mfr' }, 'amo', 'prr').valid).toBe(
-    false
-  )
+  expect(
+    fondamentaleStepIsComplete({ duree: { value: 0, heritee: false, etapeHeritee: null }, substances: { value: [], heritee: false, etapeHeritee: null }, typeId: 'dpu' }, 'amo', 'prr').valid
+  ).toBe(true)
+  expect(
+    fondamentaleStepIsComplete({ duree: { value: 0, heritee: false, etapeHeritee: null }, substances: { value: [], heritee: false, etapeHeritee: null }, typeId: 'mfr' }, 'amo', 'prr').valid
+  ).toBe(false)
 
   expect(
     fondamentaleStepIsComplete({ duree: { value: 0, heritee: false, etapeHeritee: null }, substances: { value: ['auru'], heritee: false, etapeHeritee: null }, typeId: 'mfr' }, 'oct', 'prr').valid
@@ -39,16 +43,16 @@ test('fondamentaleStepIsComplete', () => {
   expect(
     fondamentaleStepIsComplete({ duree: { value: 0, heritee: false, etapeHeritee: null }, substances: { value: ['auru'], heritee: false, etapeHeritee: null }, typeId: 'mfr' }, 'oct', 'arm').valid
   ).toBe(false)
-  expect(fondamentaleStepIsComplete({ duree: { value: 2, heritee: false, etapeHeritee: null }, substances: { value: [], heritee: false, etapeHeritee: null }, typeId: 'mfr' }, 'oct', 'arm').valid).toBe(
-    false
-  )
+  expect(
+    fondamentaleStepIsComplete({ duree: { value: 2, heritee: false, etapeHeritee: null }, substances: { value: [], heritee: false, etapeHeritee: null }, typeId: 'mfr' }, 'oct', 'arm').valid
+  ).toBe(false)
 
   expect(
     fondamentaleStepIsComplete({ duree: { value: 0, heritee: false, etapeHeritee: null }, substances: { value: ['auru'], heritee: false, etapeHeritee: null }, typeId: 'mfr' }, 'mut', 'arm').valid
   ).toBe(true)
-  expect(fondamentaleStepIsComplete({ duree: { value: 0, heritee: false, etapeHeritee: null }, substances: { value: [], heritee: false, etapeHeritee: null }, typeId: 'mfr' }, 'mut', 'arm').valid).toBe(
-    false
-  )
+  expect(
+    fondamentaleStepIsComplete({ duree: { value: 0, heritee: false, etapeHeritee: null }, substances: { value: [], heritee: false, etapeHeritee: null }, typeId: 'mfr' }, 'mut', 'arm').valid
+  ).toBe(false)
 })
 
 test('sectionsStepIsVisible', () => {
@@ -231,7 +235,9 @@ test('etapeDocumentsStepIsComplete', () => {
     ).valid
   ).toBe(true)
 
-  expect(etapeDocumentsStepIsComplete({ typeId: 'mfr', contenu: {}, isBrouillon: ETAPE_IS_BROUILLON}, 'oct', 'axm', axmDocumentsComplete, [], null, null, { ...testBlankUser, role: 'super' }).valid).toBe(true)
+  expect(
+    etapeDocumentsStepIsComplete({ typeId: 'mfr', contenu: {}, isBrouillon: ETAPE_IS_BROUILLON }, 'oct', 'axm', axmDocumentsComplete, [], null, null, { ...testBlankUser, role: 'super' }).valid
+  ).toBe(true)
   expect(
     etapeDocumentsStepIsComplete({ typeId: 'mfr', contenu: {}, isBrouillon: ETAPE_IS_BROUILLON }, 'oct', 'axm', axmDocumentsComplete, [], null, null, {
       ...testBlankUser,
@@ -281,16 +287,16 @@ test('entrepriseDocumentsStepIsComplete', () => {
       'oct',
       'axm',
       []
-    )
-  .valid).toBe(true)
+    ).valid
+  ).toBe(true)
   expect(
     entrepriseDocumentsStepIsComplete(
       { typeId: 'mfr', titulaires: { value: [], heritee: false, etapeHeritee: null }, amodiataires: { value: [], heritee: false, etapeHeritee: null }, contenu: {} },
       'oct',
       'axm',
       []
-    )
-  .valid).toBe(true)
+    ).valid
+  ).toBe(true)
 
   expect(
     entrepriseDocumentsStepIsComplete(
@@ -298,16 +304,16 @@ test('entrepriseDocumentsStepIsComplete', () => {
       'oct',
       'axm',
       []
-    )
-  .valid).toBe(false)
+    ).valid
+  ).toBe(false)
   expect(
     entrepriseDocumentsStepIsComplete(
       { typeId: 'mfr', titulaires: { value: [], heritee: false, etapeHeritee: null }, amodiataires: { value: [entreprise1.id], heritee: false, etapeHeritee: null }, contenu: {} },
       'oct',
       'axm',
       []
-    )
-  .valid).toBe(false)
+    ).valid
+  ).toBe(false)
 
   expect(
     entrepriseDocumentsStepIsComplete(
@@ -321,7 +327,6 @@ test('entrepriseDocumentsStepIsComplete', () => {
       'arm',
       [
         {
-
           documentTypeId: 'atf',
           entrepriseId: entreprise1.id,
         },
@@ -652,12 +657,12 @@ test('getDocumentsTypes', () => {
       },
       {
         "description": "la liste et la valeur du matériel d’extraction et de
-     traitement que le demandeur détient ou qu’il
+     traitement que le demandeur détient ou qu’il 
     envisage d’acquérir ainsi que, dans ce dernier
-     cas, le financement correspondant. Ces pièces
-    sont demandées au titre de la justification des
+     cas, le financement correspondant. Ces pièces 
+    sont demandées au titre de la justification des 
     capacités financières du
-    demandeur
+    demandeur 
     (décret 2001-204, art. 7)",
         "id": "idm",
         "nom": "Identification de matériel",
@@ -800,12 +805,12 @@ test('getDocumentsTypes', () => {
       },
       {
         "description": "la liste et la valeur du matériel d’extraction et de
-     traitement que le demandeur détient ou qu’il
+     traitement que le demandeur détient ou qu’il 
     envisage d’acquérir ainsi que, dans ce dernier
-     cas, le financement correspondant. Ces pièces
-    sont demandées au titre de la justification des
+     cas, le financement correspondant. Ces pièces 
+    sont demandées au titre de la justification des 
     capacités financières du
-    demandeur
+    demandeur 
     (décret 2001-204, art. 7)",
         "id": "idm",
         "nom": "Identification de matériel",

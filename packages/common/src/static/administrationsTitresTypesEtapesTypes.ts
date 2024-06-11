@@ -579,7 +579,6 @@ const AdministrationsTitresTypesEtapesTypes: {
       [ETAPES_TYPES.notificationDesCollectivitesLocales]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.noteInterneSignalee]: { lectureInterdit: true, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.notificationAuPrefet]: { lectureInterdit: true, creationInterdit: true, modificationInterdit: true },
-      [ETAPES_TYPES.avisDuParcNaturelRegional]: { lectureInterdit: true, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.publicationDansUnJournalLocalOuNational]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.rapportDuConseilGeneralDeLeconomie_CGE_]: { lectureInterdit: true, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.receptionDeComplements]: { lectureInterdit: true, creationInterdit: true, modificationInterdit: true },
@@ -623,7 +622,6 @@ const AdministrationsTitresTypesEtapesTypes: {
       [ETAPES_TYPES.notificationDesCollectivitesLocales]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.noteInterneSignalee]: { lectureInterdit: true, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.notificationAuPrefet]: { lectureInterdit: true, creationInterdit: true, modificationInterdit: true },
-      [ETAPES_TYPES.avisDuParcNaturelRegional]: { lectureInterdit: true, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.clotureDeLaParticipationDuPublic]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.ouvertureDeLaParticipationDuPublic]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.publicationDansUnJournalLocalOuNational]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
@@ -668,7 +666,6 @@ const AdministrationsTitresTypesEtapesTypes: {
       [ETAPES_TYPES.notificationDesCollectivitesLocales]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.noteInterneSignalee]: { lectureInterdit: true, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.notificationAuPrefet]: { lectureInterdit: true, creationInterdit: true, modificationInterdit: true },
-      [ETAPES_TYPES.avisDuParcNaturelRegional]: { lectureInterdit: true, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.publicationDansUnJournalLocalOuNational]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.rapportDuConseilGeneralDeLeconomie_CGE_]: { lectureInterdit: true, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.receptionDeComplements]: { lectureInterdit: true, creationInterdit: true, modificationInterdit: true },
@@ -741,7 +738,9 @@ const AdministrationsTitresTypesEtapesTypes: {
       [ETAPES_TYPES.saisineDesCollectivitesLocales]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.saisineDeLaCommissionDepartementaleDesMines_CDM_]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
     },
-    [TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_METAUX]: { [ETAPES_TYPES.avisDesServicesEtCommissionsConsultatives]: { lectureInterdit: false, creationInterdit: false, modificationInterdit: false } },
+    [TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_METAUX]: {
+      [ETAPES_TYPES.avisDesServicesEtCommissionsConsultatives]: { lectureInterdit: false, creationInterdit: false, modificationInterdit: false },
+    },
   },
   [ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']]: {
     [TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX]: {

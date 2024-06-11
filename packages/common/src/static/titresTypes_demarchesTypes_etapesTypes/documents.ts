@@ -150,7 +150,6 @@ const EtapesTypesDocumentsTypes = {
   [ETAPES_TYPES.noteInterneSignalee]: [DOCUMENTS_TYPES_IDS.arreteMinisteriel],
   [ETAPES_TYPES.paiementDesFraisDeDossierComplementaires]: [DOCUMENTS_TYPES_IDS.facture],
   [ETAPES_TYPES.paiementDesFraisDeDossier]: [DOCUMENTS_TYPES_IDS.facture, DOCUMENTS_TYPES_IDS.justificatifDePaiement, DOCUMENTS_TYPES_IDS.notes],
-  [ETAPES_TYPES.avisDuParcNaturelRegional]: [DOCUMENTS_TYPES_IDS.avis],
   [ETAPES_TYPES.clotureDeLaParticipationDuPublic]: [DOCUMENTS_TYPES_IDS.notes, DOCUMENTS_TYPES_IDS.rapportDuCommissaireEnqueteur],
   [ETAPES_TYPES.ouvertureDeLaParticipationDuPublic]: [
     DOCUMENTS_TYPES_IDS.complementsAuDossierDeDemande,
