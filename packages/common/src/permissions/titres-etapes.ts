@@ -163,7 +163,7 @@ export type IsEtapeCompleteSdomZones = DeepReadonly<SDOMZoneId[]> | null | undef
 export type IsEtapeCompleteCommunes = DeepReadonly<CommuneId[]>
 export type IsEtapeCompleteDaeDocument = DeepReadonly<Omit<GetEtapeDocumentsByEtapeIdDaeDocument, 'id'> | null>
 export type IsEtapeCompleteAslDocument = DeepReadonly<Omit<GetEtapeDocumentsByEtapeIdAslDocument, 'id'> | null>
-export type IsEtapeCompleteAvisDocuments = DeepReadonly<Pick<EtapeAvis, 'avis_type_id'>[]>
+export type IsEtapeCompleteEtapeAvis = DeepReadonly<Pick<EtapeAvis, 'avis_type_id'>[]>
 
 export const isEtapeComplete = (
   etape: IsEtapeCompleteEtape,
@@ -175,7 +175,7 @@ export const isEtapeComplete = (
   communes: IsEtapeCompleteCommunes,
   daeDocument: IsEtapeCompleteDaeDocument,
   aslDocument: IsEtapeCompleteAslDocument,
-  avisDocuments: IsEtapeCompleteAvisDocuments,
+  etapeAvis: IsEtapeCompleteEtapeAvis,
   user: User
 ): { valid: true } | { valid: false; errors: NonEmptyArray<string> } => {
   const isCompleteChecks = [
@@ -190,7 +190,7 @@ export const isEtapeComplete = (
       titreTypeId,
       entrepriseDocuments.map(ed => ({ documentTypeId: ed.entreprise_document_type_id, entrepriseId: ed.entreprise_id }))
     ),
-    etapeAvisStepIsComplete(etape, avisDocuments, titreTypeId, communes),
+    etapeAvisStepIsComplete(etape, etapeAvis, titreTypeId, communes),
   ]
   const errors: string[] = isCompleteChecks.reduce<string[]>((acc, c) => {
     if (!c.valid) {
@@ -283,7 +283,7 @@ export const isEtapeComplete = (
   return { valid: true }
 }
 
-export type IsEtapeDeposableAvisDocuments = DeepReadonly<(EtapeAvis | TempEtapeAvis)[]>
+export type IsEtapeDeposableEtapeAvis = DeepReadonly<(EtapeAvis | TempEtapeAvis)[]>
 export const isEtapeDeposable = (
   user: User,
   titreTypeId: TitreTypeId,
@@ -295,12 +295,12 @@ export const isEtapeDeposable = (
   communes: IsEtapeCompleteCommunes,
   daeDocument: IsEtapeCompleteDaeDocument,
   aslDocument: IsEtapeCompleteAslDocument,
-  avisDocuments: IsEtapeDeposableAvisDocuments
+  etapeAvis: IsEtapeDeposableEtapeAvis
 ): boolean => {
   // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   if (titreEtape.typeId === ETAPES_TYPES.demande && titreEtape.isBrouillon) {
     // FIXME On ne peut pas se baser sur le defaultHeritageProps car on ne sait pas quelles étapes seront déposable à l’avenir, il faut doncl’ajouter en param.
-    const complete = isEtapeComplete(titreEtape, titreTypeId, demarcheTypeId, etapeDocuments, entrepriseDocuments, sdomZones, communes, daeDocument, aslDocument, avisDocuments, user)
+    const complete = isEtapeComplete(titreEtape, titreTypeId, demarcheTypeId, etapeDocuments, entrepriseDocuments, sdomZones, communes, daeDocument, aslDocument, etapeAvis, user)
     if (!complete.valid) {
       console.warn(complete.errors)
 
@@ -329,10 +329,10 @@ export const canDeposeEtape = (
   communes: CommuneId[],
   daeDocument: GetEtapeDocumentsByEtapeId['dae'],
   aslDocument: GetEtapeDocumentsByEtapeId['asl'],
-  avisDocuments: (EtapeAvis | TempEtapeAvis)[]
+  etapeAvis: (EtapeAvis | TempEtapeAvis)[]
 ): boolean => {
   return (
-    isEtapeDeposable(user, titre.typeId, demarcheTypeId, titreEtape, etapeDocuments, entrepriseDocuments, sdomZones, communes, daeDocument, aslDocument, avisDocuments) &&
+    isEtapeDeposable(user, titre.typeId, demarcheTypeId, titreEtape, etapeDocuments, entrepriseDocuments, sdomZones, communes, daeDocument, aslDocument, etapeAvis) &&
     canCreateOrEditEtape(
       user,
       titreEtape.typeId,

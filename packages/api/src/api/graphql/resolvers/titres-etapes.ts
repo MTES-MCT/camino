@@ -31,10 +31,11 @@ import {
   etapeIdValidator,
   etapeSlugValidator,
   needAslAndDae,
+  tempEtapeAvisValidator,
   tempEtapeDocumentValidator,
 } from 'camino-common/src/etape.js'
 import { checkEntreprisesExist, getEntrepriseDocuments } from '../../rest/entreprises.queries.js'
-import { deleteTitreEtapeEntrepriseDocument, insertEtapeDocuments, insertTitreEtapeEntrepriseDocument, updateEtapeDocuments } from '../../../database/queries/titres-etapes.queries.js'
+import { deleteTitreEtapeEntrepriseDocument, insertEtapeAvis, insertEtapeDocuments, insertTitreEtapeEntrepriseDocument, updateEtapeDocuments } from '../../../database/queries/titres-etapes.queries.js'
 import { EntrepriseDocument, EntrepriseDocumentId, EntrepriseId } from 'camino-common/src/entreprise.js'
 import { Pool } from 'pg'
 import { GetGeojsonInformation, convertPoints, getGeojsonInformation } from '../../rest/perimetre.queries.js'
@@ -322,15 +323,19 @@ export const etapeCreer = async ({ etape: etapeNotParsed }: { etape: unknown }, 
 
     const etapeDocuments = etapeDocumentsParsed.data
 
-    // FIXME
-    const avisDocuments: EtapeAvis[] = []
+    const etapeAvisParsed = z.array(tempEtapeAvisValidator).safeParse(etape.etapeAvis)
+    if (!etapeAvisParsed.success) {
+      console.warn(etapeAvisParsed.error)
+      throw new Error('Les avis envoyés ne sont pas conformes')
+    }
 
+    const etapeAvis = etapeAvisParsed.data
     const rulesErrors = titreEtapeUpdationValidate(
       flattenEtape,
       titreDemarche,
       titreDemarche.titre,
       etapeDocuments,
-      avisDocuments,
+      etapeAvis,
       entrepriseDocuments,
       perimetreInfos.sdomZones,
       perimetreInfos.communes.map(({ id }) => id),
@@ -372,6 +377,8 @@ export const etapeCreer = async ({ etape: etapeNotParsed }: { etape: unknown }, 
     for (const document of entrepriseDocuments) {
       await insertTitreEtapeEntrepriseDocument(context.pool, { titre_etape_id: etapeUpdated.id, entreprise_document_id: document.id })
     }
+
+    await insertEtapeAvis(context.pool, etapeUpdated.id, etapeAvis)
 
     try {
       await titreEtapeUpdateTask(context.pool, etapeUpdated.id, etapeUpdated.titreDemarcheId, user)
@@ -492,7 +499,7 @@ export const etapeModifier = async ({ etape: etapeNotParsed }: { etape: unknown 
     // delete etape.etapeDocuments
 
     // FIXME
-    const avisDocuments: EtapeAvis[] = []
+    const etapeAvis: EtapeAvis[] = []
 
     const needToCreateAslAndDae = needAslAndDae({ etapeTypeId: etape.typeId, demarcheTypeId: titreDemarche.typeId, titreTypeId: titreDemarche.titre.typeId }, titreEtapeOld.isBrouillon, user)
     let daeDocument = null
@@ -520,7 +527,7 @@ export const etapeModifier = async ({ etape: etapeNotParsed }: { etape: unknown 
       titreDemarche,
       titreDemarche.titre,
       etapeDocuments,
-      avisDocuments,
+      etapeAvis,
       entrepriseDocuments,
       perimetreInfos.sdomZones,
       perimetreInfos.communes.map(({ id }) => id),

@@ -134,6 +134,26 @@ export interface IInsertEtapeDocumentDbQuery {
   result: IInsertEtapeDocumentDbResult;
 }
 
+/** 'InsertEtapeAvisDb' parameters type */
+export interface IInsertEtapeAvisDbParams {
+  avis_statut_id: string;
+  avis_type_id: string;
+  date: string;
+  description: string;
+  etape_id: string;
+  id: string;
+  largeobject_id: number;
+}
+
+/** 'InsertEtapeAvisDb' return type */
+export type IInsertEtapeAvisDbResult = void;
+
+/** 'InsertEtapeAvisDb' query type */
+export interface IInsertEtapeAvisDbQuery {
+  params: IInsertEtapeAvisDbParams;
+  result: IInsertEtapeAvisDbResult;
+}
+
 /** 'GetDocumentsByEtapeIdQuery' parameters type */
 export interface IGetDocumentsByEtapeIdQueryParams {
   titre_etape_id: string;

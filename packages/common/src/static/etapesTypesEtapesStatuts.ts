@@ -7,36 +7,18 @@ export interface EtapeTypeEtapeStatut<T extends EtapeTypeId, R extends EtapeStat
 }
 
 export const EtapesTypesEtapesStatuts = {
-  avisDeDirectionRegionaleDesAffairesCulturelles: {
-    FAVORABLE: { etapeTypeId: 'aac', etapeStatutId: 'fav' },
-    FAVORABLE_AVEC_RESERVE: { etapeTypeId: 'aac', etapeStatutId: 'fre' },
-    DEFAVORABLE: { etapeTypeId: 'aac', etapeStatutId: 'def' },
-    DEFAVORABLE_AVEC_RESERVES: { etapeTypeId: 'aac', etapeStatutId: 'dre' },
+  avisDesServicesEtCommissionsConsultatives: {
+    FAIT: { etapeTypeId: 'asc', etapeStatutId: 'fai' },
   },
-  avisDeLaDirectionDalimentationDeLagricultureEtDeLaForet: {
-    FAVORABLE: { etapeTypeId: 'aaf', etapeStatutId: 'fav' },
-    FAVORABLE_AVEC_RESERVE: { etapeTypeId: 'aaf', etapeStatutId: 'fre' },
-    DEFAVORABLE: { etapeTypeId: 'aaf', etapeStatutId: 'def' },
-    DEFAVORABLE_AVEC_RESERVES: { etapeTypeId: 'aaf', etapeStatutId: 'dre' },
-  },
+
   abrogationDeLaDecision: { FAIT: { etapeTypeId: 'abd', etapeStatutId: 'fai' } },
-  avisDGTMServiceMilieuxNaturelsBiodiversiteSitesEtPaysages_MNBST_: {
-    FAVORABLE: { etapeTypeId: 'abs', etapeStatutId: 'fav' },
-    FAVORABLE_AVEC_RESERVE: { etapeTypeId: 'abs', etapeStatutId: 'fre' },
-    DEFAVORABLE: { etapeTypeId: 'abs', etapeStatutId: 'def' },
-    DEFAVORABLE_AVEC_RESERVES: { etapeTypeId: 'abs', etapeStatutId: 'dre' },
-  },
+
   avisDeLaCommissionDesAutorisationsDeRecherchesMinieres_CARM_: {
     FAVORABLE: { etapeTypeId: 'aca', etapeStatutId: 'fav' },
     DEFAVORABLE: { etapeTypeId: 'aca', etapeStatutId: 'def' },
     AJOURNE: { etapeTypeId: 'aca', etapeStatutId: 'ajo' },
   },
-  avisDuConseilDepartementalDeLenvironnementEtDesRisquesSanitairesEtTechnologiques_Coderst_: {
-    FAVORABLE: { etapeTypeId: 'acd', etapeStatutId: 'fav' },
-    FAVORABLE_AVEC_RESERVE: { etapeTypeId: 'acd', etapeStatutId: 'fre' },
-    DEFAVORABLE: { etapeTypeId: 'acd', etapeStatutId: 'def' },
-    DEFAVORABLE_AVEC_RESERVES: { etapeTypeId: 'acd', etapeStatutId: 'dre' },
-  },
+
   avisDuConseilGeneralDeLeconomie_CGE_: {
     FAVORABLE: { etapeTypeId: 'acg', etapeStatutId: 'fav' },
     DEFAVORABLE: { etapeTypeId: 'acg', etapeStatutId: 'def' },
@@ -48,48 +30,23 @@ export const EtapesTypesEtapesStatuts = {
     DEFAVORABLE: { etapeTypeId: 'acl', etapeStatutId: 'def' },
   },
   avenantALautorisationDeRechercheMiniere: { FAIT: { etapeTypeId: 'aco', etapeStatutId: 'fai' } },
-  avisDeLaDirectionDesEntreprisesDeLaConcurrenceDeLaConsommationDuTravailEtDeLemploi: {
-    FAVORABLE: { etapeTypeId: 'aec', etapeStatutId: 'fav' },
-    FAVORABLE_AVEC_RESERVE: { etapeTypeId: 'aec', etapeStatutId: 'fre' },
-    DEFAVORABLE: { etapeTypeId: 'aec', etapeStatutId: 'def' },
-    DEFAVORABLE_AVEC_RESERVES: { etapeTypeId: 'aec', etapeStatutId: 'dre' },
-  },
+
   avisDunPresidentDEPCI: {
     FAVORABLE: { etapeTypeId: 'aep', etapeStatutId: 'fav' },
     DEFAVORABLE: { etapeTypeId: 'aep', etapeStatutId: 'def' },
     FAVORABLE_AVEC_RESERVE: { etapeTypeId: 'aep', etapeStatutId: 'fre' },
     DEFAVORABLE_AVEC_RESERVES: { etapeTypeId: 'aep', etapeStatutId: 'dre' },
   },
-  avisDeLaDirectionRegionaleDesFinancesPubliques: {
-    FAVORABLE: { etapeTypeId: 'afp', etapeStatutId: 'fav' },
-    FAVORABLE_AVEC_RESERVE: { etapeTypeId: 'afp', etapeStatutId: 'fre' },
-    DEFAVORABLE: { etapeTypeId: 'afp', etapeStatutId: 'def' },
-    DEFAVORABLE_AVEC_RESERVES: { etapeTypeId: 'afp', etapeStatutId: 'dre' },
-  },
-  avisDeLaGendarmerieNationale: {
-    FAVORABLE: { etapeTypeId: 'agn', etapeStatutId: 'fav' },
-    FAVORABLE_AVEC_RESERVE: { etapeTypeId: 'agn', etapeStatutId: 'fre' },
-    DEFAVORABLE: { etapeTypeId: 'agn', etapeStatutId: 'def' },
-    DEFAVORABLE_AVEC_RESERVES: { etapeTypeId: 'agn', etapeStatutId: 'dre' },
-  },
-  avisDeLIfremer: {
-    FAVORABLE: { etapeTypeId: 'aim', etapeStatutId: 'fav' },
-    FAVORABLE_AVEC_RESERVE: { etapeTypeId: 'aim', etapeStatutId: 'fre' },
-    DEFAVORABLE: { etapeTypeId: 'aim', etapeStatutId: 'def' },
-    DEFAVORABLE_AVEC_RESERVES: { etapeTypeId: 'aim', etapeStatutId: 'dre' },
-  },
+
+
+
   avisDunMaire: {
     FAVORABLE: { etapeTypeId: 'ama', etapeStatutId: 'fav' },
     DEFAVORABLE: { etapeTypeId: 'ama', etapeStatutId: 'def' },
     FAVORABLE_AVEC_RESERVE: { etapeTypeId: 'ama', etapeStatutId: 'fre' },
     DEFAVORABLE_AVEC_RESERVES: { etapeTypeId: 'ama', etapeStatutId: 'dre' },
   },
-  avisDuParcNaturelMarin: {
-    FAVORABLE: { etapeTypeId: 'ami', etapeStatutId: 'fav' },
-    FAVORABLE_AVEC_RESERVE: { etapeTypeId: 'ami', etapeStatutId: 'fre' },
-    DEFAVORABLE: { etapeTypeId: 'ami', etapeStatutId: 'def' },
-    DEFAVORABLE_AVEC_RESERVES: { etapeTypeId: 'ami', etapeStatutId: 'dre' },
-  },
+
   decisionDuJugeAdministratif: {
     FAIT: { etapeTypeId: 'and', etapeStatutId: 'fai' },
     ACCEPTE: { etapeTypeId: 'and', etapeStatutId: 'acc' },
@@ -107,16 +64,8 @@ export const EtapesTypesEtapesStatuts = {
     TERMINE: { etapeTypeId: 'anf', etapeStatutId: 'ter' },
     FAIT: { etapeTypeId: 'anf', etapeStatutId: 'fai' },
   },
-  avisDeLOfficeNationalDesForets: {
-    FAVORABLE: { etapeTypeId: 'aof', etapeStatutId: 'fav' },
-    FAVORABLE_AVEC_RESERVE: { etapeTypeId: 'aof', etapeStatutId: 'fre' },
-    DEFAVORABLE: { etapeTypeId: 'aof', etapeStatutId: 'def' },
-    DEFAVORABLE_AVEC_RESERVES: { etapeTypeId: 'aof', etapeStatutId: 'dre' },
-  },
-  avisDeLInstitutNationalDeLorigineEtDeLaQualite: {
-    FAVORABLE: { etapeTypeId: 'aop', etapeStatutId: 'fav' },
-    DEFAVORABLE: { etapeTypeId: 'aop', etapeStatutId: 'def' },
-  },
+
+
   avisEtRapportDuDirecteurRegionalChargeDeLenvironnementDeLamenagementEtDuLogement: {
     FAVORABLE: { etapeTypeId: 'apd', etapeStatutId: 'fav' },
     DEFAVORABLE: { etapeTypeId: 'apd', etapeStatutId: 'def' },
@@ -129,28 +78,10 @@ export const EtapesTypesEtapesStatuts = {
     FAVORABLE_AVEC_RESERVE: { etapeTypeId: 'ape', etapeStatutId: 'fre' },
     DEFAVORABLE_AVEC_RESERVES: { etapeTypeId: 'ape', etapeStatutId: 'dre' },
   },
-  avisDeLetatMajorOrpaillageEtPecheIllicite_EMOPI_: {
-    FAVORABLE: { etapeTypeId: 'api', etapeStatutId: 'fav' },
-    FAVORABLE_AVEC_RESERVE: { etapeTypeId: 'api', etapeStatutId: 'fre' },
-    DEFAVORABLE: { etapeTypeId: 'api', etapeStatutId: 'def' },
-    DEFAVORABLE_AVEC_RESERVES: { etapeTypeId: 'api', etapeStatutId: 'dre' },
-  },
-  avisDunServiceAdministratifLocal: {
-    FAVORABLE: { etapeTypeId: 'apl', etapeStatutId: 'fav' },
-    DEFAVORABLE: { etapeTypeId: 'apl', etapeStatutId: 'def' },
-    FAVORABLE_AVEC_RESERVE: { etapeTypeId: 'apl', etapeStatutId: 'fre' },
-    DEFAVORABLE_AVEC_RESERVES: { etapeTypeId: 'apl', etapeStatutId: 'dre' },
-  },
-  avisDeLautoriteMilitaire: {
-    FAVORABLE: { etapeTypeId: 'apm', etapeStatutId: 'fav' },
-    DEFAVORABLE: { etapeTypeId: 'apm', etapeStatutId: 'def' },
-    FAVORABLE_AVEC_RESERVE: { etapeTypeId: 'apm', etapeStatutId: 'fre' },
-    DEFAVORABLE_AVEC_RESERVES: { etapeTypeId: 'apm', etapeStatutId: 'dre' },
-  },
-  avisDuParcNational: {
-    FAVORABLE: { etapeTypeId: 'apn', etapeStatutId: 'fav' },
-    DEFAVORABLE: { etapeTypeId: 'apn', etapeStatutId: 'def' },
-  },
+
+
+
+
   avisDeLaCommissionDepartementaleDesMines_CDM_: {
     AJOURNE: { etapeTypeId: 'apo', etapeStatutId: 'ajo' },
     FAVORABLE: { etapeTypeId: 'apo', etapeStatutId: 'fav' },
@@ -175,40 +106,18 @@ export const EtapesTypesEtapesStatuts = {
     FAVORABLE_AVEC_RESERVE: { etapeTypeId: 'apw', etapeStatutId: 'fre' },
     DEFAVORABLE_AVEC_RESERVES: { etapeTypeId: 'apw', etapeStatutId: 'dre' },
   },
-  avisDeLaReunionInterservice: {
-    FAVORABLE: { etapeTypeId: 'ari', etapeStatutId: 'fav' },
-    DEFAVORABLE: { etapeTypeId: 'ari', etapeStatutId: 'def' },
-  },
-  avisDeLagenceRegionaleDeSante: {
-    FAVORABLE: { etapeTypeId: 'ars', etapeStatutId: 'fav' },
-    FAVORABLE_AVEC_RESERVE: { etapeTypeId: 'ars', etapeStatutId: 'fre' },
-    DEFAVORABLE: { etapeTypeId: 'ars', etapeStatutId: 'def' },
-    DEFAVORABLE_AVEC_RESERVES: { etapeTypeId: 'ars', etapeStatutId: 'dre' },
-  },
+
+
   decisionDuProprietaireDuSol: {
     FAVORABLE: { etapeTypeId: 'asl', etapeStatutId: 'fav' },
     FAVORABLE_AVEC_RESERVE: { etapeTypeId: 'asl', etapeStatutId: 'fre' },
     DEFAVORABLE: { etapeTypeId: 'asl', etapeStatutId: 'def' },
   },
-  avisDeLaCaisseGeneraleDeSecuriteSociale: {
-    FAVORABLE: { etapeTypeId: 'ass', etapeStatutId: 'fav' },
-    FAVORABLE_AVEC_RESERVE: { etapeTypeId: 'ass', etapeStatutId: 'fre' },
-    DEFAVORABLE: { etapeTypeId: 'ass', etapeStatutId: 'def' },
-    DEFAVORABLE_AVEC_RESERVES: { etapeTypeId: 'ass', etapeStatutId: 'dre' },
-  },
-  avisDGTMServiceAmenagementUrbanismeConstructionLogement_AUCL_: {
-    FAVORABLE: { etapeTypeId: 'auc', etapeStatutId: 'fav' },
-    FAVORABLE_AVEC_RESERVE: { etapeTypeId: 'auc', etapeStatutId: 'fre' },
-    DEFAVORABLE: { etapeTypeId: 'auc', etapeStatutId: 'def' },
-    DEFAVORABLE_AVEC_RESERVES: { etapeTypeId: 'auc', etapeStatutId: 'dre' },
-  },
+
   consultationDesAdministrationsCentrales: { FAIT: { etapeTypeId: 'cac', etapeStatutId: 'fai' } },
   concertationInterministerielle: { FAIT: { etapeTypeId: 'cim', etapeStatutId: 'fai' } },
   saisineDuConseilDepartementalDeLenvironnementEtDesRisquesSanitairesEtTechnologiques_Coderst_: { FAIT: { etapeTypeId: 'cod', etapeStatutId: 'fai' } },
-  confirmationDeLaccordDuProprietaireDuSol: {
-    FAVORABLE: { etapeTypeId: 'cps', etapeStatutId: 'fav' },
-    DEFAVORABLE: { etapeTypeId: 'cps', etapeStatutId: 'def' },
-  },
+
   classementSansSuite: { FAIT: { etapeTypeId: 'css', etapeStatutId: 'fai' } },
   decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_: {
     EXEMPTE: { etapeTypeId: 'dae', etapeStatutId: 'exe' },
@@ -242,7 +151,6 @@ export const EtapesTypesEtapesStatuts = {
     FAVORABLE: { etapeTypeId: 'edm', etapeStatutId: 'fav' },
     DEFAVORABLE: { etapeTypeId: 'edm', etapeStatutId: 'def' },
   },
-  expertiseDeLOfficeNationalDesForets: { FAIT: { etapeTypeId: 'eof', etapeStatutId: 'fai' } },
   clotureDeLenquetePublique: { TERMINE: { etapeTypeId: 'epc', etapeStatutId: 'ter' } },
   ouvertureDeLenquetePublique: {
     PROGRAMME: { etapeTypeId: 'epu', etapeStatutId: 'pro' },
@@ -334,33 +242,12 @@ export const EtapesTypesEtapesStatuts = {
   saisineDuConseilDEtat: { FAIT: { etapeTypeId: 'spe', etapeStatutId: 'fai' } },
   saisineDeLaCommissionDepartementaleDesMines_CDM_: { FAIT: { etapeTypeId: 'spo', etapeStatutId: 'fai' } },
   saisineDuPrefet: { FAIT: { etapeTypeId: 'spp', etapeStatutId: 'fai' } },
-  saisineDesServices: { FAIT: { etapeTypeId: 'ssr', etapeStatutId: 'fai' } },
   validationDuPaiementDesFraisDeDossierComplementaires: { FAIT: { etapeTypeId: 'vfc', etapeStatutId: 'fai' } },
   validationDuPaiementDesFraisDeDossier: { FAIT: { etapeTypeId: 'vfd', etapeStatutId: 'fai' } },
   abandonDeLaDemande: { FAIT: { etapeTypeId: 'wab', etapeStatutId: 'fai' } },
-  avisDeDirectionRegionaleDesAffairesCulturellesDRAC: {
-    FAVORABLE: { etapeTypeId: 'wac', etapeStatutId: 'fav' },
-    DEFAVORABLE: { etapeTypeId: 'wac', etapeStatutId: 'def' },
-  },
-  avisDeLaDirectionDepartementaleDesTerritoiresEtDeLaMerDDT_M_: {
-    FAVORABLE: { etapeTypeId: 'wad', etapeStatutId: 'fav' },
-    DEFAVORABLE: { etapeTypeId: 'wad', etapeStatutId: 'def' },
-  },
   avisDeLautoriteEnvironnementale: {
     FAVORABLE: { etapeTypeId: 'wae', etapeStatutId: 'fav' },
     DEFAVORABLE: { etapeTypeId: 'wae', etapeStatutId: 'def' },
-  },
-  avisDesAutresInstances: {
-    FAVORABLE: { etapeTypeId: 'wai', etapeStatutId: 'fav' },
-    DEFAVORABLE: { etapeTypeId: 'wai', etapeStatutId: 'def' },
-  },
-  avisDunServiceAdministratifLocal_wal: {
-    FAVORABLE: { etapeTypeId: 'wal', etapeStatutId: 'fav' },
-    DEFAVORABLE: { etapeTypeId: 'wal', etapeStatutId: 'def' },
-  },
-  avisDeLautoriteMilitaire_wam: {
-    FAVORABLE: { etapeTypeId: 'wam', etapeStatutId: 'fav' },
-    DEFAVORABLE: { etapeTypeId: 'wam', etapeStatutId: 'def' },
   },
   arreteDouvertureDesTravauxMiniers: { FAIT: { etapeTypeId: 'wao', etapeStatutId: 'fai' } },
   avisDuPrefetMaritime_wap: {
@@ -368,14 +255,6 @@ export const EtapesTypesEtapesStatuts = {
     DEFAVORABLE: { etapeTypeId: 'wap', etapeStatutId: 'def' },
   },
   avisDeReception: { FAIT: { etapeTypeId: 'war', etapeStatutId: 'fai' } },
-  avisDeLagenceRegionaleDeSanteARS: {
-    FAVORABLE: { etapeTypeId: 'was', etapeStatutId: 'fav' },
-    DEFAVORABLE: { etapeTypeId: 'was', etapeStatutId: 'def' },
-  },
-  avisDuConseilDepartementalDeLenvironnementEtDesRisquesSanitairesEtTechnologiques_Coderst__wat: {
-    FAVORABLE: { etapeTypeId: 'wat', etapeStatutId: 'fav' },
-    DEFAVORABLE: { etapeTypeId: 'wat', etapeStatutId: 'def' },
-  },
   avisDuDemandeurSurLesPrescriptionsProposees: {
     FAVORABLE: { etapeTypeId: 'wau', etapeStatutId: 'fav' },
     DEFAVORABLE: { etapeTypeId: 'wau', etapeStatutId: 'def' },
@@ -424,10 +303,8 @@ export const EtapesTypesEtapesStatuts = {
     DEFAVORABLE: { etapeTypeId: 'wrt', etapeStatutId: 'def' },
   },
   saisineDeLautoriteEnvironnementale: { FAIT: { etapeTypeId: 'wse', etapeStatutId: 'fai' } },
-  saisineDesServicesDeLEtat: { FAIT: { etapeTypeId: 'wss', etapeStatutId: 'fai' } },
   transmissionDuProjetDePrescriptionsAuDemandeur: { FAIT: { etapeTypeId: 'wtp', etapeStatutId: 'fai' } },
   receptionDeComplements_wco: { FAIT: { etapeTypeId: 'wco', etapeStatutId: 'fai' } },
-  avisDeLaDDT_M_: { FAIT: { etapeTypeId: 'wdt', etapeStatutId: 'fai' } },
   consultationCLEDuSAGE: {
     FAVORABLE: { etapeTypeId: 'ccs', etapeStatutId: 'fav' },
     DEFAVORABLE: { etapeTypeId: 'ccs', etapeStatutId: 'def' },

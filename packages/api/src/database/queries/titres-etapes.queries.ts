@@ -11,8 +11,9 @@ import {
   IDeleteEtapeDocumentsDbQuery,
   IUpdateEtapeDocumentFileDbQuery,
   IUpdateEtapeDocumentInfoDbQuery,
+  IInsertEtapeAvisDbQuery,
 } from './titres-etapes.queries.types.js'
-import { EtapeDocument, EtapeDocumentId, EtapeDocumentModification, etapeDocumentValidator, EtapeDocumentWithFileModification, EtapeId, TempEtapeDocument } from 'camino-common/src/etape.js'
+import { EtapeAvisId, EtapeDocument, EtapeDocumentId, EtapeDocumentModification, etapeDocumentValidator, EtapeDocumentWithFileModification, EtapeId, TempEtapeAvis, TempEtapeDocument } from 'camino-common/src/etape.js'
 import { EntrepriseDocumentId, entrepriseDocumentValidator, EntrepriseId, EtapeEntrepriseDocument, etapeEntrepriseDocumentValidator } from 'camino-common/src/entreprise.js'
 import { Pool } from 'pg'
 import { User } from 'camino-common/src/roles.js'
@@ -25,7 +26,7 @@ import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, SimplePromiseFn } from 'camino-common/src/typescript-tools.js'
 import { CanReadDemarche } from '../../api/rest/permissions/demarches.js'
-import { newEtapeDocumentId } from '../models/_format/id-create.js'
+import { newEtapeAvisId, newEtapeDocumentId } from '../models/_format/id-create.js'
 import { getCurrent } from 'camino-common/src/date.js'
 import { createLargeObject, LargeObjectId } from '../largeobjects.js'
 import { canDeleteEtapeDocument } from 'camino-common/src/permissions/titres-etapes.js'
@@ -152,11 +153,26 @@ export const insertEtapeDocuments = async (pool: Pool, titre_etape_id: EtapeId, 
   }
 }
 
+
 const insertEtapeDocumentDb = sql<
   Redefine<IInsertEtapeDocumentDbQuery, { etape_id: EtapeId; id: EtapeDocumentId; largeobject_id: LargeObjectId } & Omit<TempEtapeDocument, 'temp_document_name'>, void>
 >`
 insert into etapes_documents (id, etape_document_type_id, etape_id, description, public_lecture, entreprises_lecture, largeobject_id)
     values ($ id !, $ etape_document_type_id !, $ etape_id !, $ description, $ public_lecture !, $ entreprises_lecture !, $ largeobject_id !)
+`
+
+export const insertEtapeAvis = async (pool: Pool, titre_etape_id: EtapeId, etapeAvis: TempEtapeAvis[]) => {
+  for (const avis of etapeAvis) {
+    const id = newEtapeAvisId(getCurrent(), avis.avis_type_id)
+    const largeobject_id = await createLargeObject(pool, avis.temp_document_name)
+    await dbQueryAndValidate(insertEtapeAvisDb, { ...avis, etape_id: titre_etape_id, id, largeobject_id }, pool, z.void())
+  }
+}
+const insertEtapeAvisDb = sql<
+  Redefine<IInsertEtapeAvisDbQuery, { etape_id: EtapeId; id: EtapeAvisId; largeobject_id: LargeObjectId } & Omit<TempEtapeAvis, 'temp_document_name'>, void>
+>`
+insert into etape_avis (id, avis_type_id, etape_id, description, avis_statut_id, date, largeobject_id)
+    values ($ id !, $ avis_type_id !, $ etape_id !, $ description !, $ avis_statut_id !, $ date !, $ largeobject_id !)
 `
 
 const etapeDocumentLargeObjectIdValidator = z.number().brand('EtapeDocumentLargeObjectId')

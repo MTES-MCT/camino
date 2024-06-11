@@ -175,8 +175,7 @@ export const getDocumentsTypes = (
 // FIXME unit tests
 export const getAvisTypes = (etapeTypeId: EtapeTypeId, titreTypeId: TitreTypeId, communeIds: DeepReadonly<CommuneId[]>): { id: AvisTypeId; optionnel: boolean }[] => {
   const avis = []
-  // FIXME nouvelle ssr
-  if (etapeTypeId === 'ssr') {
+  if (etapeTypeId === ETAPES_TYPES.avisDesServicesEtCommissionsConsultatives) {
     avis.push(
       ...[
         { ...AvisTypes.lettreDeSaisineDesServices, optionnel: false },

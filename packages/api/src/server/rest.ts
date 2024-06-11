@@ -40,7 +40,7 @@ import {
 import { CaminoConfig, caminoConfigValidator } from 'camino-common/src/static/config.js'
 import { CaminoRequest, CustomResponse } from '../api/rest/express-type.js'
 import { User } from 'camino-common/src/roles.js'
-import { deleteEtape, deposeEtape, getEtape, getEtapeDocuments, getEtapeEntrepriseDocuments, getEtapesTypesEtapesStatusWithMainStep } from '../api/rest/etapes.js'
+import { deleteEtape, deposeEtape, getEtape, getEtapeAvis, getEtapeDocuments, getEtapeEntrepriseDocuments, getEtapesTypesEtapesStatusWithMainStep } from '../api/rest/etapes.js'
 import { z } from 'zod'
 import { getCommunes } from '../api/rest/communes.js'
 import { SendFileOptions } from 'express-serve-static-core'
@@ -149,6 +149,8 @@ const restRouteImplementations: Readonly<{ [key in CaminoRestRoute]: Transform<k
   '/rest/etapes/:etapeId/depot': { put: deposeEtape },
   '/rest/etapes/:etapeId/entrepriseDocuments': { get: getEtapeEntrepriseDocuments },
   '/rest/etapes/:etapeId/etapeDocuments': { get: getEtapeDocuments },
+  // FIXME: tests d'intégration ?
+  '/rest/etapes/:etapeId/etapeAvis': { get: getEtapeAvis },
   '/rest/activites/:activiteId': { get: getActivite, put: updateActivite, delete: deleteActivite },
   '/rest/communes': { get: getCommunes },
   '/rest/geojson/import/:geoSystemeId': { post: geojsonImport },

@@ -25,7 +25,7 @@ import {
 } from './titres.js'
 import { adminUserNotNullValidator, userValidator } from './roles.js'
 import { caminoAnneeValidator, caminoDateValidator } from './date.js'
-import { etapeDocumentIdValidator, etapeIdOrSlugValidator, etapeIdValidator, etapeTypeEtapeStatutWithMainStepValidator, getEtapeDocumentsByEtapeIdValidator } from './etape.js'
+import { etapeDocumentIdValidator, etapeIdOrSlugValidator, etapeIdValidator, etapeTypeEtapeStatutWithMainStepValidator, getEtapeDocumentsByEtapeIdValidator, getEtapeAvisByEtapeIdValidator } from './etape.js'
 import {
   statistiquesDGTMValidator,
   statistiquesDataGouvValidator,
@@ -96,6 +96,7 @@ const IDS = [
   '/rest/demarches/:demarcheId/geojson',
   '/rest/etapes/:etapeId/geojson',
   '/rest/etapes/:etapeId/etapeDocuments',
+  '/rest/etapes/:etapeId/etapeAvis',
   '/rest/etapes/:etapeId/entrepriseDocuments',
   '/rest/etapes/:etapeIdOrSlug',
   '/rest/etapes/:etapeId/depot',
@@ -178,6 +179,7 @@ export const CaminoRestRoutes = {
   '/rest/demarches/:demarcheId/geojson': { params: { demarcheId: demarcheIdOrSlugValidator }, get: { output: perimetreInformationsValidator } },
   '/rest/etapes/:etapeId/geojson': { params: { etapeId: etapeIdOrSlugValidator }, get: { output: perimetreInformationsValidator } },
   '/rest/etapes/:etapeId/etapeDocuments': { params: { etapeId: etapeIdValidator }, get: { output: getEtapeDocumentsByEtapeIdValidator } },
+  '/rest/etapes/:etapeId/etapeAvis': { params: { etapeId: etapeIdValidator }, get: { output: getEtapeAvisByEtapeIdValidator } },
   '/rest/etapes/:etapeId/entrepriseDocuments': { params: { etapeId: etapeIdValidator }, get: { output: z.array(etapeEntrepriseDocumentValidator) } },
   '/rest/etapes/:etapeIdOrSlug': { params: { etapeIdOrSlug: etapeIdOrSlugValidator }, delete: true, get: {output: flattenEtapeValidator} },
   '/rest/etapes/:etapeId/depot': { params: { etapeId: etapeIdValidator }, put: { input: z.void(), output: z.void() } },

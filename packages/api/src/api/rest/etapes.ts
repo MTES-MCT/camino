@@ -9,6 +9,7 @@ import {
   documentTypeIdComplementaireObligatoireDAE,
   ETAPE_IS_NOT_BROUILLON,
   etapeIdOrSlugValidator,
+  GetEtapeAvisByEtapeId,
 } from 'camino-common/src/etape.js'
 import { DemarcheId, demarcheIdValidator } from 'camino-common/src/demarche.js'
 import { HTTP_STATUS } from 'camino-common/src/http.js'
@@ -173,6 +174,34 @@ export const getEtapeDocuments =
         }
 
         res.json({ etapeDocuments: result, asl, dae })
+      } catch (e) {
+        res.sendStatus(HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR)
+        console.error(e)
+      }
+    }
+  }
+
+export const getEtapeAvis =
+  (pool: Pool) =>
+  async (req: CaminoRequest, res: CustomResponse<GetEtapeAvisByEtapeId>): Promise<void> => {
+    const etapeIdParsed = etapeIdValidator.safeParse(req.params.etapeId)
+    const user = req.auth
+
+    if (!etapeIdParsed.success) {
+      res.sendStatus(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
+    } else {
+      try {
+        // const etapeData = await getEtapeDataForEdition(pool, etapeIdParsed.data)
+        // const titreTypeId = memoize(() => Promise.resolve(etapeData.titre_type_id))
+
+        // const result = await getDocumentsByEtapeId(etapeIdParsed.data, pool, user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires, etapeData.etape_type_id, {
+        //   demarche_type_id: etapeData.demarche_type_id,
+        //   entreprises_lecture: etapeData.demarche_entreprises_lecture,
+        //   public_lecture: etapeData.demarche_public_lecture,
+        //   titre_public_lecture: etapeData.titre_public_lecture,
+        // })
+        // FIXME: à implémenter
+        res.json([])
       } catch (e) {
         res.sendStatus(HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR)
         console.error(e)
@@ -387,7 +416,7 @@ export const deposeEtape = (pool: Pool) => async (req: CaminoRequest, res: Custo
         communes,
         daeDocument,
         aslDocument,
-        // FIXME avisDocuments
+        // FIXME etapeAvis
         []
       )
       if (!deposable) throw new Error('droits insuffisants')

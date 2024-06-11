@@ -171,6 +171,7 @@ input InputEtapeCreation {
   heritageContenu: Json
   contenu: Json
   etapeDocuments: [InputEtapeDocumentCreation]
+  etapeAvis: [InputEtapeAvisCreation]
   entrepriseDocumentIds: [ID]
   notes: String
 }
@@ -204,6 +205,14 @@ input InputEtapeDocumentCreation {
   description: String
   public_lecture: Boolean!
   entreprises_lecture: Boolean!
+}
+
+input InputEtapeAvisCreation {
+  temp_document_name: String!
+  avis_type_id: String!
+  description: String!
+  date: String!
+  avis_statut_id: String!
 }
 
 input InputEtapeModification {

@@ -3,7 +3,7 @@ import { deleteWithJson, getWithJson, putWithJson } from '@/api/client-rest'
 import { CaminoDate, caminoDateValidator } from 'camino-common/src/date'
 import { DemarcheId } from 'camino-common/src/demarche'
 import { entrepriseIdValidator } from 'camino-common/src/entreprise'
-import { EtapeAvis, EtapeId, EtapeIdOrSlug, EtapeTypeEtapeStatutWithMainStep, GetEtapeDocumentsByEtapeId } from 'camino-common/src/etape'
+import { EtapeId, EtapeIdOrSlug, EtapeTypeEtapeStatutWithMainStep, GetEtapeAvisByEtapeId, GetEtapeDocumentsByEtapeId } from 'camino-common/src/etape'
 import {
     FlattenEtape,
     GraphqlEtapeCreation,
@@ -92,7 +92,7 @@ export interface EtapeApiClient {
     etape: DeepReadonly<Pick<CoreEtapeCreationOrModification, 'id' | 'date' | 'typeId'>>,
     titreDemarcheId: DemarcheId,
   ) => Promise<DeepReadonly<GetEtapeHeritagePotentiel>>
-  getEtapeAvisByEtapeId: (etapeId: EtapeId) => Promise<EtapeAvis[]>
+  getEtapeAvisByEtapeId: (etapeId: EtapeId) => Promise<GetEtapeAvisByEtapeId>
   getEtape: (etapeIdOrSlug: EtapeIdOrSlug) => Promise<DeepReadonly<{ etape: FlattenEtape; demarche: GetDemarcheByIdOrSlugValidator }>>
   etapeCreer: (etape: DeepReadonly<GraphqlEtapeCreation>) => Promise<EtapeId>
   etapeModifier: (etape: DeepReadonly<GraphqlEtapeModification>) => Promise<EtapeId>
@@ -109,10 +109,7 @@ export const etapeApiClient: EtapeApiClient = {
   },
 
   getEtapeDocumentsByEtapeId: async etapeId => getWithJson('/rest/etapes/:etapeId/etapeDocuments', { etapeId }),
-  getEtapeAvisByEtapeId: async etapeId => {
-    // FIXME
-    return []
-  },
+  getEtapeAvisByEtapeId: async etapeId => getWithJson('/rest/etapes/:etapeId/etapeAvis', { etapeId }),
 
   getEtape: async etapeIdOrSlug => {
     // const data = await apiGraphQLFetch(gql`

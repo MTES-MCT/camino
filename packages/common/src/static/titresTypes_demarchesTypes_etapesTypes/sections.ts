@@ -1,4 +1,4 @@
-import { caminoDateValidator, toCaminoDate } from '../../date.js'
+import { caminoDateValidator } from '../../date.js'
 import { DEMARCHES_TYPES_IDS, DemarcheTypeId } from '../demarchesTypes.js'
 import { TITRES_TYPES_IDS, TitreTypeId } from '../titresTypes.js'
 import { ETAPES_TYPES, EtapeTypeId } from '../etapesTypes.js'
@@ -466,42 +466,43 @@ const TDESections = {
       [ETAPES_TYPES.receptionDeComplements_RecevabiliteDeLaDemande_]: caracteristiquesARM,
       [ETAPES_TYPES.receptionDeComplements_CompletudeDeLaDemande_]: caracteristiquesARM,
       [ETAPES_TYPES.receptionDinformation_RecevabiliteDeLaDemande_]: caracteristiquesARM,
-      [ETAPES_TYPES.expertiseDeLOfficeNationalDesForets]: [
-        {
-          id: 'onf',
-          nom: 'Office National des Forêts',
-          elements: [
-            { id: 'motifs', nom: 'Motifs', type: 'textarea', optionnel: true, description: "Élément d'expertise" },
-            { id: 'expert', nom: 'Expert', type: 'text', optionnel: true, description: "Agent ONF qui a réalisé l'expertise" },
-            { id: 'agent', nom: 'Agent', type: 'text', optionnel: true, description: 'Chargé de mission foncier du Service Aménagement du Territoire' },
-            {
-              id: 'dateDebut',
-              nom: 'Date de début',
-              type: 'date',
-              dateFin: toCaminoDate('2018-02-07'),
-              dateDebut: toCaminoDate('2003-07-24'),
-              optionnel: true,
-              description: 'Date de début de l’expertise',
-            },
-          ],
-        },
-      ],
-      [ETAPES_TYPES.avisDeLOfficeNationalDesForets]: [
-        {
-          id: 'onf',
-          nom: 'Office National des Forêts',
-          elements: [
-            { id: 'motifs', nom: 'Motifs', type: 'textarea', optionnel: true, description: "Élément d'expertise" },
-            {
-              id: 'signataire',
-              nom: 'Signataire',
-              type: 'text',
-              optionnel: true,
-              description: 'Directeur ONF ou responsable du service Service Aménagement du Territoire qui apparaitra sur les documents externe pour signature',
-            },
-          ],
-        },
-      ],
+      // FIXME en attente de la réponse à https://github.com/MTES-MCT/camino/issues/1058#issuecomment-2160094157
+      // [ETAPES_TYPES.expertiseDeLOfficeNationalDesForets]: [
+      //   {
+      //     id: 'onf',
+      //     nom: 'Office National des Forêts',
+      //     elements: [
+      //       { id: 'motifs', nom: 'Motifs', type: 'textarea', optionnel: true, description: "Élément d'expertise" },
+      //       { id: 'expert', nom: 'Expert', type: 'text', optionnel: true, description: "Agent ONF qui a réalisé l'expertise" },
+      //       { id: 'agent', nom: 'Agent', type: 'text', optionnel: true, description: 'Chargé de mission foncier du Service Aménagement du Territoire' },
+      //       {
+      //         id: 'dateDebut',
+      //         nom: 'Date de début',
+      //         type: 'date',
+      //         dateFin: toCaminoDate('2018-02-07'),
+      //         dateDebut: toCaminoDate('2003-07-24'),
+      //         optionnel: true,
+      //         description: 'Date de début de l’expertise',
+      //       },
+      //     ],
+      //   },
+      // ],
+      // [ETAPES_TYPES.avisDeLOfficeNationalDesForets]: [
+      //   {
+      //     id: 'onf',
+      //     nom: 'Office National des Forêts',
+      //     elements: [
+      //       { id: 'motifs', nom: 'Motifs', type: 'textarea', optionnel: true, description: "Élément d'expertise" },
+      //       {
+      //         id: 'signataire',
+      //         nom: 'Signataire',
+      //         type: 'text',
+      //         optionnel: true,
+      //         description: 'Directeur ONF ou responsable du service Service Aménagement du Territoire qui apparaitra sur les documents externe pour signature',
+      //       },
+      //     ],
+      //   },
+      // ],
       [ETAPES_TYPES.signatureDeLautorisationDeRechercheMiniere]: [
         { id: 'arm', nom: 'Caractéristiques ARM', elements: [{ id: 'mecanise', nom: 'Prospection mécanisée', type: 'radio' }] },
         {

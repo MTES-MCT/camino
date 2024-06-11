@@ -5,6 +5,7 @@ import { entrepriseDocumentIdValidator, entrepriseIdValidator } from './entrepri
 import {
   documentComplementaireAslEtapeDocumentModificationValidator,
   documentComplementaireDaeEtapeDocumentModificationValidator,
+  etapeAvisModificationValidator,
   etapeBrouillonValidator,
   etapeDocumentModificationValidator,
   etapeIdValidator,
@@ -215,6 +216,7 @@ export const graphqlEtapeCreationValidator = graphqlEtapeValidator
     heritageContenu: z.record(z.string(), z.record(z.string(), z.object({ actif: z.boolean() }))),
     etapeDocuments: z.array(etapeDocumentModificationValidator),
     entrepriseDocumentIds: z.array(entrepriseDocumentIdValidator),
+    etapeAvis: z.array(etapeAvisModificationValidator)
   })
 
 export type GraphqlEtapeCreation = z.infer<typeof graphqlEtapeCreationValidator>

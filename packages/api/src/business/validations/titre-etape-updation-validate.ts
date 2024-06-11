@@ -19,7 +19,7 @@ export const titreEtapeUpdationValidate = (
   titreDemarche: ITitreDemarche,
   titre: Pick<ITitre, 'typeId' | 'demarches'>,
   documents: Pick<EtapeDocument, 'etape_document_type_id'>[],
-  avisDocuments: Pick<EtapeAvis, 'avis_type_id'>[],
+  etapeAvis: Pick<EtapeAvis, 'avis_type_id'>[],
   entrepriseDocuments: Pick<EntrepriseDocument, 'entreprise_document_type_id' | 'entreprise_id'>[],
   sdomZones: SDOMZoneId[] | null | undefined,
   communes: CommuneId[] | null | undefined,
@@ -82,7 +82,7 @@ export const titreEtapeUpdationValidate = (
   // 4. si l’étape n’est pas en cours de construction
   // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   if (!etape.isBrouillon) {
-    const etapeComplete = isEtapeComplete(etape, titre.typeId, titreDemarche.typeId, documents, entrepriseDocuments, sdomZones, communes ?? [], daeDocument, aslDocument, avisDocuments, user)
+    const etapeComplete = isEtapeComplete(etape, titre.typeId, titreDemarche.typeId, documents, entrepriseDocuments, sdomZones, communes ?? [], daeDocument, aslDocument, etapeAvis, user)
     if (!etapeComplete.valid) {
       errors.push(...etapeComplete.errors)
     }

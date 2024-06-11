@@ -19,11 +19,11 @@ import { entrepriseIdValidator } from '../entreprise'
 
 test('fondamentaleStepIsVisible', () => {
   expect(fondamentaleStepIsVisible('mfr')).toBe(true)
-  expect(fondamentaleStepIsVisible('aac')).toBe(false)
+  expect(fondamentaleStepIsVisible('acg')).toBe(false)
 })
 
 test('fondamentaleStepIsComplete', () => {
-  expect(fondamentaleStepIsComplete({ duree: { value: 0, heritee: false, etapeHeritee: null }, substances: { value: [], heritee: false, etapeHeritee: null }, typeId: 'aac' }, 'amo', 'prr').valid).toBe(true)
+  expect(fondamentaleStepIsComplete({ duree: { value: 0, heritee: false, etapeHeritee: null }, substances: { value: [], heritee: false, etapeHeritee: null }, typeId: 'acg' }, 'amo', 'prr').valid).toBe(true)
 
   expect(fondamentaleStepIsComplete({ duree: { value: 0, heritee: false, etapeHeritee: null }, substances: { value: [], heritee: false, etapeHeritee: null }, typeId: 'dpu' }, 'amo', 'prr').valid).toBe(true)
   expect(fondamentaleStepIsComplete({ duree: { value: 0, heritee: false, etapeHeritee: null }, substances: { value: [], heritee: false, etapeHeritee: null }, typeId: 'mfr' }, 'amo', 'prr').valid).toBe(
@@ -63,7 +63,7 @@ test('sectionsStepIsComplete', () => {
 
 test('perimetreStepIsVisible', () => {
   expect(perimetreStepIsVisible({ typeId: 'mfr' })).toBe(true)
-  expect(perimetreStepIsVisible({ typeId: 'aac' })).toBe(false)
+  expect(perimetreStepIsVisible({ typeId: 'acg' })).toBe(false)
 })
 
 test('perimetreStepIsComplete', () => {
@@ -107,7 +107,7 @@ test('perimetreStepIsComplete', () => {
   ).toBe(true)
   expect(
     perimetreStepIsComplete({
-      typeId: 'aac',
+      typeId: 'acg',
       perimetre: {
         value: {
           geojson4326Perimetre: null,

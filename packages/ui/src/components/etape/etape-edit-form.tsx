@@ -101,7 +101,7 @@ type EtapeEditFormDocuments = DeepReadonly<{
   entrepriseDocuments: SelectedEntrepriseDocument[]
   daeDocument: DocumentComplementaireDaeEtapeDocumentModification | null
   aslDocument: DocumentComplementaireAslEtapeDocumentModification | null
-  avisDocuments: (EtapeAvis | TempEtapeAvis)[]
+  etapeAvis: (EtapeAvis | TempEtapeAvis)[]
 }>
 
 const toto = ( etape: DeepReadonly<CoreEtapeCreationOrModification>,
@@ -232,7 +232,7 @@ export const EtapeEditForm = defineComponent<Props>(props => {
     entrepriseDocuments: [],
     daeDocument: null,
     aslDocument: null,
-    avisDocuments: [],
+    etapeAvis: [],
   })
   onMounted(async () => {
     if (isNotNullNorUndefined(props.etape.date) && isNotNullNorUndefined(props.etape.typeId) && isNotNullNorUndefined(props.etape.statutId)) {
@@ -340,7 +340,7 @@ export const EtapeEditForm = defineComponent<Props>(props => {
         props.perimetre.communes,
         documents.value.daeDocument,
         documents.value.aslDocument,
-        documents.value.avisDocuments
+        documents.value.etapeAvis
       )
     }
 
@@ -520,10 +520,10 @@ const EtapeEditFormInternal = defineComponent<
     })
   }
 
-  const avisCompleteUpdate = (avisDocuments: (EtapeAvis | TempEtapeAvis)[]) => {
+  const avisCompleteUpdate = (etapeAvis: (EtapeAvis | TempEtapeAvis)[]) => {
     props.setEtape(props.etape, {
       ...props.documents,
-      avisDocuments,
+      etapeAvis,
     })
   }
 
@@ -668,7 +668,7 @@ const EtapeEditFormInternal = defineComponent<
       ) : null}
 
       {etapeAvisStepIsVisible(props.etape, props.titreTypeId, props.perimetre.communes) ? (
-        <Bloc step={{ name: 'Liste des avis', help: null }} complete={etapeAvisStepIsComplete(props.etape, props.documents.avisDocuments, props.titreTypeId, props.perimetre.communes).valid}>
+        <Bloc step={{ name: 'Liste des avis', help: null }} complete={etapeAvisStepIsComplete(props.etape, props.documents.etapeAvis, props.titreTypeId, props.perimetre.communes).valid}>
           <EtapeAvisEdit
             apiClient={props.apiClient}
             tde={{ titreTypeId: props.titreTypeId, demarcheTypeId: props.demarcheTypeId, etapeTypeId: props.etape.typeId }}
