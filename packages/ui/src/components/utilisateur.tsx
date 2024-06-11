@@ -11,11 +11,11 @@ import { canDeleteUtilisateur } from 'camino-common/src/permissions/utilisateurs
 import { PermissionDisplay } from './utilisateur/permission-edit'
 import { UtilisateurToEdit } from 'camino-common/src/utilisateur'
 import { Utilisateur as ApiUser, Entreprise } from 'camino-common/src/entreprise'
-import { ButtonIcon } from './_ui/button-icon'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 
 import { entreprisesKey, userKey } from '@/moi'
 import { DsfrInputCheckbox } from './_ui/dsfr-input-checkbox'
+import { DsfrButtonIcon } from './_ui/dsfr-button'
 
 export const Utilisateur = defineComponent({
   setup() {
@@ -157,15 +157,16 @@ export const PureUtilisateur = defineComponent<Props>(props => {
             data={utilisateur.value}
             renderItem={item => (
               <>
-                {isMe.value ? <ButtonIcon class="btn-alt py-s px-m" title="changer de mot de passe" onClick={props.passwordUpdate} icon="key" /> : null}
+                {isMe.value ? <DsfrButtonIcon title="Changer de mot de passe" onClick={props.passwordUpdate} icon="fr-icon-lock-line" buttonType="secondary" /> : null}
                 {canDeleteUtilisateur(props.user, item.id) ? (
-                  <ButtonIcon
-                    class="btn-alt py-s px-m"
-                    title="supprimer le compte utilisateur"
+                  <DsfrButtonIcon
+                    title="Supprimer le compte utilisateur"
                     onClick={() => {
                       removePopup.value = true
                     }}
-                    icon="delete"
+                    class="fr-ml-1w"
+                    icon="fr-icon-delete-bin-line"
+                    buttonType="secondary"
                   />
                 ) : null}
               </>

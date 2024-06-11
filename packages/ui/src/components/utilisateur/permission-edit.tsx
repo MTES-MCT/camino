@@ -9,10 +9,10 @@ import { canEditPermission, getAssignableRoles } from 'camino-common/src/permiss
 import { UtilisateurApiClient } from './utilisateur-api-client'
 import { Pill } from '../_ui/pill'
 import { TypeAheadSmartMultiple, Element } from '../_ui/typeahead-smart-multiple'
-import { ButtonIcon } from '../_ui/button-icon'
 import { isNotNullNorUndefined, map } from 'camino-common/src/typescript-tools'
 import { capitalize } from 'camino-common/src/strings'
 import { DsfrSelect } from '../_ui/dsfr-select'
+import { DsfrButtonIcon } from '../_ui/dsfr-button'
 
 interface Props {
   user: User
@@ -43,7 +43,9 @@ export const PermissionDisplay = defineComponent<Props>(props => {
                 renderItem={item => (
                   <div style={{ display: 'flex', flexDirection: 'row', alignContent: 'center', alignItems: 'center' }}>
                     <Pill text={item.role} />{' '}
-                    {canEditPermission(props.user, item) ? <ButtonIcon class="btn-alt p-xs rnd-s" title="modifie les permissions" onClick={() => (mode.value = 'edit')} icon="pencil" /> : null}{' '}
+                    {canEditPermission(props.user, item) ? (
+                      <DsfrButtonIcon buttonType="tertiary-no-outline" title="Modifie les permissions" onClick={() => (mode.value = 'edit')} icon="fr-icon-pencil-line" />
+                    ) : null}{' '}
                   </div>
                 )}
               />

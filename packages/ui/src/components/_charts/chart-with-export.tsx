@@ -3,8 +3,8 @@ import { LoadingElement } from '@/components/_ui/functional-loader'
 import { ChartConfiguration } from 'chart.js'
 import { AsyncData } from '@/api/client-rest'
 import { defineAsyncComponent } from 'vue'
-import { ButtonIcon } from '../_ui/button-icon'
 import type { JSX } from 'vue/jsx-runtime'
+import { DsfrButtonIcon } from '../_ui/dsfr-button'
 
 interface Props<T> {
   data: AsyncData<T>
@@ -38,13 +38,13 @@ export const ChartWithExport = <T,>(props: Props<T>): JSX.Element => {
         return (
           <div style="position: relative">
             <ConfigurableChart chartConfiguration={props.getConfiguration(item)} />
-            <ButtonIcon
-              class="btn-border py-xs px-s rnd-xs"
-              style="position: absolute; top: 4px; right: 10px"
-              title="Exporter au format CSV"
+            <DsfrButtonIcon
+              icon="fr-icon-download-line"
               onClick={() => exportCsv(props.getConfiguration(item))}
-              icon="download"
-              iconSize="S"
+              title="Exporter au format CSV"
+              buttonType="tertiary"
+              buttonSize="sm"
+              style="position: absolute; top: 4px; right: 10px"
             />
           </div>
         )

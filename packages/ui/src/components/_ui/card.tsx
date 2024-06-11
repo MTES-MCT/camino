@@ -20,7 +20,7 @@ export const Card: FunctionalComponent<Props & HTMLAttributes['class']> = props 
             <Title />
           </div>
 
-          <div class="overflow-hidden flex flex-end flex-right">
+          <div class="overflow-hidden flex flex-center flex-right">
             <Buttons />
             <div class="py-s" style="width: calc(2.5 * var(--unit))" />
           </div>

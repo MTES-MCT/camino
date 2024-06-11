@@ -3,7 +3,6 @@ import { FiltersInput } from './filters-input'
 import { FiltersCheckboxes } from './filters-checkboxes'
 import { InputAutocomplete, InputAutocompleteValues } from './filters-input-autocomplete'
 import { Icon } from '@/components/_ui/icon'
-import { ButtonIcon } from '@/components/_ui/button-icon'
 import { FiltresEtapes, FilterEtapeValue } from '../../demarches/filtres-etapes'
 import { EtapesStatuts } from 'camino-common/src/static/etapesStatuts'
 import { EtapeTypeId, EtapesTypes } from 'camino-common/src/static/etapesTypes'
@@ -32,6 +31,7 @@ import { Entreprise } from 'camino-common/src/entreprise'
 import { DeprecatedAccordion } from '../accordion'
 import { CaminoRouteLocation, CaminoRouteNames, CaminoVueRoute } from '@/router/routes'
 import { CaminoRouter } from '@/typings/vue-router'
+import { DsfrButtonIcon } from '../dsfr-button'
 
 type FormatedLabel = { id: CaminoFiltre; name: string; value: string | string[] | FilterEtapeValue; valueName?: string | string[] }
 
@@ -296,7 +296,7 @@ export const Filters = defineComponent((props: Props) => {
             renderItem={_item => (
               <>
                 {labels.value.length ? (
-                  <div class={['flex', opened.value ? 'border-b-s' : null]}>
+                  <div class={['flex', opened.value ? 'border-b-s' : null]} style={{ justifyContent: 'center', alignItems: 'center' }}>
                     <div class="px-m pt-m pb-s flex" style={{ flexWrap: 'wrap' }}>
                       {labels.value.map(label => (
                         <span
@@ -315,7 +315,14 @@ export const Filters = defineComponent((props: Props) => {
                         </span>
                       ))}
                     </div>
-                    <ButtonIcon class="btn-alt p-m" style={{ marginLeft: 'auto' }} onClick={labelsReset} icon="close" title="Réinitialiser les filtres" />
+                    <DsfrButtonIcon
+                      class="fr-mr-1w"
+                      buttonType="tertiary-no-outline"
+                      style={{ marginLeft: 'auto' }}
+                      onClick={labelsReset}
+                      icon="fr-icon-close-line"
+                      title="Réinitialiser les filtres"
+                    />
                   </div>
                 ) : null}
               </>
