@@ -104,7 +104,7 @@ describe('vérifie l’arbre d’octroi d’AXM', () => {
         ...ETES.saisineDesCollectivitesLocales.FAIT,
         date: toCaminoDate('2022-04-15'),
       },
-      { ...ETES.saisineDesServices.FAIT, date: toCaminoDate('2022-04-15') },
+      { ...ETES.avisDesServicesEtCommissionsConsultatives.FAIT, date: toCaminoDate('2022-04-15') },
       {
         ...ETES.avisEtRapportDuDirecteurRegionalChargeDeLenvironnementDeLamenagementEtDuLogement.FAVORABLE,
         date: toCaminoDate('2022-06-15'),
@@ -139,7 +139,7 @@ describe('vérifie l’arbre d’octroi d’AXM', () => {
         ...ETES.saisineDesCollectivitesLocales.FAIT,
         date: toCaminoDate('2022-04-15'),
       },
-      { ...ETES.saisineDesServices.FAIT, date: toCaminoDate('2022-04-15') },
+      { ...ETES.avisDesServicesEtCommissionsConsultatives.FAIT, date: toCaminoDate('2022-04-15') },
       {
         ...ETES.avisEtRapportDuDirecteurRegionalChargeDeLenvironnementDeLamenagementEtDuLogement.FAVORABLE,
         date: toCaminoDate('2022-06-15'),
@@ -168,82 +168,6 @@ describe('vérifie l’arbre d’octroi d’AXM', () => {
       'FAIRE_SAISINE_AUTORITE_SIGNATAIRE',
       'RENDRE_DECISION_ADMINISTRATION_ACCEPTE',
       'RENDRE_DECISION_ADMINISTRATION_REJETE',
-    ])
-  })
-  test('après une saisine des services avec un accord du propriétaire du sol AVEC réserves, la confirmation de l’accord est obligatoire', () => {
-    const service = orderAndInterpretMachine(axmOctMachine, [
-      { ...ETES.demande.FAIT, date: toCaminoDate('2022-04-14') },
-      {
-        ...ETES.decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_.EXEMPTE,
-        date: toCaminoDate('2020-01-01'),
-      },
-      {
-        ...ETES.decisionDuProprietaireDuSol.FAVORABLE_AVEC_RESERVE,
-        date: toCaminoDate('2020-01-01'),
-      },
-      { ...ETES.depotDeLaDemande.FAIT, date: toCaminoDate('2022-04-15') },
-      {
-        ...ETES.recevabiliteDeLaDemande.FAVORABLE,
-        date: toCaminoDate('2022-04-15'),
-      },
-      {
-        ...ETES.saisineDesCollectivitesLocales.FAIT,
-        date: toCaminoDate('2022-04-15'),
-      },
-      { ...ETES.avisDunMaire.FAVORABLE, date: toCaminoDate('2022-04-15') },
-      { ...ETES.saisineDesServices.FAIT, date: toCaminoDate('2022-04-15') },
-      {
-        ...ETES.avisDGTMServiceMilieuxNaturelsBiodiversiteSitesEtPaysages_MNBST_.FAVORABLE,
-        date: toCaminoDate('2022-04-15'),
-      },
-      {
-        ...ETES.avisDGTMServiceAmenagementUrbanismeConstructionLogement_AUCL_.FAVORABLE,
-        date: toCaminoDate('2022-04-16'),
-      },
-      {
-        ...ETES.avisDeLaDirectionDesEntreprisesDeLaConcurrenceDeLaConsommationDuTravailEtDeLemploi.FAVORABLE,
-        date: toCaminoDate('2022-04-16'),
-      },
-      {
-        ...ETES.avisDeLaDirectionDalimentationDeLagricultureEtDeLaForet.FAVORABLE,
-        date: toCaminoDate('2022-04-16'),
-      },
-      {
-        ...ETES.avisDeDirectionRegionaleDesAffairesCulturelles.FAVORABLE,
-        date: toCaminoDate('2022-04-16'),
-      },
-      {
-        ...ETES.avisDeLagenceRegionaleDeSante.FAVORABLE,
-        date: toCaminoDate('2022-04-16'),
-      },
-      {
-        ...ETES.avisDeLaDirectionRegionaleDesFinancesPubliques.FAVORABLE,
-        date: toCaminoDate('2022-04-16'),
-      },
-      {
-        ...ETES.avisDeLaCaisseGeneraleDeSecuriteSociale.FAVORABLE,
-        date: toCaminoDate('2022-04-16'),
-      },
-      {
-        ...ETES.avisDeLOfficeNationalDesForets.FAVORABLE,
-        date: toCaminoDate('2022-04-16'),
-      },
-      {
-        ...ETES.avisDeLetatMajorOrpaillageEtPecheIllicite_EMOPI_.FAVORABLE,
-        date: toCaminoDate('2022-04-16'),
-      },
-      {
-        ...ETES.avisDeLaGendarmerieNationale.FAVORABLE,
-        date: toCaminoDate('2022-04-16'),
-      },
-    ])
-
-    expect(service).canOnlyTransitionTo({ machine: axmOctMachine, date: toCaminoDate('2022-04-16') }, [
-      'DEMANDER_INFORMATION_POUR_AVIS_DREAL',
-      'FAIRE_CLASSEMENT_SANS_SUITE',
-      'FAIRE_CONFIRMATION_PROPRIETAIRE_DU_SOL',
-      'FAIRE_DESISTEMENT_DEMANDEUR',
-      'FAIRE_NOTE_INTERNE_SIGNALEE',
     ])
   })
 
@@ -358,11 +282,7 @@ describe('vérifie l’arbre d’octroi d’AXM', () => {
         date: toCaminoDate('2022-04-16'),
       },
       { ...ETES.avisDunMaire.FAVORABLE, date: toCaminoDate('2022-04-17') },
-      { ...ETES.saisineDesServices.FAIT, date: toCaminoDate('2022-04-18') },
-      {
-        ...ETES.avisDGTMServiceMilieuxNaturelsBiodiversiteSitesEtPaysages_MNBST_.FAVORABLE,
-        date: toCaminoDate('2022-04-19'),
-      },
+      { ...ETES.avisDesServicesEtCommissionsConsultatives.FAIT, date: toCaminoDate('2022-04-18') },
       {
         ...ETES.avisEtRapportDuDirecteurRegionalChargeDeLenvironnementDeLamenagementEtDuLogement.FAVORABLE,
         date: toCaminoDate('2022-05-20'),
@@ -422,47 +342,23 @@ describe('vérifie l’arbre d’octroi d’AXM', () => {
         ...ETES.saisineDesCollectivitesLocales.FAIT,
         date: toCaminoDate('2022-04-16'),
       },
-      { ...ETES.saisineDesServices.FAIT, date: toCaminoDate('2022-04-18') },
+      { ...ETES.avisDesServicesEtCommissionsConsultatives.FAIT, date: toCaminoDate('2022-04-18') },
     ]
     const service = orderAndInterpretMachine(axmOctMachine, etapes)
     expect(service).canOnlyTransitionTo({ machine: axmOctMachine, date: toCaminoDate('2022-05-18') }, [
       'RENDRE_AVIS_DREAL',
       'FAIRE_CLASSEMENT_SANS_SUITE',
       'DEMANDER_INFORMATION_POUR_AVIS_DREAL',
-      'FAIRE_CONFIRMATION_PROPRIETAIRE_DU_SOL',
       'FAIRE_DESISTEMENT_DEMANDEUR',
       'FAIRE_NOTE_INTERNE_SIGNALEE',
-      'RENDRE_AVIS_AGENCE_REGIONALE_SANTE',
-      'RENDRE_AVIS_CAISSE_GENERALE_DE_SECURITE_SOCIALE',
-      'RENDRE_AVIS_DGTMAUCL',
-      'RENDRE_AVIS_DGTM_MNBST',
-      'RENDRE_AVIS_DIRECTION_ALIMENTATION_AGRICULTURE_FORET',
-      'RENDRE_AVIS_DIRECTION_ENTREPRISE_CONCURRENCE_CONSOMMATION_TRAVAIL_EMPLOI',
-      'RENDRE_AVIS_DIRECTION_REGIONALE_AFFAIRES_CULTURELLES',
-      'RENDRE_AVIS_DIRECTION_REGIONALE_FINANCES_PUBLIQUES',
       'RENDRE_AVIS_DUN_MAIRE',
-      'RENDRE_AVIS_ETAT_MAJOR_ORPAILLAGE_ET_PECHE_ILLICITE',
-      'RENDRE_AVIS_GENDARMERIE_NATIONALE',
-      'RENDRE_AVIS_OFFICE_NATIONAL_DES_FORETS',
     ])
     expect(service).canOnlyTransitionTo({ machine: axmOctMachine, date: toCaminoDate('2022-05-17') }, [
       'FAIRE_CLASSEMENT_SANS_SUITE',
       'DEMANDER_INFORMATION_POUR_AVIS_DREAL',
-      'FAIRE_CONFIRMATION_PROPRIETAIRE_DU_SOL',
       'FAIRE_DESISTEMENT_DEMANDEUR',
       'FAIRE_NOTE_INTERNE_SIGNALEE',
-      'RENDRE_AVIS_AGENCE_REGIONALE_SANTE',
-      'RENDRE_AVIS_CAISSE_GENERALE_DE_SECURITE_SOCIALE',
-      'RENDRE_AVIS_DGTMAUCL',
-      'RENDRE_AVIS_DGTM_MNBST',
-      'RENDRE_AVIS_DIRECTION_ALIMENTATION_AGRICULTURE_FORET',
-      'RENDRE_AVIS_DIRECTION_ENTREPRISE_CONCURRENCE_CONSOMMATION_TRAVAIL_EMPLOI',
-      'RENDRE_AVIS_DIRECTION_REGIONALE_AFFAIRES_CULTURELLES',
-      'RENDRE_AVIS_DIRECTION_REGIONALE_FINANCES_PUBLIQUES',
       'RENDRE_AVIS_DUN_MAIRE',
-      'RENDRE_AVIS_ETAT_MAJOR_ORPAILLAGE_ET_PECHE_ILLICITE',
-      'RENDRE_AVIS_GENDARMERIE_NATIONALE',
-      'RENDRE_AVIS_OFFICE_NATIONAL_DES_FORETS',
     ])
   })
 
