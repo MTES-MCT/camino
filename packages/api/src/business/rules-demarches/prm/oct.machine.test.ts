@@ -15,8 +15,7 @@ describe('vérifie l’arbre d’octroi de PRM', () => {
       { ...ETES.saisineDuPrefet.FAIT, date: toCaminoDate('2022-04-16') },
       { ...ETES.recevabiliteDeLaDemande.FAVORABLE, date: toCaminoDate('2022-04-17') },
       { ...ETES.avisDeMiseEnConcurrenceAuJORF.FAIT, date: toCaminoDate('2022-04-18') },
-      { ...ETES.saisineDesServices.FAIT, date: toCaminoDate('2022-04-19') },
-      { ...ETES.avisDeLOfficeNationalDesForets.FAVORABLE, date: toCaminoDate('2022-04-20') },
+      { ...ETES.avisDesServicesEtCommissionsConsultatives.FAIT, date: toCaminoDate('2022-04-19') },
       { ...ETES.avisEtRapportDuDirecteurRegionalChargeDeLenvironnementDeLamenagementEtDuLogement.FAVORABLE, date: toCaminoDate('2022-05-20') },
       { ...ETES.avisDuPrefet.FAVORABLE, date: toCaminoDate('2022-05-20') },
       { ...ETES.ouvertureDeLaParticipationDuPublic.FAIT, date: toCaminoDate('2022-05-18') },
@@ -51,10 +50,9 @@ describe('vérifie l’arbre d’octroi de PRM', () => {
       { ...ETES.saisineDuPrefet.FAIT, date: toCaminoDate('2022-04-16') },
       { ...ETES.recevabiliteDeLaDemande.FAVORABLE, date: toCaminoDate('2022-04-17') },
       { ...ETES.avisDeMiseEnConcurrenceAuJORF.FAIT, date: toCaminoDate('2022-04-18') },
-      { ...ETES.saisineDesServices.FAIT, date: toCaminoDate('2022-04-19') },
+      { ...ETES.avisDesServicesEtCommissionsConsultatives.FAIT, date: toCaminoDate('2022-04-19') },
       { ...ETES.saisineDesCollectivitesLocales.FAIT, date: toCaminoDate('2022-04-19') },
       { ...ETES.avisDunMaire.FAVORABLE, date: toCaminoDate('2022-04-19') },
-      { ...ETES.avisDeLOfficeNationalDesForets.FAVORABLE, date: toCaminoDate('2022-04-20') },
       { ...ETES.avisDeLaCommissionDepartementaleDesMines_CDM_.FAVORABLE, date: toCaminoDate('2022-05-20') },
       { ...ETES.avisEtRapportDuDirecteurRegionalChargeDeLenvironnementDeLamenagementEtDuLogement.FAVORABLE, date: toCaminoDate('2022-05-20') },
       { ...ETES.avisDuPrefet.FAVORABLE, date: toCaminoDate('2022-05-20') },
@@ -71,8 +69,7 @@ describe('vérifie l’arbre d’octroi de PRM', () => {
       { ...ETES.saisineDuPrefet.FAIT, date: toCaminoDate('2022-04-16') },
       { ...ETES.recevabiliteDeLaDemande.FAVORABLE, date: toCaminoDate('2022-04-17') },
       { ...ETES.avisDeMiseEnConcurrenceAuJORF.FAIT, date: toCaminoDate('2022-04-18') },
-      { ...ETES.saisineDesServices.FAIT, date: toCaminoDate('2022-04-19') },
-      { ...ETES.avisDeLOfficeNationalDesForets.FAVORABLE, date: toCaminoDate('2022-04-20') },
+      { ...ETES.avisDesServicesEtCommissionsConsultatives.FAIT, date: toCaminoDate('2022-04-19') },
       { ...ETES.avisDeLaCommissionDepartementaleDesMines_CDM_.FAVORABLE, date: toCaminoDate('2022-05-20') },
       { ...ETES.avisEtRapportDuDirecteurRegionalChargeDeLenvironnementDeLamenagementEtDuLogement.FAVORABLE, date: toCaminoDate('2022-05-20') },
       { ...ETES.avisDuPrefet.FAVORABLE, date: toCaminoDate('2022-05-20') },
@@ -89,26 +86,26 @@ describe('vérifie l’arbre d’octroi de PRM', () => {
       { ...ETES.saisineDuPrefet.FAIT, date: toCaminoDate('2022-04-16') },
       { ...ETES.recevabiliteDeLaDemande.FAVORABLE, date: toCaminoDate('2022-04-17') },
       { ...ETES.avisDeMiseEnConcurrenceAuJORF.FAIT, date: toCaminoDate('2022-04-18') },
-      { ...ETES.saisineDesServices.FAIT, date: toCaminoDate('2022-04-19') },
+      { ...ETES.avisDesServicesEtCommissionsConsultatives.FAIT, date: toCaminoDate('2022-04-19') },
       { ...ETES.avisEtRapportDuDirecteurRegionalChargeDeLenvironnementDeLamenagementEtDuLogement.FAVORABLE, date: toCaminoDate('2022-04-20') },
     ]
     expect(() => orderAndInterpretMachine(prmOctMachine, etapes)).toThrowErrorMatchingInlineSnapshot(
-      `[Error: Error: cannot execute step: '{"etapeTypeId":"apd","etapeStatutId":"fav","date":"2022-04-20"}' after '["mfr_fai","mdp_fai","spp_fai","mcr_fav","anf_fai","ssr_fai"]'. The event {"type":"RENDRE_RAPPORT_DREAL","date":"2022-04-20"} should be one of 'CLASSER_SANS_SUITE,DEMANDER_INFORMATIONS,DEPOSER_DEMANDE_CONCURRENTE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,RECEVOIR_INFORMATIONS,RENDRE_AVIS_AGENCE_REGIONALE_SANTE_ARS,RENDRE_AVIS_AUTORITE_MILITAIRE,RENDRE_AVIS_DES_DTT,RENDRE_AVIS_DIRECTION_REGIONALE_AFFAIRES_CULTURELLES,RENDRE_AVIS_DIRECTION_REGIONALE_FINANCES_PUBLIQUES,RENDRE_AVIS_INSTITUT_NATIONAL_ORIGINE_ET_QUALITE_INAO,RENDRE_AVIS_ONF,RENDRE_AVIS_PARC_NATIONAL,RENDRE_AVIS_PARC_NATUREL_REGIONAL,RENDRE_AVIS_SERVICE_ADMINISTRATIF_CIVIL_LOCAL']`
+      `[Error: Error: cannot execute step: '{"etapeTypeId":"apd","etapeStatutId":"fav","date":"2022-04-20"}' after '["mfr_fai","mdp_fai","spp_fai","mcr_fav","anf_fai","asc_fai"]'. The event {"type":"RENDRE_RAPPORT_DREAL","date":"2022-04-20"} should be one of 'CLASSER_SANS_SUITE,DEMANDER_INFORMATIONS,DEPOSER_DEMANDE_CONCURRENTE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,RECEVOIR_INFORMATIONS']`
     )
   })
 
-  test('ne peut pas faire 2 saisines des services', () => {
+  test('ne peut pas faire 2 avis des services et commissions consultatives', () => {
     const etapes = [
       { ...ETES.demande.FAIT, date: toCaminoDate('2022-04-14'), paysId: PAYS_IDS['République Française'] },
       { ...ETES.depotDeLaDemande.FAIT, date: toCaminoDate('2022-04-15') },
       { ...ETES.saisineDuPrefet.FAIT, date: toCaminoDate('2022-04-16') },
       { ...ETES.recevabiliteDeLaDemande.FAVORABLE, date: toCaminoDate('2022-04-17') },
       { ...ETES.avisDeMiseEnConcurrenceAuJORF.FAIT, date: toCaminoDate('2022-04-18') },
-      { ...ETES.saisineDesServices.FAIT, date: toCaminoDate('2022-04-19') },
-      { ...ETES.saisineDesServices.FAIT, date: toCaminoDate('2022-04-19') },
+      { ...ETES.avisDesServicesEtCommissionsConsultatives.FAIT, date: toCaminoDate('2022-04-19') },
+      { ...ETES.avisDesServicesEtCommissionsConsultatives.FAIT, date: toCaminoDate('2022-04-19') },
     ]
     expect(() => orderAndInterpretMachine(prmOctMachine, etapes)).toThrowErrorMatchingInlineSnapshot(
-      `[Error: Error: cannot execute step: '{"etapeTypeId":"ssr","etapeStatutId":"fai","date":"2022-04-19"}' after '["mfr_fai","mdp_fai","spp_fai","mcr_fav","anf_fai","ssr_fai"]'. The event {"type":"FAIRE_SAISINE_DES_SERVICES","date":"2022-04-19"} should be one of 'CLASSER_SANS_SUITE,DEMANDER_INFORMATIONS,DEPOSER_DEMANDE_CONCURRENTE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,RECEVOIR_INFORMATIONS,RENDRE_AVIS_AGENCE_REGIONALE_SANTE_ARS,RENDRE_AVIS_AUTORITE_MILITAIRE,RENDRE_AVIS_DES_DTT,RENDRE_AVIS_DIRECTION_REGIONALE_AFFAIRES_CULTURELLES,RENDRE_AVIS_DIRECTION_REGIONALE_FINANCES_PUBLIQUES,RENDRE_AVIS_INSTITUT_NATIONAL_ORIGINE_ET_QUALITE_INAO,RENDRE_AVIS_ONF,RENDRE_AVIS_PARC_NATIONAL,RENDRE_AVIS_PARC_NATUREL_REGIONAL,RENDRE_AVIS_SERVICE_ADMINISTRATIF_CIVIL_LOCAL']`
+      `[Error: Error: cannot execute step: '{"etapeTypeId":"asc","etapeStatutId":"fai","date":"2022-04-19"}' after '["mfr_fai","mdp_fai","spp_fai","mcr_fav","anf_fai","asc_fai"]'. The event {"type":"RENDRE_AVIS_SERVICES_ET_COMMISSIONS_CONSULTATIVES","date":"2022-04-19"} should be one of 'CLASSER_SANS_SUITE,DEMANDER_INFORMATIONS,DEPOSER_DEMANDE_CONCURRENTE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,RECEVOIR_INFORMATIONS']`
     )
   })
 
@@ -122,7 +119,7 @@ describe('vérifie l’arbre d’octroi de PRM', () => {
       { ...ETES.ouvertureDeLaParticipationDuPublic.FAIT, date: toCaminoDate('2022-04-19') },
     ]
     expect(() => orderAndInterpretMachine(prmOctMachine, etapes)).toThrowErrorMatchingInlineSnapshot(
-      `[Error: Error: cannot execute step: '{"etapeTypeId":"ppu","etapeStatutId":"fai","date":"2022-04-19"}' after '["mfr_fai","mdp_fai","spp_fai","mcr_fav","anf_fai"]'. The event {"type":"OUVRIR_PARTICIPATION_DU_PUBLIC","date":"2022-04-19"} should be one of 'CLASSER_SANS_SUITE,DEMANDER_INFORMATIONS,DEPOSER_DEMANDE_CONCURRENTE,DESISTER_PAR_LE_DEMANDEUR,FAIRE_SAISINE_DES_SERVICES,MODIFIER_DEMANDE,RECEVOIR_INFORMATIONS']`
+      `[Error: Error: cannot execute step: '{"etapeTypeId":"ppu","etapeStatutId":"fai","date":"2022-04-19"}' after '["mfr_fai","mdp_fai","spp_fai","mcr_fav","anf_fai"]'. The event {"type":"OUVRIR_PARTICIPATION_DU_PUBLIC","date":"2022-04-19"} should be one of 'CLASSER_SANS_SUITE,DEMANDER_INFORMATIONS,DEPOSER_DEMANDE_CONCURRENTE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,RECEVOIR_INFORMATIONS,RENDRE_AVIS_SERVICES_ET_COMMISSIONS_CONSULTATIVES']`
     )
   })
 
@@ -133,8 +130,7 @@ describe('vérifie l’arbre d’octroi de PRM', () => {
       { ...ETES.saisineDuPrefet.FAIT, date: toCaminoDate('2022-04-16') },
       { ...ETES.recevabiliteDeLaDemande.FAVORABLE, date: toCaminoDate('2022-04-17') },
       { ...ETES.avisDeMiseEnConcurrenceAuJORF.FAIT, date: toCaminoDate('2022-04-18') },
-      { ...ETES.saisineDesServices.FAIT, date: toCaminoDate('2022-04-19') },
-      { ...ETES.avisDeLOfficeNationalDesForets.FAVORABLE, date: toCaminoDate('2022-04-20') },
+      { ...ETES.avisDesServicesEtCommissionsConsultatives.FAIT, date: toCaminoDate('2022-04-19') },
       { ...ETES.avisEtRapportDuDirecteurRegionalChargeDeLenvironnementDeLamenagementEtDuLogement.FAVORABLE, date: toCaminoDate('2022-05-20') },
       { ...ETES.avisDuPrefet.FAVORABLE, date: toCaminoDate('2022-05-20') },
       { ...ETES.ouvertureDeLaParticipationDuPublic.FAIT, date: toCaminoDate('2022-05-18') },
@@ -151,7 +147,7 @@ describe('vérifie l’arbre d’octroi de PRM', () => {
     ]
 
     expect(() => orderAndInterpretMachine(prmOctMachine, etapes)).toThrowErrorMatchingInlineSnapshot(
-      `[Error: Error: cannot execute step: '{"etapeTypeId":"rpu","etapeStatutId":"fai","date":"2022-06-01"}' after '["mfr_fai","mdp_fai","spp_fai","mcr_fav","anf_fai","ssr_fai","aof_fav","ppu_fai","ppc_ter","apd_fav","app_fav","cac_fai","scg_fai","rcg_fav","acg_fav","sas_fai","dex_rej","npp_fai","mno_fai"]'. The event {"type":"PUBLIER_DECISIONS_RECUEIL_ACTES_ADMINISTRATIFS"} should be one of 'RENDRE_DECISION_ABROGATION,RENDRE_DECISION_ANNULATION_PAR_JUGE_ADMINISTRATIF']`
+      `[Error: Error: cannot execute step: '{"etapeTypeId":"rpu","etapeStatutId":"fai","date":"2022-06-01"}' after '["mfr_fai","mdp_fai","spp_fai","mcr_fav","anf_fai","asc_fai","ppu_fai","ppc_ter","apd_fav","app_fav","cac_fai","scg_fai","rcg_fav","acg_fav","sas_fai","dex_rej","npp_fai","mno_fai"]'. The event {"type":"PUBLIER_DECISIONS_RECUEIL_ACTES_ADMINISTRATIFS"} should be one of 'RENDRE_DECISION_ABROGATION,RENDRE_DECISION_ANNULATION_PAR_JUGE_ADMINISTRATIF']`
     )
   })
 

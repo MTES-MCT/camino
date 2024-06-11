@@ -145,6 +145,7 @@ const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
   },
   FAIRE_EXPERTISE_ONF: { db: EtapesTypesEtapesStatuts.expertiseDeLOfficeNationalDesForets, mainStep: true },
   RENDRE_AVIS_ONF: { db: EtapesTypesEtapesStatuts.avisDeLOfficeNationalDesForets, mainStep: true },
+  // FIXME fumer mia/mio ria/rio
   DEMANDER_INFORMATION_AVIS_ONF: { db: EtapesTypesEtapesStatuts.demandeDinformations_AvisDeLOfficeNationalDesForets_, mainStep: false },
   RECEVOIR_INFORMATION_AVIS_ONF: { db: EtapesTypesEtapesStatuts.receptionDinformation_AvisDeLOfficeNationalDesForets_, mainStep: false },
   FAIRE_SAISINE_CARM: { db: EtapesTypesEtapesStatuts.saisineDeLaCommissionDesAutorisationsDeRecherchesMinieres_CARM_, mainStep: true },

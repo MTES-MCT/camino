@@ -9,7 +9,7 @@ test('getSections erreurs', () => {
 })
 
 test('getSections pas de surcharge mais pas de sections', () => {
-  expect(getSections('apm', 'amo', 'abs')).toMatchInlineSnapshot('[]')
+  expect(getSections('apm', 'amo', 'asc')).toMatchInlineSnapshot('[]')
 })
 
 test('getSections surcharge', () => {

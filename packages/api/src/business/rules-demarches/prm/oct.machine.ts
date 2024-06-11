@@ -16,9 +16,9 @@ type OuvrirParticipationDuPublic = {
   type: 'OUVRIR_PARTICIPATION_DU_PUBLIC'
 }
 
-type FaireSaisineDesServices = {
+type RendreAvisServicesEtCommissionsConsultatives = {
   date: CaminoDate
-  type: 'FAIRE_SAISINE_DES_SERVICES'
+  type: 'RENDRE_AVIS_SERVICES_ET_COMMISSIONS_CONSULTATIVES'
 }
 
 type RendreAvisCDM = {
@@ -49,17 +49,7 @@ type XStateEvent =
   | { type: 'DEPOSER_DEMANDE_CONCURRENTE' }
   | OuvrirParticipationDuPublic
   | { type: 'CLOTURER_PARTICIPATION_DU_PUBLIC' }
-  | FaireSaisineDesServices
-  | { type: 'RENDRE_AVIS_ONF' }
-  | { type: 'RENDRE_AVIS_SERVICE_ADMINISTRATIF_CIVIL_LOCAL' }
-  | { type: 'RENDRE_AVIS_AUTORITE_MILITAIRE' }
-  | { type: 'RENDRE_AVIS_DES_DTT' }
-  | { type: 'RENDRE_AVIS_PARC_NATUREL_REGIONAL' }
-  | { type: 'RENDRE_AVIS_PARC_NATIONAL' }
-  | { type: 'RENDRE_AVIS_AGENCE_REGIONALE_SANTE_ARS' }
-  | { type: 'RENDRE_AVIS_INSTITUT_NATIONAL_ORIGINE_ET_QUALITE_INAO' }
-  | { type: 'RENDRE_AVIS_DIRECTION_REGIONALE_AFFAIRES_CULTURELLES' }
-  | { type: 'RENDRE_AVIS_DIRECTION_REGIONALE_FINANCES_PUBLIQUES' }
+  | RendreAvisServicesEtCommissionsConsultatives
   | { type: 'RENDRE_AVIS_POLICE_EAU' }
   | RendreAvisCDM
   | RendreRapportDREAL
@@ -111,17 +101,7 @@ const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
   DEPOSER_DEMANDE_CONCURRENTE: { db: EtapesTypesEtapesStatuts.avisDeDemandeConcurrente, mainStep: false },
   OUVRIR_PARTICIPATION_DU_PUBLIC: { db: EtapesTypesEtapesStatuts.ouvertureDeLaParticipationDuPublic, mainStep: true },
   CLOTURER_PARTICIPATION_DU_PUBLIC: { db: EtapesTypesEtapesStatuts.clotureDeLaParticipationDuPublic, mainStep: true },
-  FAIRE_SAISINE_DES_SERVICES: { db: EtapesTypesEtapesStatuts.saisineDesServices, mainStep: true },
-  RENDRE_AVIS_ONF: { db: EtapesTypesEtapesStatuts.avisDeLOfficeNationalDesForets, mainStep: false },
-  RENDRE_AVIS_SERVICE_ADMINISTRATIF_CIVIL_LOCAL: { db: EtapesTypesEtapesStatuts.avisDunServiceAdministratifLocal, mainStep: false },
-  RENDRE_AVIS_AUTORITE_MILITAIRE: { db: EtapesTypesEtapesStatuts.avisDeLautoriteMilitaire, mainStep: false },
-  RENDRE_AVIS_DES_DTT: { db: EtapesTypesEtapesStatuts.avisDeLaDirectionDepartementaleDesTerritoiresEtDeLaMerDDT_M_, mainStep: false },
-  RENDRE_AVIS_PARC_NATUREL_REGIONAL: { db: EtapesTypesEtapesStatuts.avisDuParcNaturelRegional, mainStep: false },
-  RENDRE_AVIS_PARC_NATIONAL: { db: EtapesTypesEtapesStatuts.avisDuParcNational, mainStep: false },
-  RENDRE_AVIS_AGENCE_REGIONALE_SANTE_ARS: { db: EtapesTypesEtapesStatuts.avisDeLagenceRegionaleDeSante, mainStep: false },
-  RENDRE_AVIS_INSTITUT_NATIONAL_ORIGINE_ET_QUALITE_INAO: { db: EtapesTypesEtapesStatuts.avisDeLInstitutNationalDeLorigineEtDeLaQualite, mainStep: false },
-  RENDRE_AVIS_DIRECTION_REGIONALE_AFFAIRES_CULTURELLES: { db: EtapesTypesEtapesStatuts.avisDeDirectionRegionaleDesAffairesCulturelles, mainStep: false },
-  RENDRE_AVIS_DIRECTION_REGIONALE_FINANCES_PUBLIQUES: { db: EtapesTypesEtapesStatuts.avisDeLaDirectionRegionaleDesFinancesPubliques, mainStep: false },
+  RENDRE_AVIS_SERVICES_ET_COMMISSIONS_CONSULTATIVES: { db: EtapesTypesEtapesStatuts.avisDesServicesEtCommissionsConsultatives, mainStep: true },
   RENDRE_AVIS_POLICE_EAU: { db: EtapesTypesEtapesStatuts.expertiseDREALOuDGTMServiceEau, mainStep: false },
 
   RENDRE_AVIS_CDM: { db: EtapesTypesEtapesStatuts.avisDeLaCommissionDepartementaleDesMines_CDM_, mainStep: true },
@@ -165,7 +145,7 @@ export class PrmOctMachine extends CaminoMachine<PrmOctContext, XStateEvent> {
     switch (event) {
       case 'RENDRE_AVIS_DE_MISE_EN_CONCURRENCE_AU_JORF':
       case 'OUVRIR_PARTICIPATION_DU_PUBLIC':
-      case 'FAIRE_SAISINE_DES_SERVICES':
+      case 'RENDRE_AVIS_SERVICES_ET_COMMISSIONS_CONSULTATIVES':
       case 'RENDRE_AVIS_CDM':
       case 'RENDRE_RAPPORT_DREAL':
         return [{ type: event, date }]
@@ -196,7 +176,7 @@ export class PrmOctMachine extends CaminoMachine<PrmOctContext, XStateEvent> {
       switch (eventFromEntry) {
         case 'RENDRE_AVIS_DE_MISE_EN_CONCURRENCE_AU_JORF':
         case 'OUVRIR_PARTICIPATION_DU_PUBLIC':
-        case 'FAIRE_SAISINE_DES_SERVICES':
+        case 'RENDRE_AVIS_SERVICES_ET_COMMISSIONS_CONSULTATIVES':
         case 'RENDRE_AVIS_CDM':
         case 'RENDRE_RAPPORT_DREAL':
           return { type: eventFromEntry, date: etape.date }
@@ -225,7 +205,7 @@ export class PrmOctMachine extends CaminoMachine<PrmOctContext, XStateEvent> {
 
 interface PrmOctContext extends CaminoCommonContext {
   dateAvisMiseEnConcurrentJorf: CaminoDate | null
-  dateSaisineDesServices: CaminoDate | null
+  dateAvisDesServicesEtCommissionsConsultatives: CaminoDate | null
   paysId: PaysId | null
   surface: number | null
 }
@@ -235,11 +215,11 @@ const peutOuvrirParticipationDuPublic = ({ context, event }: { context: PrmOctCo
 }
 
 const peutRendreRapportDREAL = ({ context, event }: { context: PrmOctContext; event: RendreRapportDREAL }): boolean => {
-  return isMetropole(context.paysId) && !!context.dateSaisineDesServices && daysBetween(dateAddMonths(context.dateSaisineDesServices, 1), event.date) >= 0
+  return !!context.dateAvisDesServicesEtCommissionsConsultatives && daysBetween(dateAddMonths(context.dateAvisDesServicesEtCommissionsConsultatives, 1), event.date) >= 0
 }
 
 const peutRendreAvisCDM = ({ context, event }: { context: PrmOctContext; event: RendreAvisCDM }): boolean => {
-  return isOutreMer(context.paysId) && !!context.dateSaisineDesServices && daysBetween(dateAddMonths(context.dateSaisineDesServices, 1), event.date) >= 0
+  return isOutreMer(context.paysId) && !!context.dateAvisDesServicesEtCommissionsConsultatives && daysBetween(dateAddMonths(context.dateAvisDesServicesEtCommissionsConsultatives, 1), event.date) >= 0
 }
 
 const estExempteDeLaMiseEnConcurrence = ({ context }: { context: PrmOctContext }): boolean => {
@@ -260,7 +240,7 @@ const prmOctMachine = createMachine({
   initial: 'demandeAFaire',
   context: {
     dateAvisMiseEnConcurrentJorf: null,
-    dateSaisineDesServices: null,
+    dateAvisDesServicesEtCommissionsConsultatives: null,
     visibilite: 'confidentielle',
     demarcheStatut: DemarchesStatutsIds.EnConstruction,
     paysId: null,
@@ -398,124 +378,18 @@ const prmOctMachine = createMachine({
                     done: { type: 'final' },
                   },
                 },
-                saisineDesServicesMachine: {
-                  initial: 'saisineDesServicesAFaire',
+                avisDesServicesEtCommissionsConsultativesMachine: {
+                  initial: 'avisDesServicesEtCommissionsConsultativesAFaire',
                   states: {
-                    saisineDesServicesAFaire: {
+                    avisDesServicesEtCommissionsConsultativesAFaire: {
                       on: {
-                        FAIRE_SAISINE_DES_SERVICES: {
-                          target: 'avisDesServicesARendre',
+                        RENDRE_AVIS_SERVICES_ET_COMMISSIONS_CONSULTATIVES: {
+                          target: 'avisDesServicesRendus',
                           actions: assign({
-                            dateSaisineDesServices: ({ event }) => event.date,
+                            dateAvisDesServicesEtCommissionsConsultatives: ({ event }) => event.date,
                           }),
                         },
                       },
-                    },
-                    avisDesServicesARendre: {
-                      type: 'parallel',
-
-                      states: {
-                        rendreAvisDrealAFaire: {
-                          on: {
-                            RENDRE_AVIS_CDM: { target: '#rapportDREALAFaire', guard: peutRendreAvisCDM },
-                            RENDRE_RAPPORT_DREAL: { target: '#avisPrefetARendre', guard: peutRendreRapportDREAL },
-                          },
-                        },
-                        avisServiceAdministratifCivilLocal: {
-                          initial: 'avisServiceAdministratifCivilLocalARendre',
-                          states: {
-                            avisServiceAdministratifCivilLocalARendre: {
-                              on: { RENDRE_AVIS_SERVICE_ADMINISTRATIF_CIVIL_LOCAL: 'avisServiceAdministratifCivilLocalRendu' },
-                            },
-                            avisServiceAdministratifCivilLocalRendu: { type: 'final' },
-                          },
-                        },
-                        avisAutoriteMilitaire: {
-                          initial: 'avisAutoriteMilitaireARendre',
-                          states: {
-                            avisAutoriteMilitaireARendre: {
-                              on: { RENDRE_AVIS_AUTORITE_MILITAIRE: 'avisAutoriteMilitaireRendu' },
-                            },
-                            avisAutoriteMilitaireRendu: { type: 'final' },
-                          },
-                        },
-                        avisDesDDT: {
-                          initial: 'avisDesDDTARendre',
-                          states: {
-                            avisDesDDTARendre: {
-                              on: {
-                                RENDRE_AVIS_DES_DTT: { target: 'avisDesDDTRendu', guard: ({ context }) => !isGuyane(context.paysId) },
-                                RENDRE_AVIS_POLICE_EAU: { target: 'avisDesDDTRendu', guard: ({ context }) => isGuyane(context.paysId) },
-                              },
-                            },
-                            avisDesDDTRendu: { type: 'final' },
-                          },
-                        },
-                        avisParcNaturelRegional: {
-                          initial: 'avisParcNaturelRegionalARendre',
-                          states: {
-                            avisParcNaturelRegionalARendre: {
-                              on: { RENDRE_AVIS_PARC_NATUREL_REGIONAL: 'avisParcNaturelRegionalRendu' },
-                            },
-                            avisParcNaturelRegionalRendu: { type: 'final' },
-                          },
-                        },
-                        avisParcNational: {
-                          initial: 'avisParcNationalARendre',
-                          states: {
-                            avisParcNationalARendre: {
-                              on: { RENDRE_AVIS_PARC_NATIONAL: 'avisParcNationalRendu' },
-                            },
-                            avisParcNationalRendu: { type: 'final' },
-                          },
-                        },
-                        avisAgenceRegionaleSanteARS: {
-                          initial: 'avisAgenceRegionaleSanteARSARendre',
-                          states: {
-                            avisAgenceRegionaleSanteARSARendre: {
-                              on: { RENDRE_AVIS_AGENCE_REGIONALE_SANTE_ARS: 'avisAgenceRegionaleSanteARSRendu' },
-                            },
-                            avisAgenceRegionaleSanteARSRendu: { type: 'final' },
-                          },
-                        },
-                        avisONF: {
-                          initial: 'avisONFARendre',
-                          states: {
-                            avisONFARendre: {
-                              on: { RENDRE_AVIS_ONF: 'avisONFRendu' },
-                            },
-                            avisONFRendu: { type: 'final' },
-                          },
-                        },
-                        avisInstitutNationalOrigineEtQualiteINAO: {
-                          initial: 'avisInstitutNationalOrigineEtQualiteINAOARendre',
-                          states: {
-                            avisInstitutNationalOrigineEtQualiteINAOARendre: {
-                              on: { RENDRE_AVIS_INSTITUT_NATIONAL_ORIGINE_ET_QUALITE_INAO: 'avisInstitutNationalOrigineEtQualiteINAORendu' },
-                            },
-                            avisInstitutNationalOrigineEtQualiteINAORendu: { type: 'final' },
-                          },
-                        },
-                        avisDirectionRegionaleAffairesCulturelles: {
-                          initial: 'avisDirectionRegionaleAffairesCulturellesARendre',
-                          states: {
-                            avisDirectionRegionaleAffairesCulturellesARendre: {
-                              on: { RENDRE_AVIS_DIRECTION_REGIONALE_AFFAIRES_CULTURELLES: 'avisDirectionRegionaleAffairesCulturellesRendu' },
-                            },
-                            avisDirectionRegionaleAffairesCulturellesRendu: { type: 'final' },
-                          },
-                        },
-                        avisDirectionRegionaleFinancesPubliques: {
-                          initial: 'avisDirectionRegionaleFinancesPubliquesARendre',
-                          states: {
-                            avisDirectionRegionaleFinancesPubliquesARendre: {
-                              on: { RENDRE_AVIS_DIRECTION_REGIONALE_FINANCES_PUBLIQUES: 'avisDirectionRegionaleFinancesPubliquesRendu' },
-                            },
-                            avisDirectionRegionaleFinancesPubliquesRendu: { type: 'final' },
-                          },
-                        },
-                      },
-                      onDone: 'avisDesServicesRendus',
                     },
                     avisDesServicesRendus: { type: 'final' },
                   },
@@ -537,13 +411,19 @@ const prmOctMachine = createMachine({
             },
             avisCommissionDepartementaleDesMinesEnGuyaneEtOutreMerARendre: {
               on: {
-                RENDRE_AVIS_CDM: 'rapportDREALAFaire',
+                RENDRE_AVIS_CDM: {
+                  target: 'rapportDREALAFaire',
+                  guard: peutRendreAvisCDM,
+                },
               },
             },
             rapportDREALAFaire: {
               id: 'rapportDREALAFaire',
               on: {
-                RENDRE_RAPPORT_DREAL: 'avisPrefetARendre',
+                RENDRE_RAPPORT_DREAL: {
+                  target: 'avisPrefetARendre',
+                  guard: peutRendreRapportDREAL,
+                },
               },
             },
             avisPrefetARendre: {

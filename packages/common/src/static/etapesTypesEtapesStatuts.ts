@@ -38,8 +38,6 @@ export const EtapesTypesEtapesStatuts = {
     DEFAVORABLE_AVEC_RESERVES: { etapeTypeId: 'aep', etapeStatutId: 'dre' },
   },
 
-
-
   avisDunMaire: {
     FAVORABLE: { etapeTypeId: 'ama', etapeStatutId: 'fav' },
     DEFAVORABLE: { etapeTypeId: 'ama', etapeStatutId: 'def' },
@@ -65,7 +63,6 @@ export const EtapesTypesEtapesStatuts = {
     FAIT: { etapeTypeId: 'anf', etapeStatutId: 'fai' },
   },
 
-
   avisEtRapportDuDirecteurRegionalChargeDeLenvironnementDeLamenagementEtDuLogement: {
     FAVORABLE: { etapeTypeId: 'apd', etapeStatutId: 'fav' },
     DEFAVORABLE: { etapeTypeId: 'apd', etapeStatutId: 'def' },
@@ -78,9 +75,6 @@ export const EtapesTypesEtapesStatuts = {
     FAVORABLE_AVEC_RESERVE: { etapeTypeId: 'ape', etapeStatutId: 'fre' },
     DEFAVORABLE_AVEC_RESERVES: { etapeTypeId: 'ape', etapeStatutId: 'dre' },
   },
-
-
-
 
   avisDeLaCommissionDepartementaleDesMines_CDM_: {
     AJOURNE: { etapeTypeId: 'apo', etapeStatutId: 'ajo' },
@@ -106,7 +100,6 @@ export const EtapesTypesEtapesStatuts = {
     FAVORABLE_AVEC_RESERVE: { etapeTypeId: 'apw', etapeStatutId: 'fre' },
     DEFAVORABLE_AVEC_RESERVES: { etapeTypeId: 'apw', etapeStatutId: 'dre' },
   },
-
 
   decisionDuProprietaireDuSol: {
     FAVORABLE: { etapeTypeId: 'asl', etapeStatutId: 'fav' },
@@ -200,10 +193,6 @@ export const EtapesTypesEtapesStatuts = {
   notificationAuPrefet: { FAIT: { etapeTypeId: 'npp', etapeStatutId: 'fai' } },
   paiementDesFraisDeDossierComplementaires: { FAIT: { etapeTypeId: 'pfc', etapeStatutId: 'fai' } },
   paiementDesFraisDeDossier: { FAIT: { etapeTypeId: 'pfd', etapeStatutId: 'fai' } },
-  avisDuParcNaturelRegional: {
-    FAVORABLE: { etapeTypeId: 'pnr', etapeStatutId: 'fav' },
-    DEFAVORABLE: { etapeTypeId: 'pnr', etapeStatutId: 'def' },
-  },
   clotureDeLaParticipationDuPublic: { TERMINE: { etapeTypeId: 'ppc', etapeStatutId: 'ter' } },
   ouvertureDeLaParticipationDuPublic: {
     PROGRAMME: { etapeTypeId: 'ppu', etapeStatutId: 'pro' },

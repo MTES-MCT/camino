@@ -15,7 +15,6 @@ import { CommuneId } from '../static/communes'
 import { DemarcheTypeId } from '../static/demarchesTypes.js'
 import { DEPARTEMENT_IDS, toDepartementId } from '../static/departement.js'
 import { DocumentsTypes, EntrepriseDocumentTypeId } from '../static/documentsTypes.js'
-import { DOMAINES_IDS } from '../static/domaines.js'
 import { ETAPES_TYPES, EtapeTypeId, EtapesTypes } from '../static/etapesTypes.js'
 import { SDOMZoneId } from '../static/sdom.js'
 import { TitreTypeId, TitresTypes } from '../static/titresTypes.js'
@@ -193,6 +192,8 @@ export const getAvisTypes = (etapeTypeId: EtapeTypeId, titreTypeId: TitreTypeId,
         { ...AvisTypes.avisAgenceRegionaleSante, optionnel: true },
         { ...AvisTypes.avisCaisseGeneraleSecuriteSociale, optionnel: true },
         { ...AvisTypes.autreAvis, optionnel: true },
+        { ...AvisTypes.avisOfficeNationalDesForets, optionnel: false },
+        { ...AvisTypes.expertiseOfficeNationalDesForets, optionnel: true },
         // TODO 2024-05-14: rendre obligatoire pour les PNMs quand ces derniers seront implémentés
         { ...AvisTypes.avisParcNaturelMarin, optionnel: true },
       ]
@@ -207,10 +208,7 @@ export const getAvisTypes = (etapeTypeId: EtapeTypeId, titreTypeId: TitreTypeId,
       )
     }
 
-    if (TitresTypes[titreTypeId].domaineId === DOMAINES_IDS.GRANULATS_MARINS) {
-      avis.push({ ...AvisTypes.avisPrefetMaritime, optionnel: true })
-    }
-
+    // FIXME Obligatoire si avis propriétaire du sol défavorable... comment on passe ça
     if (TitresTypes[titreTypeId].typeId === TITRES_TYPES_TYPES_IDS.AUTORISATION_D_EXPLOITATION) {
       avis.push({ ...AvisTypes.confirmationAccordProprietaireDuSol, optionnel: false })
     }
