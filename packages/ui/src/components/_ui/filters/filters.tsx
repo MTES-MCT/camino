@@ -297,7 +297,7 @@ export const Filters = defineComponent((props: Props) => {
               <>
                 {labels.value.length ? (
                   <div class={['flex', opened.value ? 'border-b-s' : null]} style={{ justifyContent: 'center', alignItems: 'center' }}>
-                    <div class="px-m pt-m pb-s flex" style={{ flexWrap: 'wrap' }}>
+                    <div class="px-m pt-m pb-s flex" style={{ flexWrap: 'wrap', maxWidth: 'calc( 100% - 5rem )' }}>
                       {labels.value.map(label => (
                         <span
                           key={`${label.id}-${label.valueName}`}
