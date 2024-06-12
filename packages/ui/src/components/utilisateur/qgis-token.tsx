@@ -1,10 +1,10 @@
 import { AsyncData } from '@/api/client-rest'
 import { QGISToken } from 'camino-common/src/utilisateur'
 import { defineComponent, ref } from 'vue'
-import { Pill } from '../_ui/pill'
 import { LoadingElement } from '../_ui/functional-loader'
-import { Messages } from '@/components/_ui/messages'
 import { UtilisateurApiClient } from './utilisateur-api-client'
+import { DsfrButton } from '../_ui/dsfr-button'
+import { Alert } from '../_ui/alert'
 
 interface Props {
   apiClient: Pick<UtilisateurApiClient, 'getQGISToken'>
@@ -12,7 +12,7 @@ interface Props {
 
 export const QGisToken = defineComponent<Props>(props => {
   const data = ref<AsyncData<QGISToken> | null>(null)
-  const messages = ref<{ type: 'error' | 'success'; value: string }[]>([])
+  const alertMessage = ref<string>('')
 
   const generateToken = async () => {
     data.value = { status: 'LOADING' }
@@ -32,39 +32,34 @@ export const QGisToken = defineComponent<Props>(props => {
 
   const copyToClipboard = (message: string, token: string) => {
     navigator.clipboard.writeText(token)
-    messages.value.push({
-      type: 'success',
-      value: message,
-    })
-    setTimeout(() => {
-      messages.value.shift()
-    }, 4500)
+    alertMessage.value = message
   }
 
   return () => (
-    <>
-      <button class="btn btn-secondary mb-s" onClick={() => generateToken()}>
-        Générer des identifiants pour QGis
-      </button>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+      {data.value?.status !== 'LOADING' || data.value === null ? <DsfrButton title="Générer des identifiants pour QGis" buttonType="secondary" onClick={() => generateToken()} /> : null}
       {data.value !== null ? (
         <LoadingElement
           data={data.value}
           renderItem={item => (
             <>
               {item.token ? (
-                <div>
-                  Voici l'URL à utiliser dans QGis <Pill noCapitalize onClick={() => copyToClipboard(`L'URL vient d'être copiée dans votre presse papier`, item.url)} text={item.url} />
-                  <br />
-                  Voici le jeton généré <Pill noCapitalize onClick={() => copyToClipboard(`Le token vient d'être copié dans votre presse papier`, item.token)} text={item.token} />
-                </div>
+                <>
+                  <div>
+                    Voici l'URL à utiliser dans QGis :{' '}
+                    <DsfrButton title={item.url} onClick={() => copyToClipboard(`L'URL vient d'être copiée dans votre presse papier`, item.url)} buttonType="tertiary" />
+                  </div>
+                  <div>
+                    Voici le jeton généré : <DsfrButton title={item.token} onClick={() => copyToClipboard(`Le token vient d'être copié dans votre presse papier`, item.token)} buttonType="tertiary" />
+                  </div>
+                  <Alert small={true} type="info" title={alertMessage.value} />
+                </>
               ) : null}
             </>
           )}
         ></LoadingElement>
       ) : null}
-
-      <Messages messages={messages.value} />
-    </>
+    </div>
   )
 })
 
