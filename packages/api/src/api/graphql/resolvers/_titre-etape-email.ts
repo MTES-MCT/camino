@@ -7,18 +7,19 @@ import { titreUrlGet } from '../../../business/utils/urls-get.js'
 import { EmailAdministration } from '../../../tools/api-mailjet/types.js'
 import { UserNotNull } from 'camino-common/src/roles.js'
 import { EtapesTypes } from 'camino-common/src/static/etapesTypes.js'
+import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools.js'
 
 const emailForAdministrationContentFormat = (titreTypeId: string, etapeNom: string, titreId: string, user: UserNotNull) => {
   const titreUrl = titreUrlGet(titreId)
 
   return `
   <h3>L’étape « ${etapeNom} » d’une demande d’${titreTypeId === 'arm' ? 'ARM' : 'AEX'} vient d’être réalisée.</h3>
-  
+
   <hr>
-  
+
   <b>Lien</b> : <a href="${titreUrl}">${titreUrl}</a> <br>
   <b>Effectué par</b> : ${user.prenom} ${user.nom} (${user.email})<br>
-  
+
   `
 }
 
@@ -27,12 +28,12 @@ const etapeStatusUpdated = (etape: Pick<ITitreEtape, 'typeId' | 'statutId'>, typ
 
 // VisibleForTesting
 export const emailsForAdministrationsGet = (
-  etape: Pick<ITitreEtape, 'typeId' | 'statutId'> | undefined,
+  etape: Pick<ITitreEtape, 'typeId' | 'statutId' | 'isBrouillon'> | undefined,
   demarcheTypeId: string,
   titreId: string,
   titreTypeId: string,
   user: UserNotNull,
-  oldEtape?: Pick<ITitreEtape, 'statutId'>
+  oldEtape?: Pick<ITitreEtape, 'statutId' | 'isBrouillon'>
 ): { subject: string; content: string; emails: string[] } | null => {
   if (!etape) {
     return null
@@ -42,7 +43,7 @@ export const emailsForAdministrationsGet = (
 
   if (demarcheTypeId === 'oct' && titreTypeId === 'arm') {
     // lorsque la demande est déposée
-    if (etapeStatusUpdated(etape, 'mdp', 'fai', oldEtape)) {
+    if (!etape.isBrouillon && (oldEtape?.isBrouillon ?? true)) {
       emails.push(EmailAdministration.PTMG)
       emails.push(EmailAdministration.ONF)
 
@@ -61,7 +62,7 @@ export const emailsForAdministrationsGet = (
       title = 'Nouvelle demande complète'
     }
   } else if (demarcheTypeId === 'oct' && titreTypeId === 'axm') {
-    if (etapeStatusUpdated(etape, 'mfr', 'fai', oldEtape)) {
+    if (!etape.isBrouillon && (oldEtape?.isBrouillon ?? true)) {
       emails.push(EmailAdministration.DGTM)
 
       title = 'Nouvelle demande déposée'
@@ -99,14 +100,14 @@ export const titreEtapeUtilisateursEmailsSend = async (etape: ITitreEtape, titre
     fields: { utilisateur: { id: {}, entreprises: { id: {} } } },
   })
 
-  const utilisateurs = utilisateursTitres?.map(utilisateurTitre => utilisateurTitre.utilisateur).filter(utilisateur => !!utilisateur && !!utilisateur.email)
+  const utilisateurs = utilisateursTitres?.map(utilisateurTitre => utilisateurTitre.utilisateur).filter(utilisateur => isNotNullNorUndefinedNorEmpty(utilisateur?.email))
 
   for (const utilisateur of utilisateurs) {
     if (utilisateur) {
       const user = formatUser(utilisateur)
       // On vérifie que l’utilisateur puisse voir l’étape
       const titreEtape = await titreEtapeGet(etape.id, { fields: { id: {} } }, user)
-      if (titreEtape) {
+      if (isNotNullNorUndefined(titreEtape)) {
         utilisateursEmails.push(user.email)
       }
     }

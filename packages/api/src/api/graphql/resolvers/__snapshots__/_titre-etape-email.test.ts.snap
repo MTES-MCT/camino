@@ -4,12 +4,12 @@ exports[`envoie un email sur un octroi d'AEX 1`] = `
 {
   "content": "
   <h3>L’étape « demande » d’une demande d’AEX vient d’être réalisée.</h3>
-  
+
   <hr>
-  
+
   <b>Lien</b> : <a href="http://plop.plop/titres/titreId">http://plop.plop/titres/titreId</a> <br>
   <b>Effectué par</b> :  Camino (camino@beta.gouv.fr)<br>
-  
+
   ",
   "emails": [
     "mc.remd.deal-guyane@developpement-durable.gouv.fr",
@@ -22,12 +22,12 @@ exports[`envoie un email sur un octroi d'ARM 1`] = `
 {
   "content": "
   <h3>L’étape « dépôt de la demande » d’une demande d’ARM vient d’être réalisée.</h3>
-  
+
   <hr>
-  
+
   <b>Lien</b> : <a href="http://plop.plop/titres/titreId">http://plop.plop/titres/titreId</a> <br>
   <b>Effectué par</b> :  Camino (camino@beta.gouv.fr)<br>
-  
+
   ",
   "emails": [
     "ptmg@ctguyane.fr",
