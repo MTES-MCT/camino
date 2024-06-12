@@ -63,25 +63,28 @@ export const titresDemarchesFormatTable = async (pool: Pool, titresDemarches: IT
 
     const etapesTypesStatuts = etapesDatesStatutsBuild(titreDemarche)
 
-    const etapeWithPoints = titreDemarche.etapes ? titreEtapesSortDescByOrdre(titreDemarche.etapes).find(etape => isNotNullNorUndefined(etape.geojson4326Perimetre)) : undefined
+    const sortedEtapeByOrdre = titreDemarche.etapes ? titreEtapesSortDescByOrdre(titreDemarche.etapes) : undefined
+    const etapeWithPoints = sortedEtapeByOrdre?.find(etape => isNotNullNorUndefined(etape.geojson4326Perimetre)) ?? null
+    const etapeWithTitulaires = sortedEtapeByOrdre?.find(etape => isNotNullNorUndefined(etape.titulaireIds)) ?? null
+    const etapeWithAmodiataires = sortedEtapeByOrdre?.find(etape => isNotNullNorUndefined(etape.amodiataireIds)) ?? null
 
     const titreDemarcheNew = {
       titre_id: titre.slug,
       titre_nom: titre.nom,
-
       titre_domaine: Domaines[getDomaineId(titre.typeId)].nom,
       titre_type: TitresTypesTypes[getTitreTypeType(titre.typeId)].nom,
       titre_statut: isNotNullNorUndefined(titre.titreStatutId) ? TitresStatuts[titre.titreStatutId].nom : '',
       type: DemarchesTypes[titreDemarche.typeId].nom,
       statut: DemarchesStatuts[titreDemarche.statutId!].nom,
       description: titreDemarche.description,
+      'surface km2': etapeWithPoints ? etapeWithPoints.surface : '',
       titre_references: titre.references?.map(r => `${ReferencesTypes[r.referenceTypeId].nom} : ${r.nom}`).join(';'),
-      titulaires_noms: titre.titulaireIds!.map(id => entreprisesIndex[id].nom ?? '').join(';'),
-      titulaires_adresses: titre.titulaireIds!.map(id => `${entreprisesIndex[id].adresse} ${entreprisesIndex[id].code_postal} ${entreprisesIndex[id].commune}`).join(';'),
-      titulaires_legal: titre.titulaireIds!.map(id => entreprisesIndex[id].legal_etranger ?? entreprisesIndex[id].legal_siren).join(';'),
-      amodiataires_noms: titre.amodiataireIds!.map(id => entreprisesIndex[id].nom).join(';'),
-      amodiataires_adresses: titre.amodiataireIds!.map(id => `${entreprisesIndex[id].adresse} ${entreprisesIndex[id].code_postal} ${entreprisesIndex[id].commune}`).join(';'),
-      amodiataires_legal: titre.amodiataireIds!.map(id => entreprisesIndex[id].legal_etranger ?? entreprisesIndex[id].legal_siren).join(';'),
+      titulaires_noms: (etapeWithTitulaires?.titulaireIds ?? []).map(id => entreprisesIndex[id].nom ?? '').join(';'),
+      titulaires_adresses: (etapeWithTitulaires?.titulaireIds ?? []).map(id => `${entreprisesIndex[id].adresse} ${entreprisesIndex[id].code_postal} ${entreprisesIndex[id].commune}`).join(';'),
+      titulaires_legal: (etapeWithTitulaires?.titulaireIds ?? []).map(id => entreprisesIndex[id].legal_etranger ?? entreprisesIndex[id].legal_siren).join(';'),
+      amodiataires_noms: (etapeWithAmodiataires?.amodiataireIds ?? []).map(id => entreprisesIndex[id].nom).join(';'),
+      amodiataires_adresses: (etapeWithAmodiataires?.amodiataireIds ?? []).map(id => `${entreprisesIndex[id].adresse} ${entreprisesIndex[id].code_postal} ${entreprisesIndex[id].commune}`).join(';'),
+      amodiataires_legal: (etapeWithAmodiataires?.amodiataireIds ?? []).map(id => entreprisesIndex[id].legal_etranger ?? entreprisesIndex[id].legal_siren).join(';'),
       ...etapesTypesStatuts,
       forets: etapeWithPoints ? etapeWithPoints.forets?.map(fId => Forets[fId].nom).join(';') : '',
       communes: etapeWithPoints ? etapeWithPoints.communes?.map(f => communesIndex[f.id]).join(';') : '',
