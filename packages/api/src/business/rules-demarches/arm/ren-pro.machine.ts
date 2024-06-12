@@ -20,7 +20,7 @@ type XStateEvent =
   | { type: 'NOTIFIER_DEMANDEUR_APRES_CLASSEMENT_SANS_SUITE' }
 
 type Event = XStateEvent['type']
-// FIXME on fini toujours en statut accepté après l'avis, et on fait l'avenant à l'autorisation de recherch minière (aco)
+// TODO 2024-06-12 on finit toujours en statut accepté après l'avis, et on fait l'avenant à l'autorisation de recherch minière (aco)
 // Si un jour on a un cas de rejet (peu probable car cette arbre ne sera plus utilisé avec la réforme), il faudra probablement rajouter une étape intermédiaire
 const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
   FAIRE_DEMANDE: { db: EtapesTypesEtapesStatuts.demande, mainStep: true },

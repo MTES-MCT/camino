@@ -1477,7 +1477,6 @@ export const EtapesTypes = {
     nom: 'Avis des services et commissions consultatives',
     description: '',
     fondamentale: false,
-    // FIXME
     unique: false,
     date_fin: null,
     public_lecture: false,

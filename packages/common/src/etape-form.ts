@@ -31,7 +31,7 @@ const contenuValidator = z
 export type EtapeContenu = z.infer<typeof contenuValidator>
 const dureeValidator = z.number().nonnegative().nullable()
 
-const defaultHeritageProps = {
+export const defaultHeritageProps = {
   dateDebut: { actif: false, etape: null },
   dateFin: { actif: false, etape: null },
   duree: { actif: false, etape: null },
@@ -39,7 +39,7 @@ const defaultHeritageProps = {
   substances: { actif: false, etape: null },
   titulaires: { actif: false, etape: null },
   amodiataires: { actif: false, etape: null },
-}
+} as const
 
 const heritagePropsValidator = z
   .object({

@@ -1,10 +1,11 @@
-import { FlattenEtape, flattenEtapeValidator, heritageContenuValidator } from 'camino-common/src/etape-form.js'
+import { FlattenEtape, defaultHeritageProps, flattenEtapeValidator, heritageContenuValidator } from 'camino-common/src/etape-form.js'
 import { simpleContenuToFlattenedContenu } from 'camino-common/src/sections.js'
 import { isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
 import { ITitreEtape } from '../../types.js'
 
 import { titreEtapeFormatFields } from './_fields.js'
 import { titreDemarcheFormat } from './titres-demarches.js'
+import { EtapesTypes } from 'camino-common/src/static/etapesTypes.js'
 
 export const getPerimetreFromITitreEtape = (
   titreEtape: Pick<
@@ -25,7 +26,7 @@ export const getPerimetreFromITitreEtape = (
 export const iTitreEtapeToFlattenEtape = (titreEtape: ITitreEtape): FlattenEtape => {
   const titreTypeId = titreEtape.demarche?.titre?.typeId
   const demarcheTypeId = titreEtape.demarche?.typeId
-  const heritageProps = titreEtape.heritageProps
+  const heritageProps = EtapesTypes[titreEtape.typeId].fondamentale ? titreEtape.heritageProps : defaultHeritageProps
   const heritageContenu = titreEtape.heritageContenu
   const slug = titreEtape.slug
   if (isNullOrUndefined(titreTypeId)) {

@@ -305,9 +305,7 @@ export const getEtape = (_pool: Pool) => async (req: CaminoRequest, res: CustomR
       ) {
         res.sendStatus(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
       } else {
-        // FIXME FLATTEN ICI
         res.json(iTitreEtapeToFlattenEtape(titreEtape))
-        // res.json(titreEtapeFormat(titreEtape))
       }
     } catch (e) {
       console.error(e)
