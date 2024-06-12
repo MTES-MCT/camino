@@ -173,11 +173,9 @@ export const EtapesTypesEtapesStatuts = {
   demande: {
     FAIT: { etapeTypeId: 'mfr', etapeStatutId: 'fai' },
   },
-  demandeDinformations_AvisDeLOfficeNationalDesForets_: { FAIT: { etapeTypeId: 'mia', etapeStatutId: 'fai' } },
   demandeDinformations_AvisDuDREALDEALOuDGTM_: { FAIT: { etapeTypeId: 'mie', etapeStatutId: 'fai' } },
   demandeDinformations: { FAIT: { etapeTypeId: 'mif', etapeStatutId: 'fai' } },
   demandeDinformations_RecevabiliteDeLaDemande_: { FAIT: { etapeTypeId: 'mim', etapeStatutId: 'fai' } },
-  demandeDinformations_ExpertiseDeLOfficeNationalDesForets_: { FAIT: { etapeTypeId: 'mio', etapeStatutId: 'fai' } },
   notificationAuDemandeur_AjournementDeLaCARM_: { FAIT: { etapeTypeId: 'mna', etapeStatutId: 'fai' } },
   notificationAuDemandeur_AvisFavorableDeLaCARM_: { FAIT: { etapeTypeId: 'mnb', etapeStatutId: 'fai' } },
   notificationAuDemandeur_ClassementSansSuite_: { FAIT: { etapeTypeId: 'mnc', etapeStatutId: 'fai' } },
@@ -213,11 +211,9 @@ export const EtapesTypesEtapesStatuts = {
     FAVORABLE: { etapeTypeId: 'rde', etapeStatutId: 'fav' },
     DEFAVORABLE: { etapeTypeId: 'rde', etapeStatutId: 'def' },
   },
-  receptionDinformation_AvisDeLOfficeNationalDesForets_: { FAIT: { etapeTypeId: 'ria', etapeStatutId: 'fai' } },
   receptionDinformation_AvisDuDREALDEALOuDGTM_: { FAIT: { etapeTypeId: 'rie', etapeStatutId: 'fai' } },
   receptionDinformation: { FAIT: { etapeTypeId: 'rif', etapeStatutId: 'fai' } },
   receptionDinformation_RecevabiliteDeLaDemande_: { FAIT: { etapeTypeId: 'rim', etapeStatutId: 'fai' } },
-  receptionDinformation_ExpertiseDeLOfficeNationalDesForets_: { FAIT: { etapeTypeId: 'rio', etapeStatutId: 'fai' } },
   rapportDuConseilDEtat: {
     FAVORABLE: { etapeTypeId: 'rpe', etapeStatutId: 'fav' },
     DEFAVORABLE: { etapeTypeId: 'rpe', etapeStatutId: 'def' },

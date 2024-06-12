@@ -4,13 +4,13 @@ import { Definition } from '../definition.js'
 import { EtapeBrouillon } from '../etape.js'
 
 // prettier-ignore
-const IDS = ['abd', 'aca','aco','and','ane','anf','def','dex','dim', 'dpu', 'dup', 'dux','ihi', 'mfr','mod','mom','rca','rcb','rcd','rcm','rco','rcs','ria','rie','rif','rim','rio','rpu','sco','acg','acl','aep','ama','apd','ape','apo','app','apu','apw','asl','cac','ccs','cim','cod','css','dae','dec','des','ede','edm','epc','epu','esb','ide','mca','mcb','mcd','mcm','mco','mcp','mcr','mcs','mdp','mec','men','meo','mia','mie','mif','mim','mio','mna','mnb','mnc','mnd','mni','mno','mns','mnv','ncl','nis','npp','pfc','pfd','ppc','ppu','pqr','rcg','rde','rpe','sas','sca','scg','scl','spe','spo','spp','vfc','vfd','wab','wae','wao','wap','war','wau','wce','wco','wda','wdc','wdd','wde','wdm','wfa','wfd','wfo','wfr','wmm','wmr','wmt','woe','wpa','wpb','wpc','wpo','wpp','wps','wrc','wrd','wre','wrl','wrt','wse','wtp', 'asc'] as const
+const IDS = ['abd', 'aca','aco','and','ane','anf','def','dex','dim', 'dpu', 'dup', 'dux','ihi', 'mfr','mod','mom','rca','rcb','rcd','rcm','rco','rcs','rie','rif','rim','rpu','sco','acg','acl','aep','ama','apd','ape','apo','app','apu','apw','asl','cac','ccs','cim','cod','css','dae','dec','des','ede','edm','epc','epu','esb','ide','mca','mcb','mcd','mcm','mco','mcp','mcr','mcs','mdp','mec','men','meo','mie','mif','mim','mna','mnb','mnc','mnd','mni','mno','mns','mnv','ncl','nis','npp','pfc','pfd','ppc','ppu','pqr','rcg','rde','rpe','sas','sca','scg','scl','spe','spo','spp','vfc','vfd','wab','wae','wao','wap','war','wau','wce','wco','wda','wdc','wdd','wde','wdm','wfa','wfd','wfo','wfr','wmm','wmr','wmt','woe','wpa','wpb','wpc','wpo','wpp','wps','wrc','wrd','wre','wrl','wrt','wse','wtp', 'asc'] as const
 
 // prettier-ignore
-const FONDAMENTALES_IDS = ['abd', 'aca','aco','and','ane','anf','def','dex','dim', 'dpu', 'dup', 'dux','ihi', 'mfr','mod','mom','rca','rcb','rcd','rcm','rco','rcs','ria','rie','rif','rim','rio','rpu','sco'] as const satisfies Readonly<EtapeTypeIdFondamentaleArray>
+const FONDAMENTALES_IDS = ['abd', 'aca','aco','and','ane','anf','def','dex','dim', 'dpu', 'dup', 'dux','ihi', 'mfr','mod','mom','rca','rcb','rcd','rcm','rco','rcs','rie','rif','rim','rpu','sco'] as const satisfies Readonly<EtapeTypeIdFondamentaleArray>
 
 // prettier-ignore
-const NON_FONDAMENTALES_IDS = ['acg','acl','aep','ama','apd','ape','apo','app','apu','apw','asl','cac','ccs','cim','cod','css','dae','dec','des','ede','edm','epc','epu','esb','ide','mca','mcb','mcd','mcm','mco','mcp','mcr','mcs','mdp','mec','men','meo','mia','mie','mif','mim','mio','mna','mnb','mnc','mnd','mni','mno','mns','mnv','ncl','nis','npp','pfc','pfd','ppc','ppu','pqr','rcg','rde','rpe','sas','sca','scg','scl','spe','spo','spp','vfc','vfd','wab','wae','wao','wap','war','wau','wce','wco','wda','wdc','wdd','wde','wdm','wfa','wfd','wfo','wfr','wmm','wmr','wmt','woe','wpa','wpb','wpc','wpo','wpp','wps','wrc','wrd','wre','wrl','wrt','wse','wtp', 'asc'] as const satisfies Readonly<EtapeTypeIdNonFondamentale[]>
+const NON_FONDAMENTALES_IDS = ['acg','acl','aep','ama','apd','ape','apo','app','apu','apw','asl','cac','ccs','cim','cod','css','dae','dec','des','ede','edm','epc','epu','esb','ide','mca','mcb','mcd','mcm','mco','mcp','mcr','mcs','mdp','mec','men','meo','mie','mif','mim','mna','mnb','mnc','mnd','mni','mno','mns','mnv','ncl','nis','npp','pfc','pfd','ppc','ppu','pqr','rcg','rde','rpe','sas','sca','scg','scl','spe','spo','spp','vfc','vfd','wab','wae','wao','wap','war','wau','wce','wco','wda','wdc','wdd','wde','wdm','wfa','wfd','wfo','wfr','wmm','wmr','wmt','woe','wpa','wpb','wpc','wpo','wpp','wps','wrc','wrd','wre','wrl','wrt','wse','wtp', 'asc'] as const satisfies Readonly<EtapeTypeIdNonFondamentale[]>
 
 // Ceci est un test :)
 ;[...FONDAMENTALES_IDS, ...NON_FONDAMENTALES_IDS] as const satisfies typeof IDS
@@ -67,11 +67,9 @@ export const ETAPES_TYPES = {
   enregistrementDeLaDemande: 'men',
   priseEnChargeParLOfficeNationalDesForets: 'meo',
   demande: 'mfr',
-  demandeDinformations_AvisDeLOfficeNationalDesForets_: 'mia',
   demandeDinformations_AvisDuDREALDEALOuDGTM_: 'mie',
   demandeDinformations: 'mif',
   demandeDinformations_RecevabiliteDeLaDemande_: 'mim',
-  demandeDinformations_ExpertiseDeLOfficeNationalDesForets_: 'mio',
   notificationAuDemandeur_AjournementDeLaCARM_: 'mna',
   notificationAuDemandeur_AvisFavorableDeLaCARM_: 'mnb',
   notificationAuDemandeur_ClassementSansSuite_: 'mnc',
@@ -98,11 +96,9 @@ export const ETAPES_TYPES = {
   receptionDeComplements: 'rco',
   receptionDeComplements_SaisineDeLaCARM_: 'rcs',
   recepisseDeDeclarationLoiSurLeau: 'rde',
-  receptionDinformation_AvisDeLOfficeNationalDesForets_: 'ria',
   receptionDinformation_AvisDuDREALDEALOuDGTM_: 'rie',
   receptionDinformation: 'rif',
   receptionDinformation_RecevabiliteDeLaDemande_: 'rim',
-  receptionDinformation_ExpertiseDeLOfficeNationalDesForets_: 'rio',
   rapportDuConseilDEtat: 'rpe',
   publicationDeDecisionAuRecueilDesActesAdministratifs: 'rpu',
   saisineDeLautoriteSignataire: 'sas',
@@ -296,31 +292,11 @@ export const EtapesTypes = {
     public_lecture: false,
     entreprises_lecture: true,
   },
-  mia: {
-    id: 'mia',
-    nom: "demande d'informations (avis de l'Office national des forêts)",
-    description: 'après une aof',
-    fondamentale: false,
-    unique: false,
-    date_fin: null,
-    public_lecture: false,
-    entreprises_lecture: true,
-  },
   rim: {
     id: 'rim',
     nom: "réception d'information (recevabilité de la demande)",
     description: 'après une mcr',
     fondamentale: true,
-    unique: false,
-    date_fin: null,
-    public_lecture: false,
-    entreprises_lecture: true,
-  },
-  mio: {
-    id: 'mio',
-    nom: "demande d'informations (expertise de l'Office national des forêts)",
-    description: 'après une eof',
-    fondamentale: false,
     unique: false,
     date_fin: null,
     public_lecture: false,
@@ -417,16 +393,6 @@ export const EtapesTypes = {
     public_lecture: false,
     entreprises_lecture: true,
   },
-  ria: {
-    id: 'ria',
-    nom: "réception d'information (avis de l'Office national des forêts)",
-    description: 'après une aof',
-    fondamentale: true,
-    unique: false,
-    date_fin: null,
-    public_lecture: false,
-    entreprises_lecture: true,
-  },
   epc: {
     id: 'epc',
     nom: "clôture de l'enquête publique",
@@ -455,16 +421,6 @@ export const EtapesTypes = {
     unique: false,
     date_fin: null,
     public_lecture: true,
-    entreprises_lecture: true,
-  },
-  rio: {
-    id: 'rio',
-    nom: "réception d'information (expertise de l'Office national des forêts)",
-    description: 'après une eof',
-    fondamentale: true,
-    unique: false,
-    date_fin: null,
-    public_lecture: false,
     entreprises_lecture: true,
   },
   wda: {

@@ -26,7 +26,7 @@ describe('vérifie l’arbre de renonciation et de prolongation d’ARM', () => 
         { ...ETES.modificationDeLaDemande.FAIT, date: toCaminoDate('2020-06-30') },
       ])
     ).toThrowErrorMatchingInlineSnapshot(
-      `[Error: Error: cannot execute step: '{"etapeTypeId":"mod","etapeStatutId":"fai","date":"2020-06-30"}' after '["mfr_fai","mdp_fai","mcr_fav"]'. The event {"type":"RECEVOIR_MODIFICATION_DE_LA_DEMANDE"} should be one of 'CLASSER_SANS_SUITE,DEMANDER_INFORMATION_EXPERTISE_ONF,DESISTER_PAR_LE_DEMANDEUR,FAIRE_EXPERTISE_ONF']`
+      `[Error: Error: cannot execute step: '{"etapeTypeId":"mod","etapeStatutId":"fai","date":"2020-06-30"}' after '["mfr_fai","mdp_fai","mcr_fav"]'. The event {"type":"RECEVOIR_MODIFICATION_DE_LA_DEMANDE"} should be one of 'CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES']`
     )
   })
 
@@ -49,8 +49,7 @@ describe('vérifie l’arbre de renonciation et de prolongation d’ARM', () => 
       { ...ETES.demande.FAIT, date: toCaminoDate('2020-05-27') },
       { ...ETES.depotDeLaDemande.FAIT, date: toCaminoDate('2020-05-30') },
       { ...ETES.recevabiliteDeLaDemande.FAVORABLE, date: toCaminoDate('2020-05-30') },
-      { ...ETES.expertiseDeLOfficeNationalDesForets.FAIT, date: toCaminoDate('2020-06-30') },
-      { ...ETES.avisDeLOfficeNationalDesForets.FAVORABLE, date: toCaminoDate('2020-06-30') },
+      { ...ETES.avisDesServicesEtCommissionsConsultatives.FAIT, date: toCaminoDate('2020-06-30') },
     ])
     expect(service.getSnapshot().context.demarcheStatut).toBe(DemarchesStatutsIds.Accepte)
   })

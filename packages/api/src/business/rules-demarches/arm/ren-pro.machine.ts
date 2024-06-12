@@ -12,14 +12,7 @@ type XStateEvent =
   | { type: 'FAIRE_RECEVABILITE_DEMANDE_DEFAVORABLE' }
   | { type: 'RECEVOIR_MODIFICATION_DE_LA_DEMANDE' }
   | { type: 'RECEVOIR_COMPLEMENTS_POUR_RECEVABILITE' }
-  | { type: 'DEMANDER_INFORMATION_EXPERTISE_ONF' }
-  | { type: 'RECEVOIR_INFORMATION_EXPERTISE_ONF' }
-  | { type: 'FAIRE_EXPERTISE_ONF' }
-  | { type: 'DEMANDER_INFORMATION_AVIS_ONF' }
-  | { type: 'RECEVOIR_INFORMATION_AVIS_ONF' }
-  | { type: 'RENDRE_AVIS_ONF_FAVORABLE' }
-  | { type: 'RENDRE_AVIS_ONF_DEFAVORABLE' }
-  | { type: 'NOTIFIER_DEMANDEUR_APRES_AVIS_ONF_DEFAVORABLE' }
+  | { type: 'RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES' }
   | { type: 'FAIRE_AVENANT_ARM' }
   | { type: 'NOTIFIER_AVENANT_ARM' }
   | { type: 'DESISTER_PAR_LE_DEMANDEUR' }
@@ -47,14 +40,7 @@ const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
   },
   RECEVOIR_MODIFICATION_DE_LA_DEMANDE: { db: EtapesTypesEtapesStatuts.modificationDeLaDemande, mainStep: false },
   RECEVOIR_COMPLEMENTS_POUR_RECEVABILITE: { db: EtapesTypesEtapesStatuts.receptionDeComplements_RecevabiliteDeLaDemande_, mainStep: false },
-  DEMANDER_INFORMATION_EXPERTISE_ONF: { db: EtapesTypesEtapesStatuts.demandeDinformations_ExpertiseDeLOfficeNationalDesForets_, mainStep: false },
-  RECEVOIR_INFORMATION_EXPERTISE_ONF: { db: EtapesTypesEtapesStatuts.receptionDinformation_ExpertiseDeLOfficeNationalDesForets_, mainStep: false },
-  FAIRE_EXPERTISE_ONF: { db: EtapesTypesEtapesStatuts.expertiseDeLOfficeNationalDesForets, mainStep: true },
-  DEMANDER_INFORMATION_AVIS_ONF: { db: EtapesTypesEtapesStatuts.demandeDinformations_AvisDeLOfficeNationalDesForets_, mainStep: false },
-  RECEVOIR_INFORMATION_AVIS_ONF: { db: EtapesTypesEtapesStatuts.receptionDinformation_AvisDeLOfficeNationalDesForets_, mainStep: false },
-  RENDRE_AVIS_ONF_FAVORABLE: { db: { FAVORABLE: EtapesTypesEtapesStatuts.avisDeLOfficeNationalDesForets.FAVORABLE }, mainStep: true },
-  RENDRE_AVIS_ONF_DEFAVORABLE: { db: { DEFAVORABLE: EtapesTypesEtapesStatuts.avisDeLOfficeNationalDesForets.DEFAVORABLE }, mainStep: true },
-  NOTIFIER_DEMANDEUR_APRES_AVIS_ONF_DEFAVORABLE: { db: EtapesTypesEtapesStatuts.notificationAuDemandeur_AvisDefavorable_, mainStep: true },
+  RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES: { db: EtapesTypesEtapesStatuts.avisDesServicesEtCommissionsConsultatives, mainStep: true },
   FAIRE_AVENANT_ARM: { db: EtapesTypesEtapesStatuts.avenantALautorisationDeRechercheMiniere, mainStep: true },
   NOTIFIER_AVENANT_ARM: { db: EtapesTypesEtapesStatuts.notificationAuDemandeur_SignatureDeLavenantALautorisationDeRechercheMiniere_, mainStep: true },
   DESISTER_PAR_LE_DEMANDEUR: { db: EtapesTypesEtapesStatuts.desistementDuDemandeur, mainStep: false },
@@ -135,7 +121,7 @@ const armRenProMachine = createMachine({
       on: {
         DEMANDER_COMPLEMENTS_POUR_RECEVABILITE: 'complementsPourRecevabiliteAFaire',
         FAIRE_RECEVABILITE_DEMANDE_FAVORABLE: {
-          target: 'expertiseONFAFaire',
+          target: 'avisDesServicesEtCommissionsConsultativesARendre',
           actions: assign({
             demarcheStatut: DemarchesStatutsIds.EnInstruction,
             visibilite: 'publique',
@@ -148,7 +134,7 @@ const armRenProMachine = createMachine({
       on: {
         RECEVOIR_COMPLEMENTS_POUR_RECEVABILITE: 'recevabiliteDeLaDemandeAFaire',
         FAIRE_RECEVABILITE_DEMANDE_FAVORABLE: {
-          target: 'expertiseONFAFaire',
+          target: 'avisDesServicesEtCommissionsConsultativesARendre',
           actions: assign({
             demarcheStatut: DemarchesStatutsIds.EnInstruction,
             visibilite: 'publique',
@@ -162,48 +148,12 @@ const armRenProMachine = createMachine({
         RECEVOIR_MODIFICATION_DE_LA_DEMANDE: 'recevabiliteDeLaDemandeAFaire',
       },
     },
-    expertiseONFAFaire: {
+    avisDesServicesEtCommissionsConsultativesARendre: {
       on: {
-        DEMANDER_INFORMATION_EXPERTISE_ONF: 'expertiseOuReceptionInformationONFAFaire',
-        FAIRE_EXPERTISE_ONF: 'demandeAvisONFAFaire',
-      },
-    },
-    expertiseOuReceptionInformationONFAFaire: {
-      on: {
-        FAIRE_EXPERTISE_ONF: 'demandeAvisONFAFaire',
-        RECEVOIR_INFORMATION_EXPERTISE_ONF: 'expertiseONFAFaire',
-      },
-    },
-    demandeAvisONFAFaire: {
-      on: {
-        DEMANDER_INFORMATION_AVIS_ONF: 'receptionInformationAvisONFAFaire',
-        RENDRE_AVIS_ONF_FAVORABLE: {
+        RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES: {
           target: 'avenantARMAFaire',
           actions: assign({
             demarcheStatut: DemarchesStatutsIds.Accepte,
-          }),
-        },
-        RENDRE_AVIS_ONF_DEFAVORABLE: {
-          target: 'notificationDuDemandeurApresAvisONFDefavorableAFaire',
-          actions: assign({
-            demarcheStatut: DemarchesStatutsIds.Rejete,
-          }),
-        },
-      },
-    },
-    receptionInformationAvisONFAFaire: {
-      on: {
-        RECEVOIR_INFORMATION_AVIS_ONF: 'demandeAvisONFAFaire',
-        RENDRE_AVIS_ONF_FAVORABLE: {
-          target: 'avenantARMAFaire',
-          actions: assign({
-            demarcheStatut: DemarchesStatutsIds.Accepte,
-          }),
-        },
-        RENDRE_AVIS_ONF_DEFAVORABLE: {
-          target: 'notificationDuDemandeurApresAvisONFDefavorableAFaire',
-          actions: assign({
-            demarcheStatut: DemarchesStatutsIds.Rejete,
           }),
         },
       },
@@ -213,11 +163,6 @@ const armRenProMachine = createMachine({
     },
     notificationAvenantARMAFaire: {
       on: { NOTIFIER_AVENANT_ARM: 'avenantARMAFaire' },
-    },
-    notificationDuDemandeurApresAvisONFDefavorableAFaire: {
-      on: {
-        NOTIFIER_DEMANDEUR_APRES_AVIS_ONF_DEFAVORABLE: 'done',
-      },
     },
     notificationDuDemandeurApresClassementSansSuiteAFaire: {
       on: { NOTIFIER_DEMANDEUR_APRES_CLASSEMENT_SANS_SUITE: 'done' },

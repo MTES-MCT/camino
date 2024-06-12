@@ -79,6 +79,7 @@ export const up = async (knex: Knex) => {
   )
 
   // FIXME on ne veut pas prendre plutôt la SSR comme pivot si il y'en a une ?
+  // FIXME comment on gère l'eof qui est censée être visible uniquement par l'ONF ?
   const etapesByDemarche = etapesDocuments.rows.reduce<
     Record<DemarcheId, { id: EtapeDocumentId; avis_type_id: AvisTypeId; etape_id: EtapeId; description: string; avis_statut_id: AvisStatutId; date: string; largeobject_id: string }[]>
   >((acc, row) => {
