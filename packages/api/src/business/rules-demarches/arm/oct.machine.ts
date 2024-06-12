@@ -297,6 +297,7 @@ type MecanisationInconnu = MecanisationConnu | 'inconnu'
 
 interface OctARMContext extends CaminoCommonContext {
   mecanisation: MecanisationInconnu
+  avisDesServicesEtCommissionsConsultativesFait: boolean
   paiementFraisDossierValide: boolean
 }
 
@@ -403,6 +404,7 @@ const armOctMachine = createMachine({
   context: {
     mecanisation: 'inconnu',
     visibilite: 'confidentielle',
+    avisDesServicesEtCommissionsConsultativesFait: false,
     demarcheStatut: DemarchesStatutsIds.EnConstruction,
     paiementFraisDossierValide: false,
   },
@@ -648,9 +650,29 @@ const armOctMachine = createMachine({
                     expertiseServiceMinesFait: { type: 'final' },
                   },
                 },
+                avisDesServicesEtCommissionsConsultativesMachine: {
+                  initial: 'avisDesServicesEtCommissionsConsultativesARendre',
+                  states: {
+                    avisDesServicesEtCommissionsConsultativesARendre: {
+                      on: {
+                        RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES: {
+                          target: 'avisDesServicesEtCommissionsConsultativesRendu',
+                          actions: assign({ avisDesServicesEtCommissionsConsultativesFait: true }),
+                        },
+                      },
+                    },
+                    avisDesServicesEtCommissionsConsultativesRendu: { type: 'final' },
+                  },
+                },
               },
               on: {
-                RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES: 'avisDesServicesEtCommissionsConsultativesRendu',
+                FAIRE_SAISINE_CARM: {
+                  target: '#avisCommissionAutorisationDeRecherchesMinieresAFaire',
+                  actions: assign({
+                    visibilite: 'publique',
+                  }),
+                  guard: ({ context }) => context.avisDesServicesEtCommissionsConsultativesFait,
+                },
               },
             },
             avisDesServicesEtCommissionsConsultativesARendre: {
@@ -758,6 +780,7 @@ const armOctMachine = createMachine({
       },
     },
     avisCommissionAutorisationDeRecherchesMinieresAFaire: {
+      id: 'avisCommissionAutorisationDeRecherchesMinieresAFaire',
       on: {
         RENDRE_AVIS_FAVORABLE_CARM: [
           {

@@ -391,7 +391,13 @@ const prmOctMachine = createMachine({
                         },
                       },
                     },
-                    avisDesServicesRendus: { type: 'final' },
+                    avisDesServicesRendus: {
+                      type: 'final',
+                      on: {
+                        RENDRE_AVIS_CDM: { target: '#rapportDREALAFaire', guard: peutRendreAvisCDM },
+                        RENDRE_RAPPORT_DREAL: { target: '#avisPrefetARendre', guard: peutRendreRapportDREAL },
+                      },
+                    },
                   },
                 },
               },

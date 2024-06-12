@@ -61,6 +61,22 @@ describe('vérifie l’arbre d’octroi de PRM', () => {
     ]
     expect(() => orderAndInterpretMachine(prmOctMachine, etapes)).not.toThrowError()
   })
+  test('peut créer une demande d’octroi de PRM en Guyane sans avis du maire', () => {
+    const etapes = [
+      { ...ETES.demande.FAIT, date: toCaminoDate('2023-09-05'), paysId: PAYS_IDS['Département de la Guyane'], surface: 14 },
+      { ...ETES.depotDeLaDemande.FAIT, date: toCaminoDate('2023-09-06') },
+      { ...ETES.saisineDuPrefet.FAIT, date: toCaminoDate('2023-09-21') },
+      { ...ETES.demandeDeComplements_RecevabiliteDeLaDemande_.FAIT, date: toCaminoDate('2023-11-16') },
+      { ...ETES.receptionDeComplements_RecevabiliteDeLaDemande_.FAIT, date: toCaminoDate('2023-11-22') },
+      { ...ETES.recevabiliteDeLaDemande.FAVORABLE, date: toCaminoDate('2023-12-06') },
+      { ...ETES.avisDesServicesEtCommissionsConsultatives.FAIT, date: toCaminoDate('2023-12-06') },
+      { ...ETES.saisineDesCollectivitesLocales.FAIT, date: toCaminoDate('2023-12-06') },
+      { ...ETES.avisDeLaCommissionDepartementaleDesMines_CDM_.FAVORABLE, date: toCaminoDate('2024-01-29') },
+      { ...ETES.avisEtRapportDuDirecteurRegionalChargeDeLenvironnementDeLamenagementEtDuLogement.FAVORABLE, date: toCaminoDate('2024-02-02') },
+      { ...ETES.avisDuPrefet.FAVORABLE, date: toCaminoDate('2024-02-15') },
+    ]
+    expect(() => orderAndInterpretMachine(prmOctMachine, etapes)).not.toThrowError()
+  })
 
   test('peut créer une demande d’octroi de PRM en Outre mer (hors Guyane)', () => {
     const etapes = [

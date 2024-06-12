@@ -1,12 +1,15 @@
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable sql/no-unsafe-query */
-import { DemarcheId, demarcheIdValidator } from 'camino-common/src/demarche.js'
+import { DemarcheId } from 'camino-common/src/demarche.js'
 import { EtapeDocumentId, EtapeId } from 'camino-common/src/etape.js'
 import { AvisStatutId, AvisTypeId } from 'camino-common/src/static/avisTypes.js'
 import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts.js'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
-import { getKeys, isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
+import { isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
 import { Knex } from 'knex'
+import { LargeObjectId } from '../../database/largeobjects.js'
+import { newEtapeAvisId } from '../../database/models/_format/id-create.js'
+import { CaminoDate } from 'camino-common/src/date.js'
 
 const ETAPE_TYPE_ID_TO_AVIS_TYPE_ID: { [key in string]?: AvisTypeId } = {
   ssr: 'lettreDeSaisineDesServices',
@@ -18,6 +21,7 @@ const ETAPE_TYPE_ID_TO_AVIS_TYPE_ID: { [key in string]?: AvisTypeId } = {
   acd: 'avisConseilDepartementalEnvironnementRisquesSanitairesTechnologiques',
   wat: 'avisConseilDepartementalEnvironnementRisquesSanitairesTechnologiques',
   abs: 'avisServiceMilieuxNaturelsBiodiversiteSitesPaysages',
+  aec: 'avisDirectionsRégionalesEconomieEmploiTravailSolidarités',
   afp: 'avisDirectionRegionaleFinancesPubliques',
   agn: 'avisGendarmerieNationale',
   ami: 'avisParcNaturelMarin',
@@ -42,6 +46,7 @@ const ETAPE_TYPE_ID_TO_AVIS_TYPE_ID: { [key in string]?: AvisTypeId } = {
   auc: 'autreAvis',
 } as const
 
+const etapeTypesToDelete = Object.keys(ETAPE_TYPE_ID_TO_AVIS_TYPE_ID)
 const ETAPE_STATUT_ID_TO_AVIS_STATUT_ID: { [key in EtapeStatutId]?: AvisStatutId } = {
   fav: 'Favorable',
   def: 'Défavorable',
@@ -49,95 +54,98 @@ const ETAPE_STATUT_ID_TO_AVIS_STATUT_ID: { [key in EtapeStatutId]?: AvisStatutId
   fai: 'Favorable',
   dre: 'Défavorable',
 } as const
-
+type EtapeFromDb = { id: EtapeId; date: CaminoDate; titre_demarche_id: DemarcheId; type_id: EtapeTypeId; statut_id: EtapeStatutId }
 export const up = async (knex: Knex) => {
-  const etapesDocuments: {
-    rows: {
-      id: EtapeDocumentId
-      largeobject_id: string
-      date: string
-      statut_id: EtapeStatutId
-      titre_demarche_id: DemarcheId
-      description: string
-      etape_id: EtapeId
-      etape_type_id: EtapeTypeId
-    }[]
-  } = await knex.raw(
-    `SELECT
-        etapes_documents.id,
-        etapes_documents.largeobject_id,
-        titres_etapes.date,
-        titres_etapes.statut_id,
-        titres_etapes.titre_demarche_id,
-        etapes_documents.description,
-        titres_etapes.id AS etape_id,
-        titres_etapes.type_id AS etape_type_id
-    FROM etapes_documents
-    LEFT JOIN titres_etapes ON etapes_documents.etape_id = titres_etapes.id
-    WHERE titres_etapes.type_id IN ('ssr', 'wss', 'cps', 'aac', 'wac', 'aaf', 'acd', 'wat', 'abs', 'afp', 'agn', 'ami', 'aim', 'aof', 'eof', 'aop', 'api', 'apl', 'apm', 'wam', 'apn', 'wdt', 'wad', 'ars', 'was', 'ass', 'wai', 'ari', 'wal', 'pnr', 'auc')
-    ORDER BY titres_etapes.date DESC`
+  await knex.raw(`DELETE FROM etapes_documents where etape_id in (select id FROM titres_etapes where archive is true and type_id in (${etapeTypesToDelete.map(_ => '?').join(',')}))`, [
+    ...etapeTypesToDelete,
+  ])
+  await knex.raw(`DELETE FROM titres_etapes where archive is true and type_id in (${etapeTypesToDelete.map(_ => '?').join(',')})`, [...etapeTypesToDelete])
+  // FIXME ajouter visibilité
+  // FIXME ajouter les sections d'aof et les mettre dans description
+  // FIXME rendre le fichier optionnel, un avis peut ne pas avoir de document
+  await knex.raw(
+    'CREATE TABLE etape_avis (id character varying(255) NOT NULL, avis_type_id character varying(255) NOT NULL, avis_statut_id character varying(255) NOT NULL, etape_id character varying(255) NOT NULL, description character varying(1024) NOT NULL, date character varying(10) NOT NULL, largeobject_id oid)'
   )
 
-  // FIXME on ne veut pas prendre plutôt la SSR comme pivot si il y'en a une ?
-  // FIXME comment on gère l'eof qui est censée être visible uniquement par l'ONF ?
-  // FIXME gérer la visibilité des avis
-  const etapesByDemarche = etapesDocuments.rows.reduce<
-    Record<DemarcheId, { id: EtapeDocumentId; avis_type_id: AvisTypeId; etape_id: EtapeId; description: string; avis_statut_id: AvisStatutId; date: string; largeobject_id: string }[]>
-  >((acc, row) => {
-    if (acc[row.titre_demarche_id] === undefined) {
-      acc[row.titre_demarche_id] = []
+  const allEtapesDb: { rows: EtapeFromDb[] } = await knex.raw(
+    `SELECT * FROM titres_etapes
+     WHERE titres_etapes.type_id IN (${etapeTypesToDelete.map(_ => '?').join(',')})
+     ORDER BY titres_etapes.ordre ASC`,
+    [...etapeTypesToDelete]
+  )
+
+  const etapesByDemarcheId = allEtapesDb.rows.reduce<Record<DemarcheId, EtapeFromDb[]>>((acc, etape) => {
+    if (acc[etape.titre_demarche_id] === undefined) {
+      acc[etape.titre_demarche_id] = []
     }
-    const avisTypeId = ETAPE_TYPE_ID_TO_AVIS_TYPE_ID[row.etape_type_id]
-    const avisStatutId = ETAPE_STATUT_ID_TO_AVIS_STATUT_ID[row.statut_id]
-    if (isNullOrUndefined(avisTypeId) || isNullOrUndefined(avisStatutId)) {
-      console.error('une étape type id ou statut non prise en compte', row)
-    } else {
-      acc[row.titre_demarche_id].push({
-        id: row.id,
-        avis_type_id: avisTypeId,
-        etape_id: row.etape_id,
-        description: row.description,
-        avis_statut_id: avisStatutId,
-        date: row.date,
-        largeobject_id: row.largeobject_id,
-      })
-    }
+    acc[etape.titre_demarche_id].push(etape)
 
     return acc
   }, {})
 
-  await Promise.all(
-    getKeys(etapesByDemarche, (id): id is DemarcheId => demarcheIdValidator.safeParse(id).success).flatMap((demarcheId: DemarcheId) => {
-      const etapeId = etapesByDemarche[demarcheId][0].etape_id
+  for (const etapes of Object.values(etapesByDemarcheId)) {
+    // @ts-ignore
+    const ssrEtape = etapes.find(({ type_id }) => type_id === 'ssr')
+    // @ts-ignore
+    const aofEtape = etapes.find(({ type_id }) => type_id === 'aof')
 
-      return etapesByDemarche[demarcheId].map((row, index) => {
-        const results = []
-        if (index === 0) {
-          results.push(
-            knex.raw(`UPDATE titres_etapes SET type_id = 'asc' WHERE id = :id`, {
-              id: row.etape_id,
-            })
+    const etapePivotId = ssrEtape?.id ?? aofEtape?.id ?? etapes[0].id
+
+    for (let index = 0; index < etapes.length; index++) {
+      const etape = etapes[index]
+
+      // documents et avis vide
+      const documents: { rows: { id: EtapeDocumentId; largeobject_id: LargeObjectId; description: string }[] } = await knex.raw(`SELECT * from etapes_documents where etape_id= :id`, { id: etape.id })
+      const avisTypeId = ETAPE_TYPE_ID_TO_AVIS_TYPE_ID[etape.type_id]
+      const avisStatutId = ETAPE_STATUT_ID_TO_AVIS_STATUT_ID[etape.statut_id]
+      if (isNullOrUndefined(avisTypeId) || isNullOrUndefined(avisStatutId)) {
+        console.error('une étape type id ou statut non prise en compte', etape)
+      } else {
+        for (const document of documents.rows) {
+          const row = {
+            id: document.id,
+            avis_type_id: avisTypeId,
+            etape_id: etapePivotId,
+
+            description: document.description,
+            avis_statut_id: avisStatutId,
+            date: etape.date,
+            largeobject_id: document.largeobject_id,
+          }
+          await knex.raw(
+            'INSERT INTO etape_avis(id, avis_type_id, etape_id, description, avis_statut_id, date, largeobject_id) VALUES(:id, :avis_type_id, :etape_id, :description, :avis_statut_id, :date, :largeobject_id)',
+            { ...row, etape_id: etapePivotId }
           )
-        } else {
-          results.push(
-            knex.raw(`DELETE FROM titres_etapes WHERE id = :id`, {
-              id: row.etape_id,
-            })
+          await knex.raw('DELETE FROM etapes_documents WHERE id = :id', { id: row.id })
+        }
+        if (documents.rows.length === 0) {
+          const row = {
+            id: newEtapeAvisId(etape.date, avisTypeId),
+            avis_type_id: avisTypeId,
+            etape_id: etapePivotId,
+            description: '',
+            avis_statut_id: avisStatutId,
+            date: etape.date,
+            largeobject_id: null,
+          }
+          await knex.raw(
+            'INSERT INTO etape_avis(id, avis_type_id, etape_id, description, avis_statut_id, date, largeobject_id) VALUES(:id, :avis_type_id, :etape_id, :description, :avis_statut_id, :date, :largeobject_id)',
+            { ...row, etape_id: etapePivotId }
           )
         }
+      }
 
-        results.push(
-          knex.raw(
-            'INSERT INTO etape_avis(id, avis_type_id, etape_id, description, avis_statut_id, date, largeobject_id) VALUES(:id, :avis_type_id, :etape_id, :description, :avis_statut_id, :date, :largeobject_id)',
-            { ...row, etape_id: etapeId }
-          ),
-          knex.raw('DELETE FROM etapes_documents WHERE id = :id', { id: row.id })
-        )
-
-        return results
-      })
-    })
-  )
+      if (etapePivotId === etape.id) {
+        await knex.raw(`UPDATE titres_etapes SET type_id = 'asc', statut_id='fai' WHERE id = :id`, {
+          id: etape.id,
+        })
+      } else {
+        await knex.raw(`DELETE FROM titres_etapes WHERE id = :id`, {
+          id: etape.id,
+        })
+      }
+    }
+  }
 }
 
 export const down = () => ({})

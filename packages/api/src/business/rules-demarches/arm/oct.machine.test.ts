@@ -3,9 +3,11 @@ import { interpretMachine, orderAndInterpretMachine as commonOrderAndInterpretMa
 import { IContenu } from '../../../types.js'
 import { EtapeStatutId, ETAPES_STATUTS } from 'camino-common/src/static/etapesStatuts.js'
 import { ETAPES_TYPES, EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
+import { EtapesTypesEtapesStatuts as ETES } from 'camino-common/src/static/etapesTypesEtapesStatuts.js'
 import { Etape } from '../machine-common.js'
 import { toCaminoDate } from 'camino-common/src/date.js'
 import { describe, expect, test } from 'vitest'
+import { PAYS_IDS } from 'camino-common/src/static/pays.js'
 const etapesProd = require('./oct.cas.json')
 const orderAndInterpretMachine = (etapes: readonly Etape[]) => {
   return commonOrderAndInterpretMachine(new ArmOctMachine(), etapes)
@@ -122,7 +124,33 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
       'MODIFIER_DEMANDE',
     ])
   })
-
+  test('peut faire une edm après une asc', () => {
+    const etapes = [
+      { ...ETES.paiementDesFraisDeDossier.FAIT, date: toCaminoDate('2023-09-01') },
+      { ...ETES.demande.FAIT, date: toCaminoDate('2023-09-09'), paysId: PAYS_IDS['Département de la Guyane'], surface: 3.14 },
+      { ...ETES.depotDeLaDemande.FAIT, date: toCaminoDate('2023-09-09') },
+      { ...ETES.completudeDeLaDemande.COMPLETE, date: toCaminoDate('2023-09-20') },
+      { ...ETES.validationDuPaiementDesFraisDeDossier.FAIT, date: toCaminoDate('2023-09-26') },
+      { ...ETES.recevabiliteDeLaDemande.FAVORABLE, date: toCaminoDate('2023-09-27') },
+      { ...ETES.avisDesServicesEtCommissionsConsultatives.FAIT, date: toCaminoDate('2023-09-27') },
+      { ...ETES.expertiseDGTMServicePreventionDesRisquesEtIndustriesExtractives_DATE_.FAVORABLE, date: toCaminoDate('2024-03-27') },
+    ]
+    expect(() => orderAndInterpretMachine(etapes)).not.toThrowError()
+  })
+  test('ne peut pas faire une sca avant la asc', () => {
+    const etapes = [
+      { ...ETES.paiementDesFraisDeDossier.FAIT, date: toCaminoDate('2023-09-01') },
+      { ...ETES.demande.FAIT, date: toCaminoDate('2023-09-09'), paysId: PAYS_IDS['Département de la Guyane'], surface: 3.14 },
+      { ...ETES.depotDeLaDemande.FAIT, date: toCaminoDate('2023-09-09') },
+      { ...ETES.completudeDeLaDemande.COMPLETE, date: toCaminoDate('2023-09-20') },
+      { ...ETES.validationDuPaiementDesFraisDeDossier.FAIT, date: toCaminoDate('2023-09-26') },
+      { ...ETES.recevabiliteDeLaDemande.FAVORABLE, date: toCaminoDate('2023-09-27') },
+      { ...ETES.saisineDeLaCommissionDesAutorisationsDeRecherchesMinieres_CARM_.FAIT, date: toCaminoDate('2023-09-27') },
+    ]
+    expect(() => orderAndInterpretMachine(etapes)).toThrowErrorMatchingInlineSnapshot(
+      `[Error: Error: cannot execute step: '{"etapeTypeId":"sca","etapeStatutId":"fai","date":"2023-09-27"}' after '["pfd_fai","mfr_fai","mdp_fai","mcp_com","vfd_fai","mcr_fav"]'. The event {"type":"FAIRE_SAISINE_CARM"} should be one of 'CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE_SERVICE_EAU,RECEVOIR_EXPERTISE_SERVICE_MINES,RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES']`
+    )
+  })
   test('la demande ne peut pas être effectuée après une modification de la demande', () => {
     const service = orderAndInterpretMachine([
       {
