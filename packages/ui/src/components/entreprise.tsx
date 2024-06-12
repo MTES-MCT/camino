@@ -11,11 +11,10 @@ import { EntrepriseType, newEntrepriseId, EntrepriseId, Entreprise as CommonEntr
 import { EntrepriseDocuments } from './entreprise/entreprise-documents'
 import { AsyncData } from '../api/client-rest'
 import { LoadingElement } from './_ui/functional-loader'
-import { ButtonIcon } from './_ui/button-icon'
 import { ApiClient, apiClient } from '@/api/api-client'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { userKey, entreprisesKey } from '@/moi'
-import { DsfrLink } from './_ui/dsfr-button'
+import { DsfrButtonIcon, DsfrLink } from './_ui/dsfr-button'
 import { canReadUtilisateurs } from 'camino-common/src/permissions/utilisateurs'
 import { Alert } from './_ui/alert'
 
@@ -112,7 +111,7 @@ export const PureEntreprise = defineComponent<Props>(props => {
             title={() => <span> Profil </span>}
             buttons={() => {
               if (canEditEntreprise(props.user, props.entrepriseId)) {
-                return <ButtonIcon class="btn py-s px-m" onClick={() => (editPopup.value = !editPopup.value)} title="Modifier l’entreprise" icon="pencil" />
+                return <DsfrButtonIcon onClick={() => (editPopup.value = !editPopup.value)} title="Modifier l’entreprise" icon="fr-icon-edit-line" buttonType="secondary" />
               } else {
                 return null
               }

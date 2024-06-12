@@ -4,7 +4,7 @@ import { FunctionalComponent, HTMLAttributes } from 'vue'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import type { JSX } from 'vue/jsx-runtime'
 
-export type Size = 'S' | 'M'
+type Size = 'S' | 'M'
 type Props = {
   name: IconType
   size: Size

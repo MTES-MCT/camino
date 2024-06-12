@@ -1,6 +1,5 @@
 import { EtapeType, EtapeTypeId, EtapesTypes } from 'camino-common/src/static/etapesTypes'
 import { Icon } from '@/components/_ui/icon'
-import { ButtonIcon } from '@/components/_ui/button-icon'
 import { getEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStatuts'
 import { CaminoDate } from 'camino-common/src/date'
 import { HTMLAttributes, computed, defineComponent, ref, watch } from 'vue'
@@ -11,6 +10,7 @@ import { isEventWithTarget } from '@/utils/vue-tsx-utils'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { TypeAheadSingle } from '../_ui/typeahead-single'
 import { DsfrInput } from '../_ui/dsfr-input'
+import { DsfrButtonIcon } from '../_ui/dsfr-button'
 
 export type FilterEtapeValue = {
   typeId: EtapeTypeId | ''
@@ -82,7 +82,7 @@ export const FiltresEtapes = defineComponent<Props>(props => {
 
       {clonedValues.value.map((value, n) => (
         <div key={n}>
-          <div class="flex mb-s">
+          <div class="flex mb-s" style={{ alignItems: 'center' }}>
             <EtapeTypeSearch
               class="p-s mr-s"
               index={n}
@@ -92,7 +92,7 @@ export const FiltresEtapes = defineComponent<Props>(props => {
                 valueReset(n)
               }}
             />
-            <ButtonIcon class="btn py-s px-m rnd-xs" onClick={() => valueRemove(n)} icon="minus" title="Supprime la valeur" aria-label="Supprime la valeur" />
+            <DsfrButtonIcon onClick={() => valueRemove(n)} icon="fr-icon-delete-bin-line" title="Supprime la valeur" buttonType="tertiary" />
           </div>
           {value.typeId ? (
             <div>
