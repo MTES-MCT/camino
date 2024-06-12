@@ -13,12 +13,15 @@ import {
   dateFormat,
   isBefore,
   intervalleAnnees,
+  caminoDateValidator,
 } from './date.js'
 import { test, expect } from 'vitest'
 
 test('toCaminoDate', () => {
   expect(() => toCaminoDate('123123')).toThrowError()
   expect(() => toCaminoDate(new Date('plop'))).toThrowError()
+  expect(() => toCaminoDate('2000-42-42')).toThrowError()
+  expect(() => caminoDateValidator.parse('2000-42-42')).toThrowError()
 })
 
 test('dateFormat', () => {

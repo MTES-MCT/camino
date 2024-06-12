@@ -278,12 +278,16 @@ const getFlattenEtape = async (
 
 export const etapeCreer = async ({ etape: etapeNotParsed }: { etape: unknown }, context: Context, info: GraphQLResolveInfo) => {
   try {
+    const { success, data: etape, error } = graphqlEtapeCreationValidator.safeParse(etapeNotParsed)
+
+    if (!success) {
+      console.error('[etapeCreer] étape non correctement formatée', error)
+      throw new Error("l'étape n'est pas correctement formatée")
+    }
     const user = context.user
     if (!user) {
       throw new Error("la démarche n'existe pas")
     }
-
-    const etape = graphqlEtapeCreationValidator.parse(etapeNotParsed)
     let titreDemarche = await titreDemarcheGet(etape.titreDemarcheId, { fields: {} }, user)
 
     if (!titreDemarche) throw new Error("la démarche n'existe pas")
@@ -429,12 +433,17 @@ const validateAndGetEntrepriseDocuments = async (pool: Pool, etape: FlattenEtape
 
 export const etapeModifier = async ({ etape: etapeNotParsed }: { etape: unknown }, context: Context, info: GraphQLResolveInfo) => {
   try {
+    const { success, data: etape, error } = graphqlEtapeModificationValidator.safeParse(etapeNotParsed)
+
+    if (!success) {
+      console.error('[etapeModifier] étape non correctement formatée', error)
+      throw new Error("l'étape n'est pas correctement formatée")
+    }
+
     const user = context.user
     if (!user) {
       throw new Error("l'étape n'existe pas")
     }
-
-    const etape = graphqlEtapeModificationValidator.parse(etapeNotParsed)
     const titreEtapeOld = await titreEtapeGet(
       etape.id,
       {

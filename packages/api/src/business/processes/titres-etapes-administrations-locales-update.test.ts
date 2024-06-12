@@ -49,7 +49,7 @@ describe("administrations d'une étape", () => {
         titreDemarcheId: newDemarcheId(),
         statutId: 'fai',
         date: toCaminoDate('2022-01-01'),
-        typeId: 'aac',
+        typeId: 'asc',
         isBrouillon: ETAPE_IS_NOT_BROUILLON,
         communes: [
           {

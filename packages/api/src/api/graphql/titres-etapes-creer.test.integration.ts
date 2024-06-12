@@ -10,6 +10,7 @@ import { userSuper } from '../../database/user-super'
 import { afterAll, beforeEach, beforeAll, describe, test, expect, vi } from 'vitest'
 import type { Pool } from 'pg'
 import { ETAPE_HERITAGE_PROPS } from 'camino-common/src/heritage.js'
+import { demarcheIdValidator } from 'camino-common/src/demarche.js'
 
 vi.mock('../../tools/dir-create', () => ({
   __esModule: true,
@@ -52,6 +53,36 @@ const demarcheCreate = async () => {
   return titreDemarche.id
 }
 
+const blankEtapeProps = {
+  etapeDocuments: [],
+  duree: null,
+  dateDebut: null,
+  dateFin: null,
+  substances: [],
+  geojson4326Perimetre: null,
+  geojsonOriginePerimetre: null,
+  geojson4326Points: null,
+  geojsonOriginePoints: null,
+  geojsonOrigineForages: null,
+  geojsonOrigineGeoSystemeId: null,
+  titulaireIds: [],
+  amodiataireIds: [],
+  notes: null,
+  etapeAvis: [],
+  entrepriseDocumentIds: [],
+  heritageProps: ETAPE_HERITAGE_PROPS.reduce(
+    (acc, prop) => {
+      acc[prop] = { actif: false }
+
+      return acc
+    },
+    {} as {
+      [key: string]: { actif: boolean }
+    }
+  ),
+  heritageContenu: {},
+  contenu: {},
+} as const
 describe('etapeCreer', () => {
   const etapeCreerQuery = queryImport('titre-etape-creer')
 
@@ -63,11 +94,24 @@ describe('etapeCreer', () => {
       role && isAdministrationRole(role) ? { role, administrationId: 'ope-onf-973-01' } : undefined
     )
 
-    expect(res.body.errors[0].message).toBe("la démarche n'existe pas")
+    expect(res.body.errors[0].message).toBe("l'étape n'est pas correctement formatée")
   })
 
   test('ne peut pas créer une étape sur une démarche inexistante (utilisateur admin)', async () => {
-    const res = await graphQLCall(dbPool, etapeCreerQuery, { etape: { typeId: '', statutId: '', titreDemarcheId: '', date: '' } }, { role: 'admin', administrationId: 'ope-onf-973-01' })
+    const res = await graphQLCall(
+      dbPool,
+      etapeCreerQuery,
+      {
+        etape: {
+          typeId: 'mfr',
+          statutId: 'fai',
+          titreDemarcheId: demarcheIdValidator.parse(''),
+          date: '2018-01-01',
+          ...blankEtapeProps,
+        },
+      },
+      { role: 'admin', administrationId: 'ope-onf-973-01' }
+    )
 
     expect(res.body.errors[0].message).toBe("la démarche n'existe pas")
   })
@@ -80,11 +124,11 @@ describe('etapeCreer', () => {
       etapeCreerQuery,
       {
         etape: {
-          typeId: 'mia',
+          typeId: 'sca',
           statutId: 'fai',
           titreDemarcheId,
           date: '2018-01-01',
-          etapeDocuments: [],
+          ...blankEtapeProps,
         },
       },
       {
@@ -95,7 +139,7 @@ describe('etapeCreer', () => {
 
     expect(res.body.errors[0].message).toBe('droits insuffisants pour créer cette étape')
   })
-  test('ne peut pas créer une étape incohérente (mia avec statut fav) (utilisateur admin)', async () => {
+  test('ne peut pas créer une étape incohérente (asc avec statut fav) (utilisateur admin)', async () => {
     const titreDemarcheId = await demarcheCreate()
 
     const res = await graphQLCall(
@@ -103,11 +147,11 @@ describe('etapeCreer', () => {
       etapeCreerQuery,
       {
         etape: {
-          typeId: 'mia',
+          typeId: 'asc',
           statutId: 'fav',
           titreDemarcheId,
           date: '2018-01-01',
-          etapeDocuments: [],
+          ...blankEtapeProps,
         },
       },
       {
@@ -116,10 +160,10 @@ describe('etapeCreer', () => {
       }
     )
 
-    expect(res.body.errors[0].message).toBe('statut de l\'étape "fav" invalide pour une type d\'étape mia pour une démarche de type octroi')
+    expect(res.body.errors[0].message).toBe('statut de l\'étape "fav" invalide pour une étape asc pour une démarche de type octroi')
   })
 
-  test('peut créer une étape mia avec un statut fai (utilisateur super)', async () => {
+  test('peut créer une étape asc avec un statut fai (utilisateur super)', async () => {
     const titreDemarcheId = await demarcheCreate()
 
     const res = await graphQLCall(
@@ -127,11 +171,11 @@ describe('etapeCreer', () => {
       etapeCreerQuery,
       {
         etape: {
-          typeId: 'mia',
+          typeId: 'asc',
           statutId: 'fai',
           titreDemarcheId,
           date: '2018-01-01',
-          etapeDocuments: [],
+          ...blankEtapeProps,
         },
       },
       userSuper
@@ -151,7 +195,7 @@ describe('etapeCreer', () => {
           statutId: 'fai',
           titreDemarcheId,
           date: '2018-01-01',
-          etapeDocuments: [],
+          ...blankEtapeProps,
         },
       },
       {
@@ -175,13 +219,13 @@ describe('etapeCreer', () => {
           statutId: 'fai',
           titreDemarcheId,
           date: '2018-01-01',
+          ...blankEtapeProps,
           heritageContenu: {
             deal: { motifs: { actif: false }, agent: { actif: false } },
           },
           contenu: {
             deal: { motifs: 'motif', agent: 'agent' },
           },
-          etapeDocuments: [],
         },
       },
       {
@@ -190,7 +234,7 @@ describe('etapeCreer', () => {
       }
     )
 
-    expect(res.body.errors[0].message).toBe('statut de l\'étape "fai" invalide pour une type d\'étape ede pour une démarche de type octroi')
+    expect(res.body.errors[0].message).toBe('statut de l\'étape "fai" invalide pour une étape ede pour une démarche de type octroi')
   })
 
   test('ne peut pas créer une étape avec des titulaires inexistants', async () => {
@@ -204,15 +248,15 @@ describe('etapeCreer', () => {
           typeId: 'ede',
           statutId: 'fav',
           titreDemarcheId,
-          titulaireIds: ['inexistant'],
           date: '2018-01-01',
+          ...blankEtapeProps,
+          titulaireIds: ['inexistant'],
           heritageContenu: {
             deal: { motifs: { actif: false }, agent: { actif: false } },
           },
           contenu: {
             deal: { motifs: 'motif', agent: 'agent' },
           },
-          etapeDocuments: [],
         },
       },
       {
@@ -234,6 +278,7 @@ describe('etapeCreer', () => {
           statutId: 'fai',
           titreDemarcheId,
           date: '2018-01-01',
+          ...blankEtapeProps,
           heritageProps: ETAPE_HERITAGE_PROPS.reduce(
             (acc, prop) => {
               acc[prop] = { actif: false }
@@ -250,7 +295,6 @@ describe('etapeCreer', () => {
               franchissements: { actif: true },
             },
           },
-          etapeDocuments: [],
         },
       },
       userSuper

@@ -10,7 +10,7 @@ describe("valide le type et le statut d'une étape en fonction du type de titre 
   })
 
   test("le statut de l'étape ne correspond pas au type de titre et de démarche", () => {
-    expect(titreEtapeTypeAndStatusValidate('arm', 'oct', 'mdp', 'rej')).toEqual(['statut de l\'étape "rej" invalide pour une type d\'étape mdp pour une démarche de type octroi'])
+    expect(titreEtapeTypeAndStatusValidate('arm', 'oct', 'mdp', 'rej')).toEqual(['statut de l\'étape "rej" invalide pour une étape mdp pour une démarche de type octroi'])
   })
 
   test("le type de l'étape n'est pas compatible avec le type de titre et de démarche", () => {

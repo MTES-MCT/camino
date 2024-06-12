@@ -3,13 +3,13 @@ import { Section } from 'camino-common/src/static/titresTypes_demarchesTypes_eta
 import { DeepReadonly, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools.js'
 import { FlattenedContenuElement } from 'camino-common/src/etape-form.js'
 
-export const contenuDatesCheck = (sections: DeepReadonly<Section[]>, contenu: Record<string, Record<string, Pick<FlattenedContenuElement, 'value'>>>) => {
+export const contenuDatesCheck = (sections: DeepReadonly<Section[]>, contenu: Record<string, Record<string, Pick<FlattenedContenuElement, 'value'>>>): string | null => {
   const errors = sections.reduce(
     (errors: string[], section) =>
       isNotNullNorUndefinedNorEmpty(section.elements) && isNotNullNorUndefined(contenu[section.id])
         ? section.elements.reduce((errors, element) => {
             if (element.type === 'date' && isNotNullNorUndefined(contenu[section.id][element.id])) {
-              const { success, error } = caminoDateValidator.safeParse(contenu[section.id][element.id])
+              const { success, error } = caminoDateValidator.safeParse(contenu[section.id][element.id].value)
               if (!success) {
                 errors.push(`le champ "${element.id}" est invalide`, error.message)
               }

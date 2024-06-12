@@ -32,8 +32,26 @@ const titresDemarchesEtapes: {
     titreTypeId: 'apc',
     titreId: titreIdValidator.parse('titreId'),
     etapes: [
-      { id: newEtapeId(), ordre: 1, date: caminoDateValidator.parse('1988-03-06'), typeId: 'aac', statutId: 'acc', isBrouillon: ETAPE_IS_NOT_BROUILLON, surface: km2Validator.parse(0), communes: null },
-      { id: newEtapeId(), ordre: 1, date: caminoDateValidator.parse('1988-03-08'), typeId: 'aac', statutId: 'acc', isBrouillon: ETAPE_IS_NOT_BROUILLON, surface: km2Validator.parse(0), communes: null },
+      {
+        id: newEtapeId(),
+        ordre: 1,
+        date: caminoDateValidator.parse('1988-03-06'),
+        typeId: 'asc',
+        statutId: 'fai',
+        isBrouillon: ETAPE_IS_NOT_BROUILLON,
+        surface: km2Validator.parse(0),
+        communes: null,
+      },
+      {
+        id: newEtapeId(),
+        ordre: 1,
+        date: caminoDateValidator.parse('1988-03-08'),
+        typeId: 'asc',
+        statutId: 'fai',
+        isBrouillon: ETAPE_IS_NOT_BROUILLON,
+        surface: km2Validator.parse(0),
+        communes: null,
+      },
     ],
   },
 }

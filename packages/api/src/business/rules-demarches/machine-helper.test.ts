@@ -68,13 +68,8 @@ describe('orderMachine', () => {
           date: toCaminoDate('2020-01-11'),
         },
         {
-          etapeTypeId: 'eof',
+          etapeTypeId: 'asc',
           etapeStatutId: 'fai',
-          date: toCaminoDate('2020-01-11'),
-        },
-        {
-          etapeTypeId: 'aof',
-          etapeStatutId: 'fav',
           date: toCaminoDate('2020-01-11'),
         },
         {
@@ -153,12 +148,7 @@ describe('orderMachine', () => {
         {
           "date": "2020-01-11",
           "etapeStatutId": "fai",
-          "etapeTypeId": "eof",
-        },
-        {
-          "date": "2020-01-11",
-          "etapeStatutId": "fav",
-          "etapeTypeId": "aof",
+          "etapeTypeId": "asc",
         },
         {
           "date": "2020-01-11",
@@ -231,11 +221,6 @@ describe('demarcheStatut', () => {
           etapeStatutId: 'fav',
         },
         {
-          date: toCaminoDate('2021-09-16'),
-          etapeTypeId: 'eof',
-          etapeStatutId: 'fai',
-        },
-        {
           date: toCaminoDate('2021-12-13'),
           etapeTypeId: 'rde',
           etapeStatutId: 'fav',
@@ -243,8 +228,8 @@ describe('demarcheStatut', () => {
         },
         {
           date: toCaminoDate('2021-12-20'),
-          etapeTypeId: 'aof',
-          etapeStatutId: 'def',
+          etapeTypeId: 'asc',
+          etapeStatutId: 'fai',
         },
         {
           date: toCaminoDate('2022-02-11'),
@@ -431,7 +416,7 @@ describe('mainStep', () => {
       ]
     `)
   })
-  test('possibleNextEtapes après une recevabilité favorable on doit faire une expertise de l’onf', () => {
+  test('possibleNextEtapes après une recevabilité favorable on rendre un avis des services et commissions consultatives', () => {
     expect(
       armOctMachine.possibleNextEtapes(
         [
@@ -467,13 +452,7 @@ describe('mainStep', () => {
         {
           "contenu": undefined,
           "etapeStatutId": "fai",
-          "etapeTypeId": "mio",
-          "mainStep": false,
-        },
-        {
-          "contenu": undefined,
-          "etapeStatutId": "fai",
-          "etapeTypeId": "eof",
+          "etapeTypeId": "asc",
           "mainStep": true,
         },
         {
@@ -503,7 +482,7 @@ describe('mainStep', () => {
       ]
     `)
   })
-  test('après une expertise de l’onf on doit avoir l’avis de l’onf', () => {
+  test('après un avis des services et commissions consultatives on doit avoir la saisine de la commission des autorisations de recherches minières', () => {
     expect(
       armOctMachine.possibleNextEtapes(
         [
@@ -513,7 +492,7 @@ describe('mainStep', () => {
           { etapeTypeId: 'mcp', etapeStatutId: 'com', date: toCaminoDate('2021-02-02') },
           { etapeTypeId: 'vfd', etapeStatutId: 'fai', date: toCaminoDate('2021-02-02') },
           { etapeTypeId: 'mcr', etapeStatutId: 'fav', date: toCaminoDate('2021-02-02') },
-          { etapeTypeId: 'eof', etapeStatutId: 'fai', date: toCaminoDate('2021-02-02') },
+          { etapeTypeId: 'asc', etapeStatutId: 'fai', date: toCaminoDate('2020-02-02') },
         ],
         toCaminoDate('2021-02-03')
       )
@@ -539,57 +518,9 @@ describe('mainStep', () => {
         },
         {
           "contenu": undefined,
-          "etapeStatutId": "fav",
-          "etapeTypeId": "aof",
-          "mainStep": true,
-        },
-        {
-          "contenu": undefined,
-          "etapeStatutId": "fre",
-          "etapeTypeId": "aof",
-          "mainStep": true,
-        },
-        {
-          "contenu": undefined,
-          "etapeStatutId": "def",
-          "etapeTypeId": "aof",
-          "mainStep": true,
-        },
-        {
-          "contenu": undefined,
-          "etapeStatutId": "dre",
-          "etapeTypeId": "aof",
-          "mainStep": true,
-        },
-        {
-          "contenu": undefined,
-          "etapeStatutId": "fav",
-          "etapeTypeId": "ede",
-          "mainStep": false,
-        },
-        {
-          "contenu": undefined,
-          "etapeStatutId": "def",
-          "etapeTypeId": "ede",
-          "mainStep": false,
-        },
-        {
-          "contenu": undefined,
-          "etapeStatutId": "fav",
-          "etapeTypeId": "edm",
-          "mainStep": false,
-        },
-        {
-          "contenu": undefined,
-          "etapeStatutId": "def",
-          "etapeTypeId": "edm",
-          "mainStep": false,
-        },
-        {
-          "contenu": undefined,
           "etapeStatutId": "fai",
-          "etapeTypeId": "mia",
-          "mainStep": false,
+          "etapeTypeId": "sca",
+          "mainStep": true,
         },
       ]
     `)
@@ -653,7 +584,7 @@ describe('mainStep', () => {
       ]
     `)
   })
-  test('après une recevabilité défavorable on doit avoir un avis de l’onf', () => {
+  test('après une recevabilité défavorable on doit avoir un avis des services et commissions consultatives', () => {
     expect(
       armOctMachine.possibleNextEtapes(
         [
@@ -688,26 +619,8 @@ describe('mainStep', () => {
         },
         {
           "contenu": undefined,
-          "etapeStatutId": "fav",
-          "etapeTypeId": "aof",
-          "mainStep": true,
-        },
-        {
-          "contenu": undefined,
-          "etapeStatutId": "fre",
-          "etapeTypeId": "aof",
-          "mainStep": true,
-        },
-        {
-          "contenu": undefined,
-          "etapeStatutId": "def",
-          "etapeTypeId": "aof",
-          "mainStep": true,
-        },
-        {
-          "contenu": undefined,
-          "etapeStatutId": "dre",
-          "etapeTypeId": "aof",
+          "etapeStatutId": "fai",
+          "etapeTypeId": "asc",
           "mainStep": true,
         },
       ]

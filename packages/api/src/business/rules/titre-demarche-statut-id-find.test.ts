@@ -8,6 +8,7 @@ import { describe, expect, test } from 'vitest'
 import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts.js'
 import { TitreEtapeForMachine } from '../rules-demarches/machine-common.js'
 import { ETAPE_IS_BROUILLON } from 'camino-common/src/etape.js'
+import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
 const etapesBuild = (etapesProps: Partial<ITitreEtape>[]): TitreEtapeForMachine[] =>
   etapesProps.map(
     (etapeProps, i) =>
@@ -96,8 +97,7 @@ describe("statut d'une démarche", () => {
           { typeId: 'mcp', statutId: 'com', date: toCaminoDate('2020-01-23') },
           { typeId: 'vfd', statutId: 'fai', date: toCaminoDate('2020-02-05') },
           { typeId: 'mcr', statutId: 'fav', date: toCaminoDate('2020-02-06') },
-          { typeId: 'eof', statutId: 'fai', date: toCaminoDate('2020-02-07') },
-          { typeId: 'aof', statutId: 'fav', date: toCaminoDate('2020-02-08') },
+          { typeId: 'asc', statutId: 'fai', date: toCaminoDate('2020-02-07') },
           {
             typeId: 'rde',
             statutId: 'fav',
@@ -260,8 +260,7 @@ describe("statut d'une démarche", () => {
           { typeId: 'mcp', statutId: 'com', date: toCaminoDate('2021-02-27') },
           { typeId: 'vfd', statutId: 'fai', date: toCaminoDate('2021-03-10') },
           { typeId: 'mcr', statutId: 'fav', date: toCaminoDate('2021-03-11') },
-          { typeId: 'eof', statutId: 'fai', date: toCaminoDate('2021-03-17') },
-          { typeId: 'aof', statutId: 'fav', date: toCaminoDate('2021-09-23') },
+          { typeId: 'asc', statutId: 'fai', date: toCaminoDate('2021-09-23') },
           { typeId: 'sca', statutId: 'fai', date: toCaminoDate('2021-09-24') },
           { typeId: 'aca', statutId: 'def', date: toCaminoDate('2021-09-25') },
         ]),
@@ -282,8 +281,7 @@ describe("statut d'une démarche", () => {
           { typeId: 'mcp', statutId: 'com', date: toCaminoDate('2021-02-27') },
           { typeId: 'vfd', statutId: 'fai', date: toCaminoDate('2021-03-10') },
           { typeId: 'mcr', statutId: 'fav', date: toCaminoDate('2021-03-11') },
-          { typeId: 'eof', statutId: 'fai', date: toCaminoDate('2021-03-17') },
-          { typeId: 'aof', statutId: 'fav', date: toCaminoDate('2021-09-23') },
+          { typeId: 'asc', statutId: 'fai', date: toCaminoDate('2021-09-23') },
           { typeId: 'sca', statutId: 'fai', date: toCaminoDate('2021-09-24') },
           { typeId: 'aca', statutId: 'fav', date: toCaminoDate('2021-09-25') },
         ]),
@@ -309,16 +307,12 @@ describe("statut d'une démarche", () => {
     expect(titreDemarcheStatutIdFind('ret', etapesBuild([{ typeId: 'spp' }]), 'pxm', newDemarcheId())).toEqual('ins')
   })
 
-  test("une démarche de retrait dont l'étape la plus récente est eof a le statut “en instruction”", () => {
-    expect(titreDemarcheStatutIdFind('ret', etapesBuild([{ typeId: 'ide' }, { typeId: 'eof' }]), 'pxm', newDemarcheId())).toEqual('ins')
+  test("une démarche de retrait dont l'étape la plus récente est asc a le statut “en instruction”", () => {
+    expect(titreDemarcheStatutIdFind('ret', etapesBuild([{ typeId: 'ide' }, { typeId: 'asc' }]), 'pxm', newDemarcheId())).toEqual('ins')
   })
 
   test("une démarche de retrait dont l'étape la plus récente est aco a le statut “terminé”", () => {
     expect(titreDemarcheStatutIdFind('ret', etapesBuild([{ typeId: 'aco' }]), 'pxm', newDemarcheId())).toEqual('ter')
-  })
-
-  test("une démarche de retrait dont l'étape la plus récente est aof refusée a le statut “css”", () => {
-    expect(titreDemarcheStatutIdFind('ret', etapesBuild([{ typeId: 'aof', statutId: 'def' }]), 'pxm', newDemarcheId())).toEqual('cls')
   })
 
   test("une démarche de retrait dont l'étape la plus récente de css a été faite a le statut “classé sans suite”", () => {
@@ -358,7 +352,7 @@ describe("statut d'une démarche", () => {
     ).toEqual('ind')
   })
 
-  test.each<[Travaux, EtapeStatutId, DemarcheStatutId]>([
+  test.each<[EtapeTypeId, EtapeStatutId, DemarcheStatutId]>([
     [Travaux.DemandeAutorisationOuverture, 'fai', Demarches.Depose],
     [Travaux.DepotDemande, 'fai', Demarches.Depose],
     [Travaux.Recevabilite, 'def', Demarches.EnInstruction],
@@ -368,59 +362,46 @@ describe("statut d'une démarche", () => {
     [Travaux.SaisineAutoriteEnvironmentale, 'fai', Demarches.EnInstruction],
     [Travaux.MemoireReponseExploitant, 'fai', Demarches.EnInstruction],
     [Travaux.AvisReception, 'fai', Demarches.EnInstruction],
-    [Travaux.SaisineServiceEtat, 'fai', Demarches.EnInstruction],
+    [Travaux.AvisDesServicesEtCommissionsConsultatives, 'fai', Demarches.EnInstruction],
     [Travaux.AvisAutoriteEnvironmentale, 'fai', Demarches.EnInstruction],
     [Travaux.MemoireReponseExploitant, 'fai', Demarches.EnInstruction],
     [Travaux.AvisRapportDirecteurREAL, 'fai', Demarches.EnInstruction],
     [Travaux.TransPrescriptionsDemandeur, 'fai', Demarches.EnInstruction],
-    [Travaux.AvisCODERST, 'fai', Demarches.EnInstruction],
     [Travaux.AvisPrescriptionsDemandeur, 'fai', Demarches.EnInstruction],
     [Travaux.ArreteOuvertureTravauxMiniers, 'fai', Demarches.Accepte],
     [Travaux.PubliDecisionRecueilActesAdmin, 'fai', Demarches.Accepte],
     [Travaux.Abandon, 'fai', Demarches.Desiste],
-  ])("pour une démarche de travaux de type 'aom' sur un titre, dont la dernière étape est '$etapeTypeId' au statut $statutId, le résultat est $resultId", (etapeTypeId, statutId, resultId) => {
+  ])("pour une démarche de travaux de type 'aom' sur un titre, dont la dernière étape est '%s' au statut %s, le résultat est %s", (etapeTypeId, statutId, resultId) => {
     expect(titreDemarcheStatutIdFind('aom', etapesBuild([{ typeId: etapeTypeId, statutId }]), 'pxm', newDemarcheId())).toEqual(resultId)
   })
 
-  test.each<[Travaux, EtapeStatutId, DemarcheStatutId]>([
+  test.each<[EtapeTypeId, EtapeStatutId, DemarcheStatutId]>([
     [Travaux.DeclarationOuverture, 'fai', Demarches.Depose],
     [Travaux.DepotDemande, 'fai', Demarches.Depose],
     [Travaux.Recevabilite, 'def', Demarches.EnInstruction],
     [Travaux.Recevabilite, 'fav', Demarches.EnInstruction],
     [Travaux.DemandeComplements, 'fai', Demarches.EnInstruction],
     [Travaux.ReceptionComplements, 'fai', Demarches.EnInstruction],
-    [Travaux.SaisineServiceEtat, 'fai', Demarches.EnInstruction],
-    [Travaux.AvisServiceAdminLocal, 'fai', Demarches.EnInstruction],
-    [Travaux.AvisDDTM, 'fai', Demarches.EnInstruction],
-    [Travaux.AvisAutoriteMilitaire, 'fai', Demarches.EnInstruction],
-    [Travaux.AvisARS, 'fai', Demarches.EnInstruction],
-    [Travaux.AvisDRAC, 'fai', Demarches.EnInstruction],
+    [Travaux.AvisDesServicesEtCommissionsConsultatives, 'fai', Demarches.EnInstruction],
     [Travaux.AvisPrefetMaritime, 'fai', Demarches.EnInstruction],
-    [Travaux.AvisAutresInstances, 'fai', Demarches.EnInstruction],
     [Travaux.RapportDREAL, 'fai', Demarches.EnInstruction],
     [Travaux.TransPrescriptionsDemandeur, 'fai', Demarches.EnInstruction],
     [Travaux.AvisPrescriptionsDemandeur, 'fai', Demarches.EnInstruction],
     [Travaux.DonneActeDeclaration, 'fai', Demarches.Accepte],
     [Travaux.Abandon, 'fai', Demarches.Desiste],
-  ])("pour une démarche de travaux de type 'dot' sur un titre, dont la dernière étape est '$etapeTypeId' au statut $statutId, le résultat est $resultId", (etapeTypeId, statutId, resultId) => {
+  ])("pour une démarche de travaux de type 'dot' sur un titre, dont la dernière étape est '%s' au statut %s, le résultat est %s", (etapeTypeId, statutId, resultId) => {
     expect(titreDemarcheStatutIdFind('dot', etapesBuild([{ typeId: etapeTypeId, statutId }]), 'pxm', newDemarcheId())).toEqual(resultId)
   })
 
-  test.each<[Travaux, EtapeStatutId, DemarcheStatutId]>([
+  test.each<[EtapeTypeId, EtapeStatutId, DemarcheStatutId]>([
     [Travaux.DeclarationArret, 'fai', Demarches.Depose],
     [Travaux.DepotDemande, 'fai', Demarches.Depose],
     [Travaux.Recevabilite, 'def', Demarches.EnInstruction],
     [Travaux.Recevabilite, 'fav', Demarches.EnInstruction],
     [Travaux.AvisReception, 'fav', Demarches.EnInstruction],
-    [Travaux.SaisineServiceEtat, 'fai', Demarches.EnInstruction],
+    [Travaux.AvisDesServicesEtCommissionsConsultatives, 'fai', Demarches.EnInstruction],
     [Travaux.ArretePrefectoralSursis, 'fai', Demarches.EnInstruction],
-    [Travaux.AvisServiceAdminLocal, 'fai', Demarches.EnInstruction],
-    [Travaux.AvisDDTM, 'fai', Demarches.EnInstruction],
-    [Travaux.AvisAutoriteMilitaire, 'fai', Demarches.EnInstruction],
-    [Travaux.AvisARS, 'fai', Demarches.EnInstruction],
-    [Travaux.AvisDRAC, 'fai', Demarches.EnInstruction],
     [Travaux.AvisPrefetMaritime, 'fai', Demarches.EnInstruction],
-    [Travaux.AvisAutresInstances, 'fai', Demarches.EnInstruction],
     [Travaux.AvisPrescriptionsDemandeur, 'fai', Demarches.EnInstruction],
     [Travaux.RapportDREAL, 'fai', Demarches.EnInstruction],
     [Travaux.ArretePrefectDonneActe1, 'fai', Demarches.EnInstruction],
@@ -431,7 +412,7 @@ describe("statut d'une démarche", () => {
     [Travaux.PubliDecisionRecueilActesAdmin, 'fai', Demarches.FinPoliceMines],
     [Travaux.PorterAConnaissance, 'fai', Demarches.FinPoliceMines],
     [Travaux.Abandon, 'fai', Demarches.Desiste],
-  ])("pour une démarche de travaux de type 'dam' sur un titre, dont la dernière étape est '$etapeTypeId' au statut $statutId, le résultat est $resultId", (etapeTypeId, statutId, resultId) => {
+  ])("pour une démarche de travaux de type 'dam' sur un titre, dont la dernière étape est '%s' au statut %s, le résultat est %s", (etapeTypeId, statutId, resultId) => {
     expect(titreDemarcheStatutIdFind('dam', etapesBuild([{ typeId: etapeTypeId, statutId }]), 'pxm', newDemarcheId())).toEqual(resultId)
   })
 })

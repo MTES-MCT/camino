@@ -494,6 +494,7 @@ describe('getTitre', () => {
             "description": null,
             "etapes": [
               {
+                "avis_documents": [],
                 "date": "2022-01-01",
                 "entreprises_documents": [],
                 "etape_documents": [],

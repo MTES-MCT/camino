@@ -233,6 +233,7 @@ input InputEtapeModification {
   contenu: Json
   etapeDocuments: [InputEtapeDocumentModification]
   entrepriseDocumentIds: [ID]
+  etapeAvis: [InputEtapeAvisModification]
   notes: String
   geojson4326Perimetre: Json
   geojson4326Points: Json
@@ -242,6 +243,15 @@ input InputEtapeModification {
   geojsonOrigineGeoSystemeId: String
   daeDocument: DaeDocument
   aslDocument: AslDocument
+}
+
+input InputEtapeAvisModification {
+  id: ID
+  temp_document_name: String
+  avis_type_id: String!
+  description: String!
+  date: String!
+  avis_statut_id: String!
 }
 
 input InputEtapeDocumentModification {

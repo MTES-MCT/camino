@@ -36,6 +36,6 @@ describe("vérifie la validité des propriétés dont le type est date d'une ét
       contenuDatesCheck(sections, {
         section: { date: { value: '2000-42-42' as CaminoDate }, mot: { value: 'coucou' } },
       })
-    ).toBe('le champ "date" n\'est pas une date valide')
+    ).toContain('le champ "date" est invalide')
   })
 })

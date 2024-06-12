@@ -9,7 +9,7 @@ export const contenuNumbersCheck = (sections: DeepReadonly<Section[]>, contenu: 
 
     return section.elements.reduce((errors, element) => {
       if (element.type === 'number' && isNotNullNorUndefined(contenu[section.id]?.[element.id])) {
-        const value = contenu[section.id][element.id]
+        const value = contenu[section.id][element.id].value
 
         const { success, error } = numberElementValueValidator.safeParse(value)
         if (!success) {

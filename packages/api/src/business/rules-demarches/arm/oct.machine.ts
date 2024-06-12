@@ -50,10 +50,7 @@ type XStateEvent =
   | { type: 'NOTIFIER_DEMANDEUR_CSS' }
   | { type: 'DECLARER_DEMANDE_FAVORABLE' }
   | { type: 'DECLARER_DEMANDE_DEFAVORABLE' }
-  | { type: 'FAIRE_EXPERTISE_ONF' }
-  | { type: 'RENDRE_AVIS_ONF' }
-  | { type: 'DEMANDER_INFORMATION_AVIS_ONF' }
-  | { type: 'RECEVOIR_INFORMATION_AVIS_ONF' }
+  | { type: 'RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES' }
   | { type: 'FAIRE_SAISINE_CARM' }
   | { type: 'RENDRE_AVIS_FAVORABLE_CARM' }
   | { type: 'RENDRE_AVIS_DEFAVORABLE_CARM' }
@@ -70,8 +67,6 @@ type XStateEvent =
   | { type: 'RECEVOIR_INFORMATION_MCR' }
   | { type: 'DEMANDER_COMPLEMENTS_MCR' }
   | { type: 'RECEVOIR_COMPLEMENTS_MCR' }
-  | { type: 'DEMANDER_INFORMATION_EXPERTISE_ONF' }
-  | { type: 'RECEVOIR_INFORMATION_EXPERTISE_ONF' }
   | { type: 'RECEVOIR_EXPERTISE_SERVICE_EAU' }
   | { type: 'RECEVOIR_EXPERTISE_SERVICE_MINES' }
   | { type: 'NOTIFIER_DEMANDEUR_SIGNATURE_ARM' }
@@ -143,11 +138,7 @@ const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
     },
     mainStep: false,
   },
-  FAIRE_EXPERTISE_ONF: { db: EtapesTypesEtapesStatuts.expertiseDeLOfficeNationalDesForets, mainStep: true },
-  RENDRE_AVIS_ONF: { db: EtapesTypesEtapesStatuts.avisDeLOfficeNationalDesForets, mainStep: true },
-  // FIXME fumer mia/mio ria/rio
-  DEMANDER_INFORMATION_AVIS_ONF: { db: EtapesTypesEtapesStatuts.demandeDinformations_AvisDeLOfficeNationalDesForets_, mainStep: false },
-  RECEVOIR_INFORMATION_AVIS_ONF: { db: EtapesTypesEtapesStatuts.receptionDinformation_AvisDeLOfficeNationalDesForets_, mainStep: false },
+  RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES: { db: EtapesTypesEtapesStatuts.avisDesServicesEtCommissionsConsultatives, mainStep: true },
   FAIRE_SAISINE_CARM: { db: EtapesTypesEtapesStatuts.saisineDeLaCommissionDesAutorisationsDeRecherchesMinieres_CARM_, mainStep: true },
   RENDRE_AVIS_FAVORABLE_CARM: {
     db: {
@@ -180,8 +171,6 @@ const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
   RECEVOIR_INFORMATION_MCR: { db: EtapesTypesEtapesStatuts.receptionDinformation_RecevabiliteDeLaDemande_, mainStep: false },
   DEMANDER_COMPLEMENTS_MCR: { db: EtapesTypesEtapesStatuts.demandeDeComplements_RecevabiliteDeLaDemande_, mainStep: false },
   RECEVOIR_COMPLEMENTS_MCR: { db: EtapesTypesEtapesStatuts.receptionDeComplements_RecevabiliteDeLaDemande_, mainStep: false },
-  DEMANDER_INFORMATION_EXPERTISE_ONF: { db: EtapesTypesEtapesStatuts.demandeDinformations_ExpertiseDeLOfficeNationalDesForets_, mainStep: false },
-  RECEVOIR_INFORMATION_EXPERTISE_ONF: { db: EtapesTypesEtapesStatuts.receptionDinformation_ExpertiseDeLOfficeNationalDesForets_, mainStep: false },
   RECEVOIR_EXPERTISE_SERVICE_EAU: { db: EtapesTypesEtapesStatuts.expertiseDREALOuDGTMServiceEau, mainStep: false },
   RECEVOIR_EXPERTISE_SERVICE_MINES: { db: EtapesTypesEtapesStatuts.expertiseDGTMServicePreventionDesRisquesEtIndustriesExtractives_DATE_, mainStep: false },
   NOTIFIER_DEMANDEUR_SIGNATURE_ARM: { db: EtapesTypesEtapesStatuts.notificationAuDemandeur_SignatureDeLautorisationDeRechercheMiniere_, mainStep: true },
@@ -308,7 +297,6 @@ type MecanisationInconnu = MecanisationConnu | 'inconnu'
 
 interface OctARMContext extends CaminoCommonContext {
   mecanisation: MecanisationInconnu
-  expertiseONFFaite: boolean
   paiementFraisDossierValide: boolean
 }
 
@@ -414,7 +402,6 @@ const armOctMachine = createMachine({
   initial: 'demandeEnConstructionOuDeposeeOuEnInstructionMachine',
   context: {
     mecanisation: 'inconnu',
-    expertiseONFFaite: false,
     visibilite: 'confidentielle',
     demarcheStatut: DemarchesStatutsIds.EnConstruction,
     paiementFraisDossierValide: false,
@@ -617,54 +604,26 @@ const armOctMachine = createMachine({
                 DEMANDER_INFORMATION_MCR: 'receptionInformationPourLaRecevabiliteAFaire',
                 DEMANDER_COMPLEMENTS_MCR: 'receptionComplementsPourLaRecevabiliteAFaire',
                 DECLARER_DEMANDE_FAVORABLE: 'expertisesMachine',
-                DECLARER_DEMANDE_DEFAVORABLE: 'avisONFARendre',
+                DECLARER_DEMANDE_DEFAVORABLE: 'avisDesServicesEtCommissionsConsultativesARendre',
               },
             },
             receptionInformationPourLaRecevabiliteAFaire: {
               on: {
                 RECEVOIR_INFORMATION_MCR: 'recevabiliteDeLaDemandeAFaire',
                 DECLARER_DEMANDE_FAVORABLE: 'expertisesMachine',
-                DECLARER_DEMANDE_DEFAVORABLE: 'avisONFARendre',
+                DECLARER_DEMANDE_DEFAVORABLE: 'avisDesServicesEtCommissionsConsultativesARendre',
               },
             },
             receptionComplementsPourLaRecevabiliteAFaire: {
               on: {
                 RECEVOIR_COMPLEMENTS_MCR: 'recevabiliteDeLaDemandeAFaire',
                 DECLARER_DEMANDE_FAVORABLE: 'expertisesMachine',
-                DECLARER_DEMANDE_DEFAVORABLE: 'avisONFARendre',
+                DECLARER_DEMANDE_DEFAVORABLE: 'avisDesServicesEtCommissionsConsultativesARendre',
               },
             },
             expertisesMachine: {
               type: 'parallel',
               states: {
-                expertiseONFMachine: {
-                  initial: 'expertiseONFAFaire',
-                  states: {
-                    expertiseONFAFaire: {
-                      on: {
-                        DEMANDER_INFORMATION_EXPERTISE_ONF: 'expertiseOuReceptionInformationONFAFaire',
-                        FAIRE_EXPERTISE_ONF: 'demandeAvisONFAFaire',
-                      },
-                    },
-                    expertiseOuReceptionInformationONFAFaire: {
-                      on: {
-                        FAIRE_EXPERTISE_ONF: 'demandeAvisONFAFaire',
-                        RECEVOIR_INFORMATION_EXPERTISE_ONF: 'expertiseONFAFaire',
-                      },
-                    },
-                    demandeAvisONFAFaire: {
-                      on: {
-                        DEMANDER_INFORMATION_AVIS_ONF: 'receptionInformationAvisONFAFaire',
-                      },
-                      entry: assign({ expertiseONFFaite: true }),
-                    },
-                    receptionInformationAvisONFAFaire: {
-                      on: {
-                        RECEVOIR_INFORMATION_AVIS_ONF: 'demandeAvisONFAFaire',
-                      },
-                    },
-                  },
-                },
                 expertiseServiceEauMachine: {
                   initial: 'expertiseServiceEauAfaire',
                   states: {
@@ -691,18 +650,15 @@ const armOctMachine = createMachine({
                 },
               },
               on: {
-                RENDRE_AVIS_ONF: {
-                  target: 'avisONFRendu',
-                  guard: ({ context }) => context.expertiseONFFaite,
-                },
+                RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES: 'avisDesServicesEtCommissionsConsultativesRendu',
               },
             },
-            avisONFARendre: {
+            avisDesServicesEtCommissionsConsultativesARendre: {
               on: {
-                RENDRE_AVIS_ONF: 'avisONFRendu',
+                RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES: 'avisDesServicesEtCommissionsConsultativesRendu',
               },
             },
-            avisONFRendu: { type: 'final' },
+            avisDesServicesEtCommissionsConsultativesRendu: { type: 'final' },
           },
         },
         declarationLoiSurLEauMachine: {
@@ -785,7 +741,7 @@ const armOctMachine = createMachine({
         DEMANDER_COMPLEMENTS_RDE: {
           target: [
             'demandeEnConstructionOuDeposeeOuEnInstructionMachine.declarationLoiSurLEauMachine.receptionDeComplementsAFaire',
-            'demandeEnConstructionOuDeposeeOuEnInstructionMachine.pasRdeMachine.avisONFRendu',
+            'demandeEnConstructionOuDeposeeOuEnInstructionMachine.pasRdeMachine.avisDesServicesEtCommissionsConsultativesRendu',
           ],
           guard: ({ context }) => isMecanise(context.mecanisation) && !context.mecanisation.franchissementCoursEau,
         },

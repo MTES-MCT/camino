@@ -17,6 +17,6 @@ describe('vérifie la validité du contenu de type nombre', () => {
           number: { value: -1 },
         },
       })
-    ).toEqual('le champ "number" ne peut pas avoir une valeur négative')
+    ).toContain('le champ "number" est invalide')
   })
 })

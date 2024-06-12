@@ -44,21 +44,10 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
     },
     {
       id: newEtapeId('etapeId10'),
-      typeId: 'aof',
-      statutId: 'fav',
-      isBrouillon: ETAPE_IS_NOT_BROUILLON,
-      ordre: 10,
-      date: toCaminoDate('2019-12-04'),
-      contenu: null,
-      communes: [],
-      surface: null,
-    },
-    {
-      id: newEtapeId('etapeId9'),
-      typeId: 'eof',
+      typeId: 'asc',
       statutId: 'fai',
       isBrouillon: ETAPE_IS_NOT_BROUILLON,
-      ordre: 9,
+      ordre: 10,
       date: toCaminoDate('2019-12-04'),
       contenu: null,
       communes: [],
@@ -353,17 +342,6 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
         surface: null,
       },
       {
-        id: newEtapeId('ideof'),
-        date: toCaminoDate('2021-11-22'),
-        typeId: 'eof',
-        statutId: 'fai',
-        isBrouillon: ETAPE_IS_NOT_BROUILLON,
-        ordre: 11,
-        contenu: null,
-        communes: [],
-        surface: null,
-      },
-      {
         id: newEtapeId('iddae'),
         date: toCaminoDate('2021-10-15'),
         typeId: 'dae',
@@ -458,7 +436,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
     const tested = etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(machine, etapes, null, toCaminoDate('2022-07-01'))
       .map(({ etapeTypeId }) => etapeTypeId)
       .filter(onlyUnique)
-    expect(tested).toStrictEqual(['mod', 'des', 'css', 'aof', 'ede', 'mia', 'rcb', 'rde', 'mcb'])
+    expect(tested).toStrictEqual(['mod', 'des', 'css', 'asc', 'ede', 'rcb', 'rde', 'mcb'])
     vi.resetAllMocks()
   })
   test('peut faire une completude (mcp) le même jour que le dépôt (mdp) de la demande', () => {

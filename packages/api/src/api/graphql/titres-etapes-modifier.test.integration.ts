@@ -97,7 +97,7 @@ describe('etapeModifier', () => {
       role && isAdministrationRole(role) ? { role, administrationId: 'ope-onf-973-01' } : undefined
     )
 
-    expect(res.body.errors[0].message).toBe("l'étape n'existe pas")
+    expect(res.body.errors[0].message).toBe("l'étape n'est pas correctement formatée")
   })
 
   test('ne peut pas modifier une étape sur une démarche inexistante (utilisateur super)', async () => {
@@ -116,7 +116,7 @@ describe('etapeModifier', () => {
       userSuper
     )
 
-    expect(res.body.errors[0].message).toBe("l'étape n'existe pas")
+    expect(res.body.errors[0].message).toBe("l'étape n'est pas correctement formatée")
   })
 
   test('peut modifier une étape mfr en brouillon (utilisateur super)', async () => {
@@ -131,6 +131,23 @@ describe('etapeModifier', () => {
           statutId: 'fai',
           titreDemarcheId,
           date: '2018-01-01',
+          duree: null,
+          dateDebut: null,
+          dateFin: null,
+          substances: [],
+          geojson4326Perimetre: null,
+          geojsonOriginePerimetre: null,
+          geojson4326Points: null,
+          geojsonOriginePoints: null,
+          geojsonOrigineForages: null,
+          geojsonOrigineGeoSystemeId: null,
+          titulaireIds: [],
+          amodiataireIds: [],
+          notes: null,
+          etapeAvis: [],
+          entrepriseDocumentIds: [],
+          daeDocument: null,
+          aslDocument: null,
           heritageProps: ETAPE_HERITAGE_PROPS.reduce(
             (acc, prop) => {
               acc[prop] = { actif: false }
@@ -172,6 +189,22 @@ describe('etapeModifier', () => {
           titulaireIds: ['inexistant'],
           titreDemarcheId,
           date: '2018-01-01',
+          duree: null,
+          dateDebut: null,
+          dateFin: null,
+          substances: [],
+          geojson4326Perimetre: null,
+          geojsonOriginePerimetre: null,
+          geojson4326Points: null,
+          geojsonOriginePoints: null,
+          geojsonOrigineForages: null,
+          geojsonOrigineGeoSystemeId: null,
+          amodiataireIds: [],
+          notes: null,
+          etapeAvis: [],
+          entrepriseDocumentIds: [],
+          daeDocument: null,
+          aslDocument: null,
           heritageProps: ETAPE_HERITAGE_PROPS.reduce(
             (acc, prop) => {
               acc[prop] = { actif: false }
@@ -211,6 +244,23 @@ describe('etapeModifier', () => {
       statutId: 'fai',
       titreDemarcheId,
       date: '2018-01-01',
+      duree: null,
+      dateDebut: null,
+      dateFin: null,
+      substances: [],
+      geojson4326Perimetre: null,
+      geojsonOriginePerimetre: null,
+      geojson4326Points: null,
+      geojsonOriginePoints: null,
+      geojsonOrigineForages: null,
+      geojsonOrigineGeoSystemeId: null,
+      amodiataireIds: [],
+      titulaireIds: [],
+      notes: null,
+      etapeAvis: [],
+      entrepriseDocumentIds: [],
+      daeDocument: null,
+      aslDocument: null,
       heritageProps: ETAPE_HERITAGE_PROPS.reduce(
         (acc, prop) => {
           acc[prop] = { actif: false }
@@ -278,6 +328,24 @@ describe('etapeModifier', () => {
       statutId: 'exe',
       titreDemarcheId,
       date: '2018-01-01',
+      duree: null,
+      dateDebut: null,
+      dateFin: null,
+      substances: [],
+      geojson4326Perimetre: null,
+      geojsonOriginePerimetre: null,
+      geojson4326Points: null,
+      geojsonOriginePoints: null,
+      geojsonOrigineForages: null,
+      geojsonOrigineGeoSystemeId: null,
+      amodiataireIds: [],
+      titulaireIds: [],
+      notes: null,
+      etapeAvis: [],
+      entrepriseDocumentIds: [],
+      daeDocument: null,
+      aslDocument: null,
+
       heritageProps: ETAPE_HERITAGE_PROPS.reduce(
         (acc, prop) => {
           acc[prop] = { actif: false }
@@ -309,7 +377,7 @@ describe('etapeModifier', () => {
   })
 
   test('peut modifier une étape mia avec un statut fai (utilisateur super)', async () => {
-    const { titreDemarcheId, titreEtapeId } = await etapeCreate('mia')
+    const { titreDemarcheId, titreEtapeId } = await etapeCreate('asc')
 
     const res = await graphQLCall(
       dbPool,
@@ -317,41 +385,46 @@ describe('etapeModifier', () => {
       {
         etape: {
           id: titreEtapeId,
-          typeId: 'mia',
+          typeId: 'asc',
           statutId: 'fai',
           titreDemarcheId,
           date: '2018-01-01',
           etapeDocuments: [],
+          duree: null,
+          dateDebut: null,
+          dateFin: null,
+          substances: [],
+          geojson4326Perimetre: null,
+          geojsonOriginePerimetre: null,
+          geojson4326Points: null,
+          geojsonOriginePoints: null,
+          geojsonOrigineForages: null,
+          geojsonOrigineGeoSystemeId: null,
+          amodiataireIds: [],
+          titulaireIds: [],
+          notes: null,
+          etapeAvis: [],
+          entrepriseDocumentIds: [],
+          daeDocument: null,
+          aslDocument: null,
+          heritageProps: ETAPE_HERITAGE_PROPS.reduce(
+            (acc, prop) => {
+              acc[prop] = { actif: false }
+
+              return acc
+            },
+            {} as {
+              [key: string]: { actif: boolean }
+            }
+          ),
+          heritageContenu: {},
+          contenu: {},
         },
       },
       userSuper
     )
 
     expect(res.body.errors).toBe(undefined)
-  })
-
-  test('ne peut pas modifier une étape mia avec un statut fav (utilisateur admin)', async () => {
-    const { titreDemarcheId, titreEtapeId } = await etapeCreate('mia')
-
-    const res = await graphQLCall(
-      dbPool,
-      etapeModifierQuery,
-      {
-        etape: {
-          id: titreEtapeId,
-          typeId: 'mia',
-          statutId: 'fav',
-          titreDemarcheId,
-          date: '2018-01-01',
-        },
-      },
-      {
-        role: 'admin',
-        administrationId: ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE'],
-      }
-    )
-
-    expect(res.body.errors[0].message).toBe("l'étape n'existe pas")
   })
 
   test('peut modifier une étape MEN sur un titre ARM en tant que PTMG (utilisateur admin)', async () => {
@@ -367,6 +440,35 @@ describe('etapeModifier', () => {
           titreDemarcheId,
           date: '2016-01-01',
           etapeDocuments: [],
+          duree: null,
+          dateDebut: null,
+          dateFin: null,
+          substances: [],
+          geojson4326Perimetre: null,
+          geojsonOriginePerimetre: null,
+          geojson4326Points: null,
+          geojsonOriginePoints: null,
+          geojsonOrigineForages: null,
+          geojsonOrigineGeoSystemeId: null,
+          amodiataireIds: [],
+          titulaireIds: [],
+          notes: null,
+          etapeAvis: [],
+          entrepriseDocumentIds: [],
+          daeDocument: null,
+          aslDocument: null,
+          heritageProps: ETAPE_HERITAGE_PROPS.reduce(
+            (acc, prop) => {
+              acc[prop] = { actif: false }
+
+              return acc
+            },
+            {} as {
+              [key: string]: { actif: boolean }
+            }
+          ),
+          heritageContenu: {},
+          contenu: {},
         },
       },
       {
@@ -390,6 +492,34 @@ describe('etapeModifier', () => {
           statutId: 'fai',
           titreDemarcheId,
           date: '2018-01-01',
+          duree: null,
+          dateDebut: null,
+          dateFin: null,
+          substances: [],
+          geojson4326Perimetre: null,
+          geojsonOriginePerimetre: null,
+          geojson4326Points: null,
+          geojsonOriginePoints: null,
+          geojsonOrigineForages: null,
+          geojsonOrigineGeoSystemeId: null,
+          amodiataireIds: [],
+          titulaireIds: [],
+          notes: null,
+          etapeAvis: [],
+          entrepriseDocumentIds: [],
+          daeDocument: null,
+          aslDocument: null,
+          etapeDocuments: [],
+          heritageProps: ETAPE_HERITAGE_PROPS.reduce(
+            (acc, prop) => {
+              acc[prop] = { actif: false }
+
+              return acc
+            },
+            {} as {
+              [key: string]: { actif: boolean }
+            }
+          ),
           heritageContenu: {
             deal: { motifs: { actif: false }, agent: { actif: false } },
           },

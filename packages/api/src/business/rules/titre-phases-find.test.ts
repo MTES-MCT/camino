@@ -1365,10 +1365,10 @@ describe("phases d'une démarche", () => {
               {
                 titreDemarcheId: demarcheId4,
                 ordre: 10,
-                typeId: 'aac',
+                typeId: 'asc',
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 date: toCaminoDate('2020-02-04'),
-                statutId: 'fre',
+                statutId: 'fai',
               },
               {
                 titreDemarcheId: demarcheId4,
@@ -1380,28 +1380,12 @@ describe("phases d'une démarche", () => {
               },
               {
                 titreDemarcheId: demarcheId4,
-                ordre: 11,
-                typeId: 'apm',
-                isBrouillon: ETAPE_IS_NOT_BROUILLON,
-                date: toCaminoDate('2020-02-24'),
-                statutId: 'def',
-              },
-              {
-                titreDemarcheId: demarcheId4,
                 ordre: 5,
                 typeId: 'rco',
                 duree: 60,
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 date: toCaminoDate('2019-08-30'),
                 statutId: 'fai',
-              },
-              {
-                titreDemarcheId: demarcheId4,
-                ordre: 9,
-                typeId: 'apl',
-                isBrouillon: ETAPE_IS_NOT_BROUILLON,
-                date: toCaminoDate('2020-01-31'),
-                statutId: 'def',
               },
               {
                 titreDemarcheId: demarcheId4,

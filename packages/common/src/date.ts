@@ -15,19 +15,20 @@ export const daysBetween = (a: CaminoDate, b: CaminoDate) => {
 export const isBefore = (a: CaminoDate, b: CaminoDate): boolean => {
   return a < b
 }
-
 export const caminoDateValidator = z
   .string()
   .regex(/^\d{4}-\d{2}-\d{2}$/)
   .brand<'Date'>()
+  .refine(date => !isNaN(new Date(date).getTime()), { message: 'date invalide' })
 export type CaminoDate = z.infer<typeof caminoDateValidator>
 
 export type CaminoDateFormated = string & { __camino: 'DateFormated' }
 
+// TODO 2024-06-12 utiliser le validateur zod pour faire tout ça directement, avec une union string/date et un transform
 export const toCaminoDate = (date: Date | string): CaminoDate => {
   if (typeof date === 'string') {
     const parsedDate = caminoDateValidator.safeParse(date)
-    if (parsedDate.success && !isNaN(new Date(date).getTime())) {
+    if (parsedDate.success) {
       return parsedDate.data
     } else {
       throw new Error(`Invalid date string: ${date}`)

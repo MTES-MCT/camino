@@ -213,7 +213,17 @@ export const creationCheck = async (pool: Pool, administrationId: string, creer:
           statutId: 'fai',
           titreDemarcheId: demarche?.id,
           date: '2022-01-01',
+          etapeAvis: [],
           duree: 10,
+          dateDebut: null,
+          dateFin: null,
+          geojson4326Points: null,
+          geojsonOriginePoints: null,
+          geojsonOrigineForages: null,
+          titulaireIds: [],
+          amodiataireIds: [],
+          notes: null,
+          entrepriseDocumentIds: [],
           heritageProps: ETAPE_HERITAGE_PROPS.reduce(
             (acc, prop) => {
               acc[prop] = { actif: false }

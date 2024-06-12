@@ -55,9 +55,9 @@ const writeEtapesForTest = async () => {
               }) ?? []
           ).map(etape => titreEtapeForMachineValidator.parse(etape))
         )
-        // Pour anonymiser la date en gardant les délai en mois entre la saisine et l'apd,
-        // on trouve la date de saisine et on calcule un delta random pour tomber dans le même mois
-        const firstSaisineDate = etapes.find(etape => etape.etapeTypeId === ETAPES_TYPES.saisineDesServices)?.date ?? etapes[0].date
+        // Pour anonymiser la date en gardant les délai en mois entre les 'avis des services et commissions consultatives' et l'apd,
+        // on trouve la date et on calcule un delta random pour tomber dans le même mois
+        const firstSaisineDate = etapes.find(etape => etape.etapeTypeId === ETAPES_TYPES.avisDesServicesEtCommissionsConsultatives)?.date ?? etapes[0].date
         const decalageJour = daysBetween(firstSaisineDate, setDayInMonth(firstSaisineDate, Math.floor(Math.random() * 28)))
         try {
           if (!demarcheDefinition.machine.isEtapesOk(etapes)) {

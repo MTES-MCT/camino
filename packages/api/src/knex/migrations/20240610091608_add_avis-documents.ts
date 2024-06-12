@@ -1,11 +1,11 @@
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable sql/no-unsafe-query */
-import { DemarcheId, demarcheIdValidator } from 'camino-common/src/demarche'
-import { EtapeDocumentId, EtapeId } from 'camino-common/src/etape'
-import { AvisStatutId, AvisTypeId } from 'camino-common/src/static/avisTypes'
-import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts'
-import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
-import { getKeys, isNullOrUndefined } from 'camino-common/src/typescript-tools'
+import { DemarcheId, demarcheIdValidator } from 'camino-common/src/demarche.js'
+import { EtapeDocumentId, EtapeId } from 'camino-common/src/etape.js'
+import { AvisStatutId, AvisTypeId } from 'camino-common/src/static/avisTypes.js'
+import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts.js'
+import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
+import { getKeys, isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
 import { Knex } from 'knex'
 
 const ETAPE_TYPE_ID_TO_AVIS_TYPE_ID: { [key in string]?: AvisTypeId } = {
@@ -80,6 +80,7 @@ export const up = async (knex: Knex) => {
 
   // FIXME on ne veut pas prendre plutôt la SSR comme pivot si il y'en a une ?
   // FIXME comment on gère l'eof qui est censée être visible uniquement par l'ONF ?
+  // FIXME gérer la visibilité des avis
   const etapesByDemarche = etapesDocuments.rows.reduce<
     Record<DemarcheId, { id: EtapeDocumentId; avis_type_id: AvisTypeId; etape_id: EtapeId; description: string; avis_statut_id: AvisStatutId; date: string; largeobject_id: string }[]>
   >((acc, row) => {

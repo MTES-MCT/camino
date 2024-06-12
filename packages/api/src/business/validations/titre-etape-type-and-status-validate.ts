@@ -20,7 +20,7 @@ export const titreEtapeTypeAndStatusValidate = (titreTypeId: TitreTypeId, demarc
   const titreEtapeStatut = etapesStatuts.find(etapeStatut => etapeStatut.id === etapeStatutId)
 
   if (!titreEtapeStatut) {
-    return [`statut de l'étape "${etapeStatutId}" invalide pour une type d'étape ${etapeTypeId} pour une démarche de type ${DemarchesTypes[demarcheTypeId].nom}`]
+    return [`statut de l'étape "${etapeStatutId}" invalide pour une étape ${etapeTypeId} pour une démarche de type ${DemarchesTypes[demarcheTypeId].nom}`]
   }
 
   return []
