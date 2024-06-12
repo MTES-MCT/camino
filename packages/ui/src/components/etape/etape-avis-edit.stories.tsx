@@ -64,7 +64,7 @@ export const Rempli: StoryFn = () => (
     apiClient={apiClient}
     etapeId={etapeIdValidator.parse('etapeId')}
     communeIds={[]}
-    tde={{ titreTypeId: 'axm', demarcheTypeId: 'oct', etapeTypeId: 'ssr' }}
+    tde={{ titreTypeId: 'axm', demarcheTypeId: 'oct', etapeTypeId: 'asc' }}
     onChange={completeUpdateAction}
   />
 )

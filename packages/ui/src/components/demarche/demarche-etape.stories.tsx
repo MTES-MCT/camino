@@ -575,7 +575,7 @@ export const DemandeArmMecaniseNonDeposable: StoryFn = () => (
       sections_with_values: [{ id: 'arm', elements: [{ id: 'mecanise', type: 'radio', value: true, nom: 'Mécanisation' }], nom: 'Arm' }],
       etape_documents: documentsDemande,
       entreprises_documents: entrepriseDocumentsDemande,
-      avis_documents: []
+      avis_documents: [],
     }}
   />
 )
@@ -786,15 +786,15 @@ export const AvisDefavorable: StoryFn = () => (
       id: etapeIdValidator.parse('etapeId'),
       slug: etapeSlugValidator.parse('etape-slug'),
       notes: null,
-      etape_type_id: EtapesTypesEtapesStatuts.avisDGTMServiceAmenagementUrbanismeConstructionLogement_AUCL_.DEFAVORABLE.etapeTypeId,
-      etape_statut_id: EtapesTypesEtapesStatuts.avisDGTMServiceAmenagementUrbanismeConstructionLogement_AUCL_.DEFAVORABLE.etapeStatutId,
+      etape_type_id: EtapesTypesEtapesStatuts.avisDuConseilGeneralDeLeconomie_CGE_.DEFAVORABLE.etapeTypeId,
+      etape_statut_id: EtapesTypesEtapesStatuts.avisDuConseilGeneralDeLeconomie_CGE_.DEFAVORABLE.etapeStatutId,
       is_brouillon: ETAPE_IS_NOT_BROUILLON,
       date,
       sections_with_values: [],
 
       etape_documents: [],
       entreprises_documents: [],
-      avis_documents: []
+      avis_documents: [],
     }}
     apiClient={apiClient}
     entreprises={entreprises}
