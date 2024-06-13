@@ -73,11 +73,7 @@ export const getLargeobjectIdByEtapeDocumentId = async (pool: Pool, user: User, 
 
   if (result.length === 1) {
     const etapeDocument = result[0]
-    const etapeData = await getEtapeDataForEdition(pool, etapeDocument.etape_id)
-
-    const titreTypeId = memoize(() => Promise.resolve(etapeData.titre_type_id))
-    const administrationsLocales = memoize(() => administrationsLocalesByEtapeId(etapeDocument.etape_id, pool))
-    const entreprisesTitulairesOuAmodiataires = memoize(() => entreprisesTitulairesOuAmoditairesByEtapeId(etapeDocument.etape_id, pool))
+    const { etapeData, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires } = await getEtapeDataForEdition(pool, etapeDocument.etape_id)
 
     if (
       await canReadDocument(etapeDocument, user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires, etapeData.etape_type_id, {
@@ -107,7 +103,13 @@ LIMIT 1
 `
 
 export const getEtapeDataForEdition = async (pool: Pool, etapeId: EtapeId) => {
-  return (await dbQueryAndValidate(getEtapeDataForEditionDb, { etapeId }, pool, getEtapeDataForEditionValidator))[0]
+  const etapeData = (await dbQueryAndValidate(getEtapeDataForEditionDb, { etapeId }, pool, getEtapeDataForEditionValidator))[0]
+
+  const titreTypeId = memoize(() => Promise.resolve(etapeData.titre_type_id))
+  const administrationsLocales = memoize(() => administrationsLocalesByEtapeId(etapeId, pool))
+  const entreprisesTitulairesOuAmodiataires = memoize(() => entreprisesTitulairesOuAmoditairesByEtapeId(etapeId, pool))
+
+  return { etapeData, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires }
 }
 
 const getEtapeDataForEditionValidator = z.object({

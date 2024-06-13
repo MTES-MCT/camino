@@ -27,8 +27,8 @@ import { canReadDemarche } from './permissions/demarches.js'
 import { SectionWithValue } from 'camino-common/src/sections.js'
 import { getDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/documents.js'
 import { getSections, getSectionsWithValue } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
-import { OmitDistributive, isNonEmptyArray, isNotNullNorUndefined, memoize } from 'camino-common/src/typescript-tools.js'
-import { getEntrepriseDocumentIdsByEtapeId, getDocumentsByEtapeId } from '../../database/queries/titres-etapes.queries.js'
+import { OmitDistributive, isNonEmptyArray, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, memoize } from 'camino-common/src/typescript-tools.js'
+import { getEntrepriseDocumentIdsByEtapeId, getDocumentsByEtapeId, getEtapeAvisLargeObjectIdsByEtapeId } from '../../database/queries/titres-etapes.queries.js'
 import { getAdministrationsLocales } from 'camino-common/src/administrations.js'
 import { getEntrepriseDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/entrepriseDocuments.js'
 import { isEtapeTypeIdFondamentale } from 'camino-common/src/static/etapesTypes.js'
@@ -41,6 +41,7 @@ import { TitreIdOrSlug, titreIdValidator, titreSlugValidator, TitreId } from 'ca
 import { EntrepriseId, entrepriseIdValidator } from 'camino-common/src/entreprise.js'
 import { AdministrationId } from 'camino-common/src/static/administrations.js'
 import { secteurMaritimeValidator } from 'camino-common/src/static/facades.js'
+import { getAvisTypes } from 'camino-common/src/permissions/etape-form.js'
 
 type SuperEtapeDemarcheTitreGet = OmitDistributive<DemarcheEtape, 'etape_documents' | 'avis_documents'>
 type SuperDemarcheTitreGet = Omit<TitreGet['demarches'][0], 'etapes'> & { etapes: SuperEtapeDemarcheTitreGet[]; public_lecture: boolean; entreprises_lecture: boolean; titre_public_lecture: boolean }
@@ -210,13 +211,28 @@ export const getTitre = async (pool: Pool, user: User, idOrSlug: TitreIdOrSlug):
           if (canRead) {
             const etape_documents: EtapeDocument[] = []
             const documentsTypes = getDocuments(titre.titre_type_id, superDemarche.demarche_type_id, superEtape.etape_type_id)
-            if (documentsTypes.length > 0) {
+            if (isNotNullNorUndefinedNorEmpty(documentsTypes)) {
               etape_documents.push(
                 ...(await getDocumentsByEtapeId(superEtape.id, pool, user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires, superEtape.etape_type_id, superDemarche))
               )
             }
-            // FIXME query avis_documents si on a les droits et que l'étape peut contenir des avis
+
             const avis_documents: EtapeAvis[] = []
+            const avisTypes = getAvisTypes(superEtape.etape_type_id, titre.titre_type_id, perimetre?.communes.map(({ id }) => id) ?? [])
+            if (isNotNullNorUndefinedNorEmpty(avisTypes)) {
+              const avisWithLargeObjectId = await getEtapeAvisLargeObjectIdsByEtapeId(
+                superEtape.id,
+                pool,
+                user,
+                titreTypeId,
+                administrationsLocales,
+                entreprisesTitulairesOuAmodiataires,
+                superEtape.etape_type_id,
+                superDemarche
+              )
+
+              avis_documents.push(...avisWithLargeObjectId.map(a => ({ ...a, has_file: isNotNullNorUndefined(a.largeobject_id) })))
+            }
 
             etapes.push({ ...superEtape, etape_documents, avis_documents })
           }

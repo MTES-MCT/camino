@@ -39,6 +39,7 @@ export const DocumentInitialTemporaire: StoryFn = () => (
       temp_document_name: tempDocumentNameValidator.parse('value'),
       date: toCaminoDate('2023-01-02'),
       avis_statut_id: 'Favorable',
+      has_file: false,
     }}
     apiClient={apiClient}
     avisTypeIds={avisTypeIds}
@@ -54,6 +55,7 @@ export const DocumentInitialDejaSauvegarde: StoryFn = () => (
       id: etapeAvisIdValidator.parse('documentId'),
       date: toCaminoDate('2023-01-02'),
       avis_statut_id: 'Favorable',
+      has_file: false,
     }}
     apiClient={apiClient}
     avisTypeIds={avisTypeIds}

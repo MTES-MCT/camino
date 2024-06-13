@@ -43,6 +43,7 @@ export const emailsForAdministrationsGet = (
 
   if (demarcheTypeId === 'oct' && titreTypeId === 'arm') {
     // lorsque la demande est déposée
+    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     if (!etape.isBrouillon && (oldEtape?.isBrouillon ?? true)) {
       emails.push(EmailAdministration.PTMG)
       emails.push(EmailAdministration.ONF)
@@ -62,6 +63,7 @@ export const emailsForAdministrationsGet = (
       title = 'Nouvelle demande complète'
     }
   } else if (demarcheTypeId === 'oct' && titreTypeId === 'axm') {
+    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     if (!etape.isBrouillon && (oldEtape?.isBrouillon ?? true)) {
       emails.push(EmailAdministration.DGTM)
 
@@ -86,7 +88,7 @@ export const emailsForAdministrationsGet = (
 }
 
 export const titreEtapeAdministrationsEmailsSend = async (
-  etape: Pick<ITitreEtape, 'typeId' | 'statutId'>,
+  etape: Pick<ITitreEtape, 'typeId' | 'statutId' | 'isBrouillon'>,
   demarcheTypeId: string,
   titreId: string,
   titreTypeId: string,

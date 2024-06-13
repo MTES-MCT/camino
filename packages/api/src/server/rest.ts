@@ -8,7 +8,7 @@ import { join } from 'path'
 import { inspect } from 'node:util'
 
 import { activites, demarches, entreprises, titre, titres, travaux } from '../api/rest/index.js'
-import { NewDownload, etapeDocumentDownload, etapeTelecharger, streamLargeObjectInResponse } from '../api/rest/fichiers.js'
+import { NewDownload, avisDocumentDownload, etapeDocumentDownload, etapeTelecharger, streamLargeObjectInResponse } from '../api/rest/fichiers.js'
 import { getTitreLiaisons, postTitreLiaisons, removeTitre, titresAdministrations, titresONF, updateTitre, utilisateurTitreAbonner, getTitre, getUtilisateurTitreAbonner } from '../api/rest/titres.js'
 import {
   creerEntreprise,
@@ -102,6 +102,7 @@ const restRouteImplementations: Readonly<{ [key in CaminoRestRoute]: Transform<k
   '/download/fichiers/:documentId': { newDownload: etapeDocumentDownload },
   '/download/entrepriseDocuments/:documentId': { newDownload: entrepriseDocumentDownload },
   '/download/activiteDocuments/:documentId': { newDownload: activiteDocumentDownload },
+  '/download/avisDocument/:etapeAvisId': { newDownload: avisDocumentDownload },
   '/fichiers/:documentId': { newDownload: etapeDocumentDownload },
   '/titres/:id': { download: titre },
   '/titres': { download: titres },

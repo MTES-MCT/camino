@@ -86,7 +86,6 @@ export const getEtapeDocumentsByEtapeIdValidator = z.object({
 
 export type GetEtapeDocumentsByEtapeId = z.infer<typeof getEtapeDocumentsByEtapeIdValidator>
 
-
 export const etapeAvisIdValidator = z.string().brand('EtapeAvis')
 export type EtapeAvisId = z.infer<typeof etapeAvisIdValidator>
 export const etapeAvisValidator = z.object({
@@ -94,11 +93,12 @@ export const etapeAvisValidator = z.object({
   avis_type_id: avisTypeIdValidator,
   date: caminoDateValidator,
   avis_statut_id: avisStatutIdValidator,
-  description: z.string()
+  has_file: z.boolean(),
+  description: z.string(),
 })
 export type EtapeAvis = z.infer<typeof etapeAvisValidator>
 
-export const tempEtapeAvisValidator = etapeAvisValidator.omit({ id: true }).extend({ temp_document_name: tempDocumentNameValidator })
+export const tempEtapeAvisValidator = etapeAvisValidator.omit({ id: true, has_file: true }).extend({ temp_document_name: tempDocumentNameValidator })
 export type TempEtapeAvis = z.infer<typeof tempEtapeAvisValidator>
 
 export const getEtapeAvisByEtapeIdValidator = z.array(etapeAvisValidator)

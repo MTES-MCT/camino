@@ -12,8 +12,22 @@ import {
   IUpdateEtapeDocumentFileDbQuery,
   IUpdateEtapeDocumentInfoDbQuery,
   IInsertEtapeAvisDbQuery,
+  IGetAvisByEtapeIdQueryQuery,
+  IGetLargeobjectIdByEtapeAvisIdInternalQuery,
 } from './titres-etapes.queries.types.js'
-import { EtapeAvisId, EtapeDocument, EtapeDocumentId, EtapeDocumentModification, etapeDocumentValidator, EtapeDocumentWithFileModification, EtapeId, TempEtapeAvis, TempEtapeDocument } from 'camino-common/src/etape.js'
+import {
+  EtapeAvisId,
+  etapeAvisIdValidator,
+  EtapeDocument,
+  EtapeDocumentId,
+  EtapeDocumentModification,
+  etapeDocumentValidator,
+  EtapeDocumentWithFileModification,
+  EtapeId,
+  etapeIdValidator,
+  TempEtapeAvis,
+  TempEtapeDocument,
+} from 'camino-common/src/etape.js'
 import { EntrepriseDocumentId, entrepriseDocumentValidator, EntrepriseId, EtapeEntrepriseDocument, etapeEntrepriseDocumentValidator } from 'camino-common/src/entreprise.js'
 import { Pool } from 'pg'
 import { User } from 'camino-common/src/roles.js'
@@ -27,9 +41,12 @@ import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, SimplePromiseFn } from 'camino-common/src/typescript-tools.js'
 import { CanReadDemarche } from '../../api/rest/permissions/demarches.js'
 import { newEtapeAvisId, newEtapeDocumentId } from '../models/_format/id-create.js'
-import { getCurrent } from 'camino-common/src/date.js'
-import { createLargeObject, LargeObjectId } from '../largeobjects.js'
+import { caminoDateValidator, getCurrent } from 'camino-common/src/date.js'
+import { createLargeObject, LargeObjectId, largeObjectIdValidator } from '../largeobjects.js'
 import { canDeleteEtapeDocument } from 'camino-common/src/permissions/titres-etapes.js'
+import { avisStatutIdValidator, avisTypeIdValidator } from 'camino-common/src/static/avisTypes.js'
+import { canReadAvis } from '../../api/rest/permissions/avis.js'
+import { getEtapeDataForEdition } from '../../api/rest/etapes.queries.js'
 
 export const insertTitreEtapeEntrepriseDocument = async (pool: Pool, params: { titre_etape_id: EtapeId; entreprise_document_id: EntrepriseDocumentId }) =>
   dbQueryAndValidate(insertTitreEtapeEntrepriseDocumentInternal, params, pool, z.void())
@@ -153,7 +170,6 @@ export const insertEtapeDocuments = async (pool: Pool, titre_etape_id: EtapeId, 
   }
 }
 
-
 const insertEtapeDocumentDb = sql<
   Redefine<IInsertEtapeDocumentDbQuery, { etape_id: EtapeId; id: EtapeDocumentId; largeobject_id: LargeObjectId } & Omit<TempEtapeDocument, 'temp_document_name'>, void>
 >`
@@ -168,9 +184,7 @@ export const insertEtapeAvis = async (pool: Pool, titre_etape_id: EtapeId, etape
     await dbQueryAndValidate(insertEtapeAvisDb, { ...avis, etape_id: titre_etape_id, id, largeobject_id }, pool, z.void())
   }
 }
-const insertEtapeAvisDb = sql<
-  Redefine<IInsertEtapeAvisDbQuery, { etape_id: EtapeId; id: EtapeAvisId; largeobject_id: LargeObjectId } & Omit<TempEtapeAvis, 'temp_document_name'>, void>
->`
+const insertEtapeAvisDb = sql<Redefine<IInsertEtapeAvisDbQuery, { etape_id: EtapeId; id: EtapeAvisId; largeobject_id: LargeObjectId } & Omit<TempEtapeAvis, 'temp_document_name'>, void>>`
 insert into etape_avis (id, avis_type_id, etape_id, description, avis_statut_id, date, largeobject_id)
     values ($ id !, $ avis_type_id !, $ etape_id !, $ description !, $ avis_statut_id !, $ date !, $ largeobject_id !)
 `
@@ -215,7 +229,92 @@ export const getEtapeDocumentLargeObjectIdsByEtapeId = async (
 
   return filteredDocuments
 }
+const etapeAvisDbValidator = z.object({
+  id: etapeAvisIdValidator,
+  description: z.string(),
+  avis_type_id: avisTypeIdValidator,
+  avis_statut_id: avisStatutIdValidator,
+  largeobject_id: largeObjectIdValidator.nullable(),
+  date: caminoDateValidator,
+})
+type EtapeAvisDb = z.infer<typeof etapeAvisDbValidator>
+const getAvisByEtapeIdQuery = sql<Redefine<IGetAvisByEtapeIdQueryQuery, { titre_etape_id: EtapeId }, EtapeAvisDb>>`
+select
+    a.id,
+    a.description,
+    a.avis_type_id,
+    a.avis_statut_id,
+    a.largeobject_id,
+    a.date
+from
+    etape_avis a
+where
+    a.etape_id = $ titre_etape_id !
+`
+export const getEtapeAvisLargeObjectIdsByEtapeId = async (
+  titre_etape_id: EtapeId,
+  pool: Pool,
+  user: User,
+  titreTypeId: SimplePromiseFn<TitreTypeId>,
+  titresAdministrationsLocales: SimplePromiseFn<AdministrationId[]>,
+  entreprisesTitulairesOuAmodiataires: SimplePromiseFn<EntrepriseId[]>,
+  etapeTypeId: EtapeTypeId,
+  demarche: CanReadDemarche
+): Promise<EtapeAvisDb[]> => {
+  const result = await dbQueryAndValidate(getAvisByEtapeIdQuery, { titre_etape_id }, pool, etapeAvisDbValidator)
 
+  const filteredAvis: EtapeAvisDb[] = []
+
+  for (const avis of result) {
+    if (await canReadAvis(avis, user, titreTypeId, titresAdministrationsLocales, entreprisesTitulairesOuAmodiataires, etapeTypeId, demarche)) {
+      filteredAvis.push(avis)
+    }
+  }
+
+  return filteredAvis
+}
+const loidByEtapeAvisIdValidator = z.object({
+  largeobject_id: largeObjectIdValidator,
+  etape_id: etapeIdValidator,
+})
+export const getLargeobjectIdByEtapeAvisId = async (pool: Pool, user: User, etapeAvisId: EtapeAvisId): Promise<LargeObjectId | null> => {
+  const result = await dbQueryAndValidate(
+    getLargeobjectIdByEtapeAvisIdInternal,
+    {
+      etapeAvisId,
+    },
+    pool,
+    loidByEtapeAvisIdValidator
+  )
+
+  if (result.length === 1) {
+    const etapeAvis = result[0]
+    const { etapeData, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires } = await getEtapeDataForEdition(pool, etapeAvis.etape_id)
+
+    if (
+      await canReadAvis(etapeAvis, user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires, etapeData.etape_type_id, {
+        demarche_type_id: etapeData.demarche_type_id,
+        entreprises_lecture: etapeData.demarche_entreprises_lecture,
+        public_lecture: etapeData.demarche_public_lecture,
+        titre_public_lecture: etapeData.titre_public_lecture,
+      })
+    ) {
+      return etapeAvis.largeobject_id
+    }
+  }
+
+  return null
+}
+const getLargeobjectIdByEtapeAvisIdInternal = sql<Redefine<IGetLargeobjectIdByEtapeAvisIdInternalQuery, { etapeAvisId: EtapeAvisId }, z.infer<typeof loidByEtapeAvisIdValidator>>>`
+select
+    d.largeobject_id,
+    d.etape_id
+from
+    etape_avis d
+where
+    d.id = $ etapeAvisId !
+LIMIT 1
+`
 export const getDocumentsByEtapeId = async (
   titre_etape_id: EtapeId,
   pool: Pool,

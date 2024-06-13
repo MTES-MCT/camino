@@ -21,6 +21,7 @@ const avis: EtapeAvis[] = [
     description: 'Une description',
     date: caminoDateValidator.parse('2023-02-01'),
     avis_statut_id: 'Favorable',
+    has_file: false,
   },
   {
     id: etapeAvisIdValidator.parse('id-car'),
@@ -28,6 +29,7 @@ const avis: EtapeAvis[] = [
     description: 'Une description',
     date: caminoDateValidator.parse('2023-02-01'),
     avis_statut_id: 'Non renseigné',
+    has_file: false,
   },
 ]
 

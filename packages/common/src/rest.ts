@@ -25,7 +25,15 @@ import {
 } from './titres.js'
 import { adminUserNotNullValidator, userValidator } from './roles.js'
 import { caminoAnneeValidator, caminoDateValidator } from './date.js'
-import { etapeDocumentIdValidator, etapeIdOrSlugValidator, etapeIdValidator, etapeTypeEtapeStatutWithMainStepValidator, getEtapeDocumentsByEtapeIdValidator, getEtapeAvisByEtapeIdValidator } from './etape.js'
+import {
+  etapeDocumentIdValidator,
+  etapeIdOrSlugValidator,
+  etapeIdValidator,
+  etapeTypeEtapeStatutWithMainStepValidator,
+  getEtapeDocumentsByEtapeIdValidator,
+  getEtapeAvisByEtapeIdValidator,
+  etapeAvisIdValidator,
+} from './etape.js'
 import {
   statistiquesDGTMValidator,
   statistiquesDataGouvValidator,
@@ -111,6 +119,7 @@ const IDS = [
   // NE PAS TOUCHER CES ROUTES, UTILISÉES PAR D'AUTRES
   '/download/fichiers/:documentId',
   '/download/entrepriseDocuments/:documentId',
+  '/download/avisDocument/:etapeAvisId',
   '/download/activiteDocuments/:documentId',
   '/fichiers/:documentId',
   '/titres/:id',
@@ -181,7 +190,7 @@ export const CaminoRestRoutes = {
   '/rest/etapes/:etapeId/etapeDocuments': { params: { etapeId: etapeIdValidator }, get: { output: getEtapeDocumentsByEtapeIdValidator } },
   '/rest/etapes/:etapeId/etapeAvis': { params: { etapeId: etapeIdValidator }, get: { output: getEtapeAvisByEtapeIdValidator } },
   '/rest/etapes/:etapeId/entrepriseDocuments': { params: { etapeId: etapeIdValidator }, get: { output: z.array(etapeEntrepriseDocumentValidator) } },
-  '/rest/etapes/:etapeIdOrSlug': { params: { etapeIdOrSlug: etapeIdOrSlugValidator }, delete: true, get: {output: flattenEtapeValidator} },
+  '/rest/etapes/:etapeIdOrSlug': { params: { etapeIdOrSlug: etapeIdOrSlugValidator }, delete: true, get: { output: flattenEtapeValidator } },
   '/rest/etapes/:etapeId/depot': { params: { etapeId: etapeIdValidator }, put: { input: z.void(), output: z.void() } },
   '/rest/activites/:activiteId': { params: { activiteId: activiteIdOrSlugValidator }, get: { output: activiteValidator }, put: { input: activiteEditionValidator, output: z.void() }, delete: true },
   '/rest/communes': { get: { output: z.array(communeValidator) } },
@@ -201,6 +210,7 @@ export const CaminoRestRoutes = {
   '/deconnecter': { get: { output: z.string() } },
   '/changerMotDePasse': { get: { output: z.string() } },
   '/download/fichiers/:documentId': { params: { documentId: etapeDocumentIdValidator }, newDownload: true },
+  '/download/avisDocument/:etapeAvisId': { params: { etapeAvisId: etapeAvisIdValidator }, newDownload: true },
   '/download/entrepriseDocuments/:documentId': { params: { documentId: entrepriseDocumentIdValidator }, newDownload: true },
   '/download/activiteDocuments/:documentId': { params: { documentId: activiteDocumentIdValidator }, newDownload: true },
   '/fichiers/:documentId': { params: { documentId: etapeDocumentIdValidator }, newDownload: true },

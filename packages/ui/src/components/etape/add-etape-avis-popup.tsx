@@ -79,6 +79,7 @@ export const AddEtapeAvisPopup = defineComponent<Props>(props => {
     description: avisDescription.value,
     date: avisDate.value,
     avis_statut_id: avisStatutId.value,
+    has_file: false,
   }))
 
   const canSave = computed<boolean>(() => {

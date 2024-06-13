@@ -10,6 +10,7 @@ import {
   ETAPE_IS_NOT_BROUILLON,
   etapeIdOrSlugValidator,
   GetEtapeAvisByEtapeId,
+  getEtapeAvisByEtapeIdValidator,
 } from 'camino-common/src/etape.js'
 import { DemarcheId, demarcheIdValidator } from 'camino-common/src/demarche.js'
 import { HTTP_STATUS } from 'camino-common/src/http.js'
@@ -33,8 +34,8 @@ import { getEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStat
 import { DemarchesTypes } from 'camino-common/src/static/demarchesTypes.js'
 import { Pool } from 'pg'
 import { EntrepriseId, EtapeEntrepriseDocument } from 'camino-common/src/entreprise.js'
-import { getDocumentsByEtapeId, getEntrepriseDocumentIdsByEtapeId } from '../../database/queries/titres-etapes.queries.js'
-import { GetEtapeDataForEdition, administrationsLocalesByEtapeId, entreprisesTitulairesOuAmoditairesByEtapeId, getEtapeByDemarcheIdAndEtapeTypeId, getEtapeDataForEdition } from './etapes.queries.js'
+import { getDocumentsByEtapeId, getEntrepriseDocumentIdsByEtapeId, getEtapeAvisLargeObjectIdsByEtapeId } from '../../database/queries/titres-etapes.queries.js'
+import { GetEtapeDataForEdition, getEtapeByDemarcheIdAndEtapeTypeId, getEtapeDataForEdition } from './etapes.queries.js'
 import { SDOMZoneId } from 'camino-common/src/static/sdom.js'
 import { objectClone } from '../../tools/index.js'
 import { titreEtapeAdministrationsEmailsSend } from '../graphql/resolvers/_titre-etape-email.js'
@@ -153,11 +154,7 @@ export const getEtapeDocuments =
       res.sendStatus(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
     } else {
       try {
-        const etapeData = await getEtapeDataForEdition(pool, etapeIdParsed.data)
-
-        const titreTypeId = memoize(() => Promise.resolve(etapeData.titre_type_id))
-        const administrationsLocales = memoize(() => administrationsLocalesByEtapeId(etapeIdParsed.data, pool))
-        const entreprisesTitulairesOuAmodiataires = memoize(() => entreprisesTitulairesOuAmoditairesByEtapeId(etapeIdParsed.data, pool))
+        const { etapeData, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires } = await getEtapeDataForEdition(pool, etapeIdParsed.data)
 
         const result = await getDocumentsByEtapeId(etapeIdParsed.data, pool, user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires, etapeData.etape_type_id, {
           demarche_type_id: etapeData.demarche_type_id,
@@ -191,17 +188,17 @@ export const getEtapeAvis =
       res.sendStatus(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
     } else {
       try {
-        // const etapeData = await getEtapeDataForEdition(pool, etapeIdParsed.data)
-        // const titreTypeId = memoize(() => Promise.resolve(etapeData.titre_type_id))
+        const { etapeData, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires } = await getEtapeDataForEdition(pool, etapeIdParsed.data)
 
-        // const result = await getDocumentsByEtapeId(etapeIdParsed.data, pool, user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires, etapeData.etape_type_id, {
-        //   demarche_type_id: etapeData.demarche_type_id,
-        //   entreprises_lecture: etapeData.demarche_entreprises_lecture,
-        //   public_lecture: etapeData.demarche_public_lecture,
-        //   titre_public_lecture: etapeData.titre_public_lecture,
-        // })
-        // FIXME: à implémenter
-        res.json([])
+        const result = await getEtapeAvisLargeObjectIdsByEtapeId(etapeIdParsed.data, pool, user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires, etapeData.etape_type_id, {
+          demarche_type_id: etapeData.demarche_type_id,
+          entreprises_lecture: etapeData.demarche_entreprises_lecture,
+          public_lecture: etapeData.demarche_public_lecture,
+          titre_public_lecture: etapeData.titre_public_lecture,
+        })
+
+        const avis: GetEtapeAvisByEtapeId = result.map(a => ({ ...a, has_file: isNotNullNorUndefined(a.largeobject_id) }))
+        res.json(getEtapeAvisByEtapeIdValidator.parse(avis))
       } catch (e) {
         res.sendStatus(HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR)
         console.error(e)

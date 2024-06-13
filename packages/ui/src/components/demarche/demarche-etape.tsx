@@ -37,6 +37,7 @@ import { EntrepriseId, Entreprise } from 'camino-common/src/entreprise'
 import { Badge } from '../_ui/badge'
 import { CaminoRouter } from '@/typings/vue-router'
 import { CommuneId } from 'camino-common/src/static/communes'
+import { EtapeAvisTable } from '../etape/etape-avis'
 // Il ne faut pas utiliser de literal dans le 'in' il n'y aura jamais d'erreur typescript
 const fondamentalePropsName = 'fondamentale'
 
@@ -206,6 +207,8 @@ export const DemarcheEtape = defineComponent<Props>(props => {
       : false
   )
 
+  const isBrouillon = computed<boolean>(() => props.etape.is_brouillon)
+
   return () => (
     <div class="fr-pb-2w fr-pl-2w fr-pr-2w fr-tile--shadow" style={{ border: '1px solid var(--grey-900-175)' }}>
       <div class={`${styles.sticky} fr-pt-1w`}>
@@ -214,14 +217,14 @@ export const DemarcheEtape = defineComponent<Props>(props => {
             <div class="fr-text--lg fr-mb-0" style={{ color: 'var(--text-title-blue-france)', fontWeight: '500' }}>
               {capitalize(EtapesTypes[props.etape.etape_type_id].nom)}
             </div>
-            {props.etape.is_brouillon ? <Badge class="fr-ml-1w" systemLevel="new" ariaLabel={`Brouillon de l'étape ${EtapesTypes[props.etape.etape_type_id].nom}`} label="Brouillon" /> : null}
+            {isBrouillon.value ? <Badge class="fr-ml-1w" systemLevel="new" ariaLabel={`Brouillon de l'étape ${EtapesTypes[props.etape.etape_type_id].nom}`} label="Brouillon" /> : null}
           </div>
 
           <div style={{ display: 'flex' }}>
             {canEditOrDeleteEtape.value ? (
               <>
                 {/* TODO 2024-05-16: retirer la condition 'est une demande' pour ne conserver que 'est un brouillon' */}
-                {props.etape.etape_type_id === ETAPES_TYPES.demande && props.etape.is_brouillon ? (
+                {props.etape.etape_type_id === ETAPES_TYPES.demande && isBrouillon.value ? (
                   <DsfrButton class="fr-mr-1v" buttonType="primary" label="Déposer" title="Déposer la demande" onClick={deposePopupOpen} disabled={!isDeposable.value} />
                 ) : null}
                 <DsfrLink
@@ -343,6 +346,7 @@ export const DemarcheEtape = defineComponent<Props>(props => {
 
       <EtapeDocuments etapeDocuments={props.etape.etape_documents} entrepriseDocuments={props.etape.entreprises_documents} user={props.user} entreprises={props.entreprises} />
 
+      <EtapeAvisTable etapeAvis={props.etape.avis_documents} user={props.user} />
       {removePopupVisible.value ? (
         <RemoveEtapePopup
           close={closeRemovePopup}

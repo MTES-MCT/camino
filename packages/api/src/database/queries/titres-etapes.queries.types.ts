@@ -175,3 +175,41 @@ export interface IGetDocumentsByEtapeIdQueryQuery {
   result: IGetDocumentsByEtapeIdQueryResult;
 }
 
+/** 'GetAvisByEtapeIdQuery' parameters type */
+export interface IGetAvisByEtapeIdQueryParams {
+  titre_etape_id: string;
+}
+
+/** 'GetAvisByEtapeIdQuery' return type */
+export interface IGetAvisByEtapeIdQueryResult {
+  avis_statut_id: string;
+  avis_type_id: string;
+  date: string;
+  description: string;
+  id: string;
+  largeobject_id: number | null;
+}
+
+/** 'GetAvisByEtapeIdQuery' query type */
+export interface IGetAvisByEtapeIdQueryQuery {
+  params: IGetAvisByEtapeIdQueryParams;
+  result: IGetAvisByEtapeIdQueryResult;
+}
+
+/** 'GetLargeobjectIdByEtapeAvisIdInternal' parameters type */
+export interface IGetLargeobjectIdByEtapeAvisIdInternalParams {
+  etapeAvisId: string;
+}
+
+/** 'GetLargeobjectIdByEtapeAvisIdInternal' return type */
+export interface IGetLargeobjectIdByEtapeAvisIdInternalResult {
+  etape_id: string;
+  largeobject_id: number | null;
+}
+
+/** 'GetLargeobjectIdByEtapeAvisIdInternal' query type */
+export interface IGetLargeobjectIdByEtapeAvisIdInternalQuery {
+  params: IGetLargeobjectIdByEtapeAvisIdInternalParams;
+  result: IGetLargeobjectIdByEtapeAvisIdInternalResult;
+}
+

@@ -62,7 +62,6 @@ export const up = async (knex: Knex) => {
   await knex.raw(`DELETE FROM titres_etapes where archive is true and type_id in (${etapeTypesToDelete.map(_ => '?').join(',')})`, [...etapeTypesToDelete])
   // FIXME ajouter visibilité
   // FIXME ajouter les sections d'aof et les mettre dans description
-  // FIXME rendre le fichier optionnel, un avis peut ne pas avoir de document
   await knex.raw(
     'CREATE TABLE etape_avis (id character varying(255) NOT NULL, avis_type_id character varying(255) NOT NULL, avis_statut_id character varying(255) NOT NULL, etape_id character varying(255) NOT NULL, description character varying(1024) NOT NULL, date character varying(10) NOT NULL, largeobject_id oid)'
   )
