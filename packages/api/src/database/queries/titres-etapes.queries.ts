@@ -44,7 +44,7 @@ import { newEtapeAvisId, newEtapeDocumentId } from '../models/_format/id-create.
 import { caminoDateValidator, getCurrent } from 'camino-common/src/date.js'
 import { createLargeObject, LargeObjectId, largeObjectIdValidator } from '../largeobjects.js'
 import { canDeleteEtapeDocument } from 'camino-common/src/permissions/titres-etapes.js'
-import { avisStatutIdValidator, avisTypeIdValidator } from 'camino-common/src/static/avisTypes.js'
+import { avisStatutIdValidator, avisTypeIdValidator, avisVisibilityIdValidator } from 'camino-common/src/static/avisTypes.js'
 import { canReadAvis } from '../../api/rest/permissions/avis.js'
 import { getEtapeDataForEdition } from '../../api/rest/etapes.queries.js'
 
@@ -236,6 +236,7 @@ const etapeAvisDbValidator = z.object({
   avis_statut_id: avisStatutIdValidator,
   largeobject_id: largeObjectIdValidator.nullable(),
   date: caminoDateValidator,
+  avis_visibility_id: avisVisibilityIdValidator,
 })
 type EtapeAvisDb = z.infer<typeof etapeAvisDbValidator>
 const getAvisByEtapeIdQuery = sql<Redefine<IGetAvisByEtapeIdQueryQuery, { titre_etape_id: EtapeId }, EtapeAvisDb>>`
@@ -245,7 +246,8 @@ select
     a.avis_type_id,
     a.avis_statut_id,
     a.largeobject_id,
-    a.date
+    a.date,
+    a.avis_visibility_id
 from
     etape_avis a
 where
@@ -276,6 +278,7 @@ export const getEtapeAvisLargeObjectIdsByEtapeId = async (
 const loidByEtapeAvisIdValidator = z.object({
   largeobject_id: largeObjectIdValidator,
   etape_id: etapeIdValidator,
+  avis_visibility_id: avisVisibilityIdValidator,
 })
 export const getLargeobjectIdByEtapeAvisId = async (pool: Pool, user: User, etapeAvisId: EtapeAvisId): Promise<LargeObjectId | null> => {
   const result = await dbQueryAndValidate(
@@ -308,7 +311,8 @@ export const getLargeobjectIdByEtapeAvisId = async (pool: Pool, user: User, etap
 const getLargeobjectIdByEtapeAvisIdInternal = sql<Redefine<IGetLargeobjectIdByEtapeAvisIdInternalQuery, { etapeAvisId: EtapeAvisId }, z.infer<typeof loidByEtapeAvisIdValidator>>>`
 select
     d.largeobject_id,
-    d.etape_id
+    d.etape_id,
+    d.avis_visibility_id
 from
     etape_avis d
 where

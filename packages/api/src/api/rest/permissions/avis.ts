@@ -6,10 +6,10 @@ import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { SimplePromiseFn } from 'camino-common/src/typescript-tools.js'
 import { CanReadDemarche } from './demarches.js'
 import { canReadEtape } from './etapes.js'
+import { AvisVisibilityId } from 'camino-common/src/static/avisTypes.js'
 
 export const canReadAvis = async (
-  // FIXME vérifier la visibilité
-  _avis: unknown,
+  avis: { avis_visibility_id: AvisVisibilityId },
   user: User,
   titreTypeId: SimplePromiseFn<TitreTypeId>,
   titresAdministrationsLocales: SimplePromiseFn<AdministrationId[]>,
@@ -29,15 +29,11 @@ export const canReadAvis = async (
     return true
   }
 
-  // if (document.public_lecture) {
-  //   return true
-  // }
+  if (avis.avis_visibility_id === 'Public') {
+    return true
+  }
 
-  if (isEntrepriseOrBureauDEtude(user)) {
-    // if (!document.entreprises_lecture) {
-    //   return false
-    // }
-
+  if (isEntrepriseOrBureauDEtude(user) && avis.avis_visibility_id === 'TitulairesEtAdministrations') {
     const titulaires = await entreprisesTitulairesOuAmodiataires()
 
     return titulaires.some(entrepriseId => user.entreprises?.some(({ id }) => id === entrepriseId) ?? false)

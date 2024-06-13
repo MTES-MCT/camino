@@ -59,3 +59,13 @@ export const AvisStatutIds = [
 
 export const avisStatutIdValidator = z.enum(AvisStatutIds)
 export type AvisStatutId = z.infer<typeof avisStatutIdValidator>
+
+// prettier-ignore
+export const AvisVisibilityIds = [
+  "Public",
+  "TitulairesEtAdministrations",
+  "Administrations",
+] as const
+
+export const avisVisibilityIdValidator = z.enum(AvisVisibilityIds)
+export type AvisVisibilityId = z.infer<typeof avisVisibilityIdValidator>

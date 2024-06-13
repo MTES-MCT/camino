@@ -184,6 +184,7 @@ export interface IGetAvisByEtapeIdQueryParams {
 export interface IGetAvisByEtapeIdQueryResult {
   avis_statut_id: string;
   avis_type_id: string;
+  avis_visibility_id: string;
   date: string;
   description: string;
   id: string;
@@ -203,6 +204,7 @@ export interface IGetLargeobjectIdByEtapeAvisIdInternalParams {
 
 /** 'GetLargeobjectIdByEtapeAvisIdInternal' return type */
 export interface IGetLargeobjectIdByEtapeAvisIdInternalResult {
+  avis_visibility_id: string;
   etape_id: string;
   largeobject_id: number | null;
 }

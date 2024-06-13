@@ -2,7 +2,7 @@
 /* eslint-disable sql/no-unsafe-query */
 import { DemarcheId } from 'camino-common/src/demarche.js'
 import { EtapeDocumentId, EtapeId } from 'camino-common/src/etape.js'
-import { AvisStatutId, AvisTypeId } from 'camino-common/src/static/avisTypes.js'
+import { AvisStatutId, AvisTypeId, AvisVisibilityId } from 'camino-common/src/static/avisTypes.js'
 import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts.js'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
 import { isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
@@ -45,7 +45,17 @@ const ETAPE_TYPE_ID_TO_AVIS_TYPE_ID: { [key in string]?: AvisTypeId } = {
   pnr: 'autreAvis',
   auc: 'autreAvis',
 } as const
+const getVisibilityId = (etapeDocument: Pick<DocumentFromDb, 'public_lecture' | 'entreprises_lecture'>): AvisVisibilityId => {
+  if (etapeDocument.public_lecture) {
+    return 'Public'
+  }
 
+  if (etapeDocument.entreprises_lecture) {
+    return 'TitulairesEtAdministrations'
+  }
+
+  return 'Administrations'
+}
 const etapeTypesToDelete = Object.keys(ETAPE_TYPE_ID_TO_AVIS_TYPE_ID)
 const ETAPE_STATUT_ID_TO_AVIS_STATUT_ID: { [key in EtapeStatutId]?: AvisStatutId } = {
   fav: 'Favorable',
@@ -55,15 +65,16 @@ const ETAPE_STATUT_ID_TO_AVIS_STATUT_ID: { [key in EtapeStatutId]?: AvisStatutId
   dre: 'Défavorable',
 } as const
 type EtapeFromDb = { id: EtapeId; date: CaminoDate; titre_demarche_id: DemarcheId; type_id: EtapeTypeId; statut_id: EtapeStatutId }
+type DocumentFromDb = { id: EtapeDocumentId; largeobject_id: LargeObjectId; description: string; public_lecture: boolean; entreprises_lecture: boolean }
 export const up = async (knex: Knex) => {
   await knex.raw(`DELETE FROM etapes_documents where etape_id in (select id FROM titres_etapes where archive is true and type_id in (${etapeTypesToDelete.map(_ => '?').join(',')}))`, [
     ...etapeTypesToDelete,
   ])
   await knex.raw(`DELETE FROM titres_etapes where archive is true and type_id in (${etapeTypesToDelete.map(_ => '?').join(',')})`, [...etapeTypesToDelete])
-  // FIXME ajouter visibilité
+  // FIXME ajouter visibilité, DONE coté APi, plus qu'à faire coté FRONT
   // FIXME ajouter les sections d'aof et les mettre dans description
   await knex.raw(
-    'CREATE TABLE etape_avis (id character varying(255) NOT NULL, avis_type_id character varying(255) NOT NULL, avis_statut_id character varying(255) NOT NULL, etape_id character varying(255) NOT NULL, description character varying(1024) NOT NULL, date character varying(10) NOT NULL, largeobject_id oid)'
+    'CREATE TABLE etape_avis (id character varying(255) NOT NULL, avis_type_id character varying(255) NOT NULL, avis_statut_id character varying(255) NOT NULL, avis_visibility_id character varying(255) NOT NULL, etape_id character varying(255) NOT NULL, description character varying(1024) NOT NULL, date character varying(10) NOT NULL, largeobject_id oid)'
   )
 
   const allEtapesDb: { rows: EtapeFromDb[] } = await knex.raw(
@@ -94,7 +105,7 @@ export const up = async (knex: Knex) => {
       const etape = etapes[index]
 
       // documents et avis vide
-      const documents: { rows: { id: EtapeDocumentId; largeobject_id: LargeObjectId; description: string }[] } = await knex.raw(`SELECT * from etapes_documents where etape_id= :id`, { id: etape.id })
+      const documents: { rows: DocumentFromDb[] } = await knex.raw(`SELECT * from etapes_documents where etape_id= :id`, { id: etape.id })
       const avisTypeId = ETAPE_TYPE_ID_TO_AVIS_TYPE_ID[etape.type_id]
       const avisStatutId = ETAPE_STATUT_ID_TO_AVIS_STATUT_ID[etape.statut_id]
       if (isNullOrUndefined(avisTypeId) || isNullOrUndefined(avisStatutId)) {
@@ -110,9 +121,10 @@ export const up = async (knex: Knex) => {
             avis_statut_id: avisStatutId,
             date: etape.date,
             largeobject_id: document.largeobject_id,
+            avis_visibility_id: getVisibilityId(document),
           }
           await knex.raw(
-            'INSERT INTO etape_avis(id, avis_type_id, etape_id, description, avis_statut_id, date, largeobject_id) VALUES(:id, :avis_type_id, :etape_id, :description, :avis_statut_id, :date, :largeobject_id)',
+            'INSERT INTO etape_avis(id, avis_type_id, etape_id, description, avis_statut_id, date, largeobject_id, avis_visibility_id) VALUES(:id, :avis_type_id, :etape_id, :description, :avis_statut_id, :date, :largeobject_id, :avis_visibility_id)',
             { ...row, etape_id: etapePivotId }
           )
           await knex.raw('DELETE FROM etapes_documents WHERE id = :id', { id: row.id })
@@ -126,9 +138,10 @@ export const up = async (knex: Knex) => {
             avis_statut_id: avisStatutId,
             date: etape.date,
             largeobject_id: null,
+            avis_visibility_id: 'Administrations',
           }
           await knex.raw(
-            'INSERT INTO etape_avis(id, avis_type_id, etape_id, description, avis_statut_id, date, largeobject_id) VALUES(:id, :avis_type_id, :etape_id, :description, :avis_statut_id, :date, :largeobject_id)',
+            'INSERT INTO etape_avis(id, avis_type_id, etape_id, description, avis_statut_id, date, largeobject_id, avis_visibility_id) VALUES(:id, :avis_type_id, :etape_id, :description, :avis_statut_id, :date, :largeobject_id, :avis_visibility_id)',
             { ...row, etape_id: etapePivotId }
           )
         }
