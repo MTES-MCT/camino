@@ -256,7 +256,6 @@ const AdministrationsTitresTypesEtapesTypes: {
       [ETAPES_TYPES.abrogationDeLaDecision]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.avisDuConseilGeneralDeLeconomie_CGE_]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.decisionDuJugeAdministratif]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
-      [ETAPES_TYPES.avisDesServicesEtCommissionsConsultatives]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.avisDeLaCommissionDepartementaleDesMines_CDM_]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.publicationDeLavisDeDecisionImplicite]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.classementSansSuite]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
@@ -312,7 +311,6 @@ const AdministrationsTitresTypesEtapesTypes: {
       [ETAPES_TYPES.abrogationDeLaDecision]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.avisDuConseilGeneralDeLeconomie_CGE_]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.decisionDuJugeAdministratif]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
-      [ETAPES_TYPES.avisDesServicesEtCommissionsConsultatives]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.avisDeLaCommissionDepartementaleDesMines_CDM_]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.publicationDeLavisDeDecisionImplicite]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.classementSansSuite]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
@@ -368,7 +366,6 @@ const AdministrationsTitresTypesEtapesTypes: {
       [ETAPES_TYPES.abrogationDeLaDecision]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.avisDuConseilGeneralDeLeconomie_CGE_]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.decisionDuJugeAdministratif]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
-      [ETAPES_TYPES.avisDesServicesEtCommissionsConsultatives]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.avisDeLaCommissionDepartementaleDesMines_CDM_]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.publicationDeLavisDeDecisionImplicite]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.classementSansSuite]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
@@ -424,7 +421,6 @@ const AdministrationsTitresTypesEtapesTypes: {
       [ETAPES_TYPES.abrogationDeLaDecision]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.avisDuConseilGeneralDeLeconomie_CGE_]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.decisionDuJugeAdministratif]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
-      [ETAPES_TYPES.avisDesServicesEtCommissionsConsultatives]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.avisDeLaCommissionDepartementaleDesMines_CDM_]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.publicationDeLavisDeDecisionImplicite]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.classementSansSuite]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
@@ -683,7 +679,7 @@ const AdministrationsTitresTypesEtapesTypes: {
       [ETAPES_TYPES.saisineDeLaCommissionDesAutorisationsDeRecherchesMinieres_CARM_]: { lectureInterdit: false, creationInterdit: false, modificationInterdit: false },
     },
     [TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX]: {
-      [ETAPES_TYPES.avisDesServicesEtCommissionsConsultatives]: { lectureInterdit: true, creationInterdit: true, modificationInterdit: true },
+      [ETAPES_TYPES.avisDesServicesEtCommissionsConsultatives]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.abrogationDeLaDecision]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.avisDunMaire]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.decisionDuJugeAdministratif]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
@@ -720,7 +716,7 @@ const AdministrationsTitresTypesEtapesTypes: {
       [ETAPES_TYPES.saisineDeLaCommissionDepartementaleDesMines_CDM_]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
     },
     [TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_METAUX]: {
-      [ETAPES_TYPES.avisDesServicesEtCommissionsConsultatives]: { lectureInterdit: false, creationInterdit: false, modificationInterdit: false },
+      [ETAPES_TYPES.avisDesServicesEtCommissionsConsultatives]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
     },
   },
   [ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']]: {
@@ -760,7 +756,7 @@ const AdministrationsTitresTypesEtapesTypes: {
     [TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX]: {
       [ETAPES_TYPES.avisDeLaCommissionDesAutorisationsDeRecherchesMinieres_CARM_]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.avenantALautorisationDeRechercheMiniere]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
-      [ETAPES_TYPES.avisDesServicesEtCommissionsConsultatives]: { lectureInterdit: true, creationInterdit: true, modificationInterdit: true },
+      [ETAPES_TYPES.avisDesServicesEtCommissionsConsultatives]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.classementSansSuite]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.decisionDeLOfficeNationalDesForets]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
