@@ -3,7 +3,7 @@ import { ITitreDemarche, Index } from '../../../types.js'
 import { titreEtapesSortDescByOrdre } from '../../../business/utils/titre-etapes-sort.js'
 import { getEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStatuts.js'
 import { DemarchesStatuts } from 'camino-common/src/static/demarchesStatuts.js'
-import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
+import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools.js'
 import { TitresStatuts } from 'camino-common/src/static/titresStatuts.js'
 import { DemarchesTypes } from 'camino-common/src/static/demarchesTypes.js'
 import { ReferencesTypes } from 'camino-common/src/static/referencesTypes.js'
@@ -18,7 +18,7 @@ import { EntrepriseId } from 'camino-common/src/entreprise.js'
 import { GetEntreprises, getEntreprises } from '../entreprises.queries.js'
 
 const etapesDatesStatutsBuild = (titreDemarche: ITitreDemarche) => {
-  if (!titreDemarche.etapes?.length) return null
+  if (!isNotNullNorUndefinedNorEmpty(titreDemarche.etapes)) return null
 
   const etapes = titreEtapesSortDescByOrdre(titreDemarche.etapes)
 
@@ -27,9 +27,11 @@ const etapesDatesStatutsBuild = (titreDemarche: ITitreDemarche) => {
     .reduce((etapesDatesStatuts, etape) => {
       const type = EtapesTypes[etape.typeId]
 
-      if (!type) return etapesDatesStatuts
+      if (!isNotNullNorUndefined(type)) {
+        return etapesDatesStatuts
+      }
 
-      etapesDatesStatuts[type.nom] = etape?.date || ''
+      etapesDatesStatuts[type.nom] = etape?.date ?? ''
 
       // si le type d'étape a plus d'un statut possible
       // (ex : fav/def ou acc/rej)
@@ -39,7 +41,7 @@ const etapesDatesStatutsBuild = (titreDemarche: ITitreDemarche) => {
       if (etapesStatuts!.length > 1) {
         const statut = etapesStatuts!.find(s => s.id === etape.statutId)
 
-        etapesDatesStatuts[`${type.nom}_statut`] = statut?.nom || ''
+        etapesDatesStatuts[`${type.nom}_statut`] = statut?.nom ?? ''
       }
 
       return etapesDatesStatuts
