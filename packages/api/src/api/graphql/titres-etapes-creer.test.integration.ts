@@ -83,6 +83,7 @@ const blankEtapeProps = {
   heritageContenu: {},
   contenu: {},
 } as const
+// FIXME move into rest
 describe('etapeCreer', () => {
   const etapeCreerQuery = queryImport('titre-etape-creer')
 

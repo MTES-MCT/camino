@@ -1,15 +1,10 @@
 import { apiGraphQLFetch } from '@/api/_client'
-import { deleteWithJson, getWithJson, putWithJson } from '@/api/client-rest'
+import { deleteWithJson, getWithJson, postWithJson, putWithJson } from '@/api/client-rest'
 import { CaminoDate, caminoDateValidator } from 'camino-common/src/date'
 import { DemarcheId } from 'camino-common/src/demarche'
 import { entrepriseIdValidator } from 'camino-common/src/entreprise'
 import { EtapeId, EtapeIdOrSlug, EtapeTypeEtapeStatutWithMainStep, GetEtapeAvisByEtapeId, GetEtapeDocumentsByEtapeId } from 'camino-common/src/etape'
-import {
-    FlattenEtape,
-    GraphqlEtapeCreation,
-    GraphqlEtapeModification, graphqlEtapeCreationValidator,
-    graphqlEtapeModificationValidator
-} from 'camino-common/src/etape-form'
+import { FlattenEtape, GraphqlEtapeCreation, GraphqlEtapeModification, graphqlEtapeCreationValidator, graphqlEtapeModificationValidator } from 'camino-common/src/etape-form'
 import { km2Validator } from 'camino-common/src/number'
 import { featureCollectionForagesValidator, featureCollectionPointsValidator, featureMultiPolygonValidator } from 'camino-common/src/perimetre'
 import { etapeTypeIdValidator } from 'camino-common/src/static/etapesTypes'
@@ -88,10 +83,7 @@ export interface EtapeApiClient {
   deleteEtape: (titreEtapeId: EtapeId) => Promise<void>
   deposeEtape: (titreEtapeId: EtapeId) => Promise<void>
   getEtapeDocumentsByEtapeId: (etapeId: EtapeId) => Promise<GetEtapeDocumentsByEtapeId>
-  getEtapeHeritagePotentiel: (
-    etape: DeepReadonly<Pick<CoreEtapeCreationOrModification, 'id' | 'date' | 'typeId'>>,
-    titreDemarcheId: DemarcheId,
-  ) => Promise<DeepReadonly<GetEtapeHeritagePotentiel>>
+  getEtapeHeritagePotentiel: (etape: DeepReadonly<Pick<CoreEtapeCreationOrModification, 'id' | 'date' | 'typeId'>>, titreDemarcheId: DemarcheId) => Promise<DeepReadonly<GetEtapeHeritagePotentiel>>
   getEtapeAvisByEtapeId: (etapeId: EtapeId) => Promise<GetEtapeAvisByEtapeId>
   getEtape: (etapeIdOrSlug: EtapeIdOrSlug) => Promise<DeepReadonly<{ etape: FlattenEtape; demarche: GetDemarcheByIdOrSlugValidator }>>
   etapeCreer: (etape: DeepReadonly<GraphqlEtapeCreation>) => Promise<EtapeId>
@@ -220,9 +212,9 @@ export const etapeApiClient: EtapeApiClient = {
     //     }
     //   }
     // `)({ id: etapeIdOrSlug })
-    const etape = await getWithJson('/rest/etapes/:etapeIdOrSlug', {etapeIdOrSlug})
-    const demarche = await getWithJson('/rest/demarches/:demarcheIdOrSlug', {demarcheIdOrSlug: etape.titreDemarcheId})
-    return {etape, demarche}
+    const etape = await getWithJson('/rest/etapes/:etapeIdOrSlug', { etapeIdOrSlug })
+    const demarche = await getWithJson('/rest/demarches/:demarcheIdOrSlug', { demarcheIdOrSlug: etape.titreDemarcheId })
+    return { etape, demarche }
     // TODO 2024-06-02 ce code est à remonter dans l'api
     // const result = graphqlEtapeValidator.safeParse(data)
     // if (result.success) {
@@ -329,19 +321,10 @@ export const etapeApiClient: EtapeApiClient = {
     // TODO 2024-06-02 on a du code métier dans notre api, on fusionne étape avec l'héritage
     const heritageData: DeepReadonly<z.infer<typeof heritageValidator>> = heritageValidator.parse(data)
     return heritageData
-
   },
 
   etapeCreer: async etape => {
-    const result = await apiGraphQLFetch(gql`
-      mutation EtapeCreer($etape: InputEtapeCreation!) {
-        etapeCreer(etape: $etape) {
-          id
-        }
-      }
-    `)({ etape: graphqlEtapeCreationValidator.parse(etape) })
-
-    return result.id
+    return postWithJson('/rest/etapes', {}, graphqlEtapeCreationValidator.parse(etape))
   },
 
   etapeModifier: async etape => {

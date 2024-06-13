@@ -2,7 +2,7 @@ import GraphQLJSON from 'graphql-type-json'
 
 import { titres, titreCreer } from './resolvers/titres.js'
 
-import { etape, etapeHeritage, etapeCreer, etapeModifier } from './resolvers/titres-etapes.js'
+import { etape, etapeHeritage, etapeModifier } from './resolvers/titres-etapes.js'
 
 import { demarches, demarcheCreer, demarcheModifier, demarcheSupprimer } from './resolvers/titres-demarches.js'
 
@@ -83,7 +83,6 @@ export default {
   demarcheCreer,
   demarcheModifier,
   demarcheSupprimer,
-  etapeCreer,
   etapeModifier,
   activiteDeposer,
   newsletterInscrire,

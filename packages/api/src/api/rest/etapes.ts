@@ -11,44 +11,65 @@ import {
   etapeIdOrSlugValidator,
   GetEtapeAvisByEtapeId,
   getEtapeAvisByEtapeIdValidator,
+  tempEtapeAvisValidator,
+  tempEtapeDocumentValidator,
+  EtapeBrouillon,
+  etapeSlugValidator,
 } from 'camino-common/src/etape.js'
 import { DemarcheId, demarcheIdValidator } from 'camino-common/src/demarche.js'
 import { HTTP_STATUS } from 'camino-common/src/http.js'
 import { CaminoDate, caminoDateValidator, getCurrent } from 'camino-common/src/date.js'
 import { titreDemarcheGet } from '../../database/queries/titres-demarches.js'
 import { userSuper } from '../../database/user-super.js'
-import { titreEtapeGet, titreEtapeUpdate } from '../../database/queries/titres-etapes.js'
+import { titreEtapeGet, titreEtapeUpdate, titreEtapeUpsert } from '../../database/queries/titres-etapes.js'
 import { demarcheDefinitionFind } from '../../business/rules-demarches/definitions.js'
 import { etapeTypeDateFinCheck } from '../_format/etapes-types.js'
 import { User, isBureauDEtudes, isEntreprise } from 'camino-common/src/roles.js'
-import { canCreateEtape, canDeposeEtape, canDeleteEtape, canEditEtape } from 'camino-common/src/permissions/titres-etapes.js'
+import { canCreateEtape, canDeposeEtape, canDeleteEtape, canEditEtape, canEditDates, canEditDuree } from 'camino-common/src/permissions/titres-etapes.js'
 import { TitresStatutIds } from 'camino-common/src/static/titresStatuts.js'
 import { CaminoMachines } from '../../business/rules-demarches/machines.js'
 import { titreEtapesSortAscByOrdre } from '../../business/utils/titre-etapes-sort.js'
 import { Etape, TitreEtapeForMachine, titreEtapeForMachineValidator, toMachineEtapes } from '../../business/rules-demarches/machine-common.js'
 import { canBeBrouillon, EtapesTypes, EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
-import { DeepReadonly, SimplePromiseFn, isNotNullNorUndefined, isNullOrUndefined, memoize, onlyUnique } from 'camino-common/src/typescript-tools.js'
+import { DeepReadonly, SimplePromiseFn, isNonEmptyArray, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined, memoize, onlyUnique } from 'camino-common/src/typescript-tools.js'
 import { getEtapesTDE, isTDEExist } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/index.js'
 import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts.js'
 import { getEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStatuts.js'
 import { DemarchesTypes } from 'camino-common/src/static/demarchesTypes.js'
 import { Pool } from 'pg'
-import { EntrepriseId, EtapeEntrepriseDocument } from 'camino-common/src/entreprise.js'
-import { getDocumentsByEtapeId, getEntrepriseDocumentIdsByEtapeId, getEtapeAvisLargeObjectIdsByEtapeId } from '../../database/queries/titres-etapes.queries.js'
+import { EntrepriseDocument, EntrepriseDocumentId, EntrepriseId, EtapeEntrepriseDocument } from 'camino-common/src/entreprise.js'
+import {
+  getDocumentsByEtapeId,
+  getEntrepriseDocumentIdsByEtapeId,
+  getEtapeAvisLargeObjectIdsByEtapeId,
+  insertEtapeAvis,
+  insertEtapeDocuments,
+  insertTitreEtapeEntrepriseDocument,
+} from '../../database/queries/titres-etapes.queries.js'
 import { GetEtapeDataForEdition, getEtapeByDemarcheIdAndEtapeTypeId, getEtapeDataForEdition } from './etapes.queries.js'
 import { SDOMZoneId } from 'camino-common/src/static/sdom.js'
 import { objectClone } from '../../tools/index.js'
-import { titreEtapeAdministrationsEmailsSend } from '../graphql/resolvers/_titre-etape-email.js'
-import { getGeojsonInformation } from './perimetre.queries.js'
+import { titreEtapeAdministrationsEmailsSend, titreEtapeUtilisateursEmailsSend } from '../graphql/resolvers/_titre-etape-email.js'
+import { GetGeojsonInformation, convertPoints, getGeojsonInformation } from './perimetre.queries.js'
 import { titreEtapeUpdateTask } from '../../business/titre-etape-update.js'
 import { valeurFind } from 'camino-common/src/sections.js'
 import { getElementWithValue, getSections, getSectionsWithValue } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { AdministrationId } from 'camino-common/src/static/administrations.js'
 import { titreDemarcheUpdatedEtatValidate } from '../../business/validations/titre-demarche-etat-validate.js'
-import { FlattenEtape } from 'camino-common/src/etape-form.js'
+import { FlattenEtape, GraphqlEtape, GraphqlEtapeCreation, graphqlEtapeCreationValidator } from 'camino-common/src/etape-form.js'
 import { iTitreEtapeToFlattenEtape } from '../_format/titres-etapes.js'
 import { CommuneId } from 'camino-common/src/static/communes.js'
+import { titreEtapeUpdationValidate } from '../../business/validations/titre-etape-updation-validate.js'
+import { IHeritageContenu, IHeritageProps, ITitreDemarche, ITitreEtape } from '../../types.js'
+import { checkEntreprisesExist, getEntrepriseDocuments } from './entreprises.queries.js'
+import { ETAPE_HERITAGE_PROPS } from 'camino-common/src/heritage.js'
+import { titreEtapeHeritageBuild } from '../graphql/resolvers/_titre-etape.js'
+import { KM2 } from 'camino-common/src/number.js'
+import { FeatureMultiPolygon, FeatureCollectionPoints } from 'camino-common/src/perimetre.js'
+import { canHaveForages } from 'camino-common/src/permissions/titres.js'
+import { SecteursMaritimes, getSecteurMaritime } from 'camino-common/src/static/facades.js'
+import { GEO_SYSTEME_IDS } from 'camino-common/src/static/geoSystemes.js'
 
 export const getEtapeEntrepriseDocuments =
   (pool: Pool) =>
@@ -311,6 +332,291 @@ export const getEtape = (_pool: Pool) => async (req: CaminoRequest, res: CustomR
     }
   }
 }
+const validateAndGetEntrepriseDocuments = async (pool: Pool, etape: FlattenEtape, entrepriseDocumentIds: EntrepriseDocumentId[], user: User): Promise<EntrepriseDocument[]> => {
+  const entrepriseDocuments: EntrepriseDocument[] = []
+
+  const titulaires = etape.titulaires.value
+  const amodiataires = etape.amodiataires.value
+  if (isNotNullNorUndefinedNorEmpty(entrepriseDocumentIds)) {
+    let entrepriseIds: EntrepriseId[] = []
+    if (isNotNullNorUndefinedNorEmpty(titulaires)) {
+      entrepriseIds.push(...titulaires)
+    }
+    if (isNotNullNorUndefinedNorEmpty(amodiataires)) {
+      entrepriseIds.push(...amodiataires)
+    }
+    entrepriseIds = entrepriseIds.filter(onlyUnique)
+
+    if (isNonEmptyArray(entrepriseIds)) {
+      entrepriseDocuments.push(...(await getEntrepriseDocuments(entrepriseDocumentIds, entrepriseIds, pool, user)))
+    }
+
+    if (entrepriseDocumentIds.length !== entrepriseDocuments.length) {
+      throw new Error("document d'entreprise incorrects")
+    }
+  }
+
+  return entrepriseDocuments
+}
+
+export const arePointsOnPerimeter = (perimetre: FeatureMultiPolygon, points: FeatureCollectionPoints): boolean => {
+  const coordinatesSet = new Set()
+
+  perimetre.geometry.coordinates.forEach(geometry => geometry.forEach(sub => sub.forEach(coordinate => coordinatesSet.add(`${coordinate[0]}-${coordinate[1]}`))))
+
+  return points.features.every(point => {
+    return coordinatesSet.has(`${point.geometry.coordinates[0]}-${point.geometry.coordinates[1]}`)
+  })
+}
+const getForagesProperties = async (
+  titreTypeId: TitreTypeId,
+  geojsonOrigineGeoSystemeId: GraphqlEtape['geojsonOrigineGeoSystemeId'],
+  geojsonOrigineForages: GraphqlEtape['geojsonOrigineForages'],
+  pool: Pool
+): Promise<Pick<GraphqlEtape, 'geojson4326Forages' | 'geojsonOrigineForages'>> => {
+  if (canHaveForages(titreTypeId) && isNotNullNorUndefined(geojsonOrigineForages) && isNotNullNorUndefined(geojsonOrigineGeoSystemeId)) {
+    return {
+      geojson4326Forages: await convertPoints(pool, geojsonOrigineGeoSystemeId, GEO_SYSTEME_IDS.WGS84, geojsonOrigineForages),
+      geojsonOrigineForages,
+    }
+  }
+
+  return {
+    geojson4326Forages: null,
+    geojsonOrigineForages: null,
+  }
+}
+type PerimetreInfos = {
+  secteursMaritime: SecteursMaritimes[]
+  sdomZones: SDOMZoneId[]
+  surface: KM2 | null
+} & Pick<GraphqlEtape, 'geojson4326Forages' | 'geojsonOrigineForages'> &
+  Pick<GetGeojsonInformation, 'communes' | 'forets'>
+const getPerimetreInfosInternal = async (
+  pool: Pool,
+  geojson4326Perimetre: GraphqlEtape['geojson4326Perimetre'],
+  geojsonOriginePerimetre: GraphqlEtape['geojsonOriginePerimetre'],
+  geojsonOriginePoints: GraphqlEtape['geojsonOriginePoints'],
+  titreTypeId: TitreTypeId,
+  geojsonOrigineGeoSystemeId: GraphqlEtape['geojsonOrigineGeoSystemeId'],
+  geojsonOrigineForages: GraphqlEtape['geojsonOrigineForages']
+): Promise<PerimetreInfos> => {
+  if (isNotNullNorUndefined(geojson4326Perimetre)) {
+    if (isNotNullNorUndefined(geojsonOriginePerimetre) && isNotNullNorUndefined(geojsonOriginePoints)) {
+      if (!arePointsOnPerimeter(geojsonOriginePerimetre, geojsonOriginePoints)) {
+        throw new Error(`les points doivent être sur le périmètre`)
+      }
+    }
+    const { communes, sdom, surface, forets, secteurs } = await getGeojsonInformation(pool, geojson4326Perimetre.geometry)
+    const { geojson4326Forages } = await getForagesProperties(titreTypeId, geojsonOrigineGeoSystemeId, geojsonOrigineForages, pool)
+
+    return {
+      surface,
+      communes,
+      forets,
+      secteursMaritime: secteurs.map(s => getSecteurMaritime(s)),
+      sdomZones: sdom,
+      geojson4326Forages,
+      geojsonOrigineForages,
+    }
+  } else {
+    return {
+      communes: [],
+      forets: [],
+      secteursMaritime: [],
+      sdomZones: [],
+      surface: null,
+      geojson4326Forages: null,
+      geojsonOrigineForages: null,
+    }
+  }
+}
+const getFlattenEtape = async (
+  etape: GraphqlEtapeCreation,
+  demarche: ITitreDemarche,
+  titreTypeId: TitreTypeId,
+  pool: Pool
+): Promise<{ flattenEtape: FlattenEtape; isBrouillon: EtapeBrouillon; perimetreInfos: PerimetreInfos }> => {
+  const isBrouillon = canBeBrouillon(etape.typeId)
+  const perimetreInfos = await getPerimetreInfosInternal(
+    pool,
+    etape.geojson4326Perimetre,
+    etape.geojsonOriginePerimetre,
+    etape.geojsonOriginePoints,
+    titreTypeId,
+    etape.geojsonOrigineGeoSystemeId,
+    etape.geojsonOrigineForages
+  )
+  const titreEtapeHeritage = titreEtapeHeritageBuild(etape.date, etape.typeId, demarche, titreTypeId, demarche.typeId, null)
+
+  const heritageProps = ETAPE_HERITAGE_PROPS.reduce<IHeritageProps>((acc, propId) => {
+    acc[propId] = {
+      actif: etape.heritageProps[propId].actif,
+      etape: titreEtapeHeritage.heritageProps?.[propId].etape,
+    }
+
+    return acc
+  }, {} as IHeritageProps)
+
+  const sections = getSections(titreTypeId, demarche.typeId, etape.typeId)
+  const heritageContenu = sections.reduce<IHeritageContenu>((accSections, section) => {
+    accSections[section.id] = section.elements.reduce<IHeritageContenu[string]>((accElements, element) => {
+      accElements[element.id] = {
+        actif: etape.heritageContenu[section.id]?.[element.id]?.actif ?? false,
+        etape: titreEtapeHeritage.heritageContenu?.[section.id]?.[element.id]?.etape ?? undefined,
+      }
+
+      return accElements
+    }, {})
+
+    return accSections
+  }, {})
+
+  // FIXME on peut mieux faire pour l'id et le slug ?
+  return {
+    flattenEtape: iTitreEtapeToFlattenEtape({
+      ...etape,
+      demarche,
+      ...perimetreInfos,
+      isBrouillon,
+      heritageProps,
+      heritageContenu,
+      id: etapeIdValidator.parse('newId'),
+      slug: etapeSlugValidator.parse('unknown'),
+    }),
+    isBrouillon,
+    perimetreInfos,
+  }
+}
+export const createEtape = (pool: Pool) => async (req: CaminoRequest, res: CustomResponse<EtapeId>) => {
+  try {
+    const { success, data: etape, error } = graphqlEtapeCreationValidator.safeParse(req.body)
+
+    if (!success) {
+      console.error('[etapeCreer] étape non correctement formatée', error)
+      res.status(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST).json({ errorMessage: "l'étape n'est pas correctement formatée" })
+    } else {
+      const user = req.auth
+      if (!user) {
+        res.status(HTTP_STATUS.HTTP_STATUS_NOT_FOUND).json({ errorMessage: "la démarche n'existe pas" })
+      } else {
+        let titreDemarche = await titreDemarcheGet(etape.titreDemarcheId, { fields: {} }, user)
+
+        if (!titreDemarche) {
+          res.status(HTTP_STATUS.HTTP_STATUS_NOT_FOUND).json({ errorMessage: "la démarche n'existe pas" })
+        } else {
+          titreDemarche = await titreDemarcheGet(
+            etape.titreDemarcheId,
+            {
+              fields: {
+                titre: {
+                  demarches: { etapes: { id: {} } },
+                  pointsEtape: { id: {} },
+                  titulairesEtape: { id: {} },
+                  amodiatairesEtape: { id: {} },
+                },
+                etapes: { id: {} },
+              },
+            },
+            userSuper
+          )
+
+          if (!titreDemarche || !titreDemarche.titre) {
+            res.status(HTTP_STATUS.HTTP_STATUS_NOT_FOUND).json({ errorMessage: "le titre n'existe pas" })
+          } else {
+            const titreTypeId = titreDemarche?.titre?.typeId
+            if (!titreTypeId) {
+              res.status(HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR).json({ errorMessage: `le type du titre de la ${titreDemarche.id} n'est pas chargé` })
+            } else {
+              const { flattenEtape, isBrouillon, perimetreInfos } = await getFlattenEtape(etape, titreDemarche, titreTypeId, pool)
+              const entrepriseDocuments: EntrepriseDocument[] = await validateAndGetEntrepriseDocuments(pool, flattenEtape, etape.entrepriseDocumentIds, user)
+
+              const etapeDocumentsParsed = z.array(tempEtapeDocumentValidator).safeParse(etape.etapeDocuments)
+
+              if (!etapeDocumentsParsed.success) {
+                console.warn(etapeDocumentsParsed.error)
+
+                res.status(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST).json({ errorMessage: 'Les documents envoyés ne sont pas conformes' })
+              } else {
+                const etapeDocuments = etapeDocumentsParsed.data
+
+                const etapeAvisParsed = z.array(tempEtapeAvisValidator).safeParse(etape.etapeAvis)
+                if (!etapeAvisParsed.success) {
+                  console.warn(etapeAvisParsed.error)
+                  res.status(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST).json({ errorMessage: 'Les avis envoyés ne sont pas conformes' })
+                } else {
+                  const etapeAvis = etapeAvisParsed.data
+                  const rulesErrors = titreEtapeUpdationValidate(
+                    flattenEtape,
+                    titreDemarche,
+                    titreDemarche.titre,
+                    etapeDocuments,
+                    etapeAvis,
+                    entrepriseDocuments,
+                    perimetreInfos.sdomZones,
+                    perimetreInfos.communes.map(({ id }) => id),
+                    user,
+                    null,
+                    null
+                  )
+                  if (rulesErrors.length) {
+                    res.status(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST).json({ errorMessage: rulesErrors.join(', ') })
+                  } else if (
+                    !canCreateEtape(user, etape.typeId, isBrouillon, titreDemarche.titre.titulaireIds ?? [], titreDemarche.titre.administrationsLocales ?? [], titreDemarche.typeId, {
+                      typeId: titreDemarche.titre.typeId,
+                      titreStatutId: titreDemarche.titre.titreStatutId ?? TitresStatutIds.Indetermine,
+                    })
+                  ) {
+                    res.status(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST).json({ errorMessage: 'droits insuffisants pour créer cette étape' })
+                  } else if (!(await checkEntreprisesExist(pool, [...(etape.titulaireIds ?? []), ...(etape.amodiataireIds ?? [])]))) {
+                    res.status(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST).json({ errorMessage: "certaines entreprises n'existent pas" })
+                  } else {
+                    if (!canEditDuree(titreTypeId, titreDemarche.typeId)) {
+                      etape.duree = null
+                    }
+
+                    if (!canEditDates(titreTypeId, titreDemarche.typeId, etape.typeId, user) && (isNotNullNorUndefined(etape.dateDebut) || isNotNullNorUndefined(etape.dateFin))) {
+                      etape.dateDebut = null
+                      etape.dateFin = null
+                    }
+
+                    const etapeUpdated: ITitreEtape | undefined = await titreEtapeUpsert({ ...etape, ...perimetreInfos, isBrouillon }, user!, titreDemarche.titreId)
+                    if (isNullOrUndefined(etapeUpdated)) {
+                      res.status(HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR).json({ errorMessage: "Une erreur est survenue lors de la création de l'étape" })
+                    } else {
+                      await insertEtapeDocuments(pool, etapeUpdated.id, etapeDocuments)
+                      for (const document of entrepriseDocuments) {
+                        await insertTitreEtapeEntrepriseDocument(pool, { titre_etape_id: etapeUpdated.id, entreprise_document_id: document.id })
+                      }
+
+                      await insertEtapeAvis(pool, etapeUpdated.id, etapeAvis)
+
+                      try {
+                        await titreEtapeUpdateTask(pool, etapeUpdated.id, etapeUpdated.titreDemarcheId, user)
+                      } catch (e) {
+                        console.error('une erreur est survenue lors des tâches annexes', e)
+                      }
+
+                      await titreEtapeAdministrationsEmailsSend(etapeUpdated, titreDemarche.typeId, titreDemarche.titreId, titreDemarche.titre.typeId, user)
+                      await titreEtapeUtilisateursEmailsSend(etapeUpdated, titreDemarche.titreId)
+
+                      res.json(etapeUpdated.id)
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  } catch (e) {
+    console.error(e)
+
+    res.status(HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR).json({ errorMessage: "Une erreur est survenue lors de la création de l'étape", extra: e })
+  }
+}
+
 export const deposeEtape = (pool: Pool) => async (req: CaminoRequest, res: CustomResponse<void>) => {
   const user = req.auth
 

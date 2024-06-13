@@ -149,33 +149,6 @@ type HeritageProp {
   actif: Boolean
 }
 
-input InputEtapeCreation {
-  typeId: ID!
-  statutId: ID
-  titreDemarcheId: ID!
-  date: String!
-  ordre: Int
-  duree: Int
-  dateDebut: String
-  dateFin: String
-  substances: [String!]
-  geojson4326Perimetre: Json
-  geojson4326Points: Json
-  geojsonOriginePoints: Json
-  geojsonOriginePerimetre: Json
-  geojsonOrigineForages: Json
-  geojsonOrigineGeoSystemeId: String
-  titulaireIds: [String!]
-  amodiataireIds: [String!]
-  heritageProps: InputHeritageProps
-  heritageContenu: Json
-  contenu: Json
-  etapeDocuments: [InputEtapeDocumentCreation]
-  etapeAvis: [InputEtapeAvisCreation]
-  entrepriseDocumentIds: [ID]
-  notes: String
-}
-
 input DaeDocument {
   id: String
   temp_document_name: String
@@ -197,22 +170,6 @@ input AslDocument {
   entreprises_lecture: Boolean!
   etape_statut_id: String!
   date: String!
-}
-
-input InputEtapeDocumentCreation {
-  temp_document_name: String!
-  etape_document_type_id: String!
-  description: String
-  public_lecture: Boolean!
-  entreprises_lecture: Boolean!
-}
-
-input InputEtapeAvisCreation {
-  temp_document_name: String!
-  avis_type_id: String!
-  description: String!
-  date: String!
-  avis_statut_id: String!
 }
 
 input InputEtapeModification {

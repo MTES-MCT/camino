@@ -12,14 +12,13 @@ import { titreEtapeUpdationValidate } from '../../../business/validations/titre-
 import { fieldsBuild } from './_fields-build.js'
 import { iTitreEtapeToFlattenEtape, titreEtapeFormat } from '../../_format/titres-etapes.js'
 import { userSuper } from '../../../database/user-super.js'
-import { titreEtapeAdministrationsEmailsSend, titreEtapeUtilisateursEmailsSend } from './_titre-etape-email.js'
+import { titreEtapeAdministrationsEmailsSend } from './_titre-etape-email.js'
 import { EtapeTypeId, canBeBrouillon } from 'camino-common/src/static/etapesTypes.js'
 import { isNonEmptyArray, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined, onlyUnique } from 'camino-common/src/typescript-tools.js'
 import { User } from 'camino-common/src/roles.js'
 import { CaminoDate } from 'camino-common/src/date.js'
 import { titreEtapeFormatFields } from '../../_format/_fields.js'
-import { canCreateEtape, canEditDates, canEditDuree, canEditEtape } from 'camino-common/src/permissions/titres-etapes.js'
-import { TitresStatutIds } from 'camino-common/src/static/titresStatuts.js'
+import { canEditDates, canEditDuree, canEditEtape } from 'camino-common/src/permissions/titres-etapes.js'
 import {
   ETAPE_IS_NOT_BROUILLON,
   EtapeAvis,
@@ -31,11 +30,9 @@ import {
   etapeIdValidator,
   etapeSlugValidator,
   needAslAndDae,
-  tempEtapeAvisValidator,
-  tempEtapeDocumentValidator,
 } from 'camino-common/src/etape.js'
 import { checkEntreprisesExist, getEntrepriseDocuments } from '../../rest/entreprises.queries.js'
-import { deleteTitreEtapeEntrepriseDocument, insertEtapeAvis, insertEtapeDocuments, insertTitreEtapeEntrepriseDocument, updateEtapeDocuments } from '../../../database/queries/titres-etapes.queries.js'
+import { deleteTitreEtapeEntrepriseDocument, insertTitreEtapeEntrepriseDocument, updateEtapeDocuments } from '../../../database/queries/titres-etapes.queries.js'
 import { EntrepriseDocument, EntrepriseDocumentId, EntrepriseId } from 'camino-common/src/entreprise.js'
 import { Pool } from 'pg'
 import { GetGeojsonInformation, convertPoints, getGeojsonInformation } from '../../rest/perimetre.queries.js'
@@ -49,7 +46,7 @@ import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { getEtapeByDemarcheIdAndEtapeTypeId } from '../../rest/etapes.queries.js'
 import { DemarcheId } from 'camino-common/src/demarche.js'
 import { z } from 'zod'
-import { FlattenEtape, GraphqlEtape, GraphqlEtapeCreation, graphqlEtapeCreationValidator, graphqlEtapeModificationValidator } from 'camino-common/src/etape-form.js'
+import { FlattenEtape, GraphqlEtape, GraphqlEtapeCreation, graphqlEtapeModificationValidator } from 'camino-common/src/etape-form.js'
 import { KM2 } from 'camino-common/src/number.js'
 import { getSections } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
 import { ETAPE_HERITAGE_PROPS } from 'camino-common/src/heritage.js'
@@ -273,134 +270,6 @@ const getFlattenEtape = async (
     }),
     isBrouillon,
     perimetreInfos,
-  }
-}
-
-export const etapeCreer = async ({ etape: etapeNotParsed }: { etape: unknown }, context: Context, info: GraphQLResolveInfo) => {
-  try {
-    const { success, data: etape, error } = graphqlEtapeCreationValidator.safeParse(etapeNotParsed)
-
-    if (!success) {
-      console.error('[etapeCreer] étape non correctement formatée', error)
-      throw new Error("l'étape n'est pas correctement formatée")
-    }
-    const user = context.user
-    if (!user) {
-      throw new Error("la démarche n'existe pas")
-    }
-    let titreDemarche = await titreDemarcheGet(etape.titreDemarcheId, { fields: {} }, user)
-
-    if (!titreDemarche) throw new Error("la démarche n'existe pas")
-
-    titreDemarche = await titreDemarcheGet(
-      etape.titreDemarcheId,
-      {
-        fields: {
-          titre: {
-            demarches: { etapes: { id: {} } },
-            pointsEtape: { id: {} },
-            titulairesEtape: { id: {} },
-            amodiatairesEtape: { id: {} },
-          },
-          etapes: { id: {} },
-        },
-      },
-      userSuper
-    )
-
-    if (!titreDemarche || !titreDemarche.titre) throw new Error("le titre n'existe pas")
-
-    const titreTypeId = titreDemarche?.titre?.typeId
-    if (!titreTypeId) {
-      throw new Error(`le type du titre de la ${titreDemarche.id} n'est pas chargé`)
-    }
-
-    const { flattenEtape, isBrouillon, perimetreInfos } = await getFlattenEtape(etape, titreDemarche, titreTypeId, context.pool)
-    const entrepriseDocuments: EntrepriseDocument[] = await validateAndGetEntrepriseDocuments(context.pool, flattenEtape, etape.entrepriseDocumentIds, user)
-
-    const etapeDocumentsParsed = z.array(tempEtapeDocumentValidator).safeParse(etape.etapeDocuments)
-
-    if (!etapeDocumentsParsed.success) {
-      console.warn(etapeDocumentsParsed.error)
-      throw new Error('Les documents envoyés ne sont pas conformes')
-    }
-
-    const etapeDocuments = etapeDocumentsParsed.data
-
-    const etapeAvisParsed = z.array(tempEtapeAvisValidator).safeParse(etape.etapeAvis)
-    if (!etapeAvisParsed.success) {
-      console.warn(etapeAvisParsed.error)
-      throw new Error('Les avis envoyés ne sont pas conformes')
-    }
-
-    const etapeAvis = etapeAvisParsed.data
-    const rulesErrors = titreEtapeUpdationValidate(
-      flattenEtape,
-      titreDemarche,
-      titreDemarche.titre,
-      etapeDocuments,
-      etapeAvis,
-      entrepriseDocuments,
-      perimetreInfos.sdomZones,
-      perimetreInfos.communes.map(({ id }) => id),
-      user,
-      null,
-      null
-    )
-    if (rulesErrors.length) {
-      throw new Error(rulesErrors.join(', '))
-    }
-    if (
-      !canCreateEtape(user, etape.typeId, isBrouillon, titreDemarche.titre.titulaireIds ?? [], titreDemarche.titre.administrationsLocales ?? [], titreDemarche.typeId, {
-        typeId: titreDemarche.titre.typeId,
-        titreStatutId: titreDemarche.titre.titreStatutId ?? TitresStatutIds.Indetermine,
-      })
-    ) {
-      throw new Error('droits insuffisants pour créer cette étape')
-    }
-
-    if (!(await checkEntreprisesExist(context.pool, [...(etape.titulaireIds ?? []), ...(etape.amodiataireIds ?? [])]))) {
-      throw new Error("certaines entreprises n'existent pas")
-    }
-
-    if (!canEditDuree(titreTypeId, titreDemarche.typeId)) {
-      etape.duree = null
-    }
-
-    if (!canEditDates(titreTypeId, titreDemarche.typeId, etape.typeId, user) && (isNotNullNorUndefined(etape.dateDebut) || isNotNullNorUndefined(etape.dateFin))) {
-      etape.dateDebut = null
-      etape.dateFin = null
-    }
-
-    let etapeUpdated: ITitreEtape | undefined = await titreEtapeUpsert({ ...etape, ...perimetreInfos, isBrouillon }, user!, titreDemarche.titreId)
-    if (isNullOrUndefined(etapeUpdated)) {
-      throw new Error("Une erreur est survenue lors de la création de l'étape")
-    }
-
-    await insertEtapeDocuments(context.pool, etapeUpdated.id, etapeDocuments)
-    for (const document of entrepriseDocuments) {
-      await insertTitreEtapeEntrepriseDocument(context.pool, { titre_etape_id: etapeUpdated.id, entreprise_document_id: document.id })
-    }
-
-    await insertEtapeAvis(context.pool, etapeUpdated.id, etapeAvis)
-
-    try {
-      await titreEtapeUpdateTask(context.pool, etapeUpdated.id, etapeUpdated.titreDemarcheId, user)
-    } catch (e) {
-      console.error('une erreur est survenue lors des tâches annexes', e)
-    }
-
-    await titreEtapeAdministrationsEmailsSend(etapeUpdated, titreDemarche.typeId, titreDemarche.titreId, titreDemarche.titre.typeId, user)
-    await titreEtapeUtilisateursEmailsSend(etapeUpdated, titreDemarche.titreId)
-    const fields = fieldsBuild(info)
-
-    etapeUpdated = await titreEtapeGet(etapeUpdated.id, { fields }, user)
-
-    return titreEtapeFormat(etapeUpdated!)
-  } catch (e) {
-    console.error(e)
-
-    throw e
   }
 }
 
