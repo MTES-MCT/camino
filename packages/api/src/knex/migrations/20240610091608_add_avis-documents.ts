@@ -2,7 +2,7 @@
 /* eslint-disable sql/no-unsafe-query */
 import { DemarcheId } from 'camino-common/src/demarche.js'
 import { EtapeDocumentId, EtapeId } from 'camino-common/src/etape.js'
-import { AvisStatutId, AvisTypeId, AvisVisibilityId } from 'camino-common/src/static/avisTypes.js'
+import { AvisStatutId, AvisTypeId, AvisVisibilityId, AvisVisibilityIds } from 'camino-common/src/static/avisTypes.js'
 import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts.js'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
 import { isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
@@ -47,14 +47,14 @@ const ETAPE_TYPE_ID_TO_AVIS_TYPE_ID: { [key in string]?: AvisTypeId } = {
 } as const
 const getVisibilityId = (etapeDocument: Pick<DocumentFromDb, 'public_lecture' | 'entreprises_lecture'>): AvisVisibilityId => {
   if (etapeDocument.public_lecture) {
-    return 'Public'
+    return AvisVisibilityIds.Public
   }
 
   if (etapeDocument.entreprises_lecture) {
-    return 'TitulairesEtAdministrations'
+    return AvisVisibilityIds.TitulairesEtAdministrations
   }
 
-  return 'Administrations'
+  return AvisVisibilityIds.Administrations
 }
 const etapeTypesToDelete = Object.keys(ETAPE_TYPE_ID_TO_AVIS_TYPE_ID)
 const ETAPE_STATUT_ID_TO_AVIS_STATUT_ID: { [key in EtapeStatutId]?: AvisStatutId } = {

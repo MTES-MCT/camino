@@ -3,13 +3,14 @@ import { testBlankUser } from 'camino-common/src/tests-utils'
 import { canReadAvis } from './avis'
 import { ADMINISTRATION_ROLES, EntrepriseUserNotNull, User } from 'camino-common/src/roles'
 import { newEntrepriseId } from 'camino-common/src/entreprise'
+import { AvisVisibilityIds } from 'camino-common/src/static/avisTypes'
 
 const shouldNotBeCalled = () => Promise.reject(new Error('should not be called'))
 
 describe('canReadAvis', () => {
   test('en tant que super je peux lire tous les documnents', async () => {
     expect(
-      await canReadAvis({ avis_visibility_id: 'Administrations' }, { ...testBlankUser, role: 'super' }, shouldNotBeCalled, shouldNotBeCalled, shouldNotBeCalled, 'mfr', {
+      await canReadAvis({ avis_visibility_id: AvisVisibilityIds.Administrations }, { ...testBlankUser, role: 'super' }, shouldNotBeCalled, shouldNotBeCalled, shouldNotBeCalled, 'mfr', {
         public_lecture: false,
         entreprises_lecture: false,
         titre_public_lecture: false,
@@ -22,7 +23,7 @@ describe('canReadAvis', () => {
     for (const role of ADMINISTRATION_ROLES) {
       expect(
         await canReadAvis(
-          { avis_visibility_id: 'Administrations' },
+          { avis_visibility_id: AvisVisibilityIds.Administrations },
           { ...testBlankUser, role, administrationId: 'dea-guyane-01' },
           () => Promise.resolve('arm'),
           () => Promise.resolve(['dea-guyane-01']),
@@ -42,7 +43,7 @@ describe('canReadAvis', () => {
     ]
     for (const user of users) {
       expect(
-        await canReadAvis({ avis_visibility_id: 'Public' }, user, shouldNotBeCalled, shouldNotBeCalled, shouldNotBeCalled, 'mfr', {
+        await canReadAvis({ avis_visibility_id: AvisVisibilityIds.Public }, user, shouldNotBeCalled, shouldNotBeCalled, shouldNotBeCalled, 'mfr', {
           public_lecture: true,
           entreprises_lecture: false,
           titre_public_lecture: true,
@@ -59,7 +60,7 @@ describe('canReadAvis', () => {
     ]
     for (const user of users) {
       expect(
-        await canReadAvis({ avis_visibility_id: 'Administrations' }, user, shouldNotBeCalled, shouldNotBeCalled, shouldNotBeCalled, 'mfr', {
+        await canReadAvis({ avis_visibility_id: AvisVisibilityIds.Administrations }, user, shouldNotBeCalled, shouldNotBeCalled, shouldNotBeCalled, 'mfr', {
           public_lecture: true,
           entreprises_lecture: false,
           titre_public_lecture: true,
@@ -67,7 +68,7 @@ describe('canReadAvis', () => {
         })
       ).toBe(false)
       expect(
-        await canReadAvis({ avis_visibility_id: 'TitulairesEtAdministrations' }, user, shouldNotBeCalled, shouldNotBeCalled, () => Promise.resolve(user.entreprises.map(({ id }) => id)), 'mfr', {
+        await canReadAvis({ avis_visibility_id: AvisVisibilityIds.TitulairesEtAdministrations }, user, shouldNotBeCalled, shouldNotBeCalled, () => Promise.resolve(user.entreprises.map(({ id }) => id)), 'mfr', {
           public_lecture: true,
           entreprises_lecture: false,
           titre_public_lecture: true,
@@ -75,7 +76,7 @@ describe('canReadAvis', () => {
         })
       ).toBe(true)
       expect(
-        await canReadAvis({ avis_visibility_id: 'TitulairesEtAdministrations' }, user, shouldNotBeCalled, shouldNotBeCalled, () => Promise.resolve([]), 'mfr', {
+        await canReadAvis({ avis_visibility_id: AvisVisibilityIds.TitulairesEtAdministrations }, user, shouldNotBeCalled, shouldNotBeCalled, () => Promise.resolve([]), 'mfr', {
           public_lecture: true,
           entreprises_lecture: false,
           titre_public_lecture: true,
@@ -87,7 +88,7 @@ describe('canReadAvis', () => {
 
   test('en tant non connecté, je peux lire seulement les documents public', async () => {
     expect(
-      await canReadAvis({ avis_visibility_id: 'Public' }, { ...testBlankUser, role: 'defaut' }, shouldNotBeCalled, shouldNotBeCalled, shouldNotBeCalled, 'mfr', {
+      await canReadAvis({ avis_visibility_id: AvisVisibilityIds.Public }, { ...testBlankUser, role: 'defaut' }, shouldNotBeCalled, shouldNotBeCalled, shouldNotBeCalled, 'mfr', {
         public_lecture: true,
         entreprises_lecture: false,
         titre_public_lecture: true,
@@ -95,7 +96,7 @@ describe('canReadAvis', () => {
       })
     ).toBe(true)
     expect(
-      await canReadAvis({ avis_visibility_id: 'Administrations' }, { ...testBlankUser, role: 'defaut' }, shouldNotBeCalled, shouldNotBeCalled, shouldNotBeCalled, 'mfr', {
+      await canReadAvis({ avis_visibility_id: AvisVisibilityIds.Administrations }, { ...testBlankUser, role: 'defaut' }, shouldNotBeCalled, shouldNotBeCalled, shouldNotBeCalled, 'mfr', {
         public_lecture: true,
         entreprises_lecture: false,
         titre_public_lecture: true,
