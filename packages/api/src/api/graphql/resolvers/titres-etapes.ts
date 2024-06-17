@@ -314,10 +314,8 @@ export const etapeModifier = async ({ etape: etapeNotParsed }: { etape: unknown 
     }
 
     const etapeDocuments = etapeDocumentsParsed.data
-    // delete etape.etapeDocuments
 
-    // FIXME
-    const etapeAvis: EtapeAvis[] = []
+    const etapeAvis: Pick<EtapeAvis, 'avis_type_id'>[] = etape.etapeAvis
 
     const needToCreateAslAndDae = needAslAndDae({ etapeTypeId: etape.typeId, demarcheTypeId: titreDemarche.typeId, titreTypeId: titreDemarche.titre.typeId }, titreEtapeOld.isBrouillon, user)
     let daeDocument = null

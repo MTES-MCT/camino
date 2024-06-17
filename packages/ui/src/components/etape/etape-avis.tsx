@@ -23,7 +23,6 @@ export const getAvisVisibilityLabel = (avisVisibility: AvisVisibilityId): string
   return value[avisVisibility]
 }
 
-// FIXME storybook
 export const EtapeAvisTable: FunctionalComponent<Props> = props => {
   if (isNullOrUndefinedOrEmpty(props.etapeAvis)) {
     return null

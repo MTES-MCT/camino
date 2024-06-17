@@ -7,6 +7,7 @@ import { tempDocumentNameValidator } from 'camino-common/src/document'
 import { caminoDateValidator } from 'camino-common/src/date'
 import { AvisVisibilityIds } from 'camino-common/src/static/avisTypes'
 import { testBlankUser } from 'camino-common/src/tests-utils'
+import { communeIdValidator } from 'camino-common/src/static/communes'
 
 const meta: Meta = {
   title: 'Components/Etape/EtapeAvisEdit',
@@ -65,12 +66,37 @@ export const Empty: StoryFn = () => (
     user={{ ...testBlankUser, role: 'super' }}
   />
 )
-// FIXME tester le cas des avis supplémentaires en fonction des communes
 export const Rempli: StoryFn = () => (
   <EtapeAvisEdit
     apiClient={apiClient}
     etapeId={etapeIdValidator.parse('etapeId')}
     communeIds={[]}
+    tde={{ titreTypeId: 'axm', demarcheTypeId: 'oct', etapeTypeId: 'asc' }}
+    onChange={completeUpdateAction}
+    user={{ ...testBlankUser, role: 'super' }}
+  />
+)
+export const AvisEnGuyane: StoryFn = () => (
+  <EtapeAvisEdit
+    apiClient={{
+      ...apiClient,
+      getEtapeAvisByEtapeId: async () => {
+        return Promise.resolve([
+          ...avis,
+          {
+            id: etapeAvisIdValidator.parse('id-guyane'),
+            avis_type_id: 'avisDirectionAlimentationAgricultureForet',
+            description: 'Visible que en Guyane',
+            date: caminoDateValidator.parse('2023-02-01'),
+            avis_statut_id: 'Non renseigné',
+            has_file: false,
+            avis_visibility_id: AvisVisibilityIds.Public,
+          },
+        ])
+      },
+    }}
+    etapeId={etapeIdValidator.parse('etapeId')}
+    communeIds={[communeIdValidator.parse('97302')]}
     tde={{ titreTypeId: 'axm', demarcheTypeId: 'oct', etapeTypeId: 'asc' }}
     onChange={completeUpdateAction}
     user={{ ...testBlankUser, role: 'super' }}
