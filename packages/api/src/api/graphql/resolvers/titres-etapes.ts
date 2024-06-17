@@ -39,8 +39,6 @@ import { GetGeojsonInformation, convertPoints, getGeojsonInformation } from '../
 import { SDOMZoneId } from 'camino-common/src/static/sdom.js'
 import { SecteursMaritimes, getSecteurMaritime } from 'camino-common/src/static/facades.js'
 import { FeatureCollectionPoints, FeatureMultiPolygon } from 'camino-common/src/perimetre.js'
-import { FieldsEtape } from '../../../database/queries/_options'
-import { canHaveForages } from 'camino-common/src/permissions/titres.js'
 import { GEO_SYSTEME_IDS } from 'camino-common/src/static/geoSystemes.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { getEtapeByDemarcheIdAndEtapeTypeId } from '../../rest/etapes.queries.js'
@@ -50,65 +48,7 @@ import { FlattenEtape, GraphqlEtape, GraphqlEtapeCreation, graphqlEtapeModificat
 import { KM2 } from 'camino-common/src/number.js'
 import { getSections } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
 import { ETAPE_HERITAGE_PROPS } from 'camino-common/src/heritage.js'
-
-// FIXME à supprimer, n'est plus utilisé ?
-export const etape = async ({ id }: { id: EtapeId }, { user }: Context, info: GraphQLResolveInfo) => {
-  try {
-    const fields: FieldsEtape = fieldsBuild(info)
-
-    if (isNullOrUndefined(fields.demarche)) {
-      fields.demarche = { titre: { pointsEtape: { id: {} } } }
-    }
-    if (isNullOrUndefined(fields.demarche.titre)) {
-      fields.demarche.titre = { pointsEtape: { id: {} } }
-    }
-    if (isNullOrUndefined(fields.demarche.titre.pointsEtape)) {
-      fields.demarche.titre.pointsEtape = { id: {} }
-    }
-
-    const titreEtape = await titreEtapeGet(id, { fields, fetchHeritage: true }, user)
-
-    if (isNullOrUndefined(titreEtape)) {
-      throw new Error("l'étape n'existe pas")
-    }
-    if (
-      isNullOrUndefined(titreEtape.titulaireIds) ||
-      !titreEtape.demarche ||
-      !titreEtape.demarche.titre ||
-      titreEtape.demarche.titre.administrationsLocales === undefined ||
-      !titreEtape.demarche.titre.titreStatutId
-    ) {
-      throw new Error('la démarche n’est pas chargée complètement')
-    }
-
-    // Cette route est utilisée que par l’ancienne interface qui permet d’éditer une étape. Graphql permet de récupérer trop de champs si on ne fait pas ça.
-    if (
-      !canEditEtape(user, titreEtape.typeId, titreEtape.isBrouillon, titreEtape.titulaireIds ?? [], titreEtape.demarche.titre.administrationsLocales ?? [], titreEtape.demarche.typeId, {
-        typeId: titreEtape.demarche.titre.typeId,
-        titreStatutId: titreEtape.demarche.titre.titreStatutId,
-      })
-    )
-      throw new Error('droits insuffisants')
-
-    const titreDemarche = await titreDemarcheGet(
-      titreEtape.titreDemarcheId,
-      {
-        fields: {
-          id: {},
-        },
-      },
-      user
-    )
-
-    if (!titreDemarche) throw new Error("la démarche n'existe pas")
-
-    return titreEtapeFormat(titreEtape)
-  } catch (e) {
-    console.error(e)
-
-    throw e
-  }
-}
+import { canHaveForages } from 'camino-common/src/permissions/titres.js'
 
 export const etapeHeritage = async ({ date, titreDemarcheId, typeId, etapeId }: { date: CaminoDate; titreDemarcheId: DemarcheId; typeId: EtapeTypeId; etapeId: EtapeId | null }, { user }: Context) => {
   try {

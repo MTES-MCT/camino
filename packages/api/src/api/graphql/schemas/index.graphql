@@ -75,9 +75,6 @@ type Query {
     travaux: Boolean
   ): Demarches
 
-  "Étape d’une démarche en fonction de son id"
-  etape(id: ID!): Etape
-
   etapeHeritage(date: String!, titreDemarcheId: ID!, typeId: ID!, etapeId: ID): EtapeHeritage
 
   "Liste des activités"
