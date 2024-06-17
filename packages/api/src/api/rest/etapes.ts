@@ -359,7 +359,7 @@ const validateAndGetEntrepriseDocuments = async (pool: Pool, etape: FlattenEtape
   return entrepriseDocuments
 }
 
-export const arePointsOnPerimeter = (perimetre: FeatureMultiPolygon, points: FeatureCollectionPoints): boolean => {
+const arePointsOnPerimeter = (perimetre: FeatureMultiPolygon, points: FeatureCollectionPoints): boolean => {
   const coordinatesSet = new Set()
 
   perimetre.geometry.coordinates.forEach(geometry => geometry.forEach(sub => sub.forEach(coordinate => coordinatesSet.add(`${coordinate[0]}-${coordinate[1]}`))))

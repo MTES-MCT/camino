@@ -7,7 +7,7 @@ import { titreEtapeFormatFields } from './_fields.js'
 import { titreDemarcheFormat } from './titres-demarches.js'
 import { EtapesTypes } from 'camino-common/src/static/etapesTypes.js'
 
-export const getPerimetreFromITitreEtape = (
+const getPerimetreFromITitreEtape = (
   titreEtape: Pick<
     ITitreEtape,
     'geojson4326Perimetre' | 'geojson4326Points' | 'geojsonOriginePerimetre' | 'geojsonOriginePoints' | 'geojson4326Forages' | 'geojsonOrigineForages' | 'geojsonOrigineGeoSystemeId' | 'surface'

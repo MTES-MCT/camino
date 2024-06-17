@@ -1,25 +1,8 @@
-import { Section } from '../static/titresTypes_demarchesTypes_etapesTypes/sections.js'
 import { ElementWithValue } from '../sections.js'
 import { DeepReadonly, isNullOrUndefined } from '../typescript-tools.js'
 
 // @deprecated ==> type better
 export type Contenu = { [key in string]?: { [secondKey in string]?: unknown } } | null
-
-// @deprecated => sectionsWithValueCompleteValidate
-export const contenuCompleteValidate = (sections: DeepReadonly<Section[]>, contenu: Contenu): string[] => {
-  const errors: string[] = []
-  sections.forEach(s =>
-    s.elements?.forEach(e => {
-      if (isNullOrUndefined(e.optionnel) && !['radio', 'checkbox'].includes(e.type)) {
-        if (!contenu || !contenu[s.id] || contenu[s.id]?.[e.id] === undefined || contenu[s.id]?.[e.id] === null || contenu[s.id]?.[e.id] === '') {
-          errors.push(`l’élément "${e.nom}" de la section "${s.nom}" est obligatoire`)
-        }
-      }
-    })
-  )
-
-  return errors
-}
 
 export const sectionsWithValueCompleteValidate = (sections_with_value: DeepReadonly<{ nom?: string; elements: Pick<ElementWithValue, 'nom' | 'optionnel' | 'value' | 'type'>[] }[]>): string[] => {
   const errors: string[] = []

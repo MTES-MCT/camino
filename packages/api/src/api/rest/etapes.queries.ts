@@ -147,7 +147,7 @@ where
     te.id = $ etapeId !
 `
 
-export const administrationsLocalesByEtapeId = async (etapeId: EtapeId, pool: Pool): Promise<AdministrationId[]> => {
+const administrationsLocalesByEtapeId = async (etapeId: EtapeId, pool: Pool): Promise<AdministrationId[]> => {
   const admins = await dbQueryAndValidate(getAdministrationsLocalesByEtapeId, { etapeId }, pool, administrationsLocalesValidator)
   if (admins.length > 1) {
     throw new Error(`Trop d'administrations locales trouvées pour l'etape ${etapeId}`)
@@ -172,7 +172,7 @@ where
     te.id = $ etapeId !
 `
 
-export const entreprisesTitulairesOuAmoditairesByEtapeId = async (etapeId: EtapeId, pool: Pool): Promise<EntrepriseId[]> => {
+const entreprisesTitulairesOuAmoditairesByEtapeId = async (etapeId: EtapeId, pool: Pool): Promise<EntrepriseId[]> => {
   const entreprises = await dbQueryAndValidate(getTitulairesAmodiatairesTitreEtape, { etapeId }, pool, entrepriseIdObjectValidator)
 
   return entreprises.map(({ id }) => id)

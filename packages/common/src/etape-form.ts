@@ -21,8 +21,7 @@ import { substanceLegaleIdValidator } from './static/substancesLegales.js'
 import { titreTypeIdValidator } from './static/titresTypes.js'
 import { titreIdValidator, titreSlugValidator } from './validators/titres.js'
 import { makeFlattenValidator, nullToDefault } from './zod-tools.js'
-import { numberElementValueValidator, simpleContenuToFlattenedContenu } from './sections.js'
-import { DeepReadonly, isNotNullNorUndefined } from './typescript-tools.js'
+import { numberElementValueValidator } from './sections.js'
 
 const contenuValidator = z
   .record(z.string(), z.record(z.string(), z.union([caminoDateValidator, z.string(), z.number(), z.boolean(), z.array(z.string())]).nullable()))
@@ -79,12 +78,8 @@ export const heritageContenuValidator = z
   .transform(nullToDefault({}))
 
 export type HeritageContenu = z.infer<typeof heritageContenuValidator>
-export const heritageValidator = z.object({
-  heritageProps: heritagePropsValidator,
-  heritageContenu: heritageContenuValidator,
-})
 
-export const graphqlEtapeValidator = z.object({
+const graphqlEtapeValidator = z.object({
   id: etapeIdValidator,
   slug: etapeSlugValidator,
   titreDemarcheId: demarcheIdValidator,
@@ -137,7 +132,7 @@ const perimetreObjectValidator = z.object({
 
 const flattenedContenuElementValidator = makeFlattenValidator(z.union([caminoDateValidator, z.string(), numberElementValueValidator, z.boolean(), z.array(z.string())]).nullable())
 export type FlattenedContenuElement = z.infer<typeof flattenedContenuElementValidator>
-export const flattenedContenuValidator = z.record(z.string(), z.record(z.string(), flattenedContenuElementValidator))
+const flattenedContenuValidator = z.record(z.string(), z.record(z.string(), flattenedContenuElementValidator))
 export type FlattenedContenu = z.infer<typeof flattenedContenuValidator>
 
 export const flattenEtapeValidator = graphqlEtapeValidator
@@ -216,7 +211,7 @@ export const graphqlEtapeCreationValidator = graphqlEtapeValidator
     heritageContenu: z.record(z.string(), z.record(z.string(), z.object({ actif: z.boolean() }))),
     etapeDocuments: z.array(etapeDocumentModificationValidator),
     entrepriseDocumentIds: z.array(entrepriseDocumentIdValidator),
-    etapeAvis: z.array(etapeAvisModificationValidator)
+    etapeAvis: z.array(etapeAvisModificationValidator),
   })
 
 export type GraphqlEtapeCreation = z.infer<typeof graphqlEtapeCreationValidator>
@@ -227,111 +222,3 @@ export const graphqlEtapeModificationValidator = graphqlEtapeCreationValidator.e
   aslDocument: documentComplementaireAslEtapeDocumentModificationValidator.nullable(),
 })
 export type GraphqlEtapeModification = z.infer<typeof graphqlEtapeModificationValidator>
-
-export const graphqlEtapeToFlattenEtape = (graphqlEtape: GraphqlEtape): DeepReadonly<FlattenEtape> => {
-  const contenu = simpleContenuToFlattenedContenu(graphqlEtape.demarche.titre.typeId, graphqlEtape.demarche.typeId, graphqlEtape.typeId, graphqlEtape.contenu, graphqlEtape.heritageContenu)
-  const flattenEtape: FlattenEtape = {
-    ...graphqlEtape,
-    duree: {
-      value: graphqlEtape.heritageProps.duree.actif ? graphqlEtape.heritageProps.duree.etape?.duree ?? null : graphqlEtape.duree,
-      heritee: graphqlEtape.heritageProps.duree.actif,
-      etapeHeritee: isNotNullNorUndefined(graphqlEtape.heritageProps.duree.etape)
-        ? {
-            etapeTypeId: graphqlEtape.heritageProps.duree.etape.typeId,
-            date: graphqlEtape.heritageProps.duree.etape.date,
-            value: graphqlEtape.heritageProps.duree.etape.duree,
-          }
-        : null,
-    },
-    perimetre: {
-      value: graphqlEtape.heritageProps.perimetre.actif
-        ? isNotNullNorUndefined(graphqlEtape.heritageProps.perimetre.etape)
-          ? { ...graphqlEtape.heritageProps.perimetre.etape }
-          : null
-        : { ...graphqlEtape },
-
-      heritee: graphqlEtape.heritageProps.perimetre.actif,
-      etapeHeritee: isNotNullNorUndefined(graphqlEtape.heritageProps.perimetre.etape)
-        ? {
-            etapeTypeId: graphqlEtape.heritageProps.perimetre.etape.typeId,
-            date: graphqlEtape.heritageProps.perimetre.etape.date,
-            value: { ...graphqlEtape.heritageProps.perimetre.etape },
-          }
-        : null,
-    },
-    dateDebut: {
-      value: graphqlEtape.heritageProps.dateDebut.actif ? graphqlEtape.heritageProps.dateDebut.etape?.dateDebut ?? null : graphqlEtape.dateDebut,
-      heritee: graphqlEtape.heritageProps.dateDebut.actif,
-      etapeHeritee: isNotNullNorUndefined(graphqlEtape.heritageProps.dateDebut.etape)
-        ? {
-            etapeTypeId: graphqlEtape.heritageProps.dateDebut.etape.typeId,
-            date: graphqlEtape.heritageProps.dateDebut.etape.date,
-            value: graphqlEtape.heritageProps.dateDebut.etape.dateDebut,
-          }
-        : null,
-    },
-    dateFin: {
-      value: graphqlEtape.heritageProps.dateFin.actif ? graphqlEtape.heritageProps.dateFin.etape?.dateFin ?? null : graphqlEtape.dateFin,
-      heritee: graphqlEtape.heritageProps.dateFin.actif,
-      etapeHeritee: isNotNullNorUndefined(graphqlEtape.heritageProps.dateFin.etape)
-        ? {
-            etapeTypeId: graphqlEtape.heritageProps.dateFin.etape.typeId,
-            date: graphqlEtape.heritageProps.dateFin.etape.date,
-            value: graphqlEtape.heritageProps.dateFin.etape.dateFin,
-          }
-        : null,
-    },
-    substances: {
-      value: graphqlEtape.heritageProps.substances.actif
-        ? isNotNullNorUndefined(graphqlEtape.heritageProps.substances.etape)
-          ? graphqlEtape.heritageProps.substances.etape.substances
-          : []
-        : graphqlEtape.substances,
-
-      heritee: graphqlEtape.heritageProps.substances.actif,
-      etapeHeritee: isNotNullNorUndefined(graphqlEtape.heritageProps.substances.etape)
-        ? {
-            etapeTypeId: graphqlEtape.heritageProps.substances.etape.typeId,
-            date: graphqlEtape.heritageProps.substances.etape.date,
-            value: graphqlEtape.heritageProps.substances.etape.substances,
-          }
-        : null,
-    },
-    amodiataires: {
-      value: graphqlEtape.heritageProps.amodiataires.actif
-        ? isNotNullNorUndefined(graphqlEtape.heritageProps.amodiataires.etape)
-          ? graphqlEtape.heritageProps.amodiataires.etape.amodiataireIds
-          : []
-        : graphqlEtape.amodiataireIds,
-
-      heritee: graphqlEtape.heritageProps.amodiataires.actif,
-      etapeHeritee: isNotNullNorUndefined(graphqlEtape.heritageProps.amodiataires.etape)
-        ? {
-            etapeTypeId: graphqlEtape.heritageProps.amodiataires.etape.typeId,
-            date: graphqlEtape.heritageProps.amodiataires.etape.date,
-            value: graphqlEtape.heritageProps.amodiataires.etape.amodiataireIds,
-          }
-        : null,
-    },
-    titulaires: {
-      value: graphqlEtape.heritageProps.titulaires.actif
-        ? isNotNullNorUndefined(graphqlEtape.heritageProps.titulaires.etape)
-          ? graphqlEtape.heritageProps.titulaires.etape.titulaireIds
-          : []
-        : graphqlEtape.titulaireIds,
-
-      heritee: graphqlEtape.heritageProps.titulaires.actif,
-      etapeHeritee: isNotNullNorUndefined(graphqlEtape.heritageProps.titulaires.etape)
-        ? {
-            etapeTypeId: graphqlEtape.heritageProps.titulaires.etape.typeId,
-            date: graphqlEtape.heritageProps.titulaires.etape.date,
-            value: graphqlEtape.heritageProps.titulaires.etape.titulaireIds,
-          }
-        : null,
-    },
-    contenu,
-  }
-
-  // On flatten ici pour enlever les champs supplémentaires qu'il y'a par exemple dans perimetre
-  return flattenEtapeValidator.parse(flattenEtape)
-}
