@@ -164,6 +164,8 @@ export const DemarcheEtape = defineComponent<Props>(props => {
     return null
   })
 
+  // FIXME à discuter tous les 3, mais si un jour on ajoute une nouvelle étape fondamentale brouillonable, tout ce code ne sera plus correct
+  // est-ce qu'on pourrait pas utiliser le méthode getMostRecentValuePropFromEtapeFondamentaleValide
   const isDeposable = computed<boolean>(() =>
     fondamentalePropsName in props.etape
       ? canDeposeEtape(

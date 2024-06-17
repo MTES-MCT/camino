@@ -261,13 +261,6 @@ const multiPolygonWith4Points: FeatureMultiPolygon = {
   },
 }
 
-// FIXME: PAS SÛR DE MON COUP
-// typeId: 'mfr',
-// substances: ['auru'],
-// geojson4326Perimetre: multiPolygonWith4Points,
-// duree: 4,
-// statutId: 'fai'
-
 const etapeComplete: IsEtapeCompleteEtape = {
   contenu: {},
   date: caminoDateValidator.parse('2023-02-01'),

@@ -12,7 +12,16 @@ import { TitreStatutId } from '../static/titresStatuts.js'
 import { EntrepriseDocument, EntrepriseId } from '../entreprise.js'
 import { SDOMZoneId } from '../static/sdom.js'
 import { DeepReadonly, NonEmptyArray, isNonEmptyArray } from '../typescript-tools.js'
-import { EtapeAvis, EtapeDocument, GetEtapeDocumentsByEtapeId, GetEtapeDocumentsByEtapeIdAslDocument, GetEtapeDocumentsByEtapeIdDaeDocument, TempEtapeAvis, TempEtapeDocument } from '../etape.js'
+import {
+  ETAPE_IS_BROUILLON,
+  EtapeAvis,
+  EtapeDocument,
+  GetEtapeDocumentsByEtapeId,
+  GetEtapeDocumentsByEtapeIdAslDocument,
+  GetEtapeDocumentsByEtapeIdDaeDocument,
+  TempEtapeAvis,
+  TempEtapeDocument,
+} from '../etape.js'
 import {
   dateTypeStepIsComplete,
   entrepriseDocumentsStepIsComplete,
@@ -297,9 +306,7 @@ export const isEtapeDeposable = (
   aslDocument: IsEtapeCompleteAslDocument,
   etapeAvis: IsEtapeDeposableEtapeAvis
 ): boolean => {
-  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-  if (titreEtape.typeId === ETAPES_TYPES.demande && titreEtape.isBrouillon) {
-    // FIXME On ne peut pas se baser sur le defaultHeritageProps car on ne sait pas quelles étapes seront déposable à l’avenir, il faut doncl’ajouter en param.
+  if (titreEtape.typeId === ETAPES_TYPES.demande && titreEtape.isBrouillon === ETAPE_IS_BROUILLON) {
     const complete = isEtapeComplete(titreEtape, titreTypeId, demarcheTypeId, etapeDocuments, entrepriseDocuments, sdomZones, communes, daeDocument, aslDocument, etapeAvis, user)
     if (!complete.valid) {
       console.warn(complete.errors)

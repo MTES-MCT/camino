@@ -5,11 +5,53 @@ import { EtapeDocumentId, EtapeId } from 'camino-common/src/etape.js'
 import { AvisStatutId, AvisTypeId, AvisVisibilityId, AvisVisibilityIds } from 'camino-common/src/static/avisTypes.js'
 import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts.js'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
-import { isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
+import { DeepReadonly, isNotNullNorUndefinedNorEmpty, isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
 import { Knex } from 'knex'
 import { LargeObjectId } from '../../database/largeobjects.js'
 import { newEtapeAvisId } from '../../database/models/_format/id-create.js'
 import { CaminoDate } from 'camino-common/src/date.js'
+import { Section, getSectionsWithValue } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
+import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
+import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes.js'
+import { valeurFind } from 'camino-common/src/sections.js'
+import { Contenu } from 'camino-common/src/permissions/sections.js'
+
+const oldSections = {
+  eof: [
+    {
+      id: 'onf',
+      nom: 'Office National des Forêts',
+      elements: [
+        { id: 'motifs', nom: 'Motifs', type: 'textarea', optionnel: true, description: "Élément d'expertise" },
+        { id: 'expert', nom: 'Expert', type: 'text', optionnel: true, description: "Agent ONF qui a réalisé l'expertise" },
+        { id: 'agent', nom: 'Agent', type: 'text', optionnel: true, description: 'Chargé de mission foncier du Service Aménagement du Territoire' },
+        {
+          id: 'dateDebut',
+          nom: 'Date de début',
+          type: 'date',
+          optionnel: true,
+          description: 'Date de début de l’expertise',
+        },
+      ],
+    },
+  ],
+  aof: [
+    {
+      id: 'onf',
+      nom: 'Office National des Forêts',
+      elements: [
+        { id: 'motifs', nom: 'Motifs', type: 'textarea', optionnel: true, description: "Élément d'expertise" },
+        {
+          id: 'signataire',
+          nom: 'Signataire',
+          type: 'text',
+          optionnel: true,
+          description: 'Directeur ONF ou responsable du service Service Aménagement du Territoire qui apparaitra sur les documents externe pour signature',
+        },
+      ],
+    },
+  ],
+} as const
 
 const ETAPE_TYPE_ID_TO_AVIS_TYPE_ID: { [key in string]?: AvisTypeId } = {
   ssr: 'lettreDeSaisineDesServices',
@@ -64,14 +106,13 @@ const ETAPE_STATUT_ID_TO_AVIS_STATUT_ID: { [key in EtapeStatutId]?: AvisStatutId
   fai: 'Favorable',
   dre: 'Défavorable',
 } as const
-type EtapeFromDb = { id: EtapeId; date: CaminoDate; titre_demarche_id: DemarcheId; type_id: EtapeTypeId; statut_id: EtapeStatutId }
+type EtapeFromDb = { id: EtapeId; date: CaminoDate; titre_demarche_id: DemarcheId; type_id: EtapeTypeId | 'eof' | 'aof'; statut_id: EtapeStatutId; contenu: Contenu }
 type DocumentFromDb = { id: EtapeDocumentId; largeobject_id: LargeObjectId; description: string; public_lecture: boolean; entreprises_lecture: boolean }
 export const up = async (knex: Knex) => {
   await knex.raw(`DELETE FROM etapes_documents where etape_id in (select id FROM titres_etapes where archive is true and type_id in (${etapeTypesToDelete.map(_ => '?').join(',')}))`, [
     ...etapeTypesToDelete,
   ])
   await knex.raw(`DELETE FROM titres_etapes where archive is true and type_id in (${etapeTypesToDelete.map(_ => '?').join(',')})`, [...etapeTypesToDelete])
-  // FIXME ajouter les sections d'aof et les mettre dans description
   await knex.raw(
     'CREATE TABLE etape_avis (id character varying(255) NOT NULL, avis_type_id character varying(255) NOT NULL, avis_statut_id character varying(255) NOT NULL, avis_visibility_id character varying(255) NOT NULL, etape_id character varying(255) NOT NULL, description character varying(1024) NOT NULL, date character varying(10) NOT NULL, largeobject_id oid)'
   )
@@ -110,13 +151,39 @@ export const up = async (knex: Knex) => {
       if (isNullOrUndefined(avisTypeId) || isNullOrUndefined(avisStatutId)) {
         console.error('une étape type id ou statut non prise en compte', etape)
       } else {
-        for (const document of documents.rows) {
+        const titreTypeIdDemarcheTypeId: { rows: [{ titre_type_id: TitreTypeId; demarche_type_id: DemarcheTypeId }] } = await knex.raw(
+          `
+          SELECT t.type_id as titre_type_id, d.type_id as demarche_type_id from titres_demarches d join titres t on t.id = d.titre_id where d.id= :id`,
+          { id: etape.titre_demarche_id }
+        )
+        let sections: DeepReadonly<Section[]> = []
+        if (titreTypeIdDemarcheTypeId.rows[0].titre_type_id === 'arm' && titreTypeIdDemarcheTypeId.rows[0].demarche_type_id === 'oct' && (etape.type_id === 'eof' || etape.type_id === 'aof')) {
+          sections = oldSections[etape.type_id]
+        }
+        let descriptionSections: string = ''
+
+        if (isNotNullNorUndefinedNorEmpty(sections)) {
+          const sectionsWithValue = getSectionsWithValue(sections, etape.contenu)
+          for (const section of sectionsWithValue) {
+            for (const element of section.elements) {
+              descriptionSections += `\n - ${element.nom} : ${valeurFind(element)}`
+            }
+          }
+        }
+
+        for (let i = 0; i < documents.rows.length; i++) {
+          const document = documents.rows[i]
+
+          let description: string = document.description ?? ''
+          if (i === 0) {
+            description = `${description}\n${descriptionSections}`
+          }
           const row = {
             id: document.id,
             avis_type_id: avisTypeId,
             etape_id: etapePivotId,
 
-            description: document.description,
+            description,
             avis_statut_id: avisStatutId,
             date: etape.date,
             largeobject_id: document.largeobject_id,
@@ -133,7 +200,7 @@ export const up = async (knex: Knex) => {
             id: newEtapeAvisId(etape.date, avisTypeId),
             avis_type_id: avisTypeId,
             etape_id: etapePivotId,
-            description: '',
+            description: descriptionSections,
             avis_statut_id: avisStatutId,
             date: etape.date,
             largeobject_id: null,
