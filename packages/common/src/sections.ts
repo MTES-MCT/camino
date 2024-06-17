@@ -99,7 +99,6 @@ export const valeurFind = (element: ElementWithValue): string | '–' => {
   return element.value
 }
 
-// FIXME add tests
 export const simpleContenuToFlattenedContenu = (
   titreTypeId: TitreTypeId,
   demarcheTypeId: DemarcheTypeId,

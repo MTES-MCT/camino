@@ -26,6 +26,8 @@ import { FeatureMultiPolygon } from '../perimetre.js'
 import { caminoDateValidator, toCaminoDate } from '../date.js'
 import { ETAPE_IS_BROUILLON, ETAPE_IS_NOT_BROUILLON } from '../etape.js'
 import { EntrepriseUserNotNull } from '../roles.js'
+import { communeIdValidator } from '../static/communes.js'
+import { SDOMZoneIds } from '../static/sdom.js'
 
 test.each<{ etapeTypeId: EtapeTypeId; demarcheTypeId: DemarcheTypeId; titreTypeId: TitreTypeId; optional: boolean }>([
   { etapeTypeId: 'mfr', demarcheTypeId: 'oct', titreTypeId: 'arm', optional: false },
@@ -318,7 +320,31 @@ const axmEntrepriseDocuments: IsEtapeCompleteEntrepriseDocuments = [
   { entreprise_document_type_id: 'jct', entreprise_id: entrepriseIdValidator.parse('entrepriseId1') },
 ]
 
-// FIXME ajouter un test isEtapeComplete avec des communes de Guyane
+test('teste la complétude d’une demande d’AXM faite par un utilisateur entreprises en Guyane en Zone1 du SDOM', () => {
+  expect(
+    isEtapeComplete(
+      { ...etapeComplete, isBrouillon: ETAPE_IS_BROUILLON },
+      'axm',
+      'oct',
+      axmDocuments,
+      axmEntrepriseDocuments,
+      [SDOMZoneIds.Zone1],
+      [communeIdValidator.parse('97302')],
+      { arrete_prefectoral: '', date: toCaminoDate('2024-01-01'), description: null, entreprises_lecture: true, etape_document_type_id: 'arp', etape_statut_id: 'fai', public_lecture: true },
+      { date: toCaminoDate('2024-04-22'), description: null, entreprises_lecture: true, etape_document_type_id: 'let', etape_statut_id: 'fai', public_lecture: true },
+      [],
+      { ...testBlankUser, role: 'entreprise', entreprises: [{ id: entrepriseIdValidator.parse('id1'), nom: 'nomEntreprise' }] }
+    )
+  ).toMatchInlineSnapshot(`
+    {
+      "errors": [
+        "le document "Notice d’impact" (nip) est obligatoire",
+      ],
+      "valid": false,
+    }
+  `)
+})
+
 test('teste la complétude d’une demande d’AXM faite par un utilisateur entreprises', () => {
   expect(
     isEtapeComplete(

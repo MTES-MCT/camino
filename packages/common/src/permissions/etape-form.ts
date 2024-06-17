@@ -171,7 +171,6 @@ export const getDocumentsTypes = (
   return dts
 }
 
-// FIXME unit tests
 export const getAvisTypes = (etapeTypeId: EtapeTypeId, titreTypeId: TitreTypeId, communeIds: DeepReadonly<CommuneId[]>): { id: AvisTypeId; optionnel: boolean }[] => {
   const avis = []
   if (etapeTypeId === ETAPES_TYPES.avisDesServicesEtCommissionsConsultatives) {
@@ -272,7 +271,6 @@ export const etapeDocumentsStepIsEnregistrable = (
   return etapeDocumentsStepIsComplete(etape, demarcheTypeId, titreTypeId, etapeDocuments, sdomZoneIds, daeDocument, aslDocument, user).valid
 }
 
-// FIXME test
 export const etapeAvisStepIsVisible = (etape: Pick<FlattenEtape, 'typeId'>, titreTypeId: TitreTypeId, communeIds: DeepReadonly<CommuneId[]>): boolean => {
   return getAvisTypes(etape.typeId, titreTypeId, communeIds).length > 0
 }
