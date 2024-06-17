@@ -472,7 +472,6 @@ const getFlattenEtape = async (
     return accSections
   }, {})
 
-  // FIXME on peut mieux faire pour l'id et le slug ?
   return {
     flattenEtape: iTitreEtapeToFlattenEtape({
       ...etape,
@@ -481,6 +480,7 @@ const getFlattenEtape = async (
       isBrouillon,
       heritageProps,
       heritageContenu,
+      // On ne voit pas comment mieux faire
       id: etapeIdValidator.parse('newId'),
       slug: etapeSlugValidator.parse('unknown'),
     }),
@@ -704,6 +704,14 @@ export const deposeEtape = (pool: Pool) => async (req: CaminoRequest, res: Custo
         etape_is_brouillon: titreEtape.isBrouillon,
       })
 
+      // On utilise le userSuper pour charger tous les avis, car celui qui dépose ne peut peut-être pas voir tous les avis
+      const etapeAvis = await getEtapeAvisLargeObjectIdsByEtapeId(id, pool, userSuper, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires, titreEtape.typeId, {
+        demarche_type_id: titreDemarche.typeId,
+        entreprises_lecture: titreDemarche.entreprisesLecture ?? false,
+        public_lecture: titreDemarche.publicLecture ?? false,
+        titre_public_lecture: titre.publicLecture ?? false,
+      })
+
       // TODO 2023-06-14 TS 5.1 n’arrive pas réduire le type de titre
       const flattenEtape = iTitreEtapeToFlattenEtape(titreEtape)
       const deposable = canDeposeEtape(
@@ -717,13 +725,11 @@ export const deposeEtape = (pool: Pool) => async (req: CaminoRequest, res: Custo
         communes,
         daeDocument,
         aslDocument,
-        // FIXME etapeAvis
-        []
+        etapeAvis
       )
       if (!deposable) throw new Error('droits insuffisants')
 
-      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-      if (!canBeBrouillon(titreEtape.typeId)) {
+      if (canBeBrouillon(titreEtape.typeId) === ETAPE_IS_NOT_BROUILLON) {
         throw new Error('cette étape ne peut-être déposée')
       }
 

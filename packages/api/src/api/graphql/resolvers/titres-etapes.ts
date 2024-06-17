@@ -196,7 +196,6 @@ const getFlattenEtape = async (
     return accSections
   }, {})
 
-  // FIXME on peut mieux faire pour l'id et le slug ?
   return {
     flattenEtape: iTitreEtapeToFlattenEtape({
       ...etape,
@@ -205,6 +204,7 @@ const getFlattenEtape = async (
       isBrouillon,
       heritageProps,
       heritageContenu,
+      // On ne voit pas comment mieux faire à cause du ITitreEtape
       id: etapeIdValidator.parse('newId'),
       slug: etapeSlugValidator.parse('unknown'),
     }),

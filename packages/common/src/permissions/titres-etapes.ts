@@ -283,7 +283,7 @@ export const isEtapeComplete = (
   return { valid: true }
 }
 
-export type IsEtapeDeposableEtapeAvis = DeepReadonly<(EtapeAvis | TempEtapeAvis)[]>
+export type IsEtapeDeposableEtapeAvis = DeepReadonly<Pick<EtapeAvis | TempEtapeAvis, 'avis_type_id'>[]>
 export const isEtapeDeposable = (
   user: User,
   titreTypeId: TitreTypeId,
@@ -329,7 +329,7 @@ export const canDeposeEtape = (
   communes: CommuneId[],
   daeDocument: GetEtapeDocumentsByEtapeId['dae'],
   aslDocument: GetEtapeDocumentsByEtapeId['asl'],
-  etapeAvis: (EtapeAvis | TempEtapeAvis)[]
+  etapeAvis: IsEtapeDeposableEtapeAvis
 ): boolean => {
   return (
     isEtapeDeposable(user, titre.typeId, demarcheTypeId, titreEtape, etapeDocuments, entrepriseDocuments, sdomZones, communes, daeDocument, aslDocument, etapeAvis) &&
