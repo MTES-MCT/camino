@@ -8,7 +8,7 @@ import { tempDocumentNameValidator } from './document.js'
 import { DemarcheTypeId } from './static/demarchesTypes.js'
 import { TitreTypeId } from './static/titresTypes.js'
 import { User, isEntrepriseOrBureauDEtude } from './roles.js'
-import { avisStatutIdValidator, avisTypeIdValidator } from './static/avisTypes.js'
+import { avisStatutIdValidator, avisTypeIdValidator, avisVisibilityIdValidator } from './static/avisTypes.js'
 import { GraphqlEtape } from './etape-form.js'
 
 export const etapeBrouillonValidator = z.boolean().brand('EtapeBrouillon')
@@ -95,6 +95,7 @@ export const etapeAvisValidator = z.object({
   avis_statut_id: avisStatutIdValidator,
   has_file: z.boolean(),
   description: z.string(),
+  avis_visibility_id: avisVisibilityIdValidator,
 })
 export type EtapeAvis = z.infer<typeof etapeAvisValidator>
 

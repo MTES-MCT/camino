@@ -1,6 +1,6 @@
 import { computed, defineComponent, ref } from 'vue'
 import { FunctionalPopup } from '../_ui/functional-popup'
-import { AvisStatutIds, AvisTypeId, AvisTypes } from 'camino-common/src/static/avisTypes'
+import { AVIS_VISIBILITY_IDS, AvisStatutIds, AvisTypeId, AvisTypes, AvisVisibilityId, AvisVisibilityIds } from 'camino-common/src/static/avisTypes'
 import { InputFile } from '../_ui/dsfr-input-file'
 import { ApiClient } from '@/api/api-client'
 import { TempDocumentName } from 'camino-common/src/document'
@@ -10,12 +10,16 @@ import { EtapeAvisModification, TempEtapeAvis, etapeAvisModificationValidator, t
 import { useState } from '../../utils/vue-tsx-utils'
 import { DsfrSelect } from '../_ui/dsfr-select'
 import { TypeaheadSmartSingle } from '../_ui/typeahead-smart-single'
+import { DsfrInputRadio } from '../_ui/dsfr-input-radio'
+import { User, isEntrepriseOrBureauDEtude } from 'camino-common/src/roles'
+import { getAvisVisibilityLabel } from './etape-avis'
 
 interface Props {
   close: (document: EtapeAvisModification | null) => void
   avisTypeIds: NonEmptyArray<AvisTypeId>
   initialAvis: EtapeAvisModification | null
   apiClient: Pick<ApiClient, 'uploadTempDocument'>
+  user: User
 }
 
 export const AddEtapeAvisPopup = defineComponent<Props>(props => {
@@ -24,15 +28,29 @@ export const AddEtapeAvisPopup = defineComponent<Props>(props => {
   const avisDescription = ref<string>(props.initialAvis?.description ?? '')
   const [avisDate, setAvisDate] = useState(props.initialAvis?.date ?? null)
   const [avisStatutId, setAvisStatutId] = useState(props.initialAvis?.avis_statut_id ?? null)
+  const [avisVisibilityId, setAvisVisibilityId] = useState(props.initialAvis?.avis_visibility_id ?? null)
 
   const tempAvisName = ref<TempDocumentName | undefined>(isNotNullNorUndefined(props.initialAvis) && 'temp_document_name' in props.initialAvis ? props.initialAvis.temp_document_name : undefined)
 
+  const visibilityChoices = computed<{ itemId: AvisVisibilityId; legend: { main: string } }[]>(() => {
+    return AVIS_VISIBILITY_IDS.filter(visibility => {
+      if (isEntrepriseOrBureauDEtude(props.user) && visibility === AvisVisibilityIds.Administrations) {
+        return false
+      }
+
+      return true
+    }).map(visibility => ({ itemId: visibility, legend: { main: getAvisVisibilityLabel(visibility) } }))
+  })
   const descriptionChange = (value: string) => {
     avisDescription.value = value
   }
 
   const updateAvisTypeId = (avisTypeId: AvisTypeId | null) => {
     etapeAvisTypeId.value = avisTypeId
+  }
+
+  const visibilityChange = (value: AvisVisibilityId) => {
+    setAvisVisibilityId(value)
   }
   const content = () => (
     <form>
@@ -70,6 +88,10 @@ export const AddEtapeAvisPopup = defineComponent<Props>(props => {
         <div class="fr-fieldset__element">
           <DsfrSelect legend={{ main: 'Statut' }} items={map(AvisStatutIds, avis => ({ id: avis, label: avis }))} initialValue={avisStatutId.value} valueChanged={setAvisStatutId} />
         </div>
+
+        <div class="fr-fieldset__element">
+          <DsfrInputRadio legend={{ main: 'Visibilité' }} elements={visibilityChoices.value} initialValue={avisVisibilityId.value} valueChanged={visibilityChange} />
+        </div>
       </fieldset>
     </form>
   )
@@ -79,6 +101,7 @@ export const AddEtapeAvisPopup = defineComponent<Props>(props => {
     description: avisDescription.value,
     date: avisDate.value,
     avis_statut_id: avisStatutId.value,
+    avis_visibility_id: avisVisibilityId.value,
     has_file: false,
   }))
 
@@ -115,4 +138,4 @@ export const AddEtapeAvisPopup = defineComponent<Props>(props => {
 })
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-AddEtapeAvisPopup.props = ['close', 'apiClient', 'avisTypeIds', 'initialAvis']
+AddEtapeAvisPopup.props = ['close', 'apiClient', 'avisTypeIds', 'initialAvis', 'user']

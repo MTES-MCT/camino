@@ -6,7 +6,7 @@ import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { SimplePromiseFn } from 'camino-common/src/typescript-tools.js'
 import { CanReadDemarche } from './demarches.js'
 import { canReadEtape } from './etapes.js'
-import { AvisVisibilityId } from 'camino-common/src/static/avisTypes.js'
+import { AvisVisibilityId, AvisVisibilityIds } from 'camino-common/src/static/avisTypes.js'
 
 export const canReadAvis = async (
   avis: { avis_visibility_id: AvisVisibilityId },
@@ -29,11 +29,11 @@ export const canReadAvis = async (
     return true
   }
 
-  if (avis.avis_visibility_id === 'Public') {
+  if (avis.avis_visibility_id === AvisVisibilityIds.Public) {
     return true
   }
 
-  if (isEntrepriseOrBureauDEtude(user) && avis.avis_visibility_id === 'TitulairesEtAdministrations') {
+  if (isEntrepriseOrBureauDEtude(user) && avis.avis_visibility_id === AvisVisibilityIds.TitulairesEtAdministrations) {
     const titulaires = await entreprisesTitulairesOuAmodiataires()
 
     return titulaires.some(entrepriseId => user.entreprises?.some(({ id }) => id === entrepriseId) ?? false)

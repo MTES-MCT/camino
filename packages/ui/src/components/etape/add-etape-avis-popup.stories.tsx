@@ -5,8 +5,9 @@ import { ApiClient } from '@/api/api-client'
 import { AddEtapeAvisPopup } from './add-etape-avis-popup'
 import { toCaminoDate } from 'camino-common/src/date'
 import { etapeAvisIdValidator } from 'camino-common/src/etape'
-import { AvisTypeId, AvisTypes, avisTypeIdValidator } from 'camino-common/src/static/avisTypes'
+import { AvisTypeId, AvisTypes, AvisVisibilityIds, avisTypeIdValidator } from 'camino-common/src/static/avisTypes'
 import { NonEmptyArray, getKeys } from 'camino-common/src/typescript-tools'
+import { testBlankUser } from 'camino-common/src/tests-utils'
 
 const meta: Meta = {
   title: 'Components/Etape/AddAvisPopup',
@@ -28,7 +29,7 @@ const apiClient: Pick<ApiClient, 'uploadTempDocument'> = {
 const avisTypeIds: NonEmptyArray<AvisTypeId> = getKeys(AvisTypes, (value): value is AvisTypeId => {
   return avisTypeIdValidator.safeParse(value).success
 }) as NonEmptyArray<AvisTypeId>
-export const SansDocumentInitial: StoryFn = () => <AddEtapeAvisPopup close={close} apiClient={apiClient} initialAvis={null} avisTypeIds={avisTypeIds} />
+export const SansDocumentInitial: StoryFn = () => <AddEtapeAvisPopup close={close} user={{ ...testBlankUser, role: 'super' }} apiClient={apiClient} initialAvis={null} avisTypeIds={avisTypeIds} />
 
 export const DocumentInitialTemporaire: StoryFn = () => (
   <AddEtapeAvisPopup
@@ -40,9 +41,11 @@ export const DocumentInitialTemporaire: StoryFn = () => (
       date: toCaminoDate('2023-01-02'),
       avis_statut_id: 'Favorable',
       has_file: false,
+      avis_visibility_id: AvisVisibilityIds.Administrations,
     }}
     apiClient={apiClient}
     avisTypeIds={avisTypeIds}
+    user={{ ...testBlankUser, role: 'super' }}
   />
 )
 
@@ -56,8 +59,10 @@ export const DocumentInitialDejaSauvegarde: StoryFn = () => (
       date: toCaminoDate('2023-01-02'),
       avis_statut_id: 'Favorable',
       has_file: false,
+      avis_visibility_id: AvisVisibilityIds.TitulairesEtAdministrations,
     }}
     apiClient={apiClient}
     avisTypeIds={avisTypeIds}
+    user={{ ...testBlankUser, role: 'super' }}
   />
 )

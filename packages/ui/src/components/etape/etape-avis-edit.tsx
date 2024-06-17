@@ -14,6 +14,8 @@ import { dateFormat } from 'camino-common/src/date'
 import { AvisStatut } from '../_common/etape-statut'
 import { AvisTypeId, AvisTypes } from 'camino-common/src/static/avisTypes'
 import { CommuneId } from 'camino-common/src/static/communes'
+import { getAvisVisibilityLabel } from './etape-avis'
+import { User } from 'camino-common/src/roles'
 
 interface Props {
   tde: {
@@ -25,6 +27,7 @@ interface Props {
   etapeId: EtapeId | null
   communeIds: DeepReadonly<CommuneId[]>
   apiClient: Pick<ApiClient, 'uploadTempDocument' | 'getEtapeAvisByEtapeId'>
+  user: User
 }
 
 type WithIndex = { index: number }
@@ -150,7 +153,13 @@ const EtapeAvisLoaded = defineComponent<EtapeAvisLoadedProps>(props => {
             />
           </div>
           {addOrEditPopupOpen.value.open ? (
-            <AddEtapeAvisPopup avisTypeIds={addOrEditPopupOpen.value.avisTypeIds} apiClient={props.apiClient} close={closeAddPopup} initialAvis={addOrEditPopupOpen.value.etapeAvis || null} />
+            <AddEtapeAvisPopup
+              avisTypeIds={addOrEditPopupOpen.value.avisTypeIds}
+              user={props.user}
+              apiClient={props.apiClient}
+              close={closeAddPopup}
+              initialAvis={addOrEditPopupOpen.value.etapeAvis || null}
+            />
           ) : null}
         </>
       ) : null}
@@ -185,6 +194,7 @@ const EtapeAvisTable: FunctionalComponent<PropsTable> = (props: PropsTable) => {
             <th scope="col">Date</th>
             <th scope="col">Description</th>
             <th scope="col">Statut</th>
+            <th scope="col">Visibilité</th>
             <th scope="col" style={{ display: 'flex', justifyContent: 'end' }}>
               Action
             </th>
@@ -199,6 +209,7 @@ const EtapeAvisTable: FunctionalComponent<PropsTable> = (props: PropsTable) => {
               <td>
                 <AvisStatut avisStatutId={avis.avis_statut_id} />
               </td>
+              <td>{getAvisVisibilityLabel(avis.avis_visibility_id)}</td>
               <td>
                 <div style={{ display: 'flex', justifyContent: 'end', alignItems: 'center' }}>
                   <DsfrButtonIcon icon="fr-icon-edit-line" title={`Modifier l’avis de ${props.getNom(avis.avis_type_id)}`} onClick={editAvis(avis.index)} buttonType="secondary" buttonSize="sm" />
@@ -220,6 +231,7 @@ const EtapeAvisTable: FunctionalComponent<PropsTable> = (props: PropsTable) => {
               <td>-</td>
               <td>-</td>
               <td>-</td>
+              <td>-</td>
               <td style={{ display: 'flex', justifyContent: 'end' }}>
                 <DsfrButtonIcon icon="fr-icon-add-line" title={`Ajouter un document ${props.getNom(avisTypeId)}`} onClick={() => props.add(avisTypeId)} buttonType="secondary" buttonSize="sm" />
               </td>
@@ -232,6 +244,6 @@ const EtapeAvisTable: FunctionalComponent<PropsTable> = (props: PropsTable) => {
 }
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-EtapeAvisEdit.props = ['tde', 'onChange', 'etapeId', 'apiClient', 'communeIds']
+EtapeAvisEdit.props = ['tde', 'onChange', 'etapeId', 'apiClient', 'communeIds', 'user']
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-EtapeAvisLoaded.props = ['tde', 'onChange', 'etapeId', 'apiClient', 'avis', 'communeIds']
+EtapeAvisLoaded.props = ['tde', 'onChange', 'etapeId', 'apiClient', 'avis', 'communeIds', 'user']

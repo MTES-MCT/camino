@@ -1,15 +1,26 @@
 import { FunctionalComponent } from 'vue'
 import { EtapeAvisId, EtapeAvis } from 'camino-common/src/etape'
-import { User } from 'camino-common/src/roles'
+import { User, isAdministration, isSuper } from 'camino-common/src/roles'
 import { getDownloadRestRoute } from '../../api/client-rest'
 import { isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools'
-import { AvisTypeId, AvisTypes } from 'camino-common/src/static/avisTypes'
+import { AvisTypeId, AvisTypes, AvisVisibilityId } from 'camino-common/src/static/avisTypes'
 import { AvisStatut } from '../_common/etape-statut'
 import { dateFormat } from 'camino-common/src/date'
+import { VisibilityLabel } from './etape-documents'
 
 interface Props {
   etapeAvis: EtapeAvis[]
   user: User
+}
+
+export const getAvisVisibilityLabel = (avisVisibility: AvisVisibilityId): string => {
+  const value = {
+    Public: VisibilityLabel.public,
+    Administrations: VisibilityLabel.administrations,
+    TitulairesEtAdministrations: VisibilityLabel.entreprises,
+  } as const satisfies { [key in AvisVisibilityId]: string }
+
+  return value[avisVisibility]
 }
 
 // FIXME storybook
@@ -29,7 +40,7 @@ export const EtapeAvisTable: FunctionalComponent<Props> = props => {
               <th scope="col">Statut</th>
               <th scope="col">Date</th>
               <th scope="col">Description</th>
-              {/* {isSuper(props.user) || isAdministration(props.user) ? <th scope="col">Visibilité</th> : null} */}
+              {isSuper(props.user) || isAdministration(props.user) ? <th scope="col">Visibilité</th> : null}
             </tr>
           </thead>
           <tbody>
@@ -41,7 +52,7 @@ export const EtapeAvisTable: FunctionalComponent<Props> = props => {
                 </td>
                 <td>{dateFormat(item.date)}</td>
                 <td>{item.description}</td>
-                {/* {isSuper(props.user) || isAdministration(props.user) ? <td>{getVisibilityLabel(item)}</td> : null} */}
+                {isSuper(props.user) || isAdministration(props.user) ? <td>{getAvisVisibilityLabel(item.avis_visibility_id)}</td> : null}
               </tr>
             ))}
           </tbody>

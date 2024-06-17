@@ -5,6 +5,8 @@ import { ApiClient } from '../../api/api-client'
 import { action } from '@storybook/addon-actions'
 import { tempDocumentNameValidator } from 'camino-common/src/document'
 import { caminoDateValidator } from 'camino-common/src/date'
+import { AvisVisibilityIds } from 'camino-common/src/static/avisTypes'
+import { testBlankUser } from 'camino-common/src/tests-utils'
 
 const meta: Meta = {
   title: 'Components/Etape/EtapeAvisEdit',
@@ -22,6 +24,7 @@ const avis: EtapeAvis[] = [
     date: caminoDateValidator.parse('2023-02-01'),
     avis_statut_id: 'Favorable',
     has_file: false,
+    avis_visibility_id: AvisVisibilityIds.Administrations,
   },
   {
     id: etapeAvisIdValidator.parse('id-car'),
@@ -30,6 +33,7 @@ const avis: EtapeAvis[] = [
     date: caminoDateValidator.parse('2023-02-01'),
     avis_statut_id: 'Non renseigné',
     has_file: false,
+    avis_visibility_id: AvisVisibilityIds.Public,
   },
 ]
 
@@ -58,6 +62,7 @@ export const Empty: StoryFn = () => (
     communeIds={[]}
     tde={{ titreTypeId: 'arm', demarcheTypeId: 'oct', etapeTypeId: 'mfr' }}
     onChange={completeUpdateAction}
+    user={{ ...testBlankUser, role: 'super' }}
   />
 )
 // FIXME tester le cas des avis supplémentaires en fonction des communes
@@ -68,5 +73,6 @@ export const Rempli: StoryFn = () => (
     communeIds={[]}
     tde={{ titreTypeId: 'axm', demarcheTypeId: 'oct', etapeTypeId: 'asc' }}
     onChange={completeUpdateAction}
+    user={{ ...testBlankUser, role: 'super' }}
   />
 )

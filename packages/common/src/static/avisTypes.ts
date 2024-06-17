@@ -60,13 +60,13 @@ export const AvisStatutIds = [
 export const avisStatutIdValidator = z.enum(AvisStatutIds)
 export type AvisStatutId = z.infer<typeof avisStatutIdValidator>
 
+export const AVIS_VISIBILITY_IDS = ['Public', 'TitulairesEtAdministrations', 'Administrations'] as const
 
-
-export const avisVisibilityIdValidator = z.enum(["Public", "TitulairesEtAdministrations", "Administrations"]).brand('AvisVisibilityId')
+export const avisVisibilityIdValidator = z.enum(AVIS_VISIBILITY_IDS)
 export type AvisVisibilityId = z.infer<typeof avisVisibilityIdValidator>
 
 export const AvisVisibilityIds = {
-  "Public": "Public" as AvisVisibilityId,
-  "TitulairesEtAdministrations": "TitulairesEtAdministrations" as AvisVisibilityId,
-  "Administrations": "Administrations" as AvisVisibilityId,
-} as const
+  Public: 'Public',
+  TitulairesEtAdministrations: 'TitulairesEtAdministrations',
+  Administrations: 'Administrations',
+} as const satisfies Record<(typeof AVIS_VISIBILITY_IDS)[number], AvisVisibilityId>

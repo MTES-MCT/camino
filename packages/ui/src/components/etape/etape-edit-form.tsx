@@ -7,13 +7,14 @@ import { EtapeDocumentsEdit } from './etape-documents-edit'
 import { ApiClient } from '../../api/api-client'
 import { User } from 'camino-common/src/roles'
 import {
-    DocumentComplementaireAslEtapeDocumentModification,
-    DocumentComplementaireDaeEtapeDocumentModification,
-    EtapeAvis,
-    EtapeDocument,
-    EtapeId,
-    TempEtapeAvis,
-    TempEtapeDocument,
+  DocumentComplementaireAslEtapeDocumentModification,
+  DocumentComplementaireDaeEtapeDocumentModification,
+  ETAPE_IS_NOT_BROUILLON,
+  EtapeAvis,
+  EtapeDocument,
+  EtapeId,
+  TempEtapeAvis,
+  TempEtapeDocument,
 } from 'camino-common/src/etape'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
@@ -28,28 +29,28 @@ import { FeatureCollectionForages, FeatureCollectionPoints, GeojsonInformations,
 import { SectionsEdit, SectionsEditEtape } from './sections-edit'
 import { DsfrTextarea } from '../_ui/dsfr-textarea'
 import {
-    SelectedEntrepriseDocument,
-    entrepriseDocumentsStepIsComplete,
-    entrepriseDocumentsStepIsVisible,
-    etapeDocumentsStepIsComplete,
-    etapeDocumentsStepIsVisible,
-    fondamentaleStepIsComplete,
-    fondamentaleStepIsVisible,
-    perimetreStepIsComplete,
-    perimetreStepIsVisible,
-    sectionsStepIsComplete,
-    sectionsStepIsVisible,
-    etapeAvisStepIsVisible,
-    etapeAvisStepIsComplete,
-    entrepriseDocumentsStepIsEnregistrable,
-    sectionsStepIsEnregistrable,
-    etapeAvisStepIsEnregistrable,
-    dateTypeStepIsComplete,
-    dateTypeStepIsEnregistrable,
-    dateTypeStepIsVisible,
-    etapeDocumentsStepIsEnregistrable,
-    fondamentaleStepIsEnregistrable,
-    perimetreStepIsEnregistrable,
+  SelectedEntrepriseDocument,
+  entrepriseDocumentsStepIsComplete,
+  entrepriseDocumentsStepIsVisible,
+  etapeDocumentsStepIsComplete,
+  etapeDocumentsStepIsVisible,
+  fondamentaleStepIsComplete,
+  fondamentaleStepIsVisible,
+  perimetreStepIsComplete,
+  perimetreStepIsVisible,
+  sectionsStepIsComplete,
+  sectionsStepIsVisible,
+  etapeAvisStepIsVisible,
+  etapeAvisStepIsComplete,
+  entrepriseDocumentsStepIsEnregistrable,
+  sectionsStepIsEnregistrable,
+  etapeAvisStepIsEnregistrable,
+  dateTypeStepIsComplete,
+  dateTypeStepIsEnregistrable,
+  dateTypeStepIsVisible,
+  etapeDocumentsStepIsEnregistrable,
+  fondamentaleStepIsEnregistrable,
+  perimetreStepIsEnregistrable,
 } from 'camino-common/src/permissions/etape-form'
 import { EtapeAlerte, PureFormSaveBtn } from './pure-form-save-btn'
 import { TitresStatuts } from 'camino-common/src/static/titresStatuts'
@@ -104,124 +105,127 @@ type EtapeEditFormDocuments = DeepReadonly<{
   etapeAvis: (EtapeAvis | TempEtapeAvis)[]
 }>
 
-const toto = ( etape: DeepReadonly<CoreEtapeCreationOrModification>,
-   titreTypeId: TitreTypeId,
-   demarcheTypeId: DemarcheTypeId, heritageData: DeepReadonly<GetEtapeHeritagePotentiel>): DeepReadonly<CoreEtapeCreationOrModification> => {
-     const sections = getSections(titreTypeId, demarcheTypeId, etape.typeId)
-      const flattenEtape: DeepReadonly<CoreEtapeCreationOrModification> = {
-        ...etape,
-        contenu: sections.reduce<DeepReadonly<FlattenEtape['contenu']>>((accSection, section) => {
-          const newSection = section.elements.reduce<DeepReadonly<FlattenEtape['contenu'][string]>>((accElement, element) => {
-            const elementHeritage = heritageData.heritageContenu[section.id]?.[element.id] ?? { actif: false, etape: null }
-            const currentHeritage: DeepReadonly<FlattenEtape['contenu'][string][string]> = etape.contenu[section.id]?.[element.id] ?? { value: null, heritee: true, etapeHeritee: null }
-            return {
-              ...accElement,
-              [element.id]: {
-                value: currentHeritage.heritee ? elementHeritage.etape?.contenu?.[section.id]?.[element.id] ?? null : currentHeritage.value,
-                heritee: currentHeritage.heritee && isNotNullNorUndefined(elementHeritage.etape),
-                etapeHeritee: isNotNullNorUndefined(elementHeritage.etape)
-                  ? {
-                      etapeTypeId: elementHeritage.etape.typeId,
-                      date: elementHeritage.etape.date,
-                      value: elementHeritage.etape.contenu[section.id]?.[element.id] ?? null,
-                    }
-                  : null,
-              },
-            }
-          }, {})
+const toto = (
+  etape: DeepReadonly<CoreEtapeCreationOrModification>,
+  titreTypeId: TitreTypeId,
+  demarcheTypeId: DemarcheTypeId,
+  heritageData: DeepReadonly<GetEtapeHeritagePotentiel>
+): DeepReadonly<CoreEtapeCreationOrModification> => {
+  const sections = getSections(titreTypeId, demarcheTypeId, etape.typeId)
+  const flattenEtape: DeepReadonly<CoreEtapeCreationOrModification> = {
+    ...etape,
+    contenu: sections.reduce<DeepReadonly<FlattenEtape['contenu']>>((accSection, section) => {
+      const newSection = section.elements.reduce<DeepReadonly<FlattenEtape['contenu'][string]>>((accElement, element) => {
+        const elementHeritage = heritageData.heritageContenu[section.id]?.[element.id] ?? { actif: false, etape: null }
+        const currentHeritage: DeepReadonly<FlattenEtape['contenu'][string][string]> = etape.contenu[section.id]?.[element.id] ?? { value: null, heritee: true, etapeHeritee: null }
+        return {
+          ...accElement,
+          [element.id]: {
+            value: currentHeritage.heritee ? elementHeritage.etape?.contenu?.[section.id]?.[element.id] ?? null : currentHeritage.value,
+            heritee: currentHeritage.heritee && isNotNullNorUndefined(elementHeritage.etape),
+            etapeHeritee: isNotNullNorUndefined(elementHeritage.etape)
+              ? {
+                  etapeTypeId: elementHeritage.etape.typeId,
+                  date: elementHeritage.etape.date,
+                  value: elementHeritage.etape.contenu[section.id]?.[element.id] ?? null,
+                }
+              : null,
+          },
+        }
+      }, {})
 
-          return {
-            ...accSection,
-            [section.id]: newSection,
-          }
-        }, {}),
-        duree: {
-          value: etape.duree.heritee ? heritageData.heritageProps.duree.etape?.duree ?? null : etape.duree.value,
-          heritee: etape.duree.heritee && isNotNullNorUndefined(heritageData.heritageProps.duree.etape),
-          etapeHeritee: isNotNullNorUndefined(heritageData.heritageProps.duree.etape)
-            ? {
-                etapeTypeId: heritageData.heritageProps.duree.etape.typeId,
-                date: heritageData.heritageProps.duree.etape.date,
-                value: heritageData.heritageProps.duree.etape.duree,
-              }
-            : null,
-        },
-        perimetre: {
-          value: etape.perimetre.heritee ? (isNotNullNorUndefined(heritageData.heritageProps.perimetre.etape) ? { ...heritageData.heritageProps.perimetre.etape } : null) : etape.perimetre.value,
-
-          heritee: etape.perimetre.heritee && isNotNullNorUndefined(heritageData.heritageProps.perimetre.etape),
-          etapeHeritee: isNotNullNorUndefined(heritageData.heritageProps.perimetre.etape)
-            ? {
-                etapeTypeId: heritageData.heritageProps.perimetre.etape.typeId,
-                date: heritageData.heritageProps.perimetre.etape.date,
-                value: { ...heritageData.heritageProps.perimetre.etape },
-              }
-            : null,
-        },
-        dateDebut: {
-          value: etape.dateDebut.heritee ? heritageData.heritageProps.dateDebut.etape?.dateDebut ?? null : etape.dateDebut.value,
-          heritee: etape.dateDebut.heritee && isNotNullNorUndefined(heritageData.heritageProps.dateDebut.etape),
-          etapeHeritee: isNotNullNorUndefined(heritageData.heritageProps.dateDebut.etape)
-            ? {
-                etapeTypeId: heritageData.heritageProps.dateDebut.etape.typeId,
-                date: heritageData.heritageProps.dateDebut.etape.date,
-                value: heritageData.heritageProps.dateDebut.etape.dateDebut,
-              }
-            : null,
-        },
-        dateFin: {
-          value: etape.dateFin.heritee ? heritageData.heritageProps.dateFin.etape?.dateFin ?? null : etape.dateFin.value,
-          heritee: etape.dateFin.heritee && isNotNullNorUndefined(heritageData.heritageProps.dateFin.etape),
-          etapeHeritee: isNotNullNorUndefined(heritageData.heritageProps.dateFin.etape)
-            ? {
-                etapeTypeId: heritageData.heritageProps.dateFin.etape.typeId,
-                date: heritageData.heritageProps.dateFin.etape.date,
-                value: heritageData.heritageProps.dateFin.etape.dateFin,
-              }
-            : null,
-        },
-        substances: {
-          value: etape.substances.heritee ? (isNotNullNorUndefined(heritageData.heritageProps.substances.etape) ? heritageData.heritageProps.substances.etape.substances : []) : etape.substances.value,
-
-          heritee: etape.substances.heritee && isNotNullNorUndefined(heritageData.heritageProps.substances.etape),
-          etapeHeritee: isNotNullNorUndefined(heritageData.heritageProps.substances.etape)
-            ? {
-                etapeTypeId: heritageData.heritageProps.substances.etape.typeId,
-                date: heritageData.heritageProps.substances.etape.date,
-                value: heritageData.heritageProps.substances.etape.substances,
-              }
-            : null,
-        },
-        amodiataires: {
-          value: etape.amodiataires.heritee
-            ? isNotNullNorUndefined(heritageData.heritageProps.amodiataires.etape)
-              ? heritageData.heritageProps.amodiataires.etape.amodiataireIds
-              : []
-            : etape.amodiataires.value,
-
-          heritee: etape.amodiataires.heritee && isNotNullNorUndefined(heritageData.heritageProps.amodiataires.etape),
-          etapeHeritee: isNotNullNorUndefined(heritageData.heritageProps.amodiataires.etape)
-            ? {
-                etapeTypeId: heritageData.heritageProps.amodiataires.etape.typeId,
-                date: heritageData.heritageProps.amodiataires.etape.date,
-                value: heritageData.heritageProps.amodiataires.etape.amodiataireIds,
-              }
-            : null,
-        },
-        titulaires: {
-          value: etape.titulaires.heritee ? (isNotNullNorUndefined(heritageData.heritageProps.titulaires.etape) ? heritageData.heritageProps.titulaires.etape.titulaireIds : []) : etape.titulaires.value,
-
-          heritee: etape.titulaires.heritee && isNotNullNorUndefined(heritageData.heritageProps.titulaires.etape),
-          etapeHeritee: isNotNullNorUndefined(heritageData.heritageProps.titulaires.etape)
-            ? {
-                etapeTypeId: heritageData.heritageProps.titulaires.etape.typeId,
-                date: heritageData.heritageProps.titulaires.etape.date,
-                value: heritageData.heritageProps.titulaires.etape.titulaireIds,
-              }
-            : null,
-        },
+      return {
+        ...accSection,
+        [section.id]: newSection,
       }
-      return flattenEtape
+    }, {}),
+    duree: {
+      value: etape.duree.heritee ? heritageData.heritageProps.duree.etape?.duree ?? null : etape.duree.value,
+      heritee: etape.duree.heritee && isNotNullNorUndefined(heritageData.heritageProps.duree.etape),
+      etapeHeritee: isNotNullNorUndefined(heritageData.heritageProps.duree.etape)
+        ? {
+            etapeTypeId: heritageData.heritageProps.duree.etape.typeId,
+            date: heritageData.heritageProps.duree.etape.date,
+            value: heritageData.heritageProps.duree.etape.duree,
+          }
+        : null,
+    },
+    perimetre: {
+      value: etape.perimetre.heritee ? (isNotNullNorUndefined(heritageData.heritageProps.perimetre.etape) ? { ...heritageData.heritageProps.perimetre.etape } : null) : etape.perimetre.value,
+
+      heritee: etape.perimetre.heritee && isNotNullNorUndefined(heritageData.heritageProps.perimetre.etape),
+      etapeHeritee: isNotNullNorUndefined(heritageData.heritageProps.perimetre.etape)
+        ? {
+            etapeTypeId: heritageData.heritageProps.perimetre.etape.typeId,
+            date: heritageData.heritageProps.perimetre.etape.date,
+            value: { ...heritageData.heritageProps.perimetre.etape },
+          }
+        : null,
+    },
+    dateDebut: {
+      value: etape.dateDebut.heritee ? heritageData.heritageProps.dateDebut.etape?.dateDebut ?? null : etape.dateDebut.value,
+      heritee: etape.dateDebut.heritee && isNotNullNorUndefined(heritageData.heritageProps.dateDebut.etape),
+      etapeHeritee: isNotNullNorUndefined(heritageData.heritageProps.dateDebut.etape)
+        ? {
+            etapeTypeId: heritageData.heritageProps.dateDebut.etape.typeId,
+            date: heritageData.heritageProps.dateDebut.etape.date,
+            value: heritageData.heritageProps.dateDebut.etape.dateDebut,
+          }
+        : null,
+    },
+    dateFin: {
+      value: etape.dateFin.heritee ? heritageData.heritageProps.dateFin.etape?.dateFin ?? null : etape.dateFin.value,
+      heritee: etape.dateFin.heritee && isNotNullNorUndefined(heritageData.heritageProps.dateFin.etape),
+      etapeHeritee: isNotNullNorUndefined(heritageData.heritageProps.dateFin.etape)
+        ? {
+            etapeTypeId: heritageData.heritageProps.dateFin.etape.typeId,
+            date: heritageData.heritageProps.dateFin.etape.date,
+            value: heritageData.heritageProps.dateFin.etape.dateFin,
+          }
+        : null,
+    },
+    substances: {
+      value: etape.substances.heritee ? (isNotNullNorUndefined(heritageData.heritageProps.substances.etape) ? heritageData.heritageProps.substances.etape.substances : []) : etape.substances.value,
+
+      heritee: etape.substances.heritee && isNotNullNorUndefined(heritageData.heritageProps.substances.etape),
+      etapeHeritee: isNotNullNorUndefined(heritageData.heritageProps.substances.etape)
+        ? {
+            etapeTypeId: heritageData.heritageProps.substances.etape.typeId,
+            date: heritageData.heritageProps.substances.etape.date,
+            value: heritageData.heritageProps.substances.etape.substances,
+          }
+        : null,
+    },
+    amodiataires: {
+      value: etape.amodiataires.heritee
+        ? isNotNullNorUndefined(heritageData.heritageProps.amodiataires.etape)
+          ? heritageData.heritageProps.amodiataires.etape.amodiataireIds
+          : []
+        : etape.amodiataires.value,
+
+      heritee: etape.amodiataires.heritee && isNotNullNorUndefined(heritageData.heritageProps.amodiataires.etape),
+      etapeHeritee: isNotNullNorUndefined(heritageData.heritageProps.amodiataires.etape)
+        ? {
+            etapeTypeId: heritageData.heritageProps.amodiataires.etape.typeId,
+            date: heritageData.heritageProps.amodiataires.etape.date,
+            value: heritageData.heritageProps.amodiataires.etape.amodiataireIds,
+          }
+        : null,
+    },
+    titulaires: {
+      value: etape.titulaires.heritee ? (isNotNullNorUndefined(heritageData.heritageProps.titulaires.etape) ? heritageData.heritageProps.titulaires.etape.titulaireIds : []) : etape.titulaires.value,
+
+      heritee: etape.titulaires.heritee && isNotNullNorUndefined(heritageData.heritageProps.titulaires.etape),
+      etapeHeritee: isNotNullNorUndefined(heritageData.heritageProps.titulaires.etape)
+        ? {
+            etapeTypeId: heritageData.heritageProps.titulaires.etape.typeId,
+            date: heritageData.heritageProps.titulaires.etape.date,
+            value: heritageData.heritageProps.titulaires.etape.titulaireIds,
+          }
+        : null,
+    },
+  }
+  return flattenEtape
 }
 export const EtapeEditForm = defineComponent<Props>(props => {
   const [etape, setEtape] = useState<AsyncData<CoreEtapeCreationOrModification | null>>({ status: 'LOADED', value: null })
@@ -245,16 +249,13 @@ export const EtapeEditForm = defineComponent<Props>(props => {
     setEtape({ status: 'LOADING' })
     try {
       const etape = {
-                ...currentEtape,
-                date,
-                typeId,
-                statutId,
-                isBrouillon: isNotNullNorUndefined(currentEtape.id) ? currentEtape.isBrouillon : canBeBrouillon(typeId),
-              }
-      const value = await props.apiClient.getEtapeHeritagePotentiel(
-        etape,
-        props.demarcheId,
-      )
+        ...currentEtape,
+        date,
+        typeId,
+        statutId,
+        isBrouillon: isNotNullNorUndefined(currentEtape.id) ? currentEtape.isBrouillon : canBeBrouillon(typeId),
+      }
+      const value = await props.apiClient.getEtapeHeritagePotentiel(etape, props.demarcheId)
       setEtape({ status: 'LOADED', value: toto(etape, props.titreTypeId, props.demarcheTypeId, value) })
     } catch (e: any) {
       console.error('error', e)
@@ -302,7 +303,7 @@ export const EtapeEditForm = defineComponent<Props>(props => {
 
   const canSave = computed<boolean>(() => {
     if (etape.value.status === 'LOADED' && isNotNullNorUndefined(etape.value.value)) {
-      if (!etape.value.value.isBrouillon) {
+      if (etape.value.value.isBrouillon === ETAPE_IS_NOT_BROUILLON) {
         return (
           dateTypeStepIsEnregistrable(etape.value.value, props.user) &&
           fondamentaleStepIsEnregistrable(etape.value.value, props.demarcheTypeId, props.titreTypeId) &&
@@ -675,6 +676,7 @@ const EtapeEditFormInternal = defineComponent<
             etapeId={props.etape.id}
             communeIds={props.perimetre.communes}
             onChange={avisCompleteUpdate}
+            user={props.user}
           />
         </Bloc>
       ) : null}

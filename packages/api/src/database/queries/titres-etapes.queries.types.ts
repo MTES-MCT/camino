@@ -138,6 +138,7 @@ export interface IInsertEtapeDocumentDbQuery {
 export interface IInsertEtapeAvisDbParams {
   avis_statut_id: string;
   avis_type_id: string;
+  avis_visibility_id: string;
   date: string;
   description: string;
   etape_id: string;

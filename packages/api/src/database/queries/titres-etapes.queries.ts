@@ -185,8 +185,8 @@ export const insertEtapeAvis = async (pool: Pool, titre_etape_id: EtapeId, etape
   }
 }
 const insertEtapeAvisDb = sql<Redefine<IInsertEtapeAvisDbQuery, { etape_id: EtapeId; id: EtapeAvisId; largeobject_id: LargeObjectId } & Omit<TempEtapeAvis, 'temp_document_name'>, void>>`
-insert into etape_avis (id, avis_type_id, etape_id, description, avis_statut_id, date, largeobject_id)
-    values ($ id !, $ avis_type_id !, $ etape_id !, $ description !, $ avis_statut_id !, $ date !, $ largeobject_id !)
+insert into etape_avis (id, avis_type_id, etape_id, description, avis_statut_id, date, avis_visibility_id, largeobject_id)
+    values ($ id !, $ avis_type_id !, $ etape_id !, $ description !, $ avis_statut_id !, $ date !, $ avis_visibility_id !, $ largeobject_id !)
 `
 
 const etapeDocumentLargeObjectIdValidator = z.number().brand('EtapeDocumentLargeObjectId')
