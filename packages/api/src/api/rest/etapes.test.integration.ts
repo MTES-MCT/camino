@@ -3,17 +3,21 @@ import { titreCreate } from '../../database/queries/titres.js'
 import { titreDemarcheCreate } from '../../database/queries/titres-demarches.js'
 import { userSuper } from '../../database/user-super.js'
 import { restCall, restDeleteCall } from '../../../tests/_utils/index.js'
-import { getCurrent, toCaminoDate } from 'camino-common/src/date.js'
+import { caminoDateValidator, getCurrent, toCaminoDate } from 'camino-common/src/date.js'
 import { afterAll, beforeAll, test, expect, describe, vi } from 'vitest'
 import type { Pool } from 'pg'
 import { HTTP_STATUS } from 'camino-common/src/http.js'
 import { Role, isAdministrationRole } from 'camino-common/src/roles.js'
-import { titreEtapeCreate } from '../../database/queries/titres-etapes.js'
+import { titreEtapeCreate, titreEtapeUpdate } from '../../database/queries/titres-etapes.js'
 import { entrepriseIdValidator } from 'camino-common/src/entreprise.js'
 import { TestUser, testBlankUser } from 'camino-common/src/tests-utils.js'
 import { entrepriseUpsert } from '../../database/queries/entreprises.js'
 import { Knex } from 'knex'
-import { ETAPE_IS_BROUILLON } from 'camino-common/src/etape.js'
+import { ETAPE_IS_BROUILLON, etapeAvisIdValidator } from 'camino-common/src/etape.js'
+import { insertEtapeAvisWithLargeObjectId } from '../../database/queries/titres-etapes.queries.js'
+import { largeObjectIdValidator } from '../../database/largeobjects.js'
+import { AvisVisibilityIds } from 'camino-common/src/static/avisTypes.js'
+import { tempDocumentNameValidator } from 'camino-common/src/document.js'
 
 console.info = vi.fn()
 console.error = vi.fn()
@@ -224,5 +228,76 @@ describe('etapeSupprimer', () => {
     const tested = await restDeleteCall(dbPool, '/rest/etapes/:etapeIdOrSlug', { etapeIdOrSlug: titreEtape.id }, user)
 
     expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
+  })
+})
+
+describe('getEtapeAvis', () => {
+  test('test la récupération des avis', async () => {
+    const titre = await titreCreate(
+      {
+        nom: 'nomTitre',
+        typeId: 'arm',
+        titreStatutId: 'val',
+        propsTitreEtapesIds: {},
+      },
+      {}
+    )
+
+    const titreDemarche = await titreDemarcheCreate({
+      titreId: titre.id,
+      typeId: 'oct',
+    })
+
+    const titreEtape = await titreEtapeCreate(
+      {
+        typeId: 'mfr',
+        statutId: 'fai',
+        isBrouillon: ETAPE_IS_BROUILLON,
+        ordre: 1,
+        titreDemarcheId: titreDemarche.id,
+        date: toCaminoDate('2018-01-01'),
+      },
+      userSuper,
+      titre.id
+    )
+
+    let getAvis = await restCall(dbPool, '/rest/etapes/:etapeId/etapeAvis', { etapeId: titreEtape.id }, userSuper)
+    expect(getAvis.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
+    expect(getAvis.body).toStrictEqual([])
+
+    await titreEtapeUpdate(titreEtape.id, { typeId: 'asc' }, userSuper, titre.id)
+    getAvis = await restCall(dbPool, '/rest/etapes/:etapeId/etapeAvis', { etapeId: titreEtape.id }, userSuper)
+    expect(getAvis.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
+    expect(getAvis.body).toStrictEqual([])
+
+    await insertEtapeAvisWithLargeObjectId(
+      dbPool,
+      titreEtape.id,
+      {
+        avis_type_id: 'autreAvis',
+        date: caminoDateValidator.parse('2023-02-01'),
+        avis_statut_id: 'Favorable',
+        description: 'Super',
+        avis_visibility_id: AvisVisibilityIds.Administrations,
+        temp_document_name: tempDocumentNameValidator.parse('fakeTempDocumentName'),
+      },
+      etapeAvisIdValidator.parse('avisId'),
+      largeObjectIdValidator.parse(42)
+    )
+    getAvis = await restCall(dbPool, '/rest/etapes/:etapeId/etapeAvis', { etapeId: titreEtape.id }, userSuper)
+    expect(getAvis.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
+    expect(getAvis.body).toMatchInlineSnapshot(`
+      [
+        {
+          "avis_statut_id": "Favorable",
+          "avis_type_id": "autreAvis",
+          "avis_visibility_id": "Administrations",
+          "date": "2023-02-01",
+          "description": "Super",
+          "has_file": true,
+          "id": "avisId",
+        },
+      ]
+    `)
   })
 })

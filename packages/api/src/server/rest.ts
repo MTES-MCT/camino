@@ -151,7 +151,6 @@ const restRouteImplementations: Readonly<{ [key in CaminoRestRoute]: Transform<k
   '/rest/etapes/:etapeId/depot': { put: deposeEtape },
   '/rest/etapes/:etapeId/entrepriseDocuments': { get: getEtapeEntrepriseDocuments },
   '/rest/etapes/:etapeId/etapeDocuments': { get: getEtapeDocuments },
-  // FIXME: tests d'intégration ?
   '/rest/etapes/:etapeId/etapeAvis': { get: getEtapeAvis },
   '/rest/activites/:activiteId': { get: getActivite, put: updateActivite, delete: deleteActivite },
   '/rest/communes': { get: getCommunes },
