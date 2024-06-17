@@ -168,11 +168,11 @@ const canCreateOrEditEtape = (
 export type IsEtapeCompleteEtape = DeepReadonly<Pick<FlattenEtape, 'typeId' | 'date' | 'statutId' | 'duree' | 'contenu' | 'substances' | 'perimetre' | 'isBrouillon' | 'titulaires' | 'amodiataires'>>
 export type IsEtapeCompleteDocuments = DeepReadonly<Pick<EtapeDocument | TempEtapeDocument, 'etape_document_type_id'>[]>
 export type IsEtapeCompleteEntrepriseDocuments = DeepReadonly<Pick<EntrepriseDocument, 'entreprise_document_type_id' | 'entreprise_id'>[]>
-export type IsEtapeCompleteSdomZones = DeepReadonly<SDOMZoneId[]> | null | undefined
-export type IsEtapeCompleteCommunes = DeepReadonly<CommuneId[]>
-export type IsEtapeCompleteDaeDocument = DeepReadonly<Omit<GetEtapeDocumentsByEtapeIdDaeDocument, 'id'> | null>
-export type IsEtapeCompleteAslDocument = DeepReadonly<Omit<GetEtapeDocumentsByEtapeIdAslDocument, 'id'> | null>
-export type IsEtapeCompleteEtapeAvis = DeepReadonly<Pick<EtapeAvis, 'avis_type_id'>[]>
+type IsEtapeCompleteSdomZones = DeepReadonly<SDOMZoneId[]> | null | undefined
+type IsEtapeCompleteCommunes = DeepReadonly<CommuneId[]>
+type IsEtapeCompleteDaeDocument = DeepReadonly<Omit<GetEtapeDocumentsByEtapeIdDaeDocument, 'id'> | null>
+type IsEtapeCompleteAslDocument = DeepReadonly<Omit<GetEtapeDocumentsByEtapeIdAslDocument, 'id'> | null>
+type IsEtapeCompleteEtapeAvis = DeepReadonly<Pick<EtapeAvis, 'avis_type_id'>[]>
 
 export const isEtapeComplete = (
   etape: IsEtapeCompleteEtape,
@@ -292,7 +292,7 @@ export const isEtapeComplete = (
   return { valid: true }
 }
 
-export type IsEtapeDeposableEtapeAvis = DeepReadonly<Pick<EtapeAvis | TempEtapeAvis, 'avis_type_id'>[]>
+type IsEtapeDeposableEtapeAvis = DeepReadonly<Pick<EtapeAvis | TempEtapeAvis, 'avis_type_id'>[]>
 export const isEtapeDeposable = (
   user: User,
   titreTypeId: TitreTypeId,

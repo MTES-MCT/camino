@@ -1,10 +1,5 @@
 import { z } from 'zod'
 
-export interface AvisType {
-  id: AvisTypeId
-  nom: string
-}
-
 interface Definition<T> {
   id: T
   nom: string

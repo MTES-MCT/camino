@@ -27,7 +27,7 @@ import { isNotNullNorUndefinedNorEmpty, DeepReadonly, onlyUnique, NonEmptyArray,
 import { sectionsWithValueCompleteValidate } from './sections.js'
 import { isDureeOptional } from './titres-etapes.js'
 
-export type ValidReturn = { valid: true } | { valid: false; errors: NonEmptyArray<string> }
+type ValidReturn = { valid: true } | { valid: false; errors: NonEmptyArray<string> }
 
 export const dateTypeStepIsVisible = (user: User): boolean => {
   return isSuper(user) || isAdministrationAdmin(user) || isAdministrationEditeur(user)

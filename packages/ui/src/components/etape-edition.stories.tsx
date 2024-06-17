@@ -420,16 +420,16 @@ export const DemandeArmComplete: StoryFn = () => (
 
         return Promise.resolve({
           heritageProps: {
-          dateDebut: { actif: false, etape: null },
-          dateFin: { actif: false, etape: null },
-          duree: { actif: false, etape: null },
-          substances: { actif: false, etape: null },
-          titulaires: { actif: false, etape: null },
-          amodiataires: { actif: false, etape: null },
-          perimetre: {
-            actif: false,
-            etape: null,
-          },
+            dateDebut: { actif: false, etape: null },
+            dateFin: { actif: false, etape: null },
+            duree: { actif: false, etape: null },
+            substances: { actif: false, etape: null },
+            titulaires: { actif: false, etape: null },
+            amodiataires: { actif: false, etape: null },
+            perimetre: {
+              actif: false,
+              etape: null,
+            },
           },
           heritageContenu: { arm: { mecanise: { actif: false }, franchissements: { actif: false } } },
         })
@@ -778,34 +778,34 @@ export const AxmEnZoneDuSdom: StoryFn = () => (
 
         return Promise.resolve({
           heritageProps: {
-          dateDebut: {
-            actif: false,
-            etape: null,
-          },
-          dateFin: {
-            actif: false,
-            etape: null,
-          },
-          duree: {
-            actif: false,
-            etape: null,
-          },
-          substances: {
-            actif: false,
-            etape: null,
-          },
-          titulaires: {
-            actif: false,
-            etape: null,
-          },
-          amodiataires: {
-            actif: false,
-            etape: null,
-          },
-          perimetre: {
-            actif: false,
-            etape: null,
-          },
+            dateDebut: {
+              actif: false,
+              etape: null,
+            },
+            dateFin: {
+              actif: false,
+              etape: null,
+            },
+            duree: {
+              actif: false,
+              etape: null,
+            },
+            substances: {
+              actif: false,
+              etape: null,
+            },
+            titulaires: {
+              actif: false,
+              etape: null,
+            },
+            amodiataires: {
+              actif: false,
+              etape: null,
+            },
+            perimetre: {
+              actif: false,
+              etape: null,
+            },
           },
           heritageContenu: {},
         })

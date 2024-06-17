@@ -9,7 +9,6 @@ import { DemarcheId } from 'camino-common/src/demarche'
 import { ApiClient } from '../../api/api-client'
 import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts'
 import { DsfrInput } from '../_ui/dsfr-input'
-import { User, isAdministrationAdmin, isAdministrationEditeur, isSuper } from 'camino-common/src/roles'
 
 export type EtapeDateTypeEdit = DeepReadonly<{
   statutId: EtapeStatutId | null

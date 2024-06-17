@@ -68,12 +68,20 @@ describe('canReadAvis', () => {
         })
       ).toBe(false)
       expect(
-        await canReadAvis({ avis_visibility_id: AvisVisibilityIds.TitulairesEtAdministrations }, user, shouldNotBeCalled, shouldNotBeCalled, () => Promise.resolve(user.entreprises.map(({ id }) => id)), 'mfr', {
-          public_lecture: true,
-          entreprises_lecture: false,
-          titre_public_lecture: true,
-          demarche_type_id: 'oct',
-        })
+        await canReadAvis(
+          { avis_visibility_id: AvisVisibilityIds.TitulairesEtAdministrations },
+          user,
+          shouldNotBeCalled,
+          shouldNotBeCalled,
+          () => Promise.resolve(user.entreprises.map(({ id }) => id)),
+          'mfr',
+          {
+            public_lecture: true,
+            entreprises_lecture: false,
+            titre_public_lecture: true,
+            demarche_type_id: 'oct',
+          }
+        )
       ).toBe(true)
       expect(
         await canReadAvis({ avis_visibility_id: AvisVisibilityIds.TitulairesEtAdministrations }, user, shouldNotBeCalled, shouldNotBeCalled, () => Promise.resolve([]), 'mfr', {

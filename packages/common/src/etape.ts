@@ -26,11 +26,11 @@ export type EtapeSlug = z.infer<typeof etapeSlugValidator>
 export const etapeIdOrSlugValidator = z.union([etapeIdValidator, etapeSlugValidator])
 export type EtapeIdOrSlug = z.infer<typeof etapeIdOrSlugValidator>
 
-export type HeritageProp<T> = { actif: boolean; etape?: T | null }
+type HeritageProp<T> = { actif: boolean; etape?: T | null }
 
 type EtapePropsFromHeritagePropName<key extends EtapeHeritageProps> = MappingHeritagePropsNameEtapePropsName[key][number]
 
-export type EtapeWithHeritage = InternalEtapeWithHeritage<EtapeHeritageProps, Omit<GraphqlEtape, 'typeId' | 'date' | 'statutId'> & { typeId: EtapeTypeId; date: CaminoDate; statutId: EtapeStatutId }>
+type EtapeWithHeritage = InternalEtapeWithHeritage<EtapeHeritageProps, Omit<GraphqlEtape, 'typeId' | 'date' | 'statutId'> & { typeId: EtapeTypeId; date: CaminoDate; statutId: EtapeStatutId }>
 
 type HeritageContenu = Record<string, Record<string, HeritageProp<Pick<EtapeWithHeritage, 'contenu' | 'typeId' | 'date'>>>>
 type InternalEtapeWithHeritage<HeritagePropsKeys extends EtapeHeritageProps, T extends Pick<GraphqlEtape, 'date' | EtapePropsFromHeritagePropName<HeritagePropsKeys>> & { typeId: EtapeTypeId }> = T & {
@@ -107,7 +107,6 @@ export const getEtapeAvisByEtapeIdValidator = z.array(etapeAvisValidator)
 export type GetEtapeAvisByEtapeId = z.infer<typeof getEtapeAvisByEtapeIdValidator>
 
 const etapeAvisWithFileModificationValidator = etapeAvisValidator.extend({ temp_document_name: tempDocumentNameValidator.optional() })
-export type EtapeAvisWithFileModification = z.infer<typeof etapeAvisWithFileModificationValidator>
 export const etapeAvisModificationValidator = z.union([etapeAvisWithFileModificationValidator, tempEtapeAvisValidator])
 export type EtapeAvisModification = z.infer<typeof etapeAvisModificationValidator>
 
