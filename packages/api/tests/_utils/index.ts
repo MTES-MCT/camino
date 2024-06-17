@@ -15,7 +15,7 @@ import { CaminoRestRoutes, DeleteRestRoutes, getRestRoute, GetRestRoutes, PostRe
 import { z } from 'zod'
 import { newUtilisateurId } from '../../src/database/models/_format/id-create.js'
 import { idUserKeycloakRecognised } from '../keycloak.js'
-import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
+import { DeepReadonly, isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
 import { config } from '../../src/config/index.js'
 
 export const queryImport = (nom: string) =>
@@ -63,7 +63,7 @@ export const restPostCall = async <Route extends PostRestRoutes>(
   caminoRestRoute: Route,
   params: CaminoRestParams<Route>,
   user: TestUser | undefined,
-  body: z.infer<(typeof CaminoRestRoutes)[Route]['post']['input']>
+  body: DeepReadonly<z.infer<(typeof CaminoRestRoutes)[Route]['post']['input']>>
 ): Promise<request.Test> => {
   const req = request(app(pool))
     .post(getRestRoute(caminoRestRoute, params))

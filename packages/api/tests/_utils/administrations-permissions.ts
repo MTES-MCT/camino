@@ -204,6 +204,7 @@ export const creationCheck = async (pool: Pool, administrationId: string, creer:
     for (const documentTypeId of documentTypesIds) {
       etapeDocuments.push(testDocumentCreateTemp(documentTypeId))
     }
+    // FIXME utiliser l'api REST
     const res = await graphQLCall(
       pool,
       queryImport('titre-etape-creer'),
