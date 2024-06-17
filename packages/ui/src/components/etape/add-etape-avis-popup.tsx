@@ -13,6 +13,7 @@ import { TypeaheadSmartSingle } from '../_ui/typeahead-smart-single'
 import { DsfrInputRadio } from '../_ui/dsfr-input-radio'
 import { User, isEntrepriseOrBureauDEtude } from 'camino-common/src/roles'
 import { getAvisVisibilityLabel } from './etape-avis'
+import { DsfrTextarea } from '../_ui/dsfr-textarea'
 
 interface Props {
   close: (document: EtapeAvisModification | null) => void
@@ -78,7 +79,7 @@ export const AddEtapeAvisPopup = defineComponent<Props>(props => {
         </div>
 
         <div class="fr-fieldset__element">
-          <DsfrInput legend={{ main: 'Description' }} initialValue={avisDescription.value} type={{ type: 'text' }} valueChanged={descriptionChange} />
+          <DsfrTextarea legend={{ main: 'Description' }} initialValue={avisDescription.value} valueChanged={descriptionChange} />
         </div>
 
         <div class="fr-fieldset__element">

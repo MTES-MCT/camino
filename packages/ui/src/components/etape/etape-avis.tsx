@@ -51,7 +51,7 @@ export const EtapeAvisTable: FunctionalComponent<Props> = props => {
                   <AvisStatut avisStatutId={item.avis_statut_id} />
                 </td>
                 <td>{dateFormat(item.date)}</td>
-                <td>{item.description}</td>
+                <td style={{ whiteSpace: 'pre-line' }}>{item.description}</td>
                 {isSuper(props.user) || isAdministration(props.user) ? <td>{getAvisVisibilityLabel(item.avis_visibility_id)}</td> : null}
               </tr>
             ))}

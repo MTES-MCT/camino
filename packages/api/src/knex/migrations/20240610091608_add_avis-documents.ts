@@ -114,7 +114,7 @@ export const up = async (knex: Knex) => {
   ])
   await knex.raw(`DELETE FROM titres_etapes where archive is true and type_id in (${etapeTypesToDelete.map(_ => '?').join(',')})`, [...etapeTypesToDelete])
   await knex.raw(
-    'CREATE TABLE etape_avis (id character varying(255) NOT NULL, avis_type_id character varying(255) NOT NULL, avis_statut_id character varying(255) NOT NULL, avis_visibility_id character varying(255) NOT NULL, etape_id character varying(255) NOT NULL, description character varying(1024) NOT NULL, date character varying(10) NOT NULL, largeobject_id oid)'
+    'CREATE TABLE etape_avis (id character varying(255) NOT NULL, avis_type_id character varying(255) NOT NULL, avis_statut_id character varying(255) NOT NULL, avis_visibility_id character varying(255) NOT NULL, etape_id character varying(255) NOT NULL, description text NOT NULL, date character varying(10) NOT NULL, largeobject_id oid)'
   )
 
   const allEtapesDb: { rows: EtapeFromDb[] } = await knex.raw(
@@ -160,13 +160,16 @@ export const up = async (knex: Knex) => {
         if (titreTypeIdDemarcheTypeId.rows[0].titre_type_id === 'arm' && titreTypeIdDemarcheTypeId.rows[0].demarche_type_id === 'oct' && (etape.type_id === 'eof' || etape.type_id === 'aof')) {
           sections = oldSections[etape.type_id]
         }
-        let descriptionSections: string = ''
+        const descriptionSections: string[] = []
 
         if (isNotNullNorUndefinedNorEmpty(sections)) {
           const sectionsWithValue = getSectionsWithValue(sections, etape.contenu)
           for (const section of sectionsWithValue) {
             for (const element of section.elements) {
-              descriptionSections += `\n - ${element.nom} : ${valeurFind(element)}`
+              const value = valeurFind(element)
+              if (value !== '–') {
+                descriptionSections.push(`- ${element.nom} : ${valeurFind(element)}`)
+              }
             }
           }
         }
@@ -176,7 +179,12 @@ export const up = async (knex: Knex) => {
 
           let description: string = document.description ?? ''
           if (i === 0) {
-            description = `${description}\n${descriptionSections}`
+            if (isNotNullNorUndefinedNorEmpty(description)) {
+              description = `${description}
+${descriptionSections.join('\n')}`
+            } else {
+              description = descriptionSections.join('\n')
+            }
           }
           const row = {
             id: document.id,
@@ -200,7 +208,7 @@ export const up = async (knex: Knex) => {
             id: newEtapeAvisId(etape.date, avisTypeId),
             avis_type_id: avisTypeId,
             etape_id: etapePivotId,
-            description: descriptionSections,
+            description: descriptionSections.join('\n'),
             avis_statut_id: avisStatutId,
             date: etape.date,
             largeobject_id: null,
