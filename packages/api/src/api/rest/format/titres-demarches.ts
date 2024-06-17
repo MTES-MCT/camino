@@ -3,7 +3,7 @@ import { ITitreDemarche, Index } from '../../../types.js'
 import { titreEtapesSortDescByOrdre } from '../../../business/utils/titre-etapes-sort.js'
 import { getEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStatuts.js'
 import { DemarchesStatuts } from 'camino-common/src/static/demarchesStatuts.js'
-import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools.js'
+import { isNotNullNorUndefined, isNullOrUndefined, isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools.js'
 import { TitresStatuts } from 'camino-common/src/static/titresStatuts.js'
 import { DemarchesTypes } from 'camino-common/src/static/demarchesTypes.js'
 import { ReferencesTypes } from 'camino-common/src/static/referencesTypes.js'
@@ -18,7 +18,7 @@ import { EntrepriseId } from 'camino-common/src/entreprise.js'
 import { GetEntreprises, getEntreprises } from '../entreprises.queries.js'
 
 const etapesDatesStatutsBuild = (titreDemarche: ITitreDemarche) => {
-  if (!isNotNullNorUndefinedNorEmpty(titreDemarche.etapes)) return null
+  if (isNullOrUndefinedOrEmpty(titreDemarche.etapes)) return null
 
   const etapes = titreEtapesSortDescByOrdre(titreDemarche.etapes)
 
@@ -27,7 +27,7 @@ const etapesDatesStatutsBuild = (titreDemarche: ITitreDemarche) => {
     .reduce((etapesDatesStatuts, etape) => {
       const type = EtapesTypes[etape.typeId]
 
-      if (!isNotNullNorUndefined(type)) {
+      if (isNullOrUndefined(type)) {
         return etapesDatesStatuts
       }
 
@@ -65,10 +65,10 @@ export const titresDemarchesFormatTable = async (pool: Pool, titresDemarches: IT
 
     const etapesTypesStatuts = etapesDatesStatutsBuild(titreDemarche)
 
-    const sortedEtapeByOrdre = titreDemarche.etapes ? titreEtapesSortDescByOrdre(titreDemarche.etapes) : undefined
-    const etapeWithPoints = sortedEtapeByOrdre?.find(etape => isNotNullNorUndefined(etape.geojson4326Perimetre)) ?? null
-    const etapeWithTitulaires = sortedEtapeByOrdre?.find(etape => isNotNullNorUndefined(etape.titulaireIds)) ?? null
-    const etapeWithAmodiataires = sortedEtapeByOrdre?.find(etape => isNotNullNorUndefined(etape.amodiataireIds)) ?? null
+    const sortedEtapeByOrdre = titreEtapesSortDescByOrdre(titreDemarche.etapes ?? [])
+    const etapeWithPoints = sortedEtapeByOrdre.find(etape => isNotNullNorUndefined(etape.geojson4326Perimetre)) ?? null
+    const etapeWithTitulaires = sortedEtapeByOrdre.find(etape => isNotNullNorUndefined(etape.titulaireIds)) ?? null
+    const etapeWithAmodiataires = sortedEtapeByOrdre.find(etape => isNotNullNorUndefined(etape.amodiataireIds)) ?? null
 
     const titreDemarcheNew = {
       titre_id: titre.slug,
