@@ -78,8 +78,6 @@ const ETAPES_STATUTS_OK_IDS = [
   ETAPES_STATUTS.EXEMPTE,
 ] as const satisfies Readonly<EtapeStatutId[]>
 
-
-
 export const isEtapeStatusOk = (etapeStatutId: EtapeStatutId): boolean => ETAPES_STATUTS_OK_IDS.includes(etapeStatutId)
 
 const EtapesFondamentalesStatutsOkIds = [ETAPES_STATUTS.ACCEPTE, ETAPES_STATUTS.FAIT, ETAPES_STATUTS.FAVORABLE]
