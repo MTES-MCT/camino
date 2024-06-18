@@ -119,7 +119,7 @@ export interface Departement<T = DepartementId> {
   regionId: RegionId
 }
 
-const codePostalValidator = z
+export const codePostalValidator = z
   .string()
   .regex(/^\d{5}$/)
   .brand('codePostal')

@@ -183,8 +183,6 @@ export const demarches =
         fields: {
           titre: {
             id: {},
-            titulairesEtape: { id: {} },
-            amodiatairesEtape: { id: {} },
           },
           etapes: {
             id: {},

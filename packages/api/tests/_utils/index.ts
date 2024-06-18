@@ -11,7 +11,7 @@ import { userSuper } from '../../src/database/user-super'
 import { AdminUserNotNull, isAdministrationRole, isSuperRole, UserNotNull } from 'camino-common/src/roles.js'
 import { TestUser } from 'camino-common/src/tests-utils.js'
 import { getCurrent } from 'camino-common/src/date.js'
-import { CaminoRestRoutes, DeleteRestRoutes, getRestRoute, GetRestRoutes, PostRestRoutes, PutRestRoutes, CaminoRestParams } from 'camino-common/src/rest.js'
+import { CaminoRestRoutes, DeleteRestRoutes, getRestRoute, GetRestRoutes, PostRestRoutes, PutRestRoutes, CaminoRestParams, DownloadRestRoutes } from 'camino-common/src/rest.js'
 import { z } from 'zod'
 import { newUtilisateurId } from '../../src/database/models/_format/id-create.js'
 import { idUserKeycloakRecognised } from '../keycloak.js'
@@ -30,6 +30,18 @@ const tokenCreate = (user: Partial<IUtilisateur>) => {
 
 export const graphQLCall = async (pool: Pool, query: string, variables: Index<string | boolean | Index<string | boolean | Index<string>[] | any>>, user: TestUser | undefined) => {
   const req = request(app(pool)).post('/').send({ query, variables })
+
+  return jwtSet(req, user)
+}
+
+export const restDownloadCall = async <Route extends DownloadRestRoutes>(
+  pool: Pool,
+  route: Route,
+  params: CaminoRestParams<Route>,
+  user: TestUser | undefined,
+  searchParams?: Record<string, string | string[]>
+): Promise<request.Test> => {
+  const req = request(app(pool)).get(getRestRoute(route, params, searchParams))
 
   return jwtSet(req, user)
 }
