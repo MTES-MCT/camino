@@ -1,10 +1,9 @@
 import { dbManager } from '../../../tests/db-manager.js'
 import { creationCheck, visibleCheck } from '../../../tests/_utils/administrations-permissions.js'
-import { afterAll, beforeEach, beforeAll, describe, test, vi } from 'vitest'
+import { afterAll, beforeAll, describe, test, vi } from 'vitest'
 import { AdministrationId } from 'camino-common/src/static/administrations.js'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
 import type { Pool } from 'pg'
-import { Knex } from 'knex'
 vi.mock('../../tools/dir-create', () => ({
   __esModule: true,
   default: vi.fn(),
@@ -14,16 +13,11 @@ console.info = vi.fn()
 console.error = vi.fn()
 
 let dbPool: Pool
-let knexInstance: Knex
 beforeAll(async () => {
-  const { pool, knex } = await dbManager.populateDb()
+  const { pool } = await dbManager.populateDb()
   dbPool = pool
-  knexInstance = knex
 })
-beforeEach(async () => {
-  await knexInstance.raw('delete from logs')
-  await knexInstance.raw('delete from utilisateurs')
-})
+
 afterAll(async () => {
   await dbManager.closeKnex()
 })
