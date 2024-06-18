@@ -3,8 +3,8 @@ import { creationCheck, visibleCheck } from '../../../tests/_utils/administratio
 import { afterAll, beforeEach, beforeAll, describe, test, vi } from 'vitest'
 import { AdministrationId } from 'camino-common/src/static/administrations.js'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
-import Utilisateurs from '../../database/models/utilisateurs'
 import type { Pool } from 'pg'
+import { Knex } from 'knex'
 vi.mock('../../tools/dir-create', () => ({
   __esModule: true,
   default: vi.fn(),
@@ -13,15 +13,17 @@ vi.mock('../../tools/dir-create', () => ({
 console.info = vi.fn()
 console.error = vi.fn()
 
-beforeEach(async () => {
-  await Utilisateurs.query().delete()
-})
 let dbPool: Pool
+let knexInstance: Knex
 beforeAll(async () => {
-  const { pool } = await dbManager.populateDb()
+  const { pool, knex } = await dbManager.populateDb()
   dbPool = pool
+  knexInstance = knex
 })
-
+beforeEach(async () => {
+  await knexInstance.raw('delete from logs')
+  await knexInstance.raw('delete from utilisateurs')
+})
 afterAll(async () => {
   await dbManager.closeKnex()
 })
@@ -59,9 +61,15 @@ describe('Visibilité des étapes', () => {
 })
 
 describe('Création des étapes', () => {
-  test('un utilisateur admin de l’administration min-mtes-dgaln-01 peut créer une étape $etapeTypeId sur un titre CXM', () => creationCheck(dbPool, 'min-mtes-dgaln-01', true, 'etapes', 'cxm'))
+  test('un utilisateur admin de l’administration min-mtes-dgaln-01 peut créer une étape $etapeTypeId sur un titre CXM', async () => {
+    await creationCheck(dbPool, 'min-mtes-dgaln-01', true, 'etapes', 'cxm')
+  })
 
-  test('un utilisateur admin de l’administration "min-mtes-dgaln-01" peut créer une étape mfr sur un titre PRM', () => creationCheck(dbPool, 'min-mtes-dgaln-01', true, 'etapes', 'prm'))
+  test('un utilisateur admin de l’administration "min-mtes-dgaln-01" peut créer une étape mfr sur un titre PRM', async () => {
+    await creationCheck(dbPool, 'min-mtes-dgaln-01', true, 'etapes', 'prm')
+  })
 
-  test('un utilisateur admin de l’administration "min-mtes-dgaln-01" peut créer une étape mfr sur un titre PXM', () => creationCheck(dbPool, 'min-mtes-dgaln-01', true, 'etapes', 'pxm'))
+  test('un utilisateur admin de l’administration "min-mtes-dgaln-01" peut créer une étape mfr sur un titre PXM', async () => {
+    await creationCheck(dbPool, 'min-mtes-dgaln-01', true, 'etapes', 'pxm')
+  })
 })
