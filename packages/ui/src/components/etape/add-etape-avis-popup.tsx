@@ -79,15 +79,15 @@ export const AddEtapeAvisPopup = defineComponent<Props>(props => {
         </div>
 
         <div class="fr-fieldset__element">
-          <DsfrInput legend={{ main: 'Date' }} type={{ type: 'date' }} initialValue={avisDate.value} valueChanged={setAvisDate} />
+          <DsfrInput legend={{ main: 'Date' }} required={true} type={{ type: 'date' }} initialValue={avisDate.value} valueChanged={setAvisDate} />
         </div>
 
         <div class="fr-fieldset__element">
-          <DsfrSelect legend={{ main: 'Statut' }} items={map(AvisStatutIds, avis => ({ id: avis, label: avis }))} initialValue={avisStatutId.value} valueChanged={setAvisStatutId} />
+          <DsfrSelect legend={{ main: 'Statut' }} required={true} items={map(AvisStatutIds, avis => ({ id: avis, label: avis }))} initialValue={avisStatutId.value} valueChanged={setAvisStatutId} />
         </div>
 
         <div class="fr-fieldset__element">
-          <DsfrInputRadio legend={{ main: 'Visibilité' }} elements={visibilityChoices.value} initialValue={avisVisibilityId.value} valueChanged={visibilityChange} />
+          <DsfrInputRadio legend={{ main: 'Visibilité' }} required={true} elements={visibilityChoices.value} initialValue={avisVisibilityId.value} valueChanged={visibilityChange} />
         </div>
         <div class="fr-fieldset__element">
           <DsfrTextarea legend={{ main: 'Description' }} initialValue={avisDescription.value} valueChanged={descriptionChange} />
@@ -106,7 +106,7 @@ export const AddEtapeAvisPopup = defineComponent<Props>(props => {
   }))
 
   const canSave = computed<boolean>(() => {
-    return tempEtapeAvisValidator.omit({ temp_document_name: true }).safeParse(tempAvis.value).success && (etapeAvisFile.value !== null || isNotNullNorUndefined(props.initialAvis))
+    return tempEtapeAvisValidator.omit({ temp_document_name: true }).safeParse(tempAvis.value).success
   })
 
   return () => (

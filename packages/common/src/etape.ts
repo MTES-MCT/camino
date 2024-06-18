@@ -99,14 +99,15 @@ export const etapeAvisValidator = z.object({
 })
 export type EtapeAvis = z.infer<typeof etapeAvisValidator>
 
-export const tempEtapeAvisValidator = etapeAvisValidator.omit({ id: true, has_file: true }).extend({ temp_document_name: tempDocumentNameValidator })
+const etapeAvisWithFileModificationValidator = etapeAvisValidator.extend({ temp_document_name: tempDocumentNameValidator.optional() })
+
+export const tempEtapeAvisValidator = etapeAvisWithFileModificationValidator.omit({ id: true, has_file: true })
 export type TempEtapeAvis = z.infer<typeof tempEtapeAvisValidator>
 
 export const getEtapeAvisByEtapeIdValidator = z.array(etapeAvisValidator)
 
 export type GetEtapeAvisByEtapeId = z.infer<typeof getEtapeAvisByEtapeIdValidator>
 
-const etapeAvisWithFileModificationValidator = etapeAvisValidator.extend({ temp_document_name: tempDocumentNameValidator.optional() })
 export const etapeAvisModificationValidator = z.union([etapeAvisWithFileModificationValidator, tempEtapeAvisValidator])
 export type EtapeAvisModification = z.infer<typeof etapeAvisModificationValidator>
 

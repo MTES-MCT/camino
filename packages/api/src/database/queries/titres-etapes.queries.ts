@@ -180,16 +180,16 @@ insert into etapes_documents (id, etape_document_type_id, etape_id, description,
 export const insertEtapeAvis = async (pool: Pool, titre_etape_id: EtapeId, etapeAvis: TempEtapeAvis[]) => {
   for (const avis of etapeAvis) {
     const id = newEtapeAvisId(getCurrent(), avis.avis_type_id)
-    const largeobject_id = await createLargeObject(pool, avis.temp_document_name)
+    const largeobject_id = isNotNullNorUndefined(avis.temp_document_name) ? await createLargeObject(pool, avis.temp_document_name) : null
     await insertEtapeAvisWithLargeObjectId(pool, titre_etape_id, avis, id, largeobject_id)
   }
 }
 
 // VISIBLE FOR TEST
-export const insertEtapeAvisWithLargeObjectId = async (pool: Pool, titre_etape_id: EtapeId, avis: TempEtapeAvis, id: EtapeAvisId, largeobject_id: LargeObjectId) => {
+export const insertEtapeAvisWithLargeObjectId = async (pool: Pool, titre_etape_id: EtapeId, avis: TempEtapeAvis, id: EtapeAvisId, largeobject_id: LargeObjectId | null) => {
   return dbQueryAndValidate(insertEtapeAvisDb, { ...avis, etape_id: titre_etape_id, id, largeobject_id }, pool, z.void())
 }
-const insertEtapeAvisDb = sql<Redefine<IInsertEtapeAvisDbQuery, { etape_id: EtapeId; id: EtapeAvisId; largeobject_id: LargeObjectId } & Omit<TempEtapeAvis, 'temp_document_name'>, void>>`
+const insertEtapeAvisDb = sql<Redefine<IInsertEtapeAvisDbQuery, { etape_id: EtapeId; id: EtapeAvisId; largeobject_id: LargeObjectId | null } & Omit<TempEtapeAvis, 'temp_document_name'>, void>>`
 insert into etape_avis (id, avis_type_id, etape_id, description, avis_statut_id, date, avis_visibility_id, largeobject_id)
     values ($ id !, $ avis_type_id !, $ etape_id !, $ description !, $ avis_statut_id !, $ date !, $ avis_visibility_id !, $ largeobject_id !)
 `

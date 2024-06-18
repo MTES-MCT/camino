@@ -16,7 +16,6 @@ import {
   EtapeBrouillon,
   etapeSlugValidator,
   etapeDocumentModificationValidator,
-  EtapeAvis,
   documentComplementaireDaeEtapeDocumentModificationValidator,
   documentComplementaireAslEtapeDocumentModificationValidator,
 } from 'camino-common/src/etape.js'
@@ -623,7 +622,7 @@ export const createEtape = (pool: Pool) => async (req: CaminoRequest, res: Custo
   }
 }
 
-export const updateEtape = (pool: Pool) => async (req: CaminoRequest, res: CustomResponse<void>) => {
+export const updateEtape = (pool: Pool) => async (req: CaminoRequest, res: CustomResponse<EtapeId>) => {
   try {
     const { success, data: etape, error } = graphqlEtapeModificationValidator.safeParse(req.body)
 
@@ -691,6 +690,11 @@ export const updateEtape = (pool: Pool) => async (req: CaminoRequest, res: Custo
           throw new Error(`le type du titre de la ${titreDemarche.id} n'est pas chargé`)
         }
         const { flattenEtape, perimetreInfos } = await getFlattenEtape(etape, titreDemarche, titreTypeId, pool)
+        flattenEtape.id = etape.id
+        flattenEtape.isBrouillon = titreEtapeOld.isBrouillon
+        if (isNotNullNorUndefined(titreEtapeOld.slug)) {
+          flattenEtape.slug = titreEtapeOld.slug
+        }
         const entrepriseDocuments: EntrepriseDocument[] = await validateAndGetEntrepriseDocuments(pool, flattenEtape, etape.entrepriseDocumentIds, user)
         // delete etape.entrepriseDocumentIds
 
@@ -702,8 +706,6 @@ export const updateEtape = (pool: Pool) => async (req: CaminoRequest, res: Custo
         }
 
         const etapeDocuments = etapeDocumentsParsed.data
-
-        const etapeAvis: Pick<EtapeAvis, 'avis_type_id'>[] = etape.etapeAvis
 
         const needToCreateAslAndDae = needAslAndDae({ etapeTypeId: etape.typeId, demarcheTypeId: titreDemarche.typeId, titreTypeId: titreDemarche.titre.typeId }, titreEtapeOld.isBrouillon, user)
         let daeDocument = null
@@ -731,7 +733,7 @@ export const updateEtape = (pool: Pool) => async (req: CaminoRequest, res: Custo
           titreDemarche,
           titreDemarche.titre,
           etapeDocuments,
-          etapeAvis,
+          etape.etapeAvis,
           entrepriseDocuments,
           perimetreInfos.sdomZones,
           perimetreInfos.communes.map(({ id }) => id),
@@ -817,10 +819,13 @@ export const updateEtape = (pool: Pool) => async (req: CaminoRequest, res: Custo
           }
         }
 
+        // FIXME faut faire un update ou un insert
+        await insertEtapeAvis(pool, etapeUpdated.id, etape.etapeAvis)
+
         await titreEtapeUpdateTask(pool, etapeUpdated.id, etapeUpdated.titreDemarcheId, user)
 
         await titreEtapeAdministrationsEmailsSend(flattenEtape, titreDemarche.typeId, titreDemarche.titreId, titreDemarche.titre.typeId, user, titreEtapeOld)
-        res.json(undefined)
+        res.json(titreEtapeOld.id)
       }
     }
   } catch (e: any) {

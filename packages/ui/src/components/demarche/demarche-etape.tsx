@@ -38,6 +38,8 @@ import { Badge } from '../_ui/badge'
 import { CaminoRouter } from '@/typings/vue-router'
 import { CommuneId } from 'camino-common/src/static/communes'
 import { EtapeAvisTable } from '../etape/etape-avis'
+import { FlattenEtape } from 'camino-common/src/etape-form'
+import { getSections } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections'
 // Il ne faut pas utiliser de literal dans le 'in' il n'y aura jamais d'erreur typescript
 const fondamentalePropsName = 'fondamentale'
 
@@ -170,6 +172,28 @@ export const DemarcheEtape = defineComponent<Props>(props => {
     const perimetre = getMostRecentValuePropFromEtapeFondamentaleValide('perimetre', [{ ...props.demarche, ordre: 0 }])
     const substances = getMostRecentValuePropFromEtapeFondamentaleValide('substances', [{ ...props.demarche, ordre: 0 }])
     const duree = getMostRecentValuePropFromEtapeFondamentaleValide('duree', [{ ...props.demarche, ordre: 0 }])
+
+    const sections = getSections(props.titre.typeId, props.demarche.demarche_type_id, props.etape.etape_type_id)
+    const sortedEtapes = [...props.demarche.etapes].sort((a, b) => b.ordre - a.ordre)
+    const contenu: FlattenEtape['contenu'] = {}
+
+    sections.forEach(section => {
+      contenu[section.id] = {}
+      section.elements.forEach(element => {
+        let elementValue = null
+        for (const etape of sortedEtapes) {
+          const sectionWithValue = etape.sections_with_values.find(s => s.id === section.id)
+          const elementWithValue = sectionWithValue?.elements.find(e => e.id === element.id)
+
+          if (isNotNullNorUndefined(elementWithValue)) {
+            elementValue = elementWithValue.value
+            break
+          }
+        }
+
+        contenu[section.id][element.id] = { value: elementValue, heritee: false, etapeHeritee: null }
+      })
+    })
     return canDeposeEtape(
       props.user,
       { typeId: props.titre.typeId, titreStatutId: props.titre.titreStatutId, titulaires: props.demarche.titulaireIds, administrationsLocales: props.demarche.administrationsLocales },
@@ -177,7 +201,7 @@ export const DemarcheEtape = defineComponent<Props>(props => {
       {
         amodiataires: { value: amodiataireIds ?? [], heritee: false, etapeHeritee: null },
         titulaires: { value: titulaireIds ?? [], heritee: false, etapeHeritee: null },
-        contenu: {},
+        contenu,
         date: props.etape.date,
         typeId: props.etape.etape_type_id,
         duree: { value: duree, heritee: false, etapeHeritee: null },
