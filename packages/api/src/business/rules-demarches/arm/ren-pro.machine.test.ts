@@ -44,7 +44,7 @@ describe('vérifie l’arbre de renonciation et de prolongation d’ARM', () => 
     )
   })
 
-  test('peut mettre une "aof" après une "eof"', () => {
+  test('peut mettre une "asc" après une "mcp"', () => {
     const service = orderAndInterpretMachine(armRenProMachine, [
       { ...ETES.demande.FAIT, date: toCaminoDate('2020-05-27') },
       { ...ETES.depotDeLaDemande.FAIT, date: toCaminoDate('2020-05-30') },

@@ -184,6 +184,8 @@ const EtapeAvisTable: FunctionalComponent<PropsTable> = (props: PropsTable) => {
     props.edit(index)
   }
 
+  const orderedAvis = [...props.avis].sort((a, b) => b.date.localeCompare(a.date))
+
   return (
     <div class="fr-table fr-mb-0">
       <table style={{ display: 'table' }}>
@@ -201,7 +203,7 @@ const EtapeAvisTable: FunctionalComponent<PropsTable> = (props: PropsTable) => {
           </tr>
         </thead>
         <tbody>
-          {props.avis.map(avis => (
+          {orderedAvis.map(avis => (
             <tr>
               <td>{props.getNom(avis.avis_type_id)}</td>
               <td>{dateFormat(avis.date)}</td>

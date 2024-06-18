@@ -79,10 +79,6 @@ export const AddEtapeAvisPopup = defineComponent<Props>(props => {
         </div>
 
         <div class="fr-fieldset__element">
-          <DsfrTextarea legend={{ main: 'Description' }} initialValue={avisDescription.value} valueChanged={descriptionChange} />
-        </div>
-
-        <div class="fr-fieldset__element">
           <DsfrInput legend={{ main: 'Date' }} type={{ type: 'date' }} initialValue={avisDate.value} valueChanged={setAvisDate} />
         </div>
 
@@ -92,6 +88,9 @@ export const AddEtapeAvisPopup = defineComponent<Props>(props => {
 
         <div class="fr-fieldset__element">
           <DsfrInputRadio legend={{ main: 'Visibilité' }} elements={visibilityChoices.value} initialValue={avisVisibilityId.value} valueChanged={visibilityChange} />
+        </div>
+        <div class="fr-fieldset__element">
+          <DsfrTextarea legend={{ main: 'Description' }} initialValue={avisDescription.value} valueChanged={descriptionChange} />
         </div>
       </fieldset>
     </form>

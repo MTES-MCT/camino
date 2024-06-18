@@ -28,6 +28,8 @@ export const EtapeAvisTable: FunctionalComponent<Props> = props => {
     return null
   }
 
+  const orderedAvis = [...props.etapeAvis].sort((a, b) => b.date.localeCompare(a.date))
+
   return (
     <div style={{ overflowX: 'auto' }}>
       <div class=" fr-table fr-m-0">
@@ -36,21 +38,21 @@ export const EtapeAvisTable: FunctionalComponent<Props> = props => {
           <thead>
             <tr>
               <th scope="col">Nom</th>
-              <th scope="col">Statut</th>
               <th scope="col">Date</th>
               <th scope="col">Description</th>
+              <th scope="col">Statut</th>
               {isSuper(props.user) || isAdministration(props.user) ? <th scope="col">Visibilité</th> : null}
             </tr>
           </thead>
           <tbody>
-            {props.etapeAvis.map(item => (
+            {orderedAvis.map(item => (
               <tr>
                 <td>{item.has_file ? <EtapeAvisLink avisId={item.id} avisTypeId={item.avis_type_id} /> : AvisTypes[item.avis_type_id].nom}</td>
+                <td>{dateFormat(item.date)}</td>
+                <td style={{ whiteSpace: 'pre-line' }}>{item.description}</td>
                 <td>
                   <AvisStatut avisStatutId={item.avis_statut_id} />
                 </td>
-                <td>{dateFormat(item.date)}</td>
-                <td style={{ whiteSpace: 'pre-line' }}>{item.description}</td>
                 {isSuper(props.user) || isAdministration(props.user) ? <td>{getAvisVisibilityLabel(item.avis_visibility_id)}</td> : null}
               </tr>
             ))}
