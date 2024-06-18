@@ -868,99 +868,99 @@ test('getDocumentsTypes', () => {
 test('getAvisType', () => {
   expect(getAvisTypes('mfr', 'arm', [])).toMatchInlineSnapshot(`[]`)
   expect(getAvisTypes('asc', 'arm', [])).toMatchInlineSnapshot(`
-      [
-        {
-          "id": "lettreDeSaisineDesServices",
-          "nom": "Lettre de saisine des services",
-          "optionnel": false,
-        },
-        {
-          "id": "avisDirectionRegionaleDesAffairesCulturelles",
-          "nom": "Avis de la Direction Régionale Des Affaires Culturelles (DRAC)",
-          "optionnel": true,
-        },
-        {
-          "id": "avisConseilDepartementalEnvironnementRisquesSanitairesTechnologiques",
-          "nom": "avis du Conseil Départemental de l'Environnement et des Risques Sanitaires et Technologiques (CODERST)",
-          "optionnel": true,
-        },
-        {
-          "id": "avisDirectionsRégionalesEconomieEmploiTravailSolidarités",
-          "nom": "avis de la Direction régionale de l’économie, de l’emploi, du travail et des solidarités",
-          "optionnel": true,
-        },
-        {
-          "id": "avisDirectionRegionaleFinancesPubliques",
-          "nom": "avis de la Direction Regionale Des Finances Publiques",
-          "optionnel": true,
-        },
-        {
-          "id": "avisGendarmerieNationale",
-          "nom": "avis de la Gendarmerie Nationale",
-          "optionnel": true,
-        },
-        {
-          "id": "avisIFREMER",
-          "nom": "avis de l'IFREMER",
-          "optionnel": true,
-        },
-        {
-          "id": "avisInstitutNationalOrigineQualite",
-          "nom": "avis de l'Institut National de l'origine et de la Qualité",
-          "optionnel": true,
-        },
-        {
-          "id": "avisServiceAdministratifLocal",
-          "nom": "avis d'un Service Administratif Local",
-          "optionnel": true,
-        },
-        {
-          "id": "avisAutoriteMilitaire",
-          "nom": "avis de l'Autorité militaire",
-          "optionnel": true,
-        },
-        {
-          "id": "avisParcNational",
-          "nom": "avis du Parc National",
-          "optionnel": true,
-        },
-        {
-          "id": "avisDirectionDepartementaleTerritoiresMer",
-          "nom": "avis de la Direction Départementale des Territoires et de la Mer (DDTM)",
-          "optionnel": true,
-        },
-        {
-          "id": "avisAgenceRegionaleSante",
-          "nom": "avis de l'Agence Régionale de Santé (ARS)",
-          "optionnel": true,
-        },
-        {
-          "id": "avisCaisseGeneraleSecuriteSociale",
-          "nom": "avis de la Caisse Générale de Sécurité Sociale",
-          "optionnel": true,
-        },
-        {
-          "id": "autreAvis",
-          "nom": "Autre avis",
-          "optionnel": true,
-        },
-        {
-          "id": "avisOfficeNationalDesForets",
-          "nom": "avis de l'Office National des Forêts",
-          "optionnel": false,
-        },
-        {
-          "id": "expertiseOfficeNationalDesForets",
-          "nom": "expertise de l'Office National des Forêts",
-          "optionnel": true,
-        },
-        {
-          "id": "avisParcNaturelMarin",
-          "nom": "avis du Parc Naturel Marin",
-          "optionnel": true,
-        },
-      ]
-    `)
+    [
+      {
+        "id": "lettreDeSaisineDesServices",
+        "nom": "Lettre de saisine des services",
+        "optionnel": false,
+      },
+      {
+        "id": "avisDirectionRegionaleDesAffairesCulturelles",
+        "nom": "Avis de la Direction Régionale Des Affaires Culturelles (DRAC)",
+        "optionnel": true,
+      },
+      {
+        "id": "avisConseilDepartementalEnvironnementRisquesSanitairesTechnologiques",
+        "nom": "Avis du Conseil Départemental de l'Environnement et des Risques Sanitaires et Technologiques (CODERST)",
+        "optionnel": true,
+      },
+      {
+        "id": "avisDirectionsRégionalesEconomieEmploiTravailSolidarités",
+        "nom": "Avis de la Direction régionale de l’économie, de l’emploi, du travail et des solidarités",
+        "optionnel": true,
+      },
+      {
+        "id": "avisDirectionRegionaleFinancesPubliques",
+        "nom": "Avis de la Direction Regionale Des Finances Publiques",
+        "optionnel": true,
+      },
+      {
+        "id": "avisGendarmerieNationale",
+        "nom": "Avis de la Gendarmerie Nationale",
+        "optionnel": true,
+      },
+      {
+        "id": "avisIFREMER",
+        "nom": "Avis de l'IFREMER",
+        "optionnel": true,
+      },
+      {
+        "id": "avisInstitutNationalOrigineQualite",
+        "nom": "Avis de l'Institut National de l'origine et de la Qualité",
+        "optionnel": true,
+      },
+      {
+        "id": "avisServiceAdministratifLocal",
+        "nom": "Avis d'un Service Administratif Local",
+        "optionnel": true,
+      },
+      {
+        "id": "avisAutoriteMilitaire",
+        "nom": "Avis de l'Autorité militaire",
+        "optionnel": true,
+      },
+      {
+        "id": "avisParcNational",
+        "nom": "Avis du Parc National",
+        "optionnel": true,
+      },
+      {
+        "id": "avisDirectionDepartementaleTerritoiresMer",
+        "nom": "Avis de la Direction Départementale des Territoires et de la Mer (DDTM)",
+        "optionnel": true,
+      },
+      {
+        "id": "avisAgenceRegionaleSante",
+        "nom": "Avis de l'Agence Régionale de Santé (ARS)",
+        "optionnel": true,
+      },
+      {
+        "id": "avisCaisseGeneraleSecuriteSociale",
+        "nom": "Avis de la Caisse Générale de Sécurité Sociale",
+        "optionnel": true,
+      },
+      {
+        "id": "autreAvis",
+        "nom": "Autre avis",
+        "optionnel": true,
+      },
+      {
+        "id": "avisOfficeNationalDesForets",
+        "nom": "Avis de l'Office National des Forêts",
+        "optionnel": false,
+      },
+      {
+        "id": "expertiseOfficeNationalDesForets",
+        "nom": "Expertise de l'Office National des Forêts",
+        "optionnel": true,
+      },
+      {
+        "id": "avisParcNaturelMarin",
+        "nom": "Avis du Parc Naturel Marin",
+        "optionnel": true,
+      },
+    ]
+  `)
   expect(getAvisTypes('asc', 'arm', [communeIdValidator.parse('97302')])).toMatchInlineSnapshot(`
     [
       {
@@ -975,62 +975,62 @@ test('getAvisType', () => {
       },
       {
         "id": "avisConseilDepartementalEnvironnementRisquesSanitairesTechnologiques",
-        "nom": "avis du Conseil Départemental de l'Environnement et des Risques Sanitaires et Technologiques (CODERST)",
+        "nom": "Avis du Conseil Départemental de l'Environnement et des Risques Sanitaires et Technologiques (CODERST)",
         "optionnel": true,
       },
       {
         "id": "avisDirectionsRégionalesEconomieEmploiTravailSolidarités",
-        "nom": "avis de la Direction régionale de l’économie, de l’emploi, du travail et des solidarités",
+        "nom": "Avis de la Direction régionale de l’économie, de l’emploi, du travail et des solidarités",
         "optionnel": true,
       },
       {
         "id": "avisDirectionRegionaleFinancesPubliques",
-        "nom": "avis de la Direction Regionale Des Finances Publiques",
+        "nom": "Avis de la Direction Regionale Des Finances Publiques",
         "optionnel": true,
       },
       {
         "id": "avisGendarmerieNationale",
-        "nom": "avis de la Gendarmerie Nationale",
+        "nom": "Avis de la Gendarmerie Nationale",
         "optionnel": true,
       },
       {
         "id": "avisIFREMER",
-        "nom": "avis de l'IFREMER",
+        "nom": "Avis de l'IFREMER",
         "optionnel": true,
       },
       {
         "id": "avisInstitutNationalOrigineQualite",
-        "nom": "avis de l'Institut National de l'origine et de la Qualité",
+        "nom": "Avis de l'Institut National de l'origine et de la Qualité",
         "optionnel": true,
       },
       {
         "id": "avisServiceAdministratifLocal",
-        "nom": "avis d'un Service Administratif Local",
+        "nom": "Avis d'un Service Administratif Local",
         "optionnel": true,
       },
       {
         "id": "avisAutoriteMilitaire",
-        "nom": "avis de l'Autorité militaire",
+        "nom": "Avis de l'Autorité militaire",
         "optionnel": true,
       },
       {
         "id": "avisParcNational",
-        "nom": "avis du Parc National",
+        "nom": "Avis du Parc National",
         "optionnel": true,
       },
       {
         "id": "avisDirectionDepartementaleTerritoiresMer",
-        "nom": "avis de la Direction Départementale des Territoires et de la Mer (DDTM)",
+        "nom": "Avis de la Direction Départementale des Territoires et de la Mer (DDTM)",
         "optionnel": true,
       },
       {
         "id": "avisAgenceRegionaleSante",
-        "nom": "avis de l'Agence Régionale de Santé (ARS)",
+        "nom": "Avis de l'Agence Régionale de Santé (ARS)",
         "optionnel": true,
       },
       {
         "id": "avisCaisseGeneraleSecuriteSociale",
-        "nom": "avis de la Caisse Générale de Sécurité Sociale",
+        "nom": "Avis de la Caisse Générale de Sécurité Sociale",
         "optionnel": true,
       },
       {
@@ -1040,27 +1040,27 @@ test('getAvisType', () => {
       },
       {
         "id": "avisOfficeNationalDesForets",
-        "nom": "avis de l'Office National des Forêts",
+        "nom": "Avis de l'Office National des Forêts",
         "optionnel": false,
       },
       {
         "id": "expertiseOfficeNationalDesForets",
-        "nom": "expertise de l'Office National des Forêts",
+        "nom": "Expertise de l'Office National des Forêts",
         "optionnel": true,
       },
       {
         "id": "avisParcNaturelMarin",
-        "nom": "avis du Parc Naturel Marin",
+        "nom": "Avis du Parc Naturel Marin",
         "optionnel": true,
       },
       {
         "id": "avisDirectionAlimentationAgricultureForet",
-        "nom": "avis de la Direction de l'Alimentation de l'Agriculture et de la Forêt (DRAF)",
+        "nom": "Avis de la Direction de l'Alimentation de l'Agriculture et de la Forêt (DRAF)",
         "optionnel": true,
       },
       {
         "id": "avisEtatMajorOrpaillagePecheIllicite",
-        "nom": "avis de l'État-major Orpaillage et Pêche Illicite (EMOPI)",
+        "nom": "Avis de l'État-major Orpaillage et Pêche Illicite (EMOPI)",
         "optionnel": true,
       },
     ]
@@ -1079,62 +1079,62 @@ test('getAvisType', () => {
       },
       {
         "id": "avisConseilDepartementalEnvironnementRisquesSanitairesTechnologiques",
-        "nom": "avis du Conseil Départemental de l'Environnement et des Risques Sanitaires et Technologiques (CODERST)",
+        "nom": "Avis du Conseil Départemental de l'Environnement et des Risques Sanitaires et Technologiques (CODERST)",
         "optionnel": true,
       },
       {
         "id": "avisDirectionsRégionalesEconomieEmploiTravailSolidarités",
-        "nom": "avis de la Direction régionale de l’économie, de l’emploi, du travail et des solidarités",
+        "nom": "Avis de la Direction régionale de l’économie, de l’emploi, du travail et des solidarités",
         "optionnel": true,
       },
       {
         "id": "avisDirectionRegionaleFinancesPubliques",
-        "nom": "avis de la Direction Regionale Des Finances Publiques",
+        "nom": "Avis de la Direction Regionale Des Finances Publiques",
         "optionnel": true,
       },
       {
         "id": "avisGendarmerieNationale",
-        "nom": "avis de la Gendarmerie Nationale",
+        "nom": "Avis de la Gendarmerie Nationale",
         "optionnel": true,
       },
       {
         "id": "avisIFREMER",
-        "nom": "avis de l'IFREMER",
+        "nom": "Avis de l'IFREMER",
         "optionnel": true,
       },
       {
         "id": "avisInstitutNationalOrigineQualite",
-        "nom": "avis de l'Institut National de l'origine et de la Qualité",
+        "nom": "Avis de l'Institut National de l'origine et de la Qualité",
         "optionnel": true,
       },
       {
         "id": "avisServiceAdministratifLocal",
-        "nom": "avis d'un Service Administratif Local",
+        "nom": "Avis d'un Service Administratif Local",
         "optionnel": true,
       },
       {
         "id": "avisAutoriteMilitaire",
-        "nom": "avis de l'Autorité militaire",
+        "nom": "Avis de l'Autorité militaire",
         "optionnel": true,
       },
       {
         "id": "avisParcNational",
-        "nom": "avis du Parc National",
+        "nom": "Avis du Parc National",
         "optionnel": true,
       },
       {
         "id": "avisDirectionDepartementaleTerritoiresMer",
-        "nom": "avis de la Direction Départementale des Territoires et de la Mer (DDTM)",
+        "nom": "Avis de la Direction Départementale des Territoires et de la Mer (DDTM)",
         "optionnel": true,
       },
       {
         "id": "avisAgenceRegionaleSante",
-        "nom": "avis de l'Agence Régionale de Santé (ARS)",
+        "nom": "Avis de l'Agence Régionale de Santé (ARS)",
         "optionnel": true,
       },
       {
         "id": "avisCaisseGeneraleSecuriteSociale",
-        "nom": "avis de la Caisse Générale de Sécurité Sociale",
+        "nom": "Avis de la Caisse Générale de Sécurité Sociale",
         "optionnel": true,
       },
       {
@@ -1144,33 +1144,33 @@ test('getAvisType', () => {
       },
       {
         "id": "avisOfficeNationalDesForets",
-        "nom": "avis de l'Office National des Forêts",
+        "nom": "Avis de l'Office National des Forêts",
         "optionnel": false,
       },
       {
         "id": "expertiseOfficeNationalDesForets",
-        "nom": "expertise de l'Office National des Forêts",
+        "nom": "Expertise de l'Office National des Forêts",
         "optionnel": true,
       },
       {
         "id": "avisParcNaturelMarin",
-        "nom": "avis du Parc Naturel Marin",
+        "nom": "Avis du Parc Naturel Marin",
         "optionnel": true,
       },
       {
         "id": "avisDirectionAlimentationAgricultureForet",
-        "nom": "avis de la Direction de l'Alimentation de l'Agriculture et de la Forêt (DRAF)",
+        "nom": "Avis de la Direction de l'Alimentation de l'Agriculture et de la Forêt (DRAF)",
         "optionnel": true,
       },
       {
         "id": "avisEtatMajorOrpaillagePecheIllicite",
-        "nom": "avis de l'État-major Orpaillage et Pêche Illicite (EMOPI)",
+        "nom": "Avis de l'État-major Orpaillage et Pêche Illicite (EMOPI)",
         "optionnel": true,
       },
       {
         "id": "confirmationAccordProprietaireDuSol",
         "nom": "Confirmation de l'accord du propriétaire du sol",
-        "optionnel": false,
+        "optionnel": true,
       },
     ]
   `)

@@ -398,7 +398,7 @@ describe('etapeModifier', () => {
         typeId: 'men',
         statutId: 'fai',
         titreDemarcheId,
-        date: '2016-01-01',
+        date: caminoDateValidator.parse('2016-01-01'),
         etapeDocuments: [],
         duree: null,
         dateDebut: null,
