@@ -124,7 +124,7 @@ export type TitrePropTitreEtapeFindDemarche<F extends Pick<DemarcheEtape, 'etape
 }
 
 export const getMostRecentValuePropFromEtapeFondamentaleValide = <
-  P extends 'titulaireIds' | 'amodiataireIds' | 'perimetre' | 'substances',
+  P extends 'titulaireIds' | 'amodiataireIds' | 'perimetre' | 'substances' | 'duree',
   F extends Pick<DemarcheEtapeFondamentale, 'etape_statut_id' | 'etape_type_id' | 'ordre' | 'fondamentale' | 'is_brouillon'>,
   NF extends Pick<DemarcheEtapeNonFondamentale, 'etape_statut_id' | 'etape_type_id' | 'ordre' | 'is_brouillon'>,
 >(

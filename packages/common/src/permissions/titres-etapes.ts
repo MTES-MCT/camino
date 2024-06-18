@@ -306,7 +306,7 @@ export const isEtapeDeposable = (
   aslDocument: IsEtapeCompleteAslDocument,
   etapeAvis: IsEtapeDeposableEtapeAvis
 ): boolean => {
-  if (titreEtape.typeId === ETAPES_TYPES.demande && titreEtape.isBrouillon === ETAPE_IS_BROUILLON) {
+  if (titreEtape.isBrouillon === ETAPE_IS_BROUILLON) {
     const complete = isEtapeComplete(titreEtape, titreTypeId, demarcheTypeId, etapeDocuments, entrepriseDocuments, sdomZones, communes, daeDocument, aslDocument, etapeAvis, user)
     if (!complete.valid) {
       console.warn(complete.errors)

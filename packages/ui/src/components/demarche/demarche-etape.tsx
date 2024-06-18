@@ -30,7 +30,7 @@ import { RemoveEtapePopup } from './remove-etape-popup'
 import { SDOMZoneId } from 'camino-common/src/static/sdom'
 import { DeposeEtapePopup } from './depose-etape-popup'
 import { ApiClient } from '@/api/api-client'
-import { TitreGetDemarche } from 'camino-common/src/titres'
+import { TitreGetDemarche, getMostRecentValuePropFromEtapeFondamentaleValide } from 'camino-common/src/titres'
 import { GetEtapeDocumentsByEtapeId, documentTypeIdComplementaireObligatoireASL, documentTypeIdComplementaireObligatoireDAE, etapeDocumentIdValidator, needAslAndDae } from 'camino-common/src/etape'
 import { Unites } from 'camino-common/src/static/unites'
 import { EntrepriseId, Entreprise } from 'camino-common/src/entreprise'
@@ -164,50 +164,50 @@ export const DemarcheEtape = defineComponent<Props>(props => {
     return null
   })
 
-  // FIXME à discuter tous les 3, mais si un jour on ajoute une nouvelle étape fondamentale brouillonable, tout ce code ne sera plus correct
-  // est-ce qu'on pourrait pas utiliser le méthode getMostRecentValuePropFromEtapeFondamentaleValide
   const isDeposable = computed<boolean>(() => {
-    // FIXME on peut aussi déposer l'étape d'avis qui est brouillonable
-    return fondamentalePropsName in props.etape
-      ? canDeposeEtape(
-          props.user,
-          { typeId: props.titre.typeId, titreStatutId: props.titre.titreStatutId, titulaires: props.demarche.titulaireIds, administrationsLocales: props.demarche.administrationsLocales },
-          props.demarche.demarche_type_id,
-          {
-            amodiataires: { value: props.etape.fondamentale.amodiataireIds ?? [], heritee: false, etapeHeritee: null },
-            titulaires: { value: props.etape.fondamentale.titulaireIds ?? [], heritee: false, etapeHeritee: null },
-            contenu: {},
-            date: props.etape.date,
-            typeId: props.etape.etape_type_id,
-            duree: { value: props.etape.fondamentale.duree, heritee: false, etapeHeritee: null },
-            perimetre: {
-              value: {
-                geojson4326Forages: props.etape.fondamentale.perimetre?.geojson4326_forages ?? null,
-                geojson4326Perimetre: props.etape.fondamentale.perimetre?.geojson4326_perimetre ?? null,
-                geojson4326Points: props.etape.fondamentale.perimetre?.geojson4326_points ?? null,
-                geojsonOrigineForages: props.etape.fondamentale.perimetre?.geojson_origine_forages ?? null,
-                geojsonOrigineGeoSystemeId: props.etape.fondamentale.perimetre?.geojson_origine_geo_systeme_id ?? null,
-                geojsonOriginePoints: props.etape.fondamentale.perimetre?.geojson_origine_points ?? null,
-                geojsonOriginePerimetre: props.etape.fondamentale.perimetre?.geojson_origine_perimetre ?? null,
-                surface: props.etape.fondamentale.perimetre?.surface ?? null,
-              },
-              heritee: false,
-              etapeHeritee: null,
-            },
-            substances: { value: props.etape.fondamentale.substances ?? [], heritee: false, etapeHeritee: null },
-
-            isBrouillon: props.etape.is_brouillon,
-            statutId: props.etape.etape_statut_id,
+    const titulaireIds = getMostRecentValuePropFromEtapeFondamentaleValide('titulaireIds', [{ ...props.demarche, ordre: 0 }])
+    const amodiataireIds = getMostRecentValuePropFromEtapeFondamentaleValide('amodiataireIds', [{ ...props.demarche, ordre: 0 }])
+    const perimetre = getMostRecentValuePropFromEtapeFondamentaleValide('perimetre', [{ ...props.demarche, ordre: 0 }])
+    const substances = getMostRecentValuePropFromEtapeFondamentaleValide('substances', [{ ...props.demarche, ordre: 0 }])
+    const duree = getMostRecentValuePropFromEtapeFondamentaleValide('duree', [{ ...props.demarche, ordre: 0 }])
+    return canDeposeEtape(
+      props.user,
+      { typeId: props.titre.typeId, titreStatutId: props.titre.titreStatutId, titulaires: props.demarche.titulaireIds, administrationsLocales: props.demarche.administrationsLocales },
+      props.demarche.demarche_type_id,
+      {
+        amodiataires: { value: amodiataireIds ?? [], heritee: false, etapeHeritee: null },
+        titulaires: { value: titulaireIds ?? [], heritee: false, etapeHeritee: null },
+        contenu: {},
+        date: props.etape.date,
+        typeId: props.etape.etape_type_id,
+        duree: { value: duree, heritee: false, etapeHeritee: null },
+        perimetre: {
+          value: {
+            geojson4326Forages: perimetre?.geojson4326_forages ?? null,
+            geojson4326Perimetre: perimetre?.geojson4326_perimetre ?? null,
+            geojson4326Points: perimetre?.geojson4326_points ?? null,
+            geojsonOrigineForages: perimetre?.geojson_origine_forages ?? null,
+            geojsonOrigineGeoSystemeId: perimetre?.geojson_origine_geo_systeme_id ?? null,
+            geojsonOriginePoints: perimetre?.geojson_origine_points ?? null,
+            geojsonOriginePerimetre: perimetre?.geojson_origine_perimetre ?? null,
+            surface: perimetre?.surface ?? null,
           },
-          props.etape.etape_documents,
-          props.etape.entreprises_documents,
-          props.demarche.sdom_zones,
-          props.demarche.communes,
-          daeDocument.value,
-          aslDocument.value,
-          props.etape.avis_documents
-        )
-      : false
+          heritee: false,
+          etapeHeritee: null,
+        },
+        substances: { value: substances ?? [], heritee: false, etapeHeritee: null },
+
+        isBrouillon: props.etape.is_brouillon,
+        statutId: props.etape.etape_statut_id,
+      },
+      props.etape.etape_documents,
+      props.etape.entreprises_documents,
+      props.demarche.sdom_zones,
+      props.demarche.communes,
+      daeDocument.value,
+      aslDocument.value,
+      props.etape.avis_documents
+    )
   })
 
   const isBrouillon = computed<boolean>(() => props.etape.is_brouillon)
@@ -226,7 +226,7 @@ export const DemarcheEtape = defineComponent<Props>(props => {
           <div style={{ display: 'flex' }}>
             {canEditOrDeleteEtape.value ? (
               <>
-                {isBrouillon.value ? <DsfrButton class="fr-mr-1v" buttonType="primary" label="Déposer" title="Déposer la demande" onClick={deposePopupOpen} disabled={!isDeposable.value} /> : null}
+                {isBrouillon.value ? <DsfrButton class="fr-mr-1v" buttonType="primary" label="Déposer" title="Déposer l'étape" onClick={deposePopupOpen} disabled={!isDeposable.value} /> : null}
                 <DsfrLink
                   icon={'fr-icon-pencil-line'}
                   disabled={false}

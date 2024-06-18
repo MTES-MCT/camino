@@ -474,7 +474,7 @@ export const EtapeEditForm = defineComponent<Props>(props => {
                   alertes={alertes.value}
                   canSave={canSave.value}
                   canDepose={canDepose.value}
-                  showDepose={etapeLoaded.typeId === 'mfr' && etapeLoaded.isBrouillon}
+                  showDepose={etapeLoaded.isBrouillon}
                   save={saveAndReroute}
                   depose={depose}
                 />
