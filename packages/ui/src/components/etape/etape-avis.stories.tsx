@@ -42,7 +42,11 @@ const avis: EtapeAvis[] = [
   },
 ]
 
-export const Empty: StoryFn = () => <EtapeAvisTable etapeAvis={[]} user={null} />
+export const Empty: StoryFn = () => (
+  <div>
+    <EtapeAvisTable etapeAvis={[]} user={null} />
+  </div>
+)
 export const NotConnected: StoryFn = () => <EtapeAvisTable etapeAvis={avis} user={null} />
 export const UserSuper: StoryFn = () => <EtapeAvisTable etapeAvis={avis} user={{ ...testBlankUser, role: 'super' }} />
 export const UserAdministration: StoryFn = () => <EtapeAvisTable etapeAvis={avis} user={{ ...testBlankUser, role: 'admin', administrationId: 'aut-mrae-guyane-01' }} />
