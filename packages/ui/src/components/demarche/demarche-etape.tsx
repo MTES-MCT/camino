@@ -166,8 +166,9 @@ export const DemarcheEtape = defineComponent<Props>(props => {
 
   // FIXME à discuter tous les 3, mais si un jour on ajoute une nouvelle étape fondamentale brouillonable, tout ce code ne sera plus correct
   // est-ce qu'on pourrait pas utiliser le méthode getMostRecentValuePropFromEtapeFondamentaleValide
-  const isDeposable = computed<boolean>(() =>
-    fondamentalePropsName in props.etape
+  const isDeposable = computed<boolean>(() => {
+    // FIXME on peut aussi déposer l'étape d'avis qui est brouillonable
+    return fondamentalePropsName in props.etape
       ? canDeposeEtape(
           props.user,
           { typeId: props.titre.typeId, titreStatutId: props.titre.titreStatutId, titulaires: props.demarche.titulaireIds, administrationsLocales: props.demarche.administrationsLocales },
@@ -207,7 +208,7 @@ export const DemarcheEtape = defineComponent<Props>(props => {
           props.etape.avis_documents
         )
       : false
-  )
+  })
 
   const isBrouillon = computed<boolean>(() => props.etape.is_brouillon)
 
@@ -225,10 +226,7 @@ export const DemarcheEtape = defineComponent<Props>(props => {
           <div style={{ display: 'flex' }}>
             {canEditOrDeleteEtape.value ? (
               <>
-                {/* TODO 2024-05-16: retirer la condition 'est une demande' pour ne conserver que 'est un brouillon' */}
-                {props.etape.etape_type_id === ETAPES_TYPES.demande && isBrouillon.value ? (
-                  <DsfrButton class="fr-mr-1v" buttonType="primary" label="Déposer" title="Déposer la demande" onClick={deposePopupOpen} disabled={!isDeposable.value} />
-                ) : null}
+                {isBrouillon.value ? <DsfrButton class="fr-mr-1v" buttonType="primary" label="Déposer" title="Déposer la demande" onClick={deposePopupOpen} disabled={!isDeposable.value} /> : null}
                 <DsfrLink
                   icon={'fr-icon-pencil-line'}
                   disabled={false}

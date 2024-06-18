@@ -207,9 +207,9 @@ export const getAvisTypes = (etapeTypeId: EtapeTypeId, titreTypeId: TitreTypeId,
       )
     }
 
-    // FIXME Obligatoire si avis propriétaire du sol est favorable avec réserve ... On garde ça ?! On peut le mettre tout le temps optionnel pour le moment
+    // TODO 2024-06-18 Normalement c'est obligatoire si avis propriétaire du sol est favorable avec réserve,  optionnel pour le moment
     if (TitresTypes[titreTypeId].typeId === TITRES_TYPES_TYPES_IDS.AUTORISATION_D_EXPLOITATION) {
-      avis.push({ ...AvisTypes.confirmationAccordProprietaireDuSol, optionnel: false })
+      avis.push({ ...AvisTypes.confirmationAccordProprietaireDuSol, optionnel: true })
     }
   }
 
