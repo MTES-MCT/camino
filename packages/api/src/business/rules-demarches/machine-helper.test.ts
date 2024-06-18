@@ -451,33 +451,33 @@ describe('mainStep', () => {
         },
         {
           "contenu": undefined,
+          "etapeStatutId": "fav",
+          "etapeTypeId": "ede",
+          "mainStep": false,
+        },
+        {
+          "contenu": undefined,
+          "etapeStatutId": "def",
+          "etapeTypeId": "ede",
+          "mainStep": false,
+        },
+        {
+          "contenu": undefined,
+          "etapeStatutId": "fav",
+          "etapeTypeId": "edm",
+          "mainStep": false,
+        },
+        {
+          "contenu": undefined,
+          "etapeStatutId": "def",
+          "etapeTypeId": "edm",
+          "mainStep": false,
+        },
+        {
+          "contenu": undefined,
           "etapeStatutId": "fai",
           "etapeTypeId": "asc",
           "mainStep": true,
-        },
-        {
-          "contenu": undefined,
-          "etapeStatutId": "fav",
-          "etapeTypeId": "ede",
-          "mainStep": false,
-        },
-        {
-          "contenu": undefined,
-          "etapeStatutId": "def",
-          "etapeTypeId": "ede",
-          "mainStep": false,
-        },
-        {
-          "contenu": undefined,
-          "etapeStatutId": "fav",
-          "etapeTypeId": "edm",
-          "mainStep": false,
-        },
-        {
-          "contenu": undefined,
-          "etapeStatutId": "def",
-          "etapeTypeId": "edm",
-          "mainStep": false,
         },
       ]
     `)
@@ -521,6 +521,30 @@ describe('mainStep', () => {
           "etapeStatutId": "fai",
           "etapeTypeId": "sca",
           "mainStep": true,
+        },
+        {
+          "contenu": undefined,
+          "etapeStatutId": "fav",
+          "etapeTypeId": "ede",
+          "mainStep": false,
+        },
+        {
+          "contenu": undefined,
+          "etapeStatutId": "def",
+          "etapeTypeId": "ede",
+          "mainStep": false,
+        },
+        {
+          "contenu": undefined,
+          "etapeStatutId": "fav",
+          "etapeTypeId": "edm",
+          "mainStep": false,
+        },
+        {
+          "contenu": undefined,
+          "etapeStatutId": "def",
+          "etapeTypeId": "edm",
+          "mainStep": false,
         },
       ]
     `)
