@@ -198,14 +198,8 @@ export const etapeApiClient: EtapeApiClient = {
   },
 
   etapeModifier: async etape => {
-    const result = await apiGraphQLFetch(gql`
-      mutation EtapeModifier($etape: InputEtapeModification!) {
-        etapeModifier(etape: $etape) {
-          id
-        }
-      }
-    `)({ etape: graphqlEtapeModificationValidator.parse(etape) })
+    await putWithJson('/rest/etapes', {}, graphqlEtapeModificationValidator.parse(etape))
 
-    return result.id
+    return etape.id
   },
 }

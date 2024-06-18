@@ -15,6 +15,10 @@ import {
   tempEtapeDocumentValidator,
   EtapeBrouillon,
   etapeSlugValidator,
+  etapeDocumentModificationValidator,
+  EtapeAvis,
+  documentComplementaireDaeEtapeDocumentModificationValidator,
+  documentComplementaireAslEtapeDocumentModificationValidator,
 } from 'camino-common/src/etape.js'
 import { DemarcheId, demarcheIdValidator } from 'camino-common/src/demarche.js'
 import { HTTP_STATUS } from 'camino-common/src/http.js'
@@ -39,12 +43,14 @@ import { DemarchesTypes } from 'camino-common/src/static/demarchesTypes.js'
 import { Pool } from 'pg'
 import { EntrepriseDocument, EntrepriseDocumentId, EntrepriseId, EtapeEntrepriseDocument } from 'camino-common/src/entreprise.js'
 import {
+  deleteTitreEtapeEntrepriseDocument,
   getDocumentsByEtapeId,
   getEntrepriseDocumentIdsByEtapeId,
   getEtapeAvisLargeObjectIdsByEtapeId,
   insertEtapeAvis,
   insertEtapeDocuments,
   insertTitreEtapeEntrepriseDocument,
+  updateEtapeDocuments,
 } from '../../database/queries/titres-etapes.queries.js'
 import { GetEtapeDataForEdition, getEtapeByDemarcheIdAndEtapeTypeId, getEtapeDataForEdition } from './etapes.queries.js'
 import { SDOMZoneId } from 'camino-common/src/static/sdom.js'
@@ -57,7 +63,7 @@ import { getElementWithValue, getSections, getSectionsWithValue } from 'camino-c
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { AdministrationId } from 'camino-common/src/static/administrations.js'
 import { titreDemarcheUpdatedEtatValidate } from '../../business/validations/titre-demarche-etat-validate.js'
-import { FlattenEtape, GraphqlEtape, GraphqlEtapeCreation, graphqlEtapeCreationValidator } from 'camino-common/src/etape-form.js'
+import { FlattenEtape, GraphqlEtape, GraphqlEtapeCreation, graphqlEtapeCreationValidator, graphqlEtapeModificationValidator } from 'camino-common/src/etape-form.js'
 import { iTitreEtapeToFlattenEtape } from '../_format/titres-etapes.js'
 import { CommuneId } from 'camino-common/src/static/communes.js'
 import { titreEtapeUpdationValidate } from '../../business/validations/titre-etape-updation-validate.js'
@@ -359,7 +365,7 @@ const validateAndGetEntrepriseDocuments = async (pool: Pool, etape: FlattenEtape
   return entrepriseDocuments
 }
 
-const arePointsOnPerimeter = (perimetre: FeatureMultiPolygon, points: FeatureCollectionPoints): boolean => {
+export const arePointsOnPerimeter = (perimetre: FeatureMultiPolygon, points: FeatureCollectionPoints): boolean => {
   const coordinatesSet = new Set()
 
   perimetre.geometry.coordinates.forEach(geometry => geometry.forEach(sub => sub.forEach(coordinate => coordinatesSet.add(`${coordinate[0]}-${coordinate[1]}`))))
@@ -614,6 +620,213 @@ export const createEtape = (pool: Pool) => async (req: CaminoRequest, res: Custo
     console.error(e)
 
     res.status(HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR).json({ errorMessage: "Une erreur est survenue lors de la création de l'étape", extra: e })
+  }
+}
+
+export const updateEtape = (pool: Pool) => async (req: CaminoRequest, res: CustomResponse<void>) => {
+  try {
+    const { success, data: etape, error } = graphqlEtapeModificationValidator.safeParse(req.body)
+
+    if (!success) {
+      console.error('[etapeModifier] étape non correctement formatée', error)
+      res.status(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST).json({ errorMessage: "l'étape n'est pas correctement formatée" })
+    } else {
+      const user = req.auth
+      if (!user) {
+        res.status(HTTP_STATUS.HTTP_STATUS_NOT_FOUND).json({ errorMessage: "la démarche n'existe pas" })
+      } else {
+        const titreEtapeOld = await titreEtapeGet(
+          etape.id,
+          {
+            fields: {
+              demarche: { titre: { pointsEtape: { id: {} } } },
+            },
+          },
+          user
+        )
+
+        if (isNullOrUndefined(titreEtapeOld)) throw new Error("l'étape n'existe pas")
+        if (!titreEtapeOld.demarche || !titreEtapeOld.demarche.titre || titreEtapeOld.demarche.titre.administrationsLocales === undefined || !titreEtapeOld.demarche.titre.titreStatutId) {
+          throw new Error('la démarche n’est pas chargée complètement')
+        }
+
+        if (
+          !canEditEtape(
+            user,
+            titreEtapeOld.typeId,
+            titreEtapeOld.isBrouillon,
+            titreEtapeOld.titulaireIds ?? [],
+            titreEtapeOld.demarche.titre.administrationsLocales ?? [],
+            titreEtapeOld.demarche.typeId,
+            {
+              typeId: titreEtapeOld.demarche.titre.typeId,
+              titreStatutId: titreEtapeOld.demarche.titre.titreStatutId,
+            }
+          )
+        )
+          throw new Error('droits insuffisants')
+
+        if (titreEtapeOld.typeId !== etape.typeId) throw new Error("Il est interdit d'éditer le type d'étape")
+
+        if (titreEtapeOld.titreDemarcheId !== etape.titreDemarcheId) throw new Error("la démarche n'existe pas")
+        const titreDemarche = await titreDemarcheGet(
+          etape.titreDemarcheId,
+          {
+            fields: {
+              titre: {
+                demarches: { etapes: { id: {} } },
+                titulairesEtape: { id: {} },
+                amodiatairesEtape: { id: {} },
+              },
+              etapes: { id: {} },
+            },
+          },
+          userSuper
+        )
+
+        if (!titreDemarche || !titreDemarche.titre) throw new Error("le titre n'existe pas")
+        if (isNullOrUndefined(titreDemarche.titre.titulaireIds) || isNullOrUndefined(titreDemarche.titre.amodiataireIds)) throw new Error('la démarche n’est pas chargée complètement')
+        const titreTypeId = titreDemarche?.titre?.typeId
+        if (!titreTypeId) {
+          throw new Error(`le type du titre de la ${titreDemarche.id} n'est pas chargé`)
+        }
+        const { flattenEtape, perimetreInfos } = await getFlattenEtape(etape, titreDemarche, titreTypeId, pool)
+        const entrepriseDocuments: EntrepriseDocument[] = await validateAndGetEntrepriseDocuments(pool, flattenEtape, etape.entrepriseDocumentIds, user)
+        // delete etape.entrepriseDocumentIds
+
+        const etapeDocumentsParsed = z.array(etapeDocumentModificationValidator).safeParse(etape.etapeDocuments)
+
+        if (!etapeDocumentsParsed.success) {
+          console.warn(etapeDocumentsParsed.error)
+          throw new Error('Les documents envoyés ne sont pas conformes')
+        }
+
+        const etapeDocuments = etapeDocumentsParsed.data
+
+        const etapeAvis: Pick<EtapeAvis, 'avis_type_id'>[] = etape.etapeAvis
+
+        const needToCreateAslAndDae = needAslAndDae({ etapeTypeId: etape.typeId, demarcheTypeId: titreDemarche.typeId, titreTypeId: titreDemarche.titre.typeId }, titreEtapeOld.isBrouillon, user)
+        let daeDocument = null
+        let aslDocument = null
+        if (needToCreateAslAndDae) {
+          const daeDocumentParsed = documentComplementaireDaeEtapeDocumentModificationValidator.nullable().safeParse(etape.daeDocument)
+          if (!daeDocumentParsed.success) {
+            console.warn(daeDocumentParsed.error)
+            throw new Error('L’arrêté préfectoral n’est pas conforme')
+          }
+
+          daeDocument = daeDocumentParsed.data
+
+          const aslDocumentParsed = documentComplementaireAslEtapeDocumentModificationValidator.nullable().safeParse(etape.aslDocument)
+          if (!aslDocumentParsed.success) {
+            console.warn(aslDocumentParsed.error)
+            throw new Error('La lettre du propriétaire du sol n’est pas conforme')
+          }
+
+          aslDocument = aslDocumentParsed.data
+        }
+
+        const rulesErrors = titreEtapeUpdationValidate(
+          flattenEtape,
+          titreDemarche,
+          titreDemarche.titre,
+          etapeDocuments,
+          etapeAvis,
+          entrepriseDocuments,
+          perimetreInfos.sdomZones,
+          perimetreInfos.communes.map(({ id }) => id),
+          user,
+          daeDocument,
+          aslDocument,
+          titreEtapeOld
+        )
+
+        if (rulesErrors.length) {
+          throw new Error(rulesErrors.join(', '))
+        }
+
+        if (!canEditDuree(titreTypeId, titreDemarche.typeId)) {
+          etape.duree = titreEtapeOld.duree ?? null
+        }
+
+        if (!canEditDates(titreTypeId, titreDemarche.typeId, etape.typeId, user)) {
+          etape.dateDebut = titreEtapeOld.dateDebut ?? null
+          etape.dateFin = titreEtapeOld.dateFin ?? null
+        }
+
+        if (!(await checkEntreprisesExist(pool, [...(etape.titulaireIds ?? []), ...(etape.amodiataireIds ?? [])]))) {
+          throw new Error("certaines entreprises n'existent pas")
+        }
+
+        const etapeUpdated: ITitreEtape | undefined = await titreEtapeUpsert({ ...etape, ...perimetreInfos, isBrouillon: titreEtapeOld.isBrouillon }, user!, titreDemarche.titreId)
+        if (isNullOrUndefined(etapeUpdated)) {
+          throw new Error("Une erreur est survenue lors de la modification de l'étape")
+        }
+        await updateEtapeDocuments(pool, user, etapeUpdated.id, etapeUpdated.isBrouillon, etapeDocuments)
+        await deleteTitreEtapeEntrepriseDocument(pool, { titre_etape_id: etapeUpdated.id })
+        for (const document of entrepriseDocuments) {
+          await insertTitreEtapeEntrepriseDocument(pool, { titre_etape_id: etapeUpdated.id, entreprise_document_id: document.id })
+        }
+
+        if (needToCreateAslAndDae) {
+          if (daeDocument !== null) {
+            const daeEtapeInDb = await getEtapeByDemarcheIdAndEtapeTypeId(pool, 'dae', titreDemarche.id)
+
+            const daeEtape = await titreEtapeUpsert(
+              {
+                id: daeEtapeInDb?.etape_id ?? undefined,
+                typeId: 'dae',
+                statutId: daeDocument.etape_statut_id,
+                isBrouillon: ETAPE_IS_NOT_BROUILLON,
+                titreDemarcheId: titreDemarche.id,
+                date: daeDocument.date,
+                contenu: {
+                  mea: { arrete: daeDocument.arrete_prefectoral },
+                },
+              },
+              user!,
+              titreDemarche.titreId
+            )
+            if (isNullOrUndefined(daeEtape)) {
+              throw new Error("impossible d'intégrer le document lié à la DAE")
+            }
+
+            await updateEtapeDocuments(pool, user, daeEtape.id, titreEtapeOld.isBrouillon, [daeDocument])
+          }
+
+          if (aslDocument !== null) {
+            const aslEtapeInDb = await getEtapeByDemarcheIdAndEtapeTypeId(pool, 'asl', titreDemarche.id)
+
+            const aslEtape = await titreEtapeUpsert(
+              {
+                id: aslEtapeInDb?.etape_id ?? undefined,
+                typeId: 'asl',
+                statutId: aslDocument.etape_statut_id,
+                isBrouillon: ETAPE_IS_NOT_BROUILLON,
+                titreDemarcheId: titreDemarche.id,
+                date: aslDocument.date,
+              },
+              user!,
+              titreDemarche.titreId
+            )
+
+            if (isNullOrUndefined(aslEtape)) {
+              throw new Error("impossible d'intégrer le document lié à la ASL")
+            }
+            await updateEtapeDocuments(pool, user, aslEtape.id, titreEtapeOld.isBrouillon, [aslDocument])
+          }
+        }
+
+        await titreEtapeUpdateTask(pool, etapeUpdated.id, etapeUpdated.titreDemarcheId, user)
+
+        await titreEtapeAdministrationsEmailsSend(flattenEtape, titreDemarche.typeId, titreDemarche.titreId, titreDemarche.titre.typeId, user, titreEtapeOld)
+        res.json(undefined)
+      }
+    }
+  } catch (e: any) {
+    console.error(e)
+
+    res.status(HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR).json({ errorMessage: e.message, extra: e })
   }
 }
 

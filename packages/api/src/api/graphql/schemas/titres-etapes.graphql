@@ -149,94 +149,9 @@ type HeritageProp {
   actif: Boolean
 }
 
-input DaeDocument {
-  id: String
-  temp_document_name: String
-  etape_document_type_id: String!
-  description: String
-  public_lecture: Boolean!
-  entreprises_lecture: Boolean!
-  etape_statut_id: String!
-  date: String!
-  arrete_prefectoral: String
-}
-
-input AslDocument {
-  id: String
-  temp_document_name: String
-  etape_document_type_id: String!
-  description: String
-  public_lecture: Boolean!
-  entreprises_lecture: Boolean!
-  etape_statut_id: String!
-  date: String!
-}
-
-input InputEtapeModification {
-  id: ID!
-  typeId: ID!
-  statutId: ID
-  titreDemarcheId: ID!
-  date: String!
-  ordre: Int
-  duree: Int
-  dateDebut: String
-  dateFin: String
-  substances: [String!]
-  titulaireIds: [String!]
-  amodiataireIds: [String!]
-  heritageProps: InputHeritageProps
-  heritageContenu: Json
-  contenu: Json
-  etapeDocuments: [InputEtapeDocumentModification]
-  entrepriseDocumentIds: [ID]
-  etapeAvis: [InputEtapeAvisModification]
-  notes: String
-  geojson4326Perimetre: Json
-  geojson4326Points: Json
-  geojsonOriginePoints: Json
-  geojsonOriginePerimetre: Json
-  geojsonOrigineForages: Json
-  geojsonOrigineGeoSystemeId: String
-  daeDocument: DaeDocument
-  aslDocument: AslDocument
-}
-
-input InputEtapeAvisModification {
-  id: ID
-  temp_document_name: String
-  avis_type_id: String!
-  description: String!
-  date: String!
-  avis_statut_id: String!
-}
-
-input InputEtapeDocumentModification {
-  id: ID
-  temp_document_name: String
-  etape_document_type_id: String!
-  description: String
-  public_lecture: Boolean!
-  entreprises_lecture: Boolean!
-}
-
 input InputEtapeFiltre {
   typeId: ID!
   statutId: ID
   dateDebut: String
   dateFin: String
-}
-
-input InputHeritageProps {
-  dateDebut: InputHeritageProp
-  dateFin: InputHeritageProp
-  duree: InputHeritageProp
-  perimetre: InputHeritageProp
-  substances: InputHeritageProp
-  titulaires: InputHeritageProp
-  amodiataires: InputHeritageProp
-}
-
-input InputHeritageProp {
-  actif: Boolean
 }

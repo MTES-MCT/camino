@@ -40,7 +40,17 @@ import {
 import { CaminoConfig, caminoConfigValidator } from 'camino-common/src/static/config.js'
 import { CaminoRequest, CustomResponse } from '../api/rest/express-type.js'
 import { User } from 'camino-common/src/roles.js'
-import { createEtape, deleteEtape, deposeEtape, getEtape, getEtapeAvis, getEtapeDocuments, getEtapeEntrepriseDocuments, getEtapesTypesEtapesStatusWithMainStep } from '../api/rest/etapes.js'
+import {
+  createEtape,
+  deleteEtape,
+  deposeEtape,
+  getEtape,
+  getEtapeAvis,
+  getEtapeDocuments,
+  getEtapeEntrepriseDocuments,
+  getEtapesTypesEtapesStatusWithMainStep,
+  updateEtape,
+} from '../api/rest/etapes.js'
 import { z } from 'zod'
 import { getCommunes } from '../api/rest/communes.js'
 import { SendFileOptions } from 'express-serve-static-core'
@@ -147,7 +157,7 @@ const restRouteImplementations: Readonly<{ [key in CaminoRestRoute]: Transform<k
   '/rest/demarches/:demarcheId/geojson': { get: getPerimetreInfos },
   '/rest/etapes/:etapeId/geojson': { get: getPerimetreInfos },
   '/rest/etapes/:etapeIdOrSlug': { delete: deleteEtape, get: getEtape },
-  '/rest/etapes': { post: createEtape },
+  '/rest/etapes': { post: createEtape, put: updateEtape },
   '/rest/etapes/:etapeId/depot': { put: deposeEtape },
   '/rest/etapes/:etapeId/entrepriseDocuments': { get: getEtapeEntrepriseDocuments },
   '/rest/etapes/:etapeId/etapeDocuments': { get: getEtapeDocuments },

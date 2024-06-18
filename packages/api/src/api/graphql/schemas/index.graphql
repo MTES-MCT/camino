@@ -171,9 +171,6 @@ type Mutation {
   "Supprime une démarche et met à jour le titre minier"
   demarcheSupprimer(id: ID!): ID
 
-  "Modifie une étape et met à jour le titre minier"
-  etapeModifier(etape: InputEtapeModification!): Etape
-
   "Dépose une activité"
   activiteDeposer(id: ID!): Activite
 }
