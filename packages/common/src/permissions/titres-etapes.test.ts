@@ -263,13 +263,14 @@ const multiPolygonWith4Points: FeatureMultiPolygon = {
   },
 }
 
+const titulaireId = entrepriseIdValidator.parse('titulaireId')
 const etapeComplete: IsEtapeCompleteEtape = {
   contenu: {},
   date: caminoDateValidator.parse('2023-02-01'),
   typeId: 'mfr',
   statutId: 'fai',
   substances: { value: ['auru'], heritee: false, etapeHeritee: null },
-  titulaires: { value: [], heritee: false, etapeHeritee: null },
+  titulaires: { value: [titulaireId], heritee: false, etapeHeritee: null },
   amodiataires: { value: [], heritee: false, etapeHeritee: null },
   perimetre: {
     value: {
@@ -291,12 +292,12 @@ const etapeComplete: IsEtapeCompleteEtape = {
 
 const armDocuments: IsEtapeCompleteDocuments = [{ etape_document_type_id: 'car' }, { etape_document_type_id: 'dom' }, { etape_document_type_id: 'for' }, { etape_document_type_id: 'jpa' }]
 const armEntrepriseDocuments: IsEtapeCompleteEntrepriseDocuments = [
-  { entreprise_document_type_id: 'cur', entreprise_id: entrepriseIdValidator.parse('entrepriseId1') },
-  { entreprise_document_type_id: 'jid', entreprise_id: entrepriseIdValidator.parse('entrepriseId1') },
-  { entreprise_document_type_id: 'jct', entreprise_id: entrepriseIdValidator.parse('entrepriseId1') },
-  { entreprise_document_type_id: 'kbi', entreprise_id: entrepriseIdValidator.parse('entrepriseId1') },
-  { entreprise_document_type_id: 'jcf', entreprise_id: entrepriseIdValidator.parse('entrepriseId1') },
-  { entreprise_document_type_id: 'atf', entreprise_id: entrepriseIdValidator.parse('entrepriseId1') },
+  { entreprise_document_type_id: 'cur', entreprise_id: titulaireId },
+  { entreprise_document_type_id: 'jid', entreprise_id: titulaireId },
+  { entreprise_document_type_id: 'jct', entreprise_id: titulaireId },
+  { entreprise_document_type_id: 'kbi', entreprise_id: titulaireId },
+  { entreprise_document_type_id: 'jcf', entreprise_id: titulaireId },
+  { entreprise_document_type_id: 'atf', entreprise_id: titulaireId },
 ]
 
 const axmDocuments: IsEtapeCompleteDocuments = [
@@ -310,14 +311,14 @@ const axmDocuments: IsEtapeCompleteDocuments = [
 ]
 
 const axmEntrepriseDocuments: IsEtapeCompleteEntrepriseDocuments = [
-  { entreprise_document_type_id: 'lis', entreprise_id: entrepriseIdValidator.parse('entrepriseId1') },
-  { entreprise_document_type_id: 'jac', entreprise_id: entrepriseIdValidator.parse('entrepriseId1') },
-  { entreprise_document_type_id: 'bil', entreprise_id: entrepriseIdValidator.parse('entrepriseId1') },
-  { entreprise_document_type_id: 'ref', entreprise_id: entrepriseIdValidator.parse('entrepriseId1') },
-  { entreprise_document_type_id: 'deb', entreprise_id: entrepriseIdValidator.parse('entrepriseId1') },
-  { entreprise_document_type_id: 'atf', entreprise_id: entrepriseIdValidator.parse('entrepriseId1') },
-  { entreprise_document_type_id: 'jid', entreprise_id: entrepriseIdValidator.parse('entrepriseId1') },
-  { entreprise_document_type_id: 'jct', entreprise_id: entrepriseIdValidator.parse('entrepriseId1') },
+  { entreprise_document_type_id: 'lis', entreprise_id: titulaireId },
+  { entreprise_document_type_id: 'jac', entreprise_id: titulaireId },
+  { entreprise_document_type_id: 'bil', entreprise_id: titulaireId },
+  { entreprise_document_type_id: 'ref', entreprise_id: titulaireId },
+  { entreprise_document_type_id: 'deb', entreprise_id: titulaireId },
+  { entreprise_document_type_id: 'atf', entreprise_id: titulaireId },
+  { entreprise_document_type_id: 'jid', entreprise_id: titulaireId },
+  { entreprise_document_type_id: 'jct', entreprise_id: titulaireId },
 ]
 
 test('teste la complétude d’une demande d’AXM faite par un utilisateur entreprises en Guyane en Zone1 du SDOM', () => {
