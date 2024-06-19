@@ -51,7 +51,7 @@ import { DeposeEtapePopup } from '../demarche/depose-etape-popup'
 import { EtapeAvisEdit } from './etape-avis-edit'
 import { EtapeTypeId, canBeBrouillon } from 'camino-common/src/static/etapesTypes'
 import { CoreEtapeCreationOrModification, GetEtapeHeritagePotentiel } from './etape-api-client'
-import { FlattenEtape, GraphqlEtapeCreation } from 'camino-common/src/etape-form'
+import { FlattenEtape, RestEtapeCreation } from 'camino-common/src/etape-form'
 import { AsyncData } from '@/api/client-rest'
 import { CaminoDate } from 'camino-common/src/date'
 import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts'
@@ -367,10 +367,10 @@ export const EtapeEditForm = defineComponent<Props>(props => {
           titulaires: { actif: etapeValue.titulaires.heritee },
           amodiataires: { actif: etapeValue.amodiataires.heritee },
         },
-        contenu: Object.keys(etapeValue.contenu).reduce<DeepReadonly<GraphqlEtapeCreation['contenu']>>((sectionsAcc, section) => {
+        contenu: Object.keys(etapeValue.contenu).reduce<DeepReadonly<RestEtapeCreation['contenu']>>((sectionsAcc, section) => {
           sectionsAcc = {
             ...sectionsAcc,
-            [section]: Object.keys(etapeValue.contenu[section]).reduce<DeepReadonly<GraphqlEtapeCreation['contenu'][string]>>((elementsAcc, element) => {
+            [section]: Object.keys(etapeValue.contenu[section]).reduce<DeepReadonly<RestEtapeCreation['contenu'][string]>>((elementsAcc, element) => {
               elementsAcc = { ...elementsAcc, [element]: etapeValue.contenu[section][element].value }
 
               return elementsAcc
@@ -379,10 +379,10 @@ export const EtapeEditForm = defineComponent<Props>(props => {
 
           return sectionsAcc
         }, {}),
-        heritageContenu: Object.keys(etapeValue.contenu).reduce<DeepReadonly<GraphqlEtapeCreation['heritageContenu']>>((sectionsAcc, section) => {
+        heritageContenu: Object.keys(etapeValue.contenu).reduce<DeepReadonly<RestEtapeCreation['heritageContenu']>>((sectionsAcc, section) => {
           return {
             ...sectionsAcc,
-            [section]: Object.keys(etapeValue.contenu[section]).reduce<DeepReadonly<GraphqlEtapeCreation['heritageContenu'][string]>>((elementsAcc, element) => {
+            [section]: Object.keys(etapeValue.contenu[section]).reduce<DeepReadonly<RestEtapeCreation['heritageContenu'][string]>>((elementsAcc, element) => {
               return { ...elementsAcc, [element]: { actif: etapeValue.contenu[section][element].heritee } }
             }, {}),
           }

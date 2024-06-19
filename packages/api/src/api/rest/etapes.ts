@@ -64,7 +64,7 @@ import { getElementWithValue, getSections, getSectionsWithValue } from 'camino-c
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { AdministrationId } from 'camino-common/src/static/administrations.js'
 import { titreDemarcheUpdatedEtatValidate } from '../../business/validations/titre-demarche-etat-validate.js'
-import { FlattenEtape, GraphqlEtape, GraphqlEtapeCreation, GraphqlEtapeModification, graphqlEtapeCreationValidator, graphqlEtapeModificationValidator } from 'camino-common/src/etape-form.js'
+import { FlattenEtape, GraphqlEtape, RestEtapeCreation, RestEtapeModification, restEtapeCreationValidator, restEtapeModificationValidator } from 'camino-common/src/etape-form.js'
 import { iTitreEtapeToFlattenEtape } from '../_format/titres-etapes.js'
 import { CommuneId } from 'camino-common/src/static/communes.js'
 import { titreEtapeUpdationValidate } from '../../business/validations/titre-etape-updation-validate.js'
@@ -439,7 +439,7 @@ const getPerimetreInfosInternal = async (
   }
 }
 const getFlattenEtape = async (
-  etape: GraphqlEtapeCreation | GraphqlEtapeModification,
+  etape: RestEtapeCreation | RestEtapeModification,
   demarche: ITitreDemarche,
   titreTypeId: TitreTypeId,
   isBrouillon: EtapeBrouillon,
@@ -497,7 +497,7 @@ const getFlattenEtape = async (
 }
 export const createEtape = (pool: Pool) => async (req: CaminoRequest, res: CustomResponse<EtapeId>) => {
   try {
-    const { success, data: etape, error } = graphqlEtapeCreationValidator.safeParse(req.body)
+    const { success, data: etape, error } = restEtapeCreationValidator.safeParse(req.body)
 
     if (!success) {
       console.error('[etapeCreer] étape non correctement formatée', error)
@@ -627,7 +627,7 @@ export const createEtape = (pool: Pool) => async (req: CaminoRequest, res: Custo
 
 export const updateEtape = (pool: Pool) => async (req: CaminoRequest, res: CustomResponse<EtapeId>) => {
   try {
-    const { success, data: etape, error } = graphqlEtapeModificationValidator.safeParse(req.body)
+    const { success, data: etape, error } = restEtapeModificationValidator.safeParse(req.body)
 
     if (!success) {
       console.error('[etapeModifier] étape non correctement formatée', error)

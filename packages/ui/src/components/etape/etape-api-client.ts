@@ -4,7 +4,7 @@ import { CaminoDate, caminoDateValidator } from 'camino-common/src/date'
 import { DemarcheId } from 'camino-common/src/demarche'
 import { entrepriseIdValidator } from 'camino-common/src/entreprise'
 import { EtapeId, EtapeIdOrSlug, EtapeTypeEtapeStatutWithMainStep, GetEtapeAvisByEtapeId, GetEtapeDocumentsByEtapeId } from 'camino-common/src/etape'
-import { FlattenEtape, GraphqlEtapeCreation, GraphqlEtapeModification, graphqlEtapeCreationValidator, graphqlEtapeModificationValidator } from 'camino-common/src/etape-form'
+import { FlattenEtape, RestEtapeCreation, RestEtapeModification, restEtapeCreationValidator, restEtapeModificationValidator } from 'camino-common/src/etape-form'
 import { km2Validator } from 'camino-common/src/number'
 import { featureCollectionForagesValidator, featureCollectionPointsValidator, featureMultiPolygonValidator } from 'camino-common/src/perimetre'
 import { etapeTypeIdValidator } from 'camino-common/src/static/etapesTypes'
@@ -86,8 +86,8 @@ export interface EtapeApiClient {
   getEtapeHeritagePotentiel: (etape: DeepReadonly<Pick<CoreEtapeCreationOrModification, 'id' | 'date' | 'typeId'>>, titreDemarcheId: DemarcheId) => Promise<DeepReadonly<GetEtapeHeritagePotentiel>>
   getEtapeAvisByEtapeId: (etapeId: EtapeId) => Promise<GetEtapeAvisByEtapeId>
   getEtape: (etapeIdOrSlug: EtapeIdOrSlug) => Promise<DeepReadonly<{ etape: FlattenEtape; demarche: GetDemarcheByIdOrSlugValidator }>>
-  etapeCreer: (etape: DeepReadonly<GraphqlEtapeCreation>) => Promise<EtapeId>
-  etapeModifier: (etape: DeepReadonly<GraphqlEtapeModification>) => Promise<EtapeId>
+  etapeCreer: (etape: DeepReadonly<RestEtapeCreation>) => Promise<EtapeId>
+  etapeModifier: (etape: DeepReadonly<RestEtapeModification>) => Promise<EtapeId>
 }
 
 export const etapeApiClient: EtapeApiClient = {
@@ -194,11 +194,11 @@ export const etapeApiClient: EtapeApiClient = {
   },
 
   etapeCreer: async etape => {
-    return postWithJson('/rest/etapes', {}, graphqlEtapeCreationValidator.parse(etape))
+    return postWithJson('/rest/etapes', {}, restEtapeCreationValidator.parse(etape))
   },
 
   etapeModifier: async etape => {
-    await putWithJson('/rest/etapes', {}, graphqlEtapeModificationValidator.parse(etape))
+    await putWithJson('/rest/etapes', {}, restEtapeModificationValidator.parse(etape))
 
     return etape.id
   },

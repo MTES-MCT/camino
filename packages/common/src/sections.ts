@@ -16,7 +16,7 @@ import { DeepReadonly, isNotNullNorUndefined } from './typescript-tools.js'
 import { TitreTypeId } from './static/titresTypes.js'
 import { DemarcheTypeId } from './static/demarchesTypes.js'
 import { EtapeTypeId } from './static/etapesTypes.js'
-import { EtapeContenu, FlattenEtape, FlattenedContenu, GraphqlEtapeCreation, HeritageContenu } from './etape-form.js'
+import { EtapeContenu, FlattenEtape, FlattenedContenu, RestEtapeCreation, HeritageContenu } from './etape-form.js'
 
 const dateElementWithValueValidator = dateElementValidator.extend({ value: caminoDateValidator.nullable() })
 
@@ -131,11 +131,11 @@ export const simpleContenuToFlattenedContenu = (
   }, {})
 }
 
-export const flattenContenuToSimpleContenu = (flattenContenu: FlattenEtape['contenu']): GraphqlEtapeCreation['contenu'] => {
-  return Object.keys(flattenContenu).reduce<GraphqlEtapeCreation['contenu']>((sectionsAcc, section) => {
+export const flattenContenuToSimpleContenu = (flattenContenu: FlattenEtape['contenu']): RestEtapeCreation['contenu'] => {
+  return Object.keys(flattenContenu).reduce<RestEtapeCreation['contenu']>((sectionsAcc, section) => {
     sectionsAcc = {
       ...sectionsAcc,
-      [section]: Object.keys(flattenContenu[section]).reduce<GraphqlEtapeCreation['contenu'][string]>((elementsAcc, element) => {
+      [section]: Object.keys(flattenContenu[section]).reduce<RestEtapeCreation['contenu'][string]>((elementsAcc, element) => {
         elementsAcc = { ...elementsAcc, [element]: flattenContenu[section][element].value }
 
         return elementsAcc

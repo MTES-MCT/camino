@@ -20,7 +20,7 @@ import { tempDocumentNameValidator } from 'camino-common/src/document.js'
 import { HTTP_STATUS } from 'camino-common/src/http.js'
 import { Knex } from 'knex'
 import { testDocumentCreateTemp } from '../../../tests/_utils/administrations-permissions.js'
-import { GraphqlEtapeModification } from 'camino-common/src/etape-form.js'
+import { RestEtapeModification } from 'camino-common/src/etape-form.js'
 import { EntrepriseId } from 'camino-common/src/entreprise.js'
 
 vi.mock('../../tools/dir-create', () => ({
@@ -81,7 +81,7 @@ async function etapeCreate(typeId?: EtapeTypeId) {
 
 describe('etapeModifier', () => {
   test('ne peut pas modifier une étape (utilisateur anonyme)', async () => {
-    const result = await restPutCall(dbPool, '/rest/etapes', {}, undefined, { id: '', typeId: '', statutId: '', titreDemarcheId: '', date: '' } as unknown as GraphqlEtapeModification)
+    const result = await restPutCall(dbPool, '/rest/etapes', {}, undefined, { id: '', typeId: '', statutId: '', titreDemarcheId: '', date: '' } as unknown as RestEtapeModification)
 
     expect(result.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
   })
@@ -92,7 +92,7 @@ describe('etapeModifier', () => {
       typeId: '',
       statutId: '',
       date: '',
-    } as unknown as GraphqlEtapeModification)
+    } as unknown as RestEtapeModification)
 
     expect(result.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
   })
@@ -201,7 +201,7 @@ describe('etapeModifier', () => {
 
     const documentToInsert = testDocumentCreateTemp('aac')
 
-    const etape: GraphqlEtapeModification = {
+    const etape: RestEtapeModification = {
       id: titreEtapeId,
       typeId: 'mfr',
       statutId: 'fai',
@@ -285,7 +285,7 @@ describe('etapeModifier', () => {
       temp_document_name: tempDocumentNameValidator.parse(fileName),
     }
 
-    const etape: GraphqlEtapeModification = {
+    const etape: RestEtapeModification = {
       id: titreEtapeId,
       typeId: 'dae',
       statutId: 'exe',

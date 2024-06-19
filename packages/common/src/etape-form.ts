@@ -185,7 +185,7 @@ const graphqlInputHeritagePropsValidator = z.object({
   amodiataires: graphqlInputHeritagePropValidator,
 })
 
-export const graphqlEtapeCreationValidator = graphqlEtapeValidator
+export const restEtapeCreationValidator = graphqlEtapeValidator
   .pick({
     typeId: true,
     statutId: true,
@@ -214,11 +214,11 @@ export const graphqlEtapeCreationValidator = graphqlEtapeValidator
     etapeAvis: z.array(etapeAvisModificationValidator),
   })
 
-export type GraphqlEtapeCreation = z.infer<typeof graphqlEtapeCreationValidator>
+export type RestEtapeCreation = z.infer<typeof restEtapeCreationValidator>
 
-export const graphqlEtapeModificationValidator = graphqlEtapeCreationValidator.extend({
+export const restEtapeModificationValidator = restEtapeCreationValidator.extend({
   id: etapeIdValidator,
   daeDocument: documentComplementaireDaeEtapeDocumentModificationValidator.nullable(),
   aslDocument: documentComplementaireAslEtapeDocumentModificationValidator.nullable(),
 })
-export type GraphqlEtapeModification = z.infer<typeof graphqlEtapeModificationValidator>
+export type RestEtapeModification = z.infer<typeof restEtapeModificationValidator>

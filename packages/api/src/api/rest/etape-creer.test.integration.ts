@@ -9,7 +9,7 @@ import { userSuper } from '../../database/user-super'
 import { afterAll, beforeEach, beforeAll, describe, test, expect, vi } from 'vitest'
 import type { Pool } from 'pg'
 import { demarcheIdValidator } from 'camino-common/src/demarche.js'
-import { GraphqlEtapeCreation, defaultHeritageProps } from 'camino-common/src/etape-form.js'
+import { RestEtapeCreation, defaultHeritageProps } from 'camino-common/src/etape-form.js'
 import { HTTP_STATUS } from 'camino-common/src/http.js'
 import { toCaminoDate } from 'camino-common/src/date.js'
 import { entrepriseIdValidator } from 'camino-common/src/entreprise.js'
@@ -51,7 +51,7 @@ const demarcheCreate = async () => {
 }
 
 const blankEtapeProps: Pick<
-  GraphqlEtapeCreation,
+  RestEtapeCreation,
   | 'etapeDocuments'
   | 'duree'
   | 'dateDebut'
@@ -94,7 +94,7 @@ const blankEtapeProps: Pick<
 } as const
 describe('etapeCreer', () => {
   test('ne peut pas créer une étape (utilisateur non authentifié)', async () => {
-    const result = await restPostCall(dbPool, '/rest/etapes', {}, undefined, { typeId: '', statutId: '', titreDemarcheId: '', date: '' } as unknown as GraphqlEtapeCreation)
+    const result = await restPostCall(dbPool, '/rest/etapes', {}, undefined, { typeId: '', statutId: '', titreDemarcheId: '', date: '' } as unknown as RestEtapeCreation)
 
     expect(result.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
   })
@@ -104,7 +104,7 @@ describe('etapeCreer', () => {
       statutId: '',
       titreDemarcheId: '',
       date: '',
-    } as unknown as GraphqlEtapeCreation)
+    } as unknown as RestEtapeCreation)
 
     expect(result.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
     expect(result.body).toStrictEqual({ errorMessage: "l'étape n'est pas correctement formatée" })
