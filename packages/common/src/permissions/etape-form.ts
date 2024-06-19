@@ -85,7 +85,6 @@ export const fondamentaleStepIsComplete = (
     errors.push('la durée est obligatoire')
   }
 
-  // FIXME unit tests
   if (isTitulairesRequired(flattened.typeId, demarcheTypeId, titreTypeId) && isNullOrUndefinedOrEmpty(flattened.titulaires.value)) {
     errors.push('Les titulaires sont obligatoires')
   }
@@ -292,7 +291,6 @@ export const entrepriseDocumentsStepIsComplete = (
 
   const entrepriseIds = [...etape.titulaires.value, ...etape.amodiataires.value].filter(onlyUnique)
 
-  // FIXME unit test this
   if (isNullOrUndefinedOrEmpty(entrepriseIds) && isTitulairesRequired(etape.typeId, demarcheTypeId, titreTypeId)) {
     return { valid: false, errors: ["Il y a des documents d'entreprise obligatoires, mais il n'y a pas de titulaire"] }
   }
