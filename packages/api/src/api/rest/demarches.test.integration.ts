@@ -15,6 +15,7 @@ import { entrepriseUpsert } from '../../database/queries/entreprises.js'
 import { FeatureMultiPolygon } from 'camino-common/src/perimetre.js'
 import { codePostalValidator } from 'camino-common/src/static/departement.js'
 import crypto from 'crypto'
+import { km2Validator } from 'camino-common/src/number.js'
 
 console.info = vi.fn()
 console.error = vi.fn()
@@ -99,7 +100,7 @@ describe('downloadDemarches', () => {
       statutId: 'fai',
       date: toCaminoDate('2022-01-01'),
       ordre: 1,
-      surface: 42,
+      surface: km2Validator.parse(42),
       geojson4326Perimetre: multiPolygonWith4Points,
       geojsonOriginePerimetre: multiPolygonWith4Points,
       geojsonOrigineGeoSystemeId: '4326',
@@ -154,7 +155,7 @@ slug,mon titre,minéraux et métaux,autorisation d'exploitation,valide,octroi,in
       statutId: 'fai',
       date: toCaminoDate('2023-01-01'),
       ordre: 2,
-      surface: 102,
+      surface: km2Validator.parse(102),
       geojson4326Perimetre: multiPolygonWith4Points,
       geojsonOriginePerimetre: multiPolygonWith4Points,
       geojsonOrigineGeoSystemeId: '4326',
