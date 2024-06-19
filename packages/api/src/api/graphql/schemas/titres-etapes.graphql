@@ -1,4 +1,3 @@
-# import * from 'administrations.graphql'
 # import * from 'entreprises.graphql'
 # import * from 'substances.graphql'
 # import * from 'geojsons.graphql'
