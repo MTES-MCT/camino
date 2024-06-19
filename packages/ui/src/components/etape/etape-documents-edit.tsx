@@ -296,7 +296,7 @@ const EtapeDocumentsLoaded = defineComponent<EtapeDocumentsLoadedProps>(props =>
 type PropsTable = {
   caption: string
   documents: ((EtapeDocument | TempEtapeDocument) & { index: number | 'asl' | 'dae' })[]
-  isBrouillon: boolean
+  isBrouillon: EtapeBrouillon
   emptyRequiredDocuments: DocumentTypeId[]
   getNom: (documentTypeId: DocumentTypeId) => string
   add: (documentTypeId: DocumentTypeId) => void

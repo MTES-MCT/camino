@@ -27,34 +27,115 @@ test('fondamentaleStepIsVisible', () => {
 
 test('fondamentaleStepIsComplete', () => {
   expect(
-    fondamentaleStepIsComplete({ duree: { value: 0, heritee: false, etapeHeritee: null }, substances: { value: [], heritee: false, etapeHeritee: null }, typeId: 'acg' }, 'amo', 'prr').valid
+    fondamentaleStepIsComplete(
+      {
+        duree: { value: 0, heritee: false, etapeHeritee: null },
+        substances: { value: [], heritee: false, etapeHeritee: null },
+        typeId: 'acg',
+        titulaires: { value: [], heritee: false, etapeHeritee: null },
+      },
+      'amo',
+      'prr'
+    ).valid
   ).toBe(true)
 
   expect(
-    fondamentaleStepIsComplete({ duree: { value: 0, heritee: false, etapeHeritee: null }, substances: { value: [], heritee: false, etapeHeritee: null }, typeId: 'dpu' }, 'amo', 'prr').valid
+    fondamentaleStepIsComplete(
+      {
+        duree: { value: 0, heritee: false, etapeHeritee: null },
+        substances: { value: [], heritee: false, etapeHeritee: null },
+        typeId: 'dpu',
+        titulaires: { value: [], heritee: false, etapeHeritee: null },
+      },
+      'amo',
+      'prr'
+    ).valid
   ).toBe(true)
   expect(
-    fondamentaleStepIsComplete({ duree: { value: 0, heritee: false, etapeHeritee: null }, substances: { value: [], heritee: false, etapeHeritee: null }, typeId: 'mfr' }, 'amo', 'prr').valid
+    fondamentaleStepIsComplete(
+      {
+        duree: { value: 0, heritee: false, etapeHeritee: null },
+        substances: { value: [], heritee: false, etapeHeritee: null },
+        typeId: 'mfr',
+        titulaires: { value: [], heritee: false, etapeHeritee: null },
+      },
+      'amo',
+      'prr'
+    ).valid
   ).toBe(false)
 
   expect(
-    fondamentaleStepIsComplete({ duree: { value: 0, heritee: false, etapeHeritee: null }, substances: { value: ['auru'], heritee: false, etapeHeritee: null }, typeId: 'mfr' }, 'oct', 'prr').valid
+    fondamentaleStepIsComplete(
+      {
+        duree: { value: 0, heritee: false, etapeHeritee: null },
+        substances: { value: ['auru'], heritee: false, etapeHeritee: null },
+        typeId: 'mfr',
+        titulaires: { value: [], heritee: false, etapeHeritee: null },
+      },
+      'oct',
+      'prr'
+    ).valid
   ).toBe(true)
   expect(
-    fondamentaleStepIsComplete({ duree: { value: 2, heritee: false, etapeHeritee: null }, substances: { value: ['auru'], heritee: false, etapeHeritee: null }, typeId: 'mfr' }, 'oct', 'arm').valid
+    fondamentaleStepIsComplete(
+      {
+        duree: { value: 2, heritee: false, etapeHeritee: null },
+        substances: { value: ['auru'], heritee: false, etapeHeritee: null },
+        typeId: 'mfr',
+        titulaires: { value: [], heritee: false, etapeHeritee: null },
+      },
+      'oct',
+      'arm'
+    ).valid
   ).toBe(true)
   expect(
-    fondamentaleStepIsComplete({ duree: { value: 0, heritee: false, etapeHeritee: null }, substances: { value: ['auru'], heritee: false, etapeHeritee: null }, typeId: 'mfr' }, 'oct', 'arm').valid
+    fondamentaleStepIsComplete(
+      {
+        duree: { value: 0, heritee: false, etapeHeritee: null },
+        substances: { value: ['auru'], heritee: false, etapeHeritee: null },
+        typeId: 'mfr',
+        titulaires: { value: [], heritee: false, etapeHeritee: null },
+      },
+      'oct',
+      'arm'
+    ).valid
   ).toBe(false)
   expect(
-    fondamentaleStepIsComplete({ duree: { value: 2, heritee: false, etapeHeritee: null }, substances: { value: [], heritee: false, etapeHeritee: null }, typeId: 'mfr' }, 'oct', 'arm').valid
+    fondamentaleStepIsComplete(
+      {
+        duree: { value: 2, heritee: false, etapeHeritee: null },
+        substances: { value: [], heritee: false, etapeHeritee: null },
+        typeId: 'mfr',
+        titulaires: { value: [], heritee: false, etapeHeritee: null },
+      },
+      'oct',
+      'arm'
+    ).valid
   ).toBe(false)
 
   expect(
-    fondamentaleStepIsComplete({ duree: { value: 0, heritee: false, etapeHeritee: null }, substances: { value: ['auru'], heritee: false, etapeHeritee: null }, typeId: 'mfr' }, 'mut', 'arm').valid
+    fondamentaleStepIsComplete(
+      {
+        duree: { value: 0, heritee: false, etapeHeritee: null },
+        substances: { value: ['auru'], heritee: false, etapeHeritee: null },
+        typeId: 'mfr',
+        titulaires: { value: [], heritee: false, etapeHeritee: null },
+      },
+      'mut',
+      'arm'
+    ).valid
   ).toBe(true)
   expect(
-    fondamentaleStepIsComplete({ duree: { value: 0, heritee: false, etapeHeritee: null }, substances: { value: [], heritee: false, etapeHeritee: null }, typeId: 'mfr' }, 'mut', 'arm').valid
+    fondamentaleStepIsComplete(
+      {
+        duree: { value: 0, heritee: false, etapeHeritee: null },
+        substances: { value: [], heritee: false, etapeHeritee: null },
+        typeId: 'mfr',
+        titulaires: { value: [], heritee: false, etapeHeritee: null },
+      },
+      'mut',
+      'arm'
+    ).valid
   ).toBe(false)
 })
 
@@ -660,12 +741,12 @@ test('getDocumentsTypes', () => {
       },
       {
         "description": "la liste et la valeur du matériel d’extraction et de
-     traitement que le demandeur détient ou qu’il 
+     traitement que le demandeur détient ou qu’il
     envisage d’acquérir ainsi que, dans ce dernier
-     cas, le financement correspondant. Ces pièces 
-    sont demandées au titre de la justification des 
+     cas, le financement correspondant. Ces pièces
+    sont demandées au titre de la justification des
     capacités financières du
-    demandeur 
+    demandeur
     (décret 2001-204, art. 7)",
         "id": "idm",
         "nom": "Identification de matériel",
@@ -808,12 +889,12 @@ test('getDocumentsTypes', () => {
       },
       {
         "description": "la liste et la valeur du matériel d’extraction et de
-     traitement que le demandeur détient ou qu’il 
+     traitement que le demandeur détient ou qu’il
     envisage d’acquérir ainsi que, dans ce dernier
-     cas, le financement correspondant. Ces pièces 
-    sont demandées au titre de la justification des 
+     cas, le financement correspondant. Ces pièces
+    sont demandées au titre de la justification des
     capacités financières du
-    demandeur 
+    demandeur
     (décret 2001-204, art. 7)",
         "id": "idm",
         "nom": "Identification de matériel",
