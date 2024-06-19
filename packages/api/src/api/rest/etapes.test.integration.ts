@@ -53,6 +53,10 @@ test('getEtapesTypesEtapesStatusWithMainStep', async () => {
   const tested = await restCall(dbPool, '/rest/etapesTypes/:demarcheId/:date', { demarcheId: titreDemarche.id, date: getCurrent() }, userSuper)
 
   expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
+  // TODO 2024-06-19 changer ce format ?
+  // Partir plutôt sur un object avec comme clé le etapeTypeId, une liste de etapeStatut associée et la clé mainStep (soit sur le statut, soit directement au top niveau)
+  // soit { mfr: {statuts: ['fai'], mainStep: true}}
+  // soit { mfr: {statuts: [{id: 'fai', mainStep: true}]}}
   expect(tested.body).toMatchInlineSnapshot(`
     [
       {

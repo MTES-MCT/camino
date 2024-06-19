@@ -8,6 +8,7 @@ import { EmailAdministration } from '../../../tools/api-mailjet/types.js'
 import { UserNotNull } from 'camino-common/src/roles.js'
 import { EtapesTypes } from 'camino-common/src/static/etapesTypes.js'
 import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools.js'
+import { ETAPE_IS_BROUILLON, ETAPE_IS_NOT_BROUILLON } from 'camino-common/src/etape.js'
 
 const emailForAdministrationContentFormat = (titreTypeId: string, etapeNom: string, titreId: string, user: UserNotNull) => {
   const titreUrl = titreUrlGet(titreId)
@@ -43,8 +44,7 @@ export const emailsForAdministrationsGet = (
 
   if (demarcheTypeId === 'oct' && titreTypeId === 'arm') {
     // lorsque la demande est déposée
-    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-    if (!etape.isBrouillon && (oldEtape?.isBrouillon ?? true)) {
+    if (etape.isBrouillon === ETAPE_IS_NOT_BROUILLON && (oldEtape?.isBrouillon ?? ETAPE_IS_BROUILLON) === ETAPE_IS_BROUILLON) {
       emails.push(EmailAdministration.PTMG)
       emails.push(EmailAdministration.ONF)
 
@@ -63,8 +63,7 @@ export const emailsForAdministrationsGet = (
       title = 'Nouvelle demande complète'
     }
   } else if (demarcheTypeId === 'oct' && titreTypeId === 'axm') {
-    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-    if (!etape.isBrouillon && (oldEtape?.isBrouillon ?? true)) {
+    if (etape.isBrouillon === ETAPE_IS_NOT_BROUILLON && (oldEtape?.isBrouillon ?? ETAPE_IS_BROUILLON) === ETAPE_IS_BROUILLON) {
       emails.push(EmailAdministration.DGTM)
 
       title = 'Nouvelle demande déposée'

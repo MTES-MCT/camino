@@ -321,7 +321,6 @@ export const getEtape = (_pool: Pool) => async (req: CaminoRequest, res: CustomR
       } else if (isNullOrUndefined(titreEtape.titulaireIds) || isNullOrUndefined(titreEtape.demarche?.titre) || titreEtape.demarche.titre.administrationsLocales === undefined) {
         console.error('la démarche n’est pas chargée complètement')
         res.sendStatus(HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR)
-        // Cette route est utilisée que par l’ancienne interface qui permet d’éditer une étape. Graphql permet de récupérer trop de champs si on ne fait pas ça
       } else if (
         !canEditEtape(user, titreEtape.typeId, titreEtape.isBrouillon, titreEtape.titulaireIds ?? [], titreEtape.demarche.titre.administrationsLocales ?? [], titreEtape.demarche.typeId, {
           typeId: titreEtape.demarche.titre.typeId,
@@ -1062,6 +1061,7 @@ const demarcheEtapesTypesGet = async (titreDemarcheId: DemarcheId, date: CaminoD
     etapesTypes.push(...etapesTypesTDE.flatMap(etapeTypeId => getEtapesStatuts(etapeTypeId).map(etapeStatut => ({ etapeTypeId, etapeStatutId: etapeStatut.id, mainStep: false }))))
   }
 
+  // FIXME integration tests
   // On ne peut pas avoir 2 fois le même type d'étape en brouillon
   const etapeTypeIdInBrouillon = titreDemarche.etapes?.filter(({ isBrouillon, id }) => id !== titreEtapeId && isBrouillon).map(({ typeId }) => typeId) ?? []
 

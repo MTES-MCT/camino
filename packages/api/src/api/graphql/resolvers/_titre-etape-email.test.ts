@@ -24,7 +24,6 @@ test("envoie un email sur un octroi d'AEX", () => {
     {
       typeId: 'mfr',
       statutId: 'fai',
-      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       isBrouillon: ETAPE_IS_NOT_BROUILLON,
     },
     'oct',
@@ -42,7 +41,6 @@ test("envoie un email sur un octroi d'ARM", () => {
     {
       typeId: 'mdp',
       statutId: 'fai',
-      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       isBrouillon: ETAPE_IS_NOT_BROUILLON,
     },
     'oct',
