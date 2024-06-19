@@ -18,6 +18,7 @@ import {
   etapeDocumentModificationValidator,
   documentComplementaireDaeEtapeDocumentModificationValidator,
   documentComplementaireAslEtapeDocumentModificationValidator,
+  EtapeSlug,
 } from 'camino-common/src/etape.js'
 import { DemarcheId, demarcheIdValidator } from 'camino-common/src/demarche.js'
 import { HTTP_STATUS } from 'camino-common/src/http.js'
@@ -49,6 +50,7 @@ import {
   insertEtapeAvis,
   insertEtapeDocuments,
   insertTitreEtapeEntrepriseDocument,
+  updateEtapeAvis,
   updateEtapeDocuments,
 } from '../../database/queries/titres-etapes.queries.js'
 import { GetEtapeDataForEdition, getEtapeByDemarcheIdAndEtapeTypeId, getEtapeDataForEdition } from './etapes.queries.js'
@@ -62,7 +64,7 @@ import { getElementWithValue, getSections, getSectionsWithValue } from 'camino-c
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { AdministrationId } from 'camino-common/src/static/administrations.js'
 import { titreDemarcheUpdatedEtatValidate } from '../../business/validations/titre-demarche-etat-validate.js'
-import { FlattenEtape, GraphqlEtape, GraphqlEtapeCreation, graphqlEtapeCreationValidator, graphqlEtapeModificationValidator } from 'camino-common/src/etape-form.js'
+import { FlattenEtape, GraphqlEtape, GraphqlEtapeCreation, GraphqlEtapeModification, graphqlEtapeCreationValidator, graphqlEtapeModificationValidator } from 'camino-common/src/etape-form.js'
 import { iTitreEtapeToFlattenEtape } from '../_format/titres-etapes.js'
 import { CommuneId } from 'camino-common/src/static/communes.js'
 import { titreEtapeUpdationValidate } from '../../business/validations/titre-etape-updation-validate.js'
@@ -437,12 +439,13 @@ const getPerimetreInfosInternal = async (
   }
 }
 const getFlattenEtape = async (
-  etape: GraphqlEtapeCreation,
+  etape: GraphqlEtapeCreation | GraphqlEtapeModification,
   demarche: ITitreDemarche,
   titreTypeId: TitreTypeId,
+  isBrouillon: EtapeBrouillon,
+  etapeSlug: EtapeSlug | undefined,
   pool: Pool
-): Promise<{ flattenEtape: FlattenEtape; isBrouillon: EtapeBrouillon; perimetreInfos: PerimetreInfos }> => {
-  const isBrouillon = canBeBrouillon(etape.typeId)
+): Promise<{ flattenEtape: FlattenEtape; perimetreInfos: PerimetreInfos }> => {
   const perimetreInfos = await getPerimetreInfosInternal(
     pool,
     etape.geojson4326Perimetre,
@@ -486,10 +489,9 @@ const getFlattenEtape = async (
       heritageProps,
       heritageContenu,
       // On ne voit pas comment mieux faire
-      id: etapeIdValidator.parse('newId'),
-      slug: etapeSlugValidator.parse('unknown'),
+      id: 'id' in etape ? etape.id : etapeIdValidator.parse('newId'),
+      slug: etapeSlug,
     }),
-    isBrouillon,
     perimetreInfos,
   }
 }
@@ -533,7 +535,8 @@ export const createEtape = (pool: Pool) => async (req: CaminoRequest, res: Custo
             if (!titreTypeId) {
               res.status(HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR).json({ errorMessage: `le type du titre de la ${titreDemarche.id} n'est pas chargé` })
             } else {
-              const { flattenEtape, isBrouillon, perimetreInfos } = await getFlattenEtape(etape, titreDemarche, titreTypeId, pool)
+              const isBrouillon = canBeBrouillon(etape.typeId)
+              const { flattenEtape, perimetreInfos } = await getFlattenEtape(etape, titreDemarche, titreTypeId, isBrouillon, etapeSlugValidator.parse('unknown'), pool)
               const entrepriseDocuments: EntrepriseDocument[] = await validateAndGetEntrepriseDocuments(pool, flattenEtape, etape.entrepriseDocumentIds, user)
 
               const etapeDocumentsParsed = z.array(tempEtapeDocumentValidator).safeParse(etape.etapeDocuments)
@@ -689,14 +692,9 @@ export const updateEtape = (pool: Pool) => async (req: CaminoRequest, res: Custo
         if (!titreTypeId) {
           throw new Error(`le type du titre de la ${titreDemarche.id} n'est pas chargé`)
         }
-        const { flattenEtape, perimetreInfos } = await getFlattenEtape(etape, titreDemarche, titreTypeId, pool)
-        flattenEtape.id = etape.id
-        flattenEtape.isBrouillon = titreEtapeOld.isBrouillon
-        if (isNotNullNorUndefined(titreEtapeOld.slug)) {
-          flattenEtape.slug = titreEtapeOld.slug
-        }
+        const isBrouillon = titreEtapeOld.isBrouillon
+        const { flattenEtape, perimetreInfos } = await getFlattenEtape(etape, titreDemarche, titreTypeId, isBrouillon, titreEtapeOld.slug, pool)
         const entrepriseDocuments: EntrepriseDocument[] = await validateAndGetEntrepriseDocuments(pool, flattenEtape, etape.entrepriseDocumentIds, user)
-        // delete etape.entrepriseDocumentIds
 
         const etapeDocumentsParsed = z.array(etapeDocumentModificationValidator).safeParse(etape.etapeDocuments)
 
@@ -819,8 +817,7 @@ export const updateEtape = (pool: Pool) => async (req: CaminoRequest, res: Custo
           }
         }
 
-        // FIXME faut faire un update ou un insert
-        await insertEtapeAvis(pool, etapeUpdated.id, etape.etapeAvis)
+        await updateEtapeAvis(pool, etapeUpdated.id, isBrouillon, etape.etapeAvis)
 
         await titreEtapeUpdateTask(pool, etapeUpdated.id, etapeUpdated.titreDemarcheId, user)
 
@@ -1057,12 +1054,17 @@ const demarcheEtapesTypesGet = async (titreDemarcheId: DemarcheId, date: CaminoD
     etapesTypes.push(...etapesTypesTDE.flatMap(etapeTypeId => getEtapesStatuts(etapeTypeId).map(etapeStatut => ({ etapeTypeId, etapeStatutId: etapeStatut.id, mainStep: false }))))
   }
 
-  return etapesTypes.filter(({ etapeTypeId }) =>
-    canCreateEtape(user, etapeTypeId, true, titre.titulaireIds ?? [], titre.administrationsLocales ?? [], titreDemarche.typeId, {
-      typeId: titre.typeId,
-      titreStatutId: titre.titreStatutId ?? TitresStatutIds.Indetermine,
-    })
-  )
+  // On ne peut pas avoir 2 fois le même type d'étape en brouillon
+  const etapeTypeIdInBrouillon = titreDemarche.etapes?.filter(({ isBrouillon, id }) => id !== titreEtapeId && isBrouillon).map(({ typeId }) => typeId) ?? []
+
+  return etapesTypes
+    .filter(({ etapeTypeId }) =>
+      canCreateEtape(user, etapeTypeId, true, titre.titulaireIds ?? [], titre.administrationsLocales ?? [], titreDemarche.typeId, {
+        typeId: titre.typeId,
+        titreStatutId: titre.titreStatutId ?? TitresStatutIds.Indetermine,
+      })
+    )
+    .filter(({ etapeTypeId }) => !etapeTypeIdInBrouillon.includes(etapeTypeId))
 }
 
 // VISIBLE_FOR_TESTING

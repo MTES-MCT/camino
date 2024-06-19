@@ -135,7 +135,7 @@ export const iTitreEtapeToFlattenEtape = (titreEtape: ITitreEtape): FlattenEtape
     contenu,
   }
 
-  // On flatten ici pour enlever les champs supplémentaires qu'il y'a par exemple dans perimetre
+  // On zod parse ici pour enlever les champs supplémentaires qu'il y'a par exemple dans perimetre
   return flattenEtapeValidator.parse(flattenEtape)
 }
 export const titreEtapeFormat = (titreEtape: ITitreEtape, fields = titreEtapeFormatFields) => {

@@ -15,6 +15,7 @@ import { DeepReadonly, NonEmptyArray, isNonEmptyArray } from '../typescript-tool
 import {
   ETAPE_IS_BROUILLON,
   EtapeAvis,
+  EtapeBrouillon,
   EtapeDocument,
   GetEtapeDocumentsByEtapeId,
   GetEtapeDocumentsByEtapeIdAslDocument,
@@ -353,4 +354,5 @@ export const canDeposeEtape = (
   )
 }
 
-export const canDeleteEtapeDocument = (isBrouillon: boolean): boolean => isBrouillon
+export const canDeleteEtapeDocument = (isBrouillon: EtapeBrouillon): boolean => isBrouillon
+export const canDeleteEtapeAvis = (isBrouillon: EtapeBrouillon): boolean => isBrouillon

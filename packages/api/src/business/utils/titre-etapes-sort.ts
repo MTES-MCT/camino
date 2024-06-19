@@ -5,13 +5,15 @@ import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes.js'
 import { getEtapesTDE } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/index.js'
 import { DemarcheId } from 'camino-common/src/demarche.js'
+import { isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools.js'
+import { ETAPE_IS_BROUILLON } from 'camino-common/src/etape.js'
 
 // classe les étapes selon leur ordre inverse: 3, 2, 1.
 export const titreEtapesSortDescByOrdre = <T extends Pick<ITitreEtape, 'ordre'>>(titreEtapes: T[]): T[] => titreEtapes.slice().sort((a, b) => b.ordre! - a.ordre!)
 
 // classe les étapes selon leur ordre: 1, 2, 3, …
 export const titreEtapesSortAscByOrdre = <T extends Pick<ITitreEtape, 'ordre'>>(titreEtapes: T[]): T[] => titreEtapes.slice().sort((a, b) => a.ordre! - b.ordre!)
-
+// FIXME tester le tri avec des étapes machine en brouillon
 // classe les étapes selon leur dates, ordre et etapesTypes.ordre le cas échéant
 export const titreEtapesSortAscByDate = <T extends TitreEtapeForMachine>(titreEtapes: T[], demarcheId: DemarcheId, demarcheTypeId: DemarcheTypeId, titreTypeId: TitreTypeId): T[] => {
   const demarcheDefinition = demarcheDefinitionFind(titreTypeId, demarcheTypeId, titreEtapes, demarcheId)
@@ -28,6 +30,17 @@ export const titreEtapesSortAscByDate = <T extends TitreEtapeForMachine>(titreEt
       if (found) {
         result.push(found)
       }
+    }
+
+    const etapesInBrouillon = titreEtapes.filter(({ isBrouillon }) => isBrouillon)
+    if (isNotNullNorUndefinedNorEmpty(etapesInBrouillon)) {
+      return [...result, ...etapesInBrouillon].sort((a, b) => {
+        if (a.isBrouillon === ETAPE_IS_BROUILLON || b.isBrouillon === ETAPE_IS_BROUILLON) {
+          return a.date.localeCompare(b.date)
+        }
+
+        return 0
+      })
     }
 
     return result

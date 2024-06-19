@@ -134,6 +134,54 @@ export interface IInsertEtapeDocumentDbQuery {
   result: IInsertEtapeDocumentDbResult;
 }
 
+/** 'UpdateEtapeAvisFileDb' parameters type */
+export interface IUpdateEtapeAvisFileDbParams {
+  id: string;
+  largeobject_id: number;
+}
+
+/** 'UpdateEtapeAvisFileDb' return type */
+export type IUpdateEtapeAvisFileDbResult = void;
+
+/** 'UpdateEtapeAvisFileDb' query type */
+export interface IUpdateEtapeAvisFileDbQuery {
+  params: IUpdateEtapeAvisFileDbParams;
+  result: IUpdateEtapeAvisFileDbResult;
+}
+
+/** 'UpdateEtapeAvisInfoDb' parameters type */
+export interface IUpdateEtapeAvisInfoDbParams {
+  avis_statut_id: string;
+  avis_type_id: string;
+  avis_visibility_id: string;
+  date: string;
+  description?: string | null | void;
+  id: string;
+}
+
+/** 'UpdateEtapeAvisInfoDb' return type */
+export type IUpdateEtapeAvisInfoDbResult = void;
+
+/** 'UpdateEtapeAvisInfoDb' query type */
+export interface IUpdateEtapeAvisInfoDbQuery {
+  params: IUpdateEtapeAvisInfoDbParams;
+  result: IUpdateEtapeAvisInfoDbResult;
+}
+
+/** 'DeleteEtapeAvisDb' parameters type */
+export interface IDeleteEtapeAvisDbParams {
+  ids: readonly (string)[];
+}
+
+/** 'DeleteEtapeAvisDb' return type */
+export type IDeleteEtapeAvisDbResult = void;
+
+/** 'DeleteEtapeAvisDb' query type */
+export interface IDeleteEtapeAvisDbQuery {
+  params: IDeleteEtapeAvisDbParams;
+  result: IDeleteEtapeAvisDbResult;
+}
+
 /** 'InsertEtapeAvisDb' parameters type */
 export interface IInsertEtapeAvisDbParams {
   avis_statut_id: string;
