@@ -355,4 +355,3 @@ export const canDeposeEtape = (
 }
 
 export const canDeleteEtapeDocument = (isBrouillon: EtapeBrouillon): boolean => isBrouillon
-export const canDeleteEtapeAvis = (isBrouillon: EtapeBrouillon): boolean => isBrouillon

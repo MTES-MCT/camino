@@ -42,15 +42,8 @@ import {
   sectionsStepIsVisible,
   etapeAvisStepIsVisible,
   etapeAvisStepIsComplete,
-  entrepriseDocumentsStepIsEnregistrable,
-  sectionsStepIsEnregistrable,
-  etapeAvisStepIsEnregistrable,
   dateTypeStepIsComplete,
-  dateTypeStepIsEnregistrable,
   dateTypeStepIsVisible,
-  etapeDocumentsStepIsEnregistrable,
-  fondamentaleStepIsEnregistrable,
-  perimetreStepIsEnregistrable,
 } from 'camino-common/src/permissions/etape-form'
 import { EtapeAlerte, PureFormSaveBtn } from './pure-form-save-btn'
 import { TitresStatuts } from 'camino-common/src/static/titresStatuts'
@@ -305,11 +298,11 @@ export const EtapeEditForm = defineComponent<Props>(props => {
     if (etape.value.status === 'LOADED' && isNotNullNorUndefined(etape.value.value)) {
       if (etape.value.value.isBrouillon === ETAPE_IS_NOT_BROUILLON) {
         return (
-          dateTypeStepIsEnregistrable(etape.value.value, props.user) &&
-          fondamentaleStepIsEnregistrable(etape.value.value, props.demarcheTypeId, props.titreTypeId) &&
-          sectionsStepIsEnregistrable(etape.value.value, props.demarcheTypeId, props.titreTypeId) &&
-          perimetreStepIsEnregistrable(etape.value.value) &&
-          etapeDocumentsStepIsEnregistrable(
+          dateTypeStepIsComplete(etape.value.value, props.user).valid &&
+          fondamentaleStepIsComplete(etape.value.value, props.demarcheTypeId, props.titreTypeId).valid &&
+          sectionsStepIsComplete(etape.value.value, props.demarcheTypeId, props.titreTypeId).valid &&
+          perimetreStepIsComplete(etape.value.value).valid &&
+          etapeDocumentsStepIsComplete(
             etape.value.value,
             props.demarcheTypeId,
             props.titreTypeId,
@@ -318,9 +311,9 @@ export const EtapeEditForm = defineComponent<Props>(props => {
             documents.value.daeDocument,
             documents.value.aslDocument,
             props.user
-          ) &&
-          entrepriseDocumentsStepIsEnregistrable(etape.value.value, props.demarcheTypeId, props.titreTypeId, documents.value.entrepriseDocuments).valid &&
-          etapeAvisStepIsEnregistrable()
+          ).valid &&
+          entrepriseDocumentsStepIsComplete(etape.value.value, props.demarcheTypeId, props.titreTypeId, documents.value.entrepriseDocuments).valid &&
+          etapeAvisStepIsComplete(etape.value.value, documents.value.etapeAvis, props.titreTypeId, props.perimetre.communes).valid
         )
       }
       return dateTypeStepIsComplete(etape.value.value, props.user).valid && etape.value.value.isBrouillon

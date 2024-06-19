@@ -57,15 +57,17 @@ export const dateTypeStepIsComplete = (etape: DeepReadonly<Nullable<Pick<Flatten
   return { valid: true }
 }
 
-export const dateTypeStepIsEnregistrable = (etape: DeepReadonly<Pick<FlattenEtape, 'typeId' | 'date' | 'statutId'>>, user: User): boolean => {
-  return dateTypeStepIsComplete(etape, user).valid
-}
-
 export const fondamentaleStepIsVisible = (etapeTypeId: EtapeTypeId): boolean => {
   return EtapesTypes[etapeTypeId].fondamentale
 }
 
-export const fondamentaleStepIsComplete = (flattened: DeepReadonly<Pick<FlattenEtape, 'typeId' | 'duree' | 'substances'>>, demarcheTypeId: DemarcheTypeId, titreTypeId: TitreTypeId): ValidReturn => {
+const isTitulairesRequired = (etapeTypeId: EtapeTypeId, demarcheTypeId: DemarcheTypeId, titreTypeId: TitreTypeId): boolean =>
+  getEntrepriseDocuments(titreTypeId, demarcheTypeId, etapeTypeId).some(({ optionnel }) => !optionnel)
+export const fondamentaleStepIsComplete = (
+  flattened: DeepReadonly<Pick<FlattenEtape, 'typeId' | 'duree' | 'substances' | 'titulaires'>>,
+  demarcheTypeId: DemarcheTypeId,
+  titreTypeId: TitreTypeId
+): ValidReturn => {
   if (!fondamentaleStepIsVisible(flattened.typeId)) {
     return { valid: true }
   }
@@ -83,15 +85,16 @@ export const fondamentaleStepIsComplete = (flattened: DeepReadonly<Pick<FlattenE
     errors.push('la durée est obligatoire')
   }
 
+  // FIXME unit tests
+  if (isTitulairesRequired(flattened.typeId, demarcheTypeId, titreTypeId) && isNullOrUndefinedOrEmpty(flattened.titulaires.value)) {
+    errors.push('Les titulaires sont obligatoires')
+  }
+
   if (isNonEmptyArray(errors)) {
     return { valid: false, errors }
   }
 
   return { valid: true }
-}
-
-export const fondamentaleStepIsEnregistrable = (flattened: DeepReadonly<Pick<FlattenEtape, 'typeId' | 'duree' | 'substances'>>, demarcheTypeId: DemarcheTypeId, titreTypeId: TitreTypeId): boolean => {
-  return fondamentaleStepIsComplete(flattened, demarcheTypeId, titreTypeId).valid
 }
 
 export const sectionsStepIsVisible = (etape: Pick<FlattenEtape, 'typeId'>, demarcheTypeId: DemarcheTypeId, titreTypeId: TitreTypeId): boolean => {
@@ -113,10 +116,6 @@ export const sectionsStepIsComplete = (etape: DeepReadonly<Pick<FlattenEtape, 't
   return { valid: true }
 }
 
-export const sectionsStepIsEnregistrable = (etape: DeepReadonly<Pick<FlattenEtape, 'typeId' | 'contenu'>>, demarcheTypeId: DemarcheTypeId, titreTypeId: TitreTypeId): boolean => {
-  return sectionsStepIsComplete(etape, demarcheTypeId, titreTypeId).valid
-}
-
 export const perimetreStepIsVisible = (etape: Pick<FlattenEtape, 'typeId'>): boolean => {
   return EtapesTypes[etape.typeId].fondamentale
 }
@@ -135,10 +134,6 @@ export const perimetreStepIsComplete = (etape: DeepReadonly<Pick<FlattenEtape, '
   }
 
   return { valid: true }
-}
-
-export const perimetreStepIsEnregistrable = (etape: DeepReadonly<Pick<FlattenEtape, 'typeId' | 'perimetre'>>): boolean => {
-  return perimetreStepIsComplete(etape).valid
 }
 
 export const getDocumentsTypes = (
@@ -258,19 +253,6 @@ export const etapeDocumentsStepIsComplete = (
   return { valid: true }
 }
 
-export const etapeDocumentsStepIsEnregistrable = (
-  etape: DeepReadonly<Pick<FlattenEtape, 'typeId' | 'contenu' | 'isBrouillon'>>,
-  demarcheTypeId: DemarcheTypeId,
-  titreTypeId: TitreTypeId,
-  etapeDocuments: DeepReadonly<(EtapeDocument | TempEtapeDocument)[]>,
-  sdomZoneIds: DeepReadonly<SDOMZoneId[]>,
-  daeDocument: DeepReadonly<DocumentComplementaireDaeEtapeDocumentModification> | null,
-  aslDocument: DeepReadonly<DocumentComplementaireAslEtapeDocumentModification> | null,
-  user: User
-): boolean => {
-  return etapeDocumentsStepIsComplete(etape, demarcheTypeId, titreTypeId, etapeDocuments, sdomZoneIds, daeDocument, aslDocument, user).valid
-}
-
 export const etapeAvisStepIsVisible = (etape: Pick<FlattenEtape, 'typeId'>, titreTypeId: TitreTypeId, communeIds: DeepReadonly<CommuneId[]>): boolean => {
   return getAvisTypes(etape.typeId, titreTypeId, communeIds).length > 0
 }
@@ -293,11 +275,6 @@ export const etapeAvisStepIsComplete = (
   return { valid: true }
 }
 
-export const etapeAvisStepIsEnregistrable = (): boolean => {
-  // TODO 2024-05-14 --> Si l'étape est complète à un moment, est-ce qu'on interdit le nouvel enregistrement ?
-  return true
-}
-
 export const entrepriseDocumentsStepIsVisible = (etape: Pick<FlattenEtape, 'typeId'>, demarcheTypeId: DemarcheTypeId, titreTypeId: TitreTypeId): boolean => {
   return getEntrepriseDocuments(titreTypeId, demarcheTypeId, etape.typeId).length > 0
 }
@@ -315,28 +292,10 @@ export const entrepriseDocumentsStepIsComplete = (
 
   const entrepriseIds = [...etape.titulaires.value, ...etape.amodiataires.value].filter(onlyUnique)
 
-  if (
-    entrepriseIds.some(eId => documentTypes.some(({ optionnel, id }) => !optionnel && entreprisesDocuments.every(({ documentTypeId, entrepriseId }) => documentTypeId !== id || entrepriseId !== eId)))
-  ) {
-    return { valid: false, errors: ["Il manque des documents d'entreprise obligatoires"] }
+  // FIXME unit test this
+  if (isNullOrUndefinedOrEmpty(entrepriseIds) && isTitulairesRequired(etape.typeId, demarcheTypeId, titreTypeId)) {
+    return { valid: false, errors: ["Il y a des documents d'entreprise obligatoires, mais il n'y a pas de titulaire"] }
   }
-
-  return { valid: true }
-}
-
-export const entrepriseDocumentsStepIsEnregistrable = (
-  etape: DeepReadonly<Pick<FlattenEtape, 'typeId' | 'contenu' | 'titulaires' | 'amodiataires'>>,
-  demarcheTypeId: DemarcheTypeId,
-  titreTypeId: TitreTypeId,
-  entreprisesDocuments: DeepReadonly<Pick<SelectedEntrepriseDocument, 'documentTypeId' | 'entrepriseId'>[]>
-): ValidReturn => {
-  if (!entrepriseDocumentsStepIsVisible(etape, demarcheTypeId, titreTypeId)) {
-    return { valid: true }
-  }
-
-  const documentTypes = getEntrepriseDocuments(titreTypeId, demarcheTypeId, etape.typeId)
-
-  const entrepriseIds = [...etape.titulaires.value, ...etape.amodiataires.value].filter(onlyUnique)
 
   if (
     entrepriseIds.some(eId => documentTypes.some(({ optionnel, id }) => !optionnel && entreprisesDocuments.every(({ documentTypeId, entrepriseId }) => documentTypeId !== id || entrepriseId !== eId)))

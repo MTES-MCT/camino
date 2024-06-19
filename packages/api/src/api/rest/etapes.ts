@@ -817,7 +817,15 @@ export const updateEtape = (pool: Pool) => async (req: CaminoRequest, res: Custo
           }
         }
 
-        await updateEtapeAvis(pool, etapeUpdated.id, isBrouillon, etape.etapeAvis)
+        await updateEtapeAvis(
+          pool,
+          etapeUpdated.id,
+          isBrouillon,
+          etape.etapeAvis,
+          etape.typeId,
+          titreTypeId,
+          perimetreInfos.communes.map(({ id }) => id)
+        )
 
         await titreEtapeUpdateTask(pool, etapeUpdated.id, etapeUpdated.titreDemarcheId, user)
 

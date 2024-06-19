@@ -32,25 +32,25 @@ export const titreEtapeUpdationValidate = (
 
   const sections = getSections(titre.typeId, titreDemarche.typeId, etape.typeId)
 
-  // FIXME tests à écrire et faire la même chose partout en dessous
+  // FIXME tests à écrire
   if (!etape.duree.heritee && !canEditDuree(titre.typeId, titreDemarche.typeId) && (etape.duree.value ?? 0) !== (titreEtapeOld?.duree ?? 0)) {
     errors.push('impossible d’éditer la durée')
   }
 
   if (!canEditDates(titre.typeId, titreDemarche.typeId, etape.typeId, user)) {
-    if ((etape.dateDebut.value ?? '') !== (titreEtapeOld?.dateDebut ?? '')) {
+    if (!etape.dateDebut.heritee && (etape.dateDebut.value ?? '') !== (titreEtapeOld?.dateDebut ?? '')) {
       errors.push('impossible d’éditer la date de début')
     }
-    if ((etape.dateFin.value ?? '') !== (titreEtapeOld?.dateFin ?? '')) {
+    if (!etape.dateFin.heritee && (etape.dateFin.value ?? '') !== (titreEtapeOld?.dateFin ?? '')) {
       errors.push('impossible d’éditer la date d’échéance')
     }
   }
 
-  if (!canEditTitulaires(titre.typeId, user) && entreprisesHaveChanged(etape.titulaires.value ?? [], titreEtapeOld?.titulaireIds ?? [])) {
-    errors.push(`une autorisation ${titre.typeId === 'arm' ? 'de recherche' : "d'exploitation"} ne peut pas inclure de titulaires`)
+  if (!etape.titulaires.heritee && !canEditTitulaires(titre.typeId, user) && entreprisesHaveChanged(etape.titulaires.value ?? [], titreEtapeOld?.titulaireIds ?? [])) {
+    errors.push("impossible d'éditer les titulaires")
   }
 
-  if (!canEditAmodiataires(titre.typeId, user) && entreprisesHaveChanged(etape.amodiataires.value ?? [], titreEtapeOld?.amodiataireIds ?? [])) {
+  if (!etape.amodiataires.heritee && !canEditAmodiataires(titre.typeId, user) && entreprisesHaveChanged(etape.amodiataires.value ?? [], titreEtapeOld?.amodiataireIds ?? [])) {
     errors.push(`une autorisation ${titre.typeId === 'arm' ? 'de recherche' : "d'exploitation"} ne peut pas inclure d'amodiataires`)
   }
 

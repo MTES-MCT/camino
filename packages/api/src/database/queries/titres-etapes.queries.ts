@@ -19,6 +19,7 @@ import {
   IDeleteEtapeAvisDbQuery,
 } from './titres-etapes.queries.types.js'
 import {
+  ETAPE_IS_NOT_BROUILLON,
   EtapeAvisId,
   etapeAvisIdValidator,
   EtapeAvisModification,
@@ -44,15 +45,17 @@ import { canReadDocument } from '../../api/rest/permissions/documents.js'
 import { AdministrationId } from 'camino-common/src/static/administrations.js'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
-import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, SimplePromiseFn } from 'camino-common/src/typescript-tools.js'
+import { DeepReadonly, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, SimplePromiseFn } from 'camino-common/src/typescript-tools.js'
 import { CanReadDemarche } from '../../api/rest/permissions/demarches.js'
 import { newEtapeAvisId, newEtapeDocumentId } from '../models/_format/id-create.js'
 import { caminoDateValidator, getCurrent } from 'camino-common/src/date.js'
 import { createLargeObject, LargeObjectId, largeObjectIdValidator } from '../largeobjects.js'
-import { canDeleteEtapeAvis, canDeleteEtapeDocument } from 'camino-common/src/permissions/titres-etapes.js'
+import { canDeleteEtapeDocument } from 'camino-common/src/permissions/titres-etapes.js'
 import { avisStatutIdValidator, avisTypeIdValidator, avisVisibilityIdValidator } from 'camino-common/src/static/avisTypes.js'
 import { canReadAvis } from '../../api/rest/permissions/avis.js'
 import { getEtapeDataForEdition } from '../../api/rest/etapes.queries.js'
+import { etapeAvisStepIsComplete } from 'camino-common/src/permissions/etape-form.js'
+import { CommuneId } from 'camino-common/src/static/communes.js'
 
 export const insertTitreEtapeEntrepriseDocument = async (pool: Pool, params: { titre_etape_id: EtapeId; entreprise_document_id: EntrepriseDocumentId }) =>
   dbQueryAndValidate(insertTitreEtapeEntrepriseDocumentInternal, params, pool, z.void())
@@ -215,7 +218,19 @@ delete from etape_avis
 where id in $$ ids !
 `
 
-export const updateEtapeAvis = async (pool: Pool, titre_etape_id: EtapeId, isBrouillon: EtapeBrouillon, etapeAvis: EtapeAvisModification[]) => {
+export const updateEtapeAvis = async (
+  pool: Pool,
+  titre_etape_id: EtapeId,
+  isBrouillon: EtapeBrouillon,
+  etapeAvis: EtapeAvisModification[],
+  etapeTypeId: EtapeTypeId,
+  titreTypeId: TitreTypeId,
+  communeIds: DeepReadonly<CommuneId[]>
+) => {
+  if (isBrouillon === ETAPE_IS_NOT_BROUILLON && !etapeAvisStepIsComplete({ typeId: etapeTypeId }, etapeAvis, titreTypeId, communeIds).valid) {
+    throw new Error('Impossible de mettre à jour les avis, car ils ne sont pas complets')
+  }
+
   const avisInDb = await dbQueryAndValidate(getAvisByEtapeIdQuery, { titre_etape_id }, pool, etapeAvisDbValidator)
 
   const avisListToUpdate = etapeAvis.filter((avis): avis is EtapeAvisWithFileModification => 'id' in avis)
@@ -223,7 +238,9 @@ export const updateEtapeAvis = async (pool: Pool, titre_etape_id: EtapeId, isBro
   const etapeDocumentIdsToUpdate = avisListToUpdate.map(({ id }) => id)
   const toDeleteAvis = avisInDb.filter(({ id }) => !etapeDocumentIdsToUpdate.includes(id))
   const toInsertAvis = etapeAvis.filter((avis): avis is TempEtapeAvis => !('id' in avis))
-
+  if (isNotNullNorUndefinedNorEmpty(toDeleteAvis)) {
+    await dbQueryAndValidate(deleteEtapeAvisDb, { ids: toDeleteAvis.map(({ id }) => id) }, pool, z.void())
+  }
   if (isNotNullNorUndefinedNorEmpty(avisListToUpdate)) {
     for (const avisToUpdate of avisListToUpdate) {
       if (isNotNullNorUndefined(avisToUpdate.temp_document_name)) {
@@ -235,13 +252,6 @@ export const updateEtapeAvis = async (pool: Pool, titre_etape_id: EtapeId, isBro
   }
   if (isNotNullNorUndefinedNorEmpty(toInsertAvis)) {
     await insertEtapeAvis(pool, titre_etape_id, toInsertAvis)
-  }
-  if (isNotNullNorUndefinedNorEmpty(toDeleteAvis)) {
-    if (!canDeleteEtapeAvis(isBrouillon)) {
-      throw new Error('Impossible de supprimer les avis')
-    }
-
-    await dbQueryAndValidate(deleteEtapeAvisDb, { ids: toDeleteAvis.map(({ id }) => id) }, pool, z.void())
   }
 }
 
