@@ -13,7 +13,6 @@ export const titreEtapesSortDescByOrdre = <T extends Pick<ITitreEtape, 'ordre'>>
 
 // classe les étapes selon leur ordre: 1, 2, 3, …
 export const titreEtapesSortAscByOrdre = <T extends Pick<ITitreEtape, 'ordre'>>(titreEtapes: T[]): T[] => titreEtapes.slice().sort((a, b) => a.ordre! - b.ordre!)
-// FIXME tester le tri avec des étapes machine en brouillon
 // classe les étapes selon leur dates, ordre et etapesTypes.ordre le cas échéant
 export const titreEtapesSortAscByDate = <T extends TitreEtapeForMachine>(titreEtapes: T[], demarcheId: DemarcheId, demarcheTypeId: DemarcheTypeId, titreTypeId: TitreTypeId): T[] => {
   const demarcheDefinition = demarcheDefinitionFind(titreTypeId, demarcheTypeId, titreEtapes, demarcheId)
@@ -32,6 +31,7 @@ export const titreEtapesSortAscByDate = <T extends TitreEtapeForMachine>(titreEt
       }
     }
 
+    // On remet les brouillons à la bonne date, car la machine les a ignorés
     const etapesInBrouillon = titreEtapes.filter(({ isBrouillon }) => isBrouillon)
     if (isNotNullNorUndefinedNorEmpty(etapesInBrouillon)) {
       return [...result, ...etapesInBrouillon].sort((a, b) => {

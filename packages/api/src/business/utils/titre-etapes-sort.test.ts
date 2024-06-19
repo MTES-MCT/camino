@@ -6,7 +6,7 @@ import { DEMARCHES_TYPES_IDS } from 'camino-common/src/static/demarchesTypes.js'
 import { TITRES_TYPES_IDS } from 'camino-common/src/static/titresTypes.js'
 import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes.js'
 import { TitreEtapeForMachine } from '../rules-demarches/machine-common.js'
-import { ETAPE_IS_NOT_BROUILLON } from 'camino-common/src/etape.js'
+import { ETAPE_IS_BROUILLON, ETAPE_IS_NOT_BROUILLON } from 'camino-common/src/etape.js'
 
 const titreEtapesSortedDescResult = [
   { typeId: 'dpu', ordre: 2, date: '1988-03-11' },
@@ -288,5 +288,90 @@ describe('trie les étapes', () => {
 
     const result = titreEtapesSortAscByDate(etapes, newDemarcheId(), DEMARCHES_TYPES_IDS.Octroi, TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX)
     expect(result).toContain(secondMcd)
+  })
+
+  test('tri les étapes via la machine, et remet les étapes en brouillon en fonction de leur date', () => {
+    const etapes: TitreEtapeForMachine[] = [
+      {
+        id: newEtapeId('mfr'),
+        ordre: 1,
+        typeId: 'mfr',
+        date: toCaminoDate('2020-01-01'),
+        statutId: 'fai',
+        isBrouillon: ETAPE_IS_NOT_BROUILLON,
+        surface: null,
+        contenu: {},
+        communes: [],
+      },
+      {
+        id: newEtapeId('mdp'),
+        ordre: 2,
+        typeId: 'mdp',
+        date: toCaminoDate('2020-01-02'),
+        statutId: 'fai',
+        isBrouillon: ETAPE_IS_NOT_BROUILLON,
+        surface: null,
+        contenu: {},
+        communes: [],
+      },
+      {
+        id: newEtapeId('pfd'),
+        ordre: 3,
+        typeId: 'pfd',
+        date: toCaminoDate('2020-01-03'),
+        statutId: 'fai',
+        isBrouillon: ETAPE_IS_NOT_BROUILLON,
+        surface: null,
+        contenu: {},
+        communes: [],
+      },
+      {
+        id: newEtapeId('mcp'),
+        ordre: 4,
+        typeId: 'mcp',
+        date: toCaminoDate('2020-01-04'),
+        statutId: 'fav',
+        isBrouillon: ETAPE_IS_NOT_BROUILLON,
+        surface: null,
+        contenu: {},
+        communes: [],
+      },
+      {
+        id: newEtapeId('vfd'),
+        ordre: 5,
+        typeId: 'vfd',
+        date: toCaminoDate('2020-01-05'),
+        statutId: 'fai',
+        isBrouillon: ETAPE_IS_NOT_BROUILLON,
+        surface: null,
+        contenu: {},
+        communes: [],
+      },
+      {
+        id: newEtapeId('asc'),
+        ordre: 0,
+        typeId: 'asc',
+        date: toCaminoDate('2020-01-07'),
+        statutId: 'fai',
+        isBrouillon: ETAPE_IS_BROUILLON,
+        surface: null,
+        contenu: {},
+        communes: [],
+      },
+      {
+        id: newEtapeId('mcr'),
+        ordre: 6,
+        typeId: 'pfd',
+        date: toCaminoDate('2020-01-06'),
+        statutId: 'fai',
+        isBrouillon: ETAPE_IS_NOT_BROUILLON,
+        surface: null,
+        contenu: {},
+        communes: [],
+      },
+    ]
+
+    const result = titreEtapesSortAscByDate(etapes, newDemarcheId(), DEMARCHES_TYPES_IDS.Octroi, TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX)
+    expect(result[result.length - 1].id).toBe('asc')
   })
 })
