@@ -32,7 +32,6 @@ export const titreEtapeUpdationValidate = (
 
   const sections = getSections(titre.typeId, titreDemarche.typeId, etape.typeId)
 
-  // FIXME tests à écrire
   if (!etape.duree.heritee && !canEditDuree(titre.typeId, titreDemarche.typeId) && (etape.duree.value ?? 0) !== (titreEtapeOld?.duree ?? 0)) {
     errors.push('impossible d’éditer la durée')
   }
