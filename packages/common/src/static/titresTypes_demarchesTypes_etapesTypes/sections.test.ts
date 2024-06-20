@@ -222,21 +222,33 @@ describe('getSectionsWithValue', () => {
   })
 
   test('les substances fiscales sont converties dans leur unité d’affichage', () => {
-    expect(
-      getSectionsWithValue(
-        [
-          {
-            id: 'substancesFiscales',
-            elements: [
-              { id: 'auru', type: 'number', uniteId: 'mgr', optionnel: false },
-              { id: 'arge', type: 'integer', optionnel: false },
-              { id: 'arse', type: 'integer', optionnel: false },
-            ],
-          },
-        ],
-        { substancesFiscales: { auru: 12.3, arge: null } }
-      )
-    ).toMatchInlineSnapshot(`
+    const withHeritage = getSectionsWithValue(
+      [
+        {
+          id: 'substancesFiscales',
+          elements: [
+            { id: 'auru', type: 'number', uniteId: 'mgr', optionnel: false },
+            { id: 'arge', type: 'integer', optionnel: false },
+            { id: 'arse', type: 'integer', optionnel: false },
+          ],
+        },
+      ],
+      { substancesFiscales: { auru: { value: 12.3 }, arge: { value: null } } }
+    )
+    const withoutHeritage = getSectionsWithValue(
+      [
+        {
+          id: 'substancesFiscales',
+          elements: [
+            { id: 'auru', type: 'number', uniteId: 'mgr', optionnel: false },
+            { id: 'arge', type: 'integer', optionnel: false },
+            { id: 'arse', type: 'integer', optionnel: false },
+          ],
+        },
+      ],
+      { substancesFiscales: { auru: 12.3, arge: null } }
+    )
+    expect(withoutHeritage).toMatchInlineSnapshot(`
       [
         {
           "elements": [
@@ -264,6 +276,7 @@ describe('getSectionsWithValue', () => {
         },
       ]
     `)
+    expect(withHeritage).toStrictEqual(withoutHeritage)
   })
 
   test('les options des liste déroulantes sont calculées si elles sont basées sur des métas', () => {
