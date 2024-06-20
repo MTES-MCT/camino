@@ -1,4 +1,4 @@
-import { FunctionalComponent } from 'vue'
+import { FunctionalComponent, computed } from 'vue'
 import { EtapeDocument, EtapeDocumentId } from 'camino-common/src/etape'
 import { User, isAdministration, isSuper } from 'camino-common/src/roles'
 import { DocumentTypeId, DocumentsTypes } from 'camino-common/src/static/documentsTypes'
@@ -32,10 +32,25 @@ export const getVisibilityLabel = (etapeDocument: Pick<EtapeDocument, 'public_le
   return VisibilityLabel.administrations
 }
 
+export const sortDocumentsColumn = <T extends { document_type_id: DocumentTypeId; description: string | null }>(documents: T[]): T[] => {
+  return [...documents].sort((a, b) => {
+    const result = DocumentsTypes[a.document_type_id].nom.localeCompare(DocumentsTypes[b.document_type_id].nom)
+
+    if (result === 0) {
+      return (a.description ?? '').localeCompare(b.description ?? '')
+    }
+
+    return result
+  })
+}
+
 export const EtapeDocuments: FunctionalComponent<Props> = props => {
   if (isNullOrUndefinedOrEmpty(props.etapeDocuments) && isNullOrUndefinedOrEmpty(props.entrepriseDocuments)) {
     return null
   }
+
+  const sortedEtapeDocuments = computed(() => sortDocumentsColumn(props.etapeDocuments.map(d => ({ ...d, document_type_id: d.etape_document_type_id }))))
+  const sortedEntrepriseDocuments = computed(() => sortDocumentsColumn(props.entrepriseDocuments.map(d => ({ ...d, document_type_id: d.entreprise_document_type_id }))))
 
   const entreprisesIndex = props.entreprises.reduce<Record<EntrepriseId, string>>((acc, entreprise) => {
     acc[entreprise.id] = entreprise.nom
@@ -56,7 +71,7 @@ export const EtapeDocuments: FunctionalComponent<Props> = props => {
             </tr>
           </thead>
           <tbody>
-            {props.etapeDocuments.map(item => (
+            {sortedEtapeDocuments.value.map(item => (
               <tr>
                 <td>
                   <EtapeDocumentLink documentId={item.id} documentTypeId={item.etape_document_type_id} />
@@ -65,7 +80,7 @@ export const EtapeDocuments: FunctionalComponent<Props> = props => {
                 {isSuper(props.user) || isAdministration(props.user) ? <td>{getVisibilityLabel(item)}</td> : null}
               </tr>
             ))}
-            {props.entrepriseDocuments.map(item => (
+            {sortedEntrepriseDocuments.value.map(item => (
               <tr>
                 <td>
                   <EntrepriseDocumentLink
