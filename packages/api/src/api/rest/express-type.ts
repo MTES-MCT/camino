@@ -5,7 +5,7 @@ import { User } from 'camino-common/src/roles'
 type MyResponse<T, U = Response> = (body?: T) => U
 
 export interface CustomResponse<T> extends Response {
-  json: MyResponse<T, this>
+  json: MyResponse<T | { errorMessage: string; extra?: unknown }, this>
 }
 
 export type CaminoRequest = Request<User>

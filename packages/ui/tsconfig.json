@@ -11,7 +11,7 @@
     "skipLibCheck": true,
     "jsx": "preserve",
     "jsxImportSource": "vue",
-    "noErrorTruncation": true,
+    "noErrorTruncation": false,
     "lib": [
       "esnext",
       "dom",

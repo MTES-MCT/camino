@@ -7,6 +7,7 @@ import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations.js'
 import { toCaminoDate } from 'camino-common/src/date.js'
 import { vi, describe, expect, test } from 'vitest'
 import { toCommuneId } from 'camino-common/src/static/communes.js'
+import { ETAPE_IS_NOT_BROUILLON } from 'camino-common/src/etape.js'
 vi.mock('../../database/queries/titres-etapes', () => ({
   titresEtapesGet: vi.fn(),
 }))
@@ -35,7 +36,7 @@ describe("administrations d'une étape", () => {
         statutId: 'fai',
         date: toCaminoDate('2022-01-01'),
         typeId: 'dpu',
-        isBrouillon: false,
+        isBrouillon: ETAPE_IS_NOT_BROUILLON,
         communes: [
           {
             id: toCommuneId('97300'),
@@ -48,8 +49,8 @@ describe("administrations d'une étape", () => {
         titreDemarcheId: newDemarcheId(),
         statutId: 'fai',
         date: toCaminoDate('2022-01-01'),
-        typeId: 'aac',
-        isBrouillon: false,
+        typeId: 'asc',
+        isBrouillon: ETAPE_IS_NOT_BROUILLON,
         communes: [
           {
             id: toCommuneId('87000'),
@@ -72,7 +73,7 @@ describe("administrations d'une étape", () => {
         titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-oct01'),
         typeId: 'dpu',
         statutId: 'acc',
-        isBrouillon: false,
+        isBrouillon: ETAPE_IS_NOT_BROUILLON,
         ordre: 2,
         date: toCaminoDate('1988-03-11'),
         communes: [
@@ -96,7 +97,7 @@ describe("administrations d'une étape", () => {
         titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-oct01'),
         typeId: 'dpu',
         statutId: 'acc',
-        isBrouillon: false,
+        isBrouillon: ETAPE_IS_NOT_BROUILLON,
         ordre: 2,
         date: toCaminoDate('1988-03-11'),
         communes: [],
@@ -114,7 +115,7 @@ describe("administrations d'une étape", () => {
       id: newEtapeId('h-cx-courdemanges-1988-oct01-dpu01'),
       titreDemarcheId: newDemarcheId(),
       statutId: 'fai',
-      isBrouillon: false,
+      isBrouillon: ETAPE_IS_NOT_BROUILLON,
       date: toCaminoDate('2022-01-01'),
       typeId: 'dpu',
       communes: [],
@@ -131,7 +132,7 @@ describe("administrations d'une étape", () => {
   test("supprime une administration si l'étape ne la contient plus dans ses communes", async () => {
     const titreEtape: ITitreEtape = {
       statutId: 'fai',
-      isBrouillon: false,
+      isBrouillon: ETAPE_IS_NOT_BROUILLON,
       date: toCaminoDate('2022-01-01'),
       id: newEtapeId('h-cx-courdemanges-1988-oct01-dpu01'),
       titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-oct01'),

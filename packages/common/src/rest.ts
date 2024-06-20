@@ -25,7 +25,15 @@ import {
 } from './titres.js'
 import { adminUserNotNullValidator, userValidator } from './roles.js'
 import { caminoAnneeValidator, caminoDateValidator } from './date.js'
-import { etapeDocumentIdValidator, etapeIdOrSlugValidator, etapeIdValidator, etapeTypeEtapeStatutWithMainStepValidator, getEtapeDocumentsByEtapeIdValidator } from './etape.js'
+import {
+  etapeDocumentIdValidator,
+  etapeIdOrSlugValidator,
+  etapeIdValidator,
+  etapeTypeEtapeStatutWithMainStepValidator,
+  getEtapeDocumentsByEtapeIdValidator,
+  getEtapeAvisByEtapeIdValidator,
+  etapeAvisIdValidator,
+} from './etape.js'
 import {
   statistiquesDGTMValidator,
   statistiquesDataGouvValidator,
@@ -52,6 +60,7 @@ import {
 import { titreIdOrSlugValidator, titreIdValidator } from './validators/titres.js'
 import { administrationIdValidator } from './static/administrations.js'
 import { administrationActiviteTypeEmailValidator } from './administrations.js'
+import { flattenEtapeValidator, restEtapeCreationValidator, restEtapeModificationValidator } from './etape-form.js'
 
 type CaminoRoute<T extends string> = (keyof ZodParseUrlParams<T> extends never ? {} : { params: ZodParseUrlParams<T> }) & {
   get?: { output: ZodType }
@@ -95,9 +104,11 @@ const IDS = [
   '/rest/demarches/:demarcheId/geojson',
   '/rest/etapes/:etapeId/geojson',
   '/rest/etapes/:etapeId/etapeDocuments',
+  '/rest/etapes/:etapeId/etapeAvis',
   '/rest/etapes/:etapeId/entrepriseDocuments',
-  '/rest/etapes/:etapeId',
+  '/rest/etapes/:etapeIdOrSlug',
   '/rest/etapes/:etapeId/depot',
+  '/rest/etapes',
   '/rest/activites/:activiteId',
   '/rest/geojson/import/:geoSystemeId',
   '/rest/geojson_points/:geoSystemeId',
@@ -109,6 +120,7 @@ const IDS = [
   // NE PAS TOUCHER CES ROUTES, UTILISÉES PAR D'AUTRES
   '/download/fichiers/:documentId',
   '/download/entrepriseDocuments/:documentId',
+  '/download/avisDocument/:etapeAvisId',
   '/download/activiteDocuments/:documentId',
   '/fichiers/:documentId',
   '/titres/:id',
@@ -177,9 +189,11 @@ export const CaminoRestRoutes = {
   '/rest/demarches/:demarcheId/geojson': { params: { demarcheId: demarcheIdOrSlugValidator }, get: { output: perimetreInformationsValidator } },
   '/rest/etapes/:etapeId/geojson': { params: { etapeId: etapeIdOrSlugValidator }, get: { output: perimetreInformationsValidator } },
   '/rest/etapes/:etapeId/etapeDocuments': { params: { etapeId: etapeIdValidator }, get: { output: getEtapeDocumentsByEtapeIdValidator } },
+  '/rest/etapes/:etapeId/etapeAvis': { params: { etapeId: etapeIdValidator }, get: { output: getEtapeAvisByEtapeIdValidator } },
   '/rest/etapes/:etapeId/entrepriseDocuments': { params: { etapeId: etapeIdValidator }, get: { output: z.array(etapeEntrepriseDocumentValidator) } },
-  '/rest/etapes/:etapeId': { params: { etapeId: etapeIdValidator }, delete: true },
+  '/rest/etapes/:etapeIdOrSlug': { params: { etapeIdOrSlug: etapeIdOrSlugValidator }, delete: true, get: { output: flattenEtapeValidator } },
   '/rest/etapes/:etapeId/depot': { params: { etapeId: etapeIdValidator }, put: { input: z.void(), output: z.void() } },
+  '/rest/etapes': { post: { input: restEtapeCreationValidator, output: etapeIdValidator }, put: { input: restEtapeModificationValidator, output: etapeIdValidator } },
   '/rest/activites/:activiteId': { params: { activiteId: activiteIdOrSlugValidator }, get: { output: activiteValidator }, put: { input: activiteEditionValidator, output: z.void() }, delete: true },
   '/rest/communes': { get: { output: z.array(communeValidator) } },
   '/rest/geojson_points/:geoSystemeId': { params: { geoSystemeId: geoSystemeIdValidator }, post: { input: featureCollectionPointsValidator, output: featureCollectionPointsValidator } },
@@ -198,6 +212,7 @@ export const CaminoRestRoutes = {
   '/deconnecter': { get: { output: z.string() } },
   '/changerMotDePasse': { get: { output: z.string() } },
   '/download/fichiers/:documentId': { params: { documentId: etapeDocumentIdValidator }, newDownload: true },
+  '/download/avisDocument/:etapeAvisId': { params: { etapeAvisId: etapeAvisIdValidator }, newDownload: true },
   '/download/entrepriseDocuments/:documentId': { params: { documentId: entrepriseDocumentIdValidator }, newDownload: true },
   '/download/activiteDocuments/:documentId': { params: { documentId: activiteDocumentIdValidator }, newDownload: true },
   '/fichiers/:documentId': { params: { documentId: etapeDocumentIdValidator }, newDownload: true },

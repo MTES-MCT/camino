@@ -6,9 +6,9 @@ import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts.j
 import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations.js'
 import { CaminoDate, dateAddMonths, daysBetween } from 'camino-common/src/date.js'
 
-type FaireSaisineDesServices = {
+type RendreAvisDesServicesEtCommissionsConsultatives = {
   date: CaminoDate
-  type: 'FAIRE_SAISINE_DES_SERVICES'
+  type: 'RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES'
 }
 
 type RendreAvisDreal = {
@@ -27,8 +27,7 @@ type AXMProXStateEvent =
   | { type: 'FAIRE_SAISINE_COLLECTIVITES_LOCALES' }
   | { type: 'RENDRE_AVIS_DUN_MAIRE' }
   | RendreAvisDreal
-  | FaireSaisineDesServices
-  | { type: 'RENDRE_AVIS_DGTM_MNBST' }
+  | RendreAvisDesServicesEtCommissionsConsultatives
   | { type: 'FAIRE_SAISINE_COMMISSION_DEPARTEMENTALE_DES_MINES' }
   | { type: 'RENDRE_AVIS_COMMISSION_DEPARTEMENTALE_DES_MINES' }
   | { type: 'RENDRE_AVIS_COMMISSION_DEPARTEMENTALE_DES_MINES_AJOURNE' }
@@ -40,18 +39,6 @@ type AXMProXStateEvent =
   | { type: 'PUBLIER_DANS_UN_JOURNAL_LOCAL_OU_NATIONAL' }
   | { type: 'NOTIFIER_COLLECTIVITES_LOCALES' }
   | { type: 'RENDRE_DECISION_ABROGATION' }
-  | { type: 'RENDRE_AVIS_DGTMAUCL' }
-  | {
-      type: 'RENDRE_AVIS_DIRECTION_ENTREPRISE_CONCURRENCE_CONSOMMATION_TRAVAIL_EMPLOI'
-    }
-  | { type: 'RENDRE_AVIS_DIRECTION_ALIMENTATION_AGRICULTURE_FORET' }
-  | { type: 'RENDRE_AVIS_DIRECTION_REGIONALE_AFFAIRES_CULTURELLES' }
-  | { type: 'RENDRE_AVIS_AGENCE_REGIONALE_SANTE' }
-  | { type: 'RENDRE_AVIS_DIRECTION_REGIONALE_FINANCES_PUBLIQUES' }
-  | { type: 'RENDRE_AVIS_CAISSE_GENERALE_DE_SECURITE_SOCIALE' }
-  | { type: 'RENDRE_AVIS_OFFICE_NATIONAL_DES_FORETS' }
-  | { type: 'RENDRE_AVIS_ETAT_MAJOR_ORPAILLAGE_ET_PECHE_ILLICITE' }
-  | { type: 'RENDRE_AVIS_GENDARMERIE_NATIONALE' }
   | { type: 'DEMANDER_INFORMATION_POUR_AVIS_DREAL' }
   | { type: 'RECEVOIR_INFORMATION_POUR_AVIS_DREAL' }
   | { type: 'RENDRE_DECISION_IMPLICITE_REJET' }
@@ -70,24 +57,13 @@ const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
   FAIRE_SAISINE_COLLECTIVITES_LOCALES: { db: ETES.saisineDesCollectivitesLocales, mainStep: true },
   RENDRE_AVIS_DUN_MAIRE: { db: ETES.avisDunMaire, mainStep: false },
   RENDRE_AVIS_DREAL: { db: ETES.avisEtRapportDuDirecteurRegionalChargeDeLenvironnementDeLamenagementEtDuLogement, mainStep: true },
-  FAIRE_SAISINE_DES_SERVICES: { db: ETES.saisineDesServices, mainStep: true },
-  RENDRE_AVIS_DGTM_MNBST: { db: ETES.avisDGTMServiceMilieuxNaturelsBiodiversiteSitesEtPaysages_MNBST_, mainStep: false },
+  RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES: { db: ETES.avisDesServicesEtCommissionsConsultatives, mainStep: true },
   FAIRE_SAISINE_COMMISSION_DEPARTEMENTALE_DES_MINES: { db: ETES.saisineDeLaCommissionDepartementaleDesMines_CDM_, mainStep: false },
   NOTIFIER_DEMANDEUR: { db: ETES.notificationAuDemandeur, mainStep: true },
   PUBLIER_DECISIONS_RECUEIL_ACTES_ADMINISTRATIFS: { db: ETES.publicationDeDecisionAuRecueilDesActesAdministratifs, mainStep: true },
   PUBLIER_DANS_UN_JOURNAL_LOCAL_OU_NATIONAL: { db: ETES.publicationDansUnJournalLocalOuNational, mainStep: true },
   NOTIFIER_COLLECTIVITES_LOCALES: { db: ETES.notificationDesCollectivitesLocales, mainStep: true },
   RENDRE_DECISION_ABROGATION: { db: ETES.abrogationDeLaDecision, mainStep: false },
-  RENDRE_AVIS_DGTMAUCL: { db: ETES.avisDGTMServiceAmenagementUrbanismeConstructionLogement_AUCL_, mainStep: false },
-  RENDRE_AVIS_DIRECTION_ENTREPRISE_CONCURRENCE_CONSOMMATION_TRAVAIL_EMPLOI: { db: ETES.avisDeLaDirectionDesEntreprisesDeLaConcurrenceDeLaConsommationDuTravailEtDeLemploi, mainStep: false },
-  RENDRE_AVIS_DIRECTION_ALIMENTATION_AGRICULTURE_FORET: { db: ETES.avisDeLaDirectionDalimentationDeLagricultureEtDeLaForet, mainStep: false },
-  RENDRE_AVIS_DIRECTION_REGIONALE_AFFAIRES_CULTURELLES: { db: ETES.avisDeDirectionRegionaleDesAffairesCulturelles, mainStep: false },
-  RENDRE_AVIS_AGENCE_REGIONALE_SANTE: { db: ETES.avisDeLagenceRegionaleDeSante, mainStep: false },
-  RENDRE_AVIS_DIRECTION_REGIONALE_FINANCES_PUBLIQUES: { db: ETES.avisDeLaDirectionRegionaleDesFinancesPubliques, mainStep: false },
-  RENDRE_AVIS_CAISSE_GENERALE_DE_SECURITE_SOCIALE: { db: ETES.avisDeLaCaisseGeneraleDeSecuriteSociale, mainStep: false },
-  RENDRE_AVIS_OFFICE_NATIONAL_DES_FORETS: { db: ETES.avisDeLOfficeNationalDesForets, mainStep: false },
-  RENDRE_AVIS_ETAT_MAJOR_ORPAILLAGE_ET_PECHE_ILLICITE: { db: ETES.avisDeLetatMajorOrpaillageEtPecheIllicite_EMOPI_, mainStep: false },
-  RENDRE_AVIS_GENDARMERIE_NATIONALE: { db: ETES.avisDeLaGendarmerieNationale, mainStep: false },
   DEMANDER_INFORMATION_POUR_AVIS_DREAL: { db: ETES.demandeDinformations_AvisDuDREALDEALOuDGTM_, mainStep: false },
   RECEVOIR_INFORMATION_POUR_AVIS_DREAL: { db: ETES.receptionDinformation_AvisDuDREALDEALOuDGTM_, mainStep: false },
   RENDRE_DECISION_ANNULATION_PAR_JUGE_ADMINISTRATIF: { db: ETES.decisionDuJugeAdministratif, mainStep: false },
@@ -156,7 +132,7 @@ export class AxmProMachine extends CaminoMachine<AxmProContext, AXMProXStateEven
 
   toPotentialCaminoXStateEvent(event: AXMProXStateEvent['type'], date: CaminoDate): AXMProXStateEvent[] {
     switch (event) {
-      case 'FAIRE_SAISINE_DES_SERVICES':
+      case 'RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES':
       case 'RENDRE_AVIS_DREAL':
         return [{ type: event, date }]
       default:
@@ -177,7 +153,7 @@ export class AxmProMachine extends CaminoMachine<AxmProContext, AXMProXStateEven
     if (entry) {
       const eventFromEntry = entry[0]
       switch (eventFromEntry) {
-        case 'FAIRE_SAISINE_DES_SERVICES':
+        case 'RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES':
         case 'RENDRE_AVIS_DREAL': {
           return { type: eventFromEntry, date: etape.date }
         }
@@ -192,10 +168,10 @@ export class AxmProMachine extends CaminoMachine<AxmProContext, AXMProXStateEven
   }
 }
 
-type SaisineDesServices = { faite: false } | { faite: true; date: CaminoDate }
+type AvisDesServicesEtCommissionsConsultatives = { faite: false } | { faite: true; date: CaminoDate }
 interface AxmProContext extends CaminoCommonContext {
   saisineDesCollectivitesLocalesFaite: boolean
-  saisineDesServices: SaisineDesServices
+  avisDesServicesEtCommissionsConsultatives: AvisDesServicesEtCommissionsConsultatives
   notificationDuDemandeurFaite: boolean
   notificationDesCollectivitesLocalesFaite: boolean
   publicationDecisionsRecueilActesAdministratifsFaite: boolean
@@ -203,7 +179,7 @@ interface AxmProContext extends CaminoCommonContext {
 }
 
 const peutRendreAvisDREAL = ({ context, event }: { context: AxmProContext; event: RendreAvisDreal }): boolean => {
-  return context.saisineDesServices.faite && daysBetween(dateAddMonths(context.saisineDesServices.date, 1), event.date) >= 0
+  return context.avisDesServicesEtCommissionsConsultatives.faite && daysBetween(dateAddMonths(context.avisDesServicesEtCommissionsConsultatives.date, 1), event.date) >= 0
 }
 
 const axmProMachine = createMachine({
@@ -218,7 +194,7 @@ const axmProMachine = createMachine({
     publicationDecisionsRecueilActesAdministratifsFaite: false,
     publicationDansUnJournalLocalOuNationalFaite: false,
     saisineDesCollectivitesLocalesFaite: false,
-    saisineDesServices: { faite: false },
+    avisDesServicesEtCommissionsConsultatives: { faite: false },
     visibilite: 'confidentielle',
   },
   on: {
@@ -297,7 +273,7 @@ const axmProMachine = createMachine({
             rendreAvisDrealPasEncorePossible: {
               always: {
                 target: 'rendreAvisDrealAFaire',
-                guard: ({ context }) => context.saisineDesServices.faite && context.saisineDesCollectivitesLocalesFaite,
+                guard: ({ context }) => context.avisDesServicesEtCommissionsConsultatives.faite && context.saisineDesCollectivitesLocalesFaite,
               },
             },
             rendreAvisDrealAFaire: {
@@ -346,16 +322,16 @@ const axmProMachine = createMachine({
             avisDunMaireRendu: { type: 'final' },
           },
         },
-        saisineDesServicesMachine: {
-          initial: 'saisineDesServicesAFaire',
+        avisDesServicesEtCommissionsConsultativesMachine: {
+          initial: 'avisDesServicesEtCommissionsConsultativesAFaire',
           states: {
-            saisineDesServicesAFaire: {
+            avisDesServicesEtCommissionsConsultativesAFaire: {
               on: {
-                FAIRE_SAISINE_DES_SERVICES: {
-                  target: 'avisDesServicesARendre',
-                  guard: ({ context }) => !context.saisineDesServices.faite,
+                RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES: {
+                  target: 'avisDesServicesEtCommissionsConsultativesRendu',
+                  guard: ({ context }) => !context.avisDesServicesEtCommissionsConsultatives.faite,
                   actions: assign({
-                    saisineDesServices: ({ event }) => {
+                    avisDesServicesEtCommissionsConsultatives: ({ event }) => {
                       return {
                         faite: true,
                         date: event.date,
@@ -365,139 +341,7 @@ const axmProMachine = createMachine({
                 },
               },
             },
-            avisDesServicesARendre: {
-              type: 'parallel',
-
-              states: {
-                avisDgtmMNBSTMachine: {
-                  initial: 'avisDgtmMNBSTARendre',
-                  states: {
-                    avisDgtmMNBSTARendre: {
-                      on: { RENDRE_AVIS_DGTM_MNBST: 'avisDgtmMNBSTRendu' },
-                    },
-                    avisDgtmMNBSTRendu: { type: 'final' },
-                  },
-                },
-                avisDGTMAUCLMachine: {
-                  initial: 'avisDGTMAUCLARendre',
-                  states: {
-                    avisDGTMAUCLARendre: {
-                      on: { RENDRE_AVIS_DGTMAUCL: 'avisDGTMAUCLRendu' },
-                    },
-                    avisDGTMAUCLRendu: { type: 'final' },
-                  },
-                },
-                avisDirectionEntrepriseConcurrenceConsommationTravailEmploiMachine: {
-                  initial: 'avisDirectionEntrepriseConcurrenceConsommationTravailEmploiARendre',
-                  states: {
-                    avisDirectionEntrepriseConcurrenceConsommationTravailEmploiARendre: {
-                      on: {
-                        RENDRE_AVIS_DIRECTION_ENTREPRISE_CONCURRENCE_CONSOMMATION_TRAVAIL_EMPLOI: 'avisDirectionEntrepriseConcurrenceConsommationTravailEmploiRendu',
-                      },
-                    },
-                    avisDirectionEntrepriseConcurrenceConsommationTravailEmploiRendu: { type: 'final' },
-                  },
-                },
-                avisDirectionAlimentationAgricultureForetMachine: {
-                  initial: 'avisDirectionAlimentationAgricultureForetARendre',
-                  states: {
-                    avisDirectionAlimentationAgricultureForetARendre: {
-                      on: {
-                        RENDRE_AVIS_DIRECTION_ALIMENTATION_AGRICULTURE_FORET: 'avisDirectionAlimentationAgricultureForetRendu',
-                      },
-                    },
-                    avisDirectionAlimentationAgricultureForetRendu: {
-                      type: 'final',
-                    },
-                  },
-                },
-                avisDirectionRegionaleAffairesCulturellesMachine: {
-                  initial: 'avisDirectionRegionaleAffairesCulturellesARendre',
-                  states: {
-                    avisDirectionRegionaleAffairesCulturellesARendre: {
-                      on: {
-                        RENDRE_AVIS_DIRECTION_REGIONALE_AFFAIRES_CULTURELLES: 'avisDirectionRegionaleAffairesCulturellesRendu',
-                      },
-                    },
-                    avisDirectionRegionaleAffairesCulturellesRendu: {
-                      type: 'final',
-                    },
-                  },
-                },
-                avisAgenceRegionaleSanteMachine: {
-                  initial: 'avisAgenceRegionaleSanteARendre',
-                  states: {
-                    avisAgenceRegionaleSanteARendre: {
-                      on: {
-                        RENDRE_AVIS_AGENCE_REGIONALE_SANTE: 'avisAgenceRegionaleSanteRendu',
-                      },
-                    },
-                    avisAgenceRegionaleSanteRendu: { type: 'final' },
-                  },
-                },
-                avisDirectionRegionaleFinancesPubliquesMachine: {
-                  initial: 'avisDirectionRegionaleFinancesPubliquesARendre',
-                  states: {
-                    avisDirectionRegionaleFinancesPubliquesARendre: {
-                      on: {
-                        RENDRE_AVIS_DIRECTION_REGIONALE_FINANCES_PUBLIQUES: 'avisDirectionRegionaleFinancesPubliquesRendu',
-                      },
-                    },
-                    avisDirectionRegionaleFinancesPubliquesRendu: {
-                      type: 'final',
-                    },
-                  },
-                },
-                avisCaisseGeneraleDeSecuriteSocialeMachine: {
-                  initial: 'avisCaisseGeneraleDeSecuriteSocialeARendre',
-                  states: {
-                    avisCaisseGeneraleDeSecuriteSocialeARendre: {
-                      on: {
-                        RENDRE_AVIS_CAISSE_GENERALE_DE_SECURITE_SOCIALE: 'avisCaisseGeneraleDeSecuriteSocialeRendu',
-                      },
-                    },
-                    avisCaisseGeneraleDeSecuriteSocialeRendu: { type: 'final' },
-                  },
-                },
-                avisOfficeNationalDesForetsMachine: {
-                  initial: 'avisOfficeNationalDesForetsARendre',
-                  states: {
-                    avisOfficeNationalDesForetsARendre: {
-                      on: {
-                        RENDRE_AVIS_OFFICE_NATIONAL_DES_FORETS: 'avisOfficeNationalDesForetsRendu',
-                      },
-                    },
-                    avisOfficeNationalDesForetsRendu: { type: 'final' },
-                  },
-                },
-                avisGendarmerieNationaleMachine: {
-                  initial: 'avisGendarmerieNationaleARendre',
-                  states: {
-                    avisGendarmerieNationaleARendre: {
-                      on: {
-                        RENDRE_AVIS_GENDARMERIE_NATIONALE: 'avisGendarmerieNationaleRendu',
-                      },
-                    },
-                    avisGendarmerieNationaleRendu: { type: 'final' },
-                  },
-                },
-                avisEtatMajorOrpaillageEtPecheIlliciteMachine: {
-                  initial: 'avisEtatMajorOrpaillageEtPecheIlliciteARendre',
-                  states: {
-                    avisEtatMajorOrpaillageEtPecheIlliciteARendre: {
-                      on: {
-                        RENDRE_AVIS_ETAT_MAJOR_ORPAILLAGE_ET_PECHE_ILLICITE: 'avisEtatMajorOrpaillageEtPecheIlliciteRendu',
-                      },
-                    },
-                    avisEtatMajorOrpaillageEtPecheIlliciteRendu: {
-                      type: 'final',
-                    },
-                  },
-                },
-              },
-              onDone: 'avisDesServicesRendus',
-            },
-            avisDesServicesRendus: { type: 'final' },
+            avisDesServicesEtCommissionsConsultativesRendu: { type: 'final' },
           },
         },
       },

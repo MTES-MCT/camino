@@ -9,7 +9,7 @@ test('getSections erreurs', () => {
 })
 
 test('getSections pas de surcharge mais pas de sections', () => {
-  expect(getSections('apm', 'amo', 'abs')).toMatchInlineSnapshot('[]')
+  expect(getSections('apm', 'amo', 'asc')).toMatchInlineSnapshot('[]')
 })
 
 test('getSections surcharge', () => {
@@ -152,7 +152,7 @@ describe('getSectionsWithValue', () => {
           {
             id: 'section',
             elements: [
-              { id: 'element1', type: 'checkboxes', options: [{ id: 'option1', nom: 'nomOption1' }] },
+              { id: 'element1', type: 'checkboxes', options: [{ id: 'option1', nom: 'nomOption1' }], optionnel: false },
               {
                 id: 'element2',
                 type: 'checkboxes',
@@ -160,8 +160,9 @@ describe('getSectionsWithValue', () => {
                   { id: '1', nom: 'one' },
                   { id: '2', nom: 'two' },
                 ],
+                optionnel: false,
               },
-              { id: 'element3', type: 'checkboxes', options: [{ id: '1', nom: 'one' }] },
+              { id: 'element3', type: 'checkboxes', options: [{ id: '1', nom: 'one' }], optionnel: false },
             ],
           },
         ],
@@ -173,6 +174,7 @@ describe('getSectionsWithValue', () => {
           "elements": [
             {
               "id": "element1",
+              "optionnel": false,
               "options": [
                 {
                   "id": "option1",
@@ -184,6 +186,7 @@ describe('getSectionsWithValue', () => {
             },
             {
               "id": "element2",
+              "optionnel": false,
               "options": [
                 {
                   "id": "1",
@@ -201,6 +204,7 @@ describe('getSectionsWithValue', () => {
             },
             {
               "id": "element3",
+              "optionnel": false,
               "options": [
                 {
                   "id": "1",
@@ -218,37 +222,52 @@ describe('getSectionsWithValue', () => {
   })
 
   test('les substances fiscales sont converties dans leur unité d’affichage', () => {
-    expect(
-      getSectionsWithValue(
-        [
-          {
-            id: 'substancesFiscales',
-            elements: [
-              { id: 'auru', type: 'number', uniteId: 'mgr' },
-              { id: 'arge', type: 'integer' },
-              { id: 'arse', type: 'integer' },
-            ],
-          },
-        ],
-        { substancesFiscales: { auru: 12.3, arge: null } }
-      )
-    ).toMatchInlineSnapshot(`
+    const withHeritage = getSectionsWithValue(
+      [
+        {
+          id: 'substancesFiscales',
+          elements: [
+            { id: 'auru', type: 'number', uniteId: 'mgr', optionnel: false },
+            { id: 'arge', type: 'integer', optionnel: false },
+            { id: 'arse', type: 'integer', optionnel: false },
+          ],
+        },
+      ],
+      { substancesFiscales: { auru: { value: 12.3 }, arge: { value: null } } }
+    )
+    const withoutHeritage = getSectionsWithValue(
+      [
+        {
+          id: 'substancesFiscales',
+          elements: [
+            { id: 'auru', type: 'number', uniteId: 'mgr', optionnel: false },
+            { id: 'arge', type: 'integer', optionnel: false },
+            { id: 'arse', type: 'integer', optionnel: false },
+          ],
+        },
+      ],
+      { substancesFiscales: { auru: 12.3, arge: null } }
+    )
+    expect(withoutHeritage).toMatchInlineSnapshot(`
       [
         {
           "elements": [
             {
               "id": "auru",
+              "optionnel": false,
               "type": "number",
               "uniteId": "mgr",
               "value": 12300,
             },
             {
               "id": "arge",
+              "optionnel": false,
               "type": "integer",
               "value": null,
             },
             {
               "id": "arse",
+              "optionnel": false,
               "type": "integer",
               "value": null,
             },
@@ -257,6 +276,7 @@ describe('getSectionsWithValue', () => {
         },
       ]
     `)
+    expect(withHeritage).toStrictEqual(withoutHeritage)
   })
 
   test('les options des liste déroulantes sont calculées si elles sont basées sur des métas', () => {
@@ -266,8 +286,8 @@ describe('getSectionsWithValue', () => {
           {
             id: 'section',
             elements: [
-              { id: 'unites', type: 'select', valeursMetasNom: 'unites' },
-              { id: 'devises', type: 'select', valeursMetasNom: 'devises' },
+              { id: 'unites', type: 'select', valeursMetasNom: 'unites', optionnel: false },
+              { id: 'devises', type: 'select', valeursMetasNom: 'devises', optionnel: false },
             ],
           },
         ],
@@ -279,6 +299,7 @@ describe('getSectionsWithValue', () => {
           "elements": [
             {
               "id": "unites",
+              "optionnel": false,
               "options": [
                 {
                   "id": "deg",
@@ -405,6 +426,7 @@ describe('getSectionsWithValue', () => {
             },
             {
               "id": "devises",
+              "optionnel": false,
               "options": [
                 {
                   "id": "EUR",

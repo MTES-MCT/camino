@@ -134,7 +134,7 @@ export const geojsonInformationsValidator = z.object({
 
 export type GeojsonInformations = z.infer<typeof geojsonInformationsValidator>
 
-export const perimetreInformationsValidator = geojsonInformationsValidator.pick({ superposition_alertes: true, sdomZoneIds: true })
+export const perimetreInformationsValidator = geojsonInformationsValidator.pick({ superposition_alertes: true, sdomZoneIds: true }).extend({ communes: z.array(communeIdValidator) })
 export type PerimetreInformations = z.infer<typeof perimetreInformationsValidator>
 
 export const geojsonImportBodyValidator = z.object({

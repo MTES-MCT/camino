@@ -7,6 +7,7 @@ import { titreEtapeForMachineValidator, toMachineEtapes } from '../rules-demarch
 import { titreEtapeTypeAndStatusValidate } from './titre-etape-type-and-status-validate.js'
 import { DemarcheId } from 'camino-common/src/demarche.js'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes.js'
+import { ETAPE_IS_BROUILLON } from 'camino-common/src/etape.js'
 
 const titreDemarcheEtapesBuild = <T extends Pick<Partial<ITitreEtape>, 'id'>>(titreEtape: DeepReadonly<T>, suppression: boolean, titreDemarcheEtapes?: DeepReadonly<T[]> | null): DeepReadonly<T[]> => {
   if (isNullOrUndefinedOrEmpty(titreDemarcheEtapes)) {
@@ -40,8 +41,8 @@ const titreDemarcheEtapesBuild = <T extends Pick<Partial<ITitreEtape>, 'id'>>(ti
 // est valide par rapport aux définitions des types d'étape
 export const titreDemarcheUpdatedEtatValidate = (
   demarcheTypeId: DemarcheTypeId,
-  titre: ITitre,
-  titreEtape: Pick<Partial<ITitreEtape>, 'id'> & Pick<ITitreEtape, 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'communes' | 'surface' | 'isBrouillon'>,
+  titre: Pick<ITitre, 'typeId' | 'demarches'>,
+  titreEtape: Pick<Partial<ITitreEtape>, 'id'> & Pick<ITitreEtape, 'statutId' | 'typeId' | 'date' | 'contenu' | 'surface' | 'communes' | 'isBrouillon'>,
   demarcheId: DemarcheId,
   titreDemarcheEtapes?: Pick<ITitreEtape, 'id' | 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'communes' | 'surface' | 'isBrouillon'>[] | null,
   suppression = false
@@ -68,7 +69,7 @@ export const titreDemarcheUpdatedEtatValidate = (
   }
 
   // si on essaye d’ajouter ou de modifier une demande non déposée
-  if (titreEtape.typeId === 'mfr' && titreEtape.isBrouillon && !suppression) {
+  if (titreEtape.typeId === 'mfr' && titreEtape.isBrouillon === ETAPE_IS_BROUILLON && !suppression) {
     const etapesDemande = titreDemarcheEtapes?.filter(te => te.typeId === 'mfr')
 
     // si c’est la création de la première demande, pas besoin de faire de vérification avec l’arbre
@@ -86,7 +87,7 @@ export const titreDemarcheUpdatedEtatValidate = (
 
   // vérifie que toutes les étapes existent dans l’arbre
   try {
-    const etapes = titreDemarcheEtapesNew.map(etape => titreEtapeForMachineValidator.omit({ id: true }).partial({ ordre: true }).parse(etape))
+    const etapes = titreDemarcheEtapesNew.map(etape => titreEtapeForMachineValidator.omit({ id: true, ordre: true }).parse(etape))
     const ok = demarcheDefinition.machine.isEtapesOk(demarcheDefinition.machine.orderMachine(toMachineEtapes(etapes)))
     if (!ok) {
       titreDemarchesErrors.push('la démarche n’est pas valide')

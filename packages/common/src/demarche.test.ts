@@ -43,7 +43,7 @@ test('getDemarcheContenu arm', () => {
               id: 'arm',
               nom: 'Caractéristiques ARM',
               elements: [
-                { id: 'mecanise', nom: 'Prospection mécanisée', description: '', type: 'radio', value: true },
+                { id: 'mecanise', nom: 'Prospection mécanisée', description: '', type: 'radio', value: true, optionnel: false },
                 { id: 'franchissements', nom: "Franchissements de cours d'eau", description: "Nombre de franchissements de cours d'eau", optionnel: true, type: 'integer', value: 12 },
               ],
             },

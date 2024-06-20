@@ -3,6 +3,7 @@ import { userSuper } from '../../../database/user-super.js'
 import { expect, test } from 'vitest'
 import { UserNotNull } from 'camino-common/src/roles.js'
 import { newUtilisateurId } from '../../../database/models/_format/id-create.js'
+import { ETAPE_IS_NOT_BROUILLON } from 'camino-common/src/etape.js'
 
 test('envoie un email sur une étape non existante', () => {
   const actual = emailsForAdministrationsGet(undefined, '', '', '', userSuper, undefined)
@@ -23,7 +24,7 @@ test("envoie un email sur un octroi d'AEX", () => {
     {
       typeId: 'mfr',
       statutId: 'fai',
-      isBrouillon: false,
+      isBrouillon: ETAPE_IS_NOT_BROUILLON,
     },
     'oct',
     'titreId',
@@ -40,7 +41,7 @@ test("envoie un email sur un octroi d'ARM", () => {
     {
       typeId: 'mdp',
       statutId: 'fai',
-      isBrouillon: false,
+      isBrouillon: ETAPE_IS_NOT_BROUILLON,
     },
     'oct',
     'titreId',

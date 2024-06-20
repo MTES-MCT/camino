@@ -151,7 +151,7 @@ const getGeojsonInformationValidator = z.object({
 
 // Surface maximale acceptée pour un titre
 const SURFACE_M2_MAX = 100_000 * 1_000_000
-type GetGeojsonInformation = z.infer<typeof getGeojsonInformationValidator>
+export type GetGeojsonInformation = z.infer<typeof getGeojsonInformationValidator>
 const getGeojsonInformationDbValidator = z.object({
   surface: z.number().max(SURFACE_M2_MAX),
   sdom: z.array(sdomZoneIdValidator).nullable().transform(nullToEmptyArray),

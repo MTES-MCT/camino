@@ -16,13 +16,14 @@ export const Default: StoryFn = () => (
       nom: 'Caractéristiques ARM',
       id: 'arm',
       elements: [
-        { id: 'mecanisation', type: 'radio', nom: 'Mécanisation', value: true },
+        { id: 'mecanisation', type: 'radio', nom: 'Mécanisation', value: true, optionnel: false },
         {
           id: 'franchissements',
           nom: "Franchissements de cours d'eau",
           type: 'integer',
           value: 3,
           description: "Nombre de franchissements de cours d'eau",
+          optionnel: false,
         },
       ],
     }}
@@ -42,6 +43,7 @@ export const WithoutContent: StoryFn = () => (
           type: 'radio',
           nom: 'Mécanisation',
           value: null,
+          optionnel: false,
         },
         {
           id: 'franchissements',
@@ -49,6 +51,7 @@ export const WithoutContent: StoryFn = () => (
           type: 'integer',
           description: "Nombre de franchissements de cours d'eau",
           value: null,
+          optionnel: false,
         },
       ],
     }}

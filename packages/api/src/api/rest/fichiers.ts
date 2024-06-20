@@ -3,16 +3,15 @@ import { createWriteStream } from 'node:fs'
 import { User } from 'camino-common/src/roles'
 import { DOWNLOAD_FORMATS, contentTypes } from 'camino-common/src/rest.js'
 import { Pool } from 'pg'
-import { EtapeId, etapeDocumentIdValidator } from 'camino-common/src/etape.js'
-import { getEntrepriseDocumentLargeObjectIdsByEtapeId, getEtapeDocumentLargeObjectIdsByEtapeId } from '../../database/queries/titres-etapes.queries.js'
+import { EtapeId, etapeAvisIdValidator, etapeDocumentIdValidator } from 'camino-common/src/etape.js'
+import { getEntrepriseDocumentLargeObjectIdsByEtapeId, getEtapeDocumentLargeObjectIdsByEtapeId, getLargeobjectIdByEtapeAvisId } from '../../database/queries/titres-etapes.queries.js'
 import { LargeObjectManager } from 'pg-large-object'
 
 import express from 'express'
 import { join } from 'node:path'
 import { DocumentsTypes } from 'camino-common/src/static/documentsTypes.js'
 import { slugify } from 'camino-common/src/strings.js'
-import { administrationsLocalesByEtapeId, entreprisesTitulairesOuAmoditairesByEtapeId, getEtapeDataForEdition, getLargeobjectIdByEtapeDocumentId } from './etapes.queries.js'
-import { memoize } from 'camino-common/src/typescript-tools.js'
+import { getEtapeDataForEdition, getLargeobjectIdByEtapeDocumentId } from './etapes.queries.js'
 import { EtapesTypes } from 'camino-common/src/static/etapesTypes.js'
 export type NewDownload = (params: Record<string, unknown>, user: User, pool: Pool) => Promise<{ loid: number | null; fileName: string }>
 
@@ -25,11 +24,7 @@ export const etapeTelecharger =
       throw new Error("id d'étape absent")
     }
 
-    const etapeData = await getEtapeDataForEdition(pool, etapeId)
-
-    const titreTypeId = memoize(() => Promise.resolve(etapeData.titre_type_id))
-    const administrationsLocales = memoize(() => administrationsLocalesByEtapeId(etapeId, pool))
-    const entreprisesTitulairesOuAmodiataires = memoize(() => entreprisesTitulairesOuAmoditairesByEtapeId(etapeId, pool))
+    const { etapeData, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires } = await getEtapeDataForEdition(pool, etapeId)
 
     const documents = await getEtapeDocumentLargeObjectIdsByEtapeId(etapeId, pool, user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires, etapeData.etape_type_id, {
       demarche_type_id: etapeData.demarche_type_id,
@@ -135,4 +130,10 @@ export const etapeDocumentDownload: NewDownload = async (params, user, pool) => 
   const activiteDocumentLargeObjectId = await getLargeobjectIdByEtapeDocumentId(pool, user, etapeDocumentId)
 
   return { loid: activiteDocumentLargeObjectId, fileName: etapeDocumentId }
+}
+export const avisDocumentDownload: NewDownload = async (params, user, pool) => {
+  const etapeAvisId = etapeAvisIdValidator.parse(params.etapeAvisId)
+  const avisDocumentLargeObjectId = await getLargeobjectIdByEtapeAvisId(pool, user, etapeAvisId)
+
+  return { loid: avisDocumentLargeObjectId, fileName: etapeAvisId }
 }

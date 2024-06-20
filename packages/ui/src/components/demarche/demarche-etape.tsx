@@ -21,7 +21,7 @@ import { User } from 'camino-common/src/roles'
 import styles from './demarche-etape.module.css'
 import { DsfrButton, DsfrButtonIcon, DsfrLink } from '../_ui/dsfr-button'
 import { PureDownloads } from '../_common/downloads'
-import { canDeleteEtape, canEditEtape, isEtapeDeposable } from 'camino-common/src/permissions/titres-etapes'
+import { canDeleteEtape, canDeposeEtape, canEditEtape } from 'camino-common/src/permissions/titres-etapes'
 import { AdministrationId } from 'camino-common/src/static/administrations'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
 import { TitreStatutId } from 'camino-common/src/static/titresStatuts'
@@ -30,12 +30,16 @@ import { RemoveEtapePopup } from './remove-etape-popup'
 import { SDOMZoneId } from 'camino-common/src/static/sdom'
 import { DeposeEtapePopup } from './depose-etape-popup'
 import { ApiClient } from '@/api/api-client'
-import { TitreGetDemarche } from 'camino-common/src/titres'
+import { TitreGetDemarche, getMostRecentValuePropFromEtapeFondamentaleValide } from 'camino-common/src/titres'
 import { GetEtapeDocumentsByEtapeId, documentTypeIdComplementaireObligatoireASL, documentTypeIdComplementaireObligatoireDAE, etapeDocumentIdValidator, needAslAndDae } from 'camino-common/src/etape'
 import { Unites } from 'camino-common/src/static/unites'
 import { EntrepriseId, Entreprise } from 'camino-common/src/entreprise'
 import { Badge } from '../_ui/badge'
 import { CaminoRouter } from '@/typings/vue-router'
+import { CommuneId } from 'camino-common/src/static/communes'
+import { EtapeAvisTable } from '../etape/etape-avis'
+import { FlattenEtape } from 'camino-common/src/etape-form'
+import { getSections } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections'
 // Il ne faut pas utiliser de literal dans le 'in' il n'y aura jamais d'erreur typescript
 const fondamentalePropsName = 'fondamentale'
 
@@ -46,6 +50,7 @@ type Props = {
     administrationsLocales: AdministrationId[]
     demarche_type_id: DemarcheTypeId
     sdom_zones: SDOMZoneId[]
+    communes: CommuneId[]
     etapes: TitreGetDemarche['etapes']
   }
   titre: {
@@ -161,28 +166,75 @@ export const DemarcheEtape = defineComponent<Props>(props => {
     return null
   })
 
-  const isDeposable = computed<boolean>(() =>
-    fondamentalePropsName in props.etape
-      ? isEtapeDeposable(
-          props.user,
-          { typeId: props.titre.typeId, titreStatutId: props.titre.titreStatutId, titulaires: props.demarche.titulaireIds, administrationsLocales: props.demarche.administrationsLocales },
-          props.demarche.demarche_type_id,
-          {
-            typeId: props.etape.etape_type_id,
-            isBrouillon: props.etape.is_brouillon,
-            sectionsWithValue: props.etape.sections_with_values,
-            substances: props.etape.fondamentale.substances,
-            duree: props.etape.fondamentale.duree,
-            geojson4326Perimetre: props.etape.fondamentale.perimetre?.geojson4326_perimetre ?? null,
+  const isDeposable = computed<boolean>(() => {
+    const titulaireIds = getMostRecentValuePropFromEtapeFondamentaleValide('titulaireIds', [{ ...props.demarche, ordre: 0 }])
+    const amodiataireIds = getMostRecentValuePropFromEtapeFondamentaleValide('amodiataireIds', [{ ...props.demarche, ordre: 0 }])
+    const perimetre = getMostRecentValuePropFromEtapeFondamentaleValide('perimetre', [{ ...props.demarche, ordre: 0 }])
+    const substances = getMostRecentValuePropFromEtapeFondamentaleValide('substances', [{ ...props.demarche, ordre: 0 }])
+    const duree = getMostRecentValuePropFromEtapeFondamentaleValide('duree', [{ ...props.demarche, ordre: 0 }])
+
+    const sections = getSections(props.titre.typeId, props.demarche.demarche_type_id, props.etape.etape_type_id)
+    const sortedEtapes = [...props.demarche.etapes].sort((a, b) => b.ordre - a.ordre)
+    const contenu: FlattenEtape['contenu'] = {}
+
+    sections.forEach(section => {
+      contenu[section.id] = {}
+      section.elements.forEach(element => {
+        let elementValue = null
+        for (const etape of sortedEtapes) {
+          const sectionWithValue = etape.sections_with_values.find(s => s.id === section.id)
+          const elementWithValue = sectionWithValue?.elements.find(e => e.id === element.id)
+
+          if (isNotNullNorUndefined(elementWithValue)) {
+            elementValue = elementWithValue.value
+            break
+          }
+        }
+
+        contenu[section.id][element.id] = { value: elementValue, heritee: false, etapeHeritee: null }
+      })
+    })
+    return canDeposeEtape(
+      props.user,
+      { typeId: props.titre.typeId, titreStatutId: props.titre.titreStatutId, titulaires: props.demarche.titulaireIds, administrationsLocales: props.demarche.administrationsLocales },
+      props.demarche.demarche_type_id,
+      {
+        amodiataires: { value: amodiataireIds ?? [], heritee: false, etapeHeritee: null },
+        titulaires: { value: titulaireIds ?? [], heritee: false, etapeHeritee: null },
+        contenu,
+        date: props.etape.date,
+        typeId: props.etape.etape_type_id,
+        duree: { value: duree, heritee: false, etapeHeritee: null },
+        perimetre: {
+          value: {
+            geojson4326Forages: perimetre?.geojson4326_forages ?? null,
+            geojson4326Perimetre: perimetre?.geojson4326_perimetre ?? null,
+            geojson4326Points: perimetre?.geojson4326_points ?? null,
+            geojsonOrigineForages: perimetre?.geojson_origine_forages ?? null,
+            geojsonOrigineGeoSystemeId: perimetre?.geojson_origine_geo_systeme_id ?? null,
+            geojsonOriginePoints: perimetre?.geojson_origine_points ?? null,
+            geojsonOriginePerimetre: perimetre?.geojson_origine_perimetre ?? null,
+            surface: perimetre?.surface ?? null,
           },
-          props.etape.etape_documents,
-          props.etape.entreprises_documents,
-          props.demarche.sdom_zones,
-          daeDocument.value,
-          aslDocument.value
-        )
-      : false
-  )
+          heritee: false,
+          etapeHeritee: null,
+        },
+        substances: { value: substances ?? [], heritee: false, etapeHeritee: null },
+
+        isBrouillon: props.etape.is_brouillon,
+        statutId: props.etape.etape_statut_id,
+      },
+      props.etape.etape_documents,
+      props.etape.entreprises_documents,
+      props.demarche.sdom_zones,
+      props.demarche.communes,
+      daeDocument.value,
+      aslDocument.value,
+      props.etape.avis_documents
+    )
+  })
+
+  const isBrouillon = computed<boolean>(() => props.etape.is_brouillon)
 
   return () => (
     <div class="fr-pb-2w fr-pl-2w fr-pr-2w fr-tile--shadow" style={{ border: '1px solid var(--grey-900-175)' }}>
@@ -192,16 +244,13 @@ export const DemarcheEtape = defineComponent<Props>(props => {
             <div class="fr-text--lg fr-mb-0" style={{ color: 'var(--text-title-blue-france)', fontWeight: '500' }}>
               {capitalize(EtapesTypes[props.etape.etape_type_id].nom)}
             </div>
-            {props.etape.is_brouillon ? <Badge class="fr-ml-1w" systemLevel="new" ariaLabel={`Brouillon de l'étape ${EtapesTypes[props.etape.etape_type_id].nom}`} label="Brouillon" /> : null}
+            {isBrouillon.value ? <Badge class="fr-ml-1w" systemLevel="new" ariaLabel={`Brouillon de l'étape ${EtapesTypes[props.etape.etape_type_id].nom}`} label="Brouillon" /> : null}
           </div>
 
           <div style={{ display: 'flex' }}>
             {canEditOrDeleteEtape.value ? (
               <>
-                {/* TODO 2024-05-16: retirer la condition 'est une demande' pour ne conserver que 'est un brouillon' */}
-                {props.etape.etape_type_id === ETAPES_TYPES.demande && props.etape.is_brouillon ? (
-                  <DsfrButton class="fr-mr-1v" buttonType="primary" label="Déposer" title="Déposer la demande" onClick={deposePopupOpen} disabled={!isDeposable.value} />
-                ) : null}
+                {isBrouillon.value ? <DsfrButton class="fr-mr-1v" buttonType="primary" label="Déposer" title="Déposer l'étape" onClick={deposePopupOpen} disabled={!isDeposable.value} /> : null}
                 <DsfrLink
                   icon={'fr-icon-pencil-line'}
                   disabled={false}
@@ -321,6 +370,7 @@ export const DemarcheEtape = defineComponent<Props>(props => {
 
       <EtapeDocuments etapeDocuments={props.etape.etape_documents} entrepriseDocuments={props.etape.entreprises_documents} user={props.user} entreprises={props.entreprises} />
 
+      <EtapeAvisTable etapeAvis={props.etape.avis_documents} user={props.user} />
       {removePopupVisible.value ? (
         <RemoveEtapePopup
           close={closeRemovePopup}

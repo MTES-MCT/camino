@@ -10,7 +10,7 @@ import { EtapeDocumentModification, TempEtapeDocument, etapeDocumentModification
 import { DsfrInputRadio } from '../_ui/dsfr-input-radio'
 import { VisibilityLabel } from './etape-documents'
 import { isEntrepriseOrBureauDEtude, User } from 'camino-common/src/roles'
-import { DocumentTypeTypeahead } from '../_common/document-type-typeahead'
+import { TypeaheadSmartSingle } from '../_ui/typeahead-smart-single'
 
 interface Props {
   close: (document: EtapeDocumentModification | null) => void
@@ -58,6 +58,7 @@ export const AddEtapeDocumentPopup = defineComponent<Props>(props => {
   const updateDocumentTypeId = (documentTypeId: DocumentTypeId | null) => {
     etapeDocumentTypeId.value = documentTypeId
   }
+
   const content = () => (
     <form>
       {props.documentTypeIds.length === 1 ? null : (
@@ -67,7 +68,7 @@ export const AddEtapeDocumentPopup = defineComponent<Props>(props => {
               <label class="fr-label" for="type">
                 Type de document
               </label>
-              <DocumentTypeTypeahead documentTypeIds={props.documentTypeIds} documentTypeIdSelected={updateDocumentTypeId} />
+              <TypeaheadSmartSingle possibleValues={props.documentTypeIds.map(id => DocumentsTypes[id])} valueIdSelected={updateDocumentTypeId} />
             </div>
           </div>
         </fieldset>

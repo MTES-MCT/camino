@@ -1,4 +1,3 @@
-# import * from 'administrations.graphql'
 # import * from 'entreprises.graphql'
 # import * from 'substances.graphql'
 # import * from 'geojsons.graphql'
@@ -149,118 +148,9 @@ type HeritageProp {
   actif: Boolean
 }
 
-input InputEtapeCreation {
-  typeId: ID!
-  statutId: ID
-  titreDemarcheId: ID!
-  date: String!
-  ordre: Int
-  duree: Int
-  dateDebut: String
-  dateFin: String
-  substances: [String!]
-  geojson4326Perimetre: Json
-  geojson4326Points: Json
-  geojsonOriginePoints: Json
-  geojsonOriginePerimetre: Json
-  geojsonOrigineForages: Json
-  geojsonOrigineGeoSystemeId: String
-  titulaireIds: [String!]
-  amodiataireIds: [String!]
-  heritageProps: InputHeritageProps
-  heritageContenu: Json
-  contenu: Json
-  etapeDocuments: [InputEtapeDocumentCreation]
-  entrepriseDocumentIds: [ID]
-  notes: String
-}
-
-input DaeDocument {
-  id: String
-  temp_document_name: String
-  etape_document_type_id: String!
-  description: String
-  public_lecture: Boolean!
-  entreprises_lecture: Boolean!
-  etape_statut_id: String!
-  date: String!
-  arrete_prefectoral: String
-}
-
-input AslDocument {
-  id: String
-  temp_document_name: String
-  etape_document_type_id: String!
-  description: String
-  public_lecture: Boolean!
-  entreprises_lecture: Boolean!
-  etape_statut_id: String!
-  date: String!
-}
-
-input InputEtapeDocumentCreation {
-  temp_document_name: String!
-  etape_document_type_id: String!
-  description: String
-  public_lecture: Boolean!
-  entreprises_lecture: Boolean!
-}
-
-input InputEtapeModification {
-  id: ID!
-  typeId: ID!
-  statutId: ID
-  titreDemarcheId: ID!
-  date: String!
-  ordre: Int
-  duree: Int
-  dateDebut: String
-  dateFin: String
-  substances: [String!]
-  titulaireIds: [String!]
-  amodiataireIds: [String!]
-  heritageProps: InputHeritageProps
-  heritageContenu: Json
-  contenu: Json
-  etapeDocuments: [InputEtapeDocumentModification]
-  entrepriseDocumentIds: [ID]
-  notes: String
-  geojson4326Perimetre: Json
-  geojson4326Points: Json
-  geojsonOriginePoints: Json
-  geojsonOriginePerimetre: Json
-  geojsonOrigineForages: Json
-  geojsonOrigineGeoSystemeId: String
-  daeDocument: DaeDocument
-  aslDocument: AslDocument
-}
-
-input InputEtapeDocumentModification {
-  id: ID
-  temp_document_name: String
-  etape_document_type_id: String!
-  description: String
-  public_lecture: Boolean!
-  entreprises_lecture: Boolean!
-}
-
 input InputEtapeFiltre {
   typeId: ID!
   statutId: ID
   dateDebut: String
   dateFin: String
-}
-
-input InputHeritageProps {
-  dateDebut: InputHeritageProp
-  dateFin: InputHeritageProp
-  duree: InputHeritageProp
-  perimetre: InputHeritageProp
-  substances: InputHeritageProp
-  titulaires: InputHeritageProp
-  amodiataires: InputHeritageProp
-}
-
-input InputHeritageProp {
-  actif: Boolean
 }

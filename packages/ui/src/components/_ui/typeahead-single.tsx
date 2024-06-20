@@ -5,31 +5,31 @@ import { DeepReadonly, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } fr
 import type { JSX } from 'vue/jsx-runtime'
 type TypeAheadRecord = Record<string | symbol | number, any>
 
-type Props<T extends TypeAheadRecord, K extends keyof DeepReadonly<T>> = {
+type Props<T extends DeepReadonly<TypeAheadRecord>, K extends keyof DeepReadonly<T>> = {
   overrideItem: (Pick<T, K> & Partial<Omit<T, K>>) | null
   disabled?: boolean
   props: {
     id?: string
-    itemKey: K
+    itemKey: NoInfer<K>
     placeholder: string
-    items: DeepReadonly<T[]>
+    items: T[]
     minInputLength: number
     alwaysOpen?: boolean
-    itemChipLabel: (key: DeepReadonly<T>) => string
-    displayItemInList?: (item: DeepReadonly<T>) => JSX.Element
-    onSelectItem: (item: DeepReadonly<T> | undefined) => void
+    itemChipLabel: (key: NoInfer<T>) => string
+    displayItemInList?: (item: NoInfer<T>) => JSX.Element
+    onSelectItem: (item: NoInfer<T> | undefined) => void
     onInput?: (item: string) => void
   }
 }
 
-export const TypeAheadSingle = defineComponent(<T extends TypeAheadRecord, K extends keyof DeepReadonly<T>>(props: Props<T, K>) => {
+export const TypeAheadSingle = defineComponent(<T extends DeepReadonly<TypeAheadRecord>, K extends keyof DeepReadonly<T>>(props: Props<T, K>) => {
   const id = props.props.id ?? `typeahead_${(random() * 1000).toFixed()}`
   const wrapperId = computed(() => `${id}_wrapper`)
-  const getItem = (item: (Pick<T, K> & Partial<Omit<T, K>>) | null): DeepReadonly<T> | null =>
+  const getItem = (item: (Pick<T, K> & Partial<Omit<T, K>>) | null): T | null =>
     props.props.items.find(i => {
       return i[props.props.itemKey] === item?.[props.props.itemKey]
     }) ?? null
-  const selectedItem = ref<DeepReadonly<T> | null>(getItem(props.overrideItem)) as Ref<DeepReadonly<T> | null>
+  const selectedItem = ref<T | null>(getItem(props.overrideItem)) as Ref<T | null>
 
   const initItem = getItem(props.overrideItem)
   const input = ref<string>(initItem !== null ? props.props.itemChipLabel(initItem) : '')
@@ -104,7 +104,7 @@ export const TypeAheadSingle = defineComponent(<T extends TypeAheadRecord, K ext
   const currentSelection = computed(() => {
     return isListVisible.value && currentSelectionIndex.value < notSelectedItems.value.length ? notSelectedItems.value[currentSelectionIndex.value] : undefined
   })
-  const selectItem = (item: DeepReadonly<T>) => {
+  const selectItem = (item: T) => {
     input.value = props.props.itemChipLabel(item)
 
     currentSelectionIndex.value = 0

@@ -31,11 +31,7 @@ describe('vérifie l’arbre d’octroi des PXG', () => {
         ...ETES.recevabiliteDeLaDemande.FAVORABLE,
         date: toCaminoDate('2022-04-17'),
       },
-      { ...ETES.saisineDesServices.FAIT, date: toCaminoDate('2022-04-18') },
-      {
-        ...ETES.avisDeLaDirectionDesEntreprisesDeLaConcurrenceDeLaConsommationDuTravailEtDeLemploi.FAVORABLE,
-        date: toCaminoDate('2022-04-18'),
-      },
+      { ...ETES.avisDesServicesEtCommissionsConsultatives.FAIT, date: toCaminoDate('2022-04-18') },
       {
         ...ETES.saisineDesCollectivitesLocales.FAIT,
         date: toCaminoDate('2022-04-19'),
@@ -94,11 +90,7 @@ describe('vérifie l’arbre d’octroi des PXG', () => {
         ...ETES.recevabiliteDeLaDemande.FAVORABLE,
         date: toCaminoDate('2022-04-17'),
       },
-      { ...ETES.saisineDesServices.FAIT, date: toCaminoDate('2022-04-18') },
-      {
-        ...ETES.avisDeLaDirectionDesEntreprisesDeLaConcurrenceDeLaConsommationDuTravailEtDeLemploi.FAVORABLE,
-        date: toCaminoDate('2022-04-18'),
-      },
+      { ...ETES.avisDesServicesEtCommissionsConsultatives.FAIT, date: toCaminoDate('2022-04-18') },
       {
         ...ETES.saisineDesCollectivitesLocales.FAIT,
         date: toCaminoDate('2022-04-19'),

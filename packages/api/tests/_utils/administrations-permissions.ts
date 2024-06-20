@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { ITitre } from '../../src/types.js'
 
-import { graphQLCall, queryImport } from './index.js'
+import { graphQLCall, queryImport, restPostCall } from './index.js'
 
 import Titres from '../../src/database/models/titres.js'
 import options from '../../src/database/queries/_options.js'
@@ -18,12 +18,15 @@ import type { Pool } from 'pg'
 import { getSections } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
 import { TitreId } from 'camino-common/src/validators/titres.js'
 import TitresDemarches from '../../src/database/models/titres-demarches.js'
-import { ETAPE_HERITAGE_PROPS } from 'camino-common/src/heritage.js'
 import { GEO_SYSTEME_IDS } from 'camino-common/src/static/geoSystemes.js'
 import { DocumentTypeId } from 'camino-common/src/static/documentsTypes.js'
 import { copyFileSync, mkdirSync } from 'node:fs'
-import { TempEtapeDocument } from 'camino-common/src/etape.js'
+import { ETAPE_IS_NOT_BROUILLON, TempEtapeDocument } from 'camino-common/src/etape.js'
 import { tempDocumentNameValidator } from 'camino-common/src/document.js'
+import { userSuper } from '../../src/database/user-super.js'
+import { defaultHeritageProps } from 'camino-common/src/etape-form.js'
+import { isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
+import { HTTP_STATUS } from 'camino-common/src/http.js'
 
 const dir = `${process.cwd()}/files/tmp/`
 
@@ -157,6 +160,11 @@ export const creationCheck = async (pool: Pool, administrationId: string, creer:
     const slug = result.body.data.demarcheCreer.slug
 
     const demarche = await TitresDemarches.query().findOne({ slug })
+    expect(demarche).not.toBeUndefined()
+    expect(demarche).not.toBeNull()
+    if (isNullOrUndefined(demarche)) {
+      throw new Error('pour typescript')
+    }
 
     const etapeTypeId = 'mfr'
 
@@ -196,7 +204,7 @@ export const creationCheck = async (pool: Pool, administrationId: string, creer:
       return acc
     }, {} as any)
 
-    const documentTypesIds = getDocuments(titreTypeId, demarche?.typeId, etapeTypeId)
+    const documentTypesIds = getDocuments(titreTypeId, demarche.typeId, etapeTypeId)
       .filter(({ optionnel }) => !optionnel)
       .map(({ id }) => id)
     const etapeDocuments = []
@@ -204,75 +212,66 @@ export const creationCheck = async (pool: Pool, administrationId: string, creer:
     for (const documentTypeId of documentTypesIds) {
       etapeDocuments.push(testDocumentCreateTemp(documentTypeId))
     }
-    const res = await graphQLCall(
-      pool,
-      queryImport('titre-etape-creer'),
-      {
-        etape: {
-          typeId: etapeTypeId,
-          statutId: 'fai',
-          titreDemarcheId: demarche?.id,
-          date: '2022-01-01',
-          duree: 10,
-          heritageProps: ETAPE_HERITAGE_PROPS.reduce(
-            (acc, prop) => {
-              acc[prop] = { actif: false }
-
-              return acc
-            },
-            {} as {
-              [key: string]: { actif: boolean }
-            }
-          ),
-          heritageContenu,
-          contenu,
-          substances: ['auru'],
-          etapeDocuments,
-          geojson4326Perimetre: {
-            type: 'Feature',
-            properties: {},
-            geometry: {
-              type: 'MultiPolygon',
-              coordinates: [
-                [
-                  [
-                    [1, 2],
-                    [1, 2],
-                    [1, 2],
-                    [1, 2],
-                  ],
-                ],
+    const res = await restPostCall(pool, '/rest/etapes', {}, userSuper, {
+      typeId: etapeTypeId,
+      statutId: 'fai',
+      titreDemarcheId: demarche.id,
+      date: toCaminoDate('2022-01-01'),
+      etapeAvis: [],
+      duree: 10,
+      dateDebut: null,
+      dateFin: null,
+      geojson4326Points: null,
+      geojsonOriginePoints: null,
+      geojsonOrigineForages: null,
+      titulaireIds: [],
+      amodiataireIds: [],
+      notes: null,
+      entrepriseDocumentIds: [],
+      heritageProps: defaultHeritageProps,
+      heritageContenu,
+      contenu,
+      substances: ['auru'],
+      etapeDocuments,
+      geojson4326Perimetre: {
+        type: 'Feature',
+        properties: {},
+        geometry: {
+          type: 'MultiPolygon',
+          coordinates: [
+            [
+              [
+                [1, 2],
+                [1, 2],
+                [1, 2],
+                [1, 2],
               ],
-            },
-          },
-          geojsonOrigineGeoSystemeId: GEO_SYSTEME_IDS.WGS84,
-          geojsonOriginePerimetre: {
-            type: 'Feature',
-            properties: {},
-            geometry: {
-              type: 'MultiPolygon',
-              coordinates: [
-                [
-                  [
-                    [1, 2],
-                    [1, 2],
-                    [1, 2],
-                    [1, 2],
-                  ],
-                ],
-              ],
-            },
-          },
+            ],
+          ],
         },
       },
-      {
-        role: 'super',
-      }
-    )
+      geojsonOrigineGeoSystemeId: GEO_SYSTEME_IDS.WGS84,
+      geojsonOriginePerimetre: {
+        type: 'Feature',
+        properties: {},
+        geometry: {
+          type: 'MultiPolygon',
+          coordinates: [
+            [
+              [
+                [1, 2],
+                [1, 2],
+                [1, 2],
+                [1, 2],
+              ],
+            ],
+          ],
+        },
+      },
+    })
 
     if (creer) {
-      expect(res.body.errors).toBe(undefined)
-      expect(res.body.data).toMatchObject({ etapeCreer: {} })
+      expect(res.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
     } else {
       expect(res.body.errors[0].message).toBe('droits insuffisants pour créer cette étape')
     }
@@ -326,7 +325,7 @@ const titreBuild = (
             ordre: 0,
             titreDemarcheId: newDemarcheId(`${titreId}-demarche-id`),
             statutId: 'enc',
-            isBrouillon: false,
+            isBrouillon: ETAPE_IS_NOT_BROUILLON,
             date: toCaminoDate('2020-01-01'),
             administrationsLocales: administrationIdLocale ? [administrationIdLocale] : [],
           },

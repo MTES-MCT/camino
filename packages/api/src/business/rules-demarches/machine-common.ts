@@ -10,8 +10,9 @@ import { Regions } from 'camino-common/src/static/region.js'
 import { PaysId } from 'camino-common/src/static/pays.js'
 import { communeIdValidator } from 'camino-common/src/static/communes.js'
 import { z } from 'zod'
-import { etapeIdValidator } from 'camino-common/src/etape.js'
+import { etapeBrouillonValidator, etapeIdValidator } from 'camino-common/src/etape.js'
 import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools.js'
+import { km2Validator } from 'camino-common/src/number.js'
 export interface Etape {
   // TODO 2022-07-28 : ceci pourrait être réduit en utilisant les états de 'trad'
   etapeTypeId: EtapeTypeId
@@ -36,8 +37,8 @@ export const titreEtapeForMachineValidator = z.object({
   contenu: z.any().nullable(),
   heritageContenu: z.any().nullable(),
   communes: z.array(z.object({ id: communeIdValidator })).nullable(),
-  surface: z.number().nullable(),
-  isBrouillon: z.boolean(),
+  surface: km2Validator.nullable(),
+  isBrouillon: etapeBrouillonValidator,
 })
 
 export type TitreEtapeForMachine = z.infer<typeof titreEtapeForMachineValidator>

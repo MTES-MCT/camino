@@ -16,6 +16,7 @@ import { insertCommune } from '../../database/queries/communes.queries.js'
 import { Pool } from 'pg'
 import { titreSlugValidator } from 'camino-common/src/validators/titres.js'
 import { FeatureMultiPolygon } from 'camino-common/src/perimetre.js'
+import { ETAPE_IS_BROUILLON } from 'camino-common/src/etape.js'
 
 console.info = vi.fn()
 console.error = vi.fn()
@@ -97,7 +98,7 @@ describe('titresEtapesAreasUpdate', () => {
         date: toCaminoDate('2022-03-09'),
         typeId: 'mfr',
         statutId: 'fai',
-        isBrouillon: true,
+        isBrouillon: ETAPE_IS_BROUILLON,
         titreDemarcheId,
         archive: false,
         sdomZones: [SDOMZoneIds.Zone2],

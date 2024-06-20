@@ -9,7 +9,6 @@ import { DemarcheId } from 'camino-common/src/demarche'
 import { ApiClient } from '../../api/api-client'
 import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts'
 import { DsfrInput } from '../_ui/dsfr-input'
-import { User, isAdministrationAdmin, isAdministrationEditeur, isSuper } from 'camino-common/src/roles'
 
 export type EtapeDateTypeEdit = DeepReadonly<{
   statutId: EtapeStatutId | null
@@ -23,17 +22,6 @@ export interface Props {
   demarcheId: DemarcheId
   apiClient: Pick<ApiClient, 'getEtapesTypesEtapesStatuts'>
   completeUpdate: (etape: Props['etape']) => void
-}
-
-export const dateTypeStepIsVisible = (user: User): boolean => {
-  return isSuper(user) || isAdministrationAdmin(user) || isAdministrationEditeur(user)
-}
-export const dateTypeStepIsComplete = (etape: EtapeDateTypeEdit, user: User): boolean => {
-  if (!dateTypeStepIsVisible(user)) {
-    return true
-  }
-
-  return isNotNullNorUndefined(etape.date) && isNotNullNorUndefined(etape.typeId) && isNotNullNorUndefined(etape.statutId)
 }
 
 export const DateTypeEdit = defineComponent<Props>(props => {

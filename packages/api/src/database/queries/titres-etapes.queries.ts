@@ -11,8 +11,30 @@ import {
   IDeleteEtapeDocumentsDbQuery,
   IUpdateEtapeDocumentFileDbQuery,
   IUpdateEtapeDocumentInfoDbQuery,
+  IInsertEtapeAvisDbQuery,
+  IGetAvisByEtapeIdQueryQuery,
+  IGetLargeobjectIdByEtapeAvisIdInternalQuery,
+  IUpdateEtapeAvisInfoDbQuery,
+  IUpdateEtapeAvisFileDbQuery,
+  IDeleteEtapeAvisDbQuery,
 } from './titres-etapes.queries.types.js'
-import { EtapeDocument, EtapeDocumentId, EtapeDocumentModification, etapeDocumentValidator, EtapeDocumentWithFileModification, EtapeId, TempEtapeDocument } from 'camino-common/src/etape.js'
+import {
+  ETAPE_IS_NOT_BROUILLON,
+  EtapeAvisId,
+  etapeAvisIdValidator,
+  EtapeAvisModification,
+  EtapeAvisWithFileModification,
+  EtapeBrouillon,
+  EtapeDocument,
+  EtapeDocumentId,
+  EtapeDocumentModification,
+  etapeDocumentValidator,
+  EtapeDocumentWithFileModification,
+  EtapeId,
+  etapeIdValidator,
+  TempEtapeAvis,
+  TempEtapeDocument,
+} from 'camino-common/src/etape.js'
 import { EntrepriseDocumentId, entrepriseDocumentValidator, EntrepriseId, EtapeEntrepriseDocument, etapeEntrepriseDocumentValidator } from 'camino-common/src/entreprise.js'
 import { Pool } from 'pg'
 import { User } from 'camino-common/src/roles.js'
@@ -23,12 +45,17 @@ import { canReadDocument } from '../../api/rest/permissions/documents.js'
 import { AdministrationId } from 'camino-common/src/static/administrations.js'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
-import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, SimplePromiseFn } from 'camino-common/src/typescript-tools.js'
+import { DeepReadonly, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, SimplePromiseFn } from 'camino-common/src/typescript-tools.js'
 import { CanReadDemarche } from '../../api/rest/permissions/demarches.js'
-import { newEtapeDocumentId } from '../models/_format/id-create.js'
-import { getCurrent } from 'camino-common/src/date.js'
-import { createLargeObject, LargeObjectId } from '../largeobjects.js'
+import { newEtapeAvisId, newEtapeDocumentId } from '../models/_format/id-create.js'
+import { caminoDateValidator, getCurrent } from 'camino-common/src/date.js'
+import { createLargeObject, LargeObjectId, largeObjectIdValidator } from '../largeobjects.js'
 import { canDeleteEtapeDocument } from 'camino-common/src/permissions/titres-etapes.js'
+import { avisStatutIdValidator, avisTypeIdValidator, avisVisibilityIdValidator } from 'camino-common/src/static/avisTypes.js'
+import { canReadAvis } from '../../api/rest/permissions/avis.js'
+import { getEtapeDataForEdition } from '../../api/rest/etapes.queries.js'
+import { etapeAvisStepIsComplete } from 'camino-common/src/permissions/etape-form.js'
+import { CommuneId } from 'camino-common/src/static/communes.js'
 
 export const insertTitreEtapeEntrepriseDocument = async (pool: Pool, params: { titre_etape_id: EtapeId; entreprise_document_id: EntrepriseDocumentId }) =>
   dbQueryAndValidate(insertTitreEtapeEntrepriseDocumentInternal, params, pool, z.void())
@@ -88,7 +115,7 @@ export const getEntrepriseDocumentLargeObjectIdsByEtapeId = async (params: { tit
   return result.filter(r => canSeeEntrepriseDocuments(user, r.entreprise_id))
 }
 
-export const updateEtapeDocuments = async (pool: Pool, _user: User, titre_etape_id: EtapeId, isBrouillon: boolean, etapeDocuments: EtapeDocumentModification[]) => {
+export const updateEtapeDocuments = async (pool: Pool, _user: User, titre_etape_id: EtapeId, isBrouillon: EtapeBrouillon, etapeDocuments: EtapeDocumentModification[]) => {
   const documentsInDb = await dbQueryAndValidate(getDocumentsByEtapeIdQuery, { titre_etape_id }, pool, getDocumentsByEtapeIdQueryValidator)
 
   const etapeDocumentToUpdate = etapeDocuments.filter((document): document is EtapeDocumentWithFileModification => 'id' in document)
@@ -159,6 +186,84 @@ insert into etapes_documents (id, etape_document_type_id, etape_id, description,
     values ($ id !, $ etape_document_type_id !, $ etape_id !, $ description, $ public_lecture !, $ entreprises_lecture !, $ largeobject_id !)
 `
 
+export const insertEtapeAvis = async (pool: Pool, titre_etape_id: EtapeId, etapeAvis: TempEtapeAvis[]) => {
+  for (const avis of etapeAvis) {
+    const id = newEtapeAvisId(avis.avis_type_id)
+    const largeobject_id = isNotNullNorUndefined(avis.temp_document_name) ? await createLargeObject(pool, avis.temp_document_name) : null
+    await insertEtapeAvisWithLargeObjectId(pool, titre_etape_id, avis, id, largeobject_id)
+  }
+}
+const updateEtapeAvisFileDb = sql<Redefine<IUpdateEtapeAvisFileDbQuery, { id: EtapeAvisId; largeobject_id: LargeObjectId }, void>>`
+update
+    etape_avis
+set
+    largeobject_id = $ largeobject_id !
+where
+    id = $ id !
+`
+const updateEtapeAvisInfoDb = sql<Redefine<IUpdateEtapeAvisInfoDbQuery, Omit<EtapeAvisWithFileModification, 'has_file' | 'temp_document_name'>, void>>`
+update
+    etape_avis
+set
+    avis_statut_id = $ avis_statut_id !,
+    avis_visibility_id = $ avis_visibility_id !,
+    date = $ date !,
+    avis_type_id = $ avis_type_id !,
+    description = $ description
+where
+    id = $ id !
+`
+const deleteEtapeAvisDb = sql<Redefine<IDeleteEtapeAvisDbQuery, { ids: EtapeAvisId[] }, void>>`
+delete from etape_avis
+where id in $$ ids !
+`
+
+export const updateEtapeAvis = async (
+  pool: Pool,
+  titre_etape_id: EtapeId,
+  isBrouillon: EtapeBrouillon,
+  etapeAvis: EtapeAvisModification[],
+  etapeTypeId: EtapeTypeId,
+  titreTypeId: TitreTypeId,
+  communeIds: DeepReadonly<CommuneId[]>
+) => {
+  if (isBrouillon === ETAPE_IS_NOT_BROUILLON && !etapeAvisStepIsComplete({ typeId: etapeTypeId }, etapeAvis, titreTypeId, communeIds).valid) {
+    throw new Error('Impossible de mettre à jour les avis, car ils ne sont pas complets')
+  }
+
+  const avisInDb = await dbQueryAndValidate(getAvisByEtapeIdQuery, { titre_etape_id }, pool, etapeAvisDbValidator)
+
+  const avisListToUpdate = etapeAvis.filter((avis): avis is EtapeAvisWithFileModification => 'id' in avis)
+
+  const etapeDocumentIdsToUpdate = avisListToUpdate.map(({ id }) => id)
+  const toDeleteAvis = avisInDb.filter(({ id }) => !etapeDocumentIdsToUpdate.includes(id))
+  const toInsertAvis = etapeAvis.filter((avis): avis is TempEtapeAvis => !('id' in avis))
+  if (isNotNullNorUndefinedNorEmpty(toDeleteAvis)) {
+    await dbQueryAndValidate(deleteEtapeAvisDb, { ids: toDeleteAvis.map(({ id }) => id) }, pool, z.void())
+  }
+  if (isNotNullNorUndefinedNorEmpty(avisListToUpdate)) {
+    for (const avisToUpdate of avisListToUpdate) {
+      if (isNotNullNorUndefined(avisToUpdate.temp_document_name)) {
+        const largeobject_id = await createLargeObject(pool, avisToUpdate.temp_document_name)
+        await dbQueryAndValidate(updateEtapeAvisFileDb, { id: avisToUpdate.id, largeobject_id }, pool, z.void())
+      }
+      await dbQueryAndValidate(updateEtapeAvisInfoDb, avisToUpdate, pool, z.void())
+    }
+  }
+  if (isNotNullNorUndefinedNorEmpty(toInsertAvis)) {
+    await insertEtapeAvis(pool, titre_etape_id, toInsertAvis)
+  }
+}
+
+// VISIBLE FOR TEST
+export const insertEtapeAvisWithLargeObjectId = async (pool: Pool, titre_etape_id: EtapeId, avis: TempEtapeAvis, id: EtapeAvisId, largeobject_id: LargeObjectId | null) => {
+  return dbQueryAndValidate(insertEtapeAvisDb, { ...avis, etape_id: titre_etape_id, id, largeobject_id }, pool, z.void())
+}
+const insertEtapeAvisDb = sql<Redefine<IInsertEtapeAvisDbQuery, { etape_id: EtapeId; id: EtapeAvisId; largeobject_id: LargeObjectId | null } & Omit<TempEtapeAvis, 'temp_document_name'>, void>>`
+insert into etape_avis (id, avis_type_id, etape_id, description, avis_statut_id, date, avis_visibility_id, largeobject_id)
+    values ($ id !, $ avis_type_id !, $ etape_id !, $ description !, $ avis_statut_id !, $ date !, $ avis_visibility_id !, $ largeobject_id !)
+`
+
 const etapeDocumentLargeObjectIdValidator = z.number().brand('EtapeDocumentLargeObjectId')
 
 const getDocumentsByEtapeIdQueryValidator = etapeDocumentValidator.extend({ largeobject_id: etapeDocumentLargeObjectIdValidator })
@@ -199,7 +304,96 @@ export const getEtapeDocumentLargeObjectIdsByEtapeId = async (
 
   return filteredDocuments
 }
+const etapeAvisDbValidator = z.object({
+  id: etapeAvisIdValidator,
+  description: z.string(),
+  avis_type_id: avisTypeIdValidator,
+  avis_statut_id: avisStatutIdValidator,
+  largeobject_id: largeObjectIdValidator.nullable(),
+  date: caminoDateValidator,
+  avis_visibility_id: avisVisibilityIdValidator,
+})
+type EtapeAvisDb = z.infer<typeof etapeAvisDbValidator>
+const getAvisByEtapeIdQuery = sql<Redefine<IGetAvisByEtapeIdQueryQuery, { titre_etape_id: EtapeId }, EtapeAvisDb>>`
+select
+    a.id,
+    a.description,
+    a.avis_type_id,
+    a.avis_statut_id,
+    a.largeobject_id,
+    a.date,
+    a.avis_visibility_id
+from
+    etape_avis a
+where
+    a.etape_id = $ titre_etape_id !
+`
+export const getEtapeAvisLargeObjectIdsByEtapeId = async (
+  titre_etape_id: EtapeId,
+  pool: Pool,
+  user: User,
+  titreTypeId: SimplePromiseFn<TitreTypeId>,
+  titresAdministrationsLocales: SimplePromiseFn<AdministrationId[]>,
+  entreprisesTitulairesOuAmodiataires: SimplePromiseFn<EntrepriseId[]>,
+  etapeTypeId: EtapeTypeId,
+  demarche: CanReadDemarche
+): Promise<EtapeAvisDb[]> => {
+  const result = await dbQueryAndValidate(getAvisByEtapeIdQuery, { titre_etape_id }, pool, etapeAvisDbValidator)
 
+  const filteredAvis: EtapeAvisDb[] = []
+
+  for (const avis of result) {
+    if (await canReadAvis(avis, user, titreTypeId, titresAdministrationsLocales, entreprisesTitulairesOuAmodiataires, etapeTypeId, demarche)) {
+      filteredAvis.push(avis)
+    }
+  }
+
+  return filteredAvis
+}
+const loidByEtapeAvisIdValidator = z.object({
+  largeobject_id: largeObjectIdValidator,
+  etape_id: etapeIdValidator,
+  avis_visibility_id: avisVisibilityIdValidator,
+})
+export const getLargeobjectIdByEtapeAvisId = async (pool: Pool, user: User, etapeAvisId: EtapeAvisId): Promise<LargeObjectId | null> => {
+  const result = await dbQueryAndValidate(
+    getLargeobjectIdByEtapeAvisIdInternal,
+    {
+      etapeAvisId,
+    },
+    pool,
+    loidByEtapeAvisIdValidator
+  )
+
+  if (result.length === 1) {
+    const etapeAvis = result[0]
+    const { etapeData, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires } = await getEtapeDataForEdition(pool, etapeAvis.etape_id)
+
+    if (
+      await canReadAvis(etapeAvis, user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires, etapeData.etape_type_id, {
+        demarche_type_id: etapeData.demarche_type_id,
+        entreprises_lecture: etapeData.demarche_entreprises_lecture,
+        public_lecture: etapeData.demarche_public_lecture,
+        titre_public_lecture: etapeData.titre_public_lecture,
+      })
+    ) {
+      return etapeAvis.largeobject_id
+    }
+  }
+
+  return null
+}
+const getLargeobjectIdByEtapeAvisIdInternal = sql<Redefine<IGetLargeobjectIdByEtapeAvisIdInternalQuery, { etapeAvisId: EtapeAvisId }, z.infer<typeof loidByEtapeAvisIdValidator>>>`
+select
+    d.largeobject_id,
+    d.etape_id,
+    d.avis_visibility_id
+from
+    etape_avis d
+where
+    d.id = $ etapeAvisId !
+LIMIT 1
+`
 export const getDocumentsByEtapeId = async (
   titre_etape_id: EtapeId,
   pool: Pool,

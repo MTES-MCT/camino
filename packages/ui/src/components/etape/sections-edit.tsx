@@ -7,7 +7,6 @@ import { useState } from '../../utils/vue-tsx-utils'
 import { SectionWithValue } from 'camino-common/src/sections'
 import { SectionElementWithValueEdit } from './section-element-with-value-edit'
 import { FlattenEtape } from 'camino-common/src/etape-form'
-import { Contenu } from 'camino-common/src/permissions/sections'
 
 export type SectionsEditEtape = DeepReadonly<Pick<FlattenEtape, 'typeId' | 'contenu'>>
 type Props = {
@@ -34,19 +33,7 @@ export const SectionsEdit = defineComponent<Props>(props => {
   })
   const sectionsWithValue = computed<DeepReadonly<SectionWithValue[]>>(() => {
     if (isNotNullNorUndefined(editedEtape.value.contenu)) {
-      const contenu = Object.keys(editedEtape.value.contenu).reduce<DeepReadonly<Contenu>>((accSections, section) => {
-        const elements = Object.keys(editedEtape.value.contenu[section]).reduce<DeepReadonly<{ [secondKey in string]?: unknown }>>((accElements, element) => {
-          const contenuValue = editedEtape.value.contenu[section][element].value
-          if (isNotNullNorUndefined(contenuValue)) {
-            return { ...accElements, [element]: contenuValue }
-          }
-          return accElements
-        }, {})
-
-        return { ...accSections, [section]: elements }
-      }, {})
-
-      return getSectionsWithValue(sections.value, contenu)
+      return getSectionsWithValue(sections.value, editedEtape.value.contenu)
     }
     return []
   })

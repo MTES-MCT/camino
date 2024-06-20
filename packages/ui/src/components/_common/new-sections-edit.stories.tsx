@@ -33,6 +33,7 @@ export const Default: StoryFn = () => (
             dateDebut: toCaminoDate('2018-01-01'),
             type: 'number',
             value: null,
+            optionnel: false,
           },
           {
             id: 'mercure',
@@ -40,6 +41,7 @@ export const Default: StoryFn = () => (
             description: 'Masse en gramme de l’ensemble des produits contaminés envoyés en traitement au cours du trimestre.',
             type: 'number',
             value: null,
+            optionnel: false,
           },
           {
             id: 'carburantDetaxe',
@@ -48,6 +50,7 @@ export const Default: StoryFn = () => (
             dateDebut: toCaminoDate('2018-01-01'),
             type: 'number',
             value: null,
+            optionnel: false,
           },
           {
             id: 'carburantConventionnel',
@@ -55,6 +58,7 @@ export const Default: StoryFn = () => (
             description: 'Volume total en litre de carburant conventionnel consommé au cours du trimestre par les travaux réalisés sur le chantier.',
             type: 'number',
             value: null,
+            optionnel: false,
           },
           {
             id: 'pompes',
@@ -62,6 +66,7 @@ export const Default: StoryFn = () => (
             description: 'Des pompes étaient-elles présentes sur le chantier',
             type: 'radio',
             value: null,
+            optionnel: false,
           },
           {
             id: 'pelles',
@@ -70,8 +75,9 @@ export const Default: StoryFn = () => (
             dateDebut: toCaminoDate('2018-01-01'),
             type: 'number',
             value: null,
+            optionnel: false,
           },
-          { id: 'effectifs', nom: 'Effectifs', description: 'Nombre moyen de salariés sur le chantier au cours du trimestre.', type: 'number', value: null },
+          { id: 'effectifs', nom: 'Effectifs', description: 'Nombre moyen de salariés sur le chantier au cours du trimestre.', type: 'number', optionnel: false, value: null },
           {
             id: 'environnement',
             nom: 'Dépenses relatives à la protection de l’environnement (euros)',
@@ -151,6 +157,7 @@ export const TousLesElementsVidesOptionnels: StoryFn = () => (
             description: 'Description pour radio',
             type: 'radio',
             value: null,
+            optionnel: false,
           },
           {
             id: 'checkbox',
@@ -158,6 +165,7 @@ export const TousLesElementsVidesOptionnels: StoryFn = () => (
             description: 'Description pour checkbox',
             type: 'checkbox',
             value: null,
+            optionnel: false,
           },
           {
             id: 'checkboxes',
@@ -169,6 +177,7 @@ export const TousLesElementsVidesOptionnels: StoryFn = () => (
               { id: '2', nom: 'checkbox2' },
             ],
             value: [],
+            optionnel: false,
           },
           {
             id: 'select',
@@ -200,6 +209,7 @@ export const TousLesElementsRequis: StoryFn = () => (
             description: 'Description pour integer',
             type: 'integer',
             value: null,
+            optionnel: false,
           },
           {
             id: 'number',
@@ -207,6 +217,7 @@ export const TousLesElementsRequis: StoryFn = () => (
             description: 'Description pour number',
             type: 'number',
             value: null,
+            optionnel: false,
           },
           {
             id: 'date',
@@ -214,6 +225,7 @@ export const TousLesElementsRequis: StoryFn = () => (
             description: 'Description pour date',
             type: 'date',
             value: null,
+            optionnel: false,
           },
           {
             id: 'textarea',
@@ -221,6 +233,7 @@ export const TousLesElementsRequis: StoryFn = () => (
             description: 'Description pour textarea',
             type: 'textarea',
             value: null,
+            optionnel: false,
           },
           {
             id: 'text',
@@ -228,6 +241,7 @@ export const TousLesElementsRequis: StoryFn = () => (
             description: 'Description pour text',
             type: 'text',
             value: null,
+            optionnel: false,
           },
           {
             id: 'url',
@@ -235,6 +249,7 @@ export const TousLesElementsRequis: StoryFn = () => (
             description: 'Description pour url',
             type: 'url',
             value: null,
+            optionnel: false,
           },
           {
             id: 'radio',
@@ -242,6 +257,7 @@ export const TousLesElementsRequis: StoryFn = () => (
             description: 'Description pour radio',
             type: 'radio',
             value: null,
+            optionnel: false,
           },
           {
             id: 'checkbox',
@@ -249,6 +265,7 @@ export const TousLesElementsRequis: StoryFn = () => (
             description: 'Description pour checkbox',
             type: 'checkbox',
             value: null,
+            optionnel: false,
           },
           {
             id: 'checkboxes',
@@ -260,6 +277,7 @@ export const TousLesElementsRequis: StoryFn = () => (
               { id: '2', nom: 'checkbox2' },
             ],
             value: [],
+            optionnel: false,
           },
           {
             id: 'select',
@@ -291,6 +309,7 @@ export const TousLesElementsRemplis: StoryFn = () => (
             description: 'Description pour integer',
             type: 'integer',
             value: 12,
+            optionnel: false,
           },
           {
             id: 'number',
@@ -298,6 +317,7 @@ export const TousLesElementsRemplis: StoryFn = () => (
             description: 'Description pour number',
             type: 'number',
             value: 8.2,
+            optionnel: false,
           },
           {
             id: 'date',
@@ -305,6 +325,7 @@ export const TousLesElementsRemplis: StoryFn = () => (
             description: 'Description pour date',
             type: 'date',
             value: toCaminoDate('2023-09-01'),
+            optionnel: false,
           },
           {
             id: 'textarea',
@@ -312,6 +333,7 @@ export const TousLesElementsRemplis: StoryFn = () => (
             description: 'Description pour textarea',
             type: 'textarea',
             value: 'ceci est un textarea',
+            optionnel: false,
           },
           {
             id: 'text',
@@ -319,6 +341,7 @@ export const TousLesElementsRemplis: StoryFn = () => (
             description: 'Description pour text',
             type: 'text',
             value: 'ceci est un text',
+            optionnel: false,
           },
           {
             id: 'url',
@@ -326,6 +349,7 @@ export const TousLesElementsRemplis: StoryFn = () => (
             description: 'Description pour url',
             type: 'url',
             value: 'https://google.fr',
+            optionnel: false,
           },
           {
             id: 'radio',
@@ -333,6 +357,7 @@ export const TousLesElementsRemplis: StoryFn = () => (
             description: 'Description pour radio',
             type: 'radio',
             value: true,
+            optionnel: false,
           },
           {
             id: 'checkbox',
@@ -340,6 +365,7 @@ export const TousLesElementsRemplis: StoryFn = () => (
             description: 'Description pour checkbox',
             type: 'checkbox',
             value: true,
+            optionnel: false,
           },
           {
             id: 'checkboxes',
@@ -352,6 +378,7 @@ export const TousLesElementsRemplis: StoryFn = () => (
               { id: '3', nom: 'checkbox3' },
             ],
             value: ['1', '2'],
+            optionnel: false,
           },
           {
             id: 'select',
@@ -360,6 +387,7 @@ export const TousLesElementsRemplis: StoryFn = () => (
             type: 'select',
             options: UNITES as NonEmptyArray<Unite>,
             value: 'deg',
+            optionnel: false,
           },
         ],
       },
@@ -381,6 +409,7 @@ export const VolumeGranulatsExtrait: StoryFn = () => (
             type: 'number',
             description: "Volume de granulats marins extrait, en mètre cube, au cours de l'année.",
             value: 12,
+            optionnel: false,
           },
         ],
       },
@@ -403,6 +432,7 @@ export const Date: StoryFn = () => (
             type: 'date',
             description: 'Et quelle belle date',
             value: null,
+            optionnel: false,
           },
         ],
       },
@@ -430,6 +460,7 @@ export const Checkboxes: StoryFn = () => (
               { id: '3', nom: 'plop 3' },
             ],
             value: [],
+            optionnel: false,
           },
         ],
       },
@@ -468,6 +499,7 @@ export const ToutesLesActivites: StoryFn = () => (
                             type: 'number',
                             description: `<b>${unite.symbole} (${unite.nom})</b> ${sf.description}`,
                             uniteId: sf.uniteId,
+                            optionnel: false,
                           }
 
                           return element

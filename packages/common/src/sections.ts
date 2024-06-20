@@ -4,6 +4,7 @@ import {
   checkboxElementValidator,
   checkboxesElementValidator,
   dateElementValidator,
+  getSections,
   numberElementValidator,
   radioElementValidator,
   selectElementWithOptionsValidator,
@@ -12,6 +13,10 @@ import {
 } from './static/titresTypes_demarchesTypes_etapesTypes/sections.js'
 import { z } from 'zod'
 import { DeepReadonly, isNotNullNorUndefined } from './typescript-tools.js'
+import { TitreTypeId } from './static/titresTypes.js'
+import { DemarcheTypeId } from './static/demarchesTypes.js'
+import { EtapeTypeId } from './static/etapesTypes.js'
+import { EtapeContenu, FlattenEtape, FlattenedContenu, RestEtapeCreation, HeritageContenu } from './etape-form.js'
 
 const dateElementWithValueValidator = dateElementValidator.extend({ value: caminoDateValidator.nullable() })
 
@@ -19,7 +24,8 @@ const textElementWithValueValidator = textElementValidator.extend({ value: z.str
 
 const urlElementWithValueValidator = urlElementValidator.extend({ value: z.string().nullable() })
 
-const numberElementWithValueValidator = numberElementValidator.extend({ value: z.number().nullable() })
+export const numberElementValueValidator = z.number().nonnegative().nullable()
+const numberElementWithValueValidator = numberElementValidator.extend({ value: numberElementValueValidator })
 type NumberElementWithValue = z.infer<typeof numberElementWithValueValidator>
 
 const radioElementWithValueValidator = radioElementValidator.extend({ value: z.boolean().nullable() })
@@ -91,4 +97,51 @@ export const valeurFind = (element: ElementWithValue): string | '–' => {
   }
 
   return element.value
+}
+
+export const simpleContenuToFlattenedContenu = (
+  titreTypeId: TitreTypeId,
+  demarcheTypeId: DemarcheTypeId,
+  etapeTypeId: EtapeTypeId,
+  contenu: EtapeContenu,
+  heritageContenu: HeritageContenu
+): FlattenedContenu => {
+  const sections = getSections(titreTypeId, demarcheTypeId, etapeTypeId)
+
+  return sections.reduce<FlattenedContenu>((accSection, section) => {
+    accSection[section.id] = section.elements.reduce<FlattenedContenu[string]>((accElement, element) => {
+      const elementHeritage = heritageContenu[section.id]?.[element.id] ?? { actif: false, etape: null }
+      const value = elementHeritage.actif ? elementHeritage.etape?.contenu[section.id]?.[element.id] ?? null : contenu?.[section.id]?.[element.id] ?? null
+      accElement[element.id] = {
+        value,
+        heritee: elementHeritage.actif,
+        etapeHeritee: isNotNullNorUndefined(elementHeritage.etape)
+          ? {
+              etapeTypeId: elementHeritage.etape.typeId,
+              date: elementHeritage.etape.date,
+              value: elementHeritage.etape.contenu[section.id]?.[element.id] ?? null,
+            }
+          : null,
+      }
+
+      return accElement
+    }, {})
+
+    return accSection
+  }, {})
+}
+
+export const flattenContenuToSimpleContenu = (flattenContenu: FlattenEtape['contenu']): RestEtapeCreation['contenu'] => {
+  return Object.keys(flattenContenu).reduce<RestEtapeCreation['contenu']>((sectionsAcc, section) => {
+    sectionsAcc = {
+      ...sectionsAcc,
+      [section]: Object.keys(flattenContenu[section]).reduce<RestEtapeCreation['contenu'][string]>((elementsAcc, element) => {
+        elementsAcc = { ...elementsAcc, [element]: flattenContenu[section][element].value }
+
+        return elementsAcc
+      }, {}),
+    }
+
+    return sectionsAcc
+  }, {})
 }

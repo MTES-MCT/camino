@@ -1,5 +1,4 @@
 # import * from 'scalars.graphql'
-# import * from 'administrations.graphql'
 # import * from 'entreprises.graphql'
 # import * from 'titres-demarches.graphql'
 # import * from 'metas.graphql'
@@ -104,10 +103,6 @@ input InputTitreCreation {
   nom: String!
   typeId: ID!
   references: [InputReference]
-}
-
-input InputId {
-  id: ID
 }
 
 input InputReference {

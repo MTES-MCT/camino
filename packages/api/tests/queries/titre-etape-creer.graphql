@@ -1,9 +1,0 @@
-mutation EtapeCreer($etape: InputEtapeCreation!) {
-  etapeCreer(etape: $etape) {
-    ...etape
-  }
-}
-
-fragment etape on Etape {
-  id
-}

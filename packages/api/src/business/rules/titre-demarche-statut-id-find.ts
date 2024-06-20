@@ -38,7 +38,7 @@ const titreDemarchesDemandesTypes: DemarcheTypeId[] = ['oct', 'pro', 'pr1', 'pr2
 
 const titreDemarchesTravauxTypes = ['aom', 'dam', 'dot'] as const satisfies readonly TravauxIds[]
 
-const titreEtapesDecisivesUnilateralesTypes: EtapeTypeId[] = ['ide', 'spp', 'dup', 'dux', 'aof', 'aco', ...titreEtapesDecisivesCommunesTypes]
+const titreEtapesDecisivesUnilateralesTypes: EtapeTypeId[] = ['ide', 'spp', 'dup', 'dux', 'aco', ...titreEtapesDecisivesCommunesTypes]
 
 const titreDemarchesUnilateralesTypes: DemarcheTypeId[] = ['ret', 'prr', 'dec']
 
@@ -83,7 +83,7 @@ const titreDemarcheUnilateralStatutIdFind = (titreDemarcheEtapes: Pick<ITitreEta
   const titreEtapesDecisivesUnilaterale = titreDemarcheEtapes.filter(titreEtape => titreEtapesDecisivesUnilateralesTypes.includes(titreEtape.typeId))
 
   // si aucune étape décisive n'est présente dans la démarche
-  // le statut est indétrminé
+  // le statut est indéterminé
   if (!titreEtapesDecisivesUnilaterale.length) return DemarchesStatutsIds.Indetermine
 
   // l'étape la plus récente
@@ -110,12 +110,6 @@ const titreDemarcheUnilateralStatutIdFind = (titreDemarcheEtapes: Pick<ITitreEta
   if (titreEtapeRecent.typeId === 'aco') {
     // - le statut de la démarche est "terminé"
     return DemarchesStatutsIds.Termine
-  }
-
-  // - le type de l’étape est l’avis de l’ONF défavorable
-  if (titreEtapeRecent.typeId === 'aof' && titreEtapeRecent.statutId === 'def') {
-    // - le statut de la démarche est "classement sans suite"
-    return DemarchesStatutsIds.ClasseSansSuite
   }
 
   // - si il y a plusieurs étapes
@@ -239,20 +233,13 @@ const titreDemarcheTravauxStatutIdFind = (titreDemarcheEtapes: Pick<ITitreEtape,
     [Travaux.SaisineAutoriteEnvironmentale]: DemarchesStatutsIds.EnInstruction,
     [Travaux.AvisAutoriteEnvironmentale]: DemarchesStatutsIds.EnInstruction,
     [Travaux.ArretePrefectoralSursis]: DemarchesStatutsIds.EnInstruction,
-    [Travaux.SaisineServiceEtat]: DemarchesStatutsIds.EnInstruction,
-    [Travaux.AvisServiceAdminLocal]: DemarchesStatutsIds.EnInstruction,
-    [Travaux.AvisDDTM]: DemarchesStatutsIds.EnInstruction,
-    [Travaux.AvisAutoriteMilitaire]: DemarchesStatutsIds.EnInstruction,
-    [Travaux.AvisARS]: DemarchesStatutsIds.EnInstruction,
-    [Travaux.AvisDRAC]: DemarchesStatutsIds.EnInstruction,
+    [Travaux.AvisDesServicesEtCommissionsConsultatives]: DemarchesStatutsIds.EnInstruction,
     [Travaux.AvisPrefetMaritime]: DemarchesStatutsIds.EnInstruction,
-    [Travaux.AvisAutresInstances]: DemarchesStatutsIds.EnInstruction,
     [Travaux.AvisRapportDirecteurREAL]: DemarchesStatutsIds.EnInstruction,
     [Travaux.TransPrescriptionsDemandeur]: DemarchesStatutsIds.EnInstruction,
     [Travaux.OuvertureEnquetePublique]: DemarchesStatutsIds.EnInstruction,
     [Travaux.MemoireReponseExploitant]: DemarchesStatutsIds.EnInstruction,
     [Travaux.ClotureEnquetePublique]: DemarchesStatutsIds.EnInstruction,
-    [Travaux.AvisCODERST]: DemarchesStatutsIds.EnInstruction,
     [Travaux.AvisPrescriptionsDemandeur]: DemarchesStatutsIds.EnInstruction,
     [Travaux.RapportDREAL]: DemarchesStatutsIds.EnInstruction,
     [Travaux.ArretePrescriptionComplementaire]: DemarchesStatutsIds.EnInstruction,

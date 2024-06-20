@@ -4,6 +4,7 @@ import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
 import { newDemarcheId, newEtapeId } from '../../database/models/_format/id-create.js'
 import { toCaminoDate } from 'camino-common/src/date.js'
 import { describe, expect, test } from 'vitest'
+import { ETAPE_IS_NOT_BROUILLON } from 'camino-common/src/etape.js'
 describe("date de fin d'une démarche d'annulation", () => {
   test.each<EtapeTypeId>(['dex', 'dux', 'dim'])("retourne la date d'une démarche d'annulation si elle n'a pas de date de fin pour une %p", typeId => {
     const titreDemarcheAnnulationEtapes: ITitreEtape[] = [
@@ -12,7 +13,7 @@ describe("date de fin d'une démarche d'annulation", () => {
         titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-ret01'),
         typeId,
         statutId: 'acc',
-        isBrouillon: false,
+        isBrouillon: ETAPE_IS_NOT_BROUILLON,
         ordre: 1,
         date: toCaminoDate('2013-05-21'),
       },
@@ -27,7 +28,7 @@ describe("date de fin d'une démarche d'annulation", () => {
         titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-ret01'),
         typeId,
         statutId: 'acc',
-        isBrouillon: false,
+        isBrouillon: ETAPE_IS_NOT_BROUILLON,
         ordre: 1,
         date: toCaminoDate('2013-05-21'),
         dateFin: toCaminoDate('2013-05-25'),
@@ -60,7 +61,7 @@ describe("date de fin d'une démarche d'annulation", () => {
         titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-ret01'),
         typeId: 'aco',
         statutId: 'fai',
-        isBrouillon: false,
+        isBrouillon: ETAPE_IS_NOT_BROUILLON,
         ordre: 1,
         date: toCaminoDate('2013-05-21'),
         dateFin: toCaminoDate('2013-05-25'),

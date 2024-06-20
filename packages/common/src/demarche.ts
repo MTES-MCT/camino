@@ -8,7 +8,7 @@ import { entrepriseIdValidator, etapeEntrepriseDocumentValidator } from './entre
 import { EtapeTypeId, etapeTypeIdFondamentaleValidator, etapeTypeIdNonFondamentaleValidator } from './static/etapesTypes.js'
 import { etapeStatutIdValidator } from './static/etapesStatuts.js'
 import { sectionWithValueValidator } from './sections.js'
-import { etapeDocumentValidator, etapeIdValidator, etapeSlugValidator } from './etape.js'
+import { etapeAvisValidator, etapeBrouillonValidator, etapeDocumentValidator, etapeIdValidator, etapeSlugValidator } from './etape.js'
 import { sdomZoneIdValidator } from './static/sdom.js'
 import { km2Validator, numberFormat } from './number.js'
 import { DeviseId, deviseIdValidator, DEVISES_IDS, Devises } from './static/devise.js'
@@ -32,7 +32,7 @@ export type DemarcheIdOrSlug = z.infer<typeof demarcheIdOrSlugValidator>
 
 const demarcheEtapeCommonValidator = z.object({
   etape_statut_id: etapeStatutIdValidator,
-  is_brouillon: z.boolean(),
+  is_brouillon: etapeBrouillonValidator,
   date: caminoDateValidator,
   id: etapeIdValidator,
   ordre: z.number(),
@@ -41,6 +41,7 @@ const demarcheEtapeCommonValidator = z.object({
   sections_with_values: z.array(sectionWithValueValidator),
   entreprises_documents: z.array(etapeEntrepriseDocumentValidator),
   etape_documents: z.array(etapeDocumentValidator),
+  avis_documents: z.array(etapeAvisValidator),
 })
 
 export type DemarcheEtapeCommon = z.infer<typeof demarcheEtapeCommonValidator>

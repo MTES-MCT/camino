@@ -41,6 +41,7 @@ import { canReadEtape } from './permissions/etapes.js'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
 import xlsx from 'xlsx'
 import { ZodTypeAny, z } from 'zod'
+import { CommuneId } from 'camino-common/src/static/communes'
 
 export const convertGeojsonPointsToGeoSystemeId = (pool: Pool) => async (req: CaminoRequest, res: CustomResponse<FeatureCollectionPoints>) => {
   const geoSystemeIdParsed = geoSystemeIdValidator.safeParse(req.params.geoSystemeId)
@@ -71,11 +72,11 @@ export const getPerimetreInfos = (pool: Pool) => async (req: CaminoRequest, res:
       res.sendStatus(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
     } else {
       try {
-        let etape: null | { demarche_id: DemarcheId; geojson4326_perimetre: MultiPolygon | null; sdom_zones: SDOMZoneId[]; etape_type_id: EtapeTypeId } = null
+        let etape: null | { demarche_id: DemarcheId; geojson4326_perimetre: MultiPolygon | null; sdom_zones: SDOMZoneId[]; etape_type_id: EtapeTypeId; communes: CommuneId[] } = null
         if (etapeIdOrSlugParsed.success) {
           const myEtape = await getEtapeById(pool, etapeIdOrSlugParsed.data)
 
-          etape = { demarche_id: myEtape.demarche_id, geojson4326_perimetre: myEtape.geojson4326_perimetre, sdom_zones: myEtape.sdom_zones ?? [], etape_type_id: myEtape.etape_type_id }
+          etape = { demarche_id: myEtape.demarche_id, geojson4326_perimetre: myEtape.geojson4326_perimetre, sdom_zones: myEtape.sdom_zones ?? [], etape_type_id: myEtape.etape_type_id, communes: [] }
         } else if (demarcheIdOrSlugParsed.success) {
           const demarche = await getDemarcheByIdOrSlug(pool, demarcheIdOrSlugParsed.data)
           const etapes = await getEtapesByDemarcheId(pool, demarche.demarche_id)
@@ -87,6 +88,7 @@ export const getPerimetreInfos = (pool: Pool) => async (req: CaminoRequest, res:
               geojson4326_perimetre: mostRecentEtapeFondamentale.geojson4326_perimetre,
               sdom_zones: mostRecentEtapeFondamentale.sdom_zones ?? [],
               etape_type_id: mostRecentEtapeFondamentale.etape_type_id,
+              communes: mostRecentEtapeFondamentale.communes.map(({ id }) => id),
             }
           }
         } else {
@@ -98,6 +100,7 @@ export const getPerimetreInfos = (pool: Pool) => async (req: CaminoRequest, res:
           res.json({
             superposition_alertes: [],
             sdomZoneIds: [],
+            communes: [],
           })
         } else {
           const demarche = await getDemarcheByIdOrSlug(pool, etape.demarche_id)
@@ -118,6 +121,7 @@ export const getPerimetreInfos = (pool: Pool) => async (req: CaminoRequest, res:
             res.json({
               superposition_alertes: await getAlertesSuperposition(etape.geojson4326_perimetre, titre.titre_type_id, titre.titre_slug, user, pool),
               sdomZoneIds: etape.sdom_zones,
+              communes: etape.communes,
             })
           } else {
             res.sendStatus(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)

@@ -14,6 +14,7 @@ exports[`construction des activités d'un titre > crée des activités 1`] = `
             "description": "<b>g (gramme)</b> contenu dans les minerais",
             "id": "auru",
             "nom": "or",
+            "optionnel": false,
             "type": "number",
             "uniteId": "mgr",
           },
@@ -21,6 +22,7 @@ exports[`construction des activités d'un titre > crée des activités 1`] = `
             "description": "<b>x 1000 t (millier de tonnes)</b> extrait par abattage net livré",
             "id": "naca",
             "nom": "sel (chlorure de sodium)",
+            "optionnel": false,
             "type": "number",
             "uniteId": "mtk",
           },
@@ -28,6 +30,7 @@ exports[`construction des activités d'un titre > crée des activités 1`] = `
             "description": "<b>x 1000 t (millier de tonnes)</b> extrait en dissolution par sondage et livré raffiné",
             "id": "nacb",
             "nom": "sel (chlorure de sodium)",
+            "optionnel": false,
             "type": "number",
             "uniteId": "mtk",
           },
@@ -35,6 +38,7 @@ exports[`construction des activités d'un titre > crée des activités 1`] = `
             "description": "<b>x 1000 t (millier de tonnes)</b> extrait en dissolution par sondage et livré en dissolution",
             "id": "nacc",
             "nom": "sel (chlorure de sodium contenu)",
+            "optionnel": false,
             "type": "number",
             "uniteId": "mtk",
           },
@@ -77,12 +81,14 @@ exports[`construction des activités d'un titre > crée des activités 2`] = `
             "description": "Masse d’or brut en sortie de mine extrait au cours du trimestre (exemple : masse sous la forme de concentré gravimétrique).",
             "id": "orBrut",
             "nom": "Or brut extrait (g)",
+            "optionnel": false,
             "type": "number",
           },
           {
             "description": "Masse en gramme de l’ensemble des produits contaminés envoyés en traitement au cours du trimestre.",
             "id": "mercure",
             "nom": "Mercure récupéré (g)",
+            "optionnel": false,
             "type": "number",
           },
           {
@@ -90,12 +96,14 @@ exports[`construction des activités d'un titre > crée des activités 2`] = `
             "description": "Volume total en litre de carburant détaxé consommé au cours du trimestre par les travaux réalisés sur le chantier.",
             "id": "carburantDetaxe",
             "nom": "Carburant détaxé (l)",
+            "optionnel": false,
             "type": "number",
           },
           {
             "description": "Volume total en litre de carburant conventionnel consommé au cours du trimestre par les travaux réalisés sur le chantier.",
             "id": "carburantConventionnel",
             "nom": "Carburant conventionnel (l)",
+            "optionnel": false,
             "type": "number",
           },
           {
@@ -103,6 +111,7 @@ exports[`construction des activités d'un titre > crée des activités 2`] = `
             "description": "Nombre moyen de pompes actives au cours du trimestre utilisées sur le chantier (pompe à gravier, pompe de relevage…).",
             "id": "pompes",
             "nom": "Pompes actives",
+            "optionnel": false,
             "type": "number",
           },
           {
@@ -110,12 +119,14 @@ exports[`construction des activités d'un titre > crée des activités 2`] = `
             "description": "Nombre moyen de pelles actives au cours du trimestre utilisées sur le chantier (aménagement, exploitation, réhabilitation).",
             "id": "pelles",
             "nom": "Pelles actives",
+            "optionnel": false,
             "type": "number",
           },
           {
             "description": "Nombre moyen de salariés sur le chantier au cours du trimestre.",
             "id": "effectifs",
             "nom": "Effectifs",
+            "optionnel": false,
             "type": "number",
           },
           {
@@ -123,6 +134,7 @@ exports[`construction des activités d'un titre > crée des activités 2`] = `
             "description": "Montant en euros des investissements consentis au cours du trimestre listés à l’<a href="https://www.legifrance.gouv.fr/affichCodeArticle.do?idArticle=LEGIARTI000021850940&cidTexte=LEGITEXT000006069569" target="_blank" title="Page de l’article - site externe" rel="noopener noreferrer">article 318 C de l’annexe II du code général des impôts</a>. Afin de bénéficier des déductions fiscales afférentes, les justificatifs attestant de la réalisation effective des investissements sont susceptibles de vous êtres demandés par l’administration.",
             "id": "environnement",
             "nom": "Dépenses relatives à la protection de l’environnement (euros)",
+            "optionnel": false,
             "type": "number",
           },
         ],
@@ -135,6 +147,7 @@ exports[`construction des activités d'un titre > crée des activités 2`] = `
             "dateDebut": "2018-01-01",
             "id": "1",
             "nom": "Janvier",
+            "optionnel": false,
             "options": [
               {
                 "id": "nonDebutes",
@@ -164,6 +177,7 @@ exports[`construction des activités d'un titre > crée des activités 2`] = `
             "dateDebut": "2018-01-01",
             "id": "2",
             "nom": "Février",
+            "optionnel": false,
             "options": [
               {
                 "id": "nonDebutes",
@@ -193,6 +207,7 @@ exports[`construction des activités d'un titre > crée des activités 2`] = `
             "dateDebut": "2018-01-01",
             "id": "3",
             "nom": "Mars",
+            "optionnel": false,
             "options": [
               {
                 "id": "nonDebutes",
@@ -252,12 +267,14 @@ exports[`construction des activités d'un titre > crée des activités 2`] = `
             "description": "Masse d’or brut en sortie de mine extrait au cours du trimestre (exemple : masse sous la forme de concentré gravimétrique).",
             "id": "orBrut",
             "nom": "Or brut extrait (g)",
+            "optionnel": false,
             "type": "number",
           },
           {
             "description": "Masse en gramme de l’ensemble des produits contaminés envoyés en traitement au cours du trimestre.",
             "id": "mercure",
             "nom": "Mercure récupéré (g)",
+            "optionnel": false,
             "type": "number",
           },
           {
@@ -265,12 +282,14 @@ exports[`construction des activités d'un titre > crée des activités 2`] = `
             "description": "Volume total en litre de carburant détaxé consommé au cours du trimestre par les travaux réalisés sur le chantier.",
             "id": "carburantDetaxe",
             "nom": "Carburant détaxé (l)",
+            "optionnel": false,
             "type": "number",
           },
           {
             "description": "Volume total en litre de carburant conventionnel consommé au cours du trimestre par les travaux réalisés sur le chantier.",
             "id": "carburantConventionnel",
             "nom": "Carburant conventionnel (l)",
+            "optionnel": false,
             "type": "number",
           },
           {
@@ -278,6 +297,7 @@ exports[`construction des activités d'un titre > crée des activités 2`] = `
             "description": "Nombre moyen de pompes actives au cours du trimestre utilisées sur le chantier (pompe à gravier, pompe de relevage…).",
             "id": "pompes",
             "nom": "Pompes actives",
+            "optionnel": false,
             "type": "number",
           },
           {
@@ -285,12 +305,14 @@ exports[`construction des activités d'un titre > crée des activités 2`] = `
             "description": "Nombre moyen de pelles actives au cours du trimestre utilisées sur le chantier (aménagement, exploitation, réhabilitation).",
             "id": "pelles",
             "nom": "Pelles actives",
+            "optionnel": false,
             "type": "number",
           },
           {
             "description": "Nombre moyen de salariés sur le chantier au cours du trimestre.",
             "id": "effectifs",
             "nom": "Effectifs",
+            "optionnel": false,
             "type": "number",
           },
           {
@@ -298,6 +320,7 @@ exports[`construction des activités d'un titre > crée des activités 2`] = `
             "description": "Montant en euros des investissements consentis au cours du trimestre listés à l’<a href="https://www.legifrance.gouv.fr/affichCodeArticle.do?idArticle=LEGIARTI000021850940&cidTexte=LEGITEXT000006069569" target="_blank" title="Page de l’article - site externe" rel="noopener noreferrer">article 318 C de l’annexe II du code général des impôts</a>. Afin de bénéficier des déductions fiscales afférentes, les justificatifs attestant de la réalisation effective des investissements sont susceptibles de vous êtres demandés par l’administration.",
             "id": "environnement",
             "nom": "Dépenses relatives à la protection de l’environnement (euros)",
+            "optionnel": false,
             "type": "number",
           },
         ],
@@ -310,6 +333,7 @@ exports[`construction des activités d'un titre > crée des activités 2`] = `
             "dateDebut": "2018-01-01",
             "id": "4",
             "nom": "Avril",
+            "optionnel": false,
             "options": [
               {
                 "id": "nonDebutes",
@@ -339,6 +363,7 @@ exports[`construction des activités d'un titre > crée des activités 2`] = `
             "dateDebut": "2018-01-01",
             "id": "5",
             "nom": "Mai",
+            "optionnel": false,
             "options": [
               {
                 "id": "nonDebutes",
@@ -368,6 +393,7 @@ exports[`construction des activités d'un titre > crée des activités 2`] = `
             "dateDebut": "2018-01-01",
             "id": "6",
             "nom": "Juin",
+            "optionnel": false,
             "options": [
               {
                 "id": "nonDebutes",
@@ -427,12 +453,14 @@ exports[`construction des activités d'un titre > crée des activités 2`] = `
             "description": "Masse d’or brut en sortie de mine extrait au cours du trimestre (exemple : masse sous la forme de concentré gravimétrique).",
             "id": "orBrut",
             "nom": "Or brut extrait (g)",
+            "optionnel": false,
             "type": "number",
           },
           {
             "description": "Masse en gramme de l’ensemble des produits contaminés envoyés en traitement au cours du trimestre.",
             "id": "mercure",
             "nom": "Mercure récupéré (g)",
+            "optionnel": false,
             "type": "number",
           },
           {
@@ -440,12 +468,14 @@ exports[`construction des activités d'un titre > crée des activités 2`] = `
             "description": "Volume total en litre de carburant détaxé consommé au cours du trimestre par les travaux réalisés sur le chantier.",
             "id": "carburantDetaxe",
             "nom": "Carburant détaxé (l)",
+            "optionnel": false,
             "type": "number",
           },
           {
             "description": "Volume total en litre de carburant conventionnel consommé au cours du trimestre par les travaux réalisés sur le chantier.",
             "id": "carburantConventionnel",
             "nom": "Carburant conventionnel (l)",
+            "optionnel": false,
             "type": "number",
           },
           {
@@ -453,6 +483,7 @@ exports[`construction des activités d'un titre > crée des activités 2`] = `
             "description": "Nombre moyen de pompes actives au cours du trimestre utilisées sur le chantier (pompe à gravier, pompe de relevage…).",
             "id": "pompes",
             "nom": "Pompes actives",
+            "optionnel": false,
             "type": "number",
           },
           {
@@ -460,12 +491,14 @@ exports[`construction des activités d'un titre > crée des activités 2`] = `
             "description": "Nombre moyen de pelles actives au cours du trimestre utilisées sur le chantier (aménagement, exploitation, réhabilitation).",
             "id": "pelles",
             "nom": "Pelles actives",
+            "optionnel": false,
             "type": "number",
           },
           {
             "description": "Nombre moyen de salariés sur le chantier au cours du trimestre.",
             "id": "effectifs",
             "nom": "Effectifs",
+            "optionnel": false,
             "type": "number",
           },
           {
@@ -473,6 +506,7 @@ exports[`construction des activités d'un titre > crée des activités 2`] = `
             "description": "Montant en euros des investissements consentis au cours du trimestre listés à l’<a href="https://www.legifrance.gouv.fr/affichCodeArticle.do?idArticle=LEGIARTI000021850940&cidTexte=LEGITEXT000006069569" target="_blank" title="Page de l’article - site externe" rel="noopener noreferrer">article 318 C de l’annexe II du code général des impôts</a>. Afin de bénéficier des déductions fiscales afférentes, les justificatifs attestant de la réalisation effective des investissements sont susceptibles de vous êtres demandés par l’administration.",
             "id": "environnement",
             "nom": "Dépenses relatives à la protection de l’environnement (euros)",
+            "optionnel": false,
             "type": "number",
           },
         ],
@@ -485,6 +519,7 @@ exports[`construction des activités d'un titre > crée des activités 2`] = `
             "dateDebut": "2018-01-01",
             "id": "7",
             "nom": "Juillet",
+            "optionnel": false,
             "options": [
               {
                 "id": "nonDebutes",
@@ -514,6 +549,7 @@ exports[`construction des activités d'un titre > crée des activités 2`] = `
             "dateDebut": "2018-01-01",
             "id": "8",
             "nom": "Août",
+            "optionnel": false,
             "options": [
               {
                 "id": "nonDebutes",
@@ -543,6 +579,7 @@ exports[`construction des activités d'un titre > crée des activités 2`] = `
             "dateDebut": "2018-01-01",
             "id": "9",
             "nom": "Septembre",
+            "optionnel": false,
             "options": [
               {
                 "id": "nonDebutes",
@@ -602,12 +639,14 @@ exports[`construction des activités d'un titre > crée des activités 2`] = `
             "description": "Masse d’or brut en sortie de mine extrait au cours du trimestre (exemple : masse sous la forme de concentré gravimétrique).",
             "id": "orBrut",
             "nom": "Or brut extrait (g)",
+            "optionnel": false,
             "type": "number",
           },
           {
             "description": "Masse en gramme de l’ensemble des produits contaminés envoyés en traitement au cours du trimestre.",
             "id": "mercure",
             "nom": "Mercure récupéré (g)",
+            "optionnel": false,
             "type": "number",
           },
           {
@@ -615,12 +654,14 @@ exports[`construction des activités d'un titre > crée des activités 2`] = `
             "description": "Volume total en litre de carburant détaxé consommé au cours du trimestre par les travaux réalisés sur le chantier.",
             "id": "carburantDetaxe",
             "nom": "Carburant détaxé (l)",
+            "optionnel": false,
             "type": "number",
           },
           {
             "description": "Volume total en litre de carburant conventionnel consommé au cours du trimestre par les travaux réalisés sur le chantier.",
             "id": "carburantConventionnel",
             "nom": "Carburant conventionnel (l)",
+            "optionnel": false,
             "type": "number",
           },
           {
@@ -628,6 +669,7 @@ exports[`construction des activités d'un titre > crée des activités 2`] = `
             "description": "Nombre moyen de pompes actives au cours du trimestre utilisées sur le chantier (pompe à gravier, pompe de relevage…).",
             "id": "pompes",
             "nom": "Pompes actives",
+            "optionnel": false,
             "type": "number",
           },
           {
@@ -635,12 +677,14 @@ exports[`construction des activités d'un titre > crée des activités 2`] = `
             "description": "Nombre moyen de pelles actives au cours du trimestre utilisées sur le chantier (aménagement, exploitation, réhabilitation).",
             "id": "pelles",
             "nom": "Pelles actives",
+            "optionnel": false,
             "type": "number",
           },
           {
             "description": "Nombre moyen de salariés sur le chantier au cours du trimestre.",
             "id": "effectifs",
             "nom": "Effectifs",
+            "optionnel": false,
             "type": "number",
           },
           {
@@ -648,6 +692,7 @@ exports[`construction des activités d'un titre > crée des activités 2`] = `
             "description": "Montant en euros des investissements consentis au cours du trimestre listés à l’<a href="https://www.legifrance.gouv.fr/affichCodeArticle.do?idArticle=LEGIARTI000021850940&cidTexte=LEGITEXT000006069569" target="_blank" title="Page de l’article - site externe" rel="noopener noreferrer">article 318 C de l’annexe II du code général des impôts</a>. Afin de bénéficier des déductions fiscales afférentes, les justificatifs attestant de la réalisation effective des investissements sont susceptibles de vous êtres demandés par l’administration.",
             "id": "environnement",
             "nom": "Dépenses relatives à la protection de l’environnement (euros)",
+            "optionnel": false,
             "type": "number",
           },
         ],
@@ -660,6 +705,7 @@ exports[`construction des activités d'un titre > crée des activités 2`] = `
             "dateDebut": "2018-01-01",
             "id": "10",
             "nom": "Octobre",
+            "optionnel": false,
             "options": [
               {
                 "id": "nonDebutes",
@@ -689,6 +735,7 @@ exports[`construction des activités d'un titre > crée des activités 2`] = `
             "dateDebut": "2018-01-01",
             "id": "11",
             "nom": "Novembre",
+            "optionnel": false,
             "options": [
               {
                 "id": "nonDebutes",
@@ -718,6 +765,7 @@ exports[`construction des activités d'un titre > crée des activités 2`] = `
             "dateDebut": "2018-01-01",
             "id": "12",
             "nom": "Décembre",
+            "optionnel": false,
             "options": [
               {
                 "id": "nonDebutes",

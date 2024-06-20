@@ -1,6 +1,7 @@
 import {
   DocumentComplementaireAslEtapeDocumentModification,
   DocumentComplementaireDaeEtapeDocumentModification,
+  EtapeBrouillon,
   EtapeDocument,
   EtapeDocumentModification,
   EtapeId,
@@ -37,7 +38,7 @@ interface Props {
     demarcheTypeId: DemarcheTypeId
     etapeTypeId: EtapeTypeId
   }
-  isBrouillon: boolean
+  isBrouillon: EtapeBrouillon
   sdomZoneIds: DeepReadonly<SDOMZoneId[]>
   completeUpdate: (
     etapeDocuments: (EtapeDocument | TempEtapeDocument)[],
@@ -219,6 +220,10 @@ const EtapeDocumentsLoaded = defineComponent<EtapeDocumentsLoadedProps>(props =>
   }
   const removeDocument = (documentIndex: number) => {
     etapeDocuments.value.splice(documentIndex, 1)
+    // On recalcule les index
+    etapeDocuments.value.forEach((a, index) => {
+      a.index = index
+    })
   }
 
   const getNom = (documentTypeId: DocumentTypeId) => {
@@ -291,7 +296,7 @@ const EtapeDocumentsLoaded = defineComponent<EtapeDocumentsLoadedProps>(props =>
 type PropsTable = {
   caption: string
   documents: ((EtapeDocument | TempEtapeDocument) & { index: number | 'asl' | 'dae' })[]
-  isBrouillon: boolean
+  isBrouillon: EtapeBrouillon
   emptyRequiredDocuments: DocumentTypeId[]
   getNom: (documentTypeId: DocumentTypeId) => string
   add: (documentTypeId: DocumentTypeId) => void

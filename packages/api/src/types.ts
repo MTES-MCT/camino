@@ -22,53 +22,47 @@ import { ActivitesTypesId } from 'camino-common/src/static/activitesTypes.js'
 import { CommuneId } from 'camino-common/src/static/communes.js'
 import { ForetId } from 'camino-common/src/static/forets.js'
 import { TitreId, TitreSlug } from 'camino-common/src/validators/titres.js'
-import { EtapeId, EtapeSlug } from 'camino-common/src/etape'
+import { EtapeBrouillon, EtapeId, EtapeSlug } from 'camino-common/src/etape'
 import { ActiviteId } from 'camino-common/src/activite.js'
 import { FeatureCollectionForages, FeatureCollectionPoints, FeatureMultiPolygon, GeojsonPoint, MultiPolygon } from 'camino-common/src/perimetre.js'
 import { EtapeHeritageProps } from 'camino-common/src/heritage'
 import { GeoSystemeId } from 'camino-common/src/static/geoSystemes'
 import { ElementWithValue } from 'camino-common/src/sections'
+import { KM2 } from 'camino-common/src/number'
 
-enum TitreEtapesTravauxTypes {
-  DemandeAutorisationOuverture = 'wfa',
-  DeclarationOuverture = 'wfo',
-  DeclarationArret = 'wfd',
-  DepotDemande = 'wdd',
-  DemandeComplements = 'wdc',
-  ReceptionComplements = 'wrc',
-  Recevabilite = 'wre',
-  AvisReception = 'war',
-  SaisineAutoriteEnvironmentale = 'wse',
-  AvisAutoriteEnvironmentale = 'wae',
-  SaisineServiceEtat = 'wss',
-  AvisServiceAdminLocal = 'wal',
-  AvisDDTM = 'wad',
-  AvisAutoriteMilitaire = 'wam',
-  AvisARS = 'was',
-  AvisDRAC = 'wac',
-  AvisPrefetMaritime = 'wap',
-  AvisAutresInstances = 'wai',
-  ArretePrefectoralSursis = 'wps',
-  MemoireReponseExploitant = 'wmm',
-  OuvertureEnquetePublique = 'woe',
-  ClotureEnquetePublique = 'wce',
-  RapportDREAL = 'wrd',
-  AvisRapportDirecteurREAL = 'wrl',
-  TransPrescriptionsDemandeur = 'wtp',
-  AvisCODERST = 'wat',
-  AvisPrescriptionsDemandeur = 'wau',
-  PubliDecisionRecueilActesAdmin = 'wpa',
-  DonneActeDeclaration = 'wda',
-  ArretePrefectDonneActe1 = 'wpp',
-  ArretePrefectDonneActe2 = 'wpo',
-  ArretePrescriptionComplementaire = 'wpc',
-  ArreteOuvertureTravauxMiniers = 'wao',
-  MemoireFinTravaux = 'wmt',
-  Recolement = 'wrt',
-  Abandon = 'wab',
-  DecisionAdmin = 'wdm',
-  PorterAConnaissance = 'wpb',
-}
+const TitreEtapesTravauxTypes = {
+  AvisDesServicesEtCommissionsConsultatives: 'asc',
+  DemandeAutorisationOuverture: 'wfa',
+  DeclarationOuverture: 'wfo',
+  DeclarationArret: 'wfd',
+  DepotDemande: 'wdd',
+  DemandeComplements: 'wdc',
+  ReceptionComplements: 'wrc',
+  Recevabilite: 'wre',
+  AvisReception: 'war',
+  SaisineAutoriteEnvironmentale: 'wse',
+  AvisAutoriteEnvironmentale: 'wae',
+  AvisPrefetMaritime: 'wap',
+  ArretePrefectoralSursis: 'wps',
+  MemoireReponseExploitant: 'wmm',
+  OuvertureEnquetePublique: 'woe',
+  ClotureEnquetePublique: 'wce',
+  RapportDREAL: 'wrd',
+  AvisRapportDirecteurREAL: 'wrl',
+  TransPrescriptionsDemandeur: 'wtp',
+  AvisPrescriptionsDemandeur: 'wau',
+  PubliDecisionRecueilActesAdmin: 'wpa',
+  DonneActeDeclaration: 'wda',
+  ArretePrefectDonneActe1: 'wpp',
+  ArretePrefectDonneActe2: 'wpo',
+  ArretePrescriptionComplementaire: 'wpc',
+  ArreteOuvertureTravauxMiniers: 'wao',
+  MemoireFinTravaux: 'wmt',
+  Recolement: 'wrt',
+  Abandon: 'wab',
+  DecisionAdmin: 'wdm',
+  PorterAConnaissance: 'wpb',
+} as const satisfies Record<string, EtapeTypeId>
 
 export interface IFields {
   [key: string]: IFields
@@ -239,14 +233,14 @@ export interface ITitreEtapePerimetre {
   geojsonOrigineGeoSystemeId: GeoSystemeId | null | undefined
   geojson4326Forages: FeatureCollectionForages | null | undefined
   geojsonOrigineForages: FeatureCollectionForages | null | undefined
-  surface: number | null | undefined
+  surface: KM2 | null | undefined
 }
 type ITitreEtape = {
   id: EtapeId
   slug?: EtapeSlug
   typeId: EtapeTypeId
   statutId: EtapeStatutId
-  isBrouillon: boolean
+  isBrouillon: EtapeBrouillon
   ordre?: number | null
   date: CaminoDate
   duree?: number | null
@@ -260,6 +254,7 @@ type ITitreEtape = {
   amodiataireIds?: EntrepriseId[] | null
   administrationsLocales?: AdministrationId[] | null
   entrepriseDocumentIds?: EntrepriseDocumentId[] | null
+  etapeDocuments?: unknown[]
   communes?: ICommune[] | null
   forets?: ForetId[] | null
   sdomZones?: SDOMZoneId[] | null

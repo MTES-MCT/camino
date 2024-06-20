@@ -136,6 +136,14 @@ export const TitreDemarche = defineComponent<Props>(props => {
     )
   })
 
+  const orderedEtapes = computed(() => {
+    return isNotNullNorUndefined(demarche.value)
+      ? [...demarche.value.etapes].sort((a, b) => {
+          return b.ordre - a.ordre
+        })
+      : []
+  })
+
   return () => (
     <>
       {demarche.value !== null ? (
@@ -212,32 +220,31 @@ export const TitreDemarche = defineComponent<Props>(props => {
               ) : null}
             </div>
             <div class="fr-mt-3w">
-              {[...demarche.value.etapes]
-                .sort((a, b) => b.ordre - a.ordre)
-                .map(etape => (
-                  <>
-                    {demarche.value !== null ? (
-                      <div class="fr-pb-2w">
-                        <DemarcheEtape
-                          etape={etape}
-                          router={props.router}
-                          user={props.user}
-                          entreprises={props.entreprises}
-                          titre={{ typeId: props.titre.titre_type_id, titreStatutId: props.titre.titre_statut_id, slug: props.titre.slug, nom: props.titre.nom }}
-                          demarche={{
-                            administrationsLocales: getAdministrationsLocales(perimetre.value?.communes.map(({ id }) => id) ?? [], perimetre.value?.secteurs_maritimes ?? []),
-                            demarche_type_id: demarche.value.demarche_type_id,
-                            titulaireIds: titulaires.value ?? [],
-                            sdom_zones: perimetre.value?.sdom_zones ?? [],
-                            etapes: demarche.value.etapes,
-                          }}
-                          apiClient={props.apiClient}
-                          initTab={props.initTab}
-                        />
-                      </div>
-                    ) : null}
-                  </>
-                ))}
+              {orderedEtapes.value.map(etape => (
+                <>
+                  {demarche.value !== null ? (
+                    <div class="fr-pb-2w">
+                      <DemarcheEtape
+                        etape={etape}
+                        router={props.router}
+                        user={props.user}
+                        entreprises={props.entreprises}
+                        titre={{ typeId: props.titre.titre_type_id, titreStatutId: props.titre.titre_statut_id, slug: props.titre.slug, nom: props.titre.nom }}
+                        demarche={{
+                          administrationsLocales: getAdministrationsLocales(perimetre.value?.communes.map(({ id }) => id) ?? [], perimetre.value?.secteurs_maritimes ?? []),
+                          demarche_type_id: demarche.value.demarche_type_id,
+                          titulaireIds: titulaires.value ?? [],
+                          sdom_zones: perimetre.value?.sdom_zones ?? [],
+                          communes: perimetre.value?.communes?.map(({ id }) => id) ?? [],
+                          etapes: demarche.value.etapes,
+                        }}
+                        apiClient={props.apiClient}
+                        initTab={props.initTab}
+                      />
+                    </div>
+                  ) : null}
+                </>
+              ))}
             </div>
           </div>
           {addDemarchePopup.value ? (

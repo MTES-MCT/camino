@@ -6,6 +6,7 @@ import TitresEtapes from '../models/titres-etapes.js'
 import { titreArchive } from './titres.js'
 import { toCaminoDate } from 'camino-common/src/date.js'
 import { beforeAll, expect, afterAll, test, describe, vi } from 'vitest'
+import { ETAPE_IS_BROUILLON } from 'camino-common/src/etape.js'
 
 console.info = vi.fn()
 console.error = vi.fn()
@@ -39,7 +40,7 @@ describe('teste les requêtes sur les titres', () => {
             titreDemarcheId: demarche.id,
             typeId: 'mfr',
             statutId: 'fai',
-            isBrouillon: true,
+            isBrouillon: ETAPE_IS_BROUILLON,
             date: toCaminoDate('2020-02-02'),
           })
           expect(etape.archive).toBeFalsy()

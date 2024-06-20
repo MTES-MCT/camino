@@ -2,12 +2,13 @@ import { describe, expect, test } from 'vitest'
 import { TitrePropTitreEtapeFindDemarcheEtape, getMostRecentValuePropFromEtapeFondamentaleValide } from './titres'
 import { toCaminoDate } from './date'
 import { entrepriseIdValidator } from './entreprise'
+import { ETAPE_IS_BROUILLON, ETAPE_IS_NOT_BROUILLON } from './etape'
 describe('getMostRecentValuePropFromEtapeFondamentaleValide', () => {
   test("retourne le titulaire de la demande même si elle est en brouillon, si elle est l'unique étape", () => {
     const asl: TitrePropTitreEtapeFindDemarcheEtape = {
       etape_type_id: 'asl',
       etape_statut_id: 'fai',
-      is_brouillon: false,
+      is_brouillon: ETAPE_IS_NOT_BROUILLON,
       ordre: 1,
     }
     const mfr: TitrePropTitreEtapeFindDemarcheEtape = {
@@ -22,7 +23,7 @@ describe('getMostRecentValuePropFromEtapeFondamentaleValide', () => {
         perimetre: null,
       },
       etape_statut_id: 'fai',
-      is_brouillon: true,
+      is_brouillon: ETAPE_IS_BROUILLON,
       ordre: 1,
     }
 
@@ -48,7 +49,7 @@ describe('getMostRecentValuePropFromEtapeFondamentaleValide', () => {
         perimetre: null,
       },
       etape_statut_id: 'acc',
-      is_brouillon: false,
+      is_brouillon: ETAPE_IS_NOT_BROUILLON,
       ordre: 2,
     }
 
@@ -64,7 +65,7 @@ describe('getMostRecentValuePropFromEtapeFondamentaleValide', () => {
         perimetre: null,
       },
       etape_statut_id: 'acc',
-      is_brouillon: false,
+      is_brouillon: ETAPE_IS_NOT_BROUILLON,
       ordre: 1,
     }
 

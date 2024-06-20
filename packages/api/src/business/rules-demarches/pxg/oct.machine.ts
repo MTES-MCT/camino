@@ -12,17 +12,7 @@ type PXGOctXStateEvent =
   | { type: 'FAIRE_RECEVABILITE_DEMANDE_DEFAVORABLE' }
   | { type: 'RECEVOIR_MODIFICATION_DE_LA_DEMANDE' }
   | { type: 'RECEVOIR_COMPLEMENTS_POUR_RECEVABILITE' }
-  | { type: 'FAIRE_SAISINES_DES_SERVICES' }
-  | { type: 'RENDRE_AVIS_DGTM_MNBST' }
-  | { type: 'RENDRE_AVIS_DGTMAUCL' }
-  | {
-      type: 'RENDRE_AVIS_DIRECTION_ENTREPRISE_CONCURRENCE_CONSOMMATION_TRAVAIL_EMPLOI'
-    }
-  | { type: 'RENDRE_AVIS_DIRECTION_ALIMENTATION_AGRICULTURE_FORET' }
-  | { type: 'RENDRE_AVIS_DIRECTION_REGIONALE_AFFAIRES_CULTURELLES' }
-  | { type: 'RENDRE_AVIS_DIRECTION_REGIONALE_FINANCES_PUBLIQUES' }
-  | { type: 'RENDRE_AVIS_CAISSE_GENERALE_DE_SECURITE_SOCIALE' }
-  | { type: 'RENDRE_AVIS_AGENCE_REGIONALE_SANTE' }
+  | { type: 'RENDRE_AVIS_SERVICES_ET_COMMISSIONS_CONSULTATIVES' }
   | { type: 'RENDRE_AVIS_DREAL' }
   | { type: 'FAIRE_SAISINE_DES_COLLECTIVITES_LOCALES' }
   | { type: 'RENDRE_CONSULTATION_DES_CONSEILS_MUNICIPAUX' }
@@ -33,7 +23,6 @@ type PXGOctXStateEvent =
   | { type: 'CLOTURER_ENQUETE_PUBLIQUE' }
   | { type: 'TRANSMETTRE_PROJET_DE_PRESCRIPTIONS_AU_DEMANDEUR' }
   | { type: 'RENDRE_AVIS_DU_DEMANDEUR_SUR_LES_PRESCRIPTIONS_PROPOSEES' }
-  | { type: 'RENDRE_PASSAGE_CODERST' }
   | { type: 'RENDRE_DECISION_ADMINISTRATION_FAVORABLE' }
   | { type: 'RENDRE_DECISION_ADMINISTRATION_DEFAVORABLE' }
   | { type: 'NOTIFICATION_DU_DEMANDEUR' }
@@ -73,15 +62,7 @@ const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
   DEMANDER_COMPLEMENTS_POUR_RECEVABILITE: { db: ETES.demandeDeComplements_RecevabiliteDeLaDemande_, mainStep: false },
   RECEVOIR_MODIFICATION_DE_LA_DEMANDE: { db: ETES.modificationDeLaDemande, mainStep: true },
   RECEVOIR_COMPLEMENTS_POUR_RECEVABILITE: { db: ETES.receptionDeComplements_RecevabiliteDeLaDemande_, mainStep: false },
-  FAIRE_SAISINES_DES_SERVICES: { db: ETES.saisineDesServices, mainStep: true },
-  RENDRE_AVIS_DGTM_MNBST: { db: ETES.avisDGTMServiceMilieuxNaturelsBiodiversiteSitesEtPaysages_MNBST_, mainStep: false },
-  RENDRE_AVIS_DGTMAUCL: { db: ETES.avisDGTMServiceAmenagementUrbanismeConstructionLogement_AUCL_, mainStep: false },
-  RENDRE_AVIS_DIRECTION_ENTREPRISE_CONCURRENCE_CONSOMMATION_TRAVAIL_EMPLOI: { db: ETES.avisDeLaDirectionDesEntreprisesDeLaConcurrenceDeLaConsommationDuTravailEtDeLemploi, mainStep: false },
-  RENDRE_AVIS_DIRECTION_ALIMENTATION_AGRICULTURE_FORET: { db: ETES.avisDeLaDirectionDalimentationDeLagricultureEtDeLaForet, mainStep: false },
-  RENDRE_AVIS_DIRECTION_REGIONALE_AFFAIRES_CULTURELLES: { db: ETES.avisDeDirectionRegionaleDesAffairesCulturelles, mainStep: false },
-  RENDRE_AVIS_AGENCE_REGIONALE_SANTE: { db: ETES.avisDeLagenceRegionaleDeSante, mainStep: false },
-  RENDRE_AVIS_DIRECTION_REGIONALE_FINANCES_PUBLIQUES: { db: ETES.avisDeLaDirectionRegionaleDesFinancesPubliques, mainStep: false },
-  RENDRE_AVIS_CAISSE_GENERALE_DE_SECURITE_SOCIALE: { db: ETES.avisDeLaCaisseGeneraleDeSecuriteSociale, mainStep: false },
+  RENDRE_AVIS_SERVICES_ET_COMMISSIONS_CONSULTATIVES: { db: ETES.avisDesServicesEtCommissionsConsultatives, mainStep: true },
   RENDRE_AVIS_DREAL: { db: ETES.avisEtRapportDuDirecteurRegionalChargeDeLenvironnementDeLamenagementEtDuLogement, mainStep: true },
   FAIRE_SAISINE_DES_COLLECTIVITES_LOCALES: { db: ETES.saisineDesCollectivitesLocales, mainStep: true },
   RENDRE_CONSULTATION_DES_CONSEILS_MUNICIPAUX: { db: ETES.avisDunMaire, mainStep: false },
@@ -92,7 +73,6 @@ const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
   CLOTURER_ENQUETE_PUBLIQUE: { db: ETES.clotureDeLenquetePublique, mainStep: false },
   TRANSMETTRE_PROJET_DE_PRESCRIPTIONS_AU_DEMANDEUR: { db: ETES.transmissionDuProjetDePrescriptionsAuDemandeur, mainStep: true },
   RENDRE_AVIS_DU_DEMANDEUR_SUR_LES_PRESCRIPTIONS_PROPOSEES: { db: ETES.avisDuDemandeurSurLesPrescriptionsProposees, mainStep: true },
-  RENDRE_PASSAGE_CODERST: { db: ETES.avisDuConseilDepartementalDeLenvironnementEtDesRisquesSanitairesEtTechnologiques_Coderst_, mainStep: false },
   NOTIFICATION_DU_DEMANDEUR: { db: ETES.notificationAuDemandeur, mainStep: true },
   PUBLIER_DECISION_RECUEIL_DES_ACTES_ADMINISTRATIFS: { db: ETES.publicationDeDecisionAuRecueilDesActesAdministratifs, mainStep: true },
   FAIRE_DESISTEMENT_DEMANDEUR: { db: ETES.desistementDuDemandeur, mainStep: false },
@@ -130,7 +110,7 @@ export class PxgOctMachine extends CaminoMachine<PxgContext, PXGOctXStateEvent> 
 }
 
 interface PxgContext extends CaminoCommonContext {
-  saisineDesServicesFaite: boolean
+  avisDesServicesEtCommissionsConsultativesFaite: boolean
   saisineDesCollectivitesLocalesFaites: boolean
   saisineAutoriteEnvironnementaleFaite: boolean
   avisAutoriteEnvironnementaleFaite: boolean
@@ -139,7 +119,7 @@ interface PxgContext extends CaminoCommonContext {
 }
 
 const peutRendreAvisDREAL = ({ context }: { context: PxgContext }): boolean => {
-  return context.saisineDesServicesFaite && context.saisineDesCollectivitesLocalesFaites && context.avisAutoriteEnvironnementaleFaite
+  return context.avisDesServicesEtCommissionsConsultativesFaite && context.saisineDesCollectivitesLocalesFaites && context.avisAutoriteEnvironnementaleFaite
 }
 
 const pxgOctMachine = createMachine({
@@ -149,7 +129,7 @@ const pxgOctMachine = createMachine({
   context: {
     demarcheStatut: DemarchesStatutsIds.EnConstruction,
     visibilite: 'confidentielle',
-    saisineDesServicesFaite: false,
+    avisDesServicesEtCommissionsConsultativesFaite: false,
     saisineDesCollectivitesLocalesFaites: false,
     saisineAutoriteEnvironnementaleFaite: false,
     avisAutoriteEnvironnementaleFaite: false,
@@ -262,15 +242,15 @@ const pxgOctMachine = createMachine({
             },
           },
         },
-        saisineDesServicesMachine: {
-          initial: 'saisineDesServicesAFaire',
+        avisDesServicesEtCommissionsConsultativesMachine: {
+          initial: 'avisDesServicesEtCommissionsConsultativesAFaire',
           states: {
-            saisineDesServicesAFaire: {
+            avisDesServicesEtCommissionsConsultativesAFaire: {
               on: {
-                FAIRE_SAISINES_DES_SERVICES: {
-                  target: 'avisDesServicesARendre',
+                RENDRE_AVIS_SERVICES_ET_COMMISSIONS_CONSULTATIVES: {
+                  target: 'avisDesServicesEtCommissionsConsultativesRendu',
                   actions: assign({
-                    saisineDesServicesFaite: true,
+                    avisDesServicesEtCommissionsConsultativesFaite: true,
                     demarcheStatut: ({ context }) => {
                       return context.saisineDesCollectivitesLocalesFaites && context.saisineAutoriteEnvironnementaleFaite ? DemarchesStatutsIds.EnInstruction : context.demarcheStatut
                     },
@@ -278,100 +258,8 @@ const pxgOctMachine = createMachine({
                 },
               },
             },
-            avisDesServicesARendre: {
-              type: 'parallel',
-              states: {
-                avisDgtmMNBSTMachine: {
-                  initial: 'avisDgtmMNBSTARendre',
-                  states: {
-                    avisDgtmMNBSTARendre: {
-                      on: { RENDRE_AVIS_DGTM_MNBST: 'avisDgtmMNBSTRendu' },
-                    },
-                    avisDgtmMNBSTRendu: { type: 'final' },
-                  },
-                },
-                avisDGTMAUCLMachine: {
-                  initial: 'avisDGTMAUCLARendre',
-                  states: {
-                    avisDGTMAUCLARendre: {
-                      on: { RENDRE_AVIS_DGTMAUCL: 'avisDGTMAUCLRendu' },
-                    },
-                    avisDGTMAUCLRendu: { type: 'final' },
-                  },
-                },
-                avisDirectionEntrepriseConcurrenceConsommationTravailEmploiMachine: {
-                  initial: 'avisDirectionEntrepriseConcurrenceConsommationTravailEmploiARendre',
-                  states: {
-                    avisDirectionEntrepriseConcurrenceConsommationTravailEmploiARendre: {
-                      on: {
-                        RENDRE_AVIS_DIRECTION_ENTREPRISE_CONCURRENCE_CONSOMMATION_TRAVAIL_EMPLOI: 'avisDirectionEntrepriseConcurrenceConsommationTravailEmploiRendu',
-                      },
-                    },
-                    avisDirectionEntrepriseConcurrenceConsommationTravailEmploiRendu: { type: 'final' },
-                  },
-                },
-                avisDirectionAlimentationAgricultureForetMachine: {
-                  initial: 'avisDirectionAlimentationAgricultureForetARendre',
-                  states: {
-                    avisDirectionAlimentationAgricultureForetARendre: {
-                      on: {
-                        RENDRE_AVIS_DIRECTION_ALIMENTATION_AGRICULTURE_FORET: 'avisDirectionAlimentationAgricultureForetRendu',
-                      },
-                    },
-                    avisDirectionAlimentationAgricultureForetRendu: {
-                      type: 'final',
-                    },
-                  },
-                },
-                avisDirectionRegionaleAffairesCulturellesMachine: {
-                  initial: 'avisDirectionRegionaleAffairesCulturellesARendre',
-                  states: {
-                    avisDirectionRegionaleAffairesCulturellesARendre: {
-                      on: {
-                        RENDRE_AVIS_DIRECTION_REGIONALE_AFFAIRES_CULTURELLES: 'avisDirectionRegionaleAffairesCulturellesRendu',
-                      },
-                    },
-                    avisDirectionRegionaleAffairesCulturellesRendu: {
-                      type: 'final',
-                    },
-                  },
-                },
-                avisAgenceRegionaleSanteMachine: {
-                  initial: 'avisAgenceRegionaleSanteARendre',
-                  states: {
-                    avisAgenceRegionaleSanteARendre: {
-                      on: {
-                        RENDRE_AVIS_AGENCE_REGIONALE_SANTE: 'avisAgenceRegionaleSanteRendu',
-                      },
-                    },
-                    avisAgenceRegionaleSanteRendu: { type: 'final' },
-                  },
-                },
-                avisDirectionRegionaleFinancesPubliquesMachine: {
-                  initial: 'avisDirectionRegionaleFinancesPubliquesARendre',
-                  states: {
-                    avisDirectionRegionaleFinancesPubliquesARendre: {
-                      on: {
-                        RENDRE_AVIS_DIRECTION_REGIONALE_FINANCES_PUBLIQUES: 'avisDirectionRegionaleFinancesPubliquesRendu',
-                      },
-                    },
-                    avisDirectionRegionaleFinancesPubliquesRendu: {
-                      type: 'final',
-                    },
-                  },
-                },
-                avisCaisseGeneraleDeSecuriteSocialeMachine: {
-                  initial: 'avisCaisseGeneraleDeSecuriteSocialeARendre',
-                  states: {
-                    avisCaisseGeneraleDeSecuriteSocialeARendre: {
-                      on: {
-                        RENDRE_AVIS_CAISSE_GENERALE_DE_SECURITE_SOCIALE: 'avisCaisseGeneraleDeSecuriteSocialeRendu',
-                      },
-                    },
-                    avisCaisseGeneraleDeSecuriteSocialeRendu: { type: 'final' },
-                  },
-                },
-              },
+            avisDesServicesEtCommissionsConsultativesRendu: {
+              type: 'final',
             },
           },
         },
@@ -385,7 +273,7 @@ const pxgOctMachine = createMachine({
                   actions: assign({
                     saisineDesCollectivitesLocalesFaites: true,
                     demarcheStatut: ({ context }) => {
-                      return context.saisineAutoriteEnvironnementaleFaite && context.saisineDesServicesFaite ? DemarchesStatutsIds.EnInstruction : context.demarcheStatut
+                      return context.saisineAutoriteEnvironnementaleFaite && context.avisDesServicesEtCommissionsConsultativesFaite ? DemarchesStatutsIds.EnInstruction : context.demarcheStatut
                     },
                   }),
                 },
@@ -433,7 +321,7 @@ const pxgOctMachine = createMachine({
                   actions: assign({
                     saisineAutoriteEnvironnementaleFaite: true,
                     demarcheStatut: ({ context, event: _event }) => {
-                      return context.saisineDesCollectivitesLocalesFaites && context.saisineDesServicesFaite ? DemarchesStatutsIds.EnInstruction : context.demarcheStatut
+                      return context.saisineDesCollectivitesLocalesFaites && context.avisDesServicesEtCommissionsConsultativesFaite ? DemarchesStatutsIds.EnInstruction : context.demarcheStatut
                     },
                   }),
                 },
@@ -483,7 +371,6 @@ const pxgOctMachine = createMachine({
     },
     passageCoderstOuDecisionDeLAdministrationARendre: {
       on: {
-        RENDRE_PASSAGE_CODERST: 'decisionDeLAdministrationARendre',
         RENDRE_DECISION_ADMINISTRATION_FAVORABLE: {
           target: 'notificationDuDemandeurEtPublicationDeDecisionAuRecueilDesActesAdministratifsAFaire',
           actions: assign({

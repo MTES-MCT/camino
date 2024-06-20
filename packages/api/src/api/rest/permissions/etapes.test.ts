@@ -29,7 +29,7 @@ describe('canReadEtape', () => {
         () => Promise.resolve(titreTypeId),
         () => Promise.resolve([]),
         shouldNotBeCalled,
-        'aof',
+        'ede',
         demarche
       )
     ).toBe(false)
@@ -40,7 +40,7 @@ describe('canReadEtape', () => {
         () => Promise.resolve(titreTypeId),
         () => Promise.resolve([]),
         shouldNotBeCalled,
-        'aof',
+        'ede',
         demarche
       )
     ).toBe(true)

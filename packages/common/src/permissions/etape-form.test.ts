@@ -2,53 +2,141 @@ import { expect, test } from 'vitest'
 import {
   entrepriseDocumentsStepIsComplete,
   entrepriseDocumentsStepIsVisible,
+  etapeAvisStepIsVisible,
   etapeDocumentsStepIsComplete,
   etapeDocumentsStepIsVisible,
   fondamentaleStepIsComplete,
   fondamentaleStepIsVisible,
+  getAvisTypes,
   getDocumentsTypes,
   perimetreStepIsComplete,
   perimetreStepIsVisible,
   sectionsStepIsComplete,
   sectionsStepIsVisible,
 } from './etape-form'
-import { documentTypeIdComplementaireObligatoireASL, documentTypeIdComplementaireObligatoireDAE, etapeDocumentIdValidator } from '../etape'
+import { ETAPE_IS_BROUILLON, ETAPE_IS_NOT_BROUILLON, documentTypeIdComplementaireObligatoireASL, documentTypeIdComplementaireObligatoireDAE, etapeDocumentIdValidator } from '../etape'
 import { toCaminoDate } from '../date'
 import { testBlankUser } from '../tests-utils'
-import { entrepriseDocumentIdValidator, entrepriseIdValidator } from '../entreprise'
+import { entrepriseIdValidator } from '../entreprise'
+import { communeIdValidator } from '../static/communes'
 
 test('fondamentaleStepIsVisible', () => {
   expect(fondamentaleStepIsVisible('mfr')).toBe(true)
-  expect(fondamentaleStepIsVisible('aac')).toBe(false)
+  expect(fondamentaleStepIsVisible('acg')).toBe(false)
 })
 
 test('fondamentaleStepIsComplete', () => {
-  expect(fondamentaleStepIsComplete({ duree: { value: 0, heritee: false, etapeHeritee: null }, substances: { value: [], heritee: false, etapeHeritee: null }, typeId: 'aac' }, 'amo', 'prr')).toBe(true)
-
-  expect(fondamentaleStepIsComplete({ duree: { value: 0, heritee: false, etapeHeritee: null }, substances: { value: [], heritee: false, etapeHeritee: null }, typeId: 'dpu' }, 'amo', 'prr')).toBe(true)
-  expect(fondamentaleStepIsComplete({ duree: { value: 0, heritee: false, etapeHeritee: null }, substances: { value: [], heritee: false, etapeHeritee: null }, typeId: 'mfr' }, 'amo', 'prr')).toBe(
-    false
-  )
+  expect(
+    fondamentaleStepIsComplete(
+      {
+        duree: { value: 0, heritee: false, etapeHeritee: null },
+        substances: { value: [], heritee: false, etapeHeritee: null },
+        typeId: 'acg',
+        titulaires: { value: [], heritee: false, etapeHeritee: null },
+      },
+      'amo',
+      'prr'
+    ).valid
+  ).toBe(true)
 
   expect(
-    fondamentaleStepIsComplete({ duree: { value: 0, heritee: false, etapeHeritee: null }, substances: { value: ['auru'], heritee: false, etapeHeritee: null }, typeId: 'mfr' }, 'oct', 'prr')
+    fondamentaleStepIsComplete(
+      {
+        duree: { value: 0, heritee: false, etapeHeritee: null },
+        substances: { value: [], heritee: false, etapeHeritee: null },
+        typeId: 'dpu',
+        titulaires: { value: [], heritee: false, etapeHeritee: null },
+      },
+      'amo',
+      'prr'
+    ).valid
   ).toBe(true)
   expect(
-    fondamentaleStepIsComplete({ duree: { value: 2, heritee: false, etapeHeritee: null }, substances: { value: ['auru'], heritee: false, etapeHeritee: null }, typeId: 'mfr' }, 'oct', 'arm')
-  ).toBe(true)
-  expect(
-    fondamentaleStepIsComplete({ duree: { value: 0, heritee: false, etapeHeritee: null }, substances: { value: ['auru'], heritee: false, etapeHeritee: null }, typeId: 'mfr' }, 'oct', 'arm')
+    fondamentaleStepIsComplete(
+      {
+        duree: { value: 0, heritee: false, etapeHeritee: null },
+        substances: { value: [], heritee: false, etapeHeritee: null },
+        typeId: 'mfr',
+        titulaires: { value: [], heritee: false, etapeHeritee: null },
+      },
+      'amo',
+      'prr'
+    ).valid
   ).toBe(false)
-  expect(fondamentaleStepIsComplete({ duree: { value: 2, heritee: false, etapeHeritee: null }, substances: { value: [], heritee: false, etapeHeritee: null }, typeId: 'mfr' }, 'oct', 'arm')).toBe(
-    false
-  )
 
   expect(
-    fondamentaleStepIsComplete({ duree: { value: 0, heritee: false, etapeHeritee: null }, substances: { value: ['auru'], heritee: false, etapeHeritee: null }, typeId: 'mfr' }, 'mut', 'arm')
+    fondamentaleStepIsComplete(
+      {
+        duree: { value: 0, heritee: false, etapeHeritee: null },
+        substances: { value: ['auru'], heritee: false, etapeHeritee: null },
+        typeId: 'mfr',
+        titulaires: { value: [], heritee: false, etapeHeritee: null },
+      },
+      'oct',
+      'prr'
+    ).valid
   ).toBe(true)
-  expect(fondamentaleStepIsComplete({ duree: { value: 0, heritee: false, etapeHeritee: null }, substances: { value: [], heritee: false, etapeHeritee: null }, typeId: 'mfr' }, 'mut', 'arm')).toBe(
-    false
-  )
+  expect(
+    fondamentaleStepIsComplete(
+      {
+        duree: { value: 2, heritee: false, etapeHeritee: null },
+        substances: { value: ['auru'], heritee: false, etapeHeritee: null },
+        typeId: 'mfr',
+        titulaires: { value: [], heritee: false, etapeHeritee: null },
+      },
+      'oct',
+      'arm'
+    ).valid
+  ).toBe(false)
+  expect(
+    fondamentaleStepIsComplete(
+      {
+        duree: { value: 0, heritee: false, etapeHeritee: null },
+        substances: { value: ['auru'], heritee: false, etapeHeritee: null },
+        typeId: 'mfr',
+        titulaires: { value: [], heritee: false, etapeHeritee: null },
+      },
+      'oct',
+      'arm'
+    ).valid
+  ).toBe(false)
+  expect(
+    fondamentaleStepIsComplete(
+      {
+        duree: { value: 2, heritee: false, etapeHeritee: null },
+        substances: { value: [], heritee: false, etapeHeritee: null },
+        typeId: 'mfr',
+        titulaires: { value: [], heritee: false, etapeHeritee: null },
+      },
+      'oct',
+      'arm'
+    ).valid
+  ).toBe(false)
+
+  expect(
+    fondamentaleStepIsComplete(
+      {
+        duree: { value: 0, heritee: false, etapeHeritee: null },
+        substances: { value: ['auru'], heritee: false, etapeHeritee: null },
+        typeId: 'mfr',
+        titulaires: { value: [], heritee: false, etapeHeritee: null },
+      },
+      'mut',
+      'arm'
+    ).valid
+  ).toBe(true)
+  expect(
+    fondamentaleStepIsComplete(
+      {
+        duree: { value: 0, heritee: false, etapeHeritee: null },
+        substances: { value: [], heritee: false, etapeHeritee: null },
+        typeId: 'mfr',
+        titulaires: { value: [], heritee: false, etapeHeritee: null },
+      },
+      'mut',
+      'arm'
+    ).valid
+  ).toBe(false)
 })
 
 test('sectionsStepIsVisible', () => {
@@ -57,13 +145,13 @@ test('sectionsStepIsVisible', () => {
 })
 
 test('sectionsStepIsComplete', () => {
-  expect(sectionsStepIsComplete({ typeId: 'mfr', contenu: {} }, 'oct', 'arm')).toBe(false)
-  expect(sectionsStepIsComplete({ typeId: 'mfr', contenu: { arm: { mecanise: { value: true, heritee: false, etapeHeritee: null } } } }, 'oct', 'arm')).toBe(true)
+  expect(sectionsStepIsComplete({ typeId: 'mfr', contenu: {} }, 'oct', 'arm').valid).toBe(false)
+  expect(sectionsStepIsComplete({ typeId: 'mfr', contenu: { arm: { mecanise: { value: true, heritee: false, etapeHeritee: null } } } }, 'oct', 'arm').valid).toBe(true)
 })
 
 test('perimetreStepIsVisible', () => {
   expect(perimetreStepIsVisible({ typeId: 'mfr' })).toBe(true)
-  expect(perimetreStepIsVisible({ typeId: 'aac' })).toBe(false)
+  expect(perimetreStepIsVisible({ typeId: 'acg' })).toBe(false)
 })
 
 test('perimetreStepIsComplete', () => {
@@ -84,7 +172,7 @@ test('perimetreStepIsComplete', () => {
         heritee: false,
         etapeHeritee: null,
       },
-    })
+    }).valid
   ).toBe(false)
   expect(
     perimetreStepIsComplete({
@@ -103,11 +191,11 @@ test('perimetreStepIsComplete', () => {
         heritee: false,
         etapeHeritee: null,
       },
-    })
+    }).valid
   ).toBe(true)
   expect(
     perimetreStepIsComplete({
-      typeId: 'aac',
+      typeId: 'acg',
       perimetre: {
         value: {
           geojson4326Perimetre: null,
@@ -122,7 +210,7 @@ test('perimetreStepIsComplete', () => {
         heritee: false,
         etapeHeritee: null,
       },
-    })
+    }).valid
   ).toBe(true)
   expect(
     perimetreStepIsComplete({
@@ -141,7 +229,7 @@ test('perimetreStepIsComplete', () => {
         heritee: false,
         etapeHeritee: null,
       },
-    })
+    }).valid
   ).toBe(true)
 })
 
@@ -217,32 +305,34 @@ const axmDocumentsComplete = [
 
 const entreprise1 = { id: entrepriseIdValidator.parse('id1'), nom: 'entrepriseNom' }
 test('etapeDocumentsStepIsComplete', () => {
-  expect(etapeDocumentsStepIsComplete({ typeId: 'asl', contenu: {}, isBrouillon: false }, 'oct', 'axm', [], [], null, null, null)).toBe(false)
+  expect(etapeDocumentsStepIsComplete({ typeId: 'asl', contenu: {}, isBrouillon: ETAPE_IS_NOT_BROUILLON }, 'oct', 'axm', [], [], null, null, null).valid).toBe(false)
   expect(
     etapeDocumentsStepIsComplete(
-      { typeId: 'asl', contenu: {}, isBrouillon: false },
+      { typeId: 'asl', contenu: {}, isBrouillon: ETAPE_IS_NOT_BROUILLON },
       'oct',
       'axm',
-      [{ id: etapeDocumentIdValidator.parse('idDoc1'), description: null, entreprises_lecture: true, public_lecture: true, etape_document_type_id: documentTypeIdComplementaireObligatoireASL }],
+      [{ etape_document_type_id: documentTypeIdComplementaireObligatoireASL }],
       [],
       null,
       null,
       null
-    )
+    ).valid
   ).toBe(true)
 
-  expect(etapeDocumentsStepIsComplete({ typeId: 'mfr', contenu: {}, isBrouillon: true }, 'oct', 'axm', axmDocumentsComplete, [], null, null, { ...testBlankUser, role: 'super' })).toBe(true)
   expect(
-    etapeDocumentsStepIsComplete({ typeId: 'mfr', contenu: {}, isBrouillon: true }, 'oct', 'axm', axmDocumentsComplete, [], null, null, {
+    etapeDocumentsStepIsComplete({ typeId: 'mfr', contenu: {}, isBrouillon: ETAPE_IS_BROUILLON }, 'oct', 'axm', axmDocumentsComplete, [], null, null, { ...testBlankUser, role: 'super' }).valid
+  ).toBe(true)
+  expect(
+    etapeDocumentsStepIsComplete({ typeId: 'mfr', contenu: {}, isBrouillon: ETAPE_IS_BROUILLON }, 'oct', 'axm', axmDocumentsComplete, [], null, null, {
       ...testBlankUser,
       role: 'entreprise',
       entreprises: [entreprise1],
-    })
+    }).valid
   ).toBe(false)
 
   expect(
     etapeDocumentsStepIsComplete(
-      { typeId: 'mfr', contenu: {}, isBrouillon: true },
+      { typeId: 'mfr', contenu: {}, isBrouillon: ETAPE_IS_BROUILLON },
       'oct',
       'axm',
       axmDocumentsComplete,
@@ -255,7 +345,6 @@ test('etapeDocumentsStepIsComplete', () => {
         etape_statut_id: 'exe',
         public_lecture: true,
         etape_document_type_id: documentTypeIdComplementaireObligatoireDAE,
-        id: etapeDocumentIdValidator.parse('daeId'),
       },
       {
         date: toCaminoDate('2023-02-02'),
@@ -264,10 +353,9 @@ test('etapeDocumentsStepIsComplete', () => {
         etape_statut_id: 'exe',
         public_lecture: true,
         etape_document_type_id: documentTypeIdComplementaireObligatoireASL,
-        id: etapeDocumentIdValidator.parse('aslId'),
       },
       { ...testBlankUser, role: 'entreprise', entreprises: [entreprise1] }
-    )
+    ).valid
   ).toBe(true)
 })
 
@@ -283,7 +371,7 @@ test('entrepriseDocumentsStepIsComplete', () => {
       'oct',
       'axm',
       []
-    )
+    ).valid
   ).toBe(true)
   expect(
     entrepriseDocumentsStepIsComplete(
@@ -291,8 +379,8 @@ test('entrepriseDocumentsStepIsComplete', () => {
       'oct',
       'axm',
       []
-    )
-  ).toBe(true)
+    ).valid
+  ).toBe(false)
 
   expect(
     entrepriseDocumentsStepIsComplete(
@@ -300,7 +388,7 @@ test('entrepriseDocumentsStepIsComplete', () => {
       'oct',
       'axm',
       []
-    )
+    ).valid
   ).toBe(false)
   expect(
     entrepriseDocumentsStepIsComplete(
@@ -308,7 +396,7 @@ test('entrepriseDocumentsStepIsComplete', () => {
       'oct',
       'axm',
       []
-    )
+    ).valid
   ).toBe(false)
 
   expect(
@@ -323,38 +411,32 @@ test('entrepriseDocumentsStepIsComplete', () => {
       'arm',
       [
         {
-          id: entrepriseDocumentIdValidator.parse('idatf'),
           documentTypeId: 'atf',
           entrepriseId: entreprise1.id,
         },
         {
-          id: entrepriseDocumentIdValidator.parse('idcur'),
           documentTypeId: 'cur',
           entrepriseId: entreprise1.id,
         },
 
         {
-          id: entrepriseDocumentIdValidator.parse('idjid'),
           documentTypeId: 'jid',
           entrepriseId: entreprise1.id,
         },
         {
-          id: entrepriseDocumentIdValidator.parse('idjct'),
           documentTypeId: 'jct',
           entrepriseId: entreprise1.id,
         },
         {
-          id: entrepriseDocumentIdValidator.parse('idkbi'),
           documentTypeId: 'kbi',
           entrepriseId: entreprise1.id,
         },
         {
-          id: entrepriseDocumentIdValidator.parse('idjcf'),
           documentTypeId: 'jcf',
           entrepriseId: entreprise1.id,
         },
       ]
-    )
+    ).valid
   ).toBe(true)
 })
 
@@ -862,4 +944,320 @@ test('getDocumentsTypes', () => {
       },
     ]
   `)
+})
+
+test('getAvisType', () => {
+  expect(getAvisTypes('mfr', 'arm', [])).toMatchInlineSnapshot(`[]`)
+  expect(getAvisTypes('asc', 'arm', [])).toMatchInlineSnapshot(`
+    [
+      {
+        "id": "lettreDeSaisineDesServices",
+        "nom": "Lettre de saisine des services",
+        "optionnel": false,
+      },
+      {
+        "id": "avisDirectionRegionaleDesAffairesCulturelles",
+        "nom": "Avis de la Direction Régionale Des Affaires Culturelles (DRAC)",
+        "optionnel": true,
+      },
+      {
+        "id": "avisConseilDepartementalEnvironnementRisquesSanitairesTechnologiques",
+        "nom": "Avis du Conseil Départemental de l'Environnement et des Risques Sanitaires et Technologiques (CODERST)",
+        "optionnel": true,
+      },
+      {
+        "id": "avisDirectionsRégionalesEconomieEmploiTravailSolidarités",
+        "nom": "Avis de la Direction régionale de l’économie, de l’emploi, du travail et des solidarités",
+        "optionnel": true,
+      },
+      {
+        "id": "avisDirectionRegionaleFinancesPubliques",
+        "nom": "Avis de la Direction Regionale Des Finances Publiques",
+        "optionnel": true,
+      },
+      {
+        "id": "avisGendarmerieNationale",
+        "nom": "Avis de la Gendarmerie Nationale",
+        "optionnel": true,
+      },
+      {
+        "id": "avisIFREMER",
+        "nom": "Avis de l'IFREMER",
+        "optionnel": true,
+      },
+      {
+        "id": "avisInstitutNationalOrigineQualite",
+        "nom": "Avis de l'Institut National de l'origine et de la Qualité",
+        "optionnel": true,
+      },
+      {
+        "id": "avisServiceAdministratifLocal",
+        "nom": "Avis d'un Service Administratif Local",
+        "optionnel": true,
+      },
+      {
+        "id": "avisAutoriteMilitaire",
+        "nom": "Avis de l'Autorité militaire",
+        "optionnel": true,
+      },
+      {
+        "id": "avisParcNational",
+        "nom": "Avis du Parc National",
+        "optionnel": true,
+      },
+      {
+        "id": "avisDirectionDepartementaleTerritoiresMer",
+        "nom": "Avis de la Direction Départementale des Territoires et de la Mer (DDTM)",
+        "optionnel": true,
+      },
+      {
+        "id": "avisAgenceRegionaleSante",
+        "nom": "Avis de l'Agence Régionale de Santé (ARS)",
+        "optionnel": true,
+      },
+      {
+        "id": "avisCaisseGeneraleSecuriteSociale",
+        "nom": "Avis de la Caisse Générale de Sécurité Sociale",
+        "optionnel": true,
+      },
+      {
+        "id": "autreAvis",
+        "nom": "Autre avis",
+        "optionnel": true,
+      },
+      {
+        "id": "avisOfficeNationalDesForets",
+        "nom": "Avis de l'Office National des Forêts",
+        "optionnel": false,
+      },
+      {
+        "id": "expertiseOfficeNationalDesForets",
+        "nom": "Expertise de l'Office National des Forêts",
+        "optionnel": true,
+      },
+      {
+        "id": "avisParcNaturelMarin",
+        "nom": "Avis du Parc Naturel Marin",
+        "optionnel": true,
+      },
+    ]
+  `)
+  expect(getAvisTypes('asc', 'arm', [communeIdValidator.parse('97302')])).toMatchInlineSnapshot(`
+    [
+      {
+        "id": "lettreDeSaisineDesServices",
+        "nom": "Lettre de saisine des services",
+        "optionnel": false,
+      },
+      {
+        "id": "avisDirectionRegionaleDesAffairesCulturelles",
+        "nom": "Avis de la Direction Régionale Des Affaires Culturelles (DRAC)",
+        "optionnel": true,
+      },
+      {
+        "id": "avisConseilDepartementalEnvironnementRisquesSanitairesTechnologiques",
+        "nom": "Avis du Conseil Départemental de l'Environnement et des Risques Sanitaires et Technologiques (CODERST)",
+        "optionnel": true,
+      },
+      {
+        "id": "avisDirectionsRégionalesEconomieEmploiTravailSolidarités",
+        "nom": "Avis de la Direction régionale de l’économie, de l’emploi, du travail et des solidarités",
+        "optionnel": true,
+      },
+      {
+        "id": "avisDirectionRegionaleFinancesPubliques",
+        "nom": "Avis de la Direction Regionale Des Finances Publiques",
+        "optionnel": true,
+      },
+      {
+        "id": "avisGendarmerieNationale",
+        "nom": "Avis de la Gendarmerie Nationale",
+        "optionnel": true,
+      },
+      {
+        "id": "avisIFREMER",
+        "nom": "Avis de l'IFREMER",
+        "optionnel": true,
+      },
+      {
+        "id": "avisInstitutNationalOrigineQualite",
+        "nom": "Avis de l'Institut National de l'origine et de la Qualité",
+        "optionnel": true,
+      },
+      {
+        "id": "avisServiceAdministratifLocal",
+        "nom": "Avis d'un Service Administratif Local",
+        "optionnel": true,
+      },
+      {
+        "id": "avisAutoriteMilitaire",
+        "nom": "Avis de l'Autorité militaire",
+        "optionnel": true,
+      },
+      {
+        "id": "avisParcNational",
+        "nom": "Avis du Parc National",
+        "optionnel": true,
+      },
+      {
+        "id": "avisDirectionDepartementaleTerritoiresMer",
+        "nom": "Avis de la Direction Départementale des Territoires et de la Mer (DDTM)",
+        "optionnel": true,
+      },
+      {
+        "id": "avisAgenceRegionaleSante",
+        "nom": "Avis de l'Agence Régionale de Santé (ARS)",
+        "optionnel": true,
+      },
+      {
+        "id": "avisCaisseGeneraleSecuriteSociale",
+        "nom": "Avis de la Caisse Générale de Sécurité Sociale",
+        "optionnel": true,
+      },
+      {
+        "id": "autreAvis",
+        "nom": "Autre avis",
+        "optionnel": true,
+      },
+      {
+        "id": "avisOfficeNationalDesForets",
+        "nom": "Avis de l'Office National des Forêts",
+        "optionnel": false,
+      },
+      {
+        "id": "expertiseOfficeNationalDesForets",
+        "nom": "Expertise de l'Office National des Forêts",
+        "optionnel": true,
+      },
+      {
+        "id": "avisParcNaturelMarin",
+        "nom": "Avis du Parc Naturel Marin",
+        "optionnel": true,
+      },
+      {
+        "id": "avisDirectionAlimentationAgricultureForet",
+        "nom": "Avis de la Direction de l'Alimentation de l'Agriculture et de la Forêt (DRAF)",
+        "optionnel": true,
+      },
+      {
+        "id": "avisEtatMajorOrpaillagePecheIllicite",
+        "nom": "Avis de l'État-major Orpaillage et Pêche Illicite (EMOPI)",
+        "optionnel": true,
+      },
+    ]
+  `)
+  expect(getAvisTypes('asc', 'axm', [communeIdValidator.parse('97302')])).toMatchInlineSnapshot(`
+    [
+      {
+        "id": "lettreDeSaisineDesServices",
+        "nom": "Lettre de saisine des services",
+        "optionnel": false,
+      },
+      {
+        "id": "avisDirectionRegionaleDesAffairesCulturelles",
+        "nom": "Avis de la Direction Régionale Des Affaires Culturelles (DRAC)",
+        "optionnel": true,
+      },
+      {
+        "id": "avisConseilDepartementalEnvironnementRisquesSanitairesTechnologiques",
+        "nom": "Avis du Conseil Départemental de l'Environnement et des Risques Sanitaires et Technologiques (CODERST)",
+        "optionnel": true,
+      },
+      {
+        "id": "avisDirectionsRégionalesEconomieEmploiTravailSolidarités",
+        "nom": "Avis de la Direction régionale de l’économie, de l’emploi, du travail et des solidarités",
+        "optionnel": true,
+      },
+      {
+        "id": "avisDirectionRegionaleFinancesPubliques",
+        "nom": "Avis de la Direction Regionale Des Finances Publiques",
+        "optionnel": true,
+      },
+      {
+        "id": "avisGendarmerieNationale",
+        "nom": "Avis de la Gendarmerie Nationale",
+        "optionnel": true,
+      },
+      {
+        "id": "avisIFREMER",
+        "nom": "Avis de l'IFREMER",
+        "optionnel": true,
+      },
+      {
+        "id": "avisInstitutNationalOrigineQualite",
+        "nom": "Avis de l'Institut National de l'origine et de la Qualité",
+        "optionnel": true,
+      },
+      {
+        "id": "avisServiceAdministratifLocal",
+        "nom": "Avis d'un Service Administratif Local",
+        "optionnel": true,
+      },
+      {
+        "id": "avisAutoriteMilitaire",
+        "nom": "Avis de l'Autorité militaire",
+        "optionnel": true,
+      },
+      {
+        "id": "avisParcNational",
+        "nom": "Avis du Parc National",
+        "optionnel": true,
+      },
+      {
+        "id": "avisDirectionDepartementaleTerritoiresMer",
+        "nom": "Avis de la Direction Départementale des Territoires et de la Mer (DDTM)",
+        "optionnel": true,
+      },
+      {
+        "id": "avisAgenceRegionaleSante",
+        "nom": "Avis de l'Agence Régionale de Santé (ARS)",
+        "optionnel": true,
+      },
+      {
+        "id": "avisCaisseGeneraleSecuriteSociale",
+        "nom": "Avis de la Caisse Générale de Sécurité Sociale",
+        "optionnel": true,
+      },
+      {
+        "id": "autreAvis",
+        "nom": "Autre avis",
+        "optionnel": true,
+      },
+      {
+        "id": "avisOfficeNationalDesForets",
+        "nom": "Avis de l'Office National des Forêts",
+        "optionnel": false,
+      },
+      {
+        "id": "expertiseOfficeNationalDesForets",
+        "nom": "Expertise de l'Office National des Forêts",
+        "optionnel": true,
+      },
+      {
+        "id": "avisParcNaturelMarin",
+        "nom": "Avis du Parc Naturel Marin",
+        "optionnel": true,
+      },
+      {
+        "id": "avisDirectionAlimentationAgricultureForet",
+        "nom": "Avis de la Direction de l'Alimentation de l'Agriculture et de la Forêt (DRAF)",
+        "optionnel": true,
+      },
+      {
+        "id": "avisEtatMajorOrpaillagePecheIllicite",
+        "nom": "Avis de l'État-major Orpaillage et Pêche Illicite (EMOPI)",
+        "optionnel": true,
+      },
+      {
+        "id": "confirmationAccordProprietaireDuSol",
+        "nom": "Confirmation de l'accord du propriétaire du sol",
+        "optionnel": true,
+      },
+    ]
+  `)
+})
+
+test('etapeAvisStepIsVisible', () => {
+  expect(etapeAvisStepIsVisible({ typeId: 'mfr' }, 'arm', [])).toBe(false)
+  expect(etapeAvisStepIsVisible({ typeId: 'asc' }, 'arm', [])).toBe(true)
 })

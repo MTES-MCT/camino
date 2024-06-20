@@ -31,28 +31,3 @@ type EntrepriseEtablissement {
   dateFin: String
   legalSiret: String
 }
-
-input InputEntreprise {
-  id: ID!
-  nom: String
-  paysId: String
-  legalSiren: String
-  legalEtranger: String
-  legalForme: String
-  categorie: String
-  adresse: String
-  codePostal: String
-  commune: String
-  cedex: String
-  url: String
-  telephone: String
-  email: String
-}
-
-input InputEtablissements {
-  id: ID!
-  nom: String
-  legalSiret: String
-  dateDebut: String
-  dateFin: String
-}

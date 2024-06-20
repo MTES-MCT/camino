@@ -1,17 +1,17 @@
-import { dateValidate } from 'camino-common/src/date.js'
+import { caminoDateValidator } from 'camino-common/src/date.js'
 import { Section } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
-import { DeepReadonly } from 'camino-common/src/typescript-tools.js'
-import { IContenu } from '../../../types.js'
+import { DeepReadonly, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools.js'
+import { FlattenedContenuElement } from 'camino-common/src/etape-form.js'
 
-export const contenuDatesCheck = (sections: DeepReadonly<Section[]>, contenu: IContenu) => {
+export const contenuDatesCheck = (sections: DeepReadonly<Section[]>, contenu: Record<string, Record<string, Pick<FlattenedContenuElement, 'value'>>>): string | null => {
   const errors = sections.reduce(
     (errors: string[], section) =>
-      section.elements && contenu[section.id]
+      isNotNullNorUndefinedNorEmpty(section.elements) && isNotNullNorUndefined(contenu[section.id])
         ? section.elements.reduce((errors, element) => {
-            if (element.type === 'date' && contenu[section.id][element.id]) {
-              const dateCheck = dateValidate(contenu[section.id][element.id] as string)
-              if (!dateCheck.valid) {
-                errors.push(`le champ "${element.id}" n'est pas une date valide`)
+            if (element.type === 'date' && isNotNullNorUndefined(contenu[section.id][element.id])) {
+              const { success, error } = caminoDateValidator.safeParse(contenu[section.id][element.id].value)
+              if (!success) {
+                errors.push(`le champ "${element.id}" est invalide`, error.message)
               }
             }
 

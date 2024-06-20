@@ -1,6 +1,7 @@
 import { toCaminoDate } from 'camino-common/src/date.js'
 import { TitreEtapeForMachine, toMachineEtapes } from './machine-common.js'
 import { describe, expect, test, vi } from 'vitest'
+import { ETAPE_IS_NOT_BROUILLON, ETAPE_IS_BROUILLON } from 'camino-common/src/etape.js'
 
 console.error = vi.fn()
 describe('toMachineEtapes', () => {
@@ -11,7 +12,7 @@ describe('toMachineEtapes', () => {
           typeId: 'mfr',
           statutId: 'fai',
           date: toCaminoDate('2022-01-01'),
-          isBrouillon: false,
+          isBrouillon: ETAPE_IS_NOT_BROUILLON,
           communes: [],
           ordre: 0,
           surface: null,
@@ -31,7 +32,7 @@ describe('toMachineEtapes', () => {
         {
           typeId: 'mfr',
           statutId: 'fai',
-          isBrouillon: false,
+          isBrouillon: ETAPE_IS_NOT_BROUILLON,
           date: toCaminoDate('2022-01-01'),
           contenu: { arm: { mecanise: true } },
           communes: [],
@@ -55,7 +56,7 @@ describe('toMachineEtapes', () => {
         {
           typeId: 'mfr',
           statutId: 'fai',
-          isBrouillon: true,
+          isBrouillon: ETAPE_IS_BROUILLON,
           date: toCaminoDate('2022-01-01'),
           contenu: { arm: { mecanise: true } },
           communes: [],

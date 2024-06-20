@@ -40,6 +40,7 @@ const activite: Activite = {
           dateDebut: toCaminoDate('2018-01-01'),
           type: 'number',
           value: null,
+          optionnel: false,
         },
         {
           id: 'mercure',
@@ -47,6 +48,7 @@ const activite: Activite = {
           description: 'Masse en gramme de l’ensemble des produits contaminés envoyés en traitement au cours du trimestre.',
           type: 'number',
           value: null,
+          optionnel: false,
         },
         {
           id: 'carburantDetaxe',
@@ -55,6 +57,7 @@ const activite: Activite = {
           dateDebut: toCaminoDate('2018-01-01'),
           type: 'number',
           value: null,
+          optionnel: false,
         },
         {
           id: 'carburantConventionnel',
@@ -62,6 +65,7 @@ const activite: Activite = {
           description: 'Volume total en litre de carburant conventionnel consommé au cours du trimestre par les travaux réalisés sur le chantier.',
           type: 'number',
           value: null,
+          optionnel: false,
         },
         {
           id: 'pompes',
@@ -69,6 +73,7 @@ const activite: Activite = {
           description: 'Des pompes étaient-elles présentes sur le chantier',
           type: 'radio',
           value: null,
+          optionnel: false,
         },
         {
           id: 'pelles',
@@ -77,8 +82,9 @@ const activite: Activite = {
           dateDebut: toCaminoDate('2018-01-01'),
           type: 'number',
           value: 4,
+          optionnel: false,
         },
-        { id: 'effectifs', nom: 'Effectifs', description: 'Nombre moyen de salariés sur le chantier au cours du trimestre.', type: 'number', value: null },
+        { id: 'effectifs', nom: 'Effectifs', description: 'Nombre moyen de salariés sur le chantier au cours du trimestre.', type: 'number', optionnel: false, value: null },
         {
           id: 'environnement',
           nom: 'Dépenses relatives à la protection de l’environnement (euros)',
@@ -87,6 +93,7 @@ const activite: Activite = {
           dateDebut: toCaminoDate('2018-01-01'),
           type: 'number',
           value: null,
+          optionnel: false,
         },
       ],
     },
@@ -107,6 +114,7 @@ const activite: Activite = {
             { id: 'arretDefinitif', nom: 'arrêt définitif (après réhabilitation)' },
           ],
           value: [],
+          optionnel: false,
         },
         {
           id: '5',
@@ -121,6 +129,7 @@ const activite: Activite = {
             { id: 'arretDefinitif', nom: 'arrêt définitif (après réhabilitation)' },
           ],
           value: [],
+          optionnel: false,
         },
         {
           id: '6',
@@ -135,6 +144,7 @@ const activite: Activite = {
             { id: 'arretDefinitif', nom: 'arrêt définitif (après réhabilitation)' },
           ],
           value: [],
+          optionnel: false,
         },
       ],
     },
@@ -219,6 +229,7 @@ export const FullDeposable: StoryFn = () => (
                   dateDebut: toCaminoDate('2018-01-01'),
                   type: 'number',
                   value: 0,
+                  optionnel: false,
                 },
                 {
                   id: 'mercure',
@@ -226,6 +237,7 @@ export const FullDeposable: StoryFn = () => (
                   description: 'Masse en gramme de l’ensemble des produits contaminés envoyés en traitement au cours du trimestre.',
                   type: 'number',
                   value: 120,
+                  optionnel: false,
                 },
                 {
                   id: 'carburantDetaxe',
@@ -234,6 +246,7 @@ export const FullDeposable: StoryFn = () => (
                   dateDebut: toCaminoDate('2018-01-01'),
                   type: 'number',
                   value: 8000,
+                  optionnel: false,
                 },
               ],
             },

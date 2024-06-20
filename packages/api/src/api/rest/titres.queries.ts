@@ -27,13 +27,13 @@ import { canReadDemarche } from './permissions/demarches.js'
 import { SectionWithValue } from 'camino-common/src/sections.js'
 import { getDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/documents.js'
 import { getSections, getSectionsWithValue } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
-import { OmitDistributive, isNonEmptyArray, isNotNullNorUndefined, memoize } from 'camino-common/src/typescript-tools.js'
-import { getEntrepriseDocumentIdsByEtapeId, getDocumentsByEtapeId } from '../../database/queries/titres-etapes.queries.js'
+import { OmitDistributive, isNonEmptyArray, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, memoize } from 'camino-common/src/typescript-tools.js'
+import { getEntrepriseDocumentIdsByEtapeId, getDocumentsByEtapeId, getEtapeAvisLargeObjectIdsByEtapeId } from '../../database/queries/titres-etapes.queries.js'
 import { getAdministrationsLocales } from 'camino-common/src/administrations.js'
 import { getEntrepriseDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/entrepriseDocuments.js'
 import { isEtapeTypeIdFondamentale } from 'camino-common/src/static/etapesTypes.js'
 import { getCommunes } from '../../database/queries/communes.queries.js'
-import { EtapeDocument } from 'camino-common/src/etape.js'
+import { EtapeAvis, EtapeDocument } from 'camino-common/src/etape.js'
 import { getDateLastJournal } from './journal.queries.js'
 import { canHaveActivites, canReadTitre } from 'camino-common/src/permissions/titres.js'
 import { canReadTitreActivites } from 'camino-common/src/permissions/activites.js'
@@ -41,8 +41,9 @@ import { TitreIdOrSlug, titreIdValidator, titreSlugValidator, TitreId } from 'ca
 import { EntrepriseId, entrepriseIdValidator } from 'camino-common/src/entreprise.js'
 import { AdministrationId } from 'camino-common/src/static/administrations.js'
 import { secteurMaritimeValidator } from 'camino-common/src/static/facades.js'
+import { getAvisTypes } from 'camino-common/src/permissions/etape-form.js'
 
-type SuperEtapeDemarcheTitreGet = OmitDistributive<DemarcheEtape, 'etape_documents'>
+type SuperEtapeDemarcheTitreGet = OmitDistributive<DemarcheEtape, 'etape_documents' | 'avis_documents'>
 type SuperDemarcheTitreGet = Omit<TitreGet['demarches'][0], 'etapes'> & { etapes: SuperEtapeDemarcheTitreGet[]; public_lecture: boolean; entreprises_lecture: boolean; titre_public_lecture: boolean }
 
 export const getTitre = async (pool: Pool, user: User, idOrSlug: TitreIdOrSlug): Promise<TitreGet | null> => {
@@ -78,7 +79,7 @@ export const getTitre = async (pool: Pool, user: User, idOrSlug: TitreIdOrSlug):
           entrepriseDocuments.push(...(await getEntrepriseDocumentIdsByEtapeId({ titre_etape_id: etape.id }, pool, user)))
         }
 
-        const etapeCommon: Omit<DemarcheEtapeCommon, 'etape_documents'> = {
+        const etapeCommon: Omit<DemarcheEtapeCommon, 'etape_documents' | 'avis_documents'> = {
           date: etape.date,
           ordre: etape.ordre,
           notes: etape.notes,
@@ -141,7 +142,7 @@ export const getTitre = async (pool: Pool, user: User, idOrSlug: TitreIdOrSlug):
             }
           }
 
-          const etapeFondamentale: Omit<DemarcheEtapeFondamentale, 'etape_documents'> = {
+          const etapeFondamentale: Omit<DemarcheEtapeFondamentale, 'etape_documents' | 'avis_documents'> = {
             etape_type_id: etape.etape_type_id,
             fondamentale: {
               amodiataireIds,
@@ -157,7 +158,7 @@ export const getTitre = async (pool: Pool, user: User, idOrSlug: TitreIdOrSlug):
 
           formatedEtapes.push(etapeFondamentale)
         } else {
-          const etapeNonFondamentale: Omit<DemarcheEtapeNonFondamentale, 'etape_documents'> = { etape_type_id: etape.etape_type_id, ...etapeCommon }
+          const etapeNonFondamentale: Omit<DemarcheEtapeNonFondamentale, 'etape_documents' | 'avis_documents'> = { etape_type_id: etape.etape_type_id, ...etapeCommon }
 
           formatedEtapes.push(etapeNonFondamentale)
         }
@@ -210,12 +211,30 @@ export const getTitre = async (pool: Pool, user: User, idOrSlug: TitreIdOrSlug):
           if (canRead) {
             const etape_documents: EtapeDocument[] = []
             const documentsTypes = getDocuments(titre.titre_type_id, superDemarche.demarche_type_id, superEtape.etape_type_id)
-            if (documentsTypes.length > 0) {
+            if (isNotNullNorUndefinedNorEmpty(documentsTypes)) {
               etape_documents.push(
                 ...(await getDocumentsByEtapeId(superEtape.id, pool, user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires, superEtape.etape_type_id, superDemarche))
               )
             }
-            etapes.push({ ...superEtape, etape_documents })
+
+            const avis_documents: EtapeAvis[] = []
+            const avisTypes = getAvisTypes(superEtape.etape_type_id, titre.titre_type_id, perimetre?.communes.map(({ id }) => id) ?? [])
+            if (isNotNullNorUndefinedNorEmpty(avisTypes)) {
+              const avisWithLargeObjectId = await getEtapeAvisLargeObjectIdsByEtapeId(
+                superEtape.id,
+                pool,
+                user,
+                titreTypeId,
+                administrationsLocales,
+                entreprisesTitulairesOuAmodiataires,
+                superEtape.etape_type_id,
+                superDemarche
+              )
+
+              avis_documents.push(...avisWithLargeObjectId.map(a => ({ ...a, has_file: isNotNullNorUndefined(a.largeobject_id) })))
+            }
+
+            etapes.push({ ...superEtape, etape_documents, avis_documents })
           }
         }
 

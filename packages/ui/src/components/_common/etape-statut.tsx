@@ -2,6 +2,7 @@ import { FunctionalComponent, HTMLAttributes } from 'vue'
 import { Badge } from '../_ui/badge'
 import { CouleurIllustrative } from 'camino-common/src/static/couleurs'
 import { EtapeStatutId, EtapesStatuts, ETAPES_STATUTS } from 'camino-common/src/static/etapesStatuts'
+import { AvisStatutId } from 'camino-common/src/static/avisTypes'
 
 type Props = {
   etapeStatutId: EtapeStatutId
@@ -31,4 +32,16 @@ export const EtapeStatut: FunctionalComponent<Props> = (props: Props) => {
   const couleur = couleurParStatut[props.etapeStatutId]
 
   return <Badge ariaLabel={EtapesStatuts[props.etapeStatutId].nom} badgeColor={couleur} />
+}
+
+const avisStatutToEtapeStatut = {
+  Favorable: ETAPES_STATUTS.FAVORABLE,
+  Défavorable: ETAPES_STATUTS.DEFAVORABLE,
+  'Favorable avec réserves': ETAPES_STATUTS.FAVORABLE_AVEC_RESERVE,
+  'Non renseigné': ETAPES_STATUTS.NON_APPLICABLE,
+} as const satisfies Record<AvisStatutId, EtapeStatutId>
+
+export const AvisStatut: FunctionalComponent<{ avisStatutId: AvisStatutId }> = props => {
+  const couleur = couleurParStatut[avisStatutToEtapeStatut[props.avisStatutId]]
+  return <Badge ariaLabel={props.avisStatutId} badgeColor={couleur} />
 }

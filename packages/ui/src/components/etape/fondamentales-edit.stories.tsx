@@ -1,6 +1,6 @@
 import { FondamentalesEdit } from './fondamentales-edit'
 import { Meta, StoryFn } from '@storybook/vue3'
-import { etapeIdValidator, etapeSlugValidator } from 'camino-common/src/etape'
+import { ETAPE_IS_BROUILLON, etapeIdValidator, etapeSlugValidator } from 'camino-common/src/etape'
 import { newEntrepriseId } from 'camino-common/src/entreprise'
 import { toCaminoDate } from 'camino-common/src/date'
 import { testBlankUser } from 'camino-common/src/tests-utils'
@@ -20,7 +20,7 @@ const etape: FlattenEtape = {
   slug: etapeSlugValidator.parse('slug'),
   titreDemarcheId: demarcheIdValidator.parse('demarcheId'),
   statutId: 'fai',
-  isBrouillon: true,
+  isBrouillon: ETAPE_IS_BROUILLON,
   typeId: 'mfr',
   contenu: {},
   date: toCaminoDate('2022-02-02'),

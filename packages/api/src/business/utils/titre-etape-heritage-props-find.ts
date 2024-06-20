@@ -3,9 +3,10 @@ import { objectClone } from '../../tools/index.js'
 import { SubstanceLegaleId } from 'camino-common/src/static/substancesLegales.js'
 import { CaminoDate } from 'camino-common/src/date.js'
 import { FeatureMultiPolygon, equalGeojson } from 'camino-common/src/perimetre.js'
-import { exhaustiveCheck, isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
+import { exhaustiveCheck, isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
 import { ETAPE_HERITAGE_PROPS, EtapeHeritageProps } from 'camino-common/src/heritage.js'
 import { EntrepriseId } from 'camino-common/src/entreprise'
+import { ZERO_KM2 } from 'camino-common/src/number.js'
 
 const propertyArrayCheck = (newValue: string[], prevValue: string[], propId: string) => {
   if (prevValue?.length !== newValue?.length) {
@@ -61,7 +62,7 @@ export const titreEtapeHeritagePropsFind = (titreEtape: ITitreEtape, prevTitreEt
   ETAPE_HERITAGE_PROPS.forEach(propId => {
     const heritage = newTitreEtape.heritageProps![propId]
 
-    if (!heritage) {
+    if (isNullOrUndefined(heritage)) {
       newTitreEtape = objectClone(newTitreEtape)
       hasChanged = true
       newTitreEtape.heritageProps![propId] = { actif: false, etapeId: null }
@@ -104,7 +105,7 @@ export const titreEtapeHeritagePropsFind = (titreEtape: ITitreEtape, prevTitreEt
                 geojsonOriginePerimetre: prevTitreEtape.geojsonOriginePerimetre,
                 geojsonOrigineForages: prevTitreEtape.geojsonOrigineForages,
                 geojson4326Forages: prevTitreEtape.geojson4326Forages,
-                surface: prevTitreEtape.surface ?? 0,
+                surface: prevTitreEtape.surface ?? ZERO_KM2,
               }
               newTitreEtape = { ...newTitreEtape, ...perimetre }
               break

@@ -1,5 +1,4 @@
 # import * from 'scalars.graphql'
-# import * from 'administrations.graphql'
 # import * from 'entreprises.graphql'
 # import * from 'metas.graphql'
 

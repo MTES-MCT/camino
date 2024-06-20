@@ -2,6 +2,7 @@ import { Meta, StoryFn } from '@storybook/vue3'
 import { action } from '@storybook/addon-actions'
 import { TypeAheadSingle } from './typeahead-single'
 import { TypeAheadMultiple } from './typeahead-multiple'
+import { TypeaheadSmartSingle } from './typeahead-smart-single'
 
 const meta: Meta = {
   title: 'Components/UI/TypeAhead',
@@ -68,6 +69,27 @@ export const SingleWithInitialItem: StoryFn = () => (
       onInput,
       onSelectItem: selectItem,
     }}
+  />
+)
+
+export const SmartSingle: StoryFn = () => (
+  <TypeaheadSmartSingle
+    possibleValues={[
+      { id: 'id1', nom: 'Nom' },
+      { id: 'id2', nom: 'Autre nom' },
+    ]}
+    valueIdSelected={selectItems}
+  />
+)
+
+export const SmartSingleWithInitialValue: StoryFn = () => (
+  <TypeaheadSmartSingle
+    possibleValues={[
+      { id: 'car', nom: 'Document car' },
+      { id: 'doe', nom: 'documentDoe' },
+    ]}
+    initialValue="car"
+    valueIdSelected={selectItems}
   />
 )
 

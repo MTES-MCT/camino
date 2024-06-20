@@ -8,7 +8,7 @@ import { join } from 'path'
 import { inspect } from 'node:util'
 
 import { activites, demarches, entreprises, titre, titres, travaux } from '../api/rest/index.js'
-import { NewDownload, etapeDocumentDownload, etapeTelecharger, streamLargeObjectInResponse } from '../api/rest/fichiers.js'
+import { NewDownload, avisDocumentDownload, etapeDocumentDownload, etapeTelecharger, streamLargeObjectInResponse } from '../api/rest/fichiers.js'
 import { getTitreLiaisons, postTitreLiaisons, removeTitre, titresAdministrations, titresONF, updateTitre, utilisateurTitreAbonner, getTitre, getUtilisateurTitreAbonner } from '../api/rest/titres.js'
 import {
   creerEntreprise,
@@ -40,12 +40,22 @@ import {
 import { CaminoConfig, caminoConfigValidator } from 'camino-common/src/static/config.js'
 import { CaminoRequest, CustomResponse } from '../api/rest/express-type.js'
 import { User } from 'camino-common/src/roles.js'
-import { deleteEtape, deposeEtape, getEtapeDocuments, getEtapeEntrepriseDocuments, getEtapesTypesEtapesStatusWithMainStep } from '../api/rest/etapes.js'
+import {
+  createEtape,
+  deleteEtape,
+  deposeEtape,
+  getEtape,
+  getEtapeAvis,
+  getEtapeDocuments,
+  getEtapeEntrepriseDocuments,
+  getEtapesTypesEtapesStatusWithMainStep,
+  updateEtape,
+} from '../api/rest/etapes.js'
 import { z } from 'zod'
 import { getCommunes } from '../api/rest/communes.js'
 import { SendFileOptions } from 'express-serve-static-core'
 import { activiteDocumentDownload, getActivite, updateActivite, deleteActivite } from '../api/rest/activites.js'
-import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
+import { DeepReadonly, isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
 import { getDemarcheByIdOrSlug } from '../api/rest/demarches.js'
 import { geojsonImport, geojsonImportPoints, convertGeojsonPointsToGeoSystemeId, getPerimetreInfos, geojsonImportForages } from '../api/rest/perimetre.js'
 import { getDataGouvStats } from '../api/rest/statistiques/datagouv.js'
@@ -74,7 +84,7 @@ type IRestResolver = (
   user: User
 ) => Promise<IRestResolverResult | null>
 
-type RestGetCall<Route extends GetRestRoutes> = (pool: Pool) => (req: CaminoRequest, res: CustomResponse<z.infer<(typeof CaminoRestRoutes)[Route]['get']['output']>>) => Promise<void>
+type RestGetCall<Route extends GetRestRoutes> = (pool: Pool) => (req: CaminoRequest, res: CustomResponse<DeepReadonly<z.infer<(typeof CaminoRestRoutes)[Route]['get']['output']>>>) => Promise<void>
 type RestPostCall<Route extends PostRestRoutes> = (pool: Pool) => (req: CaminoRequest, res: CustomResponse<z.infer<(typeof CaminoRestRoutes)[Route]['post']['output']>>) => Promise<void>
 type RestPutCall<Route extends PutRestRoutes> = (pool: Pool) => (req: CaminoRequest, res: CustomResponse<z.infer<(typeof CaminoRestRoutes)[Route]['put']['output']>>) => Promise<void>
 type RestDeleteCall = (pool: Pool) => (req: CaminoRequest, res: CustomResponse<void | Error>) => Promise<void>
@@ -102,6 +112,7 @@ const restRouteImplementations: Readonly<{ [key in CaminoRestRoute]: Transform<k
   '/download/fichiers/:documentId': { newDownload: etapeDocumentDownload },
   '/download/entrepriseDocuments/:documentId': { newDownload: entrepriseDocumentDownload },
   '/download/activiteDocuments/:documentId': { newDownload: activiteDocumentDownload },
+  '/download/avisDocument/:etapeAvisId': { newDownload: avisDocumentDownload },
   '/fichiers/:documentId': { newDownload: etapeDocumentDownload },
   '/titres/:id': { download: titre },
   '/titres': { download: titres },
@@ -145,10 +156,12 @@ const restRouteImplementations: Readonly<{ [key in CaminoRestRoute]: Transform<k
   '/rest/administrations/:administrationId/activiteTypeEmails/delete': { post: deleteAdministrationActiviteTypeEmails },
   '/rest/demarches/:demarcheId/geojson': { get: getPerimetreInfos },
   '/rest/etapes/:etapeId/geojson': { get: getPerimetreInfos },
-  '/rest/etapes/:etapeId': { delete: deleteEtape },
+  '/rest/etapes/:etapeIdOrSlug': { delete: deleteEtape, get: getEtape },
+  '/rest/etapes': { post: createEtape, put: updateEtape },
   '/rest/etapes/:etapeId/depot': { put: deposeEtape },
   '/rest/etapes/:etapeId/entrepriseDocuments': { get: getEtapeEntrepriseDocuments },
   '/rest/etapes/:etapeId/etapeDocuments': { get: getEtapeDocuments },
+  '/rest/etapes/:etapeId/etapeAvis': { get: getEtapeAvis },
   '/rest/activites/:activiteId': { get: getActivite, put: updateActivite, delete: deleteActivite },
   '/rest/communes': { get: getCommunes },
   '/rest/geojson/import/:geoSystemeId': { post: geojsonImport },

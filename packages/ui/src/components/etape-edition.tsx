@@ -4,7 +4,7 @@ import { ApiClient, apiClient } from '../api/api-client'
 import { DemarcheId, DemarcheIdOrSlug, demarcheIdOrSlugValidator } from 'camino-common/src/demarche'
 import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
 import { Alert } from './_ui/alert'
-import { EtapeIdOrSlug, etapeIdOrSlugValidator } from 'camino-common/src/etape'
+import { ETAPE_IS_NOT_BROUILLON, EtapeIdOrSlug, etapeIdOrSlugValidator } from 'camino-common/src/etape'
 import { entreprisesKey, userKey } from '../moi'
 import { User, isAdministrationAdmin, isAdministrationEditeur, isSuper } from 'camino-common/src/roles'
 import { Entreprise } from 'camino-common/src/entreprise'
@@ -76,6 +76,7 @@ export type Props = {
     | 'etapeCreer'
     | 'etapeModifier'
     | 'deposeEtape'
+    | 'getEtapeAvisByEtapeId'
   >
 }
 
@@ -107,7 +108,7 @@ export const PureEtapeEdition = defineComponent<Props>(props => {
               date: null,
               typeId: null,
               statutId: null,
-              isBrouillon: false,
+              isBrouillon: ETAPE_IS_NOT_BROUILLON,
               notes: null,
               substances: { value: [], heritee: true, etapeHeritee: null },
               titulaires: { value: [], heritee: true, etapeHeritee: null },

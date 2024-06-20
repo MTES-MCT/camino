@@ -134,6 +134,75 @@ export interface IInsertEtapeDocumentDbQuery {
   result: IInsertEtapeDocumentDbResult;
 }
 
+/** 'UpdateEtapeAvisFileDb' parameters type */
+export interface IUpdateEtapeAvisFileDbParams {
+  id: string;
+  largeobject_id: number;
+}
+
+/** 'UpdateEtapeAvisFileDb' return type */
+export type IUpdateEtapeAvisFileDbResult = void;
+
+/** 'UpdateEtapeAvisFileDb' query type */
+export interface IUpdateEtapeAvisFileDbQuery {
+  params: IUpdateEtapeAvisFileDbParams;
+  result: IUpdateEtapeAvisFileDbResult;
+}
+
+/** 'UpdateEtapeAvisInfoDb' parameters type */
+export interface IUpdateEtapeAvisInfoDbParams {
+  avis_statut_id: string;
+  avis_type_id: string;
+  avis_visibility_id: string;
+  date: string;
+  description?: string | null | void;
+  id: string;
+}
+
+/** 'UpdateEtapeAvisInfoDb' return type */
+export type IUpdateEtapeAvisInfoDbResult = void;
+
+/** 'UpdateEtapeAvisInfoDb' query type */
+export interface IUpdateEtapeAvisInfoDbQuery {
+  params: IUpdateEtapeAvisInfoDbParams;
+  result: IUpdateEtapeAvisInfoDbResult;
+}
+
+/** 'DeleteEtapeAvisDb' parameters type */
+export interface IDeleteEtapeAvisDbParams {
+  ids: readonly (string)[];
+}
+
+/** 'DeleteEtapeAvisDb' return type */
+export type IDeleteEtapeAvisDbResult = void;
+
+/** 'DeleteEtapeAvisDb' query type */
+export interface IDeleteEtapeAvisDbQuery {
+  params: IDeleteEtapeAvisDbParams;
+  result: IDeleteEtapeAvisDbResult;
+}
+
+/** 'InsertEtapeAvisDb' parameters type */
+export interface IInsertEtapeAvisDbParams {
+  avis_statut_id: string;
+  avis_type_id: string;
+  avis_visibility_id: string;
+  date: string;
+  description: string;
+  etape_id: string;
+  id: string;
+  largeobject_id: number;
+}
+
+/** 'InsertEtapeAvisDb' return type */
+export type IInsertEtapeAvisDbResult = void;
+
+/** 'InsertEtapeAvisDb' query type */
+export interface IInsertEtapeAvisDbQuery {
+  params: IInsertEtapeAvisDbParams;
+  result: IInsertEtapeAvisDbResult;
+}
+
 /** 'GetDocumentsByEtapeIdQuery' parameters type */
 export interface IGetDocumentsByEtapeIdQueryParams {
   titre_etape_id: string;
@@ -153,5 +222,45 @@ export interface IGetDocumentsByEtapeIdQueryResult {
 export interface IGetDocumentsByEtapeIdQueryQuery {
   params: IGetDocumentsByEtapeIdQueryParams;
   result: IGetDocumentsByEtapeIdQueryResult;
+}
+
+/** 'GetAvisByEtapeIdQuery' parameters type */
+export interface IGetAvisByEtapeIdQueryParams {
+  titre_etape_id: string;
+}
+
+/** 'GetAvisByEtapeIdQuery' return type */
+export interface IGetAvisByEtapeIdQueryResult {
+  avis_statut_id: string;
+  avis_type_id: string;
+  avis_visibility_id: string;
+  date: string;
+  description: string;
+  id: string;
+  largeobject_id: number | null;
+}
+
+/** 'GetAvisByEtapeIdQuery' query type */
+export interface IGetAvisByEtapeIdQueryQuery {
+  params: IGetAvisByEtapeIdQueryParams;
+  result: IGetAvisByEtapeIdQueryResult;
+}
+
+/** 'GetLargeobjectIdByEtapeAvisIdInternal' parameters type */
+export interface IGetLargeobjectIdByEtapeAvisIdInternalParams {
+  etapeAvisId: string;
+}
+
+/** 'GetLargeobjectIdByEtapeAvisIdInternal' return type */
+export interface IGetLargeobjectIdByEtapeAvisIdInternalResult {
+  avis_visibility_id: string;
+  etape_id: string;
+  largeobject_id: number | null;
+}
+
+/** 'GetLargeobjectIdByEtapeAvisIdInternal' query type */
+export interface IGetLargeobjectIdByEtapeAvisIdInternalQuery {
+  params: IGetLargeobjectIdByEtapeAvisIdInternalParams;
+  result: IGetLargeobjectIdByEtapeAvisIdInternalResult;
 }
 

@@ -1,32 +1,36 @@
 import { z } from 'zod'
-import { caminoDateValidator } from './date'
-import { demarcheIdValidator, demarcheSlugValidator } from './demarche'
-import { entrepriseDocumentIdValidator, entrepriseIdValidator } from './entreprise'
+import { caminoDateValidator } from './date.js'
+import { demarcheIdValidator, demarcheSlugValidator } from './demarche.js'
+import { entrepriseDocumentIdValidator, entrepriseIdValidator } from './entreprise.js'
 import {
   documentComplementaireAslEtapeDocumentModificationValidator,
   documentComplementaireDaeEtapeDocumentModificationValidator,
+  etapeAvisModificationValidator,
+  etapeBrouillonValidator,
   etapeDocumentModificationValidator,
   etapeIdValidator,
   etapeSlugValidator,
-} from './etape'
-import { km2Validator } from './number'
-import { featureCollectionForagesValidator, featureCollectionPointsValidator, featureMultiPolygonValidator } from './perimetre'
-import { demarcheTypeIdValidator } from './static/demarchesTypes'
-import { etapeStatutIdValidator } from './static/etapesStatuts'
-import { etapeTypeIdValidator } from './static/etapesTypes'
-import { geoSystemeIdValidator } from './static/geoSystemes'
-import { substanceLegaleIdValidator } from './static/substancesLegales'
-import { titreTypeIdValidator } from './static/titresTypes'
-import { titreIdValidator, titreSlugValidator } from './validators/titres'
-import { makeFlattenValidator, nullToDefault } from './zod-tools'
+} from './etape.js'
+import { km2Validator } from './number.js'
+import { featureCollectionForagesValidator, featureCollectionPointsValidator, featureMultiPolygonValidator } from './perimetre.js'
+import { demarcheTypeIdValidator } from './static/demarchesTypes.js'
+import { etapeStatutIdValidator } from './static/etapesStatuts.js'
+import { etapeTypeIdValidator } from './static/etapesTypes.js'
+import { geoSystemeIdValidator } from './static/geoSystemes.js'
+import { substanceLegaleIdValidator } from './static/substancesLegales.js'
+import { titreTypeIdValidator } from './static/titresTypes.js'
+import { titreIdValidator, titreSlugValidator } from './validators/titres.js'
+import { makeFlattenValidator, nullToDefault } from './zod-tools.js'
+import { numberElementValueValidator } from './sections.js'
 
 const contenuValidator = z
   .record(z.string(), z.record(z.string(), z.union([caminoDateValidator, z.string(), z.number(), z.boolean(), z.array(z.string())]).nullable()))
   .nullable()
   .transform(nullToDefault({}))
-const dureeValidator = z.number().nullable()
+export type EtapeContenu = z.infer<typeof contenuValidator>
+const dureeValidator = z.number().nonnegative().nullable()
 
-const defaultHeritageProps = {
+export const defaultHeritageProps = {
   dateDebut: { actif: false, etape: null },
   dateFin: { actif: false, etape: null },
   duree: { actif: false, etape: null },
@@ -34,7 +38,7 @@ const defaultHeritageProps = {
   substances: { actif: false, etape: null },
   titulaires: { actif: false, etape: null },
   amodiataires: { actif: false, etape: null },
-}
+} as const
 
 const heritagePropsValidator = z
   .object({
@@ -65,7 +69,7 @@ const heritagePropsValidator = z
   .nullable()
   .transform(nullToDefault(defaultHeritageProps))
 
-const heritageContenuValidator = z
+export const heritageContenuValidator = z
   .record(
     z.string(),
     z.record(z.string(), z.object({ actif: z.boolean(), etape: z.object({ typeId: etapeTypeIdValidator, date: caminoDateValidator, contenu: contenuValidator }).nullable().optional() }))
@@ -73,7 +77,9 @@ const heritageContenuValidator = z
   .nullable()
   .transform(nullToDefault({}))
 
-export const graphqlEtapeValidator = z.object({
+export type HeritageContenu = z.infer<typeof heritageContenuValidator>
+
+const graphqlEtapeValidator = z.object({
   id: etapeIdValidator,
   slug: etapeSlugValidator,
   titreDemarcheId: demarcheIdValidator,
@@ -110,7 +116,7 @@ export const graphqlEtapeValidator = z.object({
   notes: z.string().nullable(),
   heritageProps: heritagePropsValidator,
   heritageContenu: heritageContenuValidator,
-  isBrouillon: z.boolean(),
+  isBrouillon: etapeBrouillonValidator,
 })
 
 const perimetreObjectValidator = z.object({
@@ -123,6 +129,11 @@ const perimetreObjectValidator = z.object({
   geojsonOrigineForages: featureCollectionForagesValidator.nullable(),
   surface: km2Validator.nullable(),
 })
+
+const flattenedContenuElementValidator = makeFlattenValidator(z.union([caminoDateValidator, z.string(), numberElementValueValidator, z.boolean(), z.array(z.string())]).nullable())
+export type FlattenedContenuElement = z.infer<typeof flattenedContenuElementValidator>
+const flattenedContenuValidator = z.record(z.string(), z.record(z.string(), flattenedContenuElementValidator))
+export type FlattenedContenu = z.infer<typeof flattenedContenuValidator>
 
 export const flattenEtapeValidator = graphqlEtapeValidator
   .omit({
@@ -153,10 +164,13 @@ export const flattenEtapeValidator = graphqlEtapeValidator
     substances: makeFlattenValidator(z.array(substanceLegaleIdValidator)),
     titulaires: makeFlattenValidator(z.array(entrepriseIdValidator)),
     amodiataires: makeFlattenValidator(z.array(entrepriseIdValidator)),
-    contenu: z.record(z.string(), z.record(z.string(), makeFlattenValidator(z.union([caminoDateValidator, z.string(), z.number(), z.boolean(), z.array(z.string())]).nullable()))),
+    contenu: flattenedContenuValidator,
   })
 
 export type FlattenEtape = z.infer<typeof flattenEtapeValidator>
+
+export type GraphqlEtape = z.infer<typeof graphqlEtapeValidator>
+
 const graphqlInputHeritagePropValidator = z.object({
   actif: z.boolean(),
 })
@@ -171,7 +185,7 @@ const graphqlInputHeritagePropsValidator = z.object({
   amodiataires: graphqlInputHeritagePropValidator,
 })
 
-export const graphqlEtapeCreationValidator = graphqlEtapeValidator
+export const restEtapeCreationValidator = graphqlEtapeValidator
   .pick({
     typeId: true,
     statutId: true,
@@ -197,13 +211,14 @@ export const graphqlEtapeCreationValidator = graphqlEtapeValidator
     heritageContenu: z.record(z.string(), z.record(z.string(), z.object({ actif: z.boolean() }))),
     etapeDocuments: z.array(etapeDocumentModificationValidator),
     entrepriseDocumentIds: z.array(entrepriseDocumentIdValidator),
+    etapeAvis: z.array(etapeAvisModificationValidator),
   })
 
-export type GraphqlEtapeCreation = z.infer<typeof graphqlEtapeCreationValidator>
+export type RestEtapeCreation = z.infer<typeof restEtapeCreationValidator>
 
-export const graphqlEtapeModificationValidator = graphqlEtapeCreationValidator.extend({
+export const restEtapeModificationValidator = restEtapeCreationValidator.extend({
   id: etapeIdValidator,
   daeDocument: documentComplementaireDaeEtapeDocumentModificationValidator.nullable(),
   aslDocument: documentComplementaireAslEtapeDocumentModificationValidator.nullable(),
 })
-export type GraphqlEtapeModification = z.infer<typeof graphqlEtapeModificationValidator>
+export type RestEtapeModification = z.infer<typeof restEtapeModificationValidator>

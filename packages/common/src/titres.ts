@@ -12,6 +12,7 @@ import { TitreId, titreIdValidator, titreSlugValidator } from './validators/titr
 import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from './typescript-tools.js'
 import { EntrepriseId, entrepriseIdValidator } from './entreprise.js'
 import { isFondamentalesStatutOk } from './static/etapesStatuts.js'
+import { ETAPE_IS_NOT_BROUILLON } from './etape.js'
 
 const commonTitreValidator = z.object({
   id: titreIdValidator,
@@ -123,7 +124,7 @@ export type TitrePropTitreEtapeFindDemarche<F extends Pick<DemarcheEtape, 'etape
 }
 
 export const getMostRecentValuePropFromEtapeFondamentaleValide = <
-  P extends 'titulaireIds' | 'amodiataireIds' | 'perimetre' | 'substances',
+  P extends 'titulaireIds' | 'amodiataireIds' | 'perimetre' | 'substances' | 'duree',
   F extends Pick<DemarcheEtapeFondamentale, 'etape_statut_id' | 'etape_type_id' | 'ordre' | 'fondamentale' | 'is_brouillon'>,
   NF extends Pick<DemarcheEtapeNonFondamentale, 'etape_statut_id' | 'etape_type_id' | 'ordre' | 'is_brouillon'>,
 >(
@@ -135,7 +136,7 @@ export const getMostRecentValuePropFromEtapeFondamentaleValide = <
   for (const titreDemarche of titreDemarchesDesc) {
     const titreEtapeDesc = [...titreDemarche.etapes].sort((a, b) => b.ordre - a.ordre).filter((etape): etape is F => 'fondamentale' in etape)
     for (const titreEtape of titreEtapeDesc) {
-      if (isFondamentalesStatutOk(titreEtape.etape_statut_id) && (!titreEtape.is_brouillon || titreEtapeDesc.length === 1)) {
+      if (isFondamentalesStatutOk(titreEtape.etape_statut_id) && (titreEtape.is_brouillon === ETAPE_IS_NOT_BROUILLON || titreEtapeDesc.length === 1)) {
         const value = titreEtape.fondamentale[propId]
         if ((Array.isArray(value) && isNotNullNorUndefinedNorEmpty(value)) || (!Array.isArray(value) && isNotNullNorUndefined(value))) {
           return value

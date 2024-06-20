@@ -14,6 +14,7 @@ import { newDemarcheId, newTitreId } from '../../database/models/_format/id-crea
 import { TitreDemarchePhaseFind, TitreEtapePhaseFind } from '../../business/rules/titre-phases-find.js'
 import { TitreId } from 'camino-common/src/validators/titres.js'
 import { isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
+import { EtapeBrouillon } from 'camino-common/src/etape.js'
 
 const writePhasesForTest = async () => {
   const demarches: {
@@ -42,7 +43,7 @@ const writePhasesForTest = async () => {
       date: CaminoDate
       duree: number | null
       statut_id: EtapeStatutId
-      is_brouillon: boolean
+      is_brouillon: EtapeBrouillon
       geojson4326_perimetre: NonNullable<unknown> | null
     }[]
   } =
