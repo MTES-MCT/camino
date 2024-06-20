@@ -11,7 +11,7 @@ import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { TitreId, titreIdValidator } from 'camino-common/src/validators/titres.js'
 import { TitreEtapeForMachine } from '../rules-demarches/machine-common.js'
 import { ETAPE_IS_NOT_BROUILLON } from 'camino-common/src/etape.js'
-import { km2Validator } from 'camino-common/src/number.js'
+import { ZERO_KM2 } from 'camino-common/src/number.js'
 vi.mock('../../database/queries/titres-etapes', () => ({
   titreEtapeUpdate: vi.fn().mockResolvedValue(true),
 }))
@@ -39,7 +39,7 @@ const titresDemarchesEtapes: {
         typeId: 'asc',
         statutId: 'fai',
         isBrouillon: ETAPE_IS_NOT_BROUILLON,
-        surface: km2Validator.parse(0),
+        surface: ZERO_KM2,
         communes: null,
       },
       {
@@ -49,7 +49,7 @@ const titresDemarchesEtapes: {
         typeId: 'asc',
         statutId: 'fai',
         isBrouillon: ETAPE_IS_NOT_BROUILLON,
-        surface: km2Validator.parse(0),
+        surface: ZERO_KM2,
         communes: null,
       },
     ],

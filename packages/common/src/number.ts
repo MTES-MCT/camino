@@ -38,6 +38,6 @@ export const m2Validator = z
   .number()
   .transform(value => parseInt(`${value}`))
   .brand('CAMINO_M2')
-
+export const ZERO_KM2 = km2Validator.parse(0)
 export type KM2 = z.infer<typeof km2Validator>
 export type M2 = z.infer<typeof m2Validator>

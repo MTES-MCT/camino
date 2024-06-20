@@ -10,7 +10,7 @@ import { ETAPE_IS_BROUILLON, ETAPE_IS_NOT_BROUILLON, EtapeDocument, etapeDocumen
 import { DOCUMENTS_TYPES_IDS } from 'camino-common/src/static/documentsTypes'
 import { ApiClient } from '@/api/api-client'
 import { FeatureMultiPolygon } from 'camino-common/src/perimetre'
-import { km2Validator } from 'camino-common/src/number'
+import { ZERO_KM2, km2Validator } from 'camino-common/src/number'
 import { CaminoRouter } from '@/typings/vue-router'
 
 const meta: Meta = {
@@ -852,7 +852,7 @@ export const DemandeAvecSeulementPerimetre: StoryFn = () => (
           geojson_origine_points: null,
           geojson4326_forages: null,
           geojson_origine_forages: null,
-          surface: km2Validator.parse(0),
+          surface: ZERO_KM2,
           communes: [],
           sdom_zones: [],
           forets: [],
@@ -918,7 +918,7 @@ export const DemandeAvecGrosseNote: StoryFn = () => (
           geojson_origine_points: null,
           geojson4326_forages: null,
           geojson_origine_forages: null,
-          surface: km2Validator.parse(0),
+          surface: ZERO_KM2,
           communes: [],
           sdom_zones: [],
           forets: [],
@@ -1002,7 +1002,7 @@ export const AxmDeposableAvecDaeEtAsl: StoryFn = () => (
           geojson_origine_points: null,
           geojson4326_forages: null,
           geojson_origine_forages: null,
-          surface: km2Validator.parse(0),
+          surface: ZERO_KM2,
           communes: [],
           sdom_zones: [],
           forets: [],
@@ -1096,7 +1096,7 @@ export const DemandeAvecForage: StoryFn = () => (
           geojson_origine_points: null,
           geojson4326_forages: null,
           geojson_origine_forages: null,
-          surface: km2Validator.parse(0),
+          surface: ZERO_KM2,
           communes: [],
           sdom_zones: [],
           forets: [],

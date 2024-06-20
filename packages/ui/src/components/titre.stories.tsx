@@ -13,9 +13,10 @@ import { ETAPE_IS_NOT_BROUILLON, etapeIdValidator, etapeSlugValidator } from 'ca
 import { EtapesTypesEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStatuts'
 import { Entreprise, entrepriseIdValidator } from 'camino-common/src/entreprise'
 import { titreIdValidator, titreSlugValidator, TitreIdOrSlug } from 'camino-common/src/validators/titres'
-import { km2Validator } from 'camino-common/src/number'
+import { ZERO_KM2 } from 'camino-common/src/number'
 import { CaminoRouter } from '@/typings/vue-router'
 
+// FIXME ajoute test avec des avis
 const meta: Meta = {
   title: 'Components/Titre',
   // @ts-ignore @storybook/vue3 n'aime pas les composants tsx
@@ -211,7 +212,7 @@ const titre = {
               geojson_origine_geo_systeme_id: '4326',
               geojson4326_forages: null,
               geojson_origine_forages: null,
-              surface: km2Validator.parse(0),
+              surface: ZERO_KM2,
               communes: [],
               sdom_zones: [],
               forets: [],
