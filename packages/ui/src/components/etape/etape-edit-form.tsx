@@ -98,7 +98,7 @@ type EtapeEditFormDocuments = DeepReadonly<{
   etapeAvis: (EtapeAvis | TempEtapeAvis)[]
 }>
 
-const toto = (
+const mergeFlattenEtapeWithNewHeritage = (
   etape: DeepReadonly<CoreEtapeCreationOrModification>,
   titreTypeId: TitreTypeId,
   demarcheTypeId: DemarcheTypeId,
@@ -249,7 +249,7 @@ export const EtapeEditForm = defineComponent<Props>(props => {
         isBrouillon: isNotNullNorUndefined(currentEtape.id) ? currentEtape.isBrouillon : canBeBrouillon(typeId),
       }
       const value = await props.apiClient.getEtapeHeritagePotentiel(etape, props.demarcheId)
-      setEtape({ status: 'LOADED', value: toto(etape, props.titreTypeId, props.demarcheTypeId, value) })
+      setEtape({ status: 'LOADED', value: mergeFlattenEtapeWithNewHeritage(etape, props.titreTypeId, props.demarcheTypeId, value) })
     } catch (e: any) {
       console.error('error', e)
       setEtape({
