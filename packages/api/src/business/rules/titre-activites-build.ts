@@ -9,7 +9,7 @@ import { FrequenceId, Frequences, getNumberOfMonths } from 'camino-common/src/st
 import { SubstanceLegaleId } from 'camino-common/src/static/substancesLegales.js'
 import { CaminoDate, toCaminoDate } from 'camino-common/src/date.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
-import { DeepReadonly } from 'camino-common/src/typescript-tools.js'
+import { DeepReadonly, isNotNullNorUndefinedNorEmpty, isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
 import { ActiviteSection, ActiviteSectionElement, ActivitesTypes, ActivitesTypesId, isSubstancesFiscales } from 'camino-common/src/static/activitesTypes.js'
 import { TitreId } from 'camino-common/src/validators/titres.js'
 
@@ -45,12 +45,12 @@ const titreActiviteSectionsBuild = (
   return sections.reduce<DeepReadonly<ActiviteSection[]>>((newSections: DeepReadonly<ActiviteSection[]>, s) => {
     let elements: DeepReadonly<ActiviteSectionElement[]> = []
 
-    if (!isSubstancesFiscales(s) && s.elements) {
+    if (!isSubstancesFiscales(s) && isNotNullNorUndefinedNorEmpty(s.elements)) {
       elements = titreActiviteSectionElementsFormat(s.elements, periodeId, date)
     } else if (['gra', 'grx'].includes(activiteTypeId) && isSubstancesFiscales(s)) {
       const substances = titreEtapePropFind('substances', toCaminoDate(date), titreDemarches, titreTypeId) as SubstanceLegaleId[] | null
 
-      if (substances?.length) {
+      if (isNotNullNorUndefinedNorEmpty(substances)) {
         const substancesFiscales = substancesFiscalesFind(substances)
 
         elements = substancesFiscales.map(sf => {
@@ -61,6 +61,7 @@ const titreActiviteSectionsBuild = (
             type: 'number',
             description: `<b>${unite.symbole} (${unite.nom})</b> ${sf.description}`,
             uniteId: sf.uniteId,
+            optionnel: false,
           }
 
           return element
@@ -82,8 +83,8 @@ const titreActiviteSectionsBuild = (
   }, [])
 }
 
-const titreActiviteFind = (activiteTypeId: ActivitesTypesId, annee: number, periodeId: number, titreActivites?: ITitreActivite[] | null) =>
-  !!titreActivites?.length && titreActivites.find(a => a.typeId === activiteTypeId && a.annee === annee && a.periodeId === periodeId)
+const titreActiviteFind = (activiteTypeId: ActivitesTypesId, annee: number, periodeId: number, titreActivites?: ITitreActivite[] | null): boolean =>
+  titreActivites?.some(a => a.typeId === activiteTypeId && a.annee === annee && a.periodeId === periodeId) ?? false
 
 /**
  * Construit une activité (si elle n'existe pas déjà)
@@ -161,7 +162,7 @@ export const titreActivitesBuild = (
 ) => {
   // si le titre n'a pas de phases de démarches
   // aucune activité ne peut être créées
-  if (!titreDemarches?.some(d => d.demarcheDateDebut)) return []
+  if ((titreDemarches ?? []).every(d => isNullOrUndefined(d.demarcheDateDebut))) return []
 
   const activiteType = ActivitesTypes[activiteTypeId]
 
@@ -172,7 +173,7 @@ export const titreActivitesBuild = (
       periodes.reduce((acc: ITitreActivite[], _, i) => {
         const activiteSections = activiteType.sections
 
-        const titreActivite = titreActiviteBuild(activiteType.id, i + 1, activiteSections, annee, activiteType.frequenceId, aujourdhui, titreId, titreDemarches, titreTypeId, titreActivites)
+        const titreActivite = titreActiviteBuild(activiteType.id, i + 1, activiteSections, annee, activiteType.frequenceId, aujourdhui, titreId, titreDemarches ?? [], titreTypeId, titreActivites)
 
         if (titreActivite) {
           acc.push(titreActivite)

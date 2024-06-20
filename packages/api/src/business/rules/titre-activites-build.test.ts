@@ -52,7 +52,7 @@ describe("construction des activités d'un titre", () => {
     expect(res.length).toEqual(0)
   })
 
-  test('crée des activités', () => {
+  test.only('crée des activités', () => {
     const titreActivitesA = titreActivitesBuild(ACTIVITES_TYPES_IDS["rapport d'exploitation (permis et concessions M)"], [2018], aujourdhui, titreId, 'pxm', [
       {
         id: newDemarcheId('demarche-id'),

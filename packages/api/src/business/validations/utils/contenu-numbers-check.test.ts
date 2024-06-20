@@ -7,12 +7,12 @@ describe('vérifie la validité du contenu de type nombre', () => {
   })
 
   test('un champ de section dont le type est un nombre et qui a une valeur positive est validée', () => {
-    expect(contenuNumbersCheck([{ id: 'section', elements: [{ id: 'number', type: 'number' }] }], { section: { number: { value: 123 } } })).toBeNull()
+    expect(contenuNumbersCheck([{ id: 'section', elements: [{ id: 'number', type: 'number', optionnel: false }] }], { section: { number: { value: 123 } } })).toBeNull()
   })
 
   test('un champ de section dont le type est un nombre et qui a une valeur négative retourne une erreur', () => {
     expect(
-      contenuNumbersCheck([{ id: 'section', elements: [{ id: 'number', type: 'number' }] }], {
+      contenuNumbersCheck([{ id: 'section', elements: [{ id: 'number', type: 'number', optionnel: false }] }], {
         section: {
           number: { value: -1 },
         },

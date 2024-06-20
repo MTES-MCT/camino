@@ -9,8 +9,6 @@ describe('sectionElementWithValueCompleteValidate', () => {
     [null, false, false],
     ['un texte', false, true],
     [null, true, true],
-    [null, undefined, false],
-    ['un text', undefined, true],
   ])('Pour élément text', (value, optionnel, expectedComplete) => {
     expect(sectionElementWithValueCompleteValidate({ type: 'text', value, optionnel })).toEqual(expectedComplete)
   })
@@ -20,8 +18,6 @@ describe('sectionElementWithValueCompleteValidate', () => {
     [null, false, false],
     [10, false, true],
     [null, true, true],
-    [null, undefined, false],
-    [10, undefined, true],
   ])('Pour élément number ou integer', (value, optionnel, expectedComplete) => {
     expect(sectionElementWithValueCompleteValidate({ type: 'number', value, optionnel })).toEqual(expectedComplete)
     expect(sectionElementWithValueCompleteValidate({ type: 'integer', value, optionnel })).toEqual(expectedComplete)
@@ -32,8 +28,6 @@ describe('sectionElementWithValueCompleteValidate', () => {
     [null, false, false],
     [true, false, true],
     [null, true, true],
-    [null, undefined, false],
-    [true, undefined, true],
   ])('Pour élément radio', (value, optionnel, expectedComplete) => {
     expect(sectionElementWithValueCompleteValidate({ type: 'radio', value, optionnel })).toEqual(expectedComplete)
   })
@@ -43,8 +37,6 @@ describe('sectionElementWithValueCompleteValidate', () => {
     [null, false, true],
     [true, false, true],
     [null, true, true],
-    [null, undefined, true],
-    [true, undefined, true],
   ])('Pour élément checkbox', (value, optionnel, expectedComplete) => {
     expect(sectionElementWithValueCompleteValidate({ type: 'checkbox', value, optionnel })).toEqual(expectedComplete)
   })
@@ -52,10 +44,8 @@ describe('sectionElementWithValueCompleteValidate', () => {
   test.each<[string[], ElementWithValue['optionnel'], boolean]>([
     [[], false, true],
     [[], true, true],
-    [[], undefined, true],
     [['item'], false, true],
     [['item'], true, true],
-    [['item'], undefined, true],
   ])('Pour élément checkboxes', (value, optionnel, expectedComplete) => {
     expect(sectionElementWithValueCompleteValidate({ type: 'checkboxes', value, optionnel })).toEqual(expectedComplete)
   })
@@ -65,8 +55,6 @@ describe('sectionElementWithValueCompleteValidate', () => {
     [null, false, false],
     ['id1', false, true],
     [null, true, true],
-    [null, undefined, false],
-    ['id1', undefined, true],
   ])('Pour élément select', (value, optionnel, expectedComplete) => {
     expect(sectionElementWithValueCompleteValidate({ type: 'select', value, optionnel })).toEqual(expectedComplete)
   })
@@ -75,8 +63,6 @@ describe('sectionElementWithValueCompleteValidate', () => {
     [getCurrent(), false, true],
     [null, false, false],
     [null, true, true],
-    [null, undefined, false],
-    [getCurrent(), undefined, true],
   ])('Pour élément date', (value, optionnel, expectedComplete) => {
     expect(sectionElementWithValueCompleteValidate({ type: 'date', value, optionnel })).toEqual(expectedComplete)
   })

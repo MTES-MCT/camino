@@ -8,8 +8,8 @@ const sections: DeepReadonly<Section[]> = [
   {
     id: 'section',
     elements: [
-      { id: 'date', type: 'date' },
-      { id: 'mot', type: 'text' },
+      { id: 'date', type: 'date', optionnel: false },
+      { id: 'mot', type: 'text', optionnel: false },
     ],
   },
 ]

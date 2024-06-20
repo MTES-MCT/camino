@@ -266,7 +266,7 @@ const caracteristiquesARM: Section[] = [
     id: 'arm',
     nom: 'Caractéristiques ARM',
     elements: [
-      { id: 'mecanise', nom: 'Prospection mécanisée', type: 'radio', description: '' },
+      { id: 'mecanise', nom: 'Prospection mécanisée', type: 'radio', description: '', optionnel: false },
       { id: 'franchissements', nom: "Franchissements de cours d'eau", type: 'integer', optionnel: true, description: "Nombre de franchissements de cours d'eau" },
     ],
   },
@@ -276,7 +276,7 @@ const TDESections = {
   [TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX]: {
     [DEMARCHES_TYPES_IDS.Octroi]: {
       [ETAPES_TYPES.receptionDeComplements_DecisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet__]: [
-        { id: 'arm', nom: 'Caractéristiques ARM', elements: [{ id: 'mecanise', nom: 'Prospection mécanisée', type: 'radio', description: '' }] },
+        { id: 'arm', nom: 'Caractéristiques ARM', elements: [{ id: 'mecanise', nom: 'Prospection mécanisée', type: 'radio', description: '', optionnel: false }] },
       ],
       [ETAPES_TYPES.recepisseDeDeclarationLoiSurLeau]: [
         {
@@ -311,6 +311,7 @@ const TDESections = {
               type: 'checkbox',
               description:
                 "L'entreprise porteuse de la demande est identifiées (extrait Kbis de moins d’un an, déclaration INSEE du statut d’Auto Entrepreneur, justificatif de création de société en cours, (présence code SIRET et APE).",
+              optionnel: false,
             },
             {
               id: 'representantLegal',
@@ -318,6 +319,7 @@ const TDESections = {
               type: 'checkbox',
               description:
                 "Le réprésentant légal de l'entité porteuse de la demande est identifié (Identité, coordonnées, justificatif d'identité - CNI / passeport / carte de résident en cours de validité).",
+              optionnel: false,
             },
             { id: 'motifsIdentification', nom: 'Motifs identification demandeur', type: 'textarea', optionnel: true, description: '' },
           ],
@@ -326,14 +328,15 @@ const TDESections = {
           id: 'armCaracteristiques',
           nom: "Caractéristiques de l'autorisation de recherche",
           elements: [
-            { id: 'nomSecteur', nom: 'Nom de secteur', type: 'checkbox', description: "Le nom de secteur est cohérent avec l'appellation courante de l'ARM." },
-            { id: 'duree', nom: 'Durée', type: 'checkbox', description: "L'autorisation est demandée pour une durée maximum de 4 mois à compter de la date de l'autorisation." },
+            { id: 'nomSecteur', nom: 'Nom de secteur', type: 'checkbox', description: "Le nom de secteur est cohérent avec l'appellation courante de l'ARM.", optionnel: false },
+            { id: 'duree', nom: 'Durée', type: 'checkbox', description: "L'autorisation est demandée pour une durée maximum de 4 mois à compter de la date de l'autorisation.", optionnel: false },
             {
               id: 'descriptionProjet',
               nom: 'Description du projet de recherches minières ',
               type: 'checkbox',
               description:
                 'Le projet de recherches minières est décrit : le programme de prospection, les méthodes de travail projetées, les moyens techniques mobilisés, les moyens humains employés.',
+              optionnel: false,
             },
             {
               id: 'surfaceDemandee',
@@ -341,12 +344,14 @@ const TDESections = {
               type: 'checkbox',
               description:
                 "Les surfaces demandées n'excéde pas 3 km², sous la forme de 1 à 3 carrés ou rectangles d'une superficie de 1 km² chacun, tous situés sur le même bassin versant. Les carrés mesurent 1 km de côté et les rectangles 0,5 km de largeur et 2 km de longueur. L'espacement de leurs centres n'est pas supérieur à 4 km.",
+              optionnel: false,
             },
             {
               id: 'surfaceMaximumDetenue',
               nom: 'Surfaces maximum détenues',
               type: 'checkbox',
               description: "L'opérateur ne détient pas d'autorisation de recherches sur une surface supérieure à 3 km².",
+              optionnel: false,
             },
             {
               id: 'localisationPerimetres',
@@ -354,12 +359,14 @@ const TDESections = {
               type: 'checkbox',
               description:
                 'Les périmètres est transmis dans un fichier numérique réutilisable (au format ".geojson"). Le système de coordonnées légal en vigueur est le RGFG95 (ESPG: 2972) avec une précision métrique.',
+              optionnel: false,
             },
             {
               id: 'cheminements',
               nom: 'Cheminements prévisionnels à emprunter',
               type: 'checkbox',
               description: "Ces tracés sont élaborés uniquement à partir du réseau carrossable, jusqu'à et à l'intérieur de l'ARM.",
+              optionnel: false,
             },
             {
               id: 'localisationCheminements',
@@ -367,13 +374,15 @@ const TDESections = {
               type: 'checkbox',
               description:
                 'L\'ensemble de ces tracés est transmis dans un fichier numérique réutilisable (au format ".geojson"). Le système de coordonnées légal en vigueur est le RGFG95 (ESPG: 2972) avec une précision métrique.',
+              optionnel: false,
             },
-            { id: 'carte500000', nom: 'Carte synthétique 1/500 000', type: 'checkbox', description: 'Le document cartographique inclut les périmètres demandés' },
+            { id: 'carte500000', nom: 'Carte synthétique 1/500 000', type: 'checkbox', description: 'Le document cartographique inclut les périmètres demandés', optionnel: false },
             {
               id: 'carte50000',
               nom: 'Carte synthétique 1/50 000',
               type: 'checkbox',
               description: 'Le document cartographique inclut les périmètres demandés, le tracé des cheminements prévisionnels à emprunter, la position des points de franchissement.',
+              optionnel: false,
             },
             { id: 'motifsDemande', nom: 'Motifs caractéristiques de la demande', type: 'textarea', optionnel: true, description: '' },
           ],
@@ -382,23 +391,31 @@ const TDESections = {
           id: 'armMecanisee',
           nom: 'Informations sur la prospection mécanisée',
           elements: [
-            { id: 'recepisseLSE', nom: "Dossier loi sur l'eau", type: 'checkbox', description: "Le dossier de déclaration loi sur l'eau est présent." },
+            { id: 'recepisseLSE', nom: "Dossier loi sur l'eau", type: 'checkbox', description: "Le dossier de déclaration loi sur l'eau est présent.", optionnel: false },
             {
               id: 'recepisseCasParCas',
               nom: "Décision d'examen au cas par cas",
               type: 'checkbox',
               description: "L'étape de décision dans le cadre de l'examen au cas par cas est présente et favorable.",
+              optionnel: false,
             },
-            { id: 'franchissementsCoursDeau', nom: "Franchissements de cours d'eau", type: 'checkbox', description: "Les franchissements de cours d'eau sont indiqués." },
+            { id: 'franchissementsCoursDeau', nom: "Franchissements de cours d'eau", type: 'checkbox', description: "Les franchissements de cours d'eau sont indiqués.", optionnel: false },
             {
               id: 'localisationPointsFranchissementsCoursDeau',
               nom: "Localisation des points de franchissement de cours d'eau",
               type: 'checkbox',
               description:
                 'L\'ensemble de ces point est transmis dans un fichier numérique réutilisable (au format ".geojson"). Le système de coordonnées légal en vigueur est le RGFG95 (ESPG: 2972) avec une précision métrique.',
+              optionnel: false,
             },
-            { id: 'descriptionMateriel', nom: 'Description du matériel', type: 'checkbox', description: 'Le matériel utilisé et son origine (acquisition, location) sont décrits.' },
-            { id: 'tonnageMaximum', nom: 'Tonnage maximum autorisé', type: 'checkbox', description: 'Le tonnage maximum des pelles mécaniques autorisées fixé à 21 tonnes est respecté.' },
+            { id: 'descriptionMateriel', nom: 'Description du matériel', type: 'checkbox', description: 'Le matériel utilisé et son origine (acquisition, location) sont décrits.', optionnel: false },
+            {
+              id: 'tonnageMaximum',
+              nom: 'Tonnage maximum autorisé',
+              type: 'checkbox',
+              description: 'Le tonnage maximum des pelles mécaniques autorisées fixé à 21 tonnes est respecté.',
+              optionnel: false,
+            },
             { id: 'motifsMateriel', nom: 'Motifs caractéristiques matériel', type: 'textarea', optionnel: true, description: '' },
           ],
         },
@@ -412,12 +429,14 @@ const TDESections = {
               type: 'checkbox',
               description:
                 "La justification des capacités techniques s'appuie sur la présentation de l'activité professionnelle actuelle et les références professionnelles en matière minière du demandeur (curriculum vitae, ou à défaut, les formations suivies). S'il s'agit d'une personne morale les références professionnelles des cadres chargés du suivi et de la conduite des travaux sont présentées.",
+              optionnel: false,
             },
             {
               id: 'responsableTravaux',
               nom: 'Responsable des travaux',
               type: 'checkbox',
               description: "Le responsable des travaux est identifié (Identité, coordonnées, justificatif d'identité - CNI / passeport / carte de résident en cours de validité).",
+              optionnel: false,
             },
             { id: 'motifsCapaciteTechniques', nom: 'Motifs capacité techniques', type: 'textarea', optionnel: true, description: '' },
           ],
@@ -431,6 +450,7 @@ const TDESections = {
               nom: 'Plan de financement',
               type: 'checkbox',
               description: 'Le plan inclut le montant de la dépense totale envisagée en euros pour conduire la prospection et le plan prévisionnel de financement associé.',
+              optionnel: false,
             },
             {
               id: 'justificationCapacitesFinancieres',
@@ -438,6 +458,7 @@ const TDESections = {
               type: 'checkbox',
               description:
                 "La démonstration des capacités financières à exercer une activité d'exploration comporte la justification des ressources financières disponibles correspondant au plan de financement.",
+              optionnel: false,
             },
             {
               id: 'justificatifSituationFiscale',
@@ -445,6 +466,7 @@ const TDESections = {
               type: 'checkbox',
               description:
                 "La justification de situation fiscale régulière est présentée (attestation ou justificatif des services fiscaux, déclaration unique DGFIP, moratoire accordé par la même autorité) excepté pour les sociétés créées dans l'année.",
+              optionnel: false,
             },
             { id: 'motifsCapaciteFinancieres', nom: 'Motifs capacités financières', type: 'textarea', optionnel: true, description: '' },
           ],
@@ -467,7 +489,7 @@ const TDESections = {
       [ETAPES_TYPES.receptionDeComplements_CompletudeDeLaDemande_]: caracteristiquesARM,
       [ETAPES_TYPES.receptionDinformation_RecevabiliteDeLaDemande_]: caracteristiquesARM,
       [ETAPES_TYPES.signatureDeLautorisationDeRechercheMiniere]: [
-        { id: 'arm', nom: 'Caractéristiques ARM', elements: [{ id: 'mecanise', nom: 'Prospection mécanisée', type: 'radio' }] },
+        { id: 'arm', nom: 'Caractéristiques ARM', elements: [{ id: 'mecanise', nom: 'Prospection mécanisée', type: 'radio', optionnel: false }] },
         {
           id: 'suivi',
           nom: 'Suivi de la démarche',
@@ -904,20 +926,20 @@ const basicElementValidator = z.object({
   description: z.string().optional(),
   dateDebut: caminoDateValidator.optional(),
   dateFin: caminoDateValidator.optional(),
-  // TODO 2024-06-03: optionnel devrait être tout le temps présent avec une valeur
-  optionnel: z.boolean().optional(),
+  // TODO 2024-06-20: virer le optional quand on a viré la colonne sections dans la table activités
+  optionnel: z.boolean().optional().default(false),
 })
 
 export const dateElementValidator = basicElementValidator.extend({ type: z.literal('date') })
 export const textElementValidator = basicElementValidator.extend({ type: z.enum(['text', 'textarea']) })
 export const urlElementValidator = basicElementValidator.extend({ type: z.literal('url') })
 export const numberElementValidator = basicElementValidator.extend({ type: z.enum(['number', 'integer']), uniteId: uniteIdValidator.optional() })
-export const radioElementValidator = basicElementValidator.extend({ type: z.literal('radio'), optionnel: z.literal(false).optional() })
-export const checkboxElementValidator = basicElementValidator.extend({ type: z.literal('checkbox'), optionnel: z.literal(false).optional() })
+export const radioElementValidator = basicElementValidator.extend({ type: z.literal('radio') })
+export const checkboxElementValidator = basicElementValidator.extend({ type: z.literal('checkbox'), optionnel: z.literal(false).optional().default(false) })
 export const checkboxesElementValidator = basicElementValidator.extend({
   type: z.literal('checkboxes'),
   options: z.array(z.object({ id: z.string(), nom: z.string() })),
-  optionnel: z.boolean().optional(),
+  optionnel: z.literal(false).optional().default(false),
 })
 
 const isSelectElementWithMetas = (element: DeepReadonly<SelectElement>): element is SelectElementWithMetas => 'valeursMetasNom' in element

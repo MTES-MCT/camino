@@ -293,7 +293,7 @@ export const NoSnapshotDemande: StoryFn = () => (
           secteurs_maritimes: [],
         },
       },
-      sections_with_values: [{ id: 'arm', elements: [{ id: 'mecanise', type: 'radio', value: true, nom: 'Mécanisation' }], nom: 'Arm' }],
+      sections_with_values: [{ id: 'arm', elements: [{ id: 'mecanise', type: 'radio', value: true, nom: 'Mécanisation', optionnel: false }], nom: 'Arm' }],
       etape_documents: [],
       entreprises_documents: [],
       avis_documents: [],
@@ -334,7 +334,7 @@ export const DemandeMultipleEntreprisesDocuments: StoryFn = () => (
         perimetre: null,
       },
       sections_with_values: [
-        { id: 'arm', elements: [{ id: 'mecanise', type: 'radio', value: true, nom: 'Mécanisation' }], nom: 'Arm' },
+        { id: 'arm', elements: [{ id: 'mecanise', type: 'radio', value: true, nom: 'Mécanisation', optionnel: false }], nom: 'Arm' },
         {
           id: 'odlep',
           elements: [
@@ -398,7 +398,7 @@ export const DemandeNoMap: StoryFn = () => (
         perimetre: null,
       },
       sections_with_values: [
-        { id: 'arm', elements: [{ id: 'mecanise', type: 'radio', value: true, nom: 'Mécanisation' }], nom: 'Arm' },
+        { id: 'arm', elements: [{ id: 'mecanise', type: 'radio', value: true, nom: 'Mécanisation', optionnel: false }], nom: 'Arm' },
         {
           id: 'odlep',
           elements: [
@@ -446,7 +446,7 @@ export const DemandeNonDeposable: StoryFn = () => (
         amodiataireIds: [entrepriseIdValidator.parse('amodiataire1')],
         perimetre: null,
       },
-      sections_with_values: [{ id: 'arm', elements: [{ id: 'mecanise', type: 'radio', value: true, nom: 'Mécanisation' }], nom: 'Arm' }],
+      sections_with_values: [{ id: 'arm', elements: [{ id: 'mecanise', type: 'radio', value: true, nom: 'Mécanisation', optionnel: false }], nom: 'Arm' }],
       etape_documents: [],
       entreprises_documents: [],
       avis_documents: [],
@@ -488,7 +488,7 @@ export const DemandeNonSupprimable: StoryFn = () => (
         amodiataireIds: [entrepriseIdValidator.parse('amodiataire1')],
         perimetre: null,
       },
-      sections_with_values: [{ id: 'arm', elements: [{ id: 'mecanise', type: 'radio', value: true, nom: 'Mécanisation' }], nom: 'Arm' }],
+      sections_with_values: [{ id: 'arm', elements: [{ id: 'mecanise', type: 'radio', value: true, nom: 'Mécanisation', optionnel: false }], nom: 'Arm' }],
       etape_documents: [],
       entreprises_documents: [],
       avis_documents: [],
@@ -572,7 +572,7 @@ export const DemandeArmMecaniseNonDeposable: StoryFn = () => (
           secteurs_maritimes: [],
         },
       },
-      sections_with_values: [{ id: 'arm', elements: [{ id: 'mecanise', type: 'radio', value: true, nom: 'Mécanisation' }], nom: 'Arm' }],
+      sections_with_values: [{ id: 'arm', elements: [{ id: 'mecanise', type: 'radio', value: true, nom: 'Mécanisation', optionnel: false }], nom: 'Arm' }],
       etape_documents: documentsDemande,
       entreprises_documents: entrepriseDocumentsDemande,
       avis_documents: [],
@@ -656,7 +656,7 @@ export const DemandeArmMecaniseDeposable: StoryFn = () => (
           secteurs_maritimes: [],
         },
       },
-      sections_with_values: [{ id: 'arm', elements: [{ id: 'mecanise', type: 'radio', value: true, nom: 'Mécanisation' }], nom: 'Arm' }],
+      sections_with_values: [{ id: 'arm', elements: [{ id: 'mecanise', type: 'radio', value: true, nom: 'Mécanisation', optionnel: false }], nom: 'Arm' }],
       etape_documents: [
         ...documentsDemande,
         { id: etapeDocumentIdValidator.parse('idDoe'), etape_document_type_id: 'doe', public_lecture: true, entreprises_lecture: true, description: null },
@@ -744,7 +744,7 @@ export const DemandeArmNonMecaniseDeposable: StoryFn = () => (
           secteurs_maritimes: [],
         },
       },
-      sections_with_values: [{ id: 'arm', elements: [{ id: 'mecanise', type: 'radio', value: false, nom: 'Mécanisation' }], nom: 'Arm' }],
+      sections_with_values: [{ id: 'arm', elements: [{ id: 'mecanise', type: 'radio', value: false, nom: 'Mécanisation', optionnel: false }], nom: 'Arm' }],
       etape_documents: documentsDemande,
       entreprises_documents: entrepriseDocumentsDemande,
       avis_documents: [],
@@ -1109,8 +1109,8 @@ export const DemandeAvecForage: StoryFn = () => (
           id: 'pxg',
           nom: "Propriétés du permis d'exploitation",
           elements: [
-            { id: 'debit', nom: 'Débit volumique maximal de pompage', type: 'number', value: 3, uniteId: 'm3h' },
-            { id: 'volume', nom: 'Volume maximum de pompage', type: 'number', value: 8, uniteId: 'm3x' },
+            { id: 'debit', nom: 'Débit volumique maximal de pompage', type: 'number', value: 3, uniteId: 'm3h', optionnel: false },
+            { id: 'volume', nom: 'Volume maximum de pompage', type: 'number', value: 8, uniteId: 'm3x', optionnel: false },
           ],
         },
       ],

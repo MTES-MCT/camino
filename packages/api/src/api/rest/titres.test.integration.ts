@@ -520,6 +520,7 @@ describe('getTitre', () => {
                         "description": "",
                         "id": "mecanise",
                         "nom": "Prospection mécanisée",
+                        "optionnel": false,
                         "type": "radio",
                         "value": null,
                       },
