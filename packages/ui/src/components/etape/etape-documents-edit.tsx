@@ -249,6 +249,7 @@ const EtapeDocumentsLoaded = defineComponent<EtapeDocumentsLoadedProps>(props =>
           emptyRequiredDocuments={emptyRequiredDocuments.value}
           documents={completeRequiredDocuments.value}
           isBrouillon={props.isBrouillon}
+          user={props.user}
         />
       ) : null}
 
@@ -264,6 +265,7 @@ const EtapeDocumentsLoaded = defineComponent<EtapeDocumentsLoadedProps>(props =>
               emptyRequiredDocuments={[]}
               documents={additionnalDocuments.value}
               isBrouillon={props.isBrouillon}
+              user={props.user}
             />
             <DsfrButtonIcon
               style={{ alignSelf: 'end' }}
@@ -302,6 +304,7 @@ type PropsTable = {
   add: (documentTypeId: DocumentTypeId) => void
   edit: (documentIndex: number | 'asl' | 'dae') => void
   delete: (documentIndex: number) => void
+  user: User
 }
 const EtapeDocumentsTable: FunctionalComponent<PropsTable> = (props: PropsTable) => {
   const deleteDocument = (index: number) => () => {
@@ -342,7 +345,7 @@ const EtapeDocumentsTable: FunctionalComponent<PropsTable> = (props: PropsTable)
                     buttonType="secondary"
                     buttonSize="sm"
                   />
-                  {canDeleteEtapeDocument(props.isBrouillon) && document.index !== 'asl' && document.index !== 'dae' ? (
+                  {canDeleteEtapeDocument(props.isBrouillon, props.user) && document.index !== 'asl' && document.index !== 'dae' ? (
                     <DsfrButtonIcon
                       icon="fr-icon-delete-bin-line"
                       class="fr-ml-1w"
