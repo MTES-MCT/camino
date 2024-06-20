@@ -372,6 +372,17 @@ describe('trie les étapes', () => {
     ]
 
     const result = titreEtapesSortAscByDate(etapes, newDemarcheId(), DEMARCHES_TYPES_IDS.Octroi, TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX)
+    expect(result.map(({ id }) => id)).toMatchInlineSnapshot(`
+      [
+        "mfr",
+        "mdp",
+        "pfd",
+        "mcp",
+        "vfd",
+        "mcr",
+        "asc",
+      ]
+    `)
     expect(result[result.length - 1].id).toBe('asc')
   })
 })
