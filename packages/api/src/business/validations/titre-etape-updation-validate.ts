@@ -8,7 +8,7 @@ import { User } from 'camino-common/src/roles.js'
 import { SDOMZoneId } from 'camino-common/src/static/sdom.js'
 import { getSections } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
 import { EntrepriseDocument, EntrepriseId } from 'camino-common/src/entreprise.js'
-import { EtapeAvis, EtapeDocument, GetEtapeDocumentsByEtapeIdAslDocument, GetEtapeDocumentsByEtapeIdDaeDocument } from 'camino-common/src/etape.js'
+import { ETAPE_IS_NOT_BROUILLON, EtapeAvis, EtapeDocument, GetEtapeDocumentsByEtapeIdAslDocument, GetEtapeDocumentsByEtapeIdDaeDocument } from 'camino-common/src/etape.js'
 import { CommuneId } from 'camino-common/src/static/communes.js'
 import { isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
 import { FlattenEtape } from 'camino-common/src/etape-form.js'
@@ -80,8 +80,7 @@ export const titreEtapeUpdationValidate = (
   }
 
   // 4. si l’étape n’est pas en cours de construction
-  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-  if (!etape.isBrouillon) {
+  if (etape.isBrouillon === ETAPE_IS_NOT_BROUILLON) {
     const etapeComplete = isEtapeComplete(etape, titre.typeId, titreDemarche.typeId, documents, entrepriseDocuments, sdomZones, communes ?? [], daeDocument, aslDocument, etapeAvis, user)
     if (!etapeComplete.valid) {
       errors.push(...etapeComplete.errors)
