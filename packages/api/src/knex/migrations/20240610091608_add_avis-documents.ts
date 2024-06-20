@@ -205,7 +205,7 @@ ${descriptionSections.join('\n')}`
         }
         if (documents.rows.length === 0) {
           const row = {
-            id: newEtapeAvisId(etape.date, avisTypeId),
+            id: newEtapeAvisId(avisTypeId),
             avis_type_id: avisTypeId,
             etape_id: etapePivotId,
             description: descriptionSections.join('\n'),

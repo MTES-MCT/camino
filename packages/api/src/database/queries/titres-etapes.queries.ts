@@ -188,7 +188,7 @@ insert into etapes_documents (id, etape_document_type_id, etape_id, description,
 
 export const insertEtapeAvis = async (pool: Pool, titre_etape_id: EtapeId, etapeAvis: TempEtapeAvis[]) => {
   for (const avis of etapeAvis) {
-    const id = newEtapeAvisId(getCurrent(), avis.avis_type_id)
+    const id = newEtapeAvisId(avis.avis_type_id)
     const largeobject_id = isNotNullNorUndefined(avis.temp_document_name) ? await createLargeObject(pool, avis.temp_document_name) : null
     await insertEtapeAvisWithLargeObjectId(pool, titre_etape_id, avis, id, largeobject_id)
   }

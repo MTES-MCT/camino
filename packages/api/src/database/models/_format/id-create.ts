@@ -42,10 +42,10 @@ export const newEtapeDocumentId = (date: CaminoDate, documentTypeId: DocumentTyp
 
   return etapeDocumentIdValidator.parse(`${date}-${documentTypeId}-${hash}`)
 }
-export const newEtapeAvisId = (date: CaminoDate, documentTypeId: AvisTypeId): EtapeAvisId => {
+export const newEtapeAvisId = (documentTypeId: AvisTypeId): EtapeAvisId => {
   const hash = idGenerate(8)
 
-  return etapeAvisIdValidator.parse(`${date}-${documentTypeId}-${hash}`)
+  return etapeAvisIdValidator.parse(`avis-${documentTypeId}-${hash}`)
 }
 
 export const newUtilisateurId = (value: string = idGenerate(6)): UtilisateurId => {
