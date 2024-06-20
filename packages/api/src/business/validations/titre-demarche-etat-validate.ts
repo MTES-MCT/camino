@@ -7,6 +7,7 @@ import { titreEtapeForMachineValidator, toMachineEtapes } from '../rules-demarch
 import { titreEtapeTypeAndStatusValidate } from './titre-etape-type-and-status-validate.js'
 import { DemarcheId } from 'camino-common/src/demarche.js'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes.js'
+import { ETAPE_IS_BROUILLON } from 'camino-common/src/etape.js'
 
 const titreDemarcheEtapesBuild = <T extends Pick<Partial<ITitreEtape>, 'id'>>(titreEtape: DeepReadonly<T>, suppression: boolean, titreDemarcheEtapes?: DeepReadonly<T[]> | null): DeepReadonly<T[]> => {
   if (isNullOrUndefinedOrEmpty(titreDemarcheEtapes)) {
@@ -68,8 +69,7 @@ export const titreDemarcheUpdatedEtatValidate = (
   }
 
   // si on essaye d’ajouter ou de modifier une demande non déposée
-  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-  if (titreEtape.typeId === 'mfr' && titreEtape.isBrouillon && !suppression) {
+  if (titreEtape.typeId === 'mfr' && titreEtape.isBrouillon === ETAPE_IS_BROUILLON && !suppression) {
     const etapesDemande = titreDemarcheEtapes?.filter(te => te.typeId === 'mfr')
 
     // si c’est la création de la première demande, pas besoin de faire de vérification avec l’arbre
