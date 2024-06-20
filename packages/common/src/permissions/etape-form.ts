@@ -185,7 +185,8 @@ export const getAvisTypes = (etapeTypeId: EtapeTypeId, titreTypeId: TitreTypeId,
         { ...AvisTypes.avisAgenceRegionaleSante, optionnel: true },
         { ...AvisTypes.avisCaisseGeneraleSecuriteSociale, optionnel: true },
         { ...AvisTypes.autreAvis, optionnel: true },
-        { ...AvisTypes.avisOfficeNationalDesForets, optionnel: false },
+        // L'avis de l'onf est obligatoire que pour les ARM
+        { ...AvisTypes.avisOfficeNationalDesForets, optionnel: titreTypeId !== 'arm' },
         { ...AvisTypes.expertiseOfficeNationalDesForets, optionnel: true },
         // TODO 2024-05-14: rendre obligatoire pour les PNMs quand ces derniers seront implémentés
         { ...AvisTypes.avisParcNaturelMarin, optionnel: true },
