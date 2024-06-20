@@ -12,7 +12,7 @@ describe('canEditDemarche', () => {
     ['min-mtes-dgec-01', false],
     ['pre-42218-01', false],
     ['ope-ptmg-973-01', true],
-    ['dea-guyane-01', false],
+    ['dea-guyane-01', true],
   ])('Vérifie si l’administration peut modifier des démarches', async (administrationId, creation) => {
     expect(canEditDemarche({ role: 'admin', administrationId, ...testBlankUser }, 'arm', TitresStatutIds.Valide, [])).toEqual(creation)
   })
@@ -41,7 +41,7 @@ describe('canDeleteDemarche', () => {
     ['min-mtes-dgec-01', false],
     ['pre-42218-01', false],
     ['ope-ptmg-973-01', true],
-    ['dea-guyane-01', false],
+    ['dea-guyane-01', true],
   ])('Vérifie si l’administration peut supprimer des démarches', async (administrationId, creation) => {
     expect(canDeleteDemarche({ role: 'admin', administrationId, ...testBlankUser }, 'arm', TitresStatutIds.Valide, [], { etapes: [] })).toEqual(creation)
   })
@@ -87,7 +87,7 @@ describe('canCreateTravaux', () => {
     ['min-mtes-dgec-01', false],
     ['pre-42218-01', false],
     ['ope-ptmg-973-01', false],
-    ['dea-guyane-01', false],
+    ['dea-guyane-01', true],
   ])('Vérifie si l’administration peut créer des travaux', async (administrationId, creation) => {
     expect(canCreateTravaux({ role: 'admin', administrationId, ...testBlankUser }, 'arm', [], [])).toEqual(creation)
   })

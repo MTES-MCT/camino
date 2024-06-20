@@ -144,7 +144,7 @@ describe('etapeSupprimer', () => {
       dbPool,
       '/rest/etapes/:etapeIdOrSlug',
       { etapeIdOrSlug: titreEtape.id },
-      role && isAdministrationRole(role) ? { role, administrationId: 'dea-guyane-01' } : undefined
+      role && isAdministrationRole(role) ? { role, administrationId: 'min-mctrct-dgcl-01' } : undefined
     )
 
     expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)

@@ -206,10 +206,10 @@ describe('demarcheModifier', () => {
     expect(demarche?.typeId).toBe('pro')
   })
 
-  test('ne peut pas modifier une démarche d’un titre ARM en DEA (utilisateur admin)', async () => {
+  test('ne peut pas modifier une démarche d’un titre ARM en DGCL/SDFLAE/FL1 (utilisateur admin)', async () => {
     const { demarcheId, titreId } = await demarcheCreate()
 
-    const res = await graphQLCall(dbPool, demarcheModifierQuery, { demarche: { id: demarcheId, titreId, typeId: 'pro' } }, { role: 'admin', administrationId: ADMINISTRATION_IDS['DGTM - GUYANE'] })
+    const res = await graphQLCall(dbPool, demarcheModifierQuery, { demarche: { id: demarcheId, titreId, typeId: 'pro' } }, { role: 'admin', administrationId: ADMINISTRATION_IDS['DGCL/SDFLAE/FL1'] })
 
     expect(res.body.errors[0].message).toBe('droits insuffisants')
   })

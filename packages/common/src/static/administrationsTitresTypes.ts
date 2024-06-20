@@ -23,7 +23,7 @@ const AdministrationsTitresTypes: { [key in AdministrationId]?: Readonly<Adminis
     [TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX]: { gestionnaire: false, associee: true },
   },
   'dea-guyane-01': {
-    [TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX]: { gestionnaire: false, associee: true },
+    [TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX]: { gestionnaire: true, associee: false },
     [TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX]: { gestionnaire: true, associee: false },
   },
   'dre-aura-01': {

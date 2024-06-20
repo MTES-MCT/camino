@@ -42,15 +42,6 @@ const AdministrationsTitresTypesTitresStatuts: {
   }
 } = {
   [ADMINISTRATION_IDS['DGTM - GUYANE']]: {
-    [TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX]: {
-      [TitresStatutIds.DemandeClassee]: { titresModificationInterdit: true, demarchesModificationInterdit: true, etapesModificationInterdit: true },
-      [TitresStatutIds.DemandeInitiale]: { titresModificationInterdit: true, demarchesModificationInterdit: true, etapesModificationInterdit: false },
-      [TitresStatutIds.Echu]: { titresModificationInterdit: true, demarchesModificationInterdit: true, etapesModificationInterdit: true },
-      [TitresStatutIds.Indetermine]: { titresModificationInterdit: true, demarchesModificationInterdit: true, etapesModificationInterdit: true },
-      [TitresStatutIds.ModificationEnInstance]: { titresModificationInterdit: true, demarchesModificationInterdit: true, etapesModificationInterdit: false },
-      [TitresStatutIds.SurvieProvisoire]: { titresModificationInterdit: true, demarchesModificationInterdit: true, etapesModificationInterdit: false },
-      [TitresStatutIds.Valide]: { titresModificationInterdit: true, demarchesModificationInterdit: true, etapesModificationInterdit: true },
-    },
     [TITRES_TYPES_IDS.CONCESSION_METAUX]: {
       [TitresStatutIds.DemandeClassee]: { titresModificationInterdit: true, demarchesModificationInterdit: true, etapesModificationInterdit: false },
       [TitresStatutIds.DemandeInitiale]: { titresModificationInterdit: true, demarchesModificationInterdit: true, etapesModificationInterdit: false },
