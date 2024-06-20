@@ -16,6 +16,7 @@ export const Text: StoryFn = () => (
       nom: "nom de l'élément",
       description: 'description',
       value: 'Valeur',
+      optionnel: false,
     }}
   />
 )
@@ -28,6 +29,7 @@ export const GranulatsMarins: StoryFn = () => (
       nom: 'Granulats Marins',
       description: 'description',
       value: 200,
+      optionnel: false,
     }}
   />
 )
@@ -40,6 +42,7 @@ export const JORF: StoryFn = () => (
       nom: 'JORF',
       description: 'description',
       value: 'JORFTEXT000000592092',
+      optionnel: false,
     }}
   />
 )
@@ -52,6 +55,7 @@ export const Url: StoryFn = () => (
       nom: "nom de l'élément",
       description: 'description',
       value: 'https://google.fr',
+      optionnel: false,
     }}
   />
 )
@@ -64,6 +68,7 @@ export const Date: StoryFn = () => (
       nom: 'Une date',
       description: 'description',
       value: toCaminoDate('2022-01-01'),
+      optionnel: false,
     }}
   />
 )
@@ -81,6 +86,7 @@ export const Checkboxes: StoryFn = () => (
         { id: 'option3', nom: 'Option 3' },
         { id: 'option4', nom: 'Option 4' },
       ],
+      optionnel: false,
     }}
   />
 )
@@ -98,6 +104,7 @@ export const Select: StoryFn = () => (
         { id: 'option3', nom: 'Option 3' },
         { id: 'option4', nom: 'Option 4' },
       ],
+      optionnel: false,
     }}
   />
 )
@@ -109,6 +116,7 @@ export const Number: StoryFn = () => (
       type: 'number',
       nom: 'Un nombre',
       value: 2,
+      optionnel: false,
     }}
   />
 )
@@ -121,6 +129,7 @@ export const Radio: StoryFn = () => (
         type: 'radio',
         nom: 'Un radio bouton',
         value: true,
+        optionnel: false,
       }}
     />
     <SectionElement
@@ -129,6 +138,7 @@ export const Radio: StoryFn = () => (
         type: 'radio',
         nom: 'Un autre radio bouton',
         value: false,
+        optionnel: false,
       }}
     />
   </div>
