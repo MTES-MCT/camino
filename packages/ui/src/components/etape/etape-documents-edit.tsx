@@ -24,7 +24,7 @@ import { AsyncData } from '../../api/client-rest'
 import { DsfrButtonIcon } from '../_ui/dsfr-button'
 import { EtapesStatuts } from 'camino-common/src/static/etapesStatuts'
 import { canDeleteEtapeDocument } from 'camino-common/src/permissions/titres-etapes'
-import { getVisibilityLabel } from './etape-documents'
+import { getVisibilityLabel, sortDocumentsColumn } from './etape-documents'
 import { AddEtapeDocumentPopup } from './add-etape-document-popup'
 import { User } from 'camino-common/src/roles'
 import { getDocumentsTypes } from 'camino-common/src/permissions/etape-form'
@@ -310,6 +310,8 @@ const EtapeDocumentsTable: FunctionalComponent<PropsTable> = (props: PropsTable)
   const editDocument = (index: number | 'asl' | 'dae') => () => {
     props.edit(index)
   }
+  const sortedDocuments = computed(() => sortDocumentsColumn(props.documents.map(d => ({ ...d, document_type_id: d.etape_document_type_id }))))
+  const sortedEmptyRequiredDocuments = computed(() => [...props.emptyRequiredDocuments].sort((a, b) => DocumentsTypes[a].nom.localeCompare(DocumentsTypes[b].nom)))
 
   return (
     <div class="fr-table fr-mb-0">
@@ -326,7 +328,7 @@ const EtapeDocumentsTable: FunctionalComponent<PropsTable> = (props: PropsTable)
           </tr>
         </thead>
         <tbody>
-          {props.documents.map(document => (
+          {sortedDocuments.value.map(document => (
             <tr>
               <td>{props.getNom(document.etape_document_type_id)}</td>
               <td style={{ whiteSpace: 'pre-line' }}>{document.description}</td>
@@ -354,7 +356,7 @@ const EtapeDocumentsTable: FunctionalComponent<PropsTable> = (props: PropsTable)
               </td>
             </tr>
           ))}
-          {props.emptyRequiredDocuments.map(documentTypeId => (
+          {sortedEmptyRequiredDocuments.value.map(documentTypeId => (
             <tr>
               <td class="fr-label--disabled">{props.getNom(documentTypeId)}</td>
               <td>-</td>
