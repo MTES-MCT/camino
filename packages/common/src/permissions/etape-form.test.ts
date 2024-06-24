@@ -1226,7 +1226,7 @@ test('getAvisType', () => {
       {
         "id": "avisOfficeNationalDesForets",
         "nom": "Avis de l'Office National des Forêts",
-        "optionnel": false,
+        "optionnel": true,
       },
       {
         "id": "expertiseOfficeNationalDesForets",
