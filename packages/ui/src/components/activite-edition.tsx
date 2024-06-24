@@ -21,7 +21,7 @@ export const ActiviteEdition = defineComponent(() => {
   const activiteId = computed<ActiviteIdOrSlug | null>(() => {
     const currentRoute = router.currentRoute.value
     // TODO 2024-05-30: on ne devrait pas avoir à mettre la seconde condition, à voir pourquoi activiteId n'est pas inféré automatiquement
-    if (currentRoute.name === 'activite' && 'activiteId' in currentRoute.params) {
+    if (currentRoute.name === 'activiteEdition' && 'activiteId' in currentRoute.params) {
       return activiteIdOrSlugValidator.parse(currentRoute.params.activiteId)
     }
     return null
