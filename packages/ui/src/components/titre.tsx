@@ -26,7 +26,7 @@ import { TitreTimeline } from './titre/titre-timeline'
 import { CommuneId } from 'camino-common/src/static/communes'
 import { canDeleteTitre, canEditTitre, canHaveActivites } from 'camino-common/src/permissions/titres'
 import { TitreDemarche } from '@/components/titre/titre-demarche'
-import { isNotNullNorUndefined, isNullOrUndefined, onlyUnique } from 'camino-common/src/typescript-tools'
+import { isNotNullNorUndefined, isNullOrUndefined, isNullOrUndefinedOrEmpty, onlyUnique } from 'camino-common/src/typescript-tools'
 import { DsfrIcon } from './_ui/icon'
 import { DsfrSeparator } from './_ui/dsfr-separator'
 import { TitreAbonnerButton } from './titre/titre-abonner-button'
@@ -71,7 +71,12 @@ export const Titre = defineComponent(() => {
   const currentDemarcheSlug = computed<DemarcheSlug | null>(() => {
     const demarcheId = router.currentRoute.value.query.demarcheSlug
 
-    return demarcheSlugValidator.optional().parse(Array.isArray(demarcheId) ? demarcheId[0] : demarcheId) ?? null
+    return (
+      demarcheSlugValidator
+        .nullable()
+        .optional()
+        .parse(Array.isArray(demarcheId) ? demarcheId[0] : demarcheId) ?? null
+    )
   })
 
   return () => (
@@ -152,7 +157,7 @@ export const PureTitre = defineComponent<Props>(props => {
 
         let demarcheSlug = props.currentDemarcheSlug
 
-        if ((props.currentDemarcheSlug === null || isNullOrUndefined(data.demarches.find(({ slug }) => slug === props.currentDemarcheSlug))) && phases.value.length > 0) {
+        if ((isNullOrUndefinedOrEmpty(demarcheSlug) || isNullOrUndefined(data.demarches.find(({ slug }) => slug === props.currentDemarcheSlug))) && phases.value.length > 0) {
           demarcheSlug = phases.value[phases.value.length - 1][phases.value[phases.value.length - 1].length - 1].slug
         }
 
