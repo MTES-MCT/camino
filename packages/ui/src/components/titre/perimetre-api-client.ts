@@ -1,5 +1,4 @@
 import {
-  FeatureCollectionPoints,
   GeojsonImportBody,
   GeojsonImportForagesBody,
   GeojsonImportForagesResponse,
@@ -9,31 +8,28 @@ import {
   PerimetreInformations,
 } from 'camino-common/src/perimetre'
 import { GeoSystemeId } from 'camino-common/src/static/geoSystemes'
-import { getWithJson, postWithJson } from '../../api/client-rest'
+import { getWithJson, newPostWithJson } from '../../api/client-rest'
 import { EtapeIdOrSlug } from 'camino-common/src/etape'
 import { DemarcheIdOrSlug } from 'camino-common/src/demarche'
+import { CaminoError } from 'camino-common/src/zod-tools'
 
 export interface PerimetreApiClient {
-  getGeojsonByGeoSystemeId: (geojson: FeatureCollectionPoints, geoSystemeId: GeoSystemeId) => Promise<FeatureCollectionPoints>
-  geojsonImport: (body: GeojsonImportBody, geoSystemeId: GeoSystemeId) => Promise<GeojsonInformations | Error>
-  geojsonPointsImport: (body: GeojsonImportPointsBody, geoSystemeId: GeoSystemeId) => Promise<GeojsonImportPointsResponse | Error>
-  geojsonForagesImport: (body: GeojsonImportForagesBody, geoSystemeId: GeoSystemeId) => Promise<GeojsonImportForagesResponse | Error>
+  geojsonImport: (body: GeojsonImportBody, geoSystemeId: GeoSystemeId) => Promise<CaminoError<string> | GeojsonInformations>
+  geojsonPointsImport: (body: GeojsonImportPointsBody, geoSystemeId: GeoSystemeId) => Promise<GeojsonImportPointsResponse | CaminoError<string>>
+  geojsonForagesImport: (body: GeojsonImportForagesBody, geoSystemeId: GeoSystemeId) => Promise<GeojsonImportForagesResponse | CaminoError<string>>
   getPerimetreInfosByEtapeId: (etapeId: EtapeIdOrSlug) => Promise<PerimetreInformations>
   getPerimetreInfosByDemarcheId: (demarcheId: DemarcheIdOrSlug) => Promise<PerimetreInformations>
 }
 
 export const perimetreApiClient: PerimetreApiClient = {
-  getGeojsonByGeoSystemeId: (geojson: FeatureCollectionPoints, geoSystemeId: GeoSystemeId): Promise<FeatureCollectionPoints> => {
-    return postWithJson('/rest/geojson_points/:geoSystemeId', { geoSystemeId }, geojson)
-  },
   geojsonImport: (body: GeojsonImportBody, geoSystemeId: GeoSystemeId) => {
-    return postWithJson('/rest/geojson/import/:geoSystemeId', { geoSystemeId }, body)
+    return newPostWithJson('/rest/geojson/import/:geoSystemeId', { geoSystemeId }, body)
   },
   geojsonPointsImport: (body: GeojsonImportPointsBody, geoSystemeId: GeoSystemeId) => {
-    return postWithJson('/rest/geojson_points/import/:geoSystemeId', { geoSystemeId }, body)
+    return newPostWithJson('/rest/geojson_points/import/:geoSystemeId', { geoSystemeId }, body)
   },
   geojsonForagesImport: (body: GeojsonImportForagesBody, geoSystemeId: GeoSystemeId) => {
-    return postWithJson('/rest/geojson_forages/import/:geoSystemeId', { geoSystemeId }, body)
+    return newPostWithJson('/rest/geojson_forages/import/:geoSystemeId', { geoSystemeId }, body)
   },
   getPerimetreInfosByEtapeId: (etapeId: EtapeIdOrSlug) => {
     return getWithJson('/rest/etapes/:etapeId/geojson', { etapeId })

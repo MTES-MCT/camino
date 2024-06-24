@@ -29,6 +29,8 @@ import { EtapeHeritageProps } from 'camino-common/src/heritage'
 import { GeoSystemeId } from 'camino-common/src/static/geoSystemes'
 import { ElementWithValue } from 'camino-common/src/sections'
 import { KM2 } from 'camino-common/src/number'
+import { HttpStatus } from 'camino-common/src/http'
+import { CaminoError } from 'camino-common/src/zod-tools'
 
 const TitreEtapesTravauxTypes = {
   AvisDesServicesEtCommissionsConsultatives: 'asc',
@@ -63,7 +65,7 @@ const TitreEtapesTravauxTypes = {
   DecisionAdmin: 'wdm',
   PorterAConnaissance: 'wpb',
 } as const satisfies Record<string, EtapeTypeId>
-
+export type CaminoApiError<T extends string> = CaminoError<T> & { status: HttpStatus }
 export interface IFields {
   [key: string]: IFields
 }
@@ -174,9 +176,9 @@ interface ITitre {
   administrationsLocales?: AdministrationId[] | null
   administrations?: AdministrationId[] | null
   surface?: number | null
-  communes?: ICommune[] | null
-  forets?: ForetId[] | null
-  sdomZones?: SDOMZoneId[] | null
+  communes?: DeepReadonly<ICommune[]> | null
+  forets?: DeepReadonly<ForetId[]> | null
+  sdomZones?: DeepReadonly<SDOMZoneId[]> | null
   pointsEtape?: ITitreEtape | null
   secteursMaritime?: SecteursMaritimes[] | null
   demarches?: ITitreDemarche[]
@@ -255,9 +257,9 @@ type ITitreEtape = {
   administrationsLocales?: AdministrationId[] | null
   entrepriseDocumentIds?: EntrepriseDocumentId[] | null
   etapeDocuments?: unknown[]
-  communes?: ICommune[] | null
-  forets?: ForetId[] | null
-  sdomZones?: SDOMZoneId[] | null
+  communes?: DeepReadonly<ICommune[]> | null
+  forets?: DeepReadonly<ForetId[]> | null
+  sdomZones?: DeepReadonly<SDOMZoneId[]> | null
   secteursMaritime?: SecteursMaritimes[] | null
   heritageProps?: IHeritageProps | null
   heritageContenu?: IHeritageContenu | null

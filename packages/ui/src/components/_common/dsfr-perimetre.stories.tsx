@@ -36,15 +36,6 @@ const geojson4326_perimetre: FeatureMultiPolygon = {
   },
 }
 
-const geojson4326_points: FeatureCollectionPoints = {
-  type: 'FeatureCollection',
-  features: [
-    { type: 'Feature', properties: {}, geometry: { type: 'Point', coordinates: [-52.5660583466962, 4.23944263425535] } },
-    { type: 'Feature', properties: {}, geometry: { type: 'Point', coordinates: [-52.5660583466962, 4.23944263425535] } },
-    { type: 'Feature', properties: {}, geometry: { type: 'Point', coordinates: [-52.5660583466962, 4.23944263425535] } },
-  ],
-}
-
 const geojson4326_forages: FeatureCollectionForages = {
   type: 'FeatureCollection',
   features: [
@@ -54,15 +45,9 @@ const geojson4326_forages: FeatureCollectionForages = {
 }
 
 const pushAction = action('push')
-const getGeojsonByGeoSystemeIdAction = action('getGeojsonByGeoSystemeId')
-const getTitresWithPerimetreForCarteAction = action('getGeojsonByGeoSystemeId')
+const getTitresWithPerimetreForCarteAction = action('getTitresWithPerimetreForCarte')
 
-const apiClientMock: Pick<ApiClient, 'getTitresWithPerimetreForCarte' | 'getGeojsonByGeoSystemeId'> = {
-  getGeojsonByGeoSystemeId: (geojson, geoSystemeId) => {
-    getGeojsonByGeoSystemeIdAction(geojson, geoSystemeId)
-
-    return Promise.resolve(geojson4326_points)
-  },
+const apiClientMock: Pick<ApiClient, 'getTitresWithPerimetreForCarte'> = {
   getTitresWithPerimetreForCarte: carte => {
     getTitresWithPerimetreForCarteAction(carte)
 
@@ -153,7 +138,6 @@ export const NoNeighborsNoSnapshot: StoryFn = () => (
         surface: km2Validator.parse(3),
       }}
       calculateNeighbours={false}
-      apiClient={apiClientMock}
       titreSlug={titreSlugValidator.parse('titre-slug')}
     />
   </>
@@ -433,7 +417,6 @@ export const CustomPoints: StoryFn = () => (
       }}
       initTab="points"
       calculateNeighbours={false}
-      apiClient={apiClientMock}
       titreSlug={titreSlugValidator.parse('titre-slug')}
     />
   </>
@@ -461,7 +444,6 @@ export const CustomPointsWithoutNameAndDesc: StoryFn = () => (
       }}
       initTab="points"
       calculateNeighbours={false}
-      apiClient={apiClientMock}
       titreSlug={titreSlugValidator.parse('titre-slug')}
     />
   </>
@@ -488,7 +470,6 @@ export const CustomPointsWithAnotherGeoSysteme: StoryFn = () => (
       }}
       initTab="points"
       calculateNeighbours={false}
-      apiClient={apiClientMock}
       titreSlug={titreSlugValidator.parse('titre-slug')}
     />
   </>
@@ -515,7 +496,6 @@ export const CustomPointsWithAnotherLegacyGeoSysteme: StoryFn = () => (
       }}
       initTab="points"
       calculateNeighbours={false}
-      apiClient={apiClientMock}
       titreSlug={titreSlugValidator.parse('titre-slug')}
     />
   </>
@@ -540,7 +520,6 @@ export const WithForages: StoryFn = () => (
     }}
     initTab="points"
     calculateNeighbours={false}
-    apiClient={apiClientMock}
     titreSlug={titreSlugValidator.parse('titre-slug')}
   />
 )

@@ -1,7 +1,9 @@
 /* eslint-disable no-restricted-syntax */
 import { sql } from '@pgtyped/runtime'
-import { Redefine, dbQueryAndValidate } from '../../pg-database.js'
+import { Redefine, newDbQueryAndValidate, DbQueryAccessError } from '../../pg-database.js'
 import { z } from 'zod'
+import TE from 'fp-ts/lib/TaskEither.js'
+import E from 'fp-ts/lib/Either.js'
 import { Pool } from 'pg'
 import { GeoSystemeId } from 'camino-common/src/static/geoSystemes.js'
 import { FeatureMultiPolygon, GenericFeatureCollection, MultiPoint, MultiPolygon, featureMultiPolygonValidator, multiPointsValidator, multiPolygonValidator } from 'camino-common/src/perimetre.js'
@@ -13,29 +15,56 @@ import { communeIdValidator } from 'camino-common/src/static/communes.js'
 import { secteurDbIdValidator } from 'camino-common/src/static/facades.js'
 import { foretIdValidator } from 'camino-common/src/static/forets.js'
 import { sdomZoneIdValidator } from 'camino-common/src/static/sdom.js'
-import { KM2, km2Validator, m2Validator } from 'camino-common/src/number.js'
-import { isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
+import { KM2, M2, createM2Validator, km2Validator, m2Validator } from 'camino-common/src/number.js'
+import { DeepReadonly, isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
+import { pipe } from 'fp-ts/lib/function.js'
+import { ZodUnparseable, zodParseTaskEither, zodParseTaskEitherCallback } from '../../tools/fp-tools.js'
+import { CaminoError } from 'camino-common/src/zod-tools.js'
 
-export const convertPoints = async <T extends z.ZodTypeAny>(
+const convertPointsStringifyError = 'Impossible de transformer la feature collection' as const
+const convertPointsConversionError = 'La liste des points est vide' as const
+const convertPointsInvalidNumberOfFeaturesError = 'Le nombre de points est invalide' as const
+export type ConvertPointsErrors = DbQueryAccessError | ZodUnparseable | typeof convertPointsStringifyError | typeof convertPointsConversionError | typeof convertPointsInvalidNumberOfFeaturesError
+export const convertPoints = <T extends z.ZodTypeAny>(
   pool: Pool,
   fromGeoSystemeId: GeoSystemeId,
   toGeoSystemeId: GeoSystemeId,
   geojsonPoints: GenericFeatureCollection<T>
-): Promise<GenericFeatureCollection<T>> => {
+): TE.TaskEither<CaminoError<ConvertPointsErrors>, GenericFeatureCollection<T>> => {
   if (fromGeoSystemeId === toGeoSystemeId) {
-    return geojsonPoints
+    return TE.right(geojsonPoints)
   }
 
   const multiPoint: MultiPoint = { type: 'MultiPoint', coordinates: geojsonPoints.features.map(feature => feature.geometry.coordinates) }
 
-  const result = await dbQueryAndValidate(convertMultiPointDb, { fromGeoSystemeId, toGeoSystemeId, geojson: JSON.stringify(multiPoint) }, pool, z.object({ geojson: multiPointsValidator }))
+  return pipe(
+    TE.fromEither(
+      E.tryCatch(
+        () => JSON.stringify(multiPoint),
+        e => ({ message: convertPointsStringifyError, extra: e })
+      )
+    ),
+    TE.flatMap(geojson => newDbQueryAndValidate(convertMultiPointDb, { fromGeoSystemeId, toGeoSystemeId, geojson }, pool, z.object({ geojson: multiPointsValidator }))),
+    TE.flatMap(result => {
+      if (result.length === 0) {
+        return TE.left({ message: convertPointsConversionError })
+      }
 
-  return {
-    type: 'FeatureCollection',
-    features: geojsonPoints.features.map((feature, index) => {
-      return { ...feature, geometry: { type: 'Point', coordinates: result[0].geojson.coordinates[index] } }
+      return TE.right(result[0].geojson.coordinates)
     }),
-  }
+    TE.filterOrElseW(
+      coordinates => coordinates.length === geojsonPoints.features.length,
+      () => ({ message: convertPointsInvalidNumberOfFeaturesError })
+    ),
+    TE.map(coordinates => {
+      return {
+        type: 'FeatureCollection',
+        features: geojsonPoints.features.map((feature, index) => {
+          return { ...feature, geometry: { type: 'Point', coordinates: coordinates[index] } }
+        }),
+      }
+    })
+  )
 }
 
 const convertMultiPointDb = sql<Redefine<IConvertMultiPointDbQuery, { fromGeoSystemeId: GeoSystemeId; toGeoSystemeId: GeoSystemeId; geojson: string }, { geojson: MultiPoint }>>`
@@ -43,27 +72,47 @@ select
     ST_AsGeoJSON (ST_Transform (ST_MAKEVALID (ST_SetSRID (ST_GeomFromGeoJSON ($ geojson !::text), $ fromGeoSystemeId !::integer)), $ toGeoSystemeId !::integer), 40)::json as geojson
 LIMIT 1
 `
-
+const conversionSystemeError = 'Impossible de convertir le geojson vers le système' as const
+const perimetreInvalideError = "Le périmètre n'est pas valide dans le référentiel donné" as const
+const conversionGeometrieError = 'Impossible de convertir la géométrie en JSON' as const
 const getGeojsonByGeoSystemeIdValidator = z.object({ geojson: multiPolygonValidator, is_valid: z.boolean().nullable() })
-export const getGeojsonByGeoSystemeId = async (pool: Pool, fromGeoSystemeId: GeoSystemeId, toGeoSystemeId: GeoSystemeId, geojson: FeatureMultiPolygon): Promise<FeatureMultiPolygon> => {
-  const result = await dbQueryAndValidate(getGeojsonByGeoSystemeIdDb, { fromGeoSystemeId, toGeoSystemeId, geojson: JSON.stringify(geojson.geometry) }, pool, getGeojsonByGeoSystemeIdValidator)
+export type GetGeojsonByGeoSystemeIdErrorMessages = ZodUnparseable | DbQueryAccessError | typeof conversionSystemeError | typeof perimetreInvalideError | typeof conversionGeometrieError
+export const getGeojsonByGeoSystemeId = (
+  pool: Pool,
+  fromGeoSystemeId: GeoSystemeId,
+  toGeoSystemeId: GeoSystemeId,
+  geojson: FeatureMultiPolygon
+): TE.TaskEither<CaminoError<GetGeojsonByGeoSystemeIdErrorMessages>, FeatureMultiPolygon> => {
+  return pipe(
+    TE.fromEither(
+      E.tryCatch(
+        () => JSON.stringify(geojson.geometry),
+        () => ({ message: conversionGeometrieError })
+      )
+    ),
+    TE.flatMap(geojson => newDbQueryAndValidate(getGeojsonByGeoSystemeIdDb, { fromGeoSystemeId, toGeoSystemeId, geojson }, pool, getGeojsonByGeoSystemeIdValidator)),
+    TE.filterOrElseW(
+      result => result.length === 1,
+      () => ({ message: conversionSystemeError, extra: toGeoSystemeId })
+    ),
+    TE.filterOrElseW(
+      result => result[0].is_valid === true,
+      () => ({ message: perimetreInvalideError, extra: { fromGeoSystemeId, geojson } })
+    ),
+    TE.map(result => {
+      if (fromGeoSystemeId === toGeoSystemeId) {
+        return geojson
+      }
+      const feature: FeatureMultiPolygon = {
+        type: 'Feature',
+        properties: {},
+        geometry: result[0].geojson,
+      }
 
-  if (result.length === 1) {
-    if (result[0].is_valid !== true) {
-      throw new Error(`Le périmètre n'est pas valide dans le référentiel '${fromGeoSystemeId}' ${geojson}`)
-    }
-    if (fromGeoSystemeId === toGeoSystemeId) {
-      return geojson
-    }
-    const feature: FeatureMultiPolygon = {
-      type: 'Feature',
-      properties: {},
-      geometry: result[0].geojson,
-    }
-
-    return featureMultiPolygonValidator.parse(feature)
-  }
-  throw new Error(`Impossible de convertir le geojson vers le systeme ${toGeoSystemeId}`)
+      return feature
+    }),
+    TE.flatMap(zodParseTaskEitherCallback(featureMultiPolygonValidator))
+  )
 }
 
 const getGeojsonByGeoSystemeIdDb = sql<
@@ -81,9 +130,13 @@ const getTitresIntersectionWithGeojsonValidator = z.object({
   titre_statut_id: titreStatutIdValidator,
 })
 
-type GetTitresIntersectionWithGeojson = z.infer<typeof getTitresIntersectionWithGeojsonValidator>
-export const getTitresIntersectionWithGeojson = async (pool: Pool, geojson4326_perimetre: MultiPolygon, titreSlug: TitreSlug) => {
-  return dbQueryAndValidate(
+export type GetTitresIntersectionWithGeojson = z.infer<typeof getTitresIntersectionWithGeojsonValidator>
+export const getTitresIntersectionWithGeojson = (
+  pool: Pool,
+  geojson4326_perimetre: MultiPolygon,
+  titreSlug: TitreSlug
+): TE.TaskEither<CaminoError<ZodUnparseable | DbQueryAccessError>, GetTitresIntersectionWithGeojson[]> => {
+  return newDbQueryAndValidate(
     getTitresIntersectionWithGeojsonDb,
     {
       titre_slug: titreSlug,
@@ -120,15 +173,19 @@ where
         1) = $ domaine_id !
 `
 
-const numberTokm2 = (value: number): KM2 => km2Validator.parse(Number.parseFloat((value / 1_000_000).toFixed(2)))
+const m2ToKm2 = (value: M2): TE.TaskEither<CaminoError<ZodUnparseable>, KM2> => zodParseTaskEither(km2Validator, Number.parseFloat((value / 1_000_000).toFixed(2)))
 
-export const getGeojsonInformation = async (pool: Pool, geojson4326_perimetre: MultiPolygon): Promise<GetGeojsonInformation> => {
-  const result = await dbQueryAndValidate(getGeojsonInformationDb, { geojson4326_perimetre }, pool, getGeojsonInformationDbValidator)
-  if (result.length !== 1) {
-    throw new Error('On veut un seul résultat')
-  }
-
-  return { ...result[0], surface: numberTokm2(result[0].surface), communes: result[0].communes.map(commune => ({ ...commune, surface: m2Validator.parse(commune.surface) })) }
+const requestError = 'Une erreur inattendue est survenue lors de la récupération des informations geojson en base' as const
+export type GetGeojsonInformationErrorMessages = ZodUnparseable | DbQueryAccessError | typeof requestError
+export const getGeojsonInformation = (pool: Pool, geojson4326_perimetre: MultiPolygon): TE.TaskEither<CaminoError<GetGeojsonInformationErrorMessages>, GetGeojsonInformation> => {
+  return pipe(
+    newDbQueryAndValidate(getGeojsonInformationDb, { geojson4326_perimetre }, pool, getGeojsonInformationDbValidator),
+    TE.bindW('response', result => (result.length === 1 ? TE.right(result[0]) : TE.left({ message: requestError }))),
+    TE.bindW('surface', result => m2ToKm2(result.response.surface)),
+    TE.map(({ response, surface }) => {
+      return { ...response, surface }
+    })
+  )
 }
 
 const nullToEmptyArray = <Y>(val: null | Y[]): Y[] => {
@@ -151,15 +208,14 @@ const getGeojsonInformationValidator = z.object({
 
 // Surface maximale acceptée pour un titre
 const SURFACE_M2_MAX = 100_000 * 1_000_000
-export type GetGeojsonInformation = z.infer<typeof getGeojsonInformationValidator>
+export type GetGeojsonInformation = DeepReadonly<z.infer<typeof getGeojsonInformationValidator>>
+const getGeojsonInformationCommuneDbValidator = z.object({ id: communeIdValidator, nom: z.string(), surface: m2Validator })
+
 const getGeojsonInformationDbValidator = z.object({
-  surface: z.number().max(SURFACE_M2_MAX),
+  surface: createM2Validator(z.number().max(SURFACE_M2_MAX, `Le périmètre ne doit pas excéder ${SURFACE_M2_MAX}M²`)),
   sdom: z.array(sdomZoneIdValidator).nullable().transform(nullToEmptyArray),
   forets: z.array(foretIdValidator).nullable().transform(nullToEmptyArray),
-  communes: z
-    .array(z.object({ id: communeIdValidator, nom: z.string(), surface: z.number() }))
-    .nullable()
-    .transform(nullToEmptyArray),
+  communes: z.array(getGeojsonInformationCommuneDbValidator).nullable().transform(nullToEmptyArray),
   secteurs: z.array(secteurDbIdValidator).nullable().transform(nullToEmptyArray),
 })
 type GetGeojsonInformationDbValidator = z.infer<typeof getGeojsonInformationDbValidator>

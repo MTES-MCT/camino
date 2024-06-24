@@ -8,14 +8,14 @@ import { Alert } from '../_ui/alert'
 import { GeoSystemeTypeahead } from '../_common/geosysteme-typeahead'
 import { DsfrInputRadio } from '../_ui/dsfr-input-radio'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
-
-type FileType = 'geojson' | 'shp' | 'csv'
+import { CaminoError } from 'camino-common/src/zod-tools'
+import { PerimetreUploadType } from 'camino-common/src/static/documentsTypes'
 
 interface Props {
   apiClient: Pick<ApiClient, 'uploadTempDocument' | 'geojsonForagesImport'>
   geoSystemeId: GeoSystemeId
-  initialSelectedFileType?: FileType
-  result: (value: { geojson4326: FeatureCollectionForages; origin: FeatureCollectionForages } | Error) => void
+  initialSelectedFileType?: PerimetreUploadType
+  result: (value: { geojson4326: FeatureCollectionForages; origin: FeatureCollectionForages } | CaminoError<string>) => void
   close: () => void
 }
 
@@ -26,8 +26,8 @@ export const ForagesImportPopup = defineComponent<Props>(props => {
     importFile.value = file
   }
 
-  const fileType = ref<FileType | null>(props.initialSelectedFileType ?? null)
-  const fileTypeSelected = (value: FileType) => {
+  const fileType = ref<PerimetreUploadType | null>(props.initialSelectedFileType ?? null)
+  const fileTypeSelected = (value: PerimetreUploadType) => {
     fileType.value = value
   }
 

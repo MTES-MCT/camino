@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-types */
-import { ZodType, z } from 'zod'
+import { ZodObject, ZodType, ZodTypeAny, z } from 'zod'
 import {
   entrepriseDocumentIdValidator,
   entrepriseDocumentInputValidator,
@@ -24,7 +24,7 @@ import {
   titreOnfValidator,
   utilisateurTitreAbonneValidator,
 } from './titres.js'
-import { adminUserNotNullValidator, userValidator } from './roles.js'
+import { adminUserNotNullValidator, userValidator, utilisateurIdValidator } from './roles.js'
 import { caminoAnneeValidator, caminoDateValidator } from './date.js'
 import {
   etapeDocumentIdValidator,
@@ -49,7 +49,6 @@ import { Expect, isFalse, isTrue } from './typescript-tools.js'
 import { activiteDocumentIdValidator, activiteEditionValidator, activiteIdOrSlugValidator, activiteValidator } from './activite.js'
 import { geoSystemeIdValidator } from './static/geoSystemes.js'
 import {
-  featureCollectionPointsValidator,
   geojsonImportBodyValidator,
   geojsonImportForagesBodyValidator,
   geojsonImportForagesResponseValidator,
@@ -63,9 +62,10 @@ import { administrationIdValidator } from './static/administrations.js'
 import { administrationActiviteTypeEmailValidator } from './administrations.js'
 import { flattenEtapeValidator, restEtapeCreationValidator, restEtapeModificationValidator } from './etape-form.js'
 
-type CaminoRoute<T extends string> = (keyof ZodParseUrlParams<T> extends never ? {} : { params: ZodParseUrlParams<T> }) & {
+type CaminoRoute<T extends string> = { params: ZodObjectParsUrlParams<T> } & {
   get?: { output: ZodType }
   post?: { input: ZodType; output: ZodType }
+  newPost?: { input: ZodType; output: ZodType }
   put?: { input: ZodType; output: ZodType }
   delete?: true
   download?: true
@@ -112,7 +112,6 @@ const IDS = [
   '/rest/etapes',
   '/rest/activites/:activiteId',
   '/rest/geojson/import/:geoSystemeId',
-  '/rest/geojson_points/:geoSystemeId',
   '/rest/geojson_points/import/:geoSystemeId',
   '/rest/geojson_forages/import/:geoSystemeId',
   '/rest/communes',
@@ -137,95 +136,104 @@ const IDS = [
 ] as const
 
 export type CaminoRestRoute = (typeof IDS)[number]
-
+const noParamsValidator = z.object({})
+const utilisateurIdParamsValidator = z.object({ id: utilisateurIdValidator })
+const entrepriseIdParamsValidator = z.object({ entrepriseId: entrepriseIdValidator })
+const etapeIdParamsValidator = z.object({ etapeId: etapeIdValidator })
+const administrationIdParamsValidator = z.object({ administrationId: administrationIdValidator })
+const geoSystemIdParamsValidator = z.object({ geoSystemeId: geoSystemeIdValidator })
 export const CaminoRestRoutes = {
-  '/config': { get: { output: caminoConfigValidator } },
-  '/moi': { get: { output: userValidator } },
-  '/rest/utilisateurs/:id/newsletter': { params: { id: z.string() }, get: { output: z.boolean() }, post: { input: newsletterAbonnementValidator, output: z.boolean() } },
+  '/config': { params: noParamsValidator, get: { output: caminoConfigValidator } },
+  '/moi': { params: noParamsValidator, get: { output: userValidator } },
+  '/rest/utilisateurs/:id/newsletter': { params: utilisateurIdParamsValidator, get: { output: z.boolean() }, post: { input: newsletterAbonnementValidator, output: z.boolean() } },
   // On passe par un http get plutot qu'un http delete car nous terminons par une redirection vers la deconnexion de oauth2, qui se traduit mal sur certains navigateurs et essaie de faire un delete sur une route get
-  '/rest/utilisateurs/:id/delete': { params: { id: z.string() }, get: { output: z.void() } },
-  '/rest/utilisateurs/:id/permission': { params: { id: z.string() }, post: { input: utilisateurToEdit, output: z.void() } },
-  '/rest/statistiques/minerauxMetauxMetropole': { get: { output: statistiquesMinerauxMetauxMetropoleValidator } },
-  '/rest/statistiques/guyane': { get: { output: statistiquesGuyaneDataValidator } },
-  '/rest/statistiques/guyane/:annee': { params: { annee: caminoAnneeValidator }, get: { output: statistiquesGuyaneDataValidator } },
-  '/rest/statistiques/granulatsMarins': { get: { output: statistiquesGranulatsMarinsValidator } },
-  '/rest/statistiques/granulatsMarins/:annee': { params: { annee: caminoAnneeValidator }, get: { output: statistiquesGranulatsMarinsValidator } },
-  '/rest/statistiques/datagouv': { get: { output: z.array(statistiquesDataGouvValidator) } },
-  '/rest/titres': { post: { input: titreDemandeValidator, output: titreDemandeOutputValidator } },
-  '/rest/titres/:titreId': { params: { titreId: titreIdOrSlugValidator }, get: { output: titreGetValidator }, delete: true, post: { output: z.void(), input: editableTitreValidator } },
-  '/rest/titres/:titreId/abonne': { params: { titreId: titreIdValidator }, post: { input: utilisateurTitreAbonneValidator, output: z.void() }, get: { output: z.boolean() } },
-  '/rest/titresONF': { get: { output: z.array(titreOnfValidator) } },
-  '/rest/titresAdministrations': { get: { output: z.array(titreAdministrationValidator) } },
-  '/rest/titres/:id/titreLiaisons': { params: { id: titreIdValidator }, get: { output: titreLinksValidator }, post: { input: z.array(z.string()), output: titreLinksValidator } },
-  '/rest/demarches/:demarcheIdOrSlug': { params: { demarcheIdOrSlug: demarcheIdOrSlugValidator }, get: { output: getDemarcheByIdOrSlugValidator } },
+  '/rest/utilisateurs/:id/delete': { params: utilisateurIdParamsValidator, get: { output: z.void() } },
+  '/rest/utilisateurs/:id/permission': { params: utilisateurIdParamsValidator, post: { input: utilisateurToEdit, output: z.void() } },
+  '/rest/statistiques/minerauxMetauxMetropole': { params: noParamsValidator, get: { output: statistiquesMinerauxMetauxMetropoleValidator } },
+  '/rest/statistiques/guyane': { params: noParamsValidator, get: { output: statistiquesGuyaneDataValidator } },
+  '/rest/statistiques/guyane/:annee': { params: z.object({ annee: caminoAnneeValidator }), get: { output: statistiquesGuyaneDataValidator } },
+  '/rest/statistiques/granulatsMarins': { params: noParamsValidator, get: { output: statistiquesGranulatsMarinsValidator } },
+  '/rest/statistiques/granulatsMarins/:annee': { params: z.object({ annee: caminoAnneeValidator }), get: { output: statistiquesGranulatsMarinsValidator } },
+  '/rest/statistiques/datagouv': { params: noParamsValidator, get: { output: z.array(statistiquesDataGouvValidator) } },
+  '/rest/titres': { params: noParamsValidator, post: { input: titreDemandeValidator, output: titreDemandeOutputValidator } },
+  '/rest/titres/:titreId': { params: z.object({ titreId: titreIdOrSlugValidator }), get: { output: titreGetValidator }, delete: true, post: { output: z.void(), input: editableTitreValidator } },
+  '/rest/titres/:titreId/abonne': { params: z.object({ titreId: titreIdValidator }), post: { input: utilisateurTitreAbonneValidator, output: z.void() }, get: { output: z.boolean() } },
+  '/rest/titresONF': { params: noParamsValidator, get: { output: z.array(titreOnfValidator) } },
+  '/rest/titresAdministrations': { params: noParamsValidator, get: { output: z.array(titreAdministrationValidator) } },
+  '/rest/titres/:id/titreLiaisons': { params: z.object({ id: titreIdValidator }), get: { output: titreLinksValidator }, post: { input: z.array(z.string()), output: titreLinksValidator } },
+  '/rest/demarches/:demarcheIdOrSlug': { params: z.object({ demarcheIdOrSlug: demarcheIdOrSlugValidator }), get: { output: getDemarcheByIdOrSlugValidator } },
 
-  '/rest/statistiques/dgtm': { get: { output: statistiquesDGTMValidator } },
+  '/rest/statistiques/dgtm': { params: noParamsValidator, get: { output: statistiquesDGTMValidator } },
 
-  '/rest/entreprises/:entrepriseId/fiscalite/:annee': { params: { entrepriseId: entrepriseIdValidator, annee: caminoAnneeValidator }, get: { output: fiscaliteValidator } },
-  '/rest/entreprises': { post: { input: z.object({ siren: sirenValidator }), output: z.void() }, get: { output: z.array(entrepriseValidator) } },
+  '/rest/entreprises/:entrepriseId/fiscalite/:annee': { params: z.object({ entrepriseId: entrepriseIdValidator, annee: caminoAnneeValidator }), get: { output: fiscaliteValidator } },
+  '/rest/entreprises': { params: noParamsValidator, post: { input: z.object({ siren: sirenValidator }), output: z.void() }, get: { output: z.array(entrepriseValidator) } },
   '/rest/entreprises/:entrepriseId': {
-    params: { entrepriseId: entrepriseIdValidator },
+    params: entrepriseIdParamsValidator,
     get: { output: entrepriseTypeValidator },
     put: { input: entrepriseModificationValidator, output: z.void() },
   },
   '/rest/entreprises/:entrepriseId/documents': {
-    params: { entrepriseId: entrepriseIdValidator },
+    params: entrepriseIdParamsValidator,
     // TODO 2024-01-31 ne pas retourner une erreur, mais thrower une exception et la catcher plutôt ?
     post: { input: entrepriseDocumentInputValidator, output: z.union([entrepriseDocumentIdValidator, z.custom<Error>()]) },
     get: { output: z.array(entrepriseDocumentValidator) },
   },
-  '/rest/entreprises/:entrepriseId/documents/:entrepriseDocumentId': { params: { entrepriseId: entrepriseIdValidator, entrepriseDocumentId: entrepriseDocumentIdValidator }, delete: true },
-  '/rest/administrations/:administrationId/utilisateurs': { params: { administrationId: administrationIdValidator }, get: { output: z.array(adminUserNotNullValidator) } },
+  '/rest/entreprises/:entrepriseId/documents/:entrepriseDocumentId': { params: z.object({ entrepriseId: entrepriseIdValidator, entrepriseDocumentId: entrepriseDocumentIdValidator }), delete: true },
+  '/rest/administrations/:administrationId/utilisateurs': { params: administrationIdParamsValidator, get: { output: z.array(adminUserNotNullValidator) } },
   '/rest/administrations/:administrationId/activiteTypeEmails': {
-    params: { administrationId: administrationIdValidator },
+    params: administrationIdParamsValidator,
     get: { output: z.array(administrationActiviteTypeEmailValidator) },
-    post: { input: administrationActiviteTypeEmailValidator, output: z.boolean() },
+    newPost: { input: administrationActiviteTypeEmailValidator, output: z.boolean() },
   },
   '/rest/administrations/:administrationId/activiteTypeEmails/delete': {
-    params: { administrationId: administrationIdValidator },
-    post: { input: administrationActiviteTypeEmailValidator, output: z.boolean() },
+    params: administrationIdParamsValidator,
+    newPost: { input: administrationActiviteTypeEmailValidator, output: z.boolean() },
   },
-  '/rest/utilisateur/generateQgisToken': { post: { input: z.void(), output: qgisTokenValidator } },
-  '/rest/etapesTypes/:demarcheId/:date': { params: { demarcheId: demarcheIdValidator, date: caminoDateValidator }, get: { output: z.array(etapeTypeEtapeStatutWithMainStepValidator) } },
-  '/rest/demarches/:demarcheId/geojson': { params: { demarcheId: demarcheIdOrSlugValidator }, get: { output: perimetreInformationsValidator } },
-  '/rest/etapes/:etapeId/geojson': { params: { etapeId: etapeIdOrSlugValidator }, get: { output: perimetreInformationsValidator } },
-  '/rest/etapes/:etapeId/etapeDocuments': { params: { etapeId: etapeIdValidator }, get: { output: getEtapeDocumentsByEtapeIdValidator } },
-  '/rest/etapes/:etapeId/etapeAvis': { params: { etapeId: etapeIdValidator }, get: { output: getEtapeAvisByEtapeIdValidator } },
-  '/rest/etapes/:etapeId/entrepriseDocuments': { params: { etapeId: etapeIdValidator }, get: { output: z.array(etapeEntrepriseDocumentValidator) } },
-  '/rest/etapes/:etapeIdOrSlug': { params: { etapeIdOrSlug: etapeIdOrSlugValidator }, delete: true, get: { output: flattenEtapeValidator } },
-  '/rest/etapes/:etapeId/depot': { params: { etapeId: etapeIdValidator }, put: { input: z.void(), output: z.void() } },
-  '/rest/etapes': { post: { input: restEtapeCreationValidator, output: etapeIdValidator }, put: { input: restEtapeModificationValidator, output: etapeIdValidator } },
-  '/rest/activites/:activiteId': { params: { activiteId: activiteIdOrSlugValidator }, get: { output: activiteValidator }, put: { input: activiteEditionValidator, output: z.void() }, delete: true },
-  '/rest/communes': { get: { output: z.array(communeValidator) } },
-  '/rest/geojson_points/:geoSystemeId': { params: { geoSystemeId: geoSystemeIdValidator }, post: { input: featureCollectionPointsValidator, output: featureCollectionPointsValidator } },
+  '/rest/utilisateur/generateQgisToken': { params: noParamsValidator, post: { input: z.void(), output: qgisTokenValidator } },
+  '/rest/etapesTypes/:demarcheId/:date': { params: z.object({ demarcheId: demarcheIdValidator, date: caminoDateValidator }), get: { output: z.array(etapeTypeEtapeStatutWithMainStepValidator) } },
+  '/rest/demarches/:demarcheId/geojson': { params: z.object({ demarcheId: demarcheIdOrSlugValidator }), get: { output: perimetreInformationsValidator } },
+  '/rest/etapes/:etapeId/geojson': { params: z.object({ etapeId: etapeIdOrSlugValidator }), get: { output: perimetreInformationsValidator } },
+  '/rest/etapes/:etapeId/etapeDocuments': { params: etapeIdParamsValidator, get: { output: getEtapeDocumentsByEtapeIdValidator } },
+  '/rest/etapes/:etapeId/etapeAvis': { params: etapeIdParamsValidator, get: { output: getEtapeAvisByEtapeIdValidator } },
+  '/rest/etapes/:etapeId/entrepriseDocuments': { params: etapeIdParamsValidator, get: { output: z.array(etapeEntrepriseDocumentValidator) } },
+  '/rest/etapes/:etapeIdOrSlug': { params: z.object({ etapeIdOrSlug: etapeIdOrSlugValidator }), delete: true, get: { output: flattenEtapeValidator } },
+  '/rest/etapes/:etapeId/depot': { params: etapeIdParamsValidator, put: { input: z.void(), output: z.void() } },
+  '/rest/etapes': { params: noParamsValidator, post: { input: restEtapeCreationValidator, output: etapeIdValidator }, put: { input: restEtapeModificationValidator, output: etapeIdValidator } },
+  '/rest/activites/:activiteId': {
+    params: z.object({ activiteId: activiteIdOrSlugValidator }),
+    get: { output: activiteValidator },
+    put: { input: activiteEditionValidator, output: z.void() },
+    delete: true,
+  },
+  '/rest/communes': { params: noParamsValidator, get: { output: z.array(communeValidator) } },
   '/rest/geojson/import/:geoSystemeId': {
-    params: { geoSystemeId: geoSystemeIdValidator },
-    post: { input: geojsonImportBodyValidator, output: geojsonInformationsValidator },
+    params: geoSystemIdParamsValidator,
+    newPost: { input: geojsonImportBodyValidator, output: geojsonInformationsValidator },
   },
   '/rest/geojson_points/import/:geoSystemeId': {
-    params: { geoSystemeId: geoSystemeIdValidator },
-    post: { input: geojsonImportPointBodyValidator, output: geojsonImportPointResponseValidator },
+    params: geoSystemIdParamsValidator,
+    newPost: { input: geojsonImportPointBodyValidator, output: geojsonImportPointResponseValidator },
   },
   '/rest/geojson_forages/import/:geoSystemeId': {
-    params: { geoSystemeId: geoSystemeIdValidator },
-    post: { input: geojsonImportForagesBodyValidator, output: geojsonImportForagesResponseValidator },
+    params: geoSystemIdParamsValidator,
+    newPost: { input: geojsonImportForagesBodyValidator, output: geojsonImportForagesResponseValidator },
   },
-  '/deconnecter': { get: { output: z.string() } },
-  '/changerMotDePasse': { get: { output: z.string() } },
-  '/download/fichiers/:documentId': { params: { documentId: etapeDocumentIdValidator }, newDownload: true },
-  '/download/avisDocument/:etapeAvisId': { params: { etapeAvisId: etapeAvisIdValidator }, newDownload: true },
-  '/download/entrepriseDocuments/:documentId': { params: { documentId: entrepriseDocumentIdValidator }, newDownload: true },
-  '/download/activiteDocuments/:documentId': { params: { documentId: activiteDocumentIdValidator }, newDownload: true },
-  '/fichiers/:documentId': { params: { documentId: etapeDocumentIdValidator }, newDownload: true },
-  '/titres/:id': { params: { id: titreIdValidator }, download: true },
-  '/titres': { download: true },
-  '/titres_qgis': { download: true },
-  '/demarches': { download: true },
-  '/travaux': { download: true },
-  '/activites': { download: true },
-  '/utilisateurs': { download: true },
-  '/etape/zip/:etapeId': { params: { etapeId: etapeIdValidator }, download: true },
-  '/entreprises': { download: true },
+  '/deconnecter': { params: noParamsValidator, get: { output: z.string() } },
+  '/changerMotDePasse': { params: noParamsValidator, get: { output: z.string() } },
+  '/download/fichiers/:documentId': { params: z.object({ documentId: etapeDocumentIdValidator }), newDownload: true },
+  '/download/avisDocument/:etapeAvisId': { params: z.object({ etapeAvisId: etapeAvisIdValidator }), newDownload: true },
+  '/download/entrepriseDocuments/:documentId': { params: z.object({ documentId: entrepriseDocumentIdValidator }), newDownload: true },
+  '/download/activiteDocuments/:documentId': { params: z.object({ documentId: activiteDocumentIdValidator }), newDownload: true },
+  '/fichiers/:documentId': { params: z.object({ documentId: etapeDocumentIdValidator }), newDownload: true },
+  '/titres/:id': { params: z.object({ id: titreIdValidator }), download: true },
+  '/titres': { params: noParamsValidator, download: true },
+  '/titres_qgis': { params: noParamsValidator, download: true },
+  '/demarches': { params: noParamsValidator, download: true },
+  '/travaux': { params: noParamsValidator, download: true },
+  '/activites': { params: noParamsValidator, download: true },
+  '/utilisateurs': { params: noParamsValidator, download: true },
+  '/etape/zip/:etapeId': { params: etapeIdParamsValidator, download: true },
+  '/entreprises': { params: noParamsValidator, download: true },
 } as const satisfies { [k in CaminoRestRoute]: CaminoRoute<k> }
 
 const DOWNLOAD_FORMATS_IDS = ['xlsx', 'csv', 'ods', 'geojson', 'pdf', 'zip'] as const
@@ -242,7 +250,9 @@ const downloadFormatValidator = z.enum(DOWNLOAD_FORMATS_IDS)
 
 export type DownloadFormat = z.infer<typeof downloadFormatValidator>
 
-type ZodParseUrlParams<url> = url extends `${infer start}/${infer rest}` ? ZodParseUrlParams<start> & ZodParseUrlParams<rest> : url extends `:${infer param}` ? { [k in param]: ZodType } : {} // eslint-disable-line @typescript-eslint/ban-types
+type ZodObjectParsUrlParams<url> = ZodObject<ZodParseUrlParams<url>>
+
+type ZodParseUrlParams<url> = url extends `${infer start}/${infer rest}` ? ZodParseUrlParams<start> & ZodParseUrlParams<rest> : url extends `:${infer param}` ? { [k in param]: ZodTypeAny } : {} // eslint-disable-line @typescript-eslint/ban-types
 
 isTrue<Expect<ZodParseUrlParams<'/titre'>, {}>>
 isFalse<Expect<ZodParseUrlParams<'/titre'>, { id: ZodType }>>
@@ -250,13 +260,13 @@ isTrue<Expect<ZodParseUrlParams<'/titre/:id'>, { id: ZodType }>>
 isFalse<Expect<ZodParseUrlParams<'/titre/:id'>, {}>>
 isTrue<Expect<ZodParseUrlParams<'/titre/:titreId/:demarcheId'>, { titreId: ZodType; demarcheId: ZodType }>>
 
-type can<T, Method extends 'post' | 'get' | 'put' | 'delete' | 'download' | 'newDownload'> = T extends CaminoRestRoute
+type can<T, Method extends 'post' | 'newPost' | 'get' | 'put' | 'delete' | 'download' | 'newDownload'> = T extends CaminoRestRoute
   ? (typeof CaminoRestRoutes)[T] extends { [m in Method]: any }
     ? T
     : never
   : never
 
-type CaminoRestRouteList<Route, Method extends 'post' | 'get' | 'put' | 'delete' | 'download' | 'newDownload'> = Route extends readonly [infer First, ...infer Remaining]
+type CaminoRestRouteList<Route, Method extends 'post' | 'newPost' | 'get' | 'put' | 'delete' | 'download' | 'newDownload'> = Route extends readonly [infer First, ...infer Remaining]
   ? First extends can<First, Method>
     ? [First, ...CaminoRestRouteList<Remaining, Method>]
     : CaminoRestRouteList<Remaining, Method>
@@ -264,14 +274,13 @@ type CaminoRestRouteList<Route, Method extends 'post' | 'get' | 'put' | 'delete'
 
 export type GetRestRoutes = CaminoRestRouteList<typeof IDS, 'get'>[number]
 export type PostRestRoutes = CaminoRestRouteList<typeof IDS, 'post'>[number]
+export type NewPostRestRoutes = CaminoRestRouteList<typeof IDS, 'newPost'>[number]
 export type DeleteRestRoutes = CaminoRestRouteList<typeof IDS, 'delete'>[number]
 export type DownloadRestRoutes = CaminoRestRouteList<typeof IDS, 'download'>[number]
 export type NewDownloadRestRoutes = CaminoRestRouteList<typeof IDS, 'newDownload'>[number]
 export type PutRestRoutes = CaminoRestRouteList<typeof IDS, 'put'>[number]
 
-export type CaminoRestParams<Route extends CaminoRestRoute> = (typeof CaminoRestRoutes)[Route] extends { params: any }
-  ? { [k in keyof (typeof CaminoRestRoutes)[Route]['params']]: z.infer<(typeof CaminoRestRoutes)[Route]['params'][k]> }
-  : {}
+export type CaminoRestParams<Route extends CaminoRestRoute> = z.infer<(typeof CaminoRestRoutes)[Route]['params']>
 
 export const getRestRoute = <T extends CaminoRestRoute>(path: T, params: CaminoRestParams<T>, searchParams: Record<string, string | string[]> = {}) => {
   const urlParams = new URLSearchParams()

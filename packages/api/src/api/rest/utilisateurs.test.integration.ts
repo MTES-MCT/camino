@@ -9,6 +9,7 @@ import { userSuper } from '../../database/user-super.js'
 import { newUtilisateurId } from '../../database/models/_format/id-create.js'
 import { KeycloakFakeServer, idUserKeycloakRecognised, setupKeycloak, teardownKeycloak } from '../../../tests/keycloak.js'
 import { renewConfig } from '../../config/index.js'
+import { utilisateurIdValidator } from 'camino-common/src/roles.js'
 
 console.info = vi.fn()
 console.error = vi.fn()
@@ -87,7 +88,7 @@ describe('utilisateurModifier', () => {
 
 describe('utilisateurSupprimer', () => {
   test('ne peut pas supprimer un compte (utilisateur anonyme)', async () => {
-    const tested = await restCall(dbPool, '/rest/utilisateurs/:id/delete', { id: 'test' }, undefined)
+    const tested = await restCall(dbPool, '/rest/utilisateurs/:id/delete', { id: utilisateurIdValidator.parse('test') }, undefined)
     expect(tested.statusCode).toBe(500)
     expect(tested.body).toMatchInlineSnapshot(`
       {
@@ -108,7 +109,7 @@ describe('utilisateurSupprimer', () => {
   })
 
   test('peut supprimer un utilisateur (utilisateur super)', async () => {
-    const id = 'user-todelete'
+    const id = utilisateurIdValidator.parse('user-todelete')
     await knex('utilisateurs').insert({
       id,
       prenom: 'userToDelete',
@@ -124,7 +125,7 @@ describe('utilisateurSupprimer', () => {
   })
 
   test('ne peut pas supprimer un utilisateur inexistant (utilisateur super)', async () => {
-    const tested = await restCall(dbPool, '/rest/utilisateurs/:id/delete', { id: 'not-existing' }, { role: 'super' })
+    const tested = await restCall(dbPool, '/rest/utilisateurs/:id/delete', { id: utilisateurIdValidator.parse('not-existing') }, { role: 'super' })
     expect(tested.statusCode).toBe(500)
     expect(tested.body).toMatchInlineSnapshot(`
       {

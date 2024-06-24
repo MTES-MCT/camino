@@ -29,7 +29,7 @@ type Props = {
   titre: Pick<TitreGet, 'id' | 'slug' | 'titre_type_id' | 'titre_statut_id' | 'nom'>
   demarches: TitreGetDemarche[]
   currentDemarcheSlug: DemarcheSlug
-  apiClient: Pick<ApiClient, 'deleteEtape' | 'deposeEtape' | 'getTitresWithPerimetreForCarte' | 'createDemarche' | 'updateDemarche' | 'deleteDemarche' | 'getGeojsonByGeoSystemeId'>
+  apiClient: Pick<ApiClient, 'deleteEtape' | 'deposeEtape' | 'getTitresWithPerimetreForCarte' | 'createDemarche' | 'updateDemarche' | 'deleteDemarche'>
   demarcheCreatedOrUpdated: (demarcheSlug: DemarcheSlug) => Promise<void>
   demarcheDeleted: () => Promise<void>
   router: Pick<CaminoRouter, 'push'>

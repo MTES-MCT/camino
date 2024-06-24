@@ -8,7 +8,7 @@ import { titreSlugValidator } from './validators/titres.js'
 import { tempDocumentNameValidator } from './document.js'
 import { titreTypeIdValidator } from './static/titresTypes.js'
 import { perimetreFileUploadTypeValidator } from './static/documentsTypes.js'
-import { isNullOrUndefined } from './typescript-tools.js'
+import { DeepReadonly, isNullOrUndefined } from './typescript-tools.js'
 import { km2Validator } from './number.js'
 import { GeoSystemeId, geoSystemeIdValidator } from './static/geoSystemes.js'
 
@@ -132,7 +132,7 @@ export const geojsonInformationsValidator = z.object({
   geojson_origine_geo_systeme_id: geoSystemeIdValidator,
 })
 
-export type GeojsonInformations = z.infer<typeof geojsonInformationsValidator>
+export type GeojsonInformations = DeepReadonly<z.infer<typeof geojsonInformationsValidator>>
 
 export const perimetreInformationsValidator = geojsonInformationsValidator.pick({ superposition_alertes: true, sdomZoneIds: true }).extend({ communes: z.array(communeIdValidator) })
 export type PerimetreInformations = z.infer<typeof perimetreInformationsValidator>

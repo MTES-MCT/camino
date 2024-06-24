@@ -77,6 +77,7 @@ import { FeatureMultiPolygon, FeatureCollectionPoints } from 'camino-common/src/
 import { canHaveForages } from 'camino-common/src/permissions/titres.js'
 import { SecteursMaritimes, getSecteurMaritime } from 'camino-common/src/static/facades.js'
 import { GEO_SYSTEME_IDS } from 'camino-common/src/static/geoSystemes.js'
+import { isRight } from 'fp-ts/lib/Either.js'
 
 export const getEtapeEntrepriseDocuments =
   (pool: Pool) =>
@@ -381,9 +382,11 @@ const getForagesProperties = async (
   pool: Pool
 ): Promise<Pick<GraphqlEtape, 'geojson4326Forages' | 'geojsonOrigineForages'>> => {
   if (canHaveForages(titreTypeId) && isNotNullNorUndefined(geojsonOrigineForages) && isNotNullNorUndefined(geojsonOrigineGeoSystemeId)) {
-    return {
-      geojson4326Forages: await convertPoints(pool, geojsonOrigineGeoSystemeId, GEO_SYSTEME_IDS.WGS84, geojsonOrigineForages),
-      geojsonOrigineForages,
+    const conversion = await convertPoints(pool, geojsonOrigineGeoSystemeId, GEO_SYSTEME_IDS.WGS84, geojsonOrigineForages)()
+    if (isRight(conversion)) {
+      return { geojson4326Forages: conversion.right, geojsonOrigineForages }
+    } else {
+      throw new Error(conversion.left.message)
     }
   }
 
@@ -394,7 +397,7 @@ const getForagesProperties = async (
 }
 type PerimetreInfos = {
   secteursMaritime: SecteursMaritimes[]
-  sdomZones: SDOMZoneId[]
+  sdomZones: DeepReadonly<SDOMZoneId[]>
   surface: KM2 | null
 } & Pick<GraphqlEtape, 'geojson4326Forages' | 'geojsonOrigineForages'> &
   Pick<GetGeojsonInformation, 'communes' | 'forets'>
@@ -413,17 +416,22 @@ const getPerimetreInfosInternal = async (
         throw new Error(`les points doivent être sur le périmètre`)
       }
     }
-    const { communes, sdom, surface, forets, secteurs } = await getGeojsonInformation(pool, geojson4326Perimetre.geometry)
-    const { geojson4326Forages } = await getForagesProperties(titreTypeId, geojsonOrigineGeoSystemeId, geojsonOrigineForages, pool)
+    const result = await getGeojsonInformation(pool, geojson4326Perimetre.geometry)()
+    if (isRight(result)) {
+      const { communes, sdom, surface, forets, secteurs } = result.right
+      const { geojson4326Forages } = await getForagesProperties(titreTypeId, geojsonOrigineGeoSystemeId, geojsonOrigineForages, pool)
 
-    return {
-      surface,
-      communes,
-      forets,
-      secteursMaritime: secteurs.map(s => getSecteurMaritime(s)),
-      sdomZones: sdom,
-      geojson4326Forages,
-      geojsonOrigineForages,
+      return {
+        surface,
+        communes,
+        forets,
+        secteursMaritime: secteurs.map(s => getSecteurMaritime(s)),
+        sdomZones: sdom,
+        geojson4326Forages,
+        geojsonOrigineForages,
+      }
+    } else {
+      throw new Error(result.left.message)
     }
   } else {
     return {
@@ -881,10 +889,15 @@ export const deposeEtape = (pool: Pool) => async (req: CaminoRequest, res: Custo
       const sdomZones: SDOMZoneId[] = []
       const communes: CommuneId[] = []
       if (isNotNullNorUndefined(titreEtape.geojson4326Perimetre)) {
-        const { sdom, communes: communeFromGeoJson } = await getGeojsonInformation(pool, titreEtape.geojson4326Perimetre.geometry)
+        const result = await getGeojsonInformation(pool, titreEtape.geojson4326Perimetre.geometry)()
+        if (isRight(result)) {
+          const { sdom, communes: communeFromGeoJson } = result.right
 
-        communes.push(...communeFromGeoJson.map(({ id }) => id))
-        sdomZones.push(...sdom)
+          communes.push(...communeFromGeoJson.map(({ id }) => id))
+          sdomZones.push(...sdom)
+        } else {
+          throw new Error(result.left.message)
+        }
       }
       const titreTypeId = memoize(() => Promise.resolve(titre.typeId))
       const administrationsLocales = memoize(() => Promise.resolve(titre.administrationsLocales ?? []))
@@ -1061,7 +1074,6 @@ const demarcheEtapesTypesGet = async (titreDemarcheId: DemarcheId, date: CaminoD
     etapesTypes.push(...etapesTypesTDE.flatMap(etapeTypeId => getEtapesStatuts(etapeTypeId).map(etapeStatut => ({ etapeTypeId, etapeStatutId: etapeStatut.id, mainStep: false }))))
   }
 
-  // FIXME integration tests
   // On ne peut pas avoir 2 fois le même type d'étape en brouillon
   const etapeTypeIdInBrouillon = titreDemarche.etapes?.filter(({ isBrouillon, id }) => id !== titreEtapeId && isBrouillon).map(({ typeId }) => typeId) ?? []
 

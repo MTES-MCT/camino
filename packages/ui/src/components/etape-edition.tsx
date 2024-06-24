@@ -63,7 +63,6 @@ export type Props = {
     | 'getEtapeHeritagePotentiel'
     | 'uploadTempDocument'
     | 'geojsonImport'
-    | 'getGeojsonByGeoSystemeId'
     | 'geojsonPointsImport'
     | 'geojsonForagesImport'
     | 'getEtapeDocumentsByEtapeId'

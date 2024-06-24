@@ -28,10 +28,7 @@ type Props = {
   titreTypeId: TitreTypeId
   initTab?: TabId
   class?: HTMLAttributes['class']
-} & (
-  | { calculateNeighbours: true; router: Pick<CaminoRouter, 'push'>; apiClient: Pick<ApiClient, 'getTitresWithPerimetreForCarte' | 'getGeojsonByGeoSystemeId'> }
-  | { apiClient: Pick<ApiClient, 'getGeojsonByGeoSystemeId'>; calculateNeighbours: false }
-)
+} & ({ calculateNeighbours: true; router: Pick<CaminoRouter, 'push'>; apiClient: Pick<ApiClient, 'getTitresWithPerimetreForCarte'> } | { calculateNeighbours: false })
 
 const maxRows = 20
 

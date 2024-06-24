@@ -1,6 +1,7 @@
-import { Alert } from './alert'
+import { Alert, CaminoApiAlert } from './alert'
 import { Meta, StoryFn } from '@storybook/vue3'
 import { DsfrLink } from './dsfr-button'
+import { CaminoZodErrorReadableMessage } from 'camino-common/src/zod-tools'
 
 const meta: Meta = {
   title: 'Components/UI/Alert',
@@ -15,3 +16,13 @@ export const Info: StoryFn = () => <Alert type="info" title="Informations" descr
 export const InfoSansDescription: StoryFn = () => <Alert type="info" title="Informations" />
 export const InfoSmall: StoryFn = () => <Alert type="info" title="Informations" small={true} />
 export const InfoSmallLink: StoryFn = () => <Alert type="info" title={<DsfrLink icon={null} disabled={false} to={{ name: 'dashboard', params: {} }} title="le titre du lien" />} small={true} />
+
+export const ApiErrorSimple: StoryFn = () => <CaminoApiAlert caminoApiError={{ message: "Ceci est une alerte de l'api" }} />
+export const ApiErrorWithCompleteMessage: StoryFn = () => (
+  <CaminoApiAlert
+    caminoApiError={{
+      message: "Ceci est une alerte de l'api",
+      zodErrorReadableMessage: 'Validation error: Array must contain at least 3 element(s) at "features[0].geometry.coordinates[0][0]"' as CaminoZodErrorReadableMessage,
+    }}
+  />
+)

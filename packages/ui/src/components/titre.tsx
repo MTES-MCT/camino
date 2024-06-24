@@ -114,7 +114,6 @@ interface Props {
     | 'createDemarche'
     | 'updateDemarche'
     | 'deleteDemarche'
-    | 'getGeojsonByGeoSystemeId'
   >
   router: Pick<CaminoRouter, 'push' | 'replace'>
   initTab?: TabId

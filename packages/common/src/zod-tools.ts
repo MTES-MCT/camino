@@ -25,3 +25,10 @@ export const makeFlattenValidator = <T extends z.ZodTypeAny>(schema: T) =>
       })
       .nullable(),
   })
+
+export type CaminoZodErrorReadableMessage = string & { __camino: 'ZodReadableMessage' }
+export type CaminoError<T extends string> = {
+  message: T
+  extra?: any
+  zodErrorReadableMessage?: CaminoZodErrorReadableMessage
+}

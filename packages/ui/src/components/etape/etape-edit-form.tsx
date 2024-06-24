@@ -77,7 +77,6 @@ export type Props = {
     | 'getEtapeHeritagePotentiel'
     | 'uploadTempDocument'
     | 'geojsonImport'
-    | 'getGeojsonByGeoSystemeId'
     | 'geojsonPointsImport'
     | 'geojsonForagesImport'
     | 'getEtapeDocumentsByEtapeId'
@@ -500,7 +499,7 @@ const EtapeEditFormInternal = defineComponent<
     etape: DeepReadonly<CoreEtapeCreationOrModification>
     documents: EtapeEditFormDocuments
     setEtape: (etape: DeepReadonly<CoreEtapeCreationOrModification>, documents: EtapeEditFormDocuments) => void
-    alertesUpdate: (alertes: Omit<PerimetreInformations, 'communes'>) => void
+    alertesUpdate: (alertes: Omit<DeepReadonly<PerimetreInformations>, 'communes'>) => void
   } & Omit<Props, 'etape'>
 >(props => {
   const documentsCompleteUpdate = (

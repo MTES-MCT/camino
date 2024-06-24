@@ -6,11 +6,12 @@ import { SecteursMaritimes, SecteursMaritimesIds, getSecteurMaritime } from 'cam
 import { knex } from '../../knex.js'
 import { ForetId } from 'camino-common/src/static/forets.js'
 import { CommuneId, toCommuneId } from 'camino-common/src/static/communes.js'
-import { isNotNullNorUndefined, onlyUnique } from 'camino-common/src/typescript-tools.js'
+import { DeepReadonly, isNotNullNorUndefined, onlyUnique } from 'camino-common/src/typescript-tools.js'
 import { getGeojsonInformation } from '../../api/rest/perimetre.queries.js'
 import type { Pool } from 'pg'
 import { SDOMZoneId } from 'camino-common/src/static/sdom.js'
 import { M2 } from 'camino-common/src/number.js'
+import { isRight } from 'fp-ts/lib/Either.js'
 
 /**
  * Met à jour tous les territoires d’une liste d’étapes
@@ -40,21 +41,26 @@ export const titresEtapesAreasUpdate = async (pool: Pool, titresEtapesIds?: stri
     }
     try {
       if (isNotNullNorUndefined(titreEtape.geojson4326Perimetre)) {
-        const { forets, sdom, secteurs, communes } = await getGeojsonInformation(pool, titreEtape.geojson4326Perimetre.geometry)
+        const result = await getGeojsonInformation(pool, titreEtape.geojson4326Perimetre.geometry)()
+        if (isRight(result)) {
+          const { forets, sdom, secteurs, communes } = result.right
 
-        await intersectForets(titreEtape, forets)
-        await intersectSdom(titreEtape, sdom)
-        await intersectCommunes(titreEtape, communes)
-        await intersectSecteursMaritime(titreEtape, secteurs)
+          await intersectForets(titreEtape, forets)
+          await intersectSdom(titreEtape, sdom)
+          await intersectCommunes(titreEtape, communes)
+          await intersectSecteursMaritime(titreEtape, secteurs)
+        } else {
+          throw new Error(result.left.message)
+        }
       }
     } catch (e) {
       console.error(`Une erreur est survenue lors du traitement de l'étape ${titreEtape.id}`)
     }
   }
 }
-async function intersectSdom(titreEtape: Pick<ITitreEtape, 'sdomZones' | 'id'>, sdomZonesIds: SDOMZoneId[]) {
+async function intersectSdom(titreEtape: Pick<ITitreEtape, 'sdomZones' | 'id'>, sdomZonesIds: DeepReadonly<SDOMZoneId[]>) {
   if (sdomZonesIds.length > 0) {
-    const sortedSdomZonesIds = [...sdomZonesIds.sort()]
+    const sortedSdomZonesIds = sdomZonesIds.toSorted()
 
     if (sortedSdomZonesIds.length !== titreEtape.sdomZones?.length || titreEtape.sdomZones?.some((elem, index) => elem !== sortedSdomZonesIds[index])) {
       console.info(`nouvelles zones du sdom pour l'étape ${titreEtape.id}. Anciennes: ${JSON.stringify(titreEtape.sdomZones)}, nouvelles: ${JSON.stringify(sortedSdomZonesIds)}`)
@@ -63,12 +69,12 @@ async function intersectSdom(titreEtape: Pick<ITitreEtape, 'sdomZones' | 'id'>, 
   }
 }
 
-async function intersectForets(titreEtape: Pick<ITitreEtape, 'forets' | 'id'>, foretsNew: ForetId[]) {
+async function intersectForets(titreEtape: Pick<ITitreEtape, 'forets' | 'id'>, foretsNew: DeepReadonly<ForetId[]>) {
   if (!titreEtape.forets) {
     throw new Error('les forêts de l’étape ne sont pas chargées')
   }
 
-  const sortedForets = [...foretsNew.sort()]
+  const sortedForets = foretsNew.toSorted()
 
   if (titreEtape.forets?.length !== sortedForets.length || titreEtape.forets.some((value, index) => value !== sortedForets[index])) {
     console.info(`Mise à jour des forêts sur l'étape ${titreEtape.id}, ancien: '${JSON.stringify(titreEtape.forets)}', nouveaux: '${JSON.stringify(sortedForets)}'`)
@@ -78,7 +84,7 @@ async function intersectForets(titreEtape: Pick<ITitreEtape, 'forets' | 'id'>, f
   }
 }
 
-async function intersectCommunes(titreEtape: Pick<ITitreEtape, 'communes' | 'id' | 'geojson4326Perimetre'>, communes: { id: CommuneId; surface: M2 }[]) {
+async function intersectCommunes(titreEtape: Pick<ITitreEtape, 'communes' | 'id' | 'geojson4326Perimetre'>, communes: DeepReadonly<{ id: CommuneId; surface: M2 }[]>) {
   const communesNew: { id: CommuneId; surface: M2 }[] = communes.map(({ id, surface }) => ({ id: toCommuneId(id), surface })).sort((a, b) => a.id.localeCompare(b.id))
   if (titreEtape.communes?.length !== communesNew.length || titreEtape.communes.some((value, index) => value.id !== communesNew[index].id || value.surface !== communesNew[index].surface)) {
     console.info(`Mise à jour des communes sur l'étape ${titreEtape.id}, ancien: '${JSON.stringify(titreEtape.communes)}', nouveaux: '${JSON.stringify(communesNew)}'`)
@@ -88,7 +94,7 @@ async function intersectCommunes(titreEtape: Pick<ITitreEtape, 'communes' | 'id'
   }
 }
 
-async function intersectSecteursMaritime(titreEtape: Pick<ITitreEtape, 'secteursMaritime' | 'id'>, secteursMaritime: SecteursMaritimesIds[]) {
+async function intersectSecteursMaritime(titreEtape: Pick<ITitreEtape, 'secteursMaritime' | 'id'>, secteursMaritime: DeepReadonly<SecteursMaritimesIds[]>) {
   const secteurMaritimeNew: SecteursMaritimes[] = [...secteursMaritime.map(id => getSecteurMaritime(id))].filter(onlyUnique).sort()
   if (titreEtape.secteursMaritime?.length !== secteurMaritimeNew.length || titreEtape.secteursMaritime.some((value, index) => value !== secteurMaritimeNew[index])) {
     console.info(`Mise à jour des secteurs maritimes sur l'étape ${titreEtape.id}, ancien: '${titreEtape.secteursMaritime}', nouveaux: '${secteurMaritimeNew}'`)

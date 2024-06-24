@@ -7,15 +7,16 @@ import { FeatureCollectionForages, FeatureCollectionPoints, GeojsonInformations 
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { DsfrPerimetre } from '../_common/dsfr-perimetre'
 import { TitreSlug } from 'camino-common/src/validators/titres'
-import { Alert } from '../_ui/alert'
+import { CaminoApiAlert } from '../_ui/alert'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { PointsImportPopup } from './points-import-popup'
 import { ForagesImportPopup } from './forages-import-popup'
 import { canHaveForages } from 'camino-common/src/permissions/titres'
 import { CoreEtapeCreationOrModification } from './etape-api-client'
+import { CaminoError } from 'camino-common/src/zod-tools'
 
 export interface Props {
-  apiClient: Pick<ApiClient, 'uploadTempDocument' | 'geojsonImport' | 'getGeojsonByGeoSystemeId' | 'geojsonPointsImport' | 'geojsonForagesImport'>
+  apiClient: Pick<ApiClient, 'uploadTempDocument' | 'geojsonImport' | 'geojsonPointsImport' | 'geojsonForagesImport'>
   etape: DeepReadonly<Pick<CoreEtapeCreationOrModification, 'perimetre'>>
   titreTypeId: TitreTypeId
   titreSlug: TitreSlug
@@ -27,7 +28,6 @@ export interface Props {
 }
 
 type DisplayPerimetreProps = {
-  apiClient: Pick<ApiClient, 'getGeojsonByGeoSystemeId'>
   perimetre: Props['etape']['perimetre'] | null
   titreSlug: TitreSlug
   titreTypeId: TitreTypeId
@@ -45,7 +45,6 @@ const DisplayPerimetre: FunctionalComponent<DisplayPerimetreProps> = props => {
       <div>
         <DsfrPerimetre
           calculateNeighbours={false}
-          apiClient={props.apiClient}
           perimetre={{
             geojson4326_points: props.perimetre?.value?.geojson4326Points ?? null,
             geojson4326_perimetre: props.perimetre.value.geojson4326Perimetre,
@@ -70,7 +69,7 @@ export const PerimetreEdit = defineComponent<Props>(props => {
   const importPerimetrePopup = ref<boolean>(false)
   const importPointsPopup = ref<boolean>(false)
   const importForagesPopup = ref<boolean>(false)
-  const importError = ref<boolean>(false)
+  const importError = ref<CaminoError<string> | null>(null)
 
   const updateHeritage = (heritage: Props['etape']['perimetre']) => {
     props.onHeritageChange(heritage)
@@ -98,32 +97,32 @@ export const PerimetreEdit = defineComponent<Props>(props => {
     importForagesPopup.value = false
   }
 
-  const result = (value: GeojsonInformations | Error) => {
+  const result = (value: GeojsonInformations | CaminoError<string>) => {
     if ('geojson4326_perimetre' in value) {
-      importError.value = false
+      importError.value = null
       props.onEtapeChange(value)
     } else {
-      importError.value = true
+      importError.value = value
       console.error(value)
     }
   }
 
-  const resultPoints = (value: { geojson4326: FeatureCollectionPoints; origin: FeatureCollectionPoints } | Error) => {
+  const resultPoints = (value: { geojson4326: FeatureCollectionPoints; origin: FeatureCollectionPoints } | CaminoError<string>) => {
     if ('geojson4326' in value) {
-      importError.value = false
+      importError.value = null
       props.onPointsChange(value.geojson4326, value.origin)
     } else {
-      importError.value = true
+      importError.value = value
       console.error(value)
     }
   }
 
-  const resultForages = (value: { geojson4326: FeatureCollectionForages; origin: FeatureCollectionForages } | Error) => {
+  const resultForages = (value: { geojson4326: FeatureCollectionForages; origin: FeatureCollectionForages } | CaminoError<string>) => {
     if ('geojson4326' in value) {
-      importError.value = false
+      importError.value = null
       props.onForagesChange(value.geojson4326, value.origin)
     } else {
-      importError.value = true
+      importError.value = value
       console.error(value)
     }
   }
@@ -145,14 +144,13 @@ export const PerimetreEdit = defineComponent<Props>(props => {
               </>
             ) : null}
 
-            {importError.value ? <Alert class="fr-mt-2w" title="Une erreur est survenue lors de l’import de votre fichier." type="error" description="Vérifiez le contenu de votre fichier" /> : null}
+            {isNotNullNorUndefined(importError.value) ? <CaminoApiAlert class="fr-mt-2w" caminoApiError={importError.value} /> : null}
 
-            <DisplayPerimetre class="fr-mt-2w" apiClient={props.apiClient} perimetre={props.etape.perimetre} titreSlug={props.titreSlug} initTab={props.initTab} titreTypeId={props.titreTypeId} />
+            <DisplayPerimetre class="fr-mt-2w" perimetre={props.etape.perimetre} titreSlug={props.titreSlug} initTab={props.initTab} titreTypeId={props.titreTypeId} />
           </div>
         )}
         read={heritage => (
           <DisplayPerimetre
-            apiClient={props.apiClient}
             perimetre={isNotNullNorUndefined(heritage) ? { ...props.etape.perimetre, value: heritage.value } : null}
             titreSlug={props.titreSlug}
             titreTypeId={props.titreTypeId}

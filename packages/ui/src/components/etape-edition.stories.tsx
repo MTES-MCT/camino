@@ -29,7 +29,6 @@ const getPerimetreInfosByEtapeIdAction = action('getPerimetreInfosByEtapeId')
 const getEtapesTypesEtapesStatutsAction = action('getEtapesTypesEtapesStatuts')
 const geojsonImportAction = action('geojsonImport')
 const uploadTempDocumentAction = action('uploadTempDocument')
-const getGeojsonByGeoSystemeIdAction = action('getGeojsonByGeoSystemeId')
 const getEtapeDocumentsByEtapeIdAction = action('getEtapeDocumentsByEtapeId')
 const getEtapeEntrepriseDocumentsAction = action('getEtapeEntrepriseDocuments')
 const creerEntrepriseDocumentAction = action('creerEntrepriseDocument')
@@ -228,11 +227,6 @@ const apiClient: Props['apiClient'] = {
     uploadTempDocumentAction(document)
 
     return Promise.resolve(tempDocumentNameValidator.parse('name'))
-  },
-  getGeojsonByGeoSystemeId(geojson, geoSystemeId) {
-    getGeojsonByGeoSystemeIdAction(geojson, geoSystemeId)
-
-    return Promise.resolve(geojson)
   },
   getEtapeDocumentsByEtapeId(etapeId: EtapeId) {
     getEtapeDocumentsByEtapeIdAction(etapeId)
