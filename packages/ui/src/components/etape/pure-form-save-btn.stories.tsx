@@ -39,27 +39,39 @@ export const DemandeEnConstructionIncomplete: StoryFn = () => (
     ]}
     save={onSave}
     depose={onDepose}
+    etapeTypeId="mfr"
   />
 )
 
 export const DemandeEnConstructionComplete: StoryFn = () => (
-  <PureFormSaveBtn canSave={true} showDepose={true} canDepose={true} alertes={[{ message: 'alerte', url: 'google.com' }]} save={onSave} depose={onDepose} />
+  <PureFormSaveBtn canSave={true} showDepose={true} canDepose={true} alertes={[{ message: 'alerte', url: 'google.com' }]} save={onSave} depose={onDepose} etapeTypeId="mfr" />
 )
 
 export const CompletudeDeLaDemandeImcomplete: StoryFn = () => (
-  <PureFormSaveBtn canSave={false} showDepose={false} canDepose={true} alertes={[{ message: 'alerte', url: 'google.com' }]} save={onSave} depose={onDepose} />
+  <PureFormSaveBtn canSave={false} showDepose={false} canDepose={true} alertes={[{ message: 'alerte', url: 'google.com' }]} save={onSave} depose={onDepose} etapeTypeId="mcp" />
 )
 
 export const CompletudeDeLaDemandeComplete: StoryFn = () => (
-  <PureFormSaveBtn canSave={true} showDepose={false} canDepose={true} alertes={[{ message: 'alerte', url: 'google.com' }]} save={onSave} depose={onDepose} />
+  <PureFormSaveBtn canSave={true} showDepose={false} canDepose={true} alertes={[{ message: 'alerte', url: 'google.com' }]} save={onSave} depose={onDepose} etapeTypeId="mcp" />
 )
 
-export const SansMessage: StoryFn = () => <PureFormSaveBtn alertes={[]} canSave={true} showDepose={true} canDepose={true} save={onSave} depose={onDepose} />
+export const SansMessage: StoryFn = () => <PureFormSaveBtn alertes={[]} canSave={true} showDepose={true} canDepose={true} save={onSave} depose={onDepose} etapeTypeId="mfr" />
 
 export const WithError: StoryFn = () => (
-  <PureFormSaveBtn alertes={[]} canSave={true} showDepose={true} canDepose={true} save={onSave} depose={onDepose} initialContext={{ status: 'ERROR', message: 'Une erreur sauvage apparait' }} />
+  <PureFormSaveBtn
+    alertes={[]}
+    canSave={true}
+    showDepose={true}
+    canDepose={true}
+    save={onSave}
+    depose={onDepose}
+    etapeTypeId="mfr"
+    initialContext={{ status: 'ERROR', message: 'Une erreur sauvage apparait' }}
+  />
 )
 
 export const EnregistrementEnCours: StoryFn = () => (
-  <PureFormSaveBtn alertes={[]} canSave={true} showDepose={true} canDepose={true} save={onSave} depose={onDepose} initialContext={{ status: 'LOADING' }} />
+  <PureFormSaveBtn alertes={[]} canSave={true} showDepose={true} canDepose={true} save={onSave} depose={onDepose} etapeTypeId="mfr" initialContext={{ status: 'LOADING' }} />
 )
+
+export const AvisComplet: StoryFn = () => <PureFormSaveBtn alertes={[]} canSave={true} showDepose={true} canDepose={true} save={onSave} depose={onDepose} etapeTypeId="asc" />

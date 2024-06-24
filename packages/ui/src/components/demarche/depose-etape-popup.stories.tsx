@@ -12,7 +12,7 @@ export default meta
 const deposeEtape = action('deposeEtape')
 const close = action('close')
 
-export const Default: StoryFn = () => (
+export const Depot: StoryFn = () => (
   <DeposeEtapePopup
     id={etapeIdValidator.parse('etapeId')}
     apiClient={{
@@ -23,5 +23,21 @@ export const Default: StoryFn = () => (
       },
     }}
     close={close}
+    etapeTypeId="mfr"
+  />
+)
+
+export const Finalisation: StoryFn = () => (
+  <DeposeEtapePopup
+    id={etapeIdValidator.parse('etapeId')}
+    apiClient={{
+      deposeEtape(titreEtapeId) {
+        deposeEtape(titreEtapeId)
+
+        return Promise.resolve()
+      },
+    }}
+    close={close}
+    etapeTypeId="asc"
   />
 )
