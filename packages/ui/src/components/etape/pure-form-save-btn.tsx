@@ -4,6 +4,7 @@ import { Alert } from '../_ui/alert'
 import { DsfrButton, DsfrLink } from '../_ui/dsfr-button'
 import { AsyncData } from '@/api/client-rest'
 import { LoadingElement } from '../_ui/functional-loader'
+import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
 
 export type EtapeAlerte = { message: string; url?: string }
 type Props = {
@@ -14,6 +15,7 @@ type Props = {
   initialContext?: AsyncData<undefined>
   save: () => Promise<void>
   depose: () => Promise<void>
+  etapeTypeId: EtapeTypeId
 } & Pick<HTMLAttributes, 'class' | 'style'>
 export const PureFormSaveBtn = defineComponent<Props>(props => {
   const saveContext = ref<AsyncData<undefined>>(isNotNullNorUndefined(props.initialContext) ? props.initialContext : { status: 'LOADED', value: undefined })
@@ -79,20 +81,16 @@ export const PureFormSaveBtn = defineComponent<Props>(props => {
             disabled={!props.canSave || saveContext.value.status === 'LOADING'}
             onClick={save}
             title="Enregistrer l'étape"
-          >
-            Enregistrer
-          </DsfrButton>
+          />
           {props.showDepose ? (
             <DsfrButton
               buttonType="primary"
               type="submit"
               class="fr-ml-2w"
-              title="Enregistrer puis déposer l'étape"
+              title={props.etapeTypeId === 'mfr' ? "Enregistrer puis déposer l'étape" : "Enregistrer puis finaliser l'étape"}
               disabled={!props.canDepose || saveContext.value.status === 'LOADING'}
               onClick={depose}
-            >
-              Enregistrer et déposer
-            </DsfrButton>
+            />
           ) : null}
         </div>
       </div>
@@ -101,4 +99,4 @@ export const PureFormSaveBtn = defineComponent<Props>(props => {
 })
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-PureFormSaveBtn.props = ['alertes', 'canSave', 'canDepose', 'showDepose', 'save', 'depose', 'class', 'style', 'initialContext']
+PureFormSaveBtn.props = ['alertes', 'canSave', 'canDepose', 'showDepose', 'save', 'depose', 'class', 'style', 'initialContext', 'etapeTypeId']

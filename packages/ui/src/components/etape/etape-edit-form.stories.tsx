@@ -1,6 +1,6 @@
 import { EtapeEditForm, Props } from './etape-edit-form'
 import { Meta, StoryFn } from '@storybook/vue3'
-import { ETAPE_IS_NOT_BROUILLON, EtapeId, etapeIdValidator, etapeSlugValidator } from 'camino-common/src/etape'
+import { ETAPE_IS_BROUILLON, ETAPE_IS_NOT_BROUILLON, EtapeId, etapeIdValidator, etapeSlugValidator } from 'camino-common/src/etape'
 import { Entreprise, EntrepriseDocumentId, EntrepriseId, EtapeEntrepriseDocument, entrepriseDocumentIdValidator, entrepriseIdValidator, newEntrepriseId } from 'camino-common/src/entreprise'
 import { CaminoDate, toCaminoDate } from 'camino-common/src/date'
 import { testBlankUser } from 'camino-common/src/tests-utils'
@@ -147,6 +147,7 @@ const etapeEditFormApiClient: Props['apiClient'] = {
     return Promise.resolve([
       { etapeTypeId: 'mfr', etapeStatutId: 'fai', mainStep: true },
       { etapeTypeId: 'mdp', etapeStatutId: 'fai', mainStep: true },
+      { etapeTypeId: 'asc', etapeStatutId: 'fai', mainStep: true },
     ])
   },
   getEtapeHeritagePotentiel(etape, titreDemarcheId) {
@@ -279,6 +280,29 @@ export const EtapeModification: StoryFn = () => (
         heritee: false,
         etapeHeritee: null,
       },
+    }}
+    user={{
+      role: 'super',
+      ...testBlankUser,
+    }}
+    entreprises={entreprises}
+    goToDemarche={goToDemarcheAction}
+  />
+)
+
+export const EtapeModificationAvis: StoryFn = () => (
+  <EtapeEditForm
+    initTab="points"
+    apiClient={etapeEditFormApiClient}
+    demarcheId={demarcheIdValidator.parse('demarcheId')}
+    demarcheTypeId="oct"
+    titreSlug={titreSlugValidator.parse('titre-slug')}
+    titreTypeId="cxw"
+    perimetre={{ sdomZoneIds: [], superposition_alertes: [], communes: [] }}
+    etape={{
+      ...etape,
+      typeId: 'asc',
+      isBrouillon: ETAPE_IS_BROUILLON,
     }}
     user={{
       role: 'super',

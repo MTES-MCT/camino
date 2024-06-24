@@ -470,6 +470,7 @@ export const EtapeEditForm = defineComponent<Props>(props => {
                   showDepose={etapeLoaded.isBrouillon}
                   save={saveAndReroute}
                   depose={depose}
+                  etapeTypeId={etapeLoaded.typeId}
                 />
                 {isNotNullNorUndefined(etapeIdToDepose.value) ? (
                   <DeposeEtapePopup
@@ -482,6 +483,7 @@ export const EtapeEditForm = defineComponent<Props>(props => {
                       },
                     }}
                     id={etapeIdToDepose.value}
+                    etapeTypeId={etapeLoaded.typeId}
                   />
                 ) : null}
               </>
