@@ -250,7 +250,7 @@ describe('canReadTitre', () => {
       ).toBe(true)
     })
     test('associée', async () => {
-      const adminId = 'dea-guyane-01'
+      const adminId: AdministrationId = 'min-mctrct-dgcl-01'
       const titreTypeId = 'arm'
       expect(isGestionnaire(adminId, titreTypeId)).toBe(false)
       expect(isAssociee(adminId, titreTypeId)).toBe(true)
