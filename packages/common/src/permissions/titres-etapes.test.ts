@@ -15,6 +15,7 @@ import {
   IsEtapeCompleteEntrepriseDocuments,
   IsEtapeCompleteEtape,
   canDeleteEtape,
+  canDeleteEtapeDocument,
 } from './titres-etapes.js'
 import { AdministrationId, ADMINISTRATION_IDS } from '../static/administrations.js'
 import { test, expect } from 'vitest'
@@ -539,4 +540,10 @@ test.each<[number | null, EtapeTypeId, TitreTypeId, IsEtapeCompleteDocuments, Is
   } else {
     expect(result).toStrictEqual({ valid: true })
   }
+})
+
+test('canDeleteEtapeDocument', () => {
+  expect(canDeleteEtapeDocument(ETAPE_IS_BROUILLON, { ...testBlankUser, role: 'defaut' })).toBe(true)
+  expect(canDeleteEtapeDocument(ETAPE_IS_NOT_BROUILLON, { ...testBlankUser, role: 'defaut' })).toBe(false)
+  expect(canDeleteEtapeDocument(ETAPE_IS_NOT_BROUILLON, { ...testBlankUser, role: 'super' })).toBe(true)
 })

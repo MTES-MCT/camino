@@ -22,6 +22,7 @@ import { Knex } from 'knex'
 import { testDocumentCreateTemp } from '../../../tests/_utils/administrations-permissions.js'
 import { RestEtapeModification } from 'camino-common/src/etape-form.js'
 import { EntrepriseId } from 'camino-common/src/entreprise.js'
+import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 
 vi.mock('../../tools/dir-create', () => ({
   __esModule: true,
@@ -47,11 +48,11 @@ afterAll(async () => {
   await dbManager.closeKnex()
 })
 
-async function etapeCreate(typeId?: EtapeTypeId) {
+async function etapeCreate(typeId?: EtapeTypeId, titreTypeId: TitreTypeId = 'arm') {
   const titre = await titreCreate(
     {
       nom: 'mon titre',
-      typeId: 'arm',
+      typeId: titreTypeId,
       titreStatutId: 'ind',
       propsTitreEtapesIds: {},
     },
@@ -271,14 +272,14 @@ describe('etapeModifier', () => {
   })
 
   test("ne peut pas supprimer un document obligatoire d'une étape qui n'est pas en brouillon (utilisateur super)", async () => {
-    const { titreDemarcheId, titreEtapeId } = await etapeCreate('dae')
+    const { titreDemarcheId, titreEtapeId } = await etapeCreate('dae', 'axm')
     const dir = `${process.cwd()}/files/tmp/`
 
     const fileName = `existing_temp_file_${idGenerate()}`
     mkdirSync(dir, { recursive: true })
     copyFileSync(`./src/tools/small.pdf`, `${dir}/${fileName}`)
     const documentToInsert: TempEtapeDocument = {
-      etape_document_type_id: 'aac',
+      etape_document_type_id: 'arp',
       entreprises_lecture: true,
       public_lecture: true,
       description: 'desc',
@@ -336,7 +337,7 @@ describe('etapeModifier', () => {
 
     res = await restPutCall(dbPool, '/rest/etapes', {}, userSuper, { ...etape, etapeDocuments: [] })
 
-    expect(res.body.errorMessage).toBe('Impossible de supprimer les documents')
+    expect(res.body.errorMessage).toBe('le document "Arrêté préfectoral" (arp) est obligatoire')
   })
 
   test('peut modifier une étape mia avec un statut fai (utilisateur super)', async () => {

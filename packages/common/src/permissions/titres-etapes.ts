@@ -278,4 +278,4 @@ export const canDeposeEtape = (
   )
 }
 
-export const canDeleteEtapeDocument = (isBrouillon: EtapeBrouillon): boolean => isBrouillon
+export const canDeleteEtapeDocument = (isBrouillon: EtapeBrouillon, user: User): boolean => isBrouillon === ETAPE_IS_BROUILLON || isSuper(user)
