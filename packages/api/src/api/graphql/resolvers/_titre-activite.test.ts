@@ -32,7 +32,7 @@ describe('teste la construction des emails lors du dépôt d’une activité', (
       [ADMINISTRATION_IDS['DREAL - BRETAGNE'], true],
       [ADMINISTRATION_IDS['DEAL - LA RÉUNION'], true],
       [ADMINISTRATION_IDS['PRÉFECTURE - ALLIER'], false],
-      [ADMINISTRATION_IDS['BRGM - PROJET ZERCOA'], false],
+      [ADMINISTRATION_IDS.BRGM, false],
       [ADMINISTRATION_IDS['GENDARMERIE NATIONALE - GUYANE'], false],
     ])('si la production est nulle on envoie des emails que aux ministères et au DREAL', (administrationId, envoie) => {
       expect(titreActiviteAdministrationsEmailsGet([administrationId], [{ activite_type_id: 'grx', email: 'toto@foo.bar', administration_id: administrationId }], 'grx', undefined)).toHaveLength(
