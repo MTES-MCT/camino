@@ -3,6 +3,7 @@
 exports[`canCreateTitre > vérifie si un utilisateur administrateur admin peut créer des titres 1`] = `
 {
   "dea-guyane-01": {
+    "arm": true,
     "axm": true,
   },
   "dre-aura-01": {
@@ -103,6 +104,15 @@ exports[`canCreateTitre > vérifie si une entreprise peut créer un titre de typ
 exports[`canEditTitre > vérifie si un utilisateur administrateur admin peut modifier des titres 1`] = `
 {
   "dea-guyane-01": {
+    "arm": {
+      "dmc": true,
+      "dmi": true,
+      "ech": true,
+      "ind": true,
+      "mod": true,
+      "sup": true,
+      "val": true,
+    },
     "axm": {
       "dmc": true,
       "dmi": true,

@@ -347,12 +347,12 @@ describe('titreModifier', () => {
     expect(tested.statusCode).toBe(403)
   })
 
-  test("ne peut pas modifier un titre ARM (un utilisateur 'admin' DGTM)", async () => {
+  test("ne peut pas modifier un titre ARM (un utilisateur 'admin' DGCL/SDFLAE/FL1)", async () => {
     const tested = await restPostCall(
       dbPool,
       '/rest/titres/:titreId',
       { titreId: id },
-      { role: 'admin', administrationId: ADMINISTRATION_IDS['DGTM - GUYANE'] },
+      { role: 'admin', administrationId: ADMINISTRATION_IDS['DGCL/SDFLAE/FL1'] },
       { id, nom: 'mon titre modifié', references: [] }
     )
     expect(tested.statusCode).toBe(403)

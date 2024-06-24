@@ -464,8 +464,8 @@ describe('titreCreer', () => {
     expect(res.body.errors[0].message).toBe('permissions insuffisantes')
   })
 
-  test("ne peut pas créer un titre ARM (un utilisateur 'admin' Déal Guyane)", async () => {
-    const res = await graphQLCall(dbPool, titreCreerQuery, { titre: { nom: 'titre', typeId: 'arm' } }, { role: 'admin', administrationId: ADMINISTRATION_IDS['DGTM - GUYANE'] })
+  test("ne peut pas créer un titre ARM (un utilisateur 'admin' DGCL/SDFLAE/FL1)", async () => {
+    const res = await graphQLCall(dbPool, titreCreerQuery, { titre: { nom: 'titre', typeId: 'arm' } }, { role: 'admin', administrationId: ADMINISTRATION_IDS['DGCL/SDFLAE/FL1'] })
 
     expect(res.body.errors[0].message).toBe('permissions insuffisantes')
   })
