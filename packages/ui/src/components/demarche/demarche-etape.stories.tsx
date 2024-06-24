@@ -1120,3 +1120,27 @@ export const DemandeAvecForage: StoryFn = () => (
     }}
   />
 )
+
+export const AvisDesServices: StoryFn = () => (
+  <DemarcheEtape
+    titre={{ titreStatutId: 'val', typeId: 'arm', nom: 'nom du titre', slug: titreSlug }}
+    demarche={{ demarche_type_id: 'oct', titulaireIds: [entrepriseIdValidator.parse('titulaire1')], administrationsLocales: [], sdom_zones: [], etapes: [], communes: [] }}
+    router={routerPushMock}
+    user={{ ...testBlankUser, role: 'super' }}
+    etape={{
+      id: etapeIdValidator.parse('etapeId'),
+      slug: etapeSlugValidator.parse('etape-slug'),
+      notes: null,
+      etape_type_id: EtapesTypesEtapesStatuts.avisDesServicesEtCommissionsConsultatives.FAIT.etapeTypeId,
+      etape_statut_id: EtapesTypesEtapesStatuts.avisDesServicesEtCommissionsConsultatives.FAIT.etapeStatutId,
+      is_brouillon: ETAPE_IS_BROUILLON,
+      date,
+      sections_with_values: [],
+      etape_documents: documents,
+      entreprises_documents: entrepriseDocuments,
+      avis_documents: [],
+    }}
+    apiClient={apiClient}
+    entreprises={entreprises}
+  />
+)

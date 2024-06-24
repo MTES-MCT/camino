@@ -16,7 +16,6 @@ import { titreIdValidator, titreSlugValidator, TitreIdOrSlug } from 'camino-comm
 import { ZERO_KM2 } from 'camino-common/src/number'
 import { CaminoRouter } from '@/typings/vue-router'
 
-// FIXME ajoute test avec des avis
 const meta: Meta = {
   title: 'Components/Titre',
   // @ts-ignore @storybook/vue3 n'aime pas les composants tsx

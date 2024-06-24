@@ -254,8 +254,8 @@ export const DemarcheEtape = defineComponent<Props>(props => {
                   <DsfrButton
                     class="fr-mr-1v"
                     buttonType="primary"
-                    label={props.etape.etape_type_id === 'mfr' ? 'Déposer' : 'Terminer'}
-                    title={props.etape.etape_type_id === 'mfr' ? "Déposer l'étape" : "Terminer l'étape"}
+                    label={props.etape.etape_type_id === 'mfr' ? 'Déposer' : 'Finaliser'}
+                    title={props.etape.etape_type_id === 'mfr' ? "Déposer l'étape" : "Finaliser l'étape"}
                     onClick={deposePopupOpen}
                     disabled={!isDeposable.value}
                   />
