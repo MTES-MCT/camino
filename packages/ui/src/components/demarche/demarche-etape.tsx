@@ -287,7 +287,7 @@ export const DemarcheEtape = defineComponent<Props>(props => {
 
         {displayEtapeStatus(props.etape.etape_type_id, props.etape.etape_statut_id) ? <EtapeStatut etapeStatutId={props.etape.etape_statut_id} /> : null}
         <div class="fr-mt-1w">
-          <DsfrIcon name="fr-icon-calendar-line" color="text-title-blue-france" /> {dateFormat(props.etape.date)}
+          <DsfrIcon name="fr-icon-calendar-line" color="text-title-blue-france" aria-hidden="true" /> {dateFormat(props.etape.date)}
         </div>
       </div>
       {hasContent.value ? (

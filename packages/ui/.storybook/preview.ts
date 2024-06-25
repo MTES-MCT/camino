@@ -6,7 +6,6 @@ import '@gouvfr/dsfr/dist/component/navigation/navigation.module'
 
 import { setup } from '@storybook/vue3'
 import { h } from 'vue'
-import { IconSprite } from '../src/components/_ui/iconSprite'
 import { allRoutes } from '../src/utils/storybook-test-utils'
 import { vueRouter } from 'storybook-vue3-router'
 
@@ -16,8 +15,8 @@ setup(app => {
 
 export const decorators: Decorator[] = [
   story => ({
-    components: { story, IconSprite },
-    template: '<div>' + '<main>' + '<div><IconSprite /><story /></div>' + '</main>' + '</div>',
+    components: { story  },
+    template: '<div>' + '<main>' + '<div><story /></div>' + '</main>' + '</div>',
   }),
   vueRouter(allRoutes),
 ]

@@ -1,57 +1,12 @@
 import { Meta, StoryFn } from '@storybook/vue3'
-import { Icon, DsfrIcon } from './icon'
-import { icons } from './iconSpriteType'
+import { DsfrIcon } from './icon'
 import { icons as dsfrIcons } from './dsfrIconSpriteType'
-import { IconSprite } from '@/components/_ui/iconSprite'
 
 const meta: Meta = {
   title: 'Components/Ui/Icons',
-  component: Icon,
+  component: DsfrIcon,
 }
 export default meta
-
-export const IconAllSize: StoryFn = () => (
-  <div style="height:100%;width:100%;background:white">
-    <table>
-      <tr>
-        <th>Name</th>
-        <th>Size</th>
-      </tr>
-      <tr>
-        <td>s</td>
-        <td>
-          <Icon size="S" name="download" aria-hidden="true" />
-        </td>
-      </tr>
-      <tr>
-        <td>m</td>
-        <td>
-          <Icon size="M" name="download" aria-hidden="true" />
-        </td>
-      </tr>
-    </table>
-  </div>
-)
-
-export const AllIcons: StoryFn = () => (
-  <div style="height:100%;width:100%;background:white">
-    <IconSprite />
-    <table>
-      <tr>
-        <th>Name</th>
-        <th>Component</th>
-      </tr>
-      {icons.map(iconName => (
-        <tr>
-          <td>{iconName}</td>
-          <td>
-            <Icon size="M" name={iconName} aria-hidden="true" />
-          </td>
-        </tr>
-      ))}
-    </table>
-  </div>
-)
 
 export const AllDsfrIcons: StoryFn = () => (
   <div style="height:100%;width:100%;background:white">
@@ -66,13 +21,13 @@ export const AllDsfrIcons: StoryFn = () => (
         <tr>
           <td>{iconName}</td>
           <td>
-            <DsfrIcon name={`fr-icon-${iconName}`} size="sm" />
+            <DsfrIcon name={`fr-icon-${iconName}`} size="sm" aria-hidden="true" />
           </td>
           <td>
-            <DsfrIcon name={`fr-icon-${iconName}`} size="md" />
+            <DsfrIcon name={`fr-icon-${iconName}`} size="md" aria-hidden="true" />
           </td>
           <td>
-            <DsfrIcon name={`fr-icon-${iconName}`} size="lg" />
+            <DsfrIcon name={`fr-icon-${iconName}`} size="lg" aria-hidden="true" />
           </td>
         </tr>
       ))}
@@ -80,4 +35,4 @@ export const AllDsfrIcons: StoryFn = () => (
   </div>
 )
 
-export const DsfrIconColor: StoryFn = () => <DsfrIcon name={`fr-icon-calendar-2-fill`} color="text-title-blue-france" />
+export const DsfrIconColor: StoryFn = () => <DsfrIcon name={`fr-icon-calendar-2-fill`} color="text-title-blue-france" aria-hidden="true" />
