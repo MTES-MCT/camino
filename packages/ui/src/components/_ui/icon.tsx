@@ -36,11 +36,12 @@ export const Icon: FunctionalComponent<Props> = (props: Props): JSX.Element => {
 type DsfrIconProps = {
   name: DsfrIconType
   size?: 'sm' | 'md' | 'lg'
-  color?: 'text-title-blue-france'
-} & Pick<HTMLAttributes, 'class'>
+  color?: 'text-title-blue-france' | 'text-title-white-france'
+} & Pick<HTMLAttributes, 'class'> &
+  ({ 'aria-hidden': 'true' } | { role: 'img'; 'aria-label': string })
 
 export const DsfrIcon: FunctionalComponent<DsfrIconProps> = (props): JSX.Element => {
   const iconClass = props.size ? `fr-icon--${props.size}` : null
 
-  return <span class={[props.name, iconClass]} aria-hidden="true" style={{ color: isNotNullNorUndefined(props.color) ? `var(--${props.color})` : '' }} />
+  return <span class={[props.name, iconClass]} style={{ color: isNotNullNorUndefined(props.color) ? `var(--${props.color})` : '' }} />
 }
