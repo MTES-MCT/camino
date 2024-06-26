@@ -23,7 +23,7 @@ const apiClient: Pick<ApiClient, 'uploadTempDocument'> = {
   },
 }
 export const Default: StoryFn = () => (
-  <AddEtapeDocumentPopup close={close} documentTypeIds={['car', 'doe', 'jpa']} user={{ ...testBlankUser, role: 'admin', administrationId: 'aut-97300-01' }} apiClient={apiClient} />
+  <AddEtapeDocumentPopup close={close} documentTypeIds={['car', 'doe', 'jpa', 'aut']} user={{ ...testBlankUser, role: 'admin', administrationId: 'aut-97300-01' }} apiClient={apiClient} />
 )
 
 export const Entreprise: StoryFn = () => (
@@ -39,6 +39,16 @@ export const DocumentInitial: StoryFn = () => (
     close={close}
     documentTypeIds={['car']}
     initialDocument={{ description: 'description', entreprises_lecture: true, public_lecture: false, etape_document_type_id: 'car', temp_document_name: tempDocumentNameValidator.parse('value') }}
+    user={{ ...testBlankUser, role: 'super' }}
+    apiClient={apiClient}
+  />
+)
+
+export const DocumentInitialAutre: StoryFn = () => (
+  <AddEtapeDocumentPopup
+    close={close}
+    documentTypeIds={['aut']}
+    initialDocument={{ description: 'description', entreprises_lecture: true, public_lecture: false, etape_document_type_id: 'aut', temp_document_name: tempDocumentNameValidator.parse('value') }}
     user={{ ...testBlankUser, role: 'super' }}
     apiClient={apiClient}
   />

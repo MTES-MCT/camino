@@ -18,7 +18,7 @@ import { ApiClient } from '../../api/api-client'
 import { DeepReadonly, FunctionalComponent, computed, defineComponent, onMounted, ref, watch } from 'vue'
 import { SDOMZoneId } from 'camino-common/src/static/sdom'
 import { isNonEmptyArray, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined, NonEmptyArray } from 'camino-common/src/typescript-tools'
-import { DocumentType, DocumentTypeId, DocumentsTypes } from 'camino-common/src/static/documentsTypes'
+import { AutreDocumentType, AutreDocumentTypeId, DocumentType, DocumentTypeId, DocumentsTypes } from 'camino-common/src/static/documentsTypes'
 import { LoadingElement } from '../_ui/functional-loader'
 import { AsyncData } from '../../api/client-rest'
 import { DsfrButtonIcon } from '../_ui/dsfr-button'
@@ -96,12 +96,14 @@ const EtapeDocumentsLoaded = defineComponent<EtapeDocumentsLoadedProps>(props =>
     { deep: true }
   )
 
-  const addOrEditPopupOpen = ref<{ open: true; documentTypeIds: NonEmptyArray<DocumentTypeId>; document?: (EtapeDocument | TempEtapeDocument) & WithIndex } | { open: false }>({ open: false })
+  const addOrEditPopupOpen = ref<{ open: true; documentTypeIds: NonEmptyArray<DocumentTypeId | AutreDocumentTypeId>; document?: (EtapeDocument | TempEtapeDocument) & WithIndex } | { open: false }>({
+    open: false,
+  })
 
   const addOrEditDaePopupOpen = ref<boolean>(false)
   const addOrEditAslPopupOpen = ref<boolean>(false)
 
-  const documentTypes = computed<DocumentType[]>(() => {
+  const documentTypes = computed<(DocumentType | AutreDocumentType)[]>(() => {
     return getDocumentsTypes({ typeId: props.tde.etapeTypeId }, props.tde.demarcheTypeId, props.tde.titreTypeId, props.sdomZoneIds, props.contenu.arm?.mecanise?.value === true)
   })
 
@@ -138,7 +140,7 @@ const EtapeDocumentsLoaded = defineComponent<EtapeDocumentsLoadedProps>(props =>
 
     return documents
   })
-  const emptyRequiredDocuments = computed<DocumentTypeId[]>(() => {
+  const emptyRequiredDocuments = computed<(DocumentTypeId | AutreDocumentTypeId)[]>(() => {
     const documents = documentTypes.value
       .filter(({ optionnel, id }) => !optionnel && !completeRequiredDocuments.value.some(({ etape_document_type_id }) => etape_document_type_id === id))
       .map(({ id }) => id)
@@ -154,7 +156,7 @@ const EtapeDocumentsLoaded = defineComponent<EtapeDocumentsLoadedProps>(props =>
 
     return documents
   })
-  const additionnalDocumentTypeIds = computed<DocumentTypeId[]>(() => {
+  const additionnalDocumentTypeIds = computed<(DocumentTypeId | AutreDocumentTypeId)[]>(() => {
     return documentTypes.value.filter(dt => dt.optionnel).map(({ id }) => id)
   })
 
@@ -195,7 +197,7 @@ const EtapeDocumentsLoaded = defineComponent<EtapeDocumentsLoadedProps>(props =>
     addOrEditAslPopupOpen.value = false
   }
 
-  const addDocument = (documentTypeId: DocumentTypeId) => {
+  const addDocument = (documentTypeId: DocumentTypeId | AutreDocumentTypeId) => {
     if (needAslAndDaeCompute.value && documentTypeId === documentTypeIdComplementaireObligatoireDAE) {
       addOrEditDaePopupOpen.value = true
     } else if (needAslAndDaeCompute.value && documentTypeId === documentTypeIdComplementaireObligatoireASL) {
@@ -226,7 +228,7 @@ const EtapeDocumentsLoaded = defineComponent<EtapeDocumentsLoadedProps>(props =>
     })
   }
 
-  const getNom = (documentTypeId: DocumentTypeId) => {
+  const getNom = (documentTypeId: DocumentTypeId | AutreDocumentTypeId) => {
     if (needAslAndDaeCompute.value && documentTypeId === documentTypeIdComplementaireObligatoireDAE) {
       return `${DocumentsTypes[documentTypeIdComplementaireObligatoireDAE].nom} de la mission autorité environnementale`
     }
@@ -299,9 +301,9 @@ type PropsTable = {
   caption: string
   documents: ((EtapeDocument | TempEtapeDocument) & { index: number | 'asl' | 'dae' })[]
   isBrouillon: EtapeBrouillon
-  emptyRequiredDocuments: DocumentTypeId[]
-  getNom: (documentTypeId: DocumentTypeId) => string
-  add: (documentTypeId: DocumentTypeId) => void
+  emptyRequiredDocuments: (DocumentTypeId | AutreDocumentTypeId)[]
+  getNom: (documentTypeId: DocumentTypeId | AutreDocumentTypeId) => string
+  add: (documentTypeId: DocumentTypeId | AutreDocumentTypeId) => void
   edit: (documentIndex: number | 'asl' | 'dae') => void
   delete: (documentIndex: number) => void
   user: User

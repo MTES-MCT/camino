@@ -245,7 +245,7 @@ const EtapesTypesDocumentsTypes = {
   [ETAPES_TYPES.recolement]: [DOCUMENTS_TYPES_IDS.pvDeRecolement],
   [ETAPES_TYPES.saisineDeLautoriteEnvironnementale]: [DOCUMENTS_TYPES_IDS.courrierDeSaisineDuPrefet, DOCUMENTS_TYPES_IDS.lettreDeSaisineDuPrefet],
   [ETAPES_TYPES.transmissionDuProjetDePrescriptionsAuDemandeur]: [DOCUMENTS_TYPES_IDS.arretePrefectoral],
-} as const
+} as const satisfies { [key in EtapeTypeId]?: DocumentTypeId[] }
 
 const isEtapesTypesEtapesTypesDocumentsTypes = (etapeTypeId?: EtapeTypeId): etapeTypeId is keyof typeof EtapesTypesDocumentsTypes => {
   return Object.keys(EtapesTypesDocumentsTypes).includes(etapeTypeId)

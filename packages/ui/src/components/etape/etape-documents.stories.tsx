@@ -33,6 +33,13 @@ const documents: EtapeDocument[] = [
     public_lecture: false,
     entreprises_lecture: true,
   },
+  {
+    id: etapeDocumentIdValidator.parse('idAutre'),
+    etape_document_type_id: 'aut',
+    description: 'description document',
+    public_lecture: false,
+    entreprises_lecture: true,
+  },
 ]
 
 const titulaireId1 = entrepriseIdValidator.parse('titulaire1')

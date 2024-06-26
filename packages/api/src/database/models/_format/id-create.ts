@@ -1,7 +1,7 @@
 import { DemarcheId } from 'camino-common/src/demarche.js'
 import { CaminoDate } from 'camino-common/src/date.js'
 import { EntrepriseDocumentId, entrepriseDocumentIdValidator } from 'camino-common/src/entreprise.js'
-import { ActiviteDocumentTypeId, DocumentTypeId } from 'camino-common/src/static/documentsTypes.js'
+import { ActiviteDocumentTypeId, AutreDocumentTypeId, DocumentTypeId } from 'camino-common/src/static/documentsTypes.js'
 import { randomBytes } from 'node:crypto'
 import { TitreId } from 'camino-common/src/validators/titres.js'
 import { EtapeAvisId, EtapeDocumentId, EtapeId, etapeAvisIdValidator, etapeDocumentIdValidator } from 'camino-common/src/etape.js'
@@ -37,7 +37,7 @@ export const newActiviteDocumentId = (date: CaminoDate, activiteDocumentTypeId: 
   return activiteDocumentIdValidator.parse(`${date}-${activiteDocumentTypeId}-${hash}`)
 }
 
-export const newEtapeDocumentId = (date: CaminoDate, documentTypeId: DocumentTypeId): EtapeDocumentId => {
+export const newEtapeDocumentId = (date: CaminoDate, documentTypeId: DocumentTypeId | AutreDocumentTypeId): EtapeDocumentId => {
   const hash = idGenerate(8)
 
   return etapeDocumentIdValidator.parse(`${date}-${documentTypeId}-${hash}`)

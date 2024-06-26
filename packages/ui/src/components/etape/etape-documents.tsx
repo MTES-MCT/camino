@@ -1,7 +1,7 @@
 import { FunctionalComponent, computed } from 'vue'
 import { EtapeDocument, EtapeDocumentId } from 'camino-common/src/etape'
 import { User, isAdministration, isSuper } from 'camino-common/src/roles'
-import { DocumentTypeId, DocumentsTypes } from 'camino-common/src/static/documentsTypes'
+import { AutreDocumentTypeId, DocumentTypeId, DocumentsTypes } from 'camino-common/src/static/documentsTypes'
 import { getDownloadRestRoute } from '../../api/client-rest'
 import { Entreprise, EntrepriseId, EtapeEntrepriseDocument } from 'camino-common/src/entreprise'
 import { EntrepriseDocumentLink } from '../entreprise/entreprise-documents'
@@ -32,7 +32,7 @@ export const getVisibilityLabel = (etapeDocument: Pick<EtapeDocument, 'public_le
   return VisibilityLabel.administrations
 }
 
-export const sortDocumentsColumn = <T extends { document_type_id: DocumentTypeId; description: string | null }>(documents: T[]): T[] => {
+export const sortDocumentsColumn = <T extends { document_type_id: DocumentTypeId | AutreDocumentTypeId; description: string | null }>(documents: T[]): T[] => {
   return [...documents].sort((a, b) => {
     const result = DocumentsTypes[a.document_type_id].nom.localeCompare(DocumentsTypes[b.document_type_id].nom)
 
@@ -100,7 +100,7 @@ export const EtapeDocuments: FunctionalComponent<Props> = props => {
   )
 }
 
-type EtapeDocumentLinkProps = { documentId: EtapeDocumentId; documentTypeId: DocumentTypeId }
+type EtapeDocumentLinkProps = { documentId: EtapeDocumentId; documentTypeId: DocumentTypeId | AutreDocumentTypeId }
 const EtapeDocumentLink: FunctionalComponent<EtapeDocumentLinkProps> = props => {
   return (
     <a

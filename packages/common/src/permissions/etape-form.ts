@@ -14,7 +14,7 @@ import { AvisTypeId, AvisTypes } from '../static/avisTypes.js'
 import { CommuneId } from '../static/communes'
 import { DemarcheTypeId } from '../static/demarchesTypes.js'
 import { DEPARTEMENT_IDS, toDepartementId } from '../static/departement.js'
-import { DocumentsTypes, EntrepriseDocumentTypeId } from '../static/documentsTypes.js'
+import { AutreDocumentType, DocumentType, DocumentsTypes, EntrepriseDocumentTypeId } from '../static/documentsTypes.js'
 import { ETAPES_TYPES, EtapeTypeId, EtapesTypes } from '../static/etapesTypes.js'
 import { SDOMZoneId } from '../static/sdom.js'
 import { TitreTypeId, TitresTypes } from '../static/titresTypes.js'
@@ -141,7 +141,7 @@ export const getDocumentsTypes = (
   titreTypeId: TitreTypeId,
   sdomZoneIds: DeepReadonly<SDOMZoneId[]>,
   isArmMecanise: boolean
-) => {
+): (DocumentType | AutreDocumentType)[] => {
   const dts = getDocuments(titreTypeId, demarcheTypeId, etape.typeId)
 
   // si la démarche est mécanisée il faut ajouter des documents obligatoires
@@ -162,7 +162,7 @@ export const getDocumentsTypes = (
     }
   }
 
-  return dts
+  return [...dts, { ...DocumentsTypes.aut, optionnel: true }]
 }
 
 export const getAvisTypes = (etapeTypeId: EtapeTypeId, titreTypeId: TitreTypeId, communeIds: DeepReadonly<CommuneId[]>): { id: AvisTypeId; optionnel: boolean }[] => {
