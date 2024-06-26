@@ -46,19 +46,18 @@ export type EtapeTypeEtapeStatutWithMainStep = z.infer<typeof etapeTypeEtapeStat
 export const etapeDocumentIdValidator = z.string().brand('EtapeDocumentId')
 export type EtapeDocumentId = z.infer<typeof etapeDocumentIdValidator>
 
-export const etapeDocumentDescriptionOptionnelleValidator = z.object({
+const etapeDocumentWithoutDescriptionValidator = z.object({
   id: etapeDocumentIdValidator,
-  description: z.string().nullable(),
-  etape_document_type_id: documentTypeIdValidator,
   public_lecture: z.boolean().default(false),
   entreprises_lecture: z.boolean().default(false),
 })
-export const etapeDocumentDescriptionObligatoireValidator = z.object({
-  id: etapeDocumentIdValidator,
-  description: z.string().min(1),
+export const etapeDocumentDescriptionOptionnelleValidator = etapeDocumentWithoutDescriptionValidator.extend({
+  etape_document_type_id: documentTypeIdValidator,
+  description: z.string().nullable(),
+})
+export const etapeDocumentDescriptionObligatoireValidator = etapeDocumentWithoutDescriptionValidator.extend({
   etape_document_type_id: autreDocumentTypeIdValidator,
-  public_lecture: z.boolean().default(false),
-  entreprises_lecture: z.boolean().default(false),
+  description: z.string().min(1),
 })
 
 export const etapeDocumentValidator = z.union([etapeDocumentDescriptionOptionnelleValidator, etapeDocumentDescriptionObligatoireValidator])
@@ -86,7 +85,6 @@ export type GetEtapeDocumentsByEtapeIdDaeDocument = z.infer<typeof getEtapeDocum
 const getEtapeDocumentsByEtapeIdAslDocumentValidator = z.intersection(etapeDocumentValidator, documentComplementaireObligatoireASLValidator)
 export type GetEtapeDocumentsByEtapeIdAslDocument = z.infer<typeof getEtapeDocumentsByEtapeIdAslDocumentValidator>
 
-// FIXME: vérifier que ça fonctionne
 export const getEtapeDocumentsByEtapeIdValidator = z.object({
   etapeDocuments: z.array(etapeDocumentValidator),
   dae: getEtapeDocumentsByEtapeIdDaeDocumentValidator.nullable(),
