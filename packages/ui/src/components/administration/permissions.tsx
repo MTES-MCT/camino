@@ -181,7 +181,7 @@ export const Permissions: FunctionalComponent<Props> = props => {
     <div>
       <TitresTypes administrationId={props.administrationId} />
 
-      <div class="mb-xxl">
+      <div>
         <h3>Restrictions de l'édition des titres, démarches et étapes</h3>
 
         <div class="h6">
@@ -196,7 +196,7 @@ export const Permissions: FunctionalComponent<Props> = props => {
         <TableAuto caption="" columns={restrictionEditionColonnes} rows={restrictionEditionRows(titresTypesTitresStatuts)} initialSort={'firstColumnAsc'} />
       </div>
 
-      <div class="mb-xxl">
+      <div>
         <h3>Restrictions de la visibilité, édition et création des étapes</h3>
 
         <div class="h6">

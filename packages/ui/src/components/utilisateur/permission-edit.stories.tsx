@@ -16,7 +16,7 @@ const update = action('update')
 export const Default: StoryFn = () => (
   <PermissionDisplay
     user={{ ...testBlankUser, role: 'super' }}
-    utilisateur={{ status: 'LOADED', value: { ...testBlankUser, id: toUtilisateurId('utilisateurIdFake'), role: 'defaut' } }}
+    utilisateur={{ ...testBlankUser, id: toUtilisateurId('utilisateurIdFake'), role: 'defaut' }}
     entreprises={[]}
     apiClient={{
       updateUtilisateur: user =>
@@ -29,11 +29,10 @@ export const Default: StoryFn = () => (
     }}
   />
 )
-
-export const Entreprise: StoryFn = () => (
+export const Administration: StoryFn = () => (
   <PermissionDisplay
     user={{ ...testBlankUser, role: 'super' }}
-    utilisateur={{ status: 'LOADED', value: { ...testBlankUser, id: toUtilisateurId('utilisateurIdFake'), role: 'entreprise', entreprises: [{ id: newEntrepriseId('entrepriseId1'), nom: 'nom' }] } }}
+    utilisateur={{ ...testBlankUser, id: toUtilisateurId('utilisateurIdFake'), role: 'admin', administrationId: 'dea-guyane-01' }}
     entreprises={[{ id: newEntrepriseId('entrepriseId1'), nom: 'Nom entreprise', legal_siren: null }]}
     apiClient={{
       updateUtilisateur: user =>
@@ -46,12 +45,22 @@ export const Entreprise: StoryFn = () => (
     }}
   />
 )
-
-export const Loading: StoryFn = () => (
+export const Entreprise: StoryFn = () => (
   <PermissionDisplay
     user={{ ...testBlankUser, role: 'super' }}
-    entreprises={[]}
-    utilisateur={{ status: 'LOADING' }}
+    utilisateur={{
+      ...testBlankUser,
+      id: toUtilisateurId('utilisateurIdFake'),
+      role: 'entreprise',
+      entreprises: [
+        { id: newEntrepriseId('entrepriseId1'), nom: 'nom' },
+        { id: newEntrepriseId('entrepriseId2'), nom: 'nom' },
+      ],
+    }}
+    entreprises={[
+      { id: newEntrepriseId('entrepriseId1'), nom: 'Nom entreprise1', legal_siren: null },
+      { id: newEntrepriseId('entrepriseId2'), nom: 'Nom entreprise2', legal_siren: 'FR2320-92' },
+    ]}
     apiClient={{
       updateUtilisateur: user =>
         new Promise(resolve =>
@@ -67,7 +76,7 @@ export const Loading: StoryFn = () => (
 export const UserAdminCanEditDefautIntoLecteur: StoryFn = () => (
   <PermissionDisplay
     user={{ ...testBlankUser, role: 'admin', administrationId: 'ope-onf-973-01' }}
-    utilisateur={{ status: 'LOADED', value: { ...testBlankUser, id: toUtilisateurId('utilisateurIdFake'), role: 'defaut' } }}
+    utilisateur={{ ...testBlankUser, id: toUtilisateurId('utilisateurIdFake'), role: 'defaut' }}
     entreprises={[]}
     apiClient={{
       updateUtilisateur: user =>

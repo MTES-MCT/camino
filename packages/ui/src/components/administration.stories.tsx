@@ -18,7 +18,7 @@ const administrationActiviteTypeEmailDeleteAction = action('administrationActivi
 
 export const Default: StoryFn = () => (
   <PureAdministration
-    administrationId={ADMINISTRATION_IDS.BRGM}
+    administrationId={ADMINISTRATION_IDS['DGTM - GUYANE']}
     user={{
       role: 'super',
       ...testBlankUser,

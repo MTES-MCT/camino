@@ -1,4 +1,3 @@
-import { Card } from './_ui/card'
 import { EntrepriseEditPopup } from './entreprise/edit-popup'
 import { dateFormat, CaminoAnnee, getCurrentAnnee, toCaminoAnnee } from 'camino-common/src/date'
 import { EntrepriseFiscalite } from './entreprise/entreprise-fiscalite'
@@ -12,11 +11,13 @@ import { EntrepriseDocuments } from './entreprise/entreprise-documents'
 import { AsyncData } from '../api/client-rest'
 import { LoadingElement } from './_ui/functional-loader'
 import { ApiClient, apiClient } from '@/api/api-client'
-import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
+import { isNotNullNorUndefined, isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools'
 import { userKey, entreprisesKey } from '@/moi'
 import { DsfrButtonIcon, DsfrLink } from './_ui/dsfr-button'
 import { canReadUtilisateurs } from 'camino-common/src/permissions/utilisateurs'
 import { Alert } from './_ui/alert'
+import { LabelWithValue } from './_ui/label-with-value'
+import { List } from './_ui/list'
 
 export const Entreprise = defineComponent({
   setup() {
@@ -104,152 +105,60 @@ export const PureEntreprise = defineComponent<Props>(props => {
       data={entreprise.value}
       renderItem={item => (
         <div>
-          <h5>Entreprise</h5>
-          <h1>{item.nom}</h1>
-          <Card
-            class="mb-xxl"
-            title={() => <span> Profil </span>}
-            buttons={() => {
-              if (canEditEntreprise(props.user, props.entrepriseId)) {
-                return <DsfrButtonIcon onClick={() => (editPopup.value = !editPopup.value)} title="Modifier l’entreprise" icon="fr-icon-edit-line" buttonType="secondary" />
-              } else {
-                return null
+          <DsfrLink to={{ name: 'entreprises', params: {} }} disabled={false} title="Entreprises" icon={null} />
+
+          <div class="fr-grid-row fr-grid-row--top fr-mt-4w">
+            <h1 class="fr-m-0">{item.nom}</h1>
+            <div class="fr-m-0" style={{ marginLeft: 'auto !important', display: 'flex' }}>
+              {canEditEntreprise(props.user, props.entrepriseId) ? (
+                <DsfrButtonIcon onClick={() => (editPopup.value = !editPopup.value)} title="Modifier l’entreprise" icon="fr-icon-edit-line" buttonType="secondary" />
+              ) : null}
+            </div>
+          </div>
+          <div class="fr-pt-8w fr-pb-4w" style={{ display: 'flex', gap: '2rem', flexDirection: 'column' }}>
+            <LabelWithValue title="Siren" text={item.legal_siren ?? ''} />
+            <LabelWithValue title="Forme juridique" text={item.legal_forme ?? ''} />
+            <LabelWithValue
+              title={`Établissement${isNullOrUndefinedOrEmpty(item.etablissements) || item.etablissements.length === 1 ? '' : 's'}`}
+              item={<List elements={item.etablissements.map(({ date_debut, nom }) => `${dateFormat(date_debut)} : ${nom}`)} />}
+            />
+
+            <LabelWithValue
+              title="Adresse"
+              item={
+                <p>
+                  {item.adresse}
+                  <br />
+                  {item.code_postal} {item.commune}
+                </p>
               }
-            }}
-            content={() => (
-              <>
-                <div class="px-m pt-m border-b-s">
-                  <div class="tablet-blobs">
-                    <div class="tablet-blob-1-4">
-                      <h5>Siren</h5>
-                    </div>
-                    <div class="tablet-blob-3-4">
-                      <p>{item.legal_siren}</p>
-                    </div>
-                  </div>
+            />
 
-                  <div class="tablet-blobs">
-                    <div class="tablet-blob-1-4">
-                      <h5>Forme juridique</h5>
-                    </div>
-                    <div class="tablet-blob-3-4">
-                      <p>{item.legal_forme}</p>
-                    </div>
-                  </div>
+            <LabelWithValue title="Téléphone" text={item.telephone ?? '−'} />
 
-                  <div class="tablet-blobs">
-                    <div class="tablet-blob-1-4">
-                      <h5>
-                        Établissement
-                        {(item.etablissements?.length ?? 0) > 1 ? 's' : ''}
-                      </h5>
-                    </div>
-                    <div class="tablet-blob-3-4">
-                      <ul class="list-sans">
-                        {item.etablissements?.map(e => (
-                          <li key={e.id}>
-                            <h6 class="inline-block">{dateFormat(e.date_debut)}</h6>: {e.nom}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </div>
+            <LabelWithValue title="Email" item={isNotNullNorUndefined(item.email) ? <DsfrLink disabled={false} href={`mailto:${item.email}`} icon={null} title={item.email} /> : <span>–</span>} />
 
-                  <div class="tablet-blobs">
-                    <div class="tablet-blob-1-4">
-                      <h5>Adresse</h5>
-                    </div>
-                    <div class="tablet-blob-3-4">
-                      <p>
-                        {item.adresse}
-                        <br />
-                        {item.code_postal} {item.commune}
-                      </p>
-                    </div>
-                  </div>
+            <LabelWithValue
+              title="Site"
+              item={isNotNullNorUndefined(item.url) ? <DsfrLink href={item.url} title={item.url} disabled={false} icon={null} target="_blank" rel="noopener noreferrer" /> : <span>–</span>}
+            />
 
-                  <div class="tablet-blobs">
-                    <div class="tablet-blob-1-4">
-                      <h5>Téléphone</h5>
-                    </div>
-                    <div class="tablet-blob-3-4">
-                      <p class="word-break">
-                        <span>{item.telephone ?? '–'}</span>
-                      </p>
-                    </div>
-                  </div>
+            <LabelWithValue title="Archivée" text={item.archive ? 'Oui' : 'Non'} />
 
-                  <div class="tablet-blobs">
-                    <div class="tablet-blob-1-4">
-                      <h5>Email</h5>
-                    </div>
-                    <div class="tablet-blob-3-4">
-                      <p class="word-break">
-                        {isNotNullNorUndefined(item.email) ? (
-                          <a href={`mailto:${item.email}`} class="btn small bold py-xs px-s rnd">
-                            {item.email}
-                          </a>
-                        ) : (
-                          <span>–</span>
-                        )}
-                      </p>
-                    </div>
-                  </div>
+            {canReadUtilisateurs(props.user) ? (
+              <LabelWithValue
+                title="Utilisateurs de l'entreprise"
+                item={<DsfrLink to={{ name: 'utilisateurs', params: {}, query: { entreprisesIds: props.entrepriseId } }} icon={null} title="Voir les utilisateurs" disabled={false} />}
+              />
+            ) : null}
 
-                  <div class="tablet-blobs">
-                    <div class="tablet-blob-1-4">
-                      <h5>Site</h5>
-                    </div>
-                    <div class="tablet-blob-3-4">
-                      <p class="word-break">
-                        {isNotNullNorUndefined(item.url) ? (
-                          <a href={item.url} class="btn small bold py-xs px-s rnd">
-                            {item.url}
-                          </a>
-                        ) : (
-                          <span>–</span>
-                        )}
-                      </p>
-                    </div>
-                  </div>
+            <LabelWithValue
+              title="Titres de l'entreprise"
+              item={<DsfrLink to={{ name: 'titres', params: {}, query: { entreprisesIds: props.entrepriseId, vueId: 'table' } }} icon={null} title="Voir les titres" disabled={false} />}
+            />
+            {canSeeEntrepriseDocuments(props.user, props.entrepriseId) ? <EntrepriseDocuments user={props.user} apiClient={props.apiClient} entrepriseId={props.entrepriseId} /> : null}
+          </div>
 
-                  <div class="tablet-blobs">
-                    <div class="tablet-blob-1-4">
-                      <h5>Archivée</h5>
-                    </div>
-                    <div class="tablet-blob-3-4">
-                      <p>{item.archive ? 'Oui' : 'Non'}</p>
-                    </div>
-                  </div>
-
-                  {canReadUtilisateurs(props.user) ? (
-                    <div class="tablet-blobs">
-                      <div class="tablet-blob-1-4">
-                        <h5>Utilisateurs de l'entreprise</h5>
-                      </div>
-                      <div class="tablet-blob-3-4">
-                        <p>
-                          <DsfrLink to={{ name: 'utilisateurs', params: {}, query: { entreprisesIds: props.entrepriseId } }} icon={null} title="Voir les utilisateurs" disabled={false} />
-                        </p>
-                      </div>
-                    </div>
-                  ) : null}
-
-                  <div class="tablet-blobs">
-                    <div class="tablet-blob-1-4">
-                      <h5>Titres de l'entreprise</h5>
-                    </div>
-                    <div class="tablet-blob-3-4">
-                      <p>
-                        <DsfrLink to={{ name: 'titres', params: {}, query: { entreprisesIds: props.entrepriseId, vueId: 'table' } }} icon={null} title="Voir les titres" disabled={false} />
-                      </p>
-                    </div>
-                  </div>
-                </div>
-                {canSeeEntrepriseDocuments(props.user, props.entrepriseId) ? <EntrepriseDocuments user={props.user} apiClient={props.apiClient} entrepriseId={props.entrepriseId} /> : null}
-              </>
-            )}
-          />
           <EntrepriseFiscalite
             getFiscaliteEntreprise={async (annee: CaminoAnnee) => {
               return props.apiClient.getFiscaliteEntreprise(annee, props.entrepriseId)
