@@ -13,5 +13,12 @@ type DsfrIconProps = {
 export const DsfrIcon: FunctionalComponent<DsfrIconProps> = (props): JSX.Element => {
   const iconClass = props.size ? `fr-icon--${props.size}` : null
 
-  return <span class={[props.name, iconClass]} style={{ color: isNotNullNorUndefined(props.color) ? `var(--${props.color})` : '' }} />
+  let additionnalAttributes: { 'aria-hidden': 'true' } | { role: 'img'; 'aria-label': string }
+  if ('aria-hidden' in props) {
+    additionnalAttributes = { 'aria-hidden': props['aria-hidden'] }
+  } else {
+    additionnalAttributes = { role: props.role, 'aria-label': props['aria-label'] }
+  }
+
+  return <span class={[props.name, iconClass]} style={{ color: isNotNullNorUndefined(props.color) ? `var(--${props.color})` : '' }} {...additionnalAttributes} />
 }
