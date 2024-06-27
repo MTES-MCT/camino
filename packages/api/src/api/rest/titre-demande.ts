@@ -7,20 +7,20 @@ import titreUpdateTask from '../../business/titre-update.js'
 import { titreDemarcheUpdate } from '../../business/titre-demarche-update.js'
 import { titreEtapeUpdateTask } from '../../business/titre-etape-update.js'
 import { userSuper } from '../../database/user-super.js'
-import { User, isBureauDEtudes, isEntreprise } from 'camino-common/src/roles.js'
+import { User, isBureauDEtudes, isEntreprise, isEntrepriseOrBureauDEtude } from 'camino-common/src/roles.js'
 import { linkTitres } from '../../database/queries/titres-titres.js'
 import { getLinkConfig, canCreateTitre } from 'camino-common/src/permissions/titres.js'
 import { checkTitreLinks } from '../../business/validations/titre-links-validate.js'
 import { utilisateurTitreCreate } from '../../database/queries/utilisateurs.js'
 import { toCaminoDate } from 'camino-common/src/date.js'
 import { isNotNullNorUndefinedNorEmpty, isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
-import { ETAPE_IS_BROUILLON, EtapeId } from 'camino-common/src/etape.js'
-import { titreDemandeValidator } from 'camino-common/src/titres.js'
+import { ETAPE_IS_BROUILLON } from 'camino-common/src/etape.js'
+import { TitreDemandeOutput, titreDemandeValidator } from 'camino-common/src/titres.js'
 import { HTTP_STATUS } from 'camino-common/src/http.js'
 import { Pool } from 'pg'
 import { CaminoRequest, CustomResponse } from './express-type.js'
 
-export const titreDemandeCreer = (pool: Pool) => async (req: CaminoRequest, res: CustomResponse<EtapeId>) => {
+export const titreDemandeCreer = (pool: Pool) => async (req: CaminoRequest, res: CustomResponse<TitreDemandeOutput>) => {
   const user: User = req.auth
 
   const titreDemandeParsed = titreDemandeValidator.safeParse(req.body)
@@ -85,29 +85,34 @@ export const titreDemandeCreer = (pool: Pool) => async (req: CaminoRequest, res:
         const date = toCaminoDate(new Date())
         const titreDemarcheId = updatedTitre.demarches![0].id
 
-        const titreEtape: Omit<ITitreEtape, 'id'> = {
-          titreDemarcheId,
-          typeId: 'mfr',
-          statutId: 'fai',
-          isBrouillon: ETAPE_IS_BROUILLON,
-          date,
-          duree: titreDemande.typeId === 'arm' ? 4 : undefined,
-          titulaireIds: [titreDemande.entrepriseId],
-        }
+        // Quand on est une entreprise ou un bureau d'étude, on créer directement la demande
+        if (isEntrepriseOrBureauDEtude(user)) {
+          const titreEtape: Omit<ITitreEtape, 'id'> = {
+            titreDemarcheId,
+            typeId: 'mfr',
+            statutId: 'fai',
+            isBrouillon: ETAPE_IS_BROUILLON,
+            date,
+            duree: titreDemande.typeId === 'arm' ? 4 : undefined,
+            titulaireIds: [titreDemande.entrepriseId],
+          }
 
-        const updatedTitreEtape = await titreEtapeUpsert(titreEtape, user, titreId)
-        if (isNullOrUndefined(updatedTitreEtape)) {
-          console.error("Une erreur est survenue lors de l'insert de l'étape")
-          res.sendStatus(HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR)
+          const updatedTitreEtape = await titreEtapeUpsert(titreEtape, user, titreId)
+          if (isNullOrUndefined(updatedTitreEtape)) {
+            console.error("Une erreur est survenue lors de l'insert de l'étape")
+            res.sendStatus(HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR)
+          } else {
+            await titreEtapeUpdateTask(pool, updatedTitreEtape.id, titreEtape.titreDemarcheId, user)
+
+            const titreEtapeId = updatedTitreEtape.id
+
+            // on abonne l’utilisateur au titre
+            await utilisateurTitreCreate({ utilisateurId: user.id, titreId })
+
+            res.json({ etapeId: titreEtapeId })
+          }
         } else {
-          await titreEtapeUpdateTask(pool, updatedTitreEtape.id, titreEtape.titreDemarcheId, user)
-
-          const titreEtapeId = updatedTitreEtape.id
-
-          // on abonne l’utilisateur au titre
-          await utilisateurTitreCreate({ utilisateurId: user.id, titreId })
-
-          res.json(titreEtapeId)
+          res.json({ titreId })
         }
       }
     }
