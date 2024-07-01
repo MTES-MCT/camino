@@ -1,6 +1,6 @@
 import { defineComponent, HTMLAttributes, ref, Transition, watch } from 'vue'
 
-import { Icon } from '@/components/_ui/icon'
+import { DsfrIcon } from '@/components/_ui/icon'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 
 type Props = {
@@ -54,7 +54,7 @@ export const DeprecatedAccordion = defineComponent<Props>((props, context) => {
         >
           <div>{context.slots.title?.()}</div>
           <div class="flex flex-right flex-end">
-            <Icon size="M" name={props.opened ? 'chevron-haut' : 'chevron-bas'} aria-hidden="true" />
+            <DsfrIcon size="md" name={props.opened ? 'fr-icon-arrow-up-s-line' : 'fr-icon-arrow-down-s-line'} aria-hidden="true" />
           </div>
         </button>
 

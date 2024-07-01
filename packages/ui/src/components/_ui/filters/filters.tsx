@@ -2,7 +2,7 @@ import { HTMLAttributes, computed, defineComponent, onBeforeUnmount, onMounted, 
 import { FiltersInput } from './filters-input'
 import { FiltersCheckboxes } from './filters-checkboxes'
 import { InputAutocomplete, InputAutocompleteValues } from './filters-input-autocomplete'
-import { Icon } from '@/components/_ui/icon'
+import { DsfrIcon } from '@/components/_ui/icon'
 import { FiltresEtapes, FilterEtapeValue } from '../../demarches/filtres-etapes'
 import { EtapesStatuts } from 'camino-common/src/static/etapesStatuts'
 import { EtapeTypeId, EtapesTypes } from 'camino-common/src/static/etapesTypes'
@@ -308,8 +308,7 @@ export const Filters = defineComponent((props: Props) => {
                           {label.name} : {isNotNullNorUndefined(label.valueName) ? label.valueName : label.value}{' '}
                           {!opened.value ? (
                             <span class="inline-block align-y-top ml-xs">
-                              {' '}
-                              <Icon size="S" name="x" color="white" role="img" aria-label={`Supprimer le filtre ${label.name}`} />{' '}
+                              <DsfrIcon size="sm" name="fr-icon-close-line" color="text-title-white-france" role="img" aria-label={`Supprimer le filtre ${label.name}`} />{' '}
                             </span>
                           ) : null}
                         </span>

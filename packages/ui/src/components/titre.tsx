@@ -372,7 +372,7 @@ export const PureTitre = defineComponent<Props>(props => {
             <div class="fr-grid-row fr-grid-row--middle fr-mt-4w">
               {titre.titre_last_modified_date !== null ? (
                 <div>
-                  <DsfrIcon name="fr-icon-calendar-line" class="fr-mr-1w" size="sm" color="text-title-blue-france" />
+                  <DsfrIcon name="fr-icon-calendar-line" class="fr-mr-1w" size="sm" color="text-title-blue-france" aria-hidden="true" />
                   Modifié le {dateFormat(titre.titre_last_modified_date)}
                 </div>
               ) : null}

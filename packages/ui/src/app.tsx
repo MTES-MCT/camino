@@ -5,7 +5,6 @@ import { defineComponent, computed, ref, onMounted, inject } from 'vue'
 import { Header } from './components/page/header'
 import { Footer } from './components/page/footer'
 import { MapPattern } from './components/_map/pattern'
-import { IconSprite } from './components/_ui/iconSprite'
 
 import { RouterView, useRoute } from 'vue-router'
 import { isNullOrUndefined } from 'camino-common/src/typescript-tools'
@@ -36,7 +35,6 @@ export const App = defineComponent(() => {
   return () => (
     <div>
       <MapPattern />
-      <IconSprite />
 
       <Header user={user} currentMenuSection={currentMenuSection.value} routePath={route.fullPath} />
 

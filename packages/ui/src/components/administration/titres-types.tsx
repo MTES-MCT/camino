@@ -5,10 +5,11 @@ import { DomaineId } from 'camino-common/src/static/domaines'
 import { TitresTypes as TT, TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { TitresTypesTypes } from 'camino-common/src/static/titresTypesTypes'
 import { Domaine as CaminoDomaine } from '@/components/_common/domaine'
-import { Icon } from '@/components/_ui/icon'
+import { DsfrIcon } from '@/components/_ui/icon'
 import { Column, TableAuto } from '../_ui/table-auto'
 import { TableRow } from '../_ui/table'
 import { capitalize } from 'camino-common/src/strings'
+import { checkboxBlankIcon, checkboxCheckedIcon } from './permissions'
 
 interface Props {
   administrationId: AdministrationId
@@ -62,20 +63,20 @@ const rows = (entries: AdministrationTitresTypes[]): TableRow[] =>
       domaine: { component: CaminoDomaine, props: { domaineId: TT[titreType.titreTypeId].domaineId }, value: TT[titreType.titreTypeId].domaineId },
       titreTypeId: { value: capitalize(TitresTypesTypes[TT[titreType.titreTypeId].typeId].nom) },
       gestionnaire: {
-        component: Icon,
+        component: DsfrIcon,
         props: {
-          name: titreType.gestionnaire ? 'checkbox' : 'checkbox-blank',
-          size: 'M',
+          name: titreType.gestionnaire ? checkboxCheckedIcon : checkboxBlankIcon,
+          size: 'md',
           role: 'img',
           'aria-label': titreType.gestionnaire ? 'Est gestionnaire de ce type de titre' : 'N’est pas gestionnaire de ce type de titre',
         },
         value: `${titreType.gestionnaire}`,
       },
       associee: {
-        component: Icon,
+        component: DsfrIcon,
         props: {
-          name: titreType.associee ? 'checkbox' : 'checkbox-blank',
-          size: 'M',
+          name: titreType.associee ? checkboxCheckedIcon : checkboxBlankIcon,
+          size: 'md',
           role: 'img',
           'aria-label': titreType.associee ? 'Est associée à ce type de titre' : 'N’est pas associée à ce type de titre',
         },

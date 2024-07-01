@@ -1,5 +1,4 @@
 import { EtapeType, EtapeTypeId, EtapesTypes } from 'camino-common/src/static/etapesTypes'
-import { Icon } from '@/components/_ui/icon'
 import { getEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStatuts'
 import { CaminoDate } from 'camino-common/src/date'
 import { HTMLAttributes, computed, defineComponent, ref, watch } from 'vue'
@@ -138,10 +137,7 @@ export const FiltresEtapes = defineComponent<Props>(props => {
       ))}
 
       {clonedValues.value.some(v => v.typeId === '') ? null : (
-        <button class="btn rnd-xs py-s px-m full-x flex mb-s h6" title="Ajouter un type d’étape" aria-label="Ajouter un type d’étape" onClick={valueAdd}>
-          <span class="mt-xxs">Ajouter un type d'étape</span>
-          <Icon name="plus" size="M" class="flex-right" aria-hidden="true" />
-        </button>
+        <DsfrButtonIcon icon="fr-icon-add-line" buttonType="secondary" title="Ajouter un type d’étape" label="Ajouter un type d'étape" onClick={valueAdd} />
       )}
     </div>
   )

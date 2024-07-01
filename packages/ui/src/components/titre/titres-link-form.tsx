@@ -119,7 +119,7 @@ export const TitresLinkForm = defineComponent<Props>(props => {
           <>
             {item.amont.length || canLink.value ? (
               <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-                <DsfrIcon name="fr-icon-link" size="sm" color="text-title-blue-france" />
+                <DsfrIcon name="fr-icon-link" size="sm" color="text-title-blue-france" aria-hidden="true" />
                 Titre{item.amont.length > 1 ? 's' : ''} à l’origine de ce titre :
                 {mode.value === 'edit' ? (
                   <>
@@ -145,7 +145,7 @@ export const TitresLinkForm = defineComponent<Props>(props => {
 
             {item.aval.length ? (
               <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-                <DsfrIcon name="fr-icon-link" size="sm" color="text-title-blue-france" />
+                <DsfrIcon name="fr-icon-link" size="sm" color="text-title-blue-france" aria-hidden="true" />
                 Titre{item.aval.length > 1 ? 's' : ''} issu de ce titre :
                 <div class="flex flex-center" style={{ gap: '0.5rem' }}>
                   {item.aval.map(titreTo => (
