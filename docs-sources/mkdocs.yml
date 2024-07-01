@@ -2,10 +2,8 @@ site_name: Camino
 nav:
   - 'index.md'
   - Utilisation:
-      - Introduction: '01-utilisation/01-introduction.md'
-      - 'API GraphQL': '01-utilisation/02-graphql.md'
-      - 'API Rest': '01-utilisation/03-rest.md'
-      - 'Flux GeoJson': '01-utilisation/04-flux.md'
+      - 'API GraphQL': '01-utilisation/01-graphql.md'
+      - 'Flux GeoJson': '01-utilisation/02-flux.md'
   - Développement:
       - Introduction: '02-developpement/01-introduction.md'
       - 'Base de données': '02-developpement/02-base-de-donnees.md'
