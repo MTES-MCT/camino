@@ -1,86 +1,23 @@
-<div>
-  <h5>Utilisateur</h5>
-  <div class="flex">
-    <h1>prenom nom</h1>
+<div><a href="/mocked-href" title="Utilisateurs" class="fr-link" aria-label="Utilisateurs">Utilisateurs</a>
+  <div class="fr-grid-row fr-grid-row--top fr-mt-4w">
+    <h1 class="fr-m-0">nom prenom</h1>
+    <div class="fr-m-0" style="margin-left: auto; display: flex;"><button class="fr-btn fr-btn--secondary fr-btn--md fr-icon-lock-line" title="Changer de mot de passe" aria-label="Changer de mot de passe" type="button">
+        <!---->
+      </button><button class="fr-btn fr-btn--secondary fr-btn--md fr-icon-delete-bin-line fr-ml-1w" title="Supprimer le compte utilisateur" aria-label="Supprimer le compte utilisateur" type="button">
+        <!---->
+      </button></div>
   </div>
-  <div class="flex flex-direction-column rnd-s border bg-bg mb">
-    <div class="accordion-header flex  border-b-s">
-      <div class="py-s px-m"><span> Profil </span></div>
-      <div class="overflow-hidden flex flex-center flex-right"><button class="fr-btn fr-btn--secondary fr-btn--md fr-icon-lock-line" title="Changer de mot de passe" aria-label="Changer de mot de passe" type="button">
-          <!---->
-        </button><button class="fr-btn fr-btn--secondary fr-btn--md fr-icon-delete-bin-line fr-ml-1w" title="Supprimer le compte utilisateur" aria-label="Supprimer le compte utilisateur" type="button">
-          <!---->
-        </button>
-        <div class="py-s" style=""></div>
-      </div>
-    </div>
-    <div class="border-b-s">
-      <div class="px-m pt-m">
-        <div class="tablet-blobs">
-          <div class="tablet-blob-1-4">
-            <h5>Prénom</h5>
-          </div>
-          <p>prenom</p>
-        </div>
-        <div class="tablet-blobs">
-          <div class="tablet-blob-1-4">
-            <h5>Nom</h5>
-          </div>
-          <p>nom</p>
-        </div>
-        <div class="tablet-blobs">
-          <div class="tablet-blob-1-4">
-            <h5>Email</h5>
-          </div>
-          <div>
-            <p>email@gmail.com</p>
-          </div>
-        </div>
-        <div class="tablet-blobs">
-          <div class="tablet-blob-1-4">
-            <h5>Téléphone fixe</h5>
-          </div>
-          <p>–</p>
-        </div>
-        <div class="tablet-blobs">
-          <div class="tablet-blob-1-4">
-            <h5>Téléphone mobile</h5>
-          </div>
-          <p>–</p>
-        </div>
-        <div class="tablet-blobs">
-          <div class="tablet-blob-1-4 tablet-pt-s pb-s">
-            <h5>Rôles</h5>
-          </div>
-          <div class="tablet-blob-3-4 tablet-pt-s pb-s">
-            <div style="display: flex; flex-direction: row; align-content: center; align-items: center;">
-              <div class="bg-neutral inline-block small bold color-bg pill py-xs px-s">Super</div>
-              <!---->
-            </div>
-          </div>
-        </div>
-        <!---->
-        <!---->
-        <div class="tablet-blobs">
-          <div class="tablet-blob-1-4">
-            <h5>Newsletter</h5>
-          </div>
-          <div class="fr-checkbox-group"><input name="archive" id="checkbox_271" type="checkbox"><label class="fr-label" for="checkbox_271">
-              <!---->
-            </label></div>
-        </div>
-        <div class="tablet-blobs pb-m">
-          <div class="tablet-blob-1-4">
-            <h5>QGis</h5>
-          </div>
-          <div class="tablet-blob-3-4">
-            <div style="display: flex; flex-direction: column; gap: 16px;"><button class="fr-btn fr-btn--secondary fr-btn--md" title="Générer des identifiants pour QGis" aria-label="Générer des identifiants pour QGis" type="button">Générer des identifiants pour QGis</button>
-              <!---->
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+  <div class="fr-pt-8w fr-pb-4w" style="display: flex; gap: 2rem; flex-direction: column;">
+    <div class="fr-grid-row"><span class="fr-col-3 fr-h6" style="margin: 0px;">Prénom</span><span class="fr-col">Prenom</span></div>
+    <div class="fr-grid-row"><span class="fr-col-3 fr-h6" style="margin: 0px;">Nom</span><span class="fr-col">Nom</span></div>
+    <div class="fr-grid-row"><span class="fr-col-3 fr-h6" style="margin: 0px;">Email</span><span class="fr-col"><a class="fr-link" title="email@gmail.com" href="mailto:email@gmail.com">email@gmail.com</a></span></div>
+    <div class="fr-grid-row"><span class="fr-col-3 fr-h6" style="margin: 0px;">Téléphone fixe</span><span class="fr-col"><span>–</span></span></div>
+    <div class="fr-grid-row"><span class="fr-col-3 fr-h6" style="margin: 0px;">Téléphone mobile</span><span class="fr-col"><span>–</span></span></div>
+    <div class="fr-grid-row"><span class="fr-col-3 fr-h6" style="margin: 0px;">Rôles</span><span class="fr-col"><div style="display: flex; flex-direction: row; align-content: center; align-items: center;"><p class="fr-tag fr-tag--md" title="Super" aria-label="Super">Super</p><!----></div></span></div>
+    <!---->
+    <!---->
+    <div class="fr-grid-row"><span class="fr-col-3 fr-h6" style="margin: 0px;">Newsletter</span><span class="fr-col"><div class="fr-checkbox-group"><input name="archive" id="checkbox_271" type="checkbox"><label class="fr-label" for="checkbox_271"><!----></label></div></span></div>
+    <div class="fr-grid-row"><span class="fr-col-3 fr-h6" style="margin: 0px;">QGis</span><span class="fr-col"><div style="display: flex; flex-direction: column; gap: 16px;"><button class="fr-btn fr-btn--secondary fr-btn--md" title="Générer des identifiants pour QGis" aria-label="Générer des identifiants pour QGis" type="button">Générer des identifiants pour QGis</button><!----></div></span></div>
   </div>
   <!---->
 </div>

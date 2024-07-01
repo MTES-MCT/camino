@@ -1,7 +1,6 @@
 import { apiClient, ApiClient } from '@/api/api-client'
 import { useRoute } from 'vue-router'
 
-import { Card } from './_ui/card'
 import { TableAuto } from './_ui/table-auto'
 import { LoadingElement } from './_ui/functional-loader'
 import { Permissions } from './administration/permissions'
@@ -20,6 +19,8 @@ import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { userKey } from '@/moi'
 import { capitalize } from 'camino-common/src/strings'
 import { Alert } from './_ui/alert'
+import { DsfrLink } from './_ui/dsfr-button'
+import { LabelWithValue } from './_ui/label-with-value'
 
 export const Administration = defineComponent(() => {
   const route = useRoute<'administration'>()
@@ -50,6 +51,7 @@ interface Props {
   user: User
   apiClient: Pick<ApiClient, 'administrationActivitesTypesEmails' | 'administrationUtilisateurs' | 'administrationActiviteTypeEmailUpdate' | 'administrationActiviteTypeEmailDelete'>
 }
+
 export const PureAdministration = defineComponent<Props>(props => {
   const administration = computed<Adm>(() => Administrations[props.administrationId])
   const type = computed<AdministrationType>(() => ADMINISTRATION_TYPES[administration.value.typeId])
@@ -103,139 +105,68 @@ export const PureAdministration = defineComponent<Props>(props => {
 
   return () => (
     <div>
-      <h5>Administration</h5>
-      <h1>{administration.value.abreviation}</h1>
-      <Card
-        class="mb-xxl"
-        title={() => <span>{capitalize(administration.value.nom)}</span>}
-        content={() => (
-          <div class="px-m pt-m border-b-s">
-            <div class="tablet-blobs">
-              <div class="tablet-blob-1-4">
-                <h5>Type</h5>
-              </div>
-              <div class="tablet-blob-3-4">
-                <p class="word-break">{type.value.nom}</p>
-              </div>
-            </div>
+      <DsfrLink to={{ name: 'administrations', params: {} }} disabled={false} title="Administrations" icon={null} />
 
-            {isNotNullNorUndefined(administration.value.service) ? (
-              <div class="tablet-blobs">
-                <div class="tablet-blob-1-4">
-                  <h5>Service</h5>
-                </div>
-                <div class="tablet-blob-3-4">
-                  <p class="word-break">{administration.value.service}</p>
-                </div>
-              </div>
-            ) : null}
+      <div class="fr-grid-row fr-mt-4w" style={{ alignItems: 'center' }}>
+        <h1 class="fr-m-0">{capitalize(administration.value.nom)}</h1>
+        <span class="fr-h4 fr-m-0 fr-ml-2w">({capitalize(administration.value.abreviation)})</span>
+      </div>
 
-            <div class="tablet-blobs">
-              <div class="tablet-blob-1-4">
-                <h5>Adresse</h5>
-              </div>
-              <div class="tablet-blob-3-4">
-                <p>
-                  {administration.value.adresse1}
-                  {isNotNullNorUndefined(administration.value.adresse2) ? (
-                    <span>
-                      <br />
-                      {administration.value.adresse2}
-                    </span>
-                  ) : null}
+      <div class="fr-pt-8w fr-pb-4w" style={{ display: 'flex', gap: '2rem', flexDirection: 'column' }}>
+        <LabelWithValue title="Type" text={type.value.nom} />
+        <LabelWithValue title="Service" text={administration.value.service ?? ''} />
+        <LabelWithValue
+          title="Adresse"
+          item={
+            <p>
+              {administration.value.adresse1}
+              {isNotNullNorUndefined(administration.value.adresse2) ? (
+                <span>
                   <br />
-                  {administration.value.codePostal} {administration.value.commune}
-                </p>
-              </div>
-            </div>
+                  {administration.value.adresse2}
+                </span>
+              ) : null}
+              <br />
+              {administration.value.codePostal} {administration.value.commune}
+            </p>
+          }
+        />
+        <LabelWithValue title="Téléphone" text={administration.value.telephone ?? '–'} />
+        <LabelWithValue
+          title="Email"
+          item={
+            isNotNullNorUndefined(administration.value.email) ? (
+              <DsfrLink href={`mailto:${administration.value.email}`} title={administration.value.email} disabled={false} icon={null} />
+            ) : (
+              <span>–</span>
+            )
+          }
+        />
+        <LabelWithValue
+          title="Site"
+          item={
+            isNotNullNorUndefined(administration.value.url) ? (
+              <DsfrLink href={administration.value.url} disabled={false} icon={null} title={administration.value.url} target="_blank" rel="noopener noreferrer" />
+            ) : (
+              <span>–</span>
+            )
+          }
+        />
 
-            <div class="tablet-blobs">
-              <div class="tablet-blob-1-4">
-                <h5>Téléphone</h5>
-              </div>
-              <div class="tablet-blob-3-4">
-                <p class="word-break">
-                  <span>{administration.value.telephone ?? '–'}</span>
-                </p>
-              </div>
-            </div>
+        {departement.value ? <LabelWithValue title="Département" text={departement.value.nom} /> : null}
+        {region.value ? <LabelWithValue title="Région" text={region.value.nom} /> : null}
 
-            <div class="tablet-blobs">
-              <div class="tablet-blob-1-4">
-                <h5>Email</h5>
-              </div>
-              <div class="tablet-blob-3-4">
-                <p class="word-break">
-                  {isNotNullNorUndefined(administration.value.email) ? (
-                    <a href={`mailto:${administration.value.email}`} class="btn small bold py-xs px-s rnd">
-                      {administration.value.email}
-                    </a>
-                  ) : (
-                    <span>–</span>
-                  )}
-                </p>
-              </div>
-            </div>
-
-            <div class="tablet-blobs">
-              <div class="tablet-blob-1-4">
-                <h5>Site</h5>
-              </div>
-              <div class="tablet-blob-3-4">
-                <p class="word-break">
-                  {isNotNullNorUndefined(administration.value.url) ? (
-                    <a href={administration.value.url} class="btn small bold py-xs px-s rnd">
-                      {administration.value.url}
-                    </a>
-                  ) : (
-                    <span>–</span>
-                  )}
-                </p>
-              </div>
-            </div>
-
-            {departement.value ? (
-              <div class="tablet-blobs">
-                <div class="tablet-blob-1-4">
-                  <h5>Département</h5>
-                </div>
-                <div class="tablet-blob-3-4">
-                  <p>{departement.value?.nom}</p>
-                </div>
-              </div>
-            ) : null}
-
-            {region.value ? (
-              <div class="tablet-blobs">
-                <div class="tablet-blob-1-4">
-                  <h5>Région</h5>
-                </div>
-                <div class="tablet-blob-3-4">
-                  <p>{region.value?.nom}</p>
-                </div>
-              </div>
-            ) : null}
-
-            {isSuper(props.user) && (isNotNullNorUndefined(region.value) || isNotNullNorUndefined(departement)) ? (
-              <div class="tablet-blobs">
-                <div class="tablet-blob-1-4" />
-                <div class="tablet-blob-3-4">
-                  <p class="h6 mb">
-                    Un utilisateur d'une <b>administration locale</b> peut créer et modifier le contenu des titres du territoire concerné.
-                  </p>
-                </div>
-              </div>
-            ) : null}
-          </div>
-        )}
-      />
-
+        {isSuper(props.user) && (isNotNullNorUndefined(region.value) || isNotNullNorUndefined(departement.value)) ? (
+          <p class="fr-text--lg">
+            Un utilisateur d'une <b>administration locale</b> peut créer et modifier le contenu des titres du territoire concerné.
+          </p>
+        ) : null}
+      </div>
       {canReadAdministrations(props.user) ? (
         <LoadingElement
           data={utilisateurs.value}
           renderItem={item => (
-            <div class="mb-xxl">
-              <div class="line-neutral width-full mb-xxl" />
+            <div>
               <TableAuto caption="Utilisateurs" columns={utilisateursColonnes} rows={utilisateursLignesBuild(item)} initialSort={'firstColumnAsc'} />
             </div>
           )}
@@ -247,8 +178,6 @@ export const PureAdministration = defineComponent<Props>(props => {
           data={activitesTypesEmails.value}
           renderItem={item => (
             <>
-              {' '}
-              <div class="line-neutral width-full mb-xxl" />
               <h2>Emails</h2>
               <ActivitesTypesEmails
                 user={props.user}
@@ -268,8 +197,7 @@ export const PureAdministration = defineComponent<Props>(props => {
         />
       ) : null}
       {canReadAdministrations(props.user) ? (
-        <div class="mb-xxl">
-          <div class="line-neutral width-full mb-xxl" />
+        <div>
           <h2>Permissions</h2>
 
           <Permissions administrationId={props.administrationId} />

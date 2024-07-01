@@ -1,6 +1,4 @@
 import { computed, defineComponent, inject, onMounted, ref, watch } from 'vue'
-import { Card } from './_ui/card'
-import { User, UtilisateurId, utilisateurIdValidator } from 'camino-common/src/roles'
 import { QGisToken } from './utilisateur/qgis-token'
 import { AsyncData } from '@/api/client-rest'
 import { useRoute, useRouter } from 'vue-router'
@@ -15,8 +13,10 @@ import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 
 import { entreprisesKey, userKey } from '@/moi'
 import { DsfrInputCheckbox } from './_ui/dsfr-input-checkbox'
-import { DsfrButtonIcon } from './_ui/dsfr-button'
+import { UtilisateurId, utilisateurIdValidator, User } from 'camino-common/src/roles'
 import { Alert } from './_ui/alert'
+import { DsfrLink, DsfrButtonIcon } from './_ui/dsfr-button'
+import { LabelWithValue } from './_ui/label-with-value'
 
 export const Utilisateur = defineComponent({
   setup() {
@@ -152,21 +152,17 @@ export const PureUtilisateur = defineComponent<Props>(props => {
 
   return () => (
     <div>
-      <h5>Utilisateur</h5>
-      <div class="flex">
-        <h1>
-          <LoadingElement data={utilisateur.value} renderItem={item => <>{`${item.prenom || '–'} ${item.nom || '–'}`}</>} />
-        </h1>
-      </div>
+      <DsfrLink to={{ name: 'utilisateurs', params: {} }} disabled={false} title="Utilisateurs" icon={null} />
 
-      <Card
-        class="mb"
-        title={() => <span> Profil </span>}
-        buttons={() => (
-          <LoadingElement
-            data={utilisateur.value}
-            renderItem={item => (
-              <>
+      <LoadingElement
+        data={utilisateur.value}
+        renderItem={item => (
+          <>
+            <div class="fr-grid-row fr-grid-row--top fr-mt-4w">
+              <h1 class="fr-m-0">
+                {item.nom} {item.prenom}
+              </h1>
+              <div class="fr-m-0" style={{ marginLeft: 'auto !important', display: 'flex' }}>
                 {isMe.value ? <DsfrButtonIcon title="Changer de mot de passe" onClick={props.passwordUpdate} icon="fr-icon-lock-line" buttonType="secondary" /> : null}
                 {canDeleteUtilisateur(props.user, item.id) ? (
                   <DsfrButtonIcon
@@ -179,74 +175,41 @@ export const PureUtilisateur = defineComponent<Props>(props => {
                     buttonType="secondary"
                   />
                 ) : null}
-              </>
-            )}
-          />
-        )}
-        content={() => (
-          <div class="px-m pt-m">
-            <div class="tablet-blobs">
-              <div class="tablet-blob-1-4">
-                <h5>Prénom</h5>
-              </div>
-              <LoadingElement data={utilisateur.value} renderItem={item => <p>{item.prenom || '–'}</p>} />
-            </div>
-
-            <div class="tablet-blobs">
-              <div class="tablet-blob-1-4">
-                <h5>Nom</h5>
-              </div>
-              <LoadingElement data={utilisateur.value} renderItem={item => <p>{item.nom || '–'}</p>} />
-            </div>
-
-            <div class="tablet-blobs">
-              <div class="tablet-blob-1-4">
-                <h5>Email</h5>
-              </div>
-              <div>
-                <LoadingElement data={utilisateur.value} renderItem={item => <p>{item.email || '–'}</p>} />
               </div>
             </div>
 
-            <div class="tablet-blobs">
-              <div class="tablet-blob-1-4">
-                <h5>Téléphone fixe</h5>
-              </div>
-              <LoadingElement data={utilisateur.value} renderItem={item => <p>{isNotNullNorUndefined(item.telephoneFixe) ? item.telephoneFixe : '–'}</p>} />
-            </div>
-
-            <div class="tablet-blobs">
-              <div class="tablet-blob-1-4">
-                <h5>Téléphone mobile</h5>
-              </div>
-              <LoadingElement data={utilisateur.value} renderItem={item => <p>{isNotNullNorUndefined(item.telephoneMobile) ? item.telephoneMobile : '–'}</p>} />
-            </div>
-            <PermissionDisplay user={props.user} utilisateur={utilisateur.value} apiClient={{ ...props.apiClient, updateUtilisateur }} entreprises={props.entreprises} />
-
-            {isMe.value ? (
-              <>
-                <div class="tablet-blobs">
-                  <div class="tablet-blob-1-4">
-                    <h5>Newsletter</h5>
-                  </div>
-                  <LoadingElement
-                    data={subscription.value}
-                    renderItem={item => <DsfrInputCheckbox legend={{ main: '' }} valueChanged={checked => updateSubscription(props.utilisateurId, checked)} initialValue={item} />}
+            <div class="fr-pt-8w fr-pb-4w" style={{ display: 'flex', gap: '2rem', flexDirection: 'column' }}>
+              <LabelWithValue title="Prénom" text={item.prenom} />
+              <LabelWithValue title="Nom" text={item.nom} />
+              <LabelWithValue title="Email" item={isNotNullNorUndefined(item.email) ? <DsfrLink disabled={false} href={`mailto:${item.email}`} icon={null} title={item.email} /> : <span>–</span>} />
+              <LabelWithValue
+                title="Téléphone fixe"
+                item={isNotNullNorUndefined(item.telephoneFixe) ? <DsfrLink disabled={false} href={`tel:${item.telephoneFixe}`} icon={null} title={item.telephoneFixe} /> : <span>–</span>}
+              />
+              <LabelWithValue
+                title="Téléphone mobile"
+                item={isNotNullNorUndefined(item.telephoneMobile) ? <DsfrLink disabled={false} href={`tel:${item.telephoneMobile}`} icon={null} title={item.telephoneMobile} /> : <span>–</span>}
+              />
+              <PermissionDisplay user={props.user} utilisateur={item} apiClient={{ ...props.apiClient, updateUtilisateur }} entreprises={props.entreprises} />
+              {isMe.value ? (
+                <>
+                  <LabelWithValue
+                    title="Newsletter"
+                    item={
+                      <LoadingElement
+                        data={subscription.value}
+                        renderItem={item => <DsfrInputCheckbox legend={{ main: '' }} valueChanged={checked => updateSubscription(props.utilisateurId, checked)} initialValue={item} />}
+                      />
+                    }
                   />
-                </div>
-                <div class="tablet-blobs pb-m">
-                  <div class="tablet-blob-1-4">
-                    <h5>QGis</h5>
-                  </div>
-                  <div class="tablet-blob-3-4">
-                    <QGisToken apiClient={props.apiClient} />
-                  </div>
-                </div>
-              </>
-            ) : null}
-          </div>
+                  <LabelWithValue title="QGis" item={<QGisToken apiClient={props.apiClient} />} />{' '}
+                </>
+              ) : null}
+            </div>
+          </>
         )}
       />
+
       {removePopup.value && utilisateur.value.status === 'LOADED' ? (
         <RemovePopup
           close={() => (removePopup.value = !removePopup.value)}

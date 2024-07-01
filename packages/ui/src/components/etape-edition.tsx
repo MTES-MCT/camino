@@ -154,7 +154,7 @@ export const PureEtapeEdition = defineComponent<Props>(props => {
               <DsfrLink to={{ name: 'demarche', params: { demarcheId: demarche.demarche_slug } }} disabled={false} title={octroiNom.value} icon={null} />
             </div>
 
-            <h1 class="fr-mt-5w">{etape.typeId !== null ? `Étape - ${capitalize(EtapesTypes[etape.typeId].nom)}` : 'Création d’une étape'}</h1>
+            <h1 class="fr-mt-4w">{etape.typeId !== null ? `Étape - ${capitalize(EtapesTypes[etape.typeId].nom)}` : 'Création d’une étape'}</h1>
 
             {helpVisible(props.user, demarche.titre_type_id, etape.typeId) ? (
               <Alert

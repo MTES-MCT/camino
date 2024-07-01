@@ -20,6 +20,7 @@ type DsfrButtonProps = {
   style?: ButtonHTMLAttributes['style']
   class?: ButtonHTMLAttributes['class']
   type?: ButtonHTMLAttributes['type']
+  'aria-pressed'?: ButtonHTMLAttributes['aria-pressed']
 }
 export const DsfrButton: FunctionalComponent<DsfrButtonProps> = (props: DsfrButtonProps) => {
   const iconClass = []
@@ -34,6 +35,7 @@ export const DsfrButton: FunctionalComponent<DsfrButtonProps> = (props: DsfrButt
       disabled={props.disabled ?? false}
       title={props.title}
       aria-label={props.title}
+      aria-pressed={props['aria-pressed']}
       onClick={props.onClick}
       type={props.type ?? 'button'}
     >
