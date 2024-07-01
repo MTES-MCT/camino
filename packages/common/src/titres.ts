@@ -12,7 +12,7 @@ import { TitreId, titreIdValidator, titreSlugValidator } from './validators/titr
 import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from './typescript-tools.js'
 import { EntrepriseId, entrepriseIdValidator } from './entreprise.js'
 import { isFondamentalesStatutOk } from './static/etapesStatuts.js'
-import { ETAPE_IS_NOT_BROUILLON } from './etape.js'
+import { ETAPE_IS_NOT_BROUILLON, etapeIdValidator } from './etape.js'
 
 const commonTitreValidator = z.object({
   id: titreIdValidator,
@@ -170,3 +170,6 @@ export const titreDemandeValidator = z.object({
 })
 
 export type TitreDemande = z.infer<typeof titreDemandeValidator>
+
+export const titreDemandeOutputValidator = z.union([z.object({ etapeId: etapeIdValidator }), z.object({ titreId: titreIdValidator })])
+export type TitreDemandeOutput = z.infer<typeof titreDemandeOutputValidator>

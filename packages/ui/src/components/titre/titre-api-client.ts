@@ -1,4 +1,4 @@
-import { EditableTitre, TitreDemande, TitreGet } from 'camino-common/src/titres'
+import { EditableTitre, TitreDemande, TitreDemandeOutput, TitreGet } from 'camino-common/src/titres'
 import { TitreId, TitreIdOrSlug } from 'camino-common/src/validators/titres'
 import { deleteWithJson, getWithJson, postWithJson } from '../../api/client-rest'
 import { CaminoDate } from 'camino-common/src/date'
@@ -16,7 +16,6 @@ import { RegionId } from 'camino-common/src/static/region'
 import { FacadesMaritimes, SecteursMaritimes } from 'camino-common/src/static/facades'
 import { ReferenceTypeId } from 'camino-common/src/static/referencesTypes'
 import { TitreWithPerimetre } from '../titres/mapUtil'
-import { EtapeId } from 'camino-common/src/etape'
 
 export type TitreForTable = {
   id: TitreId
@@ -100,7 +99,7 @@ export interface TitreApiClient {
   }) => Promise<{ elements: TitreWithPerimetre[]; total: number }>
   titresRechercherByNom: (nom: string) => Promise<{ elements: TitreForTitresRerchercherByNom[] }>
   getTitresByIds: (titreIds: TitreId[], cacheKey: string) => Promise<{ elements: Pick<TitreForTable, 'id' | 'nom'>[] }>
-  createTitre: (titreDemande: TitreDemande) => Promise<EtapeId>
+  createTitre: (titreDemande: TitreDemande) => Promise<TitreDemandeOutput>
 }
 
 export const titreApiClient: TitreApiClient = {

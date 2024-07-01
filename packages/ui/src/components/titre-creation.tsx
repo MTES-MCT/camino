@@ -14,7 +14,6 @@ import { DsfrInput } from './_ui/dsfr-input'
 import { TitreReferenceSelect } from './_common/titre-reference-select'
 import { TitreReference } from 'camino-common/src/titres-references'
 import { DsfrButton } from './_ui/dsfr-button'
-import { EtapeId } from 'camino-common/src/etape'
 import { useRouter } from 'vue-router'
 import { TitreId } from 'camino-common/src/validators/titres'
 import { TitreDemande, titreDemandeValidator } from 'camino-common/src/titres'
@@ -28,13 +27,6 @@ export const TitreCreation = defineComponent(() => {
   const user = inject(userKey)
   const entreprises = inject(entreprisesKey, ref([]))
 
-  const goToEtape = async (titreEtapeId: EtapeId) => {
-    await router.push({
-      name: 'etapeEdition',
-      params: { id: titreEtapeId },
-    })
-  }
-
   return () => (
     <PureTitreCreation
       user={user}
@@ -42,10 +34,20 @@ export const TitreCreation = defineComponent(() => {
       apiClient={{
         ...apiClient,
         createTitre: async titreDemande => {
-          const etapeId = await apiClient.createTitre(titreDemande)
-          goToEtape(etapeId)
+          const result = await apiClient.createTitre(titreDemande)
+          if ('etapeId' in result) {
+            await router.push({
+              name: 'etapeEdition',
+              params: { id: result.etapeId },
+            })
+          } else {
+            await router.push({
+              name: 'titre',
+              params: { id: result.titreId },
+            })
+          }
 
-          return etapeId
+          return result
         },
       }}
     />

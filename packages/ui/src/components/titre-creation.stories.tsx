@@ -67,7 +67,7 @@ const apiClient: Pick<ApiClient, 'createTitre' | 'loadLinkableTitres'> = {
     createTitreAction(value)
 
     return new Promise(resolve => {
-      setTimeout(() => resolve(etapeIdValidator.parse('etapeId')), 1000)
+      setTimeout(() => resolve({ etapeId: etapeIdValidator.parse('etapeId') }), 1000)
     })
   },
   loadLinkableTitres:
