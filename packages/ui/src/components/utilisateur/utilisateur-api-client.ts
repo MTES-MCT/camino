@@ -4,15 +4,15 @@ import { QGISToken, UtilisateurToEdit } from 'camino-common/src/utilisateur'
 
 import gql from 'graphql-tag'
 import { getWithJson, postWithJson } from '../../api/client-rest'
-import { Role } from 'camino-common/src/roles'
+import { Role, UtilisateurId } from 'camino-common/src/roles'
 import { AdministrationId } from 'camino-common/src/static/administrations'
 
 export interface UtilisateurApiClient {
-  getUtilisateur: (userId: string) => Promise<Utilisateur>
-  getUtilisateurNewsletter: (userId: string) => Promise<boolean>
-  updateUtilisateurNewsletter: (userId: string, subscribe: boolean) => Promise<void>
+  getUtilisateur: (userId: UtilisateurId) => Promise<Utilisateur>
+  getUtilisateurNewsletter: (userId: UtilisateurId) => Promise<boolean>
+  updateUtilisateurNewsletter: (userId: UtilisateurId, subscribe: boolean) => Promise<void>
   newsletterInscrire: (email: string) => Promise<void>
-  removeUtilisateur: (userId: string) => Promise<void>
+  removeUtilisateur: (userId: UtilisateurId) => Promise<void>
   updateUtilisateur: (user: UtilisateurToEdit) => Promise<void>
   getQGISToken: () => Promise<QGISToken>
   getUtilisateurs: (params: UtilisateursParams) => Promise<{ elements: Utilisateur[]; total: number }>
@@ -96,8 +96,8 @@ export const utilisateurApiClient: UtilisateurApiClient = {
 
     return data
   },
-  getUtilisateurNewsletter: async (userId: string) => getWithJson('/rest/utilisateurs/:id/newsletter', { id: userId }),
-  updateUtilisateurNewsletter: async (userId: string, newsletter: boolean) => {
+  getUtilisateurNewsletter: async (userId: UtilisateurId) => getWithJson('/rest/utilisateurs/:id/newsletter', { id: userId }),
+  updateUtilisateurNewsletter: async (userId: UtilisateurId, newsletter: boolean) => {
     await postWithJson('/rest/utilisateurs/:id/newsletter', { id: userId }, { newsletter })
   },
   newsletterInscrire: async (email: string) => {
@@ -107,7 +107,7 @@ export const utilisateurApiClient: UtilisateurApiClient = {
       }
     `)({ email })
   },
-  removeUtilisateur: async (userId: string) => getWithJson('/rest/utilisateurs/:id/delete', { id: userId }),
+  removeUtilisateur: async (userId: UtilisateurId) => getWithJson('/rest/utilisateurs/:id/delete', { id: userId }),
   updateUtilisateur: async (utilisateur: UtilisateurToEdit) => postWithJson('/rest/utilisateurs/:id/permission', { id: utilisateur.id }, utilisateur),
   getQGISToken: async () => postWithJson('/rest/utilisateur/generateQgisToken', {}, undefined),
 }

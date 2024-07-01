@@ -3,7 +3,7 @@ import { Meta, StoryFn } from '@storybook/vue3'
 import { newEntrepriseId } from 'camino-common/src/entreprise'
 import { testBlankUser } from 'camino-common/src/tests-utils'
 import { PureUtilisateur, Props } from './utilisateur'
-import { toUtilisateurId } from 'camino-common/src/roles'
+import { toUtilisateurId, utilisateurIdValidator } from 'camino-common/src/roles'
 
 const meta: Meta<typeof PureUtilisateur> = {
   title: 'Components/Utilisateur',
@@ -50,7 +50,7 @@ export const MySelf: StoryFn = () => (
   <PureUtilisateur
     entreprises={[{ id: newEntrepriseId('id'), nom: 'Entreprise1', legal_siren: null }]}
     user={{ ...testBlankUser, id: toUtilisateurId('id'), role: 'super' }}
-    utilisateurId="id"
+    utilisateurId={utilisateurIdValidator.parse('id')}
     passwordUpdate={passwordUpdate}
     apiClient={apiClientMock}
   />
@@ -60,7 +60,7 @@ export const Loading: StoryFn = () => (
   <PureUtilisateur
     entreprises={[{ id: newEntrepriseId('id'), nom: 'Entreprise1', legal_siren: null }]}
     user={{ ...testBlankUser, id: toUtilisateurId('id'), role: 'super' }}
-    utilisateurId="id"
+    utilisateurId={utilisateurIdValidator.parse('id')}
     passwordUpdate={passwordUpdate}
     apiClient={{
       ...apiClientMock,
@@ -73,7 +73,7 @@ export const error: StoryFn = () => (
   <PureUtilisateur
     entreprises={[{ id: newEntrepriseId('id'), nom: 'Entreprise1', legal_siren: null }]}
     user={{ ...testBlankUser, id: toUtilisateurId('anotherId'), role: 'super' }}
-    utilisateurId="id"
+    utilisateurId={utilisateurIdValidator.parse('id')}
     passwordUpdate={passwordUpdate}
     apiClient={{
       ...apiClientMock,
@@ -87,7 +87,7 @@ export const AnotherUser: StoryFn = () => (
   <PureUtilisateur
     entreprises={[{ id: newEntrepriseId('id'), nom: 'Entreprise1', legal_siren: null }]}
     user={{ ...testBlankUser, id: toUtilisateurId('anotherId'), role: 'super' }}
-    utilisateurId="id"
+    utilisateurId={utilisateurIdValidator.parse('id')}
     passwordUpdate={passwordUpdate}
     apiClient={apiClientMock}
   />
