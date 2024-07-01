@@ -1,6 +1,6 @@
 import GraphQLJSON from 'graphql-type-json'
 
-import { titres, titreCreer } from './resolvers/titres.js'
+import { titres } from './resolvers/titres.js'
 
 import { etapeHeritage } from './resolvers/titres-etapes.js'
 
@@ -78,7 +78,6 @@ export default {
   journaux,
 
   // mutations
-  titreCreer,
   demarcheCreer,
   demarcheModifier,
   demarcheSupprimer,

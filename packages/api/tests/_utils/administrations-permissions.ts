@@ -8,7 +8,6 @@ import options from '../../src/database/queries/_options.js'
 import { newDemarcheId, newTitreId, newEtapeId, idGenerate } from '../../src/database/models/_format/id-create.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { getDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/documents.js'
-import { isGestionnaire } from 'camino-common/src/static/administrationsTitresTypes.js'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
 import { toCaminoDate } from 'camino-common/src/date.js'
 import { expect } from 'vitest'
@@ -27,6 +26,8 @@ import { userSuper } from '../../src/database/user-super.js'
 import { defaultHeritageProps } from 'camino-common/src/etape-form.js'
 import { isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
 import { HTTP_STATUS } from 'camino-common/src/http.js'
+import { entrepriseIdValidator } from 'camino-common/src/entreprise.js'
+import { titreCreate } from '../../src/database/queries/titres.js'
 
 const dir = `${process.cwd()}/files/tmp/`
 
@@ -57,14 +58,11 @@ export const visibleCheck = async (
 
   const administration = sortedAdministrations.find(a => a.id === administrationId)!
 
-  const gestionnaire = isGestionnaire(administration.id, null)
-
   const titre = titreBuild(
     {
       titreId: newTitreId(`${titreTypeId}${locale ? '-local' : ''}-${cible}-admin-${administrationId}`),
       titreTypeId,
     },
-    gestionnaire ? administrationId : undefined,
     locale ? administrationId : undefined,
     etapeTypeId
   )
@@ -115,31 +113,29 @@ export const creationCheck = async (pool: Pool, administrationId: string, creer:
     const titre = {
       nom: `${titreTypeId}-${cible}-admin-${administrationId}`,
       typeId: titreTypeId,
+      references: [],
+      titreFromIds: [],
+      entrepriseId: entrepriseIdValidator.parse('idEntreprise'),
     }
 
-    const titreCreerQuery = queryImport('titre-creer')
-    const res = await graphQLCall(
+    const res = await restPostCall(
       pool,
-      titreCreerQuery,
-      {
-        titre,
-      },
+      '/rest/titres',
+      {},
       {
         role: 'admin',
         administrationId: administration.id,
-      }
+      },
+      titre
     )
-
     if (creer) {
-      expect(res.body.data).toMatchObject({
-        titreCreer: { nom: titre.nom },
-      })
+      expect(res.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
     } else {
-      expect(res.body.errors[0].message).toBe('permissions insuffisantes')
+      expect(res.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
     }
   } else if (cible === 'demarches') {
-    const titreCreated = await titreCreerSuper(pool, administrationId, titreTypeId)
-    const res = await demarcheCreerProfil(pool, titreCreated.body.data.titreCreer.id, {
+    const titreCreated = await titreCreateSuper(pool, administrationId, titreTypeId)
+    const res = await demarcheCreerProfil(pool, titreCreated, {
       role: 'admin',
       administrationId: administration.id,
     })
@@ -151,9 +147,9 @@ export const creationCheck = async (pool: Pool, administrationId: string, creer:
       expect(res.body.errors[0].message).toBe('droits insuffisants')
     }
   } else if (cible === 'etapes') {
-    const titreCreated = await titreCreerSuper(pool, administrationId, titreTypeId)
+    const titreCreated = await titreCreateSuper(pool, administrationId, titreTypeId)
 
-    const result = await demarcheCreerProfil(pool, titreCreated.body.data.titreCreer.id, { role: 'super' })
+    const result = await demarcheCreerProfil(pool, titreCreated, { role: 'super' })
 
     expect(result.body.errors).toBe(undefined)
 
@@ -278,20 +274,11 @@ export const creationCheck = async (pool: Pool, administrationId: string, creer:
   }
 }
 
-const titreCreerSuper = async (pool: Pool, administrationId: string, titreTypeId: string) =>
-  graphQLCall(
-    pool,
-    queryImport('titre-creer'),
-    {
-      titre: {
-        nom: `titre-${titreTypeId!}-cree-${administrationId!}`,
-        typeId: titreTypeId!,
-      },
-    },
-    {
-      role: 'super',
-    }
-  )
+const titreCreateSuper = async (_pool: Pool, administrationId: string, titreTypeId: TitreTypeId) => {
+  const titre = await titreCreate({ nom: `titre-${titreTypeId!}-cree-${administrationId!}`, typeId: titreTypeId, titreStatutId: 'ind', propsTitreEtapesIds: {} }, {})
+
+  return titre.id
+}
 
 const demarcheCreerProfil = async (pool: Pool, titreId: string, user: TestUser) => graphQLCall(pool, queryImport('titre-demarche-creer'), { demarche: { titreId, typeId: 'oct' } }, user)
 
@@ -303,7 +290,6 @@ const titreBuild = (
     titreId: TitreId
     titreTypeId: TitreTypeId
   },
-  administrationIdGestionnaire?: AdministrationId,
   administrationIdLocale?: AdministrationId,
   etapeTypeId?: EtapeTypeId
 ) => {

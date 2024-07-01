@@ -97,15 +97,3 @@ type Reference {
   "Nom de la référence"
   nom: String!
 }
-
-"Titre minier"
-input InputTitreCreation {
-  nom: String!
-  typeId: ID!
-  references: [InputReference]
-}
-
-input InputReference {
-  referenceTypeId: String!
-  nom: String!
-}

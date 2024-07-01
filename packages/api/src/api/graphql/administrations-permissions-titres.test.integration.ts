@@ -1,17 +1,13 @@
 import { dbManager } from '../../../tests/db-manager.js'
 import { visibleCheck, creationCheck } from '../../../tests/_utils/administrations-permissions.js'
-import Utilisateurs from '../../database/models/utilisateurs'
 
-import { afterAll, beforeEach, beforeAll, describe, test, vi } from 'vitest'
+import { afterAll, beforeAll, describe, test, vi } from 'vitest'
 import { AdministrationId } from 'camino-common/src/static/administrations.js'
 import type { Pool } from 'pg'
 
 console.info = vi.fn()
 console.error = vi.fn()
 
-beforeEach(async () => {
-  await Utilisateurs.query().delete()
-})
 let dbPool: Pool
 beforeAll(async () => {
   const { pool } = await dbManager.populateDb()
