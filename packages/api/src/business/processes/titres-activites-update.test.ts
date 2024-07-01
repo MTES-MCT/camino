@@ -100,7 +100,10 @@ describe("activités d'un titre", () => {
     titreActiviteTypeCheckMock.mockReturnValue(true)
     anneesBuildMock.mockReturnValue([2018])
     titreActivitesBuildMock.mockReturnValue([{ titreId: titresSansActivite[0].id }] as ITitreActivite[])
-    getEntrepriseUtilisateursMock.mockResolvedValue([{ email: 'email' }])
+    getEntrepriseUtilisateursMock.mockResolvedValue([
+      { email: 'email', role: 'entreprise' },
+      { email: 'toto', role: 'bureau d’études' },
+    ])
 
     const titresActivitesNew = await titresActivitesUpdate(undefined as unknown as Pool)
 

@@ -132,6 +132,7 @@ export interface IGetEntrepriseUtilisateursDbParams {
 /** 'GetEntrepriseUtilisateursDb' return type */
 export interface IGetEntrepriseUtilisateursDbResult {
   email: string | null;
+  role: string;
 }
 
 /** 'GetEntrepriseUtilisateursDb' query type */

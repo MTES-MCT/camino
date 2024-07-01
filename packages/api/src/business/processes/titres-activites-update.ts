@@ -14,6 +14,7 @@ import { isNotNullNorUndefinedNorEmpty, isNullOrUndefined } from 'camino-common/
 import { canHaveActiviteTypeId } from 'camino-common/src/permissions/titres.js'
 import { Pool } from 'pg'
 import { getEntrepriseUtilisateurs } from '../../api/rest/entreprises.queries.js'
+import { isEntrepriseRole } from 'camino-common/src/roles.js'
 
 export const titresActivitesUpdate = async (pool: Pool, titresIds?: string[], aujourdhui: CaminoDate = getCurrent()) => {
   console.info()
@@ -79,8 +80,8 @@ export const titresActivitesUpdate = async (pool: Pool, titresIds?: string[], au
       if (isNotNullNorUndefinedNorEmpty(titre.titulaireIds)) {
         const utilisateursByEntreprise = await Promise.all(titre.titulaireIds.map(titulaireId => getEntrepriseUtilisateurs(pool, titulaireId)))
 
-        utilisateursByEntreprise.flat().forEach(({ email }) => {
-          if (isNotNullNorUndefinedNorEmpty(email)) {
+        utilisateursByEntreprise.flat().forEach(({ email, role }) => {
+          if (isNotNullNorUndefinedNorEmpty(email) && isEntrepriseRole(role)) {
             emails.add(email)
           }
         })

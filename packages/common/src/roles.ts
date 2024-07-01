@@ -74,5 +74,6 @@ export type UserNotNull = z.infer<typeof userNotNullValidator>
 export const isAdministrationRole = (role: Role): role is AdministrationRole => administrationRoleValidator.safeParse(role).success
 export const isSuperRole = (role: Role): role is 'super' => role === 'super'
 export const isDefautRole = (role: Role): role is 'defaut' => role === 'defaut'
+export const isEntrepriseRole = (role: Role): role is 'entreprise' => role === 'entreprise'
 
 export const isEntrepriseOrBureauDetudeRole = (role: Role): role is EntrepriseOrBureauDetudeRole => entrepriseRoleValidator.safeParse(role).success
