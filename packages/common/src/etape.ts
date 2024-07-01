@@ -1,6 +1,6 @@
 import { CaminoDate, caminoDateValidator } from './date.js'
 import { EtapeHeritageProps, MappingHeritagePropsNameEtapePropsName } from './heritage.js'
-import { DOCUMENTS_TYPES_IDS, documentTypeIdValidator } from './static/documentsTypes.js'
+import { DOCUMENTS_TYPES_IDS, autreDocumentTypeIdValidator, documentTypeIdValidator } from './static/documentsTypes.js'
 import { EtapeStatutId, etapeStatutIdValidator } from './static/etapesStatuts.js'
 import { EtapeTypeId, etapeTypeIdValidator } from './static/etapesTypes.js'
 import { z } from 'zod'
@@ -46,14 +46,21 @@ export type EtapeTypeEtapeStatutWithMainStep = z.infer<typeof etapeTypeEtapeStat
 export const etapeDocumentIdValidator = z.string().brand('EtapeDocumentId')
 export type EtapeDocumentId = z.infer<typeof etapeDocumentIdValidator>
 
-export const etapeDocumentValidator = z.object({
+const etapeDocumentWithoutDescriptionValidator = z.object({
   id: etapeDocumentIdValidator,
-  description: z.string().nullable(),
-  etape_document_type_id: documentTypeIdValidator,
   public_lecture: z.boolean().default(false),
   entreprises_lecture: z.boolean().default(false),
 })
+export const etapeDocumentDescriptionOptionnelleValidator = etapeDocumentWithoutDescriptionValidator.extend({
+  etape_document_type_id: documentTypeIdValidator,
+  description: z.string().nullable(),
+})
+export const etapeDocumentDescriptionObligatoireValidator = etapeDocumentWithoutDescriptionValidator.extend({
+  etape_document_type_id: autreDocumentTypeIdValidator,
+  description: z.string().min(1),
+})
 
+export const etapeDocumentValidator = z.union([etapeDocumentDescriptionOptionnelleValidator, etapeDocumentDescriptionObligatoireValidator])
 export type EtapeDocument = z.infer<typeof etapeDocumentValidator>
 
 const documentComplementaireObligatoireCommon = z.object({
@@ -124,10 +131,14 @@ export const needAslAndDae = (
   return tde.etapeTypeId === 'mfr' && tde.demarcheTypeId === 'oct' && tde.titreTypeId === 'axm' && isEntrepriseOrBureauDEtude(user) && isBrouillon
 }
 
-export const tempEtapeDocumentValidator = etapeDocumentValidator.omit({ id: true }).extend({ temp_document_name: tempDocumentNameValidator })
+export const tempEtapeDocumentDescriptionOptionnelleValidator = etapeDocumentDescriptionOptionnelleValidator.omit({ id: true }).extend({ temp_document_name: tempDocumentNameValidator })
+export const tempEtapeDocumentDescriptionObligatoireValidator = etapeDocumentDescriptionObligatoireValidator.omit({ id: true }).extend({ temp_document_name: tempDocumentNameValidator })
+export const tempEtapeDocumentValidator = z.union([tempEtapeDocumentDescriptionOptionnelleValidator, tempEtapeDocumentDescriptionObligatoireValidator])
 export type TempEtapeDocument = z.infer<typeof tempEtapeDocumentValidator>
 
-const etapeDocumentWithFileModificationValidator = etapeDocumentValidator.extend({ temp_document_name: tempDocumentNameValidator.optional() })
+const etapeDocumentDescriptionOptionnelleWithFileModificationValidator = etapeDocumentDescriptionOptionnelleValidator.extend({ temp_document_name: tempDocumentNameValidator.optional() })
+const etapeDocumentDescriptionObligatoireWithFileModificationValidator = etapeDocumentDescriptionObligatoireValidator.extend({ temp_document_name: tempDocumentNameValidator.optional() })
+const etapeDocumentWithFileModificationValidator = z.union([etapeDocumentDescriptionOptionnelleWithFileModificationValidator, etapeDocumentDescriptionObligatoireWithFileModificationValidator])
 export type EtapeDocumentWithFileModification = z.infer<typeof etapeDocumentWithFileModificationValidator>
 export const etapeDocumentModificationValidator = z.union([etapeDocumentWithFileModificationValidator, tempEtapeDocumentValidator])
 export type EtapeDocumentModification = z.infer<typeof etapeDocumentModificationValidator>

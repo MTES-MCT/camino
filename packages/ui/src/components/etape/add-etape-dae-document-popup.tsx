@@ -10,7 +10,7 @@ import {
   DocumentComplementaireDaeEtapeDocumentModification,
   documentComplementaireDaeEtapeDocumentModificationValidator,
   documentTypeIdComplementaireObligatoireDAE,
-  tempEtapeDocumentValidator,
+  tempEtapeDocumentDescriptionOptionnelleValidator,
 } from 'camino-common/src/etape'
 import { useState } from '@/utils/vue-tsx-utils'
 import { DsfrSelect } from '../_ui/dsfr-select'
@@ -87,7 +87,10 @@ export const AddEtapeDaeDocumentPopup = defineComponent<Props>(props => {
   }))
 
   const canSave = computed<boolean>(() => {
-    return tempEtapeDocumentValidator.omit({ temp_document_name: true }).safeParse(tempDocument.value).success && (etapeDocumentFile.value !== null || isNotNullNorUndefined(props.initialDocument))
+    return (
+      tempEtapeDocumentDescriptionOptionnelleValidator.omit({ temp_document_name: true }).safeParse(tempDocument.value).success &&
+      (etapeDocumentFile.value !== null || isNotNullNorUndefined(props.initialDocument))
+    )
   })
 
   return () => (

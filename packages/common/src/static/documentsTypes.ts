@@ -7,6 +7,12 @@ export interface DocumentType {
   optionnel: boolean
   description?: string
 }
+export interface AutreDocumentType {
+  id: AutreDocumentTypeId
+  nom: string
+  optionnel: true
+  description?: string
+}
 export interface EntrepriseDocumentType {
   id: EntrepriseDocumentTypeId
   nom: string
@@ -29,9 +35,12 @@ export type PerimetreUploadType = z.infer<typeof perimetreFileUploadTypeValidato
 export type FileUploadType = z.infer<typeof fileUploadTypeValidator>
 
 // prettier-ignore
-const IDS = ['aac','acc','acd','acg','acm','acr','adr','aep','aot','apd','apf','apm','apu','are','arm','arp','arr','atf','avc','ave','avi','bil','cam','car','cco','cdc','cnr','cnt','cod','con','cou','csp','cur','dcl','deb','dec','dei','dep','doe','dom','dos','erd','fac','fic','fip','for','idm','jac','jcf','jct','jeg','jid','jpa','kbi','lac','lce','lcg','lcm','lem','let','lis','lpf','mes','met','mot','nas','ndc','ndd','nip','nir','nis','noi','not','ocd','odr','ord','prg','pro','pub','pvr','rac','rad','rap','rce','rcr','rdr','rdt','rec','ree','ref','rfe','rgr','rie','rse','sch','sir' ] as const
+const IDS_WITHOUT_AUTRE = ['aac','acc','acd','acg','acm','acr','adr','aep','aot','apd','apf','apm','apu','are','arm','arp','arr','atf','avc','ave','avi','bil','cam','car','cco','cdc','cnr','cnt','cod','con','cou','csp','cur','dcl','deb','dec','dei','dep','doe','dom','dos','erd','fac','fic','fip','for','idm','jac','jcf','jct','jeg','jid','jpa','kbi','lac','lce','lcg','lcm','lem','let','lis','lpf','mes','met','mot','nas','ndc','ndd','nip','nir','nis','noi','not','ocd','odr','ord','prg','pro','pub','pvr','rac','rad','rap','rce','rcr','rdr','rdt','rec','ree','ref','rfe','rgr','rie','rse','sch','sir' ] as const
 
+const AUTRE_IDS = ['aut'] as const
+const IDS = [...IDS_WITHOUT_AUTRE, ...AUTRE_IDS] as const
 export const DOCUMENTS_TYPES_IDS = {
+  autreDocument: 'aut',
   avisDUnServiceDeLAdministrationCentrale: 'aac',
   accordDuProprietaireDuSolOuDuGestionnaire: 'acc',
   avisDeLaCommissionDepartementaleDesMines: 'acd',
@@ -145,7 +154,7 @@ export const EntrepriseDocumentTypeIds = [
   DOCUMENTS_TYPES_IDS.TroisDerniersBilansEtComptesDeResultats,
   DOCUMENTS_TYPES_IDS.referencesProfessionnelles,
   DOCUMENTS_TYPES_IDS.declarationsBancairesOuCautionsAppropriees,
-] as const satisfies Readonly<NonEmptyArray<Readonly<(typeof IDS)[number]>>>
+] as const satisfies Readonly<NonEmptyArray<Readonly<(typeof IDS_WITHOUT_AUTRE)[number]>>>
 
 export const entrepriseDocumentTypeIdValidator = z.enum(EntrepriseDocumentTypeIds)
 export type EntrepriseDocumentTypeId = z.infer<typeof entrepriseDocumentTypeIdValidator>
@@ -158,15 +167,18 @@ export const ActiviteDocumentTypeIds = [
   DOCUMENTS_TYPES_IDS.rapportFinancierDExploration,
   DOCUMENTS_TYPES_IDS.rapportEnvironnementalDExploration,
   DOCUMENTS_TYPES_IDS.rapportSocialEtEconomiqueDExploration,
-] as const satisfies readonly (typeof IDS)[number][]
+] as const satisfies readonly (typeof IDS_WITHOUT_AUTRE)[number][]
 
 export const activiteDocumentTypeIdValidator = z.enum(ActiviteDocumentTypeIds)
 export type ActiviteDocumentTypeId = z.infer<typeof activiteDocumentTypeIdValidator>
 
-export const documentTypeIdValidator = z.enum(IDS)
+export const documentTypeIdValidator = z.enum(IDS_WITHOUT_AUTRE)
 export type DocumentTypeId = z.infer<typeof documentTypeIdValidator>
+export const autreDocumentTypeIdValidator = z.enum(AUTRE_IDS)
+export type AutreDocumentTypeId = z.infer<typeof autreDocumentTypeIdValidator>
 
-export const DocumentsTypes: { [key in DocumentTypeId]: Definition<key> } = {
+export const DocumentsTypes: { [key in DocumentTypeId | AutreDocumentTypeId]: Definition<key> } = {
+  aut: { id: 'aut', nom: 'Autre document' },
   aac: { id: 'aac', nom: "Avis d'un service de l'administration centrale" },
   acc: { id: 'acc', nom: 'Accord du propriétaire du sol ou du gestionnaire' },
   acd: { id: 'acd', nom: 'Avis de la commission départementale des mines' },
@@ -266,8 +278,6 @@ export const DocumentsTypes: { [key in DocumentTypeId]: Definition<key> } = {
 }
 
 export const sortedEntrepriseDocumentTypes = map(EntrepriseDocumentTypeIds, id => DocumentsTypes[id]).sort((a, b) => a.nom.localeCompare(b.nom))
-export const sortedDocumentTypes = IDS.map(id => DocumentsTypes[id]).sort((a, b) => a.nom.localeCompare(b.nom))
+export const sortedDocumentTypes = IDS_WITHOUT_AUTRE.map(id => DocumentsTypes[id]).sort((a, b) => a.nom.localeCompare(b.nom))
 
-const documentsTypesIds = Object.values(DOCUMENTS_TYPES_IDS)
-
-export const isDocumentTypeId = (documentTypeId: string | null | undefined): documentTypeId is DocumentTypeId => documentsTypesIds.includes(documentTypeId)
+export const isDocumentTypeId = (documentTypeId: string | null | undefined): documentTypeId is DocumentTypeId => IDS_WITHOUT_AUTRE.includes(documentTypeId)

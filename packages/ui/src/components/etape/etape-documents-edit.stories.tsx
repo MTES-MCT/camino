@@ -38,6 +38,13 @@ const documents: EtapeDocument[] = [
     public_lecture: true,
     entreprises_lecture: true,
   },
+  {
+    id: etapeDocumentIdValidator.parse('idAutre'),
+    etape_document_type_id: 'aut',
+    description: 'description autre document',
+    public_lecture: true,
+    entreprises_lecture: true,
+  },
 ]
 
 const uploadTempDocumentAction = action('uploadTempDocument')

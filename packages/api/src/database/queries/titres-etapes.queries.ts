@@ -26,6 +26,8 @@ import {
   EtapeAvisWithFileModification,
   EtapeBrouillon,
   EtapeDocument,
+  etapeDocumentDescriptionObligatoireValidator,
+  etapeDocumentDescriptionOptionnelleValidator,
   EtapeDocumentId,
   EtapeDocumentModification,
   etapeDocumentValidator,
@@ -266,7 +268,10 @@ insert into etape_avis (id, avis_type_id, etape_id, description, avis_statut_id,
 
 const etapeDocumentLargeObjectIdValidator = z.number().brand('EtapeDocumentLargeObjectId')
 
-const getDocumentsByEtapeIdQueryValidator = etapeDocumentValidator.extend({ largeobject_id: etapeDocumentLargeObjectIdValidator })
+const getDocumentsByEtapeIdQueryValidator = z.union([
+  etapeDocumentDescriptionObligatoireValidator.extend({ largeobject_id: etapeDocumentLargeObjectIdValidator }),
+  etapeDocumentDescriptionOptionnelleValidator.extend({ largeobject_id: etapeDocumentLargeObjectIdValidator }),
+])
 type GetDocumentsByEtapeIdQuery = z.infer<typeof getDocumentsByEtapeIdQueryValidator>
 
 const getDocumentsByEtapeIdQuery = sql<Redefine<IGetDocumentsByEtapeIdQueryQuery, { titre_etape_id: EtapeId }, GetDocumentsByEtapeIdQuery>>`

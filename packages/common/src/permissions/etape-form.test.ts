@@ -454,6 +454,11 @@ test('getDocumentsTypes', () => {
         "nom": "Lettre",
         "optionnel": false,
       },
+      {
+        "id": "aut",
+        "nom": "Autre document",
+        "optionnel": true,
+      },
     ]
   `)
 
@@ -550,6 +555,11 @@ test('getDocumentsTypes', () => {
         "nom": "Récépissé "Loi sur l'eau"",
         "optionnel": true,
       },
+      {
+        "id": "aut",
+        "nom": "Autre document",
+        "optionnel": true,
+      },
     ]
   `)
 
@@ -644,6 +654,11 @@ test('getDocumentsTypes', () => {
       {
         "id": "rec",
         "nom": "Récépissé "Loi sur l'eau"",
+        "optionnel": true,
+      },
+      {
+        "id": "aut",
+        "nom": "Autre document",
         "optionnel": true,
       },
     ]
@@ -794,6 +809,11 @@ test('getDocumentsTypes', () => {
         "nom": "Schéma de pénétration du massif forestier",
         "optionnel": false,
       },
+      {
+        "id": "aut",
+        "nom": "Autre document",
+        "optionnel": true,
+      },
     ]
   `)
 
@@ -941,6 +961,11 @@ test('getDocumentsTypes', () => {
         "id": "sch",
         "nom": "Schéma de pénétration du massif forestier",
         "optionnel": false,
+      },
+      {
+        "id": "aut",
+        "nom": "Autre document",
+        "optionnel": true,
       },
     ]
   `)
