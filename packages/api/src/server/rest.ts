@@ -232,10 +232,11 @@ export const restWithPool = (dbPool: Pool) => {
                 'result',
                 ({ user, body, params }) => maRoute.newPostCall(dbPool, user, body, params)
               ),
-              TE.bindW('parsedResult', ({result}) => pipe(
-                zodParseTaskEither(maRoute.newPost.output, result),
-                TE.mapLeft(caminoError => ({...caminoError, status: HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR}))
-              )
+              TE.bindW('parsedResult', ({ result }) =>
+                pipe(
+                  zodParseTaskEither(maRoute.newPost.output, result),
+                  TE.mapLeft(caminoError => ({ ...caminoError, status: HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR }))
+                )
               ),
               TE.mapBoth(
                 caminoError => {

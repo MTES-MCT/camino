@@ -1,4 +1,4 @@
-import { z, ZodNumber} from 'zod'
+import { z, ZodNumber } from 'zod'
 
 export const numberFormat = (number: number): string =>
   Intl.NumberFormat('FR-fr', {

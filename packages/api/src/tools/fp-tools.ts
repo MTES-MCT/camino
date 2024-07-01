@@ -11,9 +11,9 @@ export const zodParseEitherCallback =
     zodParseEither(validator, value)
 
 export const zodParseTaskEitherCallback =
-      <T extends ZodTypeAny>(validator: T) =>
-      (value: unknown): TE.TaskEither<CaminoError<ZodUnparseable>, T['_output']> =>
-        zodParseTaskEither(validator, value)
+  <T extends ZodTypeAny>(validator: T) =>
+  (value: unknown): TE.TaskEither<CaminoError<ZodUnparseable>, T['_output']> =>
+    zodParseTaskEither(validator, value)
 
 export const zodParseEither = <T extends ZodTypeAny>(validator: T, item: unknown): E.Either<CaminoError<ZodUnparseable>, T['_output']> => {
   return E.tryCatch(
