@@ -9,7 +9,6 @@ import { TitresTypesTypes } from 'camino-common/src/static/titresTypesTypes'
 import { DemarchesTypes } from 'camino-common/src/static/demarchesTypes'
 import { Nom } from '../_common/nom'
 import { Domaine as CaminoDomaine } from '../_common/domaine'
-import { Statut } from '../_common/statut'
 import { DemarchesStatuts } from 'camino-common/src/static/demarchesStatuts'
 import { TitreStatut } from '../_common/titre-statut'
 import { List } from '../_ui/list'
@@ -19,6 +18,7 @@ import { Entreprise } from 'camino-common/src/entreprise'
 import { entreprisesKey } from '@/moi'
 import { CaminoRouteLocation } from '@/router/routes'
 import { CaminoRouter } from '@/typings/vue-router'
+import { DemarcheStatut } from '../_common/demarche-statut'
 
 const demarchesColonnes = [
   { id: 'titreNom', name: 'Titre' },
@@ -71,10 +71,9 @@ const demarchesLignesBuild = (demarches: GetDemarchesDemarche[]): TableRow[] =>
         value: demarcheType.nom,
       },
       statut: {
-        component: markRaw(Statut),
+        component: markRaw(DemarcheStatut),
         props: {
-          color: DemarchesStatuts[demarche.statutId].couleur,
-          nom: DemarchesStatuts[demarche.statutId].nom,
+          demarcheStatutId: demarche.statutId,
         },
         value: DemarchesStatuts[demarche.statutId].nom,
       },

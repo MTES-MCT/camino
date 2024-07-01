@@ -1,6 +1,5 @@
 import { Activite, ActiviteDocumentId } from 'camino-common/src/activite'
 import { FunctionalComponent, defineComponent, ref, computed } from 'vue'
-import { Statut } from '../_common/statut'
 import { getPeriode } from 'camino-common/src/static/frequence'
 import { ACTIVITES_STATUTS_IDS, ActivitesStatut, ActivitesStatuts } from 'camino-common/src/static/activitesStatuts'
 import { ActiviteType, ActivitesTypes } from 'camino-common/src/static/activitesTypes'
@@ -16,6 +15,7 @@ import { ActiviteRemovePopup } from './remove-popup'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { capitalize } from 'camino-common/src/strings'
 import { dateFormat } from 'camino-common/src/date'
+import { ActiviteStatut } from '../_common/activite-statut'
 
 interface Props {
   activite: Activite
@@ -47,11 +47,12 @@ export const Preview = defineComponent<Props>(props => {
 
   const activiteType = computed<ActiviteType>(() => ActivitesTypes[props.activite.type_id])
 
-  const statutNom = computed<string>(() => {
-    return isActiviteComplete(props.activite.sections_with_value, props.activite.type_id, props.activite.activite_documents).valid
-      ? activiteStatut.value.nom
-      : `${activiteStatut.value.nom} (incomplet)`
-  })
+  //FIXME
+  // const statutNom = computed<string>(() => {
+  //   return isActiviteComplete(props.activite.sections_with_value, props.activite.type_id, props.activite.activite_documents).valid
+  //     ? activiteStatut.value.nom
+  //     : `${activiteStatut.value.nom} (incomplet)`
+  // })
 
   const documentRows = props.activite.activite_documents.map(document => ({
     id: document.id,
@@ -98,7 +99,7 @@ export const Preview = defineComponent<Props>(props => {
           </div>
         </div>
 
-        <Statut color={activiteStatut.value.couleur} nom={statutNom.value} class="fr-mt-2w" />
+        <ActiviteStatut activiteStatutId={props.activite.activite_statut_id} class="fr-mt-2w" />
 
         <div class="pb-s">
           {isNotNullNorUndefined(activiteType.value.description) && activiteType.value.description !== '' ? (

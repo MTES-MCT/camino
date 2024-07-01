@@ -4,8 +4,8 @@ import { markRaw } from 'vue'
 import { TitreNom } from '../_common/titre-nom'
 import { Domaine } from '../_common/domaine'
 import { TitreTypeTypeNom } from '../_common/titre-type-type-nom'
-import { Statut } from '../_common/statut'
 import { TableRow } from './table'
+import { DemarcheStatut } from '../_common/demarche-statut'
 
 const meta: Meta = {
   title: 'Components/UI/Table',
@@ -71,10 +71,9 @@ const rows: TableRow[] = [0, 1, 2, 3].map(row => {
         value: 'arm',
       },
       statut: {
-        component: markRaw(Statut),
+        component: markRaw(DemarcheStatut),
         props: {
-          color: 'warning',
-          nom: `Demande initiale ${row}`,
+          demarcheStatutId: 'eco'
         },
         value: `Demande initiale ${row}`,
       },

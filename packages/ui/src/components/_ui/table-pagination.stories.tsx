@@ -4,10 +4,10 @@ import { markRaw } from 'vue'
 import { TitreNom } from '../_common/titre-nom'
 import { Domaine } from '../_common/domaine'
 import { TitreTypeTypeNom } from '../_common/titre-type-type-nom'
-import { Statut } from '../_common/statut'
 import { Column, TableRow } from './table'
 import { action } from '@storybook/addon-actions'
 import { AsyncData } from '@/api/client-rest'
+import { DemarcheStatut } from '../_common/demarche-statut'
 
 const meta: Meta = {
   title: 'Components/UI/Table',
@@ -74,10 +74,9 @@ const rows: AsyncData<{ total: number; rows: TableRow[] }> = {
             value: 'arm',
           },
           statut: {
-            component: markRaw(Statut),
+            component: markRaw(DemarcheStatut),
             props: {
-              color: 'warning',
-              nom: `Demande initiale ${row}`,
+              demarcheStatutId: 'acc',
             },
             value: `Demande initiale ${row}`,
           },

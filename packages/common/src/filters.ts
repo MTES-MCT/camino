@@ -162,7 +162,7 @@ export const caminoFiltres = {
     name: "Statuts d'activité",
     type: 'checkboxes',
     elements: activitesStatuts,
-    component: 'FiltresStatuts',
+    component: 'FiltresActivitesStatuts',
     validator: z.array(activiteStatutIdValidator),
   },
   annees: {
@@ -225,7 +225,7 @@ export const caminoFiltres = {
     placeholder?: string
     validator: ZodType
     elements?: unknown[]
-    component?: 'FiltresLabel' | 'FiltresTypes' | 'FiltreDomaine' | 'FiltresTitresStatuts' | 'FiltresStatuts' | 'FiltresDemarchesStatuts'
+    component?: 'FiltresLabel' | 'FiltresTypes' | 'FiltreDomaine' | 'FiltresTitresStatuts' | 'FiltresActivitesStatuts' | 'FiltresDemarchesStatuts'
     lazy?: boolean
   }
 }

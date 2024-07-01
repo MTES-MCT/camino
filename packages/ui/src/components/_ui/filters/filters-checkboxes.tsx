@@ -1,4 +1,3 @@
-import { FiltresStatuts } from '../../_common/filtres/statuts'
 import { FiltresTypes } from '../../_common/filtres/types'
 import { TitreStatut as TitreStatutComp } from '../../_common/titre-statut'
 import { Domaine as DomaineComp } from '../../_common/domaine'
@@ -11,6 +10,7 @@ import { isEventWithTarget } from '@/utils/vue-tsx-utils'
 import { DemarcheStatut } from '../../_common/demarche-statut'
 import type { JSX } from 'vue/jsx-runtime'
 import { DsfrButton } from '../dsfr-button'
+import { ActiviteStatut } from '@/components/_common/activite-statut'
 
 type Props = {
   filter: CheckboxesCaminoFiltres
@@ -32,13 +32,12 @@ function DrawComponent(filter: CheckboxesCaminoFiltres, index: number): JSX.Elem
       )
     case 'FiltresTypes':
       return FiltresTypes({ element: fullFilter.elements[index] }, { attrs: {}, emit: () => {}, slots: {} })
-    case 'FiltresStatuts':
-      return FiltresStatuts(
-        {
-          element: fullFilter.elements[index],
-        },
-        { attrs: {}, emit: () => {}, slots: {} }
-      )
+    case 'FiltresActivitesStatuts':
+      return (
+          <div>
+            <ActiviteStatut activiteStatutId={fullFilter.elements[index].id} />
+          </div>
+        )
     case 'FiltresTitresStatuts':
       return (
         <div>
