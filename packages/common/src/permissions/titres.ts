@@ -10,7 +10,7 @@ import { activitesTypesPays } from '../static/activitesTypesPays.js'
 import { canAdministrationModifyTitres } from '../static/administrationsTitresTypesTitresStatuts.js'
 import { TitreStatutId } from '../static/titresStatuts.js'
 import { territoiresIdFind } from '../territoires.js'
-import { isNotNullNorUndefinedNorEmpty, isNullOrUndefinedOrEmpty, SimplePromiseFn } from '../typescript-tools.js'
+import { DeepReadonly, isNotNullNorUndefinedNorEmpty, isNullOrUndefinedOrEmpty, SimplePromiseFn } from '../typescript-tools.js'
 import { SecteursMaritimes } from '../static/facades.js'
 import { EntrepriseId } from '../entreprise.js'
 
@@ -101,7 +101,7 @@ export const canDeleteTitre = (user: User): boolean => isSuper(user)
 
 interface TitreReduced {
   titreTypeId: TitreTypeId
-  communes: { id: CommuneId }[]
+  communes: DeepReadonly<{ id: CommuneId }[]>
   secteursMaritime: SecteursMaritimes[]
   demarches: unknown[]
 }

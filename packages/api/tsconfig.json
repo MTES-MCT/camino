@@ -8,7 +8,7 @@
     "alwaysStrict": true,
     "esModuleInterop": true,
     "inlineSources": false,
-    "lib": ["es2020", "dom"],
+    "lib": ["es2020", "dom", "ESNext.Array"],
     "module": "ES2020",
     "moduleResolution": "Bundler",
     "noFallthroughCasesInSwitch": true,

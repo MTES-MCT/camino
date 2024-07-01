@@ -1,4 +1,4 @@
-import { restCall, restPostCall, userGenerate } from '../../../tests/_utils/index.js'
+import { restCall, restNewPostCall, userGenerate } from '../../../tests/_utils/index.js'
 import { dbManager } from '../../../tests/db-manager.js'
 import { expect, test, describe, afterAll, beforeAll, vi } from 'vitest'
 import type { Pool } from 'pg'
@@ -93,13 +93,13 @@ describe('administrationActiviteTypeEmails', () => {
       expect(tested.body).toEqual([])
 
       const newActiviteTypeEmail: AdministrationActiviteTypeEmail = { activite_type_id: 'gra', email: 'toto@toto.com' }
-      await restPostCall(dbPool, '/rest/administrations/:administrationId/activiteTypeEmails', { administrationId: 'dea-guyane-01' }, user, newActiviteTypeEmail)
+      await restNewPostCall(dbPool, '/rest/administrations/:administrationId/activiteTypeEmails', { administrationId: 'dea-guyane-01' }, user, newActiviteTypeEmail)
 
       tested = await restCall(dbPool, '/rest/administrations/:administrationId/activiteTypeEmails', { administrationId: 'dea-guyane-01' }, user)
       expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
       expect(tested.body).toEqual([newActiviteTypeEmail])
 
-      await restPostCall(dbPool, '/rest/administrations/:administrationId/activiteTypeEmails/delete', { administrationId: 'dea-guyane-01' }, user, newActiviteTypeEmail)
+      await restNewPostCall(dbPool, '/rest/administrations/:administrationId/activiteTypeEmails/delete', { administrationId: 'dea-guyane-01' }, user, newActiviteTypeEmail)
       tested = await restCall(dbPool, '/rest/administrations/:administrationId/activiteTypeEmails', { administrationId: 'dea-guyane-01' }, user)
       expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
       expect(tested.body).toEqual([])

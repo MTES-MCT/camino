@@ -45,12 +45,12 @@ export const Default: StoryFn = () => (
       administrationActiviteTypeEmailUpdate: () => {
         administrationActiviteTypeEmailUpdateAction()
 
-        return Promise.resolve(undefined)
+        return Promise.resolve(true)
       },
       administrationActiviteTypeEmailDelete: () => {
         administrationActiviteTypeEmailDeleteAction()
 
-        return Promise.resolve(undefined)
+        return Promise.resolve(true)
       },
     }}
   />

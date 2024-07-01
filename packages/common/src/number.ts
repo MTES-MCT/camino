@@ -1,4 +1,4 @@
-import { z } from 'zod'
+import { z, ZodNumber } from 'zod'
 
 export const numberFormat = (number: number): string =>
   Intl.NumberFormat('FR-fr', {
@@ -34,10 +34,9 @@ export const toDegresMinutes = (value: number): { degres: number; minutes: numbe
 }
 
 export const km2Validator = z.number().nonnegative().brand('CAMINO_KM2')
-export const m2Validator = z
-  .number()
-  .transform(value => parseInt(`${value}`))
-  .brand('CAMINO_M2')
+export const createM2Validator = (v: ZodNumber) => v.transform(value => parseInt(`${value}`)).brand('CAMINO_M2')
+export const m2Validator = createM2Validator(z.number())
+
 export const ZERO_KM2 = km2Validator.parse(0)
 export type KM2 = z.infer<typeof km2Validator>
 export type M2 = z.infer<typeof m2Validator>

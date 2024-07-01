@@ -34,84 +34,148 @@ afterAll(async () => {
   await dbManager.closeKnex()
 })
 
-test('getEtapesTypesEtapesStatusWithMainStep', async () => {
-  const titre = await titreCreate(
-    {
-      nom: 'nomTitre',
-      typeId: 'arm',
-      titreStatutId: 'val',
-      propsTitreEtapesIds: {},
-    },
-    {}
-  )
+describe('getEtapesTypesEtapesStatusWithMainStep', () => {
+  test('nouvelle étapes possibles', async () => {
+    const titre = await titreCreate(
+      {
+        nom: 'nomTitre',
+        typeId: 'arm',
+        titreStatutId: 'val',
+        propsTitreEtapesIds: {},
+      },
+      {}
+    )
 
-  const titreDemarche = await titreDemarcheCreate({
-    titreId: titre.id,
-    typeId: 'oct',
+    const titreDemarche = await titreDemarcheCreate({
+      titreId: titre.id,
+      typeId: 'oct',
+    })
+
+    const tested = await restCall(dbPool, '/rest/etapesTypes/:demarcheId/:date', { demarcheId: titreDemarche.id, date: getCurrent() }, userSuper)
+
+    expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
+    // TODO 2024-06-19 changer ce format ?
+    // Partir plutôt sur un object avec comme clé le etapeTypeId, une liste de etapeStatut associée et la clé mainStep (soit sur le statut, soit directement au top niveau)
+    // soit { mfr: {statuts: ['fai'], mainStep: true}}
+    // soit { mfr: {statuts: [{id: 'fai', mainStep: true}]}}
+    expect(tested.body).toMatchInlineSnapshot(`
+      [
+        {
+          "etapeStatutId": "fai",
+          "etapeTypeId": "mfr",
+          "mainStep": true,
+        },
+        {
+          "etapeStatutId": "fai",
+          "etapeTypeId": "mfr",
+          "mainStep": true,
+        },
+        {
+          "etapeStatutId": "fai",
+          "etapeTypeId": "mfr",
+          "mainStep": true,
+        },
+        {
+          "etapeStatutId": "fai",
+          "etapeTypeId": "mfr",
+          "mainStep": true,
+        },
+        {
+          "etapeStatutId": "fai",
+          "etapeTypeId": "mfr",
+          "mainStep": true,
+        },
+        {
+          "etapeStatutId": "fai",
+          "etapeTypeId": "pfd",
+          "mainStep": true,
+        },
+        {
+          "etapeStatutId": "req",
+          "etapeTypeId": "dae",
+          "mainStep": false,
+        },
+        {
+          "etapeStatutId": "exe",
+          "etapeTypeId": "dae",
+          "mainStep": true,
+        },
+        {
+          "etapeStatutId": "def",
+          "etapeTypeId": "rde",
+          "mainStep": false,
+        },
+        {
+          "etapeStatutId": "fav",
+          "etapeTypeId": "rde",
+          "mainStep": true,
+        },
+      ]
+    `)
   })
+  test('nouvelle étapes possibles prends en compte les brouillons', async () => {
+    const titre = await titreCreate(
+      {
+        nom: 'nomTitre',
+        typeId: 'arm',
+        titreStatutId: 'val',
+        propsTitreEtapesIds: {},
+      },
+      {}
+    )
 
-  const tested = await restCall(dbPool, '/rest/etapesTypes/:demarcheId/:date', { demarcheId: titreDemarche.id, date: getCurrent() }, userSuper)
+    const titreDemarche = await titreDemarcheCreate({
+      titreId: titre.id,
+      typeId: 'oct',
+    })
 
-  expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
-  // TODO 2024-06-19 changer ce format ?
-  // Partir plutôt sur un object avec comme clé le etapeTypeId, une liste de etapeStatut associée et la clé mainStep (soit sur le statut, soit directement au top niveau)
-  // soit { mfr: {statuts: ['fai'], mainStep: true}}
-  // soit { mfr: {statuts: [{id: 'fai', mainStep: true}]}}
-  expect(tested.body).toMatchInlineSnapshot(`
-    [
+    await titreEtapeCreate(
       {
-        "etapeStatutId": "fai",
-        "etapeTypeId": "mfr",
-        "mainStep": true,
+        typeId: 'mfr',
+        date: toCaminoDate('2024-06-27'),
+        titreDemarcheId: titreDemarche.id,
+        statutId: 'fai',
+        isBrouillon: ETAPE_IS_BROUILLON,
       },
-      {
-        "etapeStatutId": "fai",
-        "etapeTypeId": "mfr",
-        "mainStep": true,
-      },
-      {
-        "etapeStatutId": "fai",
-        "etapeTypeId": "mfr",
-        "mainStep": true,
-      },
-      {
-        "etapeStatutId": "fai",
-        "etapeTypeId": "mfr",
-        "mainStep": true,
-      },
-      {
-        "etapeStatutId": "fai",
-        "etapeTypeId": "mfr",
-        "mainStep": true,
-      },
-      {
-        "etapeStatutId": "fai",
-        "etapeTypeId": "pfd",
-        "mainStep": true,
-      },
-      {
-        "etapeStatutId": "req",
-        "etapeTypeId": "dae",
-        "mainStep": false,
-      },
-      {
-        "etapeStatutId": "exe",
-        "etapeTypeId": "dae",
-        "mainStep": true,
-      },
-      {
-        "etapeStatutId": "def",
-        "etapeTypeId": "rde",
-        "mainStep": false,
-      },
-      {
-        "etapeStatutId": "fav",
-        "etapeTypeId": "rde",
-        "mainStep": true,
-      },
-    ]
-  `)
+      userSuper,
+      titre.id
+    )
+
+    const tested = await restCall(dbPool, '/rest/etapesTypes/:demarcheId/:date', { demarcheId: titreDemarche.id, date: getCurrent() }, userSuper)
+
+    expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
+    expect(tested.body).toMatchInlineSnapshot(`
+        [
+          {
+            "etapeStatutId": "fai",
+            "etapeTypeId": "pfd",
+            "mainStep": true,
+          },
+          {
+            "etapeStatutId": "req",
+            "etapeTypeId": "dae",
+            "mainStep": false,
+          },
+          {
+            "etapeStatutId": "exe",
+            "etapeTypeId": "dae",
+            "mainStep": true,
+          },
+          {
+            "etapeStatutId": "def",
+            "etapeTypeId": "rde",
+            "mainStep": false,
+          },
+          {
+            "etapeStatutId": "fav",
+            "etapeTypeId": "rde",
+            "mainStep": true,
+          },
+        ]
+      `)
+  })
 })
+
 describe('etapeSupprimer', () => {
   test.each([undefined, 'admin' as Role])('ne peut pas supprimer une étape (utilisateur %s)', async (role: Role | undefined) => {
     const titre = await titreCreate(

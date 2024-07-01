@@ -16,8 +16,9 @@ interface Props {
   administrationId: AdministrationId
   user: User
   activitesTypesEmails: AdministrationActiviteTypeEmail[]
-  emailUpdate: (administrationId: AdministrationId, administrationActiviteTypeEmail: AdministrationActiviteTypeEmail) => void
-  emailDelete: (administrationId: AdministrationId, administrationActiviteTypeEmail: AdministrationActiviteTypeEmail) => void
+  // TODO 2024-06-26 tester et gérer les retours CaminoError
+  emailUpdate: (administrationId: AdministrationId, administrationActiviteTypeEmail: AdministrationActiviteTypeEmail) => Promise<void>
+  emailDelete: (administrationId: AdministrationId, administrationActiviteTypeEmail: AdministrationActiviteTypeEmail) => Promise<void>
 }
 const activiteTypeLabelize = (activiteType: { nom: string; id: string }) => {
   return `${capitalize(activiteType.nom)} (${activiteType.id.toUpperCase()})`

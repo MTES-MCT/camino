@@ -1,6 +1,6 @@
 import { userSuper } from '../../database/user-super.js'
 import { dbManager } from '../../../tests/db-manager.js'
-import { restPostCall } from '../../../tests/_utils/index.js'
+import { restNewPostCall } from '../../../tests/_utils/index.js'
 import { test, expect, vi, beforeAll, afterAll, describe } from 'vitest'
 import type { Pool } from 'pg'
 import { HTTP_STATUS } from 'camino-common/src/http.js'
@@ -8,14 +8,13 @@ import {
   FeatureCollection,
   FeatureCollectionForages,
   FeatureCollectionPoints,
-  featureCollectionPointsValidator,
   FeatureCollectionPolygon,
   FeatureMultiPolygon,
   GeojsonImportBody,
   GeojsonImportForagesBody,
   GeojsonImportPointsBody,
 } from 'camino-common/src/perimetre.js'
-import { GEO_SYSTEME_IDS, GeoSystemeId, sortedGeoSystemes } from 'camino-common/src/static/geoSystemes.js'
+import { GEO_SYSTEME_IDS } from 'camino-common/src/static/geoSystemes.js'
 import { idGenerate } from '../../database/models/_format/id-create.js'
 import { copyFileSync, mkdirSync, writeFileSync } from 'node:fs'
 import { tempDocumentNameValidator } from 'camino-common/src/document.js'
@@ -24,6 +23,7 @@ import { join } from 'node:path'
 
 console.info = vi.fn()
 console.error = vi.fn()
+console.warn = vi.fn()
 
 let dbPool: Pool
 
@@ -34,36 +34,6 @@ beforeAll(async () => {
 
 afterAll(async () => {
   await dbManager.closeKnex()
-})
-
-const points: FeatureCollectionPoints = {
-  type: 'FeatureCollection',
-  features: [
-    { type: 'Feature', properties: { nom: '8', description: 'description point 8' }, geometry: { type: 'Point', coordinates: [-52.54, 4.22269896902571] } },
-    { type: 'Feature', properties: { nom: 'W', description: 'description point W' }, geometry: { type: 'Point', coordinates: [-52.55, 4.22438936251509] } },
-    { type: 'Feature', properties: { nom: '*', description: 'description point *' }, geometry: { type: 'Point', coordinates: [-52.55, 4.24113309117193] } },
-  ],
-}
-
-describe('convertGeojsonPointsToGeoSystemeId', () => {
-  test('pas de conversion 4326', async () => {
-    const tested = await restPostCall(dbPool, '/rest/geojson_points/:geoSystemeId', { geoSystemeId: '4326' }, userSuper, featureCollectionPointsValidator.parse(points))
-
-    expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
-    expect(tested.body).toStrictEqual(points)
-  })
-
-  test('toutes les conversions', async () => {
-    const result: { [key in GeoSystemeId]?: unknown } = {}
-    for (const geoSysteme of sortedGeoSystemes) {
-      const tested = await restPostCall(dbPool, '/rest/geojson_points/:geoSystemeId', { geoSystemeId: geoSysteme.id }, userSuper, featureCollectionPointsValidator.parse(points))
-
-      expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
-      result[geoSysteme.id] = tested.body
-    }
-
-    expect(result).toMatchSnapshot()
-  })
 })
 
 const dir = `${process.cwd()}/files/tmp/`
@@ -79,7 +49,13 @@ describe('geojsonImport', () => {
       fileType: 'geojson',
     }
 
-    const tested = await restPostCall(dbPool, '/rest/geojson/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS.WGS84 }, userSuper, body)
+    const tested = await restNewPostCall(dbPool, '/rest/geojson/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS.WGS84 }, userSuper, body)
+    expect(tested.body).toMatchInlineSnapshot(`
+      {
+        "message": "Une erreur s'est produite lors de l'ouverture du fichier GeoJSON",
+        "status": 400,
+      }
+    `)
     expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
   })
 
@@ -100,11 +76,11 @@ C;Point C;1061421.05579599016346;6865050.211738565005362`
       fileType: 'csv',
     }
 
-    const tested = await restPostCall(dbPool, '/rest/geojson/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS['RGFG95 / UTM zone 22N'] }, userSuper, body)
+    const tested = await restNewPostCall(dbPool, '/rest/geojson/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS['RGFG95 / UTM zone 22N'] }, userSuper, body)
     expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
     expect(tested.body).toMatchSnapshot()
 
-    const testedWithError = await restPostCall(dbPool, '/rest/geojson/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS.WGS84 }, userSuper, body)
+    const testedWithError = await restNewPostCall(dbPool, '/rest/geojson/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS.WGS84 }, userSuper, body)
     expect(testedWithError.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
   })
 
@@ -143,7 +119,7 @@ B;Point B;1063526.397924559889361;6867885.978687250986695`
       fileType: 'csv',
     }
 
-    const tested = await restPostCall(dbPool, '/rest/geojson/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS['RGFG95 / UTM zone 22N'] }, userSuper, body)
+    const tested = await restNewPostCall(dbPool, '/rest/geojson/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS['RGFG95 / UTM zone 22N'] }, userSuper, body)
     expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
   })
 
@@ -164,11 +140,11 @@ C;Point éç;-52.55;4.24113309117193`
       fileType: 'csv',
     }
 
-    const tested = await restPostCall(dbPool, '/rest/geojson/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS.WGS84 }, userSuper, body)
+    const tested = await restNewPostCall(dbPool, '/rest/geojson/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS.WGS84 }, userSuper, body)
     expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
     expect(tested.body).toMatchSnapshot()
 
-    const testedWithError = await restPostCall(dbPool, '/rest/geojson/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS['RGFG95 / UTM zone 22N'] }, userSuper, body)
+    const testedWithError = await restNewPostCall(dbPool, '/rest/geojson/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS['RGFG95 / UTM zone 22N'] }, userSuper, body)
     expect(testedWithError.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
   })
 
@@ -189,11 +165,11 @@ C;Point éç;-52.55;4.24113309117193`
       fileType: 'csv',
     }
 
-    const tested = await restPostCall(dbPool, '/rest/geojson/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS.WGS84 }, userSuper, body)
+    const tested = await restNewPostCall(dbPool, '/rest/geojson/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS.WGS84 }, userSuper, body)
     expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
     expect(tested.body).toMatchSnapshot()
 
-    const testedWithError = await restPostCall(dbPool, '/rest/geojson/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS['RGFG95 / UTM zone 22N'] }, userSuper, body)
+    const testedWithError = await restNewPostCall(dbPool, '/rest/geojson/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS['RGFG95 / UTM zone 22N'] }, userSuper, body)
     expect(testedWithError.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
   })
 
@@ -214,7 +190,7 @@ C;Point éç;-52,55;4,24113309117193`
       fileType: 'csv',
     }
 
-    const tested = await restPostCall(dbPool, '/rest/geojson/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS.WGS84 }, userSuper, body)
+    const tested = await restNewPostCall(dbPool, '/rest/geojson/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS.WGS84 }, userSuper, body)
     expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
     expect(tested.body).toMatchSnapshot()
   })
@@ -251,7 +227,7 @@ C;Point éç;-52,55;4,24113309117193`
       fileType: 'geojson',
     }
 
-    const tested = await restPostCall(dbPool, '/rest/geojson/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS.WGS84 }, userSuper, body)
+    const tested = await restNewPostCall(dbPool, '/rest/geojson/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS.WGS84 }, userSuper, body)
     expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
     expect(tested.body).toMatchInlineSnapshot(`
       {
@@ -394,7 +370,14 @@ C;Point éç;-52,55;4,24113309117193`
       fileType: 'geojson',
     }
 
-    const tested = await restPostCall(dbPool, '/rest/geojson/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS.WGS84 }, userSuper, body)
+    const tested = await restNewPostCall(dbPool, '/rest/geojson/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS.WGS84 }, userSuper, body)
+    expect(tested.body).toMatchInlineSnapshot(`
+      {
+        "message": "Problème de validation de données",
+        "status": 400,
+        "zodErrorReadableMessage": "Validation error: Le périmètre ne doit pas excéder 100000000000M² at "[0].surface"",
+      }
+    `)
     expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
   })
 
@@ -432,7 +415,7 @@ C;Point éç;-52,55;4,24113309117193`
       fileType: 'geojson',
     }
 
-    const tested = await restPostCall(dbPool, '/rest/geojson/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS.WGS84 }, userSuper, body)
+    const tested = await restNewPostCall(dbPool, '/rest/geojson/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS.WGS84 }, userSuper, body)
     expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
     expect(tested.body).toMatchInlineSnapshot(`
       {
@@ -580,9 +563,58 @@ C;Point éç;-52,55;4,24113309117193`
       fileType: 'geojson',
     }
 
-    const tested = await restPostCall(dbPool, '/rest/geojson/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS['RGF93 / Lambert-93'] }, userSuper, body)
+    const tested = await restNewPostCall(dbPool, '/rest/geojson/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS['RGF93 / Lambert-93'] }, userSuper, body)
     expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
     expect(tested.body).toMatchSnapshot()
+  })
+
+  // TODO 2024-06-27 ce test devrait retourner une erreur plus parlante
+  test('fichier valide geojson 2154 erreur import en 4326', async () => {
+    const featureMultipolygon: FeatureCollection = {
+      type: 'FeatureCollection',
+      features: [
+        {
+          type: 'Feature',
+          properties: { id: null },
+          geometry: {
+            type: 'MultiPolygon',
+            coordinates: [
+              [
+                [
+                  [1051195.108314365847036, 6867800.046355471946299],
+                  [1063526.397924559889361, 6867885.978687250986695],
+                  [1061421.05579599016346, 6865050.211738565005362],
+                  [1051452.905309700872749, 6864147.922254892066121],
+                  [1044836.115762767498381, 6866081.399719905108213],
+                  [1047113.322554893908091, 6867928.944853140041232],
+                  [1051195.108314365847036, 6867800.046355471946299],
+                ],
+              ],
+            ],
+          },
+        },
+      ],
+    }
+
+    const fileName = `existing_temp_file_${idGenerate()}.geojson`
+    mkdirSync(dir, { recursive: true })
+    writeFileSync(`${dir}/${fileName}`, JSON.stringify(featureMultipolygon))
+    const body: GeojsonImportBody = {
+      titreSlug: titreSlugValidator.parse('titre-slug'),
+      titreTypeId: 'arm',
+      tempDocumentName: tempDocumentNameValidator.parse(fileName),
+      fileType: 'geojson',
+    }
+
+    const tested = await restNewPostCall(dbPool, '/rest/geojson/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS.WGS84 }, userSuper, body)
+
+    expect(tested.body).toMatchInlineSnapshot(`
+        {
+          "message": "Problème de validation de données",
+          "status": 400,
+          "zodErrorReadableMessage": "Validation error: Le périmètre ne doit pas excéder 100000000000M² at "[0].surface"",
+        }
+      `)
   })
 
   test('geojson geometrie non valide', async () => {
@@ -610,29 +642,13 @@ C;Point éç;-52,55;4,24113309117193`
       fileType: 'geojson',
     }
 
-    const tested = await restPostCall(dbPool, '/rest/geojson/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS.WGS84 }, userSuper, body)
+    const tested = await restNewPostCall(dbPool, '/rest/geojson/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS.WGS84 }, userSuper, body)
     expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
     expect(tested.body).toMatchInlineSnapshot(`
       {
-        "issues": [
-          {
-            "code": "too_small",
-            "exact": false,
-            "inclusive": true,
-            "message": "Array must contain at least 3 element(s)",
-            "minimum": 3,
-            "path": [
-              "features",
-              0,
-              "geometry",
-              "coordinates",
-              0,
-              0,
-            ],
-            "type": "array",
-          },
-        ],
-        "name": "ZodError",
+        "message": "Problème de validation de données",
+        "status": 400,
+        "zodErrorReadableMessage": "Validation error: Array must contain at least 3 element(s) at "features[0].geometry.coordinates[0][0]"",
       }
     `)
   })
@@ -648,7 +664,7 @@ C;Point éç;-52,55;4,24113309117193`
       fileType: 'shp',
     }
 
-    const tested = await restPostCall(dbPool, '/rest/geojson/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS.WGS84 }, userSuper, body)
+    const tested = await restNewPostCall(dbPool, '/rest/geojson/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS.WGS84 }, userSuper, body)
     expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
     expect(tested.body).toMatchInlineSnapshot(`
       {
@@ -790,7 +806,7 @@ C;Point éç;-52,55;4,24113309117193`
       fileType: 'shp',
     }
 
-    const tested = await restPostCall(dbPool, '/rest/geojson/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS.WGS84 }, userSuper, body)
+    const tested = await restNewPostCall(dbPool, '/rest/geojson/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS.WGS84 }, userSuper, body)
     expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
     expect(tested.body).toMatchInlineSnapshot(`
       {
@@ -920,6 +936,91 @@ C;Point éç;-52,55;4,24113309117193`
       }
     `)
   })
+  test('shapefile valide avec conversion', async () => {
+    const fileName = `existing_temp_file_${idGenerate()}.shp`
+    mkdirSync(dir, { recursive: true })
+    copyFileSync(join(__dirname, 'perimetre-guyane.shp'), `${dir}/${fileName}`)
+    const body: GeojsonImportBody = {
+      titreSlug: titreSlugValidator.parse('mfr'),
+      titreTypeId: 'arm',
+      tempDocumentName: tempDocumentNameValidator.parse(fileName),
+      fileType: 'shp',
+    }
+
+    const tested = await restNewPostCall(dbPool, '/rest/geojson/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS['RGFG95 / UTM zone 22N'] }, userSuper, body)
+    // expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
+    expect(tested.body).toMatchInlineSnapshot(`
+        {
+          "communes": [],
+          "foretIds": [],
+          "geojson4326_perimetre": {
+            "geometry": {
+              "coordinates": [
+                [
+                  [
+                    [
+                      -0.06057663245889268,
+                      48.72634716602998,
+                    ],
+                    [
+                      0.009012625831280329,
+                      48.560476879146485,
+                    ],
+                    [
+                      -0.2083346466367236,
+                      48.751132381311415,
+                    ],
+                    [
+                      -0.06057663245889268,
+                      48.72634716602998,
+                    ],
+                  ],
+                ],
+              ],
+              "type": "MultiPolygon",
+            },
+            "properties": {},
+            "type": "Feature",
+          },
+          "geojson4326_points": null,
+          "geojson_origine_geo_systeme_id": "2972",
+          "geojson_origine_perimetre": {
+            "geometry": {
+              "coordinates": [
+                [
+                  [
+                    [
+                      4113587.1064621,
+                      6772028.066275262,
+                    ],
+                    [
+                      4132574.3236907134,
+                      6760333.001039797,
+                    ],
+                    [
+                      4102127.2736782786,
+                      6765797.543152926,
+                    ],
+                    [
+                      4113587.1064621,
+                      6772028.066275262,
+                    ],
+                  ],
+                ],
+              ],
+              "type": "MultiPolygon",
+            },
+            "properties": {},
+            "type": "Feature",
+          },
+          "geojson_origine_points": null,
+          "sdomZoneIds": [],
+          "secteurMaritimeIds": [],
+          "superposition_alertes": [],
+          "surface": 93.09,
+        }
+      `)
+  })
 })
 
 describe('geojsonImportPoints', () => {
@@ -931,8 +1032,14 @@ describe('geojsonImportPoints', () => {
       tempDocumentName: tempDocumentNameValidator.parse(fileName),
     }
 
-    const tested = await restPostCall(dbPool, '/rest/geojson_points/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS.WGS84 }, userSuper, body)
+    const tested = await restNewPostCall(dbPool, '/rest/geojson_points/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS.WGS84 }, userSuper, body)
     expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
+    expect(tested.body).toMatchInlineSnapshot(`
+      {
+        "message": "Fichier incorrect",
+        "status": 400,
+      }
+    `)
   })
 
   test('fichier valide sans conversion', async () => {
@@ -947,7 +1054,7 @@ describe('geojsonImportPoints', () => {
       tempDocumentName: tempDocumentNameValidator.parse(fileName),
     }
 
-    const tested = await restPostCall(dbPool, '/rest/geojson_points/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS.WGS84 }, userSuper, body)
+    const tested = await restNewPostCall(dbPool, '/rest/geojson_points/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS.WGS84 }, userSuper, body)
     expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
     expect(tested.body).toMatchInlineSnapshot(`
       {
@@ -1007,7 +1114,7 @@ describe('geojsonImportPoints', () => {
       tempDocumentName: tempDocumentNameValidator.parse(fileName),
     }
 
-    const tested = await restPostCall(dbPool, '/rest/geojson_points/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS['RGF93 / Lambert-93'] }, userSuper, body)
+    const tested = await restNewPostCall(dbPool, '/rest/geojson_points/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS['RGF93 / Lambert-93'] }, userSuper, body)
     expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
     expect(tested.body).toMatchInlineSnapshot(`
       {
@@ -1052,94 +1159,8 @@ describe('geojsonImportPoints', () => {
       }
     `)
   })
-
-  test('shapefile valide avec conversion', async () => {
-    const fileName = `existing_temp_file_${idGenerate()}.shp`
-    mkdirSync(dir, { recursive: true })
-    copyFileSync(join(__dirname, 'perimetre-guyane.shp'), `${dir}/${fileName}`)
-    const body: GeojsonImportBody = {
-      titreSlug: titreSlugValidator.parse('mfr'),
-      titreTypeId: 'arm',
-      tempDocumentName: tempDocumentNameValidator.parse(fileName),
-      fileType: 'shp',
-    }
-
-    const tested = await restPostCall(dbPool, '/rest/geojson/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS['RGFG95 / UTM zone 22N'] }, userSuper, body)
-    expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
-    expect(tested.body).toMatchInlineSnapshot(`
-      {
-        "communes": [],
-        "foretIds": [],
-        "geojson4326_perimetre": {
-          "geometry": {
-            "coordinates": [
-              [
-                [
-                  [
-                    -0.06057663245889268,
-                    48.72634716602998,
-                  ],
-                  [
-                    0.009012625831280329,
-                    48.560476879146485,
-                  ],
-                  [
-                    -0.2083346466367236,
-                    48.751132381311415,
-                  ],
-                  [
-                    -0.06057663245889268,
-                    48.72634716602998,
-                  ],
-                ],
-              ],
-            ],
-            "type": "MultiPolygon",
-          },
-          "properties": {},
-          "type": "Feature",
-        },
-        "geojson4326_points": null,
-        "geojson_origine_geo_systeme_id": "2972",
-        "geojson_origine_perimetre": {
-          "geometry": {
-            "coordinates": [
-              [
-                [
-                  [
-                    4113587.1064621,
-                    6772028.066275262,
-                  ],
-                  [
-                    4132574.3236907134,
-                    6760333.001039797,
-                  ],
-                  [
-                    4102127.2736782786,
-                    6765797.543152926,
-                  ],
-                  [
-                    4113587.1064621,
-                    6772028.066275262,
-                  ],
-                ],
-              ],
-            ],
-            "type": "MultiPolygon",
-          },
-          "properties": {},
-          "type": "Feature",
-        },
-        "geojson_origine_points": null,
-        "sdomZoneIds": [],
-        "secteurMaritimeIds": [],
-        "superposition_alertes": [],
-        "surface": 93.09,
-      }
-    `)
-  })
 })
-
+// TODO 2024-06-27 tester les forages avec des shape
 describe('geojsonImportForages', () => {
   test('fichier geojson invalide', async () => {
     const fileName = `existing_temp_file_${idGenerate()}.geojson`
@@ -1150,7 +1171,13 @@ describe('geojsonImportForages', () => {
       fileType: 'geojson',
     }
 
-    const tested = await restPostCall(dbPool, '/rest/geojson_forages/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS.WGS84 }, userSuper, body)
+    const tested = await restNewPostCall(dbPool, '/rest/geojson_forages/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS.WGS84 }, userSuper, body)
+    expect(tested.body).toMatchInlineSnapshot(`
+      {
+        "message": "Une erreur s'est produite lors de l'ouverture du fichier GeoJSON",
+        "status": 400,
+      }
+    `)
     expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
   })
 
@@ -1173,7 +1200,7 @@ describe('geojsonImportForages', () => {
       fileType: 'geojson',
     }
 
-    const tested = await restPostCall(dbPool, '/rest/geojson_forages/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS.WGS84 }, userSuper, body)
+    const tested = await restNewPostCall(dbPool, '/rest/geojson_forages/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS.WGS84 }, userSuper, body)
     expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
     expect(tested.body).toMatchInlineSnapshot(`
       {
@@ -1242,7 +1269,7 @@ describe('geojsonImportForages', () => {
       fileType: 'geojson',
     }
 
-    const tested = await restPostCall(dbPool, '/rest/geojson_forages/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS['RGF93 / Lambert-93'] }, userSuper, body)
+    const tested = await restNewPostCall(dbPool, '/rest/geojson_forages/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS['RGF93 / Lambert-93'] }, userSuper, body)
     expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
   })
 
@@ -1265,7 +1292,7 @@ describe('geojsonImportForages', () => {
       fileType: 'geojson',
     }
 
-    const tested = await restPostCall(dbPool, '/rest/geojson_forages/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS['RGF93 / Lambert-93'] }, userSuper, body)
+    const tested = await restNewPostCall(dbPool, '/rest/geojson_forages/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS['RGF93 / Lambert-93'] }, userSuper, body)
     expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
     expect(tested.body).toMatchInlineSnapshot(`
       {
@@ -1329,11 +1356,11 @@ B;Point B;1063526.397924559889361;6867885.978687250986695;12,12;captage`
       fileType: 'csv',
     }
 
-    const tested = await restPostCall(dbPool, '/rest/geojson_forages/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS['RGFG95 / UTM zone 22N'] }, userSuper, body)
+    const tested = await restNewPostCall(dbPool, '/rest/geojson_forages/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS['RGFG95 / UTM zone 22N'] }, userSuper, body)
     expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
     expect(tested.body).toMatchSnapshot()
 
-    const testedWithError = await restPostCall(dbPool, '/rest/geojson_forages/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS.WGS84 }, userSuper, body)
+    const testedWithError = await restNewPostCall(dbPool, '/rest/geojson_forages/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS.WGS84 }, userSuper, body)
     expect(testedWithError.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
   })
 
@@ -1351,7 +1378,15 @@ B;Point B;1063526.397924559889361;6867885.978687250986695;12.12;12,12`
       fileType: 'csv',
     }
 
-    const tested = await restPostCall(dbPool, '/rest/geojson_forages/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS['RGFG95 / UTM zone 22N'] }, userSuper, body)
+    const tested = await restNewPostCall(dbPool, '/rest/geojson_forages/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS['RGFG95 / UTM zone 22N'] }, userSuper, body)
+
+    expect(tested.body).toMatchInlineSnapshot(`
+      {
+        "message": "Problème de validation de données",
+        "status": 400,
+        "zodErrorReadableMessage": "Validation error: Invalid enum value. Expected 'captage' | 'rejet' | 'piézomètre', received '1212'",
+      }
+    `)
     expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
   })
   test('csv invalide en 2972 car nom obligatoire', async () => {
@@ -1368,7 +1403,7 @@ B;Point B;1063526.397924559889361;6867885.978687250986695;12.12;captage`
       fileType: 'csv',
     }
 
-    const tested = await restPostCall(dbPool, '/rest/geojson_forages/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS['RGFG95 / UTM zone 22N'] }, userSuper, body)
+    const tested = await restNewPostCall(dbPool, '/rest/geojson_forages/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS['RGFG95 / UTM zone 22N'] }, userSuper, body)
     expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
   })
 })

@@ -6,11 +6,12 @@ import { ApiClient } from '@/api/api-client'
 import { FeatureCollectionPoints } from 'camino-common/src/perimetre'
 import { Alert } from '../_ui/alert'
 import { GeoSystemeTypeahead } from '../_common/geosysteme-typeahead'
+import { CaminoError } from 'camino-common/src/zod-tools'
 
 interface Props {
   apiClient: Pick<ApiClient, 'uploadTempDocument' | 'geojsonPointsImport'>
   geoSystemeId: GeoSystemeId
-  result: (value: { geojson4326: FeatureCollectionPoints; origin: FeatureCollectionPoints } | Error) => void
+  result: (value: { geojson4326: FeatureCollectionPoints; origin: FeatureCollectionPoints } | CaminoError<string>) => void
   close: () => void
 }
 

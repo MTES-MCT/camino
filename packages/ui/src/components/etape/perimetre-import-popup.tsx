@@ -10,16 +10,16 @@ import { GeoSystemeTypeahead } from '../_common/geosysteme-typeahead'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { Alert } from '../_ui/alert'
 import { DsfrInputRadio } from '../_ui/dsfr-input-radio'
+import { CaminoError } from 'camino-common/src/zod-tools'
+import { PerimetreUploadType } from 'camino-common/src/static/documentsTypes'
 
 interface Props {
   apiClient: Pick<ApiClient, 'uploadTempDocument' | 'geojsonImport'>
   titreTypeId: TitreTypeId
   titreSlug: TitreSlug
-  result: (param: GeojsonInformations | Error) => void
+  result: (param: GeojsonInformations | CaminoError<string>) => void
   close: () => void
 }
-
-type FileType = 'geojson' | 'shp' | 'csv'
 
 const defaultGeoSystemeId = GeoSystemes[4326].id
 export const PerimetreImportPopup = defineComponent<Props>(props => {
@@ -39,9 +39,9 @@ export const PerimetreImportPopup = defineComponent<Props>(props => {
     }
   }
 
-  const fileType = ref<FileType | null>(null)
+  const fileType = ref<PerimetreUploadType | null>(null)
 
-  const fileTypeSelected = (value: FileType) => {
+  const fileTypeSelected = (value: PerimetreUploadType) => {
     fileType.value = value
   }
 

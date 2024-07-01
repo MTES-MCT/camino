@@ -112,7 +112,6 @@ const getEtapesTypesEtapesStatutsAction = action('getEtapesTypesEtapesStatuts')
 const getEtapeHeritagePotentielAction = action('getEtapeHeritagePotentiel')
 const geojsonImportAction = action('geojsonImport')
 const uploadTempDocumentAction = action('uploadTempDocumentAction')
-const getGeojsonByGeoSystemeIdAction = action('getGeojsonByGeoSystemeId')
 const getEtapeDocumentsByEtapeIdAction = action('getEtapeDocumentsByEtapeId')
 const getEtapeEntrepriseDocumentsAction = action('getEtapeEntrepriseDocuments')
 const creerEntrepriseDocumentAction = action('creerEntrepriseDocument')
@@ -208,11 +207,6 @@ const etapeEditFormApiClient: Props['apiClient'] = {
     uploadTempDocumentAction(document)
 
     return Promise.resolve(tempDocumentNameValidator.parse('name'))
-  },
-  getGeojsonByGeoSystemeId(geojson, geoSystemeId) {
-    getGeojsonByGeoSystemeIdAction(geojson, geoSystemeId)
-
-    return Promise.resolve(geojson)
   },
   getEtapeDocumentsByEtapeId(etapeId: EtapeId) {
     getEtapeDocumentsByEtapeIdAction(etapeId)

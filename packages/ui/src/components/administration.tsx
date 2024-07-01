@@ -254,13 +254,13 @@ export const PureAdministration = defineComponent<Props>(props => {
                 user={props.user}
                 administrationId={props.administrationId}
                 activitesTypesEmails={item}
-                emailUpdate={(administrationId, administrationActiviteTypeEmail) => {
-                  props.apiClient.administrationActiviteTypeEmailUpdate(administrationId, administrationActiviteTypeEmail)
-                  loadActivitesTypesEmails()
+                emailUpdate={async (administrationId, administrationActiviteTypeEmail) => {
+                  await props.apiClient.administrationActiviteTypeEmailUpdate(administrationId, administrationActiviteTypeEmail)
+                  await loadActivitesTypesEmails()
                 }}
-                emailDelete={(administrationId, administrationActiviteTypeEmail) => {
-                  props.apiClient.administrationActiviteTypeEmailDelete(administrationId, administrationActiviteTypeEmail)
-                  loadActivitesTypesEmails()
+                emailDelete={async (administrationId, administrationActiviteTypeEmail) => {
+                  await props.apiClient.administrationActiviteTypeEmailDelete(administrationId, administrationActiviteTypeEmail)
+                  await loadActivitesTypesEmails()
                 }}
               />
             </>

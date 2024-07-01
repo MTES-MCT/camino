@@ -59,7 +59,7 @@ type Props = {
     nom: string
     titreStatutId: TitreStatutId
   }
-  apiClient: Pick<ApiClient, 'deleteEtape' | 'deposeEtape' | 'getGeojsonByGeoSystemeId'>
+  apiClient: Pick<ApiClient, 'deleteEtape' | 'deposeEtape'>
   router: Pick<CaminoRouter, 'push'>
   user: User
   entreprises: Entreprise[]
@@ -362,7 +362,6 @@ export const DemarcheEtape = defineComponent<Props>(props => {
           initTab={props.initTab}
           titreSlug={props.titre.slug}
           titreTypeId={props.titre.typeId}
-          apiClient={props.apiClient}
           calculateNeighbours={false}
           perimetre={{
             geojson4326_perimetre: props.etape.fondamentale.perimetre.geojson4326_perimetre,

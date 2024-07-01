@@ -1,6 +1,6 @@
 /* eslint-disable no-restricted-syntax */
 import { Pool } from 'pg'
-import { Redefine, dbQueryAndValidate } from '../../pg-database.js'
+import { DbQueryAccessError, Redefine, dbQueryAndValidate, newDbQueryAndValidate } from '../../pg-database.js'
 import { sql } from '@pgtyped/runtime'
 import { AdministrationId, administrationIdValidator } from 'camino-common/src/static/administrations.js'
 import { AdministrationActiviteTypeEmail, administrationActiviteTypeEmailValidator } from 'camino-common/src/administrations.js'
@@ -15,6 +15,10 @@ import { AdminUserNotNull, adminUserNotNullValidator } from 'camino-common/src/r
 import { ActivitesTypesId } from 'camino-common/src/static/activitesTypes.js'
 import { NonEmptyArray } from 'camino-common/src/typescript-tools.js'
 import { z } from 'zod'
+import TE from 'fp-ts/lib/TaskEither.js'
+import { CaminoError } from 'camino-common/src/zod-tools.js'
+import { ZodUnparseable } from '../../tools/fp-tools.js'
+import { pipe } from 'fp-ts/lib/function.js'
 
 export const getUtilisateursByAdministrationId = async (pool: Pool, administrationId: AdministrationId): Promise<AdminUserNotNull[]> => {
   const result = await dbQueryAndValidate(getUtilisateursByAdministrationIdDb, { administrationId }, pool, getUtilisateursByAdministrationIdDbValidator)
@@ -55,8 +59,15 @@ where
     administration_id = $ administrationId !
 `
 
-export const deleteAdministrationActiviteTypeEmail = async (pool: Pool, administrationId: AdministrationId, administrationActiviteTypeEmail: AdministrationActiviteTypeEmail): Promise<void> => {
-  await dbQueryAndValidate(deleteAdministrationActiviteTypeEmailDb, { administrationId, ...administrationActiviteTypeEmail }, pool, z.void())
+export const deleteAdministrationActiviteTypeEmail = (
+  pool: Pool,
+  administrationId: AdministrationId,
+  administrationActiviteTypeEmail: AdministrationActiviteTypeEmail
+): TE.TaskEither<CaminoError<ZodUnparseable | DbQueryAccessError>, boolean> => {
+  return pipe(
+    newDbQueryAndValidate(deleteAdministrationActiviteTypeEmailDb, { administrationId, ...administrationActiviteTypeEmail }, pool, z.void()),
+    TE.map(() => true)
+  )
 }
 
 const deleteAdministrationActiviteTypeEmailDb = sql<
@@ -68,8 +79,15 @@ where administration_id = $ administrationId !
     and email = $ email !
 `
 
-export const insertAdministrationActiviteTypeEmail = async (pool: Pool, administrationId: AdministrationId, administrationActiviteTypeEmail: AdministrationActiviteTypeEmail): Promise<void> => {
-  await dbQueryAndValidate(insertAdministrationActiviteTypeEmailDb, { administrationId, ...administrationActiviteTypeEmail }, pool, z.void())
+export const insertAdministrationActiviteTypeEmail = (
+  pool: Pool,
+  administrationId: AdministrationId,
+  administrationActiviteTypeEmail: AdministrationActiviteTypeEmail
+): TE.TaskEither<CaminoError<ZodUnparseable | DbQueryAccessError>, boolean> => {
+  return pipe(
+    newDbQueryAndValidate(insertAdministrationActiviteTypeEmailDb, { administrationId, ...administrationActiviteTypeEmail }, pool, z.void()),
+    TE.map(() => true)
+  )
 }
 
 const insertAdministrationActiviteTypeEmailDb = sql<

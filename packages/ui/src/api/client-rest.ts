@@ -10,8 +10,10 @@ import {
   GetRestRoutes,
   PostRestRoutes,
   PutRestRoutes,
+  NewPostRestRoutes,
 } from 'camino-common/src/rest'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
+import { CaminoError } from 'camino-common/src/zod-tools'
 import { DeepReadonly } from 'vue'
 import { z } from 'zod'
 
@@ -87,6 +89,30 @@ export const postWithJson = async <T extends PostRestRoutes>(
   params: CaminoRestParams<T>,
   body: z.infer<(typeof CaminoRestRoutes)[T]['post']['input']>
 ): Promise<z.infer<(typeof CaminoRestRoutes)[T]['post']['output']>> => callFetch(path, params, 'post', {}, body)
+
+export const newPostWithJson = async <T extends NewPostRestRoutes>(
+  path: T,
+  params: CaminoRestParams<T>,
+  body: z.infer<(typeof CaminoRestRoutes)[T]['newPost']['input']>
+): Promise<CaminoError<string> | z.infer<(typeof CaminoRestRoutes)[T]['newPost']['output']>> => {
+  const url = getUiRestRoute(path, params, {})
+
+  const defaultOptions = {
+    method: 'post',
+    headers: { 'Content-Type': 'application/json' },
+  }
+
+  const fetched = await fetch(url, { ...defaultOptions, body: JSON.stringify(body) })
+  if (fetched.ok) {
+    const bodyResponse = await fetched.json()
+    return bodyResponse
+  }
+  if (fetched.status === HTTP_STATUS.HTTP_STATUS_UNAUTHORIZED) {
+    window.location.replace('/oauth2/sign_in?rd=' + encodeURIComponent(window.location.href))
+  }
+  const bodyErrorResponse = await fetched.json()
+  return bodyErrorResponse
+}
 
 export const putWithJson = async <T extends PutRestRoutes>(
   path: T,

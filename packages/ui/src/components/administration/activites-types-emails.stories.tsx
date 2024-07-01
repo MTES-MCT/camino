@@ -23,8 +23,14 @@ const activitesTypesEmails = [
   },
 ]
 
-const emailUpdate = action('emailUpdate')
-const emailDelete = action('emailDelete')
+const emailUpdate = async () => {
+  action('emailUpdate')
+  return Promise.resolve()
+}
+const emailDelete = async () => {
+  action('emailDelete')
+  return Promise.resolve()
+}
 export const EmailLectureVisible: StoryFn = () => (
   <ActivitesTypesEmails administrationId="aut-97300-01" user={null} activitesTypesEmails={activitesTypesEmails} emailUpdate={emailUpdate} emailDelete={emailDelete} />
 )

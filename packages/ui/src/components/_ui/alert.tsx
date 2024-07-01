@@ -1,3 +1,4 @@
+import { CaminoError } from 'camino-common/src/zod-tools'
 import type { FunctionalComponent, HTMLAttributes } from 'vue'
 import type { JSX } from 'vue/jsx-runtime'
 type SmallProps = {
@@ -27,6 +28,14 @@ export const Alert: FunctionalComponent<Props> = props => {
       </div>
     )
   }
+}
+
+export const CaminoApiAlert: FunctionalComponent<{ caminoApiError: CaminoError<string>; class?: HTMLAttributes['class'] }> = props => {
+  const small = !('zodErrorReadableMessage' in props.caminoApiError)
+  if (small) {
+    return <Alert small={small} type="error" title={props.caminoApiError.message} />
+  }
+  return <Alert type="error" title={props.caminoApiError.message} description={props.caminoApiError.zodErrorReadableMessage} />
 }
 
 export const PageIntrouvableAlert: FunctionalComponent = () => {

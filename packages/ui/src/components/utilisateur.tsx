@@ -1,6 +1,6 @@
 import { computed, defineComponent, inject, onMounted, ref, watch } from 'vue'
 import { Card } from './_ui/card'
-import { User } from 'camino-common/src/roles'
+import { User, UtilisateurId, utilisateurIdValidator } from 'camino-common/src/roles'
 import { QGisToken } from './utilisateur/qgis-token'
 import { AsyncData } from '@/api/client-rest'
 import { useRoute, useRouter } from 'vue-router'
@@ -16,6 +16,7 @@ import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { entreprisesKey, userKey } from '@/moi'
 import { DsfrInputCheckbox } from './_ui/dsfr-input-checkbox'
 import { DsfrButtonIcon } from './_ui/dsfr-button'
+import { Alert } from './_ui/alert'
 
 export const Utilisateur = defineComponent({
   setup() {
@@ -25,7 +26,7 @@ export const Utilisateur = defineComponent({
     const user = inject(userKey)
     const entreprises = inject(entreprisesKey, ref([]))
 
-    const deleteUtilisateur = async (userId: string) => {
+    const deleteUtilisateur = async (userId: UtilisateurId) => {
       const isMe: boolean = (user && userId === user.id) ?? false
       if (isMe) {
         // TODO 2023-10-23 type window.location pour s'appuyer sur nos routes rest et pas sur n'importe quoi
@@ -41,28 +42,37 @@ export const Utilisateur = defineComponent({
     const passwordUpdate = () => {
       window.location.replace('/apiUrl/changerMotDePasse')
     }
-    const utilisateurId = ref<string>(Array.isArray(route.params.id) ? route.params.id[0] : route.params.id)
-    watch(
-      () => route.params.id,
-      newId => {
-        utilisateurId.value = Array.isArray(newId) ? newId[0] : newId
+    const utilisateurId = computed<UtilisateurId | null>(() => {
+      const idOrSlug = route.params.id
+      const validated = utilisateurIdValidator.safeParse(idOrSlug)
+
+      if (validated.success) {
+        return validated.data
       }
-    )
+
+      return null
+    })
 
     return () => (
-      <PureUtilisateur
-        passwordUpdate={passwordUpdate}
-        apiClient={{ ...utilisateurApiClient, updateUtilisateur, removeUtilisateur: deleteUtilisateur }}
-        utilisateurId={utilisateurId.value}
-        user={user}
-        entreprises={entreprises.value}
-      />
+      <>
+        {utilisateurId.value ? (
+          <PureUtilisateur
+            passwordUpdate={passwordUpdate}
+            apiClient={{ ...utilisateurApiClient, updateUtilisateur, removeUtilisateur: deleteUtilisateur }}
+            utilisateurId={utilisateurId.value}
+            user={user}
+            entreprises={entreprises.value}
+          />
+        ) : (
+          <Alert title="Utilisateur inconnu" type="error" small={true} />
+        )}
+      </>
     )
   },
 })
 export interface Props {
   user: User
-  utilisateurId: string
+  utilisateurId: UtilisateurId
   apiClient: Pick<UtilisateurApiClient, 'getQGISToken' | 'getUtilisateur' | 'removeUtilisateur' | 'getUtilisateurNewsletter' | 'updateUtilisateur' | 'updateUtilisateurNewsletter'>
   entreprises: Entreprise[]
   passwordUpdate: () => void
@@ -121,7 +131,7 @@ export const PureUtilisateur = defineComponent<Props>(props => {
     await get()
   }
 
-  const updateSubscription = async (utilisateurId: string, newsletterChecked: boolean) => {
+  const updateSubscription = async (utilisateurId: UtilisateurId, newsletterChecked: boolean) => {
     subscription.value = { status: 'LOADING' }
     try {
       await props.apiClient.updateUtilisateurNewsletter(utilisateurId, newsletterChecked)

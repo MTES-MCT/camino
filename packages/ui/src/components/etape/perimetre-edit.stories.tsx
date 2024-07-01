@@ -19,7 +19,6 @@ export default meta
 
 const geojsonImportAction = action('geojsonImport')
 const uploadTempDocumentAction = action('uploadTempDocumentAction')
-const getGeojsonByGeoSystemeIdAction = action('getGeojsonByGeoSystemeId')
 const onEtapeChangeAction = action('onEtapeChange')
 const onPointsChangeAction = action('onPointsChange')
 const onForagesChangeAction = action('onForagesChange')
@@ -44,7 +43,7 @@ const perimetre: FeatureMultiPolygon = {
   },
 }
 
-const apiClient: Pick<ApiClient, 'uploadTempDocument' | 'geojsonImport' | 'getGeojsonByGeoSystemeId' | 'geojsonPointsImport' | 'geojsonForagesImport'> = {
+const apiClient: Pick<ApiClient, 'uploadTempDocument' | 'geojsonImport' | 'geojsonPointsImport' | 'geojsonForagesImport'> = {
   geojsonImport(body, geoSystemeId) {
     geojsonImportAction(body, geoSystemeId)
 
@@ -64,11 +63,6 @@ const apiClient: Pick<ApiClient, 'uploadTempDocument' | 'geojsonImport' | 'getGe
     uploadTempDocumentAction(document)
 
     return Promise.resolve(tempDocumentNameValidator.parse('name'))
-  },
-  getGeojsonByGeoSystemeId(geojson, geoSystemeId) {
-    getGeojsonByGeoSystemeIdAction(geojson, geoSystemeId)
-
-    return Promise.resolve(geojson)
   },
 }
 

@@ -21,7 +21,7 @@ import Titres from '../../database/models/titres.js'
 import { CustomResponse } from './express-type.js'
 import { SubstanceFiscale, substancesFiscalesBySubstanceLegale } from 'camino-common/src/static/substancesFiscales.js'
 import { Departements, toDepartementId } from 'camino-common/src/static/departement.js'
-import { isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
+import { DeepReadonly, isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
 import { Regions } from 'camino-common/src/static/region.js'
 import { anneePrecedente, caminoAnneeToNumber, isAnnee } from 'camino-common/src/date.js'
 import {
@@ -148,7 +148,7 @@ export const bodyBuilder = (
             const surfaceTotale = titre.communes.reduce((value, commune) => value + (commune.surface ?? 0), 0)
 
             let communePrincipale: ICommune | null = null
-            const communes: ICommune[] = titre.communes
+            const communes: DeepReadonly<ICommune[]> = titre.communes
             for (const commune of communes) {
               if (communePrincipale === null) {
                 communePrincipale = commune

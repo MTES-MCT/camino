@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/ban-types */
 
-import { Index } from '../types.js'
+import { CaminoApiError, Index } from '../types.js'
 import type { Pool } from 'pg'
 
+import TE from 'fp-ts/lib/TaskEither.js'
 import express from 'express'
 import { join } from 'path'
 import { inspect } from 'node:util'
@@ -36,10 +37,11 @@ import {
   DownloadRestRoutes,
   CaminoRestRoute,
   NewDownloadRestRoutes,
+  NewPostRestRoutes,
 } from 'camino-common/src/rest.js'
 import { CaminoConfig, caminoConfigValidator } from 'camino-common/src/static/config.js'
 import { CaminoRequest, CustomResponse } from '../api/rest/express-type.js'
-import { User } from 'camino-common/src/roles.js'
+import { User, UserNotNull } from 'camino-common/src/roles.js'
 import {
   createEtape,
   deleteEtape,
@@ -57,13 +59,15 @@ import { SendFileOptions } from 'express-serve-static-core'
 import { activiteDocumentDownload, getActivite, updateActivite, deleteActivite } from '../api/rest/activites.js'
 import { DeepReadonly, isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
 import { getDemarcheByIdOrSlug } from '../api/rest/demarches.js'
-import { geojsonImport, geojsonImportPoints, convertGeojsonPointsToGeoSystemeId, getPerimetreInfos, geojsonImportForages } from '../api/rest/perimetre.js'
+import { geojsonImport, geojsonImportPoints, getPerimetreInfos, geojsonImportForages } from '../api/rest/perimetre.js'
 import { getDataGouvStats } from '../api/rest/statistiques/datagouv.js'
 import { addAdministrationActiviteTypeEmails, deleteAdministrationActiviteTypeEmails, getAdministrationActiviteTypeEmails, getAdministrationUtilisateurs } from '../api/rest/administrations.js'
 import { titreDemandeCreer } from '../api/rest/titre-demande.js'
 import { config } from '../config/index.js'
 import { addLog } from '../api/rest/logs.queries.js'
 import { HTTP_STATUS } from 'camino-common/src/http.js'
+import { pipe } from 'fp-ts/lib/function.js'
+import { zodParseTaskEither } from '../tools/fp-tools.js'
 
 interface IRestResolverResult {
   nom: string
@@ -84,18 +88,26 @@ type IRestResolver = (
   user: User
 ) => Promise<IRestResolverResult | null>
 
-type RestGetCall<Route extends GetRestRoutes> = (pool: Pool) => (req: CaminoRequest, res: CustomResponse<DeepReadonly<z.infer<(typeof CaminoRestRoutes)[Route]['get']['output']>>>) => Promise<void>
-type RestPostCall<Route extends PostRestRoutes> = (pool: Pool) => (req: CaminoRequest, res: CustomResponse<z.infer<(typeof CaminoRestRoutes)[Route]['post']['output']>>) => Promise<void>
-type RestPutCall<Route extends PutRestRoutes> = (pool: Pool) => (req: CaminoRequest, res: CustomResponse<z.infer<(typeof CaminoRestRoutes)[Route]['put']['output']>>) => Promise<void>
+type CaminoRestRoutesType = typeof CaminoRestRoutes
+type RestGetCall<Route extends GetRestRoutes> = (pool: Pool) => (req: CaminoRequest, res: CustomResponse<DeepReadonly<z.infer<CaminoRestRoutesType[Route]['get']['output']>>>) => Promise<void>
+type RestNewPostCall<Route extends NewPostRestRoutes> = (
+  pool: Pool,
+  user: DeepReadonly<UserNotNull>,
+  body: DeepReadonly<z.infer<CaminoRestRoutesType[Route]['newPost']['input']>>,
+  params: DeepReadonly<z.infer<CaminoRestRoutesType[Route]['params']>>
+) => TE.TaskEither<CaminoApiError<string>, DeepReadonly<z.infer<CaminoRestRoutesType[Route]['newPost']['output']>>>
+type RestPostCall<Route extends PostRestRoutes> = (pool: Pool) => (req: CaminoRequest, res: CustomResponse<z.infer<CaminoRestRoutesType[Route]['post']['output']>>) => Promise<void>
+type RestPutCall<Route extends PutRestRoutes> = (pool: Pool) => (req: CaminoRequest, res: CustomResponse<z.infer<CaminoRestRoutesType[Route]['put']['output']>>) => Promise<void>
 type RestDeleteCall = (pool: Pool) => (req: CaminoRequest, res: CustomResponse<void | Error>) => Promise<void>
 type RestDownloadCall = (pool: Pool) => IRestResolver
 
-type Transform<Route> = (Route extends GetRestRoutes ? { get: RestGetCall<Route> } : {}) &
-  (Route extends PostRestRoutes ? { post: RestPostCall<Route> } : {}) &
-  (Route extends PutRestRoutes ? { put: RestPutCall<Route> } : {}) &
-  (Route extends DeleteRestRoutes ? { delete: RestDeleteCall } : {}) &
-  (Route extends NewDownloadRestRoutes ? { newDownload: NewDownload } : {}) &
-  (Route extends DownloadRestRoutes ? { download: RestDownloadCall } : {})
+type Transform<Route> = (Route extends GetRestRoutes ? { getCall: RestGetCall<Route> } : {}) &
+  (Route extends PostRestRoutes ? { postCall: RestPostCall<Route> } : {}) &
+  (Route extends NewPostRestRoutes ? { newPostCall: RestNewPostCall<Route> } : {}) &
+  (Route extends PutRestRoutes ? { putCall: RestPutCall<Route> } : {}) &
+  (Route extends DeleteRestRoutes ? { deleteCall: RestDeleteCall } : {}) &
+  (Route extends NewDownloadRestRoutes ? { newDownloadCall: NewDownload } : {}) &
+  (Route extends DownloadRestRoutes ? { downloadCall: RestDownloadCall } : {})
 
 const getConfig = (_pool: Pool) => async (_req: CaminoRequest, res: CustomResponse<CaminoConfig>) => {
   const caminoConfig: CaminoConfig = {
@@ -107,71 +119,76 @@ const getConfig = (_pool: Pool) => async (_req: CaminoRequest, res: CustomRespon
   res.json(caminoConfigValidator.parse(caminoConfig))
 }
 
-const restRouteImplementations: Readonly<{ [key in CaminoRestRoute]: Transform<key> }> = {
+const restRouteImplementations: Readonly<{ [key in CaminoRestRoute]: Transform<key> & CaminoRestRoutesType[key] }> = {
   // NE PAS TOUCHER A CES ROUTES, ELLES SONT UTILISÉES HORS UI
-  '/download/fichiers/:documentId': { newDownload: etapeDocumentDownload },
-  '/download/entrepriseDocuments/:documentId': { newDownload: entrepriseDocumentDownload },
-  '/download/activiteDocuments/:documentId': { newDownload: activiteDocumentDownload },
-  '/download/avisDocument/:etapeAvisId': { newDownload: avisDocumentDownload },
-  '/fichiers/:documentId': { newDownload: etapeDocumentDownload },
-  '/titres/:id': { download: titre },
-  '/titres': { download: titres },
-  '/titres_qgis': { download: titres },
-  '/demarches': { download: demarches },
-  '/travaux': { download: travaux },
-  '/activites': { download: activites },
-  '/utilisateurs': { download: utilisateurs },
-  '/etape/zip/:etapeId': { download: etapeTelecharger },
-  '/entreprises': { download: entreprises },
+  '/download/fichiers/:documentId': { newDownloadCall: etapeDocumentDownload, ...CaminoRestRoutes['/download/fichiers/:documentId'] },
+  '/download/entrepriseDocuments/:documentId': { newDownloadCall: entrepriseDocumentDownload, ...CaminoRestRoutes['/download/entrepriseDocuments/:documentId'] },
+  '/download/activiteDocuments/:documentId': { newDownloadCall: activiteDocumentDownload, ...CaminoRestRoutes['/download/activiteDocuments/:documentId'] },
+  '/download/avisDocument/:etapeAvisId': { newDownloadCall: avisDocumentDownload, ...CaminoRestRoutes['/download/avisDocument/:etapeAvisId'] },
+  '/fichiers/:documentId': { newDownloadCall: etapeDocumentDownload, ...CaminoRestRoutes['/fichiers/:documentId'] },
+  '/titres/:id': { downloadCall: titre, ...CaminoRestRoutes['/titres/:id'] },
+  '/titres': { downloadCall: titres, ...CaminoRestRoutes['/titres'] },
+  '/titres_qgis': { downloadCall: titres, ...CaminoRestRoutes['/titres_qgis'] },
+  '/demarches': { downloadCall: demarches, ...CaminoRestRoutes['/demarches'] },
+  '/travaux': { downloadCall: travaux, ...CaminoRestRoutes['/travaux'] },
+  '/activites': { downloadCall: activites, ...CaminoRestRoutes['/activites'] },
+  '/utilisateurs': { downloadCall: utilisateurs, ...CaminoRestRoutes['/utilisateurs'] },
+  '/etape/zip/:etapeId': { downloadCall: etapeTelecharger, ...CaminoRestRoutes['/etape/zip/:etapeId'] },
+  '/entreprises': { downloadCall: entreprises, ...CaminoRestRoutes['/entreprises'] },
   // NE PAS TOUCHER A CES ROUTES, ELLES SONT UTILISÉES HORS UI
 
-  '/moi': { get: moi },
-  '/config': { get: getConfig },
-  '/rest/titres/:id/titreLiaisons': { get: getTitreLiaisons, post: postTitreLiaisons },
-  '/rest/etapesTypes/:demarcheId/:date': { get: getEtapesTypesEtapesStatusWithMainStep },
-  '/rest/titres': { post: titreDemandeCreer },
-  '/rest/titres/:titreId': { delete: removeTitre, post: updateTitre, get: getTitre },
-  '/rest/titres/:titreId/abonne': { post: utilisateurTitreAbonner, get: getUtilisateurTitreAbonner },
-  '/rest/titresONF': { get: titresONF },
-  '/rest/titresAdministrations': { get: titresAdministrations },
-  '/rest/statistiques/minerauxMetauxMetropole': { get: getMinerauxMetauxMetropolesStats }, // UNTESTED YET
-  '/rest/statistiques/guyane': { get: getGuyaneStats },
-  '/rest/statistiques/guyane/:annee': { get: getGuyaneStats },
-  '/rest/statistiques/granulatsMarins': { get: getGranulatsMarinsStats },
-  '/rest/statistiques/granulatsMarins/:annee': { get: getGranulatsMarinsStats },
-  '/rest/statistiques/dgtm': { get: getDGTMStats },
-  '/rest/statistiques/datagouv': { get: getDataGouvStats },
-  '/rest/demarches/:demarcheIdOrSlug': { get: getDemarcheByIdOrSlug },
-  '/rest/utilisateur/generateQgisToken': { post: generateQgisToken },
-  '/rest/utilisateurs/:id/permission': { post: updateUtilisateurPermission },
-  '/rest/utilisateurs/:id/delete': { get: deleteUtilisateur },
-  '/rest/utilisateurs/:id/newsletter': { get: isSubscribedToNewsletter, post: manageNewsletterSubscription }, // UNTESTED YET
-  '/rest/entreprises/:entrepriseId/fiscalite/:annee': { get: fiscalite }, // UNTESTED YET
-  '/rest/entreprises/:entrepriseId': { get: getEntreprise, put: modifierEntreprise },
-  '/rest/entreprises/:entrepriseId/documents': { get: getEntrepriseDocuments, post: postEntrepriseDocument },
-  '/rest/entreprises/:entrepriseId/documents/:entrepriseDocumentId': { delete: deleteEntrepriseDocument },
-  '/rest/entreprises': { post: creerEntreprise, get: getAllEntreprises },
-  '/rest/administrations/:administrationId/utilisateurs': { get: getAdministrationUtilisateurs },
-  '/rest/administrations/:administrationId/activiteTypeEmails': { get: getAdministrationActiviteTypeEmails, post: addAdministrationActiviteTypeEmails },
-  '/rest/administrations/:administrationId/activiteTypeEmails/delete': { post: deleteAdministrationActiviteTypeEmails },
-  '/rest/demarches/:demarcheId/geojson': { get: getPerimetreInfos },
-  '/rest/etapes/:etapeId/geojson': { get: getPerimetreInfos },
-  '/rest/etapes/:etapeIdOrSlug': { delete: deleteEtape, get: getEtape },
-  '/rest/etapes': { post: createEtape, put: updateEtape },
-  '/rest/etapes/:etapeId/depot': { put: deposeEtape },
-  '/rest/etapes/:etapeId/entrepriseDocuments': { get: getEtapeEntrepriseDocuments },
-  '/rest/etapes/:etapeId/etapeDocuments': { get: getEtapeDocuments },
-  '/rest/etapes/:etapeId/etapeAvis': { get: getEtapeAvis },
-  '/rest/activites/:activiteId': { get: getActivite, put: updateActivite, delete: deleteActivite },
-  '/rest/communes': { get: getCommunes },
-  '/rest/geojson/import/:geoSystemeId': { post: geojsonImport },
-  '/rest/geojson_points/import/:geoSystemeId': { post: geojsonImportPoints },
-  '/rest/geojson_forages/import/:geoSystemeId': { post: geojsonImportForages },
-  '/rest/geojson_points/:geoSystemeId': { post: convertGeojsonPointsToGeoSystemeId },
-  '/deconnecter': { get: logout },
-  '/changerMotDePasse': { get: resetPassword },
+  '/moi': { getCall: moi, ...CaminoRestRoutes['/moi'] },
+  '/config': { getCall: getConfig, ...CaminoRestRoutes['/config'] },
+  '/rest/titres/:id/titreLiaisons': { getCall: getTitreLiaisons, postCall: postTitreLiaisons, ...CaminoRestRoutes['/rest/titres/:id/titreLiaisons'] },
+  '/rest/etapesTypes/:demarcheId/:date': { getCall: getEtapesTypesEtapesStatusWithMainStep, ...CaminoRestRoutes['/rest/etapesTypes/:demarcheId/:date'] },
+  '/rest/titres': { postCall: titreDemandeCreer, ...CaminoRestRoutes['/rest/titres'] },
+  '/rest/titres/:titreId': { deleteCall: removeTitre, postCall: updateTitre, getCall: getTitre, ...CaminoRestRoutes['/rest/titres/:titreId'] },
+  '/rest/titres/:titreId/abonne': { postCall: utilisateurTitreAbonner, getCall: getUtilisateurTitreAbonner, ...CaminoRestRoutes['/rest/titres/:titreId/abonne'] },
+  '/rest/titresONF': { getCall: titresONF, ...CaminoRestRoutes['/rest/titresONF'] },
+  '/rest/titresAdministrations': { getCall: titresAdministrations, ...CaminoRestRoutes['/rest/titresAdministrations'] },
+  '/rest/statistiques/minerauxMetauxMetropole': { getCall: getMinerauxMetauxMetropolesStats, ...CaminoRestRoutes['/rest/statistiques/minerauxMetauxMetropole'] }, // UNTESTED YET
+  '/rest/statistiques/guyane': { getCall: getGuyaneStats, ...CaminoRestRoutes['/rest/statistiques/guyane'] },
+  '/rest/statistiques/guyane/:annee': { getCall: getGuyaneStats, ...CaminoRestRoutes['/rest/statistiques/guyane/:annee'] },
+  '/rest/statistiques/granulatsMarins': { getCall: getGranulatsMarinsStats, ...CaminoRestRoutes['/rest/statistiques/granulatsMarins'] },
+  '/rest/statistiques/granulatsMarins/:annee': { getCall: getGranulatsMarinsStats, ...CaminoRestRoutes['/rest/statistiques/granulatsMarins/:annee'] },
+  '/rest/statistiques/dgtm': { getCall: getDGTMStats, ...CaminoRestRoutes['/rest/statistiques/dgtm'] },
+  '/rest/statistiques/datagouv': { getCall: getDataGouvStats, ...CaminoRestRoutes['/rest/statistiques/datagouv'] },
+  '/rest/demarches/:demarcheIdOrSlug': { getCall: getDemarcheByIdOrSlug, ...CaminoRestRoutes['/rest/demarches/:demarcheIdOrSlug'] },
+  '/rest/utilisateur/generateQgisToken': { postCall: generateQgisToken, ...CaminoRestRoutes['/rest/utilisateur/generateQgisToken'] },
+  '/rest/utilisateurs/:id/permission': { postCall: updateUtilisateurPermission, ...CaminoRestRoutes['/rest/utilisateurs/:id/permission'] },
+  '/rest/utilisateurs/:id/delete': { getCall: deleteUtilisateur, ...CaminoRestRoutes['/rest/utilisateurs/:id/delete'] },
+  '/rest/utilisateurs/:id/newsletter': { getCall: isSubscribedToNewsletter, postCall: manageNewsletterSubscription, ...CaminoRestRoutes['/rest/utilisateurs/:id/newsletter'] }, // UNTESTED YET
+  '/rest/entreprises/:entrepriseId/fiscalite/:annee': { getCall: fiscalite, ...CaminoRestRoutes['/rest/entreprises/:entrepriseId/fiscalite/:annee'] }, // UNTESTED YET
+  '/rest/entreprises/:entrepriseId': { getCall: getEntreprise, putCall: modifierEntreprise, ...CaminoRestRoutes['/rest/entreprises/:entrepriseId'] },
+  '/rest/entreprises/:entrepriseId/documents': { getCall: getEntrepriseDocuments, postCall: postEntrepriseDocument, ...CaminoRestRoutes['/rest/entreprises/:entrepriseId/documents'] },
+  '/rest/entreprises/:entrepriseId/documents/:entrepriseDocumentId': { deleteCall: deleteEntrepriseDocument, ...CaminoRestRoutes['/rest/entreprises/:entrepriseId/documents/:entrepriseDocumentId'] },
+  '/rest/entreprises': { postCall: creerEntreprise, getCall: getAllEntreprises, ...CaminoRestRoutes['/rest/entreprises'] },
+  '/rest/administrations/:administrationId/utilisateurs': { getCall: getAdministrationUtilisateurs, ...CaminoRestRoutes['/rest/administrations/:administrationId/utilisateurs'] },
+  '/rest/administrations/:administrationId/activiteTypeEmails': {
+    getCall: getAdministrationActiviteTypeEmails,
+    newPostCall: addAdministrationActiviteTypeEmails,
+    ...CaminoRestRoutes['/rest/administrations/:administrationId/activiteTypeEmails'],
+  },
+  '/rest/administrations/:administrationId/activiteTypeEmails/delete': {
+    newPostCall: deleteAdministrationActiviteTypeEmails,
+    ...CaminoRestRoutes['/rest/administrations/:administrationId/activiteTypeEmails/delete'],
+  },
+  '/rest/demarches/:demarcheId/geojson': { getCall: getPerimetreInfos, ...CaminoRestRoutes['/rest/demarches/:demarcheId/geojson'] },
+  '/rest/etapes/:etapeId/geojson': { getCall: getPerimetreInfos, ...CaminoRestRoutes['/rest/etapes/:etapeId/geojson'] },
+  '/rest/etapes/:etapeIdOrSlug': { deleteCall: deleteEtape, getCall: getEtape, ...CaminoRestRoutes['/rest/etapes/:etapeIdOrSlug'] },
+  '/rest/etapes': { postCall: createEtape, putCall: updateEtape, ...CaminoRestRoutes['/rest/etapes'] },
+  '/rest/etapes/:etapeId/depot': { putCall: deposeEtape, ...CaminoRestRoutes['/rest/etapes/:etapeId/depot'] },
+  '/rest/etapes/:etapeId/entrepriseDocuments': { getCall: getEtapeEntrepriseDocuments, ...CaminoRestRoutes['/rest/etapes/:etapeId/entrepriseDocuments'] },
+  '/rest/etapes/:etapeId/etapeDocuments': { getCall: getEtapeDocuments, ...CaminoRestRoutes['/rest/etapes/:etapeId/etapeDocuments'] },
+  '/rest/etapes/:etapeId/etapeAvis': { getCall: getEtapeAvis, ...CaminoRestRoutes['/rest/etapes/:etapeId/etapeAvis'] },
+  '/rest/activites/:activiteId': { getCall: getActivite, putCall: updateActivite, deleteCall: deleteActivite, ...CaminoRestRoutes['/rest/activites/:activiteId'] },
+  '/rest/communes': { getCall: getCommunes, ...CaminoRestRoutes['/rest/communes'] },
+  '/rest/geojson/import/:geoSystemeId': { newPostCall: geojsonImport, ...CaminoRestRoutes['/rest/geojson/import/:geoSystemeId'] },
+  '/rest/geojson_points/import/:geoSystemeId': { newPostCall: geojsonImportPoints, ...CaminoRestRoutes['/rest/geojson_points/import/:geoSystemeId'] },
+  '/rest/geojson_forages/import/:geoSystemeId': { newPostCall: geojsonImportForages, ...CaminoRestRoutes['/rest/geojson_forages/import/:geoSystemeId'] },
+  '/deconnecter': { getCall: logout, ...CaminoRestRoutes['/deconnecter'] },
+  '/changerMotDePasse': { getCall: resetPassword, ...CaminoRestRoutes['/changerMotDePasse'] },
 } as const
-
 export const restWithPool = (dbPool: Pool) => {
   const rest = express.Router()
 
@@ -179,32 +196,87 @@ export const restWithPool = (dbPool: Pool) => {
     .filter(isCaminoRestRoute)
     .forEach(route => {
       const maRoute = restRouteImplementations[route]
-      if ('get' in maRoute) {
+      if ('getCall' in maRoute) {
         console.info(`GET ${route}`)
-        rest.get(route, restCatcher(maRoute.get(dbPool)))
+        rest.get(route, restCatcher(maRoute.getCall(dbPool)))
       }
-      if ('post' in maRoute) {
+      if ('postCall' in maRoute) {
         console.info(`POST ${route}`)
-        rest.post(route, restCatcherWithMutation('post', maRoute.post(dbPool), dbPool))
+        rest.post(route, restCatcherWithMutation('post', maRoute.postCall(dbPool), dbPool))
       }
-      if ('put' in maRoute) {
+
+      if ('newPostCall' in maRoute) {
+        console.info(`POST ${route}`)
+        rest.post(route, async (req: CaminoRequest, res: express.Response, _next: express.NextFunction) => {
+          try {
+            const call = pipe(
+              TE.Do,
+              TE.bindW('user', () => {
+                if (isNotNullNorUndefined(req.auth)) {
+                  return TE.right(req.auth as UserNotNull)
+                } else {
+                  return TE.left({ message: 'Accès interdit', status: HTTP_STATUS.HTTP_STATUS_FORBIDDEN })
+                }
+              }),
+              TE.bindW('body', () => zodParseTaskEither(maRoute.newPost.input, req.body)),
+              TE.bindW('params', () => zodParseTaskEither(maRoute.params, req.params)),
+              TE.mapLeft(caminoError => {
+                if (!('status' in caminoError)) {
+                  return { ...caminoError, status: HTTP_STATUS.HTTP_STATUS_BAD_REQUEST }
+                }
+
+                return caminoError
+              }),
+              // TODO 2024-06-26 ici, si on ne met pas le body et params à any, on se retrouve avec une typescript union hell qui fait tout planter
+              TE.bindW<'result', { body: any; user: UserNotNull; params: any }, CaminoApiError<string>, DeepReadonly<z.infer<(typeof maRoute)['newPost']['output']>>>(
+                'result',
+                ({ user, body, params }) => maRoute.newPostCall(dbPool, user, body, params)
+              ),
+              TE.bindW('parsedResult', ({ result }) =>
+                pipe(
+                  zodParseTaskEither(maRoute.newPost.output, result),
+                  TE.mapLeft(caminoError => ({ ...caminoError, status: HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR }))
+                )
+              ),
+              TE.mapBoth(
+                caminoError => {
+                  console.warn(`problem with route ${route}: ${caminoError.message}`)
+                  res.status(caminoError.status).json(caminoError)
+                },
+                ({ parsedResult, user }) => {
+                  res.json(parsedResult)
+
+                  return addLog(dbPool, user.id, 'post', req.url, req.body)
+                }
+              )
+            )
+
+            await call()
+          } catch (e) {
+            console.error('catching error on newPost route', route, e, req.body)
+            res.status(HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR).json({ message: "une erreur inattendue s'est produite", extra: e })
+          }
+        })
+      }
+
+      if ('putCall' in maRoute) {
         console.info(`PUT ${route}`)
-        rest.put(route, restCatcherWithMutation('put', maRoute.put(dbPool), dbPool))
+        rest.put(route, restCatcherWithMutation('put', maRoute.putCall(dbPool), dbPool))
       }
 
-      if ('delete' in maRoute) {
+      if ('deleteCall' in maRoute) {
         console.info(`delete ${route}`)
-        rest.delete(route, restCatcherWithMutation('delete', maRoute.delete(dbPool), dbPool))
+        rest.delete(route, restCatcherWithMutation('delete', maRoute.deleteCall(dbPool), dbPool))
       }
 
-      if ('download' in maRoute) {
+      if ('downloadCall' in maRoute) {
         console.info(`download ${route}`)
-        rest.get(route, restDownload(maRoute.download(dbPool)))
+        rest.get(route, restDownload(maRoute.downloadCall(dbPool)))
       }
 
-      if ('newDownload' in maRoute) {
+      if ('newDownloadCall' in maRoute) {
         console.info(`newDownload ${route}`)
-        rest.get(route, restNewDownload(dbPool, maRoute.newDownload))
+        rest.get(route, restNewDownload(dbPool, maRoute.newDownloadCall))
       }
     })
 
@@ -239,7 +311,7 @@ const restCatcherWithMutation = (method: string, expressCall: ExpressRoute, pool
       res.sendStatus(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
     } else {
       await expressCall(req, res, next)
-      await addLog(pool, user.id, method, req.url, req.body)
+      await addLog(pool, user.id, method, req.url, req.body)()
     }
   } catch (e) {
     console.error('catching error', e)

@@ -10,7 +10,7 @@ import { getSections } from 'camino-common/src/static/titresTypes_demarchesTypes
 import { EntrepriseDocument, EntrepriseId } from 'camino-common/src/entreprise.js'
 import { ETAPE_IS_NOT_BROUILLON, EtapeAvis, EtapeDocument, GetEtapeDocumentsByEtapeIdAslDocument, GetEtapeDocumentsByEtapeIdDaeDocument } from 'camino-common/src/etape.js'
 import { CommuneId } from 'camino-common/src/static/communes.js'
-import { isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
+import { DeepReadonly, isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
 import { FlattenEtape } from 'camino-common/src/etape-form.js'
 import { flattenContenuToSimpleContenu } from 'camino-common/src/sections.js'
 
@@ -21,7 +21,7 @@ export const titreEtapeUpdationValidate = (
   documents: Pick<EtapeDocument, 'etape_document_type_id'>[],
   etapeAvis: Pick<EtapeAvis, 'avis_type_id'>[],
   entrepriseDocuments: Pick<EntrepriseDocument, 'entreprise_document_type_id' | 'entreprise_id'>[],
-  sdomZones: SDOMZoneId[] | null | undefined,
+  sdomZones: DeepReadonly<SDOMZoneId[]> | null | undefined,
   communes: CommuneId[] | null | undefined,
   user: User,
   daeDocument: Omit<GetEtapeDocumentsByEtapeIdDaeDocument, 'id'> | null,
