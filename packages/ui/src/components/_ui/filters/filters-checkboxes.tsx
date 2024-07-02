@@ -34,10 +34,10 @@ function DrawComponent(filter: CheckboxesCaminoFiltres, index: number): JSX.Elem
       return FiltresTypes({ element: fullFilter.elements[index] }, { attrs: {}, emit: () => {}, slots: {} })
     case 'FiltresActivitesStatuts':
       return (
-          <div>
-            <ActiviteStatut activiteStatutId={fullFilter.elements[index].id} />
-          </div>
-        )
+        <div>
+          <ActiviteStatut activiteStatutId={fullFilter.elements[index].id} />
+        </div>
+      )
     case 'FiltresTitresStatuts':
       return (
         <div>

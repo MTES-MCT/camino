@@ -73,7 +73,7 @@ const rows: TableRow[] = [0, 1, 2, 3].map(row => {
       statut: {
         component: markRaw(DemarcheStatut),
         props: {
-          demarcheStatutId: 'eco'
+          demarcheStatutId: 'eco',
         },
         value: `Demande initiale ${row}`,
       },
