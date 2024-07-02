@@ -193,7 +193,6 @@ export const EtapesTypesEtapesStatuts = {
   paiementDesFraisDeDossier: { FAIT: { etapeTypeId: 'pfd', etapeStatutId: 'fai' } },
   clotureDeLaParticipationDuPublic: { TERMINE: { etapeTypeId: 'ppc', etapeStatutId: 'ter' } },
   ouvertureDeLaParticipationDuPublic: {
-    PROGRAMME: { etapeTypeId: 'ppu', etapeStatutId: 'pro' },
     FAIT: { etapeTypeId: 'ppu', etapeStatutId: 'fai' },
   },
   publicationDansUnJournalLocalOuNational: { FAIT: { etapeTypeId: 'pqr', etapeStatutId: 'fai' } },
