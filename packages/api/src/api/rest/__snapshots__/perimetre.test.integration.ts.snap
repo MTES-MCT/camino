@@ -826,3 +826,50 @@ exports[`geojsonImportForages > csv valide en 2972 1`] = `
   },
 }
 `;
+
+exports[`geojsonImportForages > csv valide en iso-8859-1 1`] = `
+{
+  "geojson4326": {
+    "features": [
+      {
+        "geometry": {
+          "coordinates": [
+            -40.598937151159184,
+            61.54628068732175,
+          ],
+          "type": "Point",
+        },
+        "properties": {
+          "description": "Point A",
+          "nom": "Piézomètre A",
+          "profondeur": 12.12,
+          "type": "rejet",
+        },
+        "type": "Feature",
+      },
+    ],
+    "type": "FeatureCollection",
+  },
+  "origin": {
+    "features": [
+      {
+        "geometry": {
+          "coordinates": [
+            1051195.1083143658,
+            6867800.046355472,
+          ],
+          "type": "Point",
+        },
+        "properties": {
+          "description": "Point A",
+          "nom": "Piézomètre A",
+          "profondeur": 12.12,
+          "type": "rejet",
+        },
+        "type": "Feature",
+      },
+    ],
+    "type": "FeatureCollection",
+  },
+}
+`;

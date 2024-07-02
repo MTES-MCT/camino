@@ -97,17 +97,7 @@ export type ForageType = z.infer<typeof forageTypeValidator>
 export const featureForagePropertiesValidator = z.object({
   nom: z.string().trim().min(1),
   description: z.string().nullish(),
-  type: z
-    .string()
-    .transform(value => {
-      // TODO 2024-05-06 ceci est dû au fait que certains utilisateurs sont en ISO-8859-15 et ça pose problème uniquement lors de l'import de CSV des forages, là ou la seule clé possède un accent :(
-      if (value === 'pi�zom�tre') {
-        return 'piézomètre'
-      } else {
-        return value
-      }
-    })
-    .transform(value => forageTypeValidator.parse(value)),
+  type: forageTypeValidator,
   profondeur: z.number(),
 })
 const featureForageValidator = z.object({ type: z.literal('Feature'), geometry: pointValidator, properties: featureForagePropertiesValidator })

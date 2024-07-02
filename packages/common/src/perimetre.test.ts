@@ -1,6 +1,5 @@
 import { test, expect } from 'vitest'
-import { crsUrnValidator, equalGeojson, featureForagePropertiesValidator } from './perimetre'
-import { z } from 'zod'
+import { crsUrnValidator, equalGeojson } from './perimetre'
 
 test('equalGeojson', () => {
   expect(equalGeojson({ type: 'MultiPolygon', coordinates: [[[[1, 2]]]] }, null)).toBe(false)
@@ -50,30 +49,4 @@ test('crsUrnValidator', () => {
   expect(crsUrnValidator.safeParse('urn:ogc:def:crs:EPSG::PLOP').success).toBe(false)
   expect(crsUrnValidator.safeParse('urn:ogc:def:crs:EPSG::').success).toBe(false)
   expect(crsUrnValidator.safeParse('urn:ogc:def:crs:EPSG::27572').success).toBe(true)
-})
-test('featureForagePropertiesValidator', () => {
-  const featureForageProperties: z.infer<typeof featureForagePropertiesValidator> = {
-    nom: 'A',
-    type: 'piézomètre',
-    profondeur: 0,
-  }
-  const featureForagePropertiesCasse = {
-    nom: 'B',
-    type: 'pi�zom�tre',
-    profondeur: 0,
-  }
-  expect(z.array(featureForagePropertiesValidator).parse([featureForageProperties, featureForagePropertiesCasse])).toMatchInlineSnapshot(`
-    [
-      {
-        "nom": "A",
-        "profondeur": 0,
-        "type": "piézomètre",
-      },
-      {
-        "nom": "B",
-        "profondeur": 0,
-        "type": "piézomètre",
-      },
-    ]
-  `)
 })

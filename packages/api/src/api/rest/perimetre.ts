@@ -432,10 +432,21 @@ const fileNameToShape = <T extends ZodTypeAny>(pathFrom: string, validator: T): 
     E.flatMap(zodParseEitherCallback(validator))
   )
 }
+
+const readIsoOrUTF8FileSync = (path: string): string => {
+  const buffer = readFileSync(path)
+
+  try {
+    return new TextDecoder('utf-8', { fatal: true }).decode(buffer)
+  } catch (e) {
+    return new TextDecoder('iso-8859-15', { fatal: true }).decode(buffer)
+  }
+}
+
 const fileNameToCsv = (pathFrom: string): E.Either<CaminoError<typeof ouvertureCsvError>, unknown[]> => {
   return E.tryCatch(
     () => {
-      const fileContent = readFileSync(pathFrom, { encoding: 'utf-8' })
+      const fileContent = readIsoOrUTF8FileSync(pathFrom)
       const result = xlsx.read(fileContent, { type: 'string', FS: ';', raw: true })
 
       if (result.SheetNames.length !== 1) {
