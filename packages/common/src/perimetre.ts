@@ -97,7 +97,7 @@ export type ForageType = z.infer<typeof forageTypeValidator>
 export const featureForagePropertiesValidator = z.object({
   nom: z.string().trim().min(1),
   description: z.string().nullish(),
-  type: z.string().transform(value => forageTypeValidator.parse(value)),
+  type: forageTypeValidator,
   profondeur: z.number(),
 })
 const featureForageValidator = z.object({ type: z.literal('Feature'), geometry: pointValidator, properties: featureForagePropertiesValidator })

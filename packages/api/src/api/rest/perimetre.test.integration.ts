@@ -1384,7 +1384,7 @@ B;Point B;1063526.397924559889361;6867885.978687250986695;12.12;12,12`
       {
         "message": "Problème de validation de données",
         "status": 400,
-        "zodErrorReadableMessage": "Validation error: Invalid enum value. Expected 'captage' | 'rejet' | 'piézomètre', received '1212'",
+        "zodErrorReadableMessage": "Validation error: Invalid enum value. Expected 'captage' | 'rejet' | 'piézomètre', received '1212' at "[0].type"; Invalid enum value. Expected 'captage' | 'rejet' | 'piézomètre', received '12,12' at "[1].type"",
       }
     `)
     expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
@@ -1405,5 +1405,24 @@ B;Point B;1063526.397924559889361;6867885.978687250986695;12.12;captage`
 
     const tested = await restNewPostCall(dbPool, '/rest/geojson_forages/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS['RGFG95 / UTM zone 22N'] }, userSuper, body)
     expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
+  })
+
+  test('csv valide en iso-8859-1', async () => {
+    const fileName = `existing_temp_file_${idGenerate()}.csv`
+    mkdirSync(dir, { recursive: true })
+    writeFileSync(
+      `${dir}/${fileName}`,
+      `nom;description;x;y;profondeur;type
+Piézomètre A;Point A;1051195.108314365847036;6867800.046355471946299;12.12;rejet`,
+      { encoding: 'latin1' }
+    )
+    const body: GeojsonImportForagesBody = {
+      tempDocumentName: tempDocumentNameValidator.parse(fileName),
+      fileType: 'csv',
+    }
+
+    const tested = await restNewPostCall(dbPool, '/rest/geojson_forages/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS['RGFG95 / UTM zone 22N'] }, userSuper, body)
+    expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
+    expect(tested.body).toMatchSnapshot()
   })
 })
