@@ -2,7 +2,6 @@ import { defineComponent, inject, markRaw, ref } from 'vue'
 import { Liste, Params } from './_common/liste'
 import { getPeriode } from 'camino-common/src/static/frequence'
 import { ActivitesStatuts } from 'camino-common/src/static/activitesStatuts'
-import { Statut } from './_common/statut'
 import { List } from './_ui/list'
 import { useRouter } from 'vue-router'
 import { canReadActivites } from 'camino-common/src/permissions/activites'
@@ -18,6 +17,7 @@ import { entreprisesKey, userKey } from '@/moi'
 import { Entreprise, EntrepriseId } from 'camino-common/src/entreprise'
 import { CaminoRouteLocation } from '@/router/routes'
 import { CaminoRouter } from '@/typings/vue-router'
+import { ActiviteStatut } from './_common/activite-statut'
 
 export const activitesColonneIdAnnee = 'annee'
 
@@ -76,10 +76,9 @@ const activitesLignesBuild = (activites: UiGraphqlActivite[], entreprises: Entre
         value: getPeriode(ActivitesTypes[activite.typeId].frequenceId, activite.periodeId),
       },
       statut: {
-        component: markRaw(Statut),
+        component: markRaw(ActiviteStatut),
         props: {
-          color: activiteStatut.couleur,
-          nom: activiteStatut.nom,
+          activiteStatutId: activiteStatut.id,
         },
         value: activiteStatut.nom,
       },

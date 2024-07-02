@@ -12,7 +12,7 @@ export const ACTIVITES_STATUTS_IDS = {
   CLOTURE: 'fer',
 } as const satisfies Record<string, ActivitesStatutId>
 
-export type ActivitesStatut<T = ActivitesStatutId> = {
+type ActivitesStatut<T = ActivitesStatutId> = {
   id: T
   nom: string
   couleur: Couleur
