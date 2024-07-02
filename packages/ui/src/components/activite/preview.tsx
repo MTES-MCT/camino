@@ -1,14 +1,13 @@
 import { Activite, ActiviteDocumentId } from 'camino-common/src/activite'
 import { FunctionalComponent, defineComponent, ref, computed } from 'vue'
 import { getPeriode } from 'camino-common/src/static/frequence'
-import { ACTIVITES_STATUTS_IDS, ActivitesStatut, ActivitesStatuts } from 'camino-common/src/static/activitesStatuts'
+import { ACTIVITES_STATUTS_IDS } from 'camino-common/src/static/activitesStatuts'
 import { ActiviteType, ActivitesTypes } from 'camino-common/src/static/activitesTypes'
 import { Sections } from '../_common/new-section'
 import { Column, TableAuto } from '../_ui/table-auto'
 import { getDownloadRestRoute } from '../../api/client-rest'
 import { ActiviteDocumentTypeId, DocumentsTypes } from 'camino-common/src/static/documentsTypes'
 import { DsfrButton, DsfrButtonIcon, DsfrLink } from '../_ui/dsfr-button'
-import { isActiviteComplete } from 'camino-common/src/permissions/activites'
 import { ActiviteDeposePopup } from './depose-popup'
 import { ActiviteApiClient } from './activite-api-client'
 import { ActiviteRemovePopup } from './remove-popup'
@@ -27,6 +26,7 @@ const documentColumns = [
   { id: 'description', name: 'Description', noSort: true },
 ] as const satisfies readonly Column[]
 
+// TODO 2024-07-02 Supprimer la notion de deposable dans l'API, et faire comme pour le dépôt d'une étape
 export const Preview = defineComponent<Props>(props => {
   const deposePopupVisible = ref(false)
   const deposePopupOpen = () => {
@@ -43,16 +43,7 @@ export const Preview = defineComponent<Props>(props => {
     removePopupVisible.value = !removePopupVisible.value
   }
 
-  const activiteStatut = computed<ActivitesStatut>(() => ActivitesStatuts[props.activite.activite_statut_id])
-
   const activiteType = computed<ActiviteType>(() => ActivitesTypes[props.activite.type_id])
-
-  //FIXME
-  // const statutNom = computed<string>(() => {
-  //   return isActiviteComplete(props.activite.sections_with_value, props.activite.type_id, props.activite.activite_documents).valid
-  //     ? activiteStatut.value.nom
-  //     : `${activiteStatut.value.nom} (incomplet)`
-  // })
 
   const documentRows = props.activite.activite_documents.map(document => ({
     id: document.id,
@@ -85,17 +76,21 @@ export const Preview = defineComponent<Props>(props => {
             {props.activite.suppression ? <DsfrButtonIcon buttonType="tertiary" title="supprimer l'activité" onClick={removePopupOpen} icon="fr-icon-delete-bin-line" /> : null}
 
             {props.activite.modification ? (
-              <DsfrLink
-                buttonType={props.activite.deposable ? 'secondary' : 'primary'}
-                label={null}
-                title="modifier l'activité"
-                icon="fr-icon-edit-line"
-                to={{ name: 'activiteEdition', params: { activiteId: props.activite.slug } }}
-                disabled={false}
-              />
-            ) : null}
+              <>
+                <DsfrLink
+                  buttonType={props.activite.deposable ? 'secondary' : 'primary'}
+                  label={null}
+                  title="modifier l'activité"
+                  icon="fr-icon-edit-line"
+                  to={{ name: 'activiteEdition', params: { activiteId: props.activite.slug } }}
+                  disabled={false}
+                />
 
-            {props.activite.deposable ? <DsfrButton buttonType="primary" title="déposer l'activité" label="Déposer" onClick={deposePopupOpen} /> : null}
+                {props.activite.activite_statut_id === ACTIVITES_STATUTS_IDS.EN_CONSTRUCTION ? (
+                  <DsfrButton buttonType="primary" title="déposer l'activité" label="Déposer" onClick={deposePopupOpen} disabled={!props.activite.deposable} />
+                ) : null}
+              </>
+            ) : null}
           </div>
         </div>
 
