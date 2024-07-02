@@ -55,7 +55,7 @@ describe('titreDemandeCreer', () => {
     expect(getTitre.body.demarches[0].etapes).toHaveLength(0)
   })
   test('peut créer un titre en tant que entreprise', async () => {
-    const tested = await restPostCall(dbPool, '/rest/titres', {}, { role: 'entreprise', entreprises: [{ id: entrepriseId, nom: 'entreprise' }] }, body)
+    const tested = await restPostCall(dbPool, '/rest/titres', {}, { role: 'entreprise', entreprises: [{ id: entrepriseId }] }, body)
 
     expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
 
