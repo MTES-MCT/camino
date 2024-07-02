@@ -1,4 +1,4 @@
-import { CaminoError } from 'camino-common/src/zod-tools'
+import type { CaminoError } from 'camino-common/src/zod-tools'
 import type { FunctionalComponent, HTMLAttributes } from 'vue'
 import type { JSX } from 'vue/jsx-runtime'
 type SmallProps = {
