@@ -81,9 +81,9 @@ describe('demarcheCreer', () => {
   })
 
   test('peut créer une démarche (utilisateur super)', async () => {
-    const resTitreCreer = await graphQLCall(dbPool, queryImport('titre-creer'), { titre: { nom: 'titre', typeId: 'arm' } }, userSuper)
+    const titre = await titreCreate({ nom: 'titre', typeId: 'arm', titreStatutId: 'val', propsTitreEtapesIds: {} }, {})
 
-    const titreId = resTitreCreer.body.data.titreCreer.id
+    const titreId = titre.id
 
     const res = await graphQLCall(dbPool, demarcheCreerQuery, { demarche: { titreId, typeId: 'oct' } }, userSuper)
 
@@ -106,9 +106,9 @@ describe('demarcheCreer', () => {
   })
 
   test('peut créer une démarche (utilisateur admin)', async () => {
-    const resTitreCreer = await graphQLCall(dbPool, queryImport('titre-creer'), { titre: { nom: 'titre', typeId: 'arm' } }, userSuper)
+    const titre = await titreCreate({ nom: 'titre', typeId: 'arm', titreStatutId: 'val', propsTitreEtapesIds: {} }, {})
 
-    const titreId = resTitreCreer.body.data.titreCreer.id
+    const titreId = titre.id
 
     const res = await graphQLCall(
       dbPool,

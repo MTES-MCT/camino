@@ -158,9 +158,6 @@ Ces requêtes sont __protégées__. Elles nécessitent une authentification par 
 type Mutation {
   newsletterInscrire(email: String!): String
 
-  "Crée un titre minier"
-  titreCreer(titre: InputTitreCreation!): Titre
-
   "Crée une démarche et met à jour le titre minier"
   demarcheCreer(demarche: InputDemarcheCreation!): DemarcheSlug
 

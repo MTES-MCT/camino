@@ -4,7 +4,6 @@ import { graphQLCall, queryImport } from '../../../tests/_utils/index.js'
 import options from '../../database/queries/_options.js'
 import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations.js'
 import { ITitre } from '../../types.js'
-import { userSuper } from '../../database/user-super'
 import { newDemarcheId, newEtapeId, newTitreId } from '../../database/models/_format/id-create.js'
 import { toCaminoDate } from 'camino-common/src/date.js'
 
@@ -416,74 +415,5 @@ describe('titres', () => {
         },
       }
     `)
-  })
-})
-
-describe('titreCreer', () => {
-  const titreCreerQuery = queryImport('titre-creer')
-
-  test('ne peut pas créer un titre (utilisateur anonyme)', async () => {
-    const res = await graphQLCall(
-      dbPool,
-      titreCreerQuery,
-      {
-        titre: { nom: 'titre', typeId: 'arm' },
-      },
-      undefined
-    )
-
-    expect(res.body.errors[0].message).toBe('permissions insuffisantes')
-  })
-
-  test("ne peut pas créer un titre prm (un utilisateur 'entreprise')", async () => {
-    const res = await graphQLCall(dbPool, titreCreerQuery, { titre: { nom: 'titre', typeId: 'prm' } }, { role: 'entreprise', entreprises: [] })
-
-    expect(res.body.errors[0].message).toBe('permissions insuffisantes')
-  })
-
-  test("crée un titre (un utilisateur 'super')", async () => {
-    const res = await graphQLCall(dbPool, titreCreerQuery, { titre: { nom: 'titre', typeId: 'arm' } }, userSuper)
-
-    expect(res.body.errors).toBe(undefined)
-    expect(res.body).toMatchObject({
-      data: { titreCreer: { slug: 'm-ar-titre-0000', nom: 'titre' } },
-    })
-  })
-
-  test("ne peut pas créer un titre AXM (un utilisateur 'admin' PTMG)", async () => {
-    const res = await graphQLCall(
-      dbPool,
-      titreCreerQuery,
-      { titre: { nom: 'titre', typeId: 'axm' } },
-      {
-        role: 'admin',
-        administrationId: ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE'],
-      }
-    )
-
-    expect(res.body.errors[0].message).toBe('permissions insuffisantes')
-  })
-
-  test("ne peut pas créer un titre ARM (un utilisateur 'admin' DGCL/SDFLAE/FL1)", async () => {
-    const res = await graphQLCall(dbPool, titreCreerQuery, { titre: { nom: 'titre', typeId: 'arm' } }, { role: 'admin', administrationId: ADMINISTRATION_IDS['DGCL/SDFLAE/FL1'] })
-
-    expect(res.body.errors[0].message).toBe('permissions insuffisantes')
-  })
-
-  test("crée un titre ARM (un utilisateur 'admin' PTMG)", async () => {
-    const res = await graphQLCall(
-      dbPool,
-      titreCreerQuery,
-      { titre: { nom: 'titre', typeId: 'arm' } },
-      {
-        role: 'admin',
-        administrationId: ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE'],
-      }
-    )
-
-    expect(res.body.errors).toBe(undefined)
-    expect(res.body).toMatchObject({
-      data: { titreCreer: { slug: 'm-ar-titre-0000', nom: 'titre' } },
-    })
   })
 })

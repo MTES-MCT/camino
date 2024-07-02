@@ -1,19 +1,16 @@
 import { GraphQLResolveInfo } from 'graphql'
 
-import { Context, ITitre, ITitreColonneId } from '../../../types.js'
+import { Context, ITitreColonneId } from '../../../types.js'
 
-import { titreFormat, titresFormat } from '../../_format/titres.js'
+import { titresFormat } from '../../_format/titres.js'
 
 import { fieldsBuild } from './_fields-build.js'
 
-import { titreCreate, titreGet, titresCount, titresGet } from '../../../database/queries/titres.js'
+import { titresCount, titresGet } from '../../../database/queries/titres.js'
 
-import titreUpdateTask from '../../../business/titre-update.js'
-import { canCreateTitre } from 'camino-common/src/permissions/titres.js'
 import { DepartementId } from 'camino-common/src/static/departement.js'
 import { RegionId } from 'camino-common/src/static/region.js'
 import { FacadesMaritimes } from 'camino-common/src/static/facades.js'
-import { isTitreType } from 'camino-common/src/static/titresTypes.js'
 
 export const titres = async (
   {
@@ -118,33 +115,6 @@ export const titres = async (
       colonne,
       total,
     }
-  } catch (e) {
-    console.error(e)
-
-    throw e
-  }
-}
-
-/**
- * TODO 2022-07-12 enlever cette fonction et nettoyer l'ui
- * @deprecated Not used by frontend, titreDemandeCreer is used instead
- */
-export const titreCreer = async ({ titre }: { titre: ITitre }, { user, pool }: Context, info: GraphQLResolveInfo) => {
-  try {
-    if (!isTitreType(titre.typeId) || !canCreateTitre(user, titre.typeId)) {
-      throw new Error('permissions insuffisantes')
-    }
-
-    // insert le titre dans la base
-    titre = await titreCreate(titre, { fields: {} })
-
-    await titreUpdateTask(pool, titre.id)
-
-    const fields = fieldsBuild(info)
-
-    const titreUpdated = await titreGet(titre.id, { fields }, user)
-
-    return titreUpdated && titreFormat(titreUpdated)
   } catch (e) {
     console.error(e)
 
