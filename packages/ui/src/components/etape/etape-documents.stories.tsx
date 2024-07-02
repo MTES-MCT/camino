@@ -96,6 +96,6 @@ export const UserEntreprise: StoryFn = () => (
     etapeDocuments={documents}
     entrepriseDocuments={entrepriseDocuments}
     entreprises={entreprises}
-    user={{ ...testBlankUser, role: 'entreprise', entreprises: [{ id: entrepriseIdValidator.parse('entrepriseId'), nom: 'nom' }] }}
+    user={{ ...testBlankUser, role: 'entreprise', entreprises: [{ id: entrepriseIdValidator.parse('entrepriseId') }] }}
   />
 )

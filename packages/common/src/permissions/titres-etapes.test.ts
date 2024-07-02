@@ -147,7 +147,7 @@ test.each<{
     canCreate: false,
   },
   {
-    user: { role: 'entreprise', entreprises: [{ id: newEntrepriseId('1'), nom: 'nom' }] },
+    user: { role: 'entreprise', entreprises: [{ id: newEntrepriseId('1') }] },
     etapeTypeId: 'mfr',
     isBrouillon: ETAPE_IS_NOT_BROUILLON,
     titreTitulaires: [newEntrepriseId('1')],
@@ -157,7 +157,7 @@ test.each<{
     canCreate: false,
   },
   {
-    user: { role: 'entreprise', entreprises: [{ id: newEntrepriseId('1'), nom: 'nom' }] },
+    user: { role: 'entreprise', entreprises: [{ id: newEntrepriseId('1') }] },
     etapeTypeId: 'mfr',
     isBrouillon: ETAPE_IS_BROUILLON,
     titreTitulaires: [newEntrepriseId('1')],
@@ -241,7 +241,7 @@ test.each<{
 })
 
 test('une entreprise peut modifier sa demande mais ne peut pas la supprimer', () => {
-  const user: EntrepriseUserNotNull = { ...testBlankUser, role: 'entreprise', entreprises: [{ id: entrepriseIdValidator.parse('entrepriseId'), nom: 'entreprise1' }] }
+  const user: EntrepriseUserNotNull = { ...testBlankUser, role: 'entreprise', entreprises: [{ id: entrepriseIdValidator.parse('entrepriseId') }] }
   expect(canEditEtape(user, 'mfr', true, [user.entreprises[0].id], [], 'oct', { typeId: 'arm', titreStatutId: 'ind' })).toBe(true)
   expect(canDeleteEtape(user, 'mfr', true, [user.entreprises[0].id], [], 'oct', { typeId: 'arm', titreStatutId: 'ind' })).toBe(false)
 })
@@ -335,7 +335,7 @@ test('teste la complétude d’une demande d’AXM faite par un utilisateur entr
       { arrete_prefectoral: '', date: toCaminoDate('2024-01-01'), description: null, entreprises_lecture: true, etape_document_type_id: 'arp', etape_statut_id: 'fai', public_lecture: true },
       { date: toCaminoDate('2024-04-22'), description: null, entreprises_lecture: true, etape_document_type_id: 'let', etape_statut_id: 'fai', public_lecture: true },
       [],
-      { ...testBlankUser, role: 'entreprise', entreprises: [{ id: entrepriseIdValidator.parse('id1'), nom: 'nomEntreprise' }] }
+      { ...testBlankUser, role: 'entreprise', entreprises: [{ id: entrepriseIdValidator.parse('id1') }] }
     )
   ).toMatchInlineSnapshot(`
     {
@@ -360,7 +360,7 @@ test('teste la complétude d’une demande d’AXM faite par un utilisateur entr
       { arrete_prefectoral: '', date: toCaminoDate('2024-01-01'), description: null, entreprises_lecture: true, etape_document_type_id: 'arp', etape_statut_id: 'fai', public_lecture: true },
       { date: toCaminoDate('2024-04-22'), description: null, entreprises_lecture: true, etape_document_type_id: 'let', etape_statut_id: 'fai', public_lecture: true },
       [],
-      { ...testBlankUser, role: 'entreprise', entreprises: [{ id: entrepriseIdValidator.parse('id1'), nom: 'nomEntreprise' }] }
+      { ...testBlankUser, role: 'entreprise', entreprises: [{ id: entrepriseIdValidator.parse('id1') }] }
     )
   ).toStrictEqual({ valid: true })
 })

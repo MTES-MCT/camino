@@ -457,7 +457,6 @@ export const DemandeNonSupprimable: StoryFn = () => (
       entreprises: [
         {
           id: entrepriseIdValidator.parse('titulaire1'),
-          nom: 'entreprise1',
         },
       ],
     }}
@@ -966,7 +965,7 @@ export const AxmDeposableAvecDaeEtAsl: StoryFn = () => (
       ],
       communes: [],
     }}
-    user={{ ...testBlankUser, role: 'entreprise', entreprises: [{ id: entrepriseIdValidator.parse('titulaire1'), nom: 'nom entreprise' }] }}
+    user={{ ...testBlankUser, role: 'entreprise', entreprises: [{ id: entrepriseIdValidator.parse('titulaire1') }] }}
     router={routerPushMock}
     apiClient={apiClient}
     entreprises={entreprises}

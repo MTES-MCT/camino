@@ -43,7 +43,7 @@ export type AdminUserNotNull = z.infer<typeof adminUserNotNullValidator>
 const ENTREPRISE_ROLES = ['entreprise', 'bureau d’études'] as const satisfies readonly Role[]
 const entrepriseRoleValidator = z.enum(ENTREPRISE_ROLES)
 type EntrepriseOrBureauDetudeRole = z.infer<typeof entrepriseRoleValidator>
-const entrepriseUserNotNullValidator = baseUserNotNullValidator.extend({ role: entrepriseRoleValidator, entreprises: z.array(entrepriseValidator.pick({ id: true, nom: true })) })
+const entrepriseUserNotNullValidator = baseUserNotNullValidator.extend({ role: entrepriseRoleValidator, entreprises: z.array(entrepriseValidator.pick({ id: true })) })
 
 export type EntrepriseUserNotNull = z.infer<typeof entrepriseUserNotNullValidator>
 const userNotNullValidator = z.union([superUserNotNullValidator, defautUserNotNullValidator, adminUserNotNullValidator, entrepriseUserNotNullValidator])

@@ -30,16 +30,13 @@ test('fiscaliteVisible', () => {
   expect(fiscaliteVisible({ role: 'defaut', ...roleLessUser }, newEntrepriseId('1234'), titres)).toBe(false)
   expect(fiscaliteVisible({ role: 'bureau d’études', entreprises: [], ...roleLessUser }, newEntrepriseId('1234'), titres)).toBe(false)
   expect(fiscaliteVisible({ role: 'entreprise', entreprises: [], ...roleLessUser }, newEntrepriseId('1234'), titres)).toBe(false)
-  expect(fiscaliteVisible({ role: 'entreprise', entreprises: [{ id: newEntrepriseId('1'), nom: 'nom' }], ...roleLessUser }, newEntrepriseId('1234'), titres)).toBe(false)
-  expect(fiscaliteVisible({ role: 'entreprise', entreprises: [{ id: newEntrepriseId(newEntrepriseId('1234')), nom: 'nom' }], ...roleLessUser }, newEntrepriseId('1234'), titres)).toBe(true)
+  expect(fiscaliteVisible({ role: 'entreprise', entreprises: [{ id: newEntrepriseId('1') }], ...roleLessUser }, newEntrepriseId('1234'), titres)).toBe(false)
+  expect(fiscaliteVisible({ role: 'entreprise', entreprises: [{ id: newEntrepriseId(newEntrepriseId('1234')) }], ...roleLessUser }, newEntrepriseId('1234'), titres)).toBe(true)
   expect(
     fiscaliteVisible(
       {
         role: 'entreprise',
-        entreprises: [
-          { id: newEntrepriseId('1'), nom: 'nom' },
-          { id: newEntrepriseId(newEntrepriseId('1234')), nom: 'nom2' },
-        ],
+        entreprises: [{ id: newEntrepriseId('1') }, { id: newEntrepriseId(newEntrepriseId('1234')) }],
         ...roleLessUser,
       },
       newEntrepriseId('1234'),
@@ -55,13 +52,13 @@ test('fiscaliteVisible', () => {
 test('fiscaliteVisible avec les titres', () => {
   expect(fiscaliteVisible({ role: 'super', ...roleLessUser }, newEntrepriseId('1234'), [{ type_id: 'arm' }, { type_id: 'prw' }])).toEqual(true)
   expect(
-    fiscaliteVisible({ role: 'entreprise', entreprises: [{ id: newEntrepriseId(newEntrepriseId('1234')), nom: 'nom' }], ...roleLessUser }, newEntrepriseId('1234'), [
+    fiscaliteVisible({ role: 'entreprise', entreprises: [{ id: newEntrepriseId(newEntrepriseId('1234')) }], ...roleLessUser }, newEntrepriseId('1234'), [
       { type_id: 'prg' },
       { type_id: 'prr' },
       { type_id: 'prs' },
       { type_id: 'prw' },
     ])
   ).toEqual(false)
-  expect(fiscaliteVisible({ role: 'entreprise', entreprises: [{ id: newEntrepriseId(newEntrepriseId('1234')), nom: 'nom' }], ...roleLessUser }, newEntrepriseId('1234'), [])).toEqual(false)
+  expect(fiscaliteVisible({ role: 'entreprise', entreprises: [{ id: newEntrepriseId(newEntrepriseId('1234')) }], ...roleLessUser }, newEntrepriseId('1234'), [])).toEqual(false)
   expect(fiscaliteVisible({ role: 'super', ...roleLessUser }, newEntrepriseId('1234'), [{}])).toBe(false)
 })
