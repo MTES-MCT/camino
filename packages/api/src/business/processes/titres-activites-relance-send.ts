@@ -11,6 +11,7 @@ import { ActivitesStatutId } from 'camino-common/src/static/activitesStatuts.js'
 import { GetEntrepriseUtilisateurs, getEntrepriseUtilisateurs } from '../../api/rest/entreprises.queries.js'
 import { Pool } from 'pg'
 import { EntrepriseId } from 'camino-common/src/entreprise.js'
+import { isEntrepriseRole } from 'camino-common/src/roles.js'
 
 const ACTIVITES_DELAI_RELANCE_JOURS = 14
 
@@ -52,8 +53,8 @@ export const checkDateAndSendEmail = async (
       if (isNotNullNorUndefined(titre) && isNotNullNorUndefinedNorEmpty(titre.titulaireIds)) {
         const utilisateursByEntreprise = await Promise.all(titre.titulaireIds.map(getEmailsByEntrepriseId))
 
-        utilisateursByEntreprise.flat().forEach(({ email }) => {
-          if (isNotNullNorUndefinedNorEmpty(email)) {
+        utilisateursByEntreprise.flat().forEach(({ email, role }) => {
+          if (isNotNullNorUndefinedNorEmpty(email) && isEntrepriseRole(role)) {
             emails.add(email)
           }
         })

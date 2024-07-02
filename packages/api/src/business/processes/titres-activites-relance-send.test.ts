@@ -24,15 +24,23 @@ describe('relance les opérateurs des activités qui vont se fermer automatiquem
 
     const email = 'toto.huhu@foo.com'
 
-    const titresActivites = await checkDateAndSendEmail(() => Promise.resolve([{ email }]), toCaminoDate('2022-03-18'), [
-      {
-        date,
-        id: activiteIdValidator.parse('activiteId'),
-        titre: {
-          titulaireIds: [entrepriseIdValidator.parse('titulaire1')],
+    const titresActivites = await checkDateAndSendEmail(
+      () =>
+        Promise.resolve([
+          { email, role: 'entreprise' },
+          { email: 'emailDeBureauDEtudes', role: 'bureau d’études' },
+        ]),
+      toCaminoDate('2022-03-18'),
+      [
+        {
+          date,
+          id: activiteIdValidator.parse('activiteId'),
+          titre: {
+            titulaireIds: [entrepriseIdValidator.parse('titulaire1')],
+          },
         },
-      },
-    ])
+      ]
+    )
 
     expect(emailsWithTemplateSendMock).toBeCalledWith([email], EmailTemplateId.ACTIVITES_RELANCE, expect.any(Object))
     expect(titresActivites.length).toEqual(1)

@@ -25,7 +25,7 @@ import { CaminoDate } from 'camino-common/src/date.js'
 import { DeepReadonly, NonEmptyArray, isNonEmptyArray, onlyUnique } from 'camino-common/src/typescript-tools.js'
 import { Pool } from 'pg'
 import { canSeeEntrepriseDocuments } from 'camino-common/src/permissions/entreprises.js'
-import { User } from 'camino-common/src/roles.js'
+import { roleValidator, User } from 'camino-common/src/roles.js'
 import { z } from 'zod'
 
 const dummy = ['dummy'] as const
@@ -214,6 +214,7 @@ order by
 
 const getEntrepriseUtilisateursValidator = z.object({
   email: z.string().nullable(),
+  role: roleValidator,
 })
 export type GetEntrepriseUtilisateurs = z.infer<typeof getEntrepriseUtilisateursValidator>
 export const getEntrepriseUtilisateurs = async (pool: Pool, entreprise_id: EntrepriseId) => {
@@ -222,7 +223,8 @@ export const getEntrepriseUtilisateurs = async (pool: Pool, entreprise_id: Entre
 
 const getEntrepriseUtilisateursDb = sql<Redefine<IGetEntrepriseUtilisateursDbQuery, { entreprise_id: EntrepriseId }, GetEntrepriseUtilisateurs>>`
 select
-    u.email
+    u.email,
+    u.role
 from
     utilisateurs__entreprises ue
     join utilisateurs u on u.id = ue.utilisateur_id
