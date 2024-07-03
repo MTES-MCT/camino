@@ -66,7 +66,10 @@ describe('Storybook Tests', async () => {
         }
 
         global.ResizeObserver = ResizeObserver
-        const mounted = render(value.story(), {
+
+        const storyComponent = value.story()
+
+        const mounted = render('type' in storyComponent && typeof storyComponent.type === 'function' ? storyComponent.type() : storyComponent, {
           global: {
             components: { 'router-link': (props, { slots }) => h('a', { ...props, type: 'primary', to: JSON.stringify(props.to).replaceAll('"', '') }, slots) },
           },
@@ -75,6 +78,7 @@ describe('Storybook Tests', async () => {
         await new Promise<void>(resolve => setTimeout(() => resolve(), 1))
         expect(mounted.html()).toMatchFileSnapshot(`./${filePath.replace(/\.[^/.]+$/, '')}_snapshots_${value.name}.html`)
       } catch (e) {
+        console.log(e)
         throw new Error(`le test ${name} du fichier ${filePath} plante ${e}`)
       }
     })
