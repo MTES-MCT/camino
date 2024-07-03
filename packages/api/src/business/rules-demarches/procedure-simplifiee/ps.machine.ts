@@ -12,6 +12,8 @@ type ProcedureSimplifieeXStateEvent =
   | { type: 'RENDRE_DECISION_ADMINISTRATION_ACCEPTEE' }
   | { type: 'PUBLIER_DECISION_ACCEPTEE_AU_JORF' }
   | { type: 'PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS' }
+  | { type: 'CLASSER_SANS_SUITE' }
+  | { type: 'DESISTER_PAR_LE_DEMANDEUR' }
 
 type Event = ProcedureSimplifieeXStateEvent['type']
 
@@ -23,6 +25,8 @@ const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
   RENDRE_DECISION_ADMINISTRATION_ACCEPTEE: { db: { ACCEPTE: ETES.decisionDeLadministration.ACCEPTE }, mainStep: true },
   PUBLIER_DECISION_ACCEPTEE_AU_JORF: { db: { ACCEPTE: ETES.publicationDeDecisionAuJORF.ACCEPTE }, mainStep: true },
   PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS: { db: ETES.publicationDeDecisionAuRecueilDesActesAdministratifs, mainStep: true },
+  CLASSER_SANS_SUITE: { db: ETES.classementSansSuite, mainStep: false },
+  DESISTER_PAR_LE_DEMANDEUR: { db: ETES.desistementDuDemandeur, mainStep: false },
 }
 
 // Related to https://github.com/Microsoft/TypeScript/issues/12870
@@ -58,7 +62,7 @@ export class ProcedureSimplifieeMachine extends CaminoMachine<ProcedureSimplifie
 interface ProcedureSimplifieeContext extends CaminoCommonContext {
   depotDeLaDemandeFaite: boolean
   ouverturePublicFaite: boolean
-  decisionAdministrationFaite: boolean
+  decisionAdministrationAccepteeFaite: boolean
 }
 
 const procedureSimplifieeMachine = createMachine({
@@ -70,7 +74,23 @@ const procedureSimplifieeMachine = createMachine({
     visibilite: 'confidentielle',
     depotDeLaDemandeFaite: false,
     ouverturePublicFaite: false,
-    decisionAdministrationFaite: false,
+    decisionAdministrationAccepteeFaite: false,
+  },
+  on: {
+    CLASSER_SANS_SUITE: {
+      guard: ({ context }) => context.demarcheStatut === DemarchesStatutsIds.EnInstruction,
+      target: '.finDeMachine',
+      actions: assign({
+        demarcheStatut: DemarchesStatutsIds.ClasseSansSuite,
+      }),
+    },
+    DESISTER_PAR_LE_DEMANDEUR: {
+      guard: ({ context }) => context.demarcheStatut === DemarchesStatutsIds.EnInstruction,
+      target: '.finDeMachine',
+      actions: assign({
+        demarcheStatut: DemarchesStatutsIds.Desiste,
+      }),
+    },
   },
   states: {
     demandeAFaire: {
@@ -87,14 +107,14 @@ const procedureSimplifieeMachine = createMachine({
     receptionDeLaDemandeOuOuverturePublicOuDecisionAdministrationAFaire: {
       on: {
         DEPOSER_DEMANDE: {
-          guard: ({ context }) => !context.depotDeLaDemandeFaite && !context.decisionAdministrationFaite && !context.ouverturePublicFaite,
+          guard: ({ context }) => !context.depotDeLaDemandeFaite && !context.decisionAdministrationAccepteeFaite && !context.ouverturePublicFaite,
           target: 'receptionDeLaDemandeOuOuverturePublicOuDecisionAdministrationAFaire',
           actions: assign({
             depotDeLaDemandeFaite: true,
           }),
         },
         OUVRIR_PARTICIPATION_DU_PUBLIC: {
-          guard: ({ context }) => !context.ouverturePublicFaite && !context.decisionAdministrationFaite,
+          guard: ({ context }) => !context.ouverturePublicFaite && !context.decisionAdministrationAccepteeFaite,
           actions: assign({
             ouverturePublicFaite: true,
             visibilite: 'publique',
@@ -103,7 +123,7 @@ const procedureSimplifieeMachine = createMachine({
         },
         RENDRE_DECISION_ADMINISTRATION_ACCEPTEE: {
           actions: assign({
-            decisionAdministrationFaite: true,
+            decisionAdministrationAccepteeFaite: true,
             visibilite: 'publique',
             demarcheStatut: 'acc',
           }),
