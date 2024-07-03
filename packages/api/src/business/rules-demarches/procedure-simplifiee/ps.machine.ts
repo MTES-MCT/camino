@@ -64,106 +64,146 @@ export class ProcedureSimplifieeMachine extends CaminoMachine<ProcedureSimplifie
 }
 
 interface ProcedureSimplifieeContext extends CaminoCommonContext {
+  procedureHistorique: boolean
   depotDeLaDemandeFaite: boolean
   ouverturePublicFaite: boolean
   decisionAdministrationAccepteeFaite: boolean
   demandeInformationEnCours: boolean
 }
 
-const procedureSimplifieeMachine = createMachine({
-  types: {} as { context: ProcedureSimplifieeContext; events: ProcedureSimplifieeXStateEvent },
-  id: 'PS',
-  initial: 'demandeAFaire',
-  context: {
-    demarcheStatut: DemarchesStatutsIds.EnConstruction,
-    visibilite: 'confidentielle',
-    depotDeLaDemandeFaite: false,
-    ouverturePublicFaite: false,
-    decisionAdministrationAccepteeFaite: false,
-    demandeInformationEnCours: false,
-  },
-  on: {
-    CLASSER_SANS_SUITE: {
-      guard: ({ context }) => context.demarcheStatut === DemarchesStatutsIds.EnInstruction,
-      target: '.finDeMachine',
-      actions: assign({
-        demarcheStatut: DemarchesStatutsIds.ClasseSansSuite,
-      }),
+const createProcedureMachine = (procedureHistorique: boolean) =>
+  createMachine({
+    types: {} as { context: ProcedureSimplifieeContext; events: ProcedureSimplifieeXStateEvent },
+    id: 'PS',
+    initial: 'demandeAFaire',
+    context: {
+      procedureHistorique,
+      demarcheStatut: DemarchesStatutsIds.EnConstruction,
+      visibilite: 'confidentielle',
+      depotDeLaDemandeFaite: false,
+      ouverturePublicFaite: false,
+      decisionAdministrationAccepteeFaite: false,
+      demandeInformationEnCours: false,
     },
-    DESISTER_PAR_LE_DEMANDEUR: {
-      guard: ({ context }) => context.demarcheStatut === DemarchesStatutsIds.EnInstruction,
-      target: '.finDeMachine',
-      actions: assign({
-        demarcheStatut: DemarchesStatutsIds.Desiste,
-      }),
-    },
-    DEMANDER_INFORMATION: {
-      guard: ({ context }) => context.demarcheStatut === DemarchesStatutsIds.EnInstruction && !context.demandeInformationEnCours,
-      actions: assign({
-        demandeInformationEnCours: true,
-      }),
-    },
-    RECEVOIR_INFORMATION: {
-      guard: ({ context }) => context.demarcheStatut === DemarchesStatutsIds.EnInstruction && context.demandeInformationEnCours,
-      actions: assign({
-        demandeInformationEnCours: false,
-      }),
-    },
-  },
-  states: {
-    demandeAFaire: {
-      on: {
-        FAIRE_DEMANDE: {
-          target: 'receptionDeLaDemandeOuOuverturePublicOuDecisionAdministrationAFaire',
-          actions: assign({
-            demarcheStatut: DemarchesStatutsIds.EnInstruction,
-          }),
-        },
+    on: {
+      RENDRE_DECISION_ADMINISTRATION_ACCEPTEE: {
+        guard: ({ context }) => context.demarcheStatut === DemarchesStatutsIds.EnConstruction && context.procedureHistorique,
+        target: '.publicationAuRecueilDesActesAdministratifsOupublicationAuJORFAFaire',
+        actions: assign({
+          decisionAdministrationAccepteeFaite: true,
+          visibilite: 'publique',
+          demarcheStatut: 'acc',
+        }),
+      },
+      CLASSER_SANS_SUITE: {
+        guard: ({ context }) => context.demarcheStatut === DemarchesStatutsIds.EnInstruction,
+        target: '.finDeMachine',
+        actions: assign({
+          demarcheStatut: DemarchesStatutsIds.ClasseSansSuite,
+        }),
+      },
+      DESISTER_PAR_LE_DEMANDEUR: {
+        guard: ({ context }) => context.demarcheStatut === DemarchesStatutsIds.EnInstruction,
+        target: '.finDeMachine',
+        actions: assign({
+          demarcheStatut: DemarchesStatutsIds.Desiste,
+        }),
+      },
+      DEMANDER_INFORMATION: {
+        guard: ({ context }) => context.demarcheStatut === DemarchesStatutsIds.EnInstruction && !context.demandeInformationEnCours,
+        actions: assign({
+          demandeInformationEnCours: true,
+        }),
+      },
+      RECEVOIR_INFORMATION: {
+        guard: ({ context }) => context.demarcheStatut === DemarchesStatutsIds.EnInstruction && context.demandeInformationEnCours,
+        actions: assign({
+          demandeInformationEnCours: false,
+        }),
       },
     },
+    states: {
+      demandeAFaire: {
+        on: {
+          FAIRE_DEMANDE: {
+            target: 'receptionDeLaDemandeOuOuverturePublicOuDecisionAdministrationAFaire',
+            actions: assign({
+              demarcheStatut: DemarchesStatutsIds.EnInstruction,
+            }),
+          },
+        },
+      },
 
-    receptionDeLaDemandeOuOuverturePublicOuDecisionAdministrationAFaire: {
-      on: {
-        DEPOSER_DEMANDE: {
-          guard: ({ context }) => !context.depotDeLaDemandeFaite && !context.decisionAdministrationAccepteeFaite && !context.ouverturePublicFaite,
-          target: 'receptionDeLaDemandeOuOuverturePublicOuDecisionAdministrationAFaire',
-          actions: assign({
-            depotDeLaDemandeFaite: true,
-          }),
-        },
-        OUVRIR_PARTICIPATION_DU_PUBLIC: {
-          guard: ({ context }) => !context.ouverturePublicFaite && !context.decisionAdministrationAccepteeFaite,
-          actions: assign({
-            ouverturePublicFaite: true,
-            visibilite: 'publique',
-          }),
-          target: 'clotureDeLaParticipationDuPublicAFaire',
-        },
-        RENDRE_DECISION_ADMINISTRATION_ACCEPTEE: {
-          actions: assign({
-            decisionAdministrationAccepteeFaite: true,
-            visibilite: 'publique',
-            demarcheStatut: 'acc',
-          }),
-          target: 'publicationAuRecueilDesActesAdministratifsOupublicationAuJORFAFaire',
+      receptionDeLaDemandeOuOuverturePublicOuDecisionAdministrationAFaire: {
+        on: {
+          DEPOSER_DEMANDE: {
+            guard: ({ context }) => !context.depotDeLaDemandeFaite && !context.decisionAdministrationAccepteeFaite && !context.ouverturePublicFaite,
+            target: 'receptionDeLaDemandeOuOuverturePublicOuDecisionAdministrationAFaire',
+            actions: assign({
+              depotDeLaDemandeFaite: true,
+            }),
+          },
+          OUVRIR_PARTICIPATION_DU_PUBLIC: {
+            guard: ({ context }) => !context.ouverturePublicFaite && !context.decisionAdministrationAccepteeFaite,
+            actions: assign({
+              ouverturePublicFaite: true,
+              visibilite: 'publique',
+            }),
+            target: 'clotureDeLaParticipationDuPublicAFaire',
+          },
+          RENDRE_DECISION_ADMINISTRATION_ACCEPTEE: {
+            actions: assign({
+              decisionAdministrationAccepteeFaite: true,
+              visibilite: 'publique',
+              demarcheStatut: 'acc',
+            }),
+            target: 'publicationAuRecueilDesActesAdministratifsOupublicationAuJORFAFaire',
+          },
         },
       },
-    },
 
-    clotureDeLaParticipationDuPublicAFaire: {
-      on: {
-        CLOTURER_PARTICIPATION_DU_PUBLIC: 'receptionDeLaDemandeOuOuverturePublicOuDecisionAdministrationAFaire',
+      clotureDeLaParticipationDuPublicAFaire: {
+        on: {
+          CLOTURER_PARTICIPATION_DU_PUBLIC: 'receptionDeLaDemandeOuOuverturePublicOuDecisionAdministrationAFaire',
+        },
       },
-    },
 
-    publicationAuRecueilDesActesAdministratifsOupublicationAuJORFAFaire: {
-      on: {
-        PUBLIER_DECISION_ACCEPTEE_AU_JORF: 'finDeMachine',
-        PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS: 'finDeMachine',
+      publicationAuRecueilDesActesAdministratifsOupublicationAuJORFAFaire: {
+        on: {
+          PUBLIER_DECISION_ACCEPTEE_AU_JORF: 'finDeMachine',
+          PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS: 'finDeMachine',
+        },
+      },
+      finDeMachine: {
+        type: 'final',
       },
     },
-    finDeMachine: {
-      type: 'final',
-    },
-  },
-})
+  })
+
+const procedureHistoriqueMachine = createProcedureMachine(true)
+const procedureSimplifieeMachine = createProcedureMachine(false)
+export class ProcedureHistoriqueMachine extends CaminoMachine<ProcedureSimplifieeContext, ProcedureSimplifieeXStateEvent> {
+  constructor() {
+    super(procedureHistoriqueMachine, trad)
+  }
+
+  eventFrom(etape: Etape): ProcedureSimplifieeXStateEvent {
+    const entries = Object.entries(trad).filter((entry): entry is [Event, { db: DBEtat; mainStep: boolean }] => EVENTS.includes(entry[0]))
+
+    const entry = entries.find(([_key, { db: dbEtat }]) => {
+      return Object.values(dbEtat).some(dbEtatSingle => dbEtatSingle.etapeTypeId === etape.etapeTypeId && dbEtatSingle.etapeStatutId === etape.etapeStatutId)
+    })
+
+    if (entry) {
+      const eventFromEntry = entry[0]
+      switch (eventFromEntry) {
+        default:
+          // related to https://github.com/microsoft/TypeScript/issues/46497  https://github.com/microsoft/TypeScript/issues/40803 :(
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          return { type: eventFromEntry }
+      }
+    }
+    throw new Error(`no event from ${JSON.stringify(etape)}`)
+  }
+}

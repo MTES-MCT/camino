@@ -8,11 +8,12 @@ import { AxmProMachine } from './axm/pro.machine.js'
 import { PxgOctMachine } from './pxg/oct.machine.js'
 import { newDemarcheId } from '../../database/models/_format/id-create.js'
 import { CaminoDate, toCaminoDate } from 'camino-common/src/date.js'
-import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes.js'
+import { DEMARCHES_TYPES_IDS, DemarchesTypes, DemarcheTypeId } from 'camino-common/src/static/demarchesTypes.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { ArmRenProMachine } from './arm/ren-pro.machine.js'
 import { PrmOctMachine } from './prm/oct.machine.js'
-import { DeepReadonly } from 'camino-common/src/typescript-tools.js'
+import { DeepReadonly, isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools.js'
+import { ProcedureHistoriqueMachine, ProcedureSimplifieeMachine } from './procedure-simplifiee/ps.machine.js'
 
 interface DemarcheDefinitionCommon {
   titreTypeId: TitreTypeId
@@ -103,6 +104,24 @@ export const demarchesDefinitions: DemarcheDefinition[] = [
       newDemarcheId('Umr7TPPxiuGDOzzlKfu4S8Dm'),
     ],
   },
+  {
+    titreTypeId: 'pxg',
+    demarcheTypeIds: Object.values(DEMARCHES_TYPES_IDS)
+      .filter(demarcheTypeId => !DemarchesTypes[demarcheTypeId].travaux)
+      .filter(id => id !== 'oct'),
+    machine: new ProcedureSimplifieeMachine(),
+    dateDebut: toCaminoDate('2024-01-01'),
+    demarcheIdExceptions: [],
+  },
+  {
+    titreTypeId: 'pxg',
+    demarcheTypeIds: Object.values(DEMARCHES_TYPES_IDS)
+      .filter(demarcheTypeId => !DemarchesTypes[demarcheTypeId].travaux)
+      .filter(id => id !== 'oct'),
+    machine: new ProcedureHistoriqueMachine(),
+    dateDebut: plusVieilleDateEnBase,
+    demarcheIdExceptions: [],
+  },
 ]
 
 export const demarcheDefinitionFind = (
@@ -115,9 +134,9 @@ export const demarcheDefinitionFind = (
 
   const definition = demarchesDefinitions
     .sort((a, b) => b.dateDebut.localeCompare(a.dateDebut))
-    .find(d => (!date || d.dateDebut < date) && d.titreTypeId === titreTypeId && d.demarcheTypeIds.includes(demarcheTypeId))
+    .find(d => (isNullOrUndefinedOrEmpty(date) || d.dateDebut < date) && d.titreTypeId === titreTypeId && d.demarcheTypeIds.includes(demarcheTypeId))
 
-  if (definition?.demarcheIdExceptions?.includes(demarcheId)) {
+  if (definition?.demarcheIdExceptions?.includes(demarcheId) ?? false) {
     return undefined
   }
 
