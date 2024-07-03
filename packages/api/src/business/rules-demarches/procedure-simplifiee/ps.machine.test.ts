@@ -17,6 +17,7 @@ describe('vérifie l’arbre des procédures simplifiées', () => {
     const service = orderAndInterpretMachine(psMachine, etapes)
     expect(service).canOnlyTransitionTo({ machine: psMachine, date: toCaminoDate('2022-04-14') }, [
       'CLASSER_SANS_SUITE',
+      'DEMANDER_INFORMATION',
       'DEPOSER_DEMANDE',
       'DESISTER_PAR_LE_DEMANDEUR',
       'OUVRIR_PARTICIPATION_DU_PUBLIC',
@@ -33,6 +34,7 @@ describe('vérifie l’arbre des procédures simplifiées', () => {
     const service = orderAndInterpretMachine(psMachine, etapes)
     expect(service).canOnlyTransitionTo({ machine: psMachine, date: toCaminoDate('2022-04-16') }, [
       'CLASSER_SANS_SUITE',
+      'DEMANDER_INFORMATION',
       'DESISTER_PAR_LE_DEMANDEUR',
       'OUVRIR_PARTICIPATION_DU_PUBLIC',
       'RENDRE_DECISION_ADMINISTRATION_ACCEPTEE',
@@ -47,7 +49,7 @@ describe('vérifie l’arbre des procédures simplifiées', () => {
       { ...ETES.depotDeLaDemande.FAIT, date: toCaminoDate('2022-04-15') },
     ]
     expect(() => orderAndInterpretMachine(psMachine, etapes)).toThrowErrorMatchingInlineSnapshot(
-      `[Error: Error: cannot execute step: '{"etapeTypeId":"mdp","etapeStatutId":"fai","date":"2022-04-15"}' after '["mfr_fai","mdp_fai"]'. The event {"type":"DEPOSER_DEMANDE"} should be one of 'CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_PARTICIPATION_DU_PUBLIC,RENDRE_DECISION_ADMINISTRATION_ACCEPTEE']`
+      `[Error: Error: cannot execute step: '{"etapeTypeId":"mdp","etapeStatutId":"fai","date":"2022-04-15"}' after '["mfr_fai","mdp_fai"]'. The event {"type":"DEPOSER_DEMANDE"} should be one of 'CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_PARTICIPATION_DU_PUBLIC,RENDRE_DECISION_ADMINISTRATION_ACCEPTEE']`
     )
   })
 
@@ -58,7 +60,12 @@ describe('vérifie l’arbre des procédures simplifiées', () => {
       { ...ETES.ouvertureDeLaParticipationDuPublic.FAIT, date: toCaminoDate('2022-04-16') },
     ]
     const service = orderAndInterpretMachine(psMachine, etapes)
-    expect(service).canOnlyTransitionTo({ machine: psMachine, date: toCaminoDate('2022-04-18') }, ['CLASSER_SANS_SUITE', 'CLOTURER_PARTICIPATION_DU_PUBLIC', 'DESISTER_PAR_LE_DEMANDEUR'])
+    expect(service).canOnlyTransitionTo({ machine: psMachine, date: toCaminoDate('2022-04-18') }, [
+      'CLASSER_SANS_SUITE',
+      'CLOTURER_PARTICIPATION_DU_PUBLIC',
+      'DESISTER_PAR_LE_DEMANDEUR',
+      'DEMANDER_INFORMATION',
+    ])
     expect(service.getSnapshot().context.demarcheStatut).toBe(DemarchesStatutsIds.EnInstruction)
     expect(service.getSnapshot().context.visibilite).toBe('publique')
   })
@@ -71,7 +78,12 @@ describe('vérifie l’arbre des procédures simplifiées', () => {
       { ...ETES.clotureDeLaParticipationDuPublic.TERMINE, date: toCaminoDate('2022-04-17') },
     ]
     const service = orderAndInterpretMachine(psMachine, etapes)
-    expect(service).canOnlyTransitionTo({ machine: psMachine, date: toCaminoDate('2022-04-18') }, ['CLASSER_SANS_SUITE', 'DESISTER_PAR_LE_DEMANDEUR', 'RENDRE_DECISION_ADMINISTRATION_ACCEPTEE'])
+    expect(service).canOnlyTransitionTo({ machine: psMachine, date: toCaminoDate('2022-04-18') }, [
+      'CLASSER_SANS_SUITE',
+      'DEMANDER_INFORMATION',
+      'DESISTER_PAR_LE_DEMANDEUR',
+      'RENDRE_DECISION_ADMINISTRATION_ACCEPTEE',
+    ])
     expect(service.getSnapshot().context.demarcheStatut).toBe(DemarchesStatutsIds.EnInstruction)
     expect(service.getSnapshot().context.visibilite).toBe('publique')
   })
@@ -145,6 +157,40 @@ describe('vérifie l’arbre des procédures simplifiées', () => {
     expect(service).canOnlyTransitionTo({ machine: psMachine, date: toCaminoDate('2023-04-16') }, [])
     expect(service.getSnapshot().context.demarcheStatut).toBe(DemarchesStatutsIds.Desiste)
     expect(service.getSnapshot().context.visibilite).toBe('publique')
+  })
+
+  test("peut faire une demande d'information", () => {
+    const etapes = [
+      { ...ETES.demande.FAIT, date: toCaminoDate('2022-04-14') },
+      { ...ETES.demandeDinformations.FAIT, date: toCaminoDate('2022-04-15') },
+    ]
+    const service = orderAndInterpretMachine(psMachine, etapes)
+    expect(service).canOnlyTransitionTo({ machine: psMachine, date: toCaminoDate('2023-04-16') }, [
+      'CLASSER_SANS_SUITE',
+      'DEPOSER_DEMANDE',
+      'DESISTER_PAR_LE_DEMANDEUR',
+      'OUVRIR_PARTICIPATION_DU_PUBLIC',
+      'RECEVOIR_INFORMATION',
+      'RENDRE_DECISION_ADMINISTRATION_ACCEPTEE',
+    ])
+  })
+  test("peut faire deux demandes d'information consécutives", () => {
+    const etapes = [
+      { ...ETES.demande.FAIT, date: toCaminoDate('2022-04-14') },
+      { ...ETES.demandeDinformations.FAIT, date: toCaminoDate('2022-04-15') },
+      { ...ETES.receptionDinformation.FAIT, date: toCaminoDate('2022-04-16') },
+      { ...ETES.ouvertureDeLaParticipationDuPublic.FAIT, date: toCaminoDate('2022-04-17') },
+      { ...ETES.demandeDinformations.FAIT, date: toCaminoDate('2022-04-18') },
+      { ...ETES.clotureDeLaParticipationDuPublic.TERMINE, date: toCaminoDate('2022-04-19') },
+      { ...ETES.receptionDinformation.FAIT, date: toCaminoDate('2022-04-20') },
+    ]
+    const service = orderAndInterpretMachine(psMachine, etapes)
+    expect(service).canOnlyTransitionTo({ machine: psMachine, date: toCaminoDate('2023-04-21') }, [
+      'CLASSER_SANS_SUITE',
+      'DEMANDER_INFORMATION',
+      'DESISTER_PAR_LE_DEMANDEUR',
+      'RENDRE_DECISION_ADMINISTRATION_ACCEPTEE',
+    ])
   })
 
   test('peut faire la démarche valide la plus complète possible', () => {

@@ -14,6 +14,8 @@ type ProcedureSimplifieeXStateEvent =
   | { type: 'PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS' }
   | { type: 'CLASSER_SANS_SUITE' }
   | { type: 'DESISTER_PAR_LE_DEMANDEUR' }
+  | { type: 'DEMANDER_INFORMATION' }
+  | { type: 'RECEVOIR_INFORMATION' }
 
 type Event = ProcedureSimplifieeXStateEvent['type']
 
@@ -27,6 +29,8 @@ const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
   PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS: { db: ETES.publicationDeDecisionAuRecueilDesActesAdministratifs, mainStep: true },
   CLASSER_SANS_SUITE: { db: ETES.classementSansSuite, mainStep: false },
   DESISTER_PAR_LE_DEMANDEUR: { db: ETES.desistementDuDemandeur, mainStep: false },
+  DEMANDER_INFORMATION: { db: ETES.demandeDinformations, mainStep: false },
+  RECEVOIR_INFORMATION: { db: ETES.receptionDinformation, mainStep: false },
 }
 
 // Related to https://github.com/Microsoft/TypeScript/issues/12870
@@ -63,6 +67,7 @@ interface ProcedureSimplifieeContext extends CaminoCommonContext {
   depotDeLaDemandeFaite: boolean
   ouverturePublicFaite: boolean
   decisionAdministrationAccepteeFaite: boolean
+  demandeInformationEnCours: boolean
 }
 
 const procedureSimplifieeMachine = createMachine({
@@ -75,6 +80,7 @@ const procedureSimplifieeMachine = createMachine({
     depotDeLaDemandeFaite: false,
     ouverturePublicFaite: false,
     decisionAdministrationAccepteeFaite: false,
+    demandeInformationEnCours: false,
   },
   on: {
     CLASSER_SANS_SUITE: {
@@ -89,6 +95,18 @@ const procedureSimplifieeMachine = createMachine({
       target: '.finDeMachine',
       actions: assign({
         demarcheStatut: DemarchesStatutsIds.Desiste,
+      }),
+    },
+    DEMANDER_INFORMATION: {
+      guard: ({ context }) => context.demarcheStatut === DemarchesStatutsIds.EnInstruction && !context.demandeInformationEnCours,
+      actions: assign({
+        demandeInformationEnCours: true,
+      }),
+    },
+    RECEVOIR_INFORMATION: {
+      guard: ({ context }) => context.demarcheStatut === DemarchesStatutsIds.EnInstruction && context.demandeInformationEnCours,
+      actions: assign({
+        demandeInformationEnCours: false,
       }),
     },
   },
