@@ -96,14 +96,10 @@ export const demarchesDefinitions: DemarcheDefinition[] = [
     titreTypeId: 'pxg',
     demarcheTypeIds: ['oct'],
     machine: new PxgOctMachine(),
-    dateDebut: plusVieilleDateEnBase,
-    demarcheIdExceptions: [
-      // Ne respectent pas le cacoo
-      newDemarcheId('fqDEYKmkLijEx0b7HRmkXxUP'),
-      newDemarcheId('fML5J37ugo6iWC3ugXfQ2AIk'),
-      newDemarcheId('Umr7TPPxiuGDOzzlKfu4S8Dm'),
-    ],
+    dateDebut: toCaminoDate('1990-01-01'),
+    demarcheIdExceptions: [],
   },
+  // FIXME: finaliser les étapes d'ouverture de la participation du publique de 'Vinzelle' et 'Les poteries minérales'
   {
     titreTypeId: 'pxg',
     demarcheTypeIds: Object.values(DEMARCHES_TYPES_IDS)
@@ -115,9 +111,7 @@ export const demarchesDefinitions: DemarcheDefinition[] = [
   },
   {
     titreTypeId: 'pxg',
-    demarcheTypeIds: Object.values(DEMARCHES_TYPES_IDS)
-      .filter(demarcheTypeId => !DemarchesTypes[demarcheTypeId].travaux)
-      .filter(id => id !== 'oct'),
+    demarcheTypeIds: Object.values(DEMARCHES_TYPES_IDS).filter(demarcheTypeId => !DemarchesTypes[demarcheTypeId].travaux),
     machine: new ProcedureHistoriqueMachine(),
     dateDebut: plusVieilleDateEnBase,
     demarcheIdExceptions: [],
