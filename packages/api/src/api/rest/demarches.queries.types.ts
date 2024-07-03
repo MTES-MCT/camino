@@ -30,6 +30,7 @@ export interface IGetEtapesByDemarcheIdDbResult {
   id: string;
   is_brouillon: boolean;
   notes: string | null;
+  notes_avertissement: boolean | null;
   ordre: number;
   sdom_zones: Json;
   secteurs_maritime: Json;

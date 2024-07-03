@@ -36,7 +36,12 @@ const demarcheEtapeCommonValidator = z.object({
   date: caminoDateValidator,
   id: etapeIdValidator,
   ordre: z.number(),
-  notes: z.string().nullable(),
+  notes: z
+    .object({
+      valeur: z.string(),
+      is_avertissement: z.boolean(),
+    })
+    .nullable(),
   slug: etapeSlugValidator,
   sections_with_values: z.array(sectionWithValueValidator),
   entreprises_documents: z.array(etapeEntrepriseDocumentValidator),

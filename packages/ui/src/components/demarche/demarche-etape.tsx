@@ -14,7 +14,7 @@ import { DemarcheEtape as CommonDemarcheEtape } from 'camino-common/src/demarche
 import { DsfrPerimetre, TabId } from '../_common/dsfr-perimetre'
 import { TitreSlug } from 'camino-common/src/validators/titres'
 import { numberFormat } from 'camino-common/src/number'
-import { OmitDistributive, getValues, isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
+import { OmitDistributive, getValues, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
 import { valeurFind } from 'camino-common/src/sections'
 import { EtapeDocuments } from '../etape/etape-documents'
 import { User } from 'camino-common/src/roles'
@@ -40,6 +40,7 @@ import { CommuneId } from 'camino-common/src/static/communes'
 import { EtapeAvisTable } from '../etape/etape-avis'
 import { FlattenEtape } from 'camino-common/src/etape-form'
 import { getSections } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections'
+import { Alert } from '../_ui/alert'
 // Il ne faut pas utiliser de literal dans le 'in' il n'y aura jamais d'erreur typescript
 const fondamentalePropsName = 'fondamentale'
 
@@ -351,7 +352,15 @@ export const DemarcheEtape = defineComponent<Props>(props => {
                   ))}
               </>
             ))}
-            {props.etape.notes !== null ? <EtapePropItem style={{ gridColumn: '1 / -1', whiteSpace: 'pre-line' }} title="Notes" text={props.etape.notes} /> : null}
+            {props.etape.notes !== null && isNotNullNorUndefinedNorEmpty(props.etape.notes.valeur) ? (
+              <>
+                {props.etape.notes.is_avertissement ? (
+                  <Alert style={{ gridColumn: '1 / -1' }} small={true} title={props.etape.notes.valeur} type="warning" />
+                ) : (
+                  <EtapePropItem style={{ gridColumn: '1 / -1', whiteSpace: 'pre-line' }} title="Notes" text={props.etape.notes.valeur} />
+                )}
+              </>
+            ) : null}
           </div>
         </>
       ) : null}

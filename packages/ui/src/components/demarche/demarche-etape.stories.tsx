@@ -316,7 +316,7 @@ export const DemandeMultipleEntreprisesDocuments: StoryFn = () => (
       etape_statut_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeStatutId,
       is_brouillon: ETAPE_IS_NOT_BROUILLON,
       date,
-      notes: 'Super note',
+      notes: { valeur: 'Super note', is_avertissement: false },
       fondamentale: {
         date_debut: toCaminoDate('2023-10-25'),
         duree: 12,
@@ -890,7 +890,7 @@ export const DemandeAvecGrosseNote: StoryFn = () => (
     etape={{
       id: etapeIdValidator.parse('etapeId'),
       slug: etapeSlugValidator.parse('etape-slug'),
-      notes: 'Ceci est une énorme note sur plusieurs lignes.\n Une seconde ligne.\n Incertitudes: \n * date \n * substances \n * titulaireIds',
+      notes: { valeur: 'Ceci est une énorme note sur plusieurs lignes.\n Une seconde ligne.\n Incertitudes: \n * date \n * substances \n * titulaireIds', is_avertissement: false },
       etape_type_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeTypeId,
       etape_statut_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeStatutId,
       is_brouillon: ETAPE_IS_BROUILLON,
@@ -974,7 +974,7 @@ export const AxmDeposableAvecDaeEtAsl: StoryFn = () => (
     etape={{
       id: etapeIdValidator.parse('etapeId'),
       slug: etapeSlugValidator.parse('etape-slug'),
-      notes: '',
+      notes: { valeur: '', is_avertissement: false },
       etape_type_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeTypeId,
       etape_statut_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeStatutId,
       is_brouillon: ETAPE_IS_BROUILLON,
@@ -1068,7 +1068,7 @@ export const DemandeAvecForage: StoryFn = () => (
     etape={{
       id: etapeIdValidator.parse('etapeId'),
       slug: etapeSlugValidator.parse('etape-slug'),
-      notes: '',
+      notes: { valeur: '', is_avertissement: false },
       etape_type_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeTypeId,
       etape_statut_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeStatutId,
       is_brouillon: ETAPE_IS_BROUILLON,
@@ -1124,6 +1124,30 @@ export const AvisDesServices: StoryFn = () => (
       id: etapeIdValidator.parse('etapeId'),
       slug: etapeSlugValidator.parse('etape-slug'),
       notes: null,
+      etape_type_id: EtapesTypesEtapesStatuts.avisDesServicesEtCommissionsConsultatives.FAIT.etapeTypeId,
+      etape_statut_id: EtapesTypesEtapesStatuts.avisDesServicesEtCommissionsConsultatives.FAIT.etapeStatutId,
+      is_brouillon: ETAPE_IS_BROUILLON,
+      date,
+      sections_with_values: [],
+      etape_documents: documents,
+      entreprises_documents: entrepriseDocuments,
+      avis_documents: [],
+    }}
+    apiClient={apiClient}
+    entreprises={entreprises}
+  />
+)
+
+export const EtapeAvecNoteAvertissement: StoryFn = () => (
+  <DemarcheEtape
+    titre={{ titreStatutId: 'val', typeId: 'arm', nom: 'nom du titre', slug: titreSlug }}
+    demarche={{ demarche_type_id: 'oct', titulaireIds: [entrepriseIdValidator.parse('titulaire1')], administrationsLocales: [], sdom_zones: [], etapes: [], communes: [] }}
+    router={routerPushMock}
+    user={{ ...testBlankUser, role: 'super' }}
+    etape={{
+      id: etapeIdValidator.parse('etapeId'),
+      slug: etapeSlugValidator.parse('etape-slug'),
+      notes: { valeur: 'Ceci est une note très importante', is_avertissement: true },
       etape_type_id: EtapesTypesEtapesStatuts.avisDesServicesEtCommissionsConsultatives.FAIT.etapeTypeId,
       etape_statut_id: EtapesTypesEtapesStatuts.avisDesServicesEtCommissionsConsultatives.FAIT.etapeStatutId,
       is_brouillon: ETAPE_IS_BROUILLON,
