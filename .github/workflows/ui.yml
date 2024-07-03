@@ -26,7 +26,7 @@ jobs:
         run:  make install
       - name: Lint
         run: make lint/ui
-          
+
   test:
     runs-on: ubuntu-latest
     steps:
@@ -45,8 +45,27 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           flags: ui
+  test-storybook:
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v4
+        - uses: actions/setup-node@v4
+          with:
+            node-version: '20.12.2'
+            cache: 'npm'
+        - name: Install dependencies
+          run: make install
+        - name: Install Playwright
+          run: npx playwright install --with-deps
+        - name: Build Storybook
+          run: npm run storybook:build -w packages/ui
+        - name: Serve Storybook and run tests
+          run: |
+            npx concurrently -k -s first -n "SB,TEST" -c "magenta,blue" \
+              "npx http-server storybook-static --port 6006 --silent" \
+              "npx wait-on tcp:6006 && npm run storybook:test -w packages/ui"
   build:
-    needs: [test, lint]
+    needs: [test, test-storybook, lint]
     runs-on: ubuntu-latest
 
     steps:
