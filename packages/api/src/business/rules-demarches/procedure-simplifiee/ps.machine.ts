@@ -7,16 +7,22 @@ import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts.j
 type ProcedureSimplifieeXStateEvent =
   | { type: 'FAIRE_DEMANDE' }
   | { type: 'DEPOSER_DEMANDE' }
-  | { type: 'FAIRE_RECEVABILITE_DE_LA_DEMANDE' }
   | { type: 'OUVRIR_PARTICIPATION_DU_PUBLIC' }
+  | { type: 'CLOTURER_PARTICIPATION_DU_PUBLIC' }
+  | { type: 'RENDRE_DECISION_ADMINISTRATION_ACCEPTEE' }
+  | { type: 'PUBLIER_DECISION_ACCEPTEE_AU_JORF' }
+  | { type: 'PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS' }
 
 type Event = ProcedureSimplifieeXStateEvent['type']
 
 const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
   FAIRE_DEMANDE: { db: ETES.demande, mainStep: true },
   DEPOSER_DEMANDE: { db: ETES.depotDeLaDemande, mainStep: true },
-  FAIRE_RECEVABILITE_DE_LA_DEMANDE: { db: { FAVORABLE: ETES.recevabiliteDeLaDemande.FAVORABLE }, mainStep: true},
-  OUVRIR_PARTICIPATION_DU_PUBLIC: {db: ETES.ouvertureDeLaParticipationDuPublic, mainStep: true },
+  OUVRIR_PARTICIPATION_DU_PUBLIC: { db: ETES.ouvertureDeLaParticipationDuPublic, mainStep: true },
+  CLOTURER_PARTICIPATION_DU_PUBLIC: { db: ETES.clotureDeLaParticipationDuPublic, mainStep: true },
+  RENDRE_DECISION_ADMINISTRATION_ACCEPTEE: { db: { ACCEPTE: ETES.decisionDeLadministration.ACCEPTE }, mainStep: true },
+  PUBLIER_DECISION_ACCEPTEE_AU_JORF: { db: { ACCEPTE: ETES.publicationDeDecisionAuJORF.ACCEPTE }, mainStep: true },
+  PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS: { db: ETES.publicationDeDecisionAuRecueilDesActesAdministratifs, mainStep: true },
 }
 
 // Related to https://github.com/Microsoft/TypeScript/issues/12870
@@ -50,11 +56,10 @@ export class ProcedureSimplifieeMachine extends CaminoMachine<ProcedureSimplifie
 }
 
 interface ProcedureSimplifieeContext extends CaminoCommonContext {
-  receptionDeLaDemandeFaite: boolean
+  depotDeLaDemandeFaite: boolean
   ouverturePublicFaite: boolean
   decisionAdministrationFaite: boolean
 }
-
 
 const procedureSimplifieeMachine = createMachine({
   types: {} as { context: ProcedureSimplifieeContext; events: ProcedureSimplifieeXStateEvent },
@@ -63,51 +68,64 @@ const procedureSimplifieeMachine = createMachine({
   context: {
     demarcheStatut: DemarchesStatutsIds.EnConstruction,
     visibilite: 'confidentielle',
-    receptionDeLaDemandeFaite: false,
+    depotDeLaDemandeFaite: false,
     ouverturePublicFaite: false,
-    decisionAdministrationFaite: false
+    decisionAdministrationFaite: false,
   },
   states: {
     demandeAFaire: {
       on: {
-        FAIRE_DEMANDE: 'depotDeLaDemandeAFaire',
-      },
-    },
-    depotDeLaDemandeAFaire: {
-      on: {
-        DEPOSER_DEMANDE: {
+        FAIRE_DEMANDE: {
           target: 'receptionDeLaDemandeOuOuverturePublicOuDecisionAdministrationAFaire',
           actions: assign({
-            demarcheStatut: DemarchesStatutsIds.EnInstruction
-          })
+            demarcheStatut: DemarchesStatutsIds.EnInstruction,
+          }),
         },
       },
     },
+
     receptionDeLaDemandeOuOuverturePublicOuDecisionAdministrationAFaire: {
       on: {
-        FAIRE_RECEVABILITE_DE_LA_DEMANDE: {
-          guard: ({ context }) => !context.ouverturePublicFaite && !context.decisionAdministrationFaite && !context.receptionDeLaDemandeFaite,
+        DEPOSER_DEMANDE: {
+          guard: ({ context }) => !context.depotDeLaDemandeFaite && !context.decisionAdministrationFaite && !context.ouverturePublicFaite,
+          target: 'receptionDeLaDemandeOuOuverturePublicOuDecisionAdministrationAFaire',
           actions: assign({
-            receptionDeLaDemandeFaite: true
+            depotDeLaDemandeFaite: true,
           }),
-          target: 'receptionDeLaDemandeOuOuverturePublicOuDecisionAdministrationAFaire'
         },
         OUVRIR_PARTICIPATION_DU_PUBLIC: {
-          guard: ({ context }) => !context.decisionAdministrationFaite,
+          guard: ({ context }) => !context.ouverturePublicFaite && !context.decisionAdministrationFaite,
           actions: assign({
-            ouverturePublicFaite: true
+            ouverturePublicFaite: true,
+            visibilite: 'publique',
           }),
-          target: 'clotureDeLaParticipationDuPublic',
+          target: 'clotureDeLaParticipationDuPublicAFaire',
         },
-        // DECISION_ADMINISTRATION: {
-        //   actions: assign({
-        //     decisionAdministrationFaite: true
-        //   })
-        // },
-      }
+        RENDRE_DECISION_ADMINISTRATION_ACCEPTEE: {
+          actions: assign({
+            decisionAdministrationFaite: true,
+            visibilite: 'publique',
+            demarcheStatut: 'acc',
+          }),
+          target: 'publicationAuRecueilDesActesAdministratifsOupublicationAuJORFAFaire',
+        },
+      },
     },
-    clotureDeLaParticipationDuPublic: {
 
-    }
+    clotureDeLaParticipationDuPublicAFaire: {
+      on: {
+        CLOTURER_PARTICIPATION_DU_PUBLIC: 'receptionDeLaDemandeOuOuverturePublicOuDecisionAdministrationAFaire',
+      },
+    },
+
+    publicationAuRecueilDesActesAdministratifsOupublicationAuJORFAFaire: {
+      on: {
+        PUBLIER_DECISION_ACCEPTEE_AU_JORF: 'finDeMachine',
+        PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS: 'finDeMachine',
+      },
+    },
+    finDeMachine: {
+      type: 'final',
+    },
   },
 })

@@ -1,4 +1,4 @@
-import { interpretMachine, orderAndInterpretMachine } from '../machine-test-helper.js'
+import { orderAndInterpretMachine } from '../machine-test-helper.js'
 import { EtapesTypesEtapesStatuts as ETES } from 'camino-common/src/static/etapesTypesEtapesStatuts.js'
 import { toCaminoDate } from 'camino-common/src/date.js'
 import { describe, expect, test } from 'vitest'
@@ -7,12 +7,16 @@ import { ProcedureSimplifieeMachine } from './ps.machine.js'
 
 describe('vérifie l’arbre des procédures simplifiées', () => {
   const psMachine = new ProcedureSimplifieeMachine()
-
+  test('statut de la démarche sans étape', () => {
+    const service = orderAndInterpretMachine(psMachine, [])
+    expect(service).canOnlyTransitionTo({ machine: psMachine, date: toCaminoDate('2022-04-14') }, ['FAIRE_DEMANDE'])
+    expect(service.getSnapshot().context.demarcheStatut).toBe(DemarchesStatutsIds.EnConstruction)
+  })
   test('peut créer une "mfr"', () => {
     const etapes = [{ ...ETES.demande.FAIT, date: toCaminoDate('2022-04-14') }]
     const service = orderAndInterpretMachine(psMachine, etapes)
-    expect(service).canOnlyTransitionTo({ machine: psMachine, date: toCaminoDate('2022-04-14') }, ['DEPOSER_DEMANDE'])
-    expect(service.getSnapshot().context.demarcheStatut).toBe(DemarchesStatutsIds.EnConstruction)
+    expect(service).canOnlyTransitionTo({ machine: psMachine, date: toCaminoDate('2022-04-14') }, ['DEPOSER_DEMANDE', 'OUVRIR_PARTICIPATION_DU_PUBLIC', 'RENDRE_DECISION_ADMINISTRATION_ACCEPTEE'])
+    expect(service.getSnapshot().context.demarcheStatut).toBe(DemarchesStatutsIds.EnInstruction)
   })
 
   test('peut déposer une demande', () => {
@@ -21,229 +25,81 @@ describe('vérifie l’arbre des procédures simplifiées', () => {
       { ...ETES.depotDeLaDemande.FAIT, date: toCaminoDate('2022-04-15') },
     ]
     const service = orderAndInterpretMachine(psMachine, etapes)
-    expect(service).canOnlyTransitionTo({ machine: psMachine, date: toCaminoDate('2022-04-14') }, ['FAIRE_RECEVABILITE_DE_LA_DEMANDE', 'OUVRIR_PARTICIPATION_DU_PUBLIC'])
+    expect(service).canOnlyTransitionTo({ machine: psMachine, date: toCaminoDate('2022-04-16') }, ['OUVRIR_PARTICIPATION_DU_PUBLIC', 'RENDRE_DECISION_ADMINISTRATION_ACCEPTEE'])
     expect(service.getSnapshot().context.demarcheStatut).toBe(DemarchesStatutsIds.EnInstruction)
   })
 
-  test('ne peut pas faire deux recevabilités de la demande', () => {
+  test('ne peut pas faire deux dépôts de la demande', () => {
     const etapes = [
       { ...ETES.demande.FAIT, date: toCaminoDate('2022-04-14') },
       { ...ETES.depotDeLaDemande.FAIT, date: toCaminoDate('2022-04-15') },
-      { ...ETES.recevabiliteDeLaDemande.FAVORABLE, date: toCaminoDate('2022-04-16') },
+      { ...ETES.depotDeLaDemande.FAIT, date: toCaminoDate('2022-04-15') },
     ]
-    const service = orderAndInterpretMachine(psMachine, etapes)
-    expect(service).canOnlyTransitionTo({ machine: psMachine, date: toCaminoDate('2022-04-14') }, ['OUVRIR_PARTICIPATION_DU_PUBLIC'])
-    expect(service.getSnapshot().context.demarcheStatut).toBe(DemarchesStatutsIds.EnInstruction)
+    expect(() => orderAndInterpretMachine(psMachine, etapes)).toThrowErrorMatchingInlineSnapshot(
+      `[Error: Error: cannot execute step: '{"etapeTypeId":"mdp","etapeStatutId":"fai","date":"2022-04-15"}' after '["mfr_fai","mdp_fai"]'. The event {"type":"DEPOSER_DEMANDE"} should be one of 'OUVRIR_PARTICIPATION_DU_PUBLIC,RENDRE_DECISION_ADMINISTRATION_ACCEPTEE']`
+    )
   })
 
-  test.skip('peut avoir une démarche en instruction', () => {
+  test('peut faire une ouverture de la participation du public', () => {
     const etapes = [
       { ...ETES.demande.FAIT, date: toCaminoDate('2022-04-14') },
       { ...ETES.depotDeLaDemande.FAIT, date: toCaminoDate('2022-04-15') },
-      {
-        ...ETES.demandeDeComplements_RecevabiliteDeLaDemande_.FAIT,
-        date: toCaminoDate('2022-04-16'),
-      },
-      {
-        ...ETES.receptionDeComplements_RecevabiliteDeLaDemande_.FAIT,
-        date: toCaminoDate('2022-04-16'),
-      },
-      {
-        ...ETES.recevabiliteDeLaDemande.FAVORABLE,
-        date: toCaminoDate('2022-04-17'),
-      },
-      { ...ETES.avisDesServicesEtCommissionsConsultatives.FAIT, date: toCaminoDate('2022-04-18') },
-      {
-        ...ETES.saisineDesCollectivitesLocales.FAIT,
-        date: toCaminoDate('2022-04-19'),
-      },
-      {
-        ...ETES.saisineDeLautoriteEnvironnementale.FAIT,
-        date: toCaminoDate('2022-04-20'),
-      },
+      { ...ETES.ouvertureDeLaParticipationDuPublic.FAIT, date: toCaminoDate('2022-04-16') },
     ]
     const service = orderAndInterpretMachine(psMachine, etapes)
+    expect(service).canOnlyTransitionTo({ machine: psMachine, date: toCaminoDate('2022-04-18') }, ['CLOTURER_PARTICIPATION_DU_PUBLIC'])
     expect(service.getSnapshot().context.demarcheStatut).toBe(DemarchesStatutsIds.EnInstruction)
+    expect(service.getSnapshot().context.visibilite).toBe('publique')
   })
 
-  // test('peut modifier une demande', () => {
-  //   const etapes = [
-  //     { ...ETES.demande.FAIT, date: toCaminoDate('2022-04-14') },
-  //     { ...ETES.depotDeLaDemande.FAIT, date: toCaminoDate('2022-04-15') },
-  //     {
-  //       ...ETES.demandeDeComplements_RecevabiliteDeLaDemande_.FAIT,
-  //       date: toCaminoDate('2022-04-16'),
-  //     },
-  //     {
-  //       ...ETES.receptionDeComplements_RecevabiliteDeLaDemande_.FAIT,
-  //       date: toCaminoDate('2022-04-16'),
-  //     },
-  //     {
-  //       ...ETES.recevabiliteDeLaDemande.DEFAVORABLE,
-  //       date: toCaminoDate('2022-04-17'),
-  //     },
-  //     {
-  //       ...ETES.modificationDeLaDemande.FAIT,
-  //       date: toCaminoDate('2022-04-18'),
-  //     },
-  //     {
-  //       ...ETES.recevabiliteDeLaDemande.FAVORABLE,
-  //       date: toCaminoDate('2022-04-19'),
-  //     },
-  //   ]
-  //   const service = orderAndInterpretMachine(pxgOctMachine, etapes)
-  //   expect(service.getSnapshot().context.demarcheStatut).toBe(DemarchesStatutsIds.Depose)
-  // })
+  test('peut faire une clotûre de la participation du public', () => {
+    const etapes = [
+      { ...ETES.demande.FAIT, date: toCaminoDate('2022-04-14') },
+      { ...ETES.depotDeLaDemande.FAIT, date: toCaminoDate('2022-04-15') },
+      { ...ETES.ouvertureDeLaParticipationDuPublic.FAIT, date: toCaminoDate('2022-04-16') },
+      { ...ETES.clotureDeLaParticipationDuPublic.TERMINE, date: toCaminoDate('2022-04-17') },
+    ]
+    const service = orderAndInterpretMachine(psMachine, etapes)
+    expect(service).canOnlyTransitionTo({ machine: psMachine, date: toCaminoDate('2022-04-18') }, ['RENDRE_DECISION_ADMINISTRATION_ACCEPTEE'])
+    expect(service.getSnapshot().context.demarcheStatut).toBe(DemarchesStatutsIds.EnInstruction)
+    expect(service.getSnapshot().context.visibilite).toBe('publique')
+  })
 
-  // test('peut construire une demande complète', () => {
-  //   const etapes = [
-  //     { ...ETES.demande.FAIT, date: toCaminoDate('2022-04-14') },
-  //     { ...ETES.depotDeLaDemande.FAIT, date: toCaminoDate('2022-04-15') },
-  //     {
-  //       ...ETES.demandeDeComplements_RecevabiliteDeLaDemande_.FAIT,
-  //       date: toCaminoDate('2022-04-16'),
-  //     },
-  //     {
-  //       ...ETES.receptionDeComplements_RecevabiliteDeLaDemande_.FAIT,
-  //       date: toCaminoDate('2022-04-16'),
-  //     },
-  //     {
-  //       ...ETES.recevabiliteDeLaDemande.FAVORABLE,
-  //       date: toCaminoDate('2022-04-17'),
-  //     },
-  //     { ...ETES.avisDesServicesEtCommissionsConsultatives.FAIT, date: toCaminoDate('2022-04-18') },
-  //     {
-  //       ...ETES.saisineDesCollectivitesLocales.FAIT,
-  //       date: toCaminoDate('2022-04-19'),
-  //     },
-  //     {
-  //       ...ETES.saisineDeLautoriteEnvironnementale.FAIT,
-  //       date: toCaminoDate('2022-04-20'),
-  //     },
-  //     {
-  //       ...ETES.avisDeLautoriteEnvironnementale.FAVORABLE,
-  //       date: toCaminoDate('2022-04-21'),
-  //     },
-  //     {
-  //       ...ETES.consultationCLEDuSAGE.FAVORABLE,
-  //       date: toCaminoDate('2022-04-21'),
-  //     },
-  //     {
-  //       ...ETES.avisEtRapportDuDirecteurRegionalChargeDeLenvironnementDeLamenagementEtDuLogement.FAVORABLE,
-  //       date: toCaminoDate('2022-04-22'),
-  //     },
-  //     {
-  //       ...ETES.transmissionDuProjetDePrescriptionsAuDemandeur.FAIT,
-  //       date: toCaminoDate('2022-04-23'),
-  //     },
-  //     {
-  //       ...ETES.avisDuDemandeurSurLesPrescriptionsProposees.FAVORABLE,
-  //       date: toCaminoDate('2022-04-24'),
-  //     },
-  //     {
-  //       ...ETES.decisionDeLadministration.ACCEPTE,
-  //       date: toCaminoDate('2022-04-25'),
-  //     },
-  //     {
-  //       ...ETES.notificationAuDemandeur.FAIT,
-  //       date: toCaminoDate('2022-04-26'),
-  //     },
-  //     {
-  //       ...ETES.publicationDeDecisionAuRecueilDesActesAdministratifs.FAIT,
-  //       date: toCaminoDate('2022-04-26'),
-  //     },
-  //   ]
-  //   const service = orderAndInterpretMachine(pxgOctMachine, etapes)
-  //   expect(service).canOnlyTransitionTo({ machine: pxgOctMachine, date: toCaminoDate('2022-04-26') }, [])
-  // })
+  test("peut rendre une décision d'administration acceptée", () => {
+    const etapes = [
+      { ...ETES.demande.FAIT, date: toCaminoDate('2022-04-14') },
+      { ...ETES.decisionDeLadministration.ACCEPTE, date: toCaminoDate('2022-04-15') },
+    ]
+    const service = orderAndInterpretMachine(psMachine, etapes)
+    expect(service).canOnlyTransitionTo({ machine: psMachine, date: toCaminoDate('2022-04-16') }, ['PUBLIER_DECISION_ACCEPTEE_AU_JORF', 'PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS'])
+    expect(service.getSnapshot().context.demarcheStatut).toBe(DemarchesStatutsIds.Accepte)
+    expect(service.getSnapshot().context.visibilite).toBe('publique')
+  })
 
-  // describe('démarches simplifiées', () => {
-  //   test('la plus simple possible', () => {
-  //     const etapes = [
-  //       { ...ETES.decisionDeLadministration.ACCEPTE, date: toCaminoDate('2022-04-14') },
-  //       { ...ETES.publicationDeDecisionAuRecueilDesActesAdministratifs.FAIT, date: toCaminoDate('2022-04-15') },
-  //     ]
-  //     const service = orderAndInterpretMachine(pxgOctMachine, etapes)
-  //     expect(service.getSnapshot().context.demarcheStatut).toBe(DemarchesStatutsIds.Accepte)
-  //   })
+  test('peut rendre une décision acceptée au recueil des actes administratifs', () => {
+    const etapes = [
+      { ...ETES.demande.FAIT, date: toCaminoDate('2022-04-14') },
+      { ...ETES.decisionDeLadministration.ACCEPTE, date: toCaminoDate('2022-04-15') },
+      { ...ETES.publicationDeDecisionAuRecueilDesActesAdministratifs.FAIT, date: toCaminoDate('2022-04-16') },
+    ]
+    const service = orderAndInterpretMachine(psMachine, etapes)
+    expect(service).canOnlyTransitionTo({ machine: psMachine, date: toCaminoDate('2023-04-16') }, [])
+    expect(service.getSnapshot().context.demarcheStatut).toBe(DemarchesStatutsIds.Accepte)
+    expect(service.getSnapshot().context.visibilite).toBe('publique')
+  })
 
-  //   test('ne peut pas faire une rpu seule', () => {
-  //     const etapes = [{ ...ETES.publicationDeDecisionAuRecueilDesActesAdministratifs.FAIT, date: toCaminoDate('2022-04-15') }]
-  //     expect(() => orderAndInterpretMachine(pxgOctMachine, etapes)).toThrowErrorMatchingInlineSnapshot(
-  //       `[Error: Error: cannot execute step: '{"etapeTypeId":"rpu","etapeStatutId":"fai","date":"2022-04-15"}' after '[]'. The event {"type":"PUBLIER_DECISION_RECUEIL_DES_ACTES_ADMINISTRATIFS"} should be one of 'FAIRE_DEMANDE,OUVRIR_ENQUETE_PUBLIQUE,RENDRE_DECISION_ADMINISTRATION_FAVORABLE']`
-  //     )
-  //   })
-
-  //   test('peut créer avec une demande', () => {
-  //     const etapes = [
-  //       { ...ETES.demande.FAIT, date: toCaminoDate('2022-04-14') },
-  //       { ...ETES.decisionDeLadministration.ACCEPTE, date: toCaminoDate('2022-04-14') },
-  //       { ...ETES.publicationDeDecisionAuRecueilDesActesAdministratifs.FAIT, date: toCaminoDate('2022-04-15') },
-  //     ]
-  //     const service = orderAndInterpretMachine(pxgOctMachine, etapes)
-  //     expect(service.getSnapshot().context.demarcheStatut).toBe(DemarchesStatutsIds.Accepte)
-  //   })
-  //   test('peut créer avec une enquête publique', () => {
-  //     const etapes = [
-  //       { ...ETES.ouvertureDeLenquetePublique.FAIT, date: toCaminoDate('2022-04-13') },
-  //       { ...ETES.clotureDeLenquetePublique.TERMINE, date: toCaminoDate('2022-04-14') },
-  //       { ...ETES.decisionDeLadministration.ACCEPTE, date: toCaminoDate('2022-04-14') },
-  //       { ...ETES.publicationDeDecisionAuRecueilDesActesAdministratifs.FAIT, date: toCaminoDate('2022-04-15') },
-  //     ]
-  //     const service = orderAndInterpretMachine(pxgOctMachine, etapes)
-  //     expect(service.getSnapshot().context.demarcheStatut).toBe(DemarchesStatutsIds.Accepte)
-  //   })
-  //   test('peut créer avec une demande et une enquête publique', () => {
-  //     const etapes = [
-  //       { ...ETES.demande.FAIT, date: toCaminoDate('2022-04-12') },
-  //       { ...ETES.ouvertureDeLenquetePublique.FAIT, date: toCaminoDate('2022-04-13') },
-  //       { ...ETES.clotureDeLenquetePublique.TERMINE, date: toCaminoDate('2022-04-14') },
-  //       { ...ETES.decisionDeLadministration.ACCEPTE, date: toCaminoDate('2022-04-14') },
-  //       { ...ETES.publicationDeDecisionAuRecueilDesActesAdministratifs.FAIT, date: toCaminoDate('2022-04-15') },
-  //     ]
-  //     const service = orderAndInterpretMachine(pxgOctMachine, etapes)
-  //     expect(service.getSnapshot().context.demarcheStatut).toBe(DemarchesStatutsIds.Accepte)
-  //   })
-
-  //   test('ne peut pas aller dans la démarche simplifiée une fois la demande déposée', () => {
-  //     const etapes = [
-  //       { ...ETES.demande.FAIT, date: toCaminoDate('2022-04-12') },
-  //       { ...ETES.depotDeLaDemande.FAIT, date: toCaminoDate('2022-04-12') },
-  //       { ...ETES.ouvertureDeLenquetePublique.FAIT, date: toCaminoDate('2022-04-13') },
-  //     ]
-  //     expect(() => orderAndInterpretMachine(pxgOctMachine, etapes)).toThrowErrorMatchingInlineSnapshot(
-  //       `[Error: Error: cannot execute step: '{"etapeTypeId":"epu","etapeStatutId":"fai","date":"2022-04-13"}' after '["mfr_fai","mdp_fai"]'. The event {"type":"OUVRIR_ENQUETE_PUBLIQUE"} should be one of 'DEMANDER_COMPLEMENTS_POUR_RECEVABILITE,FAIRE_RECEVABILITE_DEMANDE_DEFAVORABLE,FAIRE_RECEVABILITE_DEMANDE_FAVORABLE']`
-  //     )
-  //   })
-
-  //   test("ne peut pas refaire de décision de l'administration", () => {
-  //     const etapes = [
-  //       { ...ETES.decisionDeLadministration.ACCEPTE, date: toCaminoDate('2022-04-14') },
-  //       { ...ETES.decisionDeLadministration.ACCEPTE, date: toCaminoDate('2022-04-15') },
-  //     ]
-  //     expect(() => orderAndInterpretMachine(pxgOctMachine, etapes)).toThrowErrorMatchingInlineSnapshot(
-  //       `[Error: Error: cannot execute step: '{"etapeTypeId":"dex","etapeStatutId":"acc","date":"2022-04-15"}' after '["dex_acc"]'. The event {"type":"RENDRE_DECISION_ADMINISTRATION_FAVORABLE"} should be one of 'PUBLIER_DECISION_RECUEIL_DES_ACTES_ADMINISTRATIFS']`
-  //     )
-  //   })
-
-  //   test("ne peut pas faire une ouverture d'enquête publique après une décision de l'administration", () => {
-  //     const etapes = [
-  //       { ...ETES.decisionDeLadministration.ACCEPTE, date: toCaminoDate('2022-04-14') },
-  //       { ...ETES.ouvertureDeLenquetePublique.FAIT, date: toCaminoDate('2022-04-16') },
-  //     ]
-  //     expect(() => orderAndInterpretMachine(pxgOctMachine, etapes)).toThrowErrorMatchingInlineSnapshot(
-  //       `[Error: Error: cannot execute step: '{"etapeTypeId":"epu","etapeStatutId":"fai","date":"2022-04-16"}' after '["dex_acc"]'. The event {"type":"OUVRIR_ENQUETE_PUBLIQUE"} should be one of 'PUBLIER_DECISION_RECUEIL_DES_ACTES_ADMINISTRATIFS']`
-  //     )
-  //   })
-  // })
-
-  // // pour regénérer le oct.cas.json: `npm run test:generate-data -w packages/api`
-  // test.each(etapesProd as any[])('cas réel N°$id', demarche => {
-  //   // ici les étapes sont déjà ordonnées
-  //   interpretMachine(pxgOctMachine, demarche.etapes)
-  //   expect(pxgOctMachine.demarcheStatut(demarche.etapes)).toStrictEqual({
-  //     demarcheStatut: demarche.demarcheStatutId,
-  //     publique: demarche.demarchePublique,
-  //   })
-  // })
+  test('peut faire la démarche valide la plus complète possible', () => {
+    const etapes = [
+      { ...ETES.demande.FAIT, date: toCaminoDate('2022-04-14') },
+      { ...ETES.depotDeLaDemande.FAIT, date: toCaminoDate('2022-04-15') },
+      { ...ETES.ouvertureDeLaParticipationDuPublic.FAIT, date: toCaminoDate('2022-04-16') },
+      { ...ETES.clotureDeLaParticipationDuPublic.TERMINE, date: toCaminoDate('2022-04-17') },
+      { ...ETES.decisionDeLadministration.ACCEPTE, date: toCaminoDate('2022-04-18') },
+      { ...ETES.publicationDeDecisionAuJORF.ACCEPTE, date: toCaminoDate('2022-04-19') },
+    ]
+    const service = orderAndInterpretMachine(psMachine, etapes)
+    expect(service).canOnlyTransitionTo({ machine: psMachine, date: toCaminoDate('2023-04-19') }, [])
+    expect(service.getSnapshot().context.demarcheStatut).toBe(DemarchesStatutsIds.Accepte)
+    expect(service.getSnapshot().context.visibilite).toBe('publique')
+  })
 })
