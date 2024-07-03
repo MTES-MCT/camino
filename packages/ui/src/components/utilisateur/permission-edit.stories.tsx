@@ -52,10 +52,7 @@ export const Entreprise: StoryFn = () => (
       ...testBlankUser,
       id: toUtilisateurId('utilisateurIdFake'),
       role: 'entreprise',
-      entreprises: [
-        { id: newEntrepriseId('entrepriseId1'), nom: 'nom' },
-        { id: newEntrepriseId('entrepriseId2'), nom: 'nom' },
-      ],
+      entreprises: [{ id: newEntrepriseId('entrepriseId1') }, { id: newEntrepriseId('entrepriseId2') }],
     }}
     entreprises={[
       { id: newEntrepriseId('entrepriseId1'), nom: 'Nom entreprise1', legal_siren: null },
