@@ -50,6 +50,7 @@ class TitresEtapes extends Model {
       administrationsLocales: { type: ['array', 'null'] },
       sdomZones: { type: ['array', 'null'] },
       notes: { type: ['string', 'null'] },
+      notesAvertissement: { type: 'boolean' },
     },
   }
 

@@ -113,7 +113,12 @@ const graphqlEtapeValidator = z.object({
   surface: km2Validator.nullable(),
   // Record<string, Record<string, ElementWithValue['value']>>
   contenu: contenuValidator,
-  notes: z.string().nullable(),
+  notes: z
+    .object({
+      valeur: z.string(),
+      is_avertissement: z.boolean().default(false),
+    })
+    .nullable(),
   heritageProps: heritagePropsValidator,
   heritageContenu: heritageContenuValidator,
   isBrouillon: etapeBrouillonValidator,
