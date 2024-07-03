@@ -1,6 +1,5 @@
 import type { StorybookConfig } from '@storybook/vue3-vite'
-import { mergeConfig } from 'vite'
-import appConfig from '../vite.config'
+import { rollupOptions } from '../vite-rollup'
 const config: StorybookConfig = {
   stories: ['../src/components/titre.stories.tsx', '../src/**/*.stories.@(js|jsx|ts|tsx)'],
   addons: ['@storybook/addon-actions', '@storybook/addon-controls', '@storybook/addon-interactions'],
@@ -20,9 +19,10 @@ const config: StorybookConfig = {
         }
 
     // Merge custom configuration into the default config
+    const { mergeConfig } = await import('vite')
     return mergeConfig(config, {
       build: {
-        rollupOptions: appConfig.build?.rollupOptions,
+        rollupOptions
       },
     })
   },
