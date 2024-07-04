@@ -20,7 +20,6 @@
 /* Layout          ------------------------------- */
 
 @import 'system/typography.css';
-@import 'system/lists.css';
 @import 'system/forms.css';
 @import 'system/utils.css';
 @import 'system/margins.css';
@@ -28,7 +27,6 @@
 @import 'system/colors.css';
 @import 'system/ui.css';
 @import 'system/code.css';
-@import 'system/tools.css';
 
 /* Leaflet          ------------------------------- */
 
