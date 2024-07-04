@@ -2,7 +2,6 @@ import { HTMLAttributes, computed, defineComponent, onBeforeUnmount, onMounted, 
 import { FiltersInput } from './filters-input'
 import { FiltersCheckboxes } from './filters-checkboxes'
 import { InputAutocomplete, InputAutocompleteValues } from './filters-input-autocomplete'
-import { DsfrIcon } from '@/components/_ui/icon'
 import { FiltresEtapes, FilterEtapeValue } from '../../demarches/filtres-etapes'
 import { EtapesStatuts } from 'camino-common/src/static/etapesStatuts'
 import { EtapeTypeId, EtapesTypes } from 'camino-common/src/static/etapesTypes'
@@ -31,7 +30,8 @@ import { Entreprise } from 'camino-common/src/entreprise'
 import { DeprecatedAccordion } from '../accordion'
 import { CaminoRouteLocation, CaminoRouteNames, CaminoVueRoute } from '@/router/routes'
 import { CaminoRouter } from '@/typings/vue-router'
-import { DsfrButtonIcon } from '../dsfr-button'
+import { DsfrButton, DsfrButtonIcon } from '../dsfr-button'
+import { DsfrTag } from '../tag'
 
 type FormatedLabel = { id: CaminoFiltre; name: string; value: string | string[] | FilterEtapeValue; valueName?: string | string[] }
 
@@ -173,7 +173,7 @@ export const Filters = defineComponent((props: Props) => {
     })
   }
 
-  const labelRemove = (label: FormatedLabel) => {
+  const labelRemove = (label: FormatedLabel) => () => {
     if (!opened.value) {
       const labelId = label.id
       if (isInputCaminoFiltre(labelId)) {
@@ -297,23 +297,17 @@ export const Filters = defineComponent((props: Props) => {
               <>
                 {labels.value.length ? (
                   <div class={['flex', opened.value ? 'border-b-s' : null]} style={{ justifyContent: 'center', alignItems: 'center' }}>
-                    <div class="px-m pt-m pb-s flex" style={{ flexWrap: 'wrap', maxWidth: 'calc( 100% - 5rem )' }}>
+                    <ul class="fr-tags-group fr-ml-2w fr-mt-3v">
                       {labels.value.map(label => (
-                        <span
-                          key={`${label.id}-${label.valueName}`}
-                          class={['flex', 'rnd-m', 'box', 'btn-flash', 'h6', 'pl-s', 'pr-xs', 'py-xs', 'bold', 'mr-xs', 'mb-xs', opened.value ? 'pr-s' : 'pr-xs']}
-                          style={{ alignItems: 'center' }}
-                          onClick={() => labelRemove(label)}
-                        >
-                          {label.name} : {isNotNullNorUndefined(label.valueName) ? label.valueName : label.value}{' '}
-                          {!opened.value ? (
-                            <span class="inline-block align-y-top ml-xs">
-                              <DsfrIcon size="sm" name="fr-icon-close-line" color="text-title-white-france" role="img" aria-label={`Supprimer le filtre ${label.name}`} />{' '}
-                            </span>
-                          ) : null}
-                        </span>
+                        <li>
+                          <DsfrTag
+                            ariaLabel={`Retirer ${label.name} : ${isNotNullNorUndefined(label.valueName) ? label.valueName : label.value}`}
+                            label={`${label.name} : ${isNotNullNorUndefined(label.valueName) ? label.valueName : label.value}`}
+                            onClicked={labelRemove(label)}
+                          />
+                        </li>
                       ))}
-                    </div>
+                    </ul>
                     <DsfrButtonIcon
                       class="fr-mr-1w"
                       buttonType="tertiary-no-outline"
@@ -332,7 +326,7 @@ export const Filters = defineComponent((props: Props) => {
           <div class="px-m">
             <div class="tablet-blobs mt">
               {inputs.value.length || autocompletes.value.length ? (
-                <div class="tablet-blob-1-2 large-blob-1-3">
+                <div class="tablet-blob-1-2 large-blob-1-3 fr-mb-2w">
                   {inputs.value.map(input => (
                     <div key={input}>
                       <FiltersInput
@@ -355,9 +349,7 @@ export const Filters = defineComponent((props: Props) => {
                       />
                     </div>
                   ))}
-                  <button class="btn-border small px-s p-xs rnd-xs mb" onClick={inputsErase}>
-                    Tout effacer
-                  </button>
+                  <DsfrButton title="Tout effacer" buttonType="tertiary" buttonSize="sm" onClick={inputsErase} />
                 </div>
               ) : null}
 
