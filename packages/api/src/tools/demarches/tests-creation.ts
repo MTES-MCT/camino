@@ -9,7 +9,7 @@ import { demarchesDefinitions } from '../../business/rules-demarches/definitions
 import { dateAddDays, daysBetween, setDayInMonth } from 'camino-common/src/date.js'
 import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes.js'
 import { toCommuneId } from 'camino-common/src/static/communes.js'
-import { isNotNullNorUndefinedNorEmpty, isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools.js'
+import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools.js'
 
 const writeEtapesForTest = async () => {
   for (const demarcheDefinition of demarchesDefinitions) {
@@ -55,6 +55,9 @@ const writeEtapesForTest = async () => {
               }) ?? []
           ).map(etape => titreEtapeForMachineValidator.parse(etape))
         )
+        if (isNullOrUndefinedOrEmpty(etapes)) {
+          return null
+        }
         // Pour anonymiser la date en gardant les délai en mois entre les 'avis des services et commissions consultatives' et l'apd,
         // on trouve la date et on calcule un delta random pour tomber dans le même mois
         const firstSaisineDate = etapes.find(etape => etape.etapeTypeId === ETAPES_TYPES.avisDesServicesEtCommissionsConsultatives)?.date ?? etapes[0].date
@@ -81,7 +84,7 @@ const writeEtapesForTest = async () => {
           demarchePublique: demarche.publicLecture ?? false,
           etapes: etapesAnonymes,
         }
-      })
+      }).filter(isNotNullNorUndefined)
     writeFileSync(`src/business/rules-demarches/${demarcheDefinition.titreTypeId}/${demarcheDefinition.demarcheTypeIds[0]}.cas.json`, JSON.stringify(toutesLesEtapes))
   }
 }
