@@ -29,7 +29,7 @@ export interface IGetEtapesByDemarcheIdDbResult {
   heritage_props: Json | null;
   id: string;
   is_brouillon: boolean;
-  notes: string | null;
+  note: Json;
   ordre: number;
   sdom_zones: Json;
   secteurs_maritime: Json;

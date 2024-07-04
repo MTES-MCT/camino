@@ -511,7 +511,10 @@ describe('getTitre', () => {
                 },
                 "id": "titre-etape-id",
                 "is_brouillon": false,
-                "notes": null,
+                "note": {
+                  "is_avertissement": false,
+                  "valeur": "",
+                },
                 "ordre": 0,
                 "sections_with_values": [
                   {

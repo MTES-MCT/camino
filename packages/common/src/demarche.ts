@@ -8,7 +8,7 @@ import { entrepriseIdValidator, etapeEntrepriseDocumentValidator } from './entre
 import { EtapeTypeId, etapeTypeIdFondamentaleValidator, etapeTypeIdNonFondamentaleValidator } from './static/etapesTypes.js'
 import { etapeStatutIdValidator } from './static/etapesStatuts.js'
 import { sectionWithValueValidator } from './sections.js'
-import { etapeAvisValidator, etapeBrouillonValidator, etapeDocumentValidator, etapeIdValidator, etapeSlugValidator } from './etape.js'
+import { etapeAvisValidator, etapeBrouillonValidator, etapeDocumentValidator, etapeIdValidator, etapeNoteValidator, etapeSlugValidator } from './etape.js'
 import { sdomZoneIdValidator } from './static/sdom.js'
 import { km2Validator, numberFormat } from './number.js'
 import { DeviseId, deviseIdValidator, DEVISES_IDS, Devises } from './static/devise.js'
@@ -36,7 +36,7 @@ const demarcheEtapeCommonValidator = z.object({
   date: caminoDateValidator,
   id: etapeIdValidator,
   ordre: z.number(),
-  notes: z.string().nullable(),
+  note: etapeNoteValidator,
   slug: etapeSlugValidator,
   sections_with_values: z.array(sectionWithValueValidator),
   entreprises_documents: z.array(etapeEntrepriseDocumentValidator),

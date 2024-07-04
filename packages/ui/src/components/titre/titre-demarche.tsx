@@ -24,6 +24,7 @@ import { Entreprise, EntrepriseId } from 'camino-common/src/entreprise'
 import { isDemarcheStatutNonStatue, isDemarcheStatutNonValide } from 'camino-common/src/static/demarchesStatuts'
 import { capitalize } from 'camino-common/src/strings'
 import { CaminoRouter } from '@/typings/vue-router'
+import { Alert } from '../_ui/alert'
 
 type Props = {
   titre: Pick<TitreGet, 'id' | 'slug' | 'titre_type_id' | 'titre_statut_id' | 'nom'>
@@ -144,6 +145,10 @@ export const TitreDemarche = defineComponent<Props>(props => {
       : []
   })
 
+  const noteAvecAvertissement = computed(() => {
+    return demarche.value?.etapes.map(({ note }) => note).filter(notes => isNotNullNorUndefinedNorEmpty(notes.valeur) && notes.is_avertissement) ?? []
+  })
+
   return () => (
     <>
       {demarche.value !== null ? (
@@ -188,6 +193,10 @@ export const TitreDemarche = defineComponent<Props>(props => {
                   <EtapePropItem title={label} text={value} />
                 ))}
                 <DisplayLocalisation perimetre={perimetre.value} />
+
+                {noteAvecAvertissement.value.map(note => (
+                  <Alert style={{ gridColumn: '1 / -1' }} small={true} type="warning" title={note.valeur} />
+                ))}
               </div>
             </div>
           </div>

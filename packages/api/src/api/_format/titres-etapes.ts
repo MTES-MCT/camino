@@ -46,7 +46,12 @@ export const iTitreEtapeToFlattenEtape = (titreEtape: ITitreEtape): FlattenEtape
   const flattenEtape: FlattenEtape = {
     ...titreEtape,
     slug,
-    notes: titreEtape.notes ?? null,
+    note: isNotNullNorUndefined(titreEtape.note)
+      ? titreEtape.note
+      : {
+          valeur: '',
+          is_avertissement: false,
+        },
     duree: {
       value: (heritageProps.duree.actif ? heritageProps.duree.etape?.duree : titreEtape.duree) ?? null,
       heritee: heritageProps.duree.actif,

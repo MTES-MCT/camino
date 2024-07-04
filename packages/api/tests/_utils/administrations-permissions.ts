@@ -222,7 +222,7 @@ export const creationCheck = async (pool: Pool, administrationId: string, creer:
       geojsonOrigineForages: null,
       titulaireIds: [],
       amodiataireIds: [],
-      notes: null,
+      note: { valeur: '', is_avertissement: false },
       entrepriseDocumentIds: [],
       heritageProps: defaultHeritageProps,
       heritageContenu,

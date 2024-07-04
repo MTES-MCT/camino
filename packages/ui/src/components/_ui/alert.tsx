@@ -11,7 +11,7 @@ type ClassicProps = {
 type Props = {
   type: 'warning' | 'success' | 'error' | 'info'
   title: string | JSX.Element
-} & (SmallProps | ClassicProps) & { class?: HTMLAttributes['class'] }
+} & (SmallProps | ClassicProps) & { class?: HTMLAttributes['class']; style?: HTMLAttributes['style'] }
 
 export const Alert: FunctionalComponent<Props> = props => {
   if ('small' in props) {

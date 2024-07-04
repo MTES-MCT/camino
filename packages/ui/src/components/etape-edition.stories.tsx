@@ -276,7 +276,7 @@ const apiClient: Props['apiClient'] = {
           etapeHeritee: null,
         },
         contenu: { arm: { mecanise: { value: null, heritee: false, etapeHeritee: null }, franchissements: { value: null, heritee: false, etapeHeritee: null } } },
-        notes: null,
+        note: { valeur: '', is_avertissement: false },
       },
       demarche: {
         demarche_slug: demarcheSlugValidator.parse('demarche-slug'),
@@ -366,7 +366,7 @@ export const AffichageAide: StoryFn = () => (
             titulaires: { value: [], heritee: false, etapeHeritee: null },
             amodiataires: { value: [], heritee: false, etapeHeritee: null },
             contenu: { arm: { mecanise: { value: null, heritee: false, etapeHeritee: null }, franchissements: { value: null, heritee: false, etapeHeritee: null } } },
-            notes: null,
+            note: { valeur: '', is_avertissement: false },
             perimetre: {
               value: {
                 geojson4326Forages: null,
@@ -556,7 +556,7 @@ export const DemandeArmComplete: StoryFn = () => (
             titulaires: { value: [entreprises[0].id], heritee: false, etapeHeritee: null },
             amodiataires: { value: [], heritee: false, etapeHeritee: null },
             contenu: { arm: { mecanise: { value: true, heritee: false, etapeHeritee: null }, franchissements: { value: 9, heritee: false, etapeHeritee: null } } },
-            notes: null,
+            note: { valeur: '', is_avertissement: false },
             perimetre: {
               value: {
                 geojson4326Forages: null,
@@ -713,7 +713,7 @@ export const ModificationDemandeHeritee: StoryFn = () => (
                 },
               },
             },
-            notes: null,
+            note: { valeur: '', is_avertissement: false },
             ...modHeritageProps,
             amodiataires: {
               value: [],
@@ -861,7 +861,7 @@ export const AxmEnZoneDuSdom: StoryFn = () => (
               etapeHeritee: null,
             },
             contenu: {},
-            notes: null,
+            note: { valeur: '', is_avertissement: false },
             heritageContenu: {},
           },
           demarche: {
