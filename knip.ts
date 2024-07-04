@@ -47,12 +47,14 @@ const config = {
       ],
     },
     "packages/ui": {
-      ignoreBinaries: ["npm-check-updates"],
+      ignoreBinaries: [
+        "npm-check-updates",
+        "playright",
+      ],
       ignoreDependencies: [
         "@vitest/coverage-v8",
         "@babel/eslint-parser",
         "@storybook/builder-vite",
-        "@storybook/testing-library",
         "@vue/eslint-config-prettier",
         "@vue/eslint-config-standard",
         "babel-core",
@@ -61,6 +63,7 @@ const config = {
         "core-js",
         "eslint-plugin-node",
         "node",
+        "rollup"
       ],
     },
   },

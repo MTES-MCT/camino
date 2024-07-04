@@ -14,7 +14,7 @@
     "lint:check": "prettier --check src && eslint --ext .js,.ts,.tsx src --max-warnings=0",
     "storybook": "storybook dev -p 6006",
     "storybook:build": "storybook build",
-    "storybook:test": "test-storybook",
+    "storybook:test": "test-storybook --browsers chromium",
     "generate-icon-types": "node --loader ts-node/esm/transpile-only ./scripts/generateIconTypes.ts"
   },
   "overrides": {
