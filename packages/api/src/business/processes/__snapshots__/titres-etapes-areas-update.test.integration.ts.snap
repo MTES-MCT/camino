@@ -99,8 +99,10 @@ exports[`titresEtapesAreasUpdate > met à jour les communes, forêts et zone du 
     "heritageProps": null,
     "id": "titreEtapeIdUniquePourMiseAJourAreas",
     "isBrouillon": true,
-    "notes": null,
-    "notesAvertissement": false,
+    "note": {
+      "is_avertissement": false,
+      "valeur": "",
+    },
     "ordre": 0,
     "sdomZones": [
       "1",
@@ -235,8 +237,10 @@ exports[`titresEtapesAreasUpdate > met à jour les communes, forêts et zone du 
       "heritageProps": null,
       "id": "titreEtapeIdUniquePourMiseAJourAreas",
       "isBrouillon": true,
-      "notes": null,
-      "notesAvertissement": false,
+      "note": {
+        "is_avertissement": false,
+        "valeur": "",
+      },
       "ordre": 0,
       "sdomZones": [
         "1",
