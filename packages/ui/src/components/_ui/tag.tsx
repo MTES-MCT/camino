@@ -32,7 +32,7 @@ export const DsfrTag = <T extends CaminoRouteNames>(props: DsfrTagProps<T>) => {
       ) : (
         <>
           {isNotNullNorUndefined(props.onClicked) ? (
-            <button class={[classes, 'fr-tag--dismiss']} title={props.ariaLabel} style={props.style} onClick={clicked}>
+            <button class={[classes, 'fr-tag--dismiss']} title={props.ariaLabel} aria-label={props.ariaLabel} style={props.style} onClick={clicked}>
               {label}
             </button>
           ) : (
