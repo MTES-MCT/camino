@@ -36,7 +36,7 @@ const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
 // Related to https://github.com/Microsoft/TypeScript/issues/12870
 const EVENTS = Object.keys(trad) as Array<Extract<keyof typeof trad, string>>
 
-// basé sur https://drive.google.com/file/d/1pQHCfLQDbo1OxDNOuicbvG_esWeWgpyC/view
+// basé sur https://drive.google.com/file/d/16lXyw3pcuiP-rHkBBM0U2Al9sWHKCBP9/view
 export class ProcedureSimplifieeMachine extends CaminoMachine<ProcedureSimplifieeContext, ProcedureSimplifieeXStateEvent> {
   constructor() {
     super(procedureSimplifieeMachine, trad)
