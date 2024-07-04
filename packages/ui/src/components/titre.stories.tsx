@@ -724,3 +724,42 @@ export const TitreAvecUneSeuleDemarcheEnConstruction: StoryFn = () => (
     titreIdOrSlug={titre.id}
   />
 )
+
+export const TitreAvecUnOctroiEnConstructionEtUnTravaux: StoryFn = () => (
+  <PureTitre
+    entreprises={entreprises}
+    currentDate={currentDate}
+    currentDemarcheSlug={demarcheSlug}
+    initTab="points"
+    user={{ ...testBlankUser, role: 'super' }}
+    router={routerPushMock}
+    apiClient={{
+      ...apiClient,
+      getTitreById: (titreIdOrSlug: TitreIdOrSlug) => {
+        getTitreAction(titreIdOrSlug)
+
+        return Promise.resolve({
+          ...titre,
+          demarches: [
+            {
+              ...titre.demarches[0],
+              demarche_date_debut: null,
+            },
+            {
+              id: demarcheIdValidator.parse('idtravaux'),
+              ordre: 4,
+              slug: demarcheSlugValidator.parse('slug_travaux'),
+              description: null,
+              etapes: [],
+              demarche_type_id: 'dam',
+              demarche_statut_id: 'fpm',
+              demarche_date_debut: null,
+              demarche_date_fin: null,
+            },
+          ],
+        })
+      },
+    }}
+    titreIdOrSlug={titre.id}
+  />
+)

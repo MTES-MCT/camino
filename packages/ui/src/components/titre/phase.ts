@@ -27,7 +27,7 @@ export const phaseWithAlterations = (demarches: TitreGetDemarche[], currentDate:
   const demarchesUsed: DemarcheSlug[] = simplePhases.map(({ slug }) => slug)
   if (isNullOrUndefinedOrEmpty(simplePhases)) {
     if (demarches.length > 1) {
-      throw new Error('Le titre a plusieurs démarches sans phases')
+      console.error('Le titre a plusieurs démarches sans phase', demarches)
     }
 
     return [[{ ...demarches[0], demarche_date_debut: null }]]
