@@ -50,7 +50,7 @@ const etape: FlattenEtape = {
     etapeHeritee: null,
   },
   amodiataires: { value: [], heritee: false, etapeHeritee: null },
-  notes: null,
+  note: { valeur: '', is_avertissement: false },
   perimetre: {
     value: {
       geojson4326Forages: null,

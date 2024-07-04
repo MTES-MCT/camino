@@ -145,13 +145,8 @@ export const TitreDemarche = defineComponent<Props>(props => {
       : []
   })
 
-  const notesAvecAvertissement = computed(() => {
-    return (
-      demarche.value?.etapes
-        .map(({ notes }) => notes)
-        .filter(isNotNullNorUndefined)
-        .filter(notes => isNotNullNorUndefinedNorEmpty(notes.valeur) && notes.is_avertissement) ?? []
-    )
+  const noteAvecAvertissement = computed(() => {
+    return demarche.value?.etapes.map(({ note }) => note).filter(notes => isNotNullNorUndefinedNorEmpty(notes.valeur) && notes.is_avertissement) ?? []
   })
 
   return () => (
@@ -199,7 +194,7 @@ export const TitreDemarche = defineComponent<Props>(props => {
                 ))}
                 <DisplayLocalisation perimetre={perimetre.value} />
 
-                {notesAvecAvertissement.value.map(note => (
+                {noteAvecAvertissement.value.map(note => (
                   <Alert style={{ gridColumn: '1 / -1' }} small={true} type="warning" title={note.valeur} />
                 ))}
               </div>

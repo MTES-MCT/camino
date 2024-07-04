@@ -87,7 +87,7 @@ const etape: Props['etape'] = {
       value: [entreprises[0].id, entreprises[1].id, entreprises[2].id],
     },
   },
-  notes: {
+  note: {
     valeur: 'Super notes de cette story',
     is_avertissement: false,
   },

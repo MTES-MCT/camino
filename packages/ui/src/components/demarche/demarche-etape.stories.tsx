@@ -187,7 +187,7 @@ export const NoSnapshotDemande: StoryFn = () => (
     entreprises={entreprises}
     etape={{
       id: etapeIdValidator.parse('etapeId'),
-      notes: null,
+      note: { valeur: '', is_avertissement: false },
       slug: etapeSlugValidator.parse('etape-slug'),
       etape_type_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeTypeId,
       etape_statut_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeStatutId,
@@ -316,7 +316,7 @@ export const DemandeMultipleEntreprisesDocuments: StoryFn = () => (
       etape_statut_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeStatutId,
       is_brouillon: ETAPE_IS_NOT_BROUILLON,
       date,
-      notes: { valeur: 'Super note', is_avertissement: false },
+      note: { valeur: 'Super note', is_avertissement: false },
       fondamentale: {
         date_debut: toCaminoDate('2023-10-25'),
         duree: 12,
@@ -375,7 +375,7 @@ export const DemandeNoMap: StoryFn = () => (
     entreprises={entreprises}
     etape={{
       id: etapeIdValidator.parse('etapeId'),
-      notes: null,
+      note: { valeur: '', is_avertissement: false },
       slug: etapeSlugValidator.parse('etape-slug'),
       etape_type_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeTypeId,
       etape_statut_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeStatutId,
@@ -424,7 +424,7 @@ export const DemandeNonDeposable: StoryFn = () => (
     etape={{
       id: etapeIdValidator.parse('etapeId'),
       slug: etapeSlugValidator.parse('etape-slug'),
-      notes: null,
+      note: { valeur: '', is_avertissement: false },
       etape_type_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeTypeId,
       etape_statut_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeStatutId,
       is_brouillon: ETAPE_IS_BROUILLON,
@@ -467,7 +467,7 @@ export const DemandeNonSupprimable: StoryFn = () => (
     etape={{
       id: etapeIdValidator.parse('etapeId'),
       slug: etapeSlugValidator.parse('etape-slug'),
-      notes: null,
+      note: { valeur: '', is_avertissement: false },
       etape_type_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeTypeId,
       etape_statut_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeStatutId,
       is_brouillon: ETAPE_IS_BROUILLON,
@@ -537,7 +537,7 @@ export const DemandeArmMecaniseNonDeposable: StoryFn = () => (
     etape={{
       id: etapeIdValidator.parse('etapeId'),
       slug: etapeSlugValidator.parse('etape-slug'),
-      notes: null,
+      note: { valeur: '', is_avertissement: false },
       etape_type_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeTypeId,
       etape_statut_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeStatutId,
       is_brouillon: ETAPE_IS_BROUILLON,
@@ -621,7 +621,7 @@ export const DemandeArmMecaniseDeposable: StoryFn = () => (
     etape={{
       id: etapeIdValidator.parse('etapeId'),
       slug: etapeSlugValidator.parse('etape-slug'),
-      notes: null,
+      note: { valeur: '', is_avertissement: false },
       etape_type_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeTypeId,
       etape_statut_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeStatutId,
       is_brouillon: ETAPE_IS_BROUILLON,
@@ -709,7 +709,7 @@ export const DemandeArmNonMecaniseDeposable: StoryFn = () => (
     etape={{
       id: etapeIdValidator.parse('etapeId'),
       slug: etapeSlugValidator.parse('etape-slug'),
-      notes: null,
+      note: { valeur: '', is_avertissement: false },
       etape_type_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeTypeId,
       etape_statut_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeStatutId,
       is_brouillon: ETAPE_IS_BROUILLON,
@@ -754,7 +754,7 @@ export const Depot: StoryFn = () => (
     etape={{
       id: etapeIdValidator.parse('etapeId'),
       slug: etapeSlugValidator.parse('etape-slug'),
-      notes: null,
+      note: { valeur: '', is_avertissement: false },
       etape_type_id: EtapesTypesEtapesStatuts.depotDeLaDemande.FAIT.etapeTypeId,
       etape_statut_id: EtapesTypesEtapesStatuts.depotDeLaDemande.FAIT.etapeStatutId,
       is_brouillon: ETAPE_IS_NOT_BROUILLON,
@@ -778,7 +778,7 @@ export const AvisDefavorable: StoryFn = () => (
     etape={{
       id: etapeIdValidator.parse('etapeId'),
       slug: etapeSlugValidator.parse('etape-slug'),
-      notes: null,
+      note: { valeur: '', is_avertissement: false },
       etape_type_id: EtapesTypesEtapesStatuts.avisDuConseilGeneralDeLeconomie_CGE_.DEFAVORABLE.etapeTypeId,
       etape_statut_id: EtapesTypesEtapesStatuts.avisDuConseilGeneralDeLeconomie_CGE_.DEFAVORABLE.etapeStatutId,
       is_brouillon: ETAPE_IS_NOT_BROUILLON,
@@ -824,7 +824,7 @@ export const DemandeAvecSeulementPerimetre: StoryFn = () => (
     etape={{
       id: etapeIdValidator.parse('etapeId'),
       slug: etapeSlugValidator.parse('etape-slug'),
-      notes: null,
+      note: { valeur: '', is_avertissement: false },
       etape_type_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeTypeId,
       etape_statut_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeStatutId,
       is_brouillon: ETAPE_IS_BROUILLON,
@@ -890,7 +890,7 @@ export const DemandeAvecGrosseNote: StoryFn = () => (
     etape={{
       id: etapeIdValidator.parse('etapeId'),
       slug: etapeSlugValidator.parse('etape-slug'),
-      notes: { valeur: 'Ceci est une énorme note sur plusieurs lignes.\n Une seconde ligne.\n Incertitudes: \n * date \n * substances \n * titulaireIds', is_avertissement: false },
+      note: { valeur: 'Ceci est une énorme note sur plusieurs lignes.\n Une seconde ligne.\n Incertitudes: \n * date \n * substances \n * titulaireIds', is_avertissement: false },
       etape_type_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeTypeId,
       etape_statut_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeStatutId,
       is_brouillon: ETAPE_IS_BROUILLON,
@@ -944,7 +944,7 @@ export const AxmDeposableAvecDaeEtAsl: StoryFn = () => (
           etape_statut_id: 'exe',
           etape_type_id: 'dae',
           is_brouillon: ETAPE_IS_NOT_BROUILLON,
-          notes: null,
+          note: { valeur: '', is_avertissement: false },
           sections_with_values: [],
           ordre: 1,
           slug: etapeSlugValidator.parse('slug-dae'),
@@ -958,7 +958,7 @@ export const AxmDeposableAvecDaeEtAsl: StoryFn = () => (
           etape_statut_id: 'exe',
           etape_type_id: 'asl',
           is_brouillon: ETAPE_IS_NOT_BROUILLON,
-          notes: null,
+          note: { valeur: '', is_avertissement: false },
           sections_with_values: [],
           ordre: 2,
           slug: etapeSlugValidator.parse('slug-asl'),
@@ -974,7 +974,7 @@ export const AxmDeposableAvecDaeEtAsl: StoryFn = () => (
     etape={{
       id: etapeIdValidator.parse('etapeId'),
       slug: etapeSlugValidator.parse('etape-slug'),
-      notes: { valeur: '', is_avertissement: false },
+      note: { valeur: '', is_avertissement: false },
       etape_type_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeTypeId,
       etape_statut_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeStatutId,
       is_brouillon: ETAPE_IS_BROUILLON,
@@ -1068,7 +1068,7 @@ export const DemandeAvecForage: StoryFn = () => (
     etape={{
       id: etapeIdValidator.parse('etapeId'),
       slug: etapeSlugValidator.parse('etape-slug'),
-      notes: { valeur: '', is_avertissement: false },
+      note: { valeur: '', is_avertissement: false },
       etape_type_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeTypeId,
       etape_statut_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeStatutId,
       is_brouillon: ETAPE_IS_BROUILLON,
@@ -1123,7 +1123,7 @@ export const AvisDesServices: StoryFn = () => (
     etape={{
       id: etapeIdValidator.parse('etapeId'),
       slug: etapeSlugValidator.parse('etape-slug'),
-      notes: null,
+      note: { valeur: '', is_avertissement: false },
       etape_type_id: EtapesTypesEtapesStatuts.avisDesServicesEtCommissionsConsultatives.FAIT.etapeTypeId,
       etape_statut_id: EtapesTypesEtapesStatuts.avisDesServicesEtCommissionsConsultatives.FAIT.etapeStatutId,
       is_brouillon: ETAPE_IS_BROUILLON,
@@ -1147,7 +1147,7 @@ export const EtapeAvecNoteAvertissement: StoryFn = () => (
     etape={{
       id: etapeIdValidator.parse('etapeId'),
       slug: etapeSlugValidator.parse('etape-slug'),
-      notes: { valeur: 'Ceci est une note très importante', is_avertissement: true },
+      note: { valeur: 'Ceci est une note très importante', is_avertissement: true },
       etape_type_id: EtapesTypesEtapesStatuts.avisDesServicesEtCommissionsConsultatives.FAIT.etapeTypeId,
       etape_statut_id: EtapesTypesEtapesStatuts.avisDesServicesEtCommissionsConsultatives.FAIT.etapeStatutId,
       is_brouillon: ETAPE_IS_BROUILLON,

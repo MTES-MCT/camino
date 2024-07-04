@@ -576,10 +576,10 @@ const EtapeEditFormInternal = defineComponent<
   }
 
   const onUpdateNotes = (notes: string) => {
-    props.setEtape({ ...props.etape, notes: { is_avertissement: props.etape.notes?.is_avertissement ?? false, valeur: notes } }, props.documents)
+    props.setEtape({ ...props.etape, note: { is_avertissement: props.etape.note.is_avertissement, valeur: notes } }, props.documents)
   }
   const onUpdateNoteAvertissement = (isAvertissement: DeepReadonly<boolean>) => {
-    props.setEtape({ ...props.etape, notes: { valeur: props.etape.notes?.valeur ?? '', is_avertissement: isAvertissement } }, props.documents)
+    props.setEtape({ ...props.etape, note: { valeur: props.etape.note.valeur, is_avertissement: isAvertissement } }, props.documents)
   }
 
   const fondamentalesCompleteUpdate = (etapeFondamentale: DeepReadonly<EtapeFondamentaleEdit>) => {
@@ -700,11 +700,11 @@ const EtapeEditFormInternal = defineComponent<
         </Bloc>
       ) : null}
 
-      <DsfrTextarea initialValue={props.etape.notes?.valeur} class="fr-mt-2w" style="flex-grow: 1" legend={{ main: 'Notes' }} valueChanged={onUpdateNotes} />
+      <DsfrTextarea initialValue={props.etape.note.valeur} class="fr-mt-2w" style="flex-grow: 1" legend={{ main: 'Notes' }} valueChanged={onUpdateNotes} />
       <DsfrInputCheckbox
         legend={{ main: 'Cette note est un avertissement', description: 'Apparait sur le résumé de la démarche' }}
         valueChanged={onUpdateNoteAvertissement}
-        initialValue={props.etape.notes?.is_avertissement}
+        initialValue={props.etape.note.is_avertissement}
       />
     </div>
   )

@@ -50,7 +50,7 @@ const etapeBrouillonValide: FlattenEtape = {
   contenu: {},
   date: caminoDateValidator.parse('2024-01-01'),
   isBrouillon: ETAPE_IS_BROUILLON,
-  notes: {
+  note: {
     valeur: '',
     is_avertissement: false,
   },
@@ -130,7 +130,7 @@ describe('valide l’étape avant de l’enregistrer', () => {
       contenu: {},
       date: caminoDateValidator.parse('2024-01-01'),
       isBrouillon: ETAPE_IS_NOT_BROUILLON,
-      notes: {
+      note: {
         valeur: '',
         is_avertissement: false,
       },

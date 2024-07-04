@@ -108,7 +108,7 @@ export const PureEtapeEdition = defineComponent<Props>(props => {
               typeId: null,
               statutId: null,
               isBrouillon: ETAPE_IS_NOT_BROUILLON,
-              notes: null,
+              note: { valeur: '', is_avertissement: false },
               substances: { value: [], heritee: true, etapeHeritee: null },
               titulaires: { value: [], heritee: true, etapeHeritee: null },
               amodiataires: { value: [], heritee: true, etapeHeritee: null },

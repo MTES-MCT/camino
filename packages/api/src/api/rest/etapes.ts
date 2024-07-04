@@ -490,8 +490,6 @@ const getFlattenEtape = async (
   return {
     flattenEtape: iTitreEtapeToFlattenEtape({
       ...etape,
-      notes: etape.notes?.valeur ?? null,
-      notesAvertissement: etape.notes?.is_avertissement ?? false,
       demarche,
       ...perimetreInfos,
       isBrouillon,
@@ -597,11 +595,7 @@ export const createEtape = (pool: Pool) => async (req: CaminoRequest, res: Custo
                       etape.dateFin = null
                     }
 
-                    const etapeUpdated: ITitreEtape | undefined = await titreEtapeUpsert(
-                      { ...etape, ...perimetreInfos, isBrouillon, notes: etape.notes?.valeur ?? null, notesAvertissement: etape.notes?.is_avertissement ?? false },
-                      user!,
-                      titreDemarche.titreId
-                    )
+                    const etapeUpdated: ITitreEtape | undefined = await titreEtapeUpsert({ ...etape, ...perimetreInfos, isBrouillon }, user!, titreDemarche.titreId)
                     if (isNullOrUndefined(etapeUpdated)) {
                       res.status(HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR).json({ errorMessage: "Une erreur est survenue lors de la création de l'étape" })
                     } else {
@@ -771,11 +765,7 @@ export const updateEtape = (pool: Pool) => async (req: CaminoRequest, res: Custo
           throw new Error("certaines entreprises n'existent pas")
         }
 
-        const etapeUpdated: ITitreEtape | undefined = await titreEtapeUpsert(
-          { ...etape, ...perimetreInfos, isBrouillon: titreEtapeOld.isBrouillon, notes: etape.notes?.valeur ?? null, notesAvertissement: etape.notes?.is_avertissement ?? false },
-          user!,
-          titreDemarche.titreId
-        )
+        const etapeUpdated: ITitreEtape | undefined = await titreEtapeUpsert({ ...etape, ...perimetreInfos, isBrouillon: titreEtapeOld.isBrouillon }, user!, titreDemarche.titreId)
         if (isNullOrUndefined(etapeUpdated)) {
           throw new Error("Une erreur est survenue lors de la modification de l'étape")
         }

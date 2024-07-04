@@ -148,3 +148,6 @@ export type DocumentComplementaireDaeEtapeDocumentModification = z.infer<typeof 
 
 export const documentComplementaireAslEtapeDocumentModificationValidator = etapeDocumentModificationValidator.and(documentComplementaireObligatoireASLValidator)
 export type DocumentComplementaireAslEtapeDocumentModification = z.infer<typeof documentComplementaireAslEtapeDocumentModificationValidator>
+
+export const etapeNoteValidator = z.object({ valeur: z.string(), is_avertissement: z.boolean() })
+export type EtapeNote = z.infer<typeof etapeNoteValidator>

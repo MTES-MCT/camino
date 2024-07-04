@@ -78,7 +78,7 @@ const displayEtapeStatus = (etape_type_id: EtapeTypeId, etape_statut_id: EtapeSt
 
 export const DemarcheEtape = defineComponent<Props>(props => {
   const hasContent = computed<boolean>(() => {
-    if (props.etape.notes !== null) {
+    if (isNotNullNorUndefinedNorEmpty(props.etape.note.valeur)) {
       return true
     }
 
@@ -352,12 +352,12 @@ export const DemarcheEtape = defineComponent<Props>(props => {
                   ))}
               </>
             ))}
-            {props.etape.notes !== null && isNotNullNorUndefinedNorEmpty(props.etape.notes.valeur) ? (
+            {isNotNullNorUndefinedNorEmpty(props.etape.note.valeur) ? (
               <>
-                {props.etape.notes.is_avertissement ? (
-                  <Alert style={{ gridColumn: '1 / -1' }} small={true} title={props.etape.notes.valeur} type="warning" />
+                {props.etape.note.is_avertissement ? (
+                  <Alert style={{ gridColumn: '1 / -1' }} small={true} title={props.etape.note.valeur} type="warning" />
                 ) : (
-                  <EtapePropItem style={{ gridColumn: '1 / -1', whiteSpace: 'pre-line' }} title="Notes" text={props.etape.notes.valeur} />
+                  <EtapePropItem style={{ gridColumn: '1 / -1', whiteSpace: 'pre-line' }} title="Notes" text={props.etape.note.valeur} />
                 )}
               </>
             ) : null}

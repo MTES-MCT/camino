@@ -9,7 +9,7 @@ import { communeValidator } from 'camino-common/src/static/communes.js'
 import { secteurMaritimeValidator } from 'camino-common/src/static/facades.js'
 import { substanceLegaleIdValidator } from 'camino-common/src/static/substancesLegales.js'
 import { etapeTypeIdValidator } from 'camino-common/src/static/etapesTypes.js'
-import { etapeBrouillonValidator, etapeIdValidator, etapeSlugValidator } from 'camino-common/src/etape.js'
+import { etapeBrouillonValidator, etapeIdValidator, etapeNoteValidator, etapeSlugValidator } from 'camino-common/src/etape.js'
 import { etapeStatutIdValidator } from 'camino-common/src/static/etapesStatuts.js'
 import { contenuValidator } from './activites.queries.js'
 import { sdomZoneIdValidator } from 'camino-common/src/static/sdom.js'
@@ -27,8 +27,7 @@ const getEtapesByDemarcheIdDbValidator = z.object({
   slug: etapeSlugValidator,
   date: caminoDateValidator,
   ordre: z.number(),
-  notes: z.string().nullable(),
-  notes_avertissement: z.boolean(),
+  note: etapeNoteValidator,
   communes: z.array(communeValidator.pick({ id: true })),
   secteurs_maritime: z.array(secteurMaritimeValidator).nullable(),
   substances: z.array(substanceLegaleIdValidator).nullable(),
@@ -64,8 +63,7 @@ select
     e.id,
     e.date,
     e.ordre,
-    e.notes,
-    e.notes_avertissement,
+    e.note,
     e.communes,
     e.secteurs_maritime,
     e.substances,

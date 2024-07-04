@@ -1,6 +1,6 @@
 import { FlattenEtape, defaultHeritageProps, flattenEtapeValidator, heritageContenuValidator } from 'camino-common/src/etape-form.js'
 import { simpleContenuToFlattenedContenu } from 'camino-common/src/sections.js'
-import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
+import { isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
 import { ITitreEtape } from '../../types.js'
 
 import { titreEtapeFormatFields } from './_fields.js'
@@ -46,12 +46,12 @@ export const iTitreEtapeToFlattenEtape = (titreEtape: ITitreEtape): FlattenEtape
   const flattenEtape: FlattenEtape = {
     ...titreEtape,
     slug,
-    notes: isNotNullNorUndefinedNorEmpty(titreEtape.notes)
-      ? {
-          valeur: titreEtape.notes,
-          is_avertissement: titreEtape.notesAvertissement ?? false,
-        }
-      : null,
+    note: isNotNullNorUndefined(titreEtape.note)
+      ? titreEtape.note
+      : {
+          valeur: '',
+          is_avertissement: false,
+        },
     duree: {
       value: (heritageProps.duree.actif ? heritageProps.duree.etape?.duree : titreEtape.duree) ?? null,
       heritee: heritageProps.duree.actif,

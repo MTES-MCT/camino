@@ -65,7 +65,7 @@ const blankEtapeProps: Pick<
   | 'geojsonOrigineGeoSystemeId'
   | 'titulaireIds'
   | 'amodiataireIds'
-  | 'notes'
+  | 'note'
   | 'etapeAvis'
   | 'entrepriseDocumentIds'
   | 'heritageProps'
@@ -85,7 +85,7 @@ const blankEtapeProps: Pick<
   geojsonOrigineGeoSystemeId: null,
   titulaireIds: [],
   amodiataireIds: [],
-  notes: null,
+  note: { valeur: '', is_avertissement: false },
   etapeAvis: [],
   entrepriseDocumentIds: [],
   heritageProps: defaultHeritageProps,

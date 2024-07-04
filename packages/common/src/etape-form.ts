@@ -9,6 +9,7 @@ import {
   etapeBrouillonValidator,
   etapeDocumentModificationValidator,
   etapeIdValidator,
+  etapeNoteValidator,
   etapeSlugValidator,
 } from './etape.js'
 import { km2Validator } from './number.js'
@@ -78,7 +79,6 @@ export const heritageContenuValidator = z
   .transform(nullToDefault({}))
 
 export type HeritageContenu = z.infer<typeof heritageContenuValidator>
-
 const graphqlEtapeValidator = z.object({
   id: etapeIdValidator,
   slug: etapeSlugValidator,
@@ -113,12 +113,7 @@ const graphqlEtapeValidator = z.object({
   surface: km2Validator.nullable(),
   // Record<string, Record<string, ElementWithValue['value']>>
   contenu: contenuValidator,
-  notes: z
-    .object({
-      valeur: z.string(),
-      is_avertissement: z.boolean().default(false),
-    })
-    .nullable(),
+  note: etapeNoteValidator,
   heritageProps: heritagePropsValidator,
   heritageContenu: heritageContenuValidator,
   isBrouillon: etapeBrouillonValidator,
@@ -207,7 +202,7 @@ export const restEtapeCreationValidator = graphqlEtapeValidator
     geojsonOrigineGeoSystemeId: true,
     titulaireIds: true,
     amodiataireIds: true,
-    notes: true,
+    note: true,
     contenu: true,
   })
   .extend({

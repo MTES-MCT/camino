@@ -49,8 +49,7 @@ class TitresEtapes extends Model {
       secteursMaritime: { type: ['array', 'null'] },
       administrationsLocales: { type: ['array', 'null'] },
       sdomZones: { type: ['array', 'null'] },
-      notes: { type: ['string', 'null'] },
-      notesAvertissement: { type: 'boolean' },
+      note: { type: 'object' },
     },
   }
 
@@ -81,10 +80,6 @@ class TitresEtapes extends Model {
 
     if (!this.slug && this.titreDemarcheId && this.typeId) {
       this.slug = etapeSlugValidator.parse(`${this.titreDemarcheId}-${this.typeId}99`)
-    }
-
-    if (isNotNullNorUndefined(this.notes) && this.notes.trim() === '') {
-      this.notes = null
     }
 
     if (isNotNullNorUndefined(this.geojson4326Perimetre)) {
