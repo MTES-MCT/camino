@@ -5,7 +5,6 @@ import { CaminoMachines } from './machines.js'
 import { ArmOctMachine } from './arm/oct.machine.js'
 import { AxmOctMachine } from './axm/oct.machine.js'
 import { AxmProMachine } from './axm/pro.machine.js'
-import { PxgOctMachine } from './pxg/oct.machine.js'
 import { newDemarcheId } from '../../database/models/_format/id-create.js'
 import { CaminoDate, toCaminoDate } from 'camino-common/src/date.js'
 import { DEMARCHES_TYPES_IDS, DemarchesTypes, DemarcheTypeId } from 'camino-common/src/static/demarchesTypes.js'
@@ -24,7 +23,7 @@ interface DemarcheDefinitionCommon {
 interface DemarcheDefinition extends DemarcheDefinitionCommon {
   machine: CaminoMachines
 }
-
+const allDemarcheNotTravaux = Object.values(DEMARCHES_TYPES_IDS).filter(demarcheTypeId => !DemarchesTypes[demarcheTypeId].travaux)
 const plusVieilleDateEnBase = toCaminoDate('1717-01-09')
 export const demarchesDefinitions: DemarcheDefinition[] = [
   {
@@ -94,24 +93,14 @@ export const demarchesDefinitions: DemarcheDefinition[] = [
   },
   {
     titreTypeId: 'pxg',
-    demarcheTypeIds: ['oct'],
-    machine: new PxgOctMachine(),
-    dateDebut: toCaminoDate('1990-01-01'),
-    demarcheIdExceptions: [],
-  },
-  // FIXME: finaliser les étapes d'ouverture de la participation du publique de 'Vinzelle' et 'Les poteries minérales'
-  {
-    titreTypeId: 'pxg',
-    demarcheTypeIds: Object.values(DEMARCHES_TYPES_IDS)
-      .filter(demarcheTypeId => !DemarchesTypes[demarcheTypeId].travaux)
-      .filter(id => id !== 'oct'),
+    demarcheTypeIds: allDemarcheNotTravaux,
     machine: new ProcedureSimplifieeMachine(),
-    dateDebut: toCaminoDate('2024-01-01'),
+    dateDebut: toCaminoDate('2024-07-01'),
     demarcheIdExceptions: [],
   },
   {
     titreTypeId: 'pxg',
-    demarcheTypeIds: Object.values(DEMARCHES_TYPES_IDS).filter(demarcheTypeId => !DemarchesTypes[demarcheTypeId].travaux),
+    demarcheTypeIds: allDemarcheNotTravaux,
     machine: new ProcedureHistoriqueMachine(),
     dateDebut: plusVieilleDateEnBase,
     demarcheIdExceptions: [],
