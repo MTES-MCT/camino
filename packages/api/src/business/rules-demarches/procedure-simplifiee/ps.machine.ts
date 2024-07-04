@@ -67,7 +67,6 @@ interface ProcedureSimplifieeContext extends CaminoCommonContext {
   procedureHistorique: boolean
   depotDeLaDemandeFaite: boolean
   ouverturePublicFaite: boolean
-  decisionAdministrationAccepteeFaite: boolean
   demandeInformationEnCours: boolean
 }
 
@@ -82,7 +81,6 @@ const createProcedureMachine = (procedureHistorique: boolean) =>
       visibilite: 'confidentielle',
       depotDeLaDemandeFaite: false,
       ouverturePublicFaite: false,
-      decisionAdministrationAccepteeFaite: false,
       demandeInformationEnCours: false,
     },
     on: {
@@ -90,7 +88,6 @@ const createProcedureMachine = (procedureHistorique: boolean) =>
         guard: ({ context }) => context.demarcheStatut === DemarchesStatutsIds.EnConstruction && context.procedureHistorique,
         target: '.publicationAuRecueilDesActesAdministratifsOupublicationAuJORFAFaire',
         actions: assign({
-          decisionAdministrationAccepteeFaite: true,
           visibilite: 'publique',
           demarcheStatut: 'acc',
         }),
@@ -133,18 +130,17 @@ const createProcedureMachine = (procedureHistorique: boolean) =>
           },
         },
       },
-
       receptionDeLaDemandeOuOuverturePublicOuDecisionAdministrationAFaire: {
         on: {
           DEPOSER_DEMANDE: {
-            guard: ({ context }) => !context.depotDeLaDemandeFaite && !context.decisionAdministrationAccepteeFaite && !context.ouverturePublicFaite,
+            guard: ({ context }) => !context.depotDeLaDemandeFaite && !context.ouverturePublicFaite,
             target: 'receptionDeLaDemandeOuOuverturePublicOuDecisionAdministrationAFaire',
             actions: assign({
               depotDeLaDemandeFaite: true,
             }),
           },
           OUVRIR_PARTICIPATION_DU_PUBLIC: {
-            guard: ({ context }) => !context.ouverturePublicFaite && !context.decisionAdministrationAccepteeFaite,
+            guard: ({ context }) => !context.ouverturePublicFaite,
             actions: assign({
               ouverturePublicFaite: true,
               visibilite: 'publique',
@@ -153,7 +149,6 @@ const createProcedureMachine = (procedureHistorique: boolean) =>
           },
           RENDRE_DECISION_ADMINISTRATION_ACCEPTEE: {
             actions: assign({
-              decisionAdministrationAccepteeFaite: true,
               visibilite: 'publique',
               demarcheStatut: 'acc',
             }),
@@ -161,13 +156,11 @@ const createProcedureMachine = (procedureHistorique: boolean) =>
           },
         },
       },
-
       clotureDeLaParticipationDuPublicAFaire: {
         on: {
           CLOTURER_PARTICIPATION_DU_PUBLIC: 'receptionDeLaDemandeOuOuverturePublicOuDecisionAdministrationAFaire',
         },
       },
-
       publicationAuRecueilDesActesAdministratifsOupublicationAuJORFAFaire: {
         on: {
           PUBLIER_DECISION_ACCEPTEE_AU_JORF: 'finDeMachine',
