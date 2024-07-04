@@ -7,9 +7,11 @@ import { LoadingElement } from '@/components/_ui/functional-loader'
 
 import { CHART_COLORS } from '../_charts/utils'
 import { ChartConfiguration, ChartData } from 'chart.js'
-import { anneePrecedente, anneeSuivante, CaminoAnnee, CaminoDate, getAnnee, getCurrent, isAnnee, toCaminoDate } from 'camino-common/src/date'
+import { anneeSuivante, CaminoAnnee, CaminoDate, getAnnee, getCurrent, isAnnee, toCaminoAnnee, toCaminoDate } from 'camino-common/src/date'
 import styles from './statistiques.module.css'
 import { numberFormat } from 'camino-common/src/number'
+import { Tab, Tabs } from '../_ui/tabs'
+import { isNotNullNorUndefined, map, NonEmptyArray } from 'camino-common/src/typescript-tools'
 
 const getStats = async (): Promise<StatistiquesGuyane> => {
   const data: StatistiquesGuyaneData = await getWithJson('/rest/statistiques/guyane', {})
@@ -224,17 +226,28 @@ export const PureGuyane = defineComponent<Props>(props => {
     status: 'LOADING',
   })
 
-  const tabs = computed<CaminoAnnee[]>(() => {
-    let annee = getAnnee(currentDate)
+  const tabIds = computed<Readonly<NonEmptyArray<CaminoAnnee>>>(() => {
+    const currentAnnee = getAnnee(currentDate)
 
-    return [0, 1, 2, 3, 4]
-      .map(_id => {
-        const monAnnee = annee
-        annee = anneePrecedente(annee)
+    return map([4, 3, 2, 1, 0], annee => {
+      return toCaminoAnnee(Number(currentAnnee) - annee)
+    })
+  })
 
-        return monAnnee
+  const tabs = computed<Readonly<NonEmptyArray<Tab<CaminoAnnee>>> | null>(() => {
+    if (data.value.status === 'LOADED') {
+      const dataLoaded = data.value.value
+      return map(tabIds.value, annee => {
+        return {
+          icon: null,
+          title: annee,
+          id: annee,
+          renderContent: () => <GuyaneActivite statistiqueGuyane={dataLoaded.parAnnee[tabActive.value]} enConstruction={enConstruction(tabActive.value)} />,
+        }
       })
-      .reverse()
+    }
+
+    return null
   })
 
   const tabToggle = (tabId: CaminoAnnee) => {
@@ -248,7 +261,7 @@ export const PureGuyane = defineComponent<Props>(props => {
   }
   const tabActive: Ref<CaminoAnnee> = ref(getAnnee(currentDate))
 
-  const anneeLaPlusRecenteConsolidee = tabs.value
+  const anneeLaPlusRecenteConsolidee = tabIds.value
     .slice()
     .reverse()
     .find(annee => !enConstruction(annee))
@@ -406,21 +419,12 @@ export const PureGuyane = defineComponent<Props>(props => {
         déclarations règlementaires de l’année précédente et l'année en cours. Ces données concernent exclusivement le territoire guyanais.
       </p>
 
-      <div class="flex">
-        {tabs.value.map(tab => (
-          <div key={tab} class={`${tabActive.value === tab ? 'active' : ''} mr-xs`}>
-            <div class="p-m btn-tab rnd-t-s" onClick={() => tabToggle(tab)}>
-              {tab}
-            </div>
-          </div>
-        ))}
-      </div>
+      <LoadingElement
+        data={data.value}
+        renderItem={() => (isNotNullNorUndefined(tabs.value) ? <Tabs initTab={tabActive.value} tabClicked={tabToggle} tabs={tabs.value} tabsTitle="Années" /> : null)}
+      />
 
-      <div class="line-neutral width-full mb" />
-      <LoadingElement data={data.value} renderItem={item => <GuyaneActivite statistiqueGuyane={item.parAnnee[tabActive.value]} enConstruction={enConstruction(tabActive.value)} />} />
-
-      <div class="line-neutral width-full mb-xl" />
-      <div id="evolution" class="mb-xxl">
+      <div id="evolution" class="my-xxl">
         <h2>Activité</h2>
         <span class="separator" />
         <p>

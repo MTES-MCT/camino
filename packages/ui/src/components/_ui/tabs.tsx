@@ -4,7 +4,7 @@ import { DsfrIcon } from './dsfrIconSpriteType'
 import { NonEmptyArray, isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { random } from '../../utils/vue-tsx-utils'
 import type { JSX } from 'vue/jsx-runtime'
-export type Tab<TabId extends string> = { icon: DsfrIcon; title: string; id: TabId; renderContent: () => JSX.Element }
+export type Tab<TabId extends string> = { icon: DsfrIcon | null; title: string; id: TabId; renderContent: () => JSX.Element }
 
 type Props<TabId extends string> = {
   tabsTitle: string
@@ -67,7 +67,7 @@ export const Tabs = defineComponent(<TabId extends string>(props: Props<TabId>) 
             <li role="presentation">
               <button
                 id={`tabpanel-${tab.id}-${idSuffix}`}
-                class={['fr-tabs__tab', tab.icon, 'fr-tabs__tab--icon-left']}
+                class={['fr-tabs__tab', tab.icon, tab.icon !== null ? 'fr-tabs__tab--icon-left' : '']}
                 tabindex={currentTabId.value === tab.id ? '0' : '-1'}
                 role="tab"
                 onClick={onTabClick(tab.id)}

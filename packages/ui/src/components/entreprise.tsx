@@ -11,7 +11,7 @@ import { EntrepriseDocuments } from './entreprise/entreprise-documents'
 import { AsyncData } from '../api/client-rest'
 import { LoadingElement } from './_ui/functional-loader'
 import { ApiClient, apiClient } from '@/api/api-client'
-import { isNotNullNorUndefined, isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools'
+import { isNotNullNorUndefined, isNullOrUndefinedOrEmpty, NonEmptyArray } from 'camino-common/src/typescript-tools'
 import { userKey, entreprisesKey } from '@/moi'
 import { DsfrButtonIcon, DsfrLink } from './_ui/dsfr-button'
 import { canReadUtilisateurs } from 'camino-common/src/permissions/utilisateurs'
@@ -69,11 +69,11 @@ export const PureEntreprise = defineComponent<Props>(props => {
       await refreshEntreprise()
     }
   )
-  const annees = computed(() => {
+  const annees = computed<Readonly<NonEmptyArray<CaminoAnnee>>>(() => {
     const anneeDepart = 2021
 
     let anneeAAjouter = anneeDepart
-    const annees = [toCaminoAnnee(anneeAAjouter.toString())]
+    const annees: NonEmptyArray<CaminoAnnee> = [toCaminoAnnee(anneeAAjouter.toString())]
     while (annees[annees.length - 1] !== props.currentYear) {
       anneeAAjouter++
       annees.push(toCaminoAnnee(anneeAAjouter.toString()))
