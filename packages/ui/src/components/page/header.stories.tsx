@@ -16,7 +16,7 @@ function sleep(ms: number) {
   return new Promise(resolve => setTimeout(resolve, ms))
 }
 
-export const SuperToto: Story = {
+export const CanOpenAnnuaire: Story = {
   args: {
     currentMenuSection: 'utilisateurs',
     routePath: "/titres?domainesIds=['m']",

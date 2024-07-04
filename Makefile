@@ -1,9 +1,12 @@
 _docs:
 	cd docs-sources && pip install -r requirements.txt
 
+storybook/build:
+    npm run storybook:build -w packages/ui
+
 docs/build: _docs
 	cd docs-sources && mkdocs build -d ../docs
-	GIT_SHA=dontcare npm run storybook:build -w packages/ui
+	GIT_SHA=dontcare storybook/build
 
 docs/serve: _docs
 	cd docs-sources && mkdocs serve -a localhost:8080
@@ -40,6 +43,13 @@ ifndef CI
 	npm run test -w packages/ui
 else
 	npm run test -w packages/ui -- --coverage
+endif
+
+storybook/test:
+ifndef CI
+	npm run storybook:test -w packages/ui
+else
+	npx concurrently -k -s first -n "SB,TEST" -c "magenta,blue" "npx http-server packages/ui/storybook-static --port 6006 --silent"  "npx wait-on tcp:6006 && npm run storybook:test -w packages/ui"
 endif
 
 test/common:
