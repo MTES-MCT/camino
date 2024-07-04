@@ -51,7 +51,7 @@ const config = {
       ],
     },
     "packages/ui": {
-      ignoreBinaries: [     "npm-check-updates"      ],
+      ignoreBinaries: ["npm-check-updates"],
       ignoreDependencies: [
         "@vitest/coverage-v8",
         "@babel/eslint-parser",
