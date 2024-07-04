@@ -1,7 +1,10 @@
 const config = {
   workspaces: {
     ".": {
-      ignoreBinaries: ["eslint", "prettier"],
+      ignoreBinaries: [
+        "eslint",
+        "prettier",
+      ],
       ignoreDependencies: [
         // TODO 2023-12-28 knip voit pas les override dependencies
         "vue",
@@ -9,6 +12,7 @@ const config = {
         "@semantic-release/commit-analyzer",
         "@semantic-release/github",
         "@semantic-release/release-notes-generator",
+        "playwright"
       ],
     },
     "packages/api": {
@@ -52,7 +56,6 @@ const config = {
         "@vitest/coverage-v8",
         "@babel/eslint-parser",
         "@storybook/builder-vite",
-        "@storybook/testing-library",
         "@vue/eslint-config-prettier",
         "@vue/eslint-config-standard",
         "babel-core",
@@ -61,6 +64,7 @@ const config = {
         "core-js",
         "eslint-plugin-node",
         "node",
+        "rollup"
       ],
     },
   },

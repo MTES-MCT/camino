@@ -6,8 +6,6 @@ import '@gouvfr/dsfr/dist/component/navigation/navigation.module'
 
 import { setup } from '@storybook/vue3'
 import { h } from 'vue'
-import { allRoutes } from '../src/utils/storybook-test-utils'
-import { vueRouter } from 'storybook-vue3-router'
 
 setup(app => {
   app.component('router-link', h('a', { type: 'primary', href: 'href_for_storybook_in_preview.js' }))
@@ -18,7 +16,6 @@ export const decorators: Decorator[] = [
     components: { story  },
     template: '<div>' + '<main>' + '<div><story /></div>' + '</main>' + '</div>',
   }),
-  vueRouter(allRoutes),
 ]
 
 const preview: Preview = {

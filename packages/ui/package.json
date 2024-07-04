@@ -14,10 +14,14 @@
     "lint:check": "prettier --check src && eslint --ext .js,.ts,.tsx src --max-warnings=0",
     "storybook": "storybook dev -p 6006",
     "storybook:build": "storybook build",
+    "storybook:test": "test-storybook --browsers chromium",
     "generate-icon-types": "node --loader ts-node/esm/transpile-only ./scripts/generateIconTypes.ts"
   },
   "overrides": {
     "vue": "3.3.4"
+  },
+  "@comment devDependencies": {
+    "storybook": "Impossible de passer à la version 8.11.x, car storybook ne peut plus démarrer à cause du package @storybook/test-runner'"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.24.1",
@@ -27,9 +31,11 @@
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@storybook/addon-actions": "8.0.9",
     "@storybook/addon-controls": "8.0.9",
+    "@storybook/addon-interactions": "8.0.9",
     "@storybook/builder-vite": "8.0.9",
     "@storybook/preview-api": "8.0.9",
-    "@storybook/testing-library": "^0.2.2",
+    "@storybook/test": "8.0.9",
+    "@storybook/test-runner": "^0.19.0",
     "@storybook/vue3": "8.0.9",
     "@storybook/vue3-vite": "8.0.9",
     "@testing-library/vue": "^8.0.3",
@@ -78,7 +84,6 @@
     "prettier": "^3.2.5",
     "rollup-plugin-visualizer": "^5.12.0",
     "storybook": "8.0.9",
-    "storybook-vue3-router": "^5.0.0",
     "ts-node": "^10.9.2",
     "tus-js-client": "^4.1.0",
     "typescript": "^5.4.5",

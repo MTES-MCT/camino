@@ -7,6 +7,7 @@ import vueJsx from '@vitejs/plugin-vue-jsx'
 import inject from '@rollup/plugin-inject'
 import { visualizer } from 'rollup-plugin-visualizer'
 import { execSync } from 'node:child_process'
+import { rollupOptions} from './vite-rollup'
 
 dotenv.config({ path: path.resolve(process.cwd(), '../../.env') })
 
@@ -28,7 +29,6 @@ export default defineConfig({
     // async cjs module issue from https://github.com/vitest-dev/vitest/issues/2742
     alias: [
       { find: /^jsondiffpatch-rc$/, replacement: 'jsondiffpatch-rc/dist/jsondiffpatch.esm.js' },
-      { find: /^storybook-vue3-router$/, replacement: 'storybook-vue3-router/dist/index.mjs' },
     ],
   },
   // suite à l’ajout de la lib jsondiffpatch, il faut injecter process
@@ -42,17 +42,7 @@ export default defineConfig({
   build: {
     outDir: '../dist',
     // mode prod
-    rollupOptions: {
-      plugins: [
-        inject({
-          process: 'process',
-        }),
-        // encore un problème avec jsondiffpatch https://github.com/vitejs/vite/issues/7385#issuecomment-1286606298
-        nodeResolve({
-          // browser: true
-        }),
-      ],
-    },
+    rollupOptions
   },
   server: {
     port: 3000,

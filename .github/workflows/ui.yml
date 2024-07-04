@@ -26,7 +26,7 @@ jobs:
         run:  make install
       - name: Lint
         run: make lint/ui
-          
+
   test:
     runs-on: ubuntu-latest
     steps:
@@ -45,8 +45,24 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           flags: ui
+  test-storybook:
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v4
+        - uses: actions/setup-node@v4
+          with:
+            node-version: '20.12.2'
+            cache: 'npm'
+        - name: Install dependencies
+          run: make install
+        - name: Install Playwright
+          run: npx playwright@1.45.1 install --with-deps chromium
+        - name: Build Storybook
+          run: make storybook/build
+        - name: Serve Storybook and run tests
+          run: make storybook/test
   build:
-    needs: [test, lint]
+    needs: [test, test-storybook, lint]
     runs-on: ubuntu-latest
 
     steps:
