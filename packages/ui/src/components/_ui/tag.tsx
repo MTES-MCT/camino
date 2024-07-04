@@ -3,7 +3,7 @@ import { HTMLAttributes } from 'vue'
 import { CaminoRouterLink } from '../../router/camino-router-link'
 import { CaminoRouteNames, CaminoVueRoute } from '@/router/routes'
 
-type DsfrTagProps<T extends CaminoRouteNames> = {
+export type DsfrTagProps<T extends CaminoRouteNames> = {
   ariaLabel: string
   label?: string
   tagSize?: 'sm' | 'md'

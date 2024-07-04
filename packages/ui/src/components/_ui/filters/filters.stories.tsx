@@ -5,6 +5,7 @@ import { allCaminoFiltres } from './camino-filtres'
 import { ApiClient } from '../../../api/api-client'
 import { CaminoRouter } from '@/typings/vue-router'
 import { SubstanceLegaleId, SubstancesLegales } from 'camino-common/src/static/substancesLegales'
+import { MapPattern } from '@/components/_map/pattern'
 
 const meta: Meta = {
   title: 'Components/Ui/Filters/Filters',
@@ -94,14 +95,17 @@ export const CustomOpenedWithValues: StoryFn = () => (
 )
 
 export const Opened: StoryFn = () => (
-  <Filters
-    entreprises={[]}
-    filters={allCaminoFiltres}
-    updateUrlQuery={{ push }}
-    route={{ query: {}, name: 'dashboard', params: {} }}
-    apiClient={apiClient}
-    toggle={action('toggle')}
-    validate={action('validate')}
-    opened={true}
-  />
+  <>
+    <MapPattern />
+    <Filters
+      entreprises={[]}
+      filters={allCaminoFiltres}
+      updateUrlQuery={{ push }}
+      route={{ query: {}, name: 'dashboard', params: {} }}
+      apiClient={apiClient}
+      toggle={action('toggle')}
+      validate={action('validate')}
+      opened={true}
+    />
+  </>
 )

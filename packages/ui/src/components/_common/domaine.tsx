@@ -1,10 +1,11 @@
 import { DomaineId, DOMAINES_IDS, Domaines } from 'camino-common/src/static/domaines'
 import { FunctionalComponent, HTMLAttributes } from 'vue'
-import { DsfrTag } from '../_ui/tag'
+import { DsfrTag, DsfrTagProps } from '../_ui/tag'
 
 type Props = {
   domaineId?: DomaineId
-} & HTMLAttributes
+} & HTMLAttributes &
+  Pick<DsfrTagProps<'erreur'>, 'tagSize'>
 
 export const dsfrVariableCouleurParDomaine = {
   m: 'background-contrast-blue-ecume',
@@ -38,7 +39,8 @@ export const Domaine: FunctionalComponent<Props> = props => {
     <DsfrTag
       class="mono"
       ariaLabel={`Domaine ${Domaines[domaine].nom}`}
-      style={{ minWidth: '2rem', backgroundColor: `var(--${dsfrVariableCouleurParDomaine[domaine]})`, color: 'black' }}
+      tagSize={props.tagSize}
+      style={{ minWidth: props.tagSize === 'sm' ? '1.5rem' : '2rem', backgroundColor: `var(--${dsfrVariableCouleurParDomaine[domaine]})`, color: 'black' }}
       label={domaine.toUpperCase()}
     />
   )

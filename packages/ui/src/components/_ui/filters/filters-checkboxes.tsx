@@ -6,11 +6,11 @@ import { exhaustiveCheck } from 'camino-common/src/typescript-tools'
 import { HTMLAttributes, defineComponent, ref, Ref, watch } from 'vue'
 import { CheckboxesCaminoFiltres } from './camino-filtres'
 import { caminoFiltres } from 'camino-common/src/filters'
-import { isEventWithTarget } from '@/utils/vue-tsx-utils'
 import { DemarcheStatut } from '../../_common/demarche-statut'
 import type { JSX } from 'vue/jsx-runtime'
 import { DsfrButton } from '../dsfr-button'
 import { ActiviteStatut } from '@/components/_common/activite-statut'
+import { DsfrInputCheckbox } from '../dsfr-input-checkbox'
 
 type Props = {
   filter: CheckboxesCaminoFiltres
@@ -26,30 +26,18 @@ function DrawComponent(filter: CheckboxesCaminoFiltres, index: number): JSX.Elem
     case 'FiltreDomaine':
       return (
         <div style={{ display: 'flex', alignItems: 'baseline' }}>
-          <DomaineComp domaineId={fullFilter.elements[index].id} />
+          <DomaineComp domaineId={fullFilter.elements[index].id} tagSize="sm" />
           <div class="h6 bold fr-pl-1w">{capitalize(fullFilter.elements[index].nom)}</div>
         </div>
       )
     case 'FiltresTypes':
-      return FiltresTypes({ element: fullFilter.elements[index] }, { attrs: {}, emit: () => {}, slots: {} })
+      return <FiltresTypes element={fullFilter.elements[index]} />
     case 'FiltresActivitesStatuts':
-      return (
-        <div>
-          <ActiviteStatut activiteStatutId={fullFilter.elements[index].id} />
-        </div>
-      )
+      return <ActiviteStatut activiteStatutId={fullFilter.elements[index].id} />
     case 'FiltresTitresStatuts':
-      return (
-        <div>
-          <TitreStatutComp titreStatutId={fullFilter.elements[index].id} />
-        </div>
-      )
+      return <TitreStatutComp titreStatutId={fullFilter.elements[index].id} />
     case 'FiltresDemarchesStatuts':
-      return (
-        <div>
-          <DemarcheStatut demarcheStatutId={fullFilter.elements[index].id} />
-        </div>
-      )
+      return <DemarcheStatut demarcheStatutId={fullFilter.elements[index].id} />
     case 'FiltresLabel':
       return <span class="h6 bold">{capitalize(fullFilter.elements[index].nom)}</span>
     default:
@@ -83,11 +71,9 @@ export const FiltersCheckboxes = defineComponent((props: Props) => {
     return value.sort()
   }
 
-  const checkboxToggle = (e: Event) => {
-    if (isEventWithTarget(e) && e.target.value !== null) {
-      selectedValues.value = idsSet(e.target.value, selectedValues.value)
-      props.valuesSelected(fullFilter.validator.parse(selectedValues.value))
-    }
+  const checkboxToggle = (elementId: string) => () => {
+    selectedValues.value = idsSet(elementId, selectedValues.value)
+    props.valuesSelected(fullFilter.validator.parse(selectedValues.value))
   }
 
   const checkboxesSelect = (action: 'none' | 'all') => {
@@ -103,20 +89,13 @@ export const FiltersCheckboxes = defineComponent((props: Props) => {
   }
 
   return () => (
-    <div class="mb">
+    <div>
       {fullFilter.name}
-      <ul class="list-sans" style={{ listStyleType: 'none' }}>
+      <ul style={{ listStyleType: 'none', paddingLeft: 0 }}>
         {fullFilter.elements.map((element, index) => (
           <li key={element.id}>
             <label style={{ display: 'flex', flexDirection: 'row' }}>
-              <input
-                value={element.id}
-                // @ts-ignore typescript est perdu ici, probablement un distributive union à supprimer
-                checked={selectedValues.value.includes(element.id)}
-                type="checkbox"
-                class="fr-mr-1v"
-                onChange={event => checkboxToggle(event)}
-              />
+              <DsfrInputCheckbox legend={{ main: '' }} initialValue={selectedValues.value.includes(element.id)} valueChanged={checkboxToggle(element.id)} />
               {DrawComponent(props.filter, index)}
             </label>
           </li>
