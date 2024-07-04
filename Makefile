@@ -6,7 +6,7 @@ storybook/build:
 
 docs/build: _docs
 	cd docs-sources && mkdocs build -d ../docs
-	GIT_SHA=dontcare storybook/build
+	GIT_SHA=dontcare $(MAKE) storybook/build
 
 docs/serve: _docs
 	cd docs-sources && mkdocs serve -a localhost:8080
