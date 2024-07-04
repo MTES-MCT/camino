@@ -4,7 +4,6 @@ const config = {
       ignoreBinaries: [
         "eslint",
         "prettier",
-        "playwright",
       ],
       ignoreDependencies: [
         // TODO 2023-12-28 knip voit pas les override dependencies
