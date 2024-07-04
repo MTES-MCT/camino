@@ -5,7 +5,7 @@ import { toCaminoDate } from 'camino-common/src/date.js'
 
 import { EtapesTypesEtapesStatuts as ETES } from 'camino-common/src/static/etapesTypesEtapesStatuts.js'
 
-const etapesProd = require('./pro.cas.json')
+const etapesProd = require('./2000-01-01-pro.cas.json')
 
 describe('vérifie l’arbre de prolongation d’AXM', () => {
   const axmProMachine = new AxmProMachine()

@@ -4,7 +4,7 @@ import { ArmRenProMachine } from './ren-pro.machine.js'
 import { interpretMachine, orderAndInterpretMachine } from '../machine-test-helper.js'
 import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts.js'
 import { EtapesTypesEtapesStatuts as ETES } from 'camino-common/src/static/etapesTypesEtapesStatuts.js'
-const etapesProd = require('./ren.cas.json')
+const etapesProd = require('./2019-10-31-ren-pro.cas.json')
 
 describe('vérifie l’arbre de renonciation et de prolongation d’ARM', () => {
   const armRenProMachine = new ArmRenProMachine()
