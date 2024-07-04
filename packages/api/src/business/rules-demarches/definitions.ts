@@ -5,14 +5,14 @@ import { CaminoMachines } from './machines.js'
 import { ArmOctMachine } from './arm/oct.machine.js'
 import { AxmOctMachine } from './axm/oct.machine.js'
 import { AxmProMachine } from './axm/pro.machine.js'
-import { PxgOctMachine } from './pxg/oct.machine.js'
 import { newDemarcheId } from '../../database/models/_format/id-create.js'
 import { CaminoDate, toCaminoDate } from 'camino-common/src/date.js'
-import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes.js'
+import { DEMARCHES_TYPES_IDS, DemarchesTypes, DemarcheTypeId } from 'camino-common/src/static/demarchesTypes.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { ArmRenProMachine } from './arm/ren-pro.machine.js'
 import { PrmOctMachine } from './prm/oct.machine.js'
-import { DeepReadonly } from 'camino-common/src/typescript-tools.js'
+import { DeepReadonly, isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools.js'
+import { ProcedureHistoriqueMachine, ProcedureSimplifieeMachine } from './procedure-simplifiee/ps.machine.js'
 
 interface DemarcheDefinitionCommon {
   titreTypeId: TitreTypeId
@@ -23,7 +23,7 @@ interface DemarcheDefinitionCommon {
 interface DemarcheDefinition extends DemarcheDefinitionCommon {
   machine: CaminoMachines
 }
-
+const allDemarcheNotTravaux = Object.values(DEMARCHES_TYPES_IDS).filter(demarcheTypeId => !DemarchesTypes[demarcheTypeId].travaux)
 const plusVieilleDateEnBase = toCaminoDate('1717-01-09')
 export const demarchesDefinitions: DemarcheDefinition[] = [
   {
@@ -93,15 +93,17 @@ export const demarchesDefinitions: DemarcheDefinition[] = [
   },
   {
     titreTypeId: 'pxg',
-    demarcheTypeIds: ['oct'],
-    machine: new PxgOctMachine(),
+    demarcheTypeIds: allDemarcheNotTravaux,
+    machine: new ProcedureSimplifieeMachine(),
+    dateDebut: toCaminoDate('2024-07-01'),
+    demarcheIdExceptions: [],
+  },
+  {
+    titreTypeId: 'pxg',
+    demarcheTypeIds: allDemarcheNotTravaux,
+    machine: new ProcedureHistoriqueMachine(),
     dateDebut: plusVieilleDateEnBase,
-    demarcheIdExceptions: [
-      // Ne respectent pas le cacoo
-      newDemarcheId('fqDEYKmkLijEx0b7HRmkXxUP'),
-      newDemarcheId('fML5J37ugo6iWC3ugXfQ2AIk'),
-      newDemarcheId('Umr7TPPxiuGDOzzlKfu4S8Dm'),
-    ],
+    demarcheIdExceptions: [],
   },
 ]
 
@@ -115,9 +117,9 @@ export const demarcheDefinitionFind = (
 
   const definition = demarchesDefinitions
     .sort((a, b) => b.dateDebut.localeCompare(a.dateDebut))
-    .find(d => (!date || d.dateDebut < date) && d.titreTypeId === titreTypeId && d.demarcheTypeIds.includes(demarcheTypeId))
+    .find(d => (isNullOrUndefinedOrEmpty(date) || d.dateDebut < date) && d.titreTypeId === titreTypeId && d.demarcheTypeIds.includes(demarcheTypeId))
 
-  if (definition?.demarcheIdExceptions?.includes(demarcheId)) {
+  if (definition?.demarcheIdExceptions?.includes(demarcheId) ?? false) {
     return undefined
   }
 

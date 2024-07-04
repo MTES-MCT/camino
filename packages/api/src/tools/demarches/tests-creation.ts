@@ -3,20 +3,21 @@ import '../../init.js'
 import { titresDemarchesGet } from '../../database/queries/titres-demarches.js'
 import { userSuper } from '../../database/user-super.js'
 import { titreDemarcheDepotDemandeDateFind } from '../../business/rules/titre-demarche-depot-demande-date-find.js'
-import { writeFileSync } from 'fs'
+import { mkdirSync, writeFileSync } from 'fs'
 import { Etape, titreEtapeForMachineValidator, toMachineEtapes } from '../../business/rules-demarches/machine-common.js'
 import { demarchesDefinitions } from '../../business/rules-demarches/definitions.js'
 import { dateAddDays, daysBetween, setDayInMonth } from 'camino-common/src/date.js'
 import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes.js'
 import { toCommuneId } from 'camino-common/src/static/communes.js'
-import { isNotNullNorUndefinedNorEmpty, isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools.js'
+import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools.js'
+import { getDomaineId, getTitreTypeType } from 'camino-common/src/static/titresTypes.js'
 
 const writeEtapesForTest = async () => {
   for (const demarcheDefinition of demarchesDefinitions) {
     const demarches = await titresDemarchesGet(
       {
-        titresTypesIds: [demarcheDefinition.titreTypeId.slice(0, 2)],
-        titresDomainesIds: [demarcheDefinition.titreTypeId.slice(2)],
+        titresTypesIds: [getTitreTypeType(demarcheDefinition.titreTypeId)],
+        titresDomainesIds: [getDomaineId(demarcheDefinition.titreTypeId)],
         typesIds: demarcheDefinition.demarcheTypeIds,
       },
       {
@@ -55,6 +56,9 @@ const writeEtapesForTest = async () => {
               }) ?? []
           ).map(etape => titreEtapeForMachineValidator.parse(etape))
         )
+        if (isNullOrUndefinedOrEmpty(etapes)) {
+          return null
+        }
         // Pour anonymiser la date en gardant les délai en mois entre les 'avis des services et commissions consultatives' et l'apd,
         // on trouve la date et on calcule un delta random pour tomber dans le même mois
         const firstSaisineDate = etapes.find(etape => etape.etapeTypeId === ETAPES_TYPES.avisDesServicesEtCommissionsConsultatives)?.date ?? etapes[0].date
@@ -82,7 +86,10 @@ const writeEtapesForTest = async () => {
           etapes: etapesAnonymes,
         }
       })
-    writeFileSync(`src/business/rules-demarches/${demarcheDefinition.titreTypeId}/${demarcheDefinition.demarcheTypeIds[0]}.cas.json`, JSON.stringify(toutesLesEtapes))
+      .filter(isNotNullNorUndefined)
+    const filePath = `src/business/rules-demarches/${demarcheDefinition.titreTypeId}`
+    mkdirSync(filePath, { recursive: true })
+    writeFileSync(`${filePath}/${demarcheDefinition.dateDebut}-${demarcheDefinition.demarcheTypeIds.join('-')}.cas.json`, JSON.stringify(toutesLesEtapes))
   }
 }
 

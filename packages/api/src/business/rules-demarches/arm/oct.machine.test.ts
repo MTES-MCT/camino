@@ -8,7 +8,7 @@ import { Etape } from '../machine-common.js'
 import { toCaminoDate } from 'camino-common/src/date.js'
 import { describe, expect, test } from 'vitest'
 import { PAYS_IDS } from 'camino-common/src/static/pays.js'
-const etapesProd = require('./oct.cas.json')
+const etapesProd = require('./2019-10-31-oct.cas.json')
 const orderAndInterpretMachine = (etapes: readonly Etape[]) => {
   return commonOrderAndInterpretMachine(new ArmOctMachine(), etapes)
 }

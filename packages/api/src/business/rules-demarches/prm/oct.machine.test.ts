@@ -4,7 +4,7 @@ import { EtapesTypesEtapesStatuts as ETES } from 'camino-common/src/static/etape
 import { toCaminoDate } from 'camino-common/src/date.js'
 import { describe, expect, test } from 'vitest'
 import { PAYS_IDS } from 'camino-common/src/static/pays.js'
-const etapesProd = require('./oct.cas.json')
+const etapesProd = require('./2019-10-31-oct.cas.json')
 
 describe('vérifie l’arbre d’octroi de PRM', () => {
   const prmOctMachine = new PrmOctMachine()

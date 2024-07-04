@@ -4,7 +4,7 @@ import { EtapesTypesEtapesStatuts as ETES } from 'camino-common/src/static/etape
 import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations.js'
 import { toCaminoDate } from 'camino-common/src/date.js'
 import { describe, expect, test } from 'vitest'
-const etapesProd = require('./oct.cas.json')
+const etapesProd = require('./2020-09-30-oct.cas.json')
 
 describe('vérifie l’arbre d’octroi d’AXM', () => {
   const axmOctMachine = new AxmOctMachine()
