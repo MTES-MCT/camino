@@ -49,6 +49,7 @@ storybook/test:
 ifndef CI
 	npm run storybook:test -w packages/ui
 else
+# TODO 2024-07-04 on peut surement mieux faire, avec un sidecar
 	npx concurrently -k -s first -n "SB,TEST" -c "magenta,blue" "npx http-server packages/ui/storybook-static --port 6006 --silent"  "npx wait-on tcp:6006 && npm run storybook:test -w packages/ui"
 endif
 
