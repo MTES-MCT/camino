@@ -1,7 +1,11 @@
 const config = {
   workspaces: {
     ".": {
-      ignoreBinaries: ["eslint", "prettier"],
+      ignoreBinaries: [
+        "eslint",
+        "prettier",
+        "playwright",
+      ],
       ignoreDependencies: [
         // TODO 2023-12-28 knip voit pas les override dependencies
         "vue",
@@ -47,10 +51,7 @@ const config = {
       ],
     },
     "packages/ui": {
-      ignoreBinaries: [
-        "npm-check-updates",
-        "playright",
-      ],
+      ignoreBinaries: [     "npm-check-updates"      ],
       ignoreDependencies: [
         "@vitest/coverage-v8",
         "@babel/eslint-parser",

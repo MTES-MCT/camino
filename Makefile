@@ -2,7 +2,7 @@ _docs:
 	cd docs-sources && pip install -r requirements.txt
 
 storybook/build:
-    npm run storybook:build -w packages/ui
+	npm run storybook:build -w packages/ui
 
 docs/build: _docs
 	cd docs-sources && mkdocs build -d ../docs
