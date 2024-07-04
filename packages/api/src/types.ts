@@ -264,7 +264,6 @@ type ITitreEtape = {
   heritageProps?: IHeritageProps | null
   heritageContenu?: IHeritageContenu | null
   note?: EtapeNote
-  notesAvertissement?: boolean
 } & Partial<ITitreEtapePerimetre>
 
 interface ITitreEtapeFiltre {
