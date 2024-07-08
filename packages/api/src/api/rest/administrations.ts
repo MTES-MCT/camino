@@ -1,7 +1,6 @@
 import { Request as JWTRequest } from 'express-jwt'
 import { HTTP_STATUS } from 'camino-common/src/http.js'
 
-import TE from 'fp-ts/lib/TaskEither.js'
 import { CustomResponse } from './express-type.js'
 import { AdminUserNotNull, User, UserNotNull } from 'camino-common/src/roles.js'
 import { Pool } from 'pg'
@@ -10,10 +9,10 @@ import { canReadAdministrations } from 'camino-common/src/permissions/administra
 import { deleteAdministrationActiviteTypeEmail, getActiviteTypeEmailsByAdministrationId, getUtilisateursByAdministrationId, insertAdministrationActiviteTypeEmail } from './administrations.queries.js'
 import { AdministrationActiviteTypeEmail } from 'camino-common/src/administrations.js'
 import { CaminoApiError } from '../../types.js'
-import { pipe } from 'fp-ts/lib/function.js'
 import { ZodUnparseable } from '../../tools/fp-tools.js'
 import { DeepReadonly, exhaustiveCheck } from 'camino-common/src/typescript-tools.js'
 import { DbQueryAccessError } from '../../pg-database.js'
+import { Effect } from 'effect'
 
 export const getAdministrationUtilisateurs = (pool: Pool) => async (req: JWTRequest<User>, res: CustomResponse<AdminUserNotNull[]>) => {
   const user = req.auth
@@ -62,15 +61,14 @@ export const addAdministrationActiviteTypeEmails = (
   user: DeepReadonly<UserNotNull>,
   body: DeepReadonly<AdministrationActiviteTypeEmail>,
   params: { administrationId: AdministrationId }
-): TE.TaskEither<CaminoApiError<'Accès interdit' | ZodUnparseable | DbQueryAccessError>, boolean> => {
-  return pipe(
-    TE.Do,
-    TE.filterOrElseW(
+): Effect.Effect<boolean, CaminoApiError<'Accès interdit' | ZodUnparseable | DbQueryAccessError>> => {
+  return Effect.Do.pipe(
+    Effect.filterOrFail(
       () => canReadAdministrations(user),
       () => ({ message: 'Accès interdit' as const })
     ),
-    TE.flatMap(() => insertAdministrationActiviteTypeEmail(pool, params.administrationId, body)),
-    TE.mapLeft(caminoError => {
+    Effect.flatMap(() => insertAdministrationActiviteTypeEmail(pool, params.administrationId, body)),
+    Effect.mapError(caminoError => {
       const message = caminoError.message
       switch (message) {
         case 'Accès interdit':
@@ -92,15 +90,14 @@ export const deleteAdministrationActiviteTypeEmails = (
   user: DeepReadonly<UserNotNull>,
   body: DeepReadonly<AdministrationActiviteTypeEmail>,
   params: { administrationId: AdministrationId }
-): TE.TaskEither<CaminoApiError<'Accès interdit' | ZodUnparseable | DbQueryAccessError>, boolean> => {
-  return pipe(
-    TE.Do,
-    TE.filterOrElseW(
+): Effect.Effect<boolean, CaminoApiError<'Accès interdit' | ZodUnparseable | DbQueryAccessError>> => {
+  return Effect.Do.pipe(
+    Effect.filterOrFail(
       () => canReadAdministrations(user),
       () => ({ message: 'Accès interdit' as const })
     ),
-    TE.flatMap(() => deleteAdministrationActiviteTypeEmail(pool, params.administrationId, body)),
-    TE.mapLeft(caminoError => {
+    Effect.flatMap(() => deleteAdministrationActiviteTypeEmail(pool, params.administrationId, body)),
+    Effect.mapError(caminoError => {
       const message = caminoError.message
       switch (message) {
         case 'Accès interdit':

@@ -1,9 +1,7 @@
 /* eslint-disable no-restricted-syntax */
 import { sql } from '@pgtyped/runtime'
-import { Redefine, newDbQueryAndValidate, DbQueryAccessError } from '../../pg-database.js'
+import { Redefine, DbQueryAccessError, effectDbQueryAndValidate } from '../../pg-database.js'
 import { z } from 'zod'
-import TE from 'fp-ts/lib/TaskEither.js'
-import E from 'fp-ts/lib/Either.js'
 import { Pool } from 'pg'
 import { GeoSystemeId } from 'camino-common/src/static/geoSystemes.js'
 import { FeatureMultiPolygon, GenericFeatureCollection, MultiPoint, MultiPolygon, featureMultiPolygonValidator, multiPointsValidator, multiPolygonValidator } from 'camino-common/src/perimetre.js'
@@ -17,9 +15,9 @@ import { foretIdValidator } from 'camino-common/src/static/forets.js'
 import { sdomZoneIdValidator } from 'camino-common/src/static/sdom.js'
 import { KM2, M2, createM2Validator, km2Validator, m2Validator } from 'camino-common/src/number.js'
 import { DeepReadonly, isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
-import { pipe } from 'fp-ts/lib/function.js'
-import { ZodUnparseable, zodParseTaskEither, zodParseTaskEitherCallback } from '../../tools/fp-tools.js'
+import { ZodUnparseable, zodParseEffect, zodParseEffectCallback } from '../../tools/fp-tools.js'
 import { CaminoError } from 'camino-common/src/zod-tools.js'
+import { Effect, pipe } from 'effect'
 
 const convertPointsStringifyError = 'Impossible de transformer la feature collection' as const
 const convertPointsConversionError = 'La liste des points est vide' as const
@@ -30,33 +28,31 @@ export const convertPoints = <T extends z.ZodTypeAny>(
   fromGeoSystemeId: GeoSystemeId,
   toGeoSystemeId: GeoSystemeId,
   geojsonPoints: GenericFeatureCollection<T>
-): TE.TaskEither<CaminoError<ConvertPointsErrors>, GenericFeatureCollection<T>> => {
+): Effect.Effect<GenericFeatureCollection<T>, CaminoError<ConvertPointsErrors>> => {
   if (fromGeoSystemeId === toGeoSystemeId) {
-    return TE.right(geojsonPoints)
+    return Effect.succeed(geojsonPoints)
   }
 
   const multiPoint: MultiPoint = { type: 'MultiPoint', coordinates: geojsonPoints.features.map(feature => feature.geometry.coordinates) }
 
   return pipe(
-    TE.fromEither(
-      E.tryCatch(
-        () => JSON.stringify(multiPoint),
-        e => ({ message: convertPointsStringifyError, extra: e })
-      )
-    ),
-    TE.flatMap(geojson => newDbQueryAndValidate(convertMultiPointDb, { fromGeoSystemeId, toGeoSystemeId, geojson }, pool, z.object({ geojson: multiPointsValidator }))),
-    TE.flatMap(result => {
+    Effect.try({
+      try: () => JSON.stringify(multiPoint),
+      catch: e => ({ message: convertPointsStringifyError, extra: e }),
+    }),
+    Effect.flatMap(geojson => effectDbQueryAndValidate(convertMultiPointDb, { fromGeoSystemeId, toGeoSystemeId, geojson }, pool, z.object({ geojson: multiPointsValidator }))),
+    Effect.flatMap(result => {
       if (result.length === 0) {
-        return TE.left({ message: convertPointsConversionError })
+        return Effect.fail({ message: convertPointsConversionError })
       }
 
-      return TE.right(result[0].geojson.coordinates)
+      return Effect.succeed(result[0].geojson.coordinates)
     }),
-    TE.filterOrElseW(
+    Effect.filterOrFail(
       coordinates => coordinates.length === geojsonPoints.features.length,
       () => ({ message: convertPointsInvalidNumberOfFeaturesError })
     ),
-    TE.map(coordinates => {
+    Effect.map(coordinates => {
       return {
         type: 'FeatureCollection',
         features: geojsonPoints.features.map((feature, index) => {
@@ -82,24 +78,22 @@ export const getGeojsonByGeoSystemeId = (
   fromGeoSystemeId: GeoSystemeId,
   toGeoSystemeId: GeoSystemeId,
   geojson: FeatureMultiPolygon
-): TE.TaskEither<CaminoError<GetGeojsonByGeoSystemeIdErrorMessages>, FeatureMultiPolygon> => {
+): Effect.Effect<FeatureMultiPolygon, CaminoError<GetGeojsonByGeoSystemeIdErrorMessages>> => {
   return pipe(
-    TE.fromEither(
-      E.tryCatch(
-        () => JSON.stringify(geojson.geometry),
-        () => ({ message: conversionGeometrieError })
-      )
-    ),
-    TE.flatMap(geojson => newDbQueryAndValidate(getGeojsonByGeoSystemeIdDb, { fromGeoSystemeId, toGeoSystemeId, geojson }, pool, getGeojsonByGeoSystemeIdValidator)),
-    TE.filterOrElseW(
+    Effect.try({
+      try: () => JSON.stringify(geojson.geometry),
+      catch: () => ({ message: conversionGeometrieError }),
+    }),
+    Effect.flatMap(geojson => effectDbQueryAndValidate(getGeojsonByGeoSystemeIdDb, { fromGeoSystemeId, toGeoSystemeId, geojson }, pool, getGeojsonByGeoSystemeIdValidator)),
+    Effect.filterOrFail(
       result => result.length === 1,
       () => ({ message: conversionSystemeError, extra: toGeoSystemeId })
     ),
-    TE.filterOrElseW(
+    Effect.filterOrFail(
       result => result[0].is_valid === true,
       () => ({ message: perimetreInvalideError, extra: { fromGeoSystemeId, geojson } })
     ),
-    TE.map(result => {
+    Effect.map(result => {
       if (fromGeoSystemeId === toGeoSystemeId) {
         return geojson
       }
@@ -111,7 +105,7 @@ export const getGeojsonByGeoSystemeId = (
 
       return feature
     }),
-    TE.flatMap(zodParseTaskEitherCallback(featureMultiPolygonValidator))
+    Effect.flatMap(zodParseEffectCallback(featureMultiPolygonValidator))
   )
 }
 
@@ -135,8 +129,8 @@ export const getTitresIntersectionWithGeojson = (
   pool: Pool,
   geojson4326_perimetre: MultiPolygon,
   titreSlug: TitreSlug
-): TE.TaskEither<CaminoError<ZodUnparseable | DbQueryAccessError>, GetTitresIntersectionWithGeojson[]> => {
-  return newDbQueryAndValidate(
+): Effect.Effect<GetTitresIntersectionWithGeojson[], CaminoError<ZodUnparseable | DbQueryAccessError>> => {
+  return effectDbQueryAndValidate(
     getTitresIntersectionWithGeojsonDb,
     {
       titre_slug: titreSlug,
@@ -173,16 +167,16 @@ where
         1) = $ domaine_id !
 `
 
-const m2ToKm2 = (value: M2): TE.TaskEither<CaminoError<ZodUnparseable>, KM2> => zodParseTaskEither(km2Validator, Number.parseFloat((value / 1_000_000).toFixed(2)))
+const m2ToKm2 = (value: M2): Effect.Effect<KM2, CaminoError<ZodUnparseable>> => zodParseEffect(km2Validator, Number.parseFloat((value / 1_000_000).toFixed(2)))
 
 const requestError = 'Une erreur inattendue est survenue lors de la récupération des informations geojson en base' as const
 export type GetGeojsonInformationErrorMessages = ZodUnparseable | DbQueryAccessError | typeof requestError
-export const getGeojsonInformation = (pool: Pool, geojson4326_perimetre: MultiPolygon): TE.TaskEither<CaminoError<GetGeojsonInformationErrorMessages>, GetGeojsonInformation> => {
+export const getGeojsonInformation = (pool: Pool, geojson4326_perimetre: MultiPolygon): Effect.Effect<GetGeojsonInformation, CaminoError<GetGeojsonInformationErrorMessages>> => {
   return pipe(
-    newDbQueryAndValidate(getGeojsonInformationDb, { geojson4326_perimetre }, pool, getGeojsonInformationDbValidator),
-    TE.bindW('response', result => (result.length === 1 ? TE.right(result[0]) : TE.left({ message: requestError }))),
-    TE.bindW('surface', result => m2ToKm2(result.response.surface)),
-    TE.map(({ response, surface }) => {
+    effectDbQueryAndValidate(getGeojsonInformationDb, { geojson4326_perimetre }, pool, getGeojsonInformationDbValidator),
+    Effect.bind('response', result => (result.length === 1 ? Effect.succeed(result[0]) : Effect.fail({ message: requestError }))),
+    Effect.bind('surface', result => m2ToKm2(result.response.surface)),
+    Effect.map(({ response, surface }) => {
       return { ...response, surface }
     })
   )

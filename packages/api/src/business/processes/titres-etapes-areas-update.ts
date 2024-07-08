@@ -11,7 +11,7 @@ import { getGeojsonInformation } from '../../api/rest/perimetre.queries.js'
 import type { Pool } from 'pg'
 import { SDOMZoneId } from 'camino-common/src/static/sdom.js'
 import { M2 } from 'camino-common/src/number.js'
-import { isRight } from 'fp-ts/lib/Either.js'
+import { callAndExit } from '../../tools/fp-tools.js'
 
 /**
  * Met à jour tous les territoires d’une liste d’étapes
@@ -41,17 +41,12 @@ export const titresEtapesAreasUpdate = async (pool: Pool, titresEtapesIds?: stri
     }
     try {
       if (isNotNullNorUndefined(titreEtape.geojson4326Perimetre)) {
-        const result = await getGeojsonInformation(pool, titreEtape.geojson4326Perimetre.geometry)()
-        if (isRight(result)) {
-          const { forets, sdom, secteurs, communes } = result.right
-
+        await callAndExit(getGeojsonInformation(pool, titreEtape.geojson4326Perimetre.geometry), async ({ forets, sdom, secteurs, communes }) => {
           await intersectForets(titreEtape, forets)
           await intersectSdom(titreEtape, sdom)
           await intersectCommunes(titreEtape, communes)
           await intersectSecteursMaritime(titreEtape, secteurs)
-        } else {
-          throw new Error(result.left.message)
-        }
+        })
       }
     } catch (e) {
       console.error(`Une erreur est survenue lors du traitement de l'étape ${titreEtape.id}`)

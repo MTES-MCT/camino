@@ -3,7 +3,6 @@
 import { CaminoApiError, Index } from '../types.js'
 import type { Pool } from 'pg'
 
-import TE from 'fp-ts/lib/TaskEither.js'
 import express from 'express'
 import { join } from 'path'
 import { inspect } from 'node:util'
@@ -66,8 +65,8 @@ import { titreDemandeCreer } from '../api/rest/titre-demande.js'
 import { config } from '../config/index.js'
 import { addLog } from '../api/rest/logs.queries.js'
 import { HTTP_STATUS } from 'camino-common/src/http.js'
-import { pipe } from 'fp-ts/lib/function.js'
-import { zodParseTaskEither } from '../tools/fp-tools.js'
+import { zodParseEffect } from '../tools/fp-tools.js'
+import { Cause, Effect, Exit, pipe } from 'effect'
 
 interface IRestResolverResult {
   nom: string
@@ -95,7 +94,7 @@ type RestNewPostCall<Route extends NewPostRestRoutes> = (
   user: DeepReadonly<UserNotNull>,
   body: DeepReadonly<z.infer<CaminoRestRoutesType[Route]['newPost']['input']>>,
   params: DeepReadonly<z.infer<CaminoRestRoutesType[Route]['params']>>
-) => TE.TaskEither<CaminoApiError<string>, DeepReadonly<z.infer<CaminoRestRoutesType[Route]['newPost']['output']>>>
+) => Effect.Effect<DeepReadonly<z.infer<CaminoRestRoutesType[Route]['newPost']['output']>>, CaminoApiError<string>>
 type RestPostCall<Route extends PostRestRoutes> = (pool: Pool) => (req: CaminoRequest, res: CustomResponse<z.infer<CaminoRestRoutesType[Route]['post']['output']>>) => Promise<void>
 type RestPutCall<Route extends PutRestRoutes> = (pool: Pool) => (req: CaminoRequest, res: CustomResponse<z.infer<CaminoRestRoutesType[Route]['put']['output']>>) => Promise<void>
 type RestDeleteCall = (pool: Pool) => (req: CaminoRequest, res: CustomResponse<void | Error>) => Promise<void>
@@ -209,18 +208,17 @@ export const restWithPool = (dbPool: Pool) => {
         console.info(`POST ${route}`)
         rest.post(route, async (req: CaminoRequest, res: express.Response, _next: express.NextFunction) => {
           try {
-            const call = pipe(
-              TE.Do,
-              TE.bindW('user', () => {
+            const call = Effect.Do.pipe(
+              Effect.bind('user', () => {
                 if (isNotNullNorUndefined(req.auth)) {
-                  return TE.right(req.auth as UserNotNull)
+                  return Effect.succeed(req.auth as UserNotNull)
                 } else {
-                  return TE.left({ message: 'Accès interdit', status: HTTP_STATUS.HTTP_STATUS_FORBIDDEN })
+                  return Effect.fail({ message: 'Accès interdit', status: HTTP_STATUS.HTTP_STATUS_FORBIDDEN })
                 }
               }),
-              TE.bindW('body', () => zodParseTaskEither(maRoute.newPost.input, req.body)),
-              TE.bindW('params', () => zodParseTaskEither(maRoute.params, req.params)),
-              TE.mapLeft(caminoError => {
+              Effect.bind('body', () => zodParseEffect(maRoute.newPost.input, req.body)),
+              Effect.bind('params', () => zodParseEffect(maRoute.params, req.params)),
+              Effect.mapError(caminoError => {
                 if (!('status' in caminoError)) {
                   return { ...caminoError, status: HTTP_STATUS.HTTP_STATUS_BAD_REQUEST }
                 }
@@ -228,30 +226,37 @@ export const restWithPool = (dbPool: Pool) => {
                 return caminoError
               }),
               // TODO 2024-06-26 ici, si on ne met pas le body et params à any, on se retrouve avec une typescript union hell qui fait tout planter
-              TE.bindW<'result', { body: any; user: UserNotNull; params: any }, CaminoApiError<string>, DeepReadonly<z.infer<(typeof maRoute)['newPost']['output']>>>(
+              Effect.bind<'result', { body: any; user: UserNotNull; params: any }, DeepReadonly<z.infer<(typeof maRoute)['newPost']['output']>>, CaminoApiError<string>, never>(
                 'result',
                 ({ user, body, params }) => maRoute.newPostCall(dbPool, user, body, params)
               ),
-              TE.bindW('parsedResult', ({ result }) =>
+              Effect.bind('parsedResult', ({ result }) =>
                 pipe(
-                  zodParseTaskEither(maRoute.newPost.output, result),
-                  TE.mapLeft(caminoError => ({ ...caminoError, status: HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR }))
+                  zodParseEffect(maRoute.newPost.output, result),
+                  Effect.mapError(caminoError => ({ ...caminoError, status: HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR }))
                 )
               ),
-              TE.mapBoth(
-                caminoError => {
+              Effect.mapBoth({
+                onFailure: caminoError => {
                   console.warn(`problem with route ${route}: ${caminoError.message}`)
                   res.status(caminoError.status).json(caminoError)
                 },
-                ({ parsedResult, user }) => {
+                onSuccess: ({ parsedResult, user }) => {
                   res.json(parsedResult)
 
                   return addLog(dbPool, user.id, 'post', req.url, req.body)
-                }
-              )
+                },
+              }),
+              Effect.runPromiseExit
             )
 
-            await call()
+            const pipeline = await call
+            if (Exit.isFailure(pipeline)) {
+              if (!Cause.isFailType(pipeline.cause)) {
+                console.error('catching error on newPost route', route, pipeline.cause, req.body)
+                res.status(HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR).json({ message: "une erreur inattendue s'est produite", extra: pipeline.cause })
+              }
+            }
           } catch (e) {
             console.error('catching error on newPost route', route, e, req.body)
             res.status(HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR).json({ message: "une erreur inattendue s'est produite", extra: e })
@@ -311,7 +316,7 @@ const restCatcherWithMutation = (method: string, expressCall: ExpressRoute, pool
       res.sendStatus(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
     } else {
       await expressCall(req, res, next)
-      await addLog(pool, user.id, method, req.url, req.body)()
+      await pipe(addLog(pool, user.id, method, req.url, req.body), Effect.runPromise)
     }
   } catch (e) {
     console.error('catching error', e)
