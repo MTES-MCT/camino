@@ -1036,15 +1036,6 @@ const demarcheEtapesTypesGet = async (titreDemarcheId: DemarcheId, date: CaminoD
 
   if (titreEtapeId && !titreEtape) throw new Error("l'étape n'existe pas")
 
-  // si on modifie une étape
-  // vérifie que son type est possible sur la démarche
-  if (titreEtape) {
-    if (!isTDEExist(titre.typeId, titreDemarche.typeId, titreEtape.typeId)) {
-      const demarcheType = DemarchesTypes[titreDemarche.typeId]
-      throw new Error(`étape ${EtapesTypes[titreEtape.typeId].nom} inexistante pour une démarche ${demarcheType.nom} pour un titre ${titre.typeId}.`)
-    }
-  }
-
   const demarcheDefinition = demarcheDefinitionFind(titre.typeId, titreDemarche.typeId, titreDemarche.etapes, titreDemarche.id)
 
   const etapesTypes: EtapeTypeEtapeStatutWithMainStep[] = []
@@ -1053,6 +1044,14 @@ const demarcheEtapesTypesGet = async (titreDemarcheId: DemarcheId, date: CaminoD
     const etapes = titreDemarche.etapes.map(etape => titreEtapeForMachineValidator.parse(etape))
     etapesTypes.push(...etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(demarcheDefinition.machine, etapes, titreEtapeId, date))
   } else {
+    // si on modifie une étape
+    // vérifie que son type est possible sur la démarche
+    if (titreEtape) {
+      if (!isTDEExist(titre.typeId, titreDemarche.typeId, titreEtape.typeId)) {
+        const demarcheType = DemarchesTypes[titreDemarche.typeId]
+        throw new Error(`étape ${EtapesTypes[titreEtape.typeId].nom} inexistante pour une démarche ${demarcheType.nom} pour un titre ${titre.typeId}.`)
+      }
+    }
     // dans un premier temps on récupère toutes les étapes possibles pour cette démarche
     let etapesTypesTDE = getEtapesTDE(titre.typeId, titreDemarche.typeId)
 

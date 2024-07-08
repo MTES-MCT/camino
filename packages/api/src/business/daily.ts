@@ -19,7 +19,6 @@ import { titresActivitesRelanceSend } from './processes/titres-activites-relance
 import type { Pool } from 'pg'
 import { demarchesDefinitionsCheck } from '../tools/demarches/definitions-check.js'
 import { titreTypeDemarcheTypeEtapeTypeCheck } from '../tools/demarches/tde-check.js'
-import { etapeStatutCheck } from '../tools/demarches/etape-statut-check.js'
 
 export const daily = async (pool: Pool) => {
   try {
@@ -49,7 +48,6 @@ export const daily = async (pool: Pool) => {
 
     await demarchesDefinitionsCheck()
     await titreTypeDemarcheTypeEtapeTypeCheck()
-    await etapeStatutCheck()
 
     logsUpdate({
       titresEtapesOrdreUpdated,
