@@ -1,7 +1,7 @@
 import { DemarcheId, demarcheIdOrSlugValidator } from 'camino-common/src/demarche.js'
 import { CaminoRequest, CustomResponse } from './express-type.js'
 import { Pool } from 'pg'
-import { pipe, Effect, Exit } from 'effect'
+import { pipe, Effect, Exit, Match } from 'effect'
 import { GEO_SYSTEME_IDS, GeoSystemeId, GeoSystemes } from 'camino-common/src/static/geoSystemes.js'
 import { HTTP_STATUS } from 'camino-common/src/http.js'
 import {
@@ -374,32 +374,33 @@ export const geojsonImport = (
 
       return result
     }),
-    Effect.mapError(caminoError => {
-      const message = caminoError.message
-      switch (message) {
-        case 'Une erreur est survenue lors de la lecture du csv':
-        case 'Une erreur est survenue lors de la récupération des informations du CSV':
-        case 'Une erreur inattendue est survenue lors de la récupération des informations geojson en base':
-        case "Impossible d'accéder à la base de données":
-          return { ...caminoError, status: HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR }
-        case 'Problème de validation de données':
-        case "Une erreur s'est produite lors de l'ouverture du fichier GeoJSON":
-        case "Une erreur s'est produite lors de l'ouverture du fichier shape":
-        case 'Impossible de convertir la géométrie en JSON':
-        case 'Impossible de convertir le geojson vers le système':
-        case "L'import CSV est fait pour des petits polygones simple de moins de 20 sommets":
-        case "Le périmètre n'est pas valide dans le référentiel donné":
-        case "Une erreur s'est produite lors de l'extraction du multi-polygone du fichier GeoJSON":
-        case "Une erreur s'est produite lors de l'extraction du multi-polygone du fichier shape":
-        case 'Impossible de transformer la feature collection':
-        case 'La liste des points est vide':
-        case 'Le nombre de points est invalide':
-          return { ...caminoError, status: HTTP_STATUS.HTTP_STATUS_BAD_REQUEST }
-        default:
-          exhaustiveCheck(message)
-          throw new Error('impossible')
-      }
-    })
+    Effect.mapError(caminoError =>
+      Match.value(caminoError.message).pipe(
+        Match.whenOr(
+          'Une erreur est survenue lors de la lecture du csv',
+          'Une erreur est survenue lors de la récupération des informations du CSV',
+          'Une erreur inattendue est survenue lors de la récupération des informations geojson en base',
+          "Impossible d'accéder à la base de données",
+          () => ({ ...caminoError, status: HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR })
+        ),
+        Match.whenOr(
+          'Problème de validation de données',
+          "Une erreur s'est produite lors de l'ouverture du fichier GeoJSON",
+          "Une erreur s'est produite lors de l'ouverture du fichier shape",
+          'Impossible de convertir la géométrie en JSON',
+          'Impossible de convertir le geojson vers le système',
+          "L'import CSV est fait pour des petits polygones simple de moins de 20 sommets",
+          "Le périmètre n'est pas valide dans le référentiel donné",
+          "Une erreur s'est produite lors de l'extraction du multi-polygone du fichier GeoJSON",
+          "Une erreur s'est produite lors de l'extraction du multi-polygone du fichier shape",
+          'Impossible de transformer la feature collection',
+          'La liste des points est vide',
+          'Le nombre de points est invalide',
+          () => ({ ...caminoError, status: HTTP_STATUS.HTTP_STATUS_BAD_REQUEST })
+        ),
+        Match.exhaustive
+      )
+    )
   )
 }
 const fileNameToJson = <T extends ZodTypeAny>(pathFrom: string, validator: T): Effect.Effect<z.infer<T>, CaminoError<ZodUnparseable | typeof ouvertureGeoJSONError>> => {
@@ -488,25 +489,21 @@ export const geojsonImportPoints = (
     }),
     Effect.bind('geojson4326points', ({ features }) => convertPoints(pool, params.geoSystemeId, GEO_SYSTEME_IDS.WGS84, features)),
     Effect.map(result => ({ geojson4326: result.geojson4326points, origin: result.features })),
-    // FIXME exthaustive de effect ?
-    Effect.mapError(caminoError => {
-      const message = caminoError.message
-      switch (message) {
-        case 'Accès interdit':
-          return { ...caminoError, status: HTTP_STATUS.HTTP_STATUS_FORBIDDEN }
-        case "Impossible d'accéder à la base de données":
-          return { ...caminoError, status: HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR }
-        case 'Problème de validation de données':
-        case 'Fichier incorrect':
-        case 'Impossible de transformer la feature collection':
-        case 'La liste des points est vide':
-        case 'Le nombre de points est invalide':
-          return { ...caminoError, status: HTTP_STATUS.HTTP_STATUS_BAD_REQUEST }
-        default:
-          exhaustiveCheck(message)
-          throw new Error('impossible')
-      }
-    })
+    Effect.mapError(caminoError =>
+      Match.value(caminoError.message).pipe(
+        Match.when('Accès interdit', () => ({ ...caminoError, status: HTTP_STATUS.HTTP_STATUS_FORBIDDEN })),
+        Match.when("Impossible d'accéder à la base de données", () => ({ ...caminoError, status: HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR })),
+        Match.whenOr(
+          'Fichier incorrect',
+          'Impossible de transformer la feature collection',
+          'La liste des points est vide',
+          'Le nombre de points est invalide',
+          'Problème de validation de données',
+          () => ({ ...caminoError, status: HTTP_STATUS.HTTP_STATUS_BAD_REQUEST })
+        ),
+        Match.exhaustive
+      )
+    )
   )
 }
 
@@ -524,19 +521,18 @@ export const geojsonImportForages = (
 
   return Effect.Do.pipe(
     Effect.bind('features', () => {
-      // FIXME put the myPipe outside
-      let myPipe: Effect.Effect<z.infer<typeof featureCollectionForagesValidator>, CaminoError<GeosjsonImportForagesErrorMessages>>
+      let featuresPipe: Effect.Effect<z.infer<typeof featureCollectionForagesValidator>, CaminoError<GeosjsonImportForagesErrorMessages>>
       switch (fileType) {
         case 'geojson': {
-          myPipe = fileNameToJson(pathFrom, featureCollectionForagesValidator)
+          featuresPipe = fileNameToJson(pathFrom, featureCollectionForagesValidator)
           break
         }
         case 'shp': {
-          myPipe = fileNameToShape(pathFrom, featureCollectionForagesValidator)
+          featuresPipe = fileNameToShape(pathFrom, featureCollectionForagesValidator)
           break
         }
         case 'csv': {
-          myPipe = pipe(
+          featuresPipe = pipe(
             fileNameToCsv(pathFrom),
             Effect.flatMap(converted => {
               const uniteId = GeoSystemes[params.geoSystemeId].uniteId
@@ -586,30 +582,28 @@ export const geojsonImportForages = (
         }
       }
 
-      return myPipe
+      return featuresPipe
     }),
     Effect.bind('conversion', ({ features }) => convertPoints(pool, params.geoSystemeId, GEO_SYSTEME_IDS.WGS84, features)),
     Effect.map(({ conversion, features }) => {
       return { geojson4326: conversion, origin: features }
     }),
-    Effect.mapError(caminoError => {
-      const message = caminoError.message
-      switch (message) {
-        case "Impossible d'accéder à la base de données":
-          return { ...caminoError, status: HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR }
-        case 'Problème de validation de données':
-        case 'Une erreur est survenue lors de la lecture du csv':
-        case "Une erreur s'est produite lors de l'ouverture du fichier GeoJSON":
-        case "Une erreur s'est produite lors de l'ouverture du fichier shape":
-        case 'Impossible de transformer la feature collection':
-        case 'La liste des points est vide':
-        case 'Le nombre de points est invalide':
-          return { ...caminoError, status: HTTP_STATUS.HTTP_STATUS_BAD_REQUEST }
-        default:
-          exhaustiveCheck(message)
-          throw new Error('impossible')
-      }
-    })
+    Effect.mapError(caminoError =>
+      Match.value(caminoError.message).pipe(
+        Match.when("Impossible d'accéder à la base de données", () => ({ ...caminoError, status: HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR })),
+        Match.whenOr(
+          'Problème de validation de données',
+          'Une erreur est survenue lors de la lecture du csv',
+          "Une erreur s'est produite lors de l'ouverture du fichier GeoJSON",
+          "Une erreur s'est produite lors de l'ouverture du fichier shape",
+          'Impossible de transformer la feature collection',
+          'La liste des points est vide',
+          'Le nombre de points est invalide',
+          () => ({ ...caminoError, status: HTTP_STATUS.HTTP_STATUS_BAD_REQUEST })
+        ),
+        Match.exhaustive
+      )
+    )
   )
 }
 
