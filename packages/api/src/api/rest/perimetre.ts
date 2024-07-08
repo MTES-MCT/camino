@@ -1,7 +1,7 @@
 import { DemarcheId, demarcheIdOrSlugValidator } from 'camino-common/src/demarche.js'
 import { CaminoRequest, CustomResponse } from './express-type.js'
 import { Pool } from 'pg'
-import { pipe, Effect, Exit, Match } from 'effect'
+import { pipe, Effect, Match } from 'effect'
 import { GEO_SYSTEME_IDS, GeoSystemeId, GeoSystemes } from 'camino-common/src/static/geoSystemes.js'
 import { HTTP_STATUS } from 'camino-common/src/http.js'
 import {
@@ -44,7 +44,7 @@ import {
 import { join } from 'node:path'
 import { readFileSync } from 'node:fs'
 import shpjs from 'shpjs'
-import { DeepReadonly, exhaustiveCheck, isNotNullNorUndefined, isNullOrUndefined, memoize } from 'camino-common/src/typescript-tools.js'
+import { DeepReadonly, isNotNullNorUndefined, isNullOrUndefined, memoize } from 'camino-common/src/typescript-tools.js'
 import { SDOMZoneId } from 'camino-common/src/static/sdom.js'
 import { TitreSlug } from 'camino-common/src/validators/titres.js'
 import { canReadEtape } from './permissions/etapes.js'
@@ -54,7 +54,7 @@ import { ZodTypeAny, z } from 'zod'
 import { CommuneId } from 'camino-common/src/static/communes'
 import { CaminoApiError } from '../../types.js'
 import { DbQueryAccessError } from '../../pg-database.js'
-import { ZodUnparseable, zodParseEffect, zodParseEffectCallback } from '../../tools/fp-tools.js'
+import { ZodUnparseable, callAndExit, zodParseEffect, zodParseEffectCallback } from '../../tools/fp-tools.js'
 import { CaminoError } from 'camino-common/src/zod-tools.js'
 
 export const getPerimetreInfos = (pool: Pool) => async (req: CaminoRequest, res: CustomResponse<PerimetreInformations>) => {
@@ -116,22 +116,19 @@ export const getPerimetreInfos = (pool: Pool) => async (req: CaminoRequest, res:
               { ...demarche, titre_public_lecture: titre.public_lecture }
             )
           ) {
-            const superpositionAlertes = await pipe(getAlertesSuperposition(etape.geojson4326_perimetre, titre.titre_type_id, titre.titre_slug, user, pool), Effect.runPromiseExit)
-            if (Exit.isSuccess(superpositionAlertes)) {
+            await callAndExit(getAlertesSuperposition(etape.geojson4326_perimetre, titre.titre_type_id, titre.titre_slug, user, pool), async superpositionAlertes => {
               res.json({
-                superposition_alertes: superpositionAlertes.value,
+                superposition_alertes: superpositionAlertes,
                 sdomZoneIds: etape.sdom_zones,
                 communes: etape.communes,
               })
-            } else {
-              res.status(HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR).send(superpositionAlertes.cause)
-            }
+            })
           } else {
             res.sendStatus(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
           }
         }
       } catch (e) {
-        res.sendStatus(HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR)
+        res.status(HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR).send(e)
         console.error(e)
       }
     }
@@ -212,10 +209,9 @@ export const geojsonImport = (
         CaminoError<GeojsonImportErrorMessages>,
         never
       >(() => {
-        const fileType = body.fileType
-        switch (fileType) {
-          case 'geojson': {
-            return pipe(
+        return Match.value(body.fileType).pipe(
+          Match.when('geojson', () =>
+            pipe(
               fileNameToJson(pathFrom, geojsonValidator),
               Effect.flatMap(features =>
                 Effect.try({
@@ -238,9 +234,9 @@ export const geojsonImport = (
                 })
               )
             )
-          }
-          case 'shp': {
-            return pipe(
+          ),
+          Match.when('shp', () =>
+            pipe(
               fileNameToShape(pathFrom, shapeValidator),
               Effect.flatMap(shapePolygonOrMultipolygons =>
                 Effect.try({
@@ -260,9 +256,9 @@ export const geojsonImport = (
                 })
               )
             )
-          }
-          case 'csv': {
-            return pipe(
+          ),
+          Match.when('csv', () =>
+            pipe(
               fileNameToCsv(pathFrom),
               Effect.filterOrFail(
                 converted => converted.length <= 20,
@@ -270,10 +266,9 @@ export const geojsonImport = (
               ),
               Effect.flatMap(converted => {
                 const uniteId = GeoSystemes[params.geoSystemeId].uniteId
-                let myPipe
-                switch (uniteId) {
-                  case 'met': {
-                    myPipe = pipe(
+                const myPipe = Match.value(uniteId).pipe(
+                  Match.when('met', () =>
+                    pipe(
                       zodParseEffect(csvXYValidator, converted),
                       Effect.flatMap(rows =>
                         Effect.try({
@@ -293,11 +288,9 @@ export const geojsonImport = (
                         })
                       )
                     )
-                    break
-                  }
-                  case 'gon':
-                  case 'deg': {
-                    myPipe = pipe(
+                  ),
+                  Match.whenOr('gon', 'deg', () =>
+                    pipe(
                       zodParseEffect(csvLatLongValidator, converted),
                       Effect.flatMap(rows =>
                         Effect.try({
@@ -316,13 +309,9 @@ export const geojsonImport = (
                         })
                       )
                     )
-                    break
-                  }
-                  default: {
-                    exhaustiveCheck(uniteId)
-                    throw new Error('impossible')
-                  }
-                }
+                  ),
+                  Match.exhaustive
+                )
 
                 return pipe(
                   myPipe,
@@ -335,11 +324,9 @@ export const geojsonImport = (
                 )
               })
             )
-          }
-          default:
-            exhaustiveCheck(fileType)
-            throw new Error('Impossible')
-        }
+          ),
+          Match.exhaustive
+        )
       })
     ),
     Effect.bind('geojson4326MultiPolygon', ({ geojsonOriginFeatureMultiPolygon }) =>
@@ -520,25 +507,19 @@ export const geojsonImportForages = (
   const fileType = body.fileType
 
   return Effect.Do.pipe(
-    Effect.bind('features', () => {
-      let featuresPipe: Effect.Effect<z.infer<typeof featureCollectionForagesValidator>, CaminoError<GeosjsonImportForagesErrorMessages>>
-      switch (fileType) {
-        case 'geojson': {
-          featuresPipe = fileNameToJson(pathFrom, featureCollectionForagesValidator)
-          break
-        }
-        case 'shp': {
-          featuresPipe = fileNameToShape(pathFrom, featureCollectionForagesValidator)
-          break
-        }
-        case 'csv': {
-          featuresPipe = pipe(
+    Effect.bind('features', () =>
+      Match.value(fileType).pipe(
+        Match.when('geojson', () => fileNameToJson(pathFrom, featureCollectionForagesValidator)),
+        Match.when('shp', () => fileNameToShape(pathFrom, featureCollectionForagesValidator)),
+        Match.when('csv', () =>
+          pipe(
             fileNameToCsv(pathFrom),
             Effect.flatMap(converted => {
               const uniteId = GeoSystemes[params.geoSystemeId].uniteId
-              switch (uniteId) {
-                case 'met': {
-                  return pipe(
+
+              return Match.value(uniteId).pipe(
+                Match.when('met', () =>
+                  pipe(
                     zodParseEffect(csvForageXYValidator, converted),
                     Effect.map(rows => {
                       const points: FeatureCollectionForages['features'] = rows.map(ligne => ({
@@ -550,10 +531,9 @@ export const geojsonImportForages = (
                       return { type: 'FeatureCollection', features: points } as const
                     })
                   )
-                }
-                case 'gon':
-                case 'deg': {
-                  return pipe(
+                ),
+                Match.whenOr('gon', 'deg', () =>
+                  pipe(
                     zodParseEffect(csvForageDegValidator, converted),
                     Effect.map(rows => {
                       const points: FeatureCollectionForages['features'] = rows.map(ligne => ({
@@ -565,25 +545,16 @@ export const geojsonImportForages = (
                       return { type: 'FeatureCollection', features: points } as const
                     })
                   )
-                }
-                default:
-                  exhaustiveCheck(uniteId)
-                  throw new Error('Cas impossible mais typescript ne voit pas que exhaustiveCheck throw une exception')
-              }
+                ),
+                Match.exhaustive
+              )
             }),
             Effect.flatMap(zodParseEffectCallback(featureCollectionForagesValidator))
           )
-          break
-        }
-
-        default: {
-          exhaustiveCheck(fileType)
-          throw new Error('Cas impossible mais typescript ne voit pas que exhaustiveCheck throw une exception')
-        }
-      }
-
-      return featuresPipe
-    }),
+        ),
+        Match.exhaustive
+      )
+    ),
     Effect.bind('conversion', ({ features }) => convertPoints(pool, params.geoSystemeId, GEO_SYSTEME_IDS.WGS84, features)),
     Effect.map(({ conversion, features }) => {
       return { geojson4326: conversion, origin: features }
