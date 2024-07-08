@@ -366,7 +366,7 @@ export const DemarcheMap = defineComponent<Props>(props => {
   onMounted(() => {
     const style: CaminoStyleSpecification = {
       version: 8,
-      glyphs: 'https://etalab-tiles.fr/fonts/{fontstack}/{range}.pbf',
+      glyphs: 'https://openmaptiles.data.gouv.fr/fonts/{fontstack}/{range}.pbf',
       sources: {
         ...layersSourceSpecifications,
         ...staticOverlayLayersSourceSpecification,
