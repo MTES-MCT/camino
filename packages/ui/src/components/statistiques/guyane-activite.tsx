@@ -8,7 +8,7 @@ interface Props {
   enConstruction: boolean
 }
 export const GuyaneActivite: FunctionalComponent<Props> = props => (
-  <div id="indicateurs" class="mb-xxl">
+  <div id="indicateurs">
     {props.enConstruction ? <Alert class="fr-mb-2v" type="warning" title="Données en cours de collecte et consolidation." /> : null}
 
     <div class="tablet-blobs">
@@ -45,12 +45,12 @@ export const GuyaneActivite: FunctionalComponent<Props> = props => (
       </div>
     </div>
     <div class="tablet-blobs">
-      <div class="tablet-blob-1-2 mb-xl">
+      <div class="tablet-blob-1-2">
         <h4 class="text-center">Sources des données</h4>
         <p class={['fr-display--xs', styles['donnee-importante']]}>{numberFormat(props.statistiqueGuyane.activitesDeposesQuantite)}</p>
         <p>Rapports d’activité de production collectés via Camino utilisés pour consolider ces statistiques.</p>
       </div>
-      <div class="tablet-blob-1-2 mb-xl">
+      <div class="tablet-blob-1-2">
         <h4 class="text-center">Taux de collecte</h4>
         <p class={['fr-display--xs', styles['donnee-importante']]}>{props.statistiqueGuyane.activitesDeposesRatio} %</p>
         <p>Des rapports d’activité de production attendus ont été déposés par les opérateurs miniers pour consolider ces statistiques.</p>

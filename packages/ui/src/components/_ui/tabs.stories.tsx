@@ -28,3 +28,4 @@ const tabs = [
 ] as const satisfies Readonly<NonEmptyArray<Tab<string>>>
 export const Simple: StoryFn = () => <Tabs initTab={tabs[0].id} tabs={tabs} tabsTitle="Titre d’accessibilité des onglets" tabClicked={update} />
 export const SecondTabInit: StoryFn = () => <Tabs initTab={tabs[1].id} tabs={tabs} tabsTitle="Titre d’accessibilité des onglets" tabClicked={update} />
+export const WithoutIcon: StoryFn = () => <Tabs initTab={tabs[0].id} tabs={[{ ...tabs[0], icon: null }, tabs[1]]} tabsTitle="Titre d’accessibilité des onglets" tabClicked={update} />
