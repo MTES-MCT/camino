@@ -6,7 +6,7 @@ import { isTDEExist } from 'camino-common/src/static/titresTypes_demarchesTypes_
 import { DemarcheTypeId, DemarchesTypes } from 'camino-common/src/static/demarchesTypes.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 
-export const titreEtapeTypeAndStatusValidate = (titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId, etapeTypeId: EtapeTypeId, etapeStatutId: EtapeStatutId | undefined): string[] => {
+export const tdeOldTitreEtapeTypeAndStatusValidate = (titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId, etapeTypeId: EtapeTypeId, etapeStatutId: EtapeStatutId | undefined): string[] => {
   if (!etapeStatutId) {
     return [`le statut est obligatoire`]
   }

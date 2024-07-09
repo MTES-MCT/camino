@@ -4,7 +4,7 @@ import type { ITitre, ITitreEtape } from '../../types.js'
 
 import { demarcheDefinitionFind } from '../rules-demarches/definitions.js'
 import { titreEtapeForMachineValidator, toMachineEtapes } from '../rules-demarches/machine-common.js'
-import { titreEtapeTypeAndStatusValidate } from './titre-etape-type-and-status-validate.js'
+import { tdeOldTitreEtapeTypeAndStatusValidate } from './titre-etape-type-and-status-validate.js'
 import { DemarcheId } from 'camino-common/src/demarche.js'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes.js'
 import { ETAPE_IS_BROUILLON } from 'camino-common/src/etape.js'
@@ -62,7 +62,7 @@ export const titreDemarcheUpdatedEtatValidate = (
       return []
     }
     // le type d'étape correspond à la démarche et au type de titre
-    const titreEtapeTypeAndStatusErrors = titreEtapeTypeAndStatusValidate(titre.typeId, titreDemarche.typeId, titreEtape.typeId, titreEtape.statutId)
+    const titreEtapeTypeAndStatusErrors = tdeOldTitreEtapeTypeAndStatusValidate(titre.typeId, titreDemarche.typeId, titreEtape.typeId, titreEtape.statutId)
     titreDemarchesErrors.push(...titreEtapeTypeAndStatusErrors)
 
     return titreDemarchesErrors
