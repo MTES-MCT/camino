@@ -39,7 +39,7 @@ export const DocumentInitialTemporaire: StoryFn = () => (
       avis_type_id: 'lettreDeSaisineDesServices',
       temp_document_name: tempDocumentNameValidator.parse('value'),
       date: toCaminoDate('2023-01-02'),
-      avis_statut_id: 'Favorable',
+      avis_statut_id: 'Fait',
       has_file: false,
       avis_visibility_id: AvisVisibilityIds.Administrations,
     }}

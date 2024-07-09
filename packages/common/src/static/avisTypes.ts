@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { NonEmptyArray } from '../typescript-tools'
 
 interface Definition<T> {
   id: T
@@ -50,10 +51,14 @@ export const AvisStatutIds = [
   "Défavorable",
   "Favorable avec réserves",
   "Non renseigné",
+  "Fait",
 ] as const
 
 export const avisStatutIdValidator = z.enum(AvisStatutIds)
 export type AvisStatutId = z.infer<typeof avisStatutIdValidator>
+
+export const getAvisStatutsByAvis = (avis: AvisTypeId): NonEmptyArray<AvisStatutId> =>
+  avis === 'lettreDeSaisineDesServices' ? ['Fait'] : ['Favorable', 'Défavorable', 'Favorable avec réserves', 'Non renseigné']
 
 export const AVIS_VISIBILITY_IDS = ['Public', 'TitulairesEtAdministrations', 'Administrations'] as const
 
