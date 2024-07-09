@@ -52,7 +52,6 @@ import { CanReadDemarche } from '../../api/rest/permissions/demarches.js'
 import { newEtapeAvisId, newEtapeDocumentId } from '../models/_format/id-create.js'
 import { caminoDateValidator, getCurrent } from 'camino-common/src/date.js'
 import { createLargeObject, LargeObjectId, largeObjectIdValidator } from '../largeobjects.js'
-import { canDeleteEtapeDocument } from 'camino-common/src/permissions/titres-etapes.js'
 import { avisStatutIdValidator, avisTypeIdValidator, avisVisibilityIdValidator } from 'camino-common/src/static/avisTypes.js'
 import { canReadAvis } from '../../api/rest/permissions/avis.js'
 import { getEtapeDataForEdition } from '../../api/rest/etapes.queries.js'
@@ -143,10 +142,6 @@ export const updateEtapeDocuments = async (pool: Pool, user: User, titre_etape_i
     await insertEtapeDocuments(pool, titre_etape_id, toInsertDocuments)
   }
   if (isNotNullNorUndefinedNorEmpty(toDeleteDocuments)) {
-    if (!canDeleteEtapeDocument(isBrouillon, user)) {
-      throw new Error('Impossible de supprimer les documents')
-    }
-
     await dbQueryAndValidate(deleteEtapeDocumentsDb, { ids: toDeleteDocuments.map(({ id }) => id) }, pool, z.void())
   }
 }

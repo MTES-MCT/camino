@@ -15,7 +15,6 @@ import {
   IsEtapeCompleteEntrepriseDocuments,
   IsEtapeCompleteEtape,
   canDeleteEtape,
-  canDeleteEtapeDocument,
 } from './titres-etapes.js'
 import { AdministrationId, ADMINISTRATION_IDS } from '../static/administrations.js'
 import { test, expect } from 'vitest'
@@ -25,7 +24,7 @@ import { EntrepriseId, entrepriseIdValidator, newEntrepriseId } from '../entrepr
 import { SubstanceLegaleId } from '../static/substancesLegales.js'
 import { FeatureMultiPolygon } from '../perimetre.js'
 import { caminoDateValidator, toCaminoDate } from '../date.js'
-import { ETAPE_IS_BROUILLON, ETAPE_IS_NOT_BROUILLON } from '../etape.js'
+import { ETAPE_IS_BROUILLON, ETAPE_IS_NOT_BROUILLON, EtapeBrouillon } from '../etape.js'
 import { EntrepriseUserNotNull } from '../roles.js'
 import { communeIdValidator } from '../static/communes.js'
 import { SDOMZoneIds } from '../static/sdom.js'
@@ -99,7 +98,7 @@ test.each<{ titreTypeId: TitreTypeId; user: TestUser; canEdit: boolean }>([
 test.each<{
   user: TestUser
   etapeTypeId: EtapeTypeId
-  isBrouillon: boolean
+  isBrouillon: EtapeBrouillon
   titreTitulaires: EntrepriseId[]
   titresAdministrationsLocales: AdministrationId[]
   demarcheTypeId: DemarcheTypeId
@@ -237,13 +236,13 @@ test.each<{
   { administrationId: 'min-mtes-dgaln-01', titreTypeId: 'arm', canEdit: true },
   { administrationId: 'ope-onf-973-01', titreTypeId: 'arm', canEdit: true },
 ])('un utilisateur admin d’une administration peut modifier une étape mcr sur un titre: $canEdit', ({ administrationId, titreTypeId, canEdit }) => {
-  expect(canEditEtape({ role: 'admin', administrationId, ...testBlankUser }, 'mcr', false, [], [], 'oct', { typeId: titreTypeId, titreStatutId: 'val' })).toBe(canEdit)
+  expect(canEditEtape({ role: 'admin', administrationId, ...testBlankUser }, 'mcr', ETAPE_IS_NOT_BROUILLON, [], [], 'oct', { typeId: titreTypeId, titreStatutId: 'val' })).toBe(canEdit)
 })
 
 test('une entreprise peut modifier sa demande mais ne peut pas la supprimer', () => {
   const user: EntrepriseUserNotNull = { ...testBlankUser, role: 'entreprise', entreprises: [{ id: entrepriseIdValidator.parse('entrepriseId') }] }
-  expect(canEditEtape(user, 'mfr', true, [user.entreprises[0].id], [], 'oct', { typeId: 'arm', titreStatutId: 'ind' })).toBe(true)
-  expect(canDeleteEtape(user, 'mfr', true, [user.entreprises[0].id], [], 'oct', { typeId: 'arm', titreStatutId: 'ind' })).toBe(false)
+  expect(canEditEtape(user, 'mfr', ETAPE_IS_BROUILLON, [user.entreprises[0].id], [], 'oct', { typeId: 'arm', titreStatutId: 'ind' })).toBe(true)
+  expect(canDeleteEtape(user, 'mfr', ETAPE_IS_BROUILLON, [user.entreprises[0].id], [], 'oct', { typeId: 'arm', titreStatutId: 'ind' })).toBe(false)
 })
 
 const multiPolygonWith4Points: FeatureMultiPolygon = {
@@ -540,10 +539,4 @@ test.each<[number | null, EtapeTypeId, TitreTypeId, IsEtapeCompleteDocuments, Is
   } else {
     expect(result).toStrictEqual({ valid: true })
   }
-})
-
-test('canDeleteEtapeDocument', () => {
-  expect(canDeleteEtapeDocument(ETAPE_IS_BROUILLON, { ...testBlankUser, role: 'defaut' })).toBe(true)
-  expect(canDeleteEtapeDocument(ETAPE_IS_NOT_BROUILLON, { ...testBlankUser, role: 'defaut' })).toBe(false)
-  expect(canDeleteEtapeDocument(ETAPE_IS_NOT_BROUILLON, { ...testBlankUser, role: 'super' })).toBe(true)
 })
