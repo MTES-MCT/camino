@@ -156,7 +156,7 @@ export const ArmMecanise: StoryFn = () => (
     tde={{ titreTypeId: 'arm', demarcheTypeId: 'oct', etapeTypeId: 'mfr' }}
     isBrouillon={ETAPE_IS_NOT_BROUILLON}
     completeUpdate={completeUpdateAction}
-    user={{ ...testBlankUser, role: 'super' }}
+    user={{ ...testBlankUser, role: 'admin', administrationId: 'dea-guyane-01' }}
   />
 )
 

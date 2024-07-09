@@ -101,7 +101,7 @@ export const canEditDuree = (titreTypeId: TitreTypeId, demarcheTypeId: DemarcheT
 export const canCreateEtape = (
   user: User,
   etapeTypeId: EtapeTypeId,
-  isBrouillon: boolean,
+  isBrouillon: EtapeBrouillon,
   titulaireIds: EntrepriseId[],
   titresAdministrationsLocales: AdministrationId[],
   demarcheTypeId: DemarcheTypeId,
@@ -113,7 +113,7 @@ export const canCreateEtape = (
 export const canDeleteEtape = (
   user: User,
   etapeTypeId: EtapeTypeId,
-  isBrouillon: boolean,
+  isBrouillon: EtapeBrouillon,
   titulaireIds: EntrepriseId[],
   titresAdministrationsLocales: AdministrationId[],
   demarcheTypeId: DemarcheTypeId,
@@ -127,7 +127,7 @@ export const canDeleteEtape = (
 export const canEditEtape = (
   user: User,
   etapeTypeId: EtapeTypeId,
-  isBrouillon: boolean,
+  isBrouillon: EtapeBrouillon,
   titulaireIds: EntrepriseId[],
   titresAdministrationsLocales: AdministrationId[],
   demarcheTypeId: DemarcheTypeId,
@@ -139,7 +139,7 @@ export const canEditEtape = (
 const canCreateOrEditEtape = (
   user: User,
   etapeTypeId: EtapeTypeId,
-  isBrouillon: boolean,
+  isBrouillon: EtapeBrouillon,
   titulaireIds: EntrepriseId[],
   titresAdministrationsLocales: AdministrationId[],
   demarcheTypeId: DemarcheTypeId,
@@ -157,7 +157,7 @@ const canCreateOrEditEtape = (
       (user.entreprises?.length ?? 0) > 0 &&
       demarcheTypeId === DEMARCHES_TYPES_IDS.Octroi &&
       etapeTypeId === ETAPES_TYPES.demande &&
-      isBrouillon &&
+      isBrouillon === ETAPE_IS_BROUILLON &&
       TITRES_TYPES_IDS_DEMAT.includes(titre.typeId) &&
       titulaireIds.some(id => user.entreprises?.some(entreprise => id === entreprise.id))
     )
@@ -277,5 +277,3 @@ export const canDeposeEtape = (
     )
   )
 }
-
-export const canDeleteEtapeDocument = (isBrouillon: EtapeBrouillon, user: User): boolean => isBrouillon === ETAPE_IS_BROUILLON || isSuper(user)

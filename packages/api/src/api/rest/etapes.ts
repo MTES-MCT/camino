@@ -19,6 +19,7 @@ import {
   documentComplementaireDaeEtapeDocumentModificationValidator,
   documentComplementaireAslEtapeDocumentModificationValidator,
   EtapeSlug,
+  ETAPE_IS_BROUILLON,
 } from 'camino-common/src/etape.js'
 import { DemarcheId, demarcheIdValidator } from 'camino-common/src/demarche.js'
 import { HTTP_STATUS } from 'camino-common/src/http.js'
@@ -1067,7 +1068,7 @@ const demarcheEtapesTypesGet = async (titreDemarcheId: DemarcheId, date: CaminoD
 
   return etapesTypes
     .filter(({ etapeTypeId }) =>
-      canCreateEtape(user, etapeTypeId, true, titre.titulaireIds ?? [], titre.administrationsLocales ?? [], titreDemarche.typeId, {
+      canCreateEtape(user, etapeTypeId, ETAPE_IS_BROUILLON, titre.titulaireIds ?? [], titre.administrationsLocales ?? [], titreDemarche.typeId, {
         typeId: titre.typeId,
         titreStatutId: titre.titreStatutId ?? TitresStatutIds.Indetermine,
       })

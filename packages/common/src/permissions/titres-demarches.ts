@@ -9,6 +9,7 @@ import { DemarcheTypeId } from '../static/demarchesTypes.js'
 import { canCreateEtape } from './titres-etapes.js'
 import { TitreGetDemarche } from '../titres.js'
 import { isNullOrUndefined } from '../typescript-tools.js'
+import { ETAPE_IS_BROUILLON } from '../etape.js'
 
 const hasOneDemarcheWithoutPhase = (demarches: Pick<TitreGetDemarche, 'demarche_date_debut'>[]): boolean => {
   // Si il y a une seule démarche et qu’elle n’a pas encore créée de phase, alors on ne peut pas créer une deuxième démarche
@@ -80,5 +81,5 @@ export const canCreateEtapeByDemarche = (
 ): boolean => {
   const etapeTypeIds = getEtapesTDE(titreTypeId, demarcheTypeId)
 
-  return etapeTypeIds.some(etapeTypeId => canCreateEtape(user, etapeTypeId, true, [], titresAdministrationsLocales, demarcheTypeId, { typeId: titreTypeId, titreStatutId }))
+  return etapeTypeIds.some(etapeTypeId => canCreateEtape(user, etapeTypeId, ETAPE_IS_BROUILLON, [], titresAdministrationsLocales, demarcheTypeId, { typeId: titreTypeId, titreStatutId }))
 }

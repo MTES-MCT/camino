@@ -23,7 +23,6 @@ import { LoadingElement } from '../_ui/functional-loader'
 import { AsyncData } from '../../api/client-rest'
 import { DsfrButtonIcon } from '../_ui/dsfr-button'
 import { EtapesStatuts } from 'camino-common/src/static/etapesStatuts'
-import { canDeleteEtapeDocument } from 'camino-common/src/permissions/titres-etapes'
 import { getVisibilityLabel, sortDocumentsColumn } from './etape-documents'
 import { AddEtapeDocumentPopup } from './add-etape-document-popup'
 import { User } from 'camino-common/src/roles'
@@ -347,7 +346,7 @@ const EtapeDocumentsTable: FunctionalComponent<PropsTable> = (props: PropsTable)
                     buttonType="secondary"
                     buttonSize="sm"
                   />
-                  {canDeleteEtapeDocument(props.isBrouillon, props.user) && document.index !== 'asl' && document.index !== 'dae' ? (
+                  {document.index !== 'asl' && document.index !== 'dae' ? (
                     <DsfrButtonIcon
                       icon="fr-icon-delete-bin-line"
                       class="fr-ml-1w"
