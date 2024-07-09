@@ -1,6 +1,6 @@
 /* eslint-disable no-restricted-syntax */
 import { Pool } from 'pg'
-import { DbQueryAccessError, Redefine, dbQueryAndValidate, newDbQueryAndValidate } from '../../pg-database.js'
+import { DbQueryAccessError, Redefine, dbQueryAndValidate, effectDbQueryAndValidate } from '../../pg-database.js'
 import { sql } from '@pgtyped/runtime'
 import { AdministrationId, administrationIdValidator } from 'camino-common/src/static/administrations.js'
 import { AdministrationActiviteTypeEmail, administrationActiviteTypeEmailValidator } from 'camino-common/src/administrations.js'
@@ -15,10 +15,9 @@ import { AdminUserNotNull, adminUserNotNullValidator } from 'camino-common/src/r
 import { ActivitesTypesId } from 'camino-common/src/static/activitesTypes.js'
 import { NonEmptyArray } from 'camino-common/src/typescript-tools.js'
 import { z } from 'zod'
-import TE from 'fp-ts/lib/TaskEither.js'
 import { CaminoError } from 'camino-common/src/zod-tools.js'
 import { ZodUnparseable } from '../../tools/fp-tools.js'
-import { pipe } from 'fp-ts/lib/function.js'
+import { Effect, pipe } from 'effect'
 
 export const getUtilisateursByAdministrationId = async (pool: Pool, administrationId: AdministrationId): Promise<AdminUserNotNull[]> => {
   const result = await dbQueryAndValidate(getUtilisateursByAdministrationIdDb, { administrationId }, pool, getUtilisateursByAdministrationIdDbValidator)
@@ -63,10 +62,10 @@ export const deleteAdministrationActiviteTypeEmail = (
   pool: Pool,
   administrationId: AdministrationId,
   administrationActiviteTypeEmail: AdministrationActiviteTypeEmail
-): TE.TaskEither<CaminoError<ZodUnparseable | DbQueryAccessError>, boolean> => {
+): Effect.Effect<boolean, CaminoError<ZodUnparseable | DbQueryAccessError>> => {
   return pipe(
-    newDbQueryAndValidate(deleteAdministrationActiviteTypeEmailDb, { administrationId, ...administrationActiviteTypeEmail }, pool, z.void()),
-    TE.map(() => true)
+    effectDbQueryAndValidate(deleteAdministrationActiviteTypeEmailDb, { administrationId, ...administrationActiviteTypeEmail }, pool, z.void()),
+    Effect.map(() => true)
   )
 }
 
@@ -83,10 +82,10 @@ export const insertAdministrationActiviteTypeEmail = (
   pool: Pool,
   administrationId: AdministrationId,
   administrationActiviteTypeEmail: AdministrationActiviteTypeEmail
-): TE.TaskEither<CaminoError<ZodUnparseable | DbQueryAccessError>, boolean> => {
+): Effect.Effect<boolean, CaminoError<ZodUnparseable | DbQueryAccessError>> => {
   return pipe(
-    newDbQueryAndValidate(insertAdministrationActiviteTypeEmailDb, { administrationId, ...administrationActiviteTypeEmail }, pool, z.void()),
-    TE.map(() => true)
+    effectDbQueryAndValidate(insertAdministrationActiviteTypeEmailDb, { administrationId, ...administrationActiviteTypeEmail }, pool, z.void()),
+    Effect.map(() => true)
   )
 }
 

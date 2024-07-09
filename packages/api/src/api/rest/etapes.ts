@@ -77,7 +77,7 @@ import { FeatureMultiPolygon, FeatureCollectionPoints } from 'camino-common/src/
 import { canHaveForages } from 'camino-common/src/permissions/titres.js'
 import { SecteursMaritimes, getSecteurMaritime } from 'camino-common/src/static/facades.js'
 import { GEO_SYSTEME_IDS } from 'camino-common/src/static/geoSystemes.js'
-import { isRight } from 'fp-ts/lib/Either.js'
+import { callAndExit } from '../../tools/fp-tools.js'
 
 export const getEtapeEntrepriseDocuments =
   (pool: Pool) =>
@@ -382,12 +382,9 @@ const getForagesProperties = async (
   pool: Pool
 ): Promise<Pick<GraphqlEtape, 'geojson4326Forages' | 'geojsonOrigineForages'>> => {
   if (canHaveForages(titreTypeId) && isNotNullNorUndefined(geojsonOrigineForages) && isNotNullNorUndefined(geojsonOrigineGeoSystemeId)) {
-    const conversion = await convertPoints(pool, geojsonOrigineGeoSystemeId, GEO_SYSTEME_IDS.WGS84, geojsonOrigineForages)()
-    if (isRight(conversion)) {
-      return { geojson4326Forages: conversion.right, geojsonOrigineForages }
-    } else {
-      throw new Error(conversion.left.message)
-    }
+    return callAndExit(convertPoints(pool, geojsonOrigineGeoSystemeId, GEO_SYSTEME_IDS.WGS84, geojsonOrigineForages), async value => {
+      return { geojson4326Forages: value, geojsonOrigineForages }
+    })
   }
 
   return {
@@ -416,9 +413,8 @@ const getPerimetreInfosInternal = async (
         throw new Error(`les points doivent être sur le périmètre`)
       }
     }
-    const result = await getGeojsonInformation(pool, geojson4326Perimetre.geometry)()
-    if (isRight(result)) {
-      const { communes, sdom, surface, forets, secteurs } = result.right
+
+    return callAndExit(getGeojsonInformation(pool, geojson4326Perimetre.geometry), async ({ communes, sdom, surface, forets, secteurs }) => {
       const { geojson4326Forages } = await getForagesProperties(titreTypeId, geojsonOrigineGeoSystemeId, geojsonOrigineForages, pool)
 
       return {
@@ -430,9 +426,7 @@ const getPerimetreInfosInternal = async (
         geojson4326Forages,
         geojsonOrigineForages,
       }
-    } else {
-      throw new Error(result.left.message)
-    }
+    })
   } else {
     return {
       communes: [],
@@ -889,15 +883,10 @@ export const deposeEtape = (pool: Pool) => async (req: CaminoRequest, res: Custo
       const sdomZones: SDOMZoneId[] = []
       const communes: CommuneId[] = []
       if (isNotNullNorUndefined(titreEtape.geojson4326Perimetre)) {
-        const result = await getGeojsonInformation(pool, titreEtape.geojson4326Perimetre.geometry)()
-        if (isRight(result)) {
-          const { sdom, communes: communeFromGeoJson } = result.right
-
+        await callAndExit(getGeojsonInformation(pool, titreEtape.geojson4326Perimetre.geometry), async ({ sdom, communes: communeFromGeoJson }) => {
           communes.push(...communeFromGeoJson.map(({ id }) => id))
           sdomZones.push(...sdom)
-        } else {
-          throw new Error(result.left.message)
-        }
+        })
       }
       const titreTypeId = memoize(() => Promise.resolve(titre.typeId))
       const administrationsLocales = memoize(() => Promise.resolve(titre.administrationsLocales ?? []))

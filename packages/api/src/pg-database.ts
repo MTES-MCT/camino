@@ -1,13 +1,11 @@
 import { TaggedQuery } from '@pgtyped/runtime'
 
-import TE from 'fp-ts/lib/TaskEither.js'
-
 import type { Pool } from 'pg'
 import { z } from 'zod'
 import type { ZodType, ZodTypeDef } from 'zod'
-import { pipe } from 'fp-ts/lib/function.js'
 import { CaminoError } from 'camino-common/src/zod-tools.js'
-import { ZodUnparseable, zodParseTaskEitherCallback } from './tools/fp-tools.js'
+import { ZodUnparseable, zodParseEffectCallback } from './tools/fp-tools.js'
+import { Effect, pipe } from 'effect'
 export type Redefine<T, P, O> = T extends { params: infer A; result: infer B }
   ? { inputs: keyof A; outputs: keyof B } extends { inputs: keyof P; outputs: keyof O }
     ? { inputs: keyof P; outputs: keyof O } extends { inputs: keyof A; outputs: keyof B }
@@ -32,17 +30,18 @@ export const dbQueryAndValidate = async <Params, Result, T extends ZodType<Resul
 }
 
 export type DbQueryAccessError = "Impossible d'accéder à la base de données"
-export const newDbQueryAndValidate = <Params, Result, T extends ZodType<Result, ZodTypeDef, unknown>>(
+
+export const effectDbQueryAndValidate = <Params, Result, T extends ZodType<Result, ZodTypeDef, unknown>>(
   query: TaggedQuery<{ params: Params; result: Result }>,
   params: Params,
   pool: Pool,
   validator: T
-): TE.TaskEither<CaminoError<DbQueryAccessError | ZodUnparseable>, Result[]> => {
+): Effect.Effect<Result[], CaminoError<DbQueryAccessError | ZodUnparseable>> => {
   return pipe(
-    TE.tryCatch(
+    Effect.tryPromise({
       // eslint-disable-next-line no-restricted-syntax
-      () => query.run(params, pool),
-      e => {
+      try: () => query.run(params, pool),
+      catch: e => {
         let extra = ''
         if (typeof e === 'string') {
           extra = e.toUpperCase()
@@ -51,8 +50,8 @@ export const newDbQueryAndValidate = <Params, Result, T extends ZodType<Result, 
         }
 
         return { message: "Impossible d'accéder à la base de données" as const, extra }
-      }
-    ),
-    TE.flatMap(zodParseTaskEitherCallback(z.array(validator)))
+      },
+    }),
+    Effect.flatMap(zodParseEffectCallback(z.array(validator)))
   )
 }

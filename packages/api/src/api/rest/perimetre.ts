@@ -1,8 +1,7 @@
 import { DemarcheId, demarcheIdOrSlugValidator } from 'camino-common/src/demarche.js'
 import { CaminoRequest, CustomResponse } from './express-type.js'
 import { Pool } from 'pg'
-import TE from 'fp-ts/lib/TaskEither.js'
-import { pipe } from 'fp-ts/lib/function.js'
+import { pipe, Effect, Match } from 'effect'
 import { GEO_SYSTEME_IDS, GeoSystemeId, GeoSystemes } from 'camino-common/src/static/geoSystemes.js'
 import { HTTP_STATUS } from 'camino-common/src/http.js'
 import {
@@ -45,7 +44,7 @@ import {
 import { join } from 'node:path'
 import { readFileSync } from 'node:fs'
 import shpjs from 'shpjs'
-import { DeepReadonly, exhaustiveCheck, isNotNullNorUndefined, isNullOrUndefined, memoize } from 'camino-common/src/typescript-tools.js'
+import { DeepReadonly, isNotNullNorUndefined, isNullOrUndefined, memoize } from 'camino-common/src/typescript-tools.js'
 import { SDOMZoneId } from 'camino-common/src/static/sdom.js'
 import { TitreSlug } from 'camino-common/src/validators/titres.js'
 import { canReadEtape } from './permissions/etapes.js'
@@ -55,8 +54,7 @@ import { ZodTypeAny, z } from 'zod'
 import { CommuneId } from 'camino-common/src/static/communes'
 import { CaminoApiError } from '../../types.js'
 import { DbQueryAccessError } from '../../pg-database.js'
-import E, { isRight } from 'fp-ts/lib/Either.js'
-import { ZodUnparseable, zodParseEither, zodParseEitherCallback } from '../../tools/fp-tools.js'
+import { ZodUnparseable, callAndExit, zodParseEffect, zodParseEffectCallback } from '../../tools/fp-tools.js'
 import { CaminoError } from 'camino-common/src/zod-tools.js'
 
 export const getPerimetreInfos = (pool: Pool) => async (req: CaminoRequest, res: CustomResponse<PerimetreInformations>) => {
@@ -118,22 +116,19 @@ export const getPerimetreInfos = (pool: Pool) => async (req: CaminoRequest, res:
               { ...demarche, titre_public_lecture: titre.public_lecture }
             )
           ) {
-            const superpositionAlertes = await getAlertesSuperposition(etape.geojson4326_perimetre, titre.titre_type_id, titre.titre_slug, user, pool)()
-            if (isRight(superpositionAlertes)) {
+            await callAndExit(getAlertesSuperposition(etape.geojson4326_perimetre, titre.titre_type_id, titre.titre_slug, user, pool), async superpositionAlertes => {
               res.json({
-                superposition_alertes: superpositionAlertes.right,
+                superposition_alertes: superpositionAlertes,
                 sdomZoneIds: etape.sdom_zones,
                 communes: etape.communes,
               })
-            } else {
-              res.status(HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR).send(superpositionAlertes.left)
-            }
+            })
           } else {
             res.sendStatus(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
           }
         }
       } catch (e) {
-        res.sendStatus(HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR)
+        res.status(HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR).send(e)
         console.error(e)
       }
     }
@@ -203,165 +198,153 @@ export const geojsonImport = (
   user: DeepReadonly<UserNotNull>,
   body: DeepReadonly<GeojsonImportBody>,
   params: { geoSystemeId: GeoSystemeId }
-): TE.TaskEither<CaminoApiError<GeojsonImportErrorMessages>, DeepReadonly<GeojsonInformations>> => {
+): Effect.Effect<DeepReadonly<GeojsonInformations>, CaminoApiError<GeojsonImportErrorMessages>> => {
   const pathFrom = join(process.cwd(), `/files/tmp/${body.tempDocumentName}`)
 
   return pipe(
-    TE.fromEither(
-      pipe(
-        E.Do,
-        E.flatMap<
-          Record<string, never>,
-          CaminoError<GeojsonImportErrorMessages>,
-          { geojsonOriginFeatureMultiPolygon: FeatureMultiPolygon; geojsonOriginFeatureCollectionPoints: null | FeatureCollectionPoints }
-        >(() => {
-          const fileType = body.fileType
-          switch (fileType) {
-            case 'geojson': {
-              return pipe(
-                fileNameToJson(pathFrom, geojsonValidator),
-                E.flatMap(features =>
-                  E.tryCatch(
-                    () => {
-                      const firstGeometry = features.features[0].geometry
-                      const multiPolygon: MultiPolygon = firstGeometry.type === 'Polygon' ? { type: 'MultiPolygon', coordinates: [firstGeometry.coordinates] } : firstGeometry
+    Effect.Do.pipe(
+      Effect.flatMap<
+        Record<string, never>,
+        { geojsonOriginFeatureMultiPolygon: FeatureMultiPolygon; geojsonOriginFeatureCollectionPoints: null | FeatureCollectionPoints },
+        CaminoError<GeojsonImportErrorMessages>,
+        never
+      >(() => {
+        return Match.value(body.fileType).pipe(
+          Match.when('geojson', () =>
+            pipe(
+              fileNameToJson(pathFrom, geojsonValidator),
+              Effect.flatMap(features =>
+                Effect.try({
+                  try: () => {
+                    const firstGeometry = features.features[0].geometry
+                    const multiPolygon: MultiPolygon = firstGeometry.type === 'Polygon' ? { type: 'MultiPolygon', coordinates: [firstGeometry.coordinates] } : firstGeometry
 
-                      const geojsonOriginFeatureMultiPolygon: FeatureMultiPolygon = { type: 'Feature', properties: {}, geometry: multiPolygon }
+                    const geojsonOriginFeatureMultiPolygon: FeatureMultiPolygon = { type: 'Feature', properties: {}, geometry: multiPolygon }
 
-                      let geojsonOriginFeatureCollectionPoints: null | FeatureCollectionPoints = null
-                      // On a des points après le multipolygone
-                      if (features.features.length > 1) {
-                        const [_multi, ...points] = features.features
-                        geojsonOriginFeatureCollectionPoints = { type: 'FeatureCollection', features: points }
-                      }
-
-                      return { geojsonOriginFeatureMultiPolygon, geojsonOriginFeatureCollectionPoints }
-                    },
-                    e => ({ message: extractionGeoJSONError, extra: e })
-                  )
-                )
-              )
-            }
-            case 'shp': {
-              return pipe(
-                fileNameToShape(pathFrom, shapeValidator),
-                E.flatMap(shapePolygonOrMultipolygons =>
-                  E.tryCatch(
-                    () => {
-                      const shapePolygonOrMultipolygon = shapePolygonOrMultipolygons[0]
-                      let coordinates: [number, number][][][]
-                      if (shapePolygonOrMultipolygon.type === 'MultiPolygon') {
-                        coordinates = shapePolygonOrMultipolygon.coordinates
-                      } else {
-                        coordinates = [shapePolygonOrMultipolygon.coordinates]
-                      }
-                      const geojsonOriginFeatureMultiPolygon: FeatureMultiPolygon = { type: 'Feature', geometry: { type: 'MultiPolygon', coordinates }, properties: {} }
-
-                      return { geojsonOriginFeatureMultiPolygon, geojsonOriginFeatureCollectionPoints: null }
-                    },
-                    e => ({ message: extractionShapeError, extra: e })
-                  )
-                )
-              )
-            }
-            case 'csv': {
-              return pipe(
-                fileNameToCsv(pathFrom),
-                E.filterOrElseW(
-                  converted => converted.length <= 20,
-                  () => ({ message: importCsvRestrictionError })
-                ),
-                E.flatMap(converted => {
-                  const uniteId = GeoSystemes[params.geoSystemeId].uniteId
-                  let myPipe
-                  switch (uniteId) {
-                    case 'met': {
-                      myPipe = pipe(
-                        zodParseEither(csvXYValidator, converted),
-                        E.flatMap(rows =>
-                          E.tryCatch(
-                            () => {
-                              const coordinates: MultiPolygon['coordinates'] = [[rows.map(({ x, y }) => [x, y])]]
-                              const points: FeatureCollectionPoints['features'] = rows.map(ligne => ({
-                                type: 'Feature',
-                                properties: { nom: ligne.nom, description: ligne.description },
-                                geometry: { type: 'Point', coordinates: [ligne.x, ligne.y] },
-                              }))
-
-                              coordinates[0][0].push([rows[0].x, rows[0].y])
-
-                              return { coordinates, points }
-                            },
-                            e => ({ message: recuperationInfoCsvError, extra: e })
-                          )
-                        )
-                      )
-                      break
+                    let geojsonOriginFeatureCollectionPoints: null | FeatureCollectionPoints = null
+                    // On a des points après le multipolygone
+                    if (features.features.length > 1) {
+                      const [_multi, ...points] = features.features
+                      geojsonOriginFeatureCollectionPoints = { type: 'FeatureCollection', features: points }
                     }
-                    case 'gon':
-                    case 'deg': {
-                      myPipe = pipe(
-                        zodParseEither(csvLatLongValidator, converted),
-                        E.flatMap(rows =>
-                          E.tryCatch(
-                            () => {
-                              const coordinates: MultiPolygon['coordinates'] = [[rows.map(({ longitude, latitude }) => [longitude, latitude])]]
-                              const points: FeatureCollectionPoints['features'] = rows.map(ligne => ({
-                                type: 'Feature',
-                                properties: { nom: ligne.nom, description: ligne.description },
-                                geometry: { type: 'Point', coordinates: [ligne.longitude, ligne.latitude] },
-                              }))
-                              coordinates[0][0].push([rows[0].longitude, rows[0].latitude])
 
-                              return { coordinates, points }
-                            },
-                            e => ({ message: recuperationInfoCsvError, extra: e })
-                          )
-                        )
-                      )
-                      break
-                    }
-                    default: {
-                      exhaustiveCheck(uniteId)
-                      throw new Error('impossible')
-                    }
-                  }
-
-                  return pipe(
-                    myPipe,
-                    E.flatMap(({ coordinates, points }) => {
-                      const geojsonOriginFeatureMultiPolygon: FeatureMultiPolygon = { type: 'Feature', properties: {}, geometry: { type: 'MultiPolygon', coordinates } }
-                      const geojsonOriginFeatureCollectionPoints: FeatureCollectionPoints = { type: 'FeatureCollection', features: points }
-
-                      return E.right({ geojsonOriginFeatureMultiPolygon, geojsonOriginFeatureCollectionPoints })
-                    })
-                  )
+                    return { geojsonOriginFeatureMultiPolygon, geojsonOriginFeatureCollectionPoints }
+                  },
+                  catch: e => ({ message: extractionGeoJSONError, extra: e }),
                 })
               )
-            }
-            default:
-              exhaustiveCheck(fileType)
-              throw new Error('Impossible')
-          }
-        })
-      )
+            )
+          ),
+          Match.when('shp', () =>
+            pipe(
+              fileNameToShape(pathFrom, shapeValidator),
+              Effect.flatMap(shapePolygonOrMultipolygons =>
+                Effect.try({
+                  try: () => {
+                    const shapePolygonOrMultipolygon = shapePolygonOrMultipolygons[0]
+                    let coordinates: [number, number][][][]
+                    if (shapePolygonOrMultipolygon.type === 'MultiPolygon') {
+                      coordinates = shapePolygonOrMultipolygon.coordinates
+                    } else {
+                      coordinates = [shapePolygonOrMultipolygon.coordinates]
+                    }
+                    const geojsonOriginFeatureMultiPolygon: FeatureMultiPolygon = { type: 'Feature', geometry: { type: 'MultiPolygon', coordinates }, properties: {} }
+
+                    return { geojsonOriginFeatureMultiPolygon, geojsonOriginFeatureCollectionPoints: null }
+                  },
+                  catch: e => ({ message: extractionShapeError, extra: e }),
+                })
+              )
+            )
+          ),
+          Match.when('csv', () =>
+            pipe(
+              fileNameToCsv(pathFrom),
+              Effect.filterOrFail(
+                converted => converted.length <= 20,
+                () => ({ message: importCsvRestrictionError })
+              ),
+              Effect.flatMap(converted => {
+                const uniteId = GeoSystemes[params.geoSystemeId].uniteId
+                const myPipe = Match.value(uniteId).pipe(
+                  Match.when('met', () =>
+                    pipe(
+                      zodParseEffect(csvXYValidator, converted),
+                      Effect.flatMap(rows =>
+                        Effect.try({
+                          try: () => {
+                            const coordinates: MultiPolygon['coordinates'] = [[rows.map(({ x, y }) => [x, y])]]
+                            const points: FeatureCollectionPoints['features'] = rows.map(ligne => ({
+                              type: 'Feature',
+                              properties: { nom: ligne.nom, description: ligne.description },
+                              geometry: { type: 'Point', coordinates: [ligne.x, ligne.y] },
+                            }))
+
+                            coordinates[0][0].push([rows[0].x, rows[0].y])
+
+                            return { coordinates, points }
+                          },
+                          catch: e => ({ message: recuperationInfoCsvError, extra: e }),
+                        })
+                      )
+                    )
+                  ),
+                  Match.whenOr('gon', 'deg', () =>
+                    pipe(
+                      zodParseEffect(csvLatLongValidator, converted),
+                      Effect.flatMap(rows =>
+                        Effect.try({
+                          try: () => {
+                            const coordinates: MultiPolygon['coordinates'] = [[rows.map(({ longitude, latitude }) => [longitude, latitude])]]
+                            const points: FeatureCollectionPoints['features'] = rows.map(ligne => ({
+                              type: 'Feature',
+                              properties: { nom: ligne.nom, description: ligne.description },
+                              geometry: { type: 'Point', coordinates: [ligne.longitude, ligne.latitude] },
+                            }))
+                            coordinates[0][0].push([rows[0].longitude, rows[0].latitude])
+
+                            return { coordinates, points }
+                          },
+                          catch: e => ({ message: recuperationInfoCsvError, extra: e }),
+                        })
+                      )
+                    )
+                  ),
+                  Match.exhaustive
+                )
+
+                return pipe(
+                  myPipe,
+                  Effect.map(({ coordinates, points }) => {
+                    const geojsonOriginFeatureMultiPolygon: FeatureMultiPolygon = { type: 'Feature', properties: {}, geometry: { type: 'MultiPolygon', coordinates } }
+                    const geojsonOriginFeatureCollectionPoints: FeatureCollectionPoints = { type: 'FeatureCollection', features: points }
+
+                    return { geojsonOriginFeatureMultiPolygon, geojsonOriginFeatureCollectionPoints }
+                  })
+                )
+              })
+            )
+          ),
+          Match.exhaustive
+        )
+      })
     ),
-    TE.bindW('geojson4326MultiPolygon', ({ geojsonOriginFeatureMultiPolygon }) =>
+    Effect.bind('geojson4326MultiPolygon', ({ geojsonOriginFeatureMultiPolygon }) =>
       pipe(
         getGeojsonByGeoSystemeIdQuery(pool, params.geoSystemeId, GEO_SYSTEME_IDS.WGS84, geojsonOriginFeatureMultiPolygon),
-        TE.map(result => result.geometry)
+        Effect.map(result => result.geometry)
       )
     ),
-    TE.bindW('geojson4326FeatureCollectionPoints', ({ geojsonOriginFeatureCollectionPoints }) => {
+    Effect.bind('geojson4326FeatureCollectionPoints', ({ geojsonOriginFeatureCollectionPoints }) => {
       if (isNotNullNorUndefined(geojsonOriginFeatureCollectionPoints)) {
         return convertPoints(pool, params.geoSystemeId, GEO_SYSTEME_IDS.WGS84, geojsonOriginFeatureCollectionPoints)
       }
 
-      return TE.right(null)
+      return Effect.succeed(null)
     }),
-    TE.bindW('geoInfo', ({ geojson4326MultiPolygon }) => getGeojsonInformation(pool, geojson4326MultiPolygon)),
-    TE.bindW('alertesSuperposition', ({ geojson4326MultiPolygon }) => getAlertesSuperposition(geojson4326MultiPolygon, body.titreTypeId, body.titreSlug, user, pool)),
-    TE.map(({ geojson4326MultiPolygon, geojson4326FeatureCollectionPoints, geoInfo, alertesSuperposition, geojsonOriginFeatureMultiPolygon, geojsonOriginFeatureCollectionPoints }) => {
+    Effect.bind('geoInfo', ({ geojson4326MultiPolygon }) => getGeojsonInformation(pool, geojson4326MultiPolygon)),
+    Effect.bind('alertesSuperposition', ({ geojson4326MultiPolygon }) => getAlertesSuperposition(geojson4326MultiPolygon, body.titreTypeId, body.titreSlug, user, pool)),
+    Effect.map(({ geojson4326MultiPolygon, geojson4326FeatureCollectionPoints, geoInfo, alertesSuperposition, geojsonOriginFeatureMultiPolygon, geojsonOriginFeatureCollectionPoints }) => {
       const result: GeojsonInformations = {
         superposition_alertes: alertesSuperposition,
         communes: geoInfo.communes,
@@ -378,58 +361,59 @@ export const geojsonImport = (
 
       return result
     }),
-    TE.mapLeft(caminoError => {
-      const message = caminoError.message
-      switch (message) {
-        case 'Une erreur est survenue lors de la lecture du csv':
-        case 'Une erreur est survenue lors de la récupération des informations du CSV':
-        case 'Une erreur inattendue est survenue lors de la récupération des informations geojson en base':
-        case "Impossible d'accéder à la base de données":
-          return { ...caminoError, status: HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR }
-        case 'Problème de validation de données':
-        case "Une erreur s'est produite lors de l'ouverture du fichier GeoJSON":
-        case "Une erreur s'est produite lors de l'ouverture du fichier shape":
-        case 'Impossible de convertir la géométrie en JSON':
-        case 'Impossible de convertir le geojson vers le système':
-        case "L'import CSV est fait pour des petits polygones simple de moins de 20 sommets":
-        case "Le périmètre n'est pas valide dans le référentiel donné":
-        case "Une erreur s'est produite lors de l'extraction du multi-polygone du fichier GeoJSON":
-        case "Une erreur s'est produite lors de l'extraction du multi-polygone du fichier shape":
-        case 'Impossible de transformer la feature collection':
-        case 'La liste des points est vide':
-        case 'Le nombre de points est invalide':
-          return { ...caminoError, status: HTTP_STATUS.HTTP_STATUS_BAD_REQUEST }
-        default:
-          exhaustiveCheck(message)
-          throw new Error('impossible')
-      }
-    })
+    Effect.mapError(caminoError =>
+      Match.value(caminoError.message).pipe(
+        Match.whenOr(
+          'Une erreur est survenue lors de la lecture du csv',
+          'Une erreur est survenue lors de la récupération des informations du CSV',
+          'Une erreur inattendue est survenue lors de la récupération des informations geojson en base',
+          "Impossible d'accéder à la base de données",
+          () => ({ ...caminoError, status: HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR })
+        ),
+        Match.whenOr(
+          'Problème de validation de données',
+          "Une erreur s'est produite lors de l'ouverture du fichier GeoJSON",
+          "Une erreur s'est produite lors de l'ouverture du fichier shape",
+          'Impossible de convertir la géométrie en JSON',
+          'Impossible de convertir le geojson vers le système',
+          "L'import CSV est fait pour des petits polygones simple de moins de 20 sommets",
+          "Le périmètre n'est pas valide dans le référentiel donné",
+          "Une erreur s'est produite lors de l'extraction du multi-polygone du fichier GeoJSON",
+          "Une erreur s'est produite lors de l'extraction du multi-polygone du fichier shape",
+          'Impossible de transformer la feature collection',
+          'La liste des points est vide',
+          'Le nombre de points est invalide',
+          () => ({ ...caminoError, status: HTTP_STATUS.HTTP_STATUS_BAD_REQUEST })
+        ),
+        Match.exhaustive
+      )
+    )
   )
 }
-const fileNameToJson = <T extends ZodTypeAny>(pathFrom: string, validator: T): E.Either<CaminoError<ZodUnparseable | typeof ouvertureGeoJSONError>, z.infer<T>> => {
+const fileNameToJson = <T extends ZodTypeAny>(pathFrom: string, validator: T): Effect.Effect<z.infer<T>, CaminoError<ZodUnparseable | typeof ouvertureGeoJSONError>> => {
   return pipe(
-    E.tryCatch(
-      () => {
+    Effect.try({
+      try: () => {
         const fileContent = readFileSync(pathFrom)
 
         return JSON.parse(fileContent.toString())
       },
-      () => ({ message: ouvertureGeoJSONError })
-    ),
-    E.flatMap(zodParseEitherCallback(validator))
+      catch: () => ({ message: ouvertureGeoJSONError }),
+    }),
+    Effect.flatMap(zodParseEffectCallback(validator))
   )
 }
-const fileNameToShape = <T extends ZodTypeAny>(pathFrom: string, validator: T): E.Either<CaminoError<ZodUnparseable | typeof ouvertureShapeError>, z.infer<T>> => {
+const fileNameToShape = <T extends ZodTypeAny>(pathFrom: string, validator: T): Effect.Effect<z.infer<T>, CaminoError<ZodUnparseable | typeof ouvertureShapeError>> => {
   return pipe(
-    E.tryCatch(
-      () => {
+    Effect.try({
+      try: () => {
         const fileContent = readFileSync(pathFrom)
 
         return shpjs.parseShp(fileContent)
       },
-      () => ({ message: ouvertureShapeError })
-    ),
-    E.flatMap(zodParseEitherCallback(validator))
+      catch: () => ({ message: ouvertureShapeError }),
+    }),
+    Effect.flatMap(zodParseEffectCallback(validator))
   )
 }
 
@@ -443,9 +427,9 @@ const readIsoOrUTF8FileSync = (path: string): string => {
   }
 }
 
-const fileNameToCsv = (pathFrom: string): E.Either<CaminoError<typeof ouvertureCsvError>, unknown[]> => {
-  return E.tryCatch(
-    () => {
+const fileNameToCsv = (pathFrom: string): Effect.Effect<unknown[], CaminoError<typeof ouvertureCsvError>> => {
+  return Effect.try({
+    try: () => {
       const fileContent = readIsoOrUTF8FileSync(pathFrom)
       const result = xlsx.read(fileContent, { type: 'string', FS: ';', raw: true })
 
@@ -457,60 +441,56 @@ const fileNameToCsv = (pathFrom: string): E.Either<CaminoError<typeof ouvertureC
 
       return xlsx.utils.sheet_to_json(sheet1, { raw: true })
     },
-    e => ({ message: ouvertureCsvError, extra: e })
-  )
+    catch: e => ({ message: ouvertureCsvError, extra: e }),
+  })
 }
 
-type GeosjsonImportPointsErrorMessages = ZodUnparseable | DbQueryAccessError | 'Accès interdit' | 'Fichier incorrect' | ConvertPointsErrors
+const accesInterditError = 'Accès interdit' as const
+type GeosjsonImportPointsErrorMessages = ZodUnparseable | DbQueryAccessError | typeof accesInterditError | 'Fichier incorrect' | ConvertPointsErrors
+
 export const geojsonImportPoints = (
   pool: Pool,
   user: DeepReadonly<UserNotNull>,
   geojsonImportInput: DeepReadonly<GeojsonImportPointsBody>,
   params: { geoSystemeId: GeoSystemeId }
-): TE.TaskEither<CaminoApiError<GeosjsonImportPointsErrorMessages>, GeojsonImportPointsResponse> => {
-  return pipe(
-    TE.Do,
-    TE.filterOrElseW(
+): Effect.Effect<GeojsonImportPointsResponse, CaminoApiError<GeosjsonImportPointsErrorMessages>> => {
+  return Effect.Do.pipe(
+    Effect.filterOrFail(
       () => !isDefault(user),
       () => ({ message: 'Accès interdit' as const })
     ),
-    TE.bindW('features', () => {
-      return TE.fromEither(
-        pipe(
-          E.tryCatch(
-            () => {
-              const filename = geojsonImportInput.tempDocumentName
-              const pathFrom = join(process.cwd(), `/files/tmp/${filename}`)
-              const fileContent = readFileSync(pathFrom)
+    Effect.bind('features', () => {
+      return pipe(
+        Effect.try({
+          try: () => {
+            const filename = geojsonImportInput.tempDocumentName
+            const pathFrom = join(process.cwd(), `/files/tmp/${filename}`)
+            const fileContent = readFileSync(pathFrom)
 
-              return JSON.parse(fileContent.toString())
-            },
-            () => ({ message: 'Fichier incorrect' as const })
-          ),
-          E.flatMap(zodParseEitherCallback(featureCollectionPointsValidator))
-        )
+            return JSON.parse(fileContent.toString())
+          },
+          catch: () => ({ message: 'Fichier incorrect' as const }),
+        }),
+        Effect.flatMap(zodParseEffectCallback(featureCollectionPointsValidator))
       )
     }),
-    TE.bindW('geojson4326points', ({ features }) => convertPoints(pool, params.geoSystemeId, GEO_SYSTEME_IDS.WGS84, features)),
-    TE.map(result => ({ geojson4326: result.geojson4326points, origin: result.features })),
-    TE.mapLeft(caminoError => {
-      const message = caminoError.message
-      switch (message) {
-        case 'Accès interdit':
-          return { ...caminoError, status: HTTP_STATUS.HTTP_STATUS_FORBIDDEN }
-        case "Impossible d'accéder à la base de données":
-          return { ...caminoError, status: HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR }
-        case 'Problème de validation de données':
-        case 'Fichier incorrect':
-        case 'Impossible de transformer la feature collection':
-        case 'La liste des points est vide':
-        case 'Le nombre de points est invalide':
-          return { ...caminoError, status: HTTP_STATUS.HTTP_STATUS_BAD_REQUEST }
-        default:
-          exhaustiveCheck(message)
-          throw new Error('impossible')
-      }
-    })
+    Effect.bind('geojson4326points', ({ features }) => convertPoints(pool, params.geoSystemeId, GEO_SYSTEME_IDS.WGS84, features)),
+    Effect.map(result => ({ geojson4326: result.geojson4326points, origin: result.features })),
+    Effect.mapError(caminoError =>
+      Match.value(caminoError.message).pipe(
+        Match.when('Accès interdit', () => ({ ...caminoError, status: HTTP_STATUS.HTTP_STATUS_FORBIDDEN })),
+        Match.when("Impossible d'accéder à la base de données", () => ({ ...caminoError, status: HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR })),
+        Match.whenOr(
+          'Fichier incorrect',
+          'Impossible de transformer la feature collection',
+          'La liste des points est vide',
+          'Le nombre de points est invalide',
+          'Problème de validation de données',
+          () => ({ ...caminoError, status: HTTP_STATUS.HTTP_STATUS_BAD_REQUEST })
+        ),
+        Match.exhaustive
+      )
+    )
   )
 }
 
@@ -520,35 +500,28 @@ export const geojsonImportForages = (
   _user: DeepReadonly<UserNotNull>,
   body: DeepReadonly<GeojsonImportForagesBody>,
   params: { geoSystemeId: GeoSystemeId }
-): TE.TaskEither<CaminoApiError<GeosjsonImportForagesErrorMessages>, GeojsonImportForagesResponse> => {
+): Effect.Effect<GeojsonImportForagesResponse, CaminoApiError<GeosjsonImportForagesErrorMessages>> => {
   const filename = body.tempDocumentName
 
   const pathFrom = join(process.cwd(), `/files/tmp/${filename}`)
   const fileType = body.fileType
 
-  return pipe(
-    TE.Do,
-    TE.bindW<'features', object, CaminoError<GeosjsonImportForagesErrorMessages>, FeatureCollectionForages>('features', () => {
-      let myPipe: E.Either<CaminoError<GeosjsonImportForagesErrorMessages>, z.infer<typeof featureCollectionForagesValidator>>
-      switch (fileType) {
-        case 'geojson': {
-          myPipe = fileNameToJson(pathFrom, featureCollectionForagesValidator)
-          break
-        }
-        case 'shp': {
-          myPipe = fileNameToShape(pathFrom, featureCollectionForagesValidator)
-          break
-        }
-        case 'csv': {
-          myPipe = pipe(
+  return Effect.Do.pipe(
+    Effect.bind('features', () =>
+      Match.value(fileType).pipe(
+        Match.when('geojson', () => fileNameToJson(pathFrom, featureCollectionForagesValidator)),
+        Match.when('shp', () => fileNameToShape(pathFrom, featureCollectionForagesValidator)),
+        Match.when('csv', () =>
+          pipe(
             fileNameToCsv(pathFrom),
-            E.flatMap(converted => {
+            Effect.flatMap(converted => {
               const uniteId = GeoSystemes[params.geoSystemeId].uniteId
-              switch (uniteId) {
-                case 'met': {
-                  return pipe(
-                    zodParseEither(csvForageXYValidator, converted),
-                    E.map(rows => {
+
+              return Match.value(uniteId).pipe(
+                Match.when('met', () =>
+                  pipe(
+                    zodParseEffect(csvForageXYValidator, converted),
+                    Effect.map(rows => {
                       const points: FeatureCollectionForages['features'] = rows.map(ligne => ({
                         type: 'Feature',
                         properties: { nom: ligne.nom, description: ligne.description, profondeur: ligne.profondeur, type: ligne.type },
@@ -558,12 +531,11 @@ export const geojsonImportForages = (
                       return { type: 'FeatureCollection', features: points } as const
                     })
                   )
-                }
-                case 'gon':
-                case 'deg': {
-                  return pipe(
-                    zodParseEither(csvForageDegValidator, converted),
-                    E.map(rows => {
+                ),
+                Match.whenOr('gon', 'deg', () =>
+                  pipe(
+                    zodParseEffect(csvForageDegValidator, converted),
+                    Effect.map(rows => {
                       const points: FeatureCollectionForages['features'] = rows.map(ligne => ({
                         type: 'Feature',
                         properties: { nom: ligne.nom, description: ligne.description, profondeur: ligne.profondeur, type: ligne.type },
@@ -573,47 +545,36 @@ export const geojsonImportForages = (
                       return { type: 'FeatureCollection', features: points } as const
                     })
                   )
-                }
-                default:
-                  exhaustiveCheck(uniteId)
-                  throw new Error('Cas impossible mais typescript ne voit pas que exhaustiveCheck throw une exception')
-              }
+                ),
+                Match.exhaustive
+              )
             }),
-            E.flatMap(zodParseEitherCallback(featureCollectionForagesValidator))
+            Effect.flatMap(zodParseEffectCallback(featureCollectionForagesValidator))
           )
-          break
-        }
-
-        default: {
-          exhaustiveCheck(fileType)
-          throw new Error('Cas impossible mais typescript ne voit pas que exhaustiveCheck throw une exception')
-        }
-      }
-
-      return TE.fromEither(myPipe)
-    }),
-    TE.bindW('conversion', ({ features }) => convertPoints(pool, params.geoSystemeId, GEO_SYSTEME_IDS.WGS84, features)),
-    TE.map(({ conversion, features }) => {
+        ),
+        Match.exhaustive
+      )
+    ),
+    Effect.bind('conversion', ({ features }) => convertPoints(pool, params.geoSystemeId, GEO_SYSTEME_IDS.WGS84, features)),
+    Effect.map(({ conversion, features }) => {
       return { geojson4326: conversion, origin: features }
     }),
-    TE.mapLeft(caminoError => {
-      const message = caminoError.message
-      switch (message) {
-        case "Impossible d'accéder à la base de données":
-          return { ...caminoError, status: HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR }
-        case 'Problème de validation de données':
-        case 'Une erreur est survenue lors de la lecture du csv':
-        case "Une erreur s'est produite lors de l'ouverture du fichier GeoJSON":
-        case "Une erreur s'est produite lors de l'ouverture du fichier shape":
-        case 'Impossible de transformer la feature collection':
-        case 'La liste des points est vide':
-        case 'Le nombre de points est invalide':
-          return { ...caminoError, status: HTTP_STATUS.HTTP_STATUS_BAD_REQUEST }
-        default:
-          exhaustiveCheck(message)
-          throw new Error('impossible')
-      }
-    })
+    Effect.mapError(caminoError =>
+      Match.value(caminoError.message).pipe(
+        Match.when("Impossible d'accéder à la base de données", () => ({ ...caminoError, status: HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR })),
+        Match.whenOr(
+          'Problème de validation de données',
+          'Une erreur est survenue lors de la lecture du csv',
+          "Une erreur s'est produite lors de l'ouverture du fichier GeoJSON",
+          "Une erreur s'est produite lors de l'ouverture du fichier shape",
+          'Impossible de transformer la feature collection',
+          'La liste des points est vide',
+          'Le nombre de points est invalide',
+          () => ({ ...caminoError, status: HTTP_STATUS.HTTP_STATUS_BAD_REQUEST })
+        ),
+        Match.exhaustive
+      )
+    )
   )
 }
 
@@ -623,11 +584,11 @@ const getAlertesSuperposition = (
   titreSlug: TitreSlug,
   user: DeepReadonly<User>,
   pool: Pool
-): TE.TaskEither<CaminoError<ZodUnparseable | DbQueryAccessError>, GetTitresIntersectionWithGeojson[]> => {
+): Effect.Effect<GetTitresIntersectionWithGeojson[], CaminoError<ZodUnparseable | DbQueryAccessError>> => {
   if (titreTypeId === 'axm' && (isSuper(user) || isAdministrationAdmin(user) || isAdministrationEditeur(user)) && geojson4326_perimetre !== null) {
     // vérifie qu’il n’existe pas de demandes de titres en cours sur ce périmètre
     return getTitresIntersectionWithGeojson(pool, geojson4326_perimetre, titreSlug)
   }
 
-  return TE.right([])
+  return Effect.succeed([])
 }
