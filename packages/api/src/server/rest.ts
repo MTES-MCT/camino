@@ -213,14 +213,14 @@ export const restWithPool = (dbPool: Pool) => {
                 if (isNotNullNorUndefined(req.auth)) {
                   return Effect.succeed(req.auth as UserNotNull)
                 } else {
-                  return Effect.fail({ message: 'Accès interdit', status: HTTP_STATUS.HTTP_STATUS_FORBIDDEN })
+                  return Effect.fail({ message: 'Accès interdit', status: HTTP_STATUS.FORBIDDEN })
                 }
               }),
               Effect.bind('body', () => zodParseEffect(maRoute.newPost.input, req.body)),
               Effect.bind('params', () => zodParseEffect(maRoute.params, req.params)),
               Effect.mapError(caminoError => {
                 if (!('status' in caminoError)) {
-                  return { ...caminoError, status: HTTP_STATUS.HTTP_STATUS_BAD_REQUEST }
+                  return { ...caminoError, status: HTTP_STATUS.BAD_REQUEST }
                 }
 
                 return caminoError
@@ -233,7 +233,7 @@ export const restWithPool = (dbPool: Pool) => {
               Effect.bind('parsedResult', ({ result }) =>
                 pipe(
                   zodParseEffect(maRoute.newPost.output, result),
-                  Effect.mapError(caminoError => ({ ...caminoError, status: HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR }))
+                  Effect.mapError(caminoError => ({ ...caminoError, status: HTTP_STATUS.INTERNAL_SERVER_ERROR }))
                 )
               ),
               Effect.mapBoth({
@@ -254,12 +254,12 @@ export const restWithPool = (dbPool: Pool) => {
             if (Exit.isFailure(pipeline)) {
               if (!Cause.isFailType(pipeline.cause)) {
                 console.error('catching error on newPost route', route, pipeline.cause, req.body)
-                res.status(HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR).json({ message: "une erreur inattendue s'est produite", extra: pipeline.cause })
+                res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: "une erreur inattendue s'est produite", extra: pipeline.cause })
               }
             }
           } catch (e) {
             console.error('catching error on newPost route', route, e, req.body)
-            res.status(HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR).json({ message: "une erreur inattendue s'est produite", extra: e })
+            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: "une erreur inattendue s'est produite", extra: e })
           }
         })
       }
@@ -313,7 +313,7 @@ const restCatcherWithMutation = (method: string, expressCall: ExpressRoute, pool
   const user = req.auth
   try {
     if (!user) {
-      res.sendStatus(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
+      res.sendStatus(HTTP_STATUS.FORBIDDEN)
     } else {
       await expressCall(req, res, next)
       await pipe(addLog(pool, user.id, method, req.url, req.body), Effect.runPromise)

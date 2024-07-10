@@ -31,11 +31,30 @@ export const Alert: FunctionalComponent<Props> = props => {
 }
 
 export const CaminoApiAlert: FunctionalComponent<{ caminoApiError: CaminoError<string>; class?: HTMLAttributes['class'] }> = props => {
-  const small = !('zodErrorReadableMessage' in props.caminoApiError)
+  const small = !('zodErrorReadableMessage' in props.caminoApiError || 'detail' in props.caminoApiError)
   if (small) {
     return <Alert small={small} type="error" title={props.caminoApiError.message} />
+  } else if ('zodErrorReadableMessage' in props.caminoApiError && 'detail' in props.caminoApiError) {
+    return (
+      <Alert
+        type="error"
+        title={props.caminoApiError.message}
+        description={
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <div>{props.caminoApiError.detail}</div>
+            <div class="fr-message fr-mt-1w" style={{ marginBottom: 0 }}>
+              <strong>Détail technique : </strong>
+            </div>
+            <div class="fr-message">{props.caminoApiError.zodErrorReadableMessage}</div>
+          </div>
+        }
+      />
+    )
+  } else if ('zodErrorReadableMessage' in props.caminoApiError) {
+    return <Alert type="error" title={props.caminoApiError.message} description={props.caminoApiError.zodErrorReadableMessage} />
+  } else {
+    return <Alert type="error" title={props.caminoApiError.message} description={props.caminoApiError.detail} />
   }
-  return <Alert type="error" title={props.caminoApiError.message} description={props.caminoApiError.zodErrorReadableMessage} />
 }
 
 export const PageIntrouvableAlert: FunctionalComponent = () => {

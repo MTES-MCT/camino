@@ -62,7 +62,7 @@ export const apiGraphQLFetch = (query, cacheKey) => async variables => {
   try {
     return await graphQLCall(apiUrl, query, variables, cacheKey)
   } catch (e) {
-    if (e.status === HTTP_STATUS.HTTP_STATUS_UNAUTHORIZED || e.message === `HTTP ${HTTP_STATUS.HTTP_STATUS_UNAUTHORIZED} status.`) {
+    if (e.status === HTTP_STATUS.UNAUTHORIZED || e.message === `HTTP ${HTTP_STATUS.UNAUTHORIZED} status.`) {
       // si la session est expirée on doit réauthentifier l’utilisateur
       window.location.replace('/oauth2/sign_in?rd=' + encodeURIComponent(window.location.href))
     } else {

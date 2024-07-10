@@ -21,16 +21,16 @@ export const getAdministrationUtilisateurs = (pool: Pool) => async (req: JWTRequ
 
   if (!parsed.success) {
     console.warn(`l'administrationId est obligatoire`)
-    res.sendStatus(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
+    res.sendStatus(HTTP_STATUS.FORBIDDEN)
   } else if (!canReadAdministrations(user)) {
-    res.sendStatus(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
+    res.sendStatus(HTTP_STATUS.FORBIDDEN)
   } else {
     try {
       res.json(await getUtilisateursByAdministrationId(pool, parsed.data))
     } catch (e) {
       console.error(e)
 
-      res.sendStatus(HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR)
+      res.sendStatus(HTTP_STATUS.INTERNAL_SERVER_ERROR)
     }
   }
 }
@@ -42,16 +42,16 @@ export const getAdministrationActiviteTypeEmails = (pool: Pool) => async (req: J
 
   if (!parsed.success) {
     console.warn(`l'administrationId est obligatoire`)
-    res.sendStatus(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
+    res.sendStatus(HTTP_STATUS.FORBIDDEN)
   } else if (!canReadAdministrations(user)) {
-    res.sendStatus(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
+    res.sendStatus(HTTP_STATUS.FORBIDDEN)
   } else {
     try {
       res.json(await getActiviteTypeEmailsByAdministrationId(pool, parsed.data))
     } catch (e) {
       console.error(e)
 
-      res.sendStatus(HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR)
+      res.sendStatus(HTTP_STATUS.INTERNAL_SERVER_ERROR)
     }
   }
 }
@@ -70,9 +70,9 @@ export const addAdministrationActiviteTypeEmails = (
     Effect.flatMap(() => insertAdministrationActiviteTypeEmail(pool, params.administrationId, body)),
     Effect.mapError(caminoError =>
       Match.value(caminoError.message).pipe(
-        Match.when('Accès interdit', () => ({ ...caminoError, status: HTTP_STATUS.HTTP_STATUS_FORBIDDEN })),
-        Match.when('Problème de validation de données', () => ({ ...caminoError, status: HTTP_STATUS.HTTP_STATUS_BAD_REQUEST })),
-        Match.when("Impossible d'accéder à la base de données", () => ({ ...caminoError, status: HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR })),
+        Match.when('Accès interdit', () => ({ ...caminoError, status: HTTP_STATUS.FORBIDDEN })),
+        Match.when('Problème de validation de données', () => ({ ...caminoError, status: HTTP_STATUS.BAD_REQUEST })),
+        Match.when("Impossible d'accéder à la base de données", () => ({ ...caminoError, status: HTTP_STATUS.INTERNAL_SERVER_ERROR })),
         Match.exhaustive
       )
     )
@@ -93,9 +93,9 @@ export const deleteAdministrationActiviteTypeEmails = (
     Effect.flatMap(() => deleteAdministrationActiviteTypeEmail(pool, params.administrationId, body)),
     Effect.mapError(caminoError =>
       Match.value(caminoError.message).pipe(
-        Match.when('Accès interdit', () => ({ ...caminoError, status: HTTP_STATUS.HTTP_STATUS_FORBIDDEN })),
-        Match.when('Problème de validation de données', () => ({ ...caminoError, status: HTTP_STATUS.HTTP_STATUS_BAD_REQUEST })),
-        Match.when("Impossible d'accéder à la base de données", () => ({ ...caminoError, status: HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR })),
+        Match.when('Accès interdit', () => ({ ...caminoError, status: HTTP_STATUS.FORBIDDEN })),
+        Match.when('Problème de validation de données', () => ({ ...caminoError, status: HTTP_STATUS.BAD_REQUEST })),
+        Match.when("Impossible d'accéder à la base de données", () => ({ ...caminoError, status: HTTP_STATUS.INTERNAL_SERVER_ERROR })),
         Match.exhaustive
       )
     )

@@ -53,7 +53,7 @@ describe('getAdministrationUtilisateurs', () => {
     const tested = await restCall(dbPool, '/rest/administrations/:administrationId/utilisateurs', { administrationId: 'dea-guyane-01' }, user)
 
     if (lecture) {
-      expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
+      expect(tested.statusCode).toBe(HTTP_STATUS.OK)
       expect(tested.body).toEqual([
         {
           administrationId: 'dea-guyane-01',
@@ -66,7 +66,7 @@ describe('getAdministrationUtilisateurs', () => {
         },
       ])
     } else {
-      expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
+      expect(tested.statusCode).toBe(HTTP_STATUS.FORBIDDEN)
     }
   })
 })
@@ -89,22 +89,22 @@ describe('administrationActiviteTypeEmails', () => {
     let tested = await restCall(dbPool, '/rest/administrations/:administrationId/activiteTypeEmails', { administrationId: 'dea-guyane-01' }, user)
 
     if (canEdit) {
-      expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
+      expect(tested.statusCode).toBe(HTTP_STATUS.OK)
       expect(tested.body).toEqual([])
 
       const newActiviteTypeEmail: AdministrationActiviteTypeEmail = { activite_type_id: 'gra', email: 'toto@toto.com' }
       await restNewPostCall(dbPool, '/rest/administrations/:administrationId/activiteTypeEmails', { administrationId: 'dea-guyane-01' }, user, newActiviteTypeEmail)
 
       tested = await restCall(dbPool, '/rest/administrations/:administrationId/activiteTypeEmails', { administrationId: 'dea-guyane-01' }, user)
-      expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
+      expect(tested.statusCode).toBe(HTTP_STATUS.OK)
       expect(tested.body).toEqual([newActiviteTypeEmail])
 
       await restNewPostCall(dbPool, '/rest/administrations/:administrationId/activiteTypeEmails/delete', { administrationId: 'dea-guyane-01' }, user, newActiviteTypeEmail)
       tested = await restCall(dbPool, '/rest/administrations/:administrationId/activiteTypeEmails', { administrationId: 'dea-guyane-01' }, user)
-      expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
+      expect(tested.statusCode).toBe(HTTP_STATUS.OK)
       expect(tested.body).toEqual([])
     } else {
-      expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
+      expect(tested.statusCode).toBe(HTTP_STATUS.FORBIDDEN)
     }
   })
 })

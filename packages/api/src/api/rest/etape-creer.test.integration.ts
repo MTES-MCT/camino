@@ -96,7 +96,7 @@ describe('etapeCreer', () => {
   test('ne peut pas créer une étape (utilisateur non authentifié)', async () => {
     const result = await restPostCall(dbPool, '/rest/etapes', {}, undefined, { typeId: '', statutId: '', titreDemarcheId: '', date: '' } as unknown as RestEtapeCreation)
 
-    expect(result.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
+    expect(result.statusCode).toBe(HTTP_STATUS.FORBIDDEN)
   })
   test('ne peut pas créer une étape (utilisateur administration)', async () => {
     const result = await restPostCall(dbPool, '/rest/etapes', {}, { role: 'editeur', administrationId: 'ope-onf-973-01' }, {
@@ -106,7 +106,7 @@ describe('etapeCreer', () => {
       date: '',
     } as unknown as RestEtapeCreation)
 
-    expect(result.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
+    expect(result.statusCode).toBe(HTTP_STATUS.BAD_REQUEST)
     expect(result.body).toStrictEqual({ errorMessage: "l'étape n'est pas correctement formatée" })
   })
 
@@ -125,7 +125,7 @@ describe('etapeCreer', () => {
       }
     )
 
-    expect(res.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_NOT_FOUND)
+    expect(res.statusCode).toBe(HTTP_STATUS.NOT_FOUND)
     expect(res.body).toMatchInlineSnapshot(`
       {
         "errorMessage": "la démarche n'existe pas",
@@ -154,7 +154,7 @@ describe('etapeCreer', () => {
       }
     )
 
-    expect(res.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
+    expect(res.statusCode).toBe(HTTP_STATUS.BAD_REQUEST)
     expect(res.body).toMatchInlineSnapshot(`
       {
         "errorMessage": "droits insuffisants pour créer cette étape",
@@ -181,7 +181,7 @@ describe('etapeCreer', () => {
       }
     )
 
-    expect(res.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
+    expect(res.statusCode).toBe(HTTP_STATUS.BAD_REQUEST)
     expect(res.body).toMatchInlineSnapshot(`
       {
         "errorMessage": "statut de l'étape "fav" invalide pour une étape asc pour une démarche de type octroi",
@@ -200,7 +200,7 @@ describe('etapeCreer', () => {
       ...blankEtapeProps,
     })
 
-    expect(res.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
+    expect(res.statusCode).toBe(HTTP_STATUS.OK)
   })
 
   test('peut créer une étape MEN sur un titre ARM en tant que PTMG (utilisateur admin)', async () => {
@@ -222,7 +222,7 @@ describe('etapeCreer', () => {
       }
     )
 
-    expect(res.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
+    expect(res.statusCode).toBe(HTTP_STATUS.OK)
   })
 
   test('ne peut pas créer une étape EDE sur un titre ARM en tant que PTMG (utilisateur admin)', async () => {
@@ -251,7 +251,7 @@ describe('etapeCreer', () => {
       }
     )
 
-    expect(res.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
+    expect(res.statusCode).toBe(HTTP_STATUS.BAD_REQUEST)
     expect(res.body).toMatchInlineSnapshot(`
       {
         "errorMessage": "statut de l'étape "fai" invalide pour une étape ede pour une démarche de type octroi",
@@ -277,7 +277,7 @@ describe('etapeCreer', () => {
       },
     })
 
-    expect(res.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
+    expect(res.statusCode).toBe(HTTP_STATUS.BAD_REQUEST)
     expect(res.body).toMatchInlineSnapshot(`
       {
         "errorMessage": "certaines entreprises n'existent pas",
@@ -301,6 +301,6 @@ describe('etapeCreer', () => {
       },
     })
 
-    expect(res.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
+    expect(res.statusCode).toBe(HTTP_STATUS.OK)
   })
 })

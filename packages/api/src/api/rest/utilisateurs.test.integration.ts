@@ -35,7 +35,7 @@ describe('moi', () => {
     const user = await userGenerate({ role: 'defaut' })
     let tested = await restCall(dbPool, '/moi', {}, undefined)
 
-    expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_NO_CONTENT)
+    expect(tested.statusCode).toBe(HTTP_STATUS.NO_CONTENT)
 
     tested = await restCall(dbPool, '/moi', {}, user)
     expect(tested.body).toMatchInlineSnapshot(`

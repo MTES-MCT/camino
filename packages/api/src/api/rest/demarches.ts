@@ -13,7 +13,7 @@ export const getDemarcheByIdOrSlug = (pool: Pool) => async (req: CaminoRequest, 
     const demarcheIdOrSlugParsed = demarcheIdOrSlugValidator.safeParse(req.params.demarcheIdOrSlug)
     const user = req.auth
     if (!demarcheIdOrSlugParsed.success) {
-      res.sendStatus(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
+      res.sendStatus(HTTP_STATUS.BAD_REQUEST)
     } else {
       const demarche = await getDemarcheByIdOrSlugDb(pool, demarcheIdOrSlugParsed.data)
       const titre = await getTitreByIdOrSlug(pool, demarche.titre_id)
@@ -31,12 +31,12 @@ export const getDemarcheByIdOrSlug = (pool: Pool) => async (req: CaminoRequest, 
       ) {
         res.json(getDemarcheByIdOrSlugValidator.parse(demarche))
       } else {
-        res.sendStatus(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
+        res.sendStatus(HTTP_STATUS.FORBIDDEN)
       }
     }
   } catch (e) {
     console.error(e)
 
-    res.sendStatus(HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR)
+    res.sendStatus(HTTP_STATUS.INTERNAL_SERVER_ERROR)
   }
 }

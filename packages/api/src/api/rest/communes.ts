@@ -12,11 +12,11 @@ export const getCommunes = (pool: Pool) => async (req: CaminoRequest, res: Custo
       const communes = await getCommunesQuery(pool, { ids: communeIds.data })
       res.json(communes)
     } else {
-      res.sendStatus(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
+      res.sendStatus(HTTP_STATUS.BAD_REQUEST)
     }
   } catch (e) {
     console.error(e)
 
-    res.sendStatus(HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR)
+    res.sendStatus(HTTP_STATUS.INTERNAL_SERVER_ERROR)
   }
 }

@@ -301,13 +301,13 @@ export const modifierEntreprise = (_pool: Pool) => async (req: JWTRequest<User>,
   const user = req.auth
   const entreprise = entrepriseModificationValidator.safeParse(req.body)
   if (!user) {
-    res.sendStatus(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
+    res.sendStatus(HTTP_STATUS.FORBIDDEN)
   } else if (!entreprise.success) {
-    res.sendStatus(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
+    res.sendStatus(HTTP_STATUS.BAD_REQUEST)
   } else {
     try {
       if (!canEditEntreprise(user, entreprise.data.id)) {
-        res.sendStatus(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
+        res.sendStatus(HTTP_STATUS.FORBIDDEN)
       } else {
         const errors = []
 
@@ -326,18 +326,18 @@ export const modifierEntreprise = (_pool: Pool) => async (req: JWTRequest<User>,
         }
 
         if (errors.length) {
-          res.sendStatus(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
+          res.sendStatus(HTTP_STATUS.BAD_REQUEST)
         } else {
           await entrepriseUpsert({
             ...entrepriseOld,
             ...entreprise.data,
           })
-          res.sendStatus(HTTP_STATUS.HTTP_STATUS_NO_CONTENT)
+          res.sendStatus(HTTP_STATUS.NO_CONTENT)
         }
       }
     } catch (e) {
       console.error(e)
-      res.sendStatus(HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR)
+      res.sendStatus(HTTP_STATUS.INTERNAL_SERVER_ERROR)
     }
   }
 }
@@ -346,33 +346,33 @@ export const creerEntreprise = (_pool: Pool) => async (req: JWTRequest<User>, re
   const user = req.auth
   const siren = sirenValidator.safeParse(req.body.siren)
   if (!user) {
-    res.sendStatus(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
+    res.sendStatus(HTTP_STATUS.FORBIDDEN)
   } else if (!siren.success) {
     console.warn(`siren '${req.body.siren}' invalide`)
-    res.sendStatus(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
+    res.sendStatus(HTTP_STATUS.BAD_REQUEST)
   } else {
     if (!canCreateEntreprise(user)) {
-      res.sendStatus(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
+      res.sendStatus(HTTP_STATUS.FORBIDDEN)
     } else {
       try {
         const entrepriseOld = await entrepriseGet(newEntrepriseId(`fr-${siren.data}`), { fields: { id: {} } }, user)
 
         if (entrepriseOld) {
           console.warn(`l'entreprise ${entrepriseOld.nom} existe déjà dans Camino`)
-          res.sendStatus(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
+          res.sendStatus(HTTP_STATUS.BAD_REQUEST)
         } else {
           const entrepriseInsee = await apiInseeEntrepriseAndEtablissementsGet(siren.data)
 
           if (!entrepriseInsee) {
-            res.sendStatus(HTTP_STATUS.HTTP_STATUS_NOT_FOUND)
+            res.sendStatus(HTTP_STATUS.NOT_FOUND)
           } else {
             await entrepriseUpsert(entrepriseInsee)
-            res.sendStatus(HTTP_STATUS.HTTP_STATUS_NO_CONTENT)
+            res.sendStatus(HTTP_STATUS.NO_CONTENT)
           }
         }
       } catch (e) {
         console.error(e)
-        res.sendStatus(HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR)
+        res.sendStatus(HTTP_STATUS.INTERNAL_SERVER_ERROR)
       }
     }
   }
@@ -382,12 +382,12 @@ export const getEntreprise = (pool: Pool) => async (req: JWTRequest<User>, res: 
 
   if (!parsed.success) {
     console.warn(`l'entrepriseId est obligatoire`)
-    res.sendStatus(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
+    res.sendStatus(HTTP_STATUS.FORBIDDEN)
   } else {
     try {
       const entreprise = await getEntrepriseQuery(pool, parsed.data)
       if (isNullOrUndefined(entreprise)) {
-        res.sendStatus(HTTP_STATUS.HTTP_STATUS_NOT_FOUND)
+        res.sendStatus(HTTP_STATUS.NOT_FOUND)
       } else {
         const etablissements = await getEntrepriseEtablissements(pool, parsed.data)
         const entrepriseType: EntrepriseType = {
@@ -400,7 +400,7 @@ export const getEntreprise = (pool: Pool) => async (req: JWTRequest<User>, res: 
     } catch (e) {
       console.error(e)
 
-      res.sendStatus(HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR)
+      res.sendStatus(HTTP_STATUS.INTERNAL_SERVER_ERROR)
     }
   }
 }
@@ -411,10 +411,10 @@ export const getEntrepriseDocuments = (pool: Pool) => async (req: JWTRequest<Use
   const entrepriseIdParsed = entrepriseIdValidator.safeParse(req.params.entrepriseId)
   if (!entrepriseIdParsed.success) {
     console.warn(`l'entrepriseId est obligatoire`)
-    res.sendStatus(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
+    res.sendStatus(HTTP_STATUS.FORBIDDEN)
   } else if (!canSeeEntrepriseDocuments(user, entrepriseIdParsed.data)) {
     console.warn(`l'utilisateur ${user} n'a pas le droit de voir les documents de l'entreprise ${entrepriseIdParsed.data}`)
-    res.sendStatus(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
+    res.sendStatus(HTTP_STATUS.FORBIDDEN)
   } else {
     const entrepriseDocuments = await getEntrepriseDocumentsQuery([], [entrepriseIdParsed.data], pool, user)
     res.json(entrepriseDocuments)
@@ -427,10 +427,10 @@ export const postEntrepriseDocument = (pool: Pool) => async (req: JWTRequest<Use
   const entrepriseIdParsed = entrepriseIdValidator.safeParse(req.params.entrepriseId)
   if (!entrepriseIdParsed.success) {
     console.warn(`l'entrepriseId est obligatoire`)
-    res.sendStatus(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
+    res.sendStatus(HTTP_STATUS.FORBIDDEN)
   } else if (!canEditEntreprise(user, entrepriseIdParsed.data)) {
     console.warn(`l'utilisateur ${user} n'a pas le droit de voir les documents de l'entreprise ${entrepriseIdParsed.data}`)
-    res.sendStatus(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
+    res.sendStatus(HTTP_STATUS.FORBIDDEN)
   } else {
     const entrepriseDocumentInput = entrepriseDocumentInputValidator.safeParse(req.body)
 
@@ -450,11 +450,11 @@ export const postEntrepriseDocument = (pool: Pool) => async (req: JWTRequest<Use
         res.json(id)
       } catch (e: any) {
         console.error(e)
-        res.status(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
+        res.status(HTTP_STATUS.BAD_REQUEST)
         res.json(e)
       }
     } else {
-      res.status(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
+      res.status(HTTP_STATUS.BAD_REQUEST)
       res.json(entrepriseDocumentInput.error)
     }
   }
@@ -467,22 +467,22 @@ export const deleteEntrepriseDocument = (pool: Pool) => async (req: JWTRequest<U
   const entrepriseDocumentIdParsed = entrepriseDocumentIdValidator.safeParse(req.params.entrepriseDocumentId)
   if (!entrepriseIdParsed.success) {
     console.warn(`l'entrepriseId est obligatoire`)
-    res.sendStatus(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
+    res.sendStatus(HTTP_STATUS.FORBIDDEN)
   } else if (!entrepriseDocumentIdParsed.success) {
     console.warn(`le documentId est obligatoire`)
-    res.sendStatus(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
+    res.sendStatus(HTTP_STATUS.FORBIDDEN)
   } else if (!canEditEntreprise(user, entrepriseIdParsed.data)) {
     console.warn(`l'utilisateur ${user} n'a pas le droit de supprimer les documents de l'entreprise ${entrepriseIdParsed.data}`)
-    res.sendStatus(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
+    res.sendStatus(HTTP_STATUS.FORBIDDEN)
   } else {
     const entrepriseDocuments = await getEntrepriseDocumentsQuery([], [entrepriseIdParsed.data], pool, user)
     const entrepriseDocument = entrepriseDocuments.find(({ id }) => id === entrepriseDocumentIdParsed.data)
 
     if (!entrepriseDocument || !entrepriseDocument.can_delete_document) {
-      res.sendStatus(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
+      res.sendStatus(HTTP_STATUS.FORBIDDEN)
     } else {
       await deleteEntrepriseDocumentQuery(pool, { id: entrepriseDocument.id, entrepriseId: entrepriseIdParsed.data })
-      res.sendStatus(HTTP_STATUS.HTTP_STATUS_NO_CONTENT)
+      res.sendStatus(HTTP_STATUS.NO_CONTENT)
     }
   }
 }
@@ -490,7 +490,7 @@ export const deleteEntrepriseDocument = (pool: Pool) => async (req: JWTRequest<U
 export const fiscalite = (_pool: Pool) => async (req: JWTRequest<User>, res: CustomResponse<Fiscalite>) => {
   const user = req.auth
   if (!user) {
-    res.sendStatus(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
+    res.sendStatus(HTTP_STATUS.FORBIDDEN)
   } else {
     const caminoAnnee = req.params.annee
 
@@ -498,10 +498,10 @@ export const fiscalite = (_pool: Pool) => async (req: JWTRequest<User>, res: Cus
 
     if (!parsed.success) {
       console.warn(`l'entrepriseId est obligatoire`)
-      res.sendStatus(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
+      res.sendStatus(HTTP_STATUS.FORBIDDEN)
     } else if (!caminoAnnee || !isAnnee(caminoAnnee)) {
       console.warn(`l'année ${caminoAnnee} n'est pas correcte`)
-      res.sendStatus(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
+      res.sendStatus(HTTP_STATUS.BAD_REQUEST)
     } else {
       const entreprise = await entrepriseGet(parsed.data, { fields: { id: {} } }, user)
       if (!entreprise) {
@@ -531,7 +531,7 @@ export const fiscalite = (_pool: Pool) => async (req: JWTRequest<User>, res: Cus
         )
       ) {
         console.warn(`la fiscalité n'est pas visible pour l'utilisateur ${user} et l'entreprise ${parsed.data}`)
-        res.sendStatus(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
+        res.sendStatus(HTTP_STATUS.FORBIDDEN)
       } else {
         const activites = await titresActivitesGet(
           // TODO 2022-07-25 Laure, est-ce qu’il faut faire les WRP ?

@@ -26,11 +26,11 @@ export const titreDemandeCreer = (pool: Pool) => async (req: CaminoRequest, res:
   const titreDemandeParsed = titreDemandeValidator.safeParse(req.body)
   try {
     if (!titreDemandeParsed.success) {
-      res.sendStatus(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
+      res.sendStatus(HTTP_STATUS.BAD_REQUEST)
     } else {
       const titreDemande = titreDemandeParsed.data
       if (!canCreateTitre(user, titreDemande.typeId) || isNullOrUndefined(user)) {
-        res.sendStatus(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
+        res.sendStatus(HTTP_STATUS.FORBIDDEN)
       } else {
         if (isEntreprise(user) || isBureauDEtudes(user)) {
           if (titreDemande.references?.length) {
@@ -100,7 +100,7 @@ export const titreDemandeCreer = (pool: Pool) => async (req: CaminoRequest, res:
           const updatedTitreEtape = await titreEtapeUpsert(titreEtape, user, titreId)
           if (isNullOrUndefined(updatedTitreEtape)) {
             console.error("Une erreur est survenue lors de l'insert de l'étape")
-            res.sendStatus(HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR)
+            res.sendStatus(HTTP_STATUS.INTERNAL_SERVER_ERROR)
           } else {
             await titreEtapeUpdateTask(pool, updatedTitreEtape.id, titreEtape.titreDemarcheId, user)
 
@@ -118,6 +118,6 @@ export const titreDemandeCreer = (pool: Pool) => async (req: CaminoRequest, res:
     }
   } catch (e) {
     console.error(e)
-    res.sendStatus(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
+    res.sendStatus(HTTP_STATUS.FORBIDDEN)
   }
 }
