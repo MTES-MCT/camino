@@ -448,9 +448,7 @@ const fileNameToCsv = (pathFrom: string): Effect.Effect<unknown[], CaminoError<t
 
 const accesInterditError = 'Accès interdit' as const
 type GeosjsonImportPointsErrorMessages = ZodUnparseable | DbQueryAccessError | typeof accesInterditError | 'Fichier incorrect' | ConvertPointsErrors
-// const tuple4326CoordinateValidator = z.tuple([z.number().min(-180).max(180), z.number().min(-90).max(90)])
-// const polygon4326CoordinatesValidator = z.array(z.array(tuple4326CoordinateValidator).min(3)).min(1)
-// z.array(polygon4326CoordinatesValidator).min(1).parse(geojson4326MultiPolygon.coordinates)
+
 export const geojsonImportPoints = (
   pool: Pool,
   user: DeepReadonly<UserNotNull>,

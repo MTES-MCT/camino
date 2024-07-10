@@ -950,7 +950,7 @@ C;Point éç;-52,55;4,24113309117193`
     }
 
     const tested = await restNewPostCall(dbPool, '/rest/geojson/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS['RGFG95 / UTM zone 22N'] }, userSuper, body)
-    // expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
+    expect(tested.statusCode).toBe(HTTP_STATUS.OK)
     expect(tested.body).toMatchInlineSnapshot(`
         {
           "communes": [],
