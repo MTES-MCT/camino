@@ -10,9 +10,9 @@ export const zodParseEffectCallback =
   (value: unknown): Effect.Effect<T['_output'], CaminoError<ZodUnparseable>> =>
     zodParseEffect(validator, value)
 
-export const zodErrorToReadableMessage = (myError: unknown) => fromError(myError).toString() as CaminoZodErrorReadableMessage
+const zodErrorToReadableMessage = (myError: unknown) => fromError(myError).toString() as CaminoZodErrorReadableMessage
 
-export const zodErrorToDetail = (myError: unknown): string | undefined => {
+const zodErrorToDetail = (myError: unknown): string | undefined => {
   if (isZodErrorLike(myError)) {
     return translateIssue(myError.errors[0])
   }

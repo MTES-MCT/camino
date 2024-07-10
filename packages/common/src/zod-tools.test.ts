@@ -13,7 +13,7 @@ test('nullToDefault', () => {
   expect(z.array(z.string()).optional().transform(nullToDefault(myArray)).parse(['toto'])).toStrictEqual(['toto'])
 })
 
-test.only('errorMessage', () => {
+test('errorMessage', () => {
   const expectMessageError = (validator: ZodTypeAny, object: unknown): Assertion<string> => {
     const { success, error } = validator.safeParse(object)
     if (success) {
