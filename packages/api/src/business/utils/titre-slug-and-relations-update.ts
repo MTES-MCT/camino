@@ -100,8 +100,8 @@ export const titreSlugAndRelationsUpdate = async (titre: ITitre): Promise<{ hasC
       slug = titre.slug
     } else {
       slug = titreSlugValidator.parse(`${slug}-${idGenerate(8)}`)
-      doublonTitreId = titreWithTheSameSlug[0].id
     }
+    doublonTitreId = titreWithTheSameSlug[0].id
   }
 
   if (titre.slug !== slug || (titre.doublonTitreId ?? null) !== doublonTitreId) {
