@@ -373,6 +373,7 @@ C;Point éç;-52,55;4,24113309117193`
     const tested = await restNewPostCall(dbPool, '/rest/geojson/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS.WGS84 }, userSuper, body)
     expect(tested.body).toMatchInlineSnapshot(`
       {
+        "detail": "La valeur du champ "surface" doit être un nombre plus petit ou égal à 100000000000.",
         "message": "Problème de validation de données",
         "status": 400,
         "zodErrorReadableMessage": "Validation error: Le périmètre ne doit pas excéder 100000000000M² at "[0].surface"",
@@ -646,6 +647,7 @@ C;Point éç;-52,55;4,24113309117193`
     expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
     expect(tested.body).toMatchInlineSnapshot(`
       {
+        "detail": "La valeur du champ "coordinates" doit être un tableau avec au moins 3 élément(s).",
         "message": "Problème de validation de données",
         "status": 400,
         "zodErrorReadableMessage": "Validation error: Array must contain at least 3 element(s) at "features[0].geometry.coordinates[0][0]"",
@@ -1382,6 +1384,7 @@ B;Point B;1063526.397924559889361;6867885.978687250986695;12.12;12,12`
 
     expect(tested.body).toMatchInlineSnapshot(`
       {
+        "detail": "Le valeur du champ "type" doit être "captage" ou "rejet" ou "piézomètre" mais reçu "1212".",
         "message": "Problème de validation de données",
         "status": 400,
         "zodErrorReadableMessage": "Validation error: Invalid enum value. Expected 'captage' | 'rejet' | 'piézomètre', received '1212' at "[0].type"; Invalid enum value. Expected 'captage' | 'rejet' | 'piézomètre', received '12,12' at "[1].type"",

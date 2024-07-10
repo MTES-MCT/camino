@@ -1,7 +1,7 @@
-import { CaminoError, CaminoZodErrorReadableMessage } from 'camino-common/src/zod-tools.js'
+import { CaminoError, CaminoZodErrorReadableMessage, translateIssue } from 'camino-common/src/zod-tools.js'
 import { Cause, Effect, Exit, pipe } from 'effect'
 import { ZodTypeAny } from 'zod'
-import { fromError } from 'zod-validation-error'
+import { fromError, isZodErrorLike } from 'zod-validation-error'
 
 export type ZodUnparseable = 'Problème de validation de données'
 
@@ -12,10 +12,18 @@ export const zodParseEffectCallback =
 
 export const zodErrorToReadableMessage = (myError: unknown) => fromError(myError).toString() as CaminoZodErrorReadableMessage
 
+export const zodErrorToDetail = (myError: unknown): string | undefined => {
+  if (isZodErrorLike(myError)) {
+    return translateIssue(myError.errors[0])
+  }
+
+  return undefined
+}
+
 export const zodParseEffect = <T extends ZodTypeAny>(validator: T, item: unknown): Effect.Effect<T['_output'], CaminoError<ZodUnparseable>> => {
   return Effect.try({
     try: () => validator.parse(item),
-    catch: myError => ({ message: 'Problème de validation de données', zodErrorReadableMessage: zodErrorToReadableMessage(myError) }),
+    catch: myError => ({ message: 'Problème de validation de données', detail: zodErrorToDetail(myError), zodErrorReadableMessage: zodErrorToReadableMessage(myError) }),
   })
 }
 
