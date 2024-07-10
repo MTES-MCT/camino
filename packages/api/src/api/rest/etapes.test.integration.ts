@@ -53,7 +53,7 @@ describe('getEtapesTypesEtapesStatusWithMainStep', () => {
 
     const tested = await restCall(dbPool, '/rest/etapesTypes/:demarcheId/:date', { demarcheId: titreDemarche.id, date: getCurrent() }, userSuper)
 
-    expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
+    expect(tested.statusCode).toBe(HTTP_STATUS.OK)
     // TODO 2024-06-19 changer ce format ?
     // Partir plutôt sur un object avec comme clé le etapeTypeId, une liste de etapeStatut associée et la clé mainStep (soit sur le statut, soit directement au top niveau)
     // soit { mfr: {statuts: ['fai'], mainStep: true}}
@@ -143,7 +143,7 @@ describe('getEtapesTypesEtapesStatusWithMainStep', () => {
 
     const tested = await restCall(dbPool, '/rest/etapesTypes/:demarcheId/:date', { demarcheId: titreDemarche.id, date: getCurrent() }, userSuper)
 
-    expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
+    expect(tested.statusCode).toBe(HTTP_STATUS.OK)
     expect(tested.body).toMatchInlineSnapshot(`
         [
           {
@@ -211,7 +211,7 @@ describe('etapeSupprimer', () => {
       role && isAdministrationRole(role) ? { role, administrationId: 'min-mctrct-dgcl-01' } : undefined
     )
 
-    expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
+    expect(tested.statusCode).toBe(HTTP_STATUS.FORBIDDEN)
   })
 
   test('peut supprimer une étape (utilisateur super)', async () => {
@@ -243,7 +243,7 @@ describe('etapeSupprimer', () => {
     )
     const tested = await restDeleteCall(dbPool, '/rest/etapes/:etapeIdOrSlug', { etapeIdOrSlug: titreEtape.id }, userSuper)
 
-    expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_NO_CONTENT)
+    expect(tested.statusCode).toBe(HTTP_STATUS.NO_CONTENT)
   })
 
   test('un titulaire peut voir mais ne peut pas supprimer sa demande', async () => {
@@ -291,11 +291,11 @@ describe('etapeSupprimer', () => {
     }
 
     const getEtape = await restCall(dbPool, '/rest/titres/:titreId', { titreId: titre.id }, user)
-    expect(getEtape.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
+    expect(getEtape.statusCode).toBe(HTTP_STATUS.OK)
 
     const tested = await restDeleteCall(dbPool, '/rest/etapes/:etapeIdOrSlug', { etapeIdOrSlug: titreEtape.id }, user)
 
-    expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
+    expect(tested.statusCode).toBe(HTTP_STATUS.FORBIDDEN)
   })
 })
 
@@ -330,12 +330,12 @@ describe('getEtapeAvis', () => {
     )
 
     let getAvis = await restCall(dbPool, '/rest/etapes/:etapeId/etapeAvis', { etapeId: titreEtape.id }, userSuper)
-    expect(getAvis.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
+    expect(getAvis.statusCode).toBe(HTTP_STATUS.OK)
     expect(getAvis.body).toStrictEqual([])
 
     await titreEtapeUpdate(titreEtape.id, { typeId: 'asc' }, userSuper, titre.id)
     getAvis = await restCall(dbPool, '/rest/etapes/:etapeId/etapeAvis', { etapeId: titreEtape.id }, userSuper)
-    expect(getAvis.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
+    expect(getAvis.statusCode).toBe(HTTP_STATUS.OK)
     expect(getAvis.body).toStrictEqual([])
 
     await insertEtapeAvisWithLargeObjectId(
@@ -353,7 +353,7 @@ describe('getEtapeAvis', () => {
       largeObjectIdValidator.parse(42)
     )
     getAvis = await restCall(dbPool, '/rest/etapes/:etapeId/etapeAvis', { etapeId: titreEtape.id }, userSuper)
-    expect(getAvis.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
+    expect(getAvis.statusCode).toBe(HTTP_STATUS.OK)
     expect(getAvis.body).toMatchInlineSnapshot(`
       [
         {

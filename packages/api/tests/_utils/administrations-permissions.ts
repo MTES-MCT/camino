@@ -129,9 +129,9 @@ export const creationCheck = async (pool: Pool, administrationId: string, creer:
       titre
     )
     if (creer) {
-      expect(res.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
+      expect(res.statusCode).toBe(HTTP_STATUS.OK)
     } else {
-      expect(res.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
+      expect(res.statusCode).toBe(HTTP_STATUS.FORBIDDEN)
     }
   } else if (cible === 'demarches') {
     const titreCreated = await titreCreateSuper(pool, administrationId, titreTypeId)
@@ -267,7 +267,7 @@ export const creationCheck = async (pool: Pool, administrationId: string, creer:
     })
 
     if (creer) {
-      expect(res.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
+      expect(res.statusCode).toBe(HTTP_STATUS.OK)
     } else {
       expect(res.body.errors[0].message).toBe('droits insuffisants pour créer cette étape')
     }

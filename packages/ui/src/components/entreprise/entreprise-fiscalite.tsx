@@ -50,7 +50,7 @@ export const EntrepriseFiscalite = defineComponent<Props>(props => {
 
       data.value = { status: 'LOADED', value: fiscaliteData }
     } catch (e: any) {
-      if (e instanceof CaminoHttpError && e.statusCode === HTTP_STATUS.HTTP_STATUS_FORBIDDEN) {
+      if (e instanceof CaminoHttpError && e.statusCode === HTTP_STATUS.FORBIDDEN) {
         isVisible.value = false
       }
 

@@ -67,7 +67,7 @@ const callFetch = async <T extends CaminoRestRoute>(
 
     return
   }
-  if (fetched.status === HTTP_STATUS.HTTP_STATUS_UNAUTHORIZED) {
+  if (fetched.status === HTTP_STATUS.UNAUTHORIZED) {
     window.location.replace('/oauth2/sign_in?rd=' + encodeURIComponent(window.location.href))
   }
   console.error(`Une erreur s'est produite lors de la récupération des données ${await fetched.text()}`)
@@ -107,7 +107,7 @@ export const newPostWithJson = async <T extends NewPostRestRoutes>(
     const bodyResponse = await fetched.json()
     return bodyResponse
   }
-  if (fetched.status === HTTP_STATUS.HTTP_STATUS_UNAUTHORIZED) {
+  if (fetched.status === HTTP_STATUS.UNAUTHORIZED) {
     window.location.replace('/oauth2/sign_in?rd=' + encodeURIComponent(window.location.href))
   }
   const bodyErrorResponse = await fetched.json()

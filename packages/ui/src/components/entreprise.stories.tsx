@@ -82,7 +82,7 @@ const apiClient: Pick<
   getFiscaliteEntreprise: data => {
     getFiscaliteEntrepriseAction(data)
 
-    return Promise.reject(new CaminoHttpError('because reasons', HTTP_STATUS.HTTP_STATUS_FORBIDDEN))
+    return Promise.reject(new CaminoHttpError('because reasons', HTTP_STATUS.FORBIDDEN))
   },
   modifierEntreprise: entreprise => {
     modifierEntrepriseAction(entreprise)

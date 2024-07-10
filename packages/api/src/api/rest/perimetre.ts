@@ -61,13 +61,13 @@ export const getPerimetreInfos = (pool: Pool) => async (req: CaminoRequest, res:
   const user = req.auth
 
   if (!user) {
-    res.sendStatus(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
+    res.sendStatus(HTTP_STATUS.FORBIDDEN)
   } else {
     const etapeIdOrSlugParsed = etapeIdOrSlugValidator.safeParse(req.params.etapeId)
     const demarcheIdOrSlugParsed = demarcheIdOrSlugValidator.safeParse(req.params.demarcheId)
 
     if (!etapeIdOrSlugParsed.success && !demarcheIdOrSlugParsed.success) {
-      res.sendStatus(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
+      res.sendStatus(HTTP_STATUS.BAD_REQUEST)
     } else {
       try {
         let etape: null | { demarche_id: DemarcheId; geojson4326_perimetre: MultiPolygon | null; sdom_zones: SDOMZoneId[]; etape_type_id: EtapeTypeId; communes: CommuneId[] } = null
@@ -90,7 +90,7 @@ export const getPerimetreInfos = (pool: Pool) => async (req: CaminoRequest, res:
             }
           }
         } else {
-          res.sendStatus(HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR)
+          res.sendStatus(HTTP_STATUS.INTERNAL_SERVER_ERROR)
           console.error("cas impossible où ni l'étape id ni la démarche Id n'est chargée")
         }
 
@@ -124,11 +124,11 @@ export const getPerimetreInfos = (pool: Pool) => async (req: CaminoRequest, res:
               })
             })
           } else {
-            res.sendStatus(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
+            res.sendStatus(HTTP_STATUS.FORBIDDEN)
           }
         }
       } catch (e) {
-        res.status(HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR).send(e)
+        res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).send(e)
         console.error(e)
       }
     }
@@ -368,7 +368,7 @@ export const geojsonImport = (
           'Une erreur est survenue lors de la récupération des informations du CSV',
           'Une erreur inattendue est survenue lors de la récupération des informations geojson en base',
           "Impossible d'accéder à la base de données",
-          () => ({ ...caminoError, status: HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR })
+          () => ({ ...caminoError, status: HTTP_STATUS.INTERNAL_SERVER_ERROR })
         ),
         Match.whenOr(
           'Problème de validation de données',
@@ -384,7 +384,7 @@ export const geojsonImport = (
           'La liste des points est vide',
           'Le nombre de points est invalide',
           'Problème de Système géographique (SRID)',
-          () => ({ ...caminoError, status: HTTP_STATUS.HTTP_STATUS_BAD_REQUEST })
+          () => ({ ...caminoError, status: HTTP_STATUS.BAD_REQUEST })
         ),
         Match.exhaustive
       )
@@ -481,8 +481,8 @@ export const geojsonImportPoints = (
     Effect.map(result => ({ geojson4326: result.geojson4326points, origin: result.features })),
     Effect.mapError(caminoError =>
       Match.value(caminoError.message).pipe(
-        Match.when('Accès interdit', () => ({ ...caminoError, status: HTTP_STATUS.HTTP_STATUS_FORBIDDEN })),
-        Match.when("Impossible d'accéder à la base de données", () => ({ ...caminoError, status: HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR })),
+        Match.when('Accès interdit', () => ({ ...caminoError, status: HTTP_STATUS.FORBIDDEN })),
+        Match.when("Impossible d'accéder à la base de données", () => ({ ...caminoError, status: HTTP_STATUS.INTERNAL_SERVER_ERROR })),
         Match.whenOr(
           'Fichier incorrect',
           'Impossible de transformer la feature collection',
@@ -490,7 +490,7 @@ export const geojsonImportPoints = (
           'Le nombre de points est invalide',
           'Problème de validation de données',
           'Problème de Système géographique (SRID)',
-          () => ({ ...caminoError, status: HTTP_STATUS.HTTP_STATUS_BAD_REQUEST })
+          () => ({ ...caminoError, status: HTTP_STATUS.BAD_REQUEST })
         ),
         Match.exhaustive
       )
@@ -565,7 +565,7 @@ export const geojsonImportForages = (
     }),
     Effect.mapError(caminoError =>
       Match.value(caminoError.message).pipe(
-        Match.when("Impossible d'accéder à la base de données", () => ({ ...caminoError, status: HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR })),
+        Match.when("Impossible d'accéder à la base de données", () => ({ ...caminoError, status: HTTP_STATUS.INTERNAL_SERVER_ERROR })),
         Match.whenOr(
           'Problème de validation de données',
           'Une erreur est survenue lors de la lecture du csv',
@@ -575,7 +575,7 @@ export const geojsonImportForages = (
           'La liste des points est vide',
           'Le nombre de points est invalide',
           'Problème de Système géographique (SRID)',
-          () => ({ ...caminoError, status: HTTP_STATUS.HTTP_STATUS_BAD_REQUEST })
+          () => ({ ...caminoError, status: HTTP_STATUS.BAD_REQUEST })
         ),
         Match.exhaustive
       )

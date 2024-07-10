@@ -26,7 +26,7 @@ test('deconnecter', async () => {
   renewConfig()
   const tested = await restCall(dbPool, '/deconnecter', {}, userSuper)
 
-  expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_FOUND)
+  expect(tested.statusCode).toBe(HTTP_STATUS.FOUND)
 })
 
 test('resetPassword', async () => {
@@ -34,5 +34,5 @@ test('resetPassword', async () => {
   renewConfig()
   const tested = await restCall(dbPool, '/changerMotDePasse', {}, userSuper)
 
-  expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_FOUND)
+  expect(tested.statusCode).toBe(HTTP_STATUS.FOUND)
 })

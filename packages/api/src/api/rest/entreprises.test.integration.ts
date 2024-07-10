@@ -193,7 +193,7 @@ describe('getEntreprise', () => {
     const entrepriseId = newEntrepriseId('nouvelle-entreprise-id')
     await entrepriseUpsert({ id: entrepriseId, nom: entrepriseId })
     const tested = await restCall(dbPool, '/rest/entreprises/:entrepriseId', { entrepriseId }, { ...testBlankUser, role: 'super' })
-    expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
+    expect(tested.statusCode).toBe(HTTP_STATUS.OK)
     expect(tested.body).toMatchInlineSnapshot(`
       {
         "adresse": null,
@@ -225,10 +225,10 @@ describe('postEntrepriseDocument', () => {
       tempDocumentName: tempDocumentNameValidator.parse('notExistingFile'),
     }
     const tested = await restPostCall(dbPool, '/rest/entreprises/:entrepriseId/documents', { entrepriseId }, { ...testBlankUser, role: 'super' }, documentToInsert)
-    expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
+    expect(tested.statusCode).toBe(HTTP_STATUS.BAD_REQUEST)
 
     const entrepriseDocumentsCall = await restCall(dbPool, '/rest/entreprises/:entrepriseId/documents', { entrepriseId }, { ...testBlankUser, role: 'super' })
-    expect(entrepriseDocumentsCall.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
+    expect(entrepriseDocumentsCall.statusCode).toBe(HTTP_STATUS.OK)
     expect(entrepriseDocumentsCall.body).toMatchInlineSnapshot('[]')
   })
 
@@ -247,10 +247,10 @@ describe('postEntrepriseDocument', () => {
     }
 
     const tested = await restPostCall(dbPool, '/rest/entreprises/:entrepriseId/documents', { entrepriseId }, { ...testBlankUser, role: 'super' }, documentToInsert)
-    expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
+    expect(tested.statusCode).toBe(HTTP_STATUS.OK)
 
     const entrepriseDocumentsCall = await restCall(dbPool, '/rest/entreprises/:entrepriseId/documents', { entrepriseId }, { ...testBlankUser, role: 'super' })
-    expect(entrepriseDocumentsCall.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
+    expect(entrepriseDocumentsCall.statusCode).toBe(HTTP_STATUS.OK)
     expect(entrepriseDocumentsCall.body).toHaveLength(1)
     expect(entrepriseDocumentsCall.body[0]).toMatchObject({
       can_delete_document: true,
@@ -305,7 +305,7 @@ describe('getEntrepriseDocument', () => {
     }
 
     const documentCall = await restPostCall(dbPool, '/rest/entreprises/:entrepriseId/documents', { entrepriseId }, { ...testBlankUser, role: 'super' }, documentToInsert)
-    expect(documentCall.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
+    expect(documentCall.statusCode).toBe(HTTP_STATUS.OK)
 
     mkdirSync(dir, { recursive: true })
     copyFileSync(`./src/tools/small.pdf`, `${dir}/${fileName}`)
@@ -317,13 +317,13 @@ describe('getEntrepriseDocument', () => {
     }
 
     const secondDocumentCall = await restPostCall(dbPool, '/rest/entreprises/:entrepriseId/documents', { entrepriseId }, { ...testBlankUser, role: 'super' }, secondDocumentToInsert)
-    expect(secondDocumentCall.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
+    expect(secondDocumentCall.statusCode).toBe(HTTP_STATUS.OK)
 
     const entrepriseDocumentId = entrepriseDocumentIdValidator.parse(documentCall.body)
     await insertTitreEtapeEntrepriseDocument(dbPool, { entreprise_document_id: entrepriseDocumentId, titre_etape_id: titreEtape.id })
 
     const tested = await restCall(dbPool, '/rest/entreprises/:entrepriseId/documents', { entrepriseId }, { ...testBlankUser, role: 'super' })
-    expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
+    expect(tested.statusCode).toBe(HTTP_STATUS.OK)
     expect(tested.body).toHaveLength(2)
     expect(tested.body[0]).toMatchObject({
       can_delete_document: false,
@@ -347,7 +347,7 @@ describe('getEntrepriseDocument', () => {
       { ...testBlankUser, role: 'super' }
     )
 
-    expect(deletePossible.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_NO_CONTENT)
+    expect(deletePossible.statusCode).toBe(HTTP_STATUS.NO_CONTENT)
 
     const deleteNotPossible = await restDeleteCall(
       dbPool,
@@ -356,7 +356,7 @@ describe('getEntrepriseDocument', () => {
       { ...testBlankUser, role: 'super' }
     )
 
-    expect(deleteNotPossible.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
+    expect(deleteNotPossible.statusCode).toBe(HTTP_STATUS.FORBIDDEN)
   })
 })
 
@@ -371,7 +371,7 @@ describe('getEntreprises', () => {
     })
     const tested = await restCall(dbPool, '/rest/entreprises', {}, { role: 'defaut' })
 
-    expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
+    expect(tested.statusCode).toBe(HTTP_STATUS.OK)
     expect(tested.body).toMatchInlineSnapshot(`
       [
         {

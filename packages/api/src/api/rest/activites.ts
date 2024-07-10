@@ -64,9 +64,9 @@ export const updateActivite =
     const user = req.auth
 
     if (!activiteIdParsed.success) {
-      res.sendStatus(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
+      res.sendStatus(HTTP_STATUS.BAD_REQUEST)
     } else if (isNullOrUndefined(user)) {
-      res.sendStatus(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
+      res.sendStatus(HTTP_STATUS.BAD_REQUEST)
     } else {
       try {
         const titreTypeId = memoize(() => titreTypeIdByActiviteId(activiteIdParsed.data, pool))
@@ -76,12 +76,12 @@ export const updateActivite =
         const result = await getActiviteById(activiteIdParsed.data, pool, user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires)
 
         if (result === null || !(await canEditActivite(user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires, result.activite_statut_id))) {
-          res.sendStatus(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
+          res.sendStatus(HTTP_STATUS.FORBIDDEN)
         } else {
           const parsed = activiteEditionValidator.safeParse(req.body)
 
           if (!parsed.success) {
-            res.sendStatus(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
+            res.sendStatus(HTTP_STATUS.BAD_REQUEST)
           } else {
             const contenu = extractContenuFromSectionWithValue(result.sections, parsed.data.sectionsWithValue)
             await updateActiviteQuery(pool, user, result.id, contenu, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires)
@@ -116,12 +116,12 @@ export const updateActivite =
               })
             }
 
-            res.sendStatus(HTTP_STATUS.HTTP_STATUS_NO_CONTENT)
+            res.sendStatus(HTTP_STATUS.NO_CONTENT)
           }
         }
       } catch (e: any) {
         console.error(e)
-        res.sendStatus(HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR)
+        res.sendStatus(HTTP_STATUS.INTERNAL_SERVER_ERROR)
       }
     }
   }
@@ -174,7 +174,7 @@ export const getActivite =
     const user = req.auth
 
     if (!activiteIdParsed.success) {
-      res.sendStatus(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
+      res.sendStatus(HTTP_STATUS.BAD_REQUEST)
     } else {
       try {
         const titreTypeId = memoize(() => titreTypeIdByActiviteId(activiteIdParsed.data, pool))
@@ -187,10 +187,10 @@ export const getActivite =
           const activite = await formatActivite(result, pool, user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires)
           res.json(activite)
         } else {
-          res.sendStatus(HTTP_STATUS.HTTP_STATUS_NOT_FOUND)
+          res.sendStatus(HTTP_STATUS.NOT_FOUND)
         }
       } catch (e) {
-        res.sendStatus(HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR)
+        res.sendStatus(HTTP_STATUS.INTERNAL_SERVER_ERROR)
         console.error(e)
       }
     }
@@ -201,7 +201,7 @@ export const deleteActivite =
   async (req: CaminoRequest, res: CustomResponse<void>): Promise<void> => {
     const activiteIdParsed = activiteIdValidator.safeParse(req.params.activiteId)
     if (!activiteIdParsed.success) {
-      res.sendStatus(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
+      res.sendStatus(HTTP_STATUS.BAD_REQUEST)
     } else {
       const id = activiteIdParsed.data
       const titreTypeId = memoize(() => titreTypeIdByActiviteId(id, pool))
@@ -210,9 +210,9 @@ export const deleteActivite =
 
       const isOk = await activiteDeleteQuery(id, pool, req.auth, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires)
       if (isOk) {
-        res.sendStatus(HTTP_STATUS.HTTP_STATUS_NO_CONTENT)
+        res.sendStatus(HTTP_STATUS.NO_CONTENT)
       } else {
-        res.sendStatus(HTTP_STATUS.HTTP_STATUS_NOT_FOUND)
+        res.sendStatus(HTTP_STATUS.NOT_FOUND)
       }
     }
   }

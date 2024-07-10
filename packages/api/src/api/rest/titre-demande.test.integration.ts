@@ -44,20 +44,20 @@ describe('titreDemandeCreer', () => {
   test('peut créer un titre en tant que super', async () => {
     const tested = await restPostCall(dbPool, '/rest/titres', {}, { role: 'super' }, body)
 
-    expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
+    expect(tested.statusCode).toBe(HTTP_STATUS.OK)
 
     expect(tested.body.titreId).not.toBeUndefined()
     expect(tested.body.etapeId).toBeUndefined()
 
     const getTitre = await restCall(dbPool, '/rest/titres/:titreId', { titreId: tested.body.titreId }, { role: 'super' })
-    expect(getTitre.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
+    expect(getTitre.statusCode).toBe(HTTP_STATUS.OK)
     expect(getTitre.body.demarches).toHaveLength(1)
     expect(getTitre.body.demarches[0].etapes).toHaveLength(0)
   })
   test('peut créer un titre en tant que entreprise', async () => {
     const tested = await restPostCall(dbPool, '/rest/titres', {}, { role: 'entreprise', entreprises: [{ id: entrepriseId }] }, body)
 
-    expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
+    expect(tested.statusCode).toBe(HTTP_STATUS.OK)
 
     expect(tested.body.titreId).toBeUndefined()
     expect(tested.body.etapeId).not.toBeUndefined()

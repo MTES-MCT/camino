@@ -86,13 +86,13 @@ export const getEtapeEntrepriseDocuments =
     const user = req.auth
 
     if (!etapeIdParsed.success) {
-      res.sendStatus(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
+      res.sendStatus(HTTP_STATUS.BAD_REQUEST)
     } else {
       try {
         const result = await getEntrepriseDocumentIdsByEtapeId({ titre_etape_id: etapeIdParsed.data }, pool, user)
         res.json(result)
       } catch (e) {
-        res.sendStatus(HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR)
+        res.sendStatus(HTTP_STATUS.INTERNAL_SERVER_ERROR)
         console.error(e)
       }
     }
@@ -180,7 +180,7 @@ export const getEtapeDocuments =
     const user = req.auth
 
     if (!etapeIdParsed.success) {
-      res.sendStatus(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
+      res.sendStatus(HTTP_STATUS.BAD_REQUEST)
     } else {
       try {
         const { etapeData, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires } = await getEtapeDataForEdition(pool, etapeIdParsed.data)
@@ -201,7 +201,7 @@ export const getEtapeDocuments =
 
         res.json({ etapeDocuments: result, asl, dae })
       } catch (e) {
-        res.sendStatus(HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR)
+        res.sendStatus(HTTP_STATUS.INTERNAL_SERVER_ERROR)
         console.error(e)
       }
     }
@@ -214,7 +214,7 @@ export const getEtapeAvis =
     const user = req.auth
 
     if (!etapeIdParsed.success) {
-      res.sendStatus(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
+      res.sendStatus(HTTP_STATUS.BAD_REQUEST)
     } else {
       try {
         const { etapeData, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires } = await getEtapeDataForEdition(pool, etapeIdParsed.data)
@@ -229,7 +229,7 @@ export const getEtapeAvis =
         const avis: GetEtapeAvisByEtapeId = result.map(a => ({ ...a, has_file: isNotNullNorUndefined(a.largeobject_id) }))
         res.json(getEtapeAvisByEtapeIdValidator.parse(avis))
       } catch (e) {
-        res.sendStatus(HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR)
+        res.sendStatus(HTTP_STATUS.INTERNAL_SERVER_ERROR)
         console.error(e)
       }
     }
@@ -240,9 +240,9 @@ export const deleteEtape = (pool: Pool) => async (req: CaminoRequest, res: Custo
 
   const etapeId = etapeIdOrSlugValidator.safeParse(req.params.etapeIdOrSlug)
   if (!etapeId.success) {
-    res.sendStatus(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
+    res.sendStatus(HTTP_STATUS.BAD_REQUEST)
   } else if (isNullOrUndefined(user)) {
-    res.sendStatus(HTTP_STATUS.HTTP_STATUS_NOT_FOUND)
+    res.sendStatus(HTTP_STATUS.NOT_FOUND)
   } else {
     try {
       const titreEtape = await titreEtapeGet(
@@ -256,7 +256,7 @@ export const deleteEtape = (pool: Pool) => async (req: CaminoRequest, res: Custo
       )
 
       if (isNullOrUndefined(titreEtape)) {
-        res.sendStatus(HTTP_STATUS.HTTP_STATUS_NOT_FOUND)
+        res.sendStatus(HTTP_STATUS.NOT_FOUND)
       } else {
         if (!titreEtape.demarche || !titreEtape.demarche.titre || titreEtape.demarche.titre.administrationsLocales === undefined || !titreEtape.demarche.titre.titreStatutId) {
           throw new Error('la démarche n’est pas chargée complètement')
@@ -268,7 +268,7 @@ export const deleteEtape = (pool: Pool) => async (req: CaminoRequest, res: Custo
             titreStatutId: titreEtape.demarche.titre.titreStatutId,
           })
         ) {
-          res.sendStatus(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
+          res.sendStatus(HTTP_STATUS.FORBIDDEN)
         } else {
           const titreDemarche = await titreDemarcheGet(
             titreEtape.titreDemarcheId,
@@ -296,11 +296,11 @@ export const deleteEtape = (pool: Pool) => async (req: CaminoRequest, res: Custo
 
           await titreEtapeUpdateTask(pool, null, titreEtape.titreDemarcheId, user)
 
-          res.sendStatus(HTTP_STATUS.HTTP_STATUS_NO_CONTENT)
+          res.sendStatus(HTTP_STATUS.NO_CONTENT)
         }
       }
     } catch (e) {
-      res.sendStatus(HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR)
+      res.sendStatus(HTTP_STATUS.INTERNAL_SERVER_ERROR)
       console.error(e)
     }
   }
@@ -310,32 +310,32 @@ export const getEtape = (_pool: Pool) => async (req: CaminoRequest, res: CustomR
 
   const etapeId = etapeIdOrSlugValidator.safeParse(req.params.etapeIdOrSlug)
   if (!etapeId.success) {
-    res.sendStatus(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
+    res.sendStatus(HTTP_STATUS.BAD_REQUEST)
   } else if (isNullOrUndefined(user)) {
-    res.sendStatus(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
+    res.sendStatus(HTTP_STATUS.FORBIDDEN)
   } else {
     try {
       const titreEtape = await titreEtapeGet(etapeId.data, { fields: { demarche: { titre: { pointsEtape: { id: {} } } } }, fetchHeritage: true }, user)
 
       if (isNullOrUndefined(titreEtape)) {
-        res.sendStatus(HTTP_STATUS.HTTP_STATUS_NOT_FOUND)
+        res.sendStatus(HTTP_STATUS.NOT_FOUND)
       } else if (isNullOrUndefined(titreEtape.titulaireIds) || isNullOrUndefined(titreEtape.demarche?.titre) || titreEtape.demarche.titre.administrationsLocales === undefined) {
         console.error('la démarche n’est pas chargée complètement')
-        res.sendStatus(HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR)
+        res.sendStatus(HTTP_STATUS.INTERNAL_SERVER_ERROR)
       } else if (
         !canEditEtape(user, titreEtape.typeId, titreEtape.isBrouillon, titreEtape.titulaireIds ?? [], titreEtape.demarche.titre.administrationsLocales ?? [], titreEtape.demarche.typeId, {
           typeId: titreEtape.demarche.titre.typeId,
           titreStatutId: titreEtape.demarche.titre.titreStatutId,
         })
       ) {
-        res.sendStatus(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
+        res.sendStatus(HTTP_STATUS.FORBIDDEN)
       } else {
         res.json(iTitreEtapeToFlattenEtape(titreEtape))
       }
     } catch (e) {
       console.error(e)
 
-      res.sendStatus(HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR)
+      res.sendStatus(HTTP_STATUS.INTERNAL_SERVER_ERROR)
     }
   }
 }
@@ -502,16 +502,16 @@ export const createEtape = (pool: Pool) => async (req: CaminoRequest, res: Custo
 
     if (!success) {
       console.error('[etapeCreer] étape non correctement formatée', error)
-      res.status(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST).json({ errorMessage: "l'étape n'est pas correctement formatée" })
+      res.status(HTTP_STATUS.BAD_REQUEST).json({ errorMessage: "l'étape n'est pas correctement formatée" })
     } else {
       const user = req.auth
       if (!user) {
-        res.status(HTTP_STATUS.HTTP_STATUS_NOT_FOUND).json({ errorMessage: "la démarche n'existe pas" })
+        res.status(HTTP_STATUS.NOT_FOUND).json({ errorMessage: "la démarche n'existe pas" })
       } else {
         let titreDemarche = await titreDemarcheGet(etape.titreDemarcheId, { fields: {} }, user)
 
         if (!titreDemarche) {
-          res.status(HTTP_STATUS.HTTP_STATUS_NOT_FOUND).json({ errorMessage: "la démarche n'existe pas" })
+          res.status(HTTP_STATUS.NOT_FOUND).json({ errorMessage: "la démarche n'existe pas" })
         } else {
           titreDemarche = await titreDemarcheGet(
             etape.titreDemarcheId,
@@ -530,11 +530,11 @@ export const createEtape = (pool: Pool) => async (req: CaminoRequest, res: Custo
           )
 
           if (!titreDemarche || !titreDemarche.titre) {
-            res.status(HTTP_STATUS.HTTP_STATUS_NOT_FOUND).json({ errorMessage: "le titre n'existe pas" })
+            res.status(HTTP_STATUS.NOT_FOUND).json({ errorMessage: "le titre n'existe pas" })
           } else {
             const titreTypeId = titreDemarche?.titre?.typeId
             if (!titreTypeId) {
-              res.status(HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR).json({ errorMessage: `le type du titre de la ${titreDemarche.id} n'est pas chargé` })
+              res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ errorMessage: `le type du titre de la ${titreDemarche.id} n'est pas chargé` })
             } else {
               const isBrouillon = canBeBrouillon(etape.typeId)
               const { flattenEtape, perimetreInfos } = await getFlattenEtape(etape, titreDemarche, titreTypeId, isBrouillon, etapeSlugValidator.parse('unknown'), pool)
@@ -545,14 +545,14 @@ export const createEtape = (pool: Pool) => async (req: CaminoRequest, res: Custo
               if (!etapeDocumentsParsed.success) {
                 console.warn(etapeDocumentsParsed.error)
 
-                res.status(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST).json({ errorMessage: 'Les documents envoyés ne sont pas conformes' })
+                res.status(HTTP_STATUS.BAD_REQUEST).json({ errorMessage: 'Les documents envoyés ne sont pas conformes' })
               } else {
                 const etapeDocuments = etapeDocumentsParsed.data
 
                 const etapeAvisParsed = z.array(tempEtapeAvisValidator).safeParse(etape.etapeAvis)
                 if (!etapeAvisParsed.success) {
                   console.warn(etapeAvisParsed.error)
-                  res.status(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST).json({ errorMessage: 'Les avis envoyés ne sont pas conformes' })
+                  res.status(HTTP_STATUS.BAD_REQUEST).json({ errorMessage: 'Les avis envoyés ne sont pas conformes' })
                 } else {
                   const etapeAvis = etapeAvisParsed.data
                   const rulesErrors = titreEtapeUpdationValidate(
@@ -569,16 +569,16 @@ export const createEtape = (pool: Pool) => async (req: CaminoRequest, res: Custo
                     null
                   )
                   if (rulesErrors.length) {
-                    res.status(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST).json({ errorMessage: rulesErrors.join(', ') })
+                    res.status(HTTP_STATUS.BAD_REQUEST).json({ errorMessage: rulesErrors.join(', ') })
                   } else if (
                     !canCreateEtape(user, etape.typeId, isBrouillon, titreDemarche.titre.titulaireIds ?? [], titreDemarche.titre.administrationsLocales ?? [], titreDemarche.typeId, {
                       typeId: titreDemarche.titre.typeId,
                       titreStatutId: titreDemarche.titre.titreStatutId ?? TitresStatutIds.Indetermine,
                     })
                   ) {
-                    res.status(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST).json({ errorMessage: 'droits insuffisants pour créer cette étape' })
+                    res.status(HTTP_STATUS.BAD_REQUEST).json({ errorMessage: 'droits insuffisants pour créer cette étape' })
                   } else if (!(await checkEntreprisesExist(pool, [...(etape.titulaireIds ?? []), ...(etape.amodiataireIds ?? [])]))) {
-                    res.status(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST).json({ errorMessage: "certaines entreprises n'existent pas" })
+                    res.status(HTTP_STATUS.BAD_REQUEST).json({ errorMessage: "certaines entreprises n'existent pas" })
                   } else {
                     if (!canEditDuree(titreTypeId, titreDemarche.typeId)) {
                       etape.duree = null
@@ -591,7 +591,7 @@ export const createEtape = (pool: Pool) => async (req: CaminoRequest, res: Custo
 
                     const etapeUpdated: ITitreEtape | undefined = await titreEtapeUpsert({ ...etape, ...perimetreInfos, isBrouillon }, user!, titreDemarche.titreId)
                     if (isNullOrUndefined(etapeUpdated)) {
-                      res.status(HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR).json({ errorMessage: "Une erreur est survenue lors de la création de l'étape" })
+                      res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ errorMessage: "Une erreur est survenue lors de la création de l'étape" })
                     } else {
                       await insertEtapeDocuments(pool, etapeUpdated.id, etapeDocuments)
                       for (const document of entrepriseDocuments) {
@@ -622,7 +622,7 @@ export const createEtape = (pool: Pool) => async (req: CaminoRequest, res: Custo
   } catch (e) {
     console.error(e)
 
-    res.status(HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR).json({ errorMessage: "Une erreur est survenue lors de la création de l'étape", extra: e })
+    res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ errorMessage: "Une erreur est survenue lors de la création de l'étape", extra: e })
   }
 }
 
@@ -632,11 +632,11 @@ export const updateEtape = (pool: Pool) => async (req: CaminoRequest, res: Custo
 
     if (!success) {
       console.error('[etapeModifier] étape non correctement formatée', error)
-      res.status(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST).json({ errorMessage: "l'étape n'est pas correctement formatée" })
+      res.status(HTTP_STATUS.BAD_REQUEST).json({ errorMessage: "l'étape n'est pas correctement formatée" })
     } else {
       const user = req.auth
       if (!user) {
-        res.status(HTTP_STATUS.HTTP_STATUS_NOT_FOUND).json({ errorMessage: "la démarche n'existe pas" })
+        res.status(HTTP_STATUS.NOT_FOUND).json({ errorMessage: "la démarche n'existe pas" })
       } else {
         const titreEtapeOld = await titreEtapeGet(
           etape.id,
@@ -837,7 +837,7 @@ export const updateEtape = (pool: Pool) => async (req: CaminoRequest, res: Custo
   } catch (e: any) {
     console.error(e)
 
-    res.status(HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR).json({ errorMessage: e.message, extra: e })
+    res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ errorMessage: e.message, extra: e })
   }
 }
 
@@ -846,7 +846,7 @@ export const deposeEtape = (pool: Pool) => async (req: CaminoRequest, res: Custo
 
   const etapeId = etapeIdValidator.safeParse(req.params.etapeId)
   if (!etapeId.success) {
-    res.sendStatus(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
+    res.sendStatus(HTTP_STATUS.BAD_REQUEST)
   } else {
     try {
       const id = etapeId.data
@@ -980,9 +980,9 @@ export const deposeEtape = (pool: Pool) => async (req: CaminoRequest, res: Custo
 
       await titreEtapeAdministrationsEmailsSend(etapeUpdated, titreDemarche.typeId, titreDemarche.titreId, titreDemarche.titre!.typeId, user!, titreEtapeOld)
 
-      res.sendStatus(HTTP_STATUS.HTTP_STATUS_NO_CONTENT)
+      res.sendStatus(HTTP_STATUS.NO_CONTENT)
     } catch (e) {
-      res.sendStatus(HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR)
+      res.sendStatus(HTTP_STATUS.INTERNAL_SERVER_ERROR)
       console.error(e)
     }
   }
@@ -997,13 +997,13 @@ export const getEtapesTypesEtapesStatusWithMainStep =
     const user = req.auth
 
     if (!demarcheIdParsed.success || !dateParsed.success || !etapeIdParsed.success) {
-      res.sendStatus(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
+      res.sendStatus(HTTP_STATUS.BAD_REQUEST)
     } else {
       try {
         const result = await demarcheEtapesTypesGet(demarcheIdParsed.data, dateParsed.data, etapeIdParsed.data ?? null, user)
         res.json(result)
       } catch (e) {
-        res.sendStatus(HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR)
+        res.sendStatus(HTTP_STATUS.INTERNAL_SERVER_ERROR)
         console.error(e)
       }
     }

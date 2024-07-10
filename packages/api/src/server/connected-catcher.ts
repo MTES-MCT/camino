@@ -10,7 +10,7 @@ export const connectedCatcher = async (req: CaminoRequest, res: express.Response
       const reqUser = req.auth
       if (!reqUser) {
         console.info('forbid a user that should be connected but is not')
-        res.sendStatus(HTTP_STATUS.HTTP_STATUS_UNAUTHORIZED)
+        res.sendStatus(HTTP_STATUS.UNAUTHORIZED)
 
         return
       }

@@ -576,5 +576,5 @@ test('utilisateurTitreAbonner', async () => {
 
   const tested = await restPostCall(dbPool, '/rest/titres/:titreId/abonne', { titreId: titre.id }, userSuper, { abonne: true })
 
-  expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_NO_CONTENT)
+  expect(tested.statusCode).toBe(HTTP_STATUS.NO_CONTENT)
 })

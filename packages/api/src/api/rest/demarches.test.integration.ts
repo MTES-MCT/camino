@@ -112,7 +112,7 @@ describe('downloadDemarches', () => {
   test('peut récupérer des démarches au format csv par défaut', async () => {
     const tested = await restDownloadCall(dbPool, '/demarches', {}, userSuper)
 
-    expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
+    expect(tested.statusCode).toBe(HTTP_STATUS.OK)
     expect(tested.headers['content-type']).toBe('text/csv; charset=utf-8')
     expect(tested.text)
       .toMatchInlineSnapshot(`"titre_id,titre_nom,titre_domaine,titre_type,titre_statut,type,statut,description,surface km2,titre_references,titulaires_noms,titulaires_adresses,titulaires_legal,amodiataires_noms,amodiataires_adresses,amodiataires_legal,demande,forets,communes
@@ -122,7 +122,7 @@ slug,mon titre,minéraux et métaux,autorisation d'exploitation,valide,octroi,in
   test('peut récupérer des démarches au format xlsx', async () => {
     const tested = await restDownloadCall(dbPool, '/demarches', {}, userSuper, { format: 'xlsx' })
 
-    expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
+    expect(tested.statusCode).toBe(HTTP_STATUS.OK)
     expect(tested.headers['content-type']).toBe('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
     expect(crypto.createHash('md5').update(tested.text).digest('hex')).toBe('b338f1d36d6d79bf6378eebce0480f72')
   })
@@ -165,7 +165,7 @@ slug,mon titre,minéraux et métaux,autorisation d'exploitation,valide,octroi,in
 
     const tested = await restDownloadCall(dbPool, '/demarches', {}, userSuper, { format: 'csv' })
 
-    expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
+    expect(tested.statusCode).toBe(HTTP_STATUS.OK)
     expect(tested.headers['content-type']).toBe('text/csv; charset=utf-8')
     expect(tested.text)
       .toMatchInlineSnapshot(`"titre_id,titre_nom,titre_domaine,titre_type,titre_statut,type,statut,description,surface km2,titre_references,titulaires_noms,titulaires_adresses,titulaires_legal,amodiataires_noms,amodiataires_adresses,amodiataires_legal,demande,forets,communes

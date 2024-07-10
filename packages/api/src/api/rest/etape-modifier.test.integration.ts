@@ -84,7 +84,7 @@ describe('etapeModifier', () => {
   test('ne peut pas modifier une étape (utilisateur anonyme)', async () => {
     const result = await restPutCall(dbPool, '/rest/etapes', {}, undefined, { id: '', typeId: '', statutId: '', titreDemarcheId: '', date: '' } as unknown as RestEtapeModification)
 
-    expect(result.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
+    expect(result.statusCode).toBe(HTTP_STATUS.FORBIDDEN)
   })
 
   test('ne peut pas modifier une étape mal formatée (utilisateur super)', async () => {
@@ -95,7 +95,7 @@ describe('etapeModifier', () => {
       date: '',
     } as unknown as RestEtapeModification)
 
-    expect(result.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
+    expect(result.statusCode).toBe(HTTP_STATUS.BAD_REQUEST)
   })
 
   test('peut modifier une étape mfr en brouillon (utilisateur super)', async () => {
@@ -144,7 +144,7 @@ describe('etapeModifier', () => {
       },
       etapeDocuments: [],
     })
-    expect(result.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
+    expect(result.statusCode).toBe(HTTP_STATUS.OK)
   })
 
   test("ne peut pas modifier une étape avec des entreprises qui n'existent pas", async () => {
@@ -249,10 +249,10 @@ describe('etapeModifier', () => {
 
     let res = await restPutCall(dbPool, '/rest/etapes', {}, userSuper, etape)
 
-    expect(res.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
+    expect(res.statusCode).toBe(HTTP_STATUS.OK)
 
     const documents = await restCall(dbPool, '/rest/etapes/:etapeId/etapeDocuments', { etapeId: titreEtapeId }, userSuper)
-    expect(documents.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
+    expect(documents.statusCode).toBe(HTTP_STATUS.OK)
     expect(documents.body.etapeDocuments).toHaveLength(1)
     expect(documents.body.etapeDocuments[0]).toMatchInlineSnapshot(
       { id: expect.any(String) },
@@ -268,7 +268,7 @@ describe('etapeModifier', () => {
     )
     res = await restPutCall(dbPool, '/rest/etapes', {}, userSuper, { ...etape, etapeDocuments: [] })
 
-    expect(res.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
+    expect(res.statusCode).toBe(HTTP_STATUS.OK)
   })
 
   test("ne peut pas supprimer un document obligatoire d'une étape qui n'est pas en brouillon (utilisateur super)", async () => {
@@ -333,7 +333,7 @@ describe('etapeModifier', () => {
 
     let res = await restPutCall(dbPool, '/rest/etapes', {}, userSuper, etape)
 
-    expect(res.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
+    expect(res.statusCode).toBe(HTTP_STATUS.OK)
 
     res = await restPutCall(dbPool, '/rest/etapes', {}, userSuper, { ...etape, etapeDocuments: [] })
 
@@ -381,7 +381,7 @@ describe('etapeModifier', () => {
       contenu: {},
     })
 
-    expect(res.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
+    expect(res.statusCode).toBe(HTTP_STATUS.OK)
   })
 
   test('peut modifier une étape MEN sur un titre ARM en tant que PTMG (utilisateur admin)', async () => {
@@ -433,7 +433,7 @@ describe('etapeModifier', () => {
       }
     )
 
-    expect(res.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
+    expect(res.statusCode).toBe(HTTP_STATUS.OK)
   })
 
   test('ne peut pas modifier une étape EDE sur un titre ARM en tant que PTMG (utilisateur admin)', async () => {

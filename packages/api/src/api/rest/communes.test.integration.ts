@@ -22,7 +22,7 @@ describe('getCommunes', () => {
   test('ne peut pas récupérer des communes sans ids', async () => {
     const tested = await restCall(dbPool, '/rest/communes', {}, undefined, { ids: [] })
 
-    expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
+    expect(tested.statusCode).toBe(HTTP_STATUS.BAD_REQUEST)
   })
 
   test('peut récupérer des communes', async () => {
@@ -32,7 +32,7 @@ describe('getCommunes', () => {
 
     let tested = await restCall(dbPool, '/rest/communes', {}, undefined, { ids: ['72000', '37000'] })
 
-    expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
+    expect(tested.statusCode).toBe(HTTP_STATUS.OK)
     expect(tested.body).toStrictEqual([
       { id: toCommuneId('72000'), nom: 'Le Mans' },
       { id: toCommuneId('37000'), nom: 'Tours' },
@@ -40,7 +40,7 @@ describe('getCommunes', () => {
 
     tested = await restCall(dbPool, '/rest/communes', {}, undefined, { ids: ['72000'] })
 
-    expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
+    expect(tested.statusCode).toBe(HTTP_STATUS.OK)
     expect(tested.body).toStrictEqual([{ id: toCommuneId('72000'), nom: 'Le Mans' }])
   })
 })
