@@ -31,4 +31,5 @@ export type CaminoError<T extends string> = {
   message: T
   extra?: any
   zodErrorReadableMessage?: CaminoZodErrorReadableMessage
+  detail?: string
 }

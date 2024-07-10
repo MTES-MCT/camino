@@ -77,7 +77,6 @@ import { KM2 } from 'camino-common/src/number.js'
 import { FeatureMultiPolygon, FeatureCollectionPoints } from 'camino-common/src/perimetre.js'
 import { canHaveForages } from 'camino-common/src/permissions/titres.js'
 import { SecteursMaritimes, getSecteurMaritime } from 'camino-common/src/static/facades.js'
-import { GEO_SYSTEME_IDS } from 'camino-common/src/static/geoSystemes.js'
 import { callAndExit } from '../../tools/fp-tools.js'
 
 export const getEtapeEntrepriseDocuments =
@@ -383,7 +382,7 @@ const getForagesProperties = async (
   pool: Pool
 ): Promise<Pick<GraphqlEtape, 'geojson4326Forages' | 'geojsonOrigineForages'>> => {
   if (canHaveForages(titreTypeId) && isNotNullNorUndefined(geojsonOrigineForages) && isNotNullNorUndefined(geojsonOrigineGeoSystemeId)) {
-    return callAndExit(convertPoints(pool, geojsonOrigineGeoSystemeId, GEO_SYSTEME_IDS.WGS84, geojsonOrigineForages), async value => {
+    return callAndExit(convertPoints(pool, geojsonOrigineGeoSystemeId, geojsonOrigineForages), async value => {
       return { geojson4326Forages: value, geojsonOrigineForages }
     })
   }

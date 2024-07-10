@@ -2,7 +2,7 @@ import { DemarcheId, demarcheIdOrSlugValidator } from 'camino-common/src/demarch
 import { CaminoRequest, CustomResponse } from './express-type.js'
 import { Pool } from 'pg'
 import { pipe, Effect, Match } from 'effect'
-import { GEO_SYSTEME_IDS, GeoSystemeId, GeoSystemes } from 'camino-common/src/static/geoSystemes.js'
+import { GeoSystemeId, GeoSystemes } from 'camino-common/src/static/geoSystemes.js'
 import { HTTP_STATUS } from 'camino-common/src/http.js'
 import {
   ConvertPointsErrors,
@@ -331,13 +331,13 @@ export const geojsonImport = (
     ),
     Effect.bind('geojson4326MultiPolygon', ({ geojsonOriginFeatureMultiPolygon }) =>
       pipe(
-        getGeojsonByGeoSystemeIdQuery(pool, params.geoSystemeId, GEO_SYSTEME_IDS.WGS84, geojsonOriginFeatureMultiPolygon),
+        getGeojsonByGeoSystemeIdQuery(pool, params.geoSystemeId, geojsonOriginFeatureMultiPolygon),
         Effect.map(result => result.geometry)
       )
     ),
     Effect.bind('geojson4326FeatureCollectionPoints', ({ geojsonOriginFeatureCollectionPoints }) => {
       if (isNotNullNorUndefined(geojsonOriginFeatureCollectionPoints)) {
-        return convertPoints(pool, params.geoSystemeId, GEO_SYSTEME_IDS.WGS84, geojsonOriginFeatureCollectionPoints)
+        return convertPoints(pool, params.geoSystemeId, geojsonOriginFeatureCollectionPoints)
       }
 
       return Effect.succeed(null)
@@ -383,6 +383,7 @@ export const geojsonImport = (
           'Impossible de transformer la feature collection',
           'La liste des points est vide',
           'Le nombre de points est invalide',
+          'Problème de Système géographique (SRID)',
           () => ({ ...caminoError, status: HTTP_STATUS.HTTP_STATUS_BAD_REQUEST })
         ),
         Match.exhaustive
@@ -447,7 +448,9 @@ const fileNameToCsv = (pathFrom: string): Effect.Effect<unknown[], CaminoError<t
 
 const accesInterditError = 'Accès interdit' as const
 type GeosjsonImportPointsErrorMessages = ZodUnparseable | DbQueryAccessError | typeof accesInterditError | 'Fichier incorrect' | ConvertPointsErrors
-
+// const tuple4326CoordinateValidator = z.tuple([z.number().min(-180).max(180), z.number().min(-90).max(90)])
+// const polygon4326CoordinatesValidator = z.array(z.array(tuple4326CoordinateValidator).min(3)).min(1)
+// z.array(polygon4326CoordinatesValidator).min(1).parse(geojson4326MultiPolygon.coordinates)
 export const geojsonImportPoints = (
   pool: Pool,
   user: DeepReadonly<UserNotNull>,
@@ -474,7 +477,7 @@ export const geojsonImportPoints = (
         Effect.flatMap(zodParseEffectCallback(featureCollectionPointsValidator))
       )
     }),
-    Effect.bind('geojson4326points', ({ features }) => convertPoints(pool, params.geoSystemeId, GEO_SYSTEME_IDS.WGS84, features)),
+    Effect.bind('geojson4326points', ({ features }) => convertPoints(pool, params.geoSystemeId, features)),
     Effect.map(result => ({ geojson4326: result.geojson4326points, origin: result.features })),
     Effect.mapError(caminoError =>
       Match.value(caminoError.message).pipe(
@@ -486,6 +489,7 @@ export const geojsonImportPoints = (
           'La liste des points est vide',
           'Le nombre de points est invalide',
           'Problème de validation de données',
+          'Problème de Système géographique (SRID)',
           () => ({ ...caminoError, status: HTTP_STATUS.HTTP_STATUS_BAD_REQUEST })
         ),
         Match.exhaustive
@@ -555,7 +559,7 @@ export const geojsonImportForages = (
         Match.exhaustive
       )
     ),
-    Effect.bind('conversion', ({ features }) => convertPoints(pool, params.geoSystemeId, GEO_SYSTEME_IDS.WGS84, features)),
+    Effect.bind('conversion', ({ features }) => convertPoints(pool, params.geoSystemeId, features)),
     Effect.map(({ conversion, features }) => {
       return { geojson4326: conversion, origin: features }
     }),
@@ -570,6 +574,7 @@ export const geojsonImportForages = (
           'Impossible de transformer la feature collection',
           'La liste des points est vide',
           'Le nombre de points est invalide',
+          'Problème de Système géographique (SRID)',
           () => ({ ...caminoError, status: HTTP_STATUS.HTTP_STATUS_BAD_REQUEST })
         ),
         Match.exhaustive

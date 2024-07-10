@@ -3,7 +3,7 @@ import { sql } from '@pgtyped/runtime'
 import { Redefine, DbQueryAccessError, effectDbQueryAndValidate } from '../../pg-database.js'
 import { z } from 'zod'
 import { Pool } from 'pg'
-import { GeoSystemeId } from 'camino-common/src/static/geoSystemes.js'
+import { GEO_SYSTEME_IDS, GeoSystemeId } from 'camino-common/src/static/geoSystemes.js'
 import { FeatureMultiPolygon, GenericFeatureCollection, MultiPoint, MultiPolygon, featureMultiPolygonValidator, multiPointsValidator, multiPolygonValidator } from 'camino-common/src/perimetre.js'
 import { IConvertMultiPointDbQuery, IGetGeojsonByGeoSystemeIdDbQuery, IGetGeojsonInformationDbQuery, IGetTitresIntersectionWithGeojsonDbQuery } from './perimetre.queries.types.js'
 import { TitreStatutId, TitresStatutIds, titreStatutIdValidator } from 'camino-common/src/static/titresStatuts.js'
@@ -19,28 +19,35 @@ import { ZodUnparseable, zodParseEffect, zodParseEffectCallback } from '../../to
 import { CaminoError } from 'camino-common/src/zod-tools.js'
 import { Effect, pipe } from 'effect'
 
+const arrayTuple4326CoordinateValidator = z.array(z.tuple([z.number().min(-180).max(180), z.number().min(-90).max(90)]))
 const convertPointsStringifyError = 'Impossible de transformer la feature collection' as const
 const convertPointsConversionError = 'La liste des points est vide' as const
 const convertPointsInvalidNumberOfFeaturesError = 'Le nombre de points est invalide' as const
-export type ConvertPointsErrors = DbQueryAccessError | ZodUnparseable | typeof convertPointsStringifyError | typeof convertPointsConversionError | typeof convertPointsInvalidNumberOfFeaturesError
+const invalidSridError = 'Problème de Système géographique (SRID)' as const
+export type ConvertPointsErrors =
+  | DbQueryAccessError
+  | ZodUnparseable
+  | typeof convertPointsStringifyError
+  | typeof convertPointsConversionError
+  | typeof convertPointsInvalidNumberOfFeaturesError
+  | typeof invalidSridError
+const to4326GeoSystemeId: GeoSystemeId = GEO_SYSTEME_IDS.WGS84
+
 export const convertPoints = <T extends z.ZodTypeAny>(
   pool: Pool,
   fromGeoSystemeId: GeoSystemeId,
-  toGeoSystemeId: GeoSystemeId,
   geojsonPoints: GenericFeatureCollection<T>
 ): Effect.Effect<GenericFeatureCollection<T>, CaminoError<ConvertPointsErrors>> => {
-  if (fromGeoSystemeId === toGeoSystemeId) {
-    return Effect.succeed(geojsonPoints)
-  }
-
-  const multiPoint: MultiPoint = { type: 'MultiPoint', coordinates: geojsonPoints.features.map(feature => feature.geometry.coordinates) }
-
   return pipe(
     Effect.try({
-      try: () => JSON.stringify(multiPoint),
+      try: () => {
+        const multiPoint: MultiPoint = { type: 'MultiPoint', coordinates: geojsonPoints.features.map(feature => feature.geometry.coordinates) }
+
+        return JSON.stringify(multiPoint)
+      },
       catch: e => ({ message: convertPointsStringifyError, extra: e }),
     }),
-    Effect.flatMap(geojson => effectDbQueryAndValidate(convertMultiPointDb, { fromGeoSystemeId, toGeoSystemeId, geojson }, pool, z.object({ geojson: multiPointsValidator }))),
+    Effect.flatMap(geojson => effectDbQueryAndValidate(convertMultiPointDb, { fromGeoSystemeId, toGeoSystemeId: to4326GeoSystemeId, geojson }, pool, z.object({ geojson: multiPointsValidator }))),
     Effect.flatMap(result => {
       if (result.length === 0) {
         return Effect.fail({ message: convertPointsConversionError })
@@ -52,6 +59,14 @@ export const convertPoints = <T extends z.ZodTypeAny>(
       coordinates => coordinates.length === geojsonPoints.features.length,
       () => ({ message: convertPointsInvalidNumberOfFeaturesError })
     ),
+    Effect.flatMap((result: [number, number][]) => {
+      const check = zodParseEffect(arrayTuple4326CoordinateValidator, result)
+
+      return Effect.matchEffect(check, {
+        onSuccess: () => Effect.succeed(result),
+        onFailure: error => Effect.fail({ ...error, message: invalidSridError, detail: 'Vérifiez que le géosystème correspond bien à celui du fichier' }),
+      })
+    }),
     Effect.map(coordinates => {
       return {
         type: 'FeatureCollection',
@@ -72,11 +87,18 @@ const conversionSystemeError = 'Impossible de convertir le geojson vers le syst�
 const perimetreInvalideError = "Le périmètre n'est pas valide dans le référentiel donné" as const
 const conversionGeometrieError = 'Impossible de convertir la géométrie en JSON' as const
 const getGeojsonByGeoSystemeIdValidator = z.object({ geojson: multiPolygonValidator, is_valid: z.boolean().nullable() })
-export type GetGeojsonByGeoSystemeIdErrorMessages = ZodUnparseable | DbQueryAccessError | typeof conversionSystemeError | typeof perimetreInvalideError | typeof conversionGeometrieError
+const polygon4326CoordinatesValidator = z.array(z.array(arrayTuple4326CoordinateValidator.min(3)).min(1)).min(1)
+
+export type GetGeojsonByGeoSystemeIdErrorMessages =
+  | ZodUnparseable
+  | DbQueryAccessError
+  | typeof conversionSystemeError
+  | typeof perimetreInvalideError
+  | typeof conversionGeometrieError
+  | typeof invalidSridError
 export const getGeojsonByGeoSystemeId = (
   pool: Pool,
   fromGeoSystemeId: GeoSystemeId,
-  toGeoSystemeId: GeoSystemeId,
   geojson: FeatureMultiPolygon
 ): Effect.Effect<FeatureMultiPolygon, CaminoError<GetGeojsonByGeoSystemeIdErrorMessages>> => {
   return pipe(
@@ -84,17 +106,27 @@ export const getGeojsonByGeoSystemeId = (
       try: () => JSON.stringify(geojson.geometry),
       catch: () => ({ message: conversionGeometrieError }),
     }),
-    Effect.flatMap(geojson => effectDbQueryAndValidate(getGeojsonByGeoSystemeIdDb, { fromGeoSystemeId, toGeoSystemeId, geojson }, pool, getGeojsonByGeoSystemeIdValidator)),
+    Effect.flatMap(geojson => effectDbQueryAndValidate(getGeojsonByGeoSystemeIdDb, { fromGeoSystemeId, toGeoSystemeId: to4326GeoSystemeId, geojson }, pool, getGeojsonByGeoSystemeIdValidator)),
     Effect.filterOrFail(
       result => result.length === 1,
-      () => ({ message: conversionSystemeError, extra: toGeoSystemeId })
+      () => ({ message: conversionSystemeError, extra: to4326GeoSystemeId })
     ),
     Effect.filterOrFail(
       result => result[0].is_valid === true,
       () => ({ message: perimetreInvalideError, extra: { fromGeoSystemeId, geojson } })
     ),
+    Effect.flatMap(result => {
+      const coordinates: [number, number][][][] = result[0].geojson.coordinates
+
+      const check = zodParseEffect(polygon4326CoordinatesValidator, coordinates)
+
+      return Effect.matchEffect(check, {
+        onSuccess: () => Effect.succeed(result),
+        onFailure: error => Effect.fail({ ...error, message: invalidSridError, detail: 'Vérifiez que le géosystème correspond bien à celui du fichier' }),
+      })
+    }),
     Effect.map(result => {
-      if (fromGeoSystemeId === toGeoSystemeId) {
+      if (fromGeoSystemeId === to4326GeoSystemeId) {
         return geojson
       }
       const feature: FeatureMultiPolygon = {

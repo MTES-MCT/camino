@@ -26,3 +26,20 @@ export const ApiErrorWithCompleteMessage: StoryFn = () => (
     }}
   />
 )
+export const ApiErrorWithDetail: StoryFn = () => (
+  <CaminoApiAlert
+    caminoApiError={{
+      message: "Ceci est une alerte de l'api",
+      detail: "Ceci est le détail human readable de l'erreur",
+    }}
+  />
+)
+export const ApiErrorWithDetailAndCompleteMessage: StoryFn = () => (
+  <CaminoApiAlert
+    caminoApiError={{
+      message: "Ceci est une alerte de l'api",
+      detail: "Ceci est le détail human readable de l'erreur",
+      zodErrorReadableMessage: 'Validation error: Array must contain at least 3 element(s) at "features[0].geometry.coordinates[0][0]"' as CaminoZodErrorReadableMessage,
+    }}
+  />
+)

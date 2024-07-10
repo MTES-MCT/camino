@@ -568,7 +568,6 @@ C;Point éç;-52,55;4,24113309117193`
     expect(tested.body).toMatchSnapshot()
   })
 
-  // TODO 2024-06-27 ce test devrait retourner une erreur plus parlante
   test('fichier valide geojson 2154 erreur import en 4326', async () => {
     const featureMultipolygon: FeatureCollection = {
       type: 'FeatureCollection',
@@ -609,12 +608,13 @@ C;Point éç;-52,55;4,24113309117193`
     const tested = await restNewPostCall(dbPool, '/rest/geojson/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS.WGS84 }, userSuper, body)
 
     expect(tested.body).toMatchInlineSnapshot(`
-        {
-          "message": "Problème de validation de données",
-          "status": 400,
-          "zodErrorReadableMessage": "Validation error: Le périmètre ne doit pas excéder 100000000000M² at "[0].surface"",
-        }
-      `)
+      {
+        "detail": "Vérifiez que le géosystème correspond bien à celui du fichier",
+        "message": "Problème de Système géographique (SRID)",
+        "status": 400,
+        "zodErrorReadableMessage": "Validation error: Number must be less than or equal to 180 at "[0][0][0][0]"; Number must be less than or equal to 90 at "[0][0][0][1]"; Number must be less than or equal to 180 at "[0][0][1][0]"; Number must be less than or equal to 90 at "[0][0][1][1]"; Number must be less than or equal to 180 at "[0][0][2][0]"; Number must be less than or equal to 90 at "[0][0][2][1]"; Number must be less than or equal to 180 at "[0][0][3][0]"; Number must be less than or equal to 90 at "[0][0][3][1]"; Number must be less than or equal to 180 at "[0][0][4][0]"; Number must be less than or equal to 90 at "[0][0][4][1]"; Number must be less than or equal to 180 at "[0][0][5][0]"; Number must be less than or equal to 90 at "[0][0][5][1]"; Number must be less than or equal to 180 at "[0][0][6][0]"; Number must be less than or equal to 90 at "[0][0][6][1]"",
+      }
+    `)
   })
 
   test('geojson geometrie non valide', async () => {

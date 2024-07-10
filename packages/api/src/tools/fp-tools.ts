@@ -10,10 +10,12 @@ export const zodParseEffectCallback =
   (value: unknown): Effect.Effect<T['_output'], CaminoError<ZodUnparseable>> =>
     zodParseEffect(validator, value)
 
+export const zodErrorToReadableMessage = (myError: unknown) => fromError(myError).toString() as CaminoZodErrorReadableMessage
+
 export const zodParseEffect = <T extends ZodTypeAny>(validator: T, item: unknown): Effect.Effect<T['_output'], CaminoError<ZodUnparseable>> => {
   return Effect.try({
     try: () => validator.parse(item),
-    catch: myError => ({ message: 'Problème de validation de données', zodErrorReadableMessage: fromError(myError).toString() as CaminoZodErrorReadableMessage }),
+    catch: myError => ({ message: 'Problème de validation de données', zodErrorReadableMessage: zodErrorToReadableMessage(myError) }),
   })
 }
 
