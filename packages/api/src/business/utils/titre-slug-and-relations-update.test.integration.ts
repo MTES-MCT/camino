@@ -93,12 +93,16 @@ describe('vérifie la mis à jour des slugs sur les relations d’un titre', () 
     } as ITitre
 
     let titre = await titreAdd(objectClone(titrePojo))
+    const firstTitreId = titre.id
     const { slug: firstSlug } = await titreSlugAndRelationsUpdate(titre)
     titre = await titreAdd({ ...titrePojo, slug: titreSlugValidator.parse(`${firstSlug}-123123`) })
 
     const { hasChanged, slug: secondSlug } = await titreSlugAndRelationsUpdate(titre)
-    expect(hasChanged).toEqual(false)
+    expect(hasChanged).toEqual(true)
     expect(secondSlug).toEqual(`${firstSlug}-123123`)
+
+    const savedTitre = await titreGet(titre.id, { fields: { id: {} } }, userSuper)
+    expect(savedTitre?.doublonTitreId).toEqual(firstTitreId)
   })
 
   test('génère un slug pour une démarche', async () => {
