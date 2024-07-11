@@ -113,7 +113,7 @@ describe('vérifie l’arbre des procédures historiques', () => {
     ]
     const service = orderAndInterpretMachine(psMachine, etapes)
     expect(service).canOnlyTransitionTo({ machine: psMachine, date: toCaminoDate('2023-04-16') }, [])
-    expect(service.getSnapshot().context.demarcheStatut).toBe(DemarchesStatutsIds.Accepte)
+    expect(service.getSnapshot().context.demarcheStatut).toBe(DemarchesStatutsIds.AccepteEtPublie)
     expect(service.getSnapshot().context.visibilite).toBe('publique')
   })
 
@@ -212,7 +212,7 @@ describe('vérifie l’arbre des procédures historiques', () => {
     ]
     const service = orderAndInterpretMachine(psMachine, etapes)
     expect(service).canOnlyTransitionTo({ machine: psMachine, date: toCaminoDate('2023-04-19') }, [])
-    expect(service.getSnapshot().context.demarcheStatut).toBe(DemarchesStatutsIds.Accepte)
+    expect(service.getSnapshot().context.demarcheStatut).toBe(DemarchesStatutsIds.AccepteEtPublie)
     expect(service.getSnapshot().context.visibilite).toBe('publique')
   })
 

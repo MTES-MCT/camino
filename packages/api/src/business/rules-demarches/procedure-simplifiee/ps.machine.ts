@@ -204,8 +204,14 @@ const procedureSimplifieeMachine = createMachine({
     },
     publicationAuRecueilDesActesAdministratifsOupublicationAuJORFAFaire: {
       on: {
-        PUBLIER_DECISION_ACCEPTEE_AU_JORF: 'finDeMachine',
-        PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS: 'finDeMachine',
+        PUBLIER_DECISION_ACCEPTEE_AU_JORF: {
+          target: 'finDeMachine',
+          actions: assign({ demarcheStatut: DemarchesStatutsIds.AccepteEtPublie }),
+        },
+        PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS: {
+          target: 'finDeMachine',
+          actions: assign({ demarcheStatut: DemarchesStatutsIds.AccepteEtPublie }),
+        },
       },
     },
     finDeMachine: {
