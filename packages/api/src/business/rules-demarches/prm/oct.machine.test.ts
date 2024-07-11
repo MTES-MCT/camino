@@ -103,7 +103,7 @@ describe('vérifie l’arbre d’octroi de PRM', () => {
       ETES.avisDesServicesEtCommissionsConsultatives.FAIT,
       ETES.avisEtRapportDuDirecteurRegionalChargeDeLenvironnementDeLamenagementEtDuLogement.FAVORABLE,
     ]
-    expect(() => setDateAndOrderAndInterpretMachine(prmOctMachine, '2022-04-12', etapes)).toThrowErrorMatchingInlineSnapshot(
+    expect(() => setDateAndOrderAndInterpretMachine(prmOctMachine, '2022-04-13', etapes)).toThrowErrorMatchingInlineSnapshot(
       `[Error: Error: cannot execute step: '{"etapeTypeId":"apd","etapeStatutId":"fav","date":"2022-04-20"}' after '["mfr_fai","mdp_fai","spp_fai","mcr_fav","anf_fai","asc_fai"]'. The event {"type":"RENDRE_RAPPORT_DREAL","date":"2022-04-20"} should be one of 'CLASSER_SANS_SUITE,DEMANDER_INFORMATIONS,DEPOSER_DEMANDE_CONCURRENTE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,RECEVOIR_INFORMATIONS']`
     )
   })
@@ -118,7 +118,7 @@ describe('vérifie l’arbre d’octroi de PRM', () => {
       ETES.avisDesServicesEtCommissionsConsultatives.FAIT,
       ETES.avisDesServicesEtCommissionsConsultatives.FAIT,
     ]
-    expect(() => setDateAndOrderAndInterpretMachine(prmOctMachine, '2022-04-11', etapes)).toThrowErrorMatchingInlineSnapshot(
+    expect(() => setDateAndOrderAndInterpretMachine(prmOctMachine, '2022-04-12', etapes)).toThrowErrorMatchingInlineSnapshot(
       `[Error: Error: cannot execute step: '{"etapeTypeId":"asc","etapeStatutId":"fai","date":"2022-04-19"}' after '["mfr_fai","mdp_fai","spp_fai","mcr_fav","anf_fai","asc_fai"]'. The event {"type":"RENDRE_AVIS_SERVICES_ET_COMMISSIONS_CONSULTATIVES","date":"2022-04-19"} should be one of 'CLASSER_SANS_SUITE,DEMANDER_INFORMATIONS,DEPOSER_DEMANDE_CONCURRENTE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,RECEVOIR_INFORMATIONS']`
     )
   })
@@ -132,7 +132,7 @@ describe('vérifie l’arbre d’octroi de PRM', () => {
       ETES.avisDeMiseEnConcurrenceAuJORF.FAIT,
       ETES.ouvertureDeLaParticipationDuPublic.FAIT,
     ]
-    expect(() => setDateAndOrderAndInterpretMachine(prmOctMachine, '2022-04-12', etapes)).toThrowErrorMatchingInlineSnapshot(
+    expect(() => setDateAndOrderAndInterpretMachine(prmOctMachine, '2022-04-13', etapes)).toThrowErrorMatchingInlineSnapshot(
       `[Error: Error: cannot execute step: '{"etapeTypeId":"ppu","etapeStatutId":"fai","date":"2022-04-19"}' after '["mfr_fai","mdp_fai","spp_fai","mcr_fav","anf_fai"]'. The event {"type":"OUVRIR_PARTICIPATION_DU_PUBLIC","date":"2022-04-19"} should be one of 'CLASSER_SANS_SUITE,DEMANDER_INFORMATIONS,DEPOSER_DEMANDE_CONCURRENTE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,RECEVOIR_INFORMATIONS,RENDRE_AVIS_SERVICES_ET_COMMISSIONS_CONSULTATIVES']`
     )
   })
@@ -160,7 +160,7 @@ describe('vérifie l’arbre d’octroi de PRM', () => {
       ETES.publicationDeDecisionAuRecueilDesActesAdministratifs.FAIT,
     ]
 
-    expect(() => setDateAndOrderAndInterpretMachine(prmOctMachine, '2022-04-12', etapes)).toThrowErrorMatchingInlineSnapshot(
+    expect(() => setDateAndOrderAndInterpretMachine(prmOctMachine, '2022-04-13', etapes)).toThrowErrorMatchingInlineSnapshot(
       `[Error: Error: cannot execute step: '{"etapeTypeId":"rpu","etapeStatutId":"fai","date":"2022-06-01"}' after '["mfr_fai","mdp_fai","spp_fai","mcr_fav","anf_fai","asc_fai","ppu_fai","ppc_ter","apd_fav","app_fav","cac_fai","scg_fai","rcg_fav","acg_fav","sas_fai","dex_rej","npp_fai","mno_fai"]'. The event {"type":"PUBLIER_DECISIONS_RECUEIL_ACTES_ADMINISTRATIFS"} should be one of 'RENDRE_DECISION_ABROGATION,RENDRE_DECISION_ANNULATION_PAR_JUGE_ADMINISTRATIF']`
     )
   })

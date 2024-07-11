@@ -3,7 +3,6 @@ import { CaminoCommonContext, DBEtat, Etape, Intervenant, intervenants, tags } f
 import { DemarchesStatutsIds, DemarcheStatutId } from 'camino-common/src/static/demarchesStatuts.js'
 import { CaminoDate } from 'camino-common/src/date.js'
 import { OmitDistributive } from 'camino-common/src/typescript-tools.js'
-import { EtapeTypeEtapeStatutValidPair } from 'camino-common/src/static/etapesTypesEtapesStatuts.js'
 
 type CaminoState<CaminoContext extends CaminoCommonContext, CaminoEvent extends EventObject> = MachineSnapshot<CaminoContext, CaminoEvent, any, any, any, any, any>
 
@@ -27,12 +26,11 @@ export abstract class CaminoMachine<CaminoContext extends CaminoCommonContext, C
   protected caminoXStateEventToEtapes(event: CaminoEvent): (OmitDistributive<Etape, 'date'> & { mainStep: boolean })[] {
     const dbEtat: { db: DBEtat; mainStep: boolean } = this.trad[event.type as CaminoEvent['type']]
 
-    return Object.values(dbEtat.db)
-      .filter((value): value is EtapeTypeEtapeStatutValidPair => true)
-      .map(toto => ({
-        ...toto,
-        mainStep: dbEtat.mainStep,
-      }))
+    return Object.values(dbEtat.db).map(({ etapeTypeId, etapeStatutId }) => ({
+      etapeTypeId,
+      etapeStatutId,
+      mainStep: dbEtat.mainStep,
+    }))
   }
 
   // visibleForTesting

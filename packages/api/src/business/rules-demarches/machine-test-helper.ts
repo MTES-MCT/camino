@@ -84,7 +84,7 @@ export const setDateAndOrderAndInterpretMachine = <T extends EventObject, C exte
   etapes: readonly (EtapeTypeEtapeStatutValidPair & Omit<Etape, 'date' | 'etapeTypeId' | 'etapeStatutId'> & { addDays?: number })[]
 ) => {
   const firstDate = toCaminoDate(initDate)
-  let index = 1
+  let index = 0
   const fullEtapes = etapes.map(etape => {
     if ('addDays' in etape && isNotNullNorUndefined(etape.addDays)) {
       index += etape.addDays

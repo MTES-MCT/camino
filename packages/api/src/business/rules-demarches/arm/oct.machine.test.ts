@@ -85,7 +85,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
   })
   test('ne peut pas faire une sca avant la asc', () => {
     expect(() =>
-      setDateAndOrderAndInterpretMachine(armOctMachine, '2023-09-27', [
+      setDateAndOrderAndInterpretMachine(armOctMachine, '2023-09-26', [
         ETES.paiementDesFraisDeDossier.FAIT,
         ETES.demande.FAIT,
         ETES.depotDeLaDemande.FAIT,
@@ -122,7 +122,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
   test.each([ETES.demandeDeComplements_DecisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_.FAIT, ETES.demandeDeComplements_RecepisseDeDeclarationLoiSurLeau_.FAIT])(
     'ne peut pas créer une étape "%s" si il n’existe pas d’autres étapes',
     (etape: EtapeTypeEtapeStatutValidPair & Omit<Etape, 'date' | 'etapeTypeId' | 'etapeStatutId'>) => {
-      expect(() => setDateAndOrderAndInterpretMachine(armOctMachine, '2020-01-01', [etape])).toThrowErrorMatchingSnapshot()
+      expect(() => setDateAndOrderAndInterpretMachine(armOctMachine, '2019-12-31', [etape])).toThrowErrorMatchingSnapshot()
     }
   )
 
@@ -135,7 +135,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
 
   test('ne peut pas créer une étape "mcp" sans "mdp"', () => {
     expect(() =>
-      setDateAndOrderAndInterpretMachine(armOctMachine, '2022-04-15', [
+      setDateAndOrderAndInterpretMachine(armOctMachine, '2022-04-14', [
         { etapeTypeId: 'mfr', etapeStatutId: 'fai' },
         { etapeTypeId: 'mcp', etapeStatutId: 'com' },
       ])
@@ -144,7 +144,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
 
   test('ne peut pas créer 2 "mfr"', () => {
     expect(() =>
-      setDateAndOrderAndInterpretMachine(armOctMachine, '2020-01-01', [
+      setDateAndOrderAndInterpretMachine(armOctMachine, '2019-12-31', [
         { etapeTypeId: 'mfr', etapeStatutId: 'fai' },
         { etapeTypeId: 'mdp', etapeStatutId: 'fai' },
         { etapeTypeId: 'mfr', etapeStatutId: 'fai' },
@@ -154,7 +154,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
 
   test('ne peut pas déplacer une étape "mdp" sans "mfr"', () => {
     expect(() =>
-      setDateAndOrderAndInterpretMachine(armOctMachine, '2020-02-02', [
+      setDateAndOrderAndInterpretMachine(armOctMachine, '2020-02-01', [
         { etapeTypeId: 'mdp', etapeStatutId: 'fai' },
         { etapeTypeId: 'mfr', etapeStatutId: 'fai' },
       ])
@@ -199,7 +199,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
 
   test('ne peut pas créer deux "des"', () => {
     expect(() =>
-      setDateAndOrderAndInterpretMachine(armOctMachine, '2020-01-01', [
+      setDateAndOrderAndInterpretMachine(armOctMachine, '2019-12-31', [
         {
           etapeTypeId: 'mfr',
           etapeStatutId: 'fai',
