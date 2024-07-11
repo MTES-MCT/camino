@@ -1,13 +1,13 @@
 import { CaminoDate } from 'camino-common/src/date'
 import { TitreGetDemarche } from 'camino-common/src/titres'
 
-import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts'
 import { isEtapeStatusOk } from 'camino-common/src/static/etapesStatuts'
 import { isEtapeDecision } from 'camino-common/src/static/etapesTypes'
 import { isNotNullNorUndefined, isNullOrUndefined, isNullOrUndefinedOrEmpty, OmitDistributive } from 'camino-common/src/typescript-tools'
 import { DemarcheSlug } from 'camino-common/src/demarche'
 import { isTravaux } from 'camino-common/src/static/demarchesTypes'
 import { ETAPE_IS_BROUILLON } from 'camino-common/src/etape'
+import { demarcheStatutIdsSuccess } from 'camino-common/src/static/demarchesStatuts'
 
 type TitreTimelineEvents = TitreGetDemarche & { first_etape_date: CaminoDate | null }
 type PhaseWithDateDebut = OmitDistributive<TitreGetDemarche, 'demarche_date_debut'> & { demarche_date_debut: CaminoDate; events: TitreTimelineEvents[] }
@@ -36,7 +36,7 @@ export const phaseWithAlterations = (demarches: TitreGetDemarche[], currentDate:
   const phasesWithAlterations: [PhaseWithDateDebut, ...DemarcheAlteration[]][] = simplePhases.map(phase => {
     const demarchesAlterationsForThisPhase = demarches
       .map(demarche => {
-        if (!isPhase(demarche) && [DemarchesStatutsIds.Accepte, DemarchesStatutsIds.Termine].includes(demarche.demarche_statut_id)) {
+        if (!isPhase(demarche) && demarcheStatutIdsSuccess.has(demarche.demarche_statut_id)) {
           let demarcheDate = demarche.demarche_date_debut
           if (isNullOrUndefined(demarcheDate)) {
             demarcheDate =
@@ -58,7 +58,7 @@ export const phaseWithAlterations = (demarches: TitreGetDemarche[], currentDate:
   })
 
   demarches.forEach(demarche => {
-    if (isNotNullNorUndefined(demarche.etapes) && (isTravaux(demarche.demarche_type_id) || ![DemarchesStatutsIds.Accepte, DemarchesStatutsIds.Termine].includes(demarche.demarche_statut_id))) {
+    if (isNotNullNorUndefined(demarche.etapes) && (isTravaux(demarche.demarche_type_id) || !demarcheStatutIdsSuccess.has(demarche.demarche_statut_id))) {
       const first_etape_date = demarche.etapes.length > 0 ? demarche.etapes[0].date : null
       if (!isPhase(demarche)) {
         if (first_etape_date === null) {

@@ -2,7 +2,7 @@ import { Definition } from '../definition.js'
 import { Couleur } from './couleurs.js'
 import { z } from 'zod'
 
-const IDS = ['acc', 'cls', 'dep', 'des', 'eco', 'fpm', 'ind', 'ini', 'ins', 'rej', 'ter'] as const
+const IDS = ['acc', 'cls', 'dep', 'des', 'eco', 'fpm', 'ind', 'ini', 'ins', 'rej', 'ter', 'acp', 'rea'] as const
 export const DemarchesStatutsIds = {
   Accepte: 'acc',
   ClasseSansSuite: 'cls',
@@ -15,6 +15,8 @@ export const DemarchesStatutsIds = {
   EnInstruction: 'ins',
   Rejete: 'rej',
   Termine: 'ter',
+  AccepteEtPublie: 'acp',
+  RejeteApresAbrogation: 'rea',
 } as const satisfies Record<string, (typeof IDS)[number]>
 
 export const demarcheStatutIdValidator = z.enum(IDS)
@@ -31,6 +33,12 @@ export const DemarchesStatuts: {
     id: 'acc',
     nom: 'accepté',
     description: "La demande a fait l’objet d’une décision favorable de l'administration.\n",
+    couleur: 'success',
+  },
+  acp: {
+    id: 'acp',
+    nom: 'accepté et publié',
+    description: "La demande a fait l’objet d’une décision favorable de l'administration et a été publiée.\n",
     couleur: 'success',
   },
   cls: {
@@ -89,6 +97,12 @@ export const DemarchesStatuts: {
       "La demande a fait l’objet d’une décision défavorable de l'administration. Les textes d’applications du code minier prévoient que les décisions de rejet ne font pas l’objet d’une publication. En conséquence, les démarches qui passent au statut “rejeté” dans Camino sont dé-publiées et rendues inaccessibles aux tiers.\n",
     couleur: 'error',
   },
+  rea: {
+    id: 'rea',
+    nom: 'rejeté après abrogation',
+    description: 'La demande a été publiée puis abrogée.',
+    couleur: 'error',
+  },
   ter: {
     id: 'ter',
     nom: 'terminé',
@@ -103,5 +117,17 @@ export const sortedDemarchesStatuts = Object.values(DemarchesStatuts).sort((a, b
 export const isDemarcheStatutNonStatue = (demarcheStatutId: DemarcheStatutId | null | undefined): boolean =>
   [DemarchesStatutsIds.EnConstruction, DemarchesStatutsIds.Depose, DemarchesStatutsIds.EnInstruction].includes(demarcheStatutId)
 
-export const isDemarcheStatutNonValide = (demarcheStatutId: DemarcheStatutId | null | undefined): boolean =>
-  [DemarchesStatutsIds.Rejete, DemarchesStatutsIds.Desiste, DemarchesStatutsIds.ClasseSansSuite].includes(demarcheStatutId)
+export const isDemarcheStatutNonValide = (demarcheStatutId: DemarcheStatutId | null | undefined): boolean => demarcheStatutIdsNonValide.has(demarcheStatutId)
+
+export const demarcheStatutIdsSuccess: ReadonlySet<Extract<DemarcheStatutId, 'acc' | 'ter' | 'acp'>> = new Set([
+  DemarchesStatutsIds.Accepte,
+  DemarchesStatutsIds.Termine,
+  DemarchesStatutsIds.AccepteEtPublie,
+])
+
+export const demarcheStatutIdsNonValide: ReadonlySet<Extract<DemarcheStatutId, 'rej' | 'des' | 'rea' | 'cls'>> = new Set([
+  DemarchesStatutsIds.Rejete,
+  DemarchesStatutsIds.Desiste,
+  DemarchesStatutsIds.ClasseSansSuite,
+  DemarchesStatutsIds.RejeteApresAbrogation,
+])
