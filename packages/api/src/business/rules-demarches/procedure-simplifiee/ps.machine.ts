@@ -26,6 +26,7 @@ type ProcedureSimplifieeXStateEvent =
   | { type: 'DESISTER_PAR_LE_DEMANDEUR' }
   | { type: 'DEMANDER_INFORMATION' }
   | { type: 'RECEVOIR_INFORMATION' }
+  | { type: 'FAIRE_ABROGATION' }
 
 type Event = ProcedureSimplifieeXStateEvent['type']
 
@@ -42,6 +43,7 @@ const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
   DESISTER_PAR_LE_DEMANDEUR: { db: ETES.desistementDuDemandeur, mainStep: false },
   DEMANDER_INFORMATION: { db: ETES.demandeDinformations, mainStep: false },
   RECEVOIR_INFORMATION: { db: ETES.receptionDinformation, mainStep: false },
+  FAIRE_ABROGATION: { db: ETES.abrogationDeLaDecision, mainStep: true },
 }
 
 // Related to https://github.com/Microsoft/TypeScript/issues/12870
@@ -204,14 +206,35 @@ const procedureSimplifieeMachine = createMachine({
     },
     publicationAuRecueilDesActesAdministratifsOupublicationAuJORFAFaire: {
       on: {
-        PUBLIER_DECISION_ACCEPTEE_AU_JORF: {
-          target: 'finDeMachine',
-          actions: assign({ demarcheStatut: DemarchesStatutsIds.AccepteEtPublie }),
-        },
-        PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS: {
-          target: 'finDeMachine',
-          actions: assign({ demarcheStatut: DemarchesStatutsIds.AccepteEtPublie }),
-        },
+        PUBLIER_DECISION_ACCEPTEE_AU_JORF: [
+          {
+            guard: ({ context }) => context.demarcheStatut === DemarchesStatutsIds.Accepte,
+            target: 'abrogationAFaire',
+            actions: assign({ demarcheStatut: DemarchesStatutsIds.AccepteEtPublie }),
+          },
+          {
+            guard: ({ context }) => context.demarcheStatut === DemarchesStatutsIds.AccepteEtPublie,
+            target: 'finDeMachine',
+            actions: assign({ demarcheStatut: DemarchesStatutsIds.RejeteApresAbrogation }),
+          },
+        ],
+        PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS: [
+          {
+            guard: ({ context }) => context.demarcheStatut === DemarchesStatutsIds.Accepte,
+            target: 'abrogationAFaire',
+            actions: assign({ demarcheStatut: DemarchesStatutsIds.AccepteEtPublie }),
+          },
+          {
+            guard: ({ context }) => context.demarcheStatut === DemarchesStatutsIds.AccepteEtPublie,
+            target: 'finDeMachine',
+            actions: assign({ demarcheStatut: DemarchesStatutsIds.RejeteApresAbrogation }),
+          },
+        ],
+      },
+    },
+    abrogationAFaire: {
+      on: {
+        FAIRE_ABROGATION: 'publicationAuRecueilDesActesAdministratifsOupublicationAuJORFAFaire',
       },
     },
     finDeMachine: {

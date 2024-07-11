@@ -112,7 +112,7 @@ describe('vérifie l’arbre des procédures historiques', () => {
       { ...ETES.publicationDeDecisionAuRecueilDesActesAdministratifs.FAIT, date: toCaminoDate('2022-04-16') },
     ]
     const service = orderAndInterpretMachine(psMachine, etapes)
-    expect(service).canOnlyTransitionTo({ machine: psMachine, date: toCaminoDate('2023-04-16') }, [])
+    expect(service).canOnlyTransitionTo({ machine: psMachine, date: toCaminoDate('2023-04-16') }, ['FAIRE_ABROGATION'])
     expect(service.getSnapshot().context.demarcheStatut).toBe(DemarchesStatutsIds.AccepteEtPublie)
     expect(service.getSnapshot().context.visibilite).toBe('publique')
   })
@@ -201,7 +201,7 @@ describe('vérifie l’arbre des procédures historiques', () => {
     ])
   })
 
-  test('peut faire la démarche valide la plus complète possible', () => {
+  test('peut faire la démarche la plus complète possible', () => {
     const etapes = [
       { ...ETES.demande.FAIT, date: toCaminoDate('2022-04-14') },
       { ...ETES.depotDeLaDemande.FAIT, date: toCaminoDate('2022-04-15') },
@@ -209,10 +209,25 @@ describe('vérifie l’arbre des procédures historiques', () => {
       { ...ETES.clotureDeLaParticipationDuPublic.TERMINE, date: toCaminoDate('2022-04-17') },
       { ...ETES.decisionDeLadministration.ACCEPTE, date: toCaminoDate('2022-04-18') },
       { ...ETES.publicationDeDecisionAuJORF.FAIT, date: toCaminoDate('2022-04-19') },
+      { ...ETES.abrogationDeLaDecision.FAIT, date: toCaminoDate('2022-04-20') },
+      { ...ETES.publicationDeDecisionAuRecueilDesActesAdministratifs.FAIT, date: toCaminoDate('2022-04-21') },
     ]
     const service = orderAndInterpretMachine(psMachine, etapes)
-    expect(service).canOnlyTransitionTo({ machine: psMachine, date: toCaminoDate('2023-04-19') }, [])
-    expect(service.getSnapshot().context.demarcheStatut).toBe(DemarchesStatutsIds.AccepteEtPublie)
+    expect(service).canOnlyTransitionTo({ machine: psMachine, date: toCaminoDate('2023-04-22') }, [])
+    expect(service.getSnapshot().context.demarcheStatut).toBe(DemarchesStatutsIds.RejeteApresAbrogation)
+    expect(service.getSnapshot().context.visibilite).toBe('publique')
+  })
+
+  test('peut abroger et publier', () => {
+    const etapes = [
+      { ...ETES.decisionDeLadministration.ACCEPTE, date: toCaminoDate('2022-04-18') },
+      { ...ETES.publicationDeDecisionAuJORF.FAIT, date: toCaminoDate('2022-04-19') },
+      { ...ETES.abrogationDeLaDecision.FAIT, date: toCaminoDate('2022-04-20') },
+      { ...ETES.publicationDeDecisionAuJORF.FAIT, date: toCaminoDate('2022-04-21') },
+    ]
+    const service = orderAndInterpretMachine(psMachine, etapes)
+    expect(service).canOnlyTransitionTo({ machine: psMachine, date: toCaminoDate('2023-04-22') }, [])
+    expect(service.getSnapshot().context.demarcheStatut).toBe(DemarchesStatutsIds.RejeteApresAbrogation)
     expect(service.getSnapshot().context.visibilite).toBe('publique')
   })
 
