@@ -1,24 +1,17 @@
 import { ArmOctMachine } from './oct.machine.js'
-import { interpretMachine, orderAndInterpretMachine as commonOrderAndInterpretMachine } from '../machine-test-helper.js'
-import { IContenu } from '../../../types.js'
-import { EtapeStatutId, ETAPES_STATUTS } from 'camino-common/src/static/etapesStatuts.js'
-import { ETAPES_TYPES, EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
-import { EtapesTypesEtapesStatuts as ETES } from 'camino-common/src/static/etapesTypesEtapesStatuts.js'
+import { interpretMachine, setDateAndOrderAndInterpretMachine, orderAndInterpretMachine } from '../machine-test-helper.js'
+import { EtapeTypeEtapeStatutValidPair, EtapesTypesEtapesStatuts as ETES } from 'camino-common/src/static/etapesTypesEtapesStatuts.js'
 import { Etape } from '../machine-common.js'
 import { toCaminoDate } from 'camino-common/src/date.js'
 import { describe, expect, test } from 'vitest'
-import { PAYS_IDS } from 'camino-common/src/static/pays.js'
 const etapesProd = require('./2019-10-31-oct.cas.json')
-const orderAndInterpretMachine = (etapes: readonly Etape[]) => {
-  return commonOrderAndInterpretMachine(new ArmOctMachine(), etapes)
-}
 
 describe('vérifie l’arbre d’octroi d’ARM', () => {
   const armOctMachine = new ArmOctMachine()
   test('ne peut pas désister', () => {
-    const service = orderAndInterpretMachine([])
+    const { service, dateFin } = setDateAndOrderAndInterpretMachine(armOctMachine, '2020-01-01', [])
 
-    expect(service).canOnlyTransitionTo({ machine: armOctMachine, date: toCaminoDate('2020-01-01') }, [
+    expect(service).canOnlyTransitionTo({ machine: armOctMachine, date: dateFin }, [
       'ACCEPTER_RDE',
       'DEMANDER_MODIFICATION_DE_LA_DEMANDE',
       'EXEMPTER_DAE',
@@ -29,23 +22,10 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
   })
 
   test('quelles sont mes prochaines étapes sur un titre mécanisé', () => {
-    const service = orderAndInterpretMachine([
-      {
-        etapeTypeId: 'pfd',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2020-02-03'),
-      },
-      {
-        etapeTypeId: 'mdp',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2020-02-02'),
-      },
-      {
-        etapeTypeId: 'mfr',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2020-01-01'),
-        contenu: { arm: { mecanise: true } },
-      },
+    const { service } = setDateAndOrderAndInterpretMachine(armOctMachine, '2020-01-01', [
+      { etapeTypeId: 'mfr', etapeStatutId: 'fai', contenu: { arm: { mecanise: true } } },
+      { etapeTypeId: 'mdp', etapeStatutId: 'fai' },
+      { etapeTypeId: 'pfd', etapeStatutId: 'fai' },
     ])
 
     expect(service).canOnlyTransitionTo({ machine: armOctMachine, date: toCaminoDate('2020-02-03') }, [
@@ -62,26 +42,13 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
   })
 
   test('quelles sont mes prochaines étapes sur un titre mécanisé avec franchissements', () => {
-    const service = orderAndInterpretMachine([
-      {
-        etapeTypeId: 'pfd',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2020-02-03'),
-      },
-      {
-        etapeTypeId: 'mdp',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2020-02-02'),
-      },
-      {
-        etapeTypeId: 'mfr',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2020-01-01'),
-        contenu: { arm: { mecanise: true, franchissements: 1 } },
-      },
+    const { service, dateFin } = setDateAndOrderAndInterpretMachine(armOctMachine, '2020-02-03', [
+      { etapeTypeId: 'mfr', etapeStatutId: 'fai', contenu: { arm: { mecanise: true, franchissements: 1 } } },
+      { etapeTypeId: 'mdp', etapeStatutId: 'fai' },
+      { etapeTypeId: 'pfd', etapeStatutId: 'fai' },
     ])
 
-    expect(service).canOnlyTransitionTo({ machine: armOctMachine, date: toCaminoDate('2020-02-03') }, [
+    expect(service).canOnlyTransitionTo({ machine: armOctMachine, date: dateFin }, [
       'ACCEPTER_RDE',
       'CLASSER_SANS_SUITE',
       'DEMANDER_COMPLEMENTS_DAE',
@@ -94,314 +61,167 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
     ])
   })
 
-  // TODO 2022-04-01: ce projet peut être intéressant pour les tests: https://xstate.js.org/docs/packages/xstate-graph/#quick-start
-  // notamment car il permet de trouver tous les chemins possibles vers les états finaux
   test('quelles sont mes prochaines étapes non mécanisé', () => {
-    const service = orderAndInterpretMachine([
-      {
-        etapeTypeId: 'pfd',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2020-02-03'),
-      },
-      {
-        etapeTypeId: 'mdp',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2020-02-02'),
-      },
-      {
-        etapeTypeId: 'mfr',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2020-01-01'),
-        contenu: { arm: { mecanise: false } },
-      },
+    const { service, dateFin } = setDateAndOrderAndInterpretMachine(armOctMachine, '2020-02-03', [
+      { etapeTypeId: 'mfr', etapeStatutId: 'fai', contenu: { arm: { mecanise: false } } },
+      { etapeTypeId: 'mdp', etapeStatutId: 'fai' },
+      { etapeTypeId: 'pfd', etapeStatutId: 'fai' },
     ])
 
-    expect(service).canOnlyTransitionTo({ machine: armOctMachine, date: toCaminoDate('2020-02-03') }, [
-      'ACCEPTER_COMPLETUDE',
-      'CLASSER_SANS_SUITE',
-      'DESISTER_PAR_LE_DEMANDEUR',
-      'REFUSER_COMPLETUDE',
-      'MODIFIER_DEMANDE',
-    ])
+    expect(service).canOnlyTransitionTo({ machine: armOctMachine, date: dateFin }, ['ACCEPTER_COMPLETUDE', 'CLASSER_SANS_SUITE', 'DESISTER_PAR_LE_DEMANDEUR', 'REFUSER_COMPLETUDE', 'MODIFIER_DEMANDE'])
   })
   test('peut faire une edm après une asc', () => {
     const etapes = [
-      { ...ETES.paiementDesFraisDeDossier.FAIT, date: toCaminoDate('2023-09-01') },
-      { ...ETES.demande.FAIT, date: toCaminoDate('2023-09-09'), paysId: PAYS_IDS['Département de la Guyane'], surface: 3.14 },
-      { ...ETES.depotDeLaDemande.FAIT, date: toCaminoDate('2023-09-09') },
-      { ...ETES.completudeDeLaDemande.COMPLETE, date: toCaminoDate('2023-09-20') },
-      { ...ETES.validationDuPaiementDesFraisDeDossier.FAIT, date: toCaminoDate('2023-09-26') },
-      { ...ETES.recevabiliteDeLaDemande.FAVORABLE, date: toCaminoDate('2023-09-27') },
-      { ...ETES.avisDesServicesEtCommissionsConsultatives.FAIT, date: toCaminoDate('2023-09-27') },
-      { ...ETES.expertiseDGTMServicePreventionDesRisquesEtIndustriesExtractives_DATE_.FAVORABLE, date: toCaminoDate('2024-03-27') },
+      ETES.paiementDesFraisDeDossier.FAIT,
+      ETES.demande.FAIT,
+      ETES.depotDeLaDemande.FAIT,
+      ETES.completudeDeLaDemande.COMPLETE,
+      ETES.validationDuPaiementDesFraisDeDossier.FAIT,
+      ETES.recevabiliteDeLaDemande.FAVORABLE,
+      ETES.avisDesServicesEtCommissionsConsultatives.FAIT,
+      ETES.expertiseDGTMServicePreventionDesRisquesEtIndustriesExtractives_DATE_.FAVORABLE,
     ]
-    expect(() => orderAndInterpretMachine(etapes)).not.toThrowError()
+    expect(() => setDateAndOrderAndInterpretMachine(armOctMachine, '2023-09-01', etapes)).not.toThrowError()
   })
   test('ne peut pas faire une sca avant la asc', () => {
-    const etapes = [
-      { ...ETES.paiementDesFraisDeDossier.FAIT, date: toCaminoDate('2023-09-01') },
-      { ...ETES.demande.FAIT, date: toCaminoDate('2023-09-09'), paysId: PAYS_IDS['Département de la Guyane'], surface: 3.14 },
-      { ...ETES.depotDeLaDemande.FAIT, date: toCaminoDate('2023-09-09') },
-      { ...ETES.completudeDeLaDemande.COMPLETE, date: toCaminoDate('2023-09-20') },
-      { ...ETES.validationDuPaiementDesFraisDeDossier.FAIT, date: toCaminoDate('2023-09-26') },
-      { ...ETES.recevabiliteDeLaDemande.FAVORABLE, date: toCaminoDate('2023-09-27') },
-      { ...ETES.saisineDeLaCommissionDesAutorisationsDeRecherchesMinieres_CARM_.FAIT, date: toCaminoDate('2023-09-27') },
-    ]
-    expect(() => orderAndInterpretMachine(etapes)).toThrowErrorMatchingInlineSnapshot(
-      `[Error: Error: cannot execute step: '{"etapeTypeId":"sca","etapeStatutId":"fai","date":"2023-09-27"}' after '["pfd_fai","mfr_fai","mdp_fai","mcp_com","vfd_fai","mcr_fav"]'. The event {"type":"FAIRE_SAISINE_CARM"} should be one of 'CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE_SERVICE_EAU,RECEVOIR_EXPERTISE_SERVICE_MINES,RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES']`
+    expect(() =>
+      setDateAndOrderAndInterpretMachine(armOctMachine, '2023-09-27', [
+        ETES.paiementDesFraisDeDossier.FAIT,
+        ETES.demande.FAIT,
+        ETES.depotDeLaDemande.FAIT,
+        ETES.completudeDeLaDemande.COMPLETE,
+        ETES.validationDuPaiementDesFraisDeDossier.FAIT,
+        ETES.recevabiliteDeLaDemande.FAVORABLE,
+        ETES.saisineDeLaCommissionDesAutorisationsDeRecherchesMinieres_CARM_.FAIT,
+      ])
+    ).toThrowErrorMatchingInlineSnapshot(
+      `[Error: Error: cannot execute step: '{"etapeTypeId":"sca","etapeStatutId":"fai","date":"2023-10-03"}' after '["pfd_fai","mfr_fai","mdp_fai","mcp_com","vfd_fai","mcr_fav"]'. The event {"type":"FAIRE_SAISINE_CARM"} should be one of 'CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE_SERVICE_EAU,RECEVOIR_EXPERTISE_SERVICE_MINES,RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES']`
     )
   })
   test('la demande ne peut pas être effectuée après une modification de la demande', () => {
-    const service = orderAndInterpretMachine([
-      {
-        etapeTypeId: 'mod',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2020-02-04'),
-      },
-      {
-        etapeTypeId: 'mdp',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2020-02-02'),
-      },
-      {
-        etapeTypeId: 'mfr',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2020-01-01'),
-        contenu: { arm: { mecanise: false } },
-      },
+    const { service, dateFin } = setDateAndOrderAndInterpretMachine(armOctMachine, '2020-01-01', [
+      { etapeTypeId: 'mfr', etapeStatutId: 'fai', contenu: { arm: { mecanise: false } } },
+      { etapeTypeId: 'mdp', etapeStatutId: 'fai' },
+      { etapeTypeId: 'mod', etapeStatutId: 'fai' },
     ])
 
-    expect(service).canOnlyTransitionTo({ machine: armOctMachine, date: toCaminoDate('2020-02-03') }, ['CLASSER_SANS_SUITE', 'DESISTER_PAR_LE_DEMANDEUR', 'MODIFIER_DEMANDE', 'PAYER_FRAIS_DE_DOSSIER'])
+    expect(service).canOnlyTransitionTo({ machine: armOctMachine, date: dateFin }, ['CLASSER_SANS_SUITE', 'DESISTER_PAR_LE_DEMANDEUR', 'MODIFIER_DEMANDE', 'PAYER_FRAIS_DE_DOSSIER'])
   })
 
   test('on peut faire une demande de compléments après une complétude incomplète', () => {
-    const service = orderAndInterpretMachine([
-      {
-        etapeTypeId: 'mcp',
-        etapeStatutId: 'inc',
-        date: toCaminoDate('2020-02-04'),
-      },
-      {
-        etapeTypeId: 'pfd',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2020-02-03'),
-      },
-      {
-        etapeTypeId: 'mdp',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2020-02-02'),
-      },
-      {
-        etapeTypeId: 'mfr',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2020-01-01'),
-        contenu: { arm: { mecanise: false } },
-      },
+    const { service, dateFin } = setDateAndOrderAndInterpretMachine(armOctMachine, '2020-01-01', [
+      { etapeTypeId: 'mfr', etapeStatutId: 'fai', contenu: { arm: { mecanise: false } } },
+      { etapeTypeId: 'mdp', etapeStatutId: 'fai' },
+      { etapeTypeId: 'pfd', etapeStatutId: 'fai' },
+      { etapeTypeId: 'mcp', etapeStatutId: 'inc' },
     ])
 
-    expect(service).canOnlyTransitionTo({ machine: armOctMachine, date: toCaminoDate('2020-02-04') }, [
-      'CLASSER_SANS_SUITE',
-      'DEMANDER_COMPLEMENTS_COMPLETUDE',
-      'DESISTER_PAR_LE_DEMANDEUR',
-      'MODIFIER_DEMANDE',
-    ])
+    expect(service).canOnlyTransitionTo({ machine: armOctMachine, date: dateFin }, ['CLASSER_SANS_SUITE', 'DEMANDER_COMPLEMENTS_COMPLETUDE', 'DESISTER_PAR_LE_DEMANDEUR', 'MODIFIER_DEMANDE'])
   })
 
-  test.each([
-    {
-      etapeTypeId: ETAPES_TYPES.demandeDeComplements_DecisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_,
-      etapeStatutId: ETAPES_STATUTS.FAIT,
-      date: toCaminoDate('2020-01-01'),
-    },
-    {
-      etapeTypeId: ETAPES_TYPES.demandeDeComplements_RecepisseDeDeclarationLoiSurLeau_,
-      etapeStatutId: ETAPES_STATUTS.FAIT,
-      date: toCaminoDate('2020-01-01'),
-    },
-  ])('ne peut pas créer une étape "%s" si il n’existe pas d’autres étapes', (etape: Etape) => {
-    expect(() => orderAndInterpretMachine([etape])).toThrowErrorMatchingSnapshot()
-  })
+  test.each([ETES.demandeDeComplements_DecisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_.FAIT, ETES.demandeDeComplements_RecepisseDeDeclarationLoiSurLeau_.FAIT])(
+    'ne peut pas créer une étape "%s" si il n’existe pas d’autres étapes',
+    (etape: EtapeTypeEtapeStatutValidPair & Omit<Etape, 'date' | 'etapeTypeId' | 'etapeStatutId'>) => {
+      expect(() => setDateAndOrderAndInterpretMachine(armOctMachine, '2020-01-01', [etape])).toThrowErrorMatchingSnapshot()
+    }
+  )
 
   test('peut créer une étape "mdp" juste après une "mfr"', () => {
-    orderAndInterpretMachine([
-      {
-        etapeTypeId: 'mfr',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2022-04-14'),
-      },
-      {
-        etapeTypeId: 'mdp',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2022-04-15'),
-      },
+    setDateAndOrderAndInterpretMachine(armOctMachine, '2022-04-16', [
+      { etapeTypeId: 'mfr', etapeStatutId: 'fai' },
+      { etapeTypeId: 'mdp', etapeStatutId: 'fai' },
     ])
   })
 
   test('ne peut pas créer une étape "mcp" sans "mdp"', () => {
     expect(() =>
-      orderAndInterpretMachine([
-        {
-          etapeTypeId: 'mfr',
-          etapeStatutId: 'fai',
-          date: toCaminoDate('2022-04-14'),
-        },
-        {
-          etapeTypeId: 'mcp',
-          etapeStatutId: 'com',
-          date: toCaminoDate('2022-04-16'),
-        },
+      setDateAndOrderAndInterpretMachine(armOctMachine, '2022-04-15', [
+        { etapeTypeId: 'mfr', etapeStatutId: 'fai' },
+        { etapeTypeId: 'mcp', etapeStatutId: 'com' },
       ])
     ).toThrowErrorMatchingSnapshot()
   })
 
   test('ne peut pas créer 2 "mfr"', () => {
     expect(() =>
-      orderAndInterpretMachine([
-        {
-          etapeTypeId: 'mfr',
-          etapeStatutId: 'fai',
-          date: toCaminoDate('2020-01-01'),
-        },
-        {
-          etapeTypeId: 'mdp',
-          etapeStatutId: 'fai',
-          date: toCaminoDate('2020-01-02'),
-        },
-        {
-          etapeTypeId: 'mfr',
-          etapeStatutId: 'fai',
-          date: toCaminoDate('2020-01-03'),
-        },
+      setDateAndOrderAndInterpretMachine(armOctMachine, '2020-01-01', [
+        { etapeTypeId: 'mfr', etapeStatutId: 'fai' },
+        { etapeTypeId: 'mdp', etapeStatutId: 'fai' },
+        { etapeTypeId: 'mfr', etapeStatutId: 'fai' },
       ])
     ).toThrowErrorMatchingSnapshot()
   })
 
   test('ne peut pas déplacer une étape "mdp" sans "mfr"', () => {
     expect(() =>
-      orderAndInterpretMachine([
-        {
-          etapeTypeId: 'mdp',
-          etapeStatutId: 'fai',
-          date: toCaminoDate('2020-02-02'),
-        },
-        {
-          etapeTypeId: 'mfr',
-          etapeStatutId: 'fai',
-          date: toCaminoDate('2020-02-03'),
-        },
+      setDateAndOrderAndInterpretMachine(armOctMachine, '2020-02-02', [
+        { etapeTypeId: 'mdp', etapeStatutId: 'fai' },
+        { etapeTypeId: 'mfr', etapeStatutId: 'fai' },
       ])
     ).toThrowErrorMatchingSnapshot()
   })
 
   test.each([
     {
-      typeId: ETAPES_TYPES.recepisseDeDeclarationLoiSurLeau,
-      statutId: ETAPES_STATUTS.FAVORABLE,
+      ...ETES.recepisseDeDeclarationLoiSurLeau.FAVORABLE,
       contenu: { arm: { franchissements: 1 } },
     },
     {
-      typeId: ETAPES_TYPES.decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_,
-      statutId: ETAPES_STATUTS.EXEMPTE,
+      ...ETES.decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_.EXEMPTE,
     },
   ])(
     'peut créer une étape "%s" juste après une "mdp" et que le titre est mécanisé avec franchissement d’eau',
-    ({ typeId, statutId, contenu }: { typeId: EtapeTypeId; statutId: EtapeStatutId; contenu?: IContenu }) => {
-      orderAndInterpretMachine([
-        {
-          etapeTypeId: 'mfr',
-          etapeStatutId: 'fai',
-          date: toCaminoDate('2020-01-01'),
-          contenu: { arm: { mecanise: true, franchissements: 1 } },
-        },
-        {
-          etapeTypeId: 'mdp',
-          etapeStatutId: 'fai',
-          date: toCaminoDate('2020-01-02'),
-        },
-        {
-          etapeTypeId: typeId,
-          etapeStatutId: statutId,
-          contenu,
-          date: toCaminoDate('2020-01-03'),
-        },
+    (etape: EtapeTypeEtapeStatutValidPair & Omit<Etape, 'date' | 'etapeTypeId' | 'etapeStatutId'>) => {
+      setDateAndOrderAndInterpretMachine(armOctMachine, '2020-01-01', [
+        { etapeTypeId: 'mfr', etapeStatutId: 'fai', contenu: { arm: { mecanise: true, franchissements: 1 } } },
+        { etapeTypeId: 'mdp', etapeStatutId: 'fai' },
+        etape,
       ])
     }
   )
 
   test('peut créer une étape "mcp" après une "mdp"', () => {
-    orderAndInterpretMachine([
-      {
-        etapeTypeId: 'mcp',
-        etapeStatutId: 'com',
-        date: toCaminoDate('2020-02-03'),
-      },
-      {
-        etapeTypeId: 'pfd',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2020-02-03'),
-      },
-      {
-        etapeTypeId: 'mdp',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2020-02-02'),
-      },
-      {
-        etapeTypeId: 'mfr',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2020-01-01'),
-      },
+    setDateAndOrderAndInterpretMachine(armOctMachine, '2020-01-01', [
+      { etapeTypeId: 'mfr', etapeStatutId: 'fai' },
+      { etapeTypeId: 'mdp', etapeStatutId: 'fai' },
+      { etapeTypeId: 'pfd', etapeStatutId: 'fai' },
+      { etapeTypeId: 'mcp', etapeStatutId: 'com' },
     ])
   })
 
   test('peut créer une "des" après "mdp"', () => {
-    orderAndInterpretMachine([
-      {
-        etapeTypeId: 'mfr',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2020-01-01'),
-      },
-      {
-        etapeTypeId: 'mdp',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2020-01-02'),
-      },
-      {
-        etapeTypeId: 'des',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2020-01-04'),
-      },
+    setDateAndOrderAndInterpretMachine(armOctMachine, '2020-02-02', [
+      { etapeTypeId: 'mfr', etapeStatutId: 'fai' },
+      { etapeTypeId: 'mdp', etapeStatutId: 'fai' },
+      { etapeTypeId: 'des', etapeStatutId: 'fai' },
     ])
   })
 
   test('ne peut pas créer deux "des"', () => {
     expect(() =>
-      orderAndInterpretMachine([
+      setDateAndOrderAndInterpretMachine(armOctMachine, '2020-01-01', [
         {
           etapeTypeId: 'mfr',
           etapeStatutId: 'fai',
-          date: toCaminoDate('2020-01-01'),
         },
         {
           etapeTypeId: 'mdp',
           etapeStatutId: 'fai',
-          date: toCaminoDate('2020-01-02'),
         },
         {
           etapeTypeId: 'des',
           etapeStatutId: 'fai',
-          date: toCaminoDate('2020-01-03'),
         },
         {
           etapeTypeId: 'des',
           etapeStatutId: 'fai',
-          date: toCaminoDate('2020-01-04'),
         },
       ])
     ).toThrowErrorMatchingSnapshot()
   })
   test('ne peut pas créer une "css" après une "des"', () => {
     expect(() =>
-      orderAndInterpretMachine([
+      orderAndInterpretMachine(armOctMachine, [
         {
           etapeTypeId: 'mfr',
           etapeStatutId: 'fai',
@@ -426,7 +246,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
     ).toThrowErrorMatchingSnapshot()
   })
   test('peut créer une "des" si le titre est en attente de "pfc"', () => {
-    orderAndInterpretMachine([
+    orderAndInterpretMachine(armOctMachine, [
       {
         etapeTypeId: 'mfr',
         etapeStatutId: 'fai',
@@ -498,7 +318,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
 
   test('ne peut pas créer une "mno" après la "aca" si le titre n’est pas mécanisé', () => {
     expect(() =>
-      orderAndInterpretMachine([
+      orderAndInterpretMachine(armOctMachine, [
         {
           etapeTypeId: 'mfr',
           etapeStatutId: 'fai',
@@ -554,7 +374,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
   })
 
   test('peut créer une "mnd" apres une "aca" défavorable', () => {
-    orderAndInterpretMachine([
+    orderAndInterpretMachine(armOctMachine, [
       {
         etapeTypeId: 'mnd',
         date: toCaminoDate('2020-08-18'),
@@ -609,7 +429,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
   })
 
   test('peut créer une "mod" si il n’y a pas de sca', () => {
-    orderAndInterpretMachine([
+    orderAndInterpretMachine(armOctMachine, [
       {
         etapeTypeId: 'mfr',
         date: toCaminoDate('2019-12-12'),
@@ -654,7 +474,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
   })
 
   test('peut créer une "mcp" après une "pfd" et "mdp"', () => {
-    orderAndInterpretMachine([
+    orderAndInterpretMachine(armOctMachine, [
       {
         etapeTypeId: 'mfr',
         date: toCaminoDate('2020-01-30'),
@@ -679,7 +499,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
   })
 
   test('peut créer une "sca" après une "asc" et "rde"', () => {
-    orderAndInterpretMachine([
+    orderAndInterpretMachine(armOctMachine, [
       {
         etapeTypeId: 'dae',
         date: toCaminoDate('2020-06-22'),
@@ -736,7 +556,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
   })
 
   test('peut faire une "sco" après une "aca" favorable en mécanisé', () => {
-    orderAndInterpretMachine([
+    orderAndInterpretMachine(armOctMachine, [
       {
         etapeTypeId: 'sco',
         etapeStatutId: 'fai',
@@ -818,7 +638,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
   })
 
   test('les étapes sont vérifiées dans le bon ordre', () => {
-    orderAndInterpretMachine([
+    orderAndInterpretMachine(armOctMachine, [
       {
         etapeTypeId: 'asc',
         etapeStatutId: 'fai',
@@ -870,7 +690,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
   })
 
   test('des étapes qui se font la même journée', () => {
-    orderAndInterpretMachine([
+    orderAndInterpretMachine(armOctMachine, [
       {
         etapeTypeId: 'mcp',
         etapeStatutId: 'com',
@@ -895,7 +715,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
   })
 
   test('peut réaliser une saisine de la CARM après un récépissé de la déclaration sur l’eau défavorable', () => {
-    orderAndInterpretMachine([
+    orderAndInterpretMachine(armOctMachine, [
       {
         etapeTypeId: 'sca',
         etapeStatutId: 'fai',
@@ -962,7 +782,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
   })
 
   test('peut réaliser une demande de compléments après un avis de la CARM ajourné', () => {
-    orderAndInterpretMachine([
+    orderAndInterpretMachine(armOctMachine, [
       {
         etapeTypeId: 'sca',
         etapeStatutId: 'fai',
@@ -1032,7 +852,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
   })
 
   test('peut réaliser une demande d’ARM non mécanisée et un avenant', () => {
-    orderAndInterpretMachine([
+    orderAndInterpretMachine(armOctMachine, [
       {
         etapeTypeId: 'mnv',
         etapeStatutId: 'fai',
@@ -1102,7 +922,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
   })
 
   test('peut réaliser une demande d’ARM mécanisée et un avenant', () => {
-    orderAndInterpretMachine([
+    orderAndInterpretMachine(armOctMachine, [
       {
         etapeTypeId: 'mnv',
         etapeStatutId: 'fai',
@@ -1188,7 +1008,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
   })
 
   test("peut faire une demande de compléments pour la RDE si les franchissements d'eau ne sont pas spécifiés sur une ARM mécanisée", () => {
-    orderAndInterpretMachine([
+    orderAndInterpretMachine(armOctMachine, [
       {
         etapeTypeId: 'rcb',
         etapeStatutId: 'fai',
@@ -1239,7 +1059,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
 
   test('ne peut pas faire de mfr non mécanisée après une dae', () => {
     expect(() =>
-      orderAndInterpretMachine([
+      orderAndInterpretMachine(armOctMachine, [
         {
           etapeTypeId: 'dae',
           etapeStatutId: 'exe',
@@ -1257,7 +1077,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
 
   test('ne peut pas faire de mfr non mécanisée après une rde', () => {
     expect(() =>
-      orderAndInterpretMachine([
+      orderAndInterpretMachine(armOctMachine, [
         {
           etapeTypeId: 'rde',
           etapeStatutId: 'fav',
@@ -1275,7 +1095,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
   })
 
   test('peut réaliser une validation des frais de dossier complémentaire après un désistement', () => {
-    orderAndInterpretMachine([
+    orderAndInterpretMachine(armOctMachine, [
       {
         etapeTypeId: 'vfc',
         etapeStatutId: 'fai',
@@ -1334,7 +1154,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
       },
     ])
 
-    orderAndInterpretMachine([
+    orderAndInterpretMachine(armOctMachine, [
       {
         etapeTypeId: 'vfc',
         etapeStatutId: 'fai',
@@ -1382,7 +1202,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
         contenu: { arm: { mecanise: true } },
       },
     ])
-    orderAndInterpretMachine([
+    orderAndInterpretMachine(armOctMachine, [
       {
         etapeTypeId: 'vfc',
         etapeStatutId: 'fai',
@@ -1436,7 +1256,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
       },
     ])
 
-    orderAndInterpretMachine([
+    orderAndInterpretMachine(armOctMachine, [
       {
         etapeTypeId: 'vfc',
         etapeStatutId: 'fai',
@@ -1482,7 +1302,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
   })
 
   test('peut faire une "mfr" non mécanisée avec un franchissement d’eau', () => {
-    orderAndInterpretMachine([
+    orderAndInterpretMachine(armOctMachine, [
       {
         etapeTypeId: 'mfr',
         etapeStatutId: 'fai',

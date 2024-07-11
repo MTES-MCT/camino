@@ -180,17 +180,15 @@ describe('vérifie l’arbre d’octroi d’AXM', () => {
   })
 
   test('peut classer sans suite après une décision du propriétaire du sol défavorable', () => {
-    const etapes = [ETES.decisionDuProprietaireDuSol.DEFAVORABLE, ETES.classementSansSuite.FAIT]
-    const { service, etapes: orderedEtapes, dateFin } = setDateAndOrderAndInterpretMachine(axmOctMachine, '2022-04-10', etapes)
+    const { service, etapes, dateFin } = setDateAndOrderAndInterpretMachine(axmOctMachine, '2022-04-10', [ETES.decisionDuProprietaireDuSol.DEFAVORABLE, ETES.classementSansSuite.FAIT])
     expect(service).canOnlyTransitionTo({ machine: axmOctMachine, date: dateFin }, [])
-    expect(axmOctMachine.whoIsBlocking(orderedEtapes)).toStrictEqual([])
+    expect(axmOctMachine.whoIsBlocking(etapes)).toStrictEqual([])
   })
 
   test('après une décision du propriétaire du sol défavorable, la DGTM est en attente', () => {
-    const etapes = [ETES.decisionDuProprietaireDuSol.DEFAVORABLE]
-    const { service, dateFin, etapes: orderedEtapes } = setDateAndOrderAndInterpretMachine(axmOctMachine, '2020-01-01', etapes)
+    const { service, dateFin, etapes } = setDateAndOrderAndInterpretMachine(axmOctMachine, '2020-01-01', [ETES.decisionDuProprietaireDuSol.DEFAVORABLE])
     expect(service).canOnlyTransitionTo({ machine: axmOctMachine, date: dateFin }, ['FAIRE_CLASSEMENT_SANS_SUITE'])
-    expect(axmOctMachine.whoIsBlocking(orderedEtapes)).toStrictEqual([ADMINISTRATION_IDS['DGTM - GUYANE']])
+    expect(axmOctMachine.whoIsBlocking(etapes)).toStrictEqual([ADMINISTRATION_IDS['DGTM - GUYANE']])
   })
 
   test('ne peut pas faire deux fois la même étape à la même date', () => {

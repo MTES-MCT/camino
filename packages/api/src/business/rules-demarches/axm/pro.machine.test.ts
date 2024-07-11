@@ -9,8 +9,7 @@ const etapesProd = require('./2000-01-01-pro.cas.json')
 describe('vérifie l’arbre de prolongation d’AXM', () => {
   const axmProMachine = new AxmProMachine()
   test('après la recevabilité, on peut faire une saisine des services', () => {
-    const etapes = [ETES.demande.FAIT, ETES.depotDeLaDemande.FAIT, ETES.recevabiliteDeLaDemande.FAVORABLE]
-    const { service, dateFin } = setDateAndOrderAndInterpretMachine(axmProMachine, '2022-04-14', etapes)
+    const { service, dateFin } = setDateAndOrderAndInterpretMachine(axmProMachine, '2022-04-14', [ETES.demande.FAIT, ETES.depotDeLaDemande.FAIT, ETES.recevabiliteDeLaDemande.FAVORABLE])
     expect(service).canOnlyTransitionTo({ machine: axmProMachine, date: dateFin }, [
       'DEMANDER_INFORMATION_POUR_AVIS_DREAL',
       'FAIRE_CLASSEMENT_SANS_SUITE',
