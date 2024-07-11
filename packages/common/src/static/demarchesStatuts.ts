@@ -125,8 +125,9 @@ export const demarcheStatutIdsSuccess: ReadonlySet<Extract<DemarcheStatutId, 'ac
   DemarchesStatutsIds.AccepteEtPublie,
 ])
 
-export const demarcheStatutIdsNonValide: ReadonlySet<Extract<DemarcheStatutId, 'rej' | 'des' | 'rea'>> = new Set([
+export const demarcheStatutIdsNonValide: ReadonlySet<Extract<DemarcheStatutId, 'rej' | 'des' | 'rea' | 'cls'>> = new Set([
   DemarchesStatutsIds.Rejete,
   DemarchesStatutsIds.Desiste,
+  DemarchesStatutsIds.ClasseSansSuite,
   DemarchesStatutsIds.RejeteApresAbrogation,
 ])
