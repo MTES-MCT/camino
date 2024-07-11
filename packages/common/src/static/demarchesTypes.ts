@@ -308,4 +308,10 @@ export const isTravaux = (demarcheTypeId: DemarcheTypeId): boolean => {
  *  La démarche a un impact potentiel sur le titre (statut, visibilité administrations…)
  */
 export const canImpactTitre = (titreDemarcheTypeId: DemarcheTypeId, titreDemarcheStatutId: DemarcheStatutId): boolean =>
-  [DemarchesStatutsIds.Accepte, DemarchesStatutsIds.Termine].includes(titreDemarcheStatutId) || isDemarcheTypeOctroi(titreDemarcheTypeId)
+  demarcheStatutIdsSuccess.has(titreDemarcheStatutId) || isDemarcheTypeOctroi(titreDemarcheTypeId)
+
+export const demarcheStatutIdsSuccess: ReadonlySet<Extract<DemarcheStatutId, 'acc' | 'ter' | 'acp'>> = new Set([
+  DemarchesStatutsIds.Accepte,
+  DemarchesStatutsIds.Termine,
+  DemarchesStatutsIds.AccepteEtPublie,
+])
