@@ -3,7 +3,7 @@ version: '3'
 services:
 
   nginx-proxy:
-    image: nginxproxy/nginx-proxy:1.5.1
+    image: nginxproxy/nginx-proxy:1.6.0
     container_name: nginx-proxy
     restart: unless-stopped
     logging:
@@ -22,7 +22,7 @@ services:
       - /var/run/docker.sock:/tmp/docker.sock:ro
 
   nginx-proxy-acme:
-    image: nginxproxy/acme-companion:2.2.10
+    image: nginxproxy/acme-companion:2.4.0
     container_name: nginx-proxy-acme
     restart: unless-stopped
     volumes_from:

@@ -1,6 +1,6 @@
 #https://github.com/fabriziocucci/vuejs.org/blob/7f9aa12833c085b97a826df3ba240f7d9e069e1b/src/v2/cookbook/dockerize-vuejs-app.md
 
-FROM node:20.12.2-alpine as build-stage
+FROM node:20.15.1-alpine as build-stage
 LABEL maintainer=francois.romain@beta.gouv.fr
 ARG GIT_SHA
 ENV GIT_SHA=${GIT_SHA}
@@ -15,7 +15,7 @@ RUN CI=true make install
 COPY ./ /app/
 RUN make build/ui
 
-FROM nginx:1.26.0
+FROM nginx:1.27.0
 COPY ui_nginx.conf /etc/nginx/templates/default.conf.template
 COPY ui_nginx_headers.conf /etc/nginx/templates/headers.conf.template
 COPY --from=build-stage /app/packages/ui/dist /usr/share/nginx/html
