@@ -1,5 +1,4 @@
 FROM node:20.15.1-alpine
-WORKDIR /
 
 # on profite que
 # - l'utilisateur a le même uid/gid sur toutes les machines
@@ -7,16 +6,17 @@ WORKDIR /
 RUN apk add make && \
     addgroup -g 1002 nonroot && \
     adduser -u 1002 -D -G nonroot nonroot && \
-    mkdir node_modules && \
-    chown nonroot:nonroot node_modules
+    mkdir -p project/node_modules && \
+    chown -R nonroot:nonroot project
 
+WORKDIR /project
 USER nonroot
 
-COPY --chown=nonroot:nonroot ./package-lock.json /
-COPY --chown=nonroot:nonroot ./Makefile /Makefile
-COPY --chown=nonroot:nonroot ./package.json /
-COPY --chown=nonroot:nonroot ./packages/api/ /packages/api
-COPY --chown=nonroot:nonroot ./packages/common/ /packages/common
+COPY --chown=nonroot:nonroot ./package-lock.json /project/package-lock.json
+COPY --chown=nonroot:nonroot ./Makefile /project/Makefile
+COPY --chown=nonroot:nonroot ./package.json /project/package.json
+COPY --chown=nonroot:nonroot ./packages/api/ /project/packages/api
+COPY --chown=nonroot:nonroot ./packages/common/ /project/packages/common
 RUN CI=true make install/prod
 
 ENTRYPOINT ["make", "start/api"]
