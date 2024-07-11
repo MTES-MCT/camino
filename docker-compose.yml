@@ -74,7 +74,7 @@ services:
     restart: unless-stopped
   oauth2:
     container_name: camino_oauth2
-    image: quay.io/oauth2-proxy/oauth2-proxy:v7.5.1
+    image: quay.io/oauth2-proxy/oauth2-proxy:v7.6.0
     depends_on:
       - ui
       - keycloak
@@ -112,7 +112,7 @@ services:
       - nginx-proxy
   keycloak:
     container_name: camino_keycloak
-    image: quay.io/keycloak/keycloak:24.0.4
+    image: quay.io/keycloak/keycloak:24.0.5
     depends_on:
       - db
     environment:

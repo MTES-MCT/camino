@@ -20,7 +20,7 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20.12.2'
+          node-version: '20.15.1'
           cache: 'npm'
       - name: Install
         run: make install
@@ -34,7 +34,7 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20.12.2'
+          node-version: '20.15.1'
           cache: 'npm'
       - name: Install
         run: make install
@@ -48,7 +48,7 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20.12.2'
+          node-version: '20.15.1'
           cache: 'npm'
       - name: Install
         run: make install
@@ -83,7 +83,7 @@ jobs:
         - name: Use Node.js
           uses: actions/setup-node@v4
           with:
-            node-version: '20.12.2'
+            node-version: '20.15.1'
             cache: 'npm'
         - name: Npm install
           run: make install
@@ -123,31 +123,31 @@ jobs:
         - name: Use Node.js
           uses: actions/setup-node@v4
           with:
-            node-version: '20.12.2'
+            node-version: '20.15.1'
             cache: 'npm'
         - name: Npm install
           run: make install
         - uses: cardinalby/export-env-action@v2
           with:
-            envFile: '.env-example'    
+            envFile: '.env-example'
             expand: 'true'
         - name: Migrate database and check queries
-          run: | 
+          run: |
             make db/migrate
             make db/check-queries
-            if [ ! -z  "$(git status --porcelain)" ]; then 
+            if [ ! -z  "$(git status --porcelain)" ]; then
             echo "Lancer 'make db/check-queries' sur sa machine et commiter les changements"
             echo "BEGIN Git diff"
             git diff
             echo "END Git diff"
-            exit 1; 
+            exit 1;
             fi
           env:
             PGHOST: localhost
             PGPORT: 5432
             PGUSER: postgres
-            PGPASSWORD: password  
-            PGDATABASE: camino   
+            PGPASSWORD: password
+            PGDATABASE: camino
   build:
     needs: [unit-test, integration-test, lint, type, check-queries]
     runs-on: ubuntu-latest
