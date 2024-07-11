@@ -30,7 +30,7 @@ const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
   OUVRIR_PARTICIPATION_DU_PUBLIC: { db: ETES.ouvertureDeLaParticipationDuPublic, mainStep: true },
   CLOTURER_PARTICIPATION_DU_PUBLIC: { db: ETES.clotureDeLaParticipationDuPublic, mainStep: true },
   RENDRE_DECISION_ADMINISTRATION_ACCEPTEE: { db: { ACCEPTE: ETES.decisionDeLadministration.ACCEPTE }, mainStep: true },
-  PUBLIER_DECISION_ACCEPTEE_AU_JORF: { db: { ACCEPTE: ETES.publicationDeDecisionAuJORF.ACCEPTE }, mainStep: true },
+  PUBLIER_DECISION_ACCEPTEE_AU_JORF: { db: { FAIT: ETES.publicationDeDecisionAuJORF.FAIT }, mainStep: true },
   PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS: { db: ETES.publicationDeDecisionAuRecueilDesActesAdministratifs, mainStep: true },
   CLASSER_SANS_SUITE: { db: ETES.classementSansSuite, mainStep: false },
   DESISTER_PAR_LE_DEMANDEUR: { db: ETES.desistementDuDemandeur, mainStep: false },

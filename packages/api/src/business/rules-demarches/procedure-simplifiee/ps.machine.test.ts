@@ -199,7 +199,7 @@ describe('vérifie l’arbre des procédures historiques', () => {
       { ...ETES.ouvertureDeLaParticipationDuPublic.FAIT, date: toCaminoDate('2022-04-16') },
       { ...ETES.clotureDeLaParticipationDuPublic.TERMINE, date: toCaminoDate('2022-04-17') },
       { ...ETES.decisionDeLadministration.ACCEPTE, date: toCaminoDate('2022-04-18') },
-      { ...ETES.publicationDeDecisionAuJORF.ACCEPTE, date: toCaminoDate('2022-04-19') },
+      { ...ETES.publicationDeDecisionAuJORF.FAIT, date: toCaminoDate('2022-04-19') },
     ]
     const service = orderAndInterpretMachine(psMachine, etapes)
     expect(service).canOnlyTransitionTo({ machine: psMachine, date: toCaminoDate('2023-04-19') }, [])

@@ -133,6 +133,7 @@ export const EtapesTypesEtapesStatuts = {
   publicationDeDecisionAuJORF: {
     ACCEPTE: { etapeTypeId: 'dpu', etapeStatutId: 'acc' },
     REJETE: { etapeTypeId: 'dpu', etapeStatutId: 'rej' },
+    FAIT: { etapeTypeId: 'dpu', etapeStatutId: 'fai' },
   },
   publicationDeDecisionAdministrativeAuJORF: { FAIT: { etapeTypeId: 'dup', etapeStatutId: 'fai' } },
   decisionAdministrative: { FAIT: { etapeTypeId: 'dux', etapeStatutId: 'fai' } },
