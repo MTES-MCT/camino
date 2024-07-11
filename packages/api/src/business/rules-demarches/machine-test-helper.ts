@@ -2,7 +2,9 @@ import { CaminoCommonContext, Etape } from './machine-common.js'
 import { Actor, EventObject, createActor } from 'xstate'
 import { CaminoMachine, getNextEvents } from './machine-helper.js'
 import { expect } from 'vitest'
-import { CaminoDate } from 'camino-common/src/date.js'
+import { CaminoDate, dateAddDays, toCaminoDate } from 'camino-common/src/date.js'
+import { EtapeTypeEtapeStatutValidPair } from 'camino-common/src/static/etapesTypesEtapesStatuts.js'
+import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
 interface CustomMatchers<R = unknown> {
   canOnlyTransitionTo<T extends EventObject, C extends CaminoCommonContext>(context: { machine: CaminoMachine<C, T>; date: CaminoDate }, _events: T['type'][]): R
 }
@@ -76,6 +78,26 @@ export const interpretMachine = <T extends EventObject, C extends CaminoCommonCo
   return service
 }
 
+export const setDateAndOrderAndInterpretMachine = <T extends EventObject, C extends CaminoCommonContext>(
+  machine: CaminoMachine<C, T>,
+  initDate: `${number}-${number}-${number}`,
+  etapes: readonly (EtapeTypeEtapeStatutValidPair & Omit<Etape, 'date' | 'etapeTypeId' | 'etapeStatutId'> & { addDays?: number })[]
+) => {
+  const firstDate = toCaminoDate(initDate)
+  let index = 0
+  const fullEtapes = etapes.map(etape => {
+    if ('addDays' in etape && isNotNullNorUndefined(etape.addDays)) {
+      index += etape.addDays
+    } else {
+      index++
+    }
+
+    return { ...etape, date: dateAddDays(firstDate, index) }
+  })
+  const service = orderAndInterpretMachine(machine, fullEtapes)
+
+  return { service, dateFin: dateAddDays(firstDate, etapes.length), etapes: fullEtapes }
+}
 export const orderAndInterpretMachine = <T extends EventObject, C extends CaminoCommonContext>(machine: CaminoMachine<C, T>, etapes: readonly Etape[]) => {
   return interpretMachine(machine, machine.orderMachine(etapes))
 }

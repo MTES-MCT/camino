@@ -2,6 +2,7 @@ import { AnyMachineSnapshot, createActor, EventObject, MachineSnapshot, StateMac
 import { CaminoCommonContext, DBEtat, Etape, Intervenant, intervenants, tags } from './machine-common.js'
 import { DemarchesStatutsIds, DemarcheStatutId } from 'camino-common/src/static/demarchesStatuts.js'
 import { CaminoDate } from 'camino-common/src/date.js'
+import { OmitDistributive } from 'camino-common/src/typescript-tools.js'
 
 type CaminoState<CaminoContext extends CaminoCommonContext, CaminoEvent extends EventObject> = MachineSnapshot<CaminoContext, CaminoEvent, any, any, any, any, any>
 
@@ -22,7 +23,7 @@ export abstract class CaminoMachine<CaminoContext extends CaminoCommonContext, C
 
   abstract eventFrom(etape: Etape): CaminoEvent
 
-  protected caminoXStateEventToEtapes(event: CaminoEvent): (Omit<Etape, 'date'> & { mainStep: boolean })[] {
+  protected caminoXStateEventToEtapes(event: CaminoEvent): (OmitDistributive<Etape, 'date'> & { mainStep: boolean })[] {
     const dbEtat: { db: DBEtat; mainStep: boolean } = this.trad[event.type as CaminoEvent['type']]
 
     return Object.values(dbEtat.db).map(({ etapeTypeId, etapeStatutId }) => ({
@@ -192,7 +193,7 @@ export abstract class CaminoMachine<CaminoContext extends CaminoCommonContext, C
     return intervenants.filter(r => responsables.includes(tags.responsable[r]))
   }
 
-  public possibleNextEtapes(etapes: readonly Etape[], date: CaminoDate): (Omit<Etape, 'date'> & { mainStep: boolean })[] {
+  public possibleNextEtapes(etapes: readonly Etape[], date: CaminoDate): (OmitDistributive<Etape, 'date'> & { mainStep: boolean })[] {
     const state = this.assertGoTo(etapes)
 
     if (state !== undefined) {

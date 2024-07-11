@@ -296,6 +296,10 @@ export const EtapesTypesEtapesStatuts = {
   },
 } as const satisfies { [key in keyof typeof ETAPES_TYPES]: { [other in keyof typeof ETAPES_STATUTS]?: EtapeTypeEtapeStatut<(typeof ETAPES_TYPES)[key], (typeof ETAPES_STATUTS)[other]> } }
 
+type GetStuff<T> = T extends { [key in keyof typeof ETAPES_TYPES]: { [other in keyof typeof ETAPES_STATUTS]?: infer A } } ? A : never
+
+export type EtapeTypeEtapeStatutValidPair = GetStuff<typeof EtapesTypesEtapesStatuts>
+
 const isEtapesTypesEtapesStatutsKey = (value: string): value is keyof typeof EtapesTypesEtapesStatuts => {
   return value in EtapesTypesEtapesStatuts
 }

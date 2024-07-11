@@ -1,7 +1,6 @@
-import { interpretMachine, orderAndInterpretMachine } from '../machine-test-helper.js'
+import { interpretMachine, setDateAndOrderAndInterpretMachine } from '../machine-test-helper.js'
 import { AxmProMachine } from './pro.machine.js'
 import { describe, expect, test } from 'vitest'
-import { toCaminoDate } from 'camino-common/src/date.js'
 
 import { EtapesTypesEtapesStatuts as ETES } from 'camino-common/src/static/etapesTypesEtapesStatuts.js'
 
@@ -10,13 +9,8 @@ const etapesProd = require('./2000-01-01-pro.cas.json')
 describe('vérifie l’arbre de prolongation d’AXM', () => {
   const axmProMachine = new AxmProMachine()
   test('après la recevabilité, on peut faire une saisine des services', () => {
-    const etapes = [
-      { ...ETES.demande.FAIT, date: toCaminoDate('2022-04-14') },
-      { ...ETES.depotDeLaDemande.FAIT, date: toCaminoDate('2022-04-15') },
-      { ...ETES.recevabiliteDeLaDemande.FAVORABLE, date: toCaminoDate('2022-04-16') },
-    ]
-    const service = orderAndInterpretMachine(axmProMachine, etapes)
-    expect(service).canOnlyTransitionTo({ machine: axmProMachine, date: toCaminoDate('2022-04-17') }, [
+    const { service, dateFin } = setDateAndOrderAndInterpretMachine(axmProMachine, '2022-04-14', [ETES.demande.FAIT, ETES.depotDeLaDemande.FAIT, ETES.recevabiliteDeLaDemande.FAVORABLE])
+    expect(service).canOnlyTransitionTo({ machine: axmProMachine, date: dateFin }, [
       'DEMANDER_INFORMATION_POUR_AVIS_DREAL',
       'FAIRE_CLASSEMENT_SANS_SUITE',
       'FAIRE_DESISTEMENT_DEMANDEUR',
