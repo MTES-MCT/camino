@@ -12,7 +12,7 @@ import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { ArmRenProMachine } from './arm/ren-pro.machine.js'
 import { PrmOctMachine } from './prm/oct.machine.js'
 import { DeepReadonly, isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools.js'
-import { ProcedureHistoriqueMachine, ProcedureSimplifieeMachine } from './procedure-simplifiee/ps.machine.js'
+import { ProcedureSimplifieeMachine } from './procedure-simplifiee/ps.machine.js'
 
 interface DemarcheDefinitionCommon {
   titreTypeId: TitreTypeId
@@ -95,13 +95,6 @@ export const demarchesDefinitions: DemarcheDefinition[] = [
     titreTypeId: 'pxg',
     demarcheTypeIds: allDemarcheNotTravaux,
     machine: new ProcedureSimplifieeMachine(),
-    dateDebut: toCaminoDate('2024-07-01'),
-    demarcheIdExceptions: [],
-  },
-  {
-    titreTypeId: 'pxg',
-    demarcheTypeIds: allDemarcheNotTravaux,
-    machine: new ProcedureHistoriqueMachine(),
     dateDebut: plusVieilleDateEnBase,
     demarcheIdExceptions: [],
   },
