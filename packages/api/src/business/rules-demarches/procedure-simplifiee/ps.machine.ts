@@ -9,12 +9,17 @@ type RendreDecisionAdministrationAcceptee = {
   date: CaminoDate
   type: 'RENDRE_DECISION_ADMINISTRATION_ACCEPTEE'
 }
+type RendreDecisionAdministrationRejetee = {
+  date: CaminoDate
+  type: 'RENDRE_DECISION_ADMINISTRATION_REJETEE'
+}
 type ProcedureSimplifieeXStateEvent =
   | { type: 'FAIRE_DEMANDE' }
   | { type: 'DEPOSER_DEMANDE' }
   | { type: 'OUVRIR_PARTICIPATION_DU_PUBLIC' }
   | { type: 'CLOTURER_PARTICIPATION_DU_PUBLIC' }
   | RendreDecisionAdministrationAcceptee
+  | RendreDecisionAdministrationRejetee
   | { type: 'PUBLIER_DECISION_ACCEPTEE_AU_JORF' }
   | { type: 'PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS' }
   | { type: 'CLASSER_SANS_SUITE' }
@@ -30,6 +35,7 @@ const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
   OUVRIR_PARTICIPATION_DU_PUBLIC: { db: ETES.ouvertureDeLaParticipationDuPublic, mainStep: true },
   CLOTURER_PARTICIPATION_DU_PUBLIC: { db: ETES.clotureDeLaParticipationDuPublic, mainStep: true },
   RENDRE_DECISION_ADMINISTRATION_ACCEPTEE: { db: { ACCEPTE: ETES.decisionDeLadministration.ACCEPTE }, mainStep: true },
+  RENDRE_DECISION_ADMINISTRATION_REJETEE: { db: { REJETE: ETES.decisionDeLadministration.REJETE }, mainStep: true },
   PUBLIER_DECISION_ACCEPTEE_AU_JORF: { db: { FAIT: ETES.publicationDeDecisionAuJORF.FAIT }, mainStep: true },
   PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS: { db: ETES.publicationDeDecisionAuRecueilDesActesAdministratifs, mainStep: true },
   CLASSER_SANS_SUITE: { db: ETES.classementSansSuite, mainStep: false },
@@ -50,6 +56,7 @@ export class ProcedureSimplifieeMachine extends CaminoMachine<ProcedureSimplifie
   toPotentialCaminoXStateEvent(event: ProcedureSimplifieeXStateEvent['type'], date: CaminoDate): ProcedureSimplifieeXStateEvent[] {
     switch (event) {
       case 'RENDRE_DECISION_ADMINISTRATION_ACCEPTEE':
+      case 'RENDRE_DECISION_ADMINISTRATION_REJETEE':
         return [{ type: event, date }]
       default:
         // related to https://github.com/microsoft/TypeScript/issues/46497  https://github.com/microsoft/TypeScript/issues/40803 :(
@@ -69,7 +76,8 @@ export class ProcedureSimplifieeMachine extends CaminoMachine<ProcedureSimplifie
     if (entry) {
       const eventFromEntry = entry[0]
       switch (eventFromEntry) {
-        case 'RENDRE_DECISION_ADMINISTRATION_ACCEPTEE': {
+        case 'RENDRE_DECISION_ADMINISTRATION_ACCEPTEE':
+        case 'RENDRE_DECISION_ADMINISTRATION_REJETEE': {
           return { type: eventFromEntry, date: etape.date }
         }
         default:
@@ -107,7 +115,15 @@ const procedureSimplifieeMachine = createMachine({
       target: '.publicationAuRecueilDesActesAdministratifsOupublicationAuJORFAFaire',
       actions: assign({
         visibilite: 'publique',
-        demarcheStatut: 'acc',
+        demarcheStatut: DemarchesStatutsIds.Accepte,
+      }),
+    },
+    RENDRE_DECISION_ADMINISTRATION_REJETEE: {
+      guard: ({ context, event }) => isBefore(event.date, procedureHistoriqueDateMax) && context.demarcheStatut === defaultDemarcheStatut,
+      target: '.finDeMachine',
+      actions: assign({
+        visibilite: 'confidentielle',
+        demarcheStatut: DemarchesStatutsIds.Rejete,
       }),
     },
     CLASSER_SANS_SUITE: {
@@ -168,9 +184,16 @@ const procedureSimplifieeMachine = createMachine({
         RENDRE_DECISION_ADMINISTRATION_ACCEPTEE: {
           actions: assign({
             visibilite: 'publique',
-            demarcheStatut: 'acc',
+            demarcheStatut: DemarchesStatutsIds.Accepte,
           }),
           target: 'publicationAuRecueilDesActesAdministratifsOupublicationAuJORFAFaire',
+        },
+        RENDRE_DECISION_ADMINISTRATION_REJETEE: {
+          actions: assign({
+            visibilite: 'confidentielle',
+            demarcheStatut: DemarchesStatutsIds.Rejete,
+          }),
+          target: 'finDeMachine',
         },
       },
     },

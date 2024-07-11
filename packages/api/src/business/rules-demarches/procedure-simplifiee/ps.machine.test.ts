@@ -11,7 +11,11 @@ const psMachine = new ProcedureSimplifieeMachine()
 describe('vérifie l’arbre des procédures historiques', () => {
   test('statut de la démarche sans étape', () => {
     const service = orderAndInterpretMachine(psMachine, [])
-    expect(service).canOnlyTransitionTo({ machine: psMachine, date: toCaminoDate('2022-04-14') }, ['FAIRE_DEMANDE', 'RENDRE_DECISION_ADMINISTRATION_ACCEPTEE'])
+    expect(service).canOnlyTransitionTo({ machine: psMachine, date: toCaminoDate('2022-04-14') }, [
+      'FAIRE_DEMANDE',
+      'RENDRE_DECISION_ADMINISTRATION_ACCEPTEE',
+      'RENDRE_DECISION_ADMINISTRATION_REJETEE',
+    ])
     expect(service.getSnapshot().context.demarcheStatut).toBe(DemarchesStatutsIds.EnConstruction)
   })
   test('peut créer une "mfr"', () => {
@@ -24,6 +28,7 @@ describe('vérifie l’arbre des procédures historiques', () => {
       'DESISTER_PAR_LE_DEMANDEUR',
       'OUVRIR_PARTICIPATION_DU_PUBLIC',
       'RENDRE_DECISION_ADMINISTRATION_ACCEPTEE',
+      'RENDRE_DECISION_ADMINISTRATION_REJETEE',
     ])
     expect(service.getSnapshot().context.demarcheStatut).toBe(DemarchesStatutsIds.EnInstruction)
   })
@@ -40,6 +45,7 @@ describe('vérifie l’arbre des procédures historiques', () => {
       'DESISTER_PAR_LE_DEMANDEUR',
       'OUVRIR_PARTICIPATION_DU_PUBLIC',
       'RENDRE_DECISION_ADMINISTRATION_ACCEPTEE',
+      'RENDRE_DECISION_ADMINISTRATION_REJETEE',
     ])
     expect(service.getSnapshot().context.demarcheStatut).toBe(DemarchesStatutsIds.EnInstruction)
   })
@@ -51,7 +57,7 @@ describe('vérifie l’arbre des procédures historiques', () => {
       { ...ETES.depotDeLaDemande.FAIT, date: toCaminoDate('2022-04-15') },
     ]
     expect(() => orderAndInterpretMachine(psMachine, etapes)).toThrowErrorMatchingInlineSnapshot(
-      `[Error: Error: cannot execute step: '{"etapeTypeId":"mdp","etapeStatutId":"fai","date":"2022-04-15"}' after '["mfr_fai","mdp_fai"]'. The event {"type":"DEPOSER_DEMANDE"} should be one of 'CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_PARTICIPATION_DU_PUBLIC,RENDRE_DECISION_ADMINISTRATION_ACCEPTEE']`
+      `[Error: Error: cannot execute step: '{"etapeTypeId":"mdp","etapeStatutId":"fai","date":"2022-04-15"}' after '["mfr_fai","mdp_fai"]'. The event {"type":"DEPOSER_DEMANDE"} should be one of 'CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_PARTICIPATION_DU_PUBLIC,RENDRE_DECISION_ADMINISTRATION_ACCEPTEE,RENDRE_DECISION_ADMINISTRATION_REJETEE']`
     )
   })
 
@@ -85,6 +91,7 @@ describe('vérifie l’arbre des procédures historiques', () => {
       'DEMANDER_INFORMATION',
       'DESISTER_PAR_LE_DEMANDEUR',
       'RENDRE_DECISION_ADMINISTRATION_ACCEPTEE',
+      'RENDRE_DECISION_ADMINISTRATION_REJETEE',
     ])
     expect(service.getSnapshot().context.demarcheStatut).toBe(DemarchesStatutsIds.EnInstruction)
     expect(service.getSnapshot().context.visibilite).toBe('publique')
@@ -171,6 +178,7 @@ describe('vérifie l’arbre des procédures historiques', () => {
       'OUVRIR_PARTICIPATION_DU_PUBLIC',
       'RECEVOIR_INFORMATION',
       'RENDRE_DECISION_ADMINISTRATION_ACCEPTEE',
+      'RENDRE_DECISION_ADMINISTRATION_REJETEE',
     ])
   })
   test("peut faire deux demandes d'information consécutives", () => {
@@ -189,6 +197,7 @@ describe('vérifie l’arbre des procédures historiques', () => {
       'DEMANDER_INFORMATION',
       'DESISTER_PAR_LE_DEMANDEUR',
       'RENDRE_DECISION_ADMINISTRATION_ACCEPTEE',
+      'RENDRE_DECISION_ADMINISTRATION_REJETEE',
     ])
   })
 
@@ -205,7 +214,30 @@ describe('vérifie l’arbre des procédures historiques', () => {
     expect(service).canOnlyTransitionTo({ machine: psMachine, date: toCaminoDate('2023-04-19') }, [])
     expect(service.getSnapshot().context.demarcheStatut).toBe(DemarchesStatutsIds.Accepte)
     expect(service.getSnapshot().context.visibilite).toBe('publique')
-  }) // pour regénérer le oct.cas.json: `npm run test:generate-data -w packages/api`
+  })
+
+  test("peut rejeter un décision de l'administration", () => {
+    const etapes = [
+      { ...ETES.demande.FAIT, date: toCaminoDate('2022-04-14') },
+      { ...ETES.depotDeLaDemande.FAIT, date: toCaminoDate('2022-04-15') },
+      { ...ETES.ouvertureDeLaParticipationDuPublic.FAIT, date: toCaminoDate('2022-04-16') },
+      { ...ETES.clotureDeLaParticipationDuPublic.TERMINE, date: toCaminoDate('2022-04-17') },
+      { ...ETES.decisionDeLadministration.REJETE, date: toCaminoDate('2022-04-18') },
+    ]
+    const service = orderAndInterpretMachine(psMachine, etapes)
+    expect(service).canOnlyTransitionTo({ machine: psMachine, date: toCaminoDate('2023-04-19') }, [])
+    expect(service.getSnapshot().context.demarcheStatut).toBe(DemarchesStatutsIds.Rejete)
+    expect(service.getSnapshot().context.visibilite).toBe('confidentielle')
+  })
+
+  test("peut rejeter immédiatement un décision de l'administration", () => {
+    const etapes = [{ ...ETES.decisionDeLadministration.REJETE, date: toCaminoDate('2022-04-18') }]
+    const service = orderAndInterpretMachine(psMachine, etapes)
+    expect(service).canOnlyTransitionTo({ machine: psMachine, date: toCaminoDate('2023-04-19') }, [])
+    expect(service.getSnapshot().context.demarcheStatut).toBe(DemarchesStatutsIds.Rejete)
+    expect(service.getSnapshot().context.visibilite).toBe('confidentielle')
+  })
+  // pour regénérer le oct.cas.json: `npm run test:generate-data -w packages/api`
   test.each(etapesProdProceduresHistoriques as any[])('cas réel N°$id', demarche => {
     // ici les étapes sont déjà ordonnées
     interpretMachine(psMachine, demarche.etapes)
