@@ -1,6 +1,6 @@
 import { Definition } from '../definition.js'
 import { z } from 'zod'
-import { DemarcheStatutId, DemarchesStatutsIds } from './demarchesStatuts.js'
+import { DemarcheStatutId, demarcheStatutIdsSuccess } from './demarchesStatuts.js'
 export interface DemarcheType<T = DemarcheTypeId> extends Definition<T> {
   titulaires: boolean
   renouvelable: boolean
@@ -309,9 +309,3 @@ export const isTravaux = (demarcheTypeId: DemarcheTypeId): boolean => {
  */
 export const canImpactTitre = (titreDemarcheTypeId: DemarcheTypeId, titreDemarcheStatutId: DemarcheStatutId): boolean =>
   demarcheStatutIdsSuccess.has(titreDemarcheStatutId) || isDemarcheTypeOctroi(titreDemarcheTypeId)
-
-export const demarcheStatutIdsSuccess: ReadonlySet<Extract<DemarcheStatutId, 'acc' | 'ter' | 'acp'>> = new Set([
-  DemarchesStatutsIds.Accepte,
-  DemarchesStatutsIds.Termine,
-  DemarchesStatutsIds.AccepteEtPublie,
-])

@@ -5,8 +5,9 @@ import { isEtapeStatusOk } from 'camino-common/src/static/etapesStatuts'
 import { isEtapeDecision } from 'camino-common/src/static/etapesTypes'
 import { isNotNullNorUndefined, isNullOrUndefined, isNullOrUndefinedOrEmpty, OmitDistributive } from 'camino-common/src/typescript-tools'
 import { DemarcheSlug } from 'camino-common/src/demarche'
-import { demarcheStatutIdsSuccess, isTravaux } from 'camino-common/src/static/demarchesTypes'
+import { isTravaux } from 'camino-common/src/static/demarchesTypes'
 import { ETAPE_IS_BROUILLON } from 'camino-common/src/etape'
+import { demarcheStatutIdsSuccess } from 'camino-common/src/static/demarchesStatuts'
 
 type TitreTimelineEvents = TitreGetDemarche & { first_etape_date: CaminoDate | null }
 type PhaseWithDateDebut = OmitDistributive<TitreGetDemarche, 'demarche_date_debut'> & { demarche_date_debut: CaminoDate; events: TitreTimelineEvents[] }

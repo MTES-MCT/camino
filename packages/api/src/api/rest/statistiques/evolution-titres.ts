@@ -1,5 +1,5 @@
 import { CaminoAnnee, toCaminoAnnee } from 'camino-common/src/date.js'
-import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts.js'
+import { demarcheStatutIdsNonValide } from 'camino-common/src/static/demarchesStatuts.js'
 import { DEMARCHES_TYPES_IDS } from 'camino-common/src/static/demarchesTypes.js'
 import { DepartementId } from 'camino-common/src/static/departement.js'
 import { DOMAINES_IDS } from 'camino-common/src/static/domaines.js'
@@ -43,7 +43,7 @@ export const evolutionTitres = async (pool: Pool, titreTypeTypeId: TitreTypeType
       anneeDepart,
       demarcheTypeIds: demarcheOctroiTypeIds,
       departements,
-      demarcheStatutIds: [DemarchesStatutsIds.Rejete, DemarchesStatutsIds.ClasseSansSuite],
+      demarcheStatutIds: Array.from(demarcheStatutIdsNonValide),
       etapeStatutFait: ETAPES_STATUTS.FAIT,
       etapeStatutRejet: ETAPES_STATUTS.REJETE,
       etapesTypesDecisionRefus,

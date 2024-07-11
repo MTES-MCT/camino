@@ -117,5 +117,16 @@ export const sortedDemarchesStatuts = Object.values(DemarchesStatuts).sort((a, b
 export const isDemarcheStatutNonStatue = (demarcheStatutId: DemarcheStatutId | null | undefined): boolean =>
   [DemarchesStatutsIds.EnConstruction, DemarchesStatutsIds.Depose, DemarchesStatutsIds.EnInstruction].includes(demarcheStatutId)
 
-export const isDemarcheStatutNonValide = (demarcheStatutId: DemarcheStatutId | null | undefined): boolean =>
-  [DemarchesStatutsIds.Rejete, DemarchesStatutsIds.Desiste, DemarchesStatutsIds.ClasseSansSuite].includes(demarcheStatutId)
+export const isDemarcheStatutNonValide = (demarcheStatutId: DemarcheStatutId | null | undefined): boolean => demarcheStatutIdsNonValide.has(demarcheStatutId)
+
+export const demarcheStatutIdsSuccess: ReadonlySet<Extract<DemarcheStatutId, 'acc' | 'ter' | 'acp'>> = new Set([
+  DemarchesStatutsIds.Accepte,
+  DemarchesStatutsIds.Termine,
+  DemarchesStatutsIds.AccepteEtPublie,
+])
+
+export const demarcheStatutIdsNonValide: ReadonlySet<Extract<DemarcheStatutId, 'rej' | 'des' | 'rea'>> = new Set([
+  DemarchesStatutsIds.Rejete,
+  DemarchesStatutsIds.Desiste,
+  DemarchesStatutsIds.RejeteApresAbrogation,
+])
