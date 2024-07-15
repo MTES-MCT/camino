@@ -98,6 +98,13 @@ export const demarchesDefinitions: DemarcheDefinition[] = [
     dateDebut: plusVieilleDateEnBase,
     demarcheIdExceptions: [],
   },
+  {
+    titreTypeId: 'arg',
+    demarcheTypeIds: allDemarcheNotTravaux,
+    machine: new ProcedureSimplifieeMachine(),
+    dateDebut: plusVieilleDateEnBase,
+    demarcheIdExceptions: [],
+  },
 ]
 
 export const demarcheDefinitionFind = (
