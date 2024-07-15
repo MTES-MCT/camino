@@ -113,20 +113,20 @@ describe("publicité d'une démarche", () => {
     ).toMatchObject({ publicLecture: false, entreprisesLecture: true })
   })
 
-  test("une démarche dont l'étape la plus récente est décision de l'administration est visible uniquement par l'entreprise", () => {
+  test("une démarche d'une machine simplifiée dont l'étape la plus récente est décision de l'administration est visible", () => {
     expect(
       titreDemarchePublicFind(
         {
           typeId: 'oct',
           id: newDemarcheId(),
-          demarcheDateDebut: toCaminoDate('2020-01-01'),
-          demarcheDateFin: toCaminoDate('2021-01-01'),
-          etapes: etapesBuild([{ typeId: 'dex', date: toCaminoDate('2000-01-01') }]),
+          demarcheDateDebut: toCaminoDate('2023-01-01'),
+          demarcheDateFin: toCaminoDate('2026-01-01'),
+          etapes: etapesBuild([{ typeId: 'dex', date: toCaminoDate('2023-01-01'), statutId: 'acc', isBrouillon: ETAPE_IS_NOT_BROUILLON }]),
           titreId: newTitreId('titreId'),
         },
         'arg'
       )
-    ).toMatchObject({ publicLecture: false, entreprisesLecture: true })
+    ).toMatchObject({ publicLecture: true, entreprisesLecture: true })
   })
 
   test("une démarche dont l'étape la plus récente est classement sans suite n'est pas publique", () => {
