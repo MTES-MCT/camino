@@ -7,43 +7,56 @@ exports[`canCreateTitre > vérifie si un utilisateur administrateur admin peut c
     "axm": true,
   },
   "dre-aura-01": {
+    "arg": true,
     "pxg": true,
   },
   "dre-bfc-01": {
+    "arg": true,
     "pxg": true,
   },
   "dre-bretagne-01": {
+    "arg": true,
     "pxg": true,
   },
   "dre-centre-val-de-loire-01": {
+    "arg": true,
     "pxg": true,
   },
   "dre-corse-01": {
+    "arg": true,
     "pxg": true,
   },
   "dre-grand-est-01": {
+    "arg": true,
     "pxg": true,
   },
   "dre-hauts-de-france-01": {
+    "arg": true,
     "pxg": true,
   },
   "dre-ile-de-france-01": {
+    "arg": true,
     "pcc": true,
     "pxg": true,
   },
   "dre-normandie-01": {
+    "arg": true,
     "pxg": true,
   },
   "dre-nouvelle-aquitaine-01": {
+    "arg": true,
     "pxg": true,
   },
   "dre-occitanie-01": {
+    "arg": true,
     "pxg": true,
   },
   "dre-paca-01": {
+    "arg": true,
     "pxg": true,
   },
   "dre-pays-de-la-loire-01": {
+    "arg": true,
     "pxg": true,
   },
   "min-mtes-dgaln-01": {
@@ -124,6 +137,15 @@ exports[`canEditTitre > vérifie si un utilisateur administrateur admin peut mod
     },
   },
   "dre-aura-01": {
+    "arg": {
+      "dmc": true,
+      "dmi": true,
+      "ech": true,
+      "ind": true,
+      "mod": true,
+      "sup": true,
+      "val": true,
+    },
     "pxg": {
       "dmc": true,
       "dmi": true,
@@ -135,6 +157,15 @@ exports[`canEditTitre > vérifie si un utilisateur administrateur admin peut mod
     },
   },
   "dre-bfc-01": {
+    "arg": {
+      "dmc": true,
+      "dmi": true,
+      "ech": true,
+      "ind": true,
+      "mod": true,
+      "sup": true,
+      "val": true,
+    },
     "pxg": {
       "dmc": true,
       "dmi": true,
@@ -146,6 +177,15 @@ exports[`canEditTitre > vérifie si un utilisateur administrateur admin peut mod
     },
   },
   "dre-bretagne-01": {
+    "arg": {
+      "dmc": true,
+      "dmi": true,
+      "ech": true,
+      "ind": true,
+      "mod": true,
+      "sup": true,
+      "val": true,
+    },
     "pxg": {
       "dmc": true,
       "dmi": true,
@@ -157,6 +197,15 @@ exports[`canEditTitre > vérifie si un utilisateur administrateur admin peut mod
     },
   },
   "dre-centre-val-de-loire-01": {
+    "arg": {
+      "dmc": true,
+      "dmi": true,
+      "ech": true,
+      "ind": true,
+      "mod": true,
+      "sup": true,
+      "val": true,
+    },
     "pxg": {
       "dmc": true,
       "dmi": true,
@@ -168,6 +217,15 @@ exports[`canEditTitre > vérifie si un utilisateur administrateur admin peut mod
     },
   },
   "dre-corse-01": {
+    "arg": {
+      "dmc": true,
+      "dmi": true,
+      "ech": true,
+      "ind": true,
+      "mod": true,
+      "sup": true,
+      "val": true,
+    },
     "pxg": {
       "dmc": true,
       "dmi": true,
@@ -179,6 +237,15 @@ exports[`canEditTitre > vérifie si un utilisateur administrateur admin peut mod
     },
   },
   "dre-grand-est-01": {
+    "arg": {
+      "dmc": true,
+      "dmi": true,
+      "ech": true,
+      "ind": true,
+      "mod": true,
+      "sup": true,
+      "val": true,
+    },
     "pxg": {
       "dmc": true,
       "dmi": true,
@@ -190,6 +257,15 @@ exports[`canEditTitre > vérifie si un utilisateur administrateur admin peut mod
     },
   },
   "dre-hauts-de-france-01": {
+    "arg": {
+      "dmc": true,
+      "dmi": true,
+      "ech": true,
+      "ind": true,
+      "mod": true,
+      "sup": true,
+      "val": true,
+    },
     "pxg": {
       "dmc": true,
       "dmi": true,
@@ -201,6 +277,15 @@ exports[`canEditTitre > vérifie si un utilisateur administrateur admin peut mod
     },
   },
   "dre-ile-de-france-01": {
+    "arg": {
+      "dmc": true,
+      "dmi": true,
+      "ech": true,
+      "ind": true,
+      "mod": true,
+      "sup": true,
+      "val": true,
+    },
     "pcc": {
       "dmc": true,
       "dmi": true,
@@ -221,6 +306,15 @@ exports[`canEditTitre > vérifie si un utilisateur administrateur admin peut mod
     },
   },
   "dre-normandie-01": {
+    "arg": {
+      "dmc": true,
+      "dmi": true,
+      "ech": true,
+      "ind": true,
+      "mod": true,
+      "sup": true,
+      "val": true,
+    },
     "pxg": {
       "dmc": true,
       "dmi": true,
@@ -232,6 +326,15 @@ exports[`canEditTitre > vérifie si un utilisateur administrateur admin peut mod
     },
   },
   "dre-nouvelle-aquitaine-01": {
+    "arg": {
+      "dmc": true,
+      "dmi": true,
+      "ech": true,
+      "ind": true,
+      "mod": true,
+      "sup": true,
+      "val": true,
+    },
     "pxg": {
       "dmc": true,
       "dmi": true,
@@ -243,6 +346,15 @@ exports[`canEditTitre > vérifie si un utilisateur administrateur admin peut mod
     },
   },
   "dre-occitanie-01": {
+    "arg": {
+      "dmc": true,
+      "dmi": true,
+      "ech": true,
+      "ind": true,
+      "mod": true,
+      "sup": true,
+      "val": true,
+    },
     "pxg": {
       "dmc": true,
       "dmi": true,
@@ -254,6 +366,15 @@ exports[`canEditTitre > vérifie si un utilisateur administrateur admin peut mod
     },
   },
   "dre-paca-01": {
+    "arg": {
+      "dmc": true,
+      "dmi": true,
+      "ech": true,
+      "ind": true,
+      "mod": true,
+      "sup": true,
+      "val": true,
+    },
     "pxg": {
       "dmc": true,
       "dmi": true,
@@ -265,6 +386,15 @@ exports[`canEditTitre > vérifie si un utilisateur administrateur admin peut mod
     },
   },
   "dre-pays-de-la-loire-01": {
+    "arg": {
+      "dmc": true,
+      "dmi": true,
+      "ech": true,
+      "ind": true,
+      "mod": true,
+      "sup": true,
+      "val": true,
+    },
     "pxg": {
       "dmc": true,
       "dmi": true,
