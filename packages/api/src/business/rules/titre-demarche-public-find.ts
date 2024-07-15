@@ -132,7 +132,7 @@ const titreDemarchePublicLectureFind = (
   // clôture de l’enquête publique (epc)
 
   const domaineId = titreTypeId ? getDomaineId(titreTypeId) : null
-  if (domaineId && ['m', 'w', 'c'].includes(domaineId) && ['ane', 'anf', 'dex', 'dpu', 'dup', 'rpu', 'ppu', 'ppc', 'epu', 'epc'].includes(titreEtape.typeId)) {
+  if (domaineId && ['m', 'w', 'c'].includes(domaineId) && ['ane', 'anf', 'dex', 'dpu', 'dup', 'rpu', 'ppu', 'epu', 'epc'].includes(titreEtape.typeId)) {
     return true
   }
 

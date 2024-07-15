@@ -208,16 +208,13 @@ const EtapesTypesDocumentsTypes = {
     { documentTypeId: DOCUMENTS_TYPES_IDS.justificatifDePaiement, optionnel: true },
     { documentTypeId: DOCUMENTS_TYPES_IDS.notes, optionnel: true },
   ],
-  [ETAPES_TYPES.clotureDeLaParticipationDuPublic]: [
-    { documentTypeId: DOCUMENTS_TYPES_IDS.notes, optionnel: true },
-    { documentTypeId: DOCUMENTS_TYPES_IDS.rapportDuCommissaireEnqueteur, optionnel: true },
-  ],
-  [ETAPES_TYPES.ouvertureDeLaParticipationDuPublic]: [
+  [ETAPES_TYPES.participationDuPublic]: [
     { documentTypeId: DOCUMENTS_TYPES_IDS.complementsAuDossierDeDemande, optionnel: true },
     { documentTypeId: DOCUMENTS_TYPES_IDS.documentsCartographiques, optionnel: true },
     { documentTypeId: DOCUMENTS_TYPES_IDS.dossierDeDemande, optionnel: true },
     { documentTypeId: DOCUMENTS_TYPES_IDS.dossier, optionnel: true },
     { documentTypeId: DOCUMENTS_TYPES_IDS.lettreDeDemande, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.rapportDuCommissaireEnqueteur, optionnel: true },
     { documentTypeId: DOCUMENTS_TYPES_IDS.notes, optionnel: true },
   ],
   [ETAPES_TYPES.receptionDeComplements_RecevabiliteDeLaDemande_]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.complementsAuDossierDeDemande, optionnel: true }],

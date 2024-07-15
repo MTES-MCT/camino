@@ -755,24 +755,21 @@ describe("publicité d'une démarche", () => {
     ).toMatchObject({ publicLecture: true })
   })
 
-  test.each<EtapeTypeId>(['ane', 'anf', 'dex', 'dpu', 'dup', 'rpu', 'ppu', 'ppc', 'epu', 'epc'])(
-    "une démarche d’un titre non énergétique dont l'étape la plus récente est %s est public",
-    etapeTypeId => {
-      expect(
-        titreDemarchePublicFind(
-          {
-            typeId: 'oct',
-            demarcheDateDebut: toCaminoDate('2020-01-01'),
-            demarcheDateFin: toCaminoDate('2021-01-01'),
-            id: newDemarcheId(),
-            etapes: etapesBuild([{ typeId: etapeTypeId, isBrouillon: ETAPE_IS_NOT_BROUILLON }]),
-            titreId: newTitreId('titreId'),
-          },
-          'pcc'
-        )
-      ).toMatchObject({ publicLecture: true })
-    }
-  )
+  test.each<EtapeTypeId>(['ane', 'anf', 'dex', 'dpu', 'dup', 'rpu', 'ppu', 'epu', 'epc'])("une démarche d’un titre non énergétique dont l'étape la plus récente est %s est public", etapeTypeId => {
+    expect(
+      titreDemarchePublicFind(
+        {
+          typeId: 'oct',
+          demarcheDateDebut: toCaminoDate('2020-01-01'),
+          demarcheDateFin: toCaminoDate('2021-01-01'),
+          id: newDemarcheId(),
+          etapes: etapesBuild([{ typeId: etapeTypeId, isBrouillon: ETAPE_IS_NOT_BROUILLON }]),
+          titreId: newTitreId('titreId'),
+        },
+        'pcc'
+      )
+    ).toMatchObject({ publicLecture: true })
+  })
 
   test('le titre WQaZgPfDcQw9tFliMgBIDH3Z ne doit pas être public', () => {
     expect(

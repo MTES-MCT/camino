@@ -1421,14 +1421,6 @@ describe("phases d'une démarche", () => {
               },
               {
                 titreDemarcheId: demarcheId4,
-                ordre: 16,
-                typeId: 'ppc',
-                isBrouillon: ETAPE_IS_NOT_BROUILLON,
-                date: toCaminoDate('2023-02-08'),
-                statutId: 'ter',
-              },
-              {
-                titreDemarcheId: demarcheId4,
                 ordre: 8,
                 typeId: 'mcr',
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,

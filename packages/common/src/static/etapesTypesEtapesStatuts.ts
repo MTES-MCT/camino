@@ -192,9 +192,10 @@ export const EtapesTypesEtapesStatuts = {
   notificationAuPrefet: { FAIT: { etapeTypeId: 'npp', etapeStatutId: 'fai' } },
   paiementDesFraisDeDossierComplementaires: { FAIT: { etapeTypeId: 'pfc', etapeStatutId: 'fai' } },
   paiementDesFraisDeDossier: { FAIT: { etapeTypeId: 'pfd', etapeStatutId: 'fai' } },
-  clotureDeLaParticipationDuPublic: { TERMINE: { etapeTypeId: 'ppc', etapeStatutId: 'ter' } },
-  ouvertureDeLaParticipationDuPublic: {
-    FAIT: { etapeTypeId: 'ppu', etapeStatutId: 'fai' },
+  participationDuPublic: {
+    PROGRAMME: { etapeTypeId: 'ppu', etapeStatutId: 'pro' },
+    EN_COURS: { etapeTypeId: 'ppu', etapeStatutId: 'enc' },
+    TERMINE: { etapeTypeId: 'ppu', etapeStatutId: 'ter' },
   },
   publicationDansUnJournalLocalOuNational: { FAIT: { etapeTypeId: 'pqr', etapeStatutId: 'fai' } },
   receptionDeComplements_RecevabiliteDeLaDemande_: { FAIT: { etapeTypeId: 'rca', etapeStatutId: 'fai' } },
