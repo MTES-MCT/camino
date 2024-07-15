@@ -12,6 +12,7 @@ type AdministrationTitreType = PartialRecord<
 const AdministrationsTypesTitresTypes: { [key in AdministrationTypeId]?: Readonly<AdministrationTitreType> } = {
   [ADMINISTRATION_TYPE_IDS.DREAL]: {
     [TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_GEOTHERMIE]: { gestionnaire: true, associee: false },
+    [TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_GEOTHERMIE]: { gestionnaire: true, associee: false },
   },
 } as const
 

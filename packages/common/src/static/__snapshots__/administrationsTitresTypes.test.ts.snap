@@ -34,6 +34,58 @@ exports[`vérifie les administrations gestionnaire d'un type de titre 1`] = `
   ],
   "arg": [
     {
+      "administrationId": "dre-aura-01",
+      "associee": false,
+    },
+    {
+      "administrationId": "dre-bfc-01",
+      "associee": false,
+    },
+    {
+      "administrationId": "dre-bretagne-01",
+      "associee": false,
+    },
+    {
+      "administrationId": "dre-centre-val-de-loire-01",
+      "associee": false,
+    },
+    {
+      "administrationId": "dre-corse-01",
+      "associee": false,
+    },
+    {
+      "administrationId": "dre-grand-est-01",
+      "associee": false,
+    },
+    {
+      "administrationId": "dre-hauts-de-france-01",
+      "associee": false,
+    },
+    {
+      "administrationId": "dre-ile-de-france-01",
+      "associee": false,
+    },
+    {
+      "administrationId": "dre-normandie-01",
+      "associee": false,
+    },
+    {
+      "administrationId": "dre-nouvelle-aquitaine-01",
+      "associee": false,
+    },
+    {
+      "administrationId": "dre-occitanie-01",
+      "associee": false,
+    },
+    {
+      "administrationId": "dre-paca-01",
+      "associee": false,
+    },
+    {
+      "administrationId": "dre-pays-de-la-loire-01",
+      "associee": false,
+    },
+    {
       "administrationId": "min-mtes-dgec-01",
       "associee": false,
     },
@@ -5075,7 +5127,7 @@ exports[`vérifie si l’administration est gestionnaire par rapport au titreTyp
     "apm": false,
     "apw": false,
     "arc": false,
-    "arg": false,
+    "arg": true,
     "arm": false,
     "axm": false,
     "cxf": false,
@@ -5108,7 +5160,7 @@ exports[`vérifie si l’administration est gestionnaire par rapport au titreTyp
     "apm": false,
     "apw": false,
     "arc": false,
-    "arg": false,
+    "arg": true,
     "arm": false,
     "axm": false,
     "cxf": false,
@@ -5141,7 +5193,7 @@ exports[`vérifie si l’administration est gestionnaire par rapport au titreTyp
     "apm": false,
     "apw": false,
     "arc": false,
-    "arg": false,
+    "arg": true,
     "arm": false,
     "axm": false,
     "cxf": false,
@@ -5174,7 +5226,7 @@ exports[`vérifie si l’administration est gestionnaire par rapport au titreTyp
     "apm": false,
     "apw": false,
     "arc": false,
-    "arg": false,
+    "arg": true,
     "arm": false,
     "axm": false,
     "cxf": false,
@@ -5207,7 +5259,7 @@ exports[`vérifie si l’administration est gestionnaire par rapport au titreTyp
     "apm": false,
     "apw": false,
     "arc": false,
-    "arg": false,
+    "arg": true,
     "arm": false,
     "axm": false,
     "cxf": false,
@@ -5240,7 +5292,7 @@ exports[`vérifie si l’administration est gestionnaire par rapport au titreTyp
     "apm": false,
     "apw": false,
     "arc": false,
-    "arg": false,
+    "arg": true,
     "arm": false,
     "axm": false,
     "cxf": false,
@@ -5273,7 +5325,7 @@ exports[`vérifie si l’administration est gestionnaire par rapport au titreTyp
     "apm": false,
     "apw": false,
     "arc": false,
-    "arg": false,
+    "arg": true,
     "arm": false,
     "axm": false,
     "cxf": false,
@@ -5306,7 +5358,7 @@ exports[`vérifie si l’administration est gestionnaire par rapport au titreTyp
     "apm": false,
     "apw": false,
     "arc": false,
-    "arg": false,
+    "arg": true,
     "arm": false,
     "axm": false,
     "cxf": false,
@@ -5339,7 +5391,7 @@ exports[`vérifie si l’administration est gestionnaire par rapport au titreTyp
     "apm": false,
     "apw": false,
     "arc": false,
-    "arg": false,
+    "arg": true,
     "arm": false,
     "axm": false,
     "cxf": false,
@@ -5372,7 +5424,7 @@ exports[`vérifie si l’administration est gestionnaire par rapport au titreTyp
     "apm": false,
     "apw": false,
     "arc": false,
-    "arg": false,
+    "arg": true,
     "arm": false,
     "axm": false,
     "cxf": false,
@@ -5405,7 +5457,7 @@ exports[`vérifie si l’administration est gestionnaire par rapport au titreTyp
     "apm": false,
     "apw": false,
     "arc": false,
-    "arg": false,
+    "arg": true,
     "arm": false,
     "axm": false,
     "cxf": false,
@@ -5438,7 +5490,7 @@ exports[`vérifie si l’administration est gestionnaire par rapport au titreTyp
     "apm": false,
     "apw": false,
     "arc": false,
-    "arg": false,
+    "arg": true,
     "arm": false,
     "axm": false,
     "cxf": false,
@@ -5471,7 +5523,7 @@ exports[`vérifie si l’administration est gestionnaire par rapport au titreTyp
     "apm": false,
     "apw": false,
     "arc": false,
-    "arg": false,
+    "arg": true,
     "arm": false,
     "axm": false,
     "cxf": false,
@@ -9171,6 +9223,11 @@ exports[`vérifie tous les droits sur les types de titre pour l’administration
     },
     {
       "associee": false,
+      "gestionnaire": true,
+      "titreTypeId": "arg",
+    },
+    {
+      "associee": false,
       "gestionnaire": false,
       "titreTypeId": "cxm",
     },
@@ -9185,6 +9242,11 @@ exports[`vérifie tous les droits sur les types de titre pour l’administration
       "associee": false,
       "gestionnaire": true,
       "titreTypeId": "pxg",
+    },
+    {
+      "associee": false,
+      "gestionnaire": true,
+      "titreTypeId": "arg",
     },
     {
       "associee": false,
@@ -9203,12 +9265,22 @@ exports[`vérifie tous les droits sur les types de titre pour l’administration
       "gestionnaire": true,
       "titreTypeId": "pxg",
     },
+    {
+      "associee": false,
+      "gestionnaire": true,
+      "titreTypeId": "arg",
+    },
   ],
   "dre-centre-val-de-loire-01": [
     {
       "associee": false,
       "gestionnaire": true,
       "titreTypeId": "pxg",
+    },
+    {
+      "associee": false,
+      "gestionnaire": true,
+      "titreTypeId": "arg",
     },
   ],
   "dre-corse-01": [
@@ -9217,12 +9289,22 @@ exports[`vérifie tous les droits sur les types de titre pour l’administration
       "gestionnaire": true,
       "titreTypeId": "pxg",
     },
+    {
+      "associee": false,
+      "gestionnaire": true,
+      "titreTypeId": "arg",
+    },
   ],
   "dre-grand-est-01": [
     {
       "associee": false,
       "gestionnaire": true,
       "titreTypeId": "pxg",
+    },
+    {
+      "associee": false,
+      "gestionnaire": true,
+      "titreTypeId": "arg",
     },
   ],
   "dre-hauts-de-france-01": [
@@ -9231,12 +9313,22 @@ exports[`vérifie tous les droits sur les types de titre pour l’administration
       "gestionnaire": true,
       "titreTypeId": "pxg",
     },
+    {
+      "associee": false,
+      "gestionnaire": true,
+      "titreTypeId": "arg",
+    },
   ],
   "dre-ile-de-france-01": [
     {
       "associee": false,
       "gestionnaire": true,
       "titreTypeId": "pxg",
+    },
+    {
+      "associee": false,
+      "gestionnaire": true,
+      "titreTypeId": "arg",
     },
     {
       "associee": false,
@@ -9250,12 +9342,22 @@ exports[`vérifie tous les droits sur les types de titre pour l’administration
       "gestionnaire": true,
       "titreTypeId": "pxg",
     },
+    {
+      "associee": false,
+      "gestionnaire": true,
+      "titreTypeId": "arg",
+    },
   ],
   "dre-nouvelle-aquitaine-01": [
     {
       "associee": false,
       "gestionnaire": true,
       "titreTypeId": "pxg",
+    },
+    {
+      "associee": false,
+      "gestionnaire": true,
+      "titreTypeId": "arg",
     },
   ],
   "dre-occitanie-01": [
@@ -9264,6 +9366,11 @@ exports[`vérifie tous les droits sur les types de titre pour l’administration
       "gestionnaire": true,
       "titreTypeId": "pxg",
     },
+    {
+      "associee": false,
+      "gestionnaire": true,
+      "titreTypeId": "arg",
+    },
   ],
   "dre-paca-01": [
     {
@@ -9271,12 +9378,22 @@ exports[`vérifie tous les droits sur les types de titre pour l’administration
       "gestionnaire": true,
       "titreTypeId": "pxg",
     },
+    {
+      "associee": false,
+      "gestionnaire": true,
+      "titreTypeId": "arg",
+    },
   ],
   "dre-pays-de-la-loire-01": [
     {
       "associee": false,
       "gestionnaire": true,
       "titreTypeId": "pxg",
+    },
+    {
+      "associee": false,
+      "gestionnaire": true,
+      "titreTypeId": "arg",
     },
   ],
   "min-dajb-01": [
