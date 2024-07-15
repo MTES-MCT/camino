@@ -17,6 +17,7 @@ import {
   IUpdateEtapeAvisInfoDbQuery,
   IUpdateEtapeAvisFileDbQuery,
   IDeleteEtapeAvisDbQuery,
+  IGetParticipationEtapesDbQuery,
 } from './titres-etapes.queries.types.js'
 import {
   ETAPE_IS_NOT_BROUILLON,
@@ -50,13 +51,15 @@ import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { DeepReadonly, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, SimplePromiseFn } from 'camino-common/src/typescript-tools.js'
 import { CanReadDemarche } from '../../api/rest/permissions/demarches.js'
 import { newEtapeAvisId, newEtapeDocumentId } from '../models/_format/id-create.js'
-import { caminoDateValidator, getCurrent } from 'camino-common/src/date.js'
+import { CaminoDate, caminoDateValidator, getCurrent } from 'camino-common/src/date.js'
 import { createLargeObject, LargeObjectId, largeObjectIdValidator } from '../largeobjects.js'
 import { avisStatutIdValidator, avisTypeIdValidator, avisVisibilityIdValidator } from 'camino-common/src/static/avisTypes.js'
 import { canReadAvis } from '../../api/rest/permissions/avis.js'
 import { getEtapeDataForEdition } from '../../api/rest/etapes.queries.js'
 import { etapeAvisStepIsComplete } from 'camino-common/src/permissions/etape-form.js'
 import { CommuneId } from 'camino-common/src/static/communes.js'
+import { EtapeStatutId, etapeStatutIdValidator } from 'camino-common/src/static/etapesStatuts.js'
+import { contenuValidator } from '../../api/rest/activites.queries.js'
 
 export const insertTitreEtapeEntrepriseDocument = async (pool: Pool, params: { titre_etape_id: EtapeId; entreprise_document_id: EntrepriseDocumentId }) =>
   dbQueryAndValidate(insertTitreEtapeEntrepriseDocumentInternal, params, pool, z.void())
@@ -408,3 +411,26 @@ export const getDocumentsByEtapeId = async (
 
   return z.array(etapeDocumentValidator).parse(result)
 }
+
+const getParticipationEtapesValidator = z.object({
+  id: etapeIdValidator,
+  date: caminoDateValidator,
+  etape_statut_id: etapeStatutIdValidator,
+  contenu:contenuValidator
+})
+
+export const getParticipationEtapes = async (pool: Pool, _etapeId: EtapeId | undefined): Promise<{ dureeParticipation: number; date: CaminoDate; id: EtapeId; etape_statut_id: EtapeStatutId }[]> => {
+  const result = await dbQueryAndValidate(getParticipationEtapesDb, undefined, pool, getParticipationEtapesValidator)
+
+  return result.map(r => ({...r, dureeParticipation: z.number().parse(r.contenu?.opdp?.duree ?? 0)}))
+}
+
+const getParticipationEtapesDb = sql<Redefine<IGetParticipationEtapesDbQuery, void, z.infer<typeof getParticipationEtapesValidator>>>`
+  select
+    te.id,
+    te.contenu,
+    te.statut_id as etape_statut_id,
+    te.date
+  from titres_etapes te
+  where archive is false
+  `

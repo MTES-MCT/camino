@@ -19,6 +19,7 @@ import { titresActivitesRelanceSend } from './processes/titres-activites-relance
 import type { Pool } from 'pg'
 import { demarchesDefinitionsCheck } from '../tools/demarches/definitions-check.js'
 import { titreTypeDemarcheTypeEtapeTypeCheck } from '../tools/demarches/tde-check.js'
+import { titresEtapesStatutUpdate } from './processes/titres-etapes-statut-update.js'
 
 export const daily = async (pool: Pool) => {
   try {
@@ -26,6 +27,7 @@ export const daily = async (pool: Pool) => {
     console.info('- - -')
     console.info('mise à jour quotidienne')
 
+    const titresEtapesStatusUpdated = await titresEtapesStatutUpdate(pool, userSuper)
     const titresEtapesOrdreUpdated = await titresEtapesOrdreUpdate(pool, userSuper)
     const titresEtapesHeritagePropsUpdated = await titresEtapesHeritagePropsUpdate(userSuper)
     const titresEtapesHeritageContenuUpdated = await titresEtapesHeritageContenuUpdate(pool, userSuper)
@@ -50,6 +52,7 @@ export const daily = async (pool: Pool) => {
     await titreTypeDemarcheTypeEtapeTypeCheck()
 
     logsUpdate({
+      titresEtapesStatusUpdated,
       titresEtapesOrdreUpdated,
       titresEtapesHeritagePropsUpdated,
       titresEtapesHeritageContenuUpdated,
