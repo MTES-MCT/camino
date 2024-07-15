@@ -21,8 +21,8 @@ services:
     expose:
       - ${API_PORT}
     volumes:
-      - ./files:/packages/api/files
-      - ./.env:/.env
+      - ./files:/project/packages/api/files
+      - ./.env:/project/.env
     networks:
       - default
       - nginx-proxy
