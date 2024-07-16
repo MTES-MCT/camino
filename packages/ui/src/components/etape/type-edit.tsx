@@ -73,7 +73,7 @@ export const TypeEdit = defineComponent<Props>(props => {
         .filter(onlyUnique)
 
       let newEtapeStatutId
-      if (possibleStatuts.value.length === 1 || etapeTypeId.value === ETAPES_TYPES.participationDuPublic) {
+      if (possibleStatuts.value.length === 1 || typeId === ETAPES_TYPES.participationDuPublic) {
         newEtapeStatutId = possibleStatuts.value[0]
       } else {
         newEtapeStatutId = null
