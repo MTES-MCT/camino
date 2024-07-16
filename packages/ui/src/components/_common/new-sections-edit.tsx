@@ -115,90 +115,110 @@ export const SectionElementEdit = defineComponent<SectionElementEditProps>(props
     case 'integer':
     case 'number':
       return () => (
-        <DsfrInput
-          type={{ type: 'number', min: 0 }}
-          required={required}
-          initialValue={element.value}
-          valueChanged={(e: number | null) => onValueChange({ ...element, value: e })}
-          legend={{ main: element.nom ?? '', description: element.description, info: info.value }}
-        />
+        <div>
+          <DsfrInput
+            type={{ type: 'number', min: 0 }}
+            required={required}
+            initialValue={element.value}
+            valueChanged={(e: number | null) => onValueChange({ ...element, value: e })}
+            legend={{ main: element.nom ?? '', description: element.description, info: info.value }}
+          />
+        </div>
       )
     case 'date':
       return () => (
-        <DsfrInput
-          type={{ type: 'date' }}
-          required={required}
-          initialValue={element.value}
-          valueChanged={(date: CaminoDate | null) => {
-            onValueChange({ ...element, value: date })
-          }}
-          legend={{ main: element.nom ?? '', description: element.description }}
-        />
+        <div>
+          <DsfrInput
+            type={{ type: 'date' }}
+            required={required}
+            initialValue={element.value}
+            valueChanged={(date: CaminoDate | null) => {
+              onValueChange({ ...element, value: date })
+            }}
+            legend={{ main: element.nom ?? '', description: element.description }}
+          />
+        </div>
       )
     case 'textarea':
       return () => (
-        <DsfrTextarea
-          required={required}
-          initialValue={element.value ?? undefined}
-          valueChanged={(e: string) => onValueChange({ ...element, value: e })}
-          legend={{ main: element.nom ?? '', description: element.description }}
-        />
+        <div>
+          <DsfrTextarea
+            required={required}
+            initialValue={element.value ?? undefined}
+            valueChanged={(e: string) => onValueChange({ ...element, value: e })}
+            legend={{ main: element.nom ?? '', description: element.description }}
+          />
+        </div>
       )
 
     case 'text':
     case 'url':
       return () => (
-        <DsfrInput
-          required={required}
-          type={{ type: 'text' }}
-          initialValue={element.value}
-          valueChanged={(e: string) => onValueChange({ ...element, value: e })}
-          legend={{ main: element.nom ?? '', description: element.description }}
-        />
+        <div>
+          <DsfrInput
+            required={required}
+            type={{ type: 'text' }}
+            initialValue={element.value}
+            valueChanged={(e: string) => onValueChange({ ...element, value: e })}
+            legend={{ main: element.nom ?? '', description: element.description }}
+          />
+        </div>
       )
 
     case 'radio':
       return () => (
-        <DsfrInputRadio
-          id={props.element.id}
-          required={required}
-          legend={{ main: element.nom ?? '', description: element.description }}
-          valueChanged={(radio: string) => onValueChange({ ...element, value: radio === 'oui' })}
-          elements={[
-            { legend: { main: 'Oui' }, itemId: 'oui' },
-            { legend: { main: 'Non' }, itemId: 'non' },
-          ]}
-          initialValue={isNullOrUndefined(props.element.value) || !isRadioElement(props.element) ? null : props.element.value ? 'oui' : 'non'}
-        />
+        <div>
+          <DsfrInputRadio
+            id={props.element.id}
+            required={required}
+            legend={{ main: element.nom ?? '', description: element.description }}
+            valueChanged={(radio: string) => onValueChange({ ...element, value: radio === 'oui' })}
+            elements={[
+              { legend: { main: 'Oui' }, itemId: 'oui' },
+              { legend: { main: 'Non' }, itemId: 'non' },
+            ]}
+            initialValue={isNullOrUndefined(props.element.value) || !isRadioElement(props.element) ? null : props.element.value ? 'oui' : 'non'}
+          />
+        </div>
       )
 
     case 'checkbox':
       return () => (
-        <DsfrInputCheckbox initialValue={element.value} legend={{ main: element.nom ?? '', description: element.description }} valueChanged={(e: boolean) => onValueChange({ ...element, value: e })} />
+        <div>
+          <DsfrInputCheckbox
+            initialValue={element.value}
+            legend={{ main: element.nom ?? '', description: element.description }}
+            valueChanged={(e: boolean) => onValueChange({ ...element, value: e })}
+          />
+        </div>
       )
 
     case 'checkboxes':
       return () => (
-        <DsfrInputCheckboxes
-          legend={{ main: element.nom ?? '', description: element.description }}
-          elements={element.options.map(option => {
-            return { itemId: option.id, legend: { main: capitalize(option.nom) } }
-          })}
-          initialCheckedValue={(props.element.value ?? []) as string[]}
-          valueChanged={newValues => onValueChange({ ...element, value: newValues })}
-        />
+        <div>
+          <DsfrInputCheckboxes
+            legend={{ main: element.nom ?? '', description: element.description }}
+            elements={element.options.map(option => {
+              return { itemId: option.id, legend: { main: capitalize(option.nom) } }
+            })}
+            initialCheckedValue={(props.element.value ?? []) as string[]}
+            valueChanged={newValues => onValueChange({ ...element, value: newValues })}
+          />
+        </div>
       )
     case 'select': {
       const options = element.options.map(option => ({ id: option.id, label: option.nom }))
       if (isNonEmptyArray(options)) {
         return () => (
-          <DsfrSelect
-            required={required}
-            legend={{ main: element.nom ?? '', description: element.description }}
-            items={options}
-            initialValue={element.value}
-            valueChanged={newValue => onValueChange({ ...element, value: newValue })}
-          />
+          <div>
+            <DsfrSelect
+              required={required}
+              legend={{ main: element.nom ?? '', description: element.description }}
+              items={options}
+              initialValue={element.value}
+              valueChanged={newValue => onValueChange({ ...element, value: newValue })}
+            />
+          </div>
         )
       } else {
         throw new Error('Select sans option, cas impossible ?')
@@ -208,6 +228,8 @@ export const SectionElementEdit = defineComponent<SectionElementEditProps>(props
     default:
       exhaustiveCheck(element)
   }
+
+  return () => <div></div>
 })
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
