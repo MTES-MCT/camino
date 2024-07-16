@@ -11,11 +11,12 @@ import { capitalize } from 'camino-common/src/strings'
 import { DsfrInputRadio } from '../_ui/dsfr-input-radio'
 import { DsfrSelect } from '../_ui/dsfr-select'
 import { useState } from '../../utils/vue-tsx-utils'
-import { CaminoDate } from 'camino-common/src/date'
+import { CaminoDate, dateAddDays, dateFormat } from 'camino-common/src/date'
 import type { JSX } from 'vue/jsx-runtime'
 interface Props {
   sectionsWithValue: DeepReadonly<SectionWithValue[]>
   completeUpdate: (complete: boolean, newContenu: Props['sectionsWithValue']) => void
+  etapeDate: CaminoDate | null
 }
 
 export const SectionsEdit = defineComponent<Props>(props => {
@@ -65,7 +66,7 @@ export const SectionsEdit = defineComponent<Props>(props => {
 
           {sectionWithValue.elements.map((element, elementIndex) => (
             <div class="fr-fieldset__element">
-              <SectionElementEdit key={element.id} element={element} onValueChange={onValueChange(elementIndex, sectionIndex)} />
+              <SectionElementEdit key={element.id} element={element} onValueChange={onValueChange(elementIndex, sectionIndex)} sectionId={sectionWithValue.id} etapeDate={props.etapeDate} />
             </div>
           ))}
         </fieldset>
@@ -74,12 +75,29 @@ export const SectionsEdit = defineComponent<Props>(props => {
   )
 })
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-SectionsEdit.props = ['sectionsWithValue', 'completeUpdate']
+SectionsEdit.props = ['sectionsWithValue', 'completeUpdate', 'etapeDate']
 
 interface SectionElementEditProps {
   element: DeepReadonly<ElementWithValue>
   onValueChange: (value: SectionElementEditProps['element']) => void
+  sectionId: string
+  etapeDate: CaminoDate | null
 }
+
+export const getInfo = (element: DeepReadonly<ElementWithValue>, sectionId: string, etapeDate: CaminoDate | null): string => {
+  if (isNotNullNorUndefined(element.value)) {
+    if (element.id === 'volumeGranulatsExtrait' && isNumberElement(element)) {
+      return `Soit l’équivalent de ${numberFormat(element.value * 1.5)} tonnes`
+    }
+    if (sectionId === 'opdp' && element.id === 'duree' && isNumberElement(element) && isNotNullNorUndefined(etapeDate)) {
+      const dateFin = dateAddDays(etapeDate, element.value)
+      return `Du ${dateFormat(etapeDate)} au ${dateFormat(dateFin)}`
+    }
+  }
+
+  return ''
+}
+
 export const SectionElementEdit = defineComponent<SectionElementEditProps>(props => {
   let sectionElementEditInput: JSX.Element | null = null
 
@@ -91,7 +109,7 @@ export const SectionElementEdit = defineComponent<SectionElementEditProps>(props
   }
 
   const info = computed<string>(() => {
-    return element.id === 'volumeGranulatsExtrait' && isNumberElement(element) && isNotNullNorUndefined(element.value) ? `Soit l’équivalent de ${numberFormat(element.value * 1.5)} tonnes` : ''
+    return getInfo(element, props.sectionId, props.etapeDate)
   })
 
   const required = !(props.element.optionnel ?? false)
@@ -205,4 +223,4 @@ export const SectionElementEdit = defineComponent<SectionElementEditProps>(props
 })
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-SectionElementEdit.props = ['element', 'onValueChange']
+SectionElementEdit.props = ['element', 'onValueChange', 'sectionId', 'etapeDate']
