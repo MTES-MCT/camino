@@ -87,11 +87,13 @@ export const canReadTitre = async (
   return false
 }
 
-export const canEditTitre = (user: User, titreTypeId: TitreTypeId, titreStatutId: TitreStatutId): boolean => {
+export const canEditTitre = (user: User, titreTypeId: TitreTypeId, titreStatutId: TitreStatutId, administrationsLocales: AdministrationId[]): boolean => {
   if (isSuper(user)) {
     return true
   } else if (isAdministrationAdmin(user) || isAdministrationEditeur(user)) {
-    return isGestionnaire(user.administrationId, titreTypeId) && canAdministrationModifyTitres(user.administrationId, titreTypeId, titreStatutId)
+    return (
+      (isGestionnaire(user.administrationId, titreTypeId) || administrationsLocales.includes(user.administrationId)) && canAdministrationModifyTitres(user.administrationId, titreTypeId, titreStatutId)
+    )
   }
 
   return false

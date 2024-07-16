@@ -214,7 +214,7 @@ export const titresAdministrations = (_pool: Pool) => async (req: CaminoRequest,
           }
 
           return (
-            canEditTitre(user, titre.typeId, titre.titreStatutId) ||
+            canEditTitre(user, titre.typeId, titre.titreStatutId, titre.administrationsLocales ?? []) ||
             canEditDemarche(user, titre.typeId, titre.titreStatutId, titre.administrationsLocales ?? []) ||
             canCreateTravaux(
               user,
@@ -510,12 +510,12 @@ export const updateTitre = (pool: Pool) => async (req: CaminoRequest, res: Custo
     res.sendStatus(HTTP_STATUS.BAD_REQUEST)
   } else {
     try {
-      const titreOld = await titreGet(titreId, { fields: {} }, user)
+      const titreOld = await titreGet(titreId, { fields: { pointsEtape: { id: {} } } }, user)
 
       if (isNullOrUndefined(titreOld)) {
         res.sendStatus(HTTP_STATUS.NOT_FOUND)
       } else {
-        if (!canEditTitre(user, titreOld.typeId, titreOld.titreStatutId)) {
+        if (!canEditTitre(user, titreOld.typeId, titreOld.titreStatutId, titreOld.administrationsLocales ?? [])) {
           res.sendStatus(HTTP_STATUS.FORBIDDEN)
         } else {
           // on doit utiliser upsert (plutôt qu'un simple update)

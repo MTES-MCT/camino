@@ -345,7 +345,7 @@ export const PureTitre = defineComponent<Props>(props => {
                   target="_blank"
                   rel="noopener external"
                 />
-                {canEditTitre(props.user, titre.titre_type_id, titre.titre_statut_id) ? (
+                {canEditTitre(props.user, titre.titre_type_id, titre.titre_statut_id, administrations.value) ? (
                   <DsfrButtonIcon icon="fr-icon-pencil-line" buttonType="secondary" class="fr-ml-2w" title="Éditer le titre" onClick={openEditerTitrePopup} />
                 ) : null}
                 {canDeleteTitre(props.user) ? (

@@ -98,20 +98,20 @@ describe('canEditTitre', () => {
   test.each<TitreTypeId>(TitresTypesIds)('vérifie si une entreprise ne peut pas modifier un titre de type %p', titreTypeId => {
     const user: User = { role: 'entreprise', entreprises: [], ...testBlankUser }
     titresStatutsArray.forEach(titreStatut => {
-      expect(canEditTitre(user, titreTypeId, titreStatut.id)).toBe(false)
+      expect(canEditTitre(user, titreTypeId, titreStatut.id, [])).toBe(false)
     })
   })
   test.each<TitreTypeId>(TitresTypesIds)('vérifie si un utilisateur super peut créer un titre de type %p', titreTypeId => {
     const user: User = { role: 'super', ...testBlankUser }
     titresStatutsArray.forEach(titreStatut => {
-      expect(canEditTitre(user, titreTypeId, titreStatut.id)).toBe(true)
+      expect(canEditTitre(user, titreTypeId, titreStatut.id, [])).toBe(true)
     })
   })
 
   test.each<TitreTypeId>(TitresTypesIds)('vérifie si un utilisateur administrateur lecteur ne peut pas modifier de titre de type %p', titreTypeId => {
     const user: User = { role: 'lecteur', administrationId: ADMINISTRATION_IDS['DEAL - MARTINIQUE'], ...testBlankUser }
     titresStatutsArray.forEach(titreStatut => {
-      expect(canEditTitre(user, titreTypeId, titreStatut.id)).toBe(false)
+      expect(canEditTitre(user, titreTypeId, titreStatut.id, [])).toBe(false)
     })
   })
 
@@ -122,7 +122,7 @@ describe('canEditTitre', () => {
       const user: User = { role: 'admin', administrationId, ...testBlankUser }
       for (const titreTypeid of TitresTypesIds) {
         for (const titreStatutId of titresStatutsArray) {
-          const itCan = canEditTitre(user, titreTypeid, titreStatutId.id)
+          const itCan = canEditTitre(user, titreTypeid, titreStatutId.id, [])
           if (itCan) {
             ;((result[administrationId] ??= {})[titreTypeid] ??= {})[titreStatutId.id] = itCan
           }
