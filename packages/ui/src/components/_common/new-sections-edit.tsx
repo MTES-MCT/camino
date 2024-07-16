@@ -12,7 +12,6 @@ import { DsfrInputRadio } from '../_ui/dsfr-input-radio'
 import { DsfrSelect } from '../_ui/dsfr-select'
 import { useState } from '../../utils/vue-tsx-utils'
 import { CaminoDate, dateAddDays, dateFormat } from 'camino-common/src/date'
-import type { JSX } from 'vue/jsx-runtime'
 interface Props {
   sectionsWithValue: DeepReadonly<SectionWithValue[]>
   completeUpdate: (complete: boolean, newContenu: Props['sectionsWithValue']) => void
@@ -99,8 +98,6 @@ export const getInfo = (element: DeepReadonly<ElementWithValue>, sectionId: stri
 }
 
 export const SectionElementEdit = defineComponent<SectionElementEditProps>(props => {
-  let sectionElementEditInput: JSX.Element | null = null
-
   const complete = ref<boolean>(sectionElementWithValueCompleteValidate(props.element))
 
   const onValueChange = (value: DeepReadonly<ElementWithValue>) => {
@@ -108,16 +105,16 @@ export const SectionElementEdit = defineComponent<SectionElementEditProps>(props
     props.onValueChange(value)
   }
 
+  const element = props.element
   const info = computed<string>(() => {
-    return getInfo(element, props.sectionId, props.etapeDate)
+    return getInfo(props.element, props.sectionId, props.etapeDate)
   })
 
   const required = !(props.element.optionnel ?? false)
-  const element = props.element
   switch (element.type) {
     case 'integer':
     case 'number':
-      sectionElementEditInput = (
+      return () => (
         <DsfrInput
           type={{ type: 'number', min: 0 }}
           required={required}
@@ -126,9 +123,8 @@ export const SectionElementEdit = defineComponent<SectionElementEditProps>(props
           legend={{ main: element.nom ?? '', description: element.description, info: info.value }}
         />
       )
-      break
     case 'date':
-      sectionElementEditInput = (
+      return () => (
         <DsfrInput
           type={{ type: 'date' }}
           required={required}
@@ -139,9 +135,8 @@ export const SectionElementEdit = defineComponent<SectionElementEditProps>(props
           legend={{ main: element.nom ?? '', description: element.description }}
         />
       )
-      break
     case 'textarea':
-      sectionElementEditInput = (
+      return () => (
         <DsfrTextarea
           required={required}
           initialValue={element.value ?? undefined}
@@ -149,11 +144,10 @@ export const SectionElementEdit = defineComponent<SectionElementEditProps>(props
           legend={{ main: element.nom ?? '', description: element.description }}
         />
       )
-      break
 
     case 'text':
     case 'url':
-      sectionElementEditInput = (
+      return () => (
         <DsfrInput
           required={required}
           type={{ type: 'text' }}
@@ -162,9 +156,9 @@ export const SectionElementEdit = defineComponent<SectionElementEditProps>(props
           legend={{ main: element.nom ?? '', description: element.description }}
         />
       )
-      break
+
     case 'radio':
-      sectionElementEditInput = (
+      return () => (
         <DsfrInputRadio
           id={props.element.id}
           required={required}
@@ -177,15 +171,14 @@ export const SectionElementEdit = defineComponent<SectionElementEditProps>(props
           initialValue={isNullOrUndefined(props.element.value) || !isRadioElement(props.element) ? null : props.element.value ? 'oui' : 'non'}
         />
       )
-      break
+
     case 'checkbox':
-      sectionElementEditInput = (
+      return () => (
         <DsfrInputCheckbox initialValue={element.value} legend={{ main: element.nom ?? '', description: element.description }} valueChanged={(e: boolean) => onValueChange({ ...element, value: e })} />
       )
 
-      break
     case 'checkboxes':
-      sectionElementEditInput = (
+      return () => (
         <DsfrInputCheckboxes
           legend={{ main: element.nom ?? '', description: element.description }}
           elements={element.options.map(option => {
@@ -195,11 +188,10 @@ export const SectionElementEdit = defineComponent<SectionElementEditProps>(props
           valueChanged={newValues => onValueChange({ ...element, value: newValues })}
         />
       )
-      break
     case 'select': {
       const options = element.options.map(option => ({ id: option.id, label: option.nom }))
       if (isNonEmptyArray(options)) {
-        sectionElementEditInput = (
+        return () => (
           <DsfrSelect
             required={required}
             legend={{ main: element.nom ?? '', description: element.description }}
@@ -211,15 +203,11 @@ export const SectionElementEdit = defineComponent<SectionElementEditProps>(props
       } else {
         throw new Error('Select sans option, cas impossible ?')
       }
-
-      break
     }
 
     default:
       exhaustiveCheck(element)
   }
-
-  return () => <div>{sectionElementEditInput}</div>
 })
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
