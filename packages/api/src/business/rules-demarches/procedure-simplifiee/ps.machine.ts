@@ -37,9 +37,7 @@ type ProcedureSimplifieeXStateEvent =
 type Event = ProcedureSimplifieeXStateEvent['type']
 
 // FIXME
-// - migration
 // - interdire de modifier le statut de la participation manuellement
-// - modifier automatiquement dans le daily le statut des participations
 
 const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
   FAIRE_DEMANDE: { db: ETES.demande, mainStep: true },

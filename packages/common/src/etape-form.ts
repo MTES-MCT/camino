@@ -24,7 +24,7 @@ import { titreIdValidator, titreSlugValidator } from './validators/titres.js'
 import { makeFlattenValidator, nullToDefault } from './zod-tools.js'
 import { numberElementValueValidator } from './sections.js'
 
-const contenuValidator = z
+export const contenuValidator = z
   .record(z.string(), z.record(z.string(), z.union([caminoDateValidator, z.string(), z.number(), z.boolean(), z.array(z.string())]).nullable()))
   .nullable()
   .transform(nullToDefault({}))

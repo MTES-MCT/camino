@@ -272,8 +272,11 @@ export type IGetParticipationEtapesDbParams = void;
 export interface IGetParticipationEtapesDbResult {
   contenu: Json | null;
   date: string;
+  demarche_type_id: string;
   etape_statut_id: string;
+  heritage_contenu: Json | null;
   id: string;
+  titre_type_id: string;
 }
 
 /** 'GetParticipationEtapesDb' query type */

@@ -1,29 +1,30 @@
-import { UserNotNull } from 'camino-common/src/roles.js'
 import { Pool } from 'pg'
-import { EtapeId } from 'camino-common/src/etape.js'
-import { CaminoDate, dateAddDays, getCurrent, isBefore } from 'camino-common/src/date.js'
-import { ETAPES_STATUTS, EtapeStatutId } from 'camino-common/src/static/etapesStatuts.js'
+import { EtapeId, getStatutId } from 'camino-common/src/etape.js'
+import { getCurrent } from 'camino-common/src/date.js'
+import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts.js'
 import { getParticipationEtapes, updateParticipationStatut } from '../../database/queries/titres-etapes.queries.js'
+import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes.js'
+import { simpleContenuToFlattenedContenu } from 'camino-common/src/sections.js'
 
-export const titresEtapesStatutUpdate = async (pool: Pool, user: UserNotNull, etapeId?: EtapeId): Promise<EtapeId[]> => {
+export const titresEtapesStatutUpdate = async (pool: Pool): Promise<EtapeId[]> => {
   console.info()
   console.info('statut des étapes…')
 
   const titresEtapesIdsUpdated: EtapeId[] = []
 
   const currentDate = getCurrent()
-  const participationEtapes: { dureeParticipation: number; date: CaminoDate; id: EtapeId; etape_statut_id: EtapeStatutId }[] = await getParticipationEtapes(pool, etapeId)
+  const participationEtapes = await getParticipationEtapes(pool)
 
   for (const etape of participationEtapes) {
-    let newStatut: EtapeStatutId
-
-    if (isBefore(currentDate, etape.date)) {
-      newStatut = ETAPES_STATUTS.PROGRAMME
-    } else if (isBefore(currentDate, dateAddDays(etape.date, etape.dureeParticipation))) {
-      newStatut = ETAPES_STATUTS.EN_COURS
-    } else {
-      newStatut = ETAPES_STATUTS.TERMINE
-    }
+    const newStatut: EtapeStatutId = getStatutId(
+      {
+        ...etape,
+        statutId: etape.etape_statut_id,
+        typeId: ETAPES_TYPES.participationDuPublic,
+        contenu: simpleContenuToFlattenedContenu(etape.titre_type_id, etape.demarche_type_id, ETAPES_TYPES.participationDuPublic, etape.contenu, etape.heritage_contenu),
+      },
+      currentDate
+    )
 
     if (newStatut !== etape.etape_statut_id) {
       await updateParticipationStatut(pool, etape.id, newStatut)

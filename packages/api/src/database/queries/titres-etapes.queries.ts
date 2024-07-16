@@ -48,11 +48,11 @@ import { entrepriseDocumentLargeObjectIdValidator } from '../../api/rest/entrepr
 import { canReadDocument } from '../../api/rest/permissions/documents.js'
 import { AdministrationId } from 'camino-common/src/static/administrations.js'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
-import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
+import { TitreTypeId, titreTypeIdValidator } from 'camino-common/src/static/titresTypes.js'
 import { DeepReadonly, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, SimplePromiseFn } from 'camino-common/src/typescript-tools.js'
 import { CanReadDemarche } from '../../api/rest/permissions/demarches.js'
 import { newEtapeAvisId, newEtapeDocumentId } from '../models/_format/id-create.js'
-import { CaminoDate, caminoDateValidator, getCurrent } from 'camino-common/src/date.js'
+import { caminoDateValidator, getCurrent } from 'camino-common/src/date.js'
 import { createLargeObject, LargeObjectId, largeObjectIdValidator } from '../largeobjects.js'
 import { avisStatutIdValidator, avisTypeIdValidator, avisVisibilityIdValidator } from 'camino-common/src/static/avisTypes.js'
 import { canReadAvis } from '../../api/rest/permissions/avis.js'
@@ -60,7 +60,8 @@ import { getEtapeDataForEdition } from '../../api/rest/etapes.queries.js'
 import { etapeAvisStepIsComplete } from 'camino-common/src/permissions/etape-form.js'
 import { CommuneId } from 'camino-common/src/static/communes.js'
 import { EtapeStatutId, etapeStatutIdValidator } from 'camino-common/src/static/etapesStatuts.js'
-import { contenuValidator } from '../../api/rest/activites.queries.js'
+import { contenuValidator, heritageContenuValidator } from 'camino-common/src/etape-form.js'
+import { demarcheTypeIdValidator } from 'camino-common/src/static/demarchesTypes.js'
 
 export const insertTitreEtapeEntrepriseDocument = async (pool: Pool, params: { titre_etape_id: EtapeId; entreprise_document_id: EntrepriseDocumentId }) =>
   dbQueryAndValidate(insertTitreEtapeEntrepriseDocumentInternal, params, pool, z.void())
@@ -418,24 +419,32 @@ const getParticipationEtapesValidator = z.object({
   date: caminoDateValidator,
   etape_statut_id: etapeStatutIdValidator,
   contenu: contenuValidator,
+  heritage_contenu: heritageContenuValidator,
+  titre_type_id: titreTypeIdValidator,
+  demarche_type_id: demarcheTypeIdValidator,
 })
 
-export const getParticipationEtapes = async (pool: Pool, _etapeId: EtapeId | undefined): Promise<{ dureeParticipation: number; date: CaminoDate; id: EtapeId; etape_statut_id: EtapeStatutId }[]> => {
-  const result = await dbQueryAndValidate(getParticipationEtapesDb, undefined, pool, getParticipationEtapesValidator)
-
-  return result.map(r => ({ ...r, dureeParticipation: z.number().parse(r.contenu?.opdp?.duree ?? 0) }))
+export const getParticipationEtapes = async (pool: Pool) => {
+  return dbQueryAndValidate(getParticipationEtapesDb, undefined, pool, getParticipationEtapesValidator)
 }
 
 const getParticipationEtapesDb = sql<Redefine<IGetParticipationEtapesDbQuery, void, z.infer<typeof getParticipationEtapesValidator>>>`
   select
     te.id,
     te.contenu,
+    te.heritage_contenu,
     te.statut_id as etape_statut_id,
-    te.date
+    te.date,
+    t.type_id as titre_type_id,
+    td.type_id as demarche_type_id
   from titres_etapes te
+  join titres_demarches td on te.titre_demarche_id = td.id
+  join titres t on td.titre_id = t.id
   where
   te.type_id = 'ppu' and
-  archive is false
+  te.archive is false and
+  td.archive is false and
+  t.archive is false
   `
 
 export const updateParticipationStatut = async (pool: Pool, etapeId: EtapeId, newStatut: EtapeStatutId): Promise<void> => {

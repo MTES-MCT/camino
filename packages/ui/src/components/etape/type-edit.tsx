@@ -1,5 +1,5 @@
 import { EtapesStatuts, EtapeStatutId } from 'camino-common/src/static/etapesStatuts'
-import { EtapesTypes, EtapeType, EtapeTypeId } from 'camino-common/src/static/etapesTypes'
+import { ETAPES_TYPES, EtapesTypes, EtapeType, EtapeTypeId } from 'camino-common/src/static/etapesTypes'
 import { computed, ref, FunctionalComponent, watch, HTMLAttributes, defineComponent } from 'vue'
 import { DemarcheId } from 'camino-common/src/demarche'
 import { EtapeApiClient } from './etape-api-client'
@@ -7,19 +7,19 @@ import { CaminoDate } from 'camino-common/src/date'
 import { EtapeId, EtapeTypeEtapeStatutWithMainStep } from 'camino-common/src/etape'
 import { AsyncData } from '@/api/client-rest'
 import { LoadingElement } from '../_ui/functional-loader'
-import { NonEmptyArray, isNonEmptyArray, isNotNullNorUndefined, isNullOrUndefinedOrEmpty, map, onlyUnique } from 'camino-common/src/typescript-tools'
+import { DeepReadonly, NonEmptyArray, isNonEmptyArray, isNotNullNorUndefined, isNullOrUndefinedOrEmpty, map, onlyUnique } from 'camino-common/src/typescript-tools'
 import { Alert } from '../_ui/alert'
 import { TypeAheadSingle } from '../_ui/typeahead-single'
 import { DsfrSelect, Item } from '../_ui/dsfr-select'
 import type { JSX } from 'vue/jsx-runtime'
 
 type Props = {
-  etape: {
+  etape: DeepReadonly<{
     statutId: EtapeStatutId | null
     typeId: EtapeTypeId | null
     id?: EtapeId | null
     date: CaminoDate
-  }
+  }>
   demarcheId: DemarcheId
   apiClient: Pick<EtapeApiClient, 'getEtapesTypesEtapesStatuts'>
   onEtapeChange: (statutId: EtapeStatutId | null, typeId: EtapeTypeId | null) => void
@@ -51,8 +51,9 @@ export const TypeEdit = defineComponent<Props>(props => {
     async newEtapeDate => {
       try {
         possibleEtapes.value = { status: 'LOADED', value: await props.apiClient.getEtapesTypesEtapesStatuts(props.demarcheId, props.etape?.id ?? null, newEtapeDate) }
-        if (etapeTypeId.value) {
-          possibleStatuts.value = possibleEtapes.value.value.filter(possible => possible.etapeTypeId === etapeTypeId.value).map(({ etapeStatutId }) => etapeStatutId)
+        const typeId = etapeTypeId.value
+        if (isNotNullNorUndefined(typeId)) {
+          updatePossibleStatuts(typeId)
         }
       } catch (e: any) {
         possibleEtapes.value = {
@@ -63,6 +64,30 @@ export const TypeEdit = defineComponent<Props>(props => {
     },
     { immediate: true }
   )
+
+  const updatePossibleStatuts = (typeId: EtapeTypeId) => {
+    if (possibleEtapes.value.status === 'LOADED') {
+      possibleStatuts.value = possibleEtapes.value.value
+        .filter(possible => possible.etapeTypeId === typeId)
+        .map(({ etapeStatutId }) => etapeStatutId)
+        .filter(onlyUnique)
+
+      let newEtapeStatutId
+      if (possibleStatuts.value.length === 1 || etapeTypeId.value === ETAPES_TYPES.participationDuPublic) {
+        newEtapeStatutId = possibleStatuts.value[0]
+      } else {
+        newEtapeStatutId = null
+      }
+
+      if (newEtapeStatutId !== etapeStatutId.value || typeId !== etapeTypeId.value) {
+        etapeStatutId.value = newEtapeStatutId
+        etapeTypeId.value = typeId
+        props.onEtapeChange(etapeStatutId.value, etapeTypeId.value)
+      }
+    }
+
+    return []
+  }
 
   const etapeTypeExistante = computed<Pick<EtapeType, 'id'> | null>(() => (etapeTypeId.value ? { id: etapeTypeId.value } : null))
 
@@ -121,22 +146,14 @@ export const TypeEdit = defineComponent<Props>(props => {
                     onSelectItem: (type: EtapeType | undefined) => {
                       if (type) {
                         etapeTypeSearch.value = ''
-                        possibleStatuts.value = items.filter(({ etapeTypeId }) => etapeTypeId === type.id).map(({ etapeStatutId }) => etapeStatutId)
-                        if (possibleStatuts.value.length === 1) {
-                          etapeStatutId.value = possibleStatuts.value[0]
-                        } else {
-                          etapeStatutId.value = null
-                        }
-
-                        etapeTypeId.value = type.id
-                        props.onEtapeChange(etapeStatutId.value, etapeTypeId.value)
+                        updatePossibleStatuts(type.id)
                       }
                     },
                     onInput: (searchTerm: string) => (etapeTypeSearch.value = searchTerm),
                   }}
                 />
               </div>
-              {!isNonEmptyArray(possibleStatuts.value) ? null : (
+              {!isNonEmptyArray(possibleStatuts.value) || etapeTypeId.value === ETAPES_TYPES.participationDuPublic ? null : (
                 <SelectStatut
                   statutIds={possibleStatuts.value}
                   statutId={etapeStatutId.value}
