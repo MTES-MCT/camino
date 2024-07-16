@@ -511,6 +511,9 @@ export const updateTitre = (pool: Pool) => async (req: CaminoRequest, res: Custo
   } else {
     try {
       const titreOld = await titreGet(titreId, { fields: { pointsEtape: { id: {} } } }, user)
+      if (isNullOrUndefined(titreOld?.administrationsLocales)) {
+        throw new Error("pas d'administrations locales chargées")
+      }
 
       if (isNullOrUndefined(titreOld)) {
         res.sendStatus(HTTP_STATUS.NOT_FOUND)
