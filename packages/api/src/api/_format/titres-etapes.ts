@@ -43,6 +43,7 @@ export const iTitreEtapeToFlattenEtape = (titreEtape: ITitreEtape): FlattenEtape
     throw new Error('pas de slug')
   }
   const contenu = simpleContenuToFlattenedContenu(titreTypeId, demarcheTypeId, titreEtape.typeId, titreEtape.contenu ?? {}, heritageContenuValidator.parse(heritageContenu))
+
   const flattenEtape: FlattenEtape = {
     ...titreEtape,
     slug,

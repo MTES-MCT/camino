@@ -38,4 +38,34 @@ describe("vérifie la validité des propriétés dont le type est date d'une ét
       })
     ).toContain('le champ "date" est invalide')
   })
+
+  test('les dates peuvent être obligatoires ou optionnelles', () => {
+    expect(
+      contenuDatesCheck(
+        [
+          {
+            id: 'section',
+            elements: [{ id: 'date', type: 'date', optionnel: false }],
+          },
+        ],
+        {
+          section: { date: { value: null } },
+        }
+      )
+    ).toContain('le champ "date" est invalide')
+
+    expect(
+      contenuDatesCheck(
+        [
+          {
+            id: 'section',
+            elements: [{ id: 'date', type: 'date', optionnel: true }],
+          },
+        ],
+        {
+          section: { date: { value: null } },
+        }
+      )
+    ).toBe(null)
+  })
 })
