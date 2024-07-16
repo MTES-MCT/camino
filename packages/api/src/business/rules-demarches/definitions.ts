@@ -24,6 +24,20 @@ interface DemarcheDefinition extends DemarcheDefinitionCommon {
   machine: CaminoMachines
 }
 const allDemarcheNotTravaux = Object.values(DEMARCHES_TYPES_IDS).filter(demarcheTypeId => !DemarchesTypes[demarcheTypeId].travaux)
+const demarcheTypeIdsCxPr_G: DemarcheTypeId[] = [
+  DEMARCHES_TYPES_IDS.Mutation,
+  DEMARCHES_TYPES_IDS.Amodiation,
+  DEMARCHES_TYPES_IDS.Cession,
+  DEMARCHES_TYPES_IDS.Conversion,
+  DEMARCHES_TYPES_IDS.Decheance,
+  DEMARCHES_TYPES_IDS.DemandeDeTitreDExploitation,
+  DEMARCHES_TYPES_IDS.DeplacementDePerimetre,
+  DEMARCHES_TYPES_IDS.Fusion,
+  DEMARCHES_TYPES_IDS.MutationPartielle,
+  DEMARCHES_TYPES_IDS.Renonciation,
+  DEMARCHES_TYPES_IDS.ResiliationAnticipeeDAmodiation,
+  DEMARCHES_TYPES_IDS.Retrait,
+]
 const plusVieilleDateEnBase = toCaminoDate('1717-01-09')
 export const demarchesDefinitions: DemarcheDefinition[] = [
   {
@@ -104,6 +118,20 @@ export const demarchesDefinitions: DemarcheDefinition[] = [
     machine: new ProcedureSimplifieeMachine(),
     dateDebut: plusVieilleDateEnBase,
     demarcheIdExceptions: [],
+  },
+  {
+    titreTypeId: 'cxg',
+    demarcheTypeIds: demarcheTypeIdsCxPr_G,
+    machine: new ProcedureSimplifieeMachine(),
+    dateDebut: plusVieilleDateEnBase,
+    demarcheIdExceptions: [],
+  },
+  {
+    titreTypeId: 'prg',
+    demarcheTypeIds: demarcheTypeIdsCxPr_G,
+    machine: new ProcedureSimplifieeMachine(),
+    dateDebut: plusVieilleDateEnBase,
+    demarcheIdExceptions: [newDemarcheId('eawZqngLivDPxPork38akC2b')],
   },
 ]
 
