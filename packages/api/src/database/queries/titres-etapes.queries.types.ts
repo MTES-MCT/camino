@@ -282,3 +282,18 @@ export interface IGetParticipationEtapesDbQuery {
   result: IGetParticipationEtapesDbResult;
 }
 
+/** 'UpdateParticipationStatutDb' parameters type */
+export interface IUpdateParticipationStatutDbParams {
+  etapeId: string;
+  newStatut: string;
+}
+
+/** 'UpdateParticipationStatutDb' return type */
+export type IUpdateParticipationStatutDbResult = void;
+
+/** 'UpdateParticipationStatutDb' query type */
+export interface IUpdateParticipationStatutDbQuery {
+  params: IUpdateParticipationStatutDbParams;
+  result: IUpdateParticipationStatutDbResult;
+}
+

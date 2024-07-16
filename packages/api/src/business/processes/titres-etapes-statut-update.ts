@@ -3,7 +3,7 @@ import { Pool } from 'pg'
 import { EtapeId } from 'camino-common/src/etape.js'
 import { CaminoDate, dateAddDays, getCurrent, isBefore } from 'camino-common/src/date.js'
 import { ETAPES_STATUTS, EtapeStatutId } from 'camino-common/src/static/etapesStatuts.js'
-import { getParticipationEtapes } from '../../database/queries/titres-etapes.queries.js'
+import { getParticipationEtapes, updateParticipationStatut } from '../../database/queries/titres-etapes.queries.js'
 
 export const titresEtapesStatutUpdate = async (pool: Pool, user: UserNotNull, etapeId?: EtapeId): Promise<EtapeId[]> => {
   console.info()
@@ -26,6 +26,7 @@ export const titresEtapesStatutUpdate = async (pool: Pool, user: UserNotNull, et
     }
 
     if (newStatut !== etape.etape_statut_id) {
+      await updateParticipationStatut(pool, etape.id, newStatut)
       console.info('titre / démarche / étape : statut (mise à jour) ->', `${etape.id} : ${etape.etape_statut_id} => ${newStatut}`)
 
       titresEtapesIdsUpdated.push(etape.id)

@@ -18,6 +18,7 @@ import {
   IUpdateEtapeAvisFileDbQuery,
   IDeleteEtapeAvisDbQuery,
   IGetParticipationEtapesDbQuery,
+  IUpdateParticipationStatutDbQuery,
 } from './titres-etapes.queries.types.js'
 import {
   ETAPE_IS_NOT_BROUILLON,
@@ -416,13 +417,13 @@ const getParticipationEtapesValidator = z.object({
   id: etapeIdValidator,
   date: caminoDateValidator,
   etape_statut_id: etapeStatutIdValidator,
-  contenu:contenuValidator
+  contenu: contenuValidator,
 })
 
 export const getParticipationEtapes = async (pool: Pool, _etapeId: EtapeId | undefined): Promise<{ dureeParticipation: number; date: CaminoDate; id: EtapeId; etape_statut_id: EtapeStatutId }[]> => {
   const result = await dbQueryAndValidate(getParticipationEtapesDb, undefined, pool, getParticipationEtapesValidator)
 
-  return result.map(r => ({...r, dureeParticipation: z.number().parse(r.contenu?.opdp?.duree ?? 0)}))
+  return result.map(r => ({ ...r, dureeParticipation: z.number().parse(r.contenu?.opdp?.duree ?? 0) }))
 }
 
 const getParticipationEtapesDb = sql<Redefine<IGetParticipationEtapesDbQuery, void, z.infer<typeof getParticipationEtapesValidator>>>`
@@ -432,5 +433,15 @@ const getParticipationEtapesDb = sql<Redefine<IGetParticipationEtapesDbQuery, vo
     te.statut_id as etape_statut_id,
     te.date
   from titres_etapes te
-  where archive is false
+  where
+  te.type_id = 'ppu' and
+  archive is false
   `
+
+export const updateParticipationStatut = async (pool: Pool, etapeId: EtapeId, newStatut: EtapeStatutId): Promise<void> => {
+  await dbQueryAndValidate(updateParticipationStatutDb, { etapeId, newStatut }, pool, z.void())
+}
+
+const updateParticipationStatutDb = sql<Redefine<IUpdateParticipationStatutDbQuery, { newStatut: EtapeStatutId; etapeId: EtapeId }, void>>`
+  UPDATE titres_etapes SET statut_id = $ newStatut ! where id = $ etapeId !
+`

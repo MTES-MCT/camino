@@ -7,22 +7,31 @@ import { EtapeId } from 'camino-common/src/etape.js'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
 import { Knex } from 'knex'
 
-// FIXME
+// FIXME TODELETE
 const demarcheIdsToIgnore = [
-  'http://camino.beta.gouv.fr/demarches/3LErsZZBdLsL0td915Gln7Fn', // elle a une ouverture de ENQUÊTE publique et une fermeture de la PARTICIPATION du public
-  'http://camino.beta.gouv.fr/demarches/AMyAuvVJ8Y1fHknlnyhxKK3L', // pas d'ouverture
-  'http://camino.beta.gouv.fr/demarches/a8fxkB5t7VvSvAAGTA5FS9cZ', // pas d'ouverture
-  'http://camino.beta.gouv.fr/demarches/me1HK9RyOgKcbQSTYizLn1KB', // pas d'ouverture
-  'http://camino.beta.gouv.fr/demarches/tZcNoZimGRDE7AOLSk8TJVqH', // pas d'ouverture
+  '3LErsZZBdLsL0td915Gln7Fn', // elle a une ouverture de ENQUÊTE publique et une fermeture de la PARTICIPATION du public
+  'AMyAuvVJ8Y1fHknlnyhxKK3L', // pas d'ouverture
+  'a8fxkB5t7VvSvAAGTA5FS9cZ', // pas d'ouverture
+  'me1HK9RyOgKcbQSTYizLn1KB', // pas d'ouverture
+  'tZcNoZimGRDE7AOLSk8TJVqH', // pas d'ouverture
 ]
 export const up = async (knex: Knex) => {
   const { rows: clotureEtapes }: { rows: { id: EtapeId; date: CaminoDate; titre_demarche_id: DemarcheId }[] } = await knex.raw(`select * from titres_etapes where type_id = 'ppc' and archive is false`)
 
-  const alreadyProccess = new Set(...[demarcheIdsToIgnore])
+  const alreadyProccess = new Set()
 
   const errors = []
 
   for (const clotureEtape of clotureEtapes) {
+    // FIXME TODELETE
+    if (demarcheIdsToIgnore.includes(clotureEtape.titre_demarche_id)) {
+      await knex.raw(`delete from etapes_documents where etape_id = '${clotureEtape.id}'`)
+
+      await knex.raw(`delete from titres_etapes where id = '${clotureEtape.id}'`)
+
+      continue
+    }
+
     if (alreadyProccess.has(clotureEtape.titre_demarche_id)) {
       continue
     }
