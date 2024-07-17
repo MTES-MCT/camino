@@ -5,7 +5,6 @@ import { InputFile } from '../_ui/dsfr-input-file'
 import { ApiClient } from '@/api/api-client'
 import { TempDocumentName } from 'camino-common/src/document'
 import { NonEmptyArray, Nullable, isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
-import { DsfrInput } from '../_ui/dsfr-input'
 import {
   EtapeDocumentModification,
   TempEtapeDocument,
@@ -18,6 +17,7 @@ import { VisibilityLabel } from './etape-documents'
 import { isEntrepriseOrBureauDEtude, User } from 'camino-common/src/roles'
 import { TypeaheadSmartSingle } from '../_ui/typeahead-smart-single'
 import { z } from 'zod'
+import { DsfrTextarea } from '../_ui/dsfr-textarea'
 
 interface Props {
   close: (document: EtapeDocumentModification | null) => void
@@ -99,11 +99,10 @@ export const AddEtapeDocumentPopup = defineComponent<Props>(props => {
           <DsfrInputRadio legend={{ main: 'Visibilité' }} elements={visibilityChoices.value} initialValue={etapeDocumentVisibility.value} valueChanged={visibilityChange} />
         </div>
         <div class="fr-fieldset__element" style={{ order: etapeDocumentTypeId.value === DOCUMENTS_TYPES_IDS.autreDocument ? -1 : 3 }}>
-          <DsfrInput
+          <DsfrTextarea
             legend={{ main: 'Description' }}
             required={etapeDocumentTypeId.value === DOCUMENTS_TYPES_IDS.autreDocument}
             initialValue={documentDescription.value}
-            type={{ type: 'text' }}
             valueChanged={descriptionChange}
           />
         </div>

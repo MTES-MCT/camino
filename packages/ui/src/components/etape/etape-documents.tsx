@@ -76,7 +76,7 @@ export const EtapeDocuments: FunctionalComponent<Props> = props => {
                 <td>
                   <EtapeDocumentLink documentId={item.id} documentTypeId={item.etape_document_type_id} />
                 </td>
-                <td>{item.description}</td>
+                <td style={{ whiteSpace: 'pre-line' }}>{item.description}</td>
                 {isSuper(props.user) || isAdministration(props.user) ? <td>{getVisibilityLabel(item)}</td> : null}
               </tr>
             ))}
@@ -89,7 +89,7 @@ export const EtapeDocuments: FunctionalComponent<Props> = props => {
                     label={`${entreprisesIndex[item.entreprise_id] ?? ''} - ${DocumentsTypes[item.entreprise_document_type_id].nom} - (${item.date})`}
                   />
                 </td>
-                <td>{item.description}</td>
+                <td style={{ whiteSpace: 'pre-line' }}>{item.description}</td>
                 {isSuper(props.user) || isAdministration(props.user) ? <td>Visible seulement par les entreprises titulaires</td> : null}
               </tr>
             ))}
