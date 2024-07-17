@@ -36,9 +36,6 @@ type ProcedureSimplifieeXStateEvent =
 
 type Event = ProcedureSimplifieeXStateEvent['type']
 
-// FIXME
-// - interdire de modifier le statut de la participation manuellement
-
 const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
   FAIRE_DEMANDE: { db: ETES.demande, mainStep: true },
   DEPOSER_DEMANDE: { db: ETES.depotDeLaDemande, mainStep: true },
