@@ -53,7 +53,7 @@ const oldSections = {
   ],
 } as const
 
-const ETAPE_TYPE_ID_TO_AVIS_TYPE_ID: { [key in string]?: AvisTypeId } = {
+const ETAPE_TYPE_ID_TO_AVIS_TYPE_ID: { [key in string]?: string } = {
   ssr: 'lettreDeSaisineDesServices',
   wss: 'lettreDeSaisineDesServices',
   cps: 'confirmationAccordProprietaireDuSol',
@@ -205,7 +205,7 @@ ${descriptionSections.join('\n')}`
         }
         if (documents.rows.length === 0) {
           const row = {
-            id: newEtapeAvisId(avisTypeId),
+            id: newEtapeAvisId(avisTypeId as AvisTypeId),
             avis_type_id: avisTypeId,
             etape_id: etapePivotId,
             description: descriptionSections.join('\n'),

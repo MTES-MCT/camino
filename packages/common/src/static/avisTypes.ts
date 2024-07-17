@@ -1,18 +1,16 @@
 import { z } from 'zod'
-import { NonEmptyArray } from '../typescript-tools'
 
 interface Definition<T> {
   id: T
   nom: string
 }
 // prettier-ignore
-const AVIS_TYPES_IDS = ['lettreDeSaisineDesServices', 'confirmationAccordProprietaireDuSol', 'avisDirectionRegionaleDesAffairesCulturelles', 'avisDirectionAlimentationAgricultureForet', 'avisConseilDepartementalEnvironnementRisquesSanitairesTechnologiques', 'avisDirectionsRégionalesEconomieEmploiTravailSolidarités', 'avisDirectionRegionaleFinancesPubliques', 'avisGendarmerieNationale', 'avisParcNaturelMarin', 'avisIFREMER', 'avisInstitutNationalOrigineQualite', 'avisEtatMajorOrpaillagePecheIllicite', 'avisServiceAdministratifLocal', 'avisAutoriteMilitaire', 'avisParcNational', 'avisDirectionDepartementaleTerritoiresMer', 'avisAgenceRegionaleSante', 'avisCaisseGeneraleSecuriteSociale', 'autreAvis', 'avisServiceMilieuxNaturelsBiodiversiteSitesPaysages', 'avisOfficeNationalDesForets', 'expertiseOfficeNationalDesForets'] as const
+const AVIS_TYPES_IDS = [ 'confirmationAccordProprietaireDuSol', 'avisDirectionRegionaleDesAffairesCulturelles', 'avisDirectionAlimentationAgricultureForet', 'avisConseilDepartementalEnvironnementRisquesSanitairesTechnologiques', 'avisDirectionsRégionalesEconomieEmploiTravailSolidarités', 'avisDirectionRegionaleFinancesPubliques', 'avisGendarmerieNationale', 'avisParcNaturelMarin', 'avisIFREMER', 'avisInstitutNationalOrigineQualite', 'avisEtatMajorOrpaillagePecheIllicite', 'avisServiceAdministratifLocal', 'avisAutoriteMilitaire', 'avisParcNational', 'avisDirectionDepartementaleTerritoiresMer', 'avisAgenceRegionaleSante', 'avisCaisseGeneraleSecuriteSociale', 'autreAvis', 'avisServiceMilieuxNaturelsBiodiversiteSitesPaysages', 'avisOfficeNationalDesForets', 'expertiseOfficeNationalDesForets'] as const
 
 export const avisTypeIdValidator = z.enum(AVIS_TYPES_IDS)
 export type AvisTypeId = z.infer<typeof avisTypeIdValidator>
 
 export const AvisTypes: { [key in AvisTypeId]: Definition<key> } = {
-  lettreDeSaisineDesServices: { id: 'lettreDeSaisineDesServices', nom: 'Lettre de saisine des services' },
   confirmationAccordProprietaireDuSol: { id: 'confirmationAccordProprietaireDuSol', nom: "Confirmation de l'accord du propriétaire du sol" },
   avisDirectionRegionaleDesAffairesCulturelles: { id: 'avisDirectionRegionaleDesAffairesCulturelles', nom: 'Avis de la Direction Régionale Des Affaires Culturelles (DRAC)' },
   avisDirectionAlimentationAgricultureForet: { id: 'avisDirectionAlimentationAgricultureForet', nom: "Avis de la Direction de l'Alimentation de l'Agriculture et de la Forêt (DRAF)" },
@@ -51,14 +49,10 @@ export const AvisStatutIds = [
   "Défavorable",
   "Favorable avec réserves",
   "Non renseigné",
-  "Fait",
 ] as const
 
 export const avisStatutIdValidator = z.enum(AvisStatutIds)
 export type AvisStatutId = z.infer<typeof avisStatutIdValidator>
-
-export const getAvisStatutsByAvis = (avis: AvisTypeId): NonEmptyArray<AvisStatutId> =>
-  avis === 'lettreDeSaisineDesServices' ? ['Fait'] : ['Favorable', 'Défavorable', 'Favorable avec réserves', 'Non renseigné']
 
 export const AVIS_VISIBILITY_IDS = ['Public', 'TitulairesEtAdministrations', 'Administrations'] as const
 

@@ -1,3 +1,4 @@
+import { ETAPES_TYPES } from '../etapesTypes.js'
 import { getDocuments } from './documents.js'
 import { test, expect } from 'vitest'
 
@@ -56,4 +57,16 @@ test('getDocuments surcharge', () => {
   expect(getDocuments('axm', 'oct', 'mfr')).toMatchSnapshot()
 
   expect(getDocuments('axm', 'oct', 'dae')).not.toEqual(getDocuments('axm', 'ces', 'dae'))
+})
+
+test("la lettre des saisines est obligatoire pour l'avis des services et commissions consultatives", () => {
+  expect(getDocuments('prm', 'amo', ETAPES_TYPES.avisDesServicesEtCommissionsConsultatives)).toMatchInlineSnapshot(`
+    [
+      {
+        "id": "lcm",
+        "nom": "Lettre de saisine des services civils et militaires",
+        "optionnel": false,
+      },
+    ]
+  `)
 })

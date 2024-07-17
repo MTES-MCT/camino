@@ -976,11 +976,6 @@ test('getAvisType', () => {
   expect(getAvisTypes('asc', 'arm', [])).toMatchInlineSnapshot(`
     [
       {
-        "id": "lettreDeSaisineDesServices",
-        "nom": "Lettre de saisine des services",
-        "optionnel": false,
-      },
-      {
         "id": "avisDirectionRegionaleDesAffairesCulturelles",
         "nom": "Avis de la Direction Régionale Des Affaires Culturelles (DRAC)",
         "optionnel": true,
@@ -1069,11 +1064,6 @@ test('getAvisType', () => {
   `)
   expect(getAvisTypes('asc', 'arm', [communeIdValidator.parse('97302')])).toMatchInlineSnapshot(`
     [
-      {
-        "id": "lettreDeSaisineDesServices",
-        "nom": "Lettre de saisine des services",
-        "optionnel": false,
-      },
       {
         "id": "avisDirectionRegionaleDesAffairesCulturelles",
         "nom": "Avis de la Direction Régionale Des Affaires Culturelles (DRAC)",
@@ -1173,11 +1163,6 @@ test('getAvisType', () => {
   `)
   expect(getAvisTypes('asc', 'axm', [communeIdValidator.parse('97302')])).toMatchInlineSnapshot(`
     [
-      {
-        "id": "lettreDeSaisineDesServices",
-        "nom": "Lettre de saisine des services",
-        "optionnel": false,
-      },
       {
         "id": "avisDirectionRegionaleDesAffairesCulturelles",
         "nom": "Avis de la Direction Régionale Des Affaires Culturelles (DRAC)",
