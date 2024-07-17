@@ -11,12 +11,13 @@ fi
 
 # backup
 USER_GROUP_ID=$(getent group users | cut -d: -f3)
+
+docker exec camino_api_db pg_dump --clean --if-exists --no-owner --no-privileges -B --dbname=camino --format c > /srv/backups/dump_without_files.backup
+
 docker exec camino_api_db /bin/bash -c 'rm -rf /dump/*'
 docker exec camino_api_db vacuumlo camino
 docker exec camino_api_db pg_dump --clean --if-exists --format=d --no-owner --no-privileges --dbname=camino -f /dump
 docker exec camino_api_db chown -R "{{camino_user_uid}}:${USER_GROUP_ID}" /dump
-
-docker exec camino_api_db pg_dump --clean --if-exists --no-owner --no-privileges -B --dbname=camino --format c > /srv/backups/dump_without_files.backup
 
 chown camino:users -R /srv/backups/
 
