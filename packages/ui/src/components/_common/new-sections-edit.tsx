@@ -89,8 +89,8 @@ export const getInfo = (element: DeepReadonly<ElementWithValue>, sectionId: stri
       return `Soit l’équivalent de ${numberFormat(element.value * 1.5)} tonnes`
     }
     if (sectionId === 'opdp' && element.id === 'duree' && isNumberElement(element) && isNotNullNorUndefined(etapeDate)) {
-      const dateFin = dateAddDays(etapeDate, element.value)
-      return `Du ${dateFormat(etapeDate)} au ${dateFormat(dateFin)}`
+      const dateFin = dateAddDays(etapeDate, element.value - 1)
+      return `Du ${dateFormat(etapeDate)} au ${dateFormat(dateFin)} (inclus)`
     }
   }
 
