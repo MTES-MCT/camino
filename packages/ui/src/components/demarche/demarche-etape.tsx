@@ -4,7 +4,7 @@ import { DsfrSeparator } from '../_ui/dsfr-separator'
 import { capitalize } from 'camino-common/src/strings'
 import { ETAPES_STATUTS, EtapeStatutId } from 'camino-common/src/static/etapesStatuts'
 import { getEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStatuts'
-import { dateFormat } from 'camino-common/src/date'
+import { CaminoDate, dateFormat } from 'camino-common/src/date'
 import { DsfrIcon } from '../_ui/icon'
 import { EtapeStatut } from '../_common/etape-statut'
 import { PropDuree } from '../etape/prop-duree'
@@ -15,7 +15,7 @@ import { DsfrPerimetre, TabId } from '../_common/dsfr-perimetre'
 import { TitreSlug } from 'camino-common/src/validators/titres'
 import { numberFormat } from 'camino-common/src/number'
 import { OmitDistributive, getValues, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
-import { valeurFind } from 'camino-common/src/sections'
+import { ElementWithValue, valeurFind } from 'camino-common/src/sections'
 import { EtapeDocuments } from '../etape/etape-documents'
 import { User } from 'camino-common/src/roles'
 import styles from './demarche-etape.module.css'
@@ -41,6 +41,7 @@ import { EtapeAvisTable } from '../etape/etape-avis'
 import { FlattenEtape } from 'camino-common/src/etape-form'
 import { getSections } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections'
 import { Alert } from '../_ui/alert'
+import { getInfo } from '../_common/new-sections-edit'
 // Il ne faut pas utiliser de literal dans le 'in' il n'y aura jamais d'erreur typescript
 const fondamentalePropsName = 'fondamentale'
 
@@ -341,6 +342,7 @@ export const DemarcheEtape = defineComponent<Props>(props => {
                                 ) : (
                                   <>
                                     {valeurFind(element)} {element.type === 'number' && isNotNullNorUndefined(element.uniteId) ? Unites[element.uniteId].symbole : null}
+                                    <SectionElementInfo element={element} sectionId={section.id} etapeDate={props.etape.date} />
                                   </>
                                 )}
                               </p>
@@ -403,6 +405,15 @@ export const DemarcheEtape = defineComponent<Props>(props => {
     </div>
   )
 })
+
+const SectionElementInfo = (props: { element: ElementWithValue; sectionId: string; etapeDate: CaminoDate }) => {
+  const info = getInfo(props.element, props.sectionId, props.etapeDate)
+  if (isNotNullNorUndefinedNorEmpty(info)) {
+    return <span class="fr-info-text fr-mt-0">{info}</span>
+  }
+
+  return null
+}
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
 DemarcheEtape.props = ['demarche', 'titre', 'router', 'user', 'entreprises', 'etape', 'apiClient', 'initTab']

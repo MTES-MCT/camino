@@ -1,6 +1,7 @@
 import { Index, IEntrepriseEtablissement, IEntreprise } from '../types.js'
 
 export const logsUpdate = ({
+  titresEtapesStatusUpdated,
   titresEtapesOrdreUpdated,
   titresEtapesHeritagePropsUpdated,
   titresEtapesHeritageContenuUpdated,
@@ -21,6 +22,7 @@ export const logsUpdate = ({
   etablissementsUpdated,
   etablissementsDeleted,
 }: {
+  titresEtapesStatusUpdated?: string[]
   titresEtapesOrdreUpdated?: string[]
   titresEtapesHeritagePropsUpdated?: string[]
   titresEtapesHeritageContenuUpdated?: string[]
@@ -45,6 +47,9 @@ export const logsUpdate = ({
   console.info('-')
   console.info('tâches exécutées:')
 
+  if (titresEtapesStatusUpdated?.length) {
+    console.info(`mise à jour: ${titresEtapesStatusUpdated.length} étape(s) (statut)`)
+  }
   if (titresEtapesOrdreUpdated?.length) {
     console.info(`mise à jour: ${titresEtapesOrdreUpdated.length} étape(s) (ordre)`)
   }

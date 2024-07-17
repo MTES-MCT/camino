@@ -4,13 +4,13 @@ import { Definition } from '../definition.js'
 import { EtapeBrouillon } from '../etape.js'
 
 // prettier-ignore
-const IDS = ['abd', 'aca','aco','and','ane','anf','def','dex','dim', 'dpu', 'dup', 'dux','ihi', 'mfr','mod','mom','rca','rcb','rcd','rcm','rco','rcs','rie','rif','rim','rpu','sco','acg','acl','aep','ama','apd','ape','apo','app','apu','apw','asl','cac','ccs','cim','cod','css','dae','dec','des','ede','edm','epc','epu','esb','ide','mca','mcb','mcd','mcm','mco','mcp','mcr','mcs','mdp','mec','men','meo','mie','mif','mim','mna','mnb','mnc','mnd','mni','mno','mns','mnv','ncl','nis','npp','pfc','pfd','ppc','ppu','pqr','rcg','rde','rpe','sas','sca','scg','scl','spe','spo','spp','vfc','vfd','wab','wae','wao','wap','war','wau','wce','wco','wda','wdc','wdd','wde','wdm','wfa','wfd','wfo','wfr','wmm','wmr','wmt','woe','wpa','wpb','wpc','wpo','wpp','wps','wrc','wrd','wre','wrl','wrt','wse','wtp', 'asc'] as const
+const IDS = ['abd', 'aca','aco','and','ane','anf','def','dex','dim', 'dpu', 'dup', 'dux','ihi', 'mfr','mod','mom','rca','rcb','rcd','rcm','rco','rcs','rie','rif','rim','rpu','sco','acg','acl','aep','ama','apd','ape','apo','app','apu','apw','asl','cac','ccs','cim','cod','css','dae','dec','des','ede','edm','epc','epu','esb','ide','mca','mcb','mcd','mcm','mco','mcp','mcr','mcs','mdp','mec','men','meo','mie','mif','mim','mna','mnb','mnc','mnd','mni','mno','mns','mnv','ncl','nis','npp','pfc','pfd','ppu','pqr','rcg','rde','rpe','sas','sca','scg','scl','spe','spo','spp','vfc','vfd','wab','wae','wao','wap','war','wau','wce','wco','wda','wdc','wdd','wde','wdm','wfa','wfd','wfo','wfr','wmm','wmr','wmt','woe','wpa','wpb','wpc','wpo','wpp','wps','wrc','wrd','wre','wrl','wrt','wse','wtp', 'asc'] as const
 
 // prettier-ignore
 const FONDAMENTALES_IDS = ['abd', 'aca','aco','and','ane','anf','def','dex','dim', 'dpu', 'dup', 'dux','ihi', 'mfr','mod','mom','rca','rcb','rcd','rcm','rco','rcs','rie','rif','rim','rpu','sco'] as const satisfies Readonly<EtapeTypeIdFondamentaleArray>
 
 // prettier-ignore
-const NON_FONDAMENTALES_IDS = ['acg','acl','aep','ama','apd','ape','apo','app','apu','apw','asl','cac','ccs','cim','cod','css','dae','dec','des','ede','edm','epc','epu','esb','ide','mca','mcb','mcd','mcm','mco','mcp','mcr','mcs','mdp','mec','men','meo','mie','mif','mim','mna','mnb','mnc','mnd','mni','mno','mns','mnv','ncl','nis','npp','pfc','pfd','ppc','ppu','pqr','rcg','rde','rpe','sas','sca','scg','scl','spe','spo','spp','vfc','vfd','wab','wae','wao','wap','war','wau','wce','wco','wda','wdc','wdd','wde','wdm','wfa','wfd','wfo','wfr','wmm','wmr','wmt','woe','wpa','wpb','wpc','wpo','wpp','wps','wrc','wrd','wre','wrl','wrt','wse','wtp', 'asc'] as const satisfies Readonly<EtapeTypeIdNonFondamentale[]>
+const NON_FONDAMENTALES_IDS = ['acg','acl','aep','ama','apd','ape','apo','app','apu','apw','asl','cac','ccs','cim','cod','css','dae','dec','des','ede','edm','epc','epu','esb','ide','mca','mcb','mcd','mcm','mco','mcp','mcr','mcs','mdp','mec','men','meo','mie','mif','mim','mna','mnb','mnc','mnd','mni','mno','mns','mnv','ncl','nis','npp','pfc','pfd','ppu','pqr','rcg','rde','rpe','sas','sca','scg','scl','spe','spo','spp','vfc','vfd','wab','wae','wao','wap','war','wau','wce','wco','wda','wdc','wdd','wde','wdm','wfa','wfd','wfo','wfr','wmm','wmr','wmt','woe','wpa','wpb','wpc','wpo','wpp','wps','wrc','wrd','wre','wrl','wrt','wse','wtp', 'asc'] as const satisfies Readonly<EtapeTypeIdNonFondamentale[]>
 
 // Ceci est un test :)
 ;[...FONDAMENTALES_IDS, ...NON_FONDAMENTALES_IDS] as const satisfies typeof IDS
@@ -85,8 +85,7 @@ export const ETAPES_TYPES = {
   notificationAuPrefet: 'npp',
   paiementDesFraisDeDossierComplementaires: 'pfc',
   paiementDesFraisDeDossier: 'pfd',
-  clotureDeLaParticipationDuPublic: 'ppc',
-  ouvertureDeLaParticipationDuPublic: 'ppu',
+  participationDuPublic: 'ppu',
   publicationDansUnJournalLocalOuNational: 'pqr',
   receptionDeComplements_RecevabiliteDeLaDemande_: 'rca',
   receptionDeComplements_RecepisseDeDeclarationLoiSurLeau_: 'rcb',
@@ -811,7 +810,7 @@ export const EtapesTypes = {
   },
   ppu: {
     id: 'ppu',
-    nom: 'ouverture de la participation du public',
+    nom: 'participation du public',
     description:
       'La participation du public est obligatoire pour l’octroi des permis exclusifs de recherches (PER) et les prolongations de concessions minières. La législation ne prévoit pas à quel moment elle intervient. Il a été décidé pour les titres miniers qu’elle aurait lieu dès la déclaration de recevabilité du dossier. ',
     fondamentale: false,
@@ -859,17 +858,6 @@ export const EtapesTypes = {
     fondamentale: false,
     unique: true,
     date_fin: toCaminoDate('2018-01-01'),
-    public_lecture: true,
-    entreprises_lecture: true,
-  },
-  ppc: {
-    id: 'ppc',
-    nom: 'clôture de la participation du public',
-    description:
-      'La durée de la participation du public doit être au moins égale 15 jours. L’administration doit tenir compte pour sa décision des avis recueillis lors de la participation du public.',
-    fondamentale: false,
-    unique: false,
-    date_fin: null,
     public_lecture: true,
     entreprises_lecture: true,
   },
@@ -1514,7 +1502,7 @@ const ETAPES_DECISIONS_IDS = [
   ETAPES_TYPES.avenantALautorisationDeRechercheMiniere,
 ] as const satisfies Readonly<EtapeTypeId[]>
 
-const ETAPES_BROUILLONS_IDS = [ETAPES_TYPES.demande, ETAPES_TYPES.avisDesServicesEtCommissionsConsultatives, ETAPES_TYPES.ouvertureDeLaParticipationDuPublic] as const satisfies Readonly<EtapeTypeId[]>
+const ETAPES_BROUILLONS_IDS = [ETAPES_TYPES.demande, ETAPES_TYPES.avisDesServicesEtCommissionsConsultatives, ETAPES_TYPES.participationDuPublic] as const satisfies Readonly<EtapeTypeId[]>
 
 export const isEtapeDecision = (etapeTypeId: EtapeTypeId): EtapeBrouillon => ETAPES_DECISIONS_IDS.includes(etapeTypeId) as EtapeBrouillon
 export const canBeBrouillon = (etapeTypeId: EtapeTypeId): EtapeBrouillon => ETAPES_BROUILLONS_IDS.includes(etapeTypeId) as EtapeBrouillon

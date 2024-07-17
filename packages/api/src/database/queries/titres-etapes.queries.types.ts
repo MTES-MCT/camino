@@ -1,4 +1,5 @@
 /** Types generated for queries found in "src/database/queries/titres-etapes.queries.ts" */
+export type Json = null | boolean | number | string | Json[] | { [key: string]: Json };
 
 /** 'InsertTitreEtapeEntrepriseDocumentInternal' parameters type */
 export interface IInsertTitreEtapeEntrepriseDocumentInternalParams {
@@ -262,5 +263,40 @@ export interface IGetLargeobjectIdByEtapeAvisIdInternalResult {
 export interface IGetLargeobjectIdByEtapeAvisIdInternalQuery {
   params: IGetLargeobjectIdByEtapeAvisIdInternalParams;
   result: IGetLargeobjectIdByEtapeAvisIdInternalResult;
+}
+
+/** 'GetParticipationEtapesDb' parameters type */
+export type IGetParticipationEtapesDbParams = void;
+
+/** 'GetParticipationEtapesDb' return type */
+export interface IGetParticipationEtapesDbResult {
+  contenu: Json | null;
+  date: string;
+  demarche_type_id: string;
+  etape_statut_id: string;
+  heritage_contenu: Json | null;
+  id: string;
+  titre_type_id: string;
+}
+
+/** 'GetParticipationEtapesDb' query type */
+export interface IGetParticipationEtapesDbQuery {
+  params: IGetParticipationEtapesDbParams;
+  result: IGetParticipationEtapesDbResult;
+}
+
+/** 'UpdateParticipationStatutDb' parameters type */
+export interface IUpdateParticipationStatutDbParams {
+  etapeId: string;
+  newStatut: string;
+}
+
+/** 'UpdateParticipationStatutDb' return type */
+export type IUpdateParticipationStatutDbResult = void;
+
+/** 'UpdateParticipationStatutDb' query type */
+export interface IUpdateParticipationStatutDbQuery {
+  params: IUpdateParticipationStatutDbParams;
+  result: IUpdateParticipationStatutDbResult;
 }
 

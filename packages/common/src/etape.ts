@@ -1,15 +1,16 @@
-import { CaminoDate, caminoDateValidator } from './date.js'
+import { CaminoDate, caminoDateValidator, dateAddDays, isBefore } from './date.js'
 import { EtapeHeritageProps, MappingHeritagePropsNameEtapePropsName } from './heritage.js'
 import { DOCUMENTS_TYPES_IDS, autreDocumentTypeIdValidator, documentTypeIdValidator } from './static/documentsTypes.js'
-import { EtapeStatutId, etapeStatutIdValidator } from './static/etapesStatuts.js'
-import { EtapeTypeId, etapeTypeIdValidator } from './static/etapesTypes.js'
+import { ETAPES_STATUTS, EtapeStatutId, etapeStatutIdValidator } from './static/etapesStatuts.js'
+import { ETAPES_TYPES, EtapeTypeId, etapeTypeIdValidator } from './static/etapesTypes.js'
 import { z } from 'zod'
 import { tempDocumentNameValidator } from './document.js'
 import { DemarcheTypeId } from './static/demarchesTypes.js'
 import { TitreTypeId } from './static/titresTypes.js'
 import { User, isEntrepriseOrBureauDEtude } from './roles.js'
 import { avisStatutIdValidator, avisTypeIdValidator, avisVisibilityIdValidator } from './static/avisTypes.js'
-import { GraphqlEtape } from './etape-form.js'
+import { FlattenEtape, GraphqlEtape } from './etape-form.js'
+import { DeepReadonly } from './typescript-tools.js'
 
 export const etapeBrouillonValidator = z.boolean().brand('EtapeBrouillon')
 export type EtapeBrouillon = z.infer<typeof etapeBrouillonValidator>
@@ -151,3 +152,17 @@ export type DocumentComplementaireAslEtapeDocumentModification = z.infer<typeof 
 
 export const etapeNoteValidator = z.object({ valeur: z.string(), is_avertissement: z.boolean() })
 export type EtapeNote = z.infer<typeof etapeNoteValidator>
+
+export const getStatutId = (etape: Pick<DeepReadonly<FlattenEtape>, 'date' | 'contenu' | 'typeId' | 'statutId'>, currentDate: CaminoDate) => {
+  if (etape.typeId !== ETAPES_TYPES.participationDuPublic) {
+    return etape.statutId
+  }
+
+  if (isBefore(currentDate, etape.date)) {
+    return ETAPES_STATUTS.PROGRAMME
+  } else if (isBefore(currentDate, dateAddDays(etape.date, z.number().parse(etape.contenu?.opdp?.duree.value ?? 0)))) {
+    return ETAPES_STATUTS.EN_COURS
+  } else {
+    return ETAPES_STATUTS.TERMINE
+  }
+}

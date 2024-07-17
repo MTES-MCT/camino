@@ -5,6 +5,7 @@ import { CaminoCommonContext, DBEtat, Etape } from '../machine-common.js'
 import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts.js'
 import { CaminoDate, dateAddMonths, daysBetween } from 'camino-common/src/date.js'
 import { PAYS_IDS, PaysId, isGuyane, isMetropole, isOutreMer } from 'camino-common/src/static/pays.js'
+import { ETAPES_STATUTS, EtapeStatutId } from 'camino-common/src/static/etapesStatuts.js'
 
 type RendreAvisMiseEnConcurrentJORF = {
   date: CaminoDate
@@ -13,6 +14,7 @@ type RendreAvisMiseEnConcurrentJORF = {
 
 type OuvrirParticipationDuPublic = {
   date: CaminoDate
+  status: EtapeStatutId
   type: 'OUVRIR_PARTICIPATION_DU_PUBLIC'
 }
 
@@ -48,7 +50,6 @@ type XStateEvent =
   | RendreAvisMiseEnConcurrentJORF
   | { type: 'DEPOSER_DEMANDE_CONCURRENTE' }
   | OuvrirParticipationDuPublic
-  | { type: 'CLOTURER_PARTICIPATION_DU_PUBLIC' }
   | RendreAvisServicesEtCommissionsConsultatives
   | { type: 'RENDRE_AVIS_POLICE_EAU' }
   | RendreAvisCDM
@@ -99,8 +100,7 @@ const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
   },
   RENDRE_AVIS_DE_MISE_EN_CONCURRENCE_AU_JORF: { db: EtapesTypesEtapesStatuts.avisDeMiseEnConcurrenceAuJORF, mainStep: true },
   DEPOSER_DEMANDE_CONCURRENTE: { db: EtapesTypesEtapesStatuts.avisDeDemandeConcurrente, mainStep: false },
-  OUVRIR_PARTICIPATION_DU_PUBLIC: { db: EtapesTypesEtapesStatuts.ouvertureDeLaParticipationDuPublic, mainStep: true },
-  CLOTURER_PARTICIPATION_DU_PUBLIC: { db: EtapesTypesEtapesStatuts.clotureDeLaParticipationDuPublic, mainStep: true },
+  OUVRIR_PARTICIPATION_DU_PUBLIC: { db: EtapesTypesEtapesStatuts.participationDuPublic, mainStep: true },
   RENDRE_AVIS_SERVICES_ET_COMMISSIONS_CONSULTATIVES: { db: EtapesTypesEtapesStatuts.avisDesServicesEtCommissionsConsultatives, mainStep: true },
   RENDRE_AVIS_POLICE_EAU: { db: EtapesTypesEtapesStatuts.expertiseDREALOuDGTMServiceEau, mainStep: false },
 
@@ -144,11 +144,16 @@ export class PrmOctMachine extends CaminoMachine<PrmOctContext, XStateEvent> {
   toPotentialCaminoXStateEvent(event: XStateEvent['type'], date: CaminoDate): XStateEvent[] {
     switch (event) {
       case 'RENDRE_AVIS_DE_MISE_EN_CONCURRENCE_AU_JORF':
-      case 'OUVRIR_PARTICIPATION_DU_PUBLIC':
       case 'RENDRE_AVIS_SERVICES_ET_COMMISSIONS_CONSULTATIVES':
       case 'RENDRE_AVIS_CDM':
       case 'RENDRE_RAPPORT_DREAL':
         return [{ type: event, date }]
+      case 'OUVRIR_PARTICIPATION_DU_PUBLIC':
+        return [
+          { type: event, status: ETAPES_STATUTS.PROGRAMME, date },
+          { type: event, status: ETAPES_STATUTS.EN_COURS, date },
+          { type: event, status: ETAPES_STATUTS.TERMINE, date },
+        ]
       case 'FAIRE_DEMANDE':
         return [
           { type: event, paysId: PAYS_IDS['Département de la Guyane'], surface: SUPERFICIE_MAX_POUR_EXONERATION_AVIS_MISE_EN_CONCURRENCE_AU_JORF + 1 },
@@ -175,11 +180,12 @@ export class PrmOctMachine extends CaminoMachine<PrmOctContext, XStateEvent> {
       const eventFromEntry = entry[0]
       switch (eventFromEntry) {
         case 'RENDRE_AVIS_DE_MISE_EN_CONCURRENCE_AU_JORF':
-        case 'OUVRIR_PARTICIPATION_DU_PUBLIC':
         case 'RENDRE_AVIS_SERVICES_ET_COMMISSIONS_CONSULTATIVES':
         case 'RENDRE_AVIS_CDM':
         case 'RENDRE_RAPPORT_DREAL':
           return { type: eventFromEntry, date: etape.date }
+        case 'OUVRIR_PARTICIPATION_DU_PUBLIC':
+          return { type: eventFromEntry, date: etape.date, status: etape.etapeStatutId }
         case 'FAIRE_DEMANDE':
           if (!etape.paysId) {
             console.info(`paysId is mandatory in etape ${JSON.stringify(etape)}, defaulting to FR.`)
@@ -208,6 +214,7 @@ interface PrmOctContext extends CaminoCommonContext {
   dateAvisDesServicesEtCommissionsConsultatives: CaminoDate | null
   paysId: PaysId | null
   surface: number | null
+  participationPublicStatutId: EtapeStatutId | null
 }
 
 const peutOuvrirParticipationDuPublic = ({ context, event }: { context: PrmOctContext; event: OuvrirParticipationDuPublic }): boolean => {
@@ -245,6 +252,7 @@ const prmOctMachine = createMachine({
     demarcheStatut: DemarchesStatutsIds.EnConstruction,
     paysId: null,
     surface: null,
+    participationPublicStatutId: null,
   },
   on: {
     MODIFIER_DEMANDE: {
@@ -447,12 +455,19 @@ const prmOctMachine = createMachine({
             participationDuPublicPasEncorePossible: {
               on: {
                 DEPOSER_DEMANDE_CONCURRENTE: { target: 'participationDuPublicPasEncorePossible', guard: value => !estExempteDeLaMiseEnConcurrence(value) },
-                OUVRIR_PARTICIPATION_DU_PUBLIC: { target: 'clotureParticipationDuPublicAFaire', guard: peutOuvrirParticipationDuPublic },
+                OUVRIR_PARTICIPATION_DU_PUBLIC: {
+                  target: 'clotureParticipationDuPublicAFaire',
+                  guard: peutOuvrirParticipationDuPublic,
+                  actions: assign({
+                    participationPublicStatutId: ({ event }) => event.status,
+                  }),
+                },
               },
             },
             clotureParticipationDuPublicAFaire: {
-              on: {
-                CLOTURER_PARTICIPATION_DU_PUBLIC: 'done',
+              always: {
+                target: 'done',
+                guard: ({ context }) => context.participationPublicStatutId === ETAPES_STATUTS.TERMINE,
               },
             },
             done: { type: 'final' },

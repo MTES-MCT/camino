@@ -4,6 +4,7 @@ import { CaminoCommonContext, DBEtat, Etape } from '../machine-common.js'
 import { EtapesTypesEtapesStatuts as ETES } from 'camino-common/src/static/etapesTypesEtapesStatuts.js'
 import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts.js'
 import { CaminoDate, isBefore, toCaminoDate } from 'camino-common/src/date.js'
+import { ETAPES_STATUTS, EtapeStatutId } from 'camino-common/src/static/etapesStatuts.js'
 
 type RendreDecisionAdministrationAcceptee = {
   date: CaminoDate
@@ -13,11 +14,16 @@ type RendreDecisionAdministrationRejetee = {
   date: CaminoDate
   type: 'RENDRE_DECISION_ADMINISTRATION_REJETEE'
 }
+
+type ParticipationDuPublic = {
+  status: EtapeStatutId
+  type: 'OUVRIR_PARTICIPATION_DU_PUBLIC'
+}
+
 type ProcedureSimplifieeXStateEvent =
   | { type: 'FAIRE_DEMANDE' }
   | { type: 'DEPOSER_DEMANDE' }
-  | { type: 'OUVRIR_PARTICIPATION_DU_PUBLIC' }
-  | { type: 'CLOTURER_PARTICIPATION_DU_PUBLIC' }
+  | ParticipationDuPublic
   | RendreDecisionAdministrationAcceptee
   | RendreDecisionAdministrationRejetee
   | { type: 'PUBLIER_DECISION_ACCEPTEE_AU_JORF' }
@@ -33,8 +39,7 @@ type Event = ProcedureSimplifieeXStateEvent['type']
 const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
   FAIRE_DEMANDE: { db: ETES.demande, mainStep: true },
   DEPOSER_DEMANDE: { db: ETES.depotDeLaDemande, mainStep: true },
-  OUVRIR_PARTICIPATION_DU_PUBLIC: { db: ETES.ouvertureDeLaParticipationDuPublic, mainStep: true },
-  CLOTURER_PARTICIPATION_DU_PUBLIC: { db: ETES.clotureDeLaParticipationDuPublic, mainStep: true },
+  OUVRIR_PARTICIPATION_DU_PUBLIC: { db: ETES.participationDuPublic, mainStep: true },
   RENDRE_DECISION_ADMINISTRATION_ACCEPTEE: { db: { ACCEPTE: ETES.decisionDeLadministration.ACCEPTE }, mainStep: true },
   RENDRE_DECISION_ADMINISTRATION_REJETEE: { db: { REJETE: ETES.decisionDeLadministration.REJETE }, mainStep: true },
   PUBLIER_DECISION_ACCEPTEE_AU_JORF: { db: { FAIT: ETES.publicationDeDecisionAuJORF.FAIT }, mainStep: true },
@@ -60,6 +65,12 @@ export class ProcedureSimplifieeMachine extends CaminoMachine<ProcedureSimplifie
       case 'RENDRE_DECISION_ADMINISTRATION_ACCEPTEE':
       case 'RENDRE_DECISION_ADMINISTRATION_REJETEE':
         return [{ type: event, date }]
+      case 'OUVRIR_PARTICIPATION_DU_PUBLIC':
+        return [
+          { type: event, status: ETAPES_STATUTS.PROGRAMME },
+          { type: event, status: ETAPES_STATUTS.EN_COURS },
+          { type: event, status: ETAPES_STATUTS.TERMINE },
+        ]
       default:
         // related to https://github.com/microsoft/TypeScript/issues/46497  https://github.com/microsoft/TypeScript/issues/40803 :(
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -82,6 +93,10 @@ export class ProcedureSimplifieeMachine extends CaminoMachine<ProcedureSimplifie
         case 'RENDRE_DECISION_ADMINISTRATION_REJETEE': {
           return { type: eventFromEntry, date: etape.date }
         }
+        case 'OUVRIR_PARTICIPATION_DU_PUBLIC': {
+          return { type: eventFromEntry, status: etape.etapeStatutId }
+        }
+
         default:
           // related to https://github.com/microsoft/TypeScript/issues/46497  https://github.com/microsoft/TypeScript/issues/40803 :(
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -95,7 +110,7 @@ export class ProcedureSimplifieeMachine extends CaminoMachine<ProcedureSimplifie
 
 interface ProcedureSimplifieeContext extends CaminoCommonContext {
   depotDeLaDemandeFaite: boolean
-  ouverturePublicFaite: boolean
+  ouverturePublicStatut: EtapeStatutId | null
   demandeInformationEnCours: boolean
 }
 const defaultDemarcheStatut = DemarchesStatutsIds.EnConstruction
@@ -108,7 +123,7 @@ const procedureSimplifieeMachine = createMachine({
     demarcheStatut: defaultDemarcheStatut,
     visibilite: 'confidentielle',
     depotDeLaDemandeFaite: false,
-    ouverturePublicFaite: false,
+    ouverturePublicStatut: null,
     demandeInformationEnCours: false,
   },
   on: {
@@ -169,21 +184,22 @@ const procedureSimplifieeMachine = createMachine({
     receptionDeLaDemandeOuOuverturePublicOuDecisionAdministrationAFaire: {
       on: {
         DEPOSER_DEMANDE: {
-          guard: ({ context }) => !context.depotDeLaDemandeFaite && !context.ouverturePublicFaite,
+          guard: ({ context }) => !context.depotDeLaDemandeFaite && !context.ouverturePublicStatut,
           target: 'receptionDeLaDemandeOuOuverturePublicOuDecisionAdministrationAFaire',
           actions: assign({
             depotDeLaDemandeFaite: true,
           }),
         },
         OUVRIR_PARTICIPATION_DU_PUBLIC: {
-          guard: ({ context }) => !context.ouverturePublicFaite,
+          guard: ({ context }) => !context.ouverturePublicStatut,
           actions: assign({
-            ouverturePublicFaite: true,
-            visibilite: 'publique',
+            ouverturePublicStatut: ({ event }) => event.status,
+            visibilite: ({ event }) => (event.status === ETAPES_STATUTS.PROGRAMME ? 'confidentielle' : 'publique'),
           }),
-          target: 'clotureDeLaParticipationDuPublicAFaire',
+          target: 'receptionDeLaDemandeOuOuverturePublicOuDecisionAdministrationAFaire',
         },
         RENDRE_DECISION_ADMINISTRATION_ACCEPTEE: {
+          guard: ({ context }) => !context.ouverturePublicStatut || context.ouverturePublicStatut === ETAPES_STATUTS.TERMINE,
           actions: assign({
             visibilite: 'publique',
             demarcheStatut: DemarchesStatutsIds.Accepte,
@@ -191,17 +207,13 @@ const procedureSimplifieeMachine = createMachine({
           target: 'publicationAuRecueilDesActesAdministratifsOupublicationAuJORFAFaire',
         },
         RENDRE_DECISION_ADMINISTRATION_REJETEE: {
+          guard: ({ context }) => !context.ouverturePublicStatut || context.ouverturePublicStatut === ETAPES_STATUTS.TERMINE,
           actions: assign({
             visibilite: 'confidentielle',
             demarcheStatut: DemarchesStatutsIds.Rejete,
           }),
           target: 'finDeMachine',
         },
-      },
-    },
-    clotureDeLaParticipationDuPublicAFaire: {
-      on: {
-        CLOTURER_PARTICIPATION_DU_PUBLIC: 'receptionDeLaDemandeOuOuverturePublicOuDecisionAdministrationAFaire',
       },
     },
     publicationAuRecueilDesActesAdministratifsOupublicationAuJORFAFaire: {

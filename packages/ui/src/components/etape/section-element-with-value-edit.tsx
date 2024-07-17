@@ -5,17 +5,19 @@ import { HeritageEdit } from './heritage-edit'
 import { SectionElement } from '../_common/new-section-element'
 import { SectionElementEdit } from '../_common/new-sections-edit'
 import { FlattenEtape } from 'camino-common/src/etape-form'
+import { CaminoDate } from 'camino-common/src/date'
 
 type Props = {
   sectionId: string
   elementWithValue: DeepReadonly<ElementWithValue>
   elementHeritage: DeepReadonly<FlattenEtape['contenu'][string][string]>
   updateElement: (etape: Props['elementHeritage']) => void
+  etapeDate: CaminoDate
 }
 
 export const SectionElementWithValueEdit: FunctionalComponent<Props> = props => {
   const write = () => {
-    return <SectionElementEdit element={props.elementWithValue} onValueChange={updateValue} />
+    return <SectionElementEdit element={props.elementWithValue} onValueChange={updateValue} sectionId={props.sectionId} etapeDate={props.etapeDate} />
   }
 
   const updateValue = (element: DeepReadonly<ElementWithValue>) => {

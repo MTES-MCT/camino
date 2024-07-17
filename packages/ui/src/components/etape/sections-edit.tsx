@@ -8,7 +8,7 @@ import { SectionWithValue } from 'camino-common/src/sections'
 import { SectionElementWithValueEdit } from './section-element-with-value-edit'
 import { FlattenEtape } from 'camino-common/src/etape-form'
 
-export type SectionsEditEtape = DeepReadonly<Pick<FlattenEtape, 'typeId' | 'contenu'>>
+export type SectionsEditEtape = DeepReadonly<Pick<FlattenEtape, 'typeId' | 'contenu' | 'date'>>
 type Props = {
   titreTypeId: TitreTypeId
   demarcheTypeId: DemarcheTypeId
@@ -51,6 +51,7 @@ export const SectionsEdit = defineComponent<Props>(props => {
                 elementWithValue={elementWithValue}
                 elementHeritage={props.etape.contenu[sectionWithValue.id][elementWithValue.id]}
                 sectionId={sectionWithValue.id}
+                etapeDate={props.etape.date}
                 updateElement={updateElement(sectionWithValue.id, elementWithValue.id)}
               />
             ))}

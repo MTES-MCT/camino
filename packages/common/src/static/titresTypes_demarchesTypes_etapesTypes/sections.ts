@@ -192,10 +192,13 @@ const EtapesTypesSections = {
   [ETAPES_TYPES.decisionAdministrative]: publication,
   [ETAPES_TYPES.publicationDeLavisDeDecisionImplicite]: publication,
   [ETAPES_TYPES.abrogationDeLaDecision]: publication,
-  [ETAPES_TYPES.ouvertureDeLaParticipationDuPublic]: [
+  [ETAPES_TYPES.participationDuPublic]: [
     {
       id: 'opdp',
-      elements: [{ id: 'lien', nom: 'Lien public externe', type: 'url', optionnel: true, description: '' }],
+      elements: [
+        { id: 'lien', nom: 'Lien public externe', type: 'url', optionnel: true, description: '' },
+        { id: 'duree', nom: 'Durée en jours de la participation du public', type: 'number', optionnel: false },
+      ],
     },
   ],
   [ETAPES_TYPES.ouvertureDeLenquetePublique]: [

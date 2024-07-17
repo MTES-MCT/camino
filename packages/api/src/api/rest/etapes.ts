@@ -20,6 +20,7 @@ import {
   documentComplementaireAslEtapeDocumentModificationValidator,
   EtapeSlug,
   ETAPE_IS_BROUILLON,
+  getStatutId,
 } from 'camino-common/src/etape.js'
 import { DemarcheId, demarcheIdValidator } from 'camino-common/src/demarche.js'
 import { HTTP_STATUS } from 'camino-common/src/http.js'
@@ -590,6 +591,8 @@ export const createEtape = (pool: Pool) => async (req: CaminoRequest, res: Custo
                       etape.dateFin = null
                     }
 
+                    etape.statutId = getStatutId(flattenEtape, getCurrent())
+
                     const etapeUpdated: ITitreEtape | undefined = await titreEtapeUpsert({ ...etape, ...perimetreInfos, isBrouillon }, user!, titreDemarche.titreId)
                     if (isNullOrUndefined(etapeUpdated)) {
                       res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ errorMessage: "Une erreur est survenue lors de la création de l'étape" })
@@ -759,6 +762,8 @@ export const updateEtape = (pool: Pool) => async (req: CaminoRequest, res: Custo
         if (!(await checkEntreprisesExist(pool, [...(etape.titulaireIds ?? []), ...(etape.amodiataireIds ?? [])]))) {
           throw new Error("certaines entreprises n'existent pas")
         }
+
+        etape.statutId = getStatutId(flattenEtape, getCurrent())
 
         const etapeUpdated: ITitreEtape | undefined = await titreEtapeUpsert({ ...etape, ...perimetreInfos, isBrouillon: titreEtapeOld.isBrouillon }, user!, titreDemarche.titreId)
         if (isNullOrUndefined(etapeUpdated)) {

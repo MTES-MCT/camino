@@ -11,11 +11,11 @@ import { capitalize } from 'camino-common/src/strings'
 import { DsfrInputRadio } from '../_ui/dsfr-input-radio'
 import { DsfrSelect } from '../_ui/dsfr-select'
 import { useState } from '../../utils/vue-tsx-utils'
-import { CaminoDate } from 'camino-common/src/date'
-import type { JSX } from 'vue/jsx-runtime'
+import { CaminoDate, dateAddDays, dateFormat } from 'camino-common/src/date'
 interface Props {
   sectionsWithValue: DeepReadonly<SectionWithValue[]>
   completeUpdate: (complete: boolean, newContenu: Props['sectionsWithValue']) => void
+  etapeDate: CaminoDate | null
 }
 
 export const SectionsEdit = defineComponent<Props>(props => {
@@ -65,7 +65,7 @@ export const SectionsEdit = defineComponent<Props>(props => {
 
           {sectionWithValue.elements.map((element, elementIndex) => (
             <div class="fr-fieldset__element">
-              <SectionElementEdit key={element.id} element={element} onValueChange={onValueChange(elementIndex, sectionIndex)} />
+              <SectionElementEdit key={element.id} element={element} onValueChange={onValueChange(elementIndex, sectionIndex)} sectionId={sectionWithValue.id} etapeDate={props.etapeDate} />
             </div>
           ))}
         </fieldset>
@@ -74,15 +74,30 @@ export const SectionsEdit = defineComponent<Props>(props => {
   )
 })
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-SectionsEdit.props = ['sectionsWithValue', 'completeUpdate']
+SectionsEdit.props = ['sectionsWithValue', 'completeUpdate', 'etapeDate']
 
 interface SectionElementEditProps {
   element: DeepReadonly<ElementWithValue>
   onValueChange: (value: SectionElementEditProps['element']) => void
+  sectionId: string
+  etapeDate: CaminoDate | null
 }
-export const SectionElementEdit = defineComponent<SectionElementEditProps>(props => {
-  let sectionElementEditInput: JSX.Element | null = null
 
+export const getInfo = (element: DeepReadonly<ElementWithValue>, sectionId: string, etapeDate: CaminoDate | null): string => {
+  if (isNotNullNorUndefined(element.value)) {
+    if (element.id === 'volumeGranulatsExtrait' && isNumberElement(element)) {
+      return `Soit l’équivalent de ${numberFormat(element.value * 1.5)} tonnes`
+    }
+    if (sectionId === 'opdp' && element.id === 'duree' && isNumberElement(element) && isNotNullNorUndefined(etapeDate)) {
+      const dateFin = dateAddDays(etapeDate, element.value - 1)
+      return `Du ${dateFormat(etapeDate)} au ${dateFormat(dateFin)} (inclus)`
+    }
+  }
+
+  return ''
+}
+
+export const SectionElementEdit = defineComponent<SectionElementEditProps>(props => {
   const complete = ref<boolean>(sectionElementWithValueCompleteValidate(props.element))
 
   const onValueChange = (value: DeepReadonly<ElementWithValue>) => {
@@ -90,119 +105,132 @@ export const SectionElementEdit = defineComponent<SectionElementEditProps>(props
     props.onValueChange(value)
   }
 
+  const element = props.element
   const info = computed<string>(() => {
-    return element.id === 'volumeGranulatsExtrait' && isNumberElement(element) && isNotNullNorUndefined(element.value) ? `Soit l’équivalent de ${numberFormat(element.value * 1.5)} tonnes` : ''
+    return getInfo(props.element, props.sectionId, props.etapeDate)
   })
 
   const required = !(props.element.optionnel ?? false)
-  const element = props.element
   switch (element.type) {
     case 'integer':
     case 'number':
-      sectionElementEditInput = (
-        <DsfrInput
-          type={{ type: 'number', min: 0 }}
-          required={required}
-          initialValue={element.value}
-          valueChanged={(e: number | null) => onValueChange({ ...element, value: e })}
-          legend={{ main: element.nom ?? '', description: element.description, info: info.value }}
-        />
+      return () => (
+        <div>
+          <DsfrInput
+            type={{ type: 'number', min: 0 }}
+            required={required}
+            initialValue={element.value}
+            valueChanged={(e: number | null) => onValueChange({ ...element, value: e })}
+            legend={{ main: element.nom ?? '', description: element.description, info: info.value }}
+          />
+        </div>
       )
-      break
     case 'date':
-      sectionElementEditInput = (
-        <DsfrInput
-          type={{ type: 'date' }}
-          required={required}
-          initialValue={element.value}
-          valueChanged={(date: CaminoDate | null) => {
-            onValueChange({ ...element, value: date })
-          }}
-          legend={{ main: element.nom ?? '', description: element.description }}
-        />
+      return () => (
+        <div>
+          <DsfrInput
+            type={{ type: 'date' }}
+            required={required}
+            initialValue={element.value}
+            valueChanged={(date: CaminoDate | null) => {
+              onValueChange({ ...element, value: date })
+            }}
+            legend={{ main: element.nom ?? '', description: element.description }}
+          />
+        </div>
       )
-      break
     case 'textarea':
-      sectionElementEditInput = (
-        <DsfrTextarea
-          required={required}
-          initialValue={element.value ?? undefined}
-          valueChanged={(e: string) => onValueChange({ ...element, value: e })}
-          legend={{ main: element.nom ?? '', description: element.description }}
-        />
+      return () => (
+        <div>
+          <DsfrTextarea
+            required={required}
+            initialValue={element.value ?? undefined}
+            valueChanged={(e: string) => onValueChange({ ...element, value: e })}
+            legend={{ main: element.nom ?? '', description: element.description }}
+          />
+        </div>
       )
-      break
 
     case 'text':
     case 'url':
-      sectionElementEditInput = (
-        <DsfrInput
-          required={required}
-          type={{ type: 'text' }}
-          initialValue={element.value}
-          valueChanged={(e: string) => onValueChange({ ...element, value: e })}
-          legend={{ main: element.nom ?? '', description: element.description }}
-        />
-      )
-      break
-    case 'radio':
-      sectionElementEditInput = (
-        <DsfrInputRadio
-          id={props.element.id}
-          required={required}
-          legend={{ main: element.nom ?? '', description: element.description }}
-          valueChanged={(radio: string) => onValueChange({ ...element, value: radio === 'oui' })}
-          elements={[
-            { legend: { main: 'Oui' }, itemId: 'oui' },
-            { legend: { main: 'Non' }, itemId: 'non' },
-          ]}
-          initialValue={isNullOrUndefined(props.element.value) || !isRadioElement(props.element) ? null : props.element.value ? 'oui' : 'non'}
-        />
-      )
-      break
-    case 'checkbox':
-      sectionElementEditInput = (
-        <DsfrInputCheckbox initialValue={element.value} legend={{ main: element.nom ?? '', description: element.description }} valueChanged={(e: boolean) => onValueChange({ ...element, value: e })} />
+      return () => (
+        <div>
+          <DsfrInput
+            required={required}
+            type={{ type: 'text' }}
+            initialValue={element.value}
+            valueChanged={(e: string) => onValueChange({ ...element, value: e })}
+            legend={{ main: element.nom ?? '', description: element.description }}
+          />
+        </div>
       )
 
-      break
-    case 'checkboxes':
-      sectionElementEditInput = (
-        <DsfrInputCheckboxes
-          legend={{ main: element.nom ?? '', description: element.description }}
-          elements={element.options.map(option => {
-            return { itemId: option.id, legend: { main: capitalize(option.nom) } }
-          })}
-          initialCheckedValue={(props.element.value ?? []) as string[]}
-          valueChanged={newValues => onValueChange({ ...element, value: newValues })}
-        />
+    case 'radio':
+      return () => (
+        <div>
+          <DsfrInputRadio
+            id={props.element.id}
+            required={required}
+            legend={{ main: element.nom ?? '', description: element.description }}
+            valueChanged={(radio: string) => onValueChange({ ...element, value: radio === 'oui' })}
+            elements={[
+              { legend: { main: 'Oui' }, itemId: 'oui' },
+              { legend: { main: 'Non' }, itemId: 'non' },
+            ]}
+            initialValue={isNullOrUndefined(props.element.value) || !isRadioElement(props.element) ? null : props.element.value ? 'oui' : 'non'}
+          />
+        </div>
       )
-      break
+
+    case 'checkbox':
+      return () => (
+        <div>
+          <DsfrInputCheckbox
+            initialValue={element.value}
+            legend={{ main: element.nom ?? '', description: element.description }}
+            valueChanged={(e: boolean) => onValueChange({ ...element, value: e })}
+          />
+        </div>
+      )
+
+    case 'checkboxes':
+      return () => (
+        <div>
+          <DsfrInputCheckboxes
+            legend={{ main: element.nom ?? '', description: element.description }}
+            elements={element.options.map(option => {
+              return { itemId: option.id, legend: { main: capitalize(option.nom) } }
+            })}
+            initialCheckedValue={(props.element.value ?? []) as string[]}
+            valueChanged={newValues => onValueChange({ ...element, value: newValues })}
+          />
+        </div>
+      )
     case 'select': {
       const options = element.options.map(option => ({ id: option.id, label: option.nom }))
       if (isNonEmptyArray(options)) {
-        sectionElementEditInput = (
-          <DsfrSelect
-            required={required}
-            legend={{ main: element.nom ?? '', description: element.description }}
-            items={options}
-            initialValue={element.value}
-            valueChanged={newValue => onValueChange({ ...element, value: newValue })}
-          />
+        return () => (
+          <div>
+            <DsfrSelect
+              required={required}
+              legend={{ main: element.nom ?? '', description: element.description }}
+              items={options}
+              initialValue={element.value}
+              valueChanged={newValue => onValueChange({ ...element, value: newValue })}
+            />
+          </div>
         )
       } else {
         throw new Error('Select sans option, cas impossible ?')
       }
-
-      break
     }
 
     default:
       exhaustiveCheck(element)
   }
 
-  return () => <div>{sectionElementEditInput}</div>
+  return () => <div></div>
 })
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-SectionElementEdit.props = ['element', 'onValueChange']
+SectionElementEdit.props = ['element', 'onValueChange', 'sectionId', 'etapeDate']

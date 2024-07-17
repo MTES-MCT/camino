@@ -20,6 +20,7 @@ export const SansHeritage: StoryFn = () => (
     etape={{
       typeId: 'mfr',
       contenu: { arm: { mecanise: { value: true, heritee: false, etapeHeritee: null }, franchissements: { value: null, heritee: false, etapeHeritee: null } } },
+      date: toCaminoDate('2024-01-01'),
     }}
   />
 )
@@ -30,6 +31,7 @@ export const AvecHeritageActif: StoryFn = () => (
     demarcheTypeId="oct"
     titreTypeId="arm"
     etape={{
+      date: toCaminoDate('2024-01-01'),
       typeId: 'mod',
       contenu: {
         arm: {
@@ -47,6 +49,7 @@ export const AvecHeritage: StoryFn = () => (
     demarcheTypeId="oct"
     titreTypeId="arm"
     etape={{
+      date: toCaminoDate('2024-01-01'),
       typeId: 'mod',
       contenu: {
         arm: {
@@ -64,6 +67,7 @@ export const DecisionJorf: StoryFn = () => (
     demarcheTypeId="pro"
     titreTypeId="pcc"
     etape={{
+      date: toCaminoDate('2000-05-16'),
       typeId: 'dpu',
       contenu: {
         publication: {

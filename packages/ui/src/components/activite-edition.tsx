@@ -176,7 +176,7 @@ export const PureActiviteEdition = defineComponent<Props>(props => {
 
                 {ActivitesTypes[activite.type_id].description !== undefined ? <div class="h6" v-html={ActivitesTypes[activite.type_id].description} /> : null}
 
-                <SectionsEdit sectionsWithValue={activite.sections_with_value} completeUpdate={sectionsUpdate} />
+                <SectionsEdit sectionsWithValue={activite.sections_with_value} completeUpdate={sectionsUpdate} etapeDate={null} />
 
                 <ActiviteDocumentsEdit apiClient={props.apiClient} activiteDocuments={activite.activite_documents} activiteTypeId={activite.type_id} completeUpdate={activiteDocumentsCompleteUpdate} />
 

@@ -1,7 +1,7 @@
 import { action } from '@storybook/addon-actions'
 import { Meta, StoryFn } from '@storybook/vue3'
 import { SectionsEdit } from './new-sections-edit'
-import { toCaminoDate } from 'camino-common/src/date'
+import { caminoDateValidator, toCaminoDate } from 'camino-common/src/date'
 import { UNITES, Unite, Unites } from 'camino-common/src/static/unites'
 import { ActiviteSectionElement, ActivitesTypes, isSubstancesFiscales } from 'camino-common/src/static/activitesTypes'
 import { getSectionsWithValue } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections'
@@ -91,6 +91,7 @@ export const Default: StoryFn = () => (
         ],
       },
     ]}
+    etapeDate={null}
   />
 )
 
@@ -191,6 +192,7 @@ export const TousLesElementsVidesOptionnels: StoryFn = () => (
         ],
       },
     ]}
+    etapeDate={null}
   />
 )
 
@@ -291,6 +293,7 @@ export const TousLesElementsRequis: StoryFn = () => (
         ],
       },
     ]}
+    etapeDate={null}
   />
 )
 
@@ -392,6 +395,7 @@ export const TousLesElementsRemplis: StoryFn = () => (
         ],
       },
     ]}
+    etapeDate={null}
   />
 )
 export const VolumeGranulatsExtrait: StoryFn = () => (
@@ -414,6 +418,31 @@ export const VolumeGranulatsExtrait: StoryFn = () => (
         ],
       },
     ]}
+    etapeDate={null}
+  />
+)
+
+export const ParticipationDuPublic: StoryFn = () => (
+  <SectionsEdit
+    completeUpdate={(complete, newContent) => {
+      completeUpdateAction(complete, newContent)
+    }}
+    sectionsWithValue={[
+      {
+        id: 'opdp',
+        elements: [
+          {
+            id: 'duree',
+            nom: 'Nombre de jours de la participation du public',
+            type: 'number',
+            description: '',
+            value: 12,
+            optionnel: false,
+          },
+        ],
+      },
+    ]}
+    etapeDate={caminoDateValidator.parse('2024-01-12')}
   />
 )
 
@@ -437,6 +466,7 @@ export const Date: StoryFn = () => (
         ],
       },
     ]}
+    etapeDate={null}
   />
 )
 
@@ -465,6 +495,7 @@ export const Checkboxes: StoryFn = () => (
         ],
       },
     ]}
+    etapeDate={null}
   />
 )
 
@@ -511,6 +542,7 @@ export const ToutesLesActivites: StoryFn = () => (
                   }),
                   {}
                 )}
+                etapeDate={null}
               />{' '}
             </td>
           </tr>
