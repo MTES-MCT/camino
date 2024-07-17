@@ -1,14 +1,14 @@
-import { computed, defineComponent, onMounted, ref } from 'vue'
+import { computed, defineComponent, ref } from 'vue'
 import { FunctionalPopup } from '../_ui/functional-popup'
-import { AVIS_VISIBILITY_IDS, AvisStatutId, AvisTypeId, AvisTypes, AvisVisibilityId, AvisVisibilityIds, getAvisStatutsByAvis } from 'camino-common/src/static/avisTypes'
+import { AVIS_VISIBILITY_IDS, AvisStatutIds, AvisTypeId, AvisTypes, AvisVisibilityId, AvisVisibilityIds } from 'camino-common/src/static/avisTypes'
 import { InputFile } from '../_ui/dsfr-input-file'
 import { ApiClient } from '@/api/api-client'
 import { TempDocumentName } from 'camino-common/src/document'
-import { NonEmptyArray, Nullable, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, map } from 'camino-common/src/typescript-tools'
+import { NonEmptyArray, Nullable, isNotNullNorUndefined, map } from 'camino-common/src/typescript-tools'
 import { DsfrInput } from '../_ui/dsfr-input'
 import { EtapeAvisModification, TempEtapeAvis, etapeAvisModificationValidator, tempEtapeAvisValidator } from 'camino-common/src/etape'
 import { useState } from '../../utils/vue-tsx-utils'
-import { DsfrSelect, Item } from '../_ui/dsfr-select'
+import { DsfrSelect } from '../_ui/dsfr-select'
 import { TypeaheadSmartSingle } from '../_ui/typeahead-smart-single'
 import { DsfrInputRadio } from '../_ui/dsfr-input-radio'
 import { User, isEntrepriseOrBureauDEtude } from 'camino-common/src/roles'
@@ -24,11 +24,11 @@ interface Props {
 }
 
 export const AddEtapeAvisPopup = defineComponent<Props>(props => {
-  const etapeAvisTypeId = ref<AvisTypeId | null>(props.initialAvis ? props.initialAvis.avis_type_id : props.avisTypeIds.length === 1 ? props.avisTypeIds[0] : null)
+  const etapeAvisTypeId = ref<AvisTypeId | null>(props.avisTypeIds.length === 1 ? props.avisTypeIds[0] : null)
   const etapeAvisFile = ref<File | null>(null)
   const avisDescription = ref<string>(props.initialAvis?.description ?? '')
   const [avisDate, setAvisDate] = useState(props.initialAvis?.date ?? null)
-  const [avisStatutId, setAvisStatutId] = useState<AvisStatutId | null>(null)
+  const [avisStatutId, setAvisStatutId] = useState(props.initialAvis?.avis_statut_id ?? null)
   const [avisVisibilityId, setAvisVisibilityId] = useState(props.initialAvis?.avis_visibility_id ?? null)
 
   const tempAvisName = ref<TempDocumentName | undefined>(isNotNullNorUndefined(props.initialAvis) && 'temp_document_name' in props.initialAvis ? props.initialAvis.temp_document_name : undefined)
@@ -48,24 +48,11 @@ export const AddEtapeAvisPopup = defineComponent<Props>(props => {
 
   const updateAvisTypeId = (avisTypeId: AvisTypeId | null) => {
     etapeAvisTypeId.value = avisTypeId
-
-    setAvisStatutId(avisStatutIds.value.length === 1 ? avisStatutIds.value[0].id : null)
   }
 
   const visibilityChange = (value: AvisVisibilityId) => {
     setAvisVisibilityId(value)
   }
-
-  const avisStatutIds = computed<Item<AvisStatutId>[]>(() => {
-    if (isNotNullNorUndefined(etapeAvisTypeId.value)) {
-      return map(getAvisStatutsByAvis(etapeAvisTypeId.value), avis => ({ id: avis, label: avis }))
-    }
-    return []
-  })
-
-  onMounted(() => {
-    setAvisStatutId(avisStatutIds.value.length === 1 ? avisStatutIds.value[0].id : props.initialAvis?.avis_statut_id ?? null)
-  })
   const content = () => (
     <form>
       {props.avisTypeIds.length === 1 ? null : (
@@ -75,7 +62,7 @@ export const AddEtapeAvisPopup = defineComponent<Props>(props => {
               <label class="fr-label" for="type">
                 Type d'avis
               </label>
-              <TypeaheadSmartSingle initialValue={etapeAvisTypeId.value ?? undefined} possibleValues={props.avisTypeIds.map(id => AvisTypes[id])} valueIdSelected={updateAvisTypeId} />
+              <TypeaheadSmartSingle initialValue={props.initialAvis?.avis_type_id} possibleValues={props.avisTypeIds.map(id => AvisTypes[id])} valueIdSelected={updateAvisTypeId} />
             </div>
           </div>
         </fieldset>
@@ -94,11 +81,10 @@ export const AddEtapeAvisPopup = defineComponent<Props>(props => {
         <div class="fr-fieldset__element">
           <DsfrInput legend={{ main: 'Date' }} required={true} type={{ type: 'date' }} initialValue={avisDate.value} valueChanged={setAvisDate} />
         </div>
-        {isNotNullNorUndefinedNorEmpty(avisStatutIds.value) ? (
-          <div class="fr-fieldset__element">
-            <DsfrSelect legend={{ main: 'Statut' }} required={true} items={avisStatutIds.value} initialValue={avisStatutId.value} valueChanged={setAvisStatutId} />
-          </div>
-        ) : null}
+
+        <div class="fr-fieldset__element">
+          <DsfrSelect legend={{ main: 'Statut' }} required={true} items={map(AvisStatutIds, avis => ({ id: avis, label: avis }))} initialValue={avisStatutId.value} valueChanged={setAvisStatutId} />
+        </div>
 
         <div class="fr-fieldset__element">
           <DsfrInputRadio legend={{ main: 'Visibilité' }} required={true} elements={visibilityChoices.value} initialValue={avisVisibilityId.value} valueChanged={visibilityChange} />
