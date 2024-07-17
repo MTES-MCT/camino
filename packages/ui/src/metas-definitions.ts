@@ -1,5 +1,3 @@
-import { documentsTypes, etapesTypesDocumentsTypes } from '@/api/metas'
-
 import { FREQUENCES_IDS } from 'camino-common/src/static/frequence'
 import { Domaines } from 'camino-common/src/static/domaines'
 import { TitresTypesTypes } from 'camino-common/src/static/titresTypesTypes'
@@ -11,12 +9,13 @@ import { sortedDemarchesTypes } from 'camino-common/src/static/demarchesTypes'
 import { titresTypesDemarcheTypesMetas } from 'camino-common/src/static/titresTypesDemarchesTypes'
 import { etapesTypesEntrepriseDocumentsTypesMetas, TDEEntrepriseDocumentsTypesMetas } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/entrepriseDocuments'
 import { TDEMetas } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes'
-import { TDEDocumentsTypesMetas } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/documents'
+import { etapesTypesDocumentsTypesMetas, TDEDocumentsTypesMetas } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/documents'
 import { EtapesStatuts } from 'camino-common/src/static/etapesStatuts'
 import { etapesTypesEtapesStatutsMetas } from 'camino-common/src/static/etapesTypesEtapesStatuts'
 import { TitresTypes } from 'camino-common/src/static/titresTypes'
 import { sortedActivitesTypes } from 'camino-common/src/static/activitesTypes'
 import { EtapesTypes } from 'camino-common/src/static/etapesTypes'
+import { sortedDocumentTypes } from 'camino-common/src/static/documentsTypes'
 
 const labelGet = (entity?: { id: string; nom: string }) => (entity ? `${entity.id} - ${entity.nom}` : '')
 
@@ -297,7 +296,7 @@ export const metasIndex = {
     ids: ['titreTypeId', 'demarcheTypeId', 'etapeTypeId', 'documentTypeId'],
   },
   'etapes-types--documents-types': {
-    get: etapesTypesDocumentsTypes,
+    get: () => etapesTypesDocumentsTypesMetas,
     nom: 'Types des étapes | Types des documents',
     colonnes: [
       {
@@ -312,8 +311,7 @@ export const metasIndex = {
         type: 'entities',
         entities: 'documents-types',
       },
-      { id: 'optionnel', nom: 'Optionnel', type: Boolean, optional: true },
-      { id: 'description', nom: 'Description', type: String, optional: true },
+      { id: 'optionnel', nom: 'Optionnel', type: Boolean },
     ],
     ids: ['etapeTypeId', 'documentTypeId'],
   },
@@ -338,7 +336,7 @@ export const metasIndex = {
     ids: ['etapeTypeId', 'documentTypeId'],
   },
   'documents-types': {
-    get: documentsTypes,
+    get: () => sortedDocumentTypes,
     labelGet,
     nom: 'Types des documents',
     colonnes: [
