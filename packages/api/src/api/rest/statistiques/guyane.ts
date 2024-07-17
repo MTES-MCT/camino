@@ -14,6 +14,7 @@ import { ACTIVITES_STATUTS_IDS } from 'camino-common/src/static/activitesStatuts
 import type { Pool } from 'pg'
 import { capitalize } from 'camino-common/src/strings.js'
 import { isTitreValide } from 'camino-common/src/static/titresStatuts.js'
+import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
 
 const statistiquesGuyaneActivitesBuild = (sectionId: string, titresActivites: ITitreActivite[], init: { [key: string]: number }) =>
   titresActivites.reduce((acc: { [key: string]: number }, ta) => {
@@ -24,7 +25,7 @@ const statistiquesGuyaneActivitesBuild = (sectionId: string, titresActivites: IT
     }
 
     Object.keys(acc).forEach(prop => {
-      if (ta.contenu && ta.contenu[sectionId] && ta.contenu[sectionId][prop] && (prop !== 'effectifs' || ta.titre!.typeId === 'axm' || ta.titre!.typeId === 'pxm' || ta.titre!.typeId === 'cxm')) {
+      if (isNotNullNorUndefined(ta.contenu?.[sectionId]?.[prop]) && (prop !== 'effectifs' || ta.titre!.typeId === 'axm' || ta.titre!.typeId === 'pxm' || ta.titre!.typeId === 'cxm')) {
         const value = ta.contenu![sectionId][prop]
 
         acc[prop] += Number(value)
@@ -34,25 +35,28 @@ const statistiquesGuyaneActivitesBuild = (sectionId: string, titresActivites: IT
     return acc
   }, init)
 
+const statsGuyaneTitresTypes: TitreTypeId[] = ['arm', 'prm', 'axm', 'cxm']
 type IStatsGuyaneTitresTypes = 'titresArm' | 'titresPrm' | 'titresAxm' | 'titresCxm'
 
 const statistiquesGuyaneTitresBuild = (titres: { id: string; typeId: TitreTypeId; surface: number }[]): Record<string, { quantite: number; surface: number }> =>
-  titres.reduce(
-    (acc, titre) => {
-      const id = `titres${capitalize(titre.typeId)}` as IStatsGuyaneTitresTypes
+  titres
+    .filter(({ typeId }) => statsGuyaneTitresTypes.includes(typeId))
+    .reduce(
+      (acc, titre) => {
+        const id = `titres${capitalize(titre.typeId)}` as IStatsGuyaneTitresTypes
 
-      acc[id].quantite++
-      acc[id].surface += titre.surface
+        acc[id].quantite++
+        acc[id].surface += titre.surface
 
-      return acc
-    },
-    {
-      titresArm: { quantite: 0, surface: 0 },
-      titresPrm: { quantite: 0, surface: 0 },
-      titresAxm: { quantite: 0, surface: 0 },
-      titresCxm: { quantite: 0, surface: 0 },
-    }
-  )
+        return acc
+      },
+      {
+        titresArm: { quantite: 0, surface: 0 },
+        titresPrm: { quantite: 0, surface: 0 },
+        titresAxm: { quantite: 0, surface: 0 },
+        titresCxm: { quantite: 0, surface: 0 },
+      }
+    )
 
 const statistiquesGuyaneInstantBuild = (titres: ITitre[]) => {
   const statsInstant = titres.reduce(
@@ -63,9 +67,12 @@ const statistiquesGuyaneInstantBuild = (titres: ITitre[]) => {
         } else {
           acc.surfaceExploitation += titre.pointsEtape?.surface ?? 0
         }
-        const id = `titres${capitalize(titre.typeId)}` as IStatsGuyaneTitresTypes
 
-        acc[id]++
+        if (statsGuyaneTitresTypes.includes(titre.typeId)) {
+          const id = `titres${capitalize(titre.typeId)}` as IStatsGuyaneTitresTypes
+
+          acc[id]++
+        }
       }
 
       return acc
