@@ -170,7 +170,6 @@ export const getAvisTypes = (etapeTypeId: EtapeTypeId, titreTypeId: TitreTypeId,
   if (etapeTypeId === ETAPES_TYPES.avisDesServicesEtCommissionsConsultatives) {
     avis.push(
       ...[
-        { ...AvisTypes.lettreDeSaisineDesServices, optionnel: false },
         { ...AvisTypes.avisDirectionRegionaleDesAffairesCulturelles, optionnel: true },
         { ...AvisTypes.avisConseilDepartementalEnvironnementRisquesSanitairesTechnologiques, optionnel: true },
         { ...AvisTypes.avisDirectionsRégionalesEconomieEmploiTravailSolidarités, optionnel: true },

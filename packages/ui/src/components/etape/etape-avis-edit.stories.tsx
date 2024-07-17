@@ -29,7 +29,7 @@ const avis: EtapeAvis[] = [
   },
   {
     id: etapeAvisIdValidator.parse('id-car'),
-    avis_type_id: 'lettreDeSaisineDesServices',
+    avis_type_id: 'autreAvis',
     description: 'Une description',
     date: caminoDateValidator.parse('2023-02-01'),
     avis_statut_id: 'Non renseigné',
@@ -97,7 +97,7 @@ export const AvisEnGuyane: StoryFn = () => (
     }}
     etapeId={etapeIdValidator.parse('etapeId')}
     communeIds={[communeIdValidator.parse('97302')]}
-    tde={{ titreTypeId: 'axm', demarcheTypeId: 'oct', etapeTypeId: 'asc' }}
+    tde={{ titreTypeId: 'arm', demarcheTypeId: 'oct', etapeTypeId: 'asc' }}
     onChange={completeUpdateAction}
     user={{ ...testBlankUser, role: 'super' }}
   />

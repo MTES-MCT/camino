@@ -36,7 +36,7 @@ export const DocumentInitialTemporaire: StoryFn = () => (
     close={close}
     initialAvis={{
       description: 'description',
-      avis_type_id: 'lettreDeSaisineDesServices',
+      avis_type_id: 'autreAvis',
       temp_document_name: tempDocumentNameValidator.parse('value'),
       date: toCaminoDate('2023-01-02'),
       avis_statut_id: 'Favorable',
@@ -54,7 +54,7 @@ export const DocumentInitialDejaSauvegarde: StoryFn = () => (
     close={close}
     initialAvis={{
       description: 'description',
-      avis_type_id: 'lettreDeSaisineDesServices',
+      avis_type_id: 'autreAvis',
       id: etapeAvisIdValidator.parse('documentId'),
       date: toCaminoDate('2023-01-02'),
       avis_statut_id: 'Favorable',

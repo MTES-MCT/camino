@@ -756,12 +756,12 @@ test('getDocumentsTypes', () => {
       },
       {
         "description": "la liste et la valeur du matériel d’extraction et de
-     traitement que le demandeur détient ou qu’il 
+     traitement que le demandeur détient ou qu’il
     envisage d’acquérir ainsi que, dans ce dernier
-     cas, le financement correspondant. Ces pièces 
-    sont demandées au titre de la justification des 
+     cas, le financement correspondant. Ces pièces
+    sont demandées au titre de la justification des
     capacités financières du
-    demandeur 
+    demandeur
     (décret 2001-204, art. 7)",
         "id": "idm",
         "nom": "Identification de matériel",
@@ -909,12 +909,12 @@ test('getDocumentsTypes', () => {
       },
       {
         "description": "la liste et la valeur du matériel d’extraction et de
-     traitement que le demandeur détient ou qu’il 
+     traitement que le demandeur détient ou qu’il
     envisage d’acquérir ainsi que, dans ce dernier
-     cas, le financement correspondant. Ces pièces 
-    sont demandées au titre de la justification des 
+     cas, le financement correspondant. Ces pièces
+    sont demandées au titre de la justification des
     capacités financières du
-    demandeur 
+    demandeur
     (décret 2001-204, art. 7)",
         "id": "idm",
         "nom": "Identification de matériel",
@@ -975,11 +975,6 @@ test('getAvisType', () => {
   expect(getAvisTypes('mfr', 'arm', [])).toMatchInlineSnapshot(`[]`)
   expect(getAvisTypes('asc', 'arm', [])).toMatchInlineSnapshot(`
     [
-      {
-        "id": "lettreDeSaisineDesServices",
-        "nom": "Lettre de saisine des services",
-        "optionnel": false,
-      },
       {
         "id": "avisDirectionRegionaleDesAffairesCulturelles",
         "nom": "Avis de la Direction Régionale Des Affaires Culturelles (DRAC)",
@@ -1069,11 +1064,6 @@ test('getAvisType', () => {
   `)
   expect(getAvisTypes('asc', 'arm', [communeIdValidator.parse('97302')])).toMatchInlineSnapshot(`
     [
-      {
-        "id": "lettreDeSaisineDesServices",
-        "nom": "Lettre de saisine des services",
-        "optionnel": false,
-      },
       {
         "id": "avisDirectionRegionaleDesAffairesCulturelles",
         "nom": "Avis de la Direction Régionale Des Affaires Culturelles (DRAC)",
@@ -1173,11 +1163,6 @@ test('getAvisType', () => {
   `)
   expect(getAvisTypes('asc', 'axm', [communeIdValidator.parse('97302')])).toMatchInlineSnapshot(`
     [
-      {
-        "id": "lettreDeSaisineDesServices",
-        "nom": "Lettre de saisine des services",
-        "optionnel": false,
-      },
       {
         "id": "avisDirectionRegionaleDesAffairesCulturelles",
         "nom": "Avis de la Direction Régionale Des Affaires Culturelles (DRAC)",
