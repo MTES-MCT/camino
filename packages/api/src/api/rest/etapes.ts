@@ -568,6 +568,7 @@ export const createEtape = (pool: Pool) => async (req: CaminoRequest, res: Custo
                     null,
                     null
                   )
+
                   if (rulesErrors.length) {
                     res.status(HTTP_STATUS.BAD_REQUEST).json({ errorMessage: rulesErrors.join(', ') })
                   } else if (
