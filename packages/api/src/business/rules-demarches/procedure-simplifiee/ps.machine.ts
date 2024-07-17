@@ -207,6 +207,7 @@ const procedureSimplifieeMachine = createMachine({
           target: 'publicationAuRecueilDesActesAdministratifsOupublicationAuJORFAFaire',
         },
         RENDRE_DECISION_ADMINISTRATION_REJETEE: {
+          guard: ({ context }) => !context.ouverturePublicStatut || context.ouverturePublicStatut === ETAPES_STATUTS.TERMINE,
           actions: assign({
             visibilite: 'confidentielle',
             demarcheStatut: DemarchesStatutsIds.Rejete,
