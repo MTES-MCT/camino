@@ -131,7 +131,7 @@ export const demarchesDefinitions: DemarcheDefinition[] = [
     demarcheTypeIds: demarcheTypeIdsCxPr_G,
     machine: new ProcedureSimplifieeMachine(),
     dateDebut: plusVieilleDateEnBase,
-    demarcheIdExceptions: [newDemarcheId('eawZqngLivDPxPork38akC2b')],
+    demarcheIdExceptions: [],
   },
 ]
 
