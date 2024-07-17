@@ -1,4 +1,4 @@
-import { getKeys, isNotNullNorUndefined, onlyUnique } from '../../typescript-tools.js'
+import { getKeys, isNotNullNorUndefined } from '../../typescript-tools.js'
 import { DEMARCHES_TYPES_IDS, DemarcheTypeId, isDemarcheTypeId } from './../demarchesTypes.js'
 import { DocumentsTypes, DOCUMENTS_TYPES_IDS, DocumentType, DocumentTypeId, isDocumentTypeId } from './../documentsTypes.js'
 import { ETAPES_TYPES, EtapeTypeId, isEtapeTypeId } from './../etapesTypes.js'
@@ -6,246 +6,369 @@ import { TitreTypeId, TITRES_TYPES_IDS, isTitreType } from './../titresTypes.js'
 import { TDEType } from './index.js'
 
 const EtapesTypesDocumentsTypes = {
-  [ETAPES_TYPES.avisDunPresidentDEPCI]: [DOCUMENTS_TYPES_IDS.avis],
-  [ETAPES_TYPES.abrogationDeLaDecision]: [DOCUMENTS_TYPES_IDS.arrete],
-  [ETAPES_TYPES.avisDeLaCommissionDesAutorisationsDeRecherchesMinieres_CARM_]: [DOCUMENTS_TYPES_IDS.avis, DOCUMENTS_TYPES_IDS.ficheDePresentation, DOCUMENTS_TYPES_IDS.lettre],
+  [ETAPES_TYPES.avisDunPresidentDEPCI]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.avis, optionnel: true }],
+  [ETAPES_TYPES.abrogationDeLaDecision]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.arrete, optionnel: true }],
+  [ETAPES_TYPES.avisDeLaCommissionDesAutorisationsDeRecherchesMinieres_CARM_]: [
+    { documentTypeId: DOCUMENTS_TYPES_IDS.avis, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.ficheDePresentation, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.lettre, optionnel: true },
+  ],
   [ETAPES_TYPES.avisDuConseilGeneralDeLeconomie_CGE_]: [
-    DOCUMENTS_TYPES_IDS.avisDUnServiceDeLAdministrationCentrale,
-    DOCUMENTS_TYPES_IDS.avisDuConseilGeneralDeLEconomie_cge,
-    DOCUMENTS_TYPES_IDS.avis,
-    DOCUMENTS_TYPES_IDS.rapportDeLAdministrationCentraleChargeDesMines,
+    { documentTypeId: DOCUMENTS_TYPES_IDS.avisDUnServiceDeLAdministrationCentrale, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.avisDuConseilGeneralDeLEconomie_cge, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.avis, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.rapportDeLAdministrationCentraleChargeDesMines, optionnel: true },
   ],
-  [ETAPES_TYPES.avisDuneCollectiviteLocale]: [DOCUMENTS_TYPES_IDS.avis],
+  [ETAPES_TYPES.avisDuneCollectiviteLocale]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.avis, optionnel: true }],
   [ETAPES_TYPES.avenantALautorisationDeRechercheMiniere]: [
-    DOCUMENTS_TYPES_IDS.avenant,
-    DOCUMENTS_TYPES_IDS.contrat,
-    DOCUMENTS_TYPES_IDS.convention,
-    DOCUMENTS_TYPES_IDS.decision,
-    DOCUMENTS_TYPES_IDS.notificationDeDecision,
+    { documentTypeId: DOCUMENTS_TYPES_IDS.avenant, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.contrat, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.convention, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.decision, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.notificationDeDecision, optionnel: true },
   ],
-  [ETAPES_TYPES.avisDunMaire]: [DOCUMENTS_TYPES_IDS.avis],
-  [ETAPES_TYPES.decisionDuJugeAdministratif]: [DOCUMENTS_TYPES_IDS.decision],
-  [ETAPES_TYPES.avisDeMiseEnConcurrenceAuJORF]: [DOCUMENTS_TYPES_IDS.avisDeMiseEnConcurrence, DOCUMENTS_TYPES_IDS.avis],
+  [ETAPES_TYPES.avisDunMaire]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.avis, optionnel: true }],
+  [ETAPES_TYPES.decisionDuJugeAdministratif]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.decision, optionnel: true }],
+  [ETAPES_TYPES.avisDeMiseEnConcurrenceAuJORF]: [
+    { documentTypeId: DOCUMENTS_TYPES_IDS.avisDeMiseEnConcurrence, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.avis, optionnel: true },
+  ],
   [ETAPES_TYPES.avisEtRapportDuDirecteurRegionalChargeDeLenvironnementDeLamenagementEtDuLogement]: [
-    DOCUMENTS_TYPES_IDS.avisDuDirecteurRegionalChargeDesMines,
-    DOCUMENTS_TYPES_IDS.rapportDeLAdministrationCentraleChargeDesMines,
-    DOCUMENTS_TYPES_IDS.rapportDeLaDirectionRegionaleChargeeDesMines,
+    { documentTypeId: DOCUMENTS_TYPES_IDS.avisDuDirecteurRegionalChargeDesMines, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.rapportDeLAdministrationCentraleChargeDesMines, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.rapportDeLaDirectionRegionaleChargeeDesMines, optionnel: true },
   ],
-  [ETAPES_TYPES.avisDuConseilDEtat]: [DOCUMENTS_TYPES_IDS.avis],
-  [ETAPES_TYPES.avisDeLaCommissionDepartementaleDesMines_CDM_]: [DOCUMENTS_TYPES_IDS.avisDeLaCommissionDepartementaleDesMines, DOCUMENTS_TYPES_IDS.rapportDeLaDirectionRegionaleChargeeDesMines],
-  [ETAPES_TYPES.avisDuPrefet]: [DOCUMENTS_TYPES_IDS.avisDuPrefet, DOCUMENTS_TYPES_IDS.lettre, DOCUMENTS_TYPES_IDS.rapportDeLaDirectionRegionaleChargeeDesMines],
-  [ETAPES_TYPES.publicationDeLavisDeDecisionImplicite]: [DOCUMENTS_TYPES_IDS.avis, DOCUMENTS_TYPES_IDS.notes],
-  [ETAPES_TYPES.avisDuPrefetMaritime]: [DOCUMENTS_TYPES_IDS.avis],
-  [ETAPES_TYPES.decisionDuProprietaireDuSol]: [DOCUMENTS_TYPES_IDS.decision, DOCUMENTS_TYPES_IDS.lettre],
-  [ETAPES_TYPES.consultationDesAdministrationsCentrales]: [DOCUMENTS_TYPES_IDS.avis, DOCUMENTS_TYPES_IDS.lettreDeSaisineDesServicesDeLAdministrationCentrale],
-  [ETAPES_TYPES.classementSansSuite]: [DOCUMENTS_TYPES_IDS.arrete, DOCUMENTS_TYPES_IDS.lettre, DOCUMENTS_TYPES_IDS.notes, DOCUMENTS_TYPES_IDS.rapportDeLaDirectionRegionaleChargeeDesMines],
+  [ETAPES_TYPES.avisDuConseilDEtat]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.avis, optionnel: true }],
+  [ETAPES_TYPES.avisDeLaCommissionDepartementaleDesMines_CDM_]: [
+    { documentTypeId: DOCUMENTS_TYPES_IDS.avisDeLaCommissionDepartementaleDesMines, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.rapportDeLaDirectionRegionaleChargeeDesMines, optionnel: true },
+  ],
+  [ETAPES_TYPES.avisDuPrefet]: [
+    { documentTypeId: DOCUMENTS_TYPES_IDS.avisDuPrefet, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.lettre, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.rapportDeLaDirectionRegionaleChargeeDesMines, optionnel: true },
+  ],
+  [ETAPES_TYPES.publicationDeLavisDeDecisionImplicite]: [
+    { documentTypeId: DOCUMENTS_TYPES_IDS.avis, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.notes, optionnel: true },
+  ],
+  [ETAPES_TYPES.avisDuPrefetMaritime]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.avis, optionnel: true }],
+  [ETAPES_TYPES.decisionDuProprietaireDuSol]: [
+    { documentTypeId: DOCUMENTS_TYPES_IDS.decision, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.lettre, optionnel: true },
+  ],
+  [ETAPES_TYPES.consultationDesAdministrationsCentrales]: [
+    { documentTypeId: DOCUMENTS_TYPES_IDS.avis, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.lettreDeSaisineDesServicesDeLAdministrationCentrale, optionnel: true },
+  ],
+  [ETAPES_TYPES.classementSansSuite]: [
+    { documentTypeId: DOCUMENTS_TYPES_IDS.arrete, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.lettre, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.notes, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.rapportDeLaDirectionRegionaleChargeeDesMines, optionnel: true },
+  ],
   [ETAPES_TYPES.decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_]: [
-    DOCUMENTS_TYPES_IDS.arretePrefectoral,
-    DOCUMENTS_TYPES_IDS.arrete,
-    DOCUMENTS_TYPES_IDS.decisionCasParCas,
-    DOCUMENTS_TYPES_IDS.lettre,
-    DOCUMENTS_TYPES_IDS.notificationDeDecision,
+    { documentTypeId: DOCUMENTS_TYPES_IDS.arretePrefectoral, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.arrete, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.decisionCasParCas, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.lettre, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.notificationDeDecision, optionnel: true },
   ],
   [ETAPES_TYPES.desistementDuDemandeur]: [
-    DOCUMENTS_TYPES_IDS.accuseDeReceptionDUneDemande,
-    DOCUMENTS_TYPES_IDS.complementsAuDossierDeDemande,
-    DOCUMENTS_TYPES_IDS.lettre,
-    DOCUMENTS_TYPES_IDS.motif,
-    DOCUMENTS_TYPES_IDS.notes,
+    { documentTypeId: DOCUMENTS_TYPES_IDS.accuseDeReceptionDUneDemande, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.complementsAuDossierDeDemande, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.lettre, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.motif, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.notes, optionnel: true },
   ],
   [ETAPES_TYPES.decisionDeLadministration]: [
-    DOCUMENTS_TYPES_IDS.arreteMinisteriel,
-    DOCUMENTS_TYPES_IDS.arretePrefectoral,
-    DOCUMENTS_TYPES_IDS.arrete,
-    DOCUMENTS_TYPES_IDS.cahierDesCharges,
-    DOCUMENTS_TYPES_IDS.courrierDeNotificationDeLaRecevabilite,
-    DOCUMENTS_TYPES_IDS.contrat,
-    DOCUMENTS_TYPES_IDS.convention,
-    DOCUMENTS_TYPES_IDS.decret,
-    DOCUMENTS_TYPES_IDS.decision,
-    DOCUMENTS_TYPES_IDS.notificationDeDecision,
-    DOCUMENTS_TYPES_IDS.ordonnanceDuRoi,
-    DOCUMENTS_TYPES_IDS.ordonnance,
-    DOCUMENTS_TYPES_IDS.documentsCartographiques,
+    { documentTypeId: DOCUMENTS_TYPES_IDS.arreteMinisteriel, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.arretePrefectoral, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.arrete, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.cahierDesCharges, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.courrierDeNotificationDeLaRecevabilite, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.contrat, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.convention, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.decret, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.decision, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.notificationDeDecision, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.ordonnanceDuRoi, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.ordonnance, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.documentsCartographiques, optionnel: true },
   ],
   [ETAPES_TYPES.publicationDeDecisionAuJORF]: [
-    DOCUMENTS_TYPES_IDS.arreteMinisteriel,
-    DOCUMENTS_TYPES_IDS.arrete,
-    DOCUMENTS_TYPES_IDS.cahierDesCharges,
-    DOCUMENTS_TYPES_IDS.convention,
-    DOCUMENTS_TYPES_IDS.decret,
-    DOCUMENTS_TYPES_IDS.decision,
-    DOCUMENTS_TYPES_IDS.ordonnance,
-    DOCUMENTS_TYPES_IDS.publicationAuJorf,
+    { documentTypeId: DOCUMENTS_TYPES_IDS.arreteMinisteriel, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.arrete, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.cahierDesCharges, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.convention, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.decret, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.decision, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.ordonnance, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.publicationAuJorf, optionnel: true },
   ],
-  [ETAPES_TYPES.publicationDeDecisionAdministrativeAuJORF]: [DOCUMENTS_TYPES_IDS.arrete, DOCUMENTS_TYPES_IDS.publicationAuJorf],
-  [ETAPES_TYPES.decisionAdministrative]: [DOCUMENTS_TYPES_IDS.arrete],
-  [ETAPES_TYPES.expertiseDGTMServicePreventionDesRisquesEtIndustriesExtractives_DATE_]: [DOCUMENTS_TYPES_IDS.avis, DOCUMENTS_TYPES_IDS.rapportDeLaDirectionRegionaleChargeeDesMines],
-  [ETAPES_TYPES.clotureDeLenquetePublique]: [DOCUMENTS_TYPES_IDS.notes, DOCUMENTS_TYPES_IDS.rapportDuCommissaireEnqueteur],
+  [ETAPES_TYPES.publicationDeDecisionAdministrativeAuJORF]: [
+    { documentTypeId: DOCUMENTS_TYPES_IDS.arrete, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.publicationAuJorf, optionnel: true },
+  ],
+  [ETAPES_TYPES.decisionAdministrative]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.arrete, optionnel: true }],
+  [ETAPES_TYPES.expertiseDGTMServicePreventionDesRisquesEtIndustriesExtractives_DATE_]: [
+    { documentTypeId: DOCUMENTS_TYPES_IDS.avis, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.rapportDeLaDirectionRegionaleChargeeDesMines, optionnel: true },
+  ],
+  [ETAPES_TYPES.clotureDeLenquetePublique]: [
+    { documentTypeId: DOCUMENTS_TYPES_IDS.notes, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.rapportDuCommissaireEnqueteur, optionnel: true },
+  ],
   [ETAPES_TYPES.ouvertureDeLenquetePublique]: [
-    DOCUMENTS_TYPES_IDS.avisDEnquetePublique,
-    DOCUMENTS_TYPES_IDS.arretePrefectoral,
-    DOCUMENTS_TYPES_IDS.lettre,
-    DOCUMENTS_TYPES_IDS.notes,
-    DOCUMENTS_TYPES_IDS.publicationAuJorf,
+    { documentTypeId: DOCUMENTS_TYPES_IDS.avisDEnquetePublique, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.arretePrefectoral, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.lettre, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.notes, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.publicationAuJorf, optionnel: true },
   ],
-  [ETAPES_TYPES.demandeDeComplements_RecevabiliteDeLaDemande_]: [DOCUMENTS_TYPES_IDS.courrierDeDemandeDeComplements, DOCUMENTS_TYPES_IDS.lettreDeDemande],
+  [ETAPES_TYPES.demandeDeComplements_RecevabiliteDeLaDemande_]: [
+    { documentTypeId: DOCUMENTS_TYPES_IDS.courrierDeDemandeDeComplements, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.lettreDeDemande, optionnel: true },
+  ],
   [ETAPES_TYPES.demandeDeComplements_RecepisseDeDeclarationLoiSurLeau_]: [
-    DOCUMENTS_TYPES_IDS.courrierDeDemandeDeComplements,
-    DOCUMENTS_TYPES_IDS.complementsAuDossierDeDemande,
-    DOCUMENTS_TYPES_IDS.dossierLoiSurLEau,
-    DOCUMENTS_TYPES_IDS.lettre,
+    { documentTypeId: DOCUMENTS_TYPES_IDS.courrierDeDemandeDeComplements, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.complementsAuDossierDeDemande, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.dossierLoiSurLEau, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.lettre, optionnel: true },
   ],
-  [ETAPES_TYPES.demandeDeComplements]: [DOCUMENTS_TYPES_IDS.courrierDeDemandeDeComplements, DOCUMENTS_TYPES_IDS.lettre, DOCUMENTS_TYPES_IDS.rapportDeRecevabilite],
-  [ETAPES_TYPES.completudeDeLaDemande]: [DOCUMENTS_TYPES_IDS.ficheDeCompletude],
+  [ETAPES_TYPES.demandeDeComplements]: [
+    { documentTypeId: DOCUMENTS_TYPES_IDS.courrierDeDemandeDeComplements, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.lettre, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.rapportDeRecevabilite, optionnel: true },
+  ],
+  [ETAPES_TYPES.completudeDeLaDemande]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.ficheDeCompletude, optionnel: true }],
   [ETAPES_TYPES.recevabiliteDeLaDemande]: [
-    DOCUMENTS_TYPES_IDS.courrierDeNotificationDeLaRecevabilite,
-    DOCUMENTS_TYPES_IDS.facture,
-    DOCUMENTS_TYPES_IDS.lettre,
-    DOCUMENTS_TYPES_IDS.notes,
-    DOCUMENTS_TYPES_IDS.rapportDeRecevabilite,
-    DOCUMENTS_TYPES_IDS.rapportDeLaDirectionRegionaleChargeeDesMines,
+    { documentTypeId: DOCUMENTS_TYPES_IDS.courrierDeNotificationDeLaRecevabilite, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.facture, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.lettre, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.notes, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.rapportDeRecevabilite, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.rapportDeLaDirectionRegionaleChargeeDesMines, optionnel: true },
   ],
-  [ETAPES_TYPES.depotDeLaDemande]: [DOCUMENTS_TYPES_IDS.accuseDeReceptionDUneDemande],
+  [ETAPES_TYPES.depotDeLaDemande]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.accuseDeReceptionDUneDemande, optionnel: true }],
   [ETAPES_TYPES.demande]: [
-    DOCUMENTS_TYPES_IDS.contratDAmodiation,
-    DOCUMENTS_TYPES_IDS.documentsCartographiques,
-    DOCUMENTS_TYPES_IDS.contrat,
-    DOCUMENTS_TYPES_IDS.complementsAuDossierDeDemande,
-    DOCUMENTS_TYPES_IDS.decisionCasParCas,
-    DOCUMENTS_TYPES_IDS.dossierLoiSurLEau,
-    DOCUMENTS_TYPES_IDS.dossierDeDemande,
-    DOCUMENTS_TYPES_IDS.dossier,
-    DOCUMENTS_TYPES_IDS.facture,
-    DOCUMENTS_TYPES_IDS.ficheDeCompletude,
-    DOCUMENTS_TYPES_IDS.ficheDePresentation,
-    DOCUMENTS_TYPES_IDS.formulaireDeDemande,
-    DOCUMENTS_TYPES_IDS.justificatifDePaiement,
-    DOCUMENTS_TYPES_IDS.lettreDeDemande,
-    DOCUMENTS_TYPES_IDS.lettre,
-    DOCUMENTS_TYPES_IDS.noticeDIncidence,
-    DOCUMENTS_TYPES_IDS.recepisse_LoiSurLEau,
+    { documentTypeId: DOCUMENTS_TYPES_IDS.contratDAmodiation, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.documentsCartographiques, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.contrat, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.complementsAuDossierDeDemande, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.decisionCasParCas, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.dossierLoiSurLEau, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.dossierDeDemande, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.dossier, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.facture, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.ficheDeCompletude, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.ficheDePresentation, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.formulaireDeDemande, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.justificatifDePaiement, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.lettreDeDemande, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.lettre, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.noticeDIncidence, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.recepisse_LoiSurLEau, optionnel: true },
   ],
-  [ETAPES_TYPES.demandeDinformations]: [DOCUMENTS_TYPES_IDS.courrierDeDemandeDeComplements],
-  [ETAPES_TYPES.notificationAuDemandeur_AjournementDeLaCARM_]: [DOCUMENTS_TYPES_IDS.lettre],
-  [ETAPES_TYPES.notificationAuDemandeur_AvisFavorableDeLaCARM_]: [DOCUMENTS_TYPES_IDS.lettre, DOCUMENTS_TYPES_IDS.notificationDeDecision],
-  [ETAPES_TYPES.notificationAuDemandeur_AvisDefavorable_]: [DOCUMENTS_TYPES_IDS.decision, DOCUMENTS_TYPES_IDS.lettre, DOCUMENTS_TYPES_IDS.notificationDeDecision],
-  [ETAPES_TYPES.notificationAuDemandeur]: [DOCUMENTS_TYPES_IDS.avis, DOCUMENTS_TYPES_IDS.notificationDeDecision],
-  [ETAPES_TYPES.notificationAuDemandeur_SignatureDeLautorisationDeRechercheMiniere_]: [DOCUMENTS_TYPES_IDS.lettre],
+  [ETAPES_TYPES.demandeDinformations]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.courrierDeDemandeDeComplements, optionnel: true }],
+  [ETAPES_TYPES.notificationAuDemandeur_AjournementDeLaCARM_]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.lettre, optionnel: true }],
+  [ETAPES_TYPES.notificationAuDemandeur_AvisFavorableDeLaCARM_]: [
+    { documentTypeId: DOCUMENTS_TYPES_IDS.lettre, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.notificationDeDecision, optionnel: true },
+  ],
+  [ETAPES_TYPES.notificationAuDemandeur_AvisDefavorable_]: [
+    { documentTypeId: DOCUMENTS_TYPES_IDS.decision, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.lettre, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.notificationDeDecision, optionnel: true },
+  ],
+  [ETAPES_TYPES.notificationAuDemandeur]: [
+    { documentTypeId: DOCUMENTS_TYPES_IDS.avis, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.notificationDeDecision, optionnel: true },
+  ],
+  [ETAPES_TYPES.notificationAuDemandeur_SignatureDeLautorisationDeRechercheMiniere_]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.lettre, optionnel: true }],
   [ETAPES_TYPES.notificationAuDemandeur_SignatureDeLavenantALautorisationDeRechercheMiniere_]: [
-    DOCUMENTS_TYPES_IDS.avenant,
-    DOCUMENTS_TYPES_IDS.contrat,
-    DOCUMENTS_TYPES_IDS.lettre,
-    DOCUMENTS_TYPES_IDS.notificationDeDecision,
+    { documentTypeId: DOCUMENTS_TYPES_IDS.avenant, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.contrat, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.lettre, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.notificationDeDecision, optionnel: true },
   ],
   [ETAPES_TYPES.modificationDeLaDemande]: [
-    DOCUMENTS_TYPES_IDS.accuseDeReceptionDUneDemande,
-    DOCUMENTS_TYPES_IDS.documentsCartographiques,
-    DOCUMENTS_TYPES_IDS.dossierLoiSurLEau,
-    DOCUMENTS_TYPES_IDS.lettreDeDemande,
-    DOCUMENTS_TYPES_IDS.lettre,
-    DOCUMENTS_TYPES_IDS.notificationDeDecision,
-    DOCUMENTS_TYPES_IDS.notes,
+    { documentTypeId: DOCUMENTS_TYPES_IDS.accuseDeReceptionDUneDemande, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.documentsCartographiques, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.dossierLoiSurLEau, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.lettreDeDemande, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.lettre, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.notificationDeDecision, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.notes, optionnel: true },
   ],
-  [ETAPES_TYPES.noteInterneSignalee]: [DOCUMENTS_TYPES_IDS.arreteMinisteriel],
-  [ETAPES_TYPES.paiementDesFraisDeDossierComplementaires]: [DOCUMENTS_TYPES_IDS.facture],
-  [ETAPES_TYPES.paiementDesFraisDeDossier]: [DOCUMENTS_TYPES_IDS.facture, DOCUMENTS_TYPES_IDS.justificatifDePaiement, DOCUMENTS_TYPES_IDS.notes],
-  [ETAPES_TYPES.clotureDeLaParticipationDuPublic]: [DOCUMENTS_TYPES_IDS.notes, DOCUMENTS_TYPES_IDS.rapportDuCommissaireEnqueteur],
+  [ETAPES_TYPES.noteInterneSignalee]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.arreteMinisteriel, optionnel: true }],
+  [ETAPES_TYPES.paiementDesFraisDeDossierComplementaires]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.facture, optionnel: true }],
+  [ETAPES_TYPES.paiementDesFraisDeDossier]: [
+    { documentTypeId: DOCUMENTS_TYPES_IDS.facture, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.justificatifDePaiement, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.notes, optionnel: true },
+  ],
+  [ETAPES_TYPES.clotureDeLaParticipationDuPublic]: [
+    { documentTypeId: DOCUMENTS_TYPES_IDS.notes, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.rapportDuCommissaireEnqueteur, optionnel: true },
+  ],
   [ETAPES_TYPES.ouvertureDeLaParticipationDuPublic]: [
-    DOCUMENTS_TYPES_IDS.complementsAuDossierDeDemande,
-    DOCUMENTS_TYPES_IDS.documentsCartographiques,
-    DOCUMENTS_TYPES_IDS.dossierDeDemande,
-    DOCUMENTS_TYPES_IDS.dossier,
-    DOCUMENTS_TYPES_IDS.lettreDeDemande,
-    DOCUMENTS_TYPES_IDS.notes,
+    { documentTypeId: DOCUMENTS_TYPES_IDS.complementsAuDossierDeDemande, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.documentsCartographiques, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.dossierDeDemande, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.dossier, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.lettreDeDemande, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.notes, optionnel: true },
   ],
-  [ETAPES_TYPES.receptionDeComplements_RecevabiliteDeLaDemande_]: [DOCUMENTS_TYPES_IDS.complementsAuDossierDeDemande],
-  [ETAPES_TYPES.receptionDeComplements_RecepisseDeDeclarationLoiSurLeau_]: [DOCUMENTS_TYPES_IDS.documentsCartographiques, DOCUMENTS_TYPES_IDS.dossierLoiSurLEau],
+  [ETAPES_TYPES.receptionDeComplements_RecevabiliteDeLaDemande_]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.complementsAuDossierDeDemande, optionnel: true }],
+  [ETAPES_TYPES.receptionDeComplements_RecepisseDeDeclarationLoiSurLeau_]: [
+    { documentTypeId: DOCUMENTS_TYPES_IDS.documentsCartographiques, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.dossierLoiSurLEau, optionnel: true },
+  ],
   [ETAPES_TYPES.rapportDuConseilGeneralDeLeconomie_CGE_]: [
-    DOCUMENTS_TYPES_IDS.avisDuConseilGeneralDeLEconomie_cge,
-    DOCUMENTS_TYPES_IDS.avis,
-    DOCUMENTS_TYPES_IDS.notes,
-    DOCUMENTS_TYPES_IDS.rapportDeLAdministrationCentraleChargeDesMines,
+    { documentTypeId: DOCUMENTS_TYPES_IDS.avisDuConseilGeneralDeLEconomie_cge, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.avis, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.notes, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.rapportDeLAdministrationCentraleChargeDesMines, optionnel: true },
   ],
   [ETAPES_TYPES.receptionDeComplements_CompletudeDeLaDemande_]: [
-    DOCUMENTS_TYPES_IDS.documentsCartographiques,
-    DOCUMENTS_TYPES_IDS.complementsAuDossierDeDemande,
-    DOCUMENTS_TYPES_IDS.facture,
-    DOCUMENTS_TYPES_IDS.kbis,
-    DOCUMENTS_TYPES_IDS.noticeDIncidence,
-    DOCUMENTS_TYPES_IDS.recepisse_LoiSurLEau,
+    { documentTypeId: DOCUMENTS_TYPES_IDS.documentsCartographiques, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.complementsAuDossierDeDemande, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.facture, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.kbis, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.noticeDIncidence, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.recepisse_LoiSurLEau, optionnel: true },
   ],
-  [ETAPES_TYPES.receptionDeComplements]: [DOCUMENTS_TYPES_IDS.documentsCartographiques, DOCUMENTS_TYPES_IDS.complementsAuDossierDeDemande, DOCUMENTS_TYPES_IDS.lettre],
-  [ETAPES_TYPES.recepisseDeDeclarationLoiSurLeau]: [DOCUMENTS_TYPES_IDS.arretePrefectoral, DOCUMENTS_TYPES_IDS.recepisse_LoiSurLEau],
+  [ETAPES_TYPES.receptionDeComplements]: [
+    { documentTypeId: DOCUMENTS_TYPES_IDS.documentsCartographiques, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.complementsAuDossierDeDemande, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.lettre, optionnel: true },
+  ],
+  [ETAPES_TYPES.recepisseDeDeclarationLoiSurLeau]: [
+    { documentTypeId: DOCUMENTS_TYPES_IDS.arretePrefectoral, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.recepisse_LoiSurLEau, optionnel: true },
+  ],
   [ETAPES_TYPES.receptionDinformation]: [
-    DOCUMENTS_TYPES_IDS.documentsCartographiques,
-    DOCUMENTS_TYPES_IDS.complementsAuDossierDeDemande,
-    DOCUMENTS_TYPES_IDS.lettreDeDemande,
-    DOCUMENTS_TYPES_IDS.lettre,
-    DOCUMENTS_TYPES_IDS.notes,
+    { documentTypeId: DOCUMENTS_TYPES_IDS.documentsCartographiques, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.complementsAuDossierDeDemande, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.lettreDeDemande, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.lettre, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.notes, optionnel: true },
   ],
-  [ETAPES_TYPES.rapportDuConseilDEtat]: [DOCUMENTS_TYPES_IDS.extraitDuRegistreDesDeliberationsDeLaSectionDesTravauxPublicDuConseilDEtat],
-  [ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs]: [DOCUMENTS_TYPES_IDS.arrete],
-  [ETAPES_TYPES.saisineDeLautoriteSignataire]: [DOCUMENTS_TYPES_IDS.lettreDeSaisineDesServicesDeLAdministrationCentrale, DOCUMENTS_TYPES_IDS.noteALAutoriteSignataire, DOCUMENTS_TYPES_IDS.notes],
+  [ETAPES_TYPES.rapportDuConseilDEtat]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.extraitDuRegistreDesDeliberationsDeLaSectionDesTravauxPublicDuConseilDEtat, optionnel: true }],
+  [ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.arrete, optionnel: true }],
+  [ETAPES_TYPES.saisineDeLautoriteSignataire]: [
+    { documentTypeId: DOCUMENTS_TYPES_IDS.lettreDeSaisineDesServicesDeLAdministrationCentrale, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.noteALAutoriteSignataire, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.notes, optionnel: true },
+  ],
   [ETAPES_TYPES.saisineDuConseilGeneralDeLeconomie_CGE_]: [
-    DOCUMENTS_TYPES_IDS.lettreDeSaisineDuConseilGeneralDeLEconomie_cge,
-    DOCUMENTS_TYPES_IDS.lettre,
-    DOCUMENTS_TYPES_IDS.notes,
-    DOCUMENTS_TYPES_IDS.rapportDeLAdministrationCentraleChargeDesMines,
-    DOCUMENTS_TYPES_IDS.rapportDeLaDirectionRegionaleChargeeDesMines,
+    { documentTypeId: DOCUMENTS_TYPES_IDS.lettreDeSaisineDuConseilGeneralDeLEconomie_cge, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.lettre, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.notes, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.rapportDeLAdministrationCentraleChargeDesMines, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.rapportDeLaDirectionRegionaleChargeeDesMines, optionnel: true },
   ],
   [ETAPES_TYPES.saisineDesCollectivitesLocales]: [
-    DOCUMENTS_TYPES_IDS.lettreDeSaisineDesServicesDeLAdministrationCentrale,
-    DOCUMENTS_TYPES_IDS.lettreDeSaisineDesServicesCivilsEtMilitaires,
-    DOCUMENTS_TYPES_IDS.lettre,
+    { documentTypeId: DOCUMENTS_TYPES_IDS.lettreDeSaisineDesServicesDeLAdministrationCentrale, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.lettreDeSaisineDesServicesCivilsEtMilitaires, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.lettre, optionnel: true },
   ],
-  [ETAPES_TYPES.signatureDeLautorisationDeRechercheMiniere]: [DOCUMENTS_TYPES_IDS.contrat, DOCUMENTS_TYPES_IDS.convention, DOCUMENTS_TYPES_IDS.lettre],
-  [ETAPES_TYPES.saisineDuConseilDEtat]: [DOCUMENTS_TYPES_IDS.lettreDeSaisineDuConseilDEtat],
-  [ETAPES_TYPES.saisineDuPrefet]: [DOCUMENTS_TYPES_IDS.lettre, DOCUMENTS_TYPES_IDS.lettreDeSaisineDuPrefet],
-  [ETAPES_TYPES.validationDuPaiementDesFraisDeDossierComplementaires]: [DOCUMENTS_TYPES_IDS.facture],
-  [ETAPES_TYPES.validationDuPaiementDesFraisDeDossier]: [DOCUMENTS_TYPES_IDS.facture, DOCUMENTS_TYPES_IDS.justificatifDePaiement],
-  [ETAPES_TYPES.abandonDeLaDemande]: [DOCUMENTS_TYPES_IDS.courrier],
-  [ETAPES_TYPES.avisDeLautoriteEnvironnementale]: [DOCUMENTS_TYPES_IDS.avis],
-  [ETAPES_TYPES.arreteDouvertureDesTravauxMiniers]: [DOCUMENTS_TYPES_IDS.arretePrefectoral],
-  [ETAPES_TYPES.avisDuPrefetMaritime_wap]: [DOCUMENTS_TYPES_IDS.avis],
-  [ETAPES_TYPES.avisDeReception]: [DOCUMENTS_TYPES_IDS.courrierDeNotificationDeLaRecevabilite, DOCUMENTS_TYPES_IDS.lettreDeSaisineDuPrefet],
-  [ETAPES_TYPES.avisDuDemandeurSurLesPrescriptionsProposees]: [DOCUMENTS_TYPES_IDS.avis, DOCUMENTS_TYPES_IDS.courrier],
-  [ETAPES_TYPES.clotureDeLenquetePublique_wce]: [DOCUMENTS_TYPES_IDS.rapportDuCommissaireEnqueteur],
-  [ETAPES_TYPES.donneActeDeLaDeclaration_DOTM_]: [DOCUMENTS_TYPES_IDS.projetDePrescriptions],
-  [ETAPES_TYPES.demandeDeComplements_AOTMOuDOTM_]: [DOCUMENTS_TYPES_IDS.courrierDeDemandeDeComplements, DOCUMENTS_TYPES_IDS.rapportDreal],
-  [ETAPES_TYPES.depotDeLaDemande_wdd]: [DOCUMENTS_TYPES_IDS.dossierDeDemande],
-  [ETAPES_TYPES.demandeDeComplements_DADT_]: [DOCUMENTS_TYPES_IDS.courrierDeDemandeDeComplements],
-  [ETAPES_TYPES.decisionDeLadministration_wdm]: [DOCUMENTS_TYPES_IDS.arreteDeRefus, DOCUMENTS_TYPES_IDS.courrier],
-  [ETAPES_TYPES.demandeDautorisationDouvertureDeTravauxMiniers_AOTM_]: [DOCUMENTS_TYPES_IDS.dossierDeDemande],
-  [ETAPES_TYPES.declarationDarretDefinitifDeTravaux_DADT_]: [DOCUMENTS_TYPES_IDS.declaration, DOCUMENTS_TYPES_IDS.dossier],
-  [ETAPES_TYPES.declarationDouvertureDeTravauxMiniers_DOTM_]: [DOCUMENTS_TYPES_IDS.declaration],
+  [ETAPES_TYPES.signatureDeLautorisationDeRechercheMiniere]: [
+    { documentTypeId: DOCUMENTS_TYPES_IDS.contrat, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.convention, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.lettre, optionnel: true },
+  ],
+  [ETAPES_TYPES.saisineDuConseilDEtat]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.lettreDeSaisineDuConseilDEtat, optionnel: true }],
+  [ETAPES_TYPES.saisineDuPrefet]: [
+    { documentTypeId: DOCUMENTS_TYPES_IDS.lettre, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.lettreDeSaisineDuPrefet, optionnel: true },
+  ],
+  [ETAPES_TYPES.validationDuPaiementDesFraisDeDossierComplementaires]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.facture, optionnel: true }],
+  [ETAPES_TYPES.validationDuPaiementDesFraisDeDossier]: [
+    { documentTypeId: DOCUMENTS_TYPES_IDS.facture, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.justificatifDePaiement, optionnel: true },
+  ],
+  [ETAPES_TYPES.abandonDeLaDemande]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.courrier, optionnel: true }],
+  [ETAPES_TYPES.avisDeLautoriteEnvironnementale]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.avis, optionnel: true }],
+  [ETAPES_TYPES.arreteDouvertureDesTravauxMiniers]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.arretePrefectoral, optionnel: true }],
+  [ETAPES_TYPES.avisDuPrefetMaritime_wap]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.avis, optionnel: true }],
+  [ETAPES_TYPES.avisDeReception]: [
+    { documentTypeId: DOCUMENTS_TYPES_IDS.courrierDeNotificationDeLaRecevabilite, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.lettreDeSaisineDuPrefet, optionnel: true },
+  ],
+  [ETAPES_TYPES.avisDuDemandeurSurLesPrescriptionsProposees]: [
+    { documentTypeId: DOCUMENTS_TYPES_IDS.avis, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.courrier, optionnel: true },
+  ],
+  [ETAPES_TYPES.clotureDeLenquetePublique_wce]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.rapportDuCommissaireEnqueteur, optionnel: true }],
+  [ETAPES_TYPES.donneActeDeLaDeclaration_DOTM_]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.projetDePrescriptions, optionnel: true }],
+  [ETAPES_TYPES.demandeDeComplements_AOTMOuDOTM_]: [
+    { documentTypeId: DOCUMENTS_TYPES_IDS.courrierDeDemandeDeComplements, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.rapportDreal, optionnel: true },
+  ],
+  [ETAPES_TYPES.depotDeLaDemande_wdd]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.dossierDeDemande, optionnel: true }],
+  [ETAPES_TYPES.demandeDeComplements_DADT_]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.courrierDeDemandeDeComplements, optionnel: true }],
+  [ETAPES_TYPES.decisionDeLadministration_wdm]: [
+    { documentTypeId: DOCUMENTS_TYPES_IDS.arreteDeRefus, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.courrier, optionnel: true },
+  ],
+  [ETAPES_TYPES.demandeDautorisationDouvertureDeTravauxMiniers_AOTM_]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.dossierDeDemande, optionnel: true }],
+  [ETAPES_TYPES.declarationDarretDefinitifDeTravaux_DADT_]: [
+    { documentTypeId: DOCUMENTS_TYPES_IDS.declaration, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.dossier, optionnel: true },
+  ],
+  [ETAPES_TYPES.declarationDouvertureDeTravauxMiniers_DOTM_]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.declaration, optionnel: true }],
   [ETAPES_TYPES.demandeDautorisationDouvertureDeTravauxMiniers_DAOTM_]: [
-    DOCUMENTS_TYPES_IDS.accuseDeReceptionDUneDemande,
-    DOCUMENTS_TYPES_IDS.documentsCartographiques,
-    DOCUMENTS_TYPES_IDS.dossierDeDemande,
-    DOCUMENTS_TYPES_IDS.dossier,
-    DOCUMENTS_TYPES_IDS.ficheDePresentation,
-    DOCUMENTS_TYPES_IDS.identificationDeMateriel,
-    DOCUMENTS_TYPES_IDS.noticeDIncidence,
+    { documentTypeId: DOCUMENTS_TYPES_IDS.accuseDeReceptionDUneDemande, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.documentsCartographiques, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.dossierDeDemande, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.dossier, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.ficheDePresentation, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.identificationDeMateriel, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.noticeDIncidence, optionnel: true },
   ],
-  [ETAPES_TYPES.memoireEnReponseDeLexploitant_ParRapportALavisDeLAE_]: [DOCUMENTS_TYPES_IDS.dossier],
-  [ETAPES_TYPES.memoireEnReponseDeLexploitant]: [DOCUMENTS_TYPES_IDS.dossier],
-  [ETAPES_TYPES.memoireDeFinDeTravaux]: [DOCUMENTS_TYPES_IDS.programmeDesTravaux],
-  [ETAPES_TYPES.ouvertureDeLenquetePublique_woe]: [DOCUMENTS_TYPES_IDS.arretePrefectoral, DOCUMENTS_TYPES_IDS.rapportDuCommissaireEnqueteur],
-  [ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs_wpa]: [DOCUMENTS_TYPES_IDS.arretePrefectoral],
-  [ETAPES_TYPES.porterAConnaissance]: [DOCUMENTS_TYPES_IDS.documentsCartographiques, DOCUMENTS_TYPES_IDS.courrier],
-  [ETAPES_TYPES.arreteDePrescriptionsComplementaires]: [DOCUMENTS_TYPES_IDS.arretePrefectoral],
-  [ETAPES_TYPES.arreteDeSecondDonnerActe]: [DOCUMENTS_TYPES_IDS.arreteDeSecondDonneActe_ap2],
-  [ETAPES_TYPES.arretePrefectoralDePremierDonnerActe_DADT_]: [DOCUMENTS_TYPES_IDS.arreteDePremierDonneActe_ap1, DOCUMENTS_TYPES_IDS.rapport],
-  [ETAPES_TYPES.arretePrefectoralDeSursisAStatuer]: [DOCUMENTS_TYPES_IDS.arretePrefectoral],
-  [ETAPES_TYPES.receptionDeComplements_wrc]: [DOCUMENTS_TYPES_IDS.complementsAuDossierDeDemande, DOCUMENTS_TYPES_IDS.documentsCartographiques],
-  [ETAPES_TYPES.rapportDeLaDreal]: [DOCUMENTS_TYPES_IDS.projetDePrescriptions, DOCUMENTS_TYPES_IDS.rapport],
-  [ETAPES_TYPES.recevabilite]: [DOCUMENTS_TYPES_IDS.avis, DOCUMENTS_TYPES_IDS.courrierDeNotificationDeLaRecevabilite, DOCUMENTS_TYPES_IDS.rapportDeRecevabilite],
-  [ETAPES_TYPES.avisEtRapportDuDirecteurRegionalChargeDeLenvironnementDeLamenagementEtDuLogement_wrl]: [DOCUMENTS_TYPES_IDS.rapport],
-  [ETAPES_TYPES.recolement]: [DOCUMENTS_TYPES_IDS.pvDeRecolement],
-  [ETAPES_TYPES.saisineDeLautoriteEnvironnementale]: [DOCUMENTS_TYPES_IDS.courrierDeSaisineDuPrefet, DOCUMENTS_TYPES_IDS.lettreDeSaisineDuPrefet],
-  [ETAPES_TYPES.transmissionDuProjetDePrescriptionsAuDemandeur]: [DOCUMENTS_TYPES_IDS.arretePrefectoral],
-} as const satisfies { [key in EtapeTypeId]?: DocumentTypeId[] }
+  [ETAPES_TYPES.memoireEnReponseDeLexploitant_ParRapportALavisDeLAE_]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.dossier, optionnel: true }],
+  [ETAPES_TYPES.memoireEnReponseDeLexploitant]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.dossier, optionnel: true }],
+  [ETAPES_TYPES.memoireDeFinDeTravaux]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.programmeDesTravaux, optionnel: true }],
+  [ETAPES_TYPES.ouvertureDeLenquetePublique_woe]: [
+    { documentTypeId: DOCUMENTS_TYPES_IDS.arretePrefectoral, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.rapportDuCommissaireEnqueteur, optionnel: true },
+  ],
+  [ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs_wpa]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.arretePrefectoral, optionnel: true }],
+  [ETAPES_TYPES.porterAConnaissance]: [
+    { documentTypeId: DOCUMENTS_TYPES_IDS.documentsCartographiques, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.courrier, optionnel: true },
+  ],
+  [ETAPES_TYPES.arreteDePrescriptionsComplementaires]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.arretePrefectoral, optionnel: true }],
+  [ETAPES_TYPES.arreteDeSecondDonnerActe]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.arreteDeSecondDonneActe_ap2, optionnel: true }],
+  [ETAPES_TYPES.arretePrefectoralDePremierDonnerActe_DADT_]: [
+    { documentTypeId: DOCUMENTS_TYPES_IDS.arreteDePremierDonneActe_ap1, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.rapport, optionnel: true },
+  ],
+  [ETAPES_TYPES.arretePrefectoralDeSursisAStatuer]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.arretePrefectoral, optionnel: true }],
+  [ETAPES_TYPES.receptionDeComplements_wrc]: [
+    { documentTypeId: DOCUMENTS_TYPES_IDS.complementsAuDossierDeDemande, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.documentsCartographiques, optionnel: true },
+  ],
+  [ETAPES_TYPES.rapportDeLaDreal]: [
+    { documentTypeId: DOCUMENTS_TYPES_IDS.projetDePrescriptions, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.rapport, optionnel: true },
+  ],
+  [ETAPES_TYPES.recevabilite]: [
+    { documentTypeId: DOCUMENTS_TYPES_IDS.avis, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.courrierDeNotificationDeLaRecevabilite, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.rapportDeRecevabilite, optionnel: true },
+  ],
+  [ETAPES_TYPES.avisEtRapportDuDirecteurRegionalChargeDeLenvironnementDeLamenagementEtDuLogement_wrl]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.rapport, optionnel: true }],
+  [ETAPES_TYPES.recolement]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.pvDeRecolement, optionnel: true }],
+  [ETAPES_TYPES.saisineDeLautoriteEnvironnementale]: [
+    { documentTypeId: DOCUMENTS_TYPES_IDS.courrierDeSaisineDuPrefet, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.lettreDeSaisineDuPrefet, optionnel: true },
+  ],
+  [ETAPES_TYPES.transmissionDuProjetDePrescriptionsAuDemandeur]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.arretePrefectoral, optionnel: true }],
+  [ETAPES_TYPES.avisDesServicesEtCommissionsConsultatives]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.lettreDeSaisineDesServicesCivilsEtMilitaires, optionnel: false }],
+} as const satisfies { [key in EtapeTypeId]?: (DocumentTypeId | { documentTypeId: DocumentTypeId; optionnel: boolean })[] }
 
 const isEtapesTypesEtapesTypesDocumentsTypes = (etapeTypeId?: EtapeTypeId): etapeTypeId is keyof typeof EtapesTypesDocumentsTypes => {
   return Object.keys(EtapesTypesDocumentsTypes).includes(etapeTypeId)
@@ -337,7 +460,7 @@ export const TDEDocumentsTypesMetas = Object.keys(TDEDocumentsTypes as TDEDocume
 export const toDocuments = (): { etapeTypeId: EtapeTypeId; documentTypeId: DocumentTypeId; optionnel: boolean; description: string | null }[] => {
   return Object.entries(EtapesTypesDocumentsTypes).flatMap(([key, values]) => {
     if (isEtapeTypeId(key)) {
-      return values.map(value => ({ etapeTypeId: key, documentTypeId: value, description: null, optionnel: true }))
+      return values.map(value => ({ etapeTypeId: key, documentTypeId: value.documentTypeId, description: null, optionnel: value.optionnel }))
     } else {
       return []
     }
@@ -346,24 +469,32 @@ export const toDocuments = (): { etapeTypeId: EtapeTypeId; documentTypeId: Docum
 
 export const getDocuments = (titreTypeId?: TitreTypeId, demarcheId?: DemarcheTypeId, etapeTypeId?: EtapeTypeId): DocumentType[] => {
   if (isNotNullNorUndefined(titreTypeId) && isNotNullNorUndefined(demarcheId) && isNotNullNorUndefined(etapeTypeId)) {
-    const documentsIds: DocumentTypeId[] = []
+    const documentTypes: DocumentType[] = []
 
     if (isEtapesTypesEtapesTypesDocumentsTypes(etapeTypeId)) {
-      documentsIds.push(...EtapesTypesDocumentsTypes[etapeTypeId])
+      documentTypes.push(...EtapesTypesDocumentsTypes[etapeTypeId].map(({ documentTypeId, optionnel }) => ({ ...DocumentsTypes[documentTypeId], optionnel })))
     }
 
-    documentsIds.push(...Object.keys((TDEDocumentsTypes as TDEDocumentsTypesUnleashed)[titreTypeId]?.[demarcheId]?.[etapeTypeId] ?? {}).filter(isDocumentTypeId))
+    Object.keys((TDEDocumentsTypes as TDEDocumentsTypesUnleashed)[titreTypeId]?.[demarcheId]?.[etapeTypeId] ?? {})
+      .filter(isDocumentTypeId)
+      .forEach(documentTypeIdSpecifique => {
+        const documentSpecifique = (TDEDocumentsTypes as TDEDocumentsTypesUnleashed)[titreTypeId]?.[demarcheId]?.[etapeTypeId]?.[documentTypeIdSpecifique]
 
-    return documentsIds.filter(onlyUnique).map(documentTypeId => {
-      const documentSpecifique = (TDEDocumentsTypes as TDEDocumentsTypesUnleashed)[titreTypeId]?.[demarcheId]?.[etapeTypeId]?.[documentTypeId]
-      const document = { ...DocumentsTypes[documentTypeId], optionnel: true }
-      if (documentSpecifique) {
-        document.optionnel = documentSpecifique.optionnel
-        document.description = documentSpecifique.description ?? document.description
-      }
+        if (isNotNullNorUndefined(documentSpecifique)) {
+          const knownDocumentType = documentTypes.find(({ id }) => id === documentTypeIdSpecifique)
 
-      return document
-    })
+          if (isNotNullNorUndefined(knownDocumentType)) {
+            knownDocumentType.optionnel = documentSpecifique.optionnel
+            knownDocumentType.description = documentSpecifique.description ?? knownDocumentType.description
+          } else {
+            const staticDocumentType = DocumentsTypes[documentTypeIdSpecifique]
+
+            documentTypes.push({ ...staticDocumentType, optionnel: documentSpecifique.optionnel, description: documentSpecifique.description ?? staticDocumentType.description })
+          }
+        }
+      })
+
+    return documentTypes
   } else {
     throw new Error(`il manque des éléments pour trouver les documents titreTypeId: '${titreTypeId}', demarcheId: ${demarcheId}, etapeTypeId: ${etapeTypeId}`)
   }
