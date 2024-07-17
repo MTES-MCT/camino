@@ -112,7 +112,7 @@ export const Meta = defineComponent(() => {
                         <>
                           {definition.value.colonnes.map(colonne => (
                             <td key={colonne.id}>
-                              <div>{element[colonne.id]}</div>
+                              <div>{JSON.stringify(element[colonne.id])}</div>
                             </td>
                           ))}
                         </>

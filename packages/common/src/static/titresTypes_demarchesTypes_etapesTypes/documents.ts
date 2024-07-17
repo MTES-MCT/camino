@@ -496,3 +496,11 @@ export const getDocuments = (titreTypeId?: TitreTypeId, demarcheId?: DemarcheTyp
     throw new Error(`il manque des éléments pour trouver les documents titreTypeId: '${titreTypeId}', demarcheId: ${demarcheId}, etapeTypeId: ${etapeTypeId}`)
   }
 }
+
+export const etapesTypesDocumentsTypesMetas = Object.keys(EtapesTypesDocumentsTypes).flatMap(etapeTypeId => {
+  return EtapesTypesDocumentsTypes[etapeTypeId as keyof typeof EtapesTypesDocumentsTypes].map(({ documentTypeId, optionnel }) => ({
+    etapeTypeId,
+    documentTypeId,
+    optionnel,
+  }))
+})
