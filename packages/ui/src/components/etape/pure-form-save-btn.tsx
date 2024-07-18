@@ -14,7 +14,7 @@ type Props = {
   showDepose: boolean
   initialContext?: AsyncData<undefined>
   save: () => Promise<void>
-  depose: () => Promise<void>
+  depose: () => void
   etapeTypeId: EtapeTypeId
 } & Pick<HTMLAttributes, 'class' | 'style'>
 export const PureFormSaveBtn = defineComponent<Props>(props => {
@@ -24,19 +24,6 @@ export const PureFormSaveBtn = defineComponent<Props>(props => {
     saveContext.value = { status: 'LOADING' }
     try {
       await props.save()
-      saveContext.value = { status: 'LOADED', value: undefined }
-    } catch (e: any) {
-      console.error('error', e)
-      saveContext.value = {
-        status: 'ERROR',
-        message: e.message ?? "Une erreur s'est produite",
-      }
-    }
-  }
-  const depose = async () => {
-    saveContext.value = { status: 'LOADING' }
-    try {
-      await props.depose()
       saveContext.value = { status: 'LOADED', value: undefined }
     } catch (e: any) {
       console.error('error', e)
@@ -89,7 +76,7 @@ export const PureFormSaveBtn = defineComponent<Props>(props => {
               class="fr-ml-2w"
               title={props.etapeTypeId === 'mfr' ? "Enregistrer puis déposer l'étape" : "Enregistrer puis finaliser l'étape"}
               disabled={!props.canDepose || saveContext.value.status === 'LOADING'}
-              onClick={depose}
+              onClick={props.depose}
             />
           ) : null}
         </div>

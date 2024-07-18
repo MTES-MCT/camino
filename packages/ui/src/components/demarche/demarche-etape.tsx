@@ -401,7 +401,15 @@ export const DemarcheEtape = defineComponent<Props>(props => {
           titreNom={props.titre.nom}
         />
       ) : null}
-      {deposePopupVisible.value ? <DeposeEtapePopup close={closeDeposePopup} apiClient={props.apiClient} id={props.etape.id} etapeTypeId={props.etape.etape_type_id} /> : null}
+      {deposePopupVisible.value ? (
+        <DeposeEtapePopup
+          close={closeDeposePopup}
+          deposeEtape={async () => {
+            await props.apiClient.deposeEtape(props.etape.id)
+          }}
+          etapeTypeId={props.etape.etape_type_id}
+        />
+      ) : null}
     </div>
   )
 })
