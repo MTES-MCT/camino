@@ -18,7 +18,6 @@ describe('vérifie l’arbre d’octroi de PRM', () => {
       { ...ETES.avisEtRapportDuDirecteurRegionalChargeDeLenvironnementDeLamenagementEtDuLogement.FAVORABLE, addDays: 31 },
       ETES.avisDuPrefet.FAVORABLE,
       ETES.participationDuPublic.TERMINE,
-      ETES.consultationDesAdministrationsCentrales.FAIT,
       ETES.saisineDuConseilGeneralDeLeconomie_CGE_.FAIT,
       ETES.rapportDuConseilGeneralDeLeconomie_CGE_.FAVORABLE,
       ETES.avisDuConseilGeneralDeLeconomie_CGE_.FAVORABLE,
@@ -145,7 +144,6 @@ describe('vérifie l’arbre d’octroi de PRM', () => {
       { ...ETES.participationDuPublic.TERMINE, addDays: 31 },
       ETES.avisEtRapportDuDirecteurRegionalChargeDeLenvironnementDeLamenagementEtDuLogement.FAVORABLE,
       ETES.avisDuPrefet.FAVORABLE,
-      ETES.consultationDesAdministrationsCentrales.FAIT,
       ETES.saisineDuConseilGeneralDeLeconomie_CGE_.FAIT,
       ETES.rapportDuConseilGeneralDeLeconomie_CGE_.FAVORABLE,
       ETES.avisDuConseilGeneralDeLeconomie_CGE_.FAVORABLE,
@@ -157,7 +155,7 @@ describe('vérifie l’arbre d’octroi de PRM', () => {
     ]
 
     expect(() => setDateAndOrderAndInterpretMachine(prmOctMachine, '2022-04-13', etapes)).toThrowErrorMatchingInlineSnapshot(
-      `[Error: Error: cannot execute step: '{"etapeTypeId":"rpu","etapeStatutId":"fai","date":"2022-05-31"}' after '["mfr_fai","mdp_fai","spp_fai","mcr_fav","anf_fai","asc_fai","ppu_ter","apd_fav","app_fav","cac_fai","scg_fai","rcg_fav","acg_fav","sas_fai","dex_rej","npp_fai","mno_fai"]'. The event {"type":"PUBLIER_DECISIONS_RECUEIL_ACTES_ADMINISTRATIFS"} should be one of 'RENDRE_DECISION_ABROGATION,RENDRE_DECISION_ANNULATION_PAR_JUGE_ADMINISTRATIF']`
+      `[Error: Error: cannot execute step: '{"etapeTypeId":"rpu","etapeStatutId":"fai","date":"2022-05-30"}' after '["mfr_fai","mdp_fai","spp_fai","mcr_fav","anf_fai","asc_fai","ppu_ter","apd_fav","app_fav","scg_fai","rcg_fav","acg_fav","sas_fai","dex_rej","npp_fai","mno_fai"]'. The event {"type":"PUBLIER_DECISIONS_RECUEIL_ACTES_ADMINISTRATIFS"} should be one of 'RENDRE_DECISION_ABROGATION,RENDRE_DECISION_ANNULATION_PAR_JUGE_ADMINISTRATIF']`
     )
   })
 
