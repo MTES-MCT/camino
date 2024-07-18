@@ -57,7 +57,6 @@ type XStateEvent =
   | { type: 'RENDRE_AVIS_PREFET' }
   | { type: 'FAIRE_SAISINE_DES_COLLECTIVITES_LOCALES' }
   | { type: 'RENDRE_AVIS_DU_MAIRE' }
-  | { type: 'FAIRE_RAPPORT_ADMINISTRATION_CENTRALE' }
   | { type: 'FAIRE_SAISINE_CONSEIL_GENERAL_CHARGE_DES_MINES' }
   | { type: 'FAIRE_RAPPORT_CONSEIL_GENERAL_CHARGE_DES_MINES' }
   | { type: 'RENDRE_AVIS_CONSEIL_GENERAL_CHARGE_DES_MINES' }
@@ -109,7 +108,6 @@ const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
   RENDRE_AVIS_PREFET: { db: EtapesTypesEtapesStatuts.avisDuPrefet, mainStep: true },
   FAIRE_SAISINE_DES_COLLECTIVITES_LOCALES: { db: EtapesTypesEtapesStatuts.saisineDesCollectivitesLocales, mainStep: true },
   RENDRE_AVIS_DU_MAIRE: { db: EtapesTypesEtapesStatuts.avisDunMaire, mainStep: true },
-  FAIRE_RAPPORT_ADMINISTRATION_CENTRALE: { db: EtapesTypesEtapesStatuts.consultationDesAdministrationsCentrales, mainStep: true },
   FAIRE_SAISINE_CONSEIL_GENERAL_CHARGE_DES_MINES: { db: EtapesTypesEtapesStatuts.saisineDuConseilGeneralDeLeconomie_CGE_, mainStep: true },
   FAIRE_RAPPORT_CONSEIL_GENERAL_CHARGE_DES_MINES: { db: EtapesTypesEtapesStatuts.rapportDuConseilGeneralDeLeconomie_CGE_, mainStep: true },
   RENDRE_AVIS_CONSEIL_GENERAL_CHARGE_DES_MINES: { db: EtapesTypesEtapesStatuts.avisDuConseilGeneralDeLeconomie_CGE_, mainStep: true },
@@ -474,12 +472,7 @@ const prmOctMachine = createMachine({
           },
         },
       },
-      onDone: 'rapportAdministrationCentraleAFaire',
-    },
-    rapportAdministrationCentraleAFaire: {
-      on: {
-        FAIRE_RAPPORT_ADMINISTRATION_CENTRALE: 'saisineDuConseilGeneralChargeDesMinesAFaire',
-      },
+      onDone: 'saisineDuConseilGeneralChargeDesMinesAFaire',
     },
     saisineDuConseilGeneralChargeDesMinesAFaire: {
       on: {
