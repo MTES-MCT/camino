@@ -51,15 +51,6 @@ const AdministrationsTitresTypesTitresStatuts: {
       [TitresStatutIds.SurvieProvisoire]: { titresModificationInterdit: true, demarchesModificationInterdit: true, etapesModificationInterdit: false },
       [TitresStatutIds.Valide]: { titresModificationInterdit: true, demarchesModificationInterdit: true, etapesModificationInterdit: false },
     },
-    [TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_METAUX]: {
-      [TitresStatutIds.DemandeClassee]: { titresModificationInterdit: true, demarchesModificationInterdit: true, etapesModificationInterdit: false },
-      [TitresStatutIds.DemandeInitiale]: { titresModificationInterdit: true, demarchesModificationInterdit: true, etapesModificationInterdit: false },
-      [TitresStatutIds.Echu]: { titresModificationInterdit: true, demarchesModificationInterdit: true, etapesModificationInterdit: false },
-      [TitresStatutIds.Indetermine]: { titresModificationInterdit: true, demarchesModificationInterdit: true, etapesModificationInterdit: false },
-      [TitresStatutIds.ModificationEnInstance]: { titresModificationInterdit: true, demarchesModificationInterdit: true, etapesModificationInterdit: false },
-      [TitresStatutIds.SurvieProvisoire]: { titresModificationInterdit: true, demarchesModificationInterdit: true, etapesModificationInterdit: false },
-      [TitresStatutIds.Valide]: { titresModificationInterdit: true, demarchesModificationInterdit: true, etapesModificationInterdit: false },
-    },
   },
   [ADMINISTRATION_IDS['DREAL - AUVERGNE-RHÔNE-ALPES - SIÈGE DE LYON']]: {
     [TITRES_TYPES_IDS.CONCESSION_METAUX]: {
