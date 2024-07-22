@@ -29,7 +29,6 @@ export const titreEtapeUpdationValidate = (
   titreEtapeOld?: ITitreEtape
 ) => {
   const errors: string[] = []
-
   const sections = getSections(titre.typeId, titreDemarche.typeId, etape.typeId)
 
   if (!etape.duree.heritee && !canEditDuree(titre.typeId, titreDemarche.typeId) && (etape.duree.value ?? 0) !== (titreEtapeOld?.duree ?? 0)) {

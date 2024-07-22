@@ -34,10 +34,14 @@ export const titreEtapeForMachineValidator = z.object({
   typeId: etapeTypeIdValidator,
   statutId: etapeStatutIdValidator,
   date: caminoDateValidator,
-  contenu: z.any().nullable(),
-  heritageContenu: z.any().nullable(),
-  communes: z.array(z.object({ id: communeIdValidator })).nullable(),
-  surface: km2Validator.nullable(),
+  contenu: z.any().nullable().optional().default(null),
+  heritageContenu: z.any().nullable().optional().default(null),
+  communes: z
+    .array(z.object({ id: communeIdValidator }))
+    .nullable()
+    .optional()
+    .default(null),
+  surface: km2Validator.nullable().optional().default(null),
   isBrouillon: etapeBrouillonValidator,
 })
 

@@ -29,19 +29,11 @@ import { titreDemarcheGet } from '../../database/queries/titres-demarches.js'
 import { userSuper } from '../../database/user-super.js'
 import { titreEtapeGet, titreEtapeUpdate, titreEtapeUpsert } from '../../database/queries/titres-etapes.js'
 import { demarcheDefinitionFind } from '../../business/rules-demarches/definitions.js'
-import { etapeTypeDateFinCheck } from '../_format/etapes-types.js'
 import { User, isBureauDEtudes, isEntreprise } from 'camino-common/src/roles.js'
 import { canCreateEtape, canDeposeEtape, canDeleteEtape, canEditEtape, canEditDates, canEditDuree } from 'camino-common/src/permissions/titres-etapes.js'
 import { TitresStatutIds } from 'camino-common/src/static/titresStatuts.js'
-import { CaminoMachines } from '../../business/rules-demarches/machines.js'
-import { titreEtapesSortAscByOrdre } from '../../business/utils/titre-etapes-sort.js'
-import { Etape, TitreEtapeForMachine, titreEtapeForMachineValidator, toMachineEtapes } from '../../business/rules-demarches/machine-common.js'
-import { canBeBrouillon, EtapesTypes, EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
+import { canBeBrouillon } from 'camino-common/src/static/etapesTypes.js'
 import { DeepReadonly, SimplePromiseFn, isNonEmptyArray, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined, memoize, onlyUnique } from 'camino-common/src/typescript-tools.js'
-import { getEtapesTDE, isTDEExist } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/index.js'
-import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts.js'
-import { getEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStatuts.js'
-import { DemarchesTypes } from 'camino-common/src/static/demarchesTypes.js'
 import { Pool } from 'pg'
 import { EntrepriseDocument, EntrepriseDocumentId, EntrepriseId, EtapeEntrepriseDocument } from 'camino-common/src/entreprise.js'
 import {
@@ -65,7 +57,7 @@ import { valeurFind } from 'camino-common/src/sections.js'
 import { getElementWithValue, getSections, getSectionsWithValue } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { AdministrationId } from 'camino-common/src/static/administrations.js'
-import { titreDemarcheUpdatedEtatValidate, toto } from '../../business/validations/titre-demarche-etat-validate.js'
+import { titreDemarcheUpdatedEtatValidate, getPossiblesEtapesTypes } from '../../business/validations/titre-demarche-etat-validate.js'
 import { FlattenEtape, GraphqlEtape, RestEtapeCreation, RestEtapeModification, restEtapeCreationValidator, restEtapeModificationValidator } from 'camino-common/src/etape-form.js'
 import { iTitreEtapeToFlattenEtape } from '../_format/titres-etapes.js'
 import { CommuneId } from 'camino-common/src/static/communes.js'
@@ -340,7 +332,12 @@ export const getEtape = (_pool: Pool) => async (req: CaminoRequest, res: CustomR
     }
   }
 }
-const validateAndGetEntrepriseDocuments = async (pool: Pool, etape: Pick<FlattenEtape, 'titulaires' | 'amodiataires'>, entrepriseDocumentIds: EntrepriseDocumentId[], user: User): Promise<EntrepriseDocument[]> => {
+const validateAndGetEntrepriseDocuments = async (
+  pool: Pool,
+  etape: Pick<FlattenEtape, 'titulaires' | 'amodiataires'>,
+  entrepriseDocumentIds: EntrepriseDocumentId[],
+  user: User
+): Promise<EntrepriseDocument[]> => {
   const entrepriseDocuments: EntrepriseDocument[] = []
 
   const titulaires = etape.titulaires.value
@@ -447,7 +444,7 @@ const getFlattenEtape = async (
   isBrouillon: EtapeBrouillon,
   etapeSlug: EtapeSlug | undefined,
   pool: Pool
-): Promise<{ flattenEtape: Partial<Pick<FlattenEtape, 'id'>> & Omit<FlattenEtape, 'id'>, perimetreInfos: PerimetreInfos }> => {
+): Promise<{ flattenEtape: Partial<Pick<FlattenEtape, 'id'>> & Omit<FlattenEtape, 'id'>; perimetreInfos: PerimetreInfos }> => {
   const perimetreInfos = await getPerimetreInfosInternal(
     pool,
     etape.geojson4326Perimetre,
@@ -482,19 +479,18 @@ const getFlattenEtape = async (
     return accSections
   }, {})
 
-
   const fakeEtapeId = etapeIdValidator.parse('newId')
-  const flattenEtape =  iTitreEtapeToFlattenEtape({
-     ...etape,
-     demarche,
-     ...perimetreInfos,
-     isBrouillon,
-     heritageProps,
-     heritageContenu,
-     // On ne voit pas comment mieux faire
-     id: 'id' in etape ? etape.id : fakeEtapeId,
-     slug: etapeSlug,
-   })
+  const flattenEtape = iTitreEtapeToFlattenEtape({
+    ...etape,
+    demarche,
+    ...perimetreInfos,
+    isBrouillon,
+    heritageProps,
+    heritageContenu,
+    // On ne voit pas comment mieux faire
+    id: 'id' in etape ? etape.id : fakeEtapeId,
+    slug: etapeSlug,
+  })
 
   return {
     flattenEtape: {
@@ -1043,7 +1039,7 @@ const demarcheEtapesTypesGet = async (titreDemarcheId: DemarcheId, date: CaminoD
   if (isNullOrUndefined(titreDemarche.titre?.titulaireIds)) {
     throw new Error("la démarche n'est pas complète")
   }
-    if (!titreDemarche.etapes) throw new Error('les étapes ne sont pas chargées')
+  if (!titreDemarche.etapes) throw new Error('les étapes ne sont pas chargées')
 
   const titre = titreDemarche.titre!
 
@@ -1053,13 +1049,20 @@ const demarcheEtapesTypesGet = async (titreDemarcheId: DemarcheId, date: CaminoD
 
   const demarcheDefinition = demarcheDefinitionFind(titre.typeId, titreDemarche.typeId, titreDemarche.etapes, titreDemarche.id)
 
-  const etapesTypes: EtapeTypeEtapeStatutWithMainStep[] = toto(demarcheDefinition, titre.typeId, titreDemarche.typeId, titreEtape?.typeId, titreEtapeId ?? undefined, date, titreDemarche.etapes )
+  const etapesTypes: EtapeTypeEtapeStatutWithMainStep[] = getPossiblesEtapesTypes(
+    demarcheDefinition,
+    titre.typeId,
+    titreDemarche.typeId,
+    titreEtape?.typeId,
+    titreEtapeId ?? undefined,
+    date,
+    titreDemarche.etapes
+  )
 
-  return etapesTypes
-    .filter(({ etapeTypeId }) =>
-      canCreateEtape(user, etapeTypeId, ETAPE_IS_BROUILLON, titre.titulaireIds ?? [], titre.administrationsLocales ?? [], titreDemarche.typeId, {
-        typeId: titre.typeId,
-        titreStatutId: titre.titreStatutId ?? TitresStatutIds.Indetermine,
-      })
-    )
+  return etapesTypes.filter(({ etapeTypeId }) =>
+    canCreateEtape(user, etapeTypeId, ETAPE_IS_BROUILLON, titre.titulaireIds ?? [], titre.administrationsLocales ?? [], titreDemarche.typeId, {
+      typeId: titre.typeId,
+      titreStatutId: titre.titreStatutId ?? TitresStatutIds.Indetermine,
+    })
+  )
 }
