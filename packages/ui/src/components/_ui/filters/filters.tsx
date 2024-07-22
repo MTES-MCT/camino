@@ -301,9 +301,9 @@ export const Filters = defineComponent((props: Props) => {
                       {labels.value.map(label => (
                         <li>
                           <DsfrTag
-                            ariaLabel={`Retirer ${label.name} : ${isNotNullNorUndefined(label.valueName) ? label.valueName : label.value}`}
+                            ariaLabel={`${!opened.value ? 'Retirer ' : ''}${label.name} : ${isNotNullNorUndefined(label.valueName) ? label.valueName : label.value}`}
                             label={`${label.name} : ${isNotNullNorUndefined(label.valueName) ? label.valueName : label.value}`}
-                            onClicked={labelRemove(label)}
+                            onClicked={opened.value ? undefined : labelRemove(label)}
                           />
                         </li>
                       ))}
