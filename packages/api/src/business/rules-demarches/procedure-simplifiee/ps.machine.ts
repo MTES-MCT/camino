@@ -5,6 +5,7 @@ import { EtapesTypesEtapesStatuts as ETES } from 'camino-common/src/static/etape
 import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts.js'
 import { CaminoDate, isBefore, toCaminoDate } from 'camino-common/src/date.js'
 import { ETAPES_STATUTS, EtapeStatutId } from 'camino-common/src/static/etapesStatuts.js'
+import { isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
 
 type RendreDecisionAdministrationAcceptee = {
   date: CaminoDate
@@ -184,14 +185,14 @@ const procedureSimplifieeMachine = createMachine({
     receptionDeLaDemandeOuOuverturePublicOuDecisionAdministrationAFaire: {
       on: {
         DEPOSER_DEMANDE: {
-          guard: ({ context }) => !context.depotDeLaDemandeFaite && !context.ouverturePublicStatut,
+          guard: ({ context }) => !context.depotDeLaDemandeFaite && isNullOrUndefined(context.ouverturePublicStatut),
           target: 'receptionDeLaDemandeOuOuverturePublicOuDecisionAdministrationAFaire',
           actions: assign({
             depotDeLaDemandeFaite: true,
           }),
         },
         OUVRIR_PARTICIPATION_DU_PUBLIC: {
-          guard: ({ context }) => !context.ouverturePublicStatut,
+          guard: ({ context }) => isNullOrUndefined(context.ouverturePublicStatut),
           actions: assign({
             ouverturePublicStatut: ({ event }) => event.status,
             visibilite: ({ event }) => (event.status === ETAPES_STATUTS.PROGRAMME ? 'confidentielle' : 'publique'),
@@ -199,7 +200,7 @@ const procedureSimplifieeMachine = createMachine({
           target: 'receptionDeLaDemandeOuOuverturePublicOuDecisionAdministrationAFaire',
         },
         RENDRE_DECISION_ADMINISTRATION_ACCEPTEE: {
-          guard: ({ context }) => !context.ouverturePublicStatut || context.ouverturePublicStatut === ETAPES_STATUTS.TERMINE,
+          guard: ({ context }) => isNullOrUndefined(context.ouverturePublicStatut) || context.ouverturePublicStatut === ETAPES_STATUTS.TERMINE,
           actions: assign({
             visibilite: 'publique',
             demarcheStatut: DemarchesStatutsIds.Accepte,
@@ -207,7 +208,7 @@ const procedureSimplifieeMachine = createMachine({
           target: 'publicationAuRecueilDesActesAdministratifsOupublicationAuJORFAFaire',
         },
         RENDRE_DECISION_ADMINISTRATION_REJETEE: {
-          guard: ({ context }) => !context.ouverturePublicStatut || context.ouverturePublicStatut === ETAPES_STATUTS.TERMINE,
+          guard: ({ context }) => isNullOrUndefined(context.ouverturePublicStatut) || context.ouverturePublicStatut === ETAPES_STATUTS.TERMINE,
           actions: assign({
             visibilite: 'confidentielle',
             demarcheStatut: DemarchesStatutsIds.Rejete,

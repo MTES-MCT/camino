@@ -1,9 +1,9 @@
-export const capitalize = (text: string): string => {
+export const capitalize = <T extends string>(text: T): Capitalize<T> => {
   if (text.length > 0) {
-    return text[0].toUpperCase() + text.substring(1)
+    return (text[0].toUpperCase() + text.substring(1)) as Capitalize<T>
   }
 
-  return text
+  return text as Capitalize<T>
 }
 
 export const levenshtein = (s: string, t: string): number => {

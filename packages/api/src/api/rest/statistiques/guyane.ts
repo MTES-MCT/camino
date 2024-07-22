@@ -35,30 +35,32 @@ const statistiquesGuyaneActivitesBuild = (sectionId: string, titresActivites: IT
     return acc
   }, init)
 
-const statsGuyaneTitresTypes: TitreTypeId[] = ['arm', 'prm', 'axm', 'cxm']
-type IStatsGuyaneTitresTypes = 'titresArm' | 'titresPrm' | 'titresAxm' | 'titresCxm'
-
-const statistiquesGuyaneTitresBuild = (titres: { id: string; typeId: TitreTypeId; surface: number }[]): Record<string, { quantite: number; surface: number }> =>
-  titres
-    .filter(({ typeId }) => statsGuyaneTitresTypes.includes(typeId))
-    .reduce(
-      (acc, titre) => {
-        const id = `titres${capitalize(titre.typeId)}` as IStatsGuyaneTitresTypes
+const statsGuyaneTitresTypes = ['arm', 'prm', 'axm', 'cxm'] as const satisfies readonly TitreTypeId[]
+type IStatsGuyaneTitresTypes = `titres${Capitalize<(typeof statsGuyaneTitresTypes)[number]>}`
+const isStatsGuyaneTitreType = (titreTypeId: TitreTypeId): titreTypeId is (typeof statsGuyaneTitresTypes)[number] => {
+  return statsGuyaneTitresTypes.includes(titreTypeId)
+}
+const statistiquesGuyaneTitresBuild = (titres: { id: string; typeId: TitreTypeId; surface: number }[]): Record<IStatsGuyaneTitresTypes, { quantite: number; surface: number }> =>
+  titres.reduce(
+    (acc, titre) => {
+      if (isStatsGuyaneTitreType(titre.typeId)) {
+        const id = `titres${capitalize(titre.typeId)}` as const
 
         acc[id].quantite++
         acc[id].surface += titre.surface
-
-        return acc
-      },
-      {
-        titresArm: { quantite: 0, surface: 0 },
-        titresPrm: { quantite: 0, surface: 0 },
-        titresAxm: { quantite: 0, surface: 0 },
-        titresCxm: { quantite: 0, surface: 0 },
       }
-    )
 
-const statistiquesGuyaneInstantBuild = (titres: ITitre[]) => {
+      return acc
+    },
+    {
+      titresArm: { quantite: 0, surface: 0 },
+      titresPrm: { quantite: 0, surface: 0 },
+      titresAxm: { quantite: 0, surface: 0 },
+      titresCxm: { quantite: 0, surface: 0 },
+    }
+  )
+
+const statistiquesGuyaneInstantBuild = (titres: ITitre[]): Record<IStatsGuyaneTitresTypes, number> & { surfaceExploration: number; surfaceExploitation: number } => {
   const statsInstant = titres.reduce(
     (acc, titre) => {
       if (isTitreValide(titre.titreStatutId)) {
@@ -68,8 +70,9 @@ const statistiquesGuyaneInstantBuild = (titres: ITitre[]) => {
           acc.surfaceExploitation += titre.pointsEtape?.surface ?? 0
         }
 
-        if (statsGuyaneTitresTypes.includes(titre.typeId)) {
-          const id = `titres${capitalize(titre.typeId)}` as IStatsGuyaneTitresTypes
+        const titreId = titre.typeId
+        if (isStatsGuyaneTitreType(titreId)) {
+          const id = `titres${capitalize(titreId)}` as const
 
           acc[id]++
         }
