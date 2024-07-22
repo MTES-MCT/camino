@@ -1,12 +1,12 @@
 import { dbManager } from '../../../tests/db-manager.js'
-import { restPutCall, restCall } from '../../../tests/_utils/index.js'
+import { restPutCall, restCall, restPostCall } from '../../../tests/_utils/index.js'
 import { titreDemarcheCreate } from '../../database/queries/titres-demarches.js'
 import { titreCreate } from '../../database/queries/titres.js'
 import { titreEtapeCreate } from '../../database/queries/titres-etapes.js'
 import Titres from '../../database/models/titres.js'
 import { userSuper } from '../../database/user-super.js'
 import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations.js'
-import { caminoDateValidator, toCaminoDate } from 'camino-common/src/date.js'
+import { CaminoDate, caminoDateValidator, toCaminoDate } from 'camino-common/src/date.js'
 
 import { afterAll, beforeEach, beforeAll, describe, test, expect, vi } from 'vitest'
 import type { Pool } from 'pg'
@@ -20,7 +20,7 @@ import { tempDocumentNameValidator } from 'camino-common/src/document.js'
 import { HTTP_STATUS } from 'camino-common/src/http.js'
 import { Knex } from 'knex'
 import { testDocumentCreateTemp } from '../../../tests/_utils/administrations-permissions.js'
-import { RestEtapeModification } from 'camino-common/src/etape-form.js'
+import { RestEtapeCreation, RestEtapeModification } from 'camino-common/src/etape-form.js'
 import { EntrepriseId } from 'camino-common/src/entreprise.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 
@@ -48,7 +48,7 @@ afterAll(async () => {
   await dbManager.closeKnex()
 })
 
-async function etapeCreate(typeId?: EtapeTypeId, titreTypeId: TitreTypeId = 'arm') {
+async function etapeCreate(typeId?: EtapeTypeId, date: CaminoDate = toCaminoDate('2018-01-01'), titreTypeId: TitreTypeId = 'arm') {
   const titre = await titreCreate(
     {
       nom: 'mon titre',
@@ -70,7 +70,7 @@ async function etapeCreate(typeId?: EtapeTypeId, titreTypeId: TitreTypeId = 'arm
       statutId: 'fai',
       ordre: 1,
       titreDemarcheId: titreDemarche.id,
-      date: toCaminoDate('2018-01-01'),
+      date,
       isBrouillon: canBeBrouillon(myTypeId),
     },
     userSuper,
@@ -272,7 +272,7 @@ describe('etapeModifier', () => {
   })
 
   test("ne peut pas supprimer un document obligatoire d'une étape qui n'est pas en brouillon (utilisateur super)", async () => {
-    const { titreDemarcheId, titreEtapeId } = await etapeCreate('dae', 'axm')
+    const { titreDemarcheId, titreEtapeId } = await etapeCreate('dae', caminoDateValidator.parse('2018-01-01'), 'axm')
     const dir = `${process.cwd()}/files/tmp/`
 
     const fileName = `existing_temp_file_${idGenerate()}`
@@ -385,8 +385,56 @@ describe('etapeModifier', () => {
   })
 
   test('peut modifier une étape MEN sur un titre ARM en tant que PTMG (utilisateur admin)', async () => {
-    const { titreDemarcheId, titreEtapeId } = await etapeCreate('men')
-    const res = await restPutCall(
+    const { titreDemarcheId } = await etapeCreate('mfr', caminoDateValidator.parse('2017-12-31'))
+
+    const menEtape: RestEtapeCreation = {
+      typeId: 'men',
+      statutId: 'fai',
+      titreDemarcheId,
+      date: toCaminoDate('2020-01-01'),
+      etapeDocuments: [],
+      duree: null,
+      dateDebut: null,
+      dateFin: null,
+      substances: [],
+      geojson4326Perimetre: null,
+      geojsonOriginePerimetre: null,
+      geojson4326Points: null,
+      geojsonOriginePoints: null,
+      geojsonOrigineForages: null,
+      geojsonOrigineGeoSystemeId: null,
+      amodiataireIds: [],
+      titulaireIds: [],
+      note: { valeur: '', is_avertissement: false },
+      etapeAvis: [],
+      entrepriseDocumentIds: [],
+      heritageProps: ETAPE_HERITAGE_PROPS.reduce(
+        (acc, prop) => {
+          acc[prop] = { actif: false }
+
+          return acc
+        },
+        {} as {
+          [key in EtapeHeritageProps]: { actif: boolean }
+        }
+      ),
+      heritageContenu: {},
+      contenu: {},
+    }
+    const res = await restPostCall(
+      dbPool,
+      '/rest/etapes',
+      {},
+      {
+        role: 'admin',
+        administrationId: ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE'],
+      },
+      menEtape
+    )
+
+    const titreEtapeId = res.body
+
+    const putRes = await restPutCall(
       dbPool,
       '/rest/etapes',
       {},
@@ -396,44 +444,13 @@ describe('etapeModifier', () => {
       },
       {
         id: titreEtapeId,
-        typeId: 'men',
-        statutId: 'fai',
-        titreDemarcheId,
-        date: caminoDateValidator.parse('2016-01-01'),
-        etapeDocuments: [],
-        duree: null,
-        dateDebut: null,
-        dateFin: null,
-        substances: [],
-        geojson4326Perimetre: null,
-        geojsonOriginePerimetre: null,
-        geojson4326Points: null,
-        geojsonOriginePoints: null,
-        geojsonOrigineForages: null,
-        geojsonOrigineGeoSystemeId: null,
-        amodiataireIds: [],
-        titulaireIds: [],
-        note: { valeur: '', is_avertissement: false },
-        etapeAvis: [],
-        entrepriseDocumentIds: [],
         daeDocument: null,
         aslDocument: null,
-        heritageProps: ETAPE_HERITAGE_PROPS.reduce(
-          (acc, prop) => {
-            acc[prop] = { actif: false }
-
-            return acc
-          },
-          {} as {
-            [key in EtapeHeritageProps]: { actif: boolean }
-          }
-        ),
-        heritageContenu: {},
-        contenu: {},
+        ...menEtape,
       }
     )
 
-    expect(res.statusCode).toBe(HTTP_STATUS.OK)
+    expect(putRes.statusCode).toBe(HTTP_STATUS.OK)
   })
 
   test('ne peut pas modifier une étape EDE sur un titre ARM en tant que PTMG (utilisateur admin)', async () => {

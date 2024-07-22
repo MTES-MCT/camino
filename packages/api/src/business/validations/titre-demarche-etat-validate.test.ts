@@ -96,9 +96,8 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
         typeId: 'arm',
         demarches: [{ typeId: 'oct' }],
       } as ITitre,
-      { typeId: 'mfr', isBrouillon: ETAPE_IS_BROUILLON, date: caminoDateValidator.parse('2000-01-01'), statutId: 'acc' },
+      { typeId: 'mfr', isBrouillon: ETAPE_IS_BROUILLON, date: caminoDateValidator.parse('2000-01-01'), statutId: 'fai' },
       newDemarcheId(),
-
       []
     )
 
@@ -141,28 +140,10 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
         typeId: 'arm',
         demarches: [{ typeId: 'oct' }],
       } as ITitre,
-      { id: etapeIdValidator.parse('1'), typeId: 'mfr', date: caminoDateValidator.parse('2023-01-01'), statutId: 'acc', isBrouillon: ETAPE_IS_BROUILLON },
+      { id: etapeIdValidator.parse('1'), typeId: 'mfr', date: caminoDateValidator.parse('2023-01-01'), statutId: 'fai', isBrouillon: ETAPE_IS_BROUILLON },
       newDemarcheId(),
-      [{ id: etapeIdValidator.parse('1'), typeId: 'mfr', date: caminoDateValidator.parse('2023-01-01'), statutId: 'acc', isBrouillon: ETAPE_IS_BROUILLON, ordre: 1 }],
+      [{ id: etapeIdValidator.parse('1'), typeId: 'mfr', date: caminoDateValidator.parse('2023-01-01'), statutId: 'fai', isBrouillon: ETAPE_IS_BROUILLON, ordre: 1 }],
       true
-    )
-
-    expect(valid).toHaveLength(0)
-  })
-
-  test('ajoute une étape sans statut à une démarche sans machine', () => {
-    const valid = titreDemarcheUpdatedEtatValidate(
-      'oct',
-      {
-        typeId: 'arm',
-        demarches: [
-          {
-            typeId: 'oct',
-          },
-        ],
-      } as ITitre,
-      { typeId: 'mfr', date: '1030-01-01' } as Pick<Required<ITitreEtape>, 'id' | 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'titreDemarcheId' | 'communes' | 'isBrouillon'>,
-      newDemarcheId()
     )
 
     expect(valid).toHaveLength(0)

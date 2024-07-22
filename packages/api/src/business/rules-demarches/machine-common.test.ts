@@ -76,6 +76,7 @@ describe('toMachineEtapes', () => {
           statutId: 'fai',
           isBrouillon: ETAPE_IS_NOT_BROUILLON,
           date: '2022-01-01',
+          isBrouillon: ETAPE_IS_NOT_BROUILLON,
         } as unknown as TitreEtapeForMachine,
       ])
     ).toThrowErrorMatchingInlineSnapshot(`[Error: l'état iii est inconnu]`)
