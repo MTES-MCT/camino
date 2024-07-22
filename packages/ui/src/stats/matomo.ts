@@ -1,7 +1,7 @@
 import { CaminoRouter } from '@/typings/vue-router'
 import { isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools'
 
-export const initMatomo = async (options: { router: CaminoRouter; host: string; siteId: string; environnement: string }) => {
+export const initMatomo = async (options: { router: CaminoRouter; host: string; siteId: string; environnement: string }): Promise<void> => {
   const trackerFileName = 'piwik'
 
   await bootstrap(options.host, trackerFileName)

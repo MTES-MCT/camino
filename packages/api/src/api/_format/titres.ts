@@ -4,7 +4,7 @@ import { titreActiviteFormat } from './titres-activites.js'
 import { titreDemarcheFormat } from './titres-demarches.js'
 import { titreFormatFields } from './_fields.js'
 import { AdministrationId } from 'camino-common/src/static/administrations.js'
-import { isNullOrUndefined, onlyUnique } from 'camino-common/src/typescript-tools.js'
+import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined, onlyUnique } from 'camino-common/src/typescript-tools.js'
 import { getGestionnairesByTitreTypeId } from 'camino-common/src/static/administrationsTitresTypes.js'
 import { ACTIVITES_STATUTS_IDS } from 'camino-common/src/static/activitesStatuts.js'
 import { FieldsTitre } from '../../database/queries/_options'
@@ -13,7 +13,7 @@ import { FieldsTitre } from '../../database/queries/_options'
 // remplacer le contenu de ce fichier
 // par des requêtes SQL (dans /database/queries/titres)
 // qui retournent les données directement formatées
-export const titreFormat = (t: ITitre, fields: FieldsTitre = titreFormatFields) => {
+export const titreFormat = (t: ITitre, fields: FieldsTitre = titreFormatFields): ITitre => {
   if ((t.confidentiel ?? false) === true) {
     // Si le titre est confidentiel, on a le droit de voir que son périmètre sur la carte
     t = {
@@ -28,7 +28,7 @@ export const titreFormat = (t: ITitre, fields: FieldsTitre = titreFormatFields) 
 
   if (isNullOrUndefined(fields)) return t
 
-  if (fields.demarches && t.demarches?.length) {
+  if (fields.demarches && isNotNullNorUndefinedNorEmpty(t.demarches)) {
     t.demarches = t.demarches.map(td => titreDemarcheFormat(td, fields.demarches))
   }
 
@@ -36,7 +36,7 @@ export const titreFormat = (t: ITitre, fields: FieldsTitre = titreFormatFields) 
     t.surface = t.pointsEtape.surface
   }
 
-  if (fields.activites && t.activites?.length) {
+  if (fields.activites && isNotNullNorUndefinedNorEmpty(t.activites)) {
     t.activites = t.activites.map(ta => {
       ta.titre = t
 
@@ -44,7 +44,7 @@ export const titreFormat = (t: ITitre, fields: FieldsTitre = titreFormatFields) 
     })
   }
 
-  if (t.activites?.length) {
+  if (isNotNullNorUndefinedNorEmpty(t.activites)) {
     t.activitesAbsentes = t.activites.filter(({ activiteStatutId }) => activiteStatutId === ACTIVITES_STATUTS_IDS.ABSENT).length
     t.activitesEnConstruction = t.activites.filter(({ activiteStatutId }) => activiteStatutId === ACTIVITES_STATUTS_IDS.EN_CONSTRUCTION).length
   }
@@ -68,14 +68,13 @@ export const titreAdministrationsGet = (titre: ITitre): AdministrationId[] => {
   return ids.filter(onlyUnique)
 }
 
-export const titresFormat = (titres: ITitre[], fields = titreFormatFields) =>
-  titres &&
-  titres.reduce((acc: ITitre[], titre) => {
+export const titresFormat = (titres: ITitre[], fields = titreFormatFields): ITitre[] =>
+  titres?.reduce((acc: ITitre[], titre) => {
     const titreFormated = titreFormat(titre, fields)
 
-    if (titreFormated) {
+    if (isNotNullNorUndefined(titreFormated)) {
       acc.push(titreFormated)
     }
 
     return acc
-  }, [])
+  }, []) ?? []

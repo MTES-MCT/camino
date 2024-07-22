@@ -13,7 +13,7 @@ const meta: Meta = {
   title: 'Components/Etape/EtapeAvisEdit',
   // @ts-ignore
   component: EtapeAvisEdit,
-  decorators: [() => ({ template: '<div class="dsfr"><story/></div>' })],
+  decorators: [(): { template: string } => ({ template: '<div class="dsfr"><story/></div>' })],
 }
 export default meta
 

@@ -1919,18 +1919,15 @@ describe("phases d'une démarche", () => {
       }
     `)
   })
+  // pour regénérer le fichier titre-phases-find.cas.json: `npm run test:generate-phase-data -w packages/api`
+  test.each(titresProd as TitrePhasesTest[])('cas réel N°%#', (titreTypeId, demarches) => {
+    const expectedResult = demarches.reduce<Record<DemarcheId, { dateDebut: CaminoDate | null | undefined; dateFin: CaminoDate | null | undefined }>>((acc, d) => {
+      if (d.demarcheDateDebut || d.demarcheDateFin) {
+        acc[d.id] = { dateDebut: d.demarcheDateDebut, dateFin: d.demarcheDateFin }
+      }
 
-  test('cas réels', () => {
-    const phasesReels = titresProd as TitrePhasesTest[]
-    phasesReels.forEach(([titreTypeId, demarches], index) => {
-      const expectedResult = demarches.reduce<Record<DemarcheId, { dateDebut: CaminoDate | null | undefined; dateFin: CaminoDate | null | undefined }>>((acc, d) => {
-        if (d.demarcheDateDebut || d.demarcheDateFin) {
-          acc[d.id] = { dateDebut: d.demarcheDateDebut, dateFin: d.demarcheDateFin }
-        }
-
-        return acc
-      }, {})
-      expect(titrePhasesFind(demarches, titreTypeId), `test N*${index}`).toStrictEqual(expectedResult)
-    })
+      return acc
+    }, {})
+    expect(titrePhasesFind(demarches, titreTypeId)).toStrictEqual(expectedResult)
   })
 })

@@ -16,6 +16,7 @@ import { getCommunesIndex } from '../../../database/queries/communes.js'
 import { EtapesTypes } from 'camino-common/src/static/etapesTypes.js'
 import { EntrepriseId } from 'camino-common/src/entreprise.js'
 import { GetEntreprises, getEntreprises } from '../entreprises.queries.js'
+import { ETAPE_IS_NOT_BROUILLON } from 'camino-common/src/etape.js'
 
 const etapesDatesStatutsBuild = (titreDemarche: ITitreDemarche) => {
   if (isNullOrUndefinedOrEmpty(titreDemarche.etapes)) return null
@@ -23,7 +24,7 @@ const etapesDatesStatutsBuild = (titreDemarche: ITitreDemarche) => {
   const etapes = titreEtapesSortDescByOrdre(titreDemarche.etapes)
 
   return etapes
-    .filter(e => !e.isBrouillon)
+    .filter(e => e.isBrouillon === ETAPE_IS_NOT_BROUILLON)
     .reduce((etapesDatesStatuts, etape) => {
       const type = EtapesTypes[etape.typeId]
 

@@ -282,7 +282,7 @@ export type PutRestRoutes = CaminoRestRouteList<typeof IDS, 'put'>[number]
 
 export type CaminoRestParams<Route extends CaminoRestRoute> = z.infer<(typeof CaminoRestRoutes)[Route]['params']>
 
-export const getRestRoute = <T extends CaminoRestRoute>(path: T, params: CaminoRestParams<T>, searchParams: Record<string, string | string[]> = {}) => {
+export const getRestRoute = <T extends CaminoRestRoute>(path: T, params: CaminoRestParams<T>, searchParams: Record<string, string | string[]> = {}): string => {
   const urlParams = new URLSearchParams()
   Object.keys(searchParams).forEach(key => {
     const params = searchParams[key]

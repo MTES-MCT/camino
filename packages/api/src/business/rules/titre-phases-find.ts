@@ -12,6 +12,7 @@ import { ETAPES_STATUTS } from 'camino-common/src/static/etapesStatuts.js'
 import { isDemarcheStatutNonStatue } from 'camino-common/src/static/demarchesStatuts.js'
 import { ETAPES_TYPES, EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
 import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools.js'
+import { ETAPE_IS_NOT_BROUILLON } from 'camino-common/src/etape.js'
 const DATE_PAR_DEFAUT_TITRE_INFINI = toCaminoDate('2018-12-31')
 /**
  * trouve une démarche acceptée ou terminée qui est
@@ -66,7 +67,7 @@ type Phase = { dateDebut: CaminoDate; dateFin: CaminoDate | null }
 type IntermediateTitrePhase = Phase & { demarcheId: DemarcheId; dateDeFinParDefaut?: true }
 export const titrePhasesFind = (titreDemarches: TitreDemarchePhaseFind[], titreTypeId: TitreTypeId): { [key in DemarcheId]?: Phase } => {
   const sortedDemarches = titreDemarcheSortAsc(titreDemarches).map(demarche => {
-    return { ...demarche, etapes: demarche.etapes?.filter(({ isBrouillon }) => !isBrouillon) }
+    return { ...demarche, etapes: demarche.etapes?.filter(({ isBrouillon }) => isBrouillon === ETAPE_IS_NOT_BROUILLON) }
   })
 
   const titreDemarcheAnnulation = titreDemarcheAnnulationFind(titreDemarches)

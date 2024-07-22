@@ -1,3 +1,4 @@
+import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools.js'
 import { Index, IEntrepriseEtablissement, IEntreprise } from '../types.js'
 
 export const logsUpdate = ({
@@ -47,82 +48,82 @@ export const logsUpdate = ({
   console.info('-')
   console.info('tâches exécutées:')
 
-  if (titresEtapesStatusUpdated?.length) {
+  if (isNotNullNorUndefinedNorEmpty(titresEtapesStatusUpdated)) {
     console.info(`mise à jour: ${titresEtapesStatusUpdated.length} étape(s) (statut)`)
   }
-  if (titresEtapesOrdreUpdated?.length) {
+  if (isNotNullNorUndefinedNorEmpty(titresEtapesOrdreUpdated)) {
     console.info(`mise à jour: ${titresEtapesOrdreUpdated.length} étape(s) (ordre)`)
   }
 
-  if (titresEtapesHeritagePropsUpdated?.length) {
+  if (isNotNullNorUndefinedNorEmpty(titresEtapesHeritagePropsUpdated)) {
     console.info(`mise à jour: ${titresEtapesHeritagePropsUpdated.length} étape(s) (héritage des propriétés)`)
   }
 
-  if (titresEtapesHeritageContenuUpdated?.length) {
+  if (isNotNullNorUndefinedNorEmpty(titresEtapesHeritageContenuUpdated)) {
     console.info(`mise à jour: ${titresEtapesHeritageContenuUpdated.length} étape(s) (héritage du contenu)`)
   }
 
-  if (titresDemarchesStatutUpdated?.length) {
+  if (isNotNullNorUndefinedNorEmpty(titresDemarchesStatutUpdated)) {
     console.info(`mise à jour: ${titresDemarchesStatutUpdated.length} démarche(s) (statut)`)
   }
 
-  if (titresDemarchesPublicUpdated?.length) {
+  if (isNotNullNorUndefinedNorEmpty(titresDemarchesPublicUpdated)) {
     console.info(`mise à jour: ${titresDemarchesPublicUpdated.length} démarche(s) (publicité)`)
   }
 
-  if (titresDemarchesOrdreUpdated?.length) {
+  if (isNotNullNorUndefinedNorEmpty(titresDemarchesOrdreUpdated)) {
     console.info(`mise à jour: ${titresDemarchesOrdreUpdated.length} démarche(s) (ordre)`)
   }
 
-  if (titresStatutIdUpdated?.length) {
+  if (isNotNullNorUndefinedNorEmpty(titresStatutIdUpdated)) {
     console.info(`mise à jour: ${titresStatutIdUpdated.length} titre(s) (statuts)`)
   }
 
-  if (titresPublicUpdated?.length) {
+  if (isNotNullNorUndefinedNorEmpty(titresPublicUpdated)) {
     console.info(`mise à jour: ${titresPublicUpdated.length} titre(s) (publicité)`)
   }
 
-  if (titresDemarchesDatesUpdated?.length) {
+  if (isNotNullNorUndefinedNorEmpty(titresDemarchesDatesUpdated)) {
     console.info(`mise à jour: ${titresDemarchesDatesUpdated.length} titre(s) (phases mises à jour)`)
   }
 
-  if (titresEtapesAdministrationsLocalesUpdated?.length) {
+  if (isNotNullNorUndefinedNorEmpty(titresEtapesAdministrationsLocalesUpdated)) {
     console.info(`mise à jour: ${titresEtapesAdministrationsLocalesUpdated.length} administration(s) locale(s) modifiée(s) dans des étapes`)
   }
 
-  if (titresPropsEtapesIdsUpdated?.length) {
+  if (isNotNullNorUndefinedNorEmpty(titresPropsEtapesIdsUpdated)) {
     console.info(`mise à jour: ${titresPropsEtapesIdsUpdated.length} titres(s) (propriétés-étapes)`)
   }
 
-  if (titresActivitesCreated?.length) {
+  if (isNotNullNorUndefinedNorEmpty(titresActivitesCreated)) {
     console.info(`mise à jour: ${titresActivitesCreated.length} activité(s) créée(s)`)
   }
 
-  if (titresActivitesRelanceSent?.length) {
+  if (isNotNullNorUndefinedNorEmpty(titresActivitesRelanceSent)) {
     console.info(`mise à jour: ${titresActivitesRelanceSent.length} activité(s) relancée(s)`)
   }
 
-  if (titresActivitesStatutIdsUpdated?.length) {
+  if (isNotNullNorUndefinedNorEmpty(titresActivitesStatutIdsUpdated)) {
     console.info(`mise à jour: ${titresActivitesStatutIdsUpdated.length} activité(s) fermée(s)`)
   }
 
-  if (titresActivitesPropsUpdated?.length) {
+  if (isNotNullNorUndefinedNorEmpty(titresActivitesPropsUpdated)) {
     console.info(`mise à jour: ${titresActivitesPropsUpdated.length} activité(s) (propriété suppression)`)
   }
 
-  if (titresUpdatedIndex && Object.keys(titresUpdatedIndex).length) {
+  if (isNotNullNorUndefined(titresUpdatedIndex) && Object.keys(titresUpdatedIndex).length) {
     console.info(`mise à jour: ${Object.keys(titresUpdatedIndex).length} titre(s) (slugs)`)
   }
 
-  if (entreprisesUpdated?.length) {
+  if (isNotNullNorUndefinedNorEmpty(entreprisesUpdated)) {
     console.info(`mise à jour: ${entreprisesUpdated.length} adresse(s) d'entreprise(s)`)
   }
 
-  if (etablissementsUpdated?.length) {
+  if (isNotNullNorUndefinedNorEmpty(etablissementsUpdated)) {
     console.info(`mise à jour: ${etablissementsUpdated.length} établissement(s) d'entreprise(s)`)
   }
 
-  if (etablissementsDeleted?.length) {
+  if (isNotNullNorUndefinedNorEmpty(etablissementsDeleted)) {
     console.info(`suppression: ${etablissementsDeleted.length} établissement(s) d'entreprise(s)`)
   }
 }

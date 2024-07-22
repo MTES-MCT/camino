@@ -4,9 +4,10 @@ import { titreEtapeFormat } from './titres-etapes.js'
 import { titreFormat } from './titres.js'
 import { titreDemarcheFormatFields } from './_fields.js'
 import { FieldsDemarche } from '../../database/queries/_options'
+import { isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
 
 export const titreDemarcheFormat = (titreDemarche: ITitreDemarche, fields: FieldsDemarche = titreDemarcheFormatFields) => {
-  if (!fields) return titreDemarche
+  if (isNullOrUndefined(fields)) return titreDemarche
 
   if (fields.titre && titreDemarche.titre) {
     titreDemarche.titre = titreFormat(titreDemarche.titre, fields.titre)

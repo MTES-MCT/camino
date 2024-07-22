@@ -7,13 +7,14 @@ import { toCaminoDate } from 'camino-common/src/date.js'
 import { describe, expect, test } from 'vitest'
 import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts.js'
 import { TitreEtapeForMachine } from '../rules-demarches/machine-common.js'
-import { ETAPE_IS_BROUILLON } from 'camino-common/src/etape.js'
+import { ETAPE_IS_BROUILLON, ETAPE_IS_NOT_BROUILLON } from 'camino-common/src/etape.js'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
 const etapesBuild = (etapesProps: Partial<ITitreEtape>[]): TitreEtapeForMachine[] =>
   etapesProps.map(
     (etapeProps, i) =>
       ({
         ...etapeProps,
+        isBrouillon: etapeProps.isBrouillon ?? ETAPE_IS_NOT_BROUILLON,
         ordre: i + 1,
       }) as unknown as TitreEtapeForMachine
   )

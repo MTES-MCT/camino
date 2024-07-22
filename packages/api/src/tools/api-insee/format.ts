@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { IApiSirenEtablissement, IApiSirenUniteLegalePeriode, IApiSirenUnionUniteLegalePeriodeEtablissmentUnite, IApiSirenUnionUniteLegaleEtablissmentUnite, IApiSirenUniteLegale } from './types.js'
 import { IEntrepriseEtablissement, IEntreprise } from '../../types.js'
 
@@ -12,7 +13,7 @@ import { entrepriseIdValidator } from 'camino-common/src/entreprise.js'
 interface IApiSirenNomFormat extends IApiSirenUnionUniteLegalePeriodeEtablissmentUnite, IApiSirenUnionUniteLegaleEtablissmentUnite {}
 
 const nomIndividuFormat = (nomUniteLegale: string, prenomUsuelUniteLegale?: string | null, sexeUniteLegale?: 'F' | 'M' | null) =>
-  `${sexeUniteLegale === 'F' ? 'MADAME' : 'MONSIEUR'} ${prenomUsuelUniteLegale || ''} ${nomUniteLegale}`
+  `${sexeUniteLegale === 'F' ? 'MADAME' : 'MONSIEUR'} ${prenomUsuelUniteLegale ?? ''} ${nomUniteLegale}`
 
 const nomEntrepriseFormat = (denominationUniteLegale?: string | null, denominationUsuelle1UniteLegale?: string | null, sigleUniteLegale?: string | null) => {
   const denomination = denominationUniteLegale && denominationUniteLegale.trim()
@@ -82,7 +83,7 @@ export const entrepriseEtablissementsFormat = (uniteLegale: IApiSirenUniteLegale
   return entrepriseEtablissements
 }
 
-export const entrepriseFormat = ({ uniteLegale, adresseEtablissement: adresse, siren }: IApiSirenEtablissement) => {
+export const entrepriseFormat = ({ uniteLegale, adresseEtablissement: adresse, siren }: IApiSirenEtablissement): IEntreprise => {
   const id = entrepriseIdValidator.parse(`fr-${siren}`)
 
   const entreprise = {

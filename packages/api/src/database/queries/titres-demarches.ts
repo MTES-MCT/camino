@@ -14,13 +14,14 @@ import { titresFiltersQueryModify } from './_titres-filters.js'
 import TitresEtapes from '../models/titres-etapes.js'
 import { User } from 'camino-common/src/roles'
 import { sortedDemarchesTypes } from 'camino-common/src/static/demarchesTypes.js'
+import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools.js'
 
 const etapesIncluesExcluesBuild = (q: QueryBuilder<TitresDemarches, TitresDemarches[]>, etapes: ITitreEtapeFiltre[], mode: 'etapesInclues' | 'etapesExclues') => {
   const raw = etapes
     .map(({ statutId, dateDebut, dateFin }) => {
-      const statutCond = statutId ? 'and etapes.statut_id = ?' : ''
-      const dateDebutCond = dateDebut ? 'and etapes.date >= ?' : ''
-      const dateFinCond = dateFin ? 'and etapes.date <= ?' : ''
+      const statutCond = isNotNullNorUndefinedNorEmpty(statutId) ? 'and etapes.statut_id = ?' : ''
+      const dateDebutCond = isNotNullNorUndefinedNorEmpty(dateDebut) ? 'and etapes.date >= ?' : ''
+      const dateFinCond = isNotNullNorUndefinedNorEmpty(dateFin) ? 'and etapes.date <= ?' : ''
 
       const condition = mode === 'etapesInclues' ? '> 0' : '= 0'
 
@@ -33,13 +34,13 @@ const etapesIncluesExcluesBuild = (q: QueryBuilder<TitresDemarches, TitresDemarc
     etapes.flatMap(({ typeId, statutId, dateDebut, dateFin }) => {
       const values = [typeId]
 
-      if (statutId) {
+      if (isNotNullNorUndefinedNorEmpty(statutId)) {
         values.push(statutId)
       }
-      if (dateDebut) {
+      if (isNotNullNorUndefinedNorEmpty(dateDebut)) {
         values.push(dateDebut)
       }
-      if (dateFin) {
+      if (isNotNullNorUndefinedNorEmpty(dateFin)) {
         values.push(dateFin)
       }
 
@@ -84,22 +85,22 @@ const titresDemarchesFiltersQueryModify = (
     q.whereIn('titresDemarches.id', titresDemarchesIds)
   }
 
-  if (typesIds?.length) {
+  if (isNotNullNorUndefinedNorEmpty(typesIds)) {
     q.whereIn('titresDemarches.typeId', typesIds)
   }
 
-  if (statutsIds?.length) {
+  if (isNotNullNorUndefinedNorEmpty(statutsIds)) {
     q.whereIn('titresDemarches.statutId', statutsIds)
   }
 
-  if (etapesInclues?.length || etapesExclues?.length) {
+  if (isNotNullNorUndefinedNorEmpty(etapesInclues) || isNotNullNorUndefinedNorEmpty(etapesExclues)) {
     q.leftJoinRelated('etapes').groupBy('titresDemarches.id')
 
-    if (etapesInclues?.length) {
+    if (isNotNullNorUndefinedNorEmpty(etapesInclues)) {
       etapesIncluesExcluesBuild(q, etapesInclues, 'etapesInclues')
     }
 
-    if (etapesExclues?.length) {
+    if (isNotNullNorUndefinedNorEmpty(etapesExclues)) {
       etapesIncluesExcluesBuild(q, etapesExclues, 'etapesExclues')
     }
   }
@@ -267,19 +268,20 @@ export const titresDemarchesGet = async (
   )
 
   if (colonne) {
+    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     if (!titresDemarchesColonnes[colonne]) {
       throw new Error(`Colonne « ${colonne} » inconnue`)
     }
 
     const groupBy = titresDemarchesColonnes[colonne].groupBy as string[]
 
-    if (titresDemarchesColonnes[colonne].relation) {
+    if (isNotNullNorUndefinedNorEmpty(titresDemarchesColonnes[colonne].relation)) {
       q.leftJoinRelated(titresDemarchesColonnes[colonne].relation!)
     }
     q.orderBy(titresDemarchesColonnes[colonne].id, ordre || 'asc')
     q.groupBy('titresDemarches.id')
 
-    if (groupBy) {
+    if (isNotNullNorUndefinedNorEmpty(groupBy)) {
       groupBy.forEach(gb => {
         q.groupBy(gb as string)
       })
@@ -290,11 +292,11 @@ export const titresDemarchesGet = async (
     q.orderBy('titresDemarches.ordre')
   }
 
-  if (page && intervalle) {
+  if (isNotNullNorUndefined(page) && page > 0 && isNotNullNorUndefined(intervalle) && intervalle > 0) {
     q.offset((page - 1) * intervalle)
   }
 
-  if (intervalle) {
+  if (isNotNullNorUndefined(intervalle) && intervalle > 0) {
     q.limit(intervalle)
   }
 

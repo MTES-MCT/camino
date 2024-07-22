@@ -10,7 +10,7 @@ export function isNotNullNorUndefined<T>(value: T | null | undefined): value is 
 export function isNotNullNorUndefinedNorEmpty<U>(value: DeepReadonly<U[]> | null | undefined): value is DeepReadonly<NonEmptyArray<U>>
 export function isNotNullNorUndefinedNorEmpty<U>(value: U[] | null | undefined): value is NonEmptyArray<U>
 export function isNotNullNorUndefinedNorEmpty(value: string | null | undefined): value is string
-export function isNotNullNorUndefinedNorEmpty(value: string | DeepReadonly<any[]> | null | undefined) {
+export function isNotNullNorUndefinedNorEmpty(value: string | DeepReadonly<any[]> | null | undefined): boolean {
   if (Array.isArray(value)) {
     if (!isNullOrUndefined(value)) {
       return isNonEmptyArray(value)
@@ -25,7 +25,7 @@ export function isNotNullNorUndefinedNorEmpty(value: string | DeepReadonly<any[]
 export function isNullOrUndefinedOrEmpty<U>(value: DeepReadonly<U[]> | null | undefined): value is null | undefined
 export function isNullOrUndefinedOrEmpty<U>(value: U[] | null | undefined): value is null | undefined
 export function isNullOrUndefinedOrEmpty(value: string | null | undefined): value is null | undefined
-export function isNullOrUndefinedOrEmpty(value: string | DeepReadonly<any[]> | null | undefined) {
+export function isNullOrUndefinedOrEmpty(value: string | DeepReadonly<any[]> | null | undefined): boolean {
   if (value === null || value === undefined) {
     return true
   }
@@ -119,8 +119,8 @@ export const map = <T, U>(array: DeepReadonly<NonEmptyArray<T>>, transform: (ite
   return [transform(first), ...rest.map(transform)]
 }
 
-export const isTrue = <T extends true>(_t: T) => {}
-export const isFalse = <T extends false>(_t: T) => {}
+export const isTrue = <T extends true>(_t: T): void => {}
+export const isFalse = <T extends false>(_t: T): void => {}
 
 export type Expect<T, E> = T extends E ? (E extends T ? true : false) : false
 

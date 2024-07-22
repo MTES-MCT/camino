@@ -57,4 +57,4 @@ export const isTitreStatutId = (value: string): value is TitreStatutId => TITRES
 
 export const titresStatutsArray = Object.values(TitresStatuts)
 
-export const isTitreValide = (titreStatutId: TitreStatutId) => [TitresStatutIds.Valide, TitresStatutIds.ModificationEnInstance, TitresStatutIds.SurvieProvisoire].includes(titreStatutId)
+export const isTitreValide = (titreStatutId: TitreStatutId): boolean => [TitresStatutIds.Valide, TitresStatutIds.ModificationEnInstance, TitresStatutIds.SurvieProvisoire].includes(titreStatutId)

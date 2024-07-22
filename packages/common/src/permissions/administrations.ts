@@ -3,7 +3,7 @@ import { AdministrationId, Administrations, sortedAdministrations } from '../sta
 import { Departements } from '../static/departement.js'
 import { DeepReadonly } from '../typescript-tools.js'
 
-export const canReadActivitesTypesEmails = (user: User, administrationId: AdministrationId) => {
+export const canReadActivitesTypesEmails = (user: User, administrationId: AdministrationId): boolean => {
   if (!canReadAdministrations(user)) {
     return false
   }
@@ -32,7 +32,7 @@ export const canReadActivitesTypesEmails = (user: User, administrationId: Admini
   return false
 }
 
-export const canReadAdministrations = (user: DeepReadonly<User>) => isSuper(user) || isAdministration(user)
+export const canReadAdministrations = (user: DeepReadonly<User>): boolean => isSuper(user) || isAdministration(user)
 
 export const canEditEmails = (user: User, administrationId: AdministrationId): boolean => {
   if (isSuper(user) || ((isAdministrationAdmin(user) || isAdministrationEditeur(user)) && Administrations[user.administrationId].typeId === 'min')) {

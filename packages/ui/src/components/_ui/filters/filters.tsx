@@ -72,7 +72,7 @@ const etapesLabelFormat = (filter: EtapeCaminoFiltres, values: FilterEtapeValue[
       }
     })
 }
-
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const getInitialFiltres = (route: CaminoRouteLocation, filters: readonly CaminoFiltre[]) => {
   const allValues = {
     administrationTypesIds: caminoFiltres.administrationTypesIds.validator.parse(routerQueryToStringArray(route.query.administrationTypesIds)),

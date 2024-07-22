@@ -4,22 +4,23 @@ import { titreDemarcheDepotDemandeDateFind } from '../../business/rules/titre-de
 
 import { DocumentType } from 'camino-common/src/static/documentsTypes.js'
 import { EtapesTypes, EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
+import { isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools.js'
 
 export const documentsTypesFormat = (documentsTypes: DocumentType[] | undefined | null, documentsTypesSpecifiques: DocumentType[] | undefined | null): DocumentType[] => {
   let result: DocumentType[] = []
 
-  if (documentsTypes?.length) {
+  if (isNotNullNorUndefinedNorEmpty(documentsTypes)) {
     result = [...documentsTypes]
   }
 
-  if (documentsTypesSpecifiques?.length) {
+  if (isNotNullNorUndefinedNorEmpty(documentsTypesSpecifiques)) {
     documentsTypesSpecifiques.forEach(documentTypeSpecifique => {
       const documentType = result.find(({ id }) => id === documentTypeSpecifique.id)
 
       // Si il est déjà présent, on override juste son attribut « optionnel » et sa description
       if (documentType) {
         documentType.optionnel = documentTypeSpecifique.optionnel
-        documentType.description = documentTypeSpecifique.description || documentType.description
+        documentType.description = documentTypeSpecifique.description ?? documentType.description
       } else {
         result.push(documentTypeSpecifique)
       }

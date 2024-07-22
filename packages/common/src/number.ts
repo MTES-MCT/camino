@@ -34,7 +34,7 @@ export const toDegresMinutes = (value: number): { degres: number; minutes: numbe
 }
 
 export const km2Validator = z.number().nonnegative().brand('CAMINO_KM2')
-export const createM2Validator = (v: ZodNumber) => v.transform(value => parseInt(`${value}`)).brand('CAMINO_M2')
+export const createM2Validator = (v: ZodNumber): z.ZodBranded<z.ZodEffects<z.ZodNumber, number, number>, 'CAMINO_M2'> => v.transform(value => parseInt(`${value}`)).brand('CAMINO_M2')
 export const m2Validator = createM2Validator(z.number())
 
 export const ZERO_KM2 = km2Validator.parse(0)

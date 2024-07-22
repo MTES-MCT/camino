@@ -1,5 +1,5 @@
-import type { LatLngExpression, Icon, DivIcon, GeoJSONOptions, DivIconOptions, MarkerOptions } from 'leaflet'
-import type { GeoJsonObject, LineString } from 'geojson'
+import type { LatLngExpression, Icon, DivIcon, GeoJSONOptions, DivIconOptions, MarkerOptions, GeoJSON, Marker, LatLng, LatLngBounds } from 'leaflet'
+import type { GeoJsonObject, Geometry, LineString } from 'geojson'
 import 'leaflet.markercluster'
 import 'leaflet-gesture-handling'
 import 'leaflet-fullscreen'
@@ -21,11 +21,11 @@ L.Marker.prototype.options.icon = L.icon({
   shadowSize: [41, 41],
 })
 
-export const leafletMarkerBuild = (latLng: LatLngExpression, icon: Icon | DivIcon | undefined, options?: MarkerOptions | undefined) => L.marker(latLng, { icon, ...options })
+export const leafletMarkerBuild = (latLng: LatLngExpression, icon: Icon | DivIcon | undefined, options?: MarkerOptions | undefined): Marker<any> => L.marker(latLng, { icon, ...options })
 
-export const leafletGeojsonBuild = (geojson: GeoJsonObject | undefined, options?: GeoJSONOptions<any> | undefined) => L.geoJSON(geojson, options)
+export const leafletGeojsonBuild = (geojson: GeoJsonObject | undefined, options?: GeoJSONOptions<any> | undefined): GeoJSON<any, Geometry> => L.geoJSON(geojson, options)
 
-export const leafletGeojsonCenterFind = (geojson: GeoJsonObject | undefined) => L.geoJSON(geojson).getBounds().getCenter()
+export const leafletGeojsonCenterFind = (geojson: GeoJsonObject | undefined): LatLng => L.geoJSON(geojson).getBounds().getCenter()
 
-export const leafletDivIconBuild = (divIconOptions: DivIconOptions) => L.divIcon(divIconOptions)
-export const leafletGeojsonBoundsGet = (zone: LineString) => L.geoJSON(zone).getBounds()
+export const leafletDivIconBuild = (divIconOptions: DivIconOptions): DivIcon => L.divIcon(divIconOptions)
+export const leafletGeojsonBoundsGet = (zone: LineString): LatLngBounds => L.geoJSON(zone).getBounds()

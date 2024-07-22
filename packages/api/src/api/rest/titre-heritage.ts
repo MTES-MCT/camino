@@ -1,4 +1,5 @@
 import { DemarcheEtape } from 'camino-common/src/demarche.js'
+import { ETAPE_IS_NOT_BROUILLON } from 'camino-common/src/etape'
 import { isFondamentalesStatutOk } from 'camino-common/src/static/etapesStatuts.js'
 import { isEtapeTypeIdFondamentale } from 'camino-common/src/static/etapesTypes.js'
 import { TitrePropTitreEtapeFindDemarche } from 'camino-common/src/titres.js'
@@ -11,7 +12,7 @@ export const getMostRecentEtapeFondamentaleValide = <F extends Pick<DemarcheEtap
   for (const titreDemarche of titreDemarchesDesc) {
     const titreEtapeDesc = [...titreDemarche.etapes].sort((a, b) => b.ordre - a.ordre)
     for (const titreEtape of titreEtapeDesc) {
-      if (isEtapeTypeIdFondamentale(titreEtape.etape_type_id) && isFondamentalesStatutOk(titreEtape.etape_statut_id) && !titreEtape.is_brouillon) {
+      if (isEtapeTypeIdFondamentale(titreEtape.etape_type_id) && isFondamentalesStatutOk(titreEtape.etape_statut_id) && titreEtape.is_brouillon === ETAPE_IS_NOT_BROUILLON) {
         return titreEtape
       }
     }

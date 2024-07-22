@@ -10,7 +10,7 @@ import { Regions } from 'camino-common/src/static/region.js'
 import { PaysId } from 'camino-common/src/static/pays.js'
 import { communeIdValidator } from 'camino-common/src/static/communes.js'
 import { z } from 'zod'
-import { etapeBrouillonValidator, etapeIdValidator } from 'camino-common/src/etape.js'
+import { ETAPE_IS_NOT_BROUILLON, etapeBrouillonValidator, etapeIdValidator } from 'camino-common/src/etape.js'
 import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools.js'
 import { km2Validator } from 'camino-common/src/number.js'
 export interface Etape {
@@ -47,7 +47,7 @@ export const toMachineEtapes = (etapes: (Pick<Partial<TitreEtapeForMachine>, 'or
   // TODO 2022-10-12 si on appelle titreEtapesSortAscByOrdre on se retrouve avec une grosse dépendance cyclique
   return etapes
     .slice()
-    .filter(dbEtape => !dbEtape.isBrouillon)
+    .filter(dbEtape => dbEtape.isBrouillon === ETAPE_IS_NOT_BROUILLON)
     .sort((a, b) => a.ordre! - b.ordre!)
     .map(dbEtape => toMachineEtape(dbEtape))
 }

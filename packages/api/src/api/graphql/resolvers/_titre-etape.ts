@@ -97,6 +97,7 @@ const titreEtapeHeritageContenuBuild = (
       (acc: { [elementId: string]: IHeritageElement }, element) => {
         acc[element.id] = {
           actif: !!titreEtapesFiltered.find(
+            // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
             e => e.id !== titreEtape.id && etapeSectionsDictionary[e.id] && etapeSectionsDictionary[e.id].find(s => s.id === section.id && s.elements?.find(el => el.id === element.id))
           ),
         }
@@ -116,6 +117,7 @@ const titreEtapeHeritageContenuBuild = (
   if (heritageContenu) {
     Object.keys(heritageContenu).forEach(sectionId => {
       Object.keys(heritageContenu![sectionId]).forEach(elementId => {
+        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
         const etapeId = heritageContenu && heritageContenu[sectionId] && heritageContenu[sectionId][elementId].etapeId
 
         if (etapeId) {

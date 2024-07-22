@@ -20,6 +20,7 @@ const fieldsToArray = (fields: IFields, format: IFieldsFormat) => {
     const fieldsSubString = fieldsToString(fieldsSub, id, format)
 
     // ajoute un modifieur à certaines propriétés (p.e.: orderAsc)
+    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     if (fieldsSub.$modifier) {
       id = `${id}(${fieldsSub.$modifier})`
     }

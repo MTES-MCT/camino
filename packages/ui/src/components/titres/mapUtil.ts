@@ -130,7 +130,7 @@ export const zones = {
 const L = window.L
 
 export type CaminoMarkerClusterGroup = MarkerClusterGroup & { caminoDomaineId?: DomaineId }
-export const clustersBuild = () =>
+export const clustersBuild = (): { [key in DomaineId]?: CaminoMarkerClusterGroup } =>
   sortedDomaines.reduce<{ [key in DomaineId]?: CaminoMarkerClusterGroup }>((clusters, { id }) => {
     clusters[id] = L.markerClusterGroup({
       iconCreateFunction(cluster) {
@@ -198,7 +198,13 @@ const svgDomaineAnchor = (domaineId: DomaineId): string => {
 }
 
 export type LayerWithTitreId = Layer & { titreId: TitreId }
-export const layersBuild = (titres: TitreWithPerimetre[], router: Pick<CaminoRouter, 'push'>, entreprises: Entreprise[], markersAlreadyInMap: TitreId[] = [], geojsonAlreadyInMap: TitreId[] = []) => {
+export const layersBuild = (
+  titres: TitreWithPerimetre[],
+  router: Pick<CaminoRouter, 'push'>,
+  entreprises: Entreprise[],
+  markersAlreadyInMap: TitreId[] = [],
+  geojsonAlreadyInMap: TitreId[] = []
+): { geojsons: Record<TitreId, GeoJSON>; markers: CaminoMarker[] } => {
   const div = document.createElement('div')
   const titleName = document.createElement('div')
   const listeTitulaires = document.createElement('ul')

@@ -10,8 +10,10 @@ export const heritageContenuFind = (
   prevTitreEtape?: Pick<ITitreEtape, 'id' | 'contenu' | 'heritageContenu'> | null
 ) => {
   let hasChanged = false
+  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   let value = (titreEtape.contenu && titreEtape.contenu[sectionId] && titreEtape.contenu[sectionId][elementId]) as IContenuValeur
 
+  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   let heritage = titreEtape.heritageContenu && titreEtape.heritageContenu[sectionId] ? titreEtape.heritageContenu[sectionId][elementId] : null
   if (!heritage) {
     // l’héritage peut ne pas exister dans le cas où un nouvel élément d’une section a été ajouté via les métas
@@ -30,6 +32,7 @@ export const heritageContenuFind = (
   if (heritage.actif) {
     if (prevTitreEtape) {
       const oldValue = value
+      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       value = (prevTitreEtape.contenu && prevTitreEtape.contenu[sectionId] && prevTitreEtape.contenu[sectionId][elementId]) as IContenuValeur
 
       if ((oldValue !== undefined || value !== null) && (oldValue !== null || value !== undefined) && oldValue !== value) {
@@ -67,16 +70,19 @@ export const titreEtapeHeritageContenuFind = (
           const { hasChanged: contenuHasChanged, actif, value, etapeId } = heritageContenuFind(section.id, element.id, titreEtape, prevTitreEtape)
 
           if (contenuHasChanged) {
+            // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
             if (value || value === 0 || value === false) {
               if (!contenu) {
                 contenu = {}
               }
 
+              // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
               if (!contenu[section.id]) {
                 contenu[section.id] = {}
               }
 
               contenu![section.id][element.id] = value
+              // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
             } else if (contenu && contenu[section.id]) {
               delete contenu[section.id][element.id]
             }
@@ -85,6 +91,7 @@ export const titreEtapeHeritageContenuFind = (
               heritageContenu = {}
             }
 
+            // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
             if (!heritageContenu[section.id]) {
               heritageContenu[section.id] = {}
             }

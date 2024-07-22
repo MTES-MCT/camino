@@ -3,6 +3,7 @@ import { DsfrIcon } from './dsfrIconSpriteType'
 import { CaminoRouterLink } from '../../router/camino-router-link'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { CaminoRouteNames, CaminoVueRoute } from '@/router/routes'
+import type { JSX } from 'vue/jsx-runtime'
 
 export const buttonTypes = ['primary', 'secondary', 'tertiary', 'tertiary-no-outline'] as const
 type ButtonType = (typeof buttonTypes)[number]
@@ -68,7 +69,7 @@ type DsfrLinkProps<T extends CaminoRouteNames> = {
   style?: HTMLAttributes['style']
   class?: HTMLAttributes['class']
 } & ({ to: CaminoVueRoute<T>; disabled: false } | { href: HTMLAnchorElement['href']; download?: HTMLAnchorElement['download']; target?: HTMLAnchorElement['target']; rel?: HTMLAnchorElement['rel'] })
-export const DsfrLink = <T extends CaminoRouteNames>(props: DsfrLinkProps<T>) => {
+export const DsfrLink = <T extends CaminoRouteNames>(props: DsfrLinkProps<T>): JSX.Element => {
   const iconClass = []
   if (props.icon !== null && props.label !== null) {
     iconClass.push(`fr-${props.buttonType ? 'btn' : 'link'}--icon-right`)

@@ -1504,5 +1504,5 @@ const ETAPES_DECISIONS_IDS = [
 
 const ETAPES_BROUILLONS_IDS = [ETAPES_TYPES.demande, ETAPES_TYPES.avisDesServicesEtCommissionsConsultatives, ETAPES_TYPES.participationDuPublic] as const satisfies Readonly<EtapeTypeId[]>
 
-export const isEtapeDecision = (etapeTypeId: EtapeTypeId): EtapeBrouillon => ETAPES_DECISIONS_IDS.includes(etapeTypeId) as EtapeBrouillon
+export const isEtapeDecision = (etapeTypeId: EtapeTypeId): boolean => ETAPES_DECISIONS_IDS.includes(etapeTypeId)
 export const canBeBrouillon = (etapeTypeId: EtapeTypeId): EtapeBrouillon => ETAPES_BROUILLONS_IDS.includes(etapeTypeId) as EtapeBrouillon

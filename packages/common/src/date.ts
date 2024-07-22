@@ -8,7 +8,7 @@ const datesDiffInDays = (a: Date, b: Date) => {
   return Math.floor((utc2 - utc1) / (1000 * 60 * 60 * 24))
 }
 
-export const daysBetween = (a: CaminoDate, b: CaminoDate) => {
+export const daysBetween = (a: CaminoDate, b: CaminoDate): number => {
   return datesDiffInDays(new Date(a), new Date(b))
 }
 
@@ -58,8 +58,8 @@ export const dateFormat = (date: CaminoDate | null | undefined): CaminoDateForma
   return isNullOrUndefinedOrEmpty(date) ? ('' as CaminoDateFormated) : (`${date.substring(8)}-${date.substring(5, 7)}-${date.substring(0, 4)}` as CaminoDateFormated)
 }
 
-export const getCurrent = () => toCaminoDate(new Date())
-export const getCurrentAnnee = () => getAnnee(getCurrent())
+export const getCurrent = (): CaminoDate => toCaminoDate(new Date())
+export const getCurrentAnnee = (): CaminoAnnee => getAnnee(getCurrent())
 
 export const isAnnee = (annee: string): annee is CaminoAnnee => {
   return caminoAnneeValidator.safeParse(annee).success

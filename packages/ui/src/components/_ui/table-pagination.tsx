@@ -5,7 +5,7 @@ import { CaminoRouterLink, routerQueryToNumber } from '@/router/camino-router-li
 import { AsyncData } from '../../api/client-rest'
 import { LoadingElement } from './functional-loader'
 import { CaminoRouteLocation } from '@/router/routes'
-
+type Params<ColumnId> = { page: number; colonne: ColumnId; ordre: 'asc' | 'desc' }
 interface Props<ColumnId> {
   columns: readonly Column<ColumnId>[]
   data: AsyncData<{
@@ -14,10 +14,10 @@ interface Props<ColumnId> {
   }>
   route: CaminoRouteLocation
   caption: string
-  updateParams: (params: { page: number; colonne: ColumnId; ordre: 'asc' | 'desc' }) => void
+  updateParams: (params: Params<ColumnId>) => void
 }
 
-export const getInitialParams = <ColumnId extends string>(route: Pick<CaminoRouteLocation, 'query'>, columns: readonly Column<ColumnId>[]) => {
+export const getInitialParams = <ColumnId extends string>(route: Pick<CaminoRouteLocation, 'query'>, columns: readonly Column<ColumnId>[]): Params<ColumnId> => {
   return {
     colonne: getSortColumnFromRoute(route, columns),
     page: getPageNumberFromRoute(route),

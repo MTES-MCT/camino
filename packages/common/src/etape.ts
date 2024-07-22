@@ -153,7 +153,7 @@ export type DocumentComplementaireAslEtapeDocumentModification = z.infer<typeof 
 export const etapeNoteValidator = z.object({ valeur: z.string(), is_avertissement: z.boolean() })
 export type EtapeNote = z.infer<typeof etapeNoteValidator>
 
-export const getStatutId = (etape: Pick<DeepReadonly<FlattenEtape>, 'date' | 'contenu' | 'typeId' | 'statutId'>, currentDate: CaminoDate) => {
+export const getStatutId = (etape: Pick<DeepReadonly<FlattenEtape>, 'date' | 'contenu' | 'typeId' | 'statutId'>, currentDate: CaminoDate): EtapeStatutId => {
   if (etape.typeId !== ETAPES_TYPES.participationDuPublic) {
     return etape.statutId
   }
