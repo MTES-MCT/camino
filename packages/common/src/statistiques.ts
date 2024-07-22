@@ -190,7 +190,6 @@ export const indicateurByAdministrationId: Record<Exclude<AdministrationTypeId, 
   min: "Nombre d'utilisateurs rattachés à un ministère",
   aut: "Nombre d'utilisateurs rattachés à une Autorité",
   dre: "Nombre d'utilisateurs rattachés à une Dréal",
-  dea: "Nombre d'utilisateurs rattachés à une Déal",
   pre: "Nombre d'utilisateurs rattachés à une préfecture",
 }
 

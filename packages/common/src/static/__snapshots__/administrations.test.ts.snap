@@ -7,10 +7,6 @@ exports[`sortedAdministrationTypes 1`] = `
     "nom": "Autorité",
   },
   {
-    "id": "dea",
-    "nom": "Déal",
-  },
-  {
     "id": "dre",
     "nom": "Dréal",
   },

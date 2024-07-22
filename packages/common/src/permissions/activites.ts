@@ -15,8 +15,7 @@ import { sectionsWithValueCompleteValidate } from './sections.js'
 export const canReadActivites = (user: User) =>
   isSuper(user) ||
   isEntreprise(user) ||
-  (isAdministration(user) &&
-    [ADMINISTRATION_TYPE_IDS.MINISTERE, ADMINISTRATION_TYPE_IDS.DEAL, ADMINISTRATION_TYPE_IDS.DREAL, ADMINISTRATION_TYPE_IDS.PREFECTURE].includes(Administrations[user.administrationId].typeId))
+  (isAdministration(user) && [ADMINISTRATION_TYPE_IDS.MINISTERE, ADMINISTRATION_TYPE_IDS.DREAL, ADMINISTRATION_TYPE_IDS.PREFECTURE].includes(Administrations[user.administrationId].typeId))
 
 export const canDeleteActiviteDocument = (activiteDocumentTypeId: ActiviteDocumentTypeId, activiteTypeId: ActivitesTypesId, activiteStatutId: ActivitesStatutId) => {
   const documentType = activitesTypesDocumentsTypes[activiteTypeId]

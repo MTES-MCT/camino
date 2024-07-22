@@ -3,7 +3,7 @@ import { toCaminoDate } from '../date.js'
 import { StatistiquesDataGouv } from '../statistiques'
 
 // prettier-ignore
-const IDS = ['Nombre d\'utilisateurs sur la plateforme', 'Nombre d\'utilisateurs affiliés à une entreprise', 'Nombre d\'utilisateurs rattachés à une préfecture','Nombre d\'utilisateurs rattachés à un ministère','Nombre d\'utilisateurs rattachés à une Dréal','Nombre d\'utilisateurs rattachés à une Déal','Nombre d\'utilisateurs rattachés à une Autorité'] as const
+const IDS = ['Nombre d\'utilisateurs sur la plateforme', 'Nombre d\'utilisateurs affiliés à une entreprise', 'Nombre d\'utilisateurs rattachés à une préfecture','Nombre d\'utilisateurs rattachés à un ministère','Nombre d\'utilisateurs rattachés à une Dréal','Nombre d\'utilisateurs rattachés à une Autorité'] as const
 
 const caminoStatistiquesDataGouvIdValidator = z.enum(IDS)
 export type CaminoStatistiquesDataGouvId = z.infer<typeof caminoStatistiquesDataGouvIdValidator>
@@ -40,13 +40,6 @@ export const CaminoStatistiquesDataGouv = {
   },
   "Nombre d'utilisateurs rattachés à une Dréal": {
     indicateur: "Nombre d'utilisateurs rattachés à une Dréal",
-    unite_mesure: 'unité',
-    frequence_monitoring: 'mensuelle',
-    date_debut: toCaminoDate('2023-01-01'),
-    dataviz_wish: 'piechart',
-  },
-  "Nombre d'utilisateurs rattachés à une Déal": {
-    indicateur: "Nombre d'utilisateurs rattachés à une Déal",
     unite_mesure: 'unité',
     frequence_monitoring: 'mensuelle',
     date_debut: toCaminoDate('2023-01-01'),

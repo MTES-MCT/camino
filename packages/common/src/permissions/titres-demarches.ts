@@ -3,7 +3,7 @@ import { TitreTypeId } from '../static/titresTypes.js'
 import { isGestionnaire } from '../static/administrationsTitresTypes.js'
 import { TitreStatutId } from '../static/titresStatuts.js'
 import { canAdministrationModifyDemarches } from '../static/administrationsTitresTypesTitresStatuts.js'
-import { AdministrationId, Administrations } from '../static/administrations.js'
+import { ADMINISTRATION_TYPE_IDS, AdministrationId, Administrations } from '../static/administrations.js'
 import { getEtapesTDE } from '../static/titresTypes_demarchesTypes_etapesTypes/index.js'
 import { DemarcheTypeId } from '../static/demarchesTypes.js'
 import { canCreateEtape } from './titres-etapes.js'
@@ -62,7 +62,7 @@ export const canCreateTravaux = (user: User, titreTypeId: TitreTypeId, administr
     return true
   } else if (isAdministrationAdmin(user) || isAdministrationEditeur(user)) {
     if (administrations.includes(user.administrationId) || isGestionnaire(user.administrationId, titreTypeId)) {
-      const isDreal = ['dre', 'dea'].includes(Administrations[user.administrationId].typeId)
+      const isDreal = Administrations[user.administrationId].typeId === ADMINISTRATION_TYPE_IDS.DREAL
       if (isDreal) {
         return true
       }

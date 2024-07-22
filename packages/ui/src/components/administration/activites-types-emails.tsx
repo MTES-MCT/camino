@@ -3,7 +3,7 @@ import { computed, defineComponent } from 'vue'
 import { ActivitesTypes, ActivitesTypesId } from 'camino-common/src/static/activitesTypes'
 import { User } from 'camino-common/src/roles'
 import { canEditEmails } from 'camino-common/src/permissions/administrations'
-import { Administration, AdministrationId, Administrations } from 'camino-common/src/static/administrations'
+import { ADMINISTRATION_TYPE_IDS, Administration, AdministrationId, Administrations } from 'camino-common/src/static/administrations'
 import { AdministrationActiviteTypeEmail } from 'camino-common/src/administrations'
 import { NonEmptyArray, getValues, isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { capitalize } from 'camino-common/src/strings'
@@ -46,7 +46,7 @@ export const ActivitesTypesEmails = defineComponent<Props>(props => {
   })
 
   const isFullyNotifiable = computed(() => {
-    return ['dea', 'dre', 'min'].includes(administration.value.typeId)
+    return [ADMINISTRATION_TYPE_IDS.DREAL, ADMINISTRATION_TYPE_IDS.MINISTERE].includes(administration.value.typeId)
   })
 
   const canEditEmailsComp = computed(() => {

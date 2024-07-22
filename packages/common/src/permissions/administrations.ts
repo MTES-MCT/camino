@@ -52,7 +52,7 @@ export const canEditEmails = (user: User, administrationId: AdministrationId): b
       // On récupère toutes les administrations départementales qui sont de la même région que l’administration régionale de l’utilisateur
       const administrationIds = sortedAdministrations.filter(({ departementId }) => departementIds.includes(departementId)).map(({ id }) => id)
 
-      if (administration.typeId === 'dre' || administration.typeId === 'dea') {
+      if (administration.typeId === 'dre') {
         administrationIds.push(user.administrationId)
       }
 

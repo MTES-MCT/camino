@@ -51,7 +51,6 @@ export const getDataGouvStats =
         {
           "Nombre d'utilisateurs rattachés à une Autorité": 0,
           "Nombre d'utilisateurs rattachés à une Dréal": 0,
-          "Nombre d'utilisateurs rattachés à une Déal": 0,
           "Nombre d'utilisateurs rattachés à un ministère": 0,
           "Nombre d'utilisateurs rattachés à une préfecture": 0,
           "Nombre d'utilisateurs affiliés à une entreprise": 0,
