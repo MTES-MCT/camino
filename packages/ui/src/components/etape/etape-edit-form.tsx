@@ -111,18 +111,22 @@ const mergeFlattenEtapeWithNewHeritage = (
       const newSection = section.elements.reduce<DeepReadonly<FlattenEtape['contenu'][string]>>((accElement, element) => {
         const elementHeritage = heritageData.heritageContenu[section.id]?.[element.id] ?? { actif: false, etape: null }
         const currentHeritage: DeepReadonly<FlattenEtape['contenu'][string][string]> = etape.contenu[section.id]?.[element.id] ?? { value: null, heritee: true, etapeHeritee: null }
+
+        // L'héritage ne peut pas être activé si le champ est obligatoire et que la valeur du champ dans l'étape héritable est null
+        const canHaveHeritage: boolean = element.optionnel || isNotNullNorUndefined(elementHeritage.etape?.contenu?.[section.id]?.[element.id])
         return {
           ...accElement,
           [element.id]: {
             value: currentHeritage.heritee ? elementHeritage.etape?.contenu?.[section.id]?.[element.id] ?? null : currentHeritage.value,
-            heritee: currentHeritage.heritee && isNotNullNorUndefined(elementHeritage.etape),
-            etapeHeritee: isNotNullNorUndefined(elementHeritage.etape)
-              ? {
-                  etapeTypeId: elementHeritage.etape.typeId,
-                  date: elementHeritage.etape.date,
-                  value: elementHeritage.etape.contenu[section.id]?.[element.id] ?? null,
-                }
-              : null,
+            heritee: currentHeritage.heritee && isNotNullNorUndefined(elementHeritage.etape) && canHaveHeritage,
+            etapeHeritee:
+              isNotNullNorUndefined(elementHeritage.etape) && canHaveHeritage
+                ? {
+                    etapeTypeId: elementHeritage.etape.typeId,
+                    date: elementHeritage.etape.date,
+                    value: elementHeritage.etape.contenu[section.id]?.[element.id] ?? null,
+                  }
+                : null,
           },
         }
       }, {})
