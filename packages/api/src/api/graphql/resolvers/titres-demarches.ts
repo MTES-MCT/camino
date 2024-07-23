@@ -10,7 +10,7 @@ import { titreDemarcheGet, titresDemarchesCount, titresDemarchesGet, titreDemarc
 
 import { titreGet } from '../../../database/queries/titres'
 
-import { titreDemarcheUpdate as titreDemarcheUpdateTask } from '../../../business/titre-demarche-update'
+import { titreDemarcheUpdateTask } from '../../../business/titre-demarche-update'
 import { titreDemarcheUpdationValidate } from '../../../business/validations/titre-demarche-updation-validate'
 import { isDemarcheTypeId, isTravaux } from 'camino-common/src/static/demarchesTypes'
 import { canCreateTravaux, canEditDemarche, canDeleteDemarche, canCreateDemarche } from 'camino-common/src/permissions/titres-demarches'

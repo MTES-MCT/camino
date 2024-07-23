@@ -10,7 +10,7 @@ import { administrationsTitresQuery } from './administrations'
 import { entreprisesTitresQuery } from './entreprises'
 import TitresEtapes from '../../models/titres-etapes'
 import { isAdministration, isBureauDEtudes, isEntreprise, isSuper, User } from 'camino-common/src/roles'
-import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
+import { DeepReadonly, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
 
 export const titresVisibleByEntrepriseQuery = (q: QueryBuilder<Titres, Titres | Titres[]>, entreprisesIds: string[]) => {
   // titres dont il est titulaire ou amodiataire
@@ -51,7 +51,7 @@ export const titresConfidentielSelect = (q: QueryBuilder<Titres, Titres | Titres
       .as('confidentiel')
   )
 
-export const titresQueryModify = (q: QueryBuilder<Titres, Titres | Titres[]>, user: User, demandeEnCours?: boolean | null) => {
+export const titresQueryModify = (q: QueryBuilder<Titres, Titres | Titres[]>, user: DeepReadonly<User>, demandeEnCours?: boolean | null) => {
   q.select('titres.*').where('titres.archive', false)
 
   // si

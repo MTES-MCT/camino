@@ -1,13 +1,16 @@
-import { DemarcheId } from 'camino-common/src/demarche'
+import { DemarcheId, DemarcheSlug, demarcheSlugValidator } from 'camino-common/src/demarche'
 import { CaminoDate } from 'camino-common/src/date'
 import { EntrepriseDocumentId, entrepriseDocumentIdValidator } from 'camino-common/src/entreprise'
 import { ActiviteDocumentTypeId, AutreDocumentTypeId, DocumentTypeId } from 'camino-common/src/static/documentsTypes'
 import { randomBytes } from 'node:crypto'
-import { TitreId } from 'camino-common/src/validators/titres'
+import { TitreId, TitreSlug, titreSlugValidator } from 'camino-common/src/validators/titres'
 import { EtapeAvisId, EtapeDocumentId, EtapeId, etapeAvisIdValidator, etapeDocumentIdValidator } from 'camino-common/src/etape'
 import { UtilisateurId } from 'camino-common/src/roles'
 import { ActiviteDocumentId, activiteDocumentIdValidator } from 'camino-common/src/activite'
 import { AvisTypeId } from 'camino-common/src/static/avisTypes'
+import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
+import { TitreTypeId, getDomaineId, getTitreTypeType } from 'camino-common/src/static/titresTypes'
+import { slugify } from 'camino-common/src/strings'
 
 export const idGenerate = <T extends string = string>(length = 24): T => randomBytes(length / 2).toString('hex') as T
 
@@ -17,10 +20,16 @@ export const newDemarcheId = (value: string = idGenerate()): DemarcheId => {
   return value as DemarcheId
 }
 
+export const newDemarcheSlug = (titreId: TitreId, demarcheTypeId: DemarcheTypeId): DemarcheSlug => {
+  return demarcheSlugValidator.parse(`${titreId}-${demarcheTypeId}99`)
+}
+
 export const newTitreId = (value: string = idGenerate()): TitreId => {
   return value as TitreId
 }
-
+export const newTitreSlug = (titreTypeId: TitreTypeId, nom: string): TitreSlug => {
+  return titreSlugValidator.parse(`${getDomaineId(titreTypeId)}-${getTitreTypeType(titreTypeId)}-${slugify(nom)}-${idGenerate(4)}`)
+}
 export const newEtapeId = (value: string = idGenerate()): EtapeId => {
   return value as EtapeId
 }

@@ -5,7 +5,7 @@ import { logsUpdate } from './_logs-update'
 import { TitreId } from 'camino-common/src/validators/titres'
 import { Pool } from 'pg'
 
-const titreUpdate = async (pool: Pool, titreId: TitreId) => {
+export const titreUpdateTask = async (pool: Pool, titreId: TitreId): Promise<void> => {
   try {
     console.info()
     console.info('- - -')
@@ -27,5 +27,3 @@ const titreUpdate = async (pool: Pool, titreId: TitreId) => {
     throw e
   }
 }
-
-export default titreUpdate

@@ -1,10 +1,9 @@
 import { Model, Modifiers, QueryContext } from 'objection'
 
 import { ITitreDemarche } from '../../types'
-import { newDemarcheId } from './_format/id-create'
+import { newDemarcheId, newDemarcheSlug } from './_format/id-create'
 import Titres from './titres'
 import TitresEtapes from './titres-etapes'
-import { demarcheSlugValidator } from 'camino-common/src/demarche'
 import { isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools'
 
 export interface DBTitresDemarches extends ITitreDemarche {
@@ -66,7 +65,7 @@ class TitresDemarches extends Model {
     }
 
     if (isNullOrUndefined(this.slug) && isNotNullNorUndefined(this.titreId) && isNotNullNorUndefined(this.typeId)) {
-      this.slug = demarcheSlugValidator.parse(`${this.titreId}-${this.typeId}99`)
+      this.slug = newDemarcheSlug(this.titreId, this.typeId)
     }
 
     return super.$beforeInsert(context)

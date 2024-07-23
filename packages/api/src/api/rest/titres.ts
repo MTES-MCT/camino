@@ -22,7 +22,7 @@ import { NotNullableKeys, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, 
 import TitresTitres from '../../database/models/titres--titres'
 import { titreAdministrationsGet } from '../_format/titres'
 import { canDeleteTitre, canEditTitre, canLinkTitres } from 'camino-common/src/permissions/titres'
-import { linkTitres } from '../../database/queries/titres-titres'
+import { linkTitres } from '../../database/queries/titres-titres.queries'
 import { checkTitreLinks } from '../../business/validations/titre-links-validate'
 import { titreEtapeForMachineValidator, toMachineEtapes } from '../../business/rules-demarches/machine-common'
 import { TitreReference } from 'camino-common/src/titres-references'
@@ -32,13 +32,15 @@ import { CaminoDate, getCurrent } from 'camino-common/src/date'
 import { isAdministration, User } from 'camino-common/src/roles'
 import { canEditDemarche, canCreateTravaux } from 'camino-common/src/permissions/titres-demarches'
 import { utilisateurTitreCreate, utilisateurTitreDelete } from '../../database/queries/utilisateurs'
-import titreUpdateTask from '../../business/titre-update'
+import { titreUpdateTask } from '../../business/titre-update'
 import { getDoublonsByTitreId, getTitre as getTitreDb } from './titres.queries'
 import type { Pool } from 'pg'
 import { z } from 'zod'
 import { TitresStatutIds } from 'camino-common/src/static/titresStatuts'
 import { getTitreUtilisateur } from '../../database/queries/titres-utilisateurs.queries'
 import { titreIdValidator, titreIdOrSlugValidator, TitreId } from 'camino-common/src/validators/titres'
+import { callAndExit } from '../../tools/fp-tools'
+
 
 const etapesAMasquer = [
   ETAPES_TYPES.classementSansSuite,
@@ -327,7 +329,7 @@ export const titresAdministrations = (_pool: Pool) => async (req: CaminoRequest,
   }
 }
 
-export const postTitreLiaisons = (_pool: Pool) => async (req: CaminoRequest, res: CustomResponse<TitreLinks>) => {
+export const postTitreLiaisons = (pool: Pool) => async (req: CaminoRequest, res: CustomResponse<TitreLinks>) => {
   const user = req.auth
 
   const titreId = titreIdValidator.safeParse(req.params.id)
@@ -363,16 +365,19 @@ export const postTitreLiaisons = (_pool: Pool) => async (req: CaminoRequest, res
 
   const titresFrom = await titresGet({ ids: titreFromIds.data }, { fields: { id: {} } }, user)
 
-  checkTitreLinks(titre, titreFromIds.data, titresFrom, titre.demarches)
+  const check = checkTitreLinks(titre.typeId, titreFromIds.data, titresFrom, titre.demarches)
+  if (!check.valid) {
+    throw new Error(check.errors.join('. '))
+  }
 
-  await linkTitres({ linkTo: titreId.data, linkFrom: titreFromIds.data })
+  await callAndExit(linkTitres(pool, { linkTo: titreId.data, linkFrom: titreFromIds.data }), async () => {})
 
   res.json({
     amont: await titreLinksGet(titreId.data, 'titreFromId', user),
     aval: await titreLinksGet(titreId.data, 'titreToId', user),
   })
 }
-export const getTitreLiaisons = (_pool: Pool) => async (req: CaminoRequest, res: CustomResponse<TitreLinks>) => {
+export const getTitreLiaisons = (_pool: Pool) => async (req: CaminoRequest, res: CustomResponse<TitreLinks>): Promise<void> => {
   const user = req.auth
 
   const titreId = req.params.id

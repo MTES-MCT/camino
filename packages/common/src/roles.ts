@@ -56,10 +56,10 @@ export const isAdministration = (user: DeepReadonly<User>): user is UserLecteur 
 export const isAdministrationAdmin = (user: DeepReadonly<User>): user is UserAdmin => userPermissionCheck(user, 'admin')
 export const isAdministrationEditeur = (user: DeepReadonly<User>): user is UserEditeur => userPermissionCheck(user, 'editeur')
 export const isAdministrationLecteur = (user: DeepReadonly<User>): user is UserLecteur => userPermissionCheck(user, 'lecteur')
-export const isEntrepriseOrBureauDEtude = (user: User): user is UserEntreprise | UserBureaudEtudes => isEntreprise(user) || isBureauDEtudes(user)
+export const isEntrepriseOrBureauDEtude = (user: DeepReadonly<User>): user is UserEntreprise | UserBureaudEtudes => isEntreprise(user) || isBureauDEtudes(user)
 
-export const isEntreprise = (user: User): user is UserEntreprise => userPermissionCheck(user, 'entreprise')
-export const isBureauDEtudes = (user: User): user is UserBureaudEtudes => userPermissionCheck(user, 'bureau d’études')
+export const isEntreprise = (user: DeepReadonly<User>): user is UserEntreprise => userPermissionCheck(user, 'entreprise')
+export const isBureauDEtudes = (user: DeepReadonly<User>): user is UserBureaudEtudes => userPermissionCheck(user, 'bureau d’études')
 export const isDefault = (user: DeepReadonly<User>): user is UserDefaut | undefined => !user || userPermissionCheck(user, 'defaut')
 
 export const isRole = (role: Role | string | undefined | null): role is Role => ROLES.includes(role)

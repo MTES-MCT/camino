@@ -1,5 +1,5 @@
 import { test, expect } from 'vitest'
-import { idGenerate, newEtapeDocumentId } from './id-create'
+import { idGenerate, newEtapeDocumentId, newTitreSlug } from './id-create'
 import { toCaminoDate } from 'camino-common/src/date'
 
 test('idGenerate', () => {
@@ -9,4 +9,7 @@ test('idGenerate', () => {
 })
 test('newDocumentId', () => {
   expect(newEtapeDocumentId(toCaminoDate('2023-01-01'), 'aac')).toHaveLength(23)
+})
+test('newTitreSlug', () => {
+  expect(newTitreSlug('apc', 'nom')).toHaveLength(23)
 })

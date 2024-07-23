@@ -174,14 +174,8 @@ export const getTitresIntersectionWithGeojson = (
     getTitresIntersectionWithGeojsonValidator
   )
 }
-
-const getTitresIntersectionWithGeojsonDb = sql<
-  Redefine<
-    IGetTitresIntersectionWithGeojsonDbQuery,
-    { titre_slug: TitreSlug; titre_statut_ids: TitreStatutId[]; geojson4326_perimetre: MultiPolygon; domaine_id: DomaineId },
-    GetTitresIntersectionWithGeojson
-  >
->`
+type GetTitresIntersectionWithGeojsonDb = DeepReadonly<{ titre_slug: TitreSlug; titre_statut_ids: TitreStatutId[]; geojson4326_perimetre: MultiPolygon; domaine_id: DomaineId }>
+const getTitresIntersectionWithGeojsonDb = sql<Redefine<IGetTitresIntersectionWithGeojsonDbQuery, GetTitresIntersectionWithGeojsonDb, GetTitresIntersectionWithGeojson>>`
 select
     t.nom,
     t.slug,
@@ -245,7 +239,7 @@ const getGeojsonInformationDbValidator = z.object({
   secteurs: z.array(secteurDbIdValidator).nullable().transform(nullToEmptyArray),
 })
 type GetGeojsonInformationDbValidator = z.infer<typeof getGeojsonInformationDbValidator>
-const getGeojsonInformationDb = sql<Redefine<IGetGeojsonInformationDbQuery, { geojson4326_perimetre: MultiPolygon }, GetGeojsonInformationDbValidator>>`
+const getGeojsonInformationDb = sql<Redefine<IGetGeojsonInformationDbQuery, DeepReadonly<{ geojson4326_perimetre: MultiPolygon }>, GetGeojsonInformationDbValidator>>`
 select
     (
         select

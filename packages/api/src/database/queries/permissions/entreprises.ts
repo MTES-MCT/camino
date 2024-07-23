@@ -8,8 +8,10 @@ import Utilisateurs from '../../models/utilisateurs'
 import { utilisateursQueryModify } from './utilisateurs'
 import { User } from 'camino-common/src/roles'
 import TitresEtapes from '../../models/titres-etapes'
+import { DeepReadonly } from 'camino-common/src/typescript-tools'
 
-export const entreprisesQueryModify = (q: QueryBuilder<Entreprises, Entreprises | Entreprises[]>, user: User) => {
+
+export const entreprisesQueryModify = (q: QueryBuilder<Entreprises, Entreprises | Entreprises[]>, user: DeepReadonly<User>): QueryBuilder<Entreprises, Entreprises | Entreprises[]> => {
   q.select('entreprises.*')
 
   q.modifyGraph('utilisateurs', b => {
@@ -19,7 +21,7 @@ export const entreprisesQueryModify = (q: QueryBuilder<Entreprises, Entreprises 
   return q
 }
 
-export const entreprisesTitresQuery = (entreprisesIds: string[], titreAlias: string) => {
+export const entreprisesTitresQuery = (entreprisesIds: string[], titreAlias: string): QueryBuilder<TitresEtapes, TitresEtapes[]> => {
   // Nous sommes obligés d’utiliser l’opérateur intersect, car on ne peut pas utiliser l’opérateur |? avec knex à cause du ? qui n’est pas escape
   const titulairesQuery = TitresEtapes.query()
     .alias('te_titulaires')

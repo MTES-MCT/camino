@@ -6,6 +6,7 @@ import type { ZodType, ZodTypeDef } from 'zod'
 import { CaminoError } from 'camino-common/src/zod-tools'
 import { ZodUnparseable, zodParseEffectCallback } from './tools/fp-tools'
 import { Effect, pipe } from 'effect'
+import { DeepReadonly } from 'camino-common/src/typescript-tools.js'
 export type Redefine<T, P, O> = T extends { params: infer A; result: infer B }
   ? { inputs: keyof A; outputs: keyof B } extends { inputs: keyof P; outputs: keyof O }
     ? { inputs: keyof P; outputs: keyof O } extends { inputs: keyof A; outputs: keyof B }
@@ -32,8 +33,8 @@ export const dbQueryAndValidate = async <Params, Result, T extends ZodType<Resul
 export type DbQueryAccessError = "Impossible d'accéder à la base de données"
 
 export const effectDbQueryAndValidate = <Params, Result, T extends ZodType<Result, ZodTypeDef, unknown>>(
-  query: TaggedQuery<{ params: Params; result: Result }>,
-  params: Params,
+  query: TaggedQuery<{ params: DeepReadonly<Params>; result: Result }>,
+  params: DeepReadonly<Params>,
   pool: Pool,
   validator: T
 ): Effect.Effect<Result[], CaminoError<DbQueryAccessError | ZodUnparseable>> => {

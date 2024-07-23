@@ -105,7 +105,7 @@ export const Full: StoryFn = () => (
       entrepriseId: entreprise1Id,
       nom: 'Titre full',
       references: [{ nom: 'REF', referenceTypeId: 'brg' }],
-      typeId: 'axm',
+      titreTypeId: 'axm',
       titreFromIds: [titreId2],
     }}
   />

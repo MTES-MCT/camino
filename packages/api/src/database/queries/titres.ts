@@ -20,6 +20,7 @@ import { RegionId } from 'camino-common/src/static/region'
 import { FacadesMaritimes } from 'camino-common/src/static/facades'
 import { EditableTitre } from 'camino-common/src/titres'
 import { TitreId } from 'camino-common/src/validators/titres'
+import { DeepReadonly } from 'camino-common/src/typescript-tools'
 
 /**
  * Construit la requête pour récupérer certains champs de titres filtrés
@@ -30,7 +31,7 @@ import { TitreId } from 'camino-common/src/validators/titres'
  * @returns la requête
  *
  */
-const titresQueryBuild = ({ fields }: { fields?: FieldsTitre }, user: User, demandeEnCours?: boolean | null) => {
+const titresQueryBuild = ({ fields }: { fields?: FieldsTitre }, user: DeepReadonly<User>, demandeEnCours?: boolean | null) => {
   const graph = fields ? graphBuild(titresFieldsAdd(fields), 'titre', fieldsFormat) : options.titres.graph
 
   const q = Titres.query().withGraphFetched(graph)
@@ -121,7 +122,7 @@ export const titresGet = async (
     demandeEnCours?: boolean | null
   } = {},
   { fields }: { fields?: FieldsTitre },
-  user: User
+  user: DeepReadonly<User>
 ): Promise<ITitre[]> => {
   const q = titresQueryBuild({ fields }, user, demandeEnCours)
 

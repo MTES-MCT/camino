@@ -12,6 +12,7 @@ import { isAdministration, isBureauDEtudes, isEntreprise, isSuper, User } from '
 import { getAdministrationTitresTypesEtapesTypes } from 'camino-common/src/static/administrationsTitresTypesEtapesTypes'
 import { knex } from '../../../knex'
 import { EtapeTypeId, etapesTypes } from 'camino-common/src/static/etapesTypes'
+import { DeepReadonly } from 'camino-common/src/typescript-tools'
 
 /**
  * Modifie la requête d'étape(s) pour prendre en compte les permissions de l'utilisateur connecté
@@ -20,7 +21,7 @@ import { EtapeTypeId, etapesTypes } from 'camino-common/src/static/etapesTypes'
  * @params user - utilisateur connecté
  * @returns une requête d'étape(s)
  */
-export const titresEtapesQueryModify = (q: QueryBuilder<TitresEtapes, TitresEtapes | TitresEtapes[]>, user: User) => {
+export const titresEtapesQueryModify = (q: QueryBuilder<TitresEtapes, TitresEtapes | TitresEtapes[]>, user: DeepReadonly<User>) => {
   q.select('titresEtapes.*').where('titresEtapes.archive', false).leftJoinRelated('[demarche.titre]')
 
   if (!isSuper(user)) {

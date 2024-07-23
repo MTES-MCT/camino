@@ -34,6 +34,7 @@ export const TitreCreation = defineComponent(() => {
       apiClient={{
         ...apiClient,
         createTitre: async titreDemande => {
+          // FIXME gérer les messages d'erreurs
           const result = await apiClient.createTitre(titreDemande)
           if ('etapeId' in result) {
             await router.push({
@@ -61,7 +62,7 @@ type Props = {
   initialValue?: TitreDemande
 }
 export const PureTitreCreation = defineComponent<Props>(props => {
-  const titreDemande = ref<Nullable<TitreDemande>>(props.initialValue ?? { entrepriseId: null, references: [], typeId: null, nom: null, titreFromIds: [] })
+  const titreDemande = ref<Nullable<TitreDemande>>(props.initialValue ?? { entrepriseId: null, references: [], titreTypeId: null, nom: null, titreFromIds: [] })
 
   const titreLinkConfig = computed<TitresLinkConfig>(() => {
     if (linkConfig.value?.count === 'single') {
@@ -86,22 +87,22 @@ export const PureTitreCreation = defineComponent<Props>(props => {
   const complete = computed(() => {
     return (
       isNotNullNorUndefined(titreDemande.value.entrepriseId) &&
-      isNotNullNorUndefined(titreDemande.value.typeId) &&
+      isNotNullNorUndefined(titreDemande.value.titreTypeId) &&
       isNotNullNorUndefined(titreDemande.value.nom) &&
       titreDemande.value.nom.trim().length > 0
     )
   })
 
   const linkConfig = computed(() => {
-    if (titreDemande.value.typeId) {
-      return getLinkConfig(titreDemande.value.typeId, [])
+    if (titreDemande.value.titreTypeId) {
+      return getLinkConfig(titreDemande.value.titreTypeId, [])
     }
 
     return null
   })
 
   const loadLinkableTitresByTypeId = computed<() => Promise<LinkableTitre[]>>(() => {
-    const titreTypeId = titreDemande.value.typeId
+    const titreTypeId = titreDemande.value.titreTypeId
     if (isNotNullNorUndefined(titreTypeId)) {
       return props.apiClient.loadLinkableTitres(titreTypeId, [])
     } else {
@@ -139,7 +140,7 @@ export const PureTitreCreation = defineComponent<Props>(props => {
     titreDemande.value = {
       entrepriseId,
       references: [],
-      typeId: null,
+      titreTypeId: null,
       nom: null,
       titreFromIds: [],
     }
@@ -163,7 +164,7 @@ export const PureTitreCreation = defineComponent<Props>(props => {
   }
 
   const onUpdateTitreTypeId = (titreTypeId: TitreTypeId | null) => {
-    titreDemande.value.typeId = titreTypeId
+    titreDemande.value.titreTypeId = titreTypeId
   }
 
   const onTitreNomChanged = (nom: string | null) => {
@@ -194,17 +195,17 @@ export const PureTitreCreation = defineComponent<Props>(props => {
           <Alert class="fr-mb-1w" small={true} type="error" title="Aucune entreprise associée à cet utilisateur" />
         )}
 
-        {isNotNullNorUndefined(titreDemande.value.entrepriseId) ? <TitreTypeSelect onUpdateTitreTypeId={onUpdateTitreTypeId} titreTypeId={titreDemande.value.typeId} user={props.user} /> : null}
+        {isNotNullNorUndefined(titreDemande.value.entrepriseId) ? <TitreTypeSelect onUpdateTitreTypeId={onUpdateTitreTypeId} titreTypeId={titreDemande.value.titreTypeId} user={props.user} /> : null}
 
-        {isNotNullNorUndefined(titreDemande.value.typeId) ? (
+        {isNotNullNorUndefined(titreDemande.value.titreTypeId) ? (
           <DsfrInput required={true} initialValue={titreDemande.value.nom} legend={{ main: 'Nom du titre' }} type={{ type: 'text' }} valueChanged={onTitreNomChanged} />
         ) : null}
 
-        {isNotNullNorUndefined(titreDemande.value.typeId) && !entrepriseOuBureauDEtudeCheck.value ? (
+        {isNotNullNorUndefined(titreDemande.value.titreTypeId) && !entrepriseOuBureauDEtudeCheck.value ? (
           <TitreReferenceSelect class="fr-mt-3w" initialValues={titreDemande.value.references ?? []} onUpdateReferences={onUpdateReferences} />
         ) : null}
 
-        {isNotNullNorUndefined(titreDemande.value.typeId) && isNotNullNorUndefined(linkConfig.value) ? (
+        {isNotNullNorUndefined(titreDemande.value.titreTypeId) && isNotNullNorUndefined(linkConfig.value) ? (
           <div class="fr-mt-3w">
             <label class="fr-label fr-mb-1w">Titre {linkConfig.value.count === 'multiple' ? 's' : ''} à l’origine de cette nouvelle demande</label>
             <TitresLink config={titreLinkConfig.value} loadLinkableTitres={loadLinkableTitresByTypeId.value} onSelectTitres={onSelectTitres} />

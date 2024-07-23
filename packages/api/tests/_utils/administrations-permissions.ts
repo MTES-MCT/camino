@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { ITitre } from '../../src/types'
 
-import { graphQLCall, queryImport, restPostCall } from './index'
+import { graphQLCall, queryImport, restNewPostCall, restPostCall } from './index'
 
 import Titres from '../../src/database/models/titres'
 import options from '../../src/database/queries/_options'
@@ -112,13 +112,13 @@ export const creationCheck = async (pool: Pool, administrationId: string, creer:
   if (cible === 'titres') {
     const titre = {
       nom: `${titreTypeId}-${cible}-admin-${administrationId}`,
-      typeId: titreTypeId,
+      titreTypeId,
       references: [],
       titreFromIds: [],
       entrepriseId: entrepriseIdValidator.parse('idEntreprise'),
     }
 
-    const res = await restPostCall(
+    const res = await restNewPostCall(
       pool,
       '/rest/titres',
       {},

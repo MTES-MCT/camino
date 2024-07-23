@@ -45,7 +45,7 @@ export const canLinkTitres = (user: User, administrationIds: AdministrationId[])
 
 export const TITRES_TYPES_IDS_DEMAT = ['arm', 'axm']
 
-export const canCreateTitre = (user: User, titreTypeId: TitreTypeId | null): boolean => {
+export const canCreateTitre = (user: DeepReadonly<User>, titreTypeId: TitreTypeId | null): boolean => {
   if (isSuper(user)) {
     return true
   } else if (isAdministrationAdmin(user) || isAdministrationEditeur(user)) {
