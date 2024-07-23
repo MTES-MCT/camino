@@ -25,6 +25,14 @@ describe("étape de publication d'une étape", () => {
     expect(titreEtapePublicationCheck('rpu', 'prm')).toEqual(true)
   })
 
+  test('une étape de rpu est une étape de publication pour un titre PXG', () => {
+    expect(titreEtapePublicationCheck('rpu', 'pxg')).toEqual(true)
+  })
+
+  test("une étape de dex n'est pas une étape de publication pour un titre PXG", () => {
+    expect(titreEtapePublicationCheck('dex', 'pxg')).toEqual(false)
+  })
+
   test("un titre non reconnu n'est pas géré", () => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
