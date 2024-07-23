@@ -15,6 +15,7 @@ import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { capitalize } from 'camino-common/src/strings'
 import { dateFormat } from 'camino-common/src/date'
 import { ActiviteStatut } from '../_common/activite-statut'
+import { LabelWithValue } from '../_ui/label-with-value'
 
 interface Props {
   activite: Activite
@@ -58,66 +59,69 @@ export const Preview = defineComponent<Props>(props => {
     },
   }))
 
+  const activiteTitle = `${capitalize(ActivitesTypes[props.activite.type_id].nom)} - ${props.activite.periode_id && activiteType.value.frequenceId ? capitalize(getPeriode(activiteType.value.frequenceId, props.activite.periode_id)) : null} ${props.activite.annee}`
+
   return () => (
     <div>
-      <div class="fr-p-2w fr-tile--shadow" style={{ border: '1px solid var(--grey-900-175)' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <div style={{ display: 'flex', justifyContent: 'start', alignItems: 'center', gap: '1.5rem' }}>
-            <h3 class="fr-mb-0">{capitalize(activiteType.value.nom)}</h3>
-            <h5 class="fr-mb-0">
-              <span>
-                {props.activite.periode_id && activiteType.value.frequenceId ? <span>{capitalize(getPeriode(activiteType.value.frequenceId, props.activite.periode_id))}</span> : null}{' '}
-                {props.activite.annee}
-              </span>
-            </h5>
-          </div>
-
-          <div style={{ display: 'flex' }}>
-            {props.activite.suppression ? <DsfrButtonIcon buttonType="tertiary" title="supprimer l'activité" onClick={removePopupOpen} icon="fr-icon-delete-bin-line" /> : null}
-
-            {props.activite.modification ? (
-              <>
-                <DsfrLink
-                  buttonType={props.activite.deposable ? 'secondary' : 'primary'}
-                  label={null}
-                  title="modifier l'activité"
-                  icon="fr-icon-edit-line"
-                  to={{ name: 'activiteEdition', params: { activiteId: props.activite.slug } }}
-                  disabled={false}
-                />
-
-                {props.activite.activite_statut_id === ACTIVITES_STATUTS_IDS.EN_CONSTRUCTION ? (
-                  <DsfrButton buttonType="primary" title="déposer l'activité" label="Déposer" onClick={deposePopupOpen} disabled={!props.activite.deposable} />
-                ) : null}
-              </>
-            ) : null}
-          </div>
+      <nav role="navigation" class="fr-breadcrumb" aria-label="vous êtes ici :">
+        <button class="fr-breadcrumb__button" aria-expanded="false" aria-controls="breadcrumb-1">
+          Voir le fil d’Ariane
+        </button>
+        <div class="fr-collapse" id="breadcrumb-1">
+          <ol class="fr-breadcrumb__list">
+            <li>
+              <DsfrLink breadcrumb={true} to={{ name: 'dashboard', params: {} }} disabled={false} title="Accueil" icon={null} />{' '}
+            </li>
+            <li>
+              <DsfrLink breadcrumb={true} to={{ name: 'activites', params: {} }} disabled={false} title="Activités" icon={null} />{' '}
+            </li>
+            <li>
+              <DsfrLink breadcrumb={true} to={{ name: 'titre', params: { id: props.activite.titre.slug } }} disabled={false} title={props.activite.titre.nom} icon={null} />{' '}
+            </li>
+            <li>
+              <a class="fr-breadcrumb__link" aria-current="page">
+                {activiteTitle}
+              </a>
+            </li>
+          </ol>
         </div>
+      </nav>
+      <div class="fr-grid-row fr-grid-row--top fr-mt-4w">
+        <h1 class="fr-m-0">{activiteTitle}</h1>
+        <div class="fr-m-0" style={{ marginLeft: 'auto !important', display: 'flex' }}>
+          {props.activite.suppression ? <DsfrButtonIcon buttonType="tertiary" title="supprimer l'activité" onClick={removePopupOpen} icon="fr-icon-delete-bin-line" /> : null}
+          {props.activite.modification ? (
+            <>
+              <DsfrLink
+                buttonType={props.activite.deposable ? 'secondary' : 'primary'}
+                label={null}
+                title="modifier l'activité"
+                icon="fr-icon-edit-line"
+                to={{ name: 'activiteEdition', params: { activiteId: props.activite.slug } }}
+                disabled={false}
+              />
 
-        <ActiviteStatut activiteStatutId={props.activite.activite_statut_id} class="fr-mt-2w" />
-
-        <div class="pb-s">
-          {isNotNullNorUndefined(activiteType.value.description) && activiteType.value.description !== '' ? (
-            <div class="border-b-s px-m pt-m">
-              <div class="h6" v-html={activiteType.value.description} />
-            </div>
+              {props.activite.activite_statut_id === ACTIVITES_STATUTS_IDS.EN_CONSTRUCTION ? (
+                <DsfrButton buttonType="primary" title="déposer l'activité" label="Déposer" onClick={deposePopupOpen} disabled={!props.activite.deposable} />
+              ) : null}
+            </>
           ) : null}
+        </div>
+      </div>
+      <div>
+        <h3>{props.activite.titre.nom}</h3>
+
+        <ActiviteStatut activiteStatutId={props.activite.activite_statut_id} />
+
+        <div class="fr-pt-1w">
+          {isNotNullNorUndefined(activiteType.value.description) && activiteType.value.description !== '' ? <div v-html={activiteType.value.description} /> : null}
           {props.activite.date_saisie !== null ? (
-            <div class="border-b-s px-m pt-m">
-              <h5>Date de {props.activite.activite_statut_id === ACTIVITES_STATUTS_IDS.DEPOSE ? 'dépôt' : 'modification'}</h5>
-              <p>{dateFormat(props.activite.date_saisie)}</p>
-            </div>
+            <LabelWithValue title={`Date de ${props.activite.activite_statut_id === ACTIVITES_STATUTS_IDS.DEPOSE ? 'dépôt' : 'modification'}`} text={dateFormat(props.activite.date_saisie)} />
           ) : null}
 
-          <div class="border-b-s px-m pt-m">
-            <Sections sections={props.activite.sections_with_value} />
-          </div>
+          <Sections sections={props.activite.sections_with_value} />
 
-          {documentRows.length > 0 ? (
-            <div class="border-b-s px-m pt-m">
-              <TableAuto caption={'Documents de l’activité'} columns={documentColumns} rows={documentRows} initialSort={'firstColumnAsc'} />
-            </div>
-          ) : null}
+          {documentRows.length > 0 ? <TableAuto caption={'Documents de l’activité'} columns={documentColumns} rows={documentRows} initialSort={'firstColumnAsc'} /> : null}
         </div>
       </div>
       {deposePopupVisible.value ? <ActiviteDeposePopup close={closeDeposePopup} activite={props.activite} apiClient={props.apiClient} /> : null}
