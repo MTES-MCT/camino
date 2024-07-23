@@ -121,4 +121,8 @@ describe("statut d'un titre", () => {
       ])
     ).toEqual(true)
   })
+
+  test("le statut d'un titre dont l'unique démarche est un octroi valide mais sans phase est en  demande initiale", () => {
+    expect(titreStatutIdFind(aujourdhui, [{ typeId: 'oct', statutId: 'acc' }])).toEqual('dmi')
+  })
 })
