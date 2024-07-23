@@ -16,7 +16,6 @@ const etapesBuild = (etapesProps: Partial<ITitreEtape>[]): TitreEtapeForMachine[
         ...etapeProps,
         isBrouillon: etapeProps.isBrouillon ?? ETAPE_IS_NOT_BROUILLON,
         ordre: i + 1,
-        isBrouillon: ETAPE_IS_NOT_BROUILLON,
       }) as unknown as TitreEtapeForMachine
   )
 
