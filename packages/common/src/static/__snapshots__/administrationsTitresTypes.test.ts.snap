@@ -34,6 +34,26 @@ exports[`vérifie les administrations gestionnaire d'un type de titre 1`] = `
   ],
   "arg": [
     {
+      "administrationId": "dea-guadeloupe-01",
+      "associee": false,
+    },
+    {
+      "administrationId": "dea-guyane-01",
+      "associee": false,
+    },
+    {
+      "administrationId": "dea-martinique-01",
+      "associee": false,
+    },
+    {
+      "administrationId": "dea-mayotte-01",
+      "associee": false,
+    },
+    {
+      "administrationId": "dea-reunion-01",
+      "associee": false,
+    },
+    {
       "administrationId": "dre-aura-01",
       "associee": false,
     },
@@ -239,6 +259,26 @@ exports[`vérifie les administrations gestionnaire d'un type de titre 1`] = `
     },
   ],
   "pxg": [
+    {
+      "administrationId": "dea-guadeloupe-01",
+      "associee": false,
+    },
+    {
+      "administrationId": "dea-guyane-01",
+      "associee": false,
+    },
+    {
+      "administrationId": "dea-martinique-01",
+      "associee": false,
+    },
+    {
+      "administrationId": "dea-mayotte-01",
+      "associee": false,
+    },
+    {
+      "administrationId": "dea-reunion-01",
+      "associee": false,
+    },
     {
       "administrationId": "dre-aura-01",
       "associee": false,
@@ -4757,11 +4797,11 @@ exports[`vérifie si l’administration est gestionnaire 1`] = `
 {
   "aut-97300-01": false,
   "aut-mrae-guyane-01": false,
-  "dea-guadeloupe-01": false,
+  "dea-guadeloupe-01": true,
   "dea-guyane-01": true,
-  "dea-martinique-01": false,
-  "dea-mayotte-01": false,
-  "dea-reunion-01": false,
+  "dea-martinique-01": true,
+  "dea-mayotte-01": true,
+  "dea-reunion-01": true,
   "dre-aura-01": true,
   "dre-bfc-01": true,
   "dre-bretagne-01": true,
@@ -4962,7 +5002,7 @@ exports[`vérifie si l’administration est gestionnaire par rapport au titreTyp
     "apm": false,
     "apw": false,
     "arc": false,
-    "arg": false,
+    "arg": true,
     "arm": false,
     "axm": false,
     "cxf": false,
@@ -4983,7 +5023,7 @@ exports[`vérifie si l’administration est gestionnaire par rapport au titreTyp
     "prs": false,
     "prw": false,
     "pxf": false,
-    "pxg": false,
+    "pxg": true,
     "pxh": false,
     "pxm": false,
     "pxr": false,
@@ -4995,7 +5035,7 @@ exports[`vérifie si l’administration est gestionnaire par rapport au titreTyp
     "apm": false,
     "apw": false,
     "arc": false,
-    "arg": false,
+    "arg": true,
     "arm": true,
     "axm": true,
     "cxf": false,
@@ -5016,7 +5056,7 @@ exports[`vérifie si l’administration est gestionnaire par rapport au titreTyp
     "prs": false,
     "prw": false,
     "pxf": false,
-    "pxg": false,
+    "pxg": true,
     "pxh": false,
     "pxm": false,
     "pxr": false,
@@ -5028,7 +5068,7 @@ exports[`vérifie si l’administration est gestionnaire par rapport au titreTyp
     "apm": false,
     "apw": false,
     "arc": false,
-    "arg": false,
+    "arg": true,
     "arm": false,
     "axm": false,
     "cxf": false,
@@ -5049,7 +5089,7 @@ exports[`vérifie si l’administration est gestionnaire par rapport au titreTyp
     "prs": false,
     "prw": false,
     "pxf": false,
-    "pxg": false,
+    "pxg": true,
     "pxh": false,
     "pxm": false,
     "pxr": false,
@@ -5061,7 +5101,7 @@ exports[`vérifie si l’administration est gestionnaire par rapport au titreTyp
     "apm": false,
     "apw": false,
     "arc": false,
-    "arg": false,
+    "arg": true,
     "arm": false,
     "axm": false,
     "cxf": false,
@@ -5082,7 +5122,7 @@ exports[`vérifie si l’administration est gestionnaire par rapport au titreTyp
     "prs": false,
     "prw": false,
     "pxf": false,
-    "pxg": false,
+    "pxg": true,
     "pxh": false,
     "pxm": false,
     "pxr": false,
@@ -5094,7 +5134,7 @@ exports[`vérifie si l’administration est gestionnaire par rapport au titreTyp
     "apm": false,
     "apw": false,
     "arc": false,
-    "arg": false,
+    "arg": true,
     "arm": false,
     "axm": false,
     "cxf": false,
@@ -5115,7 +5155,7 @@ exports[`vérifie si l’administration est gestionnaire par rapport au titreTyp
     "prs": false,
     "prw": false,
     "pxf": false,
-    "pxg": false,
+    "pxg": true,
     "pxh": false,
     "pxm": false,
     "pxr": false,
@@ -9199,8 +9239,29 @@ exports[`vérifie tous les droits sur les types de titre pour l’administration
       "titreTypeId": "arm",
     },
   ],
-  "dea-guadeloupe-01": [],
+  "dea-guadeloupe-01": [
+    {
+      "associee": false,
+      "gestionnaire": true,
+      "titreTypeId": "pxg",
+    },
+    {
+      "associee": false,
+      "gestionnaire": true,
+      "titreTypeId": "arg",
+    },
+  ],
   "dea-guyane-01": [
+    {
+      "associee": false,
+      "gestionnaire": true,
+      "titreTypeId": "pxg",
+    },
+    {
+      "associee": false,
+      "gestionnaire": true,
+      "titreTypeId": "arg",
+    },
     {
       "associee": false,
       "gestionnaire": true,
@@ -9212,9 +9273,42 @@ exports[`vérifie tous les droits sur les types de titre pour l’administration
       "titreTypeId": "axm",
     },
   ],
-  "dea-martinique-01": [],
-  "dea-mayotte-01": [],
-  "dea-reunion-01": [],
+  "dea-martinique-01": [
+    {
+      "associee": false,
+      "gestionnaire": true,
+      "titreTypeId": "pxg",
+    },
+    {
+      "associee": false,
+      "gestionnaire": true,
+      "titreTypeId": "arg",
+    },
+  ],
+  "dea-mayotte-01": [
+    {
+      "associee": false,
+      "gestionnaire": true,
+      "titreTypeId": "pxg",
+    },
+    {
+      "associee": false,
+      "gestionnaire": true,
+      "titreTypeId": "arg",
+    },
+  ],
+  "dea-reunion-01": [
+    {
+      "associee": false,
+      "gestionnaire": true,
+      "titreTypeId": "pxg",
+    },
+    {
+      "associee": false,
+      "gestionnaire": true,
+      "titreTypeId": "arg",
+    },
+  ],
   "dre-aura-01": [
     {
       "associee": false,

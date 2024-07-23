@@ -4,11 +4,10 @@ import { DepartementId } from './departement.js'
 import { z } from 'zod'
 import { map } from '../typescript-tools.js'
 
-const ADMINISTRATION_TYPE_IDS_ARRAY = ['aut', 'dea', 'dre', 'min', 'ope', 'pre'] as const
+const ADMINISTRATION_TYPE_IDS_ARRAY = ['aut', 'dre', 'min', 'ope', 'pre'] as const
 
 export const ADMINISTRATION_TYPE_IDS = {
   AUTORITE: 'aut',
-  DEAL: 'dea',
   DREAL: 'dre',
   MINISTERE: 'min',
   OPERATEUR: 'ope',
@@ -24,7 +23,6 @@ export const ADMINISTRATION_TYPES: {
   [key in AdministrationTypeId]: AdministrationType<key>
 } = {
   aut: { id: 'aut', nom: 'Autorité' },
-  dea: { id: 'dea', nom: 'Déal' },
   dre: { id: 'dre', nom: 'Dréal' },
   min: { id: 'min', nom: 'Ministère' },
   ope: { id: 'ope', nom: 'Opérateur' },
@@ -229,7 +227,7 @@ export const Administrations: {
     },
     'dea-guadeloupe-01': {
       id: 'dea-guadeloupe-01',
-      typeId: 'dea',
+      typeId: 'dre',
       nom: "Direction de l'environnement de l'aménagement et du logement (DEAL) - Guadeloupe",
       abreviation: 'DEAL - Guadeloupe',
       url: 'http://www.guadeloupe.developpement-durable.gouv.fr',
@@ -244,7 +242,7 @@ export const Administrations: {
     },
     'dea-guyane-01': {
       id: 'dea-guyane-01',
-      typeId: 'dea',
+      typeId: 'dre',
       nom: 'Direction Générale des Territoires et de la Mer de Guyane',
       abreviation: 'DGTM - Guyane',
       url: 'https://www.guyane.gouv.fr',
@@ -258,7 +256,7 @@ export const Administrations: {
     },
     'dea-martinique-01': {
       id: 'dea-martinique-01',
-      typeId: 'dea',
+      typeId: 'dre',
       nom: "Direction de l'environnement de l'aménagement et du logement (DEAL) - Martinique",
       abreviation: 'DEAL - Martinique',
       url: 'http://www.martinique.developpement-durable.gouv.fr',
@@ -272,7 +270,7 @@ export const Administrations: {
     },
     'dea-mayotte-01': {
       id: 'dea-mayotte-01',
-      typeId: 'dea',
+      typeId: 'dre',
       nom: "Direction de l'environnement de l'aménagement et du logement (DEAL) - Mayotte",
       abreviation: 'DEAL - Mayotte',
       url: 'http://www.mayotte.gouv.fr/Services-de-l-Etat/Direction-de-l-Environnement-de-l-Amenagement-et-du-Logement-DEAL',
@@ -287,7 +285,7 @@ export const Administrations: {
     },
     'dea-reunion-01': {
       id: 'dea-reunion-01',
-      typeId: 'dea',
+      typeId: 'dre',
       nom: "Direction de l'environnement de l'aménagement et du logement (DEAL) - La Réunion",
       abreviation: 'DEAL - La Réunion',
       url: 'http://www.reunion.developpement-durable.gouv.fr',

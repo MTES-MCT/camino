@@ -30,7 +30,6 @@ export const DefaultNoSnapshot: StoryFn = () => (
       demarches: 366,
       "Nombre d'utilisateurs rattachés à une Autorité": 5,
       "Nombre d'utilisateurs rattachés à une Dréal": 38,
-      "Nombre d'utilisateurs rattachés à une Déal": 8,
       "Nombre d'utilisateurs rattachés à un ministère": 26,
       "Nombre d'utilisateurs rattachés à une préfecture": 8,
       "Nombre d'utilisateurs affiliés à une entreprise": 128,

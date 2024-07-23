@@ -4,7 +4,7 @@ import { emailsSend } from '../../../tools/api-mailjet/emails.js'
 import { titreUrlGet } from '../../../business/utils/urls-get.js'
 import { UserNotNull } from 'camino-common/src/roles.js'
 import { getPeriode } from 'camino-common/src/static/frequence.js'
-import { AdministrationId, Administrations } from 'camino-common/src/static/administrations.js'
+import { ADMINISTRATION_TYPE_IDS, AdministrationId, Administrations } from 'camino-common/src/static/administrations.js'
 import { dateFormat } from 'camino-common/src/date.js'
 import { getElementValeurs, Section, SectionElement } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
 import { DeepReadonly, NonEmptyArray } from 'camino-common/src/typescript-tools.js'
@@ -149,12 +149,12 @@ export const titreActiviteAdministrationsEmailsGet = (
   return (
     administrationIds
       .map(id => Administrations[id])
-      .filter(administration => production || ['min', 'dre', 'dea'].includes(administration.typeId))
+      .filter(administration => production || [ADMINISTRATION_TYPE_IDS.MINISTERE, ADMINISTRATION_TYPE_IDS.DREAL].includes(administration.typeId))
       .filter(administration => Object.keys(activitesTypesEmailsByAdministrationId).includes(administration.id))
       .flatMap(administration => activitesTypesEmailsByAdministrationId[administration.id])
       .filter(activiteTypeEmail => activiteTypeEmail.activite_type_id === activiteTypeId)
       .filter(activiteTypeEmail => activiteTypeEmail.email)
-      .map(activiteTypeEmail => activiteTypeEmail.email) || []
+      .map(activiteTypeEmail => activiteTypeEmail.email) ?? []
   )
 }
 

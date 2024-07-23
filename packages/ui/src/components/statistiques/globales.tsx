@@ -105,7 +105,6 @@ export const PureGlobales: FunctionalComponent<Props> = props => {
     props.statistiques["Nombre d'utilisateurs rattachés à un ministère"] +
     props.statistiques["Nombre d'utilisateurs rattachés à une Autorité"] +
     props.statistiques["Nombre d'utilisateurs rattachés à une Dréal"] +
-    props.statistiques["Nombre d'utilisateurs rattachés à une Déal"] +
     props.statistiques["Nombre d'utilisateurs rattachés à une préfecture"]
 
   const totalUtilisateurs = utilisateursAdmin + props.statistiques["Nombre d'utilisateurs affiliés à une entreprise"] + props.statistiques["Nombre d'utilisateurs sur la plateforme"]

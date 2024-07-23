@@ -2,9 +2,27 @@
 
 exports[`canCreateTitre > vérifie si un utilisateur administrateur admin peut créer des titres 1`] = `
 {
+  "dea-guadeloupe-01": {
+    "arg": true,
+    "pxg": true,
+  },
   "dea-guyane-01": {
+    "arg": true,
     "arm": true,
     "axm": true,
+    "pxg": true,
+  },
+  "dea-martinique-01": {
+    "arg": true,
+    "pxg": true,
+  },
+  "dea-mayotte-01": {
+    "arg": true,
+    "pxg": true,
+  },
+  "dea-reunion-01": {
+    "arg": true,
+    "pxg": true,
   },
   "dre-aura-01": {
     "arg": true,
@@ -116,7 +134,36 @@ exports[`canCreateTitre > vérifie si une entreprise peut créer un titre de typ
 
 exports[`canEditTitre > vérifie si un utilisateur administrateur admin peut modifier des titres 1`] = `
 {
+  "dea-guadeloupe-01": {
+    "arg": {
+      "dmc": true,
+      "dmi": true,
+      "ech": true,
+      "ind": true,
+      "mod": true,
+      "sup": true,
+      "val": true,
+    },
+    "pxg": {
+      "dmc": true,
+      "dmi": true,
+      "ech": true,
+      "ind": true,
+      "mod": true,
+      "sup": true,
+      "val": true,
+    },
+  },
   "dea-guyane-01": {
+    "arg": {
+      "dmc": true,
+      "dmi": true,
+      "ech": true,
+      "ind": true,
+      "mod": true,
+      "sup": true,
+      "val": true,
+    },
     "arm": {
       "dmc": true,
       "dmi": true,
@@ -127,6 +174,75 @@ exports[`canEditTitre > vérifie si un utilisateur administrateur admin peut mod
       "val": true,
     },
     "axm": {
+      "dmc": true,
+      "dmi": true,
+      "ech": true,
+      "ind": true,
+      "mod": true,
+      "sup": true,
+      "val": true,
+    },
+    "pxg": {
+      "dmc": true,
+      "dmi": true,
+      "ech": true,
+      "ind": true,
+      "mod": true,
+      "sup": true,
+      "val": true,
+    },
+  },
+  "dea-martinique-01": {
+    "arg": {
+      "dmc": true,
+      "dmi": true,
+      "ech": true,
+      "ind": true,
+      "mod": true,
+      "sup": true,
+      "val": true,
+    },
+    "pxg": {
+      "dmc": true,
+      "dmi": true,
+      "ech": true,
+      "ind": true,
+      "mod": true,
+      "sup": true,
+      "val": true,
+    },
+  },
+  "dea-mayotte-01": {
+    "arg": {
+      "dmc": true,
+      "dmi": true,
+      "ech": true,
+      "ind": true,
+      "mod": true,
+      "sup": true,
+      "val": true,
+    },
+    "pxg": {
+      "dmc": true,
+      "dmi": true,
+      "ech": true,
+      "ind": true,
+      "mod": true,
+      "sup": true,
+      "val": true,
+    },
+  },
+  "dea-reunion-01": {
+    "arg": {
+      "dmc": true,
+      "dmi": true,
+      "ech": true,
+      "ind": true,
+      "mod": true,
+      "sup": true,
+      "val": true,
+    },
+    "pxg": {
       "dmc": true,
       "dmi": true,
       "ech": true,
