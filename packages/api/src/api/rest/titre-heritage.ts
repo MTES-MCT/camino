@@ -1,6 +1,6 @@
 import { DemarcheEtape } from 'camino-common/src/demarche.js'
 import { ETAPE_IS_NOT_BROUILLON } from 'camino-common/src/etape'
-import { isFondamentalesStatutOk } from 'camino-common/src/static/etapesStatuts.js'
+import { isFondamentalesStatutOk } from 'camino-common/src/static/etapesStatuts'
 import { isEtapeTypeIdFondamentale } from 'camino-common/src/static/etapesTypes.js'
 import { TitrePropTitreEtapeFindDemarche } from 'camino-common/src/titres.js'
 

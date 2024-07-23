@@ -1,6 +1,7 @@
 {
   "ts-node": {
-    "swc": true
+    "swc": true,
+    "experimentalSpecifierResolution": "node"
   },
   "compilerOptions": {
     "allowJs": false,
@@ -9,8 +10,8 @@
     "esModuleInterop": true,
     "inlineSources": false,
     "lib": ["es2020", "dom", "ESNext.Array"],
-    "module": "ES2020",
-    "moduleResolution": "Bundler",
+    "module": "ESNext",
+    "moduleResolution": "Node",
     "noFallthroughCasesInSwitch": true,
     "noImplicitAny": true,
     "noImplicitReturns": true,
@@ -25,7 +26,8 @@
     "noEmit": true,
     "paths": {
       "graphql-fields": ["./src/@types/graphql-fields"],
-      "html-to-text": ["./src/@types/html-to-text"]
+      "html-to-text": ["./src/@types/html-to-text"],
+      "rollup/parseAst": ["../../node_modules/rollup/dist/parseAst"]
     },
   }
 }

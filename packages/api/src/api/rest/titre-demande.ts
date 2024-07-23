@@ -1,5 +1,5 @@
 import { ITitreEtape } from '../../types.js'
-import { titreCreate, titreGet, titresGet } from '../../database/queries/titres.js'
+import { titreCreate, titreGet, titresGet } from '../../database/queries/titres'
 import { titreDemarcheCreate } from '../../database/queries/titres-demarches.js'
 import { titreEtapeUpsert } from '../../database/queries/titres-etapes.js'
 
