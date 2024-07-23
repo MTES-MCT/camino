@@ -238,6 +238,10 @@ export const DemarcheEtape = defineComponent<Props>(props => {
 
   const isBrouillon = computed<boolean>(() => props.etape.is_brouillon)
 
+  const deposeEtape = async () => {
+    await props.apiClient.deposeEtape(props.etape.id)
+  }
+
   return () => (
     <div class="fr-pb-2w fr-pl-2w fr-pr-2w fr-tile--shadow" style={{ border: '1px solid var(--grey-900-175)' }}>
       <div class={`${styles.sticky} fr-pt-1w`}>
@@ -401,7 +405,7 @@ export const DemarcheEtape = defineComponent<Props>(props => {
           titreNom={props.titre.nom}
         />
       ) : null}
-      {deposePopupVisible.value ? <DeposeEtapePopup close={closeDeposePopup} apiClient={props.apiClient} id={props.etape.id} etapeTypeId={props.etape.etape_type_id} /> : null}
+      {deposePopupVisible.value ? <DeposeEtapePopup close={closeDeposePopup} deposeEtape={deposeEtape} etapeTypeId={props.etape.etape_type_id} /> : null}
     </div>
   )
 })

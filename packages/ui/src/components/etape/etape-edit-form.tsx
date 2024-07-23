@@ -421,16 +421,13 @@ export const EtapeEditForm = defineComponent<Props>(props => {
     }
   }
 
-  const etapeIdToDepose = ref<EtapeId | null>(null)
-  const depose = async () => {
-    if (canDepose.value) {
-      const etapeId = await save()
-      etapeIdToDepose.value = etapeId
-    }
+  const showDeposeEtapePopup = ref<boolean>(false)
+  const depose = () => {
+    showDeposeEtapePopup.value = canDepose.value
   }
 
   const closeDeposePopup = () => {
-    etapeIdToDepose.value = null
+    showDeposeEtapePopup.value = false
   }
 
   return () => (
@@ -472,17 +469,16 @@ export const EtapeEditForm = defineComponent<Props>(props => {
                   depose={depose}
                   etapeTypeId={etapeLoaded.typeId}
                 />
-                {isNotNullNorUndefined(etapeIdToDepose.value) ? (
+                {showDeposeEtapePopup.value === true ? (
                   <DeposeEtapePopup
                     close={closeDeposePopup}
-                    apiClient={{
-                      ...props.apiClient,
-                      deposeEtape: async titreEtapeId => {
-                        await props.apiClient.deposeEtape(titreEtapeId)
+                    deposeEtape={async () => {
+                      const etapeIdToDepose = await save()
+                      if (isNotNullNorUndefined(etapeIdToDepose)) {
+                        await props.apiClient.deposeEtape(etapeIdToDepose)
                         props.goToDemarche(props.demarcheId)
-                      },
+                      }
                     }}
-                    id={etapeIdToDepose.value}
                     etapeTypeId={etapeLoaded.typeId}
                   />
                 ) : null}

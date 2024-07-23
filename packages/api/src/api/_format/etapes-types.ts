@@ -30,7 +30,7 @@ export const documentsTypesFormat = (documentsTypes: DocumentType[] | undefined 
   return result
 }
 
-export const etapeTypeDateFinCheck = (etapeTypeId: EtapeTypeId, titreEtapes?: ITitreEtape[] | null): boolean => {
+export const etapeTypeDateFinCheck = (etapeTypeId: EtapeTypeId, titreEtapes?: Pick<ITitreEtape, 'typeId' | 'date'>[] | null): boolean => {
   const etapeTypeDateFin = EtapesTypes[etapeTypeId].date_fin
   if (!etapeTypeDateFin || !titreEtapes) return true
 

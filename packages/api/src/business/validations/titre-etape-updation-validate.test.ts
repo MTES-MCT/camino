@@ -10,8 +10,7 @@ import { demarcheIdValidator } from 'camino-common/src/demarche.js'
 import { entrepriseIdValidator } from 'camino-common/src/entreprise.js'
 import { titreIdValidator } from 'camino-common/src/validators/titres.js'
 import { km2Validator } from 'camino-common/src/number.js'
-const etapeBrouillonValide: FlattenEtape = {
-  id: etapeIdValidator.parse('etapeId'),
+const etapeBrouillonValide: Omit<FlattenEtape, 'id'> = {
   titulaires: {
     value: [],
     heritee: false,
@@ -59,10 +58,10 @@ const etapeBrouillonValide: FlattenEtape = {
   titreDemarcheId: demarcheIdValidator.parse('demarcheId'),
   typeId: 'mfr',
 }
-const etapeComplete: FlattenEtape = {
+const etapeComplete: Omit<FlattenEtape, 'id'> = {
   ...etapeBrouillonValide,
   isBrouillon: ETAPE_IS_NOT_BROUILLON,
-  typeId: 'mod',
+  typeId: 'mdp',
   contenu: { arm: { mecanise: { value: true, heritee: true, etapeHeritee: { date: toCaminoDate('2022-01-01'), etapeTypeId: 'mfr', value: true } } } },
 }
 const demarcheId = demarcheIdValidator.parse('demarcheId')
@@ -80,6 +79,7 @@ const titreDemarche: ITitreDemarche = {
       titreDemarcheId: demarcheId,
       communes: [],
       surface: km2Validator.parse(12),
+      ordre: 0,
     },
   ],
 }
@@ -189,6 +189,14 @@ describe('valide l’étape avant de l’enregistrer', () => {
   test('valide complète', () => {
     const errors = titreEtapeUpdationValidate(etapeComplete, titreDemarche, titreARM, [{ etape_document_type_id: 'doe' }], [], [], [], [], userSuper, null, null)
     expect(errors).toStrictEqual([])
+  })
+  test('invalide car on ne peut pas faire de mod sans mdp', () => {
+    const errors = titreEtapeUpdationValidate({ ...etapeComplete, typeId: 'mod' }, titreDemarche, titreARM, [{ etape_document_type_id: 'doe' }], [], [], [], [], userSuper, null, null)
+    expect(errors).toMatchInlineSnapshot(`
+      [
+        "la démarche n'est pas valide",
+      ]
+    `)
   })
 
   test('valide complète avec héritage', () => {

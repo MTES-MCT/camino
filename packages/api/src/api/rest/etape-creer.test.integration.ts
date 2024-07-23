@@ -184,7 +184,7 @@ describe('etapeCreer', () => {
     expect(res.statusCode).toBe(HTTP_STATUS.BAD_REQUEST)
     expect(res.body).toMatchInlineSnapshot(`
       {
-        "errorMessage": "statut de l'étape "fav" invalide pour une étape asc pour une démarche de type octroi",
+        "errorMessage": "la démarche n'est pas valide",
       }
     `)
   })
@@ -205,6 +205,24 @@ describe('etapeCreer', () => {
 
   test('peut créer une étape MEN sur un titre ARM en tant que PTMG (utilisateur admin)', async () => {
     const titreDemarcheId = await demarcheCreate()
+
+    // une demande antérieure au 01/01/2018 est obligatoire pour pouvoir créer une MEN
+    await restPostCall(
+      dbPool,
+      '/rest/etapes',
+      {},
+      {
+        role: 'admin',
+        administrationId: ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE'],
+      },
+      {
+        typeId: 'mfr',
+        statutId: 'fai',
+        titreDemarcheId,
+        date: toCaminoDate('2017-01-01'),
+        ...blankEtapeProps,
+      }
+    )
     const res = await restPostCall(
       dbPool,
       '/rest/etapes',
@@ -217,7 +235,7 @@ describe('etapeCreer', () => {
         typeId: 'men',
         statutId: 'fai',
         titreDemarcheId,
-        date: toCaminoDate('2018-01-01'),
+        date: toCaminoDate('2020-01-01'),
         ...blankEtapeProps,
       }
     )
@@ -225,6 +243,27 @@ describe('etapeCreer', () => {
     expect(res.statusCode).toBe(HTTP_STATUS.OK)
   })
 
+  test("ne peut pas créer une étape MEN si c'est la première étape (utilisateur admin)", async () => {
+    const titreDemarcheId = await demarcheCreate()
+    const res = await restPostCall(
+      dbPool,
+      '/rest/etapes',
+      {},
+      {
+        role: 'admin',
+        administrationId: ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE'],
+      },
+      {
+        typeId: 'men',
+        statutId: 'fai',
+        titreDemarcheId,
+        date: toCaminoDate('2017-01-01'),
+        ...blankEtapeProps,
+      }
+    )
+
+    expect(res.statusCode).toBe(HTTP_STATUS.BAD_REQUEST)
+  })
   test('ne peut pas créer une étape EDE sur un titre ARM en tant que PTMG (utilisateur admin)', async () => {
     const titreDemarcheId = await demarcheCreate()
 
@@ -254,7 +293,7 @@ describe('etapeCreer', () => {
     expect(res.statusCode).toBe(HTTP_STATUS.BAD_REQUEST)
     expect(res.body).toMatchInlineSnapshot(`
       {
-        "errorMessage": "statut de l'étape "fai" invalide pour une étape ede pour une démarche de type octroi",
+        "errorMessage": "la démarche n'est pas valide",
       }
     `)
   })

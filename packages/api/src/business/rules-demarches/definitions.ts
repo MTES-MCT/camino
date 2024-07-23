@@ -20,7 +20,7 @@ interface DemarcheDefinitionCommon {
   dateDebut: CaminoDate
   demarcheIdExceptions?: DemarcheId[]
 }
-interface DemarcheDefinition extends DemarcheDefinitionCommon {
+export interface DemarcheDefinition extends DemarcheDefinitionCommon {
   machine: CaminoMachines
 }
 const allDemarcheNotTravaux = Object.values(DEMARCHES_TYPES_IDS).filter(demarcheTypeId => !DemarchesTypes[demarcheTypeId].travaux)
