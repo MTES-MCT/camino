@@ -1,5 +1,5 @@
 import { ITitreActivite, IContenu } from '../../types.js'
-import { DeepReadonly } from 'camino-common/src/typescript-tools.js'
+import { DeepReadonly, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools.js'
 import { Section } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
 import { Unites } from 'camino-common/src/static/unites.js'
 
@@ -7,7 +7,7 @@ import { Unites } from 'camino-common/src/static/unites.js'
 const titreActiviteContenuFormat = (sections: DeepReadonly<Section[]>, contenu: IContenu) => {
   const section = sections.find(s => s.id === 'substancesFiscales')
 
-  if (section?.elements?.length && contenu?.substancesFiscales) {
+  if (isNotNullNorUndefinedNorEmpty(section?.elements) && isNotNullNorUndefined(contenu?.substancesFiscales)) {
     const substancesFiscalesIds = Object.keys(contenu?.substancesFiscales)
 
     substancesFiscalesIds.forEach(id => {
@@ -15,7 +15,7 @@ const titreActiviteContenuFormat = (sections: DeepReadonly<Section[]>, contenu: 
 
       if (element && (element.type === 'integer' || element.type === 'number') && element.uniteId) {
         const ratio = Unites[element.uniteId].referenceUniteRatio
-        if (ratio) {
+        if (isNotNullNorUndefined(ratio) && ratio > 0) {
           contenu!.substancesFiscales[id] = (contenu!.substancesFiscales[id] as number) / ratio
         }
       }

@@ -57,7 +57,7 @@ const graphQLCall = async (url, query, variables, cacheKey = query.definitions[0
 
   return dataContent
 }
-
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const apiGraphQLFetch = (query, cacheKey) => async variables => {
   try {
     return await graphQLCall(apiUrl, query, variables, cacheKey)

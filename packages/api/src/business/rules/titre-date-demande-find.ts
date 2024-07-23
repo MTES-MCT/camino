@@ -1,3 +1,4 @@
+import { isNullOrUndefined, isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools.js'
 import { ITitreDemarche } from '../../types.js'
 
 import { titreDemarcheSortAsc } from '../utils/titre-elements-sort-asc.js'
@@ -26,7 +27,7 @@ export const titreDateDemandeFind = (titreDemarches: ITitreDemarche[]) => {
   // - il n'y a pas d'étape de dépôt ou d'enregistrement de la demande
   // - l'étape n'a pas de date
   // alors retourne null
-  if (!titreEtape || !titreEtape.date) return null
+  if (isNullOrUndefined(titreEtape) || isNullOrUndefinedOrEmpty(titreEtape.date)) return null
 
   // sinon
   // retourne la date de l'étape

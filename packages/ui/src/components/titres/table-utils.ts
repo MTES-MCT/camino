@@ -129,7 +129,7 @@ export const statutCell = (titre: { titre_statut_id: TitreStatutId }): Component
   }
 }
 
-export const referencesCell = (titre: { references?: { nom: string; referenceTypeId: ReferenceTypeId }[] }) => {
+export const referencesCell = (titre: { references?: { nom: string; referenceTypeId: ReferenceTypeId }[] }): ComponentColumnData => {
   const references = titre.references?.map(ref => `${ReferencesTypes[ref.referenceTypeId].nom} : ${ref.nom}`)
 
   return {
@@ -142,7 +142,7 @@ export const referencesCell = (titre: { references?: { nom: string; referenceTyp
     value: references,
   }
 }
-export const titulairesCell = (titre: { titulaireIds?: EntrepriseId[] }, entreprisesIndex: Record<EntrepriseId, string>) => {
+export const titulairesCell = (titre: { titulaireIds?: EntrepriseId[] }, entreprisesIndex: Record<EntrepriseId, string>): ComponentColumnData => {
   return {
     component: markRaw(List),
     props: {
@@ -159,7 +159,7 @@ const domaineCell = (titre: { domaineId: DomaineId }) => ({
   value: titre.domaineId,
 })
 
-export const typeCell = (typeId: TitreTypeId) => {
+export const typeCell = (typeId: TitreTypeId): ComponentColumnData => {
   return {
     component: markRaw(TitreTypeTypeNom),
     props: { titreTypeId: typeId },

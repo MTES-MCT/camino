@@ -314,6 +314,7 @@ const fiscaliteDetail = async (pool: Pool): Promise<FiscaliteParSubstanceParAnne
       ;(body.articles[categorie][substanceFiscaleToInput(substanceFiscale)] ??= {})[annee] = fromUniteFiscaleToUnite(substanceFiscale.uniteId, row[substance])
     })
 
+    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     if (!body.titres[categorie]) {
       body.titres[categorie] = {
         commune_principale_exploitation: {},

@@ -3,6 +3,7 @@ import { PAYS_IDS } from 'camino-common/src/static/pays.js'
 import { Regions } from 'camino-common/src/static/region.js'
 import { knex } from '../knex.js'
 import { exploitantsGuyaneSubscriberUpdate } from '../tools/api-mailjet/newsletter.js'
+import { isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
 
 interface Result {
   id: string
@@ -31,7 +32,7 @@ export const subscribeUsersToGuyaneExploitants = async (): Promise<ResultAggrega
   const reduced = result
     .filter(({ codePostal }) => codePostal !== null && Regions[Departements[toDepartementId(codePostal)].regionId].paysId === PAYS_IDS['Département de la Guyane'])
     .reduce<Record<string, ResultAggregated>>((acc, user) => {
-      if (!acc[user.id]) {
+      if (isNullOrUndefined(acc[user.id])) {
         acc[user.id] = {
           email: user.email,
           entreprises: [user.nomEntreprise],

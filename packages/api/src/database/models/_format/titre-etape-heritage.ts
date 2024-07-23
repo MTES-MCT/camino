@@ -23,6 +23,7 @@ export const heritagePropsFormat = async (heritageProps: IHeritageProps) => {
 export const heritageContenuFormat = async (heritageContenu: IHeritageContenu) => {
   const fields: FieldsEtape = { id: {} }
   for (const sectionId of Object.keys(heritageContenu)) {
+    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     if (heritageContenu[sectionId]) {
       for (const elementId of Object.keys(heritageContenu[sectionId])) {
         if (heritageContenu[sectionId][elementId].etapeId) {

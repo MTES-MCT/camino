@@ -74,6 +74,7 @@ describe('toMachineEtapes', () => {
           id: 'id',
           typeId: 'iii',
           statutId: 'fai',
+          isBrouillon: ETAPE_IS_NOT_BROUILLON,
           date: '2022-01-01',
         } as unknown as TitreEtapeForMachine,
       ])
@@ -87,9 +88,10 @@ describe('toMachineEtapes', () => {
           id: 'id',
           typeId: 'mfr',
           statutId: 'ffi',
+          isBrouillon: ETAPE_IS_NOT_BROUILLON,
           date: '2022-01-01',
         } as unknown as TitreEtapeForMachine,
       ])
-    ).toThrowErrorMatchingInlineSnapshot(`[Error: le status ffi est inconnu, {"id":"id","typeId":"mfr","statutId":"ffi","date":"2022-01-01"}]`)
+    ).toThrowErrorMatchingInlineSnapshot(`[Error: le status ffi est inconnu, {"id":"id","typeId":"mfr","statutId":"ffi","isBrouillon":false,"date":"2022-01-01"}]`)
   })
 })

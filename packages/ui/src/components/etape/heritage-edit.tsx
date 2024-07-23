@@ -29,7 +29,7 @@ type Props<T extends DeepReadonly<HeritagePossible>> = {
   updateHeritage: (update: NoInfer<T>) => void
 }
 
-export const HeritageEdit = <T extends DeepReadonly<HeritagePossible>>(props: Props<T>) => {
+export const HeritageEdit = <T extends DeepReadonly<HeritagePossible>>(props: Props<T>): JSX.Element => {
   const updateHeritage = () => {
     const etapeHeritee = props.prop.etapeHeritee
     const newHeritage = !props.prop.heritee

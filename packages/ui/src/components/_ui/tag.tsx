@@ -2,6 +2,7 @@ import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { HTMLAttributes } from 'vue'
 import { CaminoRouterLink } from '../../router/camino-router-link'
 import { CaminoRouteNames, CaminoVueRoute } from '@/router/routes'
+import type { JSX } from 'vue/jsx-runtime'
 
 export type DsfrTagProps<T extends CaminoRouteNames> = {
   ariaLabel: string
@@ -12,7 +13,7 @@ export type DsfrTagProps<T extends CaminoRouteNames> = {
   to?: CaminoVueRoute<T>
   onClicked?: () => void
 }
-export const DsfrTag = <T extends CaminoRouteNames>(props: DsfrTagProps<T>) => {
+export const DsfrTag = <T extends CaminoRouteNames>(props: DsfrTagProps<T>): JSX.Element => {
   const classes = ['fr-tag', `fr-tag--${props.tagSize ?? 'md'}`, props.class]
 
   const clicked = (e: MouseEvent) => {

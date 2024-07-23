@@ -14,6 +14,7 @@ import { titreEtapesSortDescByOrdre } from '../utils/titre-etapes-sort.js'
 import { isEtapeDecision } from 'camino-common/src/static/etapesTypes.js'
 import { isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
 import { ETAPES_STATUTS } from 'camino-common/src/static/etapesStatuts.js'
+import { ETAPE_IS_BROUILLON } from 'camino-common/src/etape.js'
 
 const etapeAmodiataireFind = (date: CaminoDate, titreEtape: ITitreEtape, titreDemarches: Pick<ITitreDemarche, 'demarcheDateDebut' | 'demarcheDateFin' | 'id'>[]) => {
   const titreDemarche = titreDemarches.find(td => td.id === titreEtape.titreDemarcheId)
@@ -37,7 +38,7 @@ const etapeValideCheck = (titreEtape: ITitreEtape, titreDemarcheTypeId: Demarche
     return true
   }
 
-  if (titreEtape.isBrouillon) {
+  if (titreEtape.isBrouillon === ETAPE_IS_BROUILLON) {
     return false
   }
 

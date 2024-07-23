@@ -10,10 +10,13 @@ export const titreDemarcheSortAsc = <T extends TitreDemarcheSortAscMinimalDemarc
     const aHasEtapes = a.etapes && a.etapes.length
     const bHasEtapes = b.etapes && b.etapes.length
 
+    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     if (!aHasEtapes && bHasEtapes) return 1
 
+    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     if (aHasEtapes && !bHasEtapes) return -1
 
+    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     if (!aHasEtapes && !bHasEtapes) {
       const aType = DemarchesTypes[a.typeId]
       const bType = DemarchesTypes[b.typeId]

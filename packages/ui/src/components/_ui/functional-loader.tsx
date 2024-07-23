@@ -8,7 +8,7 @@ type Props<T> = {
   renderItem: (item: T) => JSX.Element | null
 } & Pick<HTMLAttributes, 'class' | 'style'>
 
-export const LoadingElement = <T,>(props: Props<T>) => {
+export const LoadingElement = <T,>(props: Props<T>): JSX.Element => {
   return (
     <>
       {props.data.status === 'LOADED' ? (

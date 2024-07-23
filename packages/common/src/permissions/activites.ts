@@ -12,12 +12,12 @@ import { ElementWithValue } from '../sections.js'
 import { isNonEmptyArray, isNullOrUndefined, memoize, NonEmptyArray, SimplePromiseFn } from '../typescript-tools.js'
 import { sectionsWithValueCompleteValidate } from './sections.js'
 
-export const canReadActivites = (user: User) =>
+export const canReadActivites = (user: User): boolean =>
   isSuper(user) ||
   isEntreprise(user) ||
   (isAdministration(user) && [ADMINISTRATION_TYPE_IDS.MINISTERE, ADMINISTRATION_TYPE_IDS.DREAL, ADMINISTRATION_TYPE_IDS.PREFECTURE].includes(Administrations[user.administrationId].typeId))
 
-export const canDeleteActiviteDocument = (activiteDocumentTypeId: ActiviteDocumentTypeId, activiteTypeId: ActivitesTypesId, activiteStatutId: ActivitesStatutId) => {
+export const canDeleteActiviteDocument = (activiteDocumentTypeId: ActiviteDocumentTypeId, activiteTypeId: ActivitesTypesId, activiteStatutId: ActivitesStatutId): boolean => {
   const documentType = activitesTypesDocumentsTypes[activiteTypeId]
   if (isNullOrUndefined(documentType) || documentType.optionnel || documentType.documentTypeId !== activiteDocumentTypeId) {
     return true

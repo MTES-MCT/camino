@@ -18,6 +18,7 @@ const statistiquesGranulatsMarinsActivitesFind = (titresActivites: ITitreActivit
       if (ta.activiteStatutId === ACTIVITES_STATUTS_IDS.DEPOSE) acc.activitesDeposesQuantiteCount++
 
       props.forEach(prop => {
+        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
         if (ta.contenu && ta.contenu.renseignementsProduction && ta.contenu.renseignementsProduction[prop]) {
           const value = ta.contenu!.renseignementsProduction[prop]
           acc[prop] += Math.abs(Number(value))

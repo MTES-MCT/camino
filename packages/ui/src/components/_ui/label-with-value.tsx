@@ -1,6 +1,6 @@
 import { capitalize } from 'camino-common/src/strings'
 import { HTMLAttributes, FunctionalComponent } from 'vue'
-import { JSX } from 'vue/jsx-runtime'
+import type { JSX } from 'vue/jsx-runtime'
 
 type ItemProp = {
   item: JSX.Element

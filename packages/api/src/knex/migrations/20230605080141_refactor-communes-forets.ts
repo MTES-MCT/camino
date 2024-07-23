@@ -8,6 +8,7 @@ export const up = async (knex: Knex) => {
   const forets = await knex.select().from('titres_forets')
 
   const foretsByTitreEtapes = forets.reduce((acc, foret) => {
+    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     if (!acc[foret.titreEtapeId]) {
       acc[foret.titreEtapeId] = []
     }
@@ -25,6 +26,7 @@ export const up = async (knex: Knex) => {
   const communes = await knex.select().from('titres_communes')
 
   const communesByTitreEtapes = communes.reduce((acc, commune) => {
+    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     if (!acc[commune.titreEtapeId]) {
       acc[commune.titreEtapeId] = []
     }

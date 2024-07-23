@@ -15,6 +15,7 @@ import { getTitreTypeType } from 'camino-common/src/static/titresTypes.js'
 import { TitresTypesTypes } from 'camino-common/src/static/titresTypesTypes.js'
 import { NonEmptyArray, isNonEmptyArray, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
 import { getEntreprise, getEntrepriseUtilisateurs } from '../../api/rest/entreprises.queries.js'
+import { ETAPE_IS_NOT_BROUILLON } from 'camino-common/src/etape.js'
 
 const emailConfirmationDepotSend = async (
   emails: string[],
@@ -55,7 +56,7 @@ export const titreDemarcheDepotCheck = (titreDemarche: ITitreDemarche): boolean 
   if (!demarcheDefinition) return false
   if (titreDemarche.titre!.typeId === 'arm' && titreDemarche.typeId === 'oct') {
     // Si on a pas de demande faite
-    if (!titreDemarche.etapes?.find(e => e.typeId === 'mfr' && !e.isBrouillon)) {
+    if (!titreDemarche.etapes?.find(e => e.typeId === 'mfr' && e.isBrouillon === ETAPE_IS_NOT_BROUILLON)) {
       return false
     }
 

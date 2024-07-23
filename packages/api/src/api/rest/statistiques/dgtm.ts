@@ -9,6 +9,7 @@ import { ETAPES_TYPES, EtapeTypeId } from 'camino-common/src/static/etapesTypes.
 import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts.js'
 import { getProductionOr } from './dgtm.queries.js'
 import type { Pool } from 'pg'
+import { isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools.js'
 
 const anneeDepartStats = 2015
 
@@ -236,9 +237,9 @@ export const getDGTMStatsInside =
 
     const producteursOr = await getProductionOr(pool)
 
-    if (producteursOr && producteursOr?.length) {
+    if (isNotNullNorUndefinedNorEmpty(producteursOr)) {
       result.producteursOr = producteursOr.reduce<Record<CaminoAnnee, number>>((acc, r) => {
-        if (r.annee && r.count) {
+        if (isNotNullNorUndefinedNorEmpty(r.annee) && r.count) {
           acc[toCaminoAnnee(r.annee)] = r.count
         }
 

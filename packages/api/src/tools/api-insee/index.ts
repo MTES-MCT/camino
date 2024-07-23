@@ -2,51 +2,40 @@ import { entrepriseEtablissementsFormat, entrepriseFormat } from './format.js'
 import { entreprisesFetch, entreprisesEtablissementsFetch } from './fetch.js'
 import { IEntreprise, IEntrepriseEtablissement } from '../../types.js'
 import { Siren } from 'camino-common/src/entreprise.js'
+import { isNotNullNorUndefined, isNullOrUndefined, isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools.js'
 
 // cherche les établissements des entreprises
 // retourne des objets du modèle EntrepriseEtablissements
-export const apiInseeEntreprisesEtablissementsGet = async (sirenIds: Siren[]) => {
+export const apiInseeEntreprisesEtablissementsGet = async (sirenIds: Siren[]): Promise<IEntrepriseEtablissement[]> => {
   if (!sirenIds.length) return []
 
   const entreprises = await entreprisesEtablissementsFetch(sirenIds)
 
-  if (!entreprises || !Array.isArray(entreprises)) return []
+  if (isNullOrUndefinedOrEmpty(entreprises) || !Array.isArray(entreprises)) return []
 
-  return entreprises.reduce((acc: IEntrepriseEtablissement[], e) => {
-    if (e) {
-      acc.push(...entrepriseEtablissementsFormat(e))
-    }
-
-    return acc
-  }, [])
+  return entreprises.filter(isNotNullNorUndefined).flatMap(e => entrepriseEtablissementsFormat(e))
 }
 
 // cherche les adresses des entreprises
 // retourne des objets du modèle Entreprise
-export const apiInseeEntreprisesGet = async (sirenIds: Siren[]) => {
+export const apiInseeEntreprisesGet = async (sirenIds: Siren[]): Promise<IEntreprise[]> => {
   const entreprises = await entreprisesFetch(sirenIds)
 
-  if (!entreprises || !Array.isArray(entreprises)) {
+  if (isNullOrUndefinedOrEmpty(entreprises) || !Array.isArray(entreprises)) {
     return []
   }
 
-  return entreprises.reduce((acc: IEntreprise[], e) => {
-    if (e) {
-      acc.push(entrepriseFormat(e))
-    }
-
-    return acc
-  }, [])
+  return entreprises.filter(isNotNullNorUndefined).map(e => entrepriseFormat(e))
 }
 
-export const apiInseeEntrepriseAndEtablissementsGet = async (sirenId: Siren) => {
+export const apiInseeEntrepriseAndEtablissementsGet = async (sirenId: Siren): Promise<IEntreprise | null> => {
   const entreprises = await apiInseeEntreprisesGet([sirenId])
-  if (!entreprises) {
+  if (isNullOrUndefinedOrEmpty(entreprises)) {
     throw new Error('API Insee: erreur')
   }
 
   const [entreprise] = entreprises
-  if (!entreprise) return null
+  if (isNullOrUndefined(entreprise)) return null
 
   entreprise.etablissements = await apiInseeEntreprisesEtablissementsGet([sirenId])
 

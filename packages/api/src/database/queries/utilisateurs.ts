@@ -11,9 +11,10 @@ import Utilisateurs from '../models/utilisateurs.js'
 import { utilisateursQueryModify } from './permissions/utilisateurs.js'
 import UtilisateursTitres from '../models/utilisateurs--titres.js'
 import { Role, User } from 'camino-common/src/roles.js'
+import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
 
 const userGet = async (userId?: string): Promise<User> => {
-  if (!userId) return null
+  if (isNullOrUndefined(userId)) return null
 
   const user = await Utilisateurs.query().withGraphFetched('[entreprises]').findById(userId)
   if (user) {
@@ -79,7 +80,7 @@ const utilisateursFiltersQueryModify = (
     q.whereIn('entreprises.id', entreprisesIds).leftJoinRelated('entreprises')
   }
 
-  if (noms && noms !== '') {
+  if (isNotNullNorUndefinedNorEmpty(noms)) {
     const nomsArray = stringSplit(noms)
     const fields = ['nom', 'prenom']
 
@@ -92,7 +93,7 @@ const utilisateursFiltersQueryModify = (
     })
   }
 
-  if (emails && emails !== '') {
+  if (isNotNullNorUndefinedNorEmpty(emails)) {
     q.where(b => {
       b.whereRaw(`LOWER(??) LIKE LOWER(?)`, ['utilisateurs.email', `%${emails}%`])
     })
@@ -101,8 +102,8 @@ const utilisateursFiltersQueryModify = (
   return q
 }
 
-const userByEmailGet = async (email: string | null | undefined) => {
-  if (email) {
+const userByEmailGet = async (email: string | null | undefined): Promise<Utilisateurs | undefined> => {
+  if (isNotNullNorUndefinedNorEmpty(email)) {
     const user: IUtilisateur | undefined = await Utilisateurs.query().withGraphFetched('[entreprises]').where('utilisateurs.email', email).first()
 
     if (user) {
@@ -122,8 +123,8 @@ const userByEmailGet = async (email: string | null | undefined) => {
   return undefined
 }
 
-export const userByKeycloakIdGet = async (keycloakId: string | null | undefined) => {
-  if (keycloakId) {
+export const userByKeycloakIdGet = async (keycloakId: string | null | undefined): Promise<IUtilisateur | undefined> => {
+  if (isNotNullNorUndefinedNorEmpty(keycloakId)) {
     const user: IUtilisateur | undefined = await Utilisateurs.query().withGraphFetched('[entreprises]').where('utilisateurs.keycloakId', keycloakId).first()
 
     if (user) {
@@ -205,11 +206,11 @@ const utilisateursGet = async (
     q.orderBy('utilisateurs.nom', 'asc')
   }
 
-  if (page && intervalle) {
+  if (isNotNullNorUndefined(page) && page > 0 && isNotNullNorUndefined(intervalle) && intervalle > 0) {
     q.offset((page - 1) * intervalle)
   }
 
-  if (intervalle) {
+  if (isNotNullNorUndefined(intervalle) && intervalle > 0) {
     q.limit(intervalle)
   }
 

@@ -6,10 +6,11 @@ import { entreprisesEtablissementsUpsert, entreprisesEtablissementsDelete, entre
 import { apiInseeEntreprisesEtablissementsGet, apiInseeEntreprisesGet } from '../../tools/api-insee/index.js'
 import { userSuper } from '../../database/user-super.js'
 import { Siren, sirenValidator } from 'camino-common/src/entreprise.js'
+import { isNotNullNorUndefined, isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools.js'
 
 const entreprisesEtablissementsToUpdateBuild = (entreprisesEtablissementsOld: IEntrepriseEtablissement[], entreprisesEtablissementsNew: IEntrepriseEtablissement[]) =>
   entreprisesEtablissementsNew.reduce((acc: IEntrepriseEtablissement[], entrepriseEtablissementNew) => {
-    const entrepriseEtablissementOld = entreprisesEtablissementsOld.find(a => a && a.id === entrepriseEtablissementNew.id)
+    const entrepriseEtablissementOld = entreprisesEtablissementsOld.find(a => isNotNullNorUndefined(a) && a.id === entrepriseEtablissementNew.id)
 
     const updated = !entrepriseEtablissementOld || objectsDiffer(entrepriseEtablissementNew, entrepriseEtablissementOld)
 
@@ -22,7 +23,7 @@ const entreprisesEtablissementsToUpdateBuild = (entreprisesEtablissementsOld: IE
 
 const entreprisesEtablissementsToDeleteBuild = (entreprisesEtablissementsOld: IEntrepriseEtablissement[], entreprisesEtablissementsNew: IEntrepriseEtablissement[]) =>
   entreprisesEtablissementsOld.reduce((acc: string[], entrepriseEtablissementOld) => {
-    const deleted = !entreprisesEtablissementsNew.find(a => a && a.id === entrepriseEtablissementOld.id)
+    const deleted = !entreprisesEtablissementsNew.find(a => isNotNullNorUndefined(a) && a.id === entrepriseEtablissementOld.id)
 
     if (deleted) {
       acc.push(entrepriseEtablissementOld.id)
@@ -48,7 +49,7 @@ const sirensFind = (entreprisesOld: IEntreprise[]): Siren[] =>
   Object.keys(
     entreprisesOld.reduce<{ [id in string]?: number }>((acc, entrepriseOld) => {
       const oldSiren = entrepriseOld.legalSiren
-      if (!oldSiren) return acc
+      if (isNullOrUndefinedOrEmpty(oldSiren)) return acc
 
       const numberFound = acc[oldSiren] ?? 0
       acc[oldSiren] = numberFound + 1
