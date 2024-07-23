@@ -1,10 +1,10 @@
 import { QueryBuilder } from 'objection'
 
-import TitresActivites from '../../models/titres-activites.js'
+import TitresActivites from '../../models/titres-activites'
 
-import { administrationsTitresQuery } from './administrations.js'
-import { entreprisesTitresQuery } from './entreprises.js'
-import { isAdministration, isEntreprise, isSuper, User } from 'camino-common/src/roles.js'
+import { administrationsTitresQuery } from './administrations'
+import { entreprisesTitresQuery } from './entreprises'
+import { isAdministration, isEntreprise, isSuper, User } from 'camino-common/src/roles'
 
 export const titresActivitesQueryModify = (q: QueryBuilder<TitresActivites, TitresActivites | TitresActivites[]>, user: User) => {
   q.select('titresActivites.*')

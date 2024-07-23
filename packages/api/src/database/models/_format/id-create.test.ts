@@ -1,6 +1,6 @@
 import { test, expect } from 'vitest'
-import { idGenerate, newEtapeDocumentId } from './id-create.js'
-import { toCaminoDate } from 'camino-common/src/date.js'
+import { idGenerate, newEtapeDocumentId } from './id-create'
+import { toCaminoDate } from 'camino-common/src/date'
 
 test('idGenerate', () => {
   expect(idGenerate()).toHaveLength(24)

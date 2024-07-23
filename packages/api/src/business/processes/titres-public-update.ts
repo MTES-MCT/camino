@@ -1,8 +1,8 @@
-import { titrePublicFind } from 'camino-common/src/static/titresTypes_titresStatuts.js'
-import { TitreId } from 'camino-common/src/validators/titres.js'
-import { getTitrePublicUpdateData, updateTitrePublicLecture } from './titres-public-update.queries.js'
+import { titrePublicFind } from 'camino-common/src/static/titresTypes_titresStatuts'
+import { TitreId } from 'camino-common/src/validators/titres'
+import { getTitrePublicUpdateData, updateTitrePublicLecture } from './titres-public-update.queries'
 import { Pool } from 'pg'
-import { NonEmptyArray } from 'camino-common/src/typescript-tools.js'
+import { NonEmptyArray } from 'camino-common/src/typescript-tools'
 
 // met à jour la publicité d'un titre
 export const titresPublicUpdate = async (pool: Pool, titresIds?: NonEmptyArray<TitreId>) => {

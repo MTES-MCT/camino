@@ -4,7 +4,7 @@ import { AdministrationId } from 'camino-common/src/static/administrations'
 import { testBlankUser } from 'camino-common/src/tests-utils'
 import { test, expect } from 'vitest'
 import { utilisateurUpdationValidate } from './utilisateur-updation-validate'
-import { newUtilisateurId } from '../../database/models/_format/id-create.js'
+import { newUtilisateurId } from '../../database/models/_format/id-create'
 
 const users: Record<Role, UserNotNull> = {
   super: { ...testBlankUser, role: 'super' },

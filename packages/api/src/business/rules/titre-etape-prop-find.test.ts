@@ -1,11 +1,11 @@
-import { ITitreDemarche } from '../../types.js'
+import { ITitreDemarche } from '../../types'
 
-import { titreEtapePropFind } from './titre-etape-prop-find.js'
+import { titreEtapePropFind } from './titre-etape-prop-find'
 import { vi, describe, expect, test } from 'vitest'
-import { toCaminoDate } from 'camino-common/src/date.js'
-import { ETAPE_IS_NOT_BROUILLON, etapeIdValidator } from 'camino-common/src/etape.js'
-import { titreIdValidator } from 'camino-common/src/validators/titres.js'
-import { demarcheIdValidator } from 'camino-common/src/demarche.js'
+import { toCaminoDate } from 'camino-common/src/date'
+import { ETAPE_IS_NOT_BROUILLON, etapeIdValidator } from 'camino-common/src/etape'
+import { titreIdValidator } from 'camino-common/src/validators/titres'
+import { demarcheIdValidator } from 'camino-common/src/demarche'
 console.error = vi.fn()
 
 describe("valeur d'une propriété pour une étape", () => {

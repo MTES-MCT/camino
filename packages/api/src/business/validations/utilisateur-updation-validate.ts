@@ -10,11 +10,11 @@ import {
   isDefautRole,
   isSuperRole,
   isRole,
-} from 'camino-common/src/roles.js'
-import { canEditPermission, getAssignableRoles } from 'camino-common/src/permissions/utilisateurs.js'
-import { equalStringArrays } from '../../tools/index.js'
-import { isAdministrationId } from 'camino-common/src/static/administrations.js'
-import { UtilisateurToEdit } from 'camino-common/src/utilisateur.js'
+} from 'camino-common/src/roles'
+import { canEditPermission, getAssignableRoles } from 'camino-common/src/permissions/utilisateurs'
+import { equalStringArrays } from '../../tools/index'
+import { isAdministrationId } from 'camino-common/src/static/administrations'
+import { UtilisateurToEdit } from 'camino-common/src/utilisateur'
 
 const userIsCorrect = (utilisateur: UtilisateurToEdit): boolean => {
   if (!isRole(utilisateur.role)) {

@@ -1,5 +1,5 @@
-import { graphQLCall } from '../../../../tests/_utils/index.js'
-import { dbManager } from '../../../../tests/db-manager.js'
+import { graphQLCall } from '../../../../tests/_utils/index'
+import { dbManager } from '../../../../tests/db-manager'
 import { vi, expect, test, describe, afterAll, beforeAll } from 'vitest'
 import type { Pool } from 'pg'
 
@@ -23,7 +23,7 @@ describe('substances', () => {
   substances {
    id
     nom
-    description    
+    description
   }
 }`,
       {},

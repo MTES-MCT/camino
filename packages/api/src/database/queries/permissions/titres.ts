@@ -1,16 +1,16 @@
 import { QueryBuilder, raw } from 'objection'
 
-import Titres from '../../models/titres.js'
-import TitresDemarches from '../../models/titres-demarches.js'
-import TitresActivites from '../../models/titres-activites.js'
+import Titres from '../../models/titres'
+import TitresDemarches from '../../models/titres-demarches'
+import TitresActivites from '../../models/titres-activites'
 
-import { titresActivitesQueryModify } from './titres-activites.js'
-import { titresDemarchesQueryModify } from './titres-demarches.js'
-import { administrationsTitresQuery } from './administrations.js'
-import { entreprisesTitresQuery } from './entreprises.js'
-import TitresEtapes from '../../models/titres-etapes.js'
-import { isAdministration, isBureauDEtudes, isEntreprise, isSuper, User } from 'camino-common/src/roles.js'
-import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools.js'
+import { titresActivitesQueryModify } from './titres-activites'
+import { titresDemarchesQueryModify } from './titres-demarches'
+import { administrationsTitresQuery } from './administrations'
+import { entreprisesTitresQuery } from './entreprises'
+import TitresEtapes from '../../models/titres-etapes'
+import { isAdministration, isBureauDEtudes, isEntreprise, isSuper, User } from 'camino-common/src/roles'
+import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
 
 export const titresVisibleByEntrepriseQuery = (q: QueryBuilder<Titres, Titres | Titres[]>, entreprisesIds: string[]) => {
   // titres dont il est titulaire ou amodiataire

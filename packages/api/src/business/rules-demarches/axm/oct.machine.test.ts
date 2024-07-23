@@ -1,8 +1,8 @@
-import { interpretMachine, orderAndInterpretMachine, setDateAndOrderAndInterpretMachine } from '../machine-test-helper.js'
-import { AxmOctMachine } from './oct.machine.js'
-import { EtapesTypesEtapesStatuts as ETES } from 'camino-common/src/static/etapesTypesEtapesStatuts.js'
-import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations.js'
-import { toCaminoDate } from 'camino-common/src/date.js'
+import { interpretMachine, orderAndInterpretMachine, setDateAndOrderAndInterpretMachine } from '../machine-test-helper'
+import { AxmOctMachine } from './oct.machine'
+import { EtapesTypesEtapesStatuts as ETES } from 'camino-common/src/static/etapesTypesEtapesStatuts'
+import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations'
+import { toCaminoDate } from 'camino-common/src/date'
 import { describe, expect, test } from 'vitest'
 const etapesProd = require('./2020-09-30-oct.cas.json')
 

@@ -1,8 +1,8 @@
-import { interpretMachine, setDateAndOrderAndInterpretMachine } from '../machine-test-helper.js'
-import { PrmOctMachine } from './oct.machine.js'
-import { EtapesTypesEtapesStatuts as ETES } from 'camino-common/src/static/etapesTypesEtapesStatuts.js'
+import { interpretMachine, setDateAndOrderAndInterpretMachine } from '../machine-test-helper'
+import { PrmOctMachine } from './oct.machine'
+import { EtapesTypesEtapesStatuts as ETES } from 'camino-common/src/static/etapesTypesEtapesStatuts'
 import { describe, expect, test } from 'vitest'
-import { PAYS_IDS } from 'camino-common/src/static/pays.js'
+import { PAYS_IDS } from 'camino-common/src/static/pays'
 const etapesProd = require('./2019-10-31-oct.cas.json')
 
 describe('vérifie l’arbre d’octroi de PRM', () => {

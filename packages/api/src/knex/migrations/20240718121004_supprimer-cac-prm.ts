@@ -1,7 +1,7 @@
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable sql/no-unsafe-query */
 
-import { EtapeId } from 'camino-common/src/etape.js'
+import { EtapeId } from 'camino-common/src/etape'
 import { Knex } from 'knex'
 
 export const up = async (knex: Knex) => {

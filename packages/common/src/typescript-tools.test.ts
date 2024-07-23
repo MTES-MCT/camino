@@ -1,7 +1,7 @@
-import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefinedOrEmpty, memoize, onlyUnique, stringArrayEquals } from './typescript-tools.js'
-import { Role } from './roles.js'
-import { AdministrationId } from './static/administrations.js'
-import { Departements } from './static/departement.js'
+import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefinedOrEmpty, memoize, onlyUnique, stringArrayEquals } from './typescript-tools'
+import { Role } from './roles'
+import { AdministrationId } from './static/administrations'
+import { Departements } from './static/departement'
 import { test, expect, describe } from 'vitest'
 
 describe('isNotNullNorUndefined', () => {

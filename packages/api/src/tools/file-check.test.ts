@@ -1,5 +1,5 @@
 import { vi, expect, test } from 'vitest'
-import { isPdf } from './file-check.js'
+import { isPdf } from './file-check'
 
 console.error = vi.fn()
 console.info = vi.fn()

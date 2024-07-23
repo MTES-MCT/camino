@@ -1,7 +1,7 @@
 import { expressjwt } from 'express-jwt'
 import { CaminoRequest } from '../api/rest/express-type'
-import { config } from '../config/index.js'
-import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
+import { config } from '../config/index'
+import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 
 export const authJwt = expressjwt({
   credentialsRequired: false,

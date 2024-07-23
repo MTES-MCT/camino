@@ -1,8 +1,8 @@
-import { Definition } from '../definition.js'
-import { RegionId } from './region.js'
-import { DepartementId } from './departement.js'
+import { Definition } from '../definition'
+import { RegionId } from './region'
+import { DepartementId } from './departement'
 import { z } from 'zod'
-import { map } from '../typescript-tools.js'
+import { map } from '../typescript-tools'
 
 const ADMINISTRATION_TYPE_IDS_ARRAY = ['aut', 'dre', 'min', 'ope', 'pre'] as const
 

@@ -1,9 +1,9 @@
-import { getKeys, isNotNullNorUndefined, onlyUnique } from '../../typescript-tools.js'
-import { DEMARCHES_TYPES_IDS, DemarcheTypeId, isDemarcheTypeId } from '../demarchesTypes.js'
-import { DocumentsTypes, DOCUMENTS_TYPES_IDS, EntrepriseDocumentTypeId, EntrepriseDocumentType, isEntrepriseDocumentTypeId } from '../documentsTypes.js'
-import { ETAPES_TYPES, EtapeTypeId, isEtapeTypeId } from '../etapesTypes.js'
-import { TitreTypeId, TITRES_TYPES_IDS, isTitreType } from '../titresTypes.js'
-import { TDEType } from './index.js'
+import { getKeys, isNotNullNorUndefined, onlyUnique } from '../../typescript-tools'
+import { DEMARCHES_TYPES_IDS, DemarcheTypeId, isDemarcheTypeId } from '../demarchesTypes'
+import { DocumentsTypes, DOCUMENTS_TYPES_IDS, EntrepriseDocumentTypeId, EntrepriseDocumentType, isEntrepriseDocumentTypeId } from '../documentsTypes'
+import { ETAPES_TYPES, EtapeTypeId, isEtapeTypeId } from '../etapesTypes'
+import { TitreTypeId, TITRES_TYPES_IDS, isTitreType } from '../titresTypes'
+import { TDEType } from './index'
 
 const EtapesTypesEntrepriseDocumentsTypes = {
   [ETAPES_TYPES.demande]: [

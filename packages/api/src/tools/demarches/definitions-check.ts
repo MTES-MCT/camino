@@ -1,7 +1,7 @@
-import { demarchesDefinitions } from '../../business/rules-demarches/definitions.js'
-import { titresDemarchesGet } from '../../database/queries/titres-demarches.js'
-import { titreDemarcheUpdatedEtatValidate } from '../../business/validations/titre-demarche-etat-validate.js'
-import { userSuper } from '../../database/user-super.js'
+import { demarchesDefinitions } from '../../business/rules-demarches/definitions'
+import { titresDemarchesGet } from '../../database/queries/titres-demarches'
+import { titreDemarcheUpdatedEtatValidate } from '../../business/validations/titre-demarche-etat-validate'
+import { userSuper } from '../../database/user-super'
 
 const demarchesValidate = async () => {
   const errors = [] as string[]

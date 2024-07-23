@@ -1,4 +1,4 @@
-import { arePointsOnPerimeter } from './etapes.js'
+import { arePointsOnPerimeter } from './etapes'
 import { expect, test } from 'vitest'
 
 import { FeatureMultiPolygon } from 'camino-common/src/perimetre'

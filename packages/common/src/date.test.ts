@@ -14,7 +14,7 @@ import {
   isBefore,
   intervalleAnnees,
   caminoDateValidator,
-} from './date.js'
+} from './date'
 import { test, expect } from 'vitest'
 
 test('toCaminoDate', () => {

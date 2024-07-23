@@ -1,11 +1,11 @@
-import { FlattenEtape, defaultHeritageProps, flattenEtapeValidator, heritageContenuValidator } from 'camino-common/src/etape-form.js'
-import { simpleContenuToFlattenedContenu } from 'camino-common/src/sections.js'
-import { isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
-import { ITitreEtape } from '../../types.js'
+import { FlattenEtape, defaultHeritageProps, flattenEtapeValidator, heritageContenuValidator } from 'camino-common/src/etape-form'
+import { simpleContenuToFlattenedContenu } from 'camino-common/src/sections'
+import { isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools'
+import { ITitreEtape } from '../../types'
 
-import { titreEtapeFormatFields } from './_fields.js'
-import { titreDemarcheFormat } from './titres-demarches.js'
-import { EtapesTypes } from 'camino-common/src/static/etapesTypes.js'
+import { titreEtapeFormatFields } from './_fields'
+import { titreDemarcheFormat } from './titres-demarches'
+import { EtapesTypes } from 'camino-common/src/static/etapesTypes'
 
 const getPerimetreFromITitreEtape = (
   titreEtape: Pick<

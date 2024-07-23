@@ -4,10 +4,10 @@ import { Request } from 'express-jwt'
 import basicAuth from 'basic-auth'
 import bcrypt from 'bcryptjs'
 
-import { emailCheck } from '../tools/email-check.js'
-import { userByEmailGet } from '../database/queries/utilisateurs.js'
+import { emailCheck } from '../tools/email-check'
+import { userByEmailGet } from '../database/queries/utilisateurs'
 import { JWTUser } from './user-loader'
-import { isNullOrUndefined, isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
+import { isNullOrUndefined, isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 
 const userQGISCredentialsCheck = async (email: string, qgisToken: string) => {
   email = email.toLowerCase()

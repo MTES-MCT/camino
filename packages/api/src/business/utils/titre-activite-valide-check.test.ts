@@ -1,11 +1,11 @@
-import { ITitreDemarche } from '../../types.js'
+import { ITitreDemarche } from '../../types'
 
-import { titreActiviteValideCheck } from './titre-activite-valide-check.js'
+import { titreActiviteValideCheck } from './titre-activite-valide-check'
 
-import { titreValideCheck } from './titre-valide-check.js'
+import { titreValideCheck } from './titre-valide-check'
 
 import { vi, describe, test, expect } from 'vitest'
-import { toCaminoDate } from 'camino-common/src/date.js'
+import { toCaminoDate } from 'camino-common/src/date'
 
 vi.mock('./titre-valide-check', () => ({
   titreValideCheck: vi.fn(),

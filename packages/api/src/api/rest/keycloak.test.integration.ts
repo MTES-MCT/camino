@@ -1,10 +1,10 @@
-import { userSuper } from '../../database/user-super.js'
-import { dbManager } from '../../../tests/db-manager.js'
-import { restCall } from '../../../tests/_utils/index.js'
+import { userSuper } from '../../database/user-super'
+import { dbManager } from '../../../tests/db-manager'
+import { restCall } from '../../../tests/_utils/index'
 import { test, expect, vi, beforeAll, afterAll } from 'vitest'
 import type { Pool } from 'pg'
-import { HTTP_STATUS } from 'camino-common/src/http.js'
-import { renewConfig } from '../../config/index.js'
+import { HTTP_STATUS } from 'camino-common/src/http'
+import { renewConfig } from '../../config/index'
 
 console.info = vi.fn()
 console.error = vi.fn()

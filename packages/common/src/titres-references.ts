@@ -1,4 +1,4 @@
-import { referenceTypeIdValidator } from './static/referencesTypes.js'
+import { referenceTypeIdValidator } from './static/referencesTypes'
 import { z } from 'zod'
 
 export const titreReferenceValidator = z.object({

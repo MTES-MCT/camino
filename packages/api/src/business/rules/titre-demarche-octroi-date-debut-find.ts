@@ -1,9 +1,9 @@
-import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
-import { ITitreDemarche } from '../../types.js'
+import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
+import { ITitreDemarche } from '../../types'
 
-import { titreDemarcheSortAsc } from '../utils/titre-elements-sort-asc.js'
-import { titreEtapesSortDescByOrdre } from '../utils/titre-etapes-sort.js'
-import { isDemarcheTypeOctroi } from 'camino-common/src/static/demarchesTypes.js'
+import { titreDemarcheSortAsc } from '../utils/titre-elements-sort-asc'
+import { titreEtapesSortDescByOrdre } from '../utils/titre-etapes-sort'
+import { isDemarcheTypeOctroi } from 'camino-common/src/static/demarchesTypes'
 const etapeTypeIds: EtapeTypeId[] = ['dpu', 'dup', 'rpu', 'dex', 'dux', 'dim', 'def', 'sco', 'aco']
 const titreDemarcheOctroiDateDebutFind = (titreDemarches?: ITitreDemarche[] | null) => {
   if (!titreDemarches || !titreDemarches.length) return '0000'

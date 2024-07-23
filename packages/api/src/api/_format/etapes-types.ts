@@ -1,10 +1,10 @@
-import { ITitreEtape } from '../../types.js'
+import { ITitreEtape } from '../../types'
 
-import { titreDemarcheDepotDemandeDateFind } from '../../business/rules/titre-demarche-depot-demande-date-find.js'
+import { titreDemarcheDepotDemandeDateFind } from '../../business/rules/titre-demarche-depot-demande-date-find'
 
-import { DocumentType } from 'camino-common/src/static/documentsTypes.js'
-import { EtapesTypes, EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
-import { isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools.js'
+import { DocumentType } from 'camino-common/src/static/documentsTypes'
+import { EtapesTypes, EtapeTypeId } from 'camino-common/src/static/etapesTypes'
+import { isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
 
 export const documentsTypesFormat = (documentsTypes: DocumentType[] | undefined | null, documentsTypesSpecifiques: DocumentType[] | undefined | null): DocumentType[] => {
   let result: DocumentType[] = []

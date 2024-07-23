@@ -1,12 +1,12 @@
-import { dbManager } from '../../../tests/db-manager.js'
-import { idGenerate } from '../models/_format/id-create.js'
-import Titres from '../models/titres.js'
-import TitresDemarches from '../models/titres-demarches.js'
-import TitresEtapes from '../models/titres-etapes.js'
-import { titreDemarcheArchive } from './titres-demarches.js'
-import { toCaminoDate } from 'camino-common/src/date.js'
+import { dbManager } from '../../../tests/db-manager'
+import { idGenerate } from '../models/_format/id-create'
+import Titres from '../models/titres'
+import TitresDemarches from '../models/titres-demarches'
+import TitresEtapes from '../models/titres-etapes'
+import { titreDemarcheArchive } from './titres-demarches'
+import { toCaminoDate } from 'camino-common/src/date'
 import { beforeAll, expect, afterAll, test, describe, vi } from 'vitest'
-import { ETAPE_IS_BROUILLON } from 'camino-common/src/etape.js'
+import { ETAPE_IS_BROUILLON } from 'camino-common/src/etape'
 console.info = vi.fn()
 console.error = vi.fn()
 

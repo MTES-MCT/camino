@@ -1,7 +1,7 @@
-import { SubstanceFiscale, SubstanceFiscaleId, SubstancesFiscales } from 'camino-common/src/static/substancesFiscales.js'
-import { Unite, Unites } from 'camino-common/src/static/unites.js'
+import { SubstanceFiscale, SubstanceFiscaleId, SubstancesFiscales } from 'camino-common/src/static/substancesFiscales'
+import { Unite, Unites } from 'camino-common/src/static/unites'
 import Decimal from 'decimal.js'
-import { config } from '../../config/index.js'
+import { config } from '../../config/index'
 type Attribute = 'surface_communale' | 'surface_communale_proportionnee' | 'taxe_guyane_brute' | 'taxe_guyane_deduction' | 'taxe_guyane' | string
 
 const openfiscaSubstanceFiscaleNom = (substanceFiscale: SubstanceFiscale): string => substanceFiscale.openFisca?.nom ?? substanceFiscale.nom

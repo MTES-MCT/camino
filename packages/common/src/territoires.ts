@@ -1,9 +1,9 @@
-import { CommuneId } from './static/communes.js'
-import { FacadeComputed, FacadesMaritimes, getDepartementsBySecteurs, getFacade, getFacadesComputed, SecteursMaritimes } from './static/facades.js'
-import { DepartementId, DepartementLabel, Departements, toDepartementId } from './static/departement.js'
-import { RegionId, RegionLabel, Regions } from './static/region.js'
-import { DeepReadonly, onlyUnique } from './typescript-tools.js'
-import { PaysId } from './static/pays.js'
+import { CommuneId } from './static/communes'
+import { FacadeComputed, FacadesMaritimes, getDepartementsBySecteurs, getFacade, getFacadesComputed, SecteursMaritimes } from './static/facades'
+import { DepartementId, DepartementLabel, Departements, toDepartementId } from './static/departement'
+import { RegionId, RegionLabel, Regions } from './static/region'
+import { DeepReadonly, onlyUnique } from './typescript-tools'
+import { PaysId } from './static/pays'
 
 export const territoiresFind = (
   communesWithName: Record<CommuneId, string>,

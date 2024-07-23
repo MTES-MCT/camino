@@ -1,6 +1,6 @@
 import { Model, Modifiers } from 'objection'
 
-import { IEntrepriseEtablissement } from '../../types.js'
+import { IEntrepriseEtablissement } from '../../types'
 
 interface EntreprisesEtablissements extends IEntrepriseEtablissement {}
 

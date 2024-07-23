@@ -1,12 +1,12 @@
-import { ITitreEtape, IEntreprise, ITitreEtapePerimetre } from '../../types.js'
-import { objectClone } from '../../tools/index.js'
-import { SubstanceLegaleId } from 'camino-common/src/static/substancesLegales.js'
-import { CaminoDate } from 'camino-common/src/date.js'
-import { FeatureMultiPolygon, equalGeojson } from 'camino-common/src/perimetre.js'
-import { exhaustiveCheck, isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
-import { ETAPE_HERITAGE_PROPS, EtapeHeritageProps } from 'camino-common/src/heritage.js'
+import { ITitreEtape, IEntreprise, ITitreEtapePerimetre } from '../../types'
+import { objectClone } from '../../tools/index'
+import { SubstanceLegaleId } from 'camino-common/src/static/substancesLegales'
+import { CaminoDate } from 'camino-common/src/date'
+import { FeatureMultiPolygon, equalGeojson } from 'camino-common/src/perimetre'
+import { exhaustiveCheck, isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools'
+import { ETAPE_HERITAGE_PROPS, EtapeHeritageProps } from 'camino-common/src/heritage'
 import { EntrepriseId } from 'camino-common/src/entreprise'
-import { ZERO_KM2 } from 'camino-common/src/number.js'
+import { ZERO_KM2 } from 'camino-common/src/number'
 
 const propertyArrayCheck = (newValue: string[], prevValue: string[], propId: string) => {
   if (prevValue?.length !== newValue?.length) {

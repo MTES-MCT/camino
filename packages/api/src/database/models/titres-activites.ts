@@ -1,10 +1,10 @@
 import { Model, Modifiers, Pojo, QueryContext } from 'objection'
 
-import { ITitreActivite } from '../../types.js'
-import { idGenerate } from './_format/id-create.js'
-import Titres from './titres.js'
-import Utilisateurs from './utilisateurs.js'
-import { isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
+import { ITitreActivite } from '../../types'
+import { idGenerate } from './_format/id-create'
+import Titres from './titres'
+import Utilisateurs from './utilisateurs'
+import { isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools'
 
 interface TitresActivites extends ITitreActivite {}
 

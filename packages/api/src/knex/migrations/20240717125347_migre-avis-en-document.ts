@@ -1,11 +1,11 @@
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable sql/no-unsafe-query */
-import { CaminoDate, dateFormat } from 'camino-common/src/date.js'
-import { EtapeId } from 'camino-common/src/etape.js'
-import { AvisVisibilityId } from 'camino-common/src/static/avisTypes.js'
+import { CaminoDate, dateFormat } from 'camino-common/src/date'
+import { EtapeId } from 'camino-common/src/etape'
+import { AvisVisibilityId } from 'camino-common/src/static/avisTypes'
 import { Knex } from 'knex'
-import { LargeObjectId, largeObjectIdValidator } from '../../database/largeobjects.js'
-import { DOCUMENTS_TYPES_IDS } from 'camino-common/src/static/documentsTypes.js'
+import { LargeObjectId, largeObjectIdValidator } from '../../database/largeobjects'
+import { DOCUMENTS_TYPES_IDS } from 'camino-common/src/static/documentsTypes'
 
 export const up = async (knex: Knex) => {
   const result: { rows: { id: string; avis_visibility_id: AvisVisibilityId; etape_id: EtapeId; description: string; date: CaminoDate; largeobject_id: LargeObjectId | null }[] } = await knex.raw(

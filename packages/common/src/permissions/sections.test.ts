@@ -1,6 +1,6 @@
-import { sectionElementWithValueCompleteValidate, sectionsWithValueCompleteValidate } from './sections.js'
+import { sectionElementWithValueCompleteValidate, sectionsWithValueCompleteValidate } from './sections'
 import { test, expect, describe } from 'vitest'
-import { ElementWithValue } from '../sections.js'
+import { ElementWithValue } from '../sections'
 import { CaminoDate, getCurrent } from '../date'
 
 describe('sectionElementWithValueCompleteValidate', () => {

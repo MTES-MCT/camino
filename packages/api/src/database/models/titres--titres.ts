@@ -1,5 +1,5 @@
 import { Model } from 'objection'
-import { ITitreTitre } from '../../types.js'
+import { ITitreTitre } from '../../types'
 
 interface TitreTitre extends ITitreTitre {}
 

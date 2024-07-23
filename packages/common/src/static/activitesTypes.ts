@@ -1,7 +1,7 @@
-import { CaminoDate, toCaminoDate } from '../date.js'
-import { FrequenceId } from './frequence.js'
-import { Section, SectionElement } from './titresTypes_demarchesTypes_etapesTypes/sections.js'
-import { DeepReadonly } from '../typescript-tools.js'
+import { CaminoDate, toCaminoDate } from '../date'
+import { FrequenceId } from './frequence'
+import { Section, SectionElement } from './titresTypes_demarchesTypes_etapesTypes/sections'
+import { DeepReadonly } from '../typescript-tools'
 import { z } from 'zod'
 
 const IDS = ['gra', 'grp', 'grx', 'pma', 'pmb', 'pmc', 'pmd', 'wrp'] as const

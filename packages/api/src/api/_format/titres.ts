@@ -1,12 +1,12 @@
-import { ITitre, ITitreDemarche } from '../../types.js'
+import { ITitre, ITitreDemarche } from '../../types'
 
-import { titreActiviteFormat } from './titres-activites.js'
-import { titreDemarcheFormat } from './titres-demarches.js'
-import { titreFormatFields } from './_fields.js'
-import { AdministrationId } from 'camino-common/src/static/administrations.js'
-import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined, onlyUnique } from 'camino-common/src/typescript-tools.js'
-import { getGestionnairesByTitreTypeId } from 'camino-common/src/static/administrationsTitresTypes.js'
-import { ACTIVITES_STATUTS_IDS } from 'camino-common/src/static/activitesStatuts.js'
+import { titreActiviteFormat } from './titres-activites'
+import { titreDemarcheFormat } from './titres-demarches'
+import { titreFormatFields } from './_fields'
+import { AdministrationId } from 'camino-common/src/static/administrations'
+import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined, onlyUnique } from 'camino-common/src/typescript-tools'
+import { getGestionnairesByTitreTypeId } from 'camino-common/src/static/administrationsTitresTypes'
+import { ACTIVITES_STATUTS_IDS } from 'camino-common/src/static/activitesStatuts'
 import { FieldsTitre } from '../../database/queries/_options'
 
 // optimisation possible pour un expert SQL

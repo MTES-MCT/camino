@@ -1,5 +1,5 @@
-import { Definition } from '../definition.js'
-import { Couleur } from './couleurs.js'
+import { Definition } from '../definition'
+import { Couleur } from './couleurs'
 import { z } from 'zod'
 
 const IDS = ['acc', 'cls', 'dep', 'des', 'eco', 'fpm', 'ind', 'ini', 'ins', 'rej', 'ter', 'acp', 'rea'] as const

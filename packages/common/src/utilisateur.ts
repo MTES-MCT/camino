@@ -1,7 +1,7 @@
-import { Role, ROLES, utilisateurIdValidator } from './roles.js'
-import { AdministrationId, IDS } from './static/administrations.js'
+import { Role, ROLES, utilisateurIdValidator } from './roles'
+import { AdministrationId, IDS } from './static/administrations'
 import { z } from 'zod'
-import { entrepriseIdValidator } from './entreprise.js'
+import { entrepriseIdValidator } from './entreprise'
 
 export const qgisTokenValidator = z.object({ token: z.string(), url: z.string() })
 export type QGISToken = z.infer<typeof qgisTokenValidator>

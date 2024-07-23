@@ -1,20 +1,20 @@
 /* eslint-disable sql/no-unsafe-query */
-import { dbManager } from '../../../tests/db-manager.js'
-import { graphQLCall, queryImport } from '../../../tests/_utils/index.js'
-import options from '../../database/queries/_options.js'
-import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations.js'
-import { ITitre } from '../../types.js'
-import { newDemarcheId, newEtapeId, newTitreId } from '../../database/models/_format/id-create.js'
-import { toCaminoDate } from 'camino-common/src/date.js'
+import { dbManager } from '../../../tests/db-manager'
+import { graphQLCall, queryImport } from '../../../tests/_utils/index'
+import options from '../../database/queries/_options'
+import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations'
+import { ITitre } from '../../types'
+import { newDemarcheId, newEtapeId, newTitreId } from '../../database/models/_format/id-create'
+import { toCaminoDate } from 'camino-common/src/date'
 
 import { vi, afterEach, afterAll, beforeAll, describe, test, expect } from 'vitest'
 import type { Pool } from 'pg'
-import { entrepriseUpsert } from '../../database/queries/entreprises.js'
-import { newEntrepriseId } from 'camino-common/src/entreprise.js'
-import { communeIdValidator } from 'camino-common/src/static/communes.js'
+import { entrepriseUpsert } from '../../database/queries/entreprises'
+import { newEntrepriseId } from 'camino-common/src/entreprise'
+import { communeIdValidator } from 'camino-common/src/static/communes'
 import type { Knex } from 'knex'
 import Titres from '../../database/models/titres'
-import { ETAPE_IS_NOT_BROUILLON } from 'camino-common/src/etape.js'
+import { ETAPE_IS_NOT_BROUILLON } from 'camino-common/src/etape'
 
 console.info = vi.fn()
 console.error = vi.fn()

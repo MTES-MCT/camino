@@ -1,7 +1,7 @@
 import { z } from 'zod'
-import { caminoDateValidator } from './date.js'
-import { demarcheIdValidator, demarcheSlugValidator } from './demarche.js'
-import { entrepriseDocumentIdValidator, entrepriseIdValidator } from './entreprise.js'
+import { caminoDateValidator } from './date'
+import { demarcheIdValidator, demarcheSlugValidator } from './demarche'
+import { entrepriseDocumentIdValidator, entrepriseIdValidator } from './entreprise'
 import {
   documentComplementaireAslEtapeDocumentModificationValidator,
   documentComplementaireDaeEtapeDocumentModificationValidator,
@@ -11,18 +11,18 @@ import {
   etapeIdValidator,
   etapeNoteValidator,
   etapeSlugValidator,
-} from './etape.js'
-import { km2Validator } from './number.js'
-import { featureCollectionForagesValidator, featureCollectionPointsValidator, featureMultiPolygonValidator } from './perimetre.js'
-import { demarcheTypeIdValidator } from './static/demarchesTypes.js'
-import { etapeStatutIdValidator } from './static/etapesStatuts.js'
-import { etapeTypeIdValidator } from './static/etapesTypes.js'
-import { geoSystemeIdValidator } from './static/geoSystemes.js'
-import { substanceLegaleIdValidator } from './static/substancesLegales.js'
-import { titreTypeIdValidator } from './static/titresTypes.js'
-import { titreIdValidator, titreSlugValidator } from './validators/titres.js'
-import { makeFlattenValidator, nullToDefault } from './zod-tools.js'
-import { numberElementValueValidator } from './sections.js'
+} from './etape'
+import { km2Validator } from './number'
+import { featureCollectionForagesValidator, featureCollectionPointsValidator, featureMultiPolygonValidator } from './perimetre'
+import { demarcheTypeIdValidator } from './static/demarchesTypes'
+import { etapeStatutIdValidator } from './static/etapesStatuts'
+import { etapeTypeIdValidator } from './static/etapesTypes'
+import { geoSystemeIdValidator } from './static/geoSystemes'
+import { substanceLegaleIdValidator } from './static/substancesLegales'
+import { titreTypeIdValidator } from './static/titresTypes'
+import { titreIdValidator, titreSlugValidator } from './validators/titres'
+import { makeFlattenValidator, nullToDefault } from './zod-tools'
+import { numberElementValueValidator } from './sections'
 
 export const contenuValidator = z
   .record(z.string(), z.record(z.string(), z.union([caminoDateValidator, z.string(), z.number(), z.boolean(), z.array(z.string())]).nullable()))

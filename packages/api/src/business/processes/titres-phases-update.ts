@@ -1,8 +1,8 @@
-import { titrePhasesFind } from '../rules/titre-phases-find.js'
-import { titresGet } from '../../database/queries/titres.js'
-import { userSuper } from '../../database/user-super.js'
+import { titrePhasesFind } from '../rules/titre-phases-find'
+import { titresGet } from '../../database/queries/titres'
+import { userSuper } from '../../database/user-super'
 import type { Pool } from 'pg'
-import { updateDatesDemarche } from './titres-phases-update.queries.js'
+import { updateDatesDemarche } from './titres-phases-update.queries'
 
 export const titresDemarchesDatesUpdate = async (pool: Pool, titresIds?: string[]) => {
   console.info()

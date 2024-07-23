@@ -1,16 +1,16 @@
-import { Context } from '../../../types.js'
+import { Context } from '../../../types'
 
-import { titreDemarcheGet } from '../../../database/queries/titres-demarches.js'
+import { titreDemarcheGet } from '../../../database/queries/titres-demarches'
 
-import { titreEtapeHeritageBuild } from './_titre-etape.js'
+import { titreEtapeHeritageBuild } from './_titre-etape'
 
-import { titreEtapeFormat } from '../../_format/titres-etapes.js'
-import { userSuper } from '../../../database/user-super.js'
-import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
-import { CaminoDate } from 'camino-common/src/date.js'
-import { titreEtapeFormatFields } from '../../_format/_fields.js'
-import { EtapeId } from 'camino-common/src/etape.js'
-import { DemarcheId } from 'camino-common/src/demarche.js'
+import { titreEtapeFormat } from '../../_format/titres-etapes'
+import { userSuper } from '../../../database/user-super'
+import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
+import { CaminoDate } from 'camino-common/src/date'
+import { titreEtapeFormatFields } from '../../_format/_fields'
+import { EtapeId } from 'camino-common/src/etape'
+import { DemarcheId } from 'camino-common/src/demarche'
 
 export const etapeHeritage = async ({ date, titreDemarcheId, typeId, etapeId }: { date: CaminoDate; titreDemarcheId: DemarcheId; typeId: EtapeTypeId; etapeId: EtapeId | null }, { user }: Context) => {
   try {

@@ -1,5 +1,5 @@
-import { ElementWithValue } from '../sections.js'
-import { DeepReadonly, isNullOrUndefined } from '../typescript-tools.js'
+import { ElementWithValue } from '../sections'
+import { DeepReadonly, isNullOrUndefined } from '../typescript-tools'
 
 // @deprecated ==> type better
 export type Contenu = { [key in string]?: { [secondKey in string]?: unknown } } | null

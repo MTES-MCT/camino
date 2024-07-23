@@ -1,4 +1,4 @@
-import { IFields } from '../../../types.js'
+import { IFields } from '../../../types'
 import graphqlFields from 'graphql-fields'
 import { GraphQLResolveInfo } from 'graphql'
 

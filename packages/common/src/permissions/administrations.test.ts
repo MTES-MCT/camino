@@ -1,6 +1,6 @@
-import { canEditEmails, canReadActivitesTypesEmails } from './administrations.js'
-import { AdministrationRole, Role, User, UserNotNull } from '../roles.js'
-import { ADMINISTRATION_IDS, AdministrationId } from '../static/administrations.js'
+import { canEditEmails, canReadActivitesTypesEmails } from './administrations'
+import { AdministrationRole, Role, User, UserNotNull } from '../roles'
+import { ADMINISTRATION_IDS, AdministrationId } from '../static/administrations'
 import { test, expect } from 'vitest'
 import { testBlankUser } from '../tests-utils'
 

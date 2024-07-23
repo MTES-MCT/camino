@@ -1,6 +1,6 @@
-import { toCaminoDate } from 'camino-common/src/date.js'
-import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations.js'
-import { ArmOctMachine } from './arm/oct.machine.js'
+import { toCaminoDate } from 'camino-common/src/date'
+import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations'
+import { ArmOctMachine } from './arm/oct.machine'
 import { describe, expect, test } from 'vitest'
 const armOctMachine = new ArmOctMachine()
 describe('isEtapesOk', () => {

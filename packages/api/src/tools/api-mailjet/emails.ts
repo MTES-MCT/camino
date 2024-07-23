@@ -1,8 +1,8 @@
 import { convert } from 'html-to-text'
-import { mailjet } from './index.js'
-import { EmailTemplateId } from './types.js'
-import { emailCheck } from '../email-check.js'
-import { config } from '../../config/index.js'
+import { mailjet } from './index'
+import { EmailTemplateId } from './types'
+import { emailCheck } from '../email-check'
+import { config } from '../../config/index'
 
 const from = {
   email: config().API_MAILJET_EMAIL,

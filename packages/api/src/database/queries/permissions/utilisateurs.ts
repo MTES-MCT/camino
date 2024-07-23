@@ -1,9 +1,9 @@
 import { QueryBuilder } from 'objection'
 
-import Utilisateurs from '../../models/utilisateurs.js'
-import Entreprises from '../../models/entreprises.js'
-import { entreprisesQueryModify } from './entreprises.js'
-import { isAdministrationEditeur, isAdministrationLecteur, isBureauDEtudes, isDefault, isEntreprise, User } from 'camino-common/src/roles.js'
+import Utilisateurs from '../../models/utilisateurs'
+import Entreprises from '../../models/entreprises'
+import { entreprisesQueryModify } from './entreprises'
+import { isAdministrationEditeur, isAdministrationLecteur, isBureauDEtudes, isDefault, isEntreprise, User } from 'camino-common/src/roles'
 
 export const utilisateursQueryModify = (q: QueryBuilder<Utilisateurs, Utilisateurs | Utilisateurs[]>, user: User) => {
   q.select('utilisateurs.*')

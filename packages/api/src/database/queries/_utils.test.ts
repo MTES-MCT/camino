@@ -1,4 +1,4 @@
-import { stringSplit } from './_utils.js'
+import { stringSplit } from './_utils'
 import { describe, test, expect } from 'vitest'
 describe('sépare les groupes de mots', () => {
   test.each([

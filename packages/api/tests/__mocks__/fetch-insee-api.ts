@@ -1,5 +1,5 @@
-import { sirenValidator } from 'camino-common/src/entreprise.js'
-import { IApiSirenEtablissement, IApiSirenUniteLegale } from '../../src/tools/api-insee/types.js'
+import { sirenValidator } from 'camino-common/src/entreprise'
+import { IApiSirenEtablissement, IApiSirenUniteLegale } from '../../src/tools/api-insee/types'
 
 const entreprise = {
   siren: sirenValidator.parse('729800706'),

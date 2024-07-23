@@ -1,12 +1,12 @@
-import '../init.js'
-import { consoleOverride } from '../config/logger.js'
-import { mailjetSend } from '../tools/api-mailjet/emails.js'
+import '../init'
+import { consoleOverride } from '../config/logger'
+import { mailjetSend } from '../tools/api-mailjet/emails'
 import { readFileSync, writeFileSync, createWriteStream } from 'fs'
 import * as Console from 'console'
-import { monthly } from '../business/monthly.js'
+import { monthly } from '../business/monthly'
 import pg from 'pg'
-import { config } from '../config/index.js'
-import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
+import { config } from '../config/index'
+import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 
 const logFile = '/tmp/monthly.log'
 

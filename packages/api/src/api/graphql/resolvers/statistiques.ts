@@ -1,16 +1,16 @@
-import { Context, ITitre } from '../../../types.js'
+import { Context, ITitre } from '../../../types'
 
-import { titreEtapePropFind } from '../../../business/rules/titre-etape-prop-find.js'
-import { titreValideCheck } from '../../../business/utils/titre-valide-check.js'
-import { titresActivitesGet } from '../../../database/queries/titres-activites.js'
-import { userSuper } from '../../../database/user-super.js'
-import { Statistiques } from 'camino-common/src/statistiques.js'
-import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
-import { DEMARCHES_TYPES_IDS } from 'camino-common/src/static/demarchesTypes.js'
-import { ACTIVITES_STATUTS_IDS } from 'camino-common/src/static/activitesStatuts.js'
-import { getAnnee, toCaminoDate } from 'camino-common/src/date.js'
-import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
-import { getTitresModifiesByMonth } from '../../rest/journal.queries.js'
+import { titreEtapePropFind } from '../../../business/rules/titre-etape-prop-find'
+import { titreValideCheck } from '../../../business/utils/titre-valide-check'
+import { titresActivitesGet } from '../../../database/queries/titres-activites'
+import { userSuper } from '../../../database/user-super'
+import { Statistiques } from 'camino-common/src/statistiques'
+import { TitreTypeId } from 'camino-common/src/static/titresTypes'
+import { DEMARCHES_TYPES_IDS } from 'camino-common/src/static/demarchesTypes'
+import { ACTIVITES_STATUTS_IDS } from 'camino-common/src/static/activitesStatuts'
+import { getAnnee, toCaminoDate } from 'camino-common/src/date'
+import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
+import { getTitresModifiesByMonth } from '../../rest/journal.queries'
 
 const ACTIVITE_ANNEE_DEBUT = 2018
 

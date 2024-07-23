@@ -1,5 +1,5 @@
-import '../init.js'
-import { knex } from '../knex.js'
+import '../init'
+import { knex } from '../knex'
 
 const run = async () => {
   try {

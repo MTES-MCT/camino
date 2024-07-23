@@ -1,8 +1,8 @@
-import { interpretMachine, setDateAndOrderAndInterpretMachine } from '../machine-test-helper.js'
-import { AxmProMachine } from './pro.machine.js'
+import { interpretMachine, setDateAndOrderAndInterpretMachine } from '../machine-test-helper'
+import { AxmProMachine } from './pro.machine'
 import { describe, expect, test } from 'vitest'
 
-import { EtapesTypesEtapesStatuts as ETES } from 'camino-common/src/static/etapesTypesEtapesStatuts.js'
+import { EtapesTypesEtapesStatuts as ETES } from 'camino-common/src/static/etapesTypesEtapesStatuts'
 
 const etapesProd = require('./2000-01-01-pro.cas.json')
 

@@ -1,10 +1,10 @@
 // valide le type et le statut de l'étape en fonction des type d'étapes d'une démarche
-import { getEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStatuts.js'
-import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts.js'
-import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
-import { isTDEExist } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/index.js'
-import { DemarcheTypeId, DemarchesTypes } from 'camino-common/src/static/demarchesTypes.js'
-import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
+import { getEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStatuts'
+import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts'
+import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
+import { isTDEExist } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/index'
+import { DemarcheTypeId, DemarchesTypes } from 'camino-common/src/static/demarchesTypes'
+import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 
 export const tdeOldTitreEtapeTypeAndStatusValidate = (titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId, etapeTypeId: EtapeTypeId, etapeStatutId: EtapeStatutId | undefined): string[] => {
   if (!etapeStatutId) {

@@ -1,6 +1,6 @@
-import { TitreTypeId } from '../static/titresTypes.js'
-import { EtapeTypeId } from '../static/etapesTypes.js'
-import { DemarcheTypeId } from '../static/demarchesTypes.js'
+import { TitreTypeId } from '../static/titresTypes'
+import { EtapeTypeId } from '../static/etapesTypes'
+import { DemarcheTypeId } from '../static/demarchesTypes'
 
 import {
   canCreateEtape,
@@ -15,19 +15,19 @@ import {
   IsEtapeCompleteEntrepriseDocuments,
   IsEtapeCompleteEtape,
   canDeleteEtape,
-} from './titres-etapes.js'
-import { AdministrationId, ADMINISTRATION_IDS } from '../static/administrations.js'
+} from './titres-etapes'
+import { AdministrationId, ADMINISTRATION_IDS } from '../static/administrations'
 import { test, expect } from 'vitest'
-import { TestUser, testBlankUser } from '../tests-utils.js'
-import { TitreStatutId } from '../static/titresStatuts.js'
-import { EntrepriseId, entrepriseIdValidator, newEntrepriseId } from '../entreprise.js'
-import { SubstanceLegaleId } from '../static/substancesLegales.js'
-import { FeatureMultiPolygon } from '../perimetre.js'
-import { caminoDateValidator, toCaminoDate } from '../date.js'
-import { ETAPE_IS_BROUILLON, ETAPE_IS_NOT_BROUILLON, EtapeBrouillon } from '../etape.js'
-import { EntrepriseUserNotNull } from '../roles.js'
-import { communeIdValidator } from '../static/communes.js'
-import { SDOMZoneIds } from '../static/sdom.js'
+import { TestUser, testBlankUser } from '../tests-utils'
+import { TitreStatutId } from '../static/titresStatuts'
+import { EntrepriseId, entrepriseIdValidator, newEntrepriseId } from '../entreprise'
+import { SubstanceLegaleId } from '../static/substancesLegales'
+import { FeatureMultiPolygon } from '../perimetre'
+import { caminoDateValidator, toCaminoDate } from '../date'
+import { ETAPE_IS_BROUILLON, ETAPE_IS_NOT_BROUILLON, EtapeBrouillon } from '../etape'
+import { EntrepriseUserNotNull } from '../roles'
+import { communeIdValidator } from '../static/communes'
+import { SDOMZoneIds } from '../static/sdom'
 
 test.each<{ etapeTypeId: EtapeTypeId; demarcheTypeId: DemarcheTypeId; titreTypeId: TitreTypeId; optional: boolean }>([
   { etapeTypeId: 'mfr', demarcheTypeId: 'oct', titreTypeId: 'arm', optional: false },

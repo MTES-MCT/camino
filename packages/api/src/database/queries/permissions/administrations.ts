@@ -1,7 +1,7 @@
 import { QueryBuilder, Model } from 'objection'
-import { AdministrationId } from 'camino-common/src/static/administrations.js'
-import { getTitreTypeIdsByAdministration } from 'camino-common/src/static/administrationsTitresTypes.js'
-import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
+import { AdministrationId } from 'camino-common/src/static/administrations'
+import { getTitreTypeIdsByAdministration } from 'camino-common/src/static/administrationsTitresTypes'
+import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 
 export const administrationsTitresQuery = <M extends Model>(
   q: QueryBuilder<M, M | M[]>,

@@ -1,22 +1,22 @@
 import { GraphQLResolveInfo } from 'graphql'
 
-import { ITitreDemarche, ITitreEtapeFiltre, ITitreDemarcheColonneId, Context } from '../../../types.js'
+import { ITitreDemarche, ITitreEtapeFiltre, ITitreDemarcheColonneId, Context } from '../../../types'
 
-import { fieldsBuild } from './_fields-build.js'
+import { fieldsBuild } from './_fields-build'
 
-import { titreDemarcheFormat } from '../../_format/titres-demarches.js'
+import { titreDemarcheFormat } from '../../_format/titres-demarches'
 
-import { titreDemarcheGet, titresDemarchesCount, titresDemarchesGet, titreDemarcheCreate, titreDemarcheUpdate, titreDemarcheArchive } from '../../../database/queries/titres-demarches.js'
+import { titreDemarcheGet, titresDemarchesCount, titresDemarchesGet, titreDemarcheCreate, titreDemarcheUpdate, titreDemarcheArchive } from '../../../database/queries/titres-demarches'
 
-import { titreGet } from '../../../database/queries/titres.js'
+import { titreGet } from '../../../database/queries/titres'
 
-import { titreDemarcheUpdate as titreDemarcheUpdateTask } from '../../../business/titre-demarche-update.js'
-import { titreDemarcheUpdationValidate } from '../../../business/validations/titre-demarche-updation-validate.js'
-import { isDemarcheTypeId, isTravaux } from 'camino-common/src/static/demarchesTypes.js'
-import { canCreateTravaux, canEditDemarche, canDeleteDemarche, canCreateDemarche } from 'camino-common/src/permissions/titres-demarches.js'
-import { isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
-import { userSuper } from '../../../database/user-super.js'
-import { getDemarchesByTitreId } from '../../rest/titres.queries.js'
+import { titreDemarcheUpdate as titreDemarcheUpdateTask } from '../../../business/titre-demarche-update'
+import { titreDemarcheUpdationValidate } from '../../../business/validations/titre-demarche-updation-validate'
+import { isDemarcheTypeId, isTravaux } from 'camino-common/src/static/demarchesTypes'
+import { canCreateTravaux, canEditDemarche, canDeleteDemarche, canCreateDemarche } from 'camino-common/src/permissions/titres-demarches'
+import { isNullOrUndefined } from 'camino-common/src/typescript-tools'
+import { userSuper } from '../../../database/user-super'
+import { getDemarchesByTitreId } from '../../rest/titres.queries'
 
 export const demarches = async (
   {

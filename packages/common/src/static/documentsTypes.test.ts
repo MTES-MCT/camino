@@ -1,4 +1,4 @@
-import { isDocumentTypeId } from './documentsTypes.js'
+import { isDocumentTypeId } from './documentsTypes'
 import { test, expect } from 'vitest'
 
 test('isDocumentTypeId', () => {

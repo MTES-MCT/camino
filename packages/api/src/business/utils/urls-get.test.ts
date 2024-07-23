@@ -1,6 +1,6 @@
-import { ActivitesUrlGetParams, activitesUrlGet } from './urls-get.js'
+import { ActivitesUrlGetParams, activitesUrlGet } from './urls-get'
 import { describe, test, expect } from 'vitest'
-import { toCaminoAnnee } from 'camino-common/src/date.js'
+import { toCaminoAnnee } from 'camino-common/src/date'
 
 describe('activitesUrlGet', () => {
   test.each<[ActivitesUrlGetParams, string]>([

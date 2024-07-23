@@ -1,7 +1,7 @@
-import { DEMARCHES_TYPES_IDS, DemarcheTypeId, TravauxIds } from '../demarchesTypes.js'
-import { ETAPES_TYPES, EtapeTypeId } from '../etapesTypes.js'
-import { TITRES_TYPES_IDS, TitreTypeId } from '../titresTypes.js'
-import { TitresTypesDemarchesTypes } from '../titresTypesDemarchesTypes.js'
+import { DEMARCHES_TYPES_IDS, DemarcheTypeId, TravauxIds } from '../demarchesTypes'
+import { ETAPES_TYPES, EtapeTypeId } from '../etapesTypes'
+import { TITRES_TYPES_IDS, TitreTypeId } from '../titresTypes'
+import { TitresTypesDemarchesTypes } from '../titresTypesDemarchesTypes'
 
 const travaux = {
   [DEMARCHES_TYPES_IDS.AutorisationDOuvertureDeTravaux]: [

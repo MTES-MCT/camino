@@ -1,7 +1,7 @@
 import express from 'express'
-import { CaminoRestRoute } from 'camino-common/src/rest.js'
+import { CaminoRestRoute } from 'camino-common/src/rest'
 import { CaminoRequest } from '../api/rest/express-type'
-import { HTTP_STATUS } from 'camino-common/src/http.js'
+import { HTTP_STATUS } from 'camino-common/src/http'
 
 const excludedRoutes: CaminoRestRoute[] = ['/moi', '/config']
 export const connectedCatcher = async (req: CaminoRequest, res: express.Response, next: express.NextFunction) => {

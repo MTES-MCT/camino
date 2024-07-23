@@ -1,7 +1,7 @@
 import { EtapeId } from 'camino-common/src/etape'
 import { MultiPolygon } from 'camino-common/src/perimetre'
 import { Knex } from 'knex'
-import { M2, km2Validator } from 'camino-common/src/number.js'
+import { M2, km2Validator } from 'camino-common/src/number'
 
 export const up = async (knex: Knex) => {
   const { rows: etapes }: { rows: { id: EtapeId; geojson4326_perimetre: MultiPolygon }[] } = await knex.raw(

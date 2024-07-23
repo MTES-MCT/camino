@@ -1,10 +1,10 @@
-import { ITitreEtape } from '../../types.js'
+import { ITitreEtape } from '../../types'
 
-import { titresEtapesGet } from '../../database/queries/titres-etapes.js'
-import { userSuper } from '../../database/user-super.js'
-import { AdministrationId } from 'camino-common/src/static/administrations.js'
-import { getAdministrationsLocales } from 'camino-common/src/administrations.js'
-import { knex } from '../../knex.js'
+import { titresEtapesGet } from '../../database/queries/titres-etapes'
+import { userSuper } from '../../database/user-super'
+import { AdministrationId } from 'camino-common/src/static/administrations'
+import { getAdministrationsLocales } from 'camino-common/src/administrations'
+import { knex } from '../../knex'
 
 interface ITitreEtapeAdministrationLocale {
   titreEtapeAdministrationsLocalesOld: AdministrationId[]

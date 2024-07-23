@@ -1,16 +1,16 @@
 /* eslint-disable sql/no-unsafe-query */
-import '../init.js'
-import { knex } from '../knex.js'
-import Communes from '../database/models/communes.js'
+import '../init'
+import { knex } from '../knex'
+import Communes from '../database/models/communes'
 import JSZip from 'jszip'
 import { Readable } from 'node:stream'
-import { SDOMZoneId, SDOMZoneIds } from 'camino-common/src/static/sdom.js'
-import { assertsFacade, assertsSecteur, secteurAJour } from 'camino-common/src/static/facades.js'
+import { SDOMZoneId, SDOMZoneIds } from 'camino-common/src/static/sdom'
+import { assertsFacade, assertsSecteur, secteurAJour } from 'camino-common/src/static/facades'
 import { createRequire } from 'node:module'
-import { ForetId, ForetIds, Forets, foretIdValidator } from 'camino-common/src/static/forets.js'
+import { ForetId, ForetIds, Forets, foretIdValidator } from 'camino-common/src/static/forets'
 import { Pool } from 'pg'
-import { insertCommune } from '../database/queries/communes.queries.js'
-import { toCommuneId } from 'camino-common/src/static/communes.js'
+import { insertCommune } from '../database/queries/communes.queries'
+import { toCommuneId } from 'camino-common/src/static/communes'
 
 const require = createRequire(import.meta.url)
 const { streamArray } = require('stream-json/streamers/StreamArray')

@@ -1,7 +1,7 @@
 import { z, ZodIssue, ZodIssueCode, ZodParsedType } from 'zod'
-import { exhaustiveCheck, isNotNullNorUndefinedNorEmpty, isNullOrUndefined } from './typescript-tools.js'
-import { caminoDateValidator } from './date.js'
-import { etapeTypeIdValidator } from './static/etapesTypes.js'
+import { exhaustiveCheck, isNotNullNorUndefinedNorEmpty, isNullOrUndefined } from './typescript-tools'
+import { caminoDateValidator } from './date'
+import { etapeTypeIdValidator } from './static/etapesTypes'
 
 export const nullToDefault =
   <Y>(defaultWhenNullOrUndefined: NoInfer<Y>) =>

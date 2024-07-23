@@ -1,9 +1,9 @@
-import { userSuper } from '../../database/user-super.js'
-import { dbManager } from '../../../tests/db-manager.js'
-import { restNewPostCall } from '../../../tests/_utils/index.js'
+import { userSuper } from '../../database/user-super'
+import { dbManager } from '../../../tests/db-manager'
+import { restNewPostCall } from '../../../tests/_utils/index'
 import { test, expect, vi, beforeAll, afterAll, describe } from 'vitest'
 import type { Pool } from 'pg'
-import { HTTP_STATUS } from 'camino-common/src/http.js'
+import { HTTP_STATUS } from 'camino-common/src/http'
 import {
   FeatureCollection,
   FeatureCollectionForages,
@@ -13,12 +13,12 @@ import {
   GeojsonImportBody,
   GeojsonImportForagesBody,
   GeojsonImportPointsBody,
-} from 'camino-common/src/perimetre.js'
-import { GEO_SYSTEME_IDS } from 'camino-common/src/static/geoSystemes.js'
-import { idGenerate } from '../../database/models/_format/id-create.js'
+} from 'camino-common/src/perimetre'
+import { GEO_SYSTEME_IDS } from 'camino-common/src/static/geoSystemes'
+import { idGenerate } from '../../database/models/_format/id-create'
 import { copyFileSync, mkdirSync, writeFileSync } from 'node:fs'
-import { tempDocumentNameValidator } from 'camino-common/src/document.js'
-import { titreSlugValidator } from 'camino-common/src/validators/titres.js'
+import { tempDocumentNameValidator } from 'camino-common/src/document'
+import { titreSlugValidator } from 'camino-common/src/validators/titres'
 import { join } from 'node:path'
 
 console.info = vi.fn()

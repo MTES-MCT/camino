@@ -1,12 +1,12 @@
-import { IEntrepriseEtablissement, IEntreprise } from '../../types.js'
+import { IEntrepriseEtablissement, IEntreprise } from '../../types'
 
-import { objectsDiffer } from '../../tools/index.js'
-import { entreprisesUpsert, entreprisesGet } from '../../database/queries/entreprises.js'
-import { entreprisesEtablissementsUpsert, entreprisesEtablissementsDelete, entreprisesEtablissementsGet } from '../../database/queries/entreprises-etablissements.js'
-import { apiInseeEntreprisesEtablissementsGet, apiInseeEntreprisesGet } from '../../tools/api-insee/index.js'
-import { userSuper } from '../../database/user-super.js'
-import { Siren, sirenValidator } from 'camino-common/src/entreprise.js'
-import { isNotNullNorUndefined, isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools.js'
+import { objectsDiffer } from '../../tools/index'
+import { entreprisesUpsert, entreprisesGet } from '../../database/queries/entreprises'
+import { entreprisesEtablissementsUpsert, entreprisesEtablissementsDelete, entreprisesEtablissementsGet } from '../../database/queries/entreprises-etablissements'
+import { apiInseeEntreprisesEtablissementsGet, apiInseeEntreprisesGet } from '../../tools/api-insee/index'
+import { userSuper } from '../../database/user-super'
+import { Siren, sirenValidator } from 'camino-common/src/entreprise'
+import { isNotNullNorUndefined, isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools'
 
 const entreprisesEtablissementsToUpdateBuild = (entreprisesEtablissementsOld: IEntrepriseEtablissement[], entreprisesEtablissementsNew: IEntrepriseEtablissement[]) =>
   entreprisesEtablissementsNew.reduce((acc: IEntrepriseEtablissement[], entrepriseEtablissementNew) => {

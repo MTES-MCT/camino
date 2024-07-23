@@ -1,14 +1,14 @@
-import { ITitreEtape, TitreEtapesTravauxTypes as Travaux } from '../../types.js'
+import { ITitreEtape, TitreEtapesTravauxTypes as Travaux } from '../../types'
 
-import { titreDemarcheStatutIdFind } from './titre-demarche-statut-id-find.js'
-import { DemarchesStatutsIds as Demarches, DemarcheStatutId } from 'camino-common/src/static/demarchesStatuts.js'
-import { newDemarcheId } from '../../database/models/_format/id-create.js'
-import { toCaminoDate } from 'camino-common/src/date.js'
+import { titreDemarcheStatutIdFind } from './titre-demarche-statut-id-find'
+import { DemarchesStatutsIds as Demarches, DemarcheStatutId } from 'camino-common/src/static/demarchesStatuts'
+import { newDemarcheId } from '../../database/models/_format/id-create'
+import { toCaminoDate } from 'camino-common/src/date'
 import { describe, expect, test } from 'vitest'
-import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts.js'
-import { TitreEtapeForMachine } from '../rules-demarches/machine-common.js'
-import { ETAPE_IS_BROUILLON, ETAPE_IS_NOT_BROUILLON } from 'camino-common/src/etape.js'
-import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
+import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts'
+import { TitreEtapeForMachine } from '../rules-demarches/machine-common'
+import { ETAPE_IS_BROUILLON, ETAPE_IS_NOT_BROUILLON } from 'camino-common/src/etape'
+import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
 const etapesBuild = (etapesProps: Partial<ITitreEtape>[]): TitreEtapeForMachine[] =>
   etapesProps.map(
     (etapeProps, i) =>

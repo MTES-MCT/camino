@@ -1,16 +1,16 @@
 /* eslint-disable no-restricted-syntax */
 import { sql } from '@pgtyped/runtime'
-import { AnneeCountStatistique, anneeCountStatistiqueValidator } from 'camino-common/src/statistiques.js'
-import { Redefine, dbQueryAndValidate } from '../../../pg-database.js'
+import { AnneeCountStatistique, anneeCountStatistiqueValidator } from 'camino-common/src/statistiques'
+import { Redefine, dbQueryAndValidate } from '../../../pg-database'
 import {
   IGetSubstancesByEntrepriseCategoryByAnneeInternalQuery,
   IGetTitreActiviteSubstanceParAnneeInternalQuery,
   IGetsubstancesByAnneeByCommuneInternalQuery,
-} from './metaux-metropole.queries.types.js'
-import { SUBSTANCES_FISCALES_IDS, SubstanceFiscaleId, substanceFiscaleIdValidator } from 'camino-common/src/static/substancesFiscales.js'
+} from './metaux-metropole.queries.types'
+import { SUBSTANCES_FISCALES_IDS, SubstanceFiscaleId, substanceFiscaleIdValidator } from 'camino-common/src/static/substancesFiscales'
 import { z } from 'zod'
-import { caminoAnneeValidator } from 'camino-common/src/date.js'
-import { communeIdValidator } from 'camino-common/src/static/communes.js'
+import { caminoAnneeValidator } from 'camino-common/src/date'
+import { communeIdValidator } from 'camino-common/src/static/communes'
 import { Pool } from 'pg'
 
 export const getTitreActiviteSubstanceParAnnee = async (pool: Pool, params: { substanceFiscale: SubstanceFiscaleId }) =>

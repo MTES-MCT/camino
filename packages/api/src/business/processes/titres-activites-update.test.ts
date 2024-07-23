@@ -1,17 +1,17 @@
-import { ITitreActivite } from '../../types.js'
+import { ITitreActivite } from '../../types'
 
-import { titresActivitesUpdate } from './titres-activites-update.js'
-import { canHaveActiviteTypeId } from 'camino-common/src/permissions/titres.js'
-import { anneesBuild } from '../../tools/annees-build.js'
-import { titresActivitesUpsert } from '../../database/queries/titres-activites.js'
-import { titresGet } from '../../database/queries/titres.js'
-import { titreActivitesBuild } from '../rules/titre-activites-build.js'
+import { titresActivitesUpdate } from './titres-activites-update'
+import { canHaveActiviteTypeId } from 'camino-common/src/permissions/titres'
+import { anneesBuild } from '../../tools/annees-build'
+import { titresActivitesUpsert } from '../../database/queries/titres-activites'
+import { titresGet } from '../../database/queries/titres'
+import { titreActivitesBuild } from '../rules/titre-activites-build'
 
-import { emailsSend, emailsWithTemplateSend } from '../../tools/api-mailjet/emails.js'
-import { EmailTemplateId } from '../../tools/api-mailjet/types.js'
+import { emailsSend, emailsWithTemplateSend } from '../../tools/api-mailjet/emails'
+import { EmailTemplateId } from '../../tools/api-mailjet/types'
 import { vi, afterEach, describe, expect, test } from 'vitest'
-import { newTitreId } from '../../database/models/_format/id-create.js'
-import Titres from '../../database/models/titres.js'
+import { newTitreId } from '../../database/models/_format/id-create'
+import Titres from '../../database/models/titres'
 import { Pool } from 'pg'
 import { getEntrepriseUtilisateurs } from '../../api/rest/entreprises.queries'
 import { entrepriseIdValidator } from 'camino-common/src/entreprise'
@@ -40,7 +40,7 @@ vi.mock('../rules/titre-activites-build', () => ({
   titreActivitesBuild: vi.fn().mockResolvedValue(true),
 }))
 
-vi.mock('camino-common/src/permissions/titres.js', () => ({
+vi.mock('camino-common/src/permissions/titres', () => ({
   __esModule: true,
   canHaveActiviteTypeId: vi.fn().mockResolvedValue(true),
 }))

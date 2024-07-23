@@ -1,8 +1,8 @@
-import { dbManager } from '../../../tests/db-manager.js'
-import { creationCheck, visibleCheck } from '../../../tests/_utils/administrations-permissions.js'
+import { dbManager } from '../../../tests/db-manager'
+import { creationCheck, visibleCheck } from '../../../tests/_utils/administrations-permissions'
 import { afterAll, beforeAll, describe, test, vi } from 'vitest'
-import { AdministrationId } from 'camino-common/src/static/administrations.js'
-import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
+import { AdministrationId } from 'camino-common/src/static/administrations'
+import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
 import type { Pool } from 'pg'
 vi.mock('../../tools/dir-create', () => ({
   __esModule: true,

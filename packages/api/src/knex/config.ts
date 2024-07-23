@@ -2,7 +2,7 @@ import 'dotenv/config'
 import { knexSnakeCaseMappers } from 'objection'
 import path, { join } from 'node:path'
 import { fileURLToPath } from 'url'
-import { config } from '../config/index.js'
+import { config } from '../config/index'
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 const connection = {

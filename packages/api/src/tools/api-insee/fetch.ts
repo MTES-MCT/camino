@@ -1,11 +1,11 @@
 // https://api.insee.fr/catalogue/site/themes/wso2/subthemes/insee/pages/item-info.jag?name=Sirene&version=V3.11&provider=insee
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
-import { IApiSirenQueryTypes, IApiSirenQueryToken, IApiSirenEtablissement, IApiSirenUniteLegale } from './types.js'
+import { IApiSirenQueryTypes, IApiSirenQueryToken, IApiSirenEtablissement, IApiSirenUniteLegale } from './types'
 
-import { CaminoDate, dateAddDays, daysBetween, getCurrent } from 'camino-common/src/date.js'
-import { Siren } from 'camino-common/src/entreprise.js'
-import { config } from '../../config/index.js'
-import { isNotNullNorUndefinedNorEmpty, isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
+import { CaminoDate, dateAddDays, daysBetween, getCurrent } from 'camino-common/src/date'
+import { Siren } from 'camino-common/src/entreprise'
+import { config } from '../../config/index'
+import { isNotNullNorUndefinedNorEmpty, isNullOrUndefined } from 'camino-common/src/typescript-tools'
 
 const MAX_CALLS_MINUTE = 30
 const MAX_RESULTS = 20

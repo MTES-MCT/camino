@@ -1,6 +1,6 @@
 /* eslint-disable no-restricted-syntax */
 import { sql } from '@pgtyped/runtime'
-import { dbQueryAndValidate, Redefine } from '../../pg-database.js'
+import { dbQueryAndValidate, Redefine } from '../../pg-database'
 import {
   IDeleteTitreEtapeEntrepriseDocumentInternalQuery,
   IGetEntrepriseDocumentIdsByEtapeIdQueryQuery,
@@ -19,7 +19,7 @@ import {
   IDeleteEtapeAvisDbQuery,
   IGetParticipationEtapesDbQuery,
   IUpdateParticipationStatutDbQuery,
-} from './titres-etapes.queries.types.js'
+} from './titres-etapes.queries.types'
 import {
   ETAPE_IS_NOT_BROUILLON,
   EtapeAvisId,
@@ -38,30 +38,30 @@ import {
   etapeIdValidator,
   TempEtapeAvis,
   TempEtapeDocument,
-} from 'camino-common/src/etape.js'
-import { EntrepriseDocumentId, entrepriseDocumentValidator, EntrepriseId, EtapeEntrepriseDocument, etapeEntrepriseDocumentValidator } from 'camino-common/src/entreprise.js'
+} from 'camino-common/src/etape'
+import { EntrepriseDocumentId, entrepriseDocumentValidator, EntrepriseId, EtapeEntrepriseDocument, etapeEntrepriseDocumentValidator } from 'camino-common/src/entreprise'
 import { Pool } from 'pg'
-import { User } from 'camino-common/src/roles.js'
-import { canSeeEntrepriseDocuments } from 'camino-common/src/permissions/entreprises.js'
+import { User } from 'camino-common/src/roles'
+import { canSeeEntrepriseDocuments } from 'camino-common/src/permissions/entreprises'
 import { z } from 'zod'
-import { entrepriseDocumentLargeObjectIdValidator } from '../../api/rest/entreprises.queries.js'
-import { canReadDocument } from '../../api/rest/permissions/documents.js'
-import { AdministrationId } from 'camino-common/src/static/administrations.js'
-import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
-import { TitreTypeId, titreTypeIdValidator } from 'camino-common/src/static/titresTypes.js'
-import { DeepReadonly, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, SimplePromiseFn } from 'camino-common/src/typescript-tools.js'
-import { CanReadDemarche } from '../../api/rest/permissions/demarches.js'
-import { newEtapeAvisId, newEtapeDocumentId } from '../models/_format/id-create.js'
-import { caminoDateValidator, getCurrent } from 'camino-common/src/date.js'
-import { createLargeObject, LargeObjectId, largeObjectIdValidator } from '../largeobjects.js'
-import { avisStatutIdValidator, avisTypeIdValidator, avisVisibilityIdValidator } from 'camino-common/src/static/avisTypes.js'
-import { canReadAvis } from '../../api/rest/permissions/avis.js'
-import { getEtapeDataForEdition } from '../../api/rest/etapes.queries.js'
-import { etapeAvisStepIsComplete } from 'camino-common/src/permissions/etape-form.js'
-import { CommuneId } from 'camino-common/src/static/communes.js'
-import { EtapeStatutId, etapeStatutIdValidator } from 'camino-common/src/static/etapesStatuts.js'
-import { contenuValidator, heritageContenuValidator } from 'camino-common/src/etape-form.js'
-import { demarcheTypeIdValidator } from 'camino-common/src/static/demarchesTypes.js'
+import { entrepriseDocumentLargeObjectIdValidator } from '../../api/rest/entreprises.queries'
+import { canReadDocument } from '../../api/rest/permissions/documents'
+import { AdministrationId } from 'camino-common/src/static/administrations'
+import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
+import { TitreTypeId, titreTypeIdValidator } from 'camino-common/src/static/titresTypes'
+import { DeepReadonly, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, SimplePromiseFn } from 'camino-common/src/typescript-tools'
+import { CanReadDemarche } from '../../api/rest/permissions/demarches'
+import { newEtapeAvisId, newEtapeDocumentId } from '../models/_format/id-create'
+import { caminoDateValidator, getCurrent } from 'camino-common/src/date'
+import { createLargeObject, LargeObjectId, largeObjectIdValidator } from '../largeobjects'
+import { avisStatutIdValidator, avisTypeIdValidator, avisVisibilityIdValidator } from 'camino-common/src/static/avisTypes'
+import { canReadAvis } from '../../api/rest/permissions/avis'
+import { getEtapeDataForEdition } from '../../api/rest/etapes.queries'
+import { etapeAvisStepIsComplete } from 'camino-common/src/permissions/etape-form'
+import { CommuneId } from 'camino-common/src/static/communes'
+import { EtapeStatutId, etapeStatutIdValidator } from 'camino-common/src/static/etapesStatuts'
+import { contenuValidator, heritageContenuValidator } from 'camino-common/src/etape-form'
+import { demarcheTypeIdValidator } from 'camino-common/src/static/demarchesTypes'
 
 export const insertTitreEtapeEntrepriseDocument = async (pool: Pool, params: { titre_etape_id: EtapeId; entreprise_document_id: EntrepriseDocumentId }) =>
   dbQueryAndValidate(insertTitreEtapeEntrepriseDocumentInternal, params, pool, z.void())

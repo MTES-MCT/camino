@@ -3,8 +3,8 @@ import { TaggedQuery } from '@pgtyped/runtime'
 import type { Pool } from 'pg'
 import { z } from 'zod'
 import type { ZodType, ZodTypeDef } from 'zod'
-import { CaminoError } from 'camino-common/src/zod-tools.js'
-import { ZodUnparseable, zodParseEffectCallback } from './tools/fp-tools.js'
+import { CaminoError } from 'camino-common/src/zod-tools'
+import { ZodUnparseable, zodParseEffectCallback } from './tools/fp-tools'
 import { Effect, pipe } from 'effect'
 export type Redefine<T, P, O> = T extends { params: infer A; result: infer B }
   ? { inputs: keyof A; outputs: keyof B } extends { inputs: keyof P; outputs: keyof O }

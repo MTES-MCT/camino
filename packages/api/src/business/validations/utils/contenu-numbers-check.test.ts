@@ -1,4 +1,4 @@
-import { contenuNumbersCheck } from './contenu-numbers-check.js'
+import { contenuNumbersCheck } from './contenu-numbers-check'
 import { describe, test, expect } from 'vitest'
 
 describe('vérifie la validité du contenu de type nombre', () => {

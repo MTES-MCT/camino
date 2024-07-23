@@ -1,6 +1,6 @@
-import { CaminoDate } from '../date.js'
-import { Definition } from '../definition.js'
-import { Couleur } from './couleurs.js'
+import { CaminoDate } from '../date'
+import { Definition } from '../definition'
+import { Couleur } from './couleurs'
 
 const PHASES_STATUTS_IDS = {
   Echu: 'ech',

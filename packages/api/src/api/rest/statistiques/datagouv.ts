@@ -1,14 +1,14 @@
 import { Pool } from 'pg'
 import { CaminoRequest, CustomResponse } from '../express-type'
-import { StatistiquesDataGouv, indicateurByAdministrationId } from 'camino-common/src/statistiques.js'
-import { getUtilisateursStats } from './datagouv.queries.js'
-import { isEntrepriseOrBureauDetudeRole } from 'camino-common/src/roles.js'
-import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
-import { Administrations } from 'camino-common/src/static/administrations.js'
-import { CaminoStatistiquesDataGouv, CaminoStatistiquesDataGouvId } from 'camino-common/src/static/statistiques.js'
-import { getCurrent } from 'camino-common/src/date.js'
+import { StatistiquesDataGouv, indicateurByAdministrationId } from 'camino-common/src/statistiques'
+import { getUtilisateursStats } from './datagouv.queries'
+import { isEntrepriseOrBureauDetudeRole } from 'camino-common/src/roles'
+import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
+import { Administrations } from 'camino-common/src/static/administrations'
+import { CaminoStatistiquesDataGouv, CaminoStatistiquesDataGouvId } from 'camino-common/src/static/statistiques'
+import { getCurrent } from 'camino-common/src/date'
 import xlsx from 'xlsx'
-import { contentTypes } from 'camino-common/src/rest.js'
+import { contentTypes } from 'camino-common/src/rest'
 
 const commonIndicateurValues: Pick<
   StatistiquesDataGouv,

@@ -1,4 +1,4 @@
-import { Definition } from '../definition.js'
+import { Definition } from '../definition'
 import { z } from 'zod'
 
 const TitresStatutKeys = ['dmc', 'dmi', 'ech', 'ind', 'mod', 'val', 'sup'] as const

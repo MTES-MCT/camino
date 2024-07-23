@@ -1,15 +1,15 @@
 /* eslint-disable @typescript-eslint/ban-types */
 
-import { CaminoApiError, Index } from '../types.js'
+import { CaminoApiError, Index } from '../types'
 import type { Pool } from 'pg'
 
 import express from 'express'
 import { join } from 'path'
 import { inspect } from 'node:util'
 
-import { activites, demarches, entreprises, titre, titres, travaux } from '../api/rest/index.js'
-import { NewDownload, avisDocumentDownload, etapeDocumentDownload, etapeTelecharger, streamLargeObjectInResponse } from '../api/rest/fichiers.js'
-import { getTitreLiaisons, postTitreLiaisons, removeTitre, titresAdministrations, titresONF, updateTitre, utilisateurTitreAbonner, getTitre, getUtilisateurTitreAbonner } from '../api/rest/titres.js'
+import { activites, demarches, entreprises, titre, titres, travaux } from '../api/rest/index'
+import { NewDownload, avisDocumentDownload, etapeDocumentDownload, etapeTelecharger, streamLargeObjectInResponse } from '../api/rest/fichiers'
+import { getTitreLiaisons, postTitreLiaisons, removeTitre, titresAdministrations, titresONF, updateTitre, utilisateurTitreAbonner, getTitre, getUtilisateurTitreAbonner } from '../api/rest/titres'
 import {
   creerEntreprise,
   fiscalite,
@@ -20,10 +20,10 @@ import {
   deleteEntrepriseDocument,
   entrepriseDocumentDownload,
   getAllEntreprises,
-} from '../api/rest/entreprises.js'
-import { deleteUtilisateur, generateQgisToken, isSubscribedToNewsletter, manageNewsletterSubscription, moi, updateUtilisateurPermission, utilisateurs } from '../api/rest/utilisateurs.js'
-import { logout, resetPassword } from '../api/rest/keycloak.js'
-import { getDGTMStats, getGranulatsMarinsStats, getGuyaneStats, getMinerauxMetauxMetropolesStats } from '../api/rest/statistiques/index.js'
+} from '../api/rest/entreprises'
+import { deleteUtilisateur, generateQgisToken, isSubscribedToNewsletter, manageNewsletterSubscription, moi, updateUtilisateurPermission, utilisateurs } from '../api/rest/utilisateurs'
+import { logout, resetPassword } from '../api/rest/keycloak'
+import { getDGTMStats, getGranulatsMarinsStats, getGuyaneStats, getMinerauxMetauxMetropolesStats } from '../api/rest/statistiques/index'
 import {
   CaminoRestRoutes,
   DownloadFormat,
@@ -37,10 +37,10 @@ import {
   CaminoRestRoute,
   NewDownloadRestRoutes,
   NewPostRestRoutes,
-} from 'camino-common/src/rest.js'
-import { CaminoConfig, caminoConfigValidator } from 'camino-common/src/static/config.js'
-import { CaminoRequest, CustomResponse } from '../api/rest/express-type.js'
-import { User, UserNotNull } from 'camino-common/src/roles.js'
+} from 'camino-common/src/rest'
+import { CaminoConfig, caminoConfigValidator } from 'camino-common/src/static/config'
+import { CaminoRequest, CustomResponse } from '../api/rest/express-type'
+import { User, UserNotNull } from 'camino-common/src/roles'
 import {
   createEtape,
   deleteEtape,
@@ -51,21 +51,21 @@ import {
   getEtapeEntrepriseDocuments,
   getEtapesTypesEtapesStatusWithMainStep,
   updateEtape,
-} from '../api/rest/etapes.js'
+} from '../api/rest/etapes'
 import { z } from 'zod'
-import { getCommunes } from '../api/rest/communes.js'
+import { getCommunes } from '../api/rest/communes'
 import { SendFileOptions } from 'express-serve-static-core'
-import { activiteDocumentDownload, getActivite, updateActivite, deleteActivite } from '../api/rest/activites.js'
-import { DeepReadonly, isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
-import { getDemarcheByIdOrSlug } from '../api/rest/demarches.js'
-import { geojsonImport, geojsonImportPoints, getPerimetreInfos, geojsonImportForages } from '../api/rest/perimetre.js'
-import { getDataGouvStats } from '../api/rest/statistiques/datagouv.js'
-import { addAdministrationActiviteTypeEmails, deleteAdministrationActiviteTypeEmails, getAdministrationActiviteTypeEmails, getAdministrationUtilisateurs } from '../api/rest/administrations.js'
-import { titreDemandeCreer } from '../api/rest/titre-demande.js'
-import { config } from '../config/index.js'
-import { addLog } from '../api/rest/logs.queries.js'
-import { HTTP_STATUS } from 'camino-common/src/http.js'
-import { zodParseEffect } from '../tools/fp-tools.js'
+import { activiteDocumentDownload, getActivite, updateActivite, deleteActivite } from '../api/rest/activites'
+import { DeepReadonly, isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
+import { getDemarcheByIdOrSlug } from '../api/rest/demarches'
+import { geojsonImport, geojsonImportPoints, getPerimetreInfos, geojsonImportForages } from '../api/rest/perimetre'
+import { getDataGouvStats } from '../api/rest/statistiques/datagouv'
+import { addAdministrationActiviteTypeEmails, deleteAdministrationActiviteTypeEmails, getAdministrationActiviteTypeEmails, getAdministrationUtilisateurs } from '../api/rest/administrations'
+import { titreDemandeCreer } from '../api/rest/titre-demande'
+import { config } from '../config/index'
+import { addLog } from '../api/rest/logs.queries'
+import { HTTP_STATUS } from 'camino-common/src/http'
+import { zodParseEffect } from '../tools/fp-tools'
 import { Cause, Effect, Exit, pipe } from 'effect'
 
 interface IRestResolverResult {

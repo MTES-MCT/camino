@@ -1,9 +1,9 @@
 /* eslint-disable no-restricted-syntax */
-import { EtapeDocumentId, EtapeId, EtapeIdOrSlug, etapeBrouillonValidator, etapeIdValidator, etapeSlugValidator } from 'camino-common/src/etape.js'
-import { EtapeTypeId, etapeTypeIdValidator } from 'camino-common/src/static/etapesTypes.js'
+import { EtapeDocumentId, EtapeId, EtapeIdOrSlug, etapeBrouillonValidator, etapeIdValidator, etapeSlugValidator } from 'camino-common/src/etape'
+import { EtapeTypeId, etapeTypeIdValidator } from 'camino-common/src/static/etapesTypes'
 import { Pool } from 'pg'
 import { z } from 'zod'
-import { Redefine, dbQueryAndValidate } from '../../pg-database.js'
+import { Redefine, dbQueryAndValidate } from '../../pg-database'
 import { sql } from '@pgtyped/runtime'
 import {
   IGetAdministrationsLocalesByEtapeIdQuery,
@@ -12,21 +12,21 @@ import {
   IGetEtapeDataForEditionDbQuery,
   IGetLargeobjectIdByEtapeDocumentIdInternalQuery,
   IGetTitulairesAmodiatairesTitreEtapeQuery,
-} from './etapes.queries.types.js'
-import { DemarcheId, demarcheIdValidator } from 'camino-common/src/demarche.js'
-import { sdomZoneIdValidator } from 'camino-common/src/static/sdom.js'
-import { multiPolygonValidator } from 'camino-common/src/perimetre.js'
-import { demarcheTypeIdValidator } from 'camino-common/src/static/demarchesTypes.js'
-import { titreTypeIdValidator } from 'camino-common/src/static/titresTypes.js'
-import { AdministrationId, administrationIdValidator } from 'camino-common/src/static/administrations.js'
-import { EntrepriseId, entrepriseIdValidator } from 'camino-common/src/entreprise.js'
-import { User } from 'camino-common/src/roles.js'
-import { LargeObjectId, largeObjectIdValidator } from '../../database/largeobjects.js'
-import { canReadDocument } from './permissions/documents.js'
-import { isNotNullNorUndefinedNorEmpty, memoize } from 'camino-common/src/typescript-tools.js'
-import { etapeStatutIdValidator } from 'camino-common/src/static/etapesStatuts.js'
-import { caminoDateValidator } from 'camino-common/src/date.js'
-import { contenuValidator } from './activites.queries.js'
+} from './etapes.queries.types'
+import { DemarcheId, demarcheIdValidator } from 'camino-common/src/demarche'
+import { sdomZoneIdValidator } from 'camino-common/src/static/sdom'
+import { multiPolygonValidator } from 'camino-common/src/perimetre'
+import { demarcheTypeIdValidator } from 'camino-common/src/static/demarchesTypes'
+import { titreTypeIdValidator } from 'camino-common/src/static/titresTypes'
+import { AdministrationId, administrationIdValidator } from 'camino-common/src/static/administrations'
+import { EntrepriseId, entrepriseIdValidator } from 'camino-common/src/entreprise'
+import { User } from 'camino-common/src/roles'
+import { LargeObjectId, largeObjectIdValidator } from '../../database/largeobjects'
+import { canReadDocument } from './permissions/documents'
+import { isNotNullNorUndefinedNorEmpty, memoize } from 'camino-common/src/typescript-tools'
+import { etapeStatutIdValidator } from 'camino-common/src/static/etapesStatuts'
+import { caminoDateValidator } from 'camino-common/src/date'
+import { contenuValidator } from './activites.queries'
 
 const getEtapeByIdValidator = z.object({
   etape_id: etapeIdValidator,

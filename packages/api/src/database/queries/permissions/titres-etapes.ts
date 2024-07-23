@@ -1,17 +1,17 @@
 import { QueryBuilder } from 'objection'
 
-import TitresEtapes from '../../models/titres-etapes.js'
+import TitresEtapes from '../../models/titres-etapes'
 
-import { administrationsTitresQuery } from './administrations.js'
-import { entreprisesTitresQuery } from './entreprises.js'
-import { titresDemarchesQueryModify } from './titres-demarches.js'
-import TitresDemarches from '../../models/titres-demarches.js'
-import Journaux from '../../models/journaux.js'
-import { journauxQueryModify } from './journaux.js'
-import { isAdministration, isBureauDEtudes, isEntreprise, isSuper, User } from 'camino-common/src/roles.js'
-import { getAdministrationTitresTypesEtapesTypes } from 'camino-common/src/static/administrationsTitresTypesEtapesTypes.js'
-import { knex } from '../../../knex.js'
-import { EtapeTypeId, etapesTypes } from 'camino-common/src/static/etapesTypes.js'
+import { administrationsTitresQuery } from './administrations'
+import { entreprisesTitresQuery } from './entreprises'
+import { titresDemarchesQueryModify } from './titres-demarches'
+import TitresDemarches from '../../models/titres-demarches'
+import Journaux from '../../models/journaux'
+import { journauxQueryModify } from './journaux'
+import { isAdministration, isBureauDEtudes, isEntreprise, isSuper, User } from 'camino-common/src/roles'
+import { getAdministrationTitresTypesEtapesTypes } from 'camino-common/src/static/administrationsTitresTypesEtapesTypes'
+import { knex } from '../../../knex'
+import { EtapeTypeId, etapesTypes } from 'camino-common/src/static/etapesTypes'
 
 /**
  * Modifie la requête d'étape(s) pour prendre en compte les permissions de l'utilisateur connecté

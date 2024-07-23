@@ -1,10 +1,10 @@
 import { Pool } from 'pg'
-import { EtapeId, getStatutId } from 'camino-common/src/etape.js'
-import { getCurrent } from 'camino-common/src/date.js'
-import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts.js'
-import { getParticipationEtapes, updateParticipationStatut } from '../../database/queries/titres-etapes.queries.js'
-import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes.js'
-import { simpleContenuToFlattenedContenu } from 'camino-common/src/sections.js'
+import { EtapeId, getStatutId } from 'camino-common/src/etape'
+import { getCurrent } from 'camino-common/src/date'
+import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts'
+import { getParticipationEtapes, updateParticipationStatut } from '../../database/queries/titres-etapes.queries'
+import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes'
+import { simpleContenuToFlattenedContenu } from 'camino-common/src/sections'
 
 export const titresEtapesStatutUpdate = async (pool: Pool): Promise<EtapeId[]> => {
   console.info()

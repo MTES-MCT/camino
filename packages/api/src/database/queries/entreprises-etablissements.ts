@@ -1,8 +1,8 @@
-import { IEntrepriseEtablissement } from '../../types.js'
+import { IEntrepriseEtablissement } from '../../types'
 
-import options from './_options.js'
+import options from './_options'
 
-import EntrepriseEtablissements from '../models/entreprises-etablissements.js'
+import EntrepriseEtablissements from '../models/entreprises-etablissements'
 
 export const entreprisesEtablissementsGet = async () => EntrepriseEtablissements.query()
 

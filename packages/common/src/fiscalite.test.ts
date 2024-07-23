@@ -1,8 +1,8 @@
-import { fiscaliteVisible, fraisGestion } from './fiscalite.js'
-import { UserNotNull, toUtilisateurId } from './roles.js'
-import { CommonRestTitre } from './titres.js'
+import { fiscaliteVisible, fraisGestion } from './fiscalite'
+import { UserNotNull, toUtilisateurId } from './roles'
+import { CommonRestTitre } from './titres'
 import { test, expect } from 'vitest'
-import { newEntrepriseId } from './entreprise.js'
+import { newEntrepriseId } from './entreprise'
 import { Decimal } from 'decimal.js'
 
 test('fraisGestion', () => {

@@ -1,4 +1,4 @@
-import { getSections, getSectionsWithValue, sectionValidator } from './sections.js'
+import { getSections, getSectionsWithValue, sectionValidator } from './sections'
 import { test, expect, describe } from 'vitest'
 const activitesSectionsProd = require('./activites.sections.json')
 

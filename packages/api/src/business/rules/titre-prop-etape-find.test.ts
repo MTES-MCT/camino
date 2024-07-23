@@ -1,15 +1,15 @@
-import { ITitreDemarche, IPropId, ITitreEtape, ICommune } from '../../types.js'
+import { ITitreDemarche, IPropId, ITitreEtape, ICommune } from '../../types'
 
-import { titreContenuTitreEtapeFind, titrePropTitreEtapeFind } from './titre-prop-etape-find.js'
-import { newDemarcheId, newEtapeId, newTitreId } from '../../database/models/_format/id-create.js'
-import { toCaminoDate } from 'camino-common/src/date.js'
+import { titreContenuTitreEtapeFind, titrePropTitreEtapeFind } from './titre-prop-etape-find'
+import { newDemarcheId, newEtapeId, newTitreId } from '../../database/models/_format/id-create'
+import { toCaminoDate } from 'camino-common/src/date'
 import { describe, expect, test } from 'vitest'
-import { TitresStatutIds } from 'camino-common/src/static/titresStatuts.js'
-import { newEntrepriseId } from 'camino-common/src/entreprise.js'
-import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes.js'
-import { ETAPES_STATUTS } from 'camino-common/src/static/etapesStatuts.js'
-import { ETAPE_IS_NOT_BROUILLON, ETAPE_IS_BROUILLON } from 'camino-common/src/etape.js'
-import { km2Validator } from 'camino-common/src/number.js'
+import { TitresStatutIds } from 'camino-common/src/static/titresStatuts'
+import { newEntrepriseId } from 'camino-common/src/entreprise'
+import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes'
+import { ETAPES_STATUTS } from 'camino-common/src/static/etapesStatuts'
+import { ETAPE_IS_NOT_BROUILLON, ETAPE_IS_BROUILLON } from 'camino-common/src/etape'
+import { km2Validator } from 'camino-common/src/number'
 const currentDate = toCaminoDate('2023-04-06')
 
 describe("id de l'étape d'une propriété valide (dé-normalise)", () => {

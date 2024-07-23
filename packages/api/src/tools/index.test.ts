@@ -1,4 +1,4 @@
-import { objectsDiffer, dupFind, objectClone } from './index.js'
+import { objectsDiffer, dupFind, objectClone } from './index'
 import { describe, expect, test } from 'vitest'
 describe('comparaison entre des objets', () => {
   test('retourne false si les objets sont identiques (dates)', () => {

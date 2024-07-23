@@ -1,8 +1,8 @@
-import { checkDateAndSendEmail } from './titres-activites-relance-send.js'
-import { emailsWithTemplateSend } from '../../tools/api-mailjet/emails.js'
-import { EmailTemplateId } from '../../tools/api-mailjet/types.js'
+import { checkDateAndSendEmail } from './titres-activites-relance-send'
+import { emailsWithTemplateSend } from '../../tools/api-mailjet/emails'
+import { EmailTemplateId } from '../../tools/api-mailjet/types'
 import { vi, describe, expect, test, afterEach } from 'vitest'
-import { getCurrent, toCaminoDate } from 'camino-common/src/date.js'
+import { getCurrent, toCaminoDate } from 'camino-common/src/date'
 import { entrepriseIdValidator } from 'camino-common/src/entreprise'
 import { activiteIdValidator } from 'camino-common/src/activite'
 

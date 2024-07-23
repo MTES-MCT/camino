@@ -1,8 +1,8 @@
 // classe les démarches selon la date de leur première étape
 // puis par ordre si les dates sont identiques
-import { DemarchesTypes } from 'camino-common/src/static/demarchesTypes.js'
-import { ITitreDemarche, ITitreEtape } from '../../types.js'
-import { titreEtapesSortAscByOrdre } from './titre-etapes-sort.js'
+import { DemarchesTypes } from 'camino-common/src/static/demarchesTypes'
+import { ITitreDemarche, ITitreEtape } from '../../types'
+import { titreEtapesSortAscByOrdre } from './titre-etapes-sort'
 
 export type TitreDemarcheSortAscMinimalDemarche = Pick<ITitreDemarche, 'typeId' | 'ordre'> & { etapes?: Pick<ITitreEtape, 'ordre' | 'date'>[] }
 export const titreDemarcheSortAsc = <T extends TitreDemarcheSortAscMinimalDemarche>(titreElements: T[]): T[] =>

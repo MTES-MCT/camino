@@ -1,10 +1,10 @@
 import { assign, createMachine } from 'xstate'
-import { IContenu } from '../../../types.js'
-import { EtapesTypesEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStatuts.js'
-import { CaminoMachine } from '../machine-helper.js'
-import { CaminoCommonContext, DBEtat, Etape, tags } from '../machine-common.js'
-import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts.js'
-import { CaminoDate } from 'camino-common/src/date.js'
+import { IContenu } from '../../../types'
+import { EtapesTypesEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStatuts'
+import { CaminoMachine } from '../machine-helper'
+import { CaminoCommonContext, DBEtat, Etape, tags } from '../machine-common'
+import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts'
+import { CaminoDate } from 'camino-common/src/date'
 
 type FaireDemandeEvent = {
   mecanise: boolean

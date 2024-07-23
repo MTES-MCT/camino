@@ -11,8 +11,8 @@ import {
   isBureauDEtudes,
   BaseUserNotNull,
   toUtilisateurId,
-} from './roles.js'
-import { ADMINISTRATION_IDS } from './static/administrations.js'
+} from './roles'
+import { ADMINISTRATION_IDS } from './static/administrations'
 import { test, expect, describe } from 'vitest'
 const administrationId = ADMINISTRATION_IDS.CACEM
 describe('role', () => {

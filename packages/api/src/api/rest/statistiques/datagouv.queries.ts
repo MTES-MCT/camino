@@ -1,11 +1,11 @@
 /* eslint-disable no-restricted-syntax */
 import { sql } from '@pgtyped/runtime'
-import { Redefine, dbQueryAndValidate } from '../../../pg-database.js'
+import { Redefine, dbQueryAndValidate } from '../../../pg-database'
 import { Pool } from 'pg'
 import { z } from 'zod'
-import { roleValidator } from 'camino-common/src/roles.js'
-import { administrationIdValidator } from 'camino-common/src/static/administrations.js'
-import { IGetUtilisateursStatsDbQuery } from './datagouv.queries.types.js'
+import { roleValidator } from 'camino-common/src/roles'
+import { administrationIdValidator } from 'camino-common/src/static/administrations'
+import { IGetUtilisateursStatsDbQuery } from './datagouv.queries.types'
 
 export const getUtilisateursStats = async (pool: Pool) => dbQueryAndValidate(getUtilisateursStatsDb, undefined, pool, getUtilisateursStatsValidator)
 

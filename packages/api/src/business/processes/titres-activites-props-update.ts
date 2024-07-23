@@ -1,13 +1,13 @@
-import type { ITitreActivite } from '../../types.js'
+import type { ITitreActivite } from '../../types'
 
-import { titresActivitesUpsert } from '../../database/queries/titres-activites.js'
-import { titresGet } from '../../database/queries/titres.js'
-import { titreValideCheck } from '../utils/titre-valide-check.js'
-import { userSuper } from '../../database/user-super.js'
-import { getMonth } from 'camino-common/src/static/frequence.js'
-import { toCaminoDate } from 'camino-common/src/date.js'
-import { ActivitesTypes } from 'camino-common/src/static/activitesTypes.js'
-import { isNotNullNorUndefinedNorEmpty, isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools.js'
+import { titresActivitesUpsert } from '../../database/queries/titres-activites'
+import { titresGet } from '../../database/queries/titres'
+import { titreValideCheck } from '../utils/titre-valide-check'
+import { userSuper } from '../../database/user-super'
+import { getMonth } from 'camino-common/src/static/frequence'
+import { toCaminoDate } from 'camino-common/src/date'
+import { ActivitesTypes } from 'camino-common/src/static/activitesTypes'
+import { isNotNullNorUndefinedNorEmpty, isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools'
 
 // TODO 2023-04-12 à supprimer et à calculer lors de l’appel à l’API par un super
 export const titresActivitesPropsUpdate = async (titresIds?: string[]) => {

@@ -1,12 +1,12 @@
 /* eslint-disable no-restricted-syntax */
 import { sql } from '@pgtyped/runtime'
-import { DbQueryAccessError, Redefine, effectDbQueryAndValidate } from '../../pg-database.js'
+import { DbQueryAccessError, Redefine, effectDbQueryAndValidate } from '../../pg-database'
 import { Pool } from 'pg'
 import { z } from 'zod'
-import { IInsertLogInternalQuery } from './logs.queries.types.js'
-import { UtilisateurId } from 'camino-common/src/roles.js'
-import { CaminoError } from 'camino-common/src/zod-tools.js'
-import { ZodUnparseable } from '../../tools/fp-tools.js'
+import { IInsertLogInternalQuery } from './logs.queries.types'
+import { UtilisateurId } from 'camino-common/src/roles'
+import { CaminoError } from 'camino-common/src/zod-tools'
+import { ZodUnparseable } from '../../tools/fp-tools'
 import { Effect } from 'effect'
 
 export const addLog = (pool: Pool, utilisateur_id: UtilisateurId, method: string, path: string, body?: unknown): Effect.Effect<void[], CaminoError<ZodUnparseable | DbQueryAccessError>> =>

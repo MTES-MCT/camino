@@ -1,4 +1,4 @@
-import { isSuper, isAdministrationAdmin, isAdministrationEditeur, User, isAdministration, isEntreprise, isBureauDEtudes, ROLES, Role, UserNotNull } from '../roles.js'
+import { isSuper, isAdministrationAdmin, isAdministrationEditeur, User, isAdministration, isEntreprise, isBureauDEtudes, ROLES, Role, UserNotNull } from '../roles'
 
 export const canCreateEntreprise = (user: User): boolean => isSuper(user) || isAdministrationAdmin(user) || isAdministrationEditeur(user)
 export const canReadUtilisateurs = (user: User): boolean => isSuper(user) || isAdministration(user) || isEntreprise(user) || isBureauDEtudes(user)

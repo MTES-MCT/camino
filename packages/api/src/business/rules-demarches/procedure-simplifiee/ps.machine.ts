@@ -1,11 +1,11 @@
 import { assign, createMachine } from 'xstate'
-import { CaminoMachine } from '../machine-helper.js'
-import { CaminoCommonContext, DBEtat, Etape } from '../machine-common.js'
-import { EtapesTypesEtapesStatuts as ETES } from 'camino-common/src/static/etapesTypesEtapesStatuts.js'
-import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts.js'
-import { CaminoDate, isBefore, toCaminoDate } from 'camino-common/src/date.js'
-import { ETAPES_STATUTS, EtapeStatutId } from 'camino-common/src/static/etapesStatuts.js'
-import { isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
+import { CaminoMachine } from '../machine-helper'
+import { CaminoCommonContext, DBEtat, Etape } from '../machine-common'
+import { EtapesTypesEtapesStatuts as ETES } from 'camino-common/src/static/etapesTypesEtapesStatuts'
+import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts'
+import { CaminoDate, isBefore, toCaminoDate } from 'camino-common/src/date'
+import { ETAPES_STATUTS, EtapeStatutId } from 'camino-common/src/static/etapesStatuts'
+import { isNullOrUndefined } from 'camino-common/src/typescript-tools'
 
 type RendreDecisionAdministrationAcceptee = {
   date: CaminoDate

@@ -1,4 +1,4 @@
-import { isTitreTypeType } from './titresTypesTypes.js'
+import { isTitreTypeType } from './titresTypesTypes'
 import { test, expect } from 'vitest'
 
 test('isTitreTypeType', () => {

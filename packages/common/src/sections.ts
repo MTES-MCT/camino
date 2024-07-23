@@ -1,5 +1,5 @@
-import { caminoDateValidator, dateFormat } from './date.js'
-import { numberFormat } from './number.js'
+import { caminoDateValidator, dateFormat } from './date'
+import { numberFormat } from './number'
 import {
   checkboxElementValidator,
   checkboxesElementValidator,
@@ -10,13 +10,13 @@ import {
   selectElementWithOptionsValidator,
   textElementValidator,
   urlElementValidator,
-} from './static/titresTypes_demarchesTypes_etapesTypes/sections.js'
+} from './static/titresTypes_demarchesTypes_etapesTypes/sections'
 import { z } from 'zod'
-import { DeepReadonly, isNotNullNorUndefined } from './typescript-tools.js'
-import { TitreTypeId } from './static/titresTypes.js'
-import { DemarcheTypeId } from './static/demarchesTypes.js'
-import { EtapeTypeId } from './static/etapesTypes.js'
-import { EtapeContenu, FlattenEtape, FlattenedContenu, RestEtapeCreation, HeritageContenu } from './etape-form.js'
+import { DeepReadonly, isNotNullNorUndefined } from './typescript-tools'
+import { TitreTypeId } from './static/titresTypes'
+import { DemarcheTypeId } from './static/demarchesTypes'
+import { EtapeTypeId } from './static/etapesTypes'
+import { EtapeContenu, FlattenEtape, FlattenedContenu, RestEtapeCreation, HeritageContenu } from './etape-form'
 
 const dateElementWithValueValidator = dateElementValidator.extend({ value: caminoDateValidator.nullable() })
 

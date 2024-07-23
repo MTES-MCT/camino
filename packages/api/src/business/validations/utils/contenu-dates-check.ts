@@ -1,7 +1,7 @@
-import { caminoDateValidator } from 'camino-common/src/date.js'
-import { Section } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
-import { DeepReadonly, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools.js'
-import { FlattenedContenuElement } from 'camino-common/src/etape-form.js'
+import { caminoDateValidator } from 'camino-common/src/date'
+import { Section } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections'
+import { DeepReadonly, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
+import { FlattenedContenuElement } from 'camino-common/src/etape-form'
 
 export const contenuDatesCheck = (sections: DeepReadonly<Section[]>, contenu: Record<string, Record<string, Pick<FlattenedContenuElement, 'value'>>>): string | null => {
   const errors = sections.reduce(

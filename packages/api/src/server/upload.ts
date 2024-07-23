@@ -1,13 +1,13 @@
 import express from 'express'
 import { CaminoRequest } from '../api/rest/express-type'
 
-import { isDefault } from 'camino-common/src/roles.js'
+import { isDefault } from 'camino-common/src/roles'
 import { Server, Upload } from '@tus/server'
 import { FileStore } from '@tus/file-store'
 import { IncomingMessage, ServerResponse } from 'node:http'
-import { isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
-import { fileUploadTypeValidator } from 'camino-common/src/static/documentsTypes.js'
-import { isPdf } from '../tools/file-check.js'
+import { isNullOrUndefined } from 'camino-common/src/typescript-tools'
+import { fileUploadTypeValidator } from 'camino-common/src/static/documentsTypes'
+import { isPdf } from '../tools/file-check'
 import { unlinkSync } from 'node:fs'
 
 // Téléversement REST

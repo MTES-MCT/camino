@@ -1,9 +1,9 @@
-import { ITitreDemarche } from '../../types.js'
+import { ITitreDemarche } from '../../types'
 
-import { titreDemarcheUpdate } from '../../database/queries/titres-demarches.js'
-import { titresGet } from '../../database/queries/titres.js'
-import { titreDemarcheSortAsc } from '../utils/titre-elements-sort-asc.js'
-import { userSuper } from '../../database/user-super.js'
+import { titreDemarcheUpdate } from '../../database/queries/titres-demarches'
+import { titresGet } from '../../database/queries/titres'
+import { titreDemarcheSortAsc } from '../utils/titre-elements-sort-asc'
+import { userSuper } from '../../database/user-super'
 
 export const titresDemarchesOrdreUpdate = async (titresIds?: string[]) => {
   console.info()

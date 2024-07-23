@@ -1,5 +1,5 @@
-import { restCall } from '../../../../tests/_utils/index.js'
-import { dbManager } from '../../../../tests/db-manager.js'
+import { restCall } from '../../../../tests/_utils/index'
+import { dbManager } from '../../../../tests/db-manager'
 import { expect, test, afterAll, beforeAll, vi } from 'vitest'
 import type { Pool } from 'pg'
 

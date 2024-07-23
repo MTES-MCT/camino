@@ -1,20 +1,20 @@
 import { QueryBuilder, RawBuilder, raw } from 'objection'
 
-import { DemarcheId } from 'camino-common/src/demarche.js'
-import { ITitreDemarche, ITitreEtapeFiltre, ITitreDemarcheColonneId, IColonne, Index } from '../../types.js'
+import { DemarcheId } from 'camino-common/src/demarche'
+import { ITitreDemarche, ITitreEtapeFiltre, ITitreDemarcheColonneId, IColonne, Index } from '../../types'
 
-import options, { FieldsDemarche } from './_options.js'
-import { fieldsFormat } from './graph/fields-format.js'
-import graphBuild from './graph/build.js'
-import { fieldsTitreAdd } from './graph/fields-add.js'
+import options, { FieldsDemarche } from './_options'
+import { fieldsFormat } from './graph/fields-format'
+import graphBuild from './graph/build'
+import { fieldsTitreAdd } from './graph/fields-add'
 
-import TitresDemarches, { DBTitresDemarches } from '../models/titres-demarches.js'
-import { titresDemarchesQueryModify } from './permissions/titres-demarches.js'
-import { titresFiltersQueryModify } from './_titres-filters.js'
-import TitresEtapes from '../models/titres-etapes.js'
+import TitresDemarches, { DBTitresDemarches } from '../models/titres-demarches'
+import { titresDemarchesQueryModify } from './permissions/titres-demarches'
+import { titresFiltersQueryModify } from './_titres-filters'
+import TitresEtapes from '../models/titres-etapes'
 import { User } from 'camino-common/src/roles'
-import { sortedDemarchesTypes } from 'camino-common/src/static/demarchesTypes.js'
-import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools.js'
+import { sortedDemarchesTypes } from 'camino-common/src/static/demarchesTypes'
+import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
 
 const etapesIncluesExcluesBuild = (q: QueryBuilder<TitresDemarches, TitresDemarches[]>, etapes: ITitreEtapeFiltre[], mode: 'etapesInclues' | 'etapesExclues') => {
   const raw = etapes

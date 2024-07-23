@@ -1,5 +1,5 @@
-import { DepartementId, DEPARTEMENT_IDS } from './departement.js'
-import { getEntries, getKeys, onlyUnique } from '../typescript-tools.js'
+import { DepartementId, DEPARTEMENT_IDS } from './departement'
+import { getEntries, getKeys, onlyUnique } from '../typescript-tools'
 import { z } from 'zod'
 
 // prettier-ignore

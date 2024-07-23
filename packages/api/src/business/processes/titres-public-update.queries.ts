@@ -1,13 +1,13 @@
 /* eslint-disable no-restricted-syntax */
 import { sql } from '@pgtyped/runtime'
-import { Redefine, dbQueryAndValidate } from '../../pg-database.js'
+import { Redefine, dbQueryAndValidate } from '../../pg-database'
 import { Pool } from 'pg'
 import { z } from 'zod'
-import { TitreId, titreIdValidator } from 'camino-common/src/validators/titres.js'
-import { IGetTitrePublicUpdateDataDbQuery, IUpdateTitrePublicLectureDbQuery } from './titres-public-update.queries.types.js'
-import { titreTypeIdValidator } from 'camino-common/src/static/titresTypes.js'
-import { titreStatutIdValidator } from 'camino-common/src/static/titresStatuts.js'
-import { NonEmptyArray } from 'camino-common/src/typescript-tools.js'
+import { TitreId, titreIdValidator } from 'camino-common/src/validators/titres'
+import { IGetTitrePublicUpdateDataDbQuery, IUpdateTitrePublicLectureDbQuery } from './titres-public-update.queries.types'
+import { titreTypeIdValidator } from 'camino-common/src/static/titresTypes'
+import { titreStatutIdValidator } from 'camino-common/src/static/titresStatuts'
+import { NonEmptyArray } from 'camino-common/src/typescript-tools'
 
 const getTitrePublicUpdateDataDbValidator = z.object({
   titre_type_id: titreTypeIdValidator,

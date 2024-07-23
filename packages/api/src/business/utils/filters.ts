@@ -9,9 +9,9 @@ import {
   entreprisesFiltresNames,
   titresDownloadFormats,
   titresFiltresNames,
-} from 'camino-common/src/filters.js'
-import { DownloadFormat } from 'camino-common/src/rest.js'
-import { NonEmptyArray } from 'camino-common/src/typescript-tools.js'
+} from 'camino-common/src/filters'
+import { DownloadFormat } from 'camino-common/src/rest'
+import { NonEmptyArray } from 'camino-common/src/typescript-tools'
 import { ZodOptional, z } from 'zod'
 
 type GenericFiltreValidator<T extends Readonly<CaminoFiltre[]>> = { [key in T[number]]: ZodOptional<(typeof caminoFiltres)[key]['validator']> }

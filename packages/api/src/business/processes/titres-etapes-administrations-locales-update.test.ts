@@ -1,13 +1,13 @@
-import { titresEtapesAdministrationsLocalesUpdate } from './titres-etapes-administrations-locales-update.js'
-import { titresEtapesGet } from '../../database/queries/titres-etapes.js'
+import { titresEtapesAdministrationsLocalesUpdate } from './titres-etapes-administrations-locales-update'
+import { titresEtapesGet } from '../../database/queries/titres-etapes'
 
-import { ICommune, ITitreEtape } from '../../types.js'
-import { newDemarcheId, newEtapeId } from '../../database/models/_format/id-create.js'
-import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations.js'
-import { toCaminoDate } from 'camino-common/src/date.js'
+import { ICommune, ITitreEtape } from '../../types'
+import { newDemarcheId, newEtapeId } from '../../database/models/_format/id-create'
+import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations'
+import { toCaminoDate } from 'camino-common/src/date'
 import { vi, describe, expect, test } from 'vitest'
-import { toCommuneId } from 'camino-common/src/static/communes.js'
-import { ETAPE_IS_NOT_BROUILLON } from 'camino-common/src/etape.js'
+import { toCommuneId } from 'camino-common/src/static/communes'
+import { ETAPE_IS_NOT_BROUILLON } from 'camino-common/src/etape'
 vi.mock('../../database/queries/titres-etapes', () => ({
   titresEtapesGet: vi.fn(),
 }))

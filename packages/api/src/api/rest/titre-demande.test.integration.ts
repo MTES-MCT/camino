@@ -1,11 +1,11 @@
-import { newEntrepriseId } from 'camino-common/src/entreprise.js'
-import { dbManager } from '../../../tests/db-manager.js'
-import { restCall, restPostCall } from '../../../tests/_utils/index.js'
-import { entrepriseUpsert } from '../../database/queries/entreprises.js'
+import { newEntrepriseId } from 'camino-common/src/entreprise'
+import { dbManager } from '../../../tests/db-manager'
+import { restCall, restPostCall } from '../../../tests/_utils/index'
+import { entrepriseUpsert } from '../../database/queries/entreprises'
 import { afterAll, beforeAll, describe, test, expect, vi, beforeEach } from 'vitest'
 import type { Pool } from 'pg'
-import { HTTP_STATUS } from 'camino-common/src/http.js'
-import { TitreDemande } from 'camino-common/src/titres.js'
+import { HTTP_STATUS } from 'camino-common/src/http'
+import { TitreDemande } from 'camino-common/src/titres'
 console.info = vi.fn()
 console.error = vi.fn()
 

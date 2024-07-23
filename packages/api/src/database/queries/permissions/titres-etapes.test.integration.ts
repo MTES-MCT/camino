@@ -1,14 +1,14 @@
-import { dbManager } from '../../../../tests/db-manager.js'
+import { dbManager } from '../../../../tests/db-manager'
 
-import Titres from '../../models/titres.js'
-import { newDemarcheId, newEtapeId, newTitreId } from '../../models/_format/id-create.js'
-import { userSuper } from '../../user-super.js'
-import TitresEtapes from '../../models/titres-etapes.js'
-import { titresEtapesQueryModify } from './titres-etapes.js'
-import TitresDemarches from '../../models/titres-demarches.js'
-import { toCaminoDate } from 'camino-common/src/date.js'
+import Titres from '../../models/titres'
+import { newDemarcheId, newEtapeId, newTitreId } from '../../models/_format/id-create'
+import { userSuper } from '../../user-super'
+import TitresEtapes from '../../models/titres-etapes'
+import { titresEtapesQueryModify } from './titres-etapes'
+import TitresDemarches from '../../models/titres-demarches'
+import { toCaminoDate } from 'camino-common/src/date'
 import { beforeAll, expect, afterAll, test, describe, vi } from 'vitest'
-import { ETAPE_IS_BROUILLON } from 'camino-common/src/etape.js'
+import { ETAPE_IS_BROUILLON } from 'camino-common/src/etape'
 console.info = vi.fn()
 console.error = vi.fn()
 

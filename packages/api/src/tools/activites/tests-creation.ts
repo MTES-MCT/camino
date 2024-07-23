@@ -1,9 +1,9 @@
-import '../../init.js'
+import '../../init'
 import { writeFileSync } from 'fs'
 import { z } from 'zod'
-import { knex } from '../../knex.js'
-import { Section, sectionValidator } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
-import { ActiviteId } from 'camino-common/src/activite.js'
+import { knex } from '../../knex'
+import { Section, sectionValidator } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections'
+import { ActiviteId } from 'camino-common/src/activite'
 
 const arraySectionValidator = z.array(sectionValidator)
 const writeActivitesSectionsForTest = async () => {

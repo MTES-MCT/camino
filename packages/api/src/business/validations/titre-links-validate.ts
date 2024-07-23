@@ -1,7 +1,7 @@
-import { TitreId } from 'camino-common/src/validators/titres.js'
-import { ITitre, ITitreDemarche } from '../../types.js'
-import { getLinkConfig } from 'camino-common/src/permissions/titres.js'
-import { isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
+import { TitreId } from 'camino-common/src/validators/titres'
+import { ITitre, ITitreDemarche } from '../../types'
+import { getLinkConfig } from 'camino-common/src/permissions/titres'
+import { isNullOrUndefined } from 'camino-common/src/typescript-tools'
 
 export const checkTitreLinks = (titre: Pick<ITitre, 'typeId'>, titreFromIds: TitreId[], titresFrom: ITitre[], demarches: ITitreDemarche[]) => {
   const linkConfig = getLinkConfig(

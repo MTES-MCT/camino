@@ -1,12 +1,12 @@
-import { entreprisesUpdate } from './entreprises-update.js'
-import { entreprisesGet } from '../../database/queries/entreprises.js'
-import { entreprisesEtablissementsGet } from '../../database/queries/entreprises-etablissements.js'
-import { apiInseeEntreprisesGet, apiInseeEntreprisesEtablissementsGet } from '../../tools/api-insee/index.js'
-import { IEntreprise, IEntrepriseEtablissement } from '../../types.js'
+import { entreprisesUpdate } from './entreprises-update'
+import { entreprisesGet } from '../../database/queries/entreprises'
+import { entreprisesEtablissementsGet } from '../../database/queries/entreprises-etablissements'
+import { apiInseeEntreprisesGet, apiInseeEntreprisesEtablissementsGet } from '../../tools/api-insee/index'
+import { IEntreprise, IEntrepriseEtablissement } from '../../types'
 import { vi, beforeEach, describe, expect, test } from 'vitest'
-import { newEntrepriseId } from 'camino-common/src/entreprise.js'
-import Entreprises from '../../database/models/entreprises.js'
-import EntreprisesEtablissements from '../../database/models/entreprises-etablissements.js'
+import { newEntrepriseId } from 'camino-common/src/entreprise'
+import Entreprises from '../../database/models/entreprises'
+import EntreprisesEtablissements from '../../database/models/entreprises-etablissements'
 
 const entreprisesUpdated: IEntreprise[] = []
 // 'vi.mock()` est hoisté avant l'import, le court-circuitant

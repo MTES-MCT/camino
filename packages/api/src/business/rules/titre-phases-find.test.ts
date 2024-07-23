@@ -1,18 +1,18 @@
-import { ITitreDemarche } from '../../types.js'
-import { DemarcheId, demarcheSlugValidator } from 'camino-common/src/demarche.js'
+import { ITitreDemarche } from '../../types'
+import { DemarcheId, demarcheSlugValidator } from 'camino-common/src/demarche'
 
-import { titrePhasesFind, TitreDemarchePhaseFind } from './titre-phases-find.js'
-import { newDemarcheId, newEtapeId, newTitreId } from '../../database/models/_format/id-create.js'
-import { CaminoDate, toCaminoDate } from 'camino-common/src/date.js'
+import { titrePhasesFind, TitreDemarchePhaseFind } from './titre-phases-find'
+import { newDemarcheId, newEtapeId, newTitreId } from '../../database/models/_format/id-create'
+import { CaminoDate, toCaminoDate } from 'camino-common/src/date'
 import { describe, expect, test } from 'vitest'
 import { DEMARCHES_TYPES_IDS } from 'camino-common/src/static/demarchesTypes'
 import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 
-import { ETAPES_STATUTS } from 'camino-common/src/static/etapesStatuts.js'
-import { ETAPE_IS_BROUILLON, ETAPE_IS_NOT_BROUILLON, etapeSlugValidator } from 'camino-common/src/etape.js'
-import { FeatureMultiPolygon } from 'camino-common/src/perimetre.js'
-import { km2Validator } from 'camino-common/src/number.js'
+import { ETAPES_STATUTS } from 'camino-common/src/static/etapesStatuts'
+import { ETAPE_IS_BROUILLON, ETAPE_IS_NOT_BROUILLON, etapeSlugValidator } from 'camino-common/src/etape'
+import { FeatureMultiPolygon } from 'camino-common/src/perimetre'
+import { km2Validator } from 'camino-common/src/number'
 const titresProd = require('./titre-phases-find.cas.json')
 
 export type TitrePhasesTest = [TitreTypeId, TitreDemarchePhaseFind[]]

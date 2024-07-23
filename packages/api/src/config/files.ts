@@ -1,5 +1,5 @@
-import { DOWNLOADS_DIRECTORY } from '../api/rest/fichiers.js'
-import { dirCreate } from '../tools/dir-create.js'
+import { DOWNLOADS_DIRECTORY } from '../api/rest/fichiers'
+import { dirCreate } from '../tools/dir-create'
 
 export const filesInit = () => {
   dirCreate('files')

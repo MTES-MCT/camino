@@ -1,5 +1,5 @@
-import { activitesStatuts as activitesStatutsList } from 'camino-common/src/static/activitesStatuts.js'
-import { sortedActivitesTypes } from 'camino-common/src/static/activitesTypes.js'
+import { activitesStatuts as activitesStatutsList } from 'camino-common/src/static/activitesStatuts'
+import { sortedActivitesTypes } from 'camino-common/src/static/activitesTypes'
 
 export const activitesTypes = () => sortedActivitesTypes
 

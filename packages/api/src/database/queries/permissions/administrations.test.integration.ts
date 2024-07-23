@@ -1,9 +1,9 @@
-import { dbManager } from '../../../../tests/db-manager.js'
-import { ITitre } from '../../../types.js'
+import { dbManager } from '../../../../tests/db-manager'
+import { ITitre } from '../../../types'
 
-import Titres from '../../models/titres.js'
-import { AdministrationId } from 'camino-common/src/static/administrations.js'
-import { administrationsTitresQuery } from './administrations.js'
+import Titres from '../../models/titres'
+import { AdministrationId } from 'camino-common/src/static/administrations'
+import { administrationsTitresQuery } from './administrations'
 import { expect, test, describe, afterAll, beforeAll, vi } from 'vitest'
 
 console.info = vi.fn()
