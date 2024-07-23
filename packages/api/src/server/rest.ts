@@ -41,17 +41,7 @@ import {
 import { CaminoConfig, caminoConfigValidator } from 'camino-common/src/static/config'
 import { CaminoRequest, CustomResponse } from '../api/rest/express-type'
 import { User, UserNotNull } from 'camino-common/src/roles'
-import {
-  createEtape,
-  deleteEtape,
-  deposeEtape,
-  getEtape,
-  getEtapeAvis,
-  getEtapeDocuments,
-  getEtapeEntrepriseDocuments,
-  getEtapesTypesEtapesStatusWithMainStep,
-  updateEtape,
-} from '../api/rest/etapes'
+import { createEtape, deleteEtape, deposeEtape, getEtape, getEtapeAvis, getEtapeDocuments, getEtapeEntrepriseDocuments, getEtapesTypesEtapesStatusWithMainStep, updateEtape } from '../api/rest/etapes'
 import { z } from 'zod'
 import { getCommunes } from '../api/rest/communes'
 import { SendFileOptions } from 'express-serve-static-core'

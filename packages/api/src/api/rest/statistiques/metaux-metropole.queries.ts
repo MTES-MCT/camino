@@ -2,11 +2,7 @@
 import { sql } from '@pgtyped/runtime'
 import { AnneeCountStatistique, anneeCountStatistiqueValidator } from 'camino-common/src/statistiques'
 import { Redefine, dbQueryAndValidate } from '../../../pg-database'
-import {
-  IGetSubstancesByEntrepriseCategoryByAnneeInternalQuery,
-  IGetTitreActiviteSubstanceParAnneeInternalQuery,
-  IGetsubstancesByAnneeByCommuneInternalQuery,
-} from './metaux-metropole.queries.types'
+import { IGetSubstancesByEntrepriseCategoryByAnneeInternalQuery, IGetTitreActiviteSubstanceParAnneeInternalQuery, IGetsubstancesByAnneeByCommuneInternalQuery } from './metaux-metropole.queries.types'
 import { SUBSTANCES_FISCALES_IDS, SubstanceFiscaleId, substanceFiscaleIdValidator } from 'camino-common/src/static/substancesFiscales'
 import { z } from 'zod'
 import { caminoAnneeValidator } from 'camino-common/src/date'
