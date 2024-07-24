@@ -18,7 +18,6 @@ import { DemarcheTypeId } from './static/demarchesTypes'
 import { EtapeTypeId } from './static/etapesTypes'
 import { EtapeContenu, FlattenEtape, FlattenedContenu, RestEtapeCreation, HeritageContenu } from './etape-form'
 
-
 const dateElementWithValueValidator = dateElementValidator.extend({ value: caminoDateValidator.nullable() })
 
 const textElementWithValueValidator = textElementValidator.extend({ value: z.string().nullable() })
