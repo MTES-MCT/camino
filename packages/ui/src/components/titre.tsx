@@ -16,7 +16,7 @@ import { caminoFiltres } from 'camino-common/src/filters'
 import { ReferencesTypes } from 'camino-common/src/static/referencesTypes'
 import { TableSortEvent } from './_ui/table'
 import { activitesColonneIdAnnee } from './activites'
-import { CaminoDate, dateFormat, getCurrent } from 'camino-common/src/date'
+import { CaminoDate, getCurrent } from 'camino-common/src/date'
 import { Alert } from './_ui/alert'
 import { TitreGet, getMostRecentValuePropFromEtapeFondamentaleValide } from 'camino-common/src/titres'
 import { titreIdOrSlugValidator, TitreIdOrSlug, TitreId } from 'camino-common/src/validators/titres'
@@ -27,7 +27,6 @@ import { CommuneId } from 'camino-common/src/static/communes'
 import { canDeleteTitre, canEditTitre, canHaveActivites } from 'camino-common/src/permissions/titres'
 import { TitreDemarche } from '@/components/titre/titre-demarche'
 import { isNotNullNorUndefined, isNullOrUndefined, isNullOrUndefinedOrEmpty, onlyUnique } from 'camino-common/src/typescript-tools'
-import { DsfrIcon } from './_ui/icon'
 import { DsfrSeparator } from './_ui/dsfr-separator'
 import { TitreAbonnerButton } from './titre/titre-abonner-button'
 import { EditPopup } from './titre/edit-popup'
@@ -41,6 +40,7 @@ import { SecteursMaritimes } from 'camino-common/src/static/facades'
 import { userKey, entreprisesKey } from '@/moi'
 import { Entreprise } from 'camino-common/src/entreprise'
 import { CaminoRouter } from '@/typings/vue-router'
+import { ModifiedDate } from './_common/modified-date'
 
 const activitesSort: TableSortEvent = {
   colonne: activitesColonneIdAnnee,
@@ -370,12 +370,7 @@ export const PureTitre = defineComponent<Props>(props => {
             ) : null}
 
             <div class="fr-grid-row fr-grid-row--middle fr-mt-4w">
-              {titre.titre_last_modified_date !== null ? (
-                <div>
-                  <DsfrIcon name="fr-icon-calendar-line" class="fr-mr-1w" size="sm" color="text-title-blue-france" aria-hidden="true" />
-                  Modifié le {dateFormat(titre.titre_last_modified_date)}
-                </div>
-              ) : null}
+              {titre.titre_last_modified_date !== null ? <ModifiedDate modified_date={titre.titre_last_modified_date} /> : null}
 
               {isSuper(props.user) ? (
                 <DsfrLink

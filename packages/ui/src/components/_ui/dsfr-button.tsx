@@ -65,6 +65,7 @@ type DsfrLinkProps<T extends CaminoRouteNames> = {
   title: string
   label?: string | null
   buttonType?: ButtonType
+  breadcrumb?: true
   icon: DsfrIcon | null
   style?: HTMLAttributes['style']
   class?: HTMLAttributes['class']
@@ -79,7 +80,7 @@ export const DsfrLink = <T extends CaminoRouteNames>(props: DsfrLinkProps<T>): J
     <>
       {'to' in props ? (
         <CaminoRouterLink
-          class={[props.class, props.buttonType ? ['fr-btn', `fr-btn--${props.buttonType ?? 'primary'}`] : 'fr-link', iconClass, props.icon]}
+          class={[props.class, props.buttonType ? ['fr-btn', `fr-btn--${props.buttonType ?? 'primary'}`] : 'breadcrumb' in props ? 'fr-breadcrumb__link' : 'fr-link', iconClass, props.icon]}
           isDisabled={props.disabled}
           title={props.title}
           to={props.to}

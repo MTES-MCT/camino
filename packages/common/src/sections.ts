@@ -12,7 +12,7 @@ import {
   urlElementValidator,
 } from './static/titresTypes_demarchesTypes_etapesTypes/sections'
 import { z } from 'zod'
-import { DeepReadonly, isNotNullNorUndefined } from './typescript-tools'
+import { DeepReadonly, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from './typescript-tools'
 import { TitreTypeId } from './static/titresTypes'
 import { DemarcheTypeId } from './static/demarchesTypes'
 import { EtapeTypeId } from './static/etapesTypes'
@@ -72,14 +72,16 @@ export const valeurFind = (element: ElementWithValue): string | '–' => {
   }
 
   if (element.type === 'checkboxes') {
-    return element.value
+    const result = element.value
       .map(id => {
         const option = element.options.find(e => e.id === id)
 
-        return option ? option.nom : undefined
+        return option ? option.nom : null
       })
       .filter(valeur => isNotNullNorUndefined(valeur))
       .join(', ')
+
+    return isNotNullNorUndefinedNorEmpty(result) ? result : '–'
   }
 
   if (element.type === 'select') {
