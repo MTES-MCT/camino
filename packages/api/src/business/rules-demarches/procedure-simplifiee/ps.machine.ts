@@ -6,7 +6,10 @@ import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts'
 import { CaminoDate, isBefore, toCaminoDate } from 'camino-common/src/date'
 import { ETAPES_STATUTS, EtapeStatutId } from 'camino-common/src/static/etapesStatuts'
 import { isNullOrUndefined } from 'camino-common/src/typescript-tools'
-
+type SaisirInformationHistoriqueIncomplete = {
+  date: CaminoDate
+  type: 'SAISIR_INFORMATION_HISTORIQUE_INCOMPLETE'
+}
 type RendreDecisionAdministrationAcceptee = {
   date: CaminoDate
   type: 'RENDRE_DECISION_ADMINISTRATION_ACCEPTEE'
@@ -27,6 +30,7 @@ type ProcedureSimplifieeXStateEvent =
   | ParticipationDuPublic
   | RendreDecisionAdministrationAcceptee
   | RendreDecisionAdministrationRejetee
+  | SaisirInformationHistoriqueIncomplete
   | { type: 'PUBLIER_DECISION_ACCEPTEE_AU_JORF' }
   | { type: 'PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS' }
   | { type: 'CLASSER_SANS_SUITE' }
@@ -50,6 +54,7 @@ const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
   DEMANDER_INFORMATION: { db: ETES.demandeDinformations, mainStep: false },
   RECEVOIR_INFORMATION: { db: ETES.receptionDinformation, mainStep: false },
   FAIRE_ABROGATION: { db: ETES.abrogationDeLaDecision, mainStep: true },
+  SAISIR_INFORMATION_HISTORIQUE_INCOMPLETE: { db: ETES.informationsHistoriquesIncompletes, mainStep: false },
 }
 
 // Related to https://github.com/Microsoft/TypeScript/issues/12870
@@ -65,6 +70,7 @@ export class ProcedureSimplifieeMachine extends CaminoMachine<ProcedureSimplifie
     switch (event) {
       case 'RENDRE_DECISION_ADMINISTRATION_ACCEPTEE':
       case 'RENDRE_DECISION_ADMINISTRATION_REJETEE':
+      case 'SAISIR_INFORMATION_HISTORIQUE_INCOMPLETE':
         return [{ type: event, date }]
       case 'OUVRIR_PARTICIPATION_DU_PUBLIC':
         return [
@@ -90,6 +96,7 @@ export class ProcedureSimplifieeMachine extends CaminoMachine<ProcedureSimplifie
     if (entry) {
       const eventFromEntry = entry[0]
       switch (eventFromEntry) {
+        case 'SAISIR_INFORMATION_HISTORIQUE_INCOMPLETE':
         case 'RENDRE_DECISION_ADMINISTRATION_ACCEPTEE':
         case 'RENDRE_DECISION_ADMINISTRATION_REJETEE': {
           return { type: eventFromEntry, date: etape.date }
@@ -99,9 +106,6 @@ export class ProcedureSimplifieeMachine extends CaminoMachine<ProcedureSimplifie
         }
 
         default:
-          // related to https://github.com/microsoft/TypeScript/issues/46497  https://github.com/microsoft/TypeScript/issues/40803 :(
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
           return { type: eventFromEntry }
       }
     }
@@ -116,6 +120,7 @@ interface ProcedureSimplifieeContext extends CaminoCommonContext {
 }
 const defaultDemarcheStatut = DemarchesStatutsIds.EnConstruction
 const procedureHistoriqueDateMax = toCaminoDate('2024-07-01')
+const procedureIncompleteDateMax = toCaminoDate('2000-01-01')
 const procedureSimplifieeMachine = createMachine({
   types: {} as { context: ProcedureSimplifieeContext; events: ProcedureSimplifieeXStateEvent },
   id: 'ProcedureSimplifiee',
@@ -133,6 +138,14 @@ const procedureSimplifieeMachine = createMachine({
       target: '.publicationAuRecueilDesActesAdministratifsOupublicationAuJORFAFaire',
       actions: assign({
         visibilite: 'publique',
+        demarcheStatut: DemarchesStatutsIds.Accepte,
+      }),
+    },
+    SAISIR_INFORMATION_HISTORIQUE_INCOMPLETE: {
+      guard: ({ context, event }) => isBefore(event.date, procedureIncompleteDateMax) && context.demarcheStatut === defaultDemarcheStatut,
+      target: '.finDeMachine',
+      actions: assign({
+        visibilite: 'confidentielle',
         demarcheStatut: DemarchesStatutsIds.Accepte,
       }),
     },

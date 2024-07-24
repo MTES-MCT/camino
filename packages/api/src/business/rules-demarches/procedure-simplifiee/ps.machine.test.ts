@@ -23,6 +23,23 @@ describe('vérifie l’arbre des procédures historiques et simplifiées', () =>
     ])
     expect(service.getSnapshot().context.demarcheStatut).toBe(DemarchesStatutsIds.EnConstruction)
   })
+  test('statut de la démarche incomplète sans étape', () => {
+    const service = orderAndInterpretMachine(psMachine, [])
+    expect(service).canOnlyTransitionTo({ machine: psMachine, date: toCaminoDate('1999-04-14') }, [
+      'FAIRE_DEMANDE',
+      'RENDRE_DECISION_ADMINISTRATION_ACCEPTEE',
+      'RENDRE_DECISION_ADMINISTRATION_REJETEE',
+      'SAISIR_INFORMATION_HISTORIQUE_INCOMPLETE',
+    ])
+    expect(service.getSnapshot().context.demarcheStatut).toBe(DemarchesStatutsIds.EnConstruction)
+  })
+
+  test('peut faire une démarche historique incomplète', () => {
+    const { service, dateFin } = setDateAndOrderAndInterpretMachine(psMachine, '1999-04-14', [ETES.informationsHistoriquesIncompletes.FAIT])
+    expect(service).canOnlyTransitionTo({ machine: psMachine, date: dateFin }, [])
+    expect(service.getSnapshot().context.demarcheStatut).toBe(DemarchesStatutsIds.Accepte)
+    expect(service.getSnapshot().context.visibilite).toBe('confidentielle')
+  })
   test('peut créer une "mfr"', () => {
     const etapes = [ETES.demande.FAIT]
     const { service, dateFin } = setDateAndOrderAndInterpretMachine(psMachine, '2022-04-14', etapes)
