@@ -1,5 +1,5 @@
 import { DEMARCHES_TYPES_IDS, DemarcheType, DemarchesTypes } from './demarchesTypes'
-import { TITRES_TYPES_IDS, TitreTypeId, isTitreType } from './titresTypes'
+import { TITRES_TYPES_IDS, TitreTypeId } from './titresTypes'
 
 const demarchesEverywhere = [
   DEMARCHES_TYPES_IDS.AutorisationDOuvertureDeTravaux,
@@ -222,12 +222,3 @@ export type TitresTypesDemarchesTypes = typeof TITRES_TYPES_DEMARCHES_TYPES
 export const getDemarchesTypesByTitreType = (titreTypeId: TitreTypeId): DemarcheType[] => {
   return TITRES_TYPES_DEMARCHES_TYPES[titreTypeId].map(demarcheTypeId => DemarchesTypes[demarcheTypeId]).sort((a, b) => a.nom.localeCompare(b.nom))
 }
-
-export const titresTypesDemarcheTypesMetas = Object.keys(TITRES_TYPES_DEMARCHES_TYPES)
-  .filter(isTitreType)
-  .flatMap(titreTypeId => {
-    return TITRES_TYPES_DEMARCHES_TYPES[titreTypeId].map(demarcheTypeId => ({
-      titreTypeId,
-      demarcheTypeId,
-    }))
-  })

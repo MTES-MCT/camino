@@ -95,17 +95,6 @@ const Administrations = async () => {
 
   return Administrations
 }
-const Meta = async () => {
-  const { Meta } = await import('../components/meta')
-
-  return Meta
-}
-
-const Metas = async () => {
-  const { Metas } = await import('../components/metas')
-
-  return Metas
-}
 
 const Statistiques = async () => {
   const { Statistiques } = await import('../components/statistiques')
@@ -202,14 +191,6 @@ const routes = {
   administration: {
     ...routesDefinitions.administration,
     component: Administration,
-  },
-  metas: {
-    ...routesDefinitions.metas,
-    component: Metas,
-  },
-  meta: {
-    ...routesDefinitions.meta,
-    component: Meta,
   },
   activites: {
     ...routesDefinitions.activites,

@@ -3330,14 +3330,3 @@ export const isTDEExist = (titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTyp
 
   return false
 }
-export const TDEMetas = Object.keys(TDE).flatMap(titreTypeId => {
-  // @ts-ignore utilisé que pour les métas
-  return Object.keys(TDE[titreTypeId]).flatMap(demarcheTypeId =>
-    // @ts-ignore utilisé que pour les métas
-    TDE[titreTypeId][demarcheTypeId].map(etapeTypeId => ({
-      titreTypeId,
-      demarcheTypeId,
-      etapeTypeId,
-    }))
-  )
-})

@@ -1,7 +1,7 @@
 import type { LocationQueryRaw, RouteRecordRaw } from 'vue-router'
 
 // prettier-ignore
-const ROUTES = ['dashboard','statsDGTM','titres','titreCreation','titre','demarches','demarche','travaux','etape','etapeCreation','etapeEdition','utilisateurs','utilisateur','entreprises','entreprise','administrations','administration','metas','meta','activites','activite','activiteEdition','statistiques','journaux','statistiquesbetagouv','aPropos','homepage','erreur' ] as const
+const ROUTES = ['dashboard','statsDGTM','titres','titreCreation','titre','demarches','demarche','travaux','etape','etapeCreation','etapeEdition','utilisateurs','utilisateur','entreprises','entreprise','administrations','administration','activites','activite','activiteEdition','statistiques','journaux','statistiquesbetagouv','aPropos','homepage','erreur' ] as const
 type CaminoRoute<T extends CaminoRouteNames> = Pick<RouteRecordRaw, 'path' | 'meta'> & { name: T }
 export const routesDefinitions = {
   dashboard: {
@@ -130,22 +130,6 @@ export const routesDefinitions = {
     meta: {
       title: "Détail d'une administration",
       menuSection: 'administrations',
-    },
-  },
-  metas: {
-    path: '/metas',
-    name: 'metas',
-    meta: {
-      title: 'Métas',
-      menuSection: 'metas',
-    },
-  },
-  meta: {
-    path: '/metas/:id',
-    name: 'meta',
-    meta: {
-      title: "Détail d'une méta",
-      menuSection: 'metas',
     },
   },
   activites: {

@@ -23,7 +23,6 @@ const links = {
   ENTREPRISES: { label: 'Entreprises', path: 'entreprises' },
   UTILISATEURS: { label: 'Utilisateurs', path: 'utilisateurs' },
   ADMINISTRATIONS: { label: 'Administrations', path: 'administrations' },
-  METAS: { label: 'Métas', path: 'metas' },
   JOURNAUX: { label: 'Journaux', path: 'journaux' },
   TABLEAU_DE_BORD: { label: 'Tableau de bord', path: 'dashboard' },
 } as const satisfies Record<string, Link>
@@ -104,7 +103,7 @@ export const Header = defineComponent<Props>(props => {
     const linkActivites = canReadActivites(props.user) ? [links.ACTIVITES] : []
 
     return {
-      super: [links.TITRES_ET_AUTORISATIONS, links.DEMARCHES, links.TRAVAUX, ...linkActivites, links.STATISTIQUES, ANNUAIRE, links.METAS, links.JOURNAUX],
+      super: [links.TITRES_ET_AUTORISATIONS, links.DEMARCHES, links.TRAVAUX, ...linkActivites, links.STATISTIQUES, ANNUAIRE, links.JOURNAUX],
       admin: [links.TABLEAU_DE_BORD, links.TITRES_ET_AUTORISATIONS, links.DEMARCHES, links.TRAVAUX, ...linkActivites, links.STATISTIQUES, ANNUAIRE],
       editeur: [links.TABLEAU_DE_BORD, links.TITRES_ET_AUTORISATIONS, links.DEMARCHES, links.TRAVAUX, ...linkActivites, links.STATISTIQUES, ANNUAIRE],
       lecteur: [links.TITRES_ET_AUTORISATIONS, links.DEMARCHES, links.TRAVAUX, links.STATISTIQUES, ANNUAIRE],

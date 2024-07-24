@@ -1,8 +1,8 @@
-import { getKeys, isNotNullNorUndefined, onlyUnique } from '../../typescript-tools'
-import { DEMARCHES_TYPES_IDS, DemarcheTypeId, isDemarcheTypeId } from '../demarchesTypes'
+import { isNotNullNorUndefined, onlyUnique } from '../../typescript-tools'
+import { DEMARCHES_TYPES_IDS, DemarcheTypeId } from '../demarchesTypes'
 import { DocumentsTypes, DOCUMENTS_TYPES_IDS, EntrepriseDocumentTypeId, EntrepriseDocumentType, isEntrepriseDocumentTypeId } from '../documentsTypes'
-import { ETAPES_TYPES, EtapeTypeId, isEtapeTypeId } from '../etapesTypes'
-import { TitreTypeId, TITRES_TYPES_IDS, isTitreType } from '../titresTypes'
+import { ETAPES_TYPES, EtapeTypeId } from '../etapesTypes'
+import { TitreTypeId, TITRES_TYPES_IDS } from '../titresTypes'
 import { TDEType } from './index'
 
 const EtapesTypesEntrepriseDocumentsTypes = {
@@ -23,15 +23,6 @@ const EtapesTypesEntrepriseDocumentsTypes = {
 const isEtapesTypesEntrepriseDocumentsTypes = (etapeTypeId?: EtapeTypeId | string): etapeTypeId is keyof typeof EtapesTypesEntrepriseDocumentsTypes => {
   return Object.keys(EtapesTypesEntrepriseDocumentsTypes).includes(etapeTypeId)
 }
-
-export const etapesTypesEntrepriseDocumentsTypesMetas = Object.keys(EtapesTypesEntrepriseDocumentsTypes)
-  .filter(isEtapesTypesEntrepriseDocumentsTypes)
-  .flatMap(etapeTypeId => {
-    return EtapesTypesEntrepriseDocumentsTypes[etapeTypeId].map(documentTypeId => ({
-      etapeTypeId,
-      documentTypeId,
-    }))
-  })
 
 const TDEEntrepriseDocumentsTypes = {
   [TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX]: {
@@ -90,32 +81,6 @@ const TDEEntrepriseDocumentsTypes = {
 type TDEEntrepriseDocumentsTypesUnleashed = {
   [key in TitreTypeId]?: { [key in DemarcheTypeId]?: { [key in EtapeTypeId]?: { [key in EntrepriseDocumentTypeId]: { optionnel: boolean; description?: string } } } }
 }
-
-export const TDEEntrepriseDocumentsTypesMetas = Object.keys(TDEEntrepriseDocumentsTypes as TDEEntrepriseDocumentsTypesUnleashed)
-  .filter(isTitreType)
-  .flatMap(titreTypeId => {
-    return getKeys((TDEEntrepriseDocumentsTypes as TDEEntrepriseDocumentsTypesUnleashed)[titreTypeId] ?? {}, isDemarcheTypeId).flatMap(demarcheTypeId => {
-      return getKeys((TDEEntrepriseDocumentsTypes as TDEEntrepriseDocumentsTypesUnleashed)?.[titreTypeId]?.[demarcheTypeId] ?? {}, isEtapeTypeId).flatMap(etapeTypeId => {
-        const TDE = (TDEEntrepriseDocumentsTypes as TDEEntrepriseDocumentsTypesUnleashed)?.[titreTypeId]?.[demarcheTypeId]?.[etapeTypeId] ?? null
-        if (!TDE) {
-          return []
-        }
-
-        return Object.keys(TDE)
-          .filter(isEntrepriseDocumentTypeId)
-          .map(documentTypeId => {
-            return {
-              titreTypeId,
-              demarcheTypeId,
-              etapeTypeId,
-              documentTypeId,
-              optionnel: TDE[documentTypeId].optionnel,
-              description: TDE[documentTypeId].description,
-            }
-          })
-      })
-    })
-  })
 
 export const getEntrepriseDocuments = (titreTypeId?: TitreTypeId, demarcheTypeId?: DemarcheTypeId, etapeTypeId?: EtapeTypeId): EntrepriseDocumentType[] => {
   if (isNotNullNorUndefined(titreTypeId) && isNotNullNorUndefined(demarcheTypeId) && isNotNullNorUndefined(etapeTypeId)) {
