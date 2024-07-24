@@ -9,8 +9,11 @@ import { UserNotNull } from 'camino-common/src/roles'
 import { EtapesTypes } from 'camino-common/src/static/etapesTypes'
 import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
 import { ETAPE_IS_BROUILLON, ETAPE_IS_NOT_BROUILLON } from 'camino-common/src/etape'
+import { TitreId } from 'camino-common/src/validators/titres'
+import { TitreTypeId } from 'camino-common/src/static/titresTypes'
+import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
 
-const emailForAdministrationContentFormat = (titreTypeId: string, etapeNom: string, titreId: string, user: UserNotNull) => {
+const emailForAdministrationContentFormat = (titreTypeId: TitreTypeId, etapeNom: string, titreId: TitreId, user: UserNotNull) => {
   const titreUrl = titreUrlGet(titreId)
 
   return `
@@ -31,8 +34,8 @@ const etapeStatusUpdated = (etape: Pick<ITitreEtape, 'typeId' | 'statutId'>, typ
 export const emailsForAdministrationsGet = (
   etape: Pick<ITitreEtape, 'typeId' | 'statutId' | 'isBrouillon'> | undefined,
   demarcheTypeId: string,
-  titreId: string,
-  titreTypeId: string,
+  titreId: TitreId,
+  titreTypeId: TitreTypeId,
   user: UserNotNull,
   oldEtape?: Pick<ITitreEtape, 'statutId' | 'isBrouillon'>
 ): { subject: string; content: string; emails: string[] } | null => {
@@ -88,12 +91,12 @@ export const emailsForAdministrationsGet = (
 
 export const titreEtapeAdministrationsEmailsSend = async (
   etape: Pick<ITitreEtape, 'typeId' | 'statutId' | 'isBrouillon'>,
-  demarcheTypeId: string,
-  titreId: string,
-  titreTypeId: string,
+  demarcheTypeId: DemarcheTypeId,
+  titreId: TitreId,
+  titreTypeId: TitreTypeId,
   user: UserNotNull,
   oldEtape?: ITitreEtape
-) => {
+): Promise<void> => {
   const emailsForAdministrations = emailsForAdministrationsGet(etape, demarcheTypeId, titreId, titreTypeId, user, oldEtape)
 
   if (emailsForAdministrations) {
@@ -101,7 +104,7 @@ export const titreEtapeAdministrationsEmailsSend = async (
   }
 }
 
-export const titreEtapeUtilisateursEmailsSend = async (etape: ITitreEtape, titreId: string) => {
+export const titreEtapeUtilisateursEmailsSend = async (etape: ITitreEtape, titreId: TitreId): Promise<void> => {
   const utilisateursEmails = [] as string[]
 
   const utilisateursTitres = await utilisateursTitresGet(titreId, {

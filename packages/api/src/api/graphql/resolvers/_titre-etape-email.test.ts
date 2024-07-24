@@ -4,9 +4,10 @@ import { expect, test } from 'vitest'
 import { UserNotNull } from 'camino-common/src/roles'
 import { newUtilisateurId } from '../../../database/models/_format/id-create'
 import { ETAPE_IS_NOT_BROUILLON } from 'camino-common/src/etape'
+import { titreIdValidator } from 'camino-common/src/validators/titres'
 
 test('envoie un email sur une étape non existante', () => {
-  const actual = emailsForAdministrationsGet(undefined, '', '', '', userSuper, undefined)
+  const actual = emailsForAdministrationsGet(undefined, '', titreIdValidator.parse('titreId'), 'arm', userSuper, undefined)
 
   expect(actual).toBe(null)
 })
@@ -27,7 +28,7 @@ test("envoie un email sur un octroi d'AEX", () => {
       isBrouillon: ETAPE_IS_NOT_BROUILLON,
     },
     'oct',
-    'titreId',
+    titreIdValidator.parse('titreId'),
     'axm',
     user,
     undefined
@@ -44,7 +45,7 @@ test("envoie un email sur un octroi d'ARM", () => {
       isBrouillon: ETAPE_IS_NOT_BROUILLON,
     },
     'oct',
-    'titreId',
+    titreIdValidator.parse('titreId'),
     'arm',
     user,
     undefined

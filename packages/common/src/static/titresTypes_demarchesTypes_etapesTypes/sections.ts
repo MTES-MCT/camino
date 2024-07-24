@@ -1001,7 +1001,7 @@ export const getSections = (titreTypeId: TitreTypeId | undefined, demarcheTypeId
   }
 }
 
-export const getElementValeurs = (element: DeepReadonly<SelectElement>): { id: string; nom: string }[] => {
+const getElementValeurs = (element: DeepReadonly<SelectElement>): { id: string; nom: string }[] => {
   if (isSelectElementWithMetas(element)) {
     switch (element.valeursMetasNom) {
       case 'devises':
