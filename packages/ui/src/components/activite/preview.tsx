@@ -13,9 +13,8 @@ import { ActiviteApiClient } from './activite-api-client'
 import { ActiviteRemovePopup } from './remove-popup'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { capitalize } from 'camino-common/src/strings'
-import { dateFormat } from 'camino-common/src/date'
 import { ActiviteStatut } from '../_common/activite-statut'
-import { LabelWithValue } from '../_ui/label-with-value'
+import { ModifiedDate } from '../_common/modified-date'
 
 interface Props {
   activite: Activite
@@ -88,7 +87,7 @@ export const Preview = defineComponent<Props>(props => {
       </nav>
       <div class="fr-grid-row fr-grid-row--top fr-mt-4w">
         <h1 class="fr-m-0">{activiteTitle}</h1>
-        <div class="fr-m-0" style={{ marginLeft: 'auto !important', display: 'flex' }}>
+        <div class="fr-m-0" style={{ marginLeft: 'auto !important', display: 'flex', gap: '1rem' }}>
           {props.activite.suppression ? <DsfrButtonIcon buttonType="tertiary" title="supprimer l'activité" onClick={removePopupOpen} icon="fr-icon-delete-bin-line" /> : null}
           {props.activite.modification ? (
             <>
@@ -112,12 +111,9 @@ export const Preview = defineComponent<Props>(props => {
         <h3>{props.activite.titre.nom}</h3>
 
         <ActiviteStatut activiteStatutId={props.activite.activite_statut_id} />
-
+        {isNotNullNorUndefined(props.activite.date_saisie) ? <ModifiedDate class="fr-pt-1w" modified_date={props.activite.date_saisie} /> : null}
         <div class="fr-pt-1w">
           {isNotNullNorUndefined(activiteType.value.description) && activiteType.value.description !== '' ? <div v-html={activiteType.value.description} /> : null}
-          {props.activite.date_saisie !== null ? (
-            <LabelWithValue title={`Date de ${props.activite.activite_statut_id === ACTIVITES_STATUTS_IDS.DEPOSE ? 'dépôt' : 'modification'}`} text={dateFormat(props.activite.date_saisie)} />
-          ) : null}
 
           <Sections sections={props.activite.sections_with_value} />
 
