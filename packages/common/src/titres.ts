@@ -165,7 +165,7 @@ export type GetDemarcheByIdOrSlugValidator = z.infer<typeof getDemarcheByIdOrSlu
 export const titreDemandeValidator = z.object({
   nom: z.string(),
   titreTypeId: titreTypeIdValidator,
-  entrepriseId: entrepriseIdValidator,
+  entrepriseId: entrepriseIdValidator.optional(),
   references: z.array(titreReferenceValidator),
   titreFromIds: z.array(titreIdValidator),
 })
