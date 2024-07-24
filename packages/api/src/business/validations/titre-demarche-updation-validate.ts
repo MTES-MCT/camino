@@ -1,5 +1,5 @@
-import { isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools.js'
-import { ITitreDemarche } from '../../types.js'
+import { isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
+import { ITitreDemarche } from '../../types'
 
 export const titreDemarcheUpdationValidate = async (titreDemarcheNew: ITitreDemarche, titreDemarcheOld: ITitreDemarche) => {
   const errors = [] as string[]

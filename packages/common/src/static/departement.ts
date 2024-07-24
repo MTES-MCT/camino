@@ -1,6 +1,6 @@
-import { CommuneId } from './communes.js'
-import { PAYS_IDS } from './pays.js'
-import { RegionId, Regions } from './region.js'
+import { CommuneId } from './communes'
+import { PAYS_IDS } from './pays'
+import { RegionId, Regions } from './region'
 import { z } from 'zod'
 
 // prettier-ignore

@@ -1,6 +1,6 @@
-import { formatUser, IUtilisateur } from '../../../types.js'
-import { isAdministration } from 'camino-common/src/roles.js'
-import { Administrations } from 'camino-common/src/static/administrations.js'
+import { formatUser, IUtilisateur } from '../../../types'
+import { isAdministration } from 'camino-common/src/roles'
+import { Administrations } from 'camino-common/src/static/administrations'
 
 export const utilisateursFormatTable = (utilisateurs: IUtilisateur[]) =>
   utilisateurs.map(utilisateur => {

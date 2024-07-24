@@ -1,8 +1,8 @@
-import { knex } from '../knex.js'
-import { daily } from '../business/daily.js'
+import { knex } from '../knex'
+import { daily } from '../business/daily'
 import type { Pool } from 'pg'
-import { config } from '../config/index.js'
-import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
+import { config } from '../config/index'
+import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 
 export const databaseInit = async (pool: Pool) => {
   await knex.migrate.latest()

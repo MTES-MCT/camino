@@ -1,4 +1,4 @@
-import { TempDocumentName } from 'camino-common/src/document.js'
+import { TempDocumentName } from 'camino-common/src/document'
 import { createReadStream } from 'fs'
 import { join } from 'path'
 import { Pool } from 'pg'

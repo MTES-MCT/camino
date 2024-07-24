@@ -1,11 +1,11 @@
 import { Model, Modifiers, QueryContext } from 'objection'
 
-import { ITitreDemarche } from '../../types.js'
-import { newDemarcheId } from './_format/id-create.js'
-import Titres from './titres.js'
-import TitresEtapes from './titres-etapes.js'
-import { demarcheSlugValidator } from 'camino-common/src/demarche.js'
-import { isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
+import { ITitreDemarche } from '../../types'
+import { newDemarcheId } from './_format/id-create'
+import Titres from './titres'
+import TitresEtapes from './titres-etapes'
+import { demarcheSlugValidator } from 'camino-common/src/demarche'
+import { isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools'
 
 export interface DBTitresDemarches extends ITitreDemarche {
   archive: boolean

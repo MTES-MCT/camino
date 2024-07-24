@@ -1,8 +1,8 @@
-import { entrepriseEtablissementsFormat, entrepriseFormat } from './format.js'
-import { entreprisesFetch, entreprisesEtablissementsFetch } from './fetch.js'
-import { IEntreprise, IEntrepriseEtablissement } from '../../types.js'
-import { Siren } from 'camino-common/src/entreprise.js'
-import { isNotNullNorUndefined, isNullOrUndefined, isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools.js'
+import { entrepriseEtablissementsFormat, entrepriseFormat } from './format'
+import { entreprisesFetch, entreprisesEtablissementsFetch } from './fetch'
+import { IEntreprise, IEntrepriseEtablissement } from '../../types'
+import { Siren } from 'camino-common/src/entreprise'
+import { isNotNullNorUndefined, isNullOrUndefined, isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools'
 
 // cherche les établissements des entreprises
 // retourne des objets du modèle EntrepriseEtablissements

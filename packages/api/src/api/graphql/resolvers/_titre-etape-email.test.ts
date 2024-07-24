@@ -1,9 +1,9 @@
-import { emailsForAdministrationsGet } from './_titre-etape-email.js'
-import { userSuper } from '../../../database/user-super.js'
+import { emailsForAdministrationsGet } from './_titre-etape-email'
+import { userSuper } from '../../../database/user-super'
 import { expect, test } from 'vitest'
-import { UserNotNull } from 'camino-common/src/roles.js'
-import { newUtilisateurId } from '../../../database/models/_format/id-create.js'
-import { ETAPE_IS_NOT_BROUILLON } from 'camino-common/src/etape.js'
+import { UserNotNull } from 'camino-common/src/roles'
+import { newUtilisateurId } from '../../../database/models/_format/id-create'
+import { ETAPE_IS_NOT_BROUILLON } from 'camino-common/src/etape'
 
 test('envoie un email sur une étape non existante', () => {
   const actual = emailsForAdministrationsGet(undefined, '', '', '', userSuper, undefined)

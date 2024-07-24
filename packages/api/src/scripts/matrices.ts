@@ -1,6 +1,6 @@
-import { matrices } from '../business/matrices.js'
+import { matrices } from '../business/matrices'
 import pg from 'pg'
-import { config } from '../config/index.js'
+import { config } from '../config/index'
 // Le pool ne doit être qu'aux entrypoints : le daily, le monthly, et l'application.
 const pool = new pg.Pool({
   host: config().PGHOST,

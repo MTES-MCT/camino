@@ -1,6 +1,6 @@
-import { DeepReadonly } from 'camino-common/src/typescript-tools.js'
-import { ITitreEtape } from '../../types.js'
-import { CaminoDate } from 'camino-common/src/date.js'
+import { DeepReadonly } from 'camino-common/src/typescript-tools'
+import { ITitreEtape } from '../../types'
+import { CaminoDate } from 'camino-common/src/date'
 
 // si il y a un dépot de la demande
 // -> retourne la date de cette étape

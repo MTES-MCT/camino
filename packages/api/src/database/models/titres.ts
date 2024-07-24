@@ -1,14 +1,14 @@
 import { Model, Pojo, QueryContext, ref } from 'objection'
 
-import { ITitre } from '../../types.js'
-import TitresDemarches from './titres-demarches.js'
-import TitresEtapes from './titres-etapes.js'
-import { idGenerate } from './_format/id-create.js'
-import { slugify } from 'camino-common/src/strings.js'
-import TitresActivites from './titres-activites.js'
-import { getDomaineId, getTitreTypeType } from 'camino-common/src/static/titresTypes.js'
-import { titreSlugValidator } from 'camino-common/src/validators/titres.js'
-import { isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
+import { ITitre } from '../../types'
+import TitresDemarches from './titres-demarches'
+import TitresEtapes from './titres-etapes'
+import { idGenerate } from './_format/id-create'
+import { slugify } from 'camino-common/src/strings'
+import TitresActivites from './titres-activites'
+import { getDomaineId, getTitreTypeType } from 'camino-common/src/static/titresTypes'
+import { titreSlugValidator } from 'camino-common/src/validators/titres'
+import { isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools'
 
 export interface DBTitre extends ITitre {
   archive: boolean

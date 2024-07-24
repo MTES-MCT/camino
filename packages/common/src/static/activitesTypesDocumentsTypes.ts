@@ -1,5 +1,5 @@
-import { ACTIVITES_TYPES_IDS, ActivitesTypesId } from './activitesTypes.js'
-import { DOCUMENTS_TYPES_IDS, DocumentTypeId } from './documentsTypes.js'
+import { ACTIVITES_TYPES_IDS, ActivitesTypesId } from './activitesTypes'
+import { DOCUMENTS_TYPES_IDS, DocumentTypeId } from './documentsTypes'
 
 export const activitesTypesDocumentsTypes = {
   [ACTIVITES_TYPES_IDS["rapport trimestriel d'exploitation d'or en Guyane"]]: null,

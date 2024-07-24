@@ -1,7 +1,7 @@
-import { CaminoDate, toCaminoDate } from 'camino-common/src/date.js'
-import { ITitreDemarche } from '../../types.js'
+import { CaminoDate, toCaminoDate } from 'camino-common/src/date'
+import { ITitreDemarche } from '../../types'
 
-import { titreValideCheck } from './titre-valide-check.js'
+import { titreValideCheck } from './titre-valide-check'
 
 /**
  * Vérifie si une activité doit exister

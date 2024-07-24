@@ -1,4 +1,4 @@
-import { toCommuneId } from 'camino-common/src/static/communes.js'
+import { toCommuneId } from 'camino-common/src/static/communes'
 import { describe, expect, test } from 'vitest'
 import { territoiresFind, territoiresIdFind } from './territoires'
 describe('territoiresFind', () => {

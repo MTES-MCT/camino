@@ -1,4 +1,4 @@
-import { Definition } from '../definition.js'
+import { Definition } from '../definition'
 import { z } from 'zod'
 const IDS = ['EUR', 'FRF', 'XPF'] as const
 export const DEVISES_IDS = {

@@ -1,14 +1,14 @@
 import express from 'express'
 import { Request as JWTRequest } from 'express-jwt'
-import { knex } from '../knex.js'
-import { userIdGenerate } from '../api/graphql/resolvers/utilisateurs.js'
-import { userByKeycloakIdGet, utilisateurCreate } from '../database/queries/utilisateurs.js'
-import { emailsSend, emailsWithTemplateSend } from '../tools/api-mailjet/emails.js'
-import { formatUser } from '../types.js'
-import { getCurrent } from 'camino-common/src/date.js'
-import { EmailTemplateId } from '../tools/api-mailjet/types.js'
-import { isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
-import { config } from '../config/index.js'
+import { knex } from '../knex'
+import { userIdGenerate } from '../api/graphql/resolvers/utilisateurs'
+import { userByKeycloakIdGet, utilisateurCreate } from '../database/queries/utilisateurs'
+import { emailsSend, emailsWithTemplateSend } from '../tools/api-mailjet/emails'
+import { formatUser } from '../types'
+import { getCurrent } from 'camino-common/src/date'
+import { EmailTemplateId } from '../tools/api-mailjet/types'
+import { isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools'
+import { config } from '../config/index'
 
 export type JWTUser = { email?: string; family_name?: string; given_name?: string; sub: string | undefined }
 export const userLoader = async (req: JWTRequest<{ email?: string; family_name?: string; given_name?: string; sub?: string }>, _res: express.Response, next: express.NextFunction) => {

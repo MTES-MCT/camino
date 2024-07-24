@@ -1,6 +1,6 @@
-import { ETAPE_IS_NOT_BROUILLON, ETAPE_IS_BROUILLON } from 'camino-common/src/etape.js'
-import type { ITitre, ITitreEtape, ITitreDemarche } from '../../types.js'
-import { titreDemarcheDepotCheck } from './titres-demarches-depot-create.js'
+import { ETAPE_IS_NOT_BROUILLON, ETAPE_IS_BROUILLON } from 'camino-common/src/etape'
+import type { ITitre, ITitreEtape, ITitreDemarche } from '../../types'
+import { titreDemarcheDepotCheck } from './titres-demarches-depot-create'
 
 import { describe, expect, test } from 'vitest'
 

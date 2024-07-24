@@ -1,17 +1,17 @@
 import { RawBuilder, QueryBuilder } from 'objection'
 
-import { IUtilisateursColonneId, IColonne, IUtilisateurTitre, IUtilisateur, formatUser } from '../../types.js'
+import { IUtilisateursColonneId, IColonne, IUtilisateurTitre, IUtilisateur, formatUser } from '../../types'
 
-import options, { FieldsUtilisateur, FieldsUtilisateurTitre } from './_options.js'
-import graphBuild from './graph/build.js'
-import { fieldsFormat } from './graph/fields-format.js'
-import { stringSplit } from './_utils.js'
+import options, { FieldsUtilisateur, FieldsUtilisateurTitre } from './_options'
+import graphBuild from './graph/build'
+import { fieldsFormat } from './graph/fields-format'
+import { stringSplit } from './_utils'
 
-import Utilisateurs from '../models/utilisateurs.js'
-import { utilisateursQueryModify } from './permissions/utilisateurs.js'
-import UtilisateursTitres from '../models/utilisateurs--titres.js'
-import { Role, User } from 'camino-common/src/roles.js'
-import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
+import Utilisateurs from '../models/utilisateurs'
+import { utilisateursQueryModify } from './permissions/utilisateurs'
+import UtilisateursTitres from '../models/utilisateurs--titres'
+import { Role, User } from 'camino-common/src/roles'
+import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined } from 'camino-common/src/typescript-tools'
 
 const userGet = async (userId?: string): Promise<User> => {
   if (isNullOrUndefined(userId)) return null

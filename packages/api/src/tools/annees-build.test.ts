@@ -1,4 +1,4 @@
-import { anneesBuild } from './annees-build.js'
+import { anneesBuild } from './annees-build'
 import { describe, expect, test } from 'vitest'
 describe('liste les années entre deux dates', () => {
   test("retourne un tableau d'années entre deux date", () => {

@@ -1,12 +1,12 @@
-import { IContenu, IHeritageContenu, ITitreEtape } from '../../types.js'
+import { IContenu, IHeritageContenu, ITitreEtape } from '../../types'
 
-import { objectClone } from '../../tools/index.js'
+import { objectClone } from '../../tools/index'
 
-import { heritageContenuFind, titreEtapeHeritageContenuFind } from './titre-etape-heritage-contenu-find.js'
+import { heritageContenuFind, titreEtapeHeritageContenuFind } from './titre-etape-heritage-contenu-find'
 import { describe, test, expect } from 'vitest'
-import { DeepReadonly } from 'camino-common/src/typescript-tools.js'
-import { Section } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
-import { newEtapeId } from '../../database/models/_format/id-create.js'
+import { DeepReadonly } from 'camino-common/src/typescript-tools'
+import { Section } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections'
+import { newEtapeId } from '../../database/models/_format/id-create'
 
 describe('retourne le contenu spécifique d’un élément d’une section en fonction de son héritage', () => {
   test('l’étape n’est pas modifiée si elle n’a pas d’étape précédente et qu’elle n’a aucun héritage d’actif', () => {

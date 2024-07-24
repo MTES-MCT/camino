@@ -1,5 +1,5 @@
-import '../init.js'
-import { subscribeUsersToGuyaneExploitants } from '../business/entreprises-guyane.js'
+import '../init'
+import { subscribeUsersToGuyaneExploitants } from '../business/entreprises-guyane'
 
 // Retourne tous les utilisateurs 'entreprise' et 'bureau d'études' associés à des entreprises de Guyane
 subscribeUsersToGuyaneExploitants()

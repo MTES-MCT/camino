@@ -8,29 +8,29 @@
  * You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import './init.js'
+import './init'
 import compression from 'compression'
 import cors from 'cors'
 import express from 'express'
 import rateLimit from 'express-rate-limit'
 import * as Sentry from '@sentry/node'
 
-import { config } from './config/index.js'
-import { restWithPool } from './server/rest.js'
-import { graphql } from './server/graphql.js'
-import { authJwt } from './server/auth-jwt.js'
-import { authBasic } from './server/auth-basic.js'
-import { restUpload, uploadAllowedMiddleware } from './server/upload.js'
-import { databaseInit } from './database/init.js'
+import { config } from './config/index'
+import { restWithPool } from './server/rest'
+import { graphql } from './server/graphql'
+import { authJwt } from './server/auth-jwt'
+import { authBasic } from './server/auth-basic'
+import { restUpload, uploadAllowedMiddleware } from './server/upload'
+import { databaseInit } from './database/init'
 
-import { consoleOverride } from './config/logger.js'
-import { filesInit } from './config/files.js'
-import { userLoader } from './server/user-loader.js'
-import { connectedCatcher } from './server/connected-catcher.js'
+import { consoleOverride } from './config/logger'
+import { filesInit } from './config/files'
+import { userLoader } from './server/user-loader'
+import { connectedCatcher } from './server/connected-catcher'
 import cookieParser from 'cookie-parser'
 import pg from 'pg'
 import qs from 'qs'
-import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
+import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 // Le pool ne doit être qu'aux entrypoints : le daily, le monthly, et l'application.
 const pool = new pg.Pool({
   host: config().PGHOST,

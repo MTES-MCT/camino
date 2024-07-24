@@ -1,6 +1,6 @@
-import { titreDemarcheSortAsc, TitreDemarcheSortAscMinimalDemarche } from './titre-elements-sort-asc.js'
+import { titreDemarcheSortAsc, TitreDemarcheSortAscMinimalDemarche } from './titre-elements-sort-asc'
 import { describe, test, expect } from 'vitest'
-import { toCaminoDate } from 'camino-common/src/date.js'
+import { toCaminoDate } from 'camino-common/src/date'
 
 describe('trie les démarches', () => {
   test('des démarches sans étapes organisées par ordre décroissant sont triées par ordre croissant', () => {

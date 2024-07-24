@@ -1,5 +1,5 @@
-import { EtapeTypeId, ETAPES_TYPES } from 'camino-common/src/static/etapesTypes.js'
-import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
+import { EtapeTypeId, ETAPES_TYPES } from 'camino-common/src/static/etapesTypes'
+import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 
 type SubTitreTypeId = Extract<TitreTypeId, 'arm' | 'axm' | 'prm' | 'pxg'>
 const demarcheEtapesTypesPublication: {

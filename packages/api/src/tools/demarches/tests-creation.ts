@@ -1,16 +1,16 @@
-import '../../init.js'
+import '../../init'
 
-import { titresDemarchesGet } from '../../database/queries/titres-demarches.js'
-import { userSuper } from '../../database/user-super.js'
-import { titreDemarcheDepotDemandeDateFind } from '../../business/rules/titre-demarche-depot-demande-date-find.js'
+import { titresDemarchesGet } from '../../database/queries/titres-demarches'
+import { userSuper } from '../../database/user-super'
+import { titreDemarcheDepotDemandeDateFind } from '../../business/rules/titre-demarche-depot-demande-date-find'
 import { mkdirSync, writeFileSync } from 'fs'
-import { Etape, titreEtapeForMachineValidator, toMachineEtapes } from '../../business/rules-demarches/machine-common.js'
-import { demarchesDefinitions } from '../../business/rules-demarches/definitions.js'
-import { dateAddDays, daysBetween, setDayInMonth } from 'camino-common/src/date.js'
-import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes.js'
-import { toCommuneId } from 'camino-common/src/static/communes.js'
-import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools.js'
-import { getDomaineId, getTitreTypeType } from 'camino-common/src/static/titresTypes.js'
+import { Etape, titreEtapeForMachineValidator, toMachineEtapes } from '../../business/rules-demarches/machine-common'
+import { demarchesDefinitions } from '../../business/rules-demarches/definitions'
+import { dateAddDays, daysBetween, setDayInMonth } from 'camino-common/src/date'
+import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes'
+import { toCommuneId } from 'camino-common/src/static/communes'
+import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools'
+import { getDomaineId, getTitreTypeType } from 'camino-common/src/static/titresTypes'
 
 const writeEtapesForTest = async () => {
   for (const demarcheDefinition of demarchesDefinitions) {

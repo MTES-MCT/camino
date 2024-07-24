@@ -1,9 +1,9 @@
-import { journauxGet } from '../../../database/queries/journaux.js'
+import { journauxGet } from '../../../database/queries/journaux'
 import { GraphQLResolveInfo } from 'graphql'
-import { fieldsBuild } from './_fields-build.js'
-import { Context } from '../../../types.js'
-import { canReadJournaux } from 'camino-common/src/permissions/journaux.js'
-import { Journaux, JournauxQueryParams } from 'camino-common/src/journaux.js'
+import { fieldsBuild } from './_fields-build'
+import { Context } from '../../../types'
+import { canReadJournaux } from 'camino-common/src/permissions/journaux'
+import { Journaux, JournauxQueryParams } from 'camino-common/src/journaux'
 
 export const journaux = async (params: JournauxQueryParams, { user }: Context, info: GraphQLResolveInfo): Promise<Journaux> => {
   try {

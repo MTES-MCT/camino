@@ -1,12 +1,12 @@
-import { titresActivitesPropsUpdate } from './titres-activites-props-update.js'
-import { titresActivitesUpsert } from '../../database/queries/titres-activites.js'
-import { titresGet } from '../../database/queries/titres.js'
-import { titreValideCheck } from '../utils/titre-valide-check.js'
+import { titresActivitesPropsUpdate } from './titres-activites-props-update'
+import { titresActivitesUpsert } from '../../database/queries/titres-activites'
+import { titresGet } from '../../database/queries/titres'
+import { titreValideCheck } from '../utils/titre-valide-check'
 import { vi, describe, expect, test, afterEach } from 'vitest'
-import { titreIdValidator } from 'camino-common/src/validators/titres.js'
-import { ITitre, ITitreDemarche } from '../../types.js'
-import { toCaminoDate } from 'camino-common/src/date.js'
-import { activiteIdValidator } from 'camino-common/src/activite.js'
+import { titreIdValidator } from 'camino-common/src/validators/titres'
+import { ITitre, ITitreDemarche } from '../../types'
+import { toCaminoDate } from 'camino-common/src/date'
+import { activiteIdValidator } from 'camino-common/src/activite'
 
 vi.mock('../../database/queries/titres-activites', () => ({
   titresActivitesUpsert: vi.fn(),

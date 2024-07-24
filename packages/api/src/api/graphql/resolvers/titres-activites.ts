@@ -1,33 +1,33 @@
 import { GraphQLResolveInfo } from 'graphql'
 
-import { Context, ITitre, ITitreActiviteColonneId, IUtilisateur } from '../../../types.js'
-import { ACTIVITES_STATUTS_IDS } from 'camino-common/src/static/activitesStatuts.js'
+import { Context, ITitre, ITitreActiviteColonneId, IUtilisateur } from '../../../types'
+import { ACTIVITES_STATUTS_IDS } from 'camino-common/src/static/activitesStatuts'
 
-import { titreActiviteEmailsSend } from './_titre-activite.js'
-import { titreActiviteFormat } from '../../_format/titres-activites.js'
+import { titreActiviteEmailsSend } from './_titre-activite'
+import { titreActiviteFormat } from '../../_format/titres-activites'
 
-import { fieldsBuild } from './_fields-build.js'
+import { fieldsBuild } from './_fields-build'
 
-import { titreActiviteGet, titreActiviteUpdate as titreActiviteUpdateQuery, titresActivitesCount, titresActivitesGet } from '../../../database/queries/titres-activites.js'
-import { utilisateursGet } from '../../../database/queries/utilisateurs.js'
+import { titreActiviteGet, titreActiviteUpdate as titreActiviteUpdateQuery, titresActivitesCount, titresActivitesGet } from '../../../database/queries/titres-activites'
+import { utilisateursGet } from '../../../database/queries/utilisateurs'
 
-import { userSuper } from '../../../database/user-super.js'
-import { titreGet } from '../../../database/queries/titres.js'
-import { isBureauDEtudes, isEntreprise } from 'camino-common/src/roles.js'
-import { AdministrationId } from 'camino-common/src/static/administrations.js'
-import { isNonEmptyArray, isNotNullNorUndefinedNorEmpty, isNullOrUndefined, memoize, onlyUnique } from 'camino-common/src/typescript-tools.js'
-import { getGestionnairesByTitreTypeId } from 'camino-common/src/static/administrationsTitresTypes.js'
-import { getCurrent } from 'camino-common/src/date.js'
-import { canReadActivites, isActiviteDeposable } from 'camino-common/src/permissions/activites.js'
+import { userSuper } from '../../../database/user-super'
+import { titreGet } from '../../../database/queries/titres'
+import { isBureauDEtudes, isEntreprise } from 'camino-common/src/roles'
+import { AdministrationId } from 'camino-common/src/static/administrations'
+import { isNonEmptyArray, isNotNullNorUndefinedNorEmpty, isNullOrUndefined, memoize, onlyUnique } from 'camino-common/src/typescript-tools'
+import { getGestionnairesByTitreTypeId } from 'camino-common/src/static/administrationsTitresTypes'
+import { getCurrent } from 'camino-common/src/date'
+import { canReadActivites, isActiviteDeposable } from 'camino-common/src/permissions/activites'
 import {
   administrationsLocalesByActiviteId,
   entreprisesTitulairesOuAmoditairesByActiviteId,
   getActiviteById,
   getActiviteDocumentsByActiviteId,
   titreTypeIdByActiviteId,
-} from '../../rest/activites.queries.js'
-import { ActiviteId } from 'camino-common/src/activite.js'
-import { getSectionsWithValue } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
+} from '../../rest/activites.queries'
+import { ActiviteId } from 'camino-common/src/activite'
+import { getSectionsWithValue } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections'
 
 /**
  * Retourne les activités

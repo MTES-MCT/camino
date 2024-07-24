@@ -1,5 +1,5 @@
-import { ETAPES_TYPES } from '../etapesTypes.js'
-import { getDocuments } from './documents.js'
+import { ETAPES_TYPES } from '../etapesTypes'
+import { getDocuments } from './documents'
 import { test, expect } from 'vitest'
 
 test('getDocuments erreurs', () => {

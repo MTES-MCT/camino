@@ -1,8 +1,8 @@
-import { TitreId } from 'camino-common/src/validators/titres.js'
-import { titreDemarcheUpdate } from '../../database/queries/titres-demarches.js'
-import { titreDemarcheStatutIdFind } from '../rules/titre-demarche-statut-id-find.js'
-import { titreEtapesSortAscByOrdre } from '../utils/titre-etapes-sort.js'
-import { getDemarches } from './titres-etapes-heritage-contenu-update.queries.js'
+import { TitreId } from 'camino-common/src/validators/titres'
+import { titreDemarcheUpdate } from '../../database/queries/titres-demarches'
+import { titreDemarcheStatutIdFind } from '../rules/titre-demarche-statut-id-find'
+import { titreEtapesSortAscByOrdre } from '../utils/titre-etapes-sort'
+import { getDemarches } from './titres-etapes-heritage-contenu-update.queries'
 import { Pool } from 'pg'
 
 export const titresDemarchesStatutIdUpdate = async (pool: Pool, titreId?: TitreId) => {

@@ -1,6 +1,6 @@
 /* eslint-disable no-restricted-syntax */
 import { sql } from '@pgtyped/runtime'
-import { Redefine, dbQueryAndValidate } from '../../pg-database.js'
+import { Redefine, dbQueryAndValidate } from '../../pg-database'
 import {
   IDeleteActiviteDocumentQueryQuery,
   IGetActiviteByIdQueryQuery,
@@ -12,7 +12,7 @@ import {
   IInsertActiviteDocumentInternalQuery,
   IUpdateActiviteDbQuery,
   IActiviteDeleteDbQuery,
-} from './activites.queries.types.js'
+} from './activites.queries.types'
 import {
   ActiviteDocument,
   ActiviteDocumentId,
@@ -22,21 +22,21 @@ import {
   activiteDocumentValidator,
   activiteIdValidator,
   activiteValidator,
-} from 'camino-common/src/activite.js'
+} from 'camino-common/src/activite'
 import { Pool } from 'pg'
-import { canDeleteActiviteDocument, canEditActivite, canReadTitreActivites } from 'camino-common/src/permissions/activites.js'
-import { User, isSuper, utilisateurIdValidator } from 'camino-common/src/roles.js'
+import { canDeleteActiviteDocument, canEditActivite, canReadTitreActivites } from 'camino-common/src/permissions/activites'
+import { User, isSuper, utilisateurIdValidator } from 'camino-common/src/roles'
 import { z } from 'zod'
-import { EntrepriseId, entrepriseIdValidator } from 'camino-common/src/entreprise.js'
-import { TitreTypeId, titreTypeIdValidator } from 'camino-common/src/static/titresTypes.js'
-import { AdministrationId, administrationIdValidator } from 'camino-common/src/static/administrations.js'
-import { ACTIVITES_STATUTS_IDS, ActivitesStatutId } from 'camino-common/src/static/activitesStatuts.js'
-import { CaminoDate, getCurrent } from 'camino-common/src/date.js'
-import { titreIdValidator } from 'camino-common/src/validators/titres.js'
-import { ActivitesTypesId } from 'camino-common/src/static/activitesTypes.js'
-import { SimplePromiseFn } from 'camino-common/src/typescript-tools.js'
-import { ActiviteDocumentTypeId } from 'camino-common/src/static/documentsTypes.js'
-import { sectionValidator } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
+import { EntrepriseId, entrepriseIdValidator } from 'camino-common/src/entreprise'
+import { TitreTypeId, titreTypeIdValidator } from 'camino-common/src/static/titresTypes'
+import { AdministrationId, administrationIdValidator } from 'camino-common/src/static/administrations'
+import { ACTIVITES_STATUTS_IDS, ActivitesStatutId } from 'camino-common/src/static/activitesStatuts'
+import { CaminoDate, getCurrent } from 'camino-common/src/date'
+import { titreIdValidator } from 'camino-common/src/validators/titres'
+import { ActivitesTypesId } from 'camino-common/src/static/activitesTypes'
+import { SimplePromiseFn } from 'camino-common/src/typescript-tools'
+import { ActiviteDocumentTypeId } from 'camino-common/src/static/documentsTypes'
+import { sectionValidator } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections'
 
 export const titreTypeIdByActiviteId = async (activiteId: ActiviteIdOrSlug, pool: Pool) => {
   const typeIds = await dbQueryAndValidate(getTitreTypeIdByActiviteId, { activiteId }, pool, titreTypeIdObjectValidator)

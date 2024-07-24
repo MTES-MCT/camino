@@ -1,10 +1,10 @@
-import { restCall } from '../../../tests/_utils/index.js'
-import { dbManager } from '../../../tests/db-manager.js'
+import { restCall } from '../../../tests/_utils/index'
+import { dbManager } from '../../../tests/db-manager'
 import { expect, test, describe, afterAll, beforeAll, vi } from 'vitest'
 import type { Pool } from 'pg'
-import { HTTP_STATUS } from 'camino-common/src/http.js'
-import { insertCommune } from '../../database/queries/communes.queries.js'
-import { toCommuneId } from 'camino-common/src/static/communes.js'
+import { HTTP_STATUS } from 'camino-common/src/http'
+import { insertCommune } from '../../database/queries/communes.queries'
+import { toCommuneId } from 'camino-common/src/static/communes'
 
 console.info = vi.fn()
 console.error = vi.fn()

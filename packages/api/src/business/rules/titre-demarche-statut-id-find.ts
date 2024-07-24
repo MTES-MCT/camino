@@ -1,14 +1,14 @@
-import { ITitreEtape, TitreEtapesTravauxTypes as Travaux } from '../../types.js'
-import { DemarcheId } from 'camino-common/src/demarche.js'
+import { ITitreEtape, TitreEtapesTravauxTypes as Travaux } from '../../types'
+import { DemarcheId } from 'camino-common/src/demarche'
 
-import { titreEtapesSortDescByOrdre } from '../utils/titre-etapes-sort.js'
-import { titreEtapePublicationCheck } from './titre-etape-publication-check.js'
-import { demarcheDefinitionFind } from '../rules-demarches/definitions.js'
-import { TitreEtapeForMachine, toMachineEtapes } from '../rules-demarches/machine-common.js'
-import { DemarcheStatutId, DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts.js'
-import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
-import { DemarcheTypeId, TravauxIds } from 'camino-common/src/static/demarchesTypes.js'
-import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
+import { titreEtapesSortDescByOrdre } from '../utils/titre-etapes-sort'
+import { titreEtapePublicationCheck } from './titre-etape-publication-check'
+import { demarcheDefinitionFind } from '../rules-demarches/definitions'
+import { TitreEtapeForMachine, toMachineEtapes } from '../rules-demarches/machine-common'
+import { DemarcheStatutId, DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts'
+import { TitreTypeId } from 'camino-common/src/static/titresTypes'
+import { DemarcheTypeId, TravauxIds } from 'camino-common/src/static/demarchesTypes'
+import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
 
 const titreEtapesDecisivesCommunesTypes: EtapeTypeId[] = ['css', 'abd', 'and']
 

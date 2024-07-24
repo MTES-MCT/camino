@@ -1,5 +1,5 @@
-import { communeIdValidator } from './communes.js'
-import { checkCodePostal, isDepartementId, toDepartementId, departementsMetropole } from './departement.js'
+import { communeIdValidator } from './communes'
+import { checkCodePostal, isDepartementId, toDepartementId, departementsMetropole } from './departement'
 import { test, expect } from 'vitest'
 
 test('isDepartementId', () => {

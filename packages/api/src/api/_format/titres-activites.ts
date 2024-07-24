@@ -1,7 +1,7 @@
-import { ITitreActivite, IContenu } from '../../types.js'
-import { DeepReadonly, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools.js'
-import { Section } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
-import { Unites } from 'camino-common/src/static/unites.js'
+import { ITitreActivite, IContenu } from '../../types'
+import { DeepReadonly, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
+import { Section } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections'
+import { Unites } from 'camino-common/src/static/unites'
 
 // TODO 2023-09-19 à supprimer quand on arrêtera d’envoyer le contenu par email
 const titreActiviteContenuFormat = (sections: DeepReadonly<Section[]>, contenu: IContenu) => {

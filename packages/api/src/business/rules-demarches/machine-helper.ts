@@ -1,8 +1,8 @@
 import { AnyMachineSnapshot, createActor, EventObject, MachineSnapshot, StateMachine } from 'xstate'
-import { CaminoCommonContext, DBEtat, Etape, Intervenant, intervenants, tags } from './machine-common.js'
-import { DemarchesStatutsIds, DemarcheStatutId } from 'camino-common/src/static/demarchesStatuts.js'
-import { CaminoDate } from 'camino-common/src/date.js'
-import { OmitDistributive } from 'camino-common/src/typescript-tools.js'
+import { CaminoCommonContext, DBEtat, Etape, Intervenant, intervenants, tags } from './machine-common'
+import { DemarchesStatutsIds, DemarcheStatutId } from 'camino-common/src/static/demarchesStatuts'
+import { CaminoDate } from 'camino-common/src/date'
+import { OmitDistributive } from 'camino-common/src/typescript-tools'
 
 type CaminoState<CaminoContext extends CaminoCommonContext, CaminoEvent extends EventObject> = MachineSnapshot<CaminoContext, CaminoEvent, any, any, any, any, any>
 

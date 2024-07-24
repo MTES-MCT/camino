@@ -1,7 +1,7 @@
 import { Model, Pojo } from 'objection'
 
-import { IUtilisateur } from '../../types.js'
-import Entreprises from './entreprises.js'
+import { IUtilisateur } from '../../types'
+import Entreprises from './entreprises'
 
 interface Utilisateurs extends IUtilisateur {}
 

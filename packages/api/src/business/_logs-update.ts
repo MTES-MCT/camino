@@ -1,5 +1,5 @@
-import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools.js'
-import { Index, IEntrepriseEtablissement, IEntreprise } from '../types.js'
+import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
+import { Index, IEntrepriseEtablissement, IEntreprise } from '../types'
 
 export const logsUpdate = ({
   titresEtapesStatusUpdated,

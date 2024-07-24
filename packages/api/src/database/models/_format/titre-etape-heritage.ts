@@ -1,9 +1,9 @@
-import { IHeritageProps, IHeritageContenu } from '../../../types.js'
-import { userSuper } from '../../user-super.js'
-import { titreEtapeGet } from '../../queries/titres-etapes.js'
-import { newEtapeId } from './id-create.js'
-import { isHeritageProps } from 'camino-common/src/heritage.js'
-import { getKeys } from 'camino-common/src/typescript-tools.js'
+import { IHeritageProps, IHeritageContenu } from '../../../types'
+import { userSuper } from '../../user-super'
+import { titreEtapeGet } from '../../queries/titres-etapes'
+import { newEtapeId } from './id-create'
+import { isHeritageProps } from 'camino-common/src/heritage'
+import { getKeys } from 'camino-common/src/typescript-tools'
 import { FieldsEtape } from '../../queries/_options'
 
 export const heritagePropsFormat = async (heritageProps: IHeritageProps) => {

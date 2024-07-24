@@ -1,7 +1,7 @@
-import { ITitreDemarche } from '../../types.js'
+import { ITitreDemarche } from '../../types'
 
-import { CaminoDate } from 'camino-common/src/date.js'
-import { DemarchesTypes } from 'camino-common/src/static/demarchesTypes.js'
+import { CaminoDate } from 'camino-common/src/date'
+import { DemarchesTypes } from 'camino-common/src/static/demarchesTypes'
 
 /**
  * Vérifie la validité du titre pendant la période

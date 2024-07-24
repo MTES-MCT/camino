@@ -1,17 +1,17 @@
 import { raw, QueryBuilder } from 'objection'
 
-import { IEntreprise, IEntrepriseColonneId } from '../../types.js'
+import { IEntreprise, IEntrepriseColonneId } from '../../types'
 
-import options, { FieldsEntreprise } from './_options.js'
-import graphBuild from './graph/build.js'
-import { fieldsFormat } from './graph/fields-format.js'
-import { stringSplit } from './_utils.js'
+import options, { FieldsEntreprise } from './_options'
+import graphBuild from './graph/build'
+import { fieldsFormat } from './graph/fields-format'
+import { stringSplit } from './_utils'
 
-import Entreprises from '../models/entreprises.js'
-import { entreprisesQueryModify } from './permissions/entreprises.js'
-import { User } from 'camino-common/src/roles.js'
-import { EntrepriseId } from 'camino-common/src/entreprise.js'
-import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools.js'
+import Entreprises from '../models/entreprises'
+import { entreprisesQueryModify } from './permissions/entreprises'
+import { User } from 'camino-common/src/roles'
+import { EntrepriseId } from 'camino-common/src/entreprise'
+import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
 
 const entreprisesFiltersQueryModify = (
   {

@@ -1,7 +1,7 @@
-import { titresGet, titreUpdate } from '../../database/queries/titres.js'
-import { titreStatutIdFind } from '../rules/titre-statut-id-find.js'
-import { userSuper } from '../../database/user-super.js'
-import { getCurrent } from 'camino-common/src/date.js'
+import { titresGet, titreUpdate } from '../../database/queries/titres'
+import { titreStatutIdFind } from '../rules/titre-statut-id-find'
+import { userSuper } from '../../database/user-super'
+import { getCurrent } from 'camino-common/src/date'
 
 export const titresStatutIdsUpdate = async (titresIds?: string[]) => {
   console.info()

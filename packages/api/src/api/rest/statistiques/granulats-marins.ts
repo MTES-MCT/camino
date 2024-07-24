@@ -1,14 +1,14 @@
-import { ITitre, ITitreActivite } from '../../../types.js'
+import { ITitre, ITitreActivite } from '../../../types'
 
-import { titresGet } from '../../../database/queries/titres.js'
-import { titresActivitesGet } from '../../../database/queries/titres-activites.js'
-import { userSuper } from '../../../database/user-super.js'
-import { concessionsValidesBuild, titresSurfaceIndexBuild } from '../../graphql/resolvers/statistiques.js'
-import { ACTIVITES_STATUTS_IDS } from 'camino-common/src/static/activitesStatuts.js'
-import { StatistiqueGranulatsMarinsStatAnnee, StatistiquesGranulatsMarins } from 'camino-common/src/statistiques.js'
-import { capitalize } from 'camino-common/src/strings.js'
-import { CaminoAnnee, caminoAnneeToNumber, intervalleAnnees, toCaminoAnnee } from 'camino-common/src/date.js'
-import { isTitreValide, TitresStatutIds } from 'camino-common/src/static/titresStatuts.js'
+import { titresGet } from '../../../database/queries/titres'
+import { titresActivitesGet } from '../../../database/queries/titres-activites'
+import { userSuper } from '../../../database/user-super'
+import { concessionsValidesBuild, titresSurfaceIndexBuild } from '../../graphql/resolvers/statistiques'
+import { ACTIVITES_STATUTS_IDS } from 'camino-common/src/static/activitesStatuts'
+import { StatistiqueGranulatsMarinsStatAnnee, StatistiquesGranulatsMarins } from 'camino-common/src/statistiques'
+import { capitalize } from 'camino-common/src/strings'
+import { CaminoAnnee, caminoAnneeToNumber, intervalleAnnees, toCaminoAnnee } from 'camino-common/src/date'
+import { isTitreValide, TitresStatutIds } from 'camino-common/src/static/titresStatuts'
 
 const statistiquesGranulatsMarinsActivitesFind = (titresActivites: ITitreActivite[], props: string[]) =>
   titresActivites.reduce(

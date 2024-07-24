@@ -1,8 +1,8 @@
-import { titresActivitesUpdate } from './processes/titres-activites-update.js'
-import { titresPublicUpdate } from './processes/titres-public-update.js'
-import { titresSlugsUpdate } from './processes/titres-slugs-update.js'
-import { logsUpdate } from './_logs-update.js'
-import { TitreId } from 'camino-common/src/validators/titres.js'
+import { titresActivitesUpdate } from './processes/titres-activites-update'
+import { titresPublicUpdate } from './processes/titres-public-update'
+import { titresSlugsUpdate } from './processes/titres-slugs-update'
+import { logsUpdate } from './_logs-update'
+import { TitreId } from 'camino-common/src/validators/titres'
 import { Pool } from 'pg'
 
 const titreUpdate = async (pool: Pool, titreId: TitreId) => {

@@ -1,5 +1,5 @@
-import TitresActivites from '../../../database/models/titres-activites.js'
-import { ACTIVITES_STATUTS_IDS } from 'camino-common/src/static/activitesStatuts.js'
+import TitresActivites from '../../../database/models/titres-activites'
+import { ACTIVITES_STATUTS_IDS } from 'camino-common/src/static/activitesStatuts'
 
 const titresActivitesDelaiDepasse = [
   {

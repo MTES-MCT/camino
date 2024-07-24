@@ -1,12 +1,12 @@
-import { titreEtapesSortAscByDate, titreEtapesSortAscByOrdre, titreEtapesSortDescByOrdre } from './titre-etapes-sort.js'
-import { newDemarcheId, newEtapeId } from '../../database/models/_format/id-create.js'
+import { titreEtapesSortAscByDate, titreEtapesSortAscByOrdre, titreEtapesSortDescByOrdre } from './titre-etapes-sort'
+import { newDemarcheId, newEtapeId } from '../../database/models/_format/id-create'
 import { vi, describe, test, expect } from 'vitest'
-import { toCaminoDate } from 'camino-common/src/date.js'
-import { DEMARCHES_TYPES_IDS } from 'camino-common/src/static/demarchesTypes.js'
-import { TITRES_TYPES_IDS } from 'camino-common/src/static/titresTypes.js'
-import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes.js'
-import { TitreEtapeForMachine } from '../rules-demarches/machine-common.js'
-import { ETAPE_IS_BROUILLON, ETAPE_IS_NOT_BROUILLON } from 'camino-common/src/etape.js'
+import { toCaminoDate } from 'camino-common/src/date'
+import { DEMARCHES_TYPES_IDS } from 'camino-common/src/static/demarchesTypes'
+import { TITRES_TYPES_IDS } from 'camino-common/src/static/titresTypes'
+import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes'
+import { TitreEtapeForMachine } from '../rules-demarches/machine-common'
+import { ETAPE_IS_BROUILLON, ETAPE_IS_NOT_BROUILLON } from 'camino-common/src/etape'
 
 const titreEtapesSortedDescResult = [
   { typeId: 'dpu', ordre: 2, date: '1988-03-11' },

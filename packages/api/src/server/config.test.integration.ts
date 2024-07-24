@@ -1,4 +1,4 @@
-import { restCall } from '../../tests/_utils/index.js'
+import { restCall } from '../../tests/_utils/index'
 import { expect, test, describe, vi } from 'vitest'
 import type { Pool } from 'pg'
 

@@ -1,5 +1,5 @@
-import { EntrepriseId } from '../entreprise.js'
-import { isAdministrationAdmin, isAdministrationEditeur, isBureauDEtudes, isEntreprise, User, isSuper, isAdministration } from '../roles.js'
+import { EntrepriseId } from '../entreprise'
+import { isAdministrationAdmin, isAdministrationEditeur, isBureauDEtudes, isEntreprise, User, isSuper, isAdministration } from '../roles'
 
 export const canCreateEntreprise = (user: User): boolean => {
   if (isSuper(user) || isAdministrationAdmin(user) || isAdministrationEditeur(user)) {

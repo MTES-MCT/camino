@@ -1,4 +1,4 @@
-import { isGuyane, isMetropole, isOutreMer } from './pays.js'
+import { isGuyane, isMetropole, isOutreMer } from './pays'
 import { test, expect } from 'vitest'
 
 test('isOutreMer', () => {

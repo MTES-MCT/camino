@@ -1,16 +1,16 @@
-import { IHeritageContenu, IHeritageElement, IHeritageProps, ITitreDemarche, ITitreEtape } from '../../../types.js'
+import { IHeritageContenu, IHeritageElement, IHeritageProps, ITitreDemarche, ITitreEtape } from '../../../types'
 
-import { titreEtapeHeritagePropsFind } from '../../../business/utils/titre-etape-heritage-props-find.js'
-import { titreEtapeHeritageContenuFind } from '../../../business/utils/titre-etape-heritage-contenu-find.js'
-import { titreEtapesSortAscByOrdre, titreEtapesSortDescByOrdre } from '../../../business/utils/titre-etapes-sort.js'
-import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes.js'
-import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
-import { DeepReadonly, getKeys } from 'camino-common/src/typescript-tools.js'
-import { getSections, Section } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
-import { ETAPE_HERITAGE_PROPS, isHeritageProps } from 'camino-common/src/heritage.js'
-import { EtapeTypeId, EtapesTypes } from 'camino-common/src/static/etapesTypes.js'
-import { CaminoDate } from 'camino-common/src/date.js'
-import { EtapeId } from 'camino-common/src/etape.js'
+import { titreEtapeHeritagePropsFind } from '../../../business/utils/titre-etape-heritage-props-find'
+import { titreEtapeHeritageContenuFind } from '../../../business/utils/titre-etape-heritage-contenu-find'
+import { titreEtapesSortAscByOrdre, titreEtapesSortDescByOrdre } from '../../../business/utils/titre-etapes-sort'
+import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
+import { TitreTypeId } from 'camino-common/src/static/titresTypes'
+import { DeepReadonly, getKeys } from 'camino-common/src/typescript-tools'
+import { getSections, Section } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections'
+import { ETAPE_HERITAGE_PROPS, isHeritageProps } from 'camino-common/src/heritage'
+import { EtapeTypeId, EtapesTypes } from 'camino-common/src/static/etapesTypes'
+import { CaminoDate } from 'camino-common/src/date'
+import { EtapeId } from 'camino-common/src/etape'
 
 const titreEtapeHeritagePropsBuild = (date: CaminoDate, titreEtapes: ITitreEtape[] | null, etapeId: EtapeId | null) => {
   const titreEtapesFiltered = titreEtapesSortAscByOrdre(

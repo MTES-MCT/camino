@@ -1,12 +1,12 @@
 /* eslint-disable sql/no-unsafe-query */
 import { join } from 'path'
 
-import { idGenerate } from '../src/database/models/_format/id-create.js'
-import { knexInstanceSet } from '../src/knex.js'
+import { idGenerate } from '../src/database/models/_format/id-create'
+import { knexInstanceSet } from '../src/knex'
 import knex, { Knex } from 'knex'
 import pg, { Client } from 'pg'
 import { knexSnakeCaseMappers, Model } from 'objection'
-import { config } from '../src/config/index.js'
+import { config } from '../src/config/index'
 import { spawnSync } from 'node:child_process'
 
 class DbManager {

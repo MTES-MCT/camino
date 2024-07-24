@@ -1,8 +1,8 @@
-import { DemarcheEtape } from 'camino-common/src/demarche.js'
+import { DemarcheEtape } from 'camino-common/src/demarche'
 import { ETAPE_IS_NOT_BROUILLON } from 'camino-common/src/etape'
-import { isFondamentalesStatutOk } from 'camino-common/src/static/etapesStatuts.js'
-import { isEtapeTypeIdFondamentale } from 'camino-common/src/static/etapesTypes.js'
-import { TitrePropTitreEtapeFindDemarche } from 'camino-common/src/titres.js'
+import { isFondamentalesStatutOk } from 'camino-common/src/static/etapesStatuts'
+import { isEtapeTypeIdFondamentale } from 'camino-common/src/static/etapesTypes'
+import { TitrePropTitreEtapeFindDemarche } from 'camino-common/src/titres'
 
 export const getMostRecentEtapeFondamentaleValide = <F extends Pick<DemarcheEtape, 'etape_statut_id' | 'etape_type_id' | 'ordre' | 'is_brouillon'>>(
   titreDemarches: TitrePropTitreEtapeFindDemarche<F>[]

@@ -1,8 +1,8 @@
 import dotenv from 'dotenv'
 import { resolve } from 'node:path'
-import { caminoAnneeValidator, getCurrentAnnee } from 'camino-common/src/date.js'
-import { caminoConfigValidator } from 'camino-common/src/static/config.js'
-import { isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
+import { caminoAnneeValidator, getCurrentAnnee } from 'camino-common/src/date'
+import { caminoConfigValidator } from 'camino-common/src/static/config'
+import { isNullOrUndefined } from 'camino-common/src/typescript-tools'
 import { z } from 'zod'
 
 if (process.env.VITEST !== 'true') {

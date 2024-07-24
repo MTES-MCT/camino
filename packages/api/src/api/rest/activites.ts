@@ -1,7 +1,7 @@
-import { CaminoRequest, CustomResponse } from './express-type.js'
-import { HTTP_STATUS } from 'camino-common/src/http.js'
+import { CaminoRequest, CustomResponse } from './express-type'
+import { HTTP_STATUS } from 'camino-common/src/http'
 import { Pool } from 'pg'
-import { Activite, activiteDocumentIdValidator, activiteEditionValidator, activiteIdOrSlugValidator, activiteIdValidator } from 'camino-common/src/activite.js'
+import { Activite, activiteDocumentIdValidator, activiteEditionValidator, activiteIdOrSlugValidator, activiteIdValidator } from 'camino-common/src/activite'
 import {
   Contenu,
   administrationsLocalesByActiviteId,
@@ -15,21 +15,21 @@ import {
   updateActiviteQuery,
   DbActivite,
   activiteDeleteQuery,
-} from './activites.queries.js'
-import { NewDownload } from './fichiers.js'
-import { DeepReadonly, SimplePromiseFn, isNonEmptyArray, isNullOrUndefined, memoize } from 'camino-common/src/typescript-tools.js'
-import { canEditActivite, isActiviteDeposable } from 'camino-common/src/permissions/activites.js'
-import { SectionWithValue } from 'camino-common/src/sections.js'
-import { Section, getSectionsWithValue } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
-import { newActiviteDocumentId } from '../../database/models/_format/id-create.js'
-import { ACTIVITES_STATUTS_IDS } from 'camino-common/src/static/activitesStatuts.js'
-import { Unites } from 'camino-common/src/static/unites.js'
-import { User } from 'camino-common/src/roles.js'
-import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
-import { AdministrationId } from 'camino-common/src/static/administrations.js'
-import { EntrepriseId } from 'camino-common/src/entreprise.js'
-import { getCurrent } from 'camino-common/src/date.js'
-import { createLargeObject } from '../../database/largeobjects.js'
+} from './activites.queries'
+import { NewDownload } from './fichiers'
+import { DeepReadonly, SimplePromiseFn, isNonEmptyArray, isNullOrUndefined, memoize } from 'camino-common/src/typescript-tools'
+import { canEditActivite, isActiviteDeposable } from 'camino-common/src/permissions/activites'
+import { SectionWithValue } from 'camino-common/src/sections'
+import { Section, getSectionsWithValue } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections'
+import { newActiviteDocumentId } from '../../database/models/_format/id-create'
+import { ACTIVITES_STATUTS_IDS } from 'camino-common/src/static/activitesStatuts'
+import { Unites } from 'camino-common/src/static/unites'
+import { User } from 'camino-common/src/roles'
+import { TitreTypeId } from 'camino-common/src/static/titresTypes'
+import { AdministrationId } from 'camino-common/src/static/administrations'
+import { EntrepriseId } from 'camino-common/src/entreprise'
+import { getCurrent } from 'camino-common/src/date'
+import { createLargeObject } from '../../database/largeobjects'
 
 const extractContenuFromSectionWithValue = (sections: DeepReadonly<Section[]>, sectionsWithValue: SectionWithValue[]): Contenu => {
   const contenu: Contenu = {}

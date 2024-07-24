@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { isNullOrUndefined, isNullOrUndefinedOrEmpty } from './typescript-tools.js'
+import { isNullOrUndefined, isNullOrUndefinedOrEmpty } from './typescript-tools'
 
 const datesDiffInDays = (a: Date, b: Date) => {
   const utc1 = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate())

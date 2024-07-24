@@ -1,12 +1,12 @@
-import { IHeritageProps, ITitreEtape } from '../../types.js'
+import { IHeritageProps, ITitreEtape } from '../../types'
 
-import { titreEtapeHeritagePropsFind } from './titre-etape-heritage-props-find.js'
+import { titreEtapeHeritagePropsFind } from './titre-etape-heritage-props-find'
 
-import { objectClone } from '../../tools/index.js'
+import { objectClone } from '../../tools/index'
 import { describe, test, expect } from 'vitest'
-import { newEtapeId } from '../../database/models/_format/id-create.js'
+import { newEtapeId } from '../../database/models/_format/id-create'
 
-import { ETAPE_HERITAGE_PROPS, EtapeHeritageProps } from 'camino-common/src/heritage.js'
+import { ETAPE_HERITAGE_PROPS, EtapeHeritageProps } from 'camino-common/src/heritage'
 import { EntrepriseId, entrepriseIdValidator } from 'camino-common/src/entreprise'
 
 /* eslint-disable @typescript-eslint/ban-ts-comment */

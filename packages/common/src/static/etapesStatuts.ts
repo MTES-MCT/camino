@@ -1,4 +1,4 @@
-import { Couleur } from './couleurs.js'
+import { Couleur } from './couleurs'
 import { z } from 'zod'
 
 const IDS = ['acc', 'dre', 'enc', 'fai', 'dep', 'exe', 'req', 'com', 'inc', 'fav', 'def', 'fre', 'ajo', 'rej', 'ter', 'nul', 'pro'] as const

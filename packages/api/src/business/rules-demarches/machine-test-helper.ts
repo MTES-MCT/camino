@@ -1,10 +1,10 @@
-import { CaminoCommonContext, Etape } from './machine-common.js'
+import { CaminoCommonContext, Etape } from './machine-common'
 import { Actor, EventObject, createActor } from 'xstate'
-import { CaminoMachine, getNextEvents } from './machine-helper.js'
+import { CaminoMachine, getNextEvents } from './machine-helper'
 import { expect } from 'vitest'
-import { CaminoDate, dateAddDays, toCaminoDate } from 'camino-common/src/date.js'
-import { EtapeTypeEtapeStatutValidPair } from 'camino-common/src/static/etapesTypesEtapesStatuts.js'
-import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
+import { CaminoDate, dateAddDays, toCaminoDate } from 'camino-common/src/date'
+import { EtapeTypeEtapeStatutValidPair } from 'camino-common/src/static/etapesTypesEtapesStatuts'
+import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 interface CustomMatchers<R = unknown> {
   canOnlyTransitionTo<T extends EventObject, C extends CaminoCommonContext>(context: { machine: CaminoMachine<C, T>; date: CaminoDate }, _events: T['type'][]): R
 }

@@ -1,7 +1,7 @@
-import { ITitreDemarche } from '../../types.js'
-import { titreValideCheck } from './titre-valide-check.js'
+import { ITitreDemarche } from '../../types'
+import { titreValideCheck } from './titre-valide-check'
 import { describe, test, expect } from 'vitest'
-import { toCaminoDate } from 'camino-common/src/date.js'
+import { toCaminoDate } from 'camino-common/src/date'
 
 const titreDemarches: Pick<ITitreDemarche, 'typeId' | 'demarcheDateDebut' | 'demarcheDateFin'>[] = [
   { typeId: 'oct' },

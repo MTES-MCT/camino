@@ -1,11 +1,11 @@
-import Titres from '../../database/models/titres.js'
-import { titresSlugsUpdate } from './titres-slugs-update.js'
+import Titres from '../../database/models/titres'
+import { titresSlugsUpdate } from './titres-slugs-update'
 
-import { titreSlugAndRelationsUpdate } from '../utils/titre-slug-and-relations-update.js'
-import { titresGet } from '../../database/queries/titres.js'
+import { titreSlugAndRelationsUpdate } from '../utils/titre-slug-and-relations-update'
+import { titresGet } from '../../database/queries/titres'
 import { vi, describe, expect, test } from 'vitest'
-import { titreSlugValidator } from 'camino-common/src/validators/titres.js'
-import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
+import { titreSlugValidator } from 'camino-common/src/validators/titres'
+import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 vi.mock('../utils/titre-slug-and-relations-update', () => ({
   __esModule: true,
   titreSlugAndRelationsUpdate: vi.fn(),

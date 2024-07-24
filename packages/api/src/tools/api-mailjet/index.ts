@@ -1,5 +1,5 @@
 import Mailjet from 'node-mailjet'
-import { config } from '../../config/index.js'
+import { config } from '../../config/index'
 
 // eslint-disable-next-line new-cap
 export const mailjet = new Mailjet({

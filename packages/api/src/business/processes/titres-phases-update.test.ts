@@ -1,12 +1,12 @@
-import { titresDemarchesDatesUpdate } from './titres-phases-update.js'
-import { titresGet } from '../../database/queries/titres.js'
+import { titresDemarchesDatesUpdate } from './titres-phases-update'
+import { titresGet } from '../../database/queries/titres'
 import { vi, afterEach, describe, expect, test } from 'vitest'
-import { toCaminoDate } from 'camino-common/src/date.js'
-import { ITitre } from '../../types.js'
-import { newDemarcheId, newEtapeId, newTitreId } from '../../database/models/_format/id-create.js'
+import { toCaminoDate } from 'camino-common/src/date'
+import { ITitre } from '../../types'
+import { newDemarcheId, newEtapeId, newTitreId } from '../../database/models/_format/id-create'
 import { Pool } from 'pg'
-import { updateDatesDemarche } from './titres-phases-update.queries.js'
-import { ETAPE_IS_NOT_BROUILLON } from 'camino-common/src/etape.js'
+import { updateDatesDemarche } from './titres-phases-update.queries'
+import { ETAPE_IS_NOT_BROUILLON } from 'camino-common/src/etape'
 
 vi.mock('../../database/queries/titres', () => ({
   titresGet: vi.fn(),
@@ -17,7 +17,7 @@ vi.mock('pg', () => {
 
   return { Pool }
 })
-vi.mock('./titres-phases-update.queries.js', () => ({
+vi.mock('./titres-phases-update.queries', () => ({
   updateDatesDemarche: vi.fn(),
 }))
 

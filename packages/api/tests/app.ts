@@ -1,9 +1,9 @@
 import express from 'express'
 import type { Pool } from 'pg'
-import { graphql } from '../src/server/graphql.js'
-import { authJwt } from '../src/server/auth-jwt.js'
-import { restUpload, uploadAllowedMiddleware } from '../src/server/upload.js'
-import { restWithPool } from '../src/server/rest.js'
+import { graphql } from '../src/server/graphql'
+import { authJwt } from '../src/server/auth-jwt'
+import { restUpload, uploadAllowedMiddleware } from '../src/server/upload'
+import { restWithPool } from '../src/server/rest'
 import qs from 'qs'
 export const app = (dbPool: Pool) => {
   const app = express()

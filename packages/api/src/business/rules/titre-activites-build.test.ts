@@ -1,13 +1,13 @@
-import { ITitreActivite, ITitreDemarche } from '../../types.js'
+import { ITitreActivite, ITitreDemarche } from '../../types'
 
-import { titreActivitesBuild } from './titre-activites-build.js'
+import { titreActivitesBuild } from './titre-activites-build'
 
 import { describe, expect, test } from 'vitest'
-import { toCaminoDate } from 'camino-common/src/date.js'
-import { newDemarcheId, newEtapeId, newTitreId } from '../../database/models/_format/id-create.js'
-import { ACTIVITES_TYPES_IDS } from 'camino-common/src/static/activitesTypes.js'
-import { titreIdValidator } from 'camino-common/src/validators/titres.js'
-import { ETAPE_IS_NOT_BROUILLON } from 'camino-common/src/etape.js'
+import { toCaminoDate } from 'camino-common/src/date'
+import { newDemarcheId, newEtapeId, newTitreId } from '../../database/models/_format/id-create'
+import { ACTIVITES_TYPES_IDS } from 'camino-common/src/static/activitesTypes'
+import { titreIdValidator } from 'camino-common/src/validators/titres'
+import { ETAPE_IS_NOT_BROUILLON } from 'camino-common/src/etape'
 
 const titreId = titreIdValidator.parse('titre-id')
 

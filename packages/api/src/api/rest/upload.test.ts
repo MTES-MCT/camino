@@ -1,8 +1,8 @@
-import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations.js'
+import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations'
 import { vi, describe, test, expect } from 'vitest'
-import { uploadAllowedMiddleware } from '../../server/upload.js'
+import { uploadAllowedMiddleware } from '../../server/upload'
 import { Request, Response } from 'express'
-import { TestUser } from 'camino-common/src/tests-utils.js'
+import { TestUser } from 'camino-common/src/tests-utils'
 
 console.info = vi.fn()
 describe('téléversement de fichier par rest (tus)', () => {

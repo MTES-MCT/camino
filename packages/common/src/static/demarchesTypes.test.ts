@@ -1,6 +1,6 @@
-import { getValues } from '../typescript-tools.js'
-import { sortedDemarchesStatuts } from './demarchesStatuts.js'
-import { DEMARCHES_TYPES_IDS, isDemarcheTypeId, isDemarcheTypeOctroi, isDemarcheTypeWithPhase, canImpactTitre } from './demarchesTypes.js'
+import { getValues } from '../typescript-tools'
+import { sortedDemarchesStatuts } from './demarchesStatuts'
+import { DEMARCHES_TYPES_IDS, isDemarcheTypeId, isDemarcheTypeOctroi, isDemarcheTypeWithPhase, canImpactTitre } from './demarchesTypes'
 import { test, expect } from 'vitest'
 
 test('isDemarcheTypeId', () => {

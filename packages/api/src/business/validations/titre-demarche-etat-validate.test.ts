@@ -1,15 +1,15 @@
-import { ITitre, ITitreEtape } from '../../types.js'
+import { ITitre, ITitreEtape } from '../../types'
 
-import { etapesTypesPossibleACetteDateOuALaPlaceDeLEtape, titreDemarcheUpdatedEtatValidate } from './titre-demarche-etat-validate.js'
-import { newDemarcheId, newEtapeId } from '../../database/models/_format/id-create.js'
-import { EtapesTypesEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStatuts.js'
+import { etapesTypesPossibleACetteDateOuALaPlaceDeLEtape, titreDemarcheUpdatedEtatValidate } from './titre-demarche-etat-validate'
+import { newDemarcheId, newEtapeId } from '../../database/models/_format/id-create'
+import { EtapesTypesEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStatuts'
 import { describe, test, expect, vi } from 'vitest'
-import { caminoDateValidator, toCaminoDate } from 'camino-common/src/date.js'
-import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
-import { ETAPE_IS_BROUILLON, ETAPE_IS_NOT_BROUILLON, etapeIdValidator } from 'camino-common/src/etape.js'
-import { onlyUnique } from 'camino-common/src/typescript-tools.js'
-import { ArmOctMachine } from '../rules-demarches/arm/oct.machine.js'
-import { TitreEtapeForMachine } from '../rules-demarches/machine-common.js'
+import { caminoDateValidator, toCaminoDate } from 'camino-common/src/date'
+import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
+import { ETAPE_IS_BROUILLON, ETAPE_IS_NOT_BROUILLON, etapeIdValidator } from 'camino-common/src/etape'
+import { onlyUnique } from 'camino-common/src/typescript-tools'
+import { ArmOctMachine } from '../rules-demarches/arm/oct.machine'
+import { TitreEtapeForMachine } from '../rules-demarches/machine-common'
 
 console.warn = vi.fn()
 describe('teste titreDemarcheUpdatedEtatValidate', () => {

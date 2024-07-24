@@ -1,5 +1,5 @@
-import { EntrepriseDocumentId, EntrepriseId } from '../entreprise.js'
-import { FlattenEtape } from '../etape-form.js'
+import { EntrepriseDocumentId, EntrepriseId } from '../entreprise'
+import { FlattenEtape } from '../etape-form'
 import {
   DocumentComplementaireAslEtapeDocumentModification,
   DocumentComplementaireDaeEtapeDocumentModification,
@@ -8,24 +8,24 @@ import {
   TempEtapeAvis,
   TempEtapeDocument,
   needAslAndDae,
-} from '../etape.js'
-import { User, isAdministrationAdmin, isAdministrationEditeur, isSuper } from '../roles.js'
-import { AvisTypeId, AvisTypes } from '../static/avisTypes.js'
+} from '../etape'
+import { User, isAdministrationAdmin, isAdministrationEditeur, isSuper } from '../roles'
+import { AvisTypeId, AvisTypes } from '../static/avisTypes'
 import { CommuneId } from '../static/communes'
-import { DemarcheTypeId } from '../static/demarchesTypes.js'
-import { DEPARTEMENT_IDS, toDepartementId } from '../static/departement.js'
-import { AutreDocumentType, DocumentType, DocumentsTypes, EntrepriseDocumentTypeId } from '../static/documentsTypes.js'
-import { ETAPES_TYPES, EtapeTypeId, EtapesTypes } from '../static/etapesTypes.js'
-import { SDOMZoneId } from '../static/sdom.js'
-import { TitreTypeId, TitresTypes } from '../static/titresTypes.js'
-import { TITRES_TYPES_TYPES_IDS } from '../static/titresTypesTypes.js'
-import { getDocuments } from '../static/titresTypes_demarchesTypes_etapesTypes/documents.js'
-import { getEntrepriseDocuments } from '../static/titresTypes_demarchesTypes_etapesTypes/entrepriseDocuments.js'
-import { documentTypeIdsBySdomZonesGet } from '../static/titresTypes_demarchesTypes_etapesTypes/sdom.js'
-import { getSections, getSectionsWithValue } from '../static/titresTypes_demarchesTypes_etapesTypes/sections.js'
-import { isNotNullNorUndefinedNorEmpty, DeepReadonly, onlyUnique, NonEmptyArray, isNonEmptyArray, isNullOrUndefinedOrEmpty, isNullOrUndefined, Nullable } from '../typescript-tools.js'
-import { sectionsWithValueCompleteValidate } from './sections.js'
-import { isDureeOptional } from './titres-etapes.js'
+import { DemarcheTypeId } from '../static/demarchesTypes'
+import { DEPARTEMENT_IDS, toDepartementId } from '../static/departement'
+import { AutreDocumentType, DocumentType, DocumentsTypes, EntrepriseDocumentTypeId } from '../static/documentsTypes'
+import { ETAPES_TYPES, EtapeTypeId, EtapesTypes } from '../static/etapesTypes'
+import { SDOMZoneId } from '../static/sdom'
+import { TitreTypeId, TitresTypes } from '../static/titresTypes'
+import { TITRES_TYPES_TYPES_IDS } from '../static/titresTypesTypes'
+import { getDocuments } from '../static/titresTypes_demarchesTypes_etapesTypes/documents'
+import { getEntrepriseDocuments } from '../static/titresTypes_demarchesTypes_etapesTypes/entrepriseDocuments'
+import { documentTypeIdsBySdomZonesGet } from '../static/titresTypes_demarchesTypes_etapesTypes/sdom'
+import { getSections, getSectionsWithValue } from '../static/titresTypes_demarchesTypes_etapesTypes/sections'
+import { isNotNullNorUndefinedNorEmpty, DeepReadonly, onlyUnique, NonEmptyArray, isNonEmptyArray, isNullOrUndefinedOrEmpty, isNullOrUndefined, Nullable } from '../typescript-tools'
+import { sectionsWithValueCompleteValidate } from './sections'
+import { isDureeOptional } from './titres-etapes'
 
 type ValidReturn = { valid: true } | { valid: false; errors: NonEmptyArray<string> }
 

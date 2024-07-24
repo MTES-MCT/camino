@@ -1,19 +1,19 @@
 import { raw, QueryBuilder, RawBuilder } from 'objection'
 
-import { ITitreActivite, ITitreActiviteColonneId, Index, IColonne } from '../../types.js'
+import { ITitreActivite, ITitreActiviteColonneId, Index, IColonne } from '../../types'
 
-import options, { FieldsActivite } from './_options.js'
-import { fieldsFormat } from './graph/fields-format.js'
-import { fieldsTitreAdd } from './graph/fields-add.js'
-import graphBuild from './graph/build.js'
+import options, { FieldsActivite } from './_options'
+import { fieldsFormat } from './graph/fields-format'
+import { fieldsTitreAdd } from './graph/fields-add'
+import graphBuild from './graph/build'
 
-import { titresFiltersQueryModify } from './_titres-filters.js'
-import TitresActivites from '../models/titres-activites.js'
-import { titresActivitesQueryModify } from './permissions/titres-activites.js'
-import { User } from 'camino-common/src/roles.js'
-import { DepartementId } from 'camino-common/src/static/departement.js'
-import { ActiviteId } from 'camino-common/src/activite.js'
-import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools.js'
+import { titresFiltersQueryModify } from './_titres-filters'
+import TitresActivites from '../models/titres-activites'
+import { titresActivitesQueryModify } from './permissions/titres-activites'
+import { User } from 'camino-common/src/roles'
+import { DepartementId } from 'camino-common/src/static/departement'
+import { ActiviteId } from 'camino-common/src/activite'
+import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
 
 /**
  * Modifie la requête en fonction des paramètres de filtre

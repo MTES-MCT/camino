@@ -1,12 +1,12 @@
-import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes.js'
-import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
-import { getDomaineId, TitreTypeId } from 'camino-common/src/static/titresTypes.js'
-import { getEtapesTDE } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/index.js'
-import { ITitreEtape, ITitreDemarche } from '../../types.js'
-import { demarcheDefinitionFind } from '../rules-demarches/definitions.js'
-import { titreEtapeForMachineValidator, toMachineEtapes } from '../rules-demarches/machine-common.js'
-import { titreEtapesSortAscByOrdre } from '../utils/titre-etapes-sort.js'
-import { titreInModificationEnInstance } from './titre-statut-id-find.js'
+import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
+import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
+import { getDomaineId, TitreTypeId } from 'camino-common/src/static/titresTypes'
+import { getEtapesTDE } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/index'
+import { ITitreEtape, ITitreDemarche } from '../../types'
+import { demarcheDefinitionFind } from '../rules-demarches/definitions'
+import { titreEtapeForMachineValidator, toMachineEtapes } from '../rules-demarches/machine-common'
+import { titreEtapesSortAscByOrdre } from '../utils/titre-etapes-sort'
+import { titreInModificationEnInstance } from './titre-statut-id-find'
 const titreDemarchePublicLectureFind = (
   publicLecture: boolean,
   demarcheTypeId: DemarcheTypeId,

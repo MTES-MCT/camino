@@ -1,5 +1,5 @@
-import { config } from '../../config/index.js'
-import { GetActivitesInput } from './filters.js'
+import { config } from '../../config/index'
+import { GetActivitesInput } from './filters'
 
 export const titreUrlGet = (titreId: string) => `${config().OAUTH_URL}/titres/${titreId}`
 

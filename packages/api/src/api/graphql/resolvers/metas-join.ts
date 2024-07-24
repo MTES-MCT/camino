@@ -1,9 +1,9 @@
-import { Context } from '../../../types.js'
+import { Context } from '../../../types'
 
-import { etapesTypesDocumentsTypesGet } from '../../../database/queries/metas.js'
-import { isSuper } from 'camino-common/src/roles.js'
-import { titreTypesStatutsTitresPublicLecture } from 'camino-common/src/static/titresTypes_titresStatuts.js'
-import { TitresTypes } from 'camino-common/src/static/titresTypes.js'
+import { etapesTypesDocumentsTypesGet } from '../../../database/queries/metas'
+import { isSuper } from 'camino-common/src/roles'
+import { titreTypesStatutsTitresPublicLecture } from 'camino-common/src/static/titresTypes_titresStatuts'
+import { TitresTypes } from 'camino-common/src/static/titresTypes'
 
 export const titresTypes = () => Object.values(TitresTypes)
 

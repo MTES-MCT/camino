@@ -1,12 +1,12 @@
 import { Pool } from 'pg'
-import { HTTP_STATUS } from 'camino-common/src/http.js'
-import { CaminoRequest, CustomResponse } from './express-type.js'
-import { demarcheIdOrSlugValidator } from 'camino-common/src/demarche.js'
-import { getDemarcheByIdOrSlug as getDemarcheByIdOrSlugDb } from './demarches.queries.js'
-import { GetDemarcheByIdOrSlugValidator, getDemarcheByIdOrSlugValidator } from 'camino-common/src/titres.js'
-import { getAdministrationsLocalesByTitreId, getTitreByIdOrSlug, getTitulairesAmodiatairesByTitreId } from './titres.queries.js'
-import { memoize } from 'camino-common/src/typescript-tools.js'
-import { canReadDemarche } from './permissions/demarches.js'
+import { HTTP_STATUS } from 'camino-common/src/http'
+import { CaminoRequest, CustomResponse } from './express-type'
+import { demarcheIdOrSlugValidator } from 'camino-common/src/demarche'
+import { getDemarcheByIdOrSlug as getDemarcheByIdOrSlugDb } from './demarches.queries'
+import { GetDemarcheByIdOrSlugValidator, getDemarcheByIdOrSlugValidator } from 'camino-common/src/titres'
+import { getAdministrationsLocalesByTitreId, getTitreByIdOrSlug, getTitulairesAmodiatairesByTitreId } from './titres.queries'
+import { memoize } from 'camino-common/src/typescript-tools'
+import { canReadDemarche } from './permissions/demarches'
 
 export const getDemarcheByIdOrSlug = (pool: Pool) => async (req: CaminoRequest, res: CustomResponse<GetDemarcheByIdOrSlugValidator>) => {
   try {

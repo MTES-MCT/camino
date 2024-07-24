@@ -1,7 +1,7 @@
-import { IContenuValeur, Index, ITitreEtape } from '../../types.js'
+import { IContenuValeur, Index, ITitreEtape } from '../../types'
 
-import { DeepReadonly } from 'camino-common/src/typescript-tools.js'
-import { Section } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
+import { DeepReadonly } from 'camino-common/src/typescript-tools'
+import { Section } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections'
 
 export const heritageContenuFind = (
   sectionId: string,

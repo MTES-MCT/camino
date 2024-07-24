@@ -1,9 +1,9 @@
-import { bodyBuilder, responseExtractor } from './entreprises.js'
-import Titres from '../../database/models/titres.js'
+import { bodyBuilder, responseExtractor } from './entreprises'
+import Titres from '../../database/models/titres'
 import { describe, expect, test } from 'vitest'
-import { newEntrepriseId } from 'camino-common/src/entreprise.js'
-import { toCommuneId } from 'camino-common/src/static/communes.js'
-import { newTitreId } from '../../database/models/_format/id-create.js'
+import { newEntrepriseId } from 'camino-common/src/entreprise'
+import { toCommuneId } from 'camino-common/src/static/communes'
+import { newTitreId } from '../../database/models/_format/id-create'
 
 const entrepriseId = newEntrepriseId('entrepriseId')
 const entreprise2Id = newEntrepriseId('entrepriseId2')

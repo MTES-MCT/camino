@@ -1,6 +1,6 @@
 import { test, expect } from 'vitest'
-import { TITRES_TYPES_IDS } from './titresTypes.js'
-import { getDemarchesTypesByTitreType } from './titresTypesDemarchesTypes.js'
+import { TITRES_TYPES_IDS } from './titresTypes'
+import { getDemarchesTypesByTitreType } from './titresTypesDemarchesTypes'
 
 test('getDemarchesTypesByTitreType', () => {
   expect(getDemarchesTypesByTitreType(TITRES_TYPES_IDS.CONCESSION_METAUX)).toMatchInlineSnapshot(`

@@ -1,14 +1,14 @@
-import { ITitreEtape, formatUser } from '../../../types.js'
+import { ITitreEtape, formatUser } from '../../../types'
 
-import { emailsSend } from '../../../tools/api-mailjet/emails.js'
-import { titreEtapeGet } from '../../../database/queries/titres-etapes.js'
-import { utilisateursTitresGet } from '../../../database/queries/utilisateurs.js'
-import { titreUrlGet } from '../../../business/utils/urls-get.js'
-import { EmailAdministration } from '../../../tools/api-mailjet/types.js'
-import { UserNotNull } from 'camino-common/src/roles.js'
-import { EtapesTypes } from 'camino-common/src/static/etapesTypes.js'
-import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools.js'
-import { ETAPE_IS_BROUILLON, ETAPE_IS_NOT_BROUILLON } from 'camino-common/src/etape.js'
+import { emailsSend } from '../../../tools/api-mailjet/emails'
+import { titreEtapeGet } from '../../../database/queries/titres-etapes'
+import { utilisateursTitresGet } from '../../../database/queries/utilisateurs'
+import { titreUrlGet } from '../../../business/utils/urls-get'
+import { EmailAdministration } from '../../../tools/api-mailjet/types'
+import { UserNotNull } from 'camino-common/src/roles'
+import { EtapesTypes } from 'camino-common/src/static/etapesTypes'
+import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
+import { ETAPE_IS_BROUILLON, ETAPE_IS_NOT_BROUILLON } from 'camino-common/src/etape'
 
 const emailForAdministrationContentFormat = (titreTypeId: string, etapeNom: string, titreId: string, user: UserNotNull) => {
   const titreUrl = titreUrlGet(titreId)

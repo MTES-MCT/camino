@@ -1,12 +1,12 @@
 /* eslint-disable no-restricted-syntax */
 import { sql } from '@pgtyped/runtime'
-import { TitreId } from 'camino-common/src/validators/titres.js'
-import { Redefine, dbQueryAndValidate } from '../../pg-database.js'
-import { IGetLastJournalInternalQuery, IGetTitresModifiesByMonthDbQuery } from './journal.queries.types.js'
-import { CaminoDate, caminoDateValidator } from 'camino-common/src/date.js'
+import { TitreId } from 'camino-common/src/validators/titres'
+import { Redefine, dbQueryAndValidate } from '../../pg-database'
+import { IGetLastJournalInternalQuery, IGetTitresModifiesByMonthDbQuery } from './journal.queries.types'
+import { CaminoDate, caminoDateValidator } from 'camino-common/src/date'
 import { z } from 'zod'
 import { Pool } from 'pg'
-import { QuantiteParMois, quantitesParMoisValidator } from 'camino-common/src/statistiques.js'
+import { QuantiteParMois, quantitesParMoisValidator } from 'camino-common/src/statistiques'
 
 const lastJournalGetValidator = z.object({ date: caminoDateValidator })
 type LastJournalGet = z.infer<typeof lastJournalGetValidator>

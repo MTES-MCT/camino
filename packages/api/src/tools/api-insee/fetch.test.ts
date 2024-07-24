@@ -1,6 +1,6 @@
-import { tokenInitialize } from './fetch.js'
+import { tokenInitialize } from './fetch'
 import { expect, test, vi } from 'vitest'
-import { dateAddDays, toCaminoDate } from 'camino-common/src/date.js'
+import { dateAddDays, toCaminoDate } from 'camino-common/src/date'
 
 test('tokenInitialize', async () => {
   const fetchMocked = vi.fn().mockImplementation(() => Promise.resolve({ access_token: 'token' }))

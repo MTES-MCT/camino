@@ -1,5 +1,5 @@
-import { DEMARCHES_TYPES_IDS, DemarcheType, DemarchesTypes } from './demarchesTypes.js'
-import { TITRES_TYPES_IDS, TitreTypeId, isTitreType } from './titresTypes.js'
+import { DEMARCHES_TYPES_IDS, DemarcheType, DemarchesTypes } from './demarchesTypes'
+import { TITRES_TYPES_IDS, TitreTypeId, isTitreType } from './titresTypes'
 
 const demarchesEverywhere = [
   DEMARCHES_TYPES_IDS.AutorisationDOuvertureDeTravaux,

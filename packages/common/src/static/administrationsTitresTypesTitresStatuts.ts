@@ -1,7 +1,7 @@
-import { getKeys, isNotNullNorUndefined } from '../typescript-tools.js'
-import { AdministrationId, ADMINISTRATION_IDS } from './administrations.js'
-import { isTitreStatutId, TitresStatutIds, TitreStatutId } from './titresStatuts.js'
-import { isTitreType, TITRES_TYPES_IDS, TitreTypeId } from './titresTypes.js'
+import { getKeys, isNotNullNorUndefined } from '../typescript-tools'
+import { AdministrationId, ADMINISTRATION_IDS } from './administrations'
+import { isTitreStatutId, TitresStatutIds, TitreStatutId } from './titresStatuts'
+import { isTitreType, TITRES_TYPES_IDS, TitreTypeId } from './titresTypes'
 
 export const canAdministrationModifyEtapes = (administrationId: AdministrationId, titreTypeId: TitreTypeId, titreStatutId: TitreStatutId): boolean => {
   return !restrictions(administrationId, titreTypeId, titreStatutId).etapesModificationInterdit

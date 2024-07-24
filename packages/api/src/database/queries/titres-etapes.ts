@@ -1,14 +1,14 @@
-import { ITitreEtape } from '../../types.js'
-import options, { FieldsEtape } from './_options.js'
-import graphBuild from './graph/build.js'
-import { fieldsFormat } from './graph/fields-format.js'
+import { ITitreEtape } from '../../types'
+import options, { FieldsEtape } from './_options'
+import graphBuild from './graph/build'
+import { fieldsFormat } from './graph/fields-format'
 
-import TitresEtapes, { DBTitresEtapes } from '../models/titres-etapes.js'
-import { titresEtapesQueryModify } from './permissions/titres-etapes.js'
-import { createJournalCreate, patchJournalCreate, upsertJournalCreate } from './journaux.js'
+import TitresEtapes, { DBTitresEtapes } from '../models/titres-etapes'
+import { titresEtapesQueryModify } from './permissions/titres-etapes'
+import { createJournalCreate, patchJournalCreate, upsertJournalCreate } from './journaux'
 import { User, UserNotNull } from 'camino-common/src/roles'
-import { TitreId } from 'camino-common/src/validators/titres.js'
-import { EtapeId, EtapeIdOrSlug } from 'camino-common/src/etape.js'
+import { TitreId } from 'camino-common/src/validators/titres'
+import { EtapeId, EtapeIdOrSlug } from 'camino-common/src/etape'
 
 const titresEtapesQueryBuild = ({ fields }: { fields?: FieldsEtape }, user: User) => {
   const graph = fields ? graphBuild(fields, 'etapes', fieldsFormat) : '[]'

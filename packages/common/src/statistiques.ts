@@ -1,11 +1,11 @@
 import { z } from 'zod'
-import { CaminoAnnee, caminoAnneeValidator, caminoDateValidator } from './date.js'
-import { AdministrationTypeId } from './static/administrations.js'
-import { regionIdValidator } from './static/region.js'
-import { SDOMZoneIds } from './static/sdom.js'
-import { SUBSTANCES_FISCALES_IDS, SubstanceFiscaleId } from './static/substancesFiscales.js'
-import { TitresTypes } from './static/titresTypes.js'
-import { CaminoStatistiquesDataGouvId } from './static/statistiques.js'
+import { CaminoAnnee, caminoAnneeValidator, caminoDateValidator } from './date'
+import { AdministrationTypeId } from './static/administrations'
+import { regionIdValidator } from './static/region'
+import { SDOMZoneIds } from './static/sdom'
+import { SUBSTANCES_FISCALES_IDS, SubstanceFiscaleId } from './static/substancesFiscales'
+import { TitresTypes } from './static/titresTypes'
+import { CaminoStatistiquesDataGouvId } from './static/statistiques'
 
 export const yearMonthValidator = z
   .string()

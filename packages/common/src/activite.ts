@@ -1,10 +1,10 @@
 import { z } from 'zod'
-import { caminoAnneeValidator, caminoDateValidator } from './date.js'
-import { activiteDocumentTypeIdValidator } from './static/documentsTypes.js'
-import { sectionWithValueValidator } from './sections.js'
-import { activiteStatutIdValidator } from './static/activitesStatuts.js'
-import { activiteTypeIdValidator } from './static/activitesTypes.js'
-import { tempDocumentNameValidator } from './document.js'
+import { caminoAnneeValidator, caminoDateValidator } from './date'
+import { activiteDocumentTypeIdValidator } from './static/documentsTypes'
+import { sectionWithValueValidator } from './sections'
+import { activiteStatutIdValidator } from './static/activitesStatuts'
+import { activiteTypeIdValidator } from './static/activitesTypes'
+import { tempDocumentNameValidator } from './document'
 
 export const activiteSlugValidator = z.string().brand<'ActiviteSlug'>()
 

@@ -1,14 +1,14 @@
 import { QueryBuilder } from 'objection'
 
-import Titres from '../../models/titres.js'
-import TitresEtapes from '../../models/titres-etapes.js'
-import TitresDemarches from '../../models/titres-demarches.js'
+import Titres from '../../models/titres'
+import TitresEtapes from '../../models/titres-etapes'
+import TitresDemarches from '../../models/titres-demarches'
 
-import { titresEtapesQueryModify } from './titres-etapes.js'
-import { titresQueryModify } from './titres.js'
-import { administrationsTitresQuery } from './administrations.js'
-import { entreprisesTitresQuery } from './entreprises.js'
-import { isSuper, isAdministration, isEntreprise, isBureauDEtudes, User } from 'camino-common/src/roles.js'
+import { titresEtapesQueryModify } from './titres-etapes'
+import { titresQueryModify } from './titres'
+import { administrationsTitresQuery } from './administrations'
+import { entreprisesTitresQuery } from './entreprises'
+import { isSuper, isAdministration, isEntreprise, isBureauDEtudes, User } from 'camino-common/src/roles'
 
 export const titresDemarchesQueryModify = (q: QueryBuilder<TitresDemarches, TitresDemarches | TitresDemarches[]>, user: User) => {
   q.select('titresDemarches.*').where('titresDemarches.archive', false).leftJoinRelated('titre')

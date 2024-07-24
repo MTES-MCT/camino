@@ -1,4 +1,4 @@
-import { tdeOldTitreEtapeTypeAndStatusValidate } from './titre-etape-type-and-status-validate.js'
+import { tdeOldTitreEtapeTypeAndStatusValidate } from './titre-etape-type-and-status-validate'
 import { describe, test, expect } from 'vitest'
 
 describe("valide le type et le statut d'une étape en fonction du type de titre et du type de démarche", () => {

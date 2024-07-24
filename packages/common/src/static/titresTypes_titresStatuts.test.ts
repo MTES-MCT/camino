@@ -1,7 +1,7 @@
-import { TitresStatutIds } from './titresStatuts.js'
-import { titrePublicFind } from './titresTypes_titresStatuts.js'
+import { TitresStatutIds } from './titresStatuts'
+import { titrePublicFind } from './titresTypes_titresStatuts'
 import { test, expect, describe } from 'vitest'
-import { TITRES_TYPES_IDS } from './titresTypes.js'
+import { TITRES_TYPES_IDS } from './titresTypes'
 
 describe("publicité d'un titre", () => {
   test("un titre sans démarche n'est pas public", () => {

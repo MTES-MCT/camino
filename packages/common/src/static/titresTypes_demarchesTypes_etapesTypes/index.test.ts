@@ -1,4 +1,4 @@
-import { getEtapesTDE, isTDEExist } from './index.js'
+import { getEtapesTDE, isTDEExist } from './index'
 import { test, expect } from 'vitest'
 
 test('getEtapesTDE', () => {

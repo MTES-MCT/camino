@@ -1,7 +1,7 @@
-import { ITitreActivite } from '../../types.js'
-import { ACTIVITES_STATUTS_IDS, ActivitesStatutId } from 'camino-common/src/static/activitesStatuts.js'
-import { ActivitesTypes } from 'camino-common/src/static/activitesTypes.js'
-import { dateAddMonths } from 'camino-common/src/date.js'
+import { ITitreActivite } from '../../types'
+import { ACTIVITES_STATUTS_IDS, ActivitesStatutId } from 'camino-common/src/static/activitesStatuts'
+import { ActivitesTypes } from 'camino-common/src/static/activitesTypes'
+import { dateAddMonths } from 'camino-common/src/date'
 
 /**
  * Trouve le statut d'une activité

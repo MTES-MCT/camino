@@ -1,8 +1,8 @@
 import { describe, expect, test } from 'vitest'
-import { ArmRenProMachine } from './ren-pro.machine.js'
-import { interpretMachine, setDateAndOrderAndInterpretMachine } from '../machine-test-helper.js'
-import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts.js'
-import { EtapesTypesEtapesStatuts as ETES } from 'camino-common/src/static/etapesTypesEtapesStatuts.js'
+import { ArmRenProMachine } from './ren-pro.machine'
+import { interpretMachine, setDateAndOrderAndInterpretMachine } from '../machine-test-helper'
+import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts'
+import { EtapesTypesEtapesStatuts as ETES } from 'camino-common/src/static/etapesTypesEtapesStatuts'
 const etapesProd = require('./2019-10-31-ren-pro.cas.json')
 
 describe('vérifie l’arbre de renonciation et de prolongation d’ARM', () => {

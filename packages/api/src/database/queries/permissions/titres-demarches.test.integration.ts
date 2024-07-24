@@ -1,10 +1,10 @@
-import { dbManager } from '../../../../tests/db-manager.js'
+import { dbManager } from '../../../../tests/db-manager'
 
-import Titres from '../../models/titres.js'
-import { newDemarcheId, newTitreId } from '../../models/_format/id-create.js'
-import { userSuper } from '../../user-super.js'
-import TitresDemarches from '../../models/titres-demarches.js'
-import { titresDemarchesQueryModify } from './titres-demarches.js'
+import Titres from '../../models/titres'
+import { newDemarcheId, newTitreId } from '../../models/_format/id-create'
+import { userSuper } from '../../user-super'
+import TitresDemarches from '../../models/titres-demarches'
+import { titresDemarchesQueryModify } from './titres-demarches'
 import { expect, test, describe, afterAll, beforeAll, vi } from 'vitest'
 
 console.info = vi.fn()

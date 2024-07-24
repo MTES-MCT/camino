@@ -1,12 +1,12 @@
-import { ITitreEtape } from '../../types.js'
-import { demarcheDefinitionFind } from '../rules-demarches/definitions.js'
-import { TitreEtapeForMachine, toMachineEtapes } from '../rules-demarches/machine-common.js'
-import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
-import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes.js'
-import { getEtapesTDE } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/index.js'
-import { DemarcheId } from 'camino-common/src/demarche.js'
-import { isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools.js'
-import { ETAPE_IS_BROUILLON } from 'camino-common/src/etape.js'
+import { ITitreEtape } from '../../types'
+import { demarcheDefinitionFind } from '../rules-demarches/definitions'
+import { TitreEtapeForMachine, toMachineEtapes } from '../rules-demarches/machine-common'
+import { TitreTypeId } from 'camino-common/src/static/titresTypes'
+import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
+import { getEtapesTDE } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/index'
+import { DemarcheId } from 'camino-common/src/demarche'
+import { isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
+import { ETAPE_IS_BROUILLON } from 'camino-common/src/etape'
 
 // classe les étapes selon leur ordre inverse: 3, 2, 1.
 export const titreEtapesSortDescByOrdre = <T extends Pick<ITitreEtape, 'ordre'>>(titreEtapes: T[]): T[] => titreEtapes.slice().sort((a, b) => b.ordre! - a.ordre!)

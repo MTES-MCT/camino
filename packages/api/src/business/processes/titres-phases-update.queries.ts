@@ -1,9 +1,9 @@
 /* eslint-disable no-restricted-syntax */
 import { sql } from '@pgtyped/runtime'
-import { CaminoDate } from 'camino-common/src/date.js'
-import { DemarcheId } from 'camino-common/src/demarche.js'
-import { Redefine, dbQueryAndValidate } from '../../pg-database.js'
-import { IUpdateDatesDemarcheDbQuery } from './titres-phases-update.queries.types.js'
+import { CaminoDate } from 'camino-common/src/date'
+import { DemarcheId } from 'camino-common/src/demarche'
+import { Redefine, dbQueryAndValidate } from '../../pg-database'
+import { IUpdateDatesDemarcheDbQuery } from './titres-phases-update.queries.types'
 import { Pool } from 'pg'
 import { z } from 'zod'
 

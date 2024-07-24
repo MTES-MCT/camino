@@ -1,10 +1,10 @@
-import { ITitreDemarche } from '../../types.js'
+import { ITitreDemarche } from '../../types'
 
-import { DemarchesStatutsIds, isDemarcheStatutNonStatue, isDemarcheStatutNonValide } from 'camino-common/src/static/demarchesStatuts.js'
-import { isDemarcheTypeOctroi, DemarchesTypes } from 'camino-common/src/static/demarchesTypes.js'
-import { TitresStatutIds, TitreStatutId } from 'camino-common/src/static/titresStatuts.js'
-import { CaminoDate } from 'camino-common/src/date.js'
-import { isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
+import { DemarchesStatutsIds, isDemarcheStatutNonStatue, isDemarcheStatutNonValide } from 'camino-common/src/static/demarchesStatuts'
+import { isDemarcheTypeOctroi, DemarchesTypes } from 'camino-common/src/static/demarchesTypes'
+import { TitresStatutIds, TitreStatutId } from 'camino-common/src/static/titresStatuts'
+import { CaminoDate } from 'camino-common/src/date'
+import { isNullOrUndefined } from 'camino-common/src/typescript-tools'
 
 export type TitreStatutIdFindDemarche = Pick<ITitreDemarche, 'typeId' | 'statutId' | 'demarcheDateDebut' | 'demarcheDateFin'>
 export const titreStatutIdFind = (aujourdhui: CaminoDate, demarches: TitreStatutIdFindDemarche[] | null | undefined): TitreStatutId => {
