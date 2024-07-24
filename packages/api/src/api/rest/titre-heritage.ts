@@ -4,7 +4,6 @@ import { isFondamentalesStatutOk } from 'camino-common/src/static/etapesStatuts'
 import { isEtapeTypeIdFondamentale } from 'camino-common/src/static/etapesTypes'
 import { TitrePropTitreEtapeFindDemarche } from 'camino-common/src/titres'
 
-
 export const getMostRecentEtapeFondamentaleValide = <F extends Pick<DemarcheEtape, 'etape_statut_id' | 'etape_type_id' | 'ordre' | 'is_brouillon'>>(
   titreDemarches: TitrePropTitreEtapeFindDemarche<F>[]
 ): F | null => {
