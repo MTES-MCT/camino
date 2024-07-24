@@ -126,7 +126,6 @@ export class ProcedureSimplifieeMachine extends CaminoMachine<ProcedureSimplifie
 interface ProcedureSimplifieeContext extends CaminoCommonContext {
   depotDeLaDemandeFaite: boolean
   ouverturePublicStatut: EtapeStatutId | null
-  demandeInformationEnCours: boolean
 }
 const defaultDemarcheStatut = DemarchesStatutsIds.EnConstruction
 const procedureHistoriqueDateMax = toCaminoDate('2024-07-01')
@@ -140,7 +139,6 @@ const procedureSimplifieeMachine = createMachine({
     visibilite: 'confidentielle',
     depotDeLaDemandeFaite: false,
     ouverturePublicStatut: null,
-    demandeInformationEnCours: false,
   },
   on: {
     RENDRE_DECISION_ADMINISTRATION_ACCEPTEE: {
@@ -198,16 +196,12 @@ const procedureSimplifieeMachine = createMachine({
       }),
     },
     DEMANDER_INFORMATION: {
-      guard: ({ context }) => context.demarcheStatut === DemarchesStatutsIds.EnInstruction && !context.demandeInformationEnCours,
-      actions: assign({
-        demandeInformationEnCours: true,
-      }),
+      guard: ({ context }) => context.demarcheStatut === DemarchesStatutsIds.EnInstruction,
+      actions: assign({}),
     },
     RECEVOIR_INFORMATION: {
-      guard: ({ context }) => context.demarcheStatut === DemarchesStatutsIds.EnInstruction && context.demandeInformationEnCours,
-      actions: assign({
-        demandeInformationEnCours: false,
-      }),
+      guard: ({ context }) => context.demarcheStatut === DemarchesStatutsIds.EnInstruction,
+      actions: assign({}),
     },
   },
   states: {
