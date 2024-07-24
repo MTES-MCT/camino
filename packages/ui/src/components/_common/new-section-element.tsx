@@ -14,7 +14,7 @@ export const SectionElement: FunctionalComponent<Props> = (props: Props): JSX.El
 
   return (
     <div>
-      {hasNom ? <div class="fr-text--lg fr-m-0">{props.element.nom}</div> : null}
+      {hasNom ? <div class="fr-h6 fr-m-0">{props.element.nom}</div> : null}
       <div>
         {props.element.type === 'url' ? (
           <a target="_blank" rel="noopener noreferrer" href={valeurFind(props.element)} title={`${props.element.nom} - Lien externe`}>

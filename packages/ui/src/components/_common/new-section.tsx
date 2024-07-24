@@ -20,7 +20,7 @@ interface Props {
 export const NewSection: FunctionalComponent<Props> = (props: Props): JSX.Element => {
   return (
     <div>
-      {isNotNullNorUndefinedNorEmpty(props.section.nom) ? <h6 class="fr-m-0 fr-pt-4w">{props.section.nom}</h6> : null}
+      {isNotNullNorUndefinedNorEmpty(props.section.nom) ? <h5 class="fr-m-0 fr-pt-4w">{props.section.nom}</h5> : null}
       {props.section.elements.map(e => (
         <SectionElement class="fr-pt-2w" key={e.id} element={e} />
       ))}
