@@ -8,7 +8,6 @@ import Titres from '../../models/titres'
 import { isSuper, User } from 'camino-common/src/roles'
 import { DeepReadonly } from 'camino-common/src/typescript-tools'
 
-
 export const journauxQueryModify = (q: QueryBuilder<Journaux, Journaux | Journaux[]>, user: DeepReadonly<User>): QueryBuilder<Journaux, Journaux | Journaux[]> => {
   q.select('journaux.*')
 

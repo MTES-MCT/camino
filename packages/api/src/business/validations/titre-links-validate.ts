@@ -4,7 +4,12 @@ import { getLinkConfig } from 'camino-common/src/permissions/titres'
 import { NonEmptyArray, isNonEmptyArray, isNullOrUndefined } from 'camino-common/src/typescript-tools'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 
-export const checkTitreLinks = (titreTypeId: TitreTypeId, titreFromIds: Readonly<TitreId[]>, titresFrom: ITitre[], demarches: ITitreDemarche[]): { valid: true } | { valid: false; errors: NonEmptyArray<string> } => {
+export const checkTitreLinks = (
+  titreTypeId: TitreTypeId,
+  titreFromIds: Readonly<TitreId[]>,
+  titresFrom: ITitre[],
+  demarches: ITitreDemarche[]
+): { valid: true } | { valid: false; errors: NonEmptyArray<string> } => {
   const linkConfig = getLinkConfig(
     titreTypeId,
     demarches.map(({ typeId }) => ({ demarche_type_id: typeId }))
@@ -24,14 +29,11 @@ export const checkTitreLinks = (titreTypeId: TitreTypeId, titreFromIds: Readonly
     if (titresFrom.some(({ typeId }) => typeId !== linkConfig.typeId)) {
       errors.push(`un titre de type ${titreTypeId} ne peut-être lié qu’à un titre de type ${linkConfig.typeId}`)
     }
-
   }
 
   if (isNonEmptyArray(errors)) {
-    return {valid: false, errors}
+    return { valid: false, errors }
   }
 
-  return {valid: true}
-
-
+  return { valid: true }
 }

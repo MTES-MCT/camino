@@ -47,19 +47,13 @@ export const titreDemandeCreer = (
       () => canCreateTitre(user, titreDemande.titreTypeId),
       () => ({ message: 'Accès interdit' as const })
     ),
-    Effect.filterOrFail(
-      () => {
-        console.log(createAutomaticallyEtapeWhenCreatingTitre(user))
-        console.log(titreDemande.entrepriseId)
-        console.log(createAutomaticallyEtapeWhenCreatingTitre(user) && isNotNullNorUndefinedNorEmpty(titreDemande.entrepriseId))
-        return !createAutomaticallyEtapeWhenCreatingTitre(user) || isNotNullNorUndefinedNorEmpty(titreDemande.entrepriseId)
-      },
-      () => ({ message: 'L\'entreprise est obligatoire' as const })
-    ),
-    Effect.filterOrFail(
-      () => !createAutomaticallyEtapeWhenCreatingTitre(user) && isNullOrUndefinedOrEmpty(titreDemande.entrepriseId),
-      () => ({ message: 'L\'entreprise ne doit pas être présente' as const })
-    ),
+    Effect.tap(() => {
+      if (createAutomaticallyEtapeWhenCreatingTitre(user)) {
+        return Effect.fail({ message: "L'entreprise est obligatoire" as const }).pipe(Effect.when(() => isNullOrUndefined(titreDemande.entrepriseId)))
+      } else {
+        return Effect.fail({ message: "L'entreprise ne doit pas être présente" as const }).pipe(Effect.when(() => isNotNullNorUndefinedNorEmpty(titreDemande.entrepriseId)))
+      }
+    }),
     Effect.filterOrFail(
       () => isNullOrUndefinedOrEmpty(titreDemande.references) || !isEntrepriseOrBureauDEtude(user),
       () => ({ message: 'Permissions insuffisantes' as const, detail: "L'utilisateur n'a pas les droits pour mettre des références" })
@@ -189,7 +183,7 @@ export const titreDemandeCreer = (
             status: HTTP_STATUS.INTERNAL_SERVER_ERROR,
           })
         ),
-        Match.whenOr('Problème lors du lien des titres','L\'entreprise ne doit pas être présente', 'L\'entreprise est obligatoire', () => ({ ...caminoError, status: HTTP_STATUS.BAD_REQUEST })),
+        Match.whenOr('Problème lors du lien des titres', "L'entreprise ne doit pas être présente", "L'entreprise est obligatoire", () => ({ ...caminoError, status: HTTP_STATUS.BAD_REQUEST })),
         Match.exhaustive
       )
     )

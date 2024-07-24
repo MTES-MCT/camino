@@ -10,7 +10,6 @@ import { User } from 'camino-common/src/roles'
 import TitresEtapes from '../../models/titres-etapes'
 import { DeepReadonly } from 'camino-common/src/typescript-tools'
 
-
 export const entreprisesQueryModify = (q: QueryBuilder<Entreprises, Entreprises | Entreprises[]>, user: DeepReadonly<User>): QueryBuilder<Entreprises, Entreprises | Entreprises[]> => {
   q.select('entreprises.*')
 

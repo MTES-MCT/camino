@@ -10,6 +10,7 @@ import { titreIdValidator } from 'camino-common/src/validators/titres'
 import { TestUser } from 'camino-common/src/tests-utils'
 
 console.info = vi.fn()
+console.warn = vi.fn()
 console.error = vi.fn()
 
 beforeEach(() => {
@@ -27,7 +28,6 @@ afterAll(async () => {
   await dbManager.closeKnex()
 })
 
-// FIXME tester avec un utilisateur entreprise sans entrepriseId dans l'input
 describe('titreDemandeCreer', () => {
   let body: TitreDemande
   const entrepriseId = newEntrepriseId('plop')
@@ -46,7 +46,7 @@ describe('titreDemandeCreer', () => {
     }
   })
   test('peut créer un titre en tant que super', async () => {
-    const tested = await restNewPostCall(dbPool, '/rest/titres', {}, { role: 'super' }, body)
+    const tested = await restNewPostCall(dbPool, '/rest/titres', {}, { role: 'super' }, { ...body, entrepriseId: undefined })
 
     expect(tested.statusCode).toBe(HTTP_STATUS.OK)
 
@@ -63,7 +63,7 @@ describe('titreDemandeCreer', () => {
     const user: TestUser = { role: 'entreprise', entreprises: [{ id: entrepriseId }] }
     const tested = await restNewPostCall(dbPool, '/rest/titres', {}, user, body)
 
-    expect(tested.statusCode).toBe(HTTP_STATUS.OK)
+    expect(tested.statusCode, JSON.stringify(tested.body)).toBe(HTTP_STATUS.OK)
 
     expect(tested.body.titreId).not.toBeUndefined()
     expect(tested.body.etapeId).not.toBeUndefined()
@@ -116,13 +116,13 @@ describe('titreDemandeCreer', () => {
     expect(tested.statusCode).toBe(HTTP_STATUS.BAD_REQUEST)
     expect(tested.body).toMatchInlineSnapshot(`
       {
-        "message": "L'entreprise est obligatoire",
+        "message": "L'entreprise ne doit pas être présente",
         "status": 400,
       }
     `)
   })
 
-  test('ne peut pas créer un titre sans entrepriseId en tant qu\'entreprise', async () => {
+  test("ne peut pas créer un titre sans entrepriseId en tant qu'entreprise", async () => {
     const tested = await restNewPostCall(dbPool, '/rest/titres', {}, { role: 'entreprise', entreprises: [{ id: entrepriseId }] }, { ...body, entrepriseId: undefined })
 
     expect(tested.statusCode).toBe(HTTP_STATUS.BAD_REQUEST)
@@ -140,7 +140,7 @@ describe('titreDemandeCreer', () => {
       '/rest/titres',
       {},
       { role: 'super' },
-      { ...body, titreTypeId: 'axm', titreFromIds: [titreIdValidator.parse('unknownTitreId'), titreIdValidator.parse('anotherOne')] }
+      { ...body, entrepriseId: undefined, titreTypeId: 'axm', titreFromIds: [titreIdValidator.parse('unknownTitreId'), titreIdValidator.parse('anotherOne')] }
     )
 
     expect(tested.statusCode).toBe(HTTP_STATUS.BAD_REQUEST)
