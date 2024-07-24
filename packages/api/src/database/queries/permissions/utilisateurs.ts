@@ -4,8 +4,9 @@ import Utilisateurs from '../../models/utilisateurs'
 import Entreprises from '../../models/entreprises'
 import { entreprisesQueryModify } from './entreprises'
 import { isAdministrationEditeur, isAdministrationLecteur, isBureauDEtudes, isDefault, isEntreprise, User } from 'camino-common/src/roles'
+import { DeepReadonly } from 'camino-common/src/typescript-tools'
 
-export const utilisateursQueryModify = (q: QueryBuilder<Utilisateurs, Utilisateurs | Utilisateurs[]>, user: User) => {
+export const utilisateursQueryModify = (q: QueryBuilder<Utilisateurs, Utilisateurs | Utilisateurs[]>, user: DeepReadonly<User>): QueryBuilder<Utilisateurs, Utilisateurs | Utilisateurs[]> => {
   q.select('utilisateurs.*')
 
   q.whereNotNull('utilisateurs.keycloakId')

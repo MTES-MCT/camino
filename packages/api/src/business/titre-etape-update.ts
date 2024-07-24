@@ -22,8 +22,9 @@ import { userSuper } from '../database/user-super'
 import { titresEtapesDepotCreate } from './processes/titres-demarches-depot-create'
 import type { UserNotNull } from 'camino-common/src/roles'
 import type { Pool } from 'pg'
+import { DeepReadonly } from 'camino-common/src/typescript-tools'
 
-export const titreEtapeUpdateTask = async (pool: Pool, titreEtapeId: EtapeId | null, titreDemarcheId: DemarcheId, user: UserNotNull) => {
+export const titreEtapeUpdateTask = async (pool: Pool, titreEtapeId: EtapeId | null, titreDemarcheId: DemarcheId, user: DeepReadonly<UserNotNull>): Promise<void> => {
   try {
     console.info()
     console.info('- - -')

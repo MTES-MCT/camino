@@ -9,21 +9,17 @@ import { CaminoError } from 'camino-common/src/zod-tools'
 import { ZodUnparseable } from '../../tools/fp-tools'
 import { Effect } from 'effect'
 
-export const addLog = (pool: Pool, utilisateur_id: UtilisateurId, method: string, path: string, body?: unknown): Effect.Effect<void[], CaminoError<ZodUnparseable | DbQueryAccessError>> =>
+type Log = {
+  utilisateur_id: UtilisateurId
+  method: string
+  path: string
+  body: any
+}
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+export const addLog = (pool: Pool, utilisateur_id: UtilisateurId, method: string, path: string, body: any): Effect.Effect<void[], CaminoError<ZodUnparseable | DbQueryAccessError>> =>
   effectDbQueryAndValidate(insertLogInternal, { utilisateur_id, method, path, body }, pool, z.void())
 
-const insertLogInternal = sql<
-  Redefine<
-    IInsertLogInternalQuery,
-    {
-      utilisateur_id: UtilisateurId
-      method: string
-      path: string
-      body?: unknown
-    },
-    void
-  >
->`
+const insertLogInternal = sql<Redefine<IInsertLogInternalQuery, Log, void>>`
 insert into logs (utilisateur_id, path, method, body)
     values ($ utilisateur_id !, $path !, $ method !, $ body)
 ;

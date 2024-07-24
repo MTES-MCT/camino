@@ -9,10 +9,11 @@ import { DemarcheEtape, DemarcheEtapeFondamentale, DemarcheEtapeNonFondamentale,
 import { demarcheStatutIdValidator } from './static/demarchesStatuts'
 import { demarcheTypeIdValidator } from './static/demarchesTypes'
 import { TitreId, titreIdValidator, titreSlugValidator } from './validators/titres'
-import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from './typescript-tools'
+import { DeepReadonly, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from './typescript-tools'
 import { EntrepriseId, entrepriseIdValidator } from './entreprise'
 import { isFondamentalesStatutOk } from './static/etapesStatuts'
 import { ETAPE_IS_NOT_BROUILLON, etapeIdValidator } from './etape'
+import { isEntrepriseOrBureauDEtude, User } from './roles'
 
 const commonTitreValidator = z.object({
   id: titreIdValidator,
@@ -163,13 +164,15 @@ export type GetDemarcheByIdOrSlugValidator = z.infer<typeof getDemarcheByIdOrSlu
 
 export const titreDemandeValidator = z.object({
   nom: z.string(),
-  typeId: titreTypeIdValidator,
-  entrepriseId: entrepriseIdValidator,
+  titreTypeId: titreTypeIdValidator,
+  entrepriseId: entrepriseIdValidator.optional(),
   references: z.array(titreReferenceValidator),
   titreFromIds: z.array(titreIdValidator),
 })
 
 export type TitreDemande = z.infer<typeof titreDemandeValidator>
 
-export const titreDemandeOutputValidator = z.union([z.object({ etapeId: etapeIdValidator }), z.object({ titreId: titreIdValidator })])
+export const titreDemandeOutputValidator = z.object({ etapeId: etapeIdValidator.optional(), titreId: titreIdValidator })
 export type TitreDemandeOutput = z.infer<typeof titreDemandeOutputValidator>
+
+export const createAutomaticallyEtapeWhenCreatingTitre = (user: DeepReadonly<User>): boolean => isEntrepriseOrBureauDEtude(user)

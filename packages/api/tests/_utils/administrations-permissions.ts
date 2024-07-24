@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { ITitre } from '../../src/types'
 
-import { graphQLCall, queryImport, restPostCall } from './index'
+import { graphQLCall, queryImport, restNewPostCall, restPostCall } from './index'
 
 import Titres from '../../src/database/models/titres'
 import options from '../../src/database/queries/_options'
@@ -26,25 +26,24 @@ import { userSuper } from '../../src/database/user-super'
 import { defaultHeritageProps } from 'camino-common/src/etape-form'
 import { isNullOrUndefined } from 'camino-common/src/typescript-tools'
 import { HTTP_STATUS } from 'camino-common/src/http'
-import { entrepriseIdValidator } from 'camino-common/src/entreprise'
 import { titreCreate } from '../../src/database/queries/titres'
 
 const dir = `${process.cwd()}/files/tmp/`
 
-export const testDocumentCreateTemp = (typeId: DocumentTypeId) => {
+export const testDocumentCreateTemp = (typeId: DocumentTypeId): TempEtapeDocument => {
   const fileName = `existing_temp_file_${idGenerate()}`
   mkdirSync(dir, { recursive: true })
   copyFileSync(`./src/tools/small.pdf`, `${dir}/${fileName}`)
-  const documentToInsert: TempEtapeDocument = {
+
+  return {
     etape_document_type_id: typeId,
     entreprises_lecture: true,
     public_lecture: true,
     description: 'desc',
     temp_document_name: tempDocumentNameValidator.parse(fileName),
   }
-
-  return documentToInsert
 }
+
 export const visibleCheck = async (
   pool: Pool,
   administrationId: AdministrationId,
@@ -53,7 +52,7 @@ export const visibleCheck = async (
   titreTypeId: TitreTypeId,
   locale: boolean,
   etapeTypeId?: EtapeTypeId
-) => {
+): Promise<void> => {
   const titreQuery = queryImport('titre')
 
   const administration = sortedAdministrations.find(a => a.id === administrationId)!
@@ -106,19 +105,18 @@ export const visibleCheck = async (
   }
 }
 
-export const creationCheck = async (pool: Pool, administrationId: string, creer: boolean, cible: string, titreTypeId: TitreTypeId) => {
+export const creationCheck = async (pool: Pool, administrationId: string, creer: boolean, cible: string, titreTypeId: TitreTypeId): Promise<void> => {
   const administration = sortedAdministrations.find(a => a.id === administrationId)!
 
   if (cible === 'titres') {
     const titre = {
       nom: `${titreTypeId}-${cible}-admin-${administrationId}`,
-      typeId: titreTypeId,
+      titreTypeId,
       references: [],
       titreFromIds: [],
-      entrepriseId: entrepriseIdValidator.parse('idEntreprise'),
     }
 
-    const res = await restPostCall(
+    const res = await restNewPostCall(
       pool,
       '/rest/titres',
       {},

@@ -16,10 +16,11 @@ import { TitreReference } from 'camino-common/src/titres-references'
 import { DsfrButton } from './_ui/dsfr-button'
 import { useRouter } from 'vue-router'
 import { TitreId } from 'camino-common/src/validators/titres'
-import { TitreDemande, titreDemandeValidator } from 'camino-common/src/titres'
+import { createAutomaticallyEtapeWhenCreatingTitre, TitreDemande, TitreDemandeOutput, titreDemandeValidator } from 'camino-common/src/titres'
 import { entreprisesKey, userKey } from '@/moi'
-import { Alert } from './_ui/alert'
+import { Alert, CaminoApiAlert } from './_ui/alert'
 import { AutocompleteEntrepriseSingle } from './etape/autocomplete-entreprise-single'
+import { CaminoError } from 'camino-common/src/zod-tools'
 
 export const TitreCreation = defineComponent(() => {
   const router = useRouter()
@@ -35,7 +36,10 @@ export const TitreCreation = defineComponent(() => {
         ...apiClient,
         createTitre: async titreDemande => {
           const result = await apiClient.createTitre(titreDemande)
-          if ('etapeId' in result) {
+          if ('message' in result) {
+            return result
+          }
+          if (isNotNullNorUndefined(result.etapeId)) {
             await router.push({
               name: 'etapeEdition',
               params: { id: result.etapeId },
@@ -61,7 +65,7 @@ type Props = {
   initialValue?: TitreDemande
 }
 export const PureTitreCreation = defineComponent<Props>(props => {
-  const titreDemande = ref<Nullable<TitreDemande>>(props.initialValue ?? { entrepriseId: null, references: [], typeId: null, nom: null, titreFromIds: [] })
+  const titreDemande = ref<Nullable<TitreDemande>>(props.initialValue ?? { references: [], titreTypeId: null, nom: null, titreFromIds: [] })
 
   const titreLinkConfig = computed<TitresLinkConfig>(() => {
     if (linkConfig.value?.count === 'single') {
@@ -77,7 +81,7 @@ export const PureTitreCreation = defineComponent<Props>(props => {
     }
   })
 
-  const savingTitre = ref<AsyncData<void>>({ status: 'LOADED', value: undefined })
+  const savingTitre = ref<AsyncData<CaminoError<string> | TitreDemandeOutput | null>>({ status: 'LOADED', value: null })
 
   const entrepriseOuBureauDEtudeCheck = computed<boolean>(() => {
     return isEntreprise(props.user) || isBureauDEtudes(props.user)
@@ -85,23 +89,23 @@ export const PureTitreCreation = defineComponent<Props>(props => {
 
   const complete = computed(() => {
     return (
-      isNotNullNorUndefined(titreDemande.value.entrepriseId) &&
-      isNotNullNorUndefined(titreDemande.value.typeId) &&
+      (isNotNullNorUndefined(titreDemande.value.entrepriseId) || !createAutomaticallyEtapeWhenCreatingTitre(props.user)) &&
+      isNotNullNorUndefined(titreDemande.value.titreTypeId) &&
       isNotNullNorUndefined(titreDemande.value.nom) &&
       titreDemande.value.nom.trim().length > 0
     )
   })
 
   const linkConfig = computed(() => {
-    if (titreDemande.value.typeId) {
-      return getLinkConfig(titreDemande.value.typeId, [])
+    if (titreDemande.value.titreTypeId) {
+      return getLinkConfig(titreDemande.value.titreTypeId, [])
     }
 
     return null
   })
 
   const loadLinkableTitresByTypeId = computed<() => Promise<LinkableTitre[]>>(() => {
-    const titreTypeId = titreDemande.value.typeId
+    const titreTypeId = titreDemande.value.titreTypeId
     if (isNotNullNorUndefined(titreTypeId)) {
       return props.apiClient.loadLinkableTitres(titreTypeId, [])
     } else {
@@ -110,7 +114,7 @@ export const PureTitreCreation = defineComponent<Props>(props => {
   })
 
   onMounted(() => {
-    if (entreprises.length === 1) {
+    if (entreprises.length === 1 && createAutomaticallyEtapeWhenCreatingTitre(props.user)) {
       titreDemande.value.entrepriseId = entreprises[0].id
     }
   })
@@ -139,7 +143,7 @@ export const PureTitreCreation = defineComponent<Props>(props => {
     titreDemande.value = {
       entrepriseId,
       references: [],
-      typeId: null,
+      titreTypeId: null,
       nom: null,
       titreFromIds: [],
     }
@@ -150,8 +154,8 @@ export const PureTitreCreation = defineComponent<Props>(props => {
     if (parsed.success) {
       savingTitre.value = { status: 'LOADING' }
       try {
-        await props.apiClient.createTitre(parsed.data)
-        savingTitre.value = { status: 'LOADED', value: undefined }
+        const result = await props.apiClient.createTitre(parsed.data)
+        savingTitre.value = { status: 'LOADED', value: result }
       } catch (e: any) {
         console.error('error', e)
         savingTitre.value = {
@@ -163,7 +167,7 @@ export const PureTitreCreation = defineComponent<Props>(props => {
   }
 
   const onUpdateTitreTypeId = (titreTypeId: TitreTypeId | null) => {
-    titreDemande.value.typeId = titreTypeId
+    titreDemande.value.titreTypeId = titreTypeId
   }
 
   const onTitreNomChanged = (nom: string | null) => {
@@ -183,28 +187,34 @@ export const PureTitreCreation = defineComponent<Props>(props => {
           e.preventDefault()
         }}
       >
-        {isNonEmptyArray(entreprises) ? (
-          <div class="fr-mb-3w">
-            <label class="fr-label fr-mb-1w" for="input_entreprise">
-              Entreprise *
-            </label>
-            <AutocompleteEntrepriseSingle initialValue={titreDemande.value.entrepriseId} items={entreprises} onUpdate={entrepriseUpdate} id="input_entreprise" />
-          </div>
-        ) : (
-          <Alert class="fr-mb-1w" small={true} type="error" title="Aucune entreprise associée à cet utilisateur" />
-        )}
+        {createAutomaticallyEtapeWhenCreatingTitre(props.user) ? (
+          <>
+            {isNonEmptyArray(entreprises) ? (
+              <div class="fr-mb-3w">
+                <label class="fr-label fr-mb-1w" for="input_entreprise">
+                  Entreprise *
+                </label>
+                <AutocompleteEntrepriseSingle initialValue={titreDemande.value.entrepriseId} items={entreprises} onUpdate={entrepriseUpdate} id="input_entreprise" />
+              </div>
+            ) : (
+              <Alert class="fr-mb-1w" small={true} type="error" title="Aucune entreprise associée à cet utilisateur" />
+            )}
+          </>
+        ) : null}
 
-        {isNotNullNorUndefined(titreDemande.value.entrepriseId) ? <TitreTypeSelect onUpdateTitreTypeId={onUpdateTitreTypeId} titreTypeId={titreDemande.value.typeId} user={props.user} /> : null}
+        {isNotNullNorUndefined(titreDemande.value.entrepriseId) || !createAutomaticallyEtapeWhenCreatingTitre(props.user) ? (
+          <TitreTypeSelect onUpdateTitreTypeId={onUpdateTitreTypeId} titreTypeId={titreDemande.value.titreTypeId} user={props.user} />
+        ) : null}
 
-        {isNotNullNorUndefined(titreDemande.value.typeId) ? (
+        {isNotNullNorUndefined(titreDemande.value.titreTypeId) ? (
           <DsfrInput required={true} initialValue={titreDemande.value.nom} legend={{ main: 'Nom du titre' }} type={{ type: 'text' }} valueChanged={onTitreNomChanged} />
         ) : null}
 
-        {isNotNullNorUndefined(titreDemande.value.typeId) && !entrepriseOuBureauDEtudeCheck.value ? (
+        {isNotNullNorUndefined(titreDemande.value.titreTypeId) && !entrepriseOuBureauDEtudeCheck.value ? (
           <TitreReferenceSelect class="fr-mt-3w" initialValues={titreDemande.value.references ?? []} onUpdateReferences={onUpdateReferences} />
         ) : null}
 
-        {isNotNullNorUndefined(titreDemande.value.typeId) && isNotNullNorUndefined(linkConfig.value) ? (
+        {isNotNullNorUndefined(titreDemande.value.titreTypeId) && isNotNullNorUndefined(linkConfig.value) ? (
           <div class="fr-mt-3w">
             <label class="fr-label fr-mb-1w">Titre {linkConfig.value.count === 'multiple' ? 's' : ''} à l’origine de cette nouvelle demande</label>
             <TitresLink config={titreLinkConfig.value} loadLinkableTitres={loadLinkableTitresByTypeId.value} onSelectTitres={onSelectTitres} />
@@ -213,6 +223,7 @@ export const PureTitreCreation = defineComponent<Props>(props => {
 
         <div style={{ display: 'flex', alignItems: 'center' }} class="fr-mt-3w">
           <DsfrButton title="Enregistrer" onClick={save} disabled={!complete.value || savingTitre.value.status === 'LOADING'} type="submit" class="fr-mr-1w" />
+          {savingTitre.value.status === 'LOADED' && savingTitre.value.value !== null && 'message' in savingTitre.value.value ? <CaminoApiAlert caminoApiError={savingTitre.value.value} /> : null}
           <LoadingElement data={savingTitre.value} renderItem={() => null} />
         </div>
       </form>

@@ -155,7 +155,7 @@ export const CaminoRestRoutes = {
   '/rest/statistiques/granulatsMarins': { params: noParamsValidator, get: { output: statistiquesGranulatsMarinsValidator } },
   '/rest/statistiques/granulatsMarins/:annee': { params: z.object({ annee: caminoAnneeValidator }), get: { output: statistiquesGranulatsMarinsValidator } },
   '/rest/statistiques/datagouv': { params: noParamsValidator, get: { output: z.array(statistiquesDataGouvValidator) } },
-  '/rest/titres': { params: noParamsValidator, post: { input: titreDemandeValidator, output: titreDemandeOutputValidator } },
+  '/rest/titres': { params: noParamsValidator, newPost: { input: titreDemandeValidator, output: titreDemandeOutputValidator } },
   '/rest/titres/:titreId': { params: z.object({ titreId: titreIdOrSlugValidator }), get: { output: titreGetValidator }, delete: true, post: { output: z.void(), input: editableTitreValidator } },
   '/rest/titres/:titreId/abonne': { params: z.object({ titreId: titreIdValidator }), post: { input: utilisateurTitreAbonneValidator, output: z.void() }, get: { output: z.boolean() } },
   '/rest/titresONF': { params: noParamsValidator, get: { output: z.array(titreOnfValidator) } },

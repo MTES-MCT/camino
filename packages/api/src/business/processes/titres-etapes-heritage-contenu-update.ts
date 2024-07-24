@@ -9,7 +9,7 @@ import { DemarcheId } from 'camino-common/src/demarche'
 import { Pool } from 'pg'
 import { getDemarches } from './titres-etapes-heritage-contenu-update.queries'
 
-export const titresEtapesHeritageContenuUpdate = async (pool: Pool, user: UserNotNull, demarcheId?: DemarcheId) => {
+export const titresEtapesHeritageContenuUpdate = async (pool: Pool, user: DeepReadonly<UserNotNull>, demarcheId?: DemarcheId): Promise<string[]> => {
   console.info()
   console.info('héritage des contenus des étapes…')
 

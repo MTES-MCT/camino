@@ -130,7 +130,7 @@ const restRouteImplementations: Readonly<{ [key in CaminoRestRoute]: Transform<k
   '/config': { getCall: getConfig, ...CaminoRestRoutes['/config'] },
   '/rest/titres/:id/titreLiaisons': { getCall: getTitreLiaisons, postCall: postTitreLiaisons, ...CaminoRestRoutes['/rest/titres/:id/titreLiaisons'] },
   '/rest/etapesTypes/:demarcheId/:date': { getCall: getEtapesTypesEtapesStatusWithMainStep, ...CaminoRestRoutes['/rest/etapesTypes/:demarcheId/:date'] },
-  '/rest/titres': { postCall: titreDemandeCreer, ...CaminoRestRoutes['/rest/titres'] },
+  '/rest/titres': { newPostCall: titreDemandeCreer, ...CaminoRestRoutes['/rest/titres'] },
   '/rest/titres/:titreId': { deleteCall: removeTitre, postCall: updateTitre, getCall: getTitre, ...CaminoRestRoutes['/rest/titres/:titreId'] },
   '/rest/titres/:titreId/abonne': { postCall: utilisateurTitreAbonner, getCall: getUtilisateurTitreAbonner, ...CaminoRestRoutes['/rest/titres/:titreId/abonne'] },
   '/rest/titresONF': { getCall: titresONF, ...CaminoRestRoutes['/rest/titresONF'] },

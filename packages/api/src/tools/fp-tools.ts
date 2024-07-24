@@ -27,7 +27,7 @@ export const zodParseEffect = <T extends ZodTypeAny>(validator: T, item: unknown
   })
 }
 
-export const callAndExit = async <A, T>(toCall: Effect.Effect<A, CaminoError<string>, never>, success: (value: A) => Promise<T>) => {
+export const callAndExit = async <A, T>(toCall: Effect.Effect<A, CaminoError<string>, never>, success: (value: A) => Promise<T>): Promise<T> => {
   const pipeline = await pipe(toCall, Effect.runPromiseExit)
 
   if (Exit.isSuccess(pipeline)) {

@@ -15,7 +15,7 @@ import type { Pool } from 'pg'
 import { TitreId } from 'camino-common/src/validators/titres'
 import { DemarcheId } from 'camino-common/src/demarche'
 
-export const titreDemarcheUpdate = async (pool: Pool, titreDemarcheId: DemarcheId | null, titreId: TitreId) => {
+export const titreDemarcheUpdateTask = async (pool: Pool, titreDemarcheId: DemarcheId | null, titreId: TitreId): Promise<void> => {
   try {
     console.info()
     console.info('- - -')

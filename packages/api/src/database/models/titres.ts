@@ -3,11 +3,8 @@ import { Model, Pojo, QueryContext, ref } from 'objection'
 import { ITitre } from '../../types'
 import TitresDemarches from './titres-demarches'
 import TitresEtapes from './titres-etapes'
-import { idGenerate } from './_format/id-create'
-import { slugify } from 'camino-common/src/strings'
+import { idGenerate, newTitreSlug } from './_format/id-create'
 import TitresActivites from './titres-activites'
-import { getDomaineId, getTitreTypeType } from 'camino-common/src/static/titresTypes'
-import { titreSlugValidator } from 'camino-common/src/validators/titres'
 import { isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools'
 
 export interface DBTitre extends ITitre {
@@ -91,7 +88,7 @@ class Titres extends Model {
     }
 
     if (isNullOrUndefined(this.slug) && isNotNullNorUndefined(this.typeId) && isNotNullNorUndefined(this.nom)) {
-      this.slug = titreSlugValidator.parse(`${getDomaineId(this.typeId)}-${getTitreTypeType(this.typeId)}-${slugify(this.nom)}-${idGenerate(4)}`)
+      this.slug = newTitreSlug(this.typeId, this.nom)
     }
 
     return super.$beforeInsert(context)
