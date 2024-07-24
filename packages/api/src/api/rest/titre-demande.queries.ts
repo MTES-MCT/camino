@@ -33,9 +33,7 @@ export const createTitre = (pool: Pool, user: DeepReadonly<User>, titreInput: De
         catch: unknown => ({ message: creationTitreImpossible, extra: unknown }),
       })
     ),
-    Effect.bind('result', ({ id, slug }) => {
-      return effectDbQueryAndValidate(createTitreInternal, { ...titreInput, id, slug, references: JSON.stringify(titreInput.references) }, pool, z.void())
-    }),
+    Effect.tap(({ id, slug }) => effectDbQueryAndValidate(createTitreInternal, { ...titreInput, id, slug, references: JSON.stringify(titreInput.references) }, pool, z.void())),
     Effect.map(({ id }) => id)
   )
 
@@ -55,9 +53,7 @@ export const createDemarche = (pool: Pool, titreId: TitreId, demarcheTypeId: Dem
         catch: unknown => ({ message: creationDemarcheImpossible, extra: unknown }),
       })
     ),
-    Effect.bind('result', ({ id, slug }) => {
-      return effectDbQueryAndValidate(createTitreDemarcheInternal, { id, slug, titre_id: titreId, demarcheTypeId }, pool, z.void())
-    }),
+    Effect.tap(({ id, slug }) => effectDbQueryAndValidate(createTitreDemarcheInternal, { id, slug, titre_id: titreId, demarcheTypeId }, pool, z.void())),
     Effect.map(({ id }) => id)
   )
 }
