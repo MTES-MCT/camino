@@ -63,7 +63,9 @@ describe('Common Storybook Tests', async () => {
         }
 
         global.ResizeObserver = ResizeObserver
-        const mounted = render(value.story(), {
+        const storyComponent = value.story()
+
+        const mounted = render('type' in storyComponent && typeof storyComponent.type === 'function' ? storyComponent.type() : storyComponent, {
           global: {
             components: { 'router-link': (props, { slots }) => h('a', { ...props, type: 'primary', to: JSON.stringify(props.to).replaceAll('"', '') }, slots) },
           },
