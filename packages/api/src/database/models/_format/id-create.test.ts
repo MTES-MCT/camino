@@ -1,6 +1,7 @@
 import { test, expect } from 'vitest'
-import { idGenerate, newEtapeDocumentId, newTitreSlug } from './id-create'
+import { idGenerate, newDemarcheSlug, newEtapeDocumentId, newTitreSlug } from './id-create'
 import { toCaminoDate } from 'camino-common/src/date'
+import { titreIdValidator } from 'camino-common/src/validators/titres'
 
 test('idGenerate', () => {
   expect(idGenerate()).toHaveLength(24)
@@ -12,4 +13,7 @@ test('newDocumentId', () => {
 })
 test('newTitreSlug', () => {
   expect(newTitreSlug('apc', 'nom')).toHaveLength(13)
+})
+test('newDemarcheSlug', () => {
+  expect(newDemarcheSlug(titreIdValidator.parse('titreId'), 'oct')).toBe('titreId-oct99')
 })
