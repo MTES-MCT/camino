@@ -175,7 +175,7 @@ const procedureSimplifieeMachine = createMachine({
     },
     RENDRE_DECISION_ADMINISTRATION_REJETEE: {
       guard: ({ context, event }) => isBefore(event.date, procedureHistoriqueDateMax) && context.demarcheStatut === defaultDemarcheStatut,
-      target: '.finDeMachine',
+      target: '.publicationAuJorfApresRejetAFaire',
       actions: assign({
         visibilite: 'confidentielle',
         demarcheStatut: DemarchesStatutsIds.Rejete,
@@ -276,6 +276,11 @@ const procedureSimplifieeMachine = createMachine({
             actions: assign({ demarcheStatut: DemarchesStatutsIds.RejeteApresAbrogation }),
           },
         ],
+      },
+    },
+    publicationAuJorfApresRejetAFaire: {
+      on: {
+        PUBLIER_DECISION_ACCEPTEE_AU_JORF: 'finDeMachine',
       },
     },
     abrogationAFaire: {

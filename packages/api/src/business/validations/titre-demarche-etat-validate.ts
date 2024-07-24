@@ -111,7 +111,7 @@ export const getPossiblesEtapesTypes = (
   demarcheEtapes: Pick<ITitreEtape, 'typeId' | 'date' | 'isBrouillon' | 'id' | 'ordre' | 'statutId' | 'communes'>[]
 ): EtapeTypeEtapeStatutWithMainStep[] => {
   const etapesTypes: EtapeTypeEtapeStatutWithMainStep[] = []
-  if (demarcheDefinition) {
+  if (isNotNullNorUndefined(demarcheDefinition)) {
     const etapes = demarcheEtapes.map(etape => titreEtapeForMachineValidator.parse(etape))
 
     etapesTypes.push(...etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(demarcheDefinition.machine, etapes, etapeId ?? null, date))

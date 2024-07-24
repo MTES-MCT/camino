@@ -3,10 +3,10 @@
 
 import { Knex } from 'knex'
 
-export const up = async (knex: Knex) => {
+export const up = async (knex: Knex): Promise<void> => {
   await knex.schema.dropTable('nexistepasEtVaFairePlanterLaMigration')
 
-  return knex.schema.dropTable('nexistepasEtVaFairePlanterLaMigration')
+  await knex.schema.dropTable('nexistepasEtVaFairePlanterLaMigration')
 }
 
-export const down = () => ({})
+export const down = (): void => {}
