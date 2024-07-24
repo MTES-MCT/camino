@@ -44,5 +44,6 @@ export const Link: StoryFn = () => (
     <DsfrLink buttonType="primary" icon={null} disabled={false} title="Titre" to={{ name: 'dashboard', params: {} }} />
     <DsfrLink buttonType="primary" disabled={false} icon="fr-icon-alert-fill" title="Titre" to={{ name: 'dashboard', params: {} }} />
     <DsfrLink buttonType="primary" disabled={false} icon="fr-icon-alert-fill" title="Titre" to={{ name: 'dashboard', params: {} }} label={null} />
+    <DsfrLink breadcrumb={true} disabled={false} icon={null} title="Titre" to={{ name: 'dashboard', params: {} }} label={null} />
   </div>
 )
