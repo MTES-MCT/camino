@@ -82,12 +82,8 @@ export const DecisionJorf: StoryFn = () => (
           },
           jorf: {
             value: null,
-            heritee: true,
-            etapeHeritee: {
-              etapeTypeId: 'dex',
-              date: toCaminoDate('2000-05-16'),
-              value: null,
-            },
+            heritee: false,
+            etapeHeritee: null,
           },
         },
       },
