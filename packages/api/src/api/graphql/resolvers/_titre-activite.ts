@@ -1,96 +1,16 @@
-import { IContenu, IContenuValeur, ITitreActivite, IUtilisateur } from '../../../types'
+import { IContenu, ITitreActivite, IUtilisateur } from '../../../types'
 
-import { emailsSend } from '../../../tools/api-mailjet/emails'
-import { titreUrlGet } from '../../../business/utils/urls-get'
+import { emailsWithTemplateSend } from '../../../tools/api-mailjet/emails'
+import { activiteUrlGet } from '../../../business/utils/urls-get'
 import { UserNotNull } from 'camino-common/src/roles'
 import { getPeriode } from 'camino-common/src/static/frequence'
 import { ADMINISTRATION_TYPE_IDS, AdministrationId, Administrations } from 'camino-common/src/static/administrations'
 import { dateFormat } from 'camino-common/src/date'
-import { getElementValeurs, Section, SectionElement } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections'
-import { DeepReadonly, NonEmptyArray, isNotNullNorUndefinedNorEmpty, isNullOrUndefined, isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools'
+import { NonEmptyArray, isNotNullNorUndefinedNorEmpty, isNullOrUndefined, isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools'
 import { ActivitesTypes } from 'camino-common/src/static/activitesTypes'
 import { GetActiviteTypeEmailsByAdministrationIds, getActiviteTypeEmailsByAdministrationIds } from '../../rest/administrations.queries'
 import { Pool } from 'pg'
-
-const elementHtmlBuild = (sectionId: string, element: DeepReadonly<SectionElement>, contenu: IContenu) =>
-  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-  contenu[sectionId] && ((contenu[sectionId][element.id] as IContenuValeur) || (contenu[sectionId][element.id] as IContenuValeur) === 0 || (contenu[sectionId][element.id] as IContenuValeur) === false)
-    ? `<li><strong>${isNotNullNorUndefinedNorEmpty(element.nom) ? element.nom + ' : ' : ''}</strong>${
-        element.type === 'select'
-          ? (contenu[sectionId][element.id] as string[])
-              .reduce((valeurs: string[], id) => {
-                const valeur = getElementValeurs(element).find(v => v.id === id)
-
-                if (isNotNullNorUndefinedNorEmpty(valeur?.nom)) {
-                  valeurs.push(valeur.nom)
-                }
-
-                return valeurs
-              }, [])
-              .join(', ')
-          : contenu[sectionId][element.id]
-      } <br><small>${element.description ?? ''}</small></li>`
-    : `<li>–</li>`
-
-const elementsHtmlBuild = (sectionId: string, elements: DeepReadonly<SectionElement[]>, contenu: IContenu) =>
-  isNotNullNorUndefinedNorEmpty(elements)
-    ? elements.reduce(
-        (html, element) => `
-${html}
-
-${elementHtmlBuild(sectionId, element, contenu)}
-`,
-        ''
-      )
-    : ''
-
-const sectionHtmlBuild = ({ id, nom, elements }: DeepReadonly<Section>, contenu: IContenu) => {
-  const sectionNomHtml = isNotNullNorUndefinedNorEmpty(nom) ? `<h2>${nom}</h2>` : ''
-
-  const listHtml = isNotNullNorUndefinedNorEmpty(elements)
-    ? `<ul>
-  ${elementsHtmlBuild(id, elements, contenu)}
-</ul>`
-    : ''
-
-  return `
-${sectionNomHtml}
-${listHtml}
-    `
-}
-
-const titreActiviteEmailFormat = ({ contenu, titreId, dateSaisie, sections }: ITitreActivite, emailTitle: string, user: UserNotNull) => {
-  const titreUrl = titreUrlGet(titreId)
-
-  const header = `
-<h1>${emailTitle}</h1>
-
-<hr>
-
-<b>Lien</b> : ${titreUrl} <br>
-<b>Rempli par</b> : ${user.prenom} ${user.nom} (${user.email}) <br>
-<b>Date de dépôt</b> : ${dateSaisie ? dateFormat(dateSaisie) : ''} <br>
-
-<hr>
-`
-
-  const body =
-    isNotNullNorUndefinedNorEmpty(sections) && contenu
-      ? sections.reduce(
-          (res, section) => `
-${res}
-
-${sectionHtmlBuild(section, contenu)}
-`,
-          ''
-        )
-      : ''
-
-  return `
-${header}
-${body}
-`
-}
+import { EmailTemplateId } from '../../../tools/api-mailjet/types'
 
 const titreActiviteEmailTitleFormat = (activite: ITitreActivite, titreNom: string): string => {
   const activiteType = ActivitesTypes[activite.typeId]
@@ -168,7 +88,7 @@ export const titreActiviteEmailsSend = async (
   utilisateurs: IUtilisateur[] | undefined | null,
   administrationIds: NonEmptyArray<AdministrationId>,
   pool: Pool
-) => {
+): Promise<void> => {
   const emails = titreActiviteUtilisateursEmailsGet(utilisateurs)
 
   const administrationsActivitesTypesEmails = await getActiviteTypeEmailsByAdministrationIds(pool, administrationIds)
@@ -177,7 +97,11 @@ export const titreActiviteEmailsSend = async (
     return
   }
   const subject = titreActiviteEmailTitleFormat(activite, titreNom)
-  const content = titreActiviteEmailFormat(activite, subject, user)
 
-  await emailsSend(emails, subject, content)
+  await emailsWithTemplateSend([...emails], EmailTemplateId.ACTIVITES_DECLARATION, {
+    emailObject: subject,
+    activiteUser: `${user.nom} ${user.prenom}`,
+    activiteDateUpdated: dateFormat(activite.dateSaisie),
+    activiteUrl: activiteUrlGet(activite.id),
+  })
 }

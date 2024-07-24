@@ -1,7 +1,10 @@
+import { TitreId } from 'camino-common/src/validators/titres'
 import { config } from '../../config/index'
 import { GetActivitesInput } from './filters'
+import { ActiviteId } from 'camino-common/src/activite'
 
-export const titreUrlGet = (titreId: string) => `${config().OAUTH_URL}/titres/${titreId}`
+export const titreUrlGet = (titreId: TitreId): string => `${config().OAUTH_URL}/titres/${titreId}`
+export const activiteUrlGet = (activiteId: ActiviteId): string => `${config().OAUTH_URL}/activites/${activiteId}`
 
 export type ActivitesUrlGetParams = Pick<GetActivitesInput, 'activiteTypesIds' | 'activiteStatutsIds' | 'annees'>
 
