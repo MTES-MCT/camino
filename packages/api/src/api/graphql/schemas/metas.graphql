@@ -20,7 +20,6 @@ type TitreType {
   domaineId: String!
   domaine: Domaine!
   typeId: String!
-  type: TitreTypeType!
   archive: Boolean
 }
 

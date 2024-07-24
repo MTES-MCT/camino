@@ -320,5 +320,3 @@ export const getEtapesStatuts = (etapeTypeIdToFind: EtapeTypeId): EtapeStatut[] 
 
   return []
 }
-
-export const etapesTypesEtapesStatutsMetas = Object.values(EtapesTypesEtapesStatuts).flatMap(stuff => Object.values(stuff))

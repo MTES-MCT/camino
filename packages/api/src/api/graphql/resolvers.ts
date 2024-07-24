@@ -26,11 +26,12 @@ import {
   regions,
   departements,
   pays,
+  titresTypesTitresStatuts,
+  etapesTypesDocumentsTypes,
+  titresTypes,
 } from './resolvers/metas'
 
 import { activitesTypes, activitesStatuts } from './resolvers/metas-activites'
-
-import { titresTypes, titresTypesTitresStatuts, etapesTypesDocumentsTypes } from './resolvers/metas-join'
 
 import { substances } from './resolvers/substances'
 

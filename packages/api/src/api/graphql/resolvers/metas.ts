@@ -1,4 +1,3 @@
-import { demarchesStatutsGet, devisesGet } from '../../../database/queries/metas'
 import { sortedGeoSystemes } from 'camino-common/src/static/geoSystemes'
 import { UNITES } from 'camino-common/src/static/unites'
 import { Pays, PaysList } from 'camino-common/src/static/pays'
@@ -14,8 +13,13 @@ import { sortedDomaines } from 'camino-common/src/static/domaines'
 import { sortedTitreTypesTypes } from 'camino-common/src/static/titresTypesTypes'
 import { sortedDocumentTypes } from 'camino-common/src/static/documentsTypes'
 import { config } from '../../../config/index'
+import { titreTypesStatutsTitresPublicLecture } from 'camino-common/src/static/titresTypes_titresStatuts'
+import { TitresTypes } from 'camino-common/src/static/titresTypes'
+import { sortedDemarchesStatuts } from 'camino-common/src/static/demarchesStatuts'
+import { sortedDevises } from 'camino-common/src/static/devise'
+import { toDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/documents'
 
-export const devises = async () => devisesGet()
+export const devises = () => sortedDevises
 
 export const geoSystemes = () => sortedGeoSystemes
 
@@ -33,15 +37,7 @@ export const statuts = () => titresStatutsArray
 
 export const demarchesTypes = () => sortedDemarchesTypes
 
-export const demarchesStatuts = async () => {
-  try {
-    return await demarchesStatutsGet()
-  } catch (e) {
-    console.error(e)
-
-    throw e
-  }
-}
+export const demarchesStatuts = () => sortedDemarchesStatuts
 
 export const etapesStatuts = () => Object.values(EtapesStatuts)
 
@@ -52,15 +48,7 @@ export const version = () => config().APPLICATION_VERSION
  *
  * @returns un tableau de types d'administrations
  */
-export const administrationsTypes = () => {
-  try {
-    return sortedAdministrationTypes
-  } catch (e) {
-    console.error(e)
-
-    throw e
-  }
-}
+export const administrationsTypes = () => sortedAdministrationTypes
 
 export const pays = (): Pays[] => Object.values(PaysList)
 
@@ -69,3 +57,9 @@ export const departements = (): Departement[] => Object.values(Departements)
 export const regions = (): Region[] => Object.values(Regions)
 
 export const phasesStatuts = () => staticPhasesStatuts
+
+export const titresTypes = () => Object.values(TitresTypes)
+
+export const titresTypesTitresStatuts = () => titreTypesStatutsTitresPublicLecture
+
+export const etapesTypesDocumentsTypes = () => toDocuments()
