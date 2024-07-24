@@ -6,7 +6,7 @@ import { linkTitres } from '../../database/queries/titres-titres.queries'
 import { canCreateTitre } from 'camino-common/src/permissions/titres'
 import { checkTitreLinks } from '../../business/validations/titre-links-validate'
 import { DeepReadonly, isNotNullNorUndefinedNorEmpty, isNullOrUndefined, isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools'
-import { TitreDemande, TitreDemandeOutput } from 'camino-common/src/titres'
+import { createAutomaticallyEtapeWhenCreatingTitre, TitreDemande, TitreDemandeOutput } from 'camino-common/src/titres'
 import { HTTP_STATUS } from 'camino-common/src/http'
 import { Pool } from 'pg'
 import { ETAPE_IS_BROUILLON } from 'camino-common/src/etape'
@@ -102,7 +102,7 @@ export const titreDemandeCreer = (
       })
     }),
     Effect.flatMap(({ titreId, demarcheId }) => {
-      if (isEntrepriseOrBureauDEtude(user)) {
+      if (createAutomaticallyEtapeWhenCreatingTitre(user)) {
         return pipe(
           Effect.tryPromise({
             try: async () => {
