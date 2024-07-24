@@ -19,6 +19,15 @@ type RendreDecisionAdministrationRejetee = {
   type: 'RENDRE_DECISION_ADMINISTRATION_REJETEE'
 }
 
+type PublierDecisionAccepteeAuJORF = {
+  date: CaminoDate
+  type: 'PUBLIER_DECISION_ACCEPTEE_AU_JORF'
+}
+type PublierDecisionAuRecueilDesActesAdministratifs = {
+  date: CaminoDate
+  type: 'PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS'
+}
+
 type ParticipationDuPublic = {
   status: EtapeStatutId
   type: 'OUVRIR_PARTICIPATION_DU_PUBLIC'
@@ -31,8 +40,8 @@ type ProcedureSimplifieeXStateEvent =
   | RendreDecisionAdministrationAcceptee
   | RendreDecisionAdministrationRejetee
   | SaisirInformationHistoriqueIncomplete
-  | { type: 'PUBLIER_DECISION_ACCEPTEE_AU_JORF' }
-  | { type: 'PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS' }
+  | PublierDecisionAccepteeAuJORF
+  | PublierDecisionAuRecueilDesActesAdministratifs
   | { type: 'CLASSER_SANS_SUITE' }
   | { type: 'DESISTER_PAR_LE_DEMANDEUR' }
   | { type: 'DEMANDER_INFORMATION' }
@@ -71,6 +80,8 @@ export class ProcedureSimplifieeMachine extends CaminoMachine<ProcedureSimplifie
       case 'RENDRE_DECISION_ADMINISTRATION_ACCEPTEE':
       case 'RENDRE_DECISION_ADMINISTRATION_REJETEE':
       case 'SAISIR_INFORMATION_HISTORIQUE_INCOMPLETE':
+      case 'PUBLIER_DECISION_ACCEPTEE_AU_JORF':
+      case 'PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS':
         return [{ type: event, date }]
       case 'OUVRIR_PARTICIPATION_DU_PUBLIC':
         return [
@@ -79,9 +90,6 @@ export class ProcedureSimplifieeMachine extends CaminoMachine<ProcedureSimplifie
           { type: event, status: ETAPES_STATUTS.TERMINE },
         ]
       default:
-        // related to https://github.com/microsoft/TypeScript/issues/46497  https://github.com/microsoft/TypeScript/issues/40803 :(
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
         return [{ type: event }]
     }
   }
@@ -96,6 +104,8 @@ export class ProcedureSimplifieeMachine extends CaminoMachine<ProcedureSimplifie
     if (entry) {
       const eventFromEntry = entry[0]
       switch (eventFromEntry) {
+        case 'PUBLIER_DECISION_ACCEPTEE_AU_JORF':
+        case 'PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS':
         case 'SAISIR_INFORMATION_HISTORIQUE_INCOMPLETE':
         case 'RENDRE_DECISION_ADMINISTRATION_ACCEPTEE':
         case 'RENDRE_DECISION_ADMINISTRATION_REJETEE': {
@@ -139,6 +149,22 @@ const procedureSimplifieeMachine = createMachine({
       actions: assign({
         visibilite: 'publique',
         demarcheStatut: DemarchesStatutsIds.Accepte,
+      }),
+    },
+    PUBLIER_DECISION_ACCEPTEE_AU_JORF: {
+      guard: ({ context, event }) => isBefore(event.date, procedureIncompleteDateMax) && context.demarcheStatut === defaultDemarcheStatut,
+      target: '.abrogationAFaire',
+      actions: assign({
+        visibilite: 'publique',
+        demarcheStatut: DemarchesStatutsIds.AccepteEtPublie,
+      }),
+    },
+    PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS: {
+      guard: ({ context, event }) => isBefore(event.date, procedureIncompleteDateMax) && context.demarcheStatut === defaultDemarcheStatut,
+      target: '.abrogationAFaire',
+      actions: assign({
+        visibilite: 'publique',
+        demarcheStatut: DemarchesStatutsIds.AccepteEtPublie,
       }),
     },
     SAISIR_INFORMATION_HISTORIQUE_INCOMPLETE: {

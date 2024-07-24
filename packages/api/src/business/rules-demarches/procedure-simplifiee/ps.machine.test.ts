@@ -30,6 +30,8 @@ describe('vérifie l’arbre des procédures historiques et simplifiées', () =>
       'RENDRE_DECISION_ADMINISTRATION_ACCEPTEE',
       'RENDRE_DECISION_ADMINISTRATION_REJETEE',
       'SAISIR_INFORMATION_HISTORIQUE_INCOMPLETE',
+      'PUBLIER_DECISION_ACCEPTEE_AU_JORF',
+      'PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS',
     ])
     expect(service.getSnapshot().context.demarcheStatut).toBe(DemarchesStatutsIds.EnConstruction)
   })
@@ -40,6 +42,14 @@ describe('vérifie l’arbre des procédures historiques et simplifiées', () =>
     expect(service.getSnapshot().context.demarcheStatut).toBe(DemarchesStatutsIds.Accepte)
     expect(service.getSnapshot().context.visibilite).toBe('confidentielle')
   })
+
+  test('peut publier une démarche historique incomplète', () => {
+    const { service, dateFin } = setDateAndOrderAndInterpretMachine(psMachine, '1999-04-14', [ETES.publicationDeDecisionAuJORF.FAIT])
+    expect(service).canOnlyTransitionTo({ machine: psMachine, date: dateFin }, ['FAIRE_ABROGATION'])
+    expect(service.getSnapshot().context.demarcheStatut).toBe(DemarchesStatutsIds.AccepteEtPublie)
+    expect(service.getSnapshot().context.visibilite).toBe('publique')
+  })
+
   test('peut créer une "mfr"', () => {
     const etapes = [ETES.demande.FAIT]
     const { service, dateFin } = setDateAndOrderAndInterpretMachine(psMachine, '2022-04-14', etapes)
