@@ -1,9 +1,9 @@
 import { describe, expect, test } from 'vitest'
-import { AdministrationId } from '../static/administrations.js'
-import { canEditDemarche, canCreateTravaux, canDeleteDemarche, canCreateDemarche } from './titres-demarches.js'
-import { testBlankUser, TestUser } from '../tests-utils.js'
-import { TitresStatutIds } from '../static/titresStatuts.js'
-import { caminoDateValidator } from '../date.js'
+import { AdministrationId } from '../static/administrations'
+import { canEditDemarche, canCreateTravaux, canDeleteDemarche, canCreateDemarche } from './titres-demarches'
+import { testBlankUser, TestUser } from '../tests-utils'
+import { TitresStatutIds } from '../static/titresStatuts'
+import { caminoDateValidator } from '../date'
 
 describe('canEditDemarche', () => {
   test.each<[AdministrationId, boolean]>([

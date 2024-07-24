@@ -1,5 +1,5 @@
 import { test, expect } from 'vitest'
-import { sirenValidator } from './entreprise.js'
+import { sirenValidator } from './entreprise'
 
 test('sirenValidator', () => {
   expect(sirenValidator.safeParse('123456789').success).toBe(true)

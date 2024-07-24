@@ -1,6 +1,6 @@
-import { isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
-import { config } from '../../config/index.js'
-import { mailjet } from './index.js'
+import { isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools'
+import { config } from '../../config/index'
+import { mailjet } from './index'
 
 interface IContactListAdd {
   ListID: number

@@ -1,10 +1,10 @@
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable sql/no-unsafe-query */
 
-import { CaminoDate, daysBetween } from 'camino-common/src/date.js'
-import { DemarcheId } from 'camino-common/src/demarche.js'
-import { EtapeId } from 'camino-common/src/etape.js'
-import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
+import { CaminoDate, daysBetween } from 'camino-common/src/date'
+import { DemarcheId } from 'camino-common/src/demarche'
+import { EtapeId } from 'camino-common/src/etape'
+import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
 import { Knex } from 'knex'
 
 export const up = async (knex: Knex) => {

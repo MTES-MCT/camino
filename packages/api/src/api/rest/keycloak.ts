@@ -1,7 +1,7 @@
 import { Pool } from 'pg'
 import { CaminoRequest, CustomResponse } from './express-type'
-import { config } from '../../config/index.js'
-import { isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
+import { config } from '../../config/index'
+import { isNullOrUndefined } from 'camino-common/src/typescript-tools'
 
 export const logout = (_pool: Pool) => async (req: CaminoRequest, res: CustomResponse<string>) => {
   const authorizationToken = req.header('authorization')

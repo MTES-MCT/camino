@@ -1,6 +1,6 @@
 /* eslint-disable no-restricted-syntax */
 import { sql } from '@pgtyped/runtime'
-import { Redefine, dbQueryAndValidate } from '../../pg-database.js'
+import { Redefine, dbQueryAndValidate } from '../../pg-database'
 import {
   ICheckEntreprisesExistQueryQuery,
   IDeleteEntrepriseDocumentQueryQuery,
@@ -10,7 +10,7 @@ import {
   IGetEntreprisesDbQuery,
   IGetLargeobjectIdByEntrepriseDocumentIdInternalQuery,
   IInsertEntrepriseDocumentInternalQuery,
-} from './entreprises.queries.types.js'
+} from './entreprises.queries.types'
 import {
   EntrepriseDocument,
   EntrepriseDocumentId,
@@ -19,13 +19,13 @@ import {
   entrepriseDocumentValidator,
   entrepriseIdValidator,
   entrepriseValidator,
-} from 'camino-common/src/entreprise.js'
-import { EntrepriseDocumentTypeId } from 'camino-common/src/static/documentsTypes.js'
-import { CaminoDate } from 'camino-common/src/date.js'
-import { DeepReadonly, NonEmptyArray, isNonEmptyArray, onlyUnique } from 'camino-common/src/typescript-tools.js'
+} from 'camino-common/src/entreprise'
+import { EntrepriseDocumentTypeId } from 'camino-common/src/static/documentsTypes'
+import { CaminoDate } from 'camino-common/src/date'
+import { DeepReadonly, NonEmptyArray, isNonEmptyArray, onlyUnique } from 'camino-common/src/typescript-tools'
 import { Pool } from 'pg'
-import { canSeeEntrepriseDocuments } from 'camino-common/src/permissions/entreprises.js'
-import { roleValidator, User } from 'camino-common/src/roles.js'
+import { canSeeEntrepriseDocuments } from 'camino-common/src/permissions/entreprises'
+import { roleValidator, User } from 'camino-common/src/roles'
 import { z } from 'zod'
 
 const dummy = ['dummy'] as const

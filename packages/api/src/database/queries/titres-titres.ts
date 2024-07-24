@@ -1,5 +1,5 @@
-import TitresTitres from '../models/titres--titres.js'
-import { TitreId } from 'camino-common/src/validators/titres.js'
+import TitresTitres from '../models/titres--titres'
+import { TitreId } from 'camino-common/src/validators/titres'
 
 interface LinkTitre {
   linkTo: TitreId

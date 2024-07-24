@@ -1,11 +1,11 @@
 import { assign, createMachine } from 'xstate'
-import { EtapesTypesEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStatuts.js'
-import { CaminoMachine } from '../machine-helper.js'
-import { CaminoCommonContext, DBEtat, Etape } from '../machine-common.js'
-import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts.js'
-import { CaminoDate, dateAddMonths, daysBetween } from 'camino-common/src/date.js'
-import { PAYS_IDS, PaysId, isGuyane, isMetropole, isOutreMer } from 'camino-common/src/static/pays.js'
-import { ETAPES_STATUTS, EtapeStatutId } from 'camino-common/src/static/etapesStatuts.js'
+import { EtapesTypesEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStatuts'
+import { CaminoMachine } from '../machine-helper'
+import { CaminoCommonContext, DBEtat, Etape } from '../machine-common'
+import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts'
+import { CaminoDate, dateAddMonths, daysBetween } from 'camino-common/src/date'
+import { PAYS_IDS, PaysId, isGuyane, isMetropole, isOutreMer } from 'camino-common/src/static/pays'
+import { ETAPES_STATUTS, EtapeStatutId } from 'camino-common/src/static/etapesStatuts'
 
 type RendreAvisMiseEnConcurrentJORF = {
   date: CaminoDate

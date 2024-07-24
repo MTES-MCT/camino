@@ -1,10 +1,10 @@
-import { EntrepriseId } from 'camino-common/src/entreprise.js'
-import { isSuper, isAdministration, isEntrepriseOrBureauDEtude, User } from 'camino-common/src/roles.js'
-import { AdministrationId } from 'camino-common/src/static/administrations.js'
-import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
-import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes.js'
-import { SimplePromiseFn } from 'camino-common/src/typescript-tools.js'
-import { canReadTitre } from 'camino-common/src/permissions/titres.js'
+import { EntrepriseId } from 'camino-common/src/entreprise'
+import { isSuper, isAdministration, isEntrepriseOrBureauDEtude, User } from 'camino-common/src/roles'
+import { AdministrationId } from 'camino-common/src/static/administrations'
+import { TitreTypeId } from 'camino-common/src/static/titresTypes'
+import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
+import { SimplePromiseFn } from 'camino-common/src/typescript-tools'
+import { canReadTitre } from 'camino-common/src/permissions/titres'
 
 export type CanReadDemarche = { public_lecture: boolean; entreprises_lecture: boolean; titre_public_lecture: boolean; demarche_type_id: DemarcheTypeId }
 

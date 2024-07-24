@@ -1,9 +1,9 @@
-import { ITitreDemarche, ITitreEtape } from '../../types.js'
-import { titreDemarcheStatutIdFind } from '../rules/titre-demarche-statut-id-find.js'
-import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
-import { titrePhasesFind } from '../rules/titre-phases-find.js'
-import { CaminoDate } from 'camino-common/src/date.js'
-import { titreEtapeForMachineValidator } from '../rules-demarches/machine-common.js'
+import { ITitreDemarche, ITitreEtape } from '../../types'
+import { titreDemarcheStatutIdFind } from '../rules/titre-demarche-statut-id-find'
+import { TitreTypeId } from 'camino-common/src/static/titresTypes'
+import { titrePhasesFind } from '../rules/titre-phases-find'
+import { CaminoDate } from 'camino-common/src/date'
+import { titreEtapeForMachineValidator } from '../rules-demarches/machine-common'
 
 /**
  * Filtre les étapes antérieures à une date

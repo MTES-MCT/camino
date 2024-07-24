@@ -1,14 +1,14 @@
 import { QueryBuilder } from 'objection'
 
-import { stringSplit } from './_utils.js'
+import { stringSplit } from './_utils'
 
-import Titres from '../models/titres.js'
-import TitresDemarches from '../models/titres-demarches.js'
-import TitresActivites from '../models/titres-activites.js'
-import { DepartementId, departements as departementsStatic, isDepartementId } from 'camino-common/src/static/departement.js'
-import { RegionId } from 'camino-common/src/static/region.js'
-import { FacadesMaritimes, getSecteurs } from 'camino-common/src/static/facades.js'
-import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, onlyUnique } from 'camino-common/src/typescript-tools.js'
+import Titres from '../models/titres'
+import TitresDemarches from '../models/titres-demarches'
+import TitresActivites from '../models/titres-activites'
+import { DepartementId, departements as departementsStatic, isDepartementId } from 'camino-common/src/static/departement'
+import { RegionId } from 'camino-common/src/static/region'
+import { FacadesMaritimes, getSecteurs } from 'camino-common/src/static/facades'
+import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, onlyUnique } from 'camino-common/src/typescript-tools'
 
 type ITitreTableName = 'titres' | 'titre'
 type ITitreRootName = 'titres' | 'titresDemarches' | 'titresActivites'
@@ -144,8 +144,8 @@ export const titresFiltersQueryModify = (
 
     q.joinRaw(`join titres_etapes as communes_points_etapes on communes_points_etapes.id = ${name}."props_titre_etapes_ids" #>> '{points}'`)
     q.whereRaw(
-      `exists (select 1 
-        from jsonb_array_elements(communes_points_etapes.communes) communes_filter_communes 
+      `exists (select 1
+        from jsonb_array_elements(communes_points_etapes.communes) communes_filter_communes
         join communes as communes_filter_communes_communes on communes_filter_communes->>'id' = communes_filter_communes_communes.id
       where ${communesArray.map(() => 'lower(communes_filter_communes_communes.nom) like ? OR communes_filter_communes_communes.id = ?').join(' or ')})`,
       [...communesArray.flatMap(t => [`%${t.toLowerCase()}%`, t])]

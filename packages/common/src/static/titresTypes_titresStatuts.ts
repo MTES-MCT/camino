@@ -1,6 +1,6 @@
-import { isNotNullNorUndefined, getKeys } from '../typescript-tools.js'
-import { TitresStatutIds, TitreStatutId } from './titresStatuts.js'
-import { TITRES_TYPES_IDS, TitreTypeId, isTitreType } from './titresTypes.js'
+import { isNotNullNorUndefined, getKeys } from '../typescript-tools'
+import { TitresStatutIds, TitreStatutId } from './titresStatuts'
+import { TITRES_TYPES_IDS, TitreTypeId, isTitreType } from './titresTypes'
 
 export const titrePublicFind = (titreStatutId: TitreStatutId, titreTypeId: TitreTypeId, hasDemarchePublic: boolean): boolean => {
   // si le type de titre associé au domaine associé au statut du titre est public

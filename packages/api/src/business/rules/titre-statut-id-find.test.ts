@@ -1,5 +1,5 @@
-import { titreInModificationEnInstance, titreStatutIdFind, TitreStatutIdFindDemarche } from './titre-statut-id-find.js'
-import { toCaminoDate } from 'camino-common/src/date.js'
+import { titreInModificationEnInstance, titreStatutIdFind, TitreStatutIdFindDemarche } from './titre-statut-id-find'
+import { toCaminoDate } from 'camino-common/src/date'
 import { describe, expect, test } from 'vitest'
 
 describe("statut d'un titre", () => {

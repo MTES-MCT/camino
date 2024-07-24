@@ -1,4 +1,4 @@
-import { CaminoError, CaminoZodErrorReadableMessage, translateIssue } from 'camino-common/src/zod-tools.js'
+import { CaminoError, CaminoZodErrorReadableMessage, translateIssue } from 'camino-common/src/zod-tools'
 import { Cause, Effect, Exit, pipe } from 'effect'
 import { ZodTypeAny } from 'zod'
 import { fromError, isZodErrorLike } from 'zod-validation-error'

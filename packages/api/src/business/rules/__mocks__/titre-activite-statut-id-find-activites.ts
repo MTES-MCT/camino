@@ -1,5 +1,5 @@
-import { ITitreActivite } from '../../../types.js'
-import { ACTIVITES_STATUTS_IDS } from 'camino-common/src/static/activitesStatuts.js'
+import { ITitreActivite } from '../../../types'
+import { ACTIVITES_STATUTS_IDS } from 'camino-common/src/static/activitesStatuts'
 
 export const titreActiviteFermee = {
   activiteStatutId: ACTIVITES_STATUTS_IDS.CLOTURE,

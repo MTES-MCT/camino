@@ -1,8 +1,8 @@
 /* eslint-disable sql/no-unsafe-query */
 import { Knex } from 'knex'
-import { EtapeId } from 'camino-common/src/etape.js'
-import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools.js'
-import { FeatureMultiPolygon } from 'camino-common/src/perimetre.js'
+import { EtapeId } from 'camino-common/src/etape'
+import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
+import { FeatureMultiPolygon } from 'camino-common/src/perimetre'
 import { TitreId } from 'camino-common/src/validators/titres'
 
 const etapesToNotMigrate = ['0NmsqYGVQJYKhFY22Ltt4NBV']

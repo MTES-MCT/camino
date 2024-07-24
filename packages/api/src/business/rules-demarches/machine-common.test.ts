@@ -1,7 +1,7 @@
-import { toCaminoDate } from 'camino-common/src/date.js'
-import { TitreEtapeForMachine, toMachineEtapes } from './machine-common.js'
+import { toCaminoDate } from 'camino-common/src/date'
+import { TitreEtapeForMachine, toMachineEtapes } from './machine-common'
 import { describe, expect, test, vi } from 'vitest'
-import { ETAPE_IS_NOT_BROUILLON, ETAPE_IS_BROUILLON } from 'camino-common/src/etape.js'
+import { ETAPE_IS_NOT_BROUILLON, ETAPE_IS_BROUILLON } from 'camino-common/src/etape'
 
 console.error = vi.fn()
 describe('toMachineEtapes', () => {

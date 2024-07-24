@@ -1,4 +1,4 @@
-import { isTitreStatutId } from './titresStatuts.js'
+import { isTitreStatutId } from './titresStatuts'
 import { test, expect } from 'vitest'
 
 test('isTitreStatutId', () => {

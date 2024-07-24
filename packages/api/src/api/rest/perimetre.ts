@@ -1,9 +1,9 @@
-import { DemarcheId, demarcheIdOrSlugValidator } from 'camino-common/src/demarche.js'
-import { CaminoRequest, CustomResponse } from './express-type.js'
+import { DemarcheId, demarcheIdOrSlugValidator } from 'camino-common/src/demarche'
+import { CaminoRequest, CustomResponse } from './express-type'
 import { Pool } from 'pg'
 import { pipe, Effect, Match } from 'effect'
-import { GeoSystemeId, GeoSystemes } from 'camino-common/src/static/geoSystemes.js'
-import { HTTP_STATUS } from 'camino-common/src/http.js'
+import { GeoSystemeId, GeoSystemes } from 'camino-common/src/static/geoSystemes'
+import { HTTP_STATUS } from 'camino-common/src/http'
 import {
   ConvertPointsErrors,
   GetGeojsonByGeoSystemeIdErrorMessages,
@@ -13,14 +13,14 @@ import {
   getGeojsonByGeoSystemeId as getGeojsonByGeoSystemeIdQuery,
   getGeojsonInformation,
   getTitresIntersectionWithGeojson,
-} from './perimetre.queries.js'
-import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
-import { getMostRecentEtapeFondamentaleValide } from './titre-heritage.js'
-import { isAdministrationAdmin, isAdministrationEditeur, isDefault, isSuper, User, UserNotNull } from 'camino-common/src/roles.js'
-import { getDemarcheByIdOrSlug, getEtapesByDemarcheId } from './demarches.queries.js'
-import { getAdministrationsLocalesByTitreId, getTitreByIdOrSlug, getTitulairesAmodiatairesByTitreId } from './titres.queries.js'
-import { etapeIdOrSlugValidator } from 'camino-common/src/etape.js'
-import { getEtapeById } from './etapes.queries.js'
+} from './perimetre.queries'
+import { TitreTypeId } from 'camino-common/src/static/titresTypes'
+import { getMostRecentEtapeFondamentaleValide } from './titre-heritage'
+import { isAdministrationAdmin, isAdministrationEditeur, isDefault, isSuper, User, UserNotNull } from 'camino-common/src/roles'
+import { getDemarcheByIdOrSlug, getEtapesByDemarcheId } from './demarches.queries'
+import { getAdministrationsLocalesByTitreId, getTitreByIdOrSlug, getTitulairesAmodiatairesByTitreId } from './titres.queries'
+import { etapeIdOrSlugValidator } from 'camino-common/src/etape'
+import { getEtapeById } from './etapes.queries'
 import {
   FeatureCollectionPoints,
   FeatureMultiPolygon,
@@ -40,22 +40,22 @@ import {
   GeojsonImportPointsBody,
   GeojsonImportBody,
   GeojsonImportForagesBody,
-} from 'camino-common/src/perimetre.js'
+} from 'camino-common/src/perimetre'
 import { join } from 'node:path'
 import { readFileSync } from 'node:fs'
 import shpjs from 'shpjs'
-import { DeepReadonly, isNotNullNorUndefined, isNullOrUndefined, memoize } from 'camino-common/src/typescript-tools.js'
-import { SDOMZoneId } from 'camino-common/src/static/sdom.js'
-import { TitreSlug } from 'camino-common/src/validators/titres.js'
-import { canReadEtape } from './permissions/etapes.js'
-import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
+import { DeepReadonly, isNotNullNorUndefined, isNullOrUndefined, memoize } from 'camino-common/src/typescript-tools'
+import { SDOMZoneId } from 'camino-common/src/static/sdom'
+import { TitreSlug } from 'camino-common/src/validators/titres'
+import { canReadEtape } from './permissions/etapes'
+import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
 import xlsx from 'xlsx'
 import { ZodTypeAny, z } from 'zod'
 import { CommuneId } from 'camino-common/src/static/communes'
-import { CaminoApiError } from '../../types.js'
-import { DbQueryAccessError } from '../../pg-database.js'
-import { ZodUnparseable, callAndExit, zodParseEffect, zodParseEffectCallback } from '../../tools/fp-tools.js'
-import { CaminoError } from 'camino-common/src/zod-tools.js'
+import { CaminoApiError } from '../../types'
+import { DbQueryAccessError } from '../../pg-database'
+import { ZodUnparseable, callAndExit, zodParseEffect, zodParseEffectCallback } from '../../tools/fp-tools'
+import { CaminoError } from 'camino-common/src/zod-tools'
 
 export const getPerimetreInfos = (pool: Pool) => async (req: CaminoRequest, res: CustomResponse<PerimetreInformations>) => {
   const user = req.auth

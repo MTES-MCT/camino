@@ -1,10 +1,10 @@
-import { buildMatrices } from './matrices.js'
-import { ITitre } from '../types.js'
-import { newEntrepriseId } from 'camino-common/src/entreprise.js'
+import { buildMatrices } from './matrices'
+import { ITitre } from '../types'
+import { newEntrepriseId } from 'camino-common/src/entreprise'
 import { describe, expect, test } from 'vitest'
-import { toCommuneId } from 'camino-common/src/static/communes.js'
-import { newTitreId } from '../database/models/_format/id-create.js'
-import { titreSlugValidator } from 'camino-common/src/validators/titres.js'
+import { toCommuneId } from 'camino-common/src/static/communes'
+import { newTitreId } from '../database/models/_format/id-create'
+import { titreSlugValidator } from 'camino-common/src/validators/titres'
 import { checkCodePostal } from 'camino-common/src/static/departement'
 describe('matrices', () => {
   test('buildMatrices', () => {

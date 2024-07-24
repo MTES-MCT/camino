@@ -1,16 +1,16 @@
 import { GraphQLResolveInfo } from 'graphql'
 
-import { Context, ITitreColonneId } from '../../../types.js'
+import { Context, ITitreColonneId } from '../../../types'
 
-import { titresFormat } from '../../_format/titres.js'
+import { titresFormat } from '../../_format/titres'
 
-import { fieldsBuild } from './_fields-build.js'
+import { fieldsBuild } from './_fields-build'
 
-import { titresCount, titresGet } from '../../../database/queries/titres.js'
+import { titresCount, titresGet } from '../../../database/queries/titres'
 
-import { DepartementId } from 'camino-common/src/static/departement.js'
-import { RegionId } from 'camino-common/src/static/region.js'
-import { FacadesMaritimes } from 'camino-common/src/static/facades.js'
+import { DepartementId } from 'camino-common/src/static/departement'
+import { RegionId } from 'camino-common/src/static/region'
+import { FacadesMaritimes } from 'camino-common/src/static/facades'
 
 export const titres = async (
   {

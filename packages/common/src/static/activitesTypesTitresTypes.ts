@@ -1,5 +1,5 @@
-import { TITRES_TYPES_IDS, TitreTypeId } from './titresTypes.js'
-import { ACTIVITES_TYPES_IDS, ActivitesTypesId } from './activitesTypes.js'
+import { TITRES_TYPES_IDS, TitreTypeId } from './titresTypes'
+import { ACTIVITES_TYPES_IDS, ActivitesTypesId } from './activitesTypes'
 
 export const activitesTypesTitresTypes: { [key in ActivitesTypesId]: TitreTypeId[] } = {
   [ACTIVITES_TYPES_IDS["rapport trimestriel d'exploitation d'or en Guyane"]]: [

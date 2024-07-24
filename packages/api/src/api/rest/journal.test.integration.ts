@@ -1,13 +1,13 @@
 /* eslint-disable sql/no-unsafe-query */
-import { dbManager } from '../../../tests/db-manager.js'
-import { titreCreate } from '../../database/queries/titres.js'
+import { dbManager } from '../../../tests/db-manager'
+import { titreCreate } from '../../database/queries/titres'
 import { afterAll, beforeAll, test, expect, vi, describe } from 'vitest'
 import type { Pool } from 'pg'
-import { getTitresModifiesByMonth } from './journal.queries.js'
+import { getTitresModifiesByMonth } from './journal.queries'
 import { Knex } from 'knex'
-import { idGenerate } from '../../database/models/_format/id-create.js'
-import { userGenerate } from '../../../tests/_utils/index.js'
-import { ITitre } from '../../types.js'
+import { idGenerate } from '../../database/models/_format/id-create'
+import { userGenerate } from '../../../tests/_utils/index'
+import { ITitre } from '../../types'
 
 console.info = vi.fn()
 console.error = vi.fn()

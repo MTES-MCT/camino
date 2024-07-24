@@ -1,10 +1,10 @@
-import { ITitreDemarche } from '../../types.js'
+import { ITitreDemarche } from '../../types'
 
-import { titreEtapeFormat } from './titres-etapes.js'
-import { titreFormat } from './titres.js'
-import { titreDemarcheFormatFields } from './_fields.js'
+import { titreEtapeFormat } from './titres-etapes'
+import { titreFormat } from './titres'
+import { titreDemarcheFormatFields } from './_fields'
 import { FieldsDemarche } from '../../database/queries/_options'
-import { isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
+import { isNullOrUndefined } from 'camino-common/src/typescript-tools'
 
 export const titreDemarcheFormat = (titreDemarche: ITitreDemarche, fields: FieldsDemarche = titreDemarcheFormatFields) => {
   if (isNullOrUndefined(fields)) return titreDemarche

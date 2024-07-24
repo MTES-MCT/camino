@@ -1,4 +1,4 @@
-import { IEntreprise } from '../../../types.js'
+import { IEntreprise } from '../../../types'
 
 const entreprisesFormatTable = (entreprises: IEntreprise[]) =>
   entreprises.map(entreprise => {

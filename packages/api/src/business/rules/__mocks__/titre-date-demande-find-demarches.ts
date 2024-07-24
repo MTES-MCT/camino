@@ -1,5 +1,5 @@
-import { ITitreDemarche } from '../../../types.js'
-import { newDemarcheId, newTitreId } from '../../../database/models/_format/id-create.js'
+import { ITitreDemarche } from '../../../types'
+import { newDemarcheId, newTitreId } from '../../../database/models/_format/id-create'
 
 const titreDemarcheOctEtapeMen = [
   {

@@ -1,7 +1,7 @@
 import { test, expect } from 'vitest'
-import { newEntrepriseId } from '../entreprise.js'
-import { ADMINISTRATION_IDS } from '../static/administrations.js'
-import { canEditEntreprise, canCreateEntreprise, canSeeEntrepriseDocuments } from './entreprises.js'
+import { newEntrepriseId } from '../entreprise'
+import { ADMINISTRATION_IDS } from '../static/administrations'
+import { canEditEntreprise, canCreateEntreprise, canSeeEntrepriseDocuments } from './entreprises'
 import { testBlankUser, TestUser } from '../tests-utils'
 
 const entrepriseId = newEntrepriseId('entrepriseId')

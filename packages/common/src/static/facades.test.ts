@@ -1,4 +1,4 @@
-import { getSecteurMaritime } from './facades.js'
+import { getSecteurMaritime } from './facades'
 import { test, expect } from 'vitest'
 
 test('getSecteurMaritime', () => {

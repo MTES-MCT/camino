@@ -1,7 +1,7 @@
-import { titresActivitesStatutIdsUpdate } from './titres-activites-statut-ids-update.js'
-import { titresActivitesGet } from '../../database/queries/titres-activites.js'
+import { titresActivitesStatutIdsUpdate } from './titres-activites-statut-ids-update'
+import { titresActivitesGet } from '../../database/queries/titres-activites'
 
-import { titresActivitesDelaiDepasse, titresActivitesDelaiNonDepasse } from './__mocks__/titres-activites-statut-ids-update-activites.js'
+import { titresActivitesDelaiDepasse, titresActivitesDelaiNonDepasse } from './__mocks__/titres-activites-statut-ids-update-activites'
 import { vi, describe, expect, test } from 'vitest'
 vi.mock('../../database/queries/titres-activites', () => ({
   titreActiviteUpdate: vi.fn().mockResolvedValue(true),

@@ -1,5 +1,5 @@
-import { DomaineId, isDomaineId } from './domaines.js'
-import { isTitreTypeType, TitreTypeTypeId } from './titresTypesTypes.js'
+import { DomaineId, isDomaineId } from './domaines'
+import { isTitreTypeType, TitreTypeTypeId } from './titresTypesTypes'
 import { z } from 'zod'
 interface Definition<T> {
   id: T

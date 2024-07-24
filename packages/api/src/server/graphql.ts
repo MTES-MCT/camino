@@ -1,8 +1,8 @@
 import { createHandler } from 'graphql-http/lib/use/express'
 import type { Pool } from 'pg'
 
-import rootValue from '../api/graphql/resolvers.js'
-import schema from '../api/graphql/schemas.js'
+import rootValue from '../api/graphql/resolvers'
+import schema from '../api/graphql/schemas'
 
 export const graphql = (pool: Pool) =>
   createHandler({

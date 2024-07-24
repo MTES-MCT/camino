@@ -1,10 +1,10 @@
 import { assign, createMachine } from 'xstate'
-import { CaminoMachine } from '../machine-helper.js'
-import { CaminoCommonContext, DBEtat, Etape, tags } from '../machine-common.js'
-import { EtapesTypesEtapesStatuts as ETES } from 'camino-common/src/static/etapesTypesEtapesStatuts.js'
-import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts.js'
-import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations.js'
-import { CaminoDate, dateAddMonths, daysBetween } from 'camino-common/src/date.js'
+import { CaminoMachine } from '../machine-helper'
+import { CaminoCommonContext, DBEtat, Etape, tags } from '../machine-common'
+import { EtapesTypesEtapesStatuts as ETES } from 'camino-common/src/static/etapesTypesEtapesStatuts'
+import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts'
+import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations'
+import { CaminoDate, dateAddMonths, daysBetween } from 'camino-common/src/date'
 
 type RendreAvisDesServicesEtCommissionsConsultatives = {
   date: CaminoDate

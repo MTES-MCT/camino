@@ -1,5 +1,5 @@
-import { ACTIVITES_TYPES_IDS, ActivitesTypesId } from './activitesTypes.js'
-import { PAYS_IDS, PaysId } from './pays.js'
+import { ACTIVITES_TYPES_IDS, ActivitesTypesId } from './activitesTypes'
+import { PAYS_IDS, PaysId } from './pays'
 
 export const activitesTypesPays: { [key in ActivitesTypesId]: PaysId[] } = {
   [ACTIVITES_TYPES_IDS["rapport trimestriel d'exploitation d'or en Guyane"]]: [PAYS_IDS['Département de la Guyane']],

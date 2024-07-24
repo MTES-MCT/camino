@@ -1,16 +1,16 @@
-import { dbManager } from '../../../tests/db-manager.js'
-import { graphQLCall, queryImport } from '../../../tests/_utils/index.js'
-import { titreCreate } from '../../database/queries/titres.js'
-import { titreEtapeUpsert } from '../../database/queries/titres-etapes.js'
-import { userSuper } from '../../database/user-super.js'
-import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations.js'
-import { toCaminoDate } from 'camino-common/src/date.js'
+import { dbManager } from '../../../tests/db-manager'
+import { graphQLCall, queryImport } from '../../../tests/_utils/index'
+import { titreCreate } from '../../database/queries/titres'
+import { titreEtapeUpsert } from '../../database/queries/titres-etapes'
+import { userSuper } from '../../database/user-super'
+import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations'
+import { toCaminoDate } from 'camino-common/src/date'
 
 import { afterAll, beforeAll, afterEach, describe, test, expect, vi } from 'vitest'
 import type { Pool } from 'pg'
-import { newEtapeId } from '../../database/models/_format/id-create.js'
-import TitresDemarches from '../../database/models/titres-demarches.js'
-import { ETAPE_IS_NOT_BROUILLON } from 'camino-common/src/etape.js'
+import { newEtapeId } from '../../database/models/_format/id-create'
+import TitresDemarches from '../../database/models/titres-demarches'
+import { ETAPE_IS_NOT_BROUILLON } from 'camino-common/src/etape'
 
 console.info = vi.fn()
 console.error = vi.fn()

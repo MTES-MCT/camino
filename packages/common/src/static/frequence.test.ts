@@ -1,4 +1,4 @@
-import { FREQUENCES_IDS, getMonth, getPeriode } from './frequence.js'
+import { FREQUENCES_IDS, getMonth, getPeriode } from './frequence'
 import { test, expect } from 'vitest'
 
 test('getPeriode', () => {

@@ -1,10 +1,10 @@
-import { titresDemarchesStatutIdUpdate } from './titres-demarches-statut-ids-update.js'
+import { titresDemarchesStatutIdUpdate } from './titres-demarches-statut-ids-update'
 import { vi, describe, expect, test } from 'vitest'
-import { getDemarches } from './titres-etapes-heritage-contenu-update.queries.js'
-import { newDemarcheId, newEtapeId, newTitreId } from '../../database/models/_format/id-create.js'
-import { toCaminoDate } from 'camino-common/src/date.js'
+import { getDemarches } from './titres-etapes-heritage-contenu-update.queries'
+import { newDemarcheId, newEtapeId, newTitreId } from '../../database/models/_format/id-create'
+import { toCaminoDate } from 'camino-common/src/date'
 import { Pool } from 'pg'
-import { ETAPE_IS_NOT_BROUILLON } from 'camino-common/src/etape.js'
+import { ETAPE_IS_NOT_BROUILLON } from 'camino-common/src/etape'
 
 vi.mock('./titres-etapes-heritage-contenu-update.queries', () => ({
   getDemarches: vi.fn().mockResolvedValue(true),

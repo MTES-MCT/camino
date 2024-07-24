@@ -1,6 +1,6 @@
 import { serialize, deserialize } from 'v8'
 
-import { Index } from '../types.js'
+import { Index } from '../types'
 
 export const equalStringArrays = (arr1: string[], arr2: string[]): boolean =>
   arr1.length === arr2.length &&

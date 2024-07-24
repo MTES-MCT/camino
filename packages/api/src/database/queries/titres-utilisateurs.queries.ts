@@ -1,12 +1,12 @@
 /* eslint-disable no-restricted-syntax */
 import { sql } from '@pgtyped/runtime'
-import { Redefine, dbQueryAndValidate } from '../../pg-database.js'
-import { IGetTitreUtilisateurDbQuery } from './titres-utilisateurs.queries.types.js'
-import { isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools.js'
+import { Redefine, dbQueryAndValidate } from '../../pg-database'
+import { IGetTitreUtilisateurDbQuery } from './titres-utilisateurs.queries.types'
+import { isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
 import { Pool } from 'pg'
 import { z } from 'zod'
-import { TitreId, titreIdValidator } from 'camino-common/src/validators/titres.js'
-import { UtilisateurId, utilisateurIdValidator } from 'camino-common/src/roles.js'
+import { TitreId, titreIdValidator } from 'camino-common/src/validators/titres'
+import { UtilisateurId, utilisateurIdValidator } from 'camino-common/src/roles'
 
 export const getTitreUtilisateur = async (pool: Pool, titreId: TitreId, userId: UtilisateurId): Promise<boolean> => {
   return isNotNullNorUndefinedNorEmpty(await dbQueryAndValidate(getTitreUtilisateurDb, { titreId, userId }, pool, getTitreUtilisateurDbValidator))

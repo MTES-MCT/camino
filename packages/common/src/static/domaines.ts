@@ -1,4 +1,4 @@
-import { Definition } from '../definition.js'
+import { Definition } from '../definition'
 import { z } from 'zod'
 
 const IDS = ['m', 'c', 'f', 'g', 'h', 'r', 's', 'w'] as const

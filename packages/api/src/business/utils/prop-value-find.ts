@@ -1,5 +1,5 @@
-import { isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools.js'
-import { ITitreEtape, IPropId } from '../../types.js'
+import { isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
+import { ITitreEtape, IPropId } from '../../types'
 
 export const propValueFind = (titreEtape: ITitreEtape, propId: IPropId) => {
   if (propId === 'points') {

@@ -2,19 +2,19 @@
 // de la dernière démarche acceptée
 // pour laquelle la propriété existe
 
-import { CaminoDate } from 'camino-common/src/date.js'
-import { canImpactTitre, DemarcheTypeId, isDemarcheTypeOctroi } from 'camino-common/src/static/demarchesTypes.js'
-import { isDemarchePhaseValide } from 'camino-common/src/static/phasesStatuts.js'
-import { TitresStatutIds, TitreStatutId } from 'camino-common/src/static/titresStatuts.js'
-import { ITitreDemarche, ITitreEtape, IPropId, IContenuId } from '../../types.js'
+import { CaminoDate } from 'camino-common/src/date'
+import { canImpactTitre, DemarcheTypeId, isDemarcheTypeOctroi } from 'camino-common/src/static/demarchesTypes'
+import { isDemarchePhaseValide } from 'camino-common/src/static/phasesStatuts'
+import { TitresStatutIds, TitreStatutId } from 'camino-common/src/static/titresStatuts'
+import { ITitreDemarche, ITitreEtape, IPropId, IContenuId } from '../../types'
 
-import { propValueFind } from '../utils/prop-value-find.js'
-import { titreDemarcheSortAsc } from '../utils/titre-elements-sort-asc.js'
-import { titreEtapesSortDescByOrdre } from '../utils/titre-etapes-sort.js'
-import { isEtapeDecision } from 'camino-common/src/static/etapesTypes.js'
-import { isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
-import { ETAPES_STATUTS } from 'camino-common/src/static/etapesStatuts.js'
-import { ETAPE_IS_BROUILLON } from 'camino-common/src/etape.js'
+import { propValueFind } from '../utils/prop-value-find'
+import { titreDemarcheSortAsc } from '../utils/titre-elements-sort-asc'
+import { titreEtapesSortDescByOrdre } from '../utils/titre-etapes-sort'
+import { isEtapeDecision } from 'camino-common/src/static/etapesTypes'
+import { isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools'
+import { ETAPES_STATUTS } from 'camino-common/src/static/etapesStatuts'
+import { ETAPE_IS_BROUILLON } from 'camino-common/src/etape'
 
 const etapeAmodiataireFind = (date: CaminoDate, titreEtape: ITitreEtape, titreDemarches: Pick<ITitreDemarche, 'demarcheDateDebut' | 'demarcheDateFin' | 'id'>[]) => {
   const titreDemarche = titreDemarches.find(td => td.id === titreEtape.titreDemarcheId)

@@ -1,6 +1,6 @@
-import { Definition } from '../definition.js'
+import { Definition } from '../definition'
 import { z } from 'zod'
-import { DemarcheStatutId, demarcheStatutIdsSuccess } from './demarchesStatuts.js'
+import { DemarcheStatutId, demarcheStatutIdsSuccess } from './demarchesStatuts'
 export interface DemarcheType<T = DemarcheTypeId> extends Definition<T> {
   titulaires: boolean
   renouvelable: boolean

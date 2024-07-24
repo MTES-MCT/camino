@@ -1,9 +1,9 @@
-import { titresStatutIdsUpdate } from './titres-statut-ids-update.js'
-import { titresGet } from '../../database/queries/titres.js'
+import { titresStatutIdsUpdate } from './titres-statut-ids-update'
+import { titresGet } from '../../database/queries/titres'
 
 import { vi, describe, expect, test, beforeEach } from 'vitest'
-import { newDemarcheId, newTitreId } from '../../database/models/_format/id-create.js'
-import { toCaminoDate } from 'camino-common/src/date.js'
+import { newDemarcheId, newTitreId } from '../../database/models/_format/id-create'
+import { toCaminoDate } from 'camino-common/src/date'
 vi.mock('../../database/queries/titres', () => ({
   __esModule: true,
   titreUpdate: vi.fn().mockResolvedValue(true),

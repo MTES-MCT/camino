@@ -1,8 +1,8 @@
 import { Request as JWTRequest } from 'express-jwt'
-import { fiscaliteVisible } from 'camino-common/src/fiscalite.js'
-import { Fiscalite, FiscaliteFrance, FiscaliteGuyane } from 'camino-common/src/validators/fiscalite.js'
+import { fiscaliteVisible } from 'camino-common/src/fiscalite'
+import { Fiscalite, FiscaliteFrance, FiscaliteGuyane } from 'camino-common/src/validators/fiscalite'
 import { ICommune, IContenuValeur, IEntreprise } from '../../types'
-import { HTTP_STATUS } from 'camino-common/src/http.js'
+import { HTTP_STATUS } from 'camino-common/src/http'
 
 import {
   apiOpenfiscaCalculate,
@@ -12,18 +12,18 @@ import {
   redevanceDepartementale,
   substanceFiscaleToInput,
   openfiscaSubstanceFiscaleUnite,
-} from '../../tools/api-openfisca/index.js'
-import { titresGet } from '../../database/queries/titres.js'
-import { titresActivitesGet } from '../../database/queries/titres-activites.js'
-import { entrepriseGet, entrepriseUpsert } from '../../database/queries/entreprises.js'
-import TitresActivites from '../../database/models/titres-activites.js'
-import Titres from '../../database/models/titres.js'
-import { CustomResponse } from './express-type.js'
-import { SubstanceFiscale, substancesFiscalesBySubstanceLegale } from 'camino-common/src/static/substancesFiscales.js'
-import { Departements, toDepartementId } from 'camino-common/src/static/departement.js'
-import { DeepReadonly, isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
-import { Regions } from 'camino-common/src/static/region.js'
-import { anneePrecedente, caminoAnneeToNumber, isAnnee } from 'camino-common/src/date.js'
+} from '../../tools/api-openfisca/index'
+import { titresGet } from '../../database/queries/titres'
+import { titresActivitesGet } from '../../database/queries/titres-activites'
+import { entrepriseGet, entrepriseUpsert } from '../../database/queries/entreprises'
+import TitresActivites from '../../database/models/titres-activites'
+import Titres from '../../database/models/titres'
+import { CustomResponse } from './express-type'
+import { SubstanceFiscale, substancesFiscalesBySubstanceLegale } from 'camino-common/src/static/substancesFiscales'
+import { Departements, toDepartementId } from 'camino-common/src/static/departement'
+import { DeepReadonly, isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools'
+import { Regions } from 'camino-common/src/static/region'
+import { anneePrecedente, caminoAnneeToNumber, isAnnee } from 'camino-common/src/date'
 import {
   entrepriseIdValidator,
   entrepriseModificationValidator,
@@ -37,11 +37,11 @@ import {
   Entreprise,
   entrepriseValidator,
   entrepriseTypeValidator,
-} from 'camino-common/src/entreprise.js'
-import { isSuper, User } from 'camino-common/src/roles.js'
-import { canCreateEntreprise, canEditEntreprise, canSeeEntrepriseDocuments } from 'camino-common/src/permissions/entreprises.js'
-import { emailCheck } from '../../tools/email-check.js'
-import { apiInseeEntrepriseAndEtablissementsGet } from '../../tools/api-insee/index.js'
+} from 'camino-common/src/entreprise'
+import { isSuper, User } from 'camino-common/src/roles'
+import { canCreateEntreprise, canEditEntreprise, canSeeEntrepriseDocuments } from 'camino-common/src/permissions/entreprises'
+import { emailCheck } from '../../tools/email-check'
+import { apiInseeEntrepriseAndEtablissementsGet } from '../../tools/api-insee/index'
 import { Pool } from 'pg'
 import {
   deleteEntrepriseDocument as deleteEntrepriseDocumentQuery,
@@ -50,15 +50,15 @@ import {
   getEntreprise as getEntrepriseQuery,
   getLargeobjectIdByEntrepriseDocumentId,
   insertEntrepriseDocument,
-} from './entreprises.queries.js'
-import { newEnterpriseDocumentId } from '../../database/models/_format/id-create.js'
-import { isGuyane } from 'camino-common/src/static/pays.js'
+} from './entreprises.queries'
+import { newEnterpriseDocumentId } from '../../database/models/_format/id-create'
+import { isGuyane } from 'camino-common/src/static/pays'
 import { NewDownload } from './fichiers'
 import Decimal from 'decimal.js'
 
-import { createLargeObject } from '../../database/largeobjects.js'
+import { createLargeObject } from '../../database/largeobjects'
 import { z } from 'zod'
-import { getEntrepriseEtablissements } from './entreprises-etablissements.queries.js'
+import { getEntrepriseEtablissements } from './entreprises-etablissements.queries'
 
 const conversion = (substanceFiscale: SubstanceFiscale, quantite: IContenuValeur): Decimal => {
   if (typeof quantite !== 'number') {

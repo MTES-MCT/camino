@@ -1,12 +1,12 @@
-import { titresActivitesGet } from './titres-activites.js'
-import TitresActivites from '../models/titres-activites.js'
-import { dbManager } from '../../../tests/db-manager.js'
-import { newTitreId, newUtilisateurId } from '../models/_format/id-create.js'
-import Titres from '../models/titres.js'
-import { UserNotNull } from 'camino-common/src/roles.js'
+import { titresActivitesGet } from './titres-activites'
+import TitresActivites from '../models/titres-activites'
+import { dbManager } from '../../../tests/db-manager'
+import { newTitreId, newUtilisateurId } from '../models/_format/id-create'
+import Titres from '../models/titres'
+import { UserNotNull } from 'camino-common/src/roles'
 import { beforeAll, expect, afterAll, test, describe, vi } from 'vitest'
-import { getCurrent } from 'camino-common/src/date.js'
-import { activiteIdValidator } from 'camino-common/src/activite.js'
+import { getCurrent } from 'camino-common/src/date'
+import { activiteIdValidator } from 'camino-common/src/activite'
 console.info = vi.fn()
 console.error = vi.fn()
 beforeAll(async () => {

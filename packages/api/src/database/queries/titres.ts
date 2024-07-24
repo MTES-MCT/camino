@@ -2,24 +2,24 @@
 
 import { raw, RawBuilder } from 'objection'
 
-import { IColonne, ITitre, ITitreColonneId } from '../../types.js'
+import { IColonne, ITitre, ITitreColonneId } from '../../types'
 
-import options, { FieldsTitre } from './_options.js'
-import graphBuild from './graph/build.js'
-import { fieldsFormat } from './graph/fields-format.js'
-import { titresFieldsAdd } from './graph/fields-add.js'
+import options, { FieldsTitre } from './_options'
+import graphBuild from './graph/build'
+import { fieldsFormat } from './graph/fields-format'
+import { titresFieldsAdd } from './graph/fields-add'
 
-import Titres, { DBTitre } from '../models/titres.js'
-import { titresQueryModify } from './permissions/titres.js'
-import { titresFiltersQueryModify } from './_titres-filters.js'
-import TitresDemarches from '../models/titres-demarches.js'
-import TitresEtapes from '../models/titres-etapes.js'
+import Titres, { DBTitre } from '../models/titres'
+import { titresQueryModify } from './permissions/titres'
+import { titresFiltersQueryModify } from './_titres-filters'
+import TitresDemarches from '../models/titres-demarches'
+import TitresEtapes from '../models/titres-etapes'
 import { User } from 'camino-common/src/roles'
-import { DepartementId } from 'camino-common/src/static/departement.js'
-import { RegionId } from 'camino-common/src/static/region.js'
-import { FacadesMaritimes } from 'camino-common/src/static/facades.js'
-import { EditableTitre } from 'camino-common/src/titres.js'
-import { TitreId } from 'camino-common/src/validators/titres.js'
+import { DepartementId } from 'camino-common/src/static/departement'
+import { RegionId } from 'camino-common/src/static/region'
+import { FacadesMaritimes } from 'camino-common/src/static/facades'
+import { EditableTitre } from 'camino-common/src/titres'
+import { TitreId } from 'camino-common/src/validators/titres'
 
 /**
  * Construit la requête pour récupérer certains champs de titres filtrés

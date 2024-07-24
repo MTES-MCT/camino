@@ -1,7 +1,7 @@
 /* eslint-disable no-irregular-whitespace */
 import { test, expect } from 'vitest'
-import { getDemarcheContenu } from './demarche.js'
-import { proprietesGeothermieForagesElementIds } from './static/titresTypes_demarchesTypes_etapesTypes/sections.js'
+import { getDemarcheContenu } from './demarche'
+import { proprietesGeothermieForagesElementIds } from './static/titresTypes_demarchesTypes_etapesTypes/sections'
 
 test('getDemarcheContenu arm', () => {
   expect(

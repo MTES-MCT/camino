@@ -1,7 +1,7 @@
-import { titreActiviteUpdate, titresActivitesGet } from '../../database/queries/titres-activites.js'
-import { titreActiviteStatutIdFind } from '../rules/titre-activite-statut-id-find.js'
-import { userSuper } from '../../database/user-super.js'
-import { getCurrent } from 'camino-common/src/date.js'
+import { titreActiviteUpdate, titresActivitesGet } from '../../database/queries/titres-activites'
+import { titreActiviteStatutIdFind } from '../rules/titre-activite-statut-id-find'
+import { userSuper } from '../../database/user-super'
+import { getCurrent } from 'camino-common/src/date'
 
 // met à jour le statut des activités d'un titre
 export const titresActivitesStatutIdsUpdate = async () => {

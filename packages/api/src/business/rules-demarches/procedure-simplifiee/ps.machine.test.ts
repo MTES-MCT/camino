@@ -1,9 +1,9 @@
-import { interpretMachine, orderAndInterpretMachine, setDateAndOrderAndInterpretMachine } from '../machine-test-helper.js'
-import { EtapesTypesEtapesStatuts as ETES } from 'camino-common/src/static/etapesTypesEtapesStatuts.js'
-import { toCaminoDate } from 'camino-common/src/date.js'
+import { interpretMachine, orderAndInterpretMachine, setDateAndOrderAndInterpretMachine } from '../machine-test-helper'
+import { EtapesTypesEtapesStatuts as ETES } from 'camino-common/src/static/etapesTypesEtapesStatuts'
+import { toCaminoDate } from 'camino-common/src/date'
 import { describe, expect, test } from 'vitest'
-import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts.js'
-import { ProcedureSimplifieeMachine } from './ps.machine.js'
+import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts'
+import { ProcedureSimplifieeMachine } from './ps.machine'
 
 const etapesProdProceduresHistoriques = require('../pxg/1717-01-09-amo-ces-con-dec-dep-exp-exs-fus-mut-oct-pr1-pr2-pre-pro-prr-ren-res-ret-vct-vut.cas.json')
 const psMachine = new ProcedureSimplifieeMachine()

@@ -1,6 +1,6 @@
-import { documentsTypesFormat } from './etapes-types.js'
+import { documentsTypesFormat } from './etapes-types'
 import { describe, test, expect } from 'vitest'
-import { DocumentType } from 'camino-common/src/static/documentsTypes.js'
+import { DocumentType } from 'camino-common/src/static/documentsTypes'
 describe('teste etapes types format', () => {
   test.each<[DocumentType[] | null | undefined, DocumentType[] | null | undefined, DocumentType[]]>([
     [undefined, undefined, []],

@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { toCaminoDate } from '../date.js'
+import { toCaminoDate } from '../date'
 import { StatistiquesDataGouv } from '../statistiques'
 
 // prettier-ignore

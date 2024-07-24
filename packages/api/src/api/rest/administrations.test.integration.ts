@@ -1,12 +1,12 @@
-import { restCall, restNewPostCall, userGenerate } from '../../../tests/_utils/index.js'
-import { dbManager } from '../../../tests/db-manager.js'
+import { restCall, restNewPostCall, userGenerate } from '../../../tests/_utils/index'
+import { dbManager } from '../../../tests/db-manager'
 import { expect, test, describe, afterAll, beforeAll, vi } from 'vitest'
 import type { Pool } from 'pg'
-import { HTTP_STATUS } from 'camino-common/src/http.js'
-import { TestUser } from 'camino-common/src/tests-utils.js'
-import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations.js'
-import { AdministrationActiviteTypeEmail } from 'camino-common/src/administrations.js'
-import { toCaminoDate } from 'camino-common/src/date.js'
+import { HTTP_STATUS } from 'camino-common/src/http'
+import { TestUser } from 'camino-common/src/tests-utils'
+import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations'
+import { AdministrationActiviteTypeEmail } from 'camino-common/src/administrations'
+import { toCaminoDate } from 'camino-common/src/date'
 
 console.info = vi.fn()
 console.error = vi.fn()

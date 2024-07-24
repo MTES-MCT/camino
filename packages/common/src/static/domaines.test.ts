@@ -1,4 +1,4 @@
-import { Domaines, DOMAINES_IDS, isDomaineId } from './domaines.js'
+import { Domaines, DOMAINES_IDS, isDomaineId } from './domaines'
 import { test, expect } from 'vitest'
 
 test('domaine', () => {

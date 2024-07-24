@@ -1,13 +1,13 @@
 /* eslint-disable sql/no-unsafe-query */
-import { titreEtapeUpdate } from '../../database/queries/titres-etapes.js'
-import { titreEtapeHeritageContenuFind } from '../utils/titre-etape-heritage-contenu-find.js'
-import { titreEtapesSortAscByOrdre, titreEtapesSortDescByOrdre } from '../utils/titre-etapes-sort.js'
-import { UserNotNull } from 'camino-common/src/roles.js'
-import { getSections, Section } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
-import { DeepReadonly, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools.js'
-import { DemarcheId } from 'camino-common/src/demarche.js'
+import { titreEtapeUpdate } from '../../database/queries/titres-etapes'
+import { titreEtapeHeritageContenuFind } from '../utils/titre-etape-heritage-contenu-find'
+import { titreEtapesSortAscByOrdre, titreEtapesSortDescByOrdre } from '../utils/titre-etapes-sort'
+import { UserNotNull } from 'camino-common/src/roles'
+import { getSections, Section } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections'
+import { DeepReadonly, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
+import { DemarcheId } from 'camino-common/src/demarche'
 import { Pool } from 'pg'
-import { getDemarches } from './titres-etapes-heritage-contenu-update.queries.js'
+import { getDemarches } from './titres-etapes-heritage-contenu-update.queries'
 
 export const titresEtapesHeritageContenuUpdate = async (pool: Pool, user: UserNotNull, demarcheId?: DemarcheId) => {
   console.info()

@@ -1,7 +1,7 @@
-import { getKeys, isNotNullNorUndefined } from '../typescript-tools.js'
-import { AdministrationId, ADMINISTRATION_IDS } from './administrations.js'
-import { EtapeTypeId, ETAPES_TYPES, isEtapeTypeId } from './etapesTypes.js'
-import { isTitreType, TITRES_TYPES_IDS, TitreTypeId } from './titresTypes.js'
+import { getKeys, isNotNullNorUndefined } from '../typescript-tools'
+import { AdministrationId, ADMINISTRATION_IDS } from './administrations'
+import { EtapeTypeId, ETAPES_TYPES, isEtapeTypeId } from './etapesTypes'
+import { isTitreType, TITRES_TYPES_IDS, TitreTypeId } from './titresTypes'
 
 // TODO 2023-01-24: on n'a exposé uniquement creationInterdit
 const restrictions = (

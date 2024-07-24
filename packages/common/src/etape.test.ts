@@ -1,8 +1,8 @@
 import { test, expect } from 'vitest'
-import { etapeDocumentIdValidator, getStatutId } from './etape.js'
-import { ETAPES_STATUTS } from './static/etapesStatuts.js'
-import { caminoDateValidator } from './date.js'
-import { ETAPES_TYPES } from './static/etapesTypes.js'
+import { etapeDocumentIdValidator, getStatutId } from './etape'
+import { ETAPES_STATUTS } from './static/etapesStatuts'
+import { caminoDateValidator } from './date'
+import { ETAPES_TYPES } from './static/etapesTypes'
 
 test('documentIdValidator', () => {
   expect(() => etapeDocumentIdValidator.parse('2021-01-01-kbi-ac123457')).not.toThrowError()

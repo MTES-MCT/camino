@@ -1,9 +1,9 @@
-import { Administration, AdministrationId, sortedAdministrations } from './static/administrations.js'
-import { CommuneId } from './static/communes.js'
-import { DepartementId, Departements, toDepartementId } from './static/departement.js'
-import { SecteursMaritimes, getDepartementsBySecteurs } from './static/facades.js'
-import { onlyUnique, isNullOrUndefined, isNotNullNorUndefinedNorEmpty } from './typescript-tools.js'
-import { activiteTypeIdValidator } from './static/activitesTypes.js'
+import { Administration, AdministrationId, sortedAdministrations } from './static/administrations'
+import { CommuneId } from './static/communes'
+import { DepartementId, Departements, toDepartementId } from './static/departement'
+import { SecteursMaritimes, getDepartementsBySecteurs } from './static/facades'
+import { onlyUnique, isNullOrUndefined, isNotNullNorUndefinedNorEmpty } from './typescript-tools'
+import { activiteTypeIdValidator } from './static/activitesTypes'
 import { z } from 'zod'
 
 // calcule tous les départements d'une étape

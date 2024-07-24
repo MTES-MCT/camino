@@ -1,12 +1,12 @@
 import GraphQLJSON from 'graphql-type-json'
 
-import { titres } from './resolvers/titres.js'
+import { titres } from './resolvers/titres'
 
-import { etapeHeritage } from './resolvers/titres-etapes.js'
+import { etapeHeritage } from './resolvers/titres-etapes'
 
-import { demarches, demarcheCreer, demarcheModifier, demarcheSupprimer } from './resolvers/titres-demarches.js'
+import { demarches, demarcheCreer, demarcheModifier, demarcheSupprimer } from './resolvers/titres-demarches'
 
-import { utilisateur, utilisateurs, newsletterInscrire } from './resolvers/utilisateurs.js'
+import { utilisateur, utilisateurs, newsletterInscrire } from './resolvers/utilisateurs'
 
 import {
   devises,
@@ -26,19 +26,19 @@ import {
   regions,
   departements,
   pays,
-} from './resolvers/metas.js'
+} from './resolvers/metas'
 
-import { activitesTypes, activitesStatuts } from './resolvers/metas-activites.js'
+import { activitesTypes, activitesStatuts } from './resolvers/metas-activites'
 
-import { titresTypes, titresTypesTitresStatuts, etapesTypesDocumentsTypes } from './resolvers/metas-join.js'
+import { titresTypes, titresTypesTitresStatuts, etapesTypesDocumentsTypes } from './resolvers/metas-join'
 
-import { substances } from './resolvers/substances.js'
+import { substances } from './resolvers/substances'
 
-import { activites, activiteDeposer } from './resolvers/titres-activites.js'
-import { statistiquesGlobales } from './resolvers/statistiques.js'
+import { activites, activiteDeposer } from './resolvers/titres-activites'
+import { statistiquesGlobales } from './resolvers/statistiques'
 
-import { titreDemandeCreer } from '../rest/titre-demande.js'
-import { journaux } from './resolvers/journaux.js'
+import { titreDemandeCreer } from '../rest/titre-demande'
+import { journaux } from './resolvers/journaux'
 
 export default {
   //  types

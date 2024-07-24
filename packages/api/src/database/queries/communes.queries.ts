@@ -1,9 +1,9 @@
 /* eslint-disable no-restricted-syntax */
 import { sql } from '@pgtyped/runtime'
-import { Redefine, dbQueryAndValidate } from '../../pg-database.js'
-import { IGetCommunesInternalQuery, IInsertCommuneInternalQuery } from './communes.queries.types.js'
-import { CommuneId, Commune, communeValidator } from 'camino-common/src/static/communes.js'
-import { NonEmptyArray } from 'camino-common/src/typescript-tools.js'
+import { Redefine, dbQueryAndValidate } from '../../pg-database'
+import { IGetCommunesInternalQuery, IInsertCommuneInternalQuery } from './communes.queries.types'
+import { CommuneId, Commune, communeValidator } from 'camino-common/src/static/communes'
+import { NonEmptyArray } from 'camino-common/src/typescript-tools'
 import { Pool } from 'pg'
 import { z } from 'zod'
 

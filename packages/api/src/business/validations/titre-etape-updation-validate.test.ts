@@ -1,15 +1,15 @@
-import { ITitreDemarche, ITitre } from '../../types.js'
+import { ITitreDemarche, ITitre } from '../../types'
 
-import { titreEtapeUpdationValidate } from './titre-etape-updation-validate.js'
-import { userSuper } from '../../database/user-super.js'
+import { titreEtapeUpdationValidate } from './titre-etape-updation-validate'
+import { userSuper } from '../../database/user-super'
 import { describe, test, expect } from 'vitest'
-import { FlattenEtape } from 'camino-common/src/etape-form.js'
-import { ETAPE_IS_BROUILLON, ETAPE_IS_NOT_BROUILLON, etapeIdValidator, etapeSlugValidator } from 'camino-common/src/etape.js'
-import { caminoDateValidator, toCaminoDate } from 'camino-common/src/date.js'
-import { demarcheIdValidator } from 'camino-common/src/demarche.js'
-import { entrepriseIdValidator } from 'camino-common/src/entreprise.js'
-import { titreIdValidator } from 'camino-common/src/validators/titres.js'
-import { km2Validator } from 'camino-common/src/number.js'
+import { FlattenEtape } from 'camino-common/src/etape-form'
+import { ETAPE_IS_BROUILLON, ETAPE_IS_NOT_BROUILLON, etapeIdValidator, etapeSlugValidator } from 'camino-common/src/etape'
+import { caminoDateValidator, toCaminoDate } from 'camino-common/src/date'
+import { demarcheIdValidator } from 'camino-common/src/demarche'
+import { entrepriseIdValidator } from 'camino-common/src/entreprise'
+import { titreIdValidator } from 'camino-common/src/validators/titres'
+import { km2Validator } from 'camino-common/src/number'
 const etapeBrouillonValide: Omit<FlattenEtape, 'id'> = {
   titulaires: {
     value: [],

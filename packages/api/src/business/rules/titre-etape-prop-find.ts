@@ -1,12 +1,12 @@
-import { CaminoDate } from 'camino-common/src/date.js'
-import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
-import { ITitreDemarche, IPropId } from '../../types.js'
+import { CaminoDate } from 'camino-common/src/date'
+import { TitreTypeId } from 'camino-common/src/static/titresTypes'
+import { ITitreDemarche, IPropId } from '../../types'
 
-import { propValueFind } from '../utils/prop-value-find.js'
-import { titreDemarchesEtapesRebuild } from '../utils/titre-demarches-etapes-rebuild.js'
+import { propValueFind } from '../utils/prop-value-find'
+import { titreDemarchesEtapesRebuild } from '../utils/titre-demarches-etapes-rebuild'
 
-import { titrePropTitreEtapeFind } from './titre-prop-etape-find.js'
-import { titreStatutIdFind } from './titre-statut-id-find.js'
+import { titrePropTitreEtapeFind } from './titre-prop-etape-find'
+import { titreStatutIdFind } from './titre-statut-id-find'
 
 /**
  * Trouve la propriété d'un titre à une date donnée

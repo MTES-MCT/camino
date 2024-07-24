@@ -1,7 +1,7 @@
-import { dbManager } from '../../../tests/db-manager.js'
-import { visibleCheck, creationCheck } from '../../../tests/_utils/administrations-permissions.js'
+import { dbManager } from '../../../tests/db-manager'
+import { visibleCheck, creationCheck } from '../../../tests/_utils/administrations-permissions'
 import { beforeAll, afterAll, test, describe, vi } from 'vitest'
-import { AdministrationId } from 'camino-common/src/static/administrations.js'
+import { AdministrationId } from 'camino-common/src/static/administrations'
 import type { Pool } from 'pg'
 
 console.info = vi.fn()

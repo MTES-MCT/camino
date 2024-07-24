@@ -1,7 +1,7 @@
-import { isAdministration, isAdministrationAdmin, isAdministrationEditeur, isSuper, User } from '../roles.js'
-import { AdministrationId, Administrations, sortedAdministrations } from '../static/administrations.js'
-import { Departements } from '../static/departement.js'
-import { DeepReadonly } from '../typescript-tools.js'
+import { isAdministration, isAdministrationAdmin, isAdministrationEditeur, isSuper, User } from '../roles'
+import { AdministrationId, Administrations, sortedAdministrations } from '../static/administrations'
+import { Departements } from '../static/departement'
+import { DeepReadonly } from '../typescript-tools'
 
 export const canReadActivitesTypesEmails = (user: User, administrationId: AdministrationId): boolean => {
   if (!canReadAdministrations(user)) {

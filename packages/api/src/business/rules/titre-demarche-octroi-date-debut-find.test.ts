@@ -1,6 +1,6 @@
-import { ITitreDemarche } from '../../types.js'
+import { ITitreDemarche } from '../../types'
 
-import titreDemarcheOctroiDateDebutFind from './titre-demarche-octroi-date-debut-find.js'
+import titreDemarcheOctroiDateDebutFind from './titre-demarche-octroi-date-debut-find'
 import { describe, expect, test } from 'vitest'
 describe("trouve la date d'octroi d'un titre", () => {
   test("retourne 0000 si le titre n'a pas de démarches", () => {

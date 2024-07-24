@@ -1,8 +1,8 @@
 /* eslint-disable no-restricted-syntax */
 import { sql } from '@pgtyped/runtime'
-import { Redefine, dbQueryAndValidate } from '../../pg-database.js'
-import { IGetEntrepriseEtablissementsDbQuery } from './entreprises-etablissements.queries.types.js'
-import { EntrepriseId, entrepriseEtablissementValidator } from 'camino-common/src/entreprise.js'
+import { Redefine, dbQueryAndValidate } from '../../pg-database'
+import { IGetEntrepriseEtablissementsDbQuery } from './entreprises-etablissements.queries.types'
+import { EntrepriseId, entrepriseEtablissementValidator } from 'camino-common/src/entreprise'
 import { Pool } from 'pg'
 import { z } from 'zod'
 

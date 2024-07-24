@@ -10,9 +10,9 @@ import {
   entrepriseTypeValidator,
   sirenValidator,
   entrepriseValidator,
-} from './entreprise.js'
-import { demarcheIdOrSlugValidator, demarcheIdValidator } from './demarche.js'
-import { newsletterAbonnementValidator, qgisTokenValidator, utilisateurToEdit } from './utilisateur.js'
+} from './entreprise'
+import { demarcheIdOrSlugValidator, demarcheIdValidator } from './demarche'
+import { newsletterAbonnementValidator, qgisTokenValidator, utilisateurToEdit } from './utilisateur'
 import {
   editableTitreValidator,
   getDemarcheByIdOrSlugValidator,
@@ -23,9 +23,9 @@ import {
   titreLinksValidator,
   titreOnfValidator,
   utilisateurTitreAbonneValidator,
-} from './titres.js'
-import { adminUserNotNullValidator, userValidator, utilisateurIdValidator } from './roles.js'
-import { caminoAnneeValidator, caminoDateValidator } from './date.js'
+} from './titres'
+import { adminUserNotNullValidator, userValidator, utilisateurIdValidator } from './roles'
+import { caminoAnneeValidator, caminoDateValidator } from './date'
 import {
   etapeDocumentIdValidator,
   etapeIdOrSlugValidator,
@@ -34,20 +34,20 @@ import {
   getEtapeDocumentsByEtapeIdValidator,
   getEtapeAvisByEtapeIdValidator,
   etapeAvisIdValidator,
-} from './etape.js'
+} from './etape'
 import {
   statistiquesDGTMValidator,
   statistiquesDataGouvValidator,
   statistiquesGranulatsMarinsValidator,
   statistiquesGuyaneDataValidator,
   statistiquesMinerauxMetauxMetropoleValidator,
-} from './statistiques.js'
-import { fiscaliteValidator } from './validators/fiscalite.js'
-import { caminoConfigValidator } from './static/config.js'
-import { communeValidator } from './static/communes.js'
-import { Expect, isFalse, isTrue } from './typescript-tools.js'
-import { activiteDocumentIdValidator, activiteEditionValidator, activiteIdOrSlugValidator, activiteValidator } from './activite.js'
-import { geoSystemeIdValidator } from './static/geoSystemes.js'
+} from './statistiques'
+import { fiscaliteValidator } from './validators/fiscalite'
+import { caminoConfigValidator } from './static/config'
+import { communeValidator } from './static/communes'
+import { Expect, isFalse, isTrue } from './typescript-tools'
+import { activiteDocumentIdValidator, activiteEditionValidator, activiteIdOrSlugValidator, activiteValidator } from './activite'
+import { geoSystemeIdValidator } from './static/geoSystemes'
 import {
   geojsonImportBodyValidator,
   geojsonImportForagesBodyValidator,
@@ -56,11 +56,11 @@ import {
   geojsonImportPointResponseValidator,
   geojsonInformationsValidator,
   perimetreInformationsValidator,
-} from './perimetre.js'
-import { titreIdOrSlugValidator, titreIdValidator } from './validators/titres.js'
-import { administrationIdValidator } from './static/administrations.js'
-import { administrationActiviteTypeEmailValidator } from './administrations.js'
-import { flattenEtapeValidator, restEtapeCreationValidator, restEtapeModificationValidator } from './etape-form.js'
+} from './perimetre'
+import { titreIdOrSlugValidator, titreIdValidator } from './validators/titres'
+import { administrationIdValidator } from './static/administrations'
+import { administrationActiviteTypeEmailValidator } from './administrations'
+import { flattenEtapeValidator, restEtapeCreationValidator, restEtapeModificationValidator } from './etape-form'
 
 type CaminoRoute<T extends string> = { params: ZodObjectParsUrlParams<T> } & {
   get?: { output: ZodType }

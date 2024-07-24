@@ -1,8 +1,8 @@
-import { restCall } from '../../../../tests/_utils/index.js'
-import { dbManager } from '../../../../tests/db-manager.js'
+import { restCall } from '../../../../tests/_utils/index'
+import { dbManager } from '../../../../tests/db-manager'
 import { expect, test, afterAll, beforeAll, vi } from 'vitest'
 import type { Pool } from 'pg'
-import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations.js'
+import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations'
 
 console.info = vi.fn()
 console.error = vi.fn()

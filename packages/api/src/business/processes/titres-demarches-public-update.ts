@@ -1,7 +1,7 @@
-import { titreDemarcheUpdate } from '../../database/queries/titres-demarches.js'
-import { titreDemarchePublicFind } from '../rules/titre-demarche-public-find.js'
-import { titresGet } from '../../database/queries/titres.js'
-import { userSuper } from '../../database/user-super.js'
+import { titreDemarcheUpdate } from '../../database/queries/titres-demarches'
+import { titreDemarchePublicFind } from '../rules/titre-demarche-public-find'
+import { titresGet } from '../../database/queries/titres'
+import { userSuper } from '../../database/user-super'
 
 type ITitreDemarchePatch = {
   publicLecture: boolean

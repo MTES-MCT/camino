@@ -2,14 +2,14 @@
 
 import { Model, ModelOptions, Pojo, QueryContext } from 'objection'
 
-import { ITitreEtape } from '../../types.js'
+import { ITitreEtape } from '../../types'
 
-import { heritagePropsFormat, heritageContenuFormat } from './_format/titre-etape-heritage.js'
-import { idGenerate } from './_format/id-create.js'
-import TitresDemarches from './titres-demarches.js'
-import Journaux from './journaux.js'
-import { etapeSlugValidator } from 'camino-common/src/etape.js'
-import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
+import { heritagePropsFormat, heritageContenuFormat } from './_format/titre-etape-heritage'
+import { idGenerate } from './_format/id-create'
+import TitresDemarches from './titres-demarches'
+import Journaux from './journaux'
+import { etapeSlugValidator } from 'camino-common/src/etape'
+import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 
 export interface DBTitresEtapes extends ITitreEtape {
   archive: boolean

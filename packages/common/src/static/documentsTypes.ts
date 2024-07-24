@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { NonEmptyArray, map } from '../typescript-tools.js'
+import { NonEmptyArray, map } from '../typescript-tools'
 
 export interface DocumentType {
   id: DocumentTypeId

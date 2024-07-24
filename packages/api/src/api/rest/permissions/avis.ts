@@ -1,12 +1,12 @@
-import { EntrepriseId } from 'camino-common/src/entreprise.js'
-import { isSuper, isAdministration, isEntrepriseOrBureauDEtude, User } from 'camino-common/src/roles.js'
-import { AdministrationId } from 'camino-common/src/static/administrations.js'
-import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
-import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
-import { SimplePromiseFn } from 'camino-common/src/typescript-tools.js'
-import { CanReadDemarche } from './demarches.js'
-import { canReadEtape } from './etapes.js'
-import { AvisVisibilityId, AvisVisibilityIds } from 'camino-common/src/static/avisTypes.js'
+import { EntrepriseId } from 'camino-common/src/entreprise'
+import { isSuper, isAdministration, isEntrepriseOrBureauDEtude, User } from 'camino-common/src/roles'
+import { AdministrationId } from 'camino-common/src/static/administrations'
+import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
+import { TitreTypeId } from 'camino-common/src/static/titresTypes'
+import { SimplePromiseFn } from 'camino-common/src/typescript-tools'
+import { CanReadDemarche } from './demarches'
+import { canReadEtape } from './etapes'
+import { AvisVisibilityId, AvisVisibilityIds } from 'camino-common/src/static/avisTypes'
 
 export const canReadAvis = async (
   avis: { avis_visibility_id: AvisVisibilityId },

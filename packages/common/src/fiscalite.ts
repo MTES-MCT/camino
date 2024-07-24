@@ -1,10 +1,10 @@
-import { isAdministration, isEntreprise, isSuper, User } from './roles.js'
-import { DomaineId, DOMAINES_IDS } from './static/domaines.js'
-import { CommonRestTitre } from './titres.js'
-import { EntrepriseId } from './entreprise.js'
-import { getDomaineId } from './static/titresTypes.js'
+import { isAdministration, isEntreprise, isSuper, User } from './roles'
+import { DomaineId, DOMAINES_IDS } from './static/domaines'
+import { CommonRestTitre } from './titres'
+import { EntrepriseId } from './entreprise'
+import { getDomaineId } from './static/titresTypes'
 import { Decimal } from 'decimal.js'
-import type { Fiscalite } from './validators/fiscalite.js'
+import type { Fiscalite } from './validators/fiscalite'
 
 export const montantNetTaxeAurifere = (fiscalite: Fiscalite): number => ('guyane' in fiscalite ? fiscalite.guyane.taxeAurifere : 0)
 

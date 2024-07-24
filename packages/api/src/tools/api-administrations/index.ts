@@ -1,8 +1,8 @@
 // https://etablissements-publics.api.gouv.fr
-import { DepartementId } from 'camino-common/src/static/departement.js'
-import { Administration, administrationIdValidator, administrationTypeIdValidator } from 'camino-common/src/static/administrations.js'
-import { config } from '../../config/index.js'
-import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
+import { DepartementId } from 'camino-common/src/static/departement'
+import { Administration, administrationIdValidator, administrationTypeIdValidator } from 'camino-common/src/static/administrations'
+import { config } from '../../config/index'
+import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 
 const MAX_CALLS_MINUTE = 200
 

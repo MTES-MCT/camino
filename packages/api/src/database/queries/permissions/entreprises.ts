@@ -1,13 +1,13 @@
 import { QueryBuilder } from 'objection'
 
-import { knex } from '../../../knex.js'
+import { knex } from '../../../knex'
 
-import Entreprises from '../../models/entreprises.js'
-import Utilisateurs from '../../models/utilisateurs.js'
+import Entreprises from '../../models/entreprises'
+import Utilisateurs from '../../models/utilisateurs'
 
-import { utilisateursQueryModify } from './utilisateurs.js'
-import { User } from 'camino-common/src/roles.js'
-import TitresEtapes from '../../models/titres-etapes.js'
+import { utilisateursQueryModify } from './utilisateurs'
+import { User } from 'camino-common/src/roles'
+import TitresEtapes from '../../models/titres-etapes'
 
 export const entreprisesQueryModify = (q: QueryBuilder<Entreprises, Entreprises | Entreprises[]>, user: User) => {
   q.select('entreprises.*')

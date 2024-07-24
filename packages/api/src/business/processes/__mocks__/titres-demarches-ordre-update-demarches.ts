@@ -1,4 +1,4 @@
-import Titres from '../../../database/models/titres.js'
+import Titres from '../../../database/models/titres'
 
 const titresDemarchesDesordonnees = [
   {

@@ -1,4 +1,4 @@
-import { DEMARCHES_TYPES_IDS, DemarcheTypeId } from 'camino-common/src/static/demarchesTypes.js'
+import { DEMARCHES_TYPES_IDS, DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
 import { Knex } from 'knex'
 
 const demarcheTypeIdsCxPr_G: DemarcheTypeId[] = [

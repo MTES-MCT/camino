@@ -1,8 +1,8 @@
-import { ArmOctMachine } from './oct.machine.js'
-import { interpretMachine, setDateAndOrderAndInterpretMachine, orderAndInterpretMachine } from '../machine-test-helper.js'
-import { EtapeTypeEtapeStatutValidPair, EtapesTypesEtapesStatuts as ETES } from 'camino-common/src/static/etapesTypesEtapesStatuts.js'
-import { Etape } from '../machine-common.js'
-import { toCaminoDate } from 'camino-common/src/date.js'
+import { ArmOctMachine } from './oct.machine'
+import { interpretMachine, setDateAndOrderAndInterpretMachine, orderAndInterpretMachine } from '../machine-test-helper'
+import { EtapeTypeEtapeStatutValidPair, EtapesTypesEtapesStatuts as ETES } from 'camino-common/src/static/etapesTypesEtapesStatuts'
+import { Etape } from '../machine-common'
+import { toCaminoDate } from 'camino-common/src/date'
 import { describe, expect, test } from 'vitest'
 const etapesProd = require('./2019-10-31-oct.cas.json')
 

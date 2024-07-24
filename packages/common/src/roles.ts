@@ -1,7 +1,7 @@
-import { administrationIdValidator } from './static/administrations.js'
-import { entrepriseValidator } from './entreprise.js'
+import { administrationIdValidator } from './static/administrations'
+import { entrepriseValidator } from './entreprise'
 import { z } from 'zod'
-import { DeepReadonly } from './typescript-tools.js'
+import { DeepReadonly } from './typescript-tools'
 
 export const ROLES = ['super', 'admin', 'editeur', 'lecteur', 'entreprise', 'bureau d’études', 'defaut'] as const
 

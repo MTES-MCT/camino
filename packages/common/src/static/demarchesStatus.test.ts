@@ -1,4 +1,4 @@
-import { isDemarcheStatutNonStatue, isDemarcheStatutNonValide } from './demarchesStatuts.js'
+import { isDemarcheStatutNonStatue, isDemarcheStatutNonValide } from './demarchesStatuts'
 import { test, expect } from 'vitest'
 
 test('isDemarcheStatutNonStatue', () => {

@@ -1,8 +1,8 @@
-import { Commune, communeIdValidator } from 'camino-common/src/static/communes.js'
+import { Commune, communeIdValidator } from 'camino-common/src/static/communes'
 import { Pool } from 'pg'
-import { HTTP_STATUS } from 'camino-common/src/http.js'
-import { CaminoRequest, CustomResponse } from './express-type.js'
-import { getCommunes as getCommunesQuery } from '../../database/queries/communes.queries.js'
+import { HTTP_STATUS } from 'camino-common/src/http'
+import { CaminoRequest, CustomResponse } from './express-type'
+import { getCommunes as getCommunesQuery } from '../../database/queries/communes.queries'
 import { z } from 'zod'
 
 export const getCommunes = (pool: Pool) => async (req: CaminoRequest, res: CustomResponse<Commune[]>) => {

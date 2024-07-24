@@ -1,22 +1,22 @@
 /* eslint-disable no-restricted-syntax */
 import { Pool } from 'pg'
-import { DbQueryAccessError, Redefine, dbQueryAndValidate, effectDbQueryAndValidate } from '../../pg-database.js'
+import { DbQueryAccessError, Redefine, dbQueryAndValidate, effectDbQueryAndValidate } from '../../pg-database'
 import { sql } from '@pgtyped/runtime'
-import { AdministrationId, administrationIdValidator } from 'camino-common/src/static/administrations.js'
-import { AdministrationActiviteTypeEmail, administrationActiviteTypeEmailValidator } from 'camino-common/src/administrations.js'
+import { AdministrationId, administrationIdValidator } from 'camino-common/src/static/administrations'
+import { AdministrationActiviteTypeEmail, administrationActiviteTypeEmailValidator } from 'camino-common/src/administrations'
 import {
   IDeleteAdministrationActiviteTypeEmailDbQuery,
   IGetActiviteTypeEmailsByAdministrationIdDbQuery,
   IGetActiviteTypeEmailsByAdministrationIdsDbQuery,
   IGetUtilisateursByAdministrationIdDbQuery,
   IInsertAdministrationActiviteTypeEmailDbQuery,
-} from './administrations.queries.types.js'
-import { AdminUserNotNull, adminUserNotNullValidator } from 'camino-common/src/roles.js'
-import { ActivitesTypesId } from 'camino-common/src/static/activitesTypes.js'
-import { NonEmptyArray } from 'camino-common/src/typescript-tools.js'
+} from './administrations.queries.types'
+import { AdminUserNotNull, adminUserNotNullValidator } from 'camino-common/src/roles'
+import { ActivitesTypesId } from 'camino-common/src/static/activitesTypes'
+import { NonEmptyArray } from 'camino-common/src/typescript-tools'
 import { z } from 'zod'
-import { CaminoError } from 'camino-common/src/zod-tools.js'
-import { ZodUnparseable } from '../../tools/fp-tools.js'
+import { CaminoError } from 'camino-common/src/zod-tools'
+import { ZodUnparseable } from '../../tools/fp-tools'
 import { Effect, pipe } from 'effect'
 
 export const getUtilisateursByAdministrationId = async (pool: Pool, administrationId: AdministrationId): Promise<AdminUserNotNull[]> => {

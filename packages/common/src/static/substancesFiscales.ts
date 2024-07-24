@@ -1,5 +1,5 @@
-import { UniteId } from './unites.js'
-import { SubstanceLegaleId, SubstancesLegales } from './substancesLegales.js'
+import { UniteId } from './unites'
+import { SubstanceLegaleId, SubstancesLegales } from './substancesLegales'
 import { z } from 'zod'
 
 // prettier-ignore

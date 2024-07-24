@@ -1,17 +1,17 @@
-import { ETAPES_TYPES, EtapeTypeId } from '../static/etapesTypes.js'
-import { TitreTypeId } from '../static/titresTypes.js'
-import { DEMARCHES_TYPES_IDS, DemarcheTypeId, isDemarcheTypeWithPhase } from '../static/demarchesTypes.js'
-import { isAdministrationAdmin, isAdministrationEditeur, isBureauDEtudes, isEntreprise, isSuper, User } from '../roles.js'
-import { TITRES_TYPES_IDS_DEMAT } from './titres.js'
-import { AdministrationId } from '../static/administrations.js'
-import { isGestionnaire } from '../static/administrationsTitresTypes.js'
-import { canAdministrationModifyEtapes } from '../static/administrationsTitresTypesTitresStatuts.js'
-import { canAdministrationEtapeTypeId } from '../static/administrationsTitresTypesEtapesTypes.js'
+import { ETAPES_TYPES, EtapeTypeId } from '../static/etapesTypes'
+import { TitreTypeId } from '../static/titresTypes'
+import { DEMARCHES_TYPES_IDS, DemarcheTypeId, isDemarcheTypeWithPhase } from '../static/demarchesTypes'
+import { isAdministrationAdmin, isAdministrationEditeur, isBureauDEtudes, isEntreprise, isSuper, User } from '../roles'
+import { TITRES_TYPES_IDS_DEMAT } from './titres'
+import { AdministrationId } from '../static/administrations'
+import { isGestionnaire } from '../static/administrationsTitresTypes'
+import { canAdministrationModifyEtapes } from '../static/administrationsTitresTypesTitresStatuts'
+import { canAdministrationEtapeTypeId } from '../static/administrationsTitresTypesEtapesTypes'
 
-import { TitreStatutId } from '../static/titresStatuts.js'
-import { EntrepriseDocument, EntrepriseId } from '../entreprise.js'
-import { SDOMZoneId } from '../static/sdom.js'
-import { DeepReadonly, NonEmptyArray, isNonEmptyArray } from '../typescript-tools.js'
+import { TitreStatutId } from '../static/titresStatuts'
+import { EntrepriseDocument, EntrepriseId } from '../entreprise'
+import { SDOMZoneId } from '../static/sdom'
+import { DeepReadonly, NonEmptyArray, isNonEmptyArray } from '../typescript-tools'
 import {
   ETAPE_IS_BROUILLON,
   EtapeAvis,
@@ -22,7 +22,7 @@ import {
   GetEtapeDocumentsByEtapeIdDaeDocument,
   TempEtapeAvis,
   TempEtapeDocument,
-} from '../etape.js'
+} from '../etape'
 import {
   dateTypeStepIsComplete,
   entrepriseDocumentsStepIsComplete,
@@ -31,9 +31,9 @@ import {
   fondamentaleStepIsComplete,
   perimetreStepIsComplete,
   sectionsStepIsComplete,
-} from './etape-form.js'
-import { CommuneId } from '../static/communes.js'
-import { FlattenEtape } from '../etape-form.js'
+} from './etape-form'
+import { CommuneId } from '../static/communes'
+import { FlattenEtape } from '../etape-form'
 
 export const isDureeOptional = (etapeTypeId: EtapeTypeId, demarcheTypeId: DemarcheTypeId, titreTypeId: TitreTypeId): boolean => {
   if (titreTypeId !== 'axm' && titreTypeId !== 'arm') {

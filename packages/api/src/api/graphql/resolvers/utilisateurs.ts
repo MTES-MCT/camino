@@ -1,15 +1,15 @@
 import { GraphQLResolveInfo } from 'graphql'
 
-import { Context, IUtilisateursColonneId } from '../../../types.js'
+import { Context, IUtilisateursColonneId } from '../../../types'
 
-import { fieldsBuild } from './_fields-build.js'
+import { fieldsBuild } from './_fields-build'
 
-import { userGet, utilisateurGet, utilisateursCount, utilisateursGet } from '../../../database/queries/utilisateurs.js'
+import { userGet, utilisateurGet, utilisateursCount, utilisateursGet } from '../../../database/queries/utilisateurs'
 
-import { newsletterSubscriberUpdate } from '../../../tools/api-mailjet/newsletter.js'
-import { Role, UtilisateurId } from 'camino-common/src/roles.js'
-import { canReadUtilisateurs, canReadUtilisateur } from 'camino-common/src/permissions/utilisateurs.js'
-import { newUtilisateurId } from '../../../database/models/_format/id-create.js'
+import { newsletterSubscriberUpdate } from '../../../tools/api-mailjet/newsletter'
+import { Role, UtilisateurId } from 'camino-common/src/roles'
+import { canReadUtilisateurs, canReadUtilisateur } from 'camino-common/src/permissions/utilisateurs'
+import { newUtilisateurId } from '../../../database/models/_format/id-create'
 
 export const userIdGenerate = async (): Promise<UtilisateurId> => {
   const id = newUtilisateurId()

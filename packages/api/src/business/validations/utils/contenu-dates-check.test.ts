@@ -1,8 +1,8 @@
-import { contenuDatesCheck } from './contenu-dates-check.js'
+import { contenuDatesCheck } from './contenu-dates-check'
 import { describe, test, expect } from 'vitest'
-import { Section } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
-import { DeepReadonly } from 'camino-common/src/typescript-tools.js'
-import { CaminoDate } from 'camino-common/src/date.js'
+import { Section } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections'
+import { DeepReadonly } from 'camino-common/src/typescript-tools'
+import { CaminoDate } from 'camino-common/src/date'
 
 const sections: DeepReadonly<Section[]> = [
   {

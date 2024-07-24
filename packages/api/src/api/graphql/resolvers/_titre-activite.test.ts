@@ -1,6 +1,6 @@
-import { productionCheck, titreActiviteAdministrationsEmailsGet } from './_titre-activite.js'
-import { IContenu } from '../../../types.js'
-import { AdministrationId, ADMINISTRATION_IDS } from 'camino-common/src/static/administrations.js'
+import { productionCheck, titreActiviteAdministrationsEmailsGet } from './_titre-activite'
+import { IContenu } from '../../../types'
+import { AdministrationId, ADMINISTRATION_IDS } from 'camino-common/src/static/administrations'
 import { describe, expect, test } from 'vitest'
 import { GetActiviteTypeEmailsByAdministrationIds } from '../../rest/administrations.queries'
 

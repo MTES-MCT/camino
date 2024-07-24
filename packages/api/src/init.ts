@@ -1,4 +1,4 @@
-import { knexInit } from './knex.js'
-import { knexConfig } from './knex/config.js'
+import { knexInit } from './knex'
+import { knexConfig } from './knex/config'
 
 knexInit(knexConfig)
