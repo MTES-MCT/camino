@@ -110,6 +110,30 @@ describe('titreDemandeCreer', () => {
       `)
   })
 
+  test('ne peut pas créer un titre avec une entreprise en tant que super', async () => {
+    const tested = await restNewPostCall(dbPool, '/rest/titres', {}, { role: 'super' }, body)
+
+    expect(tested.statusCode).toBe(HTTP_STATUS.BAD_REQUEST)
+    expect(tested.body).toMatchInlineSnapshot(`
+      {
+        "message": "L'entreprise est obligatoire",
+        "status": 400,
+      }
+    `)
+  })
+
+  test('ne peut pas créer un titre sans entrepriseId en tant qu\'entreprise', async () => {
+    const tested = await restNewPostCall(dbPool, '/rest/titres', {}, { role: 'entreprise', entreprises: [{ id: entrepriseId }] }, { ...body, entrepriseId: undefined })
+
+    expect(tested.statusCode).toBe(HTTP_STATUS.BAD_REQUEST)
+    expect(tested.body).toMatchInlineSnapshot(`
+      {
+        "message": "L'entreprise est obligatoire",
+        "status": 400,
+      }
+    `)
+  })
+
   test('ne peut pas lier un titre inexistant', async () => {
     const tested = await restNewPostCall(
       dbPool,

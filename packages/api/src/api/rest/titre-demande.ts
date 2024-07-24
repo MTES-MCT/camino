@@ -33,6 +33,8 @@ type TitreDemandeCreerErrors =
   | "Problème lors de la création de l'étape"
   | "Problème lors de la mise à jour des tâches de l'étape"
   | "Problème lors de l'abonnement de l'utilisateur au titre"
+  | "L'entreprise est obligatoire"
+  | "L'entreprise ne doit pas être présente"
 export const titreDemandeCreer = (
   pool: Pool,
   user: DeepReadonly<UserNotNull>,
@@ -44,6 +46,19 @@ export const titreDemandeCreer = (
     Effect.filterOrFail(
       () => canCreateTitre(user, titreDemande.titreTypeId),
       () => ({ message: 'Accès interdit' as const })
+    ),
+    Effect.filterOrFail(
+      () => {
+        console.log(createAutomaticallyEtapeWhenCreatingTitre(user))
+        console.log(titreDemande.entrepriseId)
+        console.log(createAutomaticallyEtapeWhenCreatingTitre(user) && isNotNullNorUndefinedNorEmpty(titreDemande.entrepriseId))
+        return !createAutomaticallyEtapeWhenCreatingTitre(user) || isNotNullNorUndefinedNorEmpty(titreDemande.entrepriseId)
+      },
+      () => ({ message: 'L\'entreprise est obligatoire' as const })
+    ),
+    Effect.filterOrFail(
+      () => !createAutomaticallyEtapeWhenCreatingTitre(user) && isNullOrUndefinedOrEmpty(titreDemande.entrepriseId),
+      () => ({ message: 'L\'entreprise ne doit pas être présente' as const })
     ),
     Effect.filterOrFail(
       () => isNullOrUndefinedOrEmpty(titreDemande.references) || !isEntrepriseOrBureauDEtude(user),
@@ -106,6 +121,9 @@ export const titreDemandeCreer = (
         return pipe(
           Effect.tryPromise({
             try: async () => {
+              if (isNullOrUndefinedOrEmpty(titreDemande.entrepriseId)) {
+                throw new Error('Ne devrait jamais se produire, réduction pour typescript qui ne voit pas le filterOrFail au dessus')
+              }
               const titreEtape: Omit<ITitreEtape, 'id'> = {
                 titreDemarcheId: demarcheId,
                 typeId: 'mfr',
@@ -171,7 +189,7 @@ export const titreDemandeCreer = (
             status: HTTP_STATUS.INTERNAL_SERVER_ERROR,
           })
         ),
-        Match.when('Problème lors du lien des titres', () => ({ ...caminoError, status: HTTP_STATUS.BAD_REQUEST })),
+        Match.whenOr('Problème lors du lien des titres','L\'entreprise ne doit pas être présente', 'L\'entreprise est obligatoire', () => ({ ...caminoError, status: HTTP_STATUS.BAD_REQUEST })),
         Match.exhaustive
       )
     )
