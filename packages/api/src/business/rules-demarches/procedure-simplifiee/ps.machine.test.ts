@@ -5,7 +5,7 @@ import { describe, expect, test } from 'vitest'
 import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts'
 import { ProcedureSimplifieeMachine } from './ps.machine'
 
-const etapesProdProceduresHistoriques = require('../pxg-arg-cxr-inr-prr-pxr/1717-01-09-amo-ces-con-dec-dep-exp-exs-fus-mut-oct-pr1-pr2-pre-pro-prr-ren-res-ret-vct-vut.cas.json')
+const etapesProdProceduresHistoriques = require('../pxg-arg-cxr-inr-prr-pxr-cxf-prf-pxf/1717-01-09-amo-ces-con-dec-dep-exp-exs-fus-mut-oct-pr1-pr2-pre-pro-prr-ren-res-ret-vct-vut.cas.json')
 const psMachine = new ProcedureSimplifieeMachine()
 
 describe('vérifie l’arbre des procédures historiques et simplifiées', () => {
