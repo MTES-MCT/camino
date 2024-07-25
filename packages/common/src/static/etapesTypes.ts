@@ -4,13 +4,13 @@ import { Definition } from '../definition'
 import { EtapeBrouillon } from '../etape'
 
 // prettier-ignore
-const IDS = ['abd', 'aca','aco','and','ane','anf','def','dex','dim', 'dpu', 'dup', 'dux','ihi', 'mfr','mod','mom','rca','rcb','rcd','rcm','rco','rcs','rie','rif','rim','rpu','sco','acg','acl','aep','ama','apd','ape','apo','app','apu','apw','asl','cac','ccs','cim','cod','css','dae','dec','des','ede','edm','epc','epu','esb','ide','mca','mcb','mcd','mcm','mco','mcp','mcr','mcs','mdp','mec','men','meo','mie','mif','mim','mna','mnb','mnc','mnd','mni','mno','mns','mnv','ncl','nis','npp','pfc','pfd','ppu','pqr','rcg','rde','rpe','sas','sca','scg','scl','spe','spo','spp','vfc','vfd','wab','wae','wao','wap','war','wau','wce','wco','wda','wdc','wdd','wde','wdm','wfa','wfd','wfo','wfr','wmm','wmr','wmt','woe','wpa','wpb','wpc','wpo','wpp','wps','wrc','wrd','wre','wrl','wrt','wse','wtp', 'asc'] as const
+const IDS = ['abd', 'aca','aco','and','ane','anf','def','dex','dim', 'dpu', 'dup', 'dux','ihi', 'mfr','mod','mom','rca','rcb','rcd','rcm','rco','rcs','rie','rif','rim','rpu','sco','acg','apd','ape','apo','app','apu','apw','asl','cac','ccs','cim','cod','css','dae','dec','des','ede','edm','epc','epu','esb','ide','mca','mcb','mcd','mcm','mco','mcp','mcr','mcs','mdp','mec','men','meo','mie','mif','mim','mna','mnb','mnc','mnd','mni','mno','mns','mnv','ncl','nis','npp','pfc','pfd','ppu','pqr','rcg','rde','rpe','sas','sca','scg','scl','spe','spo','spp','vfc','vfd','wab','wae','wao','wap','war','wau','wce','wco','wda','wdc','wdd','wde','wdm','wfa','wfd','wfo','wfr','wmm','wmr','wmt','woe','wpa','wpb','wpc','wpo','wpp','wps','wrc','wrd','wre','wrl','wrt','wse','wtp', 'asc', 'adc'] as const
 
 // prettier-ignore
 const FONDAMENTALES_IDS = ['abd', 'aca','aco','and','ane','anf','def','dex','dim', 'dpu', 'dup', 'dux','ihi', 'mfr','mod','mom','rca','rcb','rcd','rcm','rco','rcs','rie','rif','rim','rpu','sco'] as const satisfies Readonly<EtapeTypeIdFondamentaleArray>
 
 // prettier-ignore
-const NON_FONDAMENTALES_IDS = ['acg','acl','aep','ama','apd','ape','apo','app','apu','apw','asl','cac','ccs','cim','cod','css','dae','dec','des','ede','edm','epc','epu','esb','ide','mca','mcb','mcd','mcm','mco','mcp','mcr','mcs','mdp','mec','men','meo','mie','mif','mim','mna','mnb','mnc','mnd','mni','mno','mns','mnv','ncl','nis','npp','pfc','pfd','ppu','pqr','rcg','rde','rpe','sas','sca','scg','scl','spe','spo','spp','vfc','vfd','wab','wae','wao','wap','war','wau','wce','wco','wda','wdc','wdd','wde','wdm','wfa','wfd','wfo','wfr','wmm','wmr','wmt','woe','wpa','wpb','wpc','wpo','wpp','wps','wrc','wrd','wre','wrl','wrt','wse','wtp', 'asc'] as const satisfies Readonly<EtapeTypeIdNonFondamentale[]>
+const NON_FONDAMENTALES_IDS = ['acg','apd','ape','apo','app','apu','apw','asl','cac','ccs','cim','cod','css','dae','dec','des','ede','edm','epc','epu','esb','ide','mca','mcb','mcd','mcm','mco','mcp','mcr','mcs','mdp','mec','men','meo','mie','mif','mim','mna','mnb','mnc','mnd','mni','mno','mns','mnv','ncl','nis','npp','pfc','pfd','ppu','pqr','rcg','rde','rpe','sas','sca','scg','scl','spe','spo','spp','vfc','vfd','wab','wae','wao','wap','war','wau','wce','wco','wda','wdc','wdd','wde','wdm','wfa','wfd','wfo','wfr','wmm','wmr','wmt','woe','wpa','wpb','wpc','wpo','wpp','wps','wrc','wrd','wre','wrl','wrt','wse','wtp', 'asc', 'adc'] as const satisfies Readonly<EtapeTypeIdNonFondamentale[]>
 
 // Ceci est un test :)
 ;[...FONDAMENTALES_IDS, ...NON_FONDAMENTALES_IDS] as const satisfies typeof IDS
@@ -19,10 +19,7 @@ export const ETAPES_TYPES = {
   abrogationDeLaDecision: 'abd',
   avisDeLaCommissionDesAutorisationsDeRecherchesMinieres_CARM_: 'aca',
   avisDuConseilGeneralDeLeconomie_CGE_: 'acg',
-  avisDuneCollectiviteLocale: 'acl',
   avenantALautorisationDeRechercheMiniere: 'aco',
-  avisDunPresidentDEPCI: 'aep',
-  avisDunMaire: 'ama',
   decisionDuJugeAdministratif: 'and',
   avisDeMiseEnConcurrenceAuJOUE: 'ane',
   avisDeMiseEnConcurrenceAuJORF: 'anf',
@@ -145,6 +142,7 @@ export const ETAPES_TYPES = {
   saisineDeLautoriteEnvironnementale: 'wse',
   transmissionDuProjetDePrescriptionsAuDemandeur: 'wtp',
   avisDesServicesEtCommissionsConsultatives: 'asc',
+  avisDesCollectivites: 'adc',
 } as const satisfies Record<string, EtapeTypeId>
 
 export const etapeTypeIdValidator = z.enum(IDS)
@@ -351,16 +349,6 @@ export const EtapesTypes = {
     public_lecture: false,
     entreprises_lecture: true,
   },
-  ama: {
-    id: 'ama',
-    nom: "avis d'un maire",
-    description: "Avis du maire, dans le cadre de l’instruction d’un titre ou d'une demande relative à la police des mines.",
-    fondamentale: false,
-    unique: false,
-    date_fin: null,
-    public_lecture: true,
-    entreprises_lecture: true,
-  },
   scg: {
     id: 'scg',
     nom: "saisine du conseil général de l'économie (CGE)",
@@ -371,16 +359,6 @@ export const EtapesTypes = {
     date_fin: null,
     public_lecture: false,
     entreprises_lecture: false,
-  },
-  aep: {
-    id: 'aep',
-    nom: "avis d'un président d'EPCI",
-    description: "Avis du président d’EPCI dans le cadre de l’instruction d’un titre ou d'une demande relative à la police des mines.",
-    fondamentale: false,
-    unique: false,
-    date_fin: null,
-    public_lecture: true,
-    entreprises_lecture: true,
   },
   rie: {
     id: 'rie',
@@ -662,16 +640,6 @@ export const EtapesTypes = {
     unique: false,
     date_fin: null,
     public_lecture: false,
-    entreprises_lecture: true,
-  },
-  acl: {
-    id: 'acl',
-    nom: "avis d'une collectivité locale",
-    description: "Avis de la collectivité locale dans le cadre de l’instruction d’un titre ou d'une demande relative à la police des mines.",
-    fondamentale: false,
-    unique: false,
-    date_fin: null,
-    public_lecture: true,
     entreprises_lecture: true,
   },
   mnc: {
@@ -1469,6 +1437,16 @@ export const EtapesTypes = {
     date_fin: null,
     public_lecture: false,
     entreprises_lecture: false,
+  },
+  adc: {
+    id: 'adc',
+    nom: 'Avis des collectivités',
+    description: '',
+    fondamentale: false,
+    unique: false,
+    date_fin: null,
+    public_lecture: true,
+    entreprises_lecture: true,
   },
 } as const satisfies { [key in EtapeTypeId]: EtapeType<key> }
 

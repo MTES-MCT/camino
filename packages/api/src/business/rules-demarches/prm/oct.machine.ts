@@ -56,7 +56,7 @@ type XStateEvent =
   | RendreRapportDREAL
   | { type: 'RENDRE_AVIS_PREFET' }
   | { type: 'FAIRE_SAISINE_DES_COLLECTIVITES_LOCALES' }
-  | { type: 'RENDRE_AVIS_DU_MAIRE' }
+  | { type: 'RENDRE_AVIS_DES_COLLECTIVITES' }
   | { type: 'FAIRE_SAISINE_CONSEIL_GENERAL_CHARGE_DES_MINES' }
   | { type: 'FAIRE_RAPPORT_CONSEIL_GENERAL_CHARGE_DES_MINES' }
   | { type: 'RENDRE_AVIS_CONSEIL_GENERAL_CHARGE_DES_MINES' }
@@ -107,7 +107,7 @@ const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
   RENDRE_RAPPORT_DREAL: { db: EtapesTypesEtapesStatuts.avisEtRapportDuDirecteurRegionalChargeDeLenvironnementDeLamenagementEtDuLogement, mainStep: true },
   RENDRE_AVIS_PREFET: { db: EtapesTypesEtapesStatuts.avisDuPrefet, mainStep: true },
   FAIRE_SAISINE_DES_COLLECTIVITES_LOCALES: { db: EtapesTypesEtapesStatuts.saisineDesCollectivitesLocales, mainStep: true },
-  RENDRE_AVIS_DU_MAIRE: { db: EtapesTypesEtapesStatuts.avisDunMaire, mainStep: true },
+  RENDRE_AVIS_DES_COLLECTIVITES: { db: EtapesTypesEtapesStatuts.avisDesCollectivites, mainStep: true },
   FAIRE_SAISINE_CONSEIL_GENERAL_CHARGE_DES_MINES: { db: EtapesTypesEtapesStatuts.saisineDuConseilGeneralDeLeconomie_CGE_, mainStep: true },
   FAIRE_RAPPORT_CONSEIL_GENERAL_CHARGE_DES_MINES: { db: EtapesTypesEtapesStatuts.rapportDuConseilGeneralDeLeconomie_CGE_, mainStep: true },
   RENDRE_AVIS_CONSEIL_GENERAL_CHARGE_DES_MINES: { db: EtapesTypesEtapesStatuts.avisDuConseilGeneralDeLeconomie_CGE_, mainStep: true },
@@ -373,12 +373,12 @@ const prmOctMachine = createMachine({
                         target: 'done',
                       },
                       on: {
-                        FAIRE_SAISINE_DES_COLLECTIVITES_LOCALES: 'avisDuMaireARendre',
+                        FAIRE_SAISINE_DES_COLLECTIVITES_LOCALES: 'avisDesCollectivitesARendre',
                       },
                     },
-                    avisDuMaireARendre: {
+                    avisDesCollectivitesARendre: {
                       on: {
-                        RENDRE_AVIS_DU_MAIRE: 'done',
+                        RENDRE_AVIS_DES_COLLECTIVITES: 'done',
                       },
                     },
                     done: { type: 'final' },

@@ -167,7 +167,9 @@ export const getDocumentsTypes = (
 
 export const getAvisTypes = (etapeTypeId: EtapeTypeId, titreTypeId: TitreTypeId, communeIds: DeepReadonly<CommuneId[]>): { id: AvisTypeId; optionnel: boolean }[] => {
   const avis = []
-  if (etapeTypeId === ETAPES_TYPES.avisDesServicesEtCommissionsConsultatives) {
+  if (etapeTypeId === ETAPES_TYPES.avisDesCollectivites) {
+    avis.push({ ...AvisTypes.avisDUneCollectivite, optionnel: true })
+  } else if (etapeTypeId === ETAPES_TYPES.avisDesServicesEtCommissionsConsultatives) {
     avis.push(
       ...[
         { ...AvisTypes.avisDirectionRegionaleDesAffairesCulturelles, optionnel: true },

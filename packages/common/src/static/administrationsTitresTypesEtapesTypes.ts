@@ -427,7 +427,7 @@ const AdministrationsTitresTypesEtapesTypes: {
     [TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX]: {
       [ETAPES_TYPES.avisDesServicesEtCommissionsConsultatives]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.abrogationDeLaDecision]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
-      [ETAPES_TYPES.avisDunMaire]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
+      [ETAPES_TYPES.avisDesCollectivites]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.decisionDuJugeAdministratif]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.avisEtRapportDuDirecteurRegionalChargeDeLenvironnementDeLamenagementEtDuLogement]: { lectureInterdit: true, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.avisDeLaCommissionDepartementaleDesMines_CDM_]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },

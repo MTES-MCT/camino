@@ -6,7 +6,7 @@ import { TitreTypeId, TITRES_TYPES_IDS } from './../titresTypes'
 import { TDEType } from './index'
 
 const EtapesTypesDocumentsTypes = {
-  [ETAPES_TYPES.avisDunPresidentDEPCI]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.avis, optionnel: true }],
+  [ETAPES_TYPES.avisDesCollectivites]: [],
   [ETAPES_TYPES.abrogationDeLaDecision]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.arrete, optionnel: true }],
   [ETAPES_TYPES.avisDeLaCommissionDesAutorisationsDeRecherchesMinieres_CARM_]: [
     { documentTypeId: DOCUMENTS_TYPES_IDS.avis, optionnel: true },
@@ -19,7 +19,6 @@ const EtapesTypesDocumentsTypes = {
     { documentTypeId: DOCUMENTS_TYPES_IDS.avis, optionnel: true },
     { documentTypeId: DOCUMENTS_TYPES_IDS.rapportDeLAdministrationCentraleChargeDesMines, optionnel: true },
   ],
-  [ETAPES_TYPES.avisDuneCollectiviteLocale]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.avis, optionnel: true }],
   [ETAPES_TYPES.avenantALautorisationDeRechercheMiniere]: [
     { documentTypeId: DOCUMENTS_TYPES_IDS.avenant, optionnel: true },
     { documentTypeId: DOCUMENTS_TYPES_IDS.contrat, optionnel: true },
@@ -27,7 +26,6 @@ const EtapesTypesDocumentsTypes = {
     { documentTypeId: DOCUMENTS_TYPES_IDS.decision, optionnel: true },
     { documentTypeId: DOCUMENTS_TYPES_IDS.notificationDeDecision, optionnel: true },
   ],
-  [ETAPES_TYPES.avisDunMaire]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.avis, optionnel: true }],
   [ETAPES_TYPES.decisionDuJugeAdministratif]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.decision, optionnel: true }],
   [ETAPES_TYPES.avisDeMiseEnConcurrenceAuJORF]: [
     { documentTypeId: DOCUMENTS_TYPES_IDS.avisDeMiseEnConcurrence, optionnel: true },

@@ -25,7 +25,7 @@ type AXMProXStateEvent =
   | { type: 'FAIRE_RECEVABILITE_DEMANDE_DEFAVORABLE' }
   | { type: 'MODIFIER_LA_DEMANDE' }
   | { type: 'FAIRE_SAISINE_COLLECTIVITES_LOCALES' }
-  | { type: 'RENDRE_AVIS_DUN_MAIRE' }
+  | { type: 'RENDRE_AVIS_DE_COLLECTIVITES' }
   | RendreAvisDreal
   | RendreAvisDesServicesEtCommissionsConsultatives
   | { type: 'FAIRE_SAISINE_COMMISSION_DEPARTEMENTALE_DES_MINES' }
@@ -55,7 +55,7 @@ const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
   RECEVOIR_COMPLEMENTS_POUR_RECEVABILITE: { db: ETES.receptionDeComplements_RecevabiliteDeLaDemande_, mainStep: false },
   MODIFIER_LA_DEMANDE: { db: ETES.modificationDeLaDemande, mainStep: true },
   FAIRE_SAISINE_COLLECTIVITES_LOCALES: { db: ETES.saisineDesCollectivitesLocales, mainStep: true },
-  RENDRE_AVIS_DUN_MAIRE: { db: ETES.avisDunMaire, mainStep: false },
+  RENDRE_AVIS_DE_COLLECTIVITES: { db: ETES.avisDesCollectivites, mainStep: false },
   RENDRE_AVIS_DREAL: { db: ETES.avisEtRapportDuDirecteurRegionalChargeDeLenvironnementDeLamenagementEtDuLogement, mainStep: true },
   RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES: { db: ETES.avisDesServicesEtCommissionsConsultatives, mainStep: true },
   FAIRE_SAISINE_COMMISSION_DEPARTEMENTALE_DES_MINES: { db: ETES.saisineDeLaCommissionDepartementaleDesMines_CDM_, mainStep: false },
@@ -308,7 +308,7 @@ const axmProMachine = createMachine({
             saisineCollectivitesLocalesAFaire: {
               on: {
                 FAIRE_SAISINE_COLLECTIVITES_LOCALES: {
-                  target: 'avisDunMaireARendre',
+                  target: 'avisDesCollectivitesARendre',
                   guard: ({ context }) => !context.saisineDesCollectivitesLocalesFaite,
                   actions: assign({
                     saisineDesCollectivitesLocalesFaite: true,
@@ -316,10 +316,10 @@ const axmProMachine = createMachine({
                 },
               },
             },
-            avisDunMaireARendre: {
-              on: { RENDRE_AVIS_DUN_MAIRE: 'avisDunMaireRendu' },
+            avisDesCollectivitesARendre: {
+              on: { RENDRE_AVIS_DE_COLLECTIVITES: 'avisDesCollectivitesRendu' },
             },
-            avisDunMaireRendu: { type: 'final' },
+            avisDesCollectivitesRendu: { type: 'final' },
           },
         },
         avisDesServicesEtCommissionsConsultativesMachine: {

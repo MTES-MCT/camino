@@ -49,7 +49,7 @@ describe('vérifie l’arbre d’octroi de PRM', () => {
       { ...ETES.participationDuPublic.TERMINE, addDays: 31 },
       ETES.avisDesServicesEtCommissionsConsultatives.FAIT,
       ETES.saisineDesCollectivitesLocales.FAIT,
-      ETES.avisDunMaire.FAVORABLE,
+      ETES.avisDesCollectivites.FAIT,
       { ...ETES.avisDeLaCommissionDepartementaleDesMines_CDM_.FAVORABLE, addDays: 31 },
       ETES.avisEtRapportDuDirecteurRegionalChargeDeLenvironnementDeLamenagementEtDuLogement.FAVORABLE,
       ETES.avisDuPrefet.FAVORABLE,

@@ -25,26 +25,10 @@ export const EtapesTypesEtapesStatuts = {
     FAVORABLE_AVEC_RESERVE: { etapeTypeId: 'acg', etapeStatutId: 'fre' },
     DEFAVORABLE_AVEC_RESERVES: { etapeTypeId: 'acg', etapeStatutId: 'dre' },
   },
-  avisDuneCollectiviteLocale: {
-    FAVORABLE: { etapeTypeId: 'acl', etapeStatutId: 'fav' },
-    DEFAVORABLE: { etapeTypeId: 'acl', etapeStatutId: 'def' },
+  avisDesCollectivites: {
+    FAIT: { etapeStatutId: 'fai', etapeTypeId: 'adc' },
   },
   avenantALautorisationDeRechercheMiniere: { FAIT: { etapeTypeId: 'aco', etapeStatutId: 'fai' } },
-
-  avisDunPresidentDEPCI: {
-    FAVORABLE: { etapeTypeId: 'aep', etapeStatutId: 'fav' },
-    DEFAVORABLE: { etapeTypeId: 'aep', etapeStatutId: 'def' },
-    FAVORABLE_AVEC_RESERVE: { etapeTypeId: 'aep', etapeStatutId: 'fre' },
-    DEFAVORABLE_AVEC_RESERVES: { etapeTypeId: 'aep', etapeStatutId: 'dre' },
-  },
-
-  avisDunMaire: {
-    FAVORABLE: { etapeTypeId: 'ama', etapeStatutId: 'fav' },
-    DEFAVORABLE: { etapeTypeId: 'ama', etapeStatutId: 'def' },
-    FAVORABLE_AVEC_RESERVE: { etapeTypeId: 'ama', etapeStatutId: 'fre' },
-    DEFAVORABLE_AVEC_RESERVES: { etapeTypeId: 'ama', etapeStatutId: 'dre' },
-  },
-
   decisionDuJugeAdministratif: {
     FAIT: { etapeTypeId: 'and', etapeStatutId: 'fai' },
     ACCEPTE: { etapeTypeId: 'and', etapeStatutId: 'acc' },
