@@ -18,7 +18,14 @@ docs/generate-schema:
 	cat docs-sources/assets/architecture.puml | docker run --rm -i agileek/plantuml:1.2022.3 > docs-sources/docs/img/architecture.svg
 
 daily:
+ifdef CAMINO_STAGE
 	npm run daily -w packages/api
+else
+	@echo 'lancement du daily en mode local avec la migration'
+	npm run db:migrate -w packages/api
+	npm run daily -w packages/api
+endif
+
 daily/debug:
 	npm run daily-debug -w packages/api
 

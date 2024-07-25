@@ -9,7 +9,7 @@ import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { CaminoDate, dateAddMonths, isBefore, toCaminoDate } from 'camino-common/src/date'
 import { titreDemarcheSortAsc } from '../utils/titre-elements-sort-asc'
 import { ETAPES_STATUTS } from 'camino-common/src/static/etapesStatuts'
-import { isDemarcheStatutNonStatue } from 'camino-common/src/static/demarchesStatuts'
+import { demarcheStatutIdsSuccess, isDemarcheStatutNonStatue } from 'camino-common/src/static/demarchesStatuts'
 import { ETAPES_TYPES, EtapeTypeId } from 'camino-common/src/static/etapesTypes'
 import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools'
 import { ETAPE_IS_NOT_BROUILLON } from 'camino-common/src/etape'
@@ -24,7 +24,7 @@ const DATE_PAR_DEFAUT_TITRE_INFINI = toCaminoDate('2018-12-31')
 const titreDemarcheAnnulationFind = (titreDemarches: TitreDemarchePhaseFind[]) =>
   titreDemarches.find(
     titreDemarche =>
-      ['acc', 'ter'].includes(titreDemarche.statutId!) &&
+      demarcheStatutIdsSuccess.has(titreDemarche.statutId!) &&
       (titreDemarche.typeId === 'ret' || (titreDemarche.typeId === 'ren' && !titreDemarche.etapes!.find(te => isNotNullNorUndefined(te.geojson4326Perimetre))))
   )
 

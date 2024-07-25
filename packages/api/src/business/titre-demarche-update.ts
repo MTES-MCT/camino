@@ -30,7 +30,7 @@ export const titreDemarcheUpdateTask = async (pool: Pool, titreDemarcheId: Demar
     let titresDemarchesPublicUpdated
 
     const titresDemarchesOrdreUpdated = await titresDemarchesOrdreUpdate([titreId])
-    const [titresDemarchesDatesUpdated = []] = await titresDemarchesDatesUpdate(pool, [titreId])
+    const titresDemarchesDatesUpdated = await titresDemarchesDatesUpdate(pool, [titreId])
 
     // si c'est une création ou modification
     // pas une suppression
