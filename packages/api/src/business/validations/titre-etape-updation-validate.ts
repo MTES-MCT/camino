@@ -27,7 +27,7 @@ export const titreEtapeUpdationValidate = (
   daeDocument: Omit<GetEtapeDocumentsByEtapeIdDaeDocument, 'id'> | null,
   aslDocument: Omit<GetEtapeDocumentsByEtapeIdAslDocument, 'id'> | null,
   titreEtapeOld?: ITitreEtape
-) => {
+): string[] => {
   const errors: string[] = []
   const sections = getSections(titre.typeId, titreDemarche.typeId, etape.typeId)
 
@@ -102,7 +102,7 @@ const titreEtapeUpdationBusinessValidate = (
   const errors = []
   // 1. la date de l'étape est possible
   // en fonction de l'ordre des types d'étapes de la démarche
-  const demarcheUpdatedErrors = titreDemarcheUpdatedEtatValidate(
+  const { valid, errors: demarcheUpdatedErrors } = titreDemarcheUpdatedEtatValidate(
     titreDemarche.typeId,
     titre,
     {
@@ -114,7 +114,7 @@ const titreEtapeUpdationBusinessValidate = (
     titreDemarche.id,
     titreDemarche.etapes!
   )
-  if (demarcheUpdatedErrors.length) {
+  if (!valid) {
     errors.push(...demarcheUpdatedErrors)
   }
 

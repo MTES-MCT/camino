@@ -11,14 +11,14 @@ import { DEMARCHES_TYPES_IDS, DemarchesTypes, DemarcheTypeId } from 'camino-comm
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { ArmRenProMachine } from './arm/ren-pro.machine'
 import { PrmOctMachine } from './prm/oct.machine'
-import { DeepReadonly, isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools'
+import { DeepReadonly, NonEmptyArray, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools'
 import { ProcedureSimplifieeMachine } from './procedure-simplifiee/ps.machine'
 
 interface DemarcheDefinitionCommon {
-  titreTypeId: TitreTypeId
+  titreTypeIds: NonEmptyArray<TitreTypeId>
   demarcheTypeIds: DemarcheTypeId[]
   dateDebut: CaminoDate
-  demarcheIdExceptions?: DemarcheId[]
+  demarcheIdExceptions: DemarcheId[]
 }
 export interface DemarcheDefinition extends DemarcheDefinitionCommon {
   machine: CaminoMachines
@@ -39,21 +39,23 @@ const demarcheTypeIdsCxPr_G: DemarcheTypeId[] = [
   DEMARCHES_TYPES_IDS.Retrait,
 ]
 const plusVieilleDateEnBase = toCaminoDate('1717-01-09')
-export const demarchesDefinitions: DemarcheDefinition[] = [
+export const demarchesDefinitions = [
   {
-    titreTypeId: 'arm',
+    titreTypeIds: ['arm'],
     demarcheTypeIds: ['oct'],
     machine: new ArmOctMachine(),
     dateDebut: toCaminoDate('2019-10-31'),
+    demarcheIdExceptions: [],
   },
   {
-    titreTypeId: 'arm',
+    titreTypeIds: ['arm'],
     demarcheTypeIds: ['ren', 'pro'],
     machine: new ArmRenProMachine(),
     dateDebut: toCaminoDate('2019-10-31'),
+    demarcheIdExceptions: [],
   },
   {
-    titreTypeId: 'prm',
+    titreTypeIds: ['prm'],
     demarcheTypeIds: ['oct'],
     machine: new PrmOctMachine(),
     dateDebut: toCaminoDate('2019-10-31'),
@@ -67,7 +69,7 @@ export const demarchesDefinitions: DemarcheDefinition[] = [
     ],
   },
   {
-    titreTypeId: 'axm',
+    titreTypeIds: ['axm'],
     demarcheTypeIds: ['oct'],
     machine: new AxmOctMachine(),
     // https://camino.beta.gouv.fr/titres/m-ax-crique-tumuc-humac-2020
@@ -80,7 +82,7 @@ export const demarchesDefinitions: DemarcheDefinition[] = [
     ],
   },
   {
-    titreTypeId: 'axm',
+    titreTypeIds: ['axm'],
     demarcheTypeIds: ['pro'],
     machine: new AxmProMachine(),
     dateDebut: toCaminoDate('2000-01-01'),
@@ -106,34 +108,20 @@ export const demarchesDefinitions: DemarcheDefinition[] = [
     ],
   },
   {
-    titreTypeId: 'pxg',
+    titreTypeIds: ['pxg', 'arg'],
     demarcheTypeIds: allDemarcheNotTravaux,
     machine: new ProcedureSimplifieeMachine(),
     dateDebut: plusVieilleDateEnBase,
     demarcheIdExceptions: [],
   },
   {
-    titreTypeId: 'arg',
-    demarcheTypeIds: allDemarcheNotTravaux,
-    machine: new ProcedureSimplifieeMachine(),
-    dateDebut: plusVieilleDateEnBase,
-    demarcheIdExceptions: [],
-  },
-  {
-    titreTypeId: 'cxg',
+    titreTypeIds: ['cxg', 'prg'],
     demarcheTypeIds: demarcheTypeIdsCxPr_G,
     machine: new ProcedureSimplifieeMachine(),
     dateDebut: plusVieilleDateEnBase,
     demarcheIdExceptions: [],
   },
-  {
-    titreTypeId: 'prg',
-    demarcheTypeIds: demarcheTypeIdsCxPr_G,
-    machine: new ProcedureSimplifieeMachine(),
-    dateDebut: plusVieilleDateEnBase,
-    demarcheIdExceptions: [],
-  },
-]
+] as const satisfies readonly DemarcheDefinition[]
 
 export const demarcheDefinitionFind = (
   titreTypeId: TitreTypeId,
@@ -144,10 +132,9 @@ export const demarcheDefinitionFind = (
   const date = titreDemarcheDepotDemandeDateFind(titreEtapes)
 
   const definition = demarchesDefinitions
-    .sort((a, b) => b.dateDebut.localeCompare(a.dateDebut))
-    .find(d => (isNullOrUndefinedOrEmpty(date) || d.dateDebut < date) && d.titreTypeId === titreTypeId && d.demarcheTypeIds.includes(demarcheTypeId))
-
-  if (definition?.demarcheIdExceptions?.includes(demarcheId) ?? false) {
+    .toSorted((a, b) => b.dateDebut.localeCompare(a.dateDebut))
+    .find(d => (isNullOrUndefinedOrEmpty(date) || d.dateDebut < date) && d.titreTypeIds.includes(titreTypeId) && d.demarcheTypeIds.includes(demarcheTypeId))
+  if (isNotNullNorUndefined(definition) && isNotNullNorUndefinedNorEmpty(definition.demarcheIdExceptions) && definition.demarcheIdExceptions.includes(demarcheId)) {
     return undefined
   }
 
