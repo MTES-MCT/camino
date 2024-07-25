@@ -2,6 +2,8 @@ import { demarchesDefinitions } from '../../business/rules-demarches/definitions
 import { titresDemarchesGet } from '../../database/queries/titres-demarches'
 import { titreDemarcheUpdatedEtatValidate } from '../../business/validations/titre-demarche-etat-validate'
 import { userSuper } from '../../database/user-super'
+import { getTitreTypeType, getDomaineId } from 'camino-common/src/static/titresTypes'
+import { onlyUnique } from 'camino-common/src/typescript-tools'
 
 const demarchesValidate = async () => {
   const errors = [] as string[]
@@ -9,8 +11,8 @@ const demarchesValidate = async () => {
     for (const demarcheTypeId of demarcheDefinition.demarcheTypeIds) {
       const demarches = await titresDemarchesGet(
         {
-          titresTypesIds: [demarcheDefinition.titreTypeId.slice(0, 2)],
-          titresDomainesIds: [demarcheDefinition.titreTypeId.slice(2)],
+          titresTypesIds: demarcheDefinition.titreTypeIds.map(getTitreTypeType).filter(onlyUnique),
+          titresDomainesIds: demarcheDefinition.titreTypeIds.map(getDomaineId).filter(onlyUnique),
           typesIds: [demarcheTypeId],
         },
         {
@@ -41,7 +43,7 @@ const demarchesValidate = async () => {
   return errors
 }
 
-export const demarchesDefinitionsCheck = async () => {
+export const demarchesDefinitionsCheck = async (): Promise<void> => {
   console.info()
   console.info('- - -')
   console.info('vérification des démarches')

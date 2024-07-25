@@ -9,15 +9,15 @@ import { demarchesDefinitions } from '../../business/rules-demarches/definitions
 import { dateAddDays, daysBetween, setDayInMonth } from 'camino-common/src/date'
 import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes'
 import { toCommuneId } from 'camino-common/src/static/communes'
-import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools'
+import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefinedOrEmpty, onlyUnique } from 'camino-common/src/typescript-tools'
 import { getDomaineId, getTitreTypeType } from 'camino-common/src/static/titresTypes'
 
 const writeEtapesForTest = async () => {
   for (const demarcheDefinition of demarchesDefinitions) {
     const demarches = await titresDemarchesGet(
       {
-        titresTypesIds: [getTitreTypeType(demarcheDefinition.titreTypeId)],
-        titresDomainesIds: [getDomaineId(demarcheDefinition.titreTypeId)],
+        titresTypesIds: demarcheDefinition.titreTypeIds.map(getTitreTypeType).filter(onlyUnique),
+        titresDomainesIds: demarcheDefinition.titreTypeIds.map(getDomaineId).filter(onlyUnique),
         typesIds: demarcheDefinition.demarcheTypeIds,
       },
       {
@@ -67,12 +67,12 @@ const writeEtapesForTest = async () => {
           if (!demarcheDefinition.machine.isEtapesOk(etapes)) {
             etapes.splice(0, etapes.length, ...demarcheDefinition.machine.orderMachine(etapes))
             if (!demarcheDefinition.machine.isEtapesOk(etapes)) {
-              console.warn(`https://camino.beta.gouv.fr/titres/${demarche.titreId} => démarche N*${index} (${demarche.id}) "${demarcheDefinition.titreTypeId}/${demarche.typeId}"`)
+              console.warn(`https://camino.beta.gouv.fr/titres/${demarche.titreId} => démarche N*${index} (${demarche.id}) "${demarcheDefinition.titreTypeIds.join(' ou ')}/${demarche.typeId}"`)
             }
           }
         } catch (e) {
           console.error('something went wrong', e)
-          console.error(`https://camino.beta.gouv.fr/titres/${demarche.titreId} => démarche N*${index} (${demarche.id}) "${demarcheDefinition.titreTypeId}/${demarche.typeId}"`)
+          console.error(`https://camino.beta.gouv.fr/titres/${demarche.titreId} => démarche N*${index} (${demarche.id}) "${demarcheDefinition.titreTypeIds.join(' ou ')}/${demarche.typeId}"`)
         }
 
         const etapesAnonymes = etapes.map(etape => {
@@ -87,7 +87,7 @@ const writeEtapesForTest = async () => {
         }
       })
       .filter(isNotNullNorUndefined)
-    const filePath = `src/business/rules-demarches/${demarcheDefinition.titreTypeId}`
+    const filePath = `src/business/rules-demarches/${demarcheDefinition.titreTypeIds.join('-')}`
     mkdirSync(filePath, { recursive: true })
     writeFileSync(`${filePath}/${demarcheDefinition.dateDebut}-${demarcheDefinition.demarcheTypeIds.join('-')}.cas.json`, JSON.stringify(toutesLesEtapes))
   }
