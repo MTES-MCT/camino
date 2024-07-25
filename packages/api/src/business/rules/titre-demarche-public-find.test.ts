@@ -220,7 +220,7 @@ describe("publicité d'une démarche", () => {
           etapes: etapesBuild([{ typeId: 'mcr' }]),
           titreId: newTitreId('titreId'),
         },
-        'cxf'
+        'pcc'
       )
     ).toMatchObject({ publicLecture: true })
   })
@@ -252,7 +252,7 @@ describe("publicité d'une démarche", () => {
           etapes: etapesBuild([{ typeId: 'mcr' }]),
           titreId: newTitreId('titreId'),
         },
-        'cxf'
+        'pcc'
       )
     ).toMatchObject({ publicLecture: false })
   })
@@ -394,12 +394,12 @@ describe("publicité d'une démarche", () => {
           demarcheDateDebut: toCaminoDate('2020-01-01'),
           demarcheDateFin: toCaminoDate('2021-01-01'),
           etapes: etapesBuild([
-            { typeId: 'anf', statutId: 'fai' },
-            { typeId: 'dim', statutId: 'rej' },
+            { typeId: 'anf', statutId: 'fai', isBrouillon: ETAPE_IS_NOT_BROUILLON, date: toCaminoDate('2021-01-01') },
+            { typeId: 'dim', statutId: 'rej', isBrouillon: ETAPE_IS_NOT_BROUILLON, date: toCaminoDate('2021-01-02') },
           ]),
           titreId: newTitreId('titreId'),
         },
-        'cxf'
+        'arc'
       )
     ).toMatchObject({ publicLecture: false })
   })
