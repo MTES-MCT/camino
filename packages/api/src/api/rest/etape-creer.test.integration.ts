@@ -184,7 +184,7 @@ describe('etapeCreer', () => {
     expect(res.statusCode).toBe(HTTP_STATUS.BAD_REQUEST)
     expect(res.body).toMatchInlineSnapshot(`
       {
-        "errorMessage": "la démarche n'est pas valide",
+        "errorMessage": "les étapes de la démarche TDE ne sont pas valides",
       }
     `)
   })
@@ -293,7 +293,7 @@ describe('etapeCreer', () => {
     expect(res.statusCode).toBe(HTTP_STATUS.BAD_REQUEST)
     expect(res.body).toMatchInlineSnapshot(`
       {
-        "errorMessage": "la démarche n'est pas valide",
+        "errorMessage": "les étapes de la démarche TDE ne sont pas valides",
       }
     `)
   })

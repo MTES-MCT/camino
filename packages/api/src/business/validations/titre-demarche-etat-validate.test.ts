@@ -10,6 +10,8 @@ import { ETAPE_IS_BROUILLON, ETAPE_IS_NOT_BROUILLON, etapeIdValidator } from 'ca
 import { onlyUnique } from 'camino-common/src/typescript-tools'
 import { ArmOctMachine } from '../rules-demarches/arm/oct.machine'
 import { TitreEtapeForMachine } from '../rules-demarches/machine-common'
+import { communeIdValidator } from 'camino-common/src/static/communes'
+import { km2Validator } from 'camino-common/src/number'
 
 console.warn = vi.fn()
 describe('teste titreDemarcheUpdatedEtatValidate', () => {
@@ -42,6 +44,46 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
     )
 
     expect(valid.valid).toBe(true)
+  })
+
+  test('prend en compte les données des étapes pour la machine', () => {
+    const demande: Pick<ITitreEtape, 'id' | 'statutId' | 'ordre' | 'typeId' | 'date' | 'contenu' | 'surface' | 'communes' | 'isBrouillon'> = {
+      id: etapeIdValidator.parse('idMfr'),
+      typeId: 'mfr',
+      statutId: 'fai',
+      isBrouillon: ETAPE_IS_NOT_BROUILLON,
+      date: toCaminoDate('2020-10-22'),
+      communes: [{ id: communeIdValidator.parse('97333') }],
+      ordre: 1,
+      contenu: null,
+      surface: km2Validator.parse(51),
+    }
+    const valid = titreDemarcheUpdatedEtatValidate(
+      'oct',
+      {
+        typeId: 'prm',
+        demarches: [{ typeId: 'oct' }],
+      } as ITitre,
+      demande,
+      newDemarcheId(),
+      [
+        demande,
+        { id: etapeIdValidator.parse('idMdp'), typeId: 'mdp', statutId: 'fai', isBrouillon: ETAPE_IS_NOT_BROUILLON, date: toCaminoDate('2020-12-17'), ordre: 2 },
+        { id: etapeIdValidator.parse('idSpp'), typeId: 'spp', statutId: 'fai', isBrouillon: ETAPE_IS_NOT_BROUILLON, date: toCaminoDate('2021-01-18'), ordre: 3 },
+        { id: etapeIdValidator.parse('idMcr'), typeId: 'mcr', statutId: 'fav', isBrouillon: ETAPE_IS_NOT_BROUILLON, date: toCaminoDate('2022-11-17'), ordre: 4 },
+        { id: etapeIdValidator.parse('idAnf'), typeId: 'anf', statutId: 'fai', isBrouillon: ETAPE_IS_NOT_BROUILLON, date: toCaminoDate('2022-11-17'), ordre: 5 },
+        { id: etapeIdValidator.parse('idAsc'), typeId: 'asc', statutId: 'fai', isBrouillon: ETAPE_IS_NOT_BROUILLON, date: toCaminoDate('2022-11-17'), ordre: 6 },
+        { id: etapeIdValidator.parse('idScl'), typeId: 'scl', statutId: 'fai', isBrouillon: ETAPE_IS_NOT_BROUILLON, date: toCaminoDate('2022-11-17'), ordre: 7 },
+        { id: etapeIdValidator.parse('idApo'), typeId: 'apo', statutId: 'fav', isBrouillon: ETAPE_IS_NOT_BROUILLON, date: toCaminoDate('2023-02-08'), ordre: 8 },
+      ]
+    )
+
+    expect(valid).toMatchInlineSnapshot(`
+        {
+          "errors": null,
+          "valid": true,
+        }
+      `)
   })
 
   test('modifie une étape à une démarche', () => {

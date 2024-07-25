@@ -14,8 +14,6 @@ const demarchesValidate = async () => {
           titresTypesIds: demarcheDefinition.titreTypeIds.map(getTitreTypeType).filter(onlyUnique),
           titresDomainesIds: demarcheDefinition.titreTypeIds.map(getDomaineId).filter(onlyUnique),
           typesIds: [demarcheTypeId],
-
-          // titresDemarchesIds: ['DGxGTYlnDDGamQtreDOhFlLl'],
         },
         {
           fields: {
