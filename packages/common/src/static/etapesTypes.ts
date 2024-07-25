@@ -1445,8 +1445,8 @@ export const EtapesTypes = {
     fondamentale: false,
     unique: false,
     date_fin: null,
-    public_lecture: false,
-    entreprises_lecture: false,
+    public_lecture: true,
+    entreprises_lecture: true,
   },
 } as const satisfies { [key in EtapeTypeId]: EtapeType<key> }
 
