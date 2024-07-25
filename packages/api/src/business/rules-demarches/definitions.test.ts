@@ -18,3 +18,7 @@ test('demarcheDefinitionFind ne retourne pas une machine quand la démarche fait
 test('demarcheDefinitionFind ne retourne pas une machine quand les étapes sont trop anciennes', () => {
   expect(demarcheDefinitionFind('prm', 'oct', [{ date: toCaminoDate('2010-06-07'), typeId: 'mdp' }], newDemarcheId('FfJTtP9EEfvf3VZy81hpF7ms'))).toBe(undefined)
 })
+
+test('demarcheDefinitionFind', () => {
+  expect(demarcheDefinitionFind('arm', 'pro', [{ date: toCaminoDate('2018-10-22'), typeId: 'def' }], newDemarcheId('Anything'))).toBe(undefined)
+})

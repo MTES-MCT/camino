@@ -42,5 +42,5 @@ export const etapeTypeDateFinCheck = (etapeTypeId: EtapeTypeId, titreEtapes?: Pi
   // alors on ne propose pas ce type d'étape
   // Exemple: Si on a pas de date de demande, on ne peut pas proposer la « décision de l’ONF »
   // car cette étape est proposable que pour les demandes antérieures au 01/01/2020
-  return dateDemande ? dateDemande < etapeTypeDateFin : false
+  return dateDemande ? dateDemande <= etapeTypeDateFin : false
 }

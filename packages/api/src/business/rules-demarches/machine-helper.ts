@@ -30,6 +30,7 @@ export abstract class CaminoMachine<CaminoContext extends CaminoCommonContext, C
       etapeTypeId,
       etapeStatutId,
       mainStep: dbEtat.mainStep,
+      ...event,
     }))
   }
 
@@ -215,6 +216,6 @@ export abstract class CaminoMachine<CaminoContext extends CaminoCommonContext, C
   }
 }
 
-export function getNextEvents(snapshot: AnyMachineSnapshot) {
+export function getNextEvents(snapshot: AnyMachineSnapshot): string[] {
   return [...new Set([...snapshot._nodes.flatMap(sn => sn.ownEvents)])]
 }

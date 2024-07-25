@@ -3,10 +3,10 @@ import { titresDemarchesGet } from '../../database/queries/titres-demarches'
 import { titreDemarcheUpdatedEtatValidate } from '../../business/validations/titre-demarche-etat-validate'
 import { userSuper } from '../../database/user-super'
 import { getTitreTypeType, getDomaineId } from 'camino-common/src/static/titresTypes'
-import { onlyUnique } from 'camino-common/src/typescript-tools'
+import { isNotNullNorUndefinedNorEmpty, onlyUnique } from 'camino-common/src/typescript-tools'
 
 const demarchesValidate = async () => {
-  const errors = [] as string[]
+  const errorsTotal = [] as string[]
   for (const demarcheDefinition of demarchesDefinitions) {
     for (const demarcheTypeId of demarcheDefinition.demarcheTypeIds) {
       const demarches = await titresDemarchesGet(
@@ -14,6 +14,8 @@ const demarchesValidate = async () => {
           titresTypesIds: demarcheDefinition.titreTypeIds.map(getTitreTypeType).filter(onlyUnique),
           titresDomainesIds: demarcheDefinition.titreTypeIds.map(getDomaineId).filter(onlyUnique),
           typesIds: [demarcheTypeId],
+
+          // titresDemarchesIds: ['DGxGTYlnDDGamQtreDOhFlLl'],
         },
         {
           fields: {
@@ -25,22 +27,22 @@ const demarchesValidate = async () => {
       )
 
       demarches
-        .filter(demarche => demarche.etapes?.length)
+        .filter(demarche => isNotNullNorUndefinedNorEmpty(demarche.etapes))
         .forEach(demarche => {
           try {
-            const errs = titreDemarcheUpdatedEtatValidate(demarche.typeId, demarche.titre!, demarche.etapes![0], demarche.id, demarche.etapes!)
+            const { valid, errors } = titreDemarcheUpdatedEtatValidate(demarche.typeId, demarche.titre!, demarche.etapes![0], demarche.id, demarche.etapes!)
 
-            if (errs.length) {
-              errors.push(`https://camino.beta.gouv.fr/titres/${demarche.titreId} => démarche "${demarche.typeId}" : ${errs}`)
+            if (!valid) {
+              errorsTotal.push(`https://camino.beta.gouv.fr/demarches/${demarche.slug} => démarche "${demarche.typeId}" : ${errors}`)
             }
           } catch (e) {
-            errors.push(`${demarche.id} démarche invalide =>\n\t${e}`)
+            errorsTotal.push(`${demarche.id} démarche invalide =>\n\t${e}`)
           }
         })
     }
   }
 
-  return errors
+  return errorsTotal
 }
 
 export const demarchesDefinitionsCheck = async (): Promise<void> => {

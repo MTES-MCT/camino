@@ -2,10 +2,9 @@ import '../../init'
 
 import { titresDemarchesGet } from '../../database/queries/titres-demarches'
 import { userSuper } from '../../database/user-super'
-import { titreDemarcheDepotDemandeDateFind } from '../../business/rules/titre-demarche-depot-demande-date-find'
 import { mkdirSync, writeFileSync } from 'fs'
 import { Etape, titreEtapeForMachineValidator, toMachineEtapes } from '../../business/rules-demarches/machine-common'
-import { demarchesDefinitions } from '../../business/rules-demarches/definitions'
+import { demarcheDefinitionFind, demarchesDefinitions } from '../../business/rules-demarches/definitions'
 import { dateAddDays, daysBetween, setDayInMonth } from 'camino-common/src/date'
 import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes'
 import { toCommuneId } from 'camino-common/src/static/communes'
@@ -31,11 +30,7 @@ const writeEtapesForTest = async () => {
 
     const toutesLesEtapes = demarches
       .filter(demarche => demarche.etapes?.length)
-      .filter(demarche => {
-        const date = titreDemarcheDepotDemandeDateFind(demarche.etapes!)
-
-        return (date ?? '') > demarcheDefinition.dateDebut && (isNullOrUndefinedOrEmpty(demarcheDefinition.demarcheIdExceptions) || !demarcheDefinition.demarcheIdExceptions.includes(demarche.id))
-      })
+      .filter(demarche => isNotNullNorUndefined(demarcheDefinitionFind(demarche.titre!.typeId, demarche.typeId, demarche.etapes!, demarche.id)))
       .map((demarche, index) => {
         const etapes: Etape[] = toMachineEtapes(
           (

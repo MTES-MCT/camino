@@ -194,7 +194,7 @@ describe('valide l’étape avant de l’enregistrer', () => {
     const errors = titreEtapeUpdationValidate({ ...etapeComplete, typeId: 'mod' }, titreDemarche, titreARM, [{ etape_document_type_id: 'doe' }], [], [], [], [], userSuper, null, null)
     expect(errors).toMatchInlineSnapshot(`
       [
-        "la démarche n'est pas valide",
+        "les étapes de la démarche machine ne sont pas valides",
       ]
     `)
   })

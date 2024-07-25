@@ -56,6 +56,7 @@ describe('vérifie l’arbre d’octroi de PRM', () => {
     ]
     expect(() => setDateAndOrderAndInterpretMachine(prmOctMachine, '2020-04-14', etapes)).not.toThrowError()
   })
+
   test('peut créer une demande d’octroi de PRM en Guyane sans avis du maire', () => {
     const etapes = [
       { ...ETES.demande.FAIT, paysId: PAYS_IDS['Département de la Guyane'], surface: 14 },

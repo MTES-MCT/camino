@@ -25,7 +25,7 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
       null
     )
 
-    expect(valid).toHaveLength(0)
+    expect(valid.valid).toBe(true)
   })
 
   test('ajoute une étape à une démarche qui contient déjà une étape', () => {
@@ -41,7 +41,7 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
       [{ id: newEtapeId('1'), typeId: 'mfr', statutId: 'fai', isBrouillon: ETAPE_IS_NOT_BROUILLON, date: toCaminoDate('2022-05-03'), communes: null, contenu: null, ordre: 1, surface: null }]
     )
 
-    expect(valid).toHaveLength(0)
+    expect(valid.valid).toBe(true)
   })
 
   test('modifie une étape à une démarche', () => {
@@ -69,7 +69,7 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
       ]
     )
 
-    expect(valid).toHaveLength(0)
+    expect(valid.valid).toBe(true)
   })
 
   test('l’ajout d’une étape d’une démarche historique est valide', () => {
@@ -86,7 +86,7 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
       false
     )
 
-    expect(valid).toHaveLength(0)
+    expect(valid.valid).toBe(true)
   })
 
   test('l’ajout d’une étape à une démarche sans étape est valide', () => {
@@ -101,11 +101,11 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
       []
     )
 
-    expect(valid).toHaveLength(0)
+    expect(valid.valid).toBe(true)
   })
 
   test("retourne une erreur si la démarche en cours de modification n'existe pas", () => {
-    expect(() =>
+    expect(
       titreDemarcheUpdatedEtatValidate(
         'oct',
         {
@@ -117,9 +117,16 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
 
         []
       )
-    ).toThrow()
+    ).toMatchInlineSnapshot(`
+      {
+        "errors": [
+          "les étapes de la démarche machine ne sont pas valides",
+        ],
+        "valid": false,
+      }
+    `)
 
-    expect(() =>
+    expect(
       titreDemarcheUpdatedEtatValidate(
         'oct',
         {
@@ -130,7 +137,14 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
 
         []
       )
-    ).toThrow()
+    ).toMatchInlineSnapshot(`
+      {
+        "errors": [
+          "les étapes de la démarche machine ne sont pas valides",
+        ],
+        "valid": false,
+      }
+    `)
   })
 
   test('supprime une étape', () => {
@@ -146,7 +160,7 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
       true
     )
 
-    expect(valid).toHaveLength(0)
+    expect(valid.valid).toBe(true)
   })
 
   test('ajoute une étape à une démarche sans machine', () => {
@@ -167,7 +181,7 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
       newDemarcheId()
     )
 
-    expect(valid).toHaveLength(0)
+    expect(valid.valid).toBe(true)
   })
 
   test('ajoute une demande en construction à une démarche vide', () => {
@@ -184,7 +198,7 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
       newDemarcheId()
     )
 
-    expect(valid).toHaveLength(0)
+    expect(valid.valid).toBe(true)
   })
 
   test('ajoute une demande en construction à une démarche qui contient déjà une étape', () => {
@@ -200,7 +214,7 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
       [{ id: etapeIdValidator.parse('1'), date: caminoDateValidator.parse('2020-01-01'), typeId: 'dae', statutId: 'exe', isBrouillon: ETAPE_IS_NOT_BROUILLON, ordre: 1 }]
     )
 
-    expect(valid).toHaveLength(0)
+    expect(valid.valid).toBe(true)
   })
 
   test('modifie une demande en construction à une démarche', () => {
@@ -219,7 +233,7 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
       ]
     )
 
-    expect(valid).toHaveLength(0)
+    expect(valid.valid).toBe(true)
   })
 
   test('ne peut pas ajouter une 2ème demande en construction à une démarche', () => {
@@ -236,9 +250,12 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
         [{ id: etapeIdValidator.parse('1'), typeId: 'mfr', statutId: 'fai', isBrouillon: ETAPE_IS_BROUILLON, date: caminoDateValidator.parse('2024-01-01'), ordre: 1 }]
       )
     ).toMatchInlineSnapshot(`
-      [
-        "la démarche n'est pas valide",
-      ]
+      {
+        "errors": [
+          "les étapes de la démarche machine ne sont pas valides",
+        ],
+        "valid": false,
+      }
     `)
   })
 
@@ -287,9 +304,12 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
         ]
       )
     ).toMatchInlineSnapshot(`
-      [
-        "la démarche n'est pas valide",
-      ]
+      {
+        "errors": [
+          "les étapes de la démarche machine ne sont pas valides",
+        ],
+        "valid": false,
+      }
     `)
   })
 })
