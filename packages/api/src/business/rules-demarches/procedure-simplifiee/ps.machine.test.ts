@@ -23,12 +23,40 @@ describe('vérifie l’arbre des procédures historiques et simplifiées', () =>
     ])
     expect(service.getSnapshot().context.demarcheStatut).toBe(DemarchesStatutsIds.EnConstruction)
   })
+  test('statut de la démarche incomplète sans étape', () => {
+    const service = orderAndInterpretMachine(psMachine, [])
+    expect(service).canOnlyTransitionTo({ machine: psMachine, date: toCaminoDate('1999-04-14') }, [
+      'FAIRE_DEMANDE',
+      'RENDRE_DECISION_ADMINISTRATION_ACCEPTEE',
+      'RENDRE_DECISION_ADMINISTRATION_REJETEE',
+      'SAISIR_INFORMATION_HISTORIQUE_INCOMPLETE',
+      'PUBLIER_DECISION_ACCEPTEE_AU_JORF',
+      'PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS',
+    ])
+    expect(service.getSnapshot().context.demarcheStatut).toBe(DemarchesStatutsIds.EnConstruction)
+  })
+
+  test('peut faire une démarche historique incomplète', () => {
+    const { service, dateFin } = setDateAndOrderAndInterpretMachine(psMachine, '1999-04-14', [ETES.informationsHistoriquesIncompletes.FAIT])
+    expect(service).canOnlyTransitionTo({ machine: psMachine, date: dateFin }, [])
+    expect(service.getSnapshot().context.demarcheStatut).toBe(DemarchesStatutsIds.Accepte)
+    expect(service.getSnapshot().context.visibilite).toBe('confidentielle')
+  })
+
+  test('peut publier une démarche historique incomplète', () => {
+    const { service, dateFin } = setDateAndOrderAndInterpretMachine(psMachine, '1999-04-14', [ETES.publicationDeDecisionAuJORF.FAIT])
+    expect(service).canOnlyTransitionTo({ machine: psMachine, date: dateFin }, ['FAIRE_ABROGATION'])
+    expect(service.getSnapshot().context.demarcheStatut).toBe(DemarchesStatutsIds.AccepteEtPublie)
+    expect(service.getSnapshot().context.visibilite).toBe('publique')
+  })
+
   test('peut créer une "mfr"', () => {
     const etapes = [ETES.demande.FAIT]
     const { service, dateFin } = setDateAndOrderAndInterpretMachine(psMachine, '2022-04-14', etapes)
     expect(service).canOnlyTransitionTo({ machine: psMachine, date: dateFin }, [
       'CLASSER_SANS_SUITE',
       'DEMANDER_INFORMATION',
+      'RECEVOIR_INFORMATION',
       'DEPOSER_DEMANDE',
       'DESISTER_PAR_LE_DEMANDEUR',
       'OUVRIR_PARTICIPATION_DU_PUBLIC',
@@ -43,6 +71,7 @@ describe('vérifie l’arbre des procédures historiques et simplifiées', () =>
     expect(service).canOnlyTransitionTo({ machine: psMachine, date: dateFin }, [
       'CLASSER_SANS_SUITE',
       'DEMANDER_INFORMATION',
+      'RECEVOIR_INFORMATION',
       'DESISTER_PAR_LE_DEMANDEUR',
       'OUVRIR_PARTICIPATION_DU_PUBLIC',
       'RENDRE_DECISION_ADMINISTRATION_ACCEPTEE',
@@ -54,14 +83,14 @@ describe('vérifie l’arbre des procédures historiques et simplifiées', () =>
   test('ne peut pas faire deux dépôts de la demande', () => {
     const etapes = [ETES.demande.FAIT, ETES.depotDeLaDemande.FAIT, ETES.depotDeLaDemande.FAIT]
     expect(() => setDateAndOrderAndInterpretMachine(psMachine, '2022-04-12', etapes)).toThrowErrorMatchingInlineSnapshot(
-      `[Error: Error: cannot execute step: '{"etapeTypeId":"mdp","etapeStatutId":"fai","date":"2022-04-15"}' after '["mfr_fai","mdp_fai"]'. The event {"type":"DEPOSER_DEMANDE"} should be one of 'CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_PARTICIPATION_DU_PUBLIC,RENDRE_DECISION_ADMINISTRATION_ACCEPTEE,RENDRE_DECISION_ADMINISTRATION_REJETEE']`
+      `[Error: Error: cannot execute step: '{"etapeTypeId":"mdp","etapeStatutId":"fai","date":"2022-04-15"}' after '["mfr_fai","mdp_fai"]'. The event {"type":"DEPOSER_DEMANDE"} should be one of 'CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_PARTICIPATION_DU_PUBLIC,RECEVOIR_INFORMATION,RENDRE_DECISION_ADMINISTRATION_ACCEPTEE,RENDRE_DECISION_ADMINISTRATION_REJETEE']`
     )
   })
 
   test('peut faire une ouverture de la participation du public', () => {
     const etapes = [ETES.demande.FAIT, ETES.depotDeLaDemande.FAIT, ETES.participationDuPublic.EN_COURS]
     const { service, dateFin } = setDateAndOrderAndInterpretMachine(psMachine, '2022-04-16', etapes)
-    expect(service).canOnlyTransitionTo({ machine: psMachine, date: dateFin }, ['CLASSER_SANS_SUITE', 'DESISTER_PAR_LE_DEMANDEUR', 'DEMANDER_INFORMATION'])
+    expect(service).canOnlyTransitionTo({ machine: psMachine, date: dateFin }, ['CLASSER_SANS_SUITE', 'DESISTER_PAR_LE_DEMANDEUR', 'DEMANDER_INFORMATION', 'RECEVOIR_INFORMATION'])
     expect(service.getSnapshot().context.demarcheStatut).toBe(DemarchesStatutsIds.EnInstruction)
     expect(service.getSnapshot().context.visibilite).toBe('publique')
   })
@@ -69,7 +98,7 @@ describe('vérifie l’arbre des procédures historiques et simplifiées', () =>
   test("tant que l'ouverture du public n'est pas en cours, la demarche est confidentielle", () => {
     const etapes = [ETES.demande.FAIT, ETES.depotDeLaDemande.FAIT, ETES.participationDuPublic.PROGRAMME]
     const { service, dateFin } = setDateAndOrderAndInterpretMachine(psMachine, '2022-04-16', etapes)
-    expect(service).canOnlyTransitionTo({ machine: psMachine, date: dateFin }, ['CLASSER_SANS_SUITE', 'DESISTER_PAR_LE_DEMANDEUR', 'DEMANDER_INFORMATION'])
+    expect(service).canOnlyTransitionTo({ machine: psMachine, date: dateFin }, ['CLASSER_SANS_SUITE', 'DESISTER_PAR_LE_DEMANDEUR', 'DEMANDER_INFORMATION', 'RECEVOIR_INFORMATION'])
     expect(service.getSnapshot().context.demarcheStatut).toBe(DemarchesStatutsIds.EnInstruction)
     expect(service.getSnapshot().context.visibilite).toBe('confidentielle')
   })
@@ -121,6 +150,14 @@ describe('vérifie l’arbre des procédures historiques et simplifiées', () =>
     expect(service.getSnapshot().context.visibilite).toBe('publique')
   })
 
+  test("peut rejeter une décision de l'administration puis un publication au JORF", () => {
+    const etapes = [ETES.decisionDeLadministration.REJETE, ETES.publicationDeDecisionAuJORF.FAIT]
+    const { service, dateFin } = setDateAndOrderAndInterpretMachine(psMachine, '2022-04-14', etapes)
+    expect(service).canOnlyTransitionTo({ machine: psMachine, date: dateFin }, [])
+    expect(service.getSnapshot().context.demarcheStatut).toBe(DemarchesStatutsIds.Rejete)
+    expect(service.getSnapshot().context.visibilite).toBe('confidentielle')
+  })
+
   test("peut faire une demande d'information", () => {
     const { service, dateFin } = setDateAndOrderAndInterpretMachine(psMachine, '2022-04-16', [ETES.demande.FAIT, ETES.demandeDinformations.FAIT])
     expect(service).canOnlyTransitionTo({ machine: psMachine, date: dateFin }, [
@@ -128,6 +165,7 @@ describe('vérifie l’arbre des procédures historiques et simplifiées', () =>
       'DEPOSER_DEMANDE',
       'DESISTER_PAR_LE_DEMANDEUR',
       'OUVRIR_PARTICIPATION_DU_PUBLIC',
+      'DEMANDER_INFORMATION',
       'RECEVOIR_INFORMATION',
       'RENDRE_DECISION_ADMINISTRATION_ACCEPTEE',
       'RENDRE_DECISION_ADMINISTRATION_REJETEE',
@@ -146,6 +184,7 @@ describe('vérifie l’arbre des procédures historiques et simplifiées', () =>
     expect(service).canOnlyTransitionTo({ machine: psMachine, date: dateFin }, [
       'CLASSER_SANS_SUITE',
       'DEMANDER_INFORMATION',
+      'RECEVOIR_INFORMATION',
       'DESISTER_PAR_LE_DEMANDEUR',
       'RENDRE_DECISION_ADMINISTRATION_ACCEPTEE',
       'RENDRE_DECISION_ADMINISTRATION_REJETEE',
@@ -185,7 +224,7 @@ describe('vérifie l’arbre des procédures historiques et simplifiées', () =>
 
   test("peut rejeter immédiatement un décision de l'administration", () => {
     const { service, dateFin } = setDateAndOrderAndInterpretMachine(psMachine, '2022-04-08', [ETES.decisionDeLadministration.REJETE])
-    expect(service).canOnlyTransitionTo({ machine: psMachine, date: dateFin }, [])
+    expect(service).canOnlyTransitionTo({ machine: psMachine, date: dateFin }, ['PUBLIER_DECISION_ACCEPTEE_AU_JORF'])
     expect(service.getSnapshot().context.demarcheStatut).toBe(DemarchesStatutsIds.Rejete)
     expect(service.getSnapshot().context.visibilite).toBe('confidentielle')
   })

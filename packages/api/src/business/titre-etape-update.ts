@@ -50,7 +50,7 @@ export const titreEtapeUpdateTask = async (pool: Pool, titreEtapeId: EtapeId | n
     const titreId = titreDemarche.titreId
     const titresDemarchesStatutUpdated = await titresDemarchesStatutIdUpdate(pool, titreId)
     const titresDemarchesOrdreUpdated = await titresDemarchesOrdreUpdate([titreId])
-    const [titresDemarchesDatesUpdated = []] = await titresDemarchesDatesUpdate(pool, [titreId])
+    const titresDemarchesDatesUpdated = await titresDemarchesDatesUpdate(pool, [titreId])
     const titresDemarchesPublicUpdated = await titresDemarchesPublicUpdate([titreId])
     const titresStatutIdUpdated = await titresStatutIdsUpdate([titreId])
     const titresPublicUpdated = await titresPublicUpdate(pool, [titreId])

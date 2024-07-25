@@ -6,7 +6,10 @@ import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts'
 import { CaminoDate, isBefore, toCaminoDate } from 'camino-common/src/date'
 import { ETAPES_STATUTS, EtapeStatutId } from 'camino-common/src/static/etapesStatuts'
 import { isNullOrUndefined } from 'camino-common/src/typescript-tools'
-
+type SaisirInformationHistoriqueIncomplete = {
+  date: CaminoDate
+  type: 'SAISIR_INFORMATION_HISTORIQUE_INCOMPLETE'
+}
 type RendreDecisionAdministrationAcceptee = {
   date: CaminoDate
   type: 'RENDRE_DECISION_ADMINISTRATION_ACCEPTEE'
@@ -14,6 +17,15 @@ type RendreDecisionAdministrationAcceptee = {
 type RendreDecisionAdministrationRejetee = {
   date: CaminoDate
   type: 'RENDRE_DECISION_ADMINISTRATION_REJETEE'
+}
+
+type PublierDecisionAccepteeAuJORF = {
+  date: CaminoDate
+  type: 'PUBLIER_DECISION_ACCEPTEE_AU_JORF'
+}
+type PublierDecisionAuRecueilDesActesAdministratifs = {
+  date: CaminoDate
+  type: 'PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS'
 }
 
 type ParticipationDuPublic = {
@@ -27,8 +39,9 @@ type ProcedureSimplifieeXStateEvent =
   | ParticipationDuPublic
   | RendreDecisionAdministrationAcceptee
   | RendreDecisionAdministrationRejetee
-  | { type: 'PUBLIER_DECISION_ACCEPTEE_AU_JORF' }
-  | { type: 'PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS' }
+  | SaisirInformationHistoriqueIncomplete
+  | PublierDecisionAccepteeAuJORF
+  | PublierDecisionAuRecueilDesActesAdministratifs
   | { type: 'CLASSER_SANS_SUITE' }
   | { type: 'DESISTER_PAR_LE_DEMANDEUR' }
   | { type: 'DEMANDER_INFORMATION' }
@@ -50,6 +63,7 @@ const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
   DEMANDER_INFORMATION: { db: ETES.demandeDinformations, mainStep: false },
   RECEVOIR_INFORMATION: { db: ETES.receptionDinformation, mainStep: false },
   FAIRE_ABROGATION: { db: ETES.abrogationDeLaDecision, mainStep: true },
+  SAISIR_INFORMATION_HISTORIQUE_INCOMPLETE: { db: ETES.informationsHistoriquesIncompletes, mainStep: false },
 }
 
 // Related to https://github.com/Microsoft/TypeScript/issues/12870
@@ -65,6 +79,9 @@ export class ProcedureSimplifieeMachine extends CaminoMachine<ProcedureSimplifie
     switch (event) {
       case 'RENDRE_DECISION_ADMINISTRATION_ACCEPTEE':
       case 'RENDRE_DECISION_ADMINISTRATION_REJETEE':
+      case 'SAISIR_INFORMATION_HISTORIQUE_INCOMPLETE':
+      case 'PUBLIER_DECISION_ACCEPTEE_AU_JORF':
+      case 'PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS':
         return [{ type: event, date }]
       case 'OUVRIR_PARTICIPATION_DU_PUBLIC':
         return [
@@ -73,9 +90,6 @@ export class ProcedureSimplifieeMachine extends CaminoMachine<ProcedureSimplifie
           { type: event, status: ETAPES_STATUTS.TERMINE },
         ]
       default:
-        // related to https://github.com/microsoft/TypeScript/issues/46497  https://github.com/microsoft/TypeScript/issues/40803 :(
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
         return [{ type: event }]
     }
   }
@@ -90,6 +104,9 @@ export class ProcedureSimplifieeMachine extends CaminoMachine<ProcedureSimplifie
     if (entry) {
       const eventFromEntry = entry[0]
       switch (eventFromEntry) {
+        case 'PUBLIER_DECISION_ACCEPTEE_AU_JORF':
+        case 'PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS':
+        case 'SAISIR_INFORMATION_HISTORIQUE_INCOMPLETE':
         case 'RENDRE_DECISION_ADMINISTRATION_ACCEPTEE':
         case 'RENDRE_DECISION_ADMINISTRATION_REJETEE': {
           return { type: eventFromEntry, date: etape.date }
@@ -99,9 +116,6 @@ export class ProcedureSimplifieeMachine extends CaminoMachine<ProcedureSimplifie
         }
 
         default:
-          // related to https://github.com/microsoft/TypeScript/issues/46497  https://github.com/microsoft/TypeScript/issues/40803 :(
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
           return { type: eventFromEntry }
       }
     }
@@ -112,10 +126,10 @@ export class ProcedureSimplifieeMachine extends CaminoMachine<ProcedureSimplifie
 interface ProcedureSimplifieeContext extends CaminoCommonContext {
   depotDeLaDemandeFaite: boolean
   ouverturePublicStatut: EtapeStatutId | null
-  demandeInformationEnCours: boolean
 }
 const defaultDemarcheStatut = DemarchesStatutsIds.EnConstruction
 const procedureHistoriqueDateMax = toCaminoDate('2024-07-01')
+const procedureIncompleteDateMax = toCaminoDate('2000-01-01')
 const procedureSimplifieeMachine = createMachine({
   types: {} as { context: ProcedureSimplifieeContext; events: ProcedureSimplifieeXStateEvent },
   id: 'ProcedureSimplifiee',
@@ -125,7 +139,6 @@ const procedureSimplifieeMachine = createMachine({
     visibilite: 'confidentielle',
     depotDeLaDemandeFaite: false,
     ouverturePublicStatut: null,
-    demandeInformationEnCours: false,
   },
   on: {
     RENDRE_DECISION_ADMINISTRATION_ACCEPTEE: {
@@ -136,9 +149,33 @@ const procedureSimplifieeMachine = createMachine({
         demarcheStatut: DemarchesStatutsIds.Accepte,
       }),
     },
+    PUBLIER_DECISION_ACCEPTEE_AU_JORF: {
+      guard: ({ context, event }) => isBefore(event.date, procedureIncompleteDateMax) && context.demarcheStatut === defaultDemarcheStatut,
+      target: '.abrogationAFaire',
+      actions: assign({
+        visibilite: 'publique',
+        demarcheStatut: DemarchesStatutsIds.AccepteEtPublie,
+      }),
+    },
+    PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS: {
+      guard: ({ context, event }) => isBefore(event.date, procedureIncompleteDateMax) && context.demarcheStatut === defaultDemarcheStatut,
+      target: '.abrogationAFaire',
+      actions: assign({
+        visibilite: 'publique',
+        demarcheStatut: DemarchesStatutsIds.AccepteEtPublie,
+      }),
+    },
+    SAISIR_INFORMATION_HISTORIQUE_INCOMPLETE: {
+      guard: ({ context, event }) => isBefore(event.date, procedureIncompleteDateMax) && context.demarcheStatut === defaultDemarcheStatut,
+      target: '.finDeMachine',
+      actions: assign({
+        visibilite: 'confidentielle',
+        demarcheStatut: DemarchesStatutsIds.Accepte,
+      }),
+    },
     RENDRE_DECISION_ADMINISTRATION_REJETEE: {
       guard: ({ context, event }) => isBefore(event.date, procedureHistoriqueDateMax) && context.demarcheStatut === defaultDemarcheStatut,
-      target: '.finDeMachine',
+      target: '.publicationAuJorfApresRejetAFaire',
       actions: assign({
         visibilite: 'confidentielle',
         demarcheStatut: DemarchesStatutsIds.Rejete,
@@ -159,16 +196,12 @@ const procedureSimplifieeMachine = createMachine({
       }),
     },
     DEMANDER_INFORMATION: {
-      guard: ({ context }) => context.demarcheStatut === DemarchesStatutsIds.EnInstruction && !context.demandeInformationEnCours,
-      actions: assign({
-        demandeInformationEnCours: true,
-      }),
+      guard: ({ context }) => context.demarcheStatut === DemarchesStatutsIds.EnInstruction,
+      actions: assign({}),
     },
     RECEVOIR_INFORMATION: {
-      guard: ({ context }) => context.demarcheStatut === DemarchesStatutsIds.EnInstruction && context.demandeInformationEnCours,
-      actions: assign({
-        demandeInformationEnCours: false,
-      }),
+      guard: ({ context }) => context.demarcheStatut === DemarchesStatutsIds.EnInstruction,
+      actions: assign({}),
     },
   },
   states: {
@@ -243,6 +276,11 @@ const procedureSimplifieeMachine = createMachine({
             actions: assign({ demarcheStatut: DemarchesStatutsIds.RejeteApresAbrogation }),
           },
         ],
+      },
+    },
+    publicationAuJorfApresRejetAFaire: {
+      on: {
+        PUBLIER_DECISION_ACCEPTEE_AU_JORF: 'finDeMachine',
       },
     },
     abrogationAFaire: {

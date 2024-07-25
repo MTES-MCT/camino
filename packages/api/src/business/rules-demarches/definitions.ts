@@ -108,7 +108,7 @@ export const demarchesDefinitions = [
     ],
   },
   {
-    titreTypeIds: ['pxg', 'arg'],
+    titreTypeIds: ['pxg', 'arg', 'cxr', 'inr', 'prr', 'pxr'],
     demarcheTypeIds: allDemarcheNotTravaux,
     machine: new ProcedureSimplifieeMachine(),
     dateDebut: plusVieilleDateEnBase,

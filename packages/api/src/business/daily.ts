@@ -21,7 +21,7 @@ import { demarchesDefinitionsCheck } from '../tools/demarches/definitions-check'
 import { titreTypeDemarcheTypeEtapeTypeCheck } from '../tools/demarches/tde-check'
 import { titresEtapesStatutUpdate } from './processes/titres-etapes-statut-update'
 
-export const daily = async (pool: Pool) => {
+export const daily = async (pool: Pool): Promise<void> => {
   try {
     console.info()
     console.info('- - -')
@@ -34,7 +34,7 @@ export const daily = async (pool: Pool) => {
 
     const titresDemarchesStatutUpdated = await titresDemarchesStatutIdUpdate(pool)
     const titresDemarchesOrdreUpdated = await titresDemarchesOrdreUpdate()
-    const [titresDemarchesDatesUpdated = []] = await titresDemarchesDatesUpdate(pool)
+    const titresDemarchesDatesUpdated = await titresDemarchesDatesUpdate(pool)
     const titresDemarchesPublicUpdated = await titresDemarchesPublicUpdate()
 
     const titresStatutIdUpdated = await titresStatutIdsUpdate()

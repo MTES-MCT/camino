@@ -3,8 +3,9 @@ import { titresGet } from '../../database/queries/titres'
 import { userSuper } from '../../database/user-super'
 import type { Pool } from 'pg'
 import { updateDatesDemarche } from './titres-phases-update.queries'
+import { DemarcheId } from 'camino-common/src/demarche'
 
-export const titresDemarchesDatesUpdate = async (pool: Pool, titresIds?: string[]) => {
+export const titresDemarchesDatesUpdate = async (pool: Pool, titresIds?: string[]): Promise<DemarcheId[]> => {
   console.info()
   console.info('phases des titres…')
 
@@ -41,10 +42,12 @@ export const titresDemarchesDatesUpdate = async (pool: Pool, titresIds?: string[
           newDateFin,
           demarcheId: demarche.id,
         })
-        console.info(`maj des dates de la demarche ${demarche.slug} titreId: ${demarche.titreId} dateDebut: ${oldDateDebut} => ${newDateDebut}, dateFin: ${oldDateFin} => ${newDateFin}`)
+        console.info(
+          `maj des dates de la demarche https://camino.beta.gouv.fr/demarches/${demarche.slug} titreId: ${demarche.titreId} dateDebut: ${oldDateDebut} => ${newDateDebut}, dateFin: ${oldDateFin} => ${newDateFin}`
+        )
       }
     }
   }
 
-  return [demarchePhaseUpdated]
+  return demarchePhaseUpdated
 }
