@@ -35,6 +35,42 @@ const multiPolygonWith4Points: FeatureMultiPolygon = {
 }
 
 describe("phases d'une démarche", () => {
+  test("un titre qui a une démarche d'octroi avec une dex rejeté et une dpu faites n'a  pas de phase", () => {
+    expect(
+      titrePhasesFind(
+        [
+          {
+            titreId: newTitreId('titreid'),
+            id: newDemarcheId('demarcheId'),
+            typeId: 'oct',
+            statutId: 'rej',
+            etapes: [
+              {
+                typeId: 'dpu',
+                statutId: 'fai',
+                ordre: 2,
+                isBrouillon: ETAPE_IS_NOT_BROUILLON,
+                date: toCaminoDate('2200-01-02'),
+                duree: 2 * 12,
+                titreDemarcheId: newDemarcheId('demarcheId'),
+              },
+              {
+                typeId: 'dex',
+                statutId: 'rej',
+                ordre: 1,
+                isBrouillon: ETAPE_IS_NOT_BROUILLON,
+                date: toCaminoDate('2200-01-01'),
+                duree: 2 * 12,
+                titreDemarcheId: newDemarcheId('demarcheId'),
+              },
+            ],
+          },
+        ],
+        'prr'
+      )
+    ).toEqual({})
+  })
+
   test("un titre qui a une démarche d'octroi avec une dpu a une phase", () => {
     expect(
       titrePhasesFind(
@@ -984,7 +1020,80 @@ describe("phases d'une démarche", () => {
       },
     })
   })
+  test('un titre avec une prolongation rejetée doit avoir une phase de prolongation (survie provisoire)', () => {
+    const demarches: ITitreDemarche[] = [
+      {
+        id: newDemarcheId('demarcheId1'),
+        titreId: newTitreId('titreId'),
+        typeId: 'oct',
+        statutId: 'acc',
+        ordre: 1,
+        etapes: [
+          {
+            id: newEtapeId('demarcheId1etapeId2'),
+            titreDemarcheId: newDemarcheId('demarcheId1'),
+            typeId: 'dpu',
+            statutId: 'acc',
+            ordre: 2,
+            isBrouillon: ETAPE_IS_NOT_BROUILLON,
+            date: toCaminoDate('2017-11-11'),
+            duree: 60,
+          },
+          {
+            id: newEtapeId('demarcheId1etapeId1'),
+            titreDemarcheId: newDemarcheId('demarcheId1'),
+            typeId: 'dex',
+            statutId: 'acc',
+            ordre: 1,
+            isBrouillon: ETAPE_IS_NOT_BROUILLON,
+            date: toCaminoDate('2017-11-06'),
+          },
+        ],
+      },
+      {
+        id: newDemarcheId('demarcheId2'),
+        titreId: newTitreId('titreId'),
+        typeId: DEMARCHES_TYPES_IDS.Prolongation1,
+        statutId: DemarchesStatutsIds.Rejete,
+        ordre: 2,
+        etapes: [
+          {
+            id: newEtapeId('demarcheId2EtapeIdDex'),
+            titreDemarcheId: newDemarcheId('demarcheId2'),
+            typeId: 'dex',
+            statutId: 'rej',
+            ordre: 1,
+            isBrouillon: ETAPE_IS_NOT_BROUILLON,
+            date: toCaminoDate('2023-01-01'),
+            duree: 60,
+          },
+          {
+            id: newEtapeId('demarcheId2EtapeIdDpu'),
+            titreDemarcheId: newDemarcheId('demarcheId2'),
+            typeId: 'dpu',
+            statutId: 'fai',
+            ordre: 2,
+            isBrouillon: ETAPE_IS_NOT_BROUILLON,
+            date: toCaminoDate('2023-01-02'),
+            duree: 60,
+          },
+        ],
+      },
+    ]
+    const titreTypeId = 'prw'
 
+    const tested = titrePhasesFind(demarches, titreTypeId)
+    expect(tested).toStrictEqual({
+      [newDemarcheId('demarcheId1')]: {
+        dateDebut: '2017-11-11',
+        dateFin: '2022-11-11',
+      },
+      [newDemarcheId('demarcheId2')]: {
+        dateDebut: '2022-11-11',
+        dateFin: '2023-01-02',
+      },
+    })
+  })
   test('un titre en modification en instance doit avoir une nouvelle phase sans date de fin', () => {
     const demarches: ITitreDemarche[] = [
       {

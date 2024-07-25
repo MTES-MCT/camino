@@ -73,7 +73,7 @@ describe("phases d'un titre", () => {
       } satisfies ITitre,
     ])
 
-    const [titresDemarchesDatesUpdated] = await titresDemarchesDatesUpdate(mockedPool)
+    const titresDemarchesDatesUpdated = await titresDemarchesDatesUpdate(mockedPool)
 
     expect(updateDatesDemarcheMock).toBeCalledWith(expect.anything(), { demarcheId: 'h-cx-courdemanges-1988-oct01', newDateDebut: toCaminoDate('2200-01-01'), newDateFin: toCaminoDate('2500-01-01') })
     expect(titresDemarchesDatesUpdated.length).toEqual(1)
@@ -122,7 +122,7 @@ describe("phases d'un titre", () => {
         ],
       } satisfies ITitre,
     ])
-    const [titresDemarchesDatesUpdated] = await titresDemarchesDatesUpdate(mockedPool)
+    const titresDemarchesDatesUpdated = await titresDemarchesDatesUpdate(mockedPool)
 
     expect(updateDatesDemarcheMock).toBeCalledWith(expect.anything(), { demarcheId: 'h-cx-courdemanges-1988-oct01', newDateDebut: toCaminoDate('2200-01-01'), newDateFin: toCaminoDate('2500-01-01') })
     expect(titresDemarchesDatesUpdated.length).toEqual(1)
@@ -150,7 +150,7 @@ describe("phases d'un titre", () => {
         ],
       } satisfies ITitre,
     ])
-    const [titresDemarchesDatesUpdated] = await titresDemarchesDatesUpdate(mockedPool)
+    const titresDemarchesDatesUpdated = await titresDemarchesDatesUpdate(mockedPool)
 
     expect(updateDatesDemarcheMock).toBeCalledWith(expect.anything(), { demarcheId: 'h-cx-courdemanges-1988-oct01', newDateDebut: null, newDateFin: null })
 
@@ -200,7 +200,7 @@ describe("phases d'un titre", () => {
         ],
       } satisfies ITitre,
     ])
-    const [titresDemarchesDatesUpdated] = await titresDemarchesDatesUpdate(mockedPool)
+    const titresDemarchesDatesUpdated = await titresDemarchesDatesUpdate(mockedPool)
 
     expect(updateDatesDemarcheMock).not.toBeCalled()
     expect(titresDemarchesDatesUpdated.length).toEqual(0)
@@ -226,7 +226,7 @@ describe("phases d'un titre", () => {
         ],
       } satisfies ITitre,
     ])
-    const [titresDemarchesDatesUpdated] = await titresDemarchesDatesUpdate(mockedPool)
+    const titresDemarchesDatesUpdated = await titresDemarchesDatesUpdate(mockedPool)
     expect(updateDatesDemarcheMock).not.toBeCalled()
     expect(titresDemarchesDatesUpdated.length).toEqual(0)
   })

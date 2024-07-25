@@ -34,13 +34,22 @@ const findDateDebut = (demarche: TitreDemarchePhaseFind, titreTypeId: TitreTypeI
     return dateDebut
   }
 
+  const sortedEtapes = titreEtapesSortAscByOrdre(demarche.etapes)
   // on trie les étapes de façon ascendante pour le cas où
   // il existe une étape de publication et une étape rectificative,
   // on prend alors en compte l'originale
-  const etapePublicationFirst = titreEtapesSortAscByOrdre(demarche.etapes).find(
-    etape => titreEtapePublicationCheck(etape.typeId, titreTypeId) && [ETAPES_STATUTS.ACCEPTE, ETAPES_STATUTS.FAIT].includes(etape.statutId)
-  )
-  if (etapePublicationFirst) {
+  const etapePublicationFirst = sortedEtapes.findIndex(etape => titreEtapePublicationCheck(etape.typeId, titreTypeId) && [ETAPES_STATUTS.ACCEPTE, ETAPES_STATUTS.FAIT].includes(etape.statutId))
+
+  if (etapePublicationFirst !== -1) {
+    // si on le statut est 'FAIT', on doit trouver le statut dans la décision de l'administration précédente
+    if (
+      sortedEtapes[etapePublicationFirst].statutId === ETAPES_STATUTS.FAIT &&
+      sortedEtapes[etapePublicationFirst - 1]?.typeId === ETAPES_TYPES.decisionDeLadministration &&
+      sortedEtapes[etapePublicationFirst - 1]?.statutId === ETAPES_STATUTS.REJETE
+    ) {
+      return null
+    }
+
     // retourne l’étape de publication la plus récente avec une date de début spécifiée
     const etapePublicationHasDateDebut = titreEtapesSortDescByOrdre(demarche.etapes).find(titreEtape => titreEtapePublicationCheck(titreEtape.typeId, titreTypeId) && titreEtape.dateDebut)
 
@@ -175,10 +184,21 @@ const etapeTypesIds: EtapeTypeId[] = ['dpu', 'dup', 'rpu', 'dex', 'dux', 'def', 
 const titreDemarcheNormaleDateFinAndDureeFind = (titreEtapes: TitreEtapePhaseFind[]): { duree: number; dateFin: CaminoDate | null | undefined } => {
   const titreEtapesSorted = titreEtapesSortDescByOrdre(titreEtapes)
 
-  const derniereDecision = titreEtapesSorted.find(({ typeId }) => [ETAPES_TYPES.publicationDeDecisionAuJORF, ETAPES_TYPES.decisionImplicite, ETAPES_TYPES.decisionDeLadministration].includes(typeId))
+  const derniereDecisionIndex = titreEtapesSorted.findIndex(({ typeId }) =>
+    [ETAPES_TYPES.publicationDeDecisionAuJORF, ETAPES_TYPES.decisionImplicite, ETAPES_TYPES.decisionDeLadministration].includes(typeId)
+  )
 
-  if (isNotNullNorUndefined(derniereDecision) && derniereDecision.statutId === ETAPES_STATUTS.REJETE) {
-    return { dateFin: derniereDecision.date, duree: 0 }
+  const derniereDecision = titreEtapesSorted[derniereDecisionIndex]
+  if (isNotNullNorUndefined(derniereDecision)) {
+    if (derniereDecision.statutId === ETAPES_STATUTS.REJETE) {
+      return { dateFin: derniereDecision.date, duree: 0 }
+    } else if (
+      derniereDecision.typeId === ETAPES_TYPES.publicationDeDecisionAuJORF &&
+      titreEtapesSorted[derniereDecisionIndex + 1]?.typeId === ETAPES_TYPES.decisionDeLadministration &&
+      titreEtapesSorted[derniereDecisionIndex + 1]?.statutId === ETAPES_STATUTS.REJETE
+    ) {
+      return { dateFin: derniereDecision.date, duree: 0 }
+    }
   }
 
   const desistementDemandeur = titreEtapesSorted.find(({ typeId }) => ETAPES_TYPES.desistementDuDemandeur === typeId)
