@@ -236,7 +236,7 @@ describe('vérifie l’arbre d’octroi d’AXM', () => {
         ...ETES.saisineDesCollectivitesLocales.FAIT,
         date: toCaminoDate('2022-04-16'),
       },
-      { ...ETES.avisDunMaire.FAVORABLE, date: toCaminoDate('2022-04-17') },
+      { ...ETES.avisDesCollectivites.FAIT, date: toCaminoDate('2022-04-17') },
       { ...ETES.avisDesServicesEtCommissionsConsultatives.FAIT, date: toCaminoDate('2022-04-18') },
       {
         ...ETES.avisEtRapportDuDirecteurRegionalChargeDeLenvironnementDeLamenagementEtDuLogement.FAVORABLE,
@@ -306,14 +306,14 @@ describe('vérifie l’arbre d’octroi d’AXM', () => {
       'DEMANDER_INFORMATION_POUR_AVIS_DREAL',
       'FAIRE_DESISTEMENT_DEMANDEUR',
       'FAIRE_NOTE_INTERNE_SIGNALEE',
-      'RENDRE_AVIS_DUN_MAIRE',
+      'RENDRE_AVIS_DES_COLLECTIVITES',
     ])
     expect(service).canOnlyTransitionTo({ machine: axmOctMachine, date: toCaminoDate('2022-05-17') }, [
       'FAIRE_CLASSEMENT_SANS_SUITE',
       'DEMANDER_INFORMATION_POUR_AVIS_DREAL',
       'FAIRE_DESISTEMENT_DEMANDEUR',
       'FAIRE_NOTE_INTERNE_SIGNALEE',
-      'RENDRE_AVIS_DUN_MAIRE',
+      'RENDRE_AVIS_DES_COLLECTIVITES',
     ])
   })
 
