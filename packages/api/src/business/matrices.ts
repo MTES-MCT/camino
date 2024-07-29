@@ -155,6 +155,13 @@ const titulaireToString = (titulaire: Titulaire): string => {
   return `${titulaire.nom} - ${titulaire.rue} - ${titulaire.siren} SIREN`
 }
 
+export type BuildedMatrices = {
+  matrice1121: Matrice1121[]
+  matrice1122: Matrice1122[]
+  matrice1403: Matrice1403[]
+  matrice1404: Record<Sips, Matrice1404[]>
+  rawLines: Matrices[]
+}
 // VISIBLE FOR TESTING
 export const buildMatrices = (
   result: OpenfiscaResponse,
@@ -162,14 +169,8 @@ export const buildMatrices = (
   annee: number,
   openfiscaConstants: OpenfiscaConstants,
   communes: Commune[],
-  entreprises: Record<EntrepriseId, GetEntreprises>
-): {
-  matrice1121: Matrice1121[]
-  matrice1122: Matrice1122[]
-  matrice1403: Matrice1403[]
-  matrice1404: Record<Sips, Matrice1404[]>
-  rawLines: Matrices[]
-} => {
+  entreprises: Record<EntrepriseId, Pick<GetEntreprises, 'nom' | 'adresse' | 'code_postal' | 'commune' | 'legal_siren'>>
+): BuildedMatrices => {
   const anneePrecedente = annee - 1
   let count = 0
   const rawLines: Matrices[] = titres
@@ -390,7 +391,7 @@ export const buildMatrices = (
   return { matrice1121, matrice1122, matrice1403, matrice1404, rawLines }
 }
 
-export const matrices = async (annee: CaminoAnnee, pool: Pool) => {
+export const matrices = async (annee: CaminoAnnee, pool: Pool): Promise<void> => {
   const anneeNumber = caminoAnneeToNumber(annee)
   const anneePrecedente = previousYear(annee)
 
