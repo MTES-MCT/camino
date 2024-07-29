@@ -1,4 +1,4 @@
-import { computed, defineComponent, ref, watch, DeepReadonly } from 'vue'
+import { defineComponent, ref, watch, DeepReadonly, FunctionalComponent } from 'vue'
 import { ElementWithValue, isNumberElement, isRadioElement, SectionWithValue } from 'camino-common/src/sections'
 import { exhaustiveCheck, isNonEmptyArray, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined } from 'camino-common/src/typescript-tools'
 import { numberFormat } from 'camino-common/src/number'
@@ -105,47 +105,51 @@ export const SectionElementEdit = defineComponent<SectionElementEditProps>(props
     props.onValueChange(value)
   }
 
-  const element = props.element
-  const info = computed<string>(() => {
-    return getInfo(props.element, props.sectionId, props.etapeDate)
-  })
+  return () => <InnerComponent {...{ ...props, onValueChange }} />
+})
 
+// @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
+SectionElementEdit.props = ['element', 'onValueChange', 'sectionId', 'etapeDate']
+
+const InnerComponent: FunctionalComponent<SectionElementEditProps> = props => {
+  const info = getInfo(props.element, props.sectionId, props.etapeDate)
   const required = !(props.element.optionnel ?? false)
+  const element = props.element
   switch (element.type) {
     case 'integer':
     case 'number':
-      return () => (
+      return (
         <div>
           <DsfrInput
             type={{ type: 'number', min: 0 }}
             required={required}
             initialValue={element.value}
-            valueChanged={(e: number | null) => onValueChange({ ...element, value: e })}
-            legend={{ main: element.nom ?? '', description: element.description, info: info.value }}
+            valueChanged={(e: number | null) => props.onValueChange({ ...element, value: e })}
+            legend={{ main: element.nom ?? '', description: element.description, info }}
           />
         </div>
       )
     case 'date':
-      return () => (
+      return (
         <div>
           <DsfrInput
             type={{ type: 'date' }}
             required={required}
             initialValue={element.value}
             valueChanged={(date: CaminoDate | null) => {
-              onValueChange({ ...element, value: date })
+              props.onValueChange({ ...element, value: date })
             }}
             legend={{ main: element.nom ?? '', description: element.description }}
           />
         </div>
       )
     case 'textarea':
-      return () => (
+      return (
         <div>
           <DsfrTextarea
             required={required}
             initialValue={element.value ?? undefined}
-            valueChanged={(e: string) => onValueChange({ ...element, value: e })}
+            valueChanged={(e: string) => props.onValueChange({ ...element, value: e })}
             legend={{ main: element.nom ?? '', description: element.description }}
           />
         </div>
@@ -153,26 +157,26 @@ export const SectionElementEdit = defineComponent<SectionElementEditProps>(props
 
     case 'text':
     case 'url':
-      return () => (
+      return (
         <div>
           <DsfrInput
             required={required}
             type={{ type: 'text' }}
             initialValue={element.value}
-            valueChanged={(e: string) => onValueChange({ ...element, value: e })}
+            valueChanged={(e: string) => props.onValueChange({ ...element, value: e })}
             legend={{ main: element.nom ?? '', description: element.description }}
           />
         </div>
       )
 
     case 'radio':
-      return () => (
+      return (
         <div>
           <DsfrInputRadio
             id={props.element.id}
             required={required}
             legend={{ main: element.nom ?? '', description: element.description }}
-            valueChanged={(radio: string) => onValueChange({ ...element, value: radio === 'oui' })}
+            valueChanged={(radio: string) => props.onValueChange({ ...element, value: radio === 'oui' })}
             elements={[
               { legend: { main: 'Oui' }, itemId: 'oui' },
               { legend: { main: 'Non' }, itemId: 'non' },
@@ -183,18 +187,18 @@ export const SectionElementEdit = defineComponent<SectionElementEditProps>(props
       )
 
     case 'checkbox':
-      return () => (
+      return (
         <div>
           <DsfrInputCheckbox
             initialValue={element.value}
             legend={{ main: element.nom ?? '', description: element.description }}
-            valueChanged={(e: boolean) => onValueChange({ ...element, value: e })}
+            valueChanged={(e: boolean) => props.onValueChange({ ...element, value: e })}
           />
         </div>
       )
 
     case 'checkboxes':
-      return () => (
+      return (
         <div>
           <DsfrInputCheckboxes
             legend={{ main: element.nom ?? '', description: element.description }}
@@ -202,21 +206,21 @@ export const SectionElementEdit = defineComponent<SectionElementEditProps>(props
               return { itemId: option.id, legend: { main: capitalize(option.nom) } }
             })}
             initialCheckedValue={(props.element.value ?? []) as string[]}
-            valueChanged={newValues => onValueChange({ ...element, value: newValues })}
+            valueChanged={newValues => props.onValueChange({ ...element, value: newValues })}
           />
         </div>
       )
     case 'select': {
       const options = element.options.map(option => ({ id: option.id, label: option.nom }))
       if (isNonEmptyArray(options)) {
-        return () => (
+        return (
           <div>
             <DsfrSelect
               required={required}
               legend={{ main: element.nom ?? '', description: element.description }}
               items={options}
               initialValue={element.value}
-              valueChanged={newValue => onValueChange({ ...element, value: newValue })}
+              valueChanged={newValue => props.onValueChange({ ...element, value: newValue })}
             />
           </div>
         )
@@ -228,9 +232,4 @@ export const SectionElementEdit = defineComponent<SectionElementEditProps>(props
     default:
       exhaustiveCheck(element)
   }
-
-  return () => <div></div>
-})
-
-// @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-SectionElementEdit.props = ['element', 'onValueChange', 'sectionId', 'etapeDate']
+}
