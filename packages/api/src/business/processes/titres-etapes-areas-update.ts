@@ -90,7 +90,10 @@ async function intersectCommunes(titreEtape: Pick<ITitreEtape, 'communes' | 'id'
 }
 
 async function intersectSecteursMaritime(titreEtape: Pick<ITitreEtape, 'secteursMaritime' | 'id'>, secteursMaritime: DeepReadonly<SecteursMaritimesIds[]>) {
-  const secteurMaritimeNew: SecteursMaritimes[] = [...secteursMaritime.map(id => getSecteurMaritime(id))].filter(onlyUnique).toSorted()
+  const secteurMaritimeNew: SecteursMaritimes[] = secteursMaritime
+    .map(id => getSecteurMaritime(id))
+    .filter(onlyUnique)
+    .toSorted()
   if (titreEtape.secteursMaritime?.length !== secteurMaritimeNew.length || titreEtape.secteursMaritime.some((value, index) => value !== secteurMaritimeNew[index])) {
     console.info(`Mise à jour des secteurs maritimes sur l'étape ${titreEtape.id}, ancien: '${titreEtape.secteursMaritime}', nouveaux: '${secteurMaritimeNew}'`)
     await knex('titres_etapes')
