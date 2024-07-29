@@ -93,12 +93,14 @@ const entryValidator = z.object({
   annee: caminoAnneeValidator,
   entreprises: z.array(z.object({ id: entrepriseIdTransformer, categorie: z.string().nullable(), nom: z.string().transform(() => '') })),
 })
+
+export type BodyMatrice = {
+  entries: z.infer<typeof entryValidator>
+  expected: BuildedMatrices
+}
 const writeMatricesForTest = async () => {
   const user = userSuper
-  const testBody: {
-    entries: z.infer<typeof entryValidator>
-    expected: BuildedMatrices
-  }[] = []
+  const testBody: BodyMatrice[] = []
   const entreprises = await getEntreprises(pool)
 
   const annees = [toCaminoAnnee(2023), toCaminoAnnee(2022)] as const
@@ -175,7 +177,7 @@ const writeMatricesForTest = async () => {
       })
     }
   }
-  writeFileSync(`src/business/rules/titre-matrices-find.cas.json`, JSON.stringify(testBody))
+  writeFileSync(`src/business/matrices.cas.json`, JSON.stringify(testBody))
 }
 
 writeMatricesForTest()

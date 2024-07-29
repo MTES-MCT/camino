@@ -27,5 +27,5 @@ export const testEnv = {
   API_MAILJET_SECRET: 'plop',
   API_MAILJET_CONTACTS_LIST_ID: '12',
   API_MAILJET_EXPLOITANTS_GUYANE_LIST_ID: '12',
-  API_OPENFISCA_URL: 'http://plop.plop',
+  API_OPENFISCA_URL: 'http://localhost:8000',
 }
