@@ -18,5 +18,5 @@ export const titreDemarcheDepotDemandeDateFind = (titreEtapes: DeepReadonly<Pick
     return titreEtapeDemande.date
   }
 
-  return titreEtapes.map(te => te.date).sort()[0]
+  return titreEtapes.map(te => te.date).toSorted()[0]
 }

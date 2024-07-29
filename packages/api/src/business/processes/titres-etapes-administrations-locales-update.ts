@@ -20,8 +20,8 @@ const titresEtapesAdministrationsLocalesBuild = (etapes: ITitreEtape[]): ITitreE
     )
 
     titresEtapesAdministrationsLocales.push({
-      titreEtapeAdministrationsLocalesOld: titreEtape.administrationsLocales?.sort() ?? [],
-      titreEtapeAdministrationsLocales: titreEtapeAdministrationsLocales.sort(),
+      titreEtapeAdministrationsLocalesOld: titreEtape.administrationsLocales?.toSorted() ?? [],
+      titreEtapeAdministrationsLocales: titreEtapeAdministrationsLocales.toSorted(),
       titreEtapeId: titreEtape.id,
     })
 

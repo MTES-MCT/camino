@@ -17,7 +17,7 @@ const propertyArrayCheck = (newValue: string[], prevValue: string[], propId: str
     if (propId === 'substances') {
       return newValue.toString() === prevValue.toString()
     } else if (['titulaires', 'amodiataires'].includes(propId)) {
-      return [...newValue].sort().toString() === [...prevValue].sort().toString()
+      return newValue.toSorted().toString() === prevValue.toSorted().toString()
     }
   }
 

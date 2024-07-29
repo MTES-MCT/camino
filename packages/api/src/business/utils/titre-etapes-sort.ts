@@ -9,10 +9,10 @@ import { isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tool
 import { ETAPE_IS_BROUILLON } from 'camino-common/src/etape'
 
 // classe les étapes selon leur ordre inverse: 3, 2, 1.
-export const titreEtapesSortDescByOrdre = <T extends Pick<ITitreEtape, 'ordre'>>(titreEtapes: T[]): T[] => titreEtapes.slice().sort((a, b) => b.ordre! - a.ordre!)
+export const titreEtapesSortDescByOrdre = <T extends Pick<ITitreEtape, 'ordre'>>(titreEtapes: T[]): T[] => titreEtapes.toSorted((a, b) => b.ordre! - a.ordre!)
 
 // classe les étapes selon leur ordre: 1, 2, 3, …
-export const titreEtapesSortAscByOrdre = <T extends Pick<ITitreEtape, 'ordre'>>(titreEtapes: T[]): T[] => titreEtapes.slice().sort((a, b) => a.ordre! - b.ordre!)
+export const titreEtapesSortAscByOrdre = <T extends Pick<ITitreEtape, 'ordre'>>(titreEtapes: T[]): T[] => titreEtapes.toSorted((a, b) => a.ordre! - b.ordre!)
 // classe les étapes selon leur dates, ordre et etapesTypes.ordre le cas échéant
 export const titreEtapesSortAscByDate = <T extends TitreEtapeForMachine>(titreEtapes: T[], demarcheId: DemarcheId, demarcheTypeId: DemarcheTypeId, titreTypeId: TitreTypeId): T[] => {
   const demarcheDefinition = demarcheDefinitionFind(titreTypeId, demarcheTypeId, titreEtapes, demarcheId)
@@ -34,7 +34,7 @@ export const titreEtapesSortAscByDate = <T extends TitreEtapeForMachine>(titreEt
     // On remet les brouillons à la bonne date, car la machine les a ignorés
     const etapesInBrouillon = titreEtapes.filter(({ isBrouillon }) => isBrouillon)
     if (isNotNullNorUndefinedNorEmpty(etapesInBrouillon)) {
-      return [...result, ...etapesInBrouillon].sort((a, b) => {
+      return [...result, ...etapesInBrouillon].toSorted((a, b) => {
         if (a.isBrouillon === ETAPE_IS_BROUILLON || b.isBrouillon === ETAPE_IS_BROUILLON) {
           return a.date.localeCompare(b.date)
         }
@@ -45,7 +45,7 @@ export const titreEtapesSortAscByDate = <T extends TitreEtapeForMachine>(titreEt
 
     return result
   } else {
-    return titreEtapes.slice().sort((a, b) => {
+    return titreEtapes.toSorted((a, b) => {
       const dateA = new Date(a.date)
       const dateB = new Date(b.date)
 

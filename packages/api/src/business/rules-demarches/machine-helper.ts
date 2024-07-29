@@ -47,7 +47,7 @@ export abstract class CaminoMachine<CaminoContext extends CaminoCommonContext, C
   }
 
   public orderMachine(etapes: readonly Etape[]): readonly Etape[] {
-    const sortedEtapes = etapes.slice().sort((a, b) => a.date.localeCompare(b.date))
+    const sortedEtapes = etapes.toSorted((a, b) => a.date.localeCompare(b.date))
 
     const solution = this.findSolution(sortedEtapes)
 

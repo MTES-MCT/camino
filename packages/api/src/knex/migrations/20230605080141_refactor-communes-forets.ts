@@ -19,7 +19,7 @@ export const up = async (knex: Knex) => {
 
   for (const titreEtapeId in foretsByTitreEtapes) {
     await knex('titres_etapes')
-      .update({ forets: JSON.stringify(foretsByTitreEtapes[titreEtapeId].sort()) })
+      .update({ forets: JSON.stringify(foretsByTitreEtapes[titreEtapeId].toSorted()) })
       .where('id', titreEtapeId)
   }
 
@@ -37,7 +37,7 @@ export const up = async (knex: Knex) => {
 
   for (const titreEtapeId in communesByTitreEtapes) {
     await knex('titres_etapes')
-      .update({ communes: JSON.stringify(communesByTitreEtapes[titreEtapeId].sort((a: any, b: any) => a.id.localeCompare(b.id))) })
+      .update({ communes: JSON.stringify(communesByTitreEtapes[titreEtapeId].toSorted((a: any, b: any) => a.id.localeCompare(b.id))) })
       .where('id', titreEtapeId)
   }
   await knex.raw('drop table titres_forets')

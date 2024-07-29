@@ -25,7 +25,7 @@ expect.extend({
     { machine, date }: { machine: CaminoMachine<C, T>; date: CaminoDate },
     events: T['type'][]
   ) {
-    events.sort()
+    events = events.toSorted()
     const passEvents: (typeof events)[number][] = getNextEvents(service.getSnapshot())
       .filter((event: string) => machine.isEvent(event))
       .filter((event: (typeof events)[number]) => {
@@ -33,8 +33,8 @@ expect.extend({
 
         return events.some(event => service.getSnapshot().can(event) && service.getSnapshot().status !== 'done')
       })
+      .toSorted()
 
-    passEvents.sort()
     if (passEvents.length !== events.length || passEvents.some((entry, index) => entry !== events[index])) {
       return {
         pass: false,
@@ -69,7 +69,7 @@ export const interpretMachine = <T extends EventObject, C extends CaminoCommonCo
 
             return events.some(event => service.getSnapshot().can(event) && service.getSnapshot().status !== 'done')
           })
-          .sort()}'`
+          .toSorted()}'`
       )
     }
     service.send(event)

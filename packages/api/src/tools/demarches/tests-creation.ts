@@ -35,7 +35,7 @@ const writeEtapesForTest = async () => {
         const etapes: Etape[] = toMachineEtapes(
           (
             demarche?.etapes
-              ?.sort((a, b) => (a.ordre ?? 0) - (b.ordre ?? 0))
+              ?.toSorted((a, b) => (a.ordre ?? 0) - (b.ordre ?? 0))
               ?.map(etape => {
                 if (etape?.contenu?.arm) {
                   etape.contenu = { arm: etape.contenu?.arm }

@@ -34,7 +34,7 @@ const titreContenuTableFormat = (titre: ITitre): Record<string, string> => {
     return {}
   }
 
-  const orderedDemarches = [...titre.demarches].filter(d => !DemarchesTypes[d.typeId].travaux).sort((a, b) => (b.ordre ?? 0) - (a.ordre ?? 0))
+  const orderedDemarches = titre.demarches.filter(d => !DemarchesTypes[d.typeId].travaux).toSorted((a, b) => (b.ordre ?? 0) - (a.ordre ?? 0))
 
   const demarche = orderedDemarches[0]
   const etapes = (demarche.etapes ?? []).map(etape => {
