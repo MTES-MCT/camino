@@ -76,7 +76,7 @@ export const TypeEdit = defineComponent<Props>(props => {
       if (possibleStatuts.value.length === 1 || typeId === ETAPES_TYPES.participationDuPublic) {
         newEtapeStatutId = possibleStatuts.value[0]
       } else {
-        newEtapeStatutId = null
+        newEtapeStatutId = possibleStatuts.value.find(value => value === etapeStatutId.value) ?? null
       }
 
       if (newEtapeStatutId !== etapeStatutId.value || typeId !== etapeTypeId.value) {
