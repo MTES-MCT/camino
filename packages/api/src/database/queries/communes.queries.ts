@@ -1,7 +1,7 @@
 /* eslint-disable no-restricted-syntax */
 import { sql } from '@pgtyped/runtime'
 import { Redefine, dbQueryAndValidate } from '../../pg-database'
-import { IGetCommunesInternalQuery, IInsertCommuneInternalQuery } from './communes.queries.types'
+import { IGetCommuneIdsInternalQuery, IGetCommunesInternalQuery, IInsertCommuneInternalQuery } from './communes.queries.types'
 import { CommuneId, Commune, communeValidator } from 'camino-common/src/static/communes'
 import { NonEmptyArray } from 'camino-common/src/typescript-tools'
 import { Pool } from 'pg'
@@ -19,6 +19,17 @@ from
     communes
 where
     id in $$ ids
+`
+
+export const getCommuneIds = async (pool: Pool): Promise<CommuneId[]> => {
+  return (await dbQueryAndValidate(getCommuneIdsInternal, undefined, pool, communeValidator.pick({ id: true }))).map(({ id }) => id)
+}
+
+const getCommuneIdsInternal = sql<Redefine<IGetCommuneIdsInternalQuery, undefined, Pick<Commune, 'id'>>>`
+select
+    id
+from
+    communes
 `
 
 export const insertCommune = async (pool: Pool, params: { id: CommuneId; nom: string }) => {

@@ -1,7 +1,6 @@
 /* eslint-disable sql/no-unsafe-query */
 import '../init'
 import { knex } from '../knex'
-import Communes from '../database/models/communes'
 import JSZip from 'jszip'
 import { Readable } from 'node:stream'
 import { SDOMZoneId, SDOMZoneIds } from 'camino-common/src/static/sdom'
@@ -9,7 +8,7 @@ import { assertsFacade, assertsSecteur, secteurAJour } from 'camino-common/src/s
 import { createRequire } from 'node:module'
 import { ForetId, ForetIds, Forets, foretIdValidator } from 'camino-common/src/static/forets'
 import { Pool } from 'pg'
-import { insertCommune } from '../database/queries/communes.queries'
+import { getCommuneIds, insertCommune } from '../database/queries/communes.queries'
 import { toCommuneId } from 'camino-common/src/static/communes'
 
 const require = createRequire(import.meta.url)
@@ -18,7 +17,7 @@ const { withParser } = require('stream-json/filters/Pick')
 const { chain } = require('stream-chain')
 
 const communesUpdate = async (pool: Pool) => {
-  const communesIdsKnown: string[] = (await Communes.query()).map(({ id }) => id)
+  const communesIdsKnown: string[] = await getCommuneIds(pool)
   const communesPostgisIdsKnown: string[] = (await knex.select('id').from('communes_postgis')).map(({ id }: { id: string }) => id)
   console.info('Téléchargement du fichier des communes')
 
