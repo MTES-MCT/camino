@@ -60,7 +60,11 @@ export const utilisateurUpdationValidate = (user: UserNotNull, utilisateur: Util
       throw new Error('droits insuffisants pour modifier les administrations')
     }
 
-    if (!isAdministrationAdmin(user) && isEntrepriseOrBureauDEtude(utilisateurOld) && !equalStringArrays(utilisateurOld.entreprises.map(({ id }) => id).sort(), utilisateur.entreprises.sort())) {
+    if (
+      !isAdministrationAdmin(user) &&
+      isEntrepriseOrBureauDEtude(utilisateurOld) &&
+      !equalStringArrays(utilisateurOld.entreprises.map(({ id }) => id).toSorted(), utilisateur.entreprises.toSorted())
+    ) {
       throw new Error('droits insuffisants pour modifier les entreprises')
     }
   }

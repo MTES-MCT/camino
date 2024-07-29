@@ -20,23 +20,24 @@ const titresEtapesAdministrationsLocalesBuild = (etapes: ITitreEtape[]): ITitreE
     )
 
     titresEtapesAdministrationsLocales.push({
-      titreEtapeAdministrationsLocalesOld: titreEtape.administrationsLocales?.sort() ?? [],
-      titreEtapeAdministrationsLocales: titreEtapeAdministrationsLocales.sort(),
+      titreEtapeAdministrationsLocalesOld: titreEtape.administrationsLocales?.toSorted() ?? [],
+      titreEtapeAdministrationsLocales: titreEtapeAdministrationsLocales.toSorted(),
       titreEtapeId: titreEtape.id,
     })
 
     return titresEtapesAdministrationsLocales
   }, [])
 
-export const titresEtapesAdministrationsLocalesUpdate = async (titresEtapesIds?: string[]) => {
+type AdministrationsByEtapeId = {
+  titreEtapeId: string
+  administrations: AdministrationId[]
+}
+export const titresEtapesAdministrationsLocalesUpdate = async (titresEtapesIds?: string[]): Promise<{ titresEtapesAdministrationsLocalesUpdated: AdministrationsByEtapeId[] }> => {
   console.info()
   console.info('administrations locales associées aux étapes…')
 
   const etapes = await titresEtapesGet({ titresEtapesIds }, { fields: { id: {} } }, userSuper)
-  const titresEtapesAdministrationsLocalesUpdated: {
-    titreEtapeId: string
-    administrations: AdministrationId[]
-  }[] = []
+  const titresEtapesAdministrationsLocalesUpdated: AdministrationsByEtapeId[] = []
 
   if (etapes.length > 0) {
     const titresEtapesAdministrationsLocales = titresEtapesAdministrationsLocalesBuild(etapes)

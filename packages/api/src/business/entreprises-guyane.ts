@@ -46,7 +46,7 @@ export const subscribeUsersToGuyaneExploitants = async (): Promise<ResultAggrega
 
       return acc
     }, {})
-  const users = Object.values(reduced).sort((a, b) => a.email.localeCompare(b.email))
+  const users = Object.values(reduced).toSorted((a, b) => a.email.localeCompare(b.email))
   await exploitantsGuyaneSubscriberUpdate(
     users.map(user => ({
       email: user.email,

@@ -50,9 +50,8 @@ export type TitreEtapeForMachine = z.infer<typeof titreEtapeForMachineValidator>
 export const toMachineEtapes = (etapes: (Pick<Partial<TitreEtapeForMachine>, 'ordre'> & Omit<TitreEtapeForMachine, 'id' | 'ordre'>)[]): Etape[] => {
   // TODO 2022-10-12 si on appelle titreEtapesSortAscByOrdre on se retrouve avec une grosse dépendance cyclique
   return etapes
-    .slice()
     .filter(dbEtape => dbEtape.isBrouillon === ETAPE_IS_NOT_BROUILLON)
-    .sort((a, b) => a.ordre! - b.ordre!)
+    .toSorted((a, b) => a.ordre! - b.ordre!)
     .map(dbEtape => toMachineEtape(dbEtape))
 }
 

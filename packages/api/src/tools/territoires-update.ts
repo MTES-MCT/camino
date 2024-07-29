@@ -145,7 +145,7 @@ const foretsUpdate = async () => {
   }
 
   if (ids.some(id => !ForetIds.includes(id)) || ForetIds.some(fId => !ids.includes(fId))) {
-    console.error(`les forêts ne sont pas à jour dans le common: ${[...ForetIds].sort()} --> ${ids.sort()}`)
+    console.error(`les forêts ne sont pas à jour dans le common: ${ForetIds.toSorted()} --> ${ids.toSorted()}`)
   }
 }
 
@@ -248,7 +248,7 @@ const sdomZonesUpdate = async () => {
   }
 }
 
-export async function updateTerritoires(pool: Pool) {
+export async function updateTerritoires(pool: Pool): Promise<void> {
   console.info('Mise à jour des territoires')
   try {
     await communesUpdate(pool)

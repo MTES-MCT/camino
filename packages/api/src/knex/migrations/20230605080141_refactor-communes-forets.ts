@@ -1,6 +1,6 @@
 import { Knex } from 'knex'
 
-export const up = async (knex: Knex) => {
+export const up = async (knex: Knex): Promise<void> => {
   await knex.raw('alter table communes drop column departement_id')
   await knex.raw("alter table titres_etapes add column forets jsonb DEFAULT '[]'::jsonb NOT NULL")
   await knex.raw("alter table titres_etapes add column communes jsonb DEFAULT '[]'::jsonb NOT NULL")
@@ -19,7 +19,7 @@ export const up = async (knex: Knex) => {
 
   for (const titreEtapeId in foretsByTitreEtapes) {
     await knex('titres_etapes')
-      .update({ forets: JSON.stringify(foretsByTitreEtapes[titreEtapeId].sort()) })
+      .update({ forets: JSON.stringify(foretsByTitreEtapes[titreEtapeId].toSorted()) })
       .where('id', titreEtapeId)
   }
 
@@ -37,7 +37,7 @@ export const up = async (knex: Knex) => {
 
   for (const titreEtapeId in communesByTitreEtapes) {
     await knex('titres_etapes')
-      .update({ communes: JSON.stringify(communesByTitreEtapes[titreEtapeId].sort((a: any, b: any) => a.id.localeCompare(b.id))) })
+      .update({ communes: JSON.stringify(communesByTitreEtapes[titreEtapeId].toSorted((a: any, b: any) => a.id.localeCompare(b.id))) })
       .where('id', titreEtapeId)
   }
   await knex.raw('drop table titres_forets')
@@ -45,4 +45,4 @@ export const up = async (knex: Knex) => {
   await knex.raw('drop table forets')
 }
 
-export const down = () => ({})
+export const down = (): void => {}

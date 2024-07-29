@@ -6,7 +6,7 @@ import { titreEtapesSortAscByOrdre } from './titre-etapes-sort'
 
 export type TitreDemarcheSortAscMinimalDemarche = Pick<ITitreDemarche, 'typeId' | 'ordre'> & { etapes?: Pick<ITitreEtape, 'ordre' | 'date'>[] }
 export const titreDemarcheSortAsc = <T extends TitreDemarcheSortAscMinimalDemarche>(titreElements: T[]): T[] =>
-  titreElements.slice().sort((a, b) => {
+  titreElements.toSorted((a, b) => {
     const aHasEtapes = a.etapes && a.etapes.length
     const bHasEtapes = b.etapes && b.etapes.length
 

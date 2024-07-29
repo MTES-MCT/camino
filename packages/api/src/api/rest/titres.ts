@@ -266,7 +266,8 @@ export const titresAdministrations =
               throw new Error('les démarches ne sont pas chargées')
             }
 
-            const demarcheLaPlusRecente = titre.demarches.length > 0 ? titre.demarches.sort(({ ordre: ordreA }, { ordre: ordreB }) => (ordreA ?? 0) - (ordreB ?? 0))[titre.demarches.length - 1] : null
+            const demarcheLaPlusRecente =
+              titre.demarches.length > 0 ? titre.demarches.toSorted(({ ordre: ordreA }, { ordre: ordreB }) => (ordreA ?? 0) - (ordreB ?? 0))[titre.demarches.length - 1] : null
             let enAttenteDeAdministration = false
             const prochainesEtapes: EtapeTypeId[] = []
             let derniereEtape: {

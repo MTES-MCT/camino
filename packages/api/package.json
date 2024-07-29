@@ -183,6 +183,10 @@
           "selector": "Identifier[name='leftJoinRelation']"
         },
         {
+                "message": "sort is deprecated. Use toSorted instead.",
+                "selector": "Identifier[name='sort']"
+              },
+        {
           "message": "no 'run' call from PgTyped allowed. Use dbQueryAndValidate.",
           "selector": "CallExpression[callee.property.name='run'][arguments.length=2]"
         },

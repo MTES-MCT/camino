@@ -17,7 +17,7 @@ const propertyArrayCheck = (newValue: string[], prevValue: string[], propId: str
     if (propId === 'substances') {
       return newValue.toString() === prevValue.toString()
     } else if (['titulaires', 'amodiataires'].includes(propId)) {
-      return [...newValue].sort().toString() === [...prevValue].sort().toString()
+      return newValue.toSorted().toString() === prevValue.toSorted().toString()
     }
   }
 
@@ -40,7 +40,13 @@ const titreEtapePropCheck = (propId: string, oldValue?: IPropValue | null, newVa
   return oldValue === newValue
 }
 
-export const titreEtapeHeritagePropsFind = (titreEtape: ITitreEtape, prevTitreEtape?: ITitreEtape | null) => {
+export const titreEtapeHeritagePropsFind = (
+  titreEtape: ITitreEtape,
+  prevTitreEtape?: ITitreEtape | null
+): {
+  hasChanged: boolean
+  titreEtape: ITitreEtape
+} => {
   let hasChanged = false
 
   let newTitreEtape = titreEtape
