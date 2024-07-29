@@ -1,11 +1,17 @@
 import { buildMatrices } from './matrices'
 import { ITitre } from '../types'
-import { newEntrepriseId } from 'camino-common/src/entreprise'
+import { EntrepriseId, newEntrepriseId } from 'camino-common/src/entreprise'
 import { describe, expect, test } from 'vitest'
 import { toCommuneId } from 'camino-common/src/static/communes'
 import { newTitreId } from '../database/models/_format/id-create'
 import { titreSlugValidator } from 'camino-common/src/validators/titres'
 import { checkCodePostal } from 'camino-common/src/static/departement'
+import { BodyMatrice } from '../tools/matrices/tests-creation'
+import { bodyBuilder } from '../api/rest/entreprises'
+import { caminoAnneeToNumber } from 'camino-common/src/date'
+import { apiOpenfiscaCalculate, apiOpenfiscaConstantsFetch } from '../tools/api-openfisca'
+import { GetEntreprises } from '../api/rest/entreprises.queries'
+const matricesProd = require('./matrices.cas.json')
 describe('matrices', () => {
   test('buildMatrices', () => {
     const openFiscaResponse = {
@@ -187,37 +193,47 @@ describe('matrices', () => {
         ],
         {
           [entreprise1Id]: {
-            id: entreprise1Id,
             nom: 'titulaire1',
             adresse: 'ladresse1',
             legal_siren: 'legalSiren1',
-            legal_etranger: null,
             code_postal: null,
             commune: null,
-            categorie: null,
           },
           [entreprise2Id]: {
-            id: entreprise2Id,
             nom: 'titulaire2',
             adresse: 'ladresse2',
             legal_siren: 'legalSiren2',
-            legal_etranger: null,
             code_postal: null,
             commune: null,
-            categorie: null,
           },
           [entreprise3Id]: {
-            id: entreprise3Id,
             nom: 'titulaire3',
             adresse: 'ladresse3',
             legal_siren: 'legalSiren3',
-            legal_etranger: null,
             code_postal: checkCodePostal('97311'),
             commune: 'Saint-Laurent-du-Maroni',
-            categorie: null,
           },
         }
       )
     ).toMatchSnapshot()
+  })
+
+  // pour regénérer le fichier titre-phases-find.cas.json: `npm run test:generate-matrices-data -w packages/api`
+  test.only.each(matricesProd as BodyMatrice[])('cas réel N°%#', async ({ entries, expected }) => {
+    const anneeNumber = caminoAnneeToNumber(entries.annee)
+    const communes = entries.titres.flatMap(titre => titre.communes.map(commune => ({ id: commune.id, nom: commune.id })))
+    const entreprises = entries.entreprises.reduce(
+      (acc, e) => {
+        acc[e.id] = { ...e, legal_siren: '', adresse: '', code_postal: '', commune: '' }
+
+        return acc
+      },
+      {} as Record<EntrepriseId, Pick<GetEntreprises, 'nom' | 'adresse' | 'code_postal' | 'commune' | 'legal_siren'>>
+    )
+    const body = bodyBuilder(entries.activitesAnnuelles, entries.activitesTrimestrielles, entries.titres, anneeNumber, entries.entreprises)
+    const result = await apiOpenfiscaCalculate(body)
+    const constants = await apiOpenfiscaConstantsFetch(anneeNumber)
+
+    expect(JSON.stringify(buildMatrices(result, entries.titres, anneeNumber, constants, communes, entreprises))).toStrictEqual(JSON.stringify(expected))
   })
 })
