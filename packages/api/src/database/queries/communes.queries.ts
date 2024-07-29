@@ -7,7 +7,7 @@ import { NonEmptyArray } from 'camino-common/src/typescript-tools'
 import { Pool } from 'pg'
 import { z } from 'zod'
 
-export const getCommunes = async (pool: Pool, params: { ids: NonEmptyArray<CommuneId> }) => {
+export const getCommunes = async (pool: Pool, params: { ids: NonEmptyArray<CommuneId> }): Promise<{ id: CommuneId; nom: string }[]> => {
   return dbQueryAndValidate(getCommunesInternal, params, pool, communeValidator)
 }
 
@@ -32,10 +32,10 @@ from
     communes
 `
 
-export const insertCommune = async (pool: Pool, params: { id: CommuneId; nom: string }) => {
-  return dbQueryAndValidate(insertCommuneInternal, params, pool, z.void())
+export const insertCommune = async (pool: Pool, params: { id: CommuneId; nom: string; geometry: string }): Promise<void> => {
+  await dbQueryAndValidate(insertCommuneInternal, params, pool, z.void())
 }
-const insertCommuneInternal = sql<Redefine<IInsertCommuneInternalQuery, { id: CommuneId; nom: string }, void>>`
-insert into communes (id, nom)
-    values ($ id, $ nom)
+const insertCommuneInternal = sql<Redefine<IInsertCommuneInternalQuery, { id: CommuneId; nom: string; geometry: string }, void>>`
+insert into communes (id, nom, geometry)
+    values ($ id, $ nom, $ geometry)
 `

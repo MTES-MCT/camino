@@ -18,7 +18,6 @@ const { chain } = require('stream-chain')
 
 const communesUpdate = async (pool: Pool) => {
   const communesIdsKnown: string[] = await getCommuneIds(pool)
-  const communesPostgisIdsKnown: string[] = (await knex.select('id').from('communes_postgis')).map(({ id }: { id: string }) => id)
   console.info('Téléchargement du fichier des communes')
 
   const communesFetch = await fetch('http://etalab-datasets.geo.data.gouv.fr/contours-administratifs/latest/geojson/communes-5m.geojson')
@@ -40,24 +39,16 @@ const communesUpdate = async (pool: Pool) => {
       try {
         const result = await knex.raw(`select ST_MakeValid(ST_MULTI(ST_SetSRID(ST_GeomFromGeoJSON('${JSON.stringify(commune.geometry)}'), 4326))) as result`)
 
-        if (communesPostgisIdsKnown.includes(commune.properties.code)) {
-          await knex('communes_postgis').where('id', commune.properties.code).update({
-            geometry: result.rows[0].result,
-          })
-        } else {
-          await knex('communes_postgis').insert({
-            id: commune.properties.code,
-            geometry: result.rows[0].result,
-          })
-        }
         if (communesIdsKnown.includes(commune.properties.code)) {
           await knex('communes').where('id', commune.properties.code).update({
             nom: commune.properties.nom,
+            geometry: result.rows[0].result,
           })
         } else {
           await insertCommune(pool, {
             id: toCommuneId(commune.properties.code),
             nom: commune.properties.nom,
+            geometry: result.rows[0].result,
           })
         }
       } catch (e) {

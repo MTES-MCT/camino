@@ -32,7 +32,7 @@ beforeAll(async () => {
   dbPool = pool
   knex = knexInstance
 
-  await insertCommune(pool, { id: toCommuneId('97300'), nom: 'Une ville en Guyane' })
+  await insertCommune(pool, { id: toCommuneId('97300'), nom: 'Une ville en Guyane', geometry: '010100000000000000000000000000000000000000' })
   const entreprises = await entreprisesUpsert([{ id: newEntrepriseId('plop'), nom: 'Mon Entreprise' }])
   await titreCreate(
     {
