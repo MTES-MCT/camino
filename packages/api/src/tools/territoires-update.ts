@@ -248,7 +248,7 @@ const sdomZonesUpdate = async () => {
   }
 }
 
-export async function updateTerritoires(pool: Pool) {
+export async function updateTerritoires(pool: Pool): Promise<void> {
   console.info('Mise à jour des territoires')
   try {
     await communesUpdate(pool)

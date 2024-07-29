@@ -40,7 +40,13 @@ const titreEtapePropCheck = (propId: string, oldValue?: IPropValue | null, newVa
   return oldValue === newValue
 }
 
-export const titreEtapeHeritagePropsFind = (titreEtape: ITitreEtape, prevTitreEtape?: ITitreEtape | null) => {
+export const titreEtapeHeritagePropsFind = (
+  titreEtape: ITitreEtape,
+  prevTitreEtape?: ITitreEtape | null
+): {
+  hasChanged: boolean
+  titreEtape: ITitreEtape
+} => {
   let hasChanged = false
 
   let newTitreEtape = titreEtape

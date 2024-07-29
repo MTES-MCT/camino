@@ -50,7 +50,7 @@ const titreContenuTableFormat = (titre: ITitre): Record<string, string> => {
   return getDemarcheContenu(etapes, titre.typeId)
 }
 
-export const titresTableFormat = async (pool: Pool, titres: ITitre[]) => {
+export const titresTableFormat = async (pool: Pool, titres: ITitre[]): Promise<Record<string, string | number | null | undefined>[]> => {
   const communesIndex = await getCommunesIndex(
     pool,
     titres.flatMap(titre => titre.communes?.map(({ id }) => id) ?? [])
@@ -116,7 +116,11 @@ export const titresTableFormat = async (pool: Pool, titres: ITitre[]) => {
   })
 }
 
-export const titreGeojsonPropertiesFormat = (communesIndex: Record<CommuneId, string>, entreprisesIndex: Record<EntrepriseId, GetEntreprises>, titre: ITitre) => {
+export const titreGeojsonPropertiesFormat = (
+  communesIndex: Record<CommuneId, string>,
+  entreprisesIndex: Record<EntrepriseId, GetEntreprises>,
+  titre: ITitre
+): Record<string, string | (string | null)[] | { nom: string; surface: number }[] | number | null | undefined> => {
   if (!titre.secteursMaritime) {
     throw new Error('les secteurs maritimes ne sont pas chargés')
   }

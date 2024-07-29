@@ -1,6 +1,6 @@
 import { Knex } from 'knex'
 
-export const up = async (knex: Knex) => {
+export const up = async (knex: Knex): Promise<void> => {
   await knex.raw('alter table communes drop column departement_id')
   await knex.raw("alter table titres_etapes add column forets jsonb DEFAULT '[]'::jsonb NOT NULL")
   await knex.raw("alter table titres_etapes add column communes jsonb DEFAULT '[]'::jsonb NOT NULL")
@@ -45,4 +45,4 @@ export const up = async (knex: Knex) => {
   await knex.raw('drop table forets')
 }
 
-export const down = () => ({})
+export const down = (): void => {}
