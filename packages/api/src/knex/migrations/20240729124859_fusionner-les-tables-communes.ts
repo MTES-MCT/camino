@@ -18,6 +18,9 @@ export const up = async (knex: Knex): Promise<void> => {
     WHERE communes.id = communes_postgis.id
   `)
 
+  // on rajoute le critère NOT NULLABLE
+  await knex.raw('ALTER TABLE communes ALTER COLUMN "geometry" SET NOT NULL')
+
   // on peut drop communes_postgis
   await knex.raw('DROP TABLE communes_postgis')
 }
