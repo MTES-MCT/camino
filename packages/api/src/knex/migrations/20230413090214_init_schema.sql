@@ -1,112 +1,64 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 15.4 (Debian 15.4-1.pgdg110+1)
+-- Dumped by pg_dump version 16.3
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
 SET default_tablespace = '';
+
 SET default_table_access_method = heap;
-CREATE EXTENSION IF NOT EXISTS postgis;
-CREATE TABLE public.activites_types (
-    id character varying(3) NOT NULL,
-    nom character varying(255) NOT NULL,
-    sections jsonb[] NOT NULL,
-    frequence_id character varying(3) NOT NULL,
-    date_debut character varying(255) NOT NULL,
-    delai_mois integer,
-    ordre integer NOT NULL,
-    description text
+
+--
+-- Name: activites_documents; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.activites_documents (
+    id character varying(255) NOT NULL,
+    activite_document_type_id character varying(3) NOT NULL,
+    date character varying(10) NOT NULL,
+    activite_id character varying(255),
+    description character varying(1024),
+    largeobject_id oid NOT NULL
 );
-ALTER TABLE public.activites_types OWNER TO postgres;
-CREATE TABLE public.activites_types__documents_types (
-    activite_type_id character varying(3) NOT NULL,
-    document_type_id character varying(3) NOT NULL,
-    optionnel boolean
-);
-ALTER TABLE public.activites_types__documents_types OWNER TO postgres;
-CREATE TABLE public.activites_types__pays (
-    pays_id character varying(3) NOT NULL,
-    activite_type_id character varying(3) NOT NULL
-);
-ALTER TABLE public.activites_types__pays OWNER TO postgres;
-CREATE TABLE public.activites_types__titres_types (
-    titre_type_id character varying(3) NOT NULL,
-    activite_type_id character varying(3) NOT NULL
-);
-ALTER TABLE public.activites_types__titres_types OWNER TO postgres;
-CREATE TABLE public.administrations (
-    id character varying(64) NOT NULL
-);
-ALTER TABLE public.administrations OWNER TO postgres;
-CREATE TABLE public.administrations__activites_types (
-    activite_type_id character varying(3) NOT NULL,
-    administration_id character varying(64) NOT NULL,
-    modification_interdit boolean,
-    lecture_interdit boolean
-);
-ALTER TABLE public.administrations__activites_types OWNER TO postgres;
+
+
+--
+-- Name: administrations__activites_types__emails; Type: TABLE; Schema: public; Owner: -
+--
+
 CREATE TABLE public.administrations__activites_types__emails (
     activite_type_id character varying(3) NOT NULL,
     administration_id character varying(64) NOT NULL,
     email character varying(255) NOT NULL
 );
-ALTER TABLE public.administrations__activites_types__emails OWNER TO postgres;
-CREATE TABLE public.caches (
-    id character varying(128) NOT NULL,
-    valeur jsonb
-);
-ALTER TABLE public.caches OWNER TO postgres;
+
+
+--
+-- Name: communes; Type: TABLE; Schema: public; Owner: -
+--
+
 CREATE TABLE public.communes (
     id character varying(5) NOT NULL,
     nom character varying(255) NOT NULL,
-    departement_id character varying(3) NOT NULL
+    geometry public.geometry NOT NULL
 );
-ALTER TABLE public.communes OWNER TO postgres;
-CREATE TABLE public.communes_postgis (
-    id character varying(5) NOT NULL,
-    geometry public.geometry(MultiPolygon,4326)
-);
-ALTER TABLE public.communes_postgis OWNER TO postgres;
-CREATE TABLE public.demarches_types (
-    id character varying(3) NOT NULL,
-    nom character varying(255) NOT NULL,
-    description text,
-    ordre integer,
-    duree boolean,
-    points boolean,
-    substances boolean,
-    titulaires boolean,
-    renouvelable boolean,
-    exception boolean,
-    auto boolean,
-    travaux boolean
-);
-ALTER TABLE public.demarches_types OWNER TO postgres;
-CREATE TABLE public.documents (
-    id character varying(255) NOT NULL,
-    type_id character varying(3) NOT NULL,
-    date character varying(10) NOT NULL,
-    entreprise_id character varying(64),
-    titre_etape_id character varying(128),
-    description character varying(1024),
-    titre_activite_id character varying(128),
-    fichier boolean,
-    fichier_type_id character varying(3),
-    url character varying(1024),
-    uri character varying(1024),
-    jorf character varying(32),
-    nor character varying(32),
-    public_lecture boolean,
-    entreprises_lecture boolean
-);
-ALTER TABLE public.documents OWNER TO postgres;
-CREATE TABLE public.documents_types (
-    id character varying(3) NOT NULL,
-    nom character varying(255) NOT NULL,
-    description text
-);
-ALTER TABLE public.documents_types OWNER TO postgres;
-CREATE TABLE public.domaines (
-    id character varying(1) NOT NULL,
-    nom character varying(255) NOT NULL,
-    description text,
-    ordre integer NOT NULL
-);
-ALTER TABLE public.domaines OWNER TO postgres;
+
+
+--
+-- Name: entreprises; Type: TABLE; Schema: public; Owner: -
+--
+
 CREATE TABLE public.entreprises (
     id character varying(64) NOT NULL,
     nom character varying(255) NOT NULL,
@@ -123,53 +75,83 @@ CREATE TABLE public.entreprises (
     url character varying(1024),
     email character varying(255),
     telephone character varying(255),
-    archive boolean DEFAULT false
+    archive boolean DEFAULT false NOT NULL
 );
-ALTER TABLE public.entreprises OWNER TO postgres;
-CREATE TABLE public.entreprises__documents_types (
-    document_type_id character varying(3) NOT NULL
+
+
+--
+-- Name: entreprises_documents; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.entreprises_documents (
+    id character varying(255) NOT NULL,
+    entreprise_document_type_id character varying(3) NOT NULL,
+    date character varying(10) NOT NULL,
+    entreprise_id character varying(64),
+    description character varying(1024),
+    largeobject_id oid NOT NULL
 );
-ALTER TABLE public.entreprises__documents_types OWNER TO postgres;
+
+
+--
+-- Name: entreprises_etablissements; Type: TABLE; Schema: public; Owner: -
+--
+
 CREATE TABLE public.entreprises_etablissements (
     id character varying(64) NOT NULL,
     entreprise_id character varying(64) NOT NULL,
-    nom character varying(255),
+    nom character varying(255) NOT NULL,
     legal_siret character varying(255),
-    date_debut character varying(10),
+    date_debut character varying(10) NOT NULL,
     date_fin character varying(10)
 );
-ALTER TABLE public.entreprises_etablissements OWNER TO postgres;
-CREATE TABLE public.etapes_types (
-    id character varying(3) NOT NULL,
-    nom character varying(128),
-    description text,
-    ordre integer NOT NULL,
-    fondamentale boolean,
-    "unique" boolean,
-    acceptation_auto boolean,
-    date_fin character varying(10),
-    sections jsonb[],
-    public_lecture boolean,
-    entreprises_lecture boolean
+
+
+--
+-- Name: etape_avis; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.etape_avis (
+    id character varying(255) NOT NULL,
+    avis_type_id character varying(255) NOT NULL,
+    avis_statut_id character varying(255) NOT NULL,
+    avis_visibility_id character varying(255) NOT NULL,
+    etape_id character varying(255) NOT NULL,
+    description text NOT NULL,
+    date character varying(10) NOT NULL,
+    largeobject_id oid
 );
-ALTER TABLE public.etapes_types OWNER TO postgres;
-CREATE TABLE public.etapes_types__justificatifs_types (
-    etape_type_id character varying(3) NOT NULL,
-    document_type_id character varying(3) NOT NULL,
-    optionnel boolean,
-    description text
+
+
+--
+-- Name: etapes_documents; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.etapes_documents (
+    id character varying(255) NOT NULL,
+    etape_document_type_id character varying(3) NOT NULL,
+    etape_id character varying(255) NOT NULL,
+    description character varying(1024),
+    public_lecture boolean NOT NULL,
+    entreprises_lecture boolean NOT NULL,
+    largeobject_id oid NOT NULL
 );
-ALTER TABLE public.etapes_types__justificatifs_types OWNER TO postgres;
-CREATE TABLE public.forets (
-    id character varying(30) NOT NULL,
-    nom character varying(255) NOT NULL
-);
-ALTER TABLE public.forets OWNER TO postgres;
+
+
+--
+-- Name: forets_postgis; Type: TABLE; Schema: public; Owner: -
+--
+
 CREATE TABLE public.forets_postgis (
     id character varying(30) NOT NULL,
     geometry public.geometry(MultiPolygon,4326)
 );
-ALTER TABLE public.forets_postgis OWNER TO postgres;
+
+
+--
+-- Name: journaux; Type: TABLE; Schema: public; Owner: -
+--
+
 CREATE TABLE public.journaux (
     id character varying(255) NOT NULL,
     utilisateur_id character varying(255) NOT NULL,
@@ -180,182 +162,179 @@ CREATE TABLE public.journaux (
     titre_id character varying(128) NOT NULL,
     CONSTRAINT logs_operation_check CHECK ((operation = ANY (ARRAY['create'::text, 'update'::text, 'delete'::text])))
 );
-ALTER TABLE public.journaux OWNER TO postgres;
+
+
+--
+-- Name: logs; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.logs (
+    datetime timestamp with time zone DEFAULT now() NOT NULL,
+    path character varying(255),
+    method character varying(6) NOT NULL,
+    body jsonb,
+    utilisateur_id character varying(255) NOT NULL
+);
+
+
+--
+-- Name: perimetre_reference; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.perimetre_reference (
+    titre_etape_id character varying(255) NOT NULL,
+    geo_systeme character varying(255) NOT NULL,
+    opposable boolean DEFAULT false,
+    geojson_perimetre jsonb
+);
+
+
+--
+-- Name: sdom_zones_postgis; Type: TABLE; Schema: public; Owner: -
+--
+
 CREATE TABLE public.sdom_zones_postgis (
     id character varying(30) NOT NULL,
     geometry public.geometry(MultiPolygon,4326)
 );
-ALTER TABLE public.sdom_zones_postgis OWNER TO postgres;
+
+
+--
+-- Name: secteurs_maritime_postgis; Type: TABLE; Schema: public; Owner: -
+--
+
 CREATE TABLE public.secteurs_maritime_postgis (
     id integer NOT NULL,
     geometry public.geometry(MultiPolygon,4326)
 );
-ALTER TABLE public.secteurs_maritime_postgis OWNER TO postgres;
+
+
+--
+-- Name: titres; Type: TABLE; Schema: public; Owner: -
+--
+
 CREATE TABLE public.titres (
     id character varying(128) NOT NULL,
     nom character varying(255) NOT NULL,
     type_id character varying(3) NOT NULL,
     titre_statut_id character varying(3) DEFAULT 'ind'::character varying NOT NULL,
-    public_lecture boolean DEFAULT false,
-    entreprises_lecture boolean DEFAULT false,
+    public_lecture boolean DEFAULT false NOT NULL,
     doublon_titre_id character varying(128),
-    contenus_titre_etapes_ids jsonb,
-    coordonnees point,
     props_titre_etapes_ids jsonb DEFAULT '{}'::jsonb,
-    slug character varying(255),
+    slug character varying(255) NOT NULL,
     archive boolean DEFAULT false NOT NULL,
     "references" jsonb DEFAULT '[]'::jsonb NOT NULL
 );
-ALTER TABLE public.titres OWNER TO postgres;
+
+
+--
+-- Name: titres__titres; Type: TABLE; Schema: public; Owner: -
+--
+
 CREATE TABLE public.titres__titres (
     titre_from_id character varying(255) NOT NULL,
     titre_to_id character varying(255) NOT NULL
 );
-ALTER TABLE public.titres__titres OWNER TO postgres;
+
+
+--
+-- Name: titres_activites; Type: TABLE; Schema: public; Owner: -
+--
+
 CREATE TABLE public.titres_activites (
     id character varying(255) NOT NULL,
     titre_id character varying(128),
     utilisateur_id character varying(128),
-    date character varying(10),
+    date character varying(10) NOT NULL,
     date_saisie character varying(10),
     contenu jsonb,
     type_id character varying(3) NOT NULL,
     activite_statut_id character varying(3) NOT NULL,
     annee integer NOT NULL,
-    periode_id integer,
-    sections jsonb[],
-    suppression boolean,
-    slug character varying(255)
+    periode_id integer NOT NULL,
+    sections jsonb[] NOT NULL,
+    suppression boolean DEFAULT false NOT NULL,
+    slug character varying(255) NOT NULL
 );
-ALTER TABLE public.titres_activites OWNER TO postgres;
-CREATE TABLE public.titres_amodiataires (
-    titre_etape_id character varying(128) NOT NULL,
-    entreprise_id character varying(64) NOT NULL,
-    operateur boolean
-);
-ALTER TABLE public.titres_amodiataires OWNER TO postgres;
-CREATE TABLE public.titres_communes (
-    titre_etape_id character varying(128) NOT NULL,
-    commune_id character varying(8) NOT NULL,
-    surface integer
-);
-ALTER TABLE public.titres_communes OWNER TO postgres;
+
+
+--
+-- Name: titres_demarches; Type: TABLE; Schema: public; Owner: -
+--
+
 CREATE TABLE public.titres_demarches (
     id character varying(128) NOT NULL,
     titre_id character varying(128) NOT NULL,
     type_id character varying(3) NOT NULL,
     statut_id character varying(3) DEFAULT 'ind'::character varying NOT NULL,
-    public_lecture boolean DEFAULT false,
-    entreprises_lecture boolean DEFAULT false,
-    ordre integer DEFAULT 0,
+    public_lecture boolean DEFAULT false NOT NULL,
+    entreprises_lecture boolean DEFAULT false NOT NULL,
+    ordre integer DEFAULT 0 NOT NULL,
     slug character varying(255),
-    demarche_date_debut character varying(10),
-    demarche_date_fin character varying(10),
     description character varying(255),
-    archive boolean DEFAULT false NOT NULL
+    archive boolean DEFAULT false NOT NULL,
+    demarche_date_debut character varying(10),
+    demarche_date_fin character varying(10)
 );
-ALTER TABLE public.titres_demarches OWNER TO postgres;
-CREATE TABLE public.titres_demarches_liens (
-    enfant_titre_demarche_id character varying(128) NOT NULL,
-    parent_titre_demarche_id character varying(128) NOT NULL
-);
-ALTER TABLE public.titres_demarches_liens OWNER TO postgres;
+
+
+--
+-- Name: titres_etapes; Type: TABLE; Schema: public; Owner: -
+--
+
 CREATE TABLE public.titres_etapes (
     id character varying(128) NOT NULL,
     titre_demarche_id character varying(128) NOT NULL,
     type_id character varying(3) NOT NULL,
     statut_id character varying(3) NOT NULL,
-    ordre integer,
+    ordre integer DEFAULT 0 NOT NULL,
     date character varying(10) NOT NULL,
     date_debut character varying(10),
     date_fin character varying(10),
     duree integer,
     surface real,
     contenu jsonb,
-    incertitudes jsonb,
     heritage_props jsonb,
     heritage_contenu jsonb,
     slug character varying(255),
-    decisions_annexes_sections jsonb[],
-    decisions_annexes_contenu json,
     archive boolean DEFAULT false NOT NULL,
     substances jsonb DEFAULT '[]'::jsonb NOT NULL,
-    secteurs_maritime jsonb,
-    administrations_locales jsonb,
-    sdom_zones jsonb
+    secteurs_maritime jsonb DEFAULT '[]'::jsonb NOT NULL,
+    administrations_locales jsonb DEFAULT '[]'::jsonb NOT NULL,
+    sdom_zones jsonb DEFAULT '[]'::jsonb NOT NULL,
+    forets jsonb DEFAULT '[]'::jsonb NOT NULL,
+    communes jsonb DEFAULT '[]'::jsonb NOT NULL,
+    geojson4326_perimetre public.geometry(MultiPolygon,4326),
+    geojson4326_points jsonb,
+    geojson_origine_points jsonb,
+    geojson_origine_perimetre jsonb,
+    geojson_origine_geo_systeme_id character varying,
+    geojson4326_forages jsonb,
+    geojson_origine_forages jsonb,
+    titulaire_ids jsonb DEFAULT '[]'::jsonb NOT NULL,
+    amodiataire_ids jsonb DEFAULT '[]'::jsonb NOT NULL,
+    is_brouillon boolean DEFAULT false NOT NULL,
+    note jsonb DEFAULT json_build_object('valeur', '', 'is_avertissement', false) NOT NULL,
+    CONSTRAINT forages_origine_not_null_when_forages4326_not_null CHECK (((ROW(geojson4326_forages, geojson_origine_forages) IS NULL) OR (ROW(geojson4326_forages, geojson_origine_forages) IS NOT NULL))),
+    CONSTRAINT perimetre_origine_not_null_when_perimetre_4326_not_null CHECK (((ROW(geojson4326_perimetre, geojson_origine_geo_systeme_id, geojson_origine_perimetre) IS NULL) OR (ROW(geojson4326_perimetre, geojson_origine_geo_systeme_id, geojson_origine_perimetre) IS NOT NULL))),
+    CONSTRAINT points_origine_not_null_when_points_4326_not_null CHECK (((ROW(geojson4326_points, geojson_origine_points) IS NULL) OR (ROW(geojson4326_points, geojson_origine_points) IS NOT NULL)))
 );
-ALTER TABLE public.titres_etapes OWNER TO postgres;
-CREATE TABLE public.titres_etapes_justificatifs (
+
+
+--
+-- Name: titres_etapes_entreprises_documents; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.titres_etapes_entreprises_documents (
     titre_etape_id character varying(128) NOT NULL,
-    document_id character varying(255) NOT NULL
+    entreprise_document_id character varying(255) NOT NULL
 );
-ALTER TABLE public.titres_etapes_justificatifs OWNER TO postgres;
-CREATE TABLE public.titres_forets (
-    titre_etape_id character varying(128) NOT NULL,
-    foret_id character varying(8) NOT NULL
-);
-ALTER TABLE public.titres_forets OWNER TO postgres;
-CREATE TABLE public.titres_points (
-    id character varying(255) NOT NULL,
-    titre_etape_id character varying(128) NOT NULL,
-    coordonnees point NOT NULL,
-    groupe integer NOT NULL,
-    contour integer NOT NULL,
-    point integer NOT NULL,
-    nom character varying(255),
-    description text,
-    subsidiaire boolean,
-    lot integer,
-    slug character varying(255)
-);
-ALTER TABLE public.titres_points OWNER TO postgres;
-CREATE TABLE public.titres_points_references (
-    id character varying(255) NOT NULL,
-    titre_point_id character varying(255),
-    geo_systeme_id character varying(5) NOT NULL,
-    coordonnees point NOT NULL,
-    opposable boolean,
-    slug character varying(255)
-);
-ALTER TABLE public.titres_points_references OWNER TO postgres;
-CREATE TABLE public.titres_titulaires (
-    titre_etape_id character varying(128) NOT NULL,
-    entreprise_id character varying(64) NOT NULL,
-    operateur boolean
-);
-ALTER TABLE public.titres_titulaires OWNER TO postgres;
-CREATE TABLE public.titres_types (
-    id character varying(3) NOT NULL,
-    domaine_id character varying(1) NOT NULL,
-    type_id character varying(3) NOT NULL,
-    contenu_ids jsonb[],
-    archive boolean
-);
-ALTER TABLE public.titres_types OWNER TO postgres;
-CREATE TABLE public.titres_types__demarches_types__etapes_types (
-    titre_type_id character varying(3) NOT NULL,
-    ordre integer,
-    demarche_type_id character varying(7) NOT NULL,
-    etape_type_id character varying(3) NOT NULL,
-    sections jsonb[]
-);
-ALTER TABLE public.titres_types__demarches_types__etapes_types OWNER TO postgres;
-CREATE TABLE public.titres_types__demarches_types__etapes_types__justificatifs_t (
-    titre_type_id character varying(3) NOT NULL,
-    demarche_type_id character varying(7) NOT NULL,
-    etape_type_id character varying(3) NOT NULL,
-    document_type_id character varying(3) NOT NULL,
-    optionnel boolean,
-    description text
-);
-ALTER TABLE public.titres_types__demarches_types__etapes_types__justificatifs_t OWNER TO postgres;
-CREATE TABLE public.titres_types_types (
-    id character varying(2) NOT NULL,
-    nom character varying(255) NOT NULL,
-    description text,
-    ordre integer NOT NULL
-);
-ALTER TABLE public.titres_types_types OWNER TO postgres;
+
+
+--
+-- Name: utilisateurs; Type: TABLE; Schema: public; Owner: -
+--
+
 CREATE TABLE public.utilisateurs (
     id character varying(255) NOT NULL,
     email character varying(255),
@@ -366,292 +345,646 @@ CREATE TABLE public.utilisateurs (
     role character varying(255) NOT NULL,
     date_creation character varying(255) NOT NULL,
     administration_id character varying(255),
-    qgis_token character varying(255)
+    qgis_token character varying(255),
+    keycloak_id character varying(255),
+    CONSTRAINT check_keycloak_id_not_null CHECK (((email IS NULL) OR (keycloak_id IS NOT NULL)))
 );
-ALTER TABLE public.utilisateurs OWNER TO postgres;
+
+
+--
+-- Name: utilisateurs__entreprises; Type: TABLE; Schema: public; Owner: -
+--
+
 CREATE TABLE public.utilisateurs__entreprises (
     utilisateur_id character varying(64),
     entreprise_id character varying(64)
 );
-ALTER TABLE public.utilisateurs__entreprises OWNER TO postgres;
+
+
+--
+-- Name: utilisateurs__titres; Type: TABLE; Schema: public; Owner: -
+--
+
 CREATE TABLE public.utilisateurs__titres (
     utilisateur_id character varying(255) NOT NULL,
     titre_id character varying(255) NOT NULL
 );
-ALTER TABLE public.utilisateurs__titres OWNER TO postgres;
-ALTER TABLE ONLY public.activites_types__documents_types
-    ADD CONSTRAINT activites_types__documents_types_pkey PRIMARY KEY (activite_type_id, document_type_id);
-ALTER TABLE ONLY public.activites_types__pays
-    ADD CONSTRAINT activites_types__pays_pkey PRIMARY KEY (pays_id, activite_type_id);
-ALTER TABLE ONLY public.activites_types
-    ADD CONSTRAINT activites_types_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: activites_documents activites_documents_pk; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.activites_documents
+    ADD CONSTRAINT activites_documents_pk PRIMARY KEY (id);
+
+
+--
+-- Name: administrations__activites_types__emails administrations__activites_types__emails_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY public.administrations__activites_types__emails
     ADD CONSTRAINT administrations__activites_types__emails_pkey PRIMARY KEY (administration_id, activite_type_id, email);
-ALTER TABLE ONLY public.administrations
-    ADD CONSTRAINT administrations_pkey PRIMARY KEY (id);
-ALTER TABLE ONLY public.caches
-    ADD CONSTRAINT caches_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: communes communes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY public.communes
     ADD CONSTRAINT communes_pkey PRIMARY KEY (id);
-ALTER TABLE ONLY public.communes_postgis
-    ADD CONSTRAINT communes_postgis_pkey PRIMARY KEY (id);
-ALTER TABLE ONLY public.demarches_types
-    ADD CONSTRAINT demarches_types_pkey PRIMARY KEY (id);
-ALTER TABLE ONLY public.documents
-    ADD CONSTRAINT documents_pkey PRIMARY KEY (id);
-ALTER TABLE ONLY public.documents_types
-    ADD CONSTRAINT documents_types_pkey PRIMARY KEY (id);
-ALTER TABLE ONLY public.domaines
-    ADD CONSTRAINT domaines_pkey PRIMARY KEY (id);
-ALTER TABLE ONLY public.entreprises__documents_types
-    ADD CONSTRAINT entreprises__documents_types_pkey PRIMARY KEY (document_type_id);
+
+
+--
+-- Name: entreprises_documents entreprises_documents_pk; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.entreprises_documents
+    ADD CONSTRAINT entreprises_documents_pk PRIMARY KEY (id);
+
+
+--
+-- Name: entreprises_etablissements entreprises_etablissements_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY public.entreprises_etablissements
     ADD CONSTRAINT entreprises_etablissements_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: entreprises entreprises_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY public.entreprises
     ADD CONSTRAINT entreprises_pkey PRIMARY KEY (id);
-ALTER TABLE ONLY public.etapes_types__justificatifs_types
-    ADD CONSTRAINT etapes_types__justificatifs_types_pkey PRIMARY KEY (etape_type_id, document_type_id);
-ALTER TABLE ONLY public.etapes_types
-    ADD CONSTRAINT etapes_types_pkey PRIMARY KEY (id);
-ALTER TABLE ONLY public.forets
-    ADD CONSTRAINT forets_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: etapes_documents etapes_documents_pk; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.etapes_documents
+    ADD CONSTRAINT etapes_documents_pk PRIMARY KEY (id);
+
+
+--
+-- Name: forets_postgis forets_postgis_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY public.forets_postgis
     ADD CONSTRAINT forets_postgis_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: journaux logs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY public.journaux
     ADD CONSTRAINT logs_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: perimetre_reference perimetre_reference_pk; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.perimetre_reference
+    ADD CONSTRAINT perimetre_reference_pk PRIMARY KEY (titre_etape_id, geo_systeme);
+
+
+--
+-- Name: sdom_zones_postgis sdom_zones_postgis_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY public.sdom_zones_postgis
     ADD CONSTRAINT sdom_zones_postgis_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: secteurs_maritime_postgis secteurs_maritime_postgis_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY public.secteurs_maritime_postgis
     ADD CONSTRAINT secteurs_maritime_postgis_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: titres__titres titres__titres_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY public.titres__titres
     ADD CONSTRAINT titres__titres_pkey PRIMARY KEY (titre_from_id, titre_to_id);
+
+
+--
+-- Name: titres_activites titres_activites_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY public.titres_activites
     ADD CONSTRAINT titres_activites_pkey PRIMARY KEY (id);
-ALTER TABLE ONLY public.titres_amodiataires
-    ADD CONSTRAINT titres_amodiataires_pkey PRIMARY KEY (titre_etape_id, entreprise_id);
-ALTER TABLE ONLY public.titres_communes
-    ADD CONSTRAINT titres_communes_pkey PRIMARY KEY (titre_etape_id, commune_id);
-ALTER TABLE ONLY public.titres_demarches_liens
-    ADD CONSTRAINT titres_demarches_liens_pkey PRIMARY KEY (enfant_titre_demarche_id, parent_titre_demarche_id);
+
+
+--
+-- Name: titres_demarches titres_demarches_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY public.titres_demarches
     ADD CONSTRAINT titres_demarches_pkey PRIMARY KEY (id);
-ALTER TABLE ONLY public.titres_etapes_justificatifs
-    ADD CONSTRAINT titres_etapes_justificatifs_pkey PRIMARY KEY (titre_etape_id, document_id);
+
+
+--
+-- Name: titres_etapes_entreprises_documents titres_etapes_justificatifs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.titres_etapes_entreprises_documents
+    ADD CONSTRAINT titres_etapes_justificatifs_pkey PRIMARY KEY (titre_etape_id, entreprise_document_id);
+
+
+--
+-- Name: titres_etapes titres_etapes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY public.titres_etapes
     ADD CONSTRAINT titres_etapes_pkey PRIMARY KEY (id);
-ALTER TABLE ONLY public.titres_forets
-    ADD CONSTRAINT titres_forets_pkey PRIMARY KEY (titre_etape_id, foret_id);
+
+
+--
+-- Name: titres titres_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY public.titres
     ADD CONSTRAINT titres_pkey PRIMARY KEY (id);
-ALTER TABLE ONLY public.titres_points
-    ADD CONSTRAINT titres_points_pkey PRIMARY KEY (id);
-ALTER TABLE ONLY public.titres_points_references
-    ADD CONSTRAINT titres_points_references_pkey PRIMARY KEY (id);
-ALTER TABLE ONLY public.titres_titulaires
-    ADD CONSTRAINT titres_titulaires_pkey PRIMARY KEY (titre_etape_id, entreprise_id);
-ALTER TABLE ONLY public.activites_types__titres_types
-    ADD CONSTRAINT titres_types__activites_types_pkey PRIMARY KEY (titre_type_id, activite_type_id);
-ALTER TABLE ONLY public.titres_types__demarches_types__etapes_types__justificatifs_t
-    ADD CONSTRAINT titres_types__demarches_types__etapes_types__justificatifs_t_pk PRIMARY KEY (titre_type_id, demarche_type_id, etape_type_id, document_type_id);
-ALTER TABLE ONLY public.titres_types__demarches_types__etapes_types
-    ADD CONSTRAINT titres_types__demarches_types__etapes_types_pkey PRIMARY KEY (titre_type_id, demarche_type_id, etape_type_id);
-ALTER TABLE ONLY public.titres_types
-    ADD CONSTRAINT titres_types_pkey PRIMARY KEY (id);
-ALTER TABLE ONLY public.titres_types_types
-    ADD CONSTRAINT titres_types_types_pkey PRIMARY KEY (id);
-ALTER TABLE ONLY public.titres_types
-    ADD CONSTRAINT titrestypes_domaineid_typeid_unique UNIQUE (domaine_id, type_id);
+
+
+--
+-- Name: utilisateurs__titres utilisateurs__titres_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY public.utilisateurs__titres
     ADD CONSTRAINT utilisateurs__titres_pkey PRIMARY KEY (utilisateur_id, titre_id);
+
+
+--
+-- Name: utilisateurs utilisateurs_email_unique; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY public.utilisateurs
     ADD CONSTRAINT utilisateurs_email_unique UNIQUE (email);
+
+
+--
+-- Name: utilisateurs utilisateurs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY public.utilisateurs
     ADD CONSTRAINT utilisateurs_pkey PRIMARY KEY (id);
-CREATE INDEX activitestypes__documentstypes_activitetypeid_index ON public.activites_types__documents_types USING btree (activite_type_id);
-CREATE INDEX activitestypes__documentstypes_documenttypeid_index ON public.activites_types__documents_types USING btree (document_type_id);
-CREATE INDEX activitestypes__pays_activitetypeid_index ON public.activites_types__pays USING btree (activite_type_id);
-CREATE INDEX activitestypes_frequenceid_index ON public.activites_types USING btree (frequence_id);
+
+
+--
+-- Name: administrations__activitestypes__emails_activitetypeid_index; Type: INDEX; Schema: public; Owner: -
+--
+
 CREATE INDEX administrations__activitestypes__emails_activitetypeid_index ON public.administrations__activites_types__emails USING btree (activite_type_id);
+
+
+--
+-- Name: administrations__activitestypes__emails_administrationid_index; Type: INDEX; Schema: public; Owner: -
+--
+
 CREATE INDEX administrations__activitestypes__emails_administrationid_index ON public.administrations__activites_types__emails USING btree (administration_id);
-CREATE INDEX administrations__activitestypes_activitetypeid_index ON public.administrations__activites_types USING btree (activite_type_id);
-CREATE INDEX administrations__activitestypes_administrationid_index ON public.administrations__activites_types USING btree (administration_id);
-CREATE INDEX documents_entrepriseid_index ON public.documents USING btree (entreprise_id);
-CREATE INDEX documents_titreactiviteid_index ON public.documents USING btree (titre_activite_id);
-CREATE INDEX documents_titreetapeid_index ON public.documents USING btree (titre_etape_id);
-CREATE INDEX documents_typeid_index ON public.documents USING btree (type_id);
-CREATE INDEX entreprises__documentstypes_documenttypeid_index ON public.entreprises__documents_types USING btree (document_type_id);
+
+
+--
+-- Name: entreprisesetablissements_entrepriseid_index; Type: INDEX; Schema: public; Owner: -
+--
+
 CREATE INDEX entreprisesetablissements_entrepriseid_index ON public.entreprises_etablissements USING btree (entreprise_id);
-CREATE INDEX etapestypes__justificatifstypes_documenttypeid_index ON public.etapes_types__justificatifs_types USING btree (document_type_id);
-CREATE INDEX etapestypes__justificatifstypes_etapetypeid_index ON public.etapes_types__justificatifs_types USING btree (etape_type_id);
-CREATE INDEX index_geo_communes ON public.communes_postgis USING spgist (geometry);
+
+
+--
+-- Name: index_geo_forets; Type: INDEX; Schema: public; Owner: -
+--
+
 CREATE INDEX index_geo_forets ON public.forets_postgis USING spgist (geometry);
+
+
+--
+-- Name: index_geo_sdom_zones; Type: INDEX; Schema: public; Owner: -
+--
+
 CREATE INDEX index_geo_sdom_zones ON public.sdom_zones_postgis USING spgist (geometry);
+
+
+--
+-- Name: index_geo_secteurs_maritime; Type: INDEX; Schema: public; Owner: -
+--
+
 CREATE INDEX index_geo_secteurs_maritime ON public.secteurs_maritime_postgis USING spgist (geometry);
+
+
+--
+-- Name: journaux_titreid_index; Type: INDEX; Schema: public; Owner: -
+--
+
 CREATE INDEX journaux_titreid_index ON public.journaux USING btree (titre_id);
+
+
+--
+-- Name: logs_utilisateurid_index; Type: INDEX; Schema: public; Owner: -
+--
+
 CREATE INDEX logs_utilisateurid_index ON public.journaux USING btree (utilisateur_id);
+
+
+--
+-- Name: titres__titres_titrefromid_index; Type: INDEX; Schema: public; Owner: -
+--
+
 CREATE INDEX titres__titres_titrefromid_index ON public.titres__titres USING btree (titre_from_id);
+
+
+--
+-- Name: titres__titres_titretoid_index; Type: INDEX; Schema: public; Owner: -
+--
+
 CREATE INDEX titres__titres_titretoid_index ON public.titres__titres USING btree (titre_to_id);
-CREATE INDEX titres_coordonnees_index ON public.titres USING gist (coordonnees);
+
+
+--
+-- Name: titres_domaines_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX titres_domaines_idx ON public.titres USING btree ("right"((type_id)::text, 1));
+
+
+--
+-- Name: titres_etapes_administrations_locales_index; Type: INDEX; Schema: public; Owner: -
+--
+
 CREATE INDEX titres_etapes_administrations_locales_index ON public.titres_etapes USING btree (administrations_locales);
+
+
+--
+-- Name: titres_etapes_geom_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX titres_etapes_geom_idx ON public.titres_etapes USING gist (geojson4326_perimetre);
+
+
+--
+-- Name: titres_etapes_sdom_zones_index; Type: INDEX; Schema: public; Owner: -
+--
+
 CREATE INDEX titres_etapes_sdom_zones_index ON public.titres_etapes USING btree (sdom_zones);
+
+
+--
+-- Name: titres_etapes_secteurs_maritime_index; Type: INDEX; Schema: public; Owner: -
+--
+
 CREATE INDEX titres_etapes_secteurs_maritime_index ON public.titres_etapes USING btree (secteurs_maritime);
+
+
+--
+-- Name: titres_etapes_substances_index; Type: INDEX; Schema: public; Owner: -
+--
+
 CREATE INDEX titres_etapes_substances_index ON public.titres_etapes USING btree (substances);
+
+
+--
+-- Name: titres_references_index; Type: INDEX; Schema: public; Owner: -
+--
+
 CREATE INDEX titres_references_index ON public.titres USING btree ("references");
+
+
+--
+-- Name: titres_slug_index; Type: INDEX; Schema: public; Owner: -
+--
+
 CREATE INDEX titres_slug_index ON public.titres USING btree (slug);
+
+
+--
+-- Name: titres_statutid_index; Type: INDEX; Schema: public; Owner: -
+--
+
 CREATE INDEX titres_statutid_index ON public.titres USING btree (titre_statut_id);
+
+
+--
+-- Name: titres_typeid_index; Type: INDEX; Schema: public; Owner: -
+--
+
 CREATE INDEX titres_typeid_index ON public.titres USING btree (type_id);
+
+
+--
+-- Name: titres_types_types_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX titres_types_types_idx ON public.titres USING btree ("left"((type_id)::text, 2));
+
+
+--
+-- Name: titresactivites_slug_index; Type: INDEX; Schema: public; Owner: -
+--
+
 CREATE INDEX titresactivites_slug_index ON public.titres_activites USING btree (slug);
+
+
+--
+-- Name: titresactivites_statutid_index; Type: INDEX; Schema: public; Owner: -
+--
+
 CREATE INDEX titresactivites_statutid_index ON public.titres_activites USING btree (activite_statut_id);
+
+
+--
+-- Name: titresactivites_titreid_index; Type: INDEX; Schema: public; Owner: -
+--
+
 CREATE INDEX titresactivites_titreid_index ON public.titres_activites USING btree (titre_id);
+
+
+--
+-- Name: titresactivites_typeid_index; Type: INDEX; Schema: public; Owner: -
+--
+
 CREATE INDEX titresactivites_typeid_index ON public.titres_activites USING btree (type_id);
+
+
+--
+-- Name: titresactivites_utilisateurid_index; Type: INDEX; Schema: public; Owner: -
+--
+
 CREATE INDEX titresactivites_utilisateurid_index ON public.titres_activites USING btree (utilisateur_id);
-CREATE INDEX titresamodiataires_entrepriseid_index ON public.titres_amodiataires USING btree (entreprise_id);
-CREATE INDEX titresamodiataires_titreetapeid_index ON public.titres_amodiataires USING btree (titre_etape_id);
-CREATE INDEX titrescommunes_communeid_index ON public.titres_communes USING btree (commune_id);
-CREATE INDEX titrescommunes_titreetapeid_index ON public.titres_communes USING btree (titre_etape_id);
+
+
+--
+-- Name: titresdemarches_slug_index; Type: INDEX; Schema: public; Owner: -
+--
+
 CREATE INDEX titresdemarches_slug_index ON public.titres_demarches USING btree (slug);
+
+
+--
+-- Name: titresdemarches_statutid_index; Type: INDEX; Schema: public; Owner: -
+--
+
 CREATE INDEX titresdemarches_statutid_index ON public.titres_demarches USING btree (statut_id);
+
+
+--
+-- Name: titresdemarches_titreid_index; Type: INDEX; Schema: public; Owner: -
+--
+
 CREATE INDEX titresdemarches_titreid_index ON public.titres_demarches USING btree (titre_id);
+
+
+--
+-- Name: titresdemarches_typeid_index; Type: INDEX; Schema: public; Owner: -
+--
+
 CREATE INDEX titresdemarches_typeid_index ON public.titres_demarches USING btree (type_id);
-CREATE INDEX titresdemarchesliens_enfanttitredemarcheid_index ON public.titres_demarches_liens USING btree (enfant_titre_demarche_id);
-CREATE INDEX titresdemarchesliens_parenttitredemarcheid_index ON public.titres_demarches_liens USING btree (parent_titre_demarche_id);
+
+
+--
+-- Name: titresetapes_slug_index; Type: INDEX; Schema: public; Owner: -
+--
+
 CREATE INDEX titresetapes_slug_index ON public.titres_etapes USING btree (slug);
+
+
+--
+-- Name: titresetapes_statutid_index; Type: INDEX; Schema: public; Owner: -
+--
+
 CREATE INDEX titresetapes_statutid_index ON public.titres_etapes USING btree (statut_id);
+
+
+--
+-- Name: titresetapes_titredemarcheid_index; Type: INDEX; Schema: public; Owner: -
+--
+
 CREATE INDEX titresetapes_titredemarcheid_index ON public.titres_etapes USING btree (titre_demarche_id);
+
+
+--
+-- Name: titresetapes_typeid_index; Type: INDEX; Schema: public; Owner: -
+--
+
 CREATE INDEX titresetapes_typeid_index ON public.titres_etapes USING btree (type_id);
-CREATE INDEX titresetapesjustificatifs_documentid_index ON public.titres_etapes_justificatifs USING btree (document_id);
-CREATE INDEX titresetapesjustificatifs_titreetapeid_index ON public.titres_etapes_justificatifs USING btree (titre_etape_id);
-CREATE INDEX titresforets_foretid_index ON public.titres_forets USING btree (foret_id);
-CREATE INDEX titresforets_titreetapeid_index ON public.titres_forets USING btree (titre_etape_id);
-CREATE INDEX titrespoints_coordonnees_index ON public.titres_points USING gist (coordonnees);
-CREATE INDEX titrespoints_slug_index ON public.titres_points USING btree (slug);
-CREATE INDEX titrespoints_titreetapeid_index ON public.titres_points USING btree (titre_etape_id);
-CREATE INDEX titrespointsreferences_slug_index ON public.titres_points_references USING btree (slug);
-CREATE INDEX titrespointsreferences_titrepointid_index ON public.titres_points_references USING btree (titre_point_id);
-CREATE INDEX titrestitulaires_entrepriseid_index ON public.titres_titulaires USING btree (entreprise_id);
-CREATE INDEX titrestitulaires_titreetapeid_index ON public.titres_titulaires USING btree (titre_etape_id);
-CREATE INDEX titrestypes__activitestypes_activitetypeid_index ON public.activites_types__titres_types USING btree (activite_type_id);
-CREATE INDEX titrestypes__activitestypes_titretypeid_index ON public.activites_types__titres_types USING btree (titre_type_id);
-CREATE INDEX titrestypes__demarchestypes__etapestypes__justificatifst_demarc ON public.titres_types__demarches_types__etapes_types__justificatifs_t USING btree (demarche_type_id);
-CREATE INDEX titrestypes__demarchestypes__etapestypes__justificatifst_docume ON public.titres_types__demarches_types__etapes_types__justificatifs_t USING btree (document_type_id);
-CREATE INDEX titrestypes__demarchestypes__etapestypes__justificatifst_etapet ON public.titres_types__demarches_types__etapes_types__justificatifs_t USING btree (etape_type_id);
-CREATE INDEX titrestypes__demarchestypes__etapestypes__justificatifst_titret ON public.titres_types__demarches_types__etapes_types__justificatifs_t USING btree (titre_type_id);
-CREATE INDEX titrestypes__demarchestypes__etapestypes_demarchetypeid_index ON public.titres_types__demarches_types__etapes_types USING btree (demarche_type_id);
-CREATE INDEX titrestypes__demarchestypes__etapestypes_etapetypeid_index ON public.titres_types__demarches_types__etapes_types USING btree (etape_type_id);
-CREATE INDEX titrestypes__demarchestypes__etapestypes_titretypeid_index ON public.titres_types__demarches_types__etapes_types USING btree (titre_type_id);
-CREATE INDEX titrestypes_domaineid_index ON public.titres_types USING btree (domaine_id);
-CREATE INDEX titrestypes_typeid_index ON public.titres_types USING btree (type_id);
+
+
+--
+-- Name: titresetapesjustificatifs_documentid_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX titresetapesjustificatifs_documentid_index ON public.titres_etapes_entreprises_documents USING btree (entreprise_document_id);
+
+
+--
+-- Name: titresetapesjustificatifs_titreetapeid_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX titresetapesjustificatifs_titreetapeid_index ON public.titres_etapes_entreprises_documents USING btree (titre_etape_id);
+
+
+--
+-- Name: utilisateurs__entreprises_entrepriseid_index; Type: INDEX; Schema: public; Owner: -
+--
+
 CREATE INDEX utilisateurs__entreprises_entrepriseid_index ON public.utilisateurs__entreprises USING btree (entreprise_id);
+
+
+--
+-- Name: utilisateurs__entreprises_utilisateurid_index; Type: INDEX; Schema: public; Owner: -
+--
+
 CREATE INDEX utilisateurs__entreprises_utilisateurid_index ON public.utilisateurs__entreprises USING btree (utilisateur_id);
+
+
+--
+-- Name: utilisateurs__titres_titreid_index; Type: INDEX; Schema: public; Owner: -
+--
+
 CREATE INDEX utilisateurs__titres_titreid_index ON public.utilisateurs__titres USING btree (titre_id);
+
+
+--
+-- Name: utilisateurs__titres_utilisateurid_index; Type: INDEX; Schema: public; Owner: -
+--
+
 CREATE INDEX utilisateurs__titres_utilisateurid_index ON public.utilisateurs__titres USING btree (utilisateur_id);
+
+
+--
+-- Name: utilisateurs_administrationid_index; Type: INDEX; Schema: public; Owner: -
+--
+
 CREATE INDEX utilisateurs_administrationid_index ON public.utilisateurs USING btree (administration_id);
+
+
+--
+-- Name: utilisateurs_qgis_token_index; Type: INDEX; Schema: public; Owner: -
+--
+
 CREATE INDEX utilisateurs_qgis_token_index ON public.utilisateurs USING btree (qgis_token);
-ALTER TABLE ONLY public.activites_types__documents_types
-    ADD CONSTRAINT activitestypes__documentstypes_activitetypeid_foreign FOREIGN KEY (activite_type_id) REFERENCES public.activites_types(id);
-ALTER TABLE ONLY public.activites_types__documents_types
-    ADD CONSTRAINT activitestypes__documentstypes_documenttypeid_foreign FOREIGN KEY (document_type_id) REFERENCES public.documents_types(id);
-ALTER TABLE ONLY public.activites_types__pays
-    ADD CONSTRAINT activitestypes__pays_activitetypeid_foreign FOREIGN KEY (activite_type_id) REFERENCES public.activites_types(id) ON DELETE CASCADE;
-ALTER TABLE ONLY public.administrations__activites_types__emails
-    ADD CONSTRAINT administrations__activitestypes__emails_activitetypeid_foreign FOREIGN KEY (activite_type_id) REFERENCES public.activites_types(id) ON DELETE CASCADE;
-ALTER TABLE ONLY public.administrations__activites_types__emails
-    ADD CONSTRAINT administrations__activitestypes__emails_administrationid_foreig FOREIGN KEY (administration_id) REFERENCES public.administrations(id) ON DELETE CASCADE;
-ALTER TABLE ONLY public.administrations__activites_types
-    ADD CONSTRAINT administrations__activitestypes_activitetypeid_foreign FOREIGN KEY (activite_type_id) REFERENCES public.activites_types(id) ON DELETE CASCADE;
-ALTER TABLE ONLY public.administrations__activites_types
-    ADD CONSTRAINT administrations__activitestypes_administrationid_foreign FOREIGN KEY (administration_id) REFERENCES public.administrations(id) ON DELETE CASCADE;
-ALTER TABLE ONLY public.documents
-    ADD CONSTRAINT documents_entrepriseid_foreign FOREIGN KEY (entreprise_id) REFERENCES public.entreprises(id) ON UPDATE CASCADE ON DELETE CASCADE;
-ALTER TABLE ONLY public.documents
-    ADD CONSTRAINT documents_titreactiviteid_foreign FOREIGN KEY (titre_activite_id) REFERENCES public.titres_activites(id) ON UPDATE CASCADE ON DELETE CASCADE;
-ALTER TABLE ONLY public.documents
-    ADD CONSTRAINT documents_titreetapeid_foreign FOREIGN KEY (titre_etape_id) REFERENCES public.titres_etapes(id) ON UPDATE CASCADE ON DELETE CASCADE;
-ALTER TABLE ONLY public.documents
-    ADD CONSTRAINT documents_typeid_foreign FOREIGN KEY (type_id) REFERENCES public.documents_types(id);
-ALTER TABLE ONLY public.entreprises__documents_types
-    ADD CONSTRAINT entreprises__documentstypes_documenttypeid_foreign FOREIGN KEY (document_type_id) REFERENCES public.documents_types(id);
+
+
+--
+-- Name: activites_documents activites_documents_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.activites_documents
+    ADD CONSTRAINT activites_documents_fk FOREIGN KEY (activite_id) REFERENCES public.titres_activites(id);
+
+
+--
+-- Name: entreprises_documents entreprises_documents_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.entreprises_documents
+    ADD CONSTRAINT entreprises_documents_fk FOREIGN KEY (entreprise_id) REFERENCES public.entreprises(id);
+
+
+--
+-- Name: entreprises_etablissements entreprisesetablissements_entrepriseid_foreign; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY public.entreprises_etablissements
     ADD CONSTRAINT entreprisesetablissements_entrepriseid_foreign FOREIGN KEY (entreprise_id) REFERENCES public.entreprises(id) ON DELETE CASCADE;
-ALTER TABLE ONLY public.etapes_types__justificatifs_types
-    ADD CONSTRAINT etapestypes__justificatifstypes_documenttypeid_foreign FOREIGN KEY (document_type_id) REFERENCES public.entreprises__documents_types(document_type_id);
-ALTER TABLE ONLY public.etapes_types__justificatifs_types
-    ADD CONSTRAINT etapestypes__justificatifstypes_etapetypeid_foreign FOREIGN KEY (etape_type_id) REFERENCES public.etapes_types(id) ON DELETE CASCADE;
+
+
+--
+-- Name: etapes_documents etapes_documents_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.etapes_documents
+    ADD CONSTRAINT etapes_documents_fk FOREIGN KEY (etape_id) REFERENCES public.titres_etapes(id);
+
+
+--
+-- Name: journaux journaux_titreid_foreign; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY public.journaux
     ADD CONSTRAINT journaux_titreid_foreign FOREIGN KEY (titre_id) REFERENCES public.titres(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: logs logs__utilisateur_id__foreign; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.logs
+    ADD CONSTRAINT logs__utilisateur_id__foreign FOREIGN KEY (utilisateur_id) REFERENCES public.utilisateurs(id);
+
+
+--
+-- Name: perimetre_reference perimetre_reference_titre_etape_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.perimetre_reference
+    ADD CONSTRAINT perimetre_reference_titre_etape_fk FOREIGN KEY (titre_etape_id) REFERENCES public.titres_etapes(id);
+
+
+--
+-- Name: titres__titres titres__titres_titrefromid_foreign; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY public.titres__titres
     ADD CONSTRAINT titres__titres_titrefromid_foreign FOREIGN KEY (titre_from_id) REFERENCES public.titres(id);
+
+
+--
+-- Name: titres__titres titres__titres_titretoid_foreign; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY public.titres__titres
     ADD CONSTRAINT titres__titres_titretoid_foreign FOREIGN KEY (titre_to_id) REFERENCES public.titres(id);
-ALTER TABLE ONLY public.titres
-    ADD CONSTRAINT titres_typeid_foreign FOREIGN KEY (type_id) REFERENCES public.titres_types(id);
+
+
+--
+-- Name: titres_etapes_entreprises_documents titres_etapes_entreprises_documents_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.titres_etapes_entreprises_documents
+    ADD CONSTRAINT titres_etapes_entreprises_documents_fk FOREIGN KEY (entreprise_document_id) REFERENCES public.entreprises_documents(id);
+
+
+--
+-- Name: titres_activites titresactivites_titreid_foreign; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY public.titres_activites
     ADD CONSTRAINT titresactivites_titreid_foreign FOREIGN KEY (titre_id) REFERENCES public.titres(id) ON UPDATE CASCADE ON DELETE CASCADE;
-ALTER TABLE ONLY public.titres_activites
-    ADD CONSTRAINT titresactivites_typeid_foreign FOREIGN KEY (type_id) REFERENCES public.activites_types(id);
+
+
+--
+-- Name: titres_activites titresactivites_utilisateurid_foreign; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY public.titres_activites
     ADD CONSTRAINT titresactivites_utilisateurid_foreign FOREIGN KEY (utilisateur_id) REFERENCES public.utilisateurs(id);
-ALTER TABLE ONLY public.titres_amodiataires
-    ADD CONSTRAINT titresamodiataires_entrepriseid_foreign FOREIGN KEY (entreprise_id) REFERENCES public.entreprises(id) ON UPDATE CASCADE ON DELETE CASCADE;
-ALTER TABLE ONLY public.titres_amodiataires
-    ADD CONSTRAINT titresamodiataires_titreetapeid_foreign FOREIGN KEY (titre_etape_id) REFERENCES public.titres_etapes(id) ON DELETE CASCADE;
-ALTER TABLE ONLY public.titres_communes
-    ADD CONSTRAINT titrescommunes_communeid_foreign FOREIGN KEY (commune_id) REFERENCES public.communes(id);
-ALTER TABLE ONLY public.titres_communes
-    ADD CONSTRAINT titrescommunes_titreetapeid_foreign FOREIGN KEY (titre_etape_id) REFERENCES public.titres_etapes(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: titres_demarches titresdemarches_titreid_foreign; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY public.titres_demarches
     ADD CONSTRAINT titresdemarches_titreid_foreign FOREIGN KEY (titre_id) REFERENCES public.titres(id) ON UPDATE CASCADE ON DELETE CASCADE;
-ALTER TABLE ONLY public.titres_demarches
-    ADD CONSTRAINT titresdemarches_typeid_foreign FOREIGN KEY (type_id) REFERENCES public.demarches_types(id);
-ALTER TABLE ONLY public.titres_demarches_liens
-    ADD CONSTRAINT titresdemarchesliens_enfanttitredemarcheid_foreign FOREIGN KEY (enfant_titre_demarche_id) REFERENCES public.titres_demarches(id) ON UPDATE CASCADE ON DELETE CASCADE;
-ALTER TABLE ONLY public.titres_demarches_liens
-    ADD CONSTRAINT titresdemarchesliens_parenttitredemarcheid_foreign FOREIGN KEY (parent_titre_demarche_id) REFERENCES public.titres_demarches(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: titres_etapes titresetapes_titredemarcheid_foreign; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY public.titres_etapes
     ADD CONSTRAINT titresetapes_titredemarcheid_foreign FOREIGN KEY (titre_demarche_id) REFERENCES public.titres_demarches(id) ON UPDATE CASCADE ON DELETE CASCADE;
-ALTER TABLE ONLY public.titres_etapes
-    ADD CONSTRAINT titresetapes_typeid_foreign FOREIGN KEY (type_id) REFERENCES public.etapes_types(id);
-ALTER TABLE ONLY public.titres_etapes_justificatifs
-    ADD CONSTRAINT titresetapesjustificatifs_documentid_foreign FOREIGN KEY (document_id) REFERENCES public.documents(id) ON UPDATE CASCADE ON DELETE CASCADE;
-ALTER TABLE ONLY public.titres_etapes_justificatifs
+
+
+--
+-- Name: titres_etapes_entreprises_documents titresetapesjustificatifs_titreetapeid_foreign; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.titres_etapes_entreprises_documents
     ADD CONSTRAINT titresetapesjustificatifs_titreetapeid_foreign FOREIGN KEY (titre_etape_id) REFERENCES public.titres_etapes(id) ON UPDATE CASCADE ON DELETE CASCADE;
-ALTER TABLE ONLY public.titres_forets
-    ADD CONSTRAINT titresforets_foretid_foreign FOREIGN KEY (foret_id) REFERENCES public.forets(id);
-ALTER TABLE ONLY public.titres_forets
-    ADD CONSTRAINT titresforets_titreetapeid_foreign FOREIGN KEY (titre_etape_id) REFERENCES public.titres_etapes(id) ON UPDATE CASCADE ON DELETE CASCADE;
-ALTER TABLE ONLY public.titres_points
-    ADD CONSTRAINT titrespoints_titreetapeid_foreign FOREIGN KEY (titre_etape_id) REFERENCES public.titres_etapes(id) ON UPDATE CASCADE ON DELETE CASCADE;
-ALTER TABLE ONLY public.titres_points_references
-    ADD CONSTRAINT titrespointsreferences_titrepointid_foreign FOREIGN KEY (titre_point_id) REFERENCES public.titres_points(id) ON DELETE CASCADE;
-ALTER TABLE ONLY public.titres_titulaires
-    ADD CONSTRAINT titrestitulaires_entrepriseid_foreign FOREIGN KEY (entreprise_id) REFERENCES public.entreprises(id) ON UPDATE CASCADE ON DELETE CASCADE;
-ALTER TABLE ONLY public.titres_titulaires
-    ADD CONSTRAINT titrestitulaires_titreetapeid_foreign FOREIGN KEY (titre_etape_id) REFERENCES public.titres_etapes(id) ON UPDATE CASCADE ON DELETE CASCADE;
-ALTER TABLE ONLY public.activites_types__titres_types
-    ADD CONSTRAINT titrestypes__activitestypes_activitetypeid_foreign FOREIGN KEY (activite_type_id) REFERENCES public.activites_types(id);
-ALTER TABLE ONLY public.activites_types__titres_types
-    ADD CONSTRAINT titrestypes__activitestypes_titretypeid_foreign FOREIGN KEY (titre_type_id) REFERENCES public.titres_types(id);
-ALTER TABLE ONLY public.titres_types__demarches_types__etapes_types__justificatifs_t
-    ADD CONSTRAINT titrestypes__demarchestypes__etapestypes__justificatifst_docume FOREIGN KEY (document_type_id) REFERENCES public.documents_types(id);
-ALTER TABLE ONLY public.titres_types__demarches_types__etapes_types__justificatifs_t
-    ADD CONSTRAINT titrestypes__demarchestypes__etapestypes__justificatifst_titret FOREIGN KEY (titre_type_id, demarche_type_id, etape_type_id) REFERENCES public.titres_types__demarches_types__etapes_types(titre_type_id, demarche_type_id, etape_type_id);
-ALTER TABLE ONLY public.titres_types__demarches_types__etapes_types
-    ADD CONSTRAINT titrestypes__demarchestypes__etapestypes_demarchetypeid_foreign FOREIGN KEY (demarche_type_id) REFERENCES public.demarches_types(id);
-ALTER TABLE ONLY public.titres_types__demarches_types__etapes_types
-    ADD CONSTRAINT titrestypes__demarchestypes__etapestypes_etapetypeid_foreign FOREIGN KEY (etape_type_id) REFERENCES public.etapes_types(id);
-ALTER TABLE ONLY public.titres_types__demarches_types__etapes_types
-    ADD CONSTRAINT titrestypes__demarchestypes__etapestypes_titretypeid_foreign FOREIGN KEY (titre_type_id) REFERENCES public.titres_types(id);
-ALTER TABLE ONLY public.titres_types
-    ADD CONSTRAINT titrestypes_domaineid_foreign FOREIGN KEY (domaine_id) REFERENCES public.domaines(id);
-ALTER TABLE ONLY public.titres_types
-    ADD CONSTRAINT titrestypes_typeid_foreign FOREIGN KEY (type_id) REFERENCES public.titres_types_types(id);
+
+
+--
+-- Name: utilisateurs__entreprises utilisateurs__entreprises_entrepriseid_foreign; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY public.utilisateurs__entreprises
     ADD CONSTRAINT utilisateurs__entreprises_entrepriseid_foreign FOREIGN KEY (entreprise_id) REFERENCES public.entreprises(id) ON DELETE CASCADE;
+
+
+--
+-- Name: utilisateurs__entreprises utilisateurs__entreprises_utilisateurid_foreign; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY public.utilisateurs__entreprises
     ADD CONSTRAINT utilisateurs__entreprises_utilisateurid_foreign FOREIGN KEY (utilisateur_id) REFERENCES public.utilisateurs(id) ON DELETE CASCADE;
+
+
+--
+-- Name: utilisateurs__titres utilisateurs__titres_titreid_foreign; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY public.utilisateurs__titres
     ADD CONSTRAINT utilisateurs__titres_titreid_foreign FOREIGN KEY (titre_id) REFERENCES public.titres(id) ON DELETE CASCADE;
+
+
+--
+-- Name: utilisateurs__titres utilisateurs__titres_utilisateurid_foreign; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY public.utilisateurs__titres
     ADD CONSTRAINT utilisateurs__titres_utilisateurid_foreign FOREIGN KEY (utilisateur_id) REFERENCES public.utilisateurs(id) ON DELETE CASCADE;
-ALTER TABLE ONLY public.utilisateurs
-    ADD CONSTRAINT utilisateurs_administrationid_foreign FOREIGN KEY (administration_id) REFERENCES public.administrations(id);
+
+
+--
+-- PostgreSQL database dump complete
+--
