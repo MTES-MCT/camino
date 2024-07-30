@@ -1,13 +1,13 @@
 import { userGet, utilisateurGet, utilisateursGet, utilisateurUpsert } from '../../database/queries/utilisateurs'
 import { CaminoRequest, CustomResponse } from './express-type'
-import { CaminoApiError, formatUser, IUtilisateursColonneId } from '../../types'
+import { formatUser, IUtilisateursColonneId } from '../../types'
 import { HTTP_STATUS } from 'camino-common/src/http'
 import { isSubscribedToNewsLetter, newsletterSubscriberUpdate } from '../../tools/api-mailjet/newsletter'
 import { isAdministrationRole, isEntrepriseOrBureauDetudeRole, isRole, User } from 'camino-common/src/roles'
 import { utilisateursFormatTable } from './format/utilisateurs'
 import { tableConvert } from './_convert'
 import { fileNameCreate } from '../../tools/file-name-create'
-import { newsletterAbonnementValidator, NewsletterRegistration, QGISToken, utilisateurToEdit } from 'camino-common/src/utilisateur'
+import { newsletterAbonnementValidator, QGISToken, utilisateurToEdit, newsletterRegistrationValidator } from 'camino-common/src/utilisateur'
 import { knex } from '../../knex'
 import { idGenerate } from '../../database/models/_format/id-create'
 import bcrypt from 'bcryptjs'
@@ -15,9 +15,8 @@ import { utilisateurUpdationValidate } from '../../business/validations/utilisat
 import { canDeleteUtilisateur } from 'camino-common/src/permissions/utilisateurs'
 import { DownloadFormat } from 'camino-common/src/rest'
 import { Pool } from 'pg'
-import { DeepReadonly, isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools'
+import { isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools'
 import { config } from '../../config/index'
-import { Effect, Match, pipe } from 'effect'
 
 export const isSubscribedToNewsletter =
   (_pool: Pool) =>
@@ -229,21 +228,24 @@ export const generateQgisToken =
     }
   }
 
-type NewsletterRegistrationErrors = "Impossible d'effectuer l'inscription à la newsletter"
-export const registerToNewsletter = (pool: Pool, user: DeepReadonly<User>, body: DeepReadonly<NewsletterRegistration>): Effect.Effect<void, CaminoApiError<NewsletterRegistrationErrors>> => {
-  return pipe(
-    Effect.tryPromise({
-      try: () => newsletterSubscriberUpdate(body.email, true),
-      catch: unknown => ({ message: "Impossible d'effectuer l'inscription à la newsletter" as const, extra: unknown }),
-    }),
-    Effect.mapError(caminoError =>
-      Match.value(caminoError.message).pipe(
-        Match.when("Impossible d'effectuer l'inscription à la newsletter", () => ({ ...caminoError, status: HTTP_STATUS.FORBIDDEN })),
-        Match.exhaustive
-      )
-    )
-  )
-}
+export const registerToNewsletter =
+  (_pool: Pool) =>
+  async (req: CaminoRequest, res: CustomResponse<boolean>): Promise<void> => {
+    const queryParsed = newsletterRegistrationValidator.safeParse(req.query)
+    if (!queryParsed.success) {
+      res.sendStatus(HTTP_STATUS.BAD_REQUEST)
+
+      return
+    }
+
+    try {
+      const result = await newsletterSubscriberUpdate(queryParsed.data.email, true)
+      res.send(result === 'email inscrit à la newsletter')
+    } catch (e) {
+      console.error(e)
+      res.sendStatus(HTTP_STATUS.INTERNAL_SERVER_ERROR)
+    }
+  }
 
 interface IUtilisateursQueryInput {
   format?: DownloadFormat
