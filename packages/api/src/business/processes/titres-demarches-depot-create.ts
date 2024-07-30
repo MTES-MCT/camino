@@ -25,10 +25,9 @@ const emailConfirmationDepotSend = async (
     titreUrl: string
     titreNom: string
   }
-) => {
+): Promise<void> => {
   await emailsWithTemplateSend(emails, EmailTemplateId.DEMARCHE_CONFIRMATION_DEPOT, {
     ...params,
-    emailONF: EmailAdministration.ONF,
     emailDGTM: EmailAdministration.DGTM,
   })
 }
@@ -101,7 +100,7 @@ const titreEtapeDepotCreate = async (pool: Pool, titreDemarche: ITitreDemarche) 
     await titreEtapeDepotConfirmationEmailsSend(titreDemarche, titulaires)
   }
 }
-export const titresEtapesDepotCreate = async (pool: Pool, demarcheId: string) => {
+export const titresEtapesDepotCreate = async (pool: Pool, demarcheId: string): Promise<boolean> => {
   console.info()
   console.info('dépôt d’une démarche…')
 
