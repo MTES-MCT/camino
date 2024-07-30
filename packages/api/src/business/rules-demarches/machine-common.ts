@@ -90,8 +90,6 @@ const toMachineEtape = (dbEtape: Omit<TitreEtapeForMachine, 'id' | 'ordre'>): Et
 
 export const tags = {
   responsable: {
-    [ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']]: 'responsablePTMG',
-    [ADMINISTRATION_IDS['OFFICE NATIONAL DES FORÊTS']]: 'responsableONF',
     [ADMINISTRATION_IDS['DGTM - GUYANE']]: 'responsableDGTM',
   },
 } as const

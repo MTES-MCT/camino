@@ -563,7 +563,7 @@ const armOctMachine = createMachine({
                 REFUSER_COMPLETUDE: 'demandeDeComplementsPourCompletudeAFaire',
                 ACCEPTER_COMPLETUDE: 'validationDesFraisDossierAFaire',
               },
-              tags: [tags.responsable['ope-ptmg-973-01']],
+              tags: [tags.responsable['dea-guyane-01']],
             },
             demandeDeComplementsPourCompletudeAFaire: {
               on: {
@@ -576,7 +576,7 @@ const armOctMachine = createMachine({
               },
             },
             validationDesFraisDossierAFaire: {
-              tags: [tags.responsable['ope-onf-973-01']],
+              tags: [tags.responsable['dea-guyane-01']],
               on: {
                 VALIDER_FRAIS_DE_DOSSIER: [
                   {
@@ -601,7 +601,7 @@ const armOctMachine = createMachine({
               },
             },
             recevabiliteDeLaDemandeAFaire: {
-              tags: [tags.responsable['ope-onf-973-01']],
+              tags: [tags.responsable['dea-guyane-01']],
               on: {
                 DEMANDER_INFORMATION_MCR: 'receptionInformationPourLaRecevabiliteAFaire',
                 DEMANDER_COMPLEMENTS_MCR: 'receptionComplementsPourLaRecevabiliteAFaire',
@@ -834,7 +834,7 @@ const armOctMachine = createMachine({
       },
     },
     validationDuPaiementDesFraisDeDossierComplementairesAFaire: {
-      tags: [tags.responsable['ope-onf-973-01']],
+      tags: [tags.responsable['dea-guyane-01']],
       id: 'validationDuPaiementDesFraisDeDossierComplementairesAFaire',
       on: {
         VALIDER_PAIEMENT_FRAIS_DE_DOSSIER_COMPLEMENTAIRES: [
