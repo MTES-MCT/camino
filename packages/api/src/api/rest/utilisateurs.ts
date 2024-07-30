@@ -234,7 +234,6 @@ export const registerToNewsletter =
     const queryParsed = newsletterRegistrationValidator.safeParse(req.query)
     if (!queryParsed.success) {
       res.sendStatus(HTTP_STATUS.BAD_REQUEST)
-
       return
     }
 

@@ -12,7 +12,7 @@ import { DomaineId } from 'camino-common/src/static/domaines'
 import { EntrepriseId } from 'camino-common/src/entreprise'
 import { SubstanceLegaleId } from 'camino-common/src/static/substancesLegales'
 import { TitreTypeTypeId } from 'camino-common/src/static/titresTypesTypes'
-import { getWithJson } from '../../api/client-rest'
+import { deleteWithJson, getWithJson } from '../../api/client-rest'
 import { DeepReadonly } from 'vue'
 
 interface InputDemarcheCreation {
@@ -92,12 +92,8 @@ export const demarcheApiClient: DemarcheApiClient = {
     return value.slug
   },
 
-  deleteDemarche: async (demarcheId: string): Promise<void> => {
-    await apiGraphQLFetch(gql`
-      mutation DemarcheSupprimer($id: ID!) {
-        demarcheSupprimer(id: $id)
-      }
-    `)({ id: demarcheId })
+  deleteDemarche: async (demarcheId: DemarcheId): Promise<void> => {
+    await deleteWithJson('/rest/demarches/:demarcheId', { demarcheId })
   },
 
   getDemarcheByIdOrSlug: async (demarcheIdOrSlug: DemarcheIdOrSlug) => {

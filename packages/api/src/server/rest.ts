@@ -56,7 +56,7 @@ import { getCommunes } from '../api/rest/communes'
 import { SendFileOptions } from 'express-serve-static-core'
 import { activiteDocumentDownload, getActivite, updateActivite, deleteActivite } from '../api/rest/activites'
 import { DeepReadonly, isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
-import { getDemarcheByIdOrSlug } from '../api/rest/demarches'
+import { getDemarcheByIdOrSlug, demarcheSupprimer } from '../api/rest/demarches'
 import { geojsonImport, geojsonImportPoints, getPerimetreInfos, geojsonImportForages } from '../api/rest/perimetre'
 import { getDataGouvStats } from '../api/rest/statistiques/datagouv'
 import { addAdministrationActiviteTypeEmails, deleteAdministrationActiviteTypeEmails, getAdministrationActiviteTypeEmails, getAdministrationUtilisateurs } from '../api/rest/administrations'
@@ -173,6 +173,7 @@ const restRouteImplementations: Readonly<{ [key in CaminoRestRoute]: Transform<k
     ...CaminoRestRoutes['/rest/administrations/:administrationId/activiteTypeEmails/delete'],
   },
   '/rest/demarches/:demarcheId/geojson': { getCall: getPerimetreInfos, ...CaminoRestRoutes['/rest/demarches/:demarcheId/geojson'] },
+  '/rest/demarches/:demarcheId': { deleteCall: demarcheSupprimer, ...CaminoRestRoutes['/rest/demarches/:demarcheId'] },
   '/rest/etapes/:etapeId/geojson': { getCall: getPerimetreInfos, ...CaminoRestRoutes['/rest/etapes/:etapeId/geojson'] },
   '/rest/etapes/:etapeIdOrSlug': { deleteCall: deleteEtape, getCall: getEtape, ...CaminoRestRoutes['/rest/etapes/:etapeIdOrSlug'] },
   '/rest/etapes': { postCall: createEtape, putCall: updateEtape, ...CaminoRestRoutes['/rest/etapes'] },

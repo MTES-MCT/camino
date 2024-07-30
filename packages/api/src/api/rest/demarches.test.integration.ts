@@ -1,4 +1,4 @@
-import { restDownloadCall } from '../../../tests/_utils/index'
+import { restDeleteCall, restDownloadCall } from '../../../tests/_utils/index'
 import { dbManager } from '../../../tests/db-manager'
 import { expect, test, describe, afterAll, beforeAll, vi } from 'vitest'
 import type { Pool } from 'pg'
@@ -16,6 +16,7 @@ import { FeatureMultiPolygon } from 'camino-common/src/perimetre'
 import { codePostalValidator } from 'camino-common/src/static/departement'
 import crypto from 'crypto'
 import { km2Validator } from 'camino-common/src/number'
+import { demarcheIdValidator } from 'camino-common/src/demarche'
 
 console.info = vi.fn()
 console.error = vi.fn()
@@ -170,5 +171,36 @@ slug,mon titre,minéraux et métaux,autorisation d'exploitation,valide,octroi,in
     expect(tested.text)
       .toMatchInlineSnapshot(`"titre_id,titre_nom,titre_domaine,titre_type,titre_statut,type,statut,description,surface km2,titre_references,titulaires_noms,titulaires_adresses,titulaires_legal,amodiataires_noms,amodiataires_adresses,amodiataires_legal,demande,forets,communes
 slug,mon titre,minéraux et métaux,autorisation d'exploitation,valide,octroi,indéterminé,description,102,Nom d'usage : Test,Mon Titulaire 2,Une adresse 10000 Commune,SIREN1,Mon Amodiataire 2,Une adresse 10000 Commune,SIREN2,2022-01-01,,"`)
+  })
+})
+
+describe('demarcheSupprimer', () => {
+  test('ne peut pas supprimer une démarche (utilisateur anonyme)', async () => {
+    const res = await restDeleteCall(dbPool, '/rest/demarches/:demarcheId', { demarcheId: demarcheIdValidator.parse('toto') }, undefined)
+    expect(res.body.errors[0].message).toBe("la démarche n'existe pas")
+  })
+
+  test('ne peut pas supprimer une démarche (utilisateur admin)', async () => {
+    const res = await restDeleteCall(dbPool, '/rest/demarches/:demarcheId', { demarcheId: demarcheIdValidator.parse('toto') }, { role: 'admin', administrationId: 'ope-onf-973-01' })
+    expect(res.body.errors[0].message).toBe("la démarche n'existe pas")
+  })
+
+  test('ne peut pas supprimer une démarche inexistante (utilisateur super)', async () => {
+    const res = await restDeleteCall(dbPool, '/rest/demarches/:demarcheId', { demarcheId: demarcheIdValidator.parse('toto') }, userSuper)
+    expect(res.body.errors[0].message).toBe("la démarche n'existe pas")
+  })
+
+  test('peut supprimer une démarche (utilisateur super)', async () => {
+    const { demarcheId } = await demarcheCreate()
+
+    let demarche = await TitresDemarches.query().findById(demarcheId)
+    expect(demarche?.archive).toBe(false)
+
+    const res = await graphQLCall(dbPool, demarcheSupprimerQuery, { id: demarcheId }, userSuper)
+
+    expect(res.body.errors).toBe(undefined)
+
+    demarche = await TitresDemarches.query().findById(demarcheId)
+    expect(demarche?.archive).toBe(true)
   })
 })
