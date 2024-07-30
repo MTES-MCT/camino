@@ -16,6 +16,7 @@
     "password": "password"
   },
   "typesOverrides": {
-    "oid": "number"
+    "oid": "number",
+    "geometry": "./src/@types/pg.types.js#PgGeometry"
   }
 }
