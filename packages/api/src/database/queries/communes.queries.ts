@@ -37,5 +37,5 @@ export const insertCommune = async (pool: Pool, params: { id: CommuneId; nom: st
 }
 const insertCommuneInternal = sql<Redefine<IInsertCommuneInternalQuery, { id: CommuneId; nom: string; geometry: string }, void>>`
 insert into communes (id, nom, geometry)
-    values ($ id, $ nom, $ geometry)
+    values ($ id !, $ nom !, $ geometry !)
 `

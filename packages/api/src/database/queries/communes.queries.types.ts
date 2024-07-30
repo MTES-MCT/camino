@@ -33,9 +33,9 @@ export interface IGetCommuneIdsInternalQuery {
 
 /** 'InsertCommuneInternal' parameters type */
 export interface IInsertCommuneInternalParams {
-  geometry?: unknown | void;
-  id?: string | null | void;
-  nom?: string | null | void;
+  geometry: unknown;
+  id: string;
+  nom: string;
 }
 
 /** 'InsertCommuneInternal' return type */
@@ -46,3 +46,4 @@ export interface IInsertCommuneInternalQuery {
   params: IInsertCommuneInternalParams;
   result: IInsertCommuneInternalResult;
 }
+
