@@ -1,6 +1,5 @@
 import { ITitre, ITitreDemarche } from '../../types'
 
-import { titreActiviteFormat } from './titres-activites'
 import { titreDemarcheFormat } from './titres-demarches'
 import { titreFormatFields } from './_fields'
 import { AdministrationId } from 'camino-common/src/static/administrations'
@@ -40,7 +39,7 @@ export const titreFormat = (t: ITitre, fields: FieldsTitre = titreFormatFields):
     t.activites = t.activites.map(ta => {
       ta.titre = t
 
-      return titreActiviteFormat(ta)
+      return ta
     })
   }
 

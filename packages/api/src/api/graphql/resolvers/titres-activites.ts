@@ -4,7 +4,6 @@ import { Context, ITitre, ITitreActiviteColonneId, IUtilisateur } from '../../..
 import { ACTIVITES_STATUTS_IDS } from 'camino-common/src/static/activitesStatuts'
 
 import { titreActiviteEmailsSend } from './_titre-activite'
-import { titreActiviteFormat } from '../../_format/titres-activites'
 
 import { fieldsBuild } from './_fields-build'
 
@@ -28,6 +27,7 @@ import {
 } from '../../rest/activites.queries'
 import { ActiviteId } from 'camino-common/src/activite'
 import { getSectionsWithValue } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections'
+import TitresActivites from '../../../database/models/titres-activites'
 
 /**
  * Retourne les activités
@@ -86,10 +86,10 @@ export const activites = async (
   },
   { user }: Context,
   info: GraphQLResolveInfo
-) => {
+): Promise<{ elements: TitresActivites[]; page?: number; intervalle?: number; ordre?: 'asc' | 'desc' | null | undefined; colonne?: ITitreActiviteColonneId | null | undefined; total: number }> => {
   try {
     if (!canReadActivites(user)) {
-      return []
+      return { elements: [], total: 0 }
     }
 
     const fields = fieldsBuild(info)
@@ -144,7 +144,7 @@ export const activites = async (
     if (!titresActivites.length) return { elements: [], total: 0 }
 
     return {
-      elements: titresActivites.map(ta => titreActiviteFormat(ta)),
+      elements: titresActivites,
       page,
       intervalle,
       ordre,
@@ -158,7 +158,7 @@ export const activites = async (
   }
 }
 
-export const activiteDeposer = async ({ id }: { id: ActiviteId }, { user, pool }: Context, info: GraphQLResolveInfo) => {
+export const activiteDeposer = async ({ id }: { id: ActiviteId }, { user, pool }: Context, info: GraphQLResolveInfo): Promise<TitresActivites> => {
   try {
     if (!user) throw new Error('droits insuffisants')
 
@@ -185,7 +185,6 @@ export const activiteDeposer = async ({ id }: { id: ActiviteId }, { user, pool }
     const activiteRes = await titreActiviteGet(activite.id, { fields }, user)
 
     if (!activiteRes) throw new Error("l'activité n'existe pas")
-    const activiteFormated = titreActiviteFormat(activiteRes)
 
     const titre = (await titreGet(
       activiteRes.titreId,
@@ -227,10 +226,10 @@ export const activiteDeposer = async ({ id }: { id: ActiviteId }, { user, pool }
 
     const filteredAdministrationId = administrations.filter(onlyUnique)
     if (isNonEmptyArray(filteredAdministrationId)) {
-      await titreActiviteEmailsSend(activiteFormated, activiteFormated.titre!.nom, user, utilisateurs, filteredAdministrationId, pool)
+      await titreActiviteEmailsSend(activiteRes, activiteRes.titre!.nom, user, utilisateurs, filteredAdministrationId, pool)
     }
 
-    return activiteFormated
+    return activiteRes
   } catch (e) {
     console.error(e)
 

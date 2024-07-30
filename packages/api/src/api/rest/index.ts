@@ -5,7 +5,6 @@ import { entreprisesGet } from '../../database/queries/entreprises'
 
 import { titreFormat, titresFormat } from '../_format/titres'
 import { titreDemarcheFormat } from '../_format/titres-demarches'
-import { titreActiviteFormat } from '../_format/titres-activites'
 
 import { tableConvert } from './_convert'
 import { fileNameCreate } from '../../tools/file-name-create'
@@ -54,7 +53,7 @@ interface ITitreInput {
 
 export const titre =
   (pool: Pool) =>
-  async ({ query: { format = 'geojson' }, params: { id } }: ITitreInput, user: User) => {
+  async ({ query: { format = 'geojson' }, params: { id } }: ITitreInput, user: User): Promise<{ nom: string; format: DownloadFormat; contenu: string } | null> => {
     formatCheck(['geojson'], format)
 
     const titre = await titreGet(id!, { fields: titreFields }, user)
@@ -99,7 +98,7 @@ export const titre =
 
 export const titres =
   (pool: Pool) =>
-  async ({ query }: { query: GenericQueryInput<typeof titresValidator> }, user: User) => {
+  async ({ query }: { query: GenericQueryInput<typeof titresValidator> }, user: User): Promise<null | { nom: string; format: DownloadFormat; contenu: string }> => {
     const params = titresValidator.parse(query)
 
     const titres = await titresGet(
@@ -152,14 +151,14 @@ export const titres =
 
 export const travaux =
   (pool: Pool) =>
-  async ({ query }: { query: GenericQueryInput<typeof demarchesValidator> }, user: User) => {
+  async ({ query }: { query: GenericQueryInput<typeof demarchesValidator> }, user: User): Promise<null | { nom: string; format: DownloadFormat; contenu: string }> => {
     const funcDemarche = demarches(pool)
 
     return funcDemarche({ query: { ...query, travaux: 'true' } }, user)
   }
 export const demarches =
   (pool: Pool) =>
-  async ({ query }: { query: GenericQueryInput<typeof demarchesValidator> }, user: User) => {
+  async ({ query }: { query: GenericQueryInput<typeof demarchesValidator> }, user: User): Promise<null | { nom: string; format: DownloadFormat; contenu: string }> => {
     const params = demarchesValidator.parse(query)
 
     const titresDemarches = await titresDemarchesGet(
@@ -217,7 +216,7 @@ export const demarches =
 
 export const activites =
   (pool: Pool) =>
-  async ({ query }: { query: GenericQueryInput<typeof activitesValidator> }, user: User) => {
+  async ({ query }: { query: GenericQueryInput<typeof activitesValidator> }, user: User): Promise<null | { nom: string; format: DownloadFormat; contenu: string }> => {
     const params = activitesValidator.parse(query)
 
     const titresActivites = await titresActivitesGet(
@@ -243,15 +242,13 @@ export const activites =
       user
     )
 
-    const titresActivitesFormatted = titresActivites.map(a => titreActiviteFormat(a))
-
     let contenu
 
     switch (params.format) {
       case 'csv':
       case 'xlsx':
       case 'ods':
-        contenu = tableConvert('activites', await titresActivitesFormatTable(pool, titresActivitesFormatted), params.format)
+        contenu = tableConvert('activites', await titresActivitesFormatTable(pool, titresActivites), params.format)
         break
       default:
         exhaustiveCheck(params.format)
@@ -268,7 +265,7 @@ export const activites =
 
 export const entreprises =
   (_pool: Pool) =>
-  async ({ query }: { query: GenericQueryInput<typeof entreprisesValidator> }, user: User) => {
+  async ({ query }: { query: GenericQueryInput<typeof entreprisesValidator> }, user: User): Promise<null | { nom: string; format: DownloadFormat; contenu: string }> => {
     const params = entreprisesValidator.parse(query)
 
     const entreprises = await entreprisesGet({ noms: params.nomsEntreprise }, {}, user)
