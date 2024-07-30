@@ -231,16 +231,16 @@ export const bodyBuilder = (
 export const toFiscalite = (result: Pick<OpenfiscaResponse, 'articles'>, articleId: string, annee: number): Fiscalite => {
   const article = result.articles[articleId]
   const fiscalite: Fiscalite = {
-    redevanceCommunale: 0,
-    redevanceDepartementale: 0,
+    redevanceCommunale: new Decimal(0),
+    redevanceDepartementale: new Decimal(0),
   }
   const communes = Object.keys(article).filter(key => key.startsWith('redevance_communale'))
   const departements = Object.keys(article).filter(key => key.startsWith('redevance_departementale'))
   for (const commune of communes) {
-    fiscalite.redevanceCommunale += article[commune]?.[annee] ?? 0
+    fiscalite.redevanceCommunale = fiscalite.redevanceCommunale.add(article[commune]?.[annee] ?? 0)
   }
   for (const departement of departements) {
-    fiscalite.redevanceDepartementale += article[departement]?.[annee] ?? 0
+    fiscalite.redevanceDepartementale = fiscalite.redevanceDepartementale.add(article[departement]?.[annee] ?? 0)
   }
 
   if ('taxe_guyane_brute' in article) {
@@ -264,8 +264,8 @@ export const responseExtractor = (result: Pick<OpenfiscaResponse, 'articles'>, a
     .map(articleId => toFiscalite(result, articleId, annee))
     .reduce<Reduced>(
       (acc, fiscalite) => {
-        acc.fiscalite.redevanceCommunale += fiscalite.redevanceCommunale
-        acc.fiscalite.redevanceDepartementale += fiscalite.redevanceDepartementale
+        acc.fiscalite.redevanceCommunale = acc.fiscalite.redevanceCommunale.add(fiscalite.redevanceCommunale)
+        acc.fiscalite.redevanceDepartementale = acc.fiscalite.redevanceDepartementale.add(fiscalite.redevanceDepartementale)
 
         if (!acc.guyane && 'guyane' in fiscalite) {
           acc = {
@@ -290,7 +290,7 @@ export const responseExtractor = (result: Pick<OpenfiscaResponse, 'articles'>, a
       },
       {
         guyane: false,
-        fiscalite: { redevanceCommunale: 0, redevanceDepartementale: 0 },
+        fiscalite: { redevanceCommunale: new Decimal(0), redevanceDepartementale: new Decimal(0) },
       }
     )
 
@@ -579,8 +579,8 @@ export const fiscalite =
             res.json(redevances)
           } else {
             res.json({
-              redevanceCommunale: 0,
-              redevanceDepartementale: 0,
+              redevanceCommunale: new Decimal(0),
+              redevanceDepartementale: new Decimal(0),
             })
           }
         }

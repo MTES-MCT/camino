@@ -108,7 +108,10 @@ const writeMatricesForTest = async () => {
     const anneeMoins1 = anneePrecedente(annee)
 
     const titres = await titresGet(
-      { regions: [REGION_IDS.Guyane] },
+      { regions: [REGION_IDS.Guyane],
+      // ids: ["xE2Ro104RTILxkxpqJRhwE33"]
+      ids: ["FCiueDa9rsCCbG0Fj7vycTeM"]
+      },
       {
         fields: {
           titulairesEtape: { id: {} },
@@ -153,6 +156,7 @@ const writeMatricesForTest = async () => {
     const body = bodyBuilder(stripedData.activitesAnnuelles, stripedData.activitesTrimestrielles, stripedData.titres, anneeNumber, stripedData.entreprises)
     if (Object.keys(body.articles).length > 0) {
       const result = await apiOpenfiscaCalculate(body)
+      console.log(JSON.stringify(result))
       const constants = await apiOpenfiscaConstantsFetch(anneeNumber)
 
       const matrices = buildMatrices(

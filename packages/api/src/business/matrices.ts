@@ -1,25 +1,30 @@
 import '../init'
 import { titresGet } from '../database/queries/titres'
 import { titresActivitesGet } from '../database/queries/titres-activites'
-import { apiOpenfiscaCalculate, apiOpenfiscaConstantsFetch, OpenfiscaConstants, OpenfiscaResponse, OpenfiscaTarifs } from '../tools/api-openfisca/index'
+import { apiOpenfiscaCalculate, apiOpenfiscaConstantsFetch, OpenfiscaConstants, OpenfiscaResponse, openfiscaSubstanceFiscaleUnite, OpenfiscaTarifs } from '../tools/api-openfisca/index'
 import { bodyBuilder, toFiscalite } from '../api/rest/entreprises'
 import { userSuper } from '../database/user-super'
 import { fraisGestion } from 'camino-common/src/fiscalite'
 import type { Fiscalite } from 'camino-common/src/validators/fiscalite'
-import { ICommune, ITitre } from '../types'
+import { ICommune, IContenuValeur, IEntreprise, ITitre } from '../types'
 import { DepartementLabel, Departements, toDepartementId } from 'camino-common/src/static/departement'
 import fs from 'fs'
 import carbone from 'carbone'
 import { Pool } from 'pg'
 import { getCommunes } from '../database/queries/communes.queries'
-import { isNonEmptyArray, isNotNullNorUndefined, onlyUnique } from 'camino-common/src/typescript-tools'
-import { Commune } from 'camino-common/src/static/communes'
-import { CaminoAnnee, caminoAnneeToNumber, anneePrecedente as previousYear, anneeSuivante, getCurrentAnnee } from 'camino-common/src/date'
+import { DeepReadonly, isNonEmptyArray, isNotNullNorUndefined, isNullOrUndefined, onlyUnique } from 'camino-common/src/typescript-tools'
+import { Commune, CommuneId } from 'camino-common/src/static/communes'
+import { CaminoAnnee, caminoAnneeToNumber, anneePrecedente as previousYear, anneeSuivante, getCurrentAnnee, anneePrecedente, toCaminoAnnee } from 'camino-common/src/date'
 
 import { Decimal } from 'decimal.js'
-import { REGION_IDS } from 'camino-common/src/static/region'
+import { REGION_IDS, Regions } from 'camino-common/src/static/region'
 import { EntrepriseId } from 'camino-common/src/entreprise'
 import { getEntreprises, GetEntreprises } from '../api/rest/entreprises.queries'
+import Titres from '../database/models/titres'
+import TitresActivites from '../database/models/titres-activites'
+import { isGuyane } from 'camino-common/src/static/pays'
+import { SubstanceFiscale, SubstanceFiscaleId, SUBSTANCES_FISCALES_IDS, substancesFiscalesBySubstanceLegale } from 'camino-common/src/static/substancesFiscales'
+import { TitreId, TitreSlug } from 'camino-common/src/validators/titres'
 
 const sips = {
   cayenne: {
@@ -136,8 +141,8 @@ type Matrices = {
   titulaire: Titulaire
   departementLabel: DepartementLabel
   titreLabel: string
-  surfaceCommunaleProportionnee: number
-  surfaceCommunale: number
+  surfaceCommunaleProportionnee: Decimal
+  surfaceCommunale: Decimal
 }
 
 type Matrice1122 = {
@@ -162,6 +167,314 @@ export type BuildedMatrices = {
   matrice1404: Record<Sips, Matrice1404[]>
   rawLines: Matrices[]
 }
+const conversion = (substanceFiscale: SubstanceFiscale, quantite: IContenuValeur): Decimal => {
+  if (typeof quantite !== 'number') {
+    return new Decimal(0)
+  }
+
+  const unite = openfiscaSubstanceFiscaleUnite(substanceFiscale)
+
+  return new Decimal(quantite).div(unite.referenceUniteRatio ?? 1).toDecimalPlaces(3)
+}
+
+// const redevanceDepartementale
+
+type ProductionBySubstance = {
+  substanceFiscaleId: SubstanceFiscaleId
+  production: Decimal
+  surface_communale: Record<CommuneId, { commune: ICommune; surface: Decimal }>
+}
+
+type TitreBuild = {
+  titre: {
+    slug: TitreSlug
+    id: TitreId
+    titulaireIds: EntrepriseId[]
+  }
+  commune_principale_exploitation: ICommune
+  surface_totale: Decimal
+  investissement: Decimal
+  categorie: 'pme' | 'autre'
+  substances: { [key in SubstanceFiscaleId]?: ProductionBySubstance }
+}
+export const getRawLines = (
+  activitesAnnuelles: Pick<TitresActivites, 'titreId' | 'contenu'>[],
+  activitesTrimestrielles: Pick<TitresActivites, 'titreId' | 'contenu'>[],
+  titres: Pick<Titres, 'titulaireIds' | 'amodiataireIds' | 'substances' | 'communes' | 'id' | 'slug'>[],
+  annee: CaminoAnnee,
+  communes: Commune[],
+  // TODO use PgTyped getEntreprises
+  entreprises: Pick<IEntreprise, 'id' | 'categorie' | 'nom' | 'adresse' | 'codePostal' | 'commune' | 'legalSiren'>[]
+): Matrices[] => {
+  const titresToBuild: Record<TitreId, TitreBuild> = {}
+  for (const activite of activitesAnnuelles) {
+    const titre = titres.find(({ id }) => id === activite.titreId)
+    const activiteTrimestresTitre = activitesTrimestrielles.filter(({ titreId }) => titreId === activite.titreId)
+
+    if (isNullOrUndefined(titre)) {
+      throw new Error(`le titre ${activite.titreId} n’est pas chargé`)
+    }
+
+    if (isNullOrUndefined(titre.communes)) {
+      throw new Error(`les communes du titre ${activite.titreId} ne sont pas chargées`)
+    }
+    if (isNullOrUndefined(titre.titulaireIds)) {
+      throw new Error(`les titulaires du titre ${activite.titreId} ne sont pas chargées`)
+    }
+    if (isNullOrUndefined(titre.amodiataireIds)) {
+      throw new Error(`les amodiataires du titre ${activite.titreId} ne sont pas chargés`)
+    }
+
+    // si N titulaires et UN amodiataire le titre appartient fiscalement à l'amodiataire
+    // https://trello.com/c/2WJcnFRw/321-featfiscalit%C3%A9-les-titres-avec-un-seul-titulaire-et-un-seul-amodiataire-sont-g%C3%A9r%C3%A9s
+    let entrepriseId: null | string = null
+    let amodiataire = false
+    if (titre.amodiataireIds.length === 1) {
+      entrepriseId = titre.amodiataireIds[0]
+      amodiataire = true
+    } else if (titre.titulaireIds.length === 1) {
+      entrepriseId = titre.titulaireIds[0]
+    } else {
+      throw new Error(`plusieurs entreprises liées au titre ${activite.titreId}, cas non géré`)
+    }
+
+    const entreprise = entreprises.find(({ id }) => id === entrepriseId)
+
+    if (!entreprise && !amodiataire) {
+      throw new Error(`pas d'entreprise trouvée pour le titre ${activite.titreId}`)
+    } else if (!entreprise && amodiataire) {
+      console.warn(`le titre ${activite.titreId} appartient à l'entreprise amodiataire et n'est pas dans la liste des entreprises à analyser`)
+    } else if (entreprise) {
+      const titreGuyannais = titre.communes
+        .map(({ id }) => toDepartementId(id))
+        .filter(isNotNullNorUndefined)
+        .some(departementId => isGuyane(Regions[Departements[departementId].regionId].paysId))
+
+      if (!titre.substances) {
+        throw new Error(`les substances du titre ${activite.titreId} ne sont pas chargées`)
+      }
+
+      if (titre.substances.length > 0 && activite.contenu) {
+        const substanceLegalesWithFiscales = titre.substances.filter(isNotNullNorUndefined).filter(substanceId => substancesFiscalesBySubstanceLegale(substanceId).length)
+
+        if (substanceLegalesWithFiscales.length > 1) {
+          // TODO 2022-07-25 on fait quoi ? On calcule quand même ?
+          console.error('BOOM, titre avec plusieurs substances légales possédant plusieurs substances fiscales ', titre.id)
+        }
+
+        const substancesFiscales = substanceLegalesWithFiscales.flatMap(substanceId => substancesFiscalesBySubstanceLegale(substanceId))
+
+        for (const substancesFiscale of substancesFiscales) {
+          const production = conversion(substancesFiscale, activite.contenu.substancesFiscales[substancesFiscale.id])
+
+          if (production.greaterThan(0)) {
+            const communes: DeepReadonly<ICommune[]> = titre.communes
+            if (isNullOrUndefined(titresToBuild[titre.id])) {
+              const surfaceTotale = titre.communes.reduce((value, commune) => value.add(commune.surface ?? 0), new Decimal(0))
+
+              let communePrincipale: ICommune | null = null
+              for (const commune of communes) {
+                if (communePrincipale === null) {
+                  communePrincipale = commune
+                } else if ((communePrincipale?.surface ?? 0) < (commune?.surface ?? 0)) {
+                  communePrincipale = commune
+                }
+              }
+              if (communePrincipale === null) {
+                throw new Error(`Impossible de trouver une commune principale pour le titre ${titre.id}`)
+              }
+              const investissement = activiteTrimestresTitre.reduce((investissement, activite) => {
+                if (typeof activite?.contenu?.renseignements?.environnement === 'number') {
+                  return investissement.add(activite?.contenu?.renseignements?.environnement)
+                }
+
+                return investissement
+              }, new Decimal(0))
+              titresToBuild[titre.id] = {
+                titre: {
+                  slug: titre.slug!,
+                  id: titre.id,
+                  titulaireIds: titre.titulaireIds,
+                },
+                commune_principale_exploitation: communePrincipale,
+                surface_totale: surfaceTotale,
+                investissement,
+                categorie: entreprise.categorie === 'PME' ? 'pme' : 'autre',
+                substances: {},
+              }
+            }
+
+            titresToBuild[titre.id].substances[substancesFiscale.id] = {
+              substanceFiscaleId: substancesFiscale.id,
+              production,
+              surface_communale: {},
+            }
+            for (const commune of communes) {
+              const article = titresToBuild[titre.id].substances[substancesFiscale.id]?.surface_communale ?? null
+              // TODO 2024-07-30 typescript should narrow this
+              if (isNotNullNorUndefined(article)) {
+                article[commune.id] = { commune, surface: new Decimal(commune.surface ?? 0) }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  let count = 0
+  const rawLines: Matrices[] = titres
+    .filter(({ id }) => isNotNullNorUndefined(titresToBuild[id]))
+    .flatMap(titre => {
+      const titreBuild = titresToBuild[titre.id]
+      const communePrincipale = titreBuild.commune_principale_exploitation
+
+      return Object.values(titreBuild.substances)
+        .filter(substance => substance.substanceFiscaleId === SUBSTANCES_FISCALES_IDS.or)
+        .flatMap(productionBySubstance => {
+          return Object.values(productionBySubstance.surface_communale).map(({ commune, surface }) => {
+            count++
+            const surfaceCommunaleProportionnee = surface.div(titreBuild.surface_totale)
+            const quantiteOrExtrait = new Decimal(productionBySubstance.production).mul(surfaceCommunaleProportionnee).toDecimalPlaces(3)
+
+            const fiscalite = toNewFiscalite(productionBySubstance, annee)
+
+            const titreLabel = titreBuild.titre.slug ?? ''
+
+            const departement = Departements[toDepartementId(commune.id)].nom
+
+            let sip: Sips = 'saintLaurentDuMaroni'
+            if (sips.saintLaurentDuMaroni.communes.includes(commune.id)) {
+              sip = 'saintLaurentDuMaroni'
+            } else if (sips.cayenne.communes.includes(commune.id)) {
+              sip = 'cayenne'
+            } else if (sips.kourou.communes.includes(commune.id)) {
+              sip = 'kourou'
+            }
+
+            if (titreBuild.titre.titulaireIds?.length !== 1) {
+              throw new Error(`Un seul titulaire doit être présent sur le titre ${titreBuild.titre.slug}`)
+            }
+            const titulaireTitre = entreprises.find(({ id }) => titreBuild.titre.titulaireIds[0] === id)
+
+            const result: Matrices = {
+              communePrincipale: communes.find(({ id }) => id === communePrincipale.id) ?? communePrincipale,
+              commune: communes.find(({ id }) => commune.id === id) ?? commune,
+              fiscalite,
+              quantiteOrExtrait: `${quantiteOrExtrait}`,
+              sip,
+              index: count,
+              titulaire: {
+                nom: titulaireTitre?.nom ?? '',
+                rue: titulaireTitre?.adresse ?? '',
+                codepostal: titulaireTitre?.codePostal ?? '',
+                commune: titulaireTitre?.commune ?? '',
+                siren: titulaireTitre?.legalSiren ?? '',
+              },
+              titreLabel,
+              departementLabel: departement,
+              surfaceCommunaleProportionnee,
+              surfaceCommunale: surface,
+            }
+
+            return result
+          })
+        })
+    })
+
+  return rawLines
+}
+
+const redevanceCommunale = {
+  [toCaminoAnnee('2017')]: {
+    auru: new Decimal(141.2),
+    reference: 'https://beta.legifrance.gouv.fr/codes/id/LEGISCTA000006191913/2018-01-01',
+  },
+  [toCaminoAnnee('2018')]: {
+    auru: new Decimal(145.3),
+    reference: 'https://beta.legifrance.gouv.fr/codes/id/LEGISCTA000006191913/2019-01-01',
+  },
+  [toCaminoAnnee('2019')]: {
+    auru: new Decimal(149.7),
+    reference: 'https://www.legifrance.gouv.fr/codes/id/LEGISCTA000006191913/2020-01-01',
+  },
+  [toCaminoAnnee('2020')]: {
+    auru: new Decimal(153.6),
+    reference: 'https://www.legifrance.gouv.fr/codes/id/LEGISCTA000006191913/2020-07-25',
+  },
+  [toCaminoAnnee('2021')]: {
+    auru: new Decimal(166.3),
+    reference: 'https://www.legifrance.gouv.fr/codes/id/LEGIARTI000043663105/2021-06-12/',
+  },
+  [toCaminoAnnee('2022')]: {
+    auru: new Decimal(175.4),
+    reference: 'https://www.legifrance.gouv.fr/codes/id/LEGIARTI000045765025/2022-05-07/',
+  },
+  [toCaminoAnnee('2023')]: {
+    auru: new Decimal(183.5),
+    reference: 'https://www.legifrance.gouv.fr/codes/id/LEGIARTI000045765025/2023-06-03/',
+  },
+} as const satisfies Record<number, { reference: string; auru: Decimal }>
+
+const redevanceDepartementale = {
+  [toCaminoAnnee('2017')]: {
+    auru: new Decimal(28.2),
+    reference: 'https://beta.legifrance.gouv.fr/codes/section_lc/LEGITEXT000006069577/LEGISCTA000006162672/2018-01-01/',
+  },
+  [toCaminoAnnee('2018')]: {
+    auru: new Decimal(29),
+    reference: 'https://beta.legifrance.gouv.fr/codes/section_lc/LEGITEXT000006069577/LEGISCTA000006162672/2019-01-01/',
+  },
+  [toCaminoAnnee('2019')]: {
+    auru: new Decimal(29.9),
+    reference: 'https://www.legifrance.gouv.fr/codes/id/LEGIARTI000038686694/2019-06-08/',
+  },
+  [toCaminoAnnee('2020')]: {
+    auru: new Decimal(30.7),
+    reference: 'https://www.legifrance.gouv.fr/codes/id/LEGIARTI000042159975/2020-07-25/',
+  },
+  [toCaminoAnnee('2021')]: {
+    auru: new Decimal(33.2),
+    reference: 'https://www.legifrance.gouv.fr/codes/id/LEGIARTI000043663002/2021-06-12/',
+  },
+  [toCaminoAnnee('2022')]: {
+    auru: new Decimal(35.0),
+    reference: 'https://www.legifrance.gouv.fr/codes/id/LEGIARTI000045764991/2022-05-07/',
+  },
+  [toCaminoAnnee('2023')]: {
+    auru: new Decimal(36.6),
+    reference: 'https://www.legifrance.gouv.fr/codes/id/LEGIARTI000045764991/2023-06-03/',
+  },
+} as const satisfies Record<number, { reference: string; auru: Decimal }>
+
+export const toNewFiscalite = (productionBySubstance: ProductionBySubstance, annee: CaminoAnnee): Fiscalite => {
+  const fiscalite: Fiscalite = {
+    redevanceCommunale: productionBySubstance.production.mul(redevanceCommunale[annee]?.auru).toDecimalPlaces(2, Decimal.ROUND_HALF_EVEN),
+    redevanceDepartementale: productionBySubstance.production.mul(redevanceDepartementale[annee]?.auru).toDecimalPlaces(2, Decimal.ROUND_HALF_EVEN),
+  }
+  // const communes = Object.keys(article).filter(key => key.startsWith('redevance_communale'))
+  // const departements = Object.keys(article).filter(key => key.startsWith('redevance_departementale'))
+  // for (const commune of communes) {
+  //   fiscalite.redevanceCommunale += article[commune]?.[annee] ?? 0
+  // }
+  // for (const departement of departements) {
+  //   fiscalite.redevanceDepartementale += article[departement]?.[annee] ?? 0
+  // }
+
+  // if ('taxe_guyane_brute' in article) {
+  //   return {
+  //     ...fiscalite,
+  //     guyane: {
+  //       taxeAurifereBrute: article.taxe_guyane_brute?.[annee] ?? 0,
+  //       taxeAurifere: article.taxe_guyane?.[annee] ?? 0,
+  //       totalInvestissementsDeduits: article.taxe_guyane_deduction?.[annee] ?? 0,
+  //     },
+  //   }
+  // }
+
+  return fiscalite
+}
+
 // VISIBLE FOR TESTING
 export const buildMatrices = (
   result: OpenfiscaResponse,
@@ -193,8 +506,8 @@ export const buildMatrices = (
           throw new Error(`commune de l’article ${articleKey} introuvable`)
         }
 
-        const surfaceCommunaleProportionnee = result.articles[articleKey]?.surface_communale_proportionnee?.[anneePrecedente] ?? 1
-        const surfaceCommunale = result.articles[articleKey]?.surface_communale?.[anneePrecedente] ?? 0
+        const surfaceCommunaleProportionnee = new Decimal(result.articles[articleKey]?.surface_communale_proportionnee?.[anneePrecedente] ?? 1)
+        const surfaceCommunale = new Decimal(result.articles[articleKey]?.surface_communale?.[anneePrecedente] ?? 0)
         const quantiteOrExtrait = new Decimal(result.articles[articleKey]?.quantite_aurifere_kg?.[anneePrecedente] ?? 0).mul(surfaceCommunaleProportionnee).toDecimalPlaces(3)
 
         const fiscalite = toFiscalite(result, articleKey, annee)
