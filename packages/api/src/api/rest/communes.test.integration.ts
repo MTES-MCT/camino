@@ -26,9 +26,10 @@ describe('getCommunes', () => {
   })
 
   test('peut récupérer des communes', async () => {
-    await insertCommune(dbPool, { id: toCommuneId('72000'), nom: 'Le Mans' })
-    await insertCommune(dbPool, { id: toCommuneId('37000'), nom: 'Tours' })
-    await insertCommune(dbPool, { id: toCommuneId('31000'), nom: 'Toulouse' })
+    const fakeGeometry: string = '010100000000000000000000000000000000000000'
+    await insertCommune(dbPool, { id: toCommuneId('72000'), nom: 'Le Mans', geometry: fakeGeometry })
+    await insertCommune(dbPool, { id: toCommuneId('37000'), nom: 'Tours', geometry: fakeGeometry })
+    await insertCommune(dbPool, { id: toCommuneId('31000'), nom: 'Toulouse', geometry: fakeGeometry })
 
     let tested = await restCall(dbPool, '/rest/communes', {}, undefined, { ids: ['72000', '37000'] })
 

@@ -390,7 +390,7 @@ describe('titres', () => {
     const nomCommune = 'NOM DE COMMUNE'
 
     await Titres.query().upsertGraph(titre, options.titres.update)
-    await knexStuff.raw(`insert into communes (id, nom) values ('${communeId}', '${nomCommune}')`)
+    await knexStuff.raw(`insert into communes (id, nom, geometry) values ('${communeId}', '${nomCommune}', '010100000000000000000000000000000000000000')`)
 
     const res = await graphQLCall(
       dbPool,

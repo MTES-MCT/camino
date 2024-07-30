@@ -36,13 +36,9 @@ describe('titresEtapesAreasUpdate', () => {
   test('met à jour les communes, forêts et zone du SDOM sur une étape', async () => {
     const baisieuxId = toCommuneId('59044')
     const saintElieId = toCommuneId('97358')
-    await insertCommune(dbPool, { id: saintElieId, nom: 'Saint-Élie' })
-    await insertCommune(dbPool, { id: baisieuxId, nom: 'Baisieux' })
-    await insertCommune(dbPool, { id: toCommuneId('97312'), nom: 'Sinnamary' })
-
-    await knex!.raw(`insert into communes_postgis (id, geometry) values ('${saintElieId}','${SaintEliePerimetre}')`)
-    await knex!.raw(`insert into communes_postgis (id, geometry) values ('${baisieuxId}', '${BaisieuxPerimetre}')`)
-    await knex!.raw(`insert into communes_postgis (id, geometry) values ('97312', '${SinnamaryPerimetre}')`)
+    await insertCommune(dbPool, { id: saintElieId, nom: 'Saint-Élie', geometry: SaintEliePerimetre })
+    await insertCommune(dbPool, { id: baisieuxId, nom: 'Baisieux', geometry: BaisieuxPerimetre })
+    await insertCommune(dbPool, { id: toCommuneId('97312'), nom: 'Sinnamary', geometry: SinnamaryPerimetre })
 
     const reginaId: ForetId = 'FRG'
     const deuxBranchesId: ForetId = 'DBR'

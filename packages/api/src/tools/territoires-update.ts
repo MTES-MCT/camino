@@ -1,7 +1,6 @@
 /* eslint-disable sql/no-unsafe-query */
 import '../init'
 import { knex } from '../knex'
-import Communes from '../database/models/communes'
 import JSZip from 'jszip'
 import { Readable } from 'node:stream'
 import { SDOMZoneId, SDOMZoneIds } from 'camino-common/src/static/sdom'
@@ -9,7 +8,7 @@ import { assertsFacade, assertsSecteur, secteurAJour } from 'camino-common/src/s
 import { createRequire } from 'node:module'
 import { ForetId, ForetIds, Forets, foretIdValidator } from 'camino-common/src/static/forets'
 import { Pool } from 'pg'
-import { insertCommune } from '../database/queries/communes.queries'
+import { getCommuneIds, insertCommune } from '../database/queries/communes.queries'
 import { toCommuneId } from 'camino-common/src/static/communes'
 
 const require = createRequire(import.meta.url)
@@ -18,8 +17,7 @@ const { withParser } = require('stream-json/filters/Pick')
 const { chain } = require('stream-chain')
 
 const communesUpdate = async (pool: Pool) => {
-  const communesIdsKnown: string[] = (await Communes.query()).map(({ id }) => id)
-  const communesPostgisIdsKnown: string[] = (await knex.select('id').from('communes_postgis')).map(({ id }: { id: string }) => id)
+  const communesIdsKnown: string[] = await getCommuneIds(pool)
   console.info('Téléchargement du fichier des communes')
 
   const communesFetch = await fetch('http://etalab-datasets.geo.data.gouv.fr/contours-administratifs/latest/geojson/communes-5m.geojson')
@@ -41,24 +39,16 @@ const communesUpdate = async (pool: Pool) => {
       try {
         const result = await knex.raw(`select ST_MakeValid(ST_MULTI(ST_SetSRID(ST_GeomFromGeoJSON('${JSON.stringify(commune.geometry)}'), 4326))) as result`)
 
-        if (communesPostgisIdsKnown.includes(commune.properties.code)) {
-          await knex('communes_postgis').where('id', commune.properties.code).update({
-            geometry: result.rows[0].result,
-          })
-        } else {
-          await knex('communes_postgis').insert({
-            id: commune.properties.code,
-            geometry: result.rows[0].result,
-          })
-        }
         if (communesIdsKnown.includes(commune.properties.code)) {
           await knex('communes').where('id', commune.properties.code).update({
             nom: commune.properties.nom,
+            geometry: result.rows[0].result,
           })
         } else {
           await insertCommune(pool, {
             id: toCommuneId(commune.properties.code),
             nom: commune.properties.nom,
+            geometry: result.rows[0].result,
           })
         }
       } catch (e) {

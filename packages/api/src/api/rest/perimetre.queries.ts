@@ -253,14 +253,12 @@ select
             json_agg(communes_with_surface)
         from (
             select
-                c.id,
-                c.nom,
-                ST_Area (ST_INTERSECTION (ST_MAKEVALID (ST_GeomFromGeoJSON ($ geojson4326_perimetre !)), commune.geometry), true) as surface
-            from
-                communes_postgis commune
-                join communes c on c.id = commune.id
+                communes.id,
+                communes.nom,
+                ST_Area (ST_INTERSECTION (ST_MAKEVALID (ST_GeomFromGeoJSON ($ geojson4326_perimetre !)), communes.geometry), true) as surface
+            from communes
             where
-                ST_INTERSECTS (ST_MAKEVALID (ST_GeomFromGeoJSON ($ geojson4326_perimetre !)), commune.geometry) is true) as communes_with_surface) as communes,
+                ST_INTERSECTS (ST_MAKEVALID (ST_GeomFromGeoJSON ($ geojson4326_perimetre !)), communes.geometry) is true) as communes_with_surface) as communes,
     (
         select
             json_agg(foret.id) as forets

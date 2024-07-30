@@ -17,10 +17,25 @@ export interface IGetCommunesInternalQuery {
   result: IGetCommunesInternalResult;
 }
 
+/** 'GetCommuneIdsInternal' parameters type */
+export type IGetCommuneIdsInternalParams = void;
+
+/** 'GetCommuneIdsInternal' return type */
+export interface IGetCommuneIdsInternalResult {
+  id: string;
+}
+
+/** 'GetCommuneIdsInternal' query type */
+export interface IGetCommuneIdsInternalQuery {
+  params: IGetCommuneIdsInternalParams;
+  result: IGetCommuneIdsInternalResult;
+}
+
 /** 'InsertCommuneInternal' parameters type */
 export interface IInsertCommuneInternalParams {
-  id?: string | null | void;
-  nom?: string | null | void;
+  geometry: unknown;
+  id: string;
+  nom: string;
 }
 
 /** 'InsertCommuneInternal' return type */
