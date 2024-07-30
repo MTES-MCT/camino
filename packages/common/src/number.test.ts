@@ -1,5 +1,6 @@
 import { test, expect } from 'vitest'
 import { indexToLetter, toDegresMinutes } from './number'
+import Decimal from 'decimal.js'
 
 test('indexToLetter', () => {
   expect(indexToLetter(0)).toBe('A')
@@ -28,4 +29,12 @@ test('toDegresMinutes', () => {
     degres: -6,
     minutes: 6.8335,
   })
+})
+
+
+test('decimal round', () => {
+
+  Decimal.ROUND_HALF_UP
+  expect(new Decimal(12.34).toDecimalPlaces(1)).toStrictEqual(new Decimal(12.3))
+  expect(new Decimal(12.35).toDecimalPlaces(1)).toStrictEqual(new Decimal(12.4))
 })

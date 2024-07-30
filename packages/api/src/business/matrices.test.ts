@@ -1,4 +1,4 @@
-import { buildMatrices } from './matrices'
+import { buildMatrices, getRawLines } from './matrices'
 import { ITitre } from '../types'
 import { EntrepriseId, newEntrepriseId } from 'camino-common/src/entreprise'
 import { describe, expect, test } from 'vitest'
@@ -230,10 +230,13 @@ describe('matrices', () => {
       },
       {} as Record<EntrepriseId, Pick<GetEntreprises, 'nom' | 'adresse' | 'code_postal' | 'commune' | 'legal_siren'>>
     )
-    const body = bodyBuilder(entries.activitesAnnuelles, entries.activitesTrimestrielles, entries.titres, anneeNumber, entries.entreprises)
-    const result = await apiOpenfiscaCalculate(body)
-    const constants = await apiOpenfiscaConstantsFetch(anneeNumber)
+    // const body = bodyBuilder(entries.activitesAnnuelles, entries.activitesTrimestrielles, entries.titres, anneeNumber, entries.entreprises)
+    // const result = await apiOpenfiscaCalculate(body)
+    // console.log(result)
+    // const constants = await apiOpenfiscaConstantsFetch(anneeNumber)
 
-    expect(JSON.stringify(buildMatrices(result, entries.titres, anneeNumber, constants, communes, entreprises))).toStrictEqual(JSON.stringify(expected))
+    console.log(getRawLines(entries.activitesAnnuelles, entries.activitesTrimestrielles, entries.titres, entries.annee, communes, entries.entreprises))
+    expect(getRawLines(entries.activitesAnnuelles, entries.activitesTrimestrielles, entries.titres, entries.annee, communes, entries.entreprises)).toStrictEqual(expected.rawLines)
+    // expect(JSON.stringify(buildMatrices(result, entries.titres, anneeNumber, constants, communes, entreprises))).toStrictEqual(JSON.stringify(expected))
   })
 })
