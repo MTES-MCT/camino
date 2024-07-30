@@ -6,10 +6,10 @@ import { fieldsBuild } from './_fields-build'
 
 import { userGet, utilisateurGet, utilisateursCount, utilisateursGet } from '../../../database/queries/utilisateurs'
 
-import { newsletterSubscriberUpdate } from '../../../tools/api-mailjet/newsletter'
 import { Role, UtilisateurId } from 'camino-common/src/roles'
 import { canReadUtilisateurs, canReadUtilisateur } from 'camino-common/src/permissions/utilisateurs'
 import { newUtilisateurId } from '../../../database/models/_format/id-create'
+import Utilisateurs from '../../../database/models/utilisateurs'
 
 export const userIdGenerate = async (): Promise<UtilisateurId> => {
   const id = newUtilisateurId()
@@ -21,7 +21,7 @@ export const userIdGenerate = async (): Promise<UtilisateurId> => {
   return id
 }
 
-export const utilisateur = async ({ id }: { id: UtilisateurId }, { user }: Context, info: GraphQLResolveInfo) => {
+export const utilisateur = async ({ id }: { id: UtilisateurId }, { user }: Context, info: GraphQLResolveInfo): Promise<Utilisateurs | null | undefined> => {
   try {
     if (!canReadUtilisateur(user, id)) {
       return null
@@ -60,10 +60,24 @@ export const utilisateurs = async (
   },
   { user }: Context,
   info: GraphQLResolveInfo
-) => {
+): Promise<{
+  elements: Utilisateurs[]
+  page: number | null | undefined
+  intervalle: number | null | undefined
+  ordre: 'asc' | 'desc' | null | undefined
+  colonne: IUtilisateursColonneId | null | undefined
+  total: number
+}> => {
   try {
     if (!canReadUtilisateurs(user)) {
-      return []
+      return {
+        elements: [],
+        page,
+        intervalle,
+        ordre,
+        colonne,
+        total: 0,
+      }
     }
     const fields = fieldsBuild(info)
 
@@ -104,16 +118,6 @@ export const utilisateurs = async (
       colonne,
       total,
     }
-  } catch (e) {
-    console.error(e)
-
-    throw e
-  }
-}
-
-export const newsletterInscrire = async ({ email }: { email: string }) => {
-  try {
-    return await newsletterSubscriberUpdate(email, true)
   } catch (e) {
     console.error(e)
 

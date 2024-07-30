@@ -70,7 +70,7 @@ export const NewsletterForm = defineComponent({
       if (email.value) {
         try {
           subscribed.value = 'SUBSCRIBING'
-          await utilisateurApiClient.newsletterInscrire(email.value)
+          await utilisateurApiClient.registerToNewsletter(email.value)
           email.value = ''
           subscribed.value = 'SUBSCRIBED'
         } catch (e: any) {

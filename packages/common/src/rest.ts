@@ -12,7 +12,7 @@ import {
   entrepriseValidator,
 } from './entreprise'
 import { demarcheIdOrSlugValidator, demarcheIdValidator } from './demarche'
-import { newsletterAbonnementValidator, qgisTokenValidator, utilisateurToEdit } from './utilisateur'
+import { newsletterAbonnementValidator, qgisTokenValidator, newsletterRegistrationValidator, utilisateurToEdit } from './utilisateur'
 import {
   editableTitreValidator,
   getDemarcheByIdOrSlugValidator,
@@ -75,6 +75,7 @@ type CaminoRoute<T extends string> = { params: ZodObjectParsUrlParams<T> } & {
 const IDS = [
   '/config',
   '/moi',
+  '/rest/utilisateurs/registerToNewsletter',
   '/rest/utilisateurs/:id/newsletter',
   '/rest/utilisateurs/:id/delete',
   '/rest/utilisateurs/:id/permission',
@@ -146,6 +147,7 @@ export const CaminoRestRoutes = {
   '/config': { params: noParamsValidator, get: { output: caminoConfigValidator } },
   '/moi': { params: noParamsValidator, get: { output: userValidator } },
   '/rest/utilisateurs/:id/newsletter': { params: utilisateurIdParamsValidator, get: { output: z.boolean() }, post: { input: newsletterAbonnementValidator, output: z.boolean() } },
+  '/rest/utilisateurs/registerToNewsletter': { params: noParamsValidator, newPost: { input: newsletterRegistrationValidator, output: z.void() } },
   // On passe par un http get plutot qu'un http delete car nous terminons par une redirection vers la deconnexion de oauth2, qui se traduit mal sur certains navigateurs et essaie de faire un delete sur une route get
   '/rest/utilisateurs/:id/delete': { params: utilisateurIdParamsValidator, get: { output: z.void() } },
   '/rest/utilisateurs/:id/permission': { params: utilisateurIdParamsValidator, post: { input: utilisateurToEdit, output: z.void() } },

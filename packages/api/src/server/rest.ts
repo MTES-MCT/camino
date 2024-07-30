@@ -3,7 +3,7 @@
 import { CaminoApiError, Index } from '../types'
 import type { Pool } from 'pg'
 
-import express from 'express'
+import express, { type Router } from 'express'
 import { join } from 'path'
 import { inspect } from 'node:util'
 
@@ -21,7 +21,16 @@ import {
   entrepriseDocumentDownload,
   getAllEntreprises,
 } from '../api/rest/entreprises'
-import { deleteUtilisateur, generateQgisToken, isSubscribedToNewsletter, manageNewsletterSubscription, moi, updateUtilisateurPermission, utilisateurs } from '../api/rest/utilisateurs'
+import {
+  deleteUtilisateur,
+  generateQgisToken,
+  isSubscribedToNewsletter,
+  manageNewsletterSubscription,
+  moi,
+  updateUtilisateurPermission,
+  utilisateurs,
+  registerToNewsletter,
+} from '../api/rest/utilisateurs'
 import { logout, resetPassword } from '../api/rest/keycloak'
 import { getDGTMStats, getGranulatsMarinsStats, getGuyaneStats, getMinerauxMetauxMetropolesStats } from '../api/rest/statistiques/index'
 import {
@@ -143,6 +152,7 @@ const restRouteImplementations: Readonly<{ [key in CaminoRestRoute]: Transform<k
   '/rest/statistiques/dgtm': { getCall: getDGTMStats, ...CaminoRestRoutes['/rest/statistiques/dgtm'] },
   '/rest/statistiques/datagouv': { getCall: getDataGouvStats, ...CaminoRestRoutes['/rest/statistiques/datagouv'] },
   '/rest/demarches/:demarcheIdOrSlug': { getCall: getDemarcheByIdOrSlug, ...CaminoRestRoutes['/rest/demarches/:demarcheIdOrSlug'] },
+  '/rest/utilisateurs/registerToNewsletter': { newPostCall: registerToNewsletter, ...CaminoRestRoutes['/rest/utilisateurs/registerToNewsletter'] },
   '/rest/utilisateur/generateQgisToken': { postCall: generateQgisToken, ...CaminoRestRoutes['/rest/utilisateur/generateQgisToken'] },
   '/rest/utilisateurs/:id/permission': { postCall: updateUtilisateurPermission, ...CaminoRestRoutes['/rest/utilisateurs/:id/permission'] },
   '/rest/utilisateurs/:id/delete': { getCall: deleteUtilisateur, ...CaminoRestRoutes['/rest/utilisateurs/:id/delete'] },
@@ -178,7 +188,7 @@ const restRouteImplementations: Readonly<{ [key in CaminoRestRoute]: Transform<k
   '/deconnecter': { getCall: logout, ...CaminoRestRoutes['/deconnecter'] },
   '/changerMotDePasse': { getCall: resetPassword, ...CaminoRestRoutes['/changerMotDePasse'] },
 } as const
-export const restWithPool = (dbPool: Pool) => {
+export const restWithPool = (dbPool: Pool): Router => {
   const rest = express.Router()
 
   Object.keys(restRouteImplementations)
