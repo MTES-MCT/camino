@@ -11,7 +11,7 @@ describe('canEditDemarche', () => {
     ['dea-guadeloupe-01', false],
     ['min-mtes-dgec-01', false],
     ['pre-42218-01', false],
-    ['ope-ptmg-973-01', true],
+    ['ope-ptmg-973-01', false],
     ['dea-guyane-01', true],
   ])('Vérifie si l’administration peut modifier des démarches', async (administrationId, creation) => {
     expect(canEditDemarche({ role: 'admin', administrationId, ...testBlankUser }, 'arm', TitresStatutIds.Valide, [])).toEqual(creation)
@@ -40,7 +40,7 @@ describe('canDeleteDemarche', () => {
     ['dea-guadeloupe-01', false],
     ['min-mtes-dgec-01', false],
     ['pre-42218-01', false],
-    ['ope-ptmg-973-01', true],
+    ['ope-ptmg-973-01', false],
     ['dea-guyane-01', true],
   ])('Vérifie si l’administration peut supprimer des démarches', async (administrationId, creation) => {
     expect(canDeleteDemarche({ role: 'admin', administrationId, ...testBlankUser }, 'arm', TitresStatutIds.Valide, [], { etapes: [] })).toEqual(creation)
