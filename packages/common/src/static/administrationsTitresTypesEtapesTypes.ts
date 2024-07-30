@@ -177,23 +177,6 @@ const AdministrationsTitresTypesEtapesTypes: {
       [ETAPES_TYPES.saisineDuConseilGeneralDeLeconomie_CGE_]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.saisineDuPrefet]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
     },
-    [TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_METAUX]: {
-      [ETAPES_TYPES.abrogationDeLaDecision]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
-      [ETAPES_TYPES.avisDuConseilGeneralDeLeconomie_CGE_]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
-      [ETAPES_TYPES.decisionDuJugeAdministratif]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
-      [ETAPES_TYPES.classementSansSuite]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
-      [ETAPES_TYPES.desistementDuDemandeur]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
-      [ETAPES_TYPES.decisionDeLadministration]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
-      [ETAPES_TYPES.decisionImplicite]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
-      [ETAPES_TYPES.publicationDeDecisionAuJORF]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
-      [ETAPES_TYPES.depotDeLaDemande]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
-      [ETAPES_TYPES.demande]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
-      [ETAPES_TYPES.notificationAuPrefet]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
-      [ETAPES_TYPES.rapportDuConseilGeneralDeLeconomie_CGE_]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
-      [ETAPES_TYPES.saisineDeLautoriteSignataire]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
-      [ETAPES_TYPES.saisineDuConseilGeneralDeLeconomie_CGE_]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
-      [ETAPES_TYPES.saisineDuPrefet]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
-    },
   },
   [ADMINISTRATION_IDS['DREAL - AUVERGNE-RHÔNE-ALPES - SIÈGE DE LYON']]: {
     [TITRES_TYPES_IDS.CONCESSION_METAUX]: {
