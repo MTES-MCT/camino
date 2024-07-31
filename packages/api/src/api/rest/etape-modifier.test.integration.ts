@@ -384,7 +384,7 @@ describe('etapeModifier', () => {
     expect(res.statusCode).toBe(HTTP_STATUS.OK)
   })
 
-  test('peut modifier une étape MEN sur un titre ARM en tant que PTMG (utilisateur admin)', async () => {
+  test('peut modifier une étape MEN sur un titre ARM en tant que DGTM (utilisateur admin)', async () => {
     const { titreDemarcheId } = await etapeCreate('mfr', caminoDateValidator.parse('2017-12-31'))
 
     const menEtape: RestEtapeCreation = {
@@ -427,7 +427,7 @@ describe('etapeModifier', () => {
       {},
       {
         role: 'admin',
-        administrationId: ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE'],
+        administrationId: ADMINISTRATION_IDS['DGTM - GUYANE'],
       },
       menEtape
     )
@@ -440,7 +440,7 @@ describe('etapeModifier', () => {
       {},
       {
         role: 'admin',
-        administrationId: ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE'],
+        administrationId: ADMINISTRATION_IDS['DGTM - GUYANE'],
       },
       {
         id: titreEtapeId,

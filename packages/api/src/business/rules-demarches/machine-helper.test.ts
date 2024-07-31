@@ -282,7 +282,7 @@ describe('demarcheStatut', () => {
   })
 })
 describe('whoIsBlocking', () => {
-  test('on attend le PTMG pour la recevabilité d’une demande d’ARM', () => {
+  test('on attend la DGTM pour la recevabilité d’une demande d’ARM', () => {
     expect(
       armOctMachine.whoIsBlocking([
         {
@@ -301,10 +301,10 @@ describe('whoIsBlocking', () => {
           date: toCaminoDate('2021-02-03'),
         },
       ])
-    ).toStrictEqual([ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']])
+    ).toStrictEqual([ADMINISTRATION_IDS['DGTM - GUYANE']])
   })
 
-  test("on attend l'ONF pour la validation du paiement des frais de dossier", () => {
+  test('on attend la DGTM pour la validation du paiement des frais de dossier', () => {
     expect(
       armOctMachine.whoIsBlocking([
         {
@@ -328,7 +328,7 @@ describe('whoIsBlocking', () => {
           date: toCaminoDate('2021-02-04'),
         },
       ])
-    ).toStrictEqual([ADMINISTRATION_IDS['OFFICE NATIONAL DES FORÊTS']])
+    ).toStrictEqual([ADMINISTRATION_IDS['DGTM - GUYANE']])
   })
 
   test('on attend personne', () => {

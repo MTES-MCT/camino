@@ -20,7 +20,7 @@ afterAll(async () => {
 
 describe('Visibilité des titres par les administrations gestionnaires ou associées', () => {
   test.each<[AdministrationId, boolean]>([
-    ['ope-onf-973-01', true],
+    ['ope-onf-973-01', false],
     ['dea-guyane-01', true],
     ['dre-grand-est-01', false],
     ['pre-97302-01', true],
@@ -33,7 +33,7 @@ describe('Visibilité des titres par les administrations gestionnaires ou associ
   )
 
   test.each<[AdministrationId, boolean]>([
-    ['ope-onf-973-01', true],
+    ['ope-onf-973-01', false],
     ['dea-guyane-01', true],
     ['dre-grand-est-01', false],
     ['pre-97302-01', false],
@@ -129,14 +129,14 @@ describe('Visibilité des titres par les administrations locales', () => {
 
 describe('Création des titres', () => {
   test.each<[AdministrationId, boolean]>([
-    ['ope-onf-973-01', true],
+    ['ope-onf-973-01', false],
     ['min-mtes-dgec-01', false],
     ['min-mtes-dgaln-01', true],
     ['min-dajb-01', false],
   ])('un utilisateur admin de l’administration $administrationId peut créer un titre ARM : $creer', async (administrationId, creer) => creationCheck(dbPool, administrationId, creer, 'titres', 'arm'))
 
   test.each<[AdministrationId, boolean]>([
-    ['ope-onf-973-01', true],
+    ['ope-onf-973-01', false],
     ['dea-guyane-01', true],
     ['min-mtes-dgec-01', false],
     ['min-mtes-dgaln-01', true],

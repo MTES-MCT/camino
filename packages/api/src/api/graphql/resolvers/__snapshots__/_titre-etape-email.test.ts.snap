@@ -30,8 +30,7 @@ exports[`envoie un email sur un octroi d'ARM 1`] = `
 
   ",
   "emails": [
-    "ptmg@ctguyane.fr",
-    "pole.minier@onf.fr",
+    "mc.remd.deal-guyane@developpement-durable.gouv.fr",
   ],
   "subject": "dépôt de la demande | Nouvelle demande déposée",
 }

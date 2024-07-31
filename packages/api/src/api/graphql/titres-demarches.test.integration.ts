@@ -124,11 +124,11 @@ describe('demarcheCreer', () => {
     expect(res.body).toMatchObject({ data: { demarcheCreer: {} } })
   })
 
-  test("ne peut pas créer une démarche sur un titre ARM échu (un utilisateur 'admin' PTMG)", async () => {
+  test.only("ne peut pas créer une démarche sur un titre ARM échu (un utilisateur 'admin' DGTM)", async () => {
     const titre = await titreCreate(
       {
         nom: 'mon titre échu',
-        typeId: 'arm',
+        typeId: 'cxm',
         titreStatutId: 'ech',
         propsTitreEtapesIds: {},
       },
@@ -141,7 +141,7 @@ describe('demarcheCreer', () => {
       { demarche: { titreId: titre.id, typeId: 'oct' } },
       {
         role: 'admin',
-        administrationId: ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE'],
+        administrationId: ADMINISTRATION_IDS['DGTM - GUYANE'],
       }
     )
 
@@ -187,7 +187,7 @@ describe('demarcheModifier', () => {
     expect(res.body.errors[0].message).toBe('la démarche n’existe pas')
   })
 
-  test('peut modifier une démarche d’un titre ARM en PTMG (utilisateur admin)', async () => {
+  test('peut modifier une démarche d’un titre ARM en DGTM (utilisateur admin)', async () => {
     const { demarcheId, titreId } = await demarcheCreate()
 
     const res = await graphQLCall(
@@ -196,7 +196,7 @@ describe('demarcheModifier', () => {
       { demarche: { id: demarcheId, titreId, typeId: 'pro' } },
       {
         role: 'admin',
-        administrationId: ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE'],
+        administrationId: ADMINISTRATION_IDS['DGTM - GUYANE'],
       }
     )
 

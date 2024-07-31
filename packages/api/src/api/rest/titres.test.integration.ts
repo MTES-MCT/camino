@@ -218,11 +218,11 @@ describe('titresLiaisons', () => {
   test('peut lier deux titres', async () => {
     const getTitres = await restCall(
       dbPool,
-      '/rest/titresONF',
+      '/rest/titresAdministrations',
       {},
       {
         role: 'admin',
-        administrationId: ADMINISTRATION_IDS['OFFICE NATIONAL DES FORÊTS'],
+        administrationId: ADMINISTRATION_IDS['DGTM - GUYANE'],
       }
     )
     const titreId = getTitres.body[0].id
@@ -243,7 +243,7 @@ describe('titresLiaisons', () => {
       { id: axm.id },
       {
         role: 'admin',
-        administrationId: ADMINISTRATION_IDS['OFFICE NATIONAL DES FORÊTS'],
+        administrationId: ADMINISTRATION_IDS['DGTM - GUYANE'],
       },
       [titreId]
     )
@@ -262,7 +262,7 @@ describe('titresLiaisons', () => {
       { id: titreId },
       {
         role: 'admin',
-        administrationId: ADMINISTRATION_IDS['OFFICE NATIONAL DES FORÊTS'],
+        administrationId: ADMINISTRATION_IDS['DGTM - GUYANE'],
       }
     )
 
@@ -320,7 +320,7 @@ describe('titreModifier', () => {
       },
       { id, nom: 'mon titre modifié', references: [] }
     )
-    expect(tested.statusCode).toBe(204)
+    expect(tested.statusCode).toBe(404)
   })
 
   test("ne peut pas modifier un titre ARM échu (un utilisateur 'admin' PTMG)", async () => {
@@ -344,7 +344,7 @@ describe('titreModifier', () => {
       },
       { id: titre.id, nom: 'mon titre modifié', references: [] }
     )
-    expect(tested.statusCode).toBe(403)
+    expect(tested.statusCode).toBe(404)
   })
 
   test("ne peut pas modifier un titre ARM (un utilisateur 'admin' DGCL/SDFLAE/FL1)", async () => {
