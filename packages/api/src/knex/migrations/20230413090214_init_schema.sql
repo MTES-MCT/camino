@@ -561,6 +561,13 @@ CREATE INDEX entreprisesetablissements_entrepriseid_index ON public.entreprises_
 
 
 --
+-- Name: index_geo_communes; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_geo_communes ON public.communes USING spgist (geometry);
+
+
+--
 -- Name: index_geo_forets; Type: INDEX; Schema: public; Owner: -
 --
 
