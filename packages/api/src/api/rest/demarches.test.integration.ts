@@ -6,6 +6,7 @@ import { HTTP_STATUS } from 'camino-common/src/http'
 import { toCaminoDate } from 'camino-common/src/date'
 import { titreSlugValidator } from 'camino-common/src/validators/titres'
 import { newTitreId, newDemarcheId, newEtapeId } from '../../database/models/_format/id-create'
+import { titreCreate } from '../../database/queries/titres'
 import TitresDemarches from '../../database/models/titres-demarches'
 import TitresEtapes from '../../database/models/titres-etapes'
 import Titres from '../../database/models/titres'
@@ -17,6 +18,7 @@ import { codePostalValidator } from 'camino-common/src/static/departement'
 import crypto from 'crypto'
 import { km2Validator } from 'camino-common/src/number'
 import { demarcheIdValidator } from 'camino-common/src/demarche'
+import { demarcheSupprimer } from './demarches'
 
 console.info = vi.fn()
 console.error = vi.fn()
@@ -176,12 +178,14 @@ slug,mon titre,minéraux et métaux,autorisation d'exploitation,valide,octroi,in
 
 describe('demarcheSupprimer', () => {
   test('ne peut pas supprimer une démarche (utilisateur anonyme)', async () => {
-    const res = await restDeleteCall(dbPool, '/rest/demarches/:demarcheId', { demarcheId: demarcheIdValidator.parse('toto') }, undefined)
+    const { demarcheId } = await demarcheCreate()
+    const res = await restDeleteCall(dbPool, '/rest/demarches/:demarcheId', { demarcheId }, undefined)
     expect(res.body.errors[0].message).toBe("la démarche n'existe pas")
   })
 
   test('ne peut pas supprimer une démarche (utilisateur admin)', async () => {
-    const res = await restDeleteCall(dbPool, '/rest/demarches/:demarcheId', { demarcheId: demarcheIdValidator.parse('toto') }, { role: 'admin', administrationId: 'ope-onf-973-01' })
+    const { demarcheId } = await demarcheCreate()
+    const res = await restDeleteCall(dbPool, '/rest/demarches/:demarcheId', { demarcheId }, { role: 'admin', administrationId: 'ope-onf-973-01' })
     expect(res.body.errors[0].message).toBe("la démarche n'existe pas")
   })
 
@@ -196,11 +200,29 @@ describe('demarcheSupprimer', () => {
     let demarche = await TitresDemarches.query().findById(demarcheId)
     expect(demarche?.archive).toBe(false)
 
-    const res = await graphQLCall(dbPool, demarcheSupprimerQuery, { id: demarcheId }, userSuper)
-
+    const res = await restDeleteCall(dbPool, '/rest/demarches/:demarcheId', { demarcheId }, userSuper)
     expect(res.body.errors).toBe(undefined)
 
     demarche = await TitresDemarches.query().findById(demarcheId)
     expect(demarche?.archive).toBe(true)
   })
 })
+
+const demarcheCreate = async () => {
+  const titre = await titreCreate(
+    {
+      nom: 'mon titre',
+      typeId: 'arm',
+      titreStatutId: 'ind',
+      propsTitreEtapesIds: {},
+    },
+    {}
+  )
+
+  const titreDemarche = await TitresDemarches.query().insertAndFetch({ titreId: titre.id, typeId: 'oct' })
+
+  return {
+    titreId: titre.id,
+    demarcheId: titreDemarche.id,
+  }
+}
