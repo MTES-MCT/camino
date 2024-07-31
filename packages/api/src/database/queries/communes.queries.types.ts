@@ -1,4 +1,5 @@
 /** Types generated for queries found in "src/database/queries/communes.queries.ts" */
+import type { PgGeometry } from '../../@types/pg.types.js';
 
 /** 'GetCommunesInternal' parameters type */
 export interface IGetCommunesInternalParams {
@@ -33,7 +34,7 @@ export interface IGetCommuneIdsInternalQuery {
 
 /** 'InsertCommuneInternal' parameters type */
 export interface IInsertCommuneInternalParams {
-  geometry: unknown;
+  geometry: PgGeometry;
   id: string;
   nom: string;
 }
