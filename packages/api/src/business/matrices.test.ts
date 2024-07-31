@@ -12,6 +12,7 @@ import { caminoAnneeToNumber } from 'camino-common/src/date'
 import { apiOpenfiscaCalculate, apiOpenfiscaConstantsFetch } from '../tools/api-openfisca'
 import { GetEntreprises } from '../api/rest/entreprises.queries'
 const matricesProd = require('./matrices.cas.json')
+
 describe('matrices', () => {
   test('buildMatrices', () => {
     const openFiscaResponse = {

@@ -24,9 +24,9 @@ export type FiscaliteFrance = z.infer<typeof fiscaliteFranceValidator>
 
 const fiscaliteGuyaneValidator = fiscaliteFranceValidator.extend({
   guyane: z.object({
-    taxeAurifereBrute: z.number(),
-    totalInvestissementsDeduits: z.number(),
-    taxeAurifere: z.number(),
+    taxeAurifereBrute: decimalValidator,
+    totalInvestissementsDeduits: decimalValidator,
+    taxeAurifere: decimalValidator,
   }),
 })
 export type FiscaliteGuyane = z.infer<typeof fiscaliteGuyaneValidator>

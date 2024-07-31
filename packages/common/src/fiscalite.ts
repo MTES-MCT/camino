@@ -6,7 +6,7 @@ import { getDomaineId } from './static/titresTypes'
 import { Decimal } from 'decimal.js'
 import type { Fiscalite } from './validators/fiscalite'
 
-export const montantNetTaxeAurifere = (fiscalite: Fiscalite): number => ('guyane' in fiscalite ? fiscalite.guyane.taxeAurifere : 0)
+export const montantNetTaxeAurifere = (fiscalite: Fiscalite): Decimal => ('guyane' in fiscalite ? fiscalite.guyane.taxeAurifere : new Decimal(0))
 
 export const fraisGestion = (fiscalite: Fiscalite): Decimal =>
   new Decimal(fiscalite.redevanceDepartementale).add(fiscalite.redevanceCommunale).add(montantNetTaxeAurifere(fiscalite)).mul(0.08).toDecimalPlaces(2)

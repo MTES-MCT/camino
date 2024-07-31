@@ -14,7 +14,7 @@ import { Pool } from 'pg'
 import { getCommunes } from '../database/queries/communes.queries'
 import { DeepReadonly, isNonEmptyArray, isNotNullNorUndefined, isNullOrUndefined, onlyUnique } from 'camino-common/src/typescript-tools'
 import { Commune, CommuneId } from 'camino-common/src/static/communes'
-import { CaminoAnnee, caminoAnneeToNumber, anneePrecedente as previousYear, anneeSuivante, getCurrentAnnee, anneePrecedente, toCaminoAnnee } from 'camino-common/src/date'
+import { CaminoAnnee, caminoAnneeToNumber, anneePrecedente as previousYear, anneeSuivante, getCurrentAnnee, toCaminoAnnee } from 'camino-common/src/date'
 
 import { Decimal } from 'decimal.js'
 import { REGION_IDS, Regions } from 'camino-common/src/static/region'
@@ -89,17 +89,17 @@ type Matrice1404 = {
   communes: string
   elementsDeBase_revenusImposablesALaTFPB: number
   elementsDeBase_tonnagesExtraits: string
-  redevanceDepartementale_produitNetDeLaRedevance: number
-  redevanceDepartementale_sommesRevenantAuxDepartements: number
-  redevanceCommunale_produitNetDeLaRedevance: number
+  redevanceDepartementale_produitNetDeLaRedevance: Decimal
+  redevanceDepartementale_sommesRevenantAuxDepartements: Decimal
+  redevanceCommunale_produitNetDeLaRedevance: Decimal
   redevanceCommunale_repartition_1ereFraction: Decimal
   redevanceCommunale_repartition_2emeFraction: Decimal
   redevanceCommunale_repartition_3emeFraction: Decimal
   redevanceCommunale_revenantAuxCommunes_1ereFraction: Decimal
   redevanceCommunale_revenantAuxCommunes_2emeFraction: Decimal
   redevanceCommunale_revenantAuxCommunes_total: Decimal
-  taxeMiniereSurLOrDeGuyane_produitNet: number
-  taxeMiniereSurLOrDeGuyane_repartition_regionDeGuyane: number
+  taxeMiniereSurLOrDeGuyane_produitNet: Decimal
+  taxeMiniereSurLOrDeGuyane_repartition_regionDeGuyane: Decimal
   taxeMiniereSurLOrDeGuyane_repartition_conservatoire: number
 }
 
@@ -111,14 +111,14 @@ type Matrice1121 = {
   baseDesRedevancesNature: string
   baseDesRedevancesQuantités: any
   redevanceDepartementaleTarifs: number
-  redevanceDepartementaleMontantNet: number
+  redevanceDepartementaleMontantNet: Decimal
   redevanceCommunaleTarifs: number
-  redevanceCommunaleMontantNetRedevanceDesMines: number
+  redevanceCommunaleMontantNetRedevanceDesMines: Decimal
   totalRedevanceDesMines: Decimal
   taxeMiniereSurLOrDeGuyaneTarifsParKgExtraitPourLesPME: number
   taxeMiniereSurLOrDeGuyaneTarifsParKgExtraitPourLesAutresEntreprises: number
-  taxeMiniereSurLOrDeGuyaneMontantDesInvestissementsDeduits: number
-  taxeMiniereSurLOrDeGuyaneMontantNetDeTaxeMinièreSurLOrDeGuyane: number
+  taxeMiniereSurLOrDeGuyaneMontantDesInvestissementsDeduits: Decimal
+  taxeMiniereSurLOrDeGuyaneMontantNetDeTaxeMinièreSurLOrDeGuyane: Decimal
   fraisDeGestionDeLaFiscaliteDirecteLocale: Decimal
   serviceDeLaDirectionGeneraleDesFinancesPubliquesEnChargeDuRecouvrement: string
   numeroDeLArticleDuRole: string | undefined
@@ -245,11 +245,6 @@ export const getRawLines = (
     } else if (!entreprise && amodiataire) {
       console.warn(`le titre ${activite.titreId} appartient à l'entreprise amodiataire et n'est pas dans la liste des entreprises à analyser`)
     } else if (entreprise) {
-      const titreGuyannais = titre.communes
-        .map(({ id }) => toDepartementId(id))
-        .filter(isNotNullNorUndefined)
-        .some(departementId => isGuyane(Regions[Departements[departementId].regionId].paysId))
-
       if (!titre.substances) {
         throw new Error(`les substances du titre ${activite.titreId} ne sont pas chargées`)
       }
@@ -298,11 +293,14 @@ export const getRawLines = (
                 },
                 commune_principale_exploitation: communePrincipale,
                 surface_totale: surfaceTotale,
-                surface_communale: communes.reduce((acc, commune) => {
-                  acc[commune.id] = {commune, surface: new Decimal(commune.surface ?? 0)}
+                surface_communale: communes.reduce(
+                  (acc, commune) => {
+                    acc[commune.id] = { commune, surface: new Decimal(commune.surface ?? 0) }
 
-                  return acc
-                }, {} as Record<CommuneId, {commune: ICommune, surface: Decimal} >),
+                    return acc
+                  },
+                  {} as Record<CommuneId, { commune: ICommune; surface: Decimal }>
+                ),
                 investissement,
                 categorie: entreprise.categorie === 'PME' ? 'pme' : 'autre',
                 substances: {},
@@ -326,6 +324,11 @@ export const getRawLines = (
       const titreBuild = titresToBuild[titre.id]
       const communePrincipale = titreBuild.commune_principale_exploitation
 
+      const isTitreGuyannais = (titre.communes ?? [])
+        .map(({ id }) => toDepartementId(id))
+        .filter(isNotNullNorUndefined)
+        .some(departementId => isGuyane(Regions[Departements[departementId].regionId].paysId))
+
       return Object.values(titreBuild.substances)
         .filter(substance => substance.substanceFiscaleId === SUBSTANCES_FISCALES_IDS.or)
         .flatMap(productionBySubstance => {
@@ -334,7 +337,7 @@ export const getRawLines = (
             const surfaceCommunaleProportionnee = surface.div(titreBuild.surface_totale)
             const quantiteOrExtrait = new Decimal(productionBySubstance.production).mul(surfaceCommunaleProportionnee).toDecimalPlaces(3)
 
-            const fiscalite = toNewFiscalite(productionBySubstance, annee)
+            const fiscalite = toNewFiscalite(productionBySubstance, annee, isTitreGuyannais, titreBuild.categorie, titreBuild.investissement, surfaceCommunaleProportionnee)
 
             const titreLabel = titreBuild.titre.slug ?? ''
 
@@ -411,7 +414,7 @@ const redevanceCommunale = {
     auru: new Decimal(183.5),
     reference: 'https://www.legifrance.gouv.fr/codes/id/LEGIARTI000045765025/2023-06-03/',
   },
-} as const satisfies Record<number, { reference: string; auru: Decimal }>
+} as const satisfies Record<CaminoAnnee, { reference: string; auru: Decimal }>
 
 const redevanceDepartementale = {
   [toCaminoAnnee('2017')]: {
@@ -442,32 +445,103 @@ const redevanceDepartementale = {
     auru: new Decimal(36.6),
     reference: 'https://www.legifrance.gouv.fr/codes/id/LEGIARTI000045764991/2023-06-03/',
   },
-} as const satisfies Record<number, { reference: string; auru: Decimal }>
+} as const satisfies Record<CaminoAnnee, { reference: string; auru: Decimal }>
 
-export const toNewFiscalite = (productionBySubstance: ProductionBySubstance, annee: CaminoAnnee): Fiscalite => {
+const categories = {
+  pme: {
+    [toCaminoAnnee(2017)]: {
+      value: new Decimal(362.95),
+      reference: 'https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000036016552/2018-01-01',
+    },
+    [toCaminoAnnee(2018)]: {
+      value: new Decimal(358.3),
+      reference: 'https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000037342798/2019-01-01',
+    },
+    [toCaminoAnnee(2019)]: {
+      value: new Decimal(345.23),
+      reference: 'https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000039355892/2020-01-01',
+    },
+    [toCaminoAnnee(2020)]: {
+      value: new Decimal(400.35),
+      reference: 'https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000042327688/2020-09-13',
+    },
+    [toCaminoAnnee(2021)]: {
+      value: new Decimal(498.06),
+      reference: 'https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000044329274/2021-11-17',
+    },
+    [toCaminoAnnee(2022)]: {
+      value: new Decimal(488.97),
+      reference: 'https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000044329274/2022-07-27/',
+    },
+    [toCaminoAnnee(2023)]: {
+      value: new Decimal(549.88),
+      reference: 'https://www.legifrance.gouv.fr/codes/id/LEGIARTI000048046958/2023-09-07',
+    },
+  },
+  autre: {
+    [toCaminoAnnee('2017')]: {
+      value: new Decimal(725.9),
+      reference: 'https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000036016552/2018-01-01',
+    },
+    [toCaminoAnnee('2018')]: {
+      value: new Decimal(716.6),
+      reference: 'https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000037342798/2019-01-01',
+    },
+    [toCaminoAnnee('2019')]: {
+      value: new Decimal(690.47),
+      reference: 'https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000039355892/2020-01-01',
+    },
+    [toCaminoAnnee('2020')]: {
+      value: new Decimal(800.71),
+      reference: 'https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000042327688/2020-09-13',
+    },
+    [toCaminoAnnee('2021')]: {
+      value: new Decimal(996.13),
+      reference: 'https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000044329274/2021-11-17',
+    },
+    [toCaminoAnnee('2022')]: {
+      value: new Decimal(977.95),
+      reference: 'https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000044329274/2022-07-27/',
+    },
+    [toCaminoAnnee('2023')]: {
+      value: new Decimal(1099.77),
+      reference: 'https://www.legifrance.gouv.fr/codes/id/LEGIARTI000048046958/2023-09-07',
+    },
+  },
+} as const satisfies Record<EntrepriseCategory, Record<CaminoAnnee, { value: Decimal; reference: string }>>
+
+// 2009-01-01: https://www.legifrance.gouv.fr/codes/id/LEGIARTI000020058692/2009-01-01
+// 2016-01-01: https://www.legifrance.gouv.fr/codes/id/LEGIARTI000031817025/2016-01-01
+const deductionMontantMax = new Decimal(5000)
+
+// 2009-01-01: https://www.legifrance.gouv.fr/codes/id/LEGIARTI000020058692/2009-01-01
+// 2016-01-01: https://www.legifrance.gouv.fr/codes/id/LEGIARTI000031817025/2016-01-01
+const deductionTaux = new Decimal(0.45)
+
+
+type EntrepriseCategory = 'pme' | 'autre'
+
+export const toNewFiscalite = (productionBySubstance: ProductionBySubstance, annee: CaminoAnnee, isTitreGuyannais: boolean, category: EntrepriseCategory, investissement: Decimal, surfaceCommunaleProportionnee: Decimal): Fiscalite => {
   const fiscalite: Fiscalite = {
     redevanceCommunale: productionBySubstance.production.mul(redevanceCommunale[annee]?.auru).toDecimalPlaces(2, Decimal.ROUND_HALF_EVEN),
     redevanceDepartementale: productionBySubstance.production.mul(redevanceDepartementale[annee]?.auru).toDecimalPlaces(2, Decimal.ROUND_HALF_EVEN),
   }
-  // const communes = Object.keys(article).filter(key => key.startsWith('redevance_communale'))
-  // const departements = Object.keys(article).filter(key => key.startsWith('redevance_departementale'))
-  // for (const commune of communes) {
-  //   fiscalite.redevanceCommunale += article[commune]?.[annee] ?? 0
-  // }
-  // for (const departement of departements) {
-  //   fiscalite.redevanceDepartementale += article[departement]?.[annee] ?? 0
-  // }
 
-  // if ('taxe_guyane_brute' in article) {
-  //   return {
-  //     ...fiscalite,
-  //     guyane: {
-  //       taxeAurifereBrute: article.taxe_guyane_brute?.[annee] ?? 0,
-  //       taxeAurifere: article.taxe_guyane?.[annee] ?? 0,
-  //       totalInvestissementsDeduits: article.taxe_guyane_deduction?.[annee] ?? 0,
-  //     },
-  //   }
-  // }
+  if (isTitreGuyannais) {
+
+    const taxeAurifereBrute =  productionBySubstance.production.mul(categories[category][annee]?.value).toDecimalPlaces(2, Decimal.ROUND_HALF_EVEN)
+
+    const totalInvestissementsDeduits = Decimal.min(deductionMontantMax, investissement, taxeAurifereBrute.mul(deductionTaux)).toDecimalPlaces(2, Decimal.ROUND_HALF_EVEN).mul(surfaceCommunaleProportionnee).toDecimalPlaces(2, Decimal.ROUND_HALF_EVEN)
+
+    return {
+      ...fiscalite,
+      guyane: {
+        taxeAurifereBrute,
+        totalInvestissementsDeduits,
+        taxeAurifere: taxeAurifereBrute.minus(totalInvestissementsDeduits) ,
+      },
+    }
+  }
 
   return fiscalite
 }
@@ -566,8 +640,8 @@ export const buildMatrices = (
       totalRedevanceDesMines: new Decimal(fiscalite.redevanceCommunale).add(new Decimal(fiscalite.redevanceDepartementale)),
       taxeMiniereSurLOrDeGuyaneTarifsParKgExtraitPourLesPME: openfiscaConstants.tarifTaxeMinierePME,
       taxeMiniereSurLOrDeGuyaneTarifsParKgExtraitPourLesAutresEntreprises: 0,
-      taxeMiniereSurLOrDeGuyaneMontantDesInvestissementsDeduits: 'guyane' in fiscalite ? fiscalite.guyane.totalInvestissementsDeduits : 0,
-      taxeMiniereSurLOrDeGuyaneMontantNetDeTaxeMinièreSurLOrDeGuyane: 'guyane' in fiscalite ? fiscalite.guyane.taxeAurifere : 0,
+      taxeMiniereSurLOrDeGuyaneMontantDesInvestissementsDeduits: 'guyane' in fiscalite ? fiscalite.guyane.totalInvestissementsDeduits : new Decimal(0),
+      taxeMiniereSurLOrDeGuyaneMontantNetDeTaxeMinièreSurLOrDeGuyane: 'guyane' in fiscalite ? fiscalite.guyane.taxeAurifere : new Decimal(0),
       fraisDeGestionDeLaFiscaliteDirecteLocale: fraisGestion(fiscalite),
       serviceDeLaDirectionGeneraleDesFinancesPubliquesEnChargeDuRecouvrement: 'Direction régionale des finances publiques (DRFIP) - Guyane',
       numeroDeLArticleDuRole: line.titreLabel,
@@ -580,7 +654,7 @@ export const buildMatrices = (
       designationDesConcessionnaires: titulaireToString(line.titulaire),
       designationDesConcessions: line.titreLabel,
       departementsSurLeTerritoireDesquelsFonctionnentLesExploitations: line.departementLabel,
-      communesSurLeTerritoireDesquelsFonctionnentLesExploitations: `${communes.find(({ id }) => id === line.commune.id)?.nom} (${line.surfaceCommunale / 1_000_000} km²)`,
+      communesSurLeTerritoireDesquelsFonctionnentLesExploitations: `${communes.find(({ id }) => id === line.commune.id)?.nom} (${line.surfaceCommunale.div(1_000_000)} km²)`,
       tonnagesExtraitsAuCoursDeLAnneePrecedenteParDepartement: line.quantiteOrExtrait,
       tonnagesExtraitsAuCoursDeLAnneePrecedenteParCommune: line.quantiteOrExtrait,
       observations: "production en kilogramme d'or",
@@ -683,8 +757,8 @@ export const buildMatrices = (
           redevanceCommunale_revenantAuxCommunes_1ereFraction: redevanceCommunalePremiereFraction,
           redevanceCommunale_revenantAuxCommunes_2emeFraction: redevanceCommunaleDeuxiemeFraction,
           redevanceCommunale_revenantAuxCommunes_total: new Decimal(redevanceCommunalePremiereFraction).add(redevanceCommunaleDeuxiemeFraction),
-          taxeMiniereSurLOrDeGuyane_produitNet: 'guyane' in line.fiscalite ? line.fiscalite.guyane.taxeAurifere : 0,
-          taxeMiniereSurLOrDeGuyane_repartition_regionDeGuyane: 'guyane' in line.fiscalite ? line.fiscalite.guyane.taxeAurifere : 0,
+          taxeMiniereSurLOrDeGuyane_produitNet: 'guyane' in line.fiscalite ? line.fiscalite.guyane.taxeAurifere : new Decimal(0),
+          taxeMiniereSurLOrDeGuyane_repartition_regionDeGuyane: 'guyane' in line.fiscalite ? line.fiscalite.guyane.taxeAurifere : new Decimal(0),
           taxeMiniereSurLOrDeGuyane_repartition_conservatoire: 0,
         })
       }
@@ -984,11 +1058,11 @@ export const matrices = async (annee: CaminoAnnee, pool: Pool): Promise<void> =>
         substances: OpenfiscaTarifs
         taxePME: number
         taxeAutre: number
-        redevanceCommunale: number
-        redevanceDepartementale: number
-        taxeMiniereOr: number
-        montantInvestissements: number
-        montantNetTaxeMiniereOr: number
+        redevanceCommunale: Decimal
+        redevanceDepartementale: Decimal
+        taxeMiniereOr: Decimal
+        montantInvestissements: Decimal
+        montantNetTaxeMiniereOr: Decimal
         totalCotisations: Decimal
         fraisGestion: Decimal
         total: Decimal

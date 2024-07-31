@@ -6,20 +6,20 @@ import { newEntrepriseId } from './entreprise'
 import { Decimal } from 'decimal.js'
 
 test('fraisGestion', () => {
-  expect(fraisGestion({ redevanceDepartementale: 50, redevanceCommunale: 50 })).toEqual(new Decimal(8))
+  expect(fraisGestion({ redevanceDepartementale: new Decimal(50), redevanceCommunale: new Decimal(50) })).toEqual(new Decimal(8))
   expect(
     fraisGestion({
-      redevanceDepartementale: 50,
-      redevanceCommunale: 50,
+      redevanceDepartementale: new Decimal(50),
+      redevanceCommunale: new Decimal(50),
       guyane: {
-        taxeAurifere: 100,
-        taxeAurifereBrute: 0,
-        totalInvestissementsDeduits: 0,
+        taxeAurifere: new Decimal(100),
+        taxeAurifereBrute: new Decimal(0),
+        totalInvestissementsDeduits: new Decimal(0),
       },
     })
   ).toEqual(new Decimal(16))
 
-  expect(fraisGestion({ redevanceDepartementale: 12.5, redevanceCommunale: 13.2 })).toEqual(new Decimal(2.06))
+  expect(fraisGestion({ redevanceDepartementale: new Decimal(12.5), redevanceCommunale: new Decimal(13.2) })).toEqual(new Decimal(2.06))
 })
 const roleLessUser: Omit<UserNotNull, 'role'> = { id: toUtilisateurId('id'), nom: 'nom', email: 'email', prenom: 'prenom', telephone_fixe: null, telephone_mobile: null }
 
