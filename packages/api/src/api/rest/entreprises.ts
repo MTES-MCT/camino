@@ -247,9 +247,9 @@ export const toFiscalite = (result: Pick<OpenfiscaResponse, 'articles'>, article
     return {
       ...fiscalite,
       guyane: {
-        taxeAurifereBrute: article.taxe_guyane_brute?.[annee] ?? 0,
-        taxeAurifere: article.taxe_guyane?.[annee] ?? 0,
-        totalInvestissementsDeduits: article.taxe_guyane_deduction?.[annee] ?? 0,
+        taxeAurifereBrute: new Decimal(article.taxe_guyane_brute?.[annee] ?? 0),
+        taxeAurifere: new Decimal(article.taxe_guyane?.[annee] ?? 0),
+        totalInvestissementsDeduits: new Decimal(article.taxe_guyane_deduction?.[annee] ?? 0),
       },
     }
   }
@@ -273,17 +273,17 @@ export const responseExtractor = (result: Pick<OpenfiscaResponse, 'articles'>, a
             fiscalite: {
               ...acc.fiscalite,
               guyane: {
-                taxeAurifereBrute: 0,
-                taxeAurifere: 0,
-                totalInvestissementsDeduits: 0,
+                taxeAurifereBrute: new Decimal(0),
+                taxeAurifere: new Decimal(0),
+                totalInvestissementsDeduits: new Decimal(0),
               },
             },
           }
         }
         if (acc.guyane && 'guyane' in fiscalite) {
-          acc.fiscalite.guyane.taxeAurifereBrute += fiscalite.guyane.taxeAurifereBrute
-          acc.fiscalite.guyane.totalInvestissementsDeduits += fiscalite.guyane.totalInvestissementsDeduits
-          acc.fiscalite.guyane.taxeAurifere += fiscalite.guyane.taxeAurifere
+          acc.fiscalite.guyane.taxeAurifereBrute = acc.fiscalite.guyane.taxeAurifereBrute.add(fiscalite.guyane.taxeAurifereBrute)
+          acc.fiscalite.guyane.totalInvestissementsDeduits = acc.fiscalite.guyane.totalInvestissementsDeduits.add(fiscalite.guyane.totalInvestissementsDeduits)
+          acc.fiscalite.guyane.taxeAurifere = acc.fiscalite.guyane.taxeAurifere.add(fiscalite.guyane.taxeAurifere)
         }
 
         return acc

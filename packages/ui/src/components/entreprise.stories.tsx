@@ -1,4 +1,5 @@
 import { PureEntreprise } from './entreprise'
+import Decimal from 'decimal.js'
 import { Meta, StoryFn } from '@storybook/vue3'
 import { action } from '@storybook/addon-actions'
 import { toCaminoAnnee, toCaminoDate } from 'camino-common/src/date'
@@ -170,12 +171,12 @@ export const Complet: StoryFn = () => (
 
         return Promise.resolve({
           guyane: {
-            taxeAurifere: 12,
-            taxeAurifereBrute: 38,
-            totalInvestissementsDeduits: 1,
+            taxeAurifere: new Decimal(12),
+            taxeAurifereBrute: new Decimal(38),
+            totalInvestissementsDeduits: new Decimal(1),
           },
-          redevanceCommunale: 200,
-          redevanceDepartementale: 78,
+          redevanceCommunale: new Decimal(200),
+          redevanceDepartementale: new Decimal(78),
         })
       },
     }}
