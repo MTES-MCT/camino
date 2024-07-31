@@ -182,7 +182,6 @@ const conversion = (substanceFiscale: SubstanceFiscale, quantite: IContenuValeur
 type ProductionBySubstance = {
   substanceFiscaleId: SubstanceFiscaleId
   production: Decimal
-  surface_communale: Record<CommuneId, { commune: ICommune; surface: Decimal }>
 }
 
 type TitreBuild = {
@@ -193,6 +192,7 @@ type TitreBuild = {
   }
   commune_principale_exploitation: ICommune
   surface_totale: Decimal
+  surface_communale: Record<CommuneId, { commune: ICommune; surface: Decimal }>
   investissement: Decimal
   categorie: 'pme' | 'autre'
   substances: { [key in SubstanceFiscaleId]?: ProductionBySubstance }
@@ -203,7 +203,7 @@ export const getRawLines = (
   titres: Pick<Titres, 'titulaireIds' | 'amodiataireIds' | 'substances' | 'communes' | 'id' | 'slug'>[],
   annee: CaminoAnnee,
   communes: Commune[],
-  // TODO use PgTyped getEntreprises
+  // FIXME use PgTyped getEntreprises
   entreprises: Pick<IEntreprise, 'id' | 'categorie' | 'nom' | 'adresse' | 'codePostal' | 'commune' | 'legalSiren'>[]
 ): Matrices[] => {
   const titresToBuild: Record<TitreId, TitreBuild> = {}
@@ -298,6 +298,11 @@ export const getRawLines = (
                 },
                 commune_principale_exploitation: communePrincipale,
                 surface_totale: surfaceTotale,
+                surface_communale: communes.reduce((acc, commune) => {
+                  acc[commune.id] = {commune, surface: new Decimal(commune.surface ?? 0)}
+
+                  return acc
+                }, {} as Record<CommuneId, {commune: ICommune, surface: Decimal} >),
                 investissement,
                 categorie: entreprise.categorie === 'PME' ? 'pme' : 'autre',
                 substances: {},
@@ -307,14 +312,6 @@ export const getRawLines = (
             titresToBuild[titre.id].substances[substancesFiscale.id] = {
               substanceFiscaleId: substancesFiscale.id,
               production,
-              surface_communale: {},
-            }
-            for (const commune of communes) {
-              const article = titresToBuild[titre.id].substances[substancesFiscale.id]?.surface_communale ?? null
-              // TODO 2024-07-30 typescript should narrow this
-              if (isNotNullNorUndefined(article)) {
-                article[commune.id] = { commune, surface: new Decimal(commune.surface ?? 0) }
-              }
             }
           }
         }
@@ -332,7 +329,7 @@ export const getRawLines = (
       return Object.values(titreBuild.substances)
         .filter(substance => substance.substanceFiscaleId === SUBSTANCES_FISCALES_IDS.or)
         .flatMap(productionBySubstance => {
-          return Object.values(productionBySubstance.surface_communale).map(({ commune, surface }) => {
+          return Object.values(titreBuild.surface_communale).map(({ commune, surface }) => {
             count++
             const surfaceCommunaleProportionnee = surface.div(titreBuild.surface_totale)
             const quantiteOrExtrait = new Decimal(productionBySubstance.production).mul(surfaceCommunaleProportionnee).toDecimalPlaces(3)

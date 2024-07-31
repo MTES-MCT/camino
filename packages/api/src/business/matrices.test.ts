@@ -218,7 +218,7 @@ describe('matrices', () => {
     ).toMatchSnapshot()
   })
 
-  // pour regénérer le fichier titre-phases-find.cas.json: `npm run test:generate-matrices-data -w packages/api`
+  // pour regénérer le fichier matrices.cas.json: `npm run test:generate-matrices-data -w packages/api`
   test.only.each(matricesProd as BodyMatrice[])('cas réel N°%#', async ({ entries, expected }) => {
     const anneeNumber = caminoAnneeToNumber(entries.annee)
     const communes = entries.titres.flatMap(titre => titre.communes.map(commune => ({ id: commune.id, nom: commune.id })))
