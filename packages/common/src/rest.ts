@@ -92,7 +92,6 @@ const IDS = [
   '/rest/titresAdministrations',
   '/rest/titres/:id/titreLiaisons',
   '/rest/demarches/:demarcheIdOrSlug',
-  '/rest/demarches/:demarcheId',
   '/rest/statistiques/dgtm',
   '/rest/entreprises/:entrepriseId/fiscalite/:annee',
   '/rest/entreprises',
@@ -164,8 +163,7 @@ export const CaminoRestRoutes = {
   '/rest/titresONF': { params: noParamsValidator, get: { output: z.array(titreOnfValidator) } },
   '/rest/titresAdministrations': { params: noParamsValidator, get: { output: z.array(titreAdministrationValidator) } },
   '/rest/titres/:id/titreLiaisons': { params: z.object({ id: titreIdValidator }), get: { output: titreLinksValidator }, post: { input: z.array(z.string()), output: titreLinksValidator } },
-  '/rest/demarches/:demarcheIdOrSlug': { params: z.object({ demarcheIdOrSlug: demarcheIdOrSlugValidator }), get: { output: getDemarcheByIdOrSlugValidator } },
-
+  '/rest/demarches/:demarcheIdOrSlug': { params: z.object({ demarcheIdOrSlug: demarcheIdOrSlugValidator }), get: { output: getDemarcheByIdOrSlugValidator }, delete: true },
   '/rest/statistiques/dgtm': { params: noParamsValidator, get: { output: statistiquesDGTMValidator } },
 
   '/rest/entreprises/:entrepriseId/fiscalite/:annee': { params: z.object({ entrepriseId: entrepriseIdValidator, annee: caminoAnneeValidator }), get: { output: fiscaliteValidator } },
@@ -195,8 +193,6 @@ export const CaminoRestRoutes = {
   '/rest/utilisateur/generateQgisToken': { params: noParamsValidator, post: { input: z.void(), output: qgisTokenValidator } },
   '/rest/etapesTypes/:demarcheId/:date': { params: z.object({ demarcheId: demarcheIdValidator, date: caminoDateValidator }), get: { output: z.array(etapeTypeEtapeStatutWithMainStepValidator) } },
   '/rest/demarches/:demarcheId/geojson': { params: z.object({ demarcheId: demarcheIdOrSlugValidator }), get: { output: perimetreInformationsValidator } },
-  // FIXME: accepter le slug pour mettre en commun avec /rest/demarches/:demarcheIdOrSlug au-dessus
-  '/rest/demarches/:demarcheId': { params: z.object({ demarcheId: demarcheIdOrSlugValidator }), delete: true },
   '/rest/etapes/:etapeId/geojson': { params: z.object({ etapeId: etapeIdOrSlugValidator }), get: { output: perimetreInformationsValidator } },
   '/rest/etapes/:etapeId/etapeDocuments': { params: etapeIdParamsValidator, get: { output: getEtapeDocumentsByEtapeIdValidator } },
   '/rest/etapes/:etapeId/etapeAvis': { params: etapeIdParamsValidator, get: { output: getEtapeAvisByEtapeIdValidator } },

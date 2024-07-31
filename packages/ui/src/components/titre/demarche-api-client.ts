@@ -92,8 +92,8 @@ export const demarcheApiClient: DemarcheApiClient = {
     return value.slug
   },
 
-  deleteDemarche: async (demarcheId: DemarcheId): Promise<void> => {
-    await deleteWithJson('/rest/demarches/:demarcheId', { demarcheId })
+  deleteDemarche: async (demarcheIdOrSlug: DemarcheId): Promise<void> => {
+    await deleteWithJson('/rest/demarches/:demarcheIdOrSlug', { demarcheIdOrSlug })
   },
 
   getDemarcheByIdOrSlug: async (demarcheIdOrSlug: DemarcheIdOrSlug) => {

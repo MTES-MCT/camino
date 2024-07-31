@@ -18,7 +18,6 @@ import { codePostalValidator } from 'camino-common/src/static/departement'
 import crypto from 'crypto'
 import { km2Validator } from 'camino-common/src/number'
 import { demarcheIdValidator } from 'camino-common/src/demarche'
-import { demarcheSupprimer } from './demarches'
 
 console.info = vi.fn()
 console.error = vi.fn()
@@ -180,18 +179,18 @@ describe('demarcheSupprimer', () => {
   test('ne peut pas supprimer une démarche (utilisateur anonyme)', async () => {
     const { demarcheId } = await demarcheCreate()
     const res = await restDeleteCall(dbPool, '/rest/demarches/:demarcheId', { demarcheId }, undefined)
-    expect(res.body.errors[0].message).toBe("la démarche n'existe pas")
+    expect(res.status).toBe(HTTP_STATUS.FORBIDDEN)
   })
 
-  test('ne peut pas supprimer une démarche (utilisateur admin)', async () => {
+  test('ne peut pas supprimer une démarche si l utilisateur n a pas accès à la démarche (utilisateur admin)', async () => {
     const { demarcheId } = await demarcheCreate()
-    const res = await restDeleteCall(dbPool, '/rest/demarches/:demarcheId', { demarcheId }, { role: 'admin', administrationId: 'ope-onf-973-01' })
-    expect(res.body.errors[0].message).toBe("la démarche n'existe pas")
+    const res = await restDeleteCall(dbPool, '/rest/demarches/:demarcheId', { demarcheId }, { role: 'admin', administrationId: 'dea-mayotte-01' })
+    expect(res.status).toBe(HTTP_STATUS.FORBIDDEN)
   })
 
   test('ne peut pas supprimer une démarche inexistante (utilisateur super)', async () => {
     const res = await restDeleteCall(dbPool, '/rest/demarches/:demarcheId', { demarcheId: demarcheIdValidator.parse('toto') }, userSuper)
-    expect(res.body.errors[0].message).toBe("la démarche n'existe pas")
+    expect(res.status).toBe(HTTP_STATUS.BAD_REQUEST)
   })
 
   test('peut supprimer une démarche (utilisateur super)', async () => {

@@ -258,7 +258,7 @@ describe('demarcheModifier', () => {
   })
 })
 
-// FIXME: mettre en commun avec demarches.test.integration ?
+// TODO 2024-07-31 : mettre en commun avec demarches.test.integration (dans un fichier helper)
 const demarcheCreate = async () => {
   const titre = await titreCreate(
     {

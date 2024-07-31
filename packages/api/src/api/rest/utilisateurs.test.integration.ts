@@ -157,7 +157,7 @@ describe('utilisateurCreer', () => {
   })
 })
 
-describe.only('registerToNewsletter', () => {
+describe('registerToNewsletter', () => {
   test("abonne l'email donné à la newsletter s'il n'est pas encore abonné", async () => {
     const tested = await restCall(dbPool, '/rest/utilisateurs/registerToNewsletter', {}, undefined, { email: 'jean@dupont.fr' })
     expect(tested.statusCode).toBe(200)

@@ -45,7 +45,6 @@ export const up = async (knex: Knex): Promise<void> => {
   ])
   await knex.raw(`DELETE FROM titres_etapes where archive is true and type_id in (${etapeTypesToDelete.map(_ => '?').join(',')})`, [...etapeTypesToDelete])
 
-  // FIXME rajouter dans la description le type de l'étape dont l'avis est issu ?
   const allEtapesDb: { rows: EtapeFromDb[] } = await knex.raw(
     `SELECT * FROM titres_etapes
      WHERE titres_etapes.type_id IN (${etapeTypesToDelete.map(_ => '?').join(',')})
