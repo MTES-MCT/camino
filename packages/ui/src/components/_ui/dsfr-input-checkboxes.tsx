@@ -20,14 +20,18 @@ export const DsfrInputCheckboxes = defineComponent(<T extends string>(props: Pro
   watch(
     () => props.elements,
     () => {
-      values.value = props.elements
+      const newValue = props.elements
         .filter(element => {
           return props.initialCheckedValue.includes(element.itemId)
         })
         .map(({ itemId }) => {
           return itemId
         })
-      props.valueChanged(values.value)
+
+      if (newValue.length !== values.value.length || newValue.some(v => !values.value.includes(v))) {
+        values.value = newValue
+        props.valueChanged(values.value)
+      }
     },
     { deep: true }
   )
