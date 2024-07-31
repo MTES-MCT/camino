@@ -10,7 +10,7 @@ vi.mock('../src/tools/api-mailjet/emails', () => ({
 
 vi.mock('../src/tools/api-mailjet/newsletter', () => ({
   __esModule: true,
-  newsletterSubscriberUpdate: vi.fn().mockImplementation(() => 'succès'),
+  newsletterSubscriberUpdate: vi.fn().mockImplementation(() => 'email inscrit à la newsletter'),
 }))
 
 function assertObject(stuff: unknown): asserts stuff is object {

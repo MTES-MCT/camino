@@ -156,3 +156,15 @@ describe('utilisateurCreer', () => {
     ).rejects.toThrowError(/check_keycloak_id_not_null/)
   })
 })
+
+describe('registerToNewsletter', () => {
+  test("abonne l'email donné à la newsletter s'il n'est pas encore abonné", async () => {
+    const tested = await restCall(dbPool, '/rest/utilisateurs/registerToNewsletter', {}, undefined, { email: 'jean@dupont.fr' })
+    expect(tested.statusCode).toBe(200)
+    expect(tested.body).toBe(true)
+  })
+  test("ne fonctionne pas si l'email est invalide", async () => {
+    const tested = await restCall(dbPool, '/rest/utilisateurs/registerToNewsletter', {}, undefined)
+    expect(tested.statusCode).toBe(400)
+  })
+})

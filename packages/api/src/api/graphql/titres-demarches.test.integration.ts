@@ -258,48 +258,7 @@ describe('demarcheModifier', () => {
   })
 })
 
-describe('demarcheSupprimer', () => {
-  const demarcheSupprimerQuery = queryImport('titre-demarche-supprimer')
-
-  test('ne peut pas supprimer une démarche (utilisateur anonyme)', async () => {
-    const res = await graphQLCall(
-      dbPool,
-      demarcheSupprimerQuery,
-      {
-        id: 'toto',
-      },
-      userSuper
-    )
-    expect(res.body.errors[0].message).toBe("la démarche n'existe pas")
-  })
-
-  test('ne peut pas supprimer une démarche (utilisateur admin)', async () => {
-    const res = await graphQLCall(dbPool, demarcheSupprimerQuery, { id: 'toto' }, { role: 'admin', administrationId: 'ope-onf-973-01' })
-
-    expect(res.body.errors[0].message).toBe("la démarche n'existe pas")
-  })
-
-  test('ne peut pas supprimer une démarche inexistante (utilisateur super)', async () => {
-    const res = await graphQLCall(dbPool, demarcheSupprimerQuery, { id: 'toto' }, userSuper)
-
-    expect(res.body.errors[0].message).toBe("la démarche n'existe pas")
-  })
-
-  test('peut supprimer une démarche (utilisateur super)', async () => {
-    const { demarcheId } = await demarcheCreate()
-
-    let demarche = await TitresDemarches.query().findById(demarcheId)
-    expect(demarche?.archive).toBe(false)
-
-    const res = await graphQLCall(dbPool, demarcheSupprimerQuery, { id: demarcheId }, userSuper)
-
-    expect(res.body.errors).toBe(undefined)
-
-    demarche = await TitresDemarches.query().findById(demarcheId)
-    expect(demarche?.archive).toBe(true)
-  })
-})
-
+// TODO 2024-07-31 : mettre en commun avec demarches.test.integration (dans un fichier helper)
 const demarcheCreate = async () => {
   const titre = await titreCreate(
     {

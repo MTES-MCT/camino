@@ -79,10 +79,11 @@ export const exploitantsGuyaneSubscriberUpdate = async (users: { email: string; 
     })
 }
 
-export const newsletterSubscriberUpdate = async (email: string | undefined | null, subscribed: boolean): Promise<string> => {
+export const newsletterSubscriberUpdate = async (email: string | undefined | null, subscribed: boolean): Promise<'email inscrit à la newsletter' | 'email désinscrit à la newsletter' | ''> => {
   if (isNullOrUndefined(email) || email === '') {
     return ''
   }
+
   await isSubscribed(newsLetterContactListId, email)
   try {
     if (subscribed) {

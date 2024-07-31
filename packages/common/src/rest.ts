@@ -75,6 +75,7 @@ type CaminoRoute<T extends string> = { params: ZodObjectParsUrlParams<T> } & {
 const IDS = [
   '/config',
   '/moi',
+  '/rest/utilisateurs/registerToNewsletter',
   '/rest/utilisateurs/:id/newsletter',
   '/rest/utilisateurs/:id/delete',
   '/rest/utilisateurs/:id/permission',
@@ -146,6 +147,7 @@ export const CaminoRestRoutes = {
   '/config': { params: noParamsValidator, get: { output: caminoConfigValidator } },
   '/moi': { params: noParamsValidator, get: { output: userValidator } },
   '/rest/utilisateurs/:id/newsletter': { params: utilisateurIdParamsValidator, get: { output: z.boolean() }, post: { input: newsletterAbonnementValidator, output: z.boolean() } },
+  '/rest/utilisateurs/registerToNewsletter': { params: noParamsValidator, get: { output: z.boolean() } },
   // On passe par un http get plutot qu'un http delete car nous terminons par une redirection vers la deconnexion de oauth2, qui se traduit mal sur certains navigateurs et essaie de faire un delete sur une route get
   '/rest/utilisateurs/:id/delete': { params: utilisateurIdParamsValidator, get: { output: z.void() } },
   '/rest/utilisateurs/:id/permission': { params: utilisateurIdParamsValidator, post: { input: utilisateurToEdit, output: z.void() } },
@@ -161,8 +163,7 @@ export const CaminoRestRoutes = {
   '/rest/titresONF': { params: noParamsValidator, get: { output: z.array(titreOnfValidator) } },
   '/rest/titresAdministrations': { params: noParamsValidator, get: { output: z.array(titreAdministrationValidator) } },
   '/rest/titres/:id/titreLiaisons': { params: z.object({ id: titreIdValidator }), get: { output: titreLinksValidator }, post: { input: z.array(z.string()), output: titreLinksValidator } },
-  '/rest/demarches/:demarcheIdOrSlug': { params: z.object({ demarcheIdOrSlug: demarcheIdOrSlugValidator }), get: { output: getDemarcheByIdOrSlugValidator } },
-
+  '/rest/demarches/:demarcheIdOrSlug': { params: z.object({ demarcheIdOrSlug: demarcheIdOrSlugValidator }), get: { output: getDemarcheByIdOrSlugValidator }, delete: true },
   '/rest/statistiques/dgtm': { params: noParamsValidator, get: { output: statistiquesDGTMValidator } },
 
   '/rest/entreprises/:entrepriseId/fiscalite/:annee': { params: z.object({ entrepriseId: entrepriseIdValidator, annee: caminoAnneeValidator }), get: { output: fiscaliteValidator } },

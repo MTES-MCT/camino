@@ -7,7 +7,7 @@ import { isAdministrationRole, isEntrepriseOrBureauDetudeRole, isRole, User } fr
 import { utilisateursFormatTable } from './format/utilisateurs'
 import { tableConvert } from './_convert'
 import { fileNameCreate } from '../../tools/file-name-create'
-import { newsletterAbonnementValidator, QGISToken, utilisateurToEdit } from 'camino-common/src/utilisateur'
+import { newsletterAbonnementValidator, QGISToken, utilisateurToEdit, newsletterRegistrationValidator } from 'camino-common/src/utilisateur'
 import { knex } from '../../knex'
 import { idGenerate } from '../../database/models/_format/id-create'
 import bcrypt from 'bcryptjs'
@@ -18,58 +18,62 @@ import { Pool } from 'pg'
 import { isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools'
 import { config } from '../../config/index'
 
-export const isSubscribedToNewsletter = (_pool: Pool) => async (req: CaminoRequest, res: CustomResponse<boolean>) => {
-  const user = req.auth
+export const isSubscribedToNewsletter =
+  (_pool: Pool) =>
+  async (req: CaminoRequest, res: CustomResponse<boolean>): Promise<void> => {
+    const user = req.auth
 
-  if (!req.params.id) {
-    res.sendStatus(HTTP_STATUS.FORBIDDEN)
-  } else {
-    const utilisateur = await utilisateurGet(req.params.id, { fields: { id: {} } }, user)
-
-    if (!user || !utilisateur) {
+    if (!req.params.id) {
       res.sendStatus(HTTP_STATUS.FORBIDDEN)
     } else {
-      const subscribed = await isSubscribedToNewsLetter(utilisateur.email)
-      res.json(subscribed)
-    }
-  }
-}
-export const updateUtilisateurPermission = (_pool: Pool) => async (req: CaminoRequest, res: CustomResponse<void>) => {
-  const user = req.auth
+      const utilisateur = await utilisateurGet(req.params.id, { fields: { id: {} } }, user)
 
-  if (!req.params.id) {
-    res.sendStatus(HTTP_STATUS.FORBIDDEN)
-  } else {
-    const utilisateurOld = await userGet(req.params.id)
-
-    if (!user || !utilisateurOld) {
-      res.sendStatus(HTTP_STATUS.FORBIDDEN)
-    } else {
-      try {
-        const utilisateur = utilisateurToEdit.parse(req.body)
-
-        utilisateurUpdationValidate(user, utilisateur, utilisateurOld)
-
-        // Thanks Objection
-        if (!isAdministrationRole(utilisateur.role)) {
-          utilisateur.administrationId = null
-        }
-        if (!isEntrepriseOrBureauDetudeRole(utilisateur.role)) {
-          utilisateur.entreprises = []
-        }
-
-        // TODO 2023-03-13: le jour où les entreprises sont un tableau d'ids dans la table user, passer à knex
-        await utilisateurUpsert({ ...utilisateur, entreprises: utilisateur.entreprises.map(id => ({ id })) })
-
-        res.sendStatus(HTTP_STATUS.NO_CONTENT)
-      } catch (e) {
-        console.error(e)
-
-        res.sendStatus(HTTP_STATUS.INTERNAL_SERVER_ERROR)
+      if (!user || !utilisateur) {
+        res.sendStatus(HTTP_STATUS.FORBIDDEN)
+      } else {
+        const subscribed = await isSubscribedToNewsLetter(utilisateur.email)
+        res.json(subscribed)
       }
     }
   }
-}
+export const updateUtilisateurPermission =
+  (_pool: Pool) =>
+  async (req: CaminoRequest, res: CustomResponse<void>): Promise<void> => {
+    const user = req.auth
+
+    if (!req.params.id) {
+      res.sendStatus(HTTP_STATUS.FORBIDDEN)
+    } else {
+      const utilisateurOld = await userGet(req.params.id)
+
+      if (!user || !utilisateurOld) {
+        res.sendStatus(HTTP_STATUS.FORBIDDEN)
+      } else {
+        try {
+          const utilisateur = utilisateurToEdit.parse(req.body)
+
+          utilisateurUpdationValidate(user, utilisateur, utilisateurOld)
+
+          // Thanks Objection
+          if (!isAdministrationRole(utilisateur.role)) {
+            utilisateur.administrationId = null
+          }
+          if (!isEntrepriseOrBureauDetudeRole(utilisateur.role)) {
+            utilisateur.entreprises = []
+          }
+
+          // TODO 2023-03-13: le jour où les entreprises sont un tableau d'ids dans la table user, passer à knex
+          await utilisateurUpsert({ ...utilisateur, entreprises: utilisateur.entreprises.map(id => ({ id })) })
+
+          res.sendStatus(HTTP_STATUS.NO_CONTENT)
+        } catch (e) {
+          console.error(e)
+
+          res.sendStatus(HTTP_STATUS.INTERNAL_SERVER_ERROR)
+        }
+      }
+    }
+  }
 
 export type KeycloakAccessTokenResponse = { access_token: string }
 
@@ -106,115 +110,141 @@ const getKeycloakApiToken = async (): Promise<string> => {
   }
 }
 
-export const deleteUtilisateur = (_pool: Pool) => async (req: CaminoRequest, res: CustomResponse<void>) => {
-  const user = req.auth
+export const deleteUtilisateur =
+  (_pool: Pool) =>
+  async (req: CaminoRequest, res: CustomResponse<void>): Promise<void> => {
+    const user = req.auth
 
-  if (!req.params.id) {
-    res.sendStatus(HTTP_STATUS.FORBIDDEN)
-  } else {
-    try {
-      const utilisateur = await utilisateurGet(req.params.id, { fields: { id: {} } }, user)
-      if (!utilisateur) {
-        throw new Error('aucun utilisateur avec cet id ou droits insuffisants pour voir cet utilisateur')
-      }
-
-      if (!canDeleteUtilisateur(user, utilisateur.id)) {
-        throw new Error('droits insuffisants')
-      }
-      const utilisateurKeycloakId = utilisateur.keycloakId
-
-      const authorizationToken = await getKeycloakApiToken()
-
-      const deleteFromKeycloak = await fetch(`${config().KEYCLOAK_URL}/admin/realms/Camino/users/${utilisateurKeycloakId}`, {
-        method: 'DELETE',
-        headers: {
-          authorization: `Bearer ${authorizationToken}`,
-        },
-      })
-      if (!deleteFromKeycloak.ok) {
-        throw new Error(`une erreur est apparue durant la suppression de l'utilisateur sur keycloak`)
-      }
-
-      utilisateur.email = null
-      utilisateur.telephoneFixe = ''
-      utilisateur.telephoneMobile = ''
-      utilisateur.role = 'defaut'
-      utilisateur.entreprises = []
-      utilisateur.administrationId = undefined
-      // TODO 2023-10-23 tout ce qui est au dessus n'est plus nécessaire une fois la migration des utilisateurs vers keycloak faite (suppression du champ email dans notre base)
-      utilisateur.keycloakId = null
-
-      await utilisateurUpsert(utilisateur)
-
-      if (isNotNullNorUndefined(user) && user.id === req.params.id) {
-        const uiUrl = config().OAUTH_URL
-        const oauthLogoutUrl = new URL(`${uiUrl}/oauth2/sign_out`)
-        res.redirect(oauthLogoutUrl.href)
-      } else {
-        res.sendStatus(HTTP_STATUS.NO_CONTENT)
-      }
-    } catch (e: any) {
-      console.error(e)
-
-      res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).send({ error: e.message ?? `Une erreur s'est produite` })
-    }
-  }
-}
-
-export const moi = (_pool: Pool) => async (req: CaminoRequest, res: CustomResponse<User>) => {
-  res.clearCookie('shouldBeConnected')
-  const user = req.auth
-  if (!user) {
-    res.sendStatus(HTTP_STATUS.NO_CONTENT)
-  } else {
-    try {
-      const utilisateur = await utilisateurGet(user.id, { fields: { entreprises: { id: {} } } }, user)
-      res.cookie('shouldBeConnected', 'anyValueIsGood, We just check the presence of this cookie')
-      // TODO 2023-05-25 use zod validator!
-      res.json(formatUser(utilisateur!))
-    } catch (e) {
-      console.error(e)
-      res.sendStatus(HTTP_STATUS.BAD_REQUEST)
-      throw e
-    }
-  }
-}
-
-export const manageNewsletterSubscription = (_pool: Pool) => async (req: CaminoRequest, res: CustomResponse<boolean>) => {
-  const user = req.auth
-
-  if (!req.params.id) {
-    res.sendStatus(HTTP_STATUS.FORBIDDEN)
-  } else {
-    const utilisateur = await utilisateurGet(req.params.id, { fields: { id: {} } }, user)
-
-    if (!user || !utilisateur) {
+    if (!req.params.id) {
       res.sendStatus(HTTP_STATUS.FORBIDDEN)
     } else {
-      const subscriptionParsed = newsletterAbonnementValidator.safeParse(req.body)
-      if (subscriptionParsed.success) {
-        await newsletterSubscriberUpdate(utilisateur.email, subscriptionParsed.data.newsletter)
-        res.sendStatus(HTTP_STATUS.NO_CONTENT)
-      } else {
-        res.sendStatus(HTTP_STATUS.BAD_REQUEST)
+      try {
+        const utilisateur = await utilisateurGet(req.params.id, { fields: { id: {} } }, user)
+        if (!utilisateur) {
+          throw new Error('aucun utilisateur avec cet id ou droits insuffisants pour voir cet utilisateur')
+        }
+
+        if (!canDeleteUtilisateur(user, utilisateur.id)) {
+          throw new Error('droits insuffisants')
+        }
+        const utilisateurKeycloakId = utilisateur.keycloakId
+
+        const authorizationToken = await getKeycloakApiToken()
+
+        const deleteFromKeycloak = await fetch(`${config().KEYCLOAK_URL}/admin/realms/Camino/users/${utilisateurKeycloakId}`, {
+          method: 'DELETE',
+          headers: {
+            authorization: `Bearer ${authorizationToken}`,
+          },
+        })
+        if (!deleteFromKeycloak.ok) {
+          throw new Error(`une erreur est apparue durant la suppression de l'utilisateur sur keycloak`)
+        }
+
+        utilisateur.email = null
+        utilisateur.telephoneFixe = ''
+        utilisateur.telephoneMobile = ''
+        utilisateur.role = 'defaut'
+        utilisateur.entreprises = []
+        utilisateur.administrationId = undefined
+        // TODO 2023-10-23 tout ce qui est au dessus n'est plus nécessaire une fois la migration des utilisateurs vers keycloak faite (suppression du champ email dans notre base)
+        utilisateur.keycloakId = null
+
+        await utilisateurUpsert(utilisateur)
+
+        if (isNotNullNorUndefined(user) && user.id === req.params.id) {
+          const uiUrl = config().OAUTH_URL
+          const oauthLogoutUrl = new URL(`${uiUrl}/oauth2/sign_out`)
+          res.redirect(oauthLogoutUrl.href)
+        } else {
+          res.sendStatus(HTTP_STATUS.NO_CONTENT)
+        }
+      } catch (e: any) {
+        console.error(e)
+
+        res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).send({ error: e.message ?? `Une erreur s'est produite` })
       }
     }
   }
-}
 
-export const generateQgisToken = (_pool: Pool) => async (req: CaminoRequest, res: CustomResponse<QGISToken>) => {
-  const user = req.auth
-
-  if (!user) {
-    res.sendStatus(HTTP_STATUS.FORBIDDEN)
-  } else {
-    const token = idGenerate()
-    await knex('utilisateurs')
-      .update({ qgis_token: bcrypt.hashSync(token, 10) })
-      .where('email', user.email)
-    res.send({ token, url: `https://${user.email.replace('@', '%40')}:${token}@${config().API_HOST}/titres_qgis` })
+export const moi =
+  (_pool: Pool) =>
+  async (req: CaminoRequest, res: CustomResponse<User>): Promise<void> => {
+    res.clearCookie('shouldBeConnected')
+    const user = req.auth
+    if (!user) {
+      res.sendStatus(HTTP_STATUS.NO_CONTENT)
+    } else {
+      try {
+        const utilisateur = await utilisateurGet(user.id, { fields: { entreprises: { id: {} } } }, user)
+        res.cookie('shouldBeConnected', 'anyValueIsGood, We just check the presence of this cookie')
+        // TODO 2023-05-25 use zod validator!
+        res.json(formatUser(utilisateur!))
+      } catch (e) {
+        console.error(e)
+        res.sendStatus(HTTP_STATUS.BAD_REQUEST)
+        throw e
+      }
+    }
   }
-}
+
+export const manageNewsletterSubscription =
+  (_pool: Pool) =>
+  async (req: CaminoRequest, res: CustomResponse<boolean>): Promise<void> => {
+    const user = req.auth
+
+    if (!req.params.id) {
+      res.sendStatus(HTTP_STATUS.FORBIDDEN)
+    } else {
+      const utilisateur = await utilisateurGet(req.params.id, { fields: { id: {} } }, user)
+
+      if (!user || !utilisateur) {
+        res.sendStatus(HTTP_STATUS.FORBIDDEN)
+      } else {
+        const subscriptionParsed = newsletterAbonnementValidator.safeParse(req.body)
+        if (subscriptionParsed.success) {
+          await newsletterSubscriberUpdate(utilisateur.email, subscriptionParsed.data.newsletter)
+          res.sendStatus(HTTP_STATUS.NO_CONTENT)
+        } else {
+          res.sendStatus(HTTP_STATUS.BAD_REQUEST)
+        }
+      }
+    }
+  }
+
+export const generateQgisToken =
+  (_pool: Pool) =>
+  async (req: CaminoRequest, res: CustomResponse<QGISToken>): Promise<void> => {
+    const user = req.auth
+
+    if (!user) {
+      res.sendStatus(HTTP_STATUS.FORBIDDEN)
+    } else {
+      const token = idGenerate()
+      await knex('utilisateurs')
+        .update({ qgis_token: bcrypt.hashSync(token, 10) })
+        .where('email', user.email)
+      res.send({ token, url: `https://${user.email.replace('@', '%40')}:${token}@${config().API_HOST}/titres_qgis` })
+    }
+  }
+
+export const registerToNewsletter =
+  (_pool: Pool) =>
+  async (req: CaminoRequest, res: CustomResponse<boolean>): Promise<void> => {
+    const queryParsed = newsletterRegistrationValidator.safeParse(req.query)
+    if (!queryParsed.success) {
+      res.sendStatus(HTTP_STATUS.BAD_REQUEST)
+      return
+    }
+
+    try {
+      const result = await newsletterSubscriberUpdate(queryParsed.data.email, true)
+      res.send(result === 'email inscrit à la newsletter')
+    } catch (e) {
+      console.error(e)
+      res.sendStatus(HTTP_STATUS.INTERNAL_SERVER_ERROR)
+    }
+  }
 
 interface IUtilisateursQueryInput {
   format?: DownloadFormat
@@ -231,7 +261,14 @@ interface IUtilisateursQueryInput {
 
 export const utilisateurs =
   (_pool: Pool) =>
-  async ({ query: { format = 'csv', colonne, ordre, entrepriseIds, administrationIds, roles, noms, emails, nomsUtilisateurs } }: { query: IUtilisateursQueryInput }, user: User) => {
+  async (
+    { query: { format = 'csv', colonne, ordre, entrepriseIds, administrationIds, roles, noms, emails, nomsUtilisateurs } }: { query: IUtilisateursQueryInput },
+    user: User
+  ): Promise<{
+    nom: string
+    format: 'csv' | 'xlsx' | 'ods'
+    contenu: string
+  } | null> => {
     const utilisateurs = await utilisateursGet(
       {
         colonne,

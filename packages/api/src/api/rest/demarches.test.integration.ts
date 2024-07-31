@@ -1,4 +1,4 @@
-import { restDownloadCall } from '../../../tests/_utils/index'
+import { restDeleteCall, restDownloadCall } from '../../../tests/_utils/index'
 import { dbManager } from '../../../tests/db-manager'
 import { expect, test, describe, afterAll, beforeAll, vi } from 'vitest'
 import type { Pool } from 'pg'
@@ -6,6 +6,7 @@ import { HTTP_STATUS } from 'camino-common/src/http'
 import { toCaminoDate } from 'camino-common/src/date'
 import { titreSlugValidator } from 'camino-common/src/validators/titres'
 import { newTitreId, newDemarcheId, newEtapeId } from '../../database/models/_format/id-create'
+import { titreCreate } from '../../database/queries/titres'
 import TitresDemarches from '../../database/models/titres-demarches'
 import TitresEtapes from '../../database/models/titres-etapes'
 import Titres from '../../database/models/titres'
@@ -16,6 +17,7 @@ import { FeatureMultiPolygon } from 'camino-common/src/perimetre'
 import { codePostalValidator } from 'camino-common/src/static/departement'
 import crypto from 'crypto'
 import { km2Validator } from 'camino-common/src/number'
+import { demarcheIdValidator } from 'camino-common/src/demarche'
 
 console.info = vi.fn()
 console.error = vi.fn()
@@ -172,3 +174,54 @@ slug,mon titre,minéraux et métaux,autorisation d'exploitation,valide,octroi,in
 slug,mon titre,minéraux et métaux,autorisation d'exploitation,valide,octroi,indéterminé,description,102,Nom d'usage : Test,Mon Titulaire 2,Une adresse 10000 Commune,SIREN1,Mon Amodiataire 2,Une adresse 10000 Commune,SIREN2,2022-01-01,,"`)
   })
 })
+
+describe('demarcheSupprimer', () => {
+  test('ne peut pas supprimer une démarche (utilisateur anonyme)', async () => {
+    const { demarcheId } = await demarcheCreate()
+    const res = await restDeleteCall(dbPool, '/rest/demarches/:demarcheIdOrSlug', { demarcheIdOrSlug: demarcheId }, undefined)
+    expect(res.status).toBe(HTTP_STATUS.FORBIDDEN)
+  })
+
+  test('ne peut pas supprimer une démarche si l utilisateur n a pas accès à la démarche (utilisateur admin)', async () => {
+    const { demarcheId } = await demarcheCreate()
+    const res = await restDeleteCall(dbPool, '/rest/demarches/:demarcheIdOrSlug', { demarcheIdOrSlug: demarcheId }, { role: 'admin', administrationId: 'dea-mayotte-01' })
+    expect(res.status).toBe(HTTP_STATUS.FORBIDDEN)
+  })
+
+  test('ne peut pas supprimer une démarche inexistante (utilisateur super)', async () => {
+    const res = await restDeleteCall(dbPool, '/rest/demarches/:demarcheIdOrSlug', { demarcheIdOrSlug: demarcheIdValidator.parse('toto') }, userSuper)
+    expect(res.status).toBe(HTTP_STATUS.BAD_REQUEST)
+  })
+
+  test('peut supprimer une démarche (utilisateur super)', async () => {
+    const { demarcheId } = await demarcheCreate()
+
+    let demarche = await TitresDemarches.query().findById(demarcheId)
+    expect(demarche?.archive).toBe(false)
+
+    const res = await restDeleteCall(dbPool, '/rest/demarches/:demarcheIdOrSlug', { demarcheIdOrSlug: demarcheId }, userSuper)
+    expect(res.body.errors).toBe(undefined)
+
+    demarche = await TitresDemarches.query().findById(demarcheId)
+    expect(demarche?.archive).toBe(true)
+  })
+})
+
+const demarcheCreate = async () => {
+  const titre = await titreCreate(
+    {
+      nom: 'mon titre',
+      typeId: 'arm',
+      titreStatutId: 'ind',
+      propsTitreEtapesIds: {},
+    },
+    {}
+  )
+
+  const titreDemarche = await TitresDemarches.query().insertAndFetch({ titreId: titre.id, typeId: 'oct' })
+
+  return {
+    titreId: titre.id,
+    demarcheId: titreDemarche.id,
+  }
+}

@@ -156,16 +156,11 @@ type Query {
 Ces requêtes sont __protégées__. Elles nécessitent une authentification par token (jwt) et un niveau de permission suffisant.
 """
 type Mutation {
-  newsletterInscrire(email: String!): String
-
   "Crée une démarche et met à jour le titre minier"
   demarcheCreer(demarche: InputDemarcheCreation!): DemarcheSlug
 
   "Modifie une démarche et met à jour le titre minier"
   demarcheModifier(demarche: InputDemarcheModification!): DemarcheSlug
-
-  "Supprime une démarche et met à jour le titre minier"
-  demarcheSupprimer(id: ID!): ID
 
   "Dépose une activité"
   activiteDeposer(id: ID!): Activite

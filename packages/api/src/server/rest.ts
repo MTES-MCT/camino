@@ -3,7 +3,7 @@
 import { CaminoApiError, Index } from '../types'
 import type { Pool } from 'pg'
 
-import express from 'express'
+import express, { type Router } from 'express'
 import { join } from 'path'
 import { inspect } from 'node:util'
 
@@ -21,7 +21,16 @@ import {
   entrepriseDocumentDownload,
   getAllEntreprises,
 } from '../api/rest/entreprises'
-import { deleteUtilisateur, generateQgisToken, isSubscribedToNewsletter, manageNewsletterSubscription, moi, updateUtilisateurPermission, utilisateurs } from '../api/rest/utilisateurs'
+import {
+  deleteUtilisateur,
+  generateQgisToken,
+  isSubscribedToNewsletter,
+  manageNewsletterSubscription,
+  moi,
+  updateUtilisateurPermission,
+  utilisateurs,
+  registerToNewsletter,
+} from '../api/rest/utilisateurs'
 import { logout, resetPassword } from '../api/rest/keycloak'
 import { getDGTMStats, getGranulatsMarinsStats, getGuyaneStats, getMinerauxMetauxMetropolesStats } from '../api/rest/statistiques/index'
 import {
@@ -47,7 +56,7 @@ import { getCommunes } from '../api/rest/communes'
 import { SendFileOptions } from 'express-serve-static-core'
 import { activiteDocumentDownload, getActivite, updateActivite, deleteActivite } from '../api/rest/activites'
 import { DeepReadonly, isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
-import { getDemarcheByIdOrSlug } from '../api/rest/demarches'
+import { getDemarcheByIdOrSlug, demarcheSupprimer } from '../api/rest/demarches'
 import { geojsonImport, geojsonImportPoints, getPerimetreInfos, geojsonImportForages } from '../api/rest/perimetre'
 import { getDataGouvStats } from '../api/rest/statistiques/datagouv'
 import { addAdministrationActiviteTypeEmails, deleteAdministrationActiviteTypeEmails, getAdministrationActiviteTypeEmails, getAdministrationUtilisateurs } from '../api/rest/administrations'
@@ -142,7 +151,8 @@ const restRouteImplementations: Readonly<{ [key in CaminoRestRoute]: Transform<k
   '/rest/statistiques/granulatsMarins/:annee': { getCall: getGranulatsMarinsStats, ...CaminoRestRoutes['/rest/statistiques/granulatsMarins/:annee'] },
   '/rest/statistiques/dgtm': { getCall: getDGTMStats, ...CaminoRestRoutes['/rest/statistiques/dgtm'] },
   '/rest/statistiques/datagouv': { getCall: getDataGouvStats, ...CaminoRestRoutes['/rest/statistiques/datagouv'] },
-  '/rest/demarches/:demarcheIdOrSlug': { getCall: getDemarcheByIdOrSlug, ...CaminoRestRoutes['/rest/demarches/:demarcheIdOrSlug'] },
+  '/rest/demarches/:demarcheIdOrSlug': { getCall: getDemarcheByIdOrSlug, deleteCall: demarcheSupprimer, ...CaminoRestRoutes['/rest/demarches/:demarcheIdOrSlug'] },
+  '/rest/utilisateurs/registerToNewsletter': { getCall: registerToNewsletter, ...CaminoRestRoutes['/rest/utilisateurs/registerToNewsletter'] },
   '/rest/utilisateur/generateQgisToken': { postCall: generateQgisToken, ...CaminoRestRoutes['/rest/utilisateur/generateQgisToken'] },
   '/rest/utilisateurs/:id/permission': { postCall: updateUtilisateurPermission, ...CaminoRestRoutes['/rest/utilisateurs/:id/permission'] },
   '/rest/utilisateurs/:id/delete': { getCall: deleteUtilisateur, ...CaminoRestRoutes['/rest/utilisateurs/:id/delete'] },
@@ -178,7 +188,7 @@ const restRouteImplementations: Readonly<{ [key in CaminoRestRoute]: Transform<k
   '/deconnecter': { getCall: logout, ...CaminoRestRoutes['/deconnecter'] },
   '/changerMotDePasse': { getCall: resetPassword, ...CaminoRestRoutes['/changerMotDePasse'] },
 } as const
-export const restWithPool = (dbPool: Pool) => {
+export const restWithPool = (dbPool: Pool): Router => {
   const rest = express.Router()
 
   Object.keys(restRouteImplementations)

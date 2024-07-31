@@ -6,16 +6,15 @@ import { fieldsBuild } from './_fields-build'
 
 import { titreDemarcheFormat } from '../../_format/titres-demarches'
 
-import { titreDemarcheGet, titresDemarchesCount, titresDemarchesGet, titreDemarcheCreate, titreDemarcheUpdate, titreDemarcheArchive } from '../../../database/queries/titres-demarches'
+import { titreDemarcheGet, titresDemarchesCount, titresDemarchesGet, titreDemarcheCreate, titreDemarcheUpdate } from '../../../database/queries/titres-demarches'
 
 import { titreGet } from '../../../database/queries/titres'
 
 import { titreDemarcheUpdateTask } from '../../../business/titre-demarche-update'
 import { titreDemarcheUpdationValidate } from '../../../business/validations/titre-demarche-updation-validate'
 import { isDemarcheTypeId, isTravaux } from 'camino-common/src/static/demarchesTypes'
-import { canCreateTravaux, canEditDemarche, canDeleteDemarche, canCreateDemarche } from 'camino-common/src/permissions/titres-demarches'
+import { canCreateTravaux, canEditDemarche, canCreateDemarche } from 'camino-common/src/permissions/titres-demarches'
 import { isNullOrUndefined } from 'camino-common/src/typescript-tools'
-import { userSuper } from '../../../database/user-super'
 import { getDemarchesByTitreId } from '../../rest/titres.queries'
 
 export const demarches = async (
@@ -204,30 +203,6 @@ export const demarcheModifier = async ({ demarche }: { demarche: ITitreDemarche 
     const demarcheUpdate = await titreDemarcheGet(demarche.id, { fields: { id: {} } }, user)
 
     return { slug: demarcheUpdate?.slug }
-  } catch (e) {
-    console.error(e)
-
-    throw e
-  }
-}
-
-export const demarcheSupprimer = async ({ id }: { id: string }, { user, pool }: Context) => {
-  try {
-    const demarcheOld = await titreDemarcheGet(id, { fields: { titre: { pointsEtape: { id: {} } }, etapes: { id: {} } } }, userSuper)
-
-    if (isNullOrUndefined(demarcheOld)) throw new Error("la démarche n'existe pas")
-    const etapes = demarcheOld.etapes
-    if (isNullOrUndefined(etapes)) throw new Error('les étapes ne sont pas chargées')
-    if (isNullOrUndefined(demarcheOld.titre)) throw new Error("le titre n'existe pas")
-    if (isNullOrUndefined(demarcheOld.titre.administrationsLocales)) throw new Error('les administrations locales ne sont pas chargées')
-
-    if (!canDeleteDemarche(user, demarcheOld.titre.typeId, demarcheOld.titre.titreStatutId, demarcheOld.titre.administrationsLocales, { etapes })) throw new Error('droits insuffisants')
-
-    await titreDemarcheArchive(id)
-
-    await titreDemarcheUpdateTask(pool, null, demarcheOld.titreId)
-
-    return id
   } catch (e) {
     console.error(e)
 

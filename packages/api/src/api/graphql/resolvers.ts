@@ -4,9 +4,9 @@ import { titres } from './resolvers/titres'
 
 import { etapeHeritage } from './resolvers/titres-etapes'
 
-import { demarches, demarcheCreer, demarcheModifier, demarcheSupprimer } from './resolvers/titres-demarches'
+import { demarches, demarcheCreer, demarcheModifier } from './resolvers/titres-demarches'
 
-import { utilisateur, utilisateurs, newsletterInscrire } from './resolvers/utilisateurs'
+import { utilisateur, utilisateurs } from './resolvers/utilisateurs'
 
 import {
   devises,
@@ -81,8 +81,6 @@ export default {
   // mutations
   demarcheCreer,
   demarcheModifier,
-  demarcheSupprimer,
   activiteDeposer,
-  newsletterInscrire,
   titreDemandeCreer,
 }
