@@ -186,13 +186,6 @@ const AdministrationsTitresTypes: { [key in AdministrationId]?: Readonly<Adminis
   'ope-brgm-01': {
     [TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_CARRIERES_CARRIERES]: { gestionnaire: false, associee: true },
   },
-  'ope-onf-973-01': {
-    [TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX]: { gestionnaire: true, associee: false },
-    [TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX]: { gestionnaire: true, associee: false },
-  },
-  'ope-ptmg-973-01': {
-    [TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX]: { gestionnaire: true, associee: true },
-  },
   'pre-97302-01': {
     [TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX]: { gestionnaire: false, associee: true },
   },

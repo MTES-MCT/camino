@@ -7,7 +7,7 @@ exports[`titresAdministration > teste la récupération des données pour les Ad
     "etapeStatutId": "com",
     "etapeTypeId": "mcp",
   },
-  "enAttenteDeAdministration": false,
+  "enAttenteDeAdministration": true,
   "id": Any<String>,
   "nom": "titre1",
   "prochainesEtapes": [
@@ -36,7 +36,7 @@ exports[`titresAdministration > teste la récupération des données pour les Ad
     "etapeStatutId": "fai",
     "etapeTypeId": "pfd",
   },
-  "enAttenteDeAdministration": false,
+  "enAttenteDeAdministration": true,
   "id": Any<String>,
   "nom": "titre2",
   "prochainesEtapes": [
@@ -63,7 +63,7 @@ exports[`titresONF > teste la récupération des données pour l'ONF 1`] = `
   "dateCARM": "",
   "dateCompletudePTMG": "2022-03-10",
   "dateReceptionONF": "",
-  "enAttenteDeONF": true,
+  "enAttenteDeONF": false,
   "id": Any<String>,
   "nom": "titre1",
   "references": [

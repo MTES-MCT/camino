@@ -234,7 +234,7 @@ test.each<{
   { administrationId: 'dea-guyane-01', titreTypeId: 'axm', canEdit: true },
   { administrationId: 'ope-onf-973-01', titreTypeId: 'axm', canEdit: false },
   { administrationId: 'min-mtes-dgaln-01', titreTypeId: 'arm', canEdit: true },
-  { administrationId: 'ope-onf-973-01', titreTypeId: 'arm', canEdit: true },
+  { administrationId: 'ope-onf-973-01', titreTypeId: 'arm', canEdit: false },
 ])('un utilisateur admin d’une administration peut modifier une étape mcr sur un titre: $canEdit', ({ administrationId, titreTypeId, canEdit }) => {
   expect(canEditEtape({ role: 'admin', administrationId, ...testBlankUser }, 'mcr', ETAPE_IS_NOT_BROUILLON, [], [], 'oct', { typeId: titreTypeId, titreStatutId: 'val' })).toBe(canEdit)
 })

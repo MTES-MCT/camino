@@ -19,7 +19,7 @@ afterAll(async () => {
 
 describe('Visibilité des démarches', () => {
   test.each<[AdministrationId, boolean]>([
-    ['ope-onf-973-01', true],
+    ['ope-onf-973-01', false],
     ['min-mtes-dgec-01', true],
     ['min-mtes-dgaln-01', true],
     ['min-dajb-01', true],
@@ -28,7 +28,7 @@ describe('Visibilité des démarches', () => {
   )
 
   test.each<[AdministrationId, boolean]>([
-    ['ope-onf-973-01', true],
+    ['ope-onf-973-01', false],
     ['dea-guyane-01', true],
     ['min-mtes-dgec-01', true],
     ['min-mtes-dgaln-01', true],
@@ -64,13 +64,13 @@ describe('Visibilité des démarches', () => {
 
 describe('Création des démarches', () => {
   test.each<[AdministrationId, boolean]>([
-    ['ope-onf-973-01', true],
+    ['ope-onf-973-01', false],
     ['min-mtes-dgaln-01', true],
     ['min-dajb-01', false],
   ])("un utilisateur admin de l’administration %s peut créer des démarches d'un titre ARM : %s", async (administrationId, creer) => creationCheck(dbPool, administrationId, creer, 'demarches', 'arm'))
 
   test.each<[AdministrationId, boolean]>([
-    ['ope-onf-973-01', true],
+    ['ope-onf-973-01', false],
     ['dea-guyane-01', true],
     ['min-mtes-dgaln-01', true],
     ['min-dajb-01', false],

@@ -115,13 +115,6 @@ exports[`canCreateTitre > vérifie si un utilisateur administrateur admin peut c
     "prr": true,
     "pxr": true,
   },
-  "ope-onf-973-01": {
-    "arm": true,
-    "axm": true,
-  },
-  "ope-ptmg-973-01": {
-    "arm": true,
-  },
 }
 `;
 
@@ -809,32 +802,6 @@ exports[`canEditTitre > vérifie si un utilisateur administrateur admin peut mod
       "dmc": true,
       "dmi": true,
       "ech": true,
-      "ind": true,
-      "mod": true,
-      "sup": true,
-      "val": true,
-    },
-  },
-  "ope-onf-973-01": {
-    "arm": {
-      "dmc": true,
-      "dmi": true,
-      "ech": true,
-      "ind": true,
-      "mod": true,
-      "sup": true,
-      "val": true,
-    },
-    "axm": {
-      "dmi": true,
-      "ind": true,
-      "mod": true,
-      "sup": true,
-    },
-  },
-  "ope-ptmg-973-01": {
-    "arm": {
-      "dmi": true,
       "ind": true,
       "mod": true,
       "sup": true,

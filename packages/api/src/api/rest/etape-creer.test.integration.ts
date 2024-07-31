@@ -13,6 +13,7 @@ import { RestEtapeCreation, defaultHeritageProps } from 'camino-common/src/etape
 import { HTTP_STATUS } from 'camino-common/src/http'
 import { toCaminoDate } from 'camino-common/src/date'
 import { entrepriseIdValidator } from 'camino-common/src/entreprise'
+import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 
 console.info = vi.fn()
 console.error = vi.fn()
@@ -31,11 +32,11 @@ afterAll(async () => {
   await dbManager.closeKnex()
 })
 
-const demarcheCreate = async () => {
+const demarcheCreate = async (titreTypeId: TitreTypeId = 'arm') => {
   const titre = await titreCreate(
     {
       nom: 'mon titre',
-      typeId: 'arm',
+      typeId: titreTypeId,
       titreStatutId: 'ind',
       propsTitreEtapesIds: {},
     },
@@ -133,34 +134,6 @@ describe('etapeCreer', () => {
     `)
   })
 
-  test('ne peut pas créer une étape de mia faite avec le ptmg', async () => {
-    const titreDemarcheId = await demarcheCreate()
-
-    const res = await restPostCall(
-      dbPool,
-      '/rest/etapes',
-      {},
-
-      {
-        role: 'admin',
-        administrationId: ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE'],
-      },
-      {
-        typeId: 'sca',
-        statutId: 'fai',
-        titreDemarcheId,
-        date: toCaminoDate('2018-01-01'),
-        ...blankEtapeProps,
-      }
-    )
-
-    expect(res.statusCode).toBe(HTTP_STATUS.BAD_REQUEST)
-    expect(res.body).toMatchInlineSnapshot(`
-      {
-        "errorMessage": "droits insuffisants pour créer cette étape",
-      }
-    `)
-  })
   test('ne peut pas créer une étape incohérente (asc avec statut fav) (utilisateur admin)', async () => {
     const titreDemarcheId = await demarcheCreate()
 
@@ -170,7 +143,7 @@ describe('etapeCreer', () => {
       {},
       {
         role: 'admin',
-        administrationId: ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE'],
+        administrationId: ADMINISTRATION_IDS['DGTM - GUYANE'],
       },
       {
         typeId: 'asc',
@@ -203,7 +176,7 @@ describe('etapeCreer', () => {
     expect(res.statusCode).toBe(HTTP_STATUS.OK)
   })
 
-  test('peut créer une étape MEN sur un titre ARM en tant que PTMG (utilisateur admin)', async () => {
+  test('peut créer une étape MEN sur un titre ARM en tant que DGTM (utilisateur admin)', async () => {
     const titreDemarcheId = await demarcheCreate()
 
     // une demande antérieure au 01/01/2018 est obligatoire pour pouvoir créer une MEN
@@ -213,7 +186,7 @@ describe('etapeCreer', () => {
       {},
       {
         role: 'admin',
-        administrationId: ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE'],
+        administrationId: ADMINISTRATION_IDS['DGTM - GUYANE'],
       },
       {
         typeId: 'mfr',
@@ -229,7 +202,7 @@ describe('etapeCreer', () => {
       {},
       {
         role: 'admin',
-        administrationId: ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE'],
+        administrationId: ADMINISTRATION_IDS['DGTM - GUYANE'],
       },
       {
         typeId: 'men',
@@ -251,7 +224,7 @@ describe('etapeCreer', () => {
       {},
       {
         role: 'admin',
-        administrationId: ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE'],
+        administrationId: ADMINISTRATION_IDS['DGTM - GUYANE'],
       },
       {
         typeId: 'men',
@@ -264,7 +237,7 @@ describe('etapeCreer', () => {
 
     expect(res.statusCode).toBe(HTTP_STATUS.BAD_REQUEST)
   })
-  test('ne peut pas créer une étape EDE sur un titre ARM en tant que PTMG (utilisateur admin)', async () => {
+  test('ne peut pas créer une étape EDE sur un titre ARM en tant que DGTM (utilisateur admin)', async () => {
     const titreDemarcheId = await demarcheCreate()
 
     const res = await restPostCall(
@@ -273,7 +246,7 @@ describe('etapeCreer', () => {
       {},
       {
         role: 'admin',
-        administrationId: ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE'],
+        administrationId: ADMINISTRATION_IDS['DGTM - GUYANE'],
       },
       {
         typeId: 'ede',

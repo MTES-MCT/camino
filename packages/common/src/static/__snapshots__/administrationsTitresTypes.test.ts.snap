@@ -119,14 +119,6 @@ exports[`vérifie les administrations gestionnaire d'un type de titre 1`] = `
       "administrationId": "min-mtes-dgaln-01",
       "associee": true,
     },
-    {
-      "administrationId": "ope-onf-973-01",
-      "associee": false,
-    },
-    {
-      "administrationId": "ope-ptmg-973-01",
-      "associee": true,
-    },
   ],
   "axm": [
     {
@@ -136,10 +128,6 @@ exports[`vérifie les administrations gestionnaire d'un type de titre 1`] = `
     {
       "administrationId": "min-mtes-dgaln-01",
       "associee": true,
-    },
-    {
-      "administrationId": "ope-onf-973-01",
-      "associee": false,
     },
   ],
   "cxf": [
@@ -393,7 +381,7 @@ exports[`vérifie si l’administration est associée 1`] = `
   "ope-brgm-01": true,
   "ope-cacem-01": false,
   "ope-onf-973-01": false,
-  "ope-ptmg-973-01": true,
+  "ope-ptmg-973-01": false,
   "pre-01053-01": false,
   "pre-02408-01": false,
   "pre-03190-01": false,
@@ -1431,7 +1419,7 @@ exports[`vérifie si l’administration est associée par rapport au titreType 1
     "apw": false,
     "arc": false,
     "arg": false,
-    "arm": true,
+    "arm": false,
     "axm": false,
     "cxf": false,
     "cxg": false,
@@ -4822,8 +4810,8 @@ exports[`vérifie si l’administration est gestionnaire 1`] = `
   "min-mtes-dgpr-01": true,
   "ope-brgm-01": false,
   "ope-cacem-01": false,
-  "ope-onf-973-01": true,
-  "ope-ptmg-973-01": true,
+  "ope-onf-973-01": false,
+  "ope-ptmg-973-01": false,
   "pre-01053-01": false,
   "pre-02408-01": false,
   "pre-03190-01": false,
@@ -5828,8 +5816,8 @@ exports[`vérifie si l’administration est gestionnaire par rapport au titreTyp
     "apw": false,
     "arc": false,
     "arg": false,
-    "arm": true,
-    "axm": true,
+    "arm": false,
+    "axm": false,
     "cxf": false,
     "cxg": false,
     "cxh": false,
@@ -5861,7 +5849,7 @@ exports[`vérifie si l’administration est gestionnaire par rapport au titreTyp
     "apw": false,
     "arc": false,
     "arg": false,
-    "arm": true,
+    "arm": false,
     "axm": false,
     "cxf": false,
     "cxg": false,
@@ -10183,25 +10171,8 @@ exports[`vérifie tous les droits sur les types de titre pour l’administration
     },
   ],
   "ope-cacem-01": [],
-  "ope-onf-973-01": [
-    {
-      "associee": false,
-      "gestionnaire": true,
-      "titreTypeId": "arm",
-    },
-    {
-      "associee": false,
-      "gestionnaire": true,
-      "titreTypeId": "axm",
-    },
-  ],
-  "ope-ptmg-973-01": [
-    {
-      "associee": true,
-      "gestionnaire": true,
-      "titreTypeId": "arm",
-    },
-  ],
+  "ope-onf-973-01": [],
+  "ope-ptmg-973-01": [],
   "pre-01053-01": [],
   "pre-02408-01": [],
   "pre-03190-01": [],

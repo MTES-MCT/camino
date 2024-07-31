@@ -48,14 +48,13 @@ export const emailsForAdministrationsGet = (
   if (demarcheTypeId === 'oct' && titreTypeId === 'arm') {
     // lorsque la demande est déposée
     if (etape.isBrouillon === ETAPE_IS_NOT_BROUILLON && (oldEtape?.isBrouillon ?? ETAPE_IS_BROUILLON) === ETAPE_IS_BROUILLON) {
-      emails.push(EmailAdministration.PTMG)
-      emails.push(EmailAdministration.ONF)
+      emails.push(EmailAdministration.DGTM)
 
       title = 'Nouvelle demande déposée'
 
       // lorsque le PTMG déclare le dossier complet
     } else if (etapeStatusUpdated(etape, 'mcp', 'com', oldEtape)) {
-      emails.push(EmailAdministration.ONF)
+      emails.push(EmailAdministration.DGTM)
 
       title = 'Nouveau dossier complet'
 

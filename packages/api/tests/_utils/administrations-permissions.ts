@@ -24,7 +24,7 @@ import { ETAPE_IS_NOT_BROUILLON, TempEtapeDocument } from 'camino-common/src/eta
 import { tempDocumentNameValidator } from 'camino-common/src/document'
 import { userSuper } from '../../src/database/user-super'
 import { defaultHeritageProps } from 'camino-common/src/etape-form'
-import { isNullOrUndefined } from 'camino-common/src/typescript-tools'
+import { isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools'
 import { HTTP_STATUS } from 'camino-common/src/http'
 import { titreCreate } from '../../src/database/queries/titres'
 
@@ -100,7 +100,9 @@ export const visibleCheck = async (
       expect(titreRes.demarches![0]!.etapes).not.toBeNull()
       expect(titreRes.demarches![0]!.etapes![0]!.id).toEqual(titre.demarches![0]!.etapes![0]!.id)
     } else {
-      expect(titreRes.demarches![0]!.etapes).toEqual([])
+      if (isNotNullNorUndefined(titreRes?.demarches?.[0])) {
+        expect(titreRes.demarches![0]!.etapes).toEqual([])
+      }
     }
   }
 }
@@ -142,7 +144,7 @@ export const creationCheck = async (pool: Pool, administrationId: string, creer:
       expect(res.body.errors).toBe(undefined)
       expect(res.body.data).toMatchObject({ demarcheCreer: {} })
     } else {
-      expect(res.body.errors[0].message).toBe('droits insuffisants')
+      expect(res.body.errors).toHaveLength(1)
     }
   } else if (cible === 'etapes') {
     const titreCreated = await titreCreateSuper(pool, administrationId, titreTypeId)

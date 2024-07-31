@@ -116,7 +116,7 @@ describe('demarcheCreer', () => {
       { demarche: { titreId, typeId: 'oct' } },
       {
         role: 'admin',
-        administrationId: ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE'],
+        administrationId: ADMINISTRATION_IDS['DGTM - GUYANE'],
       }
     )
 
@@ -145,7 +145,7 @@ describe('demarcheCreer', () => {
       }
     )
 
-    expect(res.body.errors[0].message).toBe('droits insuffisants')
+    expect(res.body.errors[0].message).toBe("le titre n'existe pas")
   })
 })
 
@@ -187,7 +187,7 @@ describe('demarcheModifier', () => {
     expect(res.body.errors[0].message).toBe('la démarche n’existe pas')
   })
 
-  test('peut modifier une démarche d’un titre ARM en PTMG (utilisateur admin)', async () => {
+  test('peut modifier une démarche d’un titre ARM en DGTM (utilisateur admin)', async () => {
     const { demarcheId, titreId } = await demarcheCreate()
 
     const res = await graphQLCall(
@@ -196,7 +196,7 @@ describe('demarcheModifier', () => {
       { demarche: { id: demarcheId, titreId, typeId: 'pro' } },
       {
         role: 'admin',
-        administrationId: ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE'],
+        administrationId: ADMINISTRATION_IDS['DGTM - GUYANE'],
       }
     )
 

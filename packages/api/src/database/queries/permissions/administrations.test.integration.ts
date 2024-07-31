@@ -20,9 +20,9 @@ afterAll(async () => {
 describe('administrationsTitresQuery', () => {
   test.each<[AdministrationId, boolean]>([
     ['ope-brgm-01', false],
-    ['ope-onf-973-01', true],
+    ['ope-onf-973-01', false],
     ['pre-97302-01', true],
-    ['ope-ptmg-973-01', true],
+    ['ope-ptmg-973-01', false],
   ])("Vérifie l'écriture de la requête sur les titres dont une administration a des droits sur le type", async (administrationId, visible) => {
     await Titres.query().delete()
 

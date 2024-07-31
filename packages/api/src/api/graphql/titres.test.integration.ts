@@ -251,23 +251,12 @@ describe('titre', () => {
     )
 
     expect(res.body.errors).toBe(undefined)
-    expect(res.body.data.titres.elements[0].demarches[0].etapes.length).toEqual(8)
+    expect(res.body.data.titres.elements[0].demarches[0].etapes.length).toEqual(1)
     expect(
       res.body.data.titres.elements[0].demarches[0].etapes.map(({ id }: { id: string }) => ({
         id,
       }))
-    ).toEqual(
-      expect.arrayContaining([
-        { id: 'titre-id-demarche-id-asc' },
-        { id: 'titre-id-demarche-id-edm' },
-        { id: 'titre-id-demarche-id-pfc' },
-        { id: 'titre-id-demarche-id-pfd' },
-        { id: 'titre-id-demarche-id-vfc' },
-        { id: 'titre-id-demarche-id-vfd' },
-        { id: 'titre-id-demarche-id-ede' },
-        { id: 'titre-id-demarche-id-dpu' },
-      ])
-    )
+    ).toEqual(expect.arrayContaining([{ id: 'titre-id-demarche-id-dpu' }]))
   })
 })
 
