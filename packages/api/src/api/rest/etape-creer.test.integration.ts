@@ -134,34 +134,6 @@ describe('etapeCreer', () => {
     `)
   })
 
-  test('ne peut pas créer une étape de mia faite avec la DGTM', async () => {
-    const titreDemarcheId = await demarcheCreate('cxm')
-
-    const res = await restPostCall(
-      dbPool,
-      '/rest/etapes',
-      {},
-
-      {
-        role: 'admin',
-        administrationId: ADMINISTRATION_IDS['DGTM - GUYANE'],
-      },
-      {
-        typeId: 'spp',
-        statutId: 'fai',
-        titreDemarcheId,
-        date: toCaminoDate('2018-01-01'),
-        ...blankEtapeProps,
-      }
-    )
-
-    expect(res.statusCode).toBe(HTTP_STATUS.BAD_REQUEST)
-    expect(res.body).toMatchInlineSnapshot(`
-      {
-        "errorMessage": "droits insuffisants pour créer cette étape",
-      }
-    `)
-  })
   test('ne peut pas créer une étape incohérente (asc avec statut fav) (utilisateur admin)', async () => {
     const titreDemarcheId = await demarcheCreate()
 

@@ -24,14 +24,15 @@ afterAll(async () => {
 
 describe('Visibilité des étapes', () => {
   test.each<[AdministrationId, boolean, EtapeTypeId]>([
-    ['ope-onf-973-01', true, 'mcr'],
+    ['ope-onf-973-01', false, 'mcr'],
+    ['dea-guyane-01', true, 'mcr'],
     ['min-mtes-dgaln-01', true, 'mcr'],
   ])("un utilisateur admin de l’administration $administrationId peut voir l'étape $etapeTypeId d'un titre ARM : $visible", async (administrationId, visible, etapeTypeId) =>
     visibleCheck(dbPool, administrationId, visible, 'etapes', 'arm', false, etapeTypeId)
   )
 
   test.each<[AdministrationId, boolean, EtapeTypeId]>([
-    ['ope-onf-973-01', true, 'mcr'],
+    ['ope-onf-973-01', false, 'mcr'],
     ['dea-guyane-01', true, 'mcr'],
     ['min-mtes-dgaln-01', true, 'mcr'],
   ])("un utilisateur admin de l’administration $administrationId peut voir l'étape $etapeTypeId d'un titre AXM : $visible", async (administrationId, visible, etapeTypeId) =>

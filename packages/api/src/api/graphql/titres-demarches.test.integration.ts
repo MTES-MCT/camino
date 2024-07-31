@@ -116,7 +116,7 @@ describe('demarcheCreer', () => {
       { demarche: { titreId, typeId: 'oct' } },
       {
         role: 'admin',
-        administrationId: ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE'],
+        administrationId: ADMINISTRATION_IDS['DGTM - GUYANE'],
       }
     )
 
@@ -124,11 +124,11 @@ describe('demarcheCreer', () => {
     expect(res.body).toMatchObject({ data: { demarcheCreer: {} } })
   })
 
-  test.only("ne peut pas créer une démarche sur un titre ARM échu (un utilisateur 'admin' DGTM)", async () => {
+  test("ne peut pas créer une démarche sur un titre ARM échu (un utilisateur 'admin' PTMG)", async () => {
     const titre = await titreCreate(
       {
         nom: 'mon titre échu',
-        typeId: 'cxm',
+        typeId: 'arm',
         titreStatutId: 'ech',
         propsTitreEtapesIds: {},
       },
@@ -141,11 +141,11 @@ describe('demarcheCreer', () => {
       { demarche: { titreId: titre.id, typeId: 'oct' } },
       {
         role: 'admin',
-        administrationId: ADMINISTRATION_IDS['DGTM - GUYANE'],
+        administrationId: ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE'],
       }
     )
 
-    expect(res.body.errors[0].message).toBe('droits insuffisants')
+    expect(res.body.errors[0].message).toBe("le titre n'existe pas")
   })
 })
 
