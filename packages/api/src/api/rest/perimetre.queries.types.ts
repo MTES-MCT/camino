@@ -59,11 +59,23 @@ export interface IGetTitresIntersectionWithGeojsonDbQuery {
   result: IGetTitresIntersectionWithGeojsonDbResult;
 }
 
-/** Query 'GetGeojsonInformationDb' is invalid, so its result is assigned type 'never'.
- *  */
-export type IGetGeojsonInformationDbResult = never;
+/** 'GetGeojsonInformationDb' parameters type */
+export interface IGetGeojsonInformationDbParams {
+  geojson4326_perimetre: string;
+}
 
-/** Query 'GetGeojsonInformationDb' is invalid, so its parameters are assigned type 'never'.
- *  */
-export type IGetGeojsonInformationDbParams = never;
+/** 'GetGeojsonInformationDb' return type */
+export interface IGetGeojsonInformationDbResult {
+  communes: Json | null;
+  forets: Json | null;
+  sdom: Json | null;
+  secteurs: Json | null;
+  surface: number | null;
+}
+
+/** 'GetGeojsonInformationDb' query type */
+export interface IGetGeojsonInformationDbQuery {
+  params: IGetGeojsonInformationDbParams;
+  result: IGetGeojsonInformationDbResult;
+}
 
