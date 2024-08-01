@@ -264,10 +264,6 @@ export const EtapesTypesEtapesStatuts = {
     FAVORABLE: { etapeTypeId: 'wre', etapeStatutId: 'fav' },
     DEFAVORABLE: { etapeTypeId: 'wre', etapeStatutId: 'def' },
   },
-  avisEtRapportDuDirecteurRegionalChargeDeLenvironnementDeLamenagementEtDuLogement_wrl: {
-    FAVORABLE: { etapeTypeId: 'wrl', etapeStatutId: 'fav' },
-    DEFAVORABLE: { etapeTypeId: 'wrl', etapeStatutId: 'def' },
-  },
   recolement: {
     FAVORABLE: { etapeTypeId: 'wrt', etapeStatutId: 'fav' },
     DEFAVORABLE: { etapeTypeId: 'wrt', etapeStatutId: 'def' },

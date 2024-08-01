@@ -18,7 +18,7 @@ const travaux = {
     ETAPES_TYPES.memoireEnReponseDeLexploitant_ParRapportALavisDeLAE_,
     ETAPES_TYPES.ouvertureDeLenquetePublique_woe,
     ETAPES_TYPES.clotureDeLenquetePublique_wce,
-    ETAPES_TYPES.avisEtRapportDuDirecteurRegionalChargeDeLenvironnementDeLamenagementEtDuLogement_wrl,
+    ETAPES_TYPES.avisEtRapportDuDirecteurRegionalChargeDeLenvironnementDeLamenagementEtDuLogement,
     ETAPES_TYPES.transmissionDuProjetDePrescriptionsAuDemandeur,
     ETAPES_TYPES.avisDuDemandeurSurLesPrescriptionsProposees,
     ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs_wpa,

@@ -4,13 +4,13 @@ import { Definition } from '../definition'
 import { EtapeBrouillon } from '../etape'
 
 // prettier-ignore
-const IDS = ['abd', 'aca','aco','and','ane','anf','def','dex','dim', 'dpu', 'dup', 'dux','ihi', 'mfr','mod','mom','rca','rcb','rcd','rcm','rco','rcs','rie','rif','rim','rpu','sco','acg','apd','ape','apo','app','apu','apw','asl','cac','ccs','cim','cod','css','dae','dec','des','ede','edm','epc','epu','esb','ide','mca','mcb','mcd','mcm','mco','mcp','mcr','mcs','mdp','mec','men','meo','mie','mif','mim','mna','mnb','mnc','mnd','mni','mno','mns','mnv','ncl','nis','npp','pfc','pfd','ppu','pqr','rcg','rde','rpe','sas','sca','scg','scl','spe','spo','spp','vfc','vfd','wab','wae','wao','wap','war','wau','wce','wco','wda','wdc','wdd','wde','wdm','wfa','wfd','wfo','wfr','wmm','wmr','wmt','woe','wpa','wpb','wpc','wpo','wpp','wps','wrc','wrd','wre','wrl','wrt','wse','wtp', 'asc', 'adc'] as const
+const IDS = ['abd', 'aca','aco','and','ane','anf','def','dex','dim', 'dpu', 'dup', 'dux','ihi', 'mfr','mod','mom','rca','rcb','rcd','rcm','rco','rcs','rie','rif','rim','rpu','sco','acg','apd','ape','apo','app','apu','apw','asl','cac','ccs','cim','cod','css','dae','dec','des','ede','edm','epc','epu','esb','ide','mca','mcb','mcd','mcm','mco','mcp','mcr','mcs','mdp','mec','men','meo','mie','mif','mim','mna','mnb','mnc','mnd','mni','mno','mns','mnv','ncl','nis','npp','pfc','pfd','ppu','pqr','rcg','rde','rpe','sas','sca','scg','scl','spe','spo','spp','vfc','vfd','wab','wae','wao','wap','war','wau','wce','wco','wda','wdc','wdd','wde','wdm','wfa','wfd','wfo','wfr','wmm','wmr','wmt','woe','wpa','wpb','wpc','wpo','wpp','wps','wrc','wrd','wre','wrt','wse','wtp', 'asc', 'adc'] as const
 
 // prettier-ignore
 const FONDAMENTALES_IDS = ['abd', 'aca','aco','and','ane','anf','def','dex','dim', 'dpu', 'dup', 'dux','ihi', 'mfr','mod','mom','rca','rcb','rcd','rcm','rco','rcs','rie','rif','rim','rpu','sco'] as const satisfies Readonly<EtapeTypeIdFondamentaleArray>
 
 // prettier-ignore
-const NON_FONDAMENTALES_IDS = ['acg','apd','ape','apo','app','apu','apw','asl','cac','ccs','cim','cod','css','dae','dec','des','ede','edm','epc','epu','esb','ide','mca','mcb','mcd','mcm','mco','mcp','mcr','mcs','mdp','mec','men','meo','mie','mif','mim','mna','mnb','mnc','mnd','mni','mno','mns','mnv','ncl','nis','npp','pfc','pfd','ppu','pqr','rcg','rde','rpe','sas','sca','scg','scl','spe','spo','spp','vfc','vfd','wab','wae','wao','wap','war','wau','wce','wco','wda','wdc','wdd','wde','wdm','wfa','wfd','wfo','wfr','wmm','wmr','wmt','woe','wpa','wpb','wpc','wpo','wpp','wps','wrc','wrd','wre','wrl','wrt','wse','wtp', 'asc', 'adc'] as const satisfies Readonly<EtapeTypeIdNonFondamentale[]>
+const NON_FONDAMENTALES_IDS = ['acg','apd','ape','apo','app','apu','apw','asl','cac','ccs','cim','cod','css','dae','dec','des','ede','edm','epc','epu','esb','ide','mca','mcb','mcd','mcm','mco','mcp','mcr','mcs','mdp','mec','men','meo','mie','mif','mim','mna','mnb','mnc','mnd','mni','mno','mns','mnv','ncl','nis','npp','pfc','pfd','ppu','pqr','rcg','rde','rpe','sas','sca','scg','scl','spe','spo','spp','vfc','vfd','wab','wae','wao','wap','war','wau','wce','wco','wda','wdc','wdd','wde','wdm','wfa','wfd','wfo','wfr','wmm','wmr','wmt','woe','wpa','wpb','wpc','wpo','wpp','wps','wrc','wrd','wre','wrt','wse','wtp', 'asc', 'adc'] as const satisfies Readonly<EtapeTypeIdNonFondamentale[]>
 
 // Ceci est un test :)
 ;[...FONDAMENTALES_IDS, ...NON_FONDAMENTALES_IDS] as const satisfies typeof IDS
@@ -137,7 +137,6 @@ export const ETAPES_TYPES = {
   receptionDeComplements_wrc: 'wrc',
   rapportDeLaDreal: 'wrd',
   recevabilite: 'wre',
-  avisEtRapportDuDirecteurRegionalChargeDeLenvironnementDeLamenagementEtDuLogement_wrl: 'wrl',
   recolement: 'wrt',
   saisineDeLautoriteEnvironnementale: 'wse',
   transmissionDuProjetDePrescriptionsAuDemandeur: 'wtp',
@@ -1331,16 +1330,6 @@ export const EtapesTypes = {
   wce: {
     id: 'wce',
     nom: "clôture de l'enquête publique",
-    description: '',
-    fondamentale: false,
-    unique: false,
-    date_fin: null,
-    public_lecture: false,
-    entreprises_lecture: false,
-  },
-  wrl: {
-    id: 'wrl',
-    nom: "Avis et rapport du directeur régional chargé de l'environnement, de l'aménagement et du logement",
     description: '',
     fondamentale: false,
     unique: false,
