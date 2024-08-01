@@ -21,7 +21,6 @@ import {
   titreDemandeValidator,
   titreGetValidator,
   titreLinksValidator,
-  titreOnfValidator,
   utilisateurTitreAbonneValidator,
 } from './titres'
 import { adminUserNotNullValidator, userValidator, utilisateurIdValidator } from './roles'
@@ -88,7 +87,6 @@ const IDS = [
   '/rest/titres',
   '/rest/titres/:titreId',
   '/rest/titres/:titreId/abonne',
-  '/rest/titresONF',
   '/rest/titresAdministrations',
   '/rest/titres/:id/titreLiaisons',
   '/rest/demarches/:demarcheIdOrSlug',
@@ -160,7 +158,6 @@ export const CaminoRestRoutes = {
   '/rest/titres': { params: noParamsValidator, newPost: { input: titreDemandeValidator, output: titreDemandeOutputValidator } },
   '/rest/titres/:titreId': { params: z.object({ titreId: titreIdOrSlugValidator }), get: { output: titreGetValidator }, delete: true, post: { output: z.void(), input: editableTitreValidator } },
   '/rest/titres/:titreId/abonne': { params: z.object({ titreId: titreIdValidator }), post: { input: utilisateurTitreAbonneValidator, output: z.void() }, get: { output: z.boolean() } },
-  '/rest/titresONF': { params: noParamsValidator, get: { output: z.array(titreOnfValidator) } },
   '/rest/titresAdministrations': { params: noParamsValidator, get: { output: z.array(titreAdministrationValidator) } },
   '/rest/titres/:id/titreLiaisons': { params: z.object({ id: titreIdValidator }), get: { output: titreLinksValidator }, post: { input: z.array(z.string()), output: titreLinksValidator } },
   '/rest/demarches/:demarcheIdOrSlug': { params: z.object({ demarcheIdOrSlug: demarcheIdOrSlugValidator }), get: { output: getDemarcheByIdOrSlugValidator }, delete: true },

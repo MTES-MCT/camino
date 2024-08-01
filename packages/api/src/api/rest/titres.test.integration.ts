@@ -165,31 +165,6 @@ async function createTitreWithEtapes(nomTitre: string, etapes: Omit<ITitreEtape,
   return titre.id
 }
 
-describe('titresONF', () => {
-  test("teste la récupération des données pour l'ONF", async () => {
-    const tested = await restCall(
-      dbPool,
-      '/rest/titresONF',
-      {},
-      {
-        role: 'admin',
-        administrationId: ADMINISTRATION_IDS['OFFICE NATIONAL DES FORÊTS'],
-      }
-    )
-
-    expect(tested.statusCode).toBe(200)
-    expect(tested.body).toHaveLength(2)
-    expect(tested.body[0]).toMatchSnapshot({
-      id: expect.any(String),
-      slug: expect.any(String),
-    })
-    expect(tested.body[1]).toMatchSnapshot({
-      id: expect.any(String),
-      slug: expect.any(String),
-    })
-  })
-})
-
 describe('titresAdministration', () => {
   test('teste la récupération des données pour les Administrations', async () => {
     const tested = await restCall(
