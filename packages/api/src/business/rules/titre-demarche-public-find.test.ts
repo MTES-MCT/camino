@@ -495,7 +495,7 @@ describe("publicité d'une démarche", () => {
           demarcheDateDebut: toCaminoDate('2020-01-01'),
           demarcheDateFin: toCaminoDate('2021-01-01'),
           id: newDemarcheId(),
-          etapes: etapesBuild([{ typeId: 'dup' }]),
+          etapes: etapesBuild([{ typeId: 'dpu' }]),
           titreId: newTitreId('titreId'),
         },
         'pcc'
@@ -755,7 +755,7 @@ describe("publicité d'une démarche", () => {
     ).toMatchObject({ publicLecture: true })
   })
 
-  test.each<EtapeTypeId>(['ane', 'anf', 'dex', 'dpu', 'dup', 'rpu', 'ppu', 'epu', 'epc'])("une démarche d’un titre non énergétique dont l'étape la plus récente est %s est public", etapeTypeId => {
+  test.each<EtapeTypeId>(['ane', 'anf', 'dex', 'dpu', 'rpu', 'ppu', 'epu', 'epc'])("une démarche d’un titre non énergétique dont l'étape la plus récente est %s est public", etapeTypeId => {
     expect(
       titreDemarchePublicFind(
         {

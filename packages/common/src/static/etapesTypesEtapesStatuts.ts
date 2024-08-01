@@ -119,7 +119,6 @@ export const EtapesTypesEtapesStatuts = {
     REJETE: { etapeTypeId: 'dpu', etapeStatutId: 'rej' },
     FAIT: { etapeTypeId: 'dpu', etapeStatutId: 'fai' },
   },
-  publicationDeDecisionAdministrativeAuJORF: { FAIT: { etapeTypeId: 'dup', etapeStatutId: 'fai' } },
   decisionAdministrative: { FAIT: { etapeTypeId: 'dux', etapeStatutId: 'fai' } },
   expertiseDREALOuDGTMServiceEau: {
     FAVORABLE: { etapeTypeId: 'ede', etapeStatutId: 'fav' },

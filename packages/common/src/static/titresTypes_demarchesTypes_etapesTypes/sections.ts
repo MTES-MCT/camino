@@ -188,7 +188,6 @@ const EtapesTypesSections = {
   [ETAPES_TYPES.publicationDeDecisionAuJORF]: publicationAuJorf,
   [ETAPES_TYPES.decisionDeLadministration]: publication,
   [ETAPES_TYPES.avisDeMiseEnConcurrenceAuJORF]: publicationAuJorf,
-  [ETAPES_TYPES.publicationDeDecisionAdministrativeAuJORF]: publicationAuJorf,
   [ETAPES_TYPES.decisionAdministrative]: publication,
   [ETAPES_TYPES.publicationDeLavisDeDecisionImplicite]: publication,
   [ETAPES_TYPES.abrogationDeLaDecision]: publication,
@@ -570,7 +569,7 @@ const TDESections = {
     },
     [DEMARCHES_TYPES_IDS.Retrait]: {
       [ETAPES_TYPES.decisionAdministrative]: proprietesDeLaConcession,
-      [ETAPES_TYPES.publicationDeDecisionAdministrativeAuJORF]: proprietesDeLaConcession,
+      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDeLaConcession,
     },
   },
   [TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_GEOTHERMIE]: {
@@ -611,7 +610,7 @@ const TDESections = {
     },
     [DEMARCHES_TYPES_IDS.Retrait]: {
       [ETAPES_TYPES.decisionAdministrative]: proprietesDuPermisExclusifDeRecherches,
-      [ETAPES_TYPES.publicationDeDecisionAdministrativeAuJORF]: proprietesDuPermisExclusifDeRecherches,
+      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches,
     },
   },
   [TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_HYDROCARBURE]: {
@@ -657,7 +656,7 @@ const TDESections = {
     },
     [DEMARCHES_TYPES_IDS.Retrait]: {
       [ETAPES_TYPES.decisionAdministrative]: proprietesDuPermisExclusifDeRecherches,
-      [ETAPES_TYPES.publicationDeDecisionAdministrativeAuJORF]: proprietesDuPermisExclusifDeRecherches,
+      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches,
     },
   },
   [TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_METAUX]: {
@@ -678,7 +677,7 @@ const TDESections = {
     },
     [DEMARCHES_TYPES_IDS.Retrait]: {
       [ETAPES_TYPES.decisionAdministrative]: proprietesDuPermisExclusifDeRecherches,
-      [ETAPES_TYPES.publicationDeDecisionAdministrativeAuJORF]: proprietesDuPermisExclusifDeRecherches,
+      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches,
     },
     [DEMARCHES_TYPES_IDS.ExtensionDeSubstance]: {
       [ETAPES_TYPES.demande]: proprietesDuPermisExclusifDeRecherches,
@@ -755,7 +754,7 @@ const TDESections = {
     },
     [DEMARCHES_TYPES_IDS.Retrait]: {
       [ETAPES_TYPES.decisionAdministrative]: proprietesDuPermisExclusifDeRecherches,
-      [ETAPES_TYPES.publicationDeDecisionAdministrativeAuJORF]: proprietesDuPermisExclusifDeRecherches,
+      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches,
     },
   },
   [TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_SOUTERRAIN]: {
@@ -801,7 +800,7 @@ const TDESections = {
     },
     [DEMARCHES_TYPES_IDS.Retrait]: {
       [ETAPES_TYPES.decisionAdministrative]: proprietesDuPermisExclusifDeRecherches,
-      [ETAPES_TYPES.publicationDeDecisionAdministrativeAuJORF]: proprietesDuPermisExclusifDeRecherches,
+      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches,
     },
   },
   [TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_GRANULATS_MARINS]: {
@@ -847,7 +846,7 @@ const TDESections = {
     },
     [DEMARCHES_TYPES_IDS.Retrait]: {
       [ETAPES_TYPES.decisionAdministrative]: proprietesDuPermisExclusifDeRecherches,
-      [ETAPES_TYPES.publicationDeDecisionAdministrativeAuJORF]: proprietesDuPermisExclusifDeRecherches,
+      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches,
     },
   },
   [TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_GRANULATS_MARINS]: {
@@ -901,11 +900,11 @@ const TDESections = {
     },
     [DEMARCHES_TYPES_IDS.Prorogation]: {
       [ETAPES_TYPES.decisionAdministrative]: proprietesDuPermisDExploitation,
-      [ETAPES_TYPES.publicationDeDecisionAdministrativeAuJORF]: proprietesDuPermisDExploitation,
+      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisDExploitation,
     },
     [DEMARCHES_TYPES_IDS.Retrait]: {
       [ETAPES_TYPES.decisionAdministrative]: proprietesDuPermisDExploitation,
-      [ETAPES_TYPES.publicationDeDecisionAdministrativeAuJORF]: proprietesDuPermisDExploitation,
+      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisDExploitation,
     },
   },
   [TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_GEOTHERMIE]: {

@@ -296,8 +296,8 @@ describe("statut d'une démarche", () => {
     expect(titreDemarcheStatutIdFind('ret', etapesBuild([{ typeId: 'ihi' }]), 'pxm', newDemarcheId())).toEqual('ind')
   })
 
-  test("une démarche de retrait dont l'étape la plus récente de dup a été faite a le statut “terminé”", () => {
-    expect(titreDemarcheStatutIdFind('ret', etapesBuild([{ typeId: 'dup', statutId: 'fai' }]), 'pxm', newDemarcheId())).toEqual('ter')
+  test("une démarche de retrait dont l'étape la plus récente de dpu a été faite a le statut “terminé”", () => {
+    expect(titreDemarcheStatutIdFind('ret', etapesBuild([{ typeId: 'dpu', statutId: 'fai' }]), 'pxm', newDemarcheId())).toEqual('ter')
   })
 
   test("une démarche de retrait dont l'étape la plus récente est ide faite a le statut “initié”", () => {

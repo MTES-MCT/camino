@@ -105,10 +105,6 @@ const EtapesTypesDocumentsTypes = {
     { documentTypeId: DOCUMENTS_TYPES_IDS.ordonnance, optionnel: true },
     { documentTypeId: DOCUMENTS_TYPES_IDS.publicationAuJorf, optionnel: true },
   ],
-  [ETAPES_TYPES.publicationDeDecisionAdministrativeAuJORF]: [
-    { documentTypeId: DOCUMENTS_TYPES_IDS.arrete, optionnel: true },
-    { documentTypeId: DOCUMENTS_TYPES_IDS.publicationAuJorf, optionnel: true },
-  ],
   [ETAPES_TYPES.decisionAdministrative]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.arrete, optionnel: true }],
   [ETAPES_TYPES.expertiseDGTMServicePreventionDesRisquesEtIndustriesExtractives_DATE_]: [
     { documentTypeId: DOCUMENTS_TYPES_IDS.avis, optionnel: true },

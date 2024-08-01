@@ -38,7 +38,7 @@ const titreDemarchesDemandesTypes: DemarcheTypeId[] = ['oct', 'pro', 'pr1', 'pr2
 
 const titreDemarchesTravauxTypes = ['aom', 'dam', 'dot'] as const satisfies readonly TravauxIds[]
 
-const titreEtapesDecisivesUnilateralesTypes: EtapeTypeId[] = ['ide', 'spp', 'dup', 'dux', 'aco', ...titreEtapesDecisivesCommunesTypes]
+const titreEtapesDecisivesUnilateralesTypes: EtapeTypeId[] = ['ide', 'spp', 'dpu', 'dux', 'aco', ...titreEtapesDecisivesCommunesTypes]
 
 const titreDemarchesUnilateralesTypes: DemarcheTypeId[] = ['ret', 'prr', 'dec']
 
@@ -95,7 +95,7 @@ const titreDemarcheUnilateralStatutIdFind = (titreDemarcheEtapes: Pick<ITitreEta
 
   // - le type de l’étape est publication au JO unilatérale
   // - le type de l’étape est décision unilatérale
-  if (['dup', 'dux'].includes(titreEtapeRecent.typeId)) {
+  if (['dpu', 'dux'].includes(titreEtapeRecent.typeId)) {
     // - le statut de la démarche est terminé
     return DemarchesStatutsIds.Termine
   }
