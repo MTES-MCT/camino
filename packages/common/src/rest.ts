@@ -63,7 +63,7 @@ import { administrationActiviteTypeEmailValidator } from './administrations'
 import { flattenEtapeValidator, restEtapeCreationValidator, restEtapeModificationValidator } from './etape-form'
 
 type CaminoRoute<T extends string> = { params: ZodObjectParsUrlParams<T> } & {
-  get?: { output: ZodType }
+  get?: { output: ZodType; searchParams?: ZodType }
   post?: { input: ZodType; output: ZodType }
   newPost?: { input: ZodType; output: ZodType }
   put?: { input: ZodType; output: ZodType }
@@ -147,7 +147,7 @@ export const CaminoRestRoutes = {
   '/config': { params: noParamsValidator, get: { output: caminoConfigValidator } },
   '/moi': { params: noParamsValidator, get: { output: userValidator } },
   '/rest/utilisateurs/:id/newsletter': { params: utilisateurIdParamsValidator, get: { output: z.boolean() }, post: { input: newsletterAbonnementValidator, output: z.boolean() } },
-  '/rest/utilisateurs/registerToNewsletter': { params: noParamsValidator, get: { output: z.boolean() } },
+  '/rest/utilisateurs/registerToNewsletter': { params: noParamsValidator, get: { output: z.boolean(), searchParams: z.object({ email: z.string() }) } },
   // On passe par un http get plutot qu'un http delete car nous terminons par une redirection vers la deconnexion de oauth2, qui se traduit mal sur certains navigateurs et essaie de faire un delete sur une route get
   '/rest/utilisateurs/:id/delete': { params: utilisateurIdParamsValidator, get: { output: z.void() } },
   '/rest/utilisateurs/:id/permission': { params: utilisateurIdParamsValidator, post: { input: utilisateurToEdit, output: z.void() } },
@@ -191,7 +191,10 @@ export const CaminoRestRoutes = {
     newPost: { input: administrationActiviteTypeEmailValidator, output: z.boolean() },
   },
   '/rest/utilisateur/generateQgisToken': { params: noParamsValidator, post: { input: z.void(), output: qgisTokenValidator } },
-  '/rest/etapesTypes/:demarcheId/:date': { params: z.object({ demarcheId: demarcheIdValidator, date: caminoDateValidator }), get: { output: z.array(etapeTypeEtapeStatutWithMainStepValidator) } },
+  '/rest/etapesTypes/:demarcheId/:date': {
+    params: z.object({ demarcheId: demarcheIdValidator, date: caminoDateValidator }),
+    get: { output: z.array(etapeTypeEtapeStatutWithMainStepValidator), searchParams: z.object({ etapeId: etapeIdValidator.optional() }) },
+  },
   '/rest/demarches/:demarcheId/geojson': { params: z.object({ demarcheId: demarcheIdOrSlugValidator }), get: { output: perimetreInformationsValidator } },
   '/rest/etapes/:etapeId/geojson': { params: z.object({ etapeId: etapeIdOrSlugValidator }), get: { output: perimetreInformationsValidator } },
   '/rest/etapes/:etapeId/etapeDocuments': { params: etapeIdParamsValidator, get: { output: getEtapeDocumentsByEtapeIdValidator } },
