@@ -89,7 +89,7 @@ type IRestResolver = (
 
 type CaminoRestRoutesType = typeof CaminoRestRoutes
 type RestGetCall<Route extends GetRestRoutes> = (pool: Pool) => (req: CaminoRequest, res: CustomResponse<DeepReadonly<z.infer<CaminoRestRoutesType[Route]['get']['output']>>>) => Promise<void>
-type RestNewPostCall<Route extends NewPostRestRoutes> = (
+export type RestNewPostCall<Route extends NewPostRestRoutes> = (
   pool: Pool,
   user: DeepReadonly<UserNotNull>,
   body: DeepReadonly<z.infer<CaminoRestRoutesType[Route]['newPost']['input']>>,
@@ -98,7 +98,7 @@ type RestNewPostCall<Route extends NewPostRestRoutes> = (
 
 type SearchParams<Route extends NewGetRestRoutes> = CaminoRestRoutesType[Route]['newGet'] extends { searchParams: ZodType } ? z.infer<CaminoRestRoutesType[Route]['newGet']['searchParams']> : undefined
 
-type RestNewGetCall<Route extends NewGetRestRoutes> = (
+export type RestNewGetCall<Route extends NewGetRestRoutes> = (
   pool: Pool,
   user: DeepReadonly<User>,
   params: DeepReadonly<z.infer<CaminoRestRoutesType[Route]['params']>>,

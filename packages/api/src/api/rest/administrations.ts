@@ -13,6 +13,7 @@ import { ZodUnparseable } from '../../tools/fp-tools'
 import { DeepReadonly } from 'camino-common/src/typescript-tools'
 import { DbQueryAccessError } from '../../pg-database'
 import { Effect, Match } from 'effect'
+import { RestNewPostCall } from '../../server/rest'
 
 export const getAdministrationUtilisateurs = (pool: Pool) => async (req: JWTRequest<User>, res: CustomResponse<AdminUserNotNull[]>) => {
   const user = req.auth
@@ -56,7 +57,7 @@ export const getAdministrationActiviteTypeEmails = (pool: Pool) => async (req: J
   }
 }
 
-export const addAdministrationActiviteTypeEmails = (
+export const addAdministrationActiviteTypeEmails: RestNewPostCall<'/rest/administrations/:administrationId/activiteTypeEmails'> = (
   pool: Pool,
   user: DeepReadonly<UserNotNull>,
   body: DeepReadonly<AdministrationActiviteTypeEmail>,
@@ -79,7 +80,7 @@ export const addAdministrationActiviteTypeEmails = (
   )
 }
 
-export const deleteAdministrationActiviteTypeEmails = (
+export const deleteAdministrationActiviteTypeEmails: RestNewPostCall<'/rest/administrations/:administrationId/activiteTypeEmails/delete'> = (
   pool: Pool,
   user: DeepReadonly<UserNotNull>,
   body: DeepReadonly<AdministrationActiviteTypeEmail>,

@@ -18,6 +18,7 @@ import { Pool } from 'pg'
 import { DeepReadonly, isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools'
 import { config } from '../../config/index'
 import { Effect, Match, pipe } from 'effect'
+import { RestNewGetCall } from '../../server/rest'
 
 export const isSubscribedToNewsletter =
   (_pool: Pool) =>
@@ -229,7 +230,7 @@ export const generateQgisToken =
     }
   }
 
-export const registerToNewsletter = (
+export const registerToNewsletter: RestNewGetCall<'/rest/utilisateurs/registerToNewsletter'> = (
   _pool: Pool,
   _user: DeepReadonly<User>,
   _params: Record<string, never>,
