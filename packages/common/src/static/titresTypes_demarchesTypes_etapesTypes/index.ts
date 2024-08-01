@@ -88,6 +88,7 @@ const permisExclusifDeRecherchesMetauxEtGranulatsMarinsProlongationsEtapes = [
   ETAPES_TYPES.decisionDeLadministration,
   ETAPES_TYPES.publicationDeDecisionAuJORF,
   ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs,
+  ETAPES_TYPES.publicationDansUnJournalLocalOuNational,
   ETAPES_TYPES.notificationAuDemandeur,
   ETAPES_TYPES.abrogationDeLaDecision,
   ETAPES_TYPES.decisionDuJugeAdministratif,
