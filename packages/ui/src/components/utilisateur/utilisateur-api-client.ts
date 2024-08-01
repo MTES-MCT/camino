@@ -3,7 +3,7 @@ import { EntrepriseId, Utilisateur } from 'camino-common/src/entreprise'
 import { QGISToken, UtilisateurToEdit } from 'camino-common/src/utilisateur'
 
 import gql from 'graphql-tag'
-import { getWithJson, postWithJson } from '../../api/client-rest'
+import { getWithJson, newGetWithJson, postWithJson } from '../../api/client-rest'
 import { Role, UtilisateurId } from 'camino-common/src/roles'
 import { AdministrationId } from 'camino-common/src/static/administrations'
 
@@ -101,7 +101,7 @@ export const utilisateurApiClient: UtilisateurApiClient = {
     await postWithJson('/rest/utilisateurs/:id/newsletter', { id: userId }, { newsletter })
   },
   registerToNewsletter: async (email: string) => {
-    await getWithJson('/rest/utilisateurs/registerToNewsletter', {}, { email })
+    await newGetWithJson('/rest/utilisateurs/registerToNewsletter', {}, { email })
   },
   removeUtilisateur: async (userId: UtilisateurId) => getWithJson('/rest/utilisateurs/:id/delete', { id: userId }),
   updateUtilisateur: async (utilisateur: UtilisateurToEdit) => postWithJson('/rest/utilisateurs/:id/permission', { id: utilisateur.id }, utilisateur),

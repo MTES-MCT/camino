@@ -11,6 +11,7 @@ import {
   PostRestRoutes,
   PutRestRoutes,
   NewPostRestRoutes,
+  NewGetRestRoutes,
 } from 'camino-common/src/rest'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { CaminoError } from 'camino-common/src/zod-tools'
@@ -74,12 +75,14 @@ const callFetch = async <T extends CaminoRestRoute>(
   // TODO 2024-05-02 améliorer la gestion du status http
   throw new CaminoHttpError(`Une erreur s'est produite lors de la récupération des données`, fetched.status as HttpStatus)
 }
-
-type GetWithJsonArgs<T extends GetRestRoutes> = (typeof CaminoRestRoutes)[T]['get'] extends { searchParams: ZodType }
-  ? [path: T, params: CaminoRestParams<T>, searchParams: z.infer<(typeof CaminoRestRoutes)[T]['get']['searchParams']>]
+type GetWithJsonArgs<T extends GetRestRoutes | NewGetRestRoutes, Method extends keyof (typeof CaminoRestRoutes)[T]> = (typeof CaminoRestRoutes)[T][Method] extends { searchParams: ZodType }
+  ? [path: T, params: CaminoRestParams<T>, searchParams: z.infer<(typeof CaminoRestRoutes)[T][Method]['searchParams']>]
   : [path: T, params: CaminoRestParams<T>]
 
-export const getWithJson = async <T extends GetRestRoutes>(...args: GetWithJsonArgs<T>): Promise<z.infer<(typeof CaminoRestRoutes)[T]['get']['output']>> =>
+export const getWithJson = async <T extends GetRestRoutes>(...args: GetWithJsonArgs<T, 'get'>): Promise<z.infer<(typeof CaminoRestRoutes)[T]['get']['output']>> =>
+  callFetch(args[0], args[1], 'get', args.length === 3 ? args[2] : {})
+
+export const newGetWithJson = async <T extends NewGetRestRoutes>(...args: GetWithJsonArgs<T, 'newGet'>): Promise<z.infer<(typeof CaminoRestRoutes)[T]['newGet']['output']>> =>
   callFetch(args[0], args[1], 'get', args.length === 3 ? args[2] : {})
 
 export const deleteWithJson = async <T extends DeleteRestRoutes>(path: T, params: CaminoRestParams<T>, searchParams: Record<string, string | string[]> = {}): Promise<void> =>
