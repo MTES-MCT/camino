@@ -385,4 +385,74 @@ describe('trie les étapes', () => {
     `)
     expect(result[result.length - 1].id).toBe('asc')
   })
+
+  test("une demande en brouillon à la même date qu'une décision de l'administration est en 1ère position", () => {
+    const etapes: TitreEtapeForMachine[] = [
+      {
+        id: newEtapeId('mfr'),
+        typeId: 'mfr',
+        date: toCaminoDate('2020-01-01'),
+        statutId: 'fai',
+        isBrouillon: ETAPE_IS_BROUILLON,
+        surface: null,
+        ordre: 1,
+        communes: [],
+        contenu: null,
+      },
+      {
+        id: newEtapeId('dex'),
+        typeId: 'dex',
+        date: toCaminoDate('2020-01-01'),
+        statutId: 'acc',
+        isBrouillon: ETAPE_IS_NOT_BROUILLON,
+        surface: null,
+        ordre: 3,
+        communes: [],
+        contenu: null,
+      },
+    ]
+    const result = titreEtapesSortAscByDate(etapes, newDemarcheId(), DEMARCHES_TYPES_IDS.Octroi, TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_GEOTHERMIE)
+
+    expect(result.map(({ id }) => id)).toMatchInlineSnapshot(`
+         [
+           "mfr",
+           "dex",
+         ]
+       `)
+  })
+
+  test("une demande en brouillon à une date postérieure qu'une décision de l'administration est en 2ème position", () => {
+    const etapes: TitreEtapeForMachine[] = [
+      {
+        id: newEtapeId('mfr'),
+        typeId: 'mfr',
+        date: toCaminoDate('2020-01-02'),
+        statutId: 'fai',
+        isBrouillon: ETAPE_IS_BROUILLON,
+        surface: null,
+        ordre: 1,
+        communes: [],
+        contenu: null,
+      },
+      {
+        id: newEtapeId('dex'),
+        typeId: 'dex',
+        date: toCaminoDate('2020-01-01'),
+        statutId: 'acc',
+        isBrouillon: ETAPE_IS_NOT_BROUILLON,
+        surface: null,
+        ordre: 3,
+        communes: [],
+        contenu: null,
+      },
+    ]
+    const result = titreEtapesSortAscByDate(etapes, newDemarcheId(), DEMARCHES_TYPES_IDS.Octroi, TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_GEOTHERMIE)
+
+    expect(result.map(({ id }) => id)).toMatchInlineSnapshot(`
+           [
+             "dex",
+             "mfr",
+           ]
+         `)
+  })
 })

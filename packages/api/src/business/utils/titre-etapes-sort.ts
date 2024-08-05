@@ -7,6 +7,7 @@ import { getEtapesTDE } from 'camino-common/src/static/titresTypes_demarchesType
 import { DemarcheId } from 'camino-common/src/demarche'
 import { isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
 import { ETAPE_IS_BROUILLON } from 'camino-common/src/etape'
+import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes'
 
 // classe les étapes selon leur ordre inverse: 3, 2, 1.
 export const titreEtapesSortDescByOrdre = <T extends Pick<ITitreEtape, 'ordre'>>(titreEtapes: T[]): T[] => titreEtapes.toSorted((a, b) => b.ordre! - a.ordre!)
@@ -36,6 +37,17 @@ export const titreEtapesSortAscByDate = <T extends TitreEtapeForMachine>(titreEt
     if (isNotNullNorUndefinedNorEmpty(etapesInBrouillon)) {
       return [...result, ...etapesInBrouillon].toSorted((a, b) => {
         if (a.isBrouillon === ETAPE_IS_BROUILLON || b.isBrouillon === ETAPE_IS_BROUILLON) {
+          // TODO 2024-08-05 si c'est une demande en brouillon à la même date qu'une autre étape, on la met en première position. On devrait pouvoir mieux faire via la machine et les étapes potentielles.
+          if (a.date === b.date) {
+            if (a.typeId === ETAPES_TYPES.demande) {
+              return -1
+            }
+
+            if (b.typeId === ETAPES_TYPES.demande) {
+              return 1
+            }
+          }
+
           return a.date.localeCompare(b.date)
         }
 
