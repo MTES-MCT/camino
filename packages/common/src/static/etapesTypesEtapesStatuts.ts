@@ -109,6 +109,7 @@ export const EtapesTypesEtapesStatuts = {
   decisionDeLadministration: {
     ACCEPTE: { etapeTypeId: 'dex', etapeStatutId: 'acc' },
     REJETE: { etapeTypeId: 'dex', etapeStatutId: 'rej' },
+    REJETE_DECISION_IMPLICITE: { etapeTypeId: 'dex', etapeStatutId: 'rei' },
   },
   decisionImplicite: {
     ACCEPTE: { etapeTypeId: 'dim', etapeStatutId: 'acc' },

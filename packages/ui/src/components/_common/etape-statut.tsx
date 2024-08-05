@@ -23,6 +23,7 @@ const couleurParStatut = {
   [ETAPES_STATUTS.FAVORABLE_AVEC_RESERVE]: 'green-bourgeon',
   [ETAPES_STATUTS.AJOURNE]: 'orange-terre-battue',
   [ETAPES_STATUTS.REJETE]: 'purple-glycine',
+  [ETAPES_STATUTS.REJETE_DECISION_IMPLICITE]: 'purple-glycine',
   [ETAPES_STATUTS.TERMINE]: 'green-bourgeon',
   [ETAPES_STATUTS.NON_APPLICABLE]: 'beige-gris-galet',
   [ETAPES_STATUTS.PROGRAMME]: 'orange-terre-battue',
