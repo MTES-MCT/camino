@@ -88,14 +88,6 @@ export const titreAdministrationValidator = commonTitreValidator.omit({ administ
 })
 export type CommonTitreAdministration = z.infer<typeof titreAdministrationValidator>
 
-export const titreOnfValidator = commonTitreValidator.omit({ administrations_locales: true }).extend({
-  dateCompletudePTMG: z.string(),
-  dateReceptionONF: z.string(),
-  dateCARM: z.string(),
-  enAttenteDeONF: z.boolean(),
-})
-export type CommonTitreONF = z.infer<typeof titreOnfValidator>
-
 const titreLinkValidator = commonTitreValidator.pick({ id: true, nom: true })
 export type TitreLink = z.infer<typeof titreLinkValidator>
 
