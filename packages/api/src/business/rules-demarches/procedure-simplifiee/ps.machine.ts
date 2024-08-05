@@ -18,7 +18,10 @@ type RendreDecisionAdministrationRejetee = {
   date: CaminoDate
   type: 'RENDRE_DECISION_ADMINISTRATION_REJETEE'
 }
-
+type RendreDecisionAdministrationRejeteeDecisionImplicite = {
+  date: CaminoDate
+  type: 'RENDRE_DECISION_ADMINISTRATION_REJETEE_DECISION_IMPLICITE'
+}
 type PublierDecisionAccepteeAuJORF = {
   date: CaminoDate
   type: 'PUBLIER_DECISION_ACCEPTEE_AU_JORF'
@@ -39,6 +42,7 @@ type ProcedureSimplifieeXStateEvent =
   | ParticipationDuPublic
   | RendreDecisionAdministrationAcceptee
   | RendreDecisionAdministrationRejetee
+  | RendreDecisionAdministrationRejeteeDecisionImplicite
   | SaisirInformationHistoriqueIncomplete
   | PublierDecisionAccepteeAuJORF
   | PublierDecisionAuRecueilDesActesAdministratifs
@@ -56,6 +60,7 @@ const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
   OUVRIR_PARTICIPATION_DU_PUBLIC: { db: ETES.participationDuPublic, mainStep: true },
   RENDRE_DECISION_ADMINISTRATION_ACCEPTEE: { db: { ACCEPTE: ETES.decisionDeLadministration.ACCEPTE }, mainStep: true },
   RENDRE_DECISION_ADMINISTRATION_REJETEE: { db: { REJETE: ETES.decisionDeLadministration.REJETE }, mainStep: true },
+  RENDRE_DECISION_ADMINISTRATION_REJETEE_DECISION_IMPLICITE: { db: { REJETE_DECISION_IMPLICITE: ETES.decisionDeLadministration.REJETE_DECISION_IMPLICITE }, mainStep: true },
   PUBLIER_DECISION_ACCEPTEE_AU_JORF: { db: { FAIT: ETES.publicationDeDecisionAuJORF.FAIT }, mainStep: true },
   PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS: { db: ETES.publicationDeDecisionAuRecueilDesActesAdministratifs, mainStep: true },
   CLASSER_SANS_SUITE: { db: ETES.classementSansSuite, mainStep: false },
@@ -79,6 +84,7 @@ export class ProcedureSimplifieeMachine extends CaminoMachine<ProcedureSimplifie
     switch (event) {
       case 'RENDRE_DECISION_ADMINISTRATION_ACCEPTEE':
       case 'RENDRE_DECISION_ADMINISTRATION_REJETEE':
+      case 'RENDRE_DECISION_ADMINISTRATION_REJETEE_DECISION_IMPLICITE':
       case 'SAISIR_INFORMATION_HISTORIQUE_INCOMPLETE':
       case 'PUBLIER_DECISION_ACCEPTEE_AU_JORF':
       case 'PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS':
@@ -108,7 +114,8 @@ export class ProcedureSimplifieeMachine extends CaminoMachine<ProcedureSimplifie
         case 'PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS':
         case 'SAISIR_INFORMATION_HISTORIQUE_INCOMPLETE':
         case 'RENDRE_DECISION_ADMINISTRATION_ACCEPTEE':
-        case 'RENDRE_DECISION_ADMINISTRATION_REJETEE': {
+        case 'RENDRE_DECISION_ADMINISTRATION_REJETEE':
+        case 'RENDRE_DECISION_ADMINISTRATION_REJETEE_DECISION_IMPLICITE': {
           return { type: eventFromEntry, date: etape.date }
         }
         case 'OUVRIR_PARTICIPATION_DU_PUBLIC': {
@@ -181,6 +188,14 @@ const procedureSimplifieeMachine = createMachine({
         demarcheStatut: DemarchesStatutsIds.Rejete,
       }),
     },
+    RENDRE_DECISION_ADMINISTRATION_REJETEE_DECISION_IMPLICITE: {
+      guard: ({ context, event }) => isBefore(event.date, procedureHistoriqueDateMax) && context.demarcheStatut === defaultDemarcheStatut,
+      target: '.finDeMachine',
+      actions: assign({
+        visibilite: 'publique',
+        demarcheStatut: DemarchesStatutsIds.Rejete,
+      }),
+    },
     CLASSER_SANS_SUITE: {
       guard: ({ context }) => context.demarcheStatut === DemarchesStatutsIds.EnInstruction,
       target: '.finDeMachine',
@@ -244,6 +259,14 @@ const procedureSimplifieeMachine = createMachine({
           guard: ({ context }) => isNullOrUndefined(context.ouverturePublicStatut) || context.ouverturePublicStatut === ETAPES_STATUTS.TERMINE,
           actions: assign({
             visibilite: 'confidentielle',
+            demarcheStatut: DemarchesStatutsIds.Rejete,
+          }),
+          target: 'finDeMachine',
+        },
+        RENDRE_DECISION_ADMINISTRATION_REJETEE_DECISION_IMPLICITE: {
+          guard: ({ context }) => isNullOrUndefined(context.ouverturePublicStatut) || context.ouverturePublicStatut === ETAPES_STATUTS.TERMINE,
+          actions: assign({
+            visibilite: 'publique',
             demarcheStatut: DemarchesStatutsIds.Rejete,
           }),
           target: 'finDeMachine',

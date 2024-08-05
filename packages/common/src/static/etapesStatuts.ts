@@ -1,7 +1,7 @@
 import { Couleur } from './couleurs'
 import { z } from 'zod'
 
-const IDS = ['acc', 'dre', 'enc', 'fai', 'dep', 'exe', 'req', 'com', 'inc', 'fav', 'def', 'fre', 'ajo', 'rej', 'ter', 'nul', 'pro'] as const
+const IDS = ['acc', 'dre', 'enc', 'fai', 'dep', 'exe', 'req', 'com', 'inc', 'fav', 'def', 'fre', 'ajo', 'rej', 'rei', 'ter', 'nul', 'pro'] as const
 export const ETAPES_STATUTS = {
   ACCEPTE: 'acc',
   DEFAVORABLE_AVEC_RESERVES: 'dre',
@@ -17,6 +17,7 @@ export const ETAPES_STATUTS = {
   FAVORABLE_AVEC_RESERVE: 'fre',
   AJOURNE: 'ajo',
   REJETE: 'rej',
+  REJETE_DECISION_IMPLICITE: 'rei',
   TERMINE: 'ter',
   NON_APPLICABLE: 'nul',
   PROGRAMME: 'pro',
@@ -56,6 +57,12 @@ export const EtapesStatuts: { [key in EtapeStatutId]: EtapeStatut<key> } = {
     couleur: 'error',
     description:
       "La demande a fait l’objet d’une décision défavorable de l'administration. Les textes d’applications du code minier prévoient que les décisions de rejet ne font pas l’objet d’une publication. En conséquence, les démarches qui passent au statut “rejeté” dans Camino sont dé-publiées et rendues inaccessibles aux tiers.\n",
+  },
+  rei: {
+    id: 'rei',
+    nom: 'rejeté - décision implicite',
+    couleur: 'error',
+    description: '',
   },
   req: { id: 'req', nom: 'requis', couleur: 'neutral' },
   ter: {
