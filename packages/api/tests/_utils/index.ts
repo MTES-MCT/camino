@@ -11,14 +11,25 @@ import { userSuper } from '../../src/database/user-super'
 import { AdminUserNotNull, isAdministrationRole, isSuperRole, UserNotNull } from 'camino-common/src/roles'
 import { TestUser } from 'camino-common/src/tests-utils'
 import { getCurrent } from 'camino-common/src/date'
-import { CaminoRestRoutes, DeleteRestRoutes, getRestRoute, GetRestRoutes, PostRestRoutes, PutRestRoutes, CaminoRestParams, DownloadRestRoutes, NewPostRestRoutes } from 'camino-common/src/rest'
+import {
+  CaminoRestRoutes,
+  DeleteRestRoutes,
+  getRestRoute,
+  GetRestRoutes,
+  PostRestRoutes,
+  PutRestRoutes,
+  CaminoRestParams,
+  DownloadRestRoutes,
+  NewPostRestRoutes,
+  NewGetRestRoutes,
+} from 'camino-common/src/rest'
 import { z } from 'zod'
 import { newUtilisateurId } from '../../src/database/models/_format/id-create'
 import { idUserKeycloakRecognised } from '../keycloak'
 import { DeepReadonly, isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { config } from '../../src/config/index'
 
-export const queryImport = (nom: string) =>
+export const queryImport = (nom: string): string =>
   fs
     .readFileSync(path.join(__dirname, `../queries/${nom}.graphql`))
     // important pour transformer le buffer en string
@@ -28,7 +39,12 @@ const tokenCreate = (user: Partial<IUtilisateur>) => {
   return jwt.sign(JSON.stringify(user), config().JWT_SECRET)
 }
 
-export const graphQLCall = async (pool: Pool, query: string, variables: Index<string | boolean | Index<string | boolean | Index<string>[] | any>>, user: TestUser | undefined) => {
+export const graphQLCall = async (
+  pool: Pool,
+  query: string,
+  variables: Index<string | boolean | Index<string | boolean | Index<string>[] | any>>,
+  user: TestUser | undefined
+): Promise<request.Test> => {
   const req = request(app(pool)).post('/').send({ query, variables })
 
   return jwtSet(req, user)
@@ -47,6 +63,18 @@ export const restDownloadCall = async <Route extends DownloadRestRoutes>(
 }
 
 export const restCall = async <Route extends GetRestRoutes>(
+  pool: Pool,
+  route: Route,
+  params: CaminoRestParams<Route>,
+  user: TestUser | undefined,
+  searchParams?: Record<string, string | string[]>
+): Promise<request.Test> => {
+  const req = request(app(pool)).get(getRestRoute(route, params, searchParams))
+
+  return jwtSet(req, user)
+}
+
+export const restNewCall = async <Route extends NewGetRestRoutes>(
   pool: Pool,
   route: Route,
   params: CaminoRestParams<Route>,

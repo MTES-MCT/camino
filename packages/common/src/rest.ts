@@ -12,7 +12,7 @@ import {
   entrepriseValidator,
 } from './entreprise'
 import { demarcheIdOrSlugValidator, demarcheIdValidator } from './demarche'
-import { newsletterAbonnementValidator, qgisTokenValidator, utilisateurToEdit } from './utilisateur'
+import { newsletterAbonnementValidator, newsletterRegistrationValidator, qgisTokenValidator, utilisateurToEdit } from './utilisateur'
 import {
   editableTitreValidator,
   getDemarcheByIdOrSlugValidator,
@@ -63,7 +63,8 @@ import { administrationActiviteTypeEmailValidator } from './administrations'
 import { flattenEtapeValidator, restEtapeCreationValidator, restEtapeModificationValidator } from './etape-form'
 
 type CaminoRoute<T extends string> = { params: ZodObjectParsUrlParams<T> } & {
-  get?: { output: ZodType }
+  get?: { output: ZodType; searchParams?: ZodType }
+  newGet?: { output: ZodType; searchParams?: ZodType }
   post?: { input: ZodType; output: ZodType }
   newPost?: { input: ZodType; output: ZodType }
   put?: { input: ZodType; output: ZodType }
@@ -147,7 +148,7 @@ export const CaminoRestRoutes = {
   '/config': { params: noParamsValidator, get: { output: caminoConfigValidator } },
   '/moi': { params: noParamsValidator, get: { output: userValidator } },
   '/rest/utilisateurs/:id/newsletter': { params: utilisateurIdParamsValidator, get: { output: z.boolean() }, post: { input: newsletterAbonnementValidator, output: z.boolean() } },
-  '/rest/utilisateurs/registerToNewsletter': { params: noParamsValidator, get: { output: z.boolean() } },
+  '/rest/utilisateurs/registerToNewsletter': { params: noParamsValidator, newGet: { output: z.boolean(), searchParams: newsletterRegistrationValidator } },
   // On passe par un http get plutot qu'un http delete car nous terminons par une redirection vers la deconnexion de oauth2, qui se traduit mal sur certains navigateurs et essaie de faire un delete sur une route get
   '/rest/utilisateurs/:id/delete': { params: utilisateurIdParamsValidator, get: { output: z.void() } },
   '/rest/utilisateurs/:id/permission': { params: utilisateurIdParamsValidator, post: { input: utilisateurToEdit, output: z.void() } },
@@ -191,7 +192,10 @@ export const CaminoRestRoutes = {
     newPost: { input: administrationActiviteTypeEmailValidator, output: z.boolean() },
   },
   '/rest/utilisateur/generateQgisToken': { params: noParamsValidator, post: { input: z.void(), output: qgisTokenValidator } },
-  '/rest/etapesTypes/:demarcheId/:date': { params: z.object({ demarcheId: demarcheIdValidator, date: caminoDateValidator }), get: { output: z.array(etapeTypeEtapeStatutWithMainStepValidator) } },
+  '/rest/etapesTypes/:demarcheId/:date': {
+    params: z.object({ demarcheId: demarcheIdValidator, date: caminoDateValidator }),
+    get: { output: z.array(etapeTypeEtapeStatutWithMainStepValidator), searchParams: z.object({ etapeId: etapeIdValidator.optional() }) },
+  },
   '/rest/demarches/:demarcheId/geojson': { params: z.object({ demarcheId: demarcheIdOrSlugValidator }), get: { output: perimetreInformationsValidator } },
   '/rest/etapes/:etapeId/geojson': { params: z.object({ etapeId: etapeIdOrSlugValidator }), get: { output: perimetreInformationsValidator } },
   '/rest/etapes/:etapeId/etapeDocuments': { params: etapeIdParamsValidator, get: { output: getEtapeDocumentsByEtapeIdValidator } },
@@ -261,19 +265,17 @@ isTrue<Expect<ZodParseUrlParams<'/titre/:id'>, { id: ZodType }>>
 isFalse<Expect<ZodParseUrlParams<'/titre/:id'>, {}>>
 isTrue<Expect<ZodParseUrlParams<'/titre/:titreId/:demarcheId'>, { titreId: ZodType; demarcheId: ZodType }>>
 
-type can<T, Method extends 'post' | 'newPost' | 'get' | 'put' | 'delete' | 'download' | 'newDownload'> = T extends CaminoRestRoute
-  ? (typeof CaminoRestRoutes)[T] extends { [m in Method]: any }
-    ? T
-    : never
-  : never
+type MethodVerb = Exclude<keyof CaminoRoute<string>, 'params'>
+type can<T, Method extends MethodVerb> = T extends CaminoRestRoute ? ((typeof CaminoRestRoutes)[T] extends { [m in Method]: any } ? T : never) : never
 
-type CaminoRestRouteList<Route, Method extends 'post' | 'newPost' | 'get' | 'put' | 'delete' | 'download' | 'newDownload'> = Route extends readonly [infer First, ...infer Remaining]
+type CaminoRestRouteList<Route, Method extends MethodVerb> = Route extends readonly [infer First, ...infer Remaining]
   ? First extends can<First, Method>
     ? [First, ...CaminoRestRouteList<Remaining, Method>]
     : CaminoRestRouteList<Remaining, Method>
   : []
 
 export type GetRestRoutes = CaminoRestRouteList<typeof IDS, 'get'>[number]
+export type NewGetRestRoutes = CaminoRestRouteList<typeof IDS, 'newGet'>[number]
 export type PostRestRoutes = CaminoRestRouteList<typeof IDS, 'post'>[number]
 export type NewPostRestRoutes = CaminoRestRouteList<typeof IDS, 'newPost'>[number]
 export type DeleteRestRoutes = CaminoRestRouteList<typeof IDS, 'delete'>[number]

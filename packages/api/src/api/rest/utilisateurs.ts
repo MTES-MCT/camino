@@ -1,13 +1,13 @@
 import { userGet, utilisateurGet, utilisateursGet, utilisateurUpsert } from '../../database/queries/utilisateurs'
 import { CaminoRequest, CustomResponse } from './express-type'
-import { formatUser, IUtilisateursColonneId } from '../../types'
+import { CaminoApiError, formatUser, IUtilisateursColonneId } from '../../types'
 import { HTTP_STATUS } from 'camino-common/src/http'
 import { isSubscribedToNewsLetter, newsletterSubscriberUpdate } from '../../tools/api-mailjet/newsletter'
 import { isAdministrationRole, isEntrepriseOrBureauDetudeRole, isRole, User } from 'camino-common/src/roles'
 import { utilisateursFormatTable } from './format/utilisateurs'
 import { tableConvert } from './_convert'
 import { fileNameCreate } from '../../tools/file-name-create'
-import { newsletterAbonnementValidator, QGISToken, utilisateurToEdit, newsletterRegistrationValidator } from 'camino-common/src/utilisateur'
+import { newsletterAbonnementValidator, QGISToken, utilisateurToEdit } from 'camino-common/src/utilisateur'
 import { knex } from '../../knex'
 import { idGenerate } from '../../database/models/_format/id-create'
 import bcrypt from 'bcryptjs'
@@ -15,8 +15,10 @@ import { utilisateurUpdationValidate } from '../../business/validations/utilisat
 import { canDeleteUtilisateur } from 'camino-common/src/permissions/utilisateurs'
 import { DownloadFormat } from 'camino-common/src/rest'
 import { Pool } from 'pg'
-import { isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools'
+import { DeepReadonly, isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools'
 import { config } from '../../config/index'
+import { Effect, Match, pipe } from 'effect'
+import { RestNewGetCall } from '../../server/rest'
 
 export const isSubscribedToNewsletter =
   (_pool: Pool) =>
@@ -228,23 +230,38 @@ export const generateQgisToken =
     }
   }
 
-export const registerToNewsletter =
-  (_pool: Pool) =>
-  async (req: CaminoRequest, res: CustomResponse<boolean>): Promise<void> => {
-    const queryParsed = newsletterRegistrationValidator.safeParse(req.query)
-    if (!queryParsed.success) {
-      res.sendStatus(HTTP_STATUS.BAD_REQUEST)
-      return
-    }
+export const registerToNewsletter: RestNewGetCall<'/rest/utilisateurs/registerToNewsletter'> = (
+  _pool: Pool,
+  _user: DeepReadonly<User>,
+  _params: Record<string, never>,
+  searchParams: { email: string }
+): Effect.Effect<boolean, CaminoApiError<"Impossible de s'enregistrer à la newsletter">> => {
+  return pipe(
+    Effect.tryPromise({
+      try: async () => {
+        await newsletterSubscriberUpdate(searchParams.email, true)
 
-    try {
-      const result = await newsletterSubscriberUpdate(queryParsed.data.email, true)
-      res.send(result === 'email inscrit à la newsletter')
-    } catch (e) {
-      console.error(e)
-      res.sendStatus(HTTP_STATUS.INTERNAL_SERVER_ERROR)
-    }
-  }
+        return true
+      },
+      catch: e => {
+        let extra = ''
+        if (typeof e === 'string') {
+          extra = e.toUpperCase()
+        } else if (e instanceof Error) {
+          extra = e.message
+        }
+
+        return { message: "Impossible de s'enregistrer à la newsletter" as const, extra }
+      },
+    }),
+    Effect.mapError(caminoError =>
+      Match.value(caminoError.message).pipe(
+        Match.when("Impossible de s'enregistrer à la newsletter", () => ({ ...caminoError, status: HTTP_STATUS.INTERNAL_SERVER_ERROR })),
+        Match.exhaustive
+      )
+    )
+  )
+}
 
 interface IUtilisateursQueryInput {
   format?: DownloadFormat

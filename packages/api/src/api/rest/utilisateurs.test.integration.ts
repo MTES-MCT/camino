@@ -1,4 +1,4 @@
-import { restCall, restPostCall, userGenerate } from '../../../tests/_utils/index'
+import { restCall, restNewCall, restPostCall, userGenerate } from '../../../tests/_utils/index'
 import { dbManager } from '../../../tests/db-manager'
 import { Knex } from 'knex'
 import { expect, test, describe, afterAll, beforeAll, vi } from 'vitest'
@@ -159,12 +159,12 @@ describe('utilisateurCreer', () => {
 
 describe('registerToNewsletter', () => {
   test("abonne l'email donné à la newsletter s'il n'est pas encore abonné", async () => {
-    const tested = await restCall(dbPool, '/rest/utilisateurs/registerToNewsletter', {}, undefined, { email: 'jean@dupont.fr' })
+    const tested = await restNewCall(dbPool, '/rest/utilisateurs/registerToNewsletter', {}, undefined, { email: 'jean@dupont.fr' })
     expect(tested.statusCode).toBe(200)
     expect(tested.body).toBe(true)
   })
   test("ne fonctionne pas si l'email est invalide", async () => {
-    const tested = await restCall(dbPool, '/rest/utilisateurs/registerToNewsletter', {}, undefined)
+    const tested = await restNewCall(dbPool, '/rest/utilisateurs/registerToNewsletter', {}, undefined)
     expect(tested.statusCode).toBe(400)
   })
 })

@@ -56,6 +56,7 @@ import { CaminoApiError } from '../../types'
 import { DbQueryAccessError } from '../../pg-database'
 import { ZodUnparseable, callAndExit, zodParseEffect, zodParseEffectCallback } from '../../tools/fp-tools'
 import { CaminoError } from 'camino-common/src/zod-tools'
+import { RestNewPostCall } from '../../server/rest'
 
 export const getPerimetreInfos = (pool: Pool) => async (req: CaminoRequest, res: CustomResponse<PerimetreInformations>) => {
   const user = req.auth
@@ -193,7 +194,7 @@ type GeojsonImportErrorMessages =
   | GetGeojsonByGeoSystemeIdErrorMessages
   | GetGeojsonInformationErrorMessages
   | ConvertPointsErrors
-export const geojsonImport = (
+export const geojsonImport: RestNewPostCall<'/rest/geojson/import/:geoSystemeId'> = (
   pool: Pool,
   user: DeepReadonly<UserNotNull>,
   body: DeepReadonly<GeojsonImportBody>,
@@ -449,7 +450,7 @@ const fileNameToCsv = (pathFrom: string): Effect.Effect<unknown[], CaminoError<t
 const accesInterditError = 'Accès interdit' as const
 type GeosjsonImportPointsErrorMessages = ZodUnparseable | DbQueryAccessError | typeof accesInterditError | 'Fichier incorrect' | ConvertPointsErrors
 
-export const geojsonImportPoints = (
+export const geojsonImportPoints: RestNewPostCall<'/rest/geojson_points/import/:geoSystemeId'> = (
   pool: Pool,
   user: DeepReadonly<UserNotNull>,
   geojsonImportInput: DeepReadonly<GeojsonImportPointsBody>,
@@ -497,7 +498,7 @@ export const geojsonImportPoints = (
 }
 
 type GeosjsonImportForagesErrorMessages = ZodUnparseable | DbQueryAccessError | typeof ouvertureCsvError | typeof ouvertureShapeError | typeof ouvertureGeoJSONError | ConvertPointsErrors
-export const geojsonImportForages = (
+export const geojsonImportForages: RestNewPostCall<'/rest/geojson_forages/import/:geoSystemeId'> = (
   pool: Pool,
   _user: DeepReadonly<UserNotNull>,
   body: DeepReadonly<GeojsonImportForagesBody>,

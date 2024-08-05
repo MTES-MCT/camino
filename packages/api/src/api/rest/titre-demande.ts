@@ -20,6 +20,7 @@ import { titreEtapeUpsert } from '../../database/queries/titres-etapes'
 import { getCurrent } from 'camino-common/src/date'
 import { titreEtapeUpdateTask } from '../../business/titre-etape-update'
 import { utilisateurTitreCreate } from '../../database/queries/utilisateurs'
+import { RestNewPostCall } from '../../server/rest'
 
 type TitreDemandeCreerErrors =
   | 'Accès interdit'
@@ -35,7 +36,7 @@ type TitreDemandeCreerErrors =
   | "Problème lors de l'abonnement de l'utilisateur au titre"
   | "L'entreprise est obligatoire"
   | "L'entreprise ne doit pas être présente"
-export const titreDemandeCreer = (
+export const titreDemandeCreer: RestNewPostCall<'/rest/titres'> = (
   pool: Pool,
   user: DeepReadonly<UserNotNull>,
   titreDemande: DeepReadonly<TitreDemande>,

@@ -46,12 +46,13 @@ import {
   CaminoRestRoute,
   NewDownloadRestRoutes,
   NewPostRestRoutes,
+  NewGetRestRoutes,
 } from 'camino-common/src/rest'
 import { CaminoConfig, caminoConfigValidator } from 'camino-common/src/static/config'
 import { CaminoRequest, CustomResponse } from '../api/rest/express-type'
 import { User, UserNotNull } from 'camino-common/src/roles'
 import { createEtape, deleteEtape, deposeEtape, getEtape, getEtapeAvis, getEtapeDocuments, getEtapeEntrepriseDocuments, getEtapesTypesEtapesStatusWithMainStep, updateEtape } from '../api/rest/etapes'
-import { z } from 'zod'
+import { ZodType, z } from 'zod'
 import { getCommunes } from '../api/rest/communes'
 import { SendFileOptions } from 'express-serve-static-core'
 import { activiteDocumentDownload, getActivite, updateActivite, deleteActivite } from '../api/rest/activites'
@@ -88,18 +89,29 @@ type IRestResolver = (
 
 type CaminoRestRoutesType = typeof CaminoRestRoutes
 type RestGetCall<Route extends GetRestRoutes> = (pool: Pool) => (req: CaminoRequest, res: CustomResponse<DeepReadonly<z.infer<CaminoRestRoutesType[Route]['get']['output']>>>) => Promise<void>
-type RestNewPostCall<Route extends NewPostRestRoutes> = (
+export type RestNewPostCall<Route extends NewPostRestRoutes> = (
   pool: Pool,
   user: DeepReadonly<UserNotNull>,
   body: DeepReadonly<z.infer<CaminoRestRoutesType[Route]['newPost']['input']>>,
   params: DeepReadonly<z.infer<CaminoRestRoutesType[Route]['params']>>
 ) => Effect.Effect<DeepReadonly<z.infer<CaminoRestRoutesType[Route]['newPost']['output']>>, CaminoApiError<string>>
+
+type SearchParams<Route extends NewGetRestRoutes> = CaminoRestRoutesType[Route]['newGet'] extends { searchParams: ZodType } ? z.infer<CaminoRestRoutesType[Route]['newGet']['searchParams']> : undefined
+
+export type RestNewGetCall<Route extends NewGetRestRoutes> = (
+  pool: Pool,
+  user: DeepReadonly<User>,
+  params: DeepReadonly<z.infer<CaminoRestRoutesType[Route]['params']>>,
+  searchParams: SearchParams<Route>
+) => Effect.Effect<DeepReadonly<z.infer<CaminoRestRoutesType[Route]['newGet']['output']>>, CaminoApiError<string>>
+
 type RestPostCall<Route extends PostRestRoutes> = (pool: Pool) => (req: CaminoRequest, res: CustomResponse<z.infer<CaminoRestRoutesType[Route]['post']['output']>>) => Promise<void>
 type RestPutCall<Route extends PutRestRoutes> = (pool: Pool) => (req: CaminoRequest, res: CustomResponse<z.infer<CaminoRestRoutesType[Route]['put']['output']>>) => Promise<void>
 type RestDeleteCall = (pool: Pool) => (req: CaminoRequest, res: CustomResponse<void | Error>) => Promise<void>
 type RestDownloadCall = (pool: Pool) => IRestResolver
 
 type Transform<Route> = (Route extends GetRestRoutes ? { getCall: RestGetCall<Route> } : {}) &
+  (Route extends NewGetRestRoutes ? { newGetCall: RestNewGetCall<Route> } : {}) &
   (Route extends PostRestRoutes ? { postCall: RestPostCall<Route> } : {}) &
   (Route extends NewPostRestRoutes ? { newPostCall: RestNewPostCall<Route> } : {}) &
   (Route extends PutRestRoutes ? { putCall: RestPutCall<Route> } : {}) &
@@ -152,7 +164,7 @@ const restRouteImplementations: Readonly<{ [key in CaminoRestRoute]: Transform<k
   '/rest/statistiques/dgtm': { getCall: getDGTMStats, ...CaminoRestRoutes['/rest/statistiques/dgtm'] },
   '/rest/statistiques/datagouv': { getCall: getDataGouvStats, ...CaminoRestRoutes['/rest/statistiques/datagouv'] },
   '/rest/demarches/:demarcheIdOrSlug': { getCall: getDemarcheByIdOrSlug, deleteCall: demarcheSupprimer, ...CaminoRestRoutes['/rest/demarches/:demarcheIdOrSlug'] },
-  '/rest/utilisateurs/registerToNewsletter': { getCall: registerToNewsletter, ...CaminoRestRoutes['/rest/utilisateurs/registerToNewsletter'] },
+  '/rest/utilisateurs/registerToNewsletter': { newGetCall: registerToNewsletter, ...CaminoRestRoutes['/rest/utilisateurs/registerToNewsletter'] },
   '/rest/utilisateur/generateQgisToken': { postCall: generateQgisToken, ...CaminoRestRoutes['/rest/utilisateur/generateQgisToken'] },
   '/rest/utilisateurs/:id/permission': { postCall: updateUtilisateurPermission, ...CaminoRestRoutes['/rest/utilisateurs/:id/permission'] },
   '/rest/utilisateurs/:id/delete': { getCall: deleteUtilisateur, ...CaminoRestRoutes['/rest/utilisateurs/:id/delete'] },
@@ -198,6 +210,60 @@ export const restWithPool = (dbPool: Pool): Router => {
       if ('getCall' in maRoute) {
         console.info(`GET ${route}`)
         rest.get(route, restCatcher(maRoute.getCall(dbPool)))
+      }
+      if ('newGetCall' in maRoute) {
+        console.info(`GET ${route}`)
+        rest.get(route, async (req: CaminoRequest, res: express.Response, _next: express.NextFunction) => {
+          try {
+            const call = Effect.Do.pipe(
+              Effect.bind('searchParams', () => {
+                if ('searchParams' in maRoute.newGet) {
+                  return zodParseEffect(maRoute.newGet.searchParams, req.query)
+                }
+
+                return Effect.succeed(undefined)
+              }),
+              Effect.bind('params', () => zodParseEffect(maRoute.params, req.params)),
+              Effect.mapError(caminoError => {
+                return { ...caminoError, status: HTTP_STATUS.BAD_REQUEST }
+              }),
+              // TODO 2024-06-26 ici, si on ne met pas les params et les searchParams à any, on se retrouve avec une typescript union hell qui fait tout planter
+              Effect.bind<'result', { searchParams: any; params: any }, DeepReadonly<z.infer<(typeof maRoute)['newGet']['output']>>, CaminoApiError<string>, never>(
+                'result',
+                ({ searchParams, params }) => {
+                  return maRoute.newGetCall(dbPool, req.auth, params, searchParams)
+                }
+              ),
+              Effect.bind('parsedResult', ({ result }) =>
+                pipe(
+                  zodParseEffect(maRoute.newGet.output, result),
+                  Effect.mapError(caminoError => ({ ...caminoError, status: HTTP_STATUS.INTERNAL_SERVER_ERROR }))
+                )
+              ),
+              Effect.mapBoth({
+                onFailure: caminoError => {
+                  console.warn(`problem with route ${route}: ${caminoError.message}`)
+                  res.status(caminoError.status).json(caminoError)
+                },
+                onSuccess: ({ parsedResult }) => {
+                  res.json(parsedResult)
+                },
+              }),
+              Effect.runPromiseExit
+            )
+
+            const pipeline = await call
+            if (Exit.isFailure(pipeline)) {
+              if (!Cause.isFailType(pipeline.cause)) {
+                console.error('catching error on newPost route', route, pipeline.cause, req.body)
+                res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: "une erreur inattendue s'est produite", extra: pipeline.cause })
+              }
+            }
+          } catch (e) {
+            console.error('catching error on newPost route', route, e, req.body)
+            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: "une erreur inattendue s'est produite", extra: e })
+          }
+        })
       }
       if ('postCall' in maRoute) {
         console.info(`POST ${route}`)
