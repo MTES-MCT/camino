@@ -12,7 +12,7 @@ import {
   entrepriseValidator,
 } from './entreprise'
 import { demarcheIdOrSlugValidator, demarcheIdValidator } from './demarche'
-import { newsletterAbonnementValidator, newsletterRegistrationValidator, qgisTokenValidator, utilisateurToEdit } from './utilisateur'
+import { newsletterAbonnementValidator, newsletterRegistrationValidator, qgisTokenValidator, utilisateurToEdit, utilisateursSearchParamsValidator, utilisateursTableValidator } from './utilisateur'
 import {
   editableTitreValidator,
   getDemarcheByIdOrSlugValidator,
@@ -79,6 +79,7 @@ const IDS = [
   '/rest/utilisateurs/:id/newsletter',
   '/rest/utilisateurs/:id/delete',
   '/rest/utilisateurs/:id/permission',
+  '/rest/utilisateurs',
   '/rest/statistiques/minerauxMetauxMetropole',
   '/rest/statistiques/guyane',
   '/rest/statistiques/guyane/:annee',
@@ -150,6 +151,7 @@ export const CaminoRestRoutes = {
   // On passe par un http get plutot qu'un http delete car nous terminons par une redirection vers la deconnexion de oauth2, qui se traduit mal sur certains navigateurs et essaie de faire un delete sur une route get
   '/rest/utilisateurs/:id/delete': { params: utilisateurIdParamsValidator, get: { output: z.void() } },
   '/rest/utilisateurs/:id/permission': { params: utilisateurIdParamsValidator, post: { input: utilisateurToEdit, output: z.void() } },
+  '/rest/utilisateurs': { params: noParamsValidator, newGet: { output: utilisateursTableValidator, searchParams: utilisateursSearchParamsValidator} },
   '/rest/statistiques/minerauxMetauxMetropole': { params: noParamsValidator, get: { output: statistiquesMinerauxMetauxMetropoleValidator } },
   '/rest/statistiques/guyane': { params: noParamsValidator, get: { output: statistiquesGuyaneDataValidator } },
   '/rest/statistiques/guyane/:annee': { params: z.object({ annee: caminoAnneeValidator }), get: { output: statistiquesGuyaneDataValidator } },

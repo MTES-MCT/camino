@@ -30,6 +30,7 @@ import {
   updateUtilisateurPermission,
   utilisateurs,
   registerToNewsletter,
+  getUtilisateurs,
 } from '../api/rest/utilisateurs'
 import { logout, resetPassword } from '../api/rest/keycloak'
 import { getDGTMStats, getGranulatsMarinsStats, getGuyaneStats, getMinerauxMetauxMetropolesStats } from '../api/rest/statistiques/index'
@@ -168,6 +169,7 @@ const restRouteImplementations: Readonly<{ [key in CaminoRestRoute]: Transform<k
   '/rest/utilisateurs/:id/permission': { postCall: updateUtilisateurPermission, ...CaminoRestRoutes['/rest/utilisateurs/:id/permission'] },
   '/rest/utilisateurs/:id/delete': { getCall: deleteUtilisateur, ...CaminoRestRoutes['/rest/utilisateurs/:id/delete'] },
   '/rest/utilisateurs/:id/newsletter': { getCall: isSubscribedToNewsletter, postCall: manageNewsletterSubscription, ...CaminoRestRoutes['/rest/utilisateurs/:id/newsletter'] }, // UNTESTED YET
+  '/rest/utilisateurs': { newGetCall: getUtilisateurs, ...CaminoRestRoutes['/rest/utilisateurs'] },
   '/rest/entreprises/:entrepriseId/fiscalite/:annee': { getCall: fiscalite, ...CaminoRestRoutes['/rest/entreprises/:entrepriseId/fiscalite/:annee'] }, // UNTESTED YET
   '/rest/entreprises/:entrepriseId': { getCall: getEntreprise, putCall: modifierEntreprise, ...CaminoRestRoutes['/rest/entreprises/:entrepriseId'] },
   '/rest/entreprises/:entrepriseId/documents': { getCall: getEntrepriseDocuments, postCall: postEntrepriseDocument, ...CaminoRestRoutes['/rest/entreprises/:entrepriseId/documents'] },

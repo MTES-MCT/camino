@@ -1,4 +1,4 @@
-import { userGet, utilisateurGet, utilisateursGet, utilisateurUpsert } from '../../database/queries/utilisateurs'
+import { userGet, utilisateurGet, utilisateursCount, utilisateursGet, utilisateurUpsert } from '../../database/queries/utilisateurs'
 import { CaminoRequest, CustomResponse } from './express-type'
 import { CaminoApiError, formatUser, IUtilisateursColonneId } from '../../types'
 import { HTTP_STATUS } from 'camino-common/src/http'
@@ -7,18 +7,23 @@ import { isAdministrationRole, isEntrepriseOrBureauDetudeRole, isRole, User } fr
 import { utilisateursFormatTable } from './format/utilisateurs'
 import { tableConvert } from './_convert'
 import { fileNameCreate } from '../../tools/file-name-create'
-import { newsletterAbonnementValidator, QGISToken, utilisateurToEdit } from 'camino-common/src/utilisateur'
+import { newsletterAbonnementValidator, QGISToken, UtilisateursTable, utilisateurToEdit } from 'camino-common/src/utilisateur'
 import { knex } from '../../knex'
 import { idGenerate } from '../../database/models/_format/id-create'
 import bcrypt from 'bcryptjs'
 import { utilisateurUpdationValidate } from '../../business/validations/utilisateur-updation-validate'
-import { canDeleteUtilisateur } from 'camino-common/src/permissions/utilisateurs'
+import { canDeleteUtilisateur, canReadUtilisateurs } from 'camino-common/src/permissions/utilisateurs'
 import { DownloadFormat } from 'camino-common/src/rest'
 import { Pool } from 'pg'
 import { DeepReadonly, isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools'
 import { config } from '../../config/index'
 import { Effect, Match, pipe } from 'effect'
 import { RestNewGetCall } from '../../server/rest'
+import { info } from 'effect/Console'
+import { fieldsBuild } from '../graphql/resolvers/_fields-build'
+import { getUtilisateursFiltered } from '../../database/queries/utilisateurs.queries'
+import { DbQueryAccessError } from '../../pg-database'
+import { ZodUnparseable } from '../../tools/fp-tools'
 
 export const isSubscribedToNewsletter =
   (_pool: Pool) =>
@@ -320,3 +325,23 @@ export const utilisateurs =
         }
       : null
   }
+
+type GetUtilisateursError = DbQueryAccessError | ZodUnparseable | 'Impossible d\'accéder à la liste des utilisateurs' | 'droits insuffisants'
+export const getUtilisateurs: RestNewGetCall<'/rest/utilisateurs'> = (
+  pool,
+  user,
+  _params,
+  searchParams
+): Effect.Effect<DeepReadonly<UtilisateursTable>, CaminoApiError<GetUtilisateursError>> => {
+  return Effect.Do.pipe(
+    Effect.flatMap(() => getUtilisateursFiltered(pool, user, searchParams)),
+    Effect.mapError(caminoError =>
+      Match.value(caminoError.message).pipe(
+        Match.when("Impossible d'accéder à la base de données", () => ({ ...caminoError, status: HTTP_STATUS.INTERNAL_SERVER_ERROR })),
+        Match.when("droits insuffisants", () => ({ ...caminoError, status: HTTP_STATUS.FORBIDDEN })),
+        Match.when("Problème de validation de données", () => ({ ...caminoError, status: HTTP_STATUS.BAD_REQUEST })),
+        Match.exhaustive
+      )
+    )
+  )
+}

@@ -16,16 +16,18 @@ import { Region, Regions } from 'camino-common/src/static/region'
 import { computed, defineComponent, inject, onMounted, ref } from 'vue'
 import { AsyncData } from '@/api/client-rest'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
-import { userKey } from '@/moi'
+import { entreprisesKey, userKey } from '@/moi'
 import { capitalize } from 'camino-common/src/strings'
 import { Alert } from './_ui/alert'
 import { DsfrLink } from './_ui/dsfr-button'
 import { LabelWithValue } from './_ui/label-with-value'
+import { Entreprise } from 'camino-common/src/entreprise'
 
 export const Administration = defineComponent(() => {
   const route = useRoute<'administration'>()
 
   const user = inject(userKey)
+  const entreprises = inject(entreprisesKey, ref([]))
 
   const administrationId = computed<AdministrationId | null>(() => {
     if (isAdministrationId(route.params.id)) {
@@ -38,7 +40,7 @@ export const Administration = defineComponent(() => {
   return () => (
     <>
       {administrationId.value ? (
-        <PureAdministration administrationId={administrationId.value} user={user} apiClient={apiClient} />
+        <PureAdministration administrationId={administrationId.value} user={user} entreprises={entreprises.value} apiClient={apiClient} />
       ) : (
         <Alert title="Administration inconnue" type="error" small={true} />
       )}
@@ -49,6 +51,7 @@ export const Administration = defineComponent(() => {
 interface Props {
   administrationId: AdministrationId
   user: User
+  entreprises: Entreprise[]
   apiClient: Pick<ApiClient, 'administrationActivitesTypesEmails' | 'administrationUtilisateurs' | 'administrationActiviteTypeEmailUpdate' | 'administrationActiviteTypeEmailDelete'>
 }
 
@@ -167,7 +170,7 @@ export const PureAdministration = defineComponent<Props>(props => {
           data={utilisateurs.value}
           renderItem={item => (
             <div>
-              <TableAuto caption="Utilisateurs" columns={utilisateursColonnes} rows={utilisateursLignesBuild(item)} initialSort={'firstColumnAsc'} />
+              <TableAuto caption="Utilisateurs" columns={utilisateursColonnes} rows={utilisateursLignesBuild(item, props.entreprises)} initialSort={'firstColumnAsc'} />
             </div>
           )}
         />
@@ -208,4 +211,4 @@ export const PureAdministration = defineComponent<Props>(props => {
 })
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-PureAdministration.props = ['administrationId', 'user', 'apiClient']
+PureAdministration.props = ['administrationId', 'user', 'entreprises', 'apiClient']

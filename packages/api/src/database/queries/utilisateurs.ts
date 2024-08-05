@@ -11,7 +11,7 @@ import Utilisateurs from '../models/utilisateurs'
 import { utilisateursQueryModify } from './permissions/utilisateurs'
 import UtilisateursTitres from '../models/utilisateurs--titres'
 import { Role, User } from 'camino-common/src/roles'
-import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined } from 'camino-common/src/typescript-tools'
+import { DeepReadonly, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined } from 'camino-common/src/typescript-tools'
 
 const userGet = async (userId?: string): Promise<User> => {
   if (isNullOrUndefined(userId)) return null
@@ -36,7 +36,7 @@ const userGet = async (userId?: string): Promise<User> => {
   return undefined
 }
 
-const utilisateursQueryBuild = ({ fields }: { fields?: FieldsUtilisateur }, user: User) => {
+const utilisateursQueryBuild = ({ fields }: { fields?: FieldsUtilisateur }, user: DeepReadonly<User>) => {
   const graph = fields ? graphBuild(fields, 'utilisateur', fieldsFormat) : options.utilisateurs.graph
 
   const q = Utilisateurs.query().withGraphFetched(graph)
@@ -184,7 +184,7 @@ const utilisateursGet = async (
     emails?: string | null
   },
   { fields }: { fields?: FieldsUtilisateur } = {},
-  user: User
+  user: DeepReadonly<User>
 ) => {
   const q = utilisateursQueryBuild({ fields }, user)
 
@@ -234,7 +234,7 @@ const utilisateursCount = async (
     emails?: string | null
   },
   { fields }: { fields?: FieldsUtilisateur },
-  user: User
+  user: DeepReadonly<User>
 ) => {
   const q = utilisateursQueryBuild({ fields }, user)
 

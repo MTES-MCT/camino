@@ -34,7 +34,7 @@ export const PureUtilisateurs = defineComponent<Props>(props => {
     }
     const utilisateurs = await props.apiClient.getUtilisateurs(getUtilisateursParams)
 
-    return { values: utilisateursLignesBuild(utilisateurs.elements), total: utilisateurs.total }
+    return { values: utilisateursLignesBuild(utilisateurs.elements, props.entreprises), total: utilisateurs.total }
   }
 
   return () => (
