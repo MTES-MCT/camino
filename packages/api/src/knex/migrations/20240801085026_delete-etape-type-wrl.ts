@@ -4,7 +4,8 @@
 import { Knex } from 'knex'
 
 export const up = async (knex: Knex): Promise<void> => {
-  await knex.schema.dropTable('nexistepasEtVaFairePlanterLaMigration')
+  await knex.raw(`update titres_etapes set type_id = 'apd' where type_id = 'wrl'`)
+  await knex.raw(`update titres_etapes set type_id = 'dpu' where type_id = 'dup'`)
 }
 
 export const down = (): void => {}

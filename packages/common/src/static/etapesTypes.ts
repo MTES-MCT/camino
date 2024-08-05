@@ -4,13 +4,13 @@ import { Definition } from '../definition'
 import { EtapeBrouillon } from '../etape'
 
 // prettier-ignore
-const IDS = ['abd', 'aca','aco','and','ane','anf','def','dex','dim', 'dpu', 'dup', 'dux','ihi', 'mfr','mod','mom','rca','rcb','rcd','rcm','rco','rcs','rie','rif','rim','rpu','sco','acg','apd','ape','apo','app','apu','apw','asl','cac','ccs','cim','cod','css','dae','dec','des','ede','edm','epc','epu','esb','ide','mca','mcb','mcd','mcm','mco','mcp','mcr','mcs','mdp','mec','men','meo','mie','mif','mim','mna','mnb','mnc','mnd','mni','mno','mns','mnv','ncl','nis','npp','pfc','pfd','ppu','pqr','rcg','rde','rpe','sas','sca','scg','scl','spe','spo','spp','vfc','vfd','wab','wae','wao','wap','war','wau','wce','wco','wda','wdc','wdd','wde','wdm','wfa','wfd','wfo','wfr','wmm','wmr','wmt','woe','wpa','wpb','wpc','wpo','wpp','wps','wrc','wrd','wre','wrl','wrt','wse','wtp', 'asc', 'adc'] as const
+const IDS = ['abd', 'aca','aco','and','ane','anf','def','dex','dim', 'dpu',  'dux','ihi', 'mfr','mod','mom','rca','rcb','rcd','rcm','rco','rcs','rie','rif','rim','rpu','sco','acg','apd','ape','apo','app','apu','apw','asl','cac','ccs','cim','cod','css','dae','dec','des','ede','edm','epc','epu','esb','ide','mca','mcb','mcd','mcm','mco','mcp','mcr','mcs','mdp','mec','men','meo','mie','mif','mim','mna','mnb','mnc','mnd','mni','mno','mns','mnv','ncl','nis','npp','pfc','pfd','ppu','pqr','rcg','rde','rpe','sas','sca','scg','scl','spe','spo','spp','vfc','vfd','wab','wae','wao','wap','war','wau','wce','wco','wda','wdc','wdd','wde','wdm','wfa','wfd','wfo','wfr','wmm','wmr','wmt','woe','wpa','wpb','wpc','wpo','wpp','wps','wrc','wrd','wre','wrt','wse','wtp', 'asc', 'adc'] as const
 
 // prettier-ignore
-const FONDAMENTALES_IDS = ['abd', 'aca','aco','and','ane','anf','def','dex','dim', 'dpu', 'dup', 'dux','ihi', 'mfr','mod','mom','rca','rcb','rcd','rcm','rco','rcs','rie','rif','rim','rpu','sco'] as const satisfies Readonly<EtapeTypeIdFondamentaleArray>
+const FONDAMENTALES_IDS = ['abd', 'aca','aco','and','ane','anf','def','dex','dim', 'dpu','dux','ihi', 'mfr','mod','mom','rca','rcb','rcd','rcm','rco','rcs','rie','rif','rim','rpu','sco'] as const satisfies Readonly<EtapeTypeIdFondamentaleArray>
 
 // prettier-ignore
-const NON_FONDAMENTALES_IDS = ['acg','apd','ape','apo','app','apu','apw','asl','cac','ccs','cim','cod','css','dae','dec','des','ede','edm','epc','epu','esb','ide','mca','mcb','mcd','mcm','mco','mcp','mcr','mcs','mdp','mec','men','meo','mie','mif','mim','mna','mnb','mnc','mnd','mni','mno','mns','mnv','ncl','nis','npp','pfc','pfd','ppu','pqr','rcg','rde','rpe','sas','sca','scg','scl','spe','spo','spp','vfc','vfd','wab','wae','wao','wap','war','wau','wce','wco','wda','wdc','wdd','wde','wdm','wfa','wfd','wfo','wfr','wmm','wmr','wmt','woe','wpa','wpb','wpc','wpo','wpp','wps','wrc','wrd','wre','wrl','wrt','wse','wtp', 'asc', 'adc'] as const satisfies Readonly<EtapeTypeIdNonFondamentale[]>
+const NON_FONDAMENTALES_IDS = ['acg','apd','ape','apo','app','apu','apw','asl','cac','ccs','cim','cod','css','dae','dec','des','ede','edm','epc','epu','esb','ide','mca','mcb','mcd','mcm','mco','mcp','mcr','mcs','mdp','mec','men','meo','mie','mif','mim','mna','mnb','mnc','mnd','mni','mno','mns','mnv','ncl','nis','npp','pfc','pfd','ppu','pqr','rcg','rde','rpe','sas','sca','scg','scl','spe','spo','spp','vfc','vfd','wab','wae','wao','wap','war','wau','wce','wco','wda','wdc','wdd','wde','wdm','wfa','wfd','wfo','wfr','wmm','wmr','wmt','woe','wpa','wpb','wpc','wpo','wpp','wps','wrc','wrd','wre','wrt','wse','wtp', 'asc', 'adc'] as const satisfies Readonly<EtapeTypeIdNonFondamentale[]>
 
 // Ceci est un test :)
 ;[...FONDAMENTALES_IDS, ...NON_FONDAMENTALES_IDS] as const satisfies typeof IDS
@@ -42,7 +42,6 @@ export const ETAPES_TYPES = {
   decisionDeLadministration: 'dex',
   decisionImplicite: 'dim',
   publicationDeDecisionAuJORF: 'dpu',
-  publicationDeDecisionAdministrativeAuJORF: 'dup',
   decisionAdministrative: 'dux',
   expertiseDREALOuDGTMServiceEau: 'ede',
   expertiseDGTMServicePreventionDesRisquesEtIndustriesExtractives_DATE_: 'edm',
@@ -137,7 +136,6 @@ export const ETAPES_TYPES = {
   receptionDeComplements_wrc: 'wrc',
   rapportDeLaDreal: 'wrd',
   recevabilite: 'wre',
-  avisEtRapportDuDirecteurRegionalChargeDeLenvironnementDeLamenagementEtDuLogement_wrl: 'wrl',
   recolement: 'wrt',
   saisineDeLautoriteEnvironnementale: 'wse',
   transmissionDuProjetDePrescriptionsAuDemandeur: 'wtp',
@@ -951,17 +949,6 @@ export const EtapesTypes = {
     public_lecture: false,
     entreprises_lecture: false,
   },
-  dup: {
-    id: 'dup',
-    nom: 'publication de décision administrative au JORF',
-    description:
-      'A la fin d’une instruction, la décision administrative est publiée au JORF  si elle est positive. Pour les instructions relatives aux granulats marins, la décision administrative est publiée au JORF, qu’elle soit positive ou négative.',
-    fondamentale: true,
-    unique: false,
-    date_fin: null,
-    public_lecture: true,
-    entreprises_lecture: true,
-  },
   vfc: {
     id: 'vfc',
     nom: 'validation du paiement des frais de dossier complémentaires',
@@ -1338,16 +1325,6 @@ export const EtapesTypes = {
     public_lecture: false,
     entreprises_lecture: false,
   },
-  wrl: {
-    id: 'wrl',
-    nom: "Avis et rapport du directeur régional chargé de l'environnement, de l'aménagement et du logement",
-    description: '',
-    fondamentale: false,
-    unique: false,
-    date_fin: null,
-    public_lecture: false,
-    entreprises_lecture: false,
-  },
   wtp: {
     id: 'wtp',
     nom: 'Transmission du projet de prescriptions au demandeur',
@@ -1470,7 +1447,6 @@ export const etapesTypes = Object.values(EtapesTypes)
 
 const ETAPES_DECISIONS_IDS = [
   ETAPES_TYPES.publicationDeDecisionAuJORF,
-  ETAPES_TYPES.publicationDeDecisionAdministrativeAuJORF,
   ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs,
   ETAPES_TYPES.decisionDeLadministration,
   ETAPES_TYPES.decisionAdministrative,

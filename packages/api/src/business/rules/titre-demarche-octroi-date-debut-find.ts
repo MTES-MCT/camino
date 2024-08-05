@@ -4,8 +4,9 @@ import { ITitreDemarche } from '../../types'
 import { titreDemarcheSortAsc } from '../utils/titre-elements-sort-asc'
 import { titreEtapesSortDescByOrdre } from '../utils/titre-etapes-sort'
 import { isDemarcheTypeOctroi } from 'camino-common/src/static/demarchesTypes'
-const etapeTypeIds: EtapeTypeId[] = ['dpu', 'dup', 'rpu', 'dex', 'dux', 'dim', 'def', 'sco', 'aco']
-const titreDemarcheOctroiDateDebutFind = (titreDemarches?: ITitreDemarche[] | null) => {
+import { CaminoDate } from 'camino-common/src/date'
+const etapeTypeIds: EtapeTypeId[] = ['dpu', 'rpu', 'dex', 'dux', 'dim', 'def', 'sco', 'aco']
+const titreDemarcheOctroiDateDebutFind = (titreDemarches?: ITitreDemarche[] | null): CaminoDate | '0000' => {
   if (!titreDemarches || !titreDemarches.length) return '0000'
 
   // récupère la démarche d'octroi (naturelle ou virtuelle)

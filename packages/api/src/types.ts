@@ -50,7 +50,7 @@ const TitreEtapesTravauxTypes = {
   OuvertureEnquetePublique: 'woe',
   ClotureEnquetePublique: 'wce',
   RapportDREAL: 'wrd',
-  AvisRapportDirecteurREAL: 'wrl',
+  AvisRapportDirecteurREAL: 'apd',
   TransPrescriptionsDemandeur: 'wtp',
   AvisPrescriptionsDemandeur: 'wau',
   PubliDecisionRecueilActesAdmin: 'wpa',

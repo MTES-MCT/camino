@@ -35,6 +35,7 @@ const EtapesTypesDocumentsTypes = {
     { documentTypeId: DOCUMENTS_TYPES_IDS.avisDuDirecteurRegionalChargeDesMines, optionnel: true },
     { documentTypeId: DOCUMENTS_TYPES_IDS.rapportDeLAdministrationCentraleChargeDesMines, optionnel: true },
     { documentTypeId: DOCUMENTS_TYPES_IDS.rapportDeLaDirectionRegionaleChargeeDesMines, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.rapport, optionnel: true },
   ],
   [ETAPES_TYPES.avisDuConseilDEtat]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.avis, optionnel: true }],
   [ETAPES_TYPES.avisDeLaCommissionDepartementaleDesMines_CDM_]: [
@@ -102,10 +103,6 @@ const EtapesTypesDocumentsTypes = {
     { documentTypeId: DOCUMENTS_TYPES_IDS.decret, optionnel: true },
     { documentTypeId: DOCUMENTS_TYPES_IDS.decision, optionnel: true },
     { documentTypeId: DOCUMENTS_TYPES_IDS.ordonnance, optionnel: true },
-    { documentTypeId: DOCUMENTS_TYPES_IDS.publicationAuJorf, optionnel: true },
-  ],
-  [ETAPES_TYPES.publicationDeDecisionAdministrativeAuJORF]: [
-    { documentTypeId: DOCUMENTS_TYPES_IDS.arrete, optionnel: true },
     { documentTypeId: DOCUMENTS_TYPES_IDS.publicationAuJorf, optionnel: true },
   ],
   [ETAPES_TYPES.decisionAdministrative]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.arrete, optionnel: true }],
@@ -355,7 +352,6 @@ const EtapesTypesDocumentsTypes = {
     { documentTypeId: DOCUMENTS_TYPES_IDS.courrierDeNotificationDeLaRecevabilite, optionnel: true },
     { documentTypeId: DOCUMENTS_TYPES_IDS.rapportDeRecevabilite, optionnel: true },
   ],
-  [ETAPES_TYPES.avisEtRapportDuDirecteurRegionalChargeDeLenvironnementDeLamenagementEtDuLogement_wrl]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.rapport, optionnel: true }],
   [ETAPES_TYPES.recolement]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.pvDeRecolement, optionnel: true }],
   [ETAPES_TYPES.saisineDeLautoriteEnvironnementale]: [
     { documentTypeId: DOCUMENTS_TYPES_IDS.courrierDeSaisineDuPrefet, optionnel: true },

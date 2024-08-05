@@ -180,7 +180,7 @@ export const titrePhasesFind = (titreDemarches: TitreDemarchePhaseFind[], titreT
 
 export type TitreEtapePhaseFind = Pick<ITitreEtape, 'titreDemarcheId' | 'ordre' | 'typeId' | 'dateFin' | 'duree' | 'dateDebut' | 'date' | 'statutId' | 'geojson4326Perimetre' | 'isBrouillon'>
 export type TitreDemarchePhaseFind = Pick<ITitreDemarche, 'statutId' | 'ordre' | 'typeId' | 'id' | 'titreId' | 'demarcheDateDebut' | 'demarcheDateFin'> & { etapes?: TitreEtapePhaseFind[] }
-const etapeTypesIds: EtapeTypeId[] = ['dpu', 'dup', 'rpu', 'dex', 'dux', 'def', 'sco', 'aco']
+const etapeTypesIds: EtapeTypeId[] = ['dpu', 'rpu', 'dex', 'dux', 'def', 'sco', 'aco']
 const titreDemarcheNormaleDateFinAndDureeFind = (titreEtapes: TitreEtapePhaseFind[]): { duree: number; dateFin: CaminoDate | null | undefined } => {
   const titreEtapesSorted = titreEtapesSortDescByOrdre(titreEtapes)
 

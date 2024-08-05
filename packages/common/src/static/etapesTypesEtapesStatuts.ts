@@ -119,7 +119,6 @@ export const EtapesTypesEtapesStatuts = {
     REJETE: { etapeTypeId: 'dpu', etapeStatutId: 'rej' },
     FAIT: { etapeTypeId: 'dpu', etapeStatutId: 'fai' },
   },
-  publicationDeDecisionAdministrativeAuJORF: { FAIT: { etapeTypeId: 'dup', etapeStatutId: 'fai' } },
   decisionAdministrative: { FAIT: { etapeTypeId: 'dux', etapeStatutId: 'fai' } },
   expertiseDREALOuDGTMServiceEau: {
     FAVORABLE: { etapeTypeId: 'ede', etapeStatutId: 'fav' },
@@ -263,10 +262,6 @@ export const EtapesTypesEtapesStatuts = {
   recevabilite: {
     FAVORABLE: { etapeTypeId: 'wre', etapeStatutId: 'fav' },
     DEFAVORABLE: { etapeTypeId: 'wre', etapeStatutId: 'def' },
-  },
-  avisEtRapportDuDirecteurRegionalChargeDeLenvironnementDeLamenagementEtDuLogement_wrl: {
-    FAVORABLE: { etapeTypeId: 'wrl', etapeStatutId: 'fav' },
-    DEFAVORABLE: { etapeTypeId: 'wrl', etapeStatutId: 'def' },
   },
   recolement: {
     FAVORABLE: { etapeTypeId: 'wrt', etapeStatutId: 'fav' },
