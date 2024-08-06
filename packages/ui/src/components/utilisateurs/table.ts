@@ -1,9 +1,8 @@
 import { List } from '../_ui/list'
-import { isAdministration, isBureauDEtudes, isEntreprise } from 'camino-common/src/roles'
+import { UserNotNull, isAdministration, isBureauDEtudes, isEntreprise } from 'camino-common/src/roles'
 import { Administrations } from 'camino-common/src/static/administrations'
 import { Column, ComponentColumnData, TableRow, TextColumnData } from '../_ui/table'
 import { markRaw } from 'vue'
-import { Utilisateur } from 'camino-common/src/utilisateur'
 import { Entreprise, EntrepriseId } from 'camino-common/src/entreprise'
 
 export const utilisateursColonnes = [
@@ -30,8 +29,7 @@ export const utilisateursColonnes = [
   },
 ] as const satisfies readonly Column[]
 
-export const utilisateursLignesBuild = (utilisateurs: Utilisateur[], entreprises: Entreprise[]): TableRow[] =>{
-
+export const utilisateursLignesBuild = (utilisateurs: UserNotNull[], entreprises: Entreprise[]): TableRow[] => {
   const entreprisesIndex = entreprises.reduce<Record<EntrepriseId, Entreprise>>((acc, e) => {
     acc[e.id] = e
 

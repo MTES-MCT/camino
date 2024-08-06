@@ -36,6 +36,7 @@ describe('filterUtilisateur', () => {
     expect(filterUtilisateur(userToBeFiltered, { noms: 'camino' }, userSuper)).toBe(false)
     expect(filterUtilisateur({ ...userToBeFiltered, nom: 'don Camino' }, { noms: 'camino' }, userSuper)).toBe(true)
     expect(filterUtilisateur({ ...userToBeFiltered, prenom: 'don Camino' }, { noms: 'camino' }, userSuper)).toBe(true)
+    expect(filterUtilisateur({ ...userToBeFiltered, prenom: null }, { noms: 'camino' }, userSuper)).toBe(false)
   })
 
   test('filtre les utilisateurs par email', () => {

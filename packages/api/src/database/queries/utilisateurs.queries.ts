@@ -1,7 +1,17 @@
 import { sql } from '@pgtyped/runtime'
 import { Effect, pipe } from 'effect'
 import { DbQueryAccessError, Redefine, dbQueryAndValidate, effectDbQueryAndValidate } from '../../pg-database'
-import { User, isAdministrationEditeur, isAdministrationLecteur, isBureauDEtudes, isEntreprise, roleValidator, utilisateurIdValidator } from 'camino-common/src/roles'
+import {
+  AdminUserNotNull,
+  EntrepriseUserNotNull,
+  User,
+  isAdministrationEditeur,
+  isAdministrationLecteur,
+  isBureauDEtudes,
+  isEntreprise,
+  roleValidator,
+  utilisateurIdValidator,
+} from 'camino-common/src/roles'
 import { z } from 'zod'
 import { CaminoError } from 'camino-common/src/zod-tools'
 import { Pool } from 'pg'
@@ -10,7 +20,7 @@ import { canReadUtilisateurs } from 'camino-common/src/permissions/utilisateurs'
 import { UtilisateursSearchParamsInput, UtilisateursSearchParams, Utilisateur, utilisateurValidator } from 'camino-common/src/utilisateur'
 import { IGetUtilisateursDbQuery, IGetUtilisateursEmailsByEntrepriseIdsDbQuery } from './utilisateurs.queries.types'
 import { ZodUnparseable, zodParseEffect } from '../../tools/fp-tools'
-import { DeepReadonly, isNotNullNorUndefinedNorEmpty, isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools'
+import { DeepReadonly, Nullable, isNotNullNorUndefinedNorEmpty, isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools'
 import { EntrepriseId, entrepriseIdValidator } from 'camino-common/src/entreprise'
 
 const getUtilisateursValidator = z.object({
@@ -45,15 +55,19 @@ export const getUtilisateursFiltered = (
     }),
     Effect.flatMap(utilisateurs => {
       return Effect.forEach(utilisateurs, u => {
+        const obj: Pick<Utilisateur, 'telephoneFixe' | 'telephoneMobile' | 'id' | 'nom' | 'prenom' | 'role' | 'email'> &
+          Nullable<Pick<AdminUserNotNull, 'administrationId'>> &
+          Pick<EntrepriseUserNotNull, 'entreprises'> = {
+          ...u,
+          telephoneMobile: u.telephone_mobile,
+          telephoneFixe: u.telephone_fixe,
+          administrationId: u.administration_id,
+          entreprises: u.entreprise_ids?.map(id => ({ id })) ?? [],
+          prenom: u.prenom ?? '',
+        }
+
         return pipe(
-          zodParseEffect(utilisateurValidator, {
-            ...u,
-            administrationId: u.administration_id,
-            telephoneMobile: u.telephone_mobile,
-            telephoneFixe: u.telephone_fixe,
-            entreprises: u.entreprise_ids?.map(id => ({ id })) ?? [],
-            prenom: u.prenom ?? '',
-          }),
+          zodParseEffect(utilisateurValidator, obj),
           Effect.mapError(error => {
             return { ...error, extra: { email: u.email } }
           })
@@ -97,7 +111,11 @@ export const filterUtilisateur = (utilisateur: GetUtilisateur, params: Omit<Util
     return false
   }
 
-  if (isNotNullNorUndefinedNorEmpty(params.noms) && !utilisateur.nom.toLowerCase().includes(params.noms.toLowerCase()) && !utilisateur.prenom.toLowerCase().includes(params.noms.toLowerCase())) {
+  if (
+    isNotNullNorUndefinedNorEmpty(params.noms) &&
+    !utilisateur.nom.toLowerCase().includes(params.noms.toLowerCase()) &&
+    (isNullOrUndefinedOrEmpty(utilisateur.prenom) || !(utilisateur.prenom ?? '').toLowerCase().includes(params.noms.toLowerCase()))
+  ) {
     return false
   }
 
