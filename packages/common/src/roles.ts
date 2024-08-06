@@ -46,7 +46,7 @@ type EntrepriseOrBureauDetudeRole = z.infer<typeof entrepriseRoleValidator>
 const entrepriseUserNotNullValidator = baseUserNotNullValidator.extend({ role: entrepriseRoleValidator, entreprises: z.array(entrepriseValidator.pick({ id: true })) })
 
 export type EntrepriseUserNotNull = z.infer<typeof entrepriseUserNotNullValidator>
-export const userNotNullValidator = z.union([superUserNotNullValidator, defautUserNotNullValidator, adminUserNotNullValidator, entrepriseUserNotNullValidator])
+export const userNotNullValidator = z.discriminatedUnion('role', [superUserNotNullValidator, defautUserNotNullValidator, adminUserNotNullValidator, entrepriseUserNotNullValidator])
 export const userValidator = userNotNullValidator.nullable().optional()
 
 export const isSuper = (user: DeepReadonly<User>): user is UserSuper => userPermissionCheck(user, 'super')

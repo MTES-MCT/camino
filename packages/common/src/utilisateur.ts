@@ -21,10 +21,10 @@ export const newsletterRegistrationValidator = z.object({
   email: z.string(),
 })
 
-const utilisateurValidator = userNotNullValidator.and(
+export const utilisateurValidator = userNotNullValidator.and(
   z.object({
-    telephoneMobile: z.string().optional(),
-    telephoneFixe: z.string().optional(),
+    telephoneMobile: z.string().nullable(),
+    telephoneFixe: z.string().nullable(),
   })
 )
 
@@ -39,8 +39,8 @@ const utilisateursColonneIdSortable = z.enum(['nom', 'prenom', 'email', 'role'])
 export type UtilisateursColonneIdSortable = z.infer<typeof utilisateursColonneIdSortable>
 
 const tableSearchParamsValidator = z.object({
-  page: z.number().optional().default(1),
-  intervalle: z.number().optional().default(10),
+  page: z.coerce.number().optional().default(1),
+  intervalle: z.coerce.number().optional().default(10),
   colonne: utilisateursColonneIdSortable,
   ordre: z.enum(['asc', 'desc']).optional().default('asc'),
 })

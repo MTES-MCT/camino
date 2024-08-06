@@ -1,4 +1,4 @@
-import { userGet, utilisateurGet, utilisateursCount, utilisateursGet, utilisateurUpsert } from '../../database/queries/utilisateurs'
+import { userGet, utilisateurGet, utilisateursGet, utilisateurUpsert } from '../../database/queries/utilisateurs'
 import { CaminoRequest, CustomResponse } from './express-type'
 import { CaminoApiError, formatUser, IUtilisateursColonneId } from '../../types'
 import { HTTP_STATUS } from 'camino-common/src/http'
@@ -12,15 +12,13 @@ import { knex } from '../../knex'
 import { idGenerate } from '../../database/models/_format/id-create'
 import bcrypt from 'bcryptjs'
 import { utilisateurUpdationValidate } from '../../business/validations/utilisateur-updation-validate'
-import { canDeleteUtilisateur, canReadUtilisateurs } from 'camino-common/src/permissions/utilisateurs'
+import { canDeleteUtilisateur } from 'camino-common/src/permissions/utilisateurs'
 import { DownloadFormat } from 'camino-common/src/rest'
 import { Pool } from 'pg'
 import { DeepReadonly, isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools'
 import { config } from '../../config/index'
 import { Effect, Match, pipe } from 'effect'
 import { RestNewGetCall } from '../../server/rest'
-import { info } from 'effect/Console'
-import { fieldsBuild } from '../graphql/resolvers/_fields-build'
 import { getUtilisateursFiltered } from '../../database/queries/utilisateurs.queries'
 import { DbQueryAccessError } from '../../pg-database'
 import { ZodUnparseable } from '../../tools/fp-tools'
@@ -326,20 +324,27 @@ export const utilisateurs =
       : null
   }
 
-type GetUtilisateursError = DbQueryAccessError | ZodUnparseable | 'Impossible d\'accéder à la liste des utilisateurs' | 'droits insuffisants'
-export const getUtilisateurs: RestNewGetCall<'/rest/utilisateurs'> = (
-  pool,
-  user,
-  _params,
-  searchParams
-): Effect.Effect<DeepReadonly<UtilisateursTable>, CaminoApiError<GetUtilisateursError>> => {
+type GetUtilisateursError = DbQueryAccessError | ZodUnparseable | "Impossible d'accéder à la liste des utilisateurs" | 'droits insuffisants'
+export const getUtilisateurs: RestNewGetCall<'/rest/utilisateurs'> = (pool, user, _params, searchParams): Effect.Effect<DeepReadonly<UtilisateursTable>, CaminoApiError<GetUtilisateursError>> => {
   return Effect.Do.pipe(
     Effect.flatMap(() => getUtilisateursFiltered(pool, user, searchParams)),
+    Effect.map(utilisateurs => {
+      return {
+        elements: utilisateurs
+          .toSorted((a, b) => {
+            const result = a[searchParams.colonne].localeCompare(b[searchParams.colonne])
+
+            return result * (searchParams.ordre === 'asc' ? 1 : -1)
+          })
+          .slice((searchParams.page - 1) * searchParams.intervalle, searchParams.page * searchParams.intervalle),
+        total: utilisateurs.length,
+      }
+    }),
     Effect.mapError(caminoError =>
       Match.value(caminoError.message).pipe(
         Match.when("Impossible d'accéder à la base de données", () => ({ ...caminoError, status: HTTP_STATUS.INTERNAL_SERVER_ERROR })),
-        Match.when("droits insuffisants", () => ({ ...caminoError, status: HTTP_STATUS.FORBIDDEN })),
-        Match.when("Problème de validation de données", () => ({ ...caminoError, status: HTTP_STATUS.BAD_REQUEST })),
+        Match.when('droits insuffisants', () => ({ ...caminoError, status: HTTP_STATUS.FORBIDDEN })),
+        Match.when('Problème de validation de données', () => ({ ...caminoError, status: HTTP_STATUS.BAD_REQUEST })),
         Match.exhaustive
       )
     )

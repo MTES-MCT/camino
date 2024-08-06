@@ -2,9 +2,7 @@
 export type stringArray = (string)[];
 
 /** 'GetUtilisateursDb' parameters type */
-export interface IGetUtilisateursDbParams {
-  orderBy: string;
-}
+export type IGetUtilisateursDbParams = void;
 
 /** 'GetUtilisateursDb' return type */
 export interface IGetUtilisateursDbResult {
