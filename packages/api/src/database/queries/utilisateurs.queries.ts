@@ -20,7 +20,7 @@ import { canReadUtilisateurs } from 'camino-common/src/permissions/utilisateurs'
 import { UtilisateursSearchParamsInput, UtilisateursSearchParams, Utilisateur, utilisateurValidator } from 'camino-common/src/utilisateur'
 import { IGetUtilisateursDbQuery, IGetUtilisateursEmailsByEntrepriseIdsDbQuery } from './utilisateurs.queries.types'
 import { ZodUnparseable, zodParseEffect } from '../../tools/fp-tools'
-import { DeepReadonly, Nullable, isNotNullNorUndefinedNorEmpty, isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools'
+import { DeepReadonly, NonEmptyArray, Nullable, isNotNullNorUndefinedNorEmpty, isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools'
 import { EntrepriseId, entrepriseIdValidator } from 'camino-common/src/entreprise'
 
 const getUtilisateursValidator = z.object({
@@ -141,11 +141,11 @@ const getUtilisateursDb = sql<Redefine<IGetUtilisateursDbQuery, undefined, GetUt
   where keycloak_id is not null`
 
 const emailValidator = z.object({ email: z.string() })
-export const getUtilisateursEmailsByEntrepriseIds = async (pool: Pool, entrepriseIds: EntrepriseId[]): Promise<string[]> => {
+export const getUtilisateursEmailsByEntrepriseIds = async (pool: Pool, entrepriseIds: NonEmptyArray<EntrepriseId>): Promise<string[]> => {
   const result = await dbQueryAndValidate(getUtilisateursEmailsByEntrepriseIdsDb, { entrepriseIds }, pool, emailValidator)
 
   return result.map(({ email }) => email)
 }
 
 const getUtilisateursEmailsByEntrepriseIdsDb = sql<Redefine<IGetUtilisateursEmailsByEntrepriseIdsDbQuery, { entrepriseIds: EntrepriseId[] }, z.infer<typeof emailValidator>>>`
-  select u.email from utilisateurs u join utilisateurs__entreprises ue on ue.entreprise_id in ($$entrepriseIds) and keycloak_id is not null`
+  select u.email from utilisateurs u join utilisateurs__entreprises ue on ue.utilisateur_id = u.id where ue.entreprise_id in $$entrepriseIds AND u.keycloak_id is not null`

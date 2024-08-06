@@ -208,7 +208,7 @@ export const activiteDeposer = async ({ id }: { id: ActiviteId }, { user, pool }
     const entreprisesIds = isAmodiataire ? titre.amodiataireIds : titre.titulaireIds
 
     let utilisateursEmails: string[] = []
-    if (entreprisesIds?.length) {
+    if (isNotNullNorUndefinedNorEmpty(entreprisesIds)) {
       utilisateursEmails = await getUtilisateursEmailsByEntrepriseIds(pool, entreprisesIds)
     }
 
