@@ -21,35 +21,38 @@ export const newsletterRegistrationValidator = z.object({
   email: z.string(),
 })
 
-
-const utilisateurValidator = userNotNullValidator.and(z.object({
+const utilisateurValidator = userNotNullValidator.and(
+  z.object({
     telephoneMobile: z.string().optional(),
     telephoneFixe: z.string().optional(),
-  }))
+  })
+)
 
 export type Utilisateur = z.infer<typeof utilisateurValidator>
 export const utilisateursTableValidator = z.object({
   elements: z.array(utilisateurValidator),
-  total: z.number()
+  total: z.number(),
 })
 export type UtilisateursTable = z.infer<typeof utilisateursTableValidator>
 
-
+const utilisateursColonneIdSortable = z.enum(['nom', 'prenom', 'email', 'role'])
+export type UtilisateursColonneIdSortable = z.infer<typeof utilisateursColonneIdSortable>
 
 const tableSearchParamsValidator = z.object({
   page: z.number().optional().default(1),
   intervalle: z.number().optional().default(10),
-  colonne: z.enum(['nom', 'prenom', 'email', 'role']),
-  ordre: z.enum(['asc', 'desc']).optional().default('asc')
-
+  colonne: utilisateursColonneIdSortable,
+  ordre: z.enum(['asc', 'desc']).optional().default('asc'),
 })
 
-export const utilisateursSearchParamsValidator = tableSearchParamsValidator.and(z.object({
-  noms: z.string().optional(),
-  emails: z.string().optional(),
-  roles: z.array(roleValidator).optional(),
-  administrationIds: z.array(administrationIdValidator).optional(),
-  entreprisesIds: z.array(entrepriseIdValidator).optional()
-}))
-export type UtilisateursSearchParamsInput = typeof utilisateursSearchParamsValidator['_input']
+export const utilisateursSearchParamsValidator = tableSearchParamsValidator.and(
+  z.object({
+    noms: z.string().optional(),
+    emails: z.string().optional(),
+    roles: z.array(roleValidator).optional(),
+    administrationIds: z.array(administrationIdValidator).optional(),
+    entreprisesIds: z.array(entrepriseIdValidator).optional(),
+  })
+)
+export type UtilisateursSearchParamsInput = (typeof utilisateursSearchParamsValidator)['_input']
 export type UtilisateursSearchParams = z.infer<typeof utilisateursSearchParamsValidator>

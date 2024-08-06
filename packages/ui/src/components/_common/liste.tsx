@@ -25,14 +25,19 @@ type ListeFiltreProps = {
   apiClient: Pick<ApiClient, 'titresRechercherByNom' | 'getTitresByIds'>
   entreprises: Entreprise[]
 }
-type Props<ColumnId extends string> = {
+
+type GetColumnId<ColumnWithId> = ColumnWithId extends { id: infer Id } ? Id : never
+
+type ToColumnId<List> = List extends [infer First, ...infer Rest] ? (First extends { noSort: true } ? ToColumnId<Rest> : [GetColumnId<First>, ...ToColumnId<Rest>]) : []
+
+type Props<ColumnId extends string, Columns> = {
   listeFiltre: ListeFiltreProps | null
-  colonnes: readonly Column<ColumnId>[]
-  getData: (params: Params<ColumnId>) => Promise<{ values: TableRow<ColumnId>[]; total: number }>
+  colonnes: Readonly<Columns>
+  getData: (params: Params<ToColumnId<Columns>[number]>) => Promise<{ values: TableRow<ColumnId>[]; total: number }>
   route: CaminoRouteLocation
 } & PageContentHeaderProps
 
-export const Liste = defineComponent(<ColumnId extends string>(props: Props<ColumnId>) => {
+export const Liste = defineComponent(<ColumnId extends string, Columns extends Column<ColumnId>[]>(props: Props<ColumnId, Columns>) => {
   const initialParams = getInitialParams(props.route, props.colonnes)
   const params = ref<Params<ColumnId>>({
     ...initialParams,
