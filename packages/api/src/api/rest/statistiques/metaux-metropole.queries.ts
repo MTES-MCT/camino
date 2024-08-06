@@ -1,4 +1,3 @@
-/* eslint-disable no-restricted-syntax */
 import { sql } from '@pgtyped/runtime'
 import { AnneeCountStatistique, anneeCountStatistiqueValidator } from 'camino-common/src/statistiques'
 import { Redefine, dbQueryAndValidate } from '../../../pg-database'

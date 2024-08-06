@@ -1,4 +1,3 @@
-/* eslint-disable no-restricted-syntax */
 import { sql } from '@pgtyped/runtime'
 import { getMostRecentValuePropFromEtapeFondamentaleValide, TitreGet, TitreGetDemarche, titreGetValidator } from 'camino-common/src/titres'
 import { Redefine, dbQueryAndValidate } from '../../pg-database'

@@ -1,4 +1,3 @@
-/* eslint-disable no-restricted-syntax */
 import { sql } from '@pgtyped/runtime'
 import { Redefine, DbQueryAccessError, effectDbQueryAndValidate } from '../../pg-database'
 import { z } from 'zod'

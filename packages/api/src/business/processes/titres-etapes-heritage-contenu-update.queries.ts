@@ -1,4 +1,3 @@
-/* eslint-disable no-restricted-syntax */
 import { sql } from '@pgtyped/runtime'
 import { IGetEtapesByDemarcheInternalQuery } from './titres-etapes-heritage-contenu-update.queries.types'
 import { Redefine, dbQueryAndValidate } from '../../pg-database'

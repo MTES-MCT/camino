@@ -217,32 +217,6 @@ const utilisateursGet = async (
   return q
 }
 
-const utilisateursCount = async (
-  {
-    ids,
-    entreprisesIds,
-    administrationIds,
-    roles,
-    noms,
-    emails,
-  }: {
-    ids?: string[]
-    entreprisesIds?: string[]
-    administrationIds?: string[]
-    roles?: Role[]
-    noms?: string | null
-    emails?: string | null
-  },
-  { fields }: { fields?: FieldsUtilisateur },
-  user: DeepReadonly<User>
-) => {
-  const q = utilisateursQueryBuild({ fields }, user)
-
-  utilisateursFiltersQueryModify({ ids, entreprisesIds, administrationIds, roles, noms, emails }, q)
-
-  return q.resultSize()
-}
-
 const utilisateurCreate = async (utilisateur: IUtilisateur, { fields }: { fields?: FieldsUtilisateur }) =>
   Utilisateurs.query()
     .insertGraph(utilisateur, options.utilisateurs.update)
@@ -260,4 +234,4 @@ const utilisateursTitresGet = async (titreId: string, { fields }: { fields?: Fie
     .where('titreId', titreId)
     .withGraphFetched(fields ? graphBuild(fields, 'utilisateursTitres', fieldsFormat) : options.utilisateursTitres.graph)
 
-export { userGet, utilisateurGet, userByEmailGet, utilisateursGet, utilisateursCount, utilisateurCreate, utilisateurUpsert, utilisateurTitreCreate, utilisateurTitreDelete, utilisateursTitresGet }
+export { userGet, utilisateurGet, userByEmailGet, utilisateursGet, utilisateurCreate, utilisateurUpsert, utilisateurTitreCreate, utilisateurTitreDelete, utilisateursTitresGet }

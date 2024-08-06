@@ -6,7 +6,7 @@ import { etapeHeritage } from './resolvers/titres-etapes'
 
 import { demarches, demarcheCreer, demarcheModifier } from './resolvers/titres-demarches'
 
-import { utilisateur, utilisateurs } from './resolvers/utilisateurs'
+import { utilisateur } from './resolvers/utilisateurs'
 
 import {
   devises,
@@ -65,7 +65,6 @@ export default {
   titres,
   substances,
   utilisateur,
-  utilisateurs,
   statistiquesGlobales,
   activites,
   administrationsTypes,

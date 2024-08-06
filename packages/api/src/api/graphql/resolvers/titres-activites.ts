@@ -1,6 +1,6 @@
 import { GraphQLResolveInfo } from 'graphql'
 
-import { Context, ITitre, ITitreActiviteColonneId, IUtilisateur } from '../../../types'
+import { Context, ITitre, ITitreActiviteColonneId } from '../../../types'
 import { ACTIVITES_STATUTS_IDS } from 'camino-common/src/static/activitesStatuts'
 
 import { titreActiviteEmailsSend } from './_titre-activite'
@@ -8,7 +8,6 @@ import { titreActiviteEmailsSend } from './_titre-activite'
 import { fieldsBuild } from './_fields-build'
 
 import { titreActiviteGet, titreActiviteUpdate as titreActiviteUpdateQuery, titresActivitesCount, titresActivitesGet } from '../../../database/queries/titres-activites'
-import { utilisateursGet } from '../../../database/queries/utilisateurs'
 
 import { userSuper } from '../../../database/user-super'
 import { titreGet } from '../../../database/queries/titres'
@@ -28,6 +27,7 @@ import {
 import { ActiviteId } from 'camino-common/src/activite'
 import { getSectionsWithValue } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections'
 import TitresActivites from '../../../database/models/titres-activites'
+import { getUtilisateursEmailsByEntrepriseIds } from '../../../database/queries/utilisateurs.queries'
 
 /**
  * Retourne les activités
@@ -207,15 +207,9 @@ export const activiteDeposer = async ({ id }: { id: ActiviteId }, { user, pool }
 
     const entreprisesIds = isAmodiataire ? titre.amodiataireIds : titre.titulaireIds
 
-    let utilisateurs: IUtilisateur[] = []
+    let utilisateursEmails: string[] = []
     if (entreprisesIds?.length) {
-      utilisateurs = await utilisateursGet(
-        {
-          entreprisesIds,
-        },
-        { fields: {} },
-        userSuper
-      )
+      utilisateursEmails = await getUtilisateursEmailsByEntrepriseIds(pool, entreprisesIds)
     }
 
     const administrations: AdministrationId[] = getGestionnairesByTitreTypeId(titre.typeId).map(({ administrationId }) => administrationId)
@@ -226,7 +220,7 @@ export const activiteDeposer = async ({ id }: { id: ActiviteId }, { user, pool }
 
     const filteredAdministrationId = administrations.filter(onlyUnique)
     if (isNonEmptyArray(filteredAdministrationId)) {
-      await titreActiviteEmailsSend(activiteRes, activiteRes.titre!.nom, user, utilisateurs, filteredAdministrationId, pool)
+      await titreActiviteEmailsSend(activiteRes, activiteRes.titre!.nom, user, utilisateursEmails, filteredAdministrationId, pool)
     }
 
     return activiteRes

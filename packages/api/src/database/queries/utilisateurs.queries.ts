@@ -1,6 +1,6 @@
 import { sql } from '@pgtyped/runtime'
 import { Effect, pipe } from 'effect'
-import { DbQueryAccessError, Redefine, effectDbQueryAndValidate } from '../../pg-database'
+import { DbQueryAccessError, Redefine, dbQueryAndValidate, effectDbQueryAndValidate } from '../../pg-database'
 import { User, isAdministrationEditeur, isAdministrationLecteur, isBureauDEtudes, isEntreprise, roleValidator, utilisateurIdValidator } from 'camino-common/src/roles'
 import { z } from 'zod'
 import { CaminoError } from 'camino-common/src/zod-tools'
@@ -8,10 +8,10 @@ import { Pool } from 'pg'
 import { administrationIdValidator } from 'camino-common/src/static/administrations'
 import { canReadUtilisateurs } from 'camino-common/src/permissions/utilisateurs'
 import { UtilisateursSearchParamsInput, UtilisateursSearchParams, Utilisateur, utilisateurValidator } from 'camino-common/src/utilisateur'
-import { IGetUtilisateursDbQuery } from './utilisateurs.queries.types'
+import { IGetUtilisateursDbQuery, IGetUtilisateursEmailsByEntrepriseIdsDbQuery } from './utilisateurs.queries.types'
 import { ZodUnparseable, zodParseEffect } from '../../tools/fp-tools'
 import { DeepReadonly, isNotNullNorUndefinedNorEmpty, isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools'
-import { entrepriseIdValidator } from 'camino-common/src/entreprise'
+import { EntrepriseId, entrepriseIdValidator } from 'camino-common/src/entreprise'
 
 const getUtilisateursValidator = z.object({
   id: utilisateurIdValidator,
@@ -121,3 +121,13 @@ const getUtilisateursDb = sql<Redefine<IGetUtilisateursDbQuery, undefined, GetUt
     (select array_agg(entreprise_id) from utilisateurs__entreprises where utilisateur_id = id) as entreprise_ids
   from utilisateurs
   where keycloak_id is not null`
+
+const emailValidator = z.object({ email: z.string() })
+export const getUtilisateursEmailsByEntrepriseIds = async (pool: Pool, entrepriseIds: EntrepriseId[]): Promise<string[]> => {
+  const result = await dbQueryAndValidate(getUtilisateursEmailsByEntrepriseIdsDb, { entrepriseIds }, pool, emailValidator)
+
+  return result.map(({ email }) => email)
+}
+
+const getUtilisateursEmailsByEntrepriseIdsDb = sql<Redefine<IGetUtilisateursEmailsByEntrepriseIdsDbQuery, { entrepriseIds: EntrepriseId[] }, z.infer<typeof emailValidator>>>`
+  select u.email from utilisateurs u join utilisateurs__entreprises ue on ue.entreprise_id in ($$entrepriseIds) and keycloak_id is not null`

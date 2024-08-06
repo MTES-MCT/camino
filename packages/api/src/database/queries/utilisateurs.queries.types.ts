@@ -23,3 +23,19 @@ export interface IGetUtilisateursDbQuery {
   result: IGetUtilisateursDbResult;
 }
 
+/** 'GetUtilisateursEmailsByEntrepriseIdsDb' parameters type */
+export interface IGetUtilisateursEmailsByEntrepriseIdsDbParams {
+  entrepriseIds: readonly (string | null | void)[];
+}
+
+/** 'GetUtilisateursEmailsByEntrepriseIdsDb' return type */
+export interface IGetUtilisateursEmailsByEntrepriseIdsDbResult {
+  email: string | null;
+}
+
+/** 'GetUtilisateursEmailsByEntrepriseIdsDb' query type */
+export interface IGetUtilisateursEmailsByEntrepriseIdsDbQuery {
+  params: IGetUtilisateursEmailsByEntrepriseIdsDbParams;
+  result: IGetUtilisateursEmailsByEntrepriseIdsDbResult;
+}
+

@@ -1,4 +1,3 @@
-/* eslint-disable no-restricted-syntax */
 import { sql } from '@pgtyped/runtime'
 import { DemarcheId, DemarcheIdOrSlug } from 'camino-common/src/demarche'
 import { Redefine, dbQueryAndValidate } from '../../pg-database'

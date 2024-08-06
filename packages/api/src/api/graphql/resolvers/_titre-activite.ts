@@ -1,4 +1,4 @@
-import { IContenu, ITitreActivite, IUtilisateur } from '../../../types'
+import { IContenu, ITitreActivite } from '../../../types'
 
 import { emailsWithTemplateSend } from '../../../tools/api-mailjet/emails'
 import { activiteUrlGet } from '../../../business/utils/urls-get'
@@ -16,10 +16,6 @@ const titreActiviteEmailTitleFormat = (activite: ITitreActivite, titreNom: strin
   const activiteType = ActivitesTypes[activite.typeId]
 
   return `${titreNom} | ${activiteType.nom}, ${getPeriode(activiteType.frequenceId, activite.periodeId)} ${activite.annee}`
-}
-
-const titreActiviteUtilisateursEmailsGet = (utilisateurs: IUtilisateur[] | undefined | null): string[] => {
-  return utilisateurs?.map(u => u.email).filter(isNotNullNorUndefinedNorEmpty) ?? []
 }
 
 export const productionCheck = (activiteTypeId: string, contenu: IContenu | null | undefined): boolean => {
@@ -85,12 +81,11 @@ export const titreActiviteEmailsSend = async (
   activite: ITitreActivite,
   titreNom: string,
   user: UserNotNull,
-  utilisateurs: IUtilisateur[] | undefined | null,
+  utilisateurEmails: string[],
   administrationIds: NonEmptyArray<AdministrationId>,
   pool: Pool
 ): Promise<void> => {
-  const emails = titreActiviteUtilisateursEmailsGet(utilisateurs)
-
+  const emails = [...utilisateurEmails]
   const administrationsActivitesTypesEmails = await getActiviteTypeEmailsByAdministrationIds(pool, administrationIds)
   emails.push(...titreActiviteAdministrationsEmailsGet(administrationIds, administrationsActivitesTypesEmails, activite.typeId, activite.contenu))
   if (!emails.length) {

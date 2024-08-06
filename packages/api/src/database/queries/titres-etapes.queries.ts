@@ -1,4 +1,3 @@
-/* eslint-disable no-restricted-syntax */
 import { sql } from '@pgtyped/runtime'
 import { dbQueryAndValidate, Redefine } from '../../pg-database'
 import {
