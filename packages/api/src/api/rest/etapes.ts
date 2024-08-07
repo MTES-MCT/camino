@@ -592,7 +592,7 @@ export const createEtape =
                     } else if (!(await checkEntreprisesExist(pool, [...(etape.titulaireIds ?? []), ...(etape.amodiataireIds ?? [])]))) {
                       res.status(HTTP_STATUS.BAD_REQUEST).json({ errorMessage: "certaines entreprises n'existent pas" })
                     } else {
-                      if (!canEditDuree(titreTypeId, titreDemarche.typeId)) {
+                      if (!canEditDuree(titreTypeId, titreDemarche.typeId, user)) {
                         etape.duree = null
                       }
 
@@ -762,7 +762,7 @@ export const updateEtape =
             throw new Error(rulesErrors.join(', '))
           }
 
-          if (!canEditDuree(titreTypeId, titreDemarche.typeId)) {
+          if (!canEditDuree(titreTypeId, titreDemarche.typeId, user)) {
             etape.duree = titreEtapeOld.duree ?? null
           }
 

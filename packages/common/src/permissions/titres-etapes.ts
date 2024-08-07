@@ -1,7 +1,7 @@
 import { ETAPES_TYPES, EtapeTypeId } from '../static/etapesTypes'
 import { TitreTypeId } from '../static/titresTypes'
 import { DEMARCHES_TYPES_IDS, DemarcheTypeId, isDemarcheTypeWithPhase } from '../static/demarchesTypes'
-import { isAdministrationAdmin, isAdministrationEditeur, isBureauDEtudes, isEntreprise, isSuper, User } from '../roles'
+import { isAdministrationAdmin, isAdministrationEditeur, isBureauDEtudes, isEntreprise, isEntrepriseOrBureauDEtude, isSuper, User } from '../roles'
 import { TITRES_TYPES_IDS_DEMAT } from './titres'
 import { AdministrationId } from '../static/administrations'
 import { isGestionnaire } from '../static/administrationsTitresTypes'
@@ -88,10 +88,14 @@ export const canEditTitulaires = (titreTypeId: TitreTypeId, user: User): boolean
   return isSuper(user) || isAdministrationAdmin(user) || isAdministrationEditeur(user)
 }
 
-export const canEditDuree = (titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId): boolean => {
+export const canEditDuree = (titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId, user: User): boolean => {
   // ne peut pas ajouter de durée à la démarche déplacement de périmètre
   if (demarchesSansDatesNiDureePourLesEtapes.includes(demarcheTypeId)) {
     return false
+  }
+
+  if (!isEntrepriseOrBureauDEtude(user)) {
+    return true
   }
 
   // la durée pour les demandes d’ARM est fixée à 4 mois par l’API

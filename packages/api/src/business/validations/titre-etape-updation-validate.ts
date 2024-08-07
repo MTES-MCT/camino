@@ -31,7 +31,7 @@ export const titreEtapeUpdationValidate = (
   const errors: string[] = []
   const sections = getSections(titre.typeId, titreDemarche.typeId, etape.typeId)
 
-  if (!etape.duree.heritee && !canEditDuree(titre.typeId, titreDemarche.typeId) && (etape.duree.value ?? 0) !== (titreEtapeOld?.duree ?? 0)) {
+  if (!etape.duree.heritee && !canEditDuree(titre.typeId, titreDemarche.typeId, user) && (etape.duree.value ?? 0) !== (titreEtapeOld?.duree ?? 0)) {
     errors.push('impossible d’éditer la durée')
   }
 

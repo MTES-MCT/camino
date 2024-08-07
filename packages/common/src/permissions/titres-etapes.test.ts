@@ -47,7 +47,14 @@ test.each<{ titreTypeId: TitreTypeId; demarcheTypeId: DemarcheTypeId; canEdit: b
   { titreTypeId: 'axm', demarcheTypeId: 'dec', canEdit: true },
   { titreTypeId: 'prm', demarcheTypeId: 'exp', canEdit: false },
   { titreTypeId: 'prm', demarcheTypeId: 'mut', canEdit: false },
-])('canEditDuree $titreTypeId | $demarcheTypeId | $canEdit', ({ titreTypeId, demarcheTypeId, canEdit }) => expect(canEditDuree(titreTypeId, demarcheTypeId)).toEqual(canEdit))
+])('canEditDuree $titreTypeId | $demarcheTypeId | $canEdit', ({ titreTypeId, demarcheTypeId, canEdit }) =>
+  expect(canEditDuree(titreTypeId, demarcheTypeId, { ...testBlankUser, role: 'entreprise', entreprises: [{ id: newEntrepriseId('entrepriseId') }] })).toEqual(canEdit)
+)
+
+test('un super ou une admininstration peut éditer la durée d un octroi d ARM', () => {
+  expect(canEditDuree('arm', 'oct', { ...testBlankUser, role: 'super' })).toEqual(true)
+  expect(canEditDuree('arm', 'oct', { ...testBlankUser, role: 'admin', administrationId: 'dea-guyane-01' })).toEqual(true)
+})
 
 test.each<{ titreTypeId: TitreTypeId; demarcheTypeId: DemarcheTypeId; etapeTypeId: EtapeTypeId; user: TestUser; canEdit: boolean }>([
   { titreTypeId: 'arm', etapeTypeId: 'mfr', demarcheTypeId: 'dec', user: { role: 'super' }, canEdit: false },
