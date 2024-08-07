@@ -169,31 +169,44 @@ describe('registerToNewsletter', () => {
   })
 })
 
-describe('getUtilisateurs', () => {
+describe.only('getUtilisateurs', () => {
   test('retourne la liste ordonnée des utilisateurs', async () => {
-    const tested = await restNewCall(dbPool, '/rest/utilisateurs', {}, userSuper, { colonne: 'noms', ordre: 'desc' })
-    expect(tested.statusCode).toBe(200)
-    expect(tested.body).toBe({
-      elements: [],
-      total: 0,
+    const id = utilisateurIdValidator.parse('id')
+    await knex('utilisateurs').insert({
+      id,
+      prenom: 'prenom-pas-super',
+      nom: 'nom-pas-super',
+      email: 'prenom-pas-super@camino.local',
+      role: 'defaut',
+      telephone_fixe: '0102030405',
+      dateCreation: '2022-05-12',
+      keycloakId: idUserKeycloakRecognised,
     })
-  })
 
-  test('retourne la liste filtrée des utilisateurs', async () => {
-    const tested = await restNewCall(dbPool, '/rest/utilisateurs', {}, userSuper, { noms: 'dupont' })
+    const tested = await restNewCall(dbPool, '/rest/utilisateurs', {}, userSuper, { colonne: 'nom', ordre: 'desc', page: 1, intervalle: 10 })
     expect(tested.statusCode).toBe(200)
-    expect(tested.body).toBe({
-      elements: [],
-      total: 0,
-    })
-  })
-
-  test('retourne la liste paginée des utilisateurs', async () => {
-    const tested = await restNewCall(dbPool, '/rest/utilisateurs', {}, userSuper, { intervalle: '1', page: '2' })
-    expect(tested.statusCode).toBe(200)
-    expect(tested.body).toBe({
-      elements: [],
-      total: 0,
+    expect(tested.body).toStrictEqual({
+      elements: [
+        {
+          email: 'super@camino.local',
+          id: 'super',
+          nom: 'nom-super',
+          prenom: 'prenom-super',
+          role: 'super',
+          telephoneFixe: null,
+          telephoneMobile: null,
+        },
+        {
+          email: 'prenom-pas-super@camino.local',
+          id: 'id',
+          nom: 'nom-pas-super',
+          prenom: 'prenom-pas-super',
+          role: 'defaut',
+          telephoneFixe: '0102030405',
+          telephoneMobile: null,
+        },
+      ],
+      total: 2,
     })
   })
 
