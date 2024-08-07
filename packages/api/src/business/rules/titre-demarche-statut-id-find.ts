@@ -9,6 +9,7 @@ import { DemarcheStatutId, DemarchesStatutsIds } from 'camino-common/src/static/
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { DemarcheTypeId, TravauxIds } from 'camino-common/src/static/demarchesTypes'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
+import { isEtapeStatusRejete } from 'camino-common/src/static/etapesStatuts'
 
 const titreEtapesDecisivesCommunesTypes: EtapeTypeId[] = ['css', 'abd', 'and']
 
@@ -70,6 +71,7 @@ const titresDemarcheCommunesStatutIdFind = (titreEtapeRecent: Pick<ITitreEtape, 
       case 'acc':
         return DemarchesStatutsIds.Accepte
       case 'rej':
+      case 'rei':
         return DemarchesStatutsIds.Rejete
     }
   }
@@ -157,6 +159,7 @@ const titreDemarcheDemandeStatutIdFind = (titreDemarcheEtapes: Pick<ITitreEtape,
       case 'acc':
         return DemarchesStatutsIds.Accepte
       case 'rej':
+      case 'rei':
         return DemarchesStatutsIds.Rejete
       default:
         return DemarchesStatutsIds.Indetermine
@@ -165,7 +168,7 @@ const titreDemarcheDemandeStatutIdFind = (titreDemarcheEtapes: Pick<ITitreEtape,
 
   //  - le type de l’étape est décision expresse (dex)
   //  - et le statut de l’étape est rejeté (rej)
-  if (['dex', 'dux'].includes(titreEtapeRecent.typeId) && titreEtapeRecent.statutId === 'rej') {
+  if (['dex', 'dux'].includes(titreEtapeRecent.typeId) && isEtapeStatusRejete(titreEtapeRecent.statutId)) {
     //  - le statut de la démarche est rejeté (rej)
     return DemarchesStatutsIds.Rejete
   }

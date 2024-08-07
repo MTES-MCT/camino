@@ -87,5 +87,11 @@ const ETAPES_STATUTS_OK_IDS = [
 
 export const isEtapeStatusOk = (etapeStatutId: EtapeStatutId): boolean => ETAPES_STATUTS_OK_IDS.includes(etapeStatutId)
 
+export const ETAPES_STATUTS_REJETE_IDS = [
+  ETAPES_STATUTS.REJETE,
+  ETAPES_STATUTS.REJETE_DECISION_IMPLICITE,
+] as const satisfies Readonly<EtapeStatutId[]>
+export const isEtapeStatusRejete = (etapeStatutId: EtapeStatutId): boolean => ETAPES_STATUTS_REJETE_IDS.includes(etapeStatutId)
+
 const EtapesFondamentalesStatutsOkIds = [ETAPES_STATUTS.ACCEPTE, ETAPES_STATUTS.FAIT, ETAPES_STATUTS.FAVORABLE]
 export const isFondamentalesStatutOk = (etapeStatutId: EtapeStatutId): boolean => EtapesFondamentalesStatutsOkIds.includes(etapeStatutId)

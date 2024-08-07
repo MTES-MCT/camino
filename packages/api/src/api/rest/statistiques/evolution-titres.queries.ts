@@ -2,7 +2,7 @@ import { sql } from '@pgtyped/runtime'
 import { DemarcheStatutId } from 'camino-common/src/static/demarchesStatuts'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
 import { DepartementId } from 'camino-common/src/static/departement'
-import { ETAPES_STATUTS } from 'camino-common/src/static/etapesStatuts'
+import { ETAPES_STATUTS, EtapeStatutId } from 'camino-common/src/static/etapesStatuts'
 import { EtapeTypeId, ETAPES_TYPES } from 'camino-common/src/static/etapesTypes'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { AnneeCountStatistique, anneeCountStatistiqueValidator } from 'camino-common/src/statistiques'
@@ -112,7 +112,7 @@ group by
 interface GetEtapesTypesDecisionRefusProps {
   anneeDepart: number
   etapesTypesDecisionRefus: EtapeTypeId[]
-  etapeStatutRejet: typeof ETAPES_STATUTS.REJETE
+  etapeStatutRejet: readonly EtapeStatutId[]
   etapeStatutFait: typeof ETAPES_STATUTS.FAIT
   etapeTypeClassementSansSuite: typeof ETAPES_TYPES.classementSansSuite
   demarcheTypeIds: DemarcheTypeId[]
@@ -134,7 +134,7 @@ from
     join titres t on t.id = td.titre_id
     join titres_etapes etapes_communes on t.props_titre_etapes_ids ->> 'points' = etapes_communes.id
 where ((et.type_id in $$ etapesTypesDecisionRefus
-        and et.statut_id = $ etapeStatutRejet)
+        and et.statut_id in $$ etapeStatutRejet)
     or (et.type_id = $ etapeTypeClassementSansSuite
         and et.statut_id = $ etapeStatutFait))
 and et.archive is false

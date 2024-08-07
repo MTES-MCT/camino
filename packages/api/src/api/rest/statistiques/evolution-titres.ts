@@ -3,7 +3,7 @@ import { demarcheStatutIdsNonValide } from 'camino-common/src/static/demarchesSt
 import { DEMARCHES_TYPES_IDS } from 'camino-common/src/static/demarchesTypes'
 import { DepartementId } from 'camino-common/src/static/departement'
 import { DOMAINES_IDS } from 'camino-common/src/static/domaines'
-import { ETAPES_STATUTS } from 'camino-common/src/static/etapesStatuts'
+import { ETAPES_STATUTS, ETAPES_STATUTS_REJETE_IDS } from 'camino-common/src/static/etapesStatuts'
 import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes'
 import { toTitreTypeId } from 'camino-common/src/static/titresTypes'
 import { TitreTypeTypeId } from 'camino-common/src/static/titresTypesTypes'
@@ -45,7 +45,7 @@ export const evolutionTitres = async (pool: Pool, titreTypeTypeId: TitreTypeType
       departements,
       demarcheStatutIds: Array.from(demarcheStatutIdsNonValide),
       etapeStatutFait: ETAPES_STATUTS.FAIT,
-      etapeStatutRejet: ETAPES_STATUTS.REJETE,
+      etapeStatutRejet: ETAPES_STATUTS_REJETE_IDS,
       etapesTypesDecisionRefus,
       etapeTypeClassementSansSuite: ETAPES_TYPES.classementSansSuite,
       titreTypeId,
