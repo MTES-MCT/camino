@@ -10,6 +10,8 @@ import { newUtilisateurId } from '../../database/models/_format/id-create'
 import { KeycloakFakeServer, idUserKeycloakRecognised, setupKeycloak, teardownKeycloak } from '../../../tests/keycloak'
 import { renewConfig } from '../../config/index'
 import { utilisateurIdValidator } from 'camino-common/src/roles'
+import { testBlankUser, TestUser } from 'camino-common/src/tests-utils'
+import { Administrations } from 'camino-common/src/static/administrations'
 
 console.info = vi.fn()
 console.error = vi.fn()
@@ -210,43 +212,40 @@ describe.only('getUtilisateurs', () => {
     })
   })
 
-  // beforeAll(async () => {
-  //   await dbManager.populateDb()
-  //   await Utilisateurs.query().insertGraph(mockUser, options.utilisateurs.update)
-  // })
+  describe('vérifie les droits de lecture', async () => {
+    const mockAdministration = Administrations['aut-97300-01']
+    const mockUserNom = 'utilisateurNom'
+    beforeAll(async () => {
+      await knex('utilisateurs').insert({
+        id: newUtilisateurId('utilisateurId'),
+        prenom: 'prenom-pas-super',
+        nom: mockUserNom,
+        email: 'utilisateurEmail',
+        role: 'editeur',
+        administrationId: mockAdministration.id,
+        dateCreation: '2022-05-12',
+        keycloakId: idUserKeycloakRecognised,
+      })
+    })
 
-  // afterAll(async () => {
-  //   await dbManager.closeKnex()
-  // })
+    test.each<[TestUser, boolean]>([
+      [{ role: 'super' }, true],
+      [{ role: 'admin', administrationId: mockAdministration.id }, true],
+      [{ role: 'editeur', administrationId: mockAdministration.id }, true],
+      [{ role: 'lecteur', administrationId: mockAdministration.id }, true],
+      [{ role: 'entreprise', entreprises: [] }, true],
+      [{ role: 'defaut' }, false],
+    ])('en tant que $role', async (user, voit) => {
+      const result = await restNewCall(dbPool, '/rest/utilisateurs', {}, { ...user, ...testBlankUser }, { colonne: 'nom', ordre: 'asc', page: 1, intervalle: 10, nomsUtilisateurs: mockUserNom })
 
-  // const mockAdministration = Administrations['aut-97300-01']
-
-  // const mockUser: IUtilisateur = {
-  //   id: newUtilisateurId('utilisateurId'),
-  //   role: 'editeur',
-  //   nom: 'utilisateurNom',
-  //   email: 'utilisateurEmail',
-  //   administrationId: mockAdministration.id,
-  //   dateCreation: '2022-05-12',
-  //   keycloakId: 'keycloakId',
-  // }
-
-  // describe('utilisateursQueryModify', () => {
-  //   test.each<[TestUser, boolean]>([
-  //     [{ role: 'super' }, true],
-  //     [{ role: 'admin', administrationId: mockAdministration.id }, true],
-  //     [{ role: 'editeur', administrationId: mockAdministration.id }, true],
-  //     [{ role: 'lecteur', administrationId: mockAdministration.id }, true],
-  //     [{ role: 'entreprise', entreprises: [] }, true],
-  //     [{ role: 'defaut' }, false],
-  //   ])("Vérifie l'écriture de la requête sur un utilisateur", async (user, voit) => {
-  //     const utilisateurs = await utilisateursGet({ noms: mockUser.nom }, {}, { ...user, ...testBlankUser })
-  //     if (voit) {
-  //       expect(utilisateurs).toHaveLength(1)
-  //       expect(utilisateurs[0]).toMatchSnapshot()
-  //     } else {
-  //       expect(utilisateurs).toHaveLength(0)
-  //     }
-  //   })
-  // })
+      if (voit) {
+        expect(result.status).toBe(200)
+        expect(result.body.elements).toHaveLength(1)
+        expect(result.body.elements[0]).toMatchSnapshot()
+      } else {
+        expect(result.status).toBe(403)
+        expect(result.body).toMatchSnapshot()
+      }
+    })
+  })
 })
