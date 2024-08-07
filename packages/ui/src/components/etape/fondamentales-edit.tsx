@@ -110,7 +110,7 @@ export const FondamentalesEdit = defineComponent<Props>(props => {
   return () => (
     <div class="fr-grid-row">
       <div class="fr-col-12 fr-col-xl-6">
-        {canEditDuree(props.titreTypeId, props.demarcheTypeId) ? (
+        {canEditDuree(props.titreTypeId, props.demarcheTypeId, props.user) ? (
           <HeritageEdit
             updateHeritage={updateDureeHeritage}
             hasHeritageValue={isNotNullNorUndefined(props.etape.duree.etapeHeritee?.value)}
