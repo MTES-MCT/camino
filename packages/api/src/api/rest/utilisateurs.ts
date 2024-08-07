@@ -276,20 +276,18 @@ export const utilisateurs =
     format: 'csv' | 'xlsx' | 'ods'
     contenu: string
   } | null> => {
+    const searchParams = utilisateursSearchParamsValidator.and(z.object({ format: z.enum(['csv', 'xlsx', 'ods']).optional().default('csv') })).parse(query)
 
-    const searchParams = utilisateursSearchParamsValidator.and(z.object({format: z.enum(['csv', 'xlsx', 'ods']).optional().default('csv')})).parse(query)
-
-    return callAndExit(getUtilisateursFilteredAndSorted(pool, user, searchParams), async (utilisateurs) => {
-
+    return callAndExit(getUtilisateursFilteredAndSorted(pool, user, searchParams), async utilisateurs => {
       const format = searchParams.format
       const contenu = tableConvert('utilisateurs', utilisateursFormatTable(utilisateurs), format)
 
       return contenu
         ? {
-          nom: fileNameCreate(`utilisateurs-${utilisateurs.length}`, format),
-          format,
-          contenu,
-        }
+            nom: fileNameCreate(`utilisateurs-${utilisateurs.length}`, format),
+            format,
+            contenu,
+          }
         : null
     })
   }
@@ -300,8 +298,7 @@ export const getUtilisateurs: RestNewGetCall<'/rest/utilisateurs'> = (pool, user
     Effect.flatMap(() => getUtilisateursFilteredAndSorted(pool, user, searchParams)),
     Effect.map(utilisateurs => {
       return {
-        elements: utilisateurs
-          .slice((searchParams.page - 1) * searchParams.intervalle, searchParams.page * searchParams.intervalle),
+        elements: utilisateurs.slice((searchParams.page - 1) * searchParams.intervalle, searchParams.page * searchParams.intervalle),
         total: utilisateurs.length,
       }
     }),

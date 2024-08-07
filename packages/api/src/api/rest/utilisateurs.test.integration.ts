@@ -175,7 +175,7 @@ describe('getUtilisateurs', () => {
     expect(tested.statusCode).toBe(200)
     expect(tested.body).toBe({
       elements: [],
-      total: 0
+      total: 0,
     })
   })
 
@@ -184,7 +184,7 @@ describe('getUtilisateurs', () => {
     expect(tested.statusCode).toBe(200)
     expect(tested.body).toBe({
       elements: [],
-      total: 0
+      total: 0,
     })
   })
 
@@ -193,7 +193,7 @@ describe('getUtilisateurs', () => {
     expect(tested.statusCode).toBe(200)
     expect(tested.body).toBe({
       elements: [],
-      total: 0
+      total: 0,
     })
   })
 
@@ -236,5 +236,4 @@ describe('getUtilisateurs', () => {
   //     }
   //   })
   // })
-
 })

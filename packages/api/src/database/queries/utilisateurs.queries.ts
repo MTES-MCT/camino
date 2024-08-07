@@ -37,7 +37,11 @@ const getUtilisateursValidator = z.object({
 export type GetUtilisateur = z.infer<typeof getUtilisateursValidator>
 
 type GetUtilisateursFilteredAndSortedErrors = DbQueryAccessError | ZodUnparseable | 'droits insuffisants'
-export const getUtilisateursFilteredAndSorted = (pool: Pool, user: DeepReadonly<User>, searchParams: UtilisateursSearchParams): Effect.Effect<Utilisateur[], CaminoError<GetUtilisateursFilteredAndSortedErrors>> => {
+export const getUtilisateursFilteredAndSorted = (
+  pool: Pool,
+  user: DeepReadonly<User>,
+  searchParams: UtilisateursSearchParams
+): Effect.Effect<Utilisateur[], CaminoError<GetUtilisateursFilteredAndSortedErrors>> => {
   return Effect.Do.pipe(
     Effect.filterOrFail(
       () => canReadUtilisateurs(user),

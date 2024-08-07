@@ -91,8 +91,6 @@ const utilisateurGet = async (id: string, { fields }: { fields?: FieldsUtilisate
   return q.findById(id)
 }
 
-
-
 const utilisateurCreate = async (utilisateur: IUtilisateur, { fields }: { fields?: FieldsUtilisateur }) =>
   Utilisateurs.query()
     .insertGraph(utilisateur, options.utilisateurs.update)
