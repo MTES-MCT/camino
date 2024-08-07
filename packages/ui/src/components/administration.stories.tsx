@@ -23,6 +23,7 @@ export const Default: StoryFn = () => (
       role: 'super',
       ...testBlankUser,
     }}
+    entreprises={[]}
     apiClient={{
       administrationActivitesTypesEmails: (_: AdministrationId) =>
         Promise.resolve([

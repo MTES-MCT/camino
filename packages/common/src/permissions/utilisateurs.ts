@@ -1,7 +1,8 @@
 import { isSuper, isAdministrationAdmin, isAdministrationEditeur, User, isAdministration, isEntreprise, isBureauDEtudes, ROLES, Role, UserNotNull } from '../roles'
+import { DeepReadonly } from '../typescript-tools'
 
 export const canCreateEntreprise = (user: User): boolean => isSuper(user) || isAdministrationAdmin(user) || isAdministrationEditeur(user)
-export const canReadUtilisateurs = (user: User): boolean => isSuper(user) || isAdministration(user) || isEntreprise(user) || isBureauDEtudes(user)
+export const canReadUtilisateurs = (user: DeepReadonly<User>): boolean => isSuper(user) || isAdministration(user) || isEntreprise(user) || isBureauDEtudes(user)
 
 export const canReadUtilisateur = (user: User, id: string): boolean => user?.id === id || canReadUtilisateurs(user)
 export const canDeleteUtilisateur = (user: User, id: string): boolean => {

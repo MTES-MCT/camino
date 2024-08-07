@@ -12,6 +12,7 @@ import { entreprisesKey, userKey } from '@/moi'
 import { Entreprise } from 'camino-common/src/entreprise'
 import { CaminoRouteLocation } from '@/router/routes'
 import { CaminoRouter } from '@/typings/vue-router'
+import { UtilisateursColonneIdSortable } from 'camino-common/src/utilisateur'
 
 interface Props {
   user: User
@@ -21,12 +22,12 @@ interface Props {
   entreprises: Entreprise[]
 }
 export const PureUtilisateurs = defineComponent<Props>(props => {
-  const load = async (params: Params<string>): Promise<{ values: TableRow[]; total: number }> => {
+  const load = async (params: Params<UtilisateursColonneIdSortable>): Promise<{ values: TableRow[]; total: number }> => {
     const getUtilisateursParams = {
       page: params.page,
       colonne: params.colonne,
       ordre: params.ordre,
-      noms: params.filtres?.nomsUtilisateurs,
+      nomsUtilisateurs: params.filtres?.nomsUtilisateurs,
       emails: params.filtres?.emails,
       roles: params.filtres?.roles,
       administrationIds: params.filtres?.administrationIds,
@@ -34,7 +35,7 @@ export const PureUtilisateurs = defineComponent<Props>(props => {
     }
     const utilisateurs = await props.apiClient.getUtilisateurs(getUtilisateursParams)
 
-    return { values: utilisateursLignesBuild(utilisateurs.elements), total: utilisateurs.total }
+    return { values: utilisateursLignesBuild(utilisateurs.elements, props.entreprises), total: utilisateurs.total }
   }
 
   return () => (

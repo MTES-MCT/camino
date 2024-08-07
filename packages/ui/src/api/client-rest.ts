@@ -76,7 +76,7 @@ const callFetch = async <T extends CaminoRestRoute>(
   throw new CaminoHttpError(`Une erreur s'est produite lors de la récupération des données`, fetched.status as HttpStatus)
 }
 type GetWithJsonArgs<T extends GetRestRoutes | NewGetRestRoutes, Method extends keyof (typeof CaminoRestRoutes)[T]> = (typeof CaminoRestRoutes)[T][Method] extends { searchParams: ZodType }
-  ? [path: T, params: CaminoRestParams<T>, searchParams: z.infer<(typeof CaminoRestRoutes)[T][Method]['searchParams']>]
+  ? [path: T, params: CaminoRestParams<T>, searchParams: (typeof CaminoRestRoutes)[T][Method]['searchParams']['_input']]
   : [path: T, params: CaminoRestParams<T>]
 
 export const getWithJson = async <T extends GetRestRoutes>(...args: GetWithJsonArgs<T, 'get'>): Promise<z.infer<(typeof CaminoRestRoutes)[T]['get']['output']>> =>

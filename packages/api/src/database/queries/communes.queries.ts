@@ -1,4 +1,3 @@
-/* eslint-disable no-restricted-syntax */
 import { sql } from '@pgtyped/runtime'
 import { Redefine, dbQueryAndValidate } from '../../pg-database'
 import { IGetCommuneIdsInternalQuery, IGetCommunesInternalQuery, IInsertCommuneInternalQuery } from './communes.queries.types'

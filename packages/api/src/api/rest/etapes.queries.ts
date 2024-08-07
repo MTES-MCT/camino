@@ -1,4 +1,3 @@
-/* eslint-disable no-restricted-syntax */
 import { EtapeDocumentId, EtapeId, EtapeIdOrSlug, etapeBrouillonValidator, etapeIdValidator, etapeSlugValidator } from 'camino-common/src/etape'
 import { EtapeTypeId, etapeTypeIdValidator } from 'camino-common/src/static/etapesTypes'
 import { Pool } from 'pg'

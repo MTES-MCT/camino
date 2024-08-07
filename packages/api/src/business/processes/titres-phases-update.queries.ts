@@ -1,4 +1,3 @@
-/* eslint-disable no-restricted-syntax */
 import { sql } from '@pgtyped/runtime'
 import { CaminoDate } from 'camino-common/src/date'
 import { DemarcheId } from 'camino-common/src/demarche'

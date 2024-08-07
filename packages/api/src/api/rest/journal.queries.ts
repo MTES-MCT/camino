@@ -1,4 +1,3 @@
-/* eslint-disable no-restricted-syntax */
 import { sql } from '@pgtyped/runtime'
 import { TitreId } from 'camino-common/src/validators/titres'
 import { Redefine, dbQueryAndValidate } from '../../pg-database'

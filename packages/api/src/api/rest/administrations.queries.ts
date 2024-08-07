@@ -1,4 +1,3 @@
-/* eslint-disable no-restricted-syntax */
 import { Pool } from 'pg'
 import { DbQueryAccessError, Redefine, dbQueryAndValidate, effectDbQueryAndValidate } from '../../pg-database'
 import { sql } from '@pgtyped/runtime'

@@ -10,6 +10,8 @@ import { newUtilisateurId } from '../../database/models/_format/id-create'
 import { KeycloakFakeServer, idUserKeycloakRecognised, setupKeycloak, teardownKeycloak } from '../../../tests/keycloak'
 import { renewConfig } from '../../config/index'
 import { utilisateurIdValidator } from 'camino-common/src/roles'
+import { testBlankUser, TestUser } from 'camino-common/src/tests-utils'
+import { Administrations } from 'camino-common/src/static/administrations'
 
 console.info = vi.fn()
 console.error = vi.fn()
@@ -104,6 +106,8 @@ describe('utilisateurSupprimer', () => {
     const user = await userGenerate({ role: 'defaut' })
 
     const tested = await restCall(dbPool, '/rest/utilisateurs/:id/delete', { id: user.id }, { role: 'defaut' })
+    await knex.raw('delete from logs')
+    await knex.raw('delete from utilisateurs') // ce delete est nécessaire car l'utilisateur n'est pas supprimé de la bdd et pour éviter qu'un test plus bas ne tente une nouvelle réinsertion du user `defaut-user`et échoue
     expect(tested.statusCode).toBe(302)
     expect(tested.header.location).toBe(`${OAUTH_URL}/oauth2/sign_out`)
   })
@@ -166,5 +170,84 @@ describe('registerToNewsletter', () => {
   test("ne fonctionne pas si l'email est invalide", async () => {
     const tested = await restNewCall(dbPool, '/rest/utilisateurs/registerToNewsletter', {}, undefined)
     expect(tested.statusCode).toBe(400)
+  })
+})
+
+describe('getUtilisateurs', () => {
+  test('retourne la liste ordonnée des utilisateurs', async () => {
+    const id = utilisateurIdValidator.parse('id')
+    await knex('utilisateurs').insert({
+      id,
+      prenom: 'prenom-pas-super',
+      nom: 'nom-pas-super',
+      email: 'prenom-pas-super@camino.local',
+      role: 'defaut',
+      telephone_fixe: '0102030405',
+      dateCreation: '2022-05-12',
+      keycloakId: idUserKeycloakRecognised,
+    })
+
+    const tested = await restNewCall(dbPool, '/rest/utilisateurs', {}, userSuper, { colonne: 'nom', ordre: 'desc', page: 1, intervalle: 10 })
+    expect(tested.statusCode).toBe(200)
+    expect(tested.body).toStrictEqual({
+      elements: [
+        {
+          email: 'super@camino.local',
+          id: 'super',
+          nom: 'nom-super',
+          prenom: 'prenom-super',
+          role: 'super',
+          telephoneFixe: null,
+          telephoneMobile: null,
+        },
+        {
+          email: 'prenom-pas-super@camino.local',
+          id: 'id',
+          nom: 'nom-pas-super',
+          prenom: 'prenom-pas-super',
+          role: 'defaut',
+          telephoneFixe: '0102030405',
+          telephoneMobile: null,
+        },
+      ],
+      total: 2,
+    })
+  })
+
+  describe('vérifie les droits de lecture', async () => {
+    const mockAdministration = Administrations['aut-97300-01']
+    const mockUserNom = 'utilisateurNom'
+    beforeAll(async () => {
+      await knex('utilisateurs').insert({
+        id: newUtilisateurId('utilisateurId'),
+        prenom: 'prenom-pas-super',
+        nom: mockUserNom,
+        email: 'utilisateurEmail',
+        role: 'editeur',
+        administrationId: mockAdministration.id,
+        dateCreation: '2022-05-12',
+        keycloakId: idUserKeycloakRecognised,
+      })
+    })
+
+    test.each<[TestUser, boolean]>([
+      [{ role: 'super' }, true],
+      [{ role: 'admin', administrationId: mockAdministration.id }, true],
+      [{ role: 'editeur', administrationId: mockAdministration.id }, true],
+      [{ role: 'lecteur', administrationId: mockAdministration.id }, true],
+      [{ role: 'entreprise', entreprises: [] }, true],
+      [{ role: 'defaut' }, false],
+    ])('en tant que $role', async (user, voit) => {
+      const result = await restNewCall(dbPool, '/rest/utilisateurs', {}, { ...user, ...testBlankUser }, { colonne: 'nom', ordre: 'asc', page: 1, intervalle: 10, nomsUtilisateurs: mockUserNom })
+
+      if (voit) {
+        expect(result.status).toBe(200)
+        expect(result.body.elements).toHaveLength(1)
+        expect(result.body.elements[0]).toMatchSnapshot()
+      } else {
+        expect(result.status).toBe(403)
+        expect(result.body).toMatchSnapshot()
+      }
+    })
   })
 })

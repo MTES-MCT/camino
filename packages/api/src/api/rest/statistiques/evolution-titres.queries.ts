@@ -1,4 +1,3 @@
-/* eslint-disable no-restricted-syntax */
 import { sql } from '@pgtyped/runtime'
 import { DemarcheStatutId } from 'camino-common/src/static/demarchesStatuts'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'

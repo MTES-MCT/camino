@@ -3,6 +3,7 @@ import { mailjet } from './index'
 import { EmailTemplateId } from './types'
 import { emailCheck } from '../email-check'
 import { config } from '../../config/index'
+import { isNotNullNorUndefined, onlyUnique } from 'camino-common/src/typescript-tools'
 
 const from = {
   email: config().API_MAILJET_EMAIL,
@@ -21,6 +22,7 @@ export const mailjetSend = async (emails: string[], options: Record<string, any>
       }
     })
 
+    emails = emails.filter(isNotNullNorUndefined).filter(onlyUnique)
     // si on est pas sur le serveur de prod
     // l'adresse email du destinataire est remplacée
     if (config().NODE_ENV !== 'production' || config().ENV !== 'prod') {

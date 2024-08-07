@@ -91,7 +91,6 @@ type ITitreDemarcheColonneId = 'titreNom' | 'titreDomaine' | 'titreType' | 'titr
 
 type ITitreActiviteColonneId = 'titre' | 'titreDomaine' | 'titreType' | 'titreStatut' | 'titulaires' | 'annee' | 'periode' | 'statut'
 
-type IUtilisateursColonneId = 'nom' | 'prenom' | 'email' | 'role'
 type IEntrepriseColonneId = 'nom' | 'siren'
 
 interface IContenuId {
@@ -288,7 +287,7 @@ interface IUtilisateur {
   qgisToken?: string | null
 }
 
-export const formatUser = (userInBdd: IUtilisateur): UserNotNull => {
+export const formatUser = (userInBdd: Pick<IUtilisateur, 'email' | 'id' | 'nom' | 'prenom' | 'administrationId' | 'role' | 'entreprises'>): UserNotNull => {
   if (!isNotNullNorUndefined(userInBdd.email)) {
     throw new Error('l’email est obligatoire')
   }
@@ -377,7 +376,6 @@ export {
   ITitreColonneId,
   ITitreDemarcheColonneId,
   ITitreActiviteColonneId,
-  IUtilisateursColonneId,
   IEntrepriseColonneId,
   IColonne,
   IContenuId,

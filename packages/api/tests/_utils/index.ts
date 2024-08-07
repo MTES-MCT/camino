@@ -79,8 +79,9 @@ export const restNewCall = async <Route extends NewGetRestRoutes>(
   route: Route,
   params: CaminoRestParams<Route>,
   user: TestUser | undefined,
-  searchParams?: Record<string, string | string[]>
+  searchParams?: DeepReadonly<z.infer<(typeof CaminoRestRoutes)[Route]['newGet']['searchParams']>>
 ): Promise<request.Test> => {
+  // @ts-ignore
   const req = request(app(pool)).get(getRestRoute(route, params, searchParams))
 
   return jwtSet(req, user)
