@@ -303,21 +303,26 @@ export const restWithPool = (dbPool: Pool): Router => {
                   Effect.mapError(caminoError => ({ ...caminoError, status: HTTP_STATUS.INTERNAL_SERVER_ERROR }))
                 )
               ),
+              Effect.tap(({ user }) => addLog(dbPool, user.id, 'post', req.url, req.body)),
               Effect.mapBoth({
                 onFailure: caminoError => {
                   console.warn(`problem with route ${route}: ${caminoError.message}`)
-                  res.status(caminoError.status).json(caminoError)
-                },
-                onSuccess: ({ parsedResult, user }) => {
-                  res.json(parsedResult)
 
-                  return addLog(dbPool, user.id, 'post', req.url, req.body)
+                  if (!('status' in caminoError)) {
+                    res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json(caminoError)
+                  } else {
+                    res.status(caminoError.status).json(caminoError)
+                  }
+                },
+                onSuccess: ({ parsedResult }) => {
+                  res.json(parsedResult)
                 },
               }),
               Effect.runPromiseExit
             )
 
             const pipeline = await call
+
             if (Exit.isFailure(pipeline)) {
               if (!Cause.isFailType(pipeline.cause)) {
                 console.error('catching error on newPost route', route, pipeline.cause, req.body)
