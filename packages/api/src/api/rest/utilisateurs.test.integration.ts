@@ -168,3 +168,73 @@ describe('registerToNewsletter', () => {
     expect(tested.statusCode).toBe(400)
   })
 })
+
+describe('getUtilisateurs', () => {
+  test('retourne la liste ordonnée des utilisateurs', async () => {
+    const tested = await restNewCall(dbPool, '/rest/utilisateurs', {}, userSuper, { colonne: 'noms', ordre: 'desc' })
+    expect(tested.statusCode).toBe(200)
+    expect(tested.body).toBe({
+      elements: [],
+      total: 0
+    })
+  })
+
+  test('retourne la liste filtrée des utilisateurs', async () => {
+    const tested = await restNewCall(dbPool, '/rest/utilisateurs', {}, userSuper, { noms: 'dupont' })
+    expect(tested.statusCode).toBe(200)
+    expect(tested.body).toBe({
+      elements: [],
+      total: 0
+    })
+  })
+
+  test('retourne la liste paginée des utilisateurs', async () => {
+    const tested = await restNewCall(dbPool, '/rest/utilisateurs', {}, userSuper, { intervalle: '1', page: '2' })
+    expect(tested.statusCode).toBe(200)
+    expect(tested.body).toBe({
+      elements: [],
+      total: 0
+    })
+  })
+
+  // beforeAll(async () => {
+  //   await dbManager.populateDb()
+  //   await Utilisateurs.query().insertGraph(mockUser, options.utilisateurs.update)
+  // })
+
+  // afterAll(async () => {
+  //   await dbManager.closeKnex()
+  // })
+
+  // const mockAdministration = Administrations['aut-97300-01']
+
+  // const mockUser: IUtilisateur = {
+  //   id: newUtilisateurId('utilisateurId'),
+  //   role: 'editeur',
+  //   nom: 'utilisateurNom',
+  //   email: 'utilisateurEmail',
+  //   administrationId: mockAdministration.id,
+  //   dateCreation: '2022-05-12',
+  //   keycloakId: 'keycloakId',
+  // }
+
+  // describe('utilisateursQueryModify', () => {
+  //   test.each<[TestUser, boolean]>([
+  //     [{ role: 'super' }, true],
+  //     [{ role: 'admin', administrationId: mockAdministration.id }, true],
+  //     [{ role: 'editeur', administrationId: mockAdministration.id }, true],
+  //     [{ role: 'lecteur', administrationId: mockAdministration.id }, true],
+  //     [{ role: 'entreprise', entreprises: [] }, true],
+  //     [{ role: 'defaut' }, false],
+  //   ])("Vérifie l'écriture de la requête sur un utilisateur", async (user, voit) => {
+  //     const utilisateurs = await utilisateursGet({ noms: mockUser.nom }, {}, { ...user, ...testBlankUser })
+  //     if (voit) {
+  //       expect(utilisateurs).toHaveLength(1)
+  //       expect(utilisateurs[0]).toMatchSnapshot()
+  //     } else {
+  //       expect(utilisateurs).toHaveLength(0)
+  //     }
+  //   })
+  // })
+
+})

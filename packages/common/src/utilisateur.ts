@@ -41,13 +41,13 @@ export type UtilisateursColonneIdSortable = z.infer<typeof utilisateursColonneId
 const tableSearchParamsValidator = z.object({
   page: z.coerce.number().optional().default(1),
   intervalle: z.coerce.number().optional().default(10),
-  colonne: utilisateursColonneIdSortable,
+  colonne: utilisateursColonneIdSortable.optional().default('nom'),
   ordre: z.enum(['asc', 'desc']).optional().default('asc'),
 })
 
 export const utilisateursSearchParamsValidator = tableSearchParamsValidator.and(
   z.object({
-    noms: z.string().optional(),
+    nomsUtilisateurs: z.string().optional(),
     emails: z.string().optional(),
     roles: z.array(roleValidator).optional(),
     administrationIds: z.array(administrationIdValidator).optional(),

@@ -27,7 +27,7 @@ export const PureUtilisateurs = defineComponent<Props>(props => {
       page: params.page,
       colonne: params.colonne,
       ordre: params.ordre,
-      noms: params.filtres?.nomsUtilisateurs,
+      nomsUtilisateurs: params.filtres?.nomsUtilisateurs,
       emails: params.filtres?.emails,
       roles: params.filtres?.roles,
       administrationIds: params.filtres?.administrationIds,

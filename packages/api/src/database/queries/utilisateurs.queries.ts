@@ -36,12 +36,8 @@ const getUtilisateursValidator = z.object({
 })
 export type GetUtilisateur = z.infer<typeof getUtilisateursValidator>
 
-type GetUtilisateursFilteredErrors = DbQueryAccessError | ZodUnparseable | 'droits insuffisants'
-export const getUtilisateursFiltered = (
-  pool: Pool,
-  user: DeepReadonly<User>,
-  params: Omit<UtilisateursSearchParams, 'page' | 'colonne' | 'intervalle' | 'ordre'>
-): Effect.Effect<Utilisateur[], CaminoError<GetUtilisateursFilteredErrors>> => {
+type GetUtilisateursFilteredAndSortedErrors = DbQueryAccessError | ZodUnparseable | 'droits insuffisants'
+export const getUtilisateursFilteredAndSorted = (pool: Pool, user: DeepReadonly<User>, searchParams: UtilisateursSearchParams): Effect.Effect<Utilisateur[], CaminoError<GetUtilisateursFilteredAndSortedErrors>> => {
   return Effect.Do.pipe(
     Effect.filterOrFail(
       () => canReadUtilisateurs(user),
@@ -50,7 +46,7 @@ export const getUtilisateursFiltered = (
     Effect.flatMap(() => effectDbQueryAndValidate(getUtilisateursDb, undefined, pool, getUtilisateursValidator)),
     Effect.map(utilisateurs => {
       return utilisateurs.filter(utilisateur => {
-        return filterUtilisateur(utilisateur, params, user)
+        return filterUtilisateur(utilisateur, searchParams, user)
       })
     }),
     Effect.flatMap(utilisateurs => {
@@ -72,6 +68,13 @@ export const getUtilisateursFiltered = (
             return { ...error, extra: { email: u.email } }
           })
         )
+      })
+    }),
+    Effect.map(utilisateurs => {
+      return utilisateurs.toSorted((a, b) => {
+        const result = a[searchParams.colonne].localeCompare(b[searchParams.colonne])
+
+        return result * (searchParams.ordre === 'asc' ? 1 : -1)
       })
     })
   )
@@ -112,9 +115,9 @@ export const filterUtilisateur = (utilisateur: GetUtilisateur, params: Omit<Util
   }
 
   if (
-    isNotNullNorUndefinedNorEmpty(params.noms) &&
-    !utilisateur.nom.toLowerCase().includes(params.noms.toLowerCase()) &&
-    (isNullOrUndefinedOrEmpty(utilisateur.prenom) || !(utilisateur.prenom ?? '').toLowerCase().includes(params.noms.toLowerCase()))
+    isNotNullNorUndefinedNorEmpty(params.nomsUtilisateurs) &&
+    !utilisateur.nom.toLowerCase().includes(params.nomsUtilisateurs.toLowerCase()) &&
+    (isNullOrUndefinedOrEmpty(utilisateur.prenom) || !(utilisateur.prenom ?? '').toLowerCase().includes(params.nomsUtilisateurs.toLowerCase()))
   ) {
     return false
   }
