@@ -106,6 +106,7 @@ describe('utilisateurSupprimer', () => {
     const user = await userGenerate({ role: 'defaut' })
 
     const tested = await restCall(dbPool, '/rest/utilisateurs/:id/delete', { id: user.id }, { role: 'defaut' })
+    await knex.raw('delete from utilisateurs') // ce delete est nécessaire car l'utilisateur n'est pas supprimé de la bdd et pour éviter qu'un test plus bas ne tente une nouvelle réinsertion du user `defaut-user`et échoue
     expect(tested.statusCode).toBe(302)
     expect(tested.header.location).toBe(`${OAUTH_URL}/oauth2/sign_out`)
   })
@@ -171,7 +172,7 @@ describe('registerToNewsletter', () => {
   })
 })
 
-describe.only('getUtilisateurs', () => {
+describe('getUtilisateurs', () => {
   test('retourne la liste ordonnée des utilisateurs', async () => {
     const id = utilisateurIdValidator.parse('id')
     await knex('utilisateurs').insert({
