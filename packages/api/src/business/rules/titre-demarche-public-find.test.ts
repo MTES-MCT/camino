@@ -252,7 +252,7 @@ describe("publicité d'une démarche", () => {
           etapes: etapesBuild([{ typeId: 'mcr' }]),
           titreId: newTitreId('titreId'),
         },
-        'pcc'
+        'cxg'
       )
     ).toMatchObject({ publicLecture: false })
   })
