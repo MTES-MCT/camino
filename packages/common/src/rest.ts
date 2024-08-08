@@ -11,7 +11,7 @@ import {
   sirenValidator,
   entrepriseValidator,
 } from './entreprise'
-import { demarcheIdOrSlugValidator, demarcheIdValidator } from './demarche'
+import { demarcheCreationInputValidator, demarcheCreationOutputValidator, demarcheIdOrSlugValidator, demarcheIdValidator } from './demarche'
 import { newsletterAbonnementValidator, newsletterRegistrationValidator, qgisTokenValidator, utilisateurToEdit, utilisateursSearchParamsValidator, utilisateursTableValidator } from './utilisateur'
 import {
   editableTitreValidator,
@@ -91,6 +91,7 @@ const IDS = [
   '/rest/titres/:titreId/abonne',
   '/rest/titresAdministrations',
   '/rest/titres/:id/titreLiaisons',
+  '/rest/demarches',
   '/rest/demarches/:demarcheIdOrSlug',
   '/rest/statistiques/dgtm',
   '/rest/entreprises/:entrepriseId/fiscalite/:annee',
@@ -163,6 +164,7 @@ export const CaminoRestRoutes = {
   '/rest/titres/:titreId/abonne': { params: z.object({ titreId: titreIdValidator }), post: { input: utilisateurTitreAbonneValidator, output: z.void() }, get: { output: z.boolean() } },
   '/rest/titresAdministrations': { params: noParamsValidator, get: { output: z.array(titreAdministrationValidator) } },
   '/rest/titres/:id/titreLiaisons': { params: z.object({ id: titreIdValidator }), get: { output: titreLinksValidator }, post: { input: z.array(z.string()), output: titreLinksValidator } },
+  '/rest/demarches': { params: noParamsValidator, newPost: { input: demarcheCreationInputValidator, output: demarcheCreationOutputValidator } },
   '/rest/demarches/:demarcheIdOrSlug': { params: z.object({ demarcheIdOrSlug: demarcheIdOrSlugValidator }), get: { output: getDemarcheByIdOrSlugValidator }, delete: true },
   '/rest/statistiques/dgtm': { params: noParamsValidator, get: { output: statistiquesDGTMValidator } },
 

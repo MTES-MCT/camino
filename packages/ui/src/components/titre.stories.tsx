@@ -240,7 +240,7 @@ const apiClient: PropsApiClient = {
   createDemarche: (...params) => {
     createDemarcheAction(params)
 
-    return Promise.resolve(demarcheSlugValidator.parse('slug'))
+    return Promise.resolve({ slug: demarcheSlugValidator.parse('slug') })
   },
   updateDemarche: (...params) => {
     updateDemarcheAction(params)
