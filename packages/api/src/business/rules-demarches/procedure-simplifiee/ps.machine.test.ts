@@ -241,6 +241,13 @@ describe('vérifie l’arbre des procédures historiques et simplifiées', () =>
     expect(service.getSnapshot().context.demarcheStatut).toBe(DemarchesStatutsIds.Rejete)
     expect(service.getSnapshot().context.visibilite).toBe('publique')
   })
+
+  test('peut publier au JORF sur les démarches très historiques', () => {
+    const { service, dateFin } = setDateAndOrderAndInterpretMachine(psMachine, '1999-01-01', [ETES.publicationDeDecisionAuJORF.FAIT])
+    expect(service).canOnlyTransitionTo({ machine: psMachine, date: dateFin }, ['FAIRE_ABROGATION'])
+    expect(service.getSnapshot().context.demarcheStatut).toBe(DemarchesStatutsIds.AccepteEtPublie)
+    expect(service.getSnapshot().context.visibilite).toBe('publique')
+  })
   // pour regénérer le oct.cas.json: `npm run test:generate-data -w packages/api`
   test.each(etapesProdProceduresHistoriques as any[])('cas réel N°$id', demarche => {
     // ici les étapes sont déjà ordonnées
