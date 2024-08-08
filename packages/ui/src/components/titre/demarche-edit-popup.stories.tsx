@@ -58,20 +58,20 @@ export const DisplayErrorMessage: Story = {
     apiClient: {
       ...apiClient,
       createDemarche: () => {
-        return new Promise(resolve => setTimeout(() => resolve({message: 'Grosse erreur'})))
-      }
+        return new Promise(resolve => setTimeout(() => resolve({ message: 'Grosse erreur' })))
+      },
     },
     close,
     demarche: { titreId: titreIdValidator.parse('titreId'), typeId: 'oct' },
     titreTypeId: 'cxf',
     titreNom: 'Nom du titre',
-    tabId: 'demarches'
+    tabId: 'demarches',
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
     await userEvent.click(canvas.getByText('Enregistrer'))
 
-    const errorDiv = await canvas.findByText("Grosse erreur")
+    const errorDiv = await canvas.findByText('Grosse erreur')
     expect(errorDiv).not.toBe(undefined)
   },
 }

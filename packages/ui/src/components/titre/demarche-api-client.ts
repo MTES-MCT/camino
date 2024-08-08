@@ -16,7 +16,7 @@ import { deleteWithJson, getWithJson, newPostWithJson } from '../../api/client-r
 import { DeepReadonly } from 'vue'
 import { CaminoError } from 'camino-common/src/zod-tools'
 
-type InputDemarcheUpdation =  DemarcheCreationInput & {
+type InputDemarcheUpdation = DemarcheCreationInput & {
   id: DemarcheId
 }
 
@@ -60,7 +60,7 @@ export interface DemarcheApiClient {
 
 export const demarcheApiClient: DemarcheApiClient = {
   createDemarche: async (demarche): Promise<DemarcheCreationOutput | CaminoError<string>> => {
-      return newPostWithJson('/rest/demarches', {}, demarche)
+    return newPostWithJson('/rest/demarches', {}, demarche)
   },
 
   updateDemarche: async (demarche): Promise<DemarcheSlug> => {

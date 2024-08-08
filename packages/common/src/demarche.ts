@@ -245,18 +245,16 @@ export const getDemarcheContenu = (etapes: (Pick<DemarcheEtapeCommon, 'sections_
   return {}
 }
 
-
-
 export const demarcheCreationInputValidator = z.object({
   titreId: titreIdValidator,
   typeId: demarcheTypeIdValidator,
-  description: z.string()
+  description: z.string(),
 })
 
 export type DemarcheCreationInput = z.infer<typeof demarcheCreationInputValidator>
 
 export const demarcheCreationOutputValidator = z.object({
-  slug: demarcheSlugValidator
+  slug: demarcheSlugValidator,
 })
 
 export type DemarcheCreationOutput = z.infer<typeof demarcheCreationOutputValidator>

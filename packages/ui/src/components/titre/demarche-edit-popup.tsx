@@ -57,7 +57,7 @@ export const DemarcheEditPopup = defineComponent<Props>(props => {
       ) : null}
       <DsfrInput legend={{ main: 'Description' }} type={{ type: 'text' }} valueChanged={descriptionChange} initialValue={description.value} />
 
-        { error.value !== null ? <CaminoApiAlert class='fr-mt-2w' caminoApiError={error.value} /> : null}
+      {error.value !== null ? <CaminoApiAlert class="fr-mt-2w" caminoApiError={error.value} /> : null}
     </form>
   )
 
