@@ -113,9 +113,6 @@ type Query {
   "Utilisateur en fonction de son id"
   utilisateur(id: ID!): Utilisateur
 
-  "Liste d'utilisateurs en fonction d'arguments (optionnels)"
-  utilisateurs(intervalle: Int, page: Int, colonne: String, ordre: String, entreprisesIds: [ID], administrationIds: [ID], roles: [ID], noms: String, emails: String): Utilisateurs
-
   "Liste des substances"
   substances: [Substance]
 
@@ -156,9 +153,6 @@ type Query {
 Ces requêtes sont __protégées__. Elles nécessitent une authentification par token (jwt) et un niveau de permission suffisant.
 """
 type Mutation {
-  "Crée une démarche et met à jour le titre minier"
-  demarcheCreer(demarche: InputDemarcheCreation!): DemarcheSlug
-
   "Modifie une démarche et met à jour le titre minier"
   demarcheModifier(demarche: InputDemarcheModification!): DemarcheSlug
 

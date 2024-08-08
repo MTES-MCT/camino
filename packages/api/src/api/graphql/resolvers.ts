@@ -4,7 +4,7 @@ import { titres } from './resolvers/titres'
 
 import { etapeHeritage } from './resolvers/titres-etapes'
 
-import { demarches, demarcheCreer, demarcheModifier } from './resolvers/titres-demarches'
+import { demarches, demarcheModifier } from './resolvers/titres-demarches'
 
 import { utilisateur } from './resolvers/utilisateurs'
 
@@ -37,8 +37,6 @@ import { substances } from './resolvers/substances'
 
 import { activites, activiteDeposer } from './resolvers/titres-activites'
 import { statistiquesGlobales } from './resolvers/statistiques'
-
-import { titreDemandeCreer } from '../rest/titre-demande'
 import { journaux } from './resolvers/journaux'
 
 export default {
@@ -78,8 +76,6 @@ export default {
   journaux,
 
   // mutations
-  demarcheCreer,
   demarcheModifier,
   activiteDeposer,
-  titreDemandeCreer,
 }

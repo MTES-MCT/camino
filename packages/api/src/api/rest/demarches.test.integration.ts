@@ -1,4 +1,4 @@
-import { restDeleteCall, restDownloadCall } from '../../../tests/_utils/index'
+import { restDeleteCall, restDownloadCall, restNewPostCall } from '../../../tests/_utils/index'
 import { dbManager } from '../../../tests/db-manager'
 import { expect, test, describe, afterAll, beforeAll, vi } from 'vitest'
 import type { Pool } from 'pg'
@@ -18,6 +18,7 @@ import { codePostalValidator } from 'camino-common/src/static/departement'
 import crypto from 'crypto'
 import { km2Validator } from 'camino-common/src/number'
 import { demarcheIdValidator } from 'camino-common/src/demarche'
+import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations'
 
 console.info = vi.fn()
 console.error = vi.fn()
@@ -204,6 +205,123 @@ describe('demarcheSupprimer', () => {
 
     demarche = await TitresDemarches.query().findById(demarcheId)
     expect(demarche?.archive).toBe(true)
+  })
+})
+
+describe('demarcheCreer', () => {
+  test('ne peut pas créer une démarche (utilisateur anonyme)', async () => {
+    const titre = await titreCreate(
+      {
+        nom: 'mon titre',
+        typeId: 'arm',
+        titreStatutId: 'ind',
+        propsTitreEtapesIds: {},
+        publicLecture: true,
+      },
+      {}
+    )
+
+    const res = await restNewPostCall(dbPool, '/rest/demarches', {}, undefined, { titreId: titre.id, typeId: 'oct', description: '' })
+
+    expect(res.status).toBe(HTTP_STATUS.FORBIDDEN)
+  })
+
+  test('ne peut pas créer une démarche (utilisateur editeur)', async () => {
+    const titre = await titreCreate(
+      {
+        nom: 'mon titre',
+        typeId: 'arm',
+        titreStatutId: 'ind',
+        propsTitreEtapesIds: {},
+        publicLecture: true,
+      },
+      {}
+    )
+
+    const res = await restNewPostCall(
+      dbPool,
+      '/rest/demarches',
+      {},
+      {
+        role: 'editeur',
+        administrationId: 'ope-onf-973-01',
+      },
+      { titreId: titre.id, typeId: 'oct', description: '' }
+    )
+
+    expect(res.status).toBe(HTTP_STATUS.INTERNAL_SERVER_ERROR)
+    expect(res.body.message).toBe('droits insuffisants')
+  })
+
+  test('peut créer une démarche (utilisateur super)', async () => {
+    const titre = await titreCreate({ nom: 'titre', typeId: 'arm', titreStatutId: 'val', propsTitreEtapesIds: {} }, {})
+
+    const titreId = titre.id
+
+    const res = await restNewPostCall(dbPool, '/rest/demarches', {}, userSuper, { titreId, typeId: 'oct', description: '' })
+
+    expect(res.status).toBe(HTTP_STATUS.OK)
+    expect(res.body).toMatchObject({ slug: {} })
+  })
+
+  test('ne peut pas créer une démarche si titre inexistant (utilisateur admin)', async () => {
+    const res = await restNewPostCall(
+      dbPool,
+      '/rest/demarches',
+      {},
+      {
+        role: 'admin',
+        administrationId: 'ope-onf-973-01',
+      },
+      { titreId: newTitreId('unknown'), typeId: 'oct', description: '' }
+    )
+    expect(res.status).toBe(HTTP_STATUS.INTERNAL_SERVER_ERROR)
+    expect(res.body.message).toBe("le titre n'existe pas")
+  })
+
+  test('peut créer une démarche (utilisateur admin)', async () => {
+    const titre = await titreCreate({ nom: 'titre', typeId: 'arm', titreStatutId: 'val', propsTitreEtapesIds: {} }, {})
+
+    const titreId = titre.id
+
+    const res = await restNewPostCall(
+      dbPool,
+      '/rest/demarches',
+      {},
+      {
+        role: 'admin',
+        administrationId: ADMINISTRATION_IDS['DGTM - GUYANE'],
+      },
+      { titreId, typeId: 'oct', description: '' }
+    )
+
+    expect(res.status).toBe(HTTP_STATUS.OK)
+    expect(res.body).toMatchObject({ slug: {} })
+  })
+
+  test("ne peut pas créer une démarche sur un titre ARM échu (un utilisateur 'admin' PTMG)", async () => {
+    const titre = await titreCreate(
+      {
+        nom: 'mon titre échu',
+        typeId: 'arm',
+        titreStatutId: 'ech',
+        propsTitreEtapesIds: {},
+      },
+      {}
+    )
+    const res = await restNewPostCall(
+      dbPool,
+      '/rest/demarches',
+      {},
+      {
+        role: 'admin',
+        administrationId: ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE'],
+      },
+      { titreId: titre.id, typeId: 'oct', description: '' }
+    )
+
+    expect(res.status).toBe(HTTP_STATUS.INTERNAL_SERVER_ERROR)
+    expect(res.body.message).toBe("le titre n'existe pas")
   })
 })
 

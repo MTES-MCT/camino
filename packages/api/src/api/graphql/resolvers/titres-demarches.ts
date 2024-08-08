@@ -6,16 +6,14 @@ import { fieldsBuild } from './_fields-build'
 
 import { titreDemarcheFormat } from '../../_format/titres-demarches'
 
-import { titreDemarcheGet, titresDemarchesCount, titresDemarchesGet, titreDemarcheCreate, titreDemarcheUpdate } from '../../../database/queries/titres-demarches'
+import { titreDemarcheGet, titresDemarchesCount, titresDemarchesGet, titreDemarcheUpdate } from '../../../database/queries/titres-demarches'
 
 import { titreGet } from '../../../database/queries/titres'
 
 import { titreDemarcheUpdateTask } from '../../../business/titre-demarche-update'
 import { titreDemarcheUpdationValidate } from '../../../business/validations/titre-demarche-updation-validate'
-import { isDemarcheTypeId, isTravaux } from 'camino-common/src/static/demarchesTypes'
-import { canCreateTravaux, canEditDemarche, canCreateDemarche } from 'camino-common/src/permissions/titres-demarches'
+import { canEditDemarche } from 'camino-common/src/permissions/titres-demarches'
 import { isNullOrUndefined } from 'camino-common/src/typescript-tools'
-import { getDemarchesByTitreId } from '../../rest/titres.queries'
 
 export const demarches = async (
   {
@@ -123,45 +121,6 @@ export const demarches = async (
       colonne,
       total,
     }
-  } catch (e) {
-    console.error(e)
-
-    throw e
-  }
-}
-
-export const demarcheCreer = async ({ demarche }: { demarche: ITitreDemarche }, { user, pool }: Context) => {
-  try {
-    const titre = await titreGet(demarche.titreId, { fields: { pointsEtape: { id: {} } } }, user)
-
-    if (!titre) throw new Error("le titre n'existe pas")
-
-    if (!isDemarcheTypeId(demarche.typeId)) {
-      throw new Error('droits insuffisants')
-    }
-    if (titre.administrationsLocales === undefined) {
-      throw new Error('les administrations locales doivent être chargées')
-    }
-    if (!titre.titreStatutId) {
-      throw new Error('le statut du titre est obligatoire')
-    }
-
-    const demarches = await getDemarchesByTitreId(pool, demarche.titreId)
-
-    if (isTravaux(demarche.typeId) && !canCreateTravaux(user, titre.typeId, titre.administrationsLocales ?? [], demarches)) {
-      throw new Error('droits insuffisants')
-    }
-    if (!isTravaux(demarche.typeId) && !canCreateDemarche(user, titre.typeId, titre.titreStatutId, titre.administrationsLocales ?? [], demarches)) {
-      throw new Error('droits insuffisants')
-    }
-
-    const demarcheCreated = await titreDemarcheCreate(demarche)
-
-    await titreDemarcheUpdateTask(pool, demarcheCreated.id, demarcheCreated.titreId)
-
-    const demarcheUpdate = await titreDemarcheGet(demarcheCreated.id, { fields: { id: {} } }, user)
-
-    return { slug: demarcheUpdate?.slug }
   } catch (e) {
     console.error(e)
 

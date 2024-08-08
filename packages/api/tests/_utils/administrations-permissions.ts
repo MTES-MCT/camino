@@ -280,7 +280,7 @@ const titreCreateSuper = async (_pool: Pool, administrationId: string, titreType
   return titre.id
 }
 
-const demarcheCreerProfil = async (pool: Pool, titreId: string, user: TestUser) => graphQLCall(pool, queryImport('titre-demarche-creer'), { demarche: { titreId, typeId: 'oct' } }, user)
+const demarcheCreerProfil = async (pool: Pool, titreId: TitreId, user: TestUser) => restNewPostCall(pool, '/rest/demarches', {}, user, { titreId, typeId: 'oct', description: '' })
 
 const titreBuild = (
   {
