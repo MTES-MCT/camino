@@ -58,7 +58,7 @@ import { getCommunes } from '../api/rest/communes'
 import { SendFileOptions } from 'express-serve-static-core'
 import { activiteDocumentDownload, getActivite, updateActivite, deleteActivite } from '../api/rest/activites'
 import { DeepReadonly, isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
-import { getDemarcheByIdOrSlug, demarcheSupprimer } from '../api/rest/demarches'
+import { getDemarcheByIdOrSlug, demarcheSupprimer, demarcheCreer } from '../api/rest/demarches'
 import { geojsonImport, geojsonImportPoints, getPerimetreInfos, geojsonImportForages } from '../api/rest/perimetre'
 import { getDataGouvStats } from '../api/rest/statistiques/datagouv'
 import { addAdministrationActiviteTypeEmails, deleteAdministrationActiviteTypeEmails, getAdministrationActiviteTypeEmails, getAdministrationUtilisateurs } from '../api/rest/administrations'
@@ -163,6 +163,7 @@ const restRouteImplementations: Readonly<{ [key in CaminoRestRoute]: Transform<k
   '/rest/statistiques/granulatsMarins/:annee': { getCall: getGranulatsMarinsStats, ...CaminoRestRoutes['/rest/statistiques/granulatsMarins/:annee'] },
   '/rest/statistiques/dgtm': { getCall: getDGTMStats, ...CaminoRestRoutes['/rest/statistiques/dgtm'] },
   '/rest/statistiques/datagouv': { getCall: getDataGouvStats, ...CaminoRestRoutes['/rest/statistiques/datagouv'] },
+  '/rest/demarches': { newPostCall: demarcheCreer, ...CaminoRestRoutes['/rest/demarches'] },
   '/rest/demarches/:demarcheIdOrSlug': { getCall: getDemarcheByIdOrSlug, deleteCall: demarcheSupprimer, ...CaminoRestRoutes['/rest/demarches/:demarcheIdOrSlug'] },
   '/rest/utilisateurs/registerToNewsletter': { newGetCall: registerToNewsletter, ...CaminoRestRoutes['/rest/utilisateurs/registerToNewsletter'] },
   '/rest/utilisateur/generateQgisToken': { postCall: generateQgisToken, ...CaminoRestRoutes['/rest/utilisateur/generateQgisToken'] },

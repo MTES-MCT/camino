@@ -20,6 +20,8 @@ import { featureCollectionForagesValidator, featureCollectionPointsValidator, fe
 import { geoSystemeIdValidator } from './static/geoSystemes'
 import { isNotNullNorUndefined } from './typescript-tools'
 import { proprietesGeothermieForagesElementIds } from './static/titresTypes_demarchesTypes_etapesTypes/sections'
+import { titreIdValidator } from './validators/titres'
+import { demarcheTypeIdValidator } from './static/demarchesTypes'
 
 export const demarcheIdValidator = z.string().brand<'DemarcheId'>()
 export type DemarcheId = z.infer<typeof demarcheIdValidator>
@@ -242,3 +244,17 @@ export const getDemarcheContenu = (etapes: (Pick<DemarcheEtapeCommon, 'sections_
 
   return {}
 }
+
+export const demarcheCreationInputValidator = z.object({
+  titreId: titreIdValidator,
+  typeId: demarcheTypeIdValidator,
+  description: z.string(),
+})
+
+export type DemarcheCreationInput = z.infer<typeof demarcheCreationInputValidator>
+
+export const demarcheCreationOutputValidator = z.object({
+  slug: demarcheSlugValidator,
+})
+
+export type DemarcheCreationOutput = z.infer<typeof demarcheCreationOutputValidator>

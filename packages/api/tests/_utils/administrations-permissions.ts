@@ -141,19 +141,19 @@ export const creationCheck = async (pool: Pool, administrationId: string, creer:
     })
 
     if (creer) {
-      expect(res.body.errors).toBe(undefined)
-      expect(res.body.data).toMatchObject({ demarcheCreer: {} })
+      expect(res.status).toBe(HTTP_STATUS.OK)
+      expect(res.body).toMatchObject({ slug: {} })
     } else {
-      expect(res.body.errors).toHaveLength(1)
+      expect(res.status).not.toBe(HTTP_STATUS.OK)
     }
   } else if (cible === 'etapes') {
     const titreCreated = await titreCreateSuper(pool, administrationId, titreTypeId)
 
     const result = await demarcheCreerProfil(pool, titreCreated, { role: 'super' })
 
-    expect(result.body.errors).toBe(undefined)
+    expect(result.status).toBe(HTTP_STATUS.OK)
 
-    const slug = result.body.data.demarcheCreer.slug
+    const slug = result.body.slug
 
     const demarche = await TitresDemarches.query().findOne({ slug })
     expect(demarche).not.toBeUndefined()
@@ -280,7 +280,7 @@ const titreCreateSuper = async (_pool: Pool, administrationId: string, titreType
   return titre.id
 }
 
-const demarcheCreerProfil = async (pool: Pool, titreId: string, user: TestUser) => graphQLCall(pool, queryImport('titre-demarche-creer'), { demarche: { titreId, typeId: 'oct' } }, user)
+const demarcheCreerProfil = async (pool: Pool, titreId: TitreId, user: TestUser) => restNewPostCall(pool, '/rest/demarches', {}, user, { titreId, typeId: 'oct', description: '' })
 
 const titreBuild = (
   {

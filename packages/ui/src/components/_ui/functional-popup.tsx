@@ -69,9 +69,11 @@ export const FunctionalPopup = defineComponent<Props>((props: Props) => {
     e.stopPropagation()
   }
 
+  const devMode: boolean = process.env.VITEST === 'true' || import.meta.env.STORYBOOK === 'true'
+
   return () => (
     // TODO 2023-11-28 ici on interdit le teleport dans le cas de vitest pour que les snapshots soient présentes. On a pas trouvé mieux à cette date
-    <Teleport to="body" disabled={process.env.VITEST === 'true'}>
+    <Teleport to="body" disabled={devMode}>
       <div>
         <dialog id={id} class="fr-modal fr-modal--opened" open={true} aria-modal={true} role="dialog" aria-labelledby={`${id}-title`} onClick={props.close} style={{ zIndex: 1000001 }}>
           <div class="fr-container fr-container--fluid fr-container-md" onClick={stopPropagation}>

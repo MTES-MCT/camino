@@ -1,6 +1,6 @@
 import { apiGraphQLFetch } from '@/api/_client'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
-import { DemarcheId, DemarcheIdOrSlug, DemarcheSlug } from 'camino-common/src/demarche'
+import { DemarcheCreationInput, DemarcheCreationOutput, DemarcheId, DemarcheIdOrSlug, DemarcheSlug } from 'camino-common/src/demarche'
 import gql from 'graphql-tag'
 import { TitreStatutId } from 'camino-common/src/static/titresStatuts'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
@@ -12,16 +12,11 @@ import { DomaineId } from 'camino-common/src/static/domaines'
 import { EntrepriseId } from 'camino-common/src/entreprise'
 import { SubstanceLegaleId } from 'camino-common/src/static/substancesLegales'
 import { TitreTypeTypeId } from 'camino-common/src/static/titresTypesTypes'
-import { deleteWithJson, getWithJson } from '../../api/client-rest'
+import { deleteWithJson, getWithJson, newPostWithJson } from '../../api/client-rest'
 import { DeepReadonly } from 'vue'
+import { CaminoError } from 'camino-common/src/zod-tools'
 
-interface InputDemarcheCreation {
-  titreId: string
-  typeId: DemarcheTypeId
-  description: string
-}
-
-type InputDemarcheUpdation = InputDemarcheCreation & {
+type InputDemarcheUpdation = DemarcheCreationInput & {
   id: DemarcheId
 }
 
@@ -56,7 +51,7 @@ export interface GetDemarchesDemarche {
   }
 }
 export interface DemarcheApiClient {
-  createDemarche: (demarche: InputDemarcheCreation) => Promise<DemarcheSlug>
+  createDemarche: (demarche: DemarcheCreationInput) => Promise<DemarcheCreationOutput | CaminoError<string>>
   updateDemarche: (demarche: InputDemarcheUpdation) => Promise<DemarcheSlug>
   deleteDemarche: (demarcheId: DemarcheId) => Promise<void>
   getDemarcheByIdOrSlug: (demarcheIdOrSlug: DemarcheIdOrSlug) => Promise<DeepReadonly<GetDemarcheByIdOrSlugValidator>>
@@ -64,18 +59,8 @@ export interface DemarcheApiClient {
 }
 
 export const demarcheApiClient: DemarcheApiClient = {
-  createDemarche: async (demarche): Promise<DemarcheSlug> => {
-    const value = await apiGraphQLFetch(gql`
-      mutation DemarcheCreer($demarche: InputDemarcheCreation!) {
-        demarcheCreer(demarche: $demarche) {
-          slug
-        }
-      }
-    `)({
-      demarche,
-    })
-
-    return value.slug
+  createDemarche: async (demarche): Promise<DemarcheCreationOutput | CaminoError<string>> => {
+    return newPostWithJson('/rest/demarches', {}, demarche)
   },
 
   updateDemarche: async (demarche): Promise<DemarcheSlug> => {

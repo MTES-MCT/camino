@@ -14,7 +14,7 @@ import { titresFiltersQueryModify } from './_titres-filters'
 import TitresEtapes from '../models/titres-etapes'
 import { User } from 'camino-common/src/roles'
 import { sortedDemarchesTypes } from 'camino-common/src/static/demarchesTypes'
-import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
+import { DeepReadonly, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
 
 const etapesIncluesExcluesBuild = (q: QueryBuilder<TitresDemarches, TitresDemarches[]>, etapes: ITitreEtapeFiltre[], mode: 'etapesInclues' | 'etapesExclues') => {
   const raw = etapes
@@ -126,7 +126,7 @@ const titresDemarchesFiltersQueryModify = (
   )
 }
 
-const titresDemarchesQueryBuild = ({ fields }: { fields?: FieldsDemarche }, user: User) => {
+const titresDemarchesQueryBuild = ({ fields }: { fields?: FieldsDemarche }, user: DeepReadonly<User>) => {
   const graph = fields ? graphBuild(fieldsTitreAdd(fields), 'demarches', fieldsFormat) : options.titresDemarches.graph
 
   const q = TitresDemarches.query().withGraphFetched(graph)
@@ -303,7 +303,7 @@ export const titresDemarchesGet = async (
   return q
 }
 
-export const titreDemarcheGet = async (titreDemarcheId: string, { fields }: { fields?: FieldsDemarche }, user: User) => {
+export const titreDemarcheGet = async (titreDemarcheId: string, { fields }: { fields?: FieldsDemarche }, user: DeepReadonly<User>) => {
   const q = titresDemarchesQueryBuild({ fields }, user)
 
   return q

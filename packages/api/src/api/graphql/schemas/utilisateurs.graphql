@@ -13,12 +13,3 @@ type Utilisateur {
   entreprises: [Entreprise]
   role: ID
 }
-
-type Utilisateurs {
-  elements: [Utilisateur]
-  intervalle: Int
-  page: Int
-  colonne: String
-  ordre: String
-  total: Int
-}

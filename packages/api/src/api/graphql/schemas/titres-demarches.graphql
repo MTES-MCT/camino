@@ -50,12 +50,6 @@ type DemarcheSlug {
   slug: String
 }
 
-input InputDemarcheCreation {
-  typeId: ID!
-  titreId: ID!
-  description: String
-}
-
 input InputDemarcheModification {
   id: ID!
   typeId: ID!

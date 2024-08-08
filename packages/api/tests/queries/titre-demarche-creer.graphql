@@ -1,5 +1,0 @@
-mutation DemarcheCreer($demarche: InputDemarcheCreation!) {
-  demarcheCreer(demarche: $demarche) {
-    slug
-  }
-}

@@ -1,15 +1,17 @@
 import { DemarcheEditPopup, Props } from './demarche-edit-popup'
-import { Meta, StoryFn } from '@storybook/vue3'
+import { Meta, StoryFn, StoryObj } from '@storybook/vue3'
 import { action } from '@storybook/addon-actions'
 import { demarcheIdValidator, demarcheSlugValidator } from 'camino-common/src/demarche'
 import { titreIdValidator } from 'camino-common/src/validators/titres'
+import { expect, userEvent, within } from '@storybook/test'
 
-const meta: Meta = {
+const meta = {
   title: 'Components/Titre/DemarcheEditPopup',
   // @ts-ignore @storybook/vue3 n'aime pas les composants tsx
   component: DemarcheEditPopup,
-}
+} satisfies Meta<typeof DemarcheEditPopup>
 export default meta
+type Story = StoryObj<typeof meta>
 
 const create = action('create')
 const update = action('update')
@@ -21,7 +23,7 @@ const apiClient: Props['apiClient'] = {
   createDemarche: demarche => {
     create(demarche)
 
-    return new Promise(resolve => setTimeout(() => resolve(demarcheSlugValidator.parse('newDemarcheSlug')), 1000))
+    return new Promise(resolve => setTimeout(() => resolve({ slug: demarcheSlugValidator.parse('newDemarcheSlug') }), 1000))
   },
   updateDemarche: demarche => {
     update(demarche)
@@ -49,3 +51,27 @@ export const Edit: StoryFn = () => (
     tabId="demarches"
   />
 )
+
+export const DisplayErrorMessage: Story = {
+  args: {
+    reload,
+    apiClient: {
+      ...apiClient,
+      createDemarche: () => {
+        return new Promise(resolve => setTimeout(() => resolve({ message: 'Grosse erreur' })))
+      },
+    },
+    close,
+    demarche: { titreId: titreIdValidator.parse('titreId'), typeId: 'oct' },
+    titreTypeId: 'cxf',
+    titreNom: 'Nom du titre',
+    tabId: 'demarches',
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    await userEvent.click(canvas.getByText('Enregistrer'))
+
+    const errorDiv = await canvas.findByText('Grosse erreur')
+    expect(errorDiv).not.toBe(undefined)
+  },
+}
