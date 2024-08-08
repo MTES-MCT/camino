@@ -115,7 +115,7 @@ export const demarchesDefinitions = [
     demarcheIdExceptions: [],
   },
   {
-    titreTypeIds: ['cxg', 'prg'],
+    titreTypeIds: ['cxg', 'prg', 'cxs', 'prs'],
     demarcheTypeIds: demarcheTypeIdsCxPr_G,
     machine: new ProcedureSimplifieeMachine(),
     dateDebut: plusVieilleDateEnBase,
