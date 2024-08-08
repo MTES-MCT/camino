@@ -7,6 +7,7 @@ import { demarcheDefinitionFind } from '../rules-demarches/definitions'
 import { titreEtapeForMachineValidator, toMachineEtapes } from '../rules-demarches/machine-common'
 import { titreEtapesSortAscByOrdre } from '../utils/titre-etapes-sort'
 import { titreInModificationEnInstance } from './titre-statut-id-find'
+import { isEtapeStatusRejete } from 'camino-common/src/static/etapesStatuts'
 const titreDemarchePublicLectureFind = (
   publicLecture: boolean,
   demarcheTypeId: DemarcheTypeId,
@@ -74,7 +75,7 @@ const titreDemarchePublicLectureFind = (
   // si le type d'étape est décision implicite
   //    ou décision de l'administration
   // et que le statut est rejeté
-  if (['dim', 'dex'].includes(titreEtape.typeId) && titreEtape.statutId === 'rej') {
+  if (['dim', 'dex'].includes(titreEtape.typeId) && isEtapeStatusRejete(titreEtape.statutId)) {
     //   si le type de titre est AXM
     //   alors la démarche est publique
     //   sinon la démarche n'est pas (plus) publique

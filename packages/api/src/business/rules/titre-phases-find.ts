@@ -8,7 +8,7 @@ import { isDemarcheTypeOctroi, isDemarcheTypeWithPhase } from 'camino-common/src
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { CaminoDate, dateAddMonths, isBefore, toCaminoDate } from 'camino-common/src/date'
 import { titreDemarcheSortAsc } from '../utils/titre-elements-sort-asc'
-import { ETAPES_STATUTS } from 'camino-common/src/static/etapesStatuts'
+import { ETAPES_STATUTS, isEtapeStatusRejete } from 'camino-common/src/static/etapesStatuts'
 import { demarcheStatutIdsSuccess, isDemarcheStatutNonStatue } from 'camino-common/src/static/demarchesStatuts'
 import { ETAPES_TYPES, EtapeTypeId } from 'camino-common/src/static/etapesTypes'
 import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools'
@@ -45,7 +45,7 @@ const findDateDebut = (demarche: TitreDemarchePhaseFind, titreTypeId: TitreTypeI
     if (
       sortedEtapes[etapePublicationFirst].statutId === ETAPES_STATUTS.FAIT &&
       sortedEtapes[etapePublicationFirst - 1]?.typeId === ETAPES_TYPES.decisionDeLadministration &&
-      sortedEtapes[etapePublicationFirst - 1]?.statutId === ETAPES_STATUTS.REJETE
+      isEtapeStatusRejete(sortedEtapes[etapePublicationFirst - 1]?.statutId)
     ) {
       return null
     }
@@ -190,12 +190,12 @@ const titreDemarcheNormaleDateFinAndDureeFind = (titreEtapes: TitreEtapePhaseFin
 
   const derniereDecision = titreEtapesSorted[derniereDecisionIndex]
   if (isNotNullNorUndefined(derniereDecision)) {
-    if (derniereDecision.statutId === ETAPES_STATUTS.REJETE) {
+    if (isEtapeStatusRejete(derniereDecision.statutId)) {
       return { dateFin: derniereDecision.date, duree: 0 }
     } else if (
       derniereDecision.typeId === ETAPES_TYPES.publicationDeDecisionAuJORF &&
       titreEtapesSorted[derniereDecisionIndex + 1]?.typeId === ETAPES_TYPES.decisionDeLadministration &&
-      titreEtapesSorted[derniereDecisionIndex + 1]?.statutId === ETAPES_STATUTS.REJETE
+      isEtapeStatusRejete(titreEtapesSorted[derniereDecisionIndex + 1]?.statutId)
     ) {
       return { dateFin: derniereDecision.date, duree: 0 }
     }

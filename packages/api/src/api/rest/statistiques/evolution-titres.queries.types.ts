@@ -68,7 +68,7 @@ export interface IGetEtapesTypesDecisionRefusDbParams {
   demarcheTypeIds: readonly (string | null | void)[];
   departements: readonly (string | null | void)[];
   etapeStatutFait?: string | null | void;
-  etapeStatutRejet?: string | null | void;
+  etapeStatutRejet: readonly (string | null | void)[];
   etapesTypesDecisionRefus: readonly (string | null | void)[];
   etapeTypeClassementSansSuite?: string | null | void;
   titreTypeId?: string | null | void;
