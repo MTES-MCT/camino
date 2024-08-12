@@ -1,7 +1,8 @@
 import { test, expect } from 'vitest'
-import { Role, UserNotNull, toUtilisateurId } from '../roles'
+import { Role,  UserNotNull, toUtilisateurId } from '../roles'
 import { testBlankUser } from '../tests-utils'
-import { canEditPermission, getAssignableRoles } from './utilisateurs'
+import { canEditPermission, canReadUtilisateur, getAssignableRoles } from './utilisateurs'
+import { entrepriseIdValidator } from '../entreprise'
 
 const users: Record<Role, UserNotNull> = {
   super: { ...testBlankUser, role: 'super' },
@@ -34,4 +35,16 @@ test('canEditPermission', () => {
 
 test('canEditPermission yourself', () => {
   Object.values(users).forEach(user => expect(canEditPermission(user, user)).toBe(false))
+})
+
+
+
+test('canReadUtilisateur', () => {
+  expect(canReadUtilisateur({ ...testBlankUser, role: 'lecteur', administrationId: 'aut-97300-01' }, {...testBlankUser, role: 'defaut'})).toBe(false)
+    expect(canReadUtilisateur({ ...testBlankUser, role: 'lecteur', administrationId: 'aut-97300-01' },{ ...testBlankUser, role: 'admin', administrationId: 'aut-97300-01' })).toBe(true)
+
+
+    const entrepriseId = entrepriseIdValidator.parse('entrepriseId')
+  expect(canReadUtilisateur({ ...testBlankUser, role: 'entreprise', entreprises: [{ id: entrepriseId }] }, {...testBlankUser, role: 'defaut'})).toBe(false)
+  expect(canReadUtilisateur({ ...testBlankUser, role: 'entreprise', entreprises: [{ id: entrepriseId }] }, { ...testBlankUser, role: 'entreprise', entreprises: [{ id: entrepriseId }] })).toBe(true)
 })

@@ -68,7 +68,7 @@ databaseInit(pool).then(() => {
     },
   })
 
-  app.use(cors({ origin: false, credentials: true, exposedHeaders: ['Content-disposition'] }), compression(), limiter, authJwt, authBasic, userLoader, cookieParser(), connectedCatcher)
+  app.use(cors({ origin: false, credentials: true, exposedHeaders: ['Content-disposition'] }), compression(), limiter, authJwt, authBasic(pool), userLoader(pool), cookieParser(), connectedCatcher)
 
   // Le Timeout du sse côté frontend est mis à 45 secondes, on envoie un ping toutes les 30 secondes
   const ssePingDelayInSeconds = 30

@@ -6,7 +6,7 @@ import type { Pool } from 'pg'
 import { Index, IUtilisateur } from '../../src/types'
 
 import { app } from '../app'
-import { utilisateurCreate, utilisateurGet } from '../../src/database/queries/utilisateurs'
+import { utilisateurCreate } from '../../src/database/queries/utilisateurs'
 import { userSuper } from '../../src/database/user-super'
 import { AdminUserNotNull, isAdministrationRole, isSuperRole, UserNotNull } from 'camino-common/src/roles'
 import { TestUser } from 'camino-common/src/tests-utils'
@@ -26,8 +26,9 @@ import {
 import { z } from 'zod'
 import { newUtilisateurId } from '../../src/database/models/_format/id-create'
 import { idUserKeycloakRecognised } from '../keycloak'
-import { DeepReadonly, isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
+import { DeepReadonly, isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools'
 import { config } from '../../src/config/index'
+import { getUtilisateurById } from '../../src/database/queries/utilisateurs.queries'
 
 export const queryImport = (nom: string): string =>
   fs
@@ -47,7 +48,7 @@ export const graphQLCall = async (
 ): Promise<request.Test> => {
   const req = request(app(pool)).post('/').send({ query, variables })
 
-  return jwtSet(req, user)
+  return jwtSet(pool, req, user)
 }
 
 export const restDownloadCall = async <Route extends DownloadRestRoutes>(
@@ -59,7 +60,7 @@ export const restDownloadCall = async <Route extends DownloadRestRoutes>(
 ): Promise<request.Test> => {
   const req = request(app(pool)).get(getRestRoute(route, params, searchParams))
 
-  return jwtSet(req, user)
+  return jwtSet(pool, req, user)
 }
 
 export const restCall = async <Route extends GetRestRoutes>(
@@ -71,7 +72,7 @@ export const restCall = async <Route extends GetRestRoutes>(
 ): Promise<request.Test> => {
   const req = request(app(pool)).get(getRestRoute(route, params, searchParams))
 
-  return jwtSet(req, user)
+  return jwtSet(pool, req, user)
 }
 
 export const restNewCall = async <Route extends NewGetRestRoutes>(
@@ -84,7 +85,7 @@ export const restNewCall = async <Route extends NewGetRestRoutes>(
   // @ts-ignore
   const req = request(app(pool)).get(getRestRoute(route, params, searchParams))
 
-  return jwtSet(req, user)
+  return jwtSet(pool, req, user)
 }
 
 export const restPostCall = async <Route extends PostRestRoutes>(
@@ -98,7 +99,7 @@ export const restPostCall = async <Route extends PostRestRoutes>(
     .post(getRestRoute(caminoRestRoute, params))
     .send(body ?? undefined)
 
-  return jwtSet(req, user)
+  return jwtSet(pool, req, user)
 }
 export const restNewPostCall = async <Route extends NewPostRestRoutes>(
   pool: Pool,
@@ -111,7 +112,7 @@ export const restNewPostCall = async <Route extends NewPostRestRoutes>(
     .post(getRestRoute(caminoRestRoute, params))
     .send(body ?? undefined)
 
-  return jwtSet(req, user)
+  return jwtSet(pool, req, user)
 }
 
 export const restPutCall = async <Route extends PutRestRoutes>(
@@ -125,19 +126,19 @@ export const restPutCall = async <Route extends PutRestRoutes>(
     .put(getRestRoute(path, params))
     .send(body ?? undefined)
 
-  return jwtSet(req, user)
+  return jwtSet(pool, req, user)
 }
 
 export const restDeleteCall = async <Route extends DeleteRestRoutes>(pool: Pool, path: Route, params: CaminoRestParams<Route>, user: TestUser | undefined): Promise<request.Test> => {
   const req = request(app(pool)).delete(getRestRoute(path, params)).send()
 
-  return jwtSet(req, user)
+  return jwtSet(pool, req, user)
 }
 
-const jwtSet = async (req: request.Test, user: TestUser | undefined): Promise<request.Test> => {
+const jwtSet = async (pool: Pool, req: request.Test, user: TestUser | undefined): Promise<request.Test> => {
   let token
   if (user) {
-    token = await userTokenGenerate(user)
+    token = await userTokenGenerate(pool, user)
   }
 
   if (isNotNullNorUndefined(token)) {
@@ -148,7 +149,7 @@ const jwtSet = async (req: request.Test, user: TestUser | undefined): Promise<re
   return req
 }
 
-export const userGenerate = async (user: TestUser): Promise<UserNotNull> => {
+export const userGenerate = async (pool: Pool, user: TestUser): Promise<UserNotNull> => {
   let idToBuild = 'super'
 
   if (!isSuperRole(user.role)) {
@@ -161,10 +162,10 @@ export const userGenerate = async (user: TestUser): Promise<UserNotNull> => {
 
   const id = newUtilisateurId(idToBuild)
 
-  let userInDb = await utilisateurGet(id, undefined, userSuper)
+  const userInDb = await getUtilisateurById(pool, id,  userSuper)
 
-  if (!userInDb) {
-    userInDb = await utilisateurCreate(
+  if (isNullOrUndefined(userInDb)) {
+    return utilisateurCreate(
       {
         ...user,
         id,
@@ -175,14 +176,14 @@ export const userGenerate = async (user: TestUser): Promise<UserNotNull> => {
         keycloakId: idUserKeycloakRecognised,
       },
       {}
-    )
+      // TODO 2023-05-24: pg-typed utilisateurCreate
+    ) as unknown as UserNotNull
   }
 
-  // TODO 2023-05-24: pg-typed utilisateurCreate and utilisateurGet
-  return userInDb as UserNotNull
+  return userInDb
 }
-const userTokenGenerate = async (user: TestUser) => {
-  const userInDb = await userGenerate(user)
+const userTokenGenerate = async (pool: Pool, user: TestUser) => {
+  const userInDb = await userGenerate(pool, user)
 
   return tokenCreate(userInDb)
 }

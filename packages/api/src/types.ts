@@ -1,6 +1,6 @@
 import { AdministrationId } from 'camino-common/src/static/administrations'
 import { CodePostal } from 'camino-common/src/static/departement'
-import { BaseUserNotNull, isAdministrationRole, isEntrepriseOrBureauDetudeRole, Role, User, UserNotNull, UtilisateurId } from 'camino-common/src/roles'
+import { Role, User, UserNotNull, userNotNullValidator, UtilisateurId } from 'camino-common/src/roles'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
 import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts'
@@ -12,7 +12,7 @@ import { TitreReference } from 'camino-common/src/titres-references'
 import { SecteursMaritimes } from 'camino-common/src/static/facades'
 import { CaminoDate } from 'camino-common/src/date'
 import { EntrepriseDocumentId, EntrepriseId } from 'camino-common/src/entreprise'
-import { DeepReadonly, isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
+import { DeepReadonly } from 'camino-common/src/typescript-tools'
 import { SDOMZoneId } from 'camino-common/src/static/sdom'
 import { ActivitesStatutId } from 'camino-common/src/static/activitesStatuts'
 import { DemarcheId, DemarcheSlug } from 'camino-common/src/demarche'
@@ -287,50 +287,8 @@ interface IUtilisateur {
   qgisToken?: string | null
 }
 
-export const formatUser = (userInBdd: Pick<IUtilisateur, 'email' | 'id' | 'nom' | 'prenom' | 'administrationId' | 'role' | 'entreprises'>): UserNotNull => {
-  if (!isNotNullNorUndefined(userInBdd.email)) {
-    throw new Error('l’email est obligatoire')
-  }
 
-  if (!isNotNullNorUndefined(userInBdd.id)) {
-    throw new Error('l’id est obligatoire')
-  }
-
-  if (!isNotNullNorUndefined(userInBdd.nom)) {
-    throw new Error('le nom est obligatoire')
-  }
-  const baseUser: Omit<BaseUserNotNull, 'role'> = {
-    id: userInBdd.id,
-    nom: userInBdd.nom,
-    prenom: userInBdd.prenom ?? '',
-    email: userInBdd.email,
-  }
-  if (isAdministrationRole(userInBdd.role)) {
-    if (!isNotNullNorUndefined(userInBdd.administrationId)) {
-      throw new Error("l'administration est obligatoire pour un admin")
-    }
-
-    return {
-      ...baseUser,
-      role: userInBdd.role,
-      administrationId: userInBdd.administrationId,
-    }
-  }
-
-  if (isEntrepriseOrBureauDetudeRole(userInBdd.role)) {
-    if (!isNotNullNorUndefined(userInBdd.entreprises)) {
-      throw new Error('les entreprises doivent être chargées')
-    }
-
-    return {
-      ...baseUser,
-      role: userInBdd.role,
-      entreprises: userInBdd.entreprises.map(({ id, nom }) => ({ id, nom: nom ?? '' })),
-    }
-  }
-
-  return { ...baseUser, role: userInBdd.role }
-}
+export const formatUser = (userInBdd: Pick<IUtilisateur, 'email' | 'id' | 'nom' | 'prenom' | 'administrationId' | 'role' | 'entreprises'>): UserNotNull => userNotNullValidator.parse({ ...userInBdd, prenom: userInBdd.prenom ?? ''})
 
 interface IUtilisateurTitre {
   utilisateurId: string

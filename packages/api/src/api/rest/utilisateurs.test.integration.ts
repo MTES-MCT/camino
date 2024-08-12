@@ -34,7 +34,7 @@ afterAll(async () => {
 
 describe('moi', () => {
   test('peut demander les informations sur soi-même', async () => {
-    const user = await userGenerate({ role: 'defaut' })
+    const user = await userGenerate(dbPool, { role: 'defaut' })
     let tested = await restCall(dbPool, '/moi', {}, undefined)
 
     expect(tested.statusCode).toBe(HTTP_STATUS.NO_CONTENT)
@@ -66,7 +66,7 @@ describe('utilisateurModifier', () => {
   })
 
   test("peut modifier le rôle d'un compte utilisateur", async () => {
-    const userToEdit = await userGenerate({ role: 'defaut' })
+    const userToEdit = await userGenerate(dbPool, { role: 'defaut' })
 
     const utilisateurToEdit: UtilisateurToEdit = {
       id: userToEdit.id,
@@ -103,7 +103,7 @@ describe('utilisateurSupprimer', () => {
     const OAUTH_URL = 'http://unused'
     process.env.OAUTH_URL = OAUTH_URL
     renewConfig()
-    const user = await userGenerate({ role: 'defaut' })
+    const user = await userGenerate(dbPool, { role: 'defaut' })
 
     const tested = await restCall(dbPool, '/rest/utilisateurs/:id/delete', { id: user.id }, { role: 'defaut' })
     await knex.raw('delete from logs')

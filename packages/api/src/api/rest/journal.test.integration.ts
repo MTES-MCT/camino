@@ -52,7 +52,7 @@ describe('getTitresModifiesByMonth', async () => {
   test('comptabilise chaque modifications sur chaque titres', async () => {
     let tested = await getTitresModifiesByMonth(dbPool)
 
-    const user = await userGenerate({ role: 'defaut' })
+    const user = await userGenerate(dbPool, { role: 'defaut' })
     await knex.raw(
       `INSERT INTO public.journaux (id, utilisateur_id, date, element_id, operation, titre_id) VALUES ('${idGenerate()}', '${
         user.id

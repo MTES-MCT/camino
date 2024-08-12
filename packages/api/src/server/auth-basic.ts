@@ -5,11 +5,12 @@ import basicAuth from 'basic-auth'
 import bcrypt from 'bcryptjs'
 
 import { emailCheck } from '../tools/email-check'
-import { userByEmailGet } from '../database/queries/utilisateurs'
 import { JWTUser } from './user-loader'
 import { isNullOrUndefined, isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
+import { GetUtilisateurByEmail, getUtilisateurByEmail } from '../database/queries/utilisateurs.queries'
+import { Pool } from 'pg'
 
-const userQGISCredentialsCheck = async (email: string, qgisToken: string) => {
+const userQGISCredentialsCheck = async (pool: Pool,email: string, qgisToken: string): Promise<GetUtilisateurByEmail | null> => {
   email = email.toLowerCase()
   if (!emailCheck(email)) {
     throw new Error('adresse email invalide')
@@ -18,20 +19,20 @@ const userQGISCredentialsCheck = async (email: string, qgisToken: string) => {
   let user
 
   try {
-    user = await userByEmailGet(email)
+    user = await getUtilisateurByEmail(pool, email)
 
     if (!user) return null
   } catch (e: any) {
     throw new Error(`Erreur technique : ${e.message}, email ${email} invalide`)
   }
 
-  if (isNullOrUndefined(user.qgisToken)) return null
-  const valid = bcrypt.compareSync(qgisToken, user.qgisToken)
+  if (isNullOrUndefined(user.qgis_token)) return null
+  const valid = bcrypt.compareSync(qgisToken, user.qgis_token)
 
   return valid ? user : null
 }
 
-export const authBasic = async (req: Request, res: express.Response, next: express.NextFunction) => {
+export const authBasic = (pool: Pool) => async (req: Request, res: express.Response, next: express.NextFunction) => {
   try {
     // basic auth est activé que pour la route titres_qgis
     if (req.url.includes('titres_qgis')) {
@@ -45,9 +46,9 @@ export const authBasic = async (req: Request, res: express.Response, next: expre
       }
 
       // Ceci est dû au fait que QGIS, parfois, escape le %40 au lieu de le transformer en @ correctement...
-      const user = await userQGISCredentialsCheck(credentials.name.replace('%40', '@'), credentials.pass)
+      const user = await userQGISCredentialsCheck(pool, credentials.name.replace('%40', '@'), credentials.pass)
 
-      if (!user) {
+      if (isNullOrUndefined(user)) {
         res.status(401)
         res.send('Identifiants incorrects')
 
@@ -55,7 +56,7 @@ export const authBasic = async (req: Request, res: express.Response, next: expre
       }
 
       // on fait comme si le JWT avait été déchiffré pour que l’utilisateur soit chargé par userLoader
-      const jwtUser: JWTUser = { email: user.email ?? undefined, family_name: user.nom ?? undefined, given_name: user.prenom ?? undefined, sub: user.keycloakId ?? undefined }
+      const jwtUser: JWTUser = { email: user.email ?? undefined, family_name: user.nom ?? undefined, given_name: user.prenom ?? undefined, sub: user.keycloak_id ?? undefined }
       req.auth = jwtUser
       next()
 
