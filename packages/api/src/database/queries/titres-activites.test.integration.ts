@@ -48,6 +48,8 @@ describe('teste les requêtes sur les activités', () => {
       prenom: 'utilisateurPrenom',
       email: 'utilisateurEmail',
       administrationId: 'min-mtes-dgaln-01',
+      telephone_fixe: null,
+      telephone_mobile: null,
     }
 
     const actual = await titresActivitesGet({}, { fields: { id: {} } }, adminDGALN)

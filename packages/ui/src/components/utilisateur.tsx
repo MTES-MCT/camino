@@ -8,12 +8,12 @@ import { RemovePopup } from './utilisateur/remove-popup'
 import { canDeleteUtilisateur } from 'camino-common/src/permissions/utilisateurs'
 import { PermissionDisplay } from './utilisateur/permission-edit'
 import { UtilisateurToEdit } from 'camino-common/src/utilisateur'
-import { Utilisateur as ApiUser, Entreprise } from 'camino-common/src/entreprise'
+import { Entreprise } from 'camino-common/src/entreprise'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 
 import { entreprisesKey, userKey } from '@/moi'
 import { DsfrInputCheckbox } from './_ui/dsfr-input-checkbox'
-import { UtilisateurId, utilisateurIdValidator, User } from 'camino-common/src/roles'
+import { UtilisateurId, utilisateurIdValidator, User, UserNotNull } from 'camino-common/src/roles'
 import { Alert } from './_ui/alert'
 import { DsfrLink, DsfrButtonIcon } from './_ui/dsfr-button'
 import { LabelWithValue } from './_ui/label-with-value'
@@ -90,7 +90,7 @@ export const PureUtilisateur = defineComponent<Props>(props => {
   })
 
   const subscription = ref<AsyncData<boolean>>({ status: 'LOADING' })
-  const utilisateur = ref<AsyncData<ApiUser>>({ status: 'LOADING' })
+  const utilisateur = ref<AsyncData<UserNotNull>>({ status: 'LOADING' })
   const removePopup = ref<boolean>(false)
   const isMe = computed<boolean>(() => {
     return isNotNullNorUndefined(props.user) && props.utilisateurId === props.user.id
@@ -184,11 +184,11 @@ export const PureUtilisateur = defineComponent<Props>(props => {
               <LabelWithValue title="Email" item={isNotNullNorUndefined(item.email) ? <DsfrLink disabled={false} href={`mailto:${item.email}`} icon={null} title={item.email} /> : <span>–</span>} />
               <LabelWithValue
                 title="Téléphone fixe"
-                item={isNotNullNorUndefined(item.telephoneFixe) ? <DsfrLink disabled={false} href={`tel:${item.telephoneFixe}`} icon={null} title={item.telephoneFixe} /> : <span>–</span>}
+                item={isNotNullNorUndefined(item.telephone_fixe) ? <DsfrLink disabled={false} href={`tel:${item.telephone_fixe}`} icon={null} title={item.telephone_fixe} /> : <span>–</span>}
               />
               <LabelWithValue
                 title="Téléphone mobile"
-                item={isNotNullNorUndefined(item.telephoneMobile) ? <DsfrLink disabled={false} href={`tel:${item.telephoneMobile}`} icon={null} title={item.telephoneMobile} /> : <span>–</span>}
+                item={isNotNullNorUndefined(item.telephone_mobile) ? <DsfrLink disabled={false} href={`tel:${item.telephone_mobile}`} icon={null} title={item.telephone_mobile} /> : <span>–</span>}
               />
               <PermissionDisplay user={props.user} utilisateur={item} apiClient={{ ...props.apiClient, updateUtilisateur }} entreprises={props.entreprises} />
               {isMe.value ? (

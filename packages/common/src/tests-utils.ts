@@ -6,4 +6,6 @@ export const testBlankUser: Omit<UserNotNull, 'role'> = {
   email: 'email@gmail.com',
   nom: 'nom',
   prenom: 'prenom',
+  telephone_fixe: null,
+  telephone_mobile: null,
 }

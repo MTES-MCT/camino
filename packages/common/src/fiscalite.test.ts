@@ -21,7 +21,7 @@ test('fraisGestion', () => {
 
   expect(fraisGestion({ redevanceDepartementale: 12.5, redevanceCommunale: 13.2 })).toEqual(new Decimal(2.06))
 })
-const roleLessUser: Omit<UserNotNull, 'role'> = { id: toUtilisateurId('id'), nom: 'nom', email: 'email', prenom: 'prenom' }
+const roleLessUser: Omit<UserNotNull, 'role'> = { id: toUtilisateurId('id'), nom: 'nom', email: 'email', prenom: 'prenom', telephone_fixe: null, telephone_mobile: null }
 
 test('fiscaliteVisible', () => {
   const titres: Partial<Pick<CommonRestTitre, 'type_id'>>[] = [{ type_id: 'arm' }, { type_id: 'prw' }]

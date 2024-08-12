@@ -26,6 +26,8 @@ const apiClientMock: Props['apiClient'] = {
       nom: 'nom',
       prenom: 'prenom',
       role: 'super',
+      telephone_fixe: null,
+      telephone_mobile: null,
     }),
   getUtilisateurNewsletter: () => Promise.resolve(true),
   removeUtilisateur: params => {

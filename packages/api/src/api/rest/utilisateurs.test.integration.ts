@@ -187,7 +187,7 @@ describe('getUtilisateurs', () => {
       keycloakId: idUserKeycloakRecognised,
     })
 
-    const tested = await restNewCall(dbPool, '/rest/utilisateurs', {}, userSuper, { colonne: 'nom', ordre: 'desc', page: 1, intervalle: 10 })
+    const tested = await restNewCall(dbPool, '/rest/utilisateurs', {}, userSuper, { colonne: 'nom', ordre: 'desc', page: '1', intervalle: '10' })
     expect(tested.statusCode).toBe(200)
     expect(tested.body).toStrictEqual({
       elements: [
@@ -238,7 +238,7 @@ describe('getUtilisateurs', () => {
       [{ role: 'entreprise', entreprises: [] }, true],
       [{ role: 'defaut' }, false],
     ])('en tant que $role', async (user, voit) => {
-      const result = await restNewCall(dbPool, '/rest/utilisateurs', {}, { ...user, ...testBlankUser }, { colonne: 'nom', ordre: 'asc', page: 1, intervalle: 10, nomsUtilisateurs: mockUserNom })
+      const result = await restNewCall(dbPool, '/rest/utilisateurs', {}, { ...user, ...testBlankUser }, { colonne: 'nom', ordre: 'asc', page: '1', intervalle: '10', nomsUtilisateurs: mockUserNom })
 
       if (voit) {
         expect(result.status).toBe(200)

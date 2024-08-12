@@ -1,6 +1,5 @@
 import { z } from 'zod'
 import { CaminoDate, caminoDateValidator } from './date'
-import { User } from './roles'
 import { DocumentTypeId, entrepriseDocumentTypeIdValidator } from './static/documentsTypes'
 import { SecteursMaritimes } from './static/facades'
 import { SubstanceLegaleId } from './static/substancesLegales'
@@ -63,15 +62,6 @@ export interface TitreEntreprise {
   activitesAbsentes: number | null
   activitesEnConstruction: number | null
 }
-export type Utilisateur = {
-  id: string
-  prenom: string
-  nom: string
-  email: string
-  telephoneFixe?: string
-  telephoneMobile?: string
-  entreprises?: Entreprise[]
-} & User
 
 export const entrepriseValidator = z.object({ id: entrepriseIdValidator, legal_siren: z.string().nullable(), nom: z.string() })
 export type Entreprise = z.infer<typeof entrepriseValidator>

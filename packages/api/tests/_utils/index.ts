@@ -80,9 +80,8 @@ export const restNewCall = async <Route extends NewGetRestRoutes>(
   route: Route,
   params: CaminoRestParams<Route>,
   user: TestUser | undefined,
-  searchParams?: DeepReadonly<z.infer<(typeof CaminoRestRoutes)[Route]['newGet']['searchParams']>>
+  searchParams?: Record<string, string | string[]>
 ): Promise<request.Test> => {
-  // @ts-ignore
   const req = request(app(pool)).get(getRestRoute(route, params, searchParams))
 
   return jwtSet(pool, req, user)
@@ -162,7 +161,7 @@ export const userGenerate = async (pool: Pool, user: TestUser): Promise<UserNotN
 
   const id = newUtilisateurId(idToBuild)
 
-  const userInDb = await getUtilisateurById(pool, id,  userSuper)
+  const userInDb = await getUtilisateurById(pool, id, userSuper)
 
   if (isNullOrUndefined(userInDb)) {
     return utilisateurCreate(

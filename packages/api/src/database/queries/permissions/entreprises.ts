@@ -10,7 +10,6 @@ import { DeepReadonly } from 'camino-common/src/typescript-tools'
 export const entreprisesQueryModify = (q: QueryBuilder<Entreprises, Entreprises | Entreprises[]>, _user: DeepReadonly<User>): QueryBuilder<Entreprises, Entreprises | Entreprises[]> => {
   q.select('entreprises.*')
 
-
   return q
 }
 

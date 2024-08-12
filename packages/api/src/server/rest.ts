@@ -31,6 +31,7 @@ import {
   utilisateurs,
   registerToNewsletter,
   getUtilisateurs,
+  getUtilisateur,
 } from '../api/rest/utilisateurs'
 import { logout, resetPassword } from '../api/rest/keycloak'
 import { getDGTMStats, getGranulatsMarinsStats, getGuyaneStats, getMinerauxMetauxMetropolesStats } from '../api/rest/statistiques/index'
@@ -97,7 +98,9 @@ export type RestNewPostCall<Route extends NewPostRestRoutes> = (
   params: DeepReadonly<z.infer<CaminoRestRoutesType[Route]['params']>>
 ) => Effect.Effect<DeepReadonly<z.infer<CaminoRestRoutesType[Route]['newPost']['output']>>, CaminoApiError<string>>
 
-type SearchParams<Route extends NewGetRestRoutes> = CaminoRestRoutesType[Route]['newGet'] extends { searchParams: ZodType } ? z.infer<CaminoRestRoutesType[Route]['newGet']['searchParams']> : undefined
+type SearchParams<Route extends NewGetRestRoutes> = CaminoRestRoutesType[Route]['newGet'] extends { searchParams: ZodType }
+  ? z.infer<CaminoRestRoutesType[Route]['newGet']['searchParams']>
+  : Record<never, string>
 
 export type RestNewGetCall<Route extends NewGetRestRoutes> = (
   pool: Pool,
@@ -170,6 +173,7 @@ const restRouteImplementations: Readonly<{ [key in CaminoRestRoute]: Transform<k
   '/rest/utilisateurs/:id/permission': { postCall: updateUtilisateurPermission, ...CaminoRestRoutes['/rest/utilisateurs/:id/permission'] },
   '/rest/utilisateurs/:id/delete': { getCall: deleteUtilisateur, ...CaminoRestRoutes['/rest/utilisateurs/:id/delete'] },
   '/rest/utilisateurs/:id/newsletter': { getCall: isSubscribedToNewsletter, postCall: manageNewsletterSubscription, ...CaminoRestRoutes['/rest/utilisateurs/:id/newsletter'] }, // UNTESTED YET
+  '/rest/utilisateurs/:id': { newGetCall: getUtilisateur, ...CaminoRestRoutes['/rest/utilisateurs/:id'] },
   '/rest/utilisateurs': { newGetCall: getUtilisateurs, ...CaminoRestRoutes['/rest/utilisateurs'] },
   '/rest/entreprises/:entrepriseId/fiscalite/:annee': { getCall: fiscalite, ...CaminoRestRoutes['/rest/entreprises/:entrepriseId/fiscalite/:annee'] }, // UNTESTED YET
   '/rest/entreprises/:entrepriseId': { getCall: getEntreprise, putCall: modifierEntreprise, ...CaminoRestRoutes['/rest/entreprises/:entrepriseId'] },

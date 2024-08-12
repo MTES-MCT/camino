@@ -7,4 +7,6 @@ export const userSuper: UserSuper = {
   nom: 'Camino',
   prenom: '',
   role: 'super',
+  telephone_fixe: null,
+  telephone_mobile: null,
 }

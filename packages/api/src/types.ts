@@ -287,8 +287,8 @@ interface IUtilisateur {
   qgisToken?: string | null
 }
 
-
-export const formatUser = (userInBdd: Pick<IUtilisateur, 'email' | 'id' | 'nom' | 'prenom' | 'administrationId' | 'role' | 'entreprises'>): UserNotNull => userNotNullValidator.parse({ ...userInBdd, prenom: userInBdd.prenom ?? ''})
+export const formatUser = (userInBdd: Pick<IUtilisateur, 'email' | 'id' | 'nom' | 'prenom' | 'administrationId' | 'role' | 'entreprises'>): UserNotNull =>
+  userNotNullValidator.parse({ ...userInBdd, prenom: userInBdd.prenom ?? '' })
 
 interface IUtilisateurTitre {
   utilisateurId: string

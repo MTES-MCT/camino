@@ -1,26 +1,23 @@
 import { sql } from '@pgtyped/runtime'
 import { Effect, pipe } from 'effect'
 import { DbQueryAccessError, Redefine, dbQueryAndValidate, effectDbQueryAndValidate } from '../../pg-database'
-import {
-  AdminUserNotNull,
-  BaseUserNotNull,
-  EntrepriseUserNotNull,
-  User,
-  UserNotNull,
-  UtilisateurId,
-  roleValidator,
-  userNotNullValidator,
-  utilisateurIdValidator,
-} from 'camino-common/src/roles'
+import { AdminUserNotNull, BaseUserNotNull, EntrepriseUserNotNull, User, UserNotNull, UtilisateurId, roleValidator, userNotNullValidator, utilisateurIdValidator } from 'camino-common/src/roles'
 import { z } from 'zod'
 import { CaminoError } from 'camino-common/src/zod-tools'
 import { Pool } from 'pg'
 import { administrationIdValidator } from 'camino-common/src/static/administrations'
 import { canReadUtilisateur, canReadUtilisateurs } from 'camino-common/src/permissions/utilisateurs'
-import { UtilisateursSearchParamsInput, UtilisateursSearchParams, Utilisateur, utilisateurValidator } from 'camino-common/src/utilisateur'
-import { IGetKeycloakIdByUserIdDbQuery, IGetUtilisateurByEmailDbQuery, IGetUtilisateurByIdDbQuery,  IGetUtilisateurByKeycloakIdDbQuery,  IGetUtilisateursDbQuery, IGetUtilisateursEmailsByEntrepriseIdsDbQuery } from './utilisateurs.queries.types'
+import { UtilisateursSearchParamsInput, UtilisateursSearchParams } from 'camino-common/src/utilisateur'
+import {
+  IGetKeycloakIdByUserIdDbQuery,
+  IGetUtilisateurByEmailDbQuery,
+  IGetUtilisateurByIdDbQuery,
+  IGetUtilisateurByKeycloakIdDbQuery,
+  IGetUtilisateursDbQuery,
+  IGetUtilisateursEmailsByEntrepriseIdsDbQuery,
+} from './utilisateurs.queries.types'
 import { ZodUnparseable, zodParseEffect } from '../../tools/fp-tools'
-import { DeepReadonly, NonEmptyArray, Nullable, isNotNullNorUndefinedNorEmpty, isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools'
+import { DeepReadonly, NonEmptyArray, Nullable, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools'
 import { EntrepriseId, entrepriseIdValidator } from 'camino-common/src/entreprise'
 
 const getUtilisateursValidator = z.object({
@@ -41,7 +38,7 @@ export const getUtilisateursFilteredAndSorted = (
   pool: Pool,
   user: DeepReadonly<User>,
   searchParams: UtilisateursSearchParams
-): Effect.Effect<Utilisateur[], CaminoError<GetUtilisateursFilteredAndSortedErrors>> => {
+): Effect.Effect<UserNotNull[], CaminoError<GetUtilisateursFilteredAndSortedErrors>> => {
   return Effect.Do.pipe(
     Effect.filterOrFail(
       () => canReadUtilisateurs(user),
@@ -55,19 +52,17 @@ export const getUtilisateursFilteredAndSorted = (
     }),
     Effect.flatMap(utilisateurs => {
       return Effect.forEach(utilisateurs, u => {
-        const obj: Pick<Utilisateur, 'telephoneFixe' | 'telephoneMobile' | 'id' | 'nom' | 'prenom' | 'role' | 'email'> &
+        const obj: Pick<UserNotNull, 'telephone_fixe' | 'telephone_mobile' | 'id' | 'nom' | 'prenom' | 'role' | 'email'> &
           Nullable<Pick<AdminUserNotNull, 'administrationId'>> &
           Pick<EntrepriseUserNotNull, 'entreprises'> = {
           ...u,
-          telephoneMobile: u.telephone_mobile,
-          telephoneFixe: u.telephone_fixe,
           administrationId: u.administration_id,
           entreprises: u.entreprise_ids?.map(id => ({ id })) ?? [],
           prenom: u.prenom ?? '',
         }
 
         return pipe(
-          zodParseEffect(utilisateurValidator, obj),
+          zodParseEffect(userNotNullValidator, obj),
           Effect.mapError(error => {
             return { ...error, extra: { email: u.email } }
           })
@@ -91,7 +86,6 @@ export const getUtilisateursFilteredAndSorted = (
 
 // VISIBLE FOR TESTING
 export const filterUtilisateur = (utilisateur: GetUtilisateur, params: Omit<UtilisateursSearchParamsInput, 'page' | 'intervalle' | 'colonne' | 'ordre'>): boolean => {
-
   // On filtre en fonction des filtres sélectionnés
   if (isNotNullNorUndefinedNorEmpty(params.administrationIds) && !params.administrationIds.includes(utilisateur.administration_id)) {
     return false
@@ -148,22 +142,55 @@ const getUtilisateursEmailsByEntrepriseIdsDb = sql<Redefine<IGetUtilisateursEmai
   select u.email from utilisateurs u join utilisateurs__entreprises ue on ue.utilisateur_id = u.id where ue.entreprise_id in $$entrepriseIds AND u.keycloak_id is not null`
 
 export const getUtilisateurById = async (pool: Pool, id: UtilisateurId, user: User): Promise<User> => {
-  const result = await dbQueryAndValidate(getUtilisateurByIdDb, {id}, pool, getUtilisateursValidator)
+  const result = await dbQueryAndValidate(getUtilisateurByIdDb, { id }, pool, getUtilisateursValidator)
 
   if (isNullOrUndefinedOrEmpty(result)) {
     return null
   }
 
-  const utilisateur: BaseUserNotNull = {...result[0], prenom: result[0].prenom ?? ''}
+  const utilisateur = {
+    ...result[0],
+    prenom: result[0].prenom ?? '',
+    entreprises: result[0].entreprise_ids?.map(id => ({ id })),
+    administrationId: result[0].administration_id,
+  }
   const utilisateurNotNull: UserNotNull = userNotNullValidator.parse(utilisateur)
 
   if (!canReadUtilisateur(user, utilisateurNotNull)) {
     return null
   }
+
   return utilisateurNotNull
 }
 
-const getUtilisateurByIdDb = sql<Redefine<IGetUtilisateurByIdDbQuery, { id: UtilisateurId },  GetUtilisateur>>`
+export const newGetUtilisateurById = (
+  pool: Pool,
+  id: UtilisateurId,
+  user: DeepReadonly<User>
+): Effect.Effect<UserNotNull, CaminoError<'droits insuffisants' | DbQueryAccessError | ZodUnparseable>> => {
+  return pipe(
+    effectDbQueryAndValidate(getUtilisateurByIdDb, { id }, pool, getUtilisateursValidator),
+    Effect.filterOrFail(
+      utilisateur => isNotNullNorUndefined(utilisateur),
+      () => ({ message: 'droits insuffisants' as const })
+    ),
+    Effect.flatMap(utilisateurs => {
+      const utilisateur = {
+        ...utilisateurs[0],
+        prenom: utilisateurs[0].prenom ?? '',
+        entreprises: utilisateurs[0].entreprise_ids?.map(id => ({ id })),
+        administrationId: utilisateurs[0].administration_id,
+      }
+
+      return zodParseEffect(userNotNullValidator, utilisateur)
+    }),
+    Effect.filterOrFail(
+      utilisateur => canReadUtilisateur(user, utilisateur),
+      () => ({ message: 'droits insuffisants' as const })
+    )
+  )
+}
+const getUtilisateurByIdDb = sql<Redefine<IGetUtilisateurByIdDbQuery, { id: UtilisateurId }, GetUtilisateur>>`
   select
     id,
     email,
@@ -178,15 +205,13 @@ const getUtilisateurByIdDb = sql<Redefine<IGetUtilisateurByIdDbQuery, { id: Util
   where id = $id!
   limit 1`
 
-
-export const getKeycloakIdByUserIdValidator = z.object({ keycloak_id: z.string() })
-type GetKeycloakIdByUser= z.infer<typeof getKeycloakIdByUserIdValidator>
+const getKeycloakIdByUserIdValidator = z.object({ keycloak_id: z.string() })
+type GetKeycloakIdByUser = z.infer<typeof getKeycloakIdByUserIdValidator>
 export const getKeycloakIdByUserId = async (pool: Pool, utilisateurId: UtilisateurId): Promise<GetKeycloakIdByUser | null> => {
-  const result = await dbQueryAndValidate(getKeycloakIdByUserIdDb, {id: utilisateurId}, pool, getKeycloakIdByUserIdValidator)
+  const result = await dbQueryAndValidate(getKeycloakIdByUserIdDb, { id: utilisateurId }, pool, getKeycloakIdByUserIdValidator)
 
   return isNullOrUndefinedOrEmpty(result) ? null : result[0]
 }
-
 
 const getKeycloakIdByUserIdDb = sql<Redefine<IGetKeycloakIdByUserIdDbQuery, { id: UtilisateurId }, GetKeycloakIdByUser>>`
   select
@@ -195,23 +220,22 @@ const getKeycloakIdByUserIdDb = sql<Redefine<IGetKeycloakIdByUserIdDbQuery, { id
   where id = $id!
   limit 1`
 
-const getUtilisateurByEmailValidator = getUtilisateursValidator
-  .pick({nom: true, prenom: true, email: true})
-  .and(z.object({
+const getUtilisateurByEmailValidator = getUtilisateursValidator.pick({ nom: true, prenom: true, email: true }).and(
+  z.object({
     keycloak_id: z.string().nullable(),
-    qgis_token: z.string().nullable()
-  }))
-
+    qgis_token: z.string().nullable(),
+  })
+)
 
 export type GetUtilisateurByEmail = z.infer<typeof getUtilisateurByEmailValidator>
 
 export const getUtilisateurByEmail = async (pool: Pool, email: string): Promise<GetUtilisateurByEmail | null> => {
-  const result = await dbQueryAndValidate(getUtilisateurByEmailDb, {email}, pool, getUtilisateurByEmailValidator)
+  const result = await dbQueryAndValidate(getUtilisateurByEmailDb, { email }, pool, getUtilisateurByEmailValidator)
 
   return isNullOrUndefinedOrEmpty(result) ? null : result[0]
 }
 
-const getUtilisateurByEmailDb = sql<Redefine<IGetUtilisateurByEmailDbQuery, { email: string },  GetUtilisateurByEmail>>`
+const getUtilisateurByEmailDb = sql<Redefine<IGetUtilisateurByEmailDbQuery, { email: string }, GetUtilisateurByEmail>>`
   select
     u.nom,
     u.prenom,
@@ -224,22 +248,20 @@ const getUtilisateurByEmailDb = sql<Redefine<IGetUtilisateurByEmailDbQuery, { em
   limit 1
   `
 
-
 export const getUtilisateurByKeycloakId = async (pool: Pool, keycloakId: string): Promise<User> => {
-  const result = await dbQueryAndValidate(getUtilisateurByKeycloakIdDb, {keycloakId}, pool, getUtilisateursValidator)
-
+  const result = await dbQueryAndValidate(getUtilisateurByKeycloakIdDb, { keycloakId }, pool, getUtilisateursValidator)
 
   if (isNullOrUndefinedOrEmpty(result)) {
     return null
   }
 
-  const utilisateur: BaseUserNotNull = {...result[0], prenom: result[0].prenom ?? ''}
+  const utilisateur: BaseUserNotNull = { ...result[0], prenom: result[0].prenom ?? '' }
   const utilisateurNotNull: UserNotNull = userNotNullValidator.parse(utilisateur)
 
   return utilisateurNotNull
 }
 
-const getUtilisateurByKeycloakIdDb = sql<Redefine<IGetUtilisateurByKeycloakIdDbQuery, { keycloakId: string },  GetUtilisateur>>`
+const getUtilisateurByKeycloakIdDb = sql<Redefine<IGetUtilisateurByKeycloakIdDbQuery, { keycloakId: string }, GetUtilisateur>>`
   select
      id,
      email,
