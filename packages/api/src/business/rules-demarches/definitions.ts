@@ -119,10 +119,7 @@ export const demarchesDefinitions = [
     demarcheTypeIds: demarcheTypeIdsCxPr_G,
     machine: new ProcedureSimplifieeMachine(),
     dateDebut: plusVieilleDateEnBase,
-    demarcheIdExceptions: [
-      // https://github.com/MTES-MCT/camino/issues/1302#issuecomment-2275401694
-      newDemarcheId('zoZk8k7ZxPBoFwV8aVchTb5K'),
-    ],
+    demarcheIdExceptions: [],
   },
 ] as const satisfies readonly DemarcheDefinition[]
 
