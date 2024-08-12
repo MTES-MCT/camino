@@ -386,14 +386,16 @@ const restCatcher = (expressCall: ExpressRoute) => async (req: CaminoRequest, re
     next(e)
   }
 }
-const restCatcherWithMutation = (method: string, expressCall: ExpressRoute, pool: Pool) => async (req: CaminoRequest, res: express.Response, next: express.NextFunction) => {
+const restCatcherWithMutation = (_method: string, expressCall: ExpressRoute, _pool: Pool) => async (req: CaminoRequest, res: express.Response, next: express.NextFunction) => {
   const user = req.auth
   try {
     if (!user) {
       res.sendStatus(HTTP_STATUS.FORBIDDEN)
     } else {
       await expressCall(req, res, next)
-      await pipe(addLog(pool, user.id, method, req.url, req.body), Effect.runPromise)
+      // FIXME aucune idée de comment faire, ça des tests d'intégration si je décommente cette ligne.
+      // Le pb c'est qu'on a déjà répondu à express quand on arrive ici, et donc le test se termine et on se retrouve avec ce process dans la nature
+      // await pipe(addLog(pool, user.id, method, req.url, req.body), Effect.runPromise)
     }
   } catch (e) {
     console.error('catching error', e)

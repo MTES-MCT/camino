@@ -148,7 +148,7 @@ export const deleteUtilisateur =
           throw new Error(`une erreur est apparue durant la suppression de l'utilisateur sur keycloak`)
         }
 
-        await utilisateurUpsert({ id: utilisateurId, keycloakId: null })
+        await utilisateurUpsert({ id: utilisateurId, email: null, keycloakId: null })
 
         if (isNotNullNorUndefined(user) && user.id === req.params.id) {
           const uiUrl = config().OAUTH_URL
@@ -285,6 +285,7 @@ export const utilisateurs =
   }
 
 type GetUtilisateursError = DbQueryAccessError | ZodUnparseable | "Impossible d'accéder à la liste des utilisateurs" | 'droits insuffisants'
+
 export const getUtilisateurs: RestNewGetCall<'/rest/utilisateurs'> = (pool, user, _params, searchParams): Effect.Effect<DeepReadonly<UtilisateursTable>, CaminoApiError<GetUtilisateursError>> => {
   return Effect.Do.pipe(
     Effect.flatMap(() => getUtilisateursFilteredAndSorted(pool, user, searchParams)),

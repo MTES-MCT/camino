@@ -1,7 +1,7 @@
 import { restCall, restNewCall, restPostCall, userGenerate } from '../../../tests/_utils/index'
 import { dbManager } from '../../../tests/db-manager'
 import { Knex } from 'knex'
-import { expect, test, describe, afterAll, beforeAll, vi } from 'vitest'
+import { expect, test, describe, afterAll, beforeAll, vi, beforeEach } from 'vitest'
 import { UtilisateurToEdit } from 'camino-common/src/utilisateur'
 import type { Pool } from 'pg'
 import { HTTP_STATUS } from 'camino-common/src/http'
@@ -26,6 +26,11 @@ beforeAll(async () => {
   renewConfig()
 })
 
+beforeEach(async () => {
+  await knex.raw('delete from logs')
+  await knex.raw('delete from utilisateurs') // ce delete est nécessaire car l'utilisateur n'est pas supprimé de la bdd et pour éviter qu'un test plus bas ne tente une nouvelle réinsertion du user `defaut-user`et échoue
+})
+
 afterAll(async () => {
   await dbManager.truncateSchema()
   await dbManager.closeKnex()
@@ -47,6 +52,8 @@ describe('moi', () => {
         "nom": "nom-defaut",
         "prenom": "prenom-defaut",
         "role": "defaut",
+        "telephone_fixe": null,
+        "telephone_mobile": null,
       }
     `)
   })
@@ -94,7 +101,7 @@ describe('utilisateurSupprimer', () => {
     expect(tested.statusCode).toBe(500)
     expect(tested.body).toMatchInlineSnapshot(`
       {
-        "error": "aucun utilisateur avec cet id ou droits insuffisants pour voir cet utilisateur",
+        "error": "droits insuffisants",
       }
     `)
   })
@@ -106,8 +113,6 @@ describe('utilisateurSupprimer', () => {
     const user = await userGenerate(dbPool, { role: 'defaut' })
 
     const tested = await restCall(dbPool, '/rest/utilisateurs/:id/delete', { id: user.id }, { role: 'defaut' })
-    await knex.raw('delete from logs')
-    await knex.raw('delete from utilisateurs') // ce delete est nécessaire car l'utilisateur n'est pas supprimé de la bdd et pour éviter qu'un test plus bas ne tente une nouvelle réinsertion du user `defaut-user`et échoue
     expect(tested.statusCode).toBe(302)
     expect(tested.header.location).toBe(`${OAUTH_URL}/oauth2/sign_out`)
   })
@@ -197,8 +202,8 @@ describe('getUtilisateurs', () => {
           nom: 'nom-super',
           prenom: 'prenom-super',
           role: 'super',
-          telephoneFixe: null,
-          telephoneMobile: null,
+          telephone_fixe: null,
+          telephone_mobile: null,
         },
         {
           email: 'prenom-pas-super@camino.local',
@@ -206,8 +211,8 @@ describe('getUtilisateurs', () => {
           nom: 'nom-pas-super',
           prenom: 'prenom-pas-super',
           role: 'defaut',
-          telephoneFixe: '0102030405',
-          telephoneMobile: null,
+          telephone_fixe: '0102030405',
+          telephone_mobile: null,
         },
       ],
       total: 2,
@@ -216,8 +221,15 @@ describe('getUtilisateurs', () => {
 
   describe('vérifie les droits de lecture', async () => {
     const mockAdministration = Administrations['aut-97300-01']
-    const mockUserNom = 'utilisateurNom'
-    beforeAll(async () => {
+    test.each<[TestUser, boolean]>([
+      [{ role: 'super' }, true],
+      [{ role: 'admin', administrationId: mockAdministration.id }, true],
+      [{ role: 'editeur', administrationId: mockAdministration.id }, true],
+      [{ role: 'lecteur', administrationId: mockAdministration.id }, true],
+      [{ role: 'entreprise', entreprises: [] }, true],
+      [{ role: 'defaut' }, false],
+    ])('en tant que $role', async (user, voit) => {
+      const mockUserNom = 'utilisateurNom'
       await knex('utilisateurs').insert({
         id: newUtilisateurId('utilisateurId'),
         prenom: 'prenom-pas-super',
@@ -227,17 +239,9 @@ describe('getUtilisateurs', () => {
         administrationId: mockAdministration.id,
         dateCreation: '2022-05-12',
         keycloakId: idUserKeycloakRecognised,
+        telephone_mobile: null,
+        telephone_fixe: null,
       })
-    })
-
-    test.each<[TestUser, boolean]>([
-      [{ role: 'super' }, true],
-      [{ role: 'admin', administrationId: mockAdministration.id }, true],
-      [{ role: 'editeur', administrationId: mockAdministration.id }, true],
-      [{ role: 'lecteur', administrationId: mockAdministration.id }, true],
-      [{ role: 'entreprise', entreprises: [] }, true],
-      [{ role: 'defaut' }, false],
-    ])('en tant que $role', async (user, voit) => {
       const result = await restNewCall(dbPool, '/rest/utilisateurs', {}, { ...user, ...testBlankUser }, { colonne: 'nom', ordre: 'asc', page: '1', intervalle: '10', nomsUtilisateurs: mockUserNom })
 
       if (voit) {

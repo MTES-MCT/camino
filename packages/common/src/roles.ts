@@ -18,7 +18,15 @@ export type UtilisateurId = z.infer<typeof utilisateurIdValidator>
 
 export const toUtilisateurId = (utilisateurId: string): UtilisateurId => utilisateurIdValidator.parse(utilisateurId)
 
-const baseUserNotNullValidator = z.object({ id: utilisateurIdValidator, email: z.string(), role: z.enum(ROLES), nom: z.string(), prenom: z.string(), telephone_fixe: z.string().nullable(), telephone_mobile: z.string().nullable() })
+const baseUserNotNullValidator = z.object({
+  id: utilisateurIdValidator,
+  email: z.string(),
+  role: z.enum(ROLES),
+  nom: z.string(),
+  prenom: z.string(),
+  telephone_fixe: z.string().nullable(),
+  telephone_mobile: z.string().nullable(),
+})
 export type BaseUserNotNull = z.infer<typeof baseUserNotNullValidator>
 
 const superRoleValidator = z.literal('super')

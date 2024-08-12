@@ -8,8 +8,8 @@ exports[`getUtilisateurs > vérifie les droits de lecture > en tant que 'admin' 
   "nom": "utilisateurNom",
   "prenom": "prenom-pas-super",
   "role": "editeur",
-  "telephoneFixe": null,
-  "telephoneMobile": null,
+  "telephone_fixe": null,
+  "telephone_mobile": null,
 }
 `;
 
@@ -28,8 +28,8 @@ exports[`getUtilisateurs > vérifie les droits de lecture > en tant que 'editeur
   "nom": "utilisateurNom",
   "prenom": "prenom-pas-super",
   "role": "editeur",
-  "telephoneFixe": null,
-  "telephoneMobile": null,
+  "telephone_fixe": null,
+  "telephone_mobile": null,
 }
 `;
 
@@ -41,8 +41,8 @@ exports[`getUtilisateurs > vérifie les droits de lecture > en tant que 'entrepr
   "nom": "utilisateurNom",
   "prenom": "prenom-pas-super",
   "role": "editeur",
-  "telephoneFixe": null,
-  "telephoneMobile": null,
+  "telephone_fixe": null,
+  "telephone_mobile": null,
 }
 `;
 
@@ -54,8 +54,8 @@ exports[`getUtilisateurs > vérifie les droits de lecture > en tant que 'lecteur
   "nom": "utilisateurNom",
   "prenom": "prenom-pas-super",
   "role": "editeur",
-  "telephoneFixe": null,
-  "telephoneMobile": null,
+  "telephone_fixe": null,
+  "telephone_mobile": null,
 }
 `;
 
@@ -67,7 +67,7 @@ exports[`getUtilisateurs > vérifie les droits de lecture > en tant que 'super' 
   "nom": "utilisateurNom",
   "prenom": "prenom-pas-super",
   "role": "editeur",
-  "telephoneFixe": null,
-  "telephoneMobile": null,
+  "telephone_fixe": null,
+  "telephone_mobile": null,
 }
 `;
