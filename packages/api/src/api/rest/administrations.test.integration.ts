@@ -63,6 +63,8 @@ describe('getAdministrationUtilisateurs', () => {
           nom: 'nom-admin',
           prenom: 'prenom-admin',
           role: 'admin',
+          telephone_fixe: null,
+          telephone_mobile: null,
         },
       ])
     } else {

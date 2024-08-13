@@ -167,7 +167,7 @@ export const newGetUtilisateurById = (
       const utilisateur = {
         ...utilisateurs[0],
         prenom: utilisateurs[0].prenom ?? '',
-        entreprises: utilisateurs[0].entreprise_ids?.map(id => ({ id })),
+        entreprises: utilisateurs[0].entreprise_ids?.map(id => ({ id })) ?? [],
         administrationId: utilisateurs[0].administration_id,
       }
 
@@ -192,6 +192,7 @@ const getUtilisateurByIdDb = sql<Redefine<IGetUtilisateurByIdDbQuery, { id: Util
     (select array_agg(entreprise_id) from utilisateurs__entreprises where utilisateur_id = id) as entreprise_ids
   from utilisateurs
   where id = $id!
+  and keycloak_id is not null
   limit 1`
 
 const getKeycloakIdByUserIdValidator = z.object({ keycloak_id: z.string() })
