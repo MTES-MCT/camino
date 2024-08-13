@@ -1,6 +1,6 @@
 import { dbManager } from '../../../tests/db-manager'
 import { beforeAll, expect, afterAll, test, vi, describe } from 'vitest'
-import { getUtilisateursEmailsByEntrepriseIds, newGetUtilisateurById } from './utilisateurs.queries'
+import { getUtilisateurByKeycloakId, getUtilisateursEmailsByEntrepriseIds, newGetUtilisateurById } from './utilisateurs.queries'
 import { Pool } from 'pg'
 import { newEntrepriseId } from 'camino-common/src/entreprise'
 import { entrepriseUpsert } from './entreprises'
@@ -122,5 +122,27 @@ describe('newGetUtilisateurById', () => {
     const result = await callAndExit(newGetUtilisateurById(dbPool, utilisateurId, userSuper), async r => r)
 
     expect(result.id).toEqual(utilisateurId)
+  })
+})
+
+describe('getUtilisateurByKeycloakId', () => {
+  test('peut récupérer un utilisateur admin', async () => {
+    const utilisateurId = newUtilisateurId()
+    await utilisateurCreate(
+      {
+        id: utilisateurId,
+        prenom: `jean`,
+        nom: `dupont`,
+        email: newUtilisateurId(),
+        dateCreation: getCurrent(),
+        keycloakId: utilisateurId,
+        role: 'admin',
+        administrationId: 'aut-mrae-guyane-01',
+      },
+      {}
+    )
+
+    const result = await getUtilisateurByKeycloakId(dbPool, utilisateurId)
+    expect(result?.id).toEqual(utilisateurId)
   })
 })

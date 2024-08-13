@@ -1,7 +1,7 @@
 import { sql } from '@pgtyped/runtime'
 import { Effect, pipe } from 'effect'
 import { DbQueryAccessError, Redefine, dbQueryAndValidate, effectDbQueryAndValidate } from '../../pg-database'
-import { AdminUserNotNull, BaseUserNotNull, EntrepriseUserNotNull, User, UserNotNull, UtilisateurId, roleValidator, userNotNullValidator, utilisateurIdValidator } from 'camino-common/src/roles'
+import { AdminUserNotNull, EntrepriseUserNotNull, User, UserNotNull, UtilisateurId, roleValidator, userNotNullValidator, utilisateurIdValidator } from 'camino-common/src/roles'
 import { z } from 'zod'
 import { CaminoError } from 'camino-common/src/zod-tools'
 import { Pool } from 'pg'
@@ -52,17 +52,8 @@ export const getUtilisateursFilteredAndSorted = (
     }),
     Effect.flatMap(utilisateurs => {
       return Effect.forEach(utilisateurs, u => {
-        const obj: Pick<UserNotNull, 'telephone_fixe' | 'telephone_mobile' | 'id' | 'nom' | 'prenom' | 'role' | 'email'> &
-          Nullable<Pick<AdminUserNotNull, 'administrationId'>> &
-          Pick<EntrepriseUserNotNull, 'entreprises'> = {
-          ...u,
-          administrationId: u.administration_id,
-          entreprises: u.entreprise_ids?.map(id => ({ id })) ?? [],
-          prenom: u.prenom ?? '',
-        }
-
         return pipe(
-          zodParseEffect(userNotNullValidator, obj),
+          zodParseEffect(userNotNullValidator, userDbToUser(u)),
           Effect.mapError(error => {
             return { ...error, extra: { email: u.email } }
           })
@@ -152,6 +143,14 @@ export const getUtilisateurById = async (pool: Pool, id: UtilisateurId, user: Us
   }
 }
 
+const userDbToUser = (
+  user: GetUtilisateur
+): Pick<UserNotNull, 'telephone_fixe' | 'telephone_mobile' | 'id' | 'nom' | 'prenom' | 'role' | 'email'> &
+  Nullable<Pick<AdminUserNotNull, 'administrationId'>> &
+  Pick<EntrepriseUserNotNull, 'entreprises'> => {
+  return { ...user, prenom: user.prenom ?? '', entreprises: user.entreprise_ids?.map(id => ({ id })) ?? [], administrationId: user.administration_id }
+}
+
 export const newGetUtilisateurById = (
   pool: Pool,
   id: UtilisateurId,
@@ -164,14 +163,7 @@ export const newGetUtilisateurById = (
       () => ({ message: 'droits insuffisants' as const })
     ),
     Effect.flatMap(utilisateurs => {
-      const utilisateur = {
-        ...utilisateurs[0],
-        prenom: utilisateurs[0].prenom ?? '',
-        entreprises: utilisateurs[0].entreprise_ids?.map(id => ({ id })) ?? [],
-        administrationId: utilisateurs[0].administration_id,
-      }
-
-      return zodParseEffect(userNotNullValidator, utilisateur)
+      return zodParseEffect(userNotNullValidator, userDbToUser(utilisateurs[0]))
     }),
     Effect.filterOrFail(
       utilisateur => canReadUtilisateur(user, utilisateur),
@@ -245,8 +237,7 @@ export const getUtilisateurByKeycloakId = async (pool: Pool, keycloakId: string)
     return null
   }
 
-  const utilisateur: BaseUserNotNull = { ...result[0], prenom: result[0].prenom ?? '' }
-  const utilisateurNotNull: UserNotNull = userNotNullValidator.parse(utilisateur)
+  const utilisateurNotNull: UserNotNull = userNotNullValidator.parse(userDbToUser(result[0]))
 
   return utilisateurNotNull
 }
