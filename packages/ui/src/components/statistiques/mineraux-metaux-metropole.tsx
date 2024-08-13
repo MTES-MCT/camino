@@ -3,7 +3,7 @@ import { StatistiquesMinerauxMetauxMetropole } from 'camino-common/src/statistiq
 import { ChartWithExport } from '../_charts/chart-with-export'
 
 import { LoadingElement } from '@/components/_ui/functional-loader'
-import { CaminoAnnee, isAnnee } from 'camino-common/src/date'
+import { CaminoAnnee, anneeSuivante, isAnnee } from 'camino-common/src/date'
 import { ref, onMounted, FunctionalComponent, defineComponent } from 'vue'
 import { ChartConfiguration, ChartData, ChartDataset } from 'chart.js'
 import { SubstancesFiscale, SUBSTANCES_FISCALES_IDS } from 'camino-common/src/static/substancesFiscales'
@@ -20,14 +20,23 @@ const getStats = async (): Promise<StatistiquesMinerauxMetauxMetropole> => getWi
 export const MinerauxMetauxMetropole: FunctionalComponent = () => <PureMinerauxMetauxMetropole getStats={getStats} />
 const bauxiteChartConfiguration = (data: StatistiquesMinerauxMetauxMetropole): ChartConfiguration => {
   const annees: CaminoAnnee[] = Object.keys(data.substances.aloh).filter(isAnnee)
+  annees.push(anneeSuivante(annees[annees.length - 1]))
   const chartData: ChartData = {
     labels: annees,
     datasets: [
       {
         type: 'bar',
-        yAxisID: 'bar',
+        yAxisID: 'production',
+        label: 'Production',
         data: annees.map(annee => data.substances.aloh[annee] ?? 0),
         backgroundColor: 'rgb(118, 182, 189)',
+      },
+      {
+        type: 'line',
+        yAxisID: 'fiscalite',
+        label: 'Fiscalité',
+        backgroundColor: CHART_COLORS.blue,
+        data: annees.map(annee => data.fiscaliteParSubstanceParAnnee[SUBSTANCES_FISCALES_IDS.bauxite]?.[annee] ?? 0),
       },
     ],
   }
@@ -40,7 +49,9 @@ const bauxiteChartConfiguration = (data: StatistiquesMinerauxMetauxMetropole): C
       responsive: true,
       plugins: {
         legend: {
-          display: false,
+          display: true,
+          position: 'top',
+          fullSize: true,
         },
         title: {
           display: true,
@@ -50,12 +61,24 @@ const bauxiteChartConfiguration = (data: StatistiquesMinerauxMetauxMetropole): C
           },
         },
       },
+      scales: {
+        production: {
+          type: 'linear',
+          position: 'left',
+        },
+        fiscalite: {
+          type: 'linear',
+          position: 'right',
+        },
+      },
     },
   }
 }
 
 const selsChartConfiguration = (data: StatistiquesMinerauxMetauxMetropole): ChartConfiguration => {
   const annees: CaminoAnnee[] = [...Object.keys(data.substances.naca), ...Object.keys(data.substances.nacb), ...Object.keys(data.substances.nacc)].filter(isAnnee).filter(onlyUnique)
+
+  annees.push(anneeSuivante(annees[annees.length - 1]))
 
   const regionsIds: RegionId[] = annees
     .flatMap(annee => [...Object.keys(data.substances?.naca[annee] ?? {}), ...Object.keys(data.substances?.nacb[annee] ?? {}), ...Object.keys(data.substances?.nacc[annee] ?? {})])
@@ -75,7 +98,21 @@ const selsChartConfiguration = (data: StatistiquesMinerauxMetauxMetropole): Char
   })
   const chartData: ChartData = {
     labels: annees,
-    datasets: datasetByRegion,
+    datasets: [
+      ...datasetByRegion,
+      {
+        type: 'line',
+        yAxisID: 'fiscalite',
+        label: 'Fiscalité',
+        backgroundColor: CHART_COLORS.blue,
+        data: annees.map(
+          annee =>
+            (data.fiscaliteParSubstanceParAnnee[SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodiumContenu_]?.[annee] ?? 0) +
+            (data.fiscaliteParSubstanceParAnnee[SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodium_extraitEnDissolutionParSondage]?.[annee] ?? 0) +
+            (data.fiscaliteParSubstanceParAnnee[SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodium_extraitParAbattage]?.[annee] ?? 0)
+        ),
+      },
+    ],
   }
 
   return {
@@ -102,6 +139,10 @@ const selsChartConfiguration = (data: StatistiquesMinerauxMetauxMetropole): Char
           stacked: true,
         },
         y: { stacked: true },
+        fiscalite: {
+          type: 'linear',
+          position: 'right',
+        },
       },
     },
   }
@@ -254,38 +295,6 @@ export const PureMinerauxMetauxMetropole = defineComponent<Props>(props => {
     status: 'LOADING',
   })
 
-  const anneesBauxite = ref<CaminoAnnee[]>([])
-
-  const bauxiteTabId = ref<CaminoAnnee>(anneesBauxite.value[anneesBauxite.value.length - 1])
-
-  const bauxiteFiscalite = ref<number>(0)
-
-  const bauxiteTabUpdate = async (annee: CaminoAnnee): Promise<void> => {
-    if (annee !== bauxiteTabId.value) {
-      bauxiteTabId.value = annee
-      if (data.value.status === 'LOADED') {
-        bauxiteFiscalite.value = data.value.value.fiscaliteParSubstanceParAnnee[SUBSTANCES_FISCALES_IDS.bauxite]?.[annee] ?? 0
-      }
-    }
-  }
-  const anneesSels = ref<CaminoAnnee[]>([])
-
-  const selsTabId = ref<CaminoAnnee>(anneesSels.value[anneesSels.value.length - 1])
-
-  const selsFiscalite = ref<number>(0)
-
-  const selsTabUpdate = async (annee: CaminoAnnee): Promise<void> => {
-    if (annee !== selsTabId.value) {
-      selsTabId.value = annee
-      if (data.value.status === 'LOADED') {
-        selsFiscalite.value =
-          (data.value.value.fiscaliteParSubstanceParAnnee[SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodiumContenu_]?.[annee] ?? 0) +
-          (data.value.value.fiscaliteParSubstanceParAnnee[SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodium_extraitEnDissolutionParSondage]?.[annee] ?? 0) +
-          (data.value.value.fiscaliteParSubstanceParAnnee[SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodium_extraitParAbattage]?.[annee] ?? 0)
-      }
-    }
-  }
-
   onMounted(async () => {
     try {
       const stats = await props.getStats()
@@ -293,19 +302,6 @@ export const PureMinerauxMetauxMetropole = defineComponent<Props>(props => {
         status: 'LOADED',
         value: stats,
       }
-      anneesBauxite.value = Object.keys(stats.fiscaliteParSubstanceParAnnee[SUBSTANCES_FISCALES_IDS.bauxite] ?? {})
-        .filter(isAnnee)
-        .sort()
-      anneesSels.value = [
-        ...Object.keys(stats.fiscaliteParSubstanceParAnnee[SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodiumContenu_] ?? {}),
-        ...Object.keys(stats.fiscaliteParSubstanceParAnnee[SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodium_extraitEnDissolutionParSondage] ?? {}),
-        ...Object.keys(stats.fiscaliteParSubstanceParAnnee[SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodium_extraitParAbattage] ?? {}),
-      ]
-        .filter(isAnnee)
-        .filter(onlyUnique)
-        .sort()
-      bauxiteTabUpdate(anneesBauxite.value[anneesBauxite.value.length - 1])
-      selsTabUpdate(anneesSels.value[anneesSels.value.length - 1])
     } catch (e: any) {
       console.error(e)
       data.value = {
@@ -463,57 +459,22 @@ export const PureMinerauxMetauxMetropole = defineComponent<Props>(props => {
 
       <h2>Production annuelle et fiscalité minière des ressources minérales non énergétiques, par famille de substances</h2>
       <span class="separator" />
-      <p class="mb-xl">Données contenues dans la base de données Camino, stabilisées pour l’année n-1.</p>
+      <p>Données contenues dans la base de données Camino, stabilisées pour l’année n-1.</p>
+      <p>
+        La fiscalité minière est calculée à partir des données de production. Il s'agit des sommes dûes et non des recettes effectivement perçues par les finances publiques. Sommes dûes par les
+        opérateurs miniers exploitant au titre des redevances départementale et communale des mines, hors frais de gestion
+      </p>
 
       <div class={styles['grid-container']}>
         <div style="grid-column-end: span 2">
           <h3>Bauxite</h3>
-          <hr />
-        </div>
-        <div>
           <ChartWithExport data={data.value} getConfiguration={item => bauxiteChartConfiguration(item)} />
-        </div>
-        <div>
-          <h4>Fiscalité minière</h4>
-          <p>Les données sont calculées à partir des données de production. Il s'agit des sommes dûes et non des recettes effectivement perçues par les finances publiques.</p>
-          <div class="flex">
-            {anneesBauxite.value.map(tab => (
-              <div key={tab} class={`${bauxiteTabId.value === tab ? 'active' : ''} mr-xs`}>
-                <button id={`cmn-titre-tab-${tab}`} class="p-m btn-tab rnd-t-s" onClick={() => bauxiteTabUpdate(tab)}>
-                  {tab}
-                </button>
-              </div>
-            ))}
-          </div>
-          <div class="line-neutral mb" />
-          <p>Sommes dûes par les opérateurs miniers exploitant de la bauxite au titre des redevances départementale et communale des mines, hors frais de gestion</p>
-          <p class={['fr-text--lead', statsStyles['donnee-importante']]}>
-            <LoadingElement data={data.value} renderItem={_item => <>{numberFormat(bauxiteFiscalite.value)} €</>} />
-          </p>
         </div>
         <div style="grid-column-end: span 2">
           <h3>Sels (sel de sodium, sel de potassium, sel gemme…)</h3>
-          <hr />
+          <ChartWithExport data={data.value} getConfiguration={item => selsChartConfiguration(item)} />
         </div>
-        <ChartWithExport data={data.value} getConfiguration={item => selsChartConfiguration(item)} />
-        <div>
-          <h4>Fiscalité minière</h4>
-          <p>Les données sont calculées à partir des données de production. Il s'agit des sommes dûes et non des recettes effectivement perçues par les finances publiques.</p>
-          <div class="flex">
-            {anneesSels.value.map(tab => (
-              <div key={tab} class={`${selsTabId.value === tab ? 'active' : ''} mr-xs`}>
-                <button id={`cmn-titre-tab-${tab}`} class="p-m btn-tab rnd-t-s" onClick={_item => selsTabUpdate(tab)}>
-                  {tab}
-                </button>
-              </div>
-            ))}
-          </div>
-          <div class="line-neutral mb" />
-          <p>Sommes dûes par les opérateurs miniers exploitant des sels au titre des redevances départementale et communale des mines, hors frais de gestion</p>
-          <p class={['fr-text--lead', statsStyles['donnee-importante']]}>
-            <LoadingElement data={data.value} renderItem={_item => <>{numberFormat(selsFiscalite.value)} €</>} />
-          </p>
-        </div>
+
         <div style="grid-column-end: span 2">
           <h3>Autres substances</h3>
           <hr />
