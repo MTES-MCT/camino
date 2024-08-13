@@ -46,9 +46,9 @@ describe('getAdministrationUtilisateurs', () => {
     [{ role: 'defaut' }, false],
     [undefined, false],
   ])('utilisateur %s peur voir les utilisateurs: %s', async (user, lecture) => {
-    await userGenerate({ role: 'defaut' })
-    await userGenerate({ role: 'admin', administrationId: 'dea-guyane-01' })
-    await userGenerate({ role: 'admin', administrationId: 'dea-reunion-01' })
+    await userGenerate(dbPool, { role: 'defaut' })
+    await userGenerate(dbPool, { role: 'admin', administrationId: 'dea-guyane-01' })
+    await userGenerate(dbPool, { role: 'admin', administrationId: 'dea-reunion-01' })
 
     const tested = await restCall(dbPool, '/rest/administrations/:administrationId/utilisateurs', { administrationId: 'dea-guyane-01' }, user)
 
@@ -63,6 +63,8 @@ describe('getAdministrationUtilisateurs', () => {
           nom: 'nom-admin',
           prenom: 'prenom-admin',
           role: 'admin',
+          telephone_fixe: null,
+          telephone_mobile: null,
         },
       ])
     } else {

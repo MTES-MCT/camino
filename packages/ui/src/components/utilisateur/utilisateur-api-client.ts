@@ -1,13 +1,10 @@
-import { apiGraphQLFetch } from '@/api/_client'
-import { Utilisateur } from 'camino-common/src/entreprise'
 import { QGISToken, UtilisateurToEdit, UtilisateursSearchParamsInput, UtilisateursTable } from 'camino-common/src/utilisateur'
 
-import gql from 'graphql-tag'
 import { getWithJson, newGetWithJson, postWithJson } from '../../api/client-rest'
-import { UtilisateurId } from 'camino-common/src/roles'
+import { UserNotNull, UtilisateurId } from 'camino-common/src/roles'
 
 export interface UtilisateurApiClient {
-  getUtilisateur: (userId: UtilisateurId) => Promise<Utilisateur>
+  getUtilisateur: (userId: UtilisateurId) => Promise<UserNotNull>
   getUtilisateurNewsletter: (userId: UtilisateurId) => Promise<boolean>
   updateUtilisateurNewsletter: (userId: UtilisateurId, subscribe: boolean) => Promise<void>
   registerToNewsletter: (email: string) => Promise<void>
@@ -21,32 +18,8 @@ export const utilisateurApiClient: UtilisateurApiClient = {
   getUtilisateurs: async (params: UtilisateursSearchParamsInput) => {
     return newGetWithJson('/rest/utilisateurs', {}, params)
   },
-  getUtilisateur: async (userId: string) => {
-    const data = await apiGraphQLFetch(gql`
-      query Utilisateur($id: ID!) {
-        utilisateur(id: $id) {
-          id
-          nom
-          prenom
-          email
-          telephoneMobile
-          telephoneFixe
-          entreprises {
-            id
-            nom
-            paysId
-            legalSiren
-            legalEtranger
-          }
-          administrationId
-          role
-        }
-      }
-    `)({
-      id: userId,
-    })
-
-    return data
+  getUtilisateur: async (userId: UtilisateurId) => {
+    return newGetWithJson('/rest/utilisateurs/:id', { id: userId })
   },
   getUtilisateurNewsletter: async (userId: UtilisateurId) => getWithJson('/rest/utilisateurs/:id/newsletter', { id: userId }),
   updateUtilisateurNewsletter: async (userId: UtilisateurId, newsletter: boolean) => {

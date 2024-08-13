@@ -1,9 +1,9 @@
-import { userGet, utilisateurGet, utilisateurUpsert } from '../../database/queries/utilisateurs'
+import { utilisateurUpsert } from '../../database/queries/utilisateurs'
 import { CaminoRequest, CustomResponse } from './express-type'
-import { CaminoApiError, formatUser } from '../../types'
+import { CaminoApiError } from '../../types'
 import { HTTP_STATUS } from 'camino-common/src/http'
 import { isSubscribedToNewsLetter, newsletterSubscriberUpdate } from '../../tools/api-mailjet/newsletter'
-import { isAdministrationRole, isEntrepriseOrBureauDetudeRole, User } from 'camino-common/src/roles'
+import { isAdministrationRole, isEntrepriseOrBureauDetudeRole, User, UserNotNull, utilisateurIdValidator } from 'camino-common/src/roles'
 import { utilisateursFormatTable } from './format/utilisateurs'
 import { tableConvert } from './_convert'
 import { fileNameCreate } from '../../tools/file-name-create'
@@ -18,20 +18,20 @@ import { DeepReadonly, isNotNullNorUndefined, isNullOrUndefined } from 'camino-c
 import { config } from '../../config/index'
 import { Effect, Match, pipe } from 'effect'
 import { RestNewGetCall } from '../../server/rest'
-import { getUtilisateursFilteredAndSorted } from '../../database/queries/utilisateurs.queries'
+import { getKeycloakIdByUserId, getUtilisateurById, getUtilisateursFilteredAndSorted, newGetUtilisateurById } from '../../database/queries/utilisateurs.queries'
 import { DbQueryAccessError } from '../../pg-database'
 import { callAndExit, ZodUnparseable } from '../../tools/fp-tools'
 import { z } from 'zod'
 
 export const isSubscribedToNewsletter =
-  (_pool: Pool) =>
+  (pool: Pool) =>
   async (req: CaminoRequest, res: CustomResponse<boolean>): Promise<void> => {
     const user = req.auth
 
     if (!req.params.id) {
       res.sendStatus(HTTP_STATUS.FORBIDDEN)
     } else {
-      const utilisateur = await utilisateurGet(req.params.id, { fields: { id: {} } }, user)
+      const utilisateur = await getUtilisateurById(pool, utilisateurIdValidator.parse(req.params.id), user)
 
       if (!user || !utilisateur) {
         res.sendStatus(HTTP_STATUS.FORBIDDEN)
@@ -42,14 +42,15 @@ export const isSubscribedToNewsletter =
     }
   }
 export const updateUtilisateurPermission =
-  (_pool: Pool) =>
+  (pool: Pool) =>
   async (req: CaminoRequest, res: CustomResponse<void>): Promise<void> => {
     const user = req.auth
 
     if (!req.params.id) {
       res.sendStatus(HTTP_STATUS.FORBIDDEN)
     } else {
-      const utilisateurOld = await userGet(req.params.id)
+      const userId = utilisateurIdValidator.parse(req.params.id)
+      const utilisateurOld = await getUtilisateurById(pool, userId, user)
 
       if (!user || !utilisateurOld) {
         res.sendStatus(HTTP_STATUS.FORBIDDEN)
@@ -116,7 +117,7 @@ const getKeycloakApiToken = async (): Promise<string> => {
 }
 
 export const deleteUtilisateur =
-  (_pool: Pool) =>
+  (pool: Pool) =>
   async (req: CaminoRequest, res: CustomResponse<void>): Promise<void> => {
     const user = req.auth
 
@@ -124,15 +125,16 @@ export const deleteUtilisateur =
       res.sendStatus(HTTP_STATUS.FORBIDDEN)
     } else {
       try {
-        const utilisateur = await utilisateurGet(req.params.id, { fields: { id: {} } }, user)
-        if (!utilisateur) {
-          throw new Error('aucun utilisateur avec cet id ou droits insuffisants pour voir cet utilisateur')
-        }
+        const utilisateurId = utilisateurIdValidator.parse(req.params.id)
 
-        if (!canDeleteUtilisateur(user, utilisateur.id)) {
+        if (!canDeleteUtilisateur(user, utilisateurId)) {
           throw new Error('droits insuffisants')
         }
-        const utilisateurKeycloakId = utilisateur.keycloakId
+
+        const utilisateurKeycloakId = await getKeycloakIdByUserId(pool, utilisateurId)
+        if (isNullOrUndefined(utilisateurKeycloakId)) {
+          throw new Error('aucun utilisateur avec cet id ou droits insuffisants pour voir cet utilisateur')
+        }
 
         const authorizationToken = await getKeycloakApiToken()
 
@@ -146,16 +148,7 @@ export const deleteUtilisateur =
           throw new Error(`une erreur est apparue durant la suppression de l'utilisateur sur keycloak`)
         }
 
-        utilisateur.email = null
-        utilisateur.telephoneFixe = ''
-        utilisateur.telephoneMobile = ''
-        utilisateur.role = 'defaut'
-        utilisateur.entreprises = []
-        utilisateur.administrationId = undefined
-        // TODO 2023-10-23 tout ce qui est au dessus n'est plus nécessaire une fois la migration des utilisateurs vers keycloak faite (suppression du champ email dans notre base)
-        utilisateur.keycloakId = null
-
-        await utilisateurUpsert(utilisateur)
+        await utilisateurUpsert({ id: utilisateurId, email: null, keycloakId: null })
 
         if (isNotNullNorUndefined(user) && user.id === req.params.id) {
           const uiUrl = config().OAUTH_URL
@@ -173,7 +166,7 @@ export const deleteUtilisateur =
   }
 
 export const moi =
-  (_pool: Pool) =>
+  (pool: Pool) =>
   async (req: CaminoRequest, res: CustomResponse<User>): Promise<void> => {
     res.clearCookie('shouldBeConnected')
     const user = req.auth
@@ -181,10 +174,9 @@ export const moi =
       res.sendStatus(HTTP_STATUS.NO_CONTENT)
     } else {
       try {
-        const utilisateur = await utilisateurGet(user.id, { fields: { entreprises: { id: {} } } }, user)
+        const utilisateur = await getUtilisateurById(pool, user.id, user)
         res.cookie('shouldBeConnected', 'anyValueIsGood, We just check the presence of this cookie')
-        // TODO 2023-05-25 use zod validator!
-        res.json(formatUser(utilisateur!))
+        res.json(utilisateur)
       } catch (e) {
         console.error(e)
         res.sendStatus(HTTP_STATUS.BAD_REQUEST)
@@ -194,14 +186,14 @@ export const moi =
   }
 
 export const manageNewsletterSubscription =
-  (_pool: Pool) =>
+  (pool: Pool) =>
   async (req: CaminoRequest, res: CustomResponse<boolean>): Promise<void> => {
     const user = req.auth
 
     if (!req.params.id) {
       res.sendStatus(HTTP_STATUS.FORBIDDEN)
     } else {
-      const utilisateur = await utilisateurGet(req.params.id, { fields: { id: {} } }, user)
+      const utilisateur = await getUtilisateurById(pool, utilisateurIdValidator.parse(req.params.id), user)
 
       if (!user || !utilisateur) {
         res.sendStatus(HTTP_STATUS.FORBIDDEN)
@@ -293,6 +285,7 @@ export const utilisateurs =
   }
 
 type GetUtilisateursError = DbQueryAccessError | ZodUnparseable | "Impossible d'accéder à la liste des utilisateurs" | 'droits insuffisants'
+
 export const getUtilisateurs: RestNewGetCall<'/rest/utilisateurs'> = (pool, user, _params, searchParams): Effect.Effect<DeepReadonly<UtilisateursTable>, CaminoApiError<GetUtilisateursError>> => {
   return Effect.Do.pipe(
     Effect.flatMap(() => getUtilisateursFilteredAndSorted(pool, user, searchParams)),
@@ -302,6 +295,21 @@ export const getUtilisateurs: RestNewGetCall<'/rest/utilisateurs'> = (pool, user
         total: utilisateurs.length,
       }
     }),
+    Effect.mapError(caminoError =>
+      Match.value(caminoError.message).pipe(
+        Match.when("Impossible d'accéder à la base de données", () => ({ ...caminoError, status: HTTP_STATUS.INTERNAL_SERVER_ERROR })),
+        Match.when('droits insuffisants', () => ({ ...caminoError, status: HTTP_STATUS.FORBIDDEN })),
+        Match.when('Problème de validation de données', () => ({ ...caminoError, status: HTTP_STATUS.BAD_REQUEST })),
+        Match.exhaustive
+      )
+    )
+  )
+}
+
+type GetUtilisateurError = DbQueryAccessError | ZodUnparseable | 'droits insuffisants'
+export const getUtilisateur: RestNewGetCall<'/rest/utilisateurs/:id'> = (pool, user, params, _searchParams): Effect.Effect<DeepReadonly<UserNotNull>, CaminoApiError<GetUtilisateurError>> => {
+  return Effect.Do.pipe(
+    Effect.flatMap(() => newGetUtilisateurById(pool, params.id, user)),
     Effect.mapError(caminoError =>
       Match.value(caminoError.message).pipe(
         Match.when("Impossible d'accéder à la base de données", () => ({ ...caminoError, status: HTTP_STATUS.INTERNAL_SERVER_ERROR })),

@@ -18,6 +18,8 @@ const user: UserNotNull = {
   nom: 'Camino',
   prenom: '',
   role: 'super',
+  telephone_fixe: null,
+  telephone_mobile: null,
 }
 
 test("envoie un email sur un octroi d'AEX", () => {

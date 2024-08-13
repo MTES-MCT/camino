@@ -13,6 +13,8 @@ export interface IGetUtilisateursByAdministrationIdDbResult {
   nom: string | null;
   prenom: string | null;
   role: string;
+  telephone_fixe: string | null;
+  telephone_mobile: string | null;
 }
 
 /** 'GetUtilisateursByAdministrationIdDb' query type */

@@ -41,6 +41,8 @@ export const Default: StoryFn = () => (
             id: toUtilisateurId('jeanmichel'),
             role: 'admin',
             administrationId: ADMINISTRATION_IDS.BRGM,
+            telephone_fixe: null,
+            telephone_mobile: null,
           },
         ]),
       administrationActiviteTypeEmailUpdate: () => {

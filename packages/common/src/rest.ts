@@ -23,7 +23,7 @@ import {
   titreLinksValidator,
   utilisateurTitreAbonneValidator,
 } from './titres'
-import { adminUserNotNullValidator, userValidator, utilisateurIdValidator } from './roles'
+import { adminUserNotNullValidator, userNotNullValidator, userValidator, utilisateurIdValidator } from './roles'
 import { caminoAnneeValidator, caminoDateValidator } from './date'
 import {
   etapeDocumentIdValidator,
@@ -79,6 +79,7 @@ const IDS = [
   '/rest/utilisateurs/:id/newsletter',
   '/rest/utilisateurs/:id/delete',
   '/rest/utilisateurs/:id/permission',
+  '/rest/utilisateurs/:id',
   '/rest/utilisateurs',
   '/rest/statistiques/minerauxMetauxMetropole',
   '/rest/statistiques/guyane',
@@ -148,6 +149,7 @@ export const CaminoRestRoutes = {
   '/config': { params: noParamsValidator, get: { output: caminoConfigValidator } },
   '/moi': { params: noParamsValidator, get: { output: userValidator } },
   '/rest/utilisateurs/:id/newsletter': { params: utilisateurIdParamsValidator, get: { output: z.boolean() }, post: { input: newsletterAbonnementValidator, output: z.boolean() } },
+  '/rest/utilisateurs/:id': { params: utilisateurIdParamsValidator, newGet: { output: userNotNullValidator } },
   '/rest/utilisateurs/registerToNewsletter': { params: noParamsValidator, newGet: { output: z.boolean(), searchParams: newsletterRegistrationValidator } },
   // On passe par un http get plutot qu'un http delete car nous terminons par une redirection vers la deconnexion de oauth2, qui se traduit mal sur certains navigateurs et essaie de faire un delete sur une route get
   '/rest/utilisateurs/:id/delete': { params: utilisateurIdParamsValidator, get: { output: z.void() } },

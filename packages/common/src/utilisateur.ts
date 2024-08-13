@@ -21,16 +21,8 @@ export const newsletterRegistrationValidator = z.object({
   email: z.string(),
 })
 
-export const utilisateurValidator = userNotNullValidator.and(
-  z.object({
-    telephoneMobile: z.string().nullable(),
-    telephoneFixe: z.string().nullable(),
-  })
-)
-
-export type Utilisateur = z.infer<typeof utilisateurValidator>
 export const utilisateursTableValidator = z.object({
-  elements: z.array(utilisateurValidator),
+  elements: z.array(userNotNullValidator),
   total: z.number(),
 })
 export type UtilisateursTable = z.infer<typeof utilisateursTableValidator>
