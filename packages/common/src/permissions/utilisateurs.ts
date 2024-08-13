@@ -12,7 +12,7 @@ import {
   isAdministrationLecteur,
   isEntrepriseOrBureauDEtude,
 } from '../roles'
-import { DeepReadonly } from '../typescript-tools'
+import { DeepReadonly, isNotNullNorUndefinedNorEmpty } from '../typescript-tools'
 
 export const canCreateEntreprise = (user: User): boolean => isSuper(user) || isAdministrationAdmin(user) || isAdministrationEditeur(user)
 export const canReadUtilisateurs = (user: DeepReadonly<User>): boolean => isSuper(user) || isAdministration(user) || isEntreprise(user) || isBureauDEtudes(user)
@@ -32,7 +32,7 @@ export const canReadUtilisateur = (user: DeepReadonly<User>, utilisateur: UserNo
     if (!isAdministration(utilisateur) || utilisateur.administrationId !== user.administrationId) {
       return false
     }
-  } else if ((isEntreprise(user) || isBureauDEtudes(user)) && user.entrepriseIds.length) {
+  } else if ((isEntreprise(user) || isBureauDEtudes(user)) && isNotNullNorUndefinedNorEmpty(user.entrepriseIds)) {
     // un utilisateur entreprise
     // ne voit que les utilisateurs de son entreprise
     const entreprisesIds = user.entrepriseIds
