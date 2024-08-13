@@ -35,7 +35,9 @@ select
     u.nom,
     u.prenom,
     u.role,
-    u.administration_id
+    u.administration_id,
+    u.telephone_mobile,
+    u.telephone_fixe
 from
     utilisateurs u
 where

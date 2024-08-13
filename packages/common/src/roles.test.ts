@@ -19,6 +19,8 @@ describe('role', () => {
   const baseRole: Omit<BaseUserNotNull, 'role'> = {
     email: '',
     id: toUtilisateurId(''),
+    telephone_fixe: null,
+    telephone_mobile: null,
     nom: '',
     prenom: '',
   }

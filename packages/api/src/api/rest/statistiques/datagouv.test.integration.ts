@@ -17,7 +17,7 @@ afterAll(async () => {
 })
 
 test("peut récupérer les indicateurs d'impact pour data.gouv", async () => {
-  await userGenerate({ role: 'defaut' })
+  await userGenerate(dbPool, { role: 'defaut' })
   const tested = await restCall(dbPool, '/rest/statistiques/datagouv', {}, undefined)
 
   expect(tested.statusCode).toBe(200)

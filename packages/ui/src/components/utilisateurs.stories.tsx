@@ -40,8 +40,8 @@ const apiClientMock: Pick<ApiClient, 'getUtilisateurs' | 'titresRechercherByNom'
           nom: 'nom1',
           prenom: 'prenom1',
           role: 'super',
-          telephoneMobile: null,
-          telephoneFixe: null,
+          telephone_mobile: null,
+          telephone_fixe: null,
         },
         {
           id: toUtilisateurId('id2'),
@@ -50,8 +50,8 @@ const apiClientMock: Pick<ApiClient, 'getUtilisateurs' | 'titresRechercherByNom'
           prenom: 'prenom2',
           role: 'entreprise',
           entreprises: [entreprise],
-          telephoneMobile: null,
-          telephoneFixe: null,
+          telephone_mobile: null,
+          telephone_fixe: null,
         },
         {
           id: toUtilisateurId('id3'),
@@ -60,8 +60,8 @@ const apiClientMock: Pick<ApiClient, 'getUtilisateurs' | 'titresRechercherByNom'
           prenom: 'prenom3',
           role: 'admin',
           administrationId: 'aut-mrae-guyane-01',
-          telephoneMobile: null,
-          telephoneFixe: null,
+          telephone_mobile: null,
+          telephone_fixe: null,
         },
       ],
     })
