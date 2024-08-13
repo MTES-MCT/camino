@@ -9,7 +9,7 @@ const meta: Meta = {
 }
 export default meta
 
-export const UserEntreprise: StoryFn = () => <DemandeTitreButton user={{ ...testBlankUser, role: 'entreprise', entreprises: [] }} />
+export const UserEntreprise: StoryFn = () => <DemandeTitreButton user={{ ...testBlankUser, role: 'entreprise', entrepriseIds: [] }} />
 
 export const DefaultCannotCreateTitre: StoryFn = () => (
   <div>

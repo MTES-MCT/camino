@@ -50,4 +50,4 @@ export const Empty: StoryFn = () => (
 export const NotConnected: StoryFn = () => <EtapeAvisTable etapeAvis={avis} user={null} />
 export const UserSuper: StoryFn = () => <EtapeAvisTable etapeAvis={avis} user={{ ...testBlankUser, role: 'super' }} />
 export const UserAdministration: StoryFn = () => <EtapeAvisTable etapeAvis={avis} user={{ ...testBlankUser, role: 'admin', administrationId: 'aut-mrae-guyane-01' }} />
-export const UserEntreprise: StoryFn = () => <EtapeAvisTable etapeAvis={avis} user={{ ...testBlankUser, role: 'entreprise', entreprises: [{ id: entrepriseIdValidator.parse('entrepriseId') }] }} />
+export const UserEntreprise: StoryFn = () => <EtapeAvisTable etapeAvis={avis} user={{ ...testBlankUser, role: 'entreprise', entrepriseIds: [entrepriseIdValidator.parse('entrepriseId')] }} />

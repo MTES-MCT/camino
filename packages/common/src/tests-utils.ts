@@ -1,6 +1,6 @@
 import { AdminUserNotNull, EntrepriseUserNotNull, toUtilisateurId, UserDefaut, UserNotNull, UserSuper } from './roles'
 
-export type TestUser = Pick<UserSuper, 'role'> | Pick<UserDefaut, 'role'> | Pick<AdminUserNotNull, 'role' | 'administrationId'> | Pick<EntrepriseUserNotNull, 'role' | 'entreprises'>
+export type TestUser = Pick<UserSuper, 'role'> | Pick<UserDefaut, 'role'> | Pick<AdminUserNotNull, 'role' | 'administrationId'> | Pick<EntrepriseUserNotNull, 'role' | 'entrepriseIds'>
 export const testBlankUser: Omit<UserNotNull, 'role'> = {
   id: toUtilisateurId('id'),
   email: 'email@gmail.com',

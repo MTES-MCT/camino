@@ -36,7 +36,7 @@ export const canReadAvis = async (
   if (isEntrepriseOrBureauDEtude(user) && avis.avis_visibility_id === AvisVisibilityIds.TitulairesEtAdministrations) {
     const titulaires = await entreprisesTitulairesOuAmodiataires()
 
-    return titulaires.some(entrepriseId => user.entreprises?.some(({ id }) => id === entrepriseId) ?? false)
+    return titulaires.some(entrepriseId => user.entrepriseIds?.includes(entrepriseId) ?? false)
   }
 
   return false

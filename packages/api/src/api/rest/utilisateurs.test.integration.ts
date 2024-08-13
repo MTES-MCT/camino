@@ -226,7 +226,7 @@ describe('getUtilisateurs', () => {
       [{ role: 'admin', administrationId: mockAdministration.id }, true],
       [{ role: 'editeur', administrationId: mockAdministration.id }, true],
       [{ role: 'lecteur', administrationId: mockAdministration.id }, true],
-      [{ role: 'entreprise', entreprises: [] }, true],
+      [{ role: 'entreprise', entrepriseIds: [] }, true],
       [{ role: 'defaut' }, false],
     ])('en tant que $role', async (user, voit) => {
       const mockUserNom = 'utilisateurNom'

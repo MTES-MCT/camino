@@ -117,7 +117,14 @@ export const ArmDemandeONF: StoryFn = () => (
 )
 
 export const ArmDemandeOperateur: StoryFn = () => (
-  <FondamentalesEdit etape={etape} completeUpdate={completeUpdate} demarcheTypeId="oct" titreTypeId="arm" user={{ role: 'entreprise', entreprises: [], ...testBlankUser }} entreprises={entreprises} />
+  <FondamentalesEdit
+    etape={etape}
+    completeUpdate={completeUpdate}
+    demarcheTypeId="oct"
+    titreTypeId="arm"
+    user={{ role: 'entreprise', entrepriseIds: [], ...testBlankUser }}
+    entreprises={entreprises}
+  />
 )
 
 export const ArmJorfONF: StoryFn = () => (

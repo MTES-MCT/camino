@@ -42,7 +42,7 @@ export const utilisateursLignesBuild = (utilisateurs: UserNotNull[], entreprises
     if (isAdministration(utilisateur)) {
       elements = [Administrations[utilisateur.administrationId].abreviation]
     } else if (isEntreprise(utilisateur) || isBureauDEtudes(utilisateur)) {
-      elements = utilisateur.entreprises?.map(({ id }) => entreprisesIndex[id].nom)
+      elements = utilisateur.entrepriseIds?.map(id => entreprisesIndex[id].nom)
     }
 
     const lien: ComponentColumnData | TextColumnData =

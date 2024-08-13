@@ -60,7 +60,7 @@ describe('titreDemandeCreer', () => {
   })
 
   test('peut créer un titre en tant que entreprise', async () => {
-    const user: TestUser = { role: 'entreprise', entreprises: [{ id: entrepriseId }] }
+    const user: TestUser = { role: 'entreprise', entrepriseIds: [entrepriseId] }
     const tested = await restNewPostCall(dbPool, '/rest/titres', {}, user, body)
 
     expect(tested.statusCode, JSON.stringify(tested.body)).toBe(HTTP_STATUS.OK)
@@ -86,7 +86,7 @@ describe('titreDemandeCreer', () => {
       titreFromIds: [],
       titreTypeId: 'arm',
     }
-    const tested = await restNewPostCall(dbPool, '/rest/titres', {}, { role: 'entreprise', entreprises: [{ id: entrepriseId }] }, bodyWithRef)
+    const tested = await restNewPostCall(dbPool, '/rest/titres', {}, { role: 'entreprise', entrepriseIds: [entrepriseId] }, bodyWithRef)
 
     expect(tested.statusCode).toBe(HTTP_STATUS.FORBIDDEN)
     expect(tested.body).toMatchInlineSnapshot(`
@@ -123,7 +123,7 @@ describe('titreDemandeCreer', () => {
   })
 
   test("ne peut pas créer un titre sans entrepriseId en tant qu'entreprise", async () => {
-    const tested = await restNewPostCall(dbPool, '/rest/titres', {}, { role: 'entreprise', entreprises: [{ id: entrepriseId }] }, { ...body, entrepriseId: undefined })
+    const tested = await restNewPostCall(dbPool, '/rest/titres', {}, { role: 'entreprise', entrepriseIds: [entrepriseId] }, { ...body, entrepriseId: undefined })
 
     expect(tested.statusCode).toBe(HTTP_STATUS.BAD_REQUEST)
     expect(tested.body).toMatchInlineSnapshot(`

@@ -1,5 +1,5 @@
 import { administrationIdValidator } from './static/administrations'
-import { entrepriseValidator } from './entreprise'
+import { entrepriseIdValidator } from './entreprise'
 import { z } from 'zod'
 import { DeepReadonly } from './typescript-tools'
 
@@ -51,7 +51,7 @@ export type AdminUserNotNull = z.infer<typeof adminUserNotNullValidator>
 const ENTREPRISE_ROLES = ['entreprise', 'bureau d’études'] as const satisfies readonly Role[]
 const entrepriseRoleValidator = z.enum(ENTREPRISE_ROLES)
 type EntrepriseOrBureauDetudeRole = z.infer<typeof entrepriseRoleValidator>
-const entrepriseUserNotNullValidator = baseUserNotNullValidator.extend({ role: entrepriseRoleValidator, entreprises: z.array(entrepriseValidator.pick({ id: true })) })
+const entrepriseUserNotNullValidator = baseUserNotNullValidator.extend({ role: entrepriseRoleValidator, entrepriseIds: z.array(entrepriseIdValidator) })
 
 export type EntrepriseUserNotNull = z.infer<typeof entrepriseUserNotNullValidator>
 export const userNotNullValidator = z.discriminatedUnion('role', [superUserNotNullValidator, defautUserNotNullValidator, adminUserNotNullValidator, entrepriseUserNotNullValidator])

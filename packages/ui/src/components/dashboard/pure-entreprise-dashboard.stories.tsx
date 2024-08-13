@@ -74,7 +74,7 @@ export const Ok: StoryFn = () => (
   <PureEntrepriseDashboard
     user={{ role: 'super', ...testBlankUser }}
     displayActivites={true}
-    entreprises={[{ id: newEntrepriseId('id') }]}
+    entrepriseIds={[newEntrepriseId('id')]}
     allEntreprises={allEntreprises}
     apiClient={{ getEntreprisesTitres: () => Promise.resolve(titres) }}
   />
@@ -84,7 +84,7 @@ export const OkWithMultipleEntreprises: StoryFn = () => (
   <PureEntrepriseDashboard
     user={{ role: 'super', ...testBlankUser }}
     displayActivites={true}
-    entreprises={[{ id: newEntrepriseId('id') }, { id: newEntrepriseId('id2') }]}
+    entrepriseIds={[newEntrepriseId('id'), newEntrepriseId('id2')]}
     allEntreprises={allEntreprises}
     apiClient={{ getEntreprisesTitres: () => Promise.resolve(titres) }}
   />
@@ -94,7 +94,7 @@ export const OkWithoutFiscalite: StoryFn = () => (
   <PureEntrepriseDashboard
     user={{ role: 'super', ...testBlankUser }}
     displayActivites={true}
-    entreprises={[]}
+    entrepriseIds={[]}
     allEntreprises={allEntreprises}
     apiClient={{
       getEntreprisesTitres: () =>
@@ -130,7 +130,7 @@ export const OkWithoutActivities: StoryFn = () => (
   <PureEntrepriseDashboard
     user={{ role: 'super', ...testBlankUser }}
     displayActivites={false}
-    entreprises={[{ id: newEntrepriseId('id') }]}
+    entrepriseIds={[newEntrepriseId('id')]}
     allEntreprises={allEntreprises}
     apiClient={{ getEntreprisesTitres: () => Promise.resolve(titres) }}
   />
@@ -140,7 +140,7 @@ export const Loading: StoryFn = () => (
   <PureEntrepriseDashboard
     user={{ role: 'super', ...testBlankUser }}
     displayActivites={false}
-    entreprises={[{ id: newEntrepriseId('id') }]}
+    entrepriseIds={[newEntrepriseId('id')]}
     allEntreprises={allEntreprises}
     apiClient={{ getEntreprisesTitres: () => new Promise<TitreEntreprise[]>(_resolve => {}) }}
   />
@@ -150,7 +150,7 @@ export const WithError: StoryFn = () => (
   <PureEntrepriseDashboard
     user={{ role: 'super', ...testBlankUser }}
     displayActivites={false}
-    entreprises={[{ id: newEntrepriseId('id') }]}
+    entrepriseIds={[newEntrepriseId('id')]}
     allEntreprises={allEntreprises}
     apiClient={{ getEntreprisesTitres: () => Promise.reject(new Error('because reasons')) }}
   />

@@ -9,8 +9,8 @@ const users: Record<Role, UserNotNull> = {
   admin: { ...testBlankUser, role: 'admin', administrationId: 'aut-97300-01' },
   editeur: { ...testBlankUser, role: 'editeur', administrationId: 'aut-97300-01' },
   lecteur: { ...testBlankUser, role: 'lecteur', administrationId: 'aut-97300-01' },
-  entreprise: { ...testBlankUser, role: 'entreprise', entreprises: [] },
-  'bureau d’études': { ...testBlankUser, role: 'bureau d’études', entreprises: [] },
+  entreprise: { ...testBlankUser, role: 'entreprise', entrepriseIds: [] },
+  'bureau d’études': { ...testBlankUser, role: 'bureau d’études', entrepriseIds: [] },
   defaut: { ...testBlankUser, role: 'defaut' },
 }
 
@@ -45,11 +45,8 @@ test('canReadUtilisateur', () => {
   ).toBe(true)
 
   const entrepriseId = entrepriseIdValidator.parse('entrepriseId')
-  expect(canReadUtilisateur({ ...testBlankUser, id: toUtilisateurId('autreId'), role: 'entreprise', entreprises: [{ id: entrepriseId }] }, { ...testBlankUser, role: 'defaut' })).toBe(false)
+  expect(canReadUtilisateur({ ...testBlankUser, id: toUtilisateurId('autreId'), role: 'entreprise', entrepriseIds: [entrepriseId] }, { ...testBlankUser, role: 'defaut' })).toBe(false)
   expect(
-    canReadUtilisateur(
-      { ...testBlankUser, id: toUtilisateurId('autreId'), role: 'entreprise', entreprises: [{ id: entrepriseId }] },
-      { ...testBlankUser, role: 'entreprise', entreprises: [{ id: entrepriseId }] }
-    )
+    canReadUtilisateur({ ...testBlankUser, id: toUtilisateurId('autreId'), role: 'entreprise', entrepriseIds: [entrepriseId] }, { ...testBlankUser, role: 'entreprise', entrepriseIds: [entrepriseId] })
   ).toBe(true)
 })

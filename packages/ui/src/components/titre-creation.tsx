@@ -133,7 +133,7 @@ export const PureTitreCreation = defineComponent<Props>(props => {
     }
 
     if (isEntreprise(props.user) || isBureauDEtudes(props.user)) {
-      return props.user.entreprises.map(({ id }) => id).includes(entreprise.id)
+      return props.user.entrepriseIds.includes(entreprise.id)
     }
 
     return false

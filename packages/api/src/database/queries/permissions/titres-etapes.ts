@@ -48,8 +48,8 @@ export const titresEtapesQueryModify = (q: QueryBuilder<TitresEtapes, TitresEtap
             restrictions.forEach(r => b.orWhere(c => c.where(knex.raw('?? = ?', ['demarche:titre.typeId', r.titreTypeId])).where(knex.raw('?? = ?', ['titresEtapes.typeId', r.etapeTypeId]))))
           )
         }
-      } else if ((isEntreprise(user) || isBureauDEtudes(user)) && user.entreprises?.length) {
-        const entreprisesIds = user.entreprises.map(a => a.id)
+      } else if ((isEntreprise(user) || isBureauDEtudes(user)) && user.entrepriseIds?.length) {
+        const entreprisesIds = user.entrepriseIds
 
         b.orWhere(c => {
           const etapeTypeIdsEntreprisePublic: EtapeTypeId[] = etapesTypes.filter(({ entreprises_lecture }) => entreprises_lecture).map(({ id }) => id)

@@ -303,7 +303,7 @@ const axmDocumentsComplete = [
   },
 ] as const
 
-const entreprise1 = { id: entrepriseIdValidator.parse('id1'), nom: 'entrepriseNom' }
+const entreprise1Id = entrepriseIdValidator.parse('id1')
 test('etapeDocumentsStepIsComplete', () => {
   expect(etapeDocumentsStepIsComplete({ typeId: 'asl', contenu: {}, isBrouillon: ETAPE_IS_NOT_BROUILLON }, 'oct', 'axm', [], [], null, null, null).valid).toBe(false)
   expect(
@@ -326,7 +326,7 @@ test('etapeDocumentsStepIsComplete', () => {
     etapeDocumentsStepIsComplete({ typeId: 'mfr', contenu: {}, isBrouillon: ETAPE_IS_BROUILLON }, 'oct', 'axm', axmDocumentsComplete, [], null, null, {
       ...testBlankUser,
       role: 'entreprise',
-      entreprises: [entreprise1],
+      entrepriseIds: [entreprise1Id],
     }).valid
   ).toBe(false)
 
@@ -354,7 +354,7 @@ test('etapeDocumentsStepIsComplete', () => {
         public_lecture: true,
         etape_document_type_id: documentTypeIdComplementaireObligatoireASL,
       },
-      { ...testBlankUser, role: 'entreprise', entreprises: [entreprise1] }
+      { ...testBlankUser, role: 'entreprise', entrepriseIds: [entreprise1Id] }
     ).valid
   ).toBe(true)
 })
@@ -384,7 +384,7 @@ test('entrepriseDocumentsStepIsComplete', () => {
 
   expect(
     entrepriseDocumentsStepIsComplete(
-      { typeId: 'mfr', titulaires: { value: [entreprise1.id], heritee: false, etapeHeritee: null }, amodiataires: { value: [], heritee: false, etapeHeritee: null }, contenu: {} },
+      { typeId: 'mfr', titulaires: { value: [entreprise1Id], heritee: false, etapeHeritee: null }, amodiataires: { value: [], heritee: false, etapeHeritee: null }, contenu: {} },
       'oct',
       'axm',
       []
@@ -392,7 +392,7 @@ test('entrepriseDocumentsStepIsComplete', () => {
   ).toBe(false)
   expect(
     entrepriseDocumentsStepIsComplete(
-      { typeId: 'mfr', titulaires: { value: [], heritee: false, etapeHeritee: null }, amodiataires: { value: [entreprise1.id], heritee: false, etapeHeritee: null }, contenu: {} },
+      { typeId: 'mfr', titulaires: { value: [], heritee: false, etapeHeritee: null }, amodiataires: { value: [entreprise1Id], heritee: false, etapeHeritee: null }, contenu: {} },
       'oct',
       'axm',
       []
@@ -404,7 +404,7 @@ test('entrepriseDocumentsStepIsComplete', () => {
       {
         typeId: 'mfr',
         titulaires: { value: [], heritee: false, etapeHeritee: null },
-        amodiataires: { value: [entreprise1.id], heritee: false, etapeHeritee: null },
+        amodiataires: { value: [entreprise1Id], heritee: false, etapeHeritee: null },
         contenu: { arm: { mecanise: { value: false, heritee: false, etapeHeritee: null } } },
       },
       'oct',
@@ -412,28 +412,28 @@ test('entrepriseDocumentsStepIsComplete', () => {
       [
         {
           documentTypeId: 'atf',
-          entrepriseId: entreprise1.id,
+          entrepriseId: entreprise1Id,
         },
         {
           documentTypeId: 'cur',
-          entrepriseId: entreprise1.id,
+          entrepriseId: entreprise1Id,
         },
 
         {
           documentTypeId: 'jid',
-          entrepriseId: entreprise1.id,
+          entrepriseId: entreprise1Id,
         },
         {
           documentTypeId: 'jct',
-          entrepriseId: entreprise1.id,
+          entrepriseId: entreprise1Id,
         },
         {
           documentTypeId: 'kbi',
-          entrepriseId: entreprise1.id,
+          entrepriseId: entreprise1Id,
         },
         {
           documentTypeId: 'jcf',
-          entrepriseId: entreprise1.id,
+          entrepriseId: entreprise1Id,
         },
       ]
     ).valid
@@ -756,12 +756,12 @@ test('getDocumentsTypes', () => {
       },
       {
         "description": "la liste et la valeur du matériel d’extraction et de
-     traitement que le demandeur détient ou qu’il 
+     traitement que le demandeur détient ou qu’il
     envisage d’acquérir ainsi que, dans ce dernier
-     cas, le financement correspondant. Ces pièces 
-    sont demandées au titre de la justification des 
+     cas, le financement correspondant. Ces pièces
+    sont demandées au titre de la justification des
     capacités financières du
-    demandeur 
+    demandeur
     (décret 2001-204, art. 7)",
         "id": "idm",
         "nom": "Identification de matériel",
@@ -909,12 +909,12 @@ test('getDocumentsTypes', () => {
       },
       {
         "description": "la liste et la valeur du matériel d’extraction et de
-     traitement que le demandeur détient ou qu’il 
+     traitement que le demandeur détient ou qu’il
     envisage d’acquérir ainsi que, dans ce dernier
-     cas, le financement correspondant. Ces pièces 
-    sont demandées au titre de la justification des 
+     cas, le financement correspondant. Ces pièces
+    sont demandées au titre de la justification des
     capacités financières du
-    demandeur 
+    demandeur
     (décret 2001-204, art. 7)",
         "id": "idm",
         "nom": "Identification de matériel",

@@ -32,11 +32,11 @@ export const canReadUtilisateur = (user: DeepReadonly<User>, utilisateur: UserNo
     if (!isAdministration(utilisateur) || utilisateur.administrationId !== user.administrationId) {
       return false
     }
-  } else if ((isEntreprise(user) || isBureauDEtudes(user)) && user.entreprises.length) {
+  } else if ((isEntreprise(user) || isBureauDEtudes(user)) && user.entrepriseIds.length) {
     // un utilisateur entreprise
     // ne voit que les utilisateurs de son entreprise
-    const entreprisesIds = user.entreprises.map(e => e.id)
-    if (!isEntrepriseOrBureauDEtude(utilisateur) || entreprisesIds.every(eId => !utilisateur.entreprises.map(({ id }) => id).includes(eId))) {
+    const entreprisesIds = user.entrepriseIds
+    if (!isEntrepriseOrBureauDEtude(utilisateur) || entreprisesIds.every(eId => !utilisateur.entrepriseIds.includes(eId))) {
       return false
     }
   }

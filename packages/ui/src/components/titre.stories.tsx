@@ -402,7 +402,7 @@ export const ChantepieOctroiAsEntreprise: StoryFn = () => (
     currentDate={currentDate}
     currentDemarcheSlug={demarcheSlugValidator.parse('m-cx-chantepie-1988-oct01')}
     initTab="points"
-    user={{ ...testBlankUser, role: 'entreprise', entreprises: [{ id: entrepriseIdValidator.parse('fr-409160132') }] }}
+    user={{ ...testBlankUser, role: 'entreprise', entrepriseIds: [entrepriseIdValidator.parse('fr-409160132')] }}
     router={routerPushMock}
     apiClient={chantePieApiClient}
     titreIdOrSlug={titre.id}
@@ -501,7 +501,7 @@ export const BonEspoirOctroi: StoryFn = () => (
     currentDate={currentDate}
     currentDemarcheSlug={demarcheSlugValidator.parse('m-pr-bon-espoir-2001-oct01')}
     initTab="points"
-    user={{ ...testBlankUser, role: 'entreprise', entreprises: [{ id: entrepriseIdValidator.parse('fr-401802863') }] }}
+    user={{ ...testBlankUser, role: 'entreprise', entrepriseIds: [entrepriseIdValidator.parse('fr-401802863')] }}
     router={routerPushMock}
     apiClient={bonEspoirApiClient}
     titreIdOrSlug={titre.id}
@@ -514,7 +514,7 @@ export const BonEspoirProlongation2: StoryFn = () => (
     currentDate={currentDate}
     currentDemarcheSlug={demarcheSlugValidator.parse('m-pr-bon-espoir-2001-pr201')}
     initTab="points"
-    user={{ ...testBlankUser, role: 'entreprise', entreprises: [{ id: entrepriseIdValidator.parse('fr-401802863') }] }}
+    user={{ ...testBlankUser, role: 'entreprise', entrepriseIds: [entrepriseIdValidator.parse('fr-401802863')] }}
     router={routerPushMock}
     apiClient={bonEspoirApiClient}
     titreIdOrSlug={titre.id}
@@ -527,7 +527,7 @@ export const BonEspoirTravaux: StoryFn = () => (
     currentDate={currentDate}
     currentDemarcheSlug={demarcheSlugValidator.parse('m-pr-bon-espoir-2001-dam01')}
     initTab="points"
-    user={{ ...testBlankUser, role: 'entreprise', entreprises: [{ id: entrepriseIdValidator.parse('fr-401802863') }] }}
+    user={{ ...testBlankUser, role: 'entreprise', entrepriseIds: [entrepriseIdValidator.parse('fr-401802863')] }}
     router={routerPushMock}
     apiClient={bonEspoirApiClient}
     titreIdOrSlug={titre.id}

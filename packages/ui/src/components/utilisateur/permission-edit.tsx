@@ -44,14 +44,14 @@ export const PermissionDisplay = defineComponent<Props>(props => {
             }
           />
 
-          {isEntrepriseOrBureauDEtude(props.utilisateur) && isNotNullNorUndefinedNorEmpty(props.utilisateur.entreprises) ? (
+          {isEntrepriseOrBureauDEtude(props.utilisateur) && isNotNullNorUndefinedNorEmpty(props.utilisateur.entrepriseIds) ? (
             <LabelWithValue
-              title={`Entreprise${props.utilisateur.entreprises.length > 0 ? 's' : ''}`}
+              title={`Entreprise${props.utilisateur.entrepriseIds.length > 0 ? 's' : ''}`}
               item={
                 <ul class="fr-tags-group">
                   {isEntrepriseOrBureauDEtude(props.utilisateur) &&
-                    props.utilisateur.entreprises.map(ent => {
-                      const e = props.entreprises.find(({ id }) => id === ent.id)
+                    props.utilisateur.entrepriseIds.map(entrepriseId => {
+                      const e = props.entreprises.find(({ id }) => id === entrepriseId)
 
                       return e ? (
                         <li key={e.id}>
@@ -97,7 +97,7 @@ const PermissionEdit = defineComponent<PermissionEditProps>(props => {
   const updatingUtilisateur = ref<UtilisateurToEdit>({
     id: props.utilisateur.id,
     role: props.utilisateur.role,
-    entreprises: isEntrepriseOrBureauDEtude(props.utilisateur) ? props.utilisateur.entreprises.map(({ id }) => id) : [],
+    entreprises: isEntrepriseOrBureauDEtude(props.utilisateur) ? props.utilisateur.entrepriseIds : [],
     administrationId: isAdministration(props.utilisateur) ? props.utilisateur.administrationId : null,
   })
 
