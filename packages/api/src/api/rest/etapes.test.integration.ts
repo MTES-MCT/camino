@@ -287,7 +287,7 @@ describe('etapeSupprimer', () => {
     const user: TestUser = {
       ...testBlankUser,
       role: 'entreprise',
-      entreprises: [{ id: titulaireId1 }],
+      entrepriseIds: [titulaireId1],
     }
 
     const getEtape = await restCall(dbPool, '/rest/titres/:titreId', { titreId: titre.id }, user)

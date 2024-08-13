@@ -27,7 +27,7 @@ describe('canEditDemarche', () => {
 
   test.each<[TestUser, boolean]>([
     [{ role: 'super' }, true],
-    [{ role: 'entreprise', entreprises: [] }, false],
+    [{ role: 'entreprise', entrepriseIds: [] }, false],
     [{ role: 'defaut' }, false],
   ])('Vérifie si un profil peut modifier des démarches', async (user, creation) => {
     expect(canEditDemarche({ ...user, ...testBlankUser }, 'arm', TitresStatutIds.Valide, [])).toEqual(creation)
@@ -56,7 +56,7 @@ describe('canDeleteDemarche', () => {
 
   test.each<[TestUser, boolean]>([
     [{ role: 'super' }, true],
-    [{ role: 'entreprise', entreprises: [] }, false],
+    [{ role: 'entreprise', entrepriseIds: [] }, false],
     [{ role: 'defaut' }, false],
   ])('Vérifie si un profil peut supprimer des démarches', async (user, creation) => {
     expect(canDeleteDemarche({ ...user, ...testBlankUser }, 'arm', TitresStatutIds.Valide, [], { etapes: [] })).toEqual(creation)
@@ -102,7 +102,7 @@ describe('canCreateTravaux', () => {
 
   test.each<[TestUser, boolean]>([
     [{ role: 'super' }, true],
-    [{ role: 'entreprise', entreprises: [] }, false],
+    [{ role: 'entreprise', entrepriseIds: [] }, false],
     [{ role: 'defaut' }, false],
   ])('Vérifie si un profil peut créer des travaux', async (user, creation) => {
     expect(canCreateTravaux({ ...user, ...testBlankUser }, 'arm', [], [])).toEqual(creation)

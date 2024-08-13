@@ -15,9 +15,9 @@ export const titresActivitesQueryModify = (q: QueryBuilder<TitresActivites, Titr
   if (isAdministration(user)) {
     q.joinRaw(`left join titres_etapes t_e on t_e.id = "titre"."props_titre_etapes_ids" ->> 'points' and t_e.administrations_locales @> '"${user.administrationId}"'::jsonb`)
     q.modify(administrationsTitresQuery, user.administrationId, 'titre', 'and', 't_e')
-  } else if (isEntreprise(user) && user?.entreprises?.length) {
+  } else if (isEntreprise(user) && user?.entrepriseIds?.length) {
     // vérifie que l'utilisateur a les permissions sur les titres
-    const entreprisesIds = user.entreprises.map(e => e.id)
+    const entreprisesIds = user.entrepriseIds
 
     q.whereExists(entreprisesTitresQuery(entreprisesIds, 'titre'))
   } else if (!isSuper(user)) {

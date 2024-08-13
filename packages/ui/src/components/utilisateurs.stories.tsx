@@ -49,7 +49,7 @@ const apiClientMock: Pick<ApiClient, 'getUtilisateurs' | 'titresRechercherByNom'
           nom: 'nom2',
           prenom: 'prenom2',
           role: 'entreprise',
-          entreprises: [entreprise],
+          entrepriseIds: [entreprise.id],
           telephone_mobile: null,
           telephone_fixe: null,
         },

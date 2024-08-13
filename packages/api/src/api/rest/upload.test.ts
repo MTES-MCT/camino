@@ -30,7 +30,7 @@ describe('téléversement de fichier par rest (tus)', () => {
         },
         200,
       ],
-      [{ role: 'entreprise', entreprises: [] }, 200],
+      [{ role: 'entreprise', entrepriseIds: [] }, 200],
       [{ role: 'defaut' }, 403],
     ])('retourne pour un utilisateur %o le code $d', async (user, code) => {
       vi.resetAllMocks()

@@ -219,7 +219,7 @@ export const OctroiAxmUtilisateurEntreprise: StoryFn = () => (
     tde={{ titreTypeId: 'axm', demarcheTypeId: 'oct', etapeTypeId: 'mfr' }}
     isBrouillon={ETAPE_IS_BROUILLON}
     completeUpdate={completeUpdateAction}
-    user={{ ...testBlankUser, role: 'entreprise', entreprises: [{ id: entrepriseIdValidator.parse('idEntreprise1') }] }}
+    user={{ ...testBlankUser, role: 'entreprise', entrepriseIds: [entrepriseIdValidator.parse('idEntreprise1')] }}
   />
 )
 
@@ -296,7 +296,7 @@ export const OctroiAxmUtilisateurEntrepriseComplet: StoryFn = () => (
     tde={{ titreTypeId: 'axm', demarcheTypeId: 'oct', etapeTypeId: 'mfr' }}
     isBrouillon={ETAPE_IS_BROUILLON}
     completeUpdate={completeUpdateAction}
-    user={{ ...testBlankUser, role: 'entreprise', entreprises: [{ id: entrepriseIdValidator.parse('idEntreprise1') }] }}
+    user={{ ...testBlankUser, role: 'entreprise', entrepriseIds: [entrepriseIdValidator.parse('idEntreprise1')] }}
   />
 )
 

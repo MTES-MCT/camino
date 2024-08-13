@@ -30,7 +30,7 @@ const fiscaliteVisibleByDomaines = (user: User, entrepriseId: EntrepriseId | und
     if (isSuper(user) || isAdministration(user)) {
       return true
     }
-    if (isEntreprise(user) && user.entreprises?.find(({ id }) => entrepriseId === id)) {
+    if (isEntreprise(user) && user.entrepriseIds?.includes(entrepriseId)) {
       return true
     }
   }

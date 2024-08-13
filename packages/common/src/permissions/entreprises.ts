@@ -15,7 +15,7 @@ export const canEditEntreprise = (user: User, entrepriseId?: EntrepriseId): bool
   }
 
   if (isEntreprise(user) || isBureauDEtudes(user)) {
-    return user.entreprises?.some(({ id }) => id === entrepriseId) ?? false
+    return user.entrepriseIds?.includes(entrepriseId) ?? false
   }
 
   return false
@@ -27,7 +27,7 @@ export const canSeeEntrepriseDocuments = (user: User, entrepriseId: EntrepriseId
   }
 
   if (isEntreprise(user) || isBureauDEtudes(user)) {
-    return user.entreprises?.some(({ id }) => id === entrepriseId) ?? false
+    return user.entrepriseIds?.includes(entrepriseId) ?? false
   }
 
   return false

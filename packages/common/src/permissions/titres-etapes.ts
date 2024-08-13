@@ -158,12 +158,12 @@ const canCreateOrEditEtape = (
     }
   } else if (isEntreprise(user) || isBureauDEtudes(user)) {
     return (
-      (user.entreprises?.length ?? 0) > 0 &&
+      (user.entrepriseIds?.length ?? 0) > 0 &&
       demarcheTypeId === DEMARCHES_TYPES_IDS.Octroi &&
       etapeTypeId === ETAPES_TYPES.demande &&
       isBrouillon === ETAPE_IS_BROUILLON &&
       TITRES_TYPES_IDS_DEMAT.includes(titre.typeId) &&
-      titulaireIds.some(id => user.entreprises?.some(entreprise => id === entreprise.id))
+      titulaireIds.some(id => user.entrepriseIds?.includes(id))
     )
   }
 

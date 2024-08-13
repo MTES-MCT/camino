@@ -877,7 +877,7 @@ export const AxmEnZoneDuSdom: StoryFn = () => (
         })
       },
     }}
-    user={{ ...testBlankUser, role: 'entreprise', entreprises: [{ id: entrepriseIdValidator.parse('entrepriseID') }] }}
+    user={{ ...testBlankUser, role: 'entreprise', entrepriseIds: [entrepriseIdValidator.parse('entrepriseID')] }}
     initTab="points"
     demarcheIdOrSlug={null}
     etapeIdOrSlug={etapeIdOrSlugValidator.parse('etape-id')}

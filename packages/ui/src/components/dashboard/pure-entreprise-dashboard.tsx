@@ -15,15 +15,15 @@ import { DsfrLink } from '../_ui/dsfr-button'
 
 interface Props {
   user: User
-  entreprises: Pick<Entreprise, 'id'>[]
+  entrepriseIds: EntrepriseId[]
   // TODO 2022-03-22: type the graphql
   apiClient: Pick<DashboardApiClient, 'getEntreprisesTitres'>
   displayActivites: boolean
   allEntreprises: Entreprise[]
 }
 
-const fiscaliteVisibleForAtLeastOneEntreprise = (user: User, entreprises: Pick<Entreprise, 'id'>[], items: TitreEntreprise[]) => {
-  return entreprises.some(({ id }) =>
+const fiscaliteVisibleForAtLeastOneEntreprise = (user: User, entrepriseIds: EntrepriseId[], items: TitreEntreprise[]) => {
+  return entrepriseIds.some(id =>
     fiscaliteVisible(
       user,
       id,
@@ -47,7 +47,7 @@ export const PureEntrepriseDashboard = defineComponent<Props>(props => {
 
   onMounted(async () => {
     try {
-      const entreprises = await props.apiClient.getEntreprisesTitres(props.entreprises.map(({ id }) => id))
+      const entreprises = await props.apiClient.getEntreprisesTitres(props.entrepriseIds)
       data.value = { status: 'LOADED', value: entreprises }
     } catch (e: any) {
       data.value = {
@@ -65,33 +65,33 @@ export const PureEntrepriseDashboard = defineComponent<Props>(props => {
         renderItem={item => {
           return (
             <>
-              {fiscaliteVisibleForAtLeastOneEntreprise(props.user, props.entreprises, item) ? (
+              {fiscaliteVisibleForAtLeastOneEntreprise(props.user, props.entrepriseIds, item) ? (
                 <Alert
                   type="info"
                   title="Découvrez l'estimation de votre fiscalité minière."
                   description={
                     <>
-                      {props.entreprises.length === 1 ? (
+                      {props.entrepriseIds.length === 1 ? (
                         <>
                           <DsfrLink
                             disabled={false}
                             icon={null}
-                            to={{ name: 'entreprise', params: { id: props.entreprises[0].id } }}
-                            label={entreprisesIndex[props.entreprises[0].id]}
-                            title={`Page de l’entreprise ${entreprisesIndex[props.entreprises[0].id]}`}
+                            to={{ name: 'entreprise', params: { id: props.entrepriseIds[0] } }}
+                            label={entreprisesIndex[props.entrepriseIds[0]]}
+                            title={`Page de l’entreprise ${entreprisesIndex[props.entrepriseIds[0]]}`}
                           />
                         </>
                       ) : (
                         <>
-                          {props.entreprises
-                            .filter(entreprise =>
+                          {props.entrepriseIds
+                            .filter(entrepriseId =>
                               fiscaliteVisible(
                                 props.user,
-                                entreprise.id,
+                                entrepriseId,
                                 item.map(({ typeId }) => ({ type_id: typeId }))
                               )
                             )
-                            .map(({ id }) => (
+                            .map(id => (
                               <DsfrLink
                                 disabled={false}
                                 class="fr-mr-1w"
@@ -117,4 +117,4 @@ export const PureEntrepriseDashboard = defineComponent<Props>(props => {
 })
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-PureEntrepriseDashboard.props = ['user', 'entreprises', 'apiClient', 'displayActivites', 'allEntreprises']
+PureEntrepriseDashboard.props = ['user', 'entrepriseIds', 'apiClient', 'displayActivites', 'allEntreprises']

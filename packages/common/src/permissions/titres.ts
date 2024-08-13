@@ -81,7 +81,7 @@ export const canReadTitre = async (
   if (isEntrepriseOrBureauDEtude(user)) {
     const entreprises = await entreprisesTitulairesOuAmodiataires()
 
-    return user.entreprises.map(({ id }) => id).some(entrepriseId => entreprises.includes(entrepriseId))
+    return user.entrepriseIds.some(entrepriseId => entreprises.includes(entrepriseId))
   }
 
   return false

@@ -48,7 +48,7 @@ test.each<{ titreTypeId: TitreTypeId; demarcheTypeId: DemarcheTypeId; canEdit: b
   { titreTypeId: 'prm', demarcheTypeId: 'exp', canEdit: false },
   { titreTypeId: 'prm', demarcheTypeId: 'mut', canEdit: false },
 ])('canEditDuree $titreTypeId | $demarcheTypeId | $canEdit', ({ titreTypeId, demarcheTypeId, canEdit }) =>
-  expect(canEditDuree(titreTypeId, demarcheTypeId, { ...testBlankUser, role: 'entreprise', entreprises: [{ id: newEntrepriseId('entrepriseId') }] })).toEqual(canEdit)
+  expect(canEditDuree(titreTypeId, demarcheTypeId, { ...testBlankUser, role: 'entreprise', entrepriseIds: [newEntrepriseId('entrepriseId')] })).toEqual(canEdit)
 )
 
 test('un super ou une admininstration peut éditer la durée d un octroi d ARM', () => {
@@ -153,7 +153,7 @@ test.each<{
     canCreate: false,
   },
   {
-    user: { role: 'entreprise', entreprises: [{ id: newEntrepriseId('1') }] },
+    user: { role: 'entreprise', entrepriseIds: [newEntrepriseId('1')] },
     etapeTypeId: 'mfr',
     isBrouillon: ETAPE_IS_NOT_BROUILLON,
     titreTitulaires: [newEntrepriseId('1')],
@@ -163,7 +163,7 @@ test.each<{
     canCreate: false,
   },
   {
-    user: { role: 'entreprise', entreprises: [{ id: newEntrepriseId('1') }] },
+    user: { role: 'entreprise', entrepriseIds: [newEntrepriseId('1')] },
     etapeTypeId: 'mfr',
     isBrouillon: ETAPE_IS_BROUILLON,
     titreTitulaires: [newEntrepriseId('1')],
@@ -247,9 +247,9 @@ test.each<{
 })
 
 test('une entreprise peut modifier sa demande mais ne peut pas la supprimer', () => {
-  const user: EntrepriseUserNotNull = { ...testBlankUser, role: 'entreprise', entreprises: [{ id: entrepriseIdValidator.parse('entrepriseId') }] }
-  expect(canEditEtape(user, 'mfr', ETAPE_IS_BROUILLON, [user.entreprises[0].id], [], 'oct', { typeId: 'arm', titreStatutId: 'ind' })).toBe(true)
-  expect(canDeleteEtape(user, 'mfr', ETAPE_IS_BROUILLON, [user.entreprises[0].id], [], 'oct', { typeId: 'arm', titreStatutId: 'ind' })).toBe(false)
+  const user: EntrepriseUserNotNull = { ...testBlankUser, role: 'entreprise', entrepriseIds: [entrepriseIdValidator.parse('entrepriseId')] }
+  expect(canEditEtape(user, 'mfr', ETAPE_IS_BROUILLON, [user.entrepriseIds[0]], [], 'oct', { typeId: 'arm', titreStatutId: 'ind' })).toBe(true)
+  expect(canDeleteEtape(user, 'mfr', ETAPE_IS_BROUILLON, [user.entrepriseIds[0]], [], 'oct', { typeId: 'arm', titreStatutId: 'ind' })).toBe(false)
 })
 
 const multiPolygonWith4Points: FeatureMultiPolygon = {
@@ -341,7 +341,7 @@ test('teste la complétude d’une demande d’AXM faite par un utilisateur entr
       { arrete_prefectoral: '', date: toCaminoDate('2024-01-01'), description: null, entreprises_lecture: true, etape_document_type_id: 'arp', etape_statut_id: 'fai', public_lecture: true },
       { date: toCaminoDate('2024-04-22'), description: null, entreprises_lecture: true, etape_document_type_id: 'let', etape_statut_id: 'fai', public_lecture: true },
       [],
-      { ...testBlankUser, role: 'entreprise', entreprises: [{ id: entrepriseIdValidator.parse('id1') }] }
+      { ...testBlankUser, role: 'entreprise', entrepriseIds: [entrepriseIdValidator.parse('id1')] }
     )
   ).toMatchInlineSnapshot(`
     {
@@ -366,7 +366,7 @@ test('teste la complétude d’une demande d’AXM faite par un utilisateur entr
       { arrete_prefectoral: '', date: toCaminoDate('2024-01-01'), description: null, entreprises_lecture: true, etape_document_type_id: 'arp', etape_statut_id: 'fai', public_lecture: true },
       { date: toCaminoDate('2024-04-22'), description: null, entreprises_lecture: true, etape_document_type_id: 'let', etape_statut_id: 'fai', public_lecture: true },
       [],
-      { ...testBlankUser, role: 'entreprise', entreprises: [{ id: entrepriseIdValidator.parse('id1') }] }
+      { ...testBlankUser, role: 'entreprise', entrepriseIds: [entrepriseIdValidator.parse('id1')] }
     )
   ).toStrictEqual({ valid: true })
 })
