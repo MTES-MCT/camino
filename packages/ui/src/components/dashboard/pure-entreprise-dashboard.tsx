@@ -117,4 +117,4 @@ export const PureEntrepriseDashboard = defineComponent<Props>(props => {
 })
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-PureEntrepriseDashboard.props = ['user', 'entreprises', 'apiClient', 'displayActivites', 'allEntreprises']
+PureEntrepriseDashboard.props = ['user', 'entrepriseIds', 'apiClient', 'displayActivites', 'allEntreprises']
