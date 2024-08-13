@@ -89,14 +89,14 @@ export const OnlyOneEntrepriseUserSuper: StoryFn = () => (
 
 export const OnlyOneEntrepriseUserEntreprise: StoryFn = () => (
   <PureTitreCreation
-    user={{ ...testBlankUser, role: 'entreprise', entreprises: [{ id: entreprise1Id }] }}
+    user={{ ...testBlankUser, role: 'entreprise', entrepriseIds: [entreprise1Id] }}
     entreprises={[{ id: entreprise1Id, nom: 'entreprise 1', legal_siren: null }]}
     apiClient={apiClient}
   />
 )
 
 export const NoEntreprise: StoryFn = () => (
-  <PureTitreCreation user={{ ...testBlankUser, role: 'entreprise', entreprises: [] }} entreprises={[{ id: entreprise1Id, nom: 'entreprise 1', legal_siren: null }]} apiClient={apiClient} />
+  <PureTitreCreation user={{ ...testBlankUser, role: 'entreprise', entrepriseIds: [] }} entreprises={[{ id: entreprise1Id, nom: 'entreprise 1', legal_siren: null }]} apiClient={apiClient} />
 )
 
 export const FullSuper: StoryFn = () => (
@@ -115,7 +115,7 @@ export const FullSuper: StoryFn = () => (
 
 export const FullEntreprise: StoryFn = () => (
   <PureTitreCreation
-    user={{ ...testBlankUser, role: 'entreprise', entreprises: [entreprises[0]] }}
+    user={{ ...testBlankUser, role: 'entreprise', entrepriseIds: [entreprises[0].id] }}
     entreprises={entreprises}
     apiClient={apiClient}
     initialValue={{

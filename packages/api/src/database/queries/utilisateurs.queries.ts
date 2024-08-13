@@ -147,8 +147,8 @@ const userDbToUser = (
   user: GetUtilisateur
 ): Pick<UserNotNull, 'telephone_fixe' | 'telephone_mobile' | 'id' | 'nom' | 'prenom' | 'role' | 'email'> &
   Nullable<Pick<AdminUserNotNull, 'administrationId'>> &
-  Pick<EntrepriseUserNotNull, 'entreprises'> => {
-  return { ...user, prenom: user.prenom ?? '', entreprises: user.entreprise_ids?.map(id => ({ id })) ?? [], administrationId: user.administration_id }
+  Pick<EntrepriseUserNotNull, 'entrepriseIds'> => {
+  return { ...user, prenom: user.prenom ?? '', entrepriseIds: user.entreprise_ids ?? [], administrationId: user.administration_id }
 }
 
 export const newGetUtilisateurById = (

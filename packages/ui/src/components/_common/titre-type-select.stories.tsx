@@ -14,6 +14,6 @@ const onUpdateTitreTypeIdAction = action('onUpdateTitreTypeId')
 
 export const Default: StoryFn = () => <TitreTypeSelect user={{ role: 'super', ...testBlankUser }} onUpdateTitreTypeId={onUpdateTitreTypeIdAction} titreTypeId={null} />
 
-export const Entreprise: StoryFn = () => <TitreTypeSelect user={{ role: 'entreprise', entreprises: [], ...testBlankUser }} onUpdateTitreTypeId={onUpdateTitreTypeIdAction} titreTypeId={null} />
+export const Entreprise: StoryFn = () => <TitreTypeSelect user={{ role: 'entreprise', entrepriseIds: [], ...testBlankUser }} onUpdateTitreTypeId={onUpdateTitreTypeIdAction} titreTypeId={null} />
 
-export const AlreadySelected: StoryFn = () => <TitreTypeSelect user={{ role: 'entreprise', entreprises: [], ...testBlankUser }} onUpdateTitreTypeId={onUpdateTitreTypeIdAction} titreTypeId={'arm'} />
+export const AlreadySelected: StoryFn = () => <TitreTypeSelect user={{ role: 'entreprise', entrepriseIds: [], ...testBlankUser }} onUpdateTitreTypeId={onUpdateTitreTypeIdAction} titreTypeId={'arm'} />

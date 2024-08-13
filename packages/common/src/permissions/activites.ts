@@ -52,7 +52,7 @@ export const canReadTitreActivites = async (
   if (isEntreprise(user)) {
     const entreprises = await entreprisesTitulairesOuAmodiataires()
 
-    return user.entreprises.map(({ id }) => id).some(entrepriseId => entreprises.includes(entrepriseId))
+    return user.entrepriseIds.some(entrepriseId => entreprises.includes(entrepriseId))
   }
 
   return false
@@ -87,10 +87,7 @@ export const canEditActivite = async (
   if (isEntreprise(user)) {
     const entrepriseFetched = await entreprises()
 
-    return (
-      user.entreprises.map(({ id }) => id).some(entrepriseId => entrepriseFetched.includes(entrepriseId)) &&
-      [ACTIVITES_STATUTS_IDS.ABSENT, ACTIVITES_STATUTS_IDS.EN_CONSTRUCTION].includes(activiteStatutId)
-    )
+    return user.entrepriseIds.some(entrepriseId => entrepriseFetched.includes(entrepriseId)) && [ACTIVITES_STATUTS_IDS.ABSENT, ACTIVITES_STATUTS_IDS.EN_CONSTRUCTION].includes(activiteStatutId)
   }
 
   return false

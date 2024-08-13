@@ -15,7 +15,7 @@ const getTestUser = (param: { role: 'super' | 'defaut' | 'entreprise' | 'bureau 
       return { ...testBlankUser, ...param }
     case 'entreprise':
     case 'bureau d’études':
-      return { ...testBlankUser, ...param, entreprises: [] }
+      return { ...testBlankUser, ...param, entrepriseIds: [] }
   }
 }
 

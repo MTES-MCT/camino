@@ -41,8 +41,8 @@ describe('getAdministrationUtilisateurs', () => {
       },
       true,
     ],
-    [{ role: 'entreprise', entreprises: [] }, false],
-    [{ role: 'bureau d’études', entreprises: [] }, false],
+    [{ role: 'entreprise', entrepriseIds: [] }, false],
+    [{ role: 'bureau d’études', entrepriseIds: [] }, false],
     [{ role: 'defaut' }, false],
     [undefined, false],
   ])('utilisateur %s peur voir les utilisateurs: %s', async (user, lecture) => {
@@ -83,8 +83,8 @@ describe('administrationActiviteTypeEmails', () => {
       },
       true,
     ],
-    [{ role: 'entreprise', entreprises: [] }, false],
-    [{ role: 'bureau d’études', entreprises: [] }, false],
+    [{ role: 'entreprise', entrepriseIds: [] }, false],
+    [{ role: 'bureau d’études', entrepriseIds: [] }, false],
     [{ role: 'defaut' }, false],
     [undefined, false],
   ])('utilisateur %s peur gérer les emails associés à un type d’activité: %s', async (user, canEdit) => {

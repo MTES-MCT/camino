@@ -107,7 +107,7 @@ describe('canReadDemarche', () => {
       expect(
         await canReadDemarche(
           { entreprises_lecture: false, public_lecture: false, titre_public_lecture: false, demarche_type_id: 'oct' },
-          { ...testBlankUser, role: 'entreprise', entreprises: [{ id: entrepriseId }] },
+          { ...testBlankUser, role: 'entreprise', entrepriseIds: [entrepriseId] },
           shouldNotBeCalled,
           shouldNotBeCalled,
           () => Promise.resolve([entrepriseId])
@@ -120,7 +120,7 @@ describe('canReadDemarche', () => {
       expect(
         await canReadDemarche(
           { entreprises_lecture: true, public_lecture: false, titre_public_lecture: false, demarche_type_id: 'oct' },
-          { ...testBlankUser, role: 'entreprise', entreprises: [{ id: entrepriseId }] },
+          { ...testBlankUser, role: 'entreprise', entrepriseIds: [entrepriseId] },
           shouldNotBeCalled,
           shouldNotBeCalled,
           () => Promise.resolve([entrepriseId])
@@ -134,7 +134,7 @@ describe('canReadDemarche', () => {
       expect(
         await canReadDemarche(
           { entreprises_lecture: true, public_lecture: false, titre_public_lecture: false, demarche_type_id: 'oct' },
-          { ...testBlankUser, role: 'entreprise', entreprises: [{ id: entrepriseIdTitulaire }] },
+          { ...testBlankUser, role: 'entreprise', entrepriseIds: [entrepriseIdTitulaire] },
           shouldNotBeCalled,
           shouldNotBeCalled,
           () => Promise.resolve([entrepriseIdNonTitulaire])

@@ -27,11 +27,11 @@ export const Default: StoryFn = () => (
 )
 
 export const Entreprise: StoryFn = () => (
-  <AddEtapeDocumentPopup close={close} documentTypeIds={['car', 'doe', 'jpa']} user={{ ...testBlankUser, role: 'entreprise', entreprises: [] }} apiClient={apiClient} />
+  <AddEtapeDocumentPopup close={close} documentTypeIds={['car', 'doe', 'jpa']} user={{ ...testBlankUser, role: 'entreprise', entrepriseIds: [] }} apiClient={apiClient} />
 )
 
 export const UnSeulDocumentPossible: StoryFn = () => (
-  <AddEtapeDocumentPopup close={close} documentTypeIds={['car']} user={{ ...testBlankUser, role: 'entreprise', entreprises: [] }} apiClient={apiClient} />
+  <AddEtapeDocumentPopup close={close} documentTypeIds={['car']} user={{ ...testBlankUser, role: 'entreprise', entrepriseIds: [] }} apiClient={apiClient} />
 )
 
 export const DocumentInitial: StoryFn = () => (

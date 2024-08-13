@@ -3,7 +3,7 @@ import path from 'path'
 import jwt from 'jsonwebtoken'
 import request from 'supertest'
 import type { Pool } from 'pg'
-import { Index, IUtilisateur } from '../../src/types'
+import { formatUser, Index, IUtilisateur } from '../../src/types'
 
 import { app } from '../app'
 import { utilisateurCreate } from '../../src/database/queries/utilisateurs'
@@ -164,19 +164,23 @@ export const userGenerate = async (pool: Pool, user: TestUser): Promise<UserNotN
   const userInDb = await getUtilisateurById(pool, id, userSuper)
 
   if (isNullOrUndefined(userInDb)) {
-    return utilisateurCreate(
+    const newUser = await utilisateurCreate(
       {
-        ...user,
         id,
         prenom: `prenom-${user.role}`,
         nom: `nom-${user.role}`,
         email: `${id}@camino.local`,
         dateCreation: getCurrent(),
         keycloakId: idUserKeycloakRecognised,
+        role: user.role,
+        administrationId: 'administrationId' in user ? user.administrationId : null,
+        entreprises: 'entrepriseIds' in user ? user.entrepriseIds?.map(id => ({ id })) : null,
       },
       {}
       // TODO 2023-05-24: pg-typed utilisateurCreate
-    ) as unknown as UserNotNull
+    )
+
+    return formatUser(newUser)
   }
 
   return userInDb

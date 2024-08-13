@@ -274,7 +274,7 @@ describe('titreModifier', () => {
   })
 
   test("ne peut pas modifier un titre (un utilisateur 'entreprise')", async () => {
-    const tested = await restPostCall(dbPool, '/rest/titres/:titreId', { titreId: id }, { role: 'entreprise', entreprises: [] }, { id, nom: 'mon titre modifié', references: [] })
+    const tested = await restPostCall(dbPool, '/rest/titres/:titreId', { titreId: id }, { role: 'entreprise', entrepriseIds: [] }, { id, nom: 'mon titre modifié', references: [] })
 
     expect(tested.statusCode).toBe(404)
   })

@@ -28,8 +28,8 @@ export const titresDemarchesQueryModify = (q: QueryBuilder<TitresDemarches, Titr
 
       if (isAdministration(user)) {
         b.modify(administrationsTitresQuery, user.administrationId, 'titre', 'or', etapePointAlias)
-      } else if ((isEntreprise(user) || isBureauDEtudes(user)) && user.entreprises?.length) {
-        const entreprisesIds = user.entreprises.map(e => e.id)
+      } else if ((isEntreprise(user) || isBureauDEtudes(user)) && user.entrepriseIds?.length) {
+        const entreprisesIds = user.entrepriseIds
 
         b.orWhere(c => {
           c.where('titresDemarches.entreprisesLecture', true)

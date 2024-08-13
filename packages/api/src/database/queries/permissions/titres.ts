@@ -71,8 +71,8 @@ export const titresQueryModify = (q: QueryBuilder<Titres, Titres | Titres[]>, us
       b.where('titres.publicLecture', true)
 
       // si l'utilisateur est `entreprise`
-      if ((isEntreprise(user) || isBureauDEtudes(user)) && user.entreprises?.length) {
-        const entreprisesIds = user.entreprises.map(e => e.id)
+      if ((isEntreprise(user) || isBureauDEtudes(user)) && user.entrepriseIds?.length) {
+        const entreprisesIds = user.entrepriseIds
 
         b.orWhere(c => {
           c.where(d => d.modify(titresVisibleByEntrepriseQuery, entreprisesIds))
@@ -96,12 +96,9 @@ export const titresQueryModify = (q: QueryBuilder<Titres, Titres | Titres[]>, us
     })
   }
 
-  if ((isEntreprise(user) || isBureauDEtudes(user)) && isNotNullNorUndefinedNorEmpty(user.entreprises)) {
+  if ((isEntreprise(user) || isBureauDEtudes(user)) && isNotNullNorUndefinedNorEmpty(user.entrepriseIds)) {
     if (isNotNullNorUndefined(demandeEnCours) && demandeEnCours) {
-      q.modify(
-        titresConfidentielSelect,
-        user.entreprises.map(e => e.id)
-      )
+      q.modify(titresConfidentielSelect, user.entrepriseIds)
     }
   }
 

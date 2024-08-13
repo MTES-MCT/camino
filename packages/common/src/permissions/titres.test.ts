@@ -58,7 +58,7 @@ describe('canCreateTitre', () => {
   test('vérifie si une entreprise peut créer un titre de type', () => {
     const result: { [key in TitreTypeId]?: true } = {}
 
-    const user: User = { role: 'entreprise', entreprises: [], ...testBlankUser }
+    const user: User = { role: 'entreprise', entrepriseIds: [], ...testBlankUser }
     for (const titreTypeid of TitresTypesIds) {
       const itCan = canCreateTitre(user, titreTypeid)
       if (itCan) {
@@ -96,7 +96,7 @@ describe('canCreateTitre', () => {
 
 describe('canEditTitre', () => {
   test.each<TitreTypeId>(TitresTypesIds)('vérifie si une entreprise ne peut pas modifier un titre de type %p', titreTypeId => {
-    const user: User = { role: 'entreprise', entreprises: [], ...testBlankUser }
+    const user: User = { role: 'entreprise', entrepriseIds: [], ...testBlankUser }
     titresStatutsArray.forEach(titreStatut => {
       expect(canEditTitre(user, titreTypeId, titreStatut.id, [])).toBe(false)
     })
@@ -139,8 +139,8 @@ test('canDeleteTitre', () => {
   expect(canDeleteTitre({ role: 'admin', administrationId: 'min-mtes-dgaln-01', ...testBlankUser })).toEqual(false)
   expect(canDeleteTitre({ role: 'editeur', administrationId: 'min-mtes-dgaln-01', ...testBlankUser })).toEqual(false)
   expect(canDeleteTitre({ role: 'lecteur', administrationId: 'min-mtes-dgaln-01', ...testBlankUser })).toEqual(false)
-  expect(canDeleteTitre({ role: 'entreprise', entreprises: [{ id: newEntrepriseId('entrepriseId') }], ...testBlankUser })).toEqual(false)
-  expect(canDeleteTitre({ role: 'bureau d’études', entreprises: [{ id: newEntrepriseId('entrepriseId') }], ...testBlankUser })).toEqual(false)
+  expect(canDeleteTitre({ role: 'entreprise', entrepriseIds: [newEntrepriseId('entrepriseId')], ...testBlankUser })).toEqual(false)
+  expect(canDeleteTitre({ role: 'bureau d’études', entrepriseIds: [newEntrepriseId('entrepriseId')], ...testBlankUser })).toEqual(false)
   expect(canDeleteTitre({ role: 'defaut', ...testBlankUser })).toEqual(false)
 })
 
@@ -301,7 +301,7 @@ describe('canReadTitre', () => {
     test('entreprise titulaire', async () => {
       const entrepriseId = entrepriseIdValidator.parse('entrepriseId')
       expect(
-        await canReadTitre({ ...testBlankUser, role: 'entreprise', entreprises: [{ id: entrepriseId }] }, shouldNotBeCalled, shouldNotBeCalled, () => Promise.resolve([entrepriseId]), {
+        await canReadTitre({ ...testBlankUser, role: 'entreprise', entrepriseIds: [entrepriseId] }, shouldNotBeCalled, shouldNotBeCalled, () => Promise.resolve([entrepriseId]), {
           public_lecture: false,
         })
       ).toBe(true)
@@ -311,13 +311,9 @@ describe('canReadTitre', () => {
       const entrepriseIdTitulaire = entrepriseIdValidator.parse('entrepriseIdTitulaire')
       const entrepriseIdNonTitulaire = entrepriseIdValidator.parse('entrepriseIdNonTitulaire')
       expect(
-        await canReadTitre(
-          { ...testBlankUser, role: 'entreprise', entreprises: [{ id: entrepriseIdTitulaire }] },
-          shouldNotBeCalled,
-          shouldNotBeCalled,
-          () => Promise.resolve([entrepriseIdNonTitulaire]),
-          { public_lecture: false }
-        )
+        await canReadTitre({ ...testBlankUser, role: 'entreprise', entrepriseIds: [entrepriseIdTitulaire] }, shouldNotBeCalled, shouldNotBeCalled, () => Promise.resolve([entrepriseIdNonTitulaire]), {
+          public_lecture: false,
+        })
       ).toBe(false)
     })
   })

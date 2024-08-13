@@ -202,7 +202,7 @@ export const activiteDeposer = async ({ id }: { id: ActiviteId }, { user, pool }
       throw new Error('Le titre n’est pas complètement chargé')
     }
 
-    const userEntreprisesId = isEntreprise(user) || isBureauDEtudes(user) ? user.entreprises.map(e => e.id) : []
+    const userEntreprisesId = isEntreprise(user) || isBureauDEtudes(user) ? user.entrepriseIds : []
     const isAmodiataire = titre.amodiataireIds?.some(amodiataireId => userEntreprisesId.some(id => id === amodiataireId))
 
     const entreprisesIds = isAmodiataire ? titre.amodiataireIds : titre.titulaireIds

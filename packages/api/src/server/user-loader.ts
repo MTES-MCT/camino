@@ -70,6 +70,7 @@ export const userLoader =
           }
 
           req.auth = formatUser(newUser)
+          next()
 
           return
         } else if (user.nom !== reqUser.family_name || user.prenom !== reqUser.given_name || user.email !== reqUser.email) {

@@ -19,11 +19,11 @@ const users: Record<Role, UserNotNull> = {
     role: 'lecteur',
     administrationId: 'aut-97300-01',
   },
-  entreprise: { ...testBlankUser, role: 'entreprise', entreprises: [] },
+  entreprise: { ...testBlankUser, role: 'entreprise', entrepriseIds: [] },
   'bureau d’études': {
     ...testBlankUser,
     role: 'bureau d’études',
-    entreprises: [],
+    entrepriseIds: [],
   },
   defaut: { ...testBlankUser, role: 'defaut' },
 }

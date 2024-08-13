@@ -26,7 +26,7 @@ describe('role', () => {
   }
   test('isSuper', () => {
     expect(isSuper({ ...baseRole, role: 'super' })).toBe(true)
-    expect(isSuper({ ...baseRole, role: 'entreprise', entreprises: [] })).toBe(false)
+    expect(isSuper({ ...baseRole, role: 'entreprise', entrepriseIds: [] })).toBe(false)
     expect(isSuper(undefined)).toBe(false)
   })
 
@@ -67,7 +67,7 @@ describe('role', () => {
       isEntreprise({
         ...baseRole,
         role: 'entreprise',
-        entreprises: [],
+        entrepriseIds: [],
       })
     ).toBe(true)
     expect(isEntreprise({ ...baseRole, role: 'defaut' })).toBe(false)
@@ -77,7 +77,7 @@ describe('role', () => {
       isBureauDEtudes({
         ...baseRole,
         role: 'bureau d’études',
-        entreprises: [],
+        entrepriseIds: [],
       })
     ).toBe(true)
     expect(isBureauDEtudes({ ...baseRole, role: 'defaut' })).toBe(false)
@@ -90,7 +90,7 @@ describe('role', () => {
       isDefault({
         ...baseRole,
         role: 'entreprise',
-        entreprises: [],
+        entrepriseIds: [],
       })
     ).toBe(false)
   })

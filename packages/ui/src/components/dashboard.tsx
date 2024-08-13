@@ -30,9 +30,9 @@ const PureDashboard: FunctionalComponent<{ user: User; entreprises: Entreprise[]
 
       return PureEntrepriseDashboard
     })
-    const entreprises = props.user.entreprises ?? []
+    const entrepriseIds = props.user.entrepriseIds ?? []
 
-    return <PureEntrepriseDashboard apiClient={dashboardApiClient} user={props.user} entreprises={entreprises} displayActivites={canReadActivites(props.user)} allEntreprises={props.entreprises} />
+    return <PureEntrepriseDashboard apiClient={dashboardApiClient} user={props.user} entrepriseIds={entrepriseIds} displayActivites={canReadActivites(props.user)} allEntreprises={props.entreprises} />
   } else if (isAdministration(props.user)) {
     const PureAdministrationDashboard = defineAsyncComponent(async () => {
       const { PureAdministrationDashboard } = await import('@/components/dashboard/pure-administration-dashboard')
