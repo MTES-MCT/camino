@@ -255,3 +255,37 @@ describe('getUtilisateurs', () => {
     })
   })
 })
+describe('getUtilisateur', () => {
+  test('retourne un utilisateur', async () => {
+    const id = newUtilisateurId('utilisateurDefaut')
+    await knex('utilisateurs').insert({
+      id,
+      prenom: 'prenom-pas-super',
+      nom: 'nom-pas-super',
+      email: 'prenom-pas-super@camino.local',
+      role: 'defaut',
+      telephone_fixe: '0102030405',
+      dateCreation: '2022-05-12',
+      keycloakId: idUserKeycloakRecognised,
+    })
+
+    let tested = await restNewCall(dbPool, '/rest/utilisateurs/:id', { id }, userSuper)
+    expect(tested.statusCode).toBe(HTTP_STATUS.OK)
+    expect(tested.body).toMatchInlineSnapshot(`
+      {
+        "email": "prenom-pas-super@camino.local",
+        "id": "utilisateurDefaut",
+        "nom": "nom-pas-super",
+        "prenom": "prenom-pas-super",
+        "role": "defaut",
+        "telephone_fixe": "0102030405",
+        "telephone_mobile": null,
+      }
+    `)
+
+    tested = await restNewCall(dbPool, '/rest/utilisateurs/:id', { id }, { ...testBlankUser, role: 'admin', administrationId: 'aut-97300-01' })
+    expect(tested.statusCode).toBe(HTTP_STATUS.OK)
+    tested = await restNewCall(dbPool, '/rest/utilisateurs/:id', { id }, { ...testBlankUser, role: 'defaut' })
+    expect(tested.statusCode).toBe(HTTP_STATUS.FORBIDDEN)
+  })
+})
