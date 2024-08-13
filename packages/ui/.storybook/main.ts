@@ -1,15 +1,14 @@
+import { dirname, join } from "path";
 import type { StorybookConfig } from '@storybook/vue3-vite'
 import { rollupOptions } from '../vite-rollup'
 const config: StorybookConfig = {
   stories: ['../src/components/titre.stories.tsx', '../src/**/*.stories.@(js|jsx|ts|tsx)'],
-  addons: ['@storybook/addon-actions', '@storybook/addon-controls', '@storybook/addon-interactions'],
+  addons: [getAbsolutePath("@storybook/addon-actions"), getAbsolutePath("@storybook/addon-controls"), getAbsolutePath("@storybook/addon-interactions")],
   framework: {
-    name: '@storybook/vue3-vite',
+    name: getAbsolutePath("@storybook/vue3-vite"),
     options: {},
   },
-  docs: {
-    autodocs: 'tag',
-  },
+  docs: {},
   async viteFinal(config) {
     if (config.resolve) {
           config.resolve.alias = {
@@ -28,3 +27,7 @@ const config: StorybookConfig = {
   },
 }
 export default config
+
+function getAbsolutePath(value: string): any {
+  return dirname(require.resolve(join(value, "package.json")));
+}
