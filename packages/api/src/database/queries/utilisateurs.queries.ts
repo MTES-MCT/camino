@@ -1,7 +1,17 @@
 import { sql } from '@pgtyped/runtime'
 import { Effect, pipe } from 'effect'
 import { DbQueryAccessError, Redefine, dbQueryAndValidate, effectDbQueryAndValidate } from '../../pg-database'
-import { AdminUserNotNull, EntrepriseUserNotNull, User, UserNotNull, UtilisateurId, roleValidator, userNotNullValidator, utilisateurIdValidator } from 'camino-common/src/roles'
+import {
+  AdminUserNotNull,
+  EntrepriseUserNotNull,
+  User,
+  UserNotNull,
+  UtilisateurId,
+  isEntrepriseOrBureauDEtude,
+  roleValidator,
+  userNotNullValidator,
+  utilisateurIdValidator,
+} from 'camino-common/src/roles'
 import { z } from 'zod'
 import { CaminoError } from 'camino-common/src/zod-tools'
 import { Pool } from 'pg'
@@ -9,6 +19,8 @@ import { administrationIdValidator } from 'camino-common/src/static/administrati
 import { canReadUtilisateur, canReadUtilisateurs } from 'camino-common/src/permissions/utilisateurs'
 import { UtilisateursSearchParamsInput, UtilisateursSearchParams } from 'camino-common/src/utilisateur'
 import {
+  ICreateUtilisateurDbQuery,
+  ICreateUtilisateurEntrepriseDbQuery,
   IGetKeycloakIdByUserIdDbQuery,
   IGetUtilisateurByEmailDbQuery,
   IGetUtilisateurByIdDbQuery,
@@ -19,6 +31,7 @@ import {
 import { ZodUnparseable, callAndExit, zodParseEffect } from '../../tools/fp-tools'
 import { DeepReadonly, NonEmptyArray, Nullable, isNotNullNorUndefinedNorEmpty, isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools'
 import { EntrepriseId, entrepriseIdValidator } from 'camino-common/src/entreprise'
+import { CaminoDate } from 'camino-common/src/date'
 
 const getUtilisateursValidator = z.object({
   id: utilisateurIdValidator,
@@ -257,3 +270,36 @@ const getUtilisateurByKeycloakIdDb = sql<Redefine<IGetUtilisateurByKeycloakIdDbQ
   where u.keycloak_id = $keycloakId!
   limit 1
   `
+
+type CreateUser = UserNotNull & {
+  date_creation: CaminoDate
+  keycloak_id: string
+}
+
+export const createUtilisateur = async (pool: Pool, user: CreateUser): Promise<UserNotNull> => {
+  await dbQueryAndValidate(
+    createUtilisateurDb,
+    {
+      ...user,
+      administrationId: 'administrationId' in user ? user.administrationId : null,
+    },
+    pool,
+    z.void()
+  )
+
+  if (isEntrepriseOrBureauDEtude(user)) {
+    for (const entreprise_id of user.entrepriseIds) {
+      await dbQueryAndValidate(createUtilisateurEntrepriseDb, { utilisateur_id: user.id, entreprise_id }, pool, z.void())
+    }
+  }
+
+  return user
+}
+const createUtilisateurDb = sql<Redefine<ICreateUtilisateurDbQuery, Omit<CreateUser, 'administrationId' | 'entrepriseIds'> & Nullable<Pick<AdminUserNotNull, 'administrationId'>>, void>>`
+  insert into utilisateurs (id, email, nom, prenom, role, date_creation, keycloak_id, administration_id, telephone_fixe, telephone_mobile)
+  values ($id!, $email!, $nom!, $prenom!, $role!, $date_creation!, $keycloak_id!, $administrationId!, $telephone_fixe!, $telephone_mobile!)
+  `
+
+const createUtilisateurEntrepriseDb = sql<Redefine<ICreateUtilisateurEntrepriseDbQuery, { utilisateur_id: UtilisateurId; entreprise_id: EntrepriseId }, void>>`
+  insert into utilisateurs__entreprises (utilisateur_id, entreprise_id)
+  values ($utilisateur_id!, $entreprise_id!)`

@@ -1,10 +1,9 @@
 import { dbManager } from '../../../tests/db-manager'
 import { beforeAll, expect, afterAll, test, vi, describe } from 'vitest'
-import { getUtilisateurByKeycloakId, getUtilisateursEmailsByEntrepriseIds, newGetUtilisateurById } from './utilisateurs.queries'
+import { createUtilisateur, getUtilisateurByKeycloakId, getUtilisateursEmailsByEntrepriseIds, newGetUtilisateurById } from './utilisateurs.queries'
 import { Pool } from 'pg'
 import { newEntrepriseId } from 'camino-common/src/entreprise'
 import { entrepriseUpsert } from './entreprises'
-import { utilisateurCreate } from './utilisateurs'
 import { newUtilisateurId } from '../models/_format/id-create'
 import { getCurrent } from 'camino-common/src/date'
 import { callAndExit } from '../../tools/fp-tools'
@@ -43,32 +42,30 @@ describe('getUtilisateursEmailsByEntrepriseIds', () => {
     })
 
     const utilisateurId = newUtilisateurId('utilisateur_id')
-    await utilisateurCreate(
-      {
-        id: utilisateurId,
-        prenom: `jean`,
-        nom: `dupont`,
-        email: `jean@dupont.fr`,
-        dateCreation: getCurrent(),
-        keycloakId: 'iduser-keycloak',
-        role: 'entreprise',
-        entreprises: [{ id: entrepriseId }],
-      },
-      {}
-    )
-    await utilisateurCreate(
-      {
-        id: newUtilisateurId('utilisateur_id2'),
-        prenom: `antoine`,
-        nom: `dupont`,
-        email: `antoine@dupont.fr`,
-        dateCreation: getCurrent(),
-        keycloakId: 'iduser-keycloak',
-        role: 'entreprise',
-        entreprises: [{ id: entrepriseId2 }],
-      },
-      {}
-    )
+    await createUtilisateur(dbPool, {
+      id: utilisateurId,
+      prenom: `jean`,
+      nom: `dupont`,
+      email: `jean@dupont.fr`,
+      date_creation: getCurrent(),
+      keycloak_id: 'iduser-keycloak',
+      role: 'entreprise',
+      entrepriseIds: [entrepriseId],
+      telephone_fixe: null,
+      telephone_mobile: null,
+    })
+    await createUtilisateur(dbPool, {
+      id: newUtilisateurId('utilisateur_id2'),
+      prenom: `antoine`,
+      nom: `dupont`,
+      email: `antoine@dupont.fr`,
+      date_creation: getCurrent(),
+      keycloak_id: 'iduser-keycloak',
+      role: 'entreprise',
+      entrepriseIds: [entrepriseId2],
+      telephone_fixe: null,
+      telephone_mobile: null,
+    })
 
     const result = await getUtilisateursEmailsByEntrepriseIds(dbPool, [entrepriseId])
     expect(result).toHaveLength(1)
@@ -85,19 +82,18 @@ describe('newGetUtilisateurById', () => {
     })
 
     const utilisateurId = newUtilisateurId()
-    await utilisateurCreate(
-      {
-        id: utilisateurId,
-        prenom: `jean`,
-        nom: `dupont`,
-        email: newUtilisateurId(),
-        dateCreation: getCurrent(),
-        keycloakId: 'iduser-keycloak',
-        role: 'entreprise',
-        entreprises: [{ id: entrepriseId }],
-      },
-      {}
-    )
+    await createUtilisateur(dbPool, {
+      id: utilisateurId,
+      prenom: `jean`,
+      nom: `dupont`,
+      email: newUtilisateurId(),
+      date_creation: getCurrent(),
+      keycloak_id: 'iduser-keycloak',
+      role: 'entreprise',
+      entrepriseIds: [entrepriseId],
+      telephone_fixe: null,
+      telephone_mobile: null,
+    })
 
     const result = await callAndExit(newGetUtilisateurById(dbPool, utilisateurId, userSuper), async r => r)
 
@@ -105,19 +101,18 @@ describe('newGetUtilisateurById', () => {
   })
   test('peut récupérer un utilisateur admin', async () => {
     const utilisateurId = newUtilisateurId()
-    await utilisateurCreate(
-      {
-        id: utilisateurId,
-        prenom: `jean`,
-        nom: `dupont`,
-        email: newUtilisateurId(),
-        dateCreation: getCurrent(),
-        keycloakId: 'iduser-keycloak',
-        role: 'admin',
-        administrationId: 'aut-mrae-guyane-01',
-      },
-      {}
-    )
+    await createUtilisateur(dbPool, {
+      id: utilisateurId,
+      prenom: `jean`,
+      nom: `dupont`,
+      email: newUtilisateurId(),
+      date_creation: getCurrent(),
+      keycloak_id: 'iduser-keycloak',
+      role: 'admin',
+      administrationId: 'aut-mrae-guyane-01',
+      telephone_fixe: null,
+      telephone_mobile: null,
+    })
 
     const result = await callAndExit(newGetUtilisateurById(dbPool, utilisateurId, userSuper), async r => r)
 
@@ -128,19 +123,18 @@ describe('newGetUtilisateurById', () => {
 describe('getUtilisateurByKeycloakId', () => {
   test('peut récupérer un utilisateur admin', async () => {
     const utilisateurId = newUtilisateurId()
-    await utilisateurCreate(
-      {
-        id: utilisateurId,
-        prenom: `jean`,
-        nom: `dupont`,
-        email: newUtilisateurId(),
-        dateCreation: getCurrent(),
-        keycloakId: utilisateurId,
-        role: 'admin',
-        administrationId: 'aut-mrae-guyane-01',
-      },
-      {}
-    )
+    await createUtilisateur(dbPool, {
+      id: utilisateurId,
+      prenom: `jean`,
+      nom: `dupont`,
+      email: newUtilisateurId(),
+      date_creation: getCurrent(),
+      keycloak_id: utilisateurId,
+      role: 'admin',
+      administrationId: 'aut-mrae-guyane-01',
+      telephone_fixe: null,
+      telephone_mobile: null,
+    })
 
     const result = await getUtilisateurByKeycloakId(dbPool, utilisateurId)
     expect(result?.id).toEqual(utilisateurId)

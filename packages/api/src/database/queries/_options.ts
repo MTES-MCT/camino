@@ -102,7 +102,7 @@ export default {
 export type FieldId = { id?: Record<string, never> }
 export type FieldsEntreprise = FieldId
 
-export type FieldsUtilisateur = FieldId & {
+type FieldsUtilisateur = FieldId & {
   entreprises?: FieldsEntreprise
 }
 export type FieldsTitre = FieldId & {

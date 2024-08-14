@@ -22,6 +22,7 @@ import { getKeycloakIdByUserId, getUtilisateurById, getUtilisateursFilteredAndSo
 import { DbQueryAccessError } from '../../pg-database'
 import { callAndExit, ZodUnparseable } from '../../tools/fp-tools'
 import { z } from 'zod'
+import { getEntreprises } from './entreprises.queries'
 
 export const isSubscribedToNewsletter =
   (pool: Pool) =>
@@ -272,7 +273,9 @@ export const utilisateurs =
 
     return callAndExit(getUtilisateursFilteredAndSorted(pool, user, searchParams), async utilisateurs => {
       const format = searchParams.format
-      const contenu = tableConvert('utilisateurs', utilisateursFormatTable(utilisateurs), format)
+
+      const entreprises = await getEntreprises(pool)
+      const contenu = tableConvert('utilisateurs', utilisateursFormatTable(utilisateurs, entreprises), format)
 
       return contenu
         ? {
