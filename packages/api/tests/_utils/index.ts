@@ -3,7 +3,7 @@ import path from 'path'
 import jwt from 'jsonwebtoken'
 import request from 'supertest'
 import type { Pool } from 'pg'
-import { Index, IUtilisateur } from '../../src/types'
+import { Index } from '../../src/types'
 
 import { app } from '../app'
 import { userSuper } from '../../src/database/user-super'
@@ -34,10 +34,6 @@ export const queryImport = (nom: string): string =>
     .readFileSync(path.join(__dirname, `../queries/${nom}.graphql`))
     // important pour transformer le buffer en string
     .toString()
-
-const tokenCreate = (user: Partial<IUtilisateur>) => {
-  return jwt.sign(JSON.stringify(user), config().JWT_SECRET)
-}
 
 export const graphQLCall = async (
   pool: Pool,
@@ -183,5 +179,5 @@ export const userGenerate = async (pool: Pool, user: TestUser): Promise<UserNotN
 const userTokenGenerate = async (pool: Pool, user: TestUser) => {
   const userInDb = await userGenerate(pool, user)
 
-  return tokenCreate(userInDb)
+  return jwt.sign(JSON.stringify(userInDb), config().JWT_SECRET)
 }

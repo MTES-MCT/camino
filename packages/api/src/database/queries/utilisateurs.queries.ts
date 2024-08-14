@@ -27,6 +27,7 @@ import {
   IGetUtilisateurByEmailDbQuery,
   IGetUtilisateurByIdDbQuery,
   IGetUtilisateurByKeycloakIdDbQuery,
+  IGetUtilisateurByTitreIdDbQuery,
   IGetUtilisateursDbQuery,
   IGetUtilisateursEmailsByEntrepriseIdsDbQuery,
   ISoftDeleteUtilisateurDbQuery,
@@ -37,6 +38,7 @@ import { ZodUnparseable, callAndExit, zodParseEffect } from '../../tools/fp-tool
 import { DeepReadonly, NonEmptyArray, Nullable, isNotNullNorUndefinedNorEmpty, isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools'
 import { EntrepriseId, entrepriseIdValidator } from 'camino-common/src/entreprise'
 import { CaminoDate } from 'camino-common/src/date'
+import { TitreId } from 'camino-common/src/validators/titres'
 
 const getUtilisateursValidator = z.object({
   id: utilisateurIdValidator,
@@ -276,6 +278,31 @@ const getUtilisateurByKeycloakIdDb = sql<Redefine<IGetUtilisateurByKeycloakIdDbQ
   limit 1
   `
 
+export const getUtilisateursByTitreId = async (pool: Pool, titreId: TitreId): Promise<UserNotNull[]> => {
+  const result = await dbQueryAndValidate(getUtilisateurByTitreIdDb, { titreId }, pool, getUtilisateursValidator)
+
+  if (isNullOrUndefinedOrEmpty(result)) {
+    return []
+  }
+
+  return z.array(userNotNullValidator).parse(result.map(userDbToUser))
+}
+
+const getUtilisateurByTitreIdDb = sql<Redefine<IGetUtilisateurByTitreIdDbQuery, { titreId: TitreId }, GetUtilisateur>>`
+  select
+     u.id,
+     u.email,
+     u.nom,
+     u.prenom,
+     u.telephone_fixe,
+     u.telephone_mobile,
+     u.role,
+     u.administration_id,
+     (select array_agg(entreprise_id) from utilisateurs__entreprises where utilisateur_id = id) as entreprise_ids
+  from utilisateurs__titres ut
+  join utilisateurs u on u.id = ut.utilisateur_id
+  where ut.titre_id = $titreId! and u.keycloak_id is not null
+  `
 type CreateUser = UserNotNull & {
   date_creation: CaminoDate
   keycloak_id: string

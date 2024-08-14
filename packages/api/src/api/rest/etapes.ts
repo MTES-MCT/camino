@@ -621,7 +621,7 @@ export const createEtape =
                         }
 
                         await titreEtapeAdministrationsEmailsSend(etapeUpdated, titreDemarche.typeId, titreDemarche.titreId, titreDemarche.titre.typeId, user)
-                        await titreEtapeUtilisateursEmailsSend(etapeUpdated, titreDemarche.titreId)
+                        await titreEtapeUtilisateursEmailsSend(etapeUpdated, titreDemarche.titreId, pool)
 
                         res.json(etapeUpdated.id)
                       }

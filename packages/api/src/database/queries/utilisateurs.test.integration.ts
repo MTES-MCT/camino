@@ -1,6 +1,6 @@
 import { dbManager } from '../../../tests/db-manager'
 import { beforeAll, expect, afterAll, test, vi, describe } from 'vitest'
-import { createUtilisateur, getUtilisateurByKeycloakId, getUtilisateursEmailsByEntrepriseIds, newGetUtilisateurById, updateUtilisateur } from './utilisateurs.queries'
+import { createUtilisateur, getUtilisateurByKeycloakId, getUtilisateursByTitreId, getUtilisateursEmailsByEntrepriseIds, newGetUtilisateurById, updateUtilisateur } from './utilisateurs.queries'
 import { Pool } from 'pg'
 import { newEntrepriseId } from 'camino-common/src/entreprise'
 import { entrepriseUpsert } from './entreprises'
@@ -8,6 +8,8 @@ import { newUtilisateurId } from '../models/_format/id-create'
 import { getCurrent } from 'camino-common/src/date'
 import { callAndExit } from '../../tools/fp-tools'
 import { userSuper } from '../user-super'
+import { createTitre } from '../../api/rest/titre-demande.queries'
+import { utilisateurTitreCreate } from './utilisateurs-titres'
 console.info = vi.fn()
 console.error = vi.fn()
 
@@ -164,6 +166,43 @@ describe('updateUtilisateur', () => {
       nom: 'nouveau nom',
       prenom: 'nouveau prenom',
       email: 'nouveau email',
+    })
+  })
+})
+
+describe('getUtilisateursByTitreId', () => {
+  test('peut récupérer les utilisateurs abonnés à un titre', async () => {
+    const utilisateurId = newUtilisateurId()
+    await createUtilisateur(dbPool, {
+      id: utilisateurId,
+      prenom: `jean`,
+      nom: `dupont`,
+      email: utilisateurId,
+      date_creation: getCurrent(),
+      keycloak_id: utilisateurId,
+      role: 'admin',
+      administrationId: 'aut-mrae-guyane-01',
+      telephone_fixe: null,
+      telephone_mobile: null,
+    })
+
+    const titreId = await callAndExit(createTitre(dbPool, userSuper, { nom: 'mon super titre', references: [], titreTypeId: 'arm' }), async t => t)
+
+    let result = await getUtilisateursByTitreId(dbPool, titreId)
+    expect(result).toHaveLength(0)
+
+    await utilisateurTitreCreate({ titreId, utilisateurId })
+
+    result = await getUtilisateursByTitreId(dbPool, titreId)
+    expect(result[0]).toMatchObject({
+      administrationId: 'aut-mrae-guyane-01',
+      email: utilisateurId,
+      id: utilisateurId,
+      nom: 'dupont',
+      prenom: 'jean',
+      role: 'admin',
+      telephone_fixe: null,
+      telephone_mobile: null,
     })
   })
 })

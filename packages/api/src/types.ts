@@ -1,6 +1,6 @@
 import { AdministrationId } from 'camino-common/src/static/administrations'
 import { CodePostal } from 'camino-common/src/static/departement'
-import { Role, User, UserNotNull, userNotNullValidator, UtilisateurId } from 'camino-common/src/roles'
+import { User } from 'camino-common/src/roles'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
 import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts'
@@ -202,7 +202,6 @@ interface ITitreActivite {
   periodeId: number
   annee: number
   utilisateurId?: string | null
-  utilisateur?: IUtilisateur | null
   dateSaisie?: CaminoDate
   contenu?: IContenu | null
   sections: DeepReadonly<Section[]>
@@ -272,34 +271,9 @@ interface ITitreEtapeFiltre {
   dateFin?: string
 }
 
-interface IUtilisateur {
-  id: UtilisateurId
-  email?: string | null
-  keycloakId?: string | null
-  dateCreation: string
-  nom?: string | null
-  prenom?: string | null
-  telephoneFixe?: string | null
-  telephoneMobile?: string | null
-  role: Role
-  administrationId?: AdministrationId | null
-  entreprises?: IEntreprise[] | null
-  qgisToken?: string | null
-}
-
-export const formatUser = (userInBdd: Pick<IUtilisateur, 'email' | 'id' | 'nom' | 'prenom' | 'administrationId' | 'role' | 'entreprises' | 'telephoneFixe' | 'telephoneMobile'>): UserNotNull =>
-  userNotNullValidator.parse({
-    ...userInBdd,
-    prenom: userInBdd.prenom ?? '',
-    entrepriseIds: userInBdd.entreprises?.map(({ id }) => id),
-    telephone_mobile: userInBdd.telephoneMobile ?? null,
-    telephone_fixe: userInBdd.telephoneFixe ?? null,
-  })
-
 interface IUtilisateurTitre {
   utilisateurId: string
   titreId: string
-  utilisateur?: IUtilisateur | null
 }
 
 export type Context = { user: User; pool: Pool }
@@ -334,7 +308,6 @@ export {
   ITitreDemarche,
   ITitreEtape,
   ITitreEtapeFiltre,
-  IUtilisateur,
   IUtilisateurTitre,
   IPropId,
   ITitreColonneId,

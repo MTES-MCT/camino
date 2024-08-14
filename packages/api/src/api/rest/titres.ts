@@ -324,8 +324,8 @@ export const utilisateurTitreAbonner =
   async (req: CaminoRequest, res: CustomResponse<void>): Promise<void> => {
     const user = req.auth
     const parsedBody = utilisateurTitreAbonneValidator.safeParse(req.body)
-    const titreId: string | undefined = req.params.titreId
-    if (!titreId) {
+    const titreId: TitreId | undefined | null = titreIdValidator.nullable().optional().parse(req.params.titreId)
+    if (isNullOrUndefined(titreId)) {
       res.sendStatus(HTTP_STATUS.BAD_REQUEST)
     } else if (!parsedBody.success) {
       res.sendStatus(HTTP_STATUS.BAD_REQUEST)

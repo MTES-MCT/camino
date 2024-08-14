@@ -123,6 +123,30 @@ export interface IGetUtilisateurByKeycloakIdDbQuery {
   result: IGetUtilisateurByKeycloakIdDbResult;
 }
 
+/** 'GetUtilisateurByTitreIdDb' parameters type */
+export interface IGetUtilisateurByTitreIdDbParams {
+  titreId: string;
+}
+
+/** 'GetUtilisateurByTitreIdDb' return type */
+export interface IGetUtilisateurByTitreIdDbResult {
+  administration_id: string | null;
+  email: string | null;
+  entreprise_ids: stringArray | null;
+  id: string;
+  nom: string | null;
+  prenom: string | null;
+  role: string;
+  telephone_fixe: string | null;
+  telephone_mobile: string | null;
+}
+
+/** 'GetUtilisateurByTitreIdDb' query type */
+export interface IGetUtilisateurByTitreIdDbQuery {
+  params: IGetUtilisateurByTitreIdDbParams;
+  result: IGetUtilisateurByTitreIdDbResult;
+}
+
 /** 'CreateUtilisateurDb' parameters type */
 export interface ICreateUtilisateurDbParams {
   administrationId: string;
