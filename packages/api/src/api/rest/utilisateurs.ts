@@ -1,9 +1,8 @@
-import { utilisateurUpsert } from '../../database/queries/utilisateurs'
 import { CaminoRequest, CustomResponse } from './express-type'
 import { CaminoApiError } from '../../types'
 import { HTTP_STATUS } from 'camino-common/src/http'
 import { isSubscribedToNewsLetter, newsletterSubscriberUpdate } from '../../tools/api-mailjet/newsletter'
-import { isAdministrationRole, isEntrepriseOrBureauDetudeRole, User, UserNotNull, utilisateurIdValidator } from 'camino-common/src/roles'
+import { User, UserNotNull, utilisateurIdValidator } from 'camino-common/src/roles'
 import { utilisateursFormatTable } from './format/utilisateurs'
 import { tableConvert } from './_convert'
 import { fileNameCreate } from '../../tools/file-name-create'
@@ -18,10 +17,18 @@ import { DeepReadonly, isNotNullNorUndefined, isNullOrUndefined } from 'camino-c
 import { config } from '../../config/index'
 import { Effect, Match, pipe } from 'effect'
 import { RestNewGetCall } from '../../server/rest'
-import { getKeycloakIdByUserId, getUtilisateurById, getUtilisateursFilteredAndSorted, newGetUtilisateurById } from '../../database/queries/utilisateurs.queries'
+import {
+  getKeycloakIdByUserId,
+  getUtilisateurById,
+  getUtilisateursFilteredAndSorted,
+  newGetUtilisateurById,
+  softDeleteUtilisateur,
+  updateUtilisateurRole,
+} from '../../database/queries/utilisateurs.queries'
 import { DbQueryAccessError } from '../../pg-database'
 import { callAndExit, ZodUnparseable } from '../../tools/fp-tools'
 import { z } from 'zod'
+import { getEntreprises } from './entreprises.queries'
 
 export const isSubscribedToNewsletter =
   (pool: Pool) =>
@@ -60,16 +67,7 @@ export const updateUtilisateurPermission =
 
           utilisateurUpdationValidate(user, utilisateur, utilisateurOld)
 
-          // Thanks Objection
-          if (!isAdministrationRole(utilisateur.role)) {
-            utilisateur.administrationId = null
-          }
-          if (!isEntrepriseOrBureauDetudeRole(utilisateur.role)) {
-            utilisateur.entreprises = []
-          }
-
-          // TODO 2023-03-13: le jour où les entreprises sont un tableau d'ids dans la table user, passer à knex
-          await utilisateurUpsert({ ...utilisateur, entreprises: utilisateur.entreprises.map(id => ({ id })) })
+          await updateUtilisateurRole(pool, utilisateur)
 
           res.sendStatus(HTTP_STATUS.NO_CONTENT)
         } catch (e) {
@@ -148,7 +146,7 @@ export const deleteUtilisateur =
           throw new Error(`une erreur est apparue durant la suppression de l'utilisateur sur keycloak`)
         }
 
-        await utilisateurUpsert({ id: utilisateurId, email: null, keycloakId: null })
+        await softDeleteUtilisateur(pool, utilisateurId)
 
         if (isNotNullNorUndefined(user) && user.id === req.params.id) {
           const uiUrl = config().OAUTH_URL
@@ -272,7 +270,9 @@ export const utilisateurs =
 
     return callAndExit(getUtilisateursFilteredAndSorted(pool, user, searchParams), async utilisateurs => {
       const format = searchParams.format
-      const contenu = tableConvert('utilisateurs', utilisateursFormatTable(utilisateurs), format)
+
+      const entreprises = await getEntreprises(pool)
+      const contenu = tableConvert('utilisateurs', utilisateursFormatTable(utilisateurs, entreprises), format)
 
       return contenu
         ? {

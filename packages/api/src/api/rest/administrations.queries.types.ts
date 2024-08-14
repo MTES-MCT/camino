@@ -7,7 +7,6 @@ export interface IGetUtilisateursByAdministrationIdDbParams {
 
 /** 'GetUtilisateursByAdministrationIdDb' return type */
 export interface IGetUtilisateursByAdministrationIdDbResult {
-  administration_id: string | null;
   email: string | null;
   id: string;
   nom: string | null;

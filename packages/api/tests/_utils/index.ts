@@ -3,10 +3,9 @@ import path from 'path'
 import jwt from 'jsonwebtoken'
 import request from 'supertest'
 import type { Pool } from 'pg'
-import { formatUser, Index, IUtilisateur } from '../../src/types'
+import { Index } from '../../src/types'
 
 import { app } from '../app'
-import { utilisateurCreate } from '../../src/database/queries/utilisateurs'
 import { userSuper } from '../../src/database/user-super'
 import { AdminUserNotNull, isAdministrationRole, isSuperRole, UserNotNull } from 'camino-common/src/roles'
 import { TestUser } from 'camino-common/src/tests-utils'
@@ -28,17 +27,13 @@ import { newUtilisateurId } from '../../src/database/models/_format/id-create'
 import { idUserKeycloakRecognised } from '../keycloak'
 import { DeepReadonly, isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools'
 import { config } from '../../src/config/index'
-import { getUtilisateurById } from '../../src/database/queries/utilisateurs.queries'
+import { createUtilisateur, getUtilisateurById } from '../../src/database/queries/utilisateurs.queries'
 
 export const queryImport = (nom: string): string =>
   fs
     .readFileSync(path.join(__dirname, `../queries/${nom}.graphql`))
     // important pour transformer le buffer en string
     .toString()
-
-const tokenCreate = (user: Partial<IUtilisateur>) => {
-  return jwt.sign(JSON.stringify(user), config().JWT_SECRET)
-}
 
 export const graphQLCall = async (
   pool: Pool,
@@ -164,23 +159,19 @@ export const userGenerate = async (pool: Pool, user: TestUser): Promise<UserNotN
   const userInDb = await getUtilisateurById(pool, id, userSuper)
 
   if (isNullOrUndefined(userInDb)) {
-    const newUser = await utilisateurCreate(
-      {
-        id,
-        prenom: `prenom-${user.role}`,
-        nom: `nom-${user.role}`,
-        email: `${id}@camino.local`,
-        dateCreation: getCurrent(),
-        keycloakId: idUserKeycloakRecognised,
-        role: user.role,
-        administrationId: 'administrationId' in user ? user.administrationId : null,
-        entreprises: 'entrepriseIds' in user ? user.entrepriseIds?.map(id => ({ id })) : null,
-      },
-      {}
-      // TODO 2023-05-24: pg-typed utilisateurCreate
-    )
+    const newUser = await createUtilisateur(pool, {
+      ...user,
+      id,
+      prenom: `prenom-${user.role}`,
+      nom: `nom-${user.role}`,
+      email: `${id}@camino.local`,
+      date_creation: getCurrent(),
+      keycloak_id: idUserKeycloakRecognised,
+      telephone_fixe: null,
+      telephone_mobile: null,
+    })
 
-    return formatUser(newUser)
+    return newUser
   }
 
   return userInDb
@@ -188,5 +179,5 @@ export const userGenerate = async (pool: Pool, user: TestUser): Promise<UserNotN
 const userTokenGenerate = async (pool: Pool, user: TestUser) => {
   const userInDb = await userGenerate(pool, user)
 
-  return tokenCreate(userInDb)
+  return jwt.sign(JSON.stringify(userInDb), config().JWT_SECRET)
 }

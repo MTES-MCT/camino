@@ -1,7 +1,24 @@
 import { Model, Pojo } from 'objection'
 
-import { IUtilisateur } from '../../types'
 import Entreprises from './entreprises'
+import { Role, UtilisateurId } from 'camino-common/src/roles'
+import { AdministrationId } from 'camino-common/src/static/administrations'
+import { IEntreprise } from '../../types'
+
+interface IUtilisateur {
+  id: UtilisateurId
+  email?: string | null
+  keycloakId?: string | null
+  dateCreation: string
+  nom?: string | null
+  prenom?: string | null
+  telephoneFixe?: string | null
+  telephoneMobile?: string | null
+  role: Role
+  administrationId?: AdministrationId | null
+  entreprises?: IEntreprise[] | null
+  qgisToken?: string | null
+}
 
 interface Utilisateurs extends IUtilisateur {}
 

@@ -64,7 +64,7 @@ describe('utilisateurModifier', () => {
     const utilisateurToEdit: UtilisateurToEdit = {
       id: newUtilisateurId('test'),
       role: 'defaut',
-      entreprises: [],
+      entrepriseIds: [],
       administrationId: null,
     }
     const tested = await restPostCall(dbPool, '/rest/utilisateurs/:id/permission', { id: utilisateurToEdit.id }, undefined, utilisateurToEdit)
@@ -78,7 +78,7 @@ describe('utilisateurModifier', () => {
     const utilisateurToEdit: UtilisateurToEdit = {
       id: userToEdit.id,
       role: 'admin',
-      entreprises: [],
+      entrepriseIds: [],
       administrationId: 'aut-97300-01',
     }
     const tested = await restPostCall(

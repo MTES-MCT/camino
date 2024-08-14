@@ -1,8 +1,7 @@
-import { ITitreEtape, formatUser } from '../../../types'
+import { ITitreEtape } from '../../../types'
 
 import { emailsSend } from '../../../tools/api-mailjet/emails'
 import { titreEtapeGet } from '../../../database/queries/titres-etapes'
-import { utilisateursTitresGet } from '../../../database/queries/utilisateurs'
 import { titreUrlGet } from '../../../business/utils/urls-get'
 import { EmailAdministration } from '../../../tools/api-mailjet/types'
 import { UserNotNull } from 'camino-common/src/roles'
@@ -12,6 +11,8 @@ import { ETAPE_IS_BROUILLON, ETAPE_IS_NOT_BROUILLON } from 'camino-common/src/et
 import { TitreId } from 'camino-common/src/validators/titres'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
+import { getUtilisateursByTitreId } from '../../../database/queries/utilisateurs.queries'
+import { Pool } from 'pg'
 
 const emailForAdministrationContentFormat = (titreTypeId: TitreTypeId, etapeNom: string, titreId: TitreId, user: UserNotNull) => {
   const titreUrl = titreUrlGet(titreId)
@@ -103,23 +104,18 @@ export const titreEtapeAdministrationsEmailsSend = async (
   }
 }
 
-export const titreEtapeUtilisateursEmailsSend = async (etape: ITitreEtape, titreId: TitreId): Promise<void> => {
+export const titreEtapeUtilisateursEmailsSend = async (etape: ITitreEtape, titreId: TitreId, pool: Pool): Promise<void> => {
   const utilisateursEmails = [] as string[]
 
-  const utilisateursTitres = await utilisateursTitresGet(titreId, {
-    fields: { utilisateur: { id: {}, entreprises: { id: {} } } },
-  })
+  const utilisateursTitres = await getUtilisateursByTitreId(pool, titreId)
 
-  const utilisateurs = utilisateursTitres?.map(utilisateurTitre => utilisateurTitre.utilisateur).filter(utilisateur => isNotNullNorUndefinedNorEmpty(utilisateur?.email))
+  const utilisateurs = utilisateursTitres?.filter(utilisateur => isNotNullNorUndefinedNorEmpty(utilisateur?.email))
 
   for (const utilisateur of utilisateurs) {
-    if (utilisateur) {
-      const user = formatUser(utilisateur)
-      // On vérifie que l’utilisateur puisse voir l’étape
-      const titreEtape = await titreEtapeGet(etape.id, { fields: { id: {} } }, user)
-      if (isNotNullNorUndefined(titreEtape)) {
-        utilisateursEmails.push(user.email)
-      }
+    // On vérifie que l’utilisateur puisse voir l’étape
+    const titreEtape = await titreEtapeGet(etape.id, { fields: { id: {} } }, utilisateur)
+    if (isNotNullNorUndefined(titreEtape)) {
+      utilisateursEmails.push(utilisateur.email)
     }
   }
 

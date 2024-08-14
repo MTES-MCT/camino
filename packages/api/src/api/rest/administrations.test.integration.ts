@@ -57,7 +57,6 @@ describe('getAdministrationUtilisateurs', () => {
       expect(tested.body).toEqual([
         {
           administrationId: 'dea-guyane-01',
-          administration_id: 'dea-guyane-01',
           email: 'admin-user-dea-guyane-01@camino.local',
           id: 'admin-user-dea-guyane-01',
           nom: 'nom-admin',

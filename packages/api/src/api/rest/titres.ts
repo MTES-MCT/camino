@@ -18,7 +18,7 @@ import { ETAPES_TYPES, EtapeTypeId } from 'camino-common/src/static/etapesTypes'
 import { CaminoDate, getCurrent } from 'camino-common/src/date'
 import { isAdministration, User } from 'camino-common/src/roles'
 import { canEditDemarche, canCreateTravaux } from 'camino-common/src/permissions/titres-demarches'
-import { utilisateurTitreCreate, utilisateurTitreDelete } from '../../database/queries/utilisateurs'
+import { utilisateurTitreCreate, utilisateurTitreDelete } from '../../database/queries/utilisateurs-titres'
 import { titreUpdateTask } from '../../business/titre-update'
 import { getDoublonsByTitreId, getTitre as getTitreDb } from './titres.queries'
 import type { Pool } from 'pg'
@@ -324,8 +324,8 @@ export const utilisateurTitreAbonner =
   async (req: CaminoRequest, res: CustomResponse<void>): Promise<void> => {
     const user = req.auth
     const parsedBody = utilisateurTitreAbonneValidator.safeParse(req.body)
-    const titreId: string | undefined = req.params.titreId
-    if (!titreId) {
+    const titreId: TitreId | undefined | null = titreIdValidator.nullable().optional().parse(req.params.titreId)
+    if (isNullOrUndefined(titreId)) {
       res.sendStatus(HTTP_STATUS.BAD_REQUEST)
     } else if (!parsedBody.success) {
       res.sendStatus(HTTP_STATUS.BAD_REQUEST)

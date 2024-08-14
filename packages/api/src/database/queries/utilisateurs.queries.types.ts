@@ -123,3 +123,126 @@ export interface IGetUtilisateurByKeycloakIdDbQuery {
   result: IGetUtilisateurByKeycloakIdDbResult;
 }
 
+/** 'GetUtilisateurByTitreIdDb' parameters type */
+export interface IGetUtilisateurByTitreIdDbParams {
+  titreId: string;
+}
+
+/** 'GetUtilisateurByTitreIdDb' return type */
+export interface IGetUtilisateurByTitreIdDbResult {
+  administration_id: string | null;
+  email: string | null;
+  entreprise_ids: stringArray | null;
+  id: string;
+  nom: string | null;
+  prenom: string | null;
+  role: string;
+  telephone_fixe: string | null;
+  telephone_mobile: string | null;
+}
+
+/** 'GetUtilisateurByTitreIdDb' query type */
+export interface IGetUtilisateurByTitreIdDbQuery {
+  params: IGetUtilisateurByTitreIdDbParams;
+  result: IGetUtilisateurByTitreIdDbResult;
+}
+
+/** 'CreateUtilisateurDb' parameters type */
+export interface ICreateUtilisateurDbParams {
+  administrationId: string;
+  date_creation: string;
+  email: string;
+  id: string;
+  keycloak_id: string;
+  nom: string;
+  prenom: string;
+  role: string;
+  telephone_fixe: string;
+  telephone_mobile: string;
+}
+
+/** 'CreateUtilisateurDb' return type */
+export type ICreateUtilisateurDbResult = void;
+
+/** 'CreateUtilisateurDb' query type */
+export interface ICreateUtilisateurDbQuery {
+  params: ICreateUtilisateurDbParams;
+  result: ICreateUtilisateurDbResult;
+}
+
+/** 'CreateUtilisateurEntrepriseDb' parameters type */
+export interface ICreateUtilisateurEntrepriseDbParams {
+  entreprise_id: string;
+  utilisateur_id: string;
+}
+
+/** 'CreateUtilisateurEntrepriseDb' return type */
+export type ICreateUtilisateurEntrepriseDbResult = void;
+
+/** 'CreateUtilisateurEntrepriseDb' query type */
+export interface ICreateUtilisateurEntrepriseDbQuery {
+  params: ICreateUtilisateurEntrepriseDbParams;
+  result: ICreateUtilisateurEntrepriseDbResult;
+}
+
+/** 'DeleteUtilisateurEntrepriseDb' parameters type */
+export interface IDeleteUtilisateurEntrepriseDbParams {
+  utilisateur_id: string;
+}
+
+/** 'DeleteUtilisateurEntrepriseDb' return type */
+export type IDeleteUtilisateurEntrepriseDbResult = void;
+
+/** 'DeleteUtilisateurEntrepriseDb' query type */
+export interface IDeleteUtilisateurEntrepriseDbQuery {
+  params: IDeleteUtilisateurEntrepriseDbParams;
+  result: IDeleteUtilisateurEntrepriseDbResult;
+}
+
+/** 'UpdateUtilisateurDb' parameters type */
+export interface IUpdateUtilisateurDbParams {
+  email: string;
+  id: string;
+  nom: string;
+  prenom: string;
+}
+
+/** 'UpdateUtilisateurDb' return type */
+export type IUpdateUtilisateurDbResult = void;
+
+/** 'UpdateUtilisateurDb' query type */
+export interface IUpdateUtilisateurDbQuery {
+  params: IUpdateUtilisateurDbParams;
+  result: IUpdateUtilisateurDbResult;
+}
+
+/** 'UpdateUtilisateurRoleDb' parameters type */
+export interface IUpdateUtilisateurRoleDbParams {
+  administrationId: string;
+  id: string;
+  role: string;
+}
+
+/** 'UpdateUtilisateurRoleDb' return type */
+export type IUpdateUtilisateurRoleDbResult = void;
+
+/** 'UpdateUtilisateurRoleDb' query type */
+export interface IUpdateUtilisateurRoleDbQuery {
+  params: IUpdateUtilisateurRoleDbParams;
+  result: IUpdateUtilisateurRoleDbResult;
+}
+
+/** 'SoftDeleteUtilisateurDb' parameters type */
+export interface ISoftDeleteUtilisateurDbParams {
+  id: string;
+}
+
+/** 'SoftDeleteUtilisateurDb' return type */
+export type ISoftDeleteUtilisateurDbResult = void;
+
+/** 'SoftDeleteUtilisateurDb' query type */
+export interface ISoftDeleteUtilisateurDbQuery {
+  params: ISoftDeleteUtilisateurDbParams;
+  result: ISoftDeleteUtilisateurDbResult;
+}
+
