@@ -1,6 +1,6 @@
 import { dbManager } from '../../../tests/db-manager'
 import { beforeAll, expect, afterAll, test, vi, describe } from 'vitest'
-import { createUtilisateur, getUtilisateurByKeycloakId, getUtilisateursEmailsByEntrepriseIds, newGetUtilisateurById } from './utilisateurs.queries'
+import { createUtilisateur, getUtilisateurByKeycloakId, getUtilisateursEmailsByEntrepriseIds, newGetUtilisateurById, updateUtilisateur } from './utilisateurs.queries'
 import { Pool } from 'pg'
 import { newEntrepriseId } from 'camino-common/src/entreprise'
 import { entrepriseUpsert } from './entreprises'
@@ -138,5 +138,32 @@ describe('getUtilisateurByKeycloakId', () => {
 
     const result = await getUtilisateurByKeycloakId(dbPool, utilisateurId)
     expect(result?.id).toEqual(utilisateurId)
+  })
+})
+
+describe('updateUtilisateur', () => {
+  test('peut récupérer un utilisateur admin', async () => {
+    const utilisateurId = newUtilisateurId()
+    const utilisateur = await createUtilisateur(dbPool, {
+      id: utilisateurId,
+      prenom: `jean`,
+      nom: `dupont`,
+      email: newUtilisateurId(),
+      date_creation: getCurrent(),
+      keycloak_id: utilisateurId,
+      role: 'admin',
+      administrationId: 'aut-mrae-guyane-01',
+      telephone_fixe: null,
+      telephone_mobile: null,
+    })
+
+    await updateUtilisateur(dbPool, { ...utilisateur, nom: 'nouveau nom', prenom: 'nouveau prenom', email: 'nouveau email' })
+
+    const newUtilisateur = await getUtilisateurByKeycloakId(dbPool, utilisateurId)
+    expect(newUtilisateur).toMatchObject({
+      nom: 'nouveau nom',
+      prenom: 'nouveau prenom',
+      email: 'nouveau email',
+    })
   })
 })

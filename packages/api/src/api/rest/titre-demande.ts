@@ -19,7 +19,7 @@ import { CreateTitreErrors, CreateDemarcheErrors, createTitre, createDemarche } 
 import { titreEtapeUpsert } from '../../database/queries/titres-etapes'
 import { getCurrent } from 'camino-common/src/date'
 import { titreEtapeUpdateTask } from '../../business/titre-etape-update'
-import { utilisateurTitreCreate } from '../../database/queries/utilisateurs'
+import { utilisateurTitreCreate } from '../../database/queries/utilisateurs-titres'
 import { RestNewPostCall } from '../../server/rest'
 
 type TitreDemandeCreerErrors =

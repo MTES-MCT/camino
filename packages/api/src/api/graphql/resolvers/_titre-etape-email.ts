@@ -2,7 +2,7 @@ import { ITitreEtape, formatUser } from '../../../types'
 
 import { emailsSend } from '../../../tools/api-mailjet/emails'
 import { titreEtapeGet } from '../../../database/queries/titres-etapes'
-import { utilisateursTitresGet } from '../../../database/queries/utilisateurs'
+import { utilisateursTitresGet } from '../../../database/queries/utilisateurs-titres'
 import { titreUrlGet } from '../../../business/utils/urls-get'
 import { EmailAdministration } from '../../../tools/api-mailjet/types'
 import { UserNotNull } from 'camino-common/src/roles'

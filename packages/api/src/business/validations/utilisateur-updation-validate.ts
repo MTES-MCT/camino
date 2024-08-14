@@ -20,14 +20,14 @@ const userIsCorrect = (utilisateur: UtilisateurToEdit): boolean => {
   if (!isRole(utilisateur.role)) {
     return false
   }
-  if ((isSuperRole(utilisateur.role) || isDefautRole(utilisateur.role)) && utilisateur.administrationId === null && utilisateur.entreprises?.length === 0) {
+  if ((isSuperRole(utilisateur.role) || isDefautRole(utilisateur.role)) && utilisateur.administrationId === null && utilisateur.entrepriseIds?.length === 0) {
     return true
   }
 
-  if (isAdministrationRole(utilisateur.role) && isAdministrationId(utilisateur.administrationId) && utilisateur.entreprises?.length === 0) {
+  if (isAdministrationRole(utilisateur.role) && isAdministrationId(utilisateur.administrationId) && utilisateur.entrepriseIds?.length === 0) {
     return true
   }
-  if (isEntrepriseOrBureauDetudeRole(utilisateur.role) && utilisateur.administrationId === null && (utilisateur.entreprises?.length ?? 0) > 0) {
+  if (isEntrepriseOrBureauDetudeRole(utilisateur.role) && utilisateur.administrationId === null && (utilisateur.entrepriseIds?.length ?? 0) > 0) {
     return true
   }
 
@@ -60,7 +60,7 @@ export const utilisateurUpdationValidate = (user: UserNotNull, utilisateur: Util
       throw new Error('droits insuffisants pour modifier les administrations')
     }
 
-    if (!isAdministrationAdmin(user) && isEntrepriseOrBureauDEtude(utilisateurOld) && !equalStringArrays(utilisateurOld.entrepriseIds.toSorted(), utilisateur.entreprises.toSorted())) {
+    if (!isAdministrationAdmin(user) && isEntrepriseOrBureauDEtude(utilisateurOld) && !equalStringArrays(utilisateurOld.entrepriseIds.toSorted(), utilisateur.entrepriseIds.toSorted())) {
       throw new Error('droits insuffisants pour modifier les entreprises')
     }
   }

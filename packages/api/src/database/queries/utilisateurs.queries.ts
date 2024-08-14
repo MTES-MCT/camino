@@ -8,6 +8,7 @@ import {
   UserNotNull,
   UtilisateurId,
   isEntrepriseOrBureauDEtude,
+  isEntrepriseOrBureauDetudeRole,
   roleValidator,
   userNotNullValidator,
   utilisateurIdValidator,
@@ -21,12 +22,16 @@ import { UtilisateursSearchParamsInput, UtilisateursSearchParams } from 'camino-
 import {
   ICreateUtilisateurDbQuery,
   ICreateUtilisateurEntrepriseDbQuery,
+  IDeleteUtilisateurEntrepriseDbQuery,
   IGetKeycloakIdByUserIdDbQuery,
   IGetUtilisateurByEmailDbQuery,
   IGetUtilisateurByIdDbQuery,
   IGetUtilisateurByKeycloakIdDbQuery,
   IGetUtilisateursDbQuery,
   IGetUtilisateursEmailsByEntrepriseIdsDbQuery,
+  ISoftDeleteUtilisateurDbQuery,
+  IUpdateUtilisateurDbQuery,
+  IUpdateUtilisateurRoleDbQuery,
 } from './utilisateurs.queries.types'
 import { ZodUnparseable, callAndExit, zodParseEffect } from '../../tools/fp-tools'
 import { DeepReadonly, NonEmptyArray, Nullable, isNotNullNorUndefinedNorEmpty, isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools'
@@ -303,3 +308,41 @@ const createUtilisateurDb = sql<Redefine<ICreateUtilisateurDbQuery, Omit<CreateU
 const createUtilisateurEntrepriseDb = sql<Redefine<ICreateUtilisateurEntrepriseDbQuery, { utilisateur_id: UtilisateurId; entreprise_id: EntrepriseId }, void>>`
   insert into utilisateurs__entreprises (utilisateur_id, entreprise_id)
   values ($utilisateur_id!, $entreprise_id!)`
+
+const deleteUtilisateurEntrepriseDb = sql<Redefine<IDeleteUtilisateurEntrepriseDbQuery, { utilisateur_id: UtilisateurId }, void>>`
+  delete from utilisateurs__entreprises where utilisateur_id = $utilisateur_id!`
+
+export const updateUtilisateur = async (pool: Pool, user: DeepReadonly<UserNotNull>): Promise<DeepReadonly<UserNotNull>> => {
+  await dbQueryAndValidate(updateUtilisateurDb, user, pool, z.void())
+
+  return user
+}
+
+const updateUtilisateurDb = sql<Redefine<IUpdateUtilisateurDbQuery, Pick<UserNotNull, 'id' | 'nom' | 'prenom' | 'email'>, void>>`
+  update utilisateurs set nom = $nom!, prenom = $prenom!, email = $email! where id = $id!
+  `
+
+type UpdateUtilisateurRole = DeepReadonly<Pick<UserNotNull, 'id' | 'role'> & Nullable<Pick<AdminUserNotNull, 'administrationId'>> & Pick<EntrepriseUserNotNull, 'entrepriseIds'>>
+export const updateUtilisateurRole = async (pool: Pool, user: UpdateUtilisateurRole): Promise<void> => {
+  await dbQueryAndValidate(updateUtilisateurRoleDb, user, pool, z.void())
+
+  await dbQueryAndValidate(deleteUtilisateurEntrepriseDb, { utilisateur_id: user.id }, pool, z.void())
+
+  if (isEntrepriseOrBureauDetudeRole(user.role)) {
+    for (const entreprise_id of user.entrepriseIds) {
+      await dbQueryAndValidate(createUtilisateurEntrepriseDb, { utilisateur_id: user.id, entreprise_id }, pool, z.void())
+    }
+  }
+}
+
+const updateUtilisateurRoleDb = sql<Redefine<IUpdateUtilisateurRoleDbQuery, Pick<UserNotNull, 'id' | 'role'> & Nullable<Pick<AdminUserNotNull, 'administrationId'>>, void>>`
+  update utilisateurs set role = $role!, administration_id = $administrationId! where id = $id!
+  `
+
+export const softDeleteUtilisateur = async (pool: Pool, id: UtilisateurId): Promise<void> => {
+  await dbQueryAndValidate(softDeleteUtilisateurDb, { id }, pool, z.void())
+}
+
+const softDeleteUtilisateurDb = sql<Redefine<ISoftDeleteUtilisateurDbQuery, { id: UtilisateurId }, void>>`
+  update utilisateurs set keycloak_id = null, email = null where id = $id!
+  `

@@ -1,14 +1,12 @@
 import express from 'express'
 import { Request as JWTRequest } from 'express-jwt'
-import { knex } from '../knex'
 import { emailsSend, emailsWithTemplateSend } from '../tools/api-mailjet/emails'
-import { formatUser } from '../types'
 import { getCurrent } from 'camino-common/src/date'
 import { EmailTemplateId } from '../tools/api-mailjet/types'
 import { DeepReadonly, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined, isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools'
 import { config } from '../config/index'
 import { Pool } from 'pg'
-import { createUtilisateur, getUtilisateurById, getUtilisateurByKeycloakId } from '../database/queries/utilisateurs.queries'
+import { createUtilisateur, getUtilisateurById, getUtilisateurByKeycloakId, updateUtilisateur } from '../database/queries/utilisateurs.queries'
 import { User, UtilisateurId } from 'camino-common/src/roles'
 import { newUtilisateurId } from '../database/models/_format/id-create'
 import { userSuper } from '../database/user-super'
@@ -70,13 +68,10 @@ export const userLoader =
           const newEmail = reqUser.email ?? user.email
 
           // mise à jour du nom et du prénom de l’utilisateur
-          await knex('utilisateurs').update({ nom: newNom, prenom: newPrenom, email: newEmail }).where('id', user.id)
-          // user.nom = newNom
-          // user.prenom = newPrenom
-          // user.email = newEmail
+          user = await updateUtilisateur(pool, { ...user, nom: newNom, prenom: newPrenom, email: newEmail })
         }
 
-        req.auth = formatUser(user)
+        req.auth = user
       }
 
       next()
