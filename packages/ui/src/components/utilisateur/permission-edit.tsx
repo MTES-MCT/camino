@@ -97,18 +97,18 @@ const PermissionEdit = defineComponent<PermissionEditProps>(props => {
   const updatingUtilisateur = ref<UtilisateurToEdit>({
     id: props.utilisateur.id,
     role: props.utilisateur.role,
-    entreprises: isEntrepriseOrBureauDEtude(props.utilisateur) ? props.utilisateur.entrepriseIds : [],
+    entrepriseIds: isEntrepriseOrBureauDEtude(props.utilisateur) ? props.utilisateur.entrepriseIds : [],
     administrationId: isAdministration(props.utilisateur) ? props.utilisateur.administrationId : null,
   })
 
   const assignableRoles = getAssignableRoles(props.user)
   const onSelectEntreprises = (elements: Element<EntrepriseId>[]) => {
     const entrs = elements.map(({ id }) => id)
-    updatingUtilisateur.value.entreprises.splice(0, updatingUtilisateur.value.entreprises.length, ...entrs)
+    updatingUtilisateur.value.entrepriseIds.splice(0, updatingUtilisateur.value.entrepriseIds.length, ...entrs)
   }
 
   const complete = computed(() => {
-    if (isEntrepriseOrBureauDetudeRole(updatingUtilisateur.value.role) && !updatingUtilisateur.value.entreprises?.length) {
+    if (isEntrepriseOrBureauDetudeRole(updatingUtilisateur.value.role) && !updatingUtilisateur.value.entrepriseIds?.length) {
       return false
     }
 
@@ -132,7 +132,7 @@ const PermissionEdit = defineComponent<PermissionEditProps>(props => {
       }
 
       if (!isEntrepriseOrBureauDetudeRole(updatingUtilisateur.value.role)) {
-        updatingUtilisateur.value.entreprises = []
+        updatingUtilisateur.value.entrepriseIds = []
       }
 
       await props.updateUtilisateur(updatingUtilisateur.value)
@@ -170,7 +170,7 @@ const PermissionEdit = defineComponent<PermissionEditProps>(props => {
                 <TypeAheadSmartMultiple
                   filter={{
                     name: 'Entreprises',
-                    value: updatingUtilisateur.value.entreprises,
+                    value: updatingUtilisateur.value.entrepriseIds,
                     elements: props.entreprises,
                     lazy: false,
                   }}

@@ -9,7 +9,7 @@ export type QGISToken = z.infer<typeof qgisTokenValidator>
 export const utilisateurToEdit = z.object({
   id: utilisateurIdValidator,
   role: z.enum<Role, typeof ROLES>(ROLES),
-  entreprises: z.array(entrepriseIdValidator),
+  entrepriseIds: z.array(entrepriseIdValidator),
   administrationId: z.enum<AdministrationId, typeof IDS>(IDS).nullable(),
 })
 

@@ -21,10 +21,10 @@ import { Effect, pipe } from 'effect'
 export const getUtilisateursByAdministrationId = async (pool: Pool, administrationId: AdministrationId): Promise<AdminUserNotNull[]> => {
   const result = await dbQueryAndValidate(getUtilisateursByAdministrationIdDb, { administrationId }, pool, getUtilisateursByAdministrationIdDbValidator)
 
-  return result.map(a => ({ ...a, administrationId: a.administration_id }))
+  return result.map(a => ({ ...a, administrationId }))
 }
 
-const getUtilisateursByAdministrationIdDbValidator = adminUserNotNullValidator.omit({ administrationId: true }).and(z.object({ administration_id: administrationIdValidator }))
+const getUtilisateursByAdministrationIdDbValidator = adminUserNotNullValidator.omit({ administrationId: true })
 
 const getUtilisateursByAdministrationIdDb = sql<
   Redefine<IGetUtilisateursByAdministrationIdDbQuery, { administrationId: AdministrationId }, z.infer<typeof getUtilisateursByAdministrationIdDbValidator>>
@@ -35,7 +35,6 @@ select
     u.nom,
     u.prenom,
     u.role,
-    u.administration_id,
     u.telephone_mobile,
     u.telephone_fixe
 from
