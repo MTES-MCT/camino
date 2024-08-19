@@ -1,4 +1,4 @@
-import { SubstanceFiscale, SubstanceFiscaleId, SubstancesFiscales } from 'camino-common/src/static/substancesFiscales'
+import { SubstanceFiscale } from 'camino-common/src/static/substancesFiscales'
 import { Unite, Unites } from 'camino-common/src/static/unites'
 import Decimal from 'decimal.js'
 import { config } from '../../config/index'
@@ -74,7 +74,7 @@ interface OpenfiscaCommon {
   }
 }
 
-export type OpenfiscaTarifs = Record<SubstanceFiscaleId, { tarifDepartemental: number; tarifCommunal: number }>
+export type OpenfiscaTarifs = { auru: { tarifDepartemental: Decimal; tarifCommunal: Decimal } }
 export interface OpenfiscaConstants {
   substances: OpenfiscaTarifs
   tarifTaxeMinierePME: number
@@ -103,50 +103,4 @@ export const apiOpenfiscaCalculate = async (body: OpenfiscaRequest): Promise<Ope
     })
 
   return apiOpenfiscaFetch<OpenfiscaResponse>(call)
-}
-
-type InitSubstance = {
-  [key in SubstanceFiscaleId]?: {
-    tarifDepartemental: number
-    tarifCommunal: number
-  }
-}
-export const apiOpenfiscaConstantsFetch = async (annee: number): Promise<OpenfiscaConstants> => {
-  const getParameter = async (parameter: string): Promise<number> => {
-    const call = (url: string) =>
-      fetch(`${url}/parameter/${parameter}`, {
-        headers: { 'Content-Type': 'application/json' },
-      })
-
-    const response = await apiOpenfiscaFetch<{
-      values: { [date: string]: number }
-    }>(call)
-
-    if (!Object.keys(response.values).includes(`${annee}-01-01`)) {
-      throw new Error(`le paramètre ${parameter} n’est pas renseigné pour l’année ${annee}`)
-    }
-
-    return response.values[`${annee}-01-01`]
-  }
-
-  const tarifTaxeMinierePME = await getParameter('taxes/guyane/categories/pme')
-  const tarifTaxeMiniereAutre = await getParameter('taxes/guyane/categories/autre')
-
-  const substances: InitSubstance = {}
-  // TODO 2022-08-09 : faire passer la substance en parametre le jour où on fait des matrices autre que Guyane
-  for (const substance of SubstancesFiscales) {
-    const nom = substance.openFisca?.nom ?? substance.nom
-    const tarifCommunal = await getParameter(`redevances/communales/${nom}`)
-    const tarifDepartemental = await getParameter(`redevances/departementales/${nom}`)
-    substances[substance.id] = {
-      tarifCommunal,
-      tarifDepartemental,
-    }
-  }
-
-  return {
-    substances: substances as Required<InitSubstance>,
-    tarifTaxeMinierePME,
-    tarifTaxeMiniereAutre,
-  }
 }

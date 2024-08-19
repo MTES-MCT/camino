@@ -1,14 +1,12 @@
 import '../../init'
 import { writeFileSync } from 'fs'
 
-import { anneePrecedente, caminoAnneeToNumber, caminoAnneeValidator, toCaminoAnnee } from 'camino-common/src/date'
-import { bodyBuilder } from '../../api/rest/entreprises'
-import { apiOpenfiscaCalculate, apiOpenfiscaConstantsFetch } from '../api-openfisca'
+import { anneePrecedente, caminoAnneeValidator, toCaminoAnnee } from 'camino-common/src/date'
 import { titresGet } from '../../database/queries/titres'
 import { titresActivitesGet } from '../../database/queries/titres-activites'
 import { userSuper } from '../../database/user-super'
 import { REGION_IDS } from 'camino-common/src/static/region'
-import { GetEntreprises, getEntreprises } from '../../api/rest/entreprises.queries'
+import { getEntreprises } from '../../api/rest/entreprises.queries'
 import { config } from '../../config'
 import pg from 'pg'
 import { z } from 'zod'
@@ -17,7 +15,7 @@ import { EntrepriseId, entrepriseIdValidator } from 'camino-common/src/entrepris
 import { substanceLegaleIdValidator } from 'camino-common/src/static/substancesLegales'
 import { CommuneId, communeIdValidator } from 'camino-common/src/static/communes'
 import { idGenerate, newTitreId } from '../../database/models/_format/id-create'
-import { BuildedMatrices, buildMatrices } from '../../business/matrices'
+import { Matrices, getRawLines } from '../../business/matrices'
 // Le pool ne doit être qu'aux entrypoints : le daily, le monthly, et l'application.
 const pool = new pg.Pool({
   host: config().PGHOST,
@@ -96,7 +94,7 @@ const entryValidator = z.object({
 
 export type BodyMatrice = {
   entries: z.infer<typeof entryValidator>
-  expected: BuildedMatrices
+  expected: Matrices[]
 }
 const writeMatricesForTest = async () => {
   const user = userSuper
@@ -109,9 +107,6 @@ const writeMatricesForTest = async () => {
 
     const titres = await titresGet(
       { regions: [REGION_IDS.Guyane],
-        // FIXME
-      // ids: ["xE2Ro104RTILxkxpqJRhwE33"]
-      // ids: ["FCiueDa9rsCCbG0Fj7vycTeM"]
       },
       {
         fields: {
@@ -144,8 +139,6 @@ const writeMatricesForTest = async () => {
       { fields: { id: {} } },
       user
     )
-    const anneeNumber = caminoAnneeToNumber(annee)
-
     const stripedData = entryValidator.parse({
       activitesAnnuelles: activites,
       activitesTrimestrielles,
@@ -154,33 +147,11 @@ const writeMatricesForTest = async () => {
       entreprises,
     })
 
-    const body = bodyBuilder(stripedData.activitesAnnuelles, stripedData.activitesTrimestrielles, stripedData.titres, anneeNumber, stripedData.entreprises)
-    if (Object.keys(body.articles).length > 0) {
-      const result = await apiOpenfiscaCalculate(body)
-      console.log(JSON.stringify(result))
-      const constants = await apiOpenfiscaConstantsFetch(anneeNumber)
-
-      const matrices = buildMatrices(
-        result,
-        stripedData.titres,
-        anneeNumber,
-        constants,
-        Object.values(communeIdsIndex).map(communeId => ({ id: communeId, nom: communeId })),
-        stripedData.entreprises.reduce(
-          (acc, e) => {
-            acc[e.id] = { ...e, legal_siren: '', adresse: '', code_postal: '', commune: '' }
-
-            return acc
-          },
-          {} as Record<EntrepriseId, Pick<GetEntreprises, 'nom' | 'adresse' | 'code_postal' | 'commune' | 'legal_siren'>>
-        )
-      )
-
-      testBody.push({
-        entries: stripedData,
-        expected: matrices,
-      })
-    }
+    const result = getRawLines(stripedData.activitesAnnuelles, stripedData.activitesTrimestrielles, stripedData.titres, annee,Object.values(communeIdsIndex).map(communeId => ({ id: communeId, nom: communeId })), stripedData.entreprises)
+    testBody.push({
+      entries: stripedData,
+      expected: result,
+    })
   }
   writeFileSync(`src/business/matrices.cas.json`, JSON.stringify(testBody))
 }

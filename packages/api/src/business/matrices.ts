@@ -1,31 +1,33 @@
 import '../init'
 import { titresGet } from '../database/queries/titres'
 import { titresActivitesGet } from '../database/queries/titres-activites'
-import { apiOpenfiscaCalculate, apiOpenfiscaConstantsFetch, OpenfiscaConstants, OpenfiscaResponse, openfiscaSubstanceFiscaleUnite, OpenfiscaTarifs } from '../tools/api-openfisca/index'
-import { bodyBuilder, toFiscalite } from '../api/rest/entreprises'
+import { openfiscaSubstanceFiscaleUnite, OpenfiscaTarifs } from '../tools/api-openfisca/index'
 import { userSuper } from '../database/user-super'
 import { fraisGestion } from 'camino-common/src/fiscalite'
-import type { Fiscalite } from 'camino-common/src/validators/fiscalite'
-import { ICommune, IContenuValeur, IEntreprise, ITitre } from '../types'
-import { DepartementLabel, Departements, toDepartementId } from 'camino-common/src/static/departement'
+import { decimalValidator, fiscaliteValidator, type Fiscalite } from 'camino-common/src/validators/fiscalite'
+import { ICommune, IContenuValeur, IEntreprise } from '../types'
+import { departementIdValidator, Departements, toDepartementId } from 'camino-common/src/static/departement'
 import fs from 'fs'
 import carbone from 'carbone'
 import { Pool } from 'pg'
 import { getCommunes } from '../database/queries/communes.queries'
 import { DeepReadonly, isNonEmptyArray, isNotNullNorUndefined, isNullOrUndefined, onlyUnique } from 'camino-common/src/typescript-tools'
-import { Commune, CommuneId } from 'camino-common/src/static/communes'
-import { CaminoAnnee, caminoAnneeToNumber, anneePrecedente as previousYear, anneeSuivante, getCurrentAnnee, toCaminoAnnee } from 'camino-common/src/date'
+import { Commune, CommuneId, communeIdValidator, communeValidator } from 'camino-common/src/static/communes'
+import { CaminoAnnee, anneePrecedente as previousYear, anneeSuivante, getCurrentAnnee, toCaminoAnnee } from 'camino-common/src/date'
 
 import { Decimal } from 'decimal.js'
 import { REGION_IDS, Regions } from 'camino-common/src/static/region'
 import { EntrepriseId } from 'camino-common/src/entreprise'
-import { getEntreprises, GetEntreprises } from '../api/rest/entreprises.queries'
+import { getEntreprises } from '../api/rest/entreprises.queries'
 import Titres from '../database/models/titres'
 import TitresActivites from '../database/models/titres-activites'
 import { isGuyane } from 'camino-common/src/static/pays'
 import { SubstanceFiscale, SubstanceFiscaleId, SUBSTANCES_FISCALES_IDS, substancesFiscalesBySubstanceLegale } from 'camino-common/src/static/substancesFiscales'
 import { TitreId, TitreSlug } from 'camino-common/src/validators/titres'
+import { z } from 'zod'
 
+const SIP_IDS = ['cayenne', 'kourou', 'saintLaurentDuMaroni'] as const
+const sipIdValidator = z.enum(SIP_IDS)
 const sips = {
   cayenne: {
     nom: 'SIP de Cayenne',
@@ -64,7 +66,7 @@ const sips = {
       '97311', //  Saint-Laurent-du-Maroni
     ],
   },
-} as const
+} as const satisfies Record<z.infer<typeof sipIdValidator>, {nom: string, communes: string[]}>
 type Sips = keyof typeof sips
 const isSip = (value: string): value is Sips => Object.keys(sips).includes(value)
 type Matrice1403 = {
@@ -110,13 +112,13 @@ type Matrice1121 = {
   natureDesSubstancesExtraites: string
   baseDesRedevancesNature: string
   baseDesRedevancesQuantités: any
-  redevanceDepartementaleTarifs: number
+  redevanceDepartementaleTarifs: Decimal
   redevanceDepartementaleMontantNet: Decimal
-  redevanceCommunaleTarifs: number
+  redevanceCommunaleTarifs: Decimal
   redevanceCommunaleMontantNetRedevanceDesMines: Decimal
   totalRedevanceDesMines: Decimal
-  taxeMiniereSurLOrDeGuyaneTarifsParKgExtraitPourLesPME: number
-  taxeMiniereSurLOrDeGuyaneTarifsParKgExtraitPourLesAutresEntreprises: number
+  taxeMiniereSurLOrDeGuyaneTarifsParKgExtraitPourLesPME: Decimal
+  taxeMiniereSurLOrDeGuyaneTarifsParKgExtraitPourLesAutresEntreprises: Decimal
   taxeMiniereSurLOrDeGuyaneMontantDesInvestissementsDeduits: Decimal
   taxeMiniereSurLOrDeGuyaneMontantNetDeTaxeMinièreSurLOrDeGuyane: Decimal
   fraisDeGestionDeLaFiscaliteDirecteLocale: Decimal
@@ -124,26 +126,35 @@ type Matrice1121 = {
   numeroDeLArticleDuRole: string | undefined
 }
 
-type Titulaire = {
-  nom: string
-  rue: string
-  codepostal: string
-  commune: string
-  siren: string
-}
-type Matrices = {
-  communePrincipale: ICommune
-  commune: ICommune
-  fiscalite: Fiscalite
-  quantiteOrExtrait: string
-  sip: Sips
-  index: number
-  titulaire: Titulaire
-  departementLabel: DepartementLabel
-  titreLabel: string
-  surfaceCommunaleProportionnee: Decimal
-  surfaceCommunale: Decimal
-}
+const matriceTitulaireValidator = z.object({
+  nom: z.string(),
+  rue: z.string(),
+  codepostal: z.string(),
+  commune: z.string(),
+  siren: z.string(),
+})
+
+type Titulaire = z.infer<typeof matriceTitulaireValidator>
+
+const communeWithSurfaceValidator = z.object({
+  id: communeIdValidator,
+  surface: decimalValidator.optional().nullable()
+})
+type CommuneWithSurface = z.infer<typeof communeWithSurfaceValidator>
+export const rawMatriceValidator = z.object({
+  communePrincipale: communeValidator,
+  commune: communeValidator,
+  fiscalite: fiscaliteValidator,
+  quantiteOrExtrait: z.string(),
+  sip: sipIdValidator,
+  index: z.number(),
+  titulaire: matriceTitulaireValidator,
+  departementId: departementIdValidator,
+  titreLabel: z.string(),
+  surfaceCommunaleProportionnee: decimalValidator,
+  surfaceCommunale: decimalValidator,
+})
+export type Matrices = z.infer<typeof rawMatriceValidator>
 
 type Matrice1122 = {
   numeroOrdreMatrice: number
@@ -177,7 +188,6 @@ const conversion = (substanceFiscale: SubstanceFiscale, quantite: IContenuValeur
   return new Decimal(quantite).div(unite.referenceUniteRatio ?? 1).toDecimalPlaces(3)
 }
 
-// const redevanceDepartementale
 
 type ProductionBySubstance = {
   substanceFiscaleId: SubstanceFiscaleId
@@ -190,9 +200,9 @@ type TitreBuild = {
     id: TitreId
     titulaireIds: EntrepriseId[]
   }
-  commune_principale_exploitation: ICommune
+  commune_principale_exploitation: CommuneWithSurface
   surface_totale: Decimal
-  surface_communale: Record<CommuneId, { commune: ICommune; surface: Decimal }>
+  surface_communale: Record<CommuneId, { commune: CommuneWithSurface; surface: Decimal }>
   investissement: Decimal
   categorie: 'pme' | 'autre'
   substances: { [key in SubstanceFiscaleId]?: ProductionBySubstance }
@@ -291,15 +301,15 @@ export const getRawLines = (
                   id: titre.id,
                   titulaireIds: titre.titulaireIds,
                 },
-                commune_principale_exploitation: communePrincipale,
+                commune_principale_exploitation: communeWithSurfaceValidator.parse(communePrincipale),
                 surface_totale: surfaceTotale,
                 surface_communale: communes.reduce(
                   (acc, commune) => {
-                    acc[commune.id] = { commune, surface: new Decimal(commune.surface ?? 0) }
+                    acc[commune.id] = { commune: communeWithSurfaceValidator.parse(commune), surface: new Decimal(commune.surface ?? 0) }
 
                     return acc
                   },
-                  {} as Record<CommuneId, { commune: ICommune; surface: Decimal }>
+                  {} as Record<CommuneId, { commune: CommuneWithSurface; surface: Decimal }>
                 ),
                 investissement,
                 categorie: entreprise.categorie === 'PME' ? 'pme' : 'autre',
@@ -341,8 +351,6 @@ export const getRawLines = (
 
             const titreLabel = titreBuild.titre.slug ?? ''
 
-            const departement = Departements[toDepartementId(commune.id)].nom
-
             let sip: Sips = 'saintLaurentDuMaroni'
             if (sips.saintLaurentDuMaroni.communes.includes(commune.id)) {
               sip = 'saintLaurentDuMaroni'
@@ -358,8 +366,8 @@ export const getRawLines = (
             const titulaireTitre = entreprises.find(({ id }) => titreBuild.titre.titulaireIds[0] === id)
 
             const result: Matrices = {
-              communePrincipale: communes.find(({ id }) => id === communePrincipale.id) ?? communePrincipale,
-              commune: communes.find(({ id }) => commune.id === id) ?? commune,
+              communePrincipale: communes.find(({ id }) => id === communePrincipale.id) ?? { id: communePrincipale.id, nom: communePrincipale.id },
+              commune: communes.find(({ id }) => commune.id === id) ?? { id: commune.id, nom: commune.id },
               fiscalite,
               quantiteOrExtrait: `${quantiteOrExtrait}`,
               sip,
@@ -372,7 +380,7 @@ export const getRawLines = (
                 siren: titulaireTitre?.legalSiren ?? '',
               },
               titreLabel,
-              departementLabel: departement,
+              departementId: toDepartementId(commune.id),
               surfaceCommunaleProportionnee,
               surfaceCommunale: surface,
             }
@@ -521,7 +529,7 @@ const deductionTaux = new Decimal(0.45)
 
 type EntrepriseCategory = 'pme' | 'autre'
 
-export const toNewFiscalite = (productionBySubstance: ProductionBySubstance, annee: CaminoAnnee, isTitreGuyannais: boolean, category: EntrepriseCategory, investissement: Decimal, surfaceCommunaleProportionnee: Decimal): Fiscalite => {
+const toNewFiscalite = (productionBySubstance: ProductionBySubstance, annee: CaminoAnnee, isTitreGuyannais: boolean, category: EntrepriseCategory, investissement: Decimal, surfaceCommunaleProportionnee: Decimal): Fiscalite => {
   const fiscalite: Fiscalite = {
     redevanceCommunale: productionBySubstance.production.mul(redevanceCommunale[annee]?.auru).toDecimalPlaces(2, Decimal.ROUND_HALF_EVEN),
     redevanceDepartementale: productionBySubstance.production.mul(redevanceDepartementale[annee]?.auru).toDecimalPlaces(2, Decimal.ROUND_HALF_EVEN),
@@ -546,82 +554,19 @@ export const toNewFiscalite = (productionBySubstance: ProductionBySubstance, ann
   return fiscalite
 }
 
+// FIXME générer les matrices et les comparer avec ce qu'on a envoyé à POH
 // VISIBLE FOR TESTING
 export const buildMatrices = (
-  result: OpenfiscaResponse,
-  titres: Pick<ITitre, 'id' | 'slug' | 'titulaireIds' | 'communes'>[],
-  annee: number,
-  openfiscaConstants: OpenfiscaConstants,
+  activitesAnnuelles: Pick<TitresActivites, 'titreId' | 'contenu'>[],
+  activitesTrimestrielles: Pick<TitresActivites, 'titreId' | 'contenu'>[],
+  titres: Pick<Titres, 'titulaireIds' | 'amodiataireIds' | 'substances' | 'communes' | 'id' | 'slug'>[],
+  annee: CaminoAnnee,
   communes: Commune[],
-  entreprises: Record<EntrepriseId, Pick<GetEntreprises, 'nom' | 'adresse' | 'code_postal' | 'commune' | 'legal_siren'>>
+  // FIXME use PgTyped getEntreprises
+  entreprises: Pick<IEntreprise, 'id' | 'categorie' | 'nom' | 'adresse' | 'codePostal' | 'commune' | 'legalSiren'>[]
 ): BuildedMatrices => {
-  const anneePrecedente = annee - 1
-  let count = 0
-  const rawLines: Matrices[] = titres
-    .filter(titre => isNotNullNorUndefined(result.titres[titre.id]))
-    .flatMap(titre => {
-      const communePrincipaleId = result.titres[titre.id]?.commune_principale_exploitation?.[anneePrecedente]
-      const communePrincipale = titre.communes?.find(({ id }) => id === communePrincipaleId)
 
-      if (!communePrincipale) {
-        throw new Error(`commune principale ${communePrincipaleId} introuvable`)
-      }
-
-      return result.titres[titre.id].articles.map(articleKey => {
-        count++
-
-        const commune = titre.communes?.find(commune => {
-          return result.communes[commune.id].articles.includes(articleKey)
-        })
-        if (!commune) {
-          throw new Error(`commune de l’article ${articleKey} introuvable`)
-        }
-
-        const surfaceCommunaleProportionnee = new Decimal(result.articles[articleKey]?.surface_communale_proportionnee?.[anneePrecedente] ?? 1)
-        const surfaceCommunale = new Decimal(result.articles[articleKey]?.surface_communale?.[anneePrecedente] ?? 0)
-        const quantiteOrExtrait = new Decimal(result.articles[articleKey]?.quantite_aurifere_kg?.[anneePrecedente] ?? 0).mul(surfaceCommunaleProportionnee).toDecimalPlaces(3)
-
-        const fiscalite = toFiscalite(result, articleKey, annee)
-
-        const titreLabel = titre.slug ?? ''
-
-        const departement = Departements[toDepartementId(commune.id)].nom
-
-        let sip: Sips = 'saintLaurentDuMaroni'
-        if (sips.saintLaurentDuMaroni.communes.includes(commune.id)) {
-          sip = 'saintLaurentDuMaroni'
-        } else if (sips.cayenne.communes.includes(commune.id)) {
-          sip = 'cayenne'
-        } else if (sips.kourou.communes.includes(commune.id)) {
-          sip = 'kourou'
-        }
-
-        if (titre.titulaireIds?.length !== 1) {
-          throw new Error(`Un seul titulaire doit être présent sur le titre ${titre.id}`)
-        }
-        const titulaireTitre = entreprises[titre.titulaireIds[0]]
-
-        return {
-          communePrincipale: communes.find(({ id }) => id === communePrincipale.id) ?? communePrincipale,
-          commune: communes.find(({ id }) => id === commune.id) ?? commune,
-          fiscalite,
-          quantiteOrExtrait: `${quantiteOrExtrait}`,
-          sip,
-          index: count,
-          titulaire: {
-            nom: titulaireTitre.nom ?? '',
-            rue: titulaireTitre.adresse ?? '',
-            codepostal: titulaireTitre.code_postal ?? '',
-            commune: titulaireTitre.commune ?? '',
-            siren: titulaireTitre.legal_siren ?? '',
-          },
-          titreLabel,
-          departementLabel: departement,
-          surfaceCommunaleProportionnee,
-          surfaceCommunale,
-        }
-      })
-    })
+  const rawLines = getRawLines(activitesAnnuelles, activitesTrimestrielles, titres, annee, communes, entreprises)
 
   const matrice1121 = rawLines.map(line => {
     const fiscalite = line.fiscalite
@@ -633,13 +578,14 @@ export const buildMatrices = (
       natureDesSubstancesExtraites: 'Minerais aurifères',
       baseDesRedevancesNature: "Kilogramme d'or contenu",
       baseDesRedevancesQuantités: line.quantiteOrExtrait,
-      redevanceDepartementaleTarifs: openfiscaConstants.substances.auru.tarifDepartemental,
+      redevanceDepartementaleTarifs: redevanceDepartementale[annee].auru,
+
       redevanceDepartementaleMontantNet: fiscalite.redevanceDepartementale,
-      redevanceCommunaleTarifs: openfiscaConstants.substances.auru.tarifCommunal,
+      redevanceCommunaleTarifs: redevanceCommunale[annee].auru,
       redevanceCommunaleMontantNetRedevanceDesMines: fiscalite.redevanceCommunale,
       totalRedevanceDesMines: new Decimal(fiscalite.redevanceCommunale).add(new Decimal(fiscalite.redevanceDepartementale)),
-      taxeMiniereSurLOrDeGuyaneTarifsParKgExtraitPourLesPME: openfiscaConstants.tarifTaxeMinierePME,
-      taxeMiniereSurLOrDeGuyaneTarifsParKgExtraitPourLesAutresEntreprises: 0,
+      taxeMiniereSurLOrDeGuyaneTarifsParKgExtraitPourLesPME: categories.pme[annee].value,
+      taxeMiniereSurLOrDeGuyaneTarifsParKgExtraitPourLesAutresEntreprises: categories.autre[annee].value,
       taxeMiniereSurLOrDeGuyaneMontantDesInvestissementsDeduits: 'guyane' in fiscalite ? fiscalite.guyane.totalInvestissementsDeduits : new Decimal(0),
       taxeMiniereSurLOrDeGuyaneMontantNetDeTaxeMinièreSurLOrDeGuyane: 'guyane' in fiscalite ? fiscalite.guyane.taxeAurifere : new Decimal(0),
       fraisDeGestionDeLaFiscaliteDirecteLocale: fraisGestion(fiscalite),
@@ -653,7 +599,7 @@ export const buildMatrices = (
       numeroOrdreMatrice: line.index,
       designationDesConcessionnaires: titulaireToString(line.titulaire),
       designationDesConcessions: line.titreLabel,
-      departementsSurLeTerritoireDesquelsFonctionnentLesExploitations: line.departementLabel,
+      departementsSurLeTerritoireDesquelsFonctionnentLesExploitations: Departements[line.departementId].nom,
       communesSurLeTerritoireDesquelsFonctionnentLesExploitations: `${communes.find(({ id }) => id === line.commune.id)?.nom} (${line.surfaceCommunale.div(1_000_000)} km²)`,
       tonnagesExtraitsAuCoursDeLAnneePrecedenteParDepartement: line.quantiteOrExtrait,
       tonnagesExtraitsAuCoursDeLAnneePrecedenteParCommune: line.quantiteOrExtrait,
@@ -742,7 +688,7 @@ export const buildMatrices = (
           circonscriptionDe: sip?.nom ?? '',
           articlesDeRoles: line.index,
           designationDesExploitants: titulaireToString(line.titulaire),
-          departements: line.departementLabel,
+          departements: Departements[line.departementId].nom,
           // TODO 2022-09-19 on est dans une impasse, impossible de répartir correctement la redevance entre la commune principale et les autres.
           // pour le moment, on fait comme les années précédences, en attendant une correction
           communes: communes.find(({ id }) => id === line.communePrincipale.id)?.nom ?? '',
@@ -774,9 +720,23 @@ export const buildMatrices = (
 
   return { matrice1121, matrice1122, matrice1403, matrice1404, rawLines }
 }
-
+type Matrice1401Template = {
+  article: number
+  entreprise: string
+  quantite: string
+  substances: OpenfiscaTarifs
+  taxePME: Decimal
+  taxeAutre: Decimal
+  redevanceCommunale: Decimal
+  redevanceDepartementale: Decimal
+  taxeMiniereOr: Decimal
+  montantInvestissements: Decimal
+  montantNetTaxeMiniereOr: Decimal
+  totalCotisations: Decimal
+  fraisGestion: Decimal
+  total: Decimal
+}
 export const matrices = async (annee: CaminoAnnee, pool: Pool): Promise<void> => {
-  const anneeNumber = caminoAnneeToNumber(annee)
   const anneePrecedente = previousYear(annee)
 
   if (annee !== getCurrentAnnee()) {
@@ -836,11 +796,6 @@ export const matrices = async (annee: CaminoAnnee, pool: Pool): Promise<void> =>
   )
 
   const entreprises = await getEntreprises(pool)
-  const entreprisesIndex = entreprises.reduce<Record<EntrepriseId, GetEntreprises>>((acc, entreprise) => {
-    acc[entreprise.id] = entreprise
-
-    return acc
-  }, {})
 
   const communesIds = titres
     .flatMap(({ communes }) => communes?.map(({ id }) => id))
@@ -848,13 +803,7 @@ export const matrices = async (annee: CaminoAnnee, pool: Pool): Promise<void> =>
     .filter(isNotNullNorUndefined)
   const communes = isNonEmptyArray(communesIds) ? await getCommunes(pool, { ids: communesIds }) : []
 
-  const body = bodyBuilder(activites, activitesTrimestrielles, titres, anneeNumber, entreprises)
-  if (Object.keys(body.articles).length > 0) {
-    const result = await apiOpenfiscaCalculate(body)
-
-    const openfiscaConstants = await apiOpenfiscaConstantsFetch(anneeNumber)
-
-    const { matrice1121, matrice1122, matrice1403, matrice1404, rawLines } = buildMatrices(result, titres, anneeNumber, openfiscaConstants, communes, entreprisesIndex)
+    const { matrice1121, matrice1122, matrice1403, matrice1404, rawLines } = buildMatrices(activites, activitesTrimestrielles, titres, annee, communes, entreprises)
 
     const { totalRedevanceDesMines, totalMontantNetTaxeMiniereOrGuyane, fraisGestionFiscaliteDirecteLocale } = matrice1121.reduce<{
       totalRedevanceDesMines: Decimal
@@ -1051,22 +1000,7 @@ export const matrices = async (annee: CaminoAnnee, pool: Pool): Promise<void> =>
 
     const matrice1401: Record<
       Sips,
-      {
-        article: number
-        entreprise: string
-        quantite: string
-        substances: OpenfiscaTarifs
-        taxePME: number
-        taxeAutre: number
-        redevanceCommunale: Decimal
-        redevanceDepartementale: Decimal
-        taxeMiniereOr: Decimal
-        montantInvestissements: Decimal
-        montantNetTaxeMiniereOr: Decimal
-        totalCotisations: Decimal
-        fraisGestion: Decimal
-        total: Decimal
-      }[]
+      Matrice1401Template[]
     > = { kourou: [], saintLaurentDuMaroni: [], cayenne: [] }
     for (const matriceLine of rawLines) {
       const fiscaliteLine = matriceLine.fiscalite
@@ -1074,13 +1008,16 @@ export const matrices = async (annee: CaminoAnnee, pool: Pool): Promise<void> =>
       if (!('guyane' in fiscaliteLine)) {
         console.error("cette ligne n'est pas de guyane", matriceLine)
       } else {
-        const matrice = {
+        const matrice: Matrice1401Template = {
           article: matriceLine.index,
-          substances: openfiscaConstants.substances,
+          substances: {auru: {
+            tarifCommunal: redevanceCommunale[annee].auru,
+            tarifDepartemental: redevanceDepartementale[annee].auru
+          }},
           entreprise: titulaireToString(matriceLine.titulaire),
           quantite: matriceLine.quantiteOrExtrait,
-          taxePME: openfiscaConstants.tarifTaxeMinierePME,
-          taxeAutre: openfiscaConstants.tarifTaxeMiniereAutre,
+          taxePME: categories.pme[annee].value,
+          taxeAutre: categories.autre[annee].value,
           redevanceCommunale: matriceLine.fiscalite.redevanceCommunale,
           redevanceDepartementale: matriceLine.fiscalite.redevanceDepartementale,
           taxeMiniereOr: fiscaliteLine.guyane.taxeAurifereBrute,
@@ -1096,7 +1033,7 @@ export const matrices = async (annee: CaminoAnnee, pool: Pool): Promise<void> =>
             'src/business/resources/matrice_1402-SD_2022.ods',
             {
               ...matrice,
-              departement: matriceLine.departementLabel,
+              departement: Departements[matriceLine.departementId],
               commune: communes.find(({ id }) => id === matriceLine.commune.id)?.nom,
               role: matriceLine.titreLabel,
               titulaire: matriceLine.titulaire,
@@ -1150,5 +1087,4 @@ export const matrices = async (annee: CaminoAnnee, pool: Pool): Promise<void> =>
       }
     }
     console.info('fini', new Date())
-  }
 }

@@ -1,4 +1,4 @@
-import { buildMatrices, getRawLines } from './matrices'
+import { buildMatrices, getRawLines, rawMatriceValidator } from './matrices'
 import { ITitre } from '../types'
 import { EntrepriseId, newEntrepriseId } from 'camino-common/src/entreprise'
 import { describe, expect, test } from 'vitest'
@@ -11,6 +11,7 @@ import { bodyBuilder } from '../api/rest/entreprises'
 import { caminoAnneeToNumber } from 'camino-common/src/date'
 import { apiOpenfiscaCalculate, apiOpenfiscaConstantsFetch } from '../tools/api-openfisca'
 import { GetEntreprises } from '../api/rest/entreprises.queries'
+import { z } from 'zod'
 const matricesProd = require('./matrices.cas.json')
 
 describe('matrices', () => {
@@ -219,25 +220,11 @@ describe('matrices', () => {
     ).toMatchSnapshot()
   })
 
+  const rawMatricesValidator = z.array(rawMatriceValidator)
   // pour regénérer le fichier matrices.cas.json: `npm run test:generate-matrices-data -w packages/api`
   test.only.each(matricesProd as BodyMatrice[])('cas réel N°%#', async ({ entries, expected }) => {
-    const anneeNumber = caminoAnneeToNumber(entries.annee)
+
     const communes = entries.titres.flatMap(titre => titre.communes.map(commune => ({ id: commune.id, nom: commune.id })))
-    const entreprises = entries.entreprises.reduce(
-      (acc, e) => {
-        acc[e.id] = { ...e, legal_siren: '', adresse: '', code_postal: '', commune: '' }
-
-        return acc
-      },
-      {} as Record<EntrepriseId, Pick<GetEntreprises, 'nom' | 'adresse' | 'code_postal' | 'commune' | 'legal_siren'>>
-    )
-    // const body = bodyBuilder(entries.activitesAnnuelles, entries.activitesTrimestrielles, entries.titres, anneeNumber, entries.entreprises)
-    // const result = await apiOpenfiscaCalculate(body)
-    // console.log(result)
-    // const constants = await apiOpenfiscaConstantsFetch(anneeNumber)
-
-    console.log(getRawLines(entries.activitesAnnuelles, entries.activitesTrimestrielles, entries.titres, entries.annee, communes, entries.entreprises))
-    expect(getRawLines(entries.activitesAnnuelles, entries.activitesTrimestrielles, entries.titres, entries.annee, communes, entries.entreprises)).toStrictEqual(expected.rawLines)
-    // expect(JSON.stringify(buildMatrices(result, entries.titres, anneeNumber, constants, communes, entreprises))).toStrictEqual(JSON.stringify(expected))
+    expect(getRawLines(entries.activitesAnnuelles, entries.activitesTrimestrielles, entries.titres, entries.annee, communes, entries.entreprises)).toStrictEqual(rawMatricesValidator.parse(expected))
   })
 })

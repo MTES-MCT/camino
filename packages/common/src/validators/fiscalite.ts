@@ -1,7 +1,7 @@
 import Decimal from 'decimal.js'
 import { z } from 'zod'
 
-const decimalValidator = z
+export const decimalValidator = z
   .any()
   .transform((value, ctx) => {
     try {
@@ -31,5 +31,5 @@ const fiscaliteGuyaneValidator = fiscaliteFranceValidator.extend({
 })
 export type FiscaliteGuyane = z.infer<typeof fiscaliteGuyaneValidator>
 
-export const fiscaliteValidator = z.union([fiscaliteFranceValidator, fiscaliteGuyaneValidator])
+export const fiscaliteValidator = z.union([fiscaliteGuyaneValidator, fiscaliteFranceValidator])
 export type Fiscalite = z.infer<typeof fiscaliteValidator>
