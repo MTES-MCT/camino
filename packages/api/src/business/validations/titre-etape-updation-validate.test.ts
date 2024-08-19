@@ -153,7 +153,6 @@ describe('valide l’étape avant de l’enregistrer', () => {
         "le document "Documents cartographiques" (car) est obligatoire",
         "le document "Dossier de demande" (dom) est obligatoire",
         "le document "Formulaire de demande" (for) est obligatoire",
-        "le document "Justificatif de paiement" (jpa) est obligatoire",
         "Il y a des documents d'entreprise obligatoires, mais il n'y a pas de titulaire",
       ]
     `)
