@@ -373,7 +373,7 @@ const TDEDocumentsTypes = {
         [DOCUMENTS_TYPES_IDS.dossierLoiSurLEau]: { optionnel: true },
         [DOCUMENTS_TYPES_IDS.dossierDeDemande]: { optionnel: false },
         [DOCUMENTS_TYPES_IDS.formulaireDeDemande]: { optionnel: false },
-        [DOCUMENTS_TYPES_IDS.justificatifDePaiement]: { optionnel: false },
+        [DOCUMENTS_TYPES_IDS.justificatifDePaiement]: { optionnel: true },
         [DOCUMENTS_TYPES_IDS.documentsCartographiques]: { optionnel: false },
       },
     },

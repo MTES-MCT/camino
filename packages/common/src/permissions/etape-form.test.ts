@@ -533,7 +533,7 @@ test('getDocumentsTypes', () => {
         "description": undefined,
         "id": "jpa",
         "nom": "Justificatif de paiement",
-        "optionnel": false,
+        "optionnel": true,
       },
       {
         "id": "lem",
@@ -634,7 +634,7 @@ test('getDocumentsTypes', () => {
         "description": undefined,
         "id": "jpa",
         "nom": "Justificatif de paiement",
-        "optionnel": false,
+        "optionnel": true,
       },
       {
         "id": "lem",
