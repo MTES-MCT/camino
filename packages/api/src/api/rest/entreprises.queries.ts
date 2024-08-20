@@ -191,7 +191,7 @@ where
     id = $ entreprise_id !
 `
 
-export const getEntreprises = async (pool: Pool) => {
+export const getEntreprises = async (pool: Pool): Promise<GetEntreprises[]> => {
   return dbQueryAndValidate(getEntreprisesDb, undefined, pool, getEntreprisesValidor)
 }
 

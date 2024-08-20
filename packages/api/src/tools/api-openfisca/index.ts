@@ -1,4 +1,4 @@
-import { SubstanceFiscale } from 'camino-common/src/static/substancesFiscales'
+import { SubstanceFiscale, SubstanceFiscaleId } from 'camino-common/src/static/substancesFiscales'
 import { Unite, Unites } from 'camino-common/src/static/unites'
 import Decimal from 'decimal.js'
 import { config } from '../../config/index'
@@ -74,12 +74,7 @@ interface OpenfiscaCommon {
   }
 }
 
-export type OpenfiscaTarifs = { auru: { tarifDepartemental: Decimal; tarifCommunal: Decimal } }
-export interface OpenfiscaConstants {
-  substances: OpenfiscaTarifs
-  tarifTaxeMinierePME: number
-  tarifTaxeMiniereAutre: number
-}
+
 
 const apiOpenfiscaFetch = async <T>(call: (apiOpenfiscaUrl: string) => Promise<Response>): Promise<T> => {
   const apiOpenfiscaUrl = config().API_OPENFISCA_URL
