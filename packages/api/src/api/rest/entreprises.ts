@@ -1,29 +1,14 @@
 import { Request as JWTRequest } from 'express-jwt'
 import { fiscaliteVisible } from 'camino-common/src/fiscalite'
 import { Fiscalite, FiscaliteFrance, FiscaliteGuyane } from 'camino-common/src/validators/fiscalite'
-import { ICommune, IContenuValeur, IEntreprise } from '../../types'
 import { HTTP_STATUS } from 'camino-common/src/http'
 
-import {
-  apiOpenfiscaCalculate,
-  OpenfiscaRequest,
-  OpenfiscaResponse,
-  redevanceCommunale,
-  redevanceDepartementale,
-  substanceFiscaleToInput,
-  openfiscaSubstanceFiscaleUnite,
-} from '../../tools/api-openfisca/index'
 import { titresGet } from '../../database/queries/titres'
 import { titresActivitesGet } from '../../database/queries/titres-activites'
 import { entrepriseGet, entrepriseUpsert } from '../../database/queries/entreprises'
-import TitresActivites from '../../database/models/titres-activites'
-import Titres from '../../database/models/titres'
 import { CustomResponse } from './express-type'
-import { SubstanceFiscale, substancesFiscalesBySubstanceLegale } from 'camino-common/src/static/substancesFiscales'
-import { Departements, toDepartementId } from 'camino-common/src/static/departement'
-import { DeepReadonly, isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools'
-import { Regions } from 'camino-common/src/static/region'
-import { anneePrecedente, caminoAnneeToNumber, isAnnee } from 'camino-common/src/date'
+import { isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools'
+import { anneePrecedente, isAnnee } from 'camino-common/src/date'
 import {
   entrepriseIdValidator,
   entrepriseModificationValidator,
@@ -52,218 +37,19 @@ import {
   insertEntrepriseDocument,
 } from './entreprises.queries'
 import { newEnterpriseDocumentId } from '../../database/models/_format/id-create'
-import { isGuyane } from 'camino-common/src/static/pays'
 import { NewDownload } from './fichiers'
 import Decimal from 'decimal.js'
 
 import { createLargeObject } from '../../database/largeobjects'
 import { z } from 'zod'
 import { getEntrepriseEtablissements } from './entreprises-etablissements.queries'
-
-const conversion = (substanceFiscale: SubstanceFiscale, quantite: IContenuValeur): Decimal => {
-  if (typeof quantite !== 'number') {
-    return new Decimal(0)
-  }
-
-  const unite = openfiscaSubstanceFiscaleUnite(substanceFiscale)
-
-  return new Decimal(quantite).div(unite.referenceUniteRatio ?? 1).toDecimalPlaces(3)
-}
-// VisibleForTesting
-export const bodyBuilder = (
-  activitesAnnuelles: Pick<TitresActivites, 'titreId' | 'contenu'>[],
-  activitesTrimestrielles: Pick<TitresActivites, 'titreId' | 'contenu'>[],
-  titres: Pick<Titres, 'titulaireIds' | 'amodiataireIds' | 'substances' | 'communes' | 'id'>[],
-  annee: number,
-  entreprises: Pick<IEntreprise, 'id' | 'categorie' | 'nom'>[]
-): OpenfiscaRequest => {
-  const anneePrecedente = annee - 1
-  const body: OpenfiscaRequest = {
-    articles: {},
-    titres: {},
-    communes: {},
-  }
-
-  for (const activite of activitesAnnuelles) {
-    const titre = titres.find(({ id }) => id === activite.titreId)
-    const activiteTrimestresTitre = activitesTrimestrielles.filter(({ titreId }) => titreId === activite.titreId)
-
-    if (isNullOrUndefined(titre)) {
-      throw new Error(`le titre ${activite.titreId} n’est pas chargé`)
-    }
-
-    if (isNullOrUndefined(titre.communes)) {
-      throw new Error(`les communes du titre ${activite.titreId} ne sont pas chargées`)
-    }
-    if (isNullOrUndefined(titre.titulaireIds)) {
-      throw new Error(`les titulaires du titre ${activite.titreId} ne sont pas chargées`)
-    }
-    if (isNullOrUndefined(titre.amodiataireIds)) {
-      throw new Error(`les amodiataires du titre ${activite.titreId} ne sont pas chargés`)
-    }
-
-    // si N titulaires et UN amodiataire le titre appartient fiscalement à l'amodiataire
-    // https://trello.com/c/2WJcnFRw/321-featfiscalit%C3%A9-les-titres-avec-un-seul-titulaire-et-un-seul-amodiataire-sont-g%C3%A9r%C3%A9s
-    let entrepriseId: null | string = null
-    let amodiataire = false
-    if (titre.amodiataireIds.length === 1) {
-      entrepriseId = titre.amodiataireIds[0]
-      amodiataire = true
-    } else if (titre.titulaireIds.length === 1) {
-      entrepriseId = titre.titulaireIds[0]
-    } else {
-      throw new Error(`plusieurs entreprises liées au titre ${activite.titreId}, cas non géré`)
-    }
-
-    const entreprise = entreprises.find(({ id }) => id === entrepriseId)
-
-    if (!entreprise && !amodiataire) {
-      throw new Error(`pas d'entreprise trouvée pour le titre ${activite.titreId}`)
-    } else if (!entreprise && amodiataire) {
-      console.warn(`le titre ${activite.titreId} appartient à l'entreprise amodiataire et n'est pas dans la liste des entreprises à analyser`)
-    } else if (entreprise) {
-      const titreGuyannais = titre.communes
-        .map(({ id }) => toDepartementId(id))
-        .filter(isNotNullNorUndefined)
-        .some(departementId => isGuyane(Regions[Departements[departementId].regionId].paysId))
-
-      if (!titre.substances) {
-        throw new Error(`les substances du titre ${activite.titreId} ne sont pas chargées`)
-      }
-
-      if (titre.substances.length > 0 && activite.contenu) {
-        const substanceLegalesWithFiscales = titre.substances.filter(isNotNullNorUndefined).filter(substanceId => substancesFiscalesBySubstanceLegale(substanceId).length)
-
-        if (substanceLegalesWithFiscales.length > 1) {
-          // TODO 2022-07-25 on fait quoi ? On calcule quand même ?
-          console.error('BOOM, titre avec plusieurs substances légales possédant plusieurs substances fiscales ', titre.id)
-        }
-
-        const substancesFiscales = substanceLegalesWithFiscales.flatMap(substanceId => substancesFiscalesBySubstanceLegale(substanceId))
-
-        for (const substancesFiscale of substancesFiscales) {
-          const production = conversion(substancesFiscale, activite.contenu.substancesFiscales[substancesFiscale.id])
-
-          if (production.greaterThan(0)) {
-            const surfaceTotale = titre.communes.reduce((value, commune) => value + (commune.surface ?? 0), 0)
-
-            let communePrincipale: ICommune | null = null
-            const communes: DeepReadonly<ICommune[]> = titre.communes
-            for (const commune of communes) {
-              if (communePrincipale === null) {
-                communePrincipale = commune
-              } else if ((communePrincipale?.surface ?? 0) < (commune?.surface ?? 0)) {
-                communePrincipale = commune
-              }
-            }
-            if (communePrincipale === null) {
-              throw new Error(`Impossible de trouver une commune principale pour le titre ${titre.id}`)
-            }
-            for (const commune of communes) {
-              const articleId = `${titre.id}-${substancesFiscale.id}-${commune.id}`
-
-              body.articles[articleId] = {
-                surface_communale: { [anneePrecedente]: commune.surface ?? 0 },
-                surface_communale_proportionnee: { [anneePrecedente]: null },
-                [substanceFiscaleToInput(substancesFiscale)]: {
-                  [anneePrecedente]: production,
-                },
-                [redevanceCommunale(substancesFiscale)]: {
-                  [annee]: null,
-                },
-                [redevanceDepartementale(substancesFiscale)]: {
-                  [annee]: null,
-                },
-              }
-
-              if (substancesFiscale.id === 'auru' && titreGuyannais) {
-                body.articles[articleId].taxe_guyane_brute = { [annee]: null }
-                body.articles[articleId].taxe_guyane_deduction = {
-                  [annee]: null,
-                }
-                body.articles[articleId].taxe_guyane = { [annee]: null }
-              }
-
-              if (!Object.prototype.hasOwnProperty.call(body.titres, titre.id)) {
-                const investissement = activiteTrimestresTitre.reduce((investissement, activite) => {
-                  let newInvestissement = 0
-                  if (typeof activite?.contenu?.renseignements?.environnement === 'number') {
-                    newInvestissement = activite?.contenu?.renseignements?.environnement
-                  }
-
-                  return investissement + newInvestissement
-                }, 0)
-                body.titres[titre.id] = {
-                  commune_principale_exploitation: {
-                    [anneePrecedente]: communePrincipale.id,
-                  },
-                  surface_totale: { [anneePrecedente]: surfaceTotale },
-                  operateur: {
-                    [anneePrecedente]: entreprise.nom ?? '',
-                  },
-                  investissement: {
-                    [anneePrecedente]: investissement.toString(10),
-                  },
-                  categorie: {
-                    [anneePrecedente]: entreprise.categorie === 'PME' ? 'pme' : 'autre',
-                  },
-                  articles: [articleId],
-                }
-              } else {
-                body.titres[titre.id].articles.push(articleId)
-              }
-
-              if (!Object.prototype.hasOwnProperty.call(body.communes, commune.id)) {
-                body.communes[commune.id] = { articles: [articleId] }
-              } else {
-                body.communes[commune.id].articles.push(articleId)
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-
-  return body
-}
-
-export const toFiscalite = (result: Pick<OpenfiscaResponse, 'articles'>, articleId: string, annee: number): Fiscalite => {
-  const article = result.articles[articleId]
-  const fiscalite: Fiscalite = {
-    redevanceCommunale: new Decimal(0),
-    redevanceDepartementale: new Decimal(0),
-  }
-  const communes = Object.keys(article).filter(key => key.startsWith('redevance_communale'))
-  const departements = Object.keys(article).filter(key => key.startsWith('redevance_departementale'))
-  for (const commune of communes) {
-    fiscalite.redevanceCommunale = fiscalite.redevanceCommunale.add(article[commune]?.[annee] ?? 0)
-  }
-  for (const departement of departements) {
-    fiscalite.redevanceDepartementale = fiscalite.redevanceDepartementale.add(article[departement]?.[annee] ?? 0)
-  }
-
-  if ('taxe_guyane_brute' in article) {
-    return {
-      ...fiscalite,
-      guyane: {
-        taxeAurifereBrute: new Decimal(article.taxe_guyane_brute?.[annee] ?? 0),
-        taxeAurifere: new Decimal(article.taxe_guyane?.[annee] ?? 0),
-        totalInvestissementsDeduits: new Decimal(article.taxe_guyane_deduction?.[annee] ?? 0),
-      },
-    }
-  }
-
-  return fiscalite
-}
+import { Matrices, getRawLines } from '../../business/matrices'
 
 type Reduced = { guyane: true; fiscalite: FiscaliteGuyane } | { guyane: false; fiscalite: FiscaliteFrance }
 // VisibleForTesting
-export const responseExtractor = (result: Pick<OpenfiscaResponse, 'articles'>, annee: number): Fiscalite => {
-  const redevances: Reduced = Object.keys(result.articles)
-    .map(articleId => toFiscalite(result, articleId, annee))
-    .reduce<Reduced>(
-      (acc, fiscalite) => {
+export const responseExtractor = (lines: Pick<Matrices, 'fiscalite'>[]): Fiscalite => {
+  const redevances: Reduced = lines.reduce<Reduced>(
+    (acc, { fiscalite }) => {
         acc.fiscalite.redevanceCommunale = acc.fiscalite.redevanceCommunale.add(fiscalite.redevanceCommunale)
         acc.fiscalite.redevanceDepartementale = acc.fiscalite.redevanceDepartementale.add(fiscalite.redevanceDepartementale)
 
@@ -569,20 +355,22 @@ export const fiscalite =
             { fields: { id: {} } },
             user
           )
+          const communes = titres.flatMap(({ communes }) => communes?.map(({ id }) => ({ id, nom: id }))).filter(isNotNullNorUndefined)
+          const rawLines = getRawLines(activites, activitesTrimestrielles, titres, caminoAnnee, communes, [
+            {
+              nom: entreprise.nom ?? '',
+              legal_siren: entreprise.legalSiren ?? null,
+              code_postal: entreprise.codePostal ?? null,
+              legal_etranger: entreprise.legalEtranger ?? null,
+              id: entreprise.id,
+              categorie: entreprise.categorie ?? 'pme',
+              adresse: entreprise.adresse ?? '',
+              commune: entreprise.commune ?? null,
+            },
+          ])
 
-          const body = bodyBuilder(activites, activitesTrimestrielles, titres, caminoAnneeToNumber(caminoAnnee), [entreprise])
-          if (Object.keys(body.articles).length > 0) {
-            const result = await apiOpenfiscaCalculate(body)
-
-            const redevances = responseExtractor(result, caminoAnneeToNumber(caminoAnnee))
-
-            res.json(redevances)
-          } else {
-            res.json({
-              redevanceCommunale: new Decimal(0),
-              redevanceDepartementale: new Decimal(0),
-            })
-          }
+         const redevances = responseExtractor(rawLines)
+          res.json(redevances)
         }
       }
     }

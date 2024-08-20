@@ -8,7 +8,7 @@ import { caminoAnneeValidator } from 'camino-common/src/date'
 import { communeIdValidator } from 'camino-common/src/static/communes'
 import { Pool } from 'pg'
 
-export const getTitreActiviteSubstanceParAnnee = async (pool: Pool, params: { substanceFiscale: SubstanceFiscaleId }) =>
+export const getTitreActiviteSubstanceParAnnee = async (pool: Pool, params: { substanceFiscale: SubstanceFiscaleId }): Promise<AnneeCountStatistique[]> =>
   dbQueryAndValidate(getTitreActiviteSubstanceParAnneeInternal, params, pool, anneeCountStatistiqueValidator)
 
 const getTitreActiviteSubstanceParAnneeInternal = sql<Redefine<IGetTitreActiviteSubstanceParAnneeInternalQuery, { substanceFiscale: SubstanceFiscaleId }, AnneeCountStatistique>>`
@@ -28,12 +28,12 @@ const substancesByAnneeByCommuneValidator = z.object({
   substances: z.record(substanceFiscaleIdValidator, z.coerce.number()),
 })
 
-type substancesByAnneeByCommune = z.infer<typeof substancesByAnneeByCommuneValidator>
+type SubstancesByAnneeByCommune = z.infer<typeof substancesByAnneeByCommuneValidator>
 
-export const getsubstancesByAnneeByCommune = async (pool: Pool, params: { substancesFiscales: readonly SubstanceFiscaleId[] }) =>
+export const getsubstancesByAnneeByCommune = async (pool: Pool, params: { substancesFiscales: readonly SubstanceFiscaleId[] }): Promise<SubstancesByAnneeByCommune[]> =>
   dbQueryAndValidate(getsubstancesByAnneeByCommuneInternal, params, pool, substancesByAnneeByCommuneValidator)
 
-const getsubstancesByAnneeByCommuneInternal = sql<Redefine<IGetsubstancesByAnneeByCommuneInternalQuery, { substancesFiscales: readonly SubstanceFiscaleId[] }, substancesByAnneeByCommune>>`
+const getsubstancesByAnneeByCommuneInternal = sql<Redefine<IGetsubstancesByAnneeByCommuneInternalQuery, { substancesFiscales: readonly SubstanceFiscaleId[] }, SubstancesByAnneeByCommune>>`
 select distinct on ("titres"."slug", ta."annee")
     ta."annee",
     "te"."communes",
@@ -74,7 +74,7 @@ export const getSubstancesByEntrepriseCategoryByAnnee = async (
     selSondage: typeof SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodium_extraitEnDissolutionParSondage
     selAbattage: typeof SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodium_extraitParAbattage
   }
-) => dbQueryAndValidate(getSubstancesByEntrepriseCategoryByAnneeInternal, params, pool, substancesByEntrepriseCategoryByAnneeValidator)
+): Promise<SubstancesByEntrepriseCategoryByAnnee[]> => dbQueryAndValidate(getSubstancesByEntrepriseCategoryByAnneeInternal, params, pool, substancesByEntrepriseCategoryByAnneeValidator)
 
 const getSubstancesByEntrepriseCategoryByAnneeInternal = sql<
   Redefine<

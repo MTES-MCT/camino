@@ -6,7 +6,7 @@ import { titresGet } from '../../database/queries/titres'
 import { titresActivitesGet } from '../../database/queries/titres-activites'
 import { userSuper } from '../../database/user-super'
 import { REGION_IDS } from 'camino-common/src/static/region'
-import { getEntreprises } from '../../api/rest/entreprises.queries'
+import { getEntreprises, getEntreprisesValidor } from '../../api/rest/entreprises.queries'
 import { config } from '../../config'
 import pg from 'pg'
 import { z } from 'zod'
@@ -89,7 +89,7 @@ const entryValidator = z.object({
     })
   ),
   annee: caminoAnneeValidator,
-  entreprises: z.array(z.object({ id: entrepriseIdTransformer, categorie: z.string().nullable(), nom: z.string().transform(() => '') })),
+  entreprises: z.array(getEntreprisesValidor),
 })
 
 export type BodyMatrice = {

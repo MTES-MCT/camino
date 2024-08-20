@@ -52,6 +52,7 @@ afterAll(async () => {
 })
 
 describe('fiscalite', () => {
+  // FIXME ajouter un test d'intégration avec de la donnée
   test('un utilisateur defaut n’a pas les droits', async () => {
     const entreprise = await entrepriseUpsert({
       id: newEntrepriseId('plop'),

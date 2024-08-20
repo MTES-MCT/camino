@@ -1,3 +1,4 @@
+import Decimal from 'decimal.js'
 import { z } from 'zod'
 const IDS = ['deg', 'gon', 'km3', 'm3a', 'm3x', 'met', 'mgr', 'mkc', 'mkg', 'mtc', 'mtk', 'mtt', 'txa', 'vmd', 'm3h', 'kwa'] as const
 
@@ -53,10 +54,10 @@ export const Unites: { [key in UniteId]: Unite<key> } = {
   kwa: { id: 'kwa', nom: 'kilowatt', symbole: 'kW', referenceUniteId: null, referenceUniteRatio: null },
 }
 
-export const fromUniteFiscaleToUnite = (unite: UniteId, value: number): number => {
+export const fromUniteFiscaleToUnite = (unite: UniteId, value: Decimal): Decimal => {
   const uniteRef = Unites[unite]
   if (uniteRef.referenceUniteRatio !== null) {
-    return value / uniteRef.referenceUniteRatio
+    return value.dividedBy(uniteRef.referenceUniteRatio)
   }
 
   return value
