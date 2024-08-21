@@ -3,13 +3,12 @@
 exports[`substancesFiscalesBySubstanceLegale 1`] = `
 [
   {
+    "calculFiscalite": {
+      "unite": "mkg",
+    },
     "description": "contenu dans les minerais",
     "id": "auru",
     "nom": "or",
-    "openFisca": {
-      "nom": "aurifere",
-      "unite": "mkg",
-    },
     "substanceLegaleId": "auru",
     "uniteId": "mgr",
   },
@@ -36,9 +35,6 @@ exports[`substancesFiscalesBySubstanceLegale 2`] = `
     "description": "contenu dans les minerais",
     "id": "etai",
     "nom": "étain",
-    "openFisca": {
-      "nom": "etain",
-    },
     "substanceLegaleId": "etai",
     "uniteId": "mtt",
   },
@@ -46,9 +42,6 @@ exports[`substancesFiscalesBySubstanceLegale 2`] = `
     "description": "net livré",
     "id": "fera",
     "nom": "pyrite de fer",
-    "openFisca": {
-      "nom": "fer_pyrite",
-    },
     "substanceLegaleId": "ferx",
     "uniteId": "mtk",
   },
@@ -56,9 +49,6 @@ exports[`substancesFiscalesBySubstanceLegale 2`] = `
     "description": "net livré",
     "id": "ferb",
     "nom": "minerais de fer",
-    "openFisca": {
-      "nom": "fer",
-    },
     "substanceLegaleId": "ferx",
     "uniteId": "mtk",
   },
@@ -66,9 +56,6 @@ exports[`substancesFiscalesBySubstanceLegale 2`] = `
     "description": "contenu dans les minerais",
     "id": "mang",
     "nom": "manganèse",
-    "openFisca": {
-      "nom": "manganese",
-    },
     "substanceLegaleId": "mang",
     "uniteId": "mtc",
   },

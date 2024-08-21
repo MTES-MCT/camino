@@ -27,10 +27,10 @@ export interface Unite<T = UniteId> {
   symbole: string
   referenceUniteId: null | UniteId
   referenceUniteRatio: null | number
-  openfiscaId?: UniteOpenfiscaId
+  uniteFiscaliteId?: UniteFiscaliteId
 }
 
-type UniteOpenfiscaId = 'kg' | '100kg' | 't' | '100t' | 'kt' | '100km3'
+type UniteFiscaliteId = 'kg' | '100kg' | 't' | '100t' | 'kt' | '100km3'
 
 export const uniteIdValidator = z.enum(IDS)
 export type UniteId = z.infer<typeof uniteIdValidator>
@@ -44,13 +44,13 @@ export const Unites: { [key in UniteId]: Unite<key> } = {
   m3x: { id: 'm3x', nom: 'mètre cube', symbole: 'm³', referenceUniteId: null, referenceUniteRatio: null },
   met: { id: 'met', nom: 'mètre', symbole: 'm', referenceUniteId: null, referenceUniteRatio: null },
   mgr: { id: 'mgr', nom: 'gramme', symbole: 'g', referenceUniteId: 'mkg', referenceUniteRatio: 0.001 },
-  mkc: { id: 'mkc', nom: 'quintal', symbole: 'x 100 kg', referenceUniteId: 'mkg', referenceUniteRatio: 100, openfiscaId: '100kg' },
-  mkg: { id: 'mkg', nom: 'kilogramme', symbole: 'kg', referenceUniteId: null, referenceUniteRatio: null, openfiscaId: 'kg' },
-  mtc: { id: 'mtc', nom: 'centaine de tonnes', symbole: 'x 100 t', referenceUniteId: 'mkg', referenceUniteRatio: 100000, openfiscaId: '100t' },
-  mtk: { id: 'mtk', nom: 'millier de tonnes', symbole: 'x 1000 t', referenceUniteId: 'mkg', referenceUniteRatio: 1000000, openfiscaId: 'kt' },
-  mtt: { id: 'mtt', nom: 'tonne', symbole: 't', referenceUniteId: 'mkg', referenceUniteRatio: 1000, openfiscaId: 't' },
+  mkc: { id: 'mkc', nom: 'quintal', symbole: 'x 100 kg', referenceUniteId: 'mkg', referenceUniteRatio: 100, uniteFiscaliteId: '100kg' },
+  mkg: { id: 'mkg', nom: 'kilogramme', symbole: 'kg', referenceUniteId: null, referenceUniteRatio: null, uniteFiscaliteId: 'kg' },
+  mtc: { id: 'mtc', nom: 'centaine de tonnes', symbole: 'x 100 t', referenceUniteId: 'mkg', referenceUniteRatio: 100000, uniteFiscaliteId: '100t' },
+  mtk: { id: 'mtk', nom: 'millier de tonnes', symbole: 'x 1000 t', referenceUniteId: 'mkg', referenceUniteRatio: 1000000, uniteFiscaliteId: 'kt' },
+  mtt: { id: 'mtt', nom: 'tonne', symbole: 't', referenceUniteId: 'mkg', referenceUniteRatio: 1000, uniteFiscaliteId: 't' },
   txa: { id: 'txa', nom: 'tonnes par an', symbole: 't/an', referenceUniteId: null, referenceUniteRatio: null },
-  vmd: { id: 'vmd', nom: '100 000 mètres cubes', symbole: 'x 100 000 m³', referenceUniteId: 'm3x', referenceUniteRatio: 100000, openfiscaId: '100km3' },
+  vmd: { id: 'vmd', nom: '100 000 mètres cubes', symbole: 'x 100 000 m³', referenceUniteId: 'm3x', referenceUniteRatio: 100000, uniteFiscaliteId: '100km3' },
   kwa: { id: 'kwa', nom: 'kilowatt', symbole: 'kW', referenceUniteId: null, referenceUniteRatio: null },
 }
 

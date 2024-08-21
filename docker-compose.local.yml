@@ -1,12 +1,6 @@
 version: '3'
 
 services:
-  openfisca:
-    build:
-      context: .
-      dockerfile: Dockerfile.openfisca
-    ports:
-      - 8000:8000
   api:
     container_name: camino_api_app
     build:
@@ -14,7 +8,6 @@ services:
       dockerfile: Dockerfile.api
     depends_on:
       - db
-      - openfisca
     environment:
       PGHOST: db
     ports:

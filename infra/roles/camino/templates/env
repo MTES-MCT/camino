@@ -36,8 +36,6 @@ OAUTH2_COOKIE_SECRET={{ oauth2_cookie_secret }}
 DOC_HOST=docs.{{ base_host }}
 DOC_URL=https://docs.{{ base_host }}
 
-API_OPENFISCA_URL="http://openfisca:8000"
-
 # certificat ssh (docker compose)
 LETSENCRYPT_EMAIL=camino@beta.gouv.fr
 

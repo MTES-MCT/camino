@@ -188,10 +188,10 @@ type BuildedMatrices = {
   rawLines: RawLineMatrice[]
 }
 
-const openfiscaSubstanceFiscaleUnite = (substanceFiscale: SubstanceFiscale): Unite => {
-  const unite = substanceFiscale.openFisca?.unite ? Unites[substanceFiscale.openFisca.unite] : Unites[substanceFiscale.uniteId]
-  if (!unite.openfiscaId) {
-    throw new Error(`l'unité ${unite.id} pour la substance ${substanceFiscale.id} n'est pas connue par openFisca`)
+const fiscaliteSubstanceFiscaleUnite = (substanceFiscale: SubstanceFiscale): Unite => {
+  const unite = substanceFiscale.calculFiscalite?.unite ? Unites[substanceFiscale.calculFiscalite.unite] : Unites[substanceFiscale.uniteId]
+  if (!unite.uniteFiscaliteId) {
+    throw new Error(`l'unité ${unite.id} pour la substance ${substanceFiscale.id} n'est pas connue par notre système de fiscalité`)
   }
 
   return unite
@@ -202,7 +202,7 @@ const conversion = (substanceFiscale: SubstanceFiscale, quantite: IContenuValeur
     return { uniteId: substanceFiscale.uniteId, value: new Decimal(0) }
   }
 
-  const unite = openfiscaSubstanceFiscaleUnite(substanceFiscale)
+  const unite = fiscaliteSubstanceFiscaleUnite(substanceFiscale)
 
   return { uniteId: unite.id, value: new Decimal(quantite).div(unite.referenceUniteRatio ?? 1).toDecimalPlaces(3) }
 }
