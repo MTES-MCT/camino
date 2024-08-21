@@ -31,10 +31,7 @@ test('toDegresMinutes', () => {
   })
 })
 
-
 test('decimal round', () => {
-
-  Decimal.ROUND_HALF_UP
   expect(new Decimal(12.34).toDecimalPlaces(1)).toStrictEqual(new Decimal(12.3))
   expect(new Decimal(12.35).toDecimalPlaces(1)).toStrictEqual(new Decimal(12.4))
 })
