@@ -63,6 +63,7 @@
     "basic-auth": "^2.0.1",
     "bcryptjs": "^2.4.3",
     "camino-common": "1.0.0",
+    "carbone": "^3.5.6",
     "compression": "^1.7.4",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
@@ -106,7 +107,6 @@
     "@typescript-eslint/eslint-plugin": "^7.12.0",
     "@typescript-eslint/parser": "^7.12.0",
     "@vitest/coverage-v8": "^1.5.2",
-    "carbone": "^3.5.5",
     "eslint": "^8.56.0",
     "eslint-config-prettier": "^8.10.0",
     "eslint-config-standard": "^17.1.0",
@@ -143,8 +143,12 @@
         }
       },
       {
-        "files": ["src/**/*.ts"],
-        "excludedFiles": ["src/**/*.queries.ts"],
+        "files": [
+          "src/**/*.ts"
+        ],
+        "excludedFiles": [
+          "src/**/*.queries.ts"
+        ],
         "rules": {
           "no-restricted-syntax": [
             "error",
@@ -199,9 +203,9 @@
           "selector": "Identifier[name='leftJoinRelation']"
         },
         {
-                "message": "sort is deprecated. Use toSorted instead.",
-                "selector": "Identifier[name='sort']"
-              },
+          "message": "sort is deprecated. Use toSorted instead.",
+          "selector": "Identifier[name='sort']"
+        },
         {
           "message": "no 'run' call from PgTyped allowed. Use dbQueryAndValidate.",
           "selector": "CallExpression[callee.property.name='run'][arguments.length=2]"

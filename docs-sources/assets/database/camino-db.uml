@@ -23,12 +23,7 @@ entity "**communes**" {
   + ""id"": //character varying(5) [PK]//
   --
   *""nom"": //character varying(255) //
-}
-
-entity "**communes_postgis**" {
-  + ""id"": //character varying(5) [PK]//
-  --
-  ""geometry"": //geometry(MultiPolygon,4326) //
+  *""geometry"": //geometry //
 }
 
 entity "**entreprises**" {
@@ -48,7 +43,7 @@ entity "**entreprises**" {
   ""url"": //character varying(1024) //
   ""email"": //character varying(255) //
   ""telephone"": //character varying(255) //
-  ""archive"": //boolean //
+  *""archive"": //boolean //
 }
 
 entity "**entreprises_documents**" {
@@ -65,10 +60,22 @@ entity "**entreprises_etablissements**" {
   + ""id"": //character varying(64) [PK]//
   --
   *""entreprise_id"": //character varying(64) [FK]//
-  ""nom"": //character varying(255) //
+  *""nom"": //character varying(255) //
   ""legal_siret"": //character varying(255) //
-  ""date_debut"": //character varying(10) //
+  *""date_debut"": //character varying(10) //
   ""date_fin"": //character varying(10) //
+}
+
+entity "**etape_avis**" {
+  --
+  *""id"": //character varying(255) //
+  *""avis_type_id"": //character varying(255) //
+  *""avis_statut_id"": //character varying(255) //
+  *""avis_visibility_id"": //character varying(255) //
+  *""etape_id"": //character varying(255) //
+  *""description"": //text //
+  *""date"": //character varying(10) //
+  ""largeobject_id"": //oid //
 }
 
 entity "**etapes_documents**" {
@@ -79,7 +86,7 @@ entity "**etapes_documents**" {
   ""description"": //character varying(1024) //
   *""public_lecture"": //boolean //
   *""entreprises_lecture"": //boolean //
-  ""largeobject_id"": //oid //
+  *""largeobject_id"": //oid //
 }
 
 entity "**forets_postgis**" {
@@ -111,6 +118,15 @@ entity "**knex_migrations_lock**" {
   + ""index"": //serial [PK]//
   --
   ""is_locked"": //integer //
+}
+
+entity "**logs**" {
+  --
+  *""datetime"": //timestamp with time zone //
+  ""path"": //character varying(255) //
+  *""method"": //character varying(6) //
+  ""body"": //jsonb //
+  *""utilisateur_id"": //character varying(255) [FK]//
 }
 
 entity "**perimetre_reference**" {
@@ -179,13 +195,6 @@ entity "**titres_activites**" {
   *""slug"": //character varying(255) //
 }
 
-entity "**titres_amodiataires**" {
-  + ""titre_etape_id"": //character varying(128) [PK][FK]//
-  + ""entreprise_id"": //character varying(64) [PK][FK]//
-  --
-  ""operateur"": //boolean //
-}
-
 entity "**titres_demarches**" {
   + ""id"": //character varying(128) [PK]//
   --
@@ -225,7 +234,6 @@ entity "**titres_etapes**" {
   *""sdom_zones"": //jsonb //
   *""forets"": //jsonb //
   *""communes"": //jsonb //
-  ""notes"": //text //
   ""geojson4326_perimetre"": //geometry(MultiPolygon,4326) //
   ""geojson4326_points"": //jsonb //
   ""geojson_origine_points"": //jsonb //
@@ -233,19 +241,16 @@ entity "**titres_etapes**" {
   ""geojson_origine_geo_systeme_id"": //character varying //
   ""geojson4326_forages"": //jsonb //
   ""geojson_origine_forages"": //jsonb //
+  *""titulaire_ids"": //jsonb //
+  *""amodiataire_ids"": //jsonb //
+  *""is_brouillon"": //boolean //
+  *""note"": //jsonb //
 }
 
 entity "**titres_etapes_entreprises_documents**" {
   + ""titre_etape_id"": //character varying(128) [PK][FK]//
   + ""entreprise_document_id"": //character varying(255) [PK][FK]//
   --
-}
-
-entity "**titres_titulaires**" {
-  + ""titre_etape_id"": //character varying(128) [PK][FK]//
-  + ""entreprise_id"": //character varying(64) [PK][FK]//
-  --
-  ""operateur"": //boolean //
 }
 
 entity "**utilisateurs**" {
@@ -285,6 +290,8 @@ entity "**utilisateurs__titres**" {
 
 "**journaux**"   }--  "**titres**"
 
+"**logs**"   }--  "**utilisateurs**"
+
 "**perimetre_reference**"   }--  "**titres_etapes**"
 
 "**titres__titres**"   }--  "**titres**"
@@ -299,14 +306,6 @@ entity "**utilisateurs__titres**" {
 
 "**titres_activites**"   }--  "**utilisateurs**"
 
-"**titres_amodiataires**"   }--  "**entreprises**"
-
-"**titres_amodiataires**"   }--  "**entreprises**"
-
-"**titres_amodiataires**"   }--  "**titres_etapes**"
-
-"**titres_amodiataires**"   }--  "**titres_etapes**"
-
 "**titres_demarches**"   }--  "**titres**"
 
 "**titres_etapes**"   }--  "**titres_demarches**"
@@ -318,14 +317,6 @@ entity "**utilisateurs__titres**" {
 "**titres_etapes_entreprises_documents**"   }--  "**titres_etapes**"
 
 "**titres_etapes_entreprises_documents**"   }--  "**titres_etapes**"
-
-"**titres_titulaires**"   }--  "**entreprises**"
-
-"**titres_titulaires**"   }--  "**entreprises**"
-
-"**titres_titulaires**"   }--  "**titres_etapes**"
-
-"**titres_titulaires**"   }--  "**titres_etapes**"
 
 "**utilisateurs__entreprises**"   }--  "**entreprises**"
 

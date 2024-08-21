@@ -12,7 +12,8 @@ docs/serve: _docs
 	cd docs-sources && mkdocs serve -a localhost:8080
 
 docs/generate-schema:
-	planter postgres://postgres:password@localhost/camino?sslmode=disable -o docs-sources/assets/database/camino-db.uml
+	# Planter vient de https://github.com/achiku/planter
+	docker run --net=camino_default --rm agileek/planter planter postgres://postgres:password@camino_api_db/camino?sslmode=disable > docs-sources/assets/database/camino-db.uml
 	cat docs-sources/assets/database/camino-db.uml | docker run --rm -i agileek/plantuml:1.2022.3 > docs-sources/docs/img/camino-db.svg
 	cat docs-sources/assets/keycloak_impersonate.uml | docker run --rm -i agileek/plantuml:1.2022.3 > docs-sources/docs/img/keycloak_impersonate.svg
 	cat docs-sources/assets/architecture.puml | docker run --rm -i agileek/plantuml:1.2022.3 > docs-sources/docs/img/architecture.svg

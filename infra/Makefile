@@ -1,5 +1,5 @@
 build:
-	docker run -t --rm -w /workspace -e CARGO_HOME=/workspace/.cargo_docker -v $${PWD}/cd:/workspace rust:1.75-buster cargo build --release
+	docker run -t --rm -w /workspace -e CARGO_HOME=/workspace/.cargo_docker -v $${PWD}/cd:/workspace rust:1.80.1-bullseye cargo build --release
 
 lint:
 	cd cd && cargo clippy
