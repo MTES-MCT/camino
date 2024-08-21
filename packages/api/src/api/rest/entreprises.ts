@@ -43,11 +43,11 @@ import Decimal from 'decimal.js'
 import { createLargeObject } from '../../database/largeobjects'
 import { z } from 'zod'
 import { getEntrepriseEtablissements } from './entreprises-etablissements.queries'
-import { Matrices, getRawLines } from '../../business/matrices'
+import { RawLineMatrice, getRawLines } from '../../business/matrices'
 
 type Reduced = { guyane: true; fiscalite: FiscaliteGuyane } | { guyane: false; fiscalite: FiscaliteFrance }
 // VisibleForTesting
-export const responseExtractor = (lines: Pick<Matrices, 'fiscalite'>[]): Fiscalite => {
+export const responseExtractor = (lines: Pick<RawLineMatrice, 'fiscalite'>[]): Fiscalite => {
   const redevances: Reduced = lines.reduce<Reduced>(
     (acc, { fiscalite }) => {
       acc.fiscalite.redevanceCommunale = acc.fiscalite.redevanceCommunale.add(fiscalite.redevanceCommunale)

@@ -15,7 +15,7 @@ import { EntrepriseId, entrepriseIdValidator } from 'camino-common/src/entrepris
 import { substanceLegaleIdValidator } from 'camino-common/src/static/substancesLegales'
 import { CommuneId, communeIdValidator } from 'camino-common/src/static/communes'
 import { idGenerate, newTitreId } from '../../database/models/_format/id-create'
-import { Matrices, getRawLines } from '../../business/matrices'
+import { RawLineMatrice, getRawLines } from '../../business/matrices'
 // Le pool ne doit être qu'aux entrypoints : le daily, le monthly, et l'application.
 const pool = new pg.Pool({
   host: config().PGHOST,
@@ -94,7 +94,7 @@ const entryValidator = z.object({
 
 export type BodyMatrice = {
   entries: z.infer<typeof entryValidator>
-  expected: Matrices[]
+  expected: RawLineMatrice[]
 }
 const writeMatricesForTest = async () => {
   const user = userSuper

@@ -139,7 +139,7 @@ export const SubstancesFiscale: {
   zinc: { id: 'zinc', substanceLegaleId: 'zinc', uniteId: 'mtc', nom: 'zinc', description: 'contenu dans les minerais' },
 }
 
-export const SubstancesFiscales = Object.values(SubstancesFiscale)
+const SubstancesFiscales = Object.values(SubstancesFiscale)
 
 export const substancesFiscalesBySubstanceLegale = (substanceLegaleId: SubstanceLegaleId): SubstanceFiscale[] => {
   const substancesLegalesIds = SubstancesLegales.filter(({ id, substanceParentIds }) => id === substanceLegaleId || substanceParentIds?.includes(substanceLegaleId)).map(({ id }) => id)

@@ -163,7 +163,7 @@ export const rawMatriceValidator = z.object({
   surfaceCommunaleProportionnee: decimalValidator,
   surfaceCommunale: decimalValidator,
 })
-export type Matrices = z.infer<typeof rawMatriceValidator>
+export type RawLineMatrice = z.infer<typeof rawMatriceValidator>
 
 type Matrice1122 = {
   numeroOrdreMatrice: number
@@ -180,12 +180,12 @@ const titulaireToString = (titulaire: Titulaire): string => {
   return `${titulaire.nom} - ${titulaire.rue} - ${titulaire.siren} SIREN`
 }
 
-export type BuildedMatrices = {
+type BuildedMatrices = {
   matrice1121: Matrice1121[]
   matrice1122: Matrice1122[]
   matrice1403: Matrice1403[]
   matrice1404: Record<Sips, Matrice1404[]>
-  rawLines: Matrices[]
+  rawLines: RawLineMatrice[]
 }
 
 const openfiscaSubstanceFiscaleUnite = (substanceFiscale: SubstanceFiscale): Unite => {
@@ -232,7 +232,7 @@ export const getRawLines = (
   annee: CaminoAnnee,
   communes: Commune[],
   entreprises: GetEntreprises[]
-): Matrices[] => {
+): RawLineMatrice[] => {
   const titresToBuild: Record<TitreId, TitreBuild> = {}
   for (const activite of activitesAnnuelles) {
     const titre = titres.find(({ id }) => id === activite.titreId)
@@ -345,7 +345,7 @@ export const getRawLines = (
   }
 
   let count = 0
-  const rawLines: Matrices[] = titres
+  const rawLines: RawLineMatrice[] = titres
     .filter(({ id }) => isNotNullNorUndefined(titresToBuild[id]))
     .flatMap(titre => {
       const titreBuild = titresToBuild[titre.id]
@@ -389,7 +389,7 @@ export const getRawLines = (
             }
             const titulaireTitre = entreprises.find(({ id }) => titreBuild.titre.titulaireIds[0] === id)
 
-            const result: Matrices = {
+            const result: RawLineMatrice = {
               communePrincipale: communes.find(({ id }) => id === communePrincipale.id) ?? { id: communePrincipale.id, nom: communePrincipale.id },
               commune: communes.find(({ id }) => commune.id === id) ?? { id: commune.id, nom: commune.id },
               fiscalite,
