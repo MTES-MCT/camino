@@ -50,35 +50,35 @@ type Reduced = { guyane: true; fiscalite: FiscaliteGuyane } | { guyane: false; f
 export const responseExtractor = (lines: Pick<Matrices, 'fiscalite'>[]): Fiscalite => {
   const redevances: Reduced = lines.reduce<Reduced>(
     (acc, { fiscalite }) => {
-        acc.fiscalite.redevanceCommunale = acc.fiscalite.redevanceCommunale.add(fiscalite.redevanceCommunale)
-        acc.fiscalite.redevanceDepartementale = acc.fiscalite.redevanceDepartementale.add(fiscalite.redevanceDepartementale)
+      acc.fiscalite.redevanceCommunale = acc.fiscalite.redevanceCommunale.add(fiscalite.redevanceCommunale)
+      acc.fiscalite.redevanceDepartementale = acc.fiscalite.redevanceDepartementale.add(fiscalite.redevanceDepartementale)
 
-        if (!acc.guyane && 'guyane' in fiscalite) {
-          acc = {
-            guyane: true,
-            fiscalite: {
-              ...acc.fiscalite,
-              guyane: {
-                taxeAurifereBrute: new Decimal(0),
-                taxeAurifere: new Decimal(0),
-                totalInvestissementsDeduits: new Decimal(0),
-              },
+      if (!acc.guyane && 'guyane' in fiscalite) {
+        acc = {
+          guyane: true,
+          fiscalite: {
+            ...acc.fiscalite,
+            guyane: {
+              taxeAurifereBrute: new Decimal(0),
+              taxeAurifere: new Decimal(0),
+              totalInvestissementsDeduits: new Decimal(0),
             },
-          }
+          },
         }
-        if (acc.guyane && 'guyane' in fiscalite) {
-          acc.fiscalite.guyane.taxeAurifereBrute = acc.fiscalite.guyane.taxeAurifereBrute.add(fiscalite.guyane.taxeAurifereBrute)
-          acc.fiscalite.guyane.totalInvestissementsDeduits = acc.fiscalite.guyane.totalInvestissementsDeduits.add(fiscalite.guyane.totalInvestissementsDeduits)
-          acc.fiscalite.guyane.taxeAurifere = acc.fiscalite.guyane.taxeAurifere.add(fiscalite.guyane.taxeAurifere)
-        }
-
-        return acc
-      },
-      {
-        guyane: false,
-        fiscalite: { redevanceCommunale: new Decimal(0), redevanceDepartementale: new Decimal(0) },
       }
-    )
+      if (acc.guyane && 'guyane' in fiscalite) {
+        acc.fiscalite.guyane.taxeAurifereBrute = acc.fiscalite.guyane.taxeAurifereBrute.add(fiscalite.guyane.taxeAurifereBrute)
+        acc.fiscalite.guyane.totalInvestissementsDeduits = acc.fiscalite.guyane.totalInvestissementsDeduits.add(fiscalite.guyane.totalInvestissementsDeduits)
+        acc.fiscalite.guyane.taxeAurifere = acc.fiscalite.guyane.taxeAurifere.add(fiscalite.guyane.taxeAurifere)
+      }
+
+      return acc
+    },
+    {
+      guyane: false,
+      fiscalite: { redevanceCommunale: new Decimal(0), redevanceDepartementale: new Decimal(0) },
+    }
+  )
 
   return redevances.fiscalite
 }
@@ -369,7 +369,7 @@ export const fiscalite =
             },
           ])
 
-         const redevances = responseExtractor(rawLines)
+          const redevances = responseExtractor(rawLines)
           res.json(redevances)
         }
       }

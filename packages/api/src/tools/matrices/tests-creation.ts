@@ -106,8 +106,7 @@ const writeMatricesForTest = async () => {
     const anneeMoins1 = anneePrecedente(annee)
 
     const titres = await titresGet(
-      { regions: [REGION_IDS.Guyane],
-      },
+      { regions: [REGION_IDS.Guyane] },
       {
         fields: {
           titulairesEtape: { id: {} },
@@ -147,7 +146,14 @@ const writeMatricesForTest = async () => {
       entreprises,
     })
 
-    const result = getRawLines(stripedData.activitesAnnuelles, stripedData.activitesTrimestrielles, stripedData.titres, annee,Object.values(communeIdsIndex).map(communeId => ({ id: communeId, nom: communeId })), stripedData.entreprises)
+    const result = getRawLines(
+      stripedData.activitesAnnuelles,
+      stripedData.activitesTrimestrielles,
+      stripedData.titres,
+      annee,
+      Object.values(communeIdsIndex).map(communeId => ({ id: communeId, nom: communeId })),
+      stripedData.entreprises
+    )
     testBody.push({
       entries: stripedData,
       expected: result,

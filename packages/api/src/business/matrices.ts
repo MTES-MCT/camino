@@ -1,7 +1,6 @@
 import '../init'
 import { titresGet } from '../database/queries/titres'
 import { titresActivitesGet } from '../database/queries/titres-activites'
-import { openfiscaSubstanceFiscaleUnite } from '../tools/api-openfisca/index'
 import { userSuper } from '../database/user-super'
 import { fraisGestion } from 'camino-common/src/fiscalite'
 import { FiscaliteFrance, decimalValidator, fiscaliteValidator, type Fiscalite } from 'camino-common/src/validators/fiscalite'
@@ -25,8 +24,16 @@ import { isGuyane } from 'camino-common/src/static/pays'
 import { SubstanceFiscale, SubstanceFiscaleId, SUBSTANCES_FISCALES_IDS, SubstancesFiscale, substancesFiscalesBySubstanceLegale } from 'camino-common/src/static/substancesFiscales'
 import { TitreId, TitreSlug } from 'camino-common/src/validators/titres'
 import { z } from 'zod'
-import { fromUniteFiscaleToUnite } from 'camino-common/src/static/unites'
-import { EntrepriseCategory, getAllTarifsBySubstances, getCategoriesForTaxeAurifereGuyane, getRedevanceCommunale, getRedevanceDepartementale, taxeAurifereBrutDeductionTaux, taxeAurifereGuyaneDeductionMontantMax } from './fiscalite'
+import { Unite, Unites, fromUniteFiscaleToUnite } from 'camino-common/src/static/unites'
+import {
+  EntrepriseCategory,
+  getAllTarifsBySubstances,
+  getCategoriesForTaxeAurifereGuyane,
+  getRedevanceCommunale,
+  getRedevanceDepartementale,
+  taxeAurifereBrutDeductionTaux,
+  taxeAurifereGuyaneDeductionMontantMax,
+} from './fiscalite'
 
 const SIP_IDS = ['cayenne', 'kourou', 'saintLaurentDuMaroni'] as const
 const sipIdValidator = z.enum(SIP_IDS)
@@ -68,7 +75,7 @@ const sips = {
       '97311', //  Saint-Laurent-du-Maroni
     ],
   },
-} as const satisfies Record<z.infer<typeof sipIdValidator>, {nom: string, communes: string[]}>
+} as const satisfies Record<z.infer<typeof sipIdValidator>, { nom: string; communes: string[] }>
 type Sips = keyof typeof sips
 const isSip = (value: string): value is Sips => Object.keys(sips).includes(value)
 type Matrice1403 = {
@@ -140,7 +147,7 @@ type Titulaire = z.infer<typeof matriceTitulaireValidator>
 
 const communeWithSurfaceValidator = z.object({
   id: communeIdValidator,
-  surface: decimalValidator.optional().nullable()
+  surface: decimalValidator.optional().nullable(),
 })
 type CommuneWithSurface = z.infer<typeof communeWithSurfaceValidator>
 export const rawMatriceValidator = z.object({
@@ -180,6 +187,18 @@ export type BuildedMatrices = {
   matrice1404: Record<Sips, Matrice1404[]>
   rawLines: Matrices[]
 }
+
+const openfiscaSubstanceFiscaleUnite = (substanceFiscale: SubstanceFiscale): Unite => {
+  const unite = substanceFiscale.openFisca?.unite ? Unites[substanceFiscale.openFisca.unite] : Unites[substanceFiscale.uniteId]
+  if (!unite.openfiscaId) {
+    throw new Error(`l'unité ${unite.id} pour la substance ${substanceFiscale.id} n'est pas connue par openFisca`)
+  }
+
+  return unite
+}
+
+// FIXME on ne convertit pas 2 fois ? ici plus lors du simple fiscalité ?
+// ça tombe en marche je pense parce qu'il n'y a pas de conversion sur l'unité de l'or, mais ça sent pas bon
 const conversion = (substanceFiscale: SubstanceFiscale, quantite: IContenuValeur): Decimal => {
   if (typeof quantite !== 'number') {
     return new Decimal(0)
@@ -189,7 +208,6 @@ const conversion = (substanceFiscale: SubstanceFiscale, quantite: IContenuValeur
 
   return new Decimal(quantite).div(unite.referenceUniteRatio ?? 1).toDecimalPlaces(3)
 }
-
 
 type ProductionBySubstance = {
   substanceFiscaleId: SubstanceFiscaleId
@@ -348,7 +366,14 @@ export const getRawLines = (
             const surfaceCommunaleProportionnee = surface.div(titreBuild.surface_totale)
             const quantiteOrExtrait = new Decimal(productionBySubstance.production).mul(surfaceCommunaleProportionnee).toDecimalPlaces(3)
 
-            const fiscalite = toNewFiscalite({ ...productionBySubstance , production: quantiteOrExtrait}, annee, isTitreGuyannais, titreBuild.categorie, titreBuild.investissement, surfaceCommunaleProportionnee)
+            const fiscalite = toNewFiscalite(
+              { ...productionBySubstance, production: quantiteOrExtrait },
+              annee,
+              isTitreGuyannais,
+              titreBuild.categorie,
+              titreBuild.investissement,
+              surfaceCommunaleProportionnee
+            )
 
             const titreLabel = titreBuild.titre.slug ?? ''
 
@@ -394,8 +419,6 @@ export const getRawLines = (
   return rawLines
 }
 
-
-
 export const getSimpleFiscalite = (productionBySubstance: ProductionBySubstance, annee: CaminoAnnee): FiscaliteFrance => {
   const production = fromUniteFiscaleToUnite(SubstancesFiscale[productionBySubstance.substanceFiscaleId].uniteId, productionBySubstance.production)
   const fiscalite: FiscaliteFrance = {
@@ -403,24 +426,33 @@ export const getSimpleFiscalite = (productionBySubstance: ProductionBySubstance,
     redevanceDepartementale: production.mul(getRedevanceDepartementale(annee, productionBySubstance.substanceFiscaleId)).toDecimalPlaces(2, Decimal.ROUND_HALF_EVEN),
   }
 
- return fiscalite
+  return fiscalite
 }
 
-const toNewFiscalite = (productionBySubstance: ProductionBySubstance, annee: CaminoAnnee, isTitreGuyannais: boolean, category: EntrepriseCategory, investissement: Decimal, surfaceCommunaleProportionnee: Decimal): Fiscalite => {
+const toNewFiscalite = (
+  productionBySubstance: ProductionBySubstance,
+  annee: CaminoAnnee,
+  isTitreGuyannais: boolean,
+  category: EntrepriseCategory,
+  investissement: Decimal,
+  surfaceCommunaleProportionnee: Decimal
+): Fiscalite => {
   const fiscalite: Fiscalite = getSimpleFiscalite(productionBySubstance, annee)
 
   if (isTitreGuyannais) {
-
     const taxeAurifereBrute = productionBySubstance.production.mul(getCategoriesForTaxeAurifereGuyane(annee, category)).toDecimalPlaces(2, Decimal.ROUND_HALF_EVEN)
 
-    const totalInvestissementsDeduits = Decimal.min(taxeAurifereGuyaneDeductionMontantMax, investissement, taxeAurifereBrute.mul(taxeAurifereBrutDeductionTaux)).toDecimalPlaces(2, Decimal.ROUND_HALF_EVEN).mul(surfaceCommunaleProportionnee).toDecimalPlaces(2, Decimal.ROUND_HALF_EVEN)
+    const totalInvestissementsDeduits = Decimal.min(taxeAurifereGuyaneDeductionMontantMax, investissement, taxeAurifereBrute.mul(taxeAurifereBrutDeductionTaux))
+      .toDecimalPlaces(2, Decimal.ROUND_HALF_EVEN)
+      .mul(surfaceCommunaleProportionnee)
+      .toDecimalPlaces(2, Decimal.ROUND_HALF_EVEN)
 
     return {
       ...fiscalite,
       guyane: {
         taxeAurifereBrute,
         totalInvestissementsDeduits,
-        taxeAurifere: taxeAurifereBrute.minus(totalInvestissementsDeduits) ,
+        taxeAurifere: taxeAurifereBrute.minus(totalInvestissementsDeduits),
       },
     }
   }
@@ -436,7 +468,6 @@ const buildMatrices = (
   communes: Commune[],
   entreprises: GetEntreprises[]
 ): BuildedMatrices => {
-
   const rawLines = getRawLines(activitesAnnuelles, activitesTrimestrielles, titres, annee, communes, entreprises)
 
   const matrice1121 = rawLines.map(line => {
@@ -676,285 +707,282 @@ export const matrices = async (annee: CaminoAnnee, pool: Pool): Promise<void> =>
     .filter(isNotNullNorUndefined)
   const communes = isNonEmptyArray(communesIds) ? await getCommunes(pool, { ids: communesIds }) : []
 
-    const { matrice1121, matrice1122, matrice1403, matrice1404, rawLines } = buildMatrices(activites, activitesTrimestrielles, titres, annee, communes, entreprises)
+  const { matrice1121, matrice1122, matrice1403, matrice1404, rawLines } = buildMatrices(activites, activitesTrimestrielles, titres, annee, communes, entreprises)
 
-    const { totalRedevanceDesMines, totalMontantNetTaxeMiniereOrGuyane, fraisGestionFiscaliteDirecteLocale } = matrice1121.reduce<{
-      totalRedevanceDesMines: Decimal
-      totalMontantNetTaxeMiniereOrGuyane: Decimal
-      fraisGestionFiscaliteDirecteLocale: Decimal
-    }>(
-      (acc, value) => {
-        acc.totalRedevanceDesMines = acc.totalRedevanceDesMines.add(value.totalRedevanceDesMines)
-        acc.totalMontantNetTaxeMiniereOrGuyane = acc.totalMontantNetTaxeMiniereOrGuyane.add(value.taxeMiniereSurLOrDeGuyaneMontantNetDeTaxeMinièreSurLOrDeGuyane)
-        acc.fraisGestionFiscaliteDirecteLocale = acc.fraisGestionFiscaliteDirecteLocale.add(value.fraisDeGestionDeLaFiscaliteDirecteLocale)
+  const { totalRedevanceDesMines, totalMontantNetTaxeMiniereOrGuyane, fraisGestionFiscaliteDirecteLocale } = matrice1121.reduce<{
+    totalRedevanceDesMines: Decimal
+    totalMontantNetTaxeMiniereOrGuyane: Decimal
+    fraisGestionFiscaliteDirecteLocale: Decimal
+  }>(
+    (acc, value) => {
+      acc.totalRedevanceDesMines = acc.totalRedevanceDesMines.add(value.totalRedevanceDesMines)
+      acc.totalMontantNetTaxeMiniereOrGuyane = acc.totalMontantNetTaxeMiniereOrGuyane.add(value.taxeMiniereSurLOrDeGuyaneMontantNetDeTaxeMinièreSurLOrDeGuyane)
+      acc.fraisGestionFiscaliteDirecteLocale = acc.fraisGestionFiscaliteDirecteLocale.add(value.fraisDeGestionDeLaFiscaliteDirecteLocale)
 
-        return acc
-      },
-      {
-        totalRedevanceDesMines: new Decimal(0),
-        totalMontantNetTaxeMiniereOrGuyane: new Decimal(0),
-        fraisGestionFiscaliteDirecteLocale: new Decimal(0),
-      }
-    )
-
-    const totalTotal = totalRedevanceDesMines.add(totalMontantNetTaxeMiniereOrGuyane).add(fraisGestionFiscaliteDirecteLocale)
-    await new Promise<void>(resolve => {
-      carbone.render(
-        'src/business/resources/matrice_1121-SD_2021.ods',
-        {
-          valeurs: matrice1121,
-          annee,
-          totalTotal,
-          totalRedevanceDesMines,
-          totalMontantNetTaxeMiniereOrGuyane,
-          fraisGestionFiscaliteDirecteLocale,
-        },
-        function (err, result) {
-          if (err) {
-            return console.error(err)
-          }
-          fs.writeFileSync(`1121_${annee}.ods`, result)
-          resolve()
-        }
-      )
-    })
-
-    const { totalParDepartement, totalParCommune } = matrice1122.reduce<{ totalParDepartement: Decimal; totalParCommune: Decimal }>(
-      (acc, value) => {
-        acc.totalParCommune = acc.totalParCommune.add(value.tonnagesExtraitsAuCoursDeLAnneePrecedenteParCommune)
-        acc.totalParDepartement = acc.totalParDepartement.add(value.tonnagesExtraitsAuCoursDeLAnneePrecedenteParDepartement)
-
-        return acc
-      },
-      {
-        totalParDepartement: new Decimal(0),
-        totalParCommune: new Decimal(0),
-      }
-    )
-    await new Promise<void>(resolve => {
-      carbone.render(
-        'src/business/resources/matrice_1122-SD_2021.ods',
-        {
-          valeurs: matrice1122,
-          annee,
-          totalParDepartement,
-          totalParCommune,
-        },
-        function (err, result) {
-          if (err) {
-            return console.error(err)
-          }
-          fs.writeFileSync(`1122_${annee}.ods`, result)
-          resolve()
-        }
-      )
-    })
-
-    const total = matrice1403.reduce(
-      (acc, cur) => {
-        acc.redevanceDepartementale = new Decimal(acc.redevanceDepartementale).add(cur.redevanceDepartementale)
-        acc.redevanceCommunale = new Decimal(acc.redevanceCommunale).add(cur.redevanceCommunale)
-        acc.taxeMiniereSurLOrDeGuyane = new Decimal(acc.taxeMiniereSurLOrDeGuyane).add(cur.taxeMiniereSurLOrDeGuyane)
-        acc.sommesRevenantALaRegionDeGuyane = new Decimal(acc.sommesRevenantALaRegionDeGuyane).add(cur.sommesRevenantALaRegionDeGuyane)
-        acc.sommesRevenantAuConservatoireDeBioDiversite = new Decimal(acc.sommesRevenantAuConservatoireDeBioDiversite).add(cur.sommesRevenantAuConservatoireDeBioDiversite)
-        acc.sommesRevenantALEtatFraisAssietteEtRecouvrement = new Decimal(acc.sommesRevenantALEtatFraisAssietteEtRecouvrement).add(cur.sommesRevenantALEtatFraisAssietteEtRecouvrement)
-        acc.sommesRevenantALEtatDegrevementsEtNonValeurs = new Decimal(acc.sommesRevenantALEtatDegrevementsEtNonValeurs).add(cur.sommesRevenantALEtatDegrevementsEtNonValeurs)
-        acc.sommesRevenantALEtatTotal = new Decimal(acc.sommesRevenantALEtatTotal).add(cur.sommesRevenantALEtatTotal)
-        acc.totalColonnes = new Decimal(acc.totalColonnes).add(cur.totalColonnes)
-        acc.nombreDArticlesDesRoles = new Decimal(acc.nombreDArticlesDesRoles).add(cur.nombreDArticlesDesRoles)
-
-        return acc
-      },
-      {
-        redevanceDepartementale: new Decimal(0),
-        redevanceCommunale: new Decimal(0),
-        taxeMiniereSurLOrDeGuyane: new Decimal(0),
-        sommesRevenantALaRegionDeGuyane: new Decimal(0),
-        sommesRevenantAuConservatoireDeBioDiversite: new Decimal(0),
-        sommesRevenantALEtatFraisAssietteEtRecouvrement: new Decimal(0),
-        sommesRevenantALEtatDegrevementsEtNonValeurs: new Decimal(0),
-        sommesRevenantALEtatTotal: new Decimal(0),
-        totalColonnes: new Decimal(0),
-        nombreDArticlesDesRoles: new Decimal(0),
-      }
-    )
-    await new Promise<void>(resolve => {
-      carbone.render(
-        'src/business/resources/matrice_1403-SD_2022.ods',
-        {
-          '1403': matrice1403,
-          total,
-          annee,
-        },
-        function (err, result) {
-          if (err) {
-            return console.error(err)
-          }
-          fs.writeFileSync(`1403_${annee}.ods`, result)
-          resolve()
-        }
-      )
-    })
-
-    const total1404 = Object.keys(matrice1404)
-      .filter(isSip)
-      .reduce(
-        (acc, sip) => {
-          acc[sip] = matrice1404[sip].reduce(
-            (accLine, line) => {
-              accLine.elementsDeBase_tonnagesExtraits = new Decimal(accLine.elementsDeBase_tonnagesExtraits).add(Number.parseFloat(line.elementsDeBase_tonnagesExtraits))
-              accLine.redevanceDepartementale_produitNetDeLaRedevance = new Decimal(accLine.redevanceDepartementale_produitNetDeLaRedevance).add(line.redevanceDepartementale_produitNetDeLaRedevance)
-              accLine.redevanceDepartementale_sommesRevenantAuxDepartements = new Decimal(accLine.redevanceDepartementale_sommesRevenantAuxDepartements).add(
-                line.redevanceDepartementale_sommesRevenantAuxDepartements
-              )
-              accLine.redevanceCommunale_produitNetDeLaRedevance = new Decimal(accLine.redevanceCommunale_produitNetDeLaRedevance).add(line.redevanceCommunale_produitNetDeLaRedevance)
-              accLine.redevanceCommunale_repartition_1ereFraction = new Decimal(accLine.redevanceCommunale_repartition_1ereFraction).add(line.redevanceCommunale_repartition_1ereFraction)
-              accLine.redevanceCommunale_repartition_2emeFraction = new Decimal(accLine.redevanceCommunale_repartition_2emeFraction).add(line.redevanceCommunale_repartition_2emeFraction)
-              accLine.redevanceCommunale_repartition_3emeFraction = new Decimal(accLine.redevanceCommunale_repartition_3emeFraction).add(line.redevanceCommunale_repartition_3emeFraction)
-              accLine.redevanceCommunale_revenantAuxCommunes_1ereFraction = new Decimal(accLine.redevanceCommunale_revenantAuxCommunes_1ereFraction).add(
-                line.redevanceCommunale_revenantAuxCommunes_1ereFraction
-              )
-              accLine.redevanceCommunale_revenantAuxCommunes_2emeFraction = new Decimal(accLine.redevanceCommunale_revenantAuxCommunes_2emeFraction).add(
-                line.redevanceCommunale_revenantAuxCommunes_2emeFraction
-              )
-              accLine.redevanceCommunale_revenantAuxCommunes_total = new Decimal(accLine.redevanceCommunale_revenantAuxCommunes_total).add(line.redevanceCommunale_revenantAuxCommunes_total)
-              accLine.taxeMiniereSurLOrDeGuyane_produitNet = new Decimal(accLine.taxeMiniereSurLOrDeGuyane_produitNet).add(line.taxeMiniereSurLOrDeGuyane_produitNet)
-              accLine.taxeMiniereSurLOrDeGuyane_repartition_regionDeGuyane = new Decimal(accLine.taxeMiniereSurLOrDeGuyane_repartition_regionDeGuyane).add(
-                line.taxeMiniereSurLOrDeGuyane_repartition_regionDeGuyane
-              )
-              accLine.taxeMiniereSurLOrDeGuyane_repartition_conservatoire = new Decimal(accLine.taxeMiniereSurLOrDeGuyane_repartition_conservatoire).add(
-                line.taxeMiniereSurLOrDeGuyane_repartition_conservatoire
-              )
-
-              return accLine
-            },
-            {
-              elementsDeBase_tonnagesExtraits: new Decimal(0),
-              redevanceDepartementale_produitNetDeLaRedevance: new Decimal(0),
-              redevanceDepartementale_sommesRevenantAuxDepartements: new Decimal(0),
-              redevanceCommunale_produitNetDeLaRedevance: new Decimal(0),
-              redevanceCommunale_repartition_1ereFraction: new Decimal(0),
-              redevanceCommunale_repartition_2emeFraction: new Decimal(0),
-              redevanceCommunale_repartition_3emeFraction: new Decimal(0),
-              redevanceCommunale_revenantAuxCommunes_1ereFraction: new Decimal(0),
-              redevanceCommunale_revenantAuxCommunes_2emeFraction: new Decimal(0),
-              redevanceCommunale_revenantAuxCommunes_total: new Decimal(0),
-              taxeMiniereSurLOrDeGuyane_produitNet: new Decimal(0),
-              taxeMiniereSurLOrDeGuyane_repartition_regionDeGuyane: new Decimal(0),
-              taxeMiniereSurLOrDeGuyane_repartition_conservatoire: new Decimal(0),
-            }
-          )
-
-          return acc
-        },
-        {
-          kourou: {},
-          cayenne: {},
-          saintLaurentDuMaroni: {},
-        }
-      )
-    await new Promise<void>(resolve => {
-      carbone.render(
-        'src/business/resources/matrice_1404-SD_2022.ods',
-        {
-          ...matrice1404,
-          total: total1404,
-          annee,
-        },
-        function (err, result) {
-          if (err) {
-            return console.error(err)
-          }
-          fs.writeFileSync(`1404_${annee}.ods`, result)
-          resolve()
-        }
-      )
-    })
-
-    const matrice1401: Record<
-      Sips,
-      Matrice1401Template[]
-    > = { kourou: [], saintLaurentDuMaroni: [], cayenne: [] }
-    for (const matriceLine of rawLines) {
-      const fiscaliteLine = matriceLine.fiscalite
-
-      if (!('guyane' in fiscaliteLine)) {
-        console.error("cette ligne n'est pas de guyane", matriceLine)
-      } else {
-        const matrice: Matrice1401Template = {
-          article: matriceLine.index,
-          substances: getAllTarifsBySubstances(annee),
-          entreprise: titulaireToString(matriceLine.titulaire),
-          quantite: matriceLine.quantiteOrExtrait,
-          taxePME: getCategoriesForTaxeAurifereGuyane(annee, 'pme'),
-          taxeAutre: getCategoriesForTaxeAurifereGuyane(annee, 'autre'),
-          redevanceCommunale: matriceLine.fiscalite.redevanceCommunale,
-          redevanceDepartementale: matriceLine.fiscalite.redevanceDepartementale,
-          taxeMiniereOr: fiscaliteLine.guyane.taxeAurifereBrute,
-          montantInvestissements: fiscaliteLine.guyane.totalInvestissementsDeduits,
-          montantNetTaxeMiniereOr: fiscaliteLine.guyane.taxeAurifere,
-          totalCotisations: new Decimal(matriceLine.fiscalite.redevanceCommunale).add(matriceLine.fiscalite.redevanceDepartementale).add(fiscaliteLine.guyane.taxeAurifere),
-          fraisGestion: fraisGestion(fiscaliteLine),
-          total: new Decimal(matriceLine.fiscalite.redevanceCommunale).add(matriceLine.fiscalite.redevanceDepartementale).add(fiscaliteLine.guyane.taxeAurifere).add(fraisGestion(fiscaliteLine)),
-        }
-        matrice1401[matriceLine.sip].push(matrice)
-        await new Promise<void>(resolve => {
-          carbone.render(
-            'src/business/resources/matrice_1402-SD_2022.ods',
-            {
-              ...matrice,
-              departement: Departements[matriceLine.departementId].nom,
-              commune: communes.find(({ id }) => id === matriceLine.commune.id)?.nom,
-              role: matriceLine.titreLabel,
-              titulaire: matriceLine.titulaire,
-              titreLabel: matriceLine.titreLabel,
-              annee,
-              anneeSuivante: anneeSuivante(annee),
-            },
-            function (err, result) {
-              if (err) {
-                return console.error(err)
-              }
-              fs.writeFileSync(`1402_${annee}_${matriceLine.sip}_${matriceLine.index}_${matriceLine.titulaire.nom}_${matriceLine.titreLabel}.ods`, result)
-              resolve()
-            }
-          )
-        })
-      }
+      return acc
+    },
+    {
+      totalRedevanceDesMines: new Decimal(0),
+      totalMontantNetTaxeMiniereOrGuyane: new Decimal(0),
+      fraisGestionFiscaliteDirecteLocale: new Decimal(0),
     }
+  )
 
-    for (const sip of Object.keys(sips)) {
-      if (isSip(sip)) {
-        await new Promise<void>(resolve => {
-          const montantTotalSommeALEtat = matrice1401[sip].reduce((acc, cur) => acc.add(cur.fraisGestion), new Decimal(0))
-          const fraisAssietteEtRecouvrement = montantTotalSommeALEtat.mul(4.4).div(8)
-          carbone.render(
-            'src/business/resources/matrice_1401-SD_2022.ods',
-            {
-              valeurs: matrice1401[sip],
-              nombreArticles: matrice1401[sip].length,
-              total: matrice1401[sip].reduce((acc, cur) => acc.add(cur.total), new Decimal(0)),
-              montantTotalSommeALEtat,
-              fraisAssietteEtRecouvrement,
-              fraisDegrevement: montantTotalSommeALEtat.sub(fraisAssietteEtRecouvrement),
-              redevanceDepartementale: matrice1401[sip].reduce((acc, cur) => acc.add(cur.redevanceDepartementale), new Decimal(0)),
-              redevanceCommunale: matrice1401[sip].reduce((acc, cur) => acc.add(cur.redevanceCommunale), new Decimal(0)),
-              montantNetTaxeMiniereOr: matrice1401[sip].reduce((acc, cur) => acc.add(cur.montantNetTaxeMiniereOr), new Decimal(0)),
-              annee,
-              anneePrecedente,
-            },
-            function (err, result) {
-              if (err) {
-                return console.error(err)
-              }
-              fs.writeFileSync(`1401_${sip}_${annee}.ods`, result)
-              resolve()
-            }
-          )
-        })
-      } else {
-        console.error(`${sip} n'est pas un SIP valide`)
+  const totalTotal = totalRedevanceDesMines.add(totalMontantNetTaxeMiniereOrGuyane).add(fraisGestionFiscaliteDirecteLocale)
+  await new Promise<void>(resolve => {
+    carbone.render(
+      'src/business/resources/matrice_1121-SD_2021.ods',
+      {
+        valeurs: matrice1121,
+        annee,
+        totalTotal,
+        totalRedevanceDesMines,
+        totalMontantNetTaxeMiniereOrGuyane,
+        fraisGestionFiscaliteDirecteLocale,
+      },
+      function (err, result) {
+        if (err) {
+          return console.error(err)
+        }
+        fs.writeFileSync(`1121_${annee}.ods`, result)
+        resolve()
       }
+    )
+  })
+
+  const { totalParDepartement, totalParCommune } = matrice1122.reduce<{ totalParDepartement: Decimal; totalParCommune: Decimal }>(
+    (acc, value) => {
+      acc.totalParCommune = acc.totalParCommune.add(value.tonnagesExtraitsAuCoursDeLAnneePrecedenteParCommune)
+      acc.totalParDepartement = acc.totalParDepartement.add(value.tonnagesExtraitsAuCoursDeLAnneePrecedenteParDepartement)
+
+      return acc
+    },
+    {
+      totalParDepartement: new Decimal(0),
+      totalParCommune: new Decimal(0),
     }
-    console.info('fini', new Date())
+  )
+  await new Promise<void>(resolve => {
+    carbone.render(
+      'src/business/resources/matrice_1122-SD_2021.ods',
+      {
+        valeurs: matrice1122,
+        annee,
+        totalParDepartement,
+        totalParCommune,
+      },
+      function (err, result) {
+        if (err) {
+          return console.error(err)
+        }
+        fs.writeFileSync(`1122_${annee}.ods`, result)
+        resolve()
+      }
+    )
+  })
+
+  const total = matrice1403.reduce(
+    (acc, cur) => {
+      acc.redevanceDepartementale = new Decimal(acc.redevanceDepartementale).add(cur.redevanceDepartementale)
+      acc.redevanceCommunale = new Decimal(acc.redevanceCommunale).add(cur.redevanceCommunale)
+      acc.taxeMiniereSurLOrDeGuyane = new Decimal(acc.taxeMiniereSurLOrDeGuyane).add(cur.taxeMiniereSurLOrDeGuyane)
+      acc.sommesRevenantALaRegionDeGuyane = new Decimal(acc.sommesRevenantALaRegionDeGuyane).add(cur.sommesRevenantALaRegionDeGuyane)
+      acc.sommesRevenantAuConservatoireDeBioDiversite = new Decimal(acc.sommesRevenantAuConservatoireDeBioDiversite).add(cur.sommesRevenantAuConservatoireDeBioDiversite)
+      acc.sommesRevenantALEtatFraisAssietteEtRecouvrement = new Decimal(acc.sommesRevenantALEtatFraisAssietteEtRecouvrement).add(cur.sommesRevenantALEtatFraisAssietteEtRecouvrement)
+      acc.sommesRevenantALEtatDegrevementsEtNonValeurs = new Decimal(acc.sommesRevenantALEtatDegrevementsEtNonValeurs).add(cur.sommesRevenantALEtatDegrevementsEtNonValeurs)
+      acc.sommesRevenantALEtatTotal = new Decimal(acc.sommesRevenantALEtatTotal).add(cur.sommesRevenantALEtatTotal)
+      acc.totalColonnes = new Decimal(acc.totalColonnes).add(cur.totalColonnes)
+      acc.nombreDArticlesDesRoles = new Decimal(acc.nombreDArticlesDesRoles).add(cur.nombreDArticlesDesRoles)
+
+      return acc
+    },
+    {
+      redevanceDepartementale: new Decimal(0),
+      redevanceCommunale: new Decimal(0),
+      taxeMiniereSurLOrDeGuyane: new Decimal(0),
+      sommesRevenantALaRegionDeGuyane: new Decimal(0),
+      sommesRevenantAuConservatoireDeBioDiversite: new Decimal(0),
+      sommesRevenantALEtatFraisAssietteEtRecouvrement: new Decimal(0),
+      sommesRevenantALEtatDegrevementsEtNonValeurs: new Decimal(0),
+      sommesRevenantALEtatTotal: new Decimal(0),
+      totalColonnes: new Decimal(0),
+      nombreDArticlesDesRoles: new Decimal(0),
+    }
+  )
+  await new Promise<void>(resolve => {
+    carbone.render(
+      'src/business/resources/matrice_1403-SD_2022.ods',
+      {
+        '1403': matrice1403,
+        total,
+        annee,
+      },
+      function (err, result) {
+        if (err) {
+          return console.error(err)
+        }
+        fs.writeFileSync(`1403_${annee}.ods`, result)
+        resolve()
+      }
+    )
+  })
+
+  const total1404 = Object.keys(matrice1404)
+    .filter(isSip)
+    .reduce(
+      (acc, sip) => {
+        acc[sip] = matrice1404[sip].reduce(
+          (accLine, line) => {
+            accLine.elementsDeBase_tonnagesExtraits = new Decimal(accLine.elementsDeBase_tonnagesExtraits).add(Number.parseFloat(line.elementsDeBase_tonnagesExtraits))
+            accLine.redevanceDepartementale_produitNetDeLaRedevance = new Decimal(accLine.redevanceDepartementale_produitNetDeLaRedevance).add(line.redevanceDepartementale_produitNetDeLaRedevance)
+            accLine.redevanceDepartementale_sommesRevenantAuxDepartements = new Decimal(accLine.redevanceDepartementale_sommesRevenantAuxDepartements).add(
+              line.redevanceDepartementale_sommesRevenantAuxDepartements
+            )
+            accLine.redevanceCommunale_produitNetDeLaRedevance = new Decimal(accLine.redevanceCommunale_produitNetDeLaRedevance).add(line.redevanceCommunale_produitNetDeLaRedevance)
+            accLine.redevanceCommunale_repartition_1ereFraction = new Decimal(accLine.redevanceCommunale_repartition_1ereFraction).add(line.redevanceCommunale_repartition_1ereFraction)
+            accLine.redevanceCommunale_repartition_2emeFraction = new Decimal(accLine.redevanceCommunale_repartition_2emeFraction).add(line.redevanceCommunale_repartition_2emeFraction)
+            accLine.redevanceCommunale_repartition_3emeFraction = new Decimal(accLine.redevanceCommunale_repartition_3emeFraction).add(line.redevanceCommunale_repartition_3emeFraction)
+            accLine.redevanceCommunale_revenantAuxCommunes_1ereFraction = new Decimal(accLine.redevanceCommunale_revenantAuxCommunes_1ereFraction).add(
+              line.redevanceCommunale_revenantAuxCommunes_1ereFraction
+            )
+            accLine.redevanceCommunale_revenantAuxCommunes_2emeFraction = new Decimal(accLine.redevanceCommunale_revenantAuxCommunes_2emeFraction).add(
+              line.redevanceCommunale_revenantAuxCommunes_2emeFraction
+            )
+            accLine.redevanceCommunale_revenantAuxCommunes_total = new Decimal(accLine.redevanceCommunale_revenantAuxCommunes_total).add(line.redevanceCommunale_revenantAuxCommunes_total)
+            accLine.taxeMiniereSurLOrDeGuyane_produitNet = new Decimal(accLine.taxeMiniereSurLOrDeGuyane_produitNet).add(line.taxeMiniereSurLOrDeGuyane_produitNet)
+            accLine.taxeMiniereSurLOrDeGuyane_repartition_regionDeGuyane = new Decimal(accLine.taxeMiniereSurLOrDeGuyane_repartition_regionDeGuyane).add(
+              line.taxeMiniereSurLOrDeGuyane_repartition_regionDeGuyane
+            )
+            accLine.taxeMiniereSurLOrDeGuyane_repartition_conservatoire = new Decimal(accLine.taxeMiniereSurLOrDeGuyane_repartition_conservatoire).add(
+              line.taxeMiniereSurLOrDeGuyane_repartition_conservatoire
+            )
+
+            return accLine
+          },
+          {
+            elementsDeBase_tonnagesExtraits: new Decimal(0),
+            redevanceDepartementale_produitNetDeLaRedevance: new Decimal(0),
+            redevanceDepartementale_sommesRevenantAuxDepartements: new Decimal(0),
+            redevanceCommunale_produitNetDeLaRedevance: new Decimal(0),
+            redevanceCommunale_repartition_1ereFraction: new Decimal(0),
+            redevanceCommunale_repartition_2emeFraction: new Decimal(0),
+            redevanceCommunale_repartition_3emeFraction: new Decimal(0),
+            redevanceCommunale_revenantAuxCommunes_1ereFraction: new Decimal(0),
+            redevanceCommunale_revenantAuxCommunes_2emeFraction: new Decimal(0),
+            redevanceCommunale_revenantAuxCommunes_total: new Decimal(0),
+            taxeMiniereSurLOrDeGuyane_produitNet: new Decimal(0),
+            taxeMiniereSurLOrDeGuyane_repartition_regionDeGuyane: new Decimal(0),
+            taxeMiniereSurLOrDeGuyane_repartition_conservatoire: new Decimal(0),
+          }
+        )
+
+        return acc
+      },
+      {
+        kourou: {},
+        cayenne: {},
+        saintLaurentDuMaroni: {},
+      }
+    )
+  await new Promise<void>(resolve => {
+    carbone.render(
+      'src/business/resources/matrice_1404-SD_2022.ods',
+      {
+        ...matrice1404,
+        total: total1404,
+        annee,
+      },
+      function (err, result) {
+        if (err) {
+          return console.error(err)
+        }
+        fs.writeFileSync(`1404_${annee}.ods`, result)
+        resolve()
+      }
+    )
+  })
+
+  const matrice1401: Record<Sips, Matrice1401Template[]> = { kourou: [], saintLaurentDuMaroni: [], cayenne: [] }
+  for (const matriceLine of rawLines) {
+    const fiscaliteLine = matriceLine.fiscalite
+
+    if (!('guyane' in fiscaliteLine)) {
+      console.error("cette ligne n'est pas de guyane", matriceLine)
+    } else {
+      const matrice: Matrice1401Template = {
+        article: matriceLine.index,
+        substances: getAllTarifsBySubstances(annee),
+        entreprise: titulaireToString(matriceLine.titulaire),
+        quantite: matriceLine.quantiteOrExtrait,
+        taxePME: getCategoriesForTaxeAurifereGuyane(annee, 'pme'),
+        taxeAutre: getCategoriesForTaxeAurifereGuyane(annee, 'autre'),
+        redevanceCommunale: matriceLine.fiscalite.redevanceCommunale,
+        redevanceDepartementale: matriceLine.fiscalite.redevanceDepartementale,
+        taxeMiniereOr: fiscaliteLine.guyane.taxeAurifereBrute,
+        montantInvestissements: fiscaliteLine.guyane.totalInvestissementsDeduits,
+        montantNetTaxeMiniereOr: fiscaliteLine.guyane.taxeAurifere,
+        totalCotisations: new Decimal(matriceLine.fiscalite.redevanceCommunale).add(matriceLine.fiscalite.redevanceDepartementale).add(fiscaliteLine.guyane.taxeAurifere),
+        fraisGestion: fraisGestion(fiscaliteLine),
+        total: new Decimal(matriceLine.fiscalite.redevanceCommunale).add(matriceLine.fiscalite.redevanceDepartementale).add(fiscaliteLine.guyane.taxeAurifere).add(fraisGestion(fiscaliteLine)),
+      }
+      matrice1401[matriceLine.sip].push(matrice)
+      await new Promise<void>(resolve => {
+        carbone.render(
+          'src/business/resources/matrice_1402-SD_2022.ods',
+          {
+            ...matrice,
+            departement: Departements[matriceLine.departementId].nom,
+            commune: communes.find(({ id }) => id === matriceLine.commune.id)?.nom,
+            role: matriceLine.titreLabel,
+            titulaire: matriceLine.titulaire,
+            titreLabel: matriceLine.titreLabel,
+            annee,
+            anneeSuivante: anneeSuivante(annee),
+          },
+          function (err, result) {
+            if (err) {
+              return console.error(err)
+            }
+            fs.writeFileSync(`1402_${annee}_${matriceLine.sip}_${matriceLine.index}_${matriceLine.titulaire.nom}_${matriceLine.titreLabel}.ods`, result)
+            resolve()
+          }
+        )
+      })
+    }
+  }
+
+  for (const sip of Object.keys(sips)) {
+    if (isSip(sip)) {
+      await new Promise<void>(resolve => {
+        const montantTotalSommeALEtat = matrice1401[sip].reduce((acc, cur) => acc.add(cur.fraisGestion), new Decimal(0))
+        const fraisAssietteEtRecouvrement = montantTotalSommeALEtat.mul(4.4).div(8)
+        carbone.render(
+          'src/business/resources/matrice_1401-SD_2022.ods',
+          {
+            valeurs: matrice1401[sip],
+            nombreArticles: matrice1401[sip].length,
+            total: matrice1401[sip].reduce((acc, cur) => acc.add(cur.total), new Decimal(0)),
+            montantTotalSommeALEtat,
+            fraisAssietteEtRecouvrement,
+            fraisDegrevement: montantTotalSommeALEtat.sub(fraisAssietteEtRecouvrement),
+            redevanceDepartementale: matrice1401[sip].reduce((acc, cur) => acc.add(cur.redevanceDepartementale), new Decimal(0)),
+            redevanceCommunale: matrice1401[sip].reduce((acc, cur) => acc.add(cur.redevanceCommunale), new Decimal(0)),
+            montantNetTaxeMiniereOr: matrice1401[sip].reduce((acc, cur) => acc.add(cur.montantNetTaxeMiniereOr), new Decimal(0)),
+            annee,
+            anneePrecedente,
+          },
+          function (err, result) {
+            if (err) {
+              return console.error(err)
+            }
+            fs.writeFileSync(`1401_${sip}_${annee}.ods`, result)
+            resolve()
+          }
+        )
+      })
+    } else {
+      console.error(`${sip} n'est pas un SIP valide`)
+    }
+  }
+  console.info('fini', new Date())
 }
