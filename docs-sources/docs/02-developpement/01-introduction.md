@@ -1,6 +1,6 @@
 # Développement de l'API de Camino
 
-> [github.com/MTES-MCT/camino](https://github.com/MTES-MCT/camino)
+> [gitlab-forge.din.developpement-durable.gouv.fr/pub/pnm-public/camino](https://gitlab-forge.din.developpement-durable.gouv.fr/pub/pnm-public/camino)
 
 ## Technologies
 
@@ -26,7 +26,7 @@
 
 ### Configuration et imports des données
 
-- Cloner ce repo : `git clone https://github.com/MTES-MCT/camino.git`.
+- Cloner ce repo : `git clone https://gitlab-forge.din.developpement-durable.gouv.fr/pub/pnm-public/camino.git`.
 - Renommer le fichier `.env-example` en `.env` et le compléter.
 - Créer une base de données PostgreSQL correspondant au fichier `.env`.
 
@@ -99,5 +99,4 @@ npm run start -w packages/api
 
 ## Contribution
 
-Voir [contributing.md](https://github.com/MTES-MCT/camino/blob/master/contributing.md) (en anglais) pour plus d'infos.
-
+Voir [contributing.md](https://gitlab-forge.din.developpement-durable.gouv.fr/pub/pnm-public/camino/blob/master/contributing.md) (en anglais) pour plus d'infos.

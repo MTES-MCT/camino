@@ -1,0 +1,24 @@
+ui/lint:
+  extends: .prepare-node-run
+  stage: test
+  script: make lint/ui
+ui/test:
+  extends: .prepare-node-run
+  stage: test
+  script: make test/ui
+ui/test-storybook:
+  extends: .prepare-node-run
+  stage: test
+  script:
+    - make storybook/build
+    - make storybook/test
+ui/build-and-push-image:
+  stage: build
+  needs: ['ui/test', 'ui/lint', 'ui/test-storybook']
+  extends:
+    - .rule-build-and-push
+    - .prepare-docker-push
+  image:
+    name: gcr.io/kaniko-project/executor:debug
+    entrypoint: [""]
+  script: /kaniko/executor --context "$CI_PROJECT_DIR" --build-arg GIT_SHA=${CI_COMMIT_SHA} --dockerfile "$CI_PROJECT_DIR/Dockerfile.ui" --destination "caminofr/camino-ui:${CI_COMMIT_SHA}"  ${KANIKO_POST_PARAM}

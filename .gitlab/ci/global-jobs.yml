@@ -1,0 +1,11 @@
+lint_graphql_inspector:
+  stage: test
+  needs: []
+  image: node:20.15.1
+  script:
+    - make graphql/check
+
+lint_detect_deadcode:
+  extends: .prepare-node-run
+  stage: test
+  script: make lint/detect-dead-code

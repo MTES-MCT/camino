@@ -1,5 +1,5 @@
 import { isNumberElement } from '../../sections'
-import { getSections, getSectionsWithValue, sectionValidator } from './sections'
+import { getElementWithValue, getSections, getSectionsWithValue, sectionValidator } from './sections'
 import { test, expect, describe } from 'vitest'
 const activitesSectionsProd = require('./activites.sections.json') // eslint-disable-line
 
@@ -156,6 +156,55 @@ test('sectionValidator prod', () => {
   )
 })
 
+describe('getElementWithValue', () => {
+  const sectionWithValue = getSectionsWithValue(
+    [
+      {
+        id: 'section',
+        elements: [
+          { id: 'element1', type: 'checkboxes', options: [{ id: 'option1', nom: 'nomOption1' }], optionnel: false },
+          {
+            id: 'element2',
+            type: 'checkboxes',
+            options: [
+              { id: '1', nom: 'one' },
+              { id: '2', nom: 'two' },
+            ],
+            optionnel: false,
+          },
+          { id: 'element3', type: 'checkboxes', options: [{ id: '1', nom: 'one' }], optionnel: false },
+        ],
+      },
+    ],
+    { section: { element1: null, element2: ['1'] } }
+  )
+  test('peut récupérer un élement avec sa value', () => {
+    expect(getElementWithValue(sectionWithValue, 'section', 'element2')).toMatchInlineSnapshot(`
+      {
+        "id": "element2",
+        "optionnel": false,
+        "options": [
+          {
+            "id": "1",
+            "nom": "one",
+          },
+          {
+            "id": "2",
+            "nom": "two",
+          },
+        ],
+        "type": "checkboxes",
+        "value": [
+          "1",
+        ],
+      }
+    `)
+  })
+
+  test('ne récupére rien si inexistant', () => {
+    expect(getElementWithValue(sectionWithValue, 'section', 'elementInexistant')).toStrictEqual(null)
+  })
+})
 describe('getSectionsWithValue', () => {
   test('les éléments checkboxes sont initialisés avec un tableau vide', () => {
     expect(

@@ -1,0 +1,28 @@
+default:
+  tags: [global, shared]
+  interruptible: true
+
+stages:
+  - prepare
+  - test
+  - build
+  - deploy
+
+build-ci-image:
+  stage: prepare
+  image:
+    name: gcr.io/kaniko-project/executor:debug
+    entrypoint: [""]
+  script: .gitlab/build-ci-image.sh
+  artifacts:
+    reports:
+      dotenv: out.env
+  retry:
+    max: 2
+
+include:
+  - local: .gitlab/global.yml
+  - local: .gitlab/deploy.yml
+  - local: .gitlab/ci/*.yml
+    rules:
+      - if: $CI_COMMIT_BRANCH && $CI_COMMIT_BRANCH != "prod" && $CI_COMMIT_BRANCH != "preprod"

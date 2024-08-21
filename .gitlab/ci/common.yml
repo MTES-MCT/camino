@@ -1,0 +1,12 @@
+common/lint:
+  extends: .prepare-node-run
+  stage: test
+  script: make lint/common
+common/test:
+  extends: .prepare-node-run
+  stage: test
+  script: make test/common
+common/type:
+  extends: .prepare-node-run
+  stage: test
+  script: make build/common

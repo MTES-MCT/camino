@@ -1,0 +1,30 @@
+.rule-build-and-push:
+  rules:
+    - if: $CI_COMMIT_BRANCH == "master"
+      variables:
+        KANIKO_POST_PARAM: ""
+    - if: $CI_COMMIT_BRANCH != "master"
+      variables:
+        KANIKO_POST_PARAM: "--no-push"
+
+.prepare-docker-push:
+  before_script: |-
+    echo '{
+      "auths": {
+        "https://index.docker.io/v1/": {
+          "auth": "'${DOCKER_CREDENTIALS}'"
+        }
+      }
+    }' > /kaniko/.docker/config.json
+
+.prepare-node-run:
+  image: ${CI_REGISTRY_IMAGE}/camino-builder:${CAMINO_BUILDER_VERSION}
+  before_script:
+    - ln -s /app/node_modules ${CI_PROJECT_DIR}/node_modules
+    - ln -s /app/packages/ui/node_modules ${CI_PROJECT_DIR}/packages/ui/node_modules
+    - ln -s /app/packages/api/node_modules ${CI_PROJECT_DIR}/packages/api/node_modules
+    - ln -s /app/packages/common/node_modules ${CI_PROJECT_DIR}/packages/common/node_modules
+    - rm ${CI_PROJECT_DIR}/node_modules/camino-ui ${CI_PROJECT_DIR}/node_modules/camino-common ${CI_PROJECT_DIR}/node_modules/camino-api
+    - ln -s ${CI_PROJECT_DIR}/packages/ui/ ${CI_PROJECT_DIR}/node_modules/camino-ui
+    - ln -s ${CI_PROJECT_DIR}/packages/common/ ${CI_PROJECT_DIR}/node_modules/camino-common
+    - ln -s ${CI_PROJECT_DIR}/packages/api/ ${CI_PROJECT_DIR}/node_modules/camino-api

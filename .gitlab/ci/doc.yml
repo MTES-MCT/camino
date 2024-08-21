@@ -1,0 +1,10 @@
+doc/build-image:
+  stage: build
+  needs: []
+  extends:
+    - .rule-build-and-push
+    - .prepare-docker-push
+  image:
+    name: gcr.io/kaniko-project/executor:debug
+    entrypoint: [""]
+  script: /kaniko/executor --context "$CI_PROJECT_DIR" --build-arg GIT_SHA=${CI_COMMIT_SHA} --dockerfile "$CI_PROJECT_DIR/Dockerfile.docs" --destination "caminofr/camino-docs:${CI_COMMIT_SHA}" ${KANIKO_POST_PARAM}

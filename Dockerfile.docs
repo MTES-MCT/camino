@@ -4,7 +4,7 @@ RUN apk add -U make python3 py3-pip curl
 RUN python3 -m pip config set global.break-system-packages true
 COPY . /project/
 WORKDIR /project
-RUN make install
+RUN CI=true make install
 RUN make docs/build
 
 FROM nginx:1.27.0

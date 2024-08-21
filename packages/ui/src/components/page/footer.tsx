@@ -147,7 +147,7 @@ export const Footer: FunctionalComponent<Props> = (props: Props) => (
               <li class="fr-footer__bottom-item">
                 <a
                   class="fr-footer__bottom-link"
-                  href={'https://github.com/MTES-MCT/camino/commit/' + props.version}
+                  href={'https://gitlab-forge.din.developpement-durable.gouv.fr/pub/pnm-public/camino/-/commit/' + props.version}
                   target="_blank"
                   rel="noopener noreferrer"
                   title="Page Github de la version de l’application - lien externe"
@@ -159,7 +159,12 @@ export const Footer: FunctionalComponent<Props> = (props: Props) => (
             <div class="fr-footer__bottom-copy">
               <p>
                 Sauf mention contraire, tous les contenus de ce site sont sous{' '}
-                <a href="https://github.com/MTES-MCT/camino/blob/master/license.md" target="_blank" rel="noopener noreferrer" title="Page de la licence utilisée par Camino - lien externe">
+                <a
+                  href="https://gitlab-forge.din.developpement-durable.gouv.fr/pub/pnm-public/camino/blob/master/license.md"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  title="Page de la licence utilisée par Camino - lien externe"
+                >
                   licence GNU AGPLv3
                 </a>
               </p>

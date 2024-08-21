@@ -1,12 +1,7 @@
 # Camino
 
-[![ui/ci](https://github.com/MTES-MCT/camino/actions/workflows/ui-ci.yml/badge.svg)](https://github.com/MTES-MCT/camino/actions/workflows/ui-ci.yml) [![api/ci](https://github.com/MTES-MCT/camino/actions/workflows/api-ci.yml/badge.svg)](https://github.com/MTES-MCT/camino/actions/workflows/api-ci.yml) [![codecov][codecov-img]][codecov]
 
-[codecov-img]: https://codecov.io/gh/MTES-MCT/camino/branch/master/graph/badge.svg
-[codecov]: https://codecov.io/gh/MTES-MCT/camino
-
-
-> Interface web de [Camino](https://camino.beta.gouv.fr), le cadastre minier numérique.
+[![pipeline status](https://gitlab-forge.din.developpement-durable.gouv.fr/pub/pnm-public/camino/badges/master/pipeline.svg)](https://gitlab-forge.din.developpement-durable.gouv.fr/pub/pnm-public/camino/-/commits/master)
 
 ![camino screenshot](packages/ui/camino-screenshot.png)
 
@@ -21,7 +16,7 @@
 
 ## Configuration
 
-- Cloner ce repo : `git clone https://github.com/MTES-MCT/camino.git`.
+- Cloner ce repo : `git clone https://gitlab-forge.din.developpement-durable.gouv.fr/pub/pnm-public/camino.git`.
 - Renommer le fichier `.env-example` en `.env` et le compléter.
 
 ### Installation
@@ -40,7 +35,7 @@ npm run dev -w packages/api
 ```
 
 ```bash
-# lance un serveur de développement de l'interface 
+# lance un serveur de développement de l'interface
 # accessible à localhost:3000
 npm run dev -w packages/ui
 ```
