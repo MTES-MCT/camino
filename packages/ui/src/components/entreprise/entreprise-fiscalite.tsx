@@ -1,6 +1,6 @@
 import { computed, defineComponent, FunctionalComponent, onMounted, ref } from 'vue'
 import { montantNetTaxeAurifere, fraisGestion } from 'camino-common/src/fiscalite'
-import type { Fiscalite } from 'camino-common/src/validators/fiscalite'
+import { fiscaliteValidator, type Fiscalite } from 'camino-common/src/validators/fiscalite'
 import { LoadingElement } from '@/components/_ui/functional-loader'
 import { AsyncData, CaminoHttpError } from '@/api/client-rest'
 import { CaminoAnnee } from 'camino-common/src/date'
@@ -47,7 +47,8 @@ export const EntrepriseFiscalite = defineComponent<Props>(props => {
   const reloadData = async (annee: CaminoAnnee) => {
     data.value = { status: 'LOADING' }
     try {
-      const fiscaliteData = await props.getFiscaliteEntreprise(annee)
+      // TODO 2024-08-21 à enlever le jour où on fait un parseBody directement dans le callFetch
+      const fiscaliteData = fiscaliteValidator.parse(await props.getFiscaliteEntreprise(annee))
 
       data.value = { status: 'LOADED', value: fiscaliteData }
     } catch (e: any) {

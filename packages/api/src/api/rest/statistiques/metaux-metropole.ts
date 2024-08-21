@@ -276,7 +276,7 @@ const fiscaliteDetail = async (pool: Pool): Promise<FiscaliteParSubstanceParAnne
   result.forEach(value => {
     substancesFiscalesStats.forEach(substance => {
       const anneePlusUn = anneeSuivante(value.annee)
-      const fiscalite = getSimpleFiscalite({ substanceFiscaleId: substance, production: new Decimal(value[substance]) }, anneePlusUn)
+      const fiscalite = getSimpleFiscalite({ substanceFiscaleId: substance, production: { value: new Decimal(value[substance]), uniteId: SubstancesFiscale[substance].uniteId } }, anneePlusUn)
       const mySubstance = (substances[substance] ??= {})
       mySubstance[anneePlusUn] = (mySubstance[anneePlusUn] ?? 0) + fiscalite.redevanceCommunale.add(fiscalite.redevanceDepartementale).toNumber()
     })

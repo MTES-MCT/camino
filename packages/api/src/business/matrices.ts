@@ -21,10 +21,10 @@ import { GetEntreprises, getEntreprises } from '../api/rest/entreprises.queries'
 import Titres from '../database/models/titres'
 import TitresActivites from '../database/models/titres-activites'
 import { isGuyane } from 'camino-common/src/static/pays'
-import { SubstanceFiscale, SubstanceFiscaleId, SUBSTANCES_FISCALES_IDS, SubstancesFiscale, substancesFiscalesBySubstanceLegale } from 'camino-common/src/static/substancesFiscales'
+import { SubstanceFiscale, SubstanceFiscaleId, SUBSTANCES_FISCALES_IDS, substancesFiscalesBySubstanceLegale } from 'camino-common/src/static/substancesFiscales'
 import { TitreId, TitreSlug } from 'camino-common/src/validators/titres'
 import { z } from 'zod'
-import { Unite, Unites, fromUniteFiscaleToUnite } from 'camino-common/src/static/unites'
+import { Unite, UniteId, Unites, fromUniteFiscaleToUnite } from 'camino-common/src/static/unites'
 import {
   EntrepriseCategory,
   getAllTarifsBySubstances,
@@ -197,21 +197,19 @@ const openfiscaSubstanceFiscaleUnite = (substanceFiscale: SubstanceFiscale): Uni
   return unite
 }
 
-// FIXME on ne convertit pas 2 fois ? ici plus lors du simple fiscalité ?
-// ça tombe en marche je pense parce qu'il n'y a pas de conversion sur l'unité de l'or, mais ça sent pas bon
-const conversion = (substanceFiscale: SubstanceFiscale, quantite: IContenuValeur): Decimal => {
+const conversion = (substanceFiscale: SubstanceFiscale, quantite: IContenuValeur): { value: Decimal; uniteId: UniteId } => {
   if (typeof quantite !== 'number') {
-    return new Decimal(0)
+    return { uniteId: substanceFiscale.uniteId, value: new Decimal(0) }
   }
 
   const unite = openfiscaSubstanceFiscaleUnite(substanceFiscale)
 
-  return new Decimal(quantite).div(unite.referenceUniteRatio ?? 1).toDecimalPlaces(3)
+  return { uniteId: unite.id, value: new Decimal(quantite).div(unite.referenceUniteRatio ?? 1).toDecimalPlaces(3) }
 }
 
 type ProductionBySubstance = {
   substanceFiscaleId: SubstanceFiscaleId
-  production: Decimal
+  production: { value: Decimal; uniteId: UniteId }
 }
 
 type TitreBuild = {
@@ -291,7 +289,7 @@ export const getRawLines = (
         for (const substancesFiscale of substancesFiscales) {
           const production = conversion(substancesFiscale, activite.contenu.substancesFiscales[substancesFiscale.id])
 
-          if (production.greaterThan(0)) {
+          if (production.value.greaterThan(0)) {
             const communes: DeepReadonly<ICommune[]> = titre.communes
             if (isNullOrUndefined(titresToBuild[titre.id])) {
               const surfaceTotale = titre.communes.reduce((value, commune) => value.add(commune.surface ?? 0), new Decimal(0))
@@ -364,10 +362,10 @@ export const getRawLines = (
           return Object.values(titreBuild.surface_communale).map(({ commune, surface }) => {
             count++
             const surfaceCommunaleProportionnee = surface.div(titreBuild.surface_totale)
-            const quantiteOrExtrait = new Decimal(productionBySubstance.production).mul(surfaceCommunaleProportionnee).toDecimalPlaces(3)
+            const quantiteOrExtrait = new Decimal(productionBySubstance.production.value).mul(surfaceCommunaleProportionnee).toDecimalPlaces(3)
 
             const fiscalite = toNewFiscalite(
-              { ...productionBySubstance, production: quantiteOrExtrait },
+              { ...productionBySubstance, production: { uniteId: productionBySubstance.production.uniteId, value: quantiteOrExtrait } },
               annee,
               isTitreGuyannais,
               titreBuild.categorie,
@@ -420,7 +418,7 @@ export const getRawLines = (
 }
 
 export const getSimpleFiscalite = (productionBySubstance: ProductionBySubstance, annee: CaminoAnnee): FiscaliteFrance => {
-  const production = fromUniteFiscaleToUnite(SubstancesFiscale[productionBySubstance.substanceFiscaleId].uniteId, productionBySubstance.production)
+  const production = fromUniteFiscaleToUnite(productionBySubstance.production.uniteId, productionBySubstance.production.value)
   const fiscalite: FiscaliteFrance = {
     redevanceCommunale: production.mul(getRedevanceCommunale(annee, productionBySubstance.substanceFiscaleId)).toDecimalPlaces(2, Decimal.ROUND_HALF_EVEN),
     redevanceDepartementale: production.mul(getRedevanceDepartementale(annee, productionBySubstance.substanceFiscaleId)).toDecimalPlaces(2, Decimal.ROUND_HALF_EVEN),
@@ -440,7 +438,7 @@ const toNewFiscalite = (
   const fiscalite: Fiscalite = getSimpleFiscalite(productionBySubstance, annee)
 
   if (isTitreGuyannais) {
-    const taxeAurifereBrute = productionBySubstance.production.mul(getCategoriesForTaxeAurifereGuyane(annee, category)).toDecimalPlaces(2, Decimal.ROUND_HALF_EVEN)
+    const taxeAurifereBrute = productionBySubstance.production.value.mul(getCategoriesForTaxeAurifereGuyane(annee, category)).toDecimalPlaces(2, Decimal.ROUND_HALF_EVEN)
 
     const totalInvestissementsDeduits = Decimal.min(taxeAurifereGuyaneDeductionMontantMax, investissement, taxeAurifereBrute.mul(taxeAurifereBrutDeductionTaux))
       .toDecimalPlaces(2, Decimal.ROUND_HALF_EVEN)
