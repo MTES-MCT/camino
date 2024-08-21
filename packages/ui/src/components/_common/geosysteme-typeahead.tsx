@@ -4,7 +4,7 @@ import { GeoSysteme, GeoSystemes, GeoSystemeId, sortedGeoSystemes } from 'camino
 import { capitalize } from 'camino-common/src/strings'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 
-// https://github.com/MTES-MCT/camino/issues/917
+// https://gitlab-forge.din.developpement-durable.gouv.fr/pub/pnm-public/camino/issues/917
 const mainGeoSystemeIds = ['4326', '2154', '5490', '2972', '2975', '4471', '4467'] as const satisfies readonly GeoSystemeId[]
 
 // TODO 2024-02-26, attention, vue rajoute tous les champs qui sont dans GeoSystemeTypeahead.props et les met à undefined, donc le typage n'est pas tout à fait correct par rapport à la réalité :(

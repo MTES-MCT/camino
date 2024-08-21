@@ -108,8 +108,7 @@ lint: lint/ui lint/api lint/common
 
 install:
 ifdef CI
-# On a enlevé --ignore-scripts car pg-formatter fait un truc très étrange en postinstall, il curl une version de pg-format en perl et le met à côté de lui pour s'en servir
-	HUSKY=0 npm ci
+	HUSKY=0 npm ci --ignore-scripts
 else
 	npm ci
 endif
@@ -185,7 +184,7 @@ ifndef GIT_SHA
 	@exit 1
 endif
 	@echo 'on déploie sur ${DEPLOY_URL} la version ${GIT_SHA}'
-	@curl --fail-with-body http://${DEPLOY_URL}:3030/update/${GIT_SHA} -H 'authorization: ${CD_TOKEN}'
+	@curl --insecure --fail-with-body -I https://cd.${DEPLOY_URL}/update/${GIT_SHA} -H 'authorization: ${CD_TOKEN}'
 
 deploy/dev:
 	$(MAKE) DEPLOY_URL=dev.camino.beta.gouv.fr _deploy

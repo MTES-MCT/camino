@@ -2,24 +2,9 @@
 
 ## Git setup
 
-From the browser, go to the project repo on [Github](https://github.com): `https://github.com/MTES-MCT/camino`
+From the browser, go to the project repo on [gitlab](https://gitlab-forge.din.developpement-durable.gouv.fr/pub/pnm-public/camino): `https://gitlab-forge.din.developpement-durable.gouv.fr/pub/pnm-public/camino`
 
 Click on the `fork` button to create your own fork of the project.
-
-Then, from the terminal:
-
-```bash
-# Clone your fork locally. This add a remote named 'origin' pointing to your fork.
-git clone git@github.com:<your-user-name>/camino.git
-
-# Go to the project directory
-cd camino
-
-# Define the main repo as a remote named 'upstream'.
-git remote add upstream https://github.com/MTES-MCT/camino.git
-
-# Now you have two remotes: 'origin' (your fork) and 'upstream' (main repo).
-```
 
 ---
 
@@ -71,8 +56,8 @@ git push origin <my-fixes>
 
 ### 5. Make a merge request
 
-Go to [github.com/MTES-MCT/camino](https://github.com/MTES-MCT/camino/).
-Make a new merge request from your `<my-fixes>` branch against the `master` branch from the main repo. See [Github Doc](http://docs.github.com/ce/github-basics/add-merge-request.html) for more details.
+Go to [gitlab-forge.din.developpement-durable.gouv.fr/pub/pnm-public/camino](https://gitlab-forge.din.developpement-durable.gouv.fr/pub/pnm-public/camino/).
+Make a new merge request from your `<my-fixes>` branch against the `master` branch from the main repo. See [Github Doc](https://docs.gitlab.com/ee/user/project/merge_requests/) for more details.
 
 **For the next fix, start over at 1.**
 

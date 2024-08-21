@@ -1,0 +1,65 @@
+api/lint:
+  extends: .prepare-node-run
+  stage: test
+  script: make lint/api
+api/test/unit:
+  extends: .prepare-node-run
+  stage: test
+  script: make test/api-unit
+api/test/integration:
+  extends: .prepare-node-run
+  variables:
+    POSTGRES_USER: postgres
+    POSTGRES_PASSWORD: password
+    POSTGRES_DB: camino_tests
+    PGUSER: postgres
+    PGPASSWORD: password
+    PGPORT: 5432
+    PGHOST: postgres
+  services:
+    - name: postgis/postgis:16-3.4
+      alias: postgres
+  stage: test
+  script: make test/api-integration
+api/type:
+  extends: .prepare-node-run
+  stage: test
+  script: make build/api
+api/check-queries:
+  extends: .prepare-node-run
+  variables:
+    POSTGRES_USER: postgres
+    POSTGRES_PASSWORD: password
+    POSTGRES_DB: camino
+    PGDATABASE: camino
+    PGUSER: postgres
+    PGPASSWORD: password
+    PGPORT: 5432
+    PGHOST: postgres
+  services:
+    - name: postgis/postgis:16-3.4
+      alias: postgres
+  stage: test
+  script:
+    - set -a
+    - source .env-example
+    - ./.gitlab/wait-for-it.sh -h ${PGHOST} -p ${PGPORT} -t 30 -- make db/migrate
+    - make db/check-queries
+    - |
+      if [ ! -z  "$(git status --porcelain)" ]; then
+      echo "Lancer 'make db/check-queries' sur sa machine et commiter les changements"
+      echo "BEGIN Git diff"
+      git diff
+      echo "END Git diff"
+      exit 1;
+      fi
+api/build-and-push-image:
+  stage: build
+  needs: ['api/test/unit', 'api/type', 'api/lint', 'api/test/integration', 'api/check-queries']
+  extends:
+    - .rule-build-and-push
+    - .prepare-docker-push
+  image:
+    name: gcr.io/kaniko-project/executor:debug
+    entrypoint: [""]
+  script: /kaniko/executor --context "$CI_PROJECT_DIR" --build-arg GIT_SHA=${CI_COMMIT_SHA} --dockerfile "$CI_PROJECT_DIR/Dockerfile.api" --destination "caminofr/camino-api:${CI_COMMIT_SHA}" ${KANIKO_POST_PARAM}

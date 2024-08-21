@@ -1,0 +1,20 @@
+release-gitlab:
+  extends: .prepare-node-run
+  stage: deploy
+  script: npx semantic-release
+  rules:
+    - if: $CI_COMMIT_BRANCH == "prod"
+deploy:
+  extends: .prepare-node-run
+  stage: deploy
+  script: INPUT_ENV=${INPUT_ENV} INPUT_SHA=${CI_COMMIT_SHA} make deploy/ci
+  rules:
+    - if: $CI_COMMIT_BRANCH == "preprod"
+      variables:
+        INPUT_ENV: preprod
+    - if: $CI_COMMIT_BRANCH == "prod"
+      variables:
+        INPUT_ENV: prod
+    - if: $CI_COMMIT_BRANCH == "master"
+      variables:
+        INPUT_ENV: dev

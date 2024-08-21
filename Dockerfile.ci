@@ -1,0 +1,17 @@
+# Debian est obligatoire à cause de playwright qui n'est pas compatible avec alpine.
+FROM node:20.15.1-bookworm
+WORKDIR /app
+RUN apt-get update && \
+    apt-get install -y make curl git && \
+    apt-get clean && \
+    apt-get autoclean && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+COPY package*.json /app/
+COPY packages/common/package.json /app/packages/common/package.json
+COPY packages/ui/package.json /app/packages/ui/package.json
+COPY packages/api/package.json /app/packages/api/package.json
+COPY Makefile /app/Makefile
+
+RUN CI=true make install
+RUN mkdir /app/packages/api/node_modules /app/packages/ui/node_modules /app/packages/common/node_modules || true
+RUN npx playwright@1.47.0 install --with-deps chromium

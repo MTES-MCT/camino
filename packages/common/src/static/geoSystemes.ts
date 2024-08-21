@@ -42,7 +42,7 @@ export interface GeoSysteme<T = GeoSystemeId> {
 export const geoSystemeIdValidator = z.enum(IDS)
 export type GeoSystemeId = z.infer<typeof geoSystemeIdValidator>
 
-// TODO 2024-01-18 issue https://github.com/MTES-MCT/camino/issues/919 --> pour les degrès, on affiche la notation DMS également
+// TODO 2024-01-18 issue https://gitlab-forge.din.developpement-durable.gouv.fr/pub/pnm-public/camino/issues/919 --> pour les degrès, on affiche la notation DMS également
 
 export const GeoSystemes = {
   '2154': {
