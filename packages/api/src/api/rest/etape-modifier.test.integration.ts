@@ -1,18 +1,13 @@
 import { dbManager } from '../../../tests/db-manager'
 import { restPutCall, restCall, restPostCall } from '../../../tests/_utils/index'
-import { titreDemarcheCreate } from '../../database/queries/titres-demarches'
-import { titreCreate } from '../../database/queries/titres'
-import { titreEtapeCreate } from '../../database/queries/titres-etapes'
 import Titres from '../../database/models/titres'
 import { userSuper } from '../../database/user-super'
 import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations'
-import { CaminoDate, caminoDateValidator, toCaminoDate } from 'camino-common/src/date'
+import { caminoDateValidator, toCaminoDate } from 'camino-common/src/date'
 
 import { afterAll, beforeEach, beforeAll, describe, test, expect, vi } from 'vitest'
 import type { Pool } from 'pg'
 import { ETAPE_HERITAGE_PROPS, EtapeHeritageProps } from 'camino-common/src/heritage'
-import { EtapeTypeId, canBeBrouillon } from 'camino-common/src/static/etapesTypes'
-import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { idGenerate } from '../../database/models/_format/id-create'
 import { copyFileSync, mkdirSync } from 'fs'
 import { TempEtapeDocument } from 'camino-common/src/etape'
@@ -22,7 +17,7 @@ import { Knex } from 'knex'
 import { testDocumentCreateTemp } from '../../../tests/_utils/administrations-permissions'
 import { RestEtapeCreation, RestEtapeModification } from 'camino-common/src/etape-form'
 import { EntrepriseId } from 'camino-common/src/entreprise'
-import { TitreTypeId } from 'camino-common/src/static/titresTypes'
+import { etapeCreate } from './rest-test-utils'
 
 vi.mock('../../tools/dir-create', () => ({
   __esModule: true,
@@ -47,38 +42,6 @@ beforeEach(async () => {
 afterAll(async () => {
   await dbManager.closeKnex()
 })
-
-async function etapeCreate(typeId?: EtapeTypeId, date: CaminoDate = toCaminoDate('2018-01-01'), titreTypeId: TitreTypeId = 'arm') {
-  const titre = await titreCreate(
-    {
-      nom: 'mon titre',
-      typeId: titreTypeId,
-      titreStatutId: 'ind',
-      propsTitreEtapesIds: {},
-    },
-    {}
-  )
-  const titreDemarche = await titreDemarcheCreate({
-    titreId: titre.id,
-    typeId: 'oct',
-  })
-
-  const myTypeId = isNotNullNorUndefined(typeId) ? typeId : 'mfr'
-  const titreEtape = await titreEtapeCreate(
-    {
-      typeId: myTypeId,
-      statutId: 'fai',
-      ordre: 1,
-      titreDemarcheId: titreDemarche.id,
-      date,
-      isBrouillon: canBeBrouillon(myTypeId),
-    },
-    userSuper,
-    titre.id
-  )
-
-  return { titreDemarcheId: titreDemarche.id, titreEtapeId: titreEtape.id }
-}
 
 describe('etapeModifier', () => {
   test('ne peut pas modifier une étape (utilisateur anonyme)', async () => {

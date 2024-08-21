@@ -330,7 +330,7 @@ export const fiscalite =
             titres.map(({ typeId }) => ({ type_id: typeId }))
           )
         ) {
-          console.warn(`la fiscalité n'est pas visible pour l'utilisateur ${user} et l'entreprise ${parsed.data}`)
+          console.warn(`la fiscalité n'est pas visible pour l'utilisateur ${user.email} et l'entreprise ${parsed.data}`)
           res.sendStatus(HTTP_STATUS.FORBIDDEN)
         } else {
           const activites = await titresActivitesGet(
