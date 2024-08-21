@@ -44,11 +44,10 @@ const configValidator = caminoConfigValidator.extend({
   API_MAILJET_SECRET: z.string(),
   API_MAILJET_CONTACTS_LIST_ID: z.coerce.number(),
   API_MAILJET_EXPLOITANTS_GUYANE_LIST_ID: z.coerce.number(),
-  API_OPENFISCA_URL: z.string().url(),
 })
 
 let cacheConfig: z.infer<typeof configValidator>
-export const renewConfig = () => {
+export const renewConfig = (): void => {
   cacheConfig = configValidator.parse(process.env)
 }
 

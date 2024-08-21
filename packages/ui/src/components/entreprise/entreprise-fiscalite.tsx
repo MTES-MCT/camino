@@ -1,6 +1,6 @@
 import { computed, defineComponent, FunctionalComponent, onMounted, ref } from 'vue'
 import { montantNetTaxeAurifere, fraisGestion } from 'camino-common/src/fiscalite'
-import type { Fiscalite } from 'camino-common/src/validators/fiscalite'
+import { fiscaliteValidator, type Fiscalite } from 'camino-common/src/validators/fiscalite'
 import { LoadingElement } from '@/components/_ui/functional-loader'
 import { AsyncData, CaminoHttpError } from '@/api/client-rest'
 import { CaminoAnnee } from 'camino-common/src/date'
@@ -9,6 +9,7 @@ import { HTTP_STATUS } from 'camino-common/src/http'
 import { map, NonEmptyArray } from 'camino-common/src/typescript-tools'
 import { Tab, Tabs } from '../_ui/tabs'
 import { Alert } from '../_ui/alert'
+import Decimal from 'decimal.js'
 
 interface Props {
   getFiscaliteEntreprise: (annee: CaminoAnnee) => Promise<Fiscalite>
@@ -46,7 +47,8 @@ export const EntrepriseFiscalite = defineComponent<Props>(props => {
   const reloadData = async (annee: CaminoAnnee) => {
     data.value = { status: 'LOADING' }
     try {
-      const fiscaliteData = await props.getFiscaliteEntreprise(annee)
+      // TODO 2024-08-21 à enlever le jour où on fait un parseBody directement dans le callFetch
+      const fiscaliteData = fiscaliteValidator.parse(await props.getFiscaliteEntreprise(annee))
 
       data.value = { status: 'LOADED', value: fiscaliteData }
     } catch (e: any) {
@@ -76,13 +78,13 @@ export const EntrepriseFiscalite = defineComponent<Props>(props => {
 
 type FiscaliteProps = { tabId: CaminoAnnee; asyncData: AsyncData<Fiscalite> } & Pick<Props, 'annees'>
 const FiscaliteByAnnee: FunctionalComponent<FiscaliteProps> = props => {
-  const currencyFormat = (number: number) =>
+  const currencyFormat = (decimal: Decimal) =>
     Intl.NumberFormat('FR-fr', {
       style: 'currency',
       currency: 'EUR',
-    }).format(number)
+    }).format(decimal.toNumber())
 
-  const sommeAPayer = (fiscalite: Fiscalite) => fiscalite.redevanceCommunale + fiscalite.redevanceDepartementale + montantNetTaxeAurifere(fiscalite) + fraisGestion(fiscalite).toNumber()
+  const sommeAPayer = (fiscalite: Fiscalite): Decimal => fiscalite.redevanceCommunale.add(fiscalite.redevanceDepartementale).add(montantNetTaxeAurifere(fiscalite)).add(fraisGestion(fiscalite))
 
   return (
     <>
@@ -106,7 +108,7 @@ const FiscaliteByAnnee: FunctionalComponent<FiscaliteProps> = props => {
           </>
         ) : null}
         <div>f. Frais de gestion de fiscalité directe locale (a+b{props.asyncData.status === 'LOADED' && 'guyane' in props.asyncData.value ? '+e' : ''})X 8%</div>
-        <LoadingElement data={props.asyncData} class={styles['fiscalite-value']} renderItem={item => <>{currencyFormat(fraisGestion(item).toNumber())}</>} />
+        <LoadingElement data={props.asyncData} class={styles['fiscalite-value']} renderItem={item => <>{currencyFormat(fraisGestion(item))}</>} />
         <div>Somme à payer auprès du comptable (2)</div>
         <LoadingElement data={props.asyncData} class={styles['fiscalite-value']} renderItem={item => <>{currencyFormat(sommeAPayer(item))}</>} />
       </div>

@@ -143,7 +143,7 @@ where id = $ id
 `
 
 // TODO 2024-04-25 supprimer archive de la table entreprises et mettre un autocomplete pour sélectionner le titulaire lors de la création d’un titre
-const getEntreprisesValidor = entrepriseValidator.extend({
+export const getEntreprisesValidor = entrepriseValidator.extend({
   adresse: z.string().nullable(),
   legal_etranger: z.string().nullable(),
   code_postal: z.string().nullable(),
@@ -191,7 +191,7 @@ where
     id = $ entreprise_id !
 `
 
-export const getEntreprises = async (pool: Pool) => {
+export const getEntreprises = async (pool: Pool): Promise<GetEntreprises[]> => {
   return dbQueryAndValidate(getEntreprisesDb, undefined, pool, getEntreprisesValidor)
 }
 

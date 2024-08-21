@@ -3,6 +3,7 @@ import { Meta, StoryFn } from '@storybook/vue3'
 import type { Fiscalite } from 'camino-common/src/validators/fiscalite'
 import { CaminoAnnee, toCaminoAnnee } from 'camino-common/src/date'
 import { CaminoHttpError } from '@/api/client-rest'
+import Decimal from 'decimal.js'
 
 const meta: Meta = {
   title: 'Components/Entreprise/Fiscalite',
@@ -15,8 +16,8 @@ export const Ok: StoryFn = () => (
   <EntrepriseFiscalite
     getFiscaliteEntreprise={() =>
       Promise.resolve({
-        redevanceCommunale: 1600.071,
-        redevanceDepartementale: 330.98,
+        redevanceCommunale: new Decimal(1600.071),
+        redevanceDepartementale: new Decimal(330.98),
       })
     }
     anneeCourante={toCaminoAnnee('2022')}
@@ -28,12 +29,12 @@ export const Guyane: StoryFn = () => (
   <EntrepriseFiscalite
     getFiscaliteEntreprise={(annee: CaminoAnnee) =>
       Promise.resolve({
-        redevanceCommunale: Number.parseInt(annee) * 1600.071,
-        redevanceDepartementale: Number.parseInt(annee) * 330.98,
+        redevanceCommunale: new Decimal(Number.parseInt(annee) * 1600.071),
+        redevanceDepartementale: new Decimal(Number.parseInt(annee) * 330.98),
         guyane: {
-          taxeAurifereBrute: Number.parseInt(annee) * 4100,
-          totalInvestissementsDeduits: Number.parseInt(annee) * 100,
-          taxeAurifere: Number.parseInt(annee) * 210,
+          taxeAurifereBrute: new Decimal(Number.parseInt(annee) * 4100),
+          totalInvestissementsDeduits: new Decimal(Number.parseInt(annee) * 100),
+          taxeAurifere: new Decimal(Number.parseInt(annee) * 210),
         },
       })
     }
@@ -46,12 +47,12 @@ export const GuyaneAnneePrecedente: StoryFn = () => (
   <EntrepriseFiscalite
     getFiscaliteEntreprise={(annee: CaminoAnnee) =>
       Promise.resolve({
-        redevanceCommunale: Number.parseInt(annee) * 1600.071,
-        redevanceDepartementale: Number.parseInt(annee) * 330.98,
+        redevanceCommunale: new Decimal(Number.parseInt(annee) * 1600.071),
+        redevanceDepartementale: new Decimal(Number.parseInt(annee) * 330.98),
         guyane: {
-          taxeAurifereBrute: Number.parseInt(annee) * 4100,
-          totalInvestissementsDeduits: Number.parseInt(annee) * 100,
-          taxeAurifere: Number.parseInt(annee) * 210,
+          taxeAurifereBrute: new Decimal(Number.parseInt(annee) * 4100),
+          totalInvestissementsDeduits: new Decimal(Number.parseInt(annee) * 100),
+          taxeAurifere: new Decimal(Number.parseInt(annee) * 210),
         },
       })
     }

@@ -1,15 +1,11 @@
 version: '3'
 
 services:
-  openfisca:
-    image: caminofr/camino-openfisca:${CAMINO_TAG}
-    restart: unless-stopped
   api:
     container_name: camino_api_app
     image: caminofr/camino-api:${CAMINO_TAG}
     depends_on:
       - db
-      - openfisca
     environment:
       CAMINO_STAGE: ${ENV}
       APPLICATION_VERSION: ${CAMINO_TAG}

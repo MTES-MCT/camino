@@ -61,6 +61,7 @@ const callFetch = async <T extends CaminoRestRoute>(
   const fetched = await fetch(url, isNotNullNorUndefined(body) ? { ...defaultOptions, body: JSON.stringify(body) } : defaultOptions)
   if (fetched.ok) {
     if (fetched.status === 200) {
+      // TODO 2024-08-21 parser le body via les validator de rest.ts
       const body = await fetched.json()
 
       return body

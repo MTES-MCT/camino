@@ -32,9 +32,10 @@
     "test:integration": "vitest --environment node --root src/ --config ../vitest.integration.config.ts",
     "test:generate-data": "node --loader ts-node/esm/transpile-only src/tools/demarches/tests-creation.ts",
     "test:generate-phase-data": "node --loader ts-node/esm/transpile-only src/tools/phases/tests-creation.ts",
+    "test:generate-matrices-data": "node --loader ts-node/esm/transpile-only src/tools/matrices/tests-creation.ts",
     "test:generate-sections-data": "node --loader ts-node/esm/transpile-only src/tools/activites/tests-creation.ts",
     "ci:lint": "prettier --check . && eslint .",
-    "matrices": "node --loader ts-node/esm/transpile-only ./src/scripts/matrices.ts"
+    "matrices": "node --enable-source-maps --loader ts-node/esm/transpile-only ./src/scripts/matrices.ts"
   },
   "@comment dependencies": {
     "--enable-source-maps": "Vient de l'issue https://github.com/TypeStrong/ts-node/issues/2053",

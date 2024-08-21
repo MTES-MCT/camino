@@ -1,6 +1,7 @@
+/* eslint-disable sql/no-unsafe-query */
 import { entrepriseDocumentIdValidator, EntrepriseDocumentInput, newEntrepriseId, Siren, sirenValidator } from 'camino-common/src/entreprise'
 import { dbManager } from '../../../tests/db-manager'
-import { restCall, restDeleteCall, restPostCall, restPutCall } from '../../../tests/_utils/index'
+import { restCall, restDeleteCall, restPostCall, restPutCall, userGenerate } from '../../../tests/_utils/index'
 import { entrepriseUpsert } from '../../database/queries/entreprises'
 import { afterAll, beforeAll, describe, test, expect, vi, beforeEach } from 'vitest'
 import { userSuper } from '../../database/user-super'
@@ -20,7 +21,9 @@ import { insertTitreEtapeEntrepriseDocument } from '../../database/queries/titre
 import { titreSlugValidator } from 'camino-common/src/validators/titres'
 import type { Knex } from 'knex'
 import { ETAPE_IS_NOT_BROUILLON } from 'camino-common/src/etape'
+import { etapeCreate } from './rest-test-utils'
 console.info = vi.fn()
+console.warn = vi.fn()
 console.error = vi.fn()
 vi.mock('../../tools/api-insee/fetch', () => ({
   __esModule: true,
@@ -51,6 +54,7 @@ afterAll(async () => {
   await dbManager.closeKnex()
 })
 
+const entrepriseId = newEntrepriseId('plop')
 describe('fiscalite', () => {
   test('un utilisateur defaut n’a pas les droits', async () => {
     const entreprise = await entrepriseUpsert({
@@ -60,6 +64,44 @@ describe('fiscalite', () => {
     const tested = await restCall(dbPool, '/rest/entreprises/:entrepriseId/fiscalite/:annee', { entrepriseId: entreprise.id, annee: toCaminoAnnee('2022') }, { role: 'defaut' })
 
     expect(tested.statusCode).toBe(403)
+  })
+
+  test('un utilisateur entreprise peut voir sa fiscalité', async () => {
+    const { titreEtapeId, titreId } = await etapeCreate('mfr', toCaminoDate('2021-01-01'), 'axm')
+
+    const entreprise = await entrepriseUpsert({
+      id: entrepriseId,
+      nom: 'Mon Entreprise',
+    })
+    const user = await userGenerate(dbPool, { role: 'entreprise', entrepriseIds: [entrepriseId] })
+
+    await knex.raw(`update titres_etapes set titulaire_ids='["${entrepriseId}"]'::json, substances='["auru"]'::json, communes='[{"id": "97311", "surface": 2994052}]'::json where id='${titreEtapeId}'`)
+    await knex.raw(`update titres set props_titre_etapes_ids='{"points": "${titreEtapeId}","substances": "${titreEtapeId}","titulaires": "${titreEtapeId}"}'::json where id='${titreId}'`)
+    await knex.raw(
+      `INSERT INTO public.titres_activites (id,titre_id,utilisateur_id,"date",date_saisie,contenu,type_id,activite_statut_id,annee,periode_id,sections,suppression,slug) VALUES ('idAnnuel','${titreId}','${user.id}','2022-01-01','2022-03-28','{"substancesFiscales": {"auru": 123}}'::json,'gra','dep',2021,1,'{}'::jsonb[],false,'anything');`
+    )
+    await knex.raw(`INSERT INTO public.titres_activites (id,titre_id,utilisateur_id,"date",date_saisie,contenu,type_id,activite_statut_id,annee,periode_id,sections,suppression,slug) VALUES
+	 ('idTrimestriel','${titreId}','${user.id}','2022-01-01','2022-03-28','{"renseignements": {"environnement": 20000}}'::json,'grp','dep',2021,3,'{}'::jsonb[],false,'anything');
+`)
+    const tested = await restCall(
+      dbPool,
+      '/rest/entreprises/:entrepriseId/fiscalite/:annee',
+      { entrepriseId: entreprise.id, annee: toCaminoAnnee('2022') },
+      { role: 'entreprise', entrepriseIds: [entrepriseId] }
+    )
+
+    expect(tested.statusCode).toBe(200)
+    expect(tested.body).toMatchInlineSnapshot(`
+      {
+        "guyane": {
+          "taxeAurifere": "115287.85",
+          "taxeAurifereBrute": "120287.85",
+          "totalInvestissementsDeduits": "5000",
+        },
+        "redevanceCommunale": "21574.2",
+        "redevanceDepartementale": "4305",
+      }
+    `)
   })
 })
 
@@ -119,7 +161,7 @@ describe('entrepriseModifier', () => {
 
   test("peut modifier une entreprise (un utilisateur 'entreprise')", async () => {
     const entreprise = await entrepriseUpsert({
-      id: newEntrepriseId('monBelEntrepriseId'),
+      id: entrepriseId,
       nom: 'Mon Entreprise',
     })
     const tested = await restPutCall(

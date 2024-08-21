@@ -1,5 +1,5 @@
 import { FiscaliteParSubstanceParAnnee, StatistiquesMinerauxMetauxMetropole, StatistiquesMinerauxMetauxMetropoleSels, substancesFiscalesStats } from 'camino-common/src/statistiques'
-import { CaminoAnnee, anneeSuivante, toCaminoAnnee, getCurrentAnnee } from 'camino-common/src/date'
+import { CaminoAnnee, toCaminoAnnee, getCurrentAnnee, anneeSuivante } from 'camino-common/src/date'
 import { fromUniteFiscaleToUnite } from 'camino-common/src/static/unites'
 import { userSuper } from '../../../database/user-super'
 import { titresGet } from '../../../database/queries/titres'
@@ -7,12 +7,13 @@ import { isTitreValide, TitresStatutIds } from 'camino-common/src/static/titresS
 import { SubstancesFiscale, SUBSTANCES_FISCALES_IDS, SubstanceFiscaleId } from 'camino-common/src/static/substancesFiscales'
 import { Departements, departementsMetropole, toDepartementId } from 'camino-common/src/static/departement'
 import { REGION_IDS, regions } from 'camino-common/src/static/region'
-import { apiOpenfiscaCalculate, OpenfiscaRequest, redevanceCommunale, redevanceDepartementale, substanceFiscaleToInput } from '../../../tools/api-openfisca/index'
 import { onlyUnique } from 'camino-common/src/typescript-tools'
 import { TITRES_TYPES_TYPES_IDS } from 'camino-common/src/static/titresTypesTypes'
 import { evolutionTitres } from './evolution-titres'
 import type { Pool } from 'pg'
 import { getSubstancesByEntrepriseCategoryByAnnee, getTitreActiviteSubstanceParAnnee, getsubstancesByAnneeByCommune } from './metaux-metropole.queries'
+import { getSimpleFiscalite } from '../../../business/matrices'
+import Decimal from 'decimal.js'
 
 export const getMinerauxMetauxMetropolesStatsInside = async (pool: Pool): Promise<StatistiquesMinerauxMetauxMetropole> => {
   const result = await statistiquesMinerauxMetauxMetropoleInstantBuild()
@@ -115,7 +116,7 @@ const buildSubstances = async (pool: Pool): Promise<Pick<StatistiquesMinerauxMet
     if (!acc[annee]) {
       acc[annee] = 0
     }
-    acc[annee] += fromUniteFiscaleToUnite(SubstancesFiscale[bauxite].uniteId, dateSubstance.count)
+    acc[annee] += fromUniteFiscaleToUnite(SubstancesFiscale[bauxite].uniteId, new Decimal(dateSubstance.count)).toNumber()
 
     return acc
   }, {})
@@ -150,7 +151,7 @@ const buildSubstances = async (pool: Pool): Promise<Pick<StatistiquesMinerauxMet
           acc[substance][annee] = {}
         }
         const substanceData = acc[substance][annee]
-        const valeur = fromUniteFiscaleToUnite(SubstancesFiscale[substance].uniteId, stat.substances[substance] ?? 0)
+        const valeur = fromUniteFiscaleToUnite(SubstancesFiscale[substance].uniteId, new Decimal(stat.substances[substance] ?? 0)).toNumber()
         if (substanceData) {
           substanceData[regionId] = valeur + (substanceData[regionId] ?? 0)
         }
@@ -259,103 +260,25 @@ const buildSubstances = async (pool: Pool): Promise<Pick<StatistiquesMinerauxMet
 }
 
 const fiscaliteDetail = async (pool: Pool): Promise<FiscaliteParSubstanceParAnnee> => {
-  const fakeCommune = '66666'
-  const body: OpenfiscaRequest = {
-    articles: {
-      pme: {
-        surface_communale: {},
-      },
-      autre: {
-        surface_communale: {},
-      },
-    },
-    titres: {
-      pme: {
-        commune_principale_exploitation: {},
-        surface_totale: {},
-        categorie: {},
-        articles: ['pme'],
-      },
-      autre: {
-        commune_principale_exploitation: {},
-        surface_totale: {},
-        categorie: {},
-        articles: ['autre'],
-      },
-    },
-    communes: {
-      [fakeCommune]: {
-        articles: ['pme', 'autre'],
-      },
-    },
-  }
-
   const result = await getSubstancesByEntrepriseCategoryByAnnee(pool, {
     bauxite: SUBSTANCES_FISCALES_IDS.bauxite,
     selContenu: SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodiumContenu_,
     selSondage: SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodium_extraitEnDissolutionParSondage,
     selAbattage: SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodium_extraitParAbattage,
   })
-
-  const annees: CaminoAnnee[] = []
-
-  result.forEach(row => {
-    const annee = row.annee
-    const categorie = row.categorie
-
-    annees.push(annee)
-    const anneeFiscale = anneeSuivante(annee)
-    body.articles[categorie].surface_communale[annee] = 1
-
-    substancesFiscalesStats.forEach(substance => {
-      const substanceFiscale = SubstancesFiscale[substance]
-      ;(body.articles[categorie][redevanceCommunale(substanceFiscale)] ??= {})[anneeFiscale] = null
-      ;(body.articles[categorie][redevanceDepartementale(substanceFiscale)] ??= {})[anneeFiscale] = null
-      ;(body.articles[categorie][substanceFiscaleToInput(substanceFiscale)] ??= {})[annee] = fromUniteFiscaleToUnite(substanceFiscale.uniteId, row[substance])
-    })
-
-    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-    if (!body.titres[categorie]) {
-      body.titres[categorie] = {
-        commune_principale_exploitation: {},
-        surface_totale: {},
-        categorie: {},
-        articles: [categorie],
-      }
-    }
-    ;(body.titres[categorie].commune_principale_exploitation ??= {})[annee] = fakeCommune
-    ;(body.titres[categorie].surface_totale ??= {})[annee] = 1
-    body.titres[categorie].categorie[annee] = categorie
-  })
-  const fiscaliteResult = await apiOpenfiscaCalculate(body)
-
   const substances: FiscaliteParSubstanceParAnnee = {
     aloh: {},
     naca: {},
     nacb: {},
     nacc: {},
   }
-  annees.filter(onlyUnique).forEach(annee => {
-    const anneeFiscale = anneeSuivante(annee)
-    const anneeFiscaleNumber = Number(anneeFiscale)
+
+  result.forEach(value => {
     substancesFiscalesStats.forEach(substance => {
-      const substanceFiscale = SubstancesFiscale[substance]
-
-      const pme =
-        (fiscaliteResult.articles.pme?.[redevanceDepartementale(substanceFiscale)]?.[anneeFiscaleNumber] ?? 0) +
-        (fiscaliteResult.articles.pme?.[redevanceCommunale(substanceFiscale)]?.[anneeFiscaleNumber] ?? 0)
-
-      const autre =
-        (fiscaliteResult.articles.autre?.[redevanceDepartementale(substanceFiscale)]?.[anneeFiscaleNumber] ?? 0) +
-        (fiscaliteResult.articles.autre?.[redevanceCommunale(substanceFiscale)]?.[anneeFiscaleNumber] ?? 0)
-
-      const sum = pme + autre
-      if (substance in substances) {
-        const subtanceData = substances[substance]
-        if (subtanceData) {
-          subtanceData[anneeFiscale] = Number(sum.toFixed(0))
-        }
-      }
+      const anneePlusUn = anneeSuivante(value.annee)
+      const fiscalite = getSimpleFiscalite({ substanceFiscaleId: substance, production: { value: new Decimal(value[substance]), uniteId: SubstancesFiscale[substance].uniteId } }, anneePlusUn)
+      const mySubstance = (substances[substance] ??= {})
+      mySubstance[anneePlusUn] = (mySubstance[anneePlusUn] ?? 0) + fiscalite.redevanceCommunale.add(fiscalite.redevanceDepartementale).toNumber()
     })
   })
 

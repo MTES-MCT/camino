@@ -55,7 +55,6 @@ const config = {
       ignoreDependencies: [
         "@vitest/coverage-v8",
         "@babel/eslint-parser",
-        "@storybook/builder-vite",
         "@vue/eslint-config-prettier",
         "@vue/eslint-config-standard",
         "babel-core",
