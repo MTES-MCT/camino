@@ -19,7 +19,7 @@ import { ETAPES_TYPES, EtapeTypeId, EtapesTypes } from '../static/etapesTypes'
 import { SDOMZoneId } from '../static/sdom'
 import { TitreTypeId, TitresTypes } from '../static/titresTypes'
 import { TITRES_TYPES_TYPES_IDS } from '../static/titresTypesTypes'
-import { getDocuments } from '../static/titresTypes_demarchesTypes_etapesTypes/documents'
+import { canHaveDocumentsAutre, getDocuments } from '../static/titresTypes_demarchesTypes_etapesTypes/documents'
 import { getEntrepriseDocuments } from '../static/titresTypes_demarchesTypes_etapesTypes/entrepriseDocuments'
 import { documentTypeIdsBySdomZonesGet } from '../static/titresTypes_demarchesTypes_etapesTypes/sdom'
 import { getSections, getSectionsWithValue } from '../static/titresTypes_demarchesTypes_etapesTypes/sections'
@@ -162,7 +162,12 @@ export const getDocumentsTypes = (
     }
   }
 
-  return [...dts, { ...DocumentsTypes.aut, optionnel: true }]
+  const response: (DocumentType | AutreDocumentType)[] = [...dts]
+  if (canHaveDocumentsAutre(etape.typeId)) {
+    response.push({ ...DocumentsTypes.aut, optionnel: true })
+  }
+
+  return response
 }
 
 export const getAvisTypes = (etapeTypeId: EtapeTypeId, titreTypeId: TitreTypeId, communeIds: DeepReadonly<CommuneId[]>): { id: AvisTypeId; optionnel: boolean }[] => {
@@ -207,6 +212,8 @@ export const getAvisTypes = (etapeTypeId: EtapeTypeId, titreTypeId: TitreTypeId,
     if (TitresTypes[titreTypeId].typeId === TITRES_TYPES_TYPES_IDS.AUTORISATION_D_EXPLOITATION) {
       avis.push({ ...AvisTypes.confirmationAccordProprietaireDuSol, optionnel: true })
     }
+  } else if (etapeTypeId === ETAPES_TYPES.consultationDesAdministrationsCentrales) {
+    avis.push({ ...AvisTypes.autreAvis, optionnel: true })
   }
 
   return avis

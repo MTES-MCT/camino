@@ -1,5 +1,5 @@
 import { ETAPES_TYPES } from '../etapesTypes'
-import { getDocuments } from './documents'
+import { canHaveDocumentsAutre, getDocuments } from './documents'
 import { test, expect } from 'vitest'
 
 test('getDocuments erreurs', () => {
@@ -69,4 +69,9 @@ test("la lettre des saisines est obligatoire pour l'avis des services et commiss
       },
     ]
   `)
+})
+
+test("canHaveDocumentsAutre n'autorise pas les documents complémentaires pour les consultations des administrations centrales", () => {
+  expect(canHaveDocumentsAutre('mfr')).toBe(true)
+  expect(canHaveDocumentsAutre('cac')).toBe(false)
 })

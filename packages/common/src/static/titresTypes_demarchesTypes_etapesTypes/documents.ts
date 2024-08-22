@@ -55,10 +55,7 @@ const EtapesTypesDocumentsTypes = {
     { documentTypeId: DOCUMENTS_TYPES_IDS.decision, optionnel: true },
     { documentTypeId: DOCUMENTS_TYPES_IDS.lettre, optionnel: true },
   ],
-  [ETAPES_TYPES.consultationDesAdministrationsCentrales]: [
-    { documentTypeId: DOCUMENTS_TYPES_IDS.avis, optionnel: true },
-    { documentTypeId: DOCUMENTS_TYPES_IDS.lettreDeSaisineDesServicesDeLAdministrationCentrale, optionnel: true },
-  ],
+  [ETAPES_TYPES.consultationDesAdministrationsCentrales]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.lettreDeSaisineDesServicesCivilsEtMilitaires, optionnel: false }],
   [ETAPES_TYPES.classementSansSuite]: [
     { documentTypeId: DOCUMENTS_TYPES_IDS.arrete, optionnel: true },
     { documentTypeId: DOCUMENTS_TYPES_IDS.lettre, optionnel: true },
@@ -359,6 +356,8 @@ const EtapesTypesDocumentsTypes = {
   [ETAPES_TYPES.avisDesServicesEtCommissionsConsultatives]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.lettreDeSaisineDesServicesCivilsEtMilitaires, optionnel: false }],
 } as const satisfies { [key in EtapeTypeId]?: (DocumentTypeId | { documentTypeId: DocumentTypeId; optionnel: boolean })[] }
 
+const EtapesTypesSansDocumentsAutre = [ETAPES_TYPES.consultationDesAdministrationsCentrales] as const satisfies Readonly<EtapeTypeId[]>
+
 const isEtapesTypesEtapesTypesDocumentsTypes = (etapeTypeId?: EtapeTypeId): etapeTypeId is keyof typeof EtapesTypesDocumentsTypes => {
   return Object.keys(EtapesTypesDocumentsTypes).includes(etapeTypeId)
 }
@@ -428,6 +427,10 @@ export const toDocuments = (): { etapeTypeId: EtapeTypeId; documentTypeId: Docum
       return []
     }
   })
+}
+
+export const canHaveDocumentsAutre = (etapeTypeId: EtapeTypeId): boolean => {
+  return !EtapesTypesSansDocumentsAutre.includes(etapeTypeId)
 }
 
 export const getDocuments = (titreTypeId?: TitreTypeId, demarcheId?: DemarcheTypeId, etapeTypeId?: EtapeTypeId): DocumentType[] => {

@@ -278,20 +278,21 @@ const EtapeDocumentsLoaded = defineComponent<EtapeDocumentsLoadedProps>(props =>
               onClick={openAddPopupAdditionnalDocument}
             />
           </div>
-          {addOrEditPopupOpen.value.open ? (
-            <AddEtapeDocumentPopup
-              documentTypeIds={addOrEditPopupOpen.value.documentTypeIds}
-              apiClient={props.apiClient}
-              close={closeAddPopup}
-              user={props.user}
-              initialDocument={addOrEditPopupOpen.value.document}
-            />
-          ) : null}
-          {addOrEditDaePopupOpen.value ? <AddEtapeDaeDocumentPopup apiClient={props.apiClient} close={closeAddDaePopup} initialDocument={daeDocument.value} /> : null}
-
-          {addOrEditAslPopupOpen.value ? <AddEtapeAslDocumentPopup apiClient={props.apiClient} close={closeAddAslPopup} initialDocument={aslDocument.value} /> : null}
         </>
       ) : null}
+
+      {addOrEditPopupOpen.value.open ? (
+        <AddEtapeDocumentPopup
+          documentTypeIds={addOrEditPopupOpen.value.documentTypeIds}
+          apiClient={props.apiClient}
+          close={closeAddPopup}
+          user={props.user}
+          initialDocument={addOrEditPopupOpen.value.document}
+        />
+      ) : null}
+      {addOrEditDaePopupOpen.value ? <AddEtapeDaeDocumentPopup apiClient={props.apiClient} close={closeAddDaePopup} initialDocument={daeDocument.value} /> : null}
+
+      {addOrEditAslPopupOpen.value ? <AddEtapeAslDocumentPopup apiClient={props.apiClient} close={closeAddAslPopup} initialDocument={aslDocument.value} /> : null}
     </>
   )
 })
