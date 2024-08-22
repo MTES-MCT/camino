@@ -34,6 +34,7 @@ describe("publicité d'une démarche", () => {
   })
 
   test("une démarche d'octroi sans étape décisive n'est pas publique", () => {
+    // FIXME: remplacer apw par autre chose ici, dans tout le fichier de test
     expect(
       titreDemarchePublicFind(
         {

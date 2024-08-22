@@ -44,7 +44,6 @@ const TitreEtapesTravauxTypes = {
   AvisReception: 'war',
   SaisineAutoriteEnvironmentale: 'wse',
   AvisAutoriteEnvironmentale: 'wae',
-  AvisPrefetMaritime: 'wap',
   ArretePrefectoralSursis: 'wps',
   MemoireReponseExploitant: 'wmm',
   OuvertureEnquetePublique: 'woe',

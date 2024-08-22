@@ -284,7 +284,6 @@ const EtapesTypesDocumentsTypes = {
   [ETAPES_TYPES.abandonDeLaDemande]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.courrier, optionnel: true }],
   [ETAPES_TYPES.avisDeLautoriteEnvironnementale]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.avis, optionnel: true }],
   [ETAPES_TYPES.arreteDouvertureDesTravauxMiniers]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.arretePrefectoral, optionnel: true }],
-  [ETAPES_TYPES.avisDuPrefetMaritime_wap]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.avis, optionnel: true }],
   [ETAPES_TYPES.avisDeReception]: [
     { documentTypeId: DOCUMENTS_TYPES_IDS.courrierDeNotificationDeLaRecevabilite, optionnel: true },
     { documentTypeId: DOCUMENTS_TYPES_IDS.lettreDeSaisineDuPrefet, optionnel: true },

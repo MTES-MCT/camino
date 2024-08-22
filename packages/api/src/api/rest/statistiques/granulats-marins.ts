@@ -62,6 +62,7 @@ const statistiquesGranulatsMarinsInstantBuild = (titres: ITitre[]): Omit<Statist
       const instructionEnCours = [TitresStatutIds.DemandeInitiale, TitresStatutIds.ModificationEnInstance, TitresStatutIds.SurvieProvisoire].includes(titre.titreStatutId)
 
       if ((isValide || instructionEnCours) && titre.pointsEtape && titre.pointsEtape.surface) {
+        // FIXME: traiter l'utilisation de l'apw ici
         if (['arw', 'apw', 'prw'].includes(titre.typeId!)) {
           acc.surfaceExploration += titre.pointsEtape.surface
           if (instructionEnCours) {
