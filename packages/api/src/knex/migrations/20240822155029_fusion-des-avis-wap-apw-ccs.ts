@@ -8,7 +8,7 @@ import { AvisStatutId, AvisTypes, AvisVisibilityIds } from 'camino-common/src/st
 import { isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools'
 import { Knex } from 'knex'
 import { LargeObjectId } from '../../database/largeobjects'
-import { EtapeTypeId, EtapesTypes } from 'camino-common/src/static/etapesTypes'
+import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
 
 type DocumentFromDb = { id: EtapeDocumentId; largeobject_id: LargeObjectId; description: string; public_lecture: boolean; entreprises_lecture: boolean }
 
@@ -33,7 +33,7 @@ export const up = async (knex: Knex): Promise<void> => {
         id: document.id,
         avis_type_id: AvisTypes.autreAvis.id,
         etape_id: avisDesServices.rows[0].id,
-        description: `${EtapesTypes[etape.type_id].nom}`,
+        description: 'avis du préfet maritime',
         avis_statut_id: nonRenseigneAvis,
         date: etape.date,
         largeobject_id: document.largeobject_id,
