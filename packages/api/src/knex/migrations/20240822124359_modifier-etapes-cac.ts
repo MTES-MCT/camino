@@ -2,10 +2,10 @@
 /* eslint-disable sql/no-unsafe-query */
 
 import { EtapeDocumentId, EtapeId } from 'camino-common/src/etape'
-import { DOCUMENTS_TYPES_IDS, DocumentTypeId } from 'camino-common/src/static/documentsTypes'
+import { DOCUMENTS_TYPES_IDS, DocumentTypeId, DocumentsTypes } from 'camino-common/src/static/documentsTypes'
 import { Knex } from 'knex'
 import { LargeObjectId } from '../../database/largeobjects'
-import { isNullOrUndefined } from 'camino-common/src/typescript-tools'
+import { isNullOrUndefined, isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools'
 import { CaminoDate } from 'camino-common/src/date'
 import { AvisStatutId, AvisTypeId, AvisTypes, AvisVisibilityId } from 'camino-common/src/static/avisTypes'
 
@@ -96,19 +96,29 @@ export const up = async (knex: Knex): Promise<void> => {
                   largeobject_id: doc.largeobject_id,
                 }
 
-                return [
-                  knex.raw(`INSERT INTO etape_avis(id, avis_type_id, avis_statut_id, avis_visibility_id, etape_id, description, date, largeobject_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`, [
-                    avis.id,
-                    avis.avis_type_id,
-                    avis.avis_statut_id,
-                    avis.avis_visibility_id,
-                    avis.etape_id,
-                    avis.description,
-                    avis.date,
-                    avis.largeobject_id,
-                  ]),
-                  knex.raw(`DELETE FROM etapes_documents WHERE id = ?`, [doc.id]),
-                ]
+                if (doc.etape_document_type_id === DOCUMENTS_TYPES_IDS.avis) {
+                  return [
+                    knex.raw(`INSERT INTO etape_avis(id, avis_type_id, avis_statut_id, avis_visibility_id, etape_id, description, date, largeobject_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`, [
+                      avis.id,
+                      avis.avis_type_id,
+                      avis.avis_statut_id,
+                      avis.avis_visibility_id,
+                      avis.etape_id,
+                      avis.description,
+                      avis.date,
+                      avis.largeobject_id,
+                    ]),
+                    knex.raw(`DELETE FROM etapes_documents WHERE id = ?`, [doc.id]),
+                  ]
+                } else {
+                  return [
+                    knex.raw(`UPDATE etapes_documents SET etape_document_type_id = ?, description = ? WHERE id = ?`, [
+                      DOCUMENTS_TYPES_IDS.autreDocument,
+                      `${DocumentsTypes[doc.etape_document_type_id].nom}${isNullOrUndefinedOrEmpty(doc.description) ? '' : ` - ${doc.description}`}`,
+                      doc.id,
+                    ]),
+                  ]
+                }
               })
               .flat()
           )
