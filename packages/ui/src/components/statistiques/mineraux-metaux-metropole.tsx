@@ -25,18 +25,20 @@ const bauxiteChartConfiguration = (data: StatistiquesMinerauxMetauxMetropole): C
     labels: annees,
     datasets: [
       {
+        type: 'line',
+        yAxisID: 'fiscalite',
+        label: 'Fiscalité',
+        backgroundColor: CHART_COLORS.blue,
+        borderColor: CHART_COLORS.blue,
+        borderDash: [5, 5],
+        data: annees.map(annee => data.fiscaliteParSubstanceParAnnee[SUBSTANCES_FISCALES_IDS.bauxite]?.[annee] ?? Number.NaN),
+      },
+      {
         type: 'bar',
         yAxisID: 'production',
         label: 'Production',
         data: annees.map(annee => data.substances.aloh[annee] ?? 0),
         backgroundColor: 'rgb(118, 182, 189)',
-      },
-      {
-        type: 'line',
-        yAxisID: 'fiscalite',
-        label: 'Fiscalité',
-        backgroundColor: CHART_COLORS.blue,
-        data: annees.map(annee => data.fiscaliteParSubstanceParAnnee[SUBSTANCES_FISCALES_IDS.bauxite]?.[annee] ?? 0),
       },
     ],
   }
@@ -55,7 +57,7 @@ const bauxiteChartConfiguration = (data: StatistiquesMinerauxMetauxMetropole): C
         },
         title: {
           display: true,
-          text: `Production Bauxite (${Unites[SubstancesFiscale.naca.uniteId].nom})`,
+          text: `Production de Bauxite et fiscalité`,
           font: {
             size: 16,
           },
@@ -65,10 +67,15 @@ const bauxiteChartConfiguration = (data: StatistiquesMinerauxMetauxMetropole): C
         production: {
           type: 'linear',
           position: 'left',
+          title: { display: true, text: `Production Bauxite (${Unites[SubstancesFiscale.naca.uniteId].nom})` },
         },
         fiscalite: {
           type: 'linear',
           position: 'right',
+          title: {
+            display: true,
+            text: `Fiscalité (en €)`,
+          },
         },
       },
     },
@@ -105,11 +112,13 @@ const selsChartConfiguration = (data: StatistiquesMinerauxMetauxMetropole): Char
         yAxisID: 'fiscalite',
         label: 'Fiscalité',
         backgroundColor: CHART_COLORS.blue,
+        borderColor: CHART_COLORS.blue,
+        borderDash: [5, 5],
         data: annees.map(
           annee =>
-            (data.fiscaliteParSubstanceParAnnee[SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodiumContenu_]?.[annee] ?? 0) +
-            (data.fiscaliteParSubstanceParAnnee[SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodium_extraitEnDissolutionParSondage]?.[annee] ?? 0) +
-            (data.fiscaliteParSubstanceParAnnee[SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodium_extraitParAbattage]?.[annee] ?? 0)
+            (data.fiscaliteParSubstanceParAnnee[SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodiumContenu_]?.[annee] ?? Number.NaN) +
+            (data.fiscaliteParSubstanceParAnnee[SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodium_extraitEnDissolutionParSondage]?.[annee] ?? Number.NaN) +
+            (data.fiscaliteParSubstanceParAnnee[SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodium_extraitParAbattage]?.[annee] ?? Number.NaN)
         ),
       },
     ],
@@ -124,7 +133,7 @@ const selsChartConfiguration = (data: StatistiquesMinerauxMetauxMetropole): Char
       plugins: {
         title: {
           display: true,
-          text: `Production Sels (${Unites[SubstancesFiscale.naca.uniteId].nom})`,
+          text: `Production de Sels et fiscalité`,
           font: {
             size: 16,
           },
@@ -138,10 +147,20 @@ const selsChartConfiguration = (data: StatistiquesMinerauxMetauxMetropole): Char
         x: {
           stacked: true,
         },
-        y: { stacked: true },
+        y: {
+          stacked: true,
+          title: {
+            display: true,
+            text: `Production Sels (${Unites[SubstancesFiscale.naca.uniteId].nom})`,
+          },
+        },
         fiscalite: {
           type: 'linear',
           position: 'right',
+          title: {
+            display: true,
+            text: `Fiscalité (en €)`,
+          },
         },
       },
     },
