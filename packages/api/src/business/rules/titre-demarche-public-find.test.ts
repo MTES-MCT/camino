@@ -7,6 +7,7 @@ import { toCaminoDate } from 'camino-common/src/date'
 import { describe, expect, test } from 'vitest'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
 import { ETAPE_IS_NOT_BROUILLON } from 'camino-common/src/etape'
+import { TITRES_TYPES_IDS } from 'camino-common/src/static/titresTypes'
 const etapesBuild = (etapesProps: Partial<ITitreEtape>[]) =>
   etapesProps.map(
     (etapeProps, i) =>
@@ -34,7 +35,6 @@ describe("publicité d'une démarche", () => {
   })
 
   test("une démarche d'octroi sans étape décisive n'est pas publique", () => {
-    // FIXME: remplacer apw par autre chose ici, dans tout le fichier de test
     expect(
       titreDemarchePublicFind(
         {
@@ -45,7 +45,7 @@ describe("publicité d'une démarche", () => {
           demarcheDateDebut: toCaminoDate('2020-01-01'),
           demarcheDateFin: toCaminoDate('2021-01-01'),
         },
-        'apw'
+        TITRES_TYPES_IDS.AUTORISATION_DE_PROSPECTION_GRANULATS_MARINS
       )
     ).toMatchObject({ publicLecture: false, entreprisesLecture: false })
   })
@@ -77,7 +77,7 @@ describe("publicité d'une démarche", () => {
           etapes: etapesBuild([{ typeId: 'spp' }]),
           titreId: newTitreId('titreId'),
         },
-        'apw'
+        TITRES_TYPES_IDS.AUTORISATION_DE_PROSPECTION_GRANULATS_MARINS
       )
     ).toMatchObject({ publicLecture: true, entreprisesLecture: true })
   })
@@ -93,7 +93,7 @@ describe("publicité d'une démarche", () => {
           etapes: etapesBuild([{ typeId: 'spp' }]),
           titreId: newTitreId('titreId'),
         },
-        'apw'
+        TITRES_TYPES_IDS.AUTORISATION_DE_PROSPECTION_GRANULATS_MARINS
       )
     ).toMatchObject({ publicLecture: true, entreprisesLecture: true })
   })
@@ -109,7 +109,7 @@ describe("publicité d'une démarche", () => {
           etapes: etapesBuild([{ typeId: 'mfr' }]),
           titreId: newTitreId('titreId'),
         },
-        'apw'
+        TITRES_TYPES_IDS.AUTORISATION_DE_PROSPECTION_GRANULATS_MARINS
       )
     ).toMatchObject({ publicLecture: false, entreprisesLecture: true })
   })
@@ -141,7 +141,7 @@ describe("publicité d'une démarche", () => {
           etapes: etapesBuild([{ typeId: 'css' }, { typeId: 'mfr' }]),
           titreId: newTitreId('titreId'),
         },
-        'apw'
+        TITRES_TYPES_IDS.AUTORISATION_DE_PROSPECTION_GRANULATS_MARINS
       )
     ).toMatchObject({ publicLecture: false })
   })
@@ -221,7 +221,7 @@ describe("publicité d'une démarche", () => {
           etapes: etapesBuild([{ typeId: 'mcr' }]),
           titreId: newTitreId('titreId'),
         },
-        'apw'
+        TITRES_TYPES_IDS.AUTORISATION_DE_PROSPECTION_GRANULATS_MARINS
       )
     ).toMatchObject({ publicLecture: true })
   })
@@ -269,7 +269,7 @@ describe("publicité d'une démarche", () => {
           etapes: etapesBuild([{ typeId: 'anf' }]),
           titreId: newTitreId('titreId'),
         },
-        'apw'
+        TITRES_TYPES_IDS.AUTORISATION_DE_PROSPECTION_GRANULATS_MARINS
       )
     ).toMatchObject({ publicLecture: true })
   })
@@ -285,7 +285,7 @@ describe("publicité d'une démarche", () => {
           etapes: etapesBuild([{ typeId: 'apu' }]),
           titreId: newTitreId('titreId'),
         },
-        'apw'
+        TITRES_TYPES_IDS.AUTORISATION_DE_PROSPECTION_GRANULATS_MARINS
       )
     ).toMatchObject({ publicLecture: true })
   })
@@ -301,7 +301,7 @@ describe("publicité d'une démarche", () => {
           etapes: etapesBuild([{ typeId: 'ane' }]),
           titreId: newTitreId('titreId'),
         },
-        'apw'
+        TITRES_TYPES_IDS.AUTORISATION_DE_PROSPECTION_GRANULATS_MARINS
       )
     ).toMatchObject({ publicLecture: true })
   })
@@ -317,7 +317,7 @@ describe("publicité d'une démarche", () => {
           etapes: etapesBuild([{ typeId: 'ppu' }]),
           titreId: newTitreId('titreId'),
         },
-        'apw'
+        TITRES_TYPES_IDS.AUTORISATION_DE_PROSPECTION_GRANULATS_MARINS
       )
     ).toMatchObject({ publicLecture: true })
   })
@@ -381,7 +381,7 @@ describe("publicité d'une démarche", () => {
           etapes: etapesBuild([{ typeId: 'dim', statutId: 'acc' }]),
           titreId: newTitreId('titreId'),
         },
-        'apw'
+        TITRES_TYPES_IDS.AUTORISATION_DE_PROSPECTION_GRANULATS_MARINS
       )
     ).toMatchObject({ publicLecture: true })
   })
@@ -400,7 +400,7 @@ describe("publicité d'une démarche", () => {
           ]),
           titreId: newTitreId('titreId'),
         },
-        'apw'
+        TITRES_TYPES_IDS.AUTORISATION_DE_PROSPECTION_GRANULATS_MARINS
       )
     ).toMatchObject({ publicLecture: false })
   })
@@ -416,7 +416,7 @@ describe("publicité d'une démarche", () => {
           etapes: etapesBuild([{ typeId: 'dex', statutId: 'rej' }]),
           titreId: newTitreId('titreId'),
         },
-        'apw'
+        TITRES_TYPES_IDS.AUTORISATION_DE_PROSPECTION_GRANULATS_MARINS
       )
     ).toMatchObject({ publicLecture: false })
   })
@@ -467,7 +467,7 @@ describe("publicité d'une démarche", () => {
           etapes: etapesBuild([{ typeId: 'dpu', statutId: 'acc' }]),
           titreId: newTitreId('titreId'),
         },
-        'apw'
+        TITRES_TYPES_IDS.AUTORISATION_DE_PROSPECTION_GRANULATS_MARINS
       )
     ).toMatchObject({ publicLecture: true })
   })
@@ -483,7 +483,7 @@ describe("publicité d'une démarche", () => {
           etapes: etapesBuild([{ typeId: 'dux' }]),
           titreId: newTitreId('titreId'),
         },
-        'apw'
+        TITRES_TYPES_IDS.AUTORISATION_DE_PROSPECTION_GRANULATS_MARINS
       )
     ).toMatchObject({ publicLecture: true })
   })
@@ -499,7 +499,7 @@ describe("publicité d'une démarche", () => {
           etapes: etapesBuild([{ typeId: 'dpu' }]),
           titreId: newTitreId('titreId'),
         },
-        'apw'
+        TITRES_TYPES_IDS.AUTORISATION_DE_PROSPECTION_GRANULATS_MARINS
       )
     ).toMatchObject({ publicLecture: true })
   })
@@ -515,7 +515,7 @@ describe("publicité d'une démarche", () => {
           etapes: etapesBuild([{ typeId: 'rpu' }]),
           titreId: newTitreId('titreId'),
         },
-        'apw'
+        TITRES_TYPES_IDS.AUTORISATION_DE_PROSPECTION_GRANULATS_MARINS
       )
     ).toMatchObject({ publicLecture: true })
   })
@@ -563,7 +563,7 @@ describe("publicité d'une démarche", () => {
           etapes: etapesBuild([{ typeId: 'and', statutId: 'fav' }]),
           titreId: newTitreId('titreId'),
         },
-        'apw'
+        TITRES_TYPES_IDS.AUTORISATION_DE_PROSPECTION_GRANULATS_MARINS
       )
     ).toMatchObject({ publicLecture: true })
   })
@@ -579,7 +579,7 @@ describe("publicité d'une démarche", () => {
           etapes: etapesBuild([{ typeId: 'and', statutId: 'fai' }]),
           titreId: newTitreId('titreId'),
         },
-        'apw'
+        TITRES_TYPES_IDS.AUTORISATION_DE_PROSPECTION_GRANULATS_MARINS
       )
     ).toMatchObject({ publicLecture: false })
   })
@@ -767,7 +767,7 @@ describe("publicité d'une démarche", () => {
           etapes: etapesBuild([{ typeId: etapeTypeId, isBrouillon: ETAPE_IS_NOT_BROUILLON }]),
           titreId: newTitreId('titreId'),
         },
-        'apw'
+        TITRES_TYPES_IDS.AUTORISATION_DE_PROSPECTION_GRANULATS_MARINS
       )
     ).toMatchObject({ publicLecture: true })
   })
@@ -783,7 +783,7 @@ describe("publicité d'une démarche", () => {
           etapes: etapesBuild([{ typeId: 'ane', isBrouillon: ETAPE_IS_NOT_BROUILLON }]),
           titreId: newTitreId('WQaZgPfDcQw9tFliMgBIDH3Z'),
         },
-        'apw'
+        TITRES_TYPES_IDS.AUTORISATION_DE_PROSPECTION_GRANULATS_MARINS
       )
     ).toMatchObject({ publicLecture: false })
   })

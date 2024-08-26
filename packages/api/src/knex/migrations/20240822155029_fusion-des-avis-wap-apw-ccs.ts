@@ -33,7 +33,7 @@ export const up = async (knex: Knex): Promise<void> => {
         id: document.id,
         avis_type_id: AvisTypes.autreAvis.id,
         etape_id: avisDesServices.rows[0].id,
-        description: `${EtapesTypes[etape.type_id].nom} - ${document.description ?? ''}`,
+        description: `${EtapesTypes[etape.type_id].nom}`,
         avis_statut_id: nonRenseigneAvis,
         date: etape.date,
         largeobject_id: document.largeobject_id,
