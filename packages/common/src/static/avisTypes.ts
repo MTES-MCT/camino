@@ -5,7 +5,7 @@ interface Definition<T> {
   nom: string
 }
 // prettier-ignore
-const AVIS_TYPES_IDS = [ 'confirmationAccordProprietaireDuSol', 'avisDirectionRegionaleDesAffairesCulturelles', 'avisDirectionAlimentationAgricultureForet', 'avisConseilDepartementalEnvironnementRisquesSanitairesTechnologiques', 'avisDirectionsRégionalesEconomieEmploiTravailSolidarités', 'avisDirectionRegionaleFinancesPubliques', 'avisGendarmerieNationale', 'avisParcNaturelMarin', 'avisIFREMER', 'avisInstitutNationalOrigineQualite', 'avisEtatMajorOrpaillagePecheIllicite', 'avisServiceAdministratifLocal', 'avisAutoriteMilitaire', 'avisParcNational', 'avisDirectionDepartementaleTerritoiresMer', 'avisAgenceRegionaleSante', 'avisCaisseGeneraleSecuriteSociale', 'autreAvis', 'avisServiceMilieuxNaturelsBiodiversiteSitesPaysages', 'avisOfficeNationalDesForets', 'expertiseOfficeNationalDesForets', 'avisDUneCollectivite','avisDuPrefetMaritime_wap','consultationCLEDuSAGE'] as const
+const AVIS_TYPES_IDS = [ 'confirmationAccordProprietaireDuSol', 'avisDirectionRegionaleDesAffairesCulturelles', 'avisDirectionAlimentationAgricultureForet', 'avisConseilDepartementalEnvironnementRisquesSanitairesTechnologiques', 'avisDirectionsRégionalesEconomieEmploiTravailSolidarités', 'avisDirectionRegionaleFinancesPubliques', 'avisGendarmerieNationale', 'avisParcNaturelMarin', 'avisIFREMER', 'avisInstitutNationalOrigineQualite', 'avisEtatMajorOrpaillagePecheIllicite', 'avisServiceAdministratifLocal', 'avisAutoriteMilitaire', 'avisParcNational', 'avisDirectionDepartementaleTerritoiresMer', 'avisAgenceRegionaleSante', 'avisCaisseGeneraleSecuriteSociale', 'autreAvis', 'avisServiceMilieuxNaturelsBiodiversiteSitesPaysages', 'avisOfficeNationalDesForets', 'expertiseOfficeNationalDesForets', 'avisDUneCollectivite'] as const
 
 export const avisTypeIdValidator = z.enum(AVIS_TYPES_IDS)
 export type AvisTypeId = z.infer<typeof avisTypeIdValidator>
@@ -42,8 +42,6 @@ export const AvisTypes: { [key in AvisTypeId]: Definition<key> } = {
   avisCaisseGeneraleSecuriteSociale: { id: 'avisCaisseGeneraleSecuriteSociale', nom: 'Avis de la Caisse Générale de Sécurité Sociale' },
   avisDUneCollectivite: { id: 'avisDUneCollectivite', nom: "Avis d'une collectivité" },
   autreAvis: { id: 'autreAvis', nom: 'Autre avis' },
-  avisDuPrefetMaritime_wap: { id: 'avisDuPrefetMaritime_wap', nom: 'Avis du préfet maritime' },
-  consultationCLEDuSAGE: { id: 'consultationCLEDuSAGE', nom: 'Consultation CLE du SAGE' },
 }
 
 // prettier-ignore

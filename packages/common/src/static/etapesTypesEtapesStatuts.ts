@@ -78,13 +78,6 @@ export const EtapesTypesEtapesStatuts = {
     ACCEPTE: { etapeTypeId: 'apu', etapeStatutId: 'acc' },
     REJETE: { etapeTypeId: 'apu', etapeStatutId: 'rej' },
   },
-  avisDuPrefetMaritime: {
-    FAVORABLE: { etapeTypeId: 'apw', etapeStatutId: 'fav' },
-    DEFAVORABLE: { etapeTypeId: 'apw', etapeStatutId: 'def' },
-    FAVORABLE_AVEC_RESERVE: { etapeTypeId: 'apw', etapeStatutId: 'fre' },
-    DEFAVORABLE_AVEC_RESERVES: { etapeTypeId: 'apw', etapeStatutId: 'dre' },
-  },
-
   decisionDuProprietaireDuSol: {
     FAVORABLE: { etapeTypeId: 'asl', etapeStatutId: 'fav' },
     FAVORABLE_AVEC_RESERVE: { etapeTypeId: 'asl', etapeStatutId: 'fre' },

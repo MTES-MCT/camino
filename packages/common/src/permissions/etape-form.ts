@@ -186,8 +186,6 @@ export const getAvisTypes = (etapeTypeId: EtapeTypeId, titreTypeId: TitreTypeId,
         { ...AvisTypes.avisAgenceRegionaleSante, optionnel: true },
         { ...AvisTypes.avisCaisseGeneraleSecuriteSociale, optionnel: true },
         { ...AvisTypes.autreAvis, optionnel: true },
-        { ...AvisTypes.avisDuPrefetMaritime_wap, optionnel: true },
-        { ...AvisTypes.consultationCLEDuSAGE, optionnel: true },
         // L'avis de l'onf est obligatoire que pour les ARM
         { ...AvisTypes.avisOfficeNationalDesForets, optionnel: titreTypeId !== 'arm' },
         { ...AvisTypes.expertiseOfficeNationalDesForets, optionnel: true },
