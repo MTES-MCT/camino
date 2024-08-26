@@ -78,13 +78,6 @@ export const EtapesTypesEtapesStatuts = {
     ACCEPTE: { etapeTypeId: 'apu', etapeStatutId: 'acc' },
     REJETE: { etapeTypeId: 'apu', etapeStatutId: 'rej' },
   },
-  avisDuPrefetMaritime: {
-    FAVORABLE: { etapeTypeId: 'apw', etapeStatutId: 'fav' },
-    DEFAVORABLE: { etapeTypeId: 'apw', etapeStatutId: 'def' },
-    FAVORABLE_AVEC_RESERVE: { etapeTypeId: 'apw', etapeStatutId: 'fre' },
-    DEFAVORABLE_AVEC_RESERVES: { etapeTypeId: 'apw', etapeStatutId: 'dre' },
-  },
-
   decisionDuProprietaireDuSol: {
     FAVORABLE: { etapeTypeId: 'asl', etapeStatutId: 'fav' },
     FAVORABLE_AVEC_RESERVE: { etapeTypeId: 'asl', etapeStatutId: 'fre' },
@@ -220,10 +213,6 @@ export const EtapesTypesEtapesStatuts = {
     DEFAVORABLE: { etapeTypeId: 'wae', etapeStatutId: 'def' },
   },
   arreteDouvertureDesTravauxMiniers: { FAIT: { etapeTypeId: 'wao', etapeStatutId: 'fai' } },
-  avisDuPrefetMaritime_wap: {
-    FAVORABLE: { etapeTypeId: 'wap', etapeStatutId: 'fav' },
-    DEFAVORABLE: { etapeTypeId: 'wap', etapeStatutId: 'def' },
-  },
   avisDeReception: { FAIT: { etapeTypeId: 'war', etapeStatutId: 'fai' } },
   avisDuDemandeurSurLesPrescriptionsProposees: {
     FAVORABLE: { etapeTypeId: 'wau', etapeStatutId: 'fav' },
@@ -271,10 +260,6 @@ export const EtapesTypesEtapesStatuts = {
   saisineDeLautoriteEnvironnementale: { FAIT: { etapeTypeId: 'wse', etapeStatutId: 'fai' } },
   transmissionDuProjetDePrescriptionsAuDemandeur: { FAIT: { etapeTypeId: 'wtp', etapeStatutId: 'fai' } },
   receptionDeComplements_wco: { FAIT: { etapeTypeId: 'wco', etapeStatutId: 'fai' } },
-  consultationCLEDuSAGE: {
-    FAVORABLE: { etapeTypeId: 'ccs', etapeStatutId: 'fav' },
-    DEFAVORABLE: { etapeTypeId: 'ccs', etapeStatutId: 'def' },
-  },
 } as const satisfies { [key in keyof typeof ETAPES_TYPES]: { [other in keyof typeof ETAPES_STATUTS]?: EtapeTypeEtapeStatut<(typeof ETAPES_TYPES)[key], (typeof ETAPES_STATUTS)[other]> } }
 
 type GetStuff<T> = T extends { [key in keyof typeof ETAPES_TYPES]: { [other in keyof typeof ETAPES_STATUTS]?: infer A } } ? A : never

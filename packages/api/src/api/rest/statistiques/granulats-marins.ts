@@ -9,6 +9,7 @@ import { StatistiqueGranulatsMarinsStatAnnee, StatistiquesGranulatsMarins } from
 import { capitalize } from 'camino-common/src/strings'
 import { CaminoAnnee, caminoAnneeToNumber, intervalleAnnees, toCaminoAnnee } from 'camino-common/src/date'
 import { isTitreValide, TitresStatutIds } from 'camino-common/src/static/titresStatuts'
+import { TITRES_TYPES_IDS } from 'camino-common/src/static/titresTypes'
 
 const statistiquesGranulatsMarinsActivitesFind = (titresActivites: ITitreActivite[], props: string[]) =>
   titresActivites.reduce(
@@ -62,7 +63,7 @@ const statistiquesGranulatsMarinsInstantBuild = (titres: ITitre[]): Omit<Statist
       const instructionEnCours = [TitresStatutIds.DemandeInitiale, TitresStatutIds.ModificationEnInstance, TitresStatutIds.SurvieProvisoire].includes(titre.titreStatutId)
 
       if ((isValide || instructionEnCours) && titre.pointsEtape && titre.pointsEtape.surface) {
-        if (['arw', 'apw', 'prw'].includes(titre.typeId!)) {
+        if ([TITRES_TYPES_IDS.AUTORISATION_DE_PROSPECTION_GRANULATS_MARINS, TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_GRANULATS_MARINS].includes(titre.typeId!)) {
           acc.surfaceExploration += titre.pointsEtape.surface
           if (instructionEnCours) {
             acc.titresInstructionExploration++
