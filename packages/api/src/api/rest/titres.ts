@@ -28,13 +28,7 @@ import { getTitreUtilisateur } from '../../database/queries/titres-utilisateurs.
 import { titreIdValidator, titreIdOrSlugValidator, TitreId } from 'camino-common/src/validators/titres'
 import { callAndExit } from '../../tools/fp-tools'
 
-const etapesAMasquer = [
-  ETAPES_TYPES.classementSansSuite,
-  ETAPES_TYPES.desistementDuDemandeur,
-  ETAPES_TYPES.noteInterneSignalee,
-  ETAPES_TYPES.decisionImplicite,
-  ETAPES_TYPES.demandeDeComplements_RecevabiliteDeLaDemande_,
-]
+const etapesAMasquer = [ETAPES_TYPES.classementSansSuite, ETAPES_TYPES.desistementDuDemandeur, ETAPES_TYPES.decisionImplicite, ETAPES_TYPES.demandeDeComplements_RecevabiliteDeLaDemande_]
 
 type AdministrationTitreSanitize = NotNullableKeys<Required<Pick<ITitre, 'slug' | 'titulaireIds' | 'titreStatutId'>>> &
   Pick<ITitre, 'typeId' | 'id' | 'nom' | 'activitesEnConstruction' | 'activitesAbsentes'>

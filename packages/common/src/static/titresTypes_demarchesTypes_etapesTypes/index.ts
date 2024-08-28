@@ -130,7 +130,6 @@ const permisExploitationMetauxEtGranulatsMarinsProlongationsEtapes = [
   ETAPES_TYPES.decisionDuJugeAdministratif,
   ETAPES_TYPES.classementSansSuite,
   ETAPES_TYPES.informationsHistoriquesIncompletes,
-  ETAPES_TYPES.noteInterneSignalee,
 ] as const
 const permisExploitationMetauxEtGranulatsMarinsProlongations = {
   [DEMARCHES_TYPES_IDS.Prolongation1]: permisExploitationMetauxEtGranulatsMarinsProlongationsEtapes,
@@ -571,7 +570,6 @@ const TDE = {
       ETAPES_TYPES.notificationDesCollectivitesLocales,
       ETAPES_TYPES.decisionImplicite,
       ETAPES_TYPES.classementSansSuite,
-      ETAPES_TYPES.noteInterneSignalee,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
       ETAPES_TYPES.informationsHistoriquesIncompletes,
@@ -977,7 +975,6 @@ const TDE = {
       ETAPES_TYPES.notificationDesCollectivitesLocales,
       ETAPES_TYPES.publicationDansUnJournalLocalOuNational,
       ETAPES_TYPES.classementSansSuite,
-      ETAPES_TYPES.noteInterneSignalee,
       ETAPES_TYPES.informationsHistoriquesIncompletes,
       ETAPES_TYPES.avisDesServicesEtCommissionsConsultatives,
       ETAPES_TYPES.avisDesCollectivites,
@@ -1021,7 +1018,6 @@ const TDE = {
       ETAPES_TYPES.notificationAuDemandeur,
       ETAPES_TYPES.notificationDesCollectivitesLocales,
       ETAPES_TYPES.classementSansSuite,
-      ETAPES_TYPES.noteInterneSignalee,
     ],
     [DEMARCHES_TYPES_IDS.ResiliationAnticipeeDAmodiation]: [
       ETAPES_TYPES.demande,
@@ -1142,7 +1138,6 @@ const TDE = {
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
       ETAPES_TYPES.classementSansSuite,
-      ETAPES_TYPES.noteInterneSignalee,
     ],
     [DEMARCHES_TYPES_IDS.Mutation]: [
       ETAPES_TYPES.demande,
@@ -1421,7 +1416,6 @@ const TDE = {
       ETAPES_TYPES.decisionDuJugeAdministratif,
       ETAPES_TYPES.classementSansSuite,
       ETAPES_TYPES.informationsHistoriquesIncompletes,
-      ETAPES_TYPES.noteInterneSignalee,
     ],
     [DEMARCHES_TYPES_IDS.Prolongation]: [
       ETAPES_TYPES.demande,
@@ -1464,7 +1458,6 @@ const TDE = {
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
       ETAPES_TYPES.classementSansSuite,
-      ETAPES_TYPES.noteInterneSignalee,
       ETAPES_TYPES.informationsHistoriquesIncompletes,
     ],
     [DEMARCHES_TYPES_IDS.Renonciation]: [
@@ -1563,7 +1556,6 @@ const TDE = {
       ETAPES_TYPES.decisionDuJugeAdministratif,
       ETAPES_TYPES.desistementDuDemandeur,
       ETAPES_TYPES.classementSansSuite,
-      ETAPES_TYPES.noteInterneSignalee,
     ],
     [DEMARCHES_TYPES_IDS.Renonciation]: [
       ETAPES_TYPES.demande,
@@ -2132,7 +2124,6 @@ const TDE = {
       ETAPES_TYPES.publicationDansUnJournalLocalOuNational,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.noteInterneSignalee,
       ETAPES_TYPES.classementSansSuite,
       ETAPES_TYPES.informationsHistoriquesIncompletes,
     ],
@@ -2888,7 +2879,6 @@ const TDE = {
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
       ETAPES_TYPES.classementSansSuite,
-      ETAPES_TYPES.noteInterneSignalee,
       ETAPES_TYPES.informationsHistoriquesIncompletes,
     ],
     ...permisExploitationMetauxEtGranulatsMarinsProlongations,

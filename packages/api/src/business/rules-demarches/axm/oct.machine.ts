@@ -45,7 +45,6 @@ type AXMOctXStateEvent =
   | { type: 'PUBLIER_DANS_UN_JOURNAL_LOCAL_OU_NATIONAL' }
   | { type: 'NOTIFIER_COLLECTIVITES_LOCALES' }
   | { type: 'RENDRE_DECISION_ABROGATION' }
-  | { type: 'FAIRE_NOTE_INTERNE_SIGNALEE' }
   | { type: 'DEMANDER_INFORMATION_POUR_AVIS_DREAL' }
   | { type: 'RECEVOIR_INFORMATION_POUR_AVIS_DREAL' }
   | { type: 'RENDRE_DECISION_IMPLICITE_REJET' }
@@ -142,7 +141,6 @@ const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
   PUBLIER_DANS_UN_JOURNAL_LOCAL_OU_NATIONAL: { db: ETES.publicationDansUnJournalLocalOuNational, mainStep: true },
   NOTIFIER_COLLECTIVITES_LOCALES: { db: ETES.notificationDesCollectivitesLocales, mainStep: true },
   RENDRE_DECISION_ABROGATION: { db: ETES.abrogationDeLaDecision, mainStep: false },
-  FAIRE_NOTE_INTERNE_SIGNALEE: { db: ETES.noteInterneSignalee, mainStep: false },
   DEMANDER_INFORMATION_POUR_AVIS_DREAL: { db: ETES.demandeDinformations_AvisDuDREALDEALOuDGTM_, mainStep: false },
   RECEVOIR_INFORMATION_POUR_AVIS_DREAL: { db: ETES.receptionDinformation_AvisDuDREALDEALOuDGTM_, mainStep: false },
   // TODO 2023-04-19 RENDRE_DECISION_IMPLICITE_REJET est une étape principale le jour où on gère le délai entre la mdp et le rejet implicite
@@ -233,10 +231,6 @@ const axmOctMachine = createMachine({
     visibilite: 'confidentielle',
   },
   on: {
-    FAIRE_NOTE_INTERNE_SIGNALEE: {
-      actions: assign({}),
-      guard: ({ context }) => context.demandeFaite,
-    },
     FAIRE_DESISTEMENT_DEMANDEUR: {
       guard: ({ context }) => context.demandeFaite && [DemarchesStatutsIds.EnConstruction, DemarchesStatutsIds.Depose, DemarchesStatutsIds.EnInstruction].includes(context.demarcheStatut),
       target: '.desistementDuDemandeurRendu',

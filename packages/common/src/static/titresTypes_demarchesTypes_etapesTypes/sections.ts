@@ -169,22 +169,6 @@ const EtapesTypesSections = {
   [ETAPES_TYPES.validationDuPaiementDesFraisDeDossierComplementaires]: [
     { id: 'paiement', nom: 'Informations sur le paiement', elements: [{ id: 'facture', nom: 'Facture ONF', type: 'text', optionnel: true, description: "Numéro de facture émise par l'ONF" }] },
   ],
-  [ETAPES_TYPES.noteInterneSignalee]: [
-    {
-      id: 'nisi',
-      nom: 'Note interne signalée',
-      elements: [
-        {
-          id: 'note',
-          nom: "Notes réservées à l'administration",
-          type: 'textarea',
-          optionnel: true,
-          description: "Informations internes importantes pour la compréhension du suivi de l'instruction de la démarche",
-        },
-      ],
-    },
-  ],
-
   [ETAPES_TYPES.publicationDeDecisionAuJORF]: publicationAuJorf,
   [ETAPES_TYPES.decisionDeLadministration]: publication,
   [ETAPES_TYPES.avisDeMiseEnConcurrenceAuJORF]: publicationAuJorf,

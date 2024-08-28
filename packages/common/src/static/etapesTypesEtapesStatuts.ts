@@ -158,7 +158,6 @@ export const EtapesTypesEtapesStatuts = {
   modificationDeLaDemande: { FAIT: { etapeTypeId: 'mod', etapeStatutId: 'fai' } },
   modificationDeLaDemande_DecisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_: { FAIT: { etapeTypeId: 'mom', etapeStatutId: 'fai' } },
   notificationDesCollectivitesLocales: { FAIT: { etapeTypeId: 'ncl', etapeStatutId: 'fai' } },
-  noteInterneSignalee: { FAIT: { etapeTypeId: 'nis', etapeStatutId: 'fai' } },
   notificationAuPrefet: { FAIT: { etapeTypeId: 'npp', etapeStatutId: 'fai' } },
   paiementDesFraisDeDossierComplementaires: { FAIT: { etapeTypeId: 'pfc', etapeStatutId: 'fai' } },
   paiementDesFraisDeDossier: { FAIT: { etapeTypeId: 'pfd', etapeStatutId: 'fai' } },
