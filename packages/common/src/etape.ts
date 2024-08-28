@@ -100,7 +100,7 @@ export const etapeAvisIdValidator = z.string().brand('EtapeAvis')
 export type EtapeAvisId = z.infer<typeof etapeAvisIdValidator>
 
 // L'avis (output tel qu'il sort de la base)
-export const commonEtapeAvisValidator = z.object({
+const commonEtapeAvisValidator = z.object({
   id: etapeAvisIdValidator,
   date: caminoDateValidator,
   avis_statut_id: avisStatutIdValidator,
