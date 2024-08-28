@@ -300,16 +300,12 @@ describe("statut d'une démarche", () => {
     expect(titreDemarcheStatutIdFind('ret', etapesBuild([{ typeId: 'dpu', statutId: 'fai' }]), 'pxm', newDemarcheId())).toEqual('ter')
   })
 
-  test("une démarche de retrait dont l'étape la plus récente est ide faite a le statut “initié”", () => {
-    expect(titreDemarcheStatutIdFind('ret', etapesBuild([{ typeId: 'ide' }]), 'pxm', newDemarcheId())).toEqual('ini')
-  })
-
   test("une démarche de retrait dont l'étape la plus récente est spp a le statut “en instruction”", () => {
     expect(titreDemarcheStatutIdFind('ret', etapesBuild([{ typeId: 'spp' }]), 'pxm', newDemarcheId())).toEqual('ins')
   })
 
   test("une démarche de retrait dont l'étape la plus récente est asc a le statut “en instruction”", () => {
-    expect(titreDemarcheStatutIdFind('ret', etapesBuild([{ typeId: 'ide' }, { typeId: 'asc' }]), 'pxm', newDemarcheId())).toEqual('ins')
+    expect(titreDemarcheStatutIdFind('ret', etapesBuild([{ typeId: 'spp' }, { typeId: 'asc' }]), 'pxm', newDemarcheId())).toEqual('ins')
   })
 
   test("une démarche de retrait dont l'étape la plus récente est aco a le statut “terminé”", () => {
