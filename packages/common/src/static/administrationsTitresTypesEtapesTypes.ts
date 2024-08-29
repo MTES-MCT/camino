@@ -429,7 +429,6 @@ const AdministrationsTitresTypesEtapesTypes: {
       [ETAPES_TYPES.receptionDinformation]: { lectureInterdit: false, creationInterdit: false, modificationInterdit: false },
       [ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.saisineDeLautoriteSignataire]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
-      [ETAPES_TYPES.saisineDesCollectivitesLocales]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.saisineDeLaCommissionDepartementaleDesMines_CDM_]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
     },
     [TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_METAUX]: {
