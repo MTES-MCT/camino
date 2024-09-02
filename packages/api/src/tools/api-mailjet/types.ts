@@ -7,5 +7,5 @@ export enum EmailTemplateId {
 }
 
 export const EmailAdministration = {
-  DGTM: 'mc.remd.deal-guyane@developpement-durable.gouv.fr',
+  DGTM: 'dgtm-datte-prie-uie@guyane.gouv.fr',
 } as const
