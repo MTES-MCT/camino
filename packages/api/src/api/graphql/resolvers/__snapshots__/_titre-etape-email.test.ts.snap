@@ -12,7 +12,7 @@ exports[`envoie un email sur un octroi d'AEX 1`] = `
 
   ",
   "emails": [
-    "mc.remd.deal-guyane@developpement-durable.gouv.fr",
+    "dgtm-datte-prie-uie@guyane.gouv.fr",
   ],
   "subject": "demande | Nouvelle demande déposée",
 }
@@ -30,7 +30,7 @@ exports[`envoie un email sur un octroi d'ARM 1`] = `
 
   ",
   "emails": [
-    "mc.remd.deal-guyane@developpement-durable.gouv.fr",
+    "dgtm-datte-prie-uie@guyane.gouv.fr",
   ],
   "subject": "dépôt de la demande | Nouvelle demande déposée",
 }
