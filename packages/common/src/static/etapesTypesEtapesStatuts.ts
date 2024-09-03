@@ -136,6 +136,9 @@ export const EtapesTypesEtapesStatuts = {
     FAVORABLE: { etapeTypeId: 'mcr', etapeStatutId: 'fav' },
     DEFAVORABLE: { etapeTypeId: 'mcr', etapeStatutId: 'def' },
   },
+  declarationDIrrecevabilite: {
+    FAIT: { etapeTypeId: 'mci', etapeStatutId: 'fai' },
+  },
   demandeDeComplements_SaisineDeLaCARM_: { FAIT: { etapeTypeId: 'mcs', etapeStatutId: 'fai' } },
   depotDeLaDemande: { FAIT: { etapeTypeId: 'mdp', etapeStatutId: 'fai' } },
   avisDeDemandeConcurrente: { FAIT: { etapeTypeId: 'mec', etapeStatutId: 'fai' } },

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { Model, Pojo } from 'objection'
 
 import { IEntreprise } from '../../types'
@@ -8,9 +9,9 @@ import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 interface Entreprises extends IEntreprise {}
 
 class Entreprises extends Model {
-  public static tableName = 'entreprises'
+  public static override tableName = 'entreprises'
 
-  public static jsonSchema = {
+  public static override jsonSchema = {
     type: 'object',
     required: ['id', 'nom'],
 
@@ -34,7 +35,7 @@ class Entreprises extends Model {
     },
   }
 
-  static relationMappings = () => ({
+  static override relationMappings = () => ({
     etablissements: {
       relation: Model.HasManyRelation,
       modelClass: EntreprisesEtablissements,
@@ -58,7 +59,7 @@ class Entreprises extends Model {
     },
   })
 
-  public $parseJson(json: Pojo) {
+  public override $parseJson(json: Pojo) {
     json = super.$parseJson(json)
     // TODO 2024-06-03 à supprimer et vérifier que l'api sirene a bien des Ids en minuscule (lancer le monthly)
     if (isNotNullNorUndefined(json.id)) {

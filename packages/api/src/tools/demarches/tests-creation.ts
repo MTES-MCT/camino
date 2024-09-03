@@ -4,7 +4,7 @@ import { titresDemarchesGet } from '../../database/queries/titres-demarches'
 import { userSuper } from '../../database/user-super'
 import { mkdirSync, writeFileSync } from 'fs'
 import { Etape, titreEtapeForMachineValidator, toMachineEtapes } from '../../business/rules-demarches/machine-common'
-import { demarcheDefinitionFind, demarchesDefinitions } from '../../business/rules-demarches/definitions'
+import { machineFind, demarchesDefinitions } from '../../business/rules-demarches/definitions'
 import { dateAddDays, daysBetween, setDayInMonth } from 'camino-common/src/date'
 import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes'
 import { toCommuneId } from 'camino-common/src/static/communes'
@@ -30,7 +30,7 @@ const writeEtapesForTest = async () => {
 
     const toutesLesEtapes = demarches
       .filter(demarche => demarche.etapes?.length)
-      .filter(demarche => isNotNullNorUndefined(demarcheDefinitionFind(demarche.titre!.typeId, demarche.typeId, demarche.etapes!, demarche.id)))
+      .filter(demarche => isNotNullNorUndefined(machineFind(demarche.titre!.typeId, demarche.typeId, demarche.etapes!, demarche.id)))
       .map((demarche, index) => {
         const etapes: Etape[] = toMachineEtapes(
           (
@@ -59,9 +59,10 @@ const writeEtapesForTest = async () => {
         const firstSaisineDate = etapes.find(etape => etape.etapeTypeId === ETAPES_TYPES.avisDesServicesEtCommissionsConsultatives)?.date ?? etapes[0].date
         const decalageJour = daysBetween(firstSaisineDate, setDayInMonth(firstSaisineDate, Math.floor(Math.random() * 28)))
         try {
-          if (!demarcheDefinition.machine.isEtapesOk(etapes)) {
-            etapes.splice(0, etapes.length, ...demarcheDefinition.machine.orderMachine(etapes))
-            if (!demarcheDefinition.machine.isEtapesOk(etapes)) {
+          const machine = demarcheDefinition.machine(demarche.titre!.typeId, demarche.typeId)
+          if (!machine.isEtapesOk(etapes)) {
+            etapes.splice(0, etapes.length, ...machine.orderMachine(etapes))
+            if (!machine.isEtapesOk(etapes)) {
               console.warn(`https://camino.beta.gouv.fr/titres/${demarche.titreId} => démarche N*${index} (${demarche.id}) "${demarcheDefinition.titreTypeIds.join(' ou ')}/${demarche.typeId}"`)
             }
           }

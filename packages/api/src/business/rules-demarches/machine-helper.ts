@@ -21,9 +21,29 @@ export abstract class CaminoMachine<CaminoContext extends CaminoCommonContext, C
     this.events = Object.keys(trad) as Array<CaminoEvent['type']>
   }
 
-  abstract eventFrom(etape: Etape): CaminoEvent
+  public eventFrom(etape: Etape): CaminoEvent {
+    const entries = Object.entries(this.trad).filter((entry): entry is [CaminoEvent['type'], { db: DBEtat; mainStep: boolean }] => this.events.includes(entry[0]))
 
-  protected caminoXStateEventToEtapes(event: CaminoEvent): (OmitDistributive<Etape, 'date'> & { mainStep: boolean })[] {
+    const entry = entries.find(([_key, { db: dbEtat }]) => {
+      return Object.values(dbEtat).some(dbEtatSingle => dbEtatSingle.etapeTypeId === etape.etapeTypeId && dbEtatSingle.etapeStatutId === etape.etapeStatutId)
+    })
+
+    if (entry) {
+      const eventFromEntr = entry[0]
+
+      return { ...this.eventFromEntry(eventFromEntr, etape), date: etape.date, status: etape.etapeStatutId }
+    }
+    throw new Error(`no event from ${JSON.stringify(etape)}`)
+  }
+
+  protected eventFromEntry(entryType: CaminoEvent['type'], _etape: Etape): CaminoEvent {
+    // @ts-ignore FIXME à voir si on repasse dessus ou si on laisse le ts-ignore
+    const result: CaminoEvent = { type: entryType }
+
+    return result
+  }
+
+  protected caminoXStateEventToEtapes(event: CaminoEvent): (OmitDistributive<Etape, 'date' | 'titreTypeId' | 'demarcheTypeId'> & { mainStep: boolean })[] {
     const dbEtat: { db: DBEtat; mainStep: boolean } = this.trad[event.type as CaminoEvent['type']]
 
     return Object.values(dbEtat.db).map(({ etapeTypeId, etapeStatutId }) => ({
@@ -194,7 +214,7 @@ export abstract class CaminoMachine<CaminoContext extends CaminoCommonContext, C
     return intervenants.filter(r => responsables.includes(tags.responsable[r]))
   }
 
-  public possibleNextEtapes(etapes: readonly Etape[], date: CaminoDate): (OmitDistributive<Etape, 'date'> & { mainStep: boolean })[] {
+  public possibleNextEtapes(etapes: readonly Etape[], date: CaminoDate): (OmitDistributive<Etape, 'date' | 'titreTypeId' | 'demarcheTypeId'> & { mainStep: boolean })[] {
     const state = this.assertGoTo(etapes)
 
     if (state !== undefined) {

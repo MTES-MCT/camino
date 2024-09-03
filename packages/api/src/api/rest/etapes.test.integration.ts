@@ -51,7 +51,7 @@ describe('getEtapesTypesEtapesStatusWithMainStep', () => {
       typeId: 'oct',
     })
 
-    const tested = await restCall(dbPool, '/rest/etapesTypes/:demarcheId/:date', { demarcheId: titreDemarche.id, date: getCurrent() }, userSuper)
+    const tested = await restCall(dbPool, '/rest/etapesTypes/:demarcheId/:date', { demarcheId: titreDemarche.id, date: toCaminoDate('2024-09-01') }, userSuper)
 
     expect(tested.statusCode).toBe(HTTP_STATUS.OK)
     // TODO 2024-06-19 changer ce format ?

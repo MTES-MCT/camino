@@ -28,7 +28,7 @@ import { CaminoDate, caminoDateValidator, getCurrent } from 'camino-common/src/d
 import { titreDemarcheGet } from '../../database/queries/titres-demarches'
 import { userSuper } from '../../database/user-super'
 import { titreEtapeGet, titreEtapeUpdate, titreEtapeUpsert } from '../../database/queries/titres-etapes'
-import { demarcheDefinitionFind } from '../../business/rules-demarches/definitions'
+import { machineFind } from '../../business/rules-demarches/definitions'
 import { User, isBureauDEtudes, isEntreprise } from 'camino-common/src/roles'
 import { canCreateEtape, canDeposeEtape, canDeleteEtape, canEditEtape, canEditDates, canEditDuree } from 'camino-common/src/permissions/titres-etapes'
 import { TitresStatutIds } from 'camino-common/src/static/titresStatuts'
@@ -1057,7 +1057,7 @@ const demarcheEtapesTypesGet = async (titreDemarcheId: DemarcheId, date: CaminoD
 
   if (titreEtapeId && !titreEtape) throw new Error("l'étape n'existe pas")
 
-  const demarcheDefinition = demarcheDefinitionFind(titre.typeId, titreDemarche.typeId, titreDemarche.etapes, titreDemarche.id)
+  const demarcheDefinition = machineFind(titre.typeId, titreDemarche.typeId, titreDemarche.etapes, titreDemarche.id, date)
 
   const etapesTypes: EtapeTypeEtapeStatutWithMainStep[] = getPossiblesEtapesTypes(
     demarcheDefinition,

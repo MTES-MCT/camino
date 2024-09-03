@@ -129,9 +129,6 @@ const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
   RECEVOIR_INFORMATIONS: { db: EtapesTypesEtapesStatuts.receptionDinformation, mainStep: false },
 } as const
 
-// Related to https://github.com/Microsoft/TypeScript/issues/12870
-const EVENTS = Object.keys(trad) as Array<Extract<keyof typeof trad, string>>
-
 const SUPERFICIE_MAX_POUR_EXONERATION_AVIS_MISE_EN_CONCURRENCE_AU_JORF = 50
 
 export class PrmOctMachine extends CaminoMachine<PrmOctContext, XStateEvent> {
@@ -139,7 +136,7 @@ export class PrmOctMachine extends CaminoMachine<PrmOctContext, XStateEvent> {
     super(prmOctMachine, trad)
   }
 
-  toPotentialCaminoXStateEvent(event: XStateEvent['type'], date: CaminoDate): XStateEvent[] {
+  override toPotentialCaminoXStateEvent(event: XStateEvent['type'], date: CaminoDate): XStateEvent[] {
     switch (event) {
       case 'RENDRE_AVIS_DE_MISE_EN_CONCURRENCE_AU_JORF':
       case 'RENDRE_AVIS_SERVICES_ET_COMMISSIONS_CONSULTATIVES':
@@ -167,43 +164,23 @@ export class PrmOctMachine extends CaminoMachine<PrmOctContext, XStateEvent> {
     }
   }
 
-  eventFrom(etape: Etape): XStateEvent {
-    const entries = Object.entries(trad).filter((entry): entry is [Event, { db: DBEtat; mainStep: boolean }] => EVENTS.includes(entry[0]))
+  override eventFromEntry(eventType: XStateEvent['type'], etape: Etape): XStateEvent {
+    switch (eventType) {
+      case 'FAIRE_DEMANDE':
+        if (!etape.paysId) {
+          console.info(`paysId is mandatory in etape ${JSON.stringify(etape)}, defaulting to FR.`)
 
-    const entry = entries.find(([_key, { db: dbEtat }]) => {
-      return Object.values(dbEtat).some(dbEtatSingle => dbEtatSingle.etapeTypeId === etape.etapeTypeId && dbEtatSingle.etapeStatutId === etape.etapeStatutId)
-    })
+          return { type: eventType, paysId: 'FR', surface: etape.surface ?? 0 }
+        }
 
-    if (entry) {
-      const eventFromEntry = entry[0]
-      switch (eventFromEntry) {
-        case 'RENDRE_AVIS_DE_MISE_EN_CONCURRENCE_AU_JORF':
-        case 'RENDRE_AVIS_SERVICES_ET_COMMISSIONS_CONSULTATIVES':
-        case 'RENDRE_AVIS_CDM':
-        case 'RENDRE_RAPPORT_DREAL':
-          return { type: eventFromEntry, date: etape.date }
-        case 'OUVRIR_PARTICIPATION_DU_PUBLIC':
-          return { type: eventFromEntry, date: etape.date, status: etape.etapeStatutId }
-        case 'FAIRE_DEMANDE':
-          if (!etape.paysId) {
-            console.info(`paysId is mandatory in etape ${JSON.stringify(etape)}, defaulting to FR.`)
+        if (etape.paysId === 'GF' && etape.surface === null && etape.surface === undefined) {
+          throw new Error(`la surface pour la demande est obligatoire quand la demande est en Guyane  ${JSON.stringify(etape)}`)
+        }
 
-            return { type: eventFromEntry, paysId: 'FR', surface: etape.surface ?? 0 }
-          }
-
-          if (etape.paysId === 'GF' && etape.surface === null && etape.surface === undefined) {
-            throw new Error(`la surface pour la demande est obligatoire quand la demande est en Guyane  ${JSON.stringify(etape)}`)
-          }
-
-          return { type: eventFromEntry, paysId: etape.paysId, surface: etape.surface ?? 0 }
-        default:
-          // related to https://github.com/microsoft/TypeScript/issues/46497  https://github.com/microsoft/TypeScript/issues/40803 :(
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
-          return { type: eventFromEntry }
-      }
+        return { type: eventType, paysId: etape.paysId, surface: etape.surface ?? 0 }
+      default:
+        return super.eventFromEntry(eventType, etape)
     }
-    throw new Error(`no event from ${JSON.stringify(etape)}`)
   }
 }
 

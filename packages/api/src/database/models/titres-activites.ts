@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { Model, Modifiers, Pojo, QueryContext } from 'objection'
 
 import { ITitreActivite } from '../../types'
@@ -9,9 +10,9 @@ import { isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/type
 interface TitresActivites extends ITitreActivite {}
 
 class TitresActivites extends Model {
-  public static tableName = 'titresActivites'
+  public static override tableName = 'titresActivites'
 
-  public static jsonSchema = {
+  public static override jsonSchema = {
     type: 'object',
 
     required: ['titreId', 'date', 'typeId', 'activiteStatutId', 'periodeId', 'annee'],
@@ -32,7 +33,7 @@ class TitresActivites extends Model {
     },
   }
 
-  static relationMappings = () => ({
+  static override relationMappings = () => ({
     titre: {
       relation: Model.BelongsToOneRelation,
       modelClass: Titres,
@@ -52,13 +53,13 @@ class TitresActivites extends Model {
     },
   })
 
-  public static modifiers: Modifiers = {
+  public static override modifiers: Modifiers = {
     orderDesc: builder => {
       builder.orderByRaw('date desc')
     },
   }
 
-  async $beforeInsert(context: QueryContext) {
+  override async $beforeInsert(context: QueryContext) {
     if (isNullOrUndefined(this.id)) {
       this.id = idGenerate()
     }
@@ -69,14 +70,14 @@ class TitresActivites extends Model {
     return super.$beforeInsert(context)
   }
 
-  public $parseJson(json: Pojo) {
+  public override $parseJson(json: Pojo) {
     delete json.modification
     json = super.$parseJson(json)
 
     return json
   }
 
-  public $formatDatabaseJson(json: Pojo) {
+  public override $formatDatabaseJson(json: Pojo) {
     delete json.modification
     json = super.$formatDatabaseJson(json)
 

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { Model, Pojo } from 'objection'
 
 import Entreprises from './entreprises'
@@ -23,9 +24,9 @@ interface IUtilisateur {
 interface Utilisateurs extends IUtilisateur {}
 
 class Utilisateurs extends Model {
-  public static tableName = 'utilisateurs'
+  public static override tableName = 'utilisateurs'
 
-  public static jsonSchema = {
+  public static override jsonSchema = {
     type: 'object',
     required: ['id', 'email', 'role'],
 
@@ -42,7 +43,7 @@ class Utilisateurs extends Model {
     },
   }
 
-  static relationMappings = () => ({
+  static override relationMappings = () => ({
     entreprises: {
       relation: Model.ManyToManyRelation,
       modelClass: Entreprises,
@@ -57,13 +58,13 @@ class Utilisateurs extends Model {
     },
   })
 
-  public $parseJson(json: Pojo) {
+  public override $parseJson(json: Pojo) {
     json = super.$parseJson(json)
 
     return json
   }
 
-  public $formatDatabaseJson(json: Pojo) {
+  public override $formatDatabaseJson(json: Pojo) {
     json = super.$formatDatabaseJson(json)
 
     return json

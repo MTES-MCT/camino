@@ -9,13 +9,18 @@ import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts'
 import { TitreEtapeForMachine } from '../rules-demarches/machine-common'
 import { ETAPE_IS_BROUILLON, ETAPE_IS_NOT_BROUILLON } from 'camino-common/src/etape'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
-const etapesBuild = (etapesProps: Partial<ITitreEtape>[]): TitreEtapeForMachine[] =>
+import { TitreTypeId } from 'camino-common/src/static/titresTypes'
+import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
+const etapesBuild = (etapesProps: Partial<ITitreEtape>[], demarcheTypeId: DemarcheTypeId = 'oct', titreTypeId: TitreTypeId = 'axm'): TitreEtapeForMachine[] =>
   etapesProps.map(
     (etapeProps, i) =>
       ({
         ...etapeProps,
         isBrouillon: etapeProps.isBrouillon ?? ETAPE_IS_NOT_BROUILLON,
         ordre: i + 1,
+        titreTypeId,
+        demarcheTypeId,
+        date: toCaminoDate('0001-01-01'),
       }) as unknown as TitreEtapeForMachine
   )
 
@@ -25,17 +30,21 @@ describe("statut d'une démarche", () => {
   })
 
   test("une démarche d'octroi sans étape décisive a le statut “indéfini”", () => {
-    expect(titreDemarcheStatutIdFind('oct', etapesBuild([{ typeId: 'anf' }]), 'pxm', newDemarcheId())).toEqual('ind')
+    expect(titreDemarcheStatutIdFind('oct', etapesBuild([{ typeId: 'anf' }], 'oct', 'pxm'), 'pxm', newDemarcheId())).toEqual('ind')
   })
 
   test("une démarche d'octroi dont l'étape de dpu la plus récente est acceptée a le statut “accepté”", () => {
     expect(
       titreDemarcheStatutIdFind(
         'oct',
-        etapesBuild([
-          { typeId: 'dex', statutId: 'acc' },
-          { typeId: 'dpu', statutId: 'acc' },
-        ]),
+        etapesBuild(
+          [
+            { typeId: 'dex', statutId: 'acc' },
+            { typeId: 'dpu', statutId: 'acc' },
+          ],
+          'oct',
+          'pxm'
+        ),
         'pxm',
         newDemarcheId()
       )
@@ -43,7 +52,7 @@ describe("statut d'une démarche", () => {
   })
 
   test("une démarche d'octroi d'un titre AXM dont l'étape de dex la plus récente est acceptée a le statut “accepté”", () => {
-    expect(titreDemarcheStatutIdFind('oct', etapesBuild([{ typeId: 'dex', date: toCaminoDate('2010-01-01'), statutId: 'acc' }]), 'axm', newDemarcheId())).toEqual('acc')
+    expect(titreDemarcheStatutIdFind('oct', etapesBuild([{ typeId: 'dex', date: toCaminoDate('2010-01-01'), statutId: 'acc' }], 'oct', 'axm'), 'axm', newDemarcheId())).toEqual('acc')
   })
 
   test("une démarche d'octroi d'un titre ARM dont l'étape de def la plus récente est acceptée a le statut “accepté”", () => {
@@ -64,7 +73,7 @@ describe("statut d'une démarche", () => {
   })
 
   test("une démarche d'octroi d'un titre PRM dont l'étape de rpu la plus récente est acceptée a le statut “accepté”", () => {
-    expect(titreDemarcheStatutIdFind('oct', etapesBuild([{ typeId: 'rpu', date: toCaminoDate('2010-01-01'), statutId: 'acc' }]), 'prm', newDemarcheId())).toEqual('acc')
+    expect(titreDemarcheStatutIdFind('oct', etapesBuild([{ typeId: 'rpu', date: toCaminoDate('2010-01-01'), statutId: 'acc' }], 'oct', 'prm'), 'prm', newDemarcheId())).toEqual('acc')
   })
 
   test("une démarche de prolongation dont l'étape de dpu la plus récente est acceptée a le statut “accepté”", () => {
@@ -166,10 +175,14 @@ describe("statut d'une démarche", () => {
     expect(
       titreDemarcheStatutIdFind(
         'oct',
-        etapesBuild([
-          { typeId: 'mfr', statutId: 'fai' },
-          { typeId: 'mdp', statutId: 'fai' },
-        ]),
+        etapesBuild(
+          [
+            { typeId: 'mfr', statutId: 'fai' },
+            { typeId: 'mdp', statutId: 'fai' },
+          ],
+          'oct',
+          'arm'
+        ),
         'arm',
         newDemarcheId()
       )

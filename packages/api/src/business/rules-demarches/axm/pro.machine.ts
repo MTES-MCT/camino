@@ -1,6 +1,6 @@
 import { assign, createMachine } from 'xstate'
 import { CaminoMachine } from '../machine-helper'
-import { CaminoCommonContext, DBEtat, Etape, tags } from '../machine-common'
+import { CaminoCommonContext, DBEtat, tags } from '../machine-common'
 import { EtapesTypesEtapesStatuts as ETES } from 'camino-common/src/static/etapesTypesEtapesStatuts'
 import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts'
 import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations'
@@ -119,9 +119,6 @@ const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
   },
 }
 
-// Related to https://github.com/Microsoft/TypeScript/issues/12870
-const EVENTS = Object.keys(trad) as Array<Extract<keyof typeof trad, string>>
-
 // basé sur TODO 2023-04-17 mettre le lien vers le bon cacoo
 // TODO 2023-04-17 mettre à jour le cacoo quand on a de nouveau accès avec :
 // - modification de la demande comme pour l'octroi d'AXM
@@ -130,7 +127,7 @@ export class AxmProMachine extends CaminoMachine<AxmProContext, AXMProXStateEven
     super(axmProMachine, trad)
   }
 
-  toPotentialCaminoXStateEvent(event: AXMProXStateEvent['type'], date: CaminoDate): AXMProXStateEvent[] {
+  override toPotentialCaminoXStateEvent(event: AXMProXStateEvent['type'], date: CaminoDate): AXMProXStateEvent[] {
     switch (event) {
       case 'RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES':
       case 'RENDRE_AVIS_DREAL':
@@ -141,30 +138,6 @@ export class AxmProMachine extends CaminoMachine<AxmProContext, AXMProXStateEven
         // @ts-ignore
         return [{ type: event }]
     }
-  }
-
-  eventFrom(etape: Etape): AXMProXStateEvent {
-    const entries = Object.entries(trad).filter((entry): entry is [Event, { db: DBEtat; mainStep: boolean }] => EVENTS.includes(entry[0]))
-
-    const entry = entries.find(([_key, { db: dbEtat }]) => {
-      return Object.values(dbEtat).some(dbEtatSingle => dbEtatSingle.etapeTypeId === etape.etapeTypeId && dbEtatSingle.etapeStatutId === etape.etapeStatutId)
-    })
-
-    if (entry) {
-      const eventFromEntry = entry[0]
-      switch (eventFromEntry) {
-        case 'RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES':
-        case 'RENDRE_AVIS_DREAL': {
-          return { type: eventFromEntry, date: etape.date }
-        }
-        default:
-          // related to https://github.com/microsoft/TypeScript/issues/46497  https://github.com/microsoft/TypeScript/issues/40803 :(
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
-          return { type: eventFromEntry }
-      }
-    }
-    throw new Error(`no event from ${JSON.stringify(etape)}`)
   }
 }
 

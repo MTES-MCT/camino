@@ -3,13 +3,14 @@ import { DemarcheId } from 'camino-common/src/demarche'
 
 import { titreEtapesSortDescByOrdre } from '../utils/titre-etapes-sort'
 import { titreEtapePublicationCheck } from './titre-etape-publication-check'
-import { demarcheDefinitionFind } from '../rules-demarches/definitions'
+import { machineFind } from '../rules-demarches/definitions'
 import { TitreEtapeForMachine, toMachineEtapes } from '../rules-demarches/machine-common'
 import { DemarcheStatutId, DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { DemarcheTypeId, TravauxIds } from 'camino-common/src/static/demarchesTypes'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
 import { isEtapeStatusRejete } from 'camino-common/src/static/etapesStatuts'
+import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 
 const titreEtapesDecisivesCommunesTypes: EtapeTypeId[] = ['css', 'abd', 'and']
 
@@ -283,10 +284,10 @@ export const titreDemarcheStatutIdFind = (demarcheTypeId: DemarcheTypeId, titreD
     return titreDemarcheTravauxStatutIdFind(titreDemarcheEtapes, demarcheTypeId)
   }
 
-  const demarcheDefinition = demarcheDefinitionFind(titreTypeId, demarcheTypeId, titreDemarcheEtapes, demarcheId)
+  const machine = machineFind(titreTypeId, demarcheTypeId, titreDemarcheEtapes, demarcheId)
 
-  if (demarcheDefinition) {
-    return demarcheDefinition.machine.demarcheStatut(toMachineEtapes(titreDemarcheEtapes)).demarcheStatut
+  if (isNotNullNorUndefined(machine)) {
+    return machine.demarcheStatut(toMachineEtapes(titreDemarcheEtapes)).demarcheStatut
   }
 
   //  si la démarche fait l’objet d’une demande

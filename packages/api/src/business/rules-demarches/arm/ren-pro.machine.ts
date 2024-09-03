@@ -1,7 +1,7 @@
 import { assign, createMachine } from 'xstate'
 import { EtapesTypesEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStatuts'
 import { CaminoMachine } from '../machine-helper'
-import { CaminoCommonContext, DBEtat, Etape } from '../machine-common'
+import { CaminoCommonContext, DBEtat } from '../machine-common'
 import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts'
 
 type XStateEvent =
@@ -48,30 +48,9 @@ const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
   NOTIFIER_DEMANDEUR_APRES_CLASSEMENT_SANS_SUITE: { db: EtapesTypesEtapesStatuts.notificationAuDemandeur_ClassementSansSuite_, mainStep: true },
 } as const
 
-// Related to https://github.com/Microsoft/TypeScript/issues/12870
-const EVENTS = Object.keys(trad) as Array<Extract<keyof typeof trad, string>>
-
 export class ArmRenProMachine extends CaminoMachine<CaminoCommonContext, XStateEvent> {
   constructor() {
     super(armRenProMachine, trad)
-  }
-
-  eventFrom(etape: Etape): XStateEvent {
-    const entries = Object.entries(trad).filter((entry): entry is [Event, { db: DBEtat; mainStep: boolean }] => EVENTS.includes(entry[0]))
-
-    const entry = entries.find(([_key, { db: dbEtat }]) => {
-      return Object.values(dbEtat).some(dbEtatSingle => dbEtatSingle.etapeTypeId === etape.etapeTypeId && dbEtatSingle.etapeStatutId === etape.etapeStatutId)
-    })
-
-    if (entry) {
-      const eventFromEntry = entry[0]
-
-      // related to https://github.com/microsoft/TypeScript/issues/46497  https://github.com/microsoft/TypeScript/issues/40803 :(
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      return { type: eventFromEntry }
-    }
-    throw new Error(`no event from ${JSON.stringify(etape)}`)
   }
 }
 

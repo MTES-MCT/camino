@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { Model, Modifiers, QueryContext } from 'objection'
 
 import { ITitreDemarche } from '../../types'
@@ -13,9 +14,9 @@ export interface DBTitresDemarches extends ITitreDemarche {
 interface TitresDemarches extends DBTitresDemarches {}
 
 class TitresDemarches extends Model {
-  public static tableName = 'titresDemarches'
+  public static override tableName = 'titresDemarches'
 
-  public static jsonSchema = {
+  public static override jsonSchema = {
     type: 'object',
     required: ['titreId', 'typeId'],
 
@@ -33,7 +34,7 @@ class TitresDemarches extends Model {
     },
   }
 
-  static relationMappings = () => ({
+  static override relationMappings = () => ({
     titre: {
       relation: Model.BelongsToOneRelation,
       modelClass: Titres,
@@ -53,13 +54,13 @@ class TitresDemarches extends Model {
     },
   })
 
-  public static modifiers: Modifiers = {
+  public static override modifiers: Modifiers = {
     orderDesc: builder => {
       builder.orderBy('ordre', 'desc')
     },
   }
 
-  async $beforeInsert(context: QueryContext) {
+  override async $beforeInsert(context: QueryContext) {
     if (isNullOrUndefined(this.id)) {
       this.id = newDemarcheId()
     }

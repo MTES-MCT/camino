@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { Model } from 'objection'
 
 import { IJournaux } from '../../types'
@@ -8,9 +9,9 @@ import Titres from './titres'
 interface Journaux extends IJournaux {}
 
 class Journaux extends Model {
-  public static tableName = 'journaux'
+  public static override tableName = 'journaux'
 
-  public static jsonSchema = {
+  public static override jsonSchema = {
     type: 'object',
 
     properties: {
@@ -24,7 +25,7 @@ class Journaux extends Model {
     },
   }
 
-  static relationMappings = () => ({
+  static override relationMappings = () => ({
     utilisateur: {
       relation: Model.BelongsToOneRelation,
       modelClass: Utilisateurs,
@@ -43,7 +44,7 @@ class Journaux extends Model {
     },
   })
 
-  async $beforeInsert(queryContext: any) {
+  override async $beforeInsert(queryContext: any) {
     await super.$beforeInsert(queryContext)
 
     this.id = idGenerate()

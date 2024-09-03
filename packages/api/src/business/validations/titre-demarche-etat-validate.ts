@@ -2,7 +2,7 @@
 import { DeepReadonly, NonEmptyArray, isNonEmptyArray, isNotNullNorUndefined, isNullOrUndefinedOrEmpty, onlyUnique } from 'camino-common/src/typescript-tools'
 import type { ITitre, ITitreEtape } from '../../types'
 
-import { DemarcheDefinition, demarcheDefinitionFind } from '../rules-demarches/definitions'
+import { machineFind } from '../rules-demarches/definitions'
 import { Etape, TitreEtapeForMachine, titreEtapeForMachineValidator, toMachineEtapes } from '../rules-demarches/machine-common'
 import { DemarcheId } from 'camino-common/src/demarche'
 import { DemarchesTypes, DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
@@ -56,7 +56,7 @@ export const titreDemarcheUpdatedEtatValidate = (
   suppression = false
 ): { valid: true; errors: null } | { valid: false; errors: NonEmptyArray<string> } => {
   const titreDemarcheEtapesNew = titreDemarcheEtapesBuild(titreEtape, suppression, titreDemarcheEtapes)
-  const demarcheDefinition = demarcheDefinitionFind(titre.typeId, demarcheTypeId, titreDemarcheEtapesNew, demarcheId)
+  const machine = machineFind(titre.typeId, demarcheTypeId, titreDemarcheEtapesNew, demarcheId)
   const titreDemarchesErrors: string[] = []
 
   // vérifie que la démarche existe dans le titre
@@ -66,10 +66,10 @@ export const titreDemarcheUpdatedEtatValidate = (
   }
   // on récupère tous les type d'étapes et les statuts associés applicable à la date souhaitée
   try {
-    const etapeTypesWithStatusPossibles = getPossiblesEtapesTypes(demarcheDefinition, titre.typeId, demarcheTypeId, titreEtape.typeId, titreEtape.id, titreEtape.date, titreDemarcheEtapes ?? [])
+    const etapeTypesWithStatusPossibles = getPossiblesEtapesTypes(machine, titre.typeId, demarcheTypeId, titreEtape.typeId, titreEtape.id, titreEtape.date, titreDemarcheEtapes ?? [])
 
     if (!etapeTypesWithStatusPossibles.some(({ etapeStatutId, etapeTypeId }) => etapeStatutId === titreEtape.statutId && etapeTypeId === titreEtape.typeId)) {
-      if (isNotNullNorUndefined(demarcheDefinition)) {
+      if (isNotNullNorUndefined(machine)) {
         return { valid: false, errors: ['les étapes de la démarche machine ne sont pas valides'] }
       } else {
         return { valid: false, errors: ['les étapes de la démarche TDE ne sont pas valides'] }
@@ -80,11 +80,11 @@ export const titreDemarcheUpdatedEtatValidate = (
     titreDemarchesErrors.push(e.message)
   }
 
-  if (isNotNullNorUndefined(demarcheDefinition)) {
+  if (isNotNullNorUndefined(machine)) {
     // vérifie que toutes les étapes existent dans l’arbre
     try {
       const etapes = titreDemarcheEtapesNew.map(etape => titreEtapeForMachineValidator.omit({ id: true, ordre: true }).parse(etape))
-      const ok = demarcheDefinition.machine.isEtapesOk(demarcheDefinition.machine.orderMachine(toMachineEtapes(etapes)))
+      const ok = machine.isEtapesOk(machine.orderMachine(toMachineEtapes(etapes)))
       if (!ok) {
         titreDemarchesErrors.push('la démarche machine n’est pas valide')
       }
@@ -102,7 +102,7 @@ export const titreDemarcheUpdatedEtatValidate = (
 }
 
 export const getPossiblesEtapesTypes = (
-  demarcheDefinition: DemarcheDefinition | undefined,
+  machine: CaminoMachines | undefined,
   titreTypeId: TitreTypeId,
   demarcheTypeId: DemarcheTypeId,
   etapeTypeId: EtapeTypeId | undefined,
@@ -111,10 +111,10 @@ export const getPossiblesEtapesTypes = (
   demarcheEtapes: Pick<ITitreEtape, 'typeId' | 'date' | 'isBrouillon' | 'id' | 'ordre' | 'statutId' | 'communes'>[]
 ): EtapeTypeEtapeStatutWithMainStep[] => {
   const etapesTypes: EtapeTypeEtapeStatutWithMainStep[] = []
-  if (isNotNullNorUndefined(demarcheDefinition)) {
+  if (isNotNullNorUndefined(machine)) {
     const etapes = demarcheEtapes.map(etape => titreEtapeForMachineValidator.parse(etape))
 
-    etapesTypes.push(...etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(demarcheDefinition.machine, etapes, etapeId ?? null, date))
+    etapesTypes.push(...etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(machine, etapes, etapeId ?? null, date))
   } else {
     // si on modifie une étape
     // vérifie que son type est possible sur la démarche

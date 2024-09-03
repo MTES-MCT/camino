@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { Model } from 'objection'
 import { IUtilisateurTitre } from '../../types'
 import Utilisateurs from './utilisateurs'
@@ -5,9 +6,9 @@ import Utilisateurs from './utilisateurs'
 interface UtilisateursTitres extends IUtilisateurTitre {}
 
 class UtilisateursTitres extends Model {
-  public static tableName = 'utilisateurs__titres'
+  public static override tableName = 'utilisateurs__titres'
 
-  public static jsonSchema = {
+  public static override jsonSchema = {
     type: 'object',
     required: ['utilisateurId', 'titreId'],
 
@@ -17,9 +18,9 @@ class UtilisateursTitres extends Model {
     },
   }
 
-  public static idColumn = ['utilisateurId', 'titreId']
+  public static override idColumn = ['utilisateurId', 'titreId']
 
-  static relationMappings = () => ({
+  static override relationMappings = () => ({
     utilisateur: {
       relation: Model.BelongsToOneRelation,
       modelClass: Utilisateurs,
