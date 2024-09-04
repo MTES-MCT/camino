@@ -44,7 +44,7 @@ const config = {
     },
     "packages/common": {
       ignoreDependencies: [
-        "@vitest/coverage-v8",
+        "vite",
         "@typescript-eslint/eslint-plugin",
         "@typescript-eslint/parser",
         "node",
