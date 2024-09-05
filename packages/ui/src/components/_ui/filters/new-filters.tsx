@@ -320,7 +320,7 @@ export const NewFilters = defineComponent((props: Props) => {
 
         </ul>
           <div style={{display: 'flex', justifyContent: 'end'}} class="fr-mt-2w">
-         <DsfrButton buttonType='secondary' icon='fr-icon-close-line' title='Réinitialiser les filtres' onClick={labelsReset}/>
+        <DsfrButton buttonType='secondary' icon={undefined} title='Réinitialiser les filtres' onClick={labelsReset}/>
          </div>
          </div>
 
