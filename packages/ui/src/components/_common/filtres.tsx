@@ -5,6 +5,7 @@ import { ApiClient } from '../../api/api-client'
 import { Entreprise } from 'camino-common/src/entreprise'
 import { CaminoRouteLocation } from '@/router/routes'
 import { CaminoRouter } from '@/typings/vue-router'
+import { NewFilters } from '../_ui/filters/new-filters'
 
 type Params = { [key in Props['filters'][number]]: (typeof caminoFiltres)[key]['validator']['_output'] }
 interface Props {
@@ -19,18 +20,7 @@ interface Props {
 }
 
 export const Filtres = defineComponent((props: Props) => {
-  const opened = ref<boolean>(false)
   const filtresValues = ref(getInitialFiltres(props.route, props.filters))
-
-  const toggle = () => {
-    opened.value = !opened.value
-
-    props.toggle?.(opened.value)
-  }
-
-  const close = () => {
-    opened.value = false
-  }
 
   const validate = (params: Params) => {
     if (JSON.stringify(filtresValues.value) !== JSON.stringify(params)) {
@@ -48,17 +38,15 @@ export const Filtres = defineComponent((props: Props) => {
   }
 
   return () => (
-    <Filters
+    <NewFilters
       updateUrlQuery={props.updateUrlQuery}
       route={props.route}
       apiClient={props.apiClient}
       entreprises={props.entreprises}
       filters={props.filters}
       class="flex-grow"
-      opened={opened.value}
       subtitle={props.subtitle}
       validate={validate}
-      toggle={toggle}
     />
   )
 })

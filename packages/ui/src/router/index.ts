@@ -239,21 +239,22 @@ const router = createRouter({
   history,
   linkActiveClass: 'active',
   linkExactActiveClass: 'exact-active',
-  scrollBehavior(to, from, savedPosition) {
-    if (savedPosition) {
-      return new Promise(resolve => {
-        setTimeout(() => {
-          resolve(savedPosition)
-        }, 500)
-      })
-    } else if (to.name === 'titres' && 'vueId' in to.query && !Array.isArray(to.query.vueId) && to.query.vueId === 'carte') {
-      return false
-    } else if (to.name === 'titre' && from.name === 'titre') {
-      return false
-    } else {
-      return { top: 0 }
-    }
-  },
+  // FIXME
+  // scrollBehavior(to, from, savedPosition) {
+  //   if (savedPosition) {
+  //     return new Promise(resolve => {
+  //       setTimeout(() => {
+  //         resolve(savedPosition)
+  //       }, 500)
+  //     })
+  //   } else if (to.name === 'titres' && 'vueId' in to.query && !Array.isArray(to.query.vueId) && to.query.vueId === 'carte') {
+  //     return false
+  //   } else if (to.name === 'titre' && from.name === 'titre') {
+  //     return false
+  //   } else {
+  //     return { top: 0 }
+  //   }
+  // },
 })
 
 router.isReady().then(async () => {})

@@ -21,6 +21,7 @@ import { EntrepriseId } from 'camino-common/src/entreprise'
 import { DemandeTitreButton } from './_common/demande-titre-button'
 import { entreprisesKey, userKey } from '@/moi'
 import { CaminoRouteLocation } from '@/router/routes'
+import { PageWithFilters } from './_common/page-with-filters'
 
 const defaultFilterByAdministrationUser: Pick<TitreFiltresParams, 'domainesIds' | 'typesIds' | 'statutsIds'> = {
   domainesIds: ['m', 'w', 'g'],
@@ -188,58 +189,51 @@ export const Titres = defineComponent({
     type VueId = (typeof vues)[number]['id']
 
     return () => (
-      <div>
-        <div>
-          <PageContentHeader
-            nom="Titres miniers et autorisations"
-            download={
-              titresForCarte.value.titres.length > 0 || (titresForTable.value.status === 'LOADED' && titresForTable.value.value.rows.length > 0)
-                ? { formats: titresDownloadFormats, downloadRoute: '/titres', params: {} }
-                : null
-            }
-            renderButton={() => <DemandeTitreButton user={user} />}
-          />
-        </div>
-
-        <TitresFiltres
-          subtitle={resultat.value}
-          apiClient={apiClient}
-          entreprises={entreprises.value}
-          route={router.currentRoute.value}
-          router={router}
-          paramsUpdate={async params => {
-            paramsFiltres.value = params
-            paramsForTable.value = { page: 1, ordre: 'asc', colonne: titresColonnes[0].id }
-            await reloadTitres(tabId.value)
-          }}
-        />
-
-        <div>
-          {tabId.value ? (
-            <Tabs
-              initTab={tabId.value}
-              tabs={vues}
-              tabsTitle={'Affichage des titres en vue carte ou tableau'}
-              tabClicked={async newTabId => {
-                if (tabId.value !== newTabId) {
-                  titresForCarte.value = { hash: '', titres: [] }
-                  const query: CaminoRouteLocation['query'] = { ...router.currentRoute.value.query, vueId: newTabId }
-                  if (newTabId === 'table') {
-                    delete query.zoom
-                    delete query.perimetre
-                    delete query.centre
-                  }
-                  await router.push({ name: router.currentRoute.value.name ?? undefined, query, params: router.currentRoute.value.params })
-                  if (newTabId === 'table') {
-                    paramsForCarte.value = null
-                    reloadTitres(newTabId)
-                  }
-                }
-              }}
-            />
-          ) : null}
-        </div>
-      </div>
-    )
+      <PageWithFilters
+        filtres={  <TitresFiltres
+                           subtitle={resultat.value}
+                           apiClient={apiClient}
+                           entreprises={entreprises.value}
+                           route={router.currentRoute.value}
+                           router={router}
+                           paramsUpdate={async params => {
+                             paramsFiltres.value = params
+                             paramsForTable.value = { page: 1, ordre: 'asc', colonne: titresColonnes[0].id }
+                             await reloadTitres(tabId.value)
+                           }}
+                         />}
+        content={
+        <><PageContentHeader
+                        nom="Titres miniers et autorisations"
+                        download={
+                          titresForCarte.value.titres.length > 0 || (titresForTable.value.status === 'LOADED' && titresForTable.value.value.rows.length > 0)
+                            ? { formats: titresDownloadFormats, downloadRoute: '/titres', params: {} }
+                            : null
+                        }
+                        renderButton={() => <DemandeTitreButton user={user} />}
+                      />   {tabId.value ? (
+                                   <Tabs
+                                     initTab={tabId.value}
+                                     tabs={vues}
+                                     tabsTitle={'Affichage des titres en vue carte ou tableau'}
+                                     tabClicked={async newTabId => {
+                                       if (tabId.value !== newTabId) {
+                                         titresForCarte.value = { hash: '', titres: [] }
+                                         const query: CaminoRouteLocation['query'] = { ...router.currentRoute.value.query, vueId: newTabId }
+                                         if (newTabId === 'table') {
+                                           delete query.zoom
+                                           delete query.perimetre
+                                           delete query.centre
+                                         }
+                                         await router.push({ name: router.currentRoute.value.name ?? undefined, query, params: router.currentRoute.value.params })
+                                         if (newTabId === 'table') {
+                                           paramsForCarte.value = null
+                                           reloadTitres(newTabId)
+                                         }
+                                       }
+                                     }}
+                                   />
+                                 ) : null}</>}
+    />)
   },
 })

@@ -130,7 +130,6 @@ export const Header = defineComponent<Props>(props => {
   }
 
   return () => (
-    <div style={{ paddingBottom: '20px' }}>
       <header role="banner" class="fr-header">
         <div class="fr-header__body">
           <div class="fr-container">
@@ -229,7 +228,6 @@ export const Header = defineComponent<Props>(props => {
           </div>
         </div>
       </header>
-    </div>
   )
 })
 

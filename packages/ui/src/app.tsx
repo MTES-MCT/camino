@@ -39,7 +39,7 @@ export const App = defineComponent(() => {
       <Header user={user} currentMenuSection={currentMenuSection.value} routePath={route.fullPath} />
 
       <main role="main">
-        <div class="fr-container">{loaded.value ? <RouterView /> : null}</div>
+        <div>{loaded.value ? <RouterView /> : null}</div>
       </main>
 
       <Footer displayNewsletter={displayNewsletter.value} version={version.value} />

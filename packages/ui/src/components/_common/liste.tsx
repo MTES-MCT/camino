@@ -11,6 +11,7 @@ import { AsyncData } from '../../api/client-rest'
 import { Entreprise } from 'camino-common/src/entreprise'
 import { CaminoRouteLocation } from '@/router/routes'
 import { CaminoRouter } from '@/typings/vue-router'
+import { PageWithFilters } from './page-with-filters'
 
 export type Params<ColumnId extends string> = {
   colonne: ColumnId
@@ -31,7 +32,7 @@ type GetColumnId<ColumnWithId> = ColumnWithId extends { id: infer Id } ? Id : ne
 type ToColumnId<List> = List extends [infer First, ...infer Rest] ? (First extends { noSort: true } ? ToColumnId<Rest> : [GetColumnId<First>, ...ToColumnId<Rest>]) : []
 
 type Props<ColumnId extends string, Columns> = {
-  listeFiltre: ListeFiltreProps | null
+  listeFiltre: ListeFiltreProps
   colonnes: Readonly<Columns>
   getData: (params: Params<ToColumnId<Columns>[number]>) => Promise<{ values: TableRow<ColumnId>[]; total: number }>
   route: CaminoRouteLocation
@@ -43,9 +44,7 @@ export const Liste = defineComponent(<ColumnId extends string, Columns extends C
     ...initialParams,
   }) as Ref<Params<ColumnId>>
 
-  if (props.listeFiltre) {
     params.value.filtres = getInitialFiltres(props.route, props.listeFiltre?.filtres)
-  }
 
   const paramsTableUpdate = (newParams: { page: number; colonne: ColumnId; ordre: 'asc' | 'desc' }) => {
     if (newParams.page !== params.value.page || newParams.colonne !== params.value.colonne || newParams.ordre !== params.value.ordre) {
@@ -94,24 +93,22 @@ export const Liste = defineComponent(<ColumnId extends string, Columns extends C
   })
 
   return () => (
-    <div>
-      <div>
-        <PageContentHeader nom={props.nom} download={props.download} renderButton={props.renderButton} />
-      </div>
-      {props.listeFiltre ? (
-        <Filtres
-          updateUrlQuery={props.listeFiltre.updateUrlQuery}
-          route={props.route}
-          filters={props.listeFiltre.filtres}
-          subtitle={resultat.value}
-          apiClient={props.listeFiltre.apiClient}
-          entreprises={props.listeFiltre.entreprises}
-          paramsUpdate={paramsFiltresUpdate}
-        />
-      ) : null}
+    <PageWithFilters
+    content={<>
+      <PageContentHeader nom={props.nom} download={props.download} renderButton={props.renderButton} />
 
-      <TablePagination data={tableData.value} columns={props.colonnes} caption={props.nom} route={props.route} updateParams={paramsTableUpdate} />
-    </div>
+
+         <TablePagination data={tableData.value} columns={props.colonnes} caption={props.nom} route={props.route} updateParams={paramsTableUpdate} /></>}
+      filtres={<Filtres
+                updateUrlQuery={props.listeFiltre.updateUrlQuery}
+                route={props.route}
+                filters={props.listeFiltre.filtres}
+                subtitle={resultat.value}
+                apiClient={props.listeFiltre.apiClient}
+                entreprises={props.listeFiltre.entreprises}
+                paramsUpdate={paramsFiltresUpdate}
+              />}
+    />
   )
 })
 

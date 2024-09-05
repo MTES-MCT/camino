@@ -9,7 +9,7 @@ interface Props {
 
 export const Footer: FunctionalComponent<Props> = (props: Props) => (
   <footer role="contentinfo" id="footer">
-    <div class="fr-footer fr-mt-3w">
+    <div class="fr-footer">
       <div class="fr-footer__top">
         <div class="fr-container">
           <div class="fr-grid-row fr-grid-row--start fr-grid-row--gutters">

@@ -41,6 +41,7 @@ import { userKey, entreprisesKey } from '@/moi'
 import { Entreprise } from 'camino-common/src/entreprise'
 import { CaminoRouter } from '@/typings/vue-router'
 import { ModifiedDate } from './_common/modified-date'
+import { PageWithGutter } from './_common/page-with-gutter'
 
 const activitesSort: TableSortEvent = {
   colonne: activitesColonneIdAnnee,
@@ -323,154 +324,152 @@ export const PureTitre = defineComponent<Props>(props => {
   }
 
   return () => (
-    <div>
-      <LoadingElement
-        data={titreData.value}
-        renderItem={titre => (
-          <div>
-            <div class="fr-grid-row fr-grid-row--top">
-              <h1 style={{ maxWidth: '400px' }} class="fr-m-0">
-                {capitalize(titre.nom)}
-              </h1>
-              <TitreStatut class="fr-ml-2w" titreStatutId={titre.titre_statut_id} style={{ alignSelf: 'center' }} />
+    <PageWithGutter content={<LoadingElement
+      data={titreData.value}
+      renderItem={titre => (
+        <div>
+          <div class="fr-grid-row fr-grid-row--top">
+            <h1 style={{ maxWidth: '400px' }} class="fr-m-0">
+              {capitalize(titre.nom)}
+            </h1>
+            <TitreStatut class="fr-ml-2w" titreStatutId={titre.titre_statut_id} style={{ alignSelf: 'center' }} />
 
-              <div class="fr-m-0" style={{ marginLeft: 'auto !important', display: 'flex' }}>
-                <DsfrLink
-                  class="fr-btn fr-btn--secondary fr-pl-2w fr-pr-2w"
-                  style={{ marginLeft: 'auto', display: 'flex' }}
-                  disabled={false}
-                  icon={null}
-                  title="Signaler une erreur"
-                  href={`mailto:camino@beta.gouv.fr?subject=Erreur ${titre.slug}&body=Bonjour, j'ai repéré une erreur sur le titre ${window.location.href} :`}
-                  target="_blank"
-                  rel="noopener external"
-                />
-                {canEditTitre(props.user, titre.titre_type_id, titre.titre_statut_id, administrations.value) ? (
-                  <DsfrButtonIcon icon="fr-icon-pencil-line" buttonType="secondary" class="fr-ml-2w" title="Éditer le titre" onClick={openEditerTitrePopup} />
-                ) : null}
-                {canDeleteTitre(props.user) ? (
-                  <DsfrButtonIcon icon="fr-icon-delete-bin-line" class="fr-ml-2w" title="Supprimer le titre" buttonType="secondary" onClick={openDeleteTitrePopup} />
-                ) : null}
-                <TitreAbonnerButton class="fr-ml-2w" titreId={titre.id} user={props.user} apiClient={props.apiClient} />
-              </div>
-            </div>
-            <div class="fr-grid-row fr-grid-row--middle fr-mt-1w">
-              <h3 class="fr-m-0">{capitalize(TitresTypesTypes[TitresTypes[titre.titre_type_id].typeId].nom)}</h3>
-              <Domaine class="fr-ml-2w" domaineId={TitresTypes[titre.titre_type_id].domaineId} />
-            </div>
-            {titre.references.length > 0 ? (
-              <div class="fr-mt-2w">
-                Références
-                {titre.references.map(reference => (
-                  <div key={reference.nom} style={{ fontWeight: 500 }}>
-                    {ReferencesTypes[reference.referenceTypeId].nom} : {reference.nom}
-                  </div>
-                ))}
-              </div>
-            ) : null}
-
-            <div class="fr-grid-row fr-grid-row--middle fr-mt-4w">
-              {titre.titre_last_modified_date !== null ? <ModifiedDate modified_date={titre.titre_last_modified_date} /> : null}
-
-              {isSuper(props.user) ? (
-                <DsfrLink
-                  style={{ marginLeft: 'auto' }}
-                  disabled={false}
-                  icon={null}
-                  title="Journaux du titre"
-                  label="Journaux du titre"
-                  to={{ name: 'journaux', params: {}, query: { [caminoFiltres.titresIds.id]: titre.id } }}
-                />
+            <div class="fr-m-0" style={{ marginLeft: 'auto !important', display: 'flex' }}>
+              <DsfrLink
+                class="fr-btn fr-btn--secondary fr-pl-2w fr-pr-2w"
+                style={{ marginLeft: 'auto', display: 'flex' }}
+                disabled={false}
+                icon={null}
+                title="Signaler une erreur"
+                href={`mailto:camino@beta.gouv.fr?subject=Erreur ${titre.slug}&body=Bonjour, j'ai repéré une erreur sur le titre ${window.location.href} :`}
+                target="_blank"
+                rel="noopener external"
+              />
+              {canEditTitre(props.user, titre.titre_type_id, titre.titre_statut_id, administrations.value) ? (
+                <DsfrButtonIcon icon="fr-icon-pencil-line" buttonType="secondary" class="fr-ml-2w" title="Éditer le titre" onClick={openEditerTitrePopup} />
               ) : null}
-            </div>
-            <div>
-              {titre.titre_doublon !== null ? (
-                <Alert
-                  small={true}
-                  type="warning"
-                  class="fr-mt-2w"
-                  title={
-                    <>
-                      Le titre est en doublon avec : <DsfrLink disabled={false} icon={null} title={titre.titre_doublon?.nom ?? ''} to={{ name: 'titre', params: { id: titre.titre_doublon?.id } }} />.
-                    </>
-                  }
-                />
+              {canDeleteTitre(props.user) ? (
+                <DsfrButtonIcon icon="fr-icon-delete-bin-line" class="fr-ml-2w" title="Supprimer le titre" buttonType="secondary" onClick={openDeleteTitrePopup} />
               ) : null}
-              {showActivitesLink.value && isNotNullNorUndefined(titre.nb_activites_to_do) ? (
-                <>
-                  {titre.nb_activites_to_do > 0 ? (
-                    <Alert
-                      class="fr-mt-2w"
-                      small={true}
-                      type={isEntrepriseOrBureauDEtude(props.user) ? 'warning' : 'info'}
-                      title={
-                        <>
-                          Il manque {titre.nb_activites_to_do} {(titre.nb_activites_to_do ?? 0) > 1 ? "rapports d'activités" : "rapport d'activité"}.{' '}
-                          <DsfrLink
-                            disabled={false}
-                            icon={null}
-                            title={`Remplir ${(titre.nb_activites_to_do ?? 0) > 1 ? "les rapports d'activités" : "le rapport d'activité"}`}
-                            to={{ name: 'activites', params: {}, query: { [caminoFiltres.titresIds.id]: titre.id, ...activitesSort } }}
-                          />
-                        </>
-                      }
-                    />
-                  ) : null}
-                  {titre.nb_activites_to_do === 0 || isAdministration(props.user) || isSuper(props.user) ? (
-                    <DsfrLink
-                      disabled={false}
-                      icon={null}
-                      class="fr-mt-2w"
-                      title="Consulter les rapports d'activités"
-                      label="Consulter les rapports d'activités"
-                      buttonType="secondary"
-                      to={{ name: 'activites', params: {}, query: { [caminoFiltres.titresIds.id]: titre.id, ...activitesSort } }}
-                    />
-                  ) : null}
-                </>
-              ) : null}
-              {titreLinkFormTitre.value !== null ? <TitresLinkForm user={props.user} titre={titreLinkFormTitre.value} apiClient={props.apiClient} /> : null}
+              <TitreAbonnerButton class="fr-ml-2w" titreId={titre.id} user={props.user} apiClient={props.apiClient} />
             </div>
+          </div>
+          <div class="fr-grid-row fr-grid-row--middle fr-mt-1w">
+            <h3 class="fr-m-0">{capitalize(TitresTypesTypes[TitresTypes[titre.titre_type_id].typeId].nom)}</h3>
+            <Domaine class="fr-ml-2w" domaineId={TitresTypes[titre.titre_type_id].domaineId} />
+          </div>
+          {titre.references.length > 0 ? (
+            <div class="fr-mt-2w">
+              Références
+              {titre.references.map(reference => (
+                <div key={reference.nom} style={{ fontWeight: 500 }}>
+                  {ReferencesTypes[reference.referenceTypeId].nom} : {reference.nom}
+                </div>
+              ))}
+            </div>
+          ) : null}
 
-            <DsfrSeparator />
+          <div class="fr-grid-row fr-grid-row--middle fr-mt-4w">
+            {titre.titre_last_modified_date !== null ? <ModifiedDate modified_date={titre.titre_last_modified_date} /> : null}
 
-            {hasNoPhases.value ? <DsfrButton style={{ marginLeft: 'auto' }} buttonType="primary" title="Ajouter une démarche" onClick={openAddDemarchePopup} /> : null}
-            {props.currentDemarcheSlug !== null ? (
-              <>
-                <TitreTimeline class="fr-pt-4w fr-pb-4w" phasesWithAlterations={phases.value} currentDemarcheSlug={props.currentDemarcheSlug} titreSlug={titre.slug} />
-                <TitreDemarche
-                  titre={titre}
-                  demarcheCreatedOrUpdated={demarcheCreatedOrUpdated}
-                  demarcheDeleted={demarcheDeleted}
-                  demarches={titre.demarches}
-                  currentDemarcheSlug={props.currentDemarcheSlug}
-                  user={props.user}
-                  entreprises={props.entreprises}
-                  apiClient={customApiClient.value}
-                  router={props.router}
-                  initTab={props.initTab}
-                />
-              </>
-            ) : null}
-            {editerTitrePopup.value ? <EditPopup close={closeEditPopup} apiClient={props.apiClient} titre={titre} reload={retrieveTitre} /> : null}
-            {supprimerTitrePopup.value ? (
-              <RemovePopup apiClient={props.apiClient} close={closeDeletePopup} titreId={titre.id} titreNom={titre.nom} titreTypeId={titre.titre_type_id} reload={reloadAfterRemoveTitre} />
-            ) : null}
-            {addDemarchePopup.value ? (
-              <DemarcheEditPopup
-                apiClient={props.apiClient}
-                close={closeAddDemarchePopup}
-                titreNom={titre.nom}
-                titreTypeId={titre.titre_type_id}
-                demarche={{ titreId: titre.id }}
-                tabId="demarches"
-                reload={demarcheCreatedOrUpdated}
+            {isSuper(props.user) ? (
+              <DsfrLink
+                style={{ marginLeft: 'auto' }}
+                disabled={false}
+                icon={null}
+                title="Journaux du titre"
+                label="Journaux du titre"
+                to={{ name: 'journaux', params: {}, query: { [caminoFiltres.titresIds.id]: titre.id } }}
               />
             ) : null}
           </div>
-        )}
-      />
-    </div>
+          <div>
+            {titre.titre_doublon !== null ? (
+              <Alert
+                small={true}
+                type="warning"
+                class="fr-mt-2w"
+                title={
+                  <>
+                    Le titre est en doublon avec : <DsfrLink disabled={false} icon={null} title={titre.titre_doublon?.nom ?? ''} to={{ name: 'titre', params: { id: titre.titre_doublon?.id } }} />.
+                  </>
+                }
+              />
+            ) : null}
+            {showActivitesLink.value && isNotNullNorUndefined(titre.nb_activites_to_do) ? (
+              <>
+                {titre.nb_activites_to_do > 0 ? (
+                  <Alert
+                    class="fr-mt-2w"
+                    small={true}
+                    type={isEntrepriseOrBureauDEtude(props.user) ? 'warning' : 'info'}
+                    title={
+                      <>
+                        Il manque {titre.nb_activites_to_do} {(titre.nb_activites_to_do ?? 0) > 1 ? "rapports d'activités" : "rapport d'activité"}.{' '}
+                        <DsfrLink
+                          disabled={false}
+                          icon={null}
+                          title={`Remplir ${(titre.nb_activites_to_do ?? 0) > 1 ? "les rapports d'activités" : "le rapport d'activité"}`}
+                          to={{ name: 'activites', params: {}, query: { [caminoFiltres.titresIds.id]: titre.id, ...activitesSort } }}
+                        />
+                      </>
+                    }
+                  />
+                ) : null}
+                {titre.nb_activites_to_do === 0 || isAdministration(props.user) || isSuper(props.user) ? (
+                  <DsfrLink
+                    disabled={false}
+                    icon={null}
+                    class="fr-mt-2w"
+                    title="Consulter les rapports d'activités"
+                    label="Consulter les rapports d'activités"
+                    buttonType="secondary"
+                    to={{ name: 'activites', params: {}, query: { [caminoFiltres.titresIds.id]: titre.id, ...activitesSort } }}
+                  />
+                ) : null}
+              </>
+            ) : null}
+            {titreLinkFormTitre.value !== null ? <TitresLinkForm user={props.user} titre={titreLinkFormTitre.value} apiClient={props.apiClient} /> : null}
+          </div>
+
+          <DsfrSeparator />
+
+          {hasNoPhases.value ? <DsfrButton style={{ marginLeft: 'auto' }} buttonType="primary" title="Ajouter une démarche" onClick={openAddDemarchePopup} /> : null}
+          {props.currentDemarcheSlug !== null ? (
+            <>
+              <TitreTimeline class="fr-pt-4w fr-pb-4w" phasesWithAlterations={phases.value} currentDemarcheSlug={props.currentDemarcheSlug} titreSlug={titre.slug} />
+              <TitreDemarche
+                titre={titre}
+                demarcheCreatedOrUpdated={demarcheCreatedOrUpdated}
+                demarcheDeleted={demarcheDeleted}
+                demarches={titre.demarches}
+                currentDemarcheSlug={props.currentDemarcheSlug}
+                user={props.user}
+                entreprises={props.entreprises}
+                apiClient={customApiClient.value}
+                router={props.router}
+                initTab={props.initTab}
+              />
+            </>
+          ) : null}
+          {editerTitrePopup.value ? <EditPopup close={closeEditPopup} apiClient={props.apiClient} titre={titre} reload={retrieveTitre} /> : null}
+          {supprimerTitrePopup.value ? (
+            <RemovePopup apiClient={props.apiClient} close={closeDeletePopup} titreId={titre.id} titreNom={titre.nom} titreTypeId={titre.titre_type_id} reload={reloadAfterRemoveTitre} />
+          ) : null}
+          {addDemarchePopup.value ? (
+            <DemarcheEditPopup
+              apiClient={props.apiClient}
+              close={closeAddDemarchePopup}
+              titreNom={titre.nom}
+              titreTypeId={titre.titre_type_id}
+              demarche={{ titreId: titre.id }}
+              tabId="demarches"
+              reload={demarcheCreatedOrUpdated}
+            />
+          ) : null}
+        </div>
+      )}
+    />}/>
   )
 })
 

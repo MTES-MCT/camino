@@ -33,7 +33,8 @@ export const TablePagination = defineComponent(<ColumnId extends string>(props: 
       // TODO 2023-07-06 si on met un ref sur la div, le scrollIntoView pète le layout des onglets... à retester plus tard
       const main = document.querySelector<HTMLElement>('main')
       if (main) {
-        main.scrollIntoView(true)
+        // FIXME
+        // main.scrollIntoView(true)
       }
     }
   )
