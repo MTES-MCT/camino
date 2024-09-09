@@ -15,13 +15,8 @@
     - role: prod
       when: env == 'prod'
   tasks:
-    - name: Remove old docker-compose (remove this once run through the prod)
+    - name: 2024-09-09 Remove old nginx storybook redirect (remove this once run through the prod)
       ansible.builtin.file:
-        path: /usr/local/bin/docker-compose
-        state: absent
-      become: True
-    - name: 2024-05-29 -> Remove old keycloak-franceconnect (remove this once run through the prod)
-      ansible.builtin.file:
-        path: /srv/www/camino/keycloak-franceconnect-6.0.0.jar
+        path: /srv/www/nginx-proxy/redirect.conf
         state: absent
       become: True

@@ -22,10 +22,10 @@
     group: users
     mode: u=rw,g=r,o=r
   become: True
-- name: Ajoute la redirection storybook à nginx
+- name: Ajoute la redirection cd pour gitlab
   ansible.builtin.template:
-    src: redirect.conf
-    dest: /srv/www/nginx-proxy/redirect.conf
+    src: cd.conf
+    dest: /srv/www/nginx-proxy/cd.conf
     owner: camino
     group: users
     mode: u=rw,g=r,o=r
