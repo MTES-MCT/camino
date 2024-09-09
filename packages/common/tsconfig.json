@@ -21,5 +21,6 @@
     "types": ["node"],
     "resolveJsonModule": true,
     "noEmit": true
-  }
+  },
+  "exclude": ["vitest.config.ts"]
 }

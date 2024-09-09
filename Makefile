@@ -62,11 +62,7 @@ else
 endif
 
 test/common:
-ifndef CI
 	npm run test -w packages/common
-else
-	npm run test -w packages/common -- --coverage
-endif
 
 test/api-unit:
 ifndef CI
