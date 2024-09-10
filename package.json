@@ -51,9 +51,6 @@
   "@comment overrides": {
     "vue": "bug npm avec les workspaces : https://github.com/npm/cli/issues/4834"
   },
-  "overrides": {
-    "vue": "3.4.26"
-  },
   "devDependencies": {
     "@types/react": "file:stub/types__react",
     "husky": "^9.0.11",
@@ -61,7 +58,7 @@
     "semantic-release": "^23.0.8",
     "semantic-release-mattermost": "^1.2.1",
     "typescript": "^5.6.2",
-    "vue": "3.4.26"
+    "vue": "^3.5.4"
   },
   "release": {
     "branches": [
