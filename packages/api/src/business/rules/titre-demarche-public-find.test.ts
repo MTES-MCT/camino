@@ -775,6 +775,22 @@ describe("publicité d'une démarche", () => {
     ).toMatchObject({ publicLecture: true })
   })
 
+  test('le titre WQaZgPfDcQw9tFliMgBIDH3Z ne doit pas être public', () => {
+    expect(
+      titreDemarchePublicFind(
+        {
+          typeId: 'oct',
+          demarcheDateDebut: toCaminoDate('2020-01-01'),
+          demarcheDateFin: toCaminoDate('2021-01-01'),
+          id: newDemarcheId(),
+          etapes: etapesBuild([{ typeId: 'dpu', isBrouillon: ETAPE_IS_NOT_BROUILLON }]),
+          titreId: newTitreId('WQaZgPfDcQw9tFliMgBIDH3Z'),
+        },
+        TITRES_TYPES_IDS.AUTORISATION_DE_PROSPECTION_GRANULATS_MARINS
+      )
+    ).toMatchObject({ publicLecture: false })
+  })
+
   test('la demarche d’une prolongation non déposée d’un PRM en survie provisoire n’est pas public ', () => {
     expect(
       titreDemarchePublicFind(
