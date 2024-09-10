@@ -7,7 +7,7 @@ import { isTitreValide, TitresStatutIds } from 'camino-common/src/static/titresS
 import { SubstancesFiscale, SUBSTANCES_FISCALES_IDS, SubstanceFiscaleId } from 'camino-common/src/static/substancesFiscales'
 import { Departements, departementsMetropole, toDepartementId } from 'camino-common/src/static/departement'
 import { REGION_IDS, regions } from 'camino-common/src/static/region'
-import { onlyUnique } from 'camino-common/src/typescript-tools'
+import { isNotNullNorUndefined, onlyUnique } from 'camino-common/src/typescript-tools'
 import { TITRES_TYPES_TYPES_IDS } from 'camino-common/src/static/titresTypesTypes'
 import { evolutionTitres } from './evolution-titres'
 import type { Pool } from 'pg'
@@ -152,7 +152,7 @@ const buildSubstances = async (pool: Pool): Promise<Pick<StatistiquesMinerauxMet
         }
         const substanceData = acc[substance][annee]
         const valeur = fromUniteFiscaleToUnite(SubstancesFiscale[substance].uniteId, new Decimal(stat.substances[substance] ?? 0)).toNumber()
-        if (substanceData) {
+        if (isNotNullNorUndefined(substanceData)) {
           substanceData[regionId] = valeur + (substanceData[regionId] ?? 0)
         }
       }

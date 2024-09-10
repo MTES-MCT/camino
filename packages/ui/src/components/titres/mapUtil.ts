@@ -7,7 +7,7 @@ import { TitreId } from 'camino-common/src/validators/titres'
 import { dsfrVariableCouleurParDomaine } from '../_common/domaine'
 import { capitalize } from 'camino-common/src/strings'
 import { GeojsonPoint, MultiPolygon } from 'camino-common/src/perimetre'
-import { isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
+import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
 import { Entreprise, EntrepriseId } from 'camino-common/src/entreprise'
 import { REGION_IDS, RegionId } from 'camino-common/src/static/region'
 import { CaminoRouter } from '@/typings/vue-router'
@@ -169,7 +169,7 @@ export const clustersBuild = (): { [key in DomaineId]?: CaminoMarkerClusterGroup
       showCoverageOnHover: false,
     })
     const cluster = clusters[id]
-    if (cluster) {
+    if (isNotNullNorUndefined(cluster)) {
       cluster.caminoDomaineId = id
     }
 
