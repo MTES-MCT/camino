@@ -116,7 +116,7 @@
     "eslint-plugin-sql": "^2.5.0",
     "supertest": "^7.0.0",
     "typescript": "^5.4.5",
-    "vitest": "^1.5.2"
+    "vitest": "^2.0.5"
   },
   "prettier": {
     "semi": false,
