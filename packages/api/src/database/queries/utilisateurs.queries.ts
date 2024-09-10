@@ -164,10 +164,12 @@ export const getUtilisateurById = async (pool: Pool, id: UtilisateurId, user: Us
 }
 
 const userDbToUser = (
-  user: GetUtilisateur
-): Pick<UserNotNull, 'telephone_fixe' | 'telephone_mobile' | 'id' | 'nom' | 'prenom' | 'role' | 'email'> &
-  Nullable<Pick<AdminUserNotNull, 'administrationId'>> &
-  Pick<EntrepriseUserNotNull, 'entrepriseIds'> => {
+  user: DeepReadonly<GetUtilisateur>
+): DeepReadonly<
+  Pick<UserNotNull, 'telephone_fixe' | 'telephone_mobile' | 'id' | 'nom' | 'prenom' | 'role' | 'email'> &
+    Nullable<Pick<AdminUserNotNull, 'administrationId'>> &
+    Pick<EntrepriseUserNotNull, 'entrepriseIds'>
+> => {
   return { ...user, prenom: user.prenom ?? '', entrepriseIds: user.entreprise_ids ?? [], administrationId: user.administration_id }
 }
 

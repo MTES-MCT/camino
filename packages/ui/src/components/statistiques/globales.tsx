@@ -76,11 +76,26 @@ export const Globales = defineComponent(() => {
     try {
       const [statsGlobales, statsUtilisateurs] = await Promise.all([statistiquesGlobales(), getWithJson('/rest/statistiques/datagouv', {})])
 
-      const statistiques = statsUtilisateurs.reduce((acc, value) => {
-        acc[value.indicateur] = value.valeur
+      const statistiques: CaminoStats = statsUtilisateurs.reduce(
+        (acc, value) => {
+          acc[value.indicateur] = value.valeur
 
-        return acc
-      }, statsGlobales)
+          return acc
+        },
+        {
+          ...statsGlobales,
+          titresModifies: [],
+          "Nombre d'utilisateurs affiliés à une entreprise": 0,
+          "Nombre d'utilisateurs rattachés à un ministère": 0,
+          "Nombre d'utilisateurs rattachés à une Autorité": 0,
+          "Nombre d'utilisateurs rattachés à une Dréal": 0,
+          "Nombre d'utilisateurs rattachés à une préfecture": 0,
+          "Nombre d'utilisateurs sur la plateforme": 0,
+          demarches: 0,
+          titresActivitesBeneficesAdministration: 0,
+          titresActivitesBeneficesEntreprise: 0,
+        }
+      )
 
       if (statistiques !== null) {
         data.value = { status: 'LOADED', value: statistiques }
