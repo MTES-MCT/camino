@@ -1,0 +1,138 @@
+<form>
+  <div>
+    <div>
+      <h2 class="fr-pt-6w">Informations principales
+        <!---->
+      </h2>
+      <!---->
+    </div>
+    <div>
+      <div class="fr-grid-row">
+        <div class="fr-col-12 fr-col-xl-6">
+          <div class="fr-input-group" style="margin-bottom: 0px;"><label class="fr-label" for="input_271">Date
+              <!---->
+              <!---->
+            </label><input class="fr-input" name="input_271" id="input_271" type="date">
+            <!---->
+          </div>
+          <div class="fr-mt-2w">
+            <div class="fr-input-group"><label class="fr-label fr-mb-1w" for="select-etape-type">Type *</label>
+              <div id="select-etape-type_wrapper" class="_typeahead_8eddf1">
+                <div class="flex"><input id="select-etape-type" type="text" name="select-etape-type" disabled="" class="fr-input" placeholder="" autocomplete="off"></div>
+                <!---->
+              </div>
+            </div>
+            <div class="fr-select-group"><label class="fr-label" for="select-etape-statut-id">Statut *
+                <!---->
+              </label><select class="fr-select" id="select-etape-statut-id" aria-label="Statut" name="select-etape-statut-id">
+                <option disabled="" value="fai">fait</option>
+                <option disabled="" hidden="" value="">Selectionnez une option</option>
+              </select></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div gotodemarche="function(...args){if(options.implicit){let storyRenderer=(&quot;__STORYBOOK_PREVIEW__&quot;in global.global?global.global.__STORYBOOK_PREVIEW__:void 0)?.storyRenders.find(render=>render.phase===&quot;playing&quot;||render.phase===&quot;rendering&quot;);if(storyRenderer){let deprecated=!window?.FEATURES?.disallowImplicitActionsInRenderV8,error=new previewErrors.ImplicitActionsDuringRendering({phase:storyRenderer.phase,name,deprecated});if(deprecated)console.warn(error);else throw error}}let channel=previewApi.addons.getChannel(),id=generateId(),minDepth=5,serializedArgs=args.map(serializeArg),normalizedArgs=args.length>1?serializedArgs:serializedArgs[0],actionDisplayToEmit={id,count:0,data:{name,args:normalizedArgs},options:{...actionOptions,maxDepth:minDepth+(actionOptions.depth||3),allowFunction:actionOptions.allowFunction||!1}};channel.emit(EVENT_ID,actionDisplayToEmit);}">
+    <!---->
+    <!---->
+    <!---->
+    <div>
+      <div>
+        <h2 class="fr-pt-6w">Liste des documents<p style="z-index: unset; margin-bottom: 0px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;" class="fr-badge fr-badge--sm fr-ml-2w fr-badge--error fr-badge--no-icon fr-ml-2w" title="Incomplet" aria-label="Incomplet">Incomplet</p>
+        </h2>
+        <!---->
+      </div>
+      <div>
+        <div class="fr-table fr-mb-0">
+          <table style="display: table;">
+            <caption>Documents obligatoires</caption>
+            <thead>
+              <tr>
+                <th scope="col">Nom</th>
+                <th scope="col">Description</th>
+                <th scope="col">Visibilité</th>
+                <th scope="col" style="display: flex; justify-content: end;">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="fr-label--disabled">Lettre de saisine des services civils et militaires</td>
+                <td>-</td>
+                <td>-</td>
+                <td style="display: flex; justify-content: end;"><button class="fr-btn fr-btn--secondary fr-btn--sm fr-icon-add-line" title="Ajouter un document Lettre de saisine des services civils et militaires" aria-label="Ajouter un document Lettre de saisine des services civils et militaires" type="button">
+                    <!---->
+                  </button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div style="display: flex; flex-direction: column;" class="fr-mt-3w">
+          <div class="fr-table fr-mb-0">
+            <table style="display: table;">
+              <caption>Documents complémentaires</caption>
+              <thead>
+                <tr>
+                  <th scope="col">Nom</th>
+                  <th scope="col">Description</th>
+                  <th scope="col">Visibilité</th>
+                  <th scope="col" style="display: flex; justify-content: end;">Action</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div><button class="fr-btn fr-btn--secondary fr-btn--md fr-icon-add-line fr-btn--icon-right fr-mt-1w" title="Ajouter un document complémentaire" aria-label="Ajouter un document complémentaire" type="button" style="align-self: end;">Ajouter</button>
+        </div>
+        <!---->
+        <!---->
+        <!---->
+      </div>
+    </div>
+    <div>
+      <div>
+        <h2 class="fr-pt-6w">Liste des avis
+          <!---->
+        </h2>
+        <!---->
+      </div>
+      <div>
+        <!---->
+        <div style="display: flex; flex-direction: column;" class="fr-mt-3w">
+          <div class="fr-table fr-mb-0">
+            <table style="display: table;">
+              <caption>Avis complémentaires</caption>
+              <thead>
+                <tr>
+                  <th scope="col">Nom</th>
+                  <th scope="col">Date</th>
+                  <th scope="col">Description</th>
+                  <th scope="col">Statut</th>
+                  <th scope="col">Visibilité</th>
+                  <th scope="col" style="display: flex; justify-content: end;">Action</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div><button class="fr-btn fr-btn--secondary fr-btn--md fr-icon-add-line fr-btn--icon-right fr-mt-1w" title="Ajouter un avis complémentaire" aria-label="Ajouter un avis complémentaire" type="button" style="align-self: end;">Ajouter</button>
+        </div>
+        <!---->
+      </div>
+    </div>
+    <!---->
+    <div class="fr-input-group fr-mt-2w" style="flex-grow: 1;"><label class="fr-label" for="textarea_670">Notes
+        <!---->
+        <!---->
+      </label><textarea class="fr-input" name="textarea_670" id="textarea_670"></textarea></div>
+    <div class="fr-checkbox-group"><input name="archive" id="checkbox_74" type="checkbox"><label class="fr-label" for="checkbox_74">Cette note est un avertissement<span class="fr-hint-text">Apparait sur le résumé de la démarche</span></label></div>
+  </div>
+  <div class="fr-mt-2w fr-pt-2w fr-pb-2w" style="position: sticky; bottom: 0px; z-index: 100000; background: white;">
+    <div style="display: flex; flex-direction: column;">
+      <!---->
+      <div style="display: flex; justify-content: end; align-items: center;" class="fr-mt-2w">
+        <!----><button class="fr-btn fr-btn--primary fr-btn--md fr-ml-2w" disabled="" title="Enregistrer l'étape" aria-label="Enregistrer l'étape" type="submit">Enregistrer l'étape</button>
+        <!---->
+      </div>
+    </div>
+  </div>
+  <!---->
+</form>

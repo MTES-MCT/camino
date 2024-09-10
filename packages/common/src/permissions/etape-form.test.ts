@@ -1265,6 +1265,15 @@ test('getAvisType', () => {
       },
     ]
   `)
+  expect(getAvisTypes('cac', 'prw', [])).toMatchInlineSnapshot(`
+    [
+      {
+        "id": "autreAvis",
+        "nom": "Autre avis",
+        "optionnel": true,
+      },
+    ]
+  `)
 })
 
 test('etapeAvisStepIsVisible', () => {

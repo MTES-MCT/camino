@@ -5,10 +5,16 @@ interface Definition<T> {
   nom: string
 }
 // prettier-ignore
-const AVIS_TYPES_IDS = [ 'confirmationAccordProprietaireDuSol', 'avisDirectionRegionaleDesAffairesCulturelles', 'avisDirectionAlimentationAgricultureForet', 'avisConseilDepartementalEnvironnementRisquesSanitairesTechnologiques', 'avisDirectionsRégionalesEconomieEmploiTravailSolidarités', 'avisDirectionRegionaleFinancesPubliques', 'avisGendarmerieNationale', 'avisParcNaturelMarin', 'avisIFREMER', 'avisInstitutNationalOrigineQualite', 'avisEtatMajorOrpaillagePecheIllicite', 'avisServiceAdministratifLocal', 'avisAutoriteMilitaire', 'avisParcNational', 'avisDirectionDepartementaleTerritoiresMer', 'avisAgenceRegionaleSante', 'avisCaisseGeneraleSecuriteSociale', 'autreAvis', 'avisServiceMilieuxNaturelsBiodiversiteSitesPaysages', 'avisOfficeNationalDesForets', 'expertiseOfficeNationalDesForets', 'avisDUneCollectivite'] as const
+const AVIS_TYPES_IDS_WITHOUT_AUTRE = [ 'confirmationAccordProprietaireDuSol', 'avisDirectionRegionaleDesAffairesCulturelles', 'avisDirectionAlimentationAgricultureForet', 'avisConseilDepartementalEnvironnementRisquesSanitairesTechnologiques', 'avisDirectionsRégionalesEconomieEmploiTravailSolidarités', 'avisDirectionRegionaleFinancesPubliques', 'avisGendarmerieNationale', 'avisParcNaturelMarin', 'avisIFREMER', 'avisInstitutNationalOrigineQualite', 'avisEtatMajorOrpaillagePecheIllicite', 'avisServiceAdministratifLocal', 'avisAutoriteMilitaire', 'avisParcNational', 'avisDirectionDepartementaleTerritoiresMer', 'avisAgenceRegionaleSante', 'avisCaisseGeneraleSecuriteSociale', 'avisServiceMilieuxNaturelsBiodiversiteSitesPaysages', 'avisOfficeNationalDesForets', 'expertiseOfficeNationalDesForets', 'avisDUneCollectivite'] as const
+const AVIS_TYPE_IDS_AUTRE = ['autreAvis'] as const
+
+const AVIS_TYPES_IDS = [...AVIS_TYPES_IDS_WITHOUT_AUTRE, ...AVIS_TYPE_IDS_AUTRE] as const
 
 export const avisTypeIdValidator = z.enum(AVIS_TYPES_IDS)
 export type AvisTypeId = z.infer<typeof avisTypeIdValidator>
+
+export const autreAvisTypeIdValidator = z.enum(AVIS_TYPE_IDS_AUTRE)
+export const avisTypeIdSansAutreValidator = z.enum(AVIS_TYPES_IDS_WITHOUT_AUTRE)
 
 export const AvisTypes: { [key in AvisTypeId]: Definition<key> } = {
   confirmationAccordProprietaireDuSol: { id: 'confirmationAccordProprietaireDuSol', nom: "Confirmation de l'accord du propriétaire du sol" },

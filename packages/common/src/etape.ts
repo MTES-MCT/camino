@@ -8,7 +8,7 @@ import { tempDocumentNameValidator } from './document'
 import { DemarcheTypeId } from './static/demarchesTypes'
 import { TitreTypeId } from './static/titresTypes'
 import { User, isEntrepriseOrBureauDEtude } from './roles'
-import { avisStatutIdValidator, avisTypeIdValidator, avisVisibilityIdValidator } from './static/avisTypes'
+import { autreAvisTypeIdValidator, avisStatutIdValidator, avisTypeIdSansAutreValidator, avisVisibilityIdValidator } from './static/avisTypes'
 import { FlattenEtape, GraphqlEtape } from './etape-form'
 import { DeepReadonly } from './typescript-tools'
 
@@ -94,25 +94,47 @@ export const getEtapeDocumentsByEtapeIdValidator = z.object({
 
 export type GetEtapeDocumentsByEtapeId = z.infer<typeof getEtapeDocumentsByEtapeIdValidator>
 
+// Avis d'une étape
+// ID
 export const etapeAvisIdValidator = z.string().brand('EtapeAvis')
 export type EtapeAvisId = z.infer<typeof etapeAvisIdValidator>
-export const etapeAvisValidator = z.object({
+
+// L'avis (output tel qu'il sort de la base)
+const commonEtapeAvisValidator = z.object({
   id: etapeAvisIdValidator,
-  avis_type_id: avisTypeIdValidator,
   date: caminoDateValidator,
   avis_statut_id: avisStatutIdValidator,
   has_file: z.boolean(),
-  description: z.string(),
   avis_visibility_id: avisVisibilityIdValidator,
 })
+const regularEtapeAvisValidator = commonEtapeAvisValidator.extend({
+  avis_type_id: avisTypeIdSansAutreValidator,
+  description: z.string().nullable(),
+})
+const autreEtapeAvisValidator = commonEtapeAvisValidator.extend({
+  avis_type_id: autreAvisTypeIdValidator,
+  description: z.string().min(1),
+})
+
+export const etapeAvisValidator = z.union([regularEtapeAvisValidator, autreEtapeAvisValidator])
 export type EtapeAvis = z.infer<typeof etapeAvisValidator>
 
-const etapeAvisWithFileModificationValidator = etapeAvisValidator.extend({ temp_document_name: tempDocumentNameValidator.optional() })
+// L'étape (input de modification)
+const tempDocumentName = {
+  temp_document_name: tempDocumentNameValidator.optional(),
+}
+const etapeAvisWithFileModificationValidator = z.union([regularEtapeAvisValidator.extend(tempDocumentName), autreEtapeAvisValidator.extend(tempDocumentName)])
 export type EtapeAvisWithFileModification = z.infer<typeof etapeAvisWithFileModificationValidator>
 
-export const tempEtapeAvisValidator = etapeAvisWithFileModificationValidator.omit({ id: true, has_file: true })
+// L'étape (input de création)
+const regularEtapeAvisWithoutIdValidator = regularEtapeAvisValidator.omit({ id: true, has_file: true })
+const autreEtapeAvisWithoutIdValidator = autreEtapeAvisValidator.omit({ id: true, has_file: true })
+export const etapeAvisWithoutIdValidator = z.union([regularEtapeAvisWithoutIdValidator, autreEtapeAvisWithoutIdValidator])
+
+export const tempEtapeAvisValidator = z.union([regularEtapeAvisWithoutIdValidator.extend(tempDocumentName), autreEtapeAvisWithoutIdValidator.extend(tempDocumentName)])
 export type TempEtapeAvis = z.infer<typeof tempEtapeAvisValidator>
 
+// Divers inputs de fonctions externes
 export const getEtapeAvisByEtapeIdValidator = z.array(etapeAvisValidator)
 
 export type GetEtapeAvisByEtapeId = z.infer<typeof getEtapeAvisByEtapeIdValidator>

@@ -207,6 +207,8 @@ export const getAvisTypes = (etapeTypeId: EtapeTypeId, titreTypeId: TitreTypeId,
     if (TitresTypes[titreTypeId].typeId === TITRES_TYPES_TYPES_IDS.AUTORISATION_D_EXPLOITATION) {
       avis.push({ ...AvisTypes.confirmationAccordProprietaireDuSol, optionnel: true })
     }
+  } else if (etapeTypeId === ETAPES_TYPES.consultationDesAdministrationsCentrales) {
+    avis.push({ ...AvisTypes.autreAvis, optionnel: true })
   }
 
   return avis

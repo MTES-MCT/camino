@@ -152,6 +152,7 @@ const etapeEditFormApiClient: Props['apiClient'] = {
       { etapeTypeId: 'asc', etapeStatutId: 'fai', mainStep: true },
       { etapeTypeId: 'aca', etapeStatutId: 'fav', mainStep: true },
       { etapeTypeId: 'aca', etapeStatutId: 'def', mainStep: true },
+      { etapeTypeId: 'cac', etapeStatutId: 'fai', mainStep: true },
     ])
   },
   getEtapeHeritagePotentiel(etape, titreDemarcheId) {
@@ -326,6 +327,29 @@ export const EtapeDecisionAdministration: StoryFn = () => (
       statutId: 'fav',
       isBrouillon: ETAPE_IS_NOT_BROUILLON,
       contenu: {},
+    }}
+    user={{
+      role: 'super',
+      ...testBlankUser,
+    }}
+    entreprises={entreprises}
+    goToDemarche={goToDemarcheAction}
+  />
+)
+export const EtapeConsultationAdministrationsCentrales: StoryFn = () => (
+  <EtapeEditForm
+    initTab="points"
+    apiClient={etapeEditFormApiClient}
+    demarcheId={demarcheIdValidator.parse('demarcheId')}
+    demarcheTypeId="oct"
+    titreSlug={titreSlugValidator.parse('titre-slug')}
+    titreTypeId="cxw"
+    perimetre={{ sdomZoneIds: [], superposition_alertes: [], communes: [] }}
+    etape={{
+      ...etape,
+      typeId: 'cac',
+      statutId: 'fai',
+      isBrouillon: ETAPE_IS_NOT_BROUILLON,
     }}
     user={{
       role: 'super',

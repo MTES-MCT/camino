@@ -55,10 +55,7 @@ const EtapesTypesDocumentsTypes = {
     { documentTypeId: DOCUMENTS_TYPES_IDS.decision, optionnel: true },
     { documentTypeId: DOCUMENTS_TYPES_IDS.lettre, optionnel: true },
   ],
-  [ETAPES_TYPES.consultationDesAdministrationsCentrales]: [
-    { documentTypeId: DOCUMENTS_TYPES_IDS.avis, optionnel: true },
-    { documentTypeId: DOCUMENTS_TYPES_IDS.lettreDeSaisineDesServicesDeLAdministrationCentrale, optionnel: true },
-  ],
+  [ETAPES_TYPES.consultationDesAdministrationsCentrales]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.lettreDeSaisineDesServicesCivilsEtMilitaires, optionnel: false }],
   [ETAPES_TYPES.classementSansSuite]: [
     { documentTypeId: DOCUMENTS_TYPES_IDS.arrete, optionnel: true },
     { documentTypeId: DOCUMENTS_TYPES_IDS.lettre, optionnel: true },

@@ -6,7 +6,7 @@ import { ApiClient } from '@/api/api-client'
 import { TempDocumentName } from 'camino-common/src/document'
 import { NonEmptyArray, Nullable, isNotNullNorUndefined, map } from 'camino-common/src/typescript-tools'
 import { DsfrInput } from '../_ui/dsfr-input'
-import { EtapeAvisModification, TempEtapeAvis, etapeAvisModificationValidator, tempEtapeAvisValidator } from 'camino-common/src/etape'
+import { EtapeAvisModification, TempEtapeAvis, etapeAvisModificationValidator, etapeAvisWithoutIdValidator } from 'camino-common/src/etape'
 import { useState } from '../../utils/vue-tsx-utils'
 import { DsfrSelect } from '../_ui/dsfr-select'
 import { TypeaheadSmartSingle } from '../_ui/typeahead-smart-single'
@@ -89,8 +89,8 @@ export const AddEtapeAvisPopup = defineComponent<Props>(props => {
         <div class="fr-fieldset__element">
           <DsfrInputRadio legend={{ main: 'Visibilité' }} required={true} elements={visibilityChoices.value} initialValue={avisVisibilityId.value} valueChanged={visibilityChange} />
         </div>
-        <div class="fr-fieldset__element">
-          <DsfrTextarea legend={{ main: 'Description' }} initialValue={avisDescription.value} valueChanged={descriptionChange} />
+        <div class="fr-fieldset__element" style={{ order: etapeAvisTypeId.value === AvisTypes.autreAvis.id ? -1 : undefined }}>
+          <DsfrTextarea required={etapeAvisTypeId.value === AvisTypes.autreAvis.id} legend={{ main: 'Description' }} initialValue={avisDescription.value} valueChanged={descriptionChange} />
         </div>
       </fieldset>
     </form>
@@ -106,7 +106,7 @@ export const AddEtapeAvisPopup = defineComponent<Props>(props => {
   }))
 
   const canSave = computed<boolean>(() => {
-    return tempEtapeAvisValidator.omit({ temp_document_name: true }).safeParse(tempAvis.value).success
+    return etapeAvisWithoutIdValidator.safeParse(tempAvis.value).success
   })
 
   return () => (
