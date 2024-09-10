@@ -18,7 +18,7 @@ services:
       - ./.env:/.env
   db:
     container_name: camino_api_db
-    image: postgis/postgis:15-3.3
+    image: postgis/postgis:16-3.4
     environment:
       PGUSER: ${PGUSER}
       POSTGRES_USER: ${PGUSER}
@@ -43,7 +43,7 @@ services:
       - ${UI_PORT}:${UI_PORT}
   oauth2:
     container_name: camino_oauth2
-    image: quay.io/oauth2-proxy/oauth2-proxy:v7.5.1
+    image: quay.io/oauth2-proxy/oauth2-proxy:v7.6.0
     environment:
       OAUTH2_PROXY_PROVIDER: 'keycloak-oidc'
       OAUTH2_PROXY_CLIENT_ID: ${KEYCLOAK_CLIENT_ID}
@@ -79,7 +79,7 @@ services:
       - ${OAUTH_PORT}:${OAUTH_PORT}
   keycloak:
     container_name: camino_keycloak
-    image: quay.io/keycloak/keycloak:24.0.4
+    image: quay.io/keycloak/keycloak:25.0.5
     depends_on:
       - db
     environment:
