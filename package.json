@@ -48,9 +48,6 @@
       "git add packages/ui/src/components/_ui/iconSpriteType.ts"
     ]
   },
-  "@comment overrides": {
-    "vue": "bug npm avec les workspaces : https://github.com/npm/cli/issues/4834"
-  },
   "devDependencies": {
     "@types/react": "file:stub/types__react",
     "husky": "^9.0.11",
