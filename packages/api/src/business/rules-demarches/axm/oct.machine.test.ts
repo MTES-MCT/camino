@@ -15,7 +15,6 @@ describe('vérifie l’arbre d’octroi d’AXM', () => {
       'DEMANDER_COMPLEMENTS_POUR_RECEVABILITE',
       'FAIRE_CLASSEMENT_SANS_SUITE',
       'FAIRE_DESISTEMENT_DEMANDEUR',
-      'FAIRE_NOTE_INTERNE_SIGNALEE',
       'FAIRE_RECEVABILITE_DEMANDE_DEFAVORABLE',
       'FAIRE_RECEVABILITE_DEMANDE_FAVORABLE',
       'RENDRE_DECISION_IMPLICITE_REJET',
@@ -36,7 +35,6 @@ describe('vérifie l’arbre d’octroi d’AXM', () => {
       'DEMANDER_COMPLEMENTS_POUR_RECEVABILITE',
       'FAIRE_CLASSEMENT_SANS_SUITE',
       'FAIRE_DESISTEMENT_DEMANDEUR',
-      'FAIRE_NOTE_INTERNE_SIGNALEE',
       'FAIRE_RECEVABILITE_DEMANDE_DEFAVORABLE',
       'FAIRE_RECEVABILITE_DEMANDE_FAVORABLE',
       'RENDRE_DECISION_IMPLICITE_REJET',
@@ -50,12 +48,7 @@ describe('vérifie l’arbre d’octroi d’AXM', () => {
       ETES.decisionDuProprietaireDuSol.FAVORABLE,
       ETES.demande.FAIT,
     ])
-    expect(service).canOnlyTransitionTo({ machine: axmOctMachine, date: dateFin }, [
-      'FAIRE_CLASSEMENT_SANS_SUITE',
-      'FAIRE_DESISTEMENT_DEMANDEUR',
-      'FAIRE_NOTE_INTERNE_SIGNALEE',
-      'MODIFIER_DEMANDE_APRES_DAE',
-    ])
+    expect(service).canOnlyTransitionTo({ machine: axmOctMachine, date: dateFin }, ['FAIRE_CLASSEMENT_SANS_SUITE', 'FAIRE_DESISTEMENT_DEMANDEUR', 'MODIFIER_DEMANDE_APRES_DAE'])
   })
 
   test('peut faire l’avis du DREAL sans aucun autre avis 30 jours après la saisine des services', () => {
@@ -87,7 +80,6 @@ describe('vérifie l’arbre d’octroi d’AXM', () => {
     expect(service).canOnlyTransitionTo({ machine: axmOctMachine, date: toCaminoDate('2022-06-15') }, [
       'FAIRE_CLASSEMENT_SANS_SUITE',
       'FAIRE_DESISTEMENT_DEMANDEUR',
-      'FAIRE_NOTE_INTERNE_SIGNALEE',
       'FAIRE_SAISINE_COMMISSION_DEPARTEMENTALE_DES_MINES',
       'RENDRE_AVIS_COMMISSION_DEPARTEMENTALE_DES_MINES',
       'RENDRE_AVIS_COMMISSION_DEPARTEMENTALE_DES_MINES_AJOURNE',
@@ -138,7 +130,6 @@ describe('vérifie l’arbre d’octroi d’AXM', () => {
     expect(service).canOnlyTransitionTo({ machine: axmOctMachine, date: toCaminoDate('2022-06-18') }, [
       'FAIRE_CLASSEMENT_SANS_SUITE',
       'FAIRE_DESISTEMENT_DEMANDEUR',
-      'FAIRE_NOTE_INTERNE_SIGNALEE',
       'FAIRE_SAISINE_AUTORITE_SIGNATAIRE',
       'RENDRE_DECISION_ADMINISTRATION_ACCEPTE',
       'RENDRE_DECISION_ADMINISTRATION_REJETE',
@@ -172,11 +163,10 @@ describe('vérifie l’arbre d’octroi d’AXM', () => {
       ETES.decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_.EXEMPTE,
       ETES.decisionDuProprietaireDuSol.FAVORABLE,
       ETES.demande.FAIT,
-      ETES.noteInterneSignalee.FAIT,
       ETES.depotDeLaDemande.FAIT,
       ETES.decisionImplicite.REJETE,
     ])
-    expect(service).canOnlyTransitionTo({ machine: axmOctMachine, date: dateFin }, ['FAIRE_NOTE_INTERNE_SIGNALEE', 'RENDRE_DECISION_ANNULATION_PAR_JUGE_ADMINISTRATIF'])
+    expect(service).canOnlyTransitionTo({ machine: axmOctMachine, date: dateFin }, ['RENDRE_DECISION_ANNULATION_PAR_JUGE_ADMINISTRATIF'])
   })
 
   test('peut classer sans suite après une décision du propriétaire du sol défavorable', () => {
@@ -210,7 +200,6 @@ describe('vérifie l’arbre d’octroi d’AXM', () => {
         ...ETES.decisionDuProprietaireDuSol.FAVORABLE,
         date: toCaminoDate('2020-01-01'),
       },
-      { ...ETES.noteInterneSignalee.FAIT, date: toCaminoDate('2022-04-10') },
       { ...ETES.depotDeLaDemande.FAIT, date: toCaminoDate('2022-04-11') },
       {
         ...ETES.demandeDeComplements_RecevabiliteDeLaDemande_.FAIT,
@@ -273,7 +262,7 @@ describe('vérifie l’arbre d’octroi d’AXM', () => {
       { ...ETES.notificationAuDemandeur.FAIT, date: toCaminoDate('2022-05-28') },
     ]
     const service = orderAndInterpretMachine(axmOctMachine, etapes)
-    expect(service).canOnlyTransitionTo({ machine: axmOctMachine, date: toCaminoDate('2022-08-28') }, ['FAIRE_NOTE_INTERNE_SIGNALEE'])
+    expect(service).canOnlyTransitionTo({ machine: axmOctMachine, date: toCaminoDate('2022-08-28') }, [])
     expect(axmOctMachine.whoIsBlocking(etapes)).toStrictEqual([])
   })
 
@@ -305,14 +294,12 @@ describe('vérifie l’arbre d’octroi d’AXM', () => {
       'FAIRE_CLASSEMENT_SANS_SUITE',
       'DEMANDER_INFORMATION_POUR_AVIS_DREAL',
       'FAIRE_DESISTEMENT_DEMANDEUR',
-      'FAIRE_NOTE_INTERNE_SIGNALEE',
       'RENDRE_AVIS_DES_COLLECTIVITES',
     ])
     expect(service).canOnlyTransitionTo({ machine: axmOctMachine, date: toCaminoDate('2022-05-17') }, [
       'FAIRE_CLASSEMENT_SANS_SUITE',
       'DEMANDER_INFORMATION_POUR_AVIS_DREAL',
       'FAIRE_DESISTEMENT_DEMANDEUR',
-      'FAIRE_NOTE_INTERNE_SIGNALEE',
       'RENDRE_AVIS_DES_COLLECTIVITES',
     ])
   })

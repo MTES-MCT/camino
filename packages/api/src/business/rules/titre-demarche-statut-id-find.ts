@@ -18,7 +18,6 @@ const titreEtapesDecisivesDemandesTypes: EtapeTypeId[] = [
   'mdp',
   'men',
   'meo',
-  'ide',
   'des',
   'mcp',
   'mcr',
@@ -39,7 +38,7 @@ const titreDemarchesDemandesTypes: DemarcheTypeId[] = ['oct', 'pro', 'pr1', 'pr2
 
 const titreDemarchesTravauxTypes = ['aom', 'dam', 'dot'] as const satisfies readonly TravauxIds[]
 
-const titreEtapesDecisivesUnilateralesTypes: EtapeTypeId[] = ['ide', 'spp', 'dpu', 'dux', 'aco', ...titreEtapesDecisivesCommunesTypes]
+const titreEtapesDecisivesUnilateralesTypes: EtapeTypeId[] = ['spp', 'dpu', 'dux', 'aco', ...titreEtapesDecisivesCommunesTypes]
 
 const titreDemarchesUnilateralesTypes: DemarcheTypeId[] = ['ret', 'prr', 'dec']
 

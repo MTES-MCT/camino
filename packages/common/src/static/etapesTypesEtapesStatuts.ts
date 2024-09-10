@@ -34,12 +34,6 @@ export const EtapesTypesEtapesStatuts = {
     ACCEPTE: { etapeTypeId: 'and', etapeStatutId: 'acc' },
     REJETE: { etapeTypeId: 'and', etapeStatutId: 'rej' },
   },
-  avisDeMiseEnConcurrenceAuJOUE: {
-    PROGRAMME: { etapeTypeId: 'ane', etapeStatutId: 'pro' },
-    EN_COURS: { etapeTypeId: 'ane', etapeStatutId: 'enc' },
-    TERMINE: { etapeTypeId: 'ane', etapeStatutId: 'ter' },
-    FAIT: { etapeTypeId: 'ane', etapeStatutId: 'fai' },
-  },
   avisDeMiseEnConcurrenceAuJORF: {
     PROGRAMME: { etapeTypeId: 'anf', etapeStatutId: 'pro' },
     EN_COURS: { etapeTypeId: 'anf', etapeStatutId: 'enc' },
@@ -128,7 +122,6 @@ export const EtapesTypesEtapesStatuts = {
     FAIT: { etapeTypeId: 'epu', etapeStatutId: 'fai' },
   },
   expertiseDREALOuDGTMServiceBiodiversite: { FAIT: { etapeTypeId: 'esb', etapeStatutId: 'fai' } },
-  initiationDeLaDemarcheDeRetrait: { FAIT: { etapeTypeId: 'ide', etapeStatutId: 'fai' } },
   informationsHistoriquesIncompletes: { FAIT: { etapeTypeId: 'ihi', etapeStatutId: 'fai' } },
   demandeDeComplements_RecevabiliteDeLaDemande_: { FAIT: { etapeTypeId: 'mca', etapeStatutId: 'fai' } },
   demandeDeComplements_RecepisseDeDeclarationLoiSurLeau_: { FAIT: { etapeTypeId: 'mcb', etapeStatutId: 'fai' } },
@@ -165,7 +158,6 @@ export const EtapesTypesEtapesStatuts = {
   modificationDeLaDemande: { FAIT: { etapeTypeId: 'mod', etapeStatutId: 'fai' } },
   modificationDeLaDemande_DecisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_: { FAIT: { etapeTypeId: 'mom', etapeStatutId: 'fai' } },
   notificationDesCollectivitesLocales: { FAIT: { etapeTypeId: 'ncl', etapeStatutId: 'fai' } },
-  noteInterneSignalee: { FAIT: { etapeTypeId: 'nis', etapeStatutId: 'fai' } },
   notificationAuPrefet: { FAIT: { etapeTypeId: 'npp', etapeStatutId: 'fai' } },
   paiementDesFraisDeDossierComplementaires: { FAIT: { etapeTypeId: 'pfc', etapeStatutId: 'fai' } },
   paiementDesFraisDeDossier: { FAIT: { etapeTypeId: 'pfd', etapeStatutId: 'fai' } },

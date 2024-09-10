@@ -290,22 +290,6 @@ describe("publicité d'une démarche", () => {
     ).toMatchObject({ publicLecture: true })
   })
 
-  test("une démarche dont l'étape la plus récente est mise en concurrence au JOUE est publique", () => {
-    expect(
-      titreDemarchePublicFind(
-        {
-          typeId: 'oct',
-          id: newDemarcheId(),
-          demarcheDateDebut: toCaminoDate('2020-01-01'),
-          demarcheDateFin: toCaminoDate('2021-01-01'),
-          etapes: etapesBuild([{ typeId: 'ane' }]),
-          titreId: newTitreId('titreId'),
-        },
-        TITRES_TYPES_IDS.AUTORISATION_DE_PROSPECTION_GRANULATS_MARINS
-      )
-    ).toMatchObject({ publicLecture: true })
-  })
-
   test("une démarche dont l'étape la plus récente est participation du public est publique", () => {
     expect(
       titreDemarchePublicFind(
@@ -756,7 +740,7 @@ describe("publicité d'une démarche", () => {
     ).toMatchObject({ publicLecture: true })
   })
 
-  test.each<EtapeTypeId>(['ane', 'anf', 'dex', 'dpu', 'rpu', 'ppu', 'epu', 'epc'])("une démarche d’un titre non énergétique dont l'étape la plus récente est %s est public", etapeTypeId => {
+  test.each<EtapeTypeId>(['anf', 'dex', 'dpu', 'rpu', 'ppu', 'epu', 'epc'])("une démarche d’un titre non énergétique dont l'étape la plus récente est %s est public", etapeTypeId => {
     expect(
       titreDemarchePublicFind(
         {
@@ -770,22 +754,6 @@ describe("publicité d'une démarche", () => {
         TITRES_TYPES_IDS.AUTORISATION_DE_PROSPECTION_GRANULATS_MARINS
       )
     ).toMatchObject({ publicLecture: true })
-  })
-
-  test('le titre WQaZgPfDcQw9tFliMgBIDH3Z ne doit pas être public', () => {
-    expect(
-      titreDemarchePublicFind(
-        {
-          typeId: 'oct',
-          demarcheDateDebut: toCaminoDate('2020-01-01'),
-          demarcheDateFin: toCaminoDate('2021-01-01'),
-          id: newDemarcheId(),
-          etapes: etapesBuild([{ typeId: 'ane', isBrouillon: ETAPE_IS_NOT_BROUILLON }]),
-          titreId: newTitreId('WQaZgPfDcQw9tFliMgBIDH3Z'),
-        },
-        TITRES_TYPES_IDS.AUTORISATION_DE_PROSPECTION_GRANULATS_MARINS
-      )
-    ).toMatchObject({ publicLecture: false })
   })
 
   test('la demarche d’une prolongation déposée d’un PRM en survie provisoire est public ', () => {
@@ -805,6 +773,22 @@ describe("publicité d'une démarche", () => {
         'prm'
       )
     ).toMatchObject({ publicLecture: true })
+  })
+
+  test('le titre WQaZgPfDcQw9tFliMgBIDH3Z ne doit pas être public', () => {
+    expect(
+      titreDemarchePublicFind(
+        {
+          typeId: 'oct',
+          demarcheDateDebut: toCaminoDate('2020-01-01'),
+          demarcheDateFin: toCaminoDate('2021-01-01'),
+          id: newDemarcheId(),
+          etapes: etapesBuild([{ typeId: 'dpu', isBrouillon: ETAPE_IS_NOT_BROUILLON }]),
+          titreId: newTitreId('WQaZgPfDcQw9tFliMgBIDH3Z'),
+        },
+        TITRES_TYPES_IDS.AUTORISATION_DE_PROSPECTION_GRANULATS_MARINS
+      )
+    ).toMatchObject({ publicLecture: false })
   })
 
   test('la demarche d’une prolongation non déposée d’un PRM en survie provisoire n’est pas public ', () => {

@@ -84,7 +84,7 @@ describe('trie les étapes', () => {
     const titreEtapesMemesDatesOrdreEtapesTypesDesc: TitreEtapeForMachine[] = [
       {
         id: newEtapeId('1'),
-        typeId: ETAPES_TYPES.initiationDeLaDemarcheDeRetrait,
+        typeId: ETAPES_TYPES.saisineDuPrefet,
         ordre: 2,
         date: toCaminoDate('1988-03-06'),
         statutId: 'fav',
@@ -118,7 +118,7 @@ describe('trie les étapes', () => {
     ]
     expect(titreEtapesSortAscByDate(titreEtapesMemesDatesOrdreEtapesTypesDesc, titreDemarcheId, DEMARCHES_TYPES_IDS.Retrait, TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX)).toMatchObject([
       {
-        typeId: ETAPES_TYPES.initiationDeLaDemarcheDeRetrait,
+        typeId: ETAPES_TYPES.saisineDuPrefet,
         ordre: 2,
         date: '1988-03-06',
         statutId: 'fav',

@@ -192,7 +192,6 @@ const EtapesTypesDocumentsTypes = {
     { documentTypeId: DOCUMENTS_TYPES_IDS.notificationDeDecision, optionnel: true },
     { documentTypeId: DOCUMENTS_TYPES_IDS.notes, optionnel: true },
   ],
-  [ETAPES_TYPES.noteInterneSignalee]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.arreteMinisteriel, optionnel: true }],
   [ETAPES_TYPES.paiementDesFraisDeDossierComplementaires]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.facture, optionnel: true }],
   [ETAPES_TYPES.paiementDesFraisDeDossier]: [
     { documentTypeId: DOCUMENTS_TYPES_IDS.facture, optionnel: true },

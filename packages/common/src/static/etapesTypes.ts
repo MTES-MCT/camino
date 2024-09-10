@@ -4,13 +4,13 @@ import { Definition } from '../definition'
 import { EtapeBrouillon } from '../etape'
 
 // prettier-ignore
-const IDS = ['abd', 'aca','aco','and','ane','anf','def','dex','dim', 'dpu',  'dux','ihi', 'mfr','mod','mom','rca','rcb','rcd','rcm','rco','rcs','rie','rif','rim','rpu','sco','acg','apd','ape','apo','app','apu','asl','cac','cim','cod','css','dae','dec','des','ede','edm','epc','epu','esb','ide','mca','mcb','mcd','mcm','mco','mcp','mcr','mcs','mdp','mec','men','meo','mie','mif','mim','mna','mnb','mnc','mnd','mni','mno','mns','mnv','ncl','nis','npp','pfc','pfd','ppu','pqr','rcg','rde','rpe','sas','sca','scg','scl','spe','spo','spp','vfc','vfd','wab','wae','wao','war','wau','wce','wco','wda','wdc','wdd','wde','wdm','wfa','wfd','wfo','wfr','wmm','wmr','wmt','woe','wpa','wpb','wpc','wpo','wpp','wps','wrc','wrd','wre','wrt','wse','wtp', 'asc', 'adc'] as const
+const IDS = ['abd', 'aca','aco','and','anf','def','dex','dim', 'dpu',  'dux','ihi', 'mfr','mod','mom','rca','rcb','rcd','rcm','rco','rcs','rie','rif','rim','rpu','sco','acg','apd','ape','apo','app','apu','asl','cac','cim','cod','css','dae','dec','des','ede','edm','epc','epu','esb','mca','mcb','mcd','mcm','mco','mcp','mcr','mcs','mdp','mec','men','meo','mie','mif','mim','mna','mnb','mnc','mnd','mni','mno','mns','mnv','ncl','npp','pfc','pfd','ppu','pqr','rcg','rde','rpe','sas','sca','scg','scl','spe','spo','spp','vfc','vfd','wab','wae','wao','war','wau','wce','wco','wda','wdc','wdd','wde','wdm','wfa','wfd','wfo','wfr','wmm','wmr','wmt','woe','wpa','wpb','wpc','wpo','wpp','wps','wrc','wrd','wre','wrt','wse','wtp', 'asc', 'adc'] as const
 
 // prettier-ignore
-const FONDAMENTALES_IDS = ['abd', 'aca','aco','and','ane','anf','def','dex','dim', 'dpu','dux','ihi', 'mfr','mod','mom','rca','rcb','rcd','rcm','rco','rcs','rie','rif','rim','rpu','sco'] as const satisfies Readonly<EtapeTypeIdFondamentaleArray>
+const FONDAMENTALES_IDS = ['abd', 'aca','aco','and','anf','def','dex','dim', 'dpu','dux','ihi', 'mfr','mod','mom','rca','rcb','rcd','rcm','rco','rcs','rie','rif','rim','rpu','sco'] as const satisfies Readonly<EtapeTypeIdFondamentaleArray>
 
 // prettier-ignore
-const NON_FONDAMENTALES_IDS = ['acg','apd','ape','apo','app','apu','asl','cac','cim','cod','css','dae','dec','des','ede','edm','epc','epu','esb','ide','mca','mcb','mcd','mcm','mco','mcp','mcr','mcs','mdp','mec','men','meo','mie','mif','mim','mna','mnb','mnc','mnd','mni','mno','mns','mnv','ncl','nis','npp','pfc','pfd','ppu','pqr','rcg','rde','rpe','sas','sca','scg','scl','spe','spo','spp','vfc','vfd','wab','wae','wao','war','wau','wce','wco','wda','wdc','wdd','wde','wdm','wfa','wfd','wfo','wfr','wmm','wmr','wmt','woe','wpa','wpb','wpc','wpo','wpp','wps','wrc','wrd','wre','wrt','wse','wtp', 'asc', 'adc'] as const satisfies Readonly<EtapeTypeIdNonFondamentale[]>
+const NON_FONDAMENTALES_IDS = ['acg','apd','ape','apo','app','apu','asl','cac','cim','cod','css','dae','dec','des','ede','edm','epc','epu','esb','mca','mcb','mcd','mcm','mco','mcp','mcr','mcs','mdp','mec','men','meo','mie','mif','mim','mna','mnb','mnc','mnd','mni','mno','mns','mnv','ncl','npp','pfc','pfd','ppu','pqr','rcg','rde','rpe','sas','sca','scg','scl','spe','spo','spp','vfc','vfd','wab','wae','wao','war','wau','wce','wco','wda','wdc','wdd','wde','wdm','wfa','wfd','wfo','wfr','wmm','wmr','wmt','woe','wpa','wpb','wpc','wpo','wpp','wps','wrc','wrd','wre','wrt','wse','wtp', 'asc', 'adc'] as const satisfies Readonly<EtapeTypeIdNonFondamentale[]>
 
 // Ceci est un test :)
 ;[...FONDAMENTALES_IDS, ...NON_FONDAMENTALES_IDS] as const satisfies typeof IDS
@@ -21,7 +21,6 @@ export const ETAPES_TYPES = {
   avisDuConseilGeneralDeLeconomie_CGE_: 'acg',
   avenantALautorisationDeRechercheMiniere: 'aco',
   decisionDuJugeAdministratif: 'and',
-  avisDeMiseEnConcurrenceAuJOUE: 'ane',
   avisDeMiseEnConcurrenceAuJORF: 'anf',
   avisEtRapportDuDirecteurRegionalChargeDeLenvironnementDeLamenagementEtDuLogement: 'apd',
   avisDuConseilDEtat: 'ape',
@@ -46,7 +45,6 @@ export const ETAPES_TYPES = {
   clotureDeLenquetePublique: 'epc',
   ouvertureDeLenquetePublique: 'epu',
   expertiseDREALOuDGTMServiceBiodiversite: 'esb',
-  initiationDeLaDemarcheDeRetrait: 'ide',
   informationsHistoriquesIncompletes: 'ihi',
   demandeDeComplements_RecevabiliteDeLaDemande_: 'mca',
   demandeDeComplements_RecepisseDeDeclarationLoiSurLeau_: 'mcb',
@@ -75,7 +73,6 @@ export const ETAPES_TYPES = {
   modificationDeLaDemande: 'mod',
   modificationDeLaDemande_DecisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_: 'mom',
   notificationDesCollectivitesLocales: 'ncl',
-  noteInterneSignalee: 'nis',
   notificationAuPrefet: 'npp',
   paiementDesFraisDeDossierComplementaires: 'pfc',
   paiementDesFraisDeDossier: 'pfd',
@@ -230,16 +227,6 @@ export const EtapesTypes = {
     unique: false,
     date_fin: null,
     public_lecture: false,
-    entreprises_lecture: true,
-  },
-  ide: {
-    id: 'ide',
-    nom: 'initiation de la démarche de retrait',
-    description: 'Initiative de l’administration qui marque l’engagement d’une démarche de retrait.',
-    fondamentale: false,
-    unique: true,
-    date_fin: null,
-    public_lecture: true,
     entreprises_lecture: true,
   },
   rco: {
@@ -415,17 +402,6 @@ export const EtapesTypes = {
     public_lecture: true,
     entreprises_lecture: true,
   },
-  ane: {
-    id: 'ane',
-    nom: 'avis de mise en concurrence au JOUE',
-    description:
-      "Pour les titres miniers H (hydrocarbures), étape par laquelle le ministre chargé des mines publie l'avis de mise en concurrence au Journal officiel de l'Union européenne au frais du demandeur.",
-    fondamentale: true,
-    unique: false,
-    date_fin: null,
-    public_lecture: true,
-    entreprises_lecture: true,
-  },
   rpe: {
     id: 'rpe',
     nom: 'rapport du Conseil d’État',
@@ -556,16 +532,6 @@ export const EtapesTypes = {
     date_fin: null,
     public_lecture: true,
     entreprises_lecture: true,
-  },
-  nis: {
-    id: 'nis',
-    nom: 'note interne signalée',
-    description: "Note confidentielle qui permet de faire connaître au sein de l'administration un certain nombre d'informations importantes. \n",
-    fondamentale: false,
-    unique: false,
-    date_fin: null,
-    public_lecture: false,
-    entreprises_lecture: false,
   },
   dex: {
     id: 'dex',
