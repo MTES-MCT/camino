@@ -9,7 +9,7 @@ import { ETAPES_TYPES, EtapeTypeId } from 'camino-common/src/static/etapesTypes'
 import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts'
 import { getProductionOr } from './dgtm.queries'
 import type { Pool } from 'pg'
-import { isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
+import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
 
 const anneeDepartStats = 2015
 
@@ -70,7 +70,7 @@ export const getDGTMStatsInside =
 
       const anneeDepot = result.depotEtInstructions[annee]
       const anneeSdom = result.sdom[annee]
-      if (anneeDepot && anneeSdom) {
+      if (isNotNullNorUndefined(anneeDepot) && isNotNullNorUndefined(anneeSdom)) {
         anneeDepot.totalTitresOctroyes++
         if (!demarche.sdomZoneIds || demarche.sdomZoneIds.length === 0) {
           anneeSdom['3'].octroye++
@@ -129,7 +129,7 @@ export const getDGTMStatsInside =
 
       const anneeDepot = result.depotEtInstructions[annee]
       const anneeSdom = result.sdom[annee]
-      if (anneeDepot && anneeSdom) {
+      if (isNotNullNorUndefined(anneeDepot) && isNotNullNorUndefined(anneeSdom)) {
         anneeDepot.totalTitresDeposes++
         if (!etape.sdomZoneIds || etape.sdomZoneIds.length === 0) {
           anneeSdom[3].depose++
@@ -206,7 +206,7 @@ export const getDGTMStatsInside =
           days = Math.abs(days)
         }
         const delaiAnnee = result.delais[annee]
-        if (delaiAnnee && delaiAnnee[instruction.titretypeid]) {
+        if (isNotNullNorUndefined(delaiAnnee) && delaiAnnee[instruction.titretypeid]) {
           delaiAnnee[instruction.titretypeid]?.delaiInstructionEnJours.push(days)
         }
       }
@@ -218,7 +218,7 @@ export const getDGTMStatsInside =
           days = Math.abs(days)
         }
         const delaiAnnee = result.delais[annee]
-        if (delaiAnnee && delaiAnnee[instruction.titretypeid]) {
+        if (isNotNullNorUndefined(delaiAnnee) && delaiAnnee[instruction.titretypeid]) {
           delaiAnnee[instruction.titretypeid]?.delaiCommissionDepartementaleEnJours.push(days)
         }
         if (instruction.decisionadministration) {
@@ -228,7 +228,7 @@ export const getDGTMStatsInside =
             days = Math.abs(days)
           }
           const delaiAnnee = result.delais[annee]
-          if (delaiAnnee && delaiAnnee[instruction.titretypeid]) {
+          if (isNotNullNorUndefined(delaiAnnee) && delaiAnnee[instruction.titretypeid]) {
             delaiAnnee[instruction.titretypeid]?.delaiDecisionPrefetEnJours.push(days)
           }
         }

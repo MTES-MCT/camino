@@ -9,7 +9,7 @@
     "alwaysStrict": true,
     "esModuleInterop": true,
     "inlineSources": false,
-    "lib": ["es2020", "dom", "ESNext.Array"],
+    "lib": ["es2020", "dom", "es2023.Array"],
     "module": "ESNext",
     "moduleResolution": "Node",
     "noFallthroughCasesInSwitch": true,

@@ -5,7 +5,7 @@ import { regionIdValidator } from './static/region'
 import { SDOMZoneIds } from './static/sdom'
 import { SUBSTANCES_FISCALES_IDS, SubstanceFiscaleId } from './static/substancesFiscales'
 import { TitresTypes } from './static/titresTypes'
-import { CaminoStatistiquesDataGouvId } from './static/statistiques'
+import { CaminoStatistiquesDataGouvId, caminoStatistiquesDataGouvIdValidator } from './static/statistiques'
 
 export const yearMonthValidator = z
   .string()
@@ -196,7 +196,7 @@ export const indicateurByAdministrationId: Record<Exclude<AdministrationTypeId, 
 export const statistiquesDataGouvValidator = z.object({
   administration_rattachement: z.literal('DGALN'),
   nom_service_public_numerique: z.literal('CAMINO'),
-  indicateur: z.string(),
+  indicateur: caminoStatistiquesDataGouvIdValidator,
   valeur: z.number(),
   unite_mesure: z.string(),
   est_cible: z.boolean(),
