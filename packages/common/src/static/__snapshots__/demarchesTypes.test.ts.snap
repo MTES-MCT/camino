@@ -304,34 +304,6 @@ exports[`canImpactTitre 1`] = `
 ]
 `;
 
-exports[`isDemarcheTypeProlongation 1`] = `
-[
-  "amo -> false",
-  "aom -> false",
-  "ces -> false",
-  "con -> false",
-  "dam -> false",
-  "dec -> false",
-  "dep -> false",
-  "dot -> false",
-  "exp -> false",
-  "exs -> false",
-  "fus -> false",
-  "mut -> false",
-  "oct -> false",
-  "pr1 -> true",
-  "pr2 -> true",
-  "pre -> true",
-  "pro -> true",
-  "prr -> false",
-  "ren -> false",
-  "res -> false",
-  "ret -> false",
-  "vct -> false",
-  "vut -> false",
-]
-`;
-
 exports[`isDemarcheTypeProlongations 1`] = `
 [
   "amo -> false",
