@@ -1361,7 +1361,7 @@ export const EtapesTypes = {
   },
   mci: {
     id: 'mci',
-    nom: 'Déclaration d\'irrecevabilité',
+    nom: "Déclaration d'irrecevabilité",
     description: '',
     fondamentale: false,
     unique: false,
