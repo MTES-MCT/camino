@@ -158,7 +158,7 @@ const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: De
         [DEMARCHES_TYPES_IDS.Octroi, DEMARCHES_TYPES_IDS.ExtensionDePerimetre].includes(demarcheTypeId) ||
         (isDemarcheTypeProlongations(demarcheTypeId) && getTitreTypeType(titreTypeId) === TITRES_TYPES_TYPES_IDS.CONCESSION),
       isAxmOuAr: () => TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX === titreTypeId || TITRES_TYPES_TYPES_IDS.AUTORISATION_DE_RECHERCHE === getTitreTypeType(titreTypeId),
-      // FIXMACHINE à vérifier
+      // FIXMACHINE à vérifier et à tester
       isEnquetePubliqueRequired: ({ event }) =>
         ((DEMARCHES_TYPES_IDS.Octroi === demarcheTypeId || isDemarcheTypeProlongations(demarcheTypeId)) &&
           [
