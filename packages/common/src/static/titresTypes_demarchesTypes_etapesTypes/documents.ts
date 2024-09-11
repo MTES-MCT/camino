@@ -107,16 +107,13 @@ const EtapesTypesDocumentsTypes = {
     { documentTypeId: DOCUMENTS_TYPES_IDS.avis, optionnel: true },
     { documentTypeId: DOCUMENTS_TYPES_IDS.rapportDeLaDirectionRegionaleChargeeDesMines, optionnel: true },
   ],
-  [ETAPES_TYPES.clotureDeLenquetePublique]: [
-    { documentTypeId: DOCUMENTS_TYPES_IDS.notes, optionnel: true },
-    { documentTypeId: DOCUMENTS_TYPES_IDS.rapportDuCommissaireEnqueteur, optionnel: true },
-  ],
-  [ETAPES_TYPES.ouvertureDeLenquetePublique]: [
+  [ETAPES_TYPES.enquetePublique]: [
     { documentTypeId: DOCUMENTS_TYPES_IDS.avisDEnquetePublique, optionnel: true },
     { documentTypeId: DOCUMENTS_TYPES_IDS.arretePrefectoral, optionnel: true },
     { documentTypeId: DOCUMENTS_TYPES_IDS.lettre, optionnel: true },
     { documentTypeId: DOCUMENTS_TYPES_IDS.notes, optionnel: true },
     { documentTypeId: DOCUMENTS_TYPES_IDS.publicationAuJorf, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.rapportDuCommissaireEnqueteur, optionnel: true },
   ],
   [ETAPES_TYPES.demandeDeComplements_RecevabiliteDeLaDemande_]: [
     { documentTypeId: DOCUMENTS_TYPES_IDS.courrierDeDemandeDeComplements, optionnel: true },
@@ -283,7 +280,6 @@ const EtapesTypesDocumentsTypes = {
     { documentTypeId: DOCUMENTS_TYPES_IDS.avis, optionnel: true },
     { documentTypeId: DOCUMENTS_TYPES_IDS.courrier, optionnel: true },
   ],
-  [ETAPES_TYPES.clotureDeLenquetePublique_wce]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.rapportDuCommissaireEnqueteur, optionnel: true }],
   [ETAPES_TYPES.donneActeDeLaDeclaration_DOTM_]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.projetDePrescriptions, optionnel: true }],
   [ETAPES_TYPES.demandeDeComplements_AOTMOuDOTM_]: [
     { documentTypeId: DOCUMENTS_TYPES_IDS.courrierDeDemandeDeComplements, optionnel: true },
@@ -313,10 +309,6 @@ const EtapesTypesDocumentsTypes = {
   [ETAPES_TYPES.memoireEnReponseDeLexploitant_ParRapportALavisDeLAE_]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.dossier, optionnel: true }],
   [ETAPES_TYPES.memoireEnReponseDeLexploitant]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.dossier, optionnel: true }],
   [ETAPES_TYPES.memoireDeFinDeTravaux]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.programmeDesTravaux, optionnel: true }],
-  [ETAPES_TYPES.ouvertureDeLenquetePublique_woe]: [
-    { documentTypeId: DOCUMENTS_TYPES_IDS.arretePrefectoral, optionnel: true },
-    { documentTypeId: DOCUMENTS_TYPES_IDS.rapportDuCommissaireEnqueteur, optionnel: true },
-  ],
   [ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs_wpa]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.arretePrefectoral, optionnel: true }],
   [ETAPES_TYPES.porterAConnaissance]: [
     { documentTypeId: DOCUMENTS_TYPES_IDS.documentsCartographiques, optionnel: true },

@@ -127,13 +127,11 @@ const titreDemarchePublicLectureFind = (
   // publication de décision au JORF (dpu)
   // publication de décision administrative au JORF (dup)
   // publication de décision au recueil des actes administratifs (rpu)
-  // ouverture de la participation du public (ppu)
-  // clôture de la participation du public`(ppc)
-  // ouverture de l’enquête publique (epu)
-  // clôture de l’enquête publique (epc)
+  // participation du public (ppu)
+  // enquête publique (epu)
 
   const domaineId = titreTypeId ? getDomaineId(titreTypeId) : null
-  if (domaineId && ['m', 'w', 'c'].includes(domaineId) && ['ane', 'anf', 'dex', 'dpu', 'dup', 'rpu', 'ppu', 'epu', 'epc'].includes(titreEtape.typeId)) {
+  if (domaineId && ['m', 'w', 'c'].includes(domaineId) && ['ane', 'anf', 'dex', 'dpu', 'dup', 'rpu', 'ppu', 'epu'].includes(titreEtape.typeId)) {
     return true
   }
 

@@ -176,13 +176,18 @@ export const etapeNoteValidator = z.object({ valeur: z.string(), is_avertissemen
 export type EtapeNote = z.infer<typeof etapeNoteValidator>
 
 export const getStatutId = (etape: Pick<DeepReadonly<FlattenEtape>, 'date' | 'contenu' | 'typeId' | 'statutId'>, currentDate: CaminoDate): EtapeStatutId => {
-  if (etape.typeId !== ETAPES_TYPES.participationDuPublic) {
+  let contenuKey: 'odlep' | 'opdp'
+  if (etape.typeId === ETAPES_TYPES.participationDuPublic) {
+    contenuKey = 'opdp'
+  } else if (etape.typeId === ETAPES_TYPES.enquetePublique) {
+    contenuKey = 'odlep'
+  } else {
     return etape.statutId
   }
 
   if (isBefore(currentDate, etape.date)) {
     return ETAPES_STATUTS.PROGRAMME
-  } else if (isBefore(currentDate, dateAddDays(etape.date, z.number().parse(etape.contenu?.opdp?.duree.value ?? 0)))) {
+  } else if (isBefore(currentDate, dateAddDays(etape.date, z.number().parse(etape.contenu?.[contenuKey]?.duree.value ?? 0)))) {
     return ETAPES_STATUTS.EN_COURS
   } else {
     return ETAPES_STATUTS.TERMINE

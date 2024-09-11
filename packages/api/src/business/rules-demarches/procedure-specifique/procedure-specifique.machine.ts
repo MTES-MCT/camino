@@ -90,7 +90,7 @@ const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
   RENDRE_AVIS_COLLECTIVITES: { db: ETES.avisDesCollectivites, mainStep: true },
   RENDRE_AVIS_SERVICES_COMMISSIONS: { db: ETES.avisDesServicesEtCommissionsConsultatives, mainStep: true },
   RENDRE_AVIS_PREFET: { db: ETES.avisDuPrefet, mainStep: true },
-  OUVRIR_ENQUETE_PUBLIQUE: { db: ETES.ouvertureDeLenquetePublique, mainStep: true },
+  OUVRIR_ENQUETE_PUBLIQUE: { db: ETES.enquetePublique, mainStep: true },
   OUVRIR_PARTICIPATION_DU_PUBLIC: { db: ETES.participationDuPublic, mainStep: true },
   RENDRE_DECISION_ADMINISTRATION_ACCEPTEE: { db: { ACCEPTE: ETES.decisionDeLadministration.ACCEPTE }, mainStep: true },
   // RECEVOIR_REPONSE_DEMANDEUR: {db: ETES.demandeur}

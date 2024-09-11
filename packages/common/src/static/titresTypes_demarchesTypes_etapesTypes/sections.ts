@@ -184,10 +184,13 @@ const EtapesTypesSections = {
       ],
     },
   ],
-  [ETAPES_TYPES.ouvertureDeLenquetePublique]: [
+  [ETAPES_TYPES.enquetePublique]: [
     {
       id: 'odlep',
-      elements: [{ id: 'lien', nom: 'Lien public externe', type: 'url', optionnel: true, description: '' }],
+      elements: [
+        { id: 'lien', nom: 'Lien public externe', type: 'url', optionnel: true, description: '' },
+        { id: 'duree', nom: "Durée en jours de l'enquête publique", type: 'number', optionnel: false },
+      ],
     },
   ],
 } as const satisfies { [key in EtapeTypeId]?: DeepReadonly<Section[]> }

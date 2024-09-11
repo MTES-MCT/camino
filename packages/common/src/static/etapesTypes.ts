@@ -4,13 +4,13 @@ import { Definition } from '../definition'
 import { EtapeBrouillon } from '../etape'
 
 // prettier-ignore
-const IDS = ['abd', 'aca','aco','and','anf','def','dex','dim', 'dpu',  'dux','ihi', 'mfr','mod','mom','rca','rcb','rcd','rcm','rco','rcs','rie','rif','rim','rpu','sco','acg','apd','ape','apo','app','apu','asl','cac','cim','cod','css','dae','dec','des','ede','edm','epc','epu','esb','mca','mcb','mcd', 'mci','mcm','mco','mcp','mcr','mcs','mdp','mec','men','meo','mie','mif','mim','mna','mnb','mnc','mnd','mni','mno','mns','mnv','ncl','npp','pfc','pfd','ppu','pqr','rcg','rde','rpe','sas','sca','scg','spe','spo','spp','vfc','vfd','wab','wae','wao','war','wau','wce','wco','wda','wdc','wdd','wde','wdm','wfa','wfd','wfo','wfr','wmm','wmr','wmt','woe','wpa','wpb','wpc','wpo','wpp','wps','wrc','wre','wrt','wse','wtp', 'asc', 'adc'] as const
+const IDS = ['abd', 'aca','aco','and','anf','def','dex','dim', 'dpu',  'dux','ihi', 'mfr','mod','mom','rca','rcb','rcd','rcm','rco','rcs','rie','rif','rim','rpu','sco','acg','apd','ape','apo','app','apu','asl','cac','cim','cod','css','dae','dec','des','ede','edm','epu','esb','mca','mcb','mcd', 'mci','mcm','mco','mcp','mcr','mcs','mdp','mec','men','meo','mie','mif','mim','mna','mnb','mnc','mnd','mni','mno','mns','mnv','ncl','npp','pfc','pfd','ppu','pqr','rcg','rde','rpe','sas','sca','scg','spe','spo','spp','vfc','vfd','wab','wae','wao','war','wau','wco','wda','wdc','wdd','wde','wdm','wfa','wfd','wfo','wfr','wmm','wmr','wmt', 'wpa','wpb','wpc','wpo','wpp','wps','wrc','wre','wrt','wse','wtp', 'asc', 'adc'] as const
 
 // prettier-ignore
 const FONDAMENTALES_IDS = ['abd', 'aca','aco','and','anf','def','dex','dim', 'dpu','dux','ihi', 'mfr','mod','mom','rca','rcb','rcd','rcm','rco','rcs','rie','rif','rim','rpu','sco'] as const satisfies Readonly<EtapeTypeIdFondamentaleArray>
 
 // prettier-ignore
-const NON_FONDAMENTALES_IDS = ['acg','apd','ape','apo','app','apu','asl','cac','cim','cod','css','dae','dec','des','ede','edm','epc','epu','esb','mca','mcb','mcd','mci', 'mcm','mco','mcp','mcr', 'mcs','mdp','mec','men','meo','mie','mif','mim','mna','mnb','mnc','mnd','mni','mno','mns','mnv','ncl','npp','pfc','pfd','ppu','pqr','rcg','rde','rpe','sas','sca','scg','spe','spo','spp','vfc','vfd','wab','wae','wao','war','wau','wce','wco','wda','wdc','wdd','wde','wdm','wfa','wfd','wfo','wfr','wmm','wmr','wmt','woe','wpa','wpb','wpc','wpo','wpp','wps','wrc','wre','wrt','wse','wtp', 'asc', 'adc'] as const satisfies Readonly<EtapeTypeIdNonFondamentale[]>
+const NON_FONDAMENTALES_IDS = ['acg','apd','ape','apo','app','apu','asl','cac','cim','cod','css','dae','dec','des','ede','edm','epu','esb','mca','mcb','mcd','mci', 'mcm','mco','mcp','mcr', 'mcs','mdp','mec','men','meo','mie','mif','mim','mna','mnb','mnc','mnd','mni','mno','mns','mnv','ncl','npp','pfc','pfd','ppu','pqr','rcg','rde','rpe','sas','sca','scg','spe','spo','spp','vfc','vfd','wab','wae','wao','war','wau','wco','wda','wdc','wdd','wde','wdm','wfa','wfd','wfo','wfr','wmm','wmr','wmt','wpa','wpb','wpc','wpo','wpp','wps','wrc','wre','wrt','wse','wtp', 'asc', 'adc'] as const satisfies Readonly<EtapeTypeIdNonFondamentale[]>
 
 // Ceci est un test :)
 ;[...FONDAMENTALES_IDS, ...NON_FONDAMENTALES_IDS] as const satisfies typeof IDS
@@ -42,8 +42,7 @@ export const ETAPES_TYPES = {
   decisionAdministrative: 'dux',
   expertiseDREALOuDGTMServiceEau: 'ede',
   expertiseDGTMServicePreventionDesRisquesEtIndustriesExtractives_DATE_: 'edm',
-  clotureDeLenquetePublique: 'epc',
-  ouvertureDeLenquetePublique: 'epu',
+  enquetePublique: 'epu',
   expertiseDREALOuDGTMServiceBiodiversite: 'esb',
   informationsHistoriquesIncompletes: 'ihi',
   demandeDeComplements_RecevabiliteDeLaDemande_: 'mca',
@@ -105,7 +104,6 @@ export const ETAPES_TYPES = {
   arreteDouvertureDesTravauxMiniers: 'wao',
   avisDeReception: 'war',
   avisDuDemandeurSurLesPrescriptionsProposees: 'wau',
-  clotureDeLenquetePublique_wce: 'wce',
   receptionDeComplements_wco: 'wco',
   donneActeDeLaDeclaration_DOTM_: 'wda',
   demandeDeComplements_AOTMOuDOTM_: 'wdc',
@@ -119,7 +117,6 @@ export const ETAPES_TYPES = {
   memoireEnReponseDeLexploitant_ParRapportALavisDeLAE_: 'wmm',
   memoireEnReponseDeLexploitant: 'wmr',
   memoireDeFinDeTravaux: 'wmt',
-  ouvertureDeLenquetePublique_woe: 'woe',
   publicationDeDecisionAuRecueilDesActesAdministratifs_wpa: 'wpa',
   porterAConnaissance: 'wpb',
   arreteDePrescriptionsComplementaires: 'wpc',
@@ -341,16 +338,6 @@ export const EtapesTypes = {
     public_lecture: false,
     entreprises_lecture: true,
   },
-  epc: {
-    id: 'epc',
-    nom: "clôture de l'enquête publique",
-    description: 'L’enquête publique dure un mois. Il est possible de la prolonger. ',
-    fondamentale: false,
-    unique: false,
-    date_fin: null,
-    public_lecture: true,
-    entreprises_lecture: true,
-  },
   sas: {
     id: 'sas',
     nom: "saisine de l'autorité signataire",
@@ -394,7 +381,8 @@ export const EtapesTypes = {
   epu: {
     id: 'epu',
     nom: "ouverture de l'enquête publique",
-    description: 'L’enquête publique requise pour l’octroi des concessions minières et des permis d’exploitations dans les départements d’outre-mer a lieu après constat de recevabilité du dossier.',
+    description:
+      'L’enquête publique requise pour l’octroi des concessions minières et des permis d’exploitations dans les départements d’outre-mer a lieu après constat de recevabilité du dossier. L’enquête publique dure un mois mais il est possible de la prolonger.',
     fondamentale: false,
     unique: false,
     date_fin: null,
@@ -1220,26 +1208,6 @@ export const EtapesTypes = {
   wmm: {
     id: 'wmm',
     nom: "memoire en réponse de l'exploitant (par rapport à l'avis de l'AE)",
-    description: '',
-    fondamentale: false,
-    unique: false,
-    date_fin: null,
-    public_lecture: false,
-    entreprises_lecture: false,
-  },
-  woe: {
-    id: 'woe',
-    nom: "ouverture de l'enquête publique",
-    description: '',
-    fondamentale: false,
-    unique: false,
-    date_fin: null,
-    public_lecture: false,
-    entreprises_lecture: false,
-  },
-  wce: {
-    id: 'wce',
-    nom: "clôture de l'enquête publique",
     description: '',
     fondamentale: false,
     unique: false,

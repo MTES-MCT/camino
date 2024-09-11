@@ -116,10 +116,10 @@ export const EtapesTypesEtapesStatuts = {
     FAVORABLE: { etapeTypeId: 'edm', etapeStatutId: 'fav' },
     DEFAVORABLE: { etapeTypeId: 'edm', etapeStatutId: 'def' },
   },
-  clotureDeLenquetePublique: { TERMINE: { etapeTypeId: 'epc', etapeStatutId: 'ter' } },
-  ouvertureDeLenquetePublique: {
+  enquetePublique: {
     PROGRAMME: { etapeTypeId: 'epu', etapeStatutId: 'pro' },
-    FAIT: { etapeTypeId: 'epu', etapeStatutId: 'fai' },
+    EN_COURS: { etapeTypeId: 'epu', etapeStatutId: 'enc' },
+    TERMINE: { etapeTypeId: 'epu', etapeStatutId: 'ter' },
   },
   expertiseDREALOuDGTMServiceBiodiversite: { FAIT: { etapeTypeId: 'esb', etapeStatutId: 'fai' } },
   informationsHistoriquesIncompletes: { FAIT: { etapeTypeId: 'ihi', etapeStatutId: 'fai' } },
@@ -212,7 +212,6 @@ export const EtapesTypesEtapesStatuts = {
     FAVORABLE: { etapeTypeId: 'wau', etapeStatutId: 'fav' },
     DEFAVORABLE: { etapeTypeId: 'wau', etapeStatutId: 'def' },
   },
-  clotureDeLenquetePublique_wce: { TERMINE: { etapeTypeId: 'wce', etapeStatutId: 'ter' } },
   donneActeDeLaDeclaration_DOTM_: { FAIT: { etapeTypeId: 'wda', etapeStatutId: 'fai' } },
   demandeDeComplements_AOTMOuDOTM_: { FAIT: { etapeTypeId: 'wdc', etapeStatutId: 'fai' } },
   depotDeLaDemande_wdd: { FAIT: { etapeTypeId: 'wdd', etapeStatutId: 'fai' } },
@@ -228,10 +227,6 @@ export const EtapesTypesEtapesStatuts = {
   memoireEnReponseDeLexploitant_ParRapportALavisDeLAE_: { FAIT: { etapeTypeId: 'wmm', etapeStatutId: 'fai' } },
   memoireEnReponseDeLexploitant: { DEPOSE: { etapeTypeId: 'wmr', etapeStatutId: 'dep' } },
   memoireDeFinDeTravaux: { FAIT: { etapeTypeId: 'wmt', etapeStatutId: 'fai' } },
-  ouvertureDeLenquetePublique_woe: {
-    FAIT: { etapeTypeId: 'woe', etapeStatutId: 'fai' },
-    PROGRAMME: { etapeTypeId: 'woe', etapeStatutId: 'pro' },
-  },
   publicationDeDecisionAuRecueilDesActesAdministratifs_wpa: { FAIT: { etapeTypeId: 'wpa', etapeStatutId: 'fai' } },
   porterAConnaissance: { FAIT: { etapeTypeId: 'wpb', etapeStatutId: 'fai' } },
   arreteDePrescriptionsComplementaires: { FAIT: { etapeTypeId: 'wpc', etapeStatutId: 'fai' } },

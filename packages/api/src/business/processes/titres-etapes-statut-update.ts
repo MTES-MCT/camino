@@ -2,8 +2,7 @@ import { Pool } from 'pg'
 import { EtapeId, getStatutId } from 'camino-common/src/etape'
 import { getCurrent } from 'camino-common/src/date'
 import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts'
-import { getParticipationEtapes, updateParticipationStatut } from '../../database/queries/titres-etapes.queries'
-import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes'
+import { getParticipationOrEnqueteEtapes, updateParticipationOrEnqueteStatut } from '../../database/queries/titres-etapes.queries'
 import { simpleContenuToFlattenedContenu } from 'camino-common/src/sections'
 
 export const titresEtapesStatutUpdate = async (pool: Pool): Promise<EtapeId[]> => {
@@ -13,21 +12,21 @@ export const titresEtapesStatutUpdate = async (pool: Pool): Promise<EtapeId[]> =
   const titresEtapesIdsUpdated: EtapeId[] = []
 
   const currentDate = getCurrent()
-  const participationEtapes = await getParticipationEtapes(pool)
+  const participationOrEnqueteEtapes = await getParticipationOrEnqueteEtapes(pool)
 
-  for (const etape of participationEtapes) {
+  for (const etape of participationOrEnqueteEtapes) {
     const newStatut: EtapeStatutId = getStatutId(
       {
         ...etape,
         statutId: etape.etape_statut_id,
-        typeId: ETAPES_TYPES.participationDuPublic,
-        contenu: simpleContenuToFlattenedContenu(etape.titre_type_id, etape.demarche_type_id, ETAPES_TYPES.participationDuPublic, etape.contenu, etape.heritage_contenu),
+        typeId: etape.type_id,
+        contenu: simpleContenuToFlattenedContenu(etape.titre_type_id, etape.demarche_type_id, etape.type_id, etape.contenu, etape.heritage_contenu),
       },
       currentDate
     )
 
     if (newStatut !== etape.etape_statut_id) {
-      await updateParticipationStatut(pool, etape.id, newStatut)
+      await updateParticipationOrEnqueteStatut(pool, etape.id, newStatut)
       console.info('titre / démarche / étape : statut (mise à jour) ->', `${etape.id} : ${etape.etape_statut_id} => ${newStatut}`)
 
       titresEtapesIdsUpdated.push(etape.id)

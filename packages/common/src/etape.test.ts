@@ -60,4 +60,64 @@ test('getStatutId', () => {
       caminoDateValidator.parse('2020-07-28')
     )
   ).toBe(ETAPES_STATUTS.EN_COURS)
+
+  expect(
+    getStatutId(
+      {
+        typeId: ETAPES_TYPES.enquetePublique,
+        date: caminoDateValidator.parse('2020-07-14'),
+        statutId: ETAPES_STATUTS.ACCEPTE,
+        contenu: { odlep: { duree: { value: 15, etapeHeritee: null, heritee: false } } },
+      },
+      caminoDateValidator.parse('2020-07-14')
+    )
+  ).toBe(ETAPES_STATUTS.EN_COURS)
+
+  expect(
+    getStatutId(
+      {
+        typeId: ETAPES_TYPES.enquetePublique,
+        date: caminoDateValidator.parse('2020-07-14'),
+        statutId: ETAPES_STATUTS.ACCEPTE,
+        contenu: { odlep: { duree: { value: 15, etapeHeritee: null, heritee: false } } },
+      },
+      caminoDateValidator.parse('2020-07-13')
+    )
+  ).toBe(ETAPES_STATUTS.PROGRAMME)
+
+  expect(
+    getStatutId(
+      {
+        typeId: ETAPES_TYPES.enquetePublique,
+        date: caminoDateValidator.parse('2020-07-14'),
+        statutId: ETAPES_STATUTS.ACCEPTE,
+        contenu: { odlep: { duree: { value: 15, etapeHeritee: null, heritee: false } } },
+      },
+      caminoDateValidator.parse('2020-07-29')
+    )
+  ).toBe(ETAPES_STATUTS.TERMINE)
+
+  expect(
+    getStatutId(
+      {
+        typeId: ETAPES_TYPES.enquetePublique,
+        date: caminoDateValidator.parse('2020-07-14'),
+        statutId: ETAPES_STATUTS.ACCEPTE,
+        contenu: { odlep: { duree: { value: 15, etapeHeritee: null, heritee: false } } },
+      },
+      caminoDateValidator.parse('2020-07-28')
+    )
+  ).toBe(ETAPES_STATUTS.EN_COURS)
+
+  expect(
+    getStatutId(
+      {
+        typeId: ETAPES_TYPES.enquetePublique,
+        date: caminoDateValidator.parse('2020-07-14'),
+        statutId: ETAPES_STATUTS.ACCEPTE,
+        contenu: {},
+      },
+      caminoDateValidator.parse('2020-07-15')
+    )
+  ).toBe(ETAPES_STATUTS.TERMINE)
 })
