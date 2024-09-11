@@ -4,7 +4,7 @@ import { CaminoCommonContext, DBEtat } from '../machine-common'
 import { EtapesTypesEtapesStatuts as ETES } from 'camino-common/src/static/etapesTypesEtapesStatuts'
 import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts'
 import { TITRES_TYPES_IDS, TitreTypeId, getTitreTypeType } from 'camino-common/src/static/titresTypes'
-import { DEMARCHES_TYPES_IDS, DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
+import { DEMARCHES_TYPES_IDS, DemarcheTypeId, isDemarcheTypeProlongations } from 'camino-common/src/static/demarchesTypes'
 import { TITRES_TYPES_TYPES_IDS } from 'camino-common/src/static/titresTypesTypes'
 import { ETAPES_STATUTS, EtapeStatutId } from 'camino-common/src/static/etapesStatuts'
 import { KM2, km2Validator } from 'camino-common/src/number'
@@ -155,16 +155,12 @@ const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: De
       isPublique: ({ context }) => context.visibilite === 'publique',
       isPerOuConcession: () => [TITRES_TYPES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES, TITRES_TYPES_TYPES_IDS.CONCESSION].includes(getTitreTypeType(titreTypeId)),
       hasMiseEnConcurrence: () =>
-        [DEMARCHES_TYPES_IDS.Octroi, DEMARCHES_TYPES_IDS.ExtensionDePerimetre, DEMARCHES_TYPES_IDS.DeplacementDePerimetre].includes(demarcheTypeId) ||
-        ([DEMARCHES_TYPES_IDS.Prolongation, DEMARCHES_TYPES_IDS.Prolongation1, DEMARCHES_TYPES_IDS.Prolongation2, DEMARCHES_TYPES_IDS.ProlongationExceptionnelle].includes(demarcheTypeId) &&
-          getTitreTypeType(titreTypeId) === TITRES_TYPES_TYPES_IDS.CONCESSION),
+        [DEMARCHES_TYPES_IDS.Octroi, DEMARCHES_TYPES_IDS.ExtensionDePerimetre].includes(demarcheTypeId) ||
+        (isDemarcheTypeProlongations(demarcheTypeId) && getTitreTypeType(titreTypeId) === TITRES_TYPES_TYPES_IDS.CONCESSION),
       isAxmOuAr: () => TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX === titreTypeId || TITRES_TYPES_TYPES_IDS.AUTORISATION_DE_RECHERCHE === getTitreTypeType(titreTypeId),
-      // FIXME il n'existe pas une liste de prolongations a utiliser quelque part ?
-      // FIXME à vérifier
+      // FIXMACHINE à vérifier
       isEnquetePubliqueRequired: ({ event }) =>
-        ([DEMARCHES_TYPES_IDS.Octroi, DEMARCHES_TYPES_IDS.Prolongation, DEMARCHES_TYPES_IDS.Prolongation1, DEMARCHES_TYPES_IDS.Prolongation2, DEMARCHES_TYPES_IDS.ProlongationExceptionnelle].includes(
-          demarcheTypeId
-        ) &&
+        ((DEMARCHES_TYPES_IDS.Octroi === demarcheTypeId || isDemarcheTypeProlongations(demarcheTypeId)) &&
           [
             TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_GRANULATS_MARINS,
             TITRES_TYPES_IDS.CONCESSION_METAUX,
@@ -173,9 +169,9 @@ const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: De
             TITRES_TYPES_IDS.CONCESSION_SOUTERRAIN,
             TITRES_TYPES_IDS.CONCESSION_GEOTHERMIE,
           ].includes(titreTypeId)) ||
-        (titreTypeId === TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX && (event.type === 'OUVRIR_PARTICIPATION_DU_PUBLIC' || event.type === 'OUVRIR_ENQUETE_PUBLIQUE') && event.surface >= 0.25),
+        (titreTypeId === TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX && (event.type === 'OUVRIR_PARTICIPATION_DU_PUBLIC' || event.type === 'OUVRIR_ENQUETE_PUBLIQUE') && event.surface > 0.25),
       isEnquetePubliquePossible: ({ event }) =>
-        titreTypeId === TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX && (event.type === 'OUVRIR_PARTICIPATION_DU_PUBLIC' || event.type === 'OUVRIR_ENQUETE_PUBLIQUE') && event.surface < 0.25,
+        titreTypeId === TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX && (event.type === 'OUVRIR_PARTICIPATION_DU_PUBLIC' || event.type === 'OUVRIR_ENQUETE_PUBLIQUE') && event.surface <= 0.25,
     },
   }).createMachine({
     id: 'ProcedureSpecifique',
@@ -203,7 +199,7 @@ const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: De
 
       recevabiliteOuInformationDuPrefetEtCollectivitesAFaire: {
         on: {
-          // FIXME
+          // FIXMACHINE
           // RENDRE_INFORMATION_DU_PREFET_ET_DES_COLLECTIVITES: {
           //   target: 'recevabiliteOuInformationDuPrefetEtCollectivitesAFaire',
           // guard: 'isPerOuConcession'
@@ -217,7 +213,7 @@ const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: De
           FAIRE_DEMANDE_DE_COMPLEMENTS: 'reponseALaDemandeDeComplements',
         },
       },
-      // FIXME brouillonable
+      // FIXMACHINE brouillonable
       reponseALaDemandeDeComplements: {
         on: {
           RECEVOIR_COMPLEMENTS: 'recevabiliteOuIrrecevabiliteAFaire',
@@ -247,9 +243,9 @@ const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: De
           },
         ],
         on: {
-          // FIXME ajouter la mise en concurrence
+          // FIXMACHINE ajouter la mise en concurrence
           RENDRE_AVIS_CGE_IGEDD: {
-            // FIXME ajouter la demande de modification de l'aes
+            // FIXMACHINE ajouter la demande de modification de l'aes
             target: 'notificationAuDemandeurAFaire',
             guard: and([not('hasMiseEnConcurrence'), not('isAxmOuAr')]),
           },
@@ -265,8 +261,8 @@ const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: De
       },
       lettreDeSaisineDuPrefetOuReponseDuDemandeurAFaire: {
         on: {
-          // FIXME brouillon
-          // FIXME 'RECEVOIR_REPONSE_DEMANDEUR': 'lettreDeSaisineDuPrefetOuReponseDuDemandeurAFaire',
+          // FIXMACHINE brouillon
+          // FIXMACHINE 'RECEVOIR_REPONSE_DEMANDEUR': 'lettreDeSaisineDuPrefetOuReponseDuDemandeurAFaire',
           FAIRE_LETTRE_SAISINE_PREFET: 'avisCollectivitesEtServicesEtCommissionsAFaireMachine',
         },
       },
@@ -285,7 +281,7 @@ const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: De
                     initial: 'avisCollectivitesARendre',
                     states: {
                       avisCollectivitesARendre: {
-                        // FIXME brouillon
+                        // FIXMACHINE brouillon
                         on: { RENDRE_AVIS_COLLECTIVITES: 'fin' },
                       },
                       fin: { type: 'final' },
@@ -295,7 +291,7 @@ const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: De
                     initial: 'avisServicesEtCommissionsRendre',
                     states: {
                       avisServicesEtCommissionsRendre: {
-                        // FIXME brouillon
+                        // FIXMACHINE brouillon
                         on: { RENDRE_AVIS_SERVICES_COMMISSIONS: 'fin' },
                       },
                       fin: { type: 'final' },
@@ -305,7 +301,7 @@ const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: De
                 onDone: 'avisDuPrefetARendre',
               },
               avisDuPrefetARendre: {
-                // FIXME gérer l'avis de la commission CDM
+                // FIXMACHINE gérer l'avis de la commission CDM
                 on: { RENDRE_AVIS_PREFET: 'fin' },
               },
               fin: {
@@ -360,15 +356,12 @@ const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: De
     },
   })
 
-// FIXME questions POH
+// FIXMACHINE questions POH
 // - L'irrecevabilité est faisable que après une demande de compléments ? -> OUI
 // - C'est une toute nouvelle étape « Information du préfet et des collectivités » ? Est-ce que ça serait pas une fusion d'anciennes étapes ? -> c'est tout nouveau
 // - Est-ce que l'information du préfet et des collectivités est faite 2 fois ? -> Non que une fois
 //
-// - La condition « octrois et modif de périmètres et prolongations de concessions », le « de concessions » c'est que pour les prolongations ? C'est prolongation QUE des concessions
-// - « Modif de périmètre », c'est quelle(s) démarche(s) ? Extension et/ou déplacement ? => QUE extension
 // - « avisDuConseilGeneralDeLeconomie_CGE_ » ça passe pour l'étape « avis du CGE et de l'IGEDD » ? => Renommer l'étape
 // - l'étape « avis du CGE et de l'IGEDD » n'a pas de statut favorable / défavorable ? => C'est une étape d'avis donc c'est FAIT
 // - comment on peut avoir une mise en concurrence si la démarche n'est pas publique ? => Modif du logigramme, ça devient publique dés que la mise en concurrence est « en cours »
 // - Pour l'enquête et la participation du public, la démarche est déjà publique => Heuuuu non, modif à faire dans le logigramme
-// - Pour la participation du public c'est >= 25 ou <= 25? => En attente

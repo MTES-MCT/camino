@@ -284,24 +284,27 @@ export const isDemarcheTypeOctroi = (demarcheTypeId: DemarcheTypeId): boolean =>
   return demarchesTypesOctroi.includes(demarcheTypeId)
 }
 
-const demarchesTypesWithPhasesAndWithoutDateFin: DemarcheTypeId[] = [
-  DEMARCHES_TYPES_IDS.Prolongation,
-  DEMARCHES_TYPES_IDS.Prolongation1,
-  DEMARCHES_TYPES_IDS.Prolongation2,
-  DEMARCHES_TYPES_IDS.ProlongationExceptionnelle,
-]
 export const isDemarcheTypeWithPhase = (demarcheTypeId: DemarcheTypeId): boolean => {
   if (isDemarcheTypeOctroi(demarcheTypeId)) {
     return true
   }
 
-  return demarchesTypesWithPhasesAndWithoutDateFin.includes(demarcheTypeId)
+  return isDemarcheTypeProlongations(demarcheTypeId)
 }
 
 export const sortedDemarchesTypes = Object.values(DemarchesTypes).sort((a, b) => a.nom.localeCompare(b.nom))
 
 export const isTravaux = (demarcheTypeId: DemarcheTypeId): boolean => {
   return DemarchesTypes[demarcheTypeId].travaux
+}
+
+export const isDemarcheTypeProlongations = (demarcheType: DemarcheTypeId): boolean => {
+  return [
+    DEMARCHES_TYPES_IDS.Prolongation,
+    DEMARCHES_TYPES_IDS.Prolongation1,
+    DEMARCHES_TYPES_IDS.Prolongation2,
+    DEMARCHES_TYPES_IDS.ProlongationExceptionnelle,
+  ].includes(demarcheType)
 }
 
 /**

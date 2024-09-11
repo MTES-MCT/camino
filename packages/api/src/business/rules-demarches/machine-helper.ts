@@ -37,7 +37,7 @@ export abstract class CaminoMachine<CaminoContext extends CaminoCommonContext, C
   }
 
   protected eventFromEntry(entryType: CaminoEvent['type'], _etape: Etape): CaminoEvent {
-    // @ts-ignore FIXME à voir si on repasse dessus ou si on laisse le ts-ignore
+    // @ts-ignore FIXMACHINE à voir si on repasse dessus ou si on laisse le ts-ignore
     const result: CaminoEvent = { type: entryType }
 
     return result

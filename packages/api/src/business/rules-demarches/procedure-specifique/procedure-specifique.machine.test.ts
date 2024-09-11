@@ -87,6 +87,6 @@ describe('vérifie l’arbre des procédures spécifique', () => {
     expect(service.getSnapshot().context.visibilite).toBe('publique')
   })
 
-  // FIXME tester que la participation du public peut-être optionnelle
-  // FIXME migrer l'enquête publique sur master
+  // FIXMACHINE tester que la participation du public peut-être optionnelle
+  // FIXMACHINE migrer l'enquête publique sur master
 })
