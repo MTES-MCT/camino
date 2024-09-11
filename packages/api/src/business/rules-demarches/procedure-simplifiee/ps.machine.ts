@@ -71,9 +71,6 @@ const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
   SAISIR_INFORMATION_HISTORIQUE_INCOMPLETE: { db: ETES.informationsHistoriquesIncompletes, mainStep: false },
 }
 
-// Related to https://github.com/Microsoft/TypeScript/issues/12870
-// const EVENTS = Object.keys(trad) as Array<Extract<keyof typeof trad, string>>
-
 // basé sur https://drive.google.com/file/d/16lXyw3pcuiP-rHkBBM0U2Al9sWHKCBP9/view
 export class ProcedureSimplifieeMachine extends CaminoMachine<ProcedureSimplifieeContext, ProcedureSimplifieeXStateEvent> {
   constructor() {
@@ -99,35 +96,6 @@ export class ProcedureSimplifieeMachine extends CaminoMachine<ProcedureSimplifie
         return [{ type: event }]
     }
   }
-
-  // eventFrom(etape: Etape): ProcedureSimplifieeXStateEvent {
-  //   const entries = Object.entries(trad).filter((entry): entry is [Event, { db: DBEtat; mainStep: boolean }] => EVENTS.includes(entry[0]))
-
-  //   const entry = entries.find(([_key, { db: dbEtat }]) => {
-  //     return Object.values(dbEtat).some(dbEtatSingle => dbEtatSingle.etapeTypeId === etape.etapeTypeId && dbEtatSingle.etapeStatutId === etape.etapeStatutId)
-  //   })
-
-  //   if (entry) {
-  //     const eventFromEntry = entry[0]
-  //     switch (eventFromEntry) {
-  //       case 'PUBLIER_DECISION_ACCEPTEE_AU_JORF':
-  //       case 'PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS':
-  //       case 'SAISIR_INFORMATION_HISTORIQUE_INCOMPLETE':
-  //       case 'RENDRE_DECISION_ADMINISTRATION_ACCEPTEE':
-  //       case 'RENDRE_DECISION_ADMINISTRATION_REJETEE':
-  //       case 'RENDRE_DECISION_ADMINISTRATION_REJETEE_DECISION_IMPLICITE': {
-  //         return { type: eventFromEntry, date: etape.date }
-  //       }
-  //       case 'OUVRIR_PARTICIPATION_DU_PUBLIC': {
-  //         return { type: eventFromEntry, status: etape.etapeStatutId }
-  //       }
-
-  //       default:
-  //         return { type: eventFromEntry }
-  //     }
-  //   }
-  //   throw new Error(`no event from ${JSON.stringify(etape)}`)
-  // }
 }
 
 interface ProcedureSimplifieeContext extends CaminoCommonContext {
