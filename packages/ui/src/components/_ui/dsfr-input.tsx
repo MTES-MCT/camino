@@ -74,7 +74,7 @@ export const DsfrInput = defineComponent<Props>(props => {
 
   return () => (
     <div class={['fr-input-group', isNotNullNorUndefined(props.disabled) && props.disabled ? 'fr-input-group--disabled' : null]} style={{ marginBottom: 0 }}>
-      {props.legend.visible ?? true ? (
+      {(props.legend.visible ?? true) ? (
         <label class="fr-label" for={id}>
           {props.legend.main} {isNotNullNorUndefined(props.required) && props.required ? ' *' : null}
           {isNotNullNorUndefined(props.legend.description) ? <span class="fr-hint-text" v-html={props.legend.description}></span> : null}

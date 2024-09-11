@@ -30,7 +30,6 @@ export const productionCheck = (activiteTypeId: string, contenu: IContenu | null
     // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     return !!contenu?.renseignements?.orExtrait
   } else if (activiteTypeId === 'wrp') {
-    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     const production = contenu?.renseignementsProduction
 
     // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions

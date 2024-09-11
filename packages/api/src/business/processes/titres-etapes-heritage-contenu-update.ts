@@ -1,4 +1,3 @@
-/* eslint-disable sql/no-unsafe-query */
 import { titreEtapeUpdate } from '../../database/queries/titres-etapes'
 import { titreEtapeHeritageContenuFind } from '../utils/titre-etape-heritage-contenu-find'
 import { titreEtapesSortAscByOrdre, titreEtapesSortDescByOrdre } from '../utils/titre-etapes-sort'

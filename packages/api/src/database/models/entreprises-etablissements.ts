@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { Model, Modifiers } from 'objection'
 
 import { IEntrepriseEtablissement } from '../../types'

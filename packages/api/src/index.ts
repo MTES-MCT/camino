@@ -53,7 +53,7 @@ databaseInit(pool).then(() => {
       dsn: config().API_SENTRY_URL,
       environment: config().ENV === 'prod' ? 'production' : config().ENV,
     })
-    app.use(Sentry.Handlers.requestHandler())
+    Sentry.setupExpressErrorHandler(app)
   }
 
   const limiter = rateLimit({
@@ -110,10 +110,6 @@ databaseInit(pool).then(() => {
   app.use('/televersement', uploadAllowedMiddleware, restUpload())
 
   app.use('/', graphql(pool))
-
-  if (isNotNullNorUndefined(config().API_SENTRY_URL)) {
-    app.use(Sentry.Handlers.errorHandler())
-  }
 
   app.listen(config().API_PORT, () => {
     console.info('')

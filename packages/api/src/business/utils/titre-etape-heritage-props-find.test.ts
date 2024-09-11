@@ -9,8 +9,6 @@ import { newEtapeId } from '../../database/models/_format/id-create'
 import { ETAPE_HERITAGE_PROPS, EtapeHeritageProps } from 'camino-common/src/heritage'
 import { EntrepriseId, entrepriseIdValidator } from 'camino-common/src/entreprise'
 
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-
 describe('retourne l’étape en fonction de son héritage', () => {
   test('l’étape n’est pas modifiée si elle n’a pas d’étape précédente et qu’elle n’a aucun héritage d’actif', () => {
     const titreEtape = {

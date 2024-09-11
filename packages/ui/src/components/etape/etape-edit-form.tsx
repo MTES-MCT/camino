@@ -117,7 +117,7 @@ const mergeFlattenEtapeWithNewHeritage = (
         return {
           ...accElement,
           [element.id]: {
-            value: currentHeritage.heritee ? elementHeritage.etape?.contenu?.[section.id]?.[element.id] ?? null : currentHeritage.value,
+            value: currentHeritage.heritee ? (elementHeritage.etape?.contenu?.[section.id]?.[element.id] ?? null) : currentHeritage.value,
             heritee: currentHeritage.heritee && isNotNullNorUndefined(elementHeritage.etape) && canHaveHeritage,
             etapeHeritee:
               isNotNullNorUndefined(elementHeritage.etape) && canHaveHeritage
@@ -137,7 +137,7 @@ const mergeFlattenEtapeWithNewHeritage = (
       }
     }, {}),
     duree: {
-      value: etape.duree.heritee ? heritageData.heritageProps.duree.etape?.duree ?? null : etape.duree.value,
+      value: etape.duree.heritee ? (heritageData.heritageProps.duree.etape?.duree ?? null) : etape.duree.value,
       heritee: etape.duree.heritee && isNotNullNorUndefined(heritageData.heritageProps.duree.etape),
       etapeHeritee: isNotNullNorUndefined(heritageData.heritageProps.duree.etape)
         ? {
@@ -160,7 +160,7 @@ const mergeFlattenEtapeWithNewHeritage = (
         : null,
     },
     dateDebut: {
-      value: etape.dateDebut.heritee ? heritageData.heritageProps.dateDebut.etape?.dateDebut ?? null : etape.dateDebut.value,
+      value: etape.dateDebut.heritee ? (heritageData.heritageProps.dateDebut.etape?.dateDebut ?? null) : etape.dateDebut.value,
       heritee: etape.dateDebut.heritee && isNotNullNorUndefined(heritageData.heritageProps.dateDebut.etape),
       etapeHeritee: isNotNullNorUndefined(heritageData.heritageProps.dateDebut.etape)
         ? {
@@ -171,7 +171,7 @@ const mergeFlattenEtapeWithNewHeritage = (
         : null,
     },
     dateFin: {
-      value: etape.dateFin.heritee ? heritageData.heritageProps.dateFin.etape?.dateFin ?? null : etape.dateFin.value,
+      value: etape.dateFin.heritee ? (heritageData.heritageProps.dateFin.etape?.dateFin ?? null) : etape.dateFin.value,
       heritee: etape.dateFin.heritee && isNotNullNorUndefined(heritageData.heritageProps.dateFin.etape),
       etapeHeritee: isNotNullNorUndefined(heritageData.heritageProps.dateFin.etape)
         ? {

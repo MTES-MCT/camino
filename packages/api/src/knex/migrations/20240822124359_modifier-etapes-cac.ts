@@ -1,4 +1,3 @@
-/* eslint-disable no-restricted-syntax */
 /* eslint-disable sql/no-unsafe-query */
 
 import { EtapeDocumentId, EtapeId } from 'camino-common/src/etape'

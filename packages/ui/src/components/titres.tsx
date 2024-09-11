@@ -58,7 +58,7 @@ export const Titres = defineComponent({
     const paramsFiltres = ref<TitreFiltresParams>(getInitialTitresFiltresParams(router.currentRoute.value))
 
     const noFilter: boolean = Object.keys(paramsFiltres.value)
-      .filter((k): k is keyof TitreFiltresParams => true)
+      .filter((_k): _k is keyof TitreFiltresParams => true)
       .every(key => {
         return paramsFiltres.value[key] === '' || (Array.isArray(paramsFiltres.value[key]) && paramsFiltres.value[key].length === 0)
       })

@@ -22,7 +22,7 @@ export const DsfrTextarea = defineComponent<Props>(props => {
   return () => (
     <div class="fr-input-group">
       <label class="fr-label" for={id}>
-        {props.legend.main} {props.required ?? false ? ' *' : null}
+        {props.legend.main} {(props.required ?? false) ? ' *' : null}
         {isNotNullNorUndefinedNorEmpty(props.legend.description) ? <span class="fr-hint-text" v-html={props.legend.description}></span> : null}
       </label>
       <textarea onInput={updateFromEvent} value={props.initialValue ?? undefined} class="fr-input" name={id} id={id} required={props.required ?? false} />

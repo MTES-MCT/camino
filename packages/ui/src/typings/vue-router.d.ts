@@ -1,4 +1,4 @@
-/* eslint-disable no-unused-vars, no-restricted-imports */
+/* eslint-disable no-restricted-imports */
 
 import { NavigationFailure, Router, RouterOptions, RouteMeta } from 'vue-router'
 import { CaminoRouteNames, CaminoVueRoute } from '@/router/routes'

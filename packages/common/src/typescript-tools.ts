@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/ban-types */
-
 export type NotNullableKeys<T> = { [K in keyof T]: NonNullable<T[K]> }
 
 export type Nullable<T> = { [P in keyof T]: T[P] | null }
@@ -79,7 +77,7 @@ interface Ref<T = any> {
 // }
 
 type Primitive = string | number | boolean | bigint | symbol | undefined | null
-type Builtin = Primitive | Function | Date | Error | RegExp
+type Builtin = Primitive | Function | Date | Error | RegExp // eslint-disable-line
 // DeepReadonly from vue
 export type DeepReadonly<T> = T extends Builtin
   ? T
@@ -99,7 +97,7 @@ export type DeepReadonly<T> = T extends Builtin
                 ? Promise<DeepReadonly<U>>
                 : T extends Ref<infer U>
                   ? Readonly<Ref<DeepReadonly<U>>>
-                  : T extends {}
+                  : T extends {} // eslint-disable-line
                     ? {
                         readonly [K in keyof T]: DeepReadonly<T[K]>
                       }

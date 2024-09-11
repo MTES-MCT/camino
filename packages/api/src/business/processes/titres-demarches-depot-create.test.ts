@@ -17,7 +17,7 @@ describe('créer le dépot de la démarche', () => {
       ] as ITitreEtape[],
       false,
     ],
-  ])('%s', (test, etapes, creation) => {
+  ])('%s', (_test, etapes, creation) => {
     const titresDemarchesDepotCreated = titreDemarcheDepotCheck({
       titre: { typeId: 'arm' } as ITitre,
       typeId: 'oct',

@@ -40,7 +40,6 @@ export const titreDemandeCreer: RestNewPostCall<'/rest/titres'> = (
   pool: Pool,
   user: DeepReadonly<UserNotNull>,
   titreDemande: DeepReadonly<TitreDemande>,
-  // eslint-disable-next-line @typescript-eslint/ban-types
   _params: {}
 ): Effect.Effect<TitreDemandeOutput, CaminoApiError<TitreDemandeCreerErrors>> => {
   return Effect.Do.pipe(

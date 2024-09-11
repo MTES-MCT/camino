@@ -3,7 +3,7 @@ import { ArmRenProMachine } from './ren-pro.machine'
 import { interpretMachine, setDateAndOrderAndInterpretMachine } from '../machine-test-helper'
 import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts'
 import { EtapesTypesEtapesStatuts as ETES } from 'camino-common/src/static/etapesTypesEtapesStatuts'
-const etapesProd = require('./2019-10-31-ren-pro.cas.json')
+const etapesProd = require('./2019-10-31-ren-pro.cas.json') // eslint-disable-line
 
 describe('vérifie l’arbre de renonciation et de prolongation d’ARM', () => {
   const armRenProMachine = new ArmRenProMachine()

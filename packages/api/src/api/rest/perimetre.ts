@@ -43,7 +43,7 @@ import {
 } from 'camino-common/src/perimetre'
 import { join } from 'node:path'
 import { readFileSync } from 'node:fs'
-import shpjs from 'shpjs'
+import { parseShp } from 'shpjs'
 import { DeepReadonly, isNotNullNorUndefined, isNullOrUndefined, memoize } from 'camino-common/src/typescript-tools'
 import { SDOMZoneId } from 'camino-common/src/static/sdom'
 import { TitreSlug } from 'camino-common/src/validators/titres'
@@ -58,83 +58,85 @@ import { ZodUnparseable, callAndExit, zodParseEffect, zodParseEffectCallback } f
 import { CaminoError } from 'camino-common/src/zod-tools'
 import { RestNewPostCall } from '../../server/rest'
 
-export const getPerimetreInfos = (pool: Pool) => async (req: CaminoRequest, res: CustomResponse<PerimetreInformations>) => {
-  const user = req.auth
+export const getPerimetreInfos =
+  (pool: Pool) =>
+  async (req: CaminoRequest, res: CustomResponse<PerimetreInformations>): Promise<void> => {
+    const user = req.auth
 
-  if (!user) {
-    res.sendStatus(HTTP_STATUS.FORBIDDEN)
-  } else {
-    const etapeIdOrSlugParsed = etapeIdOrSlugValidator.safeParse(req.params.etapeId)
-    const demarcheIdOrSlugParsed = demarcheIdOrSlugValidator.safeParse(req.params.demarcheId)
-
-    if (!etapeIdOrSlugParsed.success && !demarcheIdOrSlugParsed.success) {
-      res.sendStatus(HTTP_STATUS.BAD_REQUEST)
+    if (!user) {
+      res.sendStatus(HTTP_STATUS.FORBIDDEN)
     } else {
-      try {
-        let etape: null | { demarche_id: DemarcheId; geojson4326_perimetre: MultiPolygon | null; sdom_zones: SDOMZoneId[]; etape_type_id: EtapeTypeId; communes: CommuneId[] } = null
-        if (etapeIdOrSlugParsed.success) {
-          const myEtape = await getEtapeById(pool, etapeIdOrSlugParsed.data)
+      const etapeIdOrSlugParsed = etapeIdOrSlugValidator.safeParse(req.params.etapeId)
+      const demarcheIdOrSlugParsed = demarcheIdOrSlugValidator.safeParse(req.params.demarcheId)
 
-          etape = { demarche_id: myEtape.demarche_id, geojson4326_perimetre: myEtape.geojson4326_perimetre, sdom_zones: myEtape.sdom_zones ?? [], etape_type_id: myEtape.etape_type_id, communes: [] }
-        } else if (demarcheIdOrSlugParsed.success) {
-          const demarche = await getDemarcheByIdOrSlug(pool, demarcheIdOrSlugParsed.data)
-          const etapes = await getEtapesByDemarcheId(pool, demarche.demarche_id)
+      if (!etapeIdOrSlugParsed.success && !demarcheIdOrSlugParsed.success) {
+        res.sendStatus(HTTP_STATUS.BAD_REQUEST)
+      } else {
+        try {
+          let etape: null | { demarche_id: DemarcheId; geojson4326_perimetre: MultiPolygon | null; sdom_zones: SDOMZoneId[]; etape_type_id: EtapeTypeId; communes: CommuneId[] } = null
+          if (etapeIdOrSlugParsed.success) {
+            const myEtape = await getEtapeById(pool, etapeIdOrSlugParsed.data)
 
-          const mostRecentEtapeFondamentale = getMostRecentEtapeFondamentaleValide([{ ordre: 1, etapes }])
-          if (isNotNullNorUndefined(mostRecentEtapeFondamentale)) {
-            etape = {
-              demarche_id: demarche.demarche_id,
-              geojson4326_perimetre: mostRecentEtapeFondamentale.geojson4326_perimetre,
-              sdom_zones: mostRecentEtapeFondamentale.sdom_zones ?? [],
-              etape_type_id: mostRecentEtapeFondamentale.etape_type_id,
-              communes: mostRecentEtapeFondamentale.communes.map(({ id }) => id),
+            etape = { demarche_id: myEtape.demarche_id, geojson4326_perimetre: myEtape.geojson4326_perimetre, sdom_zones: myEtape.sdom_zones ?? [], etape_type_id: myEtape.etape_type_id, communes: [] }
+          } else if (demarcheIdOrSlugParsed.success) {
+            const demarche = await getDemarcheByIdOrSlug(pool, demarcheIdOrSlugParsed.data)
+            const etapes = await getEtapesByDemarcheId(pool, demarche.demarche_id)
+
+            const mostRecentEtapeFondamentale = getMostRecentEtapeFondamentaleValide([{ ordre: 1, etapes }])
+            if (isNotNullNorUndefined(mostRecentEtapeFondamentale)) {
+              etape = {
+                demarche_id: demarche.demarche_id,
+                geojson4326_perimetre: mostRecentEtapeFondamentale.geojson4326_perimetre,
+                sdom_zones: mostRecentEtapeFondamentale.sdom_zones ?? [],
+                etape_type_id: mostRecentEtapeFondamentale.etape_type_id,
+                communes: mostRecentEtapeFondamentale.communes.map(({ id }) => id),
+              }
             }
+          } else {
+            res.sendStatus(HTTP_STATUS.INTERNAL_SERVER_ERROR)
+            console.error("cas impossible où ni l'étape id ni la démarche Id n'est chargée")
           }
-        } else {
-          res.sendStatus(HTTP_STATUS.INTERNAL_SERVER_ERROR)
-          console.error("cas impossible où ni l'étape id ni la démarche Id n'est chargée")
-        }
 
-        if (isNullOrUndefined(etape)) {
-          res.json({
-            superposition_alertes: [],
-            sdomZoneIds: [],
-            communes: [],
-          })
-        } else {
-          const demarche = await getDemarcheByIdOrSlug(pool, etape.demarche_id)
-          const titre = await getTitreByIdOrSlug(pool, demarche.titre_id)
-
-          const administrationsLocales = memoize(() => getAdministrationsLocalesByTitreId(pool, demarche.titre_id))
-
-          if (
-            await canReadEtape(
-              user,
-              memoize(() => Promise.resolve(titre.titre_type_id)),
-              administrationsLocales,
-              memoize(() => getTitulairesAmodiatairesByTitreId(pool, demarche.titre_id)),
-              etape.etape_type_id,
-              { ...demarche, titre_public_lecture: titre.public_lecture }
-            )
-          ) {
-            await callAndExit(getAlertesSuperposition(etape.geojson4326_perimetre, titre.titre_type_id, titre.titre_slug, user, pool), async superpositionAlertes => {
-              res.json({
-                superposition_alertes: superpositionAlertes,
-                sdomZoneIds: etape.sdom_zones,
-                communes: etape.communes,
-              })
+          if (isNullOrUndefined(etape)) {
+            res.json({
+              superposition_alertes: [],
+              sdomZoneIds: [],
+              communes: [],
             })
           } else {
-            res.sendStatus(HTTP_STATUS.FORBIDDEN)
+            const demarche = await getDemarcheByIdOrSlug(pool, etape.demarche_id)
+            const titre = await getTitreByIdOrSlug(pool, demarche.titre_id)
+
+            const administrationsLocales = memoize(() => getAdministrationsLocalesByTitreId(pool, demarche.titre_id))
+
+            if (
+              await canReadEtape(
+                user,
+                memoize(() => Promise.resolve(titre.titre_type_id)),
+                administrationsLocales,
+                memoize(() => getTitulairesAmodiatairesByTitreId(pool, demarche.titre_id)),
+                etape.etape_type_id,
+                { ...demarche, titre_public_lecture: titre.public_lecture }
+              )
+            ) {
+              await callAndExit(getAlertesSuperposition(etape.geojson4326_perimetre, titre.titre_type_id, titre.titre_slug, user, pool), async superpositionAlertes => {
+                res.json({
+                  superposition_alertes: superpositionAlertes,
+                  sdomZoneIds: etape.sdom_zones,
+                  communes: etape.communes,
+                })
+              })
+            } else {
+              res.sendStatus(HTTP_STATUS.FORBIDDEN)
+            }
           }
+        } catch (e) {
+          res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).send(e)
+          console.error(e)
         }
-      } catch (e) {
-        res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).send(e)
-        console.error(e)
       }
     }
   }
-}
 
 const shapeValidator = z.array(polygonValidator.or(multiPolygonValidator)).max(1).min(1)
 const geojsonValidator = featureCollectionMultipolygonValidator.or(featureCollectionPolygonValidator)
@@ -411,7 +413,7 @@ const fileNameToShape = <T extends ZodTypeAny>(pathFrom: string, validator: T): 
       try: () => {
         const fileContent = readFileSync(pathFrom)
 
-        return shpjs.parseShp(fileContent)
+        return parseShp(fileContent)
       },
       catch: () => ({ message: ouvertureShapeError }),
     }),

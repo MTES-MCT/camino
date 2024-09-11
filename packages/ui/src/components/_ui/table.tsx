@@ -183,7 +183,7 @@ export const Table = defineComponent(
 
 export const DisplayColumn = (props: { data: ComponentColumnData | TextColumnData }): JSX.Element => {
   if (isComponentColumnData(props.data)) {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    // @ts-ignore 2024-09-12 typescript ne voit pas que le composant est utilisé juste en dessous dans le TSX, mais ça fonctionne quand même...
     const myComp = props.data.component
 
     if (props.data.value !== undefined) {

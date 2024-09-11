@@ -104,7 +104,7 @@ class DbManager {
   }
 
   private static checkPoolInstance(pool: null | pg.Pool): asserts pool is pg.Pool {
-    if (knex === null) {
+    if (pool === null) {
       throw new Error('populateDb should be called first')
     }
   }

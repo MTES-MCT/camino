@@ -9,7 +9,7 @@ export const List: FunctionalComponent<Props> = props => {
     <span>
       <ul>
         {props.elements?.map(element => (
-          <li key={element} class={[props.mini ?? false ? 'fr-text--xs' : null]}>
+          <li key={element} class={[(props.mini ?? false) ? 'fr-text--xs' : null]}>
             {element}
           </li>
         ))}

@@ -453,7 +453,7 @@ export const DemarcheMap = defineComponent<Props>(props => {
                 e.features[0].properties.longitude
               }</b></div>${isNotNullNorUndefined(e.features[0].properties.description) ? `<div>Description : ${e.features[0].properties.description}</div>` : ''}</div>`
             )
-            .addTo(mapLibre)
+            .addTo(mapLibre as Map)
         }
       })
 
@@ -470,7 +470,7 @@ export const DemarcheMap = defineComponent<Props>(props => {
                   isNotNullNorUndefined(properties.data.description) ? `<div>Description : ${properties.data.description}</div>` : ''
                 }</div>`
               )
-              .addTo(mapLibre)
+              .addTo(mapLibre as Map)
           }
         }
       })
@@ -484,7 +484,10 @@ export const DemarcheMap = defineComponent<Props>(props => {
         if (e.features !== null && e.features !== undefined && e.features.length > 0) {
           const titreProperties = e.features[0].properties as TitreValideProperties
 
-          popup.setLngLat(e.lngLat).setHTML(`<div class="fr-text--lg fr-m-0">${titreProperties.nom}</div>`).addTo(mapLibre)
+          popup
+            .setLngLat(e.lngLat)
+            .setHTML(`<div class="fr-text--lg fr-m-0">${titreProperties.nom}</div>`)
+            .addTo(mapLibre as Map)
         }
       })
 

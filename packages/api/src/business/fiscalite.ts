@@ -622,8 +622,9 @@ export const getCategoriesForTaxeAurifereGuyane = (annee: CaminoAnnee, category:
 
 type TarifsBySubstances = Record<SubstanceFiscaleId, { tarifDepartemental: Decimal; tarifCommunal: Decimal }>
 export const getAllTarifsBySubstances = (annee: CaminoAnnee): TarifsBySubstances => {
-  let { success, data } = anneeDataValidator.safeParse(annee)
-  if (!success) {
+  const anneeParsed = anneeDataValidator.safeParse(annee)
+  let data: AnneeData | null = null
+  if (!anneeParsed.success) {
     if (annee <= anneeData[0]) {
       throw new Error('Impossible de calculer la redevance pour cette année (données absentes)')
     }

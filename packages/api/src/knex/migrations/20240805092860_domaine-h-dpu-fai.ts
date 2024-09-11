@@ -1,6 +1,3 @@
-/* eslint-disable no-restricted-syntax */
-/* eslint-disable sql/no-unsafe-query */
-
 import { DEMARCHES_TYPES_IDS } from 'camino-common/src/static/demarchesTypes'
 import { Knex } from 'knex'
 

@@ -4,7 +4,7 @@ import { EtapesTypesEtapesStatuts as ETES } from 'camino-common/src/static/etape
 import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations'
 import { toCaminoDate } from 'camino-common/src/date'
 import { describe, expect, test } from 'vitest'
-const etapesProd = require('./2020-09-30-oct.cas.json')
+const etapesProd = require('./2020-09-30-oct.cas.json') // eslint-disable-line
 
 describe('vérifie l’arbre d’octroi d’AXM', () => {
   const axmOctMachine = new AxmOctMachine()

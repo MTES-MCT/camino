@@ -4,7 +4,7 @@ import { EtapeTypeEtapeStatutValidPair, EtapesTypesEtapesStatuts as ETES } from 
 import { Etape } from '../machine-common'
 import { toCaminoDate } from 'camino-common/src/date'
 import { describe, expect, test } from 'vitest'
-const etapesProd = require('./2019-10-31-oct.cas.json')
+const etapesProd = require('./2019-10-31-oct.cas.json') // eslint-disable-line
 
 describe('vérifie l’arbre d’octroi d’ARM', () => {
   const armOctMachine = new ArmOctMachine()

@@ -137,15 +137,15 @@ const batchesBuild = (ids: Siren[]) => {
 
   const count = Math.ceil(ids.length / MAX_RESULTS)
 
-  return [...new Array(count)].map((e, i) => ids.slice(i * MAX_RESULTS, (i + 1) * MAX_RESULTS))
+  return [...new Array(count)].map((_e, i) => ids.slice(i * MAX_RESULTS, (i + 1) * MAX_RESULTS))
 }
 
-export const entreprisesEtablissementsFetch = async (ids: Siren[]) => {
+export const entreprisesEtablissementsFetch = async (ids: Siren[]): Promise<IApiSirenUniteLegale[]> => {
   const batches = batchesBuild(ids)
 
   const queryFormat = (idsBatch: Siren[]) => idsBatch.map(batch => `siren:${batch}`).join(' OR ')
 
-  const results = []
+  const results: IApiSirenUniteLegale[] = []
   for (const batch of batches) {
     const result = (await typeMultiFetch('siren', 'unitesLegales', batch, queryFormat(batch))) as IApiSirenUniteLegale[]
     if (isNotNullNorUndefinedNorEmpty(result)) {
@@ -156,7 +156,7 @@ export const entreprisesEtablissementsFetch = async (ids: Siren[]) => {
   return results
 }
 
-export const entreprisesFetch = async (ids: Siren[]) => {
+export const entreprisesFetch = async (ids: Siren[]): Promise<IApiSirenEtablissement[]> => {
   const batches = batchesBuild(ids)
 
   const queryFormat = (idsBatch: Siren[]) => {
@@ -165,7 +165,7 @@ export const entreprisesFetch = async (ids: Siren[]) => {
     return `(${ids}) AND etablissementSiege:true`
   }
 
-  const results = []
+  const results: IApiSirenEtablissement[] = []
   for (const batch of batches) {
     const result = (await typeMultiFetch('siret', 'etablissements', batch, queryFormat(batch))) as IApiSirenEtablissement[]
     if (isNotNullNorUndefinedNorEmpty(result)) {

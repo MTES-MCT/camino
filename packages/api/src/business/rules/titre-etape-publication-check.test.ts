@@ -34,7 +34,6 @@ describe("étape de publication d'une étape", () => {
   })
 
   test("un titre non reconnu n'est pas géré", () => {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     expect(titreEtapePublicationCheck('rpu', 'xxx')).toEqual(false)
   })

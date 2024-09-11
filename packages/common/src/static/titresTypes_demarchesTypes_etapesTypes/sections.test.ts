@@ -1,6 +1,6 @@
 import { getSections, getSectionsWithValue, sectionValidator } from './sections'
 import { test, expect, describe } from 'vitest'
-const activitesSectionsProd = require('./activites.sections.json')
+const activitesSectionsProd = require('./activites.sections.json') // eslint-disable-line
 
 test('getSections erreurs', () => {
   expect(() => getSections(undefined, undefined, undefined)).toThrowErrorMatchingInlineSnapshot(

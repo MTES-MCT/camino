@@ -46,7 +46,7 @@ describe("date de fin d'une démarche d'annulation", () => {
         typeId: 'dex',
         statutId: 'acc',
         ordre: 1,
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+
         // @ts-ignore
         date: null,
       },

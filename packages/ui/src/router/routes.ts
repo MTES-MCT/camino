@@ -206,6 +206,6 @@ type RouterParamsNames<url> = url extends `${infer start}/${infer rest}`
     ? { [k in param]?: string }
     : url extends `:${infer param}`
       ? { [k in param]: string }
-      : {} // eslint-disable-line @typescript-eslint/ban-types
+      : {} // eslint-disable-line
 export type CaminoVueRoute<T extends CaminoRouteNames> = { name: T; params: RouterParamsNames<(typeof routesDefinitions)[T]['path']>; query?: LocationQueryRaw }
 export type CaminoRouteLocation = Required<CaminoVueRoute<CaminoRouteNames>>

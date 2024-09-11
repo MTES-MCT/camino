@@ -17,10 +17,10 @@ export const DsfrSelect = <T, Items extends DeepReadonly<NonEmptyArray<Item<T>>>
   const id = props.id ?? `select_${(random() * 1000).toFixed()}`
 
   return (
-    <div class={['fr-select-group', props.disabled ?? false ? 'fr-select-group--disabled' : null]}>
-      {props.legend.visible ?? true ? (
+    <div class={['fr-select-group', (props.disabled ?? false) ? 'fr-select-group--disabled' : null]}>
+      {(props.legend.visible ?? true) ? (
         <label class="fr-label" for={id}>
-          {props.legend.main} {props.required ?? false ? ' *' : ''}
+          {props.legend.main} {(props.required ?? false) ? ' *' : ''}
           {isNotNullNorUndefinedNorEmpty(props.legend.description) ? <span class="fr-hint-text">{props.legend.description}</span> : null}
         </label>
       ) : null}
