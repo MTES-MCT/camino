@@ -337,10 +337,6 @@ const EtapesTypesDocumentsTypes = {
     { documentTypeId: DOCUMENTS_TYPES_IDS.complementsAuDossierDeDemande, optionnel: true },
     { documentTypeId: DOCUMENTS_TYPES_IDS.documentsCartographiques, optionnel: true },
   ],
-  [ETAPES_TYPES.rapportDeLaDreal]: [
-    { documentTypeId: DOCUMENTS_TYPES_IDS.projetDePrescriptions, optionnel: true },
-    { documentTypeId: DOCUMENTS_TYPES_IDS.rapport, optionnel: true },
-  ],
   [ETAPES_TYPES.recevabilite]: [
     { documentTypeId: DOCUMENTS_TYPES_IDS.avis, optionnel: true },
     { documentTypeId: DOCUMENTS_TYPES_IDS.courrierDeNotificationDeLaRecevabilite, optionnel: true },
