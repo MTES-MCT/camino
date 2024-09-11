@@ -1,6 +1,6 @@
 import { and, assign, not, or, setup } from 'xstate'
 import { CaminoMachine } from '../machine-helper'
-import { CaminoCommonContext, DBEtat } from '../machine-common'
+import { CaminoCommonContext, DBEtat, globalGuards } from '../machine-common'
 import { EtapesTypesEtapesStatuts as ETES } from 'camino-common/src/static/etapesTypesEtapesStatuts'
 import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts'
 import { TITRES_TYPES_IDS, TitreTypeId, getTitreTypeType } from 'camino-common/src/static/titresTypes'
@@ -9,30 +9,6 @@ import { TITRES_TYPES_TYPES_IDS } from 'camino-common/src/static/titresTypesType
 import { ETAPES_STATUTS, EtapeStatutId } from 'camino-common/src/static/etapesStatuts'
 import { KM2, km2Validator } from 'camino-common/src/number'
 import { CaminoDate } from 'camino-common/src/date'
-// type SaisirInformationHistoriqueIncomplete = {
-//   date: CaminoDate
-//   type: 'SAISIR_INFORMATION_HISTORIQUE_INCOMPLETE'
-// }
-// type RendreDecisionAdministrationAcceptee = {
-//   date: CaminoDate
-//   type: 'RENDRE_DECISION_ADMINISTRATION_ACCEPTEE'
-// }
-// type RendreDecisionAdministrationRejetee = {
-//   date: CaminoDate
-//   type: 'RENDRE_DECISION_ADMINISTRATION_REJETEE'
-// }
-// type RendreDecisionAdministrationRejeteeDecisionImplicite = {
-//   date: CaminoDate
-//   type: 'RENDRE_DECISION_ADMINISTRATION_REJETEE_DECISION_IMPLICITE'
-// }
-// type PublierDecisionAccepteeAuJORF = {
-//   date: CaminoDate
-//   type: 'PUBLIER_DECISION_ACCEPTEE_AU_JORF'
-// }
-// type PublierDecisionAuRecueilDesActesAdministratifs = {
-//   date: CaminoDate
-//   type: 'PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS'
-// }
 
 type ParticipationDuPublic = {
   surface: KM2
@@ -62,17 +38,12 @@ type ProcedureSpecifiqueXStateEvent =
   | ParticipationDuPublic
   | EnqueteDuPublic
   | { type: 'RENDRE_DECISION_ADMINISTRATION_ACCEPTEE' }
-// | RendreDecisionAdministrationAcceptee
-// | RendreDecisionAdministrationRejetee
-// | RendreDecisionAdministrationRejeteeDecisionImplicite
-// | SaisirInformationHistoriqueIncomplete
-// | PublierDecisionAccepteeAuJORF
-// | PublierDecisionAuRecueilDesActesAdministratifs
-// | { type: 'CLASSER_SANS_SUITE' }
-// | { type: 'DESISTER_PAR_LE_DEMANDEUR' }
-// | { type: 'DEMANDER_INFORMATION' }
-// | { type: 'RECEVOIR_INFORMATION' }
-// | { type: 'FAIRE_ABROGATION' }
+  | { type: 'RENDRE_DECISION_ADMINISTRATION_REJETEE' }
+  | { type: 'RENDRE_DECISION_ADMINISTRATION_REJETEE_DECISION_IMPLICITE' }
+  | { type: 'PUBLIER_DECISION_ACCEPTEE_AU_JORF' }
+  | { type: 'PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS' }
+  | { type: 'FAIRE_ABROGATION' }
+  | { type: 'FAIRE_ATTESTATION_DE_CONSTITUTION_DE_GARANTIES_FINANCIERES' }
 
 type Event = ProcedureSpecifiqueXStateEvent['type']
 
@@ -93,20 +64,12 @@ const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
   OUVRIR_ENQUETE_PUBLIQUE: { db: ETES.ouvertureDeLenquetePublique, mainStep: true },
   OUVRIR_PARTICIPATION_DU_PUBLIC: { db: ETES.participationDuPublic, mainStep: true },
   RENDRE_DECISION_ADMINISTRATION_ACCEPTEE: { db: { ACCEPTE: ETES.decisionDeLadministration.ACCEPTE }, mainStep: true },
-  // RECEVOIR_REPONSE_DEMANDEUR: {db: ETES.demandeur}
-
-  // OUVRIR_PARTICIPATION_DU_PUBLIC: { db: ETES.participationDuPublic, mainStep: true },
-  // RENDRE_DECISION_ADMINISTRATION_ACCEPTEE: { db: { ACCEPTE: ETES.decisionDeLadministration.ACCEPTE }, mainStep: true },
-  // RENDRE_DECISION_ADMINISTRATION_REJETEE: { db: { REJETE: ETES.decisionDeLadministration.REJETE }, mainStep: true },
-  // RENDRE_DECISION_ADMINISTRATION_REJETEE_DECISION_IMPLICITE: { db: { REJETE_DECISION_IMPLICITE: ETES.decisionDeLadministration.REJETE_DECISION_IMPLICITE }, mainStep: true },
-  // PUBLIER_DECISION_ACCEPTEE_AU_JORF: { db: { FAIT: ETES.publicationDeDecisionAuJORF.FAIT }, mainStep: true },
-  // PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS: { db: ETES.publicationDeDecisionAuRecueilDesActesAdministratifs, mainStep: true },
-  // CLASSER_SANS_SUITE: { db: ETES.classementSansSuite, mainStep: false },
-  // DESISTER_PAR_LE_DEMANDEUR: { db: ETES.desistementDuDemandeur, mainStep: false },
-  // DEMANDER_INFORMATION: { db: ETES.demandeDinformations, mainStep: false },
-  // RECEVOIR_INFORMATION: { db: ETES.receptionDinformation, mainStep: false },
-  // FAIRE_ABROGATION: { db: ETES.abrogationDeLaDecision, mainStep: true },
-  // SAISIR_INFORMATION_HISTORIQUE_INCOMPLETE: { db: ETES.informationsHistoriquesIncompletes, mainStep: false },
+  RENDRE_DECISION_ADMINISTRATION_REJETEE: { db: { REJETE: ETES.decisionDeLadministration.REJETE }, mainStep: true },
+  RENDRE_DECISION_ADMINISTRATION_REJETEE_DECISION_IMPLICITE: { db: { REJETE_DECISION_IMPLICITE: ETES.decisionDeLadministration.REJETE_DECISION_IMPLICITE }, mainStep: true },
+  PUBLIER_DECISION_ACCEPTEE_AU_JORF: { db: { FAIT: ETES.publicationDeDecisionAuJORF.FAIT }, mainStep: true },
+  PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS: { db: ETES.publicationDeDecisionAuRecueilDesActesAdministratifs, mainStep: true },
+  FAIRE_ABROGATION: { db: ETES.abrogationDeLaDecision, mainStep: true },
+  FAIRE_ATTESTATION_DE_CONSTITUTION_DE_GARANTIES_FINANCIERES: { db: ETES.attestationDeConstitutionDeGarantiesFinancieres, mainStep: true },
 }
 
 // basé sur https://drive.google.com/drive/u/1/folders/1U_in35zSb837xCp_fp31I0vOmb36QguL
@@ -117,19 +80,6 @@ export class ProcedureSpecifiqueMachine extends CaminoMachine<ProcedureSpecifiqu
 
   override toPotentialCaminoXStateEvent(event: ProcedureSpecifiqueXStateEvent['type'], date: CaminoDate): ProcedureSpecifiqueXStateEvent[] {
     switch (event) {
-      // case 'FAIRE_DEMANDE':
-      // case 'NOTIFIER_DEMANDEUR':
-      //   return [
-      //     { type: event, titreTypeId: 'cxm', demarcheTypeId: 'oct' },
-      //     { type: event, titreTypeId: 'arm', demarcheTypeId: 'oct' },
-      //   ]
-      // case 'RENDRE_DECISION_ADMINISTRATION_ACCEPTEE':
-      // case 'RENDRE_DECISION_ADMINISTRATION_REJETEE':
-      // case 'RENDRE_DECISION_ADMINISTRATION_REJETEE_DECISION_IMPLICITE':
-      // case 'SAISIR_INFORMATION_HISTORIQUE_INCOMPLETE':
-      // case 'PUBLIER_DECISION_ACCEPTEE_AU_JORF':
-      // case 'PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS':
-      //   return [{ type: event, date }]
       case 'OUVRIR_ENQUETE_PUBLIQUE':
       case 'OUVRIR_PARTICIPATION_DU_PUBLIC':
         return [
@@ -150,10 +100,11 @@ interface ProcedureSpecifiqueContext extends CaminoCommonContext {}
 const defaultDemarcheStatut = DemarchesStatutsIds.EnConstruction
 const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId) =>
   setup({
-    types: {} as { context: ProcedureSpecifiqueContext; events: ProcedureSpecifiqueXStateEvent },
+    types: {} as { context: CaminoCommonContext; events: ProcedureSpecifiqueXStateEvent },
     guards: {
-      isPublique: ({ context }) => context.visibilite === 'publique',
+      isAxm: () => TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX === titreTypeId,
       isPerOuConcession: () => [TITRES_TYPES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES, TITRES_TYPES_TYPES_IDS.CONCESSION].includes(getTitreTypeType(titreTypeId)),
+      // FIXMACHINE la condition a changé
       hasMiseEnConcurrence: () =>
         [DEMARCHES_TYPES_IDS.Octroi, DEMARCHES_TYPES_IDS.ExtensionDePerimetre].includes(demarcheTypeId) ||
         (isDemarcheTypeProlongations(demarcheTypeId) && getTitreTypeType(titreTypeId) === TITRES_TYPES_TYPES_IDS.CONCESSION),
@@ -172,6 +123,7 @@ const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: De
         (titreTypeId === TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX && (event.type === 'OUVRIR_PARTICIPATION_DU_PUBLIC' || event.type === 'OUVRIR_ENQUETE_PUBLIQUE') && event.surface > 0.25),
       isEnquetePubliquePossible: ({ event }) =>
         titreTypeId === TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX && (event.type === 'OUVRIR_PARTICIPATION_DU_PUBLIC' || event.type === 'OUVRIR_ENQUETE_PUBLIQUE') && event.surface <= 0.25,
+      ...globalGuards,
     },
   }).createMachine({
     id: 'ProcedureSpecifique',
@@ -234,7 +186,7 @@ const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: De
       recevabiliteFavorableFaite: {
         always: [
           {
-            guard: and([not('hasMiseEnConcurrence'), not('isPublique')]),
+            guard: and([not('hasMiseEnConcurrence'), not('isVisibilitePublique')]),
             actions: assign({ visibilite: 'publique' }),
           },
           {
@@ -347,7 +299,68 @@ const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: De
       },
       decisionAdministrationAFaire: {
         on: {
-          RENDRE_DECISION_ADMINISTRATION_ACCEPTEE: 'finDeMachine',
+          RENDRE_DECISION_ADMINISTRATION_ACCEPTEE: { target: 'publicationAuRecueilDesActesAdministratifsOupublicationAuJORFAFaire', actions: assign({ demarcheStatut: DemarchesStatutsIds.Accepte }) },
+          RENDRE_DECISION_ADMINISTRATION_REJETEE: {
+            target: 'notificationAuDemandeurApresDecisionRejetAFaire',
+            actions: assign({ visibilite: 'confidentielle' }),
+          },
+          RENDRE_DECISION_ADMINISTRATION_REJETEE_DECISION_IMPLICITE: {
+            target: 'finDeMachine',
+            actions: assign({
+              demarcheStatut: DemarchesStatutsIds.Rejete,
+            }),
+          },
+        },
+      },
+      publicationAuRecueilDesActesAdministratifsOupublicationAuJORFAFaire: {
+        on: {
+          PUBLIER_DECISION_ACCEPTEE_AU_JORF: [
+            {
+              guard: 'isDemarcheStatutAcceptee',
+              target: 'abrogationOuNotificationAuDemandeurAFaire',
+              actions: assign({ demarcheStatut: DemarchesStatutsIds.AccepteEtPublie }),
+            },
+            {
+              guard: 'isDemarcheStatutAccepteeEtPublie',
+              target: 'finDeMachine',
+              actions: assign({ demarcheStatut: DemarchesStatutsIds.RejeteApresAbrogation }),
+            },
+          ],
+          PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS: [
+            {
+              guard: 'isDemarcheStatutAcceptee',
+              target: 'abrogationOuNotificationAuDemandeurAFaire',
+              actions: assign({ demarcheStatut: DemarchesStatutsIds.AccepteEtPublie }),
+            },
+            {
+              guard: 'isDemarcheStatutAccepteeEtPublie',
+              target: 'finDeMachine',
+              actions: assign({ demarcheStatut: DemarchesStatutsIds.RejeteApresAbrogation }),
+            },
+          ],
+        },
+      },
+      abrogationOuNotificationAuDemandeurAFaire: {
+        on: {
+          NOTIFIER_DEMANDEUR: 'attestationDeConstitutionDeGarantiesFinancieresAFaire',
+          FAIRE_ABROGATION: 'publicationAuRecueilDesActesAdministratifsOupublicationAuJORFAFaire',
+        },
+      },
+      attestationDeConstitutionDeGarantiesFinancieresAFaire: {
+        always: {
+          target: 'finDeMachine',
+          guard: not('isAxm'),
+        },
+        on: {
+          FAIRE_ATTESTATION_DE_CONSTITUTION_DE_GARANTIES_FINANCIERES: 'finDeMachine',
+        },
+      },
+      notificationAuDemandeurApresDecisionRejetAFaire: {
+        on: {
+          NOTIFIER_DEMANDEUR: {
+            target: 'finDeMachine',
+            actions: assign({ demarcheStatut: DemarchesStatutsIds.Rejete }),
+          },
         },
       },
       finDeMachine: {
@@ -365,3 +378,6 @@ const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: De
 // - l'étape « avis du CGE et de l'IGEDD » n'a pas de statut favorable / défavorable ? => C'est une étape d'avis donc c'est FAIT
 // - comment on peut avoir une mise en concurrence si la démarche n'est pas publique ? => Modif du logigramme, ça devient publique dés que la mise en concurrence est « en cours »
 // - Pour l'enquête et la participation du public, la démarche est déjà publique => Heuuuu non, modif à faire dans le logigramme
+//
+// - « Mesures de publicité» ça bloque tout ?
+// - Une fois qu'on a notifié le demandeur, on ne peut plus abroger ?
