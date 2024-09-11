@@ -22,7 +22,7 @@
   },
   "homepage": "https://github.com/MTES-MCT/camino#readme",
   "scripts": {
-    "prepare": "husky install",
+    "prepare": "husky",
     "test": "npm run test --workspaces",
     "lint": "npm run lint --workspaces",
     "knip": "npx --yes knip@5.24.1"
@@ -50,7 +50,7 @@
   },
   "devDependencies": {
     "@types/react": "file:stub/types__react",
-    "husky": "^9.0.11",
+    "husky": "^9.1.5",
     "lint-staged": "^15.2.2",
     "semantic-release": "^23.0.8",
     "semantic-release-mattermost": "^1.2.1",
