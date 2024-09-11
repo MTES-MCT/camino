@@ -12,7 +12,8 @@ const config = {
         "@semantic-release/commit-analyzer",
         "@semantic-release/github",
         "@semantic-release/release-notes-generator",
-        "playwright"
+        "playwright",
+        "lint-staged"
       ],
     },
     "packages/api": {
