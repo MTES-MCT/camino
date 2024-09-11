@@ -40,10 +40,9 @@ test('canImpactTitre', () => {
   expect(result).toMatchSnapshot()
 })
 
-
 test('isDemarcheTypeProlongations', () => {
   const result = getValues(DEMARCHES_TYPES_IDS).flatMap(demarcheType => {
-      return `${demarcheType} -> ${isDemarcheTypeProlongations(demarcheType)}`
+    return `${demarcheType} -> ${isDemarcheTypeProlongations(demarcheType)}`
   })
   expect(result).toMatchSnapshot()
 })

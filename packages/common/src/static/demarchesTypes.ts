@@ -299,12 +299,7 @@ export const isTravaux = (demarcheTypeId: DemarcheTypeId): boolean => {
 }
 
 export const isDemarcheTypeProlongations = (demarcheType: DemarcheTypeId): boolean => {
-  return [
-    DEMARCHES_TYPES_IDS.Prolongation,
-    DEMARCHES_TYPES_IDS.Prolongation1,
-    DEMARCHES_TYPES_IDS.Prolongation2,
-    DEMARCHES_TYPES_IDS.ProlongationExceptionnelle,
-  ].includes(demarcheType)
+  return [DEMARCHES_TYPES_IDS.Prolongation, DEMARCHES_TYPES_IDS.Prolongation1, DEMARCHES_TYPES_IDS.Prolongation2, DEMARCHES_TYPES_IDS.ProlongationExceptionnelle].includes(demarcheType)
 }
 
 /**
