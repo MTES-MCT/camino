@@ -17,7 +17,7 @@ describe('vérifie l’arbre de renonciation et de prolongation d’ARM', () => 
     expect(() =>
       setDateAndOrderAndInterpretMachine(armRenProMachine, '2020-05-26', [ETES.demande.FAIT, ETES.depotDeLaDemande.FAIT, ETES.recevabiliteDeLaDemande.FAVORABLE, ETES.modificationDeLaDemande.FAIT])
     ).toThrowErrorMatchingInlineSnapshot(
-      `[Error: Error: cannot execute step: '{"etapeTypeId":"mod","etapeStatutId":"fai","date":"2020-05-30"}' after '["mfr_fai","mdp_fai","mcr_fav"]'. The event {"type":"RECEVOIR_MODIFICATION_DE_LA_DEMANDE"} should be one of 'CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES']`
+      `[Error: Error: cannot execute step: '{"etapeTypeId":"mod","etapeStatutId":"fai","date":"2020-05-30"}' after '["mfr_fai","mdp_fai","mcr_fav"]'. The event {"type":"RECEVOIR_MODIFICATION_DE_LA_DEMANDE","date":"2020-05-30","status":"fai"} should be one of 'CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES']`
     )
   })
 
@@ -31,7 +31,7 @@ describe('vérifie l’arbre de renonciation et de prolongation d’ARM', () => 
         // {...ETES.recevabiliteDeLaDemande.DEFAVORABLE, date: toCaminoDate('2020-05-30') },
       ])
     ).toThrowErrorMatchingInlineSnapshot(
-      `[Error: Error: cannot execute step: '{"etapeTypeId":"mca","etapeStatutId":"fai","date":"2020-05-31"}' after '["mfr_fai","mdp_fai","mca_fai"]'. The event {"type":"DEMANDER_COMPLEMENTS_POUR_RECEVABILITE"} should be one of 'DESISTER_PAR_LE_DEMANDEUR,FAIRE_RECEVABILITE_DEMANDE_DEFAVORABLE,FAIRE_RECEVABILITE_DEMANDE_FAVORABLE,RECEVOIR_COMPLEMENTS_POUR_RECEVABILITE']`
+      `[Error: Error: cannot execute step: '{"etapeTypeId":"mca","etapeStatutId":"fai","date":"2020-05-31"}' after '["mfr_fai","mdp_fai","mca_fai"]'. The event {"type":"DEMANDER_COMPLEMENTS_POUR_RECEVABILITE","date":"2020-05-31","status":"fai"} should be one of 'DESISTER_PAR_LE_DEMANDEUR,FAIRE_RECEVABILITE_DEMANDE_DEFAVORABLE,FAIRE_RECEVABILITE_DEMANDE_FAVORABLE,RECEVOIR_COMPLEMENTS_POUR_RECEVABILITE']`
     )
   })
 

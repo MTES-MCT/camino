@@ -2,7 +2,7 @@ import { titreArchive, titresGet, titreGet, titreUpsert } from '../../database/q
 import { HTTP_STATUS } from 'camino-common/src/http'
 import { ITitre } from '../../types'
 import { CommonTitreAdministration, editableTitreValidator, TitreLink, TitreLinks, TitreGet, titreLinksValidator, utilisateurTitreAbonneValidator } from 'camino-common/src/titres'
-import { demarcheDefinitionFind } from '../../business/rules-demarches/definitions'
+import { machineFind } from '../../business/rules-demarches/definitions'
 import { CaminoRequest, CustomResponse } from './express-type'
 import { userSuper } from '../../database/user-super'
 import { NotNullableKeys, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined, onlyUnique } from 'camino-common/src/typescript-tools'
@@ -138,11 +138,11 @@ export const titresAdministrations =
                 const etapes = demarcheLaPlusRecente.etapes.map(etape => titreEtapeForMachineValidator.parse(etape))
                 const etapesDerniereDemarche = toMachineEtapes(etapes)
                 derniereEtape = etapesDerniereDemarche[etapesDerniereDemarche.length - 1]
-                const dd = demarcheDefinitionFind(titre.typeId, demarcheLaPlusRecente.typeId, demarcheLaPlusRecente.etapes, demarcheLaPlusRecente.id)
-                if (dd) {
+                const machine = machineFind(titre.typeId, demarcheLaPlusRecente.typeId, demarcheLaPlusRecente.etapes, demarcheLaPlusRecente.id)
+                if (machine) {
                   try {
-                    enAttenteDeAdministration = dd.machine.whoIsBlocking(etapesDerniereDemarche).includes(user.administrationId)
-                    const nextEtapes = dd.machine.possibleNextEtapes(etapesDerniereDemarche, getCurrent())
+                    enAttenteDeAdministration = machine.whoIsBlocking(etapesDerniereDemarche).includes(user.administrationId)
+                    const nextEtapes = machine.possibleNextEtapes(etapesDerniereDemarche, getCurrent())
                     prochainesEtapes.push(
                       ...nextEtapes
                         .map(etape => etape.etapeTypeId)

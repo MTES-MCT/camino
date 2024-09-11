@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { Model, Modifiers } from 'objection'
 
 import { IEntrepriseEtablissement } from '../../types'
@@ -5,9 +6,9 @@ import { IEntrepriseEtablissement } from '../../types'
 interface EntreprisesEtablissements extends IEntrepriseEtablissement {}
 
 class EntreprisesEtablissements extends Model {
-  public static tableName = 'entreprisesEtablissements'
+  public static override tableName = 'entreprisesEtablissements'
 
-  public static jsonSchema = {
+  public static override jsonSchema = {
     type: 'object',
     required: ['id', 'entrepriseId', 'dateDebut'],
 
@@ -21,7 +22,7 @@ class EntreprisesEtablissements extends Model {
     },
   }
 
-  public static modifiers: Modifiers = {
+  public static override modifiers: Modifiers = {
     orderDesc: builder => {
       builder.orderBy('dateDebut', 'desc')
     },

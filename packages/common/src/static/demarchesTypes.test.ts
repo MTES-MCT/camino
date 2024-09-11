@@ -1,6 +1,6 @@
 import { getValues } from '../typescript-tools'
 import { sortedDemarchesStatuts } from './demarchesStatuts'
-import { DEMARCHES_TYPES_IDS, isDemarcheTypeId, isDemarcheTypeOctroi, isDemarcheTypeWithPhase, canImpactTitre } from './demarchesTypes'
+import { DEMARCHES_TYPES_IDS, isDemarcheTypeId, isDemarcheTypeOctroi, isDemarcheTypeWithPhase, canImpactTitre, isDemarcheTypeProlongations } from './demarchesTypes'
 import { test, expect } from 'vitest'
 
 test('isDemarcheTypeId', () => {
@@ -36,6 +36,13 @@ test('canImpactTitre', () => {
     return sortedDemarchesStatuts.map(demarcheStatus => {
       return `${demarcheType} - ${demarcheStatus.id} -> ${canImpactTitre(demarcheType, demarcheStatus.id)}`
     })
+  })
+  expect(result).toMatchSnapshot()
+})
+
+test('isDemarcheTypeProlongations', () => {
+  const result = getValues(DEMARCHES_TYPES_IDS).flatMap(demarcheType => {
+    return `${demarcheType} -> ${isDemarcheTypeProlongations(demarcheType)}`
   })
   expect(result).toMatchSnapshot()
 })

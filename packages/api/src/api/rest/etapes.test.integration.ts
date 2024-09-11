@@ -3,7 +3,7 @@ import { titreCreate } from '../../database/queries/titres'
 import { titreDemarcheCreate } from '../../database/queries/titres-demarches'
 import { userSuper } from '../../database/user-super'
 import { restCall, restDeleteCall } from '../../../tests/_utils/index'
-import { caminoDateValidator, getCurrent, toCaminoDate } from 'camino-common/src/date'
+import { caminoDateValidator, toCaminoDate } from 'camino-common/src/date'
 import { afterAll, beforeAll, test, expect, describe, vi } from 'vitest'
 import type { Pool } from 'pg'
 import { HTTP_STATUS } from 'camino-common/src/http'
@@ -51,7 +51,7 @@ describe('getEtapesTypesEtapesStatusWithMainStep', () => {
       typeId: 'oct',
     })
 
-    const tested = await restCall(dbPool, '/rest/etapesTypes/:demarcheId/:date', { demarcheId: titreDemarche.id, date: getCurrent() }, userSuper)
+    const tested = await restCall(dbPool, '/rest/etapesTypes/:demarcheId/:date', { demarcheId: titreDemarche.id, date: toCaminoDate('2024-09-01') }, userSuper)
 
     expect(tested.statusCode).toBe(HTTP_STATUS.OK)
     // TODO 2024-06-19 changer ce format ?
@@ -141,7 +141,7 @@ describe('getEtapesTypesEtapesStatusWithMainStep', () => {
       titre.id
     )
 
-    const tested = await restCall(dbPool, '/rest/etapesTypes/:demarcheId/:date', { demarcheId: titreDemarche.id, date: getCurrent() }, userSuper)
+    const tested = await restCall(dbPool, '/rest/etapesTypes/:demarcheId/:date', { demarcheId: titreDemarche.id, date: toCaminoDate('2024-09-01') }, userSuper)
 
     expect(tested.statusCode).toBe(HTTP_STATUS.OK)
     expect(tested.body).toMatchInlineSnapshot(`

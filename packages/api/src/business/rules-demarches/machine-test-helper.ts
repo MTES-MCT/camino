@@ -81,7 +81,7 @@ export const interpretMachine = <T extends EventObject, C extends CaminoCommonCo
 export const setDateAndOrderAndInterpretMachine = <T extends EventObject, C extends CaminoCommonContext>(
   machine: CaminoMachine<C, T>,
   initDate: `${number}-${number}-${number}`,
-  etapes: readonly (EtapeTypeEtapeStatutValidPair & Omit<Etape, 'date' | 'etapeTypeId' | 'etapeStatutId'> & { addDays?: number })[]
+  etapes: readonly (EtapeTypeEtapeStatutValidPair & Omit<Etape, 'date' | 'etapeTypeId' | 'etapeStatutId' | 'titreTypeId' | 'demarcheTypeId'> & { addDays?: number })[]
 ): { service: Actor<(typeof machine)['machine']>; dateFin: CaminoDate; etapes: Etape[] } => {
   const firstDate = toCaminoDate(initDate)
   let index = 0
@@ -98,6 +98,9 @@ export const setDateAndOrderAndInterpretMachine = <T extends EventObject, C exte
 
   return { service, dateFin: dateAddDays(firstDate, etapes.length), etapes: fullEtapes }
 }
-export const orderAndInterpretMachine = <T extends EventObject, C extends CaminoCommonContext>(machine: CaminoMachine<C, T>, etapes: readonly Etape[]): Actor<(typeof machine)['machine']> => {
+export const orderAndInterpretMachine = <T extends EventObject, C extends CaminoCommonContext>(
+  machine: CaminoMachine<C, T>,
+  etapes: readonly Omit<Etape, 'titreTypeId' | 'demarcheTypeId'>[]
+): Actor<(typeof machine)['machine']> => {
   return interpretMachine(machine, machine.orderMachine(etapes))
 }

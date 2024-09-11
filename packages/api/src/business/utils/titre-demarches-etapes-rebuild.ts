@@ -21,7 +21,7 @@ const titreEtapesFilter = (titreEtapes: ITitreEtape[], date: string) => titreEta
  * @returns démarches du titre
  */
 
-export const titreDemarchesEtapesRebuild = (date: CaminoDate, titreDemarches: ITitreDemarche[], titreTypeId: TitreTypeId) => {
+export const titreDemarchesEtapesRebuild = (date: CaminoDate, titreDemarches: ITitreDemarche[], titreTypeId: TitreTypeId): ITitreDemarche[] => {
   const titreDemarchesRebuilt = titreDemarches.reduce((acc: ITitreDemarche[], td) => {
     if (!td.etapes) return acc
 

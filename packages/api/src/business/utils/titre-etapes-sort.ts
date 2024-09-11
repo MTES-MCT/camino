@@ -1,5 +1,5 @@
 import { ITitreEtape } from '../../types'
-import { demarcheDefinitionFind } from '../rules-demarches/definitions'
+import { machineFind } from '../rules-demarches/definitions'
 import { TitreEtapeForMachine, toMachineEtapes } from '../rules-demarches/machine-common'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
@@ -16,10 +16,10 @@ export const titreEtapesSortDescByOrdre = <T extends Pick<ITitreEtape, 'ordre'>>
 export const titreEtapesSortAscByOrdre = <T extends Pick<ITitreEtape, 'ordre'>>(titreEtapes: T[]): T[] => titreEtapes.toSorted((a, b) => a.ordre! - b.ordre!)
 // classe les étapes selon leur dates, ordre et etapesTypes.ordre le cas échéant
 export const titreEtapesSortAscByDate = <T extends TitreEtapeForMachine>(titreEtapes: T[], demarcheId: DemarcheId, demarcheTypeId: DemarcheTypeId, titreTypeId: TitreTypeId): T[] => {
-  const demarcheDefinition = demarcheDefinitionFind(titreTypeId, demarcheTypeId, titreEtapes, demarcheId)
-  if (demarcheDefinition) {
-    const etapes = demarcheDefinition.machine.orderMachine(toMachineEtapes(titreEtapes))
-    if (!demarcheDefinition.machine.isEtapesOk(etapes)) {
+  const machine = machineFind(titreTypeId, demarcheTypeId, titreEtapes, demarcheId)
+  if (machine) {
+    const etapes = machine.orderMachine(toMachineEtapes(titreEtapes))
+    if (!machine.isEtapesOk(etapes)) {
       console.error(`impossible de trouver un ordre pour la démarche '${demarcheId}' où ces étapes sont valides ${JSON.stringify(etapes)}`)
     }
 

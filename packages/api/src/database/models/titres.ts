@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { Model, Pojo, QueryContext, ref } from 'objection'
 
 import { ITitre } from '../../types'
@@ -14,9 +15,9 @@ export interface DBTitre extends ITitre {
 interface Titres extends DBTitre {}
 
 class Titres extends Model {
-  public static tableName = 'titres'
+  public static override tableName = 'titres'
 
-  public static jsonSchema = {
+  public static override jsonSchema = {
     type: 'object',
     required: ['nom', 'typeId'],
     properties: {
@@ -32,7 +33,7 @@ class Titres extends Model {
     },
   }
 
-  static relationMappings = () => ({
+  static override relationMappings = () => ({
     demarches: {
       relation: Model.HasManyRelation,
       modelClass: TitresDemarches,
@@ -82,7 +83,7 @@ class Titres extends Model {
     },
   })
 
-  async $beforeInsert(context: QueryContext) {
+  override async $beforeInsert(context: QueryContext) {
     if (isNullOrUndefined(this.id)) {
       this.id = idGenerate()
     }
@@ -94,7 +95,7 @@ class Titres extends Model {
     return super.$beforeInsert(context)
   }
 
-  $afterFind() {
+  override $afterFind() {
     if (this.substancesEtape === null) {
       this.substances = []
     } else if (this.substancesEtape === undefined) {
@@ -141,14 +142,14 @@ class Titres extends Model {
     }
   }
 
-  public $parseJson(json: Pojo) {
+  public override $parseJson(json: Pojo) {
     json = titreInsertFormat(json)
     json = super.$parseJson(json)
 
     return json
   }
 
-  public $formatDatabaseJson(json: Pojo) {
+  public override $formatDatabaseJson(json: Pojo) {
     json = titreInsertFormat(json)
     json = super.$formatDatabaseJson(json)
 

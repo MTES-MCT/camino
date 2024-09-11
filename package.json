@@ -38,7 +38,7 @@
       "prettier --write"
     ],
     "packages/api/**/*.{graphql,md}": "prettier --write",
-    "packages/common/**/*.ts": [
+    "packages/common/src/**/*.ts": [
       "eslint --cache --fix --max-warnings=0",
       "prettier --write"
     ],

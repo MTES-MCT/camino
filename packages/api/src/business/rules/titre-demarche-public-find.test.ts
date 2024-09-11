@@ -18,6 +18,7 @@ const etapesBuild = (etapesProps: Partial<ITitreEtape>[]) =>
         contenu: null,
         ...etapeProps,
         ordre: i + 1,
+        date: toCaminoDate('0001-01-01'),
       }) as unknown as ITitreEtape
   )
 

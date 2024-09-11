@@ -5,7 +5,7 @@ import { titreDemarcheGet } from '../../database/queries/titres-demarches'
 import { userSuper } from '../../database/user-super'
 import { titreEtapeUpdateTask } from '../titre-etape-update'
 import { titreEtapeAdministrationsEmailsSend } from '../../api/graphql/resolvers/_titre-etape-email'
-import { demarcheDefinitionFind } from '../rules-demarches/definitions'
+import { machineFind } from '../rules-demarches/definitions'
 import { titreUrlGet } from '../utils/urls-get'
 import { emailsWithTemplateSend } from '../../tools/api-mailjet/emails'
 import { EmailTemplateId, EmailAdministration } from '../../tools/api-mailjet/types'
@@ -50,7 +50,7 @@ const titreEtapeDepotConfirmationEmailsSend = async (titreDemarche: ITitreDemarc
 
 // visibleForTesting
 export const titreDemarcheDepotCheck = (titreDemarche: ITitreDemarche): boolean => {
-  const demarcheDefinition = demarcheDefinitionFind(titreDemarche.titre!.typeId, titreDemarche.typeId, titreDemarche.etapes, titreDemarche.id)
+  const demarcheDefinition = machineFind(titreDemarche.titre!.typeId, titreDemarche.typeId, titreDemarche.etapes, titreDemarche.id)
   // On peut déposer automatiquement seulement les démarches qui possèdent une machine
   if (!demarcheDefinition) return false
   if (titreDemarche.titre!.typeId === 'arm' && titreDemarche.typeId === 'oct') {

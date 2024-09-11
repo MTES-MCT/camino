@@ -3,7 +3,7 @@ import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
 import { getDomaineId, TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { getEtapesTDE } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/index'
 import { ITitreEtape, ITitreDemarche } from '../../types'
-import { demarcheDefinitionFind } from '../rules-demarches/definitions'
+import { machineFind } from '../rules-demarches/definitions'
 import { titreEtapeForMachineValidator, toMachineEtapes } from '../rules-demarches/machine-common'
 import { titreEtapesSortAscByOrdre } from '../utils/titre-etapes-sort'
 import { titreInModificationEnInstance } from './titre-statut-id-find'
@@ -154,7 +154,10 @@ const titreDemarchePublicLectureFind = (
  * @param titreTypeId - id du type de titre
  */
 
-export const titreDemarchePublicFind = (titreDemarche: Pick<ITitreDemarche, 'titreId' | 'demarcheDateDebut' | 'demarcheDateFin' | 'id' | 'typeId' | 'etapes'>, titreTypeId: TitreTypeId) => {
+export const titreDemarchePublicFind = (
+  titreDemarche: Pick<ITitreDemarche, 'titreId' | 'demarcheDateDebut' | 'demarcheDateFin' | 'id' | 'typeId' | 'etapes'>,
+  titreTypeId: TitreTypeId
+): { publicLecture: boolean; entreprisesLecture: boolean } => {
   const titreDemarcheEtapes = titreEtapesSortAscByOrdre(titreDemarche.etapes ?? [])
 
   // calcule la visibilité publique ou non de la démarche
@@ -165,10 +168,10 @@ export const titreDemarchePublicFind = (titreDemarche: Pick<ITitreDemarche, 'tit
   if (titreDemarche.titreId === 'WQaZgPfDcQw9tFliMgBIDH3Z') {
     publicLecture = false
   } else {
-    const demarcheDefinition = demarcheDefinitionFind(titreTypeId, titreDemarche.typeId, titreDemarcheEtapes, titreDemarche.id)
+    const machine = machineFind(titreTypeId, titreDemarche.typeId, titreDemarcheEtapes, titreDemarche.id)
 
-    if (demarcheDefinition) {
-      publicLecture = demarcheDefinition.machine.demarcheStatut(toMachineEtapes(titreDemarcheEtapes.map(etape => titreEtapeForMachineValidator.parse(etape)))).publique
+    if (machine) {
+      publicLecture = machine.demarcheStatut(toMachineEtapes(titreDemarcheEtapes.map(etape => titreEtapeForMachineValidator.parse(etape)))).publique
     } else {
       const demarcheTypeEtapesTypes = getEtapesTDE(titreTypeId, titreDemarche.typeId)
       publicLecture = titreDemarcheEtapes.reduce(

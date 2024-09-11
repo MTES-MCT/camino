@@ -13,15 +13,14 @@ import { ArmRenProMachine } from './arm/ren-pro.machine'
 import { PrmOctMachine } from './prm/oct.machine'
 import { DeepReadonly, NonEmptyArray, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools'
 import { ProcedureSimplifieeMachine } from './procedure-simplifiee/ps.machine'
+import { ProcedureSpecifiqueMachine } from './procedure-specifique/procedure-specifique.machine'
 
-interface DemarcheDefinitionCommon {
+interface DemarcheDefinition {
   titreTypeIds: NonEmptyArray<TitreTypeId>
   demarcheTypeIds: DemarcheTypeId[]
   dateDebut: CaminoDate
   demarcheIdExceptions: DemarcheId[]
-}
-export interface DemarcheDefinition extends DemarcheDefinitionCommon {
-  machine: CaminoMachines
+  machine: (titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId) => CaminoMachines
 }
 const allDemarcheNotTravaux = Object.values(DEMARCHES_TYPES_IDS).filter(demarcheTypeId => !DemarchesTypes[demarcheTypeId].travaux)
 const demarcheTypeIdsCxPr_G: DemarcheTypeId[] = [
@@ -43,21 +42,21 @@ export const demarchesDefinitions = [
   {
     titreTypeIds: ['arm'],
     demarcheTypeIds: ['oct'],
-    machine: new ArmOctMachine(),
+    machine: () => new ArmOctMachine(),
     dateDebut: toCaminoDate('2019-10-31'),
     demarcheIdExceptions: [],
   },
   {
     titreTypeIds: ['arm'],
     demarcheTypeIds: ['ren', 'pro'],
-    machine: new ArmRenProMachine(),
+    machine: () => new ArmRenProMachine(),
     dateDebut: toCaminoDate('2019-10-31'),
     demarcheIdExceptions: [],
   },
   {
     titreTypeIds: ['prm'],
     demarcheTypeIds: ['oct'],
-    machine: new PrmOctMachine(),
+    machine: () => new PrmOctMachine(),
     dateDebut: toCaminoDate('2019-10-31'),
     demarcheIdExceptions: [
       newDemarcheId('FfJTtP9EEfvf3VZy81hpF7ms'),
@@ -71,7 +70,7 @@ export const demarchesDefinitions = [
   {
     titreTypeIds: ['axm'],
     demarcheTypeIds: ['oct'],
-    machine: new AxmOctMachine(),
+    machine: () => new AxmOctMachine(),
     // https://camino.beta.gouv.fr/titres/m-ax-crique-tumuc-humac-2020
     dateDebut: toCaminoDate('2020-09-30'),
     demarcheIdExceptions: [
@@ -84,7 +83,7 @@ export const demarchesDefinitions = [
   {
     titreTypeIds: ['axm'],
     demarcheTypeIds: ['pro'],
-    machine: new AxmProMachine(),
+    machine: () => new AxmProMachine(),
     dateDebut: toCaminoDate('2000-01-01'),
     demarcheIdExceptions: [
       // Complète mais ne respectant pas le cacoo
@@ -110,26 +109,43 @@ export const demarchesDefinitions = [
   {
     titreTypeIds: ['pxg', 'arg', 'cxr', 'inr', 'prr', 'pxr', 'cxf', 'prf', 'pxf', 'arc', 'apc', 'pcc'],
     demarcheTypeIds: allDemarcheNotTravaux,
-    machine: new ProcedureSimplifieeMachine(),
+    machine: () => new ProcedureSimplifieeMachine(),
     dateDebut: plusVieilleDateEnBase,
     demarcheIdExceptions: [],
   },
   {
     titreTypeIds: ['cxg', 'prg', 'cxs', 'prs', 'aph', 'cxh', 'prh', 'pxh'],
     demarcheTypeIds: demarcheTypeIdsCxPr_G,
-    machine: new ProcedureSimplifieeMachine(),
+    machine: () => new ProcedureSimplifieeMachine(),
     dateDebut: plusVieilleDateEnBase,
+    demarcheIdExceptions: [],
+  },
+  {
+    titreTypeIds: ['arm', 'arc', 'axm', 'cxg', 'cxw', 'cxh', 'cxm', 'cxs', 'pcc', 'prg', 'prw', 'prh', 'prm', 'prs'],
+    demarcheTypeIds: [
+      DEMARCHES_TYPES_IDS.Octroi,
+      DEMARCHES_TYPES_IDS.Prolongation,
+      DEMARCHES_TYPES_IDS.Prolongation1,
+      DEMARCHES_TYPES_IDS.Prolongation2,
+      DEMARCHES_TYPES_IDS.ProlongationExceptionnelle,
+      DEMARCHES_TYPES_IDS.ExtensionDePerimetre,
+      DEMARCHES_TYPES_IDS.ExtensionDeSubstance,
+      DEMARCHES_TYPES_IDS.Prorogation,
+    ],
+    machine: (titreTypeId, demarcheTypeId) => new ProcedureSpecifiqueMachine(titreTypeId, demarcheTypeId),
+    dateDebut: toCaminoDate('4000-01-01'),
     demarcheIdExceptions: [],
   },
 ] as const satisfies readonly DemarcheDefinition[]
 
-export const demarcheDefinitionFind = (
+export const machineFind = (
   titreTypeId: TitreTypeId,
   demarcheTypeId: DemarcheTypeId,
   titreEtapes: DeepReadonly<Pick<ITitreEtape, 'date' | 'typeId'>[]> | undefined,
-  demarcheId: DemarcheId
-): DemarcheDefinition | undefined => {
-  const date = titreDemarcheDepotDemandeDateFind(titreEtapes)
+  demarcheId: DemarcheId,
+  overrideDate: CaminoDate | null = null
+): CaminoMachines | undefined => {
+  const date = titreDemarcheDepotDemandeDateFind(titreEtapes) ?? overrideDate
 
   const definition = demarchesDefinitions
     .toSorted((a, b) => b.dateDebut.localeCompare(a.dateDebut))
@@ -138,5 +154,5 @@ export const demarcheDefinitionFind = (
     return undefined
   }
 
-  return definition
+  return definition?.machine(titreTypeId, demarcheTypeId)
 }

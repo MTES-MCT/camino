@@ -178,15 +178,12 @@ const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
   NOTIFIER_AVENANT_ARM: { db: EtapesTypesEtapesStatuts.notificationAuDemandeur_SignatureDeLavenantALautorisationDeRechercheMiniere_, mainStep: false },
 } as const
 
-// Related to https://github.com/Microsoft/TypeScript/issues/12870
-const EVENTS = Object.keys(trad) as Array<Extract<keyof typeof trad, string>>
-
 export class ArmOctMachine extends CaminoMachine<OctARMContext, XStateEvent> {
   constructor() {
     super(armOctMachine, trad)
   }
 
-  caminoXStateEventToEtapes(event: XStateEvent): (Omit<Etape, 'date'> & { mainStep: boolean })[] {
+  override caminoXStateEventToEtapes(event: XStateEvent): (Omit<Etape, 'date' | 'titreTypeId' | 'demarcheTypeId'> & { mainStep: boolean })[] {
     const dbEtat: DBEtat = trad[event.type].db
     let contenu: IContenu | undefined
     switch (event.type) {
@@ -214,49 +211,36 @@ export class ArmOctMachine extends CaminoMachine<OctARMContext, XStateEvent> {
     }))
   }
 
-  eventFrom(etape: Etape): XStateEvent {
-    const entries = Object.entries(trad).filter((entry): entry is [Event, { db: DBEtat; mainStep: boolean }] => EVENTS.includes(entry[0]))
-
-    const entry = entries.find(([_key, { db: dbEtat }]) => {
-      return Object.values(dbEtat).some(dbEtatSingle => dbEtatSingle.etapeTypeId === etape.etapeTypeId && dbEtatSingle.etapeStatutId === etape.etapeStatutId)
-    })
-
-    if (entry) {
-      const eventFromEntry = entry[0]
-      switch (eventFromEntry) {
-        case 'FAIRE_DEMANDE': {
-          let mecanise = false
-          let franchissements = null
-          if (typeof etape.contenu?.arm?.mecanise === 'boolean') {
-            mecanise = etape.contenu?.arm.mecanise
-          }
-          if (typeof etape.contenu?.arm?.franchissements === 'number') {
-            franchissements = etape.contenu?.arm?.franchissements
-          }
-
-          return { type: eventFromEntry, mecanise, franchissements }
+  override eventFromEntry(eventFromEntry: XStateEvent['type'], etape: Etape): XStateEvent {
+    switch (eventFromEntry) {
+      case 'FAIRE_DEMANDE': {
+        let mecanise = false
+        let franchissements = null
+        if (typeof etape.contenu?.arm?.mecanise === 'boolean') {
+          mecanise = etape.contenu?.arm.mecanise
         }
-        case 'ACCEPTER_RDE':
-        case 'REFUSER_RDE':
-        case 'RECEVOIR_COMPLEMENTS_RDE': {
-          let franchissements = null
-          if (typeof etape.contenu?.arm?.franchissements === 'number') {
-            franchissements = etape.contenu?.arm?.franchissements
-          }
-
-          return { type: eventFromEntry, franchissements }
+        if (typeof etape.contenu?.arm?.franchissements === 'number') {
+          franchissements = etape.contenu?.arm?.franchissements
         }
-        default:
-          // related to https://github.com/microsoft/TypeScript/issues/46497  https://github.com/microsoft/TypeScript/issues/40803 :(
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
-          return { type: eventFromEntry }
+
+        return { type: eventFromEntry, mecanise, franchissements }
       }
+      case 'ACCEPTER_RDE':
+      case 'REFUSER_RDE':
+      case 'RECEVOIR_COMPLEMENTS_RDE': {
+        let franchissements = null
+        if (typeof etape.contenu?.arm?.franchissements === 'number') {
+          franchissements = etape.contenu?.arm?.franchissements
+        }
+
+        return { type: eventFromEntry, franchissements }
+      }
+      default:
+        return super.eventFromEntry(eventFromEntry, etape)
     }
-    throw new Error(`no event from ${JSON.stringify(etape)}`)
   }
 
-  toPotentialCaminoXStateEvent(event: XStateEvent['type'], _date: CaminoDate): XStateEvent[] {
+  override toPotentialCaminoXStateEvent(event: XStateEvent['type'], _date: CaminoDate): XStateEvent[] {
     switch (event) {
       case 'FAIRE_DEMANDE': {
         return [

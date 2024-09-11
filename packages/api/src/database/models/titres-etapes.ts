@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 
 import { Model, ModelOptions, Pojo, QueryContext } from 'objection'
 
@@ -16,9 +17,9 @@ export interface DBTitresEtapes extends ITitreEtape {
 }
 interface TitresEtapes extends DBTitresEtapes {}
 class TitresEtapes extends Model {
-  public static tableName = 'titresEtapes'
+  public static override tableName = 'titresEtapes'
 
-  public static jsonSchema = {
+  public static override jsonSchema = {
     type: 'object',
     // l’id est généré tout seul
     required: ['titreDemarcheId', 'date'],
@@ -53,7 +54,7 @@ class TitresEtapes extends Model {
     },
   }
 
-  static relationMappings = () => ({
+  static override relationMappings = () => ({
     demarche: {
       relation: Model.BelongsToOneRelation,
       modelClass: TitresDemarches,
@@ -73,7 +74,7 @@ class TitresEtapes extends Model {
     },
   })
 
-  async $beforeInsert(context: QueryContext) {
+  override async $beforeInsert(context: QueryContext) {
     if (!this.id) {
       this.id = idGenerate()
     }
@@ -90,7 +91,7 @@ class TitresEtapes extends Model {
     await super.$beforeInsert(context)
   }
 
-  async $beforeUpdate(opt: ModelOptions, context: QueryContext) {
+  override async $beforeUpdate(opt: ModelOptions, context: QueryContext) {
     if (isNotNullNorUndefined(this.geojson4326Perimetre)) {
       // eslint-disable-next-line sql/no-unsafe-query
       const rawLine = await context.transaction.raw(`select ST_GeomFromGeoJSON('${JSON.stringify(this.geojson4326Perimetre.geometry)}'::text)`)
@@ -100,7 +101,7 @@ class TitresEtapes extends Model {
     return super.$beforeUpdate(opt, context)
   }
 
-  async $afterFind(context: QueryContext) {
+  override async $afterFind(context: QueryContext) {
     if (context.fetchHeritage && this.heritageProps) {
       this.heritageProps = await heritagePropsFormat(this.heritageProps)
     }
@@ -121,7 +122,7 @@ class TitresEtapes extends Model {
     return this
   }
 
-  public $formatDatabaseJson(json: Pojo) {
+  public override $formatDatabaseJson(json: Pojo) {
     delete json.entrepriseDocumentIds
     delete json.etapeDocuments
     delete json.etapeAvis
@@ -134,7 +135,7 @@ class TitresEtapes extends Model {
     return json
   }
 
-  public $parseJson(json: Pojo) {
+  public override $parseJson(json: Pojo) {
     delete json.modification
     delete json.suppression
     json = super.$parseJson(json)
