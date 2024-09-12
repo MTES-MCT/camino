@@ -73,7 +73,7 @@ describe('vérifie l’arbre d’octroi d’AXM', () => {
       },
       { ...ETES.avisDesServicesEtCommissionsConsultatives.FAIT, date: toCaminoDate('2022-04-15') },
       {
-        ...ETES.avisEtRapportDuDirecteurRegionalChargeDeLenvironnementDeLamenagementEtDuLogement.FAVORABLE,
+        ...ETES.rapportEtAvisDeLaDREAL.FAVORABLE,
         date: toCaminoDate('2022-06-15'),
       },
     ])
@@ -107,7 +107,7 @@ describe('vérifie l’arbre d’octroi d’AXM', () => {
       },
       { ...ETES.avisDesServicesEtCommissionsConsultatives.FAIT, date: toCaminoDate('2022-04-15') },
       {
-        ...ETES.avisEtRapportDuDirecteurRegionalChargeDeLenvironnementDeLamenagementEtDuLogement.FAVORABLE,
+        ...ETES.rapportEtAvisDeLaDREAL.FAVORABLE,
         date: toCaminoDate('2022-06-15'),
       },
       {
@@ -115,7 +115,7 @@ describe('vérifie l’arbre d’octroi d’AXM', () => {
         date: toCaminoDate('2022-06-16'),
       },
       {
-        ...ETES.avisEtRapportDuDirecteurRegionalChargeDeLenvironnementDeLamenagementEtDuLogement.FAVORABLE,
+        ...ETES.rapportEtAvisDeLaDREAL.FAVORABLE,
         date: toCaminoDate('2022-06-17'),
       },
       {
@@ -228,7 +228,7 @@ describe('vérifie l’arbre d’octroi d’AXM', () => {
       { ...ETES.avisDesCollectivites.FAIT, date: toCaminoDate('2022-04-17') },
       { ...ETES.avisDesServicesEtCommissionsConsultatives.FAIT, date: toCaminoDate('2022-04-18') },
       {
-        ...ETES.avisEtRapportDuDirecteurRegionalChargeDeLenvironnementDeLamenagementEtDuLogement.FAVORABLE,
+        ...ETES.rapportEtAvisDeLaDREAL.FAVORABLE,
         date: toCaminoDate('2022-05-20'),
       },
       {

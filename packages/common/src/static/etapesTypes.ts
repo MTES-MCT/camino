@@ -22,7 +22,7 @@ export const ETAPES_TYPES = {
   avenantALautorisationDeRechercheMiniere: 'aco',
   decisionDuJugeAdministratif: 'and',
   avisDeMiseEnConcurrenceAuJORF: 'anf',
-  avisEtRapportDuDirecteurRegionalChargeDeLenvironnementDeLamenagementEtDuLogement: 'apd',
+  rapportEtAvisDeLaDREAL: 'apd',
   avisDuConseilDEtat: 'ape',
   avisDeLaCommissionDepartementaleDesMines_CDM_: 'apo',
   avisDuPrefet: 'app',
@@ -842,7 +842,7 @@ export const EtapesTypes = {
   },
   apd: {
     id: 'apd',
-    nom: "Avis et rapport du directeur régional chargé de l'environnement, de l'aménagement et du logement",
+    nom: 'Rapport et avis de la DREAL',
     description:
       "Étape par laquelle le DREAL ou le DEAL rend un avis sur la demande. Cet avis tient compte du rapport rédigé par le service instructeur de la DREAL ou de la DEAL qui s'appuie sur les avis émis par les chefs des services civils et de l'autorité militaire intéressés sur la demande.",
     fondamentale: false,

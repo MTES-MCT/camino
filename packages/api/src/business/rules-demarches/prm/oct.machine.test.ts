@@ -15,7 +15,7 @@ describe('vérifie l’arbre d’octroi de PRM', () => {
       ETES.recevabiliteDeLaDemande.FAVORABLE,
       ETES.avisDeMiseEnConcurrenceAuJORF.FAIT,
       ETES.avisDesServicesEtCommissionsConsultatives.FAIT,
-      { ...ETES.avisEtRapportDuDirecteurRegionalChargeDeLenvironnementDeLamenagementEtDuLogement.FAVORABLE, addDays: 31 },
+      { ...ETES.rapportEtAvisDeLaDREAL.FAVORABLE, addDays: 31 },
       ETES.avisDuPrefet.FAVORABLE,
       ETES.participationDuPublic.TERMINE,
       ETES.saisineDuConseilGeneralDeLeconomie_CGE_.FAIT,
@@ -51,7 +51,7 @@ describe('vérifie l’arbre d’octroi de PRM', () => {
       ETES.saisineDesCollectivitesLocales.FAIT,
       ETES.avisDesCollectivites.FAIT,
       { ...ETES.avisDeLaCommissionDepartementaleDesMines_CDM_.FAVORABLE, addDays: 31 },
-      ETES.avisEtRapportDuDirecteurRegionalChargeDeLenvironnementDeLamenagementEtDuLogement.FAVORABLE,
+      ETES.rapportEtAvisDeLaDREAL.FAVORABLE,
       ETES.avisDuPrefet.FAVORABLE,
     ]
     expect(() => setDateAndOrderAndInterpretMachine(prmOctMachine, '2020-04-14', etapes)).not.toThrowError()
@@ -68,7 +68,7 @@ describe('vérifie l’arbre d’octroi de PRM', () => {
       ETES.avisDesServicesEtCommissionsConsultatives.FAIT,
       ETES.saisineDesCollectivitesLocales.FAIT,
       { ...ETES.avisDeLaCommissionDepartementaleDesMines_CDM_.FAVORABLE, addDays: 31 },
-      ETES.avisEtRapportDuDirecteurRegionalChargeDeLenvironnementDeLamenagementEtDuLogement.FAVORABLE,
+      ETES.rapportEtAvisDeLaDREAL.FAVORABLE,
       ETES.avisDuPrefet.FAVORABLE,
     ]
     expect(() => setDateAndOrderAndInterpretMachine(prmOctMachine, '2023-09-05', etapes)).not.toThrowError()
@@ -84,7 +84,7 @@ describe('vérifie l’arbre d’octroi de PRM', () => {
       ETES.avisDesServicesEtCommissionsConsultatives.FAIT,
       { ...ETES.participationDuPublic.TERMINE, addDays: 31 },
       ETES.avisDeLaCommissionDepartementaleDesMines_CDM_.FAVORABLE,
-      ETES.avisEtRapportDuDirecteurRegionalChargeDeLenvironnementDeLamenagementEtDuLogement.FAVORABLE,
+      ETES.rapportEtAvisDeLaDREAL.FAVORABLE,
       ETES.avisDuPrefet.FAVORABLE,
     ]
     expect(() => setDateAndOrderAndInterpretMachine(prmOctMachine, '2022-06-08', etapes)).not.toThrowError()
@@ -98,7 +98,7 @@ describe('vérifie l’arbre d’octroi de PRM', () => {
       ETES.recevabiliteDeLaDemande.FAVORABLE,
       ETES.avisDeMiseEnConcurrenceAuJORF.FAIT,
       ETES.avisDesServicesEtCommissionsConsultatives.FAIT,
-      ETES.avisEtRapportDuDirecteurRegionalChargeDeLenvironnementDeLamenagementEtDuLogement.FAVORABLE,
+      ETES.rapportEtAvisDeLaDREAL.FAVORABLE,
     ]
     expect(() => setDateAndOrderAndInterpretMachine(prmOctMachine, '2022-04-13', etapes)).toThrowErrorMatchingInlineSnapshot(
       `[Error: Error: cannot execute step: '{"etapeTypeId":"apd","etapeStatutId":"fav","date":"2022-04-20"}' after '["mfr_fai","mdp_fai","spp_fai","mcr_fav","anf_fai","asc_fai"]'. The event {"type":"RENDRE_RAPPORT_DREAL","date":"2022-04-20","status":"fav"} should be one of 'CLASSER_SANS_SUITE,DEMANDER_INFORMATIONS,DEPOSER_DEMANDE_CONCURRENTE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,RECEVOIR_INFORMATIONS']`
@@ -143,7 +143,7 @@ describe('vérifie l’arbre d’octroi de PRM', () => {
       ETES.avisDeMiseEnConcurrenceAuJORF.FAIT,
       ETES.avisDesServicesEtCommissionsConsultatives.FAIT,
       { ...ETES.participationDuPublic.TERMINE, addDays: 31 },
-      ETES.avisEtRapportDuDirecteurRegionalChargeDeLenvironnementDeLamenagementEtDuLogement.FAVORABLE,
+      ETES.rapportEtAvisDeLaDREAL.FAVORABLE,
       ETES.avisDuPrefet.FAVORABLE,
       ETES.saisineDuConseilGeneralDeLeconomie_CGE_.FAIT,
       ETES.rapportDuConseilGeneralDeLeconomie_CGE_.FAVORABLE,

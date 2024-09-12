@@ -41,7 +41,7 @@ export const EtapesTypesEtapesStatuts = {
     FAIT: { etapeTypeId: 'anf', etapeStatutId: 'fai' },
   },
 
-  avisEtRapportDuDirecteurRegionalChargeDeLenvironnementDeLamenagementEtDuLogement: {
+  rapportEtAvisDeLaDREAL: {
     FAVORABLE: { etapeTypeId: 'apd', etapeStatutId: 'fav' },
     DEFAVORABLE: { etapeTypeId: 'apd', etapeStatutId: 'def' },
     FAVORABLE_AVEC_RESERVE: { etapeTypeId: 'apd', etapeStatutId: 'fre' },
