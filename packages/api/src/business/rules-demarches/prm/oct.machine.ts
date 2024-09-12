@@ -104,7 +104,7 @@ const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
   RENDRE_AVIS_POLICE_EAU: { db: EtapesTypesEtapesStatuts.expertiseDREALOuDGTMServiceEau, mainStep: false },
 
   RENDRE_AVIS_CDM: { db: EtapesTypesEtapesStatuts.avisDeLaCommissionDepartementaleDesMines_CDM_, mainStep: true },
-  RENDRE_RAPPORT_DREAL: { db: EtapesTypesEtapesStatuts.avisEtRapportDuDirecteurRegionalChargeDeLenvironnementDeLamenagementEtDuLogement, mainStep: true },
+  RENDRE_RAPPORT_DREAL: { db: EtapesTypesEtapesStatuts.rapportEtAvisDeLaDREAL, mainStep: true },
   RENDRE_AVIS_PREFET: { db: EtapesTypesEtapesStatuts.avisDuPrefet, mainStep: true },
   FAIRE_SAISINE_DES_COLLECTIVITES_LOCALES: { db: EtapesTypesEtapesStatuts.saisineDesCollectivitesLocales, mainStep: true },
   RENDRE_AVIS_DES_COLLECTIVITES: { db: EtapesTypesEtapesStatuts.avisDesCollectivites, mainStep: true },

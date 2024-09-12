@@ -48,7 +48,6 @@ const TitreEtapesTravauxTypes = {
   MemoireReponseExploitant: 'wmm',
   OuvertureEnquetePublique: 'woe',
   ClotureEnquetePublique: 'wce',
-  RapportDREAL: 'wrd',
   AvisRapportDirecteurREAL: 'apd',
   TransPrescriptionsDemandeur: 'wtp',
   AvisPrescriptionsDemandeur: 'wau',

@@ -401,7 +401,7 @@ const AdministrationsTitresTypesEtapesTypes: {
       [ETAPES_TYPES.abrogationDeLaDecision]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.avisDesCollectivites]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.decisionDuJugeAdministratif]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
-      [ETAPES_TYPES.avisEtRapportDuDirecteurRegionalChargeDeLenvironnementDeLamenagementEtDuLogement]: { lectureInterdit: true, creationInterdit: true, modificationInterdit: true },
+      [ETAPES_TYPES.rapportEtAvisDeLaDREAL]: { lectureInterdit: true, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.avisDeLaCommissionDepartementaleDesMines_CDM_]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.decisionDuProprietaireDuSol]: { lectureInterdit: false, creationInterdit: false, modificationInterdit: false },
       [ETAPES_TYPES.classementSansSuite]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },

@@ -4,13 +4,13 @@ import { Definition } from '../definition'
 import { EtapeBrouillon } from '../etape'
 
 // prettier-ignore
-const IDS = ['abd', 'aca','aco','and','anf','def','dex','dim', 'dpu',  'dux','ihi', 'mfr','mod','mom','rca','rcb','rcd','rcm','rco','rcs','rie','rif','rim','rpu','sco','acg','apd','ape','apo','app','apu','asl','cac','cim','cod','css','dae','dec','des','ede','edm','epc','epu','esb','mca','mcb','mcd', 'mci','mcm','mco','mcp','mcr','mcs','mdp','mec','men','meo','mie','mif','mim','mna','mnb','mnc','mnd','mni','mno','mns','mnv','ncl','npp','pfc','pfd','ppu','pqr','rcg','rde','rpe','sas','sca','scg','scl','spe','spo','spp','vfc','vfd','wab','wae','wao','war','wau','wce','wco','wda','wdc','wdd','wde','wdm','wfa','wfd','wfo','wfr','wmm','wmr','wmt','woe','wpa','wpb','wpc','wpo','wpp','wps','wrc','wrd','wre','wrt','wse','wtp', 'asc', 'adc'] as const
+const IDS = ['abd', 'aca','aco','and','anf','def','dex','dim', 'dpu',  'dux','ihi', 'mfr','mod','mom','rca','rcb','rcd','rcm','rco','rcs','rie','rif','rim','rpu','sco','acg','apd','ape','apo','app','apu','asl','cac','cim','cod','css','dae','dec','des','ede','edm','epc','epu','esb','mca','mcb','mcd', 'mci','mcm','mco','mcp','mcr','mcs','mdp','mec','men','meo','mie','mif','mim','mna','mnb','mnc','mnd','mni','mno','mns','mnv','ncl','npp','pfc','pfd','ppu','pqr','rcg','rde','rpe','sas','sca','scg','scl','spe','spo','spp','vfc','vfd','wab','wae','wao','war','wau','wce','wco','wda','wdc','wdd','wde','wdm','wfa','wfd','wfo','wfr','wmm','wmr','wmt','woe','wpa','wpb','wpc','wpo','wpp','wps','wrc','wre','wrt','wse','wtp', 'asc', 'adc'] as const
 
 // prettier-ignore
 const FONDAMENTALES_IDS = ['abd', 'aca','aco','and','anf','def','dex','dim', 'dpu','dux','ihi', 'mfr','mod','mom','rca','rcb','rcd','rcm','rco','rcs','rie','rif','rim','rpu','sco'] as const satisfies Readonly<EtapeTypeIdFondamentaleArray>
 
 // prettier-ignore
-const NON_FONDAMENTALES_IDS = ['acg','apd','ape','apo','app','apu','asl','cac','cim','cod','css','dae','dec','des','ede','edm','epc','epu','esb','mca','mcb','mcd','mci', 'mcm','mco','mcp','mcr', 'mcs','mdp','mec','men','meo','mie','mif','mim','mna','mnb','mnc','mnd','mni','mno','mns','mnv','ncl','npp','pfc','pfd','ppu','pqr','rcg','rde','rpe','sas','sca','scg','scl','spe','spo','spp','vfc','vfd','wab','wae','wao','war','wau','wce','wco','wda','wdc','wdd','wde','wdm','wfa','wfd','wfo','wfr','wmm','wmr','wmt','woe','wpa','wpb','wpc','wpo','wpp','wps','wrc','wrd','wre','wrt','wse','wtp', 'asc', 'adc'] as const satisfies Readonly<EtapeTypeIdNonFondamentale[]>
+const NON_FONDAMENTALES_IDS = ['acg','apd','ape','apo','app','apu','asl','cac','cim','cod','css','dae','dec','des','ede','edm','epc','epu','esb','mca','mcb','mcd','mci', 'mcm','mco','mcp','mcr', 'mcs','mdp','mec','men','meo','mie','mif','mim','mna','mnb','mnc','mnd','mni','mno','mns','mnv','ncl','npp','pfc','pfd','ppu','pqr','rcg','rde','rpe','sas','sca','scg','scl','spe','spo','spp','vfc','vfd','wab','wae','wao','war','wau','wce','wco','wda','wdc','wdd','wde','wdm','wfa','wfd','wfo','wfr','wmm','wmr','wmt','woe','wpa','wpb','wpc','wpo','wpp','wps','wrc','wre','wrt','wse','wtp', 'asc', 'adc'] as const satisfies Readonly<EtapeTypeIdNonFondamentale[]>
 
 // Ceci est un test :)
 ;[...FONDAMENTALES_IDS, ...NON_FONDAMENTALES_IDS] as const satisfies typeof IDS
@@ -22,7 +22,7 @@ export const ETAPES_TYPES = {
   avenantALautorisationDeRechercheMiniere: 'aco',
   decisionDuJugeAdministratif: 'and',
   avisDeMiseEnConcurrenceAuJORF: 'anf',
-  avisEtRapportDuDirecteurRegionalChargeDeLenvironnementDeLamenagementEtDuLogement: 'apd',
+  rapportEtAvisDeLaDREAL: 'apd',
   avisDuConseilDEtat: 'ape',
   avisDeLaCommissionDepartementaleDesMines_CDM_: 'apo',
   avisDuPrefet: 'app',
@@ -128,7 +128,6 @@ export const ETAPES_TYPES = {
   arretePrefectoralDePremierDonnerActe_DADT_: 'wpp',
   arretePrefectoralDeSursisAStatuer: 'wps',
   receptionDeComplements_wrc: 'wrc',
-  rapportDeLaDreal: 'wrd',
   recevabilite: 'wre',
   recolement: 'wrt',
   saisineDeLautoriteEnvironnementale: 'wse',
@@ -843,7 +842,7 @@ export const EtapesTypes = {
   },
   apd: {
     id: 'apd',
-    nom: "Avis et rapport du directeur régional chargé de l'environnement, de l'aménagement et du logement",
+    nom: 'Rapport et avis de la DREAL',
     description:
       "Étape par laquelle le DREAL ou le DEAL rend un avis sur la demande. Cet avis tient compte du rapport rédigé par le service instructeur de la DREAL ou de la DEAL qui s'appuie sur les avis émis par les chefs des services civils et de l'autorité militaire intéressés sur la demande.",
     fondamentale: false,
@@ -1282,16 +1281,6 @@ export const EtapesTypes = {
   wpa: {
     id: 'wpa',
     nom: 'publication de décision au recueil des actes administratifs',
-    description: '',
-    fondamentale: false,
-    unique: false,
-    date_fin: null,
-    public_lecture: false,
-    entreprises_lecture: false,
-  },
-  wrd: {
-    id: 'wrd',
-    nom: 'Rapport de la Dreal',
     description: '',
     fondamentale: false,
     unique: false,

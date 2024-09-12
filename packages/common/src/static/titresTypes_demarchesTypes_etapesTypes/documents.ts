@@ -31,10 +31,11 @@ const EtapesTypesDocumentsTypes = {
     { documentTypeId: DOCUMENTS_TYPES_IDS.avisDeMiseEnConcurrence, optionnel: true },
     { documentTypeId: DOCUMENTS_TYPES_IDS.avis, optionnel: true },
   ],
-  [ETAPES_TYPES.avisEtRapportDuDirecteurRegionalChargeDeLenvironnementDeLamenagementEtDuLogement]: [
+  [ETAPES_TYPES.rapportEtAvisDeLaDREAL]: [
     { documentTypeId: DOCUMENTS_TYPES_IDS.avisDuDirecteurRegionalChargeDesMines, optionnel: true },
     { documentTypeId: DOCUMENTS_TYPES_IDS.rapportDeLAdministrationCentraleChargeDesMines, optionnel: true },
     { documentTypeId: DOCUMENTS_TYPES_IDS.rapportDeLaDirectionRegionaleChargeeDesMines, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.projetDePrescriptions, optionnel: true },
     { documentTypeId: DOCUMENTS_TYPES_IDS.rapport, optionnel: true },
   ],
   [ETAPES_TYPES.avisDuConseilDEtat]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.avis, optionnel: true }],
@@ -336,10 +337,6 @@ const EtapesTypesDocumentsTypes = {
   [ETAPES_TYPES.receptionDeComplements_wrc]: [
     { documentTypeId: DOCUMENTS_TYPES_IDS.complementsAuDossierDeDemande, optionnel: true },
     { documentTypeId: DOCUMENTS_TYPES_IDS.documentsCartographiques, optionnel: true },
-  ],
-  [ETAPES_TYPES.rapportDeLaDreal]: [
-    { documentTypeId: DOCUMENTS_TYPES_IDS.projetDePrescriptions, optionnel: true },
-    { documentTypeId: DOCUMENTS_TYPES_IDS.rapport, optionnel: true },
   ],
   [ETAPES_TYPES.recevabilite]: [
     { documentTypeId: DOCUMENTS_TYPES_IDS.avis, optionnel: true },

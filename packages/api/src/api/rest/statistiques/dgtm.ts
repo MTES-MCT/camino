@@ -259,7 +259,7 @@ export const getDGTMStatsInside =
   left join titres_demarches td on te.titre_demarche_id = td.id
   left join titres t on td.titre_id = t.id
   left join titres_etapes te_admin on t.props_titre_etapes_ids->>'points' = te_admin.id
-  where te.type_id in ('${ETAPES_TYPES.avisEtRapportDuDirecteurRegionalChargeDeLenvironnementDeLamenagementEtDuLogement}', '${ETAPES_TYPES.avisDeLaCommissionDepartementaleDesMines_CDM_}')
+  where te.type_id in ('${ETAPES_TYPES.rapportEtAvisDeLaDREAL}', '${ETAPES_TYPES.avisDeLaCommissionDepartementaleDesMines_CDM_}')
   and te_admin.administrations_locales @> '"${administrationId}"'::jsonb
   and te.date >= '${anneeDepartStats}-01-01'
   group by (substring(te.date, 0, 5), te.type_id, te.statut_id)`)
