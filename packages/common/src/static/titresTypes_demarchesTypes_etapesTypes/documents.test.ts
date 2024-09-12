@@ -7,7 +7,7 @@ test('getDocuments erreurs', () => {
 })
 
 test('getDocuments pas de surcharge mais pas de documents', () => {
-  expect(getDocuments('apm', 'amo', 'cod')).toMatchInlineSnapshot('[]')
+  expect(getDocuments('apm', 'amo', 'pqr')).toMatchInlineSnapshot('[]')
 })
 
 test('getDocuments pas de surcharge', () => {

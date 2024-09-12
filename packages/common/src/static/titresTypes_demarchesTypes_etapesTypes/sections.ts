@@ -276,7 +276,6 @@ const TDESections = {
         },
       ],
       [ETAPES_TYPES.demande]: caracteristiquesARM,
-      [ETAPES_TYPES.modificationDeLaDemande_DecisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_]: caracteristiquesARM,
       [ETAPES_TYPES.modificationDeLaDemande]: caracteristiquesARM,
       [ETAPES_TYPES.completudeDeLaDemande]: [
         {

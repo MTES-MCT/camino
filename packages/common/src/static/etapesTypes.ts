@@ -4,13 +4,13 @@ import { Definition } from '../definition'
 import { EtapeBrouillon } from '../etape'
 
 // prettier-ignore
-const IDS = ['abd', 'aca','aco','and','anf','def','dex','dim', 'dpu',  'dux','ihi', 'mfr','mod','mom','rca','rcb','rcd','rcm','rco','rcs','rie','rif','rim','rpu','sco','acg','apd','ape','apo','app','apu','asl','cac','cim','cod','css','dae','dec','des','ede','edm','epu','esb','mca','mcb','mcd', 'mci','mcm','mco','mcp','mcr','mcs','mdp','mec','men','meo','mie','mif','mim','mna','mnb','mnc','mnd','mni','mno','mns','mnv','ncl','npp','pfc','pfd','ppu','pqr','rcg','rde','rpe','sas','sca','scg','spe','spo','spp','vfc','vfd','wab','wae','wao','war','wau','wco','wda','wdc','wdd','wde','wdm','wfa','wfd','wfo','wfr','wmm','wmr','wmt', 'wpa','wpb','wpc','wpo','wpp','wps','wrc','wre','wrt','wse','wtp', 'asc', 'adc'] as const
+const IDS = ['abd', 'aca','aco','and','anf','def','dex','dim', 'dpu',  'dux','ihi', 'mfr','mod','mom','rca','rcb','rcd','rcm','rco','rcs','rie','rif','rim','rpu','sco','acg','apd','ape','apo','app','apu','asl','cac','cim','css','dae','des','ede','edm','epu','esb','mca','mcb','mcd', 'mci','mcm','mco','mcp','mcr','mcs','mdp','mec','men','meo','mie','mif','mim','mna','mnb','mnc','mnd','mni','mno','mns','mnv','ncl','npp','pfc','pfd','ppu','pqr','rcg','rde','rpe','sas','sca','scg','spe','spo','spp','vfc','vfd','wab','wae','wao','war','wau','wco','wda','wdc','wdd','wde','wdm','wfa','wfd','wfo','wmt', 'wpa','wpb','wpc','wpo','wpp','wps','wrc','wre','wrt','wse','wtp', 'asc', 'adc'] as const
 
 // prettier-ignore
 const FONDAMENTALES_IDS = ['abd', 'aca','aco','and','anf','def','dex','dim', 'dpu','dux','ihi', 'mfr','mod','mom','rca','rcb','rcd','rcm','rco','rcs','rie','rif','rim','rpu','sco'] as const satisfies Readonly<EtapeTypeIdFondamentaleArray>
 
 // prettier-ignore
-const NON_FONDAMENTALES_IDS = ['acg','apd','ape','apo','app','apu','asl','cac','cim','cod','css','dae','dec','des','ede','edm','epu','esb','mca','mcb','mcd','mci', 'mcm','mco','mcp','mcr', 'mcs','mdp','mec','men','meo','mie','mif','mim','mna','mnb','mnc','mnd','mni','mno','mns','mnv','ncl','npp','pfc','pfd','ppu','pqr','rcg','rde','rpe','sas','sca','scg','spe','spo','spp','vfc','vfd','wab','wae','wao','war','wau','wco','wda','wdc','wdd','wde','wdm','wfa','wfd','wfo','wfr','wmm','wmr','wmt','wpa','wpb','wpc','wpo','wpp','wps','wrc','wre','wrt','wse','wtp', 'asc', 'adc'] as const satisfies Readonly<EtapeTypeIdNonFondamentale[]>
+const NON_FONDAMENTALES_IDS = ['acg','apd','ape','apo','app','apu','asl','cac','cim','css','dae','des','ede','edm','epu','esb','mca','mcb','mcd','mci', 'mcm','mco','mcp','mcr', 'mcs','mdp','mec','men','meo','mie','mif','mim','mna','mnb','mnc','mnd','mni','mno','mns','mnv','ncl','npp','pfc','pfd','ppu','pqr','rcg','rde','rpe','sas','sca','scg','spe','spo','spp','vfc','vfd','wab','wae','wao','war','wau','wco','wda','wdc','wdd','wde','wdm','wfa','wfd','wfo','wmt','wpa','wpb','wpc','wpo','wpp','wps','wrc','wre','wrt','wse','wtp', 'asc', 'adc'] as const satisfies Readonly<EtapeTypeIdNonFondamentale[]>
 
 // Ceci est un test :)
 ;[...FONDAMENTALES_IDS, ...NON_FONDAMENTALES_IDS] as const satisfies typeof IDS
@@ -30,10 +30,8 @@ export const ETAPES_TYPES = {
   decisionDuProprietaireDuSol: 'asl',
   consultationDesAdministrationsCentrales: 'cac',
   concertationInterministerielle: 'cim',
-  saisineDuConseilDepartementalDeLenvironnementEtDesRisquesSanitairesEtTechnologiques_Coderst_: 'cod',
   classementSansSuite: 'css',
   decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_: 'dae',
-  declaration: 'dec',
   decisionDeLOfficeNationalDesForets: 'def',
   desistementDuDemandeur: 'des',
   decisionDeLadministration: 'dex',
@@ -113,9 +111,6 @@ export const ETAPES_TYPES = {
   demandeDautorisationDouvertureDeTravauxMiniers_AOTM_: 'wfa',
   declarationDarretDefinitifDeTravaux_DADT_: 'wfd',
   declarationDouvertureDeTravauxMiniers_DOTM_: 'wfo',
-  demandeDautorisationDouvertureDeTravauxMiniers_DAOTM_: 'wfr',
-  memoireEnReponseDeLexploitant_ParRapportALavisDeLAE_: 'wmm',
-  memoireEnReponseDeLexploitant: 'wmr',
   memoireDeFinDeTravaux: 'wmt',
   publicationDeDecisionAuRecueilDesActesAdministratifs_wpa: 'wpa',
   porterAConnaissance: 'wpb',
@@ -277,16 +272,6 @@ export const EtapesTypes = {
     public_lecture: false,
     entreprises_lecture: true,
   },
-  dec: {
-    id: 'dec',
-    nom: 'déclaration',
-    description: '',
-    fondamentale: false,
-    unique: true,
-    date_fin: null,
-    public_lecture: true,
-    entreprises_lecture: true,
-  },
   cac: {
     id: 'cac',
     nom: 'consultation des administrations centrales',
@@ -347,16 +332,6 @@ export const EtapesTypes = {
     date_fin: null,
     public_lecture: false,
     entreprises_lecture: false,
-  },
-  cod: {
-    id: 'cod',
-    nom: "saisine du conseil départemental de l'environnement et des risques sanitaires et technologiques  (Coderst)",
-    description: '',
-    fondamentale: false,
-    unique: false,
-    date_fin: null,
-    public_lecture: true,
-    entreprises_lecture: true,
   },
   wda: {
     id: 'wda',
@@ -1065,30 +1040,10 @@ export const EtapesTypes = {
     public_lecture: true,
     entreprises_lecture: true,
   },
-  wfr: {
-    id: 'wfr',
-    nom: "Demande d'autorisation d'ouverture de travaux miniers (DAOTM)",
-    description: '',
-    fondamentale: false,
-    unique: false,
-    date_fin: null,
-    public_lecture: false,
-    entreprises_lecture: false,
-  },
   wco: {
     id: 'wco',
     nom: 'Réception de compléments',
     description: '',
-    fondamentale: false,
-    unique: false,
-    date_fin: null,
-    public_lecture: false,
-    entreprises_lecture: false,
-  },
-  wmr: {
-    id: 'wmr',
-    nom: "mémoire en réponse de l'exploitant",
-    description: "mémoire en réponse de l'exploitant à l'avis d'autorité environnementale.",
     fondamentale: false,
     unique: false,
     date_fin: null,
@@ -1198,16 +1153,6 @@ export const EtapesTypes = {
   wps: {
     id: 'wps',
     nom: 'Arrêté préfectoral de sursis à statuer',
-    description: '',
-    fondamentale: false,
-    unique: false,
-    date_fin: null,
-    public_lecture: false,
-    entreprises_lecture: false,
-  },
-  wmm: {
-    id: 'wmm',
-    nom: "memoire en réponse de l'exploitant (par rapport à l'avis de l'AE)",
     description: '',
     fondamentale: false,
     unique: false,
