@@ -1,6 +1,18 @@
+import { isNumberElement } from '../../sections'
 import { getSections, getSectionsWithValue, sectionValidator } from './sections'
 import { test, expect, describe } from 'vitest'
 const activitesSectionsProd = require('./activites.sections.json')
+
+test('isNumberElement', () => {
+  expect(
+    isNumberElement({
+      id: 'xxx',
+      type: 'integer',
+      value: 2,
+      optionnel: false,
+    })
+  ).toBe(true)
+})
 
 test('getSections erreurs', () => {
   expect(() => getSections(undefined, undefined, undefined)).toThrowErrorMatchingInlineSnapshot(
