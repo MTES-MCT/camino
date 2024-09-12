@@ -380,7 +380,7 @@ export const EtapesTypes = {
   },
   epu: {
     id: 'epu',
-    nom: "ouverture de l'enquête publique",
+    nom: 'Enquête publique',
     description:
       'L’enquête publique requise pour l’octroi des concessions minières et des permis d’exploitations dans les départements d’outre-mer a lieu après constat de recevabilité du dossier. L’enquête publique dure un mois mais il est possible de la prolonger.',
     fondamentale: false,
