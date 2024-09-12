@@ -30,7 +30,6 @@ type AXMOctXStateEvent =
   | { type: 'FAIRE_RECEVABILITE_DEMANDE_FAVORABLE' }
   | { type: 'FAIRE_RECEVABILITE_DEMANDE_DEFAVORABLE' }
   | { type: 'MODIFIER_LA_DEMANDE' }
-  | { type: 'FAIRE_SAISINE_COLLECTIVITES_LOCALES' }
   | { type: 'RENDRE_AVIS_DES_COLLECTIVITES' }
   | RendreAvisDreal
   | RendreAvisDesServicesEtCommissionsConsultatives
@@ -130,8 +129,7 @@ const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
   DEMANDER_COMPLEMENTS_POUR_RECEVABILITE: { db: ETES.demandeDeComplements_RecevabiliteDeLaDemande_, mainStep: false },
   RECEVOIR_COMPLEMENTS_POUR_RECEVABILITE: { db: ETES.receptionDeComplements_RecevabiliteDeLaDemande_, mainStep: false },
   MODIFIER_LA_DEMANDE: { db: ETES.modificationDeLaDemande, mainStep: true },
-  FAIRE_SAISINE_COLLECTIVITES_LOCALES: { db: ETES.saisineDesCollectivitesLocales, mainStep: true },
-  RENDRE_AVIS_DES_COLLECTIVITES: { db: ETES.avisDesCollectivites, mainStep: false },
+  RENDRE_AVIS_DES_COLLECTIVITES: { db: ETES.avisDesCollectivites, mainStep: true },
   RENDRE_AVIS_DREAL: { db: ETES.rapportEtAvisDeLaDREAL, mainStep: true },
   RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES: { db: ETES.avisDesServicesEtCommissionsConsultatives, mainStep: true },
   FAIRE_SAISINE_COMMISSION_DEPARTEMENTALE_DES_MINES: { db: ETES.saisineDeLaCommissionDepartementaleDesMines_CDM_, mainStep: false },
@@ -178,7 +176,7 @@ interface AxmContext extends CaminoCommonContext {
   publicationDecisionsRecueilActesAdministratifsFaite: boolean
   publicationDansUnJournalLocalOuNationalFaite: boolean
   daeRequiseOuDemandeDeposee: boolean
-  saisineDesCollectivitesLocalesFaite: boolean
+  avisDesCollectivitesFaite: boolean
   avisDesServicesEtCommissionsConsultatives: RendreAvisDesServicesEtCommissonsConsultatives
 }
 
@@ -198,7 +196,7 @@ const axmOctMachine = createMachine({
     notificationDesCollectivitesLocalesFaite: false,
     publicationDecisionsRecueilActesAdministratifsFaite: false,
     publicationDansUnJournalLocalOuNationalFaite: false,
-    saisineDesCollectivitesLocalesFaite: false,
+    avisDesCollectivitesFaite: false,
     avisDesServicesEtCommissionsConsultatives: { faite: false },
     daeRequiseOuDemandeDeposee: false,
     visibilite: 'confidentielle',
@@ -332,7 +330,7 @@ const axmOctMachine = createMachine({
             rendreAvisDrealPasEncorePossible: {
               always: {
                 target: 'rendreAvisDrealAFaire',
-                guard: ({ context }) => context.avisDesServicesEtCommissionsConsultatives.faite && context.saisineDesCollectivitesLocalesFaite,
+                guard: ({ context }) => context.avisDesServicesEtCommissionsConsultatives.faite && context.avisDesCollectivitesFaite,
               },
             },
             rendreAvisDrealAFaire: {
@@ -361,22 +359,19 @@ const axmOctMachine = createMachine({
             },
           },
         },
-        saisineCollectivitesLocalesMachine: {
-          initial: 'saisineCollectivitesLocalesAFaire',
+        avisDesCollectivitesMachine: {
+          initial: 'avisDesCollectivitesARendre',
           states: {
-            saisineCollectivitesLocalesAFaire: {
+            avisDesCollectivitesARendre: {
               on: {
-                FAIRE_SAISINE_COLLECTIVITES_LOCALES: {
-                  target: 'avisDesCollectivitesARendre',
-                  guard: ({ context }) => !context.saisineDesCollectivitesLocalesFaite,
+                RENDRE_AVIS_DES_COLLECTIVITES: {
+                  target: 'avisDesCollectivitesRendu',
+                  guard: ({ context }) => !context.avisDesCollectivitesFaite,
                   actions: assign({
-                    saisineDesCollectivitesLocalesFaite: true,
+                    avisDesCollectivitesFaite: true,
                   }),
                 },
               },
-            },
-            avisDesCollectivitesARendre: {
-              on: { RENDRE_AVIS_DES_COLLECTIVITES: 'avisDesCollectivitesRendu' },
             },
             avisDesCollectivitesRendu: { type: 'final' },
           },

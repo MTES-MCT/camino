@@ -257,11 +257,6 @@ const EtapesTypesDocumentsTypes = {
     { documentTypeId: DOCUMENTS_TYPES_IDS.rapportDeLAdministrationCentraleChargeDesMines, optionnel: true },
     { documentTypeId: DOCUMENTS_TYPES_IDS.rapportDeLaDirectionRegionaleChargeeDesMines, optionnel: true },
   ],
-  [ETAPES_TYPES.saisineDesCollectivitesLocales]: [
-    { documentTypeId: DOCUMENTS_TYPES_IDS.lettreDeSaisineDesServicesDeLAdministrationCentrale, optionnel: true },
-    { documentTypeId: DOCUMENTS_TYPES_IDS.lettreDeSaisineDesServicesCivilsEtMilitaires, optionnel: true },
-    { documentTypeId: DOCUMENTS_TYPES_IDS.lettre, optionnel: true },
-  ],
   [ETAPES_TYPES.signatureDeLautorisationDeRechercheMiniere]: [
     { documentTypeId: DOCUMENTS_TYPES_IDS.contrat, optionnel: true },
     { documentTypeId: DOCUMENTS_TYPES_IDS.convention, optionnel: true },

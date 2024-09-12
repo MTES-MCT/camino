@@ -68,7 +68,7 @@ describe('vérifie l’arbre d’octroi d’AXM', () => {
         date: toCaminoDate('2022-04-15'),
       },
       {
-        ...ETES.saisineDesCollectivitesLocales.FAIT,
+        ...ETES.avisDesCollectivites.FAIT,
         date: toCaminoDate('2022-04-15'),
       },
       { ...ETES.avisDesServicesEtCommissionsConsultatives.FAIT, date: toCaminoDate('2022-04-15') },
@@ -102,7 +102,7 @@ describe('vérifie l’arbre d’octroi d’AXM', () => {
         date: toCaminoDate('2022-04-15'),
       },
       {
-        ...ETES.saisineDesCollectivitesLocales.FAIT,
+        ...ETES.avisDesCollectivites.FAIT,
         date: toCaminoDate('2022-04-15'),
       },
       { ...ETES.avisDesServicesEtCommissionsConsultatives.FAIT, date: toCaminoDate('2022-04-15') },
@@ -221,10 +221,6 @@ describe('vérifie l’arbre d’octroi d’AXM', () => {
         ...ETES.recevabiliteDeLaDemande.FAVORABLE,
         date: toCaminoDate('2022-04-15'),
       },
-      {
-        ...ETES.saisineDesCollectivitesLocales.FAIT,
-        date: toCaminoDate('2022-04-16'),
-      },
       { ...ETES.avisDesCollectivites.FAIT, date: toCaminoDate('2022-04-17') },
       { ...ETES.avisDesServicesEtCommissionsConsultatives.FAIT, date: toCaminoDate('2022-04-18') },
       {
@@ -283,7 +279,7 @@ describe('vérifie l’arbre d’octroi d’AXM', () => {
         date: toCaminoDate('2022-04-15'),
       },
       {
-        ...ETES.saisineDesCollectivitesLocales.FAIT,
+        ...ETES.avisDesCollectivites.FAIT,
         date: toCaminoDate('2022-04-16'),
       },
       { ...ETES.avisDesServicesEtCommissionsConsultatives.FAIT, date: toCaminoDate('2022-04-18') },
@@ -294,13 +290,11 @@ describe('vérifie l’arbre d’octroi d’AXM', () => {
       'FAIRE_CLASSEMENT_SANS_SUITE',
       'DEMANDER_INFORMATION_POUR_AVIS_DREAL',
       'FAIRE_DESISTEMENT_DEMANDEUR',
-      'RENDRE_AVIS_DES_COLLECTIVITES',
     ])
     expect(service).canOnlyTransitionTo({ machine: axmOctMachine, date: toCaminoDate('2022-05-17') }, [
       'FAIRE_CLASSEMENT_SANS_SUITE',
       'DEMANDER_INFORMATION_POUR_AVIS_DREAL',
       'FAIRE_DESISTEMENT_DEMANDEUR',
-      'RENDRE_AVIS_DES_COLLECTIVITES',
     ])
   })
 

@@ -195,7 +195,6 @@ export const EtapesTypesEtapesStatuts = {
   saisineDeLautoriteSignataire: { FAIT: { etapeTypeId: 'sas', etapeStatutId: 'fai' } },
   saisineDeLaCommissionDesAutorisationsDeRecherchesMinieres_CARM_: { FAIT: { etapeTypeId: 'sca', etapeStatutId: 'fai' } },
   saisineDuConseilGeneralDeLeconomie_CGE_: { FAIT: { etapeTypeId: 'scg', etapeStatutId: 'fai' } },
-  saisineDesCollectivitesLocales: { FAIT: { etapeTypeId: 'scl', etapeStatutId: 'fai' } },
   signatureDeLautorisationDeRechercheMiniere: { FAIT: { etapeTypeId: 'sco', etapeStatutId: 'fai' } },
   saisineDuConseilDEtat: { FAIT: { etapeTypeId: 'spe', etapeStatutId: 'fai' } },
   saisineDeLaCommissionDepartementaleDesMines_CDM_: { FAIT: { etapeTypeId: 'spo', etapeStatutId: 'fai' } },
