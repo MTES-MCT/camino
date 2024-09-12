@@ -100,7 +100,7 @@ export const getDepartementsBySecteurs = (ids: SecteursMaritimes[]): Departement
     .flatMap(f =>
       Object.entries(f)
         .filter(([key, _value]) => ids.includes(key))
-        .flatMap(([_key, value]) => value.departementIds ?? [])
+        .flatMap(([_key, value]) => value.departementIds)
     )
     .filter(onlyUnique)
 }
@@ -111,9 +111,6 @@ export const getSecteurMaritime = (id: SecteursMaritimesIds): SecteursMaritimes 
     .find(([_secteur, value]) => value?.ids?.includes(id))
   if (result === undefined) {
     throw new Error(`Cas impossible, l'id ${id} n'est pas connu`)
-  }
-  if (!isSecteurMaritime(result[0])) {
-    throw new Error(`Cas impossible, le secteur maritime ${result[0]} n'est pas connu`)
   }
 
   return result[0]
@@ -162,7 +159,7 @@ export function assertsFacade(facade: unknown): asserts facade is FacadesMaritim
 
 export function assertsSecteur<T extends FacadesMaritimes>(facade: T, secteur: unknown): asserts secteur is keyof (typeof facades)[T] {
   if (!Object.keys(facades[facade]).includes(secteur)) {
-    throw new Error(`Le secteur ${secteur} n’existe pas`)
+    throw new Error(`Le secteur ${secteur} n'existe pas`)
   }
 }
 

@@ -17,10 +17,14 @@ test('toTitreTypeId', () => {
 
 test('getTitreTypeType', () => {
   expect(getTitreTypeType('apm')).toBe('ap')
+  // @ts-ignore
+  expect(() => getTitreTypeType('xxx')).toThrow(`le titreType xxx n'a pas de titreTypeType connu, cas impossible`)
 })
 
 test('getDomaineId', () => {
   expect(getDomaineId('apm')).toBe('m')
+  // @ts-ignore
+  expect(() => getDomaineId('xxx')).toThrow(`le titreType xxx n'a pas de domaineId connu, cas impossible`)
 })
 
 test.each<DomaineId>(domainesIds)('getTitreTypeTypeByDomaineId %p', domaineId => {
