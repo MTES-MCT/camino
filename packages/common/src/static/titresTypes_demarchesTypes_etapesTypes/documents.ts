@@ -35,6 +35,7 @@ const EtapesTypesDocumentsTypes = {
     { documentTypeId: DOCUMENTS_TYPES_IDS.avisDuDirecteurRegionalChargeDesMines, optionnel: true },
     { documentTypeId: DOCUMENTS_TYPES_IDS.rapportDeLAdministrationCentraleChargeDesMines, optionnel: true },
     { documentTypeId: DOCUMENTS_TYPES_IDS.rapportDeLaDirectionRegionaleChargeeDesMines, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.projetDePrescriptions, optionnel: true },
     { documentTypeId: DOCUMENTS_TYPES_IDS.rapport, optionnel: true },
   ],
   [ETAPES_TYPES.avisDuConseilDEtat]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.avis, optionnel: true }],
