@@ -289,7 +289,7 @@ describe('vérifie l’arbre d’octroi d’AXM', () => {
       'RENDRE_AVIS_DREAL',
       'FAIRE_CLASSEMENT_SANS_SUITE',
       'DEMANDER_INFORMATION_POUR_AVIS_DREAL',
-      'FAIRE_DESISTEMENT_DEMANDEUR'
+      'FAIRE_DESISTEMENT_DEMANDEUR',
     ])
     expect(service).canOnlyTransitionTo({ machine: axmOctMachine, date: toCaminoDate('2022-05-17') }, [
       'FAIRE_CLASSEMENT_SANS_SUITE',
