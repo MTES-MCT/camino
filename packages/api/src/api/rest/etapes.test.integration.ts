@@ -54,63 +54,35 @@ describe('getEtapesTypesEtapesStatusWithMainStep', () => {
     const tested = await restCall(dbPool, '/rest/etapesTypes/:demarcheId/:date', { demarcheId: titreDemarche.id, date: toCaminoDate('2024-09-01') }, userSuper)
 
     expect(tested.statusCode).toBe(HTTP_STATUS.OK)
-    // TODO 2024-06-19 changer ce format ?
-    // Partir plutôt sur un object avec comme clé le etapeTypeId, une liste de etapeStatut associée et la clé mainStep (soit sur le statut, soit directement au top niveau)
-    // soit { mfr: {statuts: ['fai'], mainStep: true}}
-    // soit { mfr: {statuts: [{id: 'fai', mainStep: true}]}}
     expect(tested.body).toMatchInlineSnapshot(`
-      [
-        {
-          "etapeStatutId": "fai",
-          "etapeTypeId": "mfr",
+      {
+        "dae": {
+          "etapeStatutIds": [
+            "req",
+            "exe",
+          ],
           "mainStep": true,
         },
-        {
-          "etapeStatutId": "fai",
-          "etapeTypeId": "mfr",
+        "mfr": {
+          "etapeStatutIds": [
+            "fai",
+          ],
           "mainStep": true,
         },
-        {
-          "etapeStatutId": "fai",
-          "etapeTypeId": "mfr",
+        "pfd": {
+          "etapeStatutIds": [
+            "fai",
+          ],
           "mainStep": true,
         },
-        {
-          "etapeStatutId": "fai",
-          "etapeTypeId": "mfr",
+        "rde": {
+          "etapeStatutIds": [
+            "def",
+            "fav",
+          ],
           "mainStep": true,
         },
-        {
-          "etapeStatutId": "fai",
-          "etapeTypeId": "mfr",
-          "mainStep": true,
-        },
-        {
-          "etapeStatutId": "fai",
-          "etapeTypeId": "pfd",
-          "mainStep": true,
-        },
-        {
-          "etapeStatutId": "req",
-          "etapeTypeId": "dae",
-          "mainStep": false,
-        },
-        {
-          "etapeStatutId": "exe",
-          "etapeTypeId": "dae",
-          "mainStep": true,
-        },
-        {
-          "etapeStatutId": "def",
-          "etapeTypeId": "rde",
-          "mainStep": false,
-        },
-        {
-          "etapeStatutId": "fav",
-          "etapeTypeId": "rde",
-          "mainStep": true,
-        },
-      ]
+      }
     `)
   })
   test('nouvelle étapes possibles prends en compte les brouillons', async () => {
@@ -145,34 +117,29 @@ describe('getEtapesTypesEtapesStatusWithMainStep', () => {
 
     expect(tested.statusCode).toBe(HTTP_STATUS.OK)
     expect(tested.body).toMatchInlineSnapshot(`
-        [
-          {
-            "etapeStatutId": "fai",
-            "etapeTypeId": "pfd",
-            "mainStep": true,
-          },
-          {
-            "etapeStatutId": "req",
-            "etapeTypeId": "dae",
-            "mainStep": false,
-          },
-          {
-            "etapeStatutId": "exe",
-            "etapeTypeId": "dae",
-            "mainStep": true,
-          },
-          {
-            "etapeStatutId": "def",
-            "etapeTypeId": "rde",
-            "mainStep": false,
-          },
-          {
-            "etapeStatutId": "fav",
-            "etapeTypeId": "rde",
-            "mainStep": true,
-          },
-        ]
-      `)
+      {
+        "dae": {
+          "etapeStatutIds": [
+            "req",
+            "exe",
+          ],
+          "mainStep": true,
+        },
+        "pfd": {
+          "etapeStatutIds": [
+            "fai",
+          ],
+          "mainStep": true,
+        },
+        "rde": {
+          "etapeStatutIds": [
+            "def",
+            "fav",
+          ],
+          "mainStep": true,
+        },
+      }
+    `)
   })
 })
 

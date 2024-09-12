@@ -17,12 +17,12 @@ export default meta
 const onEtapeChange = action('onEtapeChange')
 const apiClientMock: Pick<EtapeApiClient, 'getEtapesTypesEtapesStatuts'> = {
   getEtapesTypesEtapesStatuts: () => {
-    return Promise.resolve([
-      { etapeStatutId: ETAPES_STATUTS.FAIT, etapeTypeId: ETAPES_TYPES.demande, mainStep: false },
-      { etapeStatutId: ETAPES_STATUTS.FAIT, etapeTypeId: 'css', mainStep: false },
-      { etapeStatutId: ETAPES_STATUTS.FAIT, etapeTypeId: 'mdp', mainStep: true },
-      { etapeStatutId: ETAPES_STATUTS.FAIT, etapeTypeId: 'apd', mainStep: true },
-    ])
+    return Promise.resolve({
+      [ETAPES_TYPES.demande]: { etapeStatutIds: [ETAPES_STATUTS.FAIT], mainStep: false },
+      css: { etapeStatutIds: [ETAPES_STATUTS.FAIT], mainStep: false },
+      mdp: { etapeStatutIds: [ETAPES_STATUTS.FAIT], mainStep: true },
+      apd: { etapeStatutIds: [ETAPES_STATUTS.FAIT], mainStep: true },
+    })
   },
 }
 export const DemandeAvecUnSeulStatut: StoryFn = () => (
@@ -69,7 +69,7 @@ export const Empty: StoryFn = () => (
     onEtapeChange={onEtapeChange}
     apiClient={{
       getEtapesTypesEtapesStatuts: () => {
-        return Promise.resolve([])
+        return Promise.resolve({})
       },
     }}
     demarcheId={demarcheIdValidator.parse('demarcheID')}
@@ -86,7 +86,7 @@ export const NoEtape: StoryFn = () => (
     onEtapeChange={onEtapeChange}
     apiClient={{
       getEtapesTypesEtapesStatuts: () => {
-        return Promise.resolve([])
+        return Promise.resolve({})
       },
     }}
     demarcheId={demarcheIdValidator.parse('demarcheID')}
@@ -103,7 +103,7 @@ export const SelectedEtapeNotPossible: StoryFn = () => (
     onEtapeChange={onEtapeChange}
     apiClient={{
       getEtapesTypesEtapesStatuts: () => {
-        return Promise.resolve([{ etapeTypeId: 'mcd', etapeStatutId: 'fai', mainStep: false }])
+        return Promise.resolve({ mcd: { etapeStatutIds: ['fai'], mainStep: false } })
       },
     }}
     demarcheId={demarcheIdValidator.parse('demarcheID')}

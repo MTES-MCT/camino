@@ -7,7 +7,6 @@ import { describe, test, expect, vi } from 'vitest'
 import { caminoDateValidator, toCaminoDate } from 'camino-common/src/date'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
 import { ETAPE_IS_BROUILLON, ETAPE_IS_NOT_BROUILLON, etapeIdValidator } from 'camino-common/src/etape'
-import { onlyUnique } from 'camino-common/src/typescript-tools'
 import { ArmOctMachine } from '../rules-demarches/arm/oct.machine'
 import { TitreEtapeForMachine } from '../rules-demarches/machine-common'
 import { communeIdValidator } from 'camino-common/src/static/communes'
@@ -539,34 +538,44 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
   const machine = new ArmOctMachine()
   test('modifie une étape existante', () => {
     const tested = etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(machine, etapes, 'etapeId3', toCaminoDate('2019-10-11'))
-    expect(tested).toHaveLength(1)
-    expect(tested[0].etapeTypeId).toStrictEqual('dae')
+    expect(Object.keys(tested)).toHaveLength(1)
+    expect(tested.dae).toMatchInlineSnapshot(`
+      {
+        "etapeStatutIds": [
+          "exe",
+        ],
+        "mainStep": true,
+      }
+    `)
   })
 
   test('modifie une étape existante à la même date devrait permettre de recréer la même étape', () => {
     for (const etape of etapes ?? []) {
       const etapesTypesPossibles = etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(machine, etapes, etape.id, etape.date)
-      if (etapesTypesPossibles.length === 0) {
+      if (Object.keys(etapesTypesPossibles).length === 0) {
         console.error(`pas d'étapes possibles à l'étape ${JSON.stringify(etape)}. Devrait contenir AU MOINS la même étape`)
       }
-      expect(etapesTypesPossibles.length).toBeGreaterThan(0)
-      expect(etapesTypesPossibles.map(({ etapeTypeId }) => etapeTypeId)).toContain(etape.typeId)
+      expect(Object.keys(etapesTypesPossibles).length).toBeGreaterThan(0)
+      expect(etapesTypesPossibles[etape.typeId]).toHaveProperty('etapeStatutIds')
     }
   })
 
   test('ajoute une nouvelle étape à la fin', () => {
     const tested = etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(machine, etapes, null, toCaminoDate('2022-05-06'))
-      .map(({ etapeTypeId }) => etapeTypeId)
-      .filter(onlyUnique)
-    expect(tested).toHaveLength(1)
-    expect(tested[0]).toBe('mnv')
+    expect(Object.keys(tested)).toHaveLength(1)
+    expect(tested.mnv).toMatchInlineSnapshot(`
+      {
+        "etapeStatutIds": [
+          "fai",
+        ],
+        "mainStep": false,
+      }
+    `)
   })
 
   test('ajoute une nouvelle étape en plein milieu', () => {
     const tested = etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(machine, etapes, null, toCaminoDate('2019-12-04'))
-      .map(({ etapeTypeId }) => etapeTypeId)
-      .filter(onlyUnique)
-    expect(tested).toStrictEqual(['mod', 'ede', 'edm'])
+    expect(Object.keys(tested).toSorted()).toStrictEqual(['ede', 'edm', 'mod'])
   })
 
   test('peut faire une dae, une rde et pfd AVANT la mfr', () => {
@@ -596,9 +605,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
     ]
 
     const tested = etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(machine, etapes, null, toCaminoDate('2019-12-04'))
-      .map(({ etapeTypeId }) => etapeTypeId)
-      .filter(onlyUnique)
-    expect(tested).toStrictEqual(['pfd', 'dae', 'rde'])
+    expect(Object.keys(tested).toSorted()).toStrictEqual(['dae', 'pfd', 'rde'])
   })
 
   test('peut faire que une pfd AVANT la mfr non mecanisee', () => {
@@ -628,9 +635,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
     ]
 
     const tested = etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(machine, etapes, null, toCaminoDate('2019-12-04'))
-      .map(({ etapeTypeId }) => etapeTypeId)
-      .filter(onlyUnique)
-    expect(tested).toStrictEqual(['pfd'])
+    expect(Object.keys(tested)).toStrictEqual(['pfd'])
   })
 
   test('peut faire refuser une rde après une demande mécanisée', () => {
@@ -783,9 +788,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
     ]
 
     const tested = etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(machine, etapes, null, toCaminoDate('2022-07-01'))
-      .map(({ etapeTypeId }) => etapeTypeId)
-      .filter(onlyUnique)
-    expect(tested).toStrictEqual(['mod', 'des', 'css', 'ede', 'asc', 'rcb', 'rde', 'mcb'])
+    expect(Object.keys(tested).toSorted()).toStrictEqual(['asc', 'css', 'des', 'ede', 'mcb', 'mod', 'rcb', 'rde'])
     vi.resetAllMocks()
   })
   test('peut faire une completude (mcp) le même jour que le dépôt (mdp) de la demande', () => {
@@ -844,8 +847,6 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
     ]
 
     const tested = etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(machine, etapes, null, toCaminoDate('2022-07-01'))
-      .map(({ etapeTypeId }) => etapeTypeId)
-      .filter(onlyUnique)
-    expect(tested).toStrictEqual(['mod', 'des', 'css', 'rde', 'mcb', 'mcp'])
+    expect(Object.keys(tested).toSorted()).toStrictEqual(['css', 'des', 'mcb', 'mcp', 'mod', 'rde'])
   })
 })

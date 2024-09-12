@@ -32,8 +32,18 @@ import { machineFind } from '../../business/rules-demarches/definitions'
 import { User, isBureauDEtudes, isEntreprise } from 'camino-common/src/roles'
 import { canCreateEtape, canDeposeEtape, canDeleteEtape, canEditEtape, canEditDates, canEditDuree } from 'camino-common/src/permissions/titres-etapes'
 import { TitresStatutIds } from 'camino-common/src/static/titresStatuts'
-import { canBeBrouillon } from 'camino-common/src/static/etapesTypes'
-import { DeepReadonly, SimplePromiseFn, isNonEmptyArray, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined, memoize, onlyUnique } from 'camino-common/src/typescript-tools'
+import { canBeBrouillon, isEtapeTypeId } from 'camino-common/src/static/etapesTypes'
+import {
+  DeepReadonly,
+  SimplePromiseFn,
+  getKeys,
+  isNonEmptyArray,
+  isNotNullNorUndefined,
+  isNotNullNorUndefinedNorEmpty,
+  isNullOrUndefined,
+  memoize,
+  onlyUnique,
+} from 'camino-common/src/typescript-tools'
 import { Pool } from 'pg'
 import { EntrepriseDocument, EntrepriseDocumentId, EntrepriseId, EtapeEntrepriseDocument } from 'camino-common/src/entreprise'
 import {
@@ -1010,7 +1020,7 @@ export const deposeEtape =
 
 export const getEtapesTypesEtapesStatusWithMainStep =
   (_pool: Pool) =>
-  async (req: CaminoRequest, res: CustomResponse<EtapeTypeEtapeStatutWithMainStep[]>): Promise<void> => {
+  async (req: CaminoRequest, res: CustomResponse<EtapeTypeEtapeStatutWithMainStep>): Promise<void> => {
     const demarcheIdParsed = demarcheIdValidator.safeParse(req.params.demarcheId)
     const dateParsed = caminoDateValidator.safeParse(req.params.date)
     const etapeIdParsed = z.optional(etapeIdValidator).safeParse(req.query.etapeId)
@@ -1059,7 +1069,7 @@ const demarcheEtapesTypesGet = async (titreDemarcheId: DemarcheId, date: CaminoD
 
   const demarcheDefinition = machineFind(titre.typeId, titreDemarche.typeId, titreDemarche.etapes, titreDemarche.id, date)
 
-  const etapesTypes: EtapeTypeEtapeStatutWithMainStep[] = getPossiblesEtapesTypes(
+  const etapesTypes: EtapeTypeEtapeStatutWithMainStep = getPossiblesEtapesTypes(
     demarcheDefinition,
     titre.typeId,
     titreDemarche.typeId,
@@ -1069,10 +1079,16 @@ const demarcheEtapesTypesGet = async (titreDemarcheId: DemarcheId, date: CaminoD
     titreDemarche.etapes
   )
 
-  return etapesTypes.filter(({ etapeTypeId }) =>
-    canCreateEtape(user, etapeTypeId, ETAPE_IS_BROUILLON, titre.titulaireIds ?? [], titre.administrationsLocales ?? [], titreDemarche.typeId, {
-      typeId: titre.typeId,
-      titreStatutId: titre.titreStatutId ?? TitresStatutIds.Indetermine,
-    })
-  )
+  return getKeys(etapesTypes, isEtapeTypeId).reduce<EtapeTypeEtapeStatutWithMainStep>((acc, etapeTypeId) => {
+    if (
+      canCreateEtape(user, etapeTypeId, ETAPE_IS_BROUILLON, titre.titulaireIds ?? [], titre.administrationsLocales ?? [], titreDemarche.typeId, {
+        typeId: titre.typeId,
+        titreStatutId: titre.titreStatutId ?? TitresStatutIds.Indetermine,
+      })
+    ) {
+      acc[etapeTypeId] = etapesTypes[etapeTypeId]
+    }
+
+    return acc
+  }, {})
 }
