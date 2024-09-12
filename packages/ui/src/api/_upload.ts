@@ -1,7 +1,7 @@
 import Uppy from '@uppy/core'
-import Tus, { TusOptions } from '@uppy/tus'
-import { Upload } from 'tus-js-client'
+import Tus from '@uppy/tus'
 import { TempDocumentName, tempDocumentNameValidator } from 'camino-common/src/document'
+import { isNotNullNorUndefinedNorEmpty, isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools'
 
 const CHUNK_SIZE = 1048576 // 1 Mo
 const apiUrl = '/apiUrl'
@@ -11,7 +11,7 @@ export const uploadCall = async (file: File, progressCb: (progress: number) => v
     autoProceed: true,
   })
 
-  uppy.use<TusOptions & { onChunkComplete: Upload['options']['onChunkComplete'] }, Tus>(Tus, {
+  uppy.use(Tus, {
     chunkSize: CHUNK_SIZE,
     endpoint: `${apiUrl}/televersement`,
     onShouldRetry: () => {
@@ -33,11 +33,15 @@ export const uploadCall = async (file: File, progressCb: (progress: number) => v
     uppy.on('complete', result => {
       const { successful, failed } = result
 
-      if (failed.length || !successful.length) {
+      if (isNotNullNorUndefinedNorEmpty(failed) || isNullOrUndefinedOrEmpty(successful)) {
         reject(new Error('Échec du téléversement'))
       } else {
         const [{ uploadURL }] = successful
-        resolve(tempDocumentNameValidator.parse(uploadURL.substring(uploadURL.lastIndexOf('/') + 1)))
+        if (isNullOrUndefinedOrEmpty(uploadURL)) {
+          reject(new Error('Echec de la récupération du téléversement'))
+        } else {
+          resolve(tempDocumentNameValidator.parse(uploadURL.substring(uploadURL.lastIndexOf('/') + 1)))
+        }
       }
     })
   })

@@ -28,7 +28,6 @@ const administrationsUpdate = async () => {
   const administrations = { ...Administrations }
 
   newAdministrations.forEach(a => {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     administrations[a.id] = a
   })

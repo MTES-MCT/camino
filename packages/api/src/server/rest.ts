@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/ban-types */
-
 import { CaminoApiError, Index } from '../types'
 import type { Pool } from 'pg'
 

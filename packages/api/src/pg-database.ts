@@ -24,7 +24,6 @@ export const dbQueryAndValidate = async <Params, Result, T extends ZodType<Resul
   pool: Pool,
   validator: T
 ): Promise<Result[]> => {
-  // eslint-disable-next-line no-restricted-syntax
   const result = await query.run(params, pool)
 
   return z.array(validator).parse(result)
@@ -40,7 +39,6 @@ export const effectDbQueryAndValidate = <Params, Result, T extends ZodType<Resul
 ): Effect.Effect<Result[], CaminoError<DbQueryAccessError | ZodUnparseable>> => {
   return pipe(
     Effect.tryPromise({
-      // eslint-disable-next-line no-restricted-syntax
       try: () => query.run(params, pool),
       catch: e => {
         let extra = ''

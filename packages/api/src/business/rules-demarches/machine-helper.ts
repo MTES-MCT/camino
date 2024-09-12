@@ -4,16 +4,16 @@ import { DemarchesStatutsIds, DemarcheStatutId } from 'camino-common/src/static/
 import { CaminoDate } from 'camino-common/src/date'
 import { OmitDistributive } from 'camino-common/src/typescript-tools'
 
-type CaminoState<CaminoContext extends CaminoCommonContext, CaminoEvent extends EventObject> = MachineSnapshot<CaminoContext, CaminoEvent, any, any, any, any, any>
+type CaminoState<CaminoContext extends CaminoCommonContext, CaminoEvent extends EventObject> = MachineSnapshot<CaminoContext, CaminoEvent, any, any, any, any, any, any>
 
 export abstract class CaminoMachine<CaminoContext extends CaminoCommonContext, CaminoEvent extends EventObject> {
-  public readonly machine: StateMachine<CaminoContext, CaminoEvent, any, any, any, any, any, any, any, any, any, EventObject, any>
+  public readonly machine: StateMachine<CaminoContext, CaminoEvent, any, any, any, any, any, any, any, any, any, EventObject, any, any>
 
   private readonly trad: { [key in CaminoEvent['type']]: { db: DBEtat; mainStep: boolean } }
   private readonly events: Array<CaminoEvent['type']>
 
   protected constructor(
-    machine: StateMachine<CaminoContext, CaminoEvent, any, any, any, any, any, any, any, any, any, EventObject, any>,
+    machine: StateMachine<CaminoContext, CaminoEvent, any, any, any, any, any, any, any, any, any, EventObject, any, any>,
     trad: { [key in CaminoEvent['type']]: { db: DBEtat; mainStep: boolean } }
   ) {
     this.machine = machine

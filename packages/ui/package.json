@@ -10,182 +10,77 @@
     "dev:update": "npm-check-updates && npm install && npm audit fix",
     "start": "node ./index.js",
     "test": "vitest --environment jsdom --root src/",
-    "lint": "prettier --write src && eslint --fix --ext .js,.ts,.tsx src --max-warnings=0",
-    "lint:check": "prettier --check src && eslint --ext .js,.ts,.tsx src --max-warnings=0",
+    "lint": "prettier --write src && eslint --fix src --max-warnings=0",
+    "lint:check": "prettier --check src && eslint src --max-warnings=0",
     "storybook": "storybook dev -p 6006",
     "storybook:build": "storybook build",
     "storybook:test": "test-storybook --browsers chromium",
     "generate-icon-types": "node --loader ts-node/esm/transpile-only ./scripts/generateIconTypes.ts"
   },
   "devDependencies": {
-    "@babel/eslint-parser": "^7.24.1",
-    "@babel/preset-env": "^7.24.4",
+    "@babel/eslint-parser": "^7.25.1",
+    "@babel/preset-env": "^7.25.4",
     "@gouvfr/dsfr": "1.10.2",
     "@rollup/plugin-inject": "^5.0.5",
     "@rollup/plugin-node-resolve": "^15.2.3",
-    "@storybook/addon-actions": "^8.2.9",
-    "@storybook/addon-controls": "^8.2.9",
-    "@storybook/addon-interactions": "^8.2.9",
-    "@storybook/preview-api": "^8.2.9",
-    "@storybook/test": "^8.2.9",
+    "@storybook/addon-actions": "^8.3.0",
+    "@storybook/addon-controls": "^8.3.0",
+    "@storybook/addon-interactions": "^8.3.0",
+    "@storybook/preview-api": "^8.3.0",
+    "@storybook/test": "^8.3.0",
     "@storybook/test-runner": "^0.19.1",
-    "@storybook/vue3": "^8.2.9",
-    "@storybook/vue3-vite": "^8.2.9",
-    "@testing-library/vue": "^8.0.3",
+    "@storybook/vue3": "^8.3.0",
+    "@storybook/vue3-vite": "^8.3.0",
+    "@testing-library/vue": "^8.1.0",
     "@types/file-saver": "^2.0.7",
     "@types/geojson": "^7946.0.14",
     "@types/leaflet": "^1.9.12",
     "@types/leaflet.markercluster": "^1.5.4",
-    "@typescript-eslint/eslint-plugin": "^7.12.0",
-    "@typescript-eslint/parser": "^7.12.0",
-    "@uppy/core": "^3.10.1",
-    "@uppy/tus": "^3.5.4",
-    "@vitejs/plugin-vue-jsx": "^3.1.0",
+    "@typescript-eslint/eslint-plugin": "^8.5.0",
+    "@typescript-eslint/parser": "^8.5.0",
+    "@uppy/core": "^4.2.0",
+    "@uppy/tus": "^4.1.0",
+    "@vitejs/plugin-vue-jsx": "^4.0.1",
     "@vitest/coverage-v8": "^2.0.5",
     "@vue/eslint-config-prettier": "^9.0.0",
-    "@vue/eslint-config-standard": "^8.0.1",
     "babel-core": "^7.0.0-bridge.0",
     "babel-loader": "^9.1.3",
     "babel-plugin-graphql-tag": "^3.3.0",
     "babel-plugin-transform-vite-meta-env": "^1.0.3",
     "babel-preset-vite": "^1.1.3",
     "camino-common": "1.0.0",
-    "chart.js": "^4.4.2",
-    "core-js": "^3.37.0",
+    "chart.js": "^4.4.4",
+    "core-js": "^3.38.1",
     "dotenv": "^16.4.5",
     "email-validator": "^2.0.4",
-    "eslint": "^8.56.0",
-    "eslint-config-prettier": "^8.10.0",
-    "eslint-config-standard": "^17.1.0",
-    "eslint-plugin-import": "^2.29.1",
+    "eslint": "^9.10.0",
+    "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^6.1.1",
+    "eslint-plugin-promise": "^7.1.0",
     "file-saver": "^2.0.5",
-    "graphql": "^16.8.1",
+    "graphql": "^16.9.0",
     "graphql-react": "^20.0.0",
     "graphql-tag": "^2.12.6",
-    "jsdom": "^24.0.0",
+    "jsdom": "^25.0.0",
     "jsondiffpatch-rc": "^0.4.2",
     "leaflet": "^1.9.4",
     "leaflet-fullscreen": "^1.0.2",
     "leaflet-gesture-handling": "^1.2.2",
     "leaflet.markercluster": "^1.5.3",
-    "maplibre-gl": "^4.1.3",
-    "postcss": "^8.4.38",
-    "postcss-custom-media": "^10.0.4",
-    "postcss-preset-env": "^9.5.9",
-    "prettier": "^3.2.5",
+    "maplibre-gl": "^4.7.0",
+    "postcss": "^8.4.45",
+    "postcss-custom-media": "^11.0.1",
+    "postcss-preset-env": "^10.0.3",
+    "prettier": "^3.3.3",
     "rollup-plugin-visualizer": "^5.12.0",
-    "storybook": "^8.2.9",
+    "storybook": "^8.3.0",
     "ts-node": "^10.9.2",
-    "tus-js-client": "^4.1.0",
     "typescript": "^5.6.2",
     "typescript-plugin-css-modules": "^5.1.0",
-    "vite": "^5.2.10",
+    "vite": "^5.4.4",
     "vitest": "^2.0.5",
     "vue": "^3.5.4",
-    "vue-router": "^4.4.3"
-  },
-  "eslintConfig": {
-    "root": true,
-    "env": {
-      "node": true
-    },
-    "globals": {
-      "localStorage": "readonly",
-      "HTMLOrSVGElement": "readonly",
-      "JSX": "readonly",
-      "defineProps": "readonly",
-      "defineEmits": "readonly",
-      "T": "readonly",
-      "K": "readonly",
-      "P": "readonly",
-      "dsfr": "readonly"
-    },
-    "extends": [
-      "standard",
-      "prettier"
-    ],
-    "ignorePatterns": [
-      "!.storybook"
-    ],
-    "rules": {
-      "camelcase": 0,
-      "no-unused-vars": 0,
-      "no-use-before-define": 0,
-      "@typescript-eslint/ban-ts-comment": 0
-    },
-    "overrides": [
-      {
-        "parserOptions": {
-          "project": true
-        },
-        "files": [
-          "*.tsx",
-          "*.ts",
-          "*.js"
-        ],
-        "extends": [
-          "plugin:@typescript-eslint/recommended"
-        ],
-        "rules": {
-          "camelcase": 0,
-          "newline-before-return": 0,
-          "no-use-before-define": 0,
-          "no-redeclare": 0,
-          "no-return-await": "error",
-          "default-param-last": 0,
-          "no-unused-vars": 0,
-          "@typescript-eslint/explicit-function-return-type": 0,
-          "@typescript-eslint/explicit-module-boundary-types": "error",
-          "@typescript-eslint/no-empty-interface": 0,
-          "@typescript-eslint/no-explicit-any": 0,
-          "@typescript-eslint/no-non-null-assertion": 0,
-          "@typescript-eslint/no-var-requires": 0,
-          "@typescript-eslint/ban-ts-comment": 0,
-          "@typescript-eslint/no-unused-vars": [
-            "error",
-            {
-              "varsIgnorePattern": "^_",
-              "argsIgnorePattern": "^_"
-            }
-          ],
-          "@typescript-eslint/no-empty-function": 0,
-          "@typescript-eslint/strict-boolean-expressions": "error",
-          "no-restricted-imports": [
-            "error",
-            {
-              "paths": [
-                {
-                  "name": "vue",
-                  "importNames": [
-                    "capitalize"
-                  ],
-                  "message": "Please use capitalize from camino-common/src/strings"
-                },
-                {
-                  "name": "vue-router",
-                  "importNames": [
-                    "Router"
-                  ],
-                  "message": "Please use CaminoRouter"
-                },
-                {
-                  "name": "vue-router",
-                  "importNames": [
-                    "RouteLocationNormalized"
-                  ],
-                  "message": "Please use CaminoRouteLocation"
-                }
-              ]
-            }
-          ]
-        }
-      }
-    ],
-    "parserOptions": {
-      "parser": "@typescript-eslint/parser"
-    }
+    "vue-router": "^4.4.4"
   },
   "prettier": {
     "semi": false,
@@ -209,6 +104,6 @@
   ],
   "dependencies": {
     "decimal.js": "^10.4.3",
-    "zod": "^3.23.4"
+    "zod": "^3.23.8"
   }
 }

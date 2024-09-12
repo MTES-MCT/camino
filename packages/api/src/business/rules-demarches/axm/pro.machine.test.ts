@@ -4,7 +4,7 @@ import { describe, expect, test } from 'vitest'
 
 import { EtapesTypesEtapesStatuts as ETES } from 'camino-common/src/static/etapesTypesEtapesStatuts'
 
-const etapesProd = require('./2000-01-01-pro.cas.json')
+const etapesProd = require('./2000-01-01-pro.cas.json') // eslint-disable-line
 
 describe('vérifie l’arbre de prolongation d’AXM', () => {
   const axmProMachine = new AxmProMachine()

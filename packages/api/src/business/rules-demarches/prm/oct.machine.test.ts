@@ -3,7 +3,7 @@ import { PrmOctMachine } from './oct.machine'
 import { EtapesTypesEtapesStatuts as ETES } from 'camino-common/src/static/etapesTypesEtapesStatuts'
 import { describe, expect, test } from 'vitest'
 import { PAYS_IDS } from 'camino-common/src/static/pays'
-const etapesProd = require('./2019-10-31-oct.cas.json')
+const etapesProd = require('./2019-10-31-oct.cas.json') // eslint-disable-line
 
 describe('vérifie l’arbre d’octroi de PRM', () => {
   const prmOctMachine = new PrmOctMachine()

@@ -113,7 +113,7 @@ export const simpleContenuToFlattenedContenu = (
   return sections.reduce<FlattenedContenu>((accSection, section) => {
     accSection[section.id] = section.elements.reduce<FlattenedContenu[string]>((accElement, element) => {
       const elementHeritage = heritageContenu[section.id]?.[element.id] ?? { actif: false, etape: null }
-      const value = elementHeritage.actif ? elementHeritage.etape?.contenu[section.id]?.[element.id] ?? null : contenu?.[section.id]?.[element.id] ?? null
+      const value = elementHeritage.actif ? (elementHeritage.etape?.contenu[section.id]?.[element.id] ?? null) : (contenu?.[section.id]?.[element.id] ?? null)
       accElement[element.id] = {
         value,
         heritee: elementHeritage.actif,

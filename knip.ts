@@ -1,4 +1,5 @@
 const config = {
+  ignore: ['**/eslint.config.mjs'],
   workspaces: {
     ".": {
       ignoreBinaries: [
@@ -41,6 +42,8 @@ const config = {
         "graphql-scalars",
         "@vitest/coverage-v8",
         "@pgtyped/cli",
+        "eslint-config-prettier",
+        "eslint-plugin-promise",
       ],
     },
     "packages/common": {
@@ -57,7 +60,10 @@ const config = {
         "@vitest/coverage-v8",
         "@babel/eslint-parser",
         "@vue/eslint-config-prettier",
-        "@vue/eslint-config-standard",
+        "@typescript-eslint/eslint-plugin",
+        "@typescript-eslint/parser",
+        "eslint-config-prettier",
+        "eslint-plugin-promise",
         "babel-core",
         "babel-loader",
         "babel-preset-vite",

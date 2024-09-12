@@ -2,7 +2,7 @@ import { getRawLines, rawMatriceValidator } from './matrices'
 import { describe, expect, test } from 'vitest'
 import { BodyMatrice } from '../tools/matrices/tests-creation'
 import { z } from 'zod'
-const matricesProd = require('./matrices.cas.json')
+const matricesProd = require('./matrices.cas.json') // eslint-disable-line
 
 describe('matrices', () => {
   const rawMatricesValidator = z.array(rawMatriceValidator)

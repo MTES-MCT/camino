@@ -29,17 +29,17 @@
   },
   "lint-staged": {
     "packages/ui/src/**/*.{js,ts,tsx}": [
-      "eslint --cache --fix --max-warnings=0",
+      "eslint --config packages/ui/eslint.config.mjs --cache --fix --max-warnings=0",
       "prettier --write"
     ],
     "packages/ui/**/*.css": "prettier --write",
     "packages/api/**/*.{js,ts}": [
-      "eslint --cache --fix --max-warnings=0",
+      "eslint --config packages/api/eslint.config.mjs --cache --fix --max-warnings=0",
       "prettier --write"
     ],
     "packages/api/**/*.{graphql,md}": "prettier --write",
     "packages/common/src/**/*.ts": [
-      "eslint --cache --fix --max-warnings=0",
+      "eslint --config packages/common/eslint.config.mjs --cache --fix --max-warnings=0",
       "prettier --write"
     ],
     "packages/ui/src/components/_ui/iconSprite.tsx": [
@@ -50,10 +50,10 @@
   },
   "devDependencies": {
     "@types/react": "file:stub/types__react",
-    "husky": "^9.1.5",
-    "lint-staged": "^15.2.2",
-    "semantic-release": "^23.0.8",
-    "semantic-release-mattermost": "^1.2.1",
+    "husky": "^9.1.6",
+    "lint-staged": "^15.2.10",
+    "semantic-release": "^24.1.1",
+    "semantic-release-mattermost": "^1.2.2",
     "typescript": "^5.6.2",
     "vue": "^3.5.4"
   },

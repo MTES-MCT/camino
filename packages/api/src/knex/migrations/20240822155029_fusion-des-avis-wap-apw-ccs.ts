@@ -1,4 +1,3 @@
-/* eslint-disable no-restricted-syntax */
 /* eslint-disable sql/no-unsafe-query */
 
 import { CaminoDate } from 'camino-common/src/date'

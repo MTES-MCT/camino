@@ -50,7 +50,7 @@ expect.extend({
 })
 
 export const interpretMachine = <T extends EventObject, C extends CaminoCommonContext>(machine: CaminoMachine<C, T>, etapes: readonly Etape[]): Actor<(typeof machine)['machine']> => {
-  const service = createActor(machine.machine)
+  const service = createActor(machine.machine, {})
 
   service.start()
 

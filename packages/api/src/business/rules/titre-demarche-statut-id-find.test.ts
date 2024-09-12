@@ -352,7 +352,6 @@ describe("statut d'une démarche", () => {
   test('une démarche inexistante a le statut “indéfini”', () => {
     expect(
       titreDemarcheStatutIdFind(
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         'xxx',
         etapesBuild([{ typeId: 'mfr' }]),

@@ -13,7 +13,7 @@ import { ETAPES_STATUTS } from 'camino-common/src/static/etapesStatuts'
 import { ETAPE_IS_BROUILLON, ETAPE_IS_NOT_BROUILLON, etapeSlugValidator } from 'camino-common/src/etape'
 import { FeatureMultiPolygon } from 'camino-common/src/perimetre'
 import { km2Validator } from 'camino-common/src/number'
-const titresProd = require('./titre-phases-find.cas.json')
+const titresProd = require('./titre-phases-find.cas.json') // eslint-disable-line
 
 export type TitrePhasesTest = [TitreTypeId, TitreDemarchePhaseFind[]]
 const multiPolygonWith4Points: FeatureMultiPolygon = {

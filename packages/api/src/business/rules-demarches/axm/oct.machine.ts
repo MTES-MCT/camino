@@ -163,7 +163,7 @@ export class AxmOctMachine extends CaminoMachine<AxmContext, AXMOctXStateEvent> 
         return [{ type: event, date }]
       default:
         // related to https://github.com/microsoft/TypeScript/issues/46497  https://github.com/microsoft/TypeScript/issues/40803 :(
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+
         // @ts-ignore
         return [{ type: event }]
     }

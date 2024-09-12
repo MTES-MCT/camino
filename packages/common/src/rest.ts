@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/ban-types */
 import { ZodObject, ZodType, ZodTypeAny, z } from 'zod'
 import {
   entrepriseDocumentIdValidator,
@@ -260,12 +259,12 @@ export type DownloadFormat = z.infer<typeof downloadFormatValidator>
 
 type ZodObjectParsUrlParams<url> = ZodObject<ZodParseUrlParams<url>>
 
-type ZodParseUrlParams<url> = url extends `${infer start}/${infer rest}` ? ZodParseUrlParams<start> & ZodParseUrlParams<rest> : url extends `:${infer param}` ? { [k in param]: ZodTypeAny } : {} // eslint-disable-line @typescript-eslint/ban-types
+type ZodParseUrlParams<url> = url extends `${infer start}/${infer rest}` ? ZodParseUrlParams<start> & ZodParseUrlParams<rest> : url extends `:${infer param}` ? { [k in param]: ZodTypeAny } : {} // eslint-disable-line
 
-isTrue<Expect<ZodParseUrlParams<'/titre'>, {}>>
+isTrue<Expect<ZodParseUrlParams<'/titre'>, {}>> // eslint-disable-line
 isFalse<Expect<ZodParseUrlParams<'/titre'>, { id: ZodType }>>
 isTrue<Expect<ZodParseUrlParams<'/titre/:id'>, { id: ZodType }>>
-isFalse<Expect<ZodParseUrlParams<'/titre/:id'>, {}>>
+isFalse<Expect<ZodParseUrlParams<'/titre/:id'>, {}>> // eslint-disable-line
 isTrue<Expect<ZodParseUrlParams<'/titre/:titreId/:demarcheId'>, { titreId: ZodType; demarcheId: ZodType }>>
 
 type MethodVerb = Exclude<keyof CaminoRoute<string>, 'params'>
