@@ -50,6 +50,24 @@ describe('vérifie l’arbre des procédures spécifique', () => {
   //    ])
   //    expect(service).canOnlyTransitionTo({ machine, date: dateFin }, ['NOTIFIER_DEMANDEUR'])
   //  })
+  test('on ne peut plus rien faire pendant que la mise en concurrence est en cours', () => {
+    const { service, dateFin, machine } = setDateAndOrderAndInterpretMachine(psCxmOctMachine, '1999-04-14', [
+      ETES.demande.FAIT,
+      ETES.depotDeLaDemande.FAIT,
+      ETES.recevabiliteDeLaDemande.FAVORABLE,
+      ETES.avisDeMiseEnConcurrenceAuJORF.EN_COURS,
+    ])
+    expect(service).canOnlyTransitionTo({ machine, date: dateFin }, [])
+  })
+  // test('on peut publier le résultat de la mise en concurrence, une fois celle-ci terminée', () => {
+  //   const { service, dateFin, machine } = setDateAndOrderAndInterpretMachine(psCxmOctMachine, '1999-04-14', [
+  //     ETES.demande.FAIT,
+  //     ETES.depotDeLaDemande.FAIT,
+  //     ETES.recevabiliteDeLaDemande.FAVORABLE,
+  //     ETES.avisDeMiseEnConcurrenceAuJORF.TERMINE,
+  //   ])
+  //   expect(service).canOnlyTransitionTo({ machine, date: dateFin }, ['RESULTAT_MISE_EN_CONCURRENCE'])
+  // })
   test('on ne peut pas notifier le demandeur apres une recevabilité favorable pour pcc', () => {
     expect(() =>
       setDateAndOrderAndInterpretMachine(psPccOctMachine, '1999-04-14', [ETES.demande.FAIT, ETES.depotDeLaDemande.FAIT, ETES.recevabiliteDeLaDemande.FAVORABLE, ETES.notificationAuDemandeur.FAIT])
