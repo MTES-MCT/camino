@@ -329,7 +329,7 @@ export const DemandeMultipleEntreprisesDocuments: StoryFn = () => (
       sections_with_values: [
         { id: 'arm', elements: [{ id: 'mecanise', type: 'radio', value: true, nom: 'Mécanisation', optionnel: false }], nom: 'Arm' },
         {
-          id: 'odlep',
+          id: 'opdp',
           elements: [
             {
               id: 'lien',
@@ -338,6 +338,13 @@ export const DemandeMultipleEntreprisesDocuments: StoryFn = () => (
               optionnel: true,
               description: '',
               value: 'https://beta.gouv.fr',
+            },
+            {
+              id: 'duree',
+              nom: "Durée en jours de l'enquête publique",
+              type: 'number',
+              optionnel: false,
+              value: 7,
             },
           ],
         },
@@ -393,7 +400,7 @@ export const DemandeNoMap: StoryFn = () => (
       sections_with_values: [
         { id: 'arm', elements: [{ id: 'mecanise', type: 'radio', value: true, nom: 'Mécanisation', optionnel: false }], nom: 'Arm' },
         {
-          id: 'odlep',
+          id: 'opdp',
           elements: [
             {
               id: 'lien',
@@ -402,6 +409,13 @@ export const DemandeNoMap: StoryFn = () => (
               optionnel: true,
               description: '',
               value: 'https://beta.gouv.fr',
+            },
+            {
+              id: 'duree',
+              nom: "Durée en jours de l'enquête publique",
+              type: 'number',
+              optionnel: false,
+              value: 7,
             },
           ],
         },

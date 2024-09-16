@@ -72,6 +72,16 @@ const publication: Section[] = [
   },
 ]
 
+const participationDuPublic: Section[] = [
+  {
+    id: 'opdp',
+    elements: [
+      { id: 'lien', nom: 'Lien public externe', type: 'url', optionnel: true, description: '' },
+      { id: 'duree', nom: "Durée en jours de l'enquête publique", type: 'number', optionnel: false },
+    ],
+  },
+]
+
 const EtapesTypesSections = {
   [ETAPES_TYPES.decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_]: [
     {
@@ -175,24 +185,8 @@ const EtapesTypesSections = {
   [ETAPES_TYPES.decisionAdministrative]: publication,
   [ETAPES_TYPES.publicationDeLavisDeDecisionImplicite]: publication,
   [ETAPES_TYPES.abrogationDeLaDecision]: publication,
-  [ETAPES_TYPES.participationDuPublic]: [
-    {
-      id: 'opdp',
-      elements: [
-        { id: 'lien', nom: 'Lien public externe', type: 'url', optionnel: true, description: '' },
-        { id: 'duree', nom: 'Durée en jours de la participation du public', type: 'number', optionnel: false },
-      ],
-    },
-  ],
-  [ETAPES_TYPES.enquetePublique]: [
-    {
-      id: 'odlep',
-      elements: [
-        { id: 'lien', nom: 'Lien public externe', type: 'url', optionnel: true, description: '' },
-        { id: 'duree', nom: "Durée en jours de l'enquête publique", type: 'number', optionnel: false },
-      ],
-    },
-  ],
+  [ETAPES_TYPES.participationDuPublic]: participationDuPublic,
+  [ETAPES_TYPES.enquetePublique]: participationDuPublic,
 } as const satisfies { [key in EtapeTypeId]?: DeepReadonly<Section[]> }
 
 const proprietesDeLaConcession: Section[] = [

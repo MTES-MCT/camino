@@ -67,7 +67,7 @@ test('getStatutId', () => {
         typeId: ETAPES_TYPES.enquetePublique,
         date: caminoDateValidator.parse('2020-07-14'),
         statutId: ETAPES_STATUTS.ACCEPTE,
-        contenu: { odlep: { duree: { value: 15, etapeHeritee: null, heritee: false } } },
+        contenu: { opdp: { duree: { value: 15, etapeHeritee: null, heritee: false } } },
       },
       caminoDateValidator.parse('2020-07-14')
     )
@@ -79,7 +79,7 @@ test('getStatutId', () => {
         typeId: ETAPES_TYPES.enquetePublique,
         date: caminoDateValidator.parse('2020-07-14'),
         statutId: ETAPES_STATUTS.ACCEPTE,
-        contenu: { odlep: { duree: { value: 15, etapeHeritee: null, heritee: false } } },
+        contenu: { opdp: { duree: { value: 15, etapeHeritee: null, heritee: false } } },
       },
       caminoDateValidator.parse('2020-07-13')
     )
@@ -91,7 +91,7 @@ test('getStatutId', () => {
         typeId: ETAPES_TYPES.enquetePublique,
         date: caminoDateValidator.parse('2020-07-14'),
         statutId: ETAPES_STATUTS.ACCEPTE,
-        contenu: { odlep: { duree: { value: 15, etapeHeritee: null, heritee: false } } },
+        contenu: { opdp: { duree: { value: 15, etapeHeritee: null, heritee: false } } },
       },
       caminoDateValidator.parse('2020-07-29')
     )
@@ -103,7 +103,7 @@ test('getStatutId', () => {
         typeId: ETAPES_TYPES.enquetePublique,
         date: caminoDateValidator.parse('2020-07-14'),
         statutId: ETAPES_STATUTS.ACCEPTE,
-        contenu: { odlep: { duree: { value: 15, etapeHeritee: null, heritee: false } } },
+        contenu: { opdp: { duree: { value: 15, etapeHeritee: null, heritee: false } } },
       },
       caminoDateValidator.parse('2020-07-28')
     )

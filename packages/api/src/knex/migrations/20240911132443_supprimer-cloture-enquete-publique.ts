@@ -1,4 +1,3 @@
-/* eslint-disable no-restricted-syntax */
 /* eslint-disable sql/no-unsafe-query */
 
 import { CaminoDate, daysBetween } from 'camino-common/src/date.js'
@@ -35,7 +34,7 @@ export const up = async (knex: Knex): Promise<void> => {
     }
 
     const contenu = {
-      odlep: {
+      opdp: {
         duree: daysBetween(ouverture.date, cloture.date),
       },
     }
