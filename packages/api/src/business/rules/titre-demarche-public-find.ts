@@ -8,6 +8,7 @@ import { titreEtapeForMachineValidator, toMachineEtapes } from '../rules-demarch
 import { titreEtapesSortAscByOrdre } from '../utils/titre-etapes-sort'
 import { titreInModificationEnInstance } from './titre-statut-id-find'
 import { ETAPES_STATUTS, isEtapeStatusRejete } from 'camino-common/src/static/etapesStatuts'
+import { DOMAINES_IDS } from 'camino-common/src/static/domaines'
 const titreDemarchePublicLectureFind = (
   publicLecture: boolean,
   demarcheTypeId: DemarcheTypeId,
@@ -159,7 +160,7 @@ const titreDemarchePublicLectureFind = (
   const domaineId = titreTypeId ? getDomaineId(titreTypeId) : null
   if (
     domaineId &&
-    ['m', 'w', 'c'].includes(domaineId) &&
+    [DOMAINES_IDS.METAUX, DOMAINES_IDS.GRANULATS_MARINS, DOMAINES_IDS.CARRIERES].includes(domaineId) &&
     [
       ETAPES_TYPES.avisDeMiseEnConcurrenceAuJORF,
       ETAPES_TYPES.decisionDeLadministration,
