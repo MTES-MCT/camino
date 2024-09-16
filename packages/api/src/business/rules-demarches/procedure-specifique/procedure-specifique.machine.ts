@@ -314,47 +314,70 @@ const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: De
       },
       publicationAuRecueilDesActesAdministratifsOupublicationAuJORFAFaire: {
         on: {
-          PUBLIER_DECISION_ACCEPTEE_AU_JORF: [
-            {
-              guard: 'isDemarcheStatutAcceptee',
-              target: 'abrogationOuNotificationAuDemandeurAFaire',
-              actions: assign({ demarcheStatut: DemarchesStatutsIds.AccepteEtPublie }),
-            },
-            {
-              guard: 'isDemarcheStatutAccepteeEtPublie',
-              target: 'finDeMachine',
-              actions: assign({ demarcheStatut: DemarchesStatutsIds.RejeteApresAbrogation }),
-            },
-          ],
-          PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS: [
-            {
-              guard: 'isDemarcheStatutAcceptee',
-              target: 'abrogationOuNotificationAuDemandeurAFaire',
-              actions: assign({ demarcheStatut: DemarchesStatutsIds.AccepteEtPublie }),
-            },
-            {
-              guard: 'isDemarcheStatutAccepteeEtPublie',
-              target: 'finDeMachine',
-              actions: assign({ demarcheStatut: DemarchesStatutsIds.RejeteApresAbrogation }),
-            },
-          ],
+          PUBLIER_DECISION_ACCEPTEE_AU_JORF: {
+            target: 'abrogationOuNotificationAuDemandeurMachine',
+            actions: assign({ demarcheStatut: DemarchesStatutsIds.AccepteEtPublie }),
+          },
+          PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS: {
+            target: 'abrogationOuNotificationAuDemandeurMachine',
+            actions: assign({ demarcheStatut: DemarchesStatutsIds.AccepteEtPublie }),
+          },
         },
       },
-      abrogationOuNotificationAuDemandeurAFaire: {
-        on: {
-          NOTIFIER_DEMANDEUR: 'attestationDeConstitutionDeGarantiesFinancieresAFaire',
-          FAIRE_ABROGATION: 'publicationAuRecueilDesActesAdministratifsOupublicationAuJORFAFaire',
+      abrogationOuNotificationAuDemandeurMachine: {
+        type: 'parallel',
+        states: {
+          notificationAuDemandeurMachine: {
+            initial: 'notificationAuDemandeurAFaire',
+            states: {
+              notificationAuDemandeurAFaire: {
+                on: {
+                  NOTIFIER_DEMANDEUR: 'attestationDeConstitutionDeGarantiesFinancieresAFaire',
+                },
+              },
+              attestationDeConstitutionDeGarantiesFinancieresAFaire: {
+                always: {
+                  target: 'attestationDeConstitutionDeGarantiesFinancieresFait',
+                  guard: not('isAxm'),
+                },
+                on: {
+                  FAIRE_ATTESTATION_DE_CONSTITUTION_DE_GARANTIES_FINANCIERES: 'attestationDeConstitutionDeGarantiesFinancieresFait',
+                },
+              },
+
+              attestationDeConstitutionDeGarantiesFinancieresFait: { type: 'final' },
+            },
+          },
+
+          abrogationMachine: {
+            initial: 'abrogationAFaire',
+            states: {
+              abrogationAFaire: {
+                on: {
+                  FAIRE_ABROGATION: 'publicationsAFaire',
+                },
+              },
+              publicationsAFaire: {
+                on: {
+                  PUBLIER_DECISION_ACCEPTEE_AU_JORF: {
+                    target: 'publicationsFaites',
+                    actions: assign({ demarcheStatut: DemarchesStatutsIds.RejeteApresAbrogation }),
+                  },
+                  PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS: {
+                    target: 'publicationsFaites',
+                    actions: assign({ demarcheStatut: DemarchesStatutsIds.RejeteApresAbrogation }),
+                  },
+                },
+              },
+              publicationsFaites: {
+                type: 'final',
+              },
+            },
+          },
         },
+        onDone: 'finDeMachine',
       },
-      attestationDeConstitutionDeGarantiesFinancieresAFaire: {
-        always: {
-          target: 'finDeMachine',
-          guard: not('isAxm'),
-        },
-        on: {
-          FAIRE_ATTESTATION_DE_CONSTITUTION_DE_GARANTIES_FINANCIERES: 'finDeMachine',
-        },
-      },
+
       notificationAuDemandeurApresDecisionRejetAFaire: {
         on: {
           NOTIFIER_DEMANDEUR: {
@@ -379,5 +402,4 @@ const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: De
 // - comment on peut avoir une mise en concurrence si la démarche n'est pas publique ? => Modif du logigramme, ça devient publique dés que la mise en concurrence est « en cours »
 // - Pour l'enquête et la participation du public, la démarche est déjà publique => Heuuuu non, modif à faire dans le logigramme
 //
-// - « Mesures de publicité» ça bloque tout ?
-// - Une fois qu'on a notifié le demandeur, on ne peut plus abroger ?
+// - « Mesures de publicité» ça bloque tout ? -> NON

@@ -89,7 +89,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
 
     expect(service.getSnapshot().context.visibilite).toBe('publique')
     expect(service.getSnapshot().context.demarcheStatut).toBe(DemarchesStatutsIds.AccepteEtPublie)
-    expect(service).canOnlyTransitionTo({ machine, date: dateFin }, [])
+    expect(service).canOnlyTransitionTo({ machine, date: dateFin }, ['FAIRE_ABROGATION'])
   })
   test("réalise une demande de prolongation d'ARM rejetée", () => {
     const { service, dateFin } = setDateAndOrderAndInterpretMachine(psArmProMachine, '1999-04-14', [
@@ -168,8 +168,8 @@ describe('vérifie l’arbre des procédures spécifique', () => {
         "OUVRIR_PARTICIPATION_DU_PUBLIC                             (publique      , en instruction         ) -> [RENDRE_DECISION_ADMINISTRATION_ACCEPTEE,RENDRE_DECISION_ADMINISTRATION_REJETEE,RENDRE_DECISION_ADMINISTRATION_REJETEE_DECISION_IMPLICITE]",
         "RENDRE_DECISION_ADMINISTRATION_ACCEPTEE                    (publique      , accepté                ) -> [PUBLIER_DECISION_ACCEPTEE_AU_JORF,PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS]",
         "PUBLIER_DECISION_ACCEPTEE_AU_JORF                          (publique      , accepté et publié      ) -> [FAIRE_ABROGATION,NOTIFIER_DEMANDEUR]",
-        "NOTIFIER_DEMANDEUR                                         (publique      , accepté et publié      ) -> [FAIRE_ATTESTATION_DE_CONSTITUTION_DE_GARANTIES_FINANCIERES]",
-        "FAIRE_ATTESTATION_DE_CONSTITUTION_DE_GARANTIES_FINANCIERES (publique      , accepté et publié      ) -> []",
+        "NOTIFIER_DEMANDEUR                                         (publique      , accepté et publié      ) -> [FAIRE_ABROGATION,FAIRE_ATTESTATION_DE_CONSTITUTION_DE_GARANTIES_FINANCIERES]",
+        "FAIRE_ATTESTATION_DE_CONSTITUTION_DE_GARANTIES_FINANCIERES (publique      , accepté et publié      ) -> [FAIRE_ABROGATION]",
       ]
     `)
   })
@@ -201,8 +201,8 @@ describe('vérifie l’arbre des procédures spécifique', () => {
         "OUVRIR_PARTICIPATION_DU_PUBLIC                       (publique      , en instruction         ) -> [RENDRE_DECISION_ADMINISTRATION_ACCEPTEE,RENDRE_DECISION_ADMINISTRATION_REJETEE,RENDRE_DECISION_ADMINISTRATION_REJETEE_DECISION_IMPLICITE]",
         "RENDRE_DECISION_ADMINISTRATION_ACCEPTEE              (publique      , accepté                ) -> [PUBLIER_DECISION_ACCEPTEE_AU_JORF,PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS]",
         "PUBLIER_DECISION_ACCEPTEE_AU_JORF                    (publique      , accepté et publié      ) -> [FAIRE_ABROGATION,NOTIFIER_DEMANDEUR]",
-        "FAIRE_ABROGATION                                     (publique      , accepté et publié      ) -> [PUBLIER_DECISION_ACCEPTEE_AU_JORF,PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS]",
-        "PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS (publique      , rejeté après abrogation) -> []",
+        "FAIRE_ABROGATION                                     (publique      , accepté et publié      ) -> [NOTIFIER_DEMANDEUR,PUBLIER_DECISION_ACCEPTEE_AU_JORF,PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS]",
+        "PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS (publique      , rejeté après abrogation) -> [NOTIFIER_DEMANDEUR]",
       ]
     `)
   })
