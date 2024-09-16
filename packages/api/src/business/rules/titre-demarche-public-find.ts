@@ -40,14 +40,14 @@ const titreDemarchePublicLectureFind = (
   if (
     titreEtape.typeId === ETAPES_TYPES.recevabiliteDeLaDemande &&
     (!titreTypeId || titreTypeId !== TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX) &&
-    !demarcheTypeEtapesTypes.find(et => [ETAPES_TYPES.avisDeMiseEnConcurrenceAuJORF, 'ane'].includes(et))
+    !demarcheTypeEtapesTypes.find(et => et === ETAPES_TYPES.avisDeMiseEnConcurrenceAuJORF)
   ) {
     return true
   }
 
-  // si le type d'étape est mise en concurrence au JORF ou JOUE
+  // si le type d'étape est mise en concurrence au JORF
   // alors la démarche est publique
-  if ([ETAPES_TYPES.avisDeMiseEnConcurrenceAuJORF, 'ane'].includes(titreEtape.typeId)) {
+  if (titreEtape.typeId === ETAPES_TYPES.avisDeMiseEnConcurrenceAuJORF) {
     return true
   }
 
@@ -116,7 +116,7 @@ const titreDemarchePublicLectureFind = (
   //    ou décision unilatérale de l'administration
   //    ou publication de décision au recueil des actes administratifs
   // alors la démarche est publique
-  if (['dup', ETAPES_TYPES.decisionAdministrative, ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs].includes(titreEtape.typeId)) {
+  if ([ETAPES_TYPES.decisionAdministrative, ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs].includes(titreEtape.typeId)) {
     return true
   }
 
@@ -149,11 +149,9 @@ const titreDemarchePublicLectureFind = (
   }
 
   // public pour tous des titres non énergétiques M, W, C avec une des étapes suivantes :
-  // avis de concurrence au JOUE (ane)
   // avis de concurrence au JORF (anf)
   // décision de l'administration (dex)
   // publication de décision au JORF (dpu)
-  // publication de décision administrative au JORF (dup)
   // publication de décision au recueil des actes administratifs (rpu)
   // participation du public (ppu)
   // enquête publique (epu)
@@ -163,11 +161,9 @@ const titreDemarchePublicLectureFind = (
     domaineId &&
     ['m', 'w', 'c'].includes(domaineId) &&
     [
-      'ane',
       ETAPES_TYPES.avisDeMiseEnConcurrenceAuJORF,
       ETAPES_TYPES.decisionDeLadministration,
       ETAPES_TYPES.publicationDeDecisionAuJORF,
-      'dup',
       ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs,
       ETAPES_TYPES.participationDuPublic,
       ETAPES_TYPES.enquetePublique,
