@@ -80,14 +80,12 @@ export const EtapesTypesEtapesStatuts = {
 
   consultationDesAdministrationsCentrales: { FAIT: { etapeTypeId: 'cac', etapeStatutId: 'fai' } },
   concertationInterministerielle: { FAIT: { etapeTypeId: 'cim', etapeStatutId: 'fai' } },
-  saisineDuConseilDepartementalDeLenvironnementEtDesRisquesSanitairesEtTechnologiques_Coderst_: { FAIT: { etapeTypeId: 'cod', etapeStatutId: 'fai' } },
 
   classementSansSuite: { FAIT: { etapeTypeId: 'css', etapeStatutId: 'fai' } },
   decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_: {
     EXEMPTE: { etapeTypeId: 'dae', etapeStatutId: 'exe' },
     REQUIS: { etapeTypeId: 'dae', etapeStatutId: 'req' },
   },
-  declaration: { FAIT: { etapeTypeId: 'dec', etapeStatutId: 'fai' } },
   decisionDeLOfficeNationalDesForets: {
     ACCEPTE: { etapeTypeId: 'def', etapeStatutId: 'acc' },
     REJETE: { etapeTypeId: 'def', etapeStatutId: 'rej' },
@@ -223,9 +221,6 @@ export const EtapesTypesEtapesStatuts = {
   demandeDautorisationDouvertureDeTravauxMiniers_AOTM_: { FAIT: { etapeTypeId: 'wfa', etapeStatutId: 'fai' } },
   declarationDarretDefinitifDeTravaux_DADT_: { FAIT: { etapeTypeId: 'wfd', etapeStatutId: 'fai' } },
   declarationDouvertureDeTravauxMiniers_DOTM_: { FAIT: { etapeTypeId: 'wfo', etapeStatutId: 'fai' } },
-  demandeDautorisationDouvertureDeTravauxMiniers_DAOTM_: { DEPOSE: { etapeTypeId: 'wfr', etapeStatutId: 'dep' } },
-  memoireEnReponseDeLexploitant_ParRapportALavisDeLAE_: { FAIT: { etapeTypeId: 'wmm', etapeStatutId: 'fai' } },
-  memoireEnReponseDeLexploitant: { DEPOSE: { etapeTypeId: 'wmr', etapeStatutId: 'dep' } },
   memoireDeFinDeTravaux: { FAIT: { etapeTypeId: 'wmt', etapeStatutId: 'fai' } },
   publicationDeDecisionAuRecueilDesActesAdministratifs_wpa: { FAIT: { etapeTypeId: 'wpa', etapeStatutId: 'fai' } },
   porterAConnaissance: { FAIT: { etapeTypeId: 'wpb', etapeStatutId: 'fai' } },

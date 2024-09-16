@@ -305,7 +305,7 @@ test('perimetreStepIsComplete', () => {
 test('etapeDocumentsStepIsVisible', () => {
   expect(etapeDocumentsStepIsVisible({ typeId: 'asl' }, 'oct', 'axm')).toBe(true)
   expect(etapeDocumentsStepIsVisible({ typeId: 'mdp' }, 'oct', 'axm')).toBe(true)
-  expect(etapeDocumentsStepIsVisible({ typeId: 'cod' }, 'oct', 'axm')).toBe(false)
+  expect(etapeDocumentsStepIsVisible({ typeId: 'pqr' }, 'oct', 'axm')).toBe(false)
 })
 
 const axmDocumentsComplete = [
@@ -431,7 +431,7 @@ test('etapeDocumentsStepIsComplete', () => {
 test('entrepriseDocumentsStepIsVisible', () => {
   expect(entrepriseDocumentsStepIsVisible({ typeId: 'asl' }, 'oct', 'axm')).toBe(false)
   expect(entrepriseDocumentsStepIsVisible({ typeId: 'mfr' }, 'oct', 'axm')).toBe(true)
-  expect(entrepriseDocumentsStepIsVisible({ typeId: 'cod' }, 'oct', 'axm')).toBe(false)
+  expect(entrepriseDocumentsStepIsVisible({ typeId: 'pqr' }, 'oct', 'axm')).toBe(false)
 })
 test('entrepriseDocumentsStepIsComplete', () => {
   expect(

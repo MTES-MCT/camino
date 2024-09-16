@@ -14,7 +14,6 @@ const travaux = {
     ETAPES_TYPES.saisineDeLautoriteEnvironnementale,
     ETAPES_TYPES.avisDeLautoriteEnvironnementale,
     ETAPES_TYPES.avisDesServicesEtCommissionsConsultatives,
-    ETAPES_TYPES.memoireEnReponseDeLexploitant_ParRapportALavisDeLAE_,
     ETAPES_TYPES.enquetePublique,
     ETAPES_TYPES.rapportEtAvisDeLaDREAL,
     ETAPES_TYPES.transmissionDuProjetDePrescriptionsAuDemandeur,

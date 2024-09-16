@@ -297,17 +297,6 @@ const EtapesTypesDocumentsTypes = {
     { documentTypeId: DOCUMENTS_TYPES_IDS.dossier, optionnel: true },
   ],
   [ETAPES_TYPES.declarationDouvertureDeTravauxMiniers_DOTM_]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.declaration, optionnel: true }],
-  [ETAPES_TYPES.demandeDautorisationDouvertureDeTravauxMiniers_DAOTM_]: [
-    { documentTypeId: DOCUMENTS_TYPES_IDS.accuseDeReceptionDUneDemande, optionnel: true },
-    { documentTypeId: DOCUMENTS_TYPES_IDS.documentsCartographiques, optionnel: true },
-    { documentTypeId: DOCUMENTS_TYPES_IDS.dossierDeDemande, optionnel: true },
-    { documentTypeId: DOCUMENTS_TYPES_IDS.dossier, optionnel: true },
-    { documentTypeId: DOCUMENTS_TYPES_IDS.ficheDePresentation, optionnel: true },
-    { documentTypeId: DOCUMENTS_TYPES_IDS.identificationDeMateriel, optionnel: true },
-    { documentTypeId: DOCUMENTS_TYPES_IDS.noticeDIncidence, optionnel: true },
-  ],
-  [ETAPES_TYPES.memoireEnReponseDeLexploitant_ParRapportALavisDeLAE_]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.dossier, optionnel: true }],
-  [ETAPES_TYPES.memoireEnReponseDeLexploitant]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.dossier, optionnel: true }],
   [ETAPES_TYPES.memoireDeFinDeTravaux]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.programmeDesTravaux, optionnel: true }],
   [ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs_wpa]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.arretePrefectoral, optionnel: true }],
   [ETAPES_TYPES.porterAConnaissance]: [

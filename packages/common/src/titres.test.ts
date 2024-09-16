@@ -87,4 +87,51 @@ describe('getMostRecentValuePropFromEtapeFondamentaleValide', () => {
       ])
     ).toStrictEqual(dpu.fondamentale.titulaireIds)
   })
+
+  test("retourne null s'il n'y a aucune étape fondamentale", () => {
+    expect(getMostRecentValuePropFromEtapeFondamentaleValide('titulaireIds', [])).toBe(null)
+  })
+
+  test('ignore une étape si sa propriété est null', () => {
+    const dpu: TitrePropTitreEtapeFindDemarcheEtape = {
+      etape_type_id: 'dpu',
+      fondamentale: {
+        date_debut: null,
+        date_fin: toCaminoDate('2032-08-18'),
+        duree: null,
+        substances: [],
+        titulaireIds: [entrepriseIdValidator.parse('fr-791652399')],
+        amodiataireIds: null,
+        perimetre: null,
+      },
+      etape_statut_id: 'acc',
+      is_brouillon: ETAPE_IS_NOT_BROUILLON,
+      ordre: 2,
+    }
+
+    const dex: TitrePropTitreEtapeFindDemarcheEtape = {
+      etape_type_id: 'dex',
+      fondamentale: {
+        date_debut: null,
+        date_fin: null,
+        duree: 240,
+        substances: [],
+        titulaireIds: [entrepriseIdValidator.parse('fr-310380811')],
+        amodiataireIds: null,
+        perimetre: null,
+      },
+      etape_statut_id: 'acc',
+      is_brouillon: ETAPE_IS_NOT_BROUILLON,
+      ordre: 1,
+    }
+
+    expect(
+      getMostRecentValuePropFromEtapeFondamentaleValide('duree', [
+        {
+          etapes: [dpu, dex],
+          ordre: 1,
+        },
+      ])
+    ).toStrictEqual(240)
+  })
 })
