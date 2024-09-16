@@ -21,6 +21,12 @@ type EnqueteDuPublic = {
   status: EtapeStatutId
   type: 'OUVRIR_ENQUETE_PUBLIQUE'
 }
+
+type FaireMiseEnConcurrence = {
+  status: EtapeStatutId
+  type: 'FAIRE_MISE_EN_CONCURRENCE'
+}
+
 type ProcedureSpecifiqueXStateEvent =
   | { type: 'FAIRE_DEMANDE' }
   | { type: 'DEPOSER_DEMANDE' }
@@ -29,6 +35,7 @@ type ProcedureSpecifiqueXStateEvent =
   | { type: 'FAIRE_DEMANDE_DE_COMPLEMENTS' }
   | { type: 'RECEVOIR_COMPLEMENTS' }
   | { type: 'FAIRE_DECLARATION_IRRECEVABILITE' }
+  | FaireMiseEnConcurrence
   | { type: 'NOTIFIER_DEMANDEUR' }
   | { type: 'RENDRE_AVIS_CGE_IGEDD' }
   | { type: 'FAIRE_LETTRE_SAISINE_PREFET' }
@@ -55,6 +62,7 @@ const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
   FAIRE_DEMANDE_DE_COMPLEMENTS: { db: ETES.demandeDeComplements, mainStep: false },
   RECEVOIR_COMPLEMENTS: { db: ETES.receptionDeComplements, mainStep: false },
   FAIRE_DECLARATION_IRRECEVABILITE: { db: ETES.declarationDIrrecevabilite, mainStep: false },
+  FAIRE_MISE_EN_CONCURRENCE: { db: ETES.avisDeMiseEnConcurrenceAuJORF, mainStep: true },
   NOTIFIER_DEMANDEUR: { db: ETES.notificationAuDemandeur, mainStep: false },
   RENDRE_AVIS_CGE_IGEDD: { db: ETES.avisDuConseilGeneralDeLeconomie_CGE_, mainStep: true },
   FAIRE_LETTRE_SAISINE_PREFET: { db: ETES.saisineDuPrefet, mainStep: true },
@@ -90,6 +98,12 @@ export class ProcedureSpecifiqueMachine extends CaminoMachine<ProcedureSpecifiqu
           { type: event, status: ETAPES_STATUTS.EN_COURS, surface: km2Validator.parse(0.26) },
           { type: event, status: ETAPES_STATUTS.TERMINE, surface: km2Validator.parse(0.26) },
         ]
+      case 'FAIRE_MISE_EN_CONCURRENCE':
+        return [
+          { type: event, status: ETAPES_STATUTS.PROGRAMME },
+          { type: event, status: ETAPES_STATUTS.EN_COURS },
+          { type: event, status: ETAPES_STATUTS.TERMINE },
+        ]
       default:
         return super.toPotentialCaminoXStateEvent(event, date)
     }
@@ -105,9 +119,11 @@ const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: De
       isAxm: () => TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX === titreTypeId,
       isPerOuConcession: () => [TITRES_TYPES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES, TITRES_TYPES_TYPES_IDS.CONCESSION].includes(getTitreTypeType(titreTypeId)),
       // FIXMACHINE la condition a changé
-      hasMiseEnConcurrence: () =>
+      canHaveMiseEnConcurrence: () =>
         [DEMARCHES_TYPES_IDS.Octroi, DEMARCHES_TYPES_IDS.ExtensionDePerimetre].includes(demarcheTypeId) ||
         (isDemarcheTypeProlongations(demarcheTypeId) && getTitreTypeType(titreTypeId) === TITRES_TYPES_TYPES_IDS.CONCESSION),
+      //FIXMACHINE
+      isPremiereDemandePourMiseEnConcurrence: () => true,
       isAxmOuAr: () => TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX === titreTypeId || TITRES_TYPES_TYPES_IDS.AUTORISATION_DE_RECHERCHE === getTitreTypeType(titreTypeId),
       // FIXMACHINE à vérifier et à tester
       isEnquetePubliqueRequired: ({ event }) =>
@@ -186,20 +202,31 @@ const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: De
       recevabiliteFavorableFaite: {
         always: [
           {
-            guard: and([not('hasMiseEnConcurrence'), not('isVisibilitePublique')]),
-            actions: assign({ visibilite: 'publique' }),
+            target: 'avisCollectivitesEtServicesEtCommissionsAFaireMachine',
+            guard: and([not('canHaveMiseEnConcurrence'), 'isAxmOuAr']),
           },
           {
-            target: 'avisCollectivitesEtServicesEtCommissionsAFaireMachine',
-            guard: and([not('hasMiseEnConcurrence'), 'isAxmOuAr']),
+            target: 'resultatMiseEnConcurrenceAFaire',
+            guard: and(['canHaveMiseEnConcurrence', not('isPremiereDemandePourMiseEnConcurrence')]),
           },
         ],
         on: {
-          // FIXMACHINE ajouter la mise en concurrence
+          FAIRE_MISE_EN_CONCURRENCE: [
+            {
+              target: 'resultatMiseEnConcurrenceAFaire',
+              guard: and(['canHaveMiseEnConcurrence', 'isPremiereDemandePourMiseEnConcurrence', ({ event }) => event.status === ETAPES_STATUTS.TERMINE]),
+              actions: assign({ visibilite: 'publique' }),
+            },
+            {
+              target: 'enAttente',
+              guard: and(['canHaveMiseEnConcurrence', 'isPremiereDemandePourMiseEnConcurrence', ({ event }) => event.status === ETAPES_STATUTS.EN_COURS]),
+              actions: assign({ visibilite: 'publique' }),
+            },
+          ],
           RENDRE_AVIS_CGE_IGEDD: {
             // FIXMACHINE ajouter la demande de modification de l'aes
             target: 'notificationAuDemandeurAFaire',
-            guard: and([not('hasMiseEnConcurrence'), not('isAxmOuAr')]),
+            guard: and([not('canHaveMiseEnConcurrence'), not('isAxmOuAr')]),
           },
           NOTIFIER_DEMANDEUR: {
             target: 'recevabiliteFavorableFaite',
@@ -207,9 +234,14 @@ const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: De
           },
         },
       },
-
+      enAttente: {},
       notificationAuDemandeurAFaire: {
         on: { NOTIFIER_DEMANDEUR: 'lettreDeSaisineDuPrefetOuReponseDuDemandeurAFaire' },
+      },
+      resultatMiseEnConcurrenceAFaire: {
+        on: {
+          //FIXMACHINE
+        },
       },
       lettreDeSaisineDuPrefetOuReponseDuDemandeurAFaire: {
         on: {
@@ -270,20 +302,32 @@ const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: De
                     {
                       target: 'fin',
                       guard: and([or(['isEnquetePubliqueRequired', 'isEnquetePubliquePossible']), ({ event }) => event.status === ETAPES_STATUTS.TERMINE]),
+                      actions: assign({ visibilite: 'publique' }),
                     },
                     {
                       target: 'enAttente',
-                      guard: ({ event }) => event.status !== ETAPES_STATUTS.TERMINE,
+                      guard: ({ event }) => event.status === ETAPES_STATUTS.EN_COURS,
+                      actions: assign({ visibilite: 'publique' }),
+                    },
+                    {
+                      target: 'enAttente',
+                      guard: ({ event }) => event.status === ETAPES_STATUTS.PROGRAMME,
                     },
                   ],
                   OUVRIR_PARTICIPATION_DU_PUBLIC: [
                     {
                       target: 'fin',
                       guard: and([not('isEnquetePubliqueRequired'), ({ event }) => event.status === ETAPES_STATUTS.TERMINE]),
+                      actions: assign({ visibilite: 'publique' }),
                     },
                     {
                       target: 'enAttente',
-                      guard: ({ event }) => event.status !== ETAPES_STATUTS.TERMINE,
+                      guard: ({ event }) => event.status === ETAPES_STATUTS.EN_COURS,
+                      actions: assign({ visibilite: 'publique' }),
+                    },
+                    {
+                      target: 'enAttente',
+                      guard: ({ event }) => event.status === ETAPES_STATUTS.PROGRAMME,
                     },
                   ],
                 },
@@ -299,7 +343,10 @@ const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: De
       },
       decisionAdministrationAFaire: {
         on: {
-          RENDRE_DECISION_ADMINISTRATION_ACCEPTEE: { target: 'publicationAuRecueilDesActesAdministratifsOupublicationAuJORFAFaire', actions: assign({ demarcheStatut: DemarchesStatutsIds.Accepte }) },
+          RENDRE_DECISION_ADMINISTRATION_ACCEPTEE: {
+            target: 'publicationAuRecueilDesActesAdministratifsOupublicationAuJORFAFaire',
+            actions: assign({ demarcheStatut: DemarchesStatutsIds.Accepte, visibilite: 'publique' }),
+          },
           RENDRE_DECISION_ADMINISTRATION_REJETEE: {
             target: 'notificationAuDemandeurApresDecisionRejetAFaire',
             actions: assign({ visibilite: 'confidentielle' }),
@@ -308,6 +355,7 @@ const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: De
             target: 'finDeMachine',
             actions: assign({
               demarcheStatut: DemarchesStatutsIds.Rejete,
+              visibilite: 'publique',
             }),
           },
         },
@@ -403,3 +451,5 @@ const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: De
 // - Pour l'enquête et la participation du public, la démarche est déjà publique => Heuuuu non, modif à faire dans le logigramme
 //
 // - « Mesures de publicité» ça bloque tout ? -> NON
+//
+// - Pour la mise en concurrence, si ce n'est pas la demande initiale. L'utilisateur a le choix entre 2 « Notification au demandeur », sachant que celle après la mise en concurrence est beaucoup plus complète, on ne peut pas renommer cette dernière ?
