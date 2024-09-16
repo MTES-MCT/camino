@@ -2,7 +2,7 @@ import { AnyMachineSnapshot, createActor, EventObject, MachineSnapshot, StateMac
 import { CaminoCommonContext, DBEtat, Etape, Intervenant, intervenants, tags } from './machine-common'
 import { DemarchesStatutsIds, DemarcheStatutId } from 'camino-common/src/static/demarchesStatuts'
 import { CaminoDate } from 'camino-common/src/date'
-import { OmitDistributive } from 'camino-common/src/typescript-tools'
+import { isNotNullNorUndefined, OmitDistributive } from 'camino-common/src/typescript-tools'
 
 type CaminoState<CaminoContext extends CaminoCommonContext, CaminoEvent extends EventObject> = MachineSnapshot<CaminoContext, CaminoEvent, any, any, any, any, any, any>
 
@@ -214,28 +214,31 @@ export abstract class CaminoMachine<CaminoContext extends CaminoCommonContext, C
     return intervenants.filter(r => responsables.includes(tags.responsable[r]))
   }
 
+  public possibleNextEvents(state: CaminoState<CaminoContext, CaminoEvent>, date: CaminoDate): CaminoEvent[] {
+    return getNextEvents(state)
+      .filter((event: string) => this.isEvent(event))
+      .flatMap(event => {
+        const events = this.toPotentialCaminoXStateEvent(event, date)
+
+        return events.filter(event => {
+          return state.can(event) && state.status !== 'done'
+        })
+      })
+      .filter(isNotNullNorUndefined)
+      .toSorted((a, b) => a.type.localeCompare(b.type))
+  }
+
   public possibleNextEtapes(etapes: readonly Etape[], date: CaminoDate): (OmitDistributive<Etape, 'date' | 'titreTypeId' | 'demarcheTypeId'> & { mainStep: boolean })[] {
     const state = this.assertGoTo(etapes)
 
-    if (state !== undefined) {
-      return getNextEvents(state)
-        .filter((event: string) => this.isEvent(event))
-        .flatMap(event => {
-          const events = this.toPotentialCaminoXStateEvent(event, date)
-
-          return events
-            .filter(event => {
-              return state.can(event) && state.status !== 'done'
-            })
-            .flatMap(event => this.caminoXStateEventToEtapes(event))
-        })
-        .filter(event => event !== undefined)
+    if (isNotNullNorUndefined(state)) {
+      return this.possibleNextEvents(state, date).flatMap(this.caminoXStateEventToEtapes).filter(isNotNullNorUndefined)
     }
 
     return []
   }
 }
 
-export function getNextEvents(snapshot: AnyMachineSnapshot): string[] {
+function getNextEvents(snapshot: AnyMachineSnapshot): string[] {
   return [...new Set([...snapshot._nodes.flatMap(sn => sn.ownEvents)])]
 }

@@ -1,4 +1,4 @@
-import { assign, createMachine } from 'xstate'
+import { assign, setup } from 'xstate'
 import { CaminoMachine } from '../machine-helper'
 import { CaminoCommonContext, DBEtat } from '../machine-common'
 import { EtapesTypesEtapesStatuts as ETES } from 'camino-common/src/static/etapesTypesEtapesStatuts'
@@ -93,7 +93,7 @@ export class ProcedureSimplifieeMachine extends CaminoMachine<ProcedureSimplifie
           { type: event, status: ETAPES_STATUTS.TERMINE },
         ]
       default:
-        return [{ type: event }]
+        return super.toPotentialCaminoXStateEvent(event, date)
     }
   }
 }
@@ -105,8 +105,14 @@ interface ProcedureSimplifieeContext extends CaminoCommonContext {
 const defaultDemarcheStatut = DemarchesStatutsIds.EnConstruction
 const procedureHistoriqueDateMax = toCaminoDate('2024-07-01')
 const procedureIncompleteDateMax = toCaminoDate('2000-01-01')
-const procedureSimplifieeMachine = createMachine({
+const procedureSimplifieeMachine = setup({
   types: {} as { context: ProcedureSimplifieeContext; events: ProcedureSimplifieeXStateEvent },
+  guards: {
+    isProcedureHistorique: ({ context, event }) => 'date' in event && isBefore(event.date, procedureHistoriqueDateMax) && context.demarcheStatut === defaultDemarcheStatut,
+    isProcedureIncomplete: ({ context, event }) => 'date' in event && isBefore(event.date, procedureIncompleteDateMax) && context.demarcheStatut === defaultDemarcheStatut,
+    isDemarcheEnInstruction: ({ context }) => context.demarcheStatut === DemarchesStatutsIds.EnInstruction,
+  },
+}).createMachine({
   id: 'ProcedureSimplifiee',
   initial: 'demandeAFaire',
   context: {
@@ -117,7 +123,7 @@ const procedureSimplifieeMachine = createMachine({
   },
   on: {
     RENDRE_DECISION_ADMINISTRATION_ACCEPTEE: {
-      guard: ({ context, event }) => isBefore(event.date, procedureHistoriqueDateMax) && context.demarcheStatut === defaultDemarcheStatut,
+      guard: 'isProcedureHistorique',
       target: '.publicationAuRecueilDesActesAdministratifsOupublicationAuJORFAFaire',
       actions: assign({
         visibilite: 'publique',
@@ -125,7 +131,7 @@ const procedureSimplifieeMachine = createMachine({
       }),
     },
     PUBLIER_DECISION_ACCEPTEE_AU_JORF: {
-      guard: ({ context, event }) => isBefore(event.date, procedureIncompleteDateMax) && context.demarcheStatut === defaultDemarcheStatut,
+      guard: 'isProcedureIncomplete',
       target: '.abrogationAFaire',
       actions: assign({
         visibilite: 'publique',
@@ -133,7 +139,7 @@ const procedureSimplifieeMachine = createMachine({
       }),
     },
     PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS: {
-      guard: ({ context, event }) => isBefore(event.date, procedureIncompleteDateMax) && context.demarcheStatut === defaultDemarcheStatut,
+      guard: 'isProcedureIncomplete',
       target: '.abrogationAFaire',
       actions: assign({
         visibilite: 'publique',
@@ -141,7 +147,7 @@ const procedureSimplifieeMachine = createMachine({
       }),
     },
     SAISIR_INFORMATION_HISTORIQUE_INCOMPLETE: {
-      guard: ({ context, event }) => isBefore(event.date, procedureIncompleteDateMax) && context.demarcheStatut === defaultDemarcheStatut,
+      guard: 'isProcedureIncomplete',
       target: '.finDeMachine',
       actions: assign({
         visibilite: 'confidentielle',
@@ -149,7 +155,7 @@ const procedureSimplifieeMachine = createMachine({
       }),
     },
     RENDRE_DECISION_ADMINISTRATION_REJETEE: {
-      guard: ({ context, event }) => isBefore(event.date, procedureHistoriqueDateMax) && context.demarcheStatut === defaultDemarcheStatut,
+      guard: 'isProcedureHistorique',
       target: '.publicationAuJorfApresRejetAFaire',
       actions: assign({
         visibilite: 'confidentielle',
@@ -157,7 +163,7 @@ const procedureSimplifieeMachine = createMachine({
       }),
     },
     RENDRE_DECISION_ADMINISTRATION_REJETEE_DECISION_IMPLICITE: {
-      guard: ({ context, event }) => isBefore(event.date, procedureHistoriqueDateMax) && context.demarcheStatut === defaultDemarcheStatut,
+      guard: 'isProcedureHistorique',
       target: '.finDeMachine',
       actions: assign({
         visibilite: 'publique',
@@ -165,25 +171,25 @@ const procedureSimplifieeMachine = createMachine({
       }),
     },
     CLASSER_SANS_SUITE: {
-      guard: ({ context }) => context.demarcheStatut === DemarchesStatutsIds.EnInstruction,
+      guard: 'isDemarcheEnInstruction',
       target: '.finDeMachine',
       actions: assign({
         demarcheStatut: DemarchesStatutsIds.ClasseSansSuite,
       }),
     },
     DESISTER_PAR_LE_DEMANDEUR: {
-      guard: ({ context }) => context.demarcheStatut === DemarchesStatutsIds.EnInstruction,
+      guard: 'isDemarcheEnInstruction',
       target: '.finDeMachine',
       actions: assign({
         demarcheStatut: DemarchesStatutsIds.Desiste,
       }),
     },
     DEMANDER_INFORMATION: {
-      guard: ({ context }) => context.demarcheStatut === DemarchesStatutsIds.EnInstruction,
+      guard: 'isDemarcheEnInstruction',
       actions: assign({}),
     },
     RECEVOIR_INFORMATION: {
-      guard: ({ context }) => context.demarcheStatut === DemarchesStatutsIds.EnInstruction,
+      guard: 'isDemarcheEnInstruction',
       actions: assign({}),
     },
   },
