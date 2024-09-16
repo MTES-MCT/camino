@@ -10,10 +10,10 @@ export default defineConfig({
       thresholds: {
         // the endgame is to put thresholds at 100 and never touch it again :)
         autoUpdate: true,
-        branches: 90.81,
-        functions: 82.67,
-        lines: 96.51,
-        statements: 96.51,
+        branches: 91.57,
+        functions: 83.46,
+        lines: 96.73,
+        statements: 96.73,
         perFile: false,
       },
     },

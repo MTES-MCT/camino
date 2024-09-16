@@ -741,7 +741,7 @@ describe("publicité d'une démarche", () => {
     ).toMatchObject({ publicLecture: true })
   })
 
-  test.each<EtapeTypeId>(['anf', 'dex', 'dpu', 'rpu', 'ppu', 'epu', 'epc'])("une démarche d’un titre non énergétique dont l'étape la plus récente est %s est public", etapeTypeId => {
+  test.each<EtapeTypeId>(['anf', 'dex', 'dpu', 'rpu', 'ppu', 'epu'])("une démarche d’un titre non énergétique dont l'étape la plus récente est %s est public", etapeTypeId => {
     expect(
       titreDemarchePublicFind(
         {

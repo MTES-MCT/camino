@@ -1,5 +1,6 @@
-import { expect, test } from 'vitest'
+import { describe, expect, test } from 'vitest'
 import {
+  dateTypeStepIsComplete,
   entrepriseDocumentsStepIsComplete,
   entrepriseDocumentsStepIsVisible,
   etapeAvisStepIsVisible,
@@ -19,6 +20,74 @@ import { toCaminoDate } from '../date'
 import { testBlankUser } from '../tests-utils'
 import { entrepriseIdValidator } from '../entreprise'
 import { communeIdValidator } from '../static/communes'
+import { User } from '../roles'
+import { ADMINISTRATION_IDS } from '../static/administrations'
+
+describe('dateTypeStepIsComplete', () => {
+  test.each<User>([
+    { ...testBlankUser, role: 'super' },
+    { ...testBlankUser, role: 'admin', administrationId: ADMINISTRATION_IDS.BRGM },
+    { ...testBlankUser, role: 'editeur', administrationId: ADMINISTRATION_IDS.BRGM },
+  ])('le date-type est toujours complet pour un %s', user => {
+    expect(
+      dateTypeStepIsComplete(
+        {
+          date: toCaminoDate('2024-01-01'),
+          typeId: 'mfr',
+          statutId: 'fai',
+        },
+        user
+      ).valid
+    ).toBe(true)
+  })
+
+  test('le date-type avec une date, un typeId, et un statutId est complet', () => {
+    const result = dateTypeStepIsComplete(
+      {
+        date: toCaminoDate('2024-01-01'),
+        typeId: 'mfr',
+        statutId: 'fai',
+      },
+      {
+        ...testBlankUser,
+        role: 'super',
+      }
+    )
+    expect(result.valid).toBe(true)
+  })
+
+  test('le date-type avec une date, un typeId, et un statutId est complet', () => {
+    const result = dateTypeStepIsComplete(
+      {
+        date: toCaminoDate('2024-01-01'),
+        typeId: 'mfr',
+        statutId: 'fai',
+      },
+      {
+        ...testBlankUser,
+        role: 'super',
+      }
+    )
+    expect(result.valid).toBe(true)
+  })
+
+  test('le date-type sans date, typeId, ou statutId est incomplet', () => {
+    const result = dateTypeStepIsComplete(
+      {
+        date: null,
+        typeId: null,
+        statutId: null,
+      },
+      {
+        ...testBlankUser,
+        role: 'super',
+      }
+    )
+    expect(result.valid).toBe(false)
+    // @ts-ignore
+    expect(result.errors).toStrictEqual(["La date de l'étape est obligatoire", "Le type de l'étape est obligatoire", "Le statut de l'étape est obligatoire"])
+  })
+})
 
 test('fondamentaleStepIsVisible', () => {
   expect(fondamentaleStepIsVisible('mfr')).toBe(true)

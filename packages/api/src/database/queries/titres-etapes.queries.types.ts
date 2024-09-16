@@ -265,11 +265,11 @@ export interface IGetLargeobjectIdByEtapeAvisIdInternalQuery {
   result: IGetLargeobjectIdByEtapeAvisIdInternalResult;
 }
 
-/** 'GetParticipationEtapesDb' parameters type */
-export type IGetParticipationEtapesDbParams = void;
+/** 'GetParticipationOrEnqueteEtapesDb' parameters type */
+export type IGetParticipationOrEnqueteEtapesDbParams = void;
 
-/** 'GetParticipationEtapesDb' return type */
-export interface IGetParticipationEtapesDbResult {
+/** 'GetParticipationOrEnqueteEtapesDb' return type */
+export interface IGetParticipationOrEnqueteEtapesDbResult {
   contenu: Json | null;
   date: string;
   demarche_type_id: string;
@@ -277,26 +277,27 @@ export interface IGetParticipationEtapesDbResult {
   heritage_contenu: Json | null;
   id: string;
   titre_type_id: string;
+  type_id: string;
 }
 
-/** 'GetParticipationEtapesDb' query type */
-export interface IGetParticipationEtapesDbQuery {
-  params: IGetParticipationEtapesDbParams;
-  result: IGetParticipationEtapesDbResult;
+/** 'GetParticipationOrEnqueteEtapesDb' query type */
+export interface IGetParticipationOrEnqueteEtapesDbQuery {
+  params: IGetParticipationOrEnqueteEtapesDbParams;
+  result: IGetParticipationOrEnqueteEtapesDbResult;
 }
 
-/** 'UpdateParticipationStatutDb' parameters type */
-export interface IUpdateParticipationStatutDbParams {
+/** 'UpdateParticipationOrEnqueteStatutDb' parameters type */
+export interface IUpdateParticipationOrEnqueteStatutDbParams {
   etapeId: string;
   newStatut: string;
 }
 
-/** 'UpdateParticipationStatutDb' return type */
-export type IUpdateParticipationStatutDbResult = void;
+/** 'UpdateParticipationOrEnqueteStatutDb' return type */
+export type IUpdateParticipationOrEnqueteStatutDbResult = void;
 
-/** 'UpdateParticipationStatutDb' query type */
-export interface IUpdateParticipationStatutDbQuery {
-  params: IUpdateParticipationStatutDbParams;
-  result: IUpdateParticipationStatutDbResult;
+/** 'UpdateParticipationOrEnqueteStatutDb' query type */
+export interface IUpdateParticipationOrEnqueteStatutDbQuery {
+  params: IUpdateParticipationOrEnqueteStatutDbParams;
+  result: IUpdateParticipationOrEnqueteStatutDbResult;
 }
 

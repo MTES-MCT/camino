@@ -176,7 +176,7 @@ export const etapeNoteValidator = z.object({ valeur: z.string(), is_avertissemen
 export type EtapeNote = z.infer<typeof etapeNoteValidator>
 
 export const getStatutId = (etape: Pick<DeepReadonly<FlattenEtape>, 'date' | 'contenu' | 'typeId' | 'statutId'>, currentDate: CaminoDate): EtapeStatutId => {
-  if (etape.typeId !== ETAPES_TYPES.participationDuPublic) {
+  if (![ETAPES_TYPES.participationDuPublic, ETAPES_TYPES.enquetePublique].includes(etape.typeId)) {
     return etape.statutId
   }
 
