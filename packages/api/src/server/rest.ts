@@ -89,23 +89,23 @@ type IRestResolver = (
 
 type CaminoRestRoutesType = typeof CaminoRestRoutes
 type RestGetCall<Route extends GetRestRoutes> = (pool: Pool) => (req: CaminoRequest, res: CustomResponse<DeepReadonly<z.infer<CaminoRestRoutesType[Route]['get']['output']>>>) => Promise<void>
-export type RestNewPostCall<Route extends NewPostRestRoutes> = (
-  pool: Pool,
-  user: DeepReadonly<UserNotNull>,
-  body: DeepReadonly<z.infer<CaminoRestRoutesType[Route]['newPost']['input']>>,
+export type RestNewPostCall<Route extends NewPostRestRoutes> = (data: {
+  pool: Pool
+  user: DeepReadonly<UserNotNull>
+  body: DeepReadonly<z.infer<CaminoRestRoutesType[Route]['newPost']['input']>>
   params: DeepReadonly<z.infer<CaminoRestRoutesType[Route]['params']>>
-) => Effect.Effect<DeepReadonly<z.infer<CaminoRestRoutesType[Route]['newPost']['output']>>, CaminoApiError<string>>
+}) => Effect.Effect<DeepReadonly<z.infer<CaminoRestRoutesType[Route]['newPost']['output']>>, CaminoApiError<string>>
 
 type SearchParams<Route extends NewGetRestRoutes> = CaminoRestRoutesType[Route]['newGet'] extends { searchParams: ZodType }
   ? z.infer<CaminoRestRoutesType[Route]['newGet']['searchParams']>
   : Record<never, string>
 
-export type RestNewGetCall<Route extends NewGetRestRoutes> = (
-  pool: Pool,
-  user: DeepReadonly<User>,
-  params: DeepReadonly<z.infer<CaminoRestRoutesType[Route]['params']>>,
+export type RestNewGetCall<Route extends NewGetRestRoutes> = (data: {
+  pool: Pool
+  user: DeepReadonly<User>
+  params: DeepReadonly<z.infer<CaminoRestRoutesType[Route]['params']>>
   searchParams: SearchParams<Route>
-) => Effect.Effect<DeepReadonly<z.infer<CaminoRestRoutesType[Route]['newGet']['output']>>, CaminoApiError<string>>
+}) => Effect.Effect<DeepReadonly<z.infer<CaminoRestRoutesType[Route]['newGet']['output']>>, CaminoApiError<string>>
 
 type RestPostCall<Route extends PostRestRoutes> = (pool: Pool) => (req: CaminoRequest, res: CustomResponse<z.infer<CaminoRestRoutesType[Route]['post']['output']>>) => Promise<void>
 type RestPutCall<Route extends PutRestRoutes> = (pool: Pool) => (req: CaminoRequest, res: CustomResponse<z.infer<CaminoRestRoutesType[Route]['put']['output']>>) => Promise<void>
@@ -235,7 +235,7 @@ export const restWithPool = (dbPool: Pool): Router => {
               Effect.bind<'result', { searchParams: any; params: any }, DeepReadonly<z.infer<(typeof maRoute)['newGet']['output']>>, CaminoApiError<string>, never>(
                 'result',
                 ({ searchParams, params }) => {
-                  return maRoute.newGetCall(dbPool, req.auth, params, searchParams)
+                  return maRoute.newGetCall({ pool: dbPool, user: req.auth, params, searchParams })
                 }
               ),
               Effect.bind('parsedResult', ({ result }) =>
@@ -298,7 +298,7 @@ export const restWithPool = (dbPool: Pool): Router => {
               // TODO 2024-06-26 ici, si on ne met pas le body et params à any, on se retrouve avec une typescript union hell qui fait tout planter
               Effect.bind<'result', { body: any; user: UserNotNull; params: any }, DeepReadonly<z.infer<(typeof maRoute)['newPost']['output']>>, CaminoApiError<string>, never>(
                 'result',
-                ({ user, body, params }) => maRoute.newPostCall(dbPool, user, body, params)
+                ({ user, body, params }) => maRoute.newPostCall({ pool: dbPool, user, body, params })
               ),
               Effect.bind('parsedResult', ({ result }) =>
                 pipe(

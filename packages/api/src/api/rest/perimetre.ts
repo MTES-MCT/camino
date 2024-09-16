@@ -2,7 +2,7 @@ import { DemarcheId, demarcheIdOrSlugValidator } from 'camino-common/src/demarch
 import { CaminoRequest, CustomResponse } from './express-type'
 import { Pool } from 'pg'
 import { pipe, Effect, Match } from 'effect'
-import { GeoSystemeId, GeoSystemes } from 'camino-common/src/static/geoSystemes'
+import { GeoSystemes } from 'camino-common/src/static/geoSystemes'
 import { HTTP_STATUS } from 'camino-common/src/http'
 import {
   ConvertPointsErrors,
@@ -16,7 +16,7 @@ import {
 } from './perimetre.queries'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { getMostRecentEtapeFondamentaleValide } from './titre-heritage'
-import { isAdministrationAdmin, isAdministrationEditeur, isDefault, isSuper, User, UserNotNull } from 'camino-common/src/roles'
+import { isAdministrationAdmin, isAdministrationEditeur, isDefault, isSuper, User } from 'camino-common/src/roles'
 import { getDemarcheByIdOrSlug, getEtapesByDemarcheId } from './demarches.queries'
 import { getAdministrationsLocalesByTitreId, getTitreByIdOrSlug, getTitulairesAmodiatairesByTitreId } from './titres.queries'
 import { etapeIdOrSlugValidator } from 'camino-common/src/etape'
@@ -37,9 +37,6 @@ import {
   featureCollectionForagesValidator,
   FeatureCollectionForages,
   featureForagePropertiesValidator,
-  GeojsonImportPointsBody,
-  GeojsonImportBody,
-  GeojsonImportForagesBody,
 } from 'camino-common/src/perimetre'
 import { join } from 'node:path'
 import { readFileSync } from 'node:fs'
@@ -196,12 +193,12 @@ type GeojsonImportErrorMessages =
   | GetGeojsonByGeoSystemeIdErrorMessages
   | GetGeojsonInformationErrorMessages
   | ConvertPointsErrors
-export const geojsonImport: RestNewPostCall<'/rest/geojson/import/:geoSystemeId'> = (
-  pool: Pool,
-  user: DeepReadonly<UserNotNull>,
-  body: DeepReadonly<GeojsonImportBody>,
-  params: { geoSystemeId: GeoSystemeId }
-): Effect.Effect<DeepReadonly<GeojsonInformations>, CaminoApiError<GeojsonImportErrorMessages>> => {
+export const geojsonImport: RestNewPostCall<'/rest/geojson/import/:geoSystemeId'> = ({
+  pool,
+  user,
+  body,
+  params,
+}): Effect.Effect<DeepReadonly<GeojsonInformations>, CaminoApiError<GeojsonImportErrorMessages>> => {
   const pathFrom = join(process.cwd(), `/files/tmp/${body.tempDocumentName}`)
 
   return pipe(
@@ -452,12 +449,12 @@ const fileNameToCsv = (pathFrom: string): Effect.Effect<unknown[], CaminoError<t
 const accesInterditError = 'Accès interdit' as const
 type GeosjsonImportPointsErrorMessages = ZodUnparseable | DbQueryAccessError | typeof accesInterditError | 'Fichier incorrect' | ConvertPointsErrors
 
-export const geojsonImportPoints: RestNewPostCall<'/rest/geojson_points/import/:geoSystemeId'> = (
-  pool: Pool,
-  user: DeepReadonly<UserNotNull>,
-  geojsonImportInput: DeepReadonly<GeojsonImportPointsBody>,
-  params: { geoSystemeId: GeoSystemeId }
-): Effect.Effect<GeojsonImportPointsResponse, CaminoApiError<GeosjsonImportPointsErrorMessages>> => {
+export const geojsonImportPoints: RestNewPostCall<'/rest/geojson_points/import/:geoSystemeId'> = ({
+  pool,
+  user,
+  body: geojsonImportInput,
+  params,
+}): Effect.Effect<GeojsonImportPointsResponse, CaminoApiError<GeosjsonImportPointsErrorMessages>> => {
   return Effect.Do.pipe(
     Effect.filterOrFail(
       () => !isDefault(user),
@@ -500,12 +497,11 @@ export const geojsonImportPoints: RestNewPostCall<'/rest/geojson_points/import/:
 }
 
 type GeosjsonImportForagesErrorMessages = ZodUnparseable | DbQueryAccessError | typeof ouvertureCsvError | typeof ouvertureShapeError | typeof ouvertureGeoJSONError | ConvertPointsErrors
-export const geojsonImportForages: RestNewPostCall<'/rest/geojson_forages/import/:geoSystemeId'> = (
-  pool: Pool,
-  _user: DeepReadonly<UserNotNull>,
-  body: DeepReadonly<GeojsonImportForagesBody>,
-  params: { geoSystemeId: GeoSystemeId }
-): Effect.Effect<GeojsonImportForagesResponse, CaminoApiError<GeosjsonImportForagesErrorMessages>> => {
+export const geojsonImportForages: RestNewPostCall<'/rest/geojson_forages/import/:geoSystemeId'> = ({
+  pool,
+  body,
+  params,
+}): Effect.Effect<GeojsonImportForagesResponse, CaminoApiError<GeosjsonImportForagesErrorMessages>> => {
   const filename = body.tempDocumentName
 
   const pathFrom = join(process.cwd(), `/files/tmp/${filename}`)

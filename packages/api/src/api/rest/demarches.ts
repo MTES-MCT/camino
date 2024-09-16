@@ -94,7 +94,7 @@ export const demarcheSupprimer =
     }
   }
 
-export const demarcheCreer: RestNewPostCall<'/rest/demarches'> = (pool, user, demarche): Effect.Effect<DemarcheCreationOutput, CaminoApiError<string>> => {
+export const demarcheCreer: RestNewPostCall<'/rest/demarches'> = ({ pool, user, body: demarche }): Effect.Effect<DemarcheCreationOutput, CaminoApiError<string>> => {
   return pipe(
     Effect.tryPromise({
       try: async () => {
