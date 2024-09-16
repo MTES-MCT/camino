@@ -223,12 +223,9 @@ export const generateQgisToken =
     }
   }
 
-export const registerToNewsletter: RestNewGetCall<'/rest/utilisateurs/registerToNewsletter'> = (
-  _pool: Pool,
-  _user: DeepReadonly<User>,
-  _params: Record<string, never>,
-  searchParams: { email: string }
-): Effect.Effect<boolean, CaminoApiError<"Impossible de s'enregistrer à la newsletter">> => {
+export const registerToNewsletter: RestNewGetCall<'/rest/utilisateurs/registerToNewsletter'> = ({
+  searchParams,
+}): Effect.Effect<boolean, CaminoApiError<"Impossible de s'enregistrer à la newsletter">> => {
   return pipe(
     Effect.tryPromise({
       try: async () => {
@@ -286,7 +283,7 @@ export const utilisateurs =
 
 type GetUtilisateursError = DbQueryAccessError | ZodUnparseable | "Impossible d'accéder à la liste des utilisateurs" | 'droits insuffisants'
 
-export const getUtilisateurs: RestNewGetCall<'/rest/utilisateurs'> = (pool, user, _params, searchParams): Effect.Effect<DeepReadonly<UtilisateursTable>, CaminoApiError<GetUtilisateursError>> => {
+export const getUtilisateurs: RestNewGetCall<'/rest/utilisateurs'> = ({ pool, user, searchParams }): Effect.Effect<DeepReadonly<UtilisateursTable>, CaminoApiError<GetUtilisateursError>> => {
   return Effect.Do.pipe(
     Effect.flatMap(() => getUtilisateursFilteredAndSorted(pool, user, searchParams)),
     Effect.map(utilisateurs => {
@@ -307,7 +304,7 @@ export const getUtilisateurs: RestNewGetCall<'/rest/utilisateurs'> = (pool, user
 }
 
 type GetUtilisateurError = DbQueryAccessError | ZodUnparseable | 'droits insuffisants'
-export const getUtilisateur: RestNewGetCall<'/rest/utilisateurs/:id'> = (pool, user, params, _searchParams): Effect.Effect<DeepReadonly<UserNotNull>, CaminoApiError<GetUtilisateurError>> => {
+export const getUtilisateur: RestNewGetCall<'/rest/utilisateurs/:id'> = ({ pool, user, params }): Effect.Effect<DeepReadonly<UserNotNull>, CaminoApiError<GetUtilisateurError>> => {
   return Effect.Do.pipe(
     Effect.flatMap(() => newGetUtilisateurById(pool, params.id, user)),
     Effect.mapError(caminoError =>

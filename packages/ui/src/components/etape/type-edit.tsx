@@ -130,7 +130,7 @@ export const TypeEdit = defineComponent<Props>(props => {
                     id: 'select-etape-type',
                     placeholder: '',
                     items: [...getKeys(items, isEtapeTypeId)]
-                      .sort((a, _b) => (items[a]?.mainStep ?? false ? -1 : 1))
+                      .sort((a, _b) => ((items[a]?.mainStep ?? false) ? -1 : 1))
                       .map(etapeTypeId => EtapesTypes[etapeTypeId])
                       .filter(({ nom }) => {
                         return nom.toLowerCase().includes(etapeTypeSearch.value)

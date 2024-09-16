@@ -1,14 +1,13 @@
 import { titresGet } from '../../database/queries/titres'
 
 import { titreUpdateTask } from '../../business/titre-update'
-import { UserNotNull, isEntrepriseOrBureauDEtude } from 'camino-common/src/roles'
+import { isEntrepriseOrBureauDEtude } from 'camino-common/src/roles'
 import { linkTitres } from '../../database/queries/titres-titres.queries'
 import { canCreateTitre } from 'camino-common/src/permissions/titres'
 import { checkTitreLinks } from '../../business/validations/titre-links-validate'
-import { DeepReadonly, isNotNullNorUndefinedNorEmpty, isNullOrUndefined, isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools'
-import { createAutomaticallyEtapeWhenCreatingTitre, TitreDemande, TitreDemandeOutput } from 'camino-common/src/titres'
+import { isNotNullNorUndefinedNorEmpty, isNullOrUndefined, isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools'
+import { createAutomaticallyEtapeWhenCreatingTitre, TitreDemandeOutput } from 'camino-common/src/titres'
 import { HTTP_STATUS } from 'camino-common/src/http'
-import { Pool } from 'pg'
 import { ETAPE_IS_BROUILLON } from 'camino-common/src/etape'
 import { Effect, pipe, Match } from 'effect'
 import { capitalize } from 'effect/String'
@@ -36,12 +35,7 @@ type TitreDemandeCreerErrors =
   | "Problème lors de l'abonnement de l'utilisateur au titre"
   | "L'entreprise est obligatoire"
   | "L'entreprise ne doit pas être présente"
-export const titreDemandeCreer: RestNewPostCall<'/rest/titres'> = (
-  pool: Pool,
-  user: DeepReadonly<UserNotNull>,
-  titreDemande: DeepReadonly<TitreDemande>,
-  _params: {}
-): Effect.Effect<TitreDemandeOutput, CaminoApiError<TitreDemandeCreerErrors>> => {
+export const titreDemandeCreer: RestNewPostCall<'/rest/titres'> = ({ pool, user, body: titreDemande }): Effect.Effect<TitreDemandeOutput, CaminoApiError<TitreDemandeCreerErrors>> => {
   return Effect.Do.pipe(
     Effect.filterOrFail(
       () => canCreateTitre(user, titreDemande.titreTypeId),
