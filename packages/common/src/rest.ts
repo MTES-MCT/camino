@@ -196,7 +196,7 @@ export const CaminoRestRoutes = {
   '/rest/utilisateur/generateQgisToken': { params: noParamsValidator, post: { input: z.void(), output: qgisTokenValidator } },
   '/rest/etapesTypes/:demarcheId/:date': {
     params: z.object({ demarcheId: demarcheIdValidator, date: caminoDateValidator }),
-    get: { output: z.array(etapeTypeEtapeStatutWithMainStepValidator), searchParams: z.object({ etapeId: etapeIdValidator.optional() }) },
+    get: { output: etapeTypeEtapeStatutWithMainStepValidator, searchParams: z.object({ etapeId: etapeIdValidator.optional() }) },
   },
   '/rest/demarches/:demarcheId/geojson': { params: z.object({ demarcheId: demarcheIdOrSlugValidator }), get: { output: perimetreInformationsValidator } },
   '/rest/etapes/:etapeId/geojson': { params: z.object({ etapeId: etapeIdOrSlugValidator }), get: { output: perimetreInformationsValidator } },

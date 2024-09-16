@@ -1,5 +1,5 @@
 // valide la date et la position de l'étape en fonction des autres étapes
-import { DeepReadonly, NonEmptyArray, isNonEmptyArray, isNotNullNorUndefined, isNullOrUndefinedOrEmpty, onlyUnique } from 'camino-common/src/typescript-tools'
+import { DeepReadonly, NonEmptyArray, isNonEmptyArray, isNotNullNorUndefined, isNullOrUndefined, isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools'
 import type { ITitre, ITitreEtape } from '../../types'
 
 import { machineFind } from '../rules-demarches/definitions'
@@ -11,7 +11,6 @@ import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { CaminoMachines } from '../rules-demarches/machines'
 import { CaminoDate } from 'camino-common/src/date'
 import { EtapesTypes, EtapeTypeId } from 'camino-common/src/static/etapesTypes'
-import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts'
 import { titreEtapesSortAscByOrdre } from '../utils/titre-etapes-sort'
 import { getEtapesTDE, isTDEExist } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/index'
 import { etapeTypeDateFinCheck } from '../../api/_format/etapes-types'
@@ -67,8 +66,8 @@ export const titreDemarcheUpdatedEtatValidate = (
   // on récupère tous les type d'étapes et les statuts associés applicable à la date souhaitée
   try {
     const etapeTypesWithStatusPossibles = getPossiblesEtapesTypes(machine, titre.typeId, demarcheTypeId, titreEtape.typeId, titreEtape.id, titreEtape.date, titreDemarcheEtapes ?? [])
-
-    if (!etapeTypesWithStatusPossibles.some(({ etapeStatutId, etapeTypeId }) => etapeStatutId === titreEtape.statutId && etapeTypeId === titreEtape.typeId)) {
+    const statutPossiblesPourCetteEtape = etapeTypesWithStatusPossibles[titreEtape.typeId]
+    if (isNullOrUndefined(statutPossiblesPourCetteEtape) || !statutPossiblesPourCetteEtape.etapeStatutIds.includes(titreEtape.statutId)) {
       if (isNotNullNorUndefined(machine)) {
         return { valid: false, errors: ['les étapes de la démarche machine ne sont pas valides'] }
       } else {
@@ -109,12 +108,12 @@ export const getPossiblesEtapesTypes = (
   etapeId: EtapeId | undefined,
   date: CaminoDate,
   demarcheEtapes: Pick<ITitreEtape, 'typeId' | 'date' | 'isBrouillon' | 'id' | 'ordre' | 'statutId' | 'communes'>[]
-): EtapeTypeEtapeStatutWithMainStep[] => {
-  const etapesTypes: EtapeTypeEtapeStatutWithMainStep[] = []
+): EtapeTypeEtapeStatutWithMainStep => {
+  let etapesTypes: EtapeTypeEtapeStatutWithMainStep = {}
   if (isNotNullNorUndefined(machine)) {
     const etapes = demarcheEtapes.map(etape => titreEtapeForMachineValidator.parse(etape))
 
-    etapesTypes.push(...etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(machine, etapes, etapeId ?? null, date))
+    etapesTypes = etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(machine, etapes, etapeId ?? null, date)
   } else {
     // si on modifie une étape
     // vérifie que son type est possible sur la démarche
@@ -131,13 +130,21 @@ export const getPossiblesEtapesTypes = (
     etapesTypesTDE = etapesTypesTDE
       .filter(typeId => etapeTypeId === typeId || !etapeTypesExistants.includes(typeId) || !EtapesTypes[typeId].unique)
       .filter(etapeTypeId => etapeTypeDateFinCheck(etapeTypeId, demarcheEtapes))
-    etapesTypes.push(...etapesTypesTDE.flatMap(etapeTypeId => getEtapesStatuts(etapeTypeId).map(etapeStatut => ({ etapeTypeId, etapeStatutId: etapeStatut.id, mainStep: false }))))
+    etapesTypes = etapesTypesTDE.reduce<EtapeTypeEtapeStatutWithMainStep>((acc, etapeTypeId) => {
+      acc[etapeTypeId] = { etapeStatutIds: getEtapesStatuts(etapeTypeId).map(({ id }) => id), mainStep: false }
+
+      return acc
+    }, {})
   }
 
   // On ne peut pas avoir 2 fois le même type d'étape en brouillon
-  const etapeTypeIdInBrouillon = demarcheEtapes.filter(({ isBrouillon, id }) => id !== etapeId && isBrouillon).map(({ typeId }) => typeId) ?? []
+  const etapeTypeIdsInBrouillon = demarcheEtapes.filter(({ isBrouillon, id }) => id !== etapeId && isBrouillon).map(({ typeId }) => typeId) ?? []
 
-  return etapesTypes.filter(({ etapeTypeId }) => !etapeTypeIdInBrouillon.includes(etapeTypeId))
+  for (const etapeTypeIdInBrouillon of etapeTypeIdsInBrouillon) {
+    delete etapesTypes[etapeTypeIdInBrouillon]
+  }
+
+  return etapesTypes
 }
 
 // VISIBLE FOR TESTING
@@ -146,7 +153,7 @@ export const etapesTypesPossibleACetteDateOuALaPlaceDeLEtape = (
   etapes: TitreEtapeForMachine[],
   titreEtapeId: string | null,
   date: CaminoDate
-): { etapeTypeId: EtapeTypeId; etapeStatutId: EtapeStatutId; mainStep: boolean }[] => {
+): EtapeTypeEtapeStatutWithMainStep => {
   const sortedEtapes = titreEtapesSortAscByOrdre(etapes)
   const etapesAvant: Etape[] = []
   const etapesApres: Etape[] = []
@@ -173,5 +180,16 @@ export const etapesTypesPossibleACetteDateOuALaPlaceDeLEtape = (
     return machine.isEtapesOk(newEtapes)
   })
 
-  return etapesPossibles.map(({ etapeTypeId, etapeStatutId, mainStep }) => ({ etapeTypeId, etapeStatutId, mainStep })).filter(onlyUnique)
+  return etapesPossibles.reduce<EtapeTypeEtapeStatutWithMainStep>((acc, { etapeTypeId, etapeStatutId, mainStep }) => {
+    if (isNullOrUndefined(acc[etapeTypeId])) {
+      acc[etapeTypeId] = { etapeStatutIds: [etapeStatutId], mainStep }
+    } else {
+      if (!acc[etapeTypeId].etapeStatutIds.includes(etapeStatutId)) {
+        acc[etapeTypeId].etapeStatutIds.push(etapeStatutId)
+      }
+      acc[etapeTypeId].mainStep = acc[etapeTypeId].mainStep || mainStep
+    }
+
+    return acc
+  }, {})
 }

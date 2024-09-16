@@ -41,7 +41,7 @@ type InternalEtapeWithHeritage<HeritagePropsKeys extends EtapeHeritageProps, T e
   heritageContenu: HeritageContenu
 }
 
-export const etapeTypeEtapeStatutWithMainStepValidator = z.object({ etapeTypeId: etapeTypeIdValidator, etapeStatutId: etapeStatutIdValidator, mainStep: z.boolean() })
+export const etapeTypeEtapeStatutWithMainStepValidator = z.record(etapeTypeIdValidator, z.object({ etapeStatutIds: z.array(etapeStatutIdValidator), mainStep: z.boolean() }))
 export type EtapeTypeEtapeStatutWithMainStep = z.infer<typeof etapeTypeEtapeStatutWithMainStepValidator>
 
 export const etapeDocumentIdValidator = z.string().brand('EtapeDocumentId')

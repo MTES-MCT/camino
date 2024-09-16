@@ -146,14 +146,13 @@ const etapeEditFormApiClient: Props['apiClient'] = {
   getEtapesTypesEtapesStatuts(demarcheId: DemarcheId, titreEtapeId: EtapeId | null, date: CaminoDate) {
     getEtapesTypesEtapesStatutsAction(demarcheId, titreEtapeId, date)
 
-    return Promise.resolve([
-      { etapeTypeId: 'mfr', etapeStatutId: 'fai', mainStep: true },
-      { etapeTypeId: 'mdp', etapeStatutId: 'fai', mainStep: true },
-      { etapeTypeId: 'asc', etapeStatutId: 'fai', mainStep: true },
-      { etapeTypeId: 'aca', etapeStatutId: 'fav', mainStep: true },
-      { etapeTypeId: 'aca', etapeStatutId: 'def', mainStep: true },
-      { etapeTypeId: 'cac', etapeStatutId: 'fai', mainStep: true },
-    ])
+    return Promise.resolve({
+      mfr: { etapeStatutIds: ['fai'], mainStep: true },
+      mdp: { etapeStatutIds: ['fai'], mainStep: true },
+      asc: { etapeStatutIds: ['fai'], mainStep: true },
+      aca: { etapeStatutIds: ['fav', 'def'], mainStep: true },
+      cac: { etapeStatutIds: ['fai'], mainStep: true },
+    })
   },
   getEtapeHeritagePotentiel(etape, titreDemarcheId) {
     getEtapeHeritagePotentielAction(etape, titreDemarcheId)

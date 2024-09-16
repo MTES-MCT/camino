@@ -165,11 +165,11 @@ const apiClient: Props['apiClient'] = {
   getEtapesTypesEtapesStatuts(demarcheId: DemarcheId, titreEtapeId: EtapeId | null, date: CaminoDate) {
     getEtapesTypesEtapesStatutsAction(demarcheId, titreEtapeId, date)
 
-    return Promise.resolve([
-      { etapeTypeId: 'mfr', etapeStatutId: 'fai', mainStep: true },
-      { etapeTypeId: 'mdp', etapeStatutId: 'fai', mainStep: true },
-      { etapeTypeId: 'mod', etapeStatutId: 'fai', mainStep: true },
-    ])
+    return Promise.resolve({
+      mfr: { etapeStatutIds: ['fai'], mainStep: true },
+      mdp: { etapeStatutIds: ['fai'], mainStep: true },
+      mod: { etapeStatutIds: ['fai'], mainStep: true },
+    })
   },
   getEtapeHeritagePotentiel(etape, titreDemarcheId) {
     getEtapeHeritagePotentielAction(etape, titreDemarcheId)

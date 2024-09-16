@@ -1,5 +1,5 @@
 import { EtapesStatuts, EtapeStatutId } from 'camino-common/src/static/etapesStatuts'
-import { ETAPES_TYPES, EtapesTypes, EtapeType, EtapeTypeId } from 'camino-common/src/static/etapesTypes'
+import { ETAPES_TYPES, EtapesTypes, EtapeType, EtapeTypeId, isEtapeTypeId } from 'camino-common/src/static/etapesTypes'
 import { computed, ref, FunctionalComponent, watch, HTMLAttributes, defineComponent } from 'vue'
 import { DemarcheId } from 'camino-common/src/demarche'
 import { EtapeApiClient } from './etape-api-client'
@@ -7,7 +7,7 @@ import { CaminoDate } from 'camino-common/src/date'
 import { EtapeId, EtapeTypeEtapeStatutWithMainStep } from 'camino-common/src/etape'
 import { AsyncData } from '@/api/client-rest'
 import { LoadingElement } from '../_ui/functional-loader'
-import { DeepReadonly, NonEmptyArray, isNonEmptyArray, isNotNullNorUndefined, isNullOrUndefinedOrEmpty, map, onlyUnique } from 'camino-common/src/typescript-tools'
+import { DeepReadonly, NonEmptyArray, getKeys, isNonEmptyArray, isNotNullNorUndefined, isNullOrUndefined, isNullOrUndefinedOrEmpty, map, onlyUnique } from 'camino-common/src/typescript-tools'
 import { Alert } from '../_ui/alert'
 import { TypeAheadSingle } from '../_ui/typeahead-single'
 import { DsfrSelect, Item } from '../_ui/dsfr-select'
@@ -44,7 +44,7 @@ export const TypeEdit = defineComponent<Props>(props => {
   const etapeTypeId = ref<EtapeTypeId | null>(props.etape.typeId ?? null)
   const etapeStatutId = ref<EtapeStatutId | null>(props.etape.statutId)
 
-  const possibleEtapes = ref<AsyncData<EtapeTypeEtapeStatutWithMainStep[]>>({ status: 'LOADING' })
+  const possibleEtapes = ref<AsyncData<EtapeTypeEtapeStatutWithMainStep>>({ status: 'LOADING' })
   const possibleStatuts = ref<EtapeStatutId[]>([])
   watch(
     () => props.etape.date,
@@ -67,10 +67,7 @@ export const TypeEdit = defineComponent<Props>(props => {
 
   const updatePossibleStatuts = (typeId: EtapeTypeId) => {
     if (possibleEtapes.value.status === 'LOADED') {
-      possibleStatuts.value = possibleEtapes.value.value
-        .filter(possible => possible.etapeTypeId === typeId)
-        .map(({ etapeStatutId }) => etapeStatutId)
-        .filter(onlyUnique)
+      possibleStatuts.value = possibleEtapes.value.value[typeId]?.etapeStatutIds ?? []
 
       let newEtapeStatutId
       if (possibleStatuts.value.length === 1 || typeId === ETAPES_TYPES.participationDuPublic) {
@@ -91,22 +88,22 @@ export const TypeEdit = defineComponent<Props>(props => {
 
   const etapeTypeExistante = computed<Pick<EtapeType, 'id'> | null>(() => (etapeTypeId.value ? { id: etapeTypeId.value } : null))
 
-  const displayItemInList = (item: EtapeType, etapeTypeEtapeStatutWithMainStep: EtapeTypeEtapeStatutWithMainStep[]): JSX.Element => {
-    const isMainStep = etapeTypeEtapeStatutWithMainStep.some(({ etapeTypeId, mainStep }) => etapeTypeId === item.id && mainStep)
+  const displayItemInList = (item: EtapeType, etapeTypeEtapeStatutWithMainStep: EtapeTypeEtapeStatutWithMainStep): JSX.Element => {
+    const isMainStep = etapeTypeEtapeStatutWithMainStep[item.id]?.mainStep ?? false
 
     return isMainStep ? <strong>{item.nom}</strong> : <>{item.nom}</>
   }
 
   const noItemsText = computed<string | null>(() => {
     if (possibleEtapes.value.status === 'LOADED') {
-      if (isNullOrUndefinedOrEmpty(possibleEtapes.value.value)) {
+      if (isNullOrUndefinedOrEmpty(Object.keys(possibleEtapes.value.value))) {
         if (isNotNullNorUndefined(props.etape.typeId)) {
           return `L'étape ${EtapesTypes[props.etape.typeId].nom} n'est pas possible à cette date`
         }
 
         return 'Il n’y a aucune étape possible à cette date.'
       }
-      if (isNotNullNorUndefined(props.etape.typeId) && !possibleEtapes.value.value.some(({ etapeTypeId }) => etapeTypeId === props.etape.typeId)) {
+      if (isNotNullNorUndefined(props.etape.typeId) && isNullOrUndefined(possibleEtapes.value.value[props.etape.typeId])) {
         return `L'étape ${EtapesTypes[props.etape.typeId].nom} n'est pas possible à cette date`
       }
     }
@@ -132,9 +129,9 @@ export const TypeEdit = defineComponent<Props>(props => {
                   props={{
                     id: 'select-etape-type',
                     placeholder: '',
-                    items: [...items]
-                      .sort((a, _b) => (a.mainStep ? -1 : 1))
-                      .map(({ etapeTypeId }) => EtapesTypes[etapeTypeId])
+                    items: [...getKeys(items, isEtapeTypeId)]
+                      .sort((a, _b) => (items[a]?.mainStep ?? false ? -1 : 1))
+                      .map(etapeTypeId => EtapesTypes[etapeTypeId])
                       .filter(({ nom }) => {
                         return nom.toLowerCase().includes(etapeTypeSearch.value)
                       })
