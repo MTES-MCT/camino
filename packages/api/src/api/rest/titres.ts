@@ -1,16 +1,16 @@
 import { titreArchive, titresGet, titreGet, titreUpsert } from '../../database/queries/titres'
 import { HTTP_STATUS } from 'camino-common/src/http'
-import { ITitre } from '../../types'
-import { CommonTitreAdministration, editableTitreValidator, TitreLink, TitreLinks, TitreGet, titreLinksValidator, utilisateurTitreAbonneValidator } from 'camino-common/src/titres'
+import { CaminoApiError, ITitre } from '../../types'
+import { CommonTitreAdministration, editableTitreValidator, TitreLink, TitreLinks, TitreGet, utilisateurTitreAbonneValidator } from 'camino-common/src/titres'
 import { machineFind } from '../../business/rules-demarches/definitions'
 import { CaminoRequest, CustomResponse } from './express-type'
 import { userSuper } from '../../database/user-super'
-import { NotNullableKeys, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined, onlyUnique } from 'camino-common/src/typescript-tools'
+import { DeepReadonly, NotNullableKeys, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined, isNullOrUndefinedOrEmpty, onlyUnique } from 'camino-common/src/typescript-tools'
 import TitresTitres from '../../database/models/titres--titres'
 import { titreAdministrationsGet } from '../_format/titres'
 import { canDeleteTitre, canEditTitre, canLinkTitres } from 'camino-common/src/permissions/titres'
-import { linkTitres } from '../../database/queries/titres-titres.queries'
-import { checkTitreLinks } from '../../business/validations/titre-links-validate'
+import { linkTitres, LinkTitresErrors } from '../../database/queries/titres-titres.queries'
+import { checkTitreLinks, CheckTitreLinksError } from '../../business/validations/titre-links-validate'
 import { titreEtapeForMachineValidator, toMachineEtapes } from '../../business/rules-demarches/machine-common'
 import { TitreReference } from 'camino-common/src/titres-references'
 import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts'
@@ -22,11 +22,13 @@ import { utilisateurTitreCreate, utilisateurTitreDelete } from '../../database/q
 import { titreUpdateTask } from '../../business/titre-update'
 import { getDoublonsByTitreId, getTitre as getTitreDb } from './titres.queries'
 import type { Pool } from 'pg'
-import { z } from 'zod'
 import { TitresStatutIds } from 'camino-common/src/static/titresStatuts'
 import { getTitreUtilisateur } from '../../database/queries/titres-utilisateurs.queries'
 import { titreIdValidator, titreIdOrSlugValidator, TitreId } from 'camino-common/src/validators/titres'
-import { callAndExit } from '../../tools/fp-tools'
+import { RestNewGetCall, RestNewPostCall } from '../../server/rest'
+import { Effect, Match, pipe } from 'effect'
+import { CaminoError } from 'camino-common/src/zod-tools'
+import { DbQueryAccessError } from '../../pg-database'
 
 const etapesAMasquer = [ETAPES_TYPES.classementSansSuite, ETAPES_TYPES.desistementDuDemandeur, ETAPES_TYPES.decisionImplicite, ETAPES_TYPES.demandeDeComplements_RecevabiliteDeLaDemande_]
 
@@ -187,90 +189,148 @@ export const titresAdministrations =
     }
   }
 
-export const postTitreLiaisons =
-  (pool: Pool) =>
-  async (req: CaminoRequest, res: CustomResponse<TitreLinks>): Promise<void> => {
-    const user = req.auth
+const linkTitreError = 'Droit insuffisant pour lier des titres entre eux' as const
+const demarcheNonChargeesError = 'Les démarches ne sont pas chargées' as const
+type PostTitreLiaisonErrors = DbQueryAccessError | typeof droitInsuffisant | typeof linkTitreError | typeof demarcheNonChargeesError | LinkTitresErrors | CheckTitreLinksError
 
-    const titreId = titreIdValidator.safeParse(req.params.id)
-    const titreFromIds = z.array(titreIdValidator).safeParse(req.body)
+export const postTitreLiaisons: RestNewPostCall<'/rest/titres/:id/titreLiaisons'> = ({
+  pool,
+  user,
+  params: { id: titreId },
+  body: titreFromIds,
+}): Effect.Effect<TitreLinks, CaminoApiError<PostTitreLiaisonErrors>> => {
+  return Effect.Do.pipe(
+    Effect.bind('titre', () =>
+      Effect.tryPromise({
+        try: async () =>
+          titreGet(
+            titreId,
+            {
+              fields: {
+                pointsEtape: { id: {} },
+                demarches: { id: {} },
+              },
+            },
+            user
+          ),
+        catch: e => ({ message: "Impossible d'accéder à la base de données" as const, extra: e }),
+      })
+    ),
+    Effect.filterOrFail(
+      (binded): binded is NotNullableKeys<typeof binded> => isNotNullNorUndefined(binded.titre),
+      () => ({ message: droitInsuffisant })
+    ),
+    Effect.bind('administrations', ({ titre }) =>
+      Effect.tryPromise({
+        try: async () => titreAdministrationsGet(titre),
+        catch: e => ({ message: "Impossible d'accéder à la base de données" as const, extra: e }),
+      })
+    ),
+    Effect.filterOrFail(
+      ({ administrations }) => canLinkTitres(user, administrations),
+      () => ({ message: linkTitreError })
+    ),
+    Effect.filterOrFail(
+      ({ titre }) => isNotNullNorUndefined(titre.demarches),
+      () => ({ message: demarcheNonChargeesError })
+    ),
+    Effect.bind('titresFrom', () =>
+      Effect.tryPromise({
+        try: async () => titresGet({ ids: [...titreFromIds] }, { fields: { id: {} } }, user),
+        catch: e => ({ message: "Impossible d'accéder à la base de données" as const, extra: e }),
+      })
+    ),
+    Effect.bind('unused', ({ titre, titresFrom }) => {
+      const result = checkTitreLinks(titre.typeId, titreFromIds, titresFrom, titre.demarches ?? [])
 
-    if (!titreFromIds.success || titreFromIds.data.length === 0) {
-      throw new Error(`un tableau est attendu en corps de message : '${titreFromIds}'`)
-    }
-
-    if (!titreId.success) {
-      throw new Error('le paramètre id est obligatoire')
-    }
-
-    const titre = await titreGet(
-      titreId.data,
-      {
-        fields: {
-          pointsEtape: { id: {} },
-          demarches: { id: {} },
-        },
-      },
-      user
-    )
-
-    if (!titre) throw new Error("le titre n'existe pas")
-
-    const administrations = titreAdministrationsGet(titre)
-    if (!canLinkTitres(user, administrations)) throw new Error('droits insuffisants')
-
-    if (!titre.demarches) {
-      throw new Error('les démarches ne sont pas chargées')
-    }
-
-    const titresFrom = await titresGet({ ids: titreFromIds.data }, { fields: { id: {} } }, user)
-
-    const check = checkTitreLinks(titre.typeId, titreFromIds.data, titresFrom, titre.demarches)
-    if (!check.valid) {
-      throw new Error(check.errors.join('. '))
-    }
-
-    await callAndExit(linkTitres(pool, { linkTo: titreId.data, linkFrom: titreFromIds.data }), async () => {})
-
-    res.json({
-      amont: await titreLinksGet(titreId.data, 'titreFromId', user),
-      aval: await titreLinksGet(titreId.data, 'titreToId', user),
-    })
-  }
-export const getTitreLiaisons =
-  (_pool: Pool) =>
-  async (req: CaminoRequest, res: CustomResponse<TitreLinks>): Promise<void> => {
-    const user = req.auth
-
-    const titreId = req.params.id
-
-    if (!titreId) {
-      res.json({ amont: [], aval: [] })
-    } else {
-      const titre = await titreGet(titreId, { fields: { id: {} } }, user)
-      if (!titre) {
-        res.sendStatus(HTTP_STATUS.FORBIDDEN)
+      if (result.valid) {
+        return Effect.succeed('')
       } else {
-        const value: TitreLinks = {
-          amont: await titreLinksGet(titreId, 'titreFromId', user),
-          aval: await titreLinksGet(titreId, 'titreToId', user),
-        }
-        res.json(titreLinksValidator.parse(value))
+        console.warn(result.errors)
+
+        return Effect.fail({ message: result.errors[0], extra: result.errors })
       }
-    }
-  }
+    }),
+    Effect.tap(linkTitres(pool, { linkTo: titreId, linkFrom: titreFromIds })),
+    Effect.bind('amont', () => titreLinksGet(titreId, 'titreFromId', user)),
+    Effect.bind('aval', () => titreLinksGet(titreId, 'titreToId', user)),
+    Effect.map(({ amont, aval }) => {
+      const result: TitreLinks = { amont, aval }
 
-const titreLinksGet = async (titreId: string, link: 'titreToId' | 'titreFromId', user: User): Promise<TitreLink[]> => {
-  const titresTitres = await TitresTitres.query().where(link === 'titreToId' ? 'titreFromId' : 'titreToId', titreId)
-  const titreIds = titresTitres.map(r => r[link])
+      return result
+    }),
+    Effect.mapError(caminoError =>
+      Match.value(caminoError.message).pipe(
+        Match.whenOr("Impossible d'accéder à la base de données", demarcheNonChargeesError, () => ({ ...caminoError, status: HTTP_STATUS.INTERNAL_SERVER_ERROR })),
+        Match.whenOr('Droit insuffisant pour accéder au titre ou titre inexistant', linkTitreError, 'droits insuffisants ou titre inexistant', () => ({
+          ...caminoError,
+          status: HTTP_STATUS.FORBIDDEN,
+        })),
+        Match.whenOr(
+          'ce titre peut avoir un seul titre lié',
+          'ce titre ne peut pas être lié à d’autres titres',
+          'lien incompatible entre ces types de titre',
+          'Problème de validation de données',
+          () => ({ ...caminoError, status: HTTP_STATUS.BAD_REQUEST })
+        ),
+        Match.exhaustive
+      )
+    )
+  )
+}
 
-  if (titreIds.length > 0) {
-    const titres = await titresGet({ ids: titreIds }, { fields: { id: {} } }, user)
+const titreLinksGet = (titreId: string, link: 'titreToId' | 'titreFromId', user: DeepReadonly<User>): Effect.Effect<TitreLink[], CaminoError<DbQueryAccessError>> => {
+  return pipe(
+    Effect.tryPromise({
+      try: async () => TitresTitres.query().where(link === 'titreToId' ? 'titreFromId' : 'titreToId', titreId),
+      catch: e => ({ message: "Impossible d'accéder à la base de données" as const, extra: e }),
+    }),
+    Effect.map(titresTitres => titresTitres.map(t => t[link])),
+    Effect.flatMap(titreIds =>
+      Effect.tryPromise({
+        try: async () => {
+          if (isNullOrUndefinedOrEmpty(titreIds)) {
+            return []
+          } else {
+            return titresGet({ ids: titreIds }, { fields: { id: {} } }, user)
+          }
+        },
+        catch: e => ({ message: "Impossible d'accéder à la base de données" as const, extra: e }),
+      })
+    ),
+    Effect.map(titres => titres.map(({ id, nom }) => ({ id, nom })))
+  )
+}
 
-    return titres.map(({ id, nom }) => ({ id, nom }))
-  } else {
-    return []
-  }
+const droitInsuffisant = 'Droit insuffisant pour accéder au titre ou titre inexistant' as const
+type GetTitreLiaisonErrors = DbQueryAccessError | typeof droitInsuffisant
+export const getTitreLiaisons: RestNewGetCall<'/rest/titres/:id/titreLiaisons'> = ({ user, params }): Effect.Effect<TitreLinks, CaminoApiError<GetTitreLiaisonErrors>> => {
+  return Effect.Do.pipe(
+    Effect.flatMap(() =>
+      Effect.tryPromise({
+        try: async () => titreGet(params.id, { fields: { id: {} } }, user),
+        catch: e => ({ message: "Impossible d'accéder à la base de données" as const, extra: e }),
+      })
+    ),
+    Effect.filterOrFail(
+      titre => isNotNullNorUndefined(titre),
+      () => ({ message: droitInsuffisant })
+    ),
+    Effect.bind('amont', () => titreLinksGet(params.id, 'titreFromId', user)),
+    Effect.bind('aval', () => titreLinksGet(params.id, 'titreToId', user)),
+    Effect.map(({ amont, aval }) => {
+      const value: TitreLinks = { amont, aval }
+
+      return value
+    }),
+    Effect.mapError(caminoError =>
+      Match.value(caminoError.message).pipe(
+        Match.when("Impossible d'accéder à la base de données", () => ({ ...caminoError, status: HTTP_STATUS.INTERNAL_SERVER_ERROR })),
+        Match.when('Droit insuffisant pour accéder au titre ou titre inexistant', () => ({ ...caminoError, status: HTTP_STATUS.FORBIDDEN })),
+        Match.exhaustive
+      )
+    )
+  )
 }
 
 export const removeTitre =

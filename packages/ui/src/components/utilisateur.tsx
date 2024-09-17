@@ -99,6 +99,10 @@ export const PureUtilisateur = defineComponent<Props>(props => {
   const get = async () => {
     try {
       const utilisateurFromApi = await props.apiClient.getUtilisateur(props.utilisateurId)
+      if ('message' in utilisateurFromApi) {
+        // TODO 2024-09-17: mieux gérer le message d'erreur qui vient de l'api
+        throw new Error(utilisateurFromApi.message)
+      }
       utilisateur.value = {
         status: 'LOADED',
         value: utilisateurFromApi,

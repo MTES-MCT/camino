@@ -47,6 +47,10 @@ export const TitresLinkForm = defineComponent<Props>(props => {
     titresLinks.value = { status: 'LOADING' }
     try {
       const result = await props.apiClient.loadTitreLinks(props.titre.id)
+      if ('message' in result) {
+        // TODO 2024-09-17 mieux gérer la gestion des erreurs de l'api
+        throw new Error(result.message)
+      }
       titresLinks.value = { status: 'LOADED', value: result }
       selectedTitres.value = titresLinks.value.value.amont
     } catch (e: any) {
@@ -96,6 +100,10 @@ export const TitresLinkForm = defineComponent<Props>(props => {
         props.titre.id,
         selectedTitres.value.map(({ id }) => id)
       )
+      if ('message' in links) {
+        // TODO 2024-09-17 mieux gérer l'affichage du message d'erreur
+        throw new Error(links.message)
+      }
       mode.value = 'read'
       titresLinks.value = {
         status: 'LOADED',
