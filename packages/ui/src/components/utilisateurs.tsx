@@ -34,6 +34,10 @@ export const PureUtilisateurs = defineComponent<Props>(props => {
       entreprisesIds: params.filtres?.entreprisesIds,
     }
     const utilisateurs = await props.apiClient.getUtilisateurs(getUtilisateursParams)
+    if ('message' in utilisateurs) {
+      // TODO 2024-09-17 mieux gérer les messages d'erreur
+      throw new Error(utilisateurs.message)
+    }
 
     return { values: utilisateursLignesBuild(utilisateurs.elements, props.entreprises), total: utilisateurs.total }
   }

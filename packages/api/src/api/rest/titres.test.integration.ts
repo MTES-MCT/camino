@@ -3,7 +3,7 @@ import { titreCreate, titreUpdate } from '../../database/queries/titres'
 import { titreDemarcheCreate } from '../../database/queries/titres-demarches'
 import { titreEtapeCreate } from '../../database/queries/titres-etapes'
 import { userSuper } from '../../database/user-super'
-import { restCall, restDeleteCall, restPostCall } from '../../../tests/_utils/index'
+import { restCall, restDeleteCall, restNewCall, restNewPostCall, restPostCall } from '../../../tests/_utils/index'
 import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations'
 import { ITitreDemarche, ITitreEtape } from '../../types'
 import { entreprisesUpsert } from '../../database/queries/entreprises'
@@ -212,7 +212,7 @@ describe('titresLiaisons', () => {
       {}
     )
 
-    const tested = await restPostCall(
+    const tested = await restNewPostCall(
       dbPool,
       '/rest/titres/:id/titreLiaisons',
       { id: axm.id },
@@ -231,7 +231,7 @@ describe('titresLiaisons', () => {
       nom: getTitres.body[0].nom,
     })
 
-    const avalTested = await restCall(
+    const avalTested = await restNewCall(
       dbPool,
       '/rest/titres/:id/titreLiaisons',
       { id: titreId },

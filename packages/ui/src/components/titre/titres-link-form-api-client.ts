@@ -7,8 +7,9 @@ import gql from 'graphql-tag'
 import { TitreLink, TitreLinks } from 'camino-common/src/titres'
 import { TitreId } from 'camino-common/src/validators/titres'
 import { TitreStatutId } from 'camino-common/src/static/titresStatuts'
-import { getWithJson, postWithJson } from '@/api/client-rest'
+import { newGetWithJson, newPostWithJson } from '@/api/client-rest'
 import { CaminoDate } from 'camino-common/src/date'
+import { CaminoError } from 'camino-common/src/zod-tools'
 
 export type TitresLinkConfig =
   | {
@@ -27,15 +28,15 @@ export type LinkableTitre = TitreLink & {
 }
 
 export interface TitresLinkFormApiClient {
-  linkTitres: (titreId: TitreId, titreFromIds: TitreId[]) => Promise<TitreLinks>
-  loadTitreLinks: (titreId: TitreId) => Promise<TitreLinks>
+  linkTitres: (titreId: TitreId, titreFromIds: TitreId[]) => Promise<CaminoError<string> | TitreLinks>
+  loadTitreLinks: (titreId: TitreId) => Promise<CaminoError<string> | TitreLinks>
   loadLinkableTitres: (titreTypeId: TitreTypeId, demarches: { demarche_type_id: DemarcheTypeId }[]) => () => Promise<LinkableTitre[]>
 }
 
 export const titresLinkFormApiClient: TitresLinkFormApiClient = {
-  linkTitres: async (titreId: TitreId, titreFromIds: TitreId[]): Promise<TitreLinks> => postWithJson('/rest/titres/:id/titreLiaisons', { id: titreId }, titreFromIds),
+  linkTitres: async (titreId: TitreId, titreFromIds: TitreId[]): Promise<CaminoError<string> | TitreLinks> => newPostWithJson('/rest/titres/:id/titreLiaisons', { id: titreId }, titreFromIds),
 
-  loadTitreLinks: async (titreId: TitreId) => getWithJson('/rest/titres/:id/titreLiaisons', { id: titreId }),
+  loadTitreLinks: async (titreId: TitreId) => newGetWithJson('/rest/titres/:id/titreLiaisons', { id: titreId }),
 
   loadLinkableTitres: (titreTypeId: TitreTypeId, demarches: { demarche_type_id: DemarcheTypeId }[]) => async () => {
     const linkConfig = getLinkConfig(titreTypeId, demarches)

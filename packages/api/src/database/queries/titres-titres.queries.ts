@@ -7,13 +7,14 @@ import { CaminoError } from 'camino-common/src/zod-tools.js'
 import { Pool } from 'pg'
 import { z } from 'zod'
 import { ZodUnparseable } from '../../tools/fp-tools.js'
+import { DeepReadonly } from 'camino-common/src/typescript-tools.js'
 
 interface LinkTitre {
   linkTo: TitreId
   linkFrom: TitreId[]
 }
-type LinkTitresErrors = DbQueryAccessError | ZodUnparseable
-export const linkTitres = (pool: Pool, link: LinkTitre): Effect.Effect<void, CaminoError<LinkTitresErrors>> => {
+export type LinkTitresErrors = DbQueryAccessError | ZodUnparseable
+export const linkTitres = (pool: Pool, link: DeepReadonly<LinkTitre>): Effect.Effect<void, CaminoError<LinkTitresErrors>> => {
   return pipe(
     effectDbQueryAndValidate(deleteTitreTitreInternal, { linkTo: link.linkTo }, pool, z.void()),
     Effect.flatMap(() => {

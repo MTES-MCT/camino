@@ -48,7 +48,7 @@ import {
   NewPostRestRoutes,
   NewGetRestRoutes,
 } from 'camino-common/src/rest'
-import { CaminoConfig, caminoConfigValidator } from 'camino-common/src/static/config'
+import { CaminoConfig } from 'camino-common/src/static/config'
 import { CaminoRequest, CustomResponse } from '../api/rest/express-type'
 import { User, UserNotNull } from 'camino-common/src/roles'
 import { createEtape, deleteEtape, deposeEtape, getEtape, getEtapeAvis, getEtapeDocuments, getEtapeEntrepriseDocuments, getEtapesTypesEtapesStatusWithMainStep, updateEtape } from '../api/rest/etapes'
@@ -121,14 +121,19 @@ type Transform<Route> = (Route extends GetRestRoutes ? { getCall: RestGetCall<Ro
   (Route extends NewDownloadRestRoutes ? { newDownloadCall: NewDownload } : {}) &
   (Route extends DownloadRestRoutes ? { downloadCall: RestDownloadCall } : {})
 
-const getConfig = (_pool: Pool) => async (_req: CaminoRequest, res: CustomResponse<CaminoConfig>) => {
-  const caminoConfig: CaminoConfig = {
-    CAMINO_STAGE: config().CAMINO_STAGE,
-    API_MATOMO_URL: config().API_MATOMO_URL,
-    API_MATOMO_ID: config().API_MATOMO_ID,
-  }
+const getConfig: RestNewGetCall<'/config'> = (): Effect.Effect<CaminoConfig, CaminoApiError<"Impossible d'accéder à la configuration">> => {
+  return Effect.try({
+    try: () => {
+      const caminoConfig: CaminoConfig = {
+        CAMINO_STAGE: config().CAMINO_STAGE,
+        API_MATOMO_URL: config().API_MATOMO_URL,
+        API_MATOMO_ID: config().API_MATOMO_ID,
+      }
 
-  res.json(caminoConfigValidator.parse(caminoConfig))
+      return caminoConfig
+    },
+    catch: e => ({ message: "Impossible d'accéder à la configuration" as const, status: HTTP_STATUS.INTERNAL_SERVER_ERROR, extra: e }),
+  })
 }
 
 const restRouteImplementations: Readonly<{ [key in CaminoRestRoute]: Transform<key> & CaminoRestRoutesType[key] }> = {
@@ -150,8 +155,8 @@ const restRouteImplementations: Readonly<{ [key in CaminoRestRoute]: Transform<k
   // NE PAS TOUCHER A CES ROUTES, ELLES SONT UTILISÉES HORS UI
 
   '/moi': { getCall: moi, ...CaminoRestRoutes['/moi'] },
-  '/config': { getCall: getConfig, ...CaminoRestRoutes['/config'] },
-  '/rest/titres/:id/titreLiaisons': { getCall: getTitreLiaisons, postCall: postTitreLiaisons, ...CaminoRestRoutes['/rest/titres/:id/titreLiaisons'] },
+  '/config': { newGetCall: getConfig, ...CaminoRestRoutes['/config'] },
+  '/rest/titres/:id/titreLiaisons': { newGetCall: getTitreLiaisons, newPostCall: postTitreLiaisons, ...CaminoRestRoutes['/rest/titres/:id/titreLiaisons'] },
   '/rest/etapesTypes/:demarcheId/:date': { getCall: getEtapesTypesEtapesStatusWithMainStep, ...CaminoRestRoutes['/rest/etapesTypes/:demarcheId/:date'] },
   '/rest/titres': { newPostCall: titreDemandeCreer, ...CaminoRestRoutes['/rest/titres'] },
   '/rest/titres/:titreId': { deleteCall: removeTitre, postCall: updateTitre, getCall: getTitre, ...CaminoRestRoutes['/rest/titres/:titreId'] },
