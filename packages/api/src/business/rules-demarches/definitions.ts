@@ -154,5 +154,5 @@ export const machineFind = (
     return undefined
   }
 
-  return definition?.machine(titreTypeId, demarcheTypeId)
+  return definition?.machine(titreInfos)
 }

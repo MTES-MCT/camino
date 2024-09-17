@@ -21,6 +21,7 @@ export interface Etape {
   contenu?: IContenu
   paysId?: PaysId
   surface?: number
+  isPremiereDemandePourMiseEnConcurrence?: boolean
 }
 
 export const globalGuards = {
@@ -90,6 +91,10 @@ const toMachineEtape = (dbEtape: Omit<TitreEtapeForMachine, 'id' | 'ordre'>): Et
   }
   if (dbEtape.surface !== null) {
     machineEtape.surface = dbEtape.surface
+  }
+
+  if (dbEtape.isPremiereDemandePourMiseEnConcurrence !== null) {
+    machineEtape.isPremiereDemandePourMiseEnConcurrence = dbEtape.isPremiereDemandePourMiseEnConcurrence
   }
 
   return machineEtape

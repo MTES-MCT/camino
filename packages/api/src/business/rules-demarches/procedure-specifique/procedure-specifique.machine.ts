@@ -27,10 +27,16 @@ type FaireMiseEnConcurrence = {
   type: 'FAIRE_MISE_EN_CONCURRENCE'
 }
 
+type FaireRecevabiliteFavorable = {
+  // FIXMACHINE brand this boolean
+  isPremiereDemandePourMiseEnConcurrence: boolean
+  type: 'FAIRE_RECEVABILITE_FAVORABLE'
+}
+
 type ProcedureSpecifiqueXStateEvent =
   | { type: 'FAIRE_DEMANDE' }
   | { type: 'DEPOSER_DEMANDE' }
-  | { type: 'FAIRE_RECEVABILITE_FAVORABLE' }
+  | FaireRecevabiliteFavorable
   | { type: 'FAIRE_RECEVABILITE_DEFAVORABLE' }
   | { type: 'FAIRE_DEMANDE_DE_COMPLEMENTS' }
   | { type: 'RECEVOIR_COMPLEMENTS' }
@@ -104,17 +110,24 @@ export class ProcedureSpecifiqueMachine extends CaminoMachine<ProcedureSpecifiqu
           { type: event, status: ETAPES_STATUTS.EN_COURS },
           { type: event, status: ETAPES_STATUTS.TERMINE },
         ]
+      case 'FAIRE_RECEVABILITE_FAVORABLE':
+        return [
+          { type: event, isPremiereDemandePourMiseEnConcurrence: true },
+          { type: event, isPremiereDemandePourMiseEnConcurrence: false },
+        ]
       default:
         return super.toPotentialCaminoXStateEvent(event, date)
     }
   }
 }
 
-interface ProcedureSpecifiqueContext extends CaminoCommonContext {}
+interface ProcedureSpecifiqueContext extends CaminoCommonContext {
+  isPremiereDemandePourMiseEnConcurrence: boolean | 'inconnu'
+}
 const defaultDemarcheStatut = DemarchesStatutsIds.EnConstruction
 const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId) =>
   setup({
-    types: {} as { context: CaminoCommonContext; events: ProcedureSpecifiqueXStateEvent },
+    types: {} as { context: ProcedureSpecifiqueContext; events: ProcedureSpecifiqueXStateEvent },
     guards: {
       isAxm: () => TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX === titreTypeId,
       isPerOuConcession: () => [TITRES_TYPES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES, TITRES_TYPES_TYPES_IDS.CONCESSION].includes(getTitreTypeType(titreTypeId)),
@@ -122,8 +135,7 @@ const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: De
       canHaveMiseEnConcurrence: () =>
         [DEMARCHES_TYPES_IDS.Octroi, DEMARCHES_TYPES_IDS.ExtensionDePerimetre].includes(demarcheTypeId) ||
         (isDemarcheTypeProlongations(demarcheTypeId) && getTitreTypeType(titreTypeId) === TITRES_TYPES_TYPES_IDS.CONCESSION),
-      //FIXMACHINE
-      isPremiereDemandePourMiseEnConcurrence: () => true,
+      isPremiereDemandePourMiseEnConcurrence: ({ context }) => context.isPremiereDemandePourMiseEnConcurrence === true,
       isAxmOuAr: () => TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX === titreTypeId || TITRES_TYPES_TYPES_IDS.AUTORISATION_DE_RECHERCHE === getTitreTypeType(titreTypeId),
       // FIXMACHINE à vérifier et à tester
       isEnquetePubliqueRequired: ({ event }) =>
@@ -147,6 +159,7 @@ const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: De
     context: {
       demarcheStatut: defaultDemarcheStatut,
       visibilite: 'confidentielle',
+      isPremiereDemandePourMiseEnConcurrence: 'inconnu',
     },
     states: {
       demandeAFaire: {
@@ -189,7 +202,10 @@ const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: De
       },
       recevabiliteOuIrrecevabiliteAFaire: {
         on: {
-          FAIRE_RECEVABILITE_FAVORABLE: 'recevabiliteFavorableFaite',
+          FAIRE_RECEVABILITE_FAVORABLE: {
+            target: 'recevabiliteFavorableFaite',
+            actions: assign({ isPremiereDemandePourMiseEnConcurrence: ({ event }) => event.isPremiereDemandePourMiseEnConcurrence }),
+          },
           FAIRE_RECEVABILITE_DEFAVORABLE: 'demandeDeComplementsAFaire',
           FAIRE_DECLARATION_IRRECEVABILITE: {
             target: 'finDeMachine',

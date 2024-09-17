@@ -285,17 +285,17 @@ interface OctARMContext extends CaminoCommonContext {
   paiementFraisDossierValide: boolean
 }
 
-const isConnu = (mecanisation: MecanisationInconnu): mecanisation is MecanisationConnu => {
+const isConnu = (mecanisation: MecanisationInconnu) => {
   return mecanisation !== 'inconnu'
 }
-const isInconnu = (mecanisation: MecanisationInconnu): mecanisation is MecanisationInconnu => {
+const isInconnu = (mecanisation: MecanisationInconnu) => {
   return !isConnu(mecanisation)
 }
 
-const isMecanise = (mecanisation: MecanisationInconnu): mecanisation is MecanisationConnuMecanise => {
+const isMecanise = (mecanisation: MecanisationInconnu) => {
   return isConnu(mecanisation) && mecanisation.mecanise
 }
-const isNonMecanise = (mecanisation: MecanisationInconnu): mecanisation is MecanisationConnuNonMecanise => {
+const isNonMecanise = (mecanisation: MecanisationInconnu) => {
   return isConnu(mecanisation) && !mecanisation.mecanise
 }
 const mustPayerFraisDossierComplementaire = (mecanisation: MecanisationInconnu): boolean => {
