@@ -83,7 +83,6 @@ export const Globales = defineComponent(() => {
           return acc
         },
         {
-          ...statsGlobales,
           titresModifies: [],
           "Nombre d'utilisateurs affiliés à une entreprise": 0,
           "Nombre d'utilisateurs rattachés à un ministère": 0,
@@ -94,6 +93,7 @@ export const Globales = defineComponent(() => {
           demarches: 0,
           titresActivitesBeneficesAdministration: 0,
           titresActivitesBeneficesEntreprise: 0,
+          ...statsGlobales,
         }
       )
 
