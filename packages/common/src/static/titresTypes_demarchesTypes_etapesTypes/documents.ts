@@ -6,7 +6,7 @@ import { TitreTypeId, TITRES_TYPES_IDS } from './../titresTypes'
 import { TDEType } from './index'
 
 const EtapesTypesDocumentsTypes = {
-  [ETAPES_TYPES.avisDesCollectivites]: [],
+  [ETAPES_TYPES.avisDesCollectivites]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.lettreDeSaisineDesCollectivites, optionnel: false }],
   [ETAPES_TYPES.abrogationDeLaDecision]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.arrete, optionnel: true }],
   [ETAPES_TYPES.avisDeLaCommissionDesAutorisationsDeRecherchesMinieres_CARM_]: [
     { documentTypeId: DOCUMENTS_TYPES_IDS.avis, optionnel: true },
