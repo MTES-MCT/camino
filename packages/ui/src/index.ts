@@ -5,12 +5,13 @@ import { App } from './app'
 
 import router from './router'
 import { CaminoConfig } from 'camino-common/src/static/config'
-import { getWithJson } from './api/client-rest'
+import { getWithJson, newGetWithJson } from './api/client-rest'
 import { initMatomo } from './stats/matomo'
 import type { User } from 'camino-common/src/roles'
 import { userKey, entreprisesKey } from './moi'
 import type { Entreprise } from 'camino-common/src/entreprise'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
+import { CaminoError } from 'camino-common/src/zod-tools'
 // Le Timeout du sse côté backend est mis à 30 secondes, toujours avoir une valeur plus haute ici
 const sseTimeoutInSeconds = 45
 
@@ -56,11 +57,16 @@ const checkEventSource = () => {
 checkEventSource()
 Promise.resolve().then(async (): Promise<void> => {
   import('./styles/dsfr/dsfr.css')
-  const [configFromJson, user, entreprises]: [CaminoConfig, User, Entreprise[]] = await Promise.all([getWithJson('/config', {}), getWithJson('/moi', {}), getWithJson('/rest/entreprises', {})])
+  const [configFromJson, user, entreprises]: [CaminoConfig | CaminoError<string>, User, Entreprise[]] = await Promise.all([
+    newGetWithJson('/config', {}),
+    getWithJson('/moi', {}),
+    getWithJson('/rest/entreprises', {}),
+  ])
   const app = createApp(App)
   app.provide(userKey, user)
   app.provide(entreprisesKey, ref(entreprises))
-  if (isNotNullNorUndefined(configFromJson.CAMINO_STAGE)) {
+  // TODO 2024-09-17 mieux gérer ce cas d'erreur
+  if (!('message' in configFromJson) && isNotNullNorUndefined(configFromJson.CAMINO_STAGE)) {
     try {
       if (!configFromJson.API_MATOMO_URL || !configFromJson.API_MATOMO_ID || !configFromJson.CAMINO_STAGE) throw new Error('host et/ou siteId manquant(s)')
 

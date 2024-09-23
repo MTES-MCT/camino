@@ -83,7 +83,7 @@ type GetWithJsonArgs<T extends GetRestRoutes | NewGetRestRoutes, Method extends 
 export const getWithJson = async <T extends GetRestRoutes>(...args: GetWithJsonArgs<T, 'get'>): Promise<z.infer<(typeof CaminoRestRoutes)[T]['get']['output']>> =>
   callFetch(args[0], args[1], 'get', args.length === 3 ? args[2] : {})
 
-export const newGetWithJson = async <T extends NewGetRestRoutes>(...args: GetWithJsonArgs<T, 'newGet'>): Promise<z.infer<(typeof CaminoRestRoutes)[T]['newGet']['output']>> =>
+export const newGetWithJson = async <T extends NewGetRestRoutes>(...args: GetWithJsonArgs<T, 'newGet'>): Promise<CaminoError<string> | z.infer<(typeof CaminoRestRoutes)[T]['newGet']['output']>> =>
   callFetch(args[0], args[1], 'get', args.length === 3 ? args[2] : {})
 
 export const deleteWithJson = async <T extends DeleteRestRoutes>(path: T, params: CaminoRestParams<T>, searchParams: Record<string, string | string[]> = {}): Promise<void> =>

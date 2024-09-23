@@ -31,7 +31,7 @@ export const getLinkConfig = (typeId: TitreTypeId, demarches: { demarche_type_id
   return null
 }
 
-export const canLinkTitres = (user: User, administrationIds: AdministrationId[]): boolean => {
+export const canLinkTitres = (user: DeepReadonly<User>, administrationIds: AdministrationId[]): boolean => {
   if (isSuper(user)) {
     return true
   }

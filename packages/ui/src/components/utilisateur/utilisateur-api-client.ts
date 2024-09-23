@@ -2,16 +2,17 @@ import { QGISToken, UtilisateurToEdit, UtilisateursSearchParamsInput, Utilisateu
 
 import { getWithJson, newGetWithJson, postWithJson } from '../../api/client-rest'
 import { UserNotNull, UtilisateurId } from 'camino-common/src/roles'
+import { CaminoError } from 'camino-common/src/zod-tools'
 
 export interface UtilisateurApiClient {
-  getUtilisateur: (userId: UtilisateurId) => Promise<UserNotNull>
+  getUtilisateur: (userId: UtilisateurId) => Promise<CaminoError<string> | UserNotNull>
   getUtilisateurNewsletter: (userId: UtilisateurId) => Promise<boolean>
   updateUtilisateurNewsletter: (userId: UtilisateurId, subscribe: boolean) => Promise<void>
   registerToNewsletter: (email: string) => Promise<void>
   removeUtilisateur: (userId: UtilisateurId) => Promise<void>
   updateUtilisateur: (user: UtilisateurToEdit) => Promise<void>
   getQGISToken: () => Promise<QGISToken>
-  getUtilisateurs: (params: UtilisateursSearchParamsInput) => Promise<UtilisateursTable>
+  getUtilisateurs: (params: UtilisateursSearchParamsInput) => Promise<CaminoError<string> | UtilisateursTable>
 }
 
 export const utilisateurApiClient: UtilisateurApiClient = {
