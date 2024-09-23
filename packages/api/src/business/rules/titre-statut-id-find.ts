@@ -8,7 +8,7 @@ import { isNullOrUndefined } from 'camino-common/src/typescript-tools'
 
 export type TitreStatutIdFindDemarche = Pick<ITitreDemarche, 'typeId' | 'statutId' | 'demarcheDateDebut' | 'demarcheDateFin'>
 export const titreStatutIdFind = (aujourdhui: CaminoDate, demarches: TitreStatutIdFindDemarche[] | null | undefined): TitreStatutId => {
-  const titreDemarches = demarches ? demarches.filter(d => !DemarchesTypes[d.typeId]?.travaux) : null
+  const titreDemarches = demarches ? demarches.filter(d => !DemarchesTypes[d.typeId].travaux) : null
 
   if (!titreDemarches || !titreDemarches.length) return TitresStatutIds.Indetermine
 

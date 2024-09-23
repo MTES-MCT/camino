@@ -12,7 +12,7 @@ import { TitreReference } from 'camino-common/src/titres-references'
 import { SecteursMaritimes } from 'camino-common/src/static/facades'
 import { CaminoDate } from 'camino-common/src/date'
 import { EntrepriseDocumentId, EntrepriseId } from 'camino-common/src/entreprise'
-import { DeepReadonly } from 'camino-common/src/typescript-tools'
+import { DeepReadonly, RecordPartial } from 'camino-common/src/typescript-tools'
 import { SDOMZoneId } from 'camino-common/src/static/sdom'
 import { ActivitesStatutId } from 'camino-common/src/static/activitesStatuts'
 import { DemarcheId, DemarcheSlug } from 'camino-common/src/demarche'
@@ -96,7 +96,7 @@ interface IContenuId {
 
 type IContenuValeur = ElementWithValue['value'] | null
 
-type IContenu = Record<string, Record<string, ElementWithValue['value']>>
+type IContenu = RecordPartial<string, RecordPartial<string, ElementWithValue['value']>>
 
 type IPropsTitreEtapesIds = {
   [key in PropsTitreEtapeIdKeys]?: string
@@ -110,9 +110,7 @@ export interface IHeritageElement {
 
 type IHeritageProps = Record<EtapeHeritageProps, IHeritageElement>
 
-interface IHeritageContenu {
-  [sectionId: string]: { [elementId: string]: IHeritageElement }
-}
+type IHeritageContenu = RecordPartial<string, RecordPartial<string, IHeritageElement>>
 
 interface ICommune {
   id: CommuneId

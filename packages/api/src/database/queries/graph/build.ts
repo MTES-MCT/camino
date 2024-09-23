@@ -20,7 +20,7 @@ const fieldsToArray = (fields: IFields, format: IFieldsFormat) => {
     const fieldsSubString = fieldsToString(fieldsSub, id, format)
 
     // ajoute un modifieur à certaines propriétés (p.e.: orderAsc)
-    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions, @typescript-eslint/no-unnecessary-condition
     if (fieldsSub.$modifier) {
       id = `${id}(${fieldsSub.$modifier})`
     }
@@ -57,7 +57,7 @@ const fieldsToString = (fields: IFields, parent: string, format: IFieldsFormat) 
 // out: string de graph pour la requête avec objection
 
 // TODO: à refactoriser. est-ce que le paramètre root sert encore à quelque chose ?
-const graphBuild = (fields: IFields, root = 'root', format: IFieldsFormat = (fields: IFields) => fields) => {
+const graphBuild = (fields: IFields, root = 'root', format: IFieldsFormat = (fields: IFields) => fields): string => {
   fields = objectClone(fields)
 
   // in: AST de la requête GraphQl

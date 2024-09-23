@@ -8,9 +8,9 @@ const etapesProd = require('./2020-09-30-oct.cas.json') // eslint-disable-line
 
 describe('vérifie l’arbre d’octroi d’AXM', () => {
   const axmOctMachine = new AxmOctMachine()
-  test('peut créer une "mdp" après une "mfr", "dae" et "asl"', () => {
+  test('peut créer une "mdp" après une "mfr", "dae" et "asl"', async () => {
     const etapes = [ETES.decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_.EXEMPTE, ETES.decisionDuProprietaireDuSol.FAVORABLE, ETES.demande.FAIT, ETES.depotDeLaDemande.FAIT]
-    const { service, dateFin, etapes: fullEtapes } = setDateAndOrderAndInterpretMachine(axmOctMachine, '2020-01-01', etapes)
+    const { service, dateFin, etapes: fullEtapes } = await setDateAndOrderAndInterpretMachine(axmOctMachine, '2020-01-01', etapes)
     expect(service).canOnlyTransitionTo({ machine: axmOctMachine, date: dateFin }, [
       'DEMANDER_COMPLEMENTS_POUR_RECEVABILITE',
       'FAIRE_CLASSEMENT_SANS_SUITE',
@@ -19,10 +19,10 @@ describe('vérifie l’arbre d’octroi d’AXM', () => {
       'FAIRE_RECEVABILITE_DEMANDE_FAVORABLE',
       'RENDRE_DECISION_IMPLICITE_REJET',
     ])
-    expect(axmOctMachine.whoIsBlocking(fullEtapes)).toStrictEqual([ADMINISTRATION_IDS['DGTM - GUYANE']])
+    await expect(axmOctMachine.whoIsBlocking(fullEtapes)).resolves.toStrictEqual([ADMINISTRATION_IDS['DGTM - GUYANE']])
   })
 
-  test('peut créer une "mdp" après une "mfr", "asl", "dae" requise', () => {
+  test('peut créer une "mdp" après une "mfr", "asl", "dae" requise', async () => {
     const etapes = [
       ETES.decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_.REQUIS,
       ETES.decisionDuProprietaireDuSol.FAVORABLE,
@@ -30,7 +30,7 @@ describe('vérifie l’arbre d’octroi d’AXM', () => {
       ETES.demande.FAIT,
       ETES.depotDeLaDemande.FAIT,
     ]
-    const { service, dateFin, etapes: fullEtapes } = setDateAndOrderAndInterpretMachine(axmOctMachine, '2020-01-01', etapes)
+    const { service, dateFin, etapes: fullEtapes } = await setDateAndOrderAndInterpretMachine(axmOctMachine, '2020-01-01', etapes)
     expect(service).canOnlyTransitionTo({ machine: axmOctMachine, date: dateFin }, [
       'DEMANDER_COMPLEMENTS_POUR_RECEVABILITE',
       'FAIRE_CLASSEMENT_SANS_SUITE',
@@ -39,11 +39,11 @@ describe('vérifie l’arbre d’octroi d’AXM', () => {
       'FAIRE_RECEVABILITE_DEMANDE_FAVORABLE',
       'RENDRE_DECISION_IMPLICITE_REJET',
     ])
-    expect(axmOctMachine.whoIsBlocking(fullEtapes)).toStrictEqual([ADMINISTRATION_IDS['DGTM - GUYANE']])
+    await expect(axmOctMachine.whoIsBlocking(fullEtapes)).resolves.toStrictEqual([ADMINISTRATION_IDS['DGTM - GUYANE']])
   })
 
-  test('ne peut pas créer une "mdp" avec une "dae" requise', () => {
-    const { service, dateFin } = setDateAndOrderAndInterpretMachine(axmOctMachine, '2020-01-01', [
+  test('ne peut pas créer une "mdp" avec une "dae" requise', async () => {
+    const { service, dateFin } = await setDateAndOrderAndInterpretMachine(axmOctMachine, '2020-01-01', [
       ETES.decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_.REQUIS,
       ETES.decisionDuProprietaireDuSol.FAVORABLE,
       ETES.demande.FAIT,
@@ -51,8 +51,8 @@ describe('vérifie l’arbre d’octroi d’AXM', () => {
     expect(service).canOnlyTransitionTo({ machine: axmOctMachine, date: dateFin }, ['FAIRE_CLASSEMENT_SANS_SUITE', 'FAIRE_DESISTEMENT_DEMANDEUR', 'MODIFIER_DEMANDE_APRES_DAE'])
   })
 
-  test('peut faire l’avis du DREAL sans aucun autre avis 30 jours après la saisine des services', () => {
-    const service = orderAndInterpretMachine(axmOctMachine, [
+  test('peut faire l’avis du DREAL sans aucun autre avis 30 jours après la saisine des services', async () => {
+    const service = await orderAndInterpretMachine(axmOctMachine, [
       {
         ...ETES.decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_.EXEMPTE,
         date: toCaminoDate('2020-01-01'),
@@ -85,8 +85,8 @@ describe('vérifie l’arbre d’octroi d’AXM', () => {
       'RENDRE_AVIS_COMMISSION_DEPARTEMENTALE_DES_MINES_AJOURNE',
     ])
   })
-  test('peut ajourner l’avis de la commission départementale des mines', () => {
-    const service = orderAndInterpretMachine(axmOctMachine, [
+  test('peut ajourner l’avis de la commission départementale des mines', async () => {
+    const service = await orderAndInterpretMachine(axmOctMachine, [
       { ...ETES.demande.FAIT, date: toCaminoDate('2022-04-14') },
       {
         ...ETES.decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_.EXEMPTE,
@@ -136,8 +136,8 @@ describe('vérifie l’arbre d’octroi d’AXM', () => {
     ])
   })
 
-  test('ne peut pas faire de note interne signalée avant une demande', () => {
-    const service = orderAndInterpretMachine(axmOctMachine, [])
+  test('ne peut pas faire de note interne signalée avant une demande', async () => {
+    const service = await orderAndInterpretMachine(axmOctMachine, [])
     expect(service).canOnlyTransitionTo({ machine: axmOctMachine, date: toCaminoDate('2022-04-16') }, [
       'RENDRE_DAE_REQUISE',
       'RENDRE_DAE_EXEMPTEE',
@@ -148,8 +148,8 @@ describe('vérifie l’arbre d’octroi d’AXM', () => {
     ])
   })
 
-  test('ne peut plus rien faire après un désistement', () => {
-    const { service, dateFin } = setDateAndOrderAndInterpretMachine(axmOctMachine, '2020-02-06', [
+  test('ne peut plus rien faire après un désistement', async () => {
+    const { service, dateFin } = await setDateAndOrderAndInterpretMachine(axmOctMachine, '2020-02-06', [
       { etapeTypeId: 'mfr', etapeStatutId: 'fai' },
       { etapeTypeId: 'dae', etapeStatutId: 'req' },
       { etapeTypeId: 'asl', etapeStatutId: 'def' },
@@ -158,8 +158,8 @@ describe('vérifie l’arbre d’octroi d’AXM', () => {
     expect(service).canOnlyTransitionTo({ machine: axmOctMachine, date: dateFin }, [])
   })
 
-  test('peut faire uniquement une decision annulation par le juge administratif après une décision implicite', () => {
-    const { service, dateFin } = setDateAndOrderAndInterpretMachine(axmOctMachine, '2020-01-01', [
+  test('peut faire uniquement une decision annulation par le juge administratif après une décision implicite', async () => {
+    const { service, dateFin } = await setDateAndOrderAndInterpretMachine(axmOctMachine, '2020-01-01', [
       ETES.decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_.EXEMPTE,
       ETES.decisionDuProprietaireDuSol.FAVORABLE,
       ETES.demande.FAIT,
@@ -169,27 +169,27 @@ describe('vérifie l’arbre d’octroi d’AXM', () => {
     expect(service).canOnlyTransitionTo({ machine: axmOctMachine, date: dateFin }, ['RENDRE_DECISION_ANNULATION_PAR_JUGE_ADMINISTRATIF'])
   })
 
-  test('peut classer sans suite après une décision du propriétaire du sol défavorable', () => {
-    const { service, etapes, dateFin } = setDateAndOrderAndInterpretMachine(axmOctMachine, '2022-04-10', [ETES.decisionDuProprietaireDuSol.DEFAVORABLE, ETES.classementSansSuite.FAIT])
+  test('peut classer sans suite après une décision du propriétaire du sol défavorable', async () => {
+    const { service, etapes, dateFin } = await setDateAndOrderAndInterpretMachine(axmOctMachine, '2022-04-10', [ETES.decisionDuProprietaireDuSol.DEFAVORABLE, ETES.classementSansSuite.FAIT])
     expect(service).canOnlyTransitionTo({ machine: axmOctMachine, date: dateFin }, [])
-    expect(axmOctMachine.whoIsBlocking(etapes)).toStrictEqual([])
+    await expect(axmOctMachine.whoIsBlocking(etapes)).resolves.toStrictEqual([])
   })
 
-  test('après une décision du propriétaire du sol défavorable, la DGTM est en attente', () => {
-    const { service, dateFin, etapes } = setDateAndOrderAndInterpretMachine(axmOctMachine, '2020-01-01', [ETES.decisionDuProprietaireDuSol.DEFAVORABLE])
+  test('après une décision du propriétaire du sol défavorable, la DGTM est en attente', async () => {
+    const { service, dateFin, etapes } = await setDateAndOrderAndInterpretMachine(axmOctMachine, '2020-01-01', [ETES.decisionDuProprietaireDuSol.DEFAVORABLE])
     expect(service).canOnlyTransitionTo({ machine: axmOctMachine, date: dateFin }, ['FAIRE_CLASSEMENT_SANS_SUITE'])
-    expect(axmOctMachine.whoIsBlocking(etapes)).toStrictEqual([ADMINISTRATION_IDS['DGTM - GUYANE']])
+    await expect(axmOctMachine.whoIsBlocking(etapes)).resolves.toStrictEqual([ADMINISTRATION_IDS['DGTM - GUYANE']])
   })
 
-  test('ne peut pas faire deux fois la même étape à la même date', () => {
+  test('ne peut pas faire deux fois la même étape à la même date', async () => {
     const etapes = [
       { ...ETES.demande.FAIT, date: toCaminoDate('2022-04-01') },
       { ...ETES.demande.FAIT, date: toCaminoDate('2022-04-01') },
     ]
-    expect(() => orderAndInterpretMachine(axmOctMachine, etapes)).toThrowErrorMatchingSnapshot()
+    await expect(orderAndInterpretMachine(axmOctMachine, etapes)).rejects.toThrowErrorMatchingSnapshot()
   })
 
-  test('peut faire un octroi complet', () => {
+  test('peut faire un octroi complet', async () => {
     const etapes = [
       { ...ETES.demande.FAIT, date: toCaminoDate('2022-04-01') },
       {
@@ -257,12 +257,12 @@ describe('vérifie l’arbre d’octroi d’AXM', () => {
       },
       { ...ETES.notificationAuDemandeur.FAIT, date: toCaminoDate('2022-05-28') },
     ]
-    const service = orderAndInterpretMachine(axmOctMachine, etapes)
+    const service = await orderAndInterpretMachine(axmOctMachine, etapes)
     expect(service).canOnlyTransitionTo({ machine: axmOctMachine, date: toCaminoDate('2022-08-28') }, [])
-    expect(axmOctMachine.whoIsBlocking(etapes)).toStrictEqual([])
+    await expect(axmOctMachine.whoIsBlocking(etapes)).resolves.toStrictEqual([])
   })
 
-  test('peut rendre l’avis DREAL que 30 jours après la saisine des services', () => {
+  test('peut rendre l’avis DREAL que 30 jours après la saisine des services', async () => {
     const etapes = [
       { ...ETES.demande.FAIT, date: toCaminoDate('2022-04-01') },
       {
@@ -284,7 +284,7 @@ describe('vérifie l’arbre d’octroi d’AXM', () => {
       },
       { ...ETES.avisDesServicesEtCommissionsConsultatives.FAIT, date: toCaminoDate('2022-04-18') },
     ]
-    const service = orderAndInterpretMachine(axmOctMachine, etapes)
+    const service = await orderAndInterpretMachine(axmOctMachine, etapes)
     expect(service).canOnlyTransitionTo({ machine: axmOctMachine, date: toCaminoDate('2022-05-18') }, [
       'RENDRE_AVIS_DREAL',
       'FAIRE_CLASSEMENT_SANS_SUITE',
@@ -299,10 +299,10 @@ describe('vérifie l’arbre d’octroi d’AXM', () => {
   })
 
   // pour regénérer le oct.cas.json: `npm run test:generate-data -w packages/api`
-  test.each(etapesProd as any[])('cas réel N°$id', demarche => {
+  test.each(etapesProd as any[])('cas réel N°$id', async demarche => {
     // ici les étapes sont déjà ordonnées
-    interpretMachine(axmOctMachine, demarche.etapes)
-    expect(axmOctMachine.demarcheStatut(demarche.etapes)).toStrictEqual({
+    await interpretMachine(axmOctMachine, demarche.etapes)
+    await expect(axmOctMachine.demarcheStatut(demarche.etapes)).resolves.toStrictEqual({
       demarcheStatut: demarche.demarcheStatutId,
       publique: demarche.demarchePublique,
     })

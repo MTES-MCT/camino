@@ -217,10 +217,10 @@ export class ArmOctMachine extends CaminoMachine<OctARMContext, XStateEvent> {
         let mecanise = false
         let franchissements = null
         if (typeof etape.contenu?.arm?.mecanise === 'boolean') {
-          mecanise = etape.contenu?.arm.mecanise
+          mecanise = etape.contenu.arm.mecanise
         }
         if (typeof etape.contenu?.arm?.franchissements === 'number') {
-          franchissements = etape.contenu?.arm?.franchissements
+          franchissements = etape.contenu.arm.franchissements
         }
 
         return { type: eventFromEntry, mecanise, franchissements }
@@ -230,7 +230,7 @@ export class ArmOctMachine extends CaminoMachine<OctARMContext, XStateEvent> {
       case 'RECEVOIR_COMPLEMENTS_RDE': {
         let franchissements = null
         if (typeof etape.contenu?.arm?.franchissements === 'number') {
-          franchissements = etape.contenu?.arm?.franchissements
+          franchissements = etape.contenu.arm.franchissements
         }
 
         return { type: eventFromEntry, franchissements }
@@ -391,6 +391,7 @@ const armOctMachine = createMachine({
     avisDesServicesEtCommissionsConsultativesFait: false,
     demarcheStatut: DemarchesStatutsIds.EnConstruction,
     paiementFraisDossierValide: false,
+    asyncTasks: new Set<string>(),
   },
   on: {
     MODIFIER_DEMANDE: {

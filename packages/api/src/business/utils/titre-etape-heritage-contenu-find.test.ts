@@ -64,12 +64,12 @@ describe('retourne le contenu spécifique d’un élément d’une section en fo
     const titreEtape = {
       heritageContenu,
     } as ITitreEtape
-    titreEtape.heritageContenu!.section.element.actif = true
+    titreEtape.heritageContenu!.section!.element!.actif = true
 
     expect(heritageContenuFind('section', 'element', titreEtape, titreEtapePrecedente)).toEqual({
       hasChanged: true,
       actif: true,
-      value: contenu.section.element,
+      value: contenu.section?.element,
       etapeId: titreEtapePrecedente.id,
     })
   })
@@ -91,13 +91,13 @@ describe('retourne le contenu spécifique d’un élément d’une section en fo
     const titreEtape = {
       heritageContenu: objectClone(heritageContenu),
     } as ITitreEtape
-    titreEtape.heritageContenu!.section.element.actif = true
-    delete titreEtape.heritageContenu!.section.element.etapeId
+    titreEtape.heritageContenu!.section!.element!.actif = true
+    delete titreEtape.heritageContenu!.section!.element!.etapeId
 
     expect(heritageContenuFind('section', 'element', titreEtape, titreEtapePrecedente)).toEqual({
       hasChanged: true,
       actif: true,
-      value: contenu.section.element,
+      value: contenu.section?.element,
       etapeId: 'firstEtapeId',
     })
   })
@@ -115,7 +115,7 @@ describe('retourne le contenu spécifique d’un élément d’une section en fo
     expect(heritageContenuFind('section', 'element', titreEtape, null)).toEqual({
       hasChanged: true,
       actif: false,
-      value: titreEtape.contenu!.section.element,
+      value: titreEtape.contenu?.section?.element,
       etapeId: undefined,
     })
   })
@@ -156,7 +156,7 @@ describe('retourne le contenu de l’étape en fonction de son héritage', () =>
       id: 'etapeId',
       heritageContenu,
     } as ITitreEtape
-    titreEtape.heritageContenu!.section.element.actif = true
+    titreEtape.heritageContenu!.section!.element!.actif = true
 
     const dictionary: Record<string, DeepReadonly<Section>[]> = {
       [prevTitreEtape.id]: [
@@ -196,7 +196,7 @@ describe('retourne le contenu de l’étape en fonction de son héritage', () =>
       contenu: { section: { element: 'toto' } } as IContenu,
       heritageContenu,
     } as ITitreEtape
-    titreEtape.heritageContenu!.section.element.actif = true
+    titreEtape.heritageContenu!.section!.element!.actif = true
 
     const dictionary: Record<string, DeepReadonly<Section>[]> = {
       [prevTitreEtape.id]: [{ id: 'section', elements: [{ id: 'element', type: 'text', optionnel: false }] }],
@@ -227,8 +227,8 @@ describe('retourne le contenu de l’étape en fonction de son héritage', () =>
       contenu: { section: {} } as IContenu,
       heritageContenu,
     } as ITitreEtape
-    titreEtape.heritageContenu!.section.element.actif = true
-    titreEtape.heritageContenu!.section.element.etapeId = newEtapeId('prevEtapeId')
+    titreEtape.heritageContenu!.section!.element!.actif = true
+    titreEtape.heritageContenu!.section!.element!.etapeId = newEtapeId('prevEtapeId')
 
     const dictionary: Record<string, DeepReadonly<Section>[]> = {
       [prevTitreEtape.id]: [{ id: 'section', elements: [{ id: 'element', type: 'text', optionnel: false }] }],
@@ -259,8 +259,8 @@ describe('retourne le contenu de l’étape en fonction de son héritage', () =>
       contenu: null,
       heritageContenu,
     } as ITitreEtape
-    titreEtape.heritageContenu!.section.element.actif = true
-    titreEtape.heritageContenu!.section.element.etapeId = newEtapeId('prevEtapeId')
+    titreEtape.heritageContenu!.section!.element!.actif = true
+    titreEtape.heritageContenu!.section!.element!.etapeId = newEtapeId('prevEtapeId')
 
     const dictionary: Record<string, DeepReadonly<Section>[]> = {
       [prevTitreEtape.id]: [{ id: 'section', elements: [{ id: 'element', type: 'text', optionnel: false }] }],

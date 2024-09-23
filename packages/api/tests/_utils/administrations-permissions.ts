@@ -24,7 +24,7 @@ import { ETAPE_IS_NOT_BROUILLON, TempEtapeDocument } from 'camino-common/src/eta
 import { tempDocumentNameValidator } from 'camino-common/src/document'
 import { userSuper } from '../../src/database/user-super'
 import { defaultHeritageProps } from 'camino-common/src/etape-form'
-import { isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools'
+import { exhaustiveCheck, isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools'
 import { HTTP_STATUS } from 'camino-common/src/http'
 import { titreCreate } from '../../src/database/queries/titres'
 
@@ -80,30 +80,36 @@ export const visibleCheck = async (
 
   expect(res.body.errors).toBe(undefined)
   const titreRes = res.body.data.titres.elements[0] ?? null
-  if (cible === 'titres') {
-    if (visible) {
-      expect(titreRes).not.toBeNull()
-      expect(titreRes.id).toEqual(titre.id)
-    } else {
-      expect(titreRes).toBeNull()
-    }
-  } else if (cible === 'demarches') {
-    if (visible) {
-      expect(titreRes.demarches).not.toBeNull()
-      expect(titreRes.demarches![0]).not.toBeNull()
-      expect(titreRes.demarches![0]!.id).toEqual(titre.demarches![0]!.id)
-    } else {
-      expect(titreRes ? titreRes.demarches : []).toEqual([])
-    }
-  } else if (cible === 'etapes') {
-    if (visible) {
-      expect(titreRes.demarches![0]!.etapes).not.toBeNull()
-      expect(titreRes.demarches![0]!.etapes![0]!.id).toEqual(titre.demarches![0]!.etapes![0]!.id)
-    } else {
-      if (isNotNullNorUndefined(titreRes?.demarches?.[0])) {
-        expect(titreRes.demarches![0]!.etapes).toEqual([])
+  switch (cible) {
+    case 'titres':
+      if (visible) {
+        expect(titreRes).not.toBeNull()
+        expect(titreRes.id).toEqual(titre.id)
+      } else {
+        expect(titreRes).toBeNull()
       }
-    }
+      break
+    case 'demarches':
+      if (visible) {
+        expect(titreRes.demarches).not.toBeNull()
+        expect(titreRes.demarches![0]).not.toBeNull()
+        expect(titreRes.demarches![0]!.id).toEqual(titre.demarches![0]!.id)
+      } else {
+        expect(titreRes ? titreRes.demarches : []).toEqual([])
+      }
+      break
+    case 'etapes':
+      if (visible) {
+        expect(titreRes.demarches![0]!.etapes).not.toBeNull()
+        expect(titreRes.demarches![0]!.etapes![0]!.id).toEqual(titre.demarches![0]!.etapes![0]!.id)
+      } else {
+        if (isNotNullNorUndefined(titreRes?.demarches?.[0])) {
+          expect(titreRes.demarches![0]!.etapes).toEqual([])
+        }
+      }
+      break
+    default:
+      exhaustiveCheck(cible)
   }
 }
 
@@ -164,14 +170,14 @@ export const creationCheck = async (pool: Pool, administrationId: string, creer:
 
     const etapeTypeId = 'mfr'
 
-    const sections = getSections(titreTypeId, demarche?.typeId, etapeTypeId)
+    const sections = getSections(titreTypeId, demarche.typeId, etapeTypeId)
 
     const heritageContenu = sections.reduce((acc, section) => {
       if (!acc[section.id]) {
         acc[section.id] = {}
       }
 
-      section.elements?.forEach(e => {
+      section.elements.forEach(e => {
         acc[section.id][e.id] = { actif: false }
       })
 
@@ -183,7 +189,7 @@ export const creationCheck = async (pool: Pool, administrationId: string, creer:
         acc[section.id] = {}
       }
 
-      section.elements?.forEach(e => {
+      section.elements.forEach(e => {
         let value
         if (e.type === 'radio') {
           value = false

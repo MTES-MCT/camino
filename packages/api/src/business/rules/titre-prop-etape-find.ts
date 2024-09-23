@@ -57,7 +57,7 @@ const etapeValideCheck = (titreEtape: ITitreEtape, titreDemarcheTypeId: Demarche
   // si
   // - le titre est en modification en instance
   // - et que la prop est points, surface, substances ou communes
-  if (propId && titreStatutId && ['points', 'surface', 'communes', 'forets'].includes(propId) && [TitresStatutIds.ModificationEnInstance, TitresStatutIds.SurvieProvisoire].includes(titreStatutId)) {
+  if (propId && ['points', 'surface', 'communes', 'forets'].includes(propId) && [TitresStatutIds.ModificationEnInstance, TitresStatutIds.SurvieProvisoire].includes(titreStatutId)) {
     return true
   }
 
@@ -96,7 +96,7 @@ const titreDemarcheContenuTitreEtapeFind = ({ sectionId, elementId }: IContenuId
       // détermine si l'étape contient la section et l'élément
       isNotNullNorUndefined(titreEtape.contenu) &&
       isNotNullNorUndefined(titreEtape.contenu[sectionId]) &&
-      titreEtape.contenu[sectionId][elementId] !== undefined
+      isNotNullNorUndefined(titreEtape.contenu[sectionId][elementId])
   ) || null
 
 /**
@@ -137,7 +137,7 @@ export const titrePropTitreEtapeFind = (
  * @returns une étape ou null
  */
 
-export const titreContenuTitreEtapeFind = ({ sectionId, elementId }: IContenuId, titreDemarches: ITitreDemarche[], titreStatutId: TitreStatutId) => {
+export const titreContenuTitreEtapeFind = ({ sectionId, elementId }: IContenuId, titreDemarches: ITitreDemarche[], titreStatutId: TitreStatutId): ITitreEtape | null => {
   const titreDemarchesSorted = titreDemarcheSortAsc(titreDemarches).reverse()
 
   const titreEtape = titreDemarchesSorted.reduce((etape: ITitreEtape | null, titreDemarche: ITitreDemarche) => {

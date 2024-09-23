@@ -20,14 +20,14 @@ const userIsCorrect = (utilisateur: UtilisateurToEdit): boolean => {
   if (!isRole(utilisateur.role)) {
     return false
   }
-  if ((isSuperRole(utilisateur.role) || isDefautRole(utilisateur.role)) && utilisateur.administrationId === null && utilisateur.entrepriseIds?.length === 0) {
+  if ((isSuperRole(utilisateur.role) || isDefautRole(utilisateur.role)) && utilisateur.administrationId === null && utilisateur.entrepriseIds.length === 0) {
     return true
   }
 
-  if (isAdministrationRole(utilisateur.role) && isAdministrationId(utilisateur.administrationId) && utilisateur.entrepriseIds?.length === 0) {
+  if (isAdministrationRole(utilisateur.role) && isAdministrationId(utilisateur.administrationId) && utilisateur.entrepriseIds.length === 0) {
     return true
   }
-  if (isEntrepriseOrBureauDetudeRole(utilisateur.role) && utilisateur.administrationId === null && (utilisateur.entrepriseIds?.length ?? 0) > 0) {
+  if (isEntrepriseOrBureauDetudeRole(utilisateur.role) && utilisateur.administrationId === null && utilisateur.entrepriseIds.length > 0) {
     return true
   }
 

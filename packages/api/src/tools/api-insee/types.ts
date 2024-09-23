@@ -2,7 +2,7 @@ import { Siren } from 'camino-common/src/entreprise'
 
 export interface IApiSirenUniteLegalePeriode extends IApiSirenUnionUniteLegalePeriodeEtablissmentUnite {
   dateDebut: Date
-  dateFin: Date
+  dateFin?: Date
 }
 
 export interface IApiSirenUnionUniteLegalePeriodeEtablissmentUnite {

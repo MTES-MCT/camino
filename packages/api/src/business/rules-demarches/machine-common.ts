@@ -3,7 +3,7 @@ import { EtapeStatutId, EtapeStatutKey, ETAPES_STATUTS, isStatut, etapeStatutIdV
 import { EtapeTypeId, etapeTypeIdValidator, isEtapeTypeId } from 'camino-common/src/static/etapesTypes'
 import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations'
 import { EtapeTypeEtapeStatut } from 'camino-common/src/static/etapesTypesEtapesStatuts'
-import { DemarcheStatutId } from 'camino-common/src/static/demarchesStatuts'
+import { DemarchesStatutsIds, DemarcheStatutId } from 'camino-common/src/static/demarchesStatuts'
 import { CaminoDate, caminoDateValidator } from 'camino-common/src/date'
 import { Departements, toDepartementId } from 'camino-common/src/static/departement'
 import { Regions } from 'camino-common/src/static/region'
@@ -23,9 +23,18 @@ export interface Etape {
   surface?: number
 }
 
+export const globalGuards = {
+  isVisibilitePublique: ({ context }) => context.visibilite === 'publique',
+  isVisibiliteConfidentielle: ({ context }) => context.visibilite === 'confidentielle',
+  isDemarcheStatutAcceptee: ({ context }) => context.demarcheStatut === DemarchesStatutsIds.Accepte,
+  isDemarcheStatutAccepteeEtPublie: ({ context }) => context.demarcheStatut === DemarchesStatutsIds.AccepteEtPublie,
+} as const satisfies Record<string, (value: { context: CaminoCommonContext }) => boolean>
+
 export interface CaminoCommonContext {
   demarcheStatut: DemarcheStatutId
   visibilite: 'confidentielle' | 'publique'
+  // FIXMACHINE rendre ça générique
+  asyncTasks: Set<string>
 }
 
 export const titreEtapeForMachineValidator = z.object({

@@ -12,7 +12,7 @@ import {
   urlElementValidator,
 } from './static/titresTypes_demarchesTypes_etapesTypes/sections'
 import { z } from 'zod'
-import { DeepReadonly, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from './typescript-tools'
+import { DeepReadonly, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined } from './typescript-tools'
 import { TitreTypeId } from './static/titresTypes'
 import { DemarcheTypeId } from './static/demarchesTypes'
 import { EtapeTypeId } from './static/etapesTypes'
@@ -93,7 +93,7 @@ export const valeurFind = (element: ElementWithValue): string | '–' => {
   }
 
   if (element.type === 'radio' || element.type === 'checkbox') {
-    if (element.value === undefined) return '–'
+    if (isNullOrUndefined(element.value)) return '–'
     else if (element.value) return 'Oui'
     else return 'Non'
   }
@@ -111,9 +111,9 @@ export const simpleContenuToFlattenedContenu = (
   const sections = getSections(titreTypeId, demarcheTypeId, etapeTypeId)
 
   return sections.reduce<FlattenedContenu>((accSection, section) => {
-    accSection[section.id] = section.elements.reduce<FlattenedContenu[string]>((accElement, element) => {
-      const elementHeritage = heritageContenu[section.id]?.[element.id] ?? { actif: false, etape: null }
-      const value = elementHeritage.actif ? (elementHeritage.etape?.contenu[section.id]?.[element.id] ?? null) : (contenu?.[section.id]?.[element.id] ?? null)
+    accSection[section.id] = section.elements.reduce<NonNullable<FlattenedContenu[string]>>((accElement, element) => {
+      const elementHeritage = heritageContenu[section.id][element.id] ?? { actif: false, etape: null }
+      const value = elementHeritage.actif ? (elementHeritage.etape?.contenu[section.id]?.[element.id] ?? null) : (contenu[section.id]?.[element.id] ?? null)
       accElement[element.id] = {
         value,
         heritee: elementHeritage.actif,
@@ -137,8 +137,8 @@ export const flattenContenuToSimpleContenu = (flattenContenu: FlattenEtape['cont
   return Object.keys(flattenContenu).reduce<RestEtapeCreation['contenu']>((sectionsAcc, section) => {
     sectionsAcc = {
       ...sectionsAcc,
-      [section]: Object.keys(flattenContenu[section]).reduce<RestEtapeCreation['contenu'][string]>((elementsAcc, element) => {
-        elementsAcc = { ...elementsAcc, [element]: flattenContenu[section][element].value }
+      [section]: Object.keys(flattenContenu[section] ?? {}).reduce<RestEtapeCreation['contenu'][string]>((elementsAcc, element) => {
+        elementsAcc = { ...elementsAcc, [element]: flattenContenu[section]?.[element]?.value ?? null }
 
         return elementsAcc
       }, {}),

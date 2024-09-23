@@ -16,7 +16,7 @@ export const getDGTMStats = (pool: Pool) => async (req: CaminoRequest, res: Cust
 
   const administrationId = ADMINISTRATION_IDS['DGTM - GUYANE']
 
-  if (!isAdministration(user) || user?.administrationId !== administrationId) {
+  if (!isAdministration(user) || user.administrationId !== administrationId) {
     res.sendStatus(HTTP_STATUS.FORBIDDEN)
   } else {
     const result = await getDGTMStatsInside(pool)(administrationId)

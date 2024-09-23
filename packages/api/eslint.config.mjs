@@ -59,8 +59,11 @@ export default [
           allowLiteral: false,
         },
       ],
-
-      'newline-before-return': 1,
+      '@typescript-eslint/no-floating-promises': 'error',
+      '@typescript-eslint/no-misused-promises': 'error',
+      '@typescript-eslint/await-thenable': 'error',
+      '@typescript-eslint/no-unnecessary-condition': 'error',
+      'newline-before-return': 0,
       'no-use-before-define': 0,
       'no-redeclare': 0,
       'no-return-await': 'error',

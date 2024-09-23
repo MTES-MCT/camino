@@ -109,7 +109,7 @@ export const titreEtapeUtilisateursEmailsSend = async (etape: ITitreEtape, titre
 
   const utilisateursTitres = await getUtilisateursByTitreId(pool, titreId)
 
-  const utilisateurs = utilisateursTitres?.filter(utilisateur => isNotNullNorUndefinedNorEmpty(utilisateur?.email))
+  const utilisateurs = utilisateursTitres.filter(utilisateur => isNotNullNorUndefinedNorEmpty(utilisateur.email))
 
   for (const utilisateur of utilisateurs) {
     // On vérifie que l’utilisateur puisse voir l’étape

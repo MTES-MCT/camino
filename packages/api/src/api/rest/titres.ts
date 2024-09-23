@@ -1,18 +1,16 @@
 import { titreArchive, titresGet, titreGet, titreUpsert } from '../../database/queries/titres'
 import { HTTP_STATUS } from 'camino-common/src/http'
-import { ITitre } from '../../types'
 import { CommonTitreAdministration, editableTitreValidator, TitreLink, TitreLinks, TitreGet, titreLinksValidator, utilisateurTitreAbonneValidator } from 'camino-common/src/titres'
 import { machineFind } from '../../business/rules-demarches/definitions'
 import { CaminoRequest, CustomResponse } from './express-type'
 import { userSuper } from '../../database/user-super'
-import { NotNullableKeys, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined, onlyUnique } from 'camino-common/src/typescript-tools'
+import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined, onlyUnique } from 'camino-common/src/typescript-tools'
 import TitresTitres from '../../database/models/titres--titres'
 import { titreAdministrationsGet } from '../_format/titres'
 import { canDeleteTitre, canEditTitre, canLinkTitres } from 'camino-common/src/permissions/titres'
 import { linkTitres } from '../../database/queries/titres-titres.queries'
 import { checkTitreLinks } from '../../business/validations/titre-links-validate'
 import { titreEtapeForMachineValidator, toMachineEtapes } from '../../business/rules-demarches/machine-common'
-import { TitreReference } from 'camino-common/src/titres-references'
 import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts'
 import { ETAPES_TYPES, EtapeTypeId } from 'camino-common/src/static/etapesTypes'
 import { CaminoDate, getCurrent } from 'camino-common/src/date'
@@ -29,14 +27,6 @@ import { titreIdValidator, titreIdOrSlugValidator, TitreId } from 'camino-common
 import { callAndExit } from '../../tools/fp-tools'
 
 const etapesAMasquer = [ETAPES_TYPES.classementSansSuite, ETAPES_TYPES.desistementDuDemandeur, ETAPES_TYPES.decisionImplicite, ETAPES_TYPES.demandeDeComplements_RecevabiliteDeLaDemande_]
-
-type AdministrationTitreSanitize = NotNullableKeys<Required<Pick<ITitre, 'slug' | 'titulaireIds' | 'titreStatutId'>>> &
-  Pick<ITitre, 'typeId' | 'id' | 'nom' | 'activitesEnConstruction' | 'activitesAbsentes'>
-
-type TitreAdministrationAvecReferences = {
-  titre: AdministrationTitreSanitize
-  references: TitreReference[]
-} & Pick<CommonTitreAdministration, 'prochainesEtapes' | 'derniereEtape' | 'enAttenteDeAdministration'>
 
 export const titresAdministrations =
   (_pool: Pool) =>
@@ -60,10 +50,6 @@ export const titresAdministrations =
         )
         const titresAutorisesIds = titresAutorises
           .filter(titre => {
-            if (!titre.titreStatutId) {
-              throw new Error('le statut du titre est obligatoire')
-            }
-
             if (titre.administrationsLocales === undefined) {
               throw new Error('les administrations locales doivent être chargées')
             }
@@ -96,12 +82,9 @@ export const titresAdministrations =
           userSuper
         )
 
-        const titresFormated: CommonTitreAdministration[] = titres
-          .map((titre: ITitre): TitreAdministrationAvecReferences | null => {
-            if (titre.slug === undefined) {
-              return null
-            }
-
+        const titresFormated: CommonTitreAdministration[] = []
+        for (const titre of titres) {
+          if (titre.slug !== undefined) {
             if (!titre.titulaireIds) {
               throw new Error('les titulaires ne sont pas chargés')
             }
@@ -132,17 +115,15 @@ export const titresAdministrations =
               if (!demarcheLaPlusRecente.etapes) {
                 throw new Error('les étapes ne sont pas chargées')
               }
-              if (demarcheLaPlusRecente.statutId === DemarchesStatutsIds.EnConstruction) {
-                return null
-              } else {
+              if (demarcheLaPlusRecente.statutId !== DemarchesStatutsIds.EnConstruction) {
                 const etapes = demarcheLaPlusRecente.etapes.map(etape => titreEtapeForMachineValidator.parse(etape))
                 const etapesDerniereDemarche = toMachineEtapes(etapes)
                 derniereEtape = etapesDerniereDemarche[etapesDerniereDemarche.length - 1]
                 const machine = machineFind(titre.typeId, demarcheLaPlusRecente.typeId, demarcheLaPlusRecente.etapes, demarcheLaPlusRecente.id)
                 if (machine) {
                   try {
-                    enAttenteDeAdministration = machine.whoIsBlocking(etapesDerniereDemarche).includes(user.administrationId)
-                    const nextEtapes = machine.possibleNextEtapes(etapesDerniereDemarche, getCurrent())
+                    enAttenteDeAdministration = (await machine.whoIsBlocking(etapesDerniereDemarche)).includes(user.administrationId)
+                    const nextEtapes = await machine.possibleNextEtapes(etapesDerniereDemarche, getCurrent())
                     prochainesEtapes.push(
                       ...nextEtapes
                         .map(etape => etape.etapeTypeId)
@@ -153,32 +134,35 @@ export const titresAdministrations =
                     console.error(`Impossible de traiter le titre ${titre.id} car la démarche ${demarcheLaPlusRecente.typeId} n'est pas valide`, e)
                   }
                 }
+                titresFormated.push({
+                  id: titre.id,
+                  slug: titre.slug,
+                  nom: titre.nom,
+                  titre_statut_id: titre.titreStatutId,
+                  type_id: titre.typeId,
+                  references,
+                  titulaireIds: titre.titulaireIds,
+                  enAttenteDeAdministration,
+                  derniereEtape,
+                  prochainesEtapes,
+                })
               }
+            } else {
+              titresFormated.push({
+                id: titre.id,
+                slug: titre.slug,
+                nom: titre.nom,
+                titre_statut_id: titre.titreStatutId,
+                type_id: titre.typeId,
+                references,
+                titulaireIds: titre.titulaireIds,
+                enAttenteDeAdministration,
+                derniereEtape,
+                prochainesEtapes,
+              })
             }
-
-            return {
-              titre: titre as AdministrationTitreSanitize,
-              references,
-              enAttenteDeAdministration,
-              derniereEtape,
-              prochainesEtapes,
-            }
-          })
-          .filter((titre: TitreAdministrationAvecReferences | null): titre is TitreAdministrationAvecReferences => titre !== null)
-          .map(({ titre, references, enAttenteDeAdministration, derniereEtape, prochainesEtapes }) => {
-            return {
-              id: titre.id,
-              slug: titre.slug,
-              nom: titre.nom,
-              titre_statut_id: titre.titreStatutId,
-              type_id: titre.typeId,
-              references,
-              titulaireIds: titre.titulaireIds,
-              enAttenteDeAdministration,
-              derniereEtape,
-              prochainesEtapes,
-            }
-          })
+          }
+        }
 
         res.json(titresFormated)
       } else {
@@ -306,7 +290,9 @@ export const removeTitre =
 
         const doublonIds: TitreId[] = await getDoublonsByTitreId(pool, titreId.data)
         if (isNotNullNorUndefinedNorEmpty(doublonIds)) {
-          doublonIds.forEach(async id => titreUpdateTask(pool, id))
+          for (const id of doublonIds) {
+            await titreUpdateTask(pool, id)
+          }
         }
         res.sendStatus(HTTP_STATUS.NO_CONTENT)
       }
@@ -390,7 +376,7 @@ export const updateTitre =
         if (isNullOrUndefined(titreOld)) {
           res.sendStatus(HTTP_STATUS.NOT_FOUND)
         } else {
-          if (isNullOrUndefined(titreOld?.administrationsLocales)) {
+          if (isNullOrUndefined(titreOld.administrationsLocales)) {
             throw new Error("pas d'administrations locales chargées")
           }
 

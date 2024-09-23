@@ -23,5 +23,5 @@ const isSubTitreTypeId = (titreTypeId: TitreTypeId): titreTypeId is SubTitreType
 export const titreEtapePublicationCheck = (etapeTypeId: EtapeTypeId, titreTypeId: TitreTypeId): boolean =>
   !!(
     [ETAPES_TYPES.publicationDeDecisionAuJORF, ETAPES_TYPES.informationsHistoriquesIncompletes].includes(etapeTypeId) ||
-    (isSubTitreTypeId(titreTypeId) && demarcheEtapesTypesPublication[titreTypeId]?.includes(etapeTypeId))
+    (isSubTitreTypeId(titreTypeId) && demarcheEtapesTypesPublication[titreTypeId].includes(etapeTypeId))
   )

@@ -33,7 +33,7 @@ const getEtapesByDemarcheIdDbValidator = z.object({
   etape_type_id: etapeTypeIdValidator,
   etape_statut_id: etapeStatutIdValidator,
   heritage_props: z.record(etapeHeritagePropsValidator, z.object({ actif: z.boolean() })).nullable(),
-  heritage_contenu: z.record(z.string(), z.record(z.string(), z.object({ actif: z.boolean() }))).nullable(),
+  heritage_contenu: z.record(z.string(), z.record(z.string(), z.object({ actif: z.boolean() }).optional()).optional()).nullable(),
   date_debut: caminoDateValidator.nullable(),
   date_fin: caminoDateValidator.nullable(),
   duree: z.number().nullable(),

@@ -59,5 +59,10 @@ export default [{
         "@typescript-eslint/no-unused-expressions": 0,
         "@typescript-eslint/no-empty-function": 0,
         "@typescript-eslint/strict-boolean-expressions": "error",
+        '@typescript-eslint/no-floating-promises': 'error',
+        '@typescript-eslint/no-misused-promises': 'error',
+        '@typescript-eslint/await-thenable': 'error',
+        '@typescript-eslint/no-unnecessary-condition': 'error',
+
     },
 }];

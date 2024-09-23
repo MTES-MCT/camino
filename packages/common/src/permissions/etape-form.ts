@@ -232,7 +232,7 @@ export const etapeDocumentsStepIsComplete = (
   }
 
   const errors: string[] = []
-  const documentTypes = getDocumentsTypes({ typeId: etape.typeId }, demarcheTypeId, titreTypeId, sdomZoneIds, etape.contenu?.arm?.mecanise?.value === true)
+  const documentTypes = getDocumentsTypes({ typeId: etape.typeId }, demarcheTypeId, titreTypeId, sdomZoneIds, etape.contenu.arm?.mecanise?.value === true)
 
   errors.push(
     ...documentTypes

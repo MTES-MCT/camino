@@ -9,11 +9,12 @@ import { FrequenceId, Frequences, getNumberOfMonths } from 'camino-common/src/st
 import { SubstanceLegaleId } from 'camino-common/src/static/substancesLegales'
 import { CaminoDate, toCaminoDate } from 'camino-common/src/date'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
-import { DeepReadonly, isNotNullNorUndefinedNorEmpty, isNullOrUndefined } from 'camino-common/src/typescript-tools'
+import { DeepReadonly, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined, isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools'
 import { ActiviteSection, ActiviteSectionElement, ActivitesTypes, ActivitesTypesId, isSubstancesFiscales } from 'camino-common/src/static/activitesTypes'
 import { TitreId } from 'camino-common/src/validators/titres'
 
-const substancesFiscalesFind = (substances: SubstanceLegaleId[]): SubstanceFiscale[] => substances.filter(s => !!s).flatMap(substanceId => substancesFiscalesBySubstanceLegale(substanceId))
+const substancesFiscalesFind = (substances: (SubstanceLegaleId | undefined)[]): SubstanceFiscale[] =>
+  substances.filter(s => !!s).flatMap(substanceId => substancesFiscalesBySubstanceLegale(substanceId))
 
 const titreActiviteSectionElementsFormat = (elements: DeepReadonly<ActiviteSectionElement[]>, periodeId: number, date: CaminoDate) =>
   elements.filter(
@@ -34,7 +35,7 @@ const titreActiviteSectionElementsFormat = (elements: DeepReadonly<ActiviteSecti
  * @param titreDemarches - démarches du titre
  * @param titreTypeId - le type id du titre
  */
-const titreActiviteSectionsBuild = (
+const titreActiviteSectionsBuild = async (
   activiteTypeId: string,
   sections: DeepReadonly<ActiviteSection[]>,
   periodeId: number,
@@ -42,13 +43,14 @@ const titreActiviteSectionsBuild = (
   titreDemarches: ITitreDemarche[],
   titreTypeId: TitreTypeId
 ) => {
-  return sections.reduce<DeepReadonly<ActiviteSection[]>>((newSections: DeepReadonly<ActiviteSection[]>, s) => {
+  let newSections: DeepReadonly<ActiviteSection[]> = []
+  for (const s of sections) {
     let elements: DeepReadonly<ActiviteSectionElement[]> = []
 
     if (!isSubstancesFiscales(s) && isNotNullNorUndefinedNorEmpty(s.elements)) {
       elements = titreActiviteSectionElementsFormat(s.elements, periodeId, date)
     } else if (['gra', 'grx'].includes(activiteTypeId) && isSubstancesFiscales(s)) {
-      const substances = titreEtapePropFind('substances', toCaminoDate(date), titreDemarches, titreTypeId) as SubstanceLegaleId[] | null
+      const substances = (await titreEtapePropFind('substances', toCaminoDate(date), titreDemarches, titreTypeId)) as (SubstanceLegaleId | undefined)[] | null
 
       if (isNotNullNorUndefinedNorEmpty(substances)) {
         const substancesFiscales = substancesFiscalesFind(substances)
@@ -70,17 +72,18 @@ const titreActiviteSectionsBuild = (
     }
 
     if (elements.length) {
-      const section = {
-        id: s.id,
-        elements,
-        nom: s.nom,
-      }
-
-      return [...newSections, section]
+      newSections = [
+        ...newSections,
+        {
+          id: s.id,
+          elements,
+          nom: s.nom,
+        },
+      ]
     }
+  }
 
-    return newSections
-  }, [])
+  return newSections
 }
 
 const titreActiviteFind = (activiteTypeId: ActivitesTypesId, annee: number, periodeId: number, titreActivites?: ITitreActivite[] | null): boolean =>
@@ -100,7 +103,7 @@ const titreActiviteFind = (activiteTypeId: ActivitesTypesId, annee: number, peri
  * @param titreActivites - activités existantes du titres
  */
 
-const titreActiviteBuild = (
+const titreActiviteBuild = async (
   typeId: ActivitesTypesId,
   periodeId: number,
   activiteTypeSections: DeepReadonly<ActiviteSection[]>,
@@ -124,9 +127,11 @@ const titreActiviteBuild = (
 
   if (!titreActiviteIsValide) return null
 
-  const sections = titreActiviteSectionsBuild(typeId, activiteTypeSections, periodeId, date, titreDemarches, titreTypeId)
+  const sections = await titreActiviteSectionsBuild(typeId, activiteTypeSections, periodeId, date, titreDemarches, titreTypeId)
 
-  if (!sections.length) return null
+  if (isNullOrUndefinedOrEmpty(sections)) {
+    return null
+  }
 
   return {
     titreId,
@@ -151,7 +156,7 @@ const titreActiviteBuild = (
  * @returns une liste d'activités
  */
 
-export const titreActivitesBuild = (
+export const titreActivitesBuild = async (
   activiteTypeId: ActivitesTypesId,
   annees: number[],
   aujourdhui: CaminoDate,
@@ -159,7 +164,7 @@ export const titreActivitesBuild = (
   titreTypeId: TitreTypeId,
   titreDemarches?: ITitreDemarche[] | null,
   titreActivites?: ITitreActivite[] | null
-) => {
+): Promise<ITitreActivite[]> => {
   // si le titre n'a pas de phases de démarches
   // aucune activité ne peut être créées
   if ((titreDemarches ?? []).every(d => isNullOrUndefined(d.demarcheDateDebut))) return []
@@ -168,19 +173,18 @@ export const titreActivitesBuild = (
 
   const periodes = Frequences[activiteType.frequenceId].values
 
-  return annees.reduce(
-    (titreActivitesNew: ITitreActivite[], annee) =>
-      periodes.reduce((acc: ITitreActivite[], _, i) => {
-        const activiteSections = activiteType.sections
+  const result: ITitreActivite[] = []
+  for (const annee of annees) {
+    for (let i = 0; i < periodes.length; i++) {
+      const activiteSections = activiteType.sections
 
-        const titreActivite = titreActiviteBuild(activiteType.id, i + 1, activiteSections, annee, activiteType.frequenceId, aujourdhui, titreId, titreDemarches ?? [], titreTypeId, titreActivites)
+      const titreActivite = await titreActiviteBuild(activiteType.id, i + 1, activiteSections, annee, activiteType.frequenceId, aujourdhui, titreId, titreDemarches ?? [], titreTypeId, titreActivites)
 
-        if (titreActivite) {
-          acc.push(titreActivite)
-        }
+      if (isNotNullNorUndefined(titreActivite)) {
+        result.push(titreActivite)
+      }
+    }
+  }
 
-        return acc
-      }, titreActivitesNew),
-    []
-  )
+  return result
 }

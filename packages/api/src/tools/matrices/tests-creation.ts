@@ -16,6 +16,7 @@ import { substanceLegaleIdValidator } from 'camino-common/src/static/substancesL
 import { CommuneId, communeIdValidator } from 'camino-common/src/static/communes'
 import { idGenerate, newTitreId } from '../../database/models/_format/id-create'
 import { RawLineMatrice, getRawLines } from '../../business/matrices'
+import { isNotNullNorUndefined, RecordPartial } from 'camino-common/src/typescript-tools'
 // Le pool ne doit être qu'aux entrypoints : le daily, le monthly, et l'application.
 const pool = new pg.Pool({
   host: config().PGHOST,
@@ -24,7 +25,7 @@ const pool = new pg.Pool({
   database: config().PGDATABASE,
 })
 
-const titreIdsIndex: Record<TitreId, TitreId> = {}
+const titreIdsIndex: RecordPartial<TitreId, TitreId> = {}
 
 const titreIdTransformer = titreIdValidator.transform((value: TitreId): TitreId => {
   if (titreIdsIndex[value] === undefined) {
@@ -35,8 +36,8 @@ const titreIdTransformer = titreIdValidator.transform((value: TitreId): TitreId 
   return titreIdsIndex[value]
 })
 
-const entrepriseIdsIndex: Record<EntrepriseId, EntrepriseId> = {}
-const communeIdsIndex: Record<CommuneId, CommuneId> = {}
+const entrepriseIdsIndex: RecordPartial<EntrepriseId, EntrepriseId> = {}
+const communeIdsIndex: RecordPartial<CommuneId, CommuneId> = {}
 
 const entrepriseIdTransformer = entrepriseIdValidator.transform((value: EntrepriseId): EntrepriseId => {
   if (entrepriseIdsIndex[value] === undefined) {
@@ -151,7 +152,9 @@ const writeMatricesForTest = async () => {
       stripedData.activitesTrimestrielles,
       stripedData.titres,
       annee,
-      Object.values(communeIdsIndex).map(communeId => ({ id: communeId, nom: communeId })),
+      Object.values(communeIdsIndex)
+        .filter(isNotNullNorUndefined)
+        .map(communeId => ({ id: communeId, nom: communeId })),
       stripedData.entreprises
     )
     testBody.push({

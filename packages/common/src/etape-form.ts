@@ -24,10 +24,8 @@ import { titreIdValidator, titreSlugValidator } from './validators/titres'
 import { makeFlattenValidator, nullToDefault } from './zod-tools'
 import { numberElementValueValidator } from './sections'
 
-export const contenuValidator = z
-  .record(z.string(), z.record(z.string(), z.union([caminoDateValidator, z.string(), z.number(), z.boolean(), z.array(z.string())]).nullable()))
-  .nullable()
-  .transform(nullToDefault({}))
+const contenuContentValidator = z.union([caminoDateValidator, z.string(), z.number(), z.boolean(), z.array(z.string())]).nullable()
+export const contenuValidator = z.record(z.string(), z.record(z.string(), contenuContentValidator.optional()).optional()).nullable().transform(nullToDefault({}))
 export type EtapeContenu = z.infer<typeof contenuValidator>
 const dureeValidator = z.number().nonnegative().nullable()
 
@@ -132,7 +130,7 @@ const perimetreObjectValidator = z.object({
 
 const flattenedContenuElementValidator = makeFlattenValidator(z.union([caminoDateValidator, z.string(), numberElementValueValidator, z.boolean(), z.array(z.string())]).nullable())
 export type FlattenedContenuElement = z.infer<typeof flattenedContenuElementValidator>
-const flattenedContenuValidator = z.record(z.string(), z.record(z.string(), flattenedContenuElementValidator))
+const flattenedContenuValidator = z.record(z.string(), z.record(z.string(), flattenedContenuElementValidator.optional()).optional())
 export type FlattenedContenu = z.infer<typeof flattenedContenuValidator>
 
 export const flattenEtapeValidator = graphqlEtapeValidator
@@ -208,7 +206,7 @@ export const restEtapeCreationValidator = graphqlEtapeValidator
   .extend({
     titreDemarcheId: demarcheIdValidator,
     heritageProps: graphqlInputHeritagePropsValidator,
-    heritageContenu: z.record(z.string(), z.record(z.string(), z.object({ actif: z.boolean() }))),
+    heritageContenu: z.record(z.string(), z.record(z.string(), z.object({ actif: z.boolean() }).optional()).optional()),
     etapeDocuments: z.array(etapeDocumentModificationValidator),
     entrepriseDocumentIds: z.array(entrepriseDocumentIdValidator),
     etapeAvis: z.array(etapeAvisModificationValidator),

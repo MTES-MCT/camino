@@ -7,8 +7,8 @@ const etapesProd = require('./2019-10-31-oct.cas.json') // eslint-disable-line
 
 describe('vérifie l’arbre d’octroi de PRM', () => {
   const prmOctMachine = new PrmOctMachine()
-  test('peut créer une demande d’octroi de PRM complète en Métropole', () => {
-    const { service, etapes, dateFin } = setDateAndOrderAndInterpretMachine(prmOctMachine, '2022-07-01', [
+  test('peut créer une demande d’octroi de PRM complète en Métropole', async () => {
+    const { service, etapes, dateFin } = await setDateAndOrderAndInterpretMachine(prmOctMachine, '2022-07-01', [
       ETES.demande.FAIT,
       ETES.depotDeLaDemande.FAIT,
       ETES.saisineDuPrefet.FAIT,
@@ -31,7 +31,7 @@ describe('vérifie l’arbre d’octroi de PRM', () => {
       ETES.notificationAuPrefet.FAIT,
     ])
     expect(service).canOnlyTransitionTo({ machine: prmOctMachine, date: dateFin }, [])
-    expect(prmOctMachine.demarcheStatut(etapes)).toMatchInlineSnapshot(`
+    await expect(prmOctMachine.demarcheStatut(etapes)).resolves.toMatchInlineSnapshot(`
       {
         "demarcheStatut": "acc",
         "publique": true,
@@ -39,7 +39,7 @@ describe('vérifie l’arbre d’octroi de PRM', () => {
     `)
   })
 
-  test('peut créer une demande d’octroi de PRM en Guyane', () => {
+  test('peut créer une demande d’octroi de PRM en Guyane', async () => {
     const etapes = [
       { ...ETES.demande.FAIT, paysId: PAYS_IDS['Département de la Guyane'], surface: 200 },
       ETES.depotDeLaDemande.FAIT,
@@ -53,10 +53,10 @@ describe('vérifie l’arbre d’octroi de PRM', () => {
       ETES.rapportEtAvisDeLaDREAL.FAVORABLE,
       ETES.avisDuPrefet.FAVORABLE,
     ]
-    expect(() => setDateAndOrderAndInterpretMachine(prmOctMachine, '2020-04-14', etapes)).not.toThrowError()
+    await expect(setDateAndOrderAndInterpretMachine(prmOctMachine, '2020-04-14', etapes)).resolves.not.toThrowError()
   })
 
-  test('peut créer une demande d’octroi de PRM en Guyane sans avis du maire', () => {
+  test('peut créer une demande d’octroi de PRM en Guyane sans avis du maire', async () => {
     const etapes = [
       { ...ETES.demande.FAIT, paysId: PAYS_IDS['Département de la Guyane'], surface: 14 },
       ETES.depotDeLaDemande.FAIT,
@@ -69,10 +69,10 @@ describe('vérifie l’arbre d’octroi de PRM', () => {
       ETES.rapportEtAvisDeLaDREAL.FAVORABLE,
       ETES.avisDuPrefet.FAVORABLE,
     ]
-    expect(() => setDateAndOrderAndInterpretMachine(prmOctMachine, '2023-09-05', etapes)).not.toThrowError()
+    await expect(setDateAndOrderAndInterpretMachine(prmOctMachine, '2023-09-05', etapes)).resolves.not.toThrowError()
   })
 
-  test('peut créer une demande d’octroi de PRM en Outre mer (hors Guyane)', () => {
+  test('peut créer une demande d’octroi de PRM en Outre mer (hors Guyane)', async () => {
     const etapes = [
       { ...ETES.demande.FAIT, paysId: PAYS_IDS['Wallis-et-Futuna'] },
       ETES.depotDeLaDemande.FAIT,
@@ -85,10 +85,10 @@ describe('vérifie l’arbre d’octroi de PRM', () => {
       ETES.rapportEtAvisDeLaDREAL.FAVORABLE,
       ETES.avisDuPrefet.FAVORABLE,
     ]
-    expect(() => setDateAndOrderAndInterpretMachine(prmOctMachine, '2022-06-08', etapes)).not.toThrowError()
+    await expect(setDateAndOrderAndInterpretMachine(prmOctMachine, '2022-06-08', etapes)).resolves.not.toThrowError()
   })
 
-  test('ne peut pas faire l’avis de la DREAL si la saisine des services a été faite dans les 30 jours', () => {
+  test('ne peut pas faire l’avis de la DREAL si la saisine des services a été faite dans les 30 jours', async () => {
     const etapes = [
       { ...ETES.demande.FAIT, paysId: PAYS_IDS['République Française'] },
       ETES.depotDeLaDemande.FAIT,
@@ -98,12 +98,12 @@ describe('vérifie l’arbre d’octroi de PRM', () => {
       ETES.avisDesServicesEtCommissionsConsultatives.FAIT,
       ETES.rapportEtAvisDeLaDREAL.FAVORABLE,
     ]
-    expect(() => setDateAndOrderAndInterpretMachine(prmOctMachine, '2022-04-13', etapes)).toThrowErrorMatchingInlineSnapshot(
+    await expect(setDateAndOrderAndInterpretMachine(prmOctMachine, '2022-04-13', etapes)).rejects.toThrowErrorMatchingInlineSnapshot(
       `[Error: Error: cannot execute step: '{"etapeTypeId":"apd","etapeStatutId":"fav","date":"2022-04-20"}' after '["mfr_fai","mdp_fai","spp_fai","mcr_fav","anf_fai","asc_fai"]'. The event {"type":"RENDRE_RAPPORT_DREAL","date":"2022-04-20","status":"fav"} should be one of 'CLASSER_SANS_SUITE,DEMANDER_INFORMATIONS,DEPOSER_DEMANDE_CONCURRENTE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,RECEVOIR_INFORMATIONS']`
     )
   })
 
-  test('ne peut pas faire 2 avis des services et commissions consultatives', () => {
+  test('ne peut pas faire 2 avis des services et commissions consultatives', async () => {
     const etapes = [
       { ...ETES.demande.FAIT, paysId: PAYS_IDS['République Française'] },
       ETES.depotDeLaDemande.FAIT,
@@ -113,12 +113,12 @@ describe('vérifie l’arbre d’octroi de PRM', () => {
       ETES.avisDesServicesEtCommissionsConsultatives.FAIT,
       ETES.avisDesServicesEtCommissionsConsultatives.FAIT,
     ]
-    expect(() => setDateAndOrderAndInterpretMachine(prmOctMachine, '2022-04-12', etapes)).toThrowErrorMatchingInlineSnapshot(
+    await expect(setDateAndOrderAndInterpretMachine(prmOctMachine, '2022-04-12', etapes)).rejects.toThrowErrorMatchingInlineSnapshot(
       `[Error: Error: cannot execute step: '{"etapeTypeId":"asc","etapeStatutId":"fai","date":"2022-04-19"}' after '["mfr_fai","mdp_fai","spp_fai","mcr_fav","anf_fai","asc_fai"]'. The event {"type":"RENDRE_AVIS_SERVICES_ET_COMMISSIONS_CONSULTATIVES","date":"2022-04-19","status":"fai"} should be one of 'CLASSER_SANS_SUITE,DEMANDER_INFORMATIONS,DEPOSER_DEMANDE_CONCURRENTE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,RECEVOIR_INFORMATIONS']`
     )
   })
 
-  test('ne peut pas ouvrir la participation du public si la mise en concurrence n’est pas terminée', () => {
+  test('ne peut pas ouvrir la participation du public si la mise en concurrence n’est pas terminée', async () => {
     const etapes = [
       { ...ETES.demande.FAIT, paysId: PAYS_IDS['République Française'] },
       ETES.depotDeLaDemande.FAIT,
@@ -127,12 +127,12 @@ describe('vérifie l’arbre d’octroi de PRM', () => {
       ETES.avisDeMiseEnConcurrenceAuJORF.FAIT,
       ETES.participationDuPublic.PROGRAMME,
     ]
-    expect(() => setDateAndOrderAndInterpretMachine(prmOctMachine, '2022-04-13', etapes)).toThrowErrorMatchingInlineSnapshot(
+    await expect(setDateAndOrderAndInterpretMachine(prmOctMachine, '2022-04-13', etapes)).rejects.toThrowErrorMatchingInlineSnapshot(
       `[Error: Error: cannot execute step: '{"etapeTypeId":"ppu","etapeStatutId":"pro","date":"2022-04-19"}' after '["mfr_fai","mdp_fai","spp_fai","mcr_fav","anf_fai"]'. The event {"type":"OUVRIR_PARTICIPATION_DU_PUBLIC","date":"2022-04-19","status":"pro"} should be one of 'CLASSER_SANS_SUITE,DEMANDER_INFORMATIONS,DEPOSER_DEMANDE_CONCURRENTE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,RECEVOIR_INFORMATIONS,RENDRE_AVIS_SERVICES_ET_COMMISSIONS_CONSULTATIVES']`
     )
   })
 
-  test('ne peut pas créer une "rpu" après une "dex" rejetée', () => {
+  test('ne peut pas créer une "rpu" après une "dex" rejetée', async () => {
     const etapes = [
       { ...ETES.demande.FAIT, paysId: PAYS_IDS['République Française'] },
       ETES.depotDeLaDemande.FAIT,
@@ -153,16 +153,16 @@ describe('vérifie l’arbre d’octroi de PRM', () => {
       ETES.publicationDeDecisionAuRecueilDesActesAdministratifs.FAIT,
     ]
 
-    expect(() => setDateAndOrderAndInterpretMachine(prmOctMachine, '2022-04-13', etapes)).toThrowErrorMatchingInlineSnapshot(
+    await expect(setDateAndOrderAndInterpretMachine(prmOctMachine, '2022-04-13', etapes)).rejects.toThrowErrorMatchingInlineSnapshot(
       `[Error: Error: cannot execute step: '{"etapeTypeId":"rpu","etapeStatutId":"fai","date":"2022-05-30"}' after '["mfr_fai","mdp_fai","spp_fai","mcr_fav","anf_fai","asc_fai","ppu_ter","apd_fav","app_fav","scg_fai","rcg_fav","acg_fav","sas_fai","dex_rej","npp_fai","mno_fai"]'. The event {"type":"PUBLIER_DECISIONS_RECUEIL_ACTES_ADMINISTRATIFS","date":"2022-05-30","status":"fai"} should be one of 'RENDRE_DECISION_ABROGATION,RENDRE_DECISION_ANNULATION_PAR_JUGE_ADMINISTRATIF']`
     )
   })
 
   // pour regénérer le oct.cas.json: `npm run test:generate-data -w packages/api`
-  test.each(etapesProd as any[])('cas réel N°$id', demarche => {
+  test.each(etapesProd as any[])('cas réel N°$id', async demarche => {
     // ici les étapes sont déjà ordonnées
-    interpretMachine(prmOctMachine, demarche.etapes)
-    expect(prmOctMachine.demarcheStatut(demarche.etapes)).toStrictEqual({
+    await interpretMachine(prmOctMachine, demarche.etapes)
+    await expect(prmOctMachine.demarcheStatut(demarche.etapes)).resolves.toStrictEqual({
       demarcheStatut: demarche.demarcheStatutId,
       publique: demarche.demarchePublique,
     })

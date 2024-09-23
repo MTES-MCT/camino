@@ -46,14 +46,14 @@ const titreDemarcheEtapesBuild = <T extends Pick<Partial<ITitreEtape>, 'id'>>(ti
 
 // vérifie que la modification de la démarche
 // est valide par rapport aux définitions des types d'étape
-export const titreDemarcheUpdatedEtatValidate = (
+export const titreDemarcheUpdatedEtatValidate = async (
   demarcheTypeId: DemarcheTypeId,
   titre: Pick<ITitre, 'typeId' | 'demarches'>,
   titreEtape: Pick<Partial<ITitreEtape>, 'id'> & Pick<ITitreEtape, 'statutId' | 'typeId' | 'date' | 'contenu' | 'surface' | 'communes' | 'isBrouillon'>,
   demarcheId: DemarcheId,
   titreDemarcheEtapes?: Pick<ITitreEtape, 'id' | 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'communes' | 'surface' | 'isBrouillon'>[] | null,
   suppression = false
-): { valid: true; errors: null } | { valid: false; errors: NonEmptyArray<string> } => {
+): Promise<{ valid: true; errors: null } | { valid: false; errors: NonEmptyArray<string> }> => {
   const titreDemarcheEtapesNew = titreDemarcheEtapesBuild(titreEtape, suppression, titreDemarcheEtapes)
   const machine = machineFind(titre.typeId, demarcheTypeId, titreDemarcheEtapesNew, demarcheId)
   const titreDemarchesErrors: string[] = []
@@ -65,7 +65,7 @@ export const titreDemarcheUpdatedEtatValidate = (
   }
   // on récupère tous les type d'étapes et les statuts associés applicable à la date souhaitée
   try {
-    const etapeTypesWithStatusPossibles = getPossiblesEtapesTypes(machine, titre.typeId, demarcheTypeId, titreEtape.typeId, titreEtape.id, titreEtape.date, titreDemarcheEtapes ?? [])
+    const etapeTypesWithStatusPossibles = await getPossiblesEtapesTypes(machine, titre.typeId, demarcheTypeId, titreEtape.typeId, titreEtape.id, titreEtape.date, titreDemarcheEtapes ?? [])
     const statutPossiblesPourCetteEtape = etapeTypesWithStatusPossibles[titreEtape.typeId]
     if (isNullOrUndefined(statutPossiblesPourCetteEtape) || !statutPossiblesPourCetteEtape.etapeStatutIds.includes(titreEtape.statutId)) {
       if (isNotNullNorUndefined(machine)) {
@@ -83,7 +83,7 @@ export const titreDemarcheUpdatedEtatValidate = (
     // vérifie que toutes les étapes existent dans l’arbre
     try {
       const etapes = titreDemarcheEtapesNew.map(etape => titreEtapeForMachineValidator.omit({ id: true, ordre: true }).parse(etape))
-      const ok = machine.isEtapesOk(machine.orderMachine(toMachineEtapes(etapes)))
+      const ok = await machine.isEtapesOk(await machine.orderMachine(toMachineEtapes(etapes)))
       if (!ok) {
         titreDemarchesErrors.push('la démarche machine n’est pas valide')
       }
@@ -100,7 +100,7 @@ export const titreDemarcheUpdatedEtatValidate = (
   return { valid: true, errors: null }
 }
 
-export const getPossiblesEtapesTypes = (
+export const getPossiblesEtapesTypes = async (
   machine: CaminoMachines | undefined,
   titreTypeId: TitreTypeId,
   demarcheTypeId: DemarcheTypeId,
@@ -108,12 +108,12 @@ export const getPossiblesEtapesTypes = (
   etapeId: EtapeId | undefined,
   date: CaminoDate,
   demarcheEtapes: Pick<ITitreEtape, 'typeId' | 'date' | 'isBrouillon' | 'id' | 'ordre' | 'statutId' | 'communes'>[]
-): EtapeTypeEtapeStatutWithMainStep => {
+): Promise<EtapeTypeEtapeStatutWithMainStep> => {
   let etapesTypes: EtapeTypeEtapeStatutWithMainStep = {}
   if (isNotNullNorUndefined(machine)) {
     const etapes = demarcheEtapes.map(etape => titreEtapeForMachineValidator.parse(etape))
 
-    etapesTypes = etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(machine, etapes, etapeId ?? null, date)
+    etapesTypes = await etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(machine, etapes, etapeId ?? null, date)
   } else {
     // si on modifie une étape
     // vérifie que son type est possible sur la démarche
@@ -126,7 +126,7 @@ export const getPossiblesEtapesTypes = (
     // dans un premier temps on récupère toutes les étapes possibles pour cette démarche
     let etapesTypesTDE = getEtapesTDE(titreTypeId, demarcheTypeId)
 
-    const etapeTypesExistants = demarcheEtapes.map(({ typeId }) => typeId) ?? []
+    const etapeTypesExistants = demarcheEtapes.map(({ typeId }) => typeId)
     etapesTypesTDE = etapesTypesTDE
       .filter(typeId => etapeTypeId === typeId || !etapeTypesExistants.includes(typeId) || !EtapesTypes[typeId].unique)
       .filter(etapeTypeId => etapeTypeDateFinCheck(etapeTypeId, demarcheEtapes))
@@ -138,7 +138,7 @@ export const getPossiblesEtapesTypes = (
   }
 
   // On ne peut pas avoir 2 fois le même type d'étape en brouillon
-  const etapeTypeIdsInBrouillon = demarcheEtapes.filter(({ isBrouillon, id }) => id !== etapeId && isBrouillon).map(({ typeId }) => typeId) ?? []
+  const etapeTypeIdsInBrouillon = demarcheEtapes.filter(({ isBrouillon, id }) => id !== etapeId && isBrouillon).map(({ typeId }) => typeId)
 
   for (const etapeTypeIdInBrouillon of etapeTypeIdsInBrouillon) {
     delete etapesTypes[etapeTypeIdInBrouillon]
@@ -148,12 +148,12 @@ export const getPossiblesEtapesTypes = (
 }
 
 // VISIBLE FOR TESTING
-export const etapesTypesPossibleACetteDateOuALaPlaceDeLEtape = (
+export const etapesTypesPossibleACetteDateOuALaPlaceDeLEtape = async (
   machine: CaminoMachines,
   etapes: TitreEtapeForMachine[],
   titreEtapeId: string | null,
   date: CaminoDate
-): EtapeTypeEtapeStatutWithMainStep => {
+): Promise<EtapeTypeEtapeStatutWithMainStep> => {
   const sortedEtapes = titreEtapesSortAscByOrdre(etapes)
   const etapesAvant: Etape[] = []
   const etapesApres: Etape[] = []
@@ -170,15 +170,19 @@ export const etapesTypesPossibleACetteDateOuALaPlaceDeLEtape = (
     etapesApres.push(...toMachineEtapes(sortedEtapes.slice(etapesAvant.length)))
   }
 
-  const etapesPossibles = machine.possibleNextEtapes(etapesAvant, date).filter(et => {
+  const etapesPossiblesRaw = await machine.possibleNextEtapes(etapesAvant, date)
+  const etapesPossibles = []
+  for (const et of etapesPossiblesRaw) {
     const newEtapes = [...etapesAvant]
 
     const items = { ...et, date }
     newEtapes.push(items)
     newEtapes.push(...etapesApres)
 
-    return machine.isEtapesOk(newEtapes)
-  })
+    if (await machine.isEtapesOk(newEtapes)) {
+      etapesPossibles.push(et)
+    }
+  }
 
   return etapesPossibles.reduce<EtapeTypeEtapeStatutWithMainStep>((acc, { etapeTypeId, etapeStatutId, mainStep }) => {
     if (isNullOrUndefined(acc[etapeTypeId])) {

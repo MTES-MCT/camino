@@ -4,6 +4,7 @@ import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { titrePhasesFind } from '../rules/titre-phases-find'
 import { CaminoDate } from 'camino-common/src/date'
 import { titreEtapeForMachineValidator } from '../rules-demarches/machine-common'
+import { isNotNullNorUndefinedNorEmpty, isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools'
 
 /**
  * Filtre les étapes antérieures à une date
@@ -20,26 +21,26 @@ const titreEtapesFilter = (titreEtapes: ITitreEtape[], date: string) => titreEta
  * @param titreTypeId - id du type du titre
  * @returns démarches du titre
  */
+export const titreDemarchesEtapesRebuild = async (date: CaminoDate, titreDemarches: ITitreDemarche[], titreTypeId: TitreTypeId): Promise<ITitreDemarche[]> => {
+  const titreDemarchesRebuilt: ITitreDemarche[] = []
+  for (const td of titreDemarches) {
+    if (isNullOrUndefinedOrEmpty(td.etapes)) {
+      continue
+    }
 
-export const titreDemarchesEtapesRebuild = (date: CaminoDate, titreDemarches: ITitreDemarche[], titreTypeId: TitreTypeId): ITitreDemarche[] => {
-  const titreDemarchesRebuilt = titreDemarches.reduce((acc: ITitreDemarche[], td) => {
-    if (!td.etapes) return acc
+    const titreEtapesFiltered = titreEtapesFilter(td.etapes, date)
 
-    const titreEtapesFiltered = titreEtapesFilter(td.etapes!, date)
-
-    if (titreEtapesFiltered.length) {
+    if (isNotNullNorUndefinedNorEmpty(titreEtapesFiltered)) {
       const titreDemarche = { ...td }
 
       titreDemarche.etapes = titreEtapesFiltered
 
       const etapes = titreDemarche.etapes.map(etape => titreEtapeForMachineValidator.parse(etape))
-      titreDemarche.statutId = titreDemarcheStatutIdFind(titreDemarche.typeId, etapes, titreTypeId, titreDemarche.id)
+      titreDemarche.statutId = await titreDemarcheStatutIdFind(titreDemarche.typeId, etapes, titreTypeId, titreDemarche.id)
 
-      acc.push(titreDemarche)
+      titreDemarchesRebuilt.push(titreDemarche)
     }
-
-    return acc
-  }, [])
+  }
 
   const phases = titrePhasesFind(titreDemarchesRebuilt, titreTypeId)
 

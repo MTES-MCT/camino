@@ -31,7 +31,6 @@ import { titreEtapeGet, titreEtapeUpdate, titreEtapeUpsert } from '../../databas
 import { machineFind } from '../../business/rules-demarches/definitions'
 import { User, isBureauDEtudes, isEntreprise } from 'camino-common/src/roles'
 import { canCreateEtape, canDeposeEtape, canDeleteEtape, canEditEtape, canEditDates, canEditDuree } from 'camino-common/src/permissions/titres-etapes'
-import { TitresStatutIds } from 'camino-common/src/static/titresStatuts'
 import { canBeBrouillon, isEtapeTypeId } from 'camino-common/src/static/etapesTypes'
 import {
   DeepReadonly,
@@ -263,7 +262,7 @@ export const deleteEtape =
         if (isNullOrUndefined(titreEtape)) {
           res.sendStatus(HTTP_STATUS.NOT_FOUND)
         } else {
-          if (!titreEtape.demarche || !titreEtape.demarche.titre || titreEtape.demarche.titre.administrationsLocales === undefined || !titreEtape.demarche.titre.titreStatutId) {
+          if (!titreEtape.demarche || !titreEtape.demarche.titre || titreEtape.demarche.titre.administrationsLocales === undefined) {
             throw new Error('la démarche n’est pas chargée complètement')
           }
 
@@ -292,7 +291,7 @@ export const deleteEtape =
 
             if (!titreDemarche.titre) throw new Error("le titre n'existe pas")
 
-            const { valid, errors: rulesErrors } = titreDemarcheUpdatedEtatValidate(titreDemarche.typeId, titreDemarche.titre, titreEtape, titreDemarche.id, titreDemarche.etapes!, true)
+            const { valid, errors: rulesErrors } = await titreDemarcheUpdatedEtatValidate(titreDemarche.typeId, titreDemarche.titre, titreEtape, titreDemarche.id, titreDemarche.etapes!, true)
 
             if (!valid) {
               throw new Error(rulesErrors.join(', '))
@@ -481,9 +480,9 @@ const getFlattenEtape = async (
 
   const sections = getSections(titreTypeId, demarche.typeId, etape.typeId)
   const heritageContenu = sections.reduce<IHeritageContenu>((accSections, section) => {
-    accSections[section.id] = section.elements.reduce<IHeritageContenu[string]>((accElements, element) => {
+    accSections[section.id] = section.elements.reduce<NonNullable<IHeritageContenu[string]>>((accElements, element) => {
       accElements[element.id] = {
-        actif: etape.heritageContenu[section.id]?.[element.id]?.actif ?? false,
+        actif: etape.heritageContenu?.[section.id]?.[element.id]?.actif ?? false, // eslint-disable-line @typescript-eslint/no-unnecessary-condition
         etape: titreEtapeHeritage.heritageContenu?.[section.id]?.[element.id]?.etape ?? undefined,
       }
 
@@ -553,88 +552,84 @@ export const createEtape =
             if (!titreDemarche || !titreDemarche.titre) {
               res.status(HTTP_STATUS.NOT_FOUND).json({ errorMessage: "le titre n'existe pas" })
             } else {
-              const titreTypeId = titreDemarche?.titre?.typeId
-              if (!titreTypeId) {
-                res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ errorMessage: `le type du titre de la ${titreDemarche.id} n'est pas chargé` })
+              const titreTypeId = titreDemarche.titre.typeId
+              const isBrouillon = canBeBrouillon(etape.typeId)
+              const { flattenEtape, perimetreInfos } = await getFlattenEtape(etape, titreDemarche, titreTypeId, isBrouillon, etapeSlugValidator.parse('unknown'), pool)
+              const entrepriseDocuments: EntrepriseDocument[] = await validateAndGetEntrepriseDocuments(pool, flattenEtape, etape.entrepriseDocumentIds, user)
+
+              const etapeDocumentsParsed = z.array(tempEtapeDocumentValidator).safeParse(etape.etapeDocuments)
+
+              if (!etapeDocumentsParsed.success) {
+                console.warn(etapeDocumentsParsed.error)
+
+                res.status(HTTP_STATUS.BAD_REQUEST).json({ errorMessage: 'Les documents envoyés ne sont pas conformes' })
               } else {
-                const isBrouillon = canBeBrouillon(etape.typeId)
-                const { flattenEtape, perimetreInfos } = await getFlattenEtape(etape, titreDemarche, titreTypeId, isBrouillon, etapeSlugValidator.parse('unknown'), pool)
-                const entrepriseDocuments: EntrepriseDocument[] = await validateAndGetEntrepriseDocuments(pool, flattenEtape, etape.entrepriseDocumentIds, user)
+                const etapeDocuments = etapeDocumentsParsed.data
 
-                const etapeDocumentsParsed = z.array(tempEtapeDocumentValidator).safeParse(etape.etapeDocuments)
-
-                if (!etapeDocumentsParsed.success) {
-                  console.warn(etapeDocumentsParsed.error)
-
-                  res.status(HTTP_STATUS.BAD_REQUEST).json({ errorMessage: 'Les documents envoyés ne sont pas conformes' })
+                const etapeAvisParsed = z.array(tempEtapeAvisValidator).safeParse(etape.etapeAvis)
+                if (!etapeAvisParsed.success) {
+                  console.warn(etapeAvisParsed.error)
+                  res.status(HTTP_STATUS.BAD_REQUEST).json({ errorMessage: 'Les avis envoyés ne sont pas conformes' })
                 } else {
-                  const etapeDocuments = etapeDocumentsParsed.data
+                  const etapeAvis = etapeAvisParsed.data
+                  const rulesErrors = await titreEtapeUpdationValidate(
+                    flattenEtape,
+                    titreDemarche,
+                    titreDemarche.titre,
+                    etapeDocuments,
+                    etapeAvis,
+                    entrepriseDocuments,
+                    perimetreInfos.sdomZones,
+                    perimetreInfos.communes.map(({ id }) => id),
+                    user,
+                    null,
+                    null
+                  )
 
-                  const etapeAvisParsed = z.array(tempEtapeAvisValidator).safeParse(etape.etapeAvis)
-                  if (!etapeAvisParsed.success) {
-                    console.warn(etapeAvisParsed.error)
-                    res.status(HTTP_STATUS.BAD_REQUEST).json({ errorMessage: 'Les avis envoyés ne sont pas conformes' })
+                  if (rulesErrors.length) {
+                    res.status(HTTP_STATUS.BAD_REQUEST).json({ errorMessage: rulesErrors.join(', ') })
+                  } else if (
+                    !canCreateEtape(user, etape.typeId, isBrouillon, titreDemarche.titre.titulaireIds ?? [], titreDemarche.titre.administrationsLocales ?? [], titreDemarche.typeId, {
+                      typeId: titreDemarche.titre.typeId,
+                      titreStatutId: titreDemarche.titre.titreStatutId,
+                    })
+                  ) {
+                    res.status(HTTP_STATUS.BAD_REQUEST).json({ errorMessage: 'droits insuffisants pour créer cette étape' })
+                  } else if (!(await checkEntreprisesExist(pool, [...etape.titulaireIds, ...etape.amodiataireIds]))) {
+                    res.status(HTTP_STATUS.BAD_REQUEST).json({ errorMessage: "certaines entreprises n'existent pas" })
                   } else {
-                    const etapeAvis = etapeAvisParsed.data
-                    const rulesErrors = titreEtapeUpdationValidate(
-                      flattenEtape,
-                      titreDemarche,
-                      titreDemarche.titre,
-                      etapeDocuments,
-                      etapeAvis,
-                      entrepriseDocuments,
-                      perimetreInfos.sdomZones,
-                      perimetreInfos.communes.map(({ id }) => id),
-                      user,
-                      null,
-                      null
-                    )
+                    if (!canEditDuree(titreTypeId, titreDemarche.typeId, user)) {
+                      etape.duree = null
+                    }
 
-                    if (rulesErrors.length) {
-                      res.status(HTTP_STATUS.BAD_REQUEST).json({ errorMessage: rulesErrors.join(', ') })
-                    } else if (
-                      !canCreateEtape(user, etape.typeId, isBrouillon, titreDemarche.titre.titulaireIds ?? [], titreDemarche.titre.administrationsLocales ?? [], titreDemarche.typeId, {
-                        typeId: titreDemarche.titre.typeId,
-                        titreStatutId: titreDemarche.titre.titreStatutId ?? TitresStatutIds.Indetermine,
-                      })
-                    ) {
-                      res.status(HTTP_STATUS.BAD_REQUEST).json({ errorMessage: 'droits insuffisants pour créer cette étape' })
-                    } else if (!(await checkEntreprisesExist(pool, [...(etape.titulaireIds ?? []), ...(etape.amodiataireIds ?? [])]))) {
-                      res.status(HTTP_STATUS.BAD_REQUEST).json({ errorMessage: "certaines entreprises n'existent pas" })
+                    if (!canEditDates(titreTypeId, titreDemarche.typeId, etape.typeId, user) && (isNotNullNorUndefined(etape.dateDebut) || isNotNullNorUndefined(etape.dateFin))) {
+                      etape.dateDebut = null
+                      etape.dateFin = null
+                    }
+
+                    etape.statutId = getStatutId(flattenEtape, getCurrent())
+
+                    const etapeUpdated: ITitreEtape | undefined = await titreEtapeUpsert({ ...etape, ...perimetreInfos, isBrouillon }, user!, titreDemarche.titreId)
+                    if (isNullOrUndefined(etapeUpdated)) {
+                      res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ errorMessage: "Une erreur est survenue lors de la création de l'étape" })
                     } else {
-                      if (!canEditDuree(titreTypeId, titreDemarche.typeId, user)) {
-                        etape.duree = null
+                      await insertEtapeDocuments(pool, etapeUpdated.id, etapeDocuments)
+                      for (const document of entrepriseDocuments) {
+                        await insertTitreEtapeEntrepriseDocument(pool, { titre_etape_id: etapeUpdated.id, entreprise_document_id: document.id })
                       }
 
-                      if (!canEditDates(titreTypeId, titreDemarche.typeId, etape.typeId, user) && (isNotNullNorUndefined(etape.dateDebut) || isNotNullNorUndefined(etape.dateFin))) {
-                        etape.dateDebut = null
-                        etape.dateFin = null
+                      await insertEtapeAvis(pool, etapeUpdated.id, etapeAvis)
+
+                      try {
+                        await titreEtapeUpdateTask(pool, etapeUpdated.id, etapeUpdated.titreDemarcheId, user)
+                      } catch (e) {
+                        console.error('une erreur est survenue lors des tâches annexes', e)
                       }
 
-                      etape.statutId = getStatutId(flattenEtape, getCurrent())
+                      await titreEtapeAdministrationsEmailsSend(etapeUpdated, titreDemarche.typeId, titreDemarche.titreId, titreDemarche.titre.typeId, user)
+                      await titreEtapeUtilisateursEmailsSend(etapeUpdated, titreDemarche.titreId, pool)
 
-                      const etapeUpdated: ITitreEtape | undefined = await titreEtapeUpsert({ ...etape, ...perimetreInfos, isBrouillon }, user!, titreDemarche.titreId)
-                      if (isNullOrUndefined(etapeUpdated)) {
-                        res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ errorMessage: "Une erreur est survenue lors de la création de l'étape" })
-                      } else {
-                        await insertEtapeDocuments(pool, etapeUpdated.id, etapeDocuments)
-                        for (const document of entrepriseDocuments) {
-                          await insertTitreEtapeEntrepriseDocument(pool, { titre_etape_id: etapeUpdated.id, entreprise_document_id: document.id })
-                        }
-
-                        await insertEtapeAvis(pool, etapeUpdated.id, etapeAvis)
-
-                        try {
-                          await titreEtapeUpdateTask(pool, etapeUpdated.id, etapeUpdated.titreDemarcheId, user)
-                        } catch (e) {
-                          console.error('une erreur est survenue lors des tâches annexes', e)
-                        }
-
-                        await titreEtapeAdministrationsEmailsSend(etapeUpdated, titreDemarche.typeId, titreDemarche.titreId, titreDemarche.titre.typeId, user)
-                        await titreEtapeUtilisateursEmailsSend(etapeUpdated, titreDemarche.titreId, pool)
-
-                        res.json(etapeUpdated.id)
-                      }
+                      res.json(etapeUpdated.id)
                     }
                   }
                 }
@@ -675,7 +670,7 @@ export const updateEtape =
           )
 
           if (isNullOrUndefined(titreEtapeOld)) throw new Error("l'étape n'existe pas")
-          if (!titreEtapeOld.demarche || !titreEtapeOld.demarche.titre || titreEtapeOld.demarche.titre.administrationsLocales === undefined || !titreEtapeOld.demarche.titre.titreStatutId) {
+          if (!titreEtapeOld.demarche || !titreEtapeOld.demarche.titre || titreEtapeOld.demarche.titre.administrationsLocales === undefined) {
             throw new Error('la démarche n’est pas chargée complètement')
           }
 
@@ -715,10 +710,7 @@ export const updateEtape =
 
           if (!titreDemarche || !titreDemarche.titre) throw new Error("le titre n'existe pas")
           if (isNullOrUndefined(titreDemarche.titre.titulaireIds) || isNullOrUndefined(titreDemarche.titre.amodiataireIds)) throw new Error('la démarche n’est pas chargée complètement')
-          const titreTypeId = titreDemarche?.titre?.typeId
-          if (!titreTypeId) {
-            throw new Error(`le type du titre de la ${titreDemarche.id} n'est pas chargé`)
-          }
+          const titreTypeId = titreDemarche.titre.typeId
           const isBrouillon = titreEtapeOld.isBrouillon
           const { flattenEtape, perimetreInfos } = await getFlattenEtape(etape, titreDemarche, titreTypeId, isBrouillon, titreEtapeOld.slug, pool)
           const entrepriseDocuments: EntrepriseDocument[] = await validateAndGetEntrepriseDocuments(pool, flattenEtape, etape.entrepriseDocumentIds, user)
@@ -753,7 +745,7 @@ export const updateEtape =
             aslDocument = aslDocumentParsed.data
           }
 
-          const rulesErrors = titreEtapeUpdationValidate(
+          const rulesErrors = await titreEtapeUpdationValidate(
             flattenEtape,
             titreDemarche,
             titreDemarche.titre,
@@ -781,7 +773,7 @@ export const updateEtape =
             etape.dateFin = titreEtapeOld.dateFin ?? null
           }
 
-          if (!(await checkEntreprisesExist(pool, [...(etape.titulaireIds ?? []), ...(etape.amodiataireIds ?? [])]))) {
+          if (!(await checkEntreprisesExist(pool, [...etape.titulaireIds, ...etape.amodiataireIds]))) {
             throw new Error("certaines entreprises n'existent pas")
           }
 
@@ -1069,7 +1061,7 @@ const demarcheEtapesTypesGet = async (titreDemarcheId: DemarcheId, date: CaminoD
 
   const demarcheDefinition = machineFind(titre.typeId, titreDemarche.typeId, titreDemarche.etapes, titreDemarche.id, date)
 
-  const etapesTypes: EtapeTypeEtapeStatutWithMainStep = getPossiblesEtapesTypes(
+  const etapesTypes: EtapeTypeEtapeStatutWithMainStep = await getPossiblesEtapesTypes(
     demarcheDefinition,
     titre.typeId,
     titreDemarche.typeId,
@@ -1083,7 +1075,7 @@ const demarcheEtapesTypesGet = async (titreDemarcheId: DemarcheId, date: CaminoD
     if (
       canCreateEtape(user, etapeTypeId, ETAPE_IS_BROUILLON, titre.titulaireIds ?? [], titre.administrationsLocales ?? [], titreDemarche.typeId, {
         typeId: titre.typeId,
-        titreStatutId: titre.titreStatutId ?? TitresStatutIds.Indetermine,
+        titreStatutId: titre.titreStatutId,
       })
     ) {
       acc[etapeTypeId] = etapesTypes[etapeTypeId]

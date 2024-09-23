@@ -180,6 +180,7 @@ const buildMatrices = (
       (acc, line) => {
         const toAdd = acc[line.sip]
 
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         if (toAdd === null) {
           throw new Error(`la commune ${line.commune.id} n'appartient à aucun SIP`)
         } else {
@@ -247,13 +248,14 @@ const buildMatrices = (
       const toAdd = acc[line.sip]
       const sip = sips[line.sip]
 
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       if (toAdd === null) {
         throw new Error(`la commune ${line.commune.id} n'appartient à aucun SIP`)
       } else {
         const redevanceCommunalePremiereFraction = new Decimal(line.fiscalite.redevanceCommunale).mul(0.35).toDecimalPlaces(2)
         const redevanceCommunaleDeuxiemeFraction = new Decimal(line.fiscalite.redevanceCommunale).mul(0.1).toDecimalPlaces(2)
         toAdd.push({
-          circonscriptionDe: sip?.nom ?? '',
+          circonscriptionDe: sip.nom,
           articlesDeRoles: line.index,
           designationDesExploitants: titulaireToString(line.titulaire),
           departements: Departements[line.departementId].nom,

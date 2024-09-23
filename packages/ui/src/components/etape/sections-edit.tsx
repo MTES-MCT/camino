@@ -6,7 +6,7 @@ import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-com
 import { useState } from '../../utils/vue-tsx-utils'
 import { SectionWithValue } from 'camino-common/src/sections'
 import { SectionElementWithValueEdit } from './section-element-with-value-edit'
-import { FlattenEtape } from 'camino-common/src/etape-form'
+import { FlattenedContenuElement, FlattenEtape } from 'camino-common/src/etape-form'
 
 export type SectionsEditEtape = DeepReadonly<Pick<FlattenEtape, 'typeId' | 'contenu' | 'date'>>
 type Props = {
@@ -19,7 +19,7 @@ type Props = {
 export const SectionsEdit = defineComponent<Props>(props => {
   const [editedEtape, setEditedEtape] = useState(props.etape)
 
-  const updateElement = (sectionId: string, elementId: string) => (element: DeepReadonly<FlattenEtape['contenu'][string][string]>) => {
+  const updateElement = (sectionId: string, elementId: string) => (element: DeepReadonly<FlattenedContenuElement>) => {
     updateEtape({ contenu: { ...editedEtape.value.contenu, [sectionId]: { ...editedEtape.value.contenu[sectionId], [elementId]: element } } })
   }
 
@@ -49,7 +49,7 @@ export const SectionsEdit = defineComponent<Props>(props => {
               <SectionElementWithValueEdit
                 key={elementWithValue.id}
                 elementWithValue={elementWithValue}
-                elementHeritage={props.etape.contenu[sectionWithValue.id][elementWithValue.id]}
+                elementHeritage={props.etape.contenu[sectionWithValue.id]![elementWithValue.id]!}
                 sectionId={sectionWithValue.id}
                 etapeDate={props.etape.date}
                 updateElement={updateElement(sectionWithValue.id, elementWithValue.id)}

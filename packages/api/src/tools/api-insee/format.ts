@@ -9,6 +9,7 @@ import { voies } from './definitions/voies'
 import { checkCodePostal } from 'camino-common/src/static/departement'
 import { toCaminoDate } from 'camino-common/src/date'
 import { entrepriseIdValidator } from 'camino-common/src/entreprise'
+import { isNotNullNorUndefined, isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools'
 
 interface IApiSirenNomFormat extends IApiSirenUnionUniteLegalePeriodeEtablissmentUnite, IApiSirenUnionUniteLegaleEtablissmentUnite {}
 
@@ -64,7 +65,7 @@ const entrepriseEtablissementFormat = (uniteLegale: IApiSirenUniteLegale, uniteL
     legalSiret,
   } as IEntrepriseEtablissement
 
-  if (uniteLegalePeriode.dateFin) {
+  if (isNotNullNorUndefined(uniteLegalePeriode.dateFin)) {
     etablissement.dateFin = toCaminoDate(uniteLegalePeriode.dateFin)
   }
 
@@ -74,7 +75,7 @@ const entrepriseEtablissementFormat = (uniteLegale: IApiSirenUniteLegale, uniteL
 export const entrepriseEtablissementsFormat = (uniteLegale: IApiSirenUniteLegale) => {
   // periodesUniteLegale est un tableau
   // classé par ordre de fin chronologique décroissant
-  if (!uniteLegale.periodesUniteLegale || !uniteLegale.periodesUniteLegale.length) {
+  if (isNullOrUndefinedOrEmpty(uniteLegale.periodesUniteLegale)) {
     return []
   }
 

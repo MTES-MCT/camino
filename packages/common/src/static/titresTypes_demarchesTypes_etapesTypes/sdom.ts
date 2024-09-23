@@ -18,7 +18,7 @@ export const documentTypeIdsBySdomZonesGet = (sdomZones: DeepReadonly<SDOMZoneId
     demarcheTypeId === DEMARCHES_TYPES_IDS.Octroi &&
     titreTypeId === toTitreTypeId(TITRES_TYPES_TYPES_IDS.AUTORISATION_D_EXPLOITATION, DOMAINES_IDS.METAUX)
   ) {
-    if (sdomZones?.find(id => id === SDOMZoneIds.Zone2)) {
+    if (sdomZones.find(id => id === SDOMZoneIds.Zone2)) {
       // dans la zone 2 du SDOM les documents suivants sont obligatoires:
       documentTypeIds.push(DOCUMENTS_TYPES_IDS.noticeDImpactRenforcee)
       documentTypeIds.push(DOCUMENTS_TYPES_IDS.justificationDExistenceDuGisement)

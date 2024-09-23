@@ -153,7 +153,7 @@ describe('generateQgisToken', () => {
 
 describe('utilisateurCreer', () => {
   test('ne peut pas créer un utilisateur sans keycloak_id', async () => {
-    expect(async () =>
+    await expect(
       knex('utilisateurs').insert({
         id: 'userWithoutKeycloakId',
         prenom: 'userWithoutKeycloak',

@@ -4,7 +4,7 @@ import { UniteId, Unites } from 'camino-common/src/static/unites'
 import { getPeriode } from 'camino-common/src/static/frequence'
 import { ActivitesStatuts } from 'camino-common/src/static/activitesStatuts'
 import { Section } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections'
-import { DeepReadonly, isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools'
+import { DeepReadonly, isNullOrUndefined } from 'camino-common/src/typescript-tools'
 import { Pool } from 'pg'
 import { getCommunesIndex } from '../../../database/queries/communes'
 import { ActivitesTypes } from 'camino-common/src/static/activitesTypes'
@@ -22,7 +22,7 @@ const titreActiviteContenuFormat = (contenu: IContenu, sections: DeepReadonly<Se
           key += ` (${Unites[uniteId].nom})`
         }
       }
-      const value = isNotNullNorUndefined(contenu[section.id]) ? contenu[section.id][element.id] : undefined
+      const value = contenu[section.id]?.[element.id]
 
       if (value === undefined) {
         resElements[key] = ['number', 'integer'].includes(element.type) ? 0 : ''
@@ -50,7 +50,7 @@ export const titresActivitesFormatTable = async (pool: Pool, activites: ITitreAc
 
   return activites.map(activite => {
     const activiteType = ActivitesTypes[activite.typeId]
-    const contenu = activite.contenu && activite.sections?.length ? titreActiviteContenuFormat(activite.contenu, activite.sections) : {}
+    const contenu = activite.contenu && activite.sections.length ? titreActiviteContenuFormat(activite.contenu, activite.sections) : {}
 
     if (isNullOrUndefined(activite.titre)) {
       throw new Error(`le titre n’est pas chargé`)

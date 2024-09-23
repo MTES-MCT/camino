@@ -2,11 +2,11 @@ import { CommuneId } from './static/communes'
 import { FacadeComputed, FacadesMaritimes, getDepartementsBySecteurs, getFacade, getFacadesComputed, SecteursMaritimes } from './static/facades'
 import { DepartementId, DepartementLabel, Departements, toDepartementId } from './static/departement'
 import { RegionId, RegionLabel, Regions } from './static/region'
-import { DeepReadonly, onlyUnique } from './typescript-tools'
+import { DeepReadonly, onlyUnique, RecordPartial } from './typescript-tools'
 import { PaysId } from './static/pays'
 
 export const territoiresFind = (
-  communesWithName: Record<CommuneId, string>,
+  communesWithName: RecordPartial<CommuneId, string>,
   communes?: DeepReadonly<{ id: CommuneId; surface?: number | null }[]> | null | undefined,
   secteursMaritime?: SecteursMaritimes[] | null | undefined
 ): { communes: { nom: string; surface: null | number }[]; departements: DepartementLabel[]; regions: RegionLabel[]; facades: FacadeComputed[] } => {

@@ -58,7 +58,7 @@ export const authBasic =
         }
 
         // on fait comme si le JWT avait été déchiffré pour que l’utilisateur soit chargé par userLoader
-        const jwtUser: JWTUser = { email: user.email ?? undefined, family_name: user.nom ?? undefined, given_name: user.prenom ?? undefined, sub: user.keycloak_id ?? undefined }
+        const jwtUser: JWTUser = { email: user.email, family_name: user.nom, given_name: user.prenom ?? undefined, sub: user.keycloak_id ?? undefined }
         req.auth = jwtUser
         next()
 

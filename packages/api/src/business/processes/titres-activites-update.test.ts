@@ -99,7 +99,7 @@ describe("activités d'un titre", () => {
     titresGetMock.mockResolvedValue(titresSansActivite)
     titreActiviteTypeCheckMock.mockReturnValue(true)
     anneesBuildMock.mockReturnValue([2018])
-    titreActivitesBuildMock.mockReturnValue([{ titreId: titresSansActivite[0].id }] as ITitreActivite[])
+    titreActivitesBuildMock.mockResolvedValue([{ titreId: titresSansActivite[0].id }] as ITitreActivite[])
     getEntrepriseUtilisateursMock.mockResolvedValue([
       { email: 'email', role: 'entreprise' },
       { email: 'toto', role: 'bureau d’études' },
@@ -120,7 +120,7 @@ describe("activités d'un titre", () => {
     titresGetMock.mockResolvedValue(titresToutesActivites)
     titreActiviteTypeCheckMock.mockReturnValue(true)
     anneesBuildMock.mockReturnValue([2018])
-    titreActivitesBuildMock.mockReturnValue([])
+    titreActivitesBuildMock.mockResolvedValue([])
 
     const titresActivitesNew = await titresActivitesUpdate(undefined as unknown as Pool)
 

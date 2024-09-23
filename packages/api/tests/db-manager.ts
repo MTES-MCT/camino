@@ -136,7 +136,7 @@ class DbManager {
 
   public async truncateSchema() {
     DbManager.checkKnexInstance(this.knexInstance)
-    const tables = (await this.knexInstance('pg_tables').select('tablename').where('schemaname', 'public')) ?? []
+    const tables = await this.knexInstance('pg_tables').select('tablename').where('schemaname', 'public')
 
     await this.knexInstance.raw(
       `TRUNCATE TABLE "${tables

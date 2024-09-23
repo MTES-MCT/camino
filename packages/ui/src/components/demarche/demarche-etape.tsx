@@ -193,7 +193,7 @@ export const DemarcheEtape = defineComponent<Props>(props => {
           }
         }
 
-        contenu[section.id][element.id] = { value: elementValue, heritee: false, etapeHeritee: null }
+        contenu[section.id]![element.id] = { value: elementValue, heritee: false, etapeHeritee: null }
       })
     })
     return canDeposeEtape(

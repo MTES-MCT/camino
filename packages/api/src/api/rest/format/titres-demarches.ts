@@ -32,7 +32,7 @@ const etapesDatesStatutsBuild = (titreDemarche: ITitreDemarche) => {
         return etapesDatesStatuts
       }
 
-      etapesDatesStatuts[type.nom] = etape?.date ?? ''
+      etapesDatesStatuts[type.nom] = etape.date
 
       // si le type d'étape a plus d'un statut possible
       // (ex : fav/def ou acc/rej)
@@ -82,7 +82,7 @@ export const titresDemarchesFormatTable = async (pool: Pool, titresDemarches: IT
       description: titreDemarche.description,
       'surface km2': etapeWithPoints ? etapeWithPoints.surface : '',
       titre_references: titre.references?.map(r => `${ReferencesTypes[r.referenceTypeId].nom} : ${r.nom}`).join(';'),
-      titulaires_noms: (etapeWithTitulaires?.titulaireIds ?? []).map(id => entreprisesIndex[id].nom ?? '').join(';'),
+      titulaires_noms: (etapeWithTitulaires?.titulaireIds ?? []).map(id => entreprisesIndex[id].nom).join(';'),
       titulaires_adresses: (etapeWithTitulaires?.titulaireIds ?? []).map(id => `${entreprisesIndex[id].adresse} ${entreprisesIndex[id].code_postal} ${entreprisesIndex[id].commune}`).join(';'),
       titulaires_legal: (etapeWithTitulaires?.titulaireIds ?? []).map(id => entreprisesIndex[id].legal_etranger ?? entreprisesIndex[id].legal_siren).join(';'),
       amodiataires_noms: (etapeWithAmodiataires?.amodiataireIds ?? []).map(id => entreprisesIndex[id].nom).join(';'),

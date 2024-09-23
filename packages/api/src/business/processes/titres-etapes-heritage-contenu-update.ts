@@ -7,6 +7,7 @@ import { DeepReadonly, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/t
 import { DemarcheId } from 'camino-common/src/demarche'
 import { Pool } from 'pg'
 import { getDemarches } from './titres-etapes-heritage-contenu-update.queries'
+import { EtapeId } from 'camino-common/src/etape'
 
 export const titresEtapesHeritageContenuUpdate = async (pool: Pool, user: DeepReadonly<UserNotNull>, demarcheId?: DemarcheId): Promise<string[]> => {
   console.info()
@@ -21,15 +22,15 @@ export const titresEtapesHeritageContenuUpdate = async (pool: Pool, user: DeepRe
   const titresEtapesIdsUpdated = [] as string[]
 
   for (const titreDemarche of Object.values(titresDemarches)) {
-    if (titreDemarche.etapes?.length) {
+    if (titreDemarche.etapes.length) {
       const etapeSectionsDictionary = titreDemarche.etapes.reduce<{
-        [etapeId: string]: DeepReadonly<Section[]>
+        [etapeId in EtapeId]?: DeepReadonly<Section[]>
       }>((acc, e) => {
         acc[e.id] = getSections(titreDemarche.titreTypeId, titreDemarche.typeId, e.typeId)
 
         return acc
       }, {})
-      const titreEtapes = titreEtapesSortAscByOrdre(titreDemarche.etapes?.filter(e => etapeSectionsDictionary[e.id]) ?? [])
+      const titreEtapes = titreEtapesSortAscByOrdre(titreDemarche.etapes.filter(e => etapeSectionsDictionary[e.id]))
 
       if (isNotNullNorUndefinedNorEmpty(titreEtapes)) {
         for (let index = 0; index < titreEtapes.length; index++) {

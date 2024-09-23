@@ -10,7 +10,7 @@ import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { DemarcheTypeId, TravauxIds } from 'camino-common/src/static/demarchesTypes'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
 import { isEtapeStatusRejete } from 'camino-common/src/static/etapesStatuts'
-import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
+import { isNotNullNorUndefined, RecordPartial } from 'camino-common/src/typescript-tools'
 
 const titreEtapesDecisivesCommunesTypes: EtapeTypeId[] = ['css', 'abd', 'and']
 
@@ -216,41 +216,41 @@ const titreDemarcheDemandeStatutIdFind = (titreDemarcheEtapes: Pick<ITitreEtape,
   return DemarchesStatutsIds.Indetermine
 }
 
+const statuts: RecordPartial<EtapeTypeId, DemarcheStatutId> = {
+  [Travaux.DemandeAutorisationOuverture]: DemarchesStatutsIds.Depose,
+  [Travaux.DeclarationOuverture]: DemarchesStatutsIds.Depose,
+  [Travaux.DeclarationArret]: DemarchesStatutsIds.Depose,
+  [Travaux.DepotDemande]: DemarchesStatutsIds.Depose,
+  [Travaux.DemandeComplements]: DemarchesStatutsIds.EnInstruction,
+  [Travaux.ReceptionComplements]: DemarchesStatutsIds.EnInstruction,
+  [Travaux.Recevabilite]: DemarchesStatutsIds.EnInstruction,
+  [Travaux.AvisReception]: DemarchesStatutsIds.EnInstruction,
+  [Travaux.SaisineAutoriteEnvironmentale]: DemarchesStatutsIds.EnInstruction,
+  [Travaux.AvisAutoriteEnvironmentale]: DemarchesStatutsIds.EnInstruction,
+  [Travaux.ArretePrefectoralSursis]: DemarchesStatutsIds.EnInstruction,
+  [Travaux.AvisDesServicesEtCommissionsConsultatives]: DemarchesStatutsIds.EnInstruction,
+  [Travaux.AvisRapportDirecteurREAL]: DemarchesStatutsIds.EnInstruction,
+  [Travaux.TransPrescriptionsDemandeur]: DemarchesStatutsIds.EnInstruction,
+  [Travaux.EnquetePublique]: DemarchesStatutsIds.EnInstruction,
+  [Travaux.AvisPrescriptionsDemandeur]: DemarchesStatutsIds.EnInstruction,
+  [Travaux.ArretePrescriptionComplementaire]: DemarchesStatutsIds.EnInstruction,
+  [Travaux.ArretePrefectDonneActe1]: DemarchesStatutsIds.EnInstruction,
+  [Travaux.MemoireFinTravaux]: DemarchesStatutsIds.EnInstruction,
+  [Travaux.Recolement]: DemarchesStatutsIds.EnInstruction,
+  [Travaux.ArreteOuvertureTravauxMiniers]: DemarchesStatutsIds.Accepte,
+  [Travaux.DonneActeDeclaration]: DemarchesStatutsIds.Accepte,
+  [Travaux.Abandon]: DemarchesStatutsIds.Desiste,
+  [Travaux.ArretePrefectDonneActe2]: DemarchesStatutsIds.FinPoliceMines,
+  [Travaux.PorterAConnaissance]: DemarchesStatutsIds.FinPoliceMines,
+  [Travaux.DecisionAdmin]: DemarchesStatutsIds.Indetermine,
+  [Travaux.PubliDecisionRecueilActesAdmin]: DemarchesStatutsIds.Indetermine,
+} as const satisfies { [key in (typeof Travaux)[keyof typeof Travaux]]: DemarcheStatutId }
+
 const titreDemarcheTravauxStatutIdFind = (titreDemarcheEtapes: Pick<ITitreEtape, 'ordre' | 'typeId'>[], demarcheTypeId: string): DemarcheStatutId => {
   if (titreDemarcheEtapes.length === 0) {
     return DemarchesStatutsIds.Indetermine
   }
   const titreEtapesRecent = titreEtapesSortDescByOrdre(titreDemarcheEtapes)[0]
-
-  const statuts: {
-    [travauxEtapeType: string]: DemarcheStatutId
-  } = {
-    [Travaux.DemandeAutorisationOuverture]: DemarchesStatutsIds.Depose,
-    [Travaux.DeclarationOuverture]: DemarchesStatutsIds.Depose,
-    [Travaux.DeclarationArret]: DemarchesStatutsIds.Depose,
-    [Travaux.DepotDemande]: DemarchesStatutsIds.Depose,
-    [Travaux.DemandeComplements]: DemarchesStatutsIds.EnInstruction,
-    [Travaux.ReceptionComplements]: DemarchesStatutsIds.EnInstruction,
-    [Travaux.Recevabilite]: DemarchesStatutsIds.EnInstruction,
-    [Travaux.AvisReception]: DemarchesStatutsIds.EnInstruction,
-    [Travaux.SaisineAutoriteEnvironmentale]: DemarchesStatutsIds.EnInstruction,
-    [Travaux.AvisAutoriteEnvironmentale]: DemarchesStatutsIds.EnInstruction,
-    [Travaux.ArretePrefectoralSursis]: DemarchesStatutsIds.EnInstruction,
-    [Travaux.AvisDesServicesEtCommissionsConsultatives]: DemarchesStatutsIds.EnInstruction,
-    [Travaux.AvisRapportDirecteurREAL]: DemarchesStatutsIds.EnInstruction,
-    [Travaux.TransPrescriptionsDemandeur]: DemarchesStatutsIds.EnInstruction,
-    [Travaux.EnquetePublique]: DemarchesStatutsIds.EnInstruction,
-    [Travaux.AvisPrescriptionsDemandeur]: DemarchesStatutsIds.EnInstruction,
-    [Travaux.ArretePrescriptionComplementaire]: DemarchesStatutsIds.EnInstruction,
-    [Travaux.ArretePrefectDonneActe1]: DemarchesStatutsIds.EnInstruction,
-    [Travaux.MemoireFinTravaux]: DemarchesStatutsIds.EnInstruction,
-    [Travaux.Recolement]: DemarchesStatutsIds.EnInstruction,
-    [Travaux.ArreteOuvertureTravauxMiniers]: DemarchesStatutsIds.Accepte,
-    [Travaux.DonneActeDeclaration]: DemarchesStatutsIds.Accepte,
-    [Travaux.Abandon]: DemarchesStatutsIds.Desiste,
-    [Travaux.ArretePrefectDonneActe2]: DemarchesStatutsIds.FinPoliceMines,
-    [Travaux.PorterAConnaissance]: DemarchesStatutsIds.FinPoliceMines,
-  }
 
   if (titreEtapesRecent.typeId === Travaux.PubliDecisionRecueilActesAdmin) {
     switch (demarcheTypeId) {
@@ -261,7 +261,7 @@ const titreDemarcheTravauxStatutIdFind = (titreDemarcheEtapes: Pick<ITitreEtape,
     }
   }
 
-  return statuts[titreEtapesRecent.typeId] || DemarchesStatutsIds.Indetermine
+  return statuts[titreEtapesRecent.typeId] ?? DemarchesStatutsIds.Indetermine
 }
 
 /**
@@ -271,7 +271,12 @@ const titreDemarcheTravauxStatutIdFind = (titreDemarcheEtapes: Pick<ITitreEtape,
  * @param titreTypeId - id du type de titre
  */
 
-export const titreDemarcheStatutIdFind = (demarcheTypeId: DemarcheTypeId, titreDemarcheEtapes: TitreEtapeForMachine[], titreTypeId: TitreTypeId, demarcheId: DemarcheId): DemarcheStatutId => {
+export const titreDemarcheStatutIdFind = async (
+  demarcheTypeId: DemarcheTypeId,
+  titreDemarcheEtapes: TitreEtapeForMachine[],
+  titreTypeId: TitreTypeId,
+  demarcheId: DemarcheId
+): Promise<DemarcheStatutId> => {
   // si la démarche ne contient pas d'étapes
   // -> le statut est indétrminé
   if (!titreDemarcheEtapes.length) return DemarchesStatutsIds.Indetermine
@@ -284,7 +289,7 @@ export const titreDemarcheStatutIdFind = (demarcheTypeId: DemarcheTypeId, titreD
   const machine = machineFind(titreTypeId, demarcheTypeId, titreDemarcheEtapes, demarcheId)
 
   if (isNotNullNorUndefined(machine)) {
-    return machine.demarcheStatut(toMachineEtapes(titreDemarcheEtapes)).demarcheStatut
+    return (await machine.demarcheStatut(toMachineEtapes(titreDemarcheEtapes))).demarcheStatut
   }
 
   //  si la démarche fait l’objet d’une demande

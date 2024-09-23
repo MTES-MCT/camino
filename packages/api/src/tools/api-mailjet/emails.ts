@@ -10,7 +10,7 @@ const from = {
   name: 'Camino - le cadastre minier',
 }
 
-export const mailjetSend = async (emails: string[], options: Record<string, any>) => {
+export const mailjetSend = async (emails: string[], options: Record<string, any>): Promise<void> => {
   try {
     if (!Array.isArray(emails)) {
       throw new Error(`un tableau d'emails est attendu ${emails}`)
@@ -53,12 +53,12 @@ export const mailjetSend = async (emails: string[], options: Record<string, any>
   }
 }
 
-export const emailsSend = async (emails: string[], subject: string, html: string) => {
+export const emailsSend = async (emails: string[], subject: string, html: string): Promise<void> => {
   if (config().NODE_ENV !== 'production' || config().ENV !== 'prod') {
     html = `<p style="color: red">destinataire(s): ${emails.join(', ')} | env: ${config().ENV} | node: ${config().NODE_ENV}</p> ${html}`
   }
 
-  mailjetSend(emails, {
+  return mailjetSend(emails, {
     Subject: `[Camino] ${subject}`,
     'Html-part': html,
     'Text-part': convert(html, {
@@ -67,8 +67,8 @@ export const emailsSend = async (emails: string[], subject: string, html: string
   })
 }
 
-export const emailsWithTemplateSend = async (emails: string[], templateId: EmailTemplateId, params: Record<string, string>) => {
-  mailjetSend(emails, {
+export const emailsWithTemplateSend = async (emails: string[], templateId: EmailTemplateId, params: Record<string, string>): Promise<void> => {
+  return mailjetSend(emails, {
     'Mj-TemplateID': templateId,
     'Mj-TemplateLanguage': true,
     Vars: params,

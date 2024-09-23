@@ -95,7 +95,7 @@ export const titreSlugAndRelationsUpdate = async (titre: ITitre): Promise<{ hasC
 
   const titreWithTheSameSlug = await titresGet({ slugs: [slug] }, { fields: { id: {} } }, userSuper)
 
-  if (titreWithTheSameSlug?.length > 1 || (titreWithTheSameSlug?.length === 1 && titreWithTheSameSlug[0].id !== titre.id)) {
+  if (titreWithTheSameSlug.length > 1 || (titreWithTheSameSlug.length === 1 && titreWithTheSameSlug[0].id !== titre.id)) {
     if (isNotNullNorUndefined(titre.slug) && titre.slug.startsWith(slug)) {
       slug = titre.slug
     } else {

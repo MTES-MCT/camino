@@ -14,7 +14,7 @@ import { DeepReadonly, isNotNullNorUndefined, isNullOrUndefined } from 'camino-c
 import { FlattenEtape } from 'camino-common/src/etape-form'
 import { flattenContenuToSimpleContenu } from 'camino-common/src/sections'
 
-export const titreEtapeUpdationValidate = (
+export const titreEtapeUpdationValidate = async (
   etape: Pick<Partial<FlattenEtape>, 'id'> & Omit<FlattenEtape, 'id'>,
   titreDemarche: ITitreDemarche,
   titre: Pick<ITitre, 'typeId' | 'demarches'>,
@@ -27,7 +27,7 @@ export const titreEtapeUpdationValidate = (
   daeDocument: Omit<GetEtapeDocumentsByEtapeIdDaeDocument, 'id'> | null,
   aslDocument: Omit<GetEtapeDocumentsByEtapeIdAslDocument, 'id'> | null,
   titreEtapeOld?: ITitreEtape
-): string[] => {
+): Promise<string[]> => {
   const errors: string[] = []
   const sections = getSections(titre.typeId, titreDemarche.typeId, etape.typeId)
 
@@ -44,11 +44,11 @@ export const titreEtapeUpdationValidate = (
     }
   }
 
-  if (!etape.titulaires.heritee && !canEditTitulaires(titre.typeId, user) && entreprisesHaveChanged(etape.titulaires.value ?? [], titreEtapeOld?.titulaireIds ?? [])) {
+  if (!etape.titulaires.heritee && !canEditTitulaires(titre.typeId, user) && entreprisesHaveChanged(etape.titulaires.value, titreEtapeOld?.titulaireIds ?? [])) {
     errors.push("impossible d'éditer les titulaires")
   }
 
-  if (!etape.amodiataires.heritee && !canEditAmodiataires(titre.typeId, user) && entreprisesHaveChanged(etape.amodiataires.value ?? [], titreEtapeOld?.amodiataireIds ?? [])) {
+  if (!etape.amodiataires.heritee && !canEditAmodiataires(titre.typeId, user) && entreprisesHaveChanged(etape.amodiataires.value, titreEtapeOld?.amodiataireIds ?? [])) {
     errors.push(`une autorisation ${titre.typeId === 'arm' ? 'de recherche' : "d'exploitation"} ne peut pas inclure d'amodiataires`)
   }
 
@@ -93,7 +93,7 @@ export const titreEtapeUpdationValidate = (
   return titreEtapeUpdationBusinessValidate(etape, titreDemarche, titre, isNotNullNorUndefined(communes) ? communes.map(communeId => ({ id: communeId })) : communes)
 }
 
-const titreEtapeUpdationBusinessValidate = (
+const titreEtapeUpdationBusinessValidate = async (
   titreEtape: Pick<Partial<FlattenEtape>, 'id'> & Pick<FlattenEtape, 'statutId' | 'typeId' | 'date' | 'contenu' | 'perimetre' | 'isBrouillon'>,
   titreDemarche: ITitreDemarche,
   titre: Pick<ITitre, 'typeId' | 'demarches'>,
@@ -102,7 +102,7 @@ const titreEtapeUpdationBusinessValidate = (
   const errors = []
   // 1. la date de l'étape est possible
   // en fonction de l'ordre des types d'étapes de la démarche
-  const { valid, errors: demarcheUpdatedErrors } = titreDemarcheUpdatedEtatValidate(
+  const { valid, errors: demarcheUpdatedErrors } = await titreDemarcheUpdatedEtatValidate(
     titreDemarche.typeId,
     titre,
     {
@@ -126,5 +126,5 @@ const entreprisesHaveChanged = (newValue: EntrepriseId[], oldValue: EntrepriseId
     return true
   }
 
-  return newValue.some((v, i) => oldValue?.[i] !== v)
+  return newValue.some((v, i) => oldValue[i] !== v)
 }

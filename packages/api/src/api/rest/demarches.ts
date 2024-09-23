@@ -108,9 +108,6 @@ export const demarcheCreer: RestNewPostCall<'/rest/demarches'> = ({ pool, user, 
         if (titre.administrationsLocales === undefined) {
           throw new Error('les administrations locales doivent être chargées')
         }
-        if (!titre.titreStatutId) {
-          throw new Error('le statut du titre est obligatoire')
-        }
 
         const demarches = await getDemarchesByTitreId(pool, demarche.titreId)
 

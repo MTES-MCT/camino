@@ -54,7 +54,7 @@ export const updateActiviteQuery = async (
   titreTypeId: SimplePromiseFn<TitreTypeId>,
   titresAdministrationsLocales: SimplePromiseFn<AdministrationId[]>,
   entreprisesTitulairesOuAmodiataires: SimplePromiseFn<EntrepriseId[]>
-) => {
+): Promise<void> => {
   if (user === null || user === undefined || !(await canEditActivite(user, titreTypeId, titresAdministrationsLocales, entreprisesTitulairesOuAmodiataires, ACTIVITES_STATUTS_IDS.EN_CONSTRUCTION))) {
     throw new Error("Interdiction d'éditer une activité")
   }

@@ -14,7 +14,7 @@ export function isNotNullNorUndefinedNorEmpty(value: string | DeepReadonly<any[]
       return isNonEmptyArray(value)
     }
   } else if (typeof value === 'string') {
-    return value !== null && value !== undefined && value.trim() !== ''
+    return value.trim() !== ''
   }
 
   return false
@@ -141,4 +141,8 @@ export const memoize = <T>(fn: SimplePromiseFn<T>): Memoized<T> => {
 
 export const stringArrayEquals = (array1: string[], array2: string[]): boolean => {
   return array1.length === array2.length && array1.every((value, index) => array2[index] === value)
+}
+
+export type RecordPartial<K extends keyof any, T> = {
+  [P in K]?: T
 }

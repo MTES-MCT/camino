@@ -130,7 +130,7 @@ export const isActiviteComplete = (
     errors.push(...sectionsWithValueCompleteValidate(sections_with_value))
   }
 
-  const documentsErrors = isActiviteDocumentsComplete(documents ?? [], activiteTypeId)
+  const documentsErrors = isActiviteDocumentsComplete(documents, activiteTypeId)
   if (!documentsErrors.valid) {
     errors.push(...documentsErrors.errors)
   }
@@ -154,7 +154,7 @@ export const isActiviteDocumentsComplete = (
   } else if (isNullOrUndefined(activiteDocumentType)) {
     return { valid: true }
   } else if (!activiteDocumentType.optionnel) {
-    if (!activiteDocuments?.find(d => d.activite_document_type_id === activiteDocumentType.documentTypeId)) {
+    if (!activiteDocuments.find(d => d.activite_document_type_id === activiteDocumentType.documentTypeId)) {
       errors.push(`le document "${activiteDocumentType.documentTypeId}" est obligatoire`)
     }
   }

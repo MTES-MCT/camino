@@ -268,7 +268,7 @@ export const titresDemarchesGet = async (
   )
 
   if (colonne) {
-    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions, @typescript-eslint/no-unnecessary-condition
     if (!titresDemarchesColonnes[colonne]) {
       throw new Error(`Colonne « ${colonne} » inconnue`)
     }

@@ -51,7 +51,7 @@ import { DeposeEtapePopup } from '../demarche/depose-etape-popup'
 import { EtapeAvisEdit } from './etape-avis-edit'
 import { EtapeTypeId, canBeBrouillon } from 'camino-common/src/static/etapesTypes'
 import { CoreEtapeCreationOrModification, GetEtapeHeritagePotentiel } from './etape-api-client'
-import { FlattenEtape, RestEtapeCreation } from 'camino-common/src/etape-form'
+import { FlattenedContenuElement, FlattenEtape, RestEtapeCreation } from 'camino-common/src/etape-form'
 import { AsyncData } from '@/api/client-rest'
 import { CaminoDate } from 'camino-common/src/date'
 import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts'
@@ -110,7 +110,7 @@ const mergeFlattenEtapeWithNewHeritage = (
     contenu: sections.reduce<DeepReadonly<FlattenEtape['contenu']>>((accSection, section) => {
       const newSection = section.elements.reduce<DeepReadonly<FlattenEtape['contenu'][string]>>((accElement, element) => {
         const elementHeritage = heritageData.heritageContenu[section.id]?.[element.id] ?? { actif: false, etape: null }
-        const currentHeritage: DeepReadonly<FlattenEtape['contenu'][string][string]> = etape.contenu[section.id]?.[element.id] ?? { value: null, heritee: true, etapeHeritee: null }
+        const currentHeritage: DeepReadonly<FlattenedContenuElement> = etape.contenu[section.id]?.[element.id] ?? { value: null, heritee: true, etapeHeritee: null }
 
         // L'héritage ne peut pas être activé si le champ est obligatoire et que la valeur du champ dans l'étape héritable est null
         const canHaveHeritage: boolean = element.optionnel || isNotNullNorUndefined(elementHeritage.etape?.contenu?.[section.id]?.[element.id])
@@ -374,8 +374,8 @@ export const EtapeEditForm = defineComponent<Props>(props => {
         contenu: Object.keys(etapeValue.contenu).reduce<DeepReadonly<RestEtapeCreation['contenu']>>((sectionsAcc, section) => {
           sectionsAcc = {
             ...sectionsAcc,
-            [section]: Object.keys(etapeValue.contenu[section]).reduce<DeepReadonly<RestEtapeCreation['contenu'][string]>>((elementsAcc, element) => {
-              elementsAcc = { ...elementsAcc, [element]: etapeValue.contenu[section][element].value }
+            [section]: Object.keys(etapeValue.contenu[section] ?? {}).reduce<DeepReadonly<RestEtapeCreation['contenu'][string]>>((elementsAcc, element) => {
+              elementsAcc = { ...elementsAcc, [element]: etapeValue.contenu[section]?.[element]?.value }
 
               return elementsAcc
             }, {}),
@@ -386,8 +386,8 @@ export const EtapeEditForm = defineComponent<Props>(props => {
         heritageContenu: Object.keys(etapeValue.contenu).reduce<DeepReadonly<RestEtapeCreation['heritageContenu']>>((sectionsAcc, section) => {
           return {
             ...sectionsAcc,
-            [section]: Object.keys(etapeValue.contenu[section]).reduce<DeepReadonly<RestEtapeCreation['heritageContenu'][string]>>((elementsAcc, element) => {
-              return { ...elementsAcc, [element]: { actif: etapeValue.contenu[section][element].heritee } }
+            [section]: Object.keys(etapeValue.contenu[section] ?? {}).reduce<DeepReadonly<RestEtapeCreation['heritageContenu'][string]>>((elementsAcc, element) => {
+              return { ...elementsAcc, [element]: { actif: etapeValue.contenu[section]?.[element]?.heritee ?? false } }
             }, {}),
           }
         }, {}),

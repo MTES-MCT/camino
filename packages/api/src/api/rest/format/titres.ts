@@ -1,6 +1,6 @@
 import { ITitre, Index } from '../../../types'
 import { SubstancesLegale } from 'camino-common/src/static/substancesLegales'
-import { isNotNullNorUndefined, isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools'
+import { isNotNullNorUndefined, isNullOrUndefinedOrEmpty, RecordPartial } from 'camino-common/src/typescript-tools'
 import { TitresStatuts } from 'camino-common/src/static/titresStatuts'
 import { ReferencesTypes } from 'camino-common/src/static/referencesTypes'
 import { getDomaineId, getTitreTypeType } from 'camino-common/src/static/titresTypes'
@@ -38,7 +38,7 @@ const titreContenuTableFormat = (titre: ITitre): Record<string, string> => {
 
   const demarche = orderedDemarches[0]
   const etapes = (demarche.etapes ?? []).map(etape => {
-    const sections = getSections(titre.typeId, demarche?.typeId, etape.typeId)
+    const sections = getSections(titre.typeId, demarche.typeId, etape.typeId)
       .map(section => ({ ...section, elements: section.elements.filter(element => !(etape.heritageContenu?.[section.id]?.[element.id]?.actif ?? false)) }))
       .filter(section => section.elements.length > 0)
 
@@ -56,7 +56,7 @@ export const titresTableFormat = async (pool: Pool, titres: ITitre[]): Promise<R
     titres.flatMap(titre => titre.communes?.map(({ id }) => id) ?? [])
   )
   const entreprises = await getEntreprises(pool)
-  const entreprisesIndex = entreprises.reduce<Record<EntrepriseId, GetEntreprises>>((acc, entreprise) => {
+  const entreprisesIndex = entreprises.reduce<RecordPartial<EntrepriseId, GetEntreprises>>((acc, entreprise) => {
     acc[entreprise.id] = entreprise
 
     return acc
@@ -90,7 +90,7 @@ export const titresTableFormat = async (pool: Pool, titres: ITitre[]): Promise<R
       date_fin: dateFin,
       date_demande: dateDemande,
       statut: isNotNullNorUndefined(titre.titreStatutId) ? TitresStatuts[titre.titreStatutId].nom : '',
-      substances: titre.substances?.map(substanceId => SubstancesLegale[substanceId].nom)?.join(separator),
+      substances: titre.substances?.map(substanceId => SubstancesLegale[substanceId].nom).join(separator),
       'surface renseignee km2': titre.surface,
       'communes (surface calculee km2)': communes.map(({ nom, surface }) => `${nom} ${surface !== null ? ` (${surface})` : ''}`).join(separator),
       forets: titre.forets?.map(fId => Forets[fId].nom).join(separator),
@@ -98,11 +98,11 @@ export const titresTableFormat = async (pool: Pool, titres: ITitre[]): Promise<R
       departements: departements.join(separator),
       regions: regions.join(separator),
       administrations_noms: titre.administrations?.map(id => Administrations[id].nom).join(separator),
-      titulaires_noms: titre.titulaireIds?.map(id => entreprisesIndex[id]?.nom ?? '').join(separator),
+      titulaires_noms: titre.titulaireIds?.map(id => entreprisesIndex[id]?.nom).join(separator),
       titulaires_adresses: titre.titulaireIds?.map(id => `${entreprisesIndex[id]?.adresse} ${entreprisesIndex[id]?.code_postal} ${entreprisesIndex[id]?.commune}`).join(separator),
       titulaires_legal: titre.titulaireIds?.map(id => entreprisesIndex[id]?.legal_etranger ?? entreprisesIndex[id]?.legal_siren).join(separator),
       titulaires_categorie: titre.titulaireIds?.map(id => entreprisesIndex[id]?.categorie ?? '').join(separator),
-      amodiataires_noms: titre.amodiataireIds?.map(id => entreprisesIndex[id]?.nom ?? '').join(separator),
+      amodiataires_noms: titre.amodiataireIds?.map(id => entreprisesIndex[id]?.nom).join(separator),
       amodiataires_adresses: titre.amodiataireIds?.map(id => `${entreprisesIndex[id]?.adresse} ${entreprisesIndex[id]?.code_postal} ${entreprisesIndex[id]?.commune}`).join(separator),
       amodiataires_legal: titre.amodiataireIds?.map(id => entreprisesIndex[id]?.legal_etranger ?? entreprisesIndex[id]?.legal_siren).join(separator),
       amodiataires_categorie: titre.amodiataireIds?.map(id => entreprisesIndex[id]?.categorie ?? '').join(separator),
@@ -117,8 +117,8 @@ export const titresTableFormat = async (pool: Pool, titres: ITitre[]): Promise<R
 }
 
 export const titreGeojsonPropertiesFormat = (
-  communesIndex: Record<CommuneId, string>,
-  entreprisesIndex: Record<EntrepriseId, GetEntreprises>,
+  communesIndex: RecordPartial<CommuneId, string>,
+  entreprisesIndex: RecordPartial<EntrepriseId, GetEntreprises>,
   titre: ITitre
 ): Record<string, string | (string | null)[] | { nom: string; surface: number }[] | number | null | undefined> => {
   if (!titre.secteursMaritime) {
@@ -139,17 +139,17 @@ export const titreGeojsonPropertiesFormat = (
     statut: isNotNullNorUndefined(titre.titreStatutId) ? TitresStatuts[titre.titreStatutId].nom : '',
     substances: titre.substances?.map(substanceId => SubstancesLegale[substanceId].nom) || null,
     surface_totale: titre.surface,
-    communes: titre.communes?.map(({ id }) => communesIndex[id]),
-    surface_par_communes: titre.communes?.map(({ id, surface }) => ({ nom: communesIndex[id], surface: Math.round((surface ?? 0) / 100) / 10000 })),
+    communes: titre.communes?.map(({ id }) => communesIndex[id] ?? null).filter(isNotNullNorUndefined),
+    surface_par_communes: titre.communes?.map(({ id, surface }) => ({ nom: communesIndex[id] ?? '', surface: Math.round((surface ?? 0) / 100) / 10000 })) ?? [],
     forets: titre.forets?.map(fId => Forets[fId].nom),
     facades_maritimes: getFacadesComputed(titre.secteursMaritime).map(({ facade }) => facade),
     departements,
     regions,
     administrations_noms: titre.administrations?.map(id => Administrations[id].nom),
-    titulaires_noms: titre.titulaireIds?.map(id => entreprisesIndex[id]?.nom) || null,
-    titulaires_legal: titre.titulaireIds?.map(id => entreprisesIndex[id]?.legal_etranger ?? entreprisesIndex[id]?.legal_siren) || null,
-    amodiataires_noms: titre.amodiataireIds?.map(id => entreprisesIndex[id]?.nom) || null,
-    amodiataires_legal: titre.amodiataireIds?.map(id => entreprisesIndex[id]?.legal_etranger ?? entreprisesIndex[id]?.legal_siren) || null,
+    titulaires_noms: titre.titulaireIds?.map(id => entreprisesIndex[id]?.nom ?? '') ?? null,
+    titulaires_legal: titre.titulaireIds?.map(id => entreprisesIndex[id]?.legal_etranger ?? entreprisesIndex[id]?.legal_siren ?? '') ?? [],
+    amodiataires_noms: titre.amodiataireIds?.map(id => entreprisesIndex[id]?.nom ?? '') ?? [],
+    amodiataires_legal: titre.amodiataireIds?.map(id => entreprisesIndex[id]?.legal_etranger ?? entreprisesIndex[id]?.legal_siren ?? '') ?? [],
     references: titre.references && titre.references.map(reference => `${ReferencesTypes[reference.referenceTypeId].nom}: ${reference.nom}`),
     ...titreContenuTableFormat(titre),
   }

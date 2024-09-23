@@ -213,10 +213,11 @@ export const restWithPool = (dbPool: Pool): Router => {
       const maRoute = restRouteImplementations[route]
       if ('getCall' in maRoute) {
         console.info(`GET ${route}`)
-        rest.get(route, restCatcher(maRoute.getCall(dbPool)))
+        rest.get(route, restCatcher(maRoute.getCall(dbPool))) // eslint-disable-line @typescript-eslint/no-misused-promises
       }
       if ('newGetCall' in maRoute) {
         console.info(`GET ${route}`)
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises
         rest.get(route, async (req: CaminoRequest, res: express.Response, _next: express.NextFunction) => {
           try {
             const call = Effect.Do.pipe(
@@ -271,11 +272,12 @@ export const restWithPool = (dbPool: Pool): Router => {
       }
       if ('postCall' in maRoute) {
         console.info(`POST ${route}`)
-        rest.post(route, restCatcherWithMutation('post', maRoute.postCall(dbPool), dbPool))
+        rest.post(route, restCatcherWithMutation('post', maRoute.postCall(dbPool), dbPool)) // eslint-disable-line @typescript-eslint/no-misused-promises
       }
 
       if ('newPostCall' in maRoute) {
         console.info(`POST ${route}`)
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises
         rest.post(route, async (req: CaminoRequest, res: express.Response, _next: express.NextFunction) => {
           try {
             const call = Effect.Do.pipe(
@@ -341,22 +343,22 @@ export const restWithPool = (dbPool: Pool): Router => {
 
       if ('putCall' in maRoute) {
         console.info(`PUT ${route}`)
-        rest.put(route, restCatcherWithMutation('put', maRoute.putCall(dbPool), dbPool))
+        rest.put(route, restCatcherWithMutation('put', maRoute.putCall(dbPool), dbPool)) // eslint-disable-line @typescript-eslint/no-misused-promises
       }
 
       if ('deleteCall' in maRoute) {
         console.info(`delete ${route}`)
-        rest.delete(route, restCatcherWithMutation('delete', maRoute.deleteCall(dbPool), dbPool))
+        rest.delete(route, restCatcherWithMutation('delete', maRoute.deleteCall(dbPool), dbPool)) // eslint-disable-line @typescript-eslint/no-misused-promises
       }
 
       if ('downloadCall' in maRoute) {
         console.info(`download ${route}`)
-        rest.get(route, restDownload(maRoute.downloadCall(dbPool)))
+        rest.get(route, restDownload(maRoute.downloadCall(dbPool))) // eslint-disable-line @typescript-eslint/no-misused-promises
       }
 
       if ('newDownloadCall' in maRoute) {
         console.info(`newDownload ${route}`)
-        rest.get(route, restNewDownload(dbPool, maRoute.newDownloadCall))
+        rest.get(route, restNewDownload(dbPool, maRoute.newDownloadCall)) // eslint-disable-line @typescript-eslint/no-misused-promises
       }
     })
 

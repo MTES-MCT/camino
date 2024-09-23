@@ -88,7 +88,7 @@ const titreARM: Pick<ITitre, 'typeId' | 'demarches'> = {
   demarches: [titreDemarche],
 }
 describe('valide l’étape avant de l’enregistrer', () => {
-  test("une ARM ou une AXM ne peuvent pas recevoir d'amodiataires", () => {
+  test("une ARM ou une AXM ne peuvent pas recevoir d'amodiataires", async () => {
     // ARM
     const titreEtape: FlattenEtape = {
       id: etapeIdValidator.parse('etapeId'),
@@ -140,7 +140,7 @@ describe('valide l’étape avant de l’enregistrer', () => {
       typeId: 'mfr',
     }
 
-    let errors = titreEtapeUpdationValidate(titreEtape, titreDemarche, titreARM, [], [], [], [], [], userSuper, null, null)
+    let errors = await titreEtapeUpdationValidate(titreEtape, titreDemarche, titreARM, [], [], [], [], [], userSuper, null, null)
     expect(errors).toMatchInlineSnapshot(`
       [
         "impossible d’éditer la date de début",
@@ -161,7 +161,7 @@ describe('valide l’étape avant de l’enregistrer', () => {
       typeId: 'axm',
     }
 
-    errors = titreEtapeUpdationValidate(titreEtape, titreDemarche, titreAxm, [], [], [], [], [], userSuper, null, null)
+    errors = await titreEtapeUpdationValidate(titreEtape, titreDemarche, titreAxm, [], [], [], [], [], userSuper, null, null)
     expect(errors).toMatchInlineSnapshot(`
       [
         "impossible d’éditer la date de début",
@@ -181,16 +181,16 @@ describe('valide l’étape avant de l’enregistrer', () => {
       ]
     `)
   })
-  test('valide brouillon', () => {
-    const errors = titreEtapeUpdationValidate(etapeBrouillonValide, { ...titreDemarche, etapes: [] }, titreARM, [], [], [], [], [], userSuper, null, null)
+  test('valide brouillon', async () => {
+    const errors = await titreEtapeUpdationValidate(etapeBrouillonValide, { ...titreDemarche, etapes: [] }, titreARM, [], [], [], [], [], userSuper, null, null)
     expect(errors).toStrictEqual([])
   })
-  test('valide complète', () => {
-    const errors = titreEtapeUpdationValidate(etapeComplete, titreDemarche, titreARM, [{ etape_document_type_id: 'doe' }], [], [], [], [], userSuper, null, null)
+  test('valide complète', async () => {
+    const errors = await titreEtapeUpdationValidate(etapeComplete, titreDemarche, titreARM, [{ etape_document_type_id: 'doe' }], [], [], [], [], userSuper, null, null)
     expect(errors).toStrictEqual([])
   })
-  test('invalide car on ne peut pas faire de mod sans mdp', () => {
-    const errors = titreEtapeUpdationValidate({ ...etapeComplete, typeId: 'mod' }, titreDemarche, titreARM, [{ etape_document_type_id: 'doe' }], [], [], [], [], userSuper, null, null)
+  test('invalide car on ne peut pas faire de mod sans mdp', async () => {
+    const errors = await titreEtapeUpdationValidate({ ...etapeComplete, typeId: 'mod' }, titreDemarche, titreARM, [{ etape_document_type_id: 'doe' }], [], [], [], [], userSuper, null, null)
     expect(errors).toMatchInlineSnapshot(`
       [
         "les étapes de la démarche machine ne sont pas valides",
@@ -198,8 +198,8 @@ describe('valide l’étape avant de l’enregistrer', () => {
     `)
   })
 
-  test('valide complète avec héritage', () => {
-    const errors = titreEtapeUpdationValidate(
+  test('valide complète avec héritage', async () => {
+    const errors = await titreEtapeUpdationValidate(
       { ...etapeComplete, duree: { value: 12, heritee: true, etapeHeritee: { date: toCaminoDate('2022-01-01'), etapeTypeId: 'mfr', value: 12 } } },
       titreDemarche,
       titreARM,
@@ -214,8 +214,8 @@ describe('valide l’étape avant de l’enregistrer', () => {
     )
     expect(errors).toStrictEqual([])
   })
-  test('ne peut pas éditer les amodiataires sur une ARM', () => {
-    const errors = titreEtapeUpdationValidate(
+  test('ne peut pas éditer les amodiataires sur une ARM', async () => {
+    const errors = await titreEtapeUpdationValidate(
       { ...etapeComplete, amodiataires: { value: [entrepriseIdValidator.parse('entrepriseIdAmodiataire')], heritee: false, etapeHeritee: null } },
       titreDemarche,
       titreARM,

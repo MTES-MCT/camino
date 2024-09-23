@@ -96,8 +96,8 @@ const statistiquesGuyaneInstantBuild = (titres: ITitre[]): Record<IStatsGuyaneTi
   return statsInstant
 }
 
-const statistiquesGuyaneAnneeBuild = (titres: ITitre[], titresActivites: ITitreActivite[], annee: CaminoAnnee) => {
-  const titresFiltered = titresSurfaceIndexBuild(titres, +annee)
+const statistiquesGuyaneAnneeBuild = async (titres: ITitre[], titresActivites: ITitreActivite[], annee: CaminoAnnee) => {
+  const titresFiltered = await titresSurfaceIndexBuild(titres, +annee)
 
   const { titresArm, titresPrm, titresAxm, titresCxm } = statistiquesGuyaneTitresBuild(titresFiltered)
 
@@ -186,7 +186,7 @@ const statistiquesGuyane = async (anneeCurrent: CaminoAnnee) => {
     )
 
     return {
-      annees: annees.map(annee => statistiquesGuyaneAnneeBuild(titres, titresActivites, annee)),
+      annees: await Promise.all(annees.map(annee => statistiquesGuyaneAnneeBuild(titres, titresActivites, annee))),
       ...statistiquesGuyaneInstantBuild(titres),
     }
   } catch (e) {

@@ -200,6 +200,7 @@ const axmOctMachine = createMachine({
     avisDesServicesEtCommissionsConsultatives: { faite: false },
     daeRequiseOuDemandeDeposee: false,
     visibilite: 'confidentielle',
+    asyncTasks: new Set<string>(),
   },
   on: {
     FAIRE_DESISTEMENT_DEMANDEUR: {

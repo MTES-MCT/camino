@@ -40,15 +40,15 @@ describe('trie les étapes', () => {
     expect(titreEtapesSortDescByOrdre(titreEtapesSortedDesc)).toMatchObject(titreEtapesSortedDescResult)
   })
 
-  test('des étapes organisées par date décroissante sont triées par date croissante', () => {
-    expect(titreEtapesSortAscByDate(titreEtapesSortedDesc, newDemarcheId(), 'oct', 'prh')).toMatchObject(titreEtapesSortedAsc)
+  test('des étapes organisées par date décroissante sont triées par date croissante', async () => {
+    expect(await titreEtapesSortAscByDate(titreEtapesSortedDesc, newDemarcheId(), 'oct', 'prh')).toMatchObject(titreEtapesSortedAsc)
   })
 
-  test('des étapes organisées par date croissante restent triées par date croissante', () => {
-    expect(titreEtapesSortAscByDate(titreEtapesSortedAsc, newDemarcheId(), 'oct', 'prh')).toMatchObject(titreEtapesSortedAsc)
+  test('des étapes organisées par date croissante restent triées par date croissante', async () => {
+    expect(await titreEtapesSortAscByDate(titreEtapesSortedAsc, newDemarcheId(), 'oct', 'prh')).toMatchObject(titreEtapesSortedAsc)
   })
 
-  test('des étapes avec les mêmes dates organisées par ordre décroissant sont triées par ordre croissant', () => {
+  test('des étapes avec les mêmes dates organisées par ordre décroissant sont triées par ordre croissant', async () => {
     const titreEtapesMemesDatesOrdreDesc: TitreEtapeForMachine[] = [
       {
         id: newEtapeId('1'),
@@ -76,10 +76,10 @@ describe('trie les étapes', () => {
 
     const titreEtapesMemesDatesOrdreAscResult = titreEtapesMemesDatesOrdreDesc.slice().reverse()
 
-    expect(titreEtapesSortAscByDate(titreEtapesMemesDatesOrdreDesc, newDemarcheId(), 'oct', 'arm')).toStrictEqual(titreEtapesMemesDatesOrdreAscResult)
+    expect(await titreEtapesSortAscByDate(titreEtapesMemesDatesOrdreDesc, newDemarcheId(), 'oct', 'arm')).toStrictEqual(titreEtapesMemesDatesOrdreAscResult)
   })
 
-  test('des étapes avec les mêmes dates sont triées par ordre de type croissant', () => {
+  test('des étapes avec les mêmes dates sont triées par ordre de type croissant', async () => {
     const titreDemarcheId = newDemarcheId('1')
     const titreEtapesMemesDatesOrdreEtapesTypesDesc: TitreEtapeForMachine[] = [
       {
@@ -116,7 +116,7 @@ describe('trie les étapes', () => {
         surface: null,
       },
     ]
-    expect(titreEtapesSortAscByDate(titreEtapesMemesDatesOrdreEtapesTypesDesc, titreDemarcheId, DEMARCHES_TYPES_IDS.Retrait, TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX)).toMatchObject([
+    expect(await titreEtapesSortAscByDate(titreEtapesMemesDatesOrdreEtapesTypesDesc, titreDemarcheId, DEMARCHES_TYPES_IDS.Retrait, TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX)).toMatchObject([
       {
         typeId: ETAPES_TYPES.saisineDuPrefet,
         ordre: 2,
@@ -138,7 +138,7 @@ describe('trie les étapes', () => {
     ])
   })
 
-  test('tri selon l’arbre si les étapes ont la même date', () => {
+  test('tri selon l’arbre si les étapes ont la même date', async () => {
     const etapes: TitreEtapeForMachine[] = [
       {
         id: newEtapeId('1'),
@@ -175,13 +175,13 @@ describe('trie les étapes', () => {
       },
     ]
 
-    const result = titreEtapesSortAscByDate(etapes, newDemarcheId(), DEMARCHES_TYPES_IDS.Octroi, TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX)
+    const result = await titreEtapesSortAscByDate(etapes, newDemarcheId(), DEMARCHES_TYPES_IDS.Octroi, TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX)
     expect(result[0].typeId).toEqual('pfd')
     expect(result[1].typeId).toEqual('mfr')
     expect(result[2].typeId).toEqual('mdp')
   })
 
-  test("retourne une erreur si le type d'étape est absent dans la définition", () => {
+  test("retourne une erreur si le type d'étape est absent dans la définition", async () => {
     const etapes: TitreEtapeForMachine[] = [
       {
         id: newEtapeId('1'),
@@ -219,12 +219,12 @@ describe('trie les étapes', () => {
       },
     ]
 
-    expect(() => titreEtapesSortAscByDate(etapes, newDemarcheId(), DEMARCHES_TYPES_IDS.Octroi, TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX)).toThrowErrorMatchingInlineSnapshot(
+    await expect(titreEtapesSortAscByDate(etapes, newDemarcheId(), DEMARCHES_TYPES_IDS.Octroi, TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX)).rejects.toThrowErrorMatchingInlineSnapshot(
       `[Error: l'état bof est inconnu]`
     )
   })
 
-  test('utilise l’id pour trier des étapes totalement identiques', () => {
+  test('utilise l’id pour trier des étapes totalement identiques', async () => {
     const secondMcd: TitreEtapeForMachine = {
       id: newEtapeId('mcd2'),
       typeId: 'mcd',
@@ -285,11 +285,11 @@ describe('trie les étapes', () => {
       secondMcd,
     ]
 
-    const result = titreEtapesSortAscByDate(etapes, newDemarcheId(), DEMARCHES_TYPES_IDS.Octroi, TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX)
+    const result = await titreEtapesSortAscByDate(etapes, newDemarcheId(), DEMARCHES_TYPES_IDS.Octroi, TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX)
     expect(result).toContain(secondMcd)
   })
 
-  test('tri les étapes via la machine, et remet les étapes en brouillon en fonction de leur date', () => {
+  test('tri les étapes via la machine, et remet les étapes en brouillon en fonction de leur date', async () => {
     const etapes: TitreEtapeForMachine[] = [
       {
         id: newEtapeId('mfr'),
@@ -370,7 +370,7 @@ describe('trie les étapes', () => {
       },
     ]
 
-    const result = titreEtapesSortAscByDate(etapes, newDemarcheId(), DEMARCHES_TYPES_IDS.Octroi, TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX)
+    const result = await titreEtapesSortAscByDate(etapes, newDemarcheId(), DEMARCHES_TYPES_IDS.Octroi, TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX)
     expect(result.map(({ id }) => id)).toMatchInlineSnapshot(`
       [
         "mfr",
@@ -385,7 +385,7 @@ describe('trie les étapes', () => {
     expect(result[result.length - 1].id).toBe('asc')
   })
 
-  test("une demande en brouillon à la même date qu'une décision de l'administration est en 1ère position", () => {
+  test("une demande en brouillon à la même date qu'une décision de l'administration est en 1ère position", async () => {
     const etapes: TitreEtapeForMachine[] = [
       {
         id: newEtapeId('mfr'),
@@ -410,7 +410,7 @@ describe('trie les étapes', () => {
         contenu: null,
       },
     ]
-    const result = titreEtapesSortAscByDate(etapes, newDemarcheId(), DEMARCHES_TYPES_IDS.Octroi, TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_GEOTHERMIE)
+    const result = await titreEtapesSortAscByDate(etapes, newDemarcheId(), DEMARCHES_TYPES_IDS.Octroi, TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_GEOTHERMIE)
 
     expect(result.map(({ id }) => id)).toMatchInlineSnapshot(`
          [
@@ -420,7 +420,7 @@ describe('trie les étapes', () => {
        `)
   })
 
-  test("une demande en brouillon à une date postérieure qu'une décision de l'administration est en 2ème position", () => {
+  test("une demande en brouillon à une date postérieure qu'une décision de l'administration est en 2ème position", async () => {
     const etapes: TitreEtapeForMachine[] = [
       {
         id: newEtapeId('mfr'),
@@ -445,7 +445,7 @@ describe('trie les étapes', () => {
         contenu: null,
       },
     ]
-    const result = titreEtapesSortAscByDate(etapes, newDemarcheId(), DEMARCHES_TYPES_IDS.Octroi, TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_GEOTHERMIE)
+    const result = await titreEtapesSortAscByDate(etapes, newDemarcheId(), DEMARCHES_TYPES_IDS.Octroi, TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_GEOTHERMIE)
 
     expect(result.map(({ id }) => id)).toMatchInlineSnapshot(`
            [

@@ -42,79 +42,86 @@ const pool = new pg.Pool({
 
 consoleOverride()
 filesInit()
-databaseInit(pool).then(() => {
-  const app = express()
-  app.disable('x-powered-by')
-  app.set('query parser', function (str: string) {
-    return qs.parse(str, { comma: true })
-  })
-  if (isNotNullNorUndefined(config().API_SENTRY_URL)) {
-    Sentry.init({
-      dsn: config().API_SENTRY_URL,
-      environment: config().ENV === 'prod' ? 'production' : config().ENV,
+databaseInit(pool)
+  .then(() => {
+    const app = express()
+    app.disable('x-powered-by')
+    app.set('query parser', function (str: string) {
+      return qs.parse(str, { comma: true })
     })
-    Sentry.setupExpressErrorHandler(app)
-  }
-
-  const limiter = rateLimit({
-    windowMs: 60 * 1000, // 1 minute
-    max: 100, // Limit each IP to 100 requests per `window` (here, per 1 minute)
-    standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
-    legacyHeaders: false, // Disable the `X-RateLimit-*` headers
-    validate: false, // TODO 2024-04-29 : disable https://express-rate-limit.mintlify.app/reference/error-codes#err-erl-unexpected-x-forwarded-for en version 7, on pourra désactiver juste ça
-    skip: (request: any, _response: any) => {
-      // On n'applique pas de rate limiting sur le televersement des fichiers
-      return request.url.startsWith('/televersement')
-    },
-  })
-
-  app.use(cors({ origin: false, credentials: true, exposedHeaders: ['Content-disposition'] }), compression(), limiter, authJwt, authBasic(pool), userLoader(pool), cookieParser(), connectedCatcher)
-
-  // Le Timeout du sse côté frontend est mis à 45 secondes, on envoie un ping toutes les 30 secondes
-  const ssePingDelayInSeconds = 30
-  app.get('/stream/version', async (_req, res) => {
-    const headers = {
-      'Content-Type': 'text/event-stream',
-      Connection: 'keep-alive',
-      'Cache-Control': 'no-cache',
+    if (isNotNullNorUndefined(config().API_SENTRY_URL)) {
+      Sentry.init({
+        dsn: config().API_SENTRY_URL,
+        environment: config().ENV === 'prod' ? 'production' : config().ENV,
+      })
+      Sentry.setupExpressErrorHandler(app)
     }
 
-    res.writeHead(200, headers)
-    res.write(`id: ${Date.now()}\n`)
-    res.write(`event: version\n`)
-    res.write(`data: ${config().APPLICATION_VERSION}\n\n`)
-    res.flush()
-    let counter = 0
-    const interValID = setInterval(() => {
-      counter++
-      if (counter >= 10) {
-        clearInterval(interValID)
-        res.end()
+    const limiter = rateLimit({
+      windowMs: 60 * 1000, // 1 minute
+      max: 100, // Limit each IP to 100 requests per `window` (here, per 1 minute)
+      standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+      legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+      validate: false, // TODO 2024-04-29 : disable https://express-rate-limit.mintlify.app/reference/error-codes#err-erl-unexpected-x-forwarded-for en version 7, on pourra désactiver juste ça
+      skip: (request: any, _response: any) => {
+        // On n'applique pas de rate limiting sur le televersement des fichiers
+        return request.url.startsWith('/televersement')
+      },
+    })
 
-        return
+    app.use(cors({ origin: false, credentials: true, exposedHeaders: ['Content-disposition'] }), compression(), limiter, authJwt, authBasic(pool), userLoader(pool), cookieParser(), connectedCatcher) // eslint-disable-line @typescript-eslint/no-misused-promises
+
+    // Le Timeout du sse côté frontend est mis à 45 secondes, on envoie un ping toutes les 30 secondes
+    const ssePingDelayInSeconds = 30
+
+    // eslint-disable-next-line @typescript-eslint/no-misused-promises
+    app.get('/stream/version', async (_req, res) => {
+      const headers = {
+        'Content-Type': 'text/event-stream',
+        Connection: 'keep-alive',
+        'Cache-Control': 'no-cache',
       }
+
+      res.writeHead(200, headers)
       res.write(`id: ${Date.now()}\n`)
       res.write(`event: version\n`)
       res.write(`data: ${config().APPLICATION_VERSION}\n\n`)
       res.flush()
-    }, ssePingDelayInSeconds * 1000)
+      let counter = 0
+      const interValID = setInterval(() => {
+        counter++
+        if (counter >= 10) {
+          clearInterval(interValID)
+          res.end()
 
-    res.on('close', () => {
-      clearInterval(interValID)
-      res.end()
+          return
+        }
+        res.write(`id: ${Date.now()}\n`)
+        res.write(`event: version\n`)
+        res.write(`data: ${config().APPLICATION_VERSION}\n\n`)
+        res.flush()
+      }, ssePingDelayInSeconds * 1000)
+
+      res.on('close', () => {
+        clearInterval(interValID)
+        res.end()
+      })
+    })
+
+    app.use(express.urlencoded({ extended: true }), express.json({ limit: '5mb' }), restWithPool(pool))
+
+    app.use('/televersement', uploadAllowedMiddleware, restUpload()) // eslint-disable-line @typescript-eslint/no-misused-promises
+
+    app.use('/', graphql(pool))
+
+    app.listen(config().API_PORT, () => {
+      console.info('')
+      console.info('ENV:', config().ENV)
+      console.info('NODE_ENV:', config().NODE_ENV)
+      console.info('')
     })
   })
-
-  app.use(express.urlencoded({ extended: true }), express.json({ limit: '5mb' }), restWithPool(pool))
-
-  app.use('/televersement', uploadAllowedMiddleware, restUpload())
-
-  app.use('/', graphql(pool))
-
-  app.listen(config().API_PORT, () => {
-    console.info('')
-    console.info('ENV:', config().ENV)
-    console.info('NODE_ENV:', config().NODE_ENV)
-    console.info('')
+  .catch(message => {
+    console.error(message)
+    process.exit(1)
   })
-})

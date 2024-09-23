@@ -26,8 +26,10 @@ export const createLargeObject = async (pool: Pool, tmpFileName: TempDocumentNam
       })
       fileStream.pipe(stream)
       stream.on('finish', function () {
-        client.query('COMMIT')
-        resolve(largeObjectIdValidator.parse(oid))
+        client
+          .query('COMMIT')
+          .then(() => resolve(largeObjectIdValidator.parse(oid)))
+          .catch(e => reject(e))
       })
       stream.on('error', function (e) {
         reject(e)

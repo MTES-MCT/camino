@@ -167,6 +167,7 @@ const axmProMachine = createMachine({
     avisDesCollectivitesFaite: false,
     avisDesServicesEtCommissionsConsultatives: { faite: false },
     visibilite: 'confidentielle',
+    asyncTasks: new Set<string>(),
   },
   on: {
     FAIRE_DESISTEMENT_DEMANDEUR: {

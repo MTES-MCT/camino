@@ -204,7 +204,7 @@ export const CaminoRestRoutes = {
   '/rest/etapes/:etapeId/etapeAvis': { params: etapeIdParamsValidator, get: { output: getEtapeAvisByEtapeIdValidator } },
   '/rest/etapes/:etapeId/entrepriseDocuments': { params: etapeIdParamsValidator, get: { output: z.array(etapeEntrepriseDocumentValidator) } },
   '/rest/etapes/:etapeIdOrSlug': { params: z.object({ etapeIdOrSlug: etapeIdOrSlugValidator }), delete: true, get: { output: flattenEtapeValidator } },
-  '/rest/etapes/:etapeId/depot': { params: etapeIdParamsValidator, put: { input: z.void(), output: z.void() } },
+  '/rest/etapes/:etapeId/depot': { params: etapeIdParamsValidator, put: { input: z.undefined(), output: z.void() } },
   '/rest/etapes': { params: noParamsValidator, post: { input: restEtapeCreationValidator, output: etapeIdValidator }, put: { input: restEtapeModificationValidator, output: etapeIdValidator } },
   '/rest/activites/:activiteId': {
     params: z.object({ activiteId: activiteIdOrSlugValidator }),

@@ -5,7 +5,7 @@ import { titreEtapeHeritageContenuFind } from '../../../business/utils/titre-eta
 import { titreEtapesSortAscByOrdre, titreEtapesSortDescByOrdre } from '../../../business/utils/titre-etapes-sort'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
-import { DeepReadonly, getKeys } from 'camino-common/src/typescript-tools'
+import { DeepReadonly, getKeys, isNotNullNorUndefined, RecordPartial } from 'camino-common/src/typescript-tools'
 import { getSections, Section } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections'
 import { ETAPE_HERITAGE_PROPS, isHeritageProps } from 'camino-common/src/heritage'
 import { EtapeTypeId, EtapesTypes } from 'camino-common/src/static/etapesTypes'
@@ -82,23 +82,20 @@ const titreEtapeHeritageContenuBuild = (
 
   titreEtapesFiltered.splice(0, 0, titreEtape)
 
-  const etapeSectionsDictionary = titreEtapesFiltered.reduce<{
-    [etapeId: string]: DeepReadonly<Section[]>
-  }>((acc, e) => {
+  const etapeSectionsDictionary = titreEtapesFiltered.reduce<RecordPartial<string, DeepReadonly<Section[]>>>((acc, e) => {
     acc[e.id] = getSections(titreTypeId, demarcheTypeId, e.typeId)
 
     return acc
   }, {})
 
   titreEtape.heritageContenu = sections.reduce((heritageContenu: IHeritageContenu, section) => {
-    if (!section.elements?.length) return heritageContenu
+    if (!section.elements.length) return heritageContenu
 
-    heritageContenu[section.id] = section.elements?.reduce(
+    heritageContenu[section.id] = section.elements.reduce(
       (acc: { [elementId: string]: IHeritageElement }, element) => {
         acc[element.id] = {
           actif: !!titreEtapesFiltered.find(
-            // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-            e => e.id !== titreEtape.id && etapeSectionsDictionary[e.id] && etapeSectionsDictionary[e.id].find(s => s.id === section.id && s.elements?.find(el => el.id === element.id))
+            e => e.id !== titreEtape.id && etapeSectionsDictionary[e.id] && (etapeSectionsDictionary[e.id]?.find(s => s.id === section.id && s.elements.find(el => el.id === element.id)) ?? false)
           ),
         }
 
@@ -114,14 +111,13 @@ const titreEtapeHeritageContenuBuild = (
 
   const { contenu, heritageContenu } = titreEtapeHeritageContenuFind(titreEtapesFiltered, titreEtape, etapeSectionsDictionary)
 
-  if (heritageContenu) {
+  if (isNotNullNorUndefined(heritageContenu)) {
     Object.keys(heritageContenu).forEach(sectionId => {
-      Object.keys(heritageContenu![sectionId]).forEach(elementId => {
-        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-        const etapeId = heritageContenu && heritageContenu[sectionId] && heritageContenu[sectionId][elementId].etapeId
+      Object.keys(heritageContenu[sectionId] ?? {}).forEach(elementId => {
+        const etapeId = heritageContenu[sectionId] && heritageContenu[sectionId][elementId]?.etapeId
 
         if (etapeId) {
-          heritageContenu![sectionId][elementId].etape = titreEtapesFiltered.find(({ id }) => id === etapeId)
+          heritageContenu![sectionId]![elementId]!.etape = titreEtapesFiltered.find(({ id }) => id === etapeId)
         }
       })
     })
@@ -137,7 +133,7 @@ export const titreEtapeHeritageBuild = (
   titreTypeId: TitreTypeId,
   demarcheTypeId: DemarcheTypeId,
   etapeId: EtapeId | null
-) => {
+): ITitreEtape => {
   let titreEtape = {} as ITitreEtape
 
   const etapeType = EtapesTypes[etapeTypeId]
@@ -147,7 +143,7 @@ export const titreEtapeHeritageBuild = (
   }
 
   const sections = getSections(titreTypeId, demarcheTypeId, etapeType.id)
-  if (sections?.length) {
+  if (sections.length) {
     const { contenu, heritageContenu } = titreEtapeHeritageContenuBuild(date, etapeTypeId, titreTypeId, demarcheTypeId, titreDemarche.etapes ?? [], etapeId)
 
     titreEtape.contenu = contenu

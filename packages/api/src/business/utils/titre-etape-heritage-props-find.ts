@@ -8,12 +8,12 @@ import { ETAPE_HERITAGE_PROPS, EtapeHeritageProps } from 'camino-common/src/heri
 import { EntrepriseId } from 'camino-common/src/entreprise'
 import { ZERO_KM2 } from 'camino-common/src/number'
 
-const propertyArrayCheck = (newValue: string[], prevValue: string[], propId: string) => {
+const propertyArrayCheck = (newValue: IPropValueArray, prevValue: IPropValueArray, propId: string) => {
   if (prevValue?.length !== newValue?.length) {
     return false
   }
 
-  if (prevValue?.length && newValue?.length) {
+  if (isNotNullNorUndefined(prevValue) && isNotNullNorUndefined(newValue) && prevValue.length > 0 && newValue.length > 0) {
     if (propId === 'substances') {
       return newValue.toString() === prevValue.toString()
     } else if (['titulaires', 'amodiataires'].includes(propId)) {
@@ -30,7 +30,7 @@ type IPropValue = number | string | IPropValueArray | FeatureMultiPolygon
 
 const titreEtapePropCheck = (propId: string, oldValue?: IPropValue | null, newValue?: IPropValue | null) => {
   if (['titulaires', 'amodiataires', 'substances'].includes(propId)) {
-    return propertyArrayCheck(oldValue as string[], newValue as string[], propId)
+    return propertyArrayCheck(oldValue as IPropValueArray, newValue as IPropValueArray, propId)
   }
 
   if (propId === 'perimetre' && isNotNullNorUndefined(oldValue) && isNotNullNorUndefined(newValue)) {
@@ -74,9 +74,9 @@ export const titreEtapeHeritagePropsFind = (
       newTitreEtape.heritageProps![propId] = { actif: false, etapeId: null }
     }
 
-    const prevHeritage = prevTitreEtape?.heritageProps ? prevTitreEtape?.heritageProps[propId] : null
+    const prevHeritage = prevTitreEtape?.heritageProps ? prevTitreEtape.heritageProps[propId] : null
 
-    const etapeId = prevHeritage?.etapeId && prevHeritage?.actif ? prevHeritage.etapeId : prevTitreEtape?.id
+    const etapeId = prevHeritage?.etapeId && prevHeritage.actif ? prevHeritage.etapeId : prevTitreEtape?.id
 
     const getEtapePropId = (heritagePropId: EtapeHeritageProps): keyof ITitreEtape => {
       if (heritagePropId === 'perimetre') {
@@ -92,7 +92,7 @@ export const titreEtapeHeritagePropsFind = (
       return heritagePropId
     }
 
-    if (heritage?.actif) {
+    if (heritage.actif) {
       if (prevTitreEtape) {
         const oldValue = titreEtape[getEtapePropId(propId)] as IPropValue | undefined | null
         const newValue = prevTitreEtape[getEtapePropId(propId)] as IPropValue | undefined | null
@@ -144,7 +144,7 @@ export const titreEtapeHeritagePropsFind = (
       }
     }
 
-    if ((etapeId || heritage?.etapeId) && etapeId !== heritage?.etapeId) {
+    if ((etapeId || heritage.etapeId) && etapeId !== heritage.etapeId) {
       hasChanged = true
       newTitreEtape = objectClone(newTitreEtape)
       newTitreEtape.heritageProps![propId].etapeId = etapeId

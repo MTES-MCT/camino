@@ -41,7 +41,7 @@ const titreEtapeDepotConfirmationEmailsSend = async (titreDemarche: ITitreDemarc
   for (const titulaire of titulaires) {
     await emailConfirmationDepotSend(titulaire.emails, {
       titreTypeNom,
-      titulaireNom: titulaire.nom ?? '',
+      titulaireNom: titulaire.nom,
       titreUrl,
       titreNom,
     })
@@ -60,7 +60,7 @@ export const titreDemarcheDepotCheck = (titreDemarche: ITitreDemarche): boolean 
     }
 
     // Si on a déjà un dépot de la demande
-    return !titreDemarche.etapes?.find(e => e.typeId === 'mdp')
+    return !titreDemarche.etapes.find(e => e.typeId === 'mdp')
   }
 
   return false

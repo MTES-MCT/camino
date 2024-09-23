@@ -40,8 +40,8 @@ exports[`titresAdministration > teste la récupération des données pour les Ad
   "id": Any<String>,
   "nom": "titre2",
   "prochainesEtapes": [
-    "mod",
     "mcp",
+    "mod",
   ],
   "references": [
     {

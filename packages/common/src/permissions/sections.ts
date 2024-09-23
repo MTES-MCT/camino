@@ -19,7 +19,7 @@ export const sectionsWithValueCompleteValidate = (sections_with_value: DeepReado
 
 export const sectionElementWithValueCompleteValidate = (elementWithValue: DeepReadonly<Pick<ElementWithValue, 'optionnel' | 'value' | 'type'>>): boolean => {
   if ((isNullOrUndefined(elementWithValue.optionnel) || !elementWithValue.optionnel) && !['checkbox'].includes(elementWithValue.type)) {
-    if (elementWithValue.value === undefined || elementWithValue.value === null || elementWithValue.value === '') {
+    if (isNullOrUndefined(elementWithValue.value) || elementWithValue.value === '') {
       return false
     }
   }

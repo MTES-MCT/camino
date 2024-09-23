@@ -203,7 +203,7 @@ export const activiteDeposer = async ({ id }: { id: ActiviteId }, { user, pool }
     }
 
     const userEntreprisesId = isEntreprise(user) || isBureauDEtudes(user) ? user.entrepriseIds : []
-    const isAmodiataire = titre.amodiataireIds?.some(amodiataireId => userEntreprisesId.some(id => id === amodiataireId))
+    const isAmodiataire = titre.amodiataireIds.some(amodiataireId => userEntreprisesId.some(id => id === amodiataireId))
 
     const entreprisesIds = isAmodiataire ? titre.amodiataireIds : titre.titulaireIds
 

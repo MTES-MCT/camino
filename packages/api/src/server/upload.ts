@@ -64,7 +64,7 @@ export const restUpload = (): express.Express => {
   const uploadServer = express()
   uploadServer.disable('x-powered-by')
 
-  uploadServer.all('*', server.handle.bind(server))
+  uploadServer.all('*', server.handle.bind(server)) // eslint-disable-line @typescript-eslint/no-misused-promises
 
   return uploadServer
 }

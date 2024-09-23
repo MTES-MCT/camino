@@ -29,7 +29,7 @@ export const up = async (knex: Knex): Promise<void> => {
     const ouverture = etapes[i]
     const cloture = etapes[i + 1]
 
-    if (ouverture.titre_demarche_id !== cloture?.titre_demarche_id || !['woe', 'epu'].includes(ouverture.type_id) || !['wce', 'epc'].includes(cloture?.type_id)) {
+    if (ouverture.titre_demarche_id !== cloture.titre_demarche_id || !['woe', 'epu'].includes(ouverture.type_id) || !['wce', 'epc'].includes(cloture.type_id)) {
       throw new Error('Il manque une ouverture ou une cloture')
     }
 

@@ -8,8 +8,8 @@ const etapesProd = require('./2000-01-01-pro.cas.json') // eslint-disable-line
 
 describe('vérifie l’arbre de prolongation d’AXM', () => {
   const axmProMachine = new AxmProMachine()
-  test('après la recevabilité, on peut faire une saisine des services', () => {
-    const { service, dateFin } = setDateAndOrderAndInterpretMachine(axmProMachine, '2022-04-14', [ETES.demande.FAIT, ETES.depotDeLaDemande.FAIT, ETES.recevabiliteDeLaDemande.FAVORABLE])
+  test('après la recevabilité, on peut faire une saisine des services', async () => {
+    const { service, dateFin } = await setDateAndOrderAndInterpretMachine(axmProMachine, '2022-04-14', [ETES.demande.FAIT, ETES.depotDeLaDemande.FAIT, ETES.recevabiliteDeLaDemande.FAVORABLE])
     expect(service).canOnlyTransitionTo({ machine: axmProMachine, date: dateFin }, [
       'DEMANDER_INFORMATION_POUR_AVIS_DREAL',
       'FAIRE_CLASSEMENT_SANS_SUITE',
@@ -21,10 +21,10 @@ describe('vérifie l’arbre de prolongation d’AXM', () => {
   })
 
   // pour regénérer le pro.cas.json: `npm run test:generate-data -w packages/api`
-  test.each(etapesProd as any[])('cas réel N°$id', demarche => {
+  test.each(etapesProd as any[])('cas réel N°$id', async demarche => {
     // ici les étapes sont déjà ordonnées
-    interpretMachine(axmProMachine, demarche.etapes)
-    expect(axmProMachine.demarcheStatut(demarche.etapes)).toStrictEqual({
+    await interpretMachine(axmProMachine, demarche.etapes)
+    await expect(axmProMachine.demarcheStatut(demarche.etapes)).resolves.toStrictEqual({
       demarcheStatut: demarche.demarcheStatutId,
       publique: demarche.demarchePublique,
     })

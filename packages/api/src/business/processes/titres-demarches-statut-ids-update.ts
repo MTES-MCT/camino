@@ -5,7 +5,7 @@ import { titreEtapesSortAscByOrdre } from '../utils/titre-etapes-sort'
 import { getDemarches } from './titres-etapes-heritage-contenu-update.queries'
 import { Pool } from 'pg'
 
-export const titresDemarchesStatutIdUpdate = async (pool: Pool, titreId?: TitreId) => {
+export const titresDemarchesStatutIdUpdate = async (pool: Pool, titreId?: TitreId): Promise<string[]> => {
   console.info()
   console.info('statut des démarches…')
 
@@ -14,9 +14,9 @@ export const titresDemarchesStatutIdUpdate = async (pool: Pool, titreId?: TitreI
   const titresDemarchesUpdated: string[] = []
 
   for (const titreDemarche of Object.values(titresDemarches)) {
-    const titreDemarcheEtapes = titreEtapesSortAscByOrdre(titreDemarche.etapes ?? [])
+    const titreDemarcheEtapes = titreEtapesSortAscByOrdre(titreDemarche.etapes)
 
-    const statutId = titreDemarcheStatutIdFind(titreDemarche.typeId, titreDemarcheEtapes, titreDemarche.titreTypeId, titreDemarche.id)
+    const statutId = await titreDemarcheStatutIdFind(titreDemarche.typeId, titreDemarcheEtapes, titreDemarche.titreTypeId, titreDemarche.id)
 
     if (titreDemarche.statutId !== statutId) {
       await titreDemarcheUpdate(titreDemarche.id, { statutId })

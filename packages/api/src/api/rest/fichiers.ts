@@ -91,7 +91,7 @@ export const etapeTelecharger =
 
 const bufferSize = 16384
 
-export const streamLargeObjectInResponse = async (pool: Pool, res: express.Response, largeObjectId: number | null, documentName: string) => {
+export const streamLargeObjectInResponse = async (pool: Pool, res: express.Response, largeObjectId: number | null, documentName: string): Promise<void> => {
   if (largeObjectId === null) {
     throw new Error(`fichier inexistant (largeObjectId null) - ${documentName}`)
   }
@@ -110,10 +110,10 @@ export const streamLargeObjectInResponse = async (pool: Pool, res: express.Respo
       stream.pipe(res)
 
       stream.on('error', function () {
-        client.query('ROLLBACK')
+        client.query('ROLLBACK') // eslint-disable-line @typescript-eslint/no-floating-promises
       })
       res.on('close', function () {
-        client.query('COMMIT')
+        client.query('COMMIT') // eslint-disable-line @typescript-eslint/no-floating-promises
       })
     })
   } catch (e) {

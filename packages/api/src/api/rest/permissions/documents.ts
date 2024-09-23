@@ -40,7 +40,7 @@ export const canReadDocument = async (
 
     const titulaires = await entreprisesTitulairesOuAmodiataires()
 
-    return titulaires.some(entrepriseId => user.entrepriseIds?.includes(entrepriseId) ?? false)
+    return titulaires.some(entrepriseId => user.entrepriseIds.includes(entrepriseId))
   }
 
   return false

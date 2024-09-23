@@ -182,7 +182,7 @@ export const getStatutId = (etape: Pick<DeepReadonly<FlattenEtape>, 'date' | 'co
 
   if (isBefore(currentDate, etape.date)) {
     return ETAPES_STATUTS.PROGRAMME
-  } else if (isBefore(currentDate, dateAddDays(etape.date, z.number().parse(etape.contenu?.opdp?.duree.value ?? 0)))) {
+  } else if (isBefore(currentDate, dateAddDays(etape.date, z.number().parse(etape.contenu.opdp?.duree?.value ?? 0)))) {
     return ETAPES_STATUTS.EN_COURS
   } else {
     return ETAPES_STATUTS.TERMINE

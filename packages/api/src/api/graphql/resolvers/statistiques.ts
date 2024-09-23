@@ -9,7 +9,7 @@ import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { DEMARCHES_TYPES_IDS } from 'camino-common/src/static/demarchesTypes'
 import { ACTIVITES_STATUTS_IDS } from 'camino-common/src/static/activitesStatuts'
 import { getAnnee, toCaminoDate } from 'camino-common/src/date'
-import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
+import { isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools'
 import { getTitresModifiesByMonth } from '../../rest/journal.queries'
 
 const ACTIVITE_ANNEE_DEBUT = 2018
@@ -45,36 +45,35 @@ export const statistiquesGlobales = async (_: unknown, { pool }: Context): Promi
  * @param titres -
  * @param annee
  */
+type TitreSurfaceIndex = {
+  id: string
+  typeId: TitreTypeId
+  surface: number
+}
+export const titresSurfaceIndexBuild = async (titres: ITitre[], annee: number): Promise<TitreSurfaceIndex[]> => {
+  const titresReduced: TitreSurfaceIndex[] = []
 
-export const titresSurfaceIndexBuild = (titres: ITitre[], annee: number) =>
-  titres.reduce(
-    (
-      acc: {
-        id: string
-        typeId: TitreTypeId
-        surface: number
-      }[],
-      titre
-    ) => {
-      // titres dont le dernier octroi valide avec une phase valide débute cette année
-      const titreDemarcheOctroiValide = titre.demarches?.find(
-        demarche => demarche.typeId === DEMARCHES_TYPES_IDS.Octroi && demarche.demarcheDateDebut && getAnnee(demarche.demarcheDateDebut) === annee.toString()
-      )
+  for (const titre of titres) {
+    // titres dont le dernier octroi valide avec une phase valide débute cette année
+    const titreDemarcheOctroiValide = titre.demarches?.find(
+      demarche => demarche.typeId === DEMARCHES_TYPES_IDS.Octroi && demarche.demarcheDateDebut && getAnnee(demarche.demarcheDateDebut) === annee.toString()
+    )
 
-      if (!titreDemarcheOctroiValide) return acc
+    if (isNullOrUndefined(titreDemarcheOctroiValide)) {
+      continue
+    }
 
-      const surface = titreEtapePropFind('surface', titreDemarcheOctroiValide.demarcheDateDebut!, [titreDemarcheOctroiValide], titre.typeId) as number | null
+    const surface = (await titreEtapePropFind('surface', titreDemarcheOctroiValide.demarcheDateDebut!, [titreDemarcheOctroiValide], titre.typeId)) as number | null
 
-      acc.push({
-        id: titre.id,
-        typeId: titre.typeId,
-        surface: isNotNullNorUndefined(surface) ? surface * 100 : 0, // conversion 1 km² = 100 ha
-      })
+    titresReduced.push({
+      id: titre.id,
+      typeId: titre.typeId,
+      surface: isNotNullNorUndefined(surface) ? surface * 100 : 0, // conversion 1 km² = 100 ha
+    })
+  }
 
-      return acc
-    },
-    []
-  )
+  return titresReduced
+}
 
 export const concessionsValidesBuild = (titres: ITitre[], annee: number) => {
   return titres

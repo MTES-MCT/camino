@@ -46,8 +46,8 @@ export const titresConfidentielSelect = (q: QueryBuilder<Titres, Titres | Titres
       .select(raw('true'))
       .whereRaw('t_confidentiel.id = titres.id')
       .whereNot('titres.publicLecture', true)
-      .whereNot(a => a.modify(titresVisibleByEntrepriseQuery, entreprisesIds))
-      .where(a => a.modify(titresArmEnDemandeQuery))
+      .whereNot(a => a.modify(titresVisibleByEntrepriseQuery, entreprisesIds)) // eslint-disable-line @typescript-eslint/no-misused-promises
+      .where(a => a.modify(titresArmEnDemandeQuery)) // eslint-disable-line @typescript-eslint/no-misused-promises
       .as('confidentiel')
   )
 
@@ -71,15 +71,15 @@ export const titresQueryModify = (q: QueryBuilder<Titres, Titres | Titres[]>, us
       b.where('titres.publicLecture', true)
 
       // si l'utilisateur est `entreprise`
-      if ((isEntreprise(user) || isBureauDEtudes(user)) && user.entrepriseIds?.length) {
+      if ((isEntreprise(user) || isBureauDEtudes(user)) && user.entrepriseIds.length) {
         const entreprisesIds = user.entrepriseIds
 
         b.orWhere(c => {
-          c.where(d => d.modify(titresVisibleByEntrepriseQuery, entreprisesIds))
+          c.where(d => d.modify(titresVisibleByEntrepriseQuery, entreprisesIds)) // eslint-disable-line @typescript-eslint/no-misused-promises
 
           // ou si le titre est une ARM en cours de demande
           if (isNotNullNorUndefined(demandeEnCours) && demandeEnCours) {
-            c.orWhere(d => d.modify(titresArmEnDemandeQuery))
+            c.orWhere(d => d.modify(titresArmEnDemandeQuery)) // eslint-disable-line @typescript-eslint/no-misused-promises
           }
         })
       }
@@ -91,14 +91,14 @@ export const titresQueryModify = (q: QueryBuilder<Titres, Titres | Titres[]>, us
         // - ou administrationsLocale
         // - ou administration associée
 
-        b.modify(administrationsTitresQuery, user.administrationId, 'titres', 'or', etapePointAlias)
+        b.modify(administrationsTitresQuery, user.administrationId, 'titres', 'or', etapePointAlias) // eslint-disable-line @typescript-eslint/no-misused-promises
       }
     })
   }
 
   if ((isEntreprise(user) || isBureauDEtudes(user)) && isNotNullNorUndefinedNorEmpty(user.entrepriseIds)) {
     if (isNotNullNorUndefined(demandeEnCours) && demandeEnCours) {
-      q.modify(titresConfidentielSelect, user.entrepriseIds)
+      q.modify(titresConfidentielSelect, user.entrepriseIds) // eslint-disable-line @typescript-eslint/no-misused-promises
     }
   }
 

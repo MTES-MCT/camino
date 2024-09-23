@@ -14,24 +14,24 @@ const titreId = titreIdValidator.parse('titre-id')
 describe("construction des activités d'un titre", () => {
   const aujourdhui = toCaminoDate('2021-01-01')
 
-  test("ne crée pas d'activité pour un titre qui n'a pas de phase de démarches", () => {
-    const titreActivites1 = titreActivitesBuild(ACTIVITES_TYPES_IDS["rapport trimestriel d'exploitation d'or en Guyane"], [2020], aujourdhui, titreId, 'pxm', undefined)
+  test("ne crée pas d'activité pour un titre qui n'a pas de phase de démarches", async () => {
+    const titreActivites1 = await titreActivitesBuild(ACTIVITES_TYPES_IDS["rapport trimestriel d'exploitation d'or en Guyane"], [2020], aujourdhui, titreId, 'pxm', undefined)
 
     expect(titreActivites1.length).toEqual(0)
 
-    const titreActivites2 = titreActivitesBuild(ACTIVITES_TYPES_IDS["rapport trimestriel d'exploitation d'or en Guyane"], [2020], aujourdhui, titreId, 'pxm', [])
+    const titreActivites2 = await titreActivitesBuild(ACTIVITES_TYPES_IDS["rapport trimestriel d'exploitation d'or en Guyane"], [2020], aujourdhui, titreId, 'pxm', [])
 
     expect(titreActivites2.length).toEqual(0)
 
-    const titreActivites3 = titreActivitesBuild(ACTIVITES_TYPES_IDS["rapport trimestriel d'exploitation d'or en Guyane"], [2020], aujourdhui, titreId, 'pxm', [
+    const titreActivites3 = await titreActivitesBuild(ACTIVITES_TYPES_IDS["rapport trimestriel d'exploitation d'or en Guyane"], [2020], aujourdhui, titreId, 'pxm', [
       { id: 'demarche-id' } as unknown as ITitreDemarche,
     ])
 
     expect(titreActivites3.length).toEqual(0)
   })
 
-  test('ne crée pas une activité si elle existe déjà', () => {
-    const res = titreActivitesBuild(
+  test('ne crée pas une activité si elle existe déjà', async () => {
+    const res = await titreActivitesBuild(
       ACTIVITES_TYPES_IDS["rapport d'exploitation (permis et concessions M)"],
       [2018],
       aujourdhui,
@@ -44,16 +44,16 @@ describe("construction des activités d'un titre", () => {
     expect(res.length).toEqual(0)
   })
 
-  test("ne crée pas une activité si sa date de fin n'a pas eu lieu", () => {
-    const res = titreActivitesBuild(ACTIVITES_TYPES_IDS["rapport trimestriel d'exploitation d'or en Guyane"], [2021], aujourdhui, titreId, 'pxm', [
+  test("ne crée pas une activité si sa date de fin n'a pas eu lieu", async () => {
+    const res = await titreActivitesBuild(ACTIVITES_TYPES_IDS["rapport trimestriel d'exploitation d'or en Guyane"], [2021], aujourdhui, titreId, 'pxm', [
       { id: 'demarche-id', phase: {} } as unknown as ITitreDemarche,
     ])
 
     expect(res.length).toEqual(0)
   })
 
-  test('crée des activités', () => {
-    const titreActivitesA = titreActivitesBuild(ACTIVITES_TYPES_IDS["rapport d'exploitation (permis et concessions M)"], [2018], aujourdhui, titreId, 'pxm', [
+  test('crée des activités', async () => {
+    const titreActivitesA = await titreActivitesBuild(ACTIVITES_TYPES_IDS["rapport d'exploitation (permis et concessions M)"], [2018], aujourdhui, titreId, 'pxm', [
       {
         id: newDemarcheId('demarche-id'),
         titreId: newTitreId('titreId'),
@@ -80,7 +80,7 @@ describe("construction des activités d'un titre", () => {
 
     expect(titreActivitesA).toMatchSnapshot()
 
-    const titreActivitesB = titreActivitesBuild(ACTIVITES_TYPES_IDS["rapport trimestriel d'exploitation d'or en Guyane"], [2018], aujourdhui, titreId, 'pxm', [
+    const titreActivitesB = await titreActivitesBuild(ACTIVITES_TYPES_IDS["rapport trimestriel d'exploitation d'or en Guyane"], [2018], aujourdhui, titreId, 'pxm', [
       {
         id: 'demarche-id',
         demarcheDateDebut: '2018-01-01',
@@ -92,16 +92,16 @@ describe("construction des activités d'un titre", () => {
     expect(titreActivitesB).toMatchSnapshot()
   })
 
-  test("ne crée pas d'activité si le titre n'est pas valide pour la période", () => {
-    const titreActivites = titreActivitesBuild(ACTIVITES_TYPES_IDS["rapport trimestriel d'exploitation d'or en Guyane"], [2018], aujourdhui, titreId, 'pxm', [
+  test("ne crée pas d'activité si le titre n'est pas valide pour la période", async () => {
+    const titreActivites = await titreActivitesBuild(ACTIVITES_TYPES_IDS["rapport trimestriel d'exploitation d'or en Guyane"], [2018], aujourdhui, titreId, 'pxm', [
       { id: 'demarche-id', phase: {}, type: {} } as unknown as ITitreDemarche,
     ])
 
     expect(titreActivites.length).toEqual(0)
   })
 
-  test("ne crée pas d'activités si les sections sont vides", () => {
-    const titreActivitesA = titreActivitesBuild(ACTIVITES_TYPES_IDS["rapport d'exploitation (permis et concessions M)"], [2018], aujourdhui, titreId, 'pxm', [
+  test("ne crée pas d'activités si les sections sont vides", async () => {
+    const titreActivitesA = await titreActivitesBuild(ACTIVITES_TYPES_IDS["rapport d'exploitation (permis et concessions M)"], [2018], aujourdhui, titreId, 'pxm', [
       {
         id: 'demarche-id',
         statutId: 'acc',
@@ -122,7 +122,7 @@ describe("construction des activités d'un titre", () => {
 
     expect(titreActivitesA).toEqual([])
 
-    const titreActivitesB = titreActivitesBuild(ACTIVITES_TYPES_IDS["rapport d'exploitation (permis et concessions M)"], [2018], aujourdhui, titreId, 'pxm', [
+    const titreActivitesB = await titreActivitesBuild(ACTIVITES_TYPES_IDS["rapport d'exploitation (permis et concessions M)"], [2018], aujourdhui, titreId, 'pxm', [
       {
         id: 'demarche-id',
         statutId: 'acc',
@@ -143,7 +143,7 @@ describe("construction des activités d'un titre", () => {
 
     expect(titreActivitesB).toEqual([])
 
-    const titreActivitesD = titreActivitesBuild(ACTIVITES_TYPES_IDS["rapport d'exploitation (permis et concessions M)"], [2018], aujourdhui, titreId, 'pxm', [
+    const titreActivitesD = await titreActivitesBuild(ACTIVITES_TYPES_IDS["rapport d'exploitation (permis et concessions M)"], [2018], aujourdhui, titreId, 'pxm', [
       {
         id: 'demarche-id',
         activiteStatutId: 'acc',

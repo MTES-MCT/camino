@@ -16,9 +16,9 @@ import { titreStatutIdFind } from './titre-statut-id-find'
  * @param titreTypeId - id du type du titre
  * @returns la ou les propriétés recherchées ou null
  */
-export const titreEtapePropFind = (propId: IPropId, date: CaminoDate, titreDemarches: ITitreDemarche[], titreTypeId: TitreTypeId) => {
+export const titreEtapePropFind = async (propId: IPropId, date: CaminoDate, titreDemarches: ITitreDemarche[], titreTypeId: TitreTypeId) => {
   // reconstruit les démarches et étapes antérieures à la date
-  const titreDemarchesFiltered = titreDemarchesEtapesRebuild(date, titreDemarches, titreTypeId)
+  const titreDemarchesFiltered = await titreDemarchesEtapesRebuild(date, titreDemarches, titreTypeId)
 
   // calcule le statut du titre
   const titreStatutId = titreStatutIdFind(date, titreDemarchesFiltered)

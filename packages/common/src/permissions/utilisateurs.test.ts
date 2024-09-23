@@ -15,7 +15,7 @@ const users: Record<Role, UserNotNull> = {
 }
 
 test('getAssignableRoles', () => {
-  expect(Object.values(users).map(user => ({ role: user?.role, assignableRoles: getAssignableRoles(user) }))).toMatchSnapshot()
+  expect(Object.values(users).map(user => ({ role: user.role, assignableRoles: getAssignableRoles(user) }))).toMatchSnapshot()
 })
 
 test('canEditPermission', () => {

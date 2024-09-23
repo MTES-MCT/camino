@@ -83,6 +83,11 @@ export default [
 
       '@typescript-eslint/no-empty-function': 0,
       '@typescript-eslint/strict-boolean-expressions': 'error',
+      //  TODO 2024-09-19 activer ça sur le front ?
+      // '@typescript-eslint/no-floating-promises': 'error',
+      // '@typescript-eslint/no-misused-promises': 'error',
+      // '@typescript-eslint/await-thenable': 'error',
+      // '@typescript-eslint/no-unnecessary-condition': 'error',
 
       'no-restricted-imports': [
         'error',

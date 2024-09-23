@@ -79,6 +79,7 @@ class TitresEtapes extends Model {
       this.id = idGenerate()
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (!this.slug && this.titreDemarcheId && this.typeId) {
       this.slug = etapeSlugValidator.parse(`${this.titreDemarcheId}-${this.typeId}99`)
     }

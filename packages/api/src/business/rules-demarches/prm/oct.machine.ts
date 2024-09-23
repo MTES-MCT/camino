@@ -6,6 +6,7 @@ import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts'
 import { CaminoDate, dateAddMonths, daysBetween } from 'camino-common/src/date'
 import { PAYS_IDS, PaysId, isGuyane, isMetropole, isOutreMer } from 'camino-common/src/static/pays'
 import { ETAPES_STATUTS, EtapeStatutId } from 'camino-common/src/static/etapesStatuts'
+import { isNullOrUndefined } from 'camino-common/src/typescript-tools'
 
 type RendreAvisMiseEnConcurrentJORF = {
   date: CaminoDate
@@ -171,7 +172,7 @@ export class PrmOctMachine extends CaminoMachine<PrmOctContext, XStateEvent> {
           return { type: eventType, paysId: 'FR', surface: etape.surface ?? 0 }
         }
 
-        if (etape.paysId === 'GF' && etape.surface === null && etape.surface === undefined) {
+        if (etape.paysId === 'GF' && isNullOrUndefined(etape.surface)) {
           throw new Error(`la surface pour la demande est obligatoire quand la demande est en Guyane  ${JSON.stringify(etape)}`)
         }
 
@@ -226,6 +227,7 @@ const prmOctMachine = createMachine({
     paysId: null,
     surface: null,
     participationPublicStatutId: null,
+    asyncTasks: new Set<string>(),
   },
   on: {
     MODIFIER_DEMANDE: {

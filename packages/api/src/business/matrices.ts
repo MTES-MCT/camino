@@ -126,7 +126,7 @@ type ProductionBySubstance = {
 
 type TitreBuild = {
   titre: {
-    slug: TitreSlug
+    slug?: TitreSlug
     id: TitreId
     titulaireIds: EntrepriseId[]
   }
@@ -199,7 +199,7 @@ export const getRawLines = (
         const substancesFiscales = substanceLegalesWithFiscales.flatMap(substanceId => substancesFiscalesBySubstanceLegale(substanceId))
 
         for (const substancesFiscale of substancesFiscales) {
-          const production = conversion(substancesFiscale, activite.contenu.substancesFiscales[substancesFiscale.id])
+          const production = conversion(substancesFiscale, activite.contenu.substancesFiscales?.[substancesFiscale.id] ?? null)
 
           if (production.value.greaterThan(0)) {
             const communes: DeepReadonly<ICommune[]> = titre.communes
@@ -210,7 +210,7 @@ export const getRawLines = (
               for (const commune of communes) {
                 if (communePrincipale === null) {
                   communePrincipale = commune
-                } else if ((communePrincipale?.surface ?? 0) < (commune?.surface ?? 0)) {
+                } else if ((communePrincipale.surface ?? 0) < (commune.surface ?? 0)) {
                   communePrincipale = commune
                 }
               }
@@ -218,15 +218,15 @@ export const getRawLines = (
                 throw new Error(`Impossible de trouver une commune principale pour le titre ${titre.id}`)
               }
               const investissement = activiteTrimestresTitre.reduce((investissement, activite) => {
-                if (typeof activite?.contenu?.renseignements?.environnement === 'number') {
-                  return investissement.add(activite?.contenu?.renseignements?.environnement)
+                if (typeof activite.contenu?.renseignements?.environnement === 'number') {
+                  return investissement.add(activite.contenu.renseignements.environnement)
                 }
 
                 return investissement
               }, new Decimal(0))
               titresToBuild[titre.id] = {
                 titre: {
-                  slug: titre.slug!,
+                  slug: titre.slug,
                   id: titre.id,
                   titulaireIds: titre.titulaireIds,
                 },
@@ -296,7 +296,7 @@ export const getRawLines = (
               sip = 'kourou'
             }
 
-            if (titreBuild.titre.titulaireIds?.length !== 1) {
+            if (titreBuild.titre.titulaireIds.length !== 1) {
               throw new Error(`Un seul titulaire doit être présent sur le titre ${titreBuild.titre.slug}`)
             }
             const titulaireTitre = entreprises.find(({ id }) => titreBuild.titre.titulaireIds[0] === id)

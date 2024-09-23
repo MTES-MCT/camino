@@ -18,7 +18,7 @@ import { DistributiveOmit } from 'maplibre-gl'
 import { z } from 'zod'
 
 const contenuValidator = z
-  .record(z.string(), z.record(z.string(), z.union([caminoDateValidator, z.string(), z.number(), z.boolean(), z.array(z.string())]).nullable()))
+  .record(z.string(), z.record(z.string(), z.union([caminoDateValidator, z.string(), z.number(), z.boolean(), z.array(z.string())]).nullable()).optional())
   .nullable()
   .transform(nullToDefault({}))
 const dureeValidator = z.number().nullable()
@@ -67,7 +67,7 @@ const heritagePropsValidator = z
 const heritageContenuValidator = z
   .record(
     z.string(),
-    z.record(z.string(), z.object({ actif: z.boolean(), etape: z.object({ typeId: etapeTypeIdValidator, date: caminoDateValidator, contenu: contenuValidator }).nullable().optional() }))
+    z.record(z.string(), z.object({ actif: z.boolean(), etape: z.object({ typeId: etapeTypeIdValidator, date: caminoDateValidator, contenu: contenuValidator }).nullable().optional() }).optional())
   )
   .nullable()
   .transform(nullToDefault({}))

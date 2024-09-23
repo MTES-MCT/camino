@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 import { vi } from 'vitest'
-const origEmails = vi.importActual('../src/tools/api-mailjet/emails')
+const origEmails = await vi.importActual('../src/tools/api-mailjet/emails')
 vi.mock('../src/tools/api-mailjet/emails', () => ({
   __esModule: true,
   ...origEmails,

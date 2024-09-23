@@ -22,7 +22,7 @@ export const productionCheck = (activiteTypeId: string, contenu: IContenu | null
   if (activiteTypeId === 'grx' || activiteTypeId === 'gra') {
     if (contenu?.substancesFiscales) {
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-      return Object.keys(contenu.substancesFiscales).some(key => !!contenu.substancesFiscales[key])
+      return Object.keys(contenu.substancesFiscales).some(key => !!contenu.substancesFiscales?.[key])
     }
 
     return false
@@ -64,16 +64,14 @@ export const titreActiviteAdministrationsEmailsGet = (
   // sinon envoyer seulement aux minitères et aux DREAL
   const production = productionCheck(activiteTypeId, contenu)
 
-  return (
-    administrationIds
-      .map(id => Administrations[id])
-      .filter(administration => production || [ADMINISTRATION_TYPE_IDS.MINISTERE, ADMINISTRATION_TYPE_IDS.DREAL].includes(administration.typeId))
-      .filter(administration => Object.keys(activitesTypesEmailsByAdministrationId).includes(administration.id))
-      .flatMap(administration => activitesTypesEmailsByAdministrationId[administration.id])
-      .filter(activiteTypeEmail => activiteTypeEmail?.activite_type_id === activiteTypeId)
-      .map(activiteTypeEmail => activiteTypeEmail?.email)
-      .filter(isNotNullNorUndefinedNorEmpty) ?? []
-  )
+  return administrationIds
+    .map(id => Administrations[id])
+    .filter(administration => production || [ADMINISTRATION_TYPE_IDS.MINISTERE, ADMINISTRATION_TYPE_IDS.DREAL].includes(administration.typeId))
+    .filter(administration => Object.keys(activitesTypesEmailsByAdministrationId).includes(administration.id))
+    .flatMap(administration => activitesTypesEmailsByAdministrationId[administration.id])
+    .filter(activiteTypeEmail => activiteTypeEmail?.activite_type_id === activiteTypeId)
+    .map(activiteTypeEmail => activiteTypeEmail?.email)
+    .filter(isNotNullNorUndefinedNorEmpty)
 }
 
 export const titreActiviteEmailsSend = async (

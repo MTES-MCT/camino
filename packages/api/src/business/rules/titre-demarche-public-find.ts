@@ -195,10 +195,10 @@ const titreDemarchePublicLectureFind = (
  * @param titreTypeId - id du type de titre
  */
 
-export const titreDemarchePublicFind = (
+export const titreDemarchePublicFind = async (
   titreDemarche: Pick<ITitreDemarche, 'titreId' | 'demarcheDateDebut' | 'demarcheDateFin' | 'id' | 'typeId' | 'etapes'>,
   titreTypeId: TitreTypeId
-): { publicLecture: boolean; entreprisesLecture: boolean } => {
+): Promise<{ publicLecture: boolean; entreprisesLecture: boolean }> => {
   const titreDemarcheEtapes = titreEtapesSortAscByOrdre(titreDemarche.etapes ?? [])
 
   // calcule la visibilité publique ou non de la démarche
@@ -212,7 +212,7 @@ export const titreDemarchePublicFind = (
     const machine = machineFind(titreTypeId, titreDemarche.typeId, titreDemarcheEtapes, titreDemarche.id)
 
     if (machine) {
-      publicLecture = machine.demarcheStatut(toMachineEtapes(titreDemarcheEtapes.map(etape => titreEtapeForMachineValidator.parse(etape)))).publique
+      publicLecture = (await machine.demarcheStatut(toMachineEtapes(titreDemarcheEtapes.map(etape => titreEtapeForMachineValidator.parse(etape))))).publique
     } else {
       const demarcheTypeEtapesTypes = getEtapesTDE(titreTypeId, titreDemarche.typeId)
       publicLecture = titreDemarcheEtapes.reduce(

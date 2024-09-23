@@ -116,7 +116,7 @@ export const filterUtilisateur = (utilisateur: GetUtilisateur, params: Omit<Util
   if (
     isNotNullNorUndefinedNorEmpty(params.nomsUtilisateurs) &&
     !utilisateur.nom.toLowerCase().includes(params.nomsUtilisateurs.toLowerCase()) &&
-    (isNullOrUndefinedOrEmpty(utilisateur.prenom) || !(utilisateur.prenom ?? '').toLowerCase().includes(params.nomsUtilisateurs.toLowerCase()))
+    (isNullOrUndefinedOrEmpty(utilisateur.prenom) || !utilisateur.prenom.toLowerCase().includes(params.nomsUtilisateurs.toLowerCase()))
   ) {
     return false
   }

@@ -38,17 +38,17 @@ export const titresEtapesQueryModify = (q: QueryBuilder<TitresEtapes, TitresEtap
 
       // étapes visibles pour les admins
       if (isAdministration(user)) {
-        b.modify(administrationsTitresQuery, user.administrationId, 'demarche:titre', 'or', etapePointAlias)
+        b.modify(administrationsTitresQuery, user.administrationId, 'demarche:titre', 'or', etapePointAlias) // eslint-disable-line @typescript-eslint/no-misused-promises
 
         // l'utilisateur est dans au moins une administration
         // qui n'a pas de restriction 'creationInterdit' sur ce type d'étape / type de titre
         const restrictions = getAdministrationTitresTypesEtapesTypes(user.administrationId).filter(r => r.lectureInterdit)
         if (restrictions.length) {
-          b.whereNot(b =>
-            restrictions.forEach(r => b.orWhere(c => c.where(knex.raw('?? = ?', ['demarche:titre.typeId', r.titreTypeId])).where(knex.raw('?? = ?', ['titresEtapes.typeId', r.etapeTypeId]))))
+          b.whereNot(
+            b => restrictions.forEach(r => b.orWhere(c => c.where(knex.raw('?? = ?', ['demarche:titre.typeId', r.titreTypeId])).where(knex.raw('?? = ?', ['titresEtapes.typeId', r.etapeTypeId])))) // eslint-disable-line @typescript-eslint/no-misused-promises
           )
         }
-      } else if ((isEntreprise(user) || isBureauDEtudes(user)) && user.entrepriseIds?.length) {
+      } else if ((isEntreprise(user) || isBureauDEtudes(user)) && user.entrepriseIds.length) {
         const entreprisesIds = user.entrepriseIds
 
         b.orWhere(c => {

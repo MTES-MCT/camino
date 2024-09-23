@@ -27,8 +27,8 @@ export const titresDemarchesQueryModify = (q: QueryBuilder<TitresDemarches, Titr
       b.orWhere('titresDemarches.publicLecture', true)
 
       if (isAdministration(user)) {
-        b.modify(administrationsTitresQuery, user.administrationId, 'titre', 'or', etapePointAlias)
-      } else if ((isEntreprise(user) || isBureauDEtudes(user)) && user.entrepriseIds?.length) {
+        b.modify(administrationsTitresQuery, user.administrationId, 'titre', 'or', etapePointAlias) // eslint-disable-line @typescript-eslint/no-misused-promises
+      } else if ((isEntreprise(user) || isBureauDEtudes(user)) && user.entrepriseIds.length) {
         const entreprisesIds = user.entrepriseIds
 
         b.orWhere(c => {
@@ -44,7 +44,7 @@ export const titresDemarchesQueryModify = (q: QueryBuilder<TitresDemarches, Titr
     titresEtapesQueryModify(b as QueryBuilder<TitresEtapes, TitresEtapes | TitresEtapes[]>, user)
   })
 
-  q.modifyGraph('titre', a => titresQueryModify(a as QueryBuilder<Titres, Titres | Titres[]>, user))
+  q.modifyGraph('titre', a => titresQueryModify(a as QueryBuilder<Titres, Titres | Titres[]>, user)) // eslint-disable-line @typescript-eslint/no-misused-promises
 
   return q
 }

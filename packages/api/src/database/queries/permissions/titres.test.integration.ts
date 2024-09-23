@@ -244,7 +244,7 @@ describe('titresQueryModify', () => {
 
       await Titres.query().insertGraph(mockTitre)
 
-      const q = Titres.query().where('id', id).modify(titresConfidentielSelect, [entrepriseId1])
+      const q = Titres.query().where('id', id).modify(titresConfidentielSelect, [entrepriseId1]) // eslint-disable-line @typescript-eslint/no-misused-promises
 
       const res = await q
 

@@ -48,7 +48,7 @@ export const getDGTMStatsInside =
         }
       })
 
-    demarcheOctrois?.forEach(demarche => {
+    demarcheOctrois.forEach(demarche => {
       const annee = getAnnee(demarche.demarcheDateDebut)
       if (!result.depotEtInstructions[annee]) {
         result.depotEtInstructions[annee] = {
@@ -105,7 +105,7 @@ export const getDGTMStatsInside =
         }
       })
 
-    etapeDeposees?.forEach(etape => {
+    etapeDeposees.forEach(etape => {
       const annee = getAnnee(etape.date)
 
       if (!result.depotEtInstructions[annee]) {
@@ -264,7 +264,7 @@ export const getDGTMStatsInside =
   and te.date >= '${anneeDepartStats}-01-01'
   group by (substring(te.date, 0, 5), te.type_id, te.statut_id)`)
 
-    if (avisAXM?.rows?.length) {
+    if (avisAXM.rows.length) {
       result.avisAXM = avisAXM.rows.reduce<StatistiquesDGTM['avisAXM']>((acc, r) => {
         ;(acc[r.annee] ??= {
           apd: { fav: 0, def: 0, dre: 0, fre: 0, ajo: 0 },

@@ -14,8 +14,8 @@ import { km2Validator } from 'camino-common/src/number'
 
 console.warn = vi.fn()
 describe('teste titreDemarcheUpdatedEtatValidate', () => {
-  test('ajoute une étape à une démarche vide', () => {
-    const valid = titreDemarcheUpdatedEtatValidate(
+  test('ajoute une étape à une démarche vide', async () => {
+    const valid = await titreDemarcheUpdatedEtatValidate(
       'oct',
       {
         typeId: 'arm',
@@ -29,8 +29,8 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
     expect(valid.valid).toBe(true)
   })
 
-  test('ajoute une étape à une démarche qui contient déjà une étape', () => {
-    const valid = titreDemarcheUpdatedEtatValidate(
+  test('ajoute une étape à une démarche qui contient déjà une étape', async () => {
+    const valid = await titreDemarcheUpdatedEtatValidate(
       'oct',
       {
         typeId: 'arm',
@@ -45,7 +45,7 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
     expect(valid.valid).toBe(true)
   })
 
-  test('prend en compte les données des étapes pour la machine', () => {
+  test('prend en compte les données des étapes pour la machine', async () => {
     const demande: Pick<ITitreEtape, 'id' | 'statutId' | 'ordre' | 'typeId' | 'date' | 'contenu' | 'surface' | 'communes' | 'isBrouillon'> = {
       id: etapeIdValidator.parse('idMfr'),
       typeId: 'mfr',
@@ -57,7 +57,7 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
       contenu: null,
       surface: km2Validator.parse(51),
     }
-    const valid = titreDemarcheUpdatedEtatValidate(
+    const valid = await titreDemarcheUpdatedEtatValidate(
       'oct',
       {
         typeId: 'prm',
@@ -85,8 +85,8 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
       `)
   })
 
-  test('modifie une étape à une démarche', () => {
-    const valid = titreDemarcheUpdatedEtatValidate(
+  test('modifie une étape à une démarche', async () => {
+    const valid = await titreDemarcheUpdatedEtatValidate(
       'oct',
       {
         typeId: 'arm',
@@ -113,8 +113,8 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
     expect(valid.valid).toBe(true)
   })
 
-  test('l’ajout d’une étape d’une démarche historique est valide', () => {
-    const valid = titreDemarcheUpdatedEtatValidate(
+  test('l’ajout d’une étape d’une démarche historique est valide', async () => {
+    const valid = await titreDemarcheUpdatedEtatValidate(
       'oct',
       {
         typeId: 'arm',
@@ -130,8 +130,8 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
     expect(valid.valid).toBe(true)
   })
 
-  test('l’ajout d’une étape à une démarche sans étape est valide', () => {
-    const valid = titreDemarcheUpdatedEtatValidate(
+  test('l’ajout d’une étape à une démarche sans étape est valide', async () => {
+    const valid = await titreDemarcheUpdatedEtatValidate(
       'oct',
       {
         typeId: 'arm',
@@ -145,8 +145,8 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
     expect(valid.valid).toBe(true)
   })
 
-  test("retourne une erreur si la démarche en cours de modification n'existe pas", () => {
-    expect(
+  test("retourne une erreur si la démarche en cours de modification n'existe pas", async () => {
+    await expect(
       titreDemarcheUpdatedEtatValidate(
         'oct',
         {
@@ -158,7 +158,7 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
 
         []
       )
-    ).toMatchInlineSnapshot(`
+    ).resolves.toMatchInlineSnapshot(`
       {
         "errors": [
           "les étapes de la démarche machine ne sont pas valides",
@@ -167,7 +167,7 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
       }
     `)
 
-    expect(
+    await expect(
       titreDemarcheUpdatedEtatValidate(
         'oct',
         {
@@ -178,7 +178,7 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
 
         []
       )
-    ).toMatchInlineSnapshot(`
+    ).resolves.toMatchInlineSnapshot(`
       {
         "errors": [
           "les étapes de la démarche machine ne sont pas valides",
@@ -188,8 +188,8 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
     `)
   })
 
-  test('supprime une étape', () => {
-    const valid = titreDemarcheUpdatedEtatValidate(
+  test('supprime une étape', async () => {
+    const valid = await titreDemarcheUpdatedEtatValidate(
       'oct',
       {
         typeId: 'arm',
@@ -204,8 +204,8 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
     expect(valid.valid).toBe(true)
   })
 
-  test('ajoute une étape à une démarche sans machine', () => {
-    const valid = titreDemarcheUpdatedEtatValidate(
+  test('ajoute une étape à une démarche sans machine', async () => {
+    const valid = await titreDemarcheUpdatedEtatValidate(
       'oct',
       {
         typeId: 'arm',
@@ -225,8 +225,8 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
     expect(valid.valid).toBe(true)
   })
 
-  test('ajoute une demande en construction à une démarche vide', () => {
-    const valid = titreDemarcheUpdatedEtatValidate(
+  test('ajoute une demande en construction à une démarche vide', async () => {
+    const valid = await titreDemarcheUpdatedEtatValidate(
       'oct',
       {
         typeId: 'axm',
@@ -242,8 +242,8 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
     expect(valid.valid).toBe(true)
   })
 
-  test('ajoute une demande en construction à une démarche qui contient déjà une étape', () => {
-    const valid = titreDemarcheUpdatedEtatValidate(
+  test('ajoute une demande en construction à une démarche qui contient déjà une étape', async () => {
+    const valid = await titreDemarcheUpdatedEtatValidate(
       'oct',
       {
         typeId: 'axm',
@@ -258,8 +258,8 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
     expect(valid.valid).toBe(true)
   })
 
-  test('modifie une demande en construction à une démarche', () => {
-    const valid = titreDemarcheUpdatedEtatValidate(
+  test('modifie une demande en construction à une démarche', async () => {
+    const valid = await titreDemarcheUpdatedEtatValidate(
       'oct',
       {
         typeId: 'axm',
@@ -277,8 +277,8 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
     expect(valid.valid).toBe(true)
   })
 
-  test('ne peut pas ajouter une 2ème demande en construction à une démarche', () => {
-    expect(
+  test('ne peut pas ajouter une 2ème demande en construction à une démarche', async () => {
+    await expect(
       titreDemarcheUpdatedEtatValidate(
         'oct',
         {
@@ -290,7 +290,7 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
 
         [{ id: etapeIdValidator.parse('1'), typeId: 'mfr', statutId: 'fai', isBrouillon: ETAPE_IS_BROUILLON, date: caminoDateValidator.parse('2024-01-01'), ordre: 1 }]
       )
-    ).toMatchInlineSnapshot(`
+    ).resolves.toMatchInlineSnapshot(`
       {
         "errors": [
           "les étapes de la démarche machine ne sont pas valides",
@@ -300,8 +300,8 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
     `)
   })
 
-  test('ne peut pas ajouter une étape de type inconnu sur une machine', () => {
-    expect(
+  test('ne peut pas ajouter une étape de type inconnu sur une machine', async () => {
+    await expect(
       titreDemarcheUpdatedEtatValidate(
         'oct',
         {
@@ -344,7 +344,7 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
           },
         ]
       )
-    ).toMatchInlineSnapshot(`
+    ).resolves.toMatchInlineSnapshot(`
       {
         "errors": [
           "les étapes de la démarche machine ne sont pas valides",
@@ -536,8 +536,8 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
   ]
 
   const machine = new ArmOctMachine()
-  test('modifie une étape existante', () => {
-    const tested = etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(machine, etapes, 'etapeId3', toCaminoDate('2019-10-11'))
+  test('modifie une étape existante', async () => {
+    const tested = await etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(machine, etapes, 'etapeId3', toCaminoDate('2019-10-11'))
     expect(Object.keys(tested)).toHaveLength(1)
     expect(tested.dae).toMatchInlineSnapshot(`
       {
@@ -549,9 +549,9 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
     `)
   })
 
-  test('modifie une étape existante à la même date devrait permettre de recréer la même étape', () => {
-    for (const etape of etapes ?? []) {
-      const etapesTypesPossibles = etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(machine, etapes, etape.id, etape.date)
+  test('modifie une étape existante à la même date devrait permettre de recréer la même étape', async () => {
+    for (const etape of etapes) {
+      const etapesTypesPossibles = await etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(machine, etapes, etape.id, etape.date)
       if (Object.keys(etapesTypesPossibles).length === 0) {
         console.error(`pas d'étapes possibles à l'étape ${JSON.stringify(etape)}. Devrait contenir AU MOINS la même étape`)
       }
@@ -560,8 +560,8 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
     }
   })
 
-  test('ajoute une nouvelle étape à la fin', () => {
-    const tested = etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(machine, etapes, null, toCaminoDate('2022-05-06'))
+  test('ajoute une nouvelle étape à la fin', async () => {
+    const tested = await etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(machine, etapes, null, toCaminoDate('2022-05-06'))
     expect(Object.keys(tested)).toHaveLength(1)
     expect(tested.mnv).toMatchInlineSnapshot(`
       {
@@ -573,12 +573,12 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
     `)
   })
 
-  test('ajoute une nouvelle étape en plein milieu', () => {
-    const tested = etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(machine, etapes, null, toCaminoDate('2019-12-04'))
+  test('ajoute une nouvelle étape en plein milieu', async () => {
+    const tested = await etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(machine, etapes, null, toCaminoDate('2019-12-04'))
     expect(Object.keys(tested).toSorted()).toStrictEqual(['ede', 'edm', 'mod'])
   })
 
-  test('peut faire une dae, une rde et pfd AVANT la mfr', () => {
+  test('peut faire une dae, une rde et pfd AVANT la mfr', async () => {
     const etapes: TitreEtapeForMachine[] = [
       {
         id: newEtapeId('idMfr'),
@@ -604,11 +604,11 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       },
     ]
 
-    const tested = etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(machine, etapes, null, toCaminoDate('2019-12-04'))
+    const tested = await etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(machine, etapes, null, toCaminoDate('2019-12-04'))
     expect(Object.keys(tested).toSorted()).toStrictEqual(['dae', 'pfd', 'rde'])
   })
 
-  test('peut faire que une pfd AVANT la mfr non mecanisee', () => {
+  test('peut faire que une pfd AVANT la mfr non mecanisee', async () => {
     const etapes: TitreEtapeForMachine[] = [
       {
         id: newEtapeId('idMfr'),
@@ -634,11 +634,11 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       },
     ]
 
-    const tested = etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(machine, etapes, null, toCaminoDate('2019-12-04'))
+    const tested = await etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(machine, etapes, null, toCaminoDate('2019-12-04'))
     expect(Object.keys(tested)).toStrictEqual(['pfd'])
   })
 
-  test('peut faire refuser une rde après une demande mécanisée', () => {
+  test('peut faire refuser une rde après une demande mécanisée', async () => {
     console.warn = vi.fn()
     const etapes: TitreEtapeForMachine[] = [
       {
@@ -787,11 +787,11 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       },
     ]
 
-    const tested = etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(machine, etapes, null, toCaminoDate('2022-07-01'))
+    const tested = await etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(machine, etapes, null, toCaminoDate('2022-07-01'))
     expect(Object.keys(tested).toSorted()).toStrictEqual(['asc', 'css', 'des', 'ede', 'mcb', 'mod', 'rcb', 'rde'])
     vi.resetAllMocks()
   })
-  test('peut faire une completude (mcp) le même jour que le dépôt (mdp) de la demande', () => {
+  test('peut faire une completude (mcp) le même jour que le dépôt (mdp) de la demande', async () => {
     const etapes: TitreEtapeForMachine[] = [
       {
         id: newEtapeId('id3'),
@@ -846,7 +846,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       },
     ]
 
-    const tested = etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(machine, etapes, null, toCaminoDate('2022-07-01'))
+    const tested = await etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(machine, etapes, null, toCaminoDate('2022-07-01'))
     expect(Object.keys(tested).toSorted()).toStrictEqual(['css', 'des', 'mcb', 'mcp', 'mod', 'rde'])
   })
 })

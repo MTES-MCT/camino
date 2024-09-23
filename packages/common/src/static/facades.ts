@@ -108,7 +108,7 @@ export const getDepartementsBySecteurs = (ids: SecteursMaritimes[]): Departement
 export const getSecteurMaritime = (id: SecteursMaritimesIds): SecteursMaritimes => {
   const result: [SecteursMaritimes, any] | undefined = Object.values<Record<string, { ids: readonly number[] }>>(facades)
     .flatMap(f => getEntries(f, isSecteurMaritime))
-    .find(([_secteur, value]) => value?.ids?.includes(id))
+    .find(([_secteur, value]) => value.ids.includes(id))
   if (result === undefined) {
     throw new Error(`Cas impossible, l'id ${id} n'est pas connu`)
   }

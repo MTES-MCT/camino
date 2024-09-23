@@ -25,16 +25,16 @@ const etapesBuild = (etapesProps: Partial<ITitreEtape>[], demarcheTypeId: Demarc
   )
 
 describe("statut d'une démarche", () => {
-  test('une démarche sans étape a le statut “indéfini”', () => {
-    expect(titreDemarcheStatutIdFind('oct', [], 'pxm', newDemarcheId())).toEqual('ind')
+  test('une démarche sans étape a le statut “indéfini”', async () => {
+    await expect(titreDemarcheStatutIdFind('oct', [], 'pxm', newDemarcheId())).resolves.toEqual('ind')
   })
 
-  test("une démarche d'octroi sans étape décisive a le statut “indéfini”", () => {
-    expect(titreDemarcheStatutIdFind('oct', etapesBuild([{ typeId: 'anf' }], 'oct', 'pxm'), 'pxm', newDemarcheId())).toEqual('ind')
+  test("une démarche d'octroi sans étape décisive a le statut “indéfini”", async () => {
+    await expect(titreDemarcheStatutIdFind('oct', etapesBuild([{ typeId: 'anf' }], 'oct', 'pxm'), 'pxm', newDemarcheId())).resolves.toEqual('ind')
   })
 
-  test("une démarche d'octroi dont l'étape de dpu la plus récente est acceptée a le statut “accepté”", () => {
-    expect(
+  test("une démarche d'octroi dont l'étape de dpu la plus récente est acceptée a le statut “accepté”", async () => {
+    await expect(
       titreDemarcheStatutIdFind(
         'oct',
         etapesBuild(
@@ -48,15 +48,15 @@ describe("statut d'une démarche", () => {
         'pxm',
         newDemarcheId()
       )
-    ).toEqual('acc')
+    ).resolves.toEqual('acc')
   })
 
-  test("une démarche d'octroi d'un titre AXM dont l'étape de dex la plus récente est acceptée a le statut “accepté”", () => {
-    expect(titreDemarcheStatutIdFind('oct', etapesBuild([{ typeId: 'dex', date: toCaminoDate('2010-01-01'), statutId: 'acc' }], 'oct', 'axm'), 'axm', newDemarcheId())).toEqual('acc')
+  test("une démarche d'octroi d'un titre AXM dont l'étape de dex la plus récente est acceptée a le statut “accepté”", async () => {
+    await expect(titreDemarcheStatutIdFind('oct', etapesBuild([{ typeId: 'dex', date: toCaminoDate('2010-01-01'), statutId: 'acc' }], 'oct', 'axm'), 'axm', newDemarcheId())).resolves.toEqual('acc')
   })
 
-  test("une démarche d'octroi d'un titre ARM dont l'étape de def la plus récente est acceptée a le statut “accepté”", () => {
-    expect(
+  test("une démarche d'octroi d'un titre ARM dont l'étape de def la plus récente est acceptée a le statut “accepté”", async () => {
+    await expect(
       titreDemarcheStatutIdFind(
         'oct',
         etapesBuild([
@@ -69,15 +69,15 @@ describe("statut d'une démarche", () => {
         'arm',
         newDemarcheId()
       )
-    ).toEqual('acc')
+    ).resolves.toEqual('acc')
   })
 
-  test("une démarche d'octroi d'un titre PRM dont l'étape de rpu la plus récente est acceptée a le statut “accepté”", () => {
-    expect(titreDemarcheStatutIdFind('oct', etapesBuild([{ typeId: 'rpu', date: toCaminoDate('2010-01-01'), statutId: 'acc' }], 'oct', 'prm'), 'prm', newDemarcheId())).toEqual('acc')
+  test("une démarche d'octroi d'un titre PRM dont l'étape de rpu la plus récente est acceptée a le statut “accepté”", async () => {
+    await expect(titreDemarcheStatutIdFind('oct', etapesBuild([{ typeId: 'rpu', date: toCaminoDate('2010-01-01'), statutId: 'acc' }], 'oct', 'prm'), 'prm', newDemarcheId())).resolves.toEqual('acc')
   })
 
-  test("une démarche de prolongation dont l'étape de dpu la plus récente est acceptée a le statut “accepté”", () => {
-    expect(
+  test("une démarche de prolongation dont l'étape de dpu la plus récente est acceptée a le statut “accepté”", async () => {
+    await expect(
       titreDemarcheStatutIdFind(
         'pro',
         etapesBuild([
@@ -87,11 +87,11 @@ describe("statut d'une démarche", () => {
         'pxm',
         newDemarcheId()
       )
-    ).toEqual('acc')
+    ).resolves.toEqual('acc')
   })
 
-  test("une démarche d'octroi dont l'étape de sco est faite a le statut “accepté”", () => {
-    expect(
+  test("une démarche d'octroi dont l'étape de sco est faite a le statut “accepté”", async () => {
+    await expect(
       titreDemarcheStatutIdFind(
         'oct',
         etapesBuild([
@@ -124,8 +124,8 @@ describe("statut d'une démarche", () => {
         'arm',
         newDemarcheId()
       )
-    ).toEqual('acc')
-    expect(
+    ).resolves.toEqual('acc')
+    await expect(
       titreDemarcheStatutIdFind(
         'oct',
         etapesBuild([
@@ -138,19 +138,19 @@ describe("statut d'une démarche", () => {
         'arm',
         newDemarcheId()
       )
-    ).toEqual('acc')
+    ).resolves.toEqual('acc')
   })
 
-  test("une démarche d'octroi d'un titre autre qu'ARM dont l'étape de sco est faite a le statut “indéfini”", () => {
-    expect(titreDemarcheStatutIdFind('oct', etapesBuild([{ typeId: 'sco', statutId: 'fai' }]), 'pxm', newDemarcheId())).toEqual('ind')
+  test("une démarche d'octroi d'un titre autre qu'ARM dont l'étape de sco est faite a le statut “indéfini”", async () => {
+    await expect(titreDemarcheStatutIdFind('oct', etapesBuild([{ typeId: 'sco', statutId: 'fai' }]), 'pxm', newDemarcheId())).resolves.toEqual('ind')
   })
 
-  test("une démarche d'octroi ne contenant une unique étape de dex acceptée a le statut “en instruction”", () => {
-    expect(titreDemarcheStatutIdFind('oct', etapesBuild([{ typeId: 'dex', statutId: 'acc' }]), 'pxm', newDemarcheId())).toEqual('ins')
+  test("une démarche d'octroi ne contenant une unique étape de dex acceptée a le statut “en instruction”", async () => {
+    await expect(titreDemarcheStatutIdFind('oct', etapesBuild([{ typeId: 'dex', statutId: 'acc' }]), 'pxm', newDemarcheId())).resolves.toEqual('ins')
   })
 
-  test("une démarche d'octroi contenant une étape de publication acceptée après une dex acceptée a le statut “accepté”", () => {
-    expect(
+  test("une démarche d'octroi contenant une étape de publication acceptée après une dex acceptée a le statut “accepté”", async () => {
+    await expect(
       titreDemarcheStatutIdFind(
         'oct',
         etapesBuild([
@@ -160,19 +160,19 @@ describe("statut d'une démarche", () => {
         'pxm',
         newDemarcheId()
       )
-    ).toEqual('acc')
+    ).resolves.toEqual('acc')
   })
 
-  test("une démarche d'octroi dont l'unique étape de dex est rejetée a le statut “rejeté”", () => {
-    expect(titreDemarcheStatutIdFind('oct', etapesBuild([{ typeId: 'dex', statutId: 'rej' }]), 'pxm', newDemarcheId())).toEqual('rej')
+  test("une démarche d'octroi dont l'unique étape de dex est rejetée a le statut “rejeté”", async () => {
+    await expect(titreDemarcheStatutIdFind('oct', etapesBuild([{ typeId: 'dex', statutId: 'rej' }]), 'pxm', newDemarcheId())).resolves.toEqual('rej')
   })
 
-  test("une démarche d'octroi dont l'étape est men a le statut “en instruction”", () => {
-    expect(titreDemarcheStatutIdFind('oct', etapesBuild([{ typeId: 'men' }]), 'pxm', newDemarcheId())).toEqual('ind')
+  test("une démarche d'octroi dont l'étape est men a le statut “en instruction”", async () => {
+    await expect(titreDemarcheStatutIdFind('oct', etapesBuild([{ typeId: 'men' }]), 'pxm', newDemarcheId())).resolves.toEqual('ind')
   })
 
-  test("une démarche d'octroi d'un titre ARM dont l'étape de mdp (statut fai) a le statut “en instruction”", () => {
-    expect(
+  test("une démarche d'octroi d'un titre ARM dont l'étape de mdp (statut fai) a le statut “en instruction”", async () => {
+    await expect(
       titreDemarcheStatutIdFind(
         'oct',
         etapesBuild(
@@ -186,11 +186,11 @@ describe("statut d'une démarche", () => {
         'arm',
         newDemarcheId()
       )
-    ).toEqual('ins')
+    ).resolves.toEqual('ins')
   })
 
-  test("une démarche d'octroi d'un titre ARM dont l'étape de mcp a le statut “en instruction”", () => {
-    expect(
+  test("une démarche d'octroi d'un titre ARM dont l'étape de mcp a le statut “en instruction”", async () => {
+    await expect(
       titreDemarcheStatutIdFind(
         'oct',
         etapesBuild([
@@ -202,11 +202,11 @@ describe("statut d'une démarche", () => {
         'arm',
         newDemarcheId()
       )
-    ).toEqual('ins')
+    ).resolves.toEqual('ins')
   })
 
-  test("une démarche d'octroi d'un titre ARM dont la dernière étape de def est acceptée a le statut “accepté”", () => {
-    expect(
+  test("une démarche d'octroi d'un titre ARM dont la dernière étape de def est acceptée a le statut “accepté”", async () => {
+    await expect(
       titreDemarcheStatutIdFind(
         'oct',
         etapesBuild([
@@ -219,11 +219,11 @@ describe("statut d'une démarche", () => {
         'arm',
         newDemarcheId()
       )
-    ).toEqual('acc')
+    ).resolves.toEqual('acc')
   })
 
-  test("une démarche d'octroi d'un titre ARM dont la dernière étape de def est rejetée a le statut “rejeté”", () => {
-    expect(
+  test("une démarche d'octroi d'un titre ARM dont la dernière étape de def est rejetée a le statut “rejeté”", async () => {
+    await expect(
       titreDemarcheStatutIdFind(
         'oct',
         etapesBuild([
@@ -236,35 +236,35 @@ describe("statut d'une démarche", () => {
         'arm',
         newDemarcheId()
       )
-    ).toEqual('rej')
+    ).resolves.toEqual('rej')
   })
 
-  test("une démarche d'octroi d'un titre autre qu'ARM dont la dernière étape est une def a le statut “indéfini”", () => {
-    expect(titreDemarcheStatutIdFind('oct', etapesBuild([{ typeId: 'def', statutId: 'rej' }]), 'prh', newDemarcheId())).toEqual('ind')
+  test("une démarche d'octroi d'un titre autre qu'ARM dont la dernière étape est une def a le statut “indéfini”", async () => {
+    await expect(titreDemarcheStatutIdFind('oct', etapesBuild([{ typeId: 'def', statutId: 'rej' }]), 'prh', newDemarcheId())).resolves.toEqual('ind')
   })
 
-  test("une démarche d'octroi dont l'étape la plus récente est des a le statut “désisté”", () => {
-    expect(titreDemarcheStatutIdFind('oct', etapesBuild([{ typeId: 'des' }]), 'pxm', newDemarcheId())).toEqual('des')
+  test("une démarche d'octroi dont l'étape la plus récente est des a le statut “désisté”", async () => {
+    await expect(titreDemarcheStatutIdFind('oct', etapesBuild([{ typeId: 'des' }]), 'pxm', newDemarcheId())).resolves.toEqual('des')
   })
 
-  test("une démarche d'octroi dont l'étape la plus récente est mdp (statut fai) a le statut “déposé”", () => {
-    expect(titreDemarcheStatutIdFind('oct', etapesBuild([{ typeId: 'mdp', statutId: 'fai' }]), 'pxm', newDemarcheId())).toEqual('dep')
+  test("une démarche d'octroi dont l'étape la plus récente est mdp (statut fai) a le statut “déposé”", async () => {
+    await expect(titreDemarcheStatutIdFind('oct', etapesBuild([{ typeId: 'mdp', statutId: 'fai' }]), 'pxm', newDemarcheId())).resolves.toEqual('dep')
   })
 
-  test("une démarche d'octroi dont l'étape la plus récente est mfr a le statut “en construction”", () => {
-    expect(titreDemarcheStatutIdFind('oct', etapesBuild([{ typeId: 'mfr', statutId: 'fai', isBrouillon: ETAPE_IS_BROUILLON }]), 'pxm', newDemarcheId())).toEqual('eco')
+  test("une démarche d'octroi dont l'étape la plus récente est mfr a le statut “en construction”", async () => {
+    await expect(titreDemarcheStatutIdFind('oct', etapesBuild([{ typeId: 'mfr', statutId: 'fai', isBrouillon: ETAPE_IS_BROUILLON }]), 'pxm', newDemarcheId())).resolves.toEqual('eco')
   })
 
-  test("une démarche d'octroi dont l'étape la plus récente est mcr a le statut “en instruction”", () => {
-    expect(titreDemarcheStatutIdFind('oct', etapesBuild([{ typeId: 'mcr' }]), 'pxm', newDemarcheId())).toEqual('ins')
+  test("une démarche d'octroi dont l'étape la plus récente est mcr a le statut “en instruction”", async () => {
+    await expect(titreDemarcheStatutIdFind('oct', etapesBuild([{ typeId: 'mcr' }]), 'pxm', newDemarcheId())).resolves.toEqual('ins')
   })
 
-  test("une démarche d'octroi dont l'étape la plus récente est css a le statut “classé sans suite”", () => {
-    expect(titreDemarcheStatutIdFind('oct', etapesBuild([{ typeId: 'css' }]), 'pxm', newDemarcheId())).toEqual('cls')
+  test("une démarche d'octroi dont l'étape la plus récente est css a le statut “classé sans suite”", async () => {
+    await expect(titreDemarcheStatutIdFind('oct', etapesBuild([{ typeId: 'css' }]), 'pxm', newDemarcheId())).resolves.toEqual('cls')
   })
 
-  test("une démarche d'octroi dont l'étape la plus récente d'aca est défavorable a le statut “rejeté”", () => {
-    expect(
+  test("une démarche d'octroi dont l'étape la plus récente d'aca est défavorable a le statut “rejeté”", async () => {
+    await expect(
       titreDemarcheStatutIdFind(
         'oct',
         etapesBuild([
@@ -281,11 +281,11 @@ describe("statut d'une démarche", () => {
         'arm',
         newDemarcheId()
       )
-    ).toEqual('rej')
+    ).resolves.toEqual('rej')
   })
 
-  test("une démarche d'octroi dont l'étape la plus récente d'aca est favorable reste “en instruction”", () => {
-    expect(
+  test("une démarche d'octroi dont l'étape la plus récente d'aca est favorable reste “en instruction”", async () => {
+    await expect(
       titreDemarcheStatutIdFind(
         'oct',
         etapesBuild([
@@ -302,55 +302,55 @@ describe("statut d'une démarche", () => {
         'arm',
         newDemarcheId()
       )
-    ).toEqual('ins')
+    ).resolves.toEqual('ins')
   })
 
-  test('une démarche de retrait sans aucune étape décisive a le statut “indéterminé”', () => {
-    expect(titreDemarcheStatutIdFind('ret', etapesBuild([{ typeId: 'ihi' }]), 'pxm', newDemarcheId())).toEqual('ind')
+  test('une démarche de retrait sans aucune étape décisive a le statut “indéterminé”', async () => {
+    await expect(titreDemarcheStatutIdFind('ret', etapesBuild([{ typeId: 'ihi' }]), 'pxm', newDemarcheId())).resolves.toEqual('ind')
   })
 
-  test("une démarche de retrait dont l'étape la plus récente de dpu a été faite a le statut “terminé”", () => {
-    expect(titreDemarcheStatutIdFind('ret', etapesBuild([{ typeId: 'dpu', statutId: 'fai' }]), 'pxm', newDemarcheId())).toEqual('ter')
+  test("une démarche de retrait dont l'étape la plus récente de dpu a été faite a le statut “terminé”", async () => {
+    await expect(titreDemarcheStatutIdFind('ret', etapesBuild([{ typeId: 'dpu', statutId: 'fai' }]), 'pxm', newDemarcheId())).resolves.toEqual('ter')
   })
 
-  test("une démarche de retrait dont l'étape la plus récente est spp a le statut “en instruction”", () => {
-    expect(titreDemarcheStatutIdFind('ret', etapesBuild([{ typeId: 'spp' }]), 'pxm', newDemarcheId())).toEqual('ins')
+  test("une démarche de retrait dont l'étape la plus récente est spp a le statut “en instruction”", async () => {
+    await expect(titreDemarcheStatutIdFind('ret', etapesBuild([{ typeId: 'spp' }]), 'pxm', newDemarcheId())).resolves.toEqual('ins')
   })
 
-  test("une démarche de retrait dont l'étape la plus récente est asc a le statut “en instruction”", () => {
-    expect(titreDemarcheStatutIdFind('ret', etapesBuild([{ typeId: 'spp' }, { typeId: 'asc' }]), 'pxm', newDemarcheId())).toEqual('ins')
+  test("une démarche de retrait dont l'étape la plus récente est asc a le statut “en instruction”", async () => {
+    await expect(titreDemarcheStatutIdFind('ret', etapesBuild([{ typeId: 'spp' }, { typeId: 'asc' }]), 'pxm', newDemarcheId())).resolves.toEqual('ins')
   })
 
-  test("une démarche de retrait dont l'étape la plus récente est aco a le statut “terminé”", () => {
-    expect(titreDemarcheStatutIdFind('ret', etapesBuild([{ typeId: 'aco' }]), 'pxm', newDemarcheId())).toEqual('ter')
+  test("une démarche de retrait dont l'étape la plus récente est aco a le statut “terminé”", async () => {
+    await expect(titreDemarcheStatutIdFind('ret', etapesBuild([{ typeId: 'aco' }]), 'pxm', newDemarcheId())).resolves.toEqual('ter')
   })
 
-  test("une démarche de retrait dont l'étape la plus récente de css a été faite a le statut “classé sans suite”", () => {
-    expect(titreDemarcheStatutIdFind('ret', etapesBuild([{ typeId: 'css' }]), 'pxm', newDemarcheId())).toEqual('cls')
+  test("une démarche de retrait dont l'étape la plus récente de css a été faite a le statut “classé sans suite”", async () => {
+    await expect(titreDemarcheStatutIdFind('ret', etapesBuild([{ typeId: 'css' }]), 'pxm', newDemarcheId())).resolves.toEqual('cls')
   })
 
-  test("une démarche de demande dont l'étape la plus récente est spp ne change pas de statut", () => {
-    expect(titreDemarcheStatutIdFind('oct', etapesBuild([{ typeId: 'spp' }]), 'pxm', newDemarcheId())).toEqual('ind')
+  test("une démarche de demande dont l'étape la plus récente est spp ne change pas de statut", async () => {
+    await expect(titreDemarcheStatutIdFind('oct', etapesBuild([{ typeId: 'spp' }]), 'pxm', newDemarcheId())).resolves.toEqual('ind')
   })
 
-  test("une démarche dont l'étape la plus récente est de type “abrogation de la décision” a le statut “en instruction”", () => {
-    expect(titreDemarcheStatutIdFind('oct', etapesBuild([{ typeId: 'abd' }]), 'pxm', newDemarcheId())).toEqual('ins')
+  test("une démarche dont l'étape la plus récente est de type “abrogation de la décision” a le statut “en instruction”", async () => {
+    await expect(titreDemarcheStatutIdFind('oct', etapesBuild([{ typeId: 'abd' }]), 'pxm', newDemarcheId())).resolves.toEqual('ins')
   })
 
-  test("une démarche dont l'étape la plus récente d'annulation de la décision est favorable a le statut “en instruction”", () => {
-    expect(titreDemarcheStatutIdFind('oct', etapesBuild([{ typeId: 'and', statutId: 'fai' }]), 'pxm', newDemarcheId())).toEqual('ins')
+  test("une démarche dont l'étape la plus récente d'annulation de la décision est favorable a le statut “en instruction”", async () => {
+    await expect(titreDemarcheStatutIdFind('oct', etapesBuild([{ typeId: 'and', statutId: 'fai' }]), 'pxm', newDemarcheId())).resolves.toEqual('ins')
   })
 
-  test("une démarche dont l'étape la plus récente d'annulation de la décision est favorable a le statut “accepté”", () => {
-    expect(titreDemarcheStatutIdFind('oct', etapesBuild([{ typeId: 'and', statutId: 'acc' }]), 'pxm', newDemarcheId())).toEqual('acc')
+  test("une démarche dont l'étape la plus récente d'annulation de la décision est favorable a le statut “accepté”", async () => {
+    await expect(titreDemarcheStatutIdFind('oct', etapesBuild([{ typeId: 'and', statutId: 'acc' }]), 'pxm', newDemarcheId())).resolves.toEqual('acc')
   })
 
-  test("une démarche dont l'étape la plus récente d'annulation de la décision est favorable a le statut “rejeté”", () => {
-    expect(titreDemarcheStatutIdFind('oct', etapesBuild([{ typeId: 'and', statutId: 'rej' }]), 'pxm', newDemarcheId())).toEqual('rej')
+  test("une démarche dont l'étape la plus récente d'annulation de la décision est favorable a le statut “rejeté”", async () => {
+    await expect(titreDemarcheStatutIdFind('oct', etapesBuild([{ typeId: 'and', statutId: 'rej' }]), 'pxm', newDemarcheId())).resolves.toEqual('rej')
   })
 
-  test('une démarche inexistante a le statut “indéfini”', () => {
-    expect(
+  test('une démarche inexistante a le statut “indéfini”', async () => {
+    await expect(
       titreDemarcheStatutIdFind(
         // @ts-ignore
         'xxx',
@@ -358,7 +358,7 @@ describe("statut d'une démarche", () => {
         'pxm',
         newDemarcheId()
       )
-    ).toEqual('ind')
+    ).resolves.toEqual('ind')
   })
 
   test.each<[EtapeTypeId, EtapeStatutId, DemarcheStatutId]>([
@@ -378,8 +378,8 @@ describe("statut d'une démarche", () => {
     [Travaux.ArreteOuvertureTravauxMiniers, 'fai', Demarches.Accepte],
     [Travaux.PubliDecisionRecueilActesAdmin, 'fai', Demarches.Accepte],
     [Travaux.Abandon, 'fai', Demarches.Desiste],
-  ])("pour une démarche de travaux de type 'aom' sur un titre, dont la dernière étape est '%s' au statut %s, le résultat est %s", (etapeTypeId, statutId, resultId) => {
-    expect(titreDemarcheStatutIdFind('aom', etapesBuild([{ typeId: etapeTypeId, statutId }]), 'pxm', newDemarcheId())).toEqual(resultId)
+  ])("pour une démarche de travaux de type 'aom' sur un titre, dont la dernière étape est '%s' au statut %s, le résultat est %s", async (etapeTypeId, statutId, resultId) => {
+    await expect(titreDemarcheStatutIdFind('aom', etapesBuild([{ typeId: etapeTypeId, statutId }]), 'pxm', newDemarcheId())).resolves.toEqual(resultId)
   })
 
   test.each<[EtapeTypeId, EtapeStatutId, DemarcheStatutId]>([
@@ -395,8 +395,8 @@ describe("statut d'une démarche", () => {
     [Travaux.AvisPrescriptionsDemandeur, 'fai', Demarches.EnInstruction],
     [Travaux.DonneActeDeclaration, 'fai', Demarches.Accepte],
     [Travaux.Abandon, 'fai', Demarches.Desiste],
-  ])("pour une démarche de travaux de type 'dot' sur un titre, dont la dernière étape est '%s' au statut %s, le résultat est %s", (etapeTypeId, statutId, resultId) => {
-    expect(titreDemarcheStatutIdFind('dot', etapesBuild([{ typeId: etapeTypeId, statutId }]), 'pxm', newDemarcheId())).toEqual(resultId)
+  ])("pour une démarche de travaux de type 'dot' sur un titre, dont la dernière étape est '%s' au statut %s, le résultat est %s", async (etapeTypeId, statutId, resultId) => {
+    await expect(titreDemarcheStatutIdFind('dot', etapesBuild([{ typeId: etapeTypeId, statutId }]), 'pxm', newDemarcheId())).resolves.toEqual(resultId)
   })
 
   test.each<[EtapeTypeId, EtapeStatutId, DemarcheStatutId]>([
@@ -417,7 +417,7 @@ describe("statut d'une démarche", () => {
     [Travaux.PubliDecisionRecueilActesAdmin, 'fai', Demarches.FinPoliceMines],
     [Travaux.PorterAConnaissance, 'fai', Demarches.FinPoliceMines],
     [Travaux.Abandon, 'fai', Demarches.Desiste],
-  ])("pour une démarche de travaux de type 'dam' sur un titre, dont la dernière étape est '%s' au statut %s, le résultat est %s", (etapeTypeId, statutId, resultId) => {
-    expect(titreDemarcheStatutIdFind('dam', etapesBuild([{ typeId: etapeTypeId, statutId }]), 'pxm', newDemarcheId())).toEqual(resultId)
+  ])("pour une démarche de travaux de type 'dam' sur un titre, dont la dernière étape est '%s' au statut %s, le résultat est %s", async (etapeTypeId, statutId, resultId) => {
+    await expect(titreDemarcheStatutIdFind('dam', etapesBuild([{ typeId: etapeTypeId, statutId }]), 'pxm', newDemarcheId())).resolves.toEqual(resultId)
   })
 })

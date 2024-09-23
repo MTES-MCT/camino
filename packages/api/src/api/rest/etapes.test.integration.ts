@@ -77,8 +77,8 @@ describe('getEtapesTypesEtapesStatusWithMainStep', () => {
         },
         "rde": {
           "etapeStatutIds": [
-            "def",
             "fav",
+            "def",
           ],
           "mainStep": true,
         },
@@ -133,8 +133,8 @@ describe('getEtapesTypesEtapesStatusWithMainStep', () => {
         },
         "rde": {
           "etapeStatutIds": [
-            "def",
             "fav",
+            "def",
           ],
           "mainStep": true,
         },

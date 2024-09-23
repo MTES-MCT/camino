@@ -7,7 +7,7 @@ export const titrePublicFind = (titreStatutId: TitreStatutId, titreTypeId: Titre
   // et qu’une démarche est publique
   // alors le titre est public
   if (hasDemarchePublic) {
-    if (titresPublicLecture[titreTypeId]?.includes(titreStatutId) ?? false) {
+    if (titresPublicLecture[titreTypeId].includes(titreStatutId)) {
       return true
     }
   }

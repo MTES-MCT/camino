@@ -64,7 +64,7 @@ export const userLoader =
           await emailsWithTemplateSend([user.email], EmailTemplateId.CREATION_COMPTE, {})
         } else if (user.nom !== reqUser.family_name || user.prenom !== reqUser.given_name || user.email !== reqUser.email) {
           const newNom = reqUser.family_name ?? user.nom
-          const newPrenom = reqUser.given_name ?? user.prenom ?? ''
+          const newPrenom = reqUser.given_name ?? user.prenom
           const newEmail = reqUser.email ?? user.email
 
           // mise à jour du nom et du prénom de l’utilisateur

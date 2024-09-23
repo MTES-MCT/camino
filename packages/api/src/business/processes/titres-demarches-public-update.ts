@@ -2,6 +2,7 @@ import { titreDemarcheUpdate } from '../../database/queries/titres-demarches'
 import { titreDemarchePublicFind } from '../rules/titre-demarche-public-find'
 import { titresGet } from '../../database/queries/titres'
 import { userSuper } from '../../database/user-super'
+import { DemarcheId } from 'camino-common/src/demarche'
 
 type ITitreDemarchePatch = {
   publicLecture: boolean
@@ -9,7 +10,7 @@ type ITitreDemarchePatch = {
 }
 
 // met à jour la publicité des démarches d'un titre
-export const titresDemarchesPublicUpdate = async (titresIds?: string[]) => {
+export const titresDemarchesPublicUpdate = async (titresIds?: string[]): Promise<DemarcheId[]> => {
   console.info()
   console.info('publicité des démarches…')
 
@@ -28,11 +29,11 @@ export const titresDemarchesPublicUpdate = async (titresIds?: string[]) => {
   // TODO: forcer la présence des démarches sur le titre
   // https://stackoverflow.com/questions/40510611/typescript-interface-require-one-of-two-properties-to-exist/49725198#49725198
 
-  const titresDemarchesUpdated: string[] = []
+  const titresDemarchesUpdated: DemarcheId[] = []
 
   for (const titre of titres) {
     for (const titreDemarche of titre.demarches!) {
-      const { publicLecture, entreprisesLecture } = titreDemarchePublicFind(titreDemarche, titre.typeId)
+      const { publicLecture, entreprisesLecture } = await titreDemarchePublicFind(titreDemarche, titre.typeId)
 
       const patch = {} as ITitreDemarchePatch
 

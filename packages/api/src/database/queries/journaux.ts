@@ -22,7 +22,7 @@ export const journauxGet = async (params: JournauxQueryParams, { fields }: { fie
   const graph = fields ? graphBuild(fields, 'journaux', fieldsFormat) : options.journaux.graph
 
   const q = Journaux.query().withGraphFetched(graph)
-  q.modify(journauxQueryModify, user)
+  q.modify(journauxQueryModify, user) // eslint-disable-line @typescript-eslint/no-misused-promises
 
   if (isNotNullNorUndefined(params.recherche)) {
     q.leftJoinRelated('titre as titreRecherche')

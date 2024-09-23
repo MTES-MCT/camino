@@ -15,11 +15,11 @@ export const titreEtapesSortDescByOrdre = <T extends Pick<ITitreEtape, 'ordre'>>
 // classe les étapes selon leur ordre: 1, 2, 3, …
 export const titreEtapesSortAscByOrdre = <T extends Pick<ITitreEtape, 'ordre'>>(titreEtapes: T[]): T[] => titreEtapes.toSorted((a, b) => a.ordre! - b.ordre!)
 // classe les étapes selon leur dates, ordre et etapesTypes.ordre le cas échéant
-export const titreEtapesSortAscByDate = <T extends TitreEtapeForMachine>(titreEtapes: T[], demarcheId: DemarcheId, demarcheTypeId: DemarcheTypeId, titreTypeId: TitreTypeId): T[] => {
+export const titreEtapesSortAscByDate = async <T extends TitreEtapeForMachine>(titreEtapes: T[], demarcheId: DemarcheId, demarcheTypeId: DemarcheTypeId, titreTypeId: TitreTypeId): Promise<T[]> => {
   const machine = machineFind(titreTypeId, demarcheTypeId, titreEtapes, demarcheId)
   if (machine) {
-    const etapes = machine.orderMachine(toMachineEtapes(titreEtapes))
-    if (!machine.isEtapesOk(etapes)) {
+    const etapes = await machine.orderMachine(toMachineEtapes(titreEtapes))
+    if (!(await machine.isEtapesOk(etapes))) {
       console.error(`impossible de trouver un ordre pour la démarche '${demarcheId}' où ces étapes sont valides ${JSON.stringify(etapes)}`)
     }
 

@@ -57,7 +57,7 @@ async function intersectSdom(titreEtape: Pick<ITitreEtape, 'sdomZones' | 'id'>, 
   if (sdomZonesIds.length > 0) {
     const sortedSdomZonesIds = sdomZonesIds.toSorted()
 
-    if (sortedSdomZonesIds.length !== titreEtape.sdomZones?.length || titreEtape.sdomZones?.some((elem, index) => elem !== sortedSdomZonesIds[index])) {
+    if (sortedSdomZonesIds.length !== titreEtape.sdomZones?.length || titreEtape.sdomZones.some((elem, index) => elem !== sortedSdomZonesIds[index])) {
       console.info(`nouvelles zones du sdom pour l'étape ${titreEtape.id}. Anciennes: ${JSON.stringify(titreEtape.sdomZones)}, nouvelles: ${JSON.stringify(sortedSdomZonesIds)}`)
       await knex.raw(`update titres_etapes set sdom_zones = '["${sortedSdomZonesIds.join('","')}"]' where id ='${titreEtape.id}'`)
     }
@@ -71,7 +71,7 @@ async function intersectForets(titreEtape: Pick<ITitreEtape, 'forets' | 'id'>, f
 
   const sortedForets = foretsNew.toSorted()
 
-  if (titreEtape.forets?.length !== sortedForets.length || titreEtape.forets.some((value, index) => value !== sortedForets[index])) {
+  if (titreEtape.forets.length !== sortedForets.length || titreEtape.forets.some((value, index) => value !== sortedForets[index])) {
     console.info(`Mise à jour des forêts sur l'étape ${titreEtape.id}, ancien: '${JSON.stringify(titreEtape.forets)}', nouveaux: '${JSON.stringify(sortedForets)}'`)
     await knex('titres_etapes')
       .update({ forets: JSON.stringify(sortedForets) })

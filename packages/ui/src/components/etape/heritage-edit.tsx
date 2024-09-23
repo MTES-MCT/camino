@@ -7,7 +7,7 @@ import { capitalize } from 'camino-common/src/strings'
 import type { JSX } from 'vue/jsx-runtime'
 import { DsfrInput } from '@/components/_ui/dsfr-input'
 import { random } from '../../utils/vue-tsx-utils'
-import { FlattenEtape } from 'camino-common/src/etape-form'
+import { FlattenedContenuElement, FlattenEtape } from 'camino-common/src/etape-form'
 
 type HeritagePossible =
   | FlattenEtape['perimetre']
@@ -17,7 +17,7 @@ type HeritagePossible =
   | FlattenEtape['amodiataires']
   | FlattenEtape['duree']
   | FlattenEtape['substances']
-  | FlattenEtape['contenu'][string][string]
+  | FlattenedContenuElement
 
 type Props<T extends DeepReadonly<HeritagePossible>> = {
   prop: T

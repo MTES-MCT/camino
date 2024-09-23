@@ -68,7 +68,7 @@ export const titreAdministrationsGet = (titre: ITitre): AdministrationId[] => {
 }
 
 export const titresFormat = (titres: ITitre[], fields = titreFormatFields): ITitre[] =>
-  titres?.reduce((acc: ITitre[], titre) => {
+  titres.reduce((acc: ITitre[], titre) => {
     const titreFormated = titreFormat(titre, fields)
 
     if (isNotNullNorUndefined(titreFormated)) {
@@ -76,4 +76,4 @@ export const titresFormat = (titres: ITitre[], fields = titreFormatFields): ITit
     }
 
     return acc
-  }, []) ?? []
+  }, [])
