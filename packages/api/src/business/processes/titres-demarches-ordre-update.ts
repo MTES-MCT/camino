@@ -5,7 +5,7 @@ import { titresGet } from '../../database/queries/titres'
 import { titreDemarcheSortAsc } from '../utils/titre-elements-sort-asc'
 import { userSuper } from '../../database/user-super'
 
-export const titresDemarchesOrdreUpdate = async (titresIds?: string[]) => {
+export const titresDemarchesOrdreUpdate = async (titresIds?: string[]): Promise<string[]> => {
   console.info()
   console.info('ordre des démarches…')
 

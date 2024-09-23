@@ -21,7 +21,7 @@ const titreEtapesFilter = (titreEtapes: ITitreEtape[], date: string) => titreEta
  * @param titreTypeId - id du type du titre
  * @returns démarches du titre
  */
-export const titreDemarchesEtapesRebuild = async (date: CaminoDate, titreDemarches: ITitreDemarche[], titreTypeId: TitreTypeId): Promise<ITitreDemarche[]> => {
+export const titreDemarchesEtapesRebuild = (date: CaminoDate, titreDemarches: ITitreDemarche[], titreTypeId: TitreTypeId): ITitreDemarche[] => {
   const titreDemarchesRebuilt: ITitreDemarche[] = []
   for (const td of titreDemarches) {
     if (isNullOrUndefinedOrEmpty(td.etapes)) {
@@ -36,7 +36,7 @@ export const titreDemarchesEtapesRebuild = async (date: CaminoDate, titreDemarch
       titreDemarche.etapes = titreEtapesFiltered
 
       const etapes = titreDemarche.etapes.map(etape => titreEtapeForMachineValidator.parse(etape))
-      titreDemarche.statutId = await titreDemarcheStatutIdFind(titreDemarche.typeId, etapes, titreTypeId, titreDemarche.id)
+      titreDemarche.statutId = titreDemarcheStatutIdFind(titreDemarche.typeId, etapes, titreTypeId, titreDemarche.id)
 
       titreDemarchesRebuilt.push(titreDemarche)
     }

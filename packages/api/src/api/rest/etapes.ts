@@ -291,7 +291,7 @@ export const deleteEtape =
 
             if (!titreDemarche.titre) throw new Error("le titre n'existe pas")
 
-            const { valid, errors: rulesErrors } = await titreDemarcheUpdatedEtatValidate(titreDemarche.typeId, titreDemarche.titre, titreEtape, titreDemarche.id, titreDemarche.etapes!, true)
+            const { valid, errors: rulesErrors } = titreDemarcheUpdatedEtatValidate(titreDemarche.typeId, titreDemarche.titre, titreEtape, titreDemarche.id, titreDemarche.etapes!, true)
 
             if (!valid) {
               throw new Error(rulesErrors.join(', '))
@@ -572,7 +572,7 @@ export const createEtape =
                   res.status(HTTP_STATUS.BAD_REQUEST).json({ errorMessage: 'Les avis envoyés ne sont pas conformes' })
                 } else {
                   const etapeAvis = etapeAvisParsed.data
-                  const rulesErrors = await titreEtapeUpdationValidate(
+                  const rulesErrors = titreEtapeUpdationValidate(
                     flattenEtape,
                     titreDemarche,
                     titreDemarche.titre,
@@ -745,7 +745,7 @@ export const updateEtape =
             aslDocument = aslDocumentParsed.data
           }
 
-          const rulesErrors = await titreEtapeUpdationValidate(
+          const rulesErrors = titreEtapeUpdationValidate(
             flattenEtape,
             titreDemarche,
             titreDemarche.titre,
@@ -1061,7 +1061,7 @@ const demarcheEtapesTypesGet = async (titreDemarcheId: DemarcheId, date: CaminoD
 
   const demarcheDefinition = machineFind(titre.typeId, titreDemarche.typeId, titreDemarche.etapes, titreDemarche.id, date)
 
-  const etapesTypes: EtapeTypeEtapeStatutWithMainStep = await getPossiblesEtapesTypes(
+  const etapesTypes: EtapeTypeEtapeStatutWithMainStep = getPossiblesEtapesTypes(
     demarcheDefinition,
     titre.typeId,
     titreDemarche.typeId,

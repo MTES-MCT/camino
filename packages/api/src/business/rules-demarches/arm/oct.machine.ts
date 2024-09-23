@@ -391,7 +391,6 @@ const armOctMachine = createMachine({
     avisDesServicesEtCommissionsConsultativesFait: false,
     demarcheStatut: DemarchesStatutsIds.EnConstruction,
     paiementFraisDossierValide: false,
-    asyncTasks: new Set<string>(),
   },
   on: {
     MODIFIER_DEMANDE: {

@@ -36,11 +36,12 @@ export const titresActivitesUpdate = async (pool: Pool, titresIds?: string[], au
     userSuper
   )
 
-  const titresActivitesCreated: ITitreActivite[] = []
-  for (const activiteType of sortedActivitesTypes) {
+  const titresActivitesCreated = sortedActivitesTypes.reduce((acc: ITitreActivite[], activiteType) => {
     const annees = anneesBuild(activiteType.dateDebut, aujourdhui)
-    if (isNotNullNorUndefinedNorEmpty(annees)) {
-      for (const titre of titres) {
+    if (!annees.length) return acc
+
+    acc.push(
+      ...titres.reduce((acc: ITitreActivite[], titre) => {
         if (isNullOrUndefined(titre.demarches)) {
           throw new Error('les démarches du titre ne sont pas chargées')
         }
@@ -54,12 +55,16 @@ export const titresActivitesUpdate = async (pool: Pool, titresIds?: string[], au
         }
 
         // si le type d'activité est relié au type de titre
-        if (canHaveActiviteTypeId(activiteType.id, { titreTypeId: titre.typeId, communes: titre.communes, secteursMaritime: titre.secteursMaritime, demarches: titre.demarches })) {
-          titresActivitesCreated.push(...(await titreActivitesBuild(activiteType.id, annees, aujourdhui, titre.id, titre.typeId, titre.demarches, titre.activites)))
-        }
-      }
-    }
-  }
+        if (!canHaveActiviteTypeId(activiteType.id, { titreTypeId: titre.typeId, communes: titre.communes, secteursMaritime: titre.secteursMaritime, demarches: titre.demarches })) return acc
+
+        acc.push(...titreActivitesBuild(activiteType.id, annees, aujourdhui, titre.id, titre.typeId, titre.demarches, titre.activites))
+
+        return acc
+      }, [])
+    )
+
+    return acc
+  }, [])
 
   if (titresActivitesCreated.length) {
     await titresActivitesUpsert(titresActivitesCreated)
@@ -70,16 +75,17 @@ export const titresActivitesUpdate = async (pool: Pool, titresIds?: string[], au
 
       if (isNullOrUndefined(titre)) {
         console.error(`titre inconnu : ${activite.titreId}`)
-      } else {
-        if (isNotNullNorUndefinedNorEmpty(titre.titulaireIds)) {
-          const utilisateursByEntreprise = await Promise.all(titre.titulaireIds.map(titulaireId => getEntrepriseUtilisateurs(pool, titulaireId)))
+        continue
+      }
 
-          utilisateursByEntreprise.flat().forEach(({ email, role }) => {
-            if (isNotNullNorUndefinedNorEmpty(email) && isEntrepriseRole(role)) {
-              emails.add(email)
-            }
-          })
-        }
+      if (isNotNullNorUndefinedNorEmpty(titre.titulaireIds)) {
+        const utilisateursByEntreprise = await Promise.all(titre.titulaireIds.map(titulaireId => getEntrepriseUtilisateurs(pool, titulaireId)))
+
+        utilisateursByEntreprise.flat().forEach(({ email, role }) => {
+          if (isNotNullNorUndefinedNorEmpty(email) && isEntrepriseRole(role)) {
+            emails.add(email)
+          }
+        })
       }
     }
 

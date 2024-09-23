@@ -158,47 +158,9 @@ const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: De
       demandeAFaire: {
         on: {
           FAIRE_DEMANDE: {
-            target: 'preDepoDeLaDemande',
-            actions: assign({
-              demarcheStatut: DemarchesStatutsIds.EnInstruction,
-            }),
-          },
-        },
-      },
-      preDepoDeLaDemande: {
-        always: {
-          guard: ({ context }) => !context.asyncTasks.has('test'),
-          actions: assign({
-            asyncTasks: ({ context }) => {
-              const newSet = new Set(context.asyncTasks)
-              newSet.add('test')
-
-              return newSet
-            },
-          }),
-        },
-        invoke: {
-          src: 'toto',
-          onDone: {
             target: 'depotDeLaDemandeAFaire',
             actions: assign({
-              asyncTasks: ({ context }) => {
-                const newSet = new Set(context.asyncTasks)
-                newSet.delete('test')
-
-                return newSet
-              },
-            }),
-          },
-          onError: {
-            target: 'finDeMachine',
-            actions: assign({
-              asyncTasks: ({ context }) => {
-                const newSet = new Set(context.asyncTasks)
-                newSet.delete('test')
-
-                return newSet
-              },
+              demarcheStatut: DemarchesStatutsIds.EnInstruction,
             }),
           },
         },

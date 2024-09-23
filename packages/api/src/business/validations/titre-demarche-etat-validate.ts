@@ -46,14 +46,14 @@ const titreDemarcheEtapesBuild = <T extends Pick<Partial<ITitreEtape>, 'id'>>(ti
 
 // vérifie que la modification de la démarche
 // est valide par rapport aux définitions des types d'étape
-export const titreDemarcheUpdatedEtatValidate = async (
+export const titreDemarcheUpdatedEtatValidate = (
   demarcheTypeId: DemarcheTypeId,
   titre: Pick<ITitre, 'typeId' | 'demarches'>,
   titreEtape: Pick<Partial<ITitreEtape>, 'id'> & Pick<ITitreEtape, 'statutId' | 'typeId' | 'date' | 'contenu' | 'surface' | 'communes' | 'isBrouillon'>,
   demarcheId: DemarcheId,
   titreDemarcheEtapes?: Pick<ITitreEtape, 'id' | 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'communes' | 'surface' | 'isBrouillon'>[] | null,
   suppression = false
-): Promise<{ valid: true; errors: null } | { valid: false; errors: NonEmptyArray<string> }> => {
+): { valid: true; errors: null } | { valid: false; errors: NonEmptyArray<string> } => {
   const titreDemarcheEtapesNew = titreDemarcheEtapesBuild(titreEtape, suppression, titreDemarcheEtapes)
   const machine = machineFind(titre.typeId, demarcheTypeId, titreDemarcheEtapesNew, demarcheId)
   const titreDemarchesErrors: string[] = []
@@ -65,7 +65,7 @@ export const titreDemarcheUpdatedEtatValidate = async (
   }
   // on récupère tous les type d'étapes et les statuts associés applicable à la date souhaitée
   try {
-    const etapeTypesWithStatusPossibles = await getPossiblesEtapesTypes(machine, titre.typeId, demarcheTypeId, titreEtape.typeId, titreEtape.id, titreEtape.date, titreDemarcheEtapes ?? [])
+    const etapeTypesWithStatusPossibles = getPossiblesEtapesTypes(machine, titre.typeId, demarcheTypeId, titreEtape.typeId, titreEtape.id, titreEtape.date, titreDemarcheEtapes ?? [])
     const statutPossiblesPourCetteEtape = etapeTypesWithStatusPossibles[titreEtape.typeId]
     if (isNullOrUndefined(statutPossiblesPourCetteEtape) || !statutPossiblesPourCetteEtape.etapeStatutIds.includes(titreEtape.statutId)) {
       if (isNotNullNorUndefined(machine)) {
@@ -83,7 +83,7 @@ export const titreDemarcheUpdatedEtatValidate = async (
     // vérifie que toutes les étapes existent dans l’arbre
     try {
       const etapes = titreDemarcheEtapesNew.map(etape => titreEtapeForMachineValidator.omit({ id: true, ordre: true }).parse(etape))
-      const ok = await machine.isEtapesOk(await machine.orderMachine(toMachineEtapes(etapes)))
+      const ok = machine.isEtapesOk(machine.orderMachine(toMachineEtapes(etapes)))
       if (!ok) {
         titreDemarchesErrors.push('la démarche machine n’est pas valide')
       }
@@ -100,7 +100,7 @@ export const titreDemarcheUpdatedEtatValidate = async (
   return { valid: true, errors: null }
 }
 
-export const getPossiblesEtapesTypes = async (
+export const getPossiblesEtapesTypes = (
   machine: CaminoMachines | undefined,
   titreTypeId: TitreTypeId,
   demarcheTypeId: DemarcheTypeId,
@@ -108,12 +108,12 @@ export const getPossiblesEtapesTypes = async (
   etapeId: EtapeId | undefined,
   date: CaminoDate,
   demarcheEtapes: Pick<ITitreEtape, 'typeId' | 'date' | 'isBrouillon' | 'id' | 'ordre' | 'statutId' | 'communes'>[]
-): Promise<EtapeTypeEtapeStatutWithMainStep> => {
+): EtapeTypeEtapeStatutWithMainStep => {
   let etapesTypes: EtapeTypeEtapeStatutWithMainStep = {}
   if (isNotNullNorUndefined(machine)) {
     const etapes = demarcheEtapes.map(etape => titreEtapeForMachineValidator.parse(etape))
 
-    etapesTypes = await etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(machine, etapes, etapeId ?? null, date)
+    etapesTypes = etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(machine, etapes, etapeId ?? null, date)
   } else {
     // si on modifie une étape
     // vérifie que son type est possible sur la démarche
@@ -148,12 +148,12 @@ export const getPossiblesEtapesTypes = async (
 }
 
 // VISIBLE FOR TESTING
-export const etapesTypesPossibleACetteDateOuALaPlaceDeLEtape = async (
+export const etapesTypesPossibleACetteDateOuALaPlaceDeLEtape = (
   machine: CaminoMachines,
   etapes: TitreEtapeForMachine[],
   titreEtapeId: string | null,
   date: CaminoDate
-): Promise<EtapeTypeEtapeStatutWithMainStep> => {
+): EtapeTypeEtapeStatutWithMainStep => {
   const sortedEtapes = titreEtapesSortAscByOrdre(etapes)
   const etapesAvant: Etape[] = []
   const etapesApres: Etape[] = []
@@ -170,7 +170,7 @@ export const etapesTypesPossibleACetteDateOuALaPlaceDeLEtape = async (
     etapesApres.push(...toMachineEtapes(sortedEtapes.slice(etapesAvant.length)))
   }
 
-  const etapesPossiblesRaw = await machine.possibleNextEtapes(etapesAvant, date)
+  const etapesPossiblesRaw = machine.possibleNextEtapes(etapesAvant, date)
   const etapesPossibles = []
   for (const et of etapesPossiblesRaw) {
     const newEtapes = [...etapesAvant]
@@ -179,7 +179,7 @@ export const etapesTypesPossibleACetteDateOuALaPlaceDeLEtape = async (
     newEtapes.push(items)
     newEtapes.push(...etapesApres)
 
-    if (await machine.isEtapesOk(newEtapes)) {
+    if (machine.isEtapesOk(newEtapes)) {
       etapesPossibles.push(et)
     }
   }

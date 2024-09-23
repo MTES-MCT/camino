@@ -63,9 +63,9 @@ const writeEtapesForTest = async () => {
           const decalageJour = daysBetween(firstSaisineDate, setDayInMonth(firstSaisineDate, Math.floor(Math.random() * 28)))
           try {
             const machine = demarcheDefinition.machine(demarche.titre!.typeId, demarche.typeId)
-            if (!(await machine.isEtapesOk(etapes))) {
-              etapes.splice(0, etapes.length, ...(await machine.orderMachine(etapes)))
-              if (!(await machine.isEtapesOk(etapes))) {
+            if (!machine.isEtapesOk(etapes)) {
+              etapes.splice(0, etapes.length, ...machine.orderMachine(etapes))
+              if (!machine.isEtapesOk(etapes)) {
                 console.warn(`https://camino.beta.gouv.fr/titres/${demarche.titreId} => démarche N*${index} (${demarche.id}) "${demarcheDefinition.titreTypeIds.join(' ou ')}/${demarche.typeId}"`)
               }
             }

@@ -126,8 +126,8 @@ export const titresAdministrations =
                 const machine = machineFind(titre.typeId, demarcheLaPlusRecente.typeId, demarcheLaPlusRecente.etapes, demarcheLaPlusRecente.id)
                 if (machine) {
                   try {
-                    enAttenteDeAdministration = (await machine.whoIsBlocking(etapesDerniereDemarche)).includes(user.administrationId)
-                    const nextEtapes = await machine.possibleNextEtapes(etapesDerniereDemarche, getCurrent())
+                    enAttenteDeAdministration = machine.whoIsBlocking(etapesDerniereDemarche).includes(user.administrationId)
+                    const nextEtapes = machine.possibleNextEtapes(etapesDerniereDemarche, getCurrent())
                     prochainesEtapes.push(
                       ...nextEtapes
                         .map(etape => etape.etapeTypeId)

@@ -1,6 +1,6 @@
 import { CaminoCommonContext, Etape } from './machine-common'
 import { Actor, EventObject, createActor } from 'xstate'
-import { CaminoMachine } from './machine-helper'
+import { CaminoMachine, getNextEvents } from './machine-helper'
 import { expect } from 'vitest'
 import { CaminoDate, dateAddDays, toCaminoDate } from 'camino-common/src/date'
 import { EtapeTypeEtapeStatutValidPair } from 'camino-common/src/static/etapesTypesEtapesStatuts'
@@ -20,7 +20,6 @@ declare global {
     interface InverseAsymmetricMatchers extends CustomMatchers {}
   }
 }
-
 expect.extend({
   canOnlyTransitionTo<T extends EventObject, C extends CaminoCommonContext>(
     service: Actor<CaminoMachine<C, T>['machine']>,
@@ -28,10 +27,13 @@ expect.extend({
     events: T['type'][]
   ) {
     events = events.toSorted()
-    const passEvents = machine
-      .possibleNextEvents(service.getSnapshot(), date)
-      .map(({ type }) => type)
-      .filter(onlyUnique)
+    const passEvents: (typeof events)[number][] = getNextEvents(service.getSnapshot())
+      .filter((event: string) => machine.isEvent(event))
+      .filter((event: (typeof events)[number]) => {
+        const events = machine.toPotentialCaminoXStateEvent(event, date)
+
+        return events.some(event => service.getSnapshot().can(event) && service.getSnapshot().status !== 'done')
+      })
       .toSorted()
 
     if (passEvents.length !== events.length || passEvents.some((entry, index) => entry !== events[index])) {
@@ -47,12 +49,8 @@ expect.extend({
     }
   },
 })
-function sleep(ms: number) {
-  return new Promise(resolve => {
-    setTimeout(resolve, ms)
-  })
-}
-export const interpretMachine = async <T extends EventObject, C extends CaminoCommonContext>(machine: CaminoMachine<C, T>, etapes: readonly Etape[]): Promise<Actor<(typeof machine)['machine']>> => {
+
+export const interpretMachine = <T extends EventObject, C extends CaminoCommonContext>(machine: CaminoMachine<C, T>, etapes: readonly Etape[]): Actor<(typeof machine)['machine']> => {
   const service = createActor(machine.machine, {})
 
   service.start()
@@ -61,34 +59,29 @@ export const interpretMachine = async <T extends EventObject, C extends CaminoCo
     const etapeAFaire = etapes[i]
     const event = machine.eventFrom(etapeAFaire)
 
-    do {
-      if ((!service.getSnapshot().can(event) && service.getSnapshot().context.asyncTasks.size === 0) || service.getSnapshot().status === 'done') {
-        throw new Error(
-          `Error: cannot execute step: '${JSON.stringify(etapeAFaire)}' after '${JSON.stringify(
-            etapes.slice(0, i).map(etape => etape.etapeTypeId + '_' + etape.etapeStatutId)
-          )}'. The event ${JSON.stringify(event)} should be one of '${machine
-            .possibleNextEvents(service.getSnapshot(), etapeAFaire.date)
-            .map(({ type }) => type)
-            .filter(onlyUnique)}'`
-        )
-      } else if (service.getSnapshot().context.asyncTasks.size > 0) {
-        // FIXMACHINE planter quand on arrive à N itérations
-        await sleep(1)
-      }
-    } while (service.getSnapshot().context.asyncTasks.size > 0)
-
+    if (!service.getSnapshot().can(event) || service.getSnapshot().status === 'done') {
+      throw new Error(
+        `Error: cannot execute step: '${JSON.stringify(etapeAFaire)}' after '${JSON.stringify(
+          etapes.slice(0, i).map(etape => etape.etapeTypeId + '_' + etape.etapeStatutId)
+        )}'. The event ${JSON.stringify(event)} should be one of '${machine
+          .possibleNextEvents(service.getSnapshot(), etapeAFaire.date)
+          .map(({ type }) => type)
+          .filter(onlyUnique)
+          .toSorted()}'`
+      )
+    }
     service.send(event)
   }
 
   return service
 }
 
-export const getEventsTree = async <T extends EventObject, C extends CaminoCommonContext>(
+export const getEventsTree = <T extends EventObject, C extends CaminoCommonContext>(
   machine: CaminoMachine<C, T>,
   initDate: `${number}-${number}-${number}`,
   etapes: readonly (EtapeTypeEtapeStatutValidPair & Omit<Etape, 'date' | 'etapeTypeId' | 'etapeStatutId' | 'titreTypeId' | 'demarcheTypeId'> & { addDays?: number })[]
-): Promise<string[]> => {
-  const { service, dateFin } = await setDateAndOrderAndInterpretMachine(machine, initDate, [])
+): string[] => {
+  const { service, dateFin } = setDateAndOrderAndInterpretMachine(machine, initDate, [])
   const passEvents: T['type'][] = machine
     .possibleNextEvents(service.getSnapshot(), dateFin)
     .map(({ type }) => type)
@@ -101,25 +94,23 @@ export const getEventsTree = async <T extends EventObject, C extends CaminoCommo
       demarcheStatut: DemarchesStatuts[service.getSnapshot().context.demarcheStatut].nom,
       events: passEvents,
     },
-    ...(await Promise.all(
-      etapes.map(async (_etape, index) => {
-        const etapesToLaunch = etapes.slice(0, index + 1)
-        const { service, dateFin, etapes: etapesWithDates } = await setDateAndOrderAndInterpretMachine(machine, initDate, etapesToLaunch)
+    ...etapes.map((_etape, index) => {
+      const etapesToLaunch = etapes.slice(0, index + 1)
+      const { service, dateFin, etapes: etapesWithDates } = setDateAndOrderAndInterpretMachine(machine, initDate, etapesToLaunch)
 
-        const passEvents: T['type'][] = machine
-          .possibleNextEvents(service.getSnapshot(), dateFin)
-          .map(({ type }) => type)
-          .filter(onlyUnique)
-        const event = machine.eventFrom(etapesWithDates[etapesWithDates.length - 1])
+      const passEvents: T['type'][] = machine
+        .possibleNextEvents(service.getSnapshot(), dateFin)
+        .map(({ type }) => type)
+        .filter(onlyUnique)
+      const event = machine.eventFrom(etapesWithDates[etapesWithDates.length - 1])
 
-        return {
-          type: event.type,
-          visibilite: service.getSnapshot().context.visibilite,
-          demarcheStatut: DemarchesStatuts[service.getSnapshot().context.demarcheStatut].nom,
-          events: passEvents,
-        }
-      })
-    )),
+      return {
+        type: event.type,
+        visibilite: service.getSnapshot().context.visibilite,
+        demarcheStatut: DemarchesStatuts[service.getSnapshot().context.demarcheStatut].nom,
+        events: passEvents,
+      }
+    }),
   ]
 
   const maxPadType = Math.max(...steps.map(({ type }) => type.length))
@@ -129,11 +120,11 @@ export const getEventsTree = async <T extends EventObject, C extends CaminoCommo
   })
 }
 
-export const setDateAndOrderAndInterpretMachine = async <T extends EventObject, C extends CaminoCommonContext>(
+export const setDateAndOrderAndInterpretMachine = <T extends EventObject, C extends CaminoCommonContext>(
   machine: CaminoMachine<C, T>,
   initDate: `${number}-${number}-${number}`,
   etapes: readonly (EtapeTypeEtapeStatutValidPair & Omit<Etape, 'date' | 'etapeTypeId' | 'etapeStatutId' | 'titreTypeId' | 'demarcheTypeId'> & { addDays?: number })[]
-): Promise<{ service: Actor<(typeof machine)['machine']>; dateFin: CaminoDate; etapes: Etape[]; machine: CaminoMachine<C, T> }> => {
+): { service: Actor<(typeof machine)['machine']>; machine: CaminoMachine<C, T>; dateFin: CaminoDate; etapes: Etape[] } => {
   const firstDate = toCaminoDate(initDate)
   let index = 0
   const fullEtapes = etapes.map(etape => {
@@ -145,13 +136,13 @@ export const setDateAndOrderAndInterpretMachine = async <T extends EventObject, 
 
     return { ...etape, date: dateAddDays(firstDate, index) }
   })
-  const service = await orderAndInterpretMachine(machine, fullEtapes)
+  const service = orderAndInterpretMachine(machine, fullEtapes)
 
-  return { service, dateFin: dateAddDays(firstDate, etapes.length), etapes: fullEtapes, machine }
+  return { service, machine, dateFin: dateAddDays(firstDate, etapes.length), etapes: fullEtapes }
 }
-export const orderAndInterpretMachine = async <T extends EventObject, C extends CaminoCommonContext>(
+export const orderAndInterpretMachine = <T extends EventObject, C extends CaminoCommonContext>(
   machine: CaminoMachine<C, T>,
   etapes: readonly Omit<Etape, 'titreTypeId' | 'demarcheTypeId'>[]
-): Promise<Actor<(typeof machine)['machine']>> => {
-  return interpretMachine(machine, await machine.orderMachine(etapes))
+): Actor<(typeof machine)['machine']> => {
+  return interpretMachine(machine, machine.orderMachine(etapes))
 }

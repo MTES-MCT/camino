@@ -271,12 +271,7 @@ const titreDemarcheTravauxStatutIdFind = (titreDemarcheEtapes: Pick<ITitreEtape,
  * @param titreTypeId - id du type de titre
  */
 
-export const titreDemarcheStatutIdFind = async (
-  demarcheTypeId: DemarcheTypeId,
-  titreDemarcheEtapes: TitreEtapeForMachine[],
-  titreTypeId: TitreTypeId,
-  demarcheId: DemarcheId
-): Promise<DemarcheStatutId> => {
+export const titreDemarcheStatutIdFind = (demarcheTypeId: DemarcheTypeId, titreDemarcheEtapes: TitreEtapeForMachine[], titreTypeId: TitreTypeId, demarcheId: DemarcheId): DemarcheStatutId => {
   // si la démarche ne contient pas d'étapes
   // -> le statut est indétrminé
   if (!titreDemarcheEtapes.length) return DemarchesStatutsIds.Indetermine
@@ -289,7 +284,7 @@ export const titreDemarcheStatutIdFind = async (
   const machine = machineFind(titreTypeId, demarcheTypeId, titreDemarcheEtapes, demarcheId)
 
   if (isNotNullNorUndefined(machine)) {
-    return (await machine.demarcheStatut(toMachineEtapes(titreDemarcheEtapes))).demarcheStatut
+    return machine.demarcheStatut(toMachineEtapes(titreDemarcheEtapes)).demarcheStatut
   }
 
   //  si la démarche fait l’objet d’une demande

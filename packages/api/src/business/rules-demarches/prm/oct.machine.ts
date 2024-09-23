@@ -227,7 +227,6 @@ const prmOctMachine = createMachine({
     paysId: null,
     surface: null,
     participationPublicStatutId: null,
-    asyncTasks: new Set<string>(),
   },
   on: {
     MODIFIER_DEMANDE: {

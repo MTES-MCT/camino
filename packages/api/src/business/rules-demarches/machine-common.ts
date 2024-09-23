@@ -33,8 +33,6 @@ export const globalGuards = {
 export interface CaminoCommonContext {
   demarcheStatut: DemarcheStatutId
   visibilite: 'confidentielle' | 'publique'
-  // FIXMACHINE rendre ça générique
-  asyncTasks: Set<string>
 }
 
 export const titreEtapeForMachineValidator = z.object({

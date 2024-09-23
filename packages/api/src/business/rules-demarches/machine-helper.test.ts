@@ -5,8 +5,8 @@ import { describe, expect, test } from 'vitest'
 const armOctMachine = new ArmOctMachine()
 describe('isEtapesOk', () => {
   // On n'est pas certain de notre base de données, si ça impacte les perf,
-  test('refuse si les étapes ne sont pas temporellement dans le bon ordre', async () => {
-    await expect(
+  test('refuse si les étapes ne sont pas temporellement dans le bon ordre', () => {
+    expect(
       armOctMachine.isEtapesOk([
         {
           etapeTypeId: 'mfr',
@@ -19,12 +19,12 @@ describe('isEtapesOk', () => {
           date: toCaminoDate('2021-02-10'),
         },
       ])
-    ).resolves.toBe(false)
+    ).toBe(false)
   })
 })
 describe('orderMachine', () => {
-  test("peut ordonner la machine, même si il y'a deux étapes identiques à la même date", async () => {
-    await expect(
+  test("peut ordonner la machine, même si il y'a deux étapes identiques à la même date", () => {
+    expect(
       armOctMachine.orderMachine([
         {
           etapeTypeId: 'mfr',
@@ -98,7 +98,7 @@ describe('orderMachine', () => {
           date: toCaminoDate('2020-01-11'),
         },
       ])
-    ).resolves.toMatchInlineSnapshot(`
+    ).toMatchInlineSnapshot(`
       [
         {
           "contenu": {
@@ -181,8 +181,8 @@ describe('orderMachine', () => {
 })
 
 describe('demarcheStatut', () => {
-  test('demarche publique et acceptée', async () => {
-    await expect(
+  test('demarche publique et acceptée', () => {
+    expect(
       armOctMachine.demarcheStatut([
         {
           date: toCaminoDate('2020-07-27'),
@@ -278,12 +278,12 @@ describe('demarcheStatut', () => {
           contenu: { arm: { mecanise: true } },
         },
       ])
-    ).resolves.toStrictEqual({ demarcheStatut: 'acc', publique: true })
+    ).toStrictEqual({ demarcheStatut: 'acc', publique: true })
   })
 })
 describe('whoIsBlocking', () => {
-  test('on attend la DGTM pour la recevabilité d’une demande d’ARM', async () => {
-    await expect(
+  test('on attend la DGTM pour la recevabilité d’une demande d’ARM', () => {
+    expect(
       armOctMachine.whoIsBlocking([
         {
           etapeTypeId: 'mfr',
@@ -301,11 +301,11 @@ describe('whoIsBlocking', () => {
           date: toCaminoDate('2021-02-03'),
         },
       ])
-    ).resolves.toStrictEqual([ADMINISTRATION_IDS['DGTM - GUYANE']])
+    ).toStrictEqual([ADMINISTRATION_IDS['DGTM - GUYANE']])
   })
 
-  test('on attend la DGTM pour la validation du paiement des frais de dossier', async () => {
-    await expect(
+  test('on attend la DGTM pour la validation du paiement des frais de dossier', () => {
+    expect(
       armOctMachine.whoIsBlocking([
         {
           etapeTypeId: 'mfr',
@@ -328,11 +328,11 @@ describe('whoIsBlocking', () => {
           date: toCaminoDate('2021-02-04'),
         },
       ])
-    ).resolves.toStrictEqual([ADMINISTRATION_IDS['DGTM - GUYANE']])
+    ).toStrictEqual([ADMINISTRATION_IDS['DGTM - GUYANE']])
   })
 
-  test('on attend personne', async () => {
-    await expect(
+  test('on attend personne', () => {
+    expect(
       armOctMachine.whoIsBlocking([
         {
           etapeTypeId: 'mfr',
@@ -365,13 +365,13 @@ describe('whoIsBlocking', () => {
           date: toCaminoDate('2021-02-06'),
         },
       ])
-    ).resolves.toStrictEqual([])
+    ).toStrictEqual([])
   })
 })
 
 describe('mainStep', () => {
-  test("les étapes après une demande d'octroi d'arm", async () => {
-    await expect(
+  test("les étapes après une demande d'octroi d'arm", () => {
+    expect(
       armOctMachine.possibleNextEtapes(
         [
           {
@@ -387,7 +387,7 @@ describe('mainStep', () => {
         ],
         toCaminoDate('2021-02-03')
       )
-    ).resolves.toMatchInlineSnapshot(`
+    ).toMatchInlineSnapshot(`
       [
         {
           "contenu": undefined,
@@ -416,8 +416,8 @@ describe('mainStep', () => {
       ]
     `)
   })
-  test('possibleNextEtapes après une recevabilité favorable on rendre un avis des services et commissions consultatives', async () => {
-    await expect(
+  test('possibleNextEtapes après une recevabilité favorable on rendre un avis des services et commissions consultatives', () => {
+    expect(
       armOctMachine.possibleNextEtapes(
         [
           { etapeTypeId: 'mfr', etapeStatutId: 'fai', date: toCaminoDate('2021-02-01') },
@@ -429,7 +429,7 @@ describe('mainStep', () => {
         ],
         toCaminoDate('2021-02-03')
       )
-    ).resolves.toMatchInlineSnapshot(`
+    ).toMatchInlineSnapshot(`
       [
         {
           "contenu": undefined,
@@ -482,8 +482,8 @@ describe('mainStep', () => {
       ]
     `)
   })
-  test('après un avis des services et commissions consultatives on doit avoir la saisine de la commission des autorisations de recherches minières', async () => {
-    await expect(
+  test('après un avis des services et commissions consultatives on doit avoir la saisine de la commission des autorisations de recherches minières', () => {
+    expect(
       armOctMachine.possibleNextEtapes(
         [
           { etapeTypeId: 'mfr', etapeStatutId: 'fai', date: toCaminoDate('2021-02-01') },
@@ -496,7 +496,7 @@ describe('mainStep', () => {
         ],
         toCaminoDate('2021-02-03')
       )
-    ).resolves.toMatchInlineSnapshot(`
+    ).toMatchInlineSnapshot(`
       [
         {
           "contenu": undefined,
@@ -549,8 +549,8 @@ describe('mainStep', () => {
       ]
     `)
   })
-  test('après la validation de frais de paiement on doit faire une recevabilité', async () => {
-    await expect(
+  test('après la validation de frais de paiement on doit faire une recevabilité', () => {
+    expect(
       armOctMachine.possibleNextEtapes(
         [
           { etapeTypeId: 'mfr', etapeStatutId: 'fai', date: toCaminoDate('2021-02-01') },
@@ -561,7 +561,7 @@ describe('mainStep', () => {
         ],
         toCaminoDate('2021-02-03')
       )
-    ).resolves.toMatchInlineSnapshot(`
+    ).toMatchInlineSnapshot(`
       [
         {
           "contenu": undefined,
@@ -608,8 +608,8 @@ describe('mainStep', () => {
       ]
     `)
   })
-  test('après une recevabilité défavorable on doit avoir un avis des services et commissions consultatives', async () => {
-    await expect(
+  test('après une recevabilité défavorable on doit avoir un avis des services et commissions consultatives', () => {
+    expect(
       armOctMachine.possibleNextEtapes(
         [
           { etapeTypeId: 'mfr', etapeStatutId: 'fai', date: toCaminoDate('2021-02-01') },
@@ -621,7 +621,7 @@ describe('mainStep', () => {
         ],
         toCaminoDate('2021-02-03')
       )
-    ).resolves.toMatchInlineSnapshot(`
+    ).toMatchInlineSnapshot(`
       [
         {
           "contenu": undefined,

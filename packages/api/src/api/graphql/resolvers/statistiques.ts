@@ -50,7 +50,7 @@ type TitreSurfaceIndex = {
   typeId: TitreTypeId
   surface: number
 }
-export const titresSurfaceIndexBuild = async (titres: ITitre[], annee: number): Promise<TitreSurfaceIndex[]> => {
+export const titresSurfaceIndexBuild = (titres: ITitre[], annee: number): TitreSurfaceIndex[] => {
   const titresReduced: TitreSurfaceIndex[] = []
 
   for (const titre of titres) {
@@ -63,7 +63,7 @@ export const titresSurfaceIndexBuild = async (titres: ITitre[], annee: number): 
       continue
     }
 
-    const surface = (await titreEtapePropFind('surface', titreDemarcheOctroiValide.demarcheDateDebut!, [titreDemarcheOctroiValide], titre.typeId)) as number | null
+    const surface = titreEtapePropFind('surface', titreDemarcheOctroiValide.demarcheDateDebut!, [titreDemarcheOctroiValide], titre.typeId) as number | null
 
     titresReduced.push({
       id: titre.id,
@@ -75,7 +75,7 @@ export const titresSurfaceIndexBuild = async (titres: ITitre[], annee: number): 
   return titresReduced
 }
 
-export const concessionsValidesBuild = (titres: ITitre[], annee: number) => {
+export const concessionsValidesBuild = (titres: ITitre[], annee: number): { quantite: number; surface: number } => {
   return titres
     .filter(titre => titre.typeId === 'cxw' && titreValideCheck(titre.demarches!, toCaminoDate(`${annee}-01-01`), toCaminoDate(`${annee}-12-31`)))
     .reduce(

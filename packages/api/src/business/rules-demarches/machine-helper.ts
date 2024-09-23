@@ -6,13 +6,6 @@ import { isNotNullNorUndefined, OmitDistributive } from 'camino-common/src/types
 
 type CaminoState<CaminoContext extends CaminoCommonContext, CaminoEvent extends EventObject> = MachineSnapshot<CaminoContext, CaminoEvent, any, any, any, any, any, any>
 
-// FIXMACHINE reuse this put in common ?
-function sleep(ms: number) {
-  return new Promise(resolve => {
-    setTimeout(resolve, ms)
-  })
-}
-
 export abstract class CaminoMachine<CaminoContext extends CaminoCommonContext, CaminoEvent extends EventObject> {
   public readonly machine: StateMachine<CaminoContext, CaminoEvent, any, any, any, any, any, any, any, any, any, EventObject, any, any>
 
@@ -73,10 +66,10 @@ export abstract class CaminoMachine<CaminoContext extends CaminoCommonContext, C
     return this.events.includes(event)
   }
 
-  public async orderMachine(etapes: readonly Etape[]): Promise<readonly Etape[]> {
+  public orderMachine(etapes: readonly Etape[]): readonly Etape[] {
     const sortedEtapes = etapes.toSorted((a, b) => a.date.localeCompare(b.date))
 
-    const solution = await this.findSolution(sortedEtapes)
+    const solution = this.findSolution(sortedEtapes)
 
     if (solution === undefined) {
       return sortedEtapes
@@ -85,9 +78,9 @@ export abstract class CaminoMachine<CaminoContext extends CaminoCommonContext, C
     return solution
   }
 
-  private async findSolution(etapes: readonly Etape[], temp: Etape[] = []): Promise<readonly Etape[] | undefined> {
+  private findSolution(etapes: readonly Etape[], temp: Etape[] = []): readonly Etape[] | undefined {
     if (!etapes.length) {
-      return (await this.isEtapesOk(temp)) ? temp : undefined
+      return this.isEtapesOk(temp) ? temp : undefined
     }
 
     const etape = etapes[0]
@@ -106,8 +99,8 @@ export abstract class CaminoMachine<CaminoContext extends CaminoCommonContext, C
         }
         const nextEtapes = etapes.filter((_element, elementIndex) => index !== elementIndex)
 
-        if (await this.isEtapesOk(tmp)) {
-          const solution = await this.findSolution(nextEtapes, tmp)
+        if (this.isEtapesOk(tmp)) {
+          const solution = this.findSolution(nextEtapes, tmp)
           if (solution) {
             return solution
           }
@@ -116,7 +109,7 @@ export abstract class CaminoMachine<CaminoContext extends CaminoCommonContext, C
     } else {
       temp.push(etape)
       const nextEtapes = etapes.slice(1)
-      const solution = await this.findSolution(nextEtapes, temp)
+      const solution = this.findSolution(nextEtapes, temp)
       if (solution) {
         return solution
       }
@@ -129,7 +122,7 @@ export abstract class CaminoMachine<CaminoContext extends CaminoCommonContext, C
    * Cette function ne doit JAMAIS appeler orderMachine, car c'est orderMachine qui se sert de cette fonction.
    * Cette function ne fait que vérifier si les étapes qu'on lui donne sont valides dans l'ordre
    */
-  public async isEtapesOk(sortedEtapes: readonly Etape[]): Promise<boolean> {
+  public isEtapesOk(sortedEtapes: readonly Etape[]): boolean {
     if (sortedEtapes.length) {
       for (let i = 1; i < sortedEtapes.length; i++) {
         if (sortedEtapes[i - 1].date > sortedEtapes[i].date) {
@@ -138,7 +131,7 @@ export abstract class CaminoMachine<CaminoContext extends CaminoCommonContext, C
       }
     }
     try {
-      const result = await this.goTo(sortedEtapes)
+      const result = this.goTo(sortedEtapes)
 
       return result.valid
     } catch (e) {
@@ -148,13 +141,12 @@ export abstract class CaminoMachine<CaminoContext extends CaminoCommonContext, C
     }
   }
 
-  private async goTo(etapes: readonly Etape[]): Promise<
+  private goTo(etapes: readonly Etape[]):
     | { valid: false; etapeIndex: number }
     | {
         valid: true
         state: CaminoState<CaminoContext, CaminoEvent>
-      }
-  > {
+      } {
     const service = createActor(this.machine, {})
 
     service.subscribe({
@@ -169,17 +161,11 @@ export abstract class CaminoMachine<CaminoContext extends CaminoCommonContext, C
         const etapeAFaire = etapes[i]
         const event = this.eventFrom(etapeAFaire)
 
-        do {
-          if ((!service.getSnapshot().can(event) && service.getSnapshot().context.asyncTasks.size === 0) || service.getSnapshot().status === 'done') {
-            service.stop()
+        if (!service.getSnapshot().can(event) || service.getSnapshot().status === 'done') {
+          service.stop()
 
-            return { valid: false, etapeIndex: i }
-          } else if (service.getSnapshot().context.asyncTasks.size > 0) {
-            // FIXMACHINE planter quand on arrive à N itérations
-            await sleep(1)
-          }
-        } while (service.getSnapshot().context.asyncTasks.size > 0)
-
+          return { valid: false, etapeIndex: i }
+        }
         service.send(event)
       }
     } finally {
@@ -191,11 +177,11 @@ export abstract class CaminoMachine<CaminoContext extends CaminoCommonContext, C
     return { valid: true, state }
   }
 
-  public async demarcheStatut(etapes: readonly Etape[]): Promise<{
+  public demarcheStatut(etapes: readonly Etape[]): {
     demarcheStatut: DemarcheStatutId
     publique: boolean
-  }> {
-    const value = await this.goTo(etapes)
+  } {
+    const value = this.goTo(etapes)
     if (!value.valid) {
       console.error(`impossible de trouver le demarcheStatus, cette liste d'étapes '${JSON.stringify(etapes)}' est incohérente à l'étape ${value.etapeIndex + 1}`)
 
@@ -211,8 +197,8 @@ export abstract class CaminoMachine<CaminoContext extends CaminoCommonContext, C
     }
   }
 
-  private async assertGoTo(etapes: readonly Etape[]): Promise<CaminoState<CaminoContext, CaminoEvent>> {
-    const value = await this.goTo(etapes)
+  private assertGoTo(etapes: readonly Etape[]): CaminoState<CaminoContext, CaminoEvent> {
+    const value = this.goTo(etapes)
     if (!value.valid) {
       throw new Error(`Les étapes '${JSON.stringify(etapes)}' sont invalides à partir de l’étape ${value.etapeIndex}`)
     } else {
@@ -220,8 +206,8 @@ export abstract class CaminoMachine<CaminoContext extends CaminoCommonContext, C
     }
   }
 
-  public async whoIsBlocking(etapes: readonly Etape[]): Promise<Intervenant[]> {
-    const state = await this.assertGoTo(etapes)
+  public whoIsBlocking(etapes: readonly Etape[]): Intervenant[] {
+    const state = this.assertGoTo(etapes)
 
     const responsables: string[] = [...state.tags]
 
@@ -242,8 +228,8 @@ export abstract class CaminoMachine<CaminoContext extends CaminoCommonContext, C
       .toSorted((a, b) => a.type.localeCompare(b.type))
   }
 
-  public async possibleNextEtapes(etapes: readonly Etape[], date: CaminoDate): Promise<(OmitDistributive<Etape, 'date' | 'titreTypeId' | 'demarcheTypeId'> & { mainStep: boolean })[]> {
-    const state = await this.assertGoTo(etapes)
+  public possibleNextEtapes(etapes: readonly Etape[], date: CaminoDate): (OmitDistributive<Etape, 'date' | 'titreTypeId' | 'demarcheTypeId'> & { mainStep: boolean })[] {
+    const state = this.assertGoTo(etapes)
 
     if (isNotNullNorUndefined(state)) {
       return this.possibleNextEvents(state, date)
@@ -256,6 +242,6 @@ export abstract class CaminoMachine<CaminoContext extends CaminoCommonContext, C
   }
 }
 
-function getNextEvents(snapshot: AnyMachineSnapshot): string[] {
+export function getNextEvents(snapshot: AnyMachineSnapshot): string[] {
   return [...new Set([...snapshot._nodes.flatMap(sn => sn.ownEvents)])]
 }

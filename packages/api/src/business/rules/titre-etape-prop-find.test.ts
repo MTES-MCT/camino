@@ -11,17 +11,17 @@ console.error = vi.fn()
 describe("valeur d'une propriété pour une étape", () => {
   const date = toCaminoDate('2020-12-01')
 
-  test('retourne null si le titre ne contient pas de démarches', async () => {
-    await expect(titreEtapePropFind('titulaires', date, [] as unknown as ITitreDemarche[], 'pxm')).resolves.toEqual(null)
+  test('retourne null si le titre ne contient pas de démarches', () => {
+    expect(titreEtapePropFind('titulaires', date, [] as unknown as ITitreDemarche[], 'pxm')).toEqual(null)
   })
 
-  test('retourne null si le titre ne contient pas de démarche avec des étapes', async () => {
-    await expect(titreEtapePropFind('titulaires', date, [{}, { etapes: [] }] as unknown as ITitreDemarche[], 'pxm')).resolves.toEqual(null)
+  test('retourne null si le titre ne contient pas de démarche avec des étapes', () => {
+    expect(titreEtapePropFind('titulaires', date, [{}, { etapes: [] }] as unknown as ITitreDemarche[], 'pxm')).toEqual(null)
   })
 
-  test("retourne la propriété de l'étape antérieure qui contient la propriété voulue", async () => {
+  test("retourne la propriété de l'étape antérieure qui contient la propriété voulue", () => {
     const demarcheId = demarcheIdValidator.parse('demarche-01')
-    await expect(
+    expect(
       titreEtapePropFind(
         'titulaires',
         date,
@@ -60,11 +60,11 @@ describe("valeur d'une propriété pour une étape", () => {
         ] as ITitreDemarche[],
         'pxm'
       )
-    ).resolves.toEqual(['fr-xxxxxxxxx'])
+    ).toEqual(['fr-xxxxxxxxx'])
   })
 
-  test("retourne la propriété de l'étape antérieure qui contient la propriété voulue", async () => {
-    await expect(
+  test("retourne la propriété de l'étape antérieure qui contient la propriété voulue", () => {
+    expect(
       titreEtapePropFind(
         'surface',
         date,
@@ -106,11 +106,11 @@ describe("valeur d'une propriété pour une étape", () => {
         ] as ITitreDemarche[],
         'pxm'
       )
-    ).resolves.toEqual(0)
+    ).toEqual(0)
   })
 
-  test("retourne null si la propriété n'a pas de valeur", async () => {
-    await expect(
+  test("retourne null si la propriété n'a pas de valeur", () => {
+    expect(
       titreEtapePropFind(
         'titulaires',
         date,
@@ -137,6 +137,6 @@ describe("valeur d'une propriété pour une étape", () => {
         ] as ITitreDemarche[],
         'pxm'
       )
-    ).resolves.toBeNull()
+    ).toBeNull()
   })
 })

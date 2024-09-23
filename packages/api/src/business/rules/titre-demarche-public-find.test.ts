@@ -23,20 +23,20 @@ const etapesBuild = (etapesProps: Partial<ITitreEtape>[]) =>
   )
 
 describe("publicité d'une démarche", () => {
-  test("une démarche sans étape n'est pas publique", async () => {
-    await expect(
+  test("une démarche sans étape n'est pas publique", () => {
+    expect(
       titreDemarchePublicFind(
         { id: newDemarcheId(), typeId: 'oct', etapes: [], titreId: newTitreId('titreId'), demarcheDateDebut: toCaminoDate('2020-01-01'), demarcheDateFin: toCaminoDate('2021-01-01') },
         'arm'
       )
-    ).resolves.toMatchObject({
+    ).toMatchObject({
       publicLecture: false,
       entreprisesLecture: false,
     })
   })
 
-  test("une démarche d'octroi sans étape décisive n'est pas publique", async () => {
-    await expect(
+  test("une démarche d'octroi sans étape décisive n'est pas publique", () => {
+    expect(
       titreDemarchePublicFind(
         {
           id: newDemarcheId(),
@@ -48,11 +48,11 @@ describe("publicité d'une démarche", () => {
         },
         TITRES_TYPES_IDS.AUTORISATION_DE_PROSPECTION_GRANULATS_MARINS
       )
-    ).resolves.toMatchObject({ publicLecture: false, entreprisesLecture: false })
+    ).toMatchObject({ publicLecture: false, entreprisesLecture: false })
   })
 
-  test("une démarche de retrait dont l'étape la plus récente est saisine du préfet est publique", async () => {
-    await expect(
+  test("une démarche de retrait dont l'étape la plus récente est saisine du préfet est publique", () => {
+    expect(
       titreDemarchePublicFind(
         {
           typeId: 'oct',
@@ -64,11 +64,11 @@ describe("publicité d'une démarche", () => {
         },
         'apw'
       )
-    ).resolves.toMatchObject({ publicLecture: false, entreprisesLecture: false })
+    ).toMatchObject({ publicLecture: false, entreprisesLecture: false })
   })
 
-  test("une démarche de retrait dont l'étape la plus récente est saisine du préfet est publique", async () => {
-    await expect(
+  test("une démarche de retrait dont l'étape la plus récente est saisine du préfet est publique", () => {
+    expect(
       titreDemarchePublicFind(
         {
           typeId: 'ret',
@@ -80,11 +80,11 @@ describe("publicité d'une démarche", () => {
         },
         TITRES_TYPES_IDS.AUTORISATION_DE_PROSPECTION_GRANULATS_MARINS
       )
-    ).resolves.toMatchObject({ publicLecture: true, entreprisesLecture: true })
+    ).toMatchObject({ publicLecture: true, entreprisesLecture: true })
   })
 
-  test("une démarche de déchéance dont l'étape la plus récente est saisine du préfet est publique", async () => {
-    await expect(
+  test("une démarche de déchéance dont l'étape la plus récente est saisine du préfet est publique", () => {
+    expect(
       titreDemarchePublicFind(
         {
           typeId: 'dec',
@@ -96,11 +96,11 @@ describe("publicité d'une démarche", () => {
         },
         TITRES_TYPES_IDS.AUTORISATION_DE_PROSPECTION_GRANULATS_MARINS
       )
-    ).resolves.toMatchObject({ publicLecture: true, entreprisesLecture: true })
+    ).toMatchObject({ publicLecture: true, entreprisesLecture: true })
   })
 
-  test("une démarche dont l'étape la plus récente est demande est visible uniquement par l'entreprise", async () => {
-    await expect(
+  test("une démarche dont l'étape la plus récente est demande est visible uniquement par l'entreprise", () => {
+    expect(
       titreDemarchePublicFind(
         {
           typeId: 'oct',
@@ -112,11 +112,11 @@ describe("publicité d'une démarche", () => {
         },
         TITRES_TYPES_IDS.AUTORISATION_DE_PROSPECTION_GRANULATS_MARINS
       )
-    ).resolves.toMatchObject({ publicLecture: false, entreprisesLecture: true })
+    ).toMatchObject({ publicLecture: false, entreprisesLecture: true })
   })
 
-  test("une démarche d'une machine simplifiée dont l'étape la plus récente est décision de l'administration est visible", async () => {
-    await expect(
+  test("une démarche d'une machine simplifiée dont l'étape la plus récente est décision de l'administration est visible", () => {
+    expect(
       titreDemarchePublicFind(
         {
           typeId: 'oct',
@@ -128,11 +128,11 @@ describe("publicité d'une démarche", () => {
         },
         'arg'
       )
-    ).resolves.toMatchObject({ publicLecture: true, entreprisesLecture: true })
+    ).toMatchObject({ publicLecture: true, entreprisesLecture: true })
   })
 
-  test("une démarche dont l'étape la plus récente est classement sans suite n'est pas publique", async () => {
-    await expect(
+  test("une démarche dont l'étape la plus récente est classement sans suite n'est pas publique", () => {
+    expect(
       titreDemarchePublicFind(
         {
           typeId: 'oct',
@@ -144,11 +144,11 @@ describe("publicité d'une démarche", () => {
         },
         TITRES_TYPES_IDS.AUTORISATION_DE_PROSPECTION_GRANULATS_MARINS
       )
-    ).resolves.toMatchObject({ publicLecture: false })
+    ).toMatchObject({ publicLecture: false })
   })
 
-  test("une démarche d'un titre AXM dont l'étape la plus récente est classement sans suite ne change pas de visibilité", async () => {
-    await expect(
+  test("une démarche d'un titre AXM dont l'étape la plus récente est classement sans suite ne change pas de visibilité", () => {
+    expect(
       titreDemarchePublicFind(
         {
           typeId: 'oct',
@@ -160,11 +160,11 @@ describe("publicité d'une démarche", () => {
         },
         'axm'
       )
-    ).resolves.toMatchObject({ publicLecture: true })
+    ).toMatchObject({ publicLecture: true })
   })
 
-  test("une démarche d'un titre ARM dont l'étape la plus récente est classement sans suite ne change pas de visibilité", async () => {
-    await expect(
+  test("une démarche d'un titre ARM dont l'étape la plus récente est classement sans suite ne change pas de visibilité", () => {
+    expect(
       titreDemarchePublicFind(
         {
           typeId: 'oct',
@@ -176,11 +176,11 @@ describe("publicité d'une démarche", () => {
         },
         'arm'
       )
-    ).resolves.toMatchObject({ publicLecture: true })
+    ).toMatchObject({ publicLecture: true })
   })
 
-  test("une démarche d'un titre ARM dont l'étape la plus récente est désistement du demandeur est publique", async () => {
-    await expect(
+  test("une démarche d'un titre ARM dont l'étape la plus récente est désistement du demandeur est publique", () => {
+    expect(
       titreDemarchePublicFind(
         {
           typeId: 'oct',
@@ -192,11 +192,11 @@ describe("publicité d'une démarche", () => {
         },
         'arm'
       )
-    ).resolves.toMatchObject({ publicLecture: true })
+    ).toMatchObject({ publicLecture: true })
   })
 
-  test("une démarche d'un titre AXM dont l'étape la plus récente est désistement du demandeur est publique", async () => {
-    await expect(
+  test("une démarche d'un titre AXM dont l'étape la plus récente est désistement du demandeur est publique", () => {
+    expect(
       titreDemarchePublicFind(
         {
           typeId: 'oct',
@@ -208,11 +208,11 @@ describe("publicité d'une démarche", () => {
         },
         'axm'
       )
-    ).resolves.toMatchObject({ publicLecture: true })
+    ).toMatchObject({ publicLecture: true })
   })
 
-  test("une démarche ne pouvant pas faire l'objet d'une mise en concurrence dont l'étape la plus récente est recevabilité est publique", async () => {
-    await expect(
+  test("une démarche ne pouvant pas faire l'objet d'une mise en concurrence dont l'étape la plus récente est recevabilité est publique", () => {
+    expect(
       titreDemarchePublicFind(
         {
           typeId: 'pr1',
@@ -224,11 +224,11 @@ describe("publicité d'une démarche", () => {
         },
         TITRES_TYPES_IDS.AUTORISATION_DE_PROSPECTION_GRANULATS_MARINS
       )
-    ).resolves.toMatchObject({ publicLecture: true })
+    ).toMatchObject({ publicLecture: true })
   })
 
-  test("une démarche d'un titre ARM ne pouvant pas faire l'objet d'une mise en concurrence dont l'étape la plus récente est recevabilité n'est pas publique", async () => {
-    await expect(
+  test("une démarche d'un titre ARM ne pouvant pas faire l'objet d'une mise en concurrence dont l'étape la plus récente est recevabilité n'est pas publique", () => {
+    expect(
       titreDemarchePublicFind(
         {
           typeId: 'oct',
@@ -240,11 +240,11 @@ describe("publicité d'une démarche", () => {
         },
         'arm'
       )
-    ).resolves.toMatchObject({ publicLecture: false })
+    ).toMatchObject({ publicLecture: false })
   })
 
-  test("une démarche pouvant faire l'objet d'une mise en concurrence dont l'étape la plus récente est recevabilité n'est pas publique", async () => {
-    await expect(
+  test("une démarche pouvant faire l'objet d'une mise en concurrence dont l'étape la plus récente est recevabilité n'est pas publique", () => {
+    expect(
       titreDemarchePublicFind(
         {
           typeId: 'oct',
@@ -256,11 +256,11 @@ describe("publicité d'une démarche", () => {
         },
         'cxg'
       )
-    ).resolves.toMatchObject({ publicLecture: false })
+    ).toMatchObject({ publicLecture: false })
   })
 
-  test("une démarche dont l'étape la plus récente est mise en concurrence au JORF est publique", async () => {
-    await expect(
+  test("une démarche dont l'étape la plus récente est mise en concurrence au JORF est publique", () => {
+    expect(
       titreDemarchePublicFind(
         {
           typeId: 'oct',
@@ -272,11 +272,11 @@ describe("publicité d'une démarche", () => {
         },
         TITRES_TYPES_IDS.AUTORISATION_DE_PROSPECTION_GRANULATS_MARINS
       )
-    ).resolves.toMatchObject({ publicLecture: true })
+    ).toMatchObject({ publicLecture: true })
   })
 
-  test("une démarche dont l'étape la plus récente est publication de l'avis de décision implicite (historique) est publique", async () => {
-    await expect(
+  test("une démarche dont l'étape la plus récente est publication de l'avis de décision implicite (historique) est publique", () => {
+    expect(
       titreDemarchePublicFind(
         {
           typeId: 'oct',
@@ -288,11 +288,11 @@ describe("publicité d'une démarche", () => {
         },
         TITRES_TYPES_IDS.AUTORISATION_DE_PROSPECTION_GRANULATS_MARINS
       )
-    ).resolves.toMatchObject({ publicLecture: true })
+    ).toMatchObject({ publicLecture: true })
   })
 
-  test("une démarche dont l'étape la plus récente est participation du public est publique", async () => {
-    await expect(
+  test("une démarche dont l'étape la plus récente est participation du public est publique", () => {
+    expect(
       titreDemarchePublicFind(
         {
           typeId: 'oct',
@@ -304,11 +304,11 @@ describe("publicité d'une démarche", () => {
         },
         TITRES_TYPES_IDS.AUTORISATION_DE_PROSPECTION_GRANULATS_MARINS
       )
-    ).resolves.toMatchObject({ publicLecture: true })
+    ).toMatchObject({ publicLecture: true })
   })
 
-  test("une démarche d'un titre ARM dont l'étape la plus récente est décision de l'ONF peu importe son statut (historique) est publique", async () => {
-    await expect(
+  test("une démarche d'un titre ARM dont l'étape la plus récente est décision de l'ONF peu importe son statut (historique) est publique", () => {
+    expect(
       titreDemarchePublicFind(
         {
           typeId: 'oct',
@@ -320,11 +320,11 @@ describe("publicité d'une démarche", () => {
         },
         'arm'
       )
-    ).resolves.toMatchObject({ publicLecture: true })
+    ).toMatchObject({ publicLecture: true })
   })
 
-  test("une démarche d'un titre ARM dont l'étape la plus récente est commission ARM peu importe son statut (historique) est publique", async () => {
-    await expect(
+  test("une démarche d'un titre ARM dont l'étape la plus récente est commission ARM peu importe son statut (historique) est publique", () => {
+    expect(
       titreDemarchePublicFind(
         {
           typeId: 'oct',
@@ -336,11 +336,11 @@ describe("publicité d'une démarche", () => {
         },
         'arm'
       )
-    ).resolves.toMatchObject({ publicLecture: true })
+    ).toMatchObject({ publicLecture: true })
   })
 
-  test("une démarche d'un titre ARM dont l'étape la plus récente est saisine de la commission ARM est publique", async () => {
-    await expect(
+  test("une démarche d'un titre ARM dont l'étape la plus récente est saisine de la commission ARM est publique", () => {
+    expect(
       titreDemarchePublicFind(
         {
           typeId: 'oct',
@@ -352,11 +352,11 @@ describe("publicité d'une démarche", () => {
         },
         'arm'
       )
-    ).resolves.toMatchObject({ publicLecture: true })
+    ).toMatchObject({ publicLecture: true })
   })
 
-  test("une démarche dont l'étape la plus récente est décision implicite au statut accepté est publique", async () => {
-    await expect(
+  test("une démarche dont l'étape la plus récente est décision implicite au statut accepté est publique", () => {
+    expect(
       titreDemarchePublicFind(
         {
           typeId: 'oct',
@@ -368,11 +368,11 @@ describe("publicité d'une démarche", () => {
         },
         TITRES_TYPES_IDS.AUTORISATION_DE_PROSPECTION_GRANULATS_MARINS
       )
-    ).resolves.toMatchObject({ publicLecture: true })
+    ).toMatchObject({ publicLecture: true })
   })
 
-  test("une démarche dont l'étape la plus récente est décision implicite au statut rejeté n'est pas publique", async () => {
-    await expect(
+  test("une démarche dont l'étape la plus récente est décision implicite au statut rejeté n'est pas publique", () => {
+    expect(
       titreDemarchePublicFind(
         {
           typeId: 'oct',
@@ -387,11 +387,11 @@ describe("publicité d'une démarche", () => {
         },
         TITRES_TYPES_IDS.AUTORISATION_DE_PROSPECTION_GRANULATS_MARINS
       )
-    ).resolves.toMatchObject({ publicLecture: false })
+    ).toMatchObject({ publicLecture: false })
   })
 
-  test("une démarche d'un titre non AXM dont l'étape la plus récente est décision de l'administration au statut rejeté n'est pas publique", async () => {
-    await expect(
+  test("une démarche d'un titre non AXM dont l'étape la plus récente est décision de l'administration au statut rejeté n'est pas publique", () => {
+    expect(
       titreDemarchePublicFind(
         {
           typeId: 'oct',
@@ -403,11 +403,11 @@ describe("publicité d'une démarche", () => {
         },
         TITRES_TYPES_IDS.AUTORISATION_DE_PROSPECTION_GRANULATS_MARINS
       )
-    ).resolves.toMatchObject({ publicLecture: false })
+    ).toMatchObject({ publicLecture: false })
   })
 
-  test("une démarche d'un titre AXM dont l'étape la plus récente est décision de l'administration au statut rejeté est publique", async () => {
-    await expect(
+  test("une démarche d'un titre AXM dont l'étape la plus récente est décision de l'administration au statut rejeté est publique", () => {
+    expect(
       titreDemarchePublicFind(
         {
           typeId: 'oct',
@@ -422,11 +422,11 @@ describe("publicité d'une démarche", () => {
         },
         'axm'
       )
-    ).resolves.toMatchObject({ publicLecture: true })
+    ).toMatchObject({ publicLecture: true })
   })
 
-  test("une démarche d'un titre AXM dont l'étape la plus récente est décision de l'administration au statut accepté est publique", async () => {
-    await expect(
+  test("une démarche d'un titre AXM dont l'étape la plus récente est décision de l'administration au statut accepté est publique", () => {
+    expect(
       titreDemarchePublicFind(
         {
           typeId: 'oct',
@@ -438,11 +438,11 @@ describe("publicité d'une démarche", () => {
         },
         'axm'
       )
-    ).resolves.toMatchObject({ publicLecture: true })
+    ).toMatchObject({ publicLecture: true })
   })
 
-  test("une démarche dont l'étape la plus récente est publication de décision au JORF au statut au statut accepté publique", async () => {
-    await expect(
+  test("une démarche dont l'étape la plus récente est publication de décision au JORF au statut au statut accepté publique", () => {
+    expect(
       titreDemarchePublicFind(
         {
           typeId: 'oct',
@@ -454,11 +454,11 @@ describe("publicité d'une démarche", () => {
         },
         TITRES_TYPES_IDS.AUTORISATION_DE_PROSPECTION_GRANULATS_MARINS
       )
-    ).resolves.toMatchObject({ publicLecture: true })
+    ).toMatchObject({ publicLecture: true })
   })
 
-  test("une démarche dont l'étape la plus récente est décision unilatérale est publique", async () => {
-    await expect(
+  test("une démarche dont l'étape la plus récente est décision unilatérale est publique", () => {
+    expect(
       titreDemarchePublicFind(
         {
           typeId: 'oct',
@@ -470,11 +470,11 @@ describe("publicité d'une démarche", () => {
         },
         TITRES_TYPES_IDS.AUTORISATION_DE_PROSPECTION_GRANULATS_MARINS
       )
-    ).resolves.toMatchObject({ publicLecture: true })
+    ).toMatchObject({ publicLecture: true })
   })
 
-  test("une démarche dont l'étape la plus récente est publication de décision unilatérale est publique", async () => {
-    await expect(
+  test("une démarche dont l'étape la plus récente est publication de décision unilatérale est publique", () => {
+    expect(
       titreDemarchePublicFind(
         {
           typeId: 'oct',
@@ -486,11 +486,11 @@ describe("publicité d'une démarche", () => {
         },
         TITRES_TYPES_IDS.AUTORISATION_DE_PROSPECTION_GRANULATS_MARINS
       )
-    ).resolves.toMatchObject({ publicLecture: true })
+    ).toMatchObject({ publicLecture: true })
   })
 
-  test("une démarche dont l'étape la plus récente est publication de décision au recueil des actes administratifs est publique", async () => {
-    await expect(
+  test("une démarche dont l'étape la plus récente est publication de décision au recueil des actes administratifs est publique", () => {
+    expect(
       titreDemarchePublicFind(
         {
           typeId: 'oct',
@@ -502,11 +502,11 @@ describe("publicité d'une démarche", () => {
         },
         TITRES_TYPES_IDS.AUTORISATION_DE_PROSPECTION_GRANULATS_MARINS
       )
-    ).resolves.toMatchObject({ publicLecture: true })
+    ).toMatchObject({ publicLecture: true })
   })
 
-  test("une démarche d'un titre ARM dont l'étape la plus récente est signature de l'autorisation de recherche minière est publique", async () => {
-    await expect(
+  test("une démarche d'un titre ARM dont l'étape la plus récente est signature de l'autorisation de recherche minière est publique", () => {
+    expect(
       titreDemarchePublicFind(
         {
           typeId: 'oct',
@@ -518,11 +518,11 @@ describe("publicité d'une démarche", () => {
         },
         'arm'
       )
-    ).resolves.toMatchObject({ publicLecture: true })
+    ).toMatchObject({ publicLecture: true })
   })
 
-  test("une démarche d'un titre ARM dont l'étape la plus récente est signature de l'avenant à l'autorisation de recherche minière est publique", async () => {
-    await expect(
+  test("une démarche d'un titre ARM dont l'étape la plus récente est signature de l'avenant à l'autorisation de recherche minière est publique", () => {
+    expect(
       titreDemarchePublicFind(
         {
           typeId: 'oct',
@@ -534,11 +534,11 @@ describe("publicité d'une démarche", () => {
         },
         'arm'
       )
-    ).resolves.toMatchObject({ publicLecture: true })
+    ).toMatchObject({ publicLecture: true })
   })
 
-  test("une démarche dont l'étape la plus récente est décision d'annulation par le juge administratif est publique", async () => {
-    await expect(
+  test("une démarche dont l'étape la plus récente est décision d'annulation par le juge administratif est publique", () => {
+    expect(
       titreDemarchePublicFind(
         {
           typeId: 'oct',
@@ -550,11 +550,11 @@ describe("publicité d'une démarche", () => {
         },
         TITRES_TYPES_IDS.AUTORISATION_DE_PROSPECTION_GRANULATS_MARINS
       )
-    ).resolves.toMatchObject({ publicLecture: true })
+    ).toMatchObject({ publicLecture: true })
   })
 
-  test("une démarche dont l'étape la plus récente est décision d'annulation par le juge administratif au statut fait n'est pas publique", async () => {
-    await expect(
+  test("une démarche dont l'étape la plus récente est décision d'annulation par le juge administratif au statut fait n'est pas publique", () => {
+    expect(
       titreDemarchePublicFind(
         {
           typeId: 'oct',
@@ -566,11 +566,11 @@ describe("publicité d'une démarche", () => {
         },
         TITRES_TYPES_IDS.AUTORISATION_DE_PROSPECTION_GRANULATS_MARINS
       )
-    ).resolves.toMatchObject({ publicLecture: false })
+    ).toMatchObject({ publicLecture: false })
   })
 
-  test.each<DemarcheTypeId>(['ren', 'pro'])("une démarche %s dont l'étape la plus récente est le dépot de la demande n'est pas publique", async demarcheTypeId => {
-    await expect(
+  test.each<DemarcheTypeId>(['ren', 'pro'])("une démarche %s dont l'étape la plus récente est le dépot de la demande n'est pas publique", demarcheTypeId => {
+    expect(
       titreDemarchePublicFind(
         {
           typeId: demarcheTypeId,
@@ -582,8 +582,8 @@ describe("publicité d'une démarche", () => {
         },
         'arm'
       )
-    ).resolves.toMatchObject({ publicLecture: false })
-    await expect(
+    ).toMatchObject({ publicLecture: false })
+    expect(
       titreDemarchePublicFind(
         {
           typeId: demarcheTypeId,
@@ -598,11 +598,11 @@ describe("publicité d'une démarche", () => {
         },
         'arm'
       )
-    ).resolves.toMatchObject({ publicLecture: false })
+    ).toMatchObject({ publicLecture: false })
   })
 
-  test.each<DemarcheTypeId>(['ren', 'pro'])("une démarche %s dont l'étape la plus récente est recevabilité de la demande est publique", async demarcheTypeId => {
-    await expect(
+  test.each<DemarcheTypeId>(['ren', 'pro'])("une démarche %s dont l'étape la plus récente est recevabilité de la demande est publique", demarcheTypeId => {
+    expect(
       titreDemarchePublicFind(
         {
           typeId: demarcheTypeId,
@@ -614,9 +614,9 @@ describe("publicité d'une démarche", () => {
         },
         'arm'
       )
-    ).resolves.toMatchObject({ publicLecture: true })
+    ).toMatchObject({ publicLecture: true })
 
-    await expect(
+    expect(
       titreDemarchePublicFind(
         {
           typeId: demarcheTypeId,
@@ -632,11 +632,11 @@ describe("publicité d'une démarche", () => {
         },
         'arm'
       )
-    ).resolves.toMatchObject({ publicLecture: true })
+    ).toMatchObject({ publicLecture: true })
   })
 
-  test.each<DemarcheTypeId>(['ren', 'pro'])("une démarche %s dont l'étape la plus récente est l’expertise de l’onf est publique", async demarcheTypeId => {
-    await expect(
+  test.each<DemarcheTypeId>(['ren', 'pro'])("une démarche %s dont l'étape la plus récente est l’expertise de l’onf est publique", demarcheTypeId => {
+    expect(
       titreDemarchePublicFind(
         {
           typeId: demarcheTypeId,
@@ -651,8 +651,8 @@ describe("publicité d'une démarche", () => {
         },
         'arm'
       )
-    ).resolves.toMatchObject({ publicLecture: true })
-    await expect(
+    ).toMatchObject({ publicLecture: true })
+    expect(
       titreDemarchePublicFind(
         {
           typeId: demarcheTypeId,
@@ -669,11 +669,11 @@ describe("publicité d'une démarche", () => {
         },
         'arm'
       )
-    ).resolves.toMatchObject({ publicLecture: true })
+    ).toMatchObject({ publicLecture: true })
   })
 
-  test.each<DemarcheTypeId>(['ren', 'pro'])("une démarche %s dont l'étape la plus récente est la décision de classement sans suite est publique", async demarcheTypeId => {
-    await expect(
+  test.each<DemarcheTypeId>(['ren', 'pro'])("une démarche %s dont l'étape la plus récente est la décision de classement sans suite est publique", demarcheTypeId => {
+    expect(
       titreDemarchePublicFind(
         {
           typeId: demarcheTypeId,
@@ -685,8 +685,8 @@ describe("publicité d'une démarche", () => {
         },
         'arm'
       )
-    ).resolves.toMatchObject({ publicLecture: true })
-    await expect(
+    ).toMatchObject({ publicLecture: true })
+    expect(
       titreDemarchePublicFind(
         {
           typeId: demarcheTypeId,
@@ -703,12 +703,12 @@ describe("publicité d'une démarche", () => {
         },
         'arm'
       )
-    ).resolves.toMatchObject({ publicLecture: true })
+    ).toMatchObject({ publicLecture: true })
   })
 
-  test.each<DemarcheTypeId>(['ren', 'pro'])("une démarche %s dont l'étape la plus récente est le désistement est publique", async demarcheTypeId => {
+  test.each<DemarcheTypeId>(['ren', 'pro'])("une démarche %s dont l'étape la plus récente est le désistement est publique", demarcheTypeId => {
     // sans machine
-    await expect(
+    expect(
       titreDemarchePublicFind(
         {
           typeId: demarcheTypeId,
@@ -720,9 +720,9 @@ describe("publicité d'une démarche", () => {
         },
         'arm'
       )
-    ).resolves.toMatchObject({ publicLecture: true })
+    ).toMatchObject({ publicLecture: true })
     // avec machine
-    await expect(
+    expect(
       titreDemarchePublicFind(
         {
           typeId: demarcheTypeId,
@@ -738,11 +738,11 @@ describe("publicité d'une démarche", () => {
         },
         'arm'
       )
-    ).resolves.toMatchObject({ publicLecture: true })
+    ).toMatchObject({ publicLecture: true })
   })
 
-  test.each<EtapeTypeId>(['anf', 'dex', 'dpu', 'rpu', 'ppu', 'epu'])("une démarche d’un titre non énergétique dont l'étape la plus récente est %s est public", async etapeTypeId => {
-    await expect(
+  test.each<EtapeTypeId>(['anf', 'dex', 'dpu', 'rpu', 'ppu', 'epu'])("une démarche d’un titre non énergétique dont l'étape la plus récente est %s est public", etapeTypeId => {
+    expect(
       titreDemarchePublicFind(
         {
           typeId: 'oct',
@@ -754,11 +754,11 @@ describe("publicité d'une démarche", () => {
         },
         TITRES_TYPES_IDS.AUTORISATION_DE_PROSPECTION_GRANULATS_MARINS
       )
-    ).resolves.toMatchObject({ publicLecture: true })
+    ).toMatchObject({ publicLecture: true })
   })
 
-  test('la demarche d’une prolongation déposée d’un PRM en survie provisoire est public ', async () => {
-    await expect(
+  test('la demarche d’une prolongation déposée d’un PRM en survie provisoire est public ', () => {
+    expect(
       titreDemarchePublicFind(
         {
           id: newDemarcheId(),
@@ -773,11 +773,11 @@ describe("publicité d'une démarche", () => {
         },
         'prm'
       )
-    ).resolves.toMatchObject({ publicLecture: true })
+    ).toMatchObject({ publicLecture: true })
   })
 
-  test('le titre WQaZgPfDcQw9tFliMgBIDH3Z ne doit pas être public', async () => {
-    await expect(
+  test('le titre WQaZgPfDcQw9tFliMgBIDH3Z ne doit pas être public', () => {
+    expect(
       titreDemarchePublicFind(
         {
           typeId: 'oct',
@@ -789,11 +789,11 @@ describe("publicité d'une démarche", () => {
         },
         TITRES_TYPES_IDS.AUTORISATION_DE_PROSPECTION_GRANULATS_MARINS
       )
-    ).resolves.toMatchObject({ publicLecture: false })
+    ).toMatchObject({ publicLecture: false })
   })
 
-  test('la demarche d’une prolongation non déposée d’un PRM en survie provisoire n’est pas public ', async () => {
-    await expect(
+  test('la demarche d’une prolongation non déposée d’un PRM en survie provisoire n’est pas public ', () => {
+    expect(
       titreDemarchePublicFind(
         {
           id: newDemarcheId(),
@@ -805,6 +805,6 @@ describe("publicité d'une démarche", () => {
         },
         'prm'
       )
-    ).resolves.toMatchObject({ publicLecture: false })
+    ).toMatchObject({ publicLecture: false })
   })
 })

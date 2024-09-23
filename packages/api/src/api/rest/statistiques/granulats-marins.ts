@@ -99,9 +99,9 @@ const statistiquesGranulatsMarinsInstantBuild = (titres: ITitre[]): Omit<Statist
   return statsInstant
 }
 
-const statistiquesGranulatsMarinsAnneeBuild = async (titres: ITitre[], titresActivites: ITitreActivite[], annee: number): Promise<StatistiqueGranulatsMarinsStatAnnee> => {
+const statistiquesGranulatsMarinsAnneeBuild = (titres: ITitre[], titresActivites: ITitreActivite[], annee: number): StatistiqueGranulatsMarinsStatAnnee => {
   // les titres créés dans l'année et leur surface lors de l'octroi
-  const titresFiltered = await titresSurfaceIndexBuild(titres, annee)
+  const titresFiltered = titresSurfaceIndexBuild(titres, annee)
 
   const { titresPrw, titresPxw, titresCxw } = statistiquesGranulatsMarinsTitresGet(titresFiltered)
 
@@ -159,7 +159,7 @@ export const statistiquesGranulatsMarins = async (annee: CaminoAnnee): Promise<S
     )
 
     return {
-      annees: await Promise.all(annees.map(annee => statistiquesGranulatsMarinsAnneeBuild(titres, titresActivites, caminoAnneeToNumber(annee)))),
+      annees: annees.map(annee => statistiquesGranulatsMarinsAnneeBuild(titres, titresActivites, caminoAnneeToNumber(annee))),
       ...statistiquesGranulatsMarinsInstantBuild(titres),
     }
   } catch (e) {

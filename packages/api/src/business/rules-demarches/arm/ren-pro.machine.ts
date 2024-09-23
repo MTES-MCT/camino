@@ -61,7 +61,6 @@ const armRenProMachine = createMachine({
   context: {
     visibilite: 'confidentielle',
     demarcheStatut: DemarchesStatutsIds.EnConstruction,
-    asyncTasks: new Set<string>(),
   },
   on: {
     DESISTER_PAR_LE_DEMANDEUR: {

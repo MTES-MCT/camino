@@ -37,7 +37,7 @@ export const titresEtapesOrdreUpdateVisibleForTesting = async (
     if (isNotNullNorUndefinedNorEmpty(titreDemarche.etapes)) {
       const etapesMachine = titreDemarche.etapes.map(etape => titreEtapeForMachineValidator.parse(etape))
 
-      const etapes = await titreEtapesSortAscByDate(etapesMachine, titreDemarche.id, titreDemarche.typeId, titreDemarche.titreTypeId)
+      const etapes = titreEtapesSortAscByDate(etapesMachine, titreDemarche.id, titreDemarche.typeId, titreDemarche.titreTypeId)
       for (let index = 0; index < etapes.length; index++) {
         const titreEtape = etapes[index]
         if (titreEtape.ordre !== index + 1) {

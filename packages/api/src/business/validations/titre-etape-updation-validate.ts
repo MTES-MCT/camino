@@ -14,7 +14,7 @@ import { DeepReadonly, isNotNullNorUndefined, isNullOrUndefined } from 'camino-c
 import { FlattenEtape } from 'camino-common/src/etape-form'
 import { flattenContenuToSimpleContenu } from 'camino-common/src/sections'
 
-export const titreEtapeUpdationValidate = async (
+export const titreEtapeUpdationValidate = (
   etape: Pick<Partial<FlattenEtape>, 'id'> & Omit<FlattenEtape, 'id'>,
   titreDemarche: ITitreDemarche,
   titre: Pick<ITitre, 'typeId' | 'demarches'>,
@@ -27,7 +27,7 @@ export const titreEtapeUpdationValidate = async (
   daeDocument: Omit<GetEtapeDocumentsByEtapeIdDaeDocument, 'id'> | null,
   aslDocument: Omit<GetEtapeDocumentsByEtapeIdAslDocument, 'id'> | null,
   titreEtapeOld?: ITitreEtape
-): Promise<string[]> => {
+): string[] => {
   const errors: string[] = []
   const sections = getSections(titre.typeId, titreDemarche.typeId, etape.typeId)
 
@@ -93,7 +93,7 @@ export const titreEtapeUpdationValidate = async (
   return titreEtapeUpdationBusinessValidate(etape, titreDemarche, titre, isNotNullNorUndefined(communes) ? communes.map(communeId => ({ id: communeId })) : communes)
 }
 
-const titreEtapeUpdationBusinessValidate = async (
+const titreEtapeUpdationBusinessValidate = (
   titreEtape: Pick<Partial<FlattenEtape>, 'id'> & Pick<FlattenEtape, 'statutId' | 'typeId' | 'date' | 'contenu' | 'perimetre' | 'isBrouillon'>,
   titreDemarche: ITitreDemarche,
   titre: Pick<ITitre, 'typeId' | 'demarches'>,
@@ -102,7 +102,7 @@ const titreEtapeUpdationBusinessValidate = async (
   const errors = []
   // 1. la date de l'étape est possible
   // en fonction de l'ordre des types d'étapes de la démarche
-  const { valid, errors: demarcheUpdatedErrors } = await titreDemarcheUpdatedEtatValidate(
+  const { valid, errors: demarcheUpdatedErrors } = titreDemarcheUpdatedEtatValidate(
     titreDemarche.typeId,
     titre,
     {

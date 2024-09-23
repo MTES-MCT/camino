@@ -26,7 +26,7 @@ const demarchesValidate = async () => {
       for (const demarche of demarches) {
         if (isNotNullNorUndefinedNorEmpty(demarche.etapes)) {
           try {
-            const { valid, errors } = await titreDemarcheUpdatedEtatValidate(demarche.typeId, demarche.titre!, demarche.etapes![0], demarche.id, demarche.etapes!)
+            const { valid, errors } = titreDemarcheUpdatedEtatValidate(demarche.typeId, demarche.titre!, demarche.etapes![0], demarche.id, demarche.etapes!)
 
             if (!valid) {
               errorsTotal.push(`https://camino.beta.gouv.fr/demarches/${demarche.slug} => démarche "${demarche.typeId}" : ${errors}`)

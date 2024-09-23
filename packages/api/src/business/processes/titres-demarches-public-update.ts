@@ -33,7 +33,7 @@ export const titresDemarchesPublicUpdate = async (titresIds?: string[]): Promise
 
   for (const titre of titres) {
     for (const titreDemarche of titre.demarches!) {
-      const { publicLecture, entreprisesLecture } = await titreDemarchePublicFind(titreDemarche, titre.typeId)
+      const { publicLecture, entreprisesLecture } = titreDemarchePublicFind(titreDemarche, titre.typeId)
 
       const patch = {} as ITitreDemarchePatch
 

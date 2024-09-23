@@ -12,13 +12,13 @@ const psArmProMachine = new ProcedureSpecifiqueMachine('arm', 'pro')
 const psAxmProMachine = new ProcedureSpecifiqueMachine('axm', 'pro')
 
 describe('vérifie l’arbre des procédures spécifique', () => {
-  test('statut de la démarche simplifiee sans étape', async () => {
-    const service = await orderAndInterpretMachine(psPccOctMachine, [])
+  test('statut de la démarche simplifiee sans étape', () => {
+    const service = orderAndInterpretMachine(psPccOctMachine, [])
     expect(service).canOnlyTransitionTo({ machine: psPccOctMachine, date: toCaminoDate('2024-10-10') }, ['FAIRE_DEMANDE'])
     expect(service.getSnapshot().context.demarcheStatut).toBe(DemarchesStatutsIds.EnConstruction)
   })
   test('demande irrecevable', async () => {
-    const { service, dateFin, machine } = await setDateAndOrderAndInterpretMachine(psPccOctMachine, '1999-04-14', [
+    const { service, dateFin, machine } = setDateAndOrderAndInterpretMachine(psPccOctMachine, '1999-04-14', [
       ETES.demande.FAIT,
       ETES.depotDeLaDemande.FAIT,
       ETES.recevabiliteDeLaDemande.DEFAVORABLE,
@@ -30,8 +30,8 @@ describe('vérifie l’arbre des procédures spécifique', () => {
     expect(service.getSnapshot().context.demarcheStatut).toBe(DemarchesStatutsIds.Rejete)
     expect(service.getSnapshot().context.visibilite).toBe('confidentielle')
   })
-  test('on peut notifier le demandeur apres une recevabilité favorable pour un PER ou une concession', async () => {
-    const { service, dateFin, machine } = await setDateAndOrderAndInterpretMachine(psCxmOctMachine, '1999-04-14', [
+  test('on peut notifier le demandeur apres une recevabilité favorable pour un PER ou une concession', () => {
+    const { service, dateFin, machine } = setDateAndOrderAndInterpretMachine(psCxmOctMachine, '1999-04-14', [
       ETES.demande.FAIT,
       ETES.depotDeLaDemande.FAIT,
       ETES.recevabiliteDeLaDemande.FAVORABLE,
@@ -50,8 +50,8 @@ describe('vérifie l’arbre des procédures spécifique', () => {
   //    ])
   //    expect(service).canOnlyTransitionTo({ machine, date: dateFin }, ['NOTIFIER_DEMANDEUR'])
   //  })
-  test('on ne peut plus rien faire pendant que la mise en concurrence est en cours', async () => {
-    const { service, dateFin, machine } = await setDateAndOrderAndInterpretMachine(psCxmOctMachine, '1999-04-14', [
+  test('on ne peut plus rien faire pendant que la mise en concurrence est en cours', () => {
+    const { service, dateFin, machine } = setDateAndOrderAndInterpretMachine(psCxmOctMachine, '1999-04-14', [
       ETES.demande.FAIT,
       ETES.depotDeLaDemande.FAIT,
       ETES.recevabiliteDeLaDemande.FAVORABLE,
@@ -68,35 +68,27 @@ describe('vérifie l’arbre des procédures spécifique', () => {
   //   ])
   //   expect(service).canOnlyTransitionTo({ machine, date: dateFin }, ['RESULTAT_MISE_EN_CONCURRENCE'])
   // })
-  test('on ne peut pas notifier le demandeur apres une recevabilité favorable pour pcc', async () => {
-    await expect(() =>
+  test('on ne peut pas notifier le demandeur apres une recevabilité favorable pour pcc', () => {
+    expect(() =>
       setDateAndOrderAndInterpretMachine(psPccOctMachine, '1999-04-14', [ETES.demande.FAIT, ETES.depotDeLaDemande.FAIT, ETES.recevabiliteDeLaDemande.FAVORABLE, ETES.notificationAuDemandeur.FAIT])
-    ).rejects.toThrowErrorMatchingInlineSnapshot(
+    ).toThrowErrorMatchingInlineSnapshot(
       `[Error: Error: cannot execute step: '{"etapeTypeId":"mno","etapeStatutId":"fai","date":"1999-04-18"}' after '["mfr_fai","mdp_fai","mcr_fav"]'. The event {"type":"NOTIFIER_DEMANDEUR","date":"1999-04-18","status":"fai"} should be one of 'FAIRE_MISE_EN_CONCURRENCE']`
     )
   })
-  test("après la recevabilité favorable la démarche reste confidentielle si il n'y a pas de mise en concurrence", async () => {
-    const { service, dateFin, machine } = await setDateAndOrderAndInterpretMachine(psPrmProMachine, '1999-04-14', [
-      ETES.demande.FAIT,
-      ETES.depotDeLaDemande.FAIT,
-      ETES.recevabiliteDeLaDemande.FAVORABLE,
-    ])
+  test("après la recevabilité favorable la démarche reste confidentielle si il n'y a pas de mise en concurrence", () => {
+    const { service, dateFin, machine } = setDateAndOrderAndInterpretMachine(psPrmProMachine, '1999-04-14', [ETES.demande.FAIT, ETES.depotDeLaDemande.FAIT, ETES.recevabiliteDeLaDemande.FAVORABLE])
 
     expect(service).canOnlyTransitionTo({ machine, date: dateFin }, ['RENDRE_AVIS_CGE_IGEDD', 'NOTIFIER_DEMANDEUR'])
     expect(service.getSnapshot().context.visibilite).toBe('confidentielle')
   })
-  test('après la recevabilité favorable la démarche reste confidentielle si il y a une mise en concurrence', async () => {
-    const { service, dateFin, machine } = await setDateAndOrderAndInterpretMachine(psCxmOctMachine, '1999-04-14', [
-      ETES.demande.FAIT,
-      ETES.depotDeLaDemande.FAIT,
-      ETES.recevabiliteDeLaDemande.FAVORABLE,
-    ])
+  test('après la recevabilité favorable la démarche reste confidentielle si il y a une mise en concurrence', () => {
+    const { service, dateFin, machine } = setDateAndOrderAndInterpretMachine(psCxmOctMachine, '1999-04-14', [ETES.demande.FAIT, ETES.depotDeLaDemande.FAIT, ETES.recevabiliteDeLaDemande.FAVORABLE])
 
     expect(service).canOnlyTransitionTo({ machine, date: dateFin }, ['NOTIFIER_DEMANDEUR', 'FAIRE_MISE_EN_CONCURRENCE'])
     expect(service.getSnapshot().context.visibilite).toBe('confidentielle')
   })
-  test("ne peut pas rendre la décision de l'administration si la participation du public n'est pas terminée", async () => {
-    const { service, dateFin, machine } = await setDateAndOrderAndInterpretMachine(psArmProMachine, '1999-04-14', [
+  test("ne peut pas rendre la décision de l'administration si la participation du public n'est pas terminée", () => {
+    const { service, dateFin, machine } = setDateAndOrderAndInterpretMachine(psArmProMachine, '1999-04-14', [
       ETES.demande.FAIT,
       ETES.depotDeLaDemande.FAIT,
       ETES.recevabiliteDeLaDemande.FAVORABLE,
@@ -111,7 +103,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
   })
 
   test("réalise une demande de prolongation d'ARM complète", async () => {
-    const { service, dateFin, machine } = await setDateAndOrderAndInterpretMachine(psArmProMachine, '1999-04-14', [
+    const { service, dateFin, machine } = setDateAndOrderAndInterpretMachine(psArmProMachine, '1999-04-14', [
       ETES.demande.FAIT,
       ETES.depotDeLaDemande.FAIT,
       ETES.recevabiliteDeLaDemande.FAVORABLE,
@@ -128,8 +120,8 @@ describe('vérifie l’arbre des procédures spécifique', () => {
     expect(service.getSnapshot().context.demarcheStatut).toBe(DemarchesStatutsIds.AccepteEtPublie)
     expect(service).canOnlyTransitionTo({ machine, date: dateFin }, ['FAIRE_ABROGATION'])
   })
-  test("réalise une demande de prolongation d'ARM rejetée", async () => {
-    const { service, dateFin } = await setDateAndOrderAndInterpretMachine(psArmProMachine, '1999-04-14', [
+  test("réalise une demande de prolongation d'ARM rejetée", () => {
+    const { service, dateFin } = setDateAndOrderAndInterpretMachine(psArmProMachine, '1999-04-14', [
       ETES.demande.FAIT,
       ETES.depotDeLaDemande.FAIT,
       ETES.recevabiliteDeLaDemande.FAVORABLE,
@@ -143,8 +135,8 @@ describe('vérifie l’arbre des procédures spécifique', () => {
     expect(service).canOnlyTransitionTo({ machine: psArmProMachine, date: dateFin }, ['NOTIFIER_DEMANDEUR'])
     expect(service.getSnapshot().context.visibilite).toBe('confidentielle')
   })
-  test("réalise une demande de prolongation d'ARM rejetée puis une notification au demandeur", async () => {
-    const { service, dateFin, machine } = await setDateAndOrderAndInterpretMachine(psArmProMachine, '1999-04-14', [
+  test("réalise une demande de prolongation d'ARM rejetée puis une notification au demandeur", () => {
+    const { service, dateFin, machine } = setDateAndOrderAndInterpretMachine(psArmProMachine, '1999-04-14', [
       ETES.demande.FAIT,
       ETES.depotDeLaDemande.FAIT,
       ETES.recevabiliteDeLaDemande.FAVORABLE,
@@ -161,8 +153,8 @@ describe('vérifie l’arbre des procédures spécifique', () => {
     expect(service.getSnapshot().context.demarcheStatut).toBe(DemarchesStatutsIds.Rejete)
   })
 
-  test("réalise une demande de prolongation d'ARM rejetée suite à une décision implicite", async () => {
-    const { service, dateFin, machine } = await setDateAndOrderAndInterpretMachine(psArmProMachine, '1999-04-14', [
+  test("réalise une demande de prolongation d'ARM rejetée suite à une décision implicite", () => {
+    const { service, dateFin, machine } = setDateAndOrderAndInterpretMachine(psArmProMachine, '1999-04-14', [
       ETES.demande.FAIT,
       ETES.depotDeLaDemande.FAIT,
       ETES.recevabiliteDeLaDemande.FAVORABLE,
@@ -178,8 +170,8 @@ describe('vérifie l’arbre des procédures spécifique', () => {
     expect(service.getSnapshot().context.demarcheStatut).toBe(DemarchesStatutsIds.Rejete)
   })
 
-  test("réalise une demande de prolongation d'AXM complète", async () => {
-    const result = await getEventsTree(psAxmProMachine, '1999-04-14', [
+  test("réalise une demande de prolongation d'AXM complète", () => {
+    const result = getEventsTree(psAxmProMachine, '1999-04-14', [
       ETES.demande.FAIT,
       ETES.depotDeLaDemande.FAIT,
       ETES.recevabiliteDeLaDemande.FAVORABLE,
@@ -211,8 +203,8 @@ describe('vérifie l’arbre des procédures spécifique', () => {
     `)
   })
 
-  test("vérifie l'arbre pour la prolongation d'ARM", async () => {
-    const result = await getEventsTree(psArmProMachine, '1999-04-14', [
+  test("vérifie l'arbre pour la prolongation d'ARM", () => {
+    const result = getEventsTree(psArmProMachine, '1999-04-14', [
       ETES.demande.FAIT,
       ETES.depotDeLaDemande.FAIT,
       ETES.recevabiliteDeLaDemande.FAVORABLE,

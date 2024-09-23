@@ -1,6 +1,7 @@
 import { isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
 import { ITitreEtape, IPropId } from '../../types'
 
+// TODO 2024-09-23 type return correctly
 export const propValueFind = (titreEtape: ITitreEtape, propId: IPropId) => {
   if (propId === 'points') {
     return titreEtape.geojson4326Perimetre
