@@ -1,6 +1,8 @@
 /** Types generated for queries found in "src/database/queries/titres-etapes.queries.ts" */
 export type Json = null | boolean | number | string | Json[] | { [key: string]: Json };
 
+export type stringArray = (string)[];
+
 /** 'InsertTitreEtapeEntrepriseDocumentInternal' parameters type */
 export interface IInsertTitreEtapeEntrepriseDocumentInternalParams {
   entreprise_document_id?: string | null | void;
@@ -265,11 +267,13 @@ export interface IGetLargeobjectIdByEtapeAvisIdInternalQuery {
   result: IGetLargeobjectIdByEtapeAvisIdInternalResult;
 }
 
-/** 'GetParticipationOrEnqueteEtapesDb' parameters type */
-export type IGetParticipationOrEnqueteEtapesDbParams = void;
+/** 'GetEtapesWithAutomaticStatutDb' parameters type */
+export interface IGetEtapesWithAutomaticStatutDbParams {
+  etapeWithAutomaticStatuts: stringArray;
+}
 
-/** 'GetParticipationOrEnqueteEtapesDb' return type */
-export interface IGetParticipationOrEnqueteEtapesDbResult {
+/** 'GetEtapesWithAutomaticStatutDb' return type */
+export interface IGetEtapesWithAutomaticStatutDbResult {
   contenu: Json | null;
   date: string;
   demarche_type_id: string;
@@ -280,24 +284,24 @@ export interface IGetParticipationOrEnqueteEtapesDbResult {
   type_id: string;
 }
 
-/** 'GetParticipationOrEnqueteEtapesDb' query type */
-export interface IGetParticipationOrEnqueteEtapesDbQuery {
-  params: IGetParticipationOrEnqueteEtapesDbParams;
-  result: IGetParticipationOrEnqueteEtapesDbResult;
+/** 'GetEtapesWithAutomaticStatutDb' query type */
+export interface IGetEtapesWithAutomaticStatutDbQuery {
+  params: IGetEtapesWithAutomaticStatutDbParams;
+  result: IGetEtapesWithAutomaticStatutDbResult;
 }
 
-/** 'UpdateParticipationOrEnqueteStatutDb' parameters type */
-export interface IUpdateParticipationOrEnqueteStatutDbParams {
+/** 'UpdateEtapeStatutDb' parameters type */
+export interface IUpdateEtapeStatutDbParams {
   etapeId: string;
   newStatut: string;
 }
 
-/** 'UpdateParticipationOrEnqueteStatutDb' return type */
-export type IUpdateParticipationOrEnqueteStatutDbResult = void;
+/** 'UpdateEtapeStatutDb' return type */
+export type IUpdateEtapeStatutDbResult = void;
 
-/** 'UpdateParticipationOrEnqueteStatutDb' query type */
-export interface IUpdateParticipationOrEnqueteStatutDbQuery {
-  params: IUpdateParticipationOrEnqueteStatutDbParams;
-  result: IUpdateParticipationOrEnqueteStatutDbResult;
+/** 'UpdateEtapeStatutDb' query type */
+export interface IUpdateEtapeStatutDbQuery {
+  params: IUpdateEtapeStatutDbParams;
+  result: IUpdateEtapeStatutDbResult;
 }
 

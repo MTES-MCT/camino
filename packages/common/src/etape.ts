@@ -2,7 +2,7 @@ import { CaminoDate, caminoDateValidator, dateAddDays, isBefore } from './date'
 import { EtapeHeritageProps, MappingHeritagePropsNameEtapePropsName } from './heritage'
 import { DOCUMENTS_TYPES_IDS, autreDocumentTypeIdValidator, documentTypeIdValidator } from './static/documentsTypes'
 import { ETAPES_STATUTS, EtapeStatutId, etapeStatutIdValidator } from './static/etapesStatuts'
-import { ETAPES_TYPES, EtapeTypeId, etapeTypeIdValidator } from './static/etapesTypes'
+import { EtapeTypeId, etapeTypeIdValidator, isEtapeWithAutomaticStatuts } from './static/etapesTypes'
 import { z } from 'zod'
 import { tempDocumentNameValidator } from './document'
 import { DemarcheTypeId } from './static/demarchesTypes'
@@ -176,7 +176,7 @@ export const etapeNoteValidator = z.object({ valeur: z.string(), is_avertissemen
 export type EtapeNote = z.infer<typeof etapeNoteValidator>
 
 export const getStatutId = (etape: Pick<DeepReadonly<FlattenEtape>, 'date' | 'contenu' | 'typeId' | 'statutId'>, currentDate: CaminoDate): EtapeStatutId => {
-  if (![ETAPES_TYPES.participationDuPublic, ETAPES_TYPES.enquetePublique].includes(etape.typeId)) {
+  if (!isEtapeWithAutomaticStatuts(etape.typeId)) {
     return etape.statutId
   }
 

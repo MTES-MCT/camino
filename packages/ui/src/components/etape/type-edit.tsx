@@ -1,5 +1,5 @@
 import { EtapesStatuts, EtapeStatutId } from 'camino-common/src/static/etapesStatuts'
-import { ETAPES_TYPES, EtapesTypes, EtapeType, EtapeTypeId, isEtapeTypeId } from 'camino-common/src/static/etapesTypes'
+import { EtapesTypes, EtapeType, EtapeTypeId, isEtapeTypeId, isEtapeWithAutomaticStatuts } from 'camino-common/src/static/etapesTypes'
 import { computed, ref, FunctionalComponent, watch, HTMLAttributes, defineComponent } from 'vue'
 import { DemarcheId } from 'camino-common/src/demarche'
 import { EtapeApiClient } from './etape-api-client'
@@ -70,7 +70,7 @@ export const TypeEdit = defineComponent<Props>(props => {
       possibleStatuts.value = possibleEtapes.value.value[typeId]?.etapeStatutIds ?? []
 
       let newEtapeStatutId
-      if (possibleStatuts.value.length === 1 || typeId === ETAPES_TYPES.participationDuPublic) {
+      if (possibleStatuts.value.length === 1 || isEtapeWithAutomaticStatuts(typeId)) {
         newEtapeStatutId = possibleStatuts.value[0]
       } else {
         newEtapeStatutId = possibleStatuts.value.find(value => value === etapeStatutId.value) ?? null
@@ -150,7 +150,7 @@ export const TypeEdit = defineComponent<Props>(props => {
                   }}
                 />
               </div>
-              {!isNonEmptyArray(possibleStatuts.value) || etapeTypeId.value === ETAPES_TYPES.participationDuPublic ? null : (
+              {!isNonEmptyArray(possibleStatuts.value) || isEtapeWithAutomaticStatuts(etapeTypeId.value) ? null : (
                 <SelectStatut
                   statutIds={possibleStatuts.value}
                   statutId={etapeStatutId.value}

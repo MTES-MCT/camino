@@ -1312,3 +1312,7 @@ const ETAPES_BROUILLONS_IDS = [
 
 export const isEtapeDecision = (etapeTypeId: EtapeTypeId): boolean => ETAPES_DECISIONS_IDS.includes(etapeTypeId)
 export const canBeBrouillon = (etapeTypeId: EtapeTypeId): EtapeBrouillon => ETAPES_BROUILLONS_IDS.includes(etapeTypeId) as EtapeBrouillon
+
+export const ETAPES_WITH_AUTOMATIC_STATUTS = [ETAPES_TYPES.participationDuPublic, ETAPES_TYPES.enquetePublique, ETAPES_TYPES.avisDeMiseEnConcurrenceAuJORF] as const satisfies Readonly<EtapeTypeId[]>
+
+export const isEtapeWithAutomaticStatuts = (etapeTypeId: EtapeTypeId | null): boolean => etapeTypeId !== null && ETAPES_WITH_AUTOMATIC_STATUTS.includes(etapeTypeId)

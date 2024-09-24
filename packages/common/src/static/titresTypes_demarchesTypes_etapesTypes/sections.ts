@@ -181,7 +181,13 @@ const EtapesTypesSections = {
   ],
   [ETAPES_TYPES.publicationDeDecisionAuJORF]: publicationAuJorf,
   [ETAPES_TYPES.decisionDeLadministration]: publication,
-  [ETAPES_TYPES.avisDeMiseEnConcurrenceAuJORF]: publicationAuJorf,
+  [ETAPES_TYPES.avisDeMiseEnConcurrenceAuJORF]: [
+    ...publicationAuJorf,
+    {
+      id: 'opdp',
+      elements: [{ id: 'duree', nom: 'Durée en jours de la mise en concurrence', type: 'number', optionnel: false }],
+    },
+  ],
   [ETAPES_TYPES.decisionAdministrative]: publication,
   [ETAPES_TYPES.publicationDeLavisDeDecisionImplicite]: publication,
   [ETAPES_TYPES.abrogationDeLaDecision]: publication,

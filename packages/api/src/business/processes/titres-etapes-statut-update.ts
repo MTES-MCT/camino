@@ -2,7 +2,7 @@ import { Pool } from 'pg'
 import { EtapeId, getStatutId } from 'camino-common/src/etape'
 import { getCurrent } from 'camino-common/src/date'
 import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts'
-import { getParticipationOrEnqueteEtapes, updateParticipationOrEnqueteStatut } from '../../database/queries/titres-etapes.queries'
+import { getEtapesWithAutomaticStatut, updateEtapeStatut } from '../../database/queries/titres-etapes.queries'
 import { simpleContenuToFlattenedContenu } from 'camino-common/src/sections'
 
 export const titresEtapesStatutUpdate = async (pool: Pool): Promise<EtapeId[]> => {
@@ -12,9 +12,9 @@ export const titresEtapesStatutUpdate = async (pool: Pool): Promise<EtapeId[]> =
   const titresEtapesIdsUpdated: EtapeId[] = []
 
   const currentDate = getCurrent()
-  const participationOrEnqueteEtapes = await getParticipationOrEnqueteEtapes(pool)
+  const etapesWithAutomaticStatut = await getEtapesWithAutomaticStatut(pool)
 
-  for (const etape of participationOrEnqueteEtapes) {
+  for (const etape of etapesWithAutomaticStatut) {
     const newStatut: EtapeStatutId = getStatutId(
       {
         ...etape,
@@ -26,7 +26,7 @@ export const titresEtapesStatutUpdate = async (pool: Pool): Promise<EtapeId[]> =
     )
 
     if (newStatut !== etape.etape_statut_id) {
-      await updateParticipationOrEnqueteStatut(pool, etape.id, newStatut)
+      await updateEtapeStatut(pool, etape.id, newStatut)
       console.info('titre / démarche / étape : statut (mise à jour) ->', `${etape.id} : ${etape.etape_statut_id} => ${newStatut}`)
 
       titresEtapesIdsUpdated.push(etape.id)

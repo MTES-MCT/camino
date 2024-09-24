@@ -38,7 +38,6 @@ export const EtapesTypesEtapesStatuts = {
     PROGRAMME: { etapeTypeId: 'anf', etapeStatutId: 'pro' },
     EN_COURS: { etapeTypeId: 'anf', etapeStatutId: 'enc' },
     TERMINE: { etapeTypeId: 'anf', etapeStatutId: 'ter' },
-    FAIT: { etapeTypeId: 'anf', etapeStatutId: 'fai' },
   },
 
   rapportEtAvisDeLaDREAL: {

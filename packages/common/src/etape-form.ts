@@ -71,7 +71,7 @@ const heritagePropsValidator = z
 export const heritageContenuValidator = z
   .record(
     z.string(),
-    z.record(z.string(), z.object({ actif: z.boolean(), etape: z.object({ typeId: etapeTypeIdValidator, date: caminoDateValidator, contenu: contenuValidator }).nullable().optional() }))
+    z.record(z.string(), z.object({ actif: z.boolean(), etape: z.object({ typeId: etapeTypeIdValidator, date: caminoDateValidator, contenu: contenuValidator }).nullable().optional() })).optional()
   )
   .nullable()
   .transform(nullToDefault({}))
