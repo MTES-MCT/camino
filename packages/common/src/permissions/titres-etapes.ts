@@ -103,7 +103,7 @@ export const canEditDuree = (titreTypeId: TitreTypeId, demarcheTypeId: DemarcheT
 }
 
 export const canCreateEtape = (
-  user: User,
+  user: DeepReadonly<User>,
   etapeTypeId: EtapeTypeId,
   isBrouillon: EtapeBrouillon,
   titulaireIds: EntrepriseId[],
@@ -141,7 +141,7 @@ export const canEditEtape = (
 }
 
 const canCreateOrEditEtape = (
-  user: User,
+  user: DeepReadonly<User>,
   etapeTypeId: EtapeTypeId,
   isBrouillon: EtapeBrouillon,
   titulaireIds: EntrepriseId[],

@@ -173,11 +173,8 @@ const userDbToUser = (
   return { ...user, prenom: user.prenom ?? '', entrepriseIds: user.entreprise_ids ?? [], administrationId: user.administration_id }
 }
 
-export const newGetUtilisateurById = (
-  pool: Pool,
-  id: UtilisateurId,
-  user: DeepReadonly<User>
-): Effect.Effect<UserNotNull, CaminoError<'droits insuffisants' | DbQueryAccessError | ZodUnparseable>> => {
+export type GetUtilisateurByIdErrors = 'droits insuffisants' | DbQueryAccessError | ZodUnparseable
+export const newGetUtilisateurById = (pool: Pool, id: UtilisateurId, user: DeepReadonly<User>): Effect.Effect<UserNotNull, CaminoError<GetUtilisateurByIdErrors>> => {
   return pipe(
     effectDbQueryAndValidate(getUtilisateurByIdDb, { id }, pool, getUtilisateursValidator),
     Effect.filterOrFail(

@@ -11,7 +11,7 @@ import { TitreId } from 'camino-common/src/validators/titres'
 import { EtapeId, EtapeIdOrSlug } from 'camino-common/src/etape'
 import { DeepReadonly } from 'camino-common/src/typescript-tools'
 
-const titresEtapesQueryBuild = ({ fields }: { fields?: FieldsEtape }, user: User) => {
+const titresEtapesQueryBuild = ({ fields }: { fields?: FieldsEtape }, user: DeepReadonly<User>) => {
   const graph = fields ? graphBuild(fields, 'etapes', fieldsFormat) : '[]'
 
   const q = TitresEtapes.query().withGraphFetched(graph)
@@ -22,7 +22,7 @@ const titresEtapesQueryBuild = ({ fields }: { fields?: FieldsEtape }, user: User
 }
 
 // utilisé dans le daily et le resolver des documents uniquement
-export const titreEtapeGet = async (titreEtapeId: EtapeIdOrSlug, { fields, fetchHeritage }: { fields?: FieldsEtape; fetchHeritage?: boolean }, user: User): Promise<ITitreEtape> => {
+export const titreEtapeGet = async (titreEtapeId: EtapeIdOrSlug, { fields, fetchHeritage }: { fields?: FieldsEtape; fetchHeritage?: boolean }, user: DeepReadonly<User>): Promise<ITitreEtape> => {
   const q = titresEtapesQueryBuild({ fields }, user)
 
   q.context({ fetchHeritage })

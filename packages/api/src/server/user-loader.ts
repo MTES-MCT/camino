@@ -70,7 +70,6 @@ export const userLoader =
           // mise à jour du nom et du prénom de l’utilisateur
           user = await updateUtilisateur(pool, { ...user, nom: newNom, prenom: newPrenom, email: newEmail })
         }
-
         req.auth = user
       }
 

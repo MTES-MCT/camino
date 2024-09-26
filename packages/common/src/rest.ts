@@ -146,7 +146,7 @@ const administrationIdParamsValidator = z.object({ administrationId: administrat
 const geoSystemIdParamsValidator = z.object({ geoSystemeId: geoSystemeIdValidator })
 export const CaminoRestRoutes = {
   '/config': { params: noParamsValidator, newGet: { output: caminoConfigValidator } },
-  '/moi': { params: noParamsValidator, get: { output: userValidator } },
+  '/moi': { params: noParamsValidator, newGet: { output: userValidator } },
   '/rest/utilisateurs/:id/newsletter': { params: utilisateurIdParamsValidator, get: { output: z.boolean() }, post: { input: newsletterAbonnementValidator, output: z.boolean() } },
   '/rest/utilisateurs/:id': { params: utilisateurIdParamsValidator, newGet: { output: userNotNullValidator } },
   '/rest/utilisateurs/registerToNewsletter': { params: noParamsValidator, newGet: { output: z.boolean(), searchParams: newsletterRegistrationValidator } },
@@ -196,7 +196,7 @@ export const CaminoRestRoutes = {
   '/rest/utilisateur/generateQgisToken': { params: noParamsValidator, post: { input: z.void(), output: qgisTokenValidator } },
   '/rest/etapesTypes/:demarcheId/:date': {
     params: z.object({ demarcheId: demarcheIdValidator, date: caminoDateValidator }),
-    get: { output: etapeTypeEtapeStatutWithMainStepValidator, searchParams: z.object({ etapeId: etapeIdValidator.optional() }) },
+    newGet: { output: etapeTypeEtapeStatutWithMainStepValidator, searchParams: z.object({ etapeId: etapeIdValidator.optional() }) },
   },
   '/rest/demarches/:demarcheId/geojson': { params: z.object({ demarcheId: demarcheIdOrSlugValidator }), get: { output: perimetreInformationsValidator } },
   '/rest/etapes/:etapeId/geojson': { params: z.object({ etapeId: etapeIdOrSlugValidator }), get: { output: perimetreInformationsValidator } },

@@ -22,9 +22,9 @@ import {
   ETAPE_IS_BROUILLON,
   getStatutId,
 } from 'camino-common/src/etape'
-import { DemarcheId, demarcheIdValidator } from 'camino-common/src/demarche'
+import { DemarcheId } from 'camino-common/src/demarche'
 import { HTTP_STATUS } from 'camino-common/src/http'
-import { CaminoDate, caminoDateValidator, getCurrent } from 'camino-common/src/date'
+import { CaminoDate, getCurrent } from 'camino-common/src/date'
 import { titreDemarcheGet } from '../../database/queries/titres-demarches'
 import { userSuper } from '../../database/user-super'
 import { titreEtapeGet, titreEtapeUpdate, titreEtapeUpsert } from '../../database/queries/titres-etapes'
@@ -34,6 +34,7 @@ import { canCreateEtape, canDeposeEtape, canDeleteEtape, canEditEtape, canEditDa
 import { canBeBrouillon, isEtapeTypeId } from 'camino-common/src/static/etapesTypes'
 import {
   DeepReadonly,
+  NotNullableKeys,
   SimplePromiseFn,
   getKeys,
   isNonEmptyArray,
@@ -71,7 +72,7 @@ import { FlattenEtape, GraphqlEtape, RestEtapeCreation, RestEtapeModification, r
 import { iTitreEtapeToFlattenEtape } from '../_format/titres-etapes'
 import { CommuneId } from 'camino-common/src/static/communes'
 import { titreEtapeUpdationValidate } from '../../business/validations/titre-etape-updation-validate'
-import { IHeritageContenu, IHeritageProps, ITitreDemarche, ITitreEtape } from '../../types'
+import { CaminoApiError, IHeritageContenu, IHeritageProps, ITitre, ITitreDemarche, ITitreEtape } from '../../types'
 import { checkEntreprisesExist, getEntrepriseDocuments } from './entreprises.queries'
 import { ETAPE_HERITAGE_PROPS } from 'camino-common/src/heritage'
 import { titreEtapeHeritageBuild } from '../graphql/resolvers/_titre-etape'
@@ -80,6 +81,10 @@ import { FeatureMultiPolygon, FeatureCollectionPoints } from 'camino-common/src/
 import { canHaveForages } from 'camino-common/src/permissions/titres'
 import { SecteursMaritimes, getSecteurMaritime } from 'camino-common/src/static/facades'
 import { callAndExit } from '../../tools/fp-tools'
+import { RestNewGetCall } from '../../server/rest'
+import { Effect, Match, pipe } from 'effect'
+import { DbQueryAccessError } from '../../pg-database'
+import { CaminoError } from 'camino-common/src/zod-tools'
 
 export const getEtapeEntrepriseDocuments =
   (pool: Pool) =>
@@ -1010,77 +1015,133 @@ export const deposeEtape =
     }
   }
 
-export const getEtapesTypesEtapesStatusWithMainStep =
-  (_pool: Pool) =>
-  async (req: CaminoRequest, res: CustomResponse<EtapeTypeEtapeStatutWithMainStep>): Promise<void> => {
-    const demarcheIdParsed = demarcheIdValidator.safeParse(req.params.demarcheId)
-    const dateParsed = caminoDateValidator.safeParse(req.params.date)
-    const etapeIdParsed = z.optional(etapeIdValidator).safeParse(req.query.etapeId)
-    const user = req.auth
-
-    if (!demarcheIdParsed.success || !dateParsed.success || !etapeIdParsed.success) {
-      res.sendStatus(HTTP_STATUS.BAD_REQUEST)
-    } else {
-      try {
-        const result = await demarcheEtapesTypesGet(demarcheIdParsed.data, dateParsed.data, etapeIdParsed.data ?? null, user)
-        res.json(result)
-      } catch (e) {
-        res.sendStatus(HTTP_STATUS.INTERNAL_SERVER_ERROR)
-        console.error(e)
-      }
-    }
-  }
-
-const demarcheEtapesTypesGet = async (titreDemarcheId: DemarcheId, date: CaminoDate, titreEtapeId: EtapeId | null, user: User) => {
-  const titreDemarche = await titreDemarcheGet(
-    titreDemarcheId,
-    {
-      fields: {
-        titre: {
-          demarches: { etapes: { id: {} } },
-          pointsEtape: { id: {} },
-          titulairesEtape: { id: {} },
-        },
-        etapes: { id: {} },
-      },
-    },
-    userSuper
+export const getEtapesTypesEtapesStatusWithMainStep: RestNewGetCall<'/rest/etapesTypes/:demarcheId/:date'> = ({
+  params,
+  searchParams,
+  user,
+}): Effect.Effect<EtapeTypeEtapeStatutWithMainStep, CaminoApiError<DemarcheEtapesTypesGetErrors>> => {
+  return pipe(
+    demarcheEtapesTypesGet(params.demarcheId, params.date, searchParams.etapeId ?? null, user),
+    Effect.mapError(caminoError =>
+      Match.value(caminoError.message).pipe(
+        Match.whenOr("l'étape n'existe pas", "la démarche n'existe pas", () => ({ ...caminoError, status: HTTP_STATUS.FORBIDDEN })),
+        Match.whenOr(
+          "la démarche n'est pas complète",
+          'les étapes ne sont pas chargées',
+          "Impossible d'accéder à la base de données",
+          "Impossible de récupérer les types d'étapes",
+          "impossible de récupérer l'étape",
+          'impossible de récupérer la démarche',
+          () => ({ ...caminoError, status: HTTP_STATUS.INTERNAL_SERVER_ERROR })
+        ),
+        Match.exhaustive
+      )
+    )
   )
+}
 
-  if (!titreDemarche) throw new Error("la démarche n'existe pas")
-  if (isNullOrUndefined(titreDemarche.titre?.titulaireIds)) {
-    throw new Error("la démarche n'est pas complète")
-  }
-  if (!titreDemarche.etapes) throw new Error('les étapes ne sont pas chargées')
-
-  const titre = titreDemarche.titre!
-
-  const titreEtape = titreEtapeId ? await titreEtapeGet(titreEtapeId, {}, user) : undefined
-
-  if (titreEtapeId && !titreEtape) throw new Error("l'étape n'existe pas")
-
-  const demarcheDefinition = machineFind(titre.typeId, titreDemarche.typeId, titreDemarche.etapes, titreDemarche.id, date)
-
-  const etapesTypes: EtapeTypeEtapeStatutWithMainStep = getPossiblesEtapesTypes(
-    demarcheDefinition,
-    titre.typeId,
-    titreDemarche.typeId,
-    titreEtape?.typeId,
-    titreEtapeId ?? undefined,
-    date,
-    titreDemarche.etapes
-  )
-
-  return getKeys(etapesTypes, isEtapeTypeId).reduce<EtapeTypeEtapeStatutWithMainStep>((acc, etapeTypeId) => {
-    if (
-      canCreateEtape(user, etapeTypeId, ETAPE_IS_BROUILLON, titre.titulaireIds ?? [], titre.administrationsLocales ?? [], titreDemarche.typeId, {
-        typeId: titre.typeId,
-        titreStatutId: titre.titreStatutId,
+const impossibleDeRecupererLesEtapesTypes = "Impossible de récupérer les types d'étapes" as const
+const etapeNonExistante = "l'étape n'existe pas" as const
+const etapeNonChargees = 'les étapes ne sont pas chargées' as const
+const demarcheIncomplete = "la démarche n'est pas complète" as const
+const demarcheInexistante = "la démarche n'existe pas" as const
+const impossibleDeRecupererLaDemarche = 'impossible de récupérer la démarche' as const
+const impossibleDeRecupererLEtape = "impossible de récupérer l'étape" as const
+type DemarcheEtapesTypesGetErrors =
+  | DbQueryAccessError
+  | typeof impossibleDeRecupererLaDemarche
+  | typeof demarcheInexistante
+  | typeof demarcheIncomplete
+  | typeof etapeNonChargees
+  | typeof impossibleDeRecupererLEtape
+  | typeof etapeNonExistante
+  | typeof impossibleDeRecupererLesEtapesTypes
+const demarcheEtapesTypesGet = (
+  titreDemarcheId: DemarcheId,
+  date: CaminoDate,
+  titreEtapeId: EtapeId | null,
+  user: DeepReadonly<User>
+): Effect.Effect<EtapeTypeEtapeStatutWithMainStep, CaminoError<DemarcheEtapesTypesGetErrors>> => {
+  return Effect.Do.pipe(
+    Effect.bind('titreDemarche', () =>
+      Effect.tryPromise({
+        try: async () =>
+          titreDemarcheGet(
+            titreDemarcheId,
+            {
+              fields: {
+                titre: {
+                  demarches: { etapes: { id: {} } },
+                  pointsEtape: { id: {} },
+                  titulairesEtape: { id: {} },
+                },
+                etapes: { id: {} },
+              },
+            },
+            userSuper
+          ),
+        catch: e => ({ message: impossibleDeRecupererLaDemarche, extra: e }),
       })
-    ) {
-      acc[etapeTypeId] = etapesTypes[etapeTypeId]
-    }
+    ),
+    Effect.filterOrFail(
+      (result): result is NotNullableKeys<typeof result> => isNotNullNorUndefined(result.titreDemarche),
+      () => ({ message: demarcheInexistante })
+    ),
+    Effect.filterOrFail(
+      (result): result is NotNullableKeys<typeof result> & { titreDemarche: { titre: ITitre } } => isNotNullNorUndefined(result.titreDemarche.titre?.titulaireIds),
+      () => ({ message: demarcheIncomplete })
+    ),
+    Effect.filterOrFail(
+      ({ titreDemarche }) => isNotNullNorUndefined(titreDemarche.etapes),
+      () => ({ message: etapeNonChargees })
+    ),
+    Effect.bind('etape', () =>
+      Effect.tryPromise({
+        try: async () => {
+          if (isNotNullNorUndefined(titreEtapeId)) {
+            return titreEtapeGet(titreEtapeId, {}, user)
+          } else {
+            return undefined
+          }
+        },
+        catch: e => ({ message: impossibleDeRecupererLEtape, extra: e }),
+      })
+    ),
+    Effect.filterOrFail(
+      ({ etape }) => isNullOrUndefined(titreEtapeId) || (isNotNullNorUndefined(titreEtapeId) && isNotNullNorUndefined(etape)),
+      () => ({ message: etapeNonExistante })
+    ),
+    Effect.bind('machine', ({ titreDemarche }) => Effect.succeed(machineFind(titreDemarche.titre.typeId, titreDemarche.typeId, titreDemarche.etapes, titreDemarche.id, date))),
+    Effect.bind('etapesTypes', ({ machine, titreDemarche, etape }) =>
+      Effect.try({
+        try: () => {
+          const etapesTypes: EtapeTypeEtapeStatutWithMainStep = getPossiblesEtapesTypes(
+            machine,
+            titreDemarche.titre.typeId,
+            titreDemarche.typeId,
+            etape?.typeId,
+            titreEtapeId ?? undefined,
+            date,
+            titreDemarche.etapes ?? []
+          )
+          return etapesTypes
+        },
+        catch: e => ({ message: impossibleDeRecupererLesEtapesTypes, extra: e }),
+      })
+    ),
+    Effect.map(({ etapesTypes, titreDemarche }) =>
+      getKeys(etapesTypes, isEtapeTypeId).reduce<EtapeTypeEtapeStatutWithMainStep>((acc, etapeTypeId) => {
+        if (
+          canCreateEtape(user, etapeTypeId, ETAPE_IS_BROUILLON, titreDemarche.titre.titulaireIds ?? [], titreDemarche.titre.administrationsLocales ?? [], titreDemarche.typeId, {
+            typeId: titreDemarche.titre.typeId,
+            titreStatutId: titreDemarche.titre.titreStatutId,
+          })
+        ) {
+          acc[etapeTypeId] = etapesTypes[etapeTypeId]
+        }
 
-    return acc
-  }, {})
+        return acc
+      }, {})
+    )
+  )
 }

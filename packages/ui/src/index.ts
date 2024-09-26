@@ -57,12 +57,17 @@ const checkEventSource = () => {
 checkEventSource()
 Promise.resolve().then(async (): Promise<void> => {
   import('./styles/dsfr/dsfr.css')
-  const [configFromJson, user, entreprises]: [CaminoConfig | CaminoError<string>, User, Entreprise[]] = await Promise.all([
+  const [configFromJson, user, entreprises]: [CaminoConfig | CaminoError<string>, User | CaminoError<string>, Entreprise[]] = await Promise.all([
     newGetWithJson('/config', {}),
-    getWithJson('/moi', {}),
+    newGetWithJson('/moi', {}),
     getWithJson('/rest/entreprises', {}),
   ])
   const app = createApp(App)
+  // TODO 2024-09-24 mieux gérer les cas d'erreurs
+  if (isNotNullNorUndefined(user) && 'message' in user) {
+    console.error(user.message)
+    throw new Error("Une erreur s'est produite lors de la récupération de l'utilisateur")
+  }
   app.provide(userKey, user)
   app.provide(entreprisesKey, ref(entreprises))
   // TODO 2024-09-17 mieux gérer ce cas d'erreur

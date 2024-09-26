@@ -1,5 +1,5 @@
 import { apiGraphQLFetch } from '@/api/_client'
-import { deleteWithJson, getWithJson, postWithJson, putWithJson } from '@/api/client-rest'
+import { deleteWithJson, getWithJson, newGetWithJson, postWithJson, putWithJson } from '@/api/client-rest'
 import { CaminoDate, caminoDateValidator } from 'camino-common/src/date'
 import { DemarcheId } from 'camino-common/src/demarche'
 import { entrepriseIdValidator } from 'camino-common/src/entreprise'
@@ -12,7 +12,7 @@ import { geoSystemeIdValidator } from 'camino-common/src/static/geoSystemes'
 import { substanceLegaleIdValidator } from 'camino-common/src/static/substancesLegales'
 import { GetDemarcheByIdOrSlugValidator } from 'camino-common/src/titres'
 import { DeepReadonly, Nullable } from 'camino-common/src/typescript-tools'
-import { nullToDefault } from 'camino-common/src/zod-tools'
+import { CaminoError, nullToDefault } from 'camino-common/src/zod-tools'
 import gql from 'graphql-tag'
 import { DistributiveOmit } from 'maplibre-gl'
 import { z } from 'zod'
@@ -79,7 +79,7 @@ export type GetEtapeHeritagePotentiel = z.infer<typeof heritageValidator>
 
 export type CoreEtapeCreationOrModification = Pick<Nullable<FlattenEtape>, 'id' | 'slug'> & DistributiveOmit<FlattenEtape, 'id' | 'slug'>
 export interface EtapeApiClient {
-  getEtapesTypesEtapesStatuts: (titreDemarcheId: DemarcheId, titreEtapeId: EtapeId | null, date: CaminoDate) => Promise<EtapeTypeEtapeStatutWithMainStep>
+  getEtapesTypesEtapesStatuts: (titreDemarcheId: DemarcheId, titreEtapeId: EtapeId | null, date: CaminoDate) => Promise<EtapeTypeEtapeStatutWithMainStep | CaminoError<string>>
   deleteEtape: (titreEtapeId: EtapeId) => Promise<void>
   deposeEtape: (titreEtapeId: EtapeId) => Promise<void>
   getEtapeDocumentsByEtapeId: (etapeId: EtapeId) => Promise<GetEtapeDocumentsByEtapeId>
@@ -91,7 +91,7 @@ export interface EtapeApiClient {
 }
 
 export const etapeApiClient: EtapeApiClient = {
-  getEtapesTypesEtapesStatuts: async (demarcheId, etapeId, date) => getWithJson('/rest/etapesTypes/:demarcheId/:date', { demarcheId, date }, etapeId ? { etapeId } : {}),
+  getEtapesTypesEtapesStatuts: async (demarcheId, etapeId, date) => newGetWithJson('/rest/etapesTypes/:demarcheId/:date', { demarcheId, date }, etapeId ? { etapeId } : {}),
 
   deleteEtape: async etapeIdOrSlug => {
     await deleteWithJson('/rest/etapes/:etapeIdOrSlug', { etapeIdOrSlug })

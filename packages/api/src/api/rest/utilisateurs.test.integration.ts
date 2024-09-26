@@ -40,11 +40,11 @@ afterAll(async () => {
 describe('moi', () => {
   test('peut demander les informations sur soi-même', async () => {
     const user = await userGenerate(dbPool, { role: 'defaut' })
-    let tested = await restCall(dbPool, '/moi', {}, undefined)
+    let tested = await restNewCall(dbPool, '/moi', {}, undefined)
 
     expect(tested.statusCode).toBe(HTTP_STATUS.NO_CONTENT)
 
-    tested = await restCall(dbPool, '/moi', {}, user)
+    tested = await restNewCall(dbPool, '/moi', {}, user)
     expect(tested.body).toMatchInlineSnapshot(`
       {
         "email": "defaut-user@camino.local",

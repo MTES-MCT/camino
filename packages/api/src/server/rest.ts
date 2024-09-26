@@ -56,7 +56,7 @@ import { ZodType, z } from 'zod'
 import { getCommunes } from '../api/rest/communes'
 import { SendFileOptions } from 'express-serve-static-core'
 import { activiteDocumentDownload, getActivite, updateActivite, deleteActivite } from '../api/rest/activites'
-import { DeepReadonly, isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
+import { DeepReadonly, isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools'
 import { getDemarcheByIdOrSlug, demarcheSupprimer, demarcheCreer } from '../api/rest/demarches'
 import { geojsonImport, geojsonImportPoints, getPerimetreInfos, geojsonImportForages } from '../api/rest/perimetre'
 import { getDataGouvStats } from '../api/rest/statistiques/datagouv'
@@ -99,12 +99,16 @@ export type RestNewPostCall<Route extends NewPostRestRoutes> = (data: {
 type SearchParams<Route extends NewGetRestRoutes> = CaminoRestRoutesType[Route]['newGet'] extends { searchParams: ZodType }
   ? z.infer<CaminoRestRoutesType[Route]['newGet']['searchParams']>
   : Record<never, string>
-
+type CookieParams = {
+  clearConnectedCookie: () => void
+  addConnectedCookie: () => void
+}
 export type RestNewGetCall<Route extends NewGetRestRoutes> = (data: {
   pool: Pool
   user: DeepReadonly<User>
   params: DeepReadonly<z.infer<CaminoRestRoutesType[Route]['params']>>
   searchParams: SearchParams<Route>
+  cookie: CookieParams
 }) => Effect.Effect<DeepReadonly<z.infer<CaminoRestRoutesType[Route]['newGet']['output']>>, CaminoApiError<string>>
 
 type RestPostCall<Route extends PostRestRoutes> = (pool: Pool) => (req: CaminoRequest, res: CustomResponse<z.infer<CaminoRestRoutesType[Route]['post']['output']>>) => Promise<void>
@@ -154,10 +158,10 @@ const restRouteImplementations: Readonly<{ [key in CaminoRestRoute]: Transform<k
   '/entreprises': { downloadCall: entreprises, ...CaminoRestRoutes['/entreprises'] },
   // NE PAS TOUCHER A CES ROUTES, ELLES SONT UTILISÉES HORS UI
 
-  '/moi': { getCall: moi, ...CaminoRestRoutes['/moi'] },
+  '/moi': { newGetCall: moi, ...CaminoRestRoutes['/moi'] },
   '/config': { newGetCall: getConfig, ...CaminoRestRoutes['/config'] },
   '/rest/titres/:id/titreLiaisons': { newGetCall: getTitreLiaisons, newPostCall: postTitreLiaisons, ...CaminoRestRoutes['/rest/titres/:id/titreLiaisons'] },
-  '/rest/etapesTypes/:demarcheId/:date': { getCall: getEtapesTypesEtapesStatusWithMainStep, ...CaminoRestRoutes['/rest/etapesTypes/:demarcheId/:date'] },
+  '/rest/etapesTypes/:demarcheId/:date': { newGetCall: getEtapesTypesEtapesStatusWithMainStep, ...CaminoRestRoutes['/rest/etapesTypes/:demarcheId/:date'] },
   '/rest/titres': { newPostCall: titreDemandeCreer, ...CaminoRestRoutes['/rest/titres'] },
   '/rest/titres/:titreId': { deleteCall: removeTitre, postCall: updateTitre, getCall: getTitre, ...CaminoRestRoutes['/rest/titres/:titreId'] },
   '/rest/titres/:titreId/abonne': { postCall: utilisateurTitreAbonner, getCall: getUtilisateurTitreAbonner, ...CaminoRestRoutes['/rest/titres/:titreId/abonne'] },
@@ -241,7 +245,16 @@ export const restWithPool = (dbPool: Pool): Router => {
               Effect.bind<'result', { searchParams: any; params: any }, DeepReadonly<z.infer<(typeof maRoute)['newGet']['output']>>, CaminoApiError<string>, never>(
                 'result',
                 ({ searchParams, params }) => {
-                  return maRoute.newGetCall({ pool: dbPool, user: req.auth, params, searchParams })
+                  return maRoute.newGetCall({
+                    pool: dbPool,
+                    user: req.auth,
+                    params,
+                    searchParams,
+                    cookie: {
+                      clearConnectedCookie: () => res.clearCookie('shouldBeConnected'),
+                      addConnectedCookie: () => res.cookie('shouldBeConnected', 'anyValueIsGood, We just check the presence of this cookie'),
+                    },
+                  })
                 }
               ),
               Effect.bind('parsedResult', ({ result }) =>
@@ -256,7 +269,11 @@ export const restWithPool = (dbPool: Pool): Router => {
                   res.status(caminoError.status).json(caminoError)
                 },
                 onSuccess: ({ parsedResult }) => {
-                  res.json(parsedResult)
+                  if (isNullOrUndefined(parsedResult)) {
+                    res.sendStatus(HTTP_STATUS.NO_CONTENT)
+                  } else {
+                    res.json(parsedResult)
+                  }
                 },
               }),
               Effect.runPromiseExit

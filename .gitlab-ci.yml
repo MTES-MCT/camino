@@ -1,4 +1,5 @@
 default:
+  tags: [global, shared]
   interruptible: true
   tags: [global, shared]
 

@@ -20,6 +20,7 @@ import { RestNewGetCall } from '../../server/rest'
 import {
   getKeycloakIdByUserId,
   getUtilisateurById,
+  GetUtilisateurByIdErrors,
   getUtilisateursFilteredAndSorted,
   newGetUtilisateurById,
   softDeleteUtilisateur,
@@ -163,25 +164,23 @@ export const deleteUtilisateur =
     }
   }
 
-export const moi =
-  (pool: Pool) =>
-  async (req: CaminoRequest, res: CustomResponse<User>): Promise<void> => {
-    res.clearCookie('shouldBeConnected')
-    const user = req.auth
-    if (!user) {
-      res.sendStatus(HTTP_STATUS.NO_CONTENT)
-    } else {
-      try {
-        const utilisateur = await getUtilisateurById(pool, user.id, user)
-        res.cookie('shouldBeConnected', 'anyValueIsGood, We just check the presence of this cookie')
-        res.json(utilisateur)
-      } catch (e) {
-        console.error(e)
-        res.sendStatus(HTTP_STATUS.BAD_REQUEST)
-        throw e
-      }
-    }
+export const moi: RestNewGetCall<'/moi'> = ({ pool, cookie, user }): Effect.Effect<User, CaminoApiError<GetUtilisateurByIdErrors>> => {
+  cookie.clearConnectedCookie()
+  if (isNullOrUndefined(user)) {
+    return Effect.succeed(null)
   }
+  return pipe(
+    newGetUtilisateurById(pool, user.id, user),
+    Effect.tap(_ => cookie.addConnectedCookie()),
+    Effect.mapError(caminoError =>
+      Match.value(caminoError.message).pipe(
+        Match.when('droits insuffisants', () => ({ ...caminoError, status: HTTP_STATUS.FORBIDDEN })),
+        Match.whenOr("Impossible d'accéder à la base de données", 'Problème de validation de données', () => ({ ...caminoError, status: HTTP_STATUS.BAD_REQUEST })),
+        Match.exhaustive
+      )
+    )
+  )
+}
 
 export const manageNewsletterSubscription =
   (pool: Pool) =>
