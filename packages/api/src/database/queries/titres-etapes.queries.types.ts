@@ -305,18 +305,3 @@ export interface IUpdateEtapeStatutDbQuery {
   result: IUpdateEtapeStatutDbResult;
 }
 
-/** 'UpdateEtapeFondamentaleIdDb' parameters type */
-export interface IUpdateEtapeFondamentaleIdDbParams {
-  etapeFondamentaleId: string;
-  etapeId: string;
-}
-
-/** 'UpdateEtapeFondamentaleIdDb' return type */
-export type IUpdateEtapeFondamentaleIdDbResult = void;
-
-/** 'UpdateEtapeFondamentaleIdDb' query type */
-export interface IUpdateEtapeFondamentaleIdDbQuery {
-  params: IUpdateEtapeFondamentaleIdDbParams;
-  result: IUpdateEtapeFondamentaleIdDbResult;
-}
-

@@ -32,7 +32,7 @@ afterAll(async () => {
 const createTitreWithDemarcheWithEtape = async (titre: ITitre, demarche: Omit<ITitreDemarche, 'titreId'>, etape: Omit<ITitreEtape, 'titreDemarcheId'>): Promise<void> => {
   await Titres.query().insert(titre)
   await TitresDemarches.query().insert({ ...demarche, titreId: titre.id })
-  await TitresEtapes.query().insert({ ...etape, titreDemarcheId: demarche.id, etapeFondamentaleId: etape.id })
+  await TitresEtapes.query().insert({ ...etape, titreDemarcheId: demarche.id })
 }
 
 describe('titresQueryModify', () => {

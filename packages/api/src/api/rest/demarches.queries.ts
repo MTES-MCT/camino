@@ -1,7 +1,7 @@
 import { sql } from '@pgtyped/runtime'
-import { DemarcheId, DemarcheIdOrSlug, demarcheIdValidator } from 'camino-common/src/demarche'
+import { DemarcheId, DemarcheIdOrSlug } from 'camino-common/src/demarche'
 import { EffectDbQueryAndValidateErrors, Redefine, dbQueryAndValidate, effectDbQueryAndValidate } from '../../pg-database'
-import { IGetDemarcheByIdOrSlugDbQuery, IGetDemarchesDbQuery, IGetEtapesByDemarcheIdDbQuery } from './demarches.queries.types'
+import { IGetDemarcheByIdOrSlugDbQuery, IGetEtapesByDemarcheIdDbQuery } from './demarches.queries.types'
 import { z } from 'zod'
 import { caminoDateValidator } from 'camino-common/src/date'
 import { communeValidator } from 'camino-common/src/static/communes'
@@ -53,7 +53,6 @@ const getEtapesByDemarcheIdDbValidator = z.object({
   titulaire_ids: z.array(entrepriseIdValidator),
   amodiataire_ids: z.array(entrepriseIdValidator),
   is_brouillon: etapeBrouillonValidator,
-  etape_fondamentale_id: etapeIdValidator,
 })
 
 export const getEtapesByDemarcheId = (pool: Pool, demarcheId: DemarcheId): Effect.Effect<GetEtapesByDemarcheIdDb[], CaminoError<EffectDbQueryAndValidateErrors>> =>
@@ -90,8 +89,7 @@ select
     e.geojson_origine_forages,
     e.titulaire_ids,
     e.amodiataire_ids,
-    e.is_brouillon,
-    e.etape_fondamentale_id
+    e.is_brouillon
 from
     titres_etapes e
 where
@@ -131,10 +129,3 @@ where (td.id = $ idOrSlug !
     or td.slug = $ idOrSlug !)
 and td.archive is false
 `
-
-const getDemarchesValidator = z.object({ id: demarcheIdValidator })
-type GetDemarche = z.infer<typeof getDemarchesValidator>
-export const getDemarches = (pool: Pool): Effect.Effect<GetDemarche[], CaminoError<EffectDbQueryAndValidateErrors>> => effectDbQueryAndValidate(getDemarchesDb, {}, pool, getDemarchesValidator)
-
-const getDemarchesDb = sql<Redefine<IGetDemarchesDbQuery, {}, GetDemarche>>`
-  select td.id from titres_demarches td where td.archive is false`

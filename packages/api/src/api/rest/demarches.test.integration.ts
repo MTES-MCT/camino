@@ -109,7 +109,6 @@ describe('downloadDemarches', () => {
       geojsonOrigineGeoSystemeId: '4326',
       titulaireIds: [titulaireId],
       amodiataireIds: [amodiataireId],
-      etapeFondamentaleId: etapeId,
     })
   })
 

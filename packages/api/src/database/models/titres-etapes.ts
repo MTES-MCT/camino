@@ -9,12 +9,11 @@ import { heritagePropsFormat, heritageContenuFormat } from './_format/titre-etap
 import { idGenerate } from './_format/id-create'
 import TitresDemarches from './titres-demarches'
 import Journaux from './journaux'
-import { EtapeId, etapeSlugValidator } from 'camino-common/src/etape'
-import { isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools'
+import { etapeSlugValidator } from 'camino-common/src/etape'
+import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 
 export interface DBTitresEtapes extends ITitreEtape {
   archive: boolean
-  etapeFondamentaleId: EtapeId
 }
 interface TitresEtapes extends DBTitresEtapes {}
 class TitresEtapes extends Model {
@@ -78,9 +77,6 @@ class TitresEtapes extends Model {
   override async $beforeInsert(context: QueryContext) {
     if (!this.id) {
       this.id = idGenerate()
-    }
-    if (isNullOrUndefined(this.etapeFondamentaleId)) {
-      this.etapeFondamentaleId = this.id
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition

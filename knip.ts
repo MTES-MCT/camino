@@ -10,9 +10,7 @@ const config = {
         // TODO 2023-12-28 knip voit pas les override dependencies
         "vue",
         "@types/react",
-        "semantic-release",
         "@semantic-release/commit-analyzer",
-        "@semantic-release/github",
         "@semantic-release/release-notes-generator",
         "lint-staged"
       ],

@@ -23,8 +23,6 @@ import { titresEtapesDepotCreate } from './processes/titres-demarches-depot-crea
 import type { UserNotNull } from 'camino-common/src/roles'
 import type { Pool } from 'pg'
 import { DeepReadonly } from 'camino-common/src/typescript-tools'
-import { callAndExit } from '../tools/fp-tools'
-import { etapesFondamentaleIdUpdate } from './processes/titres-etapes-fondamentale-id-update'
 
 export const titreEtapeUpdateTask = async (pool: Pool, titreEtapeId: EtapeId | null, titreDemarcheId: DemarcheId, user: DeepReadonly<UserNotNull>): Promise<void> => {
   try {
@@ -45,7 +43,6 @@ export const titreEtapeUpdateTask = async (pool: Pool, titreEtapeId: EtapeId | n
     }
 
     const titresEtapesOrdreUpdated = await titresEtapesOrdreUpdate(pool, user, titreDemarcheId)
-    await callAndExit(etapesFondamentaleIdUpdate(pool, titreDemarcheId), async () => {})
 
     const titresEtapesHeritagePropsUpdated = await titresEtapesHeritagePropsUpdate(user, [titreDemarcheId])
     const titresEtapesHeritageContenuUpdated = await titresEtapesHeritageContenuUpdate(pool, user, titreDemarcheId)

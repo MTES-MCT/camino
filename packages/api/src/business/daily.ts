@@ -20,8 +20,6 @@ import type { Pool } from 'pg'
 import { demarchesDefinitionsCheck } from '../tools/demarches/definitions-check'
 import { titreTypeDemarcheTypeEtapeTypeCheck } from '../tools/demarches/tde-check'
 import { titresEtapesStatutUpdate } from './processes/titres-etapes-statut-update'
-import { callAndExit } from '../tools/fp-tools'
-import { etapesFondamentaleIdUpdateForAll } from './processes/titres-etapes-fondamentale-id-update'
 
 export const daily = async (pool: Pool): Promise<void> => {
   try {
@@ -31,7 +29,6 @@ export const daily = async (pool: Pool): Promise<void> => {
 
     const titresEtapesStatusUpdated = await titresEtapesStatutUpdate(pool)
     const titresEtapesOrdreUpdated = await titresEtapesOrdreUpdate(pool, userSuper)
-    await callAndExit(etapesFondamentaleIdUpdateForAll(pool), async () => {})
     const titresEtapesHeritagePropsUpdated = await titresEtapesHeritagePropsUpdate(userSuper)
     const titresEtapesHeritageContenuUpdated = await titresEtapesHeritageContenuUpdate(pool, userSuper)
 
