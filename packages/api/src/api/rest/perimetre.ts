@@ -176,7 +176,8 @@ const csvForageDegValidator = makeCsvToJsonValidator(
 const ouvertureGeoJSONError = "Une erreur s'est produite lors de l'ouverture du fichier GeoJSON" as const
 const ouvertureShapeError = "Une erreur s'est produite lors de l'ouverture du fichier shape" as const
 const ouvertureCsvError = 'Une erreur est survenue lors de la lecture du csv' as const
-const importCsvRestrictionError = "L'import CSV est fait pour des petits polygones simple de moins de 20 sommets" as const
+const MAX_CSV_LENGTH = 50 as const
+const importCsvRestrictionError = `L'import CSV est fait pour des petits polygones simple de moins de ${MAX_CSV_LENGTH} sommets` as const
 const recuperationInfoCsvError = `Une erreur est survenue lors de la récupération des informations du CSV` as const
 const extractionGeoJSONError = "Une erreur s'est produite lors de l'extraction du multi-polygone du fichier GeoJSON" as const
 const extractionShapeError = "Une erreur s'est produite lors de l'extraction du multi-polygone du fichier shape" as const
@@ -261,7 +262,7 @@ export const geojsonImport: RestNewPostCall<'/rest/geojson/import/:geoSystemeId'
             pipe(
               fileNameToCsv(pathFrom),
               Effect.filterOrFail(
-                converted => converted.length <= 20,
+                converted => converted.length <= MAX_CSV_LENGTH,
                 () => ({ message: importCsvRestrictionError })
               ),
               Effect.flatMap(converted => {
@@ -376,7 +377,7 @@ export const geojsonImport: RestNewPostCall<'/rest/geojson/import/:geoSystemeId'
           "Une erreur s'est produite lors de l'ouverture du fichier shape",
           'Impossible de convertir la géométrie en JSON',
           'Impossible de convertir le geojson vers le système',
-          "L'import CSV est fait pour des petits polygones simple de moins de 20 sommets",
+          "L'import CSV est fait pour des petits polygones simple de moins de 50 sommets",
           "Le périmètre n'est pas valide dans le référentiel donné",
           "Une erreur s'est produite lors de l'extraction du multi-polygone du fichier GeoJSON",
           "Une erreur s'est produite lors de l'extraction du multi-polygone du fichier shape",
