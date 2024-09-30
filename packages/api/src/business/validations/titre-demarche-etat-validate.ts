@@ -1,6 +1,6 @@
 // valide la date et la position de l'étape en fonction des autres étapes
 import { DeepReadonly, NonEmptyArray, isNonEmptyArray, isNotNullNorUndefined, isNullOrUndefined, isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools'
-import type { ITitre, ITitreEtape } from '../../types'
+import type { ITitreEtape } from '../../types'
 
 import { machineFind } from '../rules-demarches/definitions'
 import { Etape, TitreEtapeForMachine, titreEtapeForMachineValidator, toMachineEtapes } from '../rules-demarches/machine-common'
@@ -48,7 +48,7 @@ const titreDemarcheEtapesBuild = <T extends Pick<Partial<ITitreEtape>, 'id'>>(ti
 // est valide par rapport aux définitions des types d'étape
 export const titreDemarcheUpdatedEtatValidate = (
   demarcheTypeId: DemarcheTypeId,
-  titre: Pick<ITitre, 'typeId' | 'demarches'>,
+  titre: { typeId: TitreTypeId; demarches?: { typeId: DemarcheTypeId }[] },
   titreEtape: Pick<Partial<ITitreEtape>, 'id'> & Pick<ITitreEtape, 'statutId' | 'typeId' | 'date' | 'contenu' | 'surface' | 'communes' | 'isBrouillon'>,
   demarcheId: DemarcheId,
   titreDemarcheEtapes?: Pick<ITitreEtape, 'id' | 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'communes' | 'surface' | 'isBrouillon'>[] | null,

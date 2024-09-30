@@ -5,6 +5,12 @@ export function isNotNullNorUndefined<T>(value: T | null | undefined): value is 
   return !isNullOrUndefined(value)
 }
 
+export function toSorted<U>(value: NonEmptyArray<U>, comparator: (a: U, b: U) => number): NonEmptyArray<U>
+export function toSorted<U>(value: U[], comparator: (a: U, b: U) => number): U[]
+export function toSorted<U>(value: U[], comparator: (a: U, b: U) => number): U[] {
+  return [...value].sort(comparator)
+}
+
 export function isNotNullNorUndefinedNorEmpty<U>(value: DeepReadonly<U[]> | null | undefined): value is DeepReadonly<NonEmptyArray<U>>
 export function isNotNullNorUndefinedNorEmpty<U>(value: U[] | null | undefined): value is NonEmptyArray<U>
 export function isNotNullNorUndefinedNorEmpty(value: string | null | undefined): value is string
@@ -106,6 +112,7 @@ export type DeepReadonly<T> = T extends Builtin
 export const exhaustiveCheck = (param: never): never => {
   throw new Error(`Unreachable case: ${JSON.stringify(param)}`)
 }
+
 export type NonEmptyArray<T> = [T, ...T[]]
 export const isNonEmptyArray = <T>(arr: T[]): arr is NonEmptyArray<T> => {
   return arr.length > 0

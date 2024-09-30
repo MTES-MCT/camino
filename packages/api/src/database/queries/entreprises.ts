@@ -110,6 +110,10 @@ export const entreprisesGet = async (
   return q
 }
 
-export const entreprisesUpsert = async (entreprises: IEntreprise[]) => Entreprises.query().withGraphFetched(options.entreprises.graph).upsertGraph(entreprises, options.entreprises.update)
+export const entreprisesUpsert = async (entreprises: IEntreprise[]): Promise<IEntreprise[]> =>
+  // eslint-disable-next-line no-restricted-syntax
+  Entreprises.query().withGraphFetched(options.entreprises.graph).upsertGraph(entreprises, options.entreprises.update)
 
-export const entrepriseUpsert = async (entreprise: IEntreprise) => Entreprises.query().withGraphFetched(options.entreprises.graph).upsertGraph(entreprise, options.entreprises.update).returning('*')
+export const entrepriseUpsert = async (entreprise: Omit<IEntreprise, 'etablissements'>): Promise<IEntreprise> =>
+  // eslint-disable-next-line no-restricted-syntax
+  Entreprises.query().withGraphFetched(options.entreprises.graph).upsertGraph(entreprise, options.entreprises.update).returning('*')

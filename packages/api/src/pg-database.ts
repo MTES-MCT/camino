@@ -30,13 +30,13 @@ export const dbQueryAndValidate = async <Params, Result, T extends ZodType<Resul
 }
 
 export type DbQueryAccessError = "Impossible d'accéder à la base de données"
-
+export type EffectDbQueryAndValidateErrors = DbQueryAccessError | ZodUnparseable
 export const effectDbQueryAndValidate = <Params, Result, T extends ZodType<Result, ZodTypeDef, unknown>>(
   query: TaggedQuery<{ params: DeepReadonly<Params>; result: Result }>,
   params: DeepReadonly<Params>,
   pool: Pool,
   validator: T
-): Effect.Effect<Result[], CaminoError<DbQueryAccessError | ZodUnparseable>> => {
+): Effect.Effect<Result[], CaminoError<EffectDbQueryAndValidateErrors>> => {
   return pipe(
     Effect.tryPromise({
       try: () => query.run(params, pool),

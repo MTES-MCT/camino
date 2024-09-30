@@ -10,18 +10,18 @@ import { tempDocumentNameValidator } from 'camino-common/src/document'
 import { entreprisesEtablissementsFetch, entreprisesFetch, tokenInitialize } from '../../tools/api-insee/fetch'
 import { entreprise, entrepriseAndEtablissements } from '../../../tests/__mocks__/fetch-insee-api'
 import type { Pool } from 'pg'
-import { titreCreate } from '../../database/queries/titres'
 import { titreDemarcheCreate } from '../../database/queries/titres-demarches'
 import { titreEtapeCreate } from '../../database/queries/titres-etapes'
 import { toCaminoAnnee, toCaminoDate } from 'camino-common/src/date'
 import { HTTP_STATUS } from 'camino-common/src/http'
 import { copyFileSync, mkdirSync } from 'node:fs'
-import { idGenerate } from '../../database/models/_format/id-create'
+import { idGenerate, newTitreId } from '../../database/models/_format/id-create'
 import { insertTitreEtapeEntrepriseDocument } from '../../database/queries/titres-etapes.queries'
 import { titreSlugValidator } from 'camino-common/src/validators/titres'
 import type { Knex } from 'knex'
 import { ETAPE_IS_NOT_BROUILLON } from 'camino-common/src/etape'
 import { etapeCreate } from './rest-test-utils'
+import { insertTitreGraph } from '../../../tests/integration-test-helper'
 console.info = vi.fn()
 console.warn = vi.fn()
 console.error = vi.fn()
@@ -308,19 +308,18 @@ describe('getEntrepriseDocument', () => {
     const entrepriseId = newEntrepriseId('get-entreprise-document-entreprise-id')
     await entrepriseUpsert({ id: entrepriseId, nom: entrepriseId })
 
-    const titre = await titreCreate(
-      {
-        nom: '',
-        typeId: 'arm',
-        titreStatutId: 'ind',
-        slug: titreSlugValidator.parse('arm-slug'),
-        propsTitreEtapesIds: {},
-      },
-      {}
-    )
+    const titreId = newTitreId()
+    await insertTitreGraph({
+      id: titreId,
+      nom: '',
+      typeId: 'arm',
+      titreStatutId: 'ind',
+      slug: titreSlugValidator.parse('arm-slug'),
+      propsTitreEtapesIds: {},
+    })
 
     const titreDemarche = await titreDemarcheCreate({
-      titreId: titre.id,
+      titreId,
       typeId: 'oct',
     })
     const titreEtape = await titreEtapeCreate(
@@ -333,7 +332,7 @@ describe('getEntrepriseDocument', () => {
         isBrouillon: ETAPE_IS_NOT_BROUILLON,
       },
       userSuper,
-      titre.id
+      titreId
     )
 
     const fileName = `existing_temp_file_${idGenerate()}`

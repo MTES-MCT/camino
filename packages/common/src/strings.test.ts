@@ -14,6 +14,8 @@ test('levenshtein', () => {
   expect(levenshtein('or', 'or')).toBe(0)
   expect(levenshtein('oru', 'or')).toBe(1)
   expect(levenshtein('port', 'or')).toBe(2)
+  expect(levenshtein('or', 'port')).toBe(2)
+  expect(levenshtein('', 'port')).toBe(4)
 })
 
 test('slugify', () => {

@@ -21,6 +21,7 @@ exports[`titresEtapesAreasUpdate > met à jour les communes, forêts et zone du 
     "dateDebut": null,
     "dateFin": null,
     "duree": null,
+    "etapeFondamentaleId": "titreEtapeIdUniquePourMiseAJourAreas",
     "forets": [
       "DBR",
     ],
@@ -159,6 +160,7 @@ exports[`titresEtapesAreasUpdate > met à jour les communes, forêts et zone du 
       "dateDebut": null,
       "dateFin": null,
       "duree": null,
+      "etapeFondamentaleId": "titreEtapeIdUniquePourMiseAJourAreas",
       "forets": [
         "DBR",
       ],

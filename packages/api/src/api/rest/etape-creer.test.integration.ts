@@ -1,7 +1,5 @@
 import { dbManager } from '../../../tests/db-manager'
 import { restPostCall } from '../../../tests/_utils/index'
-import { titreDemarcheCreate } from '../../database/queries/titres-demarches'
-import { titreCreate } from '../../database/queries/titres'
 import Titres from '../../database/models/titres'
 import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations'
 import { userSuper } from '../../database/user-super'
@@ -14,6 +12,8 @@ import { HTTP_STATUS } from 'camino-common/src/http'
 import { toCaminoDate } from 'camino-common/src/date'
 import { entrepriseIdValidator } from 'camino-common/src/entreprise'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
+import { newDemarcheId, newTitreId } from '../../database/models/_format/id-create'
+import { insertTitreGraph } from '../../../tests/integration-test-helper'
 
 console.info = vi.fn()
 console.error = vi.fn()
@@ -33,22 +33,24 @@ afterAll(async () => {
 })
 
 const demarcheCreate = async (titreTypeId: TitreTypeId = 'arm') => {
-  const titre = await titreCreate(
-    {
-      nom: 'mon titre',
-      typeId: titreTypeId,
-      titreStatutId: 'ind',
-      propsTitreEtapesIds: {},
-    },
-    {}
-  )
-
-  const titreDemarche = await titreDemarcheCreate({
-    titreId: titre.id,
-    typeId: 'oct',
+  const titreId = newTitreId()
+  const titreDemarcheId = newDemarcheId()
+  await insertTitreGraph({
+    id: titreId,
+    nom: 'mon titre',
+    typeId: titreTypeId,
+    titreStatutId: 'ind',
+    propsTitreEtapesIds: {},
+    demarches: [
+      {
+        id: titreDemarcheId,
+        titreId: titreId,
+        typeId: 'oct',
+      },
+    ],
   })
 
-  return titreDemarche.id
+  return titreDemarcheId
 }
 
 const blankEtapeProps: Pick<

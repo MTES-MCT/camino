@@ -101,7 +101,7 @@ const titreActivitesQueryBuild = ({ fields }: { fields?: FieldsActivite }, user:
   return q
 }
 
-const titreActiviteGet = async (id: string, { fields }: { fields?: FieldsActivite }, user: User) => {
+export const titreActiviteGet = async (id: string, { fields }: { fields?: FieldsActivite }, user: User): Promise<ITitreActivite | undefined> => {
   const q = titreActivitesQueryBuild({ fields }, user)
 
   return q
@@ -152,7 +152,7 @@ const titresActivitesColonnes = {
  *
  */
 
-const titresActivitesGet = async (
+export const titresActivitesGet = async (
   {
     page,
     intervalle,
@@ -188,7 +188,7 @@ const titresActivitesGet = async (
   },
   { fields }: { fields?: FieldsActivite },
   user: User
-) => {
+): Promise<ITitreActivite[]> => {
   const q = titreActivitesQueryBuild({ fields }, user)
 
   titresActivitesFiltersQueryModify(
@@ -249,7 +249,7 @@ const titresActivitesGet = async (
  *
  */
 
-const titresActivitesCount = async (
+export const titresActivitesCount = async (
   {
     typesIds,
     statutsIds,
@@ -275,7 +275,7 @@ const titresActivitesCount = async (
   },
   { fields }: { fields?: FieldsActivite },
   user: User
-) => {
+): Promise<number> => {
   const q = titreActivitesQueryBuild({ fields }, user)
 
   titresActivitesFiltersQueryModify(
@@ -297,9 +297,6 @@ const titresActivitesCount = async (
   return q.resultSize()
 }
 
-const titresActivitesUpsert = async (titreActivites: ITitreActivite[]) =>
-  TitresActivites.query().withGraphFetched(options.titresActivites.graph).upsertGraph(titreActivites, options.titresActivites.update)
+export const titresActivitesInsert = async (titreActivites: Omit<ITitreActivite, 'titre'>[]): Promise<ITitreActivite[]> => TitresActivites.query().insert(titreActivites)
 
-const titreActiviteUpdate = async (id: ActiviteId, titreActivite: Partial<ITitreActivite>) => TitresActivites.query().patchAndFetchById(id, { ...titreActivite, id })
-
-export { titreActiviteGet, titresActivitesCount, titresActivitesUpsert, titresActivitesGet, titreActiviteUpdate }
+export const titreActiviteUpdate = async (_id: ActiviteId, titreActivite: Partial<ITitreActivite>): Promise<number> => TitresActivites.query().patch(titreActivite)

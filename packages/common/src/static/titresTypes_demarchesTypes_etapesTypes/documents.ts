@@ -1,7 +1,7 @@
-import { isNotNullNorUndefined } from '../../typescript-tools'
+import { getEntriesHardcore, isNotNullNorUndefined } from '../../typescript-tools'
 import { DEMARCHES_TYPES_IDS, DemarcheTypeId } from './../demarchesTypes'
 import { DocumentsTypes, DOCUMENTS_TYPES_IDS, DocumentType, DocumentTypeId, isDocumentTypeId } from './../documentsTypes'
-import { ETAPES_TYPES, EtapeTypeId, isEtapeTypeId } from './../etapesTypes'
+import { ETAPES_TYPES, EtapeTypeId } from './../etapesTypes'
 import { TitreTypeId, TITRES_TYPES_IDS } from './../titresTypes'
 import { TDEType } from './index'
 
@@ -390,13 +390,9 @@ const TDEDocumentsTypes = {
 type TDEDocumentsTypesUnleashed = { [key in TitreTypeId]?: { [key in DemarcheTypeId]?: { [key in EtapeTypeId]?: { [key in DocumentTypeId]: { optionnel: boolean; description?: string } } } } }
 
 export const toDocuments = (): { etapeTypeId: EtapeTypeId; documentTypeId: DocumentTypeId; optionnel: boolean; description: string | null }[] => {
-  return Object.entries(EtapesTypesDocumentsTypes).flatMap(([key, values]) => {
-    if (isEtapeTypeId(key)) {
-      return values.map(value => ({ etapeTypeId: key, documentTypeId: value.documentTypeId, description: null, optionnel: value.optionnel }))
-    } else {
-      return []
-    }
-  })
+  return getEntriesHardcore(EtapesTypesDocumentsTypes).flatMap(([key, values]) =>
+    values.map(value => ({ etapeTypeId: key, documentTypeId: value.documentTypeId, description: null, optionnel: value.optionnel }))
+  )
 }
 
 export const getDocuments = (titreTypeId?: TitreTypeId, demarcheId?: DemarcheTypeId, etapeTypeId?: EtapeTypeId): DocumentType[] => {

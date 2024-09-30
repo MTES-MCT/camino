@@ -1,5 +1,5 @@
 import { titresActivitesPropsUpdate } from './titres-activites-props-update'
-import { titresActivitesUpsert } from '../../database/queries/titres-activites'
+import { titreActiviteUpdate } from '../../database/queries/titres-activites'
 import { titresGet } from '../../database/queries/titres'
 import { titreValideCheck } from '../utils/titre-valide-check'
 import { vi, describe, expect, test, afterEach } from 'vitest'
@@ -9,7 +9,7 @@ import { toCaminoDate } from 'camino-common/src/date'
 import { activiteIdValidator } from 'camino-common/src/activite'
 
 vi.mock('../../database/queries/titres-activites', () => ({
-  titresActivitesUpsert: vi.fn(),
+  titreActiviteUpdate: vi.fn(),
 }))
 
 vi.mock('../../database/queries/titres', () => ({
@@ -20,7 +20,7 @@ vi.mock('../utils/titre-valide-check', () => ({
   titreValideCheck: vi.fn(),
 }))
 
-const titresActivitesUpsertMock = vi.mocked(titresActivitesUpsert, true)
+const titreActiviteUpdateMock = vi.mocked(titreActiviteUpdate, true)
 const titresGetMock = vi.mocked(titresGet, true)
 const titreValideCheckMock = vi.mocked(titreValideCheck, true)
 
@@ -94,7 +94,7 @@ describe("propriété des activités d'un titre", () => {
     const titresActivitesUpdated = await titresActivitesPropsUpdate()
 
     expect(titresActivitesUpdated).toEqual(['titre-activite-id-2019-04', 'titre-activite-id-2020-01'])
-    expect(titresActivitesUpsertMock).toHaveBeenCalled()
+    expect(titreActiviteUpdateMock).toHaveBeenCalled()
   })
   test("ne met pas à jour la propriété suppression d'une activité", async () => {
     const titresActivitesNotToUpdate: ITitre[] = [
@@ -159,6 +159,6 @@ describe("propriété des activités d'un titre", () => {
     const titresActivitesUpdated = await titresActivitesPropsUpdate()
 
     expect(titresActivitesUpdated).toEqual([])
-    expect(titresActivitesUpsertMock).not.toHaveBeenCalled()
+    expect(titreActiviteUpdateMock).not.toHaveBeenCalled()
   })
 })

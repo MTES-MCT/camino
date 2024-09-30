@@ -1,12 +1,12 @@
 import Journaux from '../models/journaux'
 import { create } from 'jsondiffpatch'
-import { Model, PartialModelGraph, RelationExpression, UpsertGraphOptions } from 'objection'
+import Objection, { Model, PartialModelGraph } from 'objection'
 import { journauxQueryModify } from './permissions/journaux'
 import { ITitreEtape } from '../../types'
 import graphBuild from './graph/build'
 import { fieldsFormat } from './graph/fields-format'
 import options, { FieldId } from './_options'
-import { User } from 'camino-common/src/roles'
+import { User, UtilisateurId } from 'camino-common/src/roles'
 import { TitreId } from 'camino-common/src/validators/titres'
 import { JournauxQueryParams } from 'camino-common/src/journaux'
 import TitresEtapes from '../models/titres-etapes'
@@ -18,7 +18,7 @@ const diffPatcher = create({
   propertyFilter: (name: string) => !['slug', 'ordre', 'demarche', 'heritageProps'].includes(name),
 })
 
-export const journauxGet = async (params: JournauxQueryParams, { fields }: { fields?: FieldId }, user: User) => {
+export const journauxGet = async (params: JournauxQueryParams, { fields }: { fields?: FieldId }, user: User): Promise<Objection.Page<Journaux>> => {
   const graph = fields ? graphBuild(fields, 'journaux', fieldsFormat) : options.journaux.graph
 
   const q = Journaux.query().withGraphFetched(graph)
@@ -38,7 +38,7 @@ export const journauxGet = async (params: JournauxQueryParams, { fields }: { fie
   return q.page(params.page - 1, 10)
 }
 
-export const createJournalCreate = async (id: string, userId: string, titreId: TitreId) => {
+export const createJournalCreate = async (id: string, userId: string, titreId: TitreId): Promise<void> => {
   await Journaux.query().insert({
     elementId: id,
     operation: 'create',
@@ -76,22 +76,19 @@ export const patchJournalCreate = async (id: EtapeId, partialEntity: Partial<ITi
   return result
 }
 
-export const upsertJournalCreate = async (
-  id: string | undefined,
-  entity: PartialModelGraph<ITitreEtape>,
-  options: UpsertGraphOptions,
-  relations: RelationExpression<TitresEtapes>,
-  userId: string,
-  titreId: TitreId
-): Promise<ITitreEtape | undefined> => {
+export const upsertJournalCreate = async (id: EtapeId | undefined, entity: PartialModelGraph<ITitreEtape>, userId: UtilisateurId, titreId: TitreId): Promise<ITitreEtape | undefined> => {
+  const relations = '[]'
   const oldValue = isNotNullNorUndefined(id) ? await TitresEtapes.query().findById(id).withGraphFetched(relations).returning('*') : undefined
 
-  // BUG Objection
-  // on ne peut pas utiliser returning('*'),
-  // car certains attributs de entity restent présents alors qu’ils sont enlevés avant l’enregistrement
-  const newModel = await TitresEtapes.query().upsertGraph(entity, options).returning('id')
+  let newModelId: EtapeId | undefined = oldValue?.id
 
-  const newValue = await TitresEtapes.query().findById(newModel.id).withGraphFetched(relations).returning('*')
+  if (isNullOrUndefined(newModelId)) {
+    newModelId = (await TitresEtapes.query().insert(entity).returning('id')).id
+  } else {
+    await TitresEtapes.query().update(entity).where('id', newModelId)
+  }
+
+  const newValue = await TitresEtapes.query().findById(newModelId).withGraphFetched(relations).returning('*')
 
   let differences: any
   let operation: 'create' | 'update' = 'create'

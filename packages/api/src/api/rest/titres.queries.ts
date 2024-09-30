@@ -41,6 +41,7 @@ import { EntrepriseId, entrepriseIdValidator } from 'camino-common/src/entrepris
 import { AdministrationId } from 'camino-common/src/static/administrations'
 import { secteurMaritimeValidator } from 'camino-common/src/static/facades'
 import { getAvisTypes } from 'camino-common/src/permissions/etape-form'
+import { callAndExit } from '../../tools/fp-tools'
 
 type SuperEtapeDemarcheTitreGet = OmitDistributive<DemarcheEtape, 'etape_documents' | 'avis_documents'>
 type SuperDemarcheTitreGet = Omit<TitreGet['demarches'][0], 'etapes'> & { etapes: SuperEtapeDemarcheTitreGet[]; public_lecture: boolean; entreprises_lecture: boolean; titre_public_lecture: boolean }
@@ -61,7 +62,7 @@ export const getTitre = async (pool: Pool, user: User, idOrSlug: TitreIdOrSlug):
 
     const superDemarches: SuperDemarcheTitreGet[] = []
     for (const demarche of demarchesFromDatabase) {
-      const etapes = await getEtapesByDemarcheId(pool, demarche.id)
+      const etapes = await callAndExit(getEtapesByDemarcheId(pool, demarche.id), async value => value)
 
       const formatedEtapes: SuperEtapeDemarcheTitreGet[] = []
       for (const etape of etapes) {
@@ -338,7 +339,7 @@ const getDemarchesByTitreIdQueryDbValidator = z.object({
 })
 type GetDemarchesByTitreIdQueryDb = z.infer<typeof getDemarchesByTitreIdQueryDbValidator>
 
-export const getDemarchesByTitreId = async (pool: Pool, titreId: TitreId) => {
+export const getDemarchesByTitreId = async (pool: Pool, titreId: TitreId): Promise<GetDemarchesByTitreIdQueryDb[]> => {
   return dbQueryAndValidate(getDemarchesByTitreIdQueryDb, { titreId }, pool, getDemarchesByTitreIdQueryDbValidator)
 }
 const getDemarchesByTitreIdQueryDb = sql<Redefine<IGetDemarchesByTitreIdQueryDbQuery, { titreId: TitreId }, GetDemarchesByTitreIdQueryDb>>`

@@ -26,7 +26,7 @@ import { userSuper } from '../../src/database/user-super'
 import { defaultHeritageProps } from 'camino-common/src/etape-form'
 import { exhaustiveCheck, isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools'
 import { HTTP_STATUS } from 'camino-common/src/http'
-import { titreCreate } from '../../src/database/queries/titres'
+import { insertTitreGraph } from '../integration-test-helper'
 
 const dir = `${process.cwd()}/files/tmp/`
 
@@ -281,9 +281,10 @@ export const creationCheck = async (pool: Pool, administrationId: string, creer:
 }
 
 const titreCreateSuper = async (_pool: Pool, administrationId: string, titreTypeId: TitreTypeId) => {
-  const titre = await titreCreate({ nom: `titre-${titreTypeId!}-cree-${administrationId!}`, typeId: titreTypeId, titreStatutId: 'ind', propsTitreEtapesIds: {} }, {})
+  const titreId = newTitreId()
+  await insertTitreGraph({ id: titreId, nom: `titre-${titreTypeId!}-cree-${administrationId!}`, typeId: titreTypeId, titreStatutId: 'ind', propsTitreEtapesIds: {} })
 
-  return titre.id
+  return titreId
 }
 
 const demarcheCreerProfil = async (pool: Pool, titreId: TitreId, user: TestUser) => restNewPostCall(pool, '/rest/demarches', {}, user, { titreId, typeId: 'oct', description: '' })

@@ -1,6 +1,5 @@
 import { dbManager } from '../../../tests/db-manager'
 import { graphQLCall, queryImport } from '../../../tests/_utils/index'
-import { titreCreate } from '../../database/queries/titres'
 import { titreEtapeUpsert } from '../../database/queries/titres-etapes'
 import { userSuper } from '../../database/user-super'
 import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations'
@@ -8,9 +7,10 @@ import { toCaminoDate } from 'camino-common/src/date'
 
 import { afterAll, beforeAll, afterEach, describe, test, expect, vi } from 'vitest'
 import type { Pool } from 'pg'
-import { newEtapeId } from '../../database/models/_format/id-create'
+import { newDemarcheId, newEtapeId, newTitreId } from '../../database/models/_format/id-create'
 import TitresDemarches from '../../database/models/titres-demarches'
 import { ETAPE_IS_NOT_BROUILLON } from 'camino-common/src/etape'
+import { insertTitreGraph } from '../../../tests/integration-test-helper'
 
 console.info = vi.fn()
 console.error = vi.fn()
@@ -137,22 +137,26 @@ describe('demarcheModifier', () => {
   })
 })
 
-// TODO 2024-07-31 : mettre en commun avec demarches.test.integration (dans un fichier helper)
 const demarcheCreate = async () => {
-  const titre = await titreCreate(
-    {
-      nom: 'mon titre',
-      typeId: 'arm',
-      titreStatutId: 'ind',
-      propsTitreEtapesIds: {},
-    },
-    {}
-  )
-
-  const titreDemarche = await TitresDemarches.query().insertAndFetch({ titreId: titre.id, typeId: 'oct' })
+  const titreId = newTitreId()
+  const demarcheId = newDemarcheId()
+  await insertTitreGraph({
+    id: titreId,
+    nom: 'mon titre',
+    typeId: 'arm',
+    titreStatutId: 'ind',
+    propsTitreEtapesIds: {},
+    demarches: [
+      {
+        id: demarcheId,
+        titreId,
+        typeId: 'oct',
+      },
+    ],
+  })
 
   return {
-    titreId: titre.id,
-    demarcheId: titreDemarche.id,
+    titreId,
+    demarcheId,
   }
 }

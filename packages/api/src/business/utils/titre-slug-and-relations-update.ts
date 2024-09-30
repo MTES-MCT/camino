@@ -44,7 +44,7 @@ const titreActiviteSlugFind = (titreActivite: ITitreActivite, titre: ITitre) => 
 interface ITitreRelation<T extends string | DemarcheId = string> {
   name: string
   slugFind: (...args: any[]) => string
-  update: ((id: T, element: { slug: string }, user: UserNotNull) => Promise<{ id: T }>) | ((id: T, element: { slug: string }, user: UserNotNull, titreId: TitreId) => Promise<{ id: T }>)
+  update: ((id: T, element: { slug: string }, user: UserNotNull) => Promise<unknown>) | ((id: T, element: { slug: string }, user: UserNotNull, titreId: TitreId) => Promise<unknown>)
   relations?: ITitreRelation[]
 }
 

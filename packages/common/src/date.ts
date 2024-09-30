@@ -15,6 +15,7 @@ export const daysBetween = (a: CaminoDate, b: CaminoDate): number => {
 export const isBefore = (a: CaminoDate, b: CaminoDate): boolean => {
   return a < b
 }
+
 export const caminoDateValidator = z
   .string()
   .regex(/^\d{4}-\d{2}-\d{2}$/)

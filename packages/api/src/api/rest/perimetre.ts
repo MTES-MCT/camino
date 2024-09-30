@@ -77,7 +77,7 @@ export const getPerimetreInfos =
             etape = { demarche_id: myEtape.demarche_id, geojson4326_perimetre: myEtape.geojson4326_perimetre, sdom_zones: myEtape.sdom_zones ?? [], etape_type_id: myEtape.etape_type_id, communes: [] }
           } else if (demarcheIdOrSlugParsed.success) {
             const demarche = await getDemarcheByIdOrSlug(pool, demarcheIdOrSlugParsed.data)
-            const etapes = await getEtapesByDemarcheId(pool, demarche.demarche_id)
+            const etapes = await callAndExit(getEtapesByDemarcheId(pool, demarche.demarche_id), async value => value)
 
             const mostRecentEtapeFondamentale = getMostRecentEtapeFondamentaleValide([{ ordre: 1, etapes }])
             if (isNotNullNorUndefined(mostRecentEtapeFondamentale)) {

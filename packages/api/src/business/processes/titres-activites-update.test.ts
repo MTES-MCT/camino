@@ -3,7 +3,7 @@ import { ITitreActivite } from '../../types'
 import { titresActivitesUpdate } from './titres-activites-update'
 import { canHaveActiviteTypeId } from 'camino-common/src/permissions/titres'
 import { anneesBuild } from '../../tools/annees-build'
-import { titresActivitesUpsert } from '../../database/queries/titres-activites'
+import { titresActivitesInsert } from '../../database/queries/titres-activites'
 import { titresGet } from '../../database/queries/titres'
 import { titreActivitesBuild } from '../rules/titre-activites-build'
 
@@ -32,7 +32,7 @@ vi.mock('../../tools/annees-build', () => ({
 
 vi.mock('../../database/queries/titres-activites', () => ({
   __esModule: true,
-  titresActivitesUpsert: vi.fn().mockResolvedValue(true),
+  titresActivitesInsert: vi.fn().mockResolvedValue(true),
 }))
 
 vi.mock('../rules/titre-activites-build', () => ({
@@ -110,7 +110,7 @@ describe("activités d'un titre", () => {
     expect(titresActivitesNew.length).toEqual(8)
 
     expect(canHaveActiviteTypeId).toHaveBeenCalledTimes(8)
-    expect(titresActivitesUpsert).toHaveBeenCalled()
+    expect(titresActivitesInsert).toHaveBeenCalled()
     expect(titreActivitesBuild).toHaveBeenCalled()
     expect(getEntrepriseUtilisateurs).toHaveBeenCalled()
     expect(emailsWithTemplateSendMock).toHaveBeenCalledWith(['email'], EmailTemplateId.ACTIVITES_NOUVELLES, expect.any(Object))
@@ -128,7 +128,7 @@ describe("activités d'un titre", () => {
 
     expect(canHaveActiviteTypeId).toHaveBeenCalledTimes(8)
     expect(titreActivitesBuild).toHaveBeenCalled()
-    expect(titresActivitesUpsert).not.toHaveBeenCalled()
+    expect(titresActivitesInsert).not.toHaveBeenCalled()
     expect(getEntrepriseUtilisateurs).not.toHaveBeenCalled()
     expect(emailsSendMock).not.toHaveBeenCalled()
   })
@@ -144,7 +144,7 @@ describe("activités d'un titre", () => {
 
     expect(canHaveActiviteTypeId).toHaveBeenCalledTimes(8)
     expect(titreActivitesBuild).not.toHaveBeenCalled()
-    expect(titresActivitesUpsert).not.toHaveBeenCalled()
+    expect(titresActivitesInsert).not.toHaveBeenCalled()
     expect(getEntrepriseUtilisateurs).not.toHaveBeenCalled()
   })
 
@@ -159,7 +159,7 @@ describe("activités d'un titre", () => {
 
     expect(canHaveActiviteTypeId).not.toHaveBeenCalled()
     expect(titreActivitesBuild).not.toHaveBeenCalled()
-    expect(titresActivitesUpsert).not.toHaveBeenCalled()
+    expect(titresActivitesInsert).not.toHaveBeenCalled()
     expect(getEntrepriseUtilisateurs).not.toHaveBeenCalled()
   })
 })

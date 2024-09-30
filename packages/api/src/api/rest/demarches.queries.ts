@@ -1,7 +1,7 @@
 import { sql } from '@pgtyped/runtime'
-import { DemarcheId, DemarcheIdOrSlug } from 'camino-common/src/demarche'
-import { Redefine, dbQueryAndValidate } from '../../pg-database'
-import { IGetDemarcheByIdOrSlugDbQuery, IGetEtapesByDemarcheIdDbQuery } from './demarches.queries.types'
+import { DemarcheId, DemarcheIdOrSlug, demarcheIdValidator } from 'camino-common/src/demarche'
+import { EffectDbQueryAndValidateErrors, Redefine, dbQueryAndValidate, effectDbQueryAndValidate } from '../../pg-database'
+import { IGetDemarcheByIdOrSlugDbQuery, IGetDemarchesDbQuery, IGetEtapesByDemarcheIdDbQuery } from './demarches.queries.types'
 import { z } from 'zod'
 import { caminoDateValidator } from 'camino-common/src/date'
 import { communeValidator } from 'camino-common/src/static/communes'
@@ -20,6 +20,8 @@ import { getDemarcheByIdOrSlugValidator as commonGetDemarcheByIdOrSlugValidator 
 import { geoSystemeIdValidator } from 'camino-common/src/static/geoSystemes'
 import { entrepriseIdValidator } from 'camino-common/src/entreprise'
 import { km2Validator } from 'camino-common/src/number'
+import { Effect } from 'effect'
+import { CaminoError } from 'camino-common/src/zod-tools'
 
 const getEtapesByDemarcheIdDbValidator = z.object({
   id: etapeIdValidator,
@@ -51,11 +53,12 @@ const getEtapesByDemarcheIdDbValidator = z.object({
   titulaire_ids: z.array(entrepriseIdValidator),
   amodiataire_ids: z.array(entrepriseIdValidator),
   is_brouillon: etapeBrouillonValidator,
+  etape_fondamentale_id: etapeIdValidator,
 })
 
-export const getEtapesByDemarcheId = async (pool: Pool, demarcheId: DemarcheId) => {
-  return dbQueryAndValidate(getEtapesByDemarcheIdDb, { demarcheId }, pool, getEtapesByDemarcheIdDbValidator)
-}
+export const getEtapesByDemarcheId = (pool: Pool, demarcheId: DemarcheId): Effect.Effect<GetEtapesByDemarcheIdDb[], CaminoError<EffectDbQueryAndValidateErrors>> =>
+  effectDbQueryAndValidate(getEtapesByDemarcheIdDb, { demarcheId }, pool, getEtapesByDemarcheIdDbValidator)
+
 type GetEtapesByDemarcheIdDb = z.infer<typeof getEtapesByDemarcheIdDbValidator>
 const getEtapesByDemarcheIdDb = sql<Redefine<IGetEtapesByDemarcheIdDbQuery, { demarcheId: DemarcheId }, GetEtapesByDemarcheIdDb>>`
 select
@@ -87,7 +90,8 @@ select
     e.geojson_origine_forages,
     e.titulaire_ids,
     e.amodiataire_ids,
-    e.is_brouillon
+    e.is_brouillon,
+    e.etape_fondamentale_id
 from
     titres_etapes e
 where
@@ -127,3 +131,10 @@ where (td.id = $ idOrSlug !
     or td.slug = $ idOrSlug !)
 and td.archive is false
 `
+
+const getDemarchesValidator = z.object({ id: demarcheIdValidator })
+type GetDemarche = z.infer<typeof getDemarchesValidator>
+export const getDemarches = (pool: Pool): Effect.Effect<GetDemarche[], CaminoError<EffectDbQueryAndValidateErrors>> => effectDbQueryAndValidate(getDemarchesDb, {}, pool, getDemarchesValidator)
+
+const getDemarchesDb = sql<Redefine<IGetDemarchesDbQuery, {}, GetDemarche>>`
+  select td.id from titres_demarches td where td.archive is false`

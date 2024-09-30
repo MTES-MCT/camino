@@ -112,6 +112,14 @@ export default [
           selector: "CallExpression[callee.name='dbQueryAndValidate']",
         },
         {
+          message: 'insertGraph is forbidden (very very bad)',
+          selector: "Identifier[name='insertGraph']",
+        },
+        {
+          message: 'upsertGraph is forbidden (very very bad)',
+          selector: "Identifier[name='upsertGraph']",
+        },
+        {
           message: 'leftJoinRelation is deprecated. Use leftJoinRelated instead.',
           selector: "Identifier[name='leftJoinRelation']",
         },

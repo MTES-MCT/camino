@@ -1,5 +1,5 @@
 import { dbManager } from '../../../tests/db-manager'
-import { titreCreate, titreUpdate } from '../../database/queries/titres'
+import { titreUpdate } from '../../database/queries/titres'
 import { titreDemarcheCreate } from '../../database/queries/titres-demarches'
 import { titreEtapeCreate } from '../../database/queries/titres-etapes'
 import { userSuper } from '../../database/user-super'
@@ -21,6 +21,7 @@ import TitresDemarches from '../../database/models/titres-demarches'
 import TitresEtapes from '../../database/models/titres-etapes'
 import Titres from '../../database/models/titres'
 import { ETAPE_IS_NOT_BROUILLON } from 'camino-common/src/etape'
+import { insertTitreGraph } from '../../../tests/integration-test-helper'
 
 console.info = vi.fn()
 console.error = vi.fn()
@@ -34,15 +35,13 @@ beforeAll(async () => {
 
   await insertCommune(pool, { id: toCommuneId('97300'), nom: 'Une ville en Guyane', geometry: '010100000000000000000000000000000000000000' })
   const entreprises = await entreprisesUpsert([{ id: newEntrepriseId('plop'), nom: 'Mon Entreprise' }])
-  await titreCreate(
-    {
-      nom: 'mon titre simple',
-      typeId: 'arm',
-      titreStatutId: 'val',
-      propsTitreEtapesIds: {},
-    },
-    {}
-  )
+  await insertTitreGraph({
+    id: newTitreId(),
+    nom: 'mon titre simple',
+    typeId: 'arm',
+    titreStatutId: 'val',
+    propsTitreEtapesIds: {},
+  })
 
   await createTitreWithEtapes(
     'titre1',
@@ -133,24 +132,23 @@ const titreEtapesCreate = async (demarche: ITitreDemarche, etapes: Omit<ITitreEt
 }
 
 async function createTitreWithEtapes(nomTitre: string, etapes: Omit<ITitreEtape, 'id' | 'titreDemarcheId'>[], entreprises: any) {
-  const titre = await titreCreate(
-    {
-      nom: nomTitre,
-      typeId: 'arm',
-      titreStatutId: 'mod',
-      propsTitreEtapesIds: {},
-      references: [
-        {
-          referenceTypeId: 'onf',
-          nom: 'ONF',
-        },
-      ],
-    },
-    {}
-  )
+  const titreId = newTitreId()
+  await insertTitreGraph({
+    id: titreId,
+    nom: nomTitre,
+    typeId: 'arm',
+    titreStatutId: 'mod',
+    propsTitreEtapesIds: {},
+    references: [
+      {
+        referenceTypeId: 'onf',
+        nom: 'ONF',
+      },
+    ],
+  })
 
   const titreDemarche = await titreDemarcheCreate({
-    titreId: titre.id,
+    titreId,
     typeId: 'oct',
   })
 
@@ -160,9 +158,9 @@ async function createTitreWithEtapes(nomTitre: string, etapes: Omit<ITitreEtape,
 
   await knex('titres')
     .update({ propsTitreEtapesIds: { titulaires: etapesCrees[0].id, points: etapesCrees[0].id } })
-    .where('id', titre.id)
+    .where('id', titreId)
 
-  return titre.id
+  return titreId
 }
 
 describe('titresAdministration', () => {
@@ -202,20 +200,20 @@ describe('titresLiaisons', () => {
     )
     const titreId = getTitres.body[0].id
 
-    const axm = await titreCreate(
-      {
-        nom: 'mon axm simple',
-        typeId: 'axm',
-        titreStatutId: 'val',
-        propsTitreEtapesIds: {},
-      },
-      {}
-    )
+    const axmId = newTitreId()
+    const axmNom = 'mon axm simple'
+    await insertTitreGraph({
+      id: axmId,
+      nom: axmNom,
+      typeId: 'axm',
+      titreStatutId: 'val',
+      propsTitreEtapesIds: {},
+    })
 
     const tested = await restNewPostCall(
       dbPool,
       '/rest/titres/:id/titreLiaisons',
-      { id: axm.id },
+      { id: axmId },
       {
         role: 'admin',
         administrationId: ADMINISTRATION_IDS['DGTM - GUYANE'],
@@ -245,8 +243,8 @@ describe('titresLiaisons', () => {
     expect(avalTested.body.amont).toHaveLength(0)
     expect(avalTested.body.aval).toHaveLength(1)
     expect(avalTested.body.aval[0]).toStrictEqual({
-      id: axm.id,
-      nom: axm.nom,
+      id: axmId,
+      nom: axmNom,
     })
   })
 })
@@ -255,16 +253,14 @@ describe('titreModifier', () => {
   let id = newTitreId('')
 
   beforeEach(async () => {
-    const titre = await titreCreate(
-      {
-        nom: 'mon titre',
-        typeId: 'arm',
-        titreStatutId: 'ind',
-        propsTitreEtapesIds: {},
-      },
-      {}
-    )
-    id = titre.id
+    id = newTitreId()
+    await insertTitreGraph({
+      id,
+      nom: 'mon titre',
+      typeId: 'arm',
+      titreStatutId: 'ind',
+      propsTitreEtapesIds: {},
+    })
   })
 
   test('ne peut pas modifier un titre (utilisateur anonyme)', async () => {
@@ -299,25 +295,18 @@ describe('titreModifier', () => {
   })
 
   test("ne peut pas modifier un titre ARM échu (un utilisateur 'admin' PTMG)", async () => {
-    const titre = await titreCreate(
-      {
-        nom: 'mon titre échu',
-        typeId: 'arm',
-        titreStatutId: 'ech',
-        propsTitreEtapesIds: {},
-      },
-      {}
-    )
+    const id = newTitreId()
+    await insertTitreGraph({ id, nom: 'mon titre échu', typeId: 'arm', titreStatutId: 'ech', propsTitreEtapesIds: {} })
 
     const tested = await restPostCall(
       dbPool,
       '/rest/titres/:titreId',
-      { titreId: titre.id },
+      { titreId: id },
       {
         role: 'admin',
         administrationId: ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE'],
       },
-      { id: titre.id, nom: 'mon titre modifié', references: [] }
+      { id, nom: 'mon titre modifié', references: [] }
     )
     expect(tested.statusCode).toBe(404)
   })
@@ -338,16 +327,14 @@ describe('titreSupprimer', () => {
   let id = newTitreId('')
 
   beforeEach(async () => {
-    const titre = await titreCreate(
-      {
-        nom: 'mon titre',
-        typeId: 'arm',
-        titreStatutId: 'ind',
-        propsTitreEtapesIds: {},
-      },
-      {}
-    )
-    id = titre.id
+    id = newTitreId()
+    await insertTitreGraph({
+      id,
+      nom: 'mon titre',
+      typeId: 'arm',
+      titreStatutId: 'ind',
+      propsTitreEtapesIds: {},
+    })
   })
 
   test('ne peut pas supprimer un titre (utilisateur anonyme)', async () => {
@@ -538,18 +525,17 @@ describe('getTitre', () => {
 })
 
 test('utilisateurTitreAbonner', async () => {
-  const titre = await titreCreate(
-    {
-      nom: 'mon autre titre',
-      typeId: 'arm',
-      slug: titreSlugValidator.parse('slug'),
-      titreStatutId: 'val',
-      propsTitreEtapesIds: {},
-    },
-    {}
-  )
+  const id = newTitreId()
+  await insertTitreGraph({
+    id,
+    nom: 'mon autre titre',
+    typeId: 'arm',
+    slug: titreSlugValidator.parse('slug'),
+    titreStatutId: 'val',
+    propsTitreEtapesIds: {},
+  })
 
-  const tested = await restPostCall(dbPool, '/rest/titres/:titreId/abonne', { titreId: titre.id }, userSuper, { abonne: true })
+  const tested = await restPostCall(dbPool, '/rest/titres/:titreId/abonne', { titreId: id }, userSuper, { abonne: true })
 
   expect(tested.statusCode).toBe(HTTP_STATUS.NO_CONTENT)
 })

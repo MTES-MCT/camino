@@ -1,16 +1,17 @@
 import type { ITitreActivite } from '../../types'
 
-import { titresActivitesUpsert } from '../../database/queries/titres-activites'
+import { titreActiviteUpdate } from '../../database/queries/titres-activites'
 import { titresGet } from '../../database/queries/titres'
 import { titreValideCheck } from '../utils/titre-valide-check'
 import { userSuper } from '../../database/user-super'
 import { getMonth } from 'camino-common/src/static/frequence'
 import { toCaminoDate } from 'camino-common/src/date'
 import { ActivitesTypes } from 'camino-common/src/static/activitesTypes'
-import { isNotNullNorUndefinedNorEmpty, isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools'
+import { isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
+import { ActiviteId } from 'camino-common/src/activite'
 
 // TODO 2023-04-12 à supprimer et à calculer lors de l’appel à l’API par un super
-export const titresActivitesPropsUpdate = async (titresIds?: string[]) => {
+export const titresActivitesPropsUpdate = async (titresIds?: string[]): Promise<ActiviteId[]> => {
   console.info()
   console.info('propriétés des activités de titres…')
 
@@ -25,12 +26,8 @@ export const titresActivitesPropsUpdate = async (titresIds?: string[]) => {
     userSuper
   )
 
-  const titresActivitesUpdated = titres.reduce((acc: ITitreActivite[], titre) => {
-    if (isNullOrUndefinedOrEmpty(titre.activites)) {
-      return acc
-    }
-
-    return titre.activites.reduce((acc, titreActivite) => {
+  const titresActivitesUpdated = titres.flatMap(titre => {
+    return (titre.activites ?? []).reduce<Pick<ITitreActivite, 'id' | 'suppression'>[]>((acc, titreActivite) => {
       const activiteType = ActivitesTypes[titreActivite.typeId]
 
       const dateDebut = toCaminoDate(new Date(titreActivite.annee, getMonth(activiteType.frequenceId, titreActivite.periodeId), 1))
@@ -38,23 +35,19 @@ export const titresActivitesPropsUpdate = async (titresIds?: string[]) => {
       const isActiviteInPhase: boolean = isNotNullNorUndefinedNorEmpty(titre.demarches) && titreValideCheck(titre.demarches, dateDebut, titreActivite.date)
 
       if (isActiviteInPhase && (titreActivite.suppression ?? false)) {
-        titreActivite.suppression = false
-
-        acc.push(titreActivite)
+        acc.push({ id: titreActivite.id, suppression: false })
       }
 
       if (!isActiviteInPhase && !(titreActivite.suppression ?? false)) {
-        titreActivite.suppression = true
-
-        acc.push(titreActivite)
+        acc.push({ id: titreActivite.id, suppression: true })
       }
 
       return acc
-    }, acc)
-  }, [])
+    }, [])
+  })
 
   if (titresActivitesUpdated.length) {
-    await titresActivitesUpsert(titresActivitesUpdated)
+    await Promise.all(titresActivitesUpdated.map(activite => titreActiviteUpdate(activite.id, activite)))
 
     console.info('titre / activités / propriétés (mise à jour) ->', titresActivitesUpdated.map(ta => ta.id).join(', '))
   }

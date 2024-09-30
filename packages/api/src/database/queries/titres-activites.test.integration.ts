@@ -30,7 +30,7 @@ describe('teste les requêtes sur les activités', () => {
     })
 
     const titreActiviteId = activiteIdValidator.parse('titreActiviteId')
-    await TitresActivites.query().insertGraph({
+    await TitresActivites.query().insert({
       id: titreActiviteId,
       typeId: 'grx',
       titreId,

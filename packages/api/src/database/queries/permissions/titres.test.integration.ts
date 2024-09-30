@@ -1,4 +1,4 @@
-import { ITitre, ITitreDemarche } from '../../../types'
+import { ITitre, ITitreDemarche, ITitreEtape } from '../../../types'
 
 import { dbManager } from '../../../../tests/db-manager'
 
@@ -15,6 +15,9 @@ import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
 import { toCaminoDate } from 'camino-common/src/date'
 import { entrepriseIdValidator } from 'camino-common/src/entreprise'
+import TitresDemarches from '../../models/titres-demarches'
+import TitresEtapes from '../../models/titres-etapes'
+import { ETAPE_IS_NOT_BROUILLON } from 'camino-common/src/etape'
 
 console.info = vi.fn()
 console.error = vi.fn()
@@ -25,6 +28,12 @@ beforeAll(async () => {
 afterAll(async () => {
   await dbManager.closeKnex()
 })
+
+const createTitreWithDemarcheWithEtape = async (titre: ITitre, demarche: Omit<ITitreDemarche, 'titreId'>, etape: Omit<ITitreEtape, 'titreDemarcheId'>): Promise<void> => {
+  await Titres.query().insert(titre)
+  await TitresDemarches.query().insert({ ...demarche, titreId: titre.id })
+  await TitresEtapes.query().insert({ ...etape, titreDemarcheId: demarche.id, etapeFondamentaleId: etape.id })
+}
 
 describe('titresQueryModify', () => {
   describe('titresVisibleByEntrepriseQuery', () => {
@@ -37,31 +46,28 @@ describe('titresQueryModify', () => {
       const etapeId = newEtapeId()
 
       const entrepriseId1 = entrepriseIdValidator.parse('entrepriseId1')
-      const mockTitre: Omit<ITitre, 'id'> = {
-        nom: 'titre1',
-        typeId: 'arm',
-        titreStatutId: 'ind',
-        propsTitreEtapesIds: { titulaires: etapeId },
-        demarches: [
-          {
-            id: demarcheId,
-            titreId: id,
-            typeId: 'oct',
-            etapes: [
-              {
-                id: etapeId,
-                titreDemarcheId: demarcheId,
-                date: toCaminoDate('2020-01-01'),
-                typeId: 'mfr',
-                statutId: 'fai',
-                titulaireIds: withTitulaire ? [entrepriseId1] : [],
-              },
-            ],
-          } as ITitreDemarche,
-        ],
-      }
 
-      await Titres.query().insertGraph(mockTitre)
+      await createTitreWithDemarcheWithEtape(
+        {
+          id,
+          nom: 'titre1',
+          typeId: 'arm',
+          titreStatutId: 'ind',
+          propsTitreEtapesIds: { titulaires: etapeId },
+        },
+        {
+          id: demarcheId,
+          typeId: 'oct',
+        },
+        {
+          id: etapeId,
+          date: toCaminoDate('2020-01-01'),
+          typeId: 'mfr',
+          statutId: 'fai',
+          titulaireIds: withTitulaire ? [entrepriseId1] : [],
+          isBrouillon: ETAPE_IS_NOT_BROUILLON,
+        }
+      )
 
       const q = Titres.query()
       titresVisibleByEntrepriseQuery(q, [entrepriseId1])
@@ -80,31 +86,27 @@ describe('titresQueryModify', () => {
       const etapeId = newEtapeId()
 
       const entrepriseId2 = entrepriseIdValidator.parse('entrepriseId2')
-      const mockTitre: Omit<ITitre, 'id'> = {
-        nom: 'titre1',
-        typeId: 'arm',
-        titreStatutId: 'ind',
-        propsTitreEtapesIds: { amodiataires: etapeId },
-        demarches: [
-          {
-            id: demarcheId,
-            titreId: id,
-            typeId: 'oct',
-            etapes: [
-              {
-                id: etapeId,
-                titreDemarcheId: demarcheId,
-                date: toCaminoDate('2020-01-01'),
-                typeId: 'mfr',
-                statutId: 'fai',
-                amodiataireIds: withAmodiataire ? [entrepriseId2] : [],
-              },
-            ],
-          } as ITitreDemarche,
-        ],
-      }
-
-      await Titres.query().insertGraph(mockTitre)
+      await createTitreWithDemarcheWithEtape(
+        {
+          id,
+          nom: 'titre1',
+          typeId: 'arm',
+          titreStatutId: 'ind',
+          propsTitreEtapesIds: { amodiataires: etapeId },
+        },
+        {
+          id: demarcheId,
+          typeId: 'oct',
+        },
+        {
+          id: etapeId,
+          date: toCaminoDate('2020-01-01'),
+          typeId: 'mfr',
+          statutId: 'fai',
+          amodiataireIds: withAmodiataire ? [entrepriseId2] : [],
+          isBrouillon: ETAPE_IS_NOT_BROUILLON,
+        }
+      )
 
       const q = Titres.query()
       titresVisibleByEntrepriseQuery(q, [entrepriseId2])
@@ -126,35 +128,39 @@ describe('titresQueryModify', () => {
       etapeStatutId = 'fav',
     }: {
       visible: boolean
-      titreTypeId?: string
-      titreStatutId?: string
-      demarcheTypeId?: string
-      demarcheStatutId?: string
-      etapeTypeId?: string
-      etapeStatutId?: string
+      titreTypeId?: TitreTypeId
+      titreStatutId?: TitreStatutId
+      demarcheTypeId?: DemarcheTypeId
+      demarcheStatutId?: DemarcheStatutId
+      etapeTypeId?: EtapeTypeId
+      etapeStatutId?: EtapeStatutId
     }) => {
-      const mockTitre = {
-        nom: 'titre1',
-        typeId: titreTypeId,
-        titreStatutId,
-        demarches: [
-          {
-            typeId: demarcheTypeId,
-            statutId: demarcheStatutId,
-            etapes: [
-              {
-                typeId: etapeTypeId,
-                statutId: etapeStatutId,
-                date: '2020-01-01',
-              },
-            ],
-          },
-        ],
-      } as ITitre
+      const id = newTitreId()
+      const demarcheId = newDemarcheId()
+      const etapeId = newEtapeId()
+      await createTitreWithDemarcheWithEtape(
+        {
+          id,
+          nom: 'titre1',
+          typeId: titreTypeId,
+          titreStatutId,
+          propsTitreEtapesIds: {},
+        },
+        {
+          id: demarcheId,
+          typeId: demarcheTypeId,
+          statutId: demarcheStatutId,
+        },
+        {
+          id: etapeId,
+          typeId: etapeTypeId,
+          statutId: etapeStatutId,
+          date: toCaminoDate('2020-01-01'),
+          isBrouillon: ETAPE_IS_NOT_BROUILLON,
+        }
+      )
 
-      const titre = await Titres.query().insertGraph(mockTitre)
-
-      const res = await Titres.query().where('id', titre.id).modify(titresArmEnDemandeQuery)
+      const res = await Titres.query().where('id', id).modify(titresArmEnDemandeQuery)
 
       expect(res).toHaveLength(visible ? 1 : 0)
     }
@@ -215,38 +221,31 @@ describe('titresQueryModify', () => {
       const id = newTitreId()
 
       const entrepriseId1 = entrepriseIdValidator.parse('entrepriseId1')
-      const mockTitre: ITitre = {
-        id,
-        nom: 'titre1',
-        typeId,
-        titreStatutId: statutId,
-        publicLecture,
-        propsTitreEtapesIds: { titulaires: etapeId },
-        demarches: [
-          {
-            id: demarcheId,
-            titreId: id,
-            typeId: 'oct',
-            statutId: 'ins',
-            etapes: [
-              {
-                id: etapeId,
-                titreDemarcheId: demarcheId,
-                date: toCaminoDate('2020-01-01'),
-                typeId: 'mcr',
-                statutId: 'fav',
-                titulaireIds: withTitulaire ? [entrepriseId1] : [],
-              },
-            ],
-          } as ITitreDemarche,
-        ],
-      }
+      await createTitreWithDemarcheWithEtape(
+        {
+          id,
+          nom: 'titre1',
+          typeId,
+          titreStatutId: statutId,
+          publicLecture,
+          propsTitreEtapesIds: { titulaires: etapeId },
+        },
+        {
+          id: demarcheId,
+          typeId: 'oct',
+          statutId: 'ins',
+        },
+        {
+          id: etapeId,
+          date: toCaminoDate('2020-01-01'),
+          typeId: 'mcr',
+          statutId: 'fav',
+          titulaireIds: withTitulaire ? [entrepriseId1] : [],
+          isBrouillon: ETAPE_IS_NOT_BROUILLON,
+        }
+      )
 
-      await Titres.query().insertGraph(mockTitre)
-
-      const q = Titres.query().where('id', id).modify(titresConfidentielSelect, [entrepriseId1]) // eslint-disable-line @typescript-eslint/no-misused-promises
-
-      const res = await q
+      const res = await Titres.query().where('id', id).modify(titresConfidentielSelect, [entrepriseId1]) // eslint-disable-line @typescript-eslint/no-misused-promises
 
       expect(res).toHaveLength(1)
       if (confidentiel) {

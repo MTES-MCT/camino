@@ -33,7 +33,7 @@ describe('administrationsTitresQuery', () => {
       typeId: 'arm',
     } as ITitre
 
-    await Titres.query().insertGraph(mockTitre)
+    await Titres.query().insert(mockTitre)
 
     const q = Titres.query()
       .joinRaw(`left join titres_etapes as t_e on t_e.id = "titres"."props_titre_etapes_ids" ->> 'points' and t_e.administrations_locales @> '"${administrationId}"'::jsonb`)

@@ -1,5 +1,5 @@
 import { ITitreEtape } from '../../types'
-import options, { FieldsEtape } from './_options'
+import { FieldsEtape } from './_options'
 import graphBuild from './graph/build'
 import { fieldsFormat } from './graph/fields-format'
 
@@ -81,4 +81,4 @@ export const titreEtapeUpdate = async (id: EtapeId, titreEtape: Partial<DBTitres
 }
 
 export const titreEtapeUpsert = async (titreEtape: Partial<Pick<ITitreEtape, 'id'>> & Omit<ITitreEtape, 'id'>, user: DeepReadonly<UserNotNull>, titreId: TitreId): Promise<ITitreEtape | undefined> =>
-  upsertJournalCreate(titreEtape.id, titreEtape, options.titresEtapes.update, '[]', user.id, titreId)
+  upsertJournalCreate(titreEtape.id, titreEtape, user.id, titreId)

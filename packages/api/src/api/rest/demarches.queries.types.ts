@@ -15,6 +15,7 @@ export interface IGetEtapesByDemarcheIdDbResult {
   date_debut: string | null;
   date_fin: string | null;
   duree: number | null;
+  etape_fondamentale_id: string;
   etape_statut_id: string;
   etape_type_id: string;
   forets: Json;
@@ -68,5 +69,19 @@ export interface IGetDemarcheByIdOrSlugDbResult {
 export interface IGetDemarcheByIdOrSlugDbQuery {
   params: IGetDemarcheByIdOrSlugDbParams;
   result: IGetDemarcheByIdOrSlugDbResult;
+}
+
+/** 'GetDemarchesDb' parameters type */
+export type IGetDemarchesDbParams = void;
+
+/** 'GetDemarchesDb' return type */
+export interface IGetDemarchesDbResult {
+  id: string;
+}
+
+/** 'GetDemarchesDb' query type */
+export interface IGetDemarchesDbQuery {
+  params: IGetDemarchesDbParams;
+  result: IGetDemarchesDbResult;
 }
 

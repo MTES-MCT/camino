@@ -4,8 +4,10 @@ import { titreDemarcheUpdatedEtatValidate } from '../../business/validations/tit
 import { userSuper } from '../../database/user-super'
 import { getTitreTypeType, getDomaineId } from 'camino-common/src/static/titresTypes'
 import { isNotNullNorUndefinedNorEmpty, onlyUnique } from 'camino-common/src/typescript-tools'
+import { DemarcheId } from 'camino-common/src/demarche'
 
 const demarchesValidate = async () => {
+  const demarchesIdsAlreadyChecked: Set<DemarcheId> = new Set()
   const errorsTotal = [] as string[]
   for (const demarcheDefinition of demarchesDefinitions) {
     for (const demarcheTypeId of demarcheDefinition.demarcheTypeIds) {
@@ -17,22 +19,27 @@ const demarchesValidate = async () => {
         },
         {
           fields: {
-            titre: { id: {}, demarches: { etapes: { id: {} } } },
+            titre: { id: {}, demarches: { id: {} } },
             etapes: { id: {} },
           },
         },
         userSuper
       )
       for (const demarche of demarches) {
-        if (isNotNullNorUndefinedNorEmpty(demarche.etapes)) {
-          try {
-            const { valid, errors } = titreDemarcheUpdatedEtatValidate(demarche.typeId, demarche.titre!, demarche.etapes![0], demarche.id, demarche.etapes!)
+        if (!demarchesIdsAlreadyChecked.has(demarche.id)) {
+          demarchesIdsAlreadyChecked.add(demarche.id)
 
-            if (!valid) {
-              errorsTotal.push(`https://camino.beta.gouv.fr/demarches/${demarche.slug} => démarche "${demarche.typeId}" : ${errors}`)
+          if (isNotNullNorUndefinedNorEmpty(demarche.etapes)) {
+            try {
+              const sortedEtapes = demarche.etapes!.toSorted((a, b) => (a.ordre ?? 0) - (b.ordre ?? 0))
+              const { valid, errors } = titreDemarcheUpdatedEtatValidate(demarche.typeId, demarche.titre!, sortedEtapes![0], demarche.id, sortedEtapes!)
+
+              if (!valid) {
+                errorsTotal.push(`https://camino.beta.gouv.fr/demarches/${demarche.slug} => démarche "${demarche.typeId}" : ${errors}`)
+              }
+            } catch (e) {
+              errorsTotal.push(`${demarche.id} démarche invalide =>\n\t${e}`)
             }
-          } catch (e) {
-            errorsTotal.push(`${demarche.id} démarche invalide =>\n\t${e}`)
           }
         }
       }

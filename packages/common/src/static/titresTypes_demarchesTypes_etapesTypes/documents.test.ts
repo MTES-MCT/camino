@@ -1,6 +1,10 @@
 import { ETAPES_TYPES } from '../etapesTypes'
-import { getDocuments } from './documents'
+import { getDocuments, toDocuments } from './documents'
 import { test, expect } from 'vitest'
+
+test('toDocuments', () => {
+  expect(toDocuments()).toHaveLength(222)
+})
 
 test('getDocuments erreurs', () => {
   expect(() => getDocuments()).toThrowErrorMatchingInlineSnapshot(`[Error: il manque des éléments pour trouver les documents titreTypeId: 'undefined', demarcheId: undefined, etapeTypeId: undefined]`)

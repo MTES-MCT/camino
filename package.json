@@ -34,7 +34,7 @@
     ],
     "packages/ui/**/*.css": "prettier --write",
     "packages/api/**/*.{js,ts}": [
-      "eslint --config packages/api/eslint.config.mjs --cache --fix --max-warnings=0",
+      "eslint --config packages/api/eslint.config.mjs --cache --fix --max-warnings=0 --no-ignore",
       "prettier --write"
     ],
     "packages/api/**/*.{graphql,md}": "prettier --write",

@@ -15,9 +15,10 @@ import {
   IsEtapeCompleteEntrepriseDocuments,
   IsEtapeCompleteEtape,
   canDeleteEtape,
+  isEtapeDeposable,
 } from './titres-etapes'
 import { AdministrationId, ADMINISTRATION_IDS } from '../static/administrations'
-import { test, expect } from 'vitest'
+import { test, expect, describe } from 'vitest'
 import { TestUser, testBlankUser } from '../tests-utils'
 import { TitreStatutId } from '../static/titresStatuts'
 import { EntrepriseId, entrepriseIdValidator, newEntrepriseId } from '../entreprise'
@@ -60,6 +61,8 @@ test.each<{ titreTypeId: TitreTypeId; demarcheTypeId: DemarcheTypeId; etapeTypeI
   { titreTypeId: 'arm', etapeTypeId: 'mfr', demarcheTypeId: 'dec', user: { role: 'super' }, canEdit: false },
   { titreTypeId: 'arm', etapeTypeId: 'dpu', demarcheTypeId: 'dec', user: { role: 'super' }, canEdit: true },
   { titreTypeId: 'axm', etapeTypeId: 'mfr', demarcheTypeId: 'dec', user: { role: 'super' }, canEdit: false },
+  { titreTypeId: 'axm', etapeTypeId: 'dpu', demarcheTypeId: 'dec', user: { role: 'admin', administrationId: ADMINISTRATION_IDS['DGTM - GUYANE'] }, canEdit: true },
+  { titreTypeId: 'axm', etapeTypeId: 'dpu', demarcheTypeId: 'dec', user: { role: 'editeur', administrationId: ADMINISTRATION_IDS['DGTM - GUYANE'] }, canEdit: true },
   { titreTypeId: 'prm', etapeTypeId: 'mfr', demarcheTypeId: 'dec', user: { role: 'super' }, canEdit: true },
   { titreTypeId: 'prm', etapeTypeId: 'mfr', demarcheTypeId: 'dec', user: { role: 'admin', administrationId: ADMINISTRATION_IDS.BRGM }, canEdit: true },
   { titreTypeId: 'prm', etapeTypeId: 'mfr', demarcheTypeId: 'dec', user: { role: 'lecteur', administrationId: ADMINISTRATION_IDS.BRGM }, canEdit: true },
@@ -500,7 +503,7 @@ test('une demande d’ARM mécanisée a des documents obligatoires supplémentai
     'oct',
     armDocuments,
     armEntrepriseDocuments,
-    [],
+    null,
     [],
     null,
     null,
@@ -546,4 +549,48 @@ test.each<[number | null, EtapeTypeId, TitreTypeId, IsEtapeCompleteDocuments, Is
   } else {
     expect(result).toStrictEqual({ valid: true })
   }
+})
+
+describe('isEtapeDeposable', () => {
+  test('Une demande d’ARM complète brouillon', () => {
+    expect(
+      isEtapeDeposable(
+        { ...testBlankUser, role: 'super' },
+        'arm',
+        'oct',
+        { ...etapeComplete, isBrouillon: ETAPE_IS_BROUILLON, contenu: { arm: { mecanise: { value: false, etapeHeritee: null, heritee: false } } } },
+        armDocuments,
+        armEntrepriseDocuments,
+        [],
+        [],
+        null,
+        null,
+        []
+      )
+    ).toStrictEqual(true)
+  })
+
+  test('Une demande d’ARM complète déjà déposée', () => {
+    expect(
+      isEtapeDeposable(
+        { ...testBlankUser, role: 'super' },
+        'arm',
+        'oct',
+        { ...etapeComplete, isBrouillon: ETAPE_IS_NOT_BROUILLON, contenu: { arm: { mecanise: { value: false, etapeHeritee: null, heritee: false } } } },
+        armDocuments,
+        armEntrepriseDocuments,
+        [],
+        [],
+        null,
+        null,
+        []
+      )
+    ).toStrictEqual(false)
+  })
+
+  test('Une demande d’ARM incomplète', () => {
+    expect(
+      isEtapeDeposable({ ...testBlankUser, role: 'super' }, 'arm', 'oct', { ...etapeComplete, isBrouillon: ETAPE_IS_BROUILLON }, armDocuments, armEntrepriseDocuments, [], [], null, null, [])
+    ).toStrictEqual(false)
+  })
 })

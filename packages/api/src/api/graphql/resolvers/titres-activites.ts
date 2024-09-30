@@ -1,6 +1,6 @@
 import { GraphQLResolveInfo } from 'graphql'
 
-import { Context, ITitre, ITitreActiviteColonneId } from '../../../types'
+import { Context, ITitre, ITitreActivite, ITitreActiviteColonneId } from '../../../types'
 import { ACTIVITES_STATUTS_IDS } from 'camino-common/src/static/activitesStatuts'
 
 import { titreActiviteEmailsSend } from './_titre-activite'
@@ -26,7 +26,6 @@ import {
 } from '../../rest/activites.queries'
 import { ActiviteId } from 'camino-common/src/activite'
 import { getSectionsWithValue } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections'
-import TitresActivites from '../../../database/models/titres-activites'
 import { getUtilisateursEmailsByEntrepriseIds } from '../../../database/queries/utilisateurs.queries'
 
 /**
@@ -86,7 +85,7 @@ export const activites = async (
   },
   { user }: Context,
   info: GraphQLResolveInfo
-): Promise<{ elements: TitresActivites[]; page?: number; intervalle?: number; ordre?: 'asc' | 'desc' | null | undefined; colonne?: ITitreActiviteColonneId | null | undefined; total: number }> => {
+): Promise<{ elements: ITitreActivite[]; page?: number; intervalle?: number; ordre?: 'asc' | 'desc' | null | undefined; colonne?: ITitreActiviteColonneId | null | undefined; total: number }> => {
   try {
     if (!canReadActivites(user)) {
       return { elements: [], total: 0 }
@@ -158,7 +157,7 @@ export const activites = async (
   }
 }
 
-export const activiteDeposer = async ({ id }: { id: ActiviteId }, { user, pool }: Context, info: GraphQLResolveInfo): Promise<TitresActivites> => {
+export const activiteDeposer = async ({ id }: { id: ActiviteId }, { user, pool }: Context, info: GraphQLResolveInfo): Promise<ITitreActivite> => {
   try {
     if (!user) throw new Error('droits insuffisants')
 
@@ -177,6 +176,7 @@ export const activiteDeposer = async ({ id }: { id: ActiviteId }, { user, pool }
     }
 
     await titreActiviteUpdateQuery(activite.id, {
+      id: activite.id,
       activiteStatutId: ACTIVITES_STATUTS_IDS.DEPOSE,
       utilisateurId: user.id,
       dateSaisie: getCurrent(),

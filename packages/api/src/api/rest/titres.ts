@@ -1,4 +1,4 @@
-import { titreArchive, titresGet, titreGet, titreUpsert } from '../../database/queries/titres'
+import { titreArchive, titresGet, titreGet, titreUpdate } from '../../database/queries/titres'
 import { HTTP_STATUS } from 'camino-common/src/http'
 import { CommonTitreAdministration, editableTitreValidator, TitreLink, TitreLinks, TitreGet, utilisateurTitreAbonneValidator } from 'camino-common/src/titres'
 import { machineFind } from '../../business/rules-demarches/definitions'
@@ -445,9 +445,7 @@ export const updateTitre =
           if (!canEditTitre(user, titreOld.typeId, titreOld.titreStatutId, titreOld.administrationsLocales ?? [])) {
             res.sendStatus(HTTP_STATUS.FORBIDDEN)
           } else {
-            // on doit utiliser upsert (plutôt qu'un simple update)
-            // car le titre contient des références (tableau d'objet)
-            await titreUpsert(parsedBody.data)
+            await titreUpdate(titreId, parsedBody.data)
 
             await titreUpdateTask(pool, titreId)
             res.sendStatus(HTTP_STATUS.NO_CONTENT)

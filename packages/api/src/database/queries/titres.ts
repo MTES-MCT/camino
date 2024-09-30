@@ -18,7 +18,6 @@ import { User } from 'camino-common/src/roles'
 import { DepartementId } from 'camino-common/src/static/departement'
 import { RegionId } from 'camino-common/src/static/region'
 import { FacadesMaritimes } from 'camino-common/src/static/facades'
-import { EditableTitre } from 'camino-common/src/titres'
 import { TitreId } from 'camino-common/src/validators/titres'
 import { DeepReadonly } from 'camino-common/src/typescript-tools'
 
@@ -211,7 +210,7 @@ export const titresCount = async (
   } = {},
   { fields }: { fields?: FieldsTitre },
   user: User
-) => {
+): Promise<number> => {
   const q = titresQueryBuild({ fields }, user, demandeEnCours)
 
   titresFiltersQueryModify(
@@ -235,24 +234,9 @@ export const titresCount = async (
   return q.resultSize()
 }
 
-/**
- * Crée un nouveau titre
- *
- * @param titre - titre à créer
- * @param fields - Non utilisés
- * @param userId - id de l’utilisateur
- * @returns le nouveau titre
- *
- */
-export const titreCreate = async (titre: Omit<ITitre, 'id'>, { fields }: { fields?: FieldsTitre }): Promise<DBTitre> => {
-  const graph = fields ? graphBuild(titresFieldsAdd(fields), 'titre', fieldsFormat) : options.titres.graph
+export const titreUpdate = async (id: TitreId, titre: Partial<DBTitre>): Promise<DBTitre> => Titres.query().patchAndFetchById(id, { ...titre, id })
 
-  return Titres.query().withGraphFetched(graph).insertGraph(titre, options.titres.update)
-}
-
-export const titreUpdate = async (id: TitreId, titre: Partial<DBTitre>) => Titres.query().patchAndFetchById(id, { ...titre, id })
-
-export const titreArchive = async (id: TitreId) => {
+export const titreArchive = async (id: TitreId): Promise<void> => {
   // archive le titre
   await titreUpdate(id, { archive: true })
 
@@ -261,8 +245,4 @@ export const titreArchive = async (id: TitreId) => {
 
   // archive les étapes des démarches du titre
   await TitresEtapes.query().patch({ archive: true }).whereIn('titreDemarcheId', TitresDemarches.query().select('id').where('titreId', id))
-}
-
-export const titreUpsert = async (titre: EditableTitre) => {
-  return Titres.query().upsertGraph(titre, options.titres.update)
 }

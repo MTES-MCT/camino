@@ -147,20 +147,13 @@ export const geojsonImportForagesResponseValidator = z.object({ geojson4326: fea
 export type GeojsonImportForagesResponse = z.infer<typeof geojsonImportForagesResponseValidator>
 
 const internalEqualGeojson = (geo1: MultiPolygon, geo2: MultiPolygon): boolean => {
-  for (let indexLevel1 = 0; indexLevel1 < geo1.coordinates.length; indexLevel1++) {
-    for (let indexLevel2 = 0; indexLevel2 < geo1.coordinates[indexLevel1].length; indexLevel2++) {
-      for (let indexLevel3 = 0; indexLevel3 < geo1.coordinates[indexLevel1][indexLevel2].length; indexLevel3++) {
-        if (
-          geo1.coordinates[indexLevel1][indexLevel2][indexLevel3][0] !== geo2.coordinates[indexLevel1]?.[indexLevel2]?.[indexLevel3]?.[0] ||
-          geo1.coordinates[indexLevel1][indexLevel2][indexLevel3][1] !== geo2.coordinates[indexLevel1]?.[indexLevel2]?.[indexLevel3]?.[1]
-        ) {
-          return false
-        }
-      }
-    }
-  }
-
-  return true
+  return geo1.coordinates.every((level1, indexLevel1) => {
+    return level1.every((level2, indexLevel2) => {
+      return level2.every((level3, indexLevel3) => {
+        return level3[0] === geo2.coordinates[indexLevel1]?.[indexLevel2]?.[indexLevel3]?.[0] && level3[1] === geo2.coordinates[indexLevel1]?.[indexLevel2]?.[indexLevel3]?.[1]
+      })
+    })
+  })
 }
 
 export const equalGeojson = (geo1: MultiPolygon, geo2: MultiPolygon | null | undefined): boolean => {

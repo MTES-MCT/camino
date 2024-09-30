@@ -1,7 +1,7 @@
 import { ITitreActivite } from '../../types'
 
 import { anneesBuild } from '../../tools/annees-build'
-import { titresActivitesUpsert } from '../../database/queries/titres-activites'
+import { titresActivitesInsert } from '../../database/queries/titres-activites'
 import { titreActivitesBuild } from '../rules/titre-activites-build'
 import { titresGet } from '../../database/queries/titres'
 import { userSuper } from '../../database/user-super'
@@ -36,38 +36,34 @@ export const titresActivitesUpdate = async (pool: Pool, titresIds?: string[], au
     userSuper
   )
 
-  const titresActivitesCreated = sortedActivitesTypes.reduce((acc: ITitreActivite[], activiteType) => {
+  const titresActivitesCreated = sortedActivitesTypes.flatMap(activiteType => {
     const annees = anneesBuild(activiteType.dateDebut, aujourdhui)
-    if (!annees.length) return acc
+    if (!annees.length) return []
 
-    acc.push(
-      ...titres.reduce((acc: ITitreActivite[], titre) => {
-        if (isNullOrUndefined(titre.demarches)) {
-          throw new Error('les démarches du titre ne sont pas chargées')
-        }
+    return titres.reduce((acc: ITitreActivite[], titre) => {
+      if (isNullOrUndefined(titre.demarches)) {
+        throw new Error('les démarches du titre ne sont pas chargées')
+      }
 
-        if (isNullOrUndefined(titre.communes)) {
-          throw new Error('les communes du titre ne sont pas chargées')
-        }
+      if (isNullOrUndefined(titre.communes)) {
+        throw new Error('les communes du titre ne sont pas chargées')
+      }
 
-        if (isNullOrUndefined(titre.secteursMaritime)) {
-          throw new Error('les secteursMaritime du titre ne sont pas chargés')
-        }
+      if (isNullOrUndefined(titre.secteursMaritime)) {
+        throw new Error('les secteursMaritime du titre ne sont pas chargés')
+      }
 
-        // si le type d'activité est relié au type de titre
-        if (!canHaveActiviteTypeId(activiteType.id, { titreTypeId: titre.typeId, communes: titre.communes, secteursMaritime: titre.secteursMaritime, demarches: titre.demarches })) return acc
+      // si le type d'activité est relié au type de titre
+      if (!canHaveActiviteTypeId(activiteType.id, { titreTypeId: titre.typeId, communes: titre.communes, secteursMaritime: titre.secteursMaritime, demarches: titre.demarches })) return acc
 
-        acc.push(...titreActivitesBuild(activiteType.id, annees, aujourdhui, titre.id, titre.typeId, titre.demarches, titre.activites))
+      acc.push(...titreActivitesBuild(activiteType.id, annees, aujourdhui, titre.id, titre.typeId, titre.demarches, titre.activites))
 
-        return acc
-      }, [])
-    )
-
-    return acc
-  }, [])
+      return acc
+    }, [])
+  })
 
   if (titresActivitesCreated.length) {
-    await titresActivitesUpsert(titresActivitesCreated)
+    await titresActivitesInsert(titresActivitesCreated)
 
     const emails = new Set<string>()
     for (const activite of titresActivitesCreated) {

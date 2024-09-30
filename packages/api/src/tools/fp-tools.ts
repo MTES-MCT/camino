@@ -5,6 +5,8 @@ import { fromError, isZodErrorLike } from 'zod-validation-error'
 
 export type ZodUnparseable = 'Problème de validation de données'
 
+export const shortCircuitError = <T extends string>(value: T): { _tag: T } => ({ _tag: value })
+
 export const zodParseEffectCallback =
   <T extends ZodTypeAny>(validator: T) =>
   (value: unknown): Effect.Effect<T['_output'], CaminoError<ZodUnparseable>> =>

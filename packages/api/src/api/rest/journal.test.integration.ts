@@ -1,13 +1,13 @@
 /* eslint-disable sql/no-unsafe-query */
 import { dbManager } from '../../../tests/db-manager'
-import { titreCreate } from '../../database/queries/titres'
 import { afterAll, beforeAll, test, expect, vi, describe } from 'vitest'
 import type { Pool } from 'pg'
 import { getTitresModifiesByMonth } from './journal.queries'
 import { Knex } from 'knex'
-import { idGenerate } from '../../database/models/_format/id-create'
+import { idGenerate, newTitreId } from '../../database/models/_format/id-create'
 import { userGenerate } from '../../../tests/_utils/index'
-import { ITitre } from '../../types'
+import { insertTitreGraph } from '../../../tests/integration-test-helper'
+import { TitreId } from 'camino-common/src/validators/titres'
 
 console.info = vi.fn()
 console.error = vi.fn()
@@ -15,21 +15,20 @@ console.error = vi.fn()
 let dbPool: Pool
 let knex: Knex
 
-let titre: ITitre
+let titreId: TitreId
 beforeAll(async () => {
   const { pool, knex: knexInstance } = await dbManager.populateDb()
   dbPool = pool
   knex = knexInstance
 
-  titre = await titreCreate(
-    {
-      nom: 'nomTitre',
-      typeId: 'arm',
-      titreStatutId: 'val',
-      propsTitreEtapesIds: {},
-    },
-    {}
-  )
+  titreId = newTitreId()
+  await insertTitreGraph({
+    id: titreId,
+    nom: 'nomTitre',
+    typeId: 'arm',
+    titreStatutId: 'val',
+    propsTitreEtapesIds: {},
+  })
 })
 
 afterAll(async () => {
@@ -42,7 +41,7 @@ describe('getTitresModifiesByMonth', async () => {
 
     await knex.raw(
       `INSERT INTO public.journaux (id, utilisateur_id, date, element_id, operation, titre_id) VALUES ('${idGenerate()}', 'super', '2021-11-10 09:02:19.012000 +00:00', '${idGenerate()}', 'update', '${
-        titre.id
+        titreId
       }')`
     )
     tested = await getTitresModifiesByMonth(dbPool)
@@ -56,7 +55,7 @@ describe('getTitresModifiesByMonth', async () => {
     await knex.raw(
       `INSERT INTO public.journaux (id, utilisateur_id, date, element_id, operation, titre_id) VALUES ('${idGenerate()}', '${
         user.id
-      }', '2021-11-10 09:02:19.012000 +00:00', '${idGenerate()}', 'update', '${titre.id}')`
+      }', '2021-11-10 09:02:19.012000 +00:00', '${idGenerate()}', 'update', '${titreId}')`
     )
     tested = await getTitresModifiesByMonth(dbPool)
     expect(tested).toMatchInlineSnapshot(`
@@ -71,7 +70,7 @@ describe('getTitresModifiesByMonth', async () => {
     await knex.raw(
       `INSERT INTO public.journaux (id, utilisateur_id, date, element_id, operation, titre_id) VALUES ('${idGenerate()}', '${
         user.id
-      }', '2021-11-10 09:02:19.012000 +00:00', '${idGenerate()}', 'update', '${titre.id}')`
+      }', '2021-11-10 09:02:19.012000 +00:00', '${idGenerate()}', 'update', '${titreId}')`
     )
     tested = await getTitresModifiesByMonth(dbPool)
     expect(tested).toMatchInlineSnapshot(`

@@ -6,9 +6,7 @@ import { HTTP_STATUS } from 'camino-common/src/http'
 import { toCaminoDate } from 'camino-common/src/date'
 import { titreSlugValidator } from 'camino-common/src/validators/titres'
 import { newTitreId, newDemarcheId, newEtapeId } from '../../database/models/_format/id-create'
-import { titreCreate } from '../../database/queries/titres'
 import TitresDemarches from '../../database/models/titres-demarches'
-import TitresEtapes from '../../database/models/titres-etapes'
 import Titres from '../../database/models/titres'
 import { userSuper } from '../../database/user-super'
 import { entrepriseIdValidator } from 'camino-common/src/entreprise'
@@ -19,6 +17,8 @@ import crypto from 'crypto'
 import { km2Validator } from 'camino-common/src/number'
 import { demarcheIdValidator } from 'camino-common/src/demarche'
 import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations'
+import { insertTitreGraph } from '../../../tests/integration-test-helper'
+import TitresEtapes from '../../database/models/titres-etapes'
 
 console.info = vi.fn()
 console.error = vi.fn()
@@ -109,6 +109,7 @@ describe('downloadDemarches', () => {
       geojsonOrigineGeoSystemeId: '4326',
       titulaireIds: [titulaireId],
       amodiataireIds: [amodiataireId],
+      etapeFondamentaleId: etapeId,
     })
   })
 
@@ -210,33 +211,31 @@ describe('demarcheSupprimer', () => {
 
 describe('demarcheCreer', () => {
   test('ne peut pas créer une démarche (utilisateur anonyme)', async () => {
-    const titre = await titreCreate(
-      {
-        nom: 'mon titre',
-        typeId: 'arm',
-        titreStatutId: 'ind',
-        propsTitreEtapesIds: {},
-        publicLecture: true,
-      },
-      {}
-    )
+    const titreId = newTitreId()
+    await insertTitreGraph({
+      id: titreId,
+      nom: 'mon titre',
+      typeId: 'arm',
+      titreStatutId: 'ind',
+      propsTitreEtapesIds: {},
+      publicLecture: true,
+    })
 
-    const res = await restNewPostCall(dbPool, '/rest/demarches', {}, undefined, { titreId: titre.id, typeId: 'oct', description: '' })
+    const res = await restNewPostCall(dbPool, '/rest/demarches', {}, undefined, { titreId, typeId: 'oct', description: '' })
 
     expect(res.status).toBe(HTTP_STATUS.FORBIDDEN)
   })
 
   test('ne peut pas créer une démarche (utilisateur editeur)', async () => {
-    const titre = await titreCreate(
-      {
-        nom: 'mon titre',
-        typeId: 'arm',
-        titreStatutId: 'ind',
-        propsTitreEtapesIds: {},
-        publicLecture: true,
-      },
-      {}
-    )
+    const titreId = newTitreId()
+    await insertTitreGraph({
+      id: titreId,
+      nom: 'mon titre',
+      typeId: 'arm',
+      titreStatutId: 'ind',
+      propsTitreEtapesIds: {},
+      publicLecture: true,
+    })
 
     const res = await restNewPostCall(
       dbPool,
@@ -246,7 +245,7 @@ describe('demarcheCreer', () => {
         role: 'editeur',
         administrationId: 'ope-onf-973-01',
       },
-      { titreId: titre.id, typeId: 'oct', description: '' }
+      { titreId, typeId: 'oct', description: '' }
     )
 
     expect(res.status).toBe(HTTP_STATUS.INTERNAL_SERVER_ERROR)
@@ -254,9 +253,8 @@ describe('demarcheCreer', () => {
   })
 
   test('peut créer une démarche (utilisateur super)', async () => {
-    const titre = await titreCreate({ nom: 'titre', typeId: 'arm', titreStatutId: 'val', propsTitreEtapesIds: {} }, {})
-
-    const titreId = titre.id
+    const titreId = newTitreId()
+    await insertTitreGraph({ id: titreId, nom: 'titre', typeId: 'arm', titreStatutId: 'val', propsTitreEtapesIds: {} })
 
     const res = await restNewPostCall(dbPool, '/rest/demarches', {}, userSuper, { titreId, typeId: 'oct', description: '' })
 
@@ -280,9 +278,8 @@ describe('demarcheCreer', () => {
   })
 
   test('peut créer une démarche (utilisateur admin)', async () => {
-    const titre = await titreCreate({ nom: 'titre', typeId: 'arm', titreStatutId: 'val', propsTitreEtapesIds: {} }, {})
-
-    const titreId = titre.id
+    const titreId = newTitreId()
+    await insertTitreGraph({ id: titreId, nom: 'titre', typeId: 'arm', titreStatutId: 'val', propsTitreEtapesIds: {} })
 
     const res = await restNewPostCall(
       dbPool,
@@ -300,15 +297,14 @@ describe('demarcheCreer', () => {
   })
 
   test("ne peut pas créer une démarche sur un titre ARM échu (un utilisateur 'admin' PTMG)", async () => {
-    const titre = await titreCreate(
-      {
-        nom: 'mon titre échu',
-        typeId: 'arm',
-        titreStatutId: 'ech',
-        propsTitreEtapesIds: {},
-      },
-      {}
-    )
+    const titreId = newTitreId()
+    await insertTitreGraph({
+      id: titreId,
+      nom: 'mon titre échu',
+      typeId: 'arm',
+      titreStatutId: 'ech',
+      propsTitreEtapesIds: {},
+    })
     const res = await restNewPostCall(
       dbPool,
       '/rest/demarches',
@@ -317,7 +313,7 @@ describe('demarcheCreer', () => {
         role: 'admin',
         administrationId: ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE'],
       },
-      { titreId: titre.id, typeId: 'oct', description: '' }
+      { titreId, typeId: 'oct', description: '' }
     )
 
     expect(res.status).toBe(HTTP_STATUS.INTERNAL_SERVER_ERROR)
@@ -326,20 +322,19 @@ describe('demarcheCreer', () => {
 })
 
 const demarcheCreate = async () => {
-  const titre = await titreCreate(
-    {
-      nom: 'mon titre',
-      typeId: 'arm',
-      titreStatutId: 'ind',
-      propsTitreEtapesIds: {},
-    },
-    {}
-  )
+  const titreId = newTitreId()
+  await insertTitreGraph({
+    id: titreId,
+    nom: 'mon titre',
+    typeId: 'arm',
+    titreStatutId: 'ind',
+    propsTitreEtapesIds: {},
+  })
 
-  const titreDemarche = await TitresDemarches.query().insertAndFetch({ titreId: titre.id, typeId: 'oct' })
+  const titreDemarche = await TitresDemarches.query().insertAndFetch({ titreId, typeId: 'oct' })
 
   return {
-    titreId: titre.id,
+    titreId,
     demarcheId: titreDemarche.id,
   }
 }
