@@ -719,7 +719,7 @@ export const EtapesTypes = {
     description: "L’enregistrement de la demande est une étape de gestion administrative interne du dossier qui se confond au dépôt de la demande lorsqu'elle est numérique et dématérialisée.",
     fondamentale: false,
     unique: true,
-    date_fin: toCaminoDate('2018-01-01'),
+    date_fin: toCaminoDate('2019-01-01'),
     public_lecture: true,
     entreprises_lecture: true,
   },
