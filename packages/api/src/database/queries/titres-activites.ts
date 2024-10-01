@@ -299,4 +299,4 @@ export const titresActivitesCount = async (
 
 export const titresActivitesInsert = async (titreActivites: Omit<ITitreActivite, 'titre'>[]): Promise<ITitreActivite[]> => TitresActivites.query().insert(titreActivites)
 
-export const titreActiviteUpdate = async (_id: ActiviteId, titreActivite: Partial<ITitreActivite>): Promise<number> => TitresActivites.query().patch(titreActivite)
+export const titreActiviteUpdate = async (id: ActiviteId, titreActivite: Partial<ITitreActivite>): Promise<number> => TitresActivites.query().patch(titreActivite).where({ id })
