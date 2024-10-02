@@ -10,11 +10,12 @@ import { ForetId, ForetIds, Forets, foretIdValidator } from 'camino-common/src/s
 import { Pool } from 'pg'
 import { getCommuneIds, insertCommune } from '../database/queries/communes.queries'
 import { toCommuneId } from 'camino-common/src/static/communes'
+import { createWriteStream } from 'node:fs'
 
 const require = createRequire(import.meta.url)
 const { streamArray } = require('stream-json/streamers/StreamArray')
 const { withParser } = require('stream-json/filters/Pick')
-const { chain } = require('stream-chain')
+import { chain } from 'stream-chain'
 
 const communesUpdate = async (pool: Pool) => {
   const communesIdsKnown: string[] = await getCommuneIds(pool)
@@ -55,7 +56,8 @@ const communesUpdate = async (pool: Pool) => {
         console.error(commune.properties.nom, e)
       }
     },
-  ])
+  ]).pipe(createWriteStream('/tmp/unused'))
+
   const promise = new Promise<void>((resolve, reject) => {
     pipeline.on('error', (error: any) => {
       console.error('Erreur lors de la gestion des communes', error)
