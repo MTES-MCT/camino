@@ -1,4 +1,4 @@
-import { isNotNullNorUndefined, onlyUnique } from '../../typescript-tools'
+import { onlyUnique } from '../../typescript-tools'
 import { DEMARCHES_TYPES_IDS, DemarcheTypeId } from '../demarchesTypes'
 import { DocumentsTypes, DOCUMENTS_TYPES_IDS, EntrepriseDocumentTypeId, EntrepriseDocumentType, isEntrepriseDocumentTypeId } from '../documentsTypes'
 import { ETAPES_TYPES, EtapeTypeId } from '../etapesTypes'
@@ -82,27 +82,23 @@ type TDEEntrepriseDocumentsTypesUnleashed = {
   [key in TitreTypeId]?: { [key in DemarcheTypeId]?: { [key in EtapeTypeId]?: { [key in EntrepriseDocumentTypeId]: { optionnel: boolean; description?: string } } } }
 }
 
-export const getEntrepriseDocuments = (titreTypeId?: TitreTypeId, demarcheTypeId?: DemarcheTypeId, etapeTypeId?: EtapeTypeId): EntrepriseDocumentType[] => {
-  if (isNotNullNorUndefined(titreTypeId) && isNotNullNorUndefined(demarcheTypeId) && isNotNullNorUndefined(etapeTypeId)) {
-    const documentsIds: EntrepriseDocumentTypeId[] = []
+export const getEntrepriseDocuments = (titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId, etapeTypeId: EtapeTypeId): EntrepriseDocumentType[] => {
+  const documentsIds: EntrepriseDocumentTypeId[] = []
 
-    if (isEtapesTypesEntrepriseDocumentsTypes(etapeTypeId)) {
-      documentsIds.push(...EtapesTypesEntrepriseDocumentsTypes[etapeTypeId])
+  if (isEtapesTypesEntrepriseDocumentsTypes(etapeTypeId)) {
+    documentsIds.push(...EtapesTypesEntrepriseDocumentsTypes[etapeTypeId])
+  }
+
+  documentsIds.push(...Object.keys((TDEEntrepriseDocumentsTypes as TDEEntrepriseDocumentsTypesUnleashed)[titreTypeId]?.[demarcheTypeId]?.[etapeTypeId] ?? {}).filter(isEntrepriseDocumentTypeId))
+
+  return documentsIds.filter(onlyUnique).map(documentTypeId => {
+    const documentSpecifique = (TDEEntrepriseDocumentsTypes as TDEEntrepriseDocumentsTypesUnleashed)[titreTypeId]?.[demarcheTypeId]?.[etapeTypeId]?.[documentTypeId]
+    const document = { ...DocumentsTypes[documentTypeId], optionnel: true }
+    if (documentSpecifique) {
+      document.optionnel = documentSpecifique.optionnel
+      document.description = documentSpecifique.description ?? document.description
     }
 
-    documentsIds.push(...Object.keys((TDEEntrepriseDocumentsTypes as TDEEntrepriseDocumentsTypesUnleashed)[titreTypeId]?.[demarcheTypeId]?.[etapeTypeId] ?? {}).filter(isEntrepriseDocumentTypeId))
-
-    return documentsIds.filter(onlyUnique).map(documentTypeId => {
-      const documentSpecifique = (TDEEntrepriseDocumentsTypes as TDEEntrepriseDocumentsTypesUnleashed)[titreTypeId]?.[demarcheTypeId]?.[etapeTypeId]?.[documentTypeId]
-      const document = { ...DocumentsTypes[documentTypeId], optionnel: true }
-      if (documentSpecifique) {
-        document.optionnel = documentSpecifique.optionnel
-        document.description = documentSpecifique.description ?? document.description
-      }
-
-      return document
-    })
-  } else {
-    throw new Error(`il manque des éléments pour trouver les documents titreTypeId: '${titreTypeId}', demarcheTypeId: ${demarcheTypeId}, etapeTypeId: ${etapeTypeId}`)
-  }
+    return document
+  })
 }

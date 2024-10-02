@@ -1,3 +1,4 @@
+/* v8 ignore next 10 */
 const IDS = ['error', 'info', 'neutral', 'success', 'warning'] as const
 
 export type Couleur = (typeof IDS)[number]

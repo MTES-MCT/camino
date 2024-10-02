@@ -512,6 +512,103 @@ describe('getSectionsWithValue', () => {
       ]
     `)
   })
+
+  test('les options des liste déroulantes sont calculées si elles sont basées sur des métas', () => {
+    expect(() =>
+      getSectionsWithValue(
+        [
+          {
+            id: 'section',
+            elements: [
+              // @ts-ignore for the tests
+              { id: 'unites', type: 'select', valeursMetasNom: 'non-existant', optionnel: false },
+            ],
+          },
+        ],
+        { section: { unites: 'mtk', devises: null } }
+      )
+    ).toThrowErrorMatchingInlineSnapshot(`[Error: Unreachable case: "non-existant"]`)
+  })
+
+  test('les options des liste déroulantes sont récupérables', () => {
+    expect(
+      getSectionsWithValue(
+        [
+          {
+            id: 'section',
+            elements: [
+              {
+                id: 'test',
+                type: 'select',
+                options: [
+                  { id: 'id1', nom: 'nom1' },
+                  { id: 'id2', nom: 'nom2' },
+                ],
+                optionnel: false,
+              },
+            ],
+          },
+        ],
+        { section: { test: 'id1' } }
+      )
+    ).toMatchInlineSnapshot(`
+      [
+        {
+          "elements": [
+            {
+              "id": "test",
+              "optionnel": false,
+              "options": [
+                {
+                  "id": "id1",
+                  "nom": "nom1",
+                },
+                {
+                  "id": "id2",
+                  "nom": "nom2",
+                },
+              ],
+              "type": "select",
+              "value": "id1",
+            },
+          ],
+          "id": "section",
+        },
+      ]
+    `)
+  })
+
+  test('les listes mal typées ne plantent pas', () => {
+    expect(
+      getSectionsWithValue(
+        [
+          {
+            id: 'section',
+            elements: [
+              // @ts-ignore pour les test
+              { id: 'test', type: 'select', optionnel: false },
+            ],
+          },
+        ],
+        { section: { test: 'id1' } }
+      )
+    ).toMatchInlineSnapshot(`
+      [
+        {
+          "elements": [
+            {
+              "id": "test",
+              "optionnel": false,
+              "options": [],
+              "type": "select",
+              "value": "id1",
+            },
+          ],
+          "id": "section",
+        },
+      ]
+    `)
+  })
 })
 
 // pour regénérer le fichier: `npm run test:generate-sections-data -w packages/api`

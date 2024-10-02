@@ -2,6 +2,7 @@ import { FREQUENCES_IDS, getMonth, getPeriode } from './frequence'
 import { test, expect } from 'vitest'
 
 test('getPeriode', () => {
+  expect(getPeriode(undefined, 3)).toBe('')
   expect(Object.values(FREQUENCES_IDS).map(frequenceId => [...Array(13).keys()].map(periodeId => getPeriode(frequenceId, periodeId)))).toMatchSnapshot()
 })
 test('getMonth', () => {

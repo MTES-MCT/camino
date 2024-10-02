@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { isNotNullNorUndefined } from '../typescript-tools'
 const IDS = ['ann', 'men', 'tri'] as const
 
 export const FREQUENCES_IDS = {
@@ -23,7 +24,7 @@ export const Frequences: { [key in FrequenceId]: Definition<key> } = {
 } as const
 
 export const getPeriode = (frequenceId: FrequenceId | undefined, periodeId: number): string => {
-  if (frequenceId) {
+  if (isNotNullNorUndefined(frequenceId)) {
     return Frequences[frequenceId].values[periodeId - 1] ?? ''
   }
 
