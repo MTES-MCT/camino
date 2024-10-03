@@ -55,6 +55,9 @@ export const titreDemarcheUpdatedEtatValidate = (
   suppression = false
 ): { valid: true; errors: null } | { valid: false; errors: NonEmptyArray<string> } => {
   const titreDemarcheEtapesNew = titreDemarcheEtapesBuild(titreEtape, suppression, titreDemarcheEtapes)
+  if (isNullOrUndefinedOrEmpty(titreDemarcheEtapesNew)) {
+    return { valid: true, errors: null }
+  }
   const machine = machineFind(titre.typeId, demarcheTypeId, titreDemarcheEtapesNew, demarcheId)
   const titreDemarchesErrors: string[] = []
 
@@ -147,13 +150,7 @@ export const getPossiblesEtapesTypes = (
   return etapesTypes
 }
 
-// VISIBLE FOR TESTING
-export const etapesTypesPossibleACetteDateOuALaPlaceDeLEtape = (
-  machine: CaminoMachines,
-  etapes: TitreEtapeForMachine[],
-  titreEtapeId: string | null,
-  date: CaminoDate
-): EtapeTypeEtapeStatutWithMainStep => {
+const etapesTypesPossibleACetteDateOuALaPlaceDeLEtape = (machine: CaminoMachines, etapes: TitreEtapeForMachine[], titreEtapeId: string | null, date: CaminoDate): EtapeTypeEtapeStatutWithMainStep => {
   const sortedEtapes = titreEtapesSortAscByOrdre(etapes)
   const etapesAvant: Etape[] = []
   const etapesApres: Etape[] = []

@@ -17,6 +17,7 @@ export interface IGetEtapesByDemarcheInternalResult {
   demarche_id_en_concurrence: string | null;
   demarche_statut_id: string;
   demarche_type_id: string;
+  has_titre_from: boolean | null;
   heritage_contenu: Json | null;
   id: string;
   is_brouillon: boolean;

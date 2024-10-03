@@ -272,7 +272,6 @@ const getDemandesPotentialConcurrenceDb = sql<
  join titres_demarches td on td.id = te.titre_demarche_id
  join titres t on t.id = td.titre_id
  left join titres__titres tt on tt.titre_to_id = t.id
- left join titres titreFrom on titreFrom.id = tt.titre_from_id
  where
     te.type_id = $demandeTypeId !
     and te.date > $dateDebutProcedureSpecifique!
@@ -282,16 +281,7 @@ const getDemandesPotentialConcurrenceDb = sql<
       td.type_id = $demarcheTypeExtensionDePerimetre!
       or (
         td.type_id = 'oct'
-        and (
-          left(t.type_id, 2) != 'cx'
-          OR titreFrom is null
-          OR left(titreFrom.type_id, 2) != 'pr'
-        )
-        AND (
-          left(t.type_id, 2) != 'ax'
-          OR titreFrom is null
-          OR left(titreFrom.type_id, 2) != 'ar'
-        )
+        and tt is null
       )
     )
   `

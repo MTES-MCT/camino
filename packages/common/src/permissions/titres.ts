@@ -15,17 +15,17 @@ import { SecteursMaritimes } from '../static/facades'
 import { EntrepriseId } from '../entreprise'
 
 export const getLinkConfig = (typeId: TitreTypeId, demarches: { demarche_type_id: DemarcheTypeId }[]): { count: 'single' | 'multiple'; typeId: TitreTypeId } | null => {
+  const titreType = TitresTypes[typeId]
+
+  if (titreType.typeId === 'cx' && demarches.some(({ demarche_type_id }) => demarche_type_id === DEMARCHES_TYPES_IDS.Fusion)) {
+    return { count: 'multiple', typeId }
+  }
+
   switch (typeId) {
     case 'axm':
       return { count: 'single', typeId: 'arm' }
     case 'pxm':
       return { count: 'single', typeId: 'prm' }
-  }
-
-  const titreType = TitresTypes[typeId]
-
-  if (titreType.typeId === 'cx' && demarches.some(({ demarche_type_id }) => demarche_type_id === DEMARCHES_TYPES_IDS.Fusion)) {
-    return { count: 'multiple', typeId }
   }
 
   return null

@@ -9,6 +9,7 @@ import { TITRES_TYPES_TYPES_IDS } from 'camino-common/src/static/titresTypesType
 import { ETAPES_STATUTS, EtapeStatutId } from 'camino-common/src/static/etapesStatuts'
 import { KM2, km2Validator } from 'camino-common/src/number'
 import { CaminoDate } from 'camino-common/src/date'
+import { isNullOrUndefined } from 'camino-common/src/typescript-tools'
 
 type ParticipationDuPublic = {
   surface: KM2
@@ -29,6 +30,7 @@ type FaireMiseEnConcurrence = {
 
 type FaireDemande = {
   concurrence: Concurrence
+  hasTitreFrom: boolean
   type: 'FAIRE_DEMANDE'
 }
 type ProcedureSpecifiqueXStateEvent =
@@ -94,21 +96,16 @@ export class ProcedureSpecifiqueMachine extends CaminoMachine<ProcedureSpecifiqu
     super(procedureSpecifiqueMachine(titreTypeId, demarcheTypeId), trad)
   }
 
-  override caminoXStateEventToEtapes(event: ProcedureSpecifiqueXStateEvent): (Omit<Etape, 'date' | 'titreTypeId' | 'demarcheTypeId'> & { mainStep: boolean })[] {
-    const dbEtat: DBEtat = trad[event.type].db
-
-    return Object.values(dbEtat).map(({ etapeTypeId, etapeStatutId }) => ({
-      etapeTypeId,
-      etapeStatutId,
-      concurrence: event.type === 'FAIRE_DEMANDE' ? event.concurrence : { amIFirst: true },
-      mainStep: trad[event.type].mainStep,
-    }))
-  }
-
   override eventFromEntry(eventFromEntry: ProcedureSpecifiqueXStateEvent['type'], etape: Etape): ProcedureSpecifiqueXStateEvent {
     switch (eventFromEntry) {
       case 'FAIRE_DEMANDE': {
-        return { type: eventFromEntry, concurrence: etape.concurrence ?? { amIFirst: true } }
+        if (isNullOrUndefined(etape.concurrence)) {
+          throw new Error('La concurrence est obligatoire pour faire la demande')
+        }
+        if (isNullOrUndefined(etape.hasTitreFrom)) {
+          throw new Error("L'attribut hasTitreFrom est obligatoire pour faire la demande")
+        }
+        return { type: eventFromEntry, concurrence: etape.concurrence, hasTitreFrom: etape.hasTitreFrom }
       }
       default:
         return super.eventFromEntry(eventFromEntry, etape)
@@ -118,11 +115,7 @@ export class ProcedureSpecifiqueMachine extends CaminoMachine<ProcedureSpecifiqu
   override toPotentialCaminoXStateEvent(event: ProcedureSpecifiqueXStateEvent['type'], date: CaminoDate): ProcedureSpecifiqueXStateEvent[] {
     switch (event) {
       case 'FAIRE_DEMANDE':
-        return [
-          { type: event, concurrence: { amIFirst: false, demarcheConcurrenteVisibilite: 'publique' } },
-          { type: event, concurrence: { amIFirst: false, demarcheConcurrenteVisibilite: 'confidentielle' } },
-          { type: event, concurrence: { amIFirst: true } },
-        ]
+        return [{ type: event, concurrence: { amIFirst: false, demarcheConcurrenteVisibilite: 'publique' }, hasTitreFrom: false }]
       case 'OUVRIR_ENQUETE_PUBLIQUE':
       case 'OUVRIR_PARTICIPATION_DU_PUBLIC':
         return [
@@ -147,6 +140,7 @@ export class ProcedureSpecifiqueMachine extends CaminoMachine<ProcedureSpecifiqu
 
 interface ProcedureSpecifiqueContext extends CaminoCommonContext {
   concurrence: 'inconnu' | { amIFirst: true } | { amIFirst: false; demarcheConcurrenteVisibilite: DemarcheVisibilite }
+  hasTitreFrom: 'inconnu' | boolean
 }
 const defaultDemarcheStatut = DemarchesStatutsIds.EnConstruction
 const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId) =>
@@ -155,12 +149,14 @@ const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: De
     guards: {
       isAxm: () => TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX === titreTypeId,
       isPerOuConcession: () => [TITRES_TYPES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES, TITRES_TYPES_TYPES_IDS.CONCESSION].includes(getTitreTypeType(titreTypeId)),
-      canHaveMiseEnConcurrence: () => {
+      canHaveMiseEnConcurrence: ({ context }) => {
         if (DEMARCHES_TYPES_IDS.ExtensionDePerimetre === demarcheTypeId) {
           return true
         } else if (DEMARCHES_TYPES_IDS.Octroi === demarcheTypeId) {
-          // FIXMACHINE sauf si concession suit à PER ou AXM suite à ARM
-          return true
+          if (context.hasTitreFrom === 'inconnu') {
+            throw new Error("hasTitreFrom n'est pas initialisé")
+          }
+          return !context.hasTitreFrom
         } else {
           return false
         }
@@ -195,6 +191,7 @@ const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: De
       demarcheStatut: defaultDemarcheStatut,
       visibilite: 'confidentielle',
       concurrence: 'inconnu',
+      hasTitreFrom: 'inconnu',
     },
     states: {
       demandeAFaire: {
@@ -204,6 +201,7 @@ const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: De
             actions: assign({
               demarcheStatut: DemarchesStatutsIds.EnInstruction,
               concurrence: ({ event }) => event.concurrence,
+              hasTitreFrom: ({ event }) => event.hasTitreFrom,
             }),
           },
         },

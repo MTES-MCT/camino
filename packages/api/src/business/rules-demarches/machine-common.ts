@@ -29,6 +29,7 @@ export interface Etape {
   paysId?: PaysId
   surface?: number
   concurrence?: Concurrence
+  hasTitreFrom?: boolean
 }
 
 export const globalGuards = {
@@ -64,6 +65,11 @@ export const titreEtapeForMachineValidator = z.object({
     .default(null),
   surface: km2Validator.nullable().optional().default(null),
   isBrouillon: etapeBrouillonValidator,
+  hasTitreFrom: z
+    .union([z.boolean(), z.literal('non-applicable')])
+    .nullable()
+    .optional()
+    .default(null),
 })
 
 export type TitreEtapeForMachine = z.infer<typeof titreEtapeForMachineValidator>
@@ -98,6 +104,9 @@ const toMachineEtape = (dbEtape: Omit<TitreEtapeForMachine, 'id' | 'ordre'>): Et
   }
   if (dbEtape.concurrence !== 'non-applicable') {
     machineEtape.concurrence = dbEtape.concurrence ?? undefined
+  }
+  if (dbEtape.hasTitreFrom !== 'non-applicable') {
+    machineEtape.hasTitreFrom = dbEtape.hasTitreFrom ?? undefined
   }
   if (isNotNullNorUndefined(dbEtape.contenu)) {
     machineEtape.contenu = dbEtape.contenu

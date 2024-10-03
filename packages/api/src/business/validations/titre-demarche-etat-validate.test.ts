@@ -1,6 +1,6 @@
 import { ITitre, ITitreEtape } from '../../types'
 
-import { etapesTypesPossibleACetteDateOuALaPlaceDeLEtape, titreDemarcheUpdatedEtatValidate } from './titre-demarche-etat-validate'
+import { getPossiblesEtapesTypes, titreDemarcheUpdatedEtatValidate } from './titre-demarche-etat-validate'
 import { newDemarcheId, newEtapeId } from '../../database/models/_format/id-create'
 import { EtapesTypesEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStatuts'
 import { describe, test, expect, vi } from 'vitest'
@@ -11,9 +11,11 @@ import { ArmOctMachine } from '../rules-demarches/arm/oct.machine'
 import { TitreEtapeForMachine } from '../rules-demarches/machine-common'
 import { communeIdValidator } from 'camino-common/src/static/communes'
 import { km2Validator } from 'camino-common/src/number'
+import { ProcedureSpecifiqueMachine } from '../rules-demarches/procedure-specifique/procedure-specifique.machine'
 
 console.warn = vi.fn()
-describe('teste titreDemarcheUpdatedEtatValidate', () => {
+
+describe('titreDemarcheUpdatedEtatValidate', () => {
   test('ajoute une étape à une démarche vide', () => {
     const valid = titreDemarcheUpdatedEtatValidate(
       'oct',
@@ -355,13 +357,26 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
   })
 })
 
-describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
+describe('getPossiblesEtapesTypes', () => {
+  test('peut créer une étape sur une procédure spécifique vide', () => {
+    expect(getPossiblesEtapesTypes(new ProcedureSpecifiqueMachine('cxm', 'oct'), 'cxm', 'oct', undefined, undefined, toCaminoDate('4000-02-01'), [])).toMatchInlineSnapshot(`
+      {
+        "mfr": {
+          "etapeStatutIds": [
+            "fai",
+          ],
+          "mainStep": true,
+        },
+      }
+    `)
+  })
   const etapes: TitreEtapeForMachine[] = [
     {
       id: newEtapeId('etapeId16'),
       typeId: 'sco',
       statutId: 'fai',
       concurrence: 'non-applicable',
+      hasTitreFrom: 'non-applicable',
       isBrouillon: ETAPE_IS_NOT_BROUILLON,
       ordre: 16,
       date: toCaminoDate('2020-08-17'),
@@ -374,6 +389,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       typeId: 'mfr',
       statutId: 'fai',
       concurrence: 'non-applicable',
+      hasTitreFrom: 'non-applicable',
       isBrouillon: ETAPE_IS_NOT_BROUILLON,
       ordre: 1,
       date: toCaminoDate('2019-09-19'),
@@ -386,6 +402,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       typeId: 'mcp',
       statutId: 'com',
       concurrence: 'non-applicable',
+      hasTitreFrom: 'non-applicable',
       isBrouillon: ETAPE_IS_NOT_BROUILLON,
       ordre: 5,
       date: toCaminoDate('2019-11-27'),
@@ -398,6 +415,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       typeId: 'asc',
       statutId: 'fai',
       concurrence: 'non-applicable',
+      hasTitreFrom: 'non-applicable',
       isBrouillon: ETAPE_IS_NOT_BROUILLON,
       ordre: 10,
       date: toCaminoDate('2019-12-04'),
@@ -410,6 +428,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       typeId: 'pfc',
       statutId: 'fai',
       concurrence: 'non-applicable',
+      hasTitreFrom: 'non-applicable',
       isBrouillon: ETAPE_IS_NOT_BROUILLON,
       ordre: 14,
       date: toCaminoDate('2020-05-22'),
@@ -422,6 +441,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       typeId: 'mcr',
       statutId: 'fav',
       concurrence: 'non-applicable',
+      hasTitreFrom: 'non-applicable',
       isBrouillon: ETAPE_IS_NOT_BROUILLON,
       ordre: 8,
       date: toCaminoDate('2019-12-04'),
@@ -434,6 +454,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       typeId: 'pfd',
       statutId: 'fai',
       concurrence: 'non-applicable',
+      hasTitreFrom: 'non-applicable',
       isBrouillon: ETAPE_IS_NOT_BROUILLON,
       ordre: 4,
       date: toCaminoDate('2019-11-20'),
@@ -446,6 +467,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       typeId: 'vfc',
       statutId: 'fai',
       concurrence: 'non-applicable',
+      hasTitreFrom: 'non-applicable',
       isBrouillon: ETAPE_IS_NOT_BROUILLON,
       ordre: 15,
       date: toCaminoDate('2020-05-22'),
@@ -458,6 +480,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       typeId: 'mnb',
       statutId: 'fai',
       concurrence: 'non-applicable',
+      hasTitreFrom: 'non-applicable',
       isBrouillon: ETAPE_IS_NOT_BROUILLON,
       ordre: 13,
       date: toCaminoDate('2020-05-18'),
@@ -470,6 +493,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       typeId: 'aca',
       statutId: 'fav',
       concurrence: 'non-applicable',
+      hasTitreFrom: 'non-applicable',
       isBrouillon: ETAPE_IS_NOT_BROUILLON,
       ordre: 12,
       date: toCaminoDate('2020-05-13'),
@@ -482,6 +506,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       typeId: 'rde',
       statutId: 'fav',
       concurrence: 'non-applicable',
+      hasTitreFrom: 'non-applicable',
       isBrouillon: ETAPE_IS_NOT_BROUILLON,
       ordre: 6,
       date: toCaminoDate('2019-12-04'),
@@ -494,6 +519,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       typeId: 'mdp',
       statutId: 'fai',
       concurrence: 'non-applicable',
+      hasTitreFrom: 'non-applicable',
       isBrouillon: ETAPE_IS_NOT_BROUILLON,
       ordre: 2,
       date: toCaminoDate('2019-09-20'),
@@ -506,6 +532,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       typeId: 'vfd',
       statutId: 'fai',
       concurrence: 'non-applicable',
+      hasTitreFrom: 'non-applicable',
       isBrouillon: ETAPE_IS_NOT_BROUILLON,
       ordre: 7,
       date: toCaminoDate('2019-12-04'),
@@ -518,6 +545,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       typeId: 'sca',
       statutId: 'fai',
       concurrence: 'non-applicable',
+      hasTitreFrom: 'non-applicable',
       isBrouillon: ETAPE_IS_NOT_BROUILLON,
       ordre: 11,
       date: toCaminoDate('2020-05-04'),
@@ -530,6 +558,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       typeId: 'dae',
       statutId: 'exe',
       concurrence: 'non-applicable',
+      hasTitreFrom: 'non-applicable',
       isBrouillon: ETAPE_IS_NOT_BROUILLON,
       ordre: 3,
       date: toCaminoDate('2019-10-11'),
@@ -542,6 +571,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       typeId: 'aco',
       statutId: 'fai',
       concurrence: 'non-applicable',
+      hasTitreFrom: 'non-applicable',
       isBrouillon: ETAPE_IS_NOT_BROUILLON,
       ordre: 17,
       date: toCaminoDate('2022-05-05'),
@@ -553,7 +583,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
 
   const machine = new ArmOctMachine()
   test('modifie une étape existante', () => {
-    const tested = etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(machine, etapes, 'etapeId3', toCaminoDate('2019-10-11'))
+    const tested = getPossiblesEtapesTypes(machine, 'arm', 'oct', undefined, etapeIdValidator.parse('etapeId3'), toCaminoDate('2019-10-11'), etapes)
     expect(Object.keys(tested)).toHaveLength(1)
     expect(tested.dae).toMatchInlineSnapshot(`
       {
@@ -567,7 +597,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
 
   test('modifie une étape existante à la même date devrait permettre de recréer la même étape', () => {
     for (const etape of etapes) {
-      const etapesTypesPossibles = etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(machine, etapes, etape.id, etape.date)
+      const etapesTypesPossibles = getPossiblesEtapesTypes(machine, 'arm', 'oct', undefined, etape.id, etape.date, etapes)
       if (Object.keys(etapesTypesPossibles).length === 0) {
         console.error(`pas d'étapes possibles à l'étape ${JSON.stringify(etape)}. Devrait contenir AU MOINS la même étape`)
       }
@@ -577,7 +607,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
   })
 
   test('ajoute une nouvelle étape à la fin', () => {
-    const tested = etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(machine, etapes, null, toCaminoDate('2022-05-06'))
+    const tested = getPossiblesEtapesTypes(machine, 'arm', 'oct', undefined, undefined, toCaminoDate('2022-05-06'), etapes)
     expect(Object.keys(tested)).toHaveLength(1)
     expect(tested.mnv).toMatchInlineSnapshot(`
       {
@@ -590,7 +620,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
   })
 
   test('ajoute une nouvelle étape en plein milieu', () => {
-    const tested = etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(machine, etapes, null, toCaminoDate('2019-12-04'))
+    const tested = getPossiblesEtapesTypes(machine, 'arm', 'oct', undefined, undefined, toCaminoDate('2019-12-04'), etapes)
     expect(Object.keys(tested).toSorted()).toStrictEqual(['ede', 'edm', 'mod'])
   })
 
@@ -602,6 +632,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
         typeId: 'mfr',
         statutId: 'fai',
         concurrence: 'non-applicable',
+        hasTitreFrom: 'non-applicable',
         isBrouillon: ETAPE_IS_NOT_BROUILLON,
         date: toCaminoDate('2022-05-16'),
         contenu: { arm: { mecanise: true, franchissements: 2 } },
@@ -614,6 +645,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
         typeId: 'mdp',
         statutId: 'fai',
         concurrence: 'non-applicable',
+        hasTitreFrom: 'non-applicable',
         isBrouillon: ETAPE_IS_NOT_BROUILLON,
         date: toCaminoDate('2022-05-17'),
         contenu: null,
@@ -622,7 +654,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       },
     ]
 
-    const tested = etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(machine, etapes, null, toCaminoDate('2019-12-04'))
+    const tested = getPossiblesEtapesTypes(machine, 'arm', 'oct', undefined, undefined, toCaminoDate('2019-12-04'), etapes)
     expect(Object.keys(tested).toSorted()).toStrictEqual(['dae', 'pfd', 'rde'])
   })
 
@@ -634,6 +666,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
         typeId: 'mfr',
         statutId: 'fai',
         concurrence: 'non-applicable',
+        hasTitreFrom: 'non-applicable',
         isBrouillon: ETAPE_IS_NOT_BROUILLON,
         date: toCaminoDate('2022-05-16'),
         contenu: { arm: { mecanise: false } },
@@ -646,6 +679,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
         typeId: 'mdp',
         statutId: 'fai',
         concurrence: 'non-applicable',
+        hasTitreFrom: 'non-applicable',
         isBrouillon: ETAPE_IS_NOT_BROUILLON,
         date: toCaminoDate('2022-05-17'),
         contenu: null,
@@ -654,7 +688,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       },
     ]
 
-    const tested = etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(machine, etapes, null, toCaminoDate('2019-12-04'))
+    const tested = getPossiblesEtapesTypes(machine, 'arm', 'oct', undefined, undefined, toCaminoDate('2019-12-04'), etapes)
     expect(Object.keys(tested)).toStrictEqual(['pfd'])
   })
 
@@ -667,6 +701,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
         typeId: 'mfr',
         statutId: 'fai',
         concurrence: 'non-applicable',
+        hasTitreFrom: 'non-applicable',
         isBrouillon: ETAPE_IS_NOT_BROUILLON,
         contenu: {
           arm: {
@@ -684,6 +719,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
         typeId: 'rcm',
         statutId: 'fai',
         concurrence: 'non-applicable',
+        hasTitreFrom: 'non-applicable',
         isBrouillon: ETAPE_IS_NOT_BROUILLON,
         contenu: {
           arm: {
@@ -701,6 +737,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
         typeId: 'mcp',
         statutId: 'inc',
         concurrence: 'non-applicable',
+        hasTitreFrom: 'non-applicable',
         isBrouillon: ETAPE_IS_NOT_BROUILLON,
         ordre: 5,
         contenu: null,
@@ -713,6 +750,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
         typeId: 'mcp',
         statutId: 'com',
         concurrence: 'non-applicable',
+        hasTitreFrom: 'non-applicable',
         isBrouillon: ETAPE_IS_NOT_BROUILLON,
         ordre: 8,
         contenu: null,
@@ -725,6 +763,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
         typeId: 'dae',
         statutId: 'exe',
         concurrence: 'non-applicable',
+        hasTitreFrom: 'non-applicable',
         isBrouillon: ETAPE_IS_NOT_BROUILLON,
 
         ordre: 1,
@@ -738,6 +777,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
         typeId: 'mcr',
         statutId: 'fav',
         concurrence: 'non-applicable',
+        hasTitreFrom: 'non-applicable',
         isBrouillon: ETAPE_IS_NOT_BROUILLON,
         contenu: null,
         ordre: 10,
@@ -750,6 +790,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
         typeId: 'mcb',
         statutId: 'fai',
         concurrence: 'non-applicable',
+        hasTitreFrom: 'non-applicable',
         isBrouillon: ETAPE_IS_NOT_BROUILLON,
 
         ordre: 13,
@@ -763,6 +804,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
         typeId: 'edm',
         statutId: 'fav',
         concurrence: 'non-applicable',
+        hasTitreFrom: 'non-applicable',
         isBrouillon: ETAPE_IS_NOT_BROUILLON,
         ordre: 12,
         contenu: null,
@@ -775,6 +817,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
         typeId: 'vfd',
         statutId: 'fai',
         concurrence: 'non-applicable',
+        hasTitreFrom: 'non-applicable',
         isBrouillon: ETAPE_IS_NOT_BROUILLON,
         ordre: 9,
         contenu: null,
@@ -787,6 +830,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
         typeId: 'pfd',
         statutId: 'fai',
         concurrence: 'non-applicable',
+        hasTitreFrom: 'non-applicable',
         isBrouillon: ETAPE_IS_NOT_BROUILLON,
         ordre: 2,
         contenu: null,
@@ -799,6 +843,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
         typeId: 'mdp',
         statutId: 'fai',
         concurrence: 'non-applicable',
+        hasTitreFrom: 'non-applicable',
         isBrouillon: ETAPE_IS_NOT_BROUILLON,
         ordre: 4,
         contenu: null,
@@ -811,6 +856,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
         typeId: 'mcm',
         statutId: 'fai',
         concurrence: 'non-applicable',
+        hasTitreFrom: 'non-applicable',
         isBrouillon: ETAPE_IS_NOT_BROUILLON,
         ordre: 6,
         contenu: null,
@@ -819,7 +865,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       },
     ]
 
-    const tested = etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(machine, etapes, null, toCaminoDate('2022-07-01'))
+    const tested = getPossiblesEtapesTypes(machine, 'arm', 'oct', undefined, undefined, toCaminoDate('2022-07-01'), etapes)
     expect(Object.keys(tested).toSorted()).toStrictEqual(['asc', 'css', 'des', 'ede', 'mcb', 'mod', 'rcb', 'rde'])
     vi.resetAllMocks()
   })
@@ -830,6 +876,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
         typeId: 'mfr',
         statutId: 'fai',
         concurrence: 'non-applicable',
+        hasTitreFrom: 'non-applicable',
         isBrouillon: ETAPE_IS_NOT_BROUILLON,
         date: toCaminoDate('2022-06-23'),
         contenu: {
@@ -847,6 +894,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
         typeId: 'dae',
         statutId: 'exe',
         concurrence: 'non-applicable',
+        hasTitreFrom: 'non-applicable',
         isBrouillon: ETAPE_IS_NOT_BROUILLON,
         date: toCaminoDate('2021-06-22'),
         ordre: 1,
@@ -860,6 +908,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
         typeId: 'mdp',
         statutId: 'fai',
         concurrence: 'non-applicable',
+        hasTitreFrom: 'non-applicable',
         isBrouillon: ETAPE_IS_NOT_BROUILLON,
         date: toCaminoDate('2022-07-01'),
         ordre: 4,
@@ -873,6 +922,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
         typeId: 'pfd',
         statutId: 'fai',
         concurrence: 'non-applicable',
+        hasTitreFrom: 'non-applicable',
         isBrouillon: ETAPE_IS_NOT_BROUILLON,
         date: toCaminoDate('2021-07-05'),
         ordre: 2,
@@ -882,7 +932,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       },
     ]
 
-    const tested = etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(machine, etapes, null, toCaminoDate('2022-07-01'))
+    const tested = getPossiblesEtapesTypes(machine, 'arm', 'oct', undefined, undefined, toCaminoDate('2022-07-01'), etapes)
     expect(Object.keys(tested).toSorted()).toStrictEqual(['css', 'des', 'mcb', 'mcp', 'mod', 'rde'])
   })
 })

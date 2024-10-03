@@ -19,7 +19,11 @@ describe('vérifie l’arbre des procédures spécifique', () => {
   })
   test('demande irrecevable', async () => {
     const { service, dateFin, machine } = setDateAndOrderAndInterpretMachine(psPccOctMachine, '1999-04-14', [
-      ETES.demande.FAIT,
+      {
+        ...ETES.demande.FAIT,
+        concurrence: { amIFirst: true },
+        hasTitreFrom: false,
+      },
       ETES.depotDeLaDemande.FAIT,
       ETES.recevabiliteDeLaDemande.DEFAVORABLE,
       ETES.demandeDeComplements.FAIT,
@@ -32,7 +36,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
   })
   test('on peut notifier le demandeur apres une recevabilité favorable pour un PER ou une concession', () => {
     const { service, dateFin, machine } = setDateAndOrderAndInterpretMachine(psCxmOctMachine, '1999-04-14', [
-      { ...ETES.demande.FAIT, concurrence: { amIFirst: true } },
+      { ...ETES.demande.FAIT, concurrence: { amIFirst: true }, hasTitreFrom: false },
       ETES.depotDeLaDemande.FAIT,
       ETES.recevabiliteDeLaDemande.FAVORABLE,
       ETES.notificationAuDemandeur.FAIT,
@@ -52,7 +56,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
   //  })
   test('on ne peut plus rien faire pendant que la mise en concurrence est en cours', () => {
     const { service, dateFin, machine } = setDateAndOrderAndInterpretMachine(psCxmOctMachine, '1999-04-14', [
-      { ...ETES.demande.FAIT, concurrence: { amIFirst: true } },
+      { ...ETES.demande.FAIT, concurrence: { amIFirst: true }, hasTitreFrom: false },
       ETES.depotDeLaDemande.FAIT,
       ETES.recevabiliteDeLaDemande.FAVORABLE,
       ETES.avisDeMiseEnConcurrenceAuJORF.EN_COURS,
@@ -61,7 +65,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
   })
   test('on peut publier le résultat de la mise en concurrence, une fois celle-ci terminée', () => {
     const tree = getEventsTree(psCxmOctMachine, '1999-04-14', [
-      { ...ETES.demande.FAIT, concurrence: { amIFirst: true } },
+      { ...ETES.demande.FAIT, concurrence: { amIFirst: true }, hasTitreFrom: false },
       ETES.depotDeLaDemande.FAIT,
       ETES.recevabiliteDeLaDemande.FAVORABLE,
       ETES.avisDeMiseEnConcurrenceAuJORF.TERMINE,
@@ -87,7 +91,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
 
   test('on peut rejeter à la fin de la mise en concurrence', () => {
     const { service, dateFin, machine } = setDateAndOrderAndInterpretMachine(psCxmOctMachine, '1999-04-14', [
-      { ...ETES.demande.FAIT, concurrence: { amIFirst: true } },
+      { ...ETES.demande.FAIT, concurrence: { amIFirst: true }, hasTitreFrom: false },
       ETES.depotDeLaDemande.FAIT,
       ETES.recevabiliteDeLaDemande.FAVORABLE,
       ETES.avisDeMiseEnConcurrenceAuJORF.TERMINE,
@@ -98,20 +102,37 @@ describe('vérifie l’arbre des procédures spécifique', () => {
   })
   test.skip('on ne peut pas notifier le demandeur apres une recevabilité favorable pour pcc', () => {
     expect(() =>
-      setDateAndOrderAndInterpretMachine(psPccOctMachine, '1999-04-14', [ETES.demande.FAIT, ETES.depotDeLaDemande.FAIT, ETES.recevabiliteDeLaDemande.FAVORABLE, ETES.notificationAuDemandeur.FAIT])
+      setDateAndOrderAndInterpretMachine(psPccOctMachine, '1999-04-14', [
+        {
+          ...ETES.demande.FAIT,
+          concurrence: { amIFirst: true },
+          hasTitreFrom: false,
+        },
+        ETES.depotDeLaDemande.FAIT,
+        ETES.recevabiliteDeLaDemande.FAVORABLE,
+        ETES.notificationAuDemandeur.FAIT,
+      ])
     ).toThrowErrorMatchingInlineSnapshot(
       `[Error: Error: cannot execute step: '{"etapeTypeId":"mno","etapeStatutId":"fai","date":"1999-04-18"}' after '["mfr_fai","mdp_fai","mcr_fav"]'. The event {"type":"NOTIFIER_DEMANDEUR","date":"1999-04-18","status":"fai"} should be one of '']`
     )
   })
   test("après la recevabilité favorable la démarche reste confidentielle si il n'y a pas de mise en concurrence", () => {
-    const { service, dateFin, machine } = setDateAndOrderAndInterpretMachine(psPrmProMachine, '1999-04-14', [ETES.demande.FAIT, ETES.depotDeLaDemande.FAIT, ETES.recevabiliteDeLaDemande.FAVORABLE])
+    const { service, dateFin, machine } = setDateAndOrderAndInterpretMachine(psPrmProMachine, '1999-04-14', [
+      {
+        ...ETES.demande.FAIT,
+        concurrence: { amIFirst: true },
+        hasTitreFrom: false,
+      },
+      ETES.depotDeLaDemande.FAIT,
+      ETES.recevabiliteDeLaDemande.FAVORABLE,
+    ])
 
     expect(service).canOnlyTransitionTo({ machine, date: dateFin }, ['RENDRE_AVIS_CGE_IGEDD'])
     expect(service.getSnapshot().context.visibilite).toBe('confidentielle')
   })
   test('après la recevabilité favorable la démarche reste confidentielle si il y a une mise en concurrence', () => {
     const { service, dateFin, machine } = setDateAndOrderAndInterpretMachine(psCxmOctMachine, '1999-04-14', [
-      { ...ETES.demande.FAIT, concurrence: { amIFirst: true } },
+      { ...ETES.demande.FAIT, concurrence: { amIFirst: true }, hasTitreFrom: false },
       ETES.depotDeLaDemande.FAIT,
       ETES.recevabiliteDeLaDemande.FAVORABLE,
     ])
@@ -122,7 +143,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
 
   test('après la recevabilité la démarche devient publique si la démarche concurrente est visible', () => {
     const { service, dateFin, machine } = setDateAndOrderAndInterpretMachine(psCxmOctMachine, '1999-04-14', [
-      { ...ETES.demande.FAIT, concurrence: { amIFirst: false, demarcheConcurrenteVisibilite: 'publique' } },
+      { ...ETES.demande.FAIT, concurrence: { amIFirst: false, demarcheConcurrenteVisibilite: 'publique' }, hasTitreFrom: false },
       ETES.depotDeLaDemande.FAIT,
       ETES.recevabiliteDeLaDemande.FAVORABLE,
     ])
@@ -133,7 +154,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
 
   test('après la recevabilité la démarche reste confidentielle si la démarche concurrente est confidentielle', () => {
     const { service, dateFin, machine } = setDateAndOrderAndInterpretMachine(psCxmOctMachine, '1999-04-14', [
-      { ...ETES.demande.FAIT, concurrence: { amIFirst: false, demarcheConcurrenteVisibilite: 'confidentielle' } },
+      { ...ETES.demande.FAIT, concurrence: { amIFirst: false, demarcheConcurrenteVisibilite: 'confidentielle' }, hasTitreFrom: false },
       ETES.depotDeLaDemande.FAIT,
       ETES.recevabiliteDeLaDemande.FAVORABLE,
     ])
@@ -143,7 +164,11 @@ describe('vérifie l’arbre des procédures spécifique', () => {
   })
   test("ne peut pas rendre la décision de l'administration si la participation du public n'est pas terminée", () => {
     const { service, dateFin, machine } = setDateAndOrderAndInterpretMachine(psArmProMachine, '1999-04-14', [
-      ETES.demande.FAIT,
+      {
+        ...ETES.demande.FAIT,
+        concurrence: { amIFirst: true },
+        hasTitreFrom: false,
+      },
       ETES.depotDeLaDemande.FAIT,
       ETES.recevabiliteDeLaDemande.FAVORABLE,
       ETES.avisDesCollectivites.FAIT,
@@ -156,9 +181,40 @@ describe('vérifie l’arbre des procédures spécifique', () => {
     expect(service.getSnapshot().context.visibilite).toBe('publique')
   })
 
+  test('ne peut pas faire une mise en concurrence si on a un titre from', () => {
+    const { service, dateFin, machine } = setDateAndOrderAndInterpretMachine(psCxmOctMachine, '1999-04-14', [
+      {
+        ...ETES.demande.FAIT,
+        concurrence: { amIFirst: true },
+        hasTitreFrom: true,
+      },
+      ETES.depotDeLaDemande.FAIT,
+      ETES.recevabiliteDeLaDemande.FAVORABLE,
+    ])
+
+    expect(service).canOnlyTransitionTo({ machine, date: dateFin }, ['RENDRE_AVIS_CGE_IGEDD'])
+  })
+
+  test("doit faire une mise en concurrence si on n'a pas de titre from", () => {
+    const { service, dateFin, machine } = setDateAndOrderAndInterpretMachine(psCxmOctMachine, '1999-04-14', [
+      {
+        ...ETES.demande.FAIT,
+        concurrence: { amIFirst: true },
+        hasTitreFrom: false,
+      },
+      ETES.depotDeLaDemande.FAIT,
+      ETES.recevabiliteDeLaDemande.FAVORABLE,
+    ])
+
+    expect(service).canOnlyTransitionTo({ machine, date: dateFin }, ['FAIRE_MISE_EN_CONCURRENCE', 'NOTIFIER_DEMANDEUR'])
+  })
   test("réalise une demande de prolongation d'ARM complète", async () => {
     const { service, dateFin, machine } = setDateAndOrderAndInterpretMachine(psArmProMachine, '1999-04-14', [
-      ETES.demande.FAIT,
+      {
+        ...ETES.demande.FAIT,
+        concurrence: { amIFirst: true },
+        hasTitreFrom: false,
+      },
       ETES.depotDeLaDemande.FAIT,
       ETES.recevabiliteDeLaDemande.FAVORABLE,
       ETES.avisDesCollectivites.FAIT,
@@ -176,7 +232,11 @@ describe('vérifie l’arbre des procédures spécifique', () => {
   })
   test("réalise une demande de prolongation d'ARM rejetée", () => {
     const { service, dateFin } = setDateAndOrderAndInterpretMachine(psArmProMachine, '1999-04-14', [
-      ETES.demande.FAIT,
+      {
+        ...ETES.demande.FAIT,
+        concurrence: { amIFirst: true },
+        hasTitreFrom: false,
+      },
       ETES.depotDeLaDemande.FAIT,
       ETES.recevabiliteDeLaDemande.FAVORABLE,
       ETES.avisDesCollectivites.FAIT,
@@ -191,7 +251,11 @@ describe('vérifie l’arbre des procédures spécifique', () => {
   })
   test("réalise une demande de prolongation d'ARM rejetée puis une notification au demandeur", () => {
     const { service, dateFin, machine } = setDateAndOrderAndInterpretMachine(psArmProMachine, '1999-04-14', [
-      ETES.demande.FAIT,
+      {
+        ...ETES.demande.FAIT,
+        concurrence: { amIFirst: true },
+        hasTitreFrom: false,
+      },
       ETES.depotDeLaDemande.FAIT,
       ETES.recevabiliteDeLaDemande.FAVORABLE,
       ETES.avisDesCollectivites.FAIT,
@@ -209,7 +273,11 @@ describe('vérifie l’arbre des procédures spécifique', () => {
 
   test("réalise une demande de prolongation d'ARM rejetée suite à une décision implicite", () => {
     const { service, dateFin, machine } = setDateAndOrderAndInterpretMachine(psArmProMachine, '1999-04-14', [
-      ETES.demande.FAIT,
+      {
+        ...ETES.demande.FAIT,
+        concurrence: { amIFirst: true },
+        hasTitreFrom: false,
+      },
       ETES.depotDeLaDemande.FAIT,
       ETES.recevabiliteDeLaDemande.FAVORABLE,
       ETES.avisDesCollectivites.FAIT,
@@ -226,7 +294,11 @@ describe('vérifie l’arbre des procédures spécifique', () => {
 
   test("réalise une demande de prolongation d'AXM complète", () => {
     const result = getEventsTree(psAxmProMachine, '1999-04-14', [
-      ETES.demande.FAIT,
+      {
+        ...ETES.demande.FAIT,
+        concurrence: { amIFirst: true },
+        hasTitreFrom: false,
+      },
       ETES.depotDeLaDemande.FAIT,
       ETES.recevabiliteDeLaDemande.FAVORABLE,
       ETES.avisDesCollectivites.FAIT,
@@ -259,7 +331,11 @@ describe('vérifie l’arbre des procédures spécifique', () => {
 
   test("vérifie l'arbre pour la prolongation d'ARM", () => {
     const result = getEventsTree(psArmProMachine, '1999-04-14', [
-      ETES.demande.FAIT,
+      {
+        ...ETES.demande.FAIT,
+        concurrence: { amIFirst: true },
+        hasTitreFrom: false,
+      },
       ETES.depotDeLaDemande.FAIT,
       ETES.recevabiliteDeLaDemande.FAVORABLE,
       ETES.avisDesCollectivites.FAIT,

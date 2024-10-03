@@ -35,6 +35,7 @@ const getEtapesByDemarcheValidator = z.object({
   surface: km2Validator.nullable(),
   type_id: etapeTypeIdValidator.nullable(),
   is_brouillon: etapeBrouillonValidator.nullable(),
+  has_titre_from: z.boolean(),
 })
 
 export const getDemarches = async (
@@ -100,6 +101,7 @@ export const getDemarches = async (
               ? { amIFirst: false, demarcheConcurrenteVisibilite: row.demarche_concurrente_public_lecture === true ? 'publique' : 'confidentielle' }
               : { amIFirst: true }
             : 'non-applicable',
+        hasTitreFrom: row.has_titre_from,
       })
     }
 
@@ -125,12 +127,14 @@ SELECT
     demarche.type_id as demarche_type_id,
     demarche.statut_id as demarche_statut_id,
     etape.communes,
-    demarche_concurrente.public_lecture as demarche_concurrente_public_lecture
+    demarche_concurrente.public_lecture as demarche_concurrente_public_lecture,
+    tt is not null as has_titre_from
 from
     titres_demarches demarche
     left join titres_etapes etape on (etape.titre_demarche_id = demarche.id
             and etape.archive is false)
     join titres titre on demarche.titre_id = titre.id
+    left join titres__titres tt on tt.titre_to_id = titre.id
     left join titres_demarches demarche_concurrente on demarche_concurrente.id = etape.demarche_id_en_concurrence
 where
     demarche.archive = false

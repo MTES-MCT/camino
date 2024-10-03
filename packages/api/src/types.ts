@@ -258,6 +258,7 @@ type ITitreEtape = {
   heritageContenu?: IHeritageContenu | null
   note?: EtapeNote
   concurrence?: TitreEtapeForMachine['concurrence']
+  hasTitreFrom?: TitreEtapeForMachine['hasTitreFrom']
 } & Partial<ITitreEtapePerimetre>
 
 interface ITitreEtapeFiltre {
