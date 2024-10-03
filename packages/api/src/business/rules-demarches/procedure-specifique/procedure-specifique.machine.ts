@@ -1,6 +1,6 @@
-import { and, assign, fromPromise, not, or, setup } from 'xstate'
+import { and, assign, not, or, setup } from 'xstate'
 import { CaminoMachine } from '../machine-helper'
-import { CaminoCommonContext, DBEtat, globalGuards } from '../machine-common'
+import { CaminoCommonContext, Concurrence, DBEtat, DemarcheVisibilite, Etape, globalGuards } from '../machine-common'
 import { EtapesTypesEtapesStatuts as ETES } from 'camino-common/src/static/etapesTypesEtapesStatuts'
 import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts'
 import { TITRES_TYPES_IDS, TitreTypeId, getTitreTypeType } from 'camino-common/src/static/titresTypes'
@@ -27,8 +27,12 @@ type FaireMiseEnConcurrence = {
   type: 'FAIRE_MISE_EN_CONCURRENCE'
 }
 
+type FaireDemande = {
+  concurrence: Concurrence
+  type: 'FAIRE_DEMANDE'
+}
 type ProcedureSpecifiqueXStateEvent =
-  | { type: 'FAIRE_DEMANDE' }
+  | FaireDemande
   | { type: 'DEPOSER_DEMANDE' }
   | { type: 'FAIRE_RECEVABILITE_FAVORABLE' }
   | { type: 'FAIRE_RECEVABILITE_DEFAVORABLE' }
@@ -36,6 +40,8 @@ type ProcedureSpecifiqueXStateEvent =
   | { type: 'RECEVOIR_COMPLEMENTS' }
   | { type: 'FAIRE_DECLARATION_IRRECEVABILITE' }
   | FaireMiseEnConcurrence
+  | { type: 'RENDRE_RESULTAT_MISE_EN_CONCURRENCE_ACCEPTEE' }
+  | { type: 'RENDRE_RESULTAT_MISE_EN_CONCURRENCE_REJETEE' }
   | { type: 'NOTIFIER_DEMANDEUR' }
   | { type: 'RENDRE_AVIS_CGE_IGEDD' }
   | { type: 'FAIRE_LETTRE_SAISINE_PREFET' }
@@ -63,6 +69,8 @@ const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
   RECEVOIR_COMPLEMENTS: { db: ETES.receptionDeComplements, mainStep: false },
   FAIRE_DECLARATION_IRRECEVABILITE: { db: ETES.declarationDIrrecevabilite, mainStep: false },
   FAIRE_MISE_EN_CONCURRENCE: { db: ETES.avisDeMiseEnConcurrenceAuJORF, mainStep: true },
+  RENDRE_RESULTAT_MISE_EN_CONCURRENCE_ACCEPTEE: { db: { ACCEPTE: ETES.resultatMiseEnConcurrence.ACCEPTE }, mainStep: true },
+  RENDRE_RESULTAT_MISE_EN_CONCURRENCE_REJETEE: { db: { REJETE: ETES.resultatMiseEnConcurrence.REJETE }, mainStep: true },
   NOTIFIER_DEMANDEUR: { db: ETES.notificationAuDemandeur, mainStep: false },
   RENDRE_AVIS_CGE_IGEDD: { db: ETES.avisDuConseilGeneralDeLeconomie_CGE_, mainStep: true },
   FAIRE_LETTRE_SAISINE_PREFET: { db: ETES.saisineDuPrefet, mainStep: true },
@@ -86,8 +94,35 @@ export class ProcedureSpecifiqueMachine extends CaminoMachine<ProcedureSpecifiqu
     super(procedureSpecifiqueMachine(titreTypeId, demarcheTypeId), trad)
   }
 
+  override caminoXStateEventToEtapes(event: ProcedureSpecifiqueXStateEvent): (Omit<Etape, 'date' | 'titreTypeId' | 'demarcheTypeId'> & { mainStep: boolean })[] {
+    const dbEtat: DBEtat = trad[event.type].db
+
+    return Object.values(dbEtat).map(({ etapeTypeId, etapeStatutId }) => ({
+      etapeTypeId,
+      etapeStatutId,
+      concurrence: event.type === 'FAIRE_DEMANDE' ? event.concurrence : { amIFirst: true },
+      mainStep: trad[event.type].mainStep,
+    }))
+  }
+
+  override eventFromEntry(eventFromEntry: ProcedureSpecifiqueXStateEvent['type'], etape: Etape): ProcedureSpecifiqueXStateEvent {
+    switch (eventFromEntry) {
+      case 'FAIRE_DEMANDE': {
+        return { type: eventFromEntry, concurrence: etape.concurrence ?? { amIFirst: true } }
+      }
+      default:
+        return super.eventFromEntry(eventFromEntry, etape)
+    }
+  }
+
   override toPotentialCaminoXStateEvent(event: ProcedureSpecifiqueXStateEvent['type'], date: CaminoDate): ProcedureSpecifiqueXStateEvent[] {
     switch (event) {
+      case 'FAIRE_DEMANDE':
+        return [
+          { type: event, concurrence: { amIFirst: false, demarcheConcurrenteVisibilite: 'publique' } },
+          { type: event, concurrence: { amIFirst: false, demarcheConcurrenteVisibilite: 'confidentielle' } },
+          { type: event, concurrence: { amIFirst: true } },
+        ]
       case 'OUVRIR_ENQUETE_PUBLIQUE':
       case 'OUVRIR_PARTICIPATION_DU_PUBLIC':
         return [
@@ -110,25 +145,32 @@ export class ProcedureSpecifiqueMachine extends CaminoMachine<ProcedureSpecifiqu
   }
 }
 
-interface ProcedureSpecifiqueContext extends CaminoCommonContext {}
+interface ProcedureSpecifiqueContext extends CaminoCommonContext {
+  concurrence: 'inconnu' | { amIFirst: true } | { amIFirst: false; demarcheConcurrenteVisibilite: DemarcheVisibilite }
+}
 const defaultDemarcheStatut = DemarchesStatutsIds.EnConstruction
 const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId) =>
   setup({
-    actors: {
-      toto: fromPromise(() => {
-        return Promise.resolve(true)
-      }),
-    },
-    types: {} as { context: CaminoCommonContext; events: ProcedureSpecifiqueXStateEvent },
+    types: {} as { context: ProcedureSpecifiqueContext; events: ProcedureSpecifiqueXStateEvent },
     guards: {
       isAxm: () => TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX === titreTypeId,
       isPerOuConcession: () => [TITRES_TYPES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES, TITRES_TYPES_TYPES_IDS.CONCESSION].includes(getTitreTypeType(titreTypeId)),
-      // FIXMACHINE la condition a changé
-      canHaveMiseEnConcurrence: () =>
-        [DEMARCHES_TYPES_IDS.Octroi, DEMARCHES_TYPES_IDS.ExtensionDePerimetre].includes(demarcheTypeId) ||
-        (isDemarcheTypeProlongations(demarcheTypeId) && getTitreTypeType(titreTypeId) === TITRES_TYPES_TYPES_IDS.CONCESSION),
-      //FIXMACHINE
-      isPremiereDemandePourMiseEnConcurrence: () => true,
+      canHaveMiseEnConcurrence: () => {
+        if (DEMARCHES_TYPES_IDS.ExtensionDePerimetre === demarcheTypeId) {
+          return true
+        } else if (DEMARCHES_TYPES_IDS.Octroi === demarcheTypeId) {
+          // FIXMACHINE sauf si concession suit à PER ou AXM suite à ARM
+          return true
+        } else {
+          return false
+        }
+      },
+      isPremiereDemandePourMiseEnConcurrence: ({ context }) => {
+        if (context.concurrence === 'inconnu') {
+          throw new Error("concurrence n'est pas initialisé")
+        }
+        return context.concurrence.amIFirst
+      },
       isAxmOuAr: () => TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX === titreTypeId || TITRES_TYPES_TYPES_IDS.AUTORISATION_DE_RECHERCHE === getTitreTypeType(titreTypeId),
       // FIXMACHINE à vérifier et à tester
       isEnquetePubliqueRequired: ({ event }) =>
@@ -152,7 +194,7 @@ const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: De
     context: {
       demarcheStatut: defaultDemarcheStatut,
       visibilite: 'confidentielle',
-      asyncTasks: new Set(),
+      concurrence: 'inconnu',
     },
     states: {
       demandeAFaire: {
@@ -161,6 +203,7 @@ const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: De
             target: 'depotDeLaDemandeAFaire',
             actions: assign({
               demarcheStatut: DemarchesStatutsIds.EnInstruction,
+              concurrence: ({ event }) => event.concurrence,
             }),
           },
         },
@@ -208,12 +251,15 @@ const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: De
       recevabiliteFavorableFaite: {
         always: [
           {
-            target: 'avisCollectivitesEtServicesEtCommissionsAFaireMachine',
-            guard: and([not('canHaveMiseEnConcurrence'), 'isAxmOuAr']),
+            target: 'avisCGE_IGEDD_AFaire',
+            guard: and([not('canHaveMiseEnConcurrence')]),
           },
           {
             target: 'resultatMiseEnConcurrenceAFaire',
             guard: and(['canHaveMiseEnConcurrence', not('isPremiereDemandePourMiseEnConcurrence')]),
+            actions: assign({
+              visibilite: ({ context }) => ('inconnu' !== context.concurrence && !context.concurrence.amIFirst ? context.concurrence.demarcheConcurrenteVisibilite : context.visibilite),
+            }),
           },
         ],
         on: {
@@ -229,11 +275,7 @@ const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: De
               actions: assign({ visibilite: 'publique' }),
             },
           ],
-          RENDRE_AVIS_CGE_IGEDD: {
-            // FIXMACHINE ajouter la demande de modification de l'aes
-            target: 'notificationAuDemandeurAFaire',
-            guard: and([not('canHaveMiseEnConcurrence'), not('isAxmOuAr')]),
-          },
+          // FIXMACHINE à mettre autre part
           NOTIFIER_DEMANDEUR: {
             target: 'recevabiliteFavorableFaite',
             guard: 'isPerOuConcession',
@@ -246,7 +288,24 @@ const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: De
       },
       resultatMiseEnConcurrenceAFaire: {
         on: {
-          //FIXMACHINE
+          RENDRE_RESULTAT_MISE_EN_CONCURRENCE_ACCEPTEE: 'avisCGE_IGEDD_AFaire',
+          RENDRE_RESULTAT_MISE_EN_CONCURRENCE_REJETEE: {
+            target: 'finDeMachine',
+            actions: assign({ demarcheStatut: DemarchesStatutsIds.Rejete }),
+          },
+        },
+      },
+      avisCGE_IGEDD_AFaire: {
+        always: {
+          target: 'avisCollectivitesEtServicesEtCommissionsAFaireMachine',
+          guard: 'isAxmOuAr',
+        },
+        on: {
+          RENDRE_AVIS_CGE_IGEDD: {
+            // FIXMACHINE ajouter la demande de modification de l'aes
+            target: 'notificationAuDemandeurAFaire',
+            guard: not('isAxmOuAr'),
+          },
         },
       },
       lettreDeSaisineDuPrefetOuReponseDuDemandeurAFaire: {
@@ -446,16 +505,22 @@ const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: De
     },
   })
 
-// FIXMACHINE questions POH
-// - L'irrecevabilité est faisable que après une demande de compléments ? -> OUI
-// - C'est une toute nouvelle étape « Information du préfet et des collectivités » ? Est-ce que ça serait pas une fusion d'anciennes étapes ? -> c'est tout nouveau
-// - Est-ce que l'information du préfet et des collectivités est faite 2 fois ? -> Non que une fois
-//
-// - « avisDuConseilGeneralDeLeconomie_CGE_ » ça passe pour l'étape « avis du CGE et de l'IGEDD » ? => Renommer l'étape
-// - l'étape « avis du CGE et de l'IGEDD » n'a pas de statut favorable / défavorable ? => C'est une étape d'avis donc c'est FAIT
-// - comment on peut avoir une mise en concurrence si la démarche n'est pas publique ? => Modif du logigramme, ça devient publique dés que la mise en concurrence est « en cours »
-// - Pour l'enquête et la participation du public, la démarche est déjà publique => Heuuuu non, modif à faire dans le logigramme
-//
-// - « Mesures de publicité» ça bloque tout ? -> NON
-//
-// - Pour la mise en concurrence, si ce n'est pas la demande initiale. L'utilisateur a le choix entre 2 « Notification au demandeur », sachant que celle après la mise en concurrence est beaucoup plus complète, on ne peut pas renommer cette dernière ?
+/**  FIXMACHINE questions POH
+- L'irrecevabilité est faisable que après une demande de compléments ? -> OUI
+- C'est une toute nouvelle étape « Information du préfet et des collectivités » ? Est-ce que ça serait pas une fusion d'anciennes étapes ? -> c'est tout nouveau
+- Est-ce que l'information du préfet et des collectivités est faite 2 fois ? -> Non que une fois
+- « avisDuConseilGeneralDeLeconomie_CGE_ » ça passe pour l'étape « avis du CGE et de l'IGEDD » ? => Renommer l'étape
+- l'étape « avis du CGE et de l'IGEDD » n'a pas de statut favorable / défavorable ? => C'est une étape d'avis donc c'est FAIT
+- comment on peut avoir une mise en concurrence si la démarche n'est pas publique ? => Modif du logigramme, ça devient publique dés que la mise en concurrence est « en cours »
+- Pour l'enquête et la participation du public, la démarche est déjà publique => Heuuuu non, modif à faire dans le logigramme
+- « Mesures de publicité» ça bloque tout ? -> NON
+- Pour la mise en concurrence, si ce n'est pas la demande initiale. L'utilisateur a le choix entre 2 « Notification au demandeur », sachant que celle après la mise en concurrence est beaucoup plus complète, on ne peut pas renommer cette dernière ?
+Si une démarche vient en concurrence d'une démarche existante, alors elle devient publique dès la recevabilité de la demande favorable ?
+Notification au demandeur après la mise en concurrence devrait être renommée "Conclusion suite à la mise en concurrence" ?
+Réecrire les conditions :
+ - "octrois et extension de périmètres et prolongations de concessions"
+ - "autres démarches et prolongations octroi de concessions suite à PER octroi d'AXM suite à ARM"
+En une seule condition
+- Pour « la mise en concurrence », c'est l'anf ?
+
+**/

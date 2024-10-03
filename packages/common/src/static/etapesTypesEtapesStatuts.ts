@@ -39,6 +39,10 @@ export const EtapesTypesEtapesStatuts = {
     EN_COURS: { etapeTypeId: 'anf', etapeStatutId: 'enc' },
     TERMINE: { etapeTypeId: 'anf', etapeStatutId: 'ter' },
   },
+  resultatMiseEnConcurrence: {
+    ACCEPTE: { etapeTypeId: 'rmc', etapeStatutId: 'acc' },
+    REJETE: { etapeTypeId: 'rmc', etapeStatutId: 'rej' },
+  },
 
   rapportEtAvisDeLaDREAL: {
     FAVORABLE: { etapeTypeId: 'apd', etapeStatutId: 'fav' },

@@ -15,6 +15,8 @@ import { DeepReadonly, NonEmptyArray, isNotNullNorUndefined, isNotNullNorUndefin
 import { ProcedureSimplifieeMachine } from './procedure-simplifiee/ps.machine'
 import { ProcedureSpecifiqueMachine } from './procedure-specifique/procedure-specifique.machine'
 
+export const DATE_DEBUT_PROCEDURE_SPECIFIQUE = toCaminoDate('4000-01-01')
+
 interface DemarcheDefinition {
   titreTypeIds: NonEmptyArray<TitreTypeId>
   demarcheTypeIds: DemarcheTypeId[]
@@ -133,7 +135,7 @@ export const demarchesDefinitions = [
       DEMARCHES_TYPES_IDS.Prorogation,
     ],
     machine: (titreTypeId, demarcheTypeId) => new ProcedureSpecifiqueMachine(titreTypeId, demarcheTypeId),
-    dateDebut: toCaminoDate('4000-01-01'),
+    dateDebut: DATE_DEBUT_PROCEDURE_SPECIFIQUE,
     demarcheIdExceptions: [],
   },
 ] as const satisfies readonly DemarcheDefinition[]

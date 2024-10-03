@@ -16,10 +16,14 @@ exports[`titresEtapesAreasUpdate > met à jour les communes, forêts et zone du 
         "surface": 292012,
       },
     ],
+    "concurrence": {
+      "amIFirst": true,
+    },
     "contenu": null,
     "date": "2022-03-09",
     "dateDebut": null,
     "dateFin": null,
+    "demarcheIdEnConcurrence": null,
     "duree": null,
     "forets": [
       "DBR",
@@ -154,10 +158,14 @@ exports[`titresEtapesAreasUpdate > met à jour les communes, forêts et zone du 
           "surface": 292012,
         },
       ],
+      "concurrence": {
+        "amIFirst": true,
+      },
       "contenu": null,
       "date": "2022-03-09",
       "dateDebut": null,
       "dateFin": null,
+      "demarcheIdEnConcurrence": null,
       "duree": null,
       "forets": [
         "DBR",

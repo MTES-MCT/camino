@@ -4,10 +4,10 @@ import { Definition } from '../definition'
 import { EtapeBrouillon } from '../etape'
 
 // prettier-ignore
-const IDS = ['abd', 'aca','aco','and','anf','def','dex','dim', 'dpu',  'dux','ihi', 'mfr','mod','mom','rca','rcb','rcd','rcm','rco','rcs','rie','rif','rim','rpu','sco','acg','acf','apd','ape','apo','app','apu','asl','cac','cim','css','dae','des','ede','edm','epu','esb','mca','mcb','mcd', 'mci','mcm','mco','mcp','mcr','mcs','mdp','mec','men','meo','mie','mif','mim','mna','mnb','mnc','mnd','mni','mno','mns','mnv','ncl','npp','pfc','pfd','ppu','pqr','rcg','rde','rpe','sas','sca','scg','spe','spo','spp','vfc','vfd','wab','wae','wao','war','wau','wco','wda','wdc','wdd','wde','wdm','wfa','wfd','wfo','wmt', 'wpa','wpb','wpc','wpo','wpp','wps','wrc','wre','wrt','wse','wtp', 'asc', 'adc'] as const
+const IDS = ['abd', 'aca','aco','and','anf','def','dex','dim', 'dpu',  'dux','ihi', 'mfr','mod','mom','rca','rcb','rcd','rcm','rco','rcs','rie','rif','rim','rmc', 'rpu','sco','acg','acf','apd','ape','apo','app','apu','asl','cac','cim','css','dae','des','ede','edm','epu','esb','mca','mcb','mcd', 'mci','mcm','mco','mcp','mcr','mcs','mdp','mec','men','meo','mie','mif','mim','mna','mnb','mnc','mnd','mni','mno','mns','mnv','ncl','npp','pfc','pfd','ppu','pqr','rcg','rde','rpe','sas','sca','scg','spe','spo','spp','vfc','vfd','wab','wae','wao','war','wau','wco','wda','wdc','wdd','wde','wdm','wfa','wfd','wfo','wmt', 'wpa','wpb','wpc','wpo','wpp','wps','wrc','wre','wrt','wse','wtp', 'asc', 'adc'] as const
 
 // prettier-ignore
-const FONDAMENTALES_IDS = ['abd', 'aca','aco','and','anf','def','dex','dim', 'dpu','dux','ihi', 'mfr','mod','mom','rca','rcb','rcd','rcm','rco','rcs','rie','rif','rim','rpu','sco'] as const satisfies Readonly<EtapeTypeIdFondamentaleArray>
+const FONDAMENTALES_IDS = ['abd', 'aca','aco','and','anf','def','dex','dim', 'dpu','dux','ihi', 'mfr','mod','mom','rca','rcb','rcd','rcm','rco','rcs','rie','rif','rim','rmc', 'rpu','sco'] as const satisfies Readonly<EtapeTypeIdFondamentaleArray>
 
 // prettier-ignore
 const NON_FONDAMENTALES_IDS = ['acg', 'acf','apd','ape','apo','app','apu','asl','cac','cim','css','dae','des','ede','edm','epu','esb','mca','mcb','mcd','mci', 'mcm','mco','mcp','mcr', 'mcs','mdp','mec','men','meo','mie','mif','mim','mna','mnb','mnc','mnd','mni','mno','mns','mnv','ncl','npp','pfc','pfd','ppu','pqr','rcg','rde','rpe','sas','sca','scg','spe','spo','spp','vfc','vfd','wab','wae','wao','war','wau','wco','wda','wdc','wdd','wde','wdm','wfa','wfd','wfo','wmt','wpa','wpb','wpc','wpo','wpp','wps','wrc','wre','wrt','wse','wtp', 'asc', 'adc'] as const satisfies Readonly<EtapeTypeIdNonFondamentale[]>
@@ -91,6 +91,7 @@ export const ETAPES_TYPES = {
   saisineDeLautoriteSignataire: 'sas',
   saisineDeLaCommissionDesAutorisationsDeRecherchesMinieres_CARM_: 'sca',
   saisineDuConseilGeneralDeLeconomie_CGE_: 'scg',
+  resultatMiseEnConcurrence: 'rmc',
   signatureDeLautorisationDeRechercheMiniere: 'sco',
   saisineDuConseilDEtat: 'spe',
   saisineDeLaCommissionDepartementaleDesMines_CDM_: 'spo',
@@ -1271,6 +1272,16 @@ export const EtapesTypes = {
     public_lecture: true,
     entreprises_lecture: true,
   },
+  rmc: {
+    id: 'rmc',
+    nom: 'Résultat de la mise en concurrence',
+    description: '',
+    fondamentale: true,
+    unique: false,
+    date_fin: null,
+    public_lecture: true,
+    entreprises_lecture: true,
+  },
 } as const satisfies { [key in EtapeTypeId]: EtapeType<key> }
 
 type IsFondamentale<T> = T extends EtapeTypeId ? ((typeof EtapesTypes)[T] extends { fondamentale: true } ? T : never) : never
@@ -1316,3 +1327,5 @@ export const canBeBrouillon = (etapeTypeId: EtapeTypeId): EtapeBrouillon => ETAP
 export const ETAPES_WITH_AUTOMATIC_STATUTS = [ETAPES_TYPES.participationDuPublic, ETAPES_TYPES.enquetePublique, ETAPES_TYPES.avisDeMiseEnConcurrenceAuJORF] as const satisfies Readonly<EtapeTypeId[]>
 
 export const isEtapeWithAutomaticStatuts = (etapeTypeId: EtapeTypeId | null): boolean => etapeTypeId !== null && ETAPES_WITH_AUTOMATIC_STATUTS.includes(etapeTypeId)
+
+export const ETAPE_TYPE_FOR_CONCURRENCY_DATA = ETAPES_TYPES.demande

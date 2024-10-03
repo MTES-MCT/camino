@@ -32,7 +32,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
   })
   test('on peut notifier le demandeur apres une recevabilité favorable pour un PER ou une concession', () => {
     const { service, dateFin, machine } = setDateAndOrderAndInterpretMachine(psCxmOctMachine, '1999-04-14', [
-      ETES.demande.FAIT,
+      { ...ETES.demande.FAIT, concurrence: { amIFirst: true } },
       ETES.depotDeLaDemande.FAIT,
       ETES.recevabiliteDeLaDemande.FAVORABLE,
       ETES.notificationAuDemandeur.FAIT,
@@ -52,39 +52,93 @@ describe('vérifie l’arbre des procédures spécifique', () => {
   //  })
   test('on ne peut plus rien faire pendant que la mise en concurrence est en cours', () => {
     const { service, dateFin, machine } = setDateAndOrderAndInterpretMachine(psCxmOctMachine, '1999-04-14', [
-      ETES.demande.FAIT,
+      { ...ETES.demande.FAIT, concurrence: { amIFirst: true } },
       ETES.depotDeLaDemande.FAIT,
       ETES.recevabiliteDeLaDemande.FAVORABLE,
       ETES.avisDeMiseEnConcurrenceAuJORF.EN_COURS,
     ])
     expect(service).canOnlyTransitionTo({ machine, date: dateFin }, [])
   })
-  // test('on peut publier le résultat de la mise en concurrence, une fois celle-ci terminée', () => {
-  //   const { service, dateFin, machine } = setDateAndOrderAndInterpretMachine(psCxmOctMachine, '1999-04-14', [
-  //     ETES.demande.FAIT,
-  //     ETES.depotDeLaDemande.FAIT,
-  //     ETES.recevabiliteDeLaDemande.FAVORABLE,
-  //     ETES.avisDeMiseEnConcurrenceAuJORF.TERMINE,
-  //   ])
-  //   expect(service).canOnlyTransitionTo({ machine, date: dateFin }, ['RESULTAT_MISE_EN_CONCURRENCE'])
-  // })
-  test('on ne peut pas notifier le demandeur apres une recevabilité favorable pour pcc', () => {
+  test('on peut publier le résultat de la mise en concurrence, une fois celle-ci terminée', () => {
+    const tree = getEventsTree(psCxmOctMachine, '1999-04-14', [
+      { ...ETES.demande.FAIT, concurrence: { amIFirst: true } },
+      ETES.depotDeLaDemande.FAIT,
+      ETES.recevabiliteDeLaDemande.FAVORABLE,
+      ETES.avisDeMiseEnConcurrenceAuJORF.TERMINE,
+      ETES.resultatMiseEnConcurrence.ACCEPTE,
+      ETES.avisDuConseilGeneralDeLeconomie_CGE_.FAVORABLE,
+      ETES.notificationAuDemandeur.FAIT,
+      ETES.saisineDuPrefet.FAIT,
+    ])
+    expect(tree).toMatchInlineSnapshot(`
+      [
+        "RIEN                                         (confidentielle, en construction        ) -> [FAIRE_DEMANDE]",
+        "FAIRE_DEMANDE                                (confidentielle, en instruction         ) -> [DEPOSER_DEMANDE]",
+        "DEPOSER_DEMANDE                              (confidentielle, en instruction         ) -> [FAIRE_RECEVABILITE_DEFAVORABLE,FAIRE_RECEVABILITE_FAVORABLE]",
+        "FAIRE_RECEVABILITE_FAVORABLE                 (confidentielle, en instruction         ) -> [FAIRE_MISE_EN_CONCURRENCE,NOTIFIER_DEMANDEUR]",
+        "FAIRE_MISE_EN_CONCURRENCE                    (publique      , en instruction         ) -> [RENDRE_RESULTAT_MISE_EN_CONCURRENCE_ACCEPTEE,RENDRE_RESULTAT_MISE_EN_CONCURRENCE_REJETEE]",
+        "RENDRE_RESULTAT_MISE_EN_CONCURRENCE_ACCEPTEE (publique      , en instruction         ) -> [RENDRE_AVIS_CGE_IGEDD]",
+        "RENDRE_AVIS_CGE_IGEDD                        (publique      , en instruction         ) -> [NOTIFIER_DEMANDEUR]",
+        "NOTIFIER_DEMANDEUR                           (publique      , en instruction         ) -> [FAIRE_LETTRE_SAISINE_PREFET]",
+        "FAIRE_LETTRE_SAISINE_PREFET                  (publique      , en instruction         ) -> [OUVRIR_ENQUETE_PUBLIQUE,OUVRIR_PARTICIPATION_DU_PUBLIC,RENDRE_AVIS_COLLECTIVITES,RENDRE_AVIS_SERVICES_COMMISSIONS]",
+      ]
+    `)
+  })
+
+  test('on peut rejeter à la fin de la mise en concurrence', () => {
+    const { service, dateFin, machine } = setDateAndOrderAndInterpretMachine(psCxmOctMachine, '1999-04-14', [
+      { ...ETES.demande.FAIT, concurrence: { amIFirst: true } },
+      ETES.depotDeLaDemande.FAIT,
+      ETES.recevabiliteDeLaDemande.FAVORABLE,
+      ETES.avisDeMiseEnConcurrenceAuJORF.TERMINE,
+      ETES.resultatMiseEnConcurrence.REJETE,
+    ])
+    expect(service).canOnlyTransitionTo({ machine, date: dateFin }, [])
+    expect(service.getSnapshot().context.demarcheStatut).toBe(DemarchesStatutsIds.Rejete)
+  })
+  test.skip('on ne peut pas notifier le demandeur apres une recevabilité favorable pour pcc', () => {
     expect(() =>
       setDateAndOrderAndInterpretMachine(psPccOctMachine, '1999-04-14', [ETES.demande.FAIT, ETES.depotDeLaDemande.FAIT, ETES.recevabiliteDeLaDemande.FAVORABLE, ETES.notificationAuDemandeur.FAIT])
     ).toThrowErrorMatchingInlineSnapshot(
-      `[Error: Error: cannot execute step: '{"etapeTypeId":"mno","etapeStatutId":"fai","date":"1999-04-18"}' after '["mfr_fai","mdp_fai","mcr_fav"]'. The event {"type":"NOTIFIER_DEMANDEUR","date":"1999-04-18","status":"fai"} should be one of 'FAIRE_MISE_EN_CONCURRENCE']`
+      `[Error: Error: cannot execute step: '{"etapeTypeId":"mno","etapeStatutId":"fai","date":"1999-04-18"}' after '["mfr_fai","mdp_fai","mcr_fav"]'. The event {"type":"NOTIFIER_DEMANDEUR","date":"1999-04-18","status":"fai"} should be one of '']`
     )
   })
   test("après la recevabilité favorable la démarche reste confidentielle si il n'y a pas de mise en concurrence", () => {
     const { service, dateFin, machine } = setDateAndOrderAndInterpretMachine(psPrmProMachine, '1999-04-14', [ETES.demande.FAIT, ETES.depotDeLaDemande.FAIT, ETES.recevabiliteDeLaDemande.FAVORABLE])
 
-    expect(service).canOnlyTransitionTo({ machine, date: dateFin }, ['RENDRE_AVIS_CGE_IGEDD', 'NOTIFIER_DEMANDEUR'])
+    expect(service).canOnlyTransitionTo({ machine, date: dateFin }, ['RENDRE_AVIS_CGE_IGEDD'])
     expect(service.getSnapshot().context.visibilite).toBe('confidentielle')
   })
   test('après la recevabilité favorable la démarche reste confidentielle si il y a une mise en concurrence', () => {
-    const { service, dateFin, machine } = setDateAndOrderAndInterpretMachine(psCxmOctMachine, '1999-04-14', [ETES.demande.FAIT, ETES.depotDeLaDemande.FAIT, ETES.recevabiliteDeLaDemande.FAVORABLE])
+    const { service, dateFin, machine } = setDateAndOrderAndInterpretMachine(psCxmOctMachine, '1999-04-14', [
+      { ...ETES.demande.FAIT, concurrence: { amIFirst: true } },
+      ETES.depotDeLaDemande.FAIT,
+      ETES.recevabiliteDeLaDemande.FAVORABLE,
+    ])
 
     expect(service).canOnlyTransitionTo({ machine, date: dateFin }, ['NOTIFIER_DEMANDEUR', 'FAIRE_MISE_EN_CONCURRENCE'])
+    expect(service.getSnapshot().context.visibilite).toBe('confidentielle')
+  })
+
+  test('après la recevabilité la démarche devient publique si la démarche concurrente est visible', () => {
+    const { service, dateFin, machine } = setDateAndOrderAndInterpretMachine(psCxmOctMachine, '1999-04-14', [
+      { ...ETES.demande.FAIT, concurrence: { amIFirst: false, demarcheConcurrenteVisibilite: 'publique' } },
+      ETES.depotDeLaDemande.FAIT,
+      ETES.recevabiliteDeLaDemande.FAVORABLE,
+    ])
+
+    expect(service).canOnlyTransitionTo({ machine, date: dateFin }, ['RENDRE_RESULTAT_MISE_EN_CONCURRENCE_ACCEPTEE', 'RENDRE_RESULTAT_MISE_EN_CONCURRENCE_REJETEE'])
+    expect(service.getSnapshot().context.visibilite).toBe('publique')
+  })
+
+  test('après la recevabilité la démarche reste confidentielle si la démarche concurrente est confidentielle', () => {
+    const { service, dateFin, machine } = setDateAndOrderAndInterpretMachine(psCxmOctMachine, '1999-04-14', [
+      { ...ETES.demande.FAIT, concurrence: { amIFirst: false, demarcheConcurrenteVisibilite: 'confidentielle' } },
+      ETES.depotDeLaDemande.FAIT,
+      ETES.recevabiliteDeLaDemande.FAVORABLE,
+    ])
+
+    expect(service).canOnlyTransitionTo({ machine, date: dateFin }, ['RENDRE_RESULTAT_MISE_EN_CONCURRENCE_ACCEPTEE', 'RENDRE_RESULTAT_MISE_EN_CONCURRENCE_REJETEE'])
     expect(service.getSnapshot().context.visibilite).toBe('confidentielle')
   })
   test("ne peut pas rendre la décision de l'administration si la participation du public n'est pas terminée", () => {

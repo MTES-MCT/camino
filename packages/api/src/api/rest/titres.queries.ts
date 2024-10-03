@@ -62,7 +62,7 @@ export const getTitre = async (pool: Pool, user: User, idOrSlug: TitreIdOrSlug):
 
     const superDemarches: SuperDemarcheTitreGet[] = []
     for (const demarche of demarchesFromDatabase) {
-      const etapes = await callAndExit(getEtapesByDemarcheId(pool, demarche.id), async value => value)
+      const etapes = await callAndExit(getEtapesByDemarcheId(pool, demarche.id))
 
       const formatedEtapes: SuperEtapeDemarcheTitreGet[] = []
       for (const etape of etapes) {

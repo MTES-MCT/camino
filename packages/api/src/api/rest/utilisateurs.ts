@@ -264,20 +264,20 @@ export const utilisateurs =
   } | null> => {
     const searchParams = utilisateursSearchParamsValidator.and(z.object({ format: z.enum(['csv', 'xlsx', 'ods']).optional().default('csv') })).parse(query)
 
-    return callAndExit(getUtilisateursFilteredAndSorted(pool, user, searchParams), async utilisateurs => {
-      const format = searchParams.format
+    const utilisateurs = await callAndExit(getUtilisateursFilteredAndSorted(pool, user, searchParams))
 
-      const entreprises = await getEntreprises(pool)
-      const contenu = tableConvert('utilisateurs', utilisateursFormatTable(utilisateurs, entreprises), format)
+    const format = searchParams.format
 
-      return contenu
-        ? {
-            nom: fileNameCreate(`utilisateurs-${utilisateurs.length}`, format),
-            format,
-            contenu,
-          }
-        : null
-    })
+    const entreprises = await getEntreprises(pool)
+    const contenu = tableConvert('utilisateurs', utilisateursFormatTable(utilisateurs, entreprises), format)
+
+    return contenu
+      ? {
+          nom: fileNameCreate(`utilisateurs-${utilisateurs.length}`, format),
+          format,
+          contenu,
+        }
+      : null
   }
 
 type GetUtilisateursError = DbQueryAccessError | ZodUnparseable | "Impossible d'accéder à la liste des utilisateurs" | 'droits insuffisants'

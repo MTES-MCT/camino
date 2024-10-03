@@ -27,16 +27,22 @@ export const zodParseEffect = <T extends ZodTypeAny>(validator: T, item: unknown
   })
 }
 
-export const callAndExit = async <A, T>(toCall: Effect.Effect<A, CaminoError<string>, never>, success: (value: A) => Promise<T>): Promise<T> => {
+export const callAndExit = async <A>(toCall: Effect.Effect<A, CaminoError<string>, never>): Promise<A> => {
   const pipeline = await pipe(toCall, Effect.runPromiseExit)
 
   if (Exit.isSuccess(pipeline)) {
-    return success(pipeline.value)
+    return pipeline.value
   } else {
     if (Cause.isFailType(pipeline.cause)) {
+      console.error(pipeline.cause.error)
       throw new Error(pipeline.cause.error.message)
     } else {
       throw new Error(`Unexpected error ${pipeline.cause}`)
     }
   }
+}
+
+export const shortCircuitError = <T extends string>(value: T, ...stuff: unknown[]): { _tag: T } => {
+  console.debug(`shortCircuit ${value}`, ...stuff)
+  return { _tag: value }
 }

@@ -13,6 +13,13 @@ import { z } from 'zod'
 import { ETAPE_IS_NOT_BROUILLON, etapeBrouillonValidator, etapeIdValidator } from 'camino-common/src/etape'
 import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
 import { km2Validator } from 'camino-common/src/number'
+const demarcheVisibiliteValidator = z.enum(['confidentielle', 'publique'])
+export type DemarcheVisibilite = z.infer<typeof demarcheVisibiliteValidator>
+const concurrenceValidator = z.discriminatedUnion('amIFirst', [
+  z.object({ amIFirst: z.literal(true) }),
+  z.object({ amIFirst: z.literal(false), demarcheConcurrenteVisibilite: demarcheVisibiliteValidator }),
+])
+export type Concurrence = z.infer<typeof concurrenceValidator>
 export interface Etape {
   // TODO 2022-07-28 : ceci pourrait être réduit en utilisant les états de 'trad'
   etapeTypeId: EtapeTypeId
@@ -21,6 +28,7 @@ export interface Etape {
   contenu?: IContenu
   paysId?: PaysId
   surface?: number
+  concurrence?: Concurrence
 }
 
 export const globalGuards = {
@@ -32,7 +40,7 @@ export const globalGuards = {
 
 export interface CaminoCommonContext {
   demarcheStatut: DemarcheStatutId
-  visibilite: 'confidentielle' | 'publique'
+  visibilite: DemarcheVisibilite
 }
 
 export const titreEtapeForMachineValidator = z.object({
@@ -41,8 +49,14 @@ export const titreEtapeForMachineValidator = z.object({
   typeId: etapeTypeIdValidator,
   statutId: etapeStatutIdValidator,
   date: caminoDateValidator,
+  //TODO 2024-10-02 ce validator est utilisé pour ITitreEtape donc nous sommes obligés de mettre tous les champs suivants optional et nullable
   contenu: z.any().nullable().optional().default(null),
   heritageContenu: z.any().nullable().optional().default(null),
+  concurrence: z
+    .union([concurrenceValidator, z.literal('non-applicable')])
+    .nullable()
+    .optional()
+    .default(null),
   communes: z
     .array(z.object({ id: communeIdValidator }))
     .nullable()
@@ -82,6 +96,9 @@ const toMachineEtape = (dbEtape: Omit<TitreEtapeForMachine, 'id' | 'ordre'>): Et
     etapeTypeId: typeId,
     etapeStatutId: statutId,
   }
+  if (dbEtape.concurrence !== 'non-applicable') {
+    machineEtape.concurrence = dbEtape.concurrence ?? undefined
+  }
   if (isNotNullNorUndefined(dbEtape.contenu)) {
     machineEtape.contenu = dbEtape.contenu
   }
@@ -91,7 +108,6 @@ const toMachineEtape = (dbEtape: Omit<TitreEtapeForMachine, 'id' | 'ordre'>): Et
   if (dbEtape.surface !== null) {
     machineEtape.surface = dbEtape.surface
   }
-
   return machineEtape
 }
 

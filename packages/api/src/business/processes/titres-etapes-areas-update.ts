@@ -41,12 +41,12 @@ export const titresEtapesAreasUpdate = async (pool: Pool, titresEtapesIds?: stri
     }
     try {
       if (isNotNullNorUndefined(titreEtape.geojson4326Perimetre)) {
-        await callAndExit(getGeojsonInformation(pool, titreEtape.geojson4326Perimetre.geometry), async ({ forets, sdom, secteurs, communes }) => {
-          await intersectForets(titreEtape, forets)
-          await intersectSdom(titreEtape, sdom)
-          await intersectCommunes(titreEtape, communes)
-          await intersectSecteursMaritime(titreEtape, secteurs)
-        })
+        const { forets, sdom, secteurs, communes } = await callAndExit(getGeojsonInformation(pool, titreEtape.geojson4326Perimetre.geometry))
+
+        await intersectForets(titreEtape, forets)
+        await intersectSdom(titreEtape, sdom)
+        await intersectCommunes(titreEtape, communes)
+        await intersectSecteursMaritime(titreEtape, secteurs)
       }
     } catch (e) {
       console.error(`Une erreur est survenue lors du traitement de l'étape ${titreEtape.id}`)

@@ -72,12 +72,12 @@ export const getPerimetreInfos =
         try {
           let etape: null | { demarche_id: DemarcheId; geojson4326_perimetre: MultiPolygon | null; sdom_zones: SDOMZoneId[]; etape_type_id: EtapeTypeId; communes: CommuneId[] } = null
           if (etapeIdOrSlugParsed.success) {
-            const myEtape = await getEtapeById(pool, etapeIdOrSlugParsed.data)
+            const myEtape = await callAndExit(getEtapeById(pool, etapeIdOrSlugParsed.data))
 
             etape = { demarche_id: myEtape.demarche_id, geojson4326_perimetre: myEtape.geojson4326_perimetre, sdom_zones: myEtape.sdom_zones ?? [], etape_type_id: myEtape.etape_type_id, communes: [] }
           } else if (demarcheIdOrSlugParsed.success) {
             const demarche = await getDemarcheByIdOrSlug(pool, demarcheIdOrSlugParsed.data)
-            const etapes = await callAndExit(getEtapesByDemarcheId(pool, demarche.demarche_id), async value => value)
+            const etapes = await callAndExit(getEtapesByDemarcheId(pool, demarche.demarche_id))
 
             const mostRecentEtapeFondamentale = getMostRecentEtapeFondamentaleValide([{ ordre: 1, etapes }])
             if (isNotNullNorUndefined(mostRecentEtapeFondamentale)) {
@@ -116,12 +116,12 @@ export const getPerimetreInfos =
                 { ...demarche, titre_public_lecture: titre.public_lecture }
               )
             ) {
-              await callAndExit(getAlertesSuperposition(etape.geojson4326_perimetre, titre.titre_type_id, titre.titre_slug, user, pool), async superpositionAlertes => {
-                res.json({
-                  superposition_alertes: superpositionAlertes,
-                  sdomZoneIds: etape.sdom_zones,
-                  communes: etape.communes,
-                })
+              const superpositionAlertes = await callAndExit(getAlertesSuperposition(etape.geojson4326_perimetre, titre.titre_type_id, titre.titre_slug, user, pool))
+
+              res.json({
+                superposition_alertes: superpositionAlertes,
+                sdomZoneIds: etape.sdom_zones,
+                communes: etape.communes,
               })
             } else {
               res.sendStatus(HTTP_STATUS.FORBIDDEN)

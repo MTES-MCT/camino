@@ -398,9 +398,8 @@ const getForagesProperties = async (
   pool: Pool
 ): Promise<Pick<GraphqlEtape, 'geojson4326Forages' | 'geojsonOrigineForages'>> => {
   if (canHaveForages(titreTypeId) && isNotNullNorUndefined(geojsonOrigineForages) && isNotNullNorUndefined(geojsonOrigineGeoSystemeId)) {
-    return callAndExit(convertPoints(pool, geojsonOrigineGeoSystemeId, geojsonOrigineForages), async value => {
-      return { geojson4326Forages: value, geojsonOrigineForages }
-    })
+    const value = await callAndExit(convertPoints(pool, geojsonOrigineGeoSystemeId, geojsonOrigineForages))
+    return { geojson4326Forages: value, geojsonOrigineForages }
   }
 
   return {
@@ -430,19 +429,18 @@ const getPerimetreInfosInternal = async (
       }
     }
 
-    return callAndExit(getGeojsonInformation(pool, geojson4326Perimetre.geometry), async ({ communes, sdom, surface, forets, secteurs }) => {
-      const { geojson4326Forages } = await getForagesProperties(titreTypeId, geojsonOrigineGeoSystemeId, geojsonOrigineForages, pool)
+    const { communes, sdom, surface, forets, secteurs } = await callAndExit(getGeojsonInformation(pool, geojson4326Perimetre.geometry))
+    const { geojson4326Forages } = await getForagesProperties(titreTypeId, geojsonOrigineGeoSystemeId, geojsonOrigineForages, pool)
 
-      return {
-        surface,
-        communes,
-        forets,
-        secteursMaritime: secteurs.map(s => getSecteurMaritime(s)),
-        sdomZones: sdom,
-        geojson4326Forages,
-        geojsonOrigineForages,
-      }
-    })
+    return {
+      surface,
+      communes,
+      forets,
+      secteursMaritime: secteurs.map(s => getSecteurMaritime(s)),
+      sdomZones: sdom,
+      geojson4326Forages,
+      geojsonOrigineForages,
+    }
   } else {
     return {
       communes: [],
@@ -910,10 +908,10 @@ export const deposeEtape =
         const sdomZones: SDOMZoneId[] = []
         const communes: CommuneId[] = []
         if (isNotNullNorUndefined(titreEtape.geojson4326Perimetre)) {
-          await callAndExit(getGeojsonInformation(pool, titreEtape.geojson4326Perimetre.geometry), async ({ sdom, communes: communeFromGeoJson }) => {
-            communes.push(...communeFromGeoJson.map(({ id }) => id))
-            sdomZones.push(...sdom)
-          })
+          const { sdom, communes: communeFromGeoJson } = await callAndExit(getGeojsonInformation(pool, titreEtape.geojson4326Perimetre.geometry))
+
+          communes.push(...communeFromGeoJson.map(({ id }) => id))
+          sdomZones.push(...sdom)
         }
         const titreTypeId = memoize(() => Promise.resolve(titre.typeId))
         const administrationsLocales = memoize(() => Promise.resolve(titre.administrationsLocales ?? []))

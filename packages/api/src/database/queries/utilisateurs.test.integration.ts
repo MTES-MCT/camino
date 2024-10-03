@@ -97,7 +97,7 @@ describe('newGetUtilisateurById', () => {
       telephone_mobile: null,
     })
 
-    const result = await callAndExit(newGetUtilisateurById(dbPool, utilisateurId, userSuper), async r => r)
+    const result = await callAndExit(newGetUtilisateurById(dbPool, utilisateurId, userSuper))
 
     expect(result.id).toEqual(utilisateurId)
   })
@@ -116,7 +116,7 @@ describe('newGetUtilisateurById', () => {
       telephone_mobile: null,
     })
 
-    const result = await callAndExit(newGetUtilisateurById(dbPool, utilisateurId, userSuper), async r => r)
+    const result = await callAndExit(newGetUtilisateurById(dbPool, utilisateurId, userSuper))
 
     expect(result.id).toEqual(utilisateurId)
   })
@@ -186,7 +186,7 @@ describe('getUtilisateursByTitreId', () => {
       telephone_mobile: null,
     })
 
-    const titreId = await callAndExit(createTitre(dbPool, userSuper, { nom: 'mon super titre', references: [], titreTypeId: 'arm' }), async t => t)
+    const titreId = await callAndExit(createTitre(dbPool, userSuper, { nom: 'mon super titre', references: [], titreTypeId: 'arm' }))
 
     let result = await getUtilisateursByTitreId(dbPool, titreId)
     expect(result).toHaveLength(0)

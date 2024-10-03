@@ -31,6 +31,7 @@ import { ElementWithValue } from 'camino-common/src/sections'
 import { KM2 } from 'camino-common/src/number'
 import { HttpStatus } from 'camino-common/src/http'
 import { CaminoError } from 'camino-common/src/zod-tools'
+import { TitreEtapeForMachine } from './business/rules-demarches/machine-common'
 
 const TitreEtapesTravauxTypes = {
   AvisDesServicesEtCommissionsConsultatives: 'asc',
@@ -256,6 +257,7 @@ type ITitreEtape = {
   heritageProps?: IHeritageProps | null
   heritageContenu?: IHeritageContenu | null
   note?: EtapeNote
+  concurrence?: TitreEtapeForMachine['concurrence']
 } & Partial<ITitreEtapePerimetre>
 
 interface ITitreEtapeFiltre {

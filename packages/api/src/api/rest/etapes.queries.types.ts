@@ -9,6 +9,7 @@ export interface IGetEtapeByIdDbParams {
 /** 'GetEtapeByIdDb' return type */
 export interface IGetEtapeByIdDbResult {
   demarche_id: string;
+  demarche_id_en_concurrence: string | null;
   etape_id: string;
   etape_type_id: string;
   geojson4326_perimetre: Json | null;
@@ -115,5 +116,40 @@ export interface IGetEtapeByDemarcheIdAndEtapeTypeIdDbResult {
 export interface IGetEtapeByDemarcheIdAndEtapeTypeIdDbQuery {
   params: IGetEtapeByDemarcheIdAndEtapeTypeIdDbParams;
   result: IGetEtapeByDemarcheIdAndEtapeTypeIdDbResult;
+}
+
+/** 'GetDemandesPotentialConcurrenceDb' parameters type */
+export interface IGetDemandesPotentialConcurrenceDbParams {
+  dateDebutProcedureSpecifique: string;
+  demandeTypeId: string;
+  demarcheTypeExtensionDePerimetre: string;
+}
+
+/** 'GetDemandesPotentialConcurrenceDb' return type */
+export interface IGetDemandesPotentialConcurrenceDbResult {
+  id: string;
+}
+
+/** 'GetDemandesPotentialConcurrenceDb' query type */
+export interface IGetDemandesPotentialConcurrenceDbQuery {
+  params: IGetDemandesPotentialConcurrenceDbParams;
+  result: IGetDemandesPotentialConcurrenceDbResult;
+}
+
+/** 'GetAllDemandesDb' parameters type */
+export interface IGetAllDemandesDbParams {
+  dateDebutProcedureSpecifique: string;
+  demandeTypeId: string;
+}
+
+/** 'GetAllDemandesDb' return type */
+export interface IGetAllDemandesDbResult {
+  id: string;
+}
+
+/** 'GetAllDemandesDb' query type */
+export interface IGetAllDemandesDbQuery {
+  params: IGetAllDemandesDbParams;
+  result: IGetAllDemandesDbResult;
 }
 

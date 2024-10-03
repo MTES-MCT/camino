@@ -157,7 +157,7 @@ const getUtilisateursEmailsByEntrepriseIdsDb = sql<Redefine<IGetUtilisateursEmai
  **/
 export const getUtilisateurById = async (pool: Pool, id: UtilisateurId, user: User): Promise<User> => {
   try {
-    return await callAndExit(newGetUtilisateurById(pool, id, user), async r => r)
+    return await callAndExit(newGetUtilisateurById(pool, id, user))
   } catch (_e) {
     return null
   }

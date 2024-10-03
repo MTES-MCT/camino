@@ -1,11 +1,13 @@
 import { EtapeDocumentId, EtapeId, EtapeIdOrSlug, etapeBrouillonValidator, etapeIdValidator, etapeSlugValidator } from 'camino-common/src/etape'
-import { EtapeTypeId, etapeTypeIdValidator } from 'camino-common/src/static/etapesTypes'
+import { ETAPE_TYPE_FOR_CONCURRENCY_DATA, EtapeTypeId, etapeTypeIdValidator } from 'camino-common/src/static/etapesTypes'
 import { Pool } from 'pg'
 import { z } from 'zod'
-import { Redefine, dbQueryAndValidate } from '../../pg-database'
+import { DBNotFound, DbQueryAccessError, Redefine, dbNotFoundError, dbQueryAndValidate, effectDbQueryAndValidate } from '../../pg-database'
 import { sql } from '@pgtyped/runtime'
 import {
   IGetAdministrationsLocalesByEtapeIdQuery,
+  IGetAllDemandesDbQuery,
+  IGetDemandesPotentialConcurrenceDbQuery,
   IGetEtapeByDemarcheIdAndEtapeTypeIdDbQuery,
   IGetEtapeByIdDbQuery,
   IGetEtapeDataForEditionDbQuery,
@@ -15,17 +17,21 @@ import {
 import { DemarcheId, demarcheIdValidator } from 'camino-common/src/demarche'
 import { sdomZoneIdValidator } from 'camino-common/src/static/sdom'
 import { multiPolygonValidator } from 'camino-common/src/perimetre'
-import { demarcheTypeIdValidator } from 'camino-common/src/static/demarchesTypes'
-import { titreTypeIdValidator } from 'camino-common/src/static/titresTypes'
+import { DEMARCHES_TYPES_IDS, demarcheTypeIdValidator } from 'camino-common/src/static/demarchesTypes'
+import { TitreTypeId, titreTypeIdValidator } from 'camino-common/src/static/titresTypes'
 import { AdministrationId, administrationIdValidator } from 'camino-common/src/static/administrations'
 import { EntrepriseId, entrepriseIdValidator } from 'camino-common/src/entreprise'
 import { User } from 'camino-common/src/roles'
 import { LargeObjectId, largeObjectIdValidator } from '../../database/largeobjects'
 import { canReadDocument } from './permissions/documents'
-import { isNotNullNorUndefinedNorEmpty, memoize } from 'camino-common/src/typescript-tools'
+import { isNotNullNorUndefinedNorEmpty, memoize, Memoized } from 'camino-common/src/typescript-tools'
 import { etapeStatutIdValidator } from 'camino-common/src/static/etapesStatuts'
 import { caminoDateValidator } from 'camino-common/src/date'
 import { contenuValidator } from './activites.queries'
+import { CaminoError } from 'camino-common/src/zod-tools'
+import { ZodUnparseable } from '../../tools/fp-tools'
+import { Effect, pipe } from 'effect'
+import { DATE_DEBUT_PROCEDURE_SPECIFIQUE } from '../../business/rules-demarches/definitions'
 
 const getEtapeByIdValidator = z.object({
   etape_id: etapeIdValidator,
@@ -33,11 +39,15 @@ const getEtapeByIdValidator = z.object({
   demarche_id: demarcheIdValidator,
   geojson4326_perimetre: multiPolygonValidator.nullable(),
   sdom_zones: z.array(sdomZoneIdValidator).nullable(),
+  demarche_id_en_concurrence: demarcheIdValidator.nullable(),
 })
 type GetEtapeByIdValidator = z.infer<typeof getEtapeByIdValidator>
 
-export const getEtapeById = async (pool: Pool, etapeId: EtapeIdOrSlug): Promise<z.infer<typeof getEtapeByIdValidator>> => {
-  return (await dbQueryAndValidate(getEtapeByIdDb, { etapeId }, pool, getEtapeByIdValidator))[0]
+export const getEtapeById = (pool: Pool, etapeId: EtapeIdOrSlug): Effect.Effect<GetEtapeByIdValidator, CaminoError<DbQueryAccessError | ZodUnparseable | DBNotFound>> => {
+  return pipe(
+    effectDbQueryAndValidate(getEtapeByIdDb, { etapeId }, pool, getEtapeByIdValidator),
+    Effect.flatMap(result => (result.length === 1 ? Effect.succeed(result[0]) : Effect.fail({ message: dbNotFoundError })))
+  )
 }
 
 const getEtapeByIdDb = sql<Redefine<IGetEtapeByIdDbQuery, { etapeId: EtapeIdOrSlug }, GetEtapeByIdValidator>>`
@@ -46,7 +56,8 @@ select
     type_id as etape_type_id,
     titre_demarche_id as demarche_id,
     ST_AsGeoJSON (geojson4326_perimetre, 40)::json as geojson4326_perimetre,
-    sdom_zones
+    sdom_zones,
+    demarche_id_en_concurrence
 from
     titres_etapes
 where (id = $ etapeId !
@@ -101,7 +112,15 @@ where
 LIMIT 1
 `
 
-export const getEtapeDataForEdition = async (pool: Pool, etapeId: EtapeId) => {
+export const getEtapeDataForEdition = async (
+  pool: Pool,
+  etapeId: EtapeId
+): Promise<{
+  etapeData: GetEtapeDataForEdition
+  titreTypeId: Memoized<TitreTypeId>
+  administrationsLocales: Memoized<AdministrationId[]>
+  entreprisesTitulairesOuAmodiataires: Memoized<EntrepriseId[]>
+}> => {
   const etapeData = (await dbQueryAndValidate(getEtapeDataForEditionDb, { etapeId }, pool, getEtapeDataForEditionValidator))[0]
 
   const titreTypeId = memoize(() => Promise.resolve(etapeData.titre_type_id))
@@ -224,3 +243,79 @@ where
     and te.titre_demarche_id = $ demarcheId !
     and te.archive is false
 `
+
+export const getDemandesPotentialConcurrence = (pool: Pool): Effect.Effect<EtapeId[], CaminoError<DbQueryAccessError | ZodUnparseable>> => {
+  return pipe(
+    effectDbQueryAndValidate(
+      getDemandesPotentialConcurrenceDb,
+      { demandeTypeId: ETAPE_TYPE_FOR_CONCURRENCY_DATA, dateDebutProcedureSpecifique: DATE_DEBUT_PROCEDURE_SPECIFIQUE, demarcheTypeExtensionDePerimetre: DEMARCHES_TYPES_IDS.ExtensionDePerimetre },
+      pool,
+      z.object({ id: etapeIdValidator })
+    ),
+    Effect.map(result => result.map(({ id }) => id))
+  )
+}
+
+const getDemandesPotentialConcurrenceDb = sql<
+  Redefine<
+    IGetDemandesPotentialConcurrenceDbQuery,
+    {
+      demandeTypeId: typeof ETAPE_TYPE_FOR_CONCURRENCY_DATA
+      dateDebutProcedureSpecifique: typeof DATE_DEBUT_PROCEDURE_SPECIFIQUE
+      demarcheTypeExtensionDePerimetre: typeof DEMARCHES_TYPES_IDS.ExtensionDePerimetre
+    },
+    { id: EtapeId }
+  >
+>`
+ select te.id
+ from titres_etapes te
+ join titres_demarches td on td.id = te.titre_demarche_id
+ join titres t on t.id = td.titre_id
+ left join titres__titres tt on tt.titre_to_id = t.id
+ left join titres titreFrom on titreFrom.id = tt.titre_from_id
+ where
+    te.type_id = $demandeTypeId !
+    and te.date > $dateDebutProcedureSpecifique!
+    and te.archive is false
+    and te.is_brouillon is false
+    and (
+      td.type_id = $demarcheTypeExtensionDePerimetre!
+      or (
+        td.type_id = 'oct'
+        and (
+          left(t.type_id, 2) != 'cx'
+          OR titreFrom is null
+          OR left(titreFrom.type_id, 2) != 'pr'
+        )
+        AND (
+          left(t.type_id, 2) != 'ax'
+          OR titreFrom is null
+          OR left(titreFrom.type_id, 2) != 'ar'
+        )
+      )
+    )
+  `
+
+export const getAllDemandes = (pool: Pool): Effect.Effect<EtapeId[], CaminoError<DbQueryAccessError | ZodUnparseable>> => {
+  return pipe(
+    effectDbQueryAndValidate(
+      getAllDemandesDb,
+      { demandeTypeId: ETAPE_TYPE_FOR_CONCURRENCY_DATA, dateDebutProcedureSpecifique: DATE_DEBUT_PROCEDURE_SPECIFIQUE },
+      pool,
+      z.object({ id: etapeIdValidator })
+    ),
+    Effect.map(result => result.map(({ id }) => id))
+  )
+}
+
+const getAllDemandesDb = sql<
+  Redefine<IGetAllDemandesDbQuery, { demandeTypeId: typeof ETAPE_TYPE_FOR_CONCURRENCY_DATA; dateDebutProcedureSpecifique: typeof DATE_DEBUT_PROCEDURE_SPECIFIQUE }, { id: EtapeId }>
+>`
+ select te.id
+ from titres_etapes te
+ where
+    te.type_id = $demandeTypeId !
+    and te.date > $dateDebutProcedureSpecifique!
+    and te.archive is false
+    and te.is_brouillon is false
+  `

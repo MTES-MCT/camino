@@ -23,6 +23,8 @@ import { titresEtapesDepotCreate } from './processes/titres-demarches-depot-crea
 import type { UserNotNull } from 'camino-common/src/roles'
 import type { Pool } from 'pg'
 import { DeepReadonly } from 'camino-common/src/typescript-tools'
+import { callAndExit } from '../tools/fp-tools'
+import { etapeMiseEnConcurrenceUpdate } from './processes/titres-etapes-mise-en-concurrence'
 
 export const titreEtapeUpdateTask = async (pool: Pool, titreEtapeId: EtapeId | null, titreDemarcheId: DemarcheId, user: DeepReadonly<UserNotNull>): Promise<void> => {
   try {
@@ -42,6 +44,9 @@ export const titreEtapeUpdateTask = async (pool: Pool, titreEtapeId: EtapeId | n
       throw new Error(`la démarche ${titreDemarche} n'existe pas`)
     }
 
+    if (titreEtapeId) {
+      await callAndExit(etapeMiseEnConcurrenceUpdate(pool, titreEtapeId))
+    }
     const titresEtapesOrdreUpdated = await titresEtapesOrdreUpdate(pool, user, titreDemarcheId)
 
     const titresEtapesHeritagePropsUpdated = await titresEtapesHeritagePropsUpdate(user, [titreDemarcheId])

@@ -29,6 +29,8 @@ export const dbQueryAndValidate = async <Params, Result, T extends ZodType<Resul
   return z.array(validator).parse(result)
 }
 
+export const dbNotFoundError = 'Élément non trouvé dans la base de données' as const
+export type DBNotFound = typeof dbNotFoundError
 export type DbQueryAccessError = "Impossible d'accéder à la base de données"
 export type EffectDbQueryAndValidateErrors = DbQueryAccessError | ZodUnparseable
 export const effectDbQueryAndValidate = <Params, Result, T extends ZodType<Result, ZodTypeDef, unknown>>(

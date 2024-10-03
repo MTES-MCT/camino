@@ -11,9 +11,12 @@ import TitresDemarches from './titres-demarches'
 import Journaux from './journaux'
 import { etapeSlugValidator } from 'camino-common/src/etape'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
+import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes'
+import { DemarcheId } from 'camino-common/src/demarche'
 
 export interface DBTitresEtapes extends ITitreEtape {
   archive: boolean
+  demarcheIdEnConcurrence: DemarcheId | null
 }
 interface TitresEtapes extends DBTitresEtapes {}
 class TitresEtapes extends Model {
@@ -111,6 +114,15 @@ class TitresEtapes extends Model {
       this.heritageContenu = await heritageContenuFormat(this.heritageContenu)
     }
 
+    if (this.typeId !== ETAPES_TYPES.demande) {
+      this.concurrence = 'non-applicable'
+    } else if (isNotNullNorUndefined(this.demarcheIdEnConcurrence)) {
+      const statutDemarcheIdConcurrente = await context.transaction.raw('select public_lecture from titres_demarches where id = ?', [this.demarcheIdEnConcurrence])
+      this.concurrence = { amIFirst: false, demarcheConcurrenteVisibilite: statutDemarcheIdConcurrente.rows[0].public_lecture ? 'publique' : 'confidentielle' }
+    } else {
+      this.concurrence = { amIFirst: true }
+    }
+
     // BUG Objection
     // Obligé de vérifier qu’on a pas déjà un geojson correct, des fois dans le $afterFind on a déjà ce qu’on souhaite
     // il y a un bug dans objection sur lequel on est déjà tombé dans upsertJournalCreate
@@ -131,6 +143,7 @@ class TitresEtapes extends Model {
     delete json.aslDocument
     delete json.modification
     delete json.suppression
+    delete json.concurrence
     json = super.$formatDatabaseJson(json)
 
     return json
@@ -139,6 +152,7 @@ class TitresEtapes extends Model {
   public override $parseJson(json: Pojo) {
     delete json.modification
     delete json.suppression
+    delete json.concurrence
     json = super.$parseJson(json)
 
     return json

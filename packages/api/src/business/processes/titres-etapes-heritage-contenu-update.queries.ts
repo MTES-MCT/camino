@@ -7,7 +7,7 @@ import { DemarcheStatutId, demarcheStatutIdValidator } from 'camino-common/src/s
 import { DemarcheTypeId, demarcheTypeIdValidator } from 'camino-common/src/static/demarchesTypes'
 import { etapeStatutIdValidator } from 'camino-common/src/static/etapesStatuts'
 import { TitreTypeId, titreTypeIdValidator } from 'camino-common/src/static/titresTypes'
-import { etapeTypeIdValidator } from 'camino-common/src/static/etapesTypes'
+import { ETAPE_TYPE_FOR_CONCURRENCY_DATA, etapeTypeIdValidator } from 'camino-common/src/static/etapesTypes'
 import { TitreId, titreIdValidator } from 'camino-common/src/validators/titres'
 import { etapeBrouillonValidator, etapeIdValidator } from 'camino-common/src/etape'
 import { z } from 'zod'
@@ -24,6 +24,8 @@ const getEtapesByDemarcheValidator = z.object({
   demarche_statut_id: demarcheStatutIdValidator,
   demarche_type_id: demarcheTypeIdValidator,
   heritage_contenu: z.any().nullable(),
+  demarche_id_en_concurrence: demarcheIdValidator.nullable(),
+  demarche_concurrente_public_lecture: z.boolean().nullable(),
   id: etapeIdValidator.nullable(),
   ordre: z.number().nullable(),
   statut_id: etapeStatutIdValidator.nullable(),
@@ -51,6 +53,7 @@ export const getDemarches = async (
 }> => {
   const etapes = await dbQueryAndValidate(getEtapesByDemarcheInternal, { demarcheId, titreId }, pool, getEtapesByDemarcheValidator)
 
+  // FIXMACHINE trier les démarches par ordre de la première étape pour avoir la bonne visibilité des démarches
   return etapes.reduce<{
     [key: DemarcheId]: {
       etapes: TitreEtapeForMachine[]
@@ -91,6 +94,12 @@ export const getDemarches = async (
         heritageContenu: row.heritage_contenu,
         communes: row.communes,
         surface: row.surface,
+        concurrence:
+          row.type_id === ETAPE_TYPE_FOR_CONCURRENCY_DATA
+            ? isNotNullNorUndefined(row.demarche_id_en_concurrence) && isNotNullNorUndefined(row.demarche_concurrente_public_lecture)
+              ? { amIFirst: false, demarcheConcurrenteVisibilite: row.demarche_concurrente_public_lecture === true ? 'publique' : 'confidentielle' }
+              : { amIFirst: true }
+            : 'non-applicable',
       })
     }
 
@@ -111,15 +120,18 @@ SELECT
     etape.surface,
     etape.is_brouillon,
     etape.heritage_contenu,
+    etape.demarche_id_en_concurrence,
     demarche.id as demarche_id,
     demarche.type_id as demarche_type_id,
     demarche.statut_id as demarche_statut_id,
-    etape.communes
+    etape.communes,
+    demarche_concurrente.public_lecture as demarche_concurrente_public_lecture
 from
     titres_demarches demarche
     left join titres_etapes etape on (etape.titre_demarche_id = demarche.id
             and etape.archive is false)
     join titres titre on demarche.titre_id = titre.id
+    left join titres_demarches demarche_concurrente on demarche_concurrente.id = etape.demarche_id_en_concurrence
 where
     demarche.archive = false
     and titre.archive = false
