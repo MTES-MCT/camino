@@ -177,10 +177,17 @@ export const CaminoMap = defineComponent<Props>((props, { expose }) => {
         attribution: 'shom',
       }
     )
+    const LimitesAdministratives = L.tileLayer(
+      'https://wmts.geopf.fr/wmts?layer=LIMITES_ADMINISTRATIVES_EXPRESS.LATEST&style=normal&tilematrixset=PM&Service=WMTS&Request=GetTile&Version=1.0.0&Format=image%2Fpng&TileMatrix={z}&TileCol={x}&TileRow={y}',
+      {
+        attribution: 'Géoportail',
+      }
+    )
     const overlayMaps = {
       [sdomOverlayName]: SDOM,
       'Façades maritimes': Facades,
       'Limite de la redevance d’archéologie préventive': RedevanceArcheologiePreventive,
+      'Limites administratives': LimitesAdministratives,
       Contours: geojsonLayer,
       Points: markerLayer,
       ...props.additionalOverlayLayers,

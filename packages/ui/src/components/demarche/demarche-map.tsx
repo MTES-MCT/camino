@@ -112,6 +112,13 @@ const staticOverlayLayersSourceSpecification: Record<
     ],
     attribution: 'shom',
   },
+  LimitesAdministratives: {
+    type: 'raster',
+    tiles: [
+      'https://wmts.geopf.fr/wmts?layer=LIMITES_ADMINISTRATIVES_EXPRESS.LATEST&style=normal&tilematrixset=PM&Service=WMTS&Request=GetTile&Version=1.0.0&Format=image%2Fpng&TileMatrix={z}&TileCol={x}&TileRow={y}',
+    ],
+    attribution: 'Géoportail',
+  },
 }
 
 const overlayConfigs: Record<OverlayLayerId, LayerSpecification> = {
@@ -124,6 +131,11 @@ const overlayConfigs: Record<OverlayLayerId, LayerSpecification> = {
     id: 'RedevanceArcheologiePreventive',
     type: 'raster',
     source: 'RedevanceArcheologiePreventive',
+  },
+  LimitesAdministratives: {
+    id: 'LimitesAdministratives',
+    type: 'raster',
+    source: 'LimitesAdministratives',
   },
   SDOM: {
     id: 'SDOM',
