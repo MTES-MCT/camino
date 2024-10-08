@@ -128,13 +128,12 @@ SELECT
     demarche.statut_id as demarche_statut_id,
     etape.communes,
     demarche_concurrente.public_lecture as demarche_concurrente_public_lecture,
-    tt is not null as has_titre_from
+    EXISTS(select 1 from titres__titres tt where titre.id = tt.titre_to_id) as has_titre_from
 from
     titres_demarches demarche
     left join titres_etapes etape on (etape.titre_demarche_id = demarche.id
             and etape.archive is false)
     join titres titre on demarche.titre_id = titre.id
-    left join titres__titres tt on tt.titre_to_id = titre.id
     left join titres_demarches demarche_concurrente on demarche_concurrente.id = etape.demarche_id_en_concurrence
 where
     demarche.archive = false
