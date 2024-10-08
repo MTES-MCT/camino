@@ -10,7 +10,7 @@ interface AdministrationsWithTitreTypeId {
 
 const administrations: AdministrationsWithTitreTypeId[] = Object.values(ADMINISTRATION_IDS).flatMap(administrationId => TitresTypesIds.map(titreTypeId => ({ administrationId, titreTypeId })))
 
-test('vérifie si l’administration est gestionnaire', () => {
+test("vérifie si l'administration est gestionnaire", () => {
   const result: { [key in AdministrationId]?: boolean } = {}
   Object.values(ADMINISTRATION_IDS).forEach(administrationId => {
     result[administrationId] = isGestionnaire(administrationId, null)
@@ -18,7 +18,7 @@ test('vérifie si l’administration est gestionnaire', () => {
   expect(result).toMatchSnapshot()
 })
 
-test('vérifie si l’administration est gestionnaire par rapport au titreType', () => {
+test("vérifie si l'administration est gestionnaire par rapport au titreType", () => {
   const result: { [key in AdministrationId]?: { [key in TitreTypeId]?: boolean } } = {}
   administrations.forEach(({ administrationId, titreTypeId }) => {
     ;(result[administrationId] ??= {})[titreTypeId] = isGestionnaire(administrationId, titreTypeId)
@@ -26,11 +26,11 @@ test('vérifie si l’administration est gestionnaire par rapport au titreType',
   expect(result).toMatchSnapshot()
 })
 
-test('vérifie si l’administration dre-centre-val-de-loire-01 est gestionnaire par rapport au titreType', () => {
+test("vérifie si l'administration dre-centre-val-de-loire-01 est gestionnaire par rapport au titreType", () => {
   expect(isGestionnaire('dre-centre-val-de-loire-01', 'pcc')).toBe(false)
 })
 
-test('vérifie si l’administration est associée', () => {
+test("vérifie si l'administration est associée", () => {
   const result: { [key in AdministrationId]?: boolean } = {}
   Object.values(ADMINISTRATION_IDS).forEach(administrationId => {
     result[administrationId] = isAssociee(administrationId, null)
@@ -38,7 +38,7 @@ test('vérifie si l’administration est associée', () => {
   expect(result).toMatchSnapshot()
 })
 
-test('vérifie si l’administration est associée par rapport au titreType', () => {
+test("vérifie si l'administration est associée par rapport au titreType", () => {
   const result: { [key in AdministrationId]?: { [key in TitreTypeId]?: boolean } } = {}
   administrations.forEach(({ administrationId, titreTypeId }) => {
     ;(result[administrationId] ??= {})[titreTypeId] = isAssociee(administrationId, titreTypeId)
@@ -46,7 +46,7 @@ test('vérifie si l’administration est associée par rapport au titreType', ()
   expect(result).toMatchSnapshot()
 })
 
-test('vérifie tous les droits sur les types de titre pour l’administration', () => {
+test("vérifie tous les droits sur les types de titre pour l'administration", () => {
   const result: { [key in AdministrationId]?: { titreTypeId: TitreTypeId; gestionnaire: boolean; associee: boolean }[] } = {}
   Object.values(ADMINISTRATION_IDS).forEach(administrationId => {
     result[administrationId] = getTitreTypeIdsByAdministration(administrationId)

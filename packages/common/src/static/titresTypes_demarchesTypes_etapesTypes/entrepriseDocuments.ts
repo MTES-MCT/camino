@@ -47,12 +47,12 @@ const TDEEntrepriseDocumentsTypes = {
         [DOCUMENTS_TYPES_IDS.attestationFiscale]: {
           optionnel: false,
           description:
-            'Attestation sur l’honneur certifiant que le demandeur est en règle au regard de ses obligations fiscales et en matière de paiement de ses cotisations sociales (décret 2001-204, art. 7).',
+            "Attestation sur l'honneur certifiant que le demandeur est en règle au regard de ses obligations fiscales et en matière de paiement de ses cotisations sociales (décret 2001-204, art. 7).",
         },
         [DOCUMENTS_TYPES_IDS.justificatifDesCapacitesTechniques]: {
           optionnel: false,
           description:
-            'La justification du choix de la zone considérée, la situation du périmètre par rapport aux documents d’urbanisme, la situation du périmètre par rapport aux titres miniers et autorisations d’exploitation existants, les activités passées d’orpaillage et leurs conséquences sur les site.',
+            "La justification du choix de la zone considérée, la situation du périmètre par rapport aux documents d'urbanisme, la situation du périmètre par rapport aux titres miniers et autorisations d'exploitation existants, les activités passées d'orpaillage et leurs conséquences sur les site.",
         },
         [DOCUMENTS_TYPES_IDS.TroisDerniersBilansEtComptesDeResultats]: {
           optionnel: false,
@@ -61,7 +61,7 @@ const TDEEntrepriseDocumentsTypes = {
         [DOCUMENTS_TYPES_IDS.referencesProfessionnelles]: {
           optionnel: false,
           description:
-            'Références professionnelles du demandeur ou celles des cadres chargés du suivi et de la conduite des travauxCes pièces sont demandées au titre la justification des capacités techniques du demandeur (décret 2001-204, art. 6).\n \n S’il s’agit d’une personne morale, références professionnelles du ou des cadres chargés du suivi et de la conduite des travaux',
+            "Références professionnelles du demandeur ou celles des cadres chargés du suivi et de la conduite des travauxCes pièces sont demandées au titre la justification des capacités techniques du demandeur (décret 2001-204, art. 6).\n \n S'il s'agit d'une personne morale, références professionnelles du ou des cadres chargés du suivi et de la conduite des travaux",
         },
         [DOCUMENTS_TYPES_IDS.declarationsBancairesOuCautionsAppropriees]: {
           optionnel: false,

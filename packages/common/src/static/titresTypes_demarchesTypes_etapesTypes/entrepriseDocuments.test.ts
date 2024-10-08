@@ -34,7 +34,7 @@ test('getEntrepriseDocuments', () => {
       {
         "description": undefined,
         "id": "jid",
-        "nom": "Justificatif d’identité",
+        "nom": "Justificatif d'identité",
         "optionnel": false,
       },
       {
@@ -82,7 +82,7 @@ test('getEntrepriseDocuments', () => {
       },
       {
         "id": "jid",
-        "nom": "Justificatif d’identité",
+        "nom": "Justificatif d'identité",
         "optionnel": true,
       },
       {

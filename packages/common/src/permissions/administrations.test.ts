@@ -4,7 +4,7 @@ import { ADMINISTRATION_IDS, AdministrationId } from '../static/administrations'
 import { test, expect } from 'vitest'
 import { testBlankUser } from '../tests-utils'
 
-const getTestUser = (param: { role: 'super' | 'defaut' | 'entreprise' | 'bureau d’études' } | { role: AdministrationRole; administrationId: AdministrationId }): UserNotNull => {
+const getTestUser = (param: { role: 'super' | 'defaut' | 'entreprise' | "bureau d'études" } | { role: AdministrationRole; administrationId: AdministrationId }): UserNotNull => {
   switch (param.role) {
     case 'super':
     case 'defaut':
@@ -14,7 +14,7 @@ const getTestUser = (param: { role: 'super' | 'defaut' | 'entreprise' | 'bureau 
     case 'editeur':
       return { ...testBlankUser, ...param }
     case 'entreprise':
-    case 'bureau d’études':
+    case "bureau d'études":
       return { ...testBlankUser, ...param, entrepriseIds: [] }
   }
 }

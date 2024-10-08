@@ -22,7 +22,7 @@ export const Domaines: { [key in DomaineId]: Domaine<key> } = {
     id: 'c',
     nom: 'carrières',
     description:
-      'Domaine couvrant les zones spéciales de carrières à terre qui incluent des substances minérales ou fossiles de carrières rares ou nécessaires pour satisfaire les besoins des consommateurs et l’intérêt économique national ou régional.',
+      "Domaine couvrant les zones spéciales de carrières à terre qui incluent des substances minérales ou fossiles de carrières rares ou nécessaires pour satisfaire les besoins des consommateurs et l'intérêt économique national ou régional.",
   },
   f: {
     id: 'f',

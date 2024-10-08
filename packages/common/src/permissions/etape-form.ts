@@ -242,7 +242,7 @@ export const etapeDocumentsStepIsComplete = (
 
   if (needAslAndDae({ etapeTypeId: etape.typeId, demarcheTypeId, titreTypeId }, etape.isBrouillon, user)) {
     if (isNullOrUndefined(daeDocument)) {
-      errors.push('L’arrêté préfectoral de la mission autorité environnementale est obligatoire')
+      errors.push("L'arrêté préfectoral de la mission autorité environnementale est obligatoire")
     }
     if (isNullOrUndefined(aslDocument)) {
       errors.push('La lettre de décision du propriétaire du sol est obligatoire')

@@ -68,7 +68,7 @@ test.each<[User, boolean]>([
     true,
   ],
   [{ ...testBlankUser, role: 'entreprise', entrepriseIds: [] }, true],
-  [{ ...testBlankUser, role: 'bureau d’études', entrepriseIds: [] }, false],
+  [{ ...testBlankUser, role: "bureau d'études", entrepriseIds: [] }, false],
   [{ ...testBlankUser, role: 'defaut' }, false],
 ])('utilisateur %s peur voir les activités: %s', async (user, lecture) => {
   expect(canReadActivites(user)).toBe(lecture)
@@ -80,7 +80,7 @@ describe('canDeleteActiviteDocument', () => {
     ['rgr', 'enc', 'wrp', true],
     ['rie', 'dep', 'pma', true],
     ['rgr', 'dep', 'wrp', false],
-  ])('vérifie la possibilité de supprimer un document optionnel ou non d’une activité (utilisateur super)', async (documentTypeId, activiteStatutId, activiteTypeId, suppression) => {
+  ])("vérifie la possibilité de supprimer un document optionnel ou non d'une activité (utilisateur super)", async (documentTypeId, activiteStatutId, activiteTypeId, suppression) => {
     expect(canDeleteActiviteDocument(documentTypeId, activiteTypeId, activiteStatutId)).toBe(suppression)
   })
 })
@@ -91,7 +91,7 @@ describe('canReadTitreActivites', () => {
   test.each<[TestUser, TitreTypeId, AdministrationId[], EntrepriseId[], boolean]>([
     [{ role: 'defaut' }, TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX, [], [], false],
     [{ role: 'super' }, TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX, [], [], true],
-    [{ role: 'bureau d’études', entrepriseIds: [entrepriseId] }, TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX, [], [entrepriseId], false],
+    [{ role: "bureau d'études", entrepriseIds: [entrepriseId] }, TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX, [], [entrepriseId], false],
     [{ role: 'entreprise', entrepriseIds: [entrepriseId] }, TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX, [], [], false],
     [{ role: 'entreprise', entrepriseIds: [entrepriseId] }, TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX, [], [entrepriseId], true],
     [{ role: 'admin', administrationId: ADMINISTRATION_IDS['DGALN/DEB/EARM2'] }, TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX, [], [], true],
@@ -120,7 +120,7 @@ describe('canEditActivite', () => {
   test.each<[TestUser, TitreTypeId, AdministrationId[], EntrepriseId[], ActivitesStatutId, boolean]>([
     [{ role: 'defaut' }, TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX, [], [], ACTIVITES_STATUTS_IDS.ABSENT, false],
     [{ role: 'super' }, TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX, [], [], ACTIVITES_STATUTS_IDS.ABSENT, true],
-    [{ role: 'bureau d’études', entrepriseIds: [entrepriseId] }, TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX, [], [entrepriseId], ACTIVITES_STATUTS_IDS.ABSENT, false],
+    [{ role: "bureau d'études", entrepriseIds: [entrepriseId] }, TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX, [], [entrepriseId], ACTIVITES_STATUTS_IDS.ABSENT, false],
     [{ role: 'entreprise', entrepriseIds: [entrepriseId] }, TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX, [], [], ACTIVITES_STATUTS_IDS.ABSENT, false],
     [{ role: 'entreprise', entrepriseIds: [entrepriseId] }, TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX, [], [entrepriseId], ACTIVITES_STATUTS_IDS.ABSENT, true],
     [{ role: 'entreprise', entrepriseIds: [entrepriseId] }, TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX, [], [entrepriseId], ACTIVITES_STATUTS_IDS.EN_CONSTRUCTION, true],
@@ -311,7 +311,7 @@ describe('isActiviteComplete', () => {
     ).toMatchInlineSnapshot(`
       {
         "errors": [
-          "l’élément "element" de la section "section" est obligatoire",
+          "l'élément "element" de la section "section" est obligatoire",
         ],
         "valid": false,
       }

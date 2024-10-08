@@ -48,7 +48,7 @@ export const isDureeOptional = (etapeTypeId: EtapeTypeId, demarcheTypeId: Demarc
 }
 
 export const canEditAmodiataires = (titreTypeId: TitreTypeId, user: User): boolean => {
-  // il n’y a pas d’amodiataire sur les ARM et les AXM
+  // il n'y a pas d'amodiataire sur les ARM et les AXM
   if (titreTypeId === 'arm' || titreTypeId === 'axm') {
     return false
   }
@@ -69,7 +69,7 @@ export const canEditDates = (titreTypeId: TitreTypeId, demarcheTypeId: DemarcheT
     return true
   }
 
-  // ne peut pas modifier les dates sur une demande d’ARM ou d’AXM car c'est camino qui fait foi
+  // ne peut pas modifier les dates sur une demande d'ARM ou d'AXM car c'est camino qui fait foi
   if (etapeTypeId === ETAPES_TYPES.demande) {
     return false
   }
@@ -98,7 +98,7 @@ export const canEditDuree = (titreTypeId: TitreTypeId, demarcheTypeId: DemarcheT
     return true
   }
 
-  // la durée pour les demandes d’ARM est fixée à 4 mois par l’API
+  // la durée pour les demandes d'ARM est fixée à 4 mois par l'API
   return titreTypeId !== 'arm' || demarcheTypeId !== 'oct'
 }
 

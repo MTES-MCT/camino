@@ -16,7 +16,7 @@ test('isNumberElement', () => {
 
 test('getSections erreurs', () => {
   expect(() => getSections(undefined, undefined, undefined)).toThrowErrorMatchingInlineSnapshot(
-    `[Error: il manque des éléments pour trouver les sections titreTypeId: 'undefined', demarcheId: undefined, etapeTypeId: undefined]`
+    "[Error: il manque des éléments pour trouver les sections titreTypeId: 'undefined', demarcheId: undefined, etapeTypeId: undefined]"
   )
 })
 
@@ -282,7 +282,7 @@ describe('getSectionsWithValue', () => {
     `)
   })
 
-  test('les substances fiscales sont converties dans leur unité d’affichage', () => {
+  test("les substances fiscales sont converties dans leur unité d'affichage", () => {
     const withHeritage = getSectionsWithValue(
       [
         {
@@ -527,7 +527,7 @@ describe('getSectionsWithValue', () => {
         ],
         { section: { unites: 'mtk', devises: null } }
       )
-    ).toThrowErrorMatchingInlineSnapshot(`[Error: Unreachable case: "non-existant"]`)
+    ).toThrowErrorMatchingInlineSnapshot('[Error: Unreachable case: "non-existant"]')
   })
 
   test('les options des liste déroulantes sont récupérables', () => {

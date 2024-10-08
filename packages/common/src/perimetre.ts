@@ -85,7 +85,7 @@ export const featureCollectionPolygonValidator = featureCollectionValidator.exte
 
 export type FeatureCollectionPolygon = z.infer<typeof featureCollectionPolygonValidator>
 
-// Permet d’obtenir un type générique sur FeatureCollection<T>, utile pour esquiver la « distributivity »
+// Permet d'obtenir un type générique sur FeatureCollection<T>, utile pour esquiver la « distributivity »
 const makeFeatureCollectionValidator = <T extends z.ZodTypeAny>(schema: T) => featureCollectionValidator.extend({ features: z.array(schema) })
 export type GenericFeatureCollection<T extends z.ZodTypeAny> = z.infer<ReturnType<typeof makeFeatureCollectionValidator<T>>>
 

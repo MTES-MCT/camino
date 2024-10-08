@@ -7,7 +7,7 @@ export const activitesTypesDocumentsTypes = {
     documentTypeId: DOCUMENTS_TYPES_IDS.rapportAnnuelDExploitation,
     optionnel: false,
   },
-  [ACTIVITES_TYPES_IDS['rapport d’intensité d’exploration']]: { documentTypeId: DOCUMENTS_TYPES_IDS.rapportDIntensiteDExploration, optionnel: true },
+  [ACTIVITES_TYPES_IDS["rapport d'intensité d'exploration"]]: { documentTypeId: DOCUMENTS_TYPES_IDS.rapportDIntensiteDExploration, optionnel: true },
   [ACTIVITES_TYPES_IDS["rapport financier d'exploration"]]: { documentTypeId: DOCUMENTS_TYPES_IDS.rapportFinancierDExploration, optionnel: true },
   [ACTIVITES_TYPES_IDS["rapport environnemental d'exploration"]]: {
     documentTypeId: DOCUMENTS_TYPES_IDS.rapportEnvironnementalDExploration,

@@ -4,13 +4,13 @@ import { Definition } from '../definition'
 import { EtapeBrouillon } from '../etape'
 
 // prettier-ignore
-const IDS = ['abd', 'aca','aco','and','anf','def','dex','dim', 'dpu',  'dux','ihi', 'mfr','mod','mom','rca','rcb','rcd','rcm','rco','rcs','rie','rif','rim','rmc', 'rpu','sco','acg','acf','apd','ape','apo','app','apu','asl','cac','cim','css','dae','des','ede','edm','epu','esb','mca','mcb','mcd', 'mci','mcm','mco','mcp','mcr','mcs','mdp','mec','men','meo','mie','mif','mim','mna','mnb','mnc','mnd','mni','mno','mns','mnv','ncl','npp','pfc','pfd','ppu','pqr','rcg','rde','rpe','sas','sca','scg','spe','spo','spp','vfc','vfd','wab','wae','wao','war','wau','wco','wda','wdc','wdd','wde','wdm','wfa','wfd','wfo','wmt', 'wpa','wpb','wpc','wpo','wpp','wps','wrc','wre','wrt','wse','wtp', 'asc', 'adc'] as const
+const IDS = ["abd", "aca","aco","and","anf","def","dex","dim", "dpu",  "dux","ihi", "mfr","mod","mom","rca","rcb","rcd","rcm","rco","rcs","rie","rif","rim","rmc", "rpu","sco","acg","acf","apd","ape","apo","app","apu","asl","cac","cim","css","dae","des","ede","edm","epu","esb","mca","mcb","mcd", "mci","mcm","mco","mcp","mcr","mcs","mdp","mec","men","meo","mie","mif","mim","mna","mnb","mnc","mnd","mni","mno","mns","mnv","ncl","npp","pfc","pfd","ppu","pqr","rcg","rde","rpe","sas","sca","scg","spe","spo","spp","vfc","vfd","wab","wae","wao","war","wau","wco","wda","wdc","wdd","wde","wdm","wfa","wfd","wfo","wmt", "wpa","wpb","wpc","wpo","wpp","wps","wrc","wre","wrt","wse","wtp", "asc", "adc"] as const
 
 // prettier-ignore
-const FONDAMENTALES_IDS = ['abd', 'aca','aco','and','anf','def','dex','dim', 'dpu','dux','ihi', 'mfr','mod','mom','rca','rcb','rcd','rcm','rco','rcs','rie','rif','rim','rmc', 'rpu','sco'] as const satisfies Readonly<EtapeTypeIdFondamentaleArray>
+const FONDAMENTALES_IDS = ["abd", "aca","aco","and","anf","def","dex","dim", "dpu","dux","ihi", "mfr","mod","mom","rca","rcb","rcd","rcm","rco","rcs","rie","rif","rim","rmc", "rpu","sco"] as const satisfies Readonly<EtapeTypeIdFondamentaleArray>
 
 // prettier-ignore
-const NON_FONDAMENTALES_IDS = ['acg', 'acf','apd','ape','apo','app','apu','asl','cac','cim','css','dae','des','ede','edm','epu','esb','mca','mcb','mcd','mci', 'mcm','mco','mcp','mcr', 'mcs','mdp','mec','men','meo','mie','mif','mim','mna','mnb','mnc','mnd','mni','mno','mns','mnv','ncl','npp','pfc','pfd','ppu','pqr','rcg','rde','rpe','sas','sca','scg','spe','spo','spp','vfc','vfd','wab','wae','wao','war','wau','wco','wda','wdc','wdd','wde','wdm','wfa','wfd','wfo','wmt','wpa','wpb','wpc','wpo','wpp','wps','wrc','wre','wrt','wse','wtp', 'asc', 'adc'] as const satisfies Readonly<EtapeTypeIdNonFondamentale[]>
+const NON_FONDAMENTALES_IDS = ["acg", "acf","apd","ape","apo","app","apu","asl","cac","cim","css","dae","des","ede","edm","epu","esb","mca","mcb","mcd","mci", "mcm","mco","mcp","mcr", "mcs","mdp","mec","men","meo","mie","mif","mim","mna","mnb","mnc","mnd","mni","mno","mns","mnv","ncl","npp","pfc","pfd","ppu","pqr","rcg","rde","rpe","sas","sca","scg","spe","spo","spp","vfc","vfd","wab","wae","wao","war","wau","wco","wda","wdc","wdd","wde","wdm","wfa","wfd","wfo","wmt","wpa","wpb","wpc","wpo","wpp","wps","wrc","wre","wrt","wse","wtp", "asc", "adc"] as const satisfies Readonly<EtapeTypeIdNonFondamentale[]>
 
 // Ceci est un test :)
 ;[...FONDAMENTALES_IDS, ...NON_FONDAMENTALES_IDS] as const satisfies typeof IDS
@@ -359,7 +359,7 @@ export const EtapesTypes = {
     id: 'epu',
     nom: 'Enquête publique',
     description:
-      'L’enquête publique requise pour l’octroi des concessions minières et des permis d’exploitations dans les départements d’outre-mer a lieu après constat de recevabilité du dossier. L’enquête publique dure un mois mais il est possible de la prolonger.',
+      "L'enquête publique requise pour l'octroi des concessions minières et des permis d'exploitations dans les départements d'outre-mer a lieu après constat de recevabilité du dossier. L'enquête publique dure un mois mais il est possible de la prolonger.",
     fondamentale: false,
     unique: false,
     date_fin: null,
@@ -368,7 +368,7 @@ export const EtapesTypes = {
   },
   rpe: {
     id: 'rpe',
-    nom: 'rapport du Conseil d’État',
+    nom: "rapport du Conseil d'État",
     description: '',
     fondamentale: false,
     unique: false,
@@ -389,7 +389,7 @@ export const EtapesTypes = {
   apo: {
     id: 'apo',
     nom: 'avis de la commission départementale des mines (CDM)',
-    description: 'L’avis de cette commission est consultatif et donne lieu à des votes des différents membres des collèges. Les représentants des administrations participent également.',
+    description: "L'avis de cette commission est consultatif et donne lieu à des votes des différents membres des collèges. Les représentants des administrations participent également.",
     fondamentale: false,
     unique: false,
     date_fin: null,
@@ -458,9 +458,9 @@ export const EtapesTypes = {
   },
   sco: {
     id: 'sco',
-    nom: 'signature de l’autorisation de recherche minière',
+    nom: "signature de l'autorisation de recherche minière",
     description:
-      'Signature de l’autorisation par l’ONF seulement dans le cas d’ARM manuelles ou par les deux parties (ONF et demandeur) dans le cas d’ARM mécanisées pour acceptation de l’état des lieux par le demandeur et valant début de validité de celle-ci.',
+      "Signature de l'autorisation par l'ONF seulement dans le cas d'ARM manuelles ou par les deux parties (ONF et demandeur) dans le cas d'ARM mécanisées pour acceptation de l'état des lieux par le demandeur et valant début de validité de celle-ci.",
     fondamentale: true,
     unique: true,
     date_fin: null,
@@ -470,7 +470,7 @@ export const EtapesTypes = {
   spp: {
     id: 'spp',
     nom: 'saisine du préfet',
-    description: 'L’administration centrale transmet la demande au préfet pour qu’il engage son instruction locale.\n',
+    description: "L'administration centrale transmet la demande au préfet pour qu'il engage son instruction locale.\n",
     fondamentale: false,
     unique: true,
     date_fin: null,
@@ -480,7 +480,7 @@ export const EtapesTypes = {
   dux: {
     id: 'dux',
     nom: 'décision administrative',
-    description: 'Refus ou acceptation à l’issue d’une instruction.',
+    description: "Refus ou acceptation à l'issue d'une instruction.",
     fondamentale: true,
     unique: false,
     date_fin: null,
@@ -529,7 +529,7 @@ export const EtapesTypes = {
   },
   mns: {
     id: 'mns',
-    nom: 'notification au demandeur (signature de l’autorisation de recherche minière)',
+    nom: "notification au demandeur (signature de l'autorisation de recherche minière)",
     description: 'après une sco',
     fondamentale: false,
     unique: false,
@@ -549,8 +549,8 @@ export const EtapesTypes = {
   },
   aco: {
     id: 'aco',
-    nom: 'avenant à l’autorisation de recherche minière',
-    description: 'Document (courrier) validant une demande de renouvellement et actant la prolongation de la durée de l’autorisation.',
+    nom: "avenant à l'autorisation de recherche minière",
+    description: "Document (courrier) validant une demande de renouvellement et actant la prolongation de la durée de l'autorisation.",
     fondamentale: true,
     unique: false,
     date_fin: null,
@@ -610,7 +610,7 @@ export const EtapesTypes = {
   spe: {
     id: 'spe',
     nom: "saisine du Conseil d'Etat",
-    description: 'Le service instructeur transmet la demande, les différents avis et une proposition de décision du premier ministre et du ministre chargé des mines au conseil d’État pour avis.',
+    description: "Le service instructeur transmet la demande, les différents avis et une proposition de décision du premier ministre et du ministre chargé des mines au conseil d'État pour avis.",
     fondamentale: false,
     unique: false,
     date_fin: null,
@@ -620,7 +620,7 @@ export const EtapesTypes = {
   abd: {
     id: 'abd',
     nom: 'abrogation de la décision',
-    description: 'Suppression de l’acte administratif pour l’avenir.',
+    description: "Suppression de l'acte administratif pour l'avenir.",
     fondamentale: true,
     unique: false,
     date_fin: null,
@@ -631,7 +631,7 @@ export const EtapesTypes = {
     id: 'des',
     nom: 'désistement du demandeur',
     description:
-      'Le demandeur signifie son souhait de ne pas donner suite à sa demande. Le désistement met fin à la démarche. Le demandeur ne peut pas se désister de sa demande après qu’une décision ait été rendue sur celle-ci.',
+      "Le demandeur signifie son souhait de ne pas donner suite à sa demande. Le désistement met fin à la démarche. Le demandeur ne peut pas se désister de sa demande après qu'une décision ait été rendue sur celle-ci.",
     fondamentale: false,
     unique: true,
     date_fin: null,
@@ -642,7 +642,7 @@ export const EtapesTypes = {
     id: 'apu',
     nom: "publication de l'avis de décision implicite",
     description:
-      'Le principe adopté par la réglementation actuelle veut que le silence de l’administration pendant un délai fixé vaut accord implicite. Toutefois il existe des décisions implicites de rejets pour certaines catégories de décisions. En particulier pour les titres miniers, l’octroi, la prolongation et la mutation. Les décisions de rejet ne sont pas publiées, les décisions d’acceptation doivent faire l’objet d’un avis au JORF confirmant que cette dernière est acquise. ',
+      "Le principe adopté par la réglementation actuelle veut que le silence de l'administration pendant un délai fixé vaut accord implicite. Toutefois il existe des décisions implicites de rejets pour certaines catégories de décisions. En particulier pour les titres miniers, l'octroi, la prolongation et la mutation. Les décisions de rejet ne sont pas publiées, les décisions d'acceptation doivent faire l'objet d'un avis au JORF confirmant que cette dernière est acquise. ",
     fondamentale: false,
     unique: true,
     date_fin: null,
@@ -653,7 +653,7 @@ export const EtapesTypes = {
     id: 'app',
     nom: 'avis du préfet',
     description:
-      'Le préfet émet un avis à l’issue de l’instruction du dossier, prenant en compte les avis délivrés par les services déconcentrés et éventuellement, l’avis de la commission des mines en Guyane.',
+      "Le préfet émet un avis à l'issue de l'instruction du dossier, prenant en compte les avis délivrés par les services déconcentrés et éventuellement, l'avis de la commission des mines en Guyane.",
     fondamentale: false,
     unique: false,
     date_fin: null,
@@ -664,7 +664,7 @@ export const EtapesTypes = {
     id: 'mcp',
     nom: 'complétude de la demande',
     description:
-      'Phase d’examen qui permet d’établir que toutes les pièces exigées par la réglementation sont bien fournies par le demandeur. Cet examen ne préjuge pas de la décision qui sera apportée par l’administration. ',
+      "Phase d'examen qui permet d'établir que toutes les pièces exigées par la réglementation sont bien fournies par le demandeur. Cet examen ne préjuge pas de la décision qui sera apportée par l'administration. ",
     fondamentale: false,
     unique: false,
     date_fin: null,
@@ -675,7 +675,7 @@ export const EtapesTypes = {
     id: 'ppu',
     nom: 'participation du public',
     description:
-      'La participation du public est obligatoire pour l’octroi des permis exclusifs de recherches (PER) et les prolongations de concessions minières. La législation ne prévoit pas à quel moment elle intervient. Il a été décidé pour les titres miniers qu’elle aurait lieu dès la déclaration de recevabilité du dossier. ',
+      "La participation du public est obligatoire pour l'octroi des permis exclusifs de recherches (PER) et les prolongations de concessions minières. La législation ne prévoit pas à quel moment elle intervient. Il a été décidé pour les titres miniers qu'elle aurait lieu dès la déclaration de recevabilité du dossier. ",
     fondamentale: false,
     unique: false,
     date_fin: null,
@@ -686,7 +686,7 @@ export const EtapesTypes = {
     id: 'mod',
     nom: 'modification de la demande',
     description:
-      'Le porteur modifie les caractéristiques fondamentales de sa demande. Cette modification ne change pas le délai de décision implicite. Les possibilités sont limitées au gré de l’avancement de la démarche, en particulier après la mise en concurrence et après la participation du public.\n',
+      "Le porteur modifie les caractéristiques fondamentales de sa demande. Cette modification ne change pas le délai de décision implicite. Les possibilités sont limitées au gré de l'avancement de la démarche, en particulier après la mise en concurrence et après la participation du public.\n",
     fondamentale: true,
     unique: false,
     date_fin: null,
@@ -707,7 +707,7 @@ export const EtapesTypes = {
     id: 'spo',
     nom: 'saisine de la commission départementale des mines (CDM)',
     description:
-      'Dans les seuls départements d’Outre-mer (Guadeloupe, Guyane, Réunion, Martinique et Mayotte) une commission dédiée à l’examen des demandes minières se réunit comportant les différentes parties prenantes. Cette commission donne un avis consultatif sur le rapport des services déconcentrés. Pour l’instant, cette commission se réunit uniquement en Guyane.',
+      "Dans les seuls départements d'Outre-mer (Guadeloupe, Guyane, Réunion, Martinique et Mayotte) une commission dédiée à l'examen des demandes minières se réunit comportant les différentes parties prenantes. Cette commission donne un avis consultatif sur le rapport des services déconcentrés. Pour l'instant, cette commission se réunit uniquement en Guyane.",
     fondamentale: false,
     unique: false,
     date_fin: null,
@@ -717,7 +717,7 @@ export const EtapesTypes = {
   men: {
     id: 'men',
     nom: 'enregistrement de la demande',
-    description: "L’enregistrement de la demande est une étape de gestion administrative interne du dossier qui se confond au dépôt de la demande lorsqu'elle est numérique et dématérialisée.",
+    description: "L'enregistrement de la demande est une étape de gestion administrative interne du dossier qui se confond au dépôt de la demande lorsqu'elle est numérique et dématérialisée.",
     fondamentale: false,
     unique: true,
     date_fin: toCaminoDate('2019-01-01'),
@@ -747,7 +747,7 @@ export const EtapesTypes = {
   ede: {
     id: 'ede',
     nom: 'expertise DREAL ou DGTM service eau',
-    description: 'Instruction de demande sur la réglementation ayant trait à l’eau par les services de la DGTM.\n',
+    description: "Instruction de demande sur la réglementation ayant trait à l'eau par les services de la DGTM.\n",
     fondamentale: false,
     unique: false,
     date_fin: null,
@@ -767,7 +767,7 @@ export const EtapesTypes = {
   mec: {
     id: 'mec',
     nom: 'avis de demande concurrente',
-    description: 'Annonce à un demandeur qu’une demande concurrente à la sienne a été déposée.',
+    description: "Annonce à un demandeur qu'une demande concurrente à la sienne a été déposée.",
     fondamentale: false,
     unique: false,
     date_fin: null,
@@ -776,7 +776,7 @@ export const EtapesTypes = {
   },
   mnv: {
     id: 'mnv',
-    nom: "notification au demandeur (signature de l'avenant à l’autorisation de recherche minière)",
+    nom: "notification au demandeur (signature de l'avenant à l'autorisation de recherche minière)",
     description: 'après une aco',
     fondamentale: false,
     unique: false,
@@ -829,7 +829,7 @@ export const EtapesTypes = {
     id: 'ape',
     nom: "avis du Conseil d'Etat",
     description:
-      "Le conseil d’État donne au premier ministre et au ministre chargé des mines un avis sur la demande et sur son instruction. Cet avis n'est pas conforme mais si la décision s'écarte de l'avis donné, elle doit être validée en conseil des ministres.",
+      "Le conseil d'État donne au premier ministre et au ministre chargé des mines un avis sur la demande et sur son instruction. Cet avis n'est pas conforme mais si la décision s'écarte de l'avis donné, elle doit être validée en conseil des ministres.",
     fondamentale: false,
     unique: false,
     date_fin: null,
@@ -839,7 +839,7 @@ export const EtapesTypes = {
   npp: {
     id: 'npp',
     nom: 'notification au préfet',
-    description: 'Note au préfet demandant de notifier la décision à l’intéressé et de prendre les mesures de publicité nécessaires.',
+    description: "Note au préfet demandant de notifier la décision à l'intéressé et de prendre les mesures de publicité nécessaires.",
     fondamentale: false,
     unique: false,
     date_fin: null,
@@ -860,7 +860,7 @@ export const EtapesTypes = {
     id: 'dim',
     nom: 'décision implicite',
     description:
-      'En dehors des décisions implicites, l’autorité administrative compétente (préfet, ministre chargé des mines ou gouvernement) peut prendre une décision express de refus ou d’acceptation par arrêté ou décret en conseil d’État (décision relative aux concessions minières).',
+      "En dehors des décisions implicites, l'autorité administrative compétente (préfet, ministre chargé des mines ou gouvernement) peut prendre une décision express de refus ou d'acceptation par arrêté ou décret en conseil d'État (décision relative aux concessions minières).",
     fondamentale: true,
     unique: false,
     date_fin: null,
@@ -870,7 +870,7 @@ export const EtapesTypes = {
   def: {
     id: 'def',
     nom: "décision de l'Office national des forêts",
-    description: 'Décision de l’ONF dans le cadre des autorisations d’exploitation (AEX) et des autorisations de recherches minières (ARM) en tant que propriétaire du sol.',
+    description: "Décision de l'ONF dans le cadre des autorisations d'exploitation (AEX) et des autorisations de recherches minières (ARM) en tant que propriétaire du sol.",
     fondamentale: true,
     unique: true,
     date_fin: toCaminoDate('2018-10-22'),
@@ -910,7 +910,7 @@ export const EtapesTypes = {
   vfd: {
     id: 'vfd',
     nom: 'validation du paiement des frais de dossier',
-    description: 'Acte attestant que le pétitionnaire d’une autorisation de recherches minières (ARM) a acquitté ses frais de dossier.\n',
+    description: "Acte attestant que le pétitionnaire d'une autorisation de recherches minières (ARM) a acquitté ses frais de dossier.\n",
     fondamentale: false,
     unique: true,
     date_fin: null,
@@ -941,7 +941,7 @@ export const EtapesTypes = {
     id: 'mcr',
     nom: 'recevabilité de la demande',
     description:
-      'Acte de l’administration établissant que l’examen de complétude a été mené à bien. Le constat de recevabilité donne lieu à un rapport de la part de l’administration qui constate que le dossier de demande est complet. ',
+      "Acte de l'administration établissant que l'examen de complétude a été mené à bien. Le constat de recevabilité donne lieu à un rapport de la part de l'administration qui constate que le dossier de demande est complet. ",
     fondamentale: false,
     unique: false,
     date_fin: null,
@@ -1002,7 +1002,7 @@ export const EtapesTypes = {
     id: 'dpu',
     nom: 'publication de décision au JORF',
     description:
-      'En dehors des refus et décisions implicites de rejet, la décision de l’autorité compétente est publiée soit au recueil administratif de la préfecture soit au JORF pour les décisions du préfet et au JORF pour celle du ministre chargé des mines et du gouvernement. Ces publications pour les actes relatifs aux titres miniers sont publiés par extrait.',
+      "En dehors des refus et décisions implicites de rejet, la décision de l'autorité compétente est publiée soit au recueil administratif de la préfecture soit au JORF pour les décisions du préfet et au JORF pour celle du ministre chargé des mines et du gouvernement. Ces publications pour les actes relatifs aux titres miniers sont publiés par extrait.",
     fondamentale: true,
     unique: false,
     date_fin: null,
@@ -1024,7 +1024,7 @@ export const EtapesTypes = {
     id: 'mdp',
     nom: 'dépôt de la demande',
     description:
-      "Le dépôt de la demande formalise la prise en charge de la demande par l'administration compétente. Cette étape fait l’objet d’un accusé de réception qui informe le demandeur des modalités d’instruction, du délai au-delà duquel une décision implicite d’accord ou de rejet sera formée et des voies de recours.",
+      "Le dépôt de la demande formalise la prise en charge de la demande par l'administration compétente. Cette étape fait l'objet d'un accusé de réception qui informe le demandeur des modalités d'instruction, du délai au-delà duquel une décision implicite d'accord ou de rejet sera formée et des voies de recours.",
     fondamentale: false,
     unique: true,
     date_fin: null,
@@ -1035,7 +1035,7 @@ export const EtapesTypes = {
     id: 'mfr',
     nom: 'demande',
     description:
-      'La demande caractérise le projet minier porté par le demandeur. Elle inclut les caractéristiques fondamentales du titre ou de l’autorisation dans une lettre appuyée par un dossier et les justifications des capacités techniques et financières. Les informations relevant du secret des affaires incluses à la demande peuvent ne pas être rendues publiques à la demande du porteur de projet.',
+      "La demande caractérise le projet minier porté par le demandeur. Elle inclut les caractéristiques fondamentales du titre ou de l'autorisation dans une lettre appuyée par un dossier et les justifications des capacités techniques et financières. Les informations relevant du secret des affaires incluses à la demande peuvent ne pas être rendues publiques à la demande du porteur de projet.",
     fondamentale: true,
     unique: true,
     date_fin: null,
@@ -1225,7 +1225,7 @@ export const EtapesTypes = {
   rde: {
     id: 'rde',
     nom: "récépissé de déclaration loi sur l'eau",
-    description: 'Document nécessaire à l’utilisation de l’eau dans le cas d’une autorisation de recherches minières (ARM).',
+    description: "Document nécessaire à l'utilisation de l'eau dans le cas d'une autorisation de recherches minières (ARM).",
     fondamentale: false,
     unique: false,
     date_fin: null,

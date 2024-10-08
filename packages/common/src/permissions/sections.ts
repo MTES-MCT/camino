@@ -9,7 +9,7 @@ export const sectionsWithValueCompleteValidate = (sections_with_value: DeepReado
   sections_with_value.forEach(s =>
     s.elements.forEach(e => {
       if (!sectionElementWithValueCompleteValidate(e)) {
-        errors.push(`l’élément "${e.nom}" de la section "${s.nom}" est obligatoire`)
+        errors.push(`l'élément "${e.nom}" de la section "${s.nom}" est obligatoire`)
       }
     })
   )

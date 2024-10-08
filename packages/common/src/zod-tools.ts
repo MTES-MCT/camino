@@ -71,7 +71,7 @@ export const translateIssue = (issue: ZodIssue): string => {
       if (isNotNullNorUndefinedNorEmpty(fieldName)) {
         message = `Le valeur du champ "${fieldName}" est invalide.`
       } else {
-        message = `La valeur est invalide.`
+        message = 'La valeur est invalide.'
       }
       break
     case ZodIssueCode.invalid_union_discriminator:
@@ -81,7 +81,7 @@ export const translateIssue = (issue: ZodIssue): string => {
       if (isNotNullNorUndefinedNorEmpty(fieldName)) {
         message = `Le valeur du champ "${fieldName}" `
       } else {
-        message = `La valeur `
+        message = 'La valeur '
       }
       message += `doit être "${issue.options.join('" ou "')}" mais reçu "${issue.received}".`
       break
@@ -90,7 +90,7 @@ export const translateIssue = (issue: ZodIssue): string => {
       if (isNotNullNorUndefinedNorEmpty(fieldName)) {
         message = `La valeur du champ "${fieldName}"`
       } else {
-        message = `La valeur`
+        message = 'La valeur'
       }
       if (typeof issue.validation === 'object') {
         if ('includes' in issue.validation) {
@@ -112,26 +112,26 @@ export const translateIssue = (issue: ZodIssue): string => {
       if (isNotNullNorUndefinedNorEmpty(fieldName)) {
         message = `La valeur du champ "${fieldName}"`
       } else {
-        message = `La valeur`
+        message = 'La valeur'
       }
-      if (issue.type === 'array') message = `${message} doit être un tableau avec ${issue.exact === true ? 'exactement' : issue.inclusive ? `au moins` : `plus de`} ${issue.minimum} élément(s).`
+      if (issue.type === 'array') message = `${message} doit être un tableau avec ${issue.exact === true ? 'exactement' : issue.inclusive ? 'au moins' : 'plus de'} ${issue.minimum} élément(s).`
       else if (issue.type === 'string')
-        message = `${message} doit être une chaine de caractère avec ${issue.exact === true ? 'exactement' : issue.inclusive ? `au moins` : `plus de`} ${issue.minimum} caractère(s).`
+        message = `${message} doit être une chaine de caractère avec ${issue.exact === true ? 'exactement' : issue.inclusive ? 'au moins' : 'plus de'} ${issue.minimum} caractère(s).`
       else if (issue.type === 'number')
-        message = `${message} doit être un nombre ${issue.exact === true ? `exactement égal à ` : issue.inclusive ? `plus grand ou égal à ` : `plus grand que `}${issue.minimum}.`
+        message = `${message} doit être un nombre ${issue.exact === true ? 'exactement égal à ' : issue.inclusive ? 'plus grand ou égal à ' : 'plus grand que '}${issue.minimum}.`
       else message = `${message} est invalide.`
       break
     case ZodIssueCode.too_big:
       if (isNotNullNorUndefinedNorEmpty(fieldName)) {
         message = `La valeur du champ "${fieldName}"`
       } else {
-        message = `La valeur`
+        message = 'La valeur'
       }
-      if (issue.type === 'array') message = `${message} doit être un tableau avec ${issue.exact === true ? `exactement` : issue.inclusive ? `au plus` : `moins de`} ${issue.maximum} élément(s).`
+      if (issue.type === 'array') message = `${message} doit être un tableau avec ${issue.exact === true ? 'exactement' : issue.inclusive ? 'au plus' : 'moins de'} ${issue.maximum} élément(s).`
       else if (issue.type === 'string')
-        message = `${message} doit être une chaine de caractère avec ${issue.exact === true ? `exactement ` : issue.inclusive ? `au plus` : `moins de`} ${issue.maximum} caractère(s).`
+        message = `${message} doit être une chaine de caractère avec ${issue.exact === true ? 'exactement ' : issue.inclusive ? 'au plus' : 'moins de'} ${issue.maximum} caractère(s).`
       else if (issue.type === 'number' || issue.type === 'bigint')
-        message = `${message} doit être un nombre ${issue.exact === true ? `exactement égal à` : issue.inclusive ? `plus petit ou égal à` : `plus petit que`} ${issue.maximum}.`
+        message = `${message} doit être un nombre ${issue.exact === true ? 'exactement égal à' : issue.inclusive ? 'plus petit ou égal à' : 'plus petit que'} ${issue.maximum}.`
       else message = `${message} est invalide.`
       break
     default:

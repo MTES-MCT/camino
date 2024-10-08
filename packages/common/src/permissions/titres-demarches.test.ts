@@ -13,7 +13,7 @@ describe('canEditDemarche', () => {
     ['pre-42218-01', false],
     ['ope-ptmg-973-01', false],
     ['dea-guyane-01', true],
-  ])('Vérifie si l’administration peut modifier des démarches', async (administrationId, creation) => {
+  ])("Vérifie si l'administration peut modifier des démarches", async (administrationId, creation) => {
     expect(canEditDemarche({ role: 'admin', administrationId, ...testBlankUser }, 'arm', TitresStatutIds.Valide, [])).toEqual(creation)
   })
 
@@ -42,7 +42,7 @@ describe('canDeleteDemarche', () => {
     ['pre-42218-01', false],
     ['ope-ptmg-973-01', false],
     ['dea-guyane-01', true],
-  ])('Vérifie si l’administration peut supprimer des démarches', async (administrationId, creation) => {
+  ])("Vérifie si l'administration peut supprimer des démarches", async (administrationId, creation) => {
     expect(canDeleteDemarche({ role: 'admin', administrationId, ...testBlankUser }, 'arm', TitresStatutIds.Valide, [], { etapes: [] })).toEqual(creation)
   })
 
@@ -64,7 +64,7 @@ describe('canDeleteDemarche', () => {
 })
 
 describe('canCreateDemarche', () => {
-  test('Une administration locale peut créer des démarches si il n’y a pas d’octroi en cours de construction', () => {
+  test("Une administration locale peut créer des démarches si il n'y a pas d'octroi en cours de construction", () => {
     expect(
       canCreateDemarche(
         { role: 'admin', administrationId: 'dea-guyane-01', ...testBlankUser },
@@ -88,7 +88,7 @@ describe('canCreateTravaux', () => {
     ['pre-42218-01', false],
     ['ope-ptmg-973-01', false],
     ['dea-guyane-01', true],
-  ])('Vérifie si l’administration peut créer des travaux', async (administrationId, creation) => {
+  ])("Vérifie si l'administration peut créer des travaux", async (administrationId, creation) => {
     expect(canCreateTravaux({ role: 'admin', administrationId, ...testBlankUser }, 'arm', [], [])).toEqual(creation)
   })
 
@@ -96,7 +96,7 @@ describe('canCreateTravaux', () => {
     expect(canCreateTravaux({ role: 'admin', administrationId: 'dea-guyane-01', ...testBlankUser }, 'axm', [], [{ demarche_date_debut: caminoDateValidator.parse('2023-01-01') }])).toEqual(true)
   })
 
-  test('La DGTM ne peut pas créer des travaux sur les AXM si l’octroi n’est pas encore valide', () => {
+  test("La DGTM ne peut pas créer des travaux sur les AXM si l'octroi n'est pas encore valide", () => {
     expect(canCreateTravaux({ role: 'admin', administrationId: 'dea-guyane-01', ...testBlankUser }, 'axm', [], [{ demarche_date_debut: null }])).toEqual(false)
   })
 

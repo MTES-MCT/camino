@@ -1,7 +1,7 @@
 import { PaysId } from './pays'
 import { z } from 'zod'
 // prettier-ignore
-const IDS = ['01','02','03','04','06','11','24','27','28','32','44','52','53','75','76','84','93','94',] as const
+const IDS = ["01","02","03","04","06","11","24","27","28","32","44","52","53","75","76","84","93","94",] as const
 export const REGION_IDS = {
   Guadeloupe: '01',
   Martinique: '02',

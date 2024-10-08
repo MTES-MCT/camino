@@ -3,12 +3,12 @@ import { entrepriseIdValidator } from './entreprise'
 import { z } from 'zod'
 import { DeepReadonly } from './typescript-tools'
 
-export const ROLES = ['super', 'admin', 'editeur', 'lecteur', 'entreprise', 'bureau d’études', 'defaut'] as const
+export const ROLES = ['super', 'admin', 'editeur', 'lecteur', 'entreprise', "bureau d'études", 'defaut'] as const
 
 export const roleValidator = z.enum(ROLES)
 export type Role = z.infer<typeof roleValidator>
 type UserEntreprise = { role: 'entreprise' } & EntrepriseUserNotNull
-type UserBureaudEtudes = { role: 'bureau d’études' } & EntrepriseUserNotNull
+type UserBureaudEtudes = { role: "bureau d'études" } & EntrepriseUserNotNull
 type UserAdmin = { role: 'admin' } & AdminUserNotNull
 type UserLecteur = { role: 'lecteur' } & AdminUserNotNull
 type UserEditeur = { role: 'editeur' } & AdminUserNotNull
@@ -48,7 +48,7 @@ export type AdministrationRole = z.infer<typeof administrationRoleValidator>
 export const adminUserNotNullValidator = baseUserNotNullValidator.extend({ role: administrationRoleValidator, administrationId: administrationIdValidator })
 export type AdminUserNotNull = z.infer<typeof adminUserNotNullValidator>
 
-const ENTREPRISE_ROLES = ['entreprise', 'bureau d’études'] as const satisfies readonly Role[]
+const ENTREPRISE_ROLES = ['entreprise', "bureau d'études"] as const satisfies readonly Role[]
 const entrepriseRoleValidator = z.enum(ENTREPRISE_ROLES)
 type EntrepriseOrBureauDetudeRole = z.infer<typeof entrepriseRoleValidator>
 const entrepriseUserNotNullValidator = baseUserNotNullValidator.extend({ role: entrepriseRoleValidator, entrepriseIds: z.array(entrepriseIdValidator) })
@@ -67,7 +67,7 @@ export const isAdministrationLecteur = (user: DeepReadonly<User>): user is UserL
 export const isEntrepriseOrBureauDEtude = (user: DeepReadonly<User>): user is UserEntreprise | UserBureaudEtudes => isEntreprise(user) || isBureauDEtudes(user)
 
 export const isEntreprise = (user: DeepReadonly<User>): user is UserEntreprise => userPermissionCheck(user, 'entreprise')
-export const isBureauDEtudes = (user: DeepReadonly<User>): user is UserBureaudEtudes => userPermissionCheck(user, 'bureau d’études')
+export const isBureauDEtudes = (user: DeepReadonly<User>): user is UserBureaudEtudes => userPermissionCheck(user, "bureau d'études")
 export const isDefault = (user: DeepReadonly<User>): user is UserDefaut | undefined => !user || userPermissionCheck(user, 'defaut')
 
 export const isRole = (role: Role | string | undefined | null): role is Role => ROLES.includes(role)

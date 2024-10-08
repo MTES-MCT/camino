@@ -35,7 +35,7 @@ export type PerimetreUploadType = z.infer<typeof perimetreFileUploadTypeValidato
 export type FileUploadType = z.infer<typeof fileUploadTypeValidator>
 
 // prettier-ignore
-const IDS_WITHOUT_AUTRE = ['aac','acc','acd','acg','acm','acr','adr','aep','aot','apd','apf','apm','apu','are','arm','arp','arr','atf','avc','ave','avi','bil','cam','car','cco','cdc','cnr','cnt','cod','con','cou','csp','cur','dcl','deb','dec','dei','dep','doe','dom','dos','erd','fac','fic','fip','for','idm','jac','jcf','jct','jeg','jid','jpa','kbi','lac','lce','lcg','lcm','ldc','lem','let','lis','lpf','mes','met','mot','nas','ndc','ndd','nip','nir','noi','not','ocd','odr','ord','prg','pro','pub','pvr','rac','rad','rap','rce','rcr','rdr','rdt','rec','ree','ref','rfe','rgr','rie','rse','sch','sir' ] as const
+const IDS_WITHOUT_AUTRE = ["aac","acc","acd","acg","acm","acr","adr","aep","aot","apd","apf","apm","apu","are","arm","arp","arr","atf","avc","ave","avi","bil","cam","car","cco","cdc","cnr","cnt","cod","con","cou","csp","cur","dcl","deb","dec","dei","dep","doe","dom","dos","erd","fac","fic","fip","for","idm","jac","jcf","jct","jeg","jid","jpa","kbi","lac","lce","lcg","lcm","ldc","lem","let","lis","lpf","mes","met","mot","nas","ndc","ndd","nip","nir","noi","not","ocd","odr","ord","prg","pro","pub","pvr","rac","rad","rap","rce","rcr","rdr","rdt","rec","ree","ref","rfe","rgr","rie","rse","sch","sir" ] as const
 
 const AUTRE_IDS = ['aut'] as const
 const IDS = [...IDS_WITHOUT_AUTRE, ...AUTRE_IDS] as const
@@ -225,11 +225,11 @@ export const DocumentsTypes: { [key in DocumentTypeId | AutreDocumentTypeId]: De
   fip: { id: 'fip', nom: 'Fiche de présentation' },
   for: { id: 'for', nom: 'Formulaire de demande' },
   idm: { id: 'idm', nom: 'Identification de matériel' },
-  jac: { id: 'jac', nom: 'Justificatif d’adhésion à la charte des bonnes pratiques' },
+  jac: { id: 'jac', nom: "Justificatif d'adhésion à la charte des bonnes pratiques" },
   jcf: { id: 'jcf', nom: 'Justificatif des capacités financières' },
   jct: { id: 'jct', nom: 'Justificatif des capacités techniques' },
-  jeg: { id: 'jeg', nom: 'Justification d’existence du gisement' },
-  jid: { id: 'jid', nom: 'Justificatif d’identité' },
+  jeg: { id: 'jeg', nom: "Justification d'existence du gisement" },
+  jid: { id: 'jid', nom: "Justificatif d'identité" },
   jpa: { id: 'jpa', nom: 'Justificatif de paiement' },
   kbi: { id: 'kbi', nom: 'Kbis' },
   lac: { id: 'lac', nom: "Lettre de saisine des services de l'administration centrale" },
@@ -247,8 +247,8 @@ export const DocumentsTypes: { [key in DocumentTypeId | AutreDocumentTypeId]: De
   nas: { id: 'nas', nom: "Note à l'autorité signataire" },
   ndc: { id: 'ndc', nom: 'Notification de demande concurrente' },
   ndd: { id: 'ndd', nom: 'Notification de décision' },
-  nip: { id: 'nip', nom: 'Notice d’impact' },
-  nir: { id: 'nir', nom: 'Notice d’impact renforcée' },
+  nip: { id: 'nip', nom: "Notice d'impact" },
+  nir: { id: 'nir', nom: "Notice d'impact renforcée" },
   noi: { id: 'noi', nom: "Notice d'incidence" },
   not: { id: 'not', nom: 'Notes' },
   ocd: { id: 'ocd', nom: 'Ordre du jour de la commission départementale des mines' },
@@ -258,7 +258,7 @@ export const DocumentsTypes: { [key in DocumentTypeId | AutreDocumentTypeId]: De
   pro: { id: 'pro', nom: 'Projet de prescriptions' },
   pub: { id: 'pub', nom: 'Publication au JORF' },
   pvr: { id: 'pvr', nom: 'PV de récolement' },
-  rac: { id: 'rac', nom: 'Rapport de l’administration centrale chargé des mines' },
+  rac: { id: 'rac', nom: "Rapport de l'administration centrale chargé des mines" },
   rad: { id: 'rad', nom: 'Rapport DREAL' },
   rap: { id: 'rap', nom: 'Rapport' },
   rce: { id: 'rce', nom: 'Rapport du commissaire enquêteur' },
@@ -270,7 +270,7 @@ export const DocumentsTypes: { [key in DocumentTypeId | AutreDocumentTypeId]: De
   ref: { id: 'ref', nom: 'Références professionnelles ', description: 'Références professionnelles du demandeur ou celles des cadres chargés du suivi et de la conduite des travaux' },
   rfe: { id: 'rfe', nom: "Rapport financier d'exploration" },
   rgr: { id: 'rgr', nom: "rapport annuel d'exploitation" },
-  rie: { id: 'rie', nom: 'Rapport d’intensité d’exploration' },
+  rie: { id: 'rie', nom: "Rapport d'intensité d'exploration" },
   rse: { id: 'rse', nom: "Rapport social et économique d'exploration" },
   sch: { id: 'sch', nom: 'Schéma de pénétration du massif forestier' },
   sir: { id: 'sir', nom: 'Avis de situation au répertoire Sirene' },

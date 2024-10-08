@@ -148,7 +148,7 @@ describe('valide l’étape avant de l’enregistrer', () => {
         "Les substances sont obligatoires",
         "la durée est obligatoire",
         "Les titulaires sont obligatoires",
-        "l’élément "Prospection mécanisée" de la section "Caractéristiques ARM" est obligatoire",
+        "l'élément "Prospection mécanisée" de la section "Caractéristiques ARM" est obligatoire",
         "Le périmètre est obligatoire",
         "le document "Documents cartographiques" (car) est obligatoire",
         "le document "Dossier de demande" (dom) est obligatoire",

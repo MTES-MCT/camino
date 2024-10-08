@@ -245,7 +245,7 @@ test.each<{
   { administrationId: 'ope-onf-973-01', titreTypeId: 'axm', canEdit: false },
   { administrationId: 'min-mtes-dgaln-01', titreTypeId: 'arm', canEdit: true },
   { administrationId: 'ope-onf-973-01', titreTypeId: 'arm', canEdit: false },
-])('un utilisateur admin d’une administration peut modifier une étape mcr sur un titre: $canEdit', ({ administrationId, titreTypeId, canEdit }) => {
+])("un utilisateur admin d'une administration peut modifier une étape mcr sur un titre: $canEdit", ({ administrationId, titreTypeId, canEdit }) => {
   expect(canEditEtape({ role: 'admin', administrationId, ...testBlankUser }, 'mcr', ETAPE_IS_NOT_BROUILLON, [], [], 'oct', { typeId: titreTypeId, titreStatutId: 'val' })).toBe(canEdit)
 })
 
@@ -332,7 +332,7 @@ const axmEntrepriseDocuments: IsEtapeCompleteEntrepriseDocuments = [
   { entreprise_document_type_id: 'jct', entreprise_id: titulaireId },
 ]
 
-test('teste la complétude d’une demande d’AXM faite par un utilisateur entreprises en Guyane en Zone1 du SDOM', () => {
+test("teste la complétude d'une demande d'AXM faite par un utilisateur entreprises en Guyane en Zone1 du SDOM", () => {
   expect(
     isEtapeComplete(
       { ...etapeComplete, isBrouillon: ETAPE_IS_BROUILLON },
@@ -350,14 +350,14 @@ test('teste la complétude d’une demande d’AXM faite par un utilisateur entr
   ).toMatchInlineSnapshot(`
     {
       "errors": [
-        "le document "Notice d’impact" (nip) est obligatoire",
+        "le document "Notice d'impact" (nip) est obligatoire",
       ],
       "valid": false,
     }
   `)
 })
 
-test('teste la complétude d’une demande d’AXM faite par un utilisateur entreprises', () => {
+test("teste la complétude d'une demande d'AXM faite par un utilisateur entreprises", () => {
   expect(
     isEtapeComplete(
       { ...etapeComplete, isBrouillon: ETAPE_IS_BROUILLON },
@@ -375,7 +375,7 @@ test('teste la complétude d’une demande d’AXM faite par un utilisateur entr
   ).toStrictEqual({ valid: true })
 })
 
-test('teste la complétude d’une demande d’ARM', () => {
+test("teste la complétude d'une demande d'ARM", () => {
   expect(
     isEtapeComplete(
       { ...etapeComplete, contenu: { arm: { mecanise: { value: false, etapeHeritee: null, heritee: false } } } },
@@ -497,7 +497,7 @@ test.each<[FeatureMultiPolygon | null, EtapeTypeId, TitreTypeId, IsEtapeComplete
   expect(result).toStrictEqual({ valid: true })
 })
 
-test('une demande d’ARM mécanisée a des documents obligatoires supplémentaires', () => {
+test("une demande d'ARM mécanisée a des documents obligatoires supplémentaires", () => {
   const errors = isEtapeComplete(
     { ...etapeComplete, contenu: { arm: { mecanise: { value: true, heritee: false, etapeHeritee: null } } } },
     'arm',
@@ -553,7 +553,7 @@ test.each<[number | null, EtapeTypeId, TitreTypeId, IsEtapeCompleteDocuments, Is
 })
 
 describe('isEtapeDeposable', () => {
-  test('Une demande d’ARM complète brouillon', () => {
+  test("Une demande d'ARM complète brouillon", () => {
     expect(
       isEtapeDeposable(
         { ...testBlankUser, role: 'super' },
@@ -571,7 +571,7 @@ describe('isEtapeDeposable', () => {
     ).toStrictEqual(true)
   })
 
-  test('Une demande d’ARM complète déjà déposée', () => {
+  test("Une demande d'ARM complète déjà déposée", () => {
     expect(
       isEtapeDeposable(
         { ...testBlankUser, role: 'super' },
@@ -589,7 +589,7 @@ describe('isEtapeDeposable', () => {
     ).toStrictEqual(false)
   })
 
-  test('Une demande d’ARM incomplète', () => {
+  test("Une demande d'ARM incomplète", () => {
     expect(
       isEtapeDeposable({ ...testBlankUser, role: 'super' }, 'arm', 'oct', { ...etapeComplete, isBrouillon: ETAPE_IS_BROUILLON }, armDocuments, armEntrepriseDocuments, [], [], null, null, [])
     ).toStrictEqual(false)

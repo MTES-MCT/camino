@@ -50,7 +50,7 @@ test.each<[TestUser, AdministrationId[], boolean]>([
   [{ role: 'admin', administrationId: ADMINISTRATION_IDS['DREAL - AUVERGNE-RHÔNE-ALPES - SIÈGE DE LYON'] }, [ADMINISTRATION_IDS['DREAL - AUVERGNE-RHÔNE-ALPES - SIÈGE DE LYON']], true],
   [{ role: 'admin', administrationId: ADMINISTRATION_IDS['DREAL - AUVERGNE-RHÔNE-ALPES - SIÈGE DE LYON'] }, [ADMINISTRATION_IDS['DREAL - PAYS DE LA LOIRE']], false],
   [{ role: 'defaut' }, [ADMINISTRATION_IDS['DREAL - AUVERGNE-RHÔNE-ALPES - SIÈGE DE LYON']], false],
-])('un utilisateur $user peut modifier les liaisons d’un titre: $can ', (user, administrationIds, can) => {
+])("un utilisateur $user peut modifier les liaisons d'un titre: $can ", (user, administrationIds, can) => {
   expect(canLinkTitres({ ...user, ...testBlankUser }, administrationIds)).toBe(can)
 })
 
@@ -140,7 +140,7 @@ test('canDeleteTitre', () => {
   expect(canDeleteTitre({ role: 'editeur', administrationId: 'min-mtes-dgaln-01', ...testBlankUser })).toEqual(false)
   expect(canDeleteTitre({ role: 'lecteur', administrationId: 'min-mtes-dgaln-01', ...testBlankUser })).toEqual(false)
   expect(canDeleteTitre({ role: 'entreprise', entrepriseIds: [newEntrepriseId('entrepriseId')], ...testBlankUser })).toEqual(false)
-  expect(canDeleteTitre({ role: 'bureau d’études', entrepriseIds: [newEntrepriseId('entrepriseId')], ...testBlankUser })).toEqual(false)
+  expect(canDeleteTitre({ role: "bureau d'études", entrepriseIds: [newEntrepriseId('entrepriseId')], ...testBlankUser })).toEqual(false)
   expect(canDeleteTitre({ role: 'defaut', ...testBlankUser })).toEqual(false)
 })
 
@@ -181,7 +181,7 @@ describe('canHaveActivites', () => {
 
     test("retourne un type d'activité sur un titre AXM de métropole", () => {
       expect(
-        canHaveActiviteTypeId(ACTIVITES_TYPES_IDS['rapport d’intensité d’exploration'], {
+        canHaveActiviteTypeId(ACTIVITES_TYPES_IDS["rapport d'intensité d'exploration"], {
           titreTypeId: 'prm',
           demarches: [{}],
           communes: [{ id: toCommuneId('72000') }],
@@ -211,7 +211,7 @@ describe('canHaveActivites', () => {
         })
       ).toEqual(true)
     })
-    test('un titre sans démarche ne peut pas avoir d’activité', () => {
+    test("un titre sans démarche ne peut pas avoir d'activité", () => {
       expect(
         canHaveActiviteTypeId(ACTIVITES_TYPES_IDS["rapport d'exploitation (permis et concessions W)"], {
           titreTypeId: 'pxw',

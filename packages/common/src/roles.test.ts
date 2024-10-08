@@ -76,7 +76,7 @@ describe('role', () => {
     expect(
       isBureauDEtudes({
         ...baseRole,
-        role: 'bureau d’études',
+        role: "bureau d'études",
         entrepriseIds: [],
       })
     ).toBe(true)

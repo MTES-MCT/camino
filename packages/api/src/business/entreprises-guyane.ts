@@ -27,7 +27,7 @@ export const subscribeUsersToGuyaneExploitants = async (): Promise<ResultAggrega
     .from('utilisateurs')
     .leftJoin('utilisateurs__entreprises', 'id', 'utilisateurs__entreprises.utilisateur_id')
     .leftJoin('entreprises', 'utilisateurs__entreprises.entreprise_id', 'entreprises.id')
-    .whereIn('role', ['entreprise', 'bureau d’études'])
+    .whereIn('role', ['entreprise', "bureau d'études"])
     .andWhereNot('utilisateurs.email', null)
   const reduced = result
     .filter(({ codePostal }) => codePostal !== null && Regions[Departements[toDepartementId(codePostal)].regionId].paysId === PAYS_IDS['Département de la Guyane'])

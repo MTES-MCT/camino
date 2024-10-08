@@ -28,7 +28,7 @@ describe('relance les opérateurs des activités qui vont se fermer automatiquem
       () =>
         Promise.resolve([
           { email, role: 'entreprise' },
-          { email: 'emailDeBureauDEtudes', role: 'bureau d’études' },
+          { email: 'emailDeBureauDEtudes', role: "bureau d'études" },
         ]),
       toCaminoDate('2022-03-18'),
       [

@@ -1,7 +1,7 @@
 import { DomaineId } from './domaines'
 import { z } from 'zod'
 // prettier-ignore
-const IDS = ['cfxx','selh','aloh','anti','arge','arse','auru','bery','bism','cadm','ceri','cesi','chro','coba','coox','cuiv','diam','etai','ferx','fluo','gall','geob','geoh', 'gehp', 'gebp','geom','germ','grap','grma','hafn','heli','hydm','hydx','indi','kals','kclx','lith','mang','merc','moly','nacl','nick','niob','oooo','phos','plat','plax','plom','radi','rhen','rubi','rxxx','scan','scoc','sele','skst','souf','soxx','tant','tell','thal','thor','tita','trxx','uran','vana','wolf','zinc','zirc','acti','amph','anda','ande','anhy','ardo','argc','argf','argk','args','asta','bary','basa','bitu','buta','caci','calc','cals','cend','cfan','cfch','cfho','cfli','corn','crai','daci','diab','diat','dior','dole','dolo','dysp','erbi','ethy','euro','falu','feld','gabb','gado','galt','gazn','glac','gnei','grai','grao','gref','gres','grsi','gyps','holm','hyda','hydc','hydg','hydo','hydr','irid','kaol','lant','lept','lute','maer','mais','marb','marn','meba','meco','mepr','mica','mics','migm','mylo','neod','ocre','ophi','osmi','pall','perl','phon','pipe','polo','porp','pouz','pras','prom','prot','prpa','prpy','pyri','quar','quat','rado','rard','rdet','rhod','rhyo','ruth','saco','sama','samg','sasi','scbi','schi','selg','selp','sels','selx','serp','sexs','sgin','sgra','sgrm','sgsc','sgsm','silc','sili','silx','smil','sssc','stex','syen','talc','tech','terb','terv','thul','tmas','tour','trac','tufo','ytri','ytte','hydrog','co2',] as const
+const IDS = ["cfxx","selh","aloh","anti","arge","arse","auru","bery","bism","cadm","ceri","cesi","chro","coba","coox","cuiv","diam","etai","ferx","fluo","gall","geob","geoh", "gehp", "gebp","geom","germ","grap","grma","hafn","heli","hydm","hydx","indi","kals","kclx","lith","mang","merc","moly","nacl","nick","niob","oooo","phos","plat","plax","plom","radi","rhen","rubi","rxxx","scan","scoc","sele","skst","souf","soxx","tant","tell","thal","thor","tita","trxx","uran","vana","wolf","zinc","zirc","acti","amph","anda","ande","anhy","ardo","argc","argf","argk","args","asta","bary","basa","bitu","buta","caci","calc","cals","cend","cfan","cfch","cfho","cfli","corn","crai","daci","diab","diat","dior","dole","dolo","dysp","erbi","ethy","euro","falu","feld","gabb","gado","galt","gazn","glac","gnei","grai","grao","gref","gres","grsi","gyps","holm","hyda","hydc","hydg","hydo","hydr","irid","kaol","lant","lept","lute","maer","mais","marb","marn","meba","meco","mepr","mica","mics","migm","mylo","neod","ocre","ophi","osmi","pall","perl","phon","pipe","polo","porp","pouz","pras","prom","prot","prpa","prpy","pyri","quar","quat","rado","rard","rdet","rhod","rhyo","ruth","saco","sama","samg","sasi","scbi","schi","selg","selp","sels","selx","serp","sexs","sgin","sgra","sgrm","sgsc","sgsm","silc","sili","silx","smil","sssc","stex","syen","talc","tech","terb","terv","thul","tmas","tour","trac","tufo","ytri","ytte","hydrog","co2",] as const
 
 export const substanceLegaleIdValidator = z.enum(IDS)
 export type SubstanceLegaleId = z.infer<typeof substanceLegaleIdValidator>
@@ -92,7 +92,7 @@ export const SubstancesLegale: {
     domaineIds: ['c', 'f', 'g', 'h', 'r', 's', 'w', 'm'],
     nom: 'substances connexes',
     description:
-      'Substances présentes lors de l’abattage des substances principales. Elles sont à la libre disposition de l’opérateur à la condition que le titre ou l’autorisation porte la mention « et substances connexes ».',
+      "Substances présentes lors de l'abattage des substances principales. Elles sont à la libre disposition de l'opérateur à la condition que le titre ou l'autorisation porte la mention « et substances connexes ».",
     substanceParentIds: ['mais', 'meco', 'tmas'],
   },
   sele: { id: 'sele', domaineIds: ['m'], nom: 'sélénium' },
@@ -186,7 +186,8 @@ export const SubstancesLegale: {
     id: 'args',
     nom: 'argiles',
     domaineIds: ['c'],
-    description: `Roches sédimentaires peu consolidées formées de minéraux argileux comme la montmorillonite (silicate d'aluminium et de magnésium hydraté) et la beidellite (silicate naturel d'aluminium hydraté). Ces phyllosilicates ont des propriétés physico-chimiques (gonflement en présence d'eau, rhéologie, adsorption, échanges cationiques...) avec de nombreuses applications dans les secteurs industriels (chimie, métallurgie, environnement, produit de collage en œnologie pour l'élimination des protéines des vins blancs et rosés. Synonyme : bentonite, "terre à foulon".`,
+    description:
+      "Roches sédimentaires peu consolidées formées de minéraux argileux comme la montmorillonite (silicate d'aluminium et de magnésium hydraté) et la beidellite (silicate naturel d'aluminium hydraté). Ces phyllosilicates ont des propriétés physico-chimiques (gonflement en présence d'eau, rhéologie, adsorption, échanges cationiques...) avec de nombreuses applications dans les secteurs industriels (chimie, métallurgie, environnement, produit de collage en œnologie pour l'élimination des protéines des vins blancs et rosés. Synonyme : bentonite, \"terre à foulon\".",
   },
   asta: { id: 'asta', nom: 'astate', domaineIds: ['r'] },
   bary: {
@@ -338,7 +339,8 @@ export const SubstancesLegale: {
     id: 'grai',
     nom: 'granite et granulite',
     domaineIds: ['c'],
-    description: `Roche plutonique cristalline à texture grenue de couleur claire (gris, rose ou jaune) composée de quartz, feldspaths et micas, sélectionnée pour son aspect décoratif. Pour les roches ornementales et de construction, une définition "commerciale" existe également et est différente de celle-ci dite "acceptation scientifique" (cf. point 2.1.156 NF EN 12670 : 2001 page 16). Pour les granulats, cette roche présente de bonnes caractéristiques de rugosité. Pour les minéraux industriels, cette roche rendue friable par l'altération (arénisation) facilite l'extraction de tout ou partie de ses constituants (quartz, feldspaths et micas). Nota : Le terme GRANULITE était utilisé autrefois pour désigner des granites de couleur claire à 2 micas (noir et blanc). qui sont valorisées pour leur aspect esthétique dans le domaine des roches ornementales et de construction.`,
+    description:
+      'Roche plutonique cristalline à texture grenue de couleur claire (gris, rose ou jaune) composée de quartz, feldspaths et micas, sélectionnée pour son aspect décoratif. Pour les roches ornementales et de construction, une définition "commerciale" existe également et est différente de celle-ci dite "acceptation scientifique" (cf. point 2.1.156 NF EN 12670 : 2001 page 16). Pour les granulats, cette roche présente de bonnes caractéristiques de rugosité. Pour les minéraux industriels, cette roche rendue friable par l\'altération (arénisation) facilite l\'extraction de tout ou partie de ses constituants (quartz, feldspaths et micas). Nota : Le terme GRANULITE était utilisé autrefois pour désigner des granites de couleur claire à 2 micas (noir et blanc). qui sont valorisées pour leur aspect esthétique dans le domaine des roches ornementales et de construction.',
   },
   grao: {
     id: 'grao',
@@ -413,7 +415,8 @@ export const SubstancesLegale: {
     id: 'marb',
     nom: 'marbres',
     domaineIds: ['c'],
-    description: `Roche métamorphique cristalline plus ou moins rubanée, contenant plus de 50 % de carbonates (calcite et plus rarement dolomite) dans laquelle les minéraux ont totalement recristallisé avec des traces d'oxydes métalliques ou d'impuretés lui donnant une grande variété de couleurs. Le métamorphisme de cette roche lui confère une plus grande dureté. Dans le domaine des roches ornementales, elle est sélectionnée pour son aspect décoratif, la recristallisation de ses composants favorise son polissage. Une définition "commerciale" existe également et est différente de celle-ci dite "acceptation scientifique" (cf. point 2.1.243 NF EN 12670 : 2001 page 22). Dans le domaine des granulats, elle est sélectionnée pour ses propriétés mécaniques (dureté, résistance aux chocs). Dans le domaine des liants hydrauliques, elle peut être utilisée comme matière première en remplacement du calcaire dans la fabrication du clinker, le constituant de base des ciments. Dans le domaine de l'amendement les composants calciques ou magnésiens sont particulièrement utiles pour la correction de pH des milieux acides. Dans le domaine des minéraux industriels, elle est utilisée, après calcination en carbonate de calcium, comme: - charge minérale dans de nombreuses applications industrielles (papier, peinture, plastiques, élastomères) - ou transformée en chaux pour la correction de pH des milieux acides.`,
+    description:
+      'Roche métamorphique cristalline plus ou moins rubanée, contenant plus de 50 % de carbonates (calcite et plus rarement dolomite) dans laquelle les minéraux ont totalement recristallisé avec des traces d\'oxydes métalliques ou d\'impuretés lui donnant une grande variété de couleurs. Le métamorphisme de cette roche lui confère une plus grande dureté. Dans le domaine des roches ornementales, elle est sélectionnée pour son aspect décoratif, la recristallisation de ses composants favorise son polissage. Une définition "commerciale" existe également et est différente de celle-ci dite "acceptation scientifique" (cf. point 2.1.243 NF EN 12670 : 2001 page 22). Dans le domaine des granulats, elle est sélectionnée pour ses propriétés mécaniques (dureté, résistance aux chocs). Dans le domaine des liants hydrauliques, elle peut être utilisée comme matière première en remplacement du calcaire dans la fabrication du clinker, le constituant de base des ciments. Dans le domaine de l\'amendement les composants calciques ou magnésiens sont particulièrement utiles pour la correction de pH des milieux acides. Dans le domaine des minéraux industriels, elle est utilisée, après calcination en carbonate de calcium, comme: - charge minérale dans de nombreuses applications industrielles (papier, peinture, plastiques, élastomères) - ou transformée en chaux pour la correction de pH des milieux acides.',
   },
   marn: {
     id: 'marn',
@@ -443,7 +446,8 @@ export const SubstancesLegale: {
     id: 'migm',
     nom: 'migmatite',
     domaineIds: ['c'],
-    description: `Roche métamorphique formée d'une alternance de roches de type granite de couleur sombre et de roche de type gneiss de couleur clair. La partie de couleur claire est assimilé à la partie de la roche ayant fondu et est appelée "le mobilisat". La partie de couleur sombre constitue la partie de la roche étant restée solide et est appelée "la restite". Ses bonnes propriétés mécaniques, permettent de l'utiliser comme roche ornementale et de construction ou comme granulat.`,
+    description:
+      'Roche métamorphique formée d\'une alternance de roches de type granite de couleur sombre et de roche de type gneiss de couleur clair. La partie de couleur claire est assimilé à la partie de la roche ayant fondu et est appelée "le mobilisat". La partie de couleur sombre constitue la partie de la roche étant restée solide et est appelée "la restite". Ses bonnes propriétés mécaniques, permettent de l\'utiliser comme roche ornementale et de construction ou comme granulat.',
   },
   mylo: {
     id: 'mylo',

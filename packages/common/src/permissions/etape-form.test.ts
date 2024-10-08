@@ -310,7 +310,7 @@ test('etapeDocumentsStepIsVisible', () => {
 
 const axmDocumentsComplete = [
   {
-    description: 'Plan à l’échelle 1/50 000ème ou 1/100 000ème',
+    description: "Plan à l'échelle 1/50 000ème ou 1/100 000ème",
     id: etapeDocumentIdValidator.parse('idcar'),
     etape_document_type_id: 'car',
     entreprises_lecture: true,
@@ -342,7 +342,7 @@ const axmDocumentsComplete = [
     public_lecture: true,
   },
   {
-    description: 'descriptif des méthodes envisagées pour l’exécution des travaux ((décret 2001-204, art. 6)',
+    description: "descriptif des méthodes envisagées pour l'exécution des travaux ((décret 2001-204, art. 6)",
     id: etapeDocumentIdValidator.parse('idmet'),
     etape_document_type_id: 'met',
     entreprises_lecture: true,
@@ -741,7 +741,7 @@ test('getDocumentsTypes', () => {
         "optionnel": true,
       },
       {
-        "description": "Plan à l’échelle 1/50 000ème ou 1/100 000ème",
+        "description": "Plan à l'échelle 1/50 000ème ou 1/100 000ème",
         "id": "car",
         "nom": "Documents cartographiques",
         "optionnel": false,
@@ -824,9 +824,9 @@ test('getDocumentsTypes', () => {
         "optionnel": true,
       },
       {
-        "description": "la liste et la valeur du matériel d’extraction et de
-     traitement que le demandeur détient ou qu’il 
-    envisage d’acquérir ainsi que, dans ce dernier
+        "description": "la liste et la valeur du matériel d'extraction et de
+     traitement que le demandeur détient ou qu'il 
+    envisage d'acquérir ainsi que, dans ce dernier
      cas, le financement correspondant. Ces pièces 
     sont demandées au titre de la justification des 
     capacités financières du
@@ -839,7 +839,7 @@ test('getDocumentsTypes', () => {
       {
         "description": undefined,
         "id": "jeg",
-        "nom": "Justification d’existence du gisement",
+        "nom": "Justification d'existence du gisement",
         "optionnel": true,
       },
       {
@@ -849,7 +849,7 @@ test('getDocumentsTypes', () => {
         "optionnel": false,
       },
       {
-        "description": "descriptif des méthodes envisagées pour l’exécution des travaux ((décret 2001-204, art. 6)",
+        "description": "descriptif des méthodes envisagées pour l'exécution des travaux ((décret 2001-204, art. 6)",
         "id": "met",
         "nom": "Méthodes pour l'exécution des travaux",
         "optionnel": false,
@@ -857,13 +857,13 @@ test('getDocumentsTypes', () => {
       {
         "description": undefined,
         "id": "nip",
-        "nom": "Notice d’impact",
+        "nom": "Notice d'impact",
         "optionnel": false,
       },
       {
         "description": "Obligatoire pour les AEX hors de la zone 2 du SDOM",
         "id": "nir",
-        "nom": "Notice d’impact renforcée",
+        "nom": "Notice d'impact renforcée",
         "optionnel": true,
       },
       {
@@ -894,7 +894,7 @@ test('getDocumentsTypes', () => {
         "optionnel": true,
       },
       {
-        "description": "Plan à l’échelle 1/50 000ème ou 1/100 000ème",
+        "description": "Plan à l'échelle 1/50 000ème ou 1/100 000ème",
         "id": "car",
         "nom": "Documents cartographiques",
         "optionnel": false,
@@ -977,9 +977,9 @@ test('getDocumentsTypes', () => {
         "optionnel": true,
       },
       {
-        "description": "la liste et la valeur du matériel d’extraction et de
-     traitement que le demandeur détient ou qu’il 
-    envisage d’acquérir ainsi que, dans ce dernier
+        "description": "la liste et la valeur du matériel d'extraction et de
+     traitement que le demandeur détient ou qu'il 
+    envisage d'acquérir ainsi que, dans ce dernier
      cas, le financement correspondant. Ces pièces 
     sont demandées au titre de la justification des 
     capacités financières du
@@ -992,7 +992,7 @@ test('getDocumentsTypes', () => {
       {
         "description": undefined,
         "id": "jeg",
-        "nom": "Justification d’existence du gisement",
+        "nom": "Justification d'existence du gisement",
         "optionnel": false,
       },
       {
@@ -1002,7 +1002,7 @@ test('getDocumentsTypes', () => {
         "optionnel": false,
       },
       {
-        "description": "descriptif des méthodes envisagées pour l’exécution des travaux ((décret 2001-204, art. 6)",
+        "description": "descriptif des méthodes envisagées pour l'exécution des travaux ((décret 2001-204, art. 6)",
         "id": "met",
         "nom": "Méthodes pour l'exécution des travaux",
         "optionnel": false,
@@ -1010,13 +1010,13 @@ test('getDocumentsTypes', () => {
       {
         "description": undefined,
         "id": "nip",
-        "nom": "Notice d’impact",
+        "nom": "Notice d'impact",
         "optionnel": true,
       },
       {
         "description": "Obligatoire pour les AEX hors de la zone 2 du SDOM",
         "id": "nir",
-        "nom": "Notice d’impact renforcée",
+        "nom": "Notice d'impact renforcée",
         "optionnel": false,
       },
       {
@@ -1041,7 +1041,7 @@ test('getDocumentsTypes', () => {
 })
 
 test('getAvisType', () => {
-  expect(getAvisTypes('mfr', 'arm', [])).toMatchInlineSnapshot(`[]`)
+  expect(getAvisTypes('mfr', 'arm', [])).toMatchInlineSnapshot('[]')
   expect(getAvisTypes('asc', 'arm', [])).toMatchInlineSnapshot(`
     [
       {
@@ -1056,7 +1056,7 @@ test('getAvisType', () => {
       },
       {
         "id": "avisDirectionsRégionalesEconomieEmploiTravailSolidarités",
-        "nom": "Avis de la Direction régionale de l’économie, de l’emploi, du travail et des solidarités",
+        "nom": "Avis de la Direction régionale de l'économie, de l'emploi, du travail et des solidarités",
         "optionnel": true,
       },
       {
@@ -1145,7 +1145,7 @@ test('getAvisType', () => {
       },
       {
         "id": "avisDirectionsRégionalesEconomieEmploiTravailSolidarités",
-        "nom": "Avis de la Direction régionale de l’économie, de l’emploi, du travail et des solidarités",
+        "nom": "Avis de la Direction régionale de l'économie, de l'emploi, du travail et des solidarités",
         "optionnel": true,
       },
       {
@@ -1244,7 +1244,7 @@ test('getAvisType', () => {
       },
       {
         "id": "avisDirectionsRégionalesEconomieEmploiTravailSolidarités",
-        "nom": "Avis de la Direction régionale de l’économie, de l’emploi, du travail et des solidarités",
+        "nom": "Avis de la Direction régionale de l'économie, de l'emploi, du travail et des solidarités",
         "optionnel": true,
       },
       {

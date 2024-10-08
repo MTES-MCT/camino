@@ -10,7 +10,7 @@ const users: Record<Role, UserNotNull> = {
   editeur: { ...testBlankUser, role: 'editeur', administrationId: 'aut-97300-01' },
   lecteur: { ...testBlankUser, role: 'lecteur', administrationId: 'aut-97300-01' },
   entreprise: { ...testBlankUser, role: 'entreprise', entrepriseIds: [] },
-  'bureau d’études': { ...testBlankUser, role: 'bureau d’études', entrepriseIds: [] },
+  "bureau d'études": { ...testBlankUser, role: "bureau d'études", entrepriseIds: [] },
   defaut: { ...testBlankUser, role: 'defaut' },
 }
 
@@ -29,7 +29,7 @@ test('canEditPermission', () => {
   expect(canEditPermission(users.lecteur, { ...testBlankUser, id: toUtilisateurId('idFake'), role: 'defaut' })).toEqual(false)
   expect(canEditPermission(users.editeur, { ...testBlankUser, id: toUtilisateurId('idFake'), role: 'defaut' })).toEqual(false)
   expect(canEditPermission(users.entreprise, { ...testBlankUser, id: toUtilisateurId('idFake'), role: 'defaut' })).toEqual(false)
-  expect(canEditPermission(users['bureau d’études'], { ...testBlankUser, id: toUtilisateurId('idFake'), role: 'defaut' })).toEqual(false)
+  expect(canEditPermission(users["bureau d'études"], { ...testBlankUser, id: toUtilisateurId('idFake'), role: 'defaut' })).toEqual(false)
   expect(canEditPermission(users.defaut, { ...testBlankUser, id: toUtilisateurId('idFake'), role: 'defaut' })).toEqual(false)
 })
 

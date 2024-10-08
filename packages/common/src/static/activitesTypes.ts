@@ -14,7 +14,7 @@ export const ACTIVITES_TYPES_IDS = {
   "rapport d'exploitation (permis et concessions M)": 'gra',
   "rapport trimestriel d'exploitation d'or en Guyane": 'grp',
   "rapport d'exploitation (autorisations M)": 'grx',
-  'rapport d’intensité d’exploration': 'pma',
+  "rapport d'intensité d'exploration": 'pma',
   "rapport financier d'exploration": 'pmb',
   "rapport environnemental d'exploration": 'pmc',
   "rapport social et économique d'exploration": 'pmd',
@@ -66,7 +66,7 @@ export const ActivitesTypes: {
     dateDebut: toCaminoDate('2020-01-01'),
     delaiMois: 11,
     description:
-      '<p>La production annuelle est requise en vertu des <a href="https://www.legifrance.gouv.fr/codes/section_lc/LEGITEXT000006069577/LEGISCTA000006179968" target="_blank" title="Page de l’article - site externe">article 1519</a>, <a href="https://www.legifrance.gouv.fr/codes/id/LEGIARTI000043663002" target="_blank" title="Page de l’article - site externe">article 1587</a> et <a href="https://www.legifrance.gouv.fr/codes/section_lc/LEGITEXT000006069577/LEGISCTA000006162672?init=true&page=1&query=1588&searchField=ALL&tab_selection=all&anchor=LEGIARTI000006306371#LEGIARTI000006306371" target="_blank" title="Page de l’article - site externe">article 1588</a> du code général des impôts relatifs au calcul de la redevance départementale et communale des mines (RDCM).</p><p>Le rapport annuel d\'exploitation est requis en vertu de l\'<a href="https://www.legifrance.gouv.fr/codes/id/LEGIARTI000023505020/2021-04-14/" target="_blank" title="Page de l’article - site externe">article L. 172-1</a> du code minier et <a href="https://www.legifrance.gouv.fr/loda/article_lc/LEGIARTI000033196097" target="_blank" title="Page de l’article - site externe">article 35</a> du décret 2006/649 du 2 juin 2006.</p>',
+      '<p>La production annuelle est requise en vertu des <a href="https://www.legifrance.gouv.fr/codes/section_lc/LEGITEXT000006069577/LEGISCTA000006179968" target="_blank" title="Page de l\'article - site externe">article 1519</a>, <a href="https://www.legifrance.gouv.fr/codes/id/LEGIARTI000043663002" target="_blank" title="Page de l\'article - site externe">article 1587</a> et <a href="https://www.legifrance.gouv.fr/codes/section_lc/LEGITEXT000006069577/LEGISCTA000006162672?init=true&page=1&query=1588&searchField=ALL&tab_selection=all&anchor=LEGIARTI000006306371#LEGIARTI000006306371" target="_blank" title="Page de l\'article - site externe">article 1588</a> du code général des impôts relatifs au calcul de la redevance départementale et communale des mines (RDCM).</p><p>Le rapport annuel d\'exploitation est requis en vertu de l\'<a href="https://www.legifrance.gouv.fr/codes/id/LEGIARTI000023505020/2021-04-14/" target="_blank" title="Page de l\'article - site externe">article L. 172-1</a> du code minier et <a href="https://www.legifrance.gouv.fr/loda/article_lc/LEGIARTI000033196097" target="_blank" title="Page de l\'article - site externe">article 35</a> du décret 2006/649 du 2 juin 2006.</p>',
   },
   grp: {
     id: 'grp',
@@ -80,7 +80,7 @@ export const ActivitesTypes: {
             nom: 'Or brut extrait (g)',
             type: 'number',
             dateDebut: toCaminoDate('2018-01-01'),
-            description: 'Masse d’or brut en sortie de mine extrait au cours du trimestre (exemple : masse sous la forme de concentré gravimétrique).',
+            description: "Masse d'or brut en sortie de mine extrait au cours du trimestre (exemple : masse sous la forme de concentré gravimétrique).",
             optionnel: false,
           },
           {
@@ -103,7 +103,7 @@ export const ActivitesTypes: {
             id: 'mercure',
             nom: 'Mercure récupéré (g)',
             type: 'number',
-            description: 'Masse en gramme de l’ensemble des produits contaminés envoyés en traitement au cours du trimestre.',
+            description: "Masse en gramme de l'ensemble des produits contaminés envoyés en traitement au cours du trimestre.",
             optionnel: false,
           },
           {
@@ -154,11 +154,11 @@ export const ActivitesTypes: {
           },
           {
             id: 'environnement',
-            nom: 'Dépenses relatives à la protection de l’environnement (euros)',
+            nom: "Dépenses relatives à la protection de l'environnement (euros)",
             type: 'number',
             dateDebut: toCaminoDate('2018-01-01'),
             description:
-              'Montant en euros des investissements consentis au cours du trimestre listés à l’<a href="https://www.legifrance.gouv.fr/affichCodeArticle.do?idArticle=LEGIARTI000021850940&cidTexte=LEGITEXT000006069569" target="_blank" title="Page de l’article - site externe" rel="noopener noreferrer">article 318 C de l’annexe II du code général des impôts</a>. Afin de bénéficier des déductions fiscales afférentes, les justificatifs attestant de la réalisation effective des investissements sont susceptibles de vous êtres demandés par l’administration.',
+              'Montant en euros des investissements consentis au cours du trimestre listés à l\'<a href="https://www.legifrance.gouv.fr/affichCodeArticle.do?idArticle=LEGIARTI000021850940&cidTexte=LEGITEXT000006069569" target="_blank" title="Page de l\'article - site externe" rel="noopener noreferrer">article 318 C de l\'annexe II du code général des impôts</a>. Afin de bénéficier des déductions fiscales afférentes, les justificatifs attestant de la réalisation effective des investissements sont susceptibles de vous êtres demandés par l\'administration.',
             optionnel: false,
           },
         ],
@@ -539,7 +539,7 @@ export const ActivitesTypes: {
             dateDebut: toCaminoDate('2018-01-01'),
             optionnel: true,
             description:
-              'Toute information sur les événements marquants du trimestre (accident, incident, arrêt ou suspension d’activité en précisant les raisons, évolution de l’exploitation, difficultés rencontrées, etc.).',
+              "Toute information sur les événements marquants du trimestre (accident, incident, arrêt ou suspension d'activité en précisant les raisons, évolution de l'exploitation, difficultés rencontrées, etc.).",
           },
         ],
       },
@@ -574,11 +574,11 @@ export const ActivitesTypes: {
     dateDebut: toCaminoDate('2018-01-01'),
     delaiMois: 11,
     description:
-      '<p>La production annuelle est requise en vertu des <a href="https://www.legifrance.gouv.fr/codes/section_lc/LEGITEXT000006069577/LEGISCTA000006179968" target="_blank" title="Page de l’article - site externe">article 1519</a>, <a href="https://www.legifrance.gouv.fr/codes/id/LEGIARTI000043663002" target="_blank" title="Page de l’article - site externe">article 1587</a> et <a href="https://www.legifrance.gouv.fr/codes/section_lc/LEGITEXT000006069577/LEGISCTA000006162672?init=true&page=1&query=1588&searchField=ALL&tab_selection=all&anchor=LEGIARTI000006306371#LEGIARTI000006306371" target="_blank" title="Page de l’article - site externe">article 1588</a> du code général des impôts relatifs au calcul de la redevance départementale et communale des mines (RDCM).</p><p>Le rapport annuel d\'exploitation est requis en vertu de l\'<a href="https://www.legifrance.gouv.fr/codes/id/LEGIARTI000023505020/2021-04-14/" target="_blank" title="Page de l’article - site externe">article L. 172-1</a> du code minier et <a href="https://www.legifrance.gouv.fr/loda/article_lc/LEGIARTI000033196097" target="_blank" title="Page de l’article - site externe">article 35</a> du décret 2006/649 du 2 juin 2006.</p>',
+      '<p>La production annuelle est requise en vertu des <a href="https://www.legifrance.gouv.fr/codes/section_lc/LEGITEXT000006069577/LEGISCTA000006179968" target="_blank" title="Page de l\'article - site externe">article 1519</a>, <a href="https://www.legifrance.gouv.fr/codes/id/LEGIARTI000043663002" target="_blank" title="Page de l\'article - site externe">article 1587</a> et <a href="https://www.legifrance.gouv.fr/codes/section_lc/LEGITEXT000006069577/LEGISCTA000006162672?init=true&page=1&query=1588&searchField=ALL&tab_selection=all&anchor=LEGIARTI000006306371#LEGIARTI000006306371" target="_blank" title="Page de l\'article - site externe">article 1588</a> du code général des impôts relatifs au calcul de la redevance départementale et communale des mines (RDCM).</p><p>Le rapport annuel d\'exploitation est requis en vertu de l\'<a href="https://www.legifrance.gouv.fr/codes/id/LEGIARTI000023505020/2021-04-14/" target="_blank" title="Page de l\'article - site externe">article L. 172-1</a> du code minier et <a href="https://www.legifrance.gouv.fr/loda/article_lc/LEGIARTI000033196097" target="_blank" title="Page de l\'article - site externe">article 35</a> du décret 2006/649 du 2 juin 2006.</p>',
   },
   pma: {
     id: 'pma',
-    nom: 'rapport d’intensité d’exploration',
+    nom: "rapport d'intensité d'exploration",
     sections: [
       {
         id: 'levesTopographiques',
@@ -1337,11 +1337,11 @@ export const ActivitesTypes: {
         elements: [
           {
             id: 'environnement',
-            nom: 'Dépenses relatives à la protection de l’environnement (euros)',
+            nom: "Dépenses relatives à la protection de l'environnement (euros)",
             type: 'number',
             dateDebut: toCaminoDate('2019-01-01'),
             description:
-              'Montant en euros des investissements consentis au cours de l\'année listés à l’<a href="https://www.legifrance.gouv.fr/affichCodeArticle.do?idArticle=LEGIARTI000021850940&cidTexte=LEGITEXT000006069569" target="_blank" title="Page de l’article - site externe" rel="noopener noreferrer">article 318 C de l’annexe II du code général des impôts</a>. Afin de bénéficier des déductions fiscales afférentes, les justificatifs attestant de la réalisation effective des investissements sont susceptibles de vous être demandés par l’administration.',
+              'Montant en euros des investissements consentis au cours de l\'année listés à l\'<a href="https://www.legifrance.gouv.fr/affichCodeArticle.do?idArticle=LEGIARTI000021850940&cidTexte=LEGITEXT000006069569" target="_blank" title="Page de l\'article - site externe" rel="noopener noreferrer">article 318 C de l\'annexe II du code général des impôts</a>. Afin de bénéficier des déductions fiscales afférentes, les justificatifs attestant de la réalisation effective des investissements sont susceptibles de vous être demandés par l\'administration.',
             optionnel: false,
           },
         ],
@@ -1430,7 +1430,7 @@ export const ActivitesTypes: {
             id: 'mercure',
             nom: 'Mercure récupéré (g)',
             type: 'number',
-            description: "<b>En Guyane</b>, masse en gramme de l’ensemble des produits contaminés au mercure envoyés en traitement au cours de l'année.",
+            description: "<b>En Guyane</b>, masse en gramme de l'ensemble des produits contaminés au mercure envoyés en traitement au cours de l'année.",
             optionnel: false,
           },
           {
@@ -1649,7 +1649,7 @@ export const ActivitesTypes: {
             type: 'textarea',
             optionnel: true,
             description:
-              "Toute information sur les événements marquants de l'année (arrêt ou suspension d’activité en précisant les raisons, évolution de l’exploitation, difficultés rencontrées, accident, incident, etc.).",
+              "Toute information sur les événements marquants de l'année (arrêt ou suspension d'activité en précisant les raisons, évolution de l'exploitation, difficultés rencontrées, accident, incident, etc.).",
           },
         ],
       },
@@ -1658,7 +1658,7 @@ export const ActivitesTypes: {
     dateDebut: toCaminoDate('2010-01-01'),
     delaiMois: 12,
     description:
-      '<p>La production annuelle est requise en vertu des <a href="https://www.legifrance.gouv.fr/codes/id/LEGIARTI000043663105" target="_blank" title="Page de l’article - site externe">article 1519</a>, <a href="https://www.legifrance.gouv.fr/codes/id/LEGIARTI000043663002" target="_blank" title="Page de l’article - site externe">article 1587</a> et <a href="https://www.legifrance.gouv.fr/codes/id/LEGIARTI000006306371" target="_blank" title="Page de l’article - site externe">article 1588</a> du code général des impôts relatifs au calcul de la redevance départementale et communale des mines (RDCM).</p><p><a href="https://www.legifrance.gouv.fr/codes/id/LEGIARTI000021822128" target="_blank" title="Page de l’article - site externe">article 47</a> du décret 2006-798 du 6 juillet 2006.</p>',
+      '<p>La production annuelle est requise en vertu des <a href="https://www.legifrance.gouv.fr/codes/id/LEGIARTI000043663105" target="_blank" title="Page de l\'article - site externe">article 1519</a>, <a href="https://www.legifrance.gouv.fr/codes/id/LEGIARTI000043663002" target="_blank" title="Page de l\'article - site externe">article 1587</a> et <a href="https://www.legifrance.gouv.fr/codes/id/LEGIARTI000006306371" target="_blank" title="Page de l\'article - site externe">article 1588</a> du code général des impôts relatifs au calcul de la redevance départementale et communale des mines (RDCM).</p><p><a href="https://www.legifrance.gouv.fr/codes/id/LEGIARTI000021822128" target="_blank" title="Page de l\'article - site externe">article 47</a> du décret 2006-798 du 6 juillet 2006.</p>',
   },
 }
 

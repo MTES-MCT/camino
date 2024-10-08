@@ -93,7 +93,7 @@ const EtapesTypesSections = {
           nom: 'Arrêté préfectoral',
           type: 'text',
           optionnel: true,
-          description: "Numéro de l'arrêté préfectoral portant décision dans le cadre de l’examen au cas par cas du projet d’autorisation de recherche minière",
+          description: "Numéro de l'arrêté préfectoral portant décision dans le cadre de l'examen au cas par cas du projet d'autorisation de recherche minière",
         },
       ],
     },
@@ -298,7 +298,7 @@ const TDESections = {
               nom: 'Entreprise',
               type: 'checkbox',
               description:
-                "L'entreprise porteuse de la demande est identifiées (extrait Kbis de moins d’un an, déclaration INSEE du statut d’Auto Entrepreneur, justificatif de création de société en cours, (présence code SIRET et APE).",
+                "L'entreprise porteuse de la demande est identifiées (extrait Kbis de moins d'un an, déclaration INSEE du statut d'Auto Entrepreneur, justificatif de création de société en cours, (présence code SIRET et APE).",
               optionnel: false,
             },
             {

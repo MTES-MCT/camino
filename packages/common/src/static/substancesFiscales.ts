@@ -3,7 +3,7 @@ import { SubstanceLegaleId, SubstancesLegales } from './substancesLegales'
 import { z } from 'zod'
 
 // prettier-ignore
-const IDS = ['aloh','anti','arge','arse','auru','bism','cfxa','cfxb','cfxc','coox','cuiv','etai','fera','ferb','fluo','hyda','hydb','hydc','hydd','hyde','hydf','kclx','lith','mang','moly','naca','nacb','nacc','plom','souf','uran','wolf','zinc',] as const
+const IDS = ["aloh","anti","arge","arse","auru","bism","cfxa","cfxb","cfxc","coox","cuiv","etai","fera","ferb","fluo","hyda","hydb","hydc","hydd","hyde","hydf","kclx","lith","mang","moly","naca","nacb","nacc","plom","souf","uran","wolf","zinc",] as const
 
 export const SUBSTANCES_FISCALES_IDS = {
   bauxite: 'aloh',
@@ -51,7 +51,7 @@ export interface SubstanceFiscale<T = SubstanceFiscaleId> {
   uniteId: UniteId
   description: string
   calculFiscalite?: {
-    // TODO 2022-07-26 : sauvegarder l'or en kg et le saisir en gramme dans l’ihm, ce champ pourra être supprimé
+    // TODO 2022-07-26 : sauvegarder l'or en kg et le saisir en gramme dans l'ihm, ce champ pourra être supprimé
     unite?: UniteId
   }
 }

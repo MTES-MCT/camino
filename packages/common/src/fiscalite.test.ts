@@ -28,7 +28,7 @@ test('fiscaliteVisible', () => {
   expect(fiscaliteVisible(null, newEntrepriseId('1234'), titres)).toBe(false)
   expect(fiscaliteVisible(undefined, newEntrepriseId('1234'), titres)).toBe(false)
   expect(fiscaliteVisible({ role: 'defaut', ...roleLessUser }, newEntrepriseId('1234'), titres)).toBe(false)
-  expect(fiscaliteVisible({ role: 'bureau d’études', entrepriseIds: [], ...roleLessUser }, newEntrepriseId('1234'), titres)).toBe(false)
+  expect(fiscaliteVisible({ role: "bureau d'études", entrepriseIds: [], ...roleLessUser }, newEntrepriseId('1234'), titres)).toBe(false)
   expect(fiscaliteVisible({ role: 'entreprise', entrepriseIds: [], ...roleLessUser }, newEntrepriseId('1234'), titres)).toBe(false)
   expect(fiscaliteVisible({ role: 'entreprise', entrepriseIds: [newEntrepriseId('1')], ...roleLessUser }, newEntrepriseId('1234'), titres)).toBe(false)
   expect(fiscaliteVisible({ role: 'entreprise', entrepriseIds: [newEntrepriseId('1234')], ...roleLessUser }, newEntrepriseId('1234'), titres)).toBe(true)

@@ -70,7 +70,7 @@ export const getAssignableRoles = (user: User): readonly Role[] => {
     return ROLES
   }
   if (isAdministrationAdmin(user)) {
-    return ['admin', 'editeur', 'lecteur', 'entreprise', 'bureau d’études', 'defaut']
+    return ['admin', 'editeur', 'lecteur', 'entreprise', "bureau d'études", 'defaut']
   }
 
   return []

@@ -8,7 +8,7 @@ exports[`getDocuments surcharge 2`] = `
     "optionnel": true,
   },
   {
-    "description": "Plan à l’échelle 1/50 000ème ou 1/100 000ème",
+    "description": "Plan à l'échelle 1/50 000ème ou 1/100 000ème",
     "id": "car",
     "nom": "Documents cartographiques",
     "optionnel": false,
@@ -91,9 +91,9 @@ exports[`getDocuments surcharge 2`] = `
     "optionnel": true,
   },
   {
-    "description": "la liste et la valeur du matériel d’extraction et de
- traitement que le demandeur détient ou qu’il 
-envisage d’acquérir ainsi que, dans ce dernier
+    "description": "la liste et la valeur du matériel d'extraction et de
+ traitement que le demandeur détient ou qu'il 
+envisage d'acquérir ainsi que, dans ce dernier
  cas, le financement correspondant. Ces pièces 
 sont demandées au titre de la justification des 
 capacités financières du
@@ -106,7 +106,7 @@ demandeur
   {
     "description": undefined,
     "id": "jeg",
-    "nom": "Justification d’existence du gisement",
+    "nom": "Justification d'existence du gisement",
     "optionnel": true,
   },
   {
@@ -116,7 +116,7 @@ demandeur
     "optionnel": false,
   },
   {
-    "description": "descriptif des méthodes envisagées pour l’exécution des travaux ((décret 2001-204, art. 6)",
+    "description": "descriptif des méthodes envisagées pour l'exécution des travaux ((décret 2001-204, art. 6)",
     "id": "met",
     "nom": "Méthodes pour l'exécution des travaux",
     "optionnel": false,
@@ -124,13 +124,13 @@ demandeur
   {
     "description": undefined,
     "id": "nip",
-    "nom": "Notice d’impact",
+    "nom": "Notice d'impact",
     "optionnel": true,
   },
   {
     "description": "Obligatoire pour les AEX hors de la zone 2 du SDOM",
     "id": "nir",
-    "nom": "Notice d’impact renforcée",
+    "nom": "Notice d'impact renforcée",
     "optionnel": true,
   },
   {

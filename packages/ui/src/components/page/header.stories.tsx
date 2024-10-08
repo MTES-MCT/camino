@@ -47,6 +47,6 @@ export const Lecteur: StoryFn = () => (
   <Header currentMenuSection={'utilisateurs'} user={{ ...testBlankUser, role: 'lecteur', administrationId: 'ope-onf-973-01' }} routePath="/titres?domainesIds=['m']" />
 )
 export const Entreprise: StoryFn = () => <Header currentMenuSection={'utilisateurs'} user={{ ...testBlankUser, role: 'entreprise', entrepriseIds: [] }} routePath="/titres?domainesIds=['m']" />
-export const BureauDEtudes: StoryFn = () => <Header currentMenuSection={'utilisateurs'} user={{ ...testBlankUser, role: 'bureau d’études', entrepriseIds: [] }} routePath="/titres?domainesIds=['m']" />
+export const BureauDEtudes: StoryFn = () => <Header currentMenuSection={'utilisateurs'} user={{ ...testBlankUser, role: "bureau d'études", entrepriseIds: [] }} routePath="/titres?domainesIds=['m']" />
 export const Defaut: StoryFn = () => <Header currentMenuSection={'utilisateurs'} user={{ ...testBlankUser, role: 'defaut' }} routePath="/titres?domainesIds=['m']" />
 export const Deconnecte: StoryFn = () => <Header currentMenuSection={'utilisateurs'} user={undefined} routePath="/titres?domainesIds=['m']" />

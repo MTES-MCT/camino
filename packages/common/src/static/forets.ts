@@ -1,7 +1,7 @@
 import { z } from 'zod'
 
 // prettier-ignore
-const IDS = ['3PI','AMO','BEL','BSL','BSM','CHA','CKA','CORA','COUN','CPG','DBR','EGY','FOS','FRG','GDS','HSI','KAW','LDD','LPS','MAL','MAN','MCA','MDF','MPA','MSO','NANC','PAP','PAR','PAUL','PTI','REG','RNNMAT','RNNNOU','RNNTRI','SAU','SGK','SMA','SPA','STE','STJ','ZDUARBAL','ZDUARMAT','ZDUGABAL','ZDUGAKOU','ZDUPAFAV','ZDUPAMAC'] as const
+const IDS = ["3PI","AMO","BEL","BSL","BSM","CHA","CKA","CORA","COUN","CPG","DBR","EGY","FOS","FRG","GDS","HSI","KAW","LDD","LPS","MAL","MAN","MCA","MDF","MPA","MSO","NANC","PAP","PAR","PAUL","PTI","REG","RNNMAT","RNNNOU","RNNTRI","SAU","SGK","SMA","SPA","STE","STJ","ZDUARBAL","ZDUARMAT","ZDUGABAL","ZDUGAKOU","ZDUPAFAV","ZDUPAMAC"] as const
 
 export const Forets = {
   '3PI': { id: '3PI', nom: '3 Pitons' },

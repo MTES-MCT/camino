@@ -269,7 +269,7 @@ exports[`substances > peut voir toutes les substances 1`] = `
       "nom": "scandium",
     },
     {
-      "description": "Substances présentes lors de l’abattage des substances principales. Elles sont à la libre disposition de l’opérateur à la condition que le titre ou l’autorisation porte la mention « et substances connexes ».",
+      "description": "Substances présentes lors de l'abattage des substances principales. Elles sont à la libre disposition de l'opérateur à la condition que le titre ou l'autorisation porte la mention « et substances connexes ».",
       "id": "scoc",
       "nom": "substances connexes",
     },

@@ -38,7 +38,7 @@ describe('canReadDocument', () => {
     const users: User[] = [
       { ...testBlankUser, role: 'defaut' },
       { ...testBlankUser, role: 'entreprise', entrepriseIds: [newEntrepriseId('entreprise1')] },
-      { ...testBlankUser, role: 'bureau d’études', entrepriseIds: [newEntrepriseId('entreprise2')] },
+      { ...testBlankUser, role: "bureau d'études", entrepriseIds: [newEntrepriseId('entreprise2')] },
     ]
     for (const user of users) {
       expect(
@@ -55,7 +55,7 @@ describe('canReadDocument', () => {
   test('en tant qu’entreprise je peux lire les documents en fonction de entreprise_lecture', async () => {
     const users: EntrepriseUserNotNull[] = [
       { ...testBlankUser, role: 'entreprise', entrepriseIds: [newEntrepriseId('entreprise1')] },
-      { ...testBlankUser, role: 'bureau d’études', entrepriseIds: [newEntrepriseId('entreprise2')] },
+      { ...testBlankUser, role: "bureau d'études", entrepriseIds: [newEntrepriseId('entreprise2')] },
     ]
     for (const user of users) {
       expect(

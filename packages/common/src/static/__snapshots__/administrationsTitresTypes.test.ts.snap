@@ -351,7 +351,7 @@ exports[`vérifie les administrations gestionnaire d'un type de titre 1`] = `
 }
 `;
 
-exports[`vérifie si l’administration est associée 1`] = `
+exports[`vérifie si l'administration est associée 1`] = `
 {
   "aut-97300-01": true,
   "aut-mrae-guyane-01": true,
@@ -486,7 +486,7 @@ exports[`vérifie si l’administration est associée 1`] = `
 }
 `;
 
-exports[`vérifie si l’administration est associée par rapport au titreType 1`] = `
+exports[`vérifie si l'administration est associée par rapport au titreType 1`] = `
 {
   "aut-97300-01": {
     "apc": false,
@@ -4781,7 +4781,7 @@ exports[`vérifie si l’administration est associée par rapport au titreType 1
 }
 `;
 
-exports[`vérifie si l’administration est gestionnaire 1`] = `
+exports[`vérifie si l'administration est gestionnaire 1`] = `
 {
   "aut-97300-01": false,
   "aut-mrae-guyane-01": false,
@@ -4916,7 +4916,7 @@ exports[`vérifie si l’administration est gestionnaire 1`] = `
 }
 `;
 
-exports[`vérifie si l’administration est gestionnaire par rapport au titreType 1`] = `
+exports[`vérifie si l'administration est gestionnaire par rapport au titreType 1`] = `
 {
   "aut-97300-01": {
     "apc": false,
@@ -9211,7 +9211,7 @@ exports[`vérifie si l’administration est gestionnaire par rapport au titreTyp
 }
 `;
 
-exports[`vérifie tous les droits sur les types de titre pour l’administration 1`] = `
+exports[`vérifie tous les droits sur les types de titre pour l'administration 1`] = `
 {
   "aut-97300-01": [
     {

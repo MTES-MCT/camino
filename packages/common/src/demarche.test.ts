@@ -59,7 +59,7 @@ test('getDemarcheContenu arm', () => {
                 {
                   id: 'arrete',
                   nom: 'Arrêté préfectoral',
-                  description: "Numéro de l'arrêté préfectoral portant décision dans le cadre de l’examen au cas par cas du projet d’autorisation de recherche minière",
+                  description: "Numéro de l'arrêté préfectoral portant décision dans le cadre de l'examen au cas par cas du projet d'autorisation de recherche minière",
                   optionnel: true,
                   type: 'text',
                   value: 'R03-2022-09-26-00002',

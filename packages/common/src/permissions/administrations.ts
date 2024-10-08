@@ -20,7 +20,7 @@ export const canReadActivitesTypesEmails = (user: User, administrationId: Admini
       const departementIds = Object.values(Departements)
         .filter(({ regionId }) => regionId === administration.regionId)
         .map(({ id }) => id)
-      // On récupère toutes les administrations départementales qui sont de la même région que l’administration régionale de l’utilisateur
+      // On récupère toutes les administrations départementales qui sont de la même région que l'administration régionale de l'utilisateur
       administrationIds.push(...sortedAdministrations.filter(({ departementId }) => departementIds.includes(departementId)).map(({ id }) => id))
     }
 
@@ -49,7 +49,7 @@ export const canEditEmails = (user: User, administrationId: AdministrationId): b
       const departementIds = Object.values(Departements)
         .filter(({ regionId }) => regionId === administration.regionId)
         .map(({ id }) => id)
-      // On récupère toutes les administrations départementales qui sont de la même région que l’administration régionale de l’utilisateur
+      // On récupère toutes les administrations départementales qui sont de la même région que l'administration régionale de l'utilisateur
       const administrationIds = sortedAdministrations.filter(({ departementId }) => departementIds.includes(departementId)).map(({ id }) => id)
 
       if (administration.typeId === 'dre') {

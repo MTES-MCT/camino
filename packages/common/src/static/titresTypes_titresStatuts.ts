@@ -4,7 +4,7 @@ import { TITRES_TYPES_IDS, TitreTypeId, isTitreType } from './titresTypes'
 
 export const titrePublicFind = (titreStatutId: TitreStatutId, titreTypeId: TitreTypeId, hasDemarchePublic: boolean): boolean => {
   // si le type de titre associé au domaine associé au statut du titre est public
-  // et qu’une démarche est publique
+  // et qu'une démarche est publique
   // alors le titre est public
   if (hasDemarchePublic) {
     if (titresPublicLecture[titreTypeId].includes(titreStatutId)) {

@@ -3,7 +3,7 @@ import { toCaminoDate } from '../date'
 import { StatistiquesDataGouv } from '../statistiques'
 
 // prettier-ignore
-const IDS = ['Nombre d\'utilisateurs sur la plateforme', 'Nombre d\'utilisateurs affiliés à une entreprise', 'Nombre d\'utilisateurs rattachés à une préfecture','Nombre d\'utilisateurs rattachés à un ministère','Nombre d\'utilisateurs rattachés à une Dréal','Nombre d\'utilisateurs rattachés à une Autorité'] as const
+const IDS = ["Nombre d'utilisateurs sur la plateforme", "Nombre d'utilisateurs affiliés à une entreprise", "Nombre d'utilisateurs rattachés à une préfecture","Nombre d'utilisateurs rattachés à un ministère","Nombre d'utilisateurs rattachés à une Dréal","Nombre d'utilisateurs rattachés à une Autorité"] as const
 
 export const caminoStatistiquesDataGouvIdValidator = z.enum(IDS)
 export type CaminoStatistiquesDataGouvId = z.infer<typeof caminoStatistiquesDataGouvIdValidator>

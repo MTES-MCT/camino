@@ -4,7 +4,7 @@ import { communeIdValidator } from './static/communes'
 
 test('getAdministrationsLocales', () => {
   expect(getAdministrationsLocales([], [])).toStrictEqual([])
-  expect(() => getAdministrationsLocales(null, [])).toThrowErrorMatchingInlineSnapshot(`[Error: les communes ne sont pas chargées]`)
+  expect(() => getAdministrationsLocales(null, [])).toThrowErrorMatchingInlineSnapshot('[Error: les communes ne sont pas chargées]')
   expect(getAdministrationsLocales([], ['Baie de Bourgneuf et littoral vendéen'])).toMatchInlineSnapshot(`
     [
       "dre-pays-de-la-loire-01",

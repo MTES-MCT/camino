@@ -11,7 +11,7 @@ type DocumentTypeIdsBySdomZonesGet = 'nir' | 'jeg' | 'nip'
 export const documentTypeIdsBySdomZonesGet = (sdomZones: DeepReadonly<SDOMZoneId[]>, titreTypeId: string, demarcheTypeId: string, etapeTypeId: string): DocumentTypeIdsBySdomZonesGet[] => {
   const documentTypeIds: DocumentTypeIdsBySdomZonesGet[] = []
 
-  // Pour les demandes d’octroi d’AXM
+  // Pour les demandes d'octroi d'AXM
   if (
     sdomZones.length > 0 &&
     etapeTypeId === ETAPES_TYPES.demande &&

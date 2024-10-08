@@ -9,7 +9,7 @@ exports[`getAssignableRoles 1`] = `
       "editeur",
       "lecteur",
       "entreprise",
-      "bureau d’études",
+      "bureau d'études",
       "defaut",
     ],
     "role": "super",
@@ -20,7 +20,7 @@ exports[`getAssignableRoles 1`] = `
       "editeur",
       "lecteur",
       "entreprise",
-      "bureau d’études",
+      "bureau d'études",
       "defaut",
     ],
     "role": "admin",
@@ -39,7 +39,7 @@ exports[`getAssignableRoles 1`] = `
   },
   {
     "assignableRoles": [],
-    "role": "bureau d’études",
+    "role": "bureau d'études",
   },
   {
     "assignableRoles": [],

@@ -7,7 +7,7 @@ interface Definition<T> {
   typeId: TitreTypeTypeId
 }
 // prettier-ignore
-const TITRES_TYPES_KEYS = ['apc', 'aph', 'apm', 'apw', 'arc', 'arg', 'arm', 'axm', 'cxf', 'cxg', 'cxh', 'cxm', 'cxr', 'cxs', 'cxw', 'inm', 'inr', 'pcc', 'prf', 'prg', 'prh', 'prm', 'prr', 'prs', 'prw', 'pxf', 'pxg', 'pxh', 'pxm', 'pxr', 'pxw',] as const
+const TITRES_TYPES_KEYS = ["apc", "aph", "apm", "apw", "arc", "arg", "arm", "axm", "cxf", "cxg", "cxh", "cxm", "cxr", "cxs", "cxw", "inm", "inr", "pcc", "prf", "prg", "prh", "prm", "prr", "prs", "prw", "pxf", "pxg", "pxh", "pxm", "pxr", "pxw",] as const
 
 export const TITRES_TYPES_IDS = {
   AUTORISATION_DE_PROSPECTION_CARRIERES: 'apc',

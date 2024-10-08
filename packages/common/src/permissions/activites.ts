@@ -150,7 +150,7 @@ export const isActiviteDocumentsComplete = (
   const activiteDocumentType = activitesTypesDocumentsTypes[activiteTypeId]
 
   if (activiteDocuments.length > 0 && isNullOrUndefined(activiteDocumentType)) {
-    errors.push(`impossible de lier un document`)
+    errors.push('impossible de lier un document')
   } else if (isNullOrUndefined(activiteDocumentType)) {
     return { valid: true }
   } else if (!activiteDocumentType.optionnel) {

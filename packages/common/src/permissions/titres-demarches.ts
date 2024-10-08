@@ -12,7 +12,7 @@ import { DeepReadonly, isNotNullNorUndefinedNorEmpty, isNullOrUndefined } from '
 import { ETAPE_IS_BROUILLON } from '../etape'
 
 const hasOneDemarcheWithoutPhase = (demarches: Pick<TitreGetDemarche, 'demarche_date_debut'>[]): boolean => {
-  // Si il y a une seule démarche et qu’elle n’a pas encore créée de phase, alors on ne peut pas créer une deuxième démarche
+  // Si il y a une seule démarche et qu'elle n'a pas encore créée de phase, alors on ne peut pas créer une deuxième démarche
   return isNotNullNorUndefinedNorEmpty(demarches) && demarches.length === 1 && isNullOrUndefined(demarches[0].demarche_date_debut)
 }
 export const canCreateDemarche = (

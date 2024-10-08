@@ -22,7 +22,7 @@ export const caminoFiltres = {
     id: 'nomsAdministration',
     type: 'input',
     name: 'Nom',
-    placeholder: `Nom de l'administration`,
+    placeholder: "Nom de l'administration",
     validator: z.string(),
   },
   administrationTypesIds: {
@@ -201,7 +201,7 @@ export const caminoFiltres = {
     id: 'nomsEntreprise',
     type: 'input',
     name: 'Nom / Siren / Siret',
-    placeholder: `Nom d'entreprise ou d'établissement, Siren, ou Siret`,
+    placeholder: "Nom d'entreprise ou d'établissement, Siren, ou Siret",
     validator: z.string(),
   },
   etapesInclues: {

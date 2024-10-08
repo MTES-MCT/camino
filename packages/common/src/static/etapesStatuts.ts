@@ -37,7 +37,7 @@ export interface EtapeStatut<T = EtapeStatutId> {
 }
 // TODO 2023-10-24 utiliser les couleurs de Sarah
 export const EtapesStatuts: { [key in EtapeStatutId]: EtapeStatut<key> } = {
-  acc: { id: 'acc', nom: 'accepté', couleur: 'success', description: "La demande a fait l’objet d’une décision favorable de l'administration." },
+  acc: { id: 'acc', nom: 'accepté', couleur: 'success', description: "La demande a fait l'objet d'une décision favorable de l'administration." },
   ajo: { id: 'ajo', nom: 'ajourné', couleur: 'warning' },
   com: { id: 'com', nom: 'complet', couleur: 'success' },
   def: { id: 'def', nom: 'défavorable', couleur: 'error' },
@@ -56,7 +56,7 @@ export const EtapesStatuts: { [key in EtapeStatutId]: EtapeStatut<key> } = {
     nom: 'rejeté',
     couleur: 'error',
     description:
-      "La demande a fait l’objet d’une décision défavorable de l'administration. Les textes d’applications du code minier prévoient que les décisions de rejet ne font pas l’objet d’une publication. En conséquence, les démarches qui passent au statut “rejeté” dans Camino sont dé-publiées et rendues inaccessibles aux tiers.\n",
+      "La demande a fait l'objet d'une décision défavorable de l'administration. Les textes d'applications du code minier prévoient que les décisions de rejet ne font pas l'objet d'une publication. En conséquence, les démarches qui passent au statut “rejeté” dans Camino sont dé-publiées et rendues inaccessibles aux tiers.\n",
   },
   rei: {
     id: 'rei',
@@ -70,7 +70,7 @@ export const EtapesStatuts: { [key in EtapeStatutId]: EtapeStatut<key> } = {
     nom: 'terminé',
     couleur: 'neutral',
     description:
-      'La démarche engagée unilatéralement par l’administration qui a fait l’objet d’une décision de l’administration. Celle-ci n’a pas fait l’objet d’une demande de la part du titulaire du titre ou de l’autorisation.\n',
+      "La démarche engagée unilatéralement par l'administration qui a fait l'objet d'une décision de l'administration. Celle-ci n'a pas fait l'objet d'une demande de la part du titulaire du titre ou de l'autorisation.\n",
   },
 }
 

@@ -354,11 +354,11 @@ const TDEDocumentsTypes = {
       [ETAPES_TYPES.decisionDuProprietaireDuSol]: { [DOCUMENTS_TYPES_IDS.lettre]: { optionnel: false, description: "Avis suite à la demande d'accord du propriétaire du sol" } },
       [ETAPES_TYPES.decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_]: { [DOCUMENTS_TYPES_IDS.arretePrefectoral]: { optionnel: false } },
       [ETAPES_TYPES.demande]: {
-        [DOCUMENTS_TYPES_IDS.documentsCartographiques]: { optionnel: false, description: 'Plan à l’échelle 1/50 000ème ou 1/100 000ème' },
+        [DOCUMENTS_TYPES_IDS.documentsCartographiques]: { optionnel: false, description: "Plan à l'échelle 1/50 000ème ou 1/100 000ème" },
         [DOCUMENTS_TYPES_IDS.identificationDeMateriel]: {
           optionnel: false,
           description:
-            'la liste et la valeur du matériel d’extraction et de\n traitement que le demandeur détient ou qu’il \nenvisage d’acquérir ainsi que, dans ce dernier\n cas, le financement correspondant. Ces pièces \nsont demandées au titre de la justification des \ncapacités financières du\ndemandeur \n(décret 2001-204, art. 7)',
+            "la liste et la valeur du matériel d'extraction et de\n traitement que le demandeur détient ou qu'il \nenvisage d'acquérir ainsi que, dans ce dernier\n cas, le financement correspondant. Ces pièces \nsont demandées au titre de la justification des \ncapacités financières du\ndemandeur \n(décret 2001-204, art. 7)",
         },
         [DOCUMENTS_TYPES_IDS.justificationDExistenceDuGisement]: { optionnel: true },
         [DOCUMENTS_TYPES_IDS.lettre]: { optionnel: true },
@@ -367,7 +367,7 @@ const TDEDocumentsTypes = {
           description:
             'la définition des mesures prévues par le pétitionnaire pour réhabiliter le site après exploitation, notamment la nature et les modalités de revégétalisation envisagée. (décret 2001-204, art. 5 bis)',
         },
-        [DOCUMENTS_TYPES_IDS.methodesPourLExecutionDesTravaux]: { optionnel: false, description: 'descriptif des méthodes envisagées pour l’exécution des travaux ((décret 2001-204, art. 6)' },
+        [DOCUMENTS_TYPES_IDS.methodesPourLExecutionDesTravaux]: { optionnel: false, description: "descriptif des méthodes envisagées pour l'exécution des travaux ((décret 2001-204, art. 6)" },
         [DOCUMENTS_TYPES_IDS.noticeDImpact]: { optionnel: true },
         [DOCUMENTS_TYPES_IDS.noticeDImpactRenforcee]: { optionnel: true, description: 'Obligatoire pour les AEX hors de la zone 2 du SDOM' },
         [DOCUMENTS_TYPES_IDS.programmeDesTravaux]: { optionnel: false, description: 'Description du phasage et planigramme des travaux. (décret 2001-204, art. 5)' },

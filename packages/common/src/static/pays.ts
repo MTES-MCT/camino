@@ -1,6 +1,6 @@
 import { z } from 'zod'
 // prettier-ignore
-const IDS = ['BL','FR','GF','GP','MF','MQ','NC','PF','PM','RE','TF','WF','XX','YT',] as const
+const IDS = ["BL","FR","GF","GP","MF","MQ","NC","PF","PM","RE","TF","WF","XX","YT",] as const
 
 export const PAYS_IDS = {
   "Collectivité d'outre-mer de Saint-Barthélemy": 'BL',

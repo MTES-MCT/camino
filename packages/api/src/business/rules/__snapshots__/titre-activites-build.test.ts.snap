@@ -78,14 +78,14 @@ exports[`construction des activités d'un titre > crée des activités 2`] = `
         "elements": [
           {
             "dateDebut": "2018-01-01",
-            "description": "Masse d’or brut en sortie de mine extrait au cours du trimestre (exemple : masse sous la forme de concentré gravimétrique).",
+            "description": "Masse d'or brut en sortie de mine extrait au cours du trimestre (exemple : masse sous la forme de concentré gravimétrique).",
             "id": "orBrut",
             "nom": "Or brut extrait (g)",
             "optionnel": false,
             "type": "number",
           },
           {
-            "description": "Masse en gramme de l’ensemble des produits contaminés envoyés en traitement au cours du trimestre.",
+            "description": "Masse en gramme de l'ensemble des produits contaminés envoyés en traitement au cours du trimestre.",
             "id": "mercure",
             "nom": "Mercure récupéré (g)",
             "optionnel": false,
@@ -131,9 +131,9 @@ exports[`construction des activités d'un titre > crée des activités 2`] = `
           },
           {
             "dateDebut": "2018-01-01",
-            "description": "Montant en euros des investissements consentis au cours du trimestre listés à l’<a href="https://www.legifrance.gouv.fr/affichCodeArticle.do?idArticle=LEGIARTI000021850940&cidTexte=LEGITEXT000006069569" target="_blank" title="Page de l’article - site externe" rel="noopener noreferrer">article 318 C de l’annexe II du code général des impôts</a>. Afin de bénéficier des déductions fiscales afférentes, les justificatifs attestant de la réalisation effective des investissements sont susceptibles de vous êtres demandés par l’administration.",
+            "description": "Montant en euros des investissements consentis au cours du trimestre listés à l'<a href="https://www.legifrance.gouv.fr/affichCodeArticle.do?idArticle=LEGIARTI000021850940&cidTexte=LEGITEXT000006069569" target="_blank" title="Page de l'article - site externe" rel="noopener noreferrer">article 318 C de l'annexe II du code général des impôts</a>. Afin de bénéficier des déductions fiscales afférentes, les justificatifs attestant de la réalisation effective des investissements sont susceptibles de vous êtres demandés par l'administration.",
             "id": "environnement",
-            "nom": "Dépenses relatives à la protection de l’environnement (euros)",
+            "nom": "Dépenses relatives à la protection de l'environnement (euros)",
             "optionnel": false,
             "type": "number",
           },
@@ -241,7 +241,7 @@ exports[`construction des activités d'un titre > crée des activités 2`] = `
         "elements": [
           {
             "dateDebut": "2018-01-01",
-            "description": "Toute information sur les événements marquants du trimestre (accident, incident, arrêt ou suspension d’activité en précisant les raisons, évolution de l’exploitation, difficultés rencontrées, etc.).",
+            "description": "Toute information sur les événements marquants du trimestre (accident, incident, arrêt ou suspension d'activité en précisant les raisons, évolution de l'exploitation, difficultés rencontrées, etc.).",
             "id": "texte",
             "optionnel": true,
             "type": "textarea",
@@ -264,14 +264,14 @@ exports[`construction des activités d'un titre > crée des activités 2`] = `
         "elements": [
           {
             "dateDebut": "2018-01-01",
-            "description": "Masse d’or brut en sortie de mine extrait au cours du trimestre (exemple : masse sous la forme de concentré gravimétrique).",
+            "description": "Masse d'or brut en sortie de mine extrait au cours du trimestre (exemple : masse sous la forme de concentré gravimétrique).",
             "id": "orBrut",
             "nom": "Or brut extrait (g)",
             "optionnel": false,
             "type": "number",
           },
           {
-            "description": "Masse en gramme de l’ensemble des produits contaminés envoyés en traitement au cours du trimestre.",
+            "description": "Masse en gramme de l'ensemble des produits contaminés envoyés en traitement au cours du trimestre.",
             "id": "mercure",
             "nom": "Mercure récupéré (g)",
             "optionnel": false,
@@ -317,9 +317,9 @@ exports[`construction des activités d'un titre > crée des activités 2`] = `
           },
           {
             "dateDebut": "2018-01-01",
-            "description": "Montant en euros des investissements consentis au cours du trimestre listés à l’<a href="https://www.legifrance.gouv.fr/affichCodeArticle.do?idArticle=LEGIARTI000021850940&cidTexte=LEGITEXT000006069569" target="_blank" title="Page de l’article - site externe" rel="noopener noreferrer">article 318 C de l’annexe II du code général des impôts</a>. Afin de bénéficier des déductions fiscales afférentes, les justificatifs attestant de la réalisation effective des investissements sont susceptibles de vous êtres demandés par l’administration.",
+            "description": "Montant en euros des investissements consentis au cours du trimestre listés à l'<a href="https://www.legifrance.gouv.fr/affichCodeArticle.do?idArticle=LEGIARTI000021850940&cidTexte=LEGITEXT000006069569" target="_blank" title="Page de l'article - site externe" rel="noopener noreferrer">article 318 C de l'annexe II du code général des impôts</a>. Afin de bénéficier des déductions fiscales afférentes, les justificatifs attestant de la réalisation effective des investissements sont susceptibles de vous êtres demandés par l'administration.",
             "id": "environnement",
-            "nom": "Dépenses relatives à la protection de l’environnement (euros)",
+            "nom": "Dépenses relatives à la protection de l'environnement (euros)",
             "optionnel": false,
             "type": "number",
           },
@@ -427,7 +427,7 @@ exports[`construction des activités d'un titre > crée des activités 2`] = `
         "elements": [
           {
             "dateDebut": "2018-01-01",
-            "description": "Toute information sur les événements marquants du trimestre (accident, incident, arrêt ou suspension d’activité en précisant les raisons, évolution de l’exploitation, difficultés rencontrées, etc.).",
+            "description": "Toute information sur les événements marquants du trimestre (accident, incident, arrêt ou suspension d'activité en précisant les raisons, évolution de l'exploitation, difficultés rencontrées, etc.).",
             "id": "texte",
             "optionnel": true,
             "type": "textarea",
@@ -450,14 +450,14 @@ exports[`construction des activités d'un titre > crée des activités 2`] = `
         "elements": [
           {
             "dateDebut": "2018-01-01",
-            "description": "Masse d’or brut en sortie de mine extrait au cours du trimestre (exemple : masse sous la forme de concentré gravimétrique).",
+            "description": "Masse d'or brut en sortie de mine extrait au cours du trimestre (exemple : masse sous la forme de concentré gravimétrique).",
             "id": "orBrut",
             "nom": "Or brut extrait (g)",
             "optionnel": false,
             "type": "number",
           },
           {
-            "description": "Masse en gramme de l’ensemble des produits contaminés envoyés en traitement au cours du trimestre.",
+            "description": "Masse en gramme de l'ensemble des produits contaminés envoyés en traitement au cours du trimestre.",
             "id": "mercure",
             "nom": "Mercure récupéré (g)",
             "optionnel": false,
@@ -503,9 +503,9 @@ exports[`construction des activités d'un titre > crée des activités 2`] = `
           },
           {
             "dateDebut": "2018-01-01",
-            "description": "Montant en euros des investissements consentis au cours du trimestre listés à l’<a href="https://www.legifrance.gouv.fr/affichCodeArticle.do?idArticle=LEGIARTI000021850940&cidTexte=LEGITEXT000006069569" target="_blank" title="Page de l’article - site externe" rel="noopener noreferrer">article 318 C de l’annexe II du code général des impôts</a>. Afin de bénéficier des déductions fiscales afférentes, les justificatifs attestant de la réalisation effective des investissements sont susceptibles de vous êtres demandés par l’administration.",
+            "description": "Montant en euros des investissements consentis au cours du trimestre listés à l'<a href="https://www.legifrance.gouv.fr/affichCodeArticle.do?idArticle=LEGIARTI000021850940&cidTexte=LEGITEXT000006069569" target="_blank" title="Page de l'article - site externe" rel="noopener noreferrer">article 318 C de l'annexe II du code général des impôts</a>. Afin de bénéficier des déductions fiscales afférentes, les justificatifs attestant de la réalisation effective des investissements sont susceptibles de vous êtres demandés par l'administration.",
             "id": "environnement",
-            "nom": "Dépenses relatives à la protection de l’environnement (euros)",
+            "nom": "Dépenses relatives à la protection de l'environnement (euros)",
             "optionnel": false,
             "type": "number",
           },
@@ -613,7 +613,7 @@ exports[`construction des activités d'un titre > crée des activités 2`] = `
         "elements": [
           {
             "dateDebut": "2018-01-01",
-            "description": "Toute information sur les événements marquants du trimestre (accident, incident, arrêt ou suspension d’activité en précisant les raisons, évolution de l’exploitation, difficultés rencontrées, etc.).",
+            "description": "Toute information sur les événements marquants du trimestre (accident, incident, arrêt ou suspension d'activité en précisant les raisons, évolution de l'exploitation, difficultés rencontrées, etc.).",
             "id": "texte",
             "optionnel": true,
             "type": "textarea",
@@ -636,14 +636,14 @@ exports[`construction des activités d'un titre > crée des activités 2`] = `
         "elements": [
           {
             "dateDebut": "2018-01-01",
-            "description": "Masse d’or brut en sortie de mine extrait au cours du trimestre (exemple : masse sous la forme de concentré gravimétrique).",
+            "description": "Masse d'or brut en sortie de mine extrait au cours du trimestre (exemple : masse sous la forme de concentré gravimétrique).",
             "id": "orBrut",
             "nom": "Or brut extrait (g)",
             "optionnel": false,
             "type": "number",
           },
           {
-            "description": "Masse en gramme de l’ensemble des produits contaminés envoyés en traitement au cours du trimestre.",
+            "description": "Masse en gramme de l'ensemble des produits contaminés envoyés en traitement au cours du trimestre.",
             "id": "mercure",
             "nom": "Mercure récupéré (g)",
             "optionnel": false,
@@ -689,9 +689,9 @@ exports[`construction des activités d'un titre > crée des activités 2`] = `
           },
           {
             "dateDebut": "2018-01-01",
-            "description": "Montant en euros des investissements consentis au cours du trimestre listés à l’<a href="https://www.legifrance.gouv.fr/affichCodeArticle.do?idArticle=LEGIARTI000021850940&cidTexte=LEGITEXT000006069569" target="_blank" title="Page de l’article - site externe" rel="noopener noreferrer">article 318 C de l’annexe II du code général des impôts</a>. Afin de bénéficier des déductions fiscales afférentes, les justificatifs attestant de la réalisation effective des investissements sont susceptibles de vous êtres demandés par l’administration.",
+            "description": "Montant en euros des investissements consentis au cours du trimestre listés à l'<a href="https://www.legifrance.gouv.fr/affichCodeArticle.do?idArticle=LEGIARTI000021850940&cidTexte=LEGITEXT000006069569" target="_blank" title="Page de l'article - site externe" rel="noopener noreferrer">article 318 C de l'annexe II du code général des impôts</a>. Afin de bénéficier des déductions fiscales afférentes, les justificatifs attestant de la réalisation effective des investissements sont susceptibles de vous êtres demandés par l'administration.",
             "id": "environnement",
-            "nom": "Dépenses relatives à la protection de l’environnement (euros)",
+            "nom": "Dépenses relatives à la protection de l'environnement (euros)",
             "optionnel": false,
             "type": "number",
           },
@@ -799,7 +799,7 @@ exports[`construction des activités d'un titre > crée des activités 2`] = `
         "elements": [
           {
             "dateDebut": "2018-01-01",
-            "description": "Toute information sur les événements marquants du trimestre (accident, incident, arrêt ou suspension d’activité en précisant les raisons, évolution de l’exploitation, difficultés rencontrées, etc.).",
+            "description": "Toute information sur les événements marquants du trimestre (accident, incident, arrêt ou suspension d'activité en précisant les raisons, évolution de l'exploitation, difficultés rencontrées, etc.).",
             "id": "texte",
             "optionnel": true,
             "type": "textarea",

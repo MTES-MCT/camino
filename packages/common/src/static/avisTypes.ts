@@ -5,7 +5,7 @@ interface Definition<T> {
   nom: string
 }
 // prettier-ignore
-const AVIS_TYPES_IDS_WITHOUT_AUTRE = [ 'confirmationAccordProprietaireDuSol', 'avisDirectionRegionaleDesAffairesCulturelles', 'avisDirectionAlimentationAgricultureForet', 'avisConseilDepartementalEnvironnementRisquesSanitairesTechnologiques', 'avisDirectionsRégionalesEconomieEmploiTravailSolidarités', 'avisDirectionRegionaleFinancesPubliques', 'avisGendarmerieNationale', 'avisParcNaturelMarin', 'avisIFREMER', 'avisInstitutNationalOrigineQualite', 'avisEtatMajorOrpaillagePecheIllicite', 'avisServiceAdministratifLocal', 'avisAutoriteMilitaire', 'avisParcNational', 'avisDirectionDepartementaleTerritoiresMer', 'avisAgenceRegionaleSante', 'avisCaisseGeneraleSecuriteSociale', 'avisServiceMilieuxNaturelsBiodiversiteSitesPaysages', 'avisOfficeNationalDesForets', 'expertiseOfficeNationalDesForets', 'avisDUneCollectivite'] as const
+const AVIS_TYPES_IDS_WITHOUT_AUTRE = [ "confirmationAccordProprietaireDuSol", "avisDirectionRegionaleDesAffairesCulturelles", "avisDirectionAlimentationAgricultureForet", "avisConseilDepartementalEnvironnementRisquesSanitairesTechnologiques", "avisDirectionsRégionalesEconomieEmploiTravailSolidarités", "avisDirectionRegionaleFinancesPubliques", "avisGendarmerieNationale", "avisParcNaturelMarin", "avisIFREMER", "avisInstitutNationalOrigineQualite", "avisEtatMajorOrpaillagePecheIllicite", "avisServiceAdministratifLocal", "avisAutoriteMilitaire", "avisParcNational", "avisDirectionDepartementaleTerritoiresMer", "avisAgenceRegionaleSante", "avisCaisseGeneraleSecuriteSociale", "avisServiceMilieuxNaturelsBiodiversiteSitesPaysages", "avisOfficeNationalDesForets", "expertiseOfficeNationalDesForets", "avisDUneCollectivite"] as const
 const AVIS_TYPE_IDS_AUTRE = ['autreAvis'] as const
 
 const AVIS_TYPES_IDS = [...AVIS_TYPES_IDS_WITHOUT_AUTRE, ...AVIS_TYPE_IDS_AUTRE] as const
@@ -30,7 +30,7 @@ export const AvisTypes: { [key in AvisTypeId]: Definition<key> } = {
   },
   avisDirectionsRégionalesEconomieEmploiTravailSolidarités: {
     id: 'avisDirectionsRégionalesEconomieEmploiTravailSolidarités',
-    nom: 'Avis de la Direction régionale de l’économie, de l’emploi, du travail et des solidarités',
+    nom: "Avis de la Direction régionale de l'économie, de l'emploi, du travail et des solidarités",
   },
   avisDirectionRegionaleFinancesPubliques: { id: 'avisDirectionRegionaleFinancesPubliques', nom: 'Avis de la Direction Regionale Des Finances Publiques' },
   avisGendarmerieNationale: { id: 'avisGendarmerieNationale', nom: 'Avis de la Gendarmerie Nationale' },

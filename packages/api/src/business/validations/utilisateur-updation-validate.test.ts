@@ -20,9 +20,9 @@ const users: Record<Role, UserNotNull> = {
     administrationId: 'aut-97300-01',
   },
   entreprise: { ...testBlankUser, role: 'entreprise', entrepriseIds: [] },
-  'bureau d’études': {
+  "bureau d'études": {
     ...testBlankUser,
-    role: 'bureau d’études',
+    role: "bureau d'études",
     entrepriseIds: [],
   },
   defaut: { ...testBlankUser, role: 'defaut' },
@@ -47,7 +47,7 @@ test('utilisateurUpdationValidate privilege escalation forbidden', () => {
     `[Error: droits insuffisants]`
   )
   expect(() =>
-    utilisateurUpdationValidate(users['bureau d’études'], { ...users['bureau d’études'], role: 'super', entrepriseIds: [], administrationId: null }, users.entreprise)
+    utilisateurUpdationValidate(users["bureau d'études"], { ...users["bureau d'études"], role: 'super', entrepriseIds: [], administrationId: null }, users.entreprise)
   ).toThrowErrorMatchingInlineSnapshot(`[Error: droits insuffisants]`)
 
   expect(() =>
@@ -148,6 +148,6 @@ test('utilisateurUpdationValidate incorrect users throw error', () => {
     utilisateurUpdationValidate(users.entreprise, { ...users.entreprise, administrationId: null, entrepriseIds: [newEntrepriseId('newEntreprise')] }, { ...users.entreprise })
   ).toThrowErrorMatchingInlineSnapshot(`[Error: droits insuffisants]`)
   expect(() =>
-    utilisateurUpdationValidate(users['bureau d’études'], { ...users['bureau d’études'], administrationId: null, entrepriseIds: [newEntrepriseId('newEntreprise')] }, { ...users['bureau d’études'] })
+    utilisateurUpdationValidate(users["bureau d'études"], { ...users["bureau d'études"], administrationId: null, entrepriseIds: [newEntrepriseId('newEntreprise')] }, { ...users["bureau d'études"] })
   ).toThrowErrorMatchingInlineSnapshot(`[Error: droits insuffisants]`)
 })

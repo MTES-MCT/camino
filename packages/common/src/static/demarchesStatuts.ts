@@ -32,19 +32,19 @@ export const DemarchesStatuts: {
   acc: {
     id: 'acc',
     nom: 'accepté',
-    description: "La demande a fait l’objet d’une décision favorable de l'administration.\n",
+    description: "La demande a fait l'objet d'une décision favorable de l'administration.\n",
     couleur: 'success',
   },
   acp: {
     id: 'acp',
     nom: 'accepté et publié',
-    description: "La demande a fait l’objet d’une décision favorable de l'administration et a été publiée.\n",
+    description: "La demande a fait l'objet d'une décision favorable de l'administration et a été publiée.\n",
     couleur: 'success',
   },
   cls: {
     id: 'cls',
     nom: 'classé sans suite',
-    description: 'La demande est classée sans suite par l’administration à défaut de pouvoir mener l’instruction à son terme.\n',
+    description: "La demande est classée sans suite par l'administration à défaut de pouvoir mener l'instruction à son terme.\n",
     couleur: 'neutral',
   },
   dep: {
@@ -57,13 +57,13 @@ export const DemarchesStatuts: {
     id: 'des',
     nom: 'désisté',
     description:
-      'La demande dont le porteur se dessaisit en informant l’administration de son choix de ne pas lui donner suite. Cette démarche demeure publique si elle a fait l’objet d’une consultation du public.',
+      "La demande dont le porteur se dessaisit en informant l'administration de son choix de ne pas lui donner suite. Cette démarche demeure publique si elle a fait l'objet d'une consultation du public.",
     couleur: 'neutral',
   },
   eco: {
     id: 'eco',
     nom: 'en construction',
-    description: 'Le dossier de demande est en cours d’élaboration par le demandeur.',
+    description: "Le dossier de demande est en cours d'élaboration par le demandeur.",
     couleur: 'warning',
   },
   fpm: {
@@ -81,20 +81,20 @@ export const DemarchesStatuts: {
   ini: {
     id: 'ini',
     nom: 'initié',
-    description: 'La démarche est engagée unilatéralement par l’administration, elle ne fait pas l’objet d’une demande de la part du titulaire du titre ou de l’autorisation.',
+    description: "La démarche est engagée unilatéralement par l'administration, elle ne fait pas l'objet d'une demande de la part du titulaire du titre ou de l'autorisation.",
     couleur: 'warning',
   },
   ins: {
     id: 'ins',
     nom: 'en instruction',
-    description: 'La demande a fait l’objet d’un examen de complétude et de recevabilité.\n',
+    description: "La demande a fait l'objet d'un examen de complétude et de recevabilité.\n",
     couleur: 'warning',
   },
   rej: {
     id: 'rej',
     nom: 'rejeté',
     description:
-      "La demande a fait l’objet d’une décision défavorable de l'administration. Les textes d’applications du code minier prévoient que les décisions de rejet ne font pas l’objet d’une publication. En conséquence, les démarches qui passent au statut “rejeté” dans Camino sont dé-publiées et rendues inaccessibles aux tiers.\n",
+      "La demande a fait l'objet d'une décision défavorable de l'administration. Les textes d'applications du code minier prévoient que les décisions de rejet ne font pas l'objet d'une publication. En conséquence, les démarches qui passent au statut “rejeté” dans Camino sont dé-publiées et rendues inaccessibles aux tiers.\n",
     couleur: 'error',
   },
   rea: {
@@ -107,7 +107,7 @@ export const DemarchesStatuts: {
     id: 'ter',
     nom: 'terminé',
     description:
-      'La démarche engagée unilatéralement par l’administration qui a fait l’objet d’une décision de l’administration. Celle-ci n’a pas fait l’objet d’une demande de la part du titulaire du titre ou de l’autorisation.\n',
+      "La démarche engagée unilatéralement par l'administration qui a fait l'objet d'une décision de l'administration. Celle-ci n'a pas fait l'objet d'une demande de la part du titulaire du titre ou de l'autorisation.\n",
     couleur: 'success',
   },
 } as const
