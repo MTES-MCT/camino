@@ -1,6 +1,7 @@
 import { Assertion, expect, test } from 'vitest'
 import { nullToDefault, translateIssue } from './zod-tools'
 import { z, ZodTypeAny } from 'zod'
+import { isNullOrUndefined } from './typescript-tools'
 
 test('nullToDefault', () => {
   expect(z.string().nullable().transform(nullToDefault('inCaseOfNull')).parse(null)).toBe('inCaseOfNull')
@@ -20,7 +21,12 @@ test('errorMessage', () => {
       throw new Error('Should have failed')
     }
 
-    return expect(translateIssue(error.errors[0]))
+    const firstError = error.errors[0]
+    if (isNullOrUndefined(firstError)) {
+      throw new Error('on veut une erreur')
+    }
+
+    return expect(translateIssue(firstError))
   }
 
   expectMessageError(z.object({ nom: z.string() }), {}).toMatchInlineSnapshot(`"Le champ "nom" est obligatoire."`)

@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { isNullOrUndefined, isNullOrUndefinedOrEmpty } from './typescript-tools'
+import { isNotNullNorUndefined, isNullOrUndefined, isNullOrUndefinedOrEmpty } from './typescript-tools'
 
 const datesDiffInDays = (a: Date, b: Date) => {
   const utc1 = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate())
@@ -107,20 +107,27 @@ export const intervalleAnnees = (anneeDepart: CaminoAnnee, anneeArrivee: CaminoA
   return annees
 }
 
-export const dateAddDays = (date: CaminoDate, days: number): CaminoDate => {
+const splitCaminoDate = (date: CaminoDate): [string, string, string] => {
   const [y, m, d] = date.split('-')
+  if (isNotNullNorUndefined(y) && isNotNullNorUndefined(m) && isNotNullNorUndefined(d)) {
+    return [y, m, d]
+  }
+  throw new Error(`Cette camino date ${date} n'est pas vraiment une caminoDate`)
+}
+export const dateAddDays = (date: CaminoDate, days: number): CaminoDate => {
+  const [y, m, d] = splitCaminoDate(date)
 
   return toCaminoDate(new Date(+y, +m - 1, +d + days))
 }
 
 export const dateAddMonths = (date: CaminoDate, months: number): CaminoDate => {
-  const [y, m, d] = date.split('-')
+  const [y, m, d] = splitCaminoDate(date)
 
   return toCaminoDate(new Date(+y, +m - 1 + months, +d))
 }
 
 export function setDayInMonth(date: CaminoDate, day: number): CaminoDate {
-  const [y, m] = date.split('-')
+  const [y, m] = splitCaminoDate(date)
 
   return toCaminoDate(new Date(+y, +m - 1, +day))
 }

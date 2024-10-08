@@ -1,6 +1,6 @@
 export const capitalize = <T extends string>(text: T): Capitalize<T> => {
   if (text.length > 0) {
-    return (text[0].toUpperCase() + text.substring(1)) as Capitalize<T>
+    return (text.substring(0, 1).toUpperCase() + text.substring(1)) as Capitalize<T>
   }
 
   return text as Capitalize<T>

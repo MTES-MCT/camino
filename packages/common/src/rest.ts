@@ -43,7 +43,7 @@ import {
 import { fiscaliteValidator } from './validators/fiscalite'
 import { caminoConfigValidator } from './static/config'
 import { communeValidator } from './static/communes'
-import { Expect, isFalse, isTrue } from './typescript-tools'
+import { Expect, isFalse, isNotNullNorUndefined, isTrue } from './typescript-tools'
 import { activiteDocumentIdValidator, activiteEditionValidator, activiteIdOrSlugValidator, activiteValidator } from './activite'
 import { geoSystemeIdValidator } from './static/geoSystemes'
 import {
@@ -295,7 +295,7 @@ export const getRestRoute = <T extends CaminoRestRoute>(path: T, params: CaminoR
       for (const param of params) {
         urlParams.append(`${key}[]`, param)
       }
-    } else {
+    } else if (isNotNullNorUndefined(params)) {
       urlParams.append(key, params)
     }
   })

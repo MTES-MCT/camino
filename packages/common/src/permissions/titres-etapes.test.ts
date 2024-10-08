@@ -250,9 +250,10 @@ test.each<{
 })
 
 test('une entreprise peut modifier sa demande mais ne peut pas la supprimer', () => {
-  const user: EntrepriseUserNotNull = { ...testBlankUser, role: 'entreprise', entrepriseIds: [entrepriseIdValidator.parse('entrepriseId')] }
-  expect(canEditEtape(user, 'mfr', ETAPE_IS_BROUILLON, [user.entrepriseIds[0]], [], 'oct', { typeId: 'arm', titreStatutId: 'ind' })).toBe(true)
-  expect(canDeleteEtape(user, 'mfr', ETAPE_IS_BROUILLON, [user.entrepriseIds[0]], [], 'oct', { typeId: 'arm', titreStatutId: 'ind' })).toBe(false)
+  const entrepriseId = entrepriseIdValidator.parse('entrepriseId')
+  const user: EntrepriseUserNotNull = { ...testBlankUser, role: 'entreprise', entrepriseIds: [entrepriseId] }
+  expect(canEditEtape(user, 'mfr', ETAPE_IS_BROUILLON, [entrepriseId], [], 'oct', { typeId: 'arm', titreStatutId: 'ind' })).toBe(true)
+  expect(canDeleteEtape(user, 'mfr', ETAPE_IS_BROUILLON, [entrepriseId], [], 'oct', { typeId: 'arm', titreStatutId: 'ind' })).toBe(false)
 })
 
 const multiPolygonWith4Points: FeatureMultiPolygon = {
