@@ -13,7 +13,7 @@ export default defineConfig({
     },
     setupFiles: path.resolve(__dirname, './tests/vitestSetup.ts'),
     testTimeout: 10000,
-    hookTimeout: 30000,
+    hookTimeout: 45000,
     env: testEnv,
   },
 })

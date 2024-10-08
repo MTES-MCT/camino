@@ -20,7 +20,9 @@ api/test/integration:
     - name: postgis/postgis:16-3.4
       alias: postgres
   stage: test
-  script: make test/api-integration
+  script:
+    - ./.gitlab/wait-for-it.sh -h ${PGHOST} -p ${PGPORT} -t 30 -- echo 'done'
+    - make test/api-integration
 api/type:
   extends: .prepare-node-run
   stage: test
