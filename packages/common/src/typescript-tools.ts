@@ -147,3 +147,7 @@ export const stringArrayEquals = (array1: string[], array2: string[]): boolean =
 export type RecordPartial<K extends keyof any, T> = {
   [P in K]?: T
 }
+
+export const toSorted = <T>(values: DeepReadonly<T[]>, compareFn?: (a: DeepReadonly<T>, b: DeepReadonly<T>) => number): DeepReadonly<T[]> => {
+  return [...values].sort(compareFn)
+}

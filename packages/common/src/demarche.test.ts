@@ -1,7 +1,9 @@
 /* eslint-disable no-irregular-whitespace */
-import { test, expect } from 'vitest'
-import { getDemarcheContenu } from './demarche'
+import { test, expect, describe } from 'vitest'
+import { demarcheDepotDemandeDateFind, getDemarcheContenu } from './demarche'
 import { proprietesGeothermieForagesElementIds } from './static/titresTypes_demarchesTypes_etapesTypes/sections'
+import { ETAPES_TYPES } from './static/etapesTypes'
+import { toCaminoDate } from './date'
 
 test('getDemarcheContenu arm', () => {
   expect(
@@ -303,4 +305,27 @@ test('getDemarcheContenu pxg', () => {
       "Volume maximum de pompage": "3000000 m³",
     }
   `)
+})
+
+describe('demarcheDepotDemandeDateFind', () => {
+  test("pas d'étapes", () => {
+    expect(demarcheDepotDemandeDateFind([])).toBe(undefined)
+  })
+
+  test('un dépot de la demande', () => {
+    expect(
+      demarcheDepotDemandeDateFind([
+        { typeId: ETAPES_TYPES.demande, date: toCaminoDate('2020-01-01') },
+        { typeId: ETAPES_TYPES.depotDeLaDemande, date: toCaminoDate('2024-01-01') },
+      ])
+    ).toBe(toCaminoDate('2024-01-01'))
+  })
+  test('sans dépot de la demande', () => {
+    expect(
+      demarcheDepotDemandeDateFind([
+        { typeId: ETAPES_TYPES.demande, date: toCaminoDate('2020-01-01') },
+        { typeId: ETAPES_TYPES.abrogationDeLaDecision, date: toCaminoDate('2024-01-01') },
+      ])
+    ).toBe(toCaminoDate('2020-01-01'))
+  })
 })

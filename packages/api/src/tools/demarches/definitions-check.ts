@@ -1,10 +1,10 @@
-import { demarchesDefinitions } from '../../business/rules-demarches/definitions'
 import { titresDemarchesGet } from '../../database/queries/titres-demarches'
 import { titreDemarcheUpdatedEtatValidate } from '../../business/validations/titre-demarche-etat-validate'
 import { userSuper } from '../../database/user-super'
 import { getTitreTypeType, getDomaineId } from 'camino-common/src/static/titresTypes'
 import { isNotNullNorUndefinedNorEmpty, onlyUnique } from 'camino-common/src/typescript-tools'
 import { DemarcheId } from 'camino-common/src/demarche'
+import { demarchesDefinitions } from 'camino-common/src/machines'
 
 const demarchesValidate = async () => {
   const demarchesIdsAlreadyChecked: Set<DemarcheId> = new Set()

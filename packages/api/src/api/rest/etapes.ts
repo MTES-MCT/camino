@@ -28,7 +28,6 @@ import { CaminoDate, getCurrent } from 'camino-common/src/date'
 import { titreDemarcheGet } from '../../database/queries/titres-demarches'
 import { userSuper } from '../../database/user-super'
 import { titreEtapeGet, titreEtapeUpdate, titreEtapeUpsert } from '../../database/queries/titres-etapes'
-import { machineFind } from '../../business/rules-demarches/definitions'
 import { User, isBureauDEtudes, isEntreprise } from 'camino-common/src/roles'
 import { canCreateEtape, canDeposeEtape, canDeleteEtape, canEditEtape, canEditDates, canEditDuree } from 'camino-common/src/permissions/titres-etapes'
 import { canBeBrouillon, isEtapeTypeId } from 'camino-common/src/static/etapesTypes'
@@ -85,6 +84,7 @@ import { RestNewGetCall } from '../../server/rest'
 import { Effect, Match, pipe } from 'effect'
 import { DbQueryAccessError } from '../../pg-database'
 import { CaminoError } from 'camino-common/src/zod-tools'
+import { machineFind } from '../../business/rules-demarches/machines'
 
 export const getEtapeEntrepriseDocuments =
   (pool: Pool) =>

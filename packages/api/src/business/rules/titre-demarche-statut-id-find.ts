@@ -3,7 +3,6 @@ import { DemarcheId } from 'camino-common/src/demarche'
 
 import { titreEtapesSortDescByOrdre } from '../utils/titre-etapes-sort'
 import { titreEtapePublicationCheck } from './titre-etape-publication-check'
-import { machineFind } from '../rules-demarches/definitions'
 import { TitreEtapeForMachine, toMachineEtapes } from '../rules-demarches/machine-common'
 import { DemarcheStatutId, DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
@@ -11,6 +10,7 @@ import { DemarcheTypeId, TravauxIds } from 'camino-common/src/static/demarchesTy
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
 import { isEtapeStatusRejete } from 'camino-common/src/static/etapesStatuts'
 import { isNotNullNorUndefined, RecordPartial } from 'camino-common/src/typescript-tools'
+import { machineFind } from '../rules-demarches/machines'
 
 const titreEtapesDecisivesCommunesTypes: EtapeTypeId[] = ['css', 'abd', 'and']
 

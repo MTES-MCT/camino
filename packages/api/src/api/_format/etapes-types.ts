@@ -1,6 +1,5 @@
+import { demarcheDepotDemandeDateFind } from 'camino-common/src/demarche'
 import { ITitreEtape } from '../../types'
-
-import { titreDemarcheDepotDemandeDateFind } from '../../business/rules/titre-demarche-depot-demande-date-find'
 
 import { DocumentType } from 'camino-common/src/static/documentsTypes'
 import { EtapesTypes, EtapeTypeId } from 'camino-common/src/static/etapesTypes'
@@ -34,7 +33,7 @@ export const etapeTypeDateFinCheck = (etapeTypeId: EtapeTypeId, titreEtapes?: Pi
   const etapeTypeDateFin = EtapesTypes[etapeTypeId].date_fin
   if (!etapeTypeDateFin || !titreEtapes) return true
 
-  const dateDemande = titreDemarcheDepotDemandeDateFind(titreEtapes)
+  const dateDemande = demarcheDepotDemandeDateFind(titreEtapes)
 
   // si
   // - la date de demande est absente,

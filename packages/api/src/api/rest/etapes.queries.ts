@@ -31,7 +31,7 @@ import { contenuValidator } from './activites.queries'
 import { CaminoError } from 'camino-common/src/zod-tools'
 import { ZodUnparseable } from '../../tools/fp-tools'
 import { Effect, pipe } from 'effect'
-import { DATE_DEBUT_PROCEDURE_SPECIFIQUE } from '../../business/rules-demarches/definitions'
+import { DATE_DEBUT_PROCEDURE_SPECIFIQUE } from 'camino-common/src/machines'
 
 const getEtapeByIdValidator = z.object({
   etape_id: etapeIdValidator,

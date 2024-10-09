@@ -1,5 +1,4 @@
 import { ITitreEtape } from '../../types'
-import { machineFind } from '../rules-demarches/definitions'
 import { TitreEtapeForMachine, toMachineEtapes } from '../rules-demarches/machine-common'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
@@ -8,6 +7,7 @@ import { DemarcheId } from 'camino-common/src/demarche'
 import { isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
 import { ETAPE_IS_BROUILLON } from 'camino-common/src/etape'
 import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes'
+import { machineFind } from '../rules-demarches/machines'
 
 // classe les étapes selon leur ordre inverse: 3, 2, 1.
 export const titreEtapesSortDescByOrdre = <T extends Pick<ITitreEtape, 'ordre'>>(titreEtapes: T[]): T[] => titreEtapes.toSorted((a, b) => b.ordre! - a.ordre!)

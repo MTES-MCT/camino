@@ -59,10 +59,10 @@ class DbManager {
       }
     )
 
-    console.info(output.stdout)
-    console.error(output.stderr)
+    console.log(output.stdout) // eslint-disable-line no-console
+    console.log(output.stderr) // eslint-disable-line no-console
     if (output.status !== 0) {
-      console.error(`migration went wrong ${output.status}`)
+      console.log(`migration went wrong ${output.status}`) // eslint-disable-line no-console
       throw new Error(`Migration went wrong:`)
     }
   }

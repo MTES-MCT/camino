@@ -3,12 +3,12 @@ import { ETAPES_TYPES, EtapeTypeId } from 'camino-common/src/static/etapesTypes'
 import { getDomaineId, TITRES_TYPES_IDS, TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { getEtapesTDE } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/index'
 import { ITitreEtape, ITitreDemarche } from '../../types'
-import { machineFind } from '../rules-demarches/definitions'
 import { titreEtapeForMachineValidator, toMachineEtapes } from '../rules-demarches/machine-common'
 import { titreEtapesSortAscByOrdre } from '../utils/titre-etapes-sort'
 import { titreInModificationEnInstance } from './titre-statut-id-find'
 import { ETAPES_STATUTS, isEtapeStatusRejete } from 'camino-common/src/static/etapesStatuts'
 import { DOMAINES_IDS } from 'camino-common/src/static/domaines'
+import { machineFind } from '../rules-demarches/machines'
 const titreDemarchePublicLectureFind = (
   publicLecture: boolean,
   demarcheTypeId: DemarcheTypeId,

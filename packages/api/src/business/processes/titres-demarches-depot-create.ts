@@ -5,7 +5,6 @@ import { titreDemarcheGet } from '../../database/queries/titres-demarches'
 import { userSuper } from '../../database/user-super'
 import { titreEtapeUpdateTask } from '../titre-etape-update'
 import { titreEtapeAdministrationsEmailsSend } from '../../api/graphql/resolvers/_titre-etape-email'
-import { machineFind } from '../rules-demarches/definitions'
 import { titreUrlGet } from '../utils/urls-get'
 import { emailsWithTemplateSend } from '../../tools/api-mailjet/emails'
 import { EmailTemplateId, EmailAdministration } from '../../tools/api-mailjet/types'
@@ -16,6 +15,7 @@ import { TitresTypesTypes } from 'camino-common/src/static/titresTypesTypes'
 import { NonEmptyArray, isNonEmptyArray, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined } from 'camino-common/src/typescript-tools'
 import { getEntreprise, getEntrepriseUtilisateurs } from '../../api/rest/entreprises.queries'
 import { ETAPE_IS_NOT_BROUILLON } from 'camino-common/src/etape'
+import { machineIdFind } from 'camino-common/src/machines'
 
 const emailConfirmationDepotSend = async (
   emails: string[],
@@ -50,9 +50,9 @@ const titreEtapeDepotConfirmationEmailsSend = async (titreDemarche: ITitreDemarc
 
 // visibleForTesting
 export const titreDemarcheDepotCheck = (titreDemarche: ITitreDemarche): boolean => {
-  const demarcheDefinition = machineFind(titreDemarche.titre!.typeId, titreDemarche.typeId, titreDemarche.etapes, titreDemarche.id)
+  const machineId = machineIdFind(titreDemarche.titre!.typeId, titreDemarche.typeId, titreDemarche.etapes, titreDemarche.id)
   // On peut déposer automatiquement seulement les démarches qui possèdent une machine
-  if (!demarcheDefinition) return false
+  if (!machineId) return false
   if (titreDemarche.titre!.typeId === 'arm' && titreDemarche.typeId === 'oct') {
     // Si on a pas de demande faite
     if (!titreDemarche.etapes?.find(e => e.typeId === 'mfr' && e.isBrouillon === ETAPE_IS_NOT_BROUILLON)) {

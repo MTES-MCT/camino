@@ -18,7 +18,7 @@ import {
   isEtapeDeposable,
 } from './titres-etapes'
 import { AdministrationId, ADMINISTRATION_IDS } from '../static/administrations'
-import { test, expect, describe } from 'vitest'
+import { test, expect, describe, vi } from 'vitest'
 import { TestUser, testBlankUser } from '../tests-utils'
 import { TitreStatutId } from '../static/titresStatuts'
 import { EntrepriseId, entrepriseIdValidator, newEntrepriseId } from '../entreprise'
@@ -29,6 +29,8 @@ import { ETAPE_IS_BROUILLON, ETAPE_IS_NOT_BROUILLON, EtapeBrouillon } from '../e
 import { EntrepriseUserNotNull } from '../roles'
 import { communeIdValidator } from '../static/communes'
 import { SDOMZoneIds } from '../static/sdom'
+
+console.warn = vi.fn()
 
 test.each<{ etapeTypeId: EtapeTypeId; demarcheTypeId: DemarcheTypeId; titreTypeId: TitreTypeId; optional: boolean }>([
   { etapeTypeId: 'mfr', demarcheTypeId: 'oct', titreTypeId: 'arm', optional: false },

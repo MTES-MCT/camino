@@ -1,11 +1,11 @@
 import { z } from 'zod'
 import { TITRES_TYPES_IDS, TitreTypeId, getTitreTypeType } from './static/titresTypes'
-import { caminoDateValidator } from './date'
+import { CaminoDate, caminoDateValidator } from './date'
 import { communeIdValidator } from './static/communes'
 import { secteurMaritimeValidator } from './static/facades'
 import { substanceLegaleIdValidator } from './static/substancesLegales'
 import { entrepriseIdValidator, etapeEntrepriseDocumentValidator } from './entreprise'
-import { EtapeTypeId, etapeTypeIdFondamentaleValidator, etapeTypeIdNonFondamentaleValidator } from './static/etapesTypes'
+import { ETAPES_TYPES, EtapeTypeId, etapeTypeIdFondamentaleValidator, etapeTypeIdNonFondamentaleValidator } from './static/etapesTypes'
 import { etapeStatutIdValidator } from './static/etapesStatuts'
 import { sectionWithValueValidator } from './sections'
 import { etapeAvisValidator, etapeBrouillonValidator, etapeDocumentValidator, etapeIdValidator, etapeNoteValidator, etapeSlugValidator } from './etape'
@@ -18,7 +18,7 @@ import { capitalize } from './strings'
 import { foretIdValidator } from './static/forets'
 import { featureCollectionForagesValidator, featureCollectionPointsValidator, featureMultiPolygonValidator } from './perimetre'
 import { geoSystemeIdValidator } from './static/geoSystemes'
-import { isNotNullNorUndefined } from './typescript-tools'
+import { DeepReadonly, isNotNullNorUndefined, isNullOrUndefinedOrEmpty, toSorted } from './typescript-tools'
 import { proprietesGeothermieForagesElementIds } from './static/titresTypes_demarchesTypes_etapesTypes/sections'
 import { titreIdValidator } from './validators/titres'
 import { demarcheTypeIdValidator } from './static/demarchesTypes'
@@ -258,3 +258,17 @@ export const demarcheCreationOutputValidator = z.object({
 })
 
 export type DemarcheCreationOutput = z.infer<typeof demarcheCreationOutputValidator>
+
+export const demarcheDepotDemandeDateFind = (titreEtapes: DeepReadonly<{ date: CaminoDate; typeId: EtapeTypeId }[]> | undefined): undefined | CaminoDate => {
+  if (isNullOrUndefinedOrEmpty(titreEtapes)) {
+    return undefined
+  }
+
+  const titreEtapeDemande = titreEtapes.find(te => te.typeId === ETAPES_TYPES.depotDeLaDemande)
+
+  if (isNotNullNorUndefined(titreEtapeDemande)) {
+    return titreEtapeDemande.date
+  }
+
+  return toSorted(titreEtapes.map(te => te.date))[0]
+}

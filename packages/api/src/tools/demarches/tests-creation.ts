@@ -4,12 +4,13 @@ import { titresDemarchesGet } from '../../database/queries/titres-demarches'
 import { userSuper } from '../../database/user-super'
 import { mkdirSync, writeFileSync } from 'fs'
 import { Etape, titreEtapeForMachineValidator, toMachineEtapes } from '../../business/rules-demarches/machine-common'
-import { machineFind, demarchesDefinitions } from '../../business/rules-demarches/definitions'
 import { dateAddDays, daysBetween, setDayInMonth } from 'camino-common/src/date'
 import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes'
 import { toCommuneId } from 'camino-common/src/static/communes'
-import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefinedOrEmpty, onlyUnique } from 'camino-common/src/typescript-tools'
+import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined, isNullOrUndefinedOrEmpty, onlyUnique } from 'camino-common/src/typescript-tools'
 import { getDomaineId, getTitreTypeType } from 'camino-common/src/static/titresTypes'
+import { demarchesDefinitions, machineIdFind } from 'camino-common/src/machines'
+import { getMachineFromId } from '../../business/rules-demarches/machines'
 
 const writeEtapesForTest = async () => {
   for (const demarcheDefinition of demarchesDefinitions) {
@@ -30,7 +31,7 @@ const writeEtapesForTest = async () => {
 
     const lesDemarchesFiltres = demarches
       .filter(demarche => demarche.etapes?.length)
-      .filter(demarche => isNotNullNorUndefined(machineFind(demarche.titre!.typeId, demarche.typeId, demarche.etapes!, demarche.id)))
+      .filter(demarche => isNotNullNorUndefined(machineIdFind(demarche.titre!.typeId, demarche.typeId, demarche.etapes!, demarche.id)))
 
     const toutesLesEtapes = (
       await Promise.all(
@@ -62,11 +63,15 @@ const writeEtapesForTest = async () => {
           const firstSaisineDate = etapes.find(etape => etape.etapeTypeId === ETAPES_TYPES.avisDesServicesEtCommissionsConsultatives)?.date ?? etapes[0].date
           const decalageJour = daysBetween(firstSaisineDate, setDayInMonth(firstSaisineDate, Math.floor(Math.random() * 28)))
           try {
-            const machine = demarcheDefinition.machine(demarche.titre!.typeId, demarche.typeId)
-            if (!machine.isEtapesOk(etapes)) {
-              etapes.splice(0, etapes.length, ...machine.orderMachine(etapes))
+            const machine = getMachineFromId({ machineId: demarcheDefinition.machineId, titreTypeId: demarche.titre!.typeId, demarcheTypeId: demarche.typeId })
+            if (isNullOrUndefined(machine)) {
+              console.warn('machine non trouvée')
+            } else {
               if (!machine.isEtapesOk(etapes)) {
-                console.warn(`https://camino.beta.gouv.fr/titres/${demarche.titreId} => démarche N*${index} (${demarche.id}) "${demarcheDefinition.titreTypeIds.join(' ou ')}/${demarche.typeId}"`)
+                etapes.splice(0, etapes.length, ...machine.orderMachine(etapes))
+                if (!machine.isEtapesOk(etapes)) {
+                  console.warn(`https://camino.beta.gouv.fr/titres/${demarche.titreId} => démarche N*${index} (${demarche.id}) "${demarcheDefinition.titreTypeIds.join(' ou ')}/${demarche.typeId}"`)
+                }
               }
             }
           } catch (e) {

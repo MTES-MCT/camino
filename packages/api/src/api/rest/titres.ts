@@ -1,7 +1,6 @@
 import { titreArchive, titresGet, titreGet, titreUpdate } from '../../database/queries/titres'
 import { HTTP_STATUS } from 'camino-common/src/http'
 import { CommonTitreAdministration, editableTitreValidator, TitreLink, TitreLinks, TitreGet, utilisateurTitreAbonneValidator } from 'camino-common/src/titres'
-import { machineFind } from '../../business/rules-demarches/definitions'
 import { CaminoRequest, CustomResponse } from './express-type'
 import { userSuper } from '../../database/user-super'
 import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined, onlyUnique } from 'camino-common/src/typescript-tools'
@@ -29,6 +28,7 @@ import { RestNewGetCall, RestNewPostCall } from '../../server/rest'
 import { Effect, Match, pipe } from 'effect'
 import { CaminoError } from 'camino-common/src/zod-tools'
 import { DbQueryAccessError } from '../../pg-database'
+import { machineFind } from '../../business/rules-demarches/machines'
 
 const etapesAMasquer = [ETAPES_TYPES.classementSansSuite, ETAPES_TYPES.desistementDuDemandeur, ETAPES_TYPES.decisionImplicite, ETAPES_TYPES.demandeDeComplements_RecevabiliteDeLaDemande_]
 

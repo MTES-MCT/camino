@@ -1,4 +1,4 @@
-import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefinedOrEmpty, memoize, onlyUnique, stringArrayEquals } from './typescript-tools'
+import { toSorted, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefinedOrEmpty, memoize, onlyUnique, stringArrayEquals } from './typescript-tools'
 import { Role } from './roles'
 import { AdministrationId } from './static/administrations'
 import { Departements } from './static/departement'
@@ -64,4 +64,13 @@ test('stringArrayEquals', () => {
   expect(stringArrayEquals(['un'], ['un', 'deux'])).toBe(false)
   expect(stringArrayEquals(['un', 'deux'], ['un'])).toBe(false)
   expect(stringArrayEquals([], ['un'])).toBe(false)
+})
+
+test('toSorted', () => {
+  expect(toSorted([])).toStrictEqual([])
+  const arraySimple = ['b', 'a'] as const
+  expect(toSorted(arraySimple)).toStrictEqual(['a', 'b'])
+  expect(arraySimple).toStrictEqual(['b', 'a'])
+
+  expect(toSorted([{ type: 'b' }, { type: 'a' }], (a, b) => a.type.localeCompare(b.type))).toStrictEqual([{ type: 'a' }, { type: 'b' }])
 })
