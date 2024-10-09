@@ -1,7 +1,7 @@
 import { sql } from '@pgtyped/runtime'
-import { DemarcheId, DemarcheIdOrSlug } from 'camino-common/src/demarche'
+import { DemarcheId, DemarcheIdOrSlug, demarcheIdValidator, GetDemarcheMiseEnConcurrence } from 'camino-common/src/demarche'
 import { EffectDbQueryAndValidateErrors, Redefine, dbQueryAndValidate, effectDbQueryAndValidate } from '../../pg-database'
-import { IGetDemarcheByIdOrSlugDbQuery, IGetEtapesByDemarcheIdDbQuery } from './demarches.queries.types'
+import { IGetDemarcheByIdOrSlugDbQuery, IGetDemarchesEnConcurrenceDbQuery, IGetEtapesByDemarcheIdDbQuery } from './demarches.queries.types'
 import { z } from 'zod'
 import { caminoDateValidator } from 'camino-common/src/date'
 import { communeValidator } from 'camino-common/src/static/communes'
@@ -20,8 +20,10 @@ import { getDemarcheByIdOrSlugValidator as commonGetDemarcheByIdOrSlugValidator 
 import { geoSystemeIdValidator } from 'camino-common/src/static/geoSystemes'
 import { entrepriseIdValidator } from 'camino-common/src/entreprise'
 import { km2Validator } from 'camino-common/src/number'
-import { Effect } from 'effect'
+import { Effect, pipe } from 'effect'
 import { CaminoError } from 'camino-common/src/zod-tools'
+import { isAdministration, isSuper, User } from 'camino-common/src/roles'
+import { DeepReadonly } from 'camino-common/src/typescript-tools'
 
 const getEtapesByDemarcheIdDbValidator = z.object({
   id: etapeIdValidator,
@@ -53,6 +55,7 @@ const getEtapesByDemarcheIdDbValidator = z.object({
   titulaire_ids: z.array(entrepriseIdValidator),
   amodiataire_ids: z.array(entrepriseIdValidator),
   is_brouillon: etapeBrouillonValidator,
+  demarche_id_en_concurrence: demarcheIdValidator.nullable(),
 })
 
 export const getEtapesByDemarcheId = (pool: Pool, demarcheId: DemarcheId): Effect.Effect<GetEtapesByDemarcheIdDb[], CaminoError<EffectDbQueryAndValidateErrors>> =>
@@ -89,7 +92,8 @@ select
     e.geojson_origine_forages,
     e.titulaire_ids,
     e.amodiataire_ids,
-    e.is_brouillon
+    e.is_brouillon,
+    e.demarche_id_en_concurrence
 from
     titres_etapes e
 where
@@ -128,4 +132,44 @@ from
 where (td.id = $ idOrSlug !
     or td.slug = $ idOrSlug !)
 and td.archive is false
+`
+
+const getDemarchesEnConcurrenceDbValidator = z.object({
+  titre_nom: z.string(),
+  demarche_id: demarcheIdValidator,
+  demarche_public_lecture: z.boolean(),
+})
+export const getDemarchesEnConcurrenceQuery = (
+  pool: Pool,
+  demarcheIdPivot: DemarcheId,
+  user: DeepReadonly<User>
+): Effect.Effect<GetDemarcheMiseEnConcurrence[], CaminoError<EffectDbQueryAndValidateErrors>> => {
+  return pipe(
+    effectDbQueryAndValidate(getDemarchesEnConcurrenceDb, { demarcheIdPivot }, pool, getDemarchesEnConcurrenceDbValidator),
+    Effect.map(demarches =>
+      demarches
+        .filter(({ demarche_public_lecture }) => demarche_public_lecture === true || isAdministration(user) || isSuper(user))
+        .map(demarche => ({
+          demarcheId: demarche.demarche_id,
+          titreNom: demarche.titre_nom,
+        }))
+    )
+  )
+}
+
+type GetDemarchesEnConcurrenceDb = z.infer<typeof getDemarchesEnConcurrenceDbValidator>
+const getDemarchesEnConcurrenceDb = sql<Redefine<IGetDemarchesEnConcurrenceDbQuery, { demarcheIdPivot: DemarcheId }, GetDemarchesEnConcurrenceDb>>`
+select
+    t.nom as titre_nom,
+    td.id as demarche_id,
+    td.public_lecture as demarche_public_lecture
+from
+    titres_etapes e
+    join titres_demarches td on e.titre_demarche_id = td.id
+    join titres t on td.titre_id = t.id
+where
+    (e.demarche_id_en_concurrence = $ demarcheIdPivot !
+    or (e.titre_demarche_id = $ demarcheIdPivot! and e.type_id = 'mfr')
+    )
+    and e.archive is false
 `

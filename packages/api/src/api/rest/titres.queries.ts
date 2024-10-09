@@ -14,10 +14,10 @@ import { z } from 'zod'
 import { Commune, communeIdValidator } from 'camino-common/src/static/communes'
 import { Pool } from 'pg'
 import { titreTypeIdValidator } from 'camino-common/src/static/titresTypes'
-import { User } from 'camino-common/src/roles'
+import { isAdministration, isSuper, User } from 'camino-common/src/roles'
 import { titreStatutIdValidator } from 'camino-common/src/static/titresStatuts'
 import { titreReferenceValidator } from 'camino-common/src/titres-references'
-import { DemarcheEtape, DemarcheEtapeCommon, DemarcheEtapeFondamentale, DemarcheEtapeNonFondamentale, demarcheIdValidator, demarcheSlugValidator } from 'camino-common/src/demarche'
+import { DemarcheEtape, DemarcheEtapeCommon, DemarcheEtapeFondamentale, DemarcheEtapeNonFondamentale, DemarcheId, demarcheIdValidator, demarcheSlugValidator } from 'camino-common/src/demarche'
 import { demarcheStatutIdValidator } from 'camino-common/src/static/demarchesStatuts'
 import { demarcheTypeIdValidator } from 'camino-common/src/static/demarchesTypes'
 import { getEtapesByDemarcheId } from './demarches.queries'
@@ -30,7 +30,7 @@ import { OmitDistributive, isNonEmptyArray, isNotNullNorUndefined, isNotNullNorU
 import { getEntrepriseDocumentIdsByEtapeId, getDocumentsByEtapeId, getEtapeAvisLargeObjectIdsByEtapeId } from '../../database/queries/titres-etapes.queries'
 import { getAdministrationsLocales } from 'camino-common/src/administrations'
 import { getEntrepriseDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/entrepriseDocuments'
-import { isEtapeTypeIdFondamentale } from 'camino-common/src/static/etapesTypes'
+import { ETAPE_TYPE_FOR_CONCURRENCY_DATA, isEtapeTypeIdFondamentale } from 'camino-common/src/static/etapesTypes'
 import { getCommunes } from '../../database/queries/communes.queries'
 import { EtapeAvis, EtapeDocument } from 'camino-common/src/etape'
 import { getDateLastJournal } from './journal.queries'
@@ -142,7 +142,7 @@ export const getTitre = async (pool: Pool, user: User, idOrSlug: TitreIdOrSlug):
             }
           }
 
-          const etapeFondamentale: Omit<DemarcheEtapeFondamentale, 'etape_documents' | 'avis_documents'> = {
+          const etapeFondamentale: Omit<DemarcheEtapeFondamentale, 'etape_documents' | 'avis_documents' | 'demarche_id_en_concurrence'> = {
             etape_type_id: etape.etape_type_id,
             fondamentale: {
               amodiataireIds,
@@ -156,7 +156,18 @@ export const getTitre = async (pool: Pool, user: User, idOrSlug: TitreIdOrSlug):
             ...etapeCommon,
           }
 
-          formatedEtapes.push(etapeFondamentale)
+          const etape_type_id = etapeFondamentale.etape_type_id
+          if (etape_type_id === ETAPE_TYPE_FOR_CONCURRENCY_DATA) {
+            let demarcheIdEnConcurrence: DemarcheId | null
+            if (isAdministration(user) || isSuper(user) || demarche.public_lecture) {
+              demarcheIdEnConcurrence = etape.demarche_id_en_concurrence
+            } else {
+              demarcheIdEnConcurrence = null
+            }
+            formatedEtapes.push({ ...etapeFondamentale, etape_type_id, demarche_id_en_concurrence: demarcheIdEnConcurrence })
+          } else {
+            formatedEtapes.push({ ...etapeFondamentale, etape_type_id })
+          }
         } else {
           const etapeNonFondamentale: Omit<DemarcheEtapeNonFondamentale, 'etape_documents' | 'avis_documents'> = { etape_type_id: etape.etape_type_id, ...etapeCommon }
 

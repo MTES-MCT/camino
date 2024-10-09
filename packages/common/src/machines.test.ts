@@ -5,15 +5,11 @@ import { demarcheIdValidator } from './demarche'
 
 describe('machineFind', () => {
   test('demarcheDefinitionFind retourne une machine', () => {
-    expect(machineIdFind('prm', 'oct', [{ date: toCaminoDate('2023-06-07'), typeId: 'mdp' }], demarcheIdValidator.parse('demarcheId'))).toStrictEqual({
-      machineId: 'PrmOct',
-      titreTypeId: 'prm',
-      demarcheTypeId: 'oct',
-    })
+    expect(machineIdFind('prm', 'oct', [{ date: toCaminoDate('2023-06-07'), typeId: 'mdp' }], demarcheIdValidator.parse('demarcheId'))).toStrictEqual('PrmOct')
   })
 
   test("demarcheDefinitionFind retourne une machine quand il n'y a pas d'étape", () => {
-    expect(machineIdFind('prm', 'oct', [], demarcheIdValidator.parse('demarcheId'))).toStrictEqual({ machineId: 'ProcedureSpecifique', titreTypeId: 'prm', demarcheTypeId: 'oct' })
+    expect(machineIdFind('prm', 'oct', [], demarcheIdValidator.parse('demarcheId'))).toStrictEqual('ProcedureSpecifique')
   })
 
   test('demarcheDefinitionFind ne retourne pas une machine quand la démarche fait partie des exceptions', () => {

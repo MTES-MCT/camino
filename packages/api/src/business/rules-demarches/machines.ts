@@ -11,7 +11,7 @@ import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
 import { CaminoDate } from 'camino-common/src/date'
 import { DemarcheId } from 'camino-common/src/demarche'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
-import { DeepReadonly } from 'camino-common/src/typescript-tools'
+import { DeepReadonly, isNullOrUndefined } from 'camino-common/src/typescript-tools'
 
 const machines = {
   ArmOct: () => new ArmOctMachine(),
@@ -29,7 +29,13 @@ export const machineFind = (
   titreEtapes: DeepReadonly<{ date: CaminoDate; typeId: EtapeTypeId }[]> | undefined,
   demarcheId: DemarcheId,
   overrideDate: CaminoDate | null = null
-): CaminoMachines | undefined => getMachineFromId(machineIdFind(titreTypeId, demarcheTypeId, titreEtapes, demarcheId, overrideDate))
+): CaminoMachines | undefined => {
+  const machineId = machineIdFind(titreTypeId, demarcheTypeId, titreEtapes, demarcheId, overrideDate)
+  if (isNullOrUndefined(machineId)) {
+    return undefined
+  }
+  return getMachineFromId({ machineId, titreTypeId, demarcheTypeId })
+}
 
 export const getMachineFromId = (entry: { machineId: CaminoMachineId; titreTypeId: TitreTypeId; demarcheTypeId: DemarcheTypeId } | undefined): CaminoMachines | undefined =>
   entry === undefined ? undefined : machines[entry.machineId](entry.titreTypeId, entry.demarcheTypeId)

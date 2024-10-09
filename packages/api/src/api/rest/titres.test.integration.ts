@@ -458,6 +458,7 @@ describe('getTitre', () => {
               {
                 "avis_documents": [],
                 "date": "2022-01-01",
+                "demarche_id_en_concurrence": null,
                 "entreprises_documents": [],
                 "etape_documents": [],
                 "etape_statut_id": "fai",

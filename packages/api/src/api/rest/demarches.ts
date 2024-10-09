@@ -2,7 +2,7 @@ import { Pool } from 'pg'
 import { HTTP_STATUS } from 'camino-common/src/http'
 import { CaminoRequest, CustomResponse } from './express-type'
 import { DemarcheCreationOutput, demarcheIdOrSlugValidator } from 'camino-common/src/demarche'
-import { getDemarcheByIdOrSlug as getDemarcheByIdOrSlugDb } from './demarches.queries'
+import { getDemarcheByIdOrSlug as getDemarcheByIdOrSlugDb, getDemarchesEnConcurrenceQuery } from './demarches.queries'
 import { GetDemarcheByIdOrSlugValidator, getDemarcheByIdOrSlugValidator } from 'camino-common/src/titres'
 import { getAdministrationsLocalesByTitreId, getDemarchesByTitreId, getTitreByIdOrSlug, getTitulairesAmodiatairesByTitreId } from './titres.queries'
 import { isNullOrUndefined, memoize } from 'camino-common/src/typescript-tools'
@@ -11,8 +11,8 @@ import { titreDemarcheArchive, titreDemarcheCreate, titreDemarcheGet } from '../
 import { titreDemarcheUpdateTask } from '../../business/titre-demarche-update'
 import { canCreateDemarche, canCreateTravaux, canDeleteDemarche } from 'camino-common/src/permissions/titres-demarches'
 import { userSuper } from '../../database/user-super'
-import { RestNewPostCall } from '../../server/rest'
-import { Effect, pipe } from 'effect'
+import { RestNewGetCall, RestNewPostCall } from '../../server/rest'
+import { Effect, Match, pipe } from 'effect'
 import { isDemarcheTypeId, isTravaux } from 'camino-common/src/static/demarchesTypes'
 import { titreGet } from '../../database/queries/titres'
 import { CaminoApiError } from '../../types'
@@ -139,5 +139,18 @@ export const demarcheCreer: RestNewPostCall<'/rest/demarches'> = ({ pool, user, 
         return { message: "Problème lors de l'enregistrement de la démarche" as const, extra: unknown, status: HTTP_STATUS.INTERNAL_SERVER_ERROR }
       },
     })
+  )
+}
+
+export const getDemarchesEnConcurrence: RestNewGetCall<'/rest/demarches/:demarcheId/miseEnConcurrence'> = ({ pool, user, params }) => {
+  return pipe(
+    getDemarchesEnConcurrenceQuery(pool, params.demarcheId, user),
+    Effect.mapError(caminoError =>
+      Match.value(caminoError.message).pipe(
+        Match.when('Problème de validation de données', () => ({ ...caminoError, status: HTTP_STATUS.BAD_REQUEST })),
+        Match.when("Impossible d'accéder à la base de données", () => ({ ...caminoError, status: HTTP_STATUS.INTERNAL_SERVER_ERROR })),
+        Match.exhaustive
+      )
+    )
   )
 }

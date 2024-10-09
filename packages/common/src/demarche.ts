@@ -5,7 +5,7 @@ import { communeIdValidator } from './static/communes'
 import { secteurMaritimeValidator } from './static/facades'
 import { substanceLegaleIdValidator } from './static/substancesLegales'
 import { entrepriseIdValidator, etapeEntrepriseDocumentValidator } from './entreprise'
-import { ETAPES_TYPES, EtapeTypeId, etapeTypeIdFondamentaleValidator, etapeTypeIdNonFondamentaleValidator } from './static/etapesTypes'
+import { ETAPE_TYPE_FOR_CONCURRENCY_DATA, ETAPES_TYPES, EtapeTypeId, etapeTypeIdFondamentaleValidator, etapeTypeIdNonFondamentaleValidator } from './static/etapesTypes'
 import { etapeStatutIdValidator } from './static/etapesStatuts'
 import { sectionWithValueValidator } from './sections'
 import { etapeAvisValidator, etapeBrouillonValidator, etapeDocumentValidator, etapeIdValidator, etapeNoteValidator, etapeSlugValidator } from './etape'
@@ -21,7 +21,7 @@ import { geoSystemeIdValidator } from './static/geoSystemes'
 import { DeepReadonly, isNotNullNorUndefined, isNullOrUndefinedOrEmpty, toSorted } from './typescript-tools'
 import { proprietesGeothermieForagesElementIds } from './static/titresTypes_demarchesTypes_etapesTypes/sections'
 import { titreIdValidator } from './validators/titres'
-import { demarcheTypeIdValidator } from './static/demarchesTypes'
+import { DEMARCHES_TYPES_IDS, DemarcheTypeId, demarcheTypeIdValidator } from './static/demarchesTypes'
 
 export const demarcheIdValidator = z.string().brand<'DemarcheId'>()
 export type DemarcheId = z.infer<typeof demarcheIdValidator>
@@ -44,6 +44,7 @@ const demarcheEtapeCommonValidator = z.object({
   entreprises_documents: z.array(etapeEntrepriseDocumentValidator),
   etape_documents: z.array(etapeDocumentValidator),
   avis_documents: z.array(etapeAvisValidator),
+  demarche_id_en_concurrence: z.never().optional(),
 })
 
 export type DemarcheEtapeCommon = z.infer<typeof demarcheEtapeCommonValidator>
@@ -63,33 +64,42 @@ const etapePerimetreValidator = z.object({
   forets: z.array(foretIdValidator),
 })
 
-const demarcheEtapeFondamentaleValidator = z.intersection(
-  z.object({
-    etape_type_id: etapeTypeIdFondamentaleValidator,
-    fondamentale: z.object({
-      date_debut: caminoDateValidator.nullable(),
-      date_fin: caminoDateValidator.nullable(),
-      duree: z.number().nullable(),
-      substances: z.array(substanceLegaleIdValidator).nullable(),
-      titulaireIds: z.array(entrepriseIdValidator).nullable(),
-      amodiataireIds: z.array(entrepriseIdValidator).nullable(),
-      perimetre: etapePerimetreValidator.nullable(),
-    }),
+const demarcheEtapeFondamentaleCommonValidator = demarcheEtapeCommonValidator.extend({
+  fondamentale: z.object({
+    date_debut: caminoDateValidator.nullable(),
+    date_fin: caminoDateValidator.nullable(),
+    duree: z.number().nullable(),
+    substances: z.array(substanceLegaleIdValidator).nullable(),
+    titulaireIds: z.array(entrepriseIdValidator).nullable(),
+    amodiataireIds: z.array(entrepriseIdValidator).nullable(),
+    perimetre: etapePerimetreValidator.nullable(),
   }),
-  demarcheEtapeCommonValidator
-)
+})
 
-export type DemarcheEtapeFondamentale = z.infer<typeof demarcheEtapeFondamentaleValidator>
+const demarcheEtapeFondamentaleWithConcurrencyValidator = demarcheEtapeFondamentaleCommonValidator.omit({ demarche_id_en_concurrence: true }).extend({
+  etape_type_id: etapeTypeIdFondamentaleValidator.extract([ETAPE_TYPE_FOR_CONCURRENCY_DATA]),
+  demarche_id_en_concurrence: demarcheIdValidator.nullable(),
+})
 
-const demarcheEtapeNonFondamentaleValidator = z.intersection(
-  z.object({
-    etape_type_id: etapeTypeIdNonFondamentaleValidator,
-  }),
-  demarcheEtapeCommonValidator
-)
+type DemarcheEtapeFondamentaleWithConcurrency = z.infer<typeof demarcheEtapeFondamentaleWithConcurrencyValidator>
+const demarcheEtapeFondamentaleWithoutConcurrencyValidator = demarcheEtapeFondamentaleCommonValidator.extend({
+  etape_type_id: etapeTypeIdFondamentaleValidator.exclude([ETAPE_TYPE_FOR_CONCURRENCY_DATA]),
+})
+type DemarcheEtapeFondamentaleWithoutConcurrency = z.infer<typeof demarcheEtapeFondamentaleWithoutConcurrencyValidator>
+
+export type DemarcheEtapeFondamentale = DemarcheEtapeFondamentaleWithConcurrency | DemarcheEtapeFondamentaleWithoutConcurrency
+
+const demarcheEtapeNonFondamentaleValidator = demarcheEtapeCommonValidator.extend({
+  etape_type_id: etapeTypeIdNonFondamentaleValidator,
+})
+
 export type DemarcheEtapeNonFondamentale = z.infer<typeof demarcheEtapeNonFondamentaleValidator>
 
-export const demarcheEtapeValidator = z.union([demarcheEtapeFondamentaleValidator, demarcheEtapeNonFondamentaleValidator])
+export const demarcheEtapeValidator = z.discriminatedUnion('etape_type_id', [
+  demarcheEtapeFondamentaleWithConcurrencyValidator,
+  demarcheEtapeFondamentaleWithoutConcurrencyValidator,
+  demarcheEtapeNonFondamentaleValidator,
+])
 
 export type DemarcheEtape = z.infer<typeof demarcheEtapeValidator>
 
@@ -271,4 +281,20 @@ export const demarcheDepotDemandeDateFind = (titreEtapes: DeepReadonly<{ date: C
   }
 
   return toSorted(titreEtapes.map(te => te.date))[0]
+}
+
+export const getDemarcheMiseEnConcurrenceValidator = z.object({
+  demarcheId: demarcheIdValidator,
+  titreNom: z.string(),
+})
+export type GetDemarcheMiseEnConcurrence = z.infer<typeof getDemarcheMiseEnConcurrenceValidator>
+
+export const canHaveMiseEnConcurrence = (demarcheTypeId: DemarcheTypeId, hasTitreFrom: boolean): boolean => {
+  if (DEMARCHES_TYPES_IDS.ExtensionDePerimetre === demarcheTypeId) {
+    return true
+  } else if (DEMARCHES_TYPES_IDS.Octroi === demarcheTypeId) {
+    return !hasTitreFrom
+  } else {
+    return false
+  }
 }

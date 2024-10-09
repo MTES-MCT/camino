@@ -1,9 +1,10 @@
 /* eslint-disable no-irregular-whitespace */
 import { test, expect, describe } from 'vitest'
-import { demarcheDepotDemandeDateFind, getDemarcheContenu } from './demarche'
+import { canHaveMiseEnConcurrence, demarcheDepotDemandeDateFind, getDemarcheContenu } from './demarche'
 import { proprietesGeothermieForagesElementIds } from './static/titresTypes_demarchesTypes_etapesTypes/sections'
 import { ETAPES_TYPES } from './static/etapesTypes'
 import { toCaminoDate } from './date'
+import { DEMARCHES_TYPES_IDS } from './static/demarchesTypes'
 
 test('getDemarcheContenu arm', () => {
   expect(
@@ -328,4 +329,10 @@ describe('demarcheDepotDemandeDateFind', () => {
       ])
     ).toBe(toCaminoDate('2020-01-01'))
   })
+})
+test('canHaveMiseEnConcurrence', () => {
+  expect(canHaveMiseEnConcurrence(DEMARCHES_TYPES_IDS.ResiliationAnticipeeDAmodiation, false)).toBe(false)
+  expect(canHaveMiseEnConcurrence(DEMARCHES_TYPES_IDS.ExtensionDePerimetre, false)).toBe(true)
+  expect(canHaveMiseEnConcurrence(DEMARCHES_TYPES_IDS.Octroi, false)).toBe(true)
+  expect(canHaveMiseEnConcurrence(DEMARCHES_TYPES_IDS.Octroi, true)).toBe(false)
 })

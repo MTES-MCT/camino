@@ -1,6 +1,6 @@
 import { apiGraphQLFetch } from '@/api/_client'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
-import { DemarcheCreationInput, DemarcheCreationOutput, DemarcheId, DemarcheIdOrSlug, DemarcheSlug } from 'camino-common/src/demarche'
+import { DemarcheCreationInput, DemarcheCreationOutput, DemarcheId, DemarcheIdOrSlug, DemarcheSlug, GetDemarcheMiseEnConcurrence } from 'camino-common/src/demarche'
 import gql from 'graphql-tag'
 import { TitreStatutId } from 'camino-common/src/static/titresStatuts'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
@@ -12,7 +12,7 @@ import { DomaineId } from 'camino-common/src/static/domaines'
 import { EntrepriseId } from 'camino-common/src/entreprise'
 import { SubstanceLegaleId } from 'camino-common/src/static/substancesLegales'
 import { TitreTypeTypeId } from 'camino-common/src/static/titresTypesTypes'
-import { deleteWithJson, getWithJson, newPostWithJson } from '../../api/client-rest'
+import { deleteWithJson, getWithJson, newGetWithJson, newPostWithJson } from '../../api/client-rest'
 import { DeepReadonly } from 'vue'
 import { CaminoError } from 'camino-common/src/zod-tools'
 
@@ -55,6 +55,7 @@ export interface DemarcheApiClient {
   updateDemarche: (demarche: InputDemarcheUpdation) => Promise<DemarcheSlug>
   deleteDemarche: (demarcheId: DemarcheId) => Promise<void>
   getDemarcheByIdOrSlug: (demarcheIdOrSlug: DemarcheIdOrSlug) => Promise<DeepReadonly<GetDemarcheByIdOrSlugValidator>>
+  getDemarcheMiseEnConcurrence: (demarcheId: DemarcheId) => Promise<DeepReadonly<GetDemarcheMiseEnConcurrence[] | CaminoError<string>>>
   getDemarches: (params: GetDemarchesParams) => Promise<{ elements: GetDemarchesDemarche[]; total: number }>
 }
 
@@ -83,6 +84,9 @@ export const demarcheApiClient: DemarcheApiClient = {
 
   getDemarcheByIdOrSlug: async (demarcheIdOrSlug: DemarcheIdOrSlug) => {
     return getWithJson('/rest/demarches/:demarcheIdOrSlug', { demarcheIdOrSlug })
+  },
+  getDemarcheMiseEnConcurrence: async (demarcheId: DemarcheId) => {
+    return newGetWithJson('/rest/demarches/:demarcheId/miseEnConcurrence', { demarcheId })
   },
   getDemarches: async (params: GetDemarchesParams) => {
     const data = await apiGraphQLFetch(gql`

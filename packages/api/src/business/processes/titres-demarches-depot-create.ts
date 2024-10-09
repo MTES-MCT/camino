@@ -53,6 +53,8 @@ export const titreDemarcheDepotCheck = (titreDemarche: ITitreDemarche): boolean 
   const machineId = machineIdFind(titreDemarche.titre!.typeId, titreDemarche.typeId, titreDemarche.etapes, titreDemarche.id)
   // On peut déposer automatiquement seulement les démarches qui possèdent une machine
   if (!machineId) return false
+
+  //FIXMACHINE est-ce que la machine spécifique est concernée par ça ? Si oui, on peut maintenant utiliser les MachineId
   if (titreDemarche.titre!.typeId === 'arm' && titreDemarche.typeId === 'oct') {
     // Si on a pas de demande faite
     if (!titreDemarche.etapes?.find(e => e.typeId === 'mfr' && e.isBrouillon === ETAPE_IS_NOT_BROUILLON)) {

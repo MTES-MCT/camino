@@ -41,6 +41,8 @@ import { userKey, entreprisesKey } from '@/moi'
 import { Entreprise } from 'camino-common/src/entreprise'
 import { CaminoRouter } from '@/typings/vue-router'
 import { ModifiedDate } from './_common/modified-date'
+import { DemarcheMiseEnConcurrence } from './titre/demarche-mise-en-concurrence'
+import { useState } from '@/utils/vue-tsx-utils'
 
 const activitesSort: TableSortEvent = {
   colonne: activitesColonneIdAnnee,
@@ -92,7 +94,7 @@ export const Titre = defineComponent(() => {
   )
 })
 
-interface Props {
+export interface Props {
   user: User
   entreprises: Entreprise[]
   titreIdOrSlug: TitreIdOrSlug | null
@@ -114,6 +116,7 @@ interface Props {
     | 'createDemarche'
     | 'updateDemarche'
     | 'deleteDemarche'
+    | 'getDemarcheMiseEnConcurrence'
   >
   router: Pick<CaminoRouter, 'push' | 'replace'>
   initTab?: TabId
@@ -121,6 +124,7 @@ interface Props {
 
 export const PureTitre = defineComponent<Props>(props => {
   const titreData = ref<AsyncData<TitreGet>>({ status: 'LOADING' })
+  const [hasTitresFrom, setHasTitresFrom] = useState<boolean | 'LOADING'>('LOADING')
 
   const retrieveTitre = async () => {
     const titreId: TitreId | null = titreData.value.status === 'LOADED' ? titreData.value.value.id : null
@@ -429,11 +433,11 @@ export const PureTitre = defineComponent<Props>(props => {
                   ) : null}
                 </>
               ) : null}
-              {titreLinkFormTitre.value !== null ? <TitresLinkForm user={props.user} titre={titreLinkFormTitre.value} apiClient={props.apiClient} /> : null}
+              {titreLinkFormTitre.value !== null ? <TitresLinkForm user={props.user} titre={titreLinkFormTitre.value} apiClient={props.apiClient} onTitresFromLoaded={setHasTitresFrom} /> : null}
             </div>
 
+            <DemarcheMiseEnConcurrence apiClient={props.apiClient} titre={titre} user={props.user ?? null} hasTitresFrom={hasTitresFrom.value} />
             <DsfrSeparator />
-
             {hasNoPhases.value ? <DsfrButton style={{ marginLeft: 'auto' }} buttonType="primary" title="Ajouter une démarche" onClick={openAddDemarchePopup} /> : null}
             {props.currentDemarcheSlug !== null ? (
               <>

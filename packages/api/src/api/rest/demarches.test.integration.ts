@@ -1,4 +1,4 @@
-import { restDeleteCall, restDownloadCall, restNewPostCall } from '../../../tests/_utils/index'
+import { restDeleteCall, restDownloadCall, restNewCall, restNewPostCall } from '../../../tests/_utils/index'
 import { dbManager } from '../../../tests/db-manager'
 import { expect, test, describe, afterAll, beforeAll, vi } from 'vitest'
 import type { Pool } from 'pg'
@@ -19,6 +19,11 @@ import { demarcheIdValidator } from 'camino-common/src/demarche'
 import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations'
 import { insertTitreGraph } from '../../../tests/integration-test-helper'
 import TitresEtapes from '../../database/models/titres-etapes'
+import { testBlankUser } from 'camino-common/src/tests-utils'
+import { ETAPE_IS_NOT_BROUILLON } from 'camino-common/src/etape'
+import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes'
+import { ETAPES_STATUTS } from 'camino-common/src/static/etapesStatuts'
+import { DEMARCHES_TYPES_IDS } from 'camino-common/src/static/demarchesTypes'
 
 console.info = vi.fn()
 console.error = vi.fn()
@@ -317,6 +322,133 @@ describe('demarcheCreer', () => {
 
     expect(res.status).toBe(HTTP_STATUS.INTERNAL_SERVER_ERROR)
     expect(res.body.message).toBe("le titre n'existe pas")
+  })
+})
+
+describe('getDemarchesEnConcurrence', () => {
+  test('retourne aucune démarche en concurrence en tant que admin', async () => {
+    const demarcheId = newDemarcheId()
+
+    const res = await restNewCall(dbPool, '/rest/demarches/:demarcheId/miseEnConcurrence', { demarcheId }, { ...testBlankUser, role: 'admin', administrationId: 'aut-mrae-guyane-01' })
+    expect(res.status).toBe(HTTP_STATUS.OK)
+    expect(res.body).toEqual([])
+  })
+
+  test('retourne toutes les démarches en concurrence en tant que admin', async () => {
+    // insérer titre pivot
+    const titreIdPivot = newTitreId()
+    const demarcheIdPivot = newDemarcheId('demarcheIdPivot')
+    await insertTitreGraph({
+      id: titreIdPivot,
+      nom: 'titre pivot',
+      typeId: 'arm',
+      titreStatutId: 'ind',
+      propsTitreEtapesIds: {},
+      demarches: [
+        {
+          id: demarcheIdPivot,
+          titreId: titreIdPivot,
+          typeId: DEMARCHES_TYPES_IDS.Octroi,
+          publicLecture: false,
+          etapes: [
+            { id: newEtapeId(), date: toCaminoDate('2024-01-01'), isBrouillon: ETAPE_IS_NOT_BROUILLON, typeId: ETAPES_TYPES.demande, statutId: ETAPES_STATUTS.FAIT, titreDemarcheId: demarcheIdPivot },
+          ],
+        },
+      ],
+    })
+
+    // insérer titres satellite
+    const titreIdSatellite1 = newTitreId()
+    const demarcheIdSatellite1 = newDemarcheId('demarcheIdSatellite1')
+    await insertTitreGraph({
+      id: titreIdSatellite1,
+      nom: 'titre satellite 1',
+      typeId: 'arm',
+      titreStatutId: 'ind',
+      propsTitreEtapesIds: {},
+      demarches: [
+        {
+          id: demarcheIdSatellite1,
+          titreId: titreIdSatellite1,
+          typeId: DEMARCHES_TYPES_IDS.Octroi,
+          etapes: [
+            {
+              id: newEtapeId(),
+              date: toCaminoDate('2024-01-02'),
+              isBrouillon: ETAPE_IS_NOT_BROUILLON,
+              typeId: ETAPES_TYPES.demande,
+              statutId: ETAPES_STATUTS.FAIT,
+              titreDemarcheId: demarcheIdSatellite1,
+              demarcheIdEnConcurrence: demarcheIdPivot,
+            },
+          ],
+        },
+      ],
+    })
+
+    const titreIdSatellite2 = newTitreId()
+    const demarcheIdSatellite2 = newDemarcheId('demarcheIdSatellite2')
+    await insertTitreGraph({
+      id: titreIdSatellite2,
+      nom: 'titre satellite 2',
+      typeId: 'arm',
+      titreStatutId: 'ind',
+      propsTitreEtapesIds: {},
+      demarches: [
+        {
+          id: demarcheIdSatellite2,
+          titreId: titreIdSatellite2,
+          typeId: DEMARCHES_TYPES_IDS.Octroi,
+          publicLecture: true,
+          etapes: [
+            {
+              id: newEtapeId(),
+              date: toCaminoDate('2024-01-03'),
+              isBrouillon: ETAPE_IS_NOT_BROUILLON,
+              typeId: ETAPES_TYPES.demande,
+              statutId: ETAPES_STATUTS.FAIT,
+              titreDemarcheId: demarcheIdSatellite2,
+              demarcheIdEnConcurrence: demarcheIdPivot,
+            },
+          ],
+        },
+      ],
+    })
+
+    const resForAdmin = await restNewCall(
+      dbPool,
+      '/rest/demarches/:demarcheId/miseEnConcurrence',
+      { demarcheId: demarcheIdPivot },
+      { ...testBlankUser, role: 'admin', administrationId: 'aut-mrae-guyane-01' }
+    )
+    expect(resForAdmin.status).toBe(HTTP_STATUS.OK)
+    expect(resForAdmin.body).toMatchInlineSnapshot(`
+      [
+        {
+          "demarcheId": "demarcheIdPivot",
+          "titreNom": "titre pivot",
+        },
+        {
+          "demarcheId": "demarcheIdSatellite1",
+          "titreNom": "titre satellite 1",
+        },
+        {
+          "demarcheId": "demarcheIdSatellite2",
+          "titreNom": "titre satellite 2",
+        },
+      ]
+    `)
+
+    const resForDefault = await restNewCall(dbPool, '/rest/demarches/:demarcheId/miseEnConcurrence', { demarcheId: demarcheIdPivot }, { ...testBlankUser, role: 'defaut' })
+    expect(resForDefault.status).toBe(HTTP_STATUS.OK)
+    expect(resForDefault.body).toMatchInlineSnapshot(`
+      [
+        {
+          "demarcheId": "demarcheIdSatellite2",
+          "titreNom": "titre satellite 2",
+        },
+      ]
+    `)
   })
 })
 

@@ -10,7 +10,7 @@ import {
   sirenValidator,
   entrepriseValidator,
 } from './entreprise'
-import { demarcheCreationInputValidator, demarcheCreationOutputValidator, demarcheIdOrSlugValidator, demarcheIdValidator } from './demarche'
+import { demarcheCreationInputValidator, demarcheCreationOutputValidator, demarcheIdOrSlugValidator, demarcheIdValidator, getDemarcheMiseEnConcurrenceValidator } from './demarche'
 import { newsletterAbonnementValidator, newsletterRegistrationValidator, qgisTokenValidator, utilisateurToEdit, utilisateursSearchParamsValidator, utilisateursTableValidator } from './utilisateur'
 import {
   editableTitreValidator,
@@ -93,6 +93,7 @@ const IDS = [
   '/rest/titres/:id/titreLiaisons',
   '/rest/demarches',
   '/rest/demarches/:demarcheIdOrSlug',
+  '/rest/demarches/:demarcheId/miseEnConcurrence',
   '/rest/statistiques/dgtm',
   '/rest/entreprises/:entrepriseId/fiscalite/:annee',
   '/rest/entreprises',
@@ -199,6 +200,7 @@ export const CaminoRestRoutes = {
     newGet: { output: etapeTypeEtapeStatutWithMainStepValidator, searchParams: z.object({ etapeId: etapeIdValidator.optional() }) },
   },
   '/rest/demarches/:demarcheId/geojson': { params: z.object({ demarcheId: demarcheIdOrSlugValidator }), get: { output: perimetreInformationsValidator } },
+  '/rest/demarches/:demarcheId/miseEnConcurrence': { params: z.object({ demarcheId: demarcheIdValidator }), newGet: { output: z.array(getDemarcheMiseEnConcurrenceValidator) } },
   '/rest/etapes/:etapeId/geojson': { params: z.object({ etapeId: etapeIdOrSlugValidator }), get: { output: perimetreInformationsValidator } },
   '/rest/etapes/:etapeId/etapeDocuments': { params: etapeIdParamsValidator, get: { output: getEtapeDocumentsByEtapeIdValidator } },
   '/rest/etapes/:etapeId/etapeAvis': { params: etapeIdParamsValidator, get: { output: getEtapeAvisByEtapeIdValidator } },

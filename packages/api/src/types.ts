@@ -259,6 +259,7 @@ type ITitreEtape = {
   note?: EtapeNote
   concurrence?: TitreEtapeForMachine['concurrence']
   hasTitreFrom?: TitreEtapeForMachine['hasTitreFrom']
+  demarcheIdEnConcurrence?: DemarcheId | null
 } & Partial<ITitreEtapePerimetre>
 
 interface ITitreEtapeFiltre {

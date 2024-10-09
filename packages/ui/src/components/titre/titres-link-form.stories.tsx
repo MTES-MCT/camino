@@ -59,7 +59,12 @@ const apiClient: Props['apiClient'] = {
 }
 
 export const AxmWithAlreadySelectedTitre: StoryFn = () => (
-  <TitresLinkForm user={{ role: 'super', ...testBlankUser }} titre={{ typeId: 'axm', administrations: [], id: titreIdValidator.parse('titreId'), demarches: [] }} apiClient={apiClient} />
+  <TitresLinkForm
+    user={{ role: 'super', ...testBlankUser }}
+    titre={{ typeId: 'axm', administrations: [], id: titreIdValidator.parse('titreId'), demarches: [] }}
+    apiClient={apiClient}
+    onTitresFromLoaded={() => {}}
+  />
 )
 
 export const FusionWithAlreadySelectedTitre: StoryFn = () => (
@@ -83,6 +88,7 @@ export const FusionWithAlreadySelectedTitre: StoryFn = () => (
         })
       },
     }}
+    onTitresFromLoaded={() => {}}
   />
 )
 
@@ -94,9 +100,15 @@ export const TitreWithTitreLinksLoading: StoryFn = () => (
       ...apiClient,
       loadTitreLinks: () => new Promise<TitreLinks>(() => ({})),
     }}
+    onTitresFromLoaded={() => {}}
   />
 )
 
 export const DefautCantUpdateLinks: StoryFn = () => (
-  <TitresLinkForm user={{ role: 'defaut', ...testBlankUser }} titre={{ typeId: 'axm', administrations: [], id: titreIdValidator.parse('titreId'), demarches: [] }} apiClient={apiClient} />
+  <TitresLinkForm
+    user={{ role: 'defaut', ...testBlankUser }}
+    titre={{ typeId: 'axm', administrations: [], id: titreIdValidator.parse('titreId'), demarches: [] }}
+    apiClient={apiClient}
+    onTitresFromLoaded={() => {}}
+  />
 )

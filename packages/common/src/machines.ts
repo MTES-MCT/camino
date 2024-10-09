@@ -138,7 +138,7 @@ export const machineIdFind = (
   titreEtapes: DeepReadonly<{ date: CaminoDate; typeId: EtapeTypeId }[]> | undefined,
   demarcheId: DemarcheId,
   overrideDate: CaminoDate | null = null
-): { machineId: CaminoMachineId; titreTypeId: TitreTypeId; demarcheTypeId: DemarcheTypeId } | undefined => {
+): CaminoMachineId | undefined => {
   const date = demarcheDepotDemandeDateFind(titreEtapes) ?? overrideDate
 
   const definition = toSorted(demarchesDefinitions, (a, b) => b.dateDebut.localeCompare(a.dateDebut)).find(
@@ -148,5 +148,5 @@ export const machineIdFind = (
     return undefined
   }
 
-  return isNotNullNorUndefined(definition) ? { machineId: definition.machineId, titreTypeId, demarcheTypeId } : undefined
+  return definition?.machineId
 }

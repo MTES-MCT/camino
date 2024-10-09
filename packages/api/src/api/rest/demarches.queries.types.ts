@@ -14,6 +14,7 @@ export interface IGetEtapesByDemarcheIdDbResult {
   date: string;
   date_debut: string | null;
   date_fin: string | null;
+  demarche_id_en_concurrence: string | null;
   duree: number | null;
   etape_statut_id: string;
   etape_type_id: string;
@@ -68,5 +69,23 @@ export interface IGetDemarcheByIdOrSlugDbResult {
 export interface IGetDemarcheByIdOrSlugDbQuery {
   params: IGetDemarcheByIdOrSlugDbParams;
   result: IGetDemarcheByIdOrSlugDbResult;
+}
+
+/** 'GetDemarchesEnConcurrenceDb' parameters type */
+export interface IGetDemarchesEnConcurrenceDbParams {
+  demarcheIdPivot: string;
+}
+
+/** 'GetDemarchesEnConcurrenceDb' return type */
+export interface IGetDemarchesEnConcurrenceDbResult {
+  demarche_id: string;
+  demarche_public_lecture: boolean;
+  titre_nom: string;
+}
+
+/** 'GetDemarchesEnConcurrenceDb' query type */
+export interface IGetDemarchesEnConcurrenceDbQuery {
+  params: IGetDemarchesEnConcurrenceDbParams;
+  result: IGetDemarchesEnConcurrenceDbResult;
 }
 

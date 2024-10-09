@@ -10,6 +10,7 @@ import { ETAPES_STATUTS, EtapeStatutId } from 'camino-common/src/static/etapesSt
 import { KM2, km2Validator } from 'camino-common/src/number'
 import { CaminoDate } from 'camino-common/src/date'
 import { isNullOrUndefined } from 'camino-common/src/typescript-tools'
+import { canHaveMiseEnConcurrence } from 'camino-common/src/demarche'
 
 type ParticipationDuPublic = {
   surface: KM2
@@ -150,16 +151,10 @@ const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: De
       isAxm: () => TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX === titreTypeId,
       isPerOuConcession: () => [TITRES_TYPES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES, TITRES_TYPES_TYPES_IDS.CONCESSION].includes(getTitreTypeType(titreTypeId)),
       canHaveMiseEnConcurrence: ({ context }) => {
-        if (DEMARCHES_TYPES_IDS.ExtensionDePerimetre === demarcheTypeId) {
-          return true
-        } else if (DEMARCHES_TYPES_IDS.Octroi === demarcheTypeId) {
-          if (context.hasTitreFrom === 'inconnu') {
-            throw new Error("hasTitreFrom n'est pas initialisé")
-          }
-          return !context.hasTitreFrom
-        } else {
-          return false
+        if (context.hasTitreFrom === 'inconnu') {
+          throw new Error("hasTitreFrom n'est pas initialisé")
         }
+        return canHaveMiseEnConcurrence(demarcheTypeId, context.hasTitreFrom)
       },
       isPremiereDemandePourMiseEnConcurrence: ({ context }) => {
         if (context.concurrence === 'inconnu') {

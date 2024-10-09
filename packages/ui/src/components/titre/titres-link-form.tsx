@@ -24,6 +24,7 @@ export interface Props {
     demarches: { demarche_type_id: DemarcheTypeId }[]
   }
   apiClient: Pick<ApiClient, 'loadTitreLinks' | 'loadLinkableTitres' | 'linkTitres'>
+  onTitresFromLoaded: (hasTitresFrom: boolean) => void
 }
 export const TitresLinkForm = defineComponent<Props>(props => {
   const mode = ref<'read' | 'edit'>('read')
@@ -52,6 +53,7 @@ export const TitresLinkForm = defineComponent<Props>(props => {
         throw new Error(result.message)
       }
       titresLinks.value = { status: 'LOADED', value: result }
+      props.onTitresFromLoaded(result.amont.length > 0)
       selectedTitres.value = titresLinks.value.value.amont
     } catch (e: any) {
       titresLinks.value = {
@@ -170,4 +172,4 @@ export const TitresLinkForm = defineComponent<Props>(props => {
 })
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-TitresLinkForm.props = ['apiClient', 'titre', 'user']
+TitresLinkForm.props = ['apiClient', 'titre', 'user', 'onTitresFromLoaded']
