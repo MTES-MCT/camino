@@ -610,7 +610,7 @@ export const WithDoublon: StoryFn = () => (
   />
 )
 
-export const WithLinkableTitres: StoryFn = () => (
+export const WithLinkableTitreAmont: StoryFn = () => (
   <PureTitre
     entreprises={entreprises}
     currentDate={currentDate}
@@ -636,6 +636,55 @@ export const WithLinkableTitres: StoryFn = () => (
 
         return Promise.resolve({
           amont: [{ id: titreIdValidator.parse('idEnAmont'), nom: 'nom du titre en amont' }],
+          aval: [],
+        })
+      },
+      getTitreById: titreIdOrSlug => {
+        getTitreAction(titreIdOrSlug)
+
+        return Promise.resolve({
+          id: titreIdValidator.parse('id-du-titre'),
+          nb_activites_to_do: 0,
+          nom: 'Nom du titre',
+          slug: titreSlugValidator.parse('slug-du-titre'),
+          titre_type_id: 'axm',
+          titre_statut_id: 'val',
+          references: [],
+          titre_last_modified_date: toCaminoDate('2021-01-01'),
+          titre_doublon: null,
+          demarches: [],
+        })
+      },
+    }}
+    titreIdOrSlug={titre.id}
+  />
+)
+export const WithLinkableTitreAval: StoryFn = () => (
+  <PureTitre
+    entreprises={entreprises}
+    currentDate={currentDate}
+    currentDemarcheSlug={demarcheSlug}
+    user={{ ...testBlankUser, role: 'super' }}
+    router={routerPushMock}
+    apiClient={{
+      ...apiClient,
+      loadLinkableTitres:
+        (...params) =>
+        () => {
+          loadLinkableTitresAction(params)
+
+          return Promise.resolve(linkableTitres)
+        },
+      linkTitres: (...params) => {
+        linkTitresAction(params)
+
+        return Promise.resolve({ aval: titresTo, amont: titresFrom })
+      },
+      loadTitreLinks: titreId => {
+        loadTitreLinksAction(titreId)
+
+        return Promise.resolve({
+          amont: [],
           aval: [{ id: titreIdValidator.parse('idEnAval'), nom: 'nom du titre en aval' }],
         })
       },

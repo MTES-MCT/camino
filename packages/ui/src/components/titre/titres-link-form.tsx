@@ -14,6 +14,7 @@ import { TitresLinkConfig } from '@/components/titre/titres-link-form-api-client
 import { DsfrButton, DsfrButtonIcon } from '../_ui/dsfr-button'
 import { DsfrIcon } from '../_ui/icon'
 import { DsfrTag } from '../_ui/tag'
+import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
 
 export interface Props {
   user: User
@@ -63,7 +64,7 @@ export const TitresLinkForm = defineComponent<Props>(props => {
     }
   }
 
-  const canLink = computed<boolean>(() => {
+  const canEditLink = computed<boolean>(() => {
     // On ne peut pas lier si ce type de titre n’accepte pas de liaison
     if (!linkConfig.value) {
       return false
@@ -127,7 +128,7 @@ export const TitresLinkForm = defineComponent<Props>(props => {
         data={titresLinks.value}
         renderItem={item => (
           <>
-            {item.amont.length || canLink.value ? (
+            {isNotNullNorUndefinedNorEmpty(item.amont) && isNotNullNorUndefined(linkConfig.value) ? (
               <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
                 <DsfrIcon name="fr-icon-link" size="sm" color="text-title-blue-france" aria-hidden="true" />
                 Titre{item.amont.length > 1 ? 's' : ''} à l’origine de ce titre :
@@ -147,14 +148,14 @@ export const TitresLinkForm = defineComponent<Props>(props => {
                       <DsfrTag key={titreFrom.id} tagSize="sm" to={{ name: 'titre', params: { id: titreFrom.id } }} ariaLabel={titreFrom.nom} />
                     ))}
 
-                    {canLink.value ? <DsfrButtonIcon buttonType="tertiary-no-outline" title="modifier les titres liés" onClick={() => (mode.value = 'edit')} icon="fr-icon-pencil-line" /> : null}
+                    {canEditLink.value ? <DsfrButtonIcon buttonType="tertiary-no-outline" title="modifier les titres liés" onClick={() => (mode.value = 'edit')} icon="fr-icon-pencil-line" /> : null}
                   </div>
                 )}
               </div>
             ) : null}
 
             {item.aval.length ? (
-              <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+              <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }} class="fr-mt-1w">
                 <DsfrIcon name="fr-icon-link" size="sm" color="text-title-blue-france" aria-hidden="true" />
                 Titre{item.aval.length > 1 ? 's' : ''} issu de ce titre :
                 <div class="flex flex-center" style={{ gap: '0.5rem' }}>

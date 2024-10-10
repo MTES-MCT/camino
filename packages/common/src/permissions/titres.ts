@@ -1,4 +1,4 @@
-import { TitresTypes, TitreTypeId } from '../static/titresTypes'
+import { TITRES_TYPES_IDS, TitresTypes, TitreTypeId, toTitreTypeId } from '../static/titresTypes'
 import { DEMARCHES_TYPES_IDS, DemarcheTypeId } from '../static/demarchesTypes'
 import { isAdministration, isAdministrationAdmin, isAdministrationEditeur, isBureauDEtudes, isEntreprise, isEntrepriseOrBureauDEtude, isSuper, User } from '../roles'
 import { AdministrationId } from '../static/administrations'
@@ -13,19 +13,24 @@ import { territoiresIdFind } from '../territoires'
 import { DeepReadonly, isNotNullNorUndefinedNorEmpty, isNullOrUndefinedOrEmpty, SimplePromiseFn } from '../typescript-tools'
 import { SecteursMaritimes } from '../static/facades'
 import { EntrepriseId } from '../entreprise'
+import { TITRES_TYPES_TYPES_IDS } from '../static/titresTypesTypes'
 
 export const getLinkConfig = (typeId: TitreTypeId, demarches: { demarche_type_id: DemarcheTypeId }[]): { count: 'single' | 'multiple'; typeId: TitreTypeId } | null => {
   const titreType = TitresTypes[typeId]
 
-  if (titreType.typeId === 'cx' && demarches.some(({ demarche_type_id }) => demarche_type_id === DEMARCHES_TYPES_IDS.Fusion)) {
+  if (titreType.typeId === TITRES_TYPES_TYPES_IDS.CONCESSION && demarches.some(({ demarche_type_id }) => demarche_type_id === DEMARCHES_TYPES_IDS.Fusion)) {
     return { count: 'multiple', typeId }
   }
 
+  if (titreType.typeId === TITRES_TYPES_TYPES_IDS.CONCESSION) {
+    return { count: 'single', typeId: toTitreTypeId(TITRES_TYPES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES, titreType.domaineId) }
+  }
+
   switch (typeId) {
-    case 'axm':
-      return { count: 'single', typeId: 'arm' }
-    case 'pxm':
-      return { count: 'single', typeId: 'prm' }
+    case TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX:
+      return { count: 'single', typeId: TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX }
+    case TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_METAUX:
+      return { count: 'single', typeId: TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_METAUX }
   }
 
   return null

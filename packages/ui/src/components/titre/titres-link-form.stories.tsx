@@ -67,6 +67,15 @@ export const AxmWithAlreadySelectedTitre: StoryFn = () => (
   />
 )
 
+export const AxmWithAlreadySelectedTitreNotEditable: StoryFn = () => (
+  <TitresLinkForm
+    user={{ role: 'defaut', ...testBlankUser }}
+    titre={{ typeId: 'axm', administrations: [], id: titreIdValidator.parse('titreId'), demarches: [] }}
+    apiClient={apiClient}
+    onTitresFromLoaded={() => {}}
+  />
+)
+
 export const FusionWithAlreadySelectedTitre: StoryFn = () => (
   <TitresLinkForm
     user={{ role: 'super', ...testBlankUser }}

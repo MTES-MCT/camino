@@ -858,6 +858,34 @@ exports[`getTitreFromTypeId pas de fusions 1`] = `
     "count": "single",
     "typeId": "arm",
   },
+  "cxf": {
+    "count": "single",
+    "typeId": "prf",
+  },
+  "cxg": {
+    "count": "single",
+    "typeId": "prg",
+  },
+  "cxh": {
+    "count": "single",
+    "typeId": "prh",
+  },
+  "cxm": {
+    "count": "single",
+    "typeId": "prm",
+  },
+  "cxr": {
+    "count": "single",
+    "typeId": "prr",
+  },
+  "cxs": {
+    "count": "single",
+    "typeId": "prs",
+  },
+  "cxw": {
+    "count": "single",
+    "typeId": "prw",
+  },
   "pxm": {
     "count": "single",
     "typeId": "prm",
