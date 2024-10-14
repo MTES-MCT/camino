@@ -331,3 +331,31 @@ exports[`isDemarcheTypeProlongations 1`] = `
   "vut -> false",
 ]
 `;
+
+exports[`isTravaux 1`] = `
+[
+  "amo -> false",
+  "aom -> true",
+  "ces -> false",
+  "con -> false",
+  "dam -> true",
+  "dec -> false",
+  "dep -> false",
+  "dot -> true",
+  "exp -> false",
+  "exs -> false",
+  "fus -> false",
+  "mut -> false",
+  "oct -> false",
+  "pr1 -> false",
+  "pr2 -> false",
+  "pre -> false",
+  "pro -> false",
+  "prr -> false",
+  "ren -> false",
+  "res -> false",
+  "ret -> false",
+  "vct -> false",
+  "vut -> false",
+]
+`;

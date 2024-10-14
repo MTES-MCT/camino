@@ -1,4 +1,4 @@
-import { canCreateTitre, canDeleteTitre, canEditTitre, canHaveActiviteTypeId, canLinkTitres, canReadTitre, getLinkConfig } from './titres'
+import { canCreateTitre, canDeleteTitre, canEditTitre, canHaveActivites, canHaveActiviteTypeId, canHaveForages, canLinkTitres, canReadTitre, getLinkConfig } from './titres'
 import { TitresTypesIds, TitreTypeId } from '../static/titresTypes'
 import { ADMINISTRATION_IDS, AdministrationId } from '../static/administrations'
 import { test, expect, describe } from 'vitest'
@@ -11,6 +11,31 @@ import { TitreStatutId, titresStatutsArray } from '../static/titresStatuts'
 import { isAssociee, isGestionnaire } from '../static/administrationsTitresTypes'
 
 const shouldNotBeCalled = () => Promise.reject(new Error('should not be called'))
+
+test('canHaveActivites', () => {
+  expect(
+    canHaveActivites({
+      communes: [],
+      demarches: [],
+      secteursMaritime: [],
+      titreTypeId: 'arm',
+    })
+  ).toBe(false)
+
+  expect(
+    canHaveActivites({
+      communes: [],
+      demarches: [{}],
+      secteursMaritime: [],
+      titreTypeId: 'cxm',
+    })
+  ).toBe(true)
+})
+
+test('canHaveForages', () => {
+  expect(canHaveForages('apc')).toBe(false)
+  expect(canHaveForages('pxg')).toBe(true)
+})
 
 test('getTitreFromTypeId pas de fusions', () => {
   const titreFromTypeId = TitresTypesIds.reduce<{
@@ -231,6 +256,10 @@ describe('canReadTitre', () => {
 
   test('si le titre est en lecture publique, tout le monde y a accès', async () => {
     expect(await canReadTitre(null, shouldNotBeCalled, shouldNotBeCalled, shouldNotBeCalled, { public_lecture: true })).toBe(true)
+  })
+
+  test("si le titre n'est pas en lecture publique", async () => {
+    expect(await canReadTitre(null, shouldNotBeCalled, shouldNotBeCalled, shouldNotBeCalled, { public_lecture: false })).toBe(false)
   })
 
   describe("pour les utilisateurs administrations, on peut lire un titre si l'utilisateur fait partie d'une administration gestionnaire, associé ou locale", () => {

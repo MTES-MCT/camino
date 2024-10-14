@@ -521,6 +521,8 @@ export const getAdministrationTitresTypesEtapesTypes = (
 ): { titreTypeId: TitreTypeId; etapeTypeId: EtapeTypeId; lectureInterdit: boolean; creationInterdit: boolean; modificationInterdit: boolean }[] => {
   return getKeys(AdministrationsTitresTypesEtapesTypes[administrationId] ?? {}, isTitreType)
     .flatMap(titreTypeId =>
+      // waiting for typescript improvement
+      /* v8 ignore next */
       getKeys(AdministrationsTitresTypesEtapesTypes[administrationId]?.[titreTypeId] ?? {}, isEtapeTypeId).flatMap(etapeTypeId => {
         const value = AdministrationsTitresTypesEtapesTypes[administrationId]?.[titreTypeId]?.[etapeTypeId]
 
@@ -531,6 +533,8 @@ export const getAdministrationTitresTypesEtapesTypes = (
               lectureInterdit: value.lectureInterdit,
               creationInterdit: value.creationInterdit,
               modificationInterdit: value.modificationInterdit,
+              // waiting for typescript improvement
+              /* v8 ignore next 2 */
             }
           : undefined
       })

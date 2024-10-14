@@ -196,6 +196,8 @@ export const getTitreTypeIdsByAdministration = (administrationId: Administration
   const administrationTitresTypes = Object.assign({}, administrationTypeTitresTypes ?? {}, AdministrationsTitresTypes[administrationId] ?? {})
 
   return getKeys(administrationTitresTypes, isTitreType).reduce<{ titreTypeId: TitreTypeId; gestionnaire: boolean; associee: boolean }[]>((acc, titreTypeId) => {
+    // waiting for typescript improvement
+    /* v8 ignore next */
     acc.push({ titreTypeId, gestionnaire: administrationTitresTypes[titreTypeId]?.gestionnaire ?? false, associee: administrationTitresTypes[titreTypeId]?.associee ?? false })
 
     return acc

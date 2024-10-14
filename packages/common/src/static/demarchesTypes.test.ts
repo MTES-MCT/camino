@@ -1,6 +1,6 @@
 import { getValues } from '../typescript-tools'
 import { sortedDemarchesStatuts } from './demarchesStatuts'
-import { DEMARCHES_TYPES_IDS, isDemarcheTypeId, isDemarcheTypeOctroi, isDemarcheTypeWithPhase, canImpactTitre, isDemarcheTypeProlongations } from './demarchesTypes'
+import { DEMARCHES_TYPES_IDS, isDemarcheTypeId, isDemarcheTypeOctroi, isDemarcheTypeWithPhase, canImpactTitre, isDemarcheTypeProlongations, isTravaux } from './demarchesTypes'
 import { test, expect } from 'vitest'
 
 test('isDemarcheTypeId', () => {
@@ -43,6 +43,13 @@ test('canImpactTitre', () => {
 test('isDemarcheTypeProlongations', () => {
   const result = getValues(DEMARCHES_TYPES_IDS).flatMap(demarcheType => {
     return `${demarcheType} -> ${isDemarcheTypeProlongations(demarcheType)}`
+  })
+  expect(result).toMatchSnapshot()
+})
+
+test('isTravaux', () => {
+  const result = getValues(DEMARCHES_TYPES_IDS).flatMap(demarcheType => {
+    return `${demarcheType} -> ${isTravaux(demarcheType)}`
   })
   expect(result).toMatchSnapshot()
 })
