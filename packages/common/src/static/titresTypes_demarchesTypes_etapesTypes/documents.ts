@@ -17,7 +17,7 @@ const EtapesTypesDocumentsTypes = {
     { documentTypeId: DOCUMENTS_TYPES_IDS.avisDUnServiceDeLAdministrationCentrale, optionnel: true },
     { documentTypeId: DOCUMENTS_TYPES_IDS.avisDuConseilGeneralDeLEconomie_cge, optionnel: true },
     { documentTypeId: DOCUMENTS_TYPES_IDS.avis, optionnel: true },
-    { documentTypeId: DOCUMENTS_TYPES_IDS.rapportDeLAdministrationCentraleChargeDesMines, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.rapportDeLaDirectionRegionaleChargeeDesMines, optionnel: true },
   ],
   [ETAPES_TYPES.avenantALautorisationDeRechercheMiniere]: [
     { documentTypeId: DOCUMENTS_TYPES_IDS.avenant, optionnel: true },
@@ -33,10 +33,8 @@ const EtapesTypesDocumentsTypes = {
   ],
   [ETAPES_TYPES.rapportEtAvisDeLaDREAL]: [
     { documentTypeId: DOCUMENTS_TYPES_IDS.avisDuDirecteurRegionalChargeDesMines, optionnel: true },
-    { documentTypeId: DOCUMENTS_TYPES_IDS.rapportDeLAdministrationCentraleChargeDesMines, optionnel: true },
     { documentTypeId: DOCUMENTS_TYPES_IDS.rapportDeLaDirectionRegionaleChargeeDesMines, optionnel: true },
     { documentTypeId: DOCUMENTS_TYPES_IDS.projetDePrescriptions, optionnel: true },
-    { documentTypeId: DOCUMENTS_TYPES_IDS.rapport, optionnel: true },
   ],
   [ETAPES_TYPES.avisDuConseilDEtat]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.avis, optionnel: true }],
   [ETAPES_TYPES.avisDeLaCommissionDepartementaleDesMines_CDM_]: [
@@ -214,7 +212,7 @@ const EtapesTypesDocumentsTypes = {
     { documentTypeId: DOCUMENTS_TYPES_IDS.avisDuConseilGeneralDeLEconomie_cge, optionnel: true },
     { documentTypeId: DOCUMENTS_TYPES_IDS.avis, optionnel: true },
     { documentTypeId: DOCUMENTS_TYPES_IDS.notes, optionnel: true },
-    { documentTypeId: DOCUMENTS_TYPES_IDS.rapportDeLAdministrationCentraleChargeDesMines, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.rapportDeLaDirectionRegionaleChargeeDesMines, optionnel: true },
   ],
   [ETAPES_TYPES.receptionDeComplements_CompletudeDeLaDemande_]: [
     { documentTypeId: DOCUMENTS_TYPES_IDS.documentsCartographiques, optionnel: true },
@@ -251,7 +249,6 @@ const EtapesTypesDocumentsTypes = {
     { documentTypeId: DOCUMENTS_TYPES_IDS.lettreDeSaisineDuConseilGeneralDeLEconomie_cge, optionnel: true },
     { documentTypeId: DOCUMENTS_TYPES_IDS.lettre, optionnel: true },
     { documentTypeId: DOCUMENTS_TYPES_IDS.notes, optionnel: true },
-    { documentTypeId: DOCUMENTS_TYPES_IDS.rapportDeLAdministrationCentraleChargeDesMines, optionnel: true },
     { documentTypeId: DOCUMENTS_TYPES_IDS.rapportDeLaDirectionRegionaleChargeeDesMines, optionnel: true },
   ],
   [ETAPES_TYPES.signatureDeLautorisationDeRechercheMiniere]: [
@@ -307,7 +304,7 @@ const EtapesTypesDocumentsTypes = {
   [ETAPES_TYPES.arreteDeSecondDonnerActe]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.arreteDeSecondDonneActe_ap2, optionnel: true }],
   [ETAPES_TYPES.arretePrefectoralDePremierDonnerActe_DADT_]: [
     { documentTypeId: DOCUMENTS_TYPES_IDS.arreteDePremierDonneActe_ap1, optionnel: true },
-    { documentTypeId: DOCUMENTS_TYPES_IDS.rapport, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.rapportDeLaDirectionRegionaleChargeeDesMines, optionnel: true },
   ],
   [ETAPES_TYPES.arretePrefectoralDeSursisAStatuer]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.arretePrefectoral, optionnel: true }],
   [ETAPES_TYPES.receptionDeComplements_wrc]: [
