@@ -7,7 +7,7 @@ import { titreEtapeUpdateTask } from '../titre-etape-update'
 import { titreEtapeAdministrationsEmailsSend } from '../../api/graphql/resolvers/_titre-etape-email'
 import { titreUrlGet } from '../utils/urls-get'
 import { emailsWithTemplateSend } from '../../tools/api-mailjet/emails'
-import { EmailTemplateId, EmailAdministration } from '../../tools/api-mailjet/types'
+import { EmailTemplateId } from '../../tools/api-mailjet/types'
 import { getCurrent } from 'camino-common/src/date'
 import type { Pool } from 'pg'
 import { getTitreTypeType } from 'camino-common/src/static/titresTypes'
@@ -28,7 +28,6 @@ const emailConfirmationDepotSend = async (
 ): Promise<void> => {
   await emailsWithTemplateSend(emails, EmailTemplateId.DEMARCHE_CONFIRMATION_DEPOT, {
     ...params,
-    emailDGTM: EmailAdministration.DGTM,
   })
 }
 

@@ -9,7 +9,7 @@ import { EtapesTypes } from 'camino-common/src/static/etapesTypes'
 import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
 import { ETAPE_IS_BROUILLON, ETAPE_IS_NOT_BROUILLON } from 'camino-common/src/etape'
 import { TitreId } from 'camino-common/src/validators/titres'
-import { TitreTypeId } from 'camino-common/src/static/titresTypes'
+import { TITRES_TYPES_IDS, TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
 import { getUtilisateursByTitreId } from '../../../database/queries/utilisateurs.queries'
 import { Pool } from 'pg'
@@ -28,9 +28,6 @@ const emailForAdministrationContentFormat = (titreTypeId: TitreTypeId, etapeNom:
   `
 }
 
-const etapeStatusUpdated = (etape: Pick<ITitreEtape, 'typeId' | 'statutId'>, typeId: string, statusId: string, oldEtape?: Pick<ITitreEtape, 'statutId'>) =>
-  etape.typeId === typeId && (!oldEtape || oldEtape.statutId !== statusId) && etape.statutId === statusId
-
 // VisibleForTesting
 export const emailsForAdministrationsGet = (
   etape: Pick<ITitreEtape, 'typeId' | 'statutId' | 'isBrouillon'> | undefined,
@@ -46,34 +43,12 @@ export const emailsForAdministrationsGet = (
   const emails = [] as string[]
   let title = ''
 
-  if (demarcheTypeId === 'oct' && titreTypeId === 'arm') {
+  if (demarcheTypeId === 'oct' && [TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX, TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX].includes(titreTypeId)) {
     // lorsque la demande est déposée
     if (etape.isBrouillon === ETAPE_IS_NOT_BROUILLON && (oldEtape?.isBrouillon ?? ETAPE_IS_BROUILLON) === ETAPE_IS_BROUILLON) {
       emails.push(EmailAdministration.DGTM)
 
       title = 'Nouvelle demande déposée'
-
-      // lorsque le PTMG déclare le dossier complet
-    } else if (etapeStatusUpdated(etape, 'mcp', 'com', oldEtape)) {
-      emails.push(EmailAdministration.DGTM)
-
-      title = 'Nouveau dossier complet'
-
-      // lorsque la demande est complète
-    } else if (etapeStatusUpdated(etape, 'mcr', 'fav', oldEtape)) {
-      emails.push(EmailAdministration.DGTM)
-
-      title = 'Nouvelle demande complète'
-    }
-  } else if (demarcheTypeId === 'oct' && titreTypeId === 'axm') {
-    if (etape.isBrouillon === ETAPE_IS_NOT_BROUILLON && (oldEtape?.isBrouillon ?? ETAPE_IS_BROUILLON) === ETAPE_IS_BROUILLON) {
-      emails.push(EmailAdministration.DGTM)
-
-      title = 'Nouvelle demande déposée'
-    } else if (etapeStatusUpdated(etape, 'cps', 'fav', oldEtape)) {
-      emails.push(EmailAdministration.DGTM)
-
-      title = 'Confirmation de l’accord du propriétaire du sol'
     }
   }
 
