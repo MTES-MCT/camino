@@ -55,7 +55,7 @@ const apiClientMock: Pick<ApiClient, 'getTitresWithPerimetreForCarte'> = {
   },
 }
 
-export const DefaultNoSnapshot: StoryFn = () => (
+export const Default: StoryFn = () => (
   <>
     <MapPattern />
     <DsfrPerimetre
@@ -122,7 +122,7 @@ export const DefaultNoSnapshot: StoryFn = () => (
   </>
 )
 
-export const NoNeighborsNoSnapshot: StoryFn = () => (
+export const NoNeighbors: StoryFn = () => (
   <>
     <MapPattern />
     <DsfrPerimetre
@@ -167,7 +167,7 @@ const perimetreWithLacune: FeatureMultiPolygon = {
     ],
   },
 }
-export const PolygonWithLacuneNoSnapshot: StoryFn = () => (
+export const PolygonWithLacune: StoryFn = () => (
   <>
     <MapPattern />
     <DsfrPerimetre
@@ -209,7 +209,7 @@ const bigGeoJson: FeatureMultiPolygon = {
   },
 }
 
-export const BigNoSnapshot: StoryFn = () => (
+export const Big: StoryFn = () => (
   <>
     <MapPattern />
     <DsfrPerimetre
@@ -275,7 +275,7 @@ const multiplePolygone: FeatureMultiPolygon = {
   },
 }
 
-export const MultipleNoSnapshot: StoryFn = () => (
+export const Multiple: StoryFn = () => (
   <>
     <MapPattern />
     <DsfrPerimetre

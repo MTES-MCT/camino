@@ -10,7 +10,9 @@ type StoryFile = {
   [name: string]: StoryFn | Meta
 }
 console.error = vi.fn()
-
+vi.mock('./../demarche/demarche-map.tsx', () => ({
+  DemarcheMap: (props: any) => h('mocked-map', props, [Object.keys(props).map(key => h(key, {}, JSON.stringify(props[key])))]),
+}))
 vi.mock('vue-router', () => ({
   useRoute: vi.fn(() => ({
     name: 'mocked-current-route',

@@ -119,25 +119,25 @@ const TabCaminoMap = defineComponent<TabCaminoMapProps>(props => {
       <div style={{ display: 'flex' }}>
         {isNotNullNorUndefined(props.perimetre.surface) ? <div class="fr-text--md">Surface : {props.perimetre.surface} Km²</div> : null}
         <div style={{ marginLeft: 'auto' }}>
-          {props.perimetre.geojson_origine_geo_systeme_id !== '4326' ? (
-            <DsfrLink
-              class="fr-mr-2w"
-              href={`data:${contentTypes.geojson};charset=utf-8,${encodeURI(JSON.stringify(geojson_origine.value))}`}
-              download={`perimetre-${props.titreSlug}-${props.perimetre.geojson_origine_geo_systeme_id}.geojson`}
-              icon="fr-icon-download-line"
-              buttonType="secondary"
-              title={`Télécharge le périmètre au format geojson dans le référentiel d'origine ${props.perimetre.geojson_origine_geo_systeme_id}`}
-              label={`.geojson (${props.perimetre.geojson_origine_geo_systeme_id})`}
-            />
-          ) : null}
           <DsfrLink
-            href={`data:${contentTypes.geojson};charset=utf-8,${encodeURI(JSON.stringify(geojson_4326.value))}`}
-            download={`perimetre-${props.titreSlug}-4326.geojson`}
+            class="fr-mr-2w"
+            href={`data:${contentTypes.geojson};charset=utf-8,${encodeURI(JSON.stringify(geojson_origine.value))}`}
+            download={`perimetre-${props.titreSlug}-${props.perimetre.geojson_origine_geo_systeme_id}.geojson`}
             icon="fr-icon-download-line"
             buttonType="secondary"
-            title="Télécharge le périmètre au format geojson dans le référentiel 4326"
-            label=".geojson (4326)"
+            title={`Télécharge le périmètre au format geojson dans le référentiel d'origine ${props.perimetre.geojson_origine_geo_systeme_id}`}
+            label={`.geojson (${props.perimetre.geojson_origine_geo_systeme_id})`}
           />
+          {props.perimetre.geojson_origine_geo_systeme_id !== '4326' ? (
+            <DsfrLink
+              href={`data:${contentTypes.geojson};charset=utf-8,${encodeURI(JSON.stringify(geojson_4326.value))}`}
+              download={`perimetre-${props.titreSlug}-4326.geojson`}
+              icon="fr-icon-download-line"
+              buttonType="secondary"
+              title="Télécharge le périmètre au format geojson dans le référentiel 4326"
+              label=".geojson (4326)"
+            />
+          ) : null}
         </div>
       </div>
     </div>
