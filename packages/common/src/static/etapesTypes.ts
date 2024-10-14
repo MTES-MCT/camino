@@ -154,7 +154,7 @@ export const EtapesTypes = {
   },
   rcs: {
     id: 'rcs',
-    nom: 'réception de compléments (saisine de la CARM)',
+    nom: 'réponse à la demande de compléments (saisine de la CARM)',
     description: 'après une sca',
     fondamentale: true,
     unique: false,
@@ -184,7 +184,7 @@ export const EtapesTypes = {
   },
   rcb: {
     id: 'rcb',
-    nom: "réception de compléments (récépissé de déclaration loi sur l'eau)",
+    nom: "réponse à la demande de compléments (récépissé de déclaration loi sur l'eau)",
     description: 'après une rde',
     fondamentale: true,
     unique: false,
@@ -204,7 +204,7 @@ export const EtapesTypes = {
   },
   rca: {
     id: 'rca',
-    nom: 'réception de compléments (recevabilité de la demande)',
+    nom: 'réponse à la demande de compléments (recevabilité de la demande)',
     description: 'après une mcr',
     fondamentale: true,
     unique: false,
@@ -214,7 +214,7 @@ export const EtapesTypes = {
   },
   rcd: {
     id: 'rcd',
-    nom: 'réception de compléments (décision de la mission autorité environnementale (examen au cas par cas du projet))',
+    nom: 'réponse à la demande de compléments (décision de la mission autorité environnementale (examen au cas par cas du projet))',
     description: 'après une dae',
     fondamentale: true,
     unique: false,
@@ -224,7 +224,7 @@ export const EtapesTypes = {
   },
   rco: {
     id: 'rco',
-    nom: 'réception de compléments',
+    nom: 'réponse à la demande de compléments',
     description:
       'Étape par laquelle le service instructeur accuse réception des compléments transmis par le demandeur. Cette étape permet la reprise du décompte du délai dans lequel une décision doit être prise.',
     fondamentale: true,
@@ -286,7 +286,7 @@ export const EtapesTypes = {
   },
   rcm: {
     id: 'rcm',
-    nom: 'réception de compléments (complétude de la demande)',
+    nom: 'réponse à la demande de compléments (complétude de la demande)',
     description: 'après une mcp',
     fondamentale: true,
     unique: false,
@@ -1044,7 +1044,7 @@ export const EtapesTypes = {
   },
   wco: {
     id: 'wco',
-    nom: 'Réception de compléments',
+    nom: 'réponse à la demande de compléments',
     description: '',
     fondamentale: false,
     unique: false,
@@ -1319,6 +1319,7 @@ const ETAPES_BROUILLONS_IDS = [
   ETAPES_TYPES.participationDuPublic,
   ETAPES_TYPES.receptionDinformation,
   ETAPES_TYPES.consultationDesAdministrationsCentrales,
+  ETAPES_TYPES.receptionDeComplements,
 ] as const satisfies Readonly<EtapeTypeId[]>
 
 export const isEtapeDecision = (etapeTypeId: EtapeTypeId): boolean => ETAPES_DECISIONS_IDS.includes(etapeTypeId)

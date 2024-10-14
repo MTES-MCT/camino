@@ -224,7 +224,7 @@ test('canBeBrouillon', () => {
       "rapportDuConseilGeneralDeLeconomie_CGE_": false,
       "rapportEtAvisDeLaDREAL": false,
       "recepisseDeDeclarationLoiSurLeau": false,
-      "receptionDeComplements": false,
+      "receptionDeComplements": true,
       "receptionDeComplements_CompletudeDeLaDemande_": false,
       "receptionDeComplements_DecisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet__": false,
       "receptionDeComplements_RecepisseDeDeclarationLoiSurLeau_": false,
