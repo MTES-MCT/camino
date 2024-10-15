@@ -75,7 +75,7 @@ const EtapesTypesDocumentsTypes = {
     { documentTypeId: DOCUMENTS_TYPES_IDS.motif, optionnel: true },
     { documentTypeId: DOCUMENTS_TYPES_IDS.notes, optionnel: true },
   ],
-  [ETAPES_TYPES.decisionDeLadministration]: [
+  [ETAPES_TYPES.decisionDeLAutoriteAdministrative]: [
     { documentTypeId: DOCUMENTS_TYPES_IDS.arreteMinisteriel, optionnel: true },
     { documentTypeId: DOCUMENTS_TYPES_IDS.arretePrefectoral, optionnel: true },
     { documentTypeId: DOCUMENTS_TYPES_IDS.arrete, optionnel: true },
@@ -100,7 +100,6 @@ const EtapesTypesDocumentsTypes = {
     { documentTypeId: DOCUMENTS_TYPES_IDS.ordonnance, optionnel: true },
     { documentTypeId: DOCUMENTS_TYPES_IDS.publicationAuJorf, optionnel: true },
   ],
-  [ETAPES_TYPES.decisionAdministrative]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.arrete, optionnel: true }],
   [ETAPES_TYPES.expertiseDGTMServicePreventionDesRisquesEtIndustriesExtractives_DATE_]: [
     { documentTypeId: DOCUMENTS_TYPES_IDS.avis, optionnel: true },
     { documentTypeId: DOCUMENTS_TYPES_IDS.rapportDeLaDirectionRegionaleChargeeDesMines, optionnel: true },
@@ -284,10 +283,6 @@ const EtapesTypesDocumentsTypes = {
   ],
   [ETAPES_TYPES.depotDeLaDemande_wdd]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.dossierDeDemande, optionnel: true }],
   [ETAPES_TYPES.demandeDeComplements_DADT_]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.courrierDeDemandeDeComplements, optionnel: true }],
-  [ETAPES_TYPES.decisionDeLadministration_wdm]: [
-    { documentTypeId: DOCUMENTS_TYPES_IDS.arreteDeRefus, optionnel: true },
-    { documentTypeId: DOCUMENTS_TYPES_IDS.courrier, optionnel: true },
-  ],
   [ETAPES_TYPES.demandeDautorisationDouvertureDeTravauxMiniers_AOTM_]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.dossierDeDemande, optionnel: true }],
   [ETAPES_TYPES.declarationDarretDefinitifDeTravaux_DADT_]: [
     { documentTypeId: DOCUMENTS_TYPES_IDS.declaration, optionnel: true },
@@ -342,7 +337,7 @@ const TDEDocumentsTypes = {
     },
   },
   [TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_GEOTHERMIE]: {
-    [DEMARCHES_TYPES_IDS.MutationPartielle]: { [ETAPES_TYPES.decisionDeLadministration]: { [DOCUMENTS_TYPES_IDS.arrete]: { optionnel: true } } },
+    [DEMARCHES_TYPES_IDS.MutationPartielle]: { [ETAPES_TYPES.decisionDeLAutoriteAdministrative]: { [DOCUMENTS_TYPES_IDS.arrete]: { optionnel: true } } },
   },
   [TITRES_TYPES_IDS.CONCESSION_METAUX]: { [DEMARCHES_TYPES_IDS.Renonciation]: { [ETAPES_TYPES.decisionImplicite]: { [DOCUMENTS_TYPES_IDS.courrier]: { optionnel: true } } } },
   [TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX]: {

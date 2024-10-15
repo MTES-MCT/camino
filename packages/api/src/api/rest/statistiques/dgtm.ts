@@ -166,7 +166,7 @@ export const getDGTMStatsInside =
       .joinRaw(`left join titres_etapes depot_de_la_demande on (depot_de_la_demande.titre_demarche_id = "titres_demarches"."id" and depot_de_la_demande.type_id = '${ETAPES_TYPES.depotDeLaDemande}')`)
       .joinRaw(`left join titres_etapes APO on (APO.titre_demarche_id = "titres_demarches"."id" and APO.type_id = '${ETAPES_TYPES.avisDeLaCommissionDepartementaleDesMines_CDM_}')`)
       .joinRaw(
-        `left join titres_etapes decision_administration on (decision_administration.titre_demarche_id = "titres_demarches"."id" and decision_administration.type_id = '${ETAPES_TYPES.decisionDeLadministration}')`
+        `left join titres_etapes decision_administration on (decision_administration.titre_demarche_id = "titres_demarches"."id" and decision_administration.type_id = '${ETAPES_TYPES.decisionDeLAutoriteAdministrative}')`
       )
       .where('titresDemarches.typeId', 'oct')
       .whereRaw(`titres.type_id in (${titreTypeIdDelais.map(t => `'${t}'`).join(',')})`)

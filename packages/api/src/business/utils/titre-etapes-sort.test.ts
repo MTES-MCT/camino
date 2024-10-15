@@ -114,7 +114,7 @@ describe('trie les étapes', () => {
       },
       {
         id: newEtapeId('3'),
-        typeId: ETAPES_TYPES.decisionAdministrative,
+        typeId: ETAPES_TYPES.decisionDeLAutoriteAdministrative,
         ordre: 2,
         date: toCaminoDate('1988-03-06'),
         statutId: 'fav',
@@ -134,7 +134,7 @@ describe('trie les étapes', () => {
         statutId: 'fav',
       },
       {
-        typeId: ETAPES_TYPES.decisionAdministrative,
+        typeId: ETAPES_TYPES.decisionDeLAutoriteAdministrative,
         ordre: 2,
         date: '1988-03-06',
         statutId: 'fav',

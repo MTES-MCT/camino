@@ -59,7 +59,7 @@ const TitreEtapesTravauxTypes = {
   MemoireFinTravaux: 'wmt',
   Recolement: 'wrt',
   Abandon: 'wab',
-  DecisionAdmin: 'wdm',
+  DecisionAdmin: ETAPES_TYPES.decisionDeLAutoriteAdministrative,
   PorterAConnaissance: 'wpb',
 } as const satisfies Record<string, EtapeTypeId>
 export type CaminoApiError<T extends string> = CaminoError<T> & { status: HttpStatus }

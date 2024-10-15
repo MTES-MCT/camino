@@ -111,8 +111,8 @@ const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
   FAIRE_RAPPORT_CONSEIL_GENERAL_CHARGE_DES_MINES: { db: EtapesTypesEtapesStatuts.rapportDuConseilGeneralDeLeconomie_CGE_, mainStep: true },
   RENDRE_AVIS_CONSEIL_GENERAL_CHARGE_DES_MINES: { db: EtapesTypesEtapesStatuts.avisDuConseilGeneralDeLeconomie_CGE_, mainStep: true },
   FAIRE_SAISINE_AUTORITE_SIGNATAIRE: { db: EtapesTypesEtapesStatuts.saisineDeLautoriteSignataire, mainStep: true },
-  RENDRE_DECISION_ADMINISTRATION_ACCEPTE: { db: { ACCEPTE: EtapesTypesEtapesStatuts.decisionDeLadministration.ACCEPTE }, mainStep: true },
-  RENDRE_DECISION_ADMINISTRATION_REJETE: { db: { REJETE: EtapesTypesEtapesStatuts.decisionDeLadministration.REJETE }, mainStep: true },
+  RENDRE_DECISION_ADMINISTRATION_ACCEPTE: { db: { ACCEPTE: EtapesTypesEtapesStatuts.decisionDeLAutoriteAdministrative.ACCEPTE }, mainStep: true },
+  RENDRE_DECISION_ADMINISTRATION_REJETE: { db: { REJETE: EtapesTypesEtapesStatuts.decisionDeLAutoriteAdministrative.REJETE }, mainStep: true },
   FAIRE_PUBLICATION_AU_JORF: { db: EtapesTypesEtapesStatuts.publicationDeDecisionAuJORF, mainStep: true },
   NOTIFIER_PREFET: { db: EtapesTypesEtapesStatuts.notificationAuPrefet, mainStep: true },
   NOTIFIER_DEMANDEUR: { db: EtapesTypesEtapesStatuts.notificationAuDemandeur, mainStep: true },
@@ -462,10 +462,10 @@ const prmOctMachine = createMachine({
     },
     saisineDeLAutoriteSignataireAFaire: {
       on: {
-        FAIRE_SAISINE_AUTORITE_SIGNATAIRE: 'decisionDeLAdministrationARendre',
+        FAIRE_SAISINE_AUTORITE_SIGNATAIRE: 'decisionDeLAutoriteAdministrativeARendre',
       },
     },
-    decisionDeLAdministrationARendre: {
+    decisionDeLAutoriteAdministrativeARendre: {
       on: {
         RENDRE_DECISION_ADMINISTRATION_ACCEPTE: 'publicationAuJORFAFaire',
         RENDRE_DECISION_ADMINISTRATION_REJETE: {

@@ -94,7 +94,7 @@ const titreDemarchePublicLectureFind = (
   // si le type d'étape est décision implicite
   //    ou décision de l'administration
   // et que le statut est rejeté
-  if ([ETAPES_TYPES.decisionImplicite, ETAPES_TYPES.decisionDeLadministration].includes(titreEtape.typeId) && isEtapeStatusRejete(titreEtape.statutId)) {
+  if ([ETAPES_TYPES.decisionImplicite, ETAPES_TYPES.decisionDeLAutoriteAdministrative].includes(titreEtape.typeId) && isEtapeStatusRejete(titreEtape.statutId)) {
     //   si le type de titre est AXM
     //   alors la démarche est publique
     //   sinon la démarche n'est pas (plus) publique
@@ -107,7 +107,7 @@ const titreDemarchePublicLectureFind = (
   // et que le statut est accepté
   // alors la démarche est publique
   if (
-    [ETAPES_TYPES.decisionImplicite, ETAPES_TYPES.decisionDeLadministration, ETAPES_TYPES.publicationDeDecisionAuJORF].includes(titreEtape.typeId) &&
+    [ETAPES_TYPES.decisionImplicite, ETAPES_TYPES.decisionDeLAutoriteAdministrative, ETAPES_TYPES.publicationDeDecisionAuJORF].includes(titreEtape.typeId) &&
     titreEtape.statutId === ETAPES_STATUTS.ACCEPTE
   ) {
     return true
@@ -117,7 +117,7 @@ const titreDemarchePublicLectureFind = (
   //    ou décision unilatérale de l'administration
   //    ou publication de décision au recueil des actes administratifs
   // alors la démarche est publique
-  if ([ETAPES_TYPES.decisionAdministrative, ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs].includes(titreEtape.typeId)) {
+  if ([ETAPES_TYPES.decisionDeLAutoriteAdministrative, ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs].includes(titreEtape.typeId)) {
     return true
   }
 
@@ -163,7 +163,7 @@ const titreDemarchePublicLectureFind = (
     [DOMAINES_IDS.METAUX, DOMAINES_IDS.GRANULATS_MARINS, DOMAINES_IDS.CARRIERES].includes(domaineId) &&
     [
       ETAPES_TYPES.avisDeMiseEnConcurrenceAuJORF,
-      ETAPES_TYPES.decisionDeLadministration,
+      ETAPES_TYPES.decisionDeLAutoriteAdministrative,
       ETAPES_TYPES.publicationDeDecisionAuJORF,
       ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs,
       ETAPES_TYPES.participationDuPublic,
@@ -225,7 +225,8 @@ export const titreDemarchePublicFind = (
   // les entreprises titulaires ou amodiataires peuvent voir la démarche
   // si la démarche est visible au public
   // ou si la démarche contient une demande ou une décision de l'administration unilatérale
-  const entreprisesLecture = publicLecture || titreDemarcheEtapes.some(te => [ETAPES_TYPES.demande, ETAPES_TYPES.decisionDeLadministration, ETAPES_TYPES.decisionAdministrative].includes(te.typeId))
+  const entreprisesLecture =
+    publicLecture || titreDemarcheEtapes.some(te => [ETAPES_TYPES.demande, ETAPES_TYPES.decisionDeLAutoriteAdministrative, ETAPES_TYPES.decisionDeLAutoriteAdministrative].includes(te.typeId))
 
   return { publicLecture, entreprisesLecture }
 }

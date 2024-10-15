@@ -108,7 +108,7 @@ describe('vérifie l’arbre des procédures historiques et simplifiées', () =>
   })
 
   test("peut rendre une décision d'administration acceptée", () => {
-    const etapes = [ETES.decisionDeLadministration.ACCEPTE]
+    const etapes = [ETES.decisionDeLAutoriteAdministrative.ACCEPTE]
     const { service, dateFin } = setDateAndOrderAndInterpretMachine(psMachine, '2022-04-15', etapes)
     expect(service).canOnlyTransitionTo({ machine: psMachine, date: dateFin }, ['PUBLIER_DECISION_ACCEPTEE_AU_JORF', 'PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS'])
     expect(service.getSnapshot().context.demarcheStatut).toBe(DemarchesStatutsIds.Accepte)
@@ -116,7 +116,7 @@ describe('vérifie l’arbre des procédures historiques et simplifiées', () =>
   })
 
   test('peut rendre une décision acceptée au recueil des actes administratifs', () => {
-    const etapes = [ETES.demande.FAIT, ETES.decisionDeLadministration.ACCEPTE, ETES.publicationDeDecisionAuRecueilDesActesAdministratifs.FAIT]
+    const etapes = [ETES.demande.FAIT, ETES.decisionDeLAutoriteAdministrative.ACCEPTE, ETES.publicationDeDecisionAuRecueilDesActesAdministratifs.FAIT]
     const { service, dateFin } = setDateAndOrderAndInterpretMachine(psMachine, '2022-04-14', etapes)
     expect(service).canOnlyTransitionTo({ machine: psMachine, date: dateFin }, ['FAIRE_ABROGATION'])
     expect(service.getSnapshot().context.demarcheStatut).toBe(DemarchesStatutsIds.AccepteEtPublie)
@@ -155,7 +155,7 @@ describe('vérifie l’arbre des procédures historiques et simplifiées', () =>
   })
 
   test("peut rejeter une décision de l'administration puis un publication au JORF", () => {
-    const etapes = [ETES.decisionDeLadministration.REJETE, ETES.publicationDeDecisionAuJORF.FAIT]
+    const etapes = [ETES.decisionDeLAutoriteAdministrative.REJETE, ETES.publicationDeDecisionAuJORF.FAIT]
     const { service, dateFin } = setDateAndOrderAndInterpretMachine(psMachine, '2022-04-14', etapes)
     expect(service).canOnlyTransitionTo({ machine: psMachine, date: dateFin }, [])
     expect(service.getSnapshot().context.demarcheStatut).toBe(DemarchesStatutsIds.Rejete)
@@ -202,7 +202,7 @@ describe('vérifie l’arbre des procédures historiques et simplifiées', () =>
       ETES.demande.FAIT,
       ETES.depotDeLaDemande.FAIT,
       ETES.participationDuPublic.TERMINE,
-      ETES.decisionDeLadministration.ACCEPTE,
+      ETES.decisionDeLAutoriteAdministrative.ACCEPTE,
       ETES.publicationDeDecisionAuJORF.FAIT,
       ETES.abrogationDeLaDecision.FAIT,
       ETES.publicationDeDecisionAuRecueilDesActesAdministratifs.FAIT,
@@ -213,7 +213,7 @@ describe('vérifie l’arbre des procédures historiques et simplifiées', () =>
   })
 
   test('peut abroger et publier', () => {
-    const etapes = [ETES.decisionDeLadministration.ACCEPTE, ETES.publicationDeDecisionAuJORF.FAIT, ETES.abrogationDeLaDecision.FAIT, ETES.publicationDeDecisionAuJORF.FAIT]
+    const etapes = [ETES.decisionDeLAutoriteAdministrative.ACCEPTE, ETES.publicationDeDecisionAuJORF.FAIT, ETES.abrogationDeLaDecision.FAIT, ETES.publicationDeDecisionAuJORF.FAIT]
     const { service, dateFin } = setDateAndOrderAndInterpretMachine(psMachine, '2022-04-18', etapes)
     expect(service).canOnlyTransitionTo({ machine: psMachine, date: dateFin }, [])
     expect(service.getSnapshot().context.demarcheStatut).toBe(DemarchesStatutsIds.RejeteApresAbrogation)
@@ -221,7 +221,7 @@ describe('vérifie l’arbre des procédures historiques et simplifiées', () =>
   })
 
   test("peut rejeter un décision de l'administration", () => {
-    const etapes = [ETES.demande.FAIT, ETES.depotDeLaDemande.FAIT, ETES.participationDuPublic.TERMINE, ETES.decisionDeLadministration.REJETE]
+    const etapes = [ETES.demande.FAIT, ETES.depotDeLaDemande.FAIT, ETES.participationDuPublic.TERMINE, ETES.decisionDeLAutoriteAdministrative.REJETE]
     const { service, dateFin } = setDateAndOrderAndInterpretMachine(psMachine, '2022-04-14', etapes)
     expect(service).canOnlyTransitionTo({ machine: psMachine, date: dateFin }, [])
     expect(service.getSnapshot().context.demarcheStatut).toBe(DemarchesStatutsIds.Rejete)
@@ -229,14 +229,14 @@ describe('vérifie l’arbre des procédures historiques et simplifiées', () =>
   })
 
   test("peut rejeter immédiatement une décision de l'administration", () => {
-    const { service, dateFin } = setDateAndOrderAndInterpretMachine(psMachine, '2022-04-08', [ETES.decisionDeLadministration.REJETE])
+    const { service, dateFin } = setDateAndOrderAndInterpretMachine(psMachine, '2022-04-08', [ETES.decisionDeLAutoriteAdministrative.REJETE])
     expect(service).canOnlyTransitionTo({ machine: psMachine, date: dateFin }, ['PUBLIER_DECISION_ACCEPTEE_AU_JORF'])
     expect(service.getSnapshot().context.demarcheStatut).toBe(DemarchesStatutsIds.Rejete)
     expect(service.getSnapshot().context.visibilite).toBe('confidentielle')
   })
 
   test("peut rejeter par décision implicite une décision de l'administration", () => {
-    const { service, dateFin } = setDateAndOrderAndInterpretMachine(psMachine, '2022-04-08', [ETES.decisionDeLadministration.REJETE_DECISION_IMPLICITE])
+    const { service, dateFin } = setDateAndOrderAndInterpretMachine(psMachine, '2022-04-08', [ETES.decisionDeLAutoriteAdministrative.REJETE_DECISION_IMPLICITE])
     expect(service).canOnlyTransitionTo({ machine: psMachine, date: dateFin }, [])
     expect(service.getSnapshot().context.demarcheStatut).toBe(DemarchesStatutsIds.Rejete)
     expect(service.getSnapshot().context.visibilite).toBe('publique')

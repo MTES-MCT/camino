@@ -5,9 +5,9 @@ import { titreEtapesSortDescByOrdre } from '../utils/titre-etapes-sort'
 import { titreEtapePublicationCheck } from './titre-etape-publication-check'
 import { TitreEtapeForMachine, toMachineEtapes } from '../rules-demarches/machine-common'
 import { DemarcheStatutId, DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts'
-import { TitreTypeId } from 'camino-common/src/static/titresTypes'
+import { TITRES_TYPES_IDS, TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { DemarcheTypeId, TravauxIds } from 'camino-common/src/static/demarchesTypes'
-import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
+import { ETAPES_TYPES, EtapeTypeId } from 'camino-common/src/static/etapesTypes'
 import { isEtapeStatusRejete } from 'camino-common/src/static/etapesStatuts'
 import { isNotNullNorUndefined, RecordPartial } from 'camino-common/src/typescript-tools'
 import { machineFind } from '../rules-demarches/machines'
@@ -39,7 +39,7 @@ const titreDemarchesDemandesTypes: DemarcheTypeId[] = ['oct', 'pro', 'pr1', 'pr2
 
 const titreDemarchesTravauxTypes = ['aom', 'dam', 'dot'] as const satisfies readonly TravauxIds[]
 
-const titreEtapesDecisivesUnilateralesTypes: EtapeTypeId[] = ['spp', 'dpu', 'dux', 'aco', ...titreEtapesDecisivesCommunesTypes]
+const titreEtapesDecisivesUnilateralesTypes: EtapeTypeId[] = ['spp', 'dpu', 'dex', 'aco', ...titreEtapesDecisivesCommunesTypes]
 
 const titreDemarchesUnilateralesTypes: DemarcheTypeId[] = ['ret', 'prr', 'dec']
 
@@ -95,9 +95,7 @@ const titreDemarcheUnilateralStatutIdFind = (titreDemarcheEtapes: Pick<ITitreEta
   const statutId = titresDemarcheCommunesStatutIdFind(titreEtapeRecent)
   if (statutId) return statutId
 
-  // - le type de l’étape est publication au JO unilatérale
-  // - le type de l’étape est décision unilatérale
-  if (['dpu', 'dux'].includes(titreEtapeRecent.typeId)) {
+  if ([ETAPES_TYPES.publicationDeDecisionAuJORF, ETAPES_TYPES.decisionDeLAutoriteAdministrative].includes(titreEtapeRecent.typeId)) {
     // - le statut de la démarche est terminé
     return DemarchesStatutsIds.Termine
   }
@@ -168,7 +166,7 @@ const titreDemarcheDemandeStatutIdFind = (titreDemarcheEtapes: Pick<ITitreEtape,
 
   //  - le type de l’étape est décision expresse (dex)
   //  - et le statut de l’étape est rejeté (rej)
-  if (['dex', 'dux'].includes(titreEtapeRecent.typeId) && isEtapeStatusRejete(titreEtapeRecent.statutId)) {
+  if (titreEtapeRecent.typeId === ETAPES_TYPES.decisionDeLAutoriteAdministrative && isEtapeStatusRejete(titreEtapeRecent.statutId)) {
     //  - le statut de la démarche est rejeté (rej)
     return DemarchesStatutsIds.Rejete
   }
@@ -194,7 +192,18 @@ const titreDemarcheDemandeStatutIdFind = (titreDemarcheEtapes: Pick<ITitreEtape,
   //  OU
   //  - le type de l’étape est avis de la commission ARM (aca) (non défavorable)
   //  - le type de l’étape est décision de l'ONF (def) (non défavorable)
-  if (['mcr', 'dex', 'dux'].includes(titreEtapeRecent.typeId) || (titreTypeId === 'arm' && ['mdp', 'men', 'meo', 'mcp', 'def', 'aca'].includes(titreEtapeRecent.typeId))) {
+  if (
+    [ETAPES_TYPES.recevabiliteDeLaDemande, ETAPES_TYPES.decisionDeLAutoriteAdministrative].includes(titreEtapeRecent.typeId) ||
+    (titreTypeId === TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX &&
+      [
+        ETAPES_TYPES.depotDeLaDemande,
+        ETAPES_TYPES.enregistrementDeLaDemande,
+        ETAPES_TYPES.priseEnChargeParLOfficeNationalDesForets,
+        ETAPES_TYPES.completudeDeLaDemande,
+        ETAPES_TYPES.decisionDeLOfficeNationalDesForets,
+        ETAPES_TYPES.avisDeLaCommissionDesAutorisationsDeRecherchesMinieres_CARM_,
+      ].includes(titreEtapeRecent.typeId))
+  ) {
     //  - le statut de la démarche est “en instruction”
     return DemarchesStatutsIds.EnInstruction
   }

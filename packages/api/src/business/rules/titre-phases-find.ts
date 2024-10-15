@@ -44,7 +44,7 @@ const findDateDebut = (demarche: TitreDemarchePhaseFind, titreTypeId: TitreTypeI
     // si on le statut est 'FAIT', on doit trouver le statut dans la décision de l'administration précédente
     if (
       sortedEtapes[etapePublicationFirst].statutId === ETAPES_STATUTS.FAIT &&
-      sortedEtapes[etapePublicationFirst - 1]?.typeId === ETAPES_TYPES.decisionDeLadministration &&
+      sortedEtapes[etapePublicationFirst - 1]?.typeId === ETAPES_TYPES.decisionDeLAutoriteAdministrative &&
       isEtapeStatusRejete(sortedEtapes[etapePublicationFirst - 1]?.statutId)
     ) {
       return null
@@ -180,12 +180,12 @@ export const titrePhasesFind = (titreDemarches: TitreDemarchePhaseFind[], titreT
 
 export type TitreEtapePhaseFind = Pick<ITitreEtape, 'titreDemarcheId' | 'ordre' | 'typeId' | 'dateFin' | 'duree' | 'dateDebut' | 'date' | 'statutId' | 'geojson4326Perimetre' | 'isBrouillon'>
 export type TitreDemarchePhaseFind = Pick<ITitreDemarche, 'statutId' | 'ordre' | 'typeId' | 'id' | 'titreId' | 'demarcheDateDebut' | 'demarcheDateFin'> & { etapes?: TitreEtapePhaseFind[] }
-const etapeTypesIds: EtapeTypeId[] = ['dpu', 'rpu', 'dex', 'dux', 'def', 'sco', 'aco']
+const etapeTypesIds: EtapeTypeId[] = ['dpu', 'rpu', 'dex', 'def', 'sco', 'aco']
 const titreDemarcheNormaleDateFinAndDureeFind = (titreEtapes: TitreEtapePhaseFind[]): { duree: number; dateFin: CaminoDate | null | undefined } => {
   const titreEtapesSorted = titreEtapesSortDescByOrdre(titreEtapes)
 
   const derniereDecisionIndex = titreEtapesSorted.findIndex(({ typeId }) =>
-    [ETAPES_TYPES.publicationDeDecisionAuJORF, ETAPES_TYPES.decisionImplicite, ETAPES_TYPES.decisionDeLadministration].includes(typeId)
+    [ETAPES_TYPES.publicationDeDecisionAuJORF, ETAPES_TYPES.decisionImplicite, ETAPES_TYPES.decisionDeLAutoriteAdministrative].includes(typeId)
   )
 
   const derniereDecision = titreEtapesSorted[derniereDecisionIndex]
@@ -194,7 +194,7 @@ const titreDemarcheNormaleDateFinAndDureeFind = (titreEtapes: TitreEtapePhaseFin
       return { dateFin: derniereDecision.date, duree: 0 }
     } else if (
       derniereDecision.typeId === ETAPES_TYPES.publicationDeDecisionAuJORF &&
-      titreEtapesSorted[derniereDecisionIndex + 1]?.typeId === ETAPES_TYPES.decisionDeLadministration &&
+      titreEtapesSorted[derniereDecisionIndex + 1]?.typeId === ETAPES_TYPES.decisionDeLAutoriteAdministrative &&
       isEtapeStatusRejete(titreEtapesSorted[derniereDecisionIndex + 1]?.statutId)
     ) {
       return { dateFin: derniereDecision.date, duree: 0 }

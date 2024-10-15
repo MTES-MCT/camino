@@ -221,7 +221,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
       ETES.avisDesServicesEtCommissionsConsultatives.FAIT,
       ETES.avisDuPrefet.FAVORABLE,
       ETES.participationDuPublic.TERMINE,
-      ETES.decisionDeLadministration.ACCEPTE,
+      ETES.decisionDeLAutoriteAdministrative.ACCEPTE,
       ETES.publicationDeDecisionAuJORF.FAIT,
       ETES.notificationAuDemandeur.FAIT,
     ])
@@ -243,7 +243,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
       ETES.avisDesServicesEtCommissionsConsultatives.FAIT,
       ETES.avisDuPrefet.FAVORABLE,
       ETES.participationDuPublic.TERMINE,
-      ETES.decisionDeLadministration.REJETE,
+      ETES.decisionDeLAutoriteAdministrative.REJETE,
     ])
 
     expect(service).canOnlyTransitionTo({ machine: psArmProMachine, date: dateFin }, ['NOTIFIER_DEMANDEUR'])
@@ -262,7 +262,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
       ETES.avisDesServicesEtCommissionsConsultatives.FAIT,
       ETES.avisDuPrefet.FAVORABLE,
       ETES.participationDuPublic.TERMINE,
-      ETES.decisionDeLadministration.REJETE,
+      ETES.decisionDeLAutoriteAdministrative.REJETE,
       ETES.notificationAuDemandeur.FAIT,
     ])
 
@@ -284,7 +284,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
       ETES.avisDesServicesEtCommissionsConsultatives.FAIT,
       ETES.avisDuPrefet.FAVORABLE,
       ETES.participationDuPublic.TERMINE,
-      ETES.decisionDeLadministration.REJETE_DECISION_IMPLICITE,
+      ETES.decisionDeLAutoriteAdministrative.REJETE_DECISION_IMPLICITE,
     ])
 
     expect(service).canOnlyTransitionTo({ machine, date: dateFin }, [])
@@ -305,7 +305,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
       ETES.avisDesServicesEtCommissionsConsultatives.FAIT,
       ETES.avisDuPrefet.FAVORABLE,
       ETES.participationDuPublic.TERMINE,
-      ETES.decisionDeLadministration.ACCEPTE,
+      ETES.decisionDeLAutoriteAdministrative.ACCEPTE,
       ETES.publicationDeDecisionAuJORF.FAIT,
       ETES.notificationAuDemandeur.FAIT,
       ETES.attestationDeConstitutionDeGarantiesFinancieres.FAIT,
@@ -342,7 +342,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
       ETES.avisDesServicesEtCommissionsConsultatives.FAIT,
       ETES.avisDuPrefet.FAVORABLE,
       ETES.participationDuPublic.TERMINE,
-      ETES.decisionDeLadministration.ACCEPTE,
+      ETES.decisionDeLAutoriteAdministrative.ACCEPTE,
       ETES.publicationDeDecisionAuJORF.FAIT,
       ETES.abrogationDeLaDecision.FAIT,
       ETES.publicationDeDecisionAuRecueilDesActesAdministratifs.FAIT,

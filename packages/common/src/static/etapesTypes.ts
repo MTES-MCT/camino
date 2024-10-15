@@ -4,13 +4,15 @@ import { Definition } from '../definition'
 import { EtapeBrouillon } from '../etape'
 
 // prettier-ignore
-const IDS = ["abd", "aca","aco","and","anf","def","dex","dim", "dpu",  "dux","ihi", "mfr","mod","mom","rca","rcb","rcd","rcm","rco","rcs","rie","rif","rim","rmc", "rpu","sco","acg","acf","apd","ape","apo","app","apu","asl","cac","cim","css","dae","des","ede","edm","epu","esb","mca","mcb","mcd", "mci","mcm","mco","mcp","mcr","mcs","mdp","mec","men","meo","mie","mif","mim","mna","mnb","mnc","mnd","mni","mno","mns","mnv","ncl","npp","pfc","pfd","ppu","pqr","rcg","rde","rpe","sas","sca","scg","spe","spo","spp","vfc","vfd","wab","wae","wao","war","wau","wco","wda","wdc","wdd","wde","wdm","wfa","wfd","wfo","wmt", "wpb","wpc","wpo","wpp","wps","wrc","wre","wrt","wse","wtp", "asc", "adc"] as const
+
+const IDS = ["abd", "aca","aco","and","anf","def","dex","dim", "dpu",  "ihi", "mfr","mod","mom","rca","rcb","rcd","rcm","rco","rcs","rie","rif","rim","rmc", "rpu","sco","acg","acf","apd","ape","apo","app","apu","asl","cac","cim","css","dae","des","ede","edm","epu","esb","mca","mcb","mcd", "mci","mcm","mco","mcp","mcr","mcs","mdp","mec","men","meo","mie","mif","mim","mna","mnb","mnc","mnd","mni","mno","mns","mnv","ncl","npp","pfc","pfd","ppu","pqr","rcg","rde","rpe","sas","sca","scg","spe","spo","spp","vfc","vfd","wab","wae","wao","war","wau","wco","wda","wdc","wdd","wde","wfa","wfd","wfo","wmt","wpb","wpc","wpo","wpp","wps","wrc","wre","wrt","wse","wtp", "asc", "adc"] as const
 
 // prettier-ignore
-const FONDAMENTALES_IDS = ["abd", "aca","aco","and","anf","def","dex","dim", "dpu","dux","ihi", "mfr","mod","mom","rca","rcb","rcd","rcm","rco","rcs","rie","rif","rim","rmc", "rpu","sco"] as const satisfies Readonly<EtapeTypeIdFondamentaleArray>
+const FONDAMENTALES_IDS = ["abd", "aca","aco","and","anf","def","dex","dim", "dpu","ihi", "mfr","mod","mom","rca","rcb","rcd","rcm","rco","rcs","rie","rif","rim","rmc", "rpu","sco"] as const satisfies Readonly<EtapeTypeIdFondamentaleArray>
 
 // prettier-ignore
-const NON_FONDAMENTALES_IDS = ["acg", "acf","apd","ape","apo","app","apu","asl","cac","cim","css","dae","des","ede","edm","epu","esb","mca","mcb","mcd","mci", "mcm","mco","mcp","mcr", "mcs","mdp","mec","men","meo","mie","mif","mim","mna","mnb","mnc","mnd","mni","mno","mns","mnv","ncl","npp","pfc","pfd","ppu","pqr","rcg","rde","rpe","sas","sca","scg","spe","spo","spp","vfc","vfd","wab","wae","wao","war","wau","wco","wda","wdc","wdd","wde","wdm","wfa","wfd","wfo","wmt","wpb","wpc","wpo","wpp","wps","wrc","wre","wrt","wse","wtp", "asc", "adc"] as const satisfies Readonly<EtapeTypeIdNonFondamentale[]>
+
+const NON_FONDAMENTALES_IDS = ["acg", "acf","apd","ape","apo","app","apu","asl","cac","cim","css","dae","des","ede","edm","epu","esb","mca","mcb","mcd","mci", "mcm","mco","mcp","mcr", "mcs","mdp","mec","men","meo","mie","mif","mim","mna","mnb","mnc","mnd","mni","mno","mns","mnv","ncl","npp","pfc","pfd","ppu","pqr","rcg","rde","rpe","sas","sca","scg","spe","spo","spp","vfc","vfd","wab","wae","wao","war","wau","wco","wda","wdc","wdd","wde","wfa","wfd","wfo","wmt","wpb","wpc","wpo","wpp","wps","wrc","wre","wrt","wse","wtp", "asc", "adc"] as const satisfies Readonly<EtapeTypeIdNonFondamentale[]>
 
 // Ceci est un test :)
 ;[...FONDAMENTALES_IDS, ...NON_FONDAMENTALES_IDS] as const satisfies typeof IDS
@@ -34,10 +36,9 @@ export const ETAPES_TYPES = {
   decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_: 'dae',
   decisionDeLOfficeNationalDesForets: 'def',
   desistementDuDemandeur: 'des',
-  decisionDeLadministration: 'dex',
+  decisionDeLAutoriteAdministrative: 'dex',
   decisionImplicite: 'dim',
   publicationDeDecisionAuJORF: 'dpu',
-  decisionAdministrative: 'dux',
   expertiseDREALOuDGTMServiceEau: 'ede',
   expertiseDGTMServicePreventionDesRisquesEtIndustriesExtractives_DATE_: 'edm',
   enquetePublique: 'epu',
@@ -108,7 +109,6 @@ export const ETAPES_TYPES = {
   demandeDeComplements_AOTMOuDOTM_: 'wdc',
   depotDeLaDemande_wdd: 'wdd',
   demandeDeComplements_DADT_: 'wde',
-  decisionDeLadministration_wdm: 'wdm',
   demandeDautorisationDouvertureDeTravauxMiniers_AOTM_: 'wfa',
   declarationDarretDefinitifDeTravaux_DADT_: 'wfd',
   declarationDouvertureDeTravauxMiniers_DOTM_: 'wfo',
@@ -476,19 +476,9 @@ export const EtapesTypes = {
     public_lecture: false,
     entreprises_lecture: true,
   },
-  dux: {
-    id: 'dux',
-    nom: 'décision administrative',
-    description: "Refus ou acceptation à l'issue d'une instruction.",
-    fondamentale: true,
-    unique: false,
-    date_fin: null,
-    public_lecture: true,
-    entreprises_lecture: true,
-  },
   dex: {
     id: 'dex',
-    nom: "décision de l'administration",
+    nom: "décision de l'autorité administrative",
     description: '',
     fondamentale: true,
     unique: false,
@@ -585,16 +575,6 @@ export const EtapesTypes = {
     date_fin: null,
     public_lecture: true,
     entreprises_lecture: true,
-  },
-  wdm: {
-    id: 'wdm',
-    nom: "décision de l'administration",
-    description: '',
-    fondamentale: false,
-    unique: false,
-    date_fin: null,
-    public_lecture: false,
-    entreprises_lecture: false,
   },
   wrt: {
     id: 'wrt',
@@ -1294,8 +1274,7 @@ export const etapesTypes = Object.values(EtapesTypes)
 const ETAPES_DECISIONS_IDS = [
   ETAPES_TYPES.publicationDeDecisionAuJORF,
   ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs,
-  ETAPES_TYPES.decisionDeLadministration,
-  ETAPES_TYPES.decisionAdministrative,
+  ETAPES_TYPES.decisionDeLAutoriteAdministrative,
   ETAPES_TYPES.decisionImplicite,
   ETAPES_TYPES.decisionDeLOfficeNationalDesForets,
   ETAPES_TYPES.signatureDeLautorisationDeRechercheMiniere,

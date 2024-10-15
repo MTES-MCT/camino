@@ -2,6 +2,8 @@ import { CaminoDate } from 'camino-common/src/date'
 
 import { titreEtapesSortAscByOrdre, titreEtapesSortDescByOrdre } from '../utils/titre-etapes-sort'
 import { TitreEtapePhaseFind } from './titre-phases-find'
+import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes'
+import { ETAPES_STATUTS } from 'camino-common/src/static/etapesStatuts'
 
 /**
  * Retourne la date de fin d'une démarche d'annulation
@@ -12,10 +14,9 @@ import { TitreEtapePhaseFind } from './titre-phases-find'
 export const titreDemarcheAnnulationDateFinFind = (titreEtapes: TitreEtapePhaseFind[]): CaminoDate | null | undefined => {
   // si l’étape valide l’annulation
   const etapeAnnulationValideCheck = (te: TitreEtapePhaseFind) =>
-    // si on a une décision expresse (dex) ou unilatérale (dux) ou implicite (dim)
-    ['dex', 'dux', 'dim'].includes(te.typeId) ||
+    [ETAPES_TYPES.decisionDeLAutoriteAdministrative, ETAPES_TYPES.decisionImplicite].includes(te.typeId) ||
     // si l’ARM a une signature de l’avenant à l’autorisation de recherche minière fait
-    (te.typeId === 'aco' && te.statutId === 'fai')
+    (te.typeId === ETAPES_TYPES.avenantALautorisationDeRechercheMiniere && te.statutId === ETAPES_STATUTS.FAIT)
 
   // la dernière étape qui valide l’annulation et qui contient une date de fin
   const etapeAnnulationHasDateFin = titreEtapesSortDescByOrdre(titreEtapes).find(te => te.dateFin && etapeAnnulationValideCheck(te))

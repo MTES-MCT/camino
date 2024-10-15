@@ -457,7 +457,7 @@ describe("publicité d'une démarche", () => {
     ).toMatchObject({ publicLecture: true })
   })
 
-  test("une démarche dont l'étape la plus récente est décision unilatérale est publique", () => {
+  test("une démarche dont l'étape la plus récente est décision de l'autorité administrative est publique", () => {
     expect(
       titreDemarchePublicFind(
         {
@@ -465,7 +465,7 @@ describe("publicité d'une démarche", () => {
           demarcheDateDebut: toCaminoDate('2020-01-01'),
           demarcheDateFin: toCaminoDate('2021-01-01'),
           id: newDemarcheId(),
-          etapes: etapesBuild([{ typeId: 'dux' }]),
+          etapes: etapesBuild([{ typeId: 'dex' }]),
           titreId: newTitreId('titreId'),
         },
         TITRES_TYPES_IDS.AUTORISATION_DE_PROSPECTION_GRANULATS_MARINS

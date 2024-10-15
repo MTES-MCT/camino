@@ -240,7 +240,7 @@ describe('vérifie l’arbre d’octroi d’AXM', () => {
         date: toCaminoDate('2022-05-23'),
       },
       {
-        ...ETES.decisionDeLadministration.ACCEPTE,
+        ...ETES.decisionDeLAutoriteAdministrative.ACCEPTE,
         date: toCaminoDate('2022-05-24'),
       },
       {

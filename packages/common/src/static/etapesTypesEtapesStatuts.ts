@@ -95,7 +95,7 @@ export const EtapesTypesEtapesStatuts = {
     REJETE: { etapeTypeId: 'def', etapeStatutId: 'rej' },
   },
   desistementDuDemandeur: { FAIT: { etapeTypeId: 'des', etapeStatutId: 'fai' } },
-  decisionDeLadministration: {
+  decisionDeLAutoriteAdministrative: {
     ACCEPTE: { etapeTypeId: 'dex', etapeStatutId: 'acc' },
     REJETE: { etapeTypeId: 'dex', etapeStatutId: 'rej' },
     REJETE_DECISION_IMPLICITE: { etapeTypeId: 'dex', etapeStatutId: 'rei' },
@@ -109,7 +109,6 @@ export const EtapesTypesEtapesStatuts = {
     REJETE: { etapeTypeId: 'dpu', etapeStatutId: 'rej' },
     FAIT: { etapeTypeId: 'dpu', etapeStatutId: 'fai' },
   },
-  decisionAdministrative: { FAIT: { etapeTypeId: 'dux', etapeStatutId: 'fai' } },
   expertiseDREALOuDGTMServiceEau: {
     FAVORABLE: { etapeTypeId: 'ede', etapeStatutId: 'fav' },
     DEFAVORABLE: { etapeTypeId: 'ede', etapeStatutId: 'def' },
@@ -218,10 +217,6 @@ export const EtapesTypesEtapesStatuts = {
   demandeDeComplements_AOTMOuDOTM_: { FAIT: { etapeTypeId: 'wdc', etapeStatutId: 'fai' } },
   depotDeLaDemande_wdd: { FAIT: { etapeTypeId: 'wdd', etapeStatutId: 'fai' } },
   demandeDeComplements_DADT_: { FAIT: { etapeTypeId: 'wde', etapeStatutId: 'fai' } },
-  decisionDeLadministration_wdm: {
-    ACCEPTE: { etapeTypeId: 'wdm', etapeStatutId: 'acc' },
-    REJETE: { etapeTypeId: 'wdm', etapeStatutId: 'rej' },
-  },
   demandeDautorisationDouvertureDeTravauxMiniers_AOTM_: { FAIT: { etapeTypeId: 'wfa', etapeStatutId: 'fai' } },
   declarationDarretDefinitifDeTravaux_DADT_: { FAIT: { etapeTypeId: 'wfd', etapeStatutId: 'fai' } },
   declarationDouvertureDeTravauxMiniers_DOTM_: { FAIT: { etapeTypeId: 'wfo', etapeStatutId: 'fai' } },

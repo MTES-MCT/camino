@@ -221,13 +221,6 @@ test('getAdministrationTitresTypesEtapesTypes', () => {
       },
       {
         "creationInterdit": true,
-        "etapeTypeId": "dux",
-        "lectureInterdit": false,
-        "modificationInterdit": true,
-        "titreTypeId": "prm",
-      },
-      {
-        "creationInterdit": true,
         "etapeTypeId": "mdp",
         "lectureInterdit": false,
         "modificationInterdit": true,

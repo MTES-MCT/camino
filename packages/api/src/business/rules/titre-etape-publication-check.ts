@@ -6,7 +6,7 @@ const demarcheEtapesTypesPublication: {
   [key in SubTitreTypeId]: readonly EtapeTypeId[]
 } = {
   arm: [ETAPES_TYPES.decisionDeLOfficeNationalDesForets, ETAPES_TYPES.signatureDeLautorisationDeRechercheMiniere, ETAPES_TYPES.avenantALautorisationDeRechercheMiniere],
-  axm: [ETAPES_TYPES.decisionDeLadministration, ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs],
+  axm: [ETAPES_TYPES.decisionDeLAutoriteAdministrative, ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs],
   prm: [ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs],
   pxg: [ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs],
 } as const

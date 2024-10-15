@@ -6,7 +6,7 @@ import { toCaminoDate } from 'camino-common/src/date'
 import { describe, expect, test } from 'vitest'
 import { ETAPE_IS_NOT_BROUILLON } from 'camino-common/src/etape'
 describe("date de fin d'une démarche d'annulation", () => {
-  test.each<EtapeTypeId>(['dex', 'dux', 'dim'])("retourne la date d'une démarche d'annulation si elle n'a pas de date de fin pour une %p", typeId => {
+  test.each<EtapeTypeId>(['dex', 'dim'])("retourne la date d'une démarche d'annulation si elle n'a pas de date de fin pour une %p", typeId => {
     const titreDemarcheAnnulationEtapes: ITitreEtape[] = [
       {
         id: newEtapeId('h-cx-courdemanges-1988-ret01-dex01'),
@@ -21,7 +21,7 @@ describe("date de fin d'une démarche d'annulation", () => {
     expect(titreDemarcheAnnulationDateFinFind(titreDemarcheAnnulationEtapes)).toEqual('2013-05-21')
   })
 
-  test.each<EtapeTypeId>(['dex', 'dux', 'dim'])("retourne la date de fin d'une démarche d'annulation si elle existe pour une %p", typeId => {
+  test.each<EtapeTypeId>(['dex', 'dim'])("retourne la date de fin d'une démarche d'annulation si elle existe pour une %p", typeId => {
     const titreDemarcheAnnulationEtapesDateFin: ITitreEtape[] = [
       {
         id: newEtapeId('h-cx-courdemanges-1988-ret01-dex01'),

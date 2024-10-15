@@ -20,7 +20,7 @@ export const evolutionTitres = async (pool: Pool, titreTypeTypeId: TitreTypeType
   }
   const demarcheOctroiTypeIds = [DEMARCHES_TYPES_IDS.Octroi, DEMARCHES_TYPES_IDS.Prolongation, DEMARCHES_TYPES_IDS.Prolongation1, DEMARCHES_TYPES_IDS.Prolongation2]
   const titreTypeId = toTitreTypeId(titreTypeTypeId, DOMAINES_IDS.METAUX)
-  const etapesTypesDecisionRefus = [ETAPES_TYPES.decisionImplicite, ETAPES_TYPES.decisionDeLadministration, ETAPES_TYPES.decisionDuJugeAdministratif]
+  const etapesTypesDecisionRefus = [ETAPES_TYPES.decisionImplicite, ETAPES_TYPES.decisionDeLAutoriteAdministrative, ETAPES_TYPES.decisionDuJugeAdministratif]
   // conversion 1 km² = 100 ha
 
   const [depot, octroi, refus, surface] = await Promise.all([

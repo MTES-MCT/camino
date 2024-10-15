@@ -104,13 +104,13 @@ const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
   },
   RENDRE_DECISION_ADMINISTRATION_ACCEPTE: {
     db: {
-      ACCEPTE: ETES.decisionDeLadministration.ACCEPTE,
+      ACCEPTE: ETES.decisionDeLAutoriteAdministrative.ACCEPTE,
     },
     mainStep: true,
   },
   RENDRE_DECISION_ADMINISTRATION_REJETE: {
     db: {
-      REJETE: ETES.decisionDeLadministration.REJETE,
+      REJETE: ETES.decisionDeLAutoriteAdministrative.REJETE,
     },
     mainStep: false,
   },
