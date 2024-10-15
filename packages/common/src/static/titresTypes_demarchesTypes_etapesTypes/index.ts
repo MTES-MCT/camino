@@ -18,7 +18,7 @@ const travaux = {
     ETAPES_TYPES.rapportEtAvisDeLaDREAL,
     ETAPES_TYPES.transmissionDuProjetDePrescriptionsAuDemandeur,
     ETAPES_TYPES.avisDuDemandeurSurLesPrescriptionsProposees,
-    ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs_wpa,
+    ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs,
     ETAPES_TYPES.abandonDeLaDemande,
     ETAPES_TYPES.decisionDeLadministration_wdm,
     ETAPES_TYPES.arreteDouvertureDesTravauxMiniers,
@@ -54,7 +54,7 @@ const travaux = {
     ETAPES_TYPES.memoireDeFinDeTravaux,
     ETAPES_TYPES.recolement,
     ETAPES_TYPES.arreteDeSecondDonnerActe,
-    ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs_wpa,
+    ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs,
     ETAPES_TYPES.porterAConnaissance,
   ],
 } as const satisfies { [key in TravauxIds]: readonly EtapeTypeId[] }

@@ -226,7 +226,6 @@ export const EtapesTypesEtapesStatuts = {
   declarationDarretDefinitifDeTravaux_DADT_: { FAIT: { etapeTypeId: 'wfd', etapeStatutId: 'fai' } },
   declarationDouvertureDeTravauxMiniers_DOTM_: { FAIT: { etapeTypeId: 'wfo', etapeStatutId: 'fai' } },
   memoireDeFinDeTravaux: { FAIT: { etapeTypeId: 'wmt', etapeStatutId: 'fai' } },
-  publicationDeDecisionAuRecueilDesActesAdministratifs_wpa: { FAIT: { etapeTypeId: 'wpa', etapeStatutId: 'fai' } },
   porterAConnaissance: { FAIT: { etapeTypeId: 'wpb', etapeStatutId: 'fai' } },
   arreteDePrescriptionsComplementaires: { FAIT: { etapeTypeId: 'wpc', etapeStatutId: 'fai' } },
   arreteDeSecondDonnerActe: { ACCEPTE: { etapeTypeId: 'wpo', etapeStatutId: 'acc' } },

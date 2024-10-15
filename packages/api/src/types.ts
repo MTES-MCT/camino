@@ -4,7 +4,7 @@ import { User } from 'camino-common/src/roles'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
 import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts'
-import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
+import { ETAPES_TYPES, EtapeTypeId } from 'camino-common/src/static/etapesTypes'
 import { SubstanceLegaleId } from 'camino-common/src/static/substancesLegales'
 import { DemarcheStatutId } from 'camino-common/src/static/demarchesStatuts'
 import { TitreStatutId } from 'camino-common/src/static/titresStatuts'
@@ -50,7 +50,7 @@ const TitreEtapesTravauxTypes = {
   AvisRapportDirecteurREAL: 'apd',
   TransPrescriptionsDemandeur: 'wtp',
   AvisPrescriptionsDemandeur: 'wau',
-  PubliDecisionRecueilActesAdmin: 'wpa',
+  PubliDecisionRecueilActesAdmin: ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs,
   DonneActeDeclaration: 'wda',
   ArretePrefectDonneActe1: 'wpp',
   ArretePrefectDonneActe2: 'wpo',

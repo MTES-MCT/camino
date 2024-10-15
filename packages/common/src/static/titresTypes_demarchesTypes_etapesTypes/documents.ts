@@ -295,7 +295,6 @@ const EtapesTypesDocumentsTypes = {
   ],
   [ETAPES_TYPES.declarationDouvertureDeTravauxMiniers_DOTM_]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.declaration, optionnel: true }],
   [ETAPES_TYPES.memoireDeFinDeTravaux]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.programmeDesTravaux, optionnel: true }],
-  [ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs_wpa]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.arretePrefectoral, optionnel: true }],
   [ETAPES_TYPES.porterAConnaissance]: [
     { documentTypeId: DOCUMENTS_TYPES_IDS.documentsCartographiques, optionnel: true },
     { documentTypeId: DOCUMENTS_TYPES_IDS.courrier, optionnel: true },
