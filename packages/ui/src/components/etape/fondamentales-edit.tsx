@@ -177,7 +177,7 @@ export const FondamentalesEdit = defineComponent<Props>(props => {
             updateHeritage={updateTitulairesHeritage}
             hasHeritageValue={isNotNullNorUndefinedNorEmpty(props.etape.titulaires.etapeHeritee?.value)}
             prop={editedEtape.value.titulaires}
-            label="Titulaires"
+            label="Titulaires *"
             write={() => (
               <div class="fr-input-group fr-mb-0">
                 <label class="fr-label" for="filters_autocomplete_titulaires">

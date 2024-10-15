@@ -144,6 +144,18 @@ test('fondamentaleStepIsComplete', () => {
       'oct',
       'prr'
     ).valid
+  ).toBe(false)
+  expect(
+    fondamentaleStepIsComplete(
+      {
+        duree: { value: 0, heritee: false, etapeHeritee: null },
+        substances: { value: ['auru'], heritee: false, etapeHeritee: null },
+        typeId: 'mfr',
+        titulaires: { value: [entreprise1Id], heritee: false, etapeHeritee: null },
+      },
+      'oct',
+      'prr'
+    ).valid
   ).toBe(true)
   expect(
     fondamentaleStepIsComplete(
@@ -188,7 +200,7 @@ test('fondamentaleStepIsComplete', () => {
         duree: { value: 0, heritee: false, etapeHeritee: null },
         substances: { value: ['auru'], heritee: false, etapeHeritee: null },
         typeId: 'mfr',
-        titulaires: { value: [], heritee: false, etapeHeritee: null },
+        titulaires: { value: [entreprise1Id], heritee: false, etapeHeritee: null },
       },
       'mut',
       'arm'

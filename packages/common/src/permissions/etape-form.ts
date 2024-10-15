@@ -61,8 +61,6 @@ export const fondamentaleStepIsVisible = (etapeTypeId: EtapeTypeId): boolean => 
   return EtapesTypes[etapeTypeId].fondamentale
 }
 
-const isTitulairesRequired = (etapeTypeId: EtapeTypeId, demarcheTypeId: DemarcheTypeId, titreTypeId: TitreTypeId): boolean =>
-  getEntrepriseDocuments(titreTypeId, demarcheTypeId, etapeTypeId).some(({ optionnel }) => !optionnel)
 export const fondamentaleStepIsComplete = (
   flattened: DeepReadonly<Pick<FlattenEtape, 'typeId' | 'duree' | 'substances' | 'titulaires'>>,
   demarcheTypeId: DemarcheTypeId,
@@ -85,7 +83,7 @@ export const fondamentaleStepIsComplete = (
     errors.push('la durée est obligatoire')
   }
 
-  if (isTitulairesRequired(flattened.typeId, demarcheTypeId, titreTypeId) && isNullOrUndefinedOrEmpty(flattened.titulaires.value)) {
+  if (isNullOrUndefinedOrEmpty(flattened.titulaires.value)) {
     errors.push('Les titulaires sont obligatoires')
   }
 
@@ -295,7 +293,7 @@ export const entrepriseDocumentsStepIsComplete = (
 
   const entrepriseIds = [...etape.titulaires.value, ...etape.amodiataires.value].filter(onlyUnique)
 
-  if (isNullOrUndefinedOrEmpty(entrepriseIds) && isTitulairesRequired(etape.typeId, demarcheTypeId, titreTypeId)) {
+  if (isNullOrUndefinedOrEmpty(entrepriseIds) && getEntrepriseDocuments(titreTypeId, demarcheTypeId, etape.typeId).some(({ optionnel }) => !optionnel)) {
     return { valid: false, errors: ["Il y a des documents d'entreprise obligatoires, mais il n'y a pas de titulaire"] }
   }
 
