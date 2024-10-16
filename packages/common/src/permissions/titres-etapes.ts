@@ -64,14 +64,14 @@ export const canEditDates = (titreTypeId: TitreTypeId, demarcheTypeId: DemarcheT
     return false
   }
 
+  // ne peut pas modifier les dates sur une demande, seulement la durée (sauf pour les ARM et AXM)
+  if (etapeTypeId === ETAPES_TYPES.demande) {
+    return false
+  }
+
   // peut éditer la date sur les titres autre que ARM et AXM
   if (titreTypeId !== 'arm' && titreTypeId !== 'axm') {
     return true
-  }
-
-  // ne peut pas modifier les dates sur une demande d'ARM ou d'AXM car c'est camino qui fait foi
-  if (etapeTypeId === ETAPES_TYPES.demande) {
-    return false
   }
 
   // seuls les supers et les administrations peuvent éditer la date de début sur les ARM et les AXM
