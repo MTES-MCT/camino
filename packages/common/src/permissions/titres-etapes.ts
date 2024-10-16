@@ -194,7 +194,7 @@ export const isEtapeComplete = (
 ): { valid: true } | { valid: false; errors: NonEmptyArray<string> } => {
   const isCompleteChecks = [
     dateTypeStepIsComplete(etape, user),
-    fondamentaleStepIsComplete(etape, demarcheTypeId, titreTypeId),
+    fondamentaleStepIsComplete(etape, demarcheTypeId, titreTypeId, user),
     sectionsStepIsComplete(etape, demarcheTypeId, titreTypeId),
     perimetreStepIsComplete(etape),
     etapeDocumentsStepIsComplete(etape, demarcheTypeId, titreTypeId, documents, sdomZones ?? [], daeDocument, aslDocument, user),

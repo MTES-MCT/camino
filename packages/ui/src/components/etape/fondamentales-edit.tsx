@@ -181,7 +181,7 @@ export const FondamentalesEdit = defineComponent<Props>(props => {
             write={() => (
               <div class="fr-input-group fr-mb-0">
                 <label class="fr-label" for="filters_autocomplete_titulaires">
-                  Titulaires
+                  Titulaires *
                 </label>
                 <AutocompleteEntreprises
                   class="fr-mt-1w"
@@ -195,7 +195,7 @@ export const FondamentalesEdit = defineComponent<Props>(props => {
             )}
             read={heritagePropEtape => (
               <div class="fr-input-group fr-input-group--disabled fr-mb-0">
-                <label class="fr-label">Titulaires</label>
+                <label class="fr-label">Titulaires *</label>
                 <div class="fr-mt-1w">{heritagePropEtape?.value.map(id => <DsfrTag key={id} class="fr-mr-1w" ariaLabel={getEntrepriseNom(id)} />)}</div>
               </div>
             )}

@@ -25,7 +25,7 @@ import { documentTypeIdsBySdomZonesGet } from '../static/titresTypes_demarchesTy
 import { getSections, getSectionsWithValue } from '../static/titresTypes_demarchesTypes_etapesTypes/sections'
 import { isNotNullNorUndefinedNorEmpty, DeepReadonly, onlyUnique, NonEmptyArray, isNonEmptyArray, isNullOrUndefinedOrEmpty, isNullOrUndefined, Nullable } from '../typescript-tools'
 import { sectionsWithValueCompleteValidate } from './sections'
-import { isDureeOptional } from './titres-etapes'
+import { canEditDuree, isDureeOptional } from './titres-etapes'
 
 type ValidReturn = { valid: true } | { valid: false; errors: NonEmptyArray<string> }
 
@@ -64,7 +64,8 @@ export const fondamentaleStepIsVisible = (etapeTypeId: EtapeTypeId): boolean => 
 export const fondamentaleStepIsComplete = (
   flattened: DeepReadonly<Pick<FlattenEtape, 'typeId' | 'duree' | 'substances' | 'titulaires'>>,
   demarcheTypeId: DemarcheTypeId,
-  titreTypeId: TitreTypeId
+  titreTypeId: TitreTypeId,
+  user: User
 ): ValidReturn => {
   if (!fondamentaleStepIsVisible(flattened.typeId)) {
     return { valid: true }
@@ -79,7 +80,7 @@ export const fondamentaleStepIsComplete = (
     errors.push('Les substances sont obligatoires')
   }
 
-  if (!isDureeOptional(flattened.typeId, demarcheTypeId, titreTypeId) && (isNullOrUndefined(flattened.duree.value) || flattened.duree.value === 0)) {
+  if (canEditDuree(titreTypeId, demarcheTypeId, user) && !isDureeOptional(flattened.typeId, demarcheTypeId, titreTypeId) && (isNullOrUndefined(flattened.duree.value) || flattened.duree.value === 0)) {
     errors.push('la durée est obligatoire')
   }
 

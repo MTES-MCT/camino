@@ -22,6 +22,7 @@ import { entrepriseIdValidator } from '../entreprise'
 import { communeIdValidator } from '../static/communes'
 import { User } from '../roles'
 import { ADMINISTRATION_IDS } from '../static/administrations'
+import { SUBSTANCES_FISCALES_IDS } from '../static/substancesFiscales'
 
 describe('dateTypeStepIsComplete', () => {
   test.each<User>([
@@ -104,7 +105,8 @@ test('fondamentaleStepIsComplete', () => {
         titulaires: { value: [], heritee: false, etapeHeritee: null },
       },
       'amo',
-      'prr'
+      'prr',
+      { ...testBlankUser, role: 'super' }
     ).valid
   ).toBe(true)
 
@@ -117,7 +119,8 @@ test('fondamentaleStepIsComplete', () => {
         titulaires: { value: [], heritee: false, etapeHeritee: null },
       },
       'amo',
-      'prr'
+      'prr',
+      { ...testBlankUser, role: 'super' }
     ).valid
   ).toBe(true)
   expect(
@@ -129,7 +132,8 @@ test('fondamentaleStepIsComplete', () => {
         titulaires: { value: [], heritee: false, etapeHeritee: null },
       },
       'amo',
-      'prr'
+      'prr',
+      { ...testBlankUser, role: 'super' }
     ).valid
   ).toBe(false)
 
@@ -142,7 +146,8 @@ test('fondamentaleStepIsComplete', () => {
         titulaires: { value: [], heritee: false, etapeHeritee: null },
       },
       'oct',
-      'prr'
+      'prr',
+      { ...testBlankUser, role: 'super' }
     ).valid
   ).toBe(false)
   expect(
@@ -154,7 +159,8 @@ test('fondamentaleStepIsComplete', () => {
         titulaires: { value: [entreprise1Id], heritee: false, etapeHeritee: null },
       },
       'oct',
-      'prr'
+      'prr',
+      { ...testBlankUser, role: 'super' }
     ).valid
   ).toBe(true)
   expect(
@@ -166,7 +172,8 @@ test('fondamentaleStepIsComplete', () => {
         titulaires: { value: [], heritee: false, etapeHeritee: null },
       },
       'oct',
-      'arm'
+      'arm',
+      { ...testBlankUser, role: 'super' }
     ).valid
   ).toBe(false)
   expect(
@@ -178,7 +185,8 @@ test('fondamentaleStepIsComplete', () => {
         titulaires: { value: [], heritee: false, etapeHeritee: null },
       },
       'oct',
-      'arm'
+      'arm',
+      { ...testBlankUser, role: 'super' }
     ).valid
   ).toBe(false)
   expect(
@@ -190,7 +198,8 @@ test('fondamentaleStepIsComplete', () => {
         titulaires: { value: [], heritee: false, etapeHeritee: null },
       },
       'oct',
-      'arm'
+      'arm',
+      { ...testBlankUser, role: 'super' }
     ).valid
   ).toBe(false)
 
@@ -203,7 +212,8 @@ test('fondamentaleStepIsComplete', () => {
         titulaires: { value: [entreprise1Id], heritee: false, etapeHeritee: null },
       },
       'mut',
-      'arm'
+      'arm',
+      { ...testBlankUser, role: 'super' }
     ).valid
   ).toBe(true)
   expect(
@@ -215,11 +225,24 @@ test('fondamentaleStepIsComplete', () => {
         titulaires: { value: [], heritee: false, etapeHeritee: null },
       },
       'mut',
-      'arm'
+      'arm',
+      { ...testBlankUser, role: 'super' }
     ).valid
   ).toBe(false)
+  expect(
+    fondamentaleStepIsComplete(
+      {
+        duree: { value: 0, heritee: false, etapeHeritee: null },
+        substances: { value: [SUBSTANCES_FISCALES_IDS.or], heritee: false, etapeHeritee: null },
+        typeId: 'mfr',
+        titulaires: { value: [entreprise1Id], heritee: false, etapeHeritee: null },
+      },
+      'oct',
+      'arm',
+      { ...testBlankUser, role: 'entreprise', entrepriseIds: [entreprise1Id] }
+    ).valid
+  ).toBe(true)
 })
-
 test('sectionsStepIsVisible', () => {
   expect(sectionsStepIsVisible({ typeId: 'mfr' }, 'oct', 'arm')).toBe(true)
   expect(sectionsStepIsVisible({ typeId: 'asl' }, 'oct', 'axm')).toBe(false)

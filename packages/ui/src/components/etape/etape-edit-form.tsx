@@ -303,7 +303,7 @@ export const EtapeEditForm = defineComponent<Props>(props => {
       if (etape.value.value.isBrouillon === ETAPE_IS_NOT_BROUILLON) {
         return (
           dateTypeStepIsComplete(etape.value.value, props.user).valid &&
-          fondamentaleStepIsComplete(etape.value.value, props.demarcheTypeId, props.titreTypeId).valid &&
+          fondamentaleStepIsComplete(etape.value.value, props.demarcheTypeId, props.titreTypeId, props.user).valid &&
           sectionsStepIsComplete(etape.value.value, props.demarcheTypeId, props.titreTypeId).valid &&
           perimetreStepIsComplete(etape.value.value).valid &&
           etapeDocumentsStepIsComplete(
@@ -597,7 +597,7 @@ const EtapeEditFormInternal = defineComponent<
   return () => (
     <div>
       {fondamentaleStepIsVisible(props.etape.typeId) ? (
-        <Bloc step={{ name: 'Propriétés', help: null }} complete={fondamentaleStepIsComplete(props.etape, props.demarcheTypeId, props.titreTypeId).valid}>
+        <Bloc step={{ name: 'Propriétés', help: null }} complete={fondamentaleStepIsComplete(props.etape, props.demarcheTypeId, props.titreTypeId, props.user).valid}>
           <FondamentalesEdit
             etape={props.etape}
             demarcheTypeId={props.demarcheTypeId}
