@@ -5,7 +5,7 @@ import { AutreDocumentTypeId, DocumentTypeId, DocumentsTypes } from 'camino-comm
 import { getDownloadRestRoute } from '../../api/client-rest'
 import { Entreprise, EntrepriseId, EtapeEntrepriseDocument } from 'camino-common/src/entreprise'
 import { EntrepriseDocumentLink } from '../entreprise/entreprise-documents'
-import { isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools'
+import { isNotNullNorUndefinedNorEmpty, isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools'
 
 interface Props {
   etapeDocuments: EtapeDocument[]
@@ -66,7 +66,6 @@ export const EtapeDocuments: FunctionalComponent<Props> = props => {
           <thead>
             <tr>
               <th scope="col">Nom</th>
-              <th scope="col">Description</th>
               {isSuper(props.user) || isAdministration(props.user) ? <th scope="col">Visibilité</th> : null}
             </tr>
           </thead>
@@ -74,9 +73,8 @@ export const EtapeDocuments: FunctionalComponent<Props> = props => {
             {sortedEtapeDocuments.value.map(item => (
               <tr>
                 <td>
-                  <EtapeDocumentLink documentId={item.id} documentTypeId={item.etape_document_type_id} />
+                  <EtapeDocumentLink documentId={item.id} documentTypeId={item.etape_document_type_id} description={item.description} />
                 </td>
-                <td style={{ whiteSpace: 'pre-line' }}>{item.description}</td>
                 {isSuper(props.user) || isAdministration(props.user) ? <td>{getVisibilityLabel(item)}</td> : null}
               </tr>
             ))}
@@ -100,15 +98,12 @@ export const EtapeDocuments: FunctionalComponent<Props> = props => {
   )
 }
 
-type EtapeDocumentLinkProps = { documentId: EtapeDocumentId; documentTypeId: DocumentTypeId | AutreDocumentTypeId }
+type EtapeDocumentLinkProps = { documentId: EtapeDocumentId; documentTypeId: DocumentTypeId | AutreDocumentTypeId; description: string | null }
 const EtapeDocumentLink: FunctionalComponent<EtapeDocumentLinkProps> = props => {
+  const label = isNotNullNorUndefinedNorEmpty(props.description) ? props.description : DocumentsTypes[props.documentTypeId].nom
   return (
-    <a
-      href={getDownloadRestRoute('/download/fichiers/:documentId', { documentId: props.documentId })}
-      title={`Télécharger le document ${DocumentsTypes[props.documentTypeId].nom} - nouvelle fenêtre`}
-      target="_blank"
-    >
-      {DocumentsTypes[props.documentTypeId].nom}
+    <a href={getDownloadRestRoute('/download/fichiers/:documentId', { documentId: props.documentId })} title={`Télécharger le document ${label} - nouvelle fenêtre`} target="_blank">
+      {label}
     </a>
   )
 }
