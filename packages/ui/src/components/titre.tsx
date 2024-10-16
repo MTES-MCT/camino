@@ -31,7 +31,7 @@ import { DsfrSeparator } from './_ui/dsfr-separator'
 import { TitreAbonnerButton } from './titre/titre-abonner-button'
 import { EditPopup } from './titre/edit-popup'
 import { RemovePopup } from './titre/remove-popup'
-import { AdministrationId } from 'camino-common/src/static/administrations'
+import { ADMINISTRATION_TYPE_IDS, AdministrationId, Administrations } from 'camino-common/src/static/administrations'
 import { getAdministrationsLocales } from 'camino-common/src/administrations'
 import { getGestionnairesByTitreTypeId } from 'camino-common/src/static/administrationsTitresTypes'
 import { DemarcheEditPopup } from './titre/demarche-edit-popup'
@@ -255,6 +255,7 @@ export const PureTitre = defineComponent<Props>(props => {
         titreData.value.value.titre_type_id !== null
           ? getGestionnairesByTitreTypeId(titreData.value.value.titre_type_id)
               .filter(({ associee }) => !associee)
+              .filter(({ administrationId }) => Administrations[administrationId].typeId === ADMINISTRATION_TYPE_IDS.MINISTERE)
               .map(({ administrationId }) => administrationId)
           : []
 
