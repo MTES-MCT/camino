@@ -3,7 +3,7 @@ import { dbManager } from '../../../tests/db-manager'
 import { expect, test, describe, afterAll, beforeAll, vi } from 'vitest'
 import type { Pool } from 'pg'
 import { HTTP_STATUS } from 'camino-common/src/http'
-import { toCaminoDate } from 'camino-common/src/date'
+import { dateAddDays, toCaminoDate } from 'camino-common/src/date'
 import { titreSlugValidator } from 'camino-common/src/validators/titres'
 import { newTitreId, newDemarcheId, newEtapeId } from '../../database/models/_format/id-create'
 import TitresDemarches from '../../database/models/titres-demarches'
@@ -24,9 +24,11 @@ import { ETAPE_IS_NOT_BROUILLON } from 'camino-common/src/etape'
 import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes'
 import { ETAPES_STATUTS } from 'camino-common/src/static/etapesStatuts'
 import { DEMARCHES_TYPES_IDS } from 'camino-common/src/static/demarchesTypes'
+import { DATE_DEBUT_PROCEDURE_SPECIFIQUE } from 'camino-common/src/machines'
 
 console.info = vi.fn()
 console.error = vi.fn()
+console.warn = vi.fn()
 let dbPool: Pool
 beforeAll(async () => {
   const { pool } = await dbManager.populateDb()
@@ -452,6 +454,136 @@ describe('getDemarchesEnConcurrence', () => {
   })
 })
 
+describe('getResultatEnConcurrence', () => {
+  test("La démarche n'existe pas", async () => {
+    const actual = await restNewCall(dbPool, '/rest/demarches/:demarcheId/resultatMiseEnConcurrence', { demarcheId: demarcheIdValidator.parse('non-existing') }, { ...testBlankUser, role: 'defaut' })
+
+    expect(actual.status).toBe(HTTP_STATUS.BAD_REQUEST)
+  })
+
+  test('Avec un seul satellite', async () => {
+    const perimetreSimple: FeatureMultiPolygon = {
+      type: 'Feature',
+      properties: {},
+      geometry: {
+        type: 'MultiPolygon',
+        coordinates: [
+          [
+            [
+              [7.252418901, 47.828347504],
+              [7.251749335, 47.827897983],
+              [7.252418901, 47.827448465],
+              [7.253088467, 47.827897983],
+              [7.252418901, 47.828347504],
+            ],
+          ],
+        ],
+      },
+    }
+    const perimetreDecale: FeatureMultiPolygon = {
+      type: 'Feature',
+      properties: {},
+      geometry: {
+        type: 'MultiPolygon',
+        coordinates: [
+          [
+            [
+              [7.252718901, 47.828347504],
+              [7.252049335, 47.827897983],
+              [7.252718901, 47.827448465],
+              [7.253388467, 47.827897983],
+              [7.252718901, 47.828347504],
+            ],
+          ],
+        ],
+      },
+    }
+    // insérer titre pivot
+    const titreIdPivot = newTitreId()
+    const demarcheIdPivot = newDemarcheId('demarcheIdPivotResultat')
+    await insertTitreGraph({
+      id: titreIdPivot,
+      nom: 'titre pivot',
+      typeId: 'arm',
+      slug: titreSlugValidator.parse('slug-pivot'),
+      titreStatutId: 'ind',
+      propsTitreEtapesIds: {},
+      demarches: [
+        {
+          id: demarcheIdPivot,
+          titreId: titreIdPivot,
+          typeId: DEMARCHES_TYPES_IDS.Octroi,
+          publicLecture: false,
+          etapes: [
+            {
+              id: newEtapeId(),
+              date: dateAddDays(DATE_DEBUT_PROCEDURE_SPECIFIQUE, 2),
+              isBrouillon: ETAPE_IS_NOT_BROUILLON,
+              typeId: ETAPES_TYPES.demande,
+              statutId: ETAPES_STATUTS.FAIT,
+              titreDemarcheId: demarcheIdPivot,
+              geojson4326Perimetre: perimetreSimple,
+              geojsonOriginePerimetre: perimetreSimple,
+              geojsonOrigineGeoSystemeId: '4326',
+            },
+            {
+              id: newEtapeId(),
+              date: dateAddDays(DATE_DEBUT_PROCEDURE_SPECIFIQUE, 3),
+              isBrouillon: ETAPE_IS_NOT_BROUILLON,
+              typeId: ETAPES_TYPES.avisDeMiseEnConcurrenceAuJORF,
+              statutId: ETAPES_STATUTS.TERMINE,
+              titreDemarcheId: demarcheIdPivot,
+              geojson4326Perimetre: perimetreSimple,
+              geojsonOriginePerimetre: perimetreSimple,
+              surface: km2Validator.parse(12),
+              geojsonOrigineGeoSystemeId: '4326',
+              titulaireIds: [entrepriseIdValidator.parse('enterpriseId')],
+            },
+          ],
+        },
+      ],
+    })
+
+    // insérer titres satellite
+    const titreIdSatellite1 = newTitreId()
+    const demarcheIdSatellite1 = newDemarcheId('demarcheIdSatelliteResultat1')
+    await insertTitreGraph({
+      id: titreIdSatellite1,
+      nom: 'titre satellite 1',
+      typeId: 'arm',
+      slug: titreSlugValidator.parse('slug-satellite-1'),
+      titreStatutId: 'ind',
+      propsTitreEtapesIds: {},
+      demarches: [
+        {
+          id: demarcheIdSatellite1,
+          titreId: titreIdSatellite1,
+          typeId: DEMARCHES_TYPES_IDS.Octroi,
+          etapes: [
+            {
+              id: newEtapeId(),
+              date: dateAddDays(DATE_DEBUT_PROCEDURE_SPECIFIQUE, 3),
+              isBrouillon: ETAPE_IS_NOT_BROUILLON,
+              typeId: ETAPES_TYPES.demande,
+              statutId: ETAPES_STATUTS.FAIT,
+              titreDemarcheId: demarcheIdSatellite1,
+              demarcheIdEnConcurrence: demarcheIdPivot,
+              geojson4326Perimetre: perimetreDecale,
+              geojsonOriginePerimetre: perimetreDecale,
+              geojsonOrigineGeoSystemeId: '4326',
+              surface: km2Validator.parse(17),
+              titulaireIds: [entrepriseIdValidator.parse('enterpriseId2')],
+            },
+          ],
+        },
+      ],
+    })
+    const actual = await restNewCall(dbPool, '/rest/demarches/:demarcheId/resultatMiseEnConcurrence', { demarcheId: demarcheIdPivot }, { ...testBlankUser, role: 'super' })
+
+    expect(actual.body).toMatchSnapshot()
+    expect(actual.status).toBe(HTTP_STATUS.OK)
+  })
+})
 const demarcheCreate = async () => {
   const titreId = newTitreId()
   await insertTitreGraph({

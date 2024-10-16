@@ -51,15 +51,17 @@ export const TypeEdit = defineComponent<Props>(props => {
     async newEtapeDate => {
       try {
         const newEtapeTypesAndStatuts = await props.apiClient.getEtapesTypesEtapesStatuts(props.demarcheId, props.etape?.id ?? null, newEtapeDate)
-        // TODO 2024-09-24 mieux remonter les erreurs
         if ('message' in newEtapeTypesAndStatuts) {
-          console.warn("problème pendant la récupération des types d'étapes possible", newEtapeTypesAndStatuts)
-          throw new Error(newEtapeTypesAndStatuts.message)
-        }
-        possibleEtapes.value = { status: 'LOADED', value: newEtapeTypesAndStatuts }
-        const typeId = etapeTypeId.value
-        if (isNotNullNorUndefined(typeId)) {
-          updatePossibleStatuts(typeId)
+          possibleEtapes.value = {
+            status: 'NEW_ERROR',
+            error: newEtapeTypesAndStatuts,
+          }
+        } else {
+          possibleEtapes.value = { status: 'LOADED', value: newEtapeTypesAndStatuts }
+          const typeId = etapeTypeId.value
+          if (isNotNullNorUndefined(typeId)) {
+            updatePossibleStatuts(typeId)
+          }
         }
       } catch (e: any) {
         possibleEtapes.value = {

@@ -50,12 +50,15 @@ export const TitresLinkForm = defineComponent<Props>(props => {
     try {
       const result = await props.apiClient.loadTitreLinks(props.titre.id)
       if ('message' in result) {
-        // TODO 2024-09-17 mieux gérer la gestion des erreurs de l'api
-        throw new Error(result.message)
+        titresLinks.value = {
+          status: 'NEW_ERROR',
+          error: result,
+        }
+      } else {
+        titresLinks.value = { status: 'LOADED', value: result }
+        props.onTitresFromLoaded(result.amont.length > 0)
+        selectedTitres.value = titresLinks.value.value.amont
       }
-      titresLinks.value = { status: 'LOADED', value: result }
-      props.onTitresFromLoaded(result.amont.length > 0)
-      selectedTitres.value = titresLinks.value.value.amont
     } catch (e: any) {
       titresLinks.value = {
         status: 'ERROR',
@@ -104,13 +107,16 @@ export const TitresLinkForm = defineComponent<Props>(props => {
         selectedTitres.value.map(({ id }) => id)
       )
       if ('message' in links) {
-        // TODO 2024-09-17 mieux gérer l'affichage du message d'erreur
-        throw new Error(links.message)
-      }
-      mode.value = 'read'
-      titresLinks.value = {
-        status: 'LOADED',
-        value: links,
+        titresLinks.value = {
+          status: 'NEW_ERROR',
+          error: links,
+        }
+      } else {
+        mode.value = 'read'
+        titresLinks.value = {
+          status: 'LOADED',
+          value: links,
+        }
       }
     } catch (e: any) {
       titresLinks.value = {

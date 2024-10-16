@@ -1,5 +1,5 @@
 import { test, expect } from 'vitest'
-import { indexToLetter, toDegresMinutes } from './number'
+import { indexToLetter, m2toKm2, m2Validator, toDegresMinutes } from './number'
 import Decimal from 'decimal.js'
 
 test('indexToLetter', () => {
@@ -34,4 +34,8 @@ test('toDegresMinutes', () => {
 test('decimal round', () => {
   expect(new Decimal(12.34).toDecimalPlaces(1)).toStrictEqual(new Decimal(12.3))
   expect(new Decimal(12.35).toDecimalPlaces(1)).toStrictEqual(new Decimal(12.4))
+})
+
+test('m2ToKm2', () => {
+  expect(m2toKm2(m2Validator.parse(12))).toBe(0.000_012)
 })

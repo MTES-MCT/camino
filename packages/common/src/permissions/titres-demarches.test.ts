@@ -1,9 +1,13 @@
 import { describe, expect, test } from 'vitest'
 import { AdministrationId } from '../static/administrations'
-import { canEditDemarche, canCreateTravaux, canDeleteDemarche, canCreateDemarche } from './titres-demarches'
+import { canEditDemarche, canCreateTravaux, canDeleteDemarche, canCreateDemarche, canPublishResultatMiseEnConcurrence } from './titres-demarches'
 import { testBlankUser, TestUser } from '../tests-utils'
 import { TitresStatutIds } from '../static/titresStatuts'
-import { caminoDateValidator } from '../date'
+import { caminoDateValidator, dateAddDays, toCaminoDate } from '../date'
+import { demarcheIdValidator } from '../demarche'
+import { ETAPES_TYPES } from '../static/etapesTypes'
+import { EtapesTypesEtapesStatuts } from '../static/etapesTypesEtapesStatuts'
+import { DATE_DEBUT_PROCEDURE_SPECIFIQUE } from '../machines'
 
 describe('canEditDemarche', () => {
   test.each<[AdministrationId, boolean]>([
@@ -106,5 +110,111 @@ describe('canCreateTravaux', () => {
     [{ role: 'defaut' }, false],
   ])('Vérifie si un profil peut créer des travaux', async (user, creation) => {
     expect(canCreateTravaux({ ...user, ...testBlankUser }, 'arm', [], [])).toEqual(creation)
+  })
+})
+
+describe('canPublishResultatMiseEnConcurrence', () => {
+  const demarcheId = demarcheIdValidator.parse('demarcheId')
+  test('machine non procédure spécifique', () => {
+    expect(canPublishResultatMiseEnConcurrence({ ...testBlankUser, role: 'super' }, 'arm', 'oct', [{ date: toCaminoDate('2020-01-01'), etape_statut_id: 'fai', etape_type_id: 'mfr' }], demarcheId))
+      .toMatchInlineSnapshot(`
+      {
+        "error": "Cette démarche n'est pas une procédure spécifique",
+        "valid": false,
+      }
+    `)
+  })
+  test('mise en concurrence non terminée', () => {
+    expect(
+      canPublishResultatMiseEnConcurrence(
+        { ...testBlankUser, role: 'super' },
+        'arm',
+        'oct',
+        [{ date: dateAddDays(DATE_DEBUT_PROCEDURE_SPECIFIQUE, 12), etape_statut_id: 'fai', etape_type_id: 'mfr' }],
+        demarcheId
+      )
+    ).toMatchInlineSnapshot(`
+      {
+        "error": "Cette démarche n'a pas terminé sa mise en concurrence",
+        "valid": false,
+      }
+    `)
+  })
+  test('pas les droits', () => {
+    expect(
+      canPublishResultatMiseEnConcurrence(
+        { ...testBlankUser, role: 'defaut' },
+        'arm',
+        'oct',
+        [
+          {
+            etape_type_id: ETAPES_TYPES.avisDeMiseEnConcurrenceAuJORF,
+            etape_statut_id: EtapesTypesEtapesStatuts.avisDeMiseEnConcurrenceAuJORF.TERMINE.etapeStatutId,
+            demarche_id_en_concurrence: null,
+            date: dateAddDays(DATE_DEBUT_PROCEDURE_SPECIFIQUE, 10),
+          },
+        ],
+        demarcheId
+      )
+    ).toMatchInlineSnapshot(`
+      {
+        "error": "L'utilisateur ne dispose pas des droits suffisants",
+        "valid": false,
+      }
+    `)
+  })
+
+  test('peut publier le résultat de la mise en concurrence', () => {
+    expect(
+      canPublishResultatMiseEnConcurrence(
+        { ...testBlankUser, role: 'admin', administrationId: 'aut-mrae-guyane-01' },
+        'arm',
+        'oct',
+        [
+          {
+            etape_type_id: ETAPES_TYPES.avisDeMiseEnConcurrenceAuJORF,
+            etape_statut_id: EtapesTypesEtapesStatuts.avisDeMiseEnConcurrenceAuJORF.TERMINE.etapeStatutId,
+            demarche_id_en_concurrence: null,
+            date: dateAddDays(DATE_DEBUT_PROCEDURE_SPECIFIQUE, 10),
+          },
+        ],
+        demarcheId
+      )
+    ).toMatchInlineSnapshot(`
+      {
+        "error": null,
+        "valid": true,
+      }
+    `)
+  })
+
+  test('ne peut publier pas le résultat de la mise en concurrence si déjà existant', () => {
+    expect(
+      canPublishResultatMiseEnConcurrence(
+        { ...testBlankUser, role: 'editeur', administrationId: 'aut-mrae-guyane-01' },
+        'arm',
+        'oct',
+        [
+          {
+            etape_type_id: ETAPES_TYPES.avisDeMiseEnConcurrenceAuJORF,
+            etape_statut_id: EtapesTypesEtapesStatuts.avisDeMiseEnConcurrenceAuJORF.TERMINE.etapeStatutId,
+            demarche_id_en_concurrence: null,
+            date: dateAddDays(DATE_DEBUT_PROCEDURE_SPECIFIQUE, 10),
+          },
+          {
+            etape_type_id: ETAPES_TYPES.resultatMiseEnConcurrence,
+            etape_statut_id: EtapesTypesEtapesStatuts.resultatMiseEnConcurrence.ACCEPTE.etapeStatutId,
+            demarche_id_en_concurrence: null,
+            date: dateAddDays(DATE_DEBUT_PROCEDURE_SPECIFIQUE, 11),
+          },
+        ],
+        demarcheId
+      )
+    ).toMatchInlineSnapshot(`
+      {
+        "error": "Cette démarche a déja un résultat final de la mise en concurrence",
+        "valid": false,
+      }
+    `)
   })
 })

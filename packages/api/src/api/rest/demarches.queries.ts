@@ -1,29 +1,43 @@
 import { sql } from '@pgtyped/runtime'
-import { DemarcheId, DemarcheIdOrSlug, demarcheIdValidator, GetDemarcheMiseEnConcurrence } from 'camino-common/src/demarche'
-import { EffectDbQueryAndValidateErrors, Redefine, dbQueryAndValidate, effectDbQueryAndValidate } from '../../pg-database'
-import { IGetDemarcheByIdOrSlugDbQuery, IGetDemarchesEnConcurrenceDbQuery, IGetEtapesByDemarcheIdDbQuery } from './demarches.queries.types'
+import { commonTitreEnConcurrenceValidator, DemarcheId, DemarcheIdOrSlug, demarcheIdValidator, GetDemarcheMiseEnConcurrence, GetResultatMiseEnConcurrence } from 'camino-common/src/demarche'
+import { EffectDbQueryAndValidateErrors, Redefine, effectDbQueryAndValidate } from '../../pg-database'
+import {
+  IGetDemarcheByIdOrSlugDbQuery,
+  IGetDemarchePivotEnConcurrenceDbQuery,
+  IGetDemarchesEnConcurrenceDbQuery,
+  IGetDemarchesSatellitesEnConcurrenceDbQuery,
+  IGetEtapesByDemarcheIdDbQuery,
+  IGetPerimetreSansSatelliteDbQuery,
+} from './demarches.queries.types'
 import { z } from 'zod'
 import { caminoDateValidator } from 'camino-common/src/date'
 import { communeValidator } from 'camino-common/src/static/communes'
 import { secteurMaritimeValidator } from 'camino-common/src/static/facades'
 import { substanceLegaleIdValidator } from 'camino-common/src/static/substancesLegales'
-import { etapeTypeIdValidator } from 'camino-common/src/static/etapesTypes'
+import { ETAPES_TYPES, etapeTypeIdValidator } from 'camino-common/src/static/etapesTypes'
 import { etapeBrouillonValidator, etapeIdValidator, etapeNoteValidator, etapeSlugValidator } from 'camino-common/src/etape'
 import { etapeStatutIdValidator } from 'camino-common/src/static/etapesStatuts'
 import { contenuValidator } from './activites.queries'
 import { sdomZoneIdValidator } from 'camino-common/src/static/sdom'
 import { foretIdValidator } from 'camino-common/src/static/forets'
 import { Pool } from 'pg'
-import { featureCollectionForagesValidator, featureCollectionPointsValidator, featureMultiPolygonValidator, multiPolygonValidator } from 'camino-common/src/perimetre'
+import {
+  featureCollectionForagesValidator,
+  featureCollectionPointsValidator,
+  FeatureMultiPolygon,
+  featureMultiPolygonValidator,
+  MultiPolygon,
+  multiPolygonValidator,
+} from 'camino-common/src/perimetre'
 import { etapeHeritagePropsValidator } from 'camino-common/src/heritage'
 import { getDemarcheByIdOrSlugValidator as commonGetDemarcheByIdOrSlugValidator } from 'camino-common/src/titres'
 import { geoSystemeIdValidator } from 'camino-common/src/static/geoSystemes'
 import { entrepriseIdValidator } from 'camino-common/src/entreprise'
-import { km2Validator } from 'camino-common/src/number'
+import { km2Validator, m2toKm2, m2Validator } from 'camino-common/src/number'
 import { Effect, pipe } from 'effect'
 import { CaminoError } from 'camino-common/src/zod-tools'
 import { isAdministration, isSuper, User } from 'camino-common/src/roles'
-import { DeepReadonly } from 'camino-common/src/typescript-tools'
+import { DeepReadonly, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
 
 const getEtapesByDemarcheIdDbValidator = z.object({
   id: etapeIdValidator,
@@ -110,9 +124,16 @@ const getDemarcheByIdOrSlugValidator = commonGetDemarcheByIdOrSlugValidator.exte
 
 type GetDemarcheByIdOrSlugValidator = z.infer<typeof getDemarcheByIdOrSlugValidator>
 
-export const getDemarcheByIdOrSlug = async (pool: Pool, idOrSlug: DemarcheIdOrSlug): Promise<z.infer<typeof getDemarcheByIdOrSlugValidator>> => {
-  return (await dbQueryAndValidate(getDemarcheByIdOrSlugDb, { idOrSlug }, pool, getDemarcheByIdOrSlugValidator))[0]
-}
+export type GetDemarcheByIdOrSlugErrors = EffectDbQueryAndValidateErrors | "La démarche n'existe pas"
+export const getDemarcheByIdOrSlug = (pool: Pool, idOrSlug: DemarcheIdOrSlug): Effect.Effect<GetDemarcheByIdOrSlugValidator, CaminoError<GetDemarcheByIdOrSlugErrors>> =>
+  pipe(
+    effectDbQueryAndValidate(getDemarcheByIdOrSlugDb, { idOrSlug }, pool, getDemarcheByIdOrSlugValidator),
+    Effect.filterOrFail(
+      demarches => isNotNullNorUndefinedNorEmpty(demarches),
+      () => ({ message: "La démarche n'existe pas" as const })
+    ),
+    Effect.map(demarches => demarches[0])
+  )
 
 const getDemarcheByIdOrSlugDb = sql<Redefine<IGetDemarcheByIdOrSlugDbQuery, { idOrSlug: DemarcheIdOrSlug }, GetDemarcheByIdOrSlugValidator>>`
 select
@@ -172,4 +193,173 @@ where
     or (e.titre_demarche_id = $ demarcheIdPivot! and e.type_id = 'mfr')
     )
     and e.archive is false
+`
+
+const multipolygontoFeatureMultipolygon = (multipolygon: MultiPolygon): FeatureMultiPolygon => {
+  return {
+    type: 'Feature',
+    geometry: multipolygon,
+    properties: {},
+  }
+}
+
+const getDemarchePivotEnConcurrenceDbValidator = commonTitreEnConcurrenceValidator
+  .pick({
+    demarcheId: true,
+    demarcheTypeId: true,
+    titreNom: true,
+    titreSlug: true,
+    titreTypeId: true,
+  })
+  .extend({
+    perimetreTotalGeojson4326: multiPolygonValidator,
+    perimetreTotalSurface: km2Validator,
+    titulaireIds: z.array(entrepriseIdValidator),
+  })
+export const getDemarchePivotEnConcurrence = (
+  pool: Pool,
+  demarcheIdPivot: DemarcheId,
+  _user: DeepReadonly<User>
+): Effect.Effect<GetResultatMiseEnConcurrence, CaminoError<EffectDbQueryAndValidateErrors | "La démarche n'existe pas">> => {
+  return Effect.Do.pipe(
+    Effect.bind('pivots', () =>
+      effectDbQueryAndValidate(
+        getDemarchePivotEnConcurrenceDb,
+        { demarcheIdPivot, miseEnConcurrenceTypeId: ETAPES_TYPES.avisDeMiseEnConcurrenceAuJORF },
+        pool,
+        getDemarchePivotEnConcurrenceDbValidator
+      )
+    ),
+    Effect.filterOrFail(
+      ({ pivots }) => isNotNullNorUndefinedNorEmpty(pivots),
+      () => ({ message: "La démarche n'existe pas" as const })
+    ),
+    Effect.bind('pivot', ({ pivots }) => Effect.succeed(pivots[0])),
+    Effect.bind('satellites', ({ pivot }) =>
+      effectDbQueryAndValidate(getDemarchesSatellitesEnConcurrenceDb, { demarcheIdPivot, perimetrePivot: pivot.perimetreTotalGeojson4326 }, pool, getDemarchesSatellitesEnConcurrenceDbValidator)
+    ),
+    Effect.flatMap(({ pivot, satellites }) => {
+      return pipe(
+        Effect.reduce(satellites, { geojson_4326: pivot.perimetreTotalGeojson4326, surface: pivot.perimetreTotalSurface }, (acc, satellite) => {
+          return pipe(
+            effectDbQueryAndValidate(getPerimetreSansSatelliteDb, { perimetrePivot: acc.geojson_4326, perimetreSatellite: satellite.perimetre }, pool, getPerimetreSansSatelliteValidator),
+            Effect.map(result => ({
+              geojson_4326: result[0].perimetre_sans_satellite,
+              surface: m2toKm2(result[0].surface_sans_satellite),
+            }))
+          )
+        }),
+        Effect.map(perimetreSansSatellite => {
+          return {
+            pivot: {
+              ...pivot,
+
+              titulaireId: pivot.titulaireIds[0],
+              perimetreTotal: {
+                geojson4326_perimetre: multipolygontoFeatureMultipolygon(pivot.perimetreTotalGeojson4326),
+                surface: pivot.perimetreTotalSurface,
+              },
+              perimetreSansSatellite: {
+                geojson4326_perimetre: multipolygontoFeatureMultipolygon(perimetreSansSatellite.geojson_4326),
+                surface: perimetreSansSatellite.surface,
+              },
+            },
+            satellites: satellites.map(satellite => ({
+              ...satellite,
+              titulaireId: satellite.titulaireIds[0],
+              perimetreEnCommun: {
+                geojson4326_perimetre: multipolygontoFeatureMultipolygon(satellite.perimetreEnCommun),
+                surface: m2toKm2(satellite.surfaceEnCommun),
+              },
+            })),
+          }
+        })
+      )
+    })
+  )
+}
+
+type GetDemarchePivotEnConcurrenceDb = z.infer<typeof getDemarchePivotEnConcurrenceDbValidator>
+const getDemarchePivotEnConcurrenceDb = sql<
+  Redefine<IGetDemarchePivotEnConcurrenceDbQuery, { demarcheIdPivot: DemarcheId; miseEnConcurrenceTypeId: typeof ETAPES_TYPES.avisDeMiseEnConcurrenceAuJORF }, GetDemarchePivotEnConcurrenceDb>
+>`
+select
+    t.nom as "titreNom",
+    t.slug AS "titreSlug",
+    td.type_id AS "demarcheTypeId",
+    td.id as "demarcheId",
+    t.type_id AS "titreTypeId",
+    ST_AsGeoJSON(ST_Multi(te.geojson4326_perimetre))::json as "perimetreTotalGeojson4326",
+    te.surface as "perimetreTotalSurface",
+    te.titulaire_ids as "titulaireIds"
+
+from
+    titres_demarches td
+    join titres_etapes te on te.titre_demarche_id = td.id and te.type_id = $miseEnConcurrenceTypeId! and te.archive is false
+    join titres t on td.titre_id = t.id
+where
+    td.id = $ demarcheIdPivot !
+    and td.archive is false
+`
+const getDemarchesSatellitesEnConcurrenceDbValidator = commonTitreEnConcurrenceValidator
+  .pick({
+    demarcheId: true,
+    demarcheTypeId: true,
+    titreNom: true,
+    titreSlug: true,
+    titreTypeId: true,
+  })
+  .extend({
+    titulaireIds: z.array(entrepriseIdValidator),
+    perimetre: multiPolygonValidator,
+    perimetreEnCommun: multiPolygonValidator,
+    surfaceEnCommun: m2Validator,
+  })
+const getDemarchesSatellitesEnConcurrenceDb = sql<
+  Redefine<IGetDemarchesSatellitesEnConcurrenceDbQuery, { demarcheIdPivot: DemarcheId; perimetrePivot: DeepReadonly<MultiPolygon> }, z.infer<typeof getDemarchesSatellitesEnConcurrenceDbValidator>>
+>`
+  select
+    tmp."titreNom",
+    tmp."titreSlug",
+    tmp."demarcheId",
+    tmp."demarcheTypeId",
+    tmp."titreTypeId",
+    tmp."titulaireIds",
+    ST_AsGeoJSON(ST_Multi(tmp.geojson4326_perimetre))::json AS perimetre,
+    ST_AREA(tmp."perimetreGeomEnCommun", TRUE) as "surfaceEnCommun",
+    ST_AsGeoJSON(ST_MakeValid(ST_Multi(tmp."perimetreGeomEnCommun")))::json as "perimetreEnCommun"
+  from (
+    select
+      t.nom as "titreNom",
+      t.slug AS "titreSlug",
+      td.id as "demarcheId",
+      td.type_id AS "demarcheTypeId",
+      t.type_id AS "titreTypeId",
+      te.titulaire_ids as "titulaireIds",
+      te.geojson4326_perimetre,
+      ST_Intersection(te.geojson4326_perimetre, ST_GeomFromGeoJSON($perimetrePivot!)) as "perimetreGeomEnCommun"
+    from
+        titres_etapes te
+        join titres_demarches td on te.titre_demarche_id = td.id
+        join titres t on td.titre_id = t.id
+    where
+        te.demarche_id_en_concurrence = $ demarcheIdPivot !
+        and te.archive is false
+  ) tmp
+  `
+
+const getPerimetreSansSatelliteValidator = z.object({
+  perimetre_sans_satellite: multiPolygonValidator,
+  surface_sans_satellite: m2Validator,
+})
+const getPerimetreSansSatelliteDb = sql<
+  Redefine<IGetPerimetreSansSatelliteDbQuery, { perimetrePivot: DeepReadonly<MultiPolygon>; perimetreSatellite: DeepReadonly<MultiPolygon> }, z.infer<typeof getPerimetreSansSatelliteValidator>>
+>`
+SELECT
+  ST_AREA(perimetre_geom_sans_satellite, TRUE) AS surface_sans_satellite,
+  ST_AsGeoJSON(ST_MakeValid(ST_Multi(perimetre_geom_sans_satellite)))::json AS perimetre_sans_satellite
+FROM (
+  select
+    ST_DIFFERENCE(ST_GeomFromGeoJSON($ perimetrePivot !), ST_GeomFromGeoJSON($ perimetreSatellite !)) AS perimetre_geom_sans_satellite
+) tmp
 `

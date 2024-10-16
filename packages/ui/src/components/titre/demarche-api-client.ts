@@ -1,6 +1,6 @@
 import { apiGraphQLFetch } from '@/api/_client'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
-import { DemarcheCreationInput, DemarcheCreationOutput, DemarcheId, DemarcheIdOrSlug, DemarcheSlug, GetDemarcheMiseEnConcurrence } from 'camino-common/src/demarche'
+import { DemarcheCreationInput, DemarcheCreationOutput, DemarcheId, DemarcheIdOrSlug, DemarcheSlug, GetDemarcheMiseEnConcurrence, GetResultatMiseEnConcurrence } from 'camino-common/src/demarche'
 import gql from 'graphql-tag'
 import { TitreStatutId } from 'camino-common/src/static/titresStatuts'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
@@ -56,6 +56,7 @@ export interface DemarcheApiClient {
   deleteDemarche: (demarcheId: DemarcheId) => Promise<void>
   getDemarcheByIdOrSlug: (demarcheIdOrSlug: DemarcheIdOrSlug) => Promise<DeepReadonly<GetDemarcheByIdOrSlugValidator>>
   getDemarcheMiseEnConcurrence: (demarcheId: DemarcheId) => Promise<DeepReadonly<GetDemarcheMiseEnConcurrence[] | CaminoError<string>>>
+  getResultatMiseEnConcurrence: (demarcheId: DemarcheId) => Promise<DeepReadonly<GetResultatMiseEnConcurrence | CaminoError<string>>>
   getDemarches: (params: GetDemarchesParams) => Promise<{ elements: GetDemarchesDemarche[]; total: number }>
 }
 
@@ -88,6 +89,11 @@ export const demarcheApiClient: DemarcheApiClient = {
   getDemarcheMiseEnConcurrence: async (demarcheId: DemarcheId) => {
     return newGetWithJson('/rest/demarches/:demarcheId/miseEnConcurrence', { demarcheId })
   },
+
+  getResultatMiseEnConcurrence: async (demarcheId: DemarcheId) => {
+    return newGetWithJson('/rest/demarches/:demarcheId/resultatMiseEnConcurrence', { demarcheId })
+  },
+
   getDemarches: async (params: GetDemarchesParams) => {
     const data = await apiGraphQLFetch(gql`
       query Demarches(

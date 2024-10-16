@@ -273,7 +273,7 @@ const getDemandesPotentialConcurrenceDb = sql<
  join titres t on t.id = td.titre_id
  where
     te.type_id = $demandeTypeId !
-    and te.date > $dateDebutProcedureSpecifique!
+    and te.date >= $dateDebutProcedureSpecifique!
     and te.archive is false
     and te.is_brouillon is false
     and (

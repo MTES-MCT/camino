@@ -40,3 +40,5 @@ export const m2Validator = createM2Validator(z.number())
 export const ZERO_KM2 = km2Validator.parse(0)
 export type KM2 = z.infer<typeof km2Validator>
 export type M2 = z.infer<typeof m2Validator>
+
+export const m2toKm2 = (m2: M2): KM2 => km2Validator.parse(m2 / 1000000)

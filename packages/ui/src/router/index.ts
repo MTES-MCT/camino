@@ -9,6 +9,12 @@ const PageIntrouvableAlert = async () => {
 
   return PageIntrouvableAlert
 }
+
+const DemarcheResultatMiseEnConcurrence = async () => {
+  const { DemarcheResultatMiseEnConcurrence } = await import('../components/demarche-resultat-mise-en-concurrence')
+
+  return DemarcheResultatMiseEnConcurrence
+}
 const DGTMStatsFull = async () => {
   const { DGTMStatsFull } = await import('../components/dashboard/dgtm-stats-full')
 
@@ -221,6 +227,10 @@ const routes = {
   aPropos: {
     ...routesDefinitions.aPropos,
     component: About,
+  },
+  resultatMiseEnConcurrence: {
+    ...routesDefinitions.resultatMiseEnConcurrence,
+    component: DemarcheResultatMiseEnConcurrence,
   },
   homepage: {
     ...routesDefinitions.homepage,

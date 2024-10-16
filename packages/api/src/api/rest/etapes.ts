@@ -716,6 +716,11 @@ export const updateEtape =
           const titreTypeId = titreDemarche.titre.typeId
           const isBrouillon = titreEtapeOld.isBrouillon
           const { flattenEtape, perimetreInfos } = await getFlattenEtape(etape, titreDemarche, titreTypeId, isBrouillon, titreEtapeOld.slug, pool)
+          // FIXMACHINE WTF
+          // @ts-ignore
+          flattenEtape.concurrence = titreEtapeOld.concurrence
+          // @ts-ignore
+          flattenEtape.hasTitreFrom = titreEtapeOld.hasTitreFrom
           const entrepriseDocuments: EntrepriseDocument[] = await validateAndGetEntrepriseDocuments(pool, flattenEtape, etape.entrepriseDocumentIds, user)
 
           const etapeDocumentsParsed = z.array(etapeDocumentModificationValidator).safeParse(etape.etapeDocuments)

@@ -57,7 +57,7 @@ import { getCommunes } from '../api/rest/communes'
 import { SendFileOptions } from 'express-serve-static-core'
 import { activiteDocumentDownload, getActivite, updateActivite, deleteActivite } from '../api/rest/activites'
 import { DeepReadonly, isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools'
-import { getDemarcheByIdOrSlug, demarcheSupprimer, demarcheCreer, getDemarchesEnConcurrence } from '../api/rest/demarches'
+import { getDemarcheByIdOrSlug, demarcheSupprimer, demarcheCreer, getDemarchesEnConcurrence, getResultatEnConcurrence } from '../api/rest/demarches'
 import { geojsonImport, geojsonImportPoints, getPerimetreInfos, geojsonImportForages } from '../api/rest/perimetre'
 import { getDataGouvStats } from '../api/rest/statistiques/datagouv'
 import { addAdministrationActiviteTypeEmails, deleteAdministrationActiviteTypeEmails, getAdministrationActiviteTypeEmails, getAdministrationUtilisateurs } from '../api/rest/administrations'
@@ -176,6 +176,7 @@ const restRouteImplementations: Readonly<{ [key in CaminoRestRoute]: Transform<k
   '/rest/demarches': { newPostCall: demarcheCreer, ...CaminoRestRoutes['/rest/demarches'] },
   '/rest/demarches/:demarcheIdOrSlug': { getCall: getDemarcheByIdOrSlug, deleteCall: demarcheSupprimer, ...CaminoRestRoutes['/rest/demarches/:demarcheIdOrSlug'] },
   '/rest/demarches/:demarcheId/miseEnConcurrence': { newGetCall: getDemarchesEnConcurrence, ...CaminoRestRoutes['/rest/demarches/:demarcheId/miseEnConcurrence'] },
+  '/rest/demarches/:demarcheId/resultatMiseEnConcurrence': { newGetCall: getResultatEnConcurrence, ...CaminoRestRoutes['/rest/demarches/:demarcheId/resultatMiseEnConcurrence'] },
   '/rest/utilisateurs/registerToNewsletter': { newGetCall: registerToNewsletter, ...CaminoRestRoutes['/rest/utilisateurs/registerToNewsletter'] },
   '/rest/utilisateur/generateQgisToken': { postCall: generateQgisToken, ...CaminoRestRoutes['/rest/utilisateur/generateQgisToken'] },
   '/rest/utilisateurs/:id/permission': { postCall: updateUtilisateurPermission, ...CaminoRestRoutes['/rest/utilisateurs/:id/permission'] },

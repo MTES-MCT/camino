@@ -1,21 +1,29 @@
 import { Pool } from 'pg'
 import { HTTP_STATUS } from 'camino-common/src/http'
 import { CaminoRequest, CustomResponse } from './express-type'
-import { DemarcheCreationOutput, demarcheIdOrSlugValidator } from 'camino-common/src/demarche'
-import { getDemarcheByIdOrSlug as getDemarcheByIdOrSlugDb, getDemarchesEnConcurrenceQuery } from './demarches.queries'
+import { DemarcheCreationOutput, demarcheIdOrSlugValidator, GetDemarcheMiseEnConcurrence, GetResultatMiseEnConcurrence } from 'camino-common/src/demarche'
+import {
+  getDemarcheByIdOrSlug as getDemarcheByIdOrSlugDb,
+  GetDemarcheByIdOrSlugErrors,
+  getDemarchePivotEnConcurrence,
+  getDemarchesEnConcurrenceQuery,
+  getEtapesByDemarcheId,
+} from './demarches.queries'
 import { GetDemarcheByIdOrSlugValidator, getDemarcheByIdOrSlugValidator } from 'camino-common/src/titres'
 import { getAdministrationsLocalesByTitreId, getDemarchesByTitreId, getTitreByIdOrSlug, getTitulairesAmodiatairesByTitreId } from './titres.queries'
 import { isNullOrUndefined, memoize } from 'camino-common/src/typescript-tools'
 import { canReadDemarche } from './permissions/demarches'
 import { titreDemarcheArchive, titreDemarcheCreate, titreDemarcheGet } from '../../database/queries/titres-demarches'
 import { titreDemarcheUpdateTask } from '../../business/titre-demarche-update'
-import { canCreateDemarche, canCreateTravaux, canDeleteDemarche } from 'camino-common/src/permissions/titres-demarches'
+import { canCreateDemarche, canCreateTravaux, canDeleteDemarche, canPublishResultatMiseEnConcurrence } from 'camino-common/src/permissions/titres-demarches'
 import { userSuper } from '../../database/user-super'
 import { RestNewGetCall, RestNewPostCall } from '../../server/rest'
 import { Effect, Match, pipe } from 'effect'
 import { isDemarcheTypeId, isTravaux } from 'camino-common/src/static/demarchesTypes'
 import { titreGet } from '../../database/queries/titres'
 import { CaminoApiError } from '../../types'
+import { EffectDbQueryAndValidateErrors } from '../../pg-database'
+import { callAndExit } from '../../tools/fp-tools'
 
 export const getDemarcheByIdOrSlug =
   (pool: Pool) =>
@@ -26,7 +34,7 @@ export const getDemarcheByIdOrSlug =
       if (!demarcheIdOrSlugParsed.success) {
         res.sendStatus(HTTP_STATUS.BAD_REQUEST)
       } else {
-        const demarche = await getDemarcheByIdOrSlugDb(pool, demarcheIdOrSlugParsed.data)
+        const demarche = await callAndExit(getDemarcheByIdOrSlugDb(pool, demarcheIdOrSlugParsed.data))
         const titre = await getTitreByIdOrSlug(pool, demarche.titre_id)
 
         const administrationsLocales = memoize(() => getAdministrationsLocalesByTitreId(pool, demarche.titre_id))
@@ -142,13 +150,45 @@ export const demarcheCreer: RestNewPostCall<'/rest/demarches'> = ({ pool, user, 
   )
 }
 
-export const getDemarchesEnConcurrence: RestNewGetCall<'/rest/demarches/:demarcheId/miseEnConcurrence'> = ({ pool, user, params }) => {
+export const getDemarchesEnConcurrence: RestNewGetCall<'/rest/demarches/:demarcheId/miseEnConcurrence'> = ({
+  pool,
+  user,
+  params,
+}): Effect.Effect<GetDemarcheMiseEnConcurrence[], CaminoApiError<EffectDbQueryAndValidateErrors>> => {
   return pipe(
     getDemarchesEnConcurrenceQuery(pool, params.demarcheId, user),
     Effect.mapError(caminoError =>
       Match.value(caminoError.message).pipe(
         Match.when('Problème de validation de données', () => ({ ...caminoError, status: HTTP_STATUS.BAD_REQUEST })),
         Match.when("Impossible d'accéder à la base de données", () => ({ ...caminoError, status: HTTP_STATUS.INTERNAL_SERVER_ERROR })),
+        Match.exhaustive
+      )
+    )
+  )
+}
+
+export const getResultatEnConcurrence: RestNewGetCall<'/rest/demarches/:demarcheId/resultatMiseEnConcurrence'> = ({
+  pool,
+  user,
+  params,
+}): Effect.Effect<GetResultatMiseEnConcurrence, CaminoApiError<EffectDbQueryAndValidateErrors | GetDemarcheByIdOrSlugErrors | 'droits insuffisants'>> => {
+  return Effect.Do.pipe(
+    Effect.bind('etapes', () => getEtapesByDemarcheId(pool, params.demarcheId)),
+    Effect.bind('demarche', () => getDemarcheByIdOrSlugDb(pool, params.demarcheId)),
+    Effect.flatMap(({ etapes, demarche }) => {
+      const result = canPublishResultatMiseEnConcurrence(user, demarche.titre_type_id, demarche.demarche_type_id, etapes, demarche.demarche_id)
+      if (result.valid) {
+        return Effect.succeed(null)
+      } else {
+        return Effect.fail({ message: 'droits insuffisants' as const, detail: result.error })
+      }
+    }),
+    Effect.flatMap(() => getDemarchePivotEnConcurrence(pool, params.demarcheId, user)),
+    Effect.mapError(caminoError =>
+      Match.value(caminoError.message).pipe(
+        Match.whenOr('Problème de validation de données', "La démarche n'existe pas", () => ({ ...caminoError, status: HTTP_STATUS.BAD_REQUEST })),
+        Match.when("Impossible d'accéder à la base de données", () => ({ ...caminoError, status: HTTP_STATUS.INTERNAL_SERVER_ERROR })),
+        Match.when('droits insuffisants', () => ({ ...caminoError, status: HTTP_STATUS.FORBIDDEN })),
         Match.exhaustive
       )
     )

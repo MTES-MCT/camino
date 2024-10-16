@@ -84,6 +84,7 @@ export const titreDemarcheUpdatedEtatValidate = (
   if (isNotNullNorUndefined(machine)) {
     // vérifie que toutes les étapes existent dans l’arbre
     try {
+      // FIXMACHINE ne pas faire de parse ici
       const etapes = titreDemarcheEtapesNew.map(etape => titreEtapeForMachineValidator.omit({ id: true, ordre: true }).parse(etape))
       const ok = machine.isEtapesOk(machine.orderMachine(toMachineEtapes(etapes)))
       if (!ok) {

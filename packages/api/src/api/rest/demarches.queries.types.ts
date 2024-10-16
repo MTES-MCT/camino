@@ -89,3 +89,70 @@ export interface IGetDemarchesEnConcurrenceDbQuery {
   result: IGetDemarchesEnConcurrenceDbResult;
 }
 
+/** 'GetDemarchePivotEnConcurrenceDb' parameters type */
+export interface IGetDemarchePivotEnConcurrenceDbParams {
+  demarcheIdPivot: string;
+  miseEnConcurrenceTypeId: string;
+}
+
+/** 'GetDemarchePivotEnConcurrenceDb' return type */
+export interface IGetDemarchePivotEnConcurrenceDbResult {
+  demarcheId: string;
+  demarcheTypeId: string;
+  perimetreTotalGeojson4326: Json | null;
+  perimetreTotalSurface: number | null;
+  titreNom: string;
+  titreSlug: string;
+  titreTypeId: string;
+  titulaireIds: Json;
+}
+
+/** 'GetDemarchePivotEnConcurrenceDb' query type */
+export interface IGetDemarchePivotEnConcurrenceDbQuery {
+  params: IGetDemarchePivotEnConcurrenceDbParams;
+  result: IGetDemarchePivotEnConcurrenceDbResult;
+}
+
+/** 'GetDemarchesSatellitesEnConcurrenceDb' parameters type */
+export interface IGetDemarchesSatellitesEnConcurrenceDbParams {
+  demarcheIdPivot: string;
+  perimetrePivot: string;
+}
+
+/** 'GetDemarchesSatellitesEnConcurrenceDb' return type */
+export interface IGetDemarchesSatellitesEnConcurrenceDbResult {
+  demarcheId: string;
+  demarcheTypeId: string;
+  perimetre: Json | null;
+  perimetreEnCommun: Json | null;
+  surfaceEnCommun: number | null;
+  titreNom: string;
+  titreSlug: string;
+  titreTypeId: string;
+  titulaireIds: Json;
+}
+
+/** 'GetDemarchesSatellitesEnConcurrenceDb' query type */
+export interface IGetDemarchesSatellitesEnConcurrenceDbQuery {
+  params: IGetDemarchesSatellitesEnConcurrenceDbParams;
+  result: IGetDemarchesSatellitesEnConcurrenceDbResult;
+}
+
+/** 'GetPerimetreSansSatelliteDb' parameters type */
+export interface IGetPerimetreSansSatelliteDbParams {
+  perimetrePivot: string;
+  perimetreSatellite: string;
+}
+
+/** 'GetPerimetreSansSatelliteDb' return type */
+export interface IGetPerimetreSansSatelliteDbResult {
+  perimetre_sans_satellite: Json | null;
+  surface_sans_satellite: number | null;
+}
+
+/** 'GetPerimetreSansSatelliteDb' query type */
+export interface IGetPerimetreSansSatelliteDbQuery {
+  params: IGetPerimetreSansSatelliteDbParams;
+  result: IGetPerimetreSansSatelliteDbResult;
+}
+

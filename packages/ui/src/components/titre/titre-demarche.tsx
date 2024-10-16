@@ -15,7 +15,7 @@ import { ApiClient } from '@/api/api-client'
 import { SubstanceLegaleId, SubstancesLegale } from 'camino-common/src/static/substancesLegales'
 import { territoiresFind } from 'camino-common/src/territoires'
 import { DsfrButton, DsfrButtonIcon, DsfrLink } from '../_ui/dsfr-button'
-import { canCreateDemarche, canCreateEtapeByDemarche, canEditDemarche, canDeleteDemarche, canCreateTravaux } from 'camino-common/src/permissions/titres-demarches'
+import { canCreateDemarche, canCreateEtapeByDemarche, canEditDemarche, canDeleteDemarche, canCreateTravaux, canPublishResultatMiseEnConcurrence } from 'camino-common/src/permissions/titres-demarches'
 import { DemarcheEditPopup } from './demarche-edit-popup'
 import { DemarcheRemovePopup } from './demarche-remove-popup'
 import { Forets } from 'camino-common/src/static/forets'
@@ -217,16 +217,31 @@ export const TitreDemarche = defineComponent<Props>(props => {
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             <div class="fr-mt-3w" style={{ display: 'flex', alignContent: 'center' }}>
               <h3 class="fr-mb-0">Étapes</h3>
-              {canCreateEtapeByDemarche(props.user, props.titre.titre_type_id, demarche.value.demarche_type_id, administrations.value, props.titre.titre_statut_id) ? (
-                <DsfrLink
-                  buttonType="primary"
-                  style={{ marginLeft: 'auto' }}
-                  icon={null}
-                  disabled={false}
-                  title="Ajouter une étape"
-                  to={{ name: 'etapeCreation', params: {}, query: { 'demarche-id': demarche.value.slug } }}
-                />
-              ) : null}
+              <div style={{ marginLeft: 'auto' }}>
+                {canPublishResultatMiseEnConcurrence(props.user, props.titre.titre_type_id, demarche.value.demarche_type_id, demarche.value.etapes, demarche.value.id).valid ? (
+                  <DsfrLink
+                    buttonType="primary"
+                    class="fr-mr-2w"
+                    icon={null}
+                    disabled={false}
+                    title="Terminer la mise en concurrence"
+                    to={{ name: 'resultatMiseEnConcurrence', params: { demarcheId: demarche.value.id }, query: {} }}
+                  />
+                ) : null}
+                {canCreateEtapeByDemarche(props.user, props.titre.titre_type_id, demarche.value.demarche_type_id, administrations.value, props.titre.titre_statut_id) ? (
+                  <DsfrLink
+                    buttonType={
+                      canPublishResultatMiseEnConcurrence(props.user, props.titre.titre_type_id, demarche.value.demarche_type_id, demarche.value.etapes, demarche.value.id).valid
+                        ? 'secondary'
+                        : 'primary'
+                    }
+                    icon={null}
+                    disabled={false}
+                    title="Ajouter une étape"
+                    to={{ name: 'etapeCreation', params: {}, query: { 'demarche-id': demarche.value.slug } }}
+                  />
+                ) : null}
+              </div>
             </div>
             <div class="fr-mt-3w">
               {orderedEtapes.value.map(etape => (

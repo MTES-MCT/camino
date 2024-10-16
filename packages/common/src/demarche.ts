@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { TITRES_TYPES_IDS, TitreTypeId, getTitreTypeType } from './static/titresTypes'
+import { TITRES_TYPES_IDS, TitreTypeId, getTitreTypeType, titreTypeIdValidator } from './static/titresTypes'
 import { CaminoDate, caminoDateValidator } from './date'
 import { communeIdValidator } from './static/communes'
 import { secteurMaritimeValidator } from './static/facades'
@@ -20,7 +20,7 @@ import { featureCollectionForagesValidator, featureCollectionPointsValidator, fe
 import { geoSystemeIdValidator } from './static/geoSystemes'
 import { DeepReadonly, isNotNullNorUndefined, isNullOrUndefinedOrEmpty, toSorted } from './typescript-tools'
 import { proprietesGeothermieForagesElementIds } from './static/titresTypes_demarchesTypes_etapesTypes/sections'
-import { titreIdValidator } from './validators/titres'
+import { titreIdValidator, titreSlugValidator } from './validators/titres'
 import { DEMARCHES_TYPES_IDS, DemarcheTypeId, demarcheTypeIdValidator } from './static/demarchesTypes'
 
 export const demarcheIdValidator = z.string().brand<'DemarcheId'>()
@@ -298,3 +298,29 @@ export const canHaveMiseEnConcurrence = (demarcheTypeId: DemarcheTypeId, hasTitr
     return false
   }
 }
+
+export const commonTitreEnConcurrenceValidator = z.object({
+  demarcheId: demarcheIdValidator,
+  demarcheTypeId: demarcheTypeIdValidator,
+  titreNom: z.string(),
+  titreSlug: titreSlugValidator,
+  titreTypeId: titreTypeIdValidator,
+  titulaireId: entrepriseIdValidator,
+})
+
+const commonPerimetreValidator = z.object({ geojson4326_perimetre: featureMultiPolygonValidator, surface: km2Validator })
+const pivotValidator = commonTitreEnConcurrenceValidator.extend({
+  perimetreTotal: commonPerimetreValidator,
+  perimetreSansSatellite: commonPerimetreValidator,
+})
+
+export const getResultatMiseEnConcurrenceValidator = z.object({
+  pivot: pivotValidator,
+  satellites: z.array(
+    commonTitreEnConcurrenceValidator.extend({
+      perimetreEnCommun: commonPerimetreValidator,
+    })
+  ),
+})
+
+export type GetResultatMiseEnConcurrence = z.infer<typeof getResultatMiseEnConcurrenceValidator>

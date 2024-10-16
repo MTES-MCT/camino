@@ -2,7 +2,7 @@ import { AsyncData } from '@/api/client-rest'
 import { HTMLAttributes } from 'vue'
 import styles from './functional-loader.module.css'
 import type { JSX } from 'vue/jsx-runtime'
-import { Alert } from './alert'
+import { Alert, CaminoApiAlert } from './alert'
 type Props<T> = {
   data: AsyncData<T>
   renderItem: (item: T) => JSX.Element | null
@@ -16,6 +16,7 @@ export const LoadingElement = <T,>(props: Props<T>): JSX.Element => {
       ) : (
         <div class={`${props.data.status === 'LOADING' ? styles['top-level'] : ''} ${props.class}`} style={'display: flex; justify-content: center'}>
           {props.data.status === 'ERROR' ? <Alert small={true} title={props.data.message} type="error" /> : null}
+          {props.data.status === 'NEW_ERROR' ? <CaminoApiAlert caminoApiError={props.data.error} /> : null}
           {props.data.status === 'LOADING' ? <div class={styles.spinner}></div> : null}
         </div>
       )}

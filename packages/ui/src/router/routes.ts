@@ -1,7 +1,7 @@
 import type { LocationQueryRaw, RouteRecordRaw } from 'vue-router'
 
 // prettier-ignore
-const ROUTES = ['dashboard','statsDGTM','titres','titreCreation','titre','demarches','demarche','travaux','etape','etapeCreation','etapeEdition','utilisateurs','utilisateur','entreprises','entreprise','administrations','administration','activites','activite','activiteEdition','statistiques','journaux','statistiquesbetagouv','aPropos','homepage','erreur' ] as const
+const ROUTES = ['dashboard','statsDGTM','titres','titreCreation','titre','demarches','demarche','travaux','etape','etapeCreation','etapeEdition','resultatMiseEnConcurrence','utilisateurs','utilisateur','entreprises','entreprise','administrations','administration','activites','activite','activiteEdition','statistiques','journaux','statistiquesbetagouv','aPropos','homepage','erreur' ] as const
 type CaminoRoute<T extends CaminoRouteNames> = Pick<RouteRecordRaw, 'path' | 'meta'> & { name: T }
 export const routesDefinitions = {
   dashboard: {
@@ -55,6 +55,10 @@ export const routesDefinitions = {
   demarche: {
     path: '/demarches/:demarcheId',
     name: 'demarche',
+  },
+  resultatMiseEnConcurrence: {
+    path: '/demarches/:demarcheId/resultat-mise-en-concurrence',
+    name: 'resultatMiseEnConcurrence',
   },
   travaux: {
     path: '/travaux',

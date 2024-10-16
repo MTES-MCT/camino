@@ -76,7 +76,7 @@ export const getPerimetreInfos =
 
             etape = { demarche_id: myEtape.demarche_id, geojson4326_perimetre: myEtape.geojson4326_perimetre, sdom_zones: myEtape.sdom_zones ?? [], etape_type_id: myEtape.etape_type_id, communes: [] }
           } else if (demarcheIdOrSlugParsed.success) {
-            const demarche = await getDemarcheByIdOrSlug(pool, demarcheIdOrSlugParsed.data)
+            const demarche = await callAndExit(getDemarcheByIdOrSlug(pool, demarcheIdOrSlugParsed.data))
             const etapes = await callAndExit(getEtapesByDemarcheId(pool, demarche.demarche_id))
 
             const mostRecentEtapeFondamentale = getMostRecentEtapeFondamentaleValide([{ ordre: 1, etapes }])
@@ -101,7 +101,7 @@ export const getPerimetreInfos =
               communes: [],
             })
           } else {
-            const demarche = await getDemarcheByIdOrSlug(pool, etape.demarche_id)
+            const demarche = await callAndExit(getDemarcheByIdOrSlug(pool, etape.demarche_id))
             const titre = await getTitreByIdOrSlug(pool, demarche.titre_id)
 
             const administrationsLocales = memoize(() => getAdministrationsLocalesByTitreId(pool, demarche.titre_id))

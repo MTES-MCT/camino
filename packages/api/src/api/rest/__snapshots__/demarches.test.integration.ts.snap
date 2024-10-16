@@ -1,0 +1,140 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`getResultatEnConcurrence > Avec un seul satellite 1`] = `
+{
+  "pivot": {
+    "demarcheId": "demarcheIdPivotResultat",
+    "demarcheTypeId": "oct",
+    "perimetreSansSatellite": {
+      "geojson4326_perimetre": {
+        "geometry": {
+          "coordinates": [
+            [
+              [
+                [
+                  7.252418901,
+                  47.827448465,
+                ],
+                [
+                  7.251749335,
+                  47.827897983,
+                ],
+                [
+                  7.252418901,
+                  47.828347504,
+                ],
+                [
+                  7.252568901,
+                  47.8282468,
+                ],
+                [
+                  7.252049335,
+                  47.827897983,
+                ],
+                [
+                  7.252568901,
+                  47.827549169,
+                ],
+                [
+                  7.252418901,
+                  47.827448465,
+                ],
+              ],
+            ],
+          ],
+          "type": "MultiPolygon",
+        },
+        "properties": {},
+        "type": "Feature",
+      },
+      "surface": 0.001993,
+    },
+    "perimetreTotal": {
+      "geojson4326_perimetre": {
+        "geometry": {
+          "coordinates": [
+            [
+              [
+                [
+                  7.252418901,
+                  47.828347504,
+                ],
+                [
+                  7.251749335,
+                  47.827897983,
+                ],
+                [
+                  7.252418901,
+                  47.827448465,
+                ],
+                [
+                  7.253088467,
+                  47.827897983,
+                ],
+                [
+                  7.252418901,
+                  47.828347504,
+                ],
+              ],
+            ],
+          ],
+          "type": "MultiPolygon",
+        },
+        "properties": {},
+        "type": "Feature",
+      },
+      "surface": 12,
+    },
+    "titreNom": "titre pivot",
+    "titreSlug": "slug-pivot",
+    "titreTypeId": "arm",
+    "titulaireId": "enterpriseId",
+  },
+  "satellites": [
+    {
+      "demarcheId": "demarcheIdSatelliteResultat1",
+      "demarcheTypeId": "oct",
+      "perimetreEnCommun": {
+        "geojson4326_perimetre": {
+          "geometry": {
+            "coordinates": [
+              [
+                [
+                  [
+                    7.252049335,
+                    47.827897983,
+                  ],
+                  [
+                    7.252568901,
+                    47.8282468,
+                  ],
+                  [
+                    7.253088467,
+                    47.827897983,
+                  ],
+                  [
+                    7.252568901,
+                    47.827549169,
+                  ],
+                  [
+                    7.252049335,
+                    47.827897983,
+                  ],
+                ],
+              ],
+            ],
+            "type": "MultiPolygon",
+          },
+          "properties": {},
+          "type": "Feature",
+        },
+        "surface": 0.003017,
+      },
+      "titreNom": "titre satellite 1",
+      "titreSlug": "slug-satellite-1",
+      "titreTypeId": "arm",
+      "titulaireId": "enterpriseId2",
+    },
+  ],
+}
+`;

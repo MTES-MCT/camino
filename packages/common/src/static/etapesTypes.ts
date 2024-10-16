@@ -1243,7 +1243,7 @@ export const EtapesTypes = {
   },
   rmc: {
     id: 'rmc',
-    nom: 'Résultat de la mise en concurrence',
+    nom: 'résultat final de la mise en concurrence',
     description: '',
     fondamentale: true,
     unique: false,

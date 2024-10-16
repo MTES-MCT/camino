@@ -19,7 +19,8 @@ import { DeepReadonly } from 'vue'
 import { ZodType, z } from 'zod'
 
 type Loading = { status: 'LOADING' }
-type Error = { status: 'ERROR'; message: string }
+type CaminoApiError = { status: 'ERROR'; message: string }
+type NewCaminoApiError = { status: 'NEW_ERROR'; error: CaminoError<string> }
 export class CaminoHttpError extends Error {
   public readonly statusCode: HttpStatus
   constructor(errorMessage: string, statusCode: HttpStatus) {
@@ -29,7 +30,7 @@ export class CaminoHttpError extends Error {
   }
 }
 
-export type AsyncData<T> = Loading | { status: 'LOADED'; value: T } | Error
+export type AsyncData<T> = Loading | { status: 'LOADED'; value: T } | CaminoApiError | NewCaminoApiError
 
 type UiRestRoute = string & { __camino: 'RestRoute' }
 
@@ -83,8 +84,33 @@ type GetWithJsonArgs<T extends GetRestRoutes | NewGetRestRoutes, Method extends 
 export const getWithJson = async <T extends GetRestRoutes>(...args: GetWithJsonArgs<T, 'get'>): Promise<z.infer<(typeof CaminoRestRoutes)[T]['get']['output']>> =>
   callFetch(args[0], args[1], 'get', args.length === 3 ? args[2] : {})
 
-export const newGetWithJson = async <T extends NewGetRestRoutes>(...args: GetWithJsonArgs<T, 'newGet'>): Promise<CaminoError<string> | z.infer<(typeof CaminoRestRoutes)[T]['newGet']['output']>> =>
-  callFetch(args[0], args[1], 'get', args.length === 3 ? args[2] : {})
+export const newGetWithJson = async <T extends NewGetRestRoutes>(...args: GetWithJsonArgs<T, 'newGet'>): Promise<CaminoError<string> | z.infer<(typeof CaminoRestRoutes)[T]['newGet']['output']>> => {
+  const url = getUiRestRoute(args[0], args[1], args.length === 3 ? args[2] : {})
+
+  const defaultOptions = {
+    method: 'get',
+    headers: { 'Content-Type': 'application/json' },
+  }
+
+  const fetched = await fetch(url, defaultOptions)
+  if (fetched.ok) {
+    if (fetched.status === 200) {
+      // TODO 2024-08-21 parser le body via les validator de rest.ts
+      const body = await fetched.json()
+
+      return body
+    }
+
+    return
+  }
+
+  if (fetched.status === HTTP_STATUS.UNAUTHORIZED) {
+    window.location.replace('/oauth2/sign_in?rd=' + encodeURIComponent(window.location.href))
+  }
+
+  const bodyErrorResponse = await fetched.json()
+  return bodyErrorResponse
+}
 
 export const deleteWithJson = async <T extends DeleteRestRoutes>(path: T, params: CaminoRestParams<T>, searchParams: Record<string, string | string[]> = {}): Promise<void> =>
   callFetch(path, params, 'delete', searchParams)

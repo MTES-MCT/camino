@@ -97,23 +97,19 @@ export const PureUtilisateur = defineComponent<Props>(props => {
   })
 
   const get = async () => {
-    try {
-      const utilisateurFromApi = await props.apiClient.getUtilisateur(props.utilisateurId)
-      if ('message' in utilisateurFromApi) {
-        // TODO 2024-09-17: mieux gérer le message d'erreur qui vient de l'api
-        throw new Error(utilisateurFromApi.message)
+    const utilisateurFromApi = await props.apiClient.getUtilisateur(props.utilisateurId)
+    if ('message' in utilisateurFromApi) {
+      utilisateur.value = {
+        status: 'NEW_ERROR',
+        error: utilisateurFromApi,
       }
+    } else {
       utilisateur.value = {
         status: 'LOADED',
         value: utilisateurFromApi,
       }
-    } catch (e: any) {
-      console.error('error', e)
-      utilisateur.value = {
-        status: 'ERROR',
-        message: e.message ?? "Une erreur s'est produite",
-      }
     }
+
     if (isMe.value) {
       try {
         subscription.value = {

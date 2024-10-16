@@ -80,7 +80,7 @@ export const error: StoryFn = () => (
     apiClient={{
       ...apiClientMock,
       getUtilisateurNewsletter: () => Promise.reject(new Error('Cassé')),
-      getUtilisateur: () => Promise.reject(new Error('Cassé')),
+      getUtilisateur: () => Promise.resolve({ message: 'Cassé' }),
     }}
   />
 )
