@@ -44,12 +44,18 @@ export const titreEtapeUpdationValidate = (
     }
   }
 
-  if (!etape.titulaires.heritee && !canEditTitulaires(titre.typeId, user) && entreprisesHaveChanged(etape.titulaires.value, titreEtapeOld?.titulaireIds ?? [])) {
-    errors.push("impossible d'éditer les titulaires")
+  if (!etape.titulaires.heritee) {
+    const editTitulaires = canEditTitulaires(titre.typeId, titreDemarche.typeId, user)
+    if (editTitulaires.visibility === 'absent' && entreprisesHaveChanged(etape.titulaires.value, titreEtapeOld?.titulaireIds ?? [])) {
+      errors.push(editTitulaires.message)
+    }
   }
 
-  if (!etape.amodiataires.heritee && !canEditAmodiataires(titre.typeId, user) && entreprisesHaveChanged(etape.amodiataires.value, titreEtapeOld?.amodiataireIds ?? [])) {
-    errors.push(`une autorisation ${titre.typeId === 'arm' ? 'de recherche' : "d'exploitation"} ne peut pas inclure d'amodiataires`)
+  if (!etape.amodiataires.heritee) {
+    const editAmodiataires = canEditAmodiataires(titre.typeId, titreDemarche.typeId, user)
+    if (editAmodiataires.visibility === 'absent' && entreprisesHaveChanged(etape.amodiataires.value, titreEtapeOld?.amodiataireIds ?? [])) {
+      errors.push(editAmodiataires.message)
+    }
   }
 
   if (sections.length) {

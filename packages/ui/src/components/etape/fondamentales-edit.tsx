@@ -4,7 +4,7 @@ import { HeritageEdit } from './heritage-edit'
 import { AutocompleteEntreprises } from './autocomplete-entreprises'
 import { CaminoDate } from 'camino-common/src/date'
 import { SubstancesEdit } from './substances-edit'
-import { isDureeOptional as titreEtapesDureeOptionalCheck, canEditAmodiataires, canEditTitulaires, canEditDuree, canEditDates } from 'camino-common/src/permissions/titres-etapes'
+import { isDureeOptional as titreEtapesDureeOptionalCheck, canEditAmodiataires, canEditTitulaires, canEditDuree, canEditDates, InputPresence } from 'camino-common/src/permissions/titres-etapes'
 
 import { DomaineId } from 'camino-common/src/static/domaines'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
@@ -67,6 +67,22 @@ export const FondamentalesEdit = defineComponent<Props>(props => {
 
   const dureeOptionalCheck = computed<boolean>(() => {
     return titreEtapesDureeOptionalCheck(editedEtape.value.typeId, props.demarcheTypeId, props.titreTypeId)
+  })
+
+  const titulairesEdit = computed<InputPresence>(() => canEditTitulaires(props.titreTypeId, props.demarcheTypeId, props.user))
+  const titulairesLabel = computed<string>(() => {
+    if (titulairesEdit.value.visibility === 'present') {
+      return titulairesEdit.value.required ? 'Titulaires *' : 'Titulaires'
+    }
+    return ''
+  })
+
+  const amodiatairesEdit = computed<InputPresence>(() => canEditAmodiataires(props.titreTypeId, props.demarcheTypeId, props.user))
+  const amodiatairesLabel = computed<string>(() => {
+    if (amodiatairesEdit.value.visibility === 'present') {
+      return amodiatairesEdit.value.required ? 'Amodiataires *' : 'Amodiataires'
+    }
+    return ''
   })
 
   const domaineId = computed<DomaineId>(() => getDomaineId(props.titreTypeId))
@@ -172,16 +188,16 @@ export const FondamentalesEdit = defineComponent<Props>(props => {
           />
         ) : null}
 
-        {canEditTitulaires(props.titreTypeId, props.user) ? (
+        {titulairesEdit.value.visibility === 'present' ? (
           <HeritageEdit
             updateHeritage={updateTitulairesHeritage}
             hasHeritageValue={isNotNullNorUndefinedNorEmpty(props.etape.titulaires.etapeHeritee?.value)}
             prop={editedEtape.value.titulaires}
-            label="Titulaires *"
+            label={titulairesLabel.value}
             write={() => (
               <div class="fr-input-group fr-mb-0">
                 <label class="fr-label" for="filters_autocomplete_titulaires">
-                  Titulaires *
+                  {titulairesLabel.value}
                 </label>
                 <AutocompleteEntreprises
                   class="fr-mt-1w"
@@ -195,23 +211,23 @@ export const FondamentalesEdit = defineComponent<Props>(props => {
             )}
             read={heritagePropEtape => (
               <div class="fr-input-group fr-input-group--disabled fr-mb-0">
-                <label class="fr-label">Titulaires *</label>
+                <label class="fr-label">{titulairesLabel.value}</label>
                 <div class="fr-mt-1w">{heritagePropEtape?.value.map(id => <DsfrTag key={id} class="fr-mr-1w" ariaLabel={getEntrepriseNom(id)} />)}</div>
               </div>
             )}
           />
         ) : null}
 
-        {canEditAmodiataires(props.titreTypeId, props.user) ? (
+        {amodiatairesEdit.value.visibility === 'present' ? (
           <HeritageEdit
             updateHeritage={updateAmodiatairesHeritage}
             hasHeritageValue={isNotNullNorUndefinedNorEmpty(props.etape.amodiataires.etapeHeritee?.value)}
             prop={editedEtape.value.amodiataires}
-            label="Amodiataires"
+            label={amodiatairesLabel.value}
             write={() => (
               <div class="fr-input-group fr-mb-0">
                 <label class="fr-label" for="filters_autocomplete_amodiataires">
-                  Amodiataires
+                  {amodiatairesLabel.value}
                 </label>
                 <AutocompleteEntreprises
                   class="fr-mt-1w"
@@ -225,7 +241,7 @@ export const FondamentalesEdit = defineComponent<Props>(props => {
             )}
             read={heritagePropEtape => (
               <div class="fr-input-group fr-input-group--disabled fr-mb-0">
-                <label class="fr-label">Amodiataires</label>
+                <label class="fr-label">{amodiatairesLabel.value}</label>
                 <div class="fr-mt-1w">{heritagePropEtape?.value.map(id => <DsfrTag key={id} class="fr-mr-1w" ariaLabel={getEntrepriseNom(id)} />)}</div>
               </div>
             )}

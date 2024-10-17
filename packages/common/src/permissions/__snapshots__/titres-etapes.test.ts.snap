@@ -1,0 +1,213 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`canEditAmodiataires by demarcheTypeId 1`] = `
+{
+  "Amodiation": {
+    "message": "les amodiataires sont obligatoires pour les démarches d'Amodiation",
+    "required": true,
+    "visibility": "present",
+  },
+  "AutorisationDOuvertureDeTravaux": {
+    "required": false,
+    "visibility": "present",
+  },
+  "Cession": {
+    "required": false,
+    "visibility": "present",
+  },
+  "Conversion": {
+    "message": "une démarche conversion ne peut pas inclure d'amodiataire",
+    "visibility": "absent",
+  },
+  "Decheance": {
+    "required": false,
+    "visibility": "present",
+  },
+  "DeclarationDArretDefinitifDesTravaux": {
+    "required": false,
+    "visibility": "present",
+  },
+  "DeclarationDOuvertureDeTravaux": {
+    "required": false,
+    "visibility": "present",
+  },
+  "DemandeDeTitreDExploitation": {
+    "required": false,
+    "visibility": "present",
+  },
+  "DeplacementDePerimetre": {
+    "message": "une démarche déplacement de périmètre ne peut pas inclure d'amodiataire",
+    "visibility": "absent",
+  },
+  "ExtensionDePerimetre": {
+    "required": false,
+    "visibility": "present",
+  },
+  "ExtensionDeSubstance": {
+    "required": false,
+    "visibility": "present",
+  },
+  "Fusion": {
+    "message": "une démarche fusion ne peut pas inclure d'amodiataire",
+    "visibility": "absent",
+  },
+  "Mutation": {
+    "message": "une démarche mutation ne peut pas inclure d'amodiataire",
+    "visibility": "absent",
+  },
+  "MutationPartielle": {
+    "message": "une démarche mutation partielle ne peut pas inclure d'amodiataire",
+    "visibility": "absent",
+  },
+  "Octroi": {
+    "required": false,
+    "visibility": "present",
+  },
+  "Prolongation": {
+    "required": false,
+    "visibility": "present",
+  },
+  "Prolongation1": {
+    "required": false,
+    "visibility": "present",
+  },
+  "Prolongation2": {
+    "required": false,
+    "visibility": "present",
+  },
+  "ProlongationExceptionnelle": {
+    "required": false,
+    "visibility": "present",
+  },
+  "Prorogation": {
+    "required": false,
+    "visibility": "present",
+  },
+  "Renonciation": {
+    "message": "une démarche renonciation ne peut pas inclure d'amodiataire",
+    "visibility": "absent",
+  },
+  "ResiliationAnticipeeDAmodiation": {
+    "message": "une démarche résiliation anticipée d'amodiation ne peut pas inclure d'amodiataire",
+    "visibility": "absent",
+  },
+  "Retrait": {
+    "required": false,
+    "visibility": "present",
+  },
+}
+`;
+
+exports[`canEditTitulaires by demarcheTypeId 1`] = `
+{
+  "Amodiation": {
+    "message": "une démarche amodiation ne peut pas inclure de titulaire",
+    "visibility": "absent",
+  },
+  "AutorisationDOuvertureDeTravaux": {
+    "message": "les titulaires sont obligatoires pour les démarches Autorisation d'ouverture de travaux",
+    "required": true,
+    "visibility": "present",
+  },
+  "Cession": {
+    "message": "les titulaires sont obligatoires pour les démarches cession",
+    "required": true,
+    "visibility": "present",
+  },
+  "Conversion": {
+    "message": "une démarche conversion ne peut pas inclure de titulaire",
+    "visibility": "absent",
+  },
+  "Decheance": {
+    "message": "les titulaires sont obligatoires pour les démarches déchéance",
+    "required": true,
+    "visibility": "present",
+  },
+  "DeclarationDArretDefinitifDesTravaux": {
+    "message": "les titulaires sont obligatoires pour les démarches Déclaration d'arrêt définitif des travaux",
+    "required": true,
+    "visibility": "present",
+  },
+  "DeclarationDOuvertureDeTravaux": {
+    "message": "les titulaires sont obligatoires pour les démarches Déclaration d'ouverture de travaux",
+    "required": true,
+    "visibility": "present",
+  },
+  "DemandeDeTitreDExploitation": {
+    "message": "les titulaires sont obligatoires pour les démarches demande de titre d'exploitation",
+    "required": true,
+    "visibility": "present",
+  },
+  "DeplacementDePerimetre": {
+    "message": "une démarche déplacement de périmètre ne peut pas inclure de titulaire",
+    "visibility": "absent",
+  },
+  "ExtensionDePerimetre": {
+    "message": "les titulaires sont obligatoires pour les démarches extension de périmètre",
+    "required": true,
+    "visibility": "present",
+  },
+  "ExtensionDeSubstance": {
+    "message": "les titulaires sont obligatoires pour les démarches extension de substance",
+    "required": true,
+    "visibility": "present",
+  },
+  "Fusion": {
+    "message": "une démarche fusion ne peut pas inclure de titulaire",
+    "visibility": "absent",
+  },
+  "Mutation": {
+    "message": "les titulaires sont obligatoires pour les démarches mutation",
+    "required": true,
+    "visibility": "present",
+  },
+  "MutationPartielle": {
+    "message": "les titulaires sont obligatoires pour les démarches mutation partielle",
+    "required": true,
+    "visibility": "present",
+  },
+  "Octroi": {
+    "message": "les titulaires sont obligatoires pour les démarches octroi",
+    "required": true,
+    "visibility": "present",
+  },
+  "Prolongation": {
+    "message": "les titulaires sont obligatoires pour les démarches prolongation",
+    "required": true,
+    "visibility": "present",
+  },
+  "Prolongation1": {
+    "message": "les titulaires sont obligatoires pour les démarches prolongation 1",
+    "required": true,
+    "visibility": "present",
+  },
+  "Prolongation2": {
+    "message": "les titulaires sont obligatoires pour les démarches prolongation 2",
+    "required": true,
+    "visibility": "present",
+  },
+  "ProlongationExceptionnelle": {
+    "message": "les titulaires sont obligatoires pour les démarches prolongation exceptionnelle",
+    "required": true,
+    "visibility": "present",
+  },
+  "Prorogation": {
+    "message": "les titulaires sont obligatoires pour les démarches prorogation",
+    "required": true,
+    "visibility": "present",
+  },
+  "Renonciation": {
+    "message": "une démarche renonciation ne peut pas inclure de titulaire",
+    "visibility": "absent",
+  },
+  "ResiliationAnticipeeDAmodiation": {
+    "message": "une démarche résiliation anticipée d'amodiation ne peut pas inclure de titulaire",
+    "visibility": "absent",
+  },
+  "Retrait": {
+    "message": "les titulaires sont obligatoires pour les démarches retrait",
+    "required": true,
+    "visibility": "present",
+  },
+}
+`;

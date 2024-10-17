@@ -1,6 +1,6 @@
-import { TitreTypeId } from '../static/titresTypes'
+import { TITRES_TYPES_IDS, TitreTypeId } from '../static/titresTypes'
 import { EtapeTypeId } from '../static/etapesTypes'
-import { DemarcheTypeId } from '../static/demarchesTypes'
+import { DEMARCHES_TYPES_IDS, DemarcheTypeId } from '../static/demarchesTypes'
 
 import {
   canCreateEtape,
@@ -16,6 +16,7 @@ import {
   IsEtapeCompleteEtape,
   canDeleteEtape,
   isEtapeDeposable,
+  InputPresence,
 } from './titres-etapes'
 import { AdministrationId, ADMINISTRATION_IDS } from '../static/administrations'
 import { test, expect, describe, vi } from 'vitest'
@@ -29,6 +30,7 @@ import { ETAPE_IS_BROUILLON, ETAPE_IS_NOT_BROUILLON, EtapeBrouillon } from '../e
 import { EntrepriseUserNotNull } from '../roles'
 import { communeIdValidator } from '../static/communes'
 import { SDOMZoneIds } from '../static/sdom'
+import { PartialRecord } from '../typescript-tools'
 
 console.warn = vi.fn()
 
@@ -85,15 +87,26 @@ test.each<{ titreTypeId: TitreTypeId; user: TestUser; canEdit: boolean }>([
   { titreTypeId: 'prm', user: { role: 'lecteur', administrationId: ADMINISTRATION_IDS.BRGM }, canEdit: false },
   { titreTypeId: 'prm', user: { role: 'defaut' }, canEdit: false },
 ])('canEditAmodiataires $titreTypeId | $user | $canEdit', ({ titreTypeId, user, canEdit }) => {
-  expect(canEditAmodiataires(titreTypeId, { ...user, ...testBlankUser })).toEqual(canEdit)
+  const editAmodiataires = canEditAmodiataires(titreTypeId, DEMARCHES_TYPES_IDS.Octroi, { ...user, ...testBlankUser })
+  expect(editAmodiataires.visibility === 'present').toEqual(canEdit)
+})
+
+test('canEditAmodiataires by demarcheTypeId', () => {
+  const result = Object.entries(DEMARCHES_TYPES_IDS).reduce<PartialRecord<string, InputPresence>>((acc, [key, value]) => {
+    acc[key] = canEditAmodiataires(TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_METAUX, value, { ...testBlankUser, role: 'super' })
+
+    return acc
+  }, {})
+
+  expect(result).toMatchSnapshot()
 })
 
 test.each<{ titreTypeId: TitreTypeId; user: TestUser; canEdit: boolean }>([
   { titreTypeId: 'prm', user: { role: 'super' }, canEdit: true },
   { titreTypeId: 'prm', user: { role: 'admin', administrationId: ADMINISTRATION_IDS.BRGM }, canEdit: true },
   { titreTypeId: 'prm', user: { role: 'editeur', administrationId: ADMINISTRATION_IDS.BRGM }, canEdit: true },
-  { titreTypeId: 'prm', user: { role: 'lecteur', administrationId: ADMINISTRATION_IDS.BRGM }, canEdit: true },
-  { titreTypeId: 'prm', user: { role: 'defaut' }, canEdit: true },
+  { titreTypeId: 'prm', user: { role: 'lecteur', administrationId: ADMINISTRATION_IDS.BRGM }, canEdit: false },
+  { titreTypeId: 'prm', user: { role: 'defaut' }, canEdit: false },
   { titreTypeId: 'axm', user: { role: 'super' }, canEdit: true },
   { titreTypeId: 'axm', user: { role: 'admin', administrationId: ADMINISTRATION_IDS.BRGM }, canEdit: true },
   { titreTypeId: 'axm', user: { role: 'editeur', administrationId: ADMINISTRATION_IDS.BRGM }, canEdit: true },
@@ -105,9 +118,19 @@ test.each<{ titreTypeId: TitreTypeId; user: TestUser; canEdit: boolean }>([
   { titreTypeId: 'arm', user: { role: 'lecteur', administrationId: ADMINISTRATION_IDS.BRGM }, canEdit: false },
   { titreTypeId: 'arm', user: { role: 'defaut' }, canEdit: false },
 ])('canEditTitulaires $titreTypeId | $user | $canEdit', ({ titreTypeId, user, canEdit }) => {
-  expect(canEditTitulaires(titreTypeId, { ...user, ...testBlankUser })).toEqual(canEdit)
+  const editTitulaires = canEditTitulaires(titreTypeId, DEMARCHES_TYPES_IDS.Octroi, { ...user, ...testBlankUser })
+  expect(editTitulaires.visibility === 'present').toEqual(canEdit)
 })
 
+test('canEditTitulaires by demarcheTypeId', () => {
+  const result = Object.entries(DEMARCHES_TYPES_IDS).reduce<PartialRecord<string, ReturnType<typeof canEditTitulaires>>>((acc, [key, value]) => {
+    acc[key] = canEditTitulaires(TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_METAUX, value, { ...testBlankUser, role: 'super' })
+
+    return acc
+  }, {})
+
+  expect(result).toMatchSnapshot()
+})
 test.each<{
   user: TestUser
   etapeTypeId: EtapeTypeId

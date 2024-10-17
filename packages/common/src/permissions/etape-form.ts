@@ -25,7 +25,7 @@ import { documentTypeIdsBySdomZonesGet } from '../static/titresTypes_demarchesTy
 import { getSections, getSectionsWithValue } from '../static/titresTypes_demarchesTypes_etapesTypes/sections'
 import { isNotNullNorUndefinedNorEmpty, DeepReadonly, onlyUnique, NonEmptyArray, isNonEmptyArray, isNullOrUndefinedOrEmpty, isNullOrUndefined, Nullable } from '../typescript-tools'
 import { sectionsWithValueCompleteValidate } from './sections'
-import { canEditDuree, isDureeOptional } from './titres-etapes'
+import { canEditAmodiataires, canEditDuree, canEditTitulaires, isDureeOptional } from './titres-etapes'
 
 type ValidReturn = { valid: true } | { valid: false; errors: NonEmptyArray<string> }
 
@@ -62,7 +62,7 @@ export const fondamentaleStepIsVisible = (etapeTypeId: EtapeTypeId): boolean => 
 }
 
 export const fondamentaleStepIsComplete = (
-  flattened: DeepReadonly<Pick<FlattenEtape, 'typeId' | 'duree' | 'substances' | 'titulaires'>>,
+  flattened: DeepReadonly<Pick<FlattenEtape, 'typeId' | 'duree' | 'substances' | 'titulaires' | 'amodiataires'>>,
   demarcheTypeId: DemarcheTypeId,
   titreTypeId: TitreTypeId,
   user: User
@@ -84,8 +84,14 @@ export const fondamentaleStepIsComplete = (
     errors.push('la durée est obligatoire')
   }
 
-  if (isNullOrUndefinedOrEmpty(flattened.titulaires.value)) {
-    errors.push('Les titulaires sont obligatoires')
+  const editTitulaires = canEditTitulaires(titreTypeId, demarcheTypeId, user)
+  if (editTitulaires.visibility === 'present' && editTitulaires.required && isNullOrUndefinedOrEmpty(flattened.titulaires.value)) {
+    errors.push(editTitulaires.message)
+  }
+
+  const editAmodiataires = canEditAmodiataires(titreTypeId, demarcheTypeId, user)
+  if (editAmodiataires.visibility === 'present' && editAmodiataires.required && isNullOrUndefinedOrEmpty(flattened.amodiataires.value)) {
+    errors.push(editAmodiataires.message)
   }
 
   if (isNonEmptyArray(errors)) {

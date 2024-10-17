@@ -1,6 +1,6 @@
 import { ETAPES_TYPES, EtapeTypeId } from '../static/etapesTypes'
-import { TitreTypeId } from '../static/titresTypes'
-import { DEMARCHES_TYPES_IDS, DemarcheTypeId, isDemarcheTypeWithPhase } from '../static/demarchesTypes'
+import { TITRES_TYPES_IDS, TitreTypeId } from '../static/titresTypes'
+import { DEMARCHES_TYPES_IDS, DemarchesTypes, DemarcheTypeId, isDemarcheTypeWithPhase } from '../static/demarchesTypes'
 import { isAdministrationAdmin, isAdministrationEditeur, isBureauDEtudes, isEntreprise, isEntrepriseOrBureauDEtude, isSuper, User } from '../roles'
 import { TITRES_TYPES_IDS_DEMAT } from './titres'
 import { AdministrationId } from '../static/administrations'
@@ -47,14 +47,37 @@ export const isDureeOptional = (etapeTypeId: EtapeTypeId, demarcheTypeId: Demarc
   return etapeTypeId !== 'mfr'
 }
 
-export const canEditAmodiataires = (titreTypeId: TitreTypeId, user: User): boolean => {
-  // il n'y a pas d'amodiataire sur les ARM et les AXM
-  if (titreTypeId === 'arm' || titreTypeId === 'axm') {
-    return false
+export type InputPresence = { visibility: 'absent'; message: string } | { visibility: 'present'; required: true; message: string } | { visibility: 'present'; required: false }
+
+export const canEditAmodiataires = (titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId, user: User): InputPresence => {
+  if (titreTypeId === TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX || titreTypeId === TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX) {
+    return { visibility: 'absent', message: `une autorisation ${titreTypeId === 'arm' ? 'de recherche' : "d'exploitation"} ne peut pas inclure d'amodiataires` }
+  }
+
+  if (
+    [
+      DEMARCHES_TYPES_IDS.Fusion,
+      DEMARCHES_TYPES_IDS.Mutation,
+      DEMARCHES_TYPES_IDS.MutationPartielle,
+      DEMARCHES_TYPES_IDS.Renonciation,
+      DEMARCHES_TYPES_IDS.Conversion,
+      DEMARCHES_TYPES_IDS.DeplacementDePerimetre,
+      DEMARCHES_TYPES_IDS.ResiliationAnticipeeDAmodiation,
+    ].includes(demarcheTypeId)
+  ) {
+    return { visibility: 'absent', message: `une démarche ${DemarchesTypes[demarcheTypeId].nom} ne peut pas inclure d'amodiataire` }
   }
 
   // seuls les supers et les administrations peuvent éditer les amodiataires
-  return isSuper(user) || isAdministrationAdmin(user) || isAdministrationEditeur(user)
+  if (isSuper(user) || isAdministrationAdmin(user) || isAdministrationEditeur(user)) {
+    if (demarcheTypeId === DEMARCHES_TYPES_IDS.Amodiation) {
+      return { visibility: 'present', required: true, message: "les amodiataires sont obligatoires pour les démarches d'Amodiation" }
+    }
+
+    return { visibility: 'present', required: false }
+  }
+
+  return { visibility: 'absent', message: 'droits insuffisants pour éditer les amodiataires' }
 }
 
 const demarchesSansDatesNiDureePourLesEtapes = [DEMARCHES_TYPES_IDS.DeplacementDePerimetre, DEMARCHES_TYPES_IDS.Mutation, DEMARCHES_TYPES_IDS.ExtensionDePerimetre] as const
@@ -64,7 +87,7 @@ export const canEditDates = (titreTypeId: TitreTypeId, demarcheTypeId: DemarcheT
     return false
   }
 
-  // ne peut pas modifier les dates sur une demande, seulement la durée (sauf pour les ARM et AXM)
+  // ne peut pas modifier les dates sur une demande
   if (etapeTypeId === ETAPES_TYPES.demande) {
     return false
   }
@@ -78,14 +101,26 @@ export const canEditDates = (titreTypeId: TitreTypeId, demarcheTypeId: DemarcheT
   return isSuper(user) || isAdministrationAdmin(user) || isAdministrationEditeur(user)
 }
 
-export const canEditTitulaires = (titreTypeId: TitreTypeId, user: User): boolean => {
-  // peut éditer les titulaires sur les titres autre que ARM et AXM
-  if (titreTypeId !== 'arm' && titreTypeId !== 'axm') {
-    return true
+export const canEditTitulaires = (_titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId, user: User): InputPresence => {
+  if (
+    [
+      DEMARCHES_TYPES_IDS.Fusion,
+      DEMARCHES_TYPES_IDS.Renonciation,
+      DEMARCHES_TYPES_IDS.Amodiation,
+      DEMARCHES_TYPES_IDS.Conversion,
+      DEMARCHES_TYPES_IDS.DeplacementDePerimetre,
+      DEMARCHES_TYPES_IDS.ResiliationAnticipeeDAmodiation,
+    ].includes(demarcheTypeId)
+  ) {
+    return { visibility: 'absent', message: `une démarche ${DemarchesTypes[demarcheTypeId].nom} ne peut pas inclure de titulaire` }
   }
 
-  // seuls les supers et les administrations peuvent éditer les titulaires sur les ARM et les AXM
-  return isSuper(user) || isAdministrationAdmin(user) || isAdministrationEditeur(user)
+  // seuls les supers et les administrations peuvent éditer les titulaires
+  if (isSuper(user) || isAdministrationAdmin(user) || isAdministrationEditeur(user)) {
+    return { visibility: 'present', required: true, message: `les titulaires sont obligatoires pour les démarches ${DemarchesTypes[demarcheTypeId].nom}` }
+  }
+
+  return { visibility: 'absent', message: 'droits insuffisants pour éditer les titulaires' }
 }
 
 export const canEditDuree = (titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId, user: User): boolean => {

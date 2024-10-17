@@ -23,6 +23,8 @@ import { communeIdValidator } from '../static/communes'
 import { User } from '../roles'
 import { ADMINISTRATION_IDS } from '../static/administrations'
 import { SUBSTANCES_FISCALES_IDS } from '../static/substancesFiscales'
+import { DEMARCHES_TYPES_IDS } from '../static/demarchesTypes'
+import { TITRES_TYPES_IDS } from '../static/titresTypes'
 
 describe('dateTypeStepIsComplete', () => {
   test.each<User>([
@@ -103,6 +105,7 @@ test('fondamentaleStepIsComplete', () => {
         substances: { value: [], heritee: false, etapeHeritee: null },
         typeId: 'acg',
         titulaires: { value: [], heritee: false, etapeHeritee: null },
+        amodiataires: { value: [], heritee: false, etapeHeritee: null },
       },
       'amo',
       'prr',
@@ -117,6 +120,7 @@ test('fondamentaleStepIsComplete', () => {
         substances: { value: [], heritee: false, etapeHeritee: null },
         typeId: 'dpu',
         titulaires: { value: [], heritee: false, etapeHeritee: null },
+        amodiataires: { value: [], heritee: false, etapeHeritee: null },
       },
       'amo',
       'prr',
@@ -130,12 +134,21 @@ test('fondamentaleStepIsComplete', () => {
         substances: { value: [], heritee: false, etapeHeritee: null },
         typeId: 'mfr',
         titulaires: { value: [], heritee: false, etapeHeritee: null },
+        amodiataires: { value: [], heritee: false, etapeHeritee: null },
       },
       'amo',
       'prr',
       { ...testBlankUser, role: 'super' }
-    ).valid
-  ).toBe(false)
+    )
+  ).toMatchInlineSnapshot(`
+    {
+      "errors": [
+        "Les substances sont obligatoires",
+        "les amodiataires sont obligatoires pour les démarches d'Amodiation",
+      ],
+      "valid": false,
+    }
+  `)
 
   expect(
     fondamentaleStepIsComplete(
@@ -144,12 +157,20 @@ test('fondamentaleStepIsComplete', () => {
         substances: { value: ['auru'], heritee: false, etapeHeritee: null },
         typeId: 'mfr',
         titulaires: { value: [], heritee: false, etapeHeritee: null },
+        amodiataires: { value: [], heritee: false, etapeHeritee: null },
       },
       'oct',
       'prr',
       { ...testBlankUser, role: 'super' }
-    ).valid
-  ).toBe(false)
+    )
+  ).toMatchInlineSnapshot(`
+    {
+      "errors": [
+        "les titulaires sont obligatoires pour les démarches octroi",
+      ],
+      "valid": false,
+    }
+  `)
   expect(
     fondamentaleStepIsComplete(
       {
@@ -157,6 +178,7 @@ test('fondamentaleStepIsComplete', () => {
         substances: { value: ['auru'], heritee: false, etapeHeritee: null },
         typeId: 'mfr',
         titulaires: { value: [entreprise1Id], heritee: false, etapeHeritee: null },
+        amodiataires: { value: [], heritee: false, etapeHeritee: null },
       },
       'oct',
       'prr',
@@ -170,12 +192,20 @@ test('fondamentaleStepIsComplete', () => {
         substances: { value: ['auru'], heritee: false, etapeHeritee: null },
         typeId: 'mfr',
         titulaires: { value: [], heritee: false, etapeHeritee: null },
+        amodiataires: { value: [], heritee: false, etapeHeritee: null },
       },
       'oct',
       'arm',
       { ...testBlankUser, role: 'super' }
-    ).valid
-  ).toBe(false)
+    )
+  ).toMatchInlineSnapshot(`
+    {
+      "errors": [
+        "les titulaires sont obligatoires pour les démarches octroi",
+      ],
+      "valid": false,
+    }
+  `)
   expect(
     fondamentaleStepIsComplete(
       {
@@ -183,12 +213,21 @@ test('fondamentaleStepIsComplete', () => {
         substances: { value: ['auru'], heritee: false, etapeHeritee: null },
         typeId: 'mfr',
         titulaires: { value: [], heritee: false, etapeHeritee: null },
+        amodiataires: { value: [], heritee: false, etapeHeritee: null },
       },
       'oct',
       'arm',
       { ...testBlankUser, role: 'super' }
-    ).valid
-  ).toBe(false)
+    )
+  ).toMatchInlineSnapshot(`
+    {
+      "errors": [
+        "la durée est obligatoire",
+        "les titulaires sont obligatoires pour les démarches octroi",
+      ],
+      "valid": false,
+    }
+  `)
   expect(
     fondamentaleStepIsComplete(
       {
@@ -196,12 +235,21 @@ test('fondamentaleStepIsComplete', () => {
         substances: { value: [], heritee: false, etapeHeritee: null },
         typeId: 'mfr',
         titulaires: { value: [], heritee: false, etapeHeritee: null },
+        amodiataires: { value: [], heritee: false, etapeHeritee: null },
       },
       'oct',
       'arm',
       { ...testBlankUser, role: 'super' }
-    ).valid
-  ).toBe(false)
+    )
+  ).toMatchInlineSnapshot(`
+    {
+      "errors": [
+        "Les substances sont obligatoires",
+        "les titulaires sont obligatoires pour les démarches octroi",
+      ],
+      "valid": false,
+    }
+  `)
 
   expect(
     fondamentaleStepIsComplete(
@@ -210,6 +258,7 @@ test('fondamentaleStepIsComplete', () => {
         substances: { value: ['auru'], heritee: false, etapeHeritee: null },
         typeId: 'mfr',
         titulaires: { value: [entreprise1Id], heritee: false, etapeHeritee: null },
+        amodiataires: { value: [], heritee: false, etapeHeritee: null },
       },
       'mut',
       'arm',
@@ -223,12 +272,21 @@ test('fondamentaleStepIsComplete', () => {
         substances: { value: [], heritee: false, etapeHeritee: null },
         typeId: 'mfr',
         titulaires: { value: [], heritee: false, etapeHeritee: null },
+        amodiataires: { value: [], heritee: false, etapeHeritee: null },
       },
       'mut',
       'arm',
       { ...testBlankUser, role: 'super' }
-    ).valid
-  ).toBe(false)
+    )
+  ).toMatchInlineSnapshot(`
+    {
+      "errors": [
+        "Les substances sont obligatoires",
+        "les titulaires sont obligatoires pour les démarches mutation",
+      ],
+      "valid": false,
+    }
+  `)
   expect(
     fondamentaleStepIsComplete(
       {
@@ -236,12 +294,48 @@ test('fondamentaleStepIsComplete', () => {
         substances: { value: [SUBSTANCES_FISCALES_IDS.or], heritee: false, etapeHeritee: null },
         typeId: 'mfr',
         titulaires: { value: [entreprise1Id], heritee: false, etapeHeritee: null },
+        amodiataires: { value: [], heritee: false, etapeHeritee: null },
       },
       'oct',
       'arm',
       { ...testBlankUser, role: 'entreprise', entrepriseIds: [entreprise1Id] }
     ).valid
   ).toBe(true)
+  expect(
+    fondamentaleStepIsComplete(
+      {
+        duree: { value: 0, heritee: false, etapeHeritee: null },
+        substances: { value: [SUBSTANCES_FISCALES_IDS.or], heritee: false, etapeHeritee: null },
+        typeId: 'mfr',
+        titulaires: { value: [], heritee: false, etapeHeritee: null },
+        amodiataires: { value: [entreprise1Id], heritee: false, etapeHeritee: null },
+      },
+      DEMARCHES_TYPES_IDS.Amodiation,
+      TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_METAUX,
+      { ...testBlankUser, role: 'super' }
+    ).valid
+  ).toBe(true)
+  expect(
+    fondamentaleStepIsComplete(
+      {
+        duree: { value: 0, heritee: false, etapeHeritee: null },
+        substances: { value: [SUBSTANCES_FISCALES_IDS.or], heritee: false, etapeHeritee: null },
+        typeId: 'mfr',
+        titulaires: { value: [], heritee: false, etapeHeritee: null },
+        amodiataires: { value: [], heritee: false, etapeHeritee: null },
+      },
+      DEMARCHES_TYPES_IDS.Amodiation,
+      TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_METAUX,
+      { ...testBlankUser, role: 'super' }
+    )
+  ).toMatchInlineSnapshot(`
+        {
+          "errors": [
+            "les amodiataires sont obligatoires pour les démarches d'Amodiation",
+          ],
+          "valid": false,
+        }
+      `)
 })
 test('sectionsStepIsVisible', () => {
   expect(sectionsStepIsVisible({ typeId: 'mfr' }, 'oct', 'arm')).toBe(true)
@@ -768,311 +862,8 @@ test('getDocumentsTypes', () => {
     ]
   `)
 
-  expect(getDocumentsTypes({ typeId: 'mfr' }, 'oct', 'axm', ['1'], false)).toMatchInlineSnapshot(`
-    [
-      {
-        "id": "cam",
-        "nom": "Contrat d'amodiation",
-        "optionnel": true,
-      },
-      {
-        "description": "Plan à l'échelle 1/50 000ème ou 1/100 000ème",
-        "id": "car",
-        "nom": "Documents cartographiques",
-        "optionnel": false,
-      },
-      {
-        "id": "cnt",
-        "nom": "Contrat",
-        "optionnel": true,
-      },
-      {
-        "id": "cod",
-        "nom": "Compléments au dossier de demande",
-        "optionnel": true,
-      },
-      {
-        "id": "dep",
-        "nom": "Décision cas par cas",
-        "optionnel": true,
-      },
-      {
-        "id": "doe",
-        "nom": "Dossier "Loi sur l'eau"",
-        "optionnel": true,
-      },
-      {
-        "id": "dom",
-        "nom": "Dossier de demande",
-        "optionnel": true,
-      },
-      {
-        "id": "dos",
-        "nom": "Dossier",
-        "optionnel": true,
-      },
-      {
-        "id": "fac",
-        "nom": "Facture",
-        "optionnel": true,
-      },
-      {
-        "id": "fic",
-        "nom": "Fiche de complétude",
-        "optionnel": true,
-      },
-      {
-        "id": "fip",
-        "nom": "Fiche de présentation",
-        "optionnel": true,
-      },
-      {
-        "id": "for",
-        "nom": "Formulaire de demande",
-        "optionnel": true,
-      },
-      {
-        "id": "jpa",
-        "nom": "Justificatif de paiement",
-        "optionnel": true,
-      },
-      {
-        "description": undefined,
-        "id": "lem",
-        "nom": "Lettre de demande",
-        "optionnel": false,
-      },
-      {
-        "description": undefined,
-        "id": "let",
-        "nom": "Lettre",
-        "optionnel": true,
-      },
-      {
-        "id": "noi",
-        "nom": "Notice d'incidence",
-        "optionnel": true,
-      },
-      {
-        "id": "rec",
-        "nom": "Récépissé "Loi sur l'eau"",
-        "optionnel": true,
-      },
-      {
-        "description": "la liste et la valeur du matériel d'extraction et de
-     traitement que le demandeur détient ou qu'il 
-    envisage d'acquérir ainsi que, dans ce dernier
-     cas, le financement correspondant. Ces pièces 
-    sont demandées au titre de la justification des 
-    capacités financières du
-    demandeur 
-    (décret 2001-204, art. 7)",
-        "id": "idm",
-        "nom": "Identification de matériel",
-        "optionnel": false,
-      },
-      {
-        "description": undefined,
-        "id": "jeg",
-        "nom": "Justification d'existence du gisement",
-        "optionnel": true,
-      },
-      {
-        "description": "la définition des mesures prévues par le pétitionnaire pour réhabiliter le site après exploitation, notamment la nature et les modalités de revégétalisation envisagée. (décret 2001-204, art. 5 bis)",
-        "id": "mes",
-        "nom": "Mesures prévues pour réhabiliter le site ",
-        "optionnel": false,
-      },
-      {
-        "description": "descriptif des méthodes envisagées pour l'exécution des travaux ((décret 2001-204, art. 6)",
-        "id": "met",
-        "nom": "Méthodes pour l'exécution des travaux",
-        "optionnel": false,
-      },
-      {
-        "description": undefined,
-        "id": "nip",
-        "nom": "Notice d'impact",
-        "optionnel": false,
-      },
-      {
-        "description": "Obligatoire pour les AEX hors de la zone 2 du SDOM",
-        "id": "nir",
-        "nom": "Notice d'impact renforcée",
-        "optionnel": true,
-      },
-      {
-        "description": "Description du phasage et planigramme des travaux. (décret 2001-204, art. 5)",
-        "id": "prg",
-        "nom": "Programme des travaux ",
-        "optionnel": false,
-      },
-      {
-        "description": "le schéma de pénétration du massif forestier proposé par le pétitionnaire pour l'acheminement du matériel lourd et la desserte du chantier (décret 2001-204, art. 5 bis)",
-        "id": "sch",
-        "nom": "Schéma de pénétration du massif forestier",
-        "optionnel": false,
-      },
-      {
-        "id": "aut",
-        "nom": "Autre document",
-        "optionnel": true,
-      },
-    ]
-  `)
-
-  expect(getDocumentsTypes({ typeId: 'mfr' }, 'oct', 'axm', ['2'], false)).toMatchInlineSnapshot(`
-    [
-      {
-        "id": "cam",
-        "nom": "Contrat d'amodiation",
-        "optionnel": true,
-      },
-      {
-        "description": "Plan à l'échelle 1/50 000ème ou 1/100 000ème",
-        "id": "car",
-        "nom": "Documents cartographiques",
-        "optionnel": false,
-      },
-      {
-        "id": "cnt",
-        "nom": "Contrat",
-        "optionnel": true,
-      },
-      {
-        "id": "cod",
-        "nom": "Compléments au dossier de demande",
-        "optionnel": true,
-      },
-      {
-        "id": "dep",
-        "nom": "Décision cas par cas",
-        "optionnel": true,
-      },
-      {
-        "id": "doe",
-        "nom": "Dossier "Loi sur l'eau"",
-        "optionnel": true,
-      },
-      {
-        "id": "dom",
-        "nom": "Dossier de demande",
-        "optionnel": true,
-      },
-      {
-        "id": "dos",
-        "nom": "Dossier",
-        "optionnel": true,
-      },
-      {
-        "id": "fac",
-        "nom": "Facture",
-        "optionnel": true,
-      },
-      {
-        "id": "fic",
-        "nom": "Fiche de complétude",
-        "optionnel": true,
-      },
-      {
-        "id": "fip",
-        "nom": "Fiche de présentation",
-        "optionnel": true,
-      },
-      {
-        "id": "for",
-        "nom": "Formulaire de demande",
-        "optionnel": true,
-      },
-      {
-        "id": "jpa",
-        "nom": "Justificatif de paiement",
-        "optionnel": true,
-      },
-      {
-        "description": undefined,
-        "id": "lem",
-        "nom": "Lettre de demande",
-        "optionnel": false,
-      },
-      {
-        "description": undefined,
-        "id": "let",
-        "nom": "Lettre",
-        "optionnel": true,
-      },
-      {
-        "id": "noi",
-        "nom": "Notice d'incidence",
-        "optionnel": true,
-      },
-      {
-        "id": "rec",
-        "nom": "Récépissé "Loi sur l'eau"",
-        "optionnel": true,
-      },
-      {
-        "description": "la liste et la valeur du matériel d'extraction et de
-     traitement que le demandeur détient ou qu'il 
-    envisage d'acquérir ainsi que, dans ce dernier
-     cas, le financement correspondant. Ces pièces 
-    sont demandées au titre de la justification des 
-    capacités financières du
-    demandeur 
-    (décret 2001-204, art. 7)",
-        "id": "idm",
-        "nom": "Identification de matériel",
-        "optionnel": false,
-      },
-      {
-        "description": undefined,
-        "id": "jeg",
-        "nom": "Justification d'existence du gisement",
-        "optionnel": false,
-      },
-      {
-        "description": "la définition des mesures prévues par le pétitionnaire pour réhabiliter le site après exploitation, notamment la nature et les modalités de revégétalisation envisagée. (décret 2001-204, art. 5 bis)",
-        "id": "mes",
-        "nom": "Mesures prévues pour réhabiliter le site ",
-        "optionnel": false,
-      },
-      {
-        "description": "descriptif des méthodes envisagées pour l'exécution des travaux ((décret 2001-204, art. 6)",
-        "id": "met",
-        "nom": "Méthodes pour l'exécution des travaux",
-        "optionnel": false,
-      },
-      {
-        "description": undefined,
-        "id": "nip",
-        "nom": "Notice d'impact",
-        "optionnel": true,
-      },
-      {
-        "description": "Obligatoire pour les AEX hors de la zone 2 du SDOM",
-        "id": "nir",
-        "nom": "Notice d'impact renforcée",
-        "optionnel": false,
-      },
-      {
-        "description": "Description du phasage et planigramme des travaux. (décret 2001-204, art. 5)",
-        "id": "prg",
-        "nom": "Programme des travaux ",
-        "optionnel": false,
-      },
-      {
-        "description": "le schéma de pénétration du massif forestier proposé par le pétitionnaire pour l'acheminement du matériel lourd et la desserte du chantier (décret 2001-204, art. 5 bis)",
-        "id": "sch",
-        "nom": "Schéma de pénétration du massif forestier",
-        "optionnel": false,
-      },
-      {
-        "id": "aut",
-        "nom": "Autre document",
-        "optionnel": true,
-      },
-    ]
-  `)
+  expect(getDocumentsTypes({ typeId: 'mfr' }, 'oct', 'axm', ['1'], false)).toMatchSnapshot()
+  expect(getDocumentsTypes({ typeId: 'mfr' }, 'oct', 'axm', ['2'], false)).toMatchSnapshot()
 })
 
 test('getAvisType', () => {
