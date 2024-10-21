@@ -98,26 +98,6 @@ export interface IGetTitulairesAmodiatairesTitreEtapeQuery {
   result: IGetTitulairesAmodiatairesTitreEtapeResult;
 }
 
-/** 'GetEtapeByDemarcheIdAndEtapeTypeIdDb' parameters type */
-export interface IGetEtapeByDemarcheIdAndEtapeTypeIdDbParams {
-  demarcheId: string;
-  etapeTypeId: string;
-}
-
-/** 'GetEtapeByDemarcheIdAndEtapeTypeIdDb' return type */
-export interface IGetEtapeByDemarcheIdAndEtapeTypeIdDbResult {
-  contenu: Json | null;
-  date: string;
-  etape_id: string;
-  etape_statut_id: string;
-}
-
-/** 'GetEtapeByDemarcheIdAndEtapeTypeIdDb' query type */
-export interface IGetEtapeByDemarcheIdAndEtapeTypeIdDbQuery {
-  params: IGetEtapeByDemarcheIdAndEtapeTypeIdDbParams;
-  result: IGetEtapeByDemarcheIdAndEtapeTypeIdDbResult;
-}
-
 /** 'GetDemandesPotentialConcurrenceDb' parameters type */
 export interface IGetDemandesPotentialConcurrenceDbParams {
   dateDebutProcedureSpecifique: string;

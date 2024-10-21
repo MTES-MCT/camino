@@ -146,7 +146,7 @@ describe('valide l’étape avant de l’enregistrer', () => {
       hasTitreFrom: true,
     }
 
-    let errors = titreEtapeUpdationValidate(titreEtape, titreDemarche, titreARM, [], [], [], [], [], userSuper, null, null)
+    let errors = titreEtapeUpdationValidate(titreEtape, titreDemarche, titreARM, [], [], [], [], [], userSuper)
     expect(errors).toMatchInlineSnapshot(`
       [
         "une date peut-être spécifiée que sur une étape de décision",
@@ -166,7 +166,7 @@ describe('valide l’étape avant de l’enregistrer', () => {
       typeId: 'axm',
     }
 
-    errors = titreEtapeUpdationValidate(titreEtape, titreDemarche, titreAxm, [], [], [], [], [], userSuper, null, null)
+    errors = titreEtapeUpdationValidate(titreEtape, titreDemarche, titreAxm, [], [], [], [], [], userSuper)
     expect(errors).toMatchInlineSnapshot(`
       [
         "une date peut-être spécifiée que sur une étape de décision",
@@ -186,11 +186,11 @@ describe('valide l’étape avant de l’enregistrer', () => {
     `)
   })
   test('valide brouillon', () => {
-    const errors = titreEtapeUpdationValidate(etapeBrouillonValide, { ...titreDemarche, etapes: [] }, titreARM, [], [], [], [], [], userSuper, null, null)
+    const errors = titreEtapeUpdationValidate(etapeBrouillonValide, { ...titreDemarche, etapes: [] }, titreARM, [], [], [], [], [], userSuper)
     expect(errors).toStrictEqual([])
   })
   test('valide complète', () => {
-    const errors = titreEtapeUpdationValidate(etapeComplete, titreDemarche, titreARM, [{ etape_document_type_id: 'doe' }], [], [], [], [], userSuper, null, null)
+    const errors = titreEtapeUpdationValidate(etapeComplete, titreDemarche, titreARM, [{ etape_document_type_id: 'doe' }], [], [], [], [], userSuper)
     expect(errors).toStrictEqual([])
   })
   test('invalide car on ne peut pas faire de mod sans mdp', () => {
@@ -222,9 +222,7 @@ describe('valide l’étape avant de l’enregistrer', () => {
       [],
       [],
       [],
-      userSuper,
-      null,
-      null
+      userSuper
     )
     expect(errors).toMatchInlineSnapshot(`
       [
@@ -243,9 +241,7 @@ describe('valide l’étape avant de l’enregistrer', () => {
       [],
       [],
       [],
-      userSuper,
-      null,
-      null
+      userSuper
     )
     expect(errors).toStrictEqual([])
   })
@@ -259,9 +255,7 @@ describe('valide l’étape avant de l’enregistrer', () => {
       [],
       [],
       [],
-      userSuper,
-      null,
-      null
+      userSuper
     )
     expect(errors).toMatchInlineSnapshot(`
       [

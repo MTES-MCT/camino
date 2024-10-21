@@ -2,16 +2,7 @@ import { z } from 'zod'
 import { caminoDateValidator } from './date'
 import { demarcheIdValidator, demarcheSlugValidator } from './demarche'
 import { entrepriseDocumentIdValidator, entrepriseIdValidator } from './entreprise'
-import {
-  documentComplementaireAslEtapeDocumentModificationValidator,
-  documentComplementaireDaeEtapeDocumentModificationValidator,
-  etapeAvisModificationValidator,
-  etapeBrouillonValidator,
-  etapeDocumentModificationValidator,
-  etapeIdValidator,
-  etapeNoteValidator,
-  etapeSlugValidator,
-} from './etape'
+import { etapeAvisModificationValidator, etapeBrouillonValidator, etapeDocumentModificationValidator, etapeIdValidator, etapeNoteValidator, etapeSlugValidator } from './etape'
 import { km2Validator } from './number'
 import { featureCollectionForagesValidator, featureCollectionPointsValidator, featureMultiPolygonValidator } from './perimetre'
 import { demarcheTypeIdValidator } from './static/demarchesTypes'
@@ -221,7 +212,5 @@ export type RestEtapeCreation = z.infer<typeof restEtapeCreationValidator>
 
 export const restEtapeModificationValidator = restEtapeCreationValidator.extend({
   id: etapeIdValidator,
-  daeDocument: documentComplementaireDaeEtapeDocumentModificationValidator.nullable(),
-  aslDocument: documentComplementaireAslEtapeDocumentModificationValidator.nullable(),
 })
 export type RestEtapeModification = z.infer<typeof restEtapeModificationValidator>

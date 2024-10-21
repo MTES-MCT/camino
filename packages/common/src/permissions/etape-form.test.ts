@@ -15,7 +15,7 @@ import {
   sectionsStepIsComplete,
   sectionsStepIsVisible,
 } from './etape-form'
-import { ETAPE_IS_BROUILLON, ETAPE_IS_NOT_BROUILLON, documentTypeIdComplementaireObligatoireASL, documentTypeIdComplementaireObligatoireDAE, etapeDocumentIdValidator } from '../etape'
+import { ETAPE_IS_BROUILLON, ETAPE_IS_NOT_BROUILLON, etapeDocumentIdValidator } from '../etape'
 import { toCaminoDate } from '../date'
 import { testBlankUser } from '../tests-utils'
 import { entrepriseIdValidator } from '../entreprise'
@@ -585,58 +585,20 @@ const axmDocumentsComplete = [
 
 const entreprise1Id = entrepriseIdValidator.parse('id1')
 test('etapeDocumentsStepIsComplete', () => {
-  expect(etapeDocumentsStepIsComplete({ typeId: 'asl', contenu: {}, isBrouillon: ETAPE_IS_NOT_BROUILLON }, 'oct', 'axm', [], [], null, null, null).valid).toBe(false)
-  expect(
-    etapeDocumentsStepIsComplete(
-      { typeId: 'asl', contenu: {}, isBrouillon: ETAPE_IS_NOT_BROUILLON },
-      'oct',
-      'axm',
-      [{ etape_document_type_id: documentTypeIdComplementaireObligatoireASL }],
-      [],
-      null,
-      null,
-      null
-    ).valid
-  ).toBe(true)
+  expect(etapeDocumentsStepIsComplete({ typeId: 'asl', contenu: {}, isBrouillon: ETAPE_IS_NOT_BROUILLON }, 'oct', 'axm', [{ etape_document_type_id: 'dec' }], [])).toMatchInlineSnapshot(`
+    {
+      "errors": [
+        "le document "Lettre" (let) est obligatoire",
+      ],
+      "valid": false,
+    }
+  `)
 
-  expect(
-    etapeDocumentsStepIsComplete({ typeId: 'mfr', contenu: {}, isBrouillon: ETAPE_IS_BROUILLON }, 'oct', 'axm', axmDocumentsComplete, [], null, null, { ...testBlankUser, role: 'super' }).valid
-  ).toBe(true)
-  expect(
-    etapeDocumentsStepIsComplete({ typeId: 'mfr', contenu: {}, isBrouillon: ETAPE_IS_BROUILLON }, 'oct', 'axm', axmDocumentsComplete, [], null, null, {
-      ...testBlankUser,
-      role: 'entreprise',
-      entrepriseIds: [entreprise1Id],
-    }).valid
-  ).toBe(false)
-
-  expect(
-    etapeDocumentsStepIsComplete(
-      { typeId: 'mfr', contenu: {}, isBrouillon: ETAPE_IS_BROUILLON },
-      'oct',
-      'axm',
-      axmDocumentsComplete,
-      [],
-      {
-        arrete_prefectoral: '',
-        date: toCaminoDate('2023-02-02'),
-        description: null,
-        entreprises_lecture: true,
-        etape_statut_id: 'exe',
-        public_lecture: true,
-        etape_document_type_id: documentTypeIdComplementaireObligatoireDAE,
-      },
-      {
-        date: toCaminoDate('2023-02-02'),
-        description: null,
-        entreprises_lecture: true,
-        etape_statut_id: 'exe',
-        public_lecture: true,
-        etape_document_type_id: documentTypeIdComplementaireObligatoireASL,
-      },
-      { ...testBlankUser, role: 'entreprise', entrepriseIds: [entreprise1Id] }
-    ).valid
-  ).toBe(true)
+  expect(etapeDocumentsStepIsComplete({ typeId: 'mfr', contenu: {}, isBrouillon: ETAPE_IS_BROUILLON }, 'oct', 'axm', axmDocumentsComplete, [])).toMatchInlineSnapshot(`
+    {
+      "valid": true,
+    }
+  `)
 })
 
 test('entrepriseDocumentsStepIsVisible', () => {

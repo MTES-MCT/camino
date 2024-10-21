@@ -31,7 +31,6 @@ import { SDOMZoneId } from 'camino-common/src/static/sdom'
 import { DeposeEtapePopup } from './depose-etape-popup'
 import { ApiClient } from '@/api/api-client'
 import { TitreGetDemarche, getMostRecentValuePropFromEtapeFondamentaleValide } from 'camino-common/src/titres'
-import { GetEtapeDocumentsByEtapeId, documentTypeIdComplementaireObligatoireASL, documentTypeIdComplementaireObligatoireDAE, etapeDocumentIdValidator, needAslAndDae } from 'camino-common/src/etape'
 import { Unites } from 'camino-common/src/static/unites'
 import { EntrepriseId, Entreprise } from 'camino-common/src/entreprise'
 import { Badge } from '../_ui/badge'
@@ -129,45 +128,6 @@ export const DemarcheEtape = defineComponent<Props>(props => {
       canDelete.value
   )
 
-  const daeDocument = computed<GetEtapeDocumentsByEtapeId['dae']>(() => {
-    if (needAslAndDae({ etapeTypeId: props.etape.etape_type_id, demarcheTypeId: props.demarche.demarche_type_id, titreTypeId: props.titre.typeId }, props.etape.is_brouillon, props.user)) {
-      const daeEtape = props.demarche.etapes.find(({ etape_type_id }) => etape_type_id === 'dae')
-      if (isNotNullNorUndefined(daeEtape)) {
-        return {
-          id: etapeDocumentIdValidator.parse('daeId'),
-          date: daeEtape.date,
-          description: '',
-          arrete_prefectoral: '',
-          public_lecture: false,
-          entreprises_lecture: true,
-          etape_statut_id: daeEtape.etape_statut_id,
-          etape_document_type_id: documentTypeIdComplementaireObligatoireDAE,
-        }
-      }
-    }
-
-    return null
-  })
-
-  const aslDocument = computed<GetEtapeDocumentsByEtapeId['asl']>(() => {
-    if (needAslAndDae({ etapeTypeId: props.etape.etape_type_id, demarcheTypeId: props.demarche.demarche_type_id, titreTypeId: props.titre.typeId }, props.etape.is_brouillon, props.user)) {
-      const aslEtape = props.demarche.etapes.find(({ etape_type_id }) => etape_type_id === 'asl')
-      if (isNotNullNorUndefined(aslEtape)) {
-        return {
-          id: etapeDocumentIdValidator.parse('aslId'),
-          date: aslEtape.date,
-          description: '',
-          public_lecture: false,
-          entreprises_lecture: true,
-          etape_statut_id: aslEtape.etape_statut_id,
-          etape_document_type_id: documentTypeIdComplementaireObligatoireASL,
-        }
-      }
-    }
-
-    return null
-  })
-
   const isDeposable = computed<boolean>(() => {
     const titulaireIds = getMostRecentValuePropFromEtapeFondamentaleValide('titulaireIds', [{ ...props.demarche, ordre: 0 }])
     const amodiataireIds = getMostRecentValuePropFromEtapeFondamentaleValide('amodiataireIds', [{ ...props.demarche, ordre: 0 }])
@@ -230,8 +190,6 @@ export const DemarcheEtape = defineComponent<Props>(props => {
       props.etape.entreprises_documents,
       props.demarche.sdom_zones,
       props.demarche.communes,
-      daeDocument.value,
-      aslDocument.value,
       props.etape.avis_documents
     )
   })

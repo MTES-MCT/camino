@@ -7,7 +7,6 @@ import { tempDocumentNameValidator } from 'camino-common/src/document'
 import { testBlankUser } from 'camino-common/src/tests-utils'
 import { useArgs } from '@storybook/preview-api'
 import { entrepriseIdValidator } from 'camino-common/src/entreprise'
-import { caminoDateValidator } from 'camino-common/src/date'
 
 const meta: Meta = {
   title: 'Components/Etape/EtapeDocumentsEdit',
@@ -268,25 +267,6 @@ export const OctroiAxmUtilisateurEntrepriseComplet: StoryFn = () => (
               entreprises_lecture: false,
             },
           ],
-          dae: {
-            id: etapeDocumentIdValidator.parse('daeId'),
-            date: caminoDateValidator.parse('2023-01-23'),
-            description: 'description',
-            public_lecture: false,
-            entreprises_lecture: true,
-            etape_document_type_id: 'arp',
-            etape_statut_id: 'exe',
-            arrete_prefectoral: '1233232323',
-          },
-          asl: {
-            id: etapeDocumentIdValidator.parse('daeId'),
-            date: caminoDateValidator.parse('2023-01-23'),
-            description: 'description',
-            public_lecture: false,
-            entreprises_lecture: true,
-            etape_document_type_id: 'let',
-            etape_statut_id: 'fav',
-          },
         })
       },
     }}

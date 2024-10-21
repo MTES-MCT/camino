@@ -1,14 +1,6 @@
 import { EntrepriseDocumentId, EntrepriseId } from '../entreprise'
 import { FlattenEtape } from '../etape-form'
-import {
-  DocumentComplementaireAslEtapeDocumentModification,
-  DocumentComplementaireDaeEtapeDocumentModification,
-  EtapeAvis,
-  EtapeDocument,
-  TempEtapeAvis,
-  TempEtapeDocument,
-  needAslAndDae,
-} from '../etape'
+import { EtapeAvis, EtapeDocument, TempEtapeAvis, TempEtapeDocument } from '../etape'
 import { User, isAdministrationAdmin, isAdministrationEditeur, isSuper } from '../roles'
 import { AvisTypeId, AvisTypes } from '../static/avisTypes'
 import { CommuneId } from '../static/communes'
@@ -227,10 +219,7 @@ export const etapeDocumentsStepIsComplete = (
   demarcheTypeId: DemarcheTypeId,
   titreTypeId: TitreTypeId,
   etapeDocuments: DeepReadonly<Pick<EtapeDocument | TempEtapeDocument, 'etape_document_type_id'>[]>,
-  sdomZoneIds: DeepReadonly<SDOMZoneId[]>,
-  daeDocument: DeepReadonly<Omit<DocumentComplementaireDaeEtapeDocumentModification, 'id'>> | null,
-  aslDocument: DeepReadonly<Omit<DocumentComplementaireAslEtapeDocumentModification, 'id'>> | null,
-  user: User
+  sdomZoneIds: DeepReadonly<SDOMZoneId[]>
 ): ValidReturn => {
   if (!etapeDocumentsStepIsVisible(etape, demarcheTypeId, titreTypeId)) {
     return { valid: true }
@@ -244,15 +233,6 @@ export const etapeDocumentsStepIsComplete = (
       .filter(({ optionnel, id }) => !optionnel && etapeDocuments.every(({ etape_document_type_id }) => etape_document_type_id !== id))
       .map(({ id }) => `le document "${DocumentsTypes[id].nom}" (${id}) est obligatoire`)
   )
-
-  if (needAslAndDae({ etapeTypeId: etape.typeId, demarcheTypeId, titreTypeId }, etape.isBrouillon, user)) {
-    if (isNullOrUndefined(daeDocument)) {
-      errors.push("L'arrêté préfectoral de la mission autorité environnementale est obligatoire")
-    }
-    if (isNullOrUndefined(aslDocument)) {
-      errors.push('La lettre de décision du propriétaire du sol est obligatoire')
-    }
-  }
 
   if (isNonEmptyArray(errors)) {
     return { valid: false, errors }

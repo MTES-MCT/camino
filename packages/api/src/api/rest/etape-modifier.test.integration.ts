@@ -84,8 +84,6 @@ describe('etapeModifier', () => {
       note: { valeur: '', is_avertissement: false },
       etapeAvis: [],
       entrepriseDocumentIds: [],
-      daeDocument: null,
-      aslDocument: null,
       heritageProps: ETAPE_HERITAGE_PROPS.reduce(
         (acc, prop) => {
           acc[prop] = { actif: false }
@@ -133,8 +131,6 @@ describe('etapeModifier', () => {
       note: { valeur: '', is_avertissement: false },
       etapeAvis: [],
       entrepriseDocumentIds: [],
-      daeDocument: null,
-      aslDocument: null,
       heritageProps: ETAPE_HERITAGE_PROPS.reduce(
         (acc, prop) => {
           acc[prop] = { actif: false }
@@ -186,8 +182,6 @@ describe('etapeModifier', () => {
       note: { valeur: '', is_avertissement: false },
       etapeAvis: [],
       entrepriseDocumentIds: [],
-      daeDocument: null,
-      aslDocument: null,
       heritageProps: ETAPE_HERITAGE_PROPS.reduce(
         (acc, prop) => {
           acc[prop] = { actif: false }
@@ -270,8 +264,6 @@ describe('etapeModifier', () => {
       note: { valeur: '', is_avertissement: false },
       etapeAvis: [],
       entrepriseDocumentIds: [],
-      daeDocument: null,
-      aslDocument: null,
 
       heritageProps: ETAPE_HERITAGE_PROPS.reduce(
         (acc, prop) => {
@@ -328,8 +320,6 @@ describe('etapeModifier', () => {
       note: { valeur: '', is_avertissement: false },
       etapeAvis: [],
       entrepriseDocumentIds: [],
-      daeDocument: null,
-      aslDocument: null,
       heritageProps: ETAPE_HERITAGE_PROPS.reduce(
         (acc, prop) => {
           acc[prop] = { actif: false }
@@ -407,8 +397,6 @@ describe('etapeModifier', () => {
       },
       {
         id: titreEtapeId,
-        daeDocument: null,
-        aslDocument: null,
         ...menEtape,
       }
     )
@@ -447,8 +435,6 @@ describe('etapeModifier', () => {
         note: { valeur: '', is_avertissement: false },
         etapeAvis: [],
         entrepriseDocumentIds: [],
-        daeDocument: null,
-        aslDocument: null,
         etapeDocuments: [],
         heritageProps: ETAPE_HERITAGE_PROPS.reduce(
           (acc, prop) => {

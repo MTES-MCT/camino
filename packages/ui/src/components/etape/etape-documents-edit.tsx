@@ -1,16 +1,4 @@
-import {
-  DocumentComplementaireAslEtapeDocumentModification,
-  DocumentComplementaireDaeEtapeDocumentModification,
-  EtapeBrouillon,
-  EtapeDocument,
-  EtapeDocumentModification,
-  EtapeId,
-  GetEtapeDocumentsByEtapeId,
-  TempEtapeDocument,
-  documentTypeIdComplementaireObligatoireASL,
-  documentTypeIdComplementaireObligatoireDAE,
-  needAslAndDae,
-} from 'camino-common/src/etape'
+import { EtapeBrouillon, EtapeDocument, EtapeDocumentModification, EtapeId, GetEtapeDocumentsByEtapeId, TempEtapeDocument } from 'camino-common/src/etape'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
@@ -22,14 +10,10 @@ import { AutreDocumentType, AutreDocumentTypeId, DocumentType, DocumentTypeId, D
 import { LoadingElement } from '../_ui/functional-loader'
 import { AsyncData } from '../../api/client-rest'
 import { DsfrButtonIcon } from '../_ui/dsfr-button'
-import { EtapesStatuts } from 'camino-common/src/static/etapesStatuts'
 import { getVisibilityLabel, sortDocumentsColumn } from './etape-documents'
 import { AddEtapeDocumentPopup } from './add-etape-document-popup'
 import { User } from 'camino-common/src/roles'
 import { getDocumentsTypes } from 'camino-common/src/permissions/etape-form'
-import { AddEtapeDaeDocumentPopup } from './add-etape-dae-document-popup'
-import { AddEtapeAslDocumentPopup } from './add-etape-asl-document-popup'
-import { dateFormat } from 'camino-common/src/date'
 
 interface Props {
   tde: {
@@ -39,11 +23,7 @@ interface Props {
   }
   isBrouillon: EtapeBrouillon
   sdomZoneIds: DeepReadonly<SDOMZoneId[]>
-  completeUpdate: (
-    etapeDocuments: (EtapeDocument | TempEtapeDocument)[],
-    daeDocument: DocumentComplementaireDaeEtapeDocumentModification | null,
-    aslDocument: DocumentComplementaireAslEtapeDocumentModification | null
-  ) => void
+  completeUpdate: (etapeDocuments: (EtapeDocument | TempEtapeDocument)[]) => void
   etapeId: EtapeId | null
   apiClient: Pick<ApiClient, 'uploadTempDocument' | 'getEtapeDocumentsByEtapeId'>
   contenu: DeepReadonly<{ arm?: { mecanise?: { value: boolean } } }>
@@ -71,10 +51,10 @@ export const EtapeDocumentsEdit = defineComponent<Props>(props => {
         }
       }
     } else {
-      etapeDocuments.value = { status: 'LOADED', value: { etapeDocuments: [], asl: null, dae: null } }
+      etapeDocuments.value = { status: 'LOADED', value: { etapeDocuments: [] } }
     }
     if (etapeDocuments.value.status === 'LOADED') {
-      props.completeUpdate(etapeDocuments.value.value.etapeDocuments, etapeDocuments.value.value.dae, etapeDocuments.value.value.asl)
+      props.completeUpdate(etapeDocuments.value.value.etapeDocuments)
     }
   })
 
@@ -83,14 +63,12 @@ export const EtapeDocumentsEdit = defineComponent<Props>(props => {
 
 type EtapeDocumentsLoadedProps = GetEtapeDocumentsByEtapeId & Props
 const EtapeDocumentsLoaded = defineComponent<EtapeDocumentsLoadedProps>(props => {
-  const daeDocument = ref<DocumentComplementaireDaeEtapeDocumentModification | null>(props.dae)
-  const aslDocument = ref<DocumentComplementaireAslEtapeDocumentModification | null>(props.asl)
   const etapeDocuments = ref<EtapeDocumentModificationWithIndex[]>(props.etapeDocuments.map((document, index) => ({ ...document, index })))
 
   watch(
-    () => [etapeDocuments.value, daeDocument.value, aslDocument.value],
+    () => etapeDocuments.value,
     () => {
-      props.completeUpdate(etapeDocuments.value, daeDocument.value, aslDocument.value)
+      props.completeUpdate(etapeDocuments.value)
     },
     { deep: true }
   )
@@ -99,43 +77,12 @@ const EtapeDocumentsLoaded = defineComponent<EtapeDocumentsLoadedProps>(props =>
     open: false,
   })
 
-  const addOrEditDaePopupOpen = ref<boolean>(false)
-  const addOrEditAslPopupOpen = ref<boolean>(false)
-
   const documentTypes = computed<(DocumentType | AutreDocumentType)[]>(() => {
     return getDocumentsTypes({ typeId: props.tde.etapeTypeId }, props.tde.demarcheTypeId, props.tde.titreTypeId, props.sdomZoneIds, props.contenu.arm?.mecanise?.value === true)
   })
 
-  const needAslAndDaeCompute = computed<boolean>(() => {
-    return needAslAndDae(props.tde, props.isBrouillon, props.user)
-  })
-
   const completeRequiredDocuments = computed<PropsTable['documents']>(() => {
     const documents: PropsTable['documents'] = etapeDocuments.value.filter(({ etape_document_type_id }) => documentTypes.value.some(dt => dt.id === etape_document_type_id && !dt.optionnel))
-
-    if (needAslAndDaeCompute.value) {
-      if (isNotNullNorUndefined(daeDocument.value)) {
-        documents.push({
-          ...daeDocument.value,
-          index: 'dae',
-          description: `${daeDocument.value.description}
-- Statut : ${EtapesStatuts[daeDocument.value.etape_statut_id].nom}
-- Date : ${dateFormat(daeDocument.value.date)}
-- Arrêté : ${daeDocument.value.arrete_prefectoral ?? ''}
-`,
-        })
-      }
-      if (isNotNullNorUndefined(aslDocument.value)) {
-        documents.push({
-          ...aslDocument.value,
-          index: 'asl',
-          description: `${aslDocument.value.description}
-        - Statut : ${EtapesStatuts[aslDocument.value.etape_statut_id].nom}
-        - Date : ${dateFormat(aslDocument.value.date)}
-        `,
-        })
-      }
-    }
 
     return documents
   })
@@ -143,15 +90,6 @@ const EtapeDocumentsLoaded = defineComponent<EtapeDocumentsLoadedProps>(props =>
     const documents = documentTypes.value
       .filter(({ optionnel, id }) => !optionnel && !completeRequiredDocuments.value.some(({ etape_document_type_id }) => etape_document_type_id === id))
       .map(({ id }) => id)
-
-    if (needAslAndDaeCompute.value) {
-      if (isNullOrUndefined(daeDocument.value)) {
-        documents.push(documentTypeIdComplementaireObligatoireDAE)
-      }
-      if (isNullOrUndefined(aslDocument.value)) {
-        documents.push(documentTypeIdComplementaireObligatoireASL)
-      }
-    }
 
     return documents
   })
@@ -180,44 +118,12 @@ const EtapeDocumentsLoaded = defineComponent<EtapeDocumentsLoadedProps>(props =>
     addOrEditPopupOpen.value = { open: false }
   }
 
-  const closeAddDaePopup = (newDocument: DocumentComplementaireDaeEtapeDocumentModification | null) => {
-    if (newDocument !== null) {
-      daeDocument.value = newDocument
-    }
-
-    addOrEditDaePopupOpen.value = false
-  }
-
-  const closeAddAslPopup = (newDocument: DocumentComplementaireAslEtapeDocumentModification | null) => {
-    if (newDocument !== null) {
-      aslDocument.value = newDocument
-    }
-
-    addOrEditAslPopupOpen.value = false
-  }
-
   const addDocument = (documentTypeId: DocumentTypeId | AutreDocumentTypeId) => {
-    if (needAslAndDaeCompute.value && documentTypeId === documentTypeIdComplementaireObligatoireDAE) {
-      addOrEditDaePopupOpen.value = true
-    } else if (needAslAndDaeCompute.value && documentTypeId === documentTypeIdComplementaireObligatoireASL) {
-      addOrEditAslPopupOpen.value = true
-    } else {
-      addOrEditPopupOpen.value = { open: true, documentTypeIds: [documentTypeId] }
-    }
+    addOrEditPopupOpen.value = { open: true, documentTypeIds: [documentTypeId] }
   }
-  const editDocument = (documentIndex: number | 'asl' | 'dae') => {
-    switch (documentIndex) {
-      case 'asl':
-        addOrEditAslPopupOpen.value = true
-        break
-      case 'dae':
-        addOrEditDaePopupOpen.value = true
-        break
-      default: {
-        const document = etapeDocuments.value[documentIndex]
-        addOrEditPopupOpen.value = { open: true, documentTypeIds: [document.etape_document_type_id], document }
-      }
-    }
+  const editDocument = (documentIndex: number) => {
+    const document = etapeDocuments.value[documentIndex]
+    addOrEditPopupOpen.value = { open: true, documentTypeIds: [document.etape_document_type_id], document }
   }
   const removeDocument = (documentIndex: number) => {
     etapeDocuments.value.splice(documentIndex, 1)
@@ -228,13 +134,6 @@ const EtapeDocumentsLoaded = defineComponent<EtapeDocumentsLoadedProps>(props =>
   }
 
   const getNom = (documentTypeId: DocumentTypeId | AutreDocumentTypeId) => {
-    if (needAslAndDaeCompute.value && documentTypeId === documentTypeIdComplementaireObligatoireDAE) {
-      return `${DocumentsTypes[documentTypeIdComplementaireObligatoireDAE].nom} de la mission autorité environnementale`
-    }
-    if (needAslAndDaeCompute.value && documentTypeId === documentTypeIdComplementaireObligatoireASL) {
-      return `${DocumentsTypes[documentTypeIdComplementaireObligatoireASL].nom} de la décision du propriétaire du sol`
-    }
-
     return DocumentsTypes[documentTypeId].nom
   }
 
@@ -290,21 +189,18 @@ const EtapeDocumentsLoaded = defineComponent<EtapeDocumentsLoadedProps>(props =>
           initialDocument={addOrEditPopupOpen.value.document}
         />
       ) : null}
-      {addOrEditDaePopupOpen.value ? <AddEtapeDaeDocumentPopup apiClient={props.apiClient} close={closeAddDaePopup} initialDocument={daeDocument.value} /> : null}
-
-      {addOrEditAslPopupOpen.value ? <AddEtapeAslDocumentPopup apiClient={props.apiClient} close={closeAddAslPopup} initialDocument={aslDocument.value} /> : null}
     </>
   )
 })
 
 type PropsTable = {
   caption: string
-  documents: ((EtapeDocument | TempEtapeDocument) & { index: number | 'asl' | 'dae' })[]
+  documents: ((EtapeDocument | TempEtapeDocument) & { index: number })[]
   isBrouillon: EtapeBrouillon
   emptyRequiredDocuments: (DocumentTypeId | AutreDocumentTypeId)[]
   getNom: (documentTypeId: DocumentTypeId | AutreDocumentTypeId) => string
   add: (documentTypeId: DocumentTypeId | AutreDocumentTypeId) => void
-  edit: (documentIndex: number | 'asl' | 'dae') => void
+  edit: (documentIndex: number) => void
   delete: (documentIndex: number) => void
   user: User
 }
@@ -312,7 +208,7 @@ const EtapeDocumentsTable: FunctionalComponent<PropsTable> = (props: PropsTable)
   const deleteDocument = (index: number) => () => {
     props.delete(index)
   }
-  const editDocument = (index: number | 'asl' | 'dae') => () => {
+  const editDocument = (index: number) => () => {
     props.edit(index)
   }
   const sortedDocuments = computed(() => sortDocumentsColumn(props.documents.map(d => ({ ...d, document_type_id: d.etape_document_type_id }))))
@@ -347,16 +243,14 @@ const EtapeDocumentsTable: FunctionalComponent<PropsTable> = (props: PropsTable)
                     buttonType="secondary"
                     buttonSize="sm"
                   />
-                  {document.index !== 'asl' && document.index !== 'dae' ? (
-                    <DsfrButtonIcon
-                      icon="fr-icon-delete-bin-line"
-                      class="fr-ml-1w"
-                      title={`Supprimer le document de ${props.getNom(document.etape_document_type_id)}`}
-                      onClick={deleteDocument(document.index)}
-                      buttonType="secondary"
-                      buttonSize="sm"
-                    />
-                  ) : null}
+                  <DsfrButtonIcon
+                    icon="fr-icon-delete-bin-line"
+                    class="fr-ml-1w"
+                    title={`Supprimer le document de ${props.getNom(document.etape_document_type_id)}`}
+                    onClick={deleteDocument(document.index)}
+                    buttonType="secondary"
+                    buttonSize="sm"
+                  />
                 </div>
               </td>
             </tr>
@@ -386,4 +280,4 @@ const EtapeDocumentsTable: FunctionalComponent<PropsTable> = (props: PropsTable)
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
 EtapeDocumentsEdit.props = ['tde', 'completeUpdate', 'etapeId', 'apiClient', 'sdomZoneIds', 'contenu', 'isBrouillon', 'user']
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-EtapeDocumentsLoaded.props = ['tde', 'completeUpdate', 'etapeId', 'apiClient', 'sdomZoneIds', 'contenu', 'isBrouillon', 'user', 'asl', 'dae', 'etapeDocuments']
+EtapeDocumentsLoaded.props = ['tde', 'completeUpdate', 'etapeId', 'apiClient', 'sdomZoneIds', 'contenu', 'isBrouillon', 'user', 'etapeDocuments']

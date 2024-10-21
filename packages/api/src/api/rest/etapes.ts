@@ -5,8 +5,6 @@ import {
   etapeIdValidator,
   EtapeId,
   GetEtapeDocumentsByEtapeId,
-  needAslAndDae,
-  documentTypeIdComplementaireObligatoireDAE,
   ETAPE_IS_NOT_BROUILLON,
   etapeIdOrSlugValidator,
   GetEtapeAvisByEtapeId,
@@ -16,8 +14,6 @@ import {
   EtapeBrouillon,
   etapeSlugValidator,
   etapeDocumentModificationValidator,
-  documentComplementaireDaeEtapeDocumentModificationValidator,
-  documentComplementaireAslEtapeDocumentModificationValidator,
   EtapeSlug,
   ETAPE_IS_BROUILLON,
   getStatutId,
@@ -35,7 +31,6 @@ import { canBeBrouillon, ETAPES_TYPES, isEtapeTypeId } from 'camino-common/src/s
 import {
   DeepReadonly,
   NotNullableKeys,
-  SimplePromiseFn,
   getKeys,
   isNonEmptyArray,
   isNotNullNorUndefined,
@@ -57,16 +52,14 @@ import {
   updateEtapeAvis,
   updateEtapeDocuments,
 } from '../../database/queries/titres-etapes.queries'
-import { GetEtapeDataForEdition, getEtapeByDemarcheIdAndEtapeTypeId, getEtapeDataForEdition } from './etapes.queries'
+import { getEtapeDataForEdition } from './etapes.queries'
 import { SDOMZoneId } from 'camino-common/src/static/sdom'
 import { objectClone } from '../../tools/index'
 import { titreEtapeAdministrationsEmailsSend, titreEtapeUtilisateursEmailsSend } from '../graphql/resolvers/_titre-etape-email'
 import { GetGeojsonInformation, convertPoints, getGeojsonInformation } from './perimetre.queries'
 import { titreEtapeUpdateTask } from '../../business/titre-etape-update'
-import { valeurFind } from 'camino-common/src/sections'
-import { getElementWithValue, getSections, getSectionsWithValue } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections'
+import { getSections } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
-import { AdministrationId } from 'camino-common/src/static/administrations'
 import { titreDemarcheUpdatedEtatValidate, getPossiblesEtapesTypes } from '../../business/validations/titre-demarche-etat-validate'
 import { FlattenEtape, GraphqlEtape, RestEtapeCreation, RestEtapeModification, restEtapeCreationValidator, restEtapeModificationValidator } from 'camino-common/src/etape-form'
 import { ApiFlattenEtape, iTitreEtapeToFlattenEtape } from '../_format/titres-etapes'
@@ -107,81 +100,6 @@ export const getEtapeEntrepriseDocuments =
     }
   }
 
-const getDaeDocument = async (
-  pool: Pool,
-  user: User,
-  titreTypeId: SimplePromiseFn<TitreTypeId>,
-  titresAdministrationsLocales: SimplePromiseFn<AdministrationId[]>,
-  entreprisesTitulairesOuAmodiataires: SimplePromiseFn<EntrepriseId[]>,
-  etapeData: GetEtapeDataForEdition
-) => {
-  const daeEtape = await getEtapeByDemarcheIdAndEtapeTypeId(pool, 'dae', etapeData.demarche_id)
-  if (isNotNullNorUndefined(daeEtape)) {
-    const daeEtapeDocuments = await getDocumentsByEtapeId(daeEtape.etape_id, pool, user, titreTypeId, titresAdministrationsLocales, entreprisesTitulairesOuAmodiataires, etapeData.etape_type_id, {
-      demarche_type_id: etapeData.demarche_type_id,
-      entreprises_lecture: etapeData.demarche_entreprises_lecture,
-      public_lecture: etapeData.demarche_public_lecture,
-      titre_public_lecture: etapeData.titre_public_lecture,
-    })
-
-    const daeArreteDocument = daeEtapeDocuments.find(({ etape_document_type_id }) => etape_document_type_id === documentTypeIdComplementaireObligatoireDAE)
-    if (isNotNullNorUndefined(daeArreteDocument)) {
-      const sectionsWithValue = getSectionsWithValue(getSections(etapeData.titre_type_id, etapeData.demarche_type_id, 'dae'), daeEtape.contenu)
-      const elementWithValue = getElementWithValue(sectionsWithValue, 'mea', 'arrete')
-      const arrete_prefectoral = isNotNullNorUndefined(elementWithValue) ? valeurFind(elementWithValue) : null
-
-      return {
-        id: daeArreteDocument.id,
-        date: daeEtape.date,
-        etape_statut_id: daeEtape.etape_statut_id,
-        arrete_prefectoral,
-        description: daeArreteDocument.description,
-        entreprises_lecture: daeArreteDocument.entreprises_lecture,
-        public_lecture: daeArreteDocument.public_lecture,
-        etape_document_type_id: documentTypeIdComplementaireObligatoireDAE,
-      }
-    }
-  }
-
-  return null
-}
-
-const getAslDocument = async (
-  pool: Pool,
-  user: User,
-  titreTypeId: SimplePromiseFn<TitreTypeId>,
-  titresAdministrationsLocales: SimplePromiseFn<AdministrationId[]>,
-  entreprisesTitulairesOuAmodiataires: SimplePromiseFn<EntrepriseId[]>,
-  etapeData: GetEtapeDataForEdition
-): Promise<GetEtapeDocumentsByEtapeId['asl'] | null> => {
-  const aslEtape = await getEtapeByDemarcheIdAndEtapeTypeId(pool, 'asl', etapeData.demarche_id)
-  if (isNotNullNorUndefined(aslEtape)) {
-    const aslEtapeDocuments = await getDocumentsByEtapeId(aslEtape.etape_id, pool, user, titreTypeId, titresAdministrationsLocales, entreprisesTitulairesOuAmodiataires, etapeData.etape_type_id, {
-      demarche_type_id: etapeData.demarche_type_id,
-      entreprises_lecture: etapeData.demarche_entreprises_lecture,
-      public_lecture: etapeData.demarche_public_lecture,
-      titre_public_lecture: etapeData.titre_public_lecture,
-    })
-
-    const aslEtapeDocumentTypeId = 'let'
-
-    const aslLettreDocument = aslEtapeDocuments.find(({ etape_document_type_id }) => etape_document_type_id === aslEtapeDocumentTypeId)
-    if (isNotNullNorUndefined(aslLettreDocument)) {
-      return {
-        id: aslLettreDocument.id,
-        date: aslEtape.date,
-        etape_statut_id: aslEtape.etape_statut_id,
-        description: aslLettreDocument.description,
-        entreprises_lecture: aslLettreDocument.entreprises_lecture,
-        public_lecture: aslLettreDocument.public_lecture,
-        etape_document_type_id: aslEtapeDocumentTypeId,
-      }
-    }
-  }
-
-  return null
-}
-
 export const getEtapeDocuments =
   (pool: Pool) =>
   async (req: CaminoRequest, res: CustomResponse<GetEtapeDocumentsByEtapeId>): Promise<void> => {
@@ -201,14 +119,7 @@ export const getEtapeDocuments =
           titre_public_lecture: etapeData.titre_public_lecture,
         })
 
-        let dae: null | GetEtapeDocumentsByEtapeId['dae'] = null
-        let asl: null | GetEtapeDocumentsByEtapeId['asl'] = null
-        if (needAslAndDae({ etapeTypeId: etapeData.etape_type_id, demarcheTypeId: etapeData.demarche_type_id, titreTypeId: etapeData.titre_type_id }, etapeData.etape_is_brouillon, user)) {
-          dae = await getDaeDocument(pool, user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires, etapeData)
-          asl = await getAslDocument(pool, user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires, etapeData)
-        }
-
-        res.json({ etapeDocuments: result, asl, dae })
+        res.json({ etapeDocuments: result })
       } catch (e) {
         res.sendStatus(HTTP_STATUS.INTERNAL_SERVER_ERROR)
         console.error(e)
@@ -599,9 +510,7 @@ export const createEtape =
                     entrepriseDocuments,
                     perimetreInfos.sdomZones,
                     perimetreInfos.communes.map(({ id }) => id),
-                    user,
-                    null,
-                    null
+                    user
                   )
 
                   if (rulesErrors.length) {
@@ -743,27 +652,6 @@ export const updateEtape =
 
           const etapeDocuments = etapeDocumentsParsed.data
 
-          const needToCreateAslAndDae = needAslAndDae({ etapeTypeId: etape.typeId, demarcheTypeId: titreDemarche.typeId, titreTypeId: titreDemarche.titre.typeId }, titreEtapeOld.isBrouillon, user)
-          let daeDocument = null
-          let aslDocument = null
-          if (needToCreateAslAndDae) {
-            const daeDocumentParsed = documentComplementaireDaeEtapeDocumentModificationValidator.nullable().safeParse(etape.daeDocument)
-            if (!daeDocumentParsed.success) {
-              console.warn(daeDocumentParsed.error)
-              throw new Error('L’arrêté préfectoral n’est pas conforme')
-            }
-
-            daeDocument = daeDocumentParsed.data
-
-            const aslDocumentParsed = documentComplementaireAslEtapeDocumentModificationValidator.nullable().safeParse(etape.aslDocument)
-            if (!aslDocumentParsed.success) {
-              console.warn(aslDocumentParsed.error)
-              throw new Error('La lettre du propriétaire du sol n’est pas conforme')
-            }
-
-            aslDocument = aslDocumentParsed.data
-          }
-
           const rulesErrors = titreEtapeUpdationValidate(
             flattenEtape,
             titreDemarche,
@@ -774,8 +662,6 @@ export const updateEtape =
             perimetreInfos.sdomZones,
             perimetreInfos.communes.map(({ id }) => id),
             user,
-            daeDocument,
-            aslDocument,
             titreEtapeOld
           )
 
@@ -797,55 +683,6 @@ export const updateEtape =
           await deleteTitreEtapeEntrepriseDocument(pool, { titre_etape_id: etapeUpdated.id })
           for (const document of entrepriseDocuments) {
             await insertTitreEtapeEntrepriseDocument(pool, { titre_etape_id: etapeUpdated.id, entreprise_document_id: document.id })
-          }
-
-          if (needToCreateAslAndDae) {
-            if (daeDocument !== null) {
-              const daeEtapeInDb = await getEtapeByDemarcheIdAndEtapeTypeId(pool, 'dae', titreDemarche.id)
-
-              const daeEtape = await titreEtapeUpsert(
-                {
-                  id: daeEtapeInDb?.etape_id ?? undefined,
-                  typeId: 'dae',
-                  statutId: daeDocument.etape_statut_id,
-                  isBrouillon: ETAPE_IS_NOT_BROUILLON,
-                  titreDemarcheId: titreDemarche.id,
-                  date: daeDocument.date,
-                  contenu: {
-                    mea: { arrete: daeDocument.arrete_prefectoral },
-                  },
-                },
-                user!,
-                titreDemarche.titreId
-              )
-              if (isNullOrUndefined(daeEtape)) {
-                throw new Error("impossible d'intégrer le document lié à la DAE")
-              }
-
-              await updateEtapeDocuments(pool, user, daeEtape.id, titreEtapeOld.isBrouillon, [daeDocument])
-            }
-
-            if (aslDocument !== null) {
-              const aslEtapeInDb = await getEtapeByDemarcheIdAndEtapeTypeId(pool, 'asl', titreDemarche.id)
-
-              const aslEtape = await titreEtapeUpsert(
-                {
-                  id: aslEtapeInDb?.etape_id ?? undefined,
-                  typeId: 'asl',
-                  statutId: aslDocument.etape_statut_id,
-                  isBrouillon: ETAPE_IS_NOT_BROUILLON,
-                  titreDemarcheId: titreDemarche.id,
-                  date: aslDocument.date,
-                },
-                user!,
-                titreDemarche.titreId
-              )
-
-              if (isNullOrUndefined(aslEtape)) {
-                throw new Error("impossible d'intégrer le document lié à la ASL")
-              }
-              await updateEtapeDocuments(pool, user, aslEtape.id, titreEtapeOld.isBrouillon, [aslDocument])
-            }
           }
 
           await updateEtapeAvis(
@@ -934,32 +771,6 @@ export const deposeEtape =
 
         const entrepriseDocuments = await getEntrepriseDocumentIdsByEtapeId({ titre_etape_id: titreEtape.id }, pool, userSuper)
 
-        const daeDocument = await getDaeDocument(pool, user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires, {
-          demarche_entreprises_lecture: titreDemarche.entreprisesLecture ?? false,
-          demarche_public_lecture: titreDemarche.publicLecture ?? false,
-          demarche_id: titreDemarche.id,
-          demarche_type_id: titreDemarche.typeId,
-          etape_statut_id: titreEtape.statutId,
-          etape_type_id: titreEtape.typeId,
-          titre_public_lecture: titre.publicLecture ?? false,
-          titre_type_id: titre.typeId,
-          etape_slug: titreEtape.slug,
-          etape_is_brouillon: titreEtape.isBrouillon,
-        })
-
-        const aslDocument = await getAslDocument(pool, user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires, {
-          demarche_entreprises_lecture: titreDemarche.entreprisesLecture ?? false,
-          demarche_public_lecture: titreDemarche.publicLecture ?? false,
-          demarche_id: titreDemarche.id,
-          demarche_type_id: titreDemarche.typeId,
-          etape_statut_id: titreEtape.statutId,
-          etape_type_id: titreEtape.typeId,
-          titre_public_lecture: titre.publicLecture ?? false,
-          titre_type_id: titre.typeId,
-          etape_slug: titreEtape.slug,
-          etape_is_brouillon: titreEtape.isBrouillon,
-        })
-
         // On utilise le userSuper pour charger tous les avis, car celui qui dépose ne peut peut-être pas voir tous les avis
         const etapeAvis = await getEtapeAvisLargeObjectIdsByEtapeId(id, pool, userSuper, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires, titreEtape.typeId, {
           demarche_type_id: titreDemarche.typeId,
@@ -979,8 +790,6 @@ export const deposeEtape =
           entrepriseDocuments,
           sdomZones,
           communes,
-          daeDocument,
-          aslDocument,
           etapeAvis
         )
         if (!deposable) throw new Error('droits insuffisants')

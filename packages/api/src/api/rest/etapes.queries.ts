@@ -1,5 +1,5 @@
 import { EtapeDocumentId, EtapeId, EtapeIdOrSlug, etapeBrouillonValidator, etapeIdValidator, etapeSlugValidator } from 'camino-common/src/etape'
-import { ETAPE_TYPE_FOR_CONCURRENCY_DATA, EtapeTypeId, etapeTypeIdValidator } from 'camino-common/src/static/etapesTypes'
+import { ETAPE_TYPE_FOR_CONCURRENCY_DATA, etapeTypeIdValidator } from 'camino-common/src/static/etapesTypes'
 import { Pool } from 'pg'
 import { z } from 'zod'
 import { DBNotFound, DbQueryAccessError, Redefine, dbNotFoundError, dbQueryAndValidate, effectDbQueryAndValidate } from '../../pg-database'
@@ -8,13 +8,12 @@ import {
   IGetAdministrationsLocalesByEtapeIdQuery,
   IGetAllDemandesDbQuery,
   IGetDemandesPotentialConcurrenceDbQuery,
-  IGetEtapeByDemarcheIdAndEtapeTypeIdDbQuery,
   IGetEtapeByIdDbQuery,
   IGetEtapeDataForEditionDbQuery,
   IGetLargeobjectIdByEtapeDocumentIdInternalQuery,
   IGetTitulairesAmodiatairesTitreEtapeQuery,
 } from './etapes.queries.types'
-import { DemarcheId, demarcheIdValidator } from 'camino-common/src/demarche'
+import { demarcheIdValidator } from 'camino-common/src/demarche'
 import { sdomZoneIdValidator } from 'camino-common/src/static/sdom'
 import { multiPolygonValidator } from 'camino-common/src/perimetre'
 import { DEMARCHES_TYPES_IDS, demarcheTypeIdValidator } from 'camino-common/src/static/demarchesTypes'
@@ -24,10 +23,8 @@ import { EntrepriseId, entrepriseIdValidator } from 'camino-common/src/entrepris
 import { User } from 'camino-common/src/roles'
 import { LargeObjectId, largeObjectIdValidator } from '../../database/largeobjects'
 import { canReadDocument } from './permissions/documents'
-import { isNotNullNorUndefinedNorEmpty, memoize, Memoized } from 'camino-common/src/typescript-tools'
+import { memoize, Memoized } from 'camino-common/src/typescript-tools'
 import { etapeStatutIdValidator } from 'camino-common/src/static/etapesStatuts'
-import { caminoDateValidator } from 'camino-common/src/date'
-import { contenuValidator } from './activites.queries'
 import { CaminoError } from 'camino-common/src/zod-tools'
 import { ZodUnparseable } from '../../tools/fp-tools'
 import { Effect, pipe } from 'effect'
@@ -143,7 +140,7 @@ const getEtapeDataForEditionValidator = z.object({
   etape_is_brouillon: etapeBrouillonValidator,
 })
 
-export type GetEtapeDataForEdition = z.infer<typeof getEtapeDataForEditionValidator>
+type GetEtapeDataForEdition = z.infer<typeof getEtapeDataForEditionValidator>
 
 const getEtapeDataForEditionDb = sql<Redefine<IGetEtapeDataForEditionDbQuery, { etapeId: EtapeId }, GetEtapeDataForEdition>>`
 select
@@ -211,37 +208,6 @@ where
     te.id = $ etapeId !
     and (etape_titulaires.titulaire_ids ? e.id
         or etape_amodiataires.amodiataire_ids ? e.id)
-`
-
-const getEtapeByDemarcheIdAndEtapeTypeIdValidator = z.object({
-  etape_id: etapeIdValidator,
-  etape_statut_id: etapeStatutIdValidator,
-  date: caminoDateValidator,
-  contenu: contenuValidator.nullable(),
-})
-type EtapeByDemarcheIdAndEtapeTypeId = z.infer<typeof getEtapeByDemarcheIdAndEtapeTypeIdValidator>
-export const getEtapeByDemarcheIdAndEtapeTypeId = async (pool: Pool, etapeTypeId: EtapeTypeId, demarcheId: DemarcheId): Promise<EtapeByDemarcheIdAndEtapeTypeId | null> => {
-  const result = await dbQueryAndValidate(getEtapeByDemarcheIdAndEtapeTypeIdDb, { etapeTypeId, demarcheId }, pool, getEtapeByDemarcheIdAndEtapeTypeIdValidator)
-
-  if (isNotNullNorUndefinedNorEmpty(result)) {
-    return result[0]
-  }
-
-  return null
-}
-
-const getEtapeByDemarcheIdAndEtapeTypeIdDb = sql<Redefine<IGetEtapeByDemarcheIdAndEtapeTypeIdDbQuery, { etapeTypeId: EtapeTypeId; demarcheId: DemarcheId }, EtapeByDemarcheIdAndEtapeTypeId>>`
-select
-    te.id as etape_id,
-    te.statut_id as etape_statut_id,
-    te.date,
-    te.contenu
-from
-    titres_etapes te
-where
-    te.type_id = $ etapeTypeId !
-    and te.titre_demarche_id = $ demarcheId !
-    and te.archive is false
 `
 
 export const getDemandesPotentialConcurrence = (pool: Pool): Effect.Effect<EtapeId[], CaminoError<DbQueryAccessError | ZodUnparseable>> => {

@@ -25,7 +25,7 @@ import { TitreStatutId } from '../static/titresStatuts'
 import { EntrepriseId, entrepriseIdValidator, newEntrepriseId } from '../entreprise'
 import { SubstanceLegaleId } from '../static/substancesLegales'
 import { FeatureMultiPolygon } from '../perimetre'
-import { caminoDateValidator, toCaminoDate } from '../date'
+import { caminoDateValidator } from '../date'
 import { ETAPE_IS_BROUILLON, ETAPE_IS_NOT_BROUILLON, EtapeBrouillon } from '../etape'
 import { EntrepriseUserNotNull } from '../roles'
 import { communeIdValidator } from '../static/communes'
@@ -390,19 +390,11 @@ const axmEntrepriseDocuments: IsEtapeCompleteEntrepriseDocuments = [
 
 test("teste la complétude d'une demande d'AXM faite par un utilisateur entreprises en Guyane en Zone1 du SDOM", () => {
   expect(
-    isEtapeComplete(
-      { ...etapeComplete, isBrouillon: ETAPE_IS_BROUILLON },
-      'axm',
-      'oct',
-      axmDocuments,
-      axmEntrepriseDocuments,
-      [SDOMZoneIds.Zone1],
-      [communeIdValidator.parse('97302')],
-      { arrete_prefectoral: '', date: toCaminoDate('2024-01-01'), description: null, entreprises_lecture: true, etape_document_type_id: 'arp', etape_statut_id: 'fai', public_lecture: true },
-      { date: toCaminoDate('2024-04-22'), description: null, entreprises_lecture: true, etape_document_type_id: 'let', etape_statut_id: 'fai', public_lecture: true },
-      [],
-      { ...testBlankUser, role: 'entreprise', entrepriseIds: [entrepriseIdValidator.parse('id1')] }
-    )
+    isEtapeComplete({ ...etapeComplete, isBrouillon: ETAPE_IS_BROUILLON }, 'axm', 'oct', axmDocuments, axmEntrepriseDocuments, [SDOMZoneIds.Zone1], [communeIdValidator.parse('97302')], [], {
+      ...testBlankUser,
+      role: 'entreprise',
+      entrepriseIds: [entrepriseIdValidator.parse('id1')],
+    })
   ).toMatchInlineSnapshot(`
     {
       "errors": [
@@ -415,37 +407,20 @@ test("teste la complétude d'une demande d'AXM faite par un utilisateur entrepri
 
 test("teste la complétude d'une demande d'AXM faite par un utilisateur entreprises", () => {
   expect(
-    isEtapeComplete(
-      { ...etapeComplete, isBrouillon: ETAPE_IS_BROUILLON },
-      'axm',
-      'oct',
-      axmDocuments,
-      axmEntrepriseDocuments,
-      [],
-      [],
-      { arrete_prefectoral: '', date: toCaminoDate('2024-01-01'), description: null, entreprises_lecture: true, etape_document_type_id: 'arp', etape_statut_id: 'fai', public_lecture: true },
-      { date: toCaminoDate('2024-04-22'), description: null, entreprises_lecture: true, etape_document_type_id: 'let', etape_statut_id: 'fai', public_lecture: true },
-      [],
-      { ...testBlankUser, role: 'entreprise', entrepriseIds: [entrepriseIdValidator.parse('id1')] }
-    )
+    isEtapeComplete({ ...etapeComplete, isBrouillon: ETAPE_IS_BROUILLON }, 'axm', 'oct', axmDocuments, axmEntrepriseDocuments, [], [], [], {
+      ...testBlankUser,
+      role: 'entreprise',
+      entrepriseIds: [entrepriseIdValidator.parse('id1')],
+    })
   ).toStrictEqual({ valid: true })
 })
 
 test("teste la complétude d'une demande d'ARM", () => {
   expect(
-    isEtapeComplete(
-      { ...etapeComplete, contenu: { arm: { mecanise: { value: false, etapeHeritee: null, heritee: false } } } },
-      'arm',
-      'oct',
-      armDocuments,
-      armEntrepriseDocuments,
-      [],
-      [],
-      null,
-      null,
-      [],
-      { ...testBlankUser, role: 'super' }
-    )
+    isEtapeComplete({ ...etapeComplete, contenu: { arm: { mecanise: { value: false, etapeHeritee: null, heritee: false } } } }, 'arm', 'oct', armDocuments, armEntrepriseDocuments, [], [], [], {
+      ...testBlankUser,
+      role: 'super',
+    })
   ).toStrictEqual({ valid: true })
 })
 
@@ -461,7 +436,7 @@ test.each<[SubstanceLegaleId[], EtapeTypeId, TitreTypeId, IsEtapeCompleteDocumen
     typeId: etapeType,
   }
 
-  const result = isEtapeComplete(titreEtape, titreType, 'oct', testDocuments, entrepriseDocuments, [], [], null, null, [], { ...testBlankUser, role: 'super' })
+  const result = isEtapeComplete(titreEtape, titreType, 'oct', testDocuments, entrepriseDocuments, [], [], [], { ...testBlankUser, role: 'super' })
 
   expect(result.valid, JSON.stringify(result)).toBe(true)
 })
@@ -478,7 +453,7 @@ test.each<[SubstanceLegaleId[], EtapeTypeId, TitreTypeId, IsEtapeCompleteDocumen
     typeId: etapeType,
   }
 
-  const result = isEtapeComplete(titreEtape, titreType, 'oct', testDocuments, entrepriseDocuments, [], [], null, null, [], { ...testBlankUser, role: 'super' })
+  const result = isEtapeComplete(titreEtape, titreType, 'oct', testDocuments, entrepriseDocuments, [], [], [], { ...testBlankUser, role: 'super' })
 
   const errorLabel = 'Les substances sont obligatoires'
   expect(result.valid).toBe(false)
@@ -513,7 +488,7 @@ test.each<[FeatureMultiPolygon | null, EtapeTypeId, TitreTypeId, IsEtapeComplete
     typeId: etapeType,
   }
 
-  const result = isEtapeComplete(titreEtape, titreType, 'oct', documents, entrepriseDocuments, [], [], null, null, [], { ...testBlankUser, role: 'super' })
+  const result = isEtapeComplete(titreEtape, titreType, 'oct', documents, entrepriseDocuments, [], [], [], { ...testBlankUser, role: 'super' })
 
   const errorLabel = 'le périmètre est obligatoire pour une démarche octroi'
   expect(result.valid).toBe(false)
@@ -548,7 +523,7 @@ test.each<[FeatureMultiPolygon | null, EtapeTypeId, TitreTypeId, IsEtapeComplete
     typeId: etapeType,
   }
 
-  const result = isEtapeComplete(titreEtape, titreType, 'oct', documents, entrepriseDocuments, [], [], null, null, [], { ...testBlankUser, role: 'super' })
+  const result = isEtapeComplete(titreEtape, titreType, 'oct', documents, entrepriseDocuments, [], [], [], { ...testBlankUser, role: 'super' })
 
   expect(result).toStrictEqual({ valid: true })
 })
@@ -562,8 +537,6 @@ test("une demande d'ARM mécanisée a des documents obligatoires supplémentaire
     armEntrepriseDocuments,
     null,
     [],
-    null,
-    null,
     [],
     { ...testBlankUser, role: 'super' }
   )
@@ -594,7 +567,7 @@ test.each<[number | null, EtapeTypeId, TitreTypeId, IsEtapeCompleteDocuments, Is
     typeId: etapeType,
   }
 
-  const result = isEtapeComplete(titreEtape, titreType, 'oct', documents, entreprisedocuments, [], [], null, null, [], { ...testBlankUser, role: 'super' })
+  const result = isEtapeComplete(titreEtape, titreType, 'oct', documents, entreprisedocuments, [], [], [], { ...testBlankUser, role: 'super' })
 
   const errorLabel = 'la durée est obligatoire pour une démarche octroi'
   if (error) {
@@ -620,8 +593,6 @@ describe('isEtapeDeposable', () => {
         armEntrepriseDocuments,
         [],
         [],
-        null,
-        null,
         []
       )
     ).toStrictEqual(true)
@@ -638,16 +609,14 @@ describe('isEtapeDeposable', () => {
         armEntrepriseDocuments,
         [],
         [],
-        null,
-        null,
         []
       )
     ).toStrictEqual(false)
   })
 
   test("Une demande d'ARM incomplète", () => {
-    expect(
-      isEtapeDeposable({ ...testBlankUser, role: 'super' }, 'arm', 'oct', { ...etapeComplete, isBrouillon: ETAPE_IS_BROUILLON }, armDocuments, armEntrepriseDocuments, [], [], null, null, [])
-    ).toStrictEqual(false)
+    expect(isEtapeDeposable({ ...testBlankUser, role: 'super' }, 'arm', 'oct', { ...etapeComplete, isBrouillon: ETAPE_IS_BROUILLON }, armDocuments, armEntrepriseDocuments, [], [], [])).toStrictEqual(
+      false
+    )
   })
 })

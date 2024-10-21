@@ -8,7 +8,7 @@ import { User } from 'camino-common/src/roles'
 import { SDOMZoneId } from 'camino-common/src/static/sdom'
 import { getSections } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections'
 import { EntrepriseDocument, EntrepriseId } from 'camino-common/src/entreprise'
-import { ETAPE_IS_NOT_BROUILLON, EtapeAvis, EtapeDocument, GetEtapeDocumentsByEtapeIdAslDocument, GetEtapeDocumentsByEtapeIdDaeDocument } from 'camino-common/src/etape'
+import { ETAPE_IS_NOT_BROUILLON, EtapeAvis, EtapeDocument } from 'camino-common/src/etape'
 import { CommuneId } from 'camino-common/src/static/communes'
 import { DeepReadonly, isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools'
 import { flattenContenuToSimpleContenu } from 'camino-common/src/sections'
@@ -25,8 +25,6 @@ export const titreEtapeUpdationValidate = (
   sdomZones: DeepReadonly<SDOMZoneId[]> | null | undefined,
   communes: CommuneId[] | null | undefined,
   user: User,
-  daeDocument: Omit<GetEtapeDocumentsByEtapeIdDaeDocument, 'id'> | null,
-  aslDocument: Omit<GetEtapeDocumentsByEtapeIdAslDocument, 'id'> | null,
   titreEtapeOld?: ITitreEtape
 ): string[] => {
   const errors: string[] = []
@@ -97,7 +95,7 @@ export const titreEtapeUpdationValidate = (
 
   // 4. si l’étape n’est pas en cours de construction
   if (etape.isBrouillon === ETAPE_IS_NOT_BROUILLON) {
-    const etapeComplete = isEtapeComplete(etape, titre.typeId, titreDemarche.typeId, documents, entrepriseDocuments, sdomZones, communes ?? [], daeDocument, aslDocument, etapeAvis, user)
+    const etapeComplete = isEtapeComplete(etape, titre.typeId, titreDemarche.typeId, documents, entrepriseDocuments, sdomZones, communes ?? [], etapeAvis, user)
     if (!etapeComplete.valid) {
       errors.push(...etapeComplete.errors)
     }

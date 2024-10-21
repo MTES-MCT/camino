@@ -6,16 +6,7 @@ import { EntrepriseDocumentsEdit } from './entreprises-documents-edit'
 import { EtapeDocumentsEdit } from './etape-documents-edit'
 import { ApiClient } from '../../api/api-client'
 import { User } from 'camino-common/src/roles'
-import {
-  DocumentComplementaireAslEtapeDocumentModification,
-  DocumentComplementaireDaeEtapeDocumentModification,
-  ETAPE_IS_NOT_BROUILLON,
-  EtapeAvis,
-  EtapeDocument,
-  EtapeId,
-  TempEtapeAvis,
-  TempEtapeDocument,
-} from 'camino-common/src/etape'
+import { ETAPE_IS_NOT_BROUILLON, EtapeAvis, EtapeDocument, EtapeId, TempEtapeAvis, TempEtapeDocument } from 'camino-common/src/etape'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { TitreSlug } from 'camino-common/src/validators/titres'
@@ -93,8 +84,6 @@ export type Props = {
 type EtapeEditFormDocuments = DeepReadonly<{
   etapeDocuments: (EtapeDocument | TempEtapeDocument)[]
   entrepriseDocuments: SelectedEntrepriseDocument[]
-  daeDocument: DocumentComplementaireDaeEtapeDocumentModification | null
-  aslDocument: DocumentComplementaireAslEtapeDocumentModification | null
   etapeAvis: (EtapeAvis | TempEtapeAvis)[]
 }>
 
@@ -231,8 +220,6 @@ export const EtapeEditForm = defineComponent<Props>(props => {
   const [documents, setDocuments] = useState<EtapeEditFormDocuments>({
     etapeDocuments: [],
     entrepriseDocuments: [],
-    daeDocument: null,
-    aslDocument: null,
     etapeAvis: [],
   })
   onMounted(async () => {
@@ -306,16 +293,7 @@ export const EtapeEditForm = defineComponent<Props>(props => {
           fondamentaleStepIsComplete(etape.value.value, props.demarcheTypeId, props.titreTypeId, props.user).valid &&
           sectionsStepIsComplete(etape.value.value, props.demarcheTypeId, props.titreTypeId).valid &&
           perimetreStepIsComplete(etape.value.value, props.demarcheTypeId).valid &&
-          etapeDocumentsStepIsComplete(
-            etape.value.value,
-            props.demarcheTypeId,
-            props.titreTypeId,
-            documents.value.etapeDocuments,
-            props.perimetre.sdomZoneIds,
-            documents.value.daeDocument,
-            documents.value.aslDocument,
-            props.user
-          ).valid &&
+          etapeDocumentsStepIsComplete(etape.value.value, props.demarcheTypeId, props.titreTypeId, documents.value.etapeDocuments, props.perimetre.sdomZoneIds).valid &&
           entrepriseDocumentsStepIsComplete(etape.value.value, props.demarcheTypeId, props.titreTypeId, documents.value.entrepriseDocuments).valid &&
           etapeAvisStepIsComplete(etape.value.value, documents.value.etapeAvis, props.titreTypeId, props.perimetre.communes).valid
         )
@@ -336,8 +314,6 @@ export const EtapeEditForm = defineComponent<Props>(props => {
         documents.value.entrepriseDocuments.map(({ documentTypeId, entrepriseId }) => ({ entreprise_document_type_id: documentTypeId, entreprise_id: entrepriseId })),
         props.perimetre.sdomZoneIds,
         props.perimetre.communes,
-        documents.value.daeDocument,
-        documents.value.aslDocument,
         documents.value.etapeAvis
       )
     }
@@ -503,16 +479,10 @@ const EtapeEditFormInternal = defineComponent<
     alertesUpdate: (alertes: Omit<DeepReadonly<PerimetreInformations>, 'communes'>) => void
   } & Omit<Props, 'etape'>
 >(props => {
-  const documentsCompleteUpdate = (
-    etapeDocuments: (EtapeDocument | TempEtapeDocument)[],
-    daeDocument: DocumentComplementaireDaeEtapeDocumentModification | null,
-    aslDocument: DocumentComplementaireAslEtapeDocumentModification | null
-  ) => {
+  const documentsCompleteUpdate = (etapeDocuments: (EtapeDocument | TempEtapeDocument)[]) => {
     props.setEtape(props.etape, {
       ...props.documents,
       etapeDocuments,
-      daeDocument,
-      aslDocument,
     })
   }
 
@@ -640,18 +610,7 @@ const EtapeEditFormInternal = defineComponent<
       {etapeDocumentsStepIsVisible(props.etape, props.demarcheTypeId, props.titreTypeId) ? (
         <Bloc
           step={{ name: 'Liste des documents', help: null }}
-          complete={
-            etapeDocumentsStepIsComplete(
-              props.etape,
-              props.demarcheTypeId,
-              props.titreTypeId,
-              props.documents.etapeDocuments,
-              props.perimetre.sdomZoneIds,
-              props.documents.daeDocument,
-              props.documents.aslDocument,
-              props.user
-            ).valid
-          }
+          complete={etapeDocumentsStepIsComplete(props.etape, props.demarcheTypeId, props.titreTypeId, props.documents.etapeDocuments, props.perimetre.sdomZoneIds).valid}
         >
           <EtapeDocumentsEdit
             apiClient={props.apiClient}

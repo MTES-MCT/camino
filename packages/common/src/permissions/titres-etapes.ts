@@ -7,17 +7,7 @@ import { TitreStatutId } from '../static/titresStatuts'
 import { EntrepriseDocument, EntrepriseId } from '../entreprise'
 import { SDOMZoneId } from '../static/sdom'
 import { DeepReadonly, NonEmptyArray, isNonEmptyArray } from '../typescript-tools'
-import {
-  ETAPE_IS_BROUILLON,
-  EtapeAvis,
-  EtapeBrouillon,
-  EtapeDocument,
-  GetEtapeDocumentsByEtapeId,
-  GetEtapeDocumentsByEtapeIdAslDocument,
-  GetEtapeDocumentsByEtapeIdDaeDocument,
-  TempEtapeAvis,
-  TempEtapeDocument,
-} from '../etape'
+import { ETAPE_IS_BROUILLON, EtapeAvis, EtapeBrouillon, EtapeDocument, TempEtapeAvis, TempEtapeDocument } from '../etape'
 import {
   dateTypeStepIsComplete,
   entrepriseDocumentsStepIsComplete,
@@ -215,8 +205,6 @@ export type IsEtapeCompleteDocuments = DeepReadonly<Pick<EtapeDocument | TempEta
 export type IsEtapeCompleteEntrepriseDocuments = DeepReadonly<Pick<EntrepriseDocument, 'entreprise_document_type_id' | 'entreprise_id'>[]>
 type IsEtapeCompleteSdomZones = DeepReadonly<SDOMZoneId[]> | null | undefined
 type IsEtapeCompleteCommunes = DeepReadonly<CommuneId[]>
-type IsEtapeCompleteDaeDocument = DeepReadonly<Omit<GetEtapeDocumentsByEtapeIdDaeDocument, 'id'> | null>
-type IsEtapeCompleteAslDocument = DeepReadonly<Omit<GetEtapeDocumentsByEtapeIdAslDocument, 'id'> | null>
 type IsEtapeCompleteEtapeAvis = DeepReadonly<Pick<EtapeAvis, 'avis_type_id'>[]>
 
 export const isEtapeComplete = (
@@ -227,8 +215,6 @@ export const isEtapeComplete = (
   entrepriseDocuments: IsEtapeCompleteEntrepriseDocuments,
   sdomZones: IsEtapeCompleteSdomZones,
   communes: IsEtapeCompleteCommunes,
-  daeDocument: IsEtapeCompleteDaeDocument,
-  aslDocument: IsEtapeCompleteAslDocument,
   etapeAvis: IsEtapeCompleteEtapeAvis,
   user: User
 ): { valid: true } | { valid: false; errors: NonEmptyArray<string> } => {
@@ -237,7 +223,7 @@ export const isEtapeComplete = (
     fondamentaleStepIsComplete(etape, demarcheTypeId, titreTypeId, user),
     sectionsStepIsComplete(etape, demarcheTypeId, titreTypeId),
     perimetreStepIsComplete(etape, demarcheTypeId),
-    etapeDocumentsStepIsComplete(etape, demarcheTypeId, titreTypeId, documents, sdomZones ?? [], daeDocument, aslDocument, user),
+    etapeDocumentsStepIsComplete(etape, demarcheTypeId, titreTypeId, documents, sdomZones ?? []),
     entrepriseDocumentsStepIsComplete(
       etape,
       demarcheTypeId,
@@ -271,12 +257,10 @@ export const isEtapeDeposable = (
   entrepriseDocuments: IsEtapeCompleteEntrepriseDocuments,
   sdomZones: IsEtapeCompleteSdomZones,
   communes: IsEtapeCompleteCommunes,
-  daeDocument: IsEtapeCompleteDaeDocument,
-  aslDocument: IsEtapeCompleteAslDocument,
   etapeAvis: IsEtapeDeposableEtapeAvis
 ): boolean => {
   if (titreEtape.isBrouillon === ETAPE_IS_BROUILLON) {
-    const complete = isEtapeComplete(titreEtape, titreTypeId, demarcheTypeId, etapeDocuments, entrepriseDocuments, sdomZones, communes, daeDocument, aslDocument, etapeAvis, user)
+    const complete = isEtapeComplete(titreEtape, titreTypeId, demarcheTypeId, etapeDocuments, entrepriseDocuments, sdomZones, communes, etapeAvis, user)
     if (!complete.valid) {
       console.warn(complete.errors)
 
@@ -303,12 +287,10 @@ export const canDeposeEtape = (
   entrepriseDocuments: Pick<EntrepriseDocument, 'entreprise_document_type_id' | 'entreprise_id'>[],
   sdomZones: SDOMZoneId[] | null | undefined,
   communes: CommuneId[],
-  daeDocument: GetEtapeDocumentsByEtapeId['dae'],
-  aslDocument: GetEtapeDocumentsByEtapeId['asl'],
   etapeAvis: IsEtapeDeposableEtapeAvis
 ): boolean => {
   return (
-    isEtapeDeposable(user, titre.typeId, demarcheTypeId, titreEtape, etapeDocuments, entrepriseDocuments, sdomZones, communes, daeDocument, aslDocument, etapeAvis) &&
+    isEtapeDeposable(user, titre.typeId, demarcheTypeId, titreEtape, etapeDocuments, entrepriseDocuments, sdomZones, communes, etapeAvis) &&
     canCreateOrEditEtape(
       user,
       titreEtape.typeId,
