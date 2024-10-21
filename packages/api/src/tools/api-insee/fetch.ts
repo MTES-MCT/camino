@@ -6,6 +6,7 @@ import { CaminoDate, dateAddDays, daysBetween, getCurrent } from 'camino-common/
 import { Siren } from 'camino-common/src/entreprise'
 import { config } from '../../config/index'
 import { isNotNullNorUndefinedNorEmpty, isNullOrUndefined } from 'camino-common/src/typescript-tools'
+import { fetch } from 'undici'
 
 const MAX_CALLS_MINUTE = 30
 const MAX_RESULTS = 20

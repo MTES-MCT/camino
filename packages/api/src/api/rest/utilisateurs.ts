@@ -30,6 +30,7 @@ import { DbQueryAccessError } from '../../pg-database'
 import { callAndExit, ZodUnparseable } from '../../tools/fp-tools'
 import { z } from 'zod'
 import { getEntreprises } from './entreprises.queries'
+import { fetch } from 'undici'
 
 export const isSubscribedToNewsletter =
   (pool: Pool) =>

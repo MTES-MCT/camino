@@ -6,6 +6,10 @@ import { DepartementId } from 'camino-common/src/static/departement'
 import { isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools'
 import { readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
+import { setGlobalDispatcher, EnvHttpProxyAgent } from 'undici'
+
+const envHttpProxyAgent = new EnvHttpProxyAgent()
+setGlobalDispatcher(envHttpProxyAgent)
 
 const administrationsUpdate = async () => {
   console.info()

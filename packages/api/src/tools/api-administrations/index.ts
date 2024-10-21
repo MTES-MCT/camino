@@ -3,6 +3,7 @@ import { DepartementId } from 'camino-common/src/static/departement'
 import { Administration, administrationIdValidator, administrationTypeIdValidator } from 'camino-common/src/static/administrations'
 import { config } from '../../config/index'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
+import { fetch } from 'undici'
 
 const MAX_CALLS_MINUTE = 200
 

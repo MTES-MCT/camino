@@ -11,6 +11,7 @@ import { Pool } from 'pg'
 import { getCommuneIds, insertCommune } from '../database/queries/communes.queries'
 import { toCommuneId } from 'camino-common/src/static/communes'
 import { createWriteStream } from 'node:fs'
+import { fetch } from 'undici'
 
 const require = createRequire(import.meta.url)
 const { streamArray } = require('stream-json/streamers/StreamArray')
@@ -28,7 +29,6 @@ const communesUpdate = async (pool: Pool) => {
     throw new Error('Les communes sont vides')
   }
   const pipeline = chain([
-    // @ts-expect-error
     Readable.fromWeb(communesFetch.body),
     withParser({ filter: 'features' }),
     streamArray(),

@@ -7,6 +7,10 @@ import { monthly } from '../business/monthly'
 import pg from 'pg'
 import { config } from '../config/index'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
+import { setGlobalDispatcher, EnvHttpProxyAgent } from 'undici'
+
+const envHttpProxyAgent = new EnvHttpProxyAgent()
+setGlobalDispatcher(envHttpProxyAgent)
 
 const logFile = '/tmp/monthly.log'
 

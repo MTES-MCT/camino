@@ -31,6 +31,11 @@ import cookieParser from 'cookie-parser'
 import pg from 'pg'
 import qs from 'qs'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
+import { setGlobalDispatcher, EnvHttpProxyAgent } from 'undici'
+
+// pour gérer les variables HTTPS_PROXY et tout ça... https://github.com/nodejs/undici/blob/7f635e51f6170f4b59abedc7cb45e6bcda7f056d/docs/docs/api/EnvHttpProxyAgent.md#L4
+const envHttpProxyAgent = new EnvHttpProxyAgent()
+setGlobalDispatcher(envHttpProxyAgent)
 // Le pool ne doit être qu'aux entrypoints : le daily, le monthly, et l'application.
 const pool = new pg.Pool({
   host: config().PGHOST,

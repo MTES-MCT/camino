@@ -42,6 +42,7 @@ export default [
     },
 
     rules: {
+      'no-restricted-globals': ['error', { name: 'fetch', message: 'Use fetch from undici to get the proxy configuration automatically' }],
       camelcase: 0,
 
       'sql/format': [

@@ -10,6 +10,19 @@ if (process.env.VITEST !== 'true') {
 }
 
 const JWT_ALGORITHMS = ['HS256', 'HS384', 'HS512', 'RS256', 'RS384', 'RS512', 'ES256', 'ES384', 'ES512', 'PS256', 'PS384', 'PS512', 'none'] as const
+const urlToSplit = (url: undefined | string): { value: string; host: string; port: number } | undefined => {
+  if (isNullOrUndefined(url)) {
+    return url
+  }
+  const value = new URL(url)
+
+  return {
+    value: url,
+    host: value.host,
+    port: parseInt(value.port),
+  }
+}
+const httpsProxyValidator = z.string().url().optional().transform(urlToSplit)
 
 const configValidator = caminoConfigValidator.extend({
   API_HOST: z.string(),
@@ -44,6 +57,7 @@ const configValidator = caminoConfigValidator.extend({
   API_MAILJET_SECRET: z.string(),
   API_MAILJET_CONTACTS_LIST_ID: z.coerce.number(),
   API_MAILJET_EXPLOITANTS_GUYANE_LIST_ID: z.coerce.number(),
+  HTTPS_PROXY: httpsProxyValidator,
 })
 
 let cacheConfig: z.infer<typeof configValidator>
