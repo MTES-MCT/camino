@@ -25,7 +25,7 @@ import { documentTypeIdsBySdomZonesGet } from '../static/titresTypes_demarchesTy
 import { getSections, getSectionsWithValue } from '../static/titresTypes_demarchesTypes_etapesTypes/sections'
 import { isNotNullNorUndefinedNorEmpty, DeepReadonly, onlyUnique, NonEmptyArray, isNonEmptyArray, isNullOrUndefinedOrEmpty, isNullOrUndefined, Nullable } from '../typescript-tools'
 import { sectionsWithValueCompleteValidate } from './sections'
-import { canEditAmodiataires, canEditDuree, canEditTitulaires, isDureeOptional } from './titres-etapes'
+import { canEditAmodiataires, canEditDuree, canEditPerimetre, canEditTitulaires } from './titres-etapes'
 
 type ValidReturn = { valid: true } | { valid: false; errors: NonEmptyArray<string> }
 
@@ -72,16 +72,13 @@ export const fondamentaleStepIsComplete = (
   }
   const errors: string[] = []
 
-  if (flattened.typeId !== ETAPES_TYPES.demande) {
-    return { valid: true }
-  }
-
   if (isNullOrUndefinedOrEmpty(flattened.substances.value)) {
     errors.push('Les substances sont obligatoires')
   }
 
-  if (canEditDuree(titreTypeId, demarcheTypeId, user) && !isDureeOptional(flattened.typeId, demarcheTypeId, titreTypeId) && (isNullOrUndefined(flattened.duree.value) || flattened.duree.value === 0)) {
-    errors.push('la durée est obligatoire')
+  const editDuree = canEditDuree(titreTypeId, demarcheTypeId, user)
+  if (editDuree.visibility === 'present' && editDuree.required && (isNullOrUndefined(flattened.duree.value) || flattened.duree.value === 0)) {
+    errors.push(editDuree.message)
   }
 
   const editTitulaires = canEditTitulaires(titreTypeId, demarcheTypeId, user)
@@ -120,17 +117,20 @@ export const sectionsStepIsComplete = (etape: DeepReadonly<Pick<FlattenEtape, 't
   return { valid: true }
 }
 
-export const perimetreStepIsVisible = (etape: Pick<FlattenEtape, 'typeId'>): boolean => {
-  return EtapesTypes[etape.typeId].fondamentale
+export const perimetreStepIsVisible = (etape: Pick<FlattenEtape, 'typeId'>, demarcheTypeId: DemarcheTypeId): boolean => {
+  const editPerimetre = canEditPerimetre(demarcheTypeId, etape.typeId)
+
+  return editPerimetre.visibility === 'present'
 }
-export const perimetreStepIsComplete = (etape: DeepReadonly<Pick<FlattenEtape, 'typeId' | 'perimetre'>>): ValidReturn => {
-  if (!perimetreStepIsVisible(etape)) {
+export const perimetreStepIsComplete = (etape: DeepReadonly<Pick<FlattenEtape, 'typeId' | 'perimetre'>>, demarcheTypeId: DemarcheTypeId): ValidReturn => {
+  if (!perimetreStepIsVisible(etape, demarcheTypeId)) {
     return { valid: true }
   }
 
   const errors: string[] = []
-  if (etape.typeId === 'mfr' && isNullOrUndefined(etape.perimetre.value?.geojson4326Perimetre)) {
-    errors.push('Le périmètre est obligatoire')
+  const editPerimetre = canEditPerimetre(demarcheTypeId, etape.typeId)
+  if (editPerimetre.visibility === 'present' && editPerimetre.required && isNullOrUndefined(etape.perimetre.value?.geojson4326Perimetre)) {
+    errors.push(editPerimetre.message)
   }
 
   if (isNonEmptyArray(errors)) {

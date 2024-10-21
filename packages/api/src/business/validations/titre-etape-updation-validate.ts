@@ -3,7 +3,7 @@ import { ITitreEtape, ITitreDemarche, ITitre } from '../../types'
 import { titreDemarcheUpdatedEtatValidate } from './titre-demarche-etat-validate'
 import { contenuNumbersCheck } from './utils/contenu-numbers-check'
 import { contenuDatesCheck } from './utils/contenu-dates-check'
-import { canEditAmodiataires, canEditDates, canEditDuree, canEditTitulaires, isEtapeComplete } from 'camino-common/src/permissions/titres-etapes'
+import { canEditAmodiataires, canEditDates, canEditDuree, canEditPerimetre, canEditTitulaires, isEtapeComplete } from 'camino-common/src/permissions/titres-etapes'
 import { User } from 'camino-common/src/roles'
 import { SDOMZoneId } from 'camino-common/src/static/sdom'
 import { getSections } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections'
@@ -13,6 +13,7 @@ import { CommuneId } from 'camino-common/src/static/communes'
 import { DeepReadonly, isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools'
 import { FlattenEtape } from 'camino-common/src/etape-form'
 import { flattenContenuToSimpleContenu } from 'camino-common/src/sections'
+import { equalGeojson } from 'camino-common/src/perimetre'
 
 export const titreEtapeUpdationValidate = (
   etape: Pick<Partial<FlattenEtape>, 'id'> & Omit<FlattenEtape, 'id'>,
@@ -31,16 +32,19 @@ export const titreEtapeUpdationValidate = (
   const errors: string[] = []
   const sections = getSections(titre.typeId, titreDemarche.typeId, etape.typeId)
 
-  if (!etape.duree.heritee && !canEditDuree(titre.typeId, titreDemarche.typeId, user) && (etape.duree.value ?? 0) !== (titreEtapeOld?.duree ?? 0)) {
-    errors.push('impossible d’éditer la durée')
+  if (!etape.duree.heritee) {
+    const editDuree = canEditDuree(titre.typeId, titreDemarche.typeId, user)
+    if (editDuree.visibility === 'absent' && (etape.duree.value ?? 0) !== (titreEtapeOld?.duree ?? 0)) {
+      errors.push(editDuree.message)
+    }
   }
 
-  if (!canEditDates(titre.typeId, titreDemarche.typeId, etape.typeId, user)) {
+  const editDates = canEditDates(titre.typeId, titreDemarche.typeId, etape.typeId, user)
+  if (editDates.visibility === 'absent') {
     if (!etape.dateDebut.heritee && (etape.dateDebut.value ?? '') !== (titreEtapeOld?.dateDebut ?? '')) {
-      errors.push('impossible d’éditer la date de début')
-    }
-    if (!etape.dateFin.heritee && (etape.dateFin.value ?? '') !== (titreEtapeOld?.dateFin ?? '')) {
-      errors.push('impossible d’éditer la date d’échéance')
+      errors.push(editDates.message)
+    } else if (!etape.dateFin.heritee && (etape.dateFin.value ?? '') !== (titreEtapeOld?.dateFin ?? '')) {
+      errors.push(editDates.message)
     }
   }
 
@@ -55,6 +59,13 @@ export const titreEtapeUpdationValidate = (
     const editAmodiataires = canEditAmodiataires(titre.typeId, titreDemarche.typeId, user)
     if (editAmodiataires.visibility === 'absent' && entreprisesHaveChanged(etape.amodiataires.value, titreEtapeOld?.amodiataireIds ?? [])) {
       errors.push(editAmodiataires.message)
+    }
+  }
+
+  if (!etape.perimetre.heritee) {
+    const editPerimetre = canEditPerimetre(titreDemarche.typeId, etape.typeId)
+    if (editPerimetre.visibility === 'absent' && !equalGeojson(etape.perimetre.value?.geojson4326Perimetre?.geometry ?? null, titreEtapeOld?.geojson4326Perimetre?.geometry)) {
+      errors.push(editPerimetre.message)
     }
   }
 

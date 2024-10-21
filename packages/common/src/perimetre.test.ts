@@ -2,6 +2,8 @@ import { test, expect } from 'vitest'
 import { crsUrnValidator, equalGeojson } from './perimetre'
 
 test('equalGeojson', () => {
+  expect(equalGeojson(null, null)).toBe(true)
+  expect(equalGeojson(null, { type: 'MultiPolygon', coordinates: [[[[1, 2]]]] })).toBe(false)
   expect(equalGeojson({ type: 'MultiPolygon', coordinates: [[[[1, 2]]]] }, null)).toBe(false)
   expect(equalGeojson({ type: 'MultiPolygon', coordinates: [[[[1, 2]]]] }, undefined)).toBe(false)
   expect(equalGeojson({ type: 'MultiPolygon', coordinates: [[[[1, 2]]]] }, { type: 'MultiPolygon', coordinates: [[[[2, 2]]]] })).toBe(false)

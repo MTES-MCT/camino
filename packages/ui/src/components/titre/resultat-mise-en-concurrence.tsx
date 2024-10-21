@@ -24,12 +24,13 @@ export type Props = {
   apiClient: Pick<ApiClient, 'getEtapesTypesEtapesStatuts' | 'etapeCreer'>
   initTab?: TabId
   entreprises: Entreprise[]
+  initDate?: CaminoDate
 } & DeepReadonly<GetResultatMiseEnConcurrence>
 
 export const ResultatMiseEnConcurrence = defineComponent<Props>(props => {
   const [decision, setDecision] = useState<'acc' | 'rej' | null>(null)
   const [updatePerimetre, setUpdatePerimetre] = useState<'origin' | 'origin_without_satellite' | 'custom' | null>(null)
-  const [date, setDate] = useState<CaminoDate | null>(getCurrent())
+  const [date, setDate] = useState<CaminoDate | null>(props.initDate ?? getCurrent())
   const [possibleEtapes, setPossibleEtapes] = useState<AsyncData<boolean>>({ status: 'LOADING' })
   const [etapeCreation, setEtapeCreation] = useState<AsyncData<boolean>>({ status: 'LOADED', value: true })
   const entreprisesIndex = props.entreprises.reduce<Record<EntrepriseId, string>>((acc, entreprise) => {
@@ -227,4 +228,4 @@ export const ResultatMiseEnConcurrence = defineComponent<Props>(props => {
 })
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-ResultatMiseEnConcurrence.props = ['initTab', 'pivot', 'satellites', 'entreprises', 'apiClient']
+ResultatMiseEnConcurrence.props = ['initTab', 'pivot', 'satellites', 'entreprises', 'apiClient', 'initDate']

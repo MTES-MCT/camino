@@ -305,7 +305,7 @@ export const EtapeEditForm = defineComponent<Props>(props => {
           dateTypeStepIsComplete(etape.value.value, props.user).valid &&
           fondamentaleStepIsComplete(etape.value.value, props.demarcheTypeId, props.titreTypeId, props.user).valid &&
           sectionsStepIsComplete(etape.value.value, props.demarcheTypeId, props.titreTypeId).valid &&
-          perimetreStepIsComplete(etape.value.value).valid &&
+          perimetreStepIsComplete(etape.value.value, props.demarcheTypeId).valid &&
           etapeDocumentsStepIsComplete(
             etape.value.value,
             props.demarcheTypeId,
@@ -621,8 +621,8 @@ const EtapeEditFormInternal = defineComponent<
         </Bloc>
       ) : null}
 
-      {perimetreStepIsVisible(props.etape) ? (
-        <Bloc step={{ name: 'Périmètre', help: null }} complete={perimetreStepIsComplete(props.etape).valid}>
+      {perimetreStepIsVisible(props.etape, props.demarcheTypeId) ? (
+        <Bloc step={{ name: 'Périmètre', help: null }} complete={perimetreStepIsComplete(props.etape, props.demarcheTypeId).valid}>
           <PerimetreEdit
             etape={props.etape}
             titreTypeId={props.titreTypeId}

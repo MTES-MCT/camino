@@ -1,5 +1,5 @@
 import { TITRES_TYPES_IDS, TitreTypeId } from '../static/titresTypes'
-import { EtapeTypeId } from '../static/etapesTypes'
+import { ETAPES_TYPES, EtapeTypeId } from '../static/etapesTypes'
 import { DEMARCHES_TYPES_IDS, DemarcheTypeId } from '../static/demarchesTypes'
 
 import {
@@ -9,7 +9,6 @@ import {
   canEditDates,
   canEditDuree,
   canEditTitulaires,
-  isDureeOptional,
   isEtapeComplete,
   IsEtapeCompleteDocuments,
   IsEtapeCompleteEntrepriseDocuments,
@@ -17,6 +16,7 @@ import {
   canDeleteEtape,
   isEtapeDeposable,
   InputPresence,
+  canEditPerimetre,
 } from './titres-etapes'
 import { AdministrationId, ADMINISTRATION_IDS } from '../static/administrations'
 import { test, expect, describe, vi } from 'vitest'
@@ -34,31 +34,33 @@ import { PartialRecord } from '../typescript-tools'
 
 console.warn = vi.fn()
 
-test.each<{ etapeTypeId: EtapeTypeId; demarcheTypeId: DemarcheTypeId; titreTypeId: TitreTypeId; optional: boolean }>([
-  { etapeTypeId: 'mfr', demarcheTypeId: 'oct', titreTypeId: 'arm', optional: false },
-  { etapeTypeId: 'mfr', demarcheTypeId: 'oct', titreTypeId: 'axm', optional: false },
-  { etapeTypeId: 'dex', demarcheTypeId: 'oct', titreTypeId: 'axm', optional: true },
-  { etapeTypeId: 'mfr', demarcheTypeId: 'oct', titreTypeId: 'prm', optional: true },
-  { etapeTypeId: 'mfr', demarcheTypeId: 'dep', titreTypeId: 'arm', optional: true },
-])('isDureeOptional $etapeTypeId | $demarcheTypeId | $titreTypeId | $optional', ({ etapeTypeId, demarcheTypeId, titreTypeId, optional }) => {
-  expect(isDureeOptional(etapeTypeId, demarcheTypeId, titreTypeId)).toEqual(optional)
-})
-
 test.each<{ titreTypeId: TitreTypeId; demarcheTypeId: DemarcheTypeId; canEdit: boolean }>([
   { titreTypeId: 'arm', demarcheTypeId: 'dep', canEdit: false },
-  { titreTypeId: 'arm', demarcheTypeId: 'oct', canEdit: false },
+  { titreTypeId: 'arm', demarcheTypeId: 'oct', canEdit: true },
   { titreTypeId: 'arm', demarcheTypeId: 'dec', canEdit: true },
   { titreTypeId: 'arm', demarcheTypeId: 'pro', canEdit: true },
   { titreTypeId: 'axm', demarcheTypeId: 'dec', canEdit: true },
   { titreTypeId: 'prm', demarcheTypeId: 'exp', canEdit: false },
   { titreTypeId: 'prm', demarcheTypeId: 'mut', canEdit: false },
 ])('canEditDuree $titreTypeId | $demarcheTypeId | $canEdit', ({ titreTypeId, demarcheTypeId, canEdit }) =>
-  expect(canEditDuree(titreTypeId, demarcheTypeId, { ...testBlankUser, role: 'entreprise', entrepriseIds: [newEntrepriseId('entrepriseId')] })).toEqual(canEdit)
+  expect(canEditDuree(titreTypeId, demarcheTypeId, { ...testBlankUser, role: 'entreprise', entrepriseIds: [newEntrepriseId('entrepriseId')] }).visibility === 'present').toEqual(canEdit)
 )
 
 test('un super ou une admininstration peut éditer la durée d un octroi d ARM', () => {
-  expect(canEditDuree('arm', 'oct', { ...testBlankUser, role: 'super' })).toEqual(true)
-  expect(canEditDuree('arm', 'oct', { ...testBlankUser, role: 'admin', administrationId: 'dea-guyane-01' })).toEqual(true)
+  expect(canEditDuree('arm', 'oct', { ...testBlankUser, role: 'super' })).toMatchInlineSnapshot(`
+    {
+      "message": "la durée est obligatoire pour une démarche octroi",
+      "required": true,
+      "visibility": "present",
+    }
+  `)
+  expect(canEditDuree('arm', 'oct', { ...testBlankUser, role: 'admin', administrationId: 'dea-guyane-01' })).toMatchInlineSnapshot(`
+    {
+      "message": "la durée est obligatoire pour une démarche octroi",
+      "required": true,
+      "visibility": "present",
+    }
+  `)
 })
 
 test.each<{ titreTypeId: TitreTypeId; demarcheTypeId: DemarcheTypeId; etapeTypeId: EtapeTypeId; user: TestUser; canEdit: boolean }>([
@@ -68,14 +70,16 @@ test.each<{ titreTypeId: TitreTypeId; demarcheTypeId: DemarcheTypeId; etapeTypeI
   { titreTypeId: 'axm', etapeTypeId: 'dpu', demarcheTypeId: 'dec', user: { role: 'admin', administrationId: ADMINISTRATION_IDS['DGTM - GUYANE'] }, canEdit: true },
   { titreTypeId: 'axm', etapeTypeId: 'dpu', demarcheTypeId: 'dec', user: { role: 'editeur', administrationId: ADMINISTRATION_IDS['DGTM - GUYANE'] }, canEdit: true },
   { titreTypeId: 'prm', etapeTypeId: 'mfr', demarcheTypeId: 'dec', user: { role: 'super' }, canEdit: false },
-  { titreTypeId: 'prm', etapeTypeId: 'mcr', demarcheTypeId: 'dec', user: { role: 'super' }, canEdit: true },
-  { titreTypeId: 'prm', etapeTypeId: 'mcr', demarcheTypeId: 'dec', user: { role: 'admin', administrationId: ADMINISTRATION_IDS.BRGM }, canEdit: true },
-  { titreTypeId: 'prm', etapeTypeId: 'mcr', demarcheTypeId: 'dec', user: { role: 'lecteur', administrationId: ADMINISTRATION_IDS.BRGM }, canEdit: true },
+  { titreTypeId: 'prm', etapeTypeId: 'dpu', demarcheTypeId: 'dec', user: { role: 'super' }, canEdit: true },
+  { titreTypeId: 'prm', etapeTypeId: 'dpu', demarcheTypeId: 'dec', user: { role: 'admin', administrationId: ADMINISTRATION_IDS.BRGM }, canEdit: true },
+  { titreTypeId: 'prm', etapeTypeId: 'mcr', demarcheTypeId: 'dec', user: { role: 'super' }, canEdit: false },
+  { titreTypeId: 'prm', etapeTypeId: 'mcr', demarcheTypeId: 'dec', user: { role: 'admin', administrationId: ADMINISTRATION_IDS.BRGM }, canEdit: false },
+  { titreTypeId: 'prm', etapeTypeId: 'mcr', demarcheTypeId: 'dec', user: { role: 'lecteur', administrationId: ADMINISTRATION_IDS.BRGM }, canEdit: false },
   { titreTypeId: 'prm', etapeTypeId: 'mfr', demarcheTypeId: 'dep', user: { role: 'lecteur', administrationId: ADMINISTRATION_IDS.BRGM }, canEdit: false },
   { titreTypeId: 'prm', etapeTypeId: 'mfr', demarcheTypeId: 'exp', user: { role: 'super' }, canEdit: false },
   { titreTypeId: 'prm', etapeTypeId: 'mfr', demarcheTypeId: 'mut', user: { role: 'super' }, canEdit: false },
 ])('canEditDate $titreTypeId | $demarcheTypeId | $etapeTypeId | $user | $canEdit', ({ titreTypeId, demarcheTypeId, etapeTypeId, user, canEdit }) => {
-  expect(canEditDates(titreTypeId, demarcheTypeId, etapeTypeId, { ...user, ...testBlankUser })).toEqual(canEdit)
+  expect(canEditDates(titreTypeId, demarcheTypeId, etapeTypeId, { ...user, ...testBlankUser }).visibility === 'present').toEqual(canEdit)
 })
 
 test.each<{ titreTypeId: TitreTypeId; user: TestUser; canEdit: boolean }>([
@@ -130,6 +134,32 @@ test('canEditTitulaires by demarcheTypeId', () => {
   }, {})
 
   expect(result).toMatchSnapshot()
+})
+
+test('canEditPerimetre by demarcheTypeId', () => {
+  const result = Object.entries(DEMARCHES_TYPES_IDS).reduce<PartialRecord<string, ReturnType<typeof canEditPerimetre>>>((acc, [key, value]) => {
+    acc[key] = canEditPerimetre(value, ETAPES_TYPES.demande)
+
+    return acc
+  }, {})
+
+  expect(result).toMatchSnapshot()
+})
+
+test('canEditPerimetre fondamentale', () => {
+  expect(canEditPerimetre(DEMARCHES_TYPES_IDS.Octroi, ETAPES_TYPES.demande)).toMatchInlineSnapshot(`
+    {
+      "message": "le périmètre est obligatoire pour une démarche octroi",
+      "required": true,
+      "visibility": "present",
+    }
+  `)
+  expect(canEditPerimetre(DEMARCHES_TYPES_IDS.Octroi, ETAPES_TYPES.avisDeDemandeConcurrente)).toMatchInlineSnapshot(`
+    {
+      "message": "une étape avis de demande concurrente ne peut pas inclure de périmètre",
+      "visibility": "absent",
+    }
+  `)
 })
 test.each<{
   user: TestUser
@@ -485,7 +515,7 @@ test.each<[FeatureMultiPolygon | null, EtapeTypeId, TitreTypeId, IsEtapeComplete
 
   const result = isEtapeComplete(titreEtape, titreType, 'oct', documents, entrepriseDocuments, [], [], null, null, [], { ...testBlankUser, role: 'super' })
 
-  const errorLabel = 'Le périmètre est obligatoire'
+  const errorLabel = 'le périmètre est obligatoire pour une démarche octroi'
   expect(result.valid).toBe(false)
   if (!result.valid) {
     expect(result.errors, JSON.stringify(result)).toContain(errorLabel)
@@ -552,10 +582,10 @@ test.each<[number | null, EtapeTypeId, TitreTypeId, IsEtapeCompleteDocuments, Is
   [null, 'mfr', 'axm', axmDocuments, axmEntrepriseDocuments, true],
   [0, 'mfr', 'axm', axmDocuments, axmEntrepriseDocuments, true],
   [0, 'mfr', 'arm', armDocuments, armEntrepriseDocuments, true],
-  [0, 'mfr', 'prm', armDocuments, armEntrepriseDocuments, false],
-  [0, 'rde', 'arm', [], [], false],
-  [3, 'mfr', 'arm', armDocuments, armEntrepriseDocuments, false],
-  [3, 'mfr', 'axm', axmDocuments, axmEntrepriseDocuments, false],
+  [3, 'mfr', 'prm', armDocuments, armEntrepriseDocuments, false],
+  [3, 'rde', 'arm', [], [], false],
+  [4, 'mfr', 'arm', armDocuments, armEntrepriseDocuments, false],
+  [4, 'mfr', 'axm', axmDocuments, axmEntrepriseDocuments, false],
 ])('%# teste la complétude de la durée %s pour une étapeType %s, un titreType %s', (duree, etapeType, titreType, documents, entreprisedocuments, error) => {
   const titreEtape: IsEtapeCompleteEtape = {
     ...etapeComplete,
@@ -566,7 +596,7 @@ test.each<[number | null, EtapeTypeId, TitreTypeId, IsEtapeCompleteDocuments, Is
 
   const result = isEtapeComplete(titreEtape, titreType, 'oct', documents, entreprisedocuments, [], [], null, null, [], { ...testBlankUser, role: 'super' })
 
-  const errorLabel = 'la durée est obligatoire'
+  const errorLabel = 'la durée est obligatoire pour une démarche octroi'
   if (error) {
     if (!result.valid) {
       expect(result.errors).toContain(errorLabel)

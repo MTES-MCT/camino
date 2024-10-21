@@ -29,7 +29,7 @@ import { titreDemarcheGet } from '../../database/queries/titres-demarches'
 import { userSuper } from '../../database/user-super'
 import { titreEtapeGet, titreEtapeUpdate, titreEtapeUpsert } from '../../database/queries/titres-etapes'
 import { User, isBureauDEtudes, isEntreprise } from 'camino-common/src/roles'
-import { canCreateEtape, canDeposeEtape, canDeleteEtape, canEditEtape, canEditDates, canEditDuree } from 'camino-common/src/permissions/titres-etapes'
+import { canCreateEtape, canDeposeEtape, canDeleteEtape, canEditEtape } from 'camino-common/src/permissions/titres-etapes'
 import { canBeBrouillon, isEtapeTypeId } from 'camino-common/src/static/etapesTypes'
 import {
   DeepReadonly,
@@ -601,15 +601,6 @@ export const createEtape =
                   } else if (!(await checkEntreprisesExist(pool, [...etape.titulaireIds, ...etape.amodiataireIds]))) {
                     res.status(HTTP_STATUS.BAD_REQUEST).json({ errorMessage: "certaines entreprises n'existent pas" })
                   } else {
-                    if (!canEditDuree(titreTypeId, titreDemarche.typeId, user)) {
-                      etape.duree = null
-                    }
-
-                    if (!canEditDates(titreTypeId, titreDemarche.typeId, etape.typeId, user) && (isNotNullNorUndefined(etape.dateDebut) || isNotNullNorUndefined(etape.dateFin))) {
-                      etape.dateDebut = null
-                      etape.dateFin = null
-                    }
-
                     etape.statutId = getStatutId(flattenEtape, getCurrent())
 
                     const etapeUpdated: ITitreEtape | undefined = await titreEtapeUpsert({ ...etape, ...perimetreInfos, isBrouillon }, user!, titreDemarche.titreId)
@@ -770,15 +761,6 @@ export const updateEtape =
 
           if (rulesErrors.length) {
             throw new Error(rulesErrors.join(', '))
-          }
-
-          if (!canEditDuree(titreTypeId, titreDemarche.typeId, user)) {
-            etape.duree = titreEtapeOld.duree ?? null
-          }
-
-          if (!canEditDates(titreTypeId, titreDemarche.typeId, etape.typeId, user)) {
-            etape.dateDebut = titreEtapeOld.dateDebut ?? null
-            etape.dateFin = titreEtapeOld.dateFin ?? null
           }
 
           if (!(await checkEntreprisesExist(pool, [...etape.titulaireIds, ...etape.amodiataireIds]))) {

@@ -143,13 +143,12 @@ describe('valide l’étape avant de l’enregistrer', () => {
     let errors = titreEtapeUpdationValidate(titreEtape, titreDemarche, titreARM, [], [], [], [], [], userSuper, null, null)
     expect(errors).toMatchInlineSnapshot(`
       [
-        "impossible d’éditer la date de début",
-        "impossible d’éditer la date d’échéance",
+        "une date peut-être spécifiée que sur une étape de décision",
         "Les substances sont obligatoires",
-        "la durée est obligatoire",
+        "la durée est obligatoire pour une démarche octroi",
         "les titulaires sont obligatoires pour les démarches octroi",
         "l'élément "Prospection mécanisée" de la section "Caractéristiques ARM" est obligatoire",
-        "Le périmètre est obligatoire",
+        "le périmètre est obligatoire pour une démarche octroi",
         "le document "Documents cartographiques" (car) est obligatoire",
         "le document "Dossier de demande" (dom) est obligatoire",
         "le document "Formulaire de demande" (for) est obligatoire",
@@ -164,12 +163,11 @@ describe('valide l’étape avant de l’enregistrer', () => {
     errors = titreEtapeUpdationValidate(titreEtape, titreDemarche, titreAxm, [], [], [], [], [], userSuper, null, null)
     expect(errors).toMatchInlineSnapshot(`
       [
-        "impossible d’éditer la date de début",
-        "impossible d’éditer la date d’échéance",
+        "une date peut-être spécifiée que sur une étape de décision",
         "Les substances sont obligatoires",
-        "la durée est obligatoire",
+        "la durée est obligatoire pour une démarche octroi",
         "les titulaires sont obligatoires pour les démarches octroi",
-        "Le périmètre est obligatoire",
+        "le périmètre est obligatoire pour une démarche octroi",
         "le document "Documents cartographiques" (car) est obligatoire",
         "le document "Lettre de demande" (lem) est obligatoire",
         "le document "Identification de matériel" (idm) est obligatoire",
@@ -190,7 +188,38 @@ describe('valide l’étape avant de l’enregistrer', () => {
     expect(errors).toStrictEqual([])
   })
   test('invalide car on ne peut pas faire de mod sans mdp', () => {
-    const errors = titreEtapeUpdationValidate({ ...etapeComplete, typeId: 'mod' }, titreDemarche, titreARM, [{ etape_document_type_id: 'doe' }], [], [], [], [], userSuper, null, null)
+    const errors = titreEtapeUpdationValidate(
+      {
+        ...etapeComplete,
+        typeId: 'mod',
+        duree: { value: 3, etapeHeritee: null, heritee: false },
+        titulaires: { value: [entrepriseIdValidator.parse('entreprise1Id')], etapeHeritee: null, heritee: false },
+        perimetre: {
+          value: {
+            geojson4326Perimetre: { type: 'Feature', properties: {}, geometry: { type: 'MultiPolygon', coordinates: [] } },
+            geojson4326Forages: null,
+            geojson4326Points: null,
+            geojsonOrigineForages: null,
+            geojsonOrigineGeoSystemeId: null,
+            geojsonOriginePerimetre: null,
+            geojsonOriginePoints: null,
+            surface: null,
+          },
+          heritee: false,
+          etapeHeritee: null,
+        },
+      },
+      titreDemarche,
+      titreARM,
+      [{ etape_document_type_id: 'doe' }],
+      [],
+      [],
+      [],
+      [],
+      userSuper,
+      null,
+      null
+    )
     expect(errors).toMatchInlineSnapshot(`
       [
         "les étapes de la démarche machine ne sont pas valides",

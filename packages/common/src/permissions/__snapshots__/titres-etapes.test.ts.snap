@@ -98,6 +98,120 @@ exports[`canEditAmodiataires by demarcheTypeId 1`] = `
 }
 `;
 
+exports[`canEditPerimetre by demarcheTypeId 1`] = `
+{
+  "Amodiation": {
+    "message": "une démarche amodiation ne peut pas inclure de périmètre",
+    "visibility": "absent",
+  },
+  "AutorisationDOuvertureDeTravaux": {
+    "message": "le périmètre est obligatoire pour une démarche Autorisation d'ouverture de travaux",
+    "required": true,
+    "visibility": "present",
+  },
+  "Cession": {
+    "message": "le périmètre est obligatoire pour une démarche cession",
+    "required": true,
+    "visibility": "present",
+  },
+  "Conversion": {
+    "message": "une démarche conversion ne peut pas inclure de périmètre",
+    "visibility": "absent",
+  },
+  "Decheance": {
+    "message": "le périmètre est obligatoire pour une démarche déchéance",
+    "required": true,
+    "visibility": "present",
+  },
+  "DeclarationDArretDefinitifDesTravaux": {
+    "message": "le périmètre est obligatoire pour une démarche Déclaration d'arrêt définitif des travaux",
+    "required": true,
+    "visibility": "present",
+  },
+  "DeclarationDOuvertureDeTravaux": {
+    "message": "le périmètre est obligatoire pour une démarche Déclaration d'ouverture de travaux",
+    "required": true,
+    "visibility": "present",
+  },
+  "DemandeDeTitreDExploitation": {
+    "message": "le périmètre est obligatoire pour une démarche demande de titre d'exploitation",
+    "required": true,
+    "visibility": "present",
+  },
+  "DeplacementDePerimetre": {
+    "message": "le périmètre est obligatoire pour une démarche déplacement de périmètre",
+    "required": true,
+    "visibility": "present",
+  },
+  "ExtensionDePerimetre": {
+    "message": "le périmètre est obligatoire pour une démarche extension de périmètre",
+    "required": true,
+    "visibility": "present",
+  },
+  "ExtensionDeSubstance": {
+    "message": "le périmètre est obligatoire pour une démarche extension de substance",
+    "required": true,
+    "visibility": "present",
+  },
+  "Fusion": {
+    "message": "une démarche fusion ne peut pas inclure de périmètre",
+    "visibility": "absent",
+  },
+  "Mutation": {
+    "message": "une démarche mutation ne peut pas inclure de périmètre",
+    "visibility": "absent",
+  },
+  "MutationPartielle": {
+    "message": "le périmètre est obligatoire pour une démarche mutation partielle",
+    "required": true,
+    "visibility": "present",
+  },
+  "Octroi": {
+    "message": "le périmètre est obligatoire pour une démarche octroi",
+    "required": true,
+    "visibility": "present",
+  },
+  "Prolongation": {
+    "message": "le périmètre est obligatoire pour une démarche prolongation",
+    "required": true,
+    "visibility": "present",
+  },
+  "Prolongation1": {
+    "message": "le périmètre est obligatoire pour une démarche prolongation 1",
+    "required": true,
+    "visibility": "present",
+  },
+  "Prolongation2": {
+    "message": "le périmètre est obligatoire pour une démarche prolongation 2",
+    "required": true,
+    "visibility": "present",
+  },
+  "ProlongationExceptionnelle": {
+    "message": "le périmètre est obligatoire pour une démarche prolongation exceptionnelle",
+    "required": true,
+    "visibility": "present",
+  },
+  "Prorogation": {
+    "message": "le périmètre est obligatoire pour une démarche prorogation",
+    "required": true,
+    "visibility": "present",
+  },
+  "Renonciation": {
+    "message": "une démarche renonciation ne peut pas inclure de périmètre",
+    "visibility": "absent",
+  },
+  "ResiliationAnticipeeDAmodiation": {
+    "message": "une démarche résiliation anticipée d'amodiation ne peut pas inclure de périmètre",
+    "visibility": "absent",
+  },
+  "Retrait": {
+    "message": "le périmètre est obligatoire pour une démarche retrait",
+    "required": true,
+    "visibility": "present",
+  },
+}
+`;
+
 exports[`canEditTitulaires by demarcheTypeId 1`] = `
 {
   "Amodiation": {

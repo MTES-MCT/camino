@@ -156,8 +156,12 @@ const internalEqualGeojson = (geo1: MultiPolygon, geo2: MultiPolygon): boolean =
   })
 }
 
-export const equalGeojson = (geo1: MultiPolygon, geo2: MultiPolygon | null | undefined): boolean => {
-  if (isNullOrUndefined(geo2)) {
+export const equalGeojson = (geo1: MultiPolygon | null, geo2: MultiPolygon | null | undefined): boolean => {
+  if (isNullOrUndefined(geo1) && isNullOrUndefined(geo2)) {
+    return true
+  }
+
+  if (isNullOrUndefined(geo1) || isNullOrUndefined(geo2)) {
     return false
   }
 

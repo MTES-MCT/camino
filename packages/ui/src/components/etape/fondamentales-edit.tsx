@@ -4,8 +4,7 @@ import { HeritageEdit } from './heritage-edit'
 import { AutocompleteEntreprises } from './autocomplete-entreprises'
 import { CaminoDate } from 'camino-common/src/date'
 import { SubstancesEdit } from './substances-edit'
-import { isDureeOptional as titreEtapesDureeOptionalCheck, canEditAmodiataires, canEditTitulaires, canEditDuree, canEditDates, InputPresence } from 'camino-common/src/permissions/titres-etapes'
-
+import { canEditAmodiataires, canEditTitulaires, canEditDuree, canEditDates, InputPresence, InputAbsent, InputPresentOptional } from 'camino-common/src/permissions/titres-etapes'
 import { DomaineId } from 'camino-common/src/static/domaines'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
 import { getDomaineId, TitreTypeId } from 'camino-common/src/static/titresTypes'
@@ -65,9 +64,10 @@ export const FondamentalesEdit = defineComponent<Props>(props => {
     updateEtape({ amodiataires })
   }
 
-  const dureeOptionalCheck = computed<boolean>(() => {
-    return titreEtapesDureeOptionalCheck(editedEtape.value.typeId, props.demarcheTypeId, props.titreTypeId)
-  })
+  const dureeEdit = computed<InputPresence>(() => canEditDuree(props.titreTypeId, props.demarcheTypeId, props.user))
+  const dureeOptionalCheck = computed<boolean>(() => dureeEdit.value.visibility === 'present' && !dureeEdit.value.required)
+
+  const datesEdit = computed<InputAbsent | InputPresentOptional>(() => canEditDates(props.titreTypeId, props.demarcheTypeId, props.etape.typeId, props.user))
 
   const titulairesEdit = computed<InputPresence>(() => canEditTitulaires(props.titreTypeId, props.demarcheTypeId, props.user))
   const titulairesLabel = computed<string>(() => {
@@ -126,7 +126,7 @@ export const FondamentalesEdit = defineComponent<Props>(props => {
   return () => (
     <div class="fr-grid-row">
       <div class="fr-col-12 fr-col-xl-6">
-        {canEditDuree(props.titreTypeId, props.demarcheTypeId, props.user) ? (
+        {dureeEdit.value.visibility === 'present' ? (
           <HeritageEdit
             updateHeritage={updateDureeHeritage}
             hasHeritageValue={isNotNullNorUndefined(props.etape.duree.etapeHeritee?.value)}
@@ -166,26 +166,25 @@ export const FondamentalesEdit = defineComponent<Props>(props => {
           />
         ) : null}
 
-        {canEditDates(props.titreTypeId, props.demarcheTypeId, editedEtape.value.typeId, props.user) ? (
-          <HeritageEdit
-            updateHeritage={updateDateDebutHeritage}
-            hasHeritageValue={isNotNullNorUndefined(props.etape.dateDebut.etapeHeritee?.value)}
-            prop={editedEtape.value.dateDebut}
-            label="Date de début"
-            write={() => <DsfrInput type={{ type: 'date' }} legend={{ main: 'Date de début' }} initialValue={props.etape.dateDebut.value} valueChanged={dateDebutChanged} />}
-            read={heritagePropEtape => <DsfrInput type={{ type: 'date' }} legend={{ main: 'Date de début' }} initialValue={heritagePropEtape?.value} valueChanged={() => {}} disabled={true} />}
-          />
-        ) : null}
-
-        {canEditDates(props.titreTypeId, props.demarcheTypeId, editedEtape.value.typeId, props.user) ? (
-          <HeritageEdit
-            updateHeritage={updateDateFinHeritage}
-            hasHeritageValue={isNotNullNorUndefined(props.etape.dateFin.etapeHeritee?.value)}
-            prop={editedEtape.value.dateFin}
-            label="Date d’échéance"
-            write={() => <DsfrInput type={{ type: 'date' }} legend={{ main: 'Date d’échéance' }} initialValue={props.etape.dateFin.value} valueChanged={dateFinChanged} />}
-            read={heritagePropEtape => <DsfrInput type={{ type: 'date' }} legend={{ main: 'Date d’échéance' }} initialValue={heritagePropEtape?.value} valueChanged={() => {}} disabled={true} />}
-          />
+        {datesEdit.value.visibility === 'present' ? (
+          <>
+            <HeritageEdit
+              updateHeritage={updateDateDebutHeritage}
+              hasHeritageValue={isNotNullNorUndefined(props.etape.dateDebut.etapeHeritee?.value)}
+              prop={editedEtape.value.dateDebut}
+              label="Date de début"
+              write={() => <DsfrInput type={{ type: 'date' }} legend={{ main: 'Date de début' }} initialValue={props.etape.dateDebut.value} valueChanged={dateDebutChanged} />}
+              read={heritagePropEtape => <DsfrInput type={{ type: 'date' }} legend={{ main: 'Date de début' }} initialValue={heritagePropEtape?.value} valueChanged={() => {}} disabled={true} />}
+            />
+            <HeritageEdit
+              updateHeritage={updateDateFinHeritage}
+              hasHeritageValue={isNotNullNorUndefined(props.etape.dateFin.etapeHeritee?.value)}
+              prop={editedEtape.value.dateFin}
+              label="Date d’échéance"
+              write={() => <DsfrInput type={{ type: 'date' }} legend={{ main: 'Date d’échéance' }} initialValue={props.etape.dateFin.value} valueChanged={dateFinChanged} />}
+              read={heritagePropEtape => <DsfrInput type={{ type: 'date' }} legend={{ main: 'Date d’échéance' }} initialValue={heritagePropEtape?.value} valueChanged={() => {}} disabled={true} />}
+            />
+          </>
         ) : null}
 
         {titulairesEdit.value.visibility === 'present' ? (

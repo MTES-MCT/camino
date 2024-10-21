@@ -9,6 +9,7 @@ import { km2Validator } from 'camino-common/src/number'
 import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes'
 import { action } from '@storybook/addon-actions'
 import { etapeIdValidator } from 'camino-common/src/etape'
+import { toCaminoDate } from 'camino-common/src/date'
 
 const meta: Meta = {
   title: 'Components/Titre/ResultatMiseEnConcurrence',
@@ -56,6 +57,7 @@ const perimetre: Props['pivot']['perimetreTotal'] = {
 export const Default: StoryFn = () => (
   <ResultatMiseEnConcurrence
     initTab="carte"
+    initDate={toCaminoDate('2024-10-16')}
     entreprises={entreprises}
     apiClient={{
       getEtapesTypesEtapesStatuts(titreDemarcheId, titreEtapeId, date) {
@@ -94,6 +96,7 @@ export const Default: StoryFn = () => (
 export const Loading: StoryFn = () => (
   <ResultatMiseEnConcurrence
     initTab="carte"
+    initDate={toCaminoDate('2024-10-16')}
     entreprises={entreprises}
     apiClient={{
       getEtapesTypesEtapesStatuts() {
@@ -131,6 +134,7 @@ export const Loading: StoryFn = () => (
 export const WithError: StoryFn = () => (
   <ResultatMiseEnConcurrence
     initTab="carte"
+    initDate={toCaminoDate('2024-10-16')}
     entreprises={entreprises}
     apiClient={{
       getEtapesTypesEtapesStatuts() {

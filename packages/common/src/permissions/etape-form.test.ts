@@ -125,8 +125,17 @@ test('fondamentaleStepIsComplete', () => {
       'amo',
       'prr',
       { ...testBlankUser, role: 'super' }
-    ).valid
-  ).toBe(true)
+    )
+  ).toMatchInlineSnapshot(`
+    {
+      "errors": [
+        "Les substances sont obligatoires",
+        "la durée est obligatoire pour une démarche amodiation",
+        "les amodiataires sont obligatoires pour les démarches d'Amodiation",
+      ],
+      "valid": false,
+    }
+  `)
   expect(
     fondamentaleStepIsComplete(
       {
@@ -144,6 +153,7 @@ test('fondamentaleStepIsComplete', () => {
     {
       "errors": [
         "Les substances sont obligatoires",
+        "la durée est obligatoire pour une démarche amodiation",
         "les amodiataires sont obligatoires pour les démarches d'Amodiation",
       ],
       "valid": false,
@@ -166,6 +176,7 @@ test('fondamentaleStepIsComplete', () => {
   ).toMatchInlineSnapshot(`
     {
       "errors": [
+        "la durée est obligatoire pour une démarche octroi",
         "les titulaires sont obligatoires pour les démarches octroi",
       ],
       "valid": false,
@@ -183,8 +194,15 @@ test('fondamentaleStepIsComplete', () => {
       'oct',
       'prr',
       { ...testBlankUser, role: 'super' }
-    ).valid
-  ).toBe(true)
+    )
+  ).toMatchInlineSnapshot(`
+    {
+      "errors": [
+        "la durée est obligatoire pour une démarche octroi",
+      ],
+      "valid": false,
+    }
+  `)
   expect(
     fondamentaleStepIsComplete(
       {
@@ -222,7 +240,7 @@ test('fondamentaleStepIsComplete', () => {
   ).toMatchInlineSnapshot(`
     {
       "errors": [
-        "la durée est obligatoire",
+        "la durée est obligatoire pour une démarche octroi",
         "les titulaires sont obligatoires pour les démarches octroi",
       ],
       "valid": false,
@@ -254,7 +272,7 @@ test('fondamentaleStepIsComplete', () => {
   expect(
     fondamentaleStepIsComplete(
       {
-        duree: { value: 0, heritee: false, etapeHeritee: null },
+        duree: { value: 2, heritee: false, etapeHeritee: null },
         substances: { value: ['auru'], heritee: false, etapeHeritee: null },
         typeId: 'mfr',
         titulaires: { value: [entreprise1Id], heritee: false, etapeHeritee: null },
@@ -263,8 +281,12 @@ test('fondamentaleStepIsComplete', () => {
       'mut',
       'arm',
       { ...testBlankUser, role: 'super' }
-    ).valid
-  ).toBe(true)
+    )
+  ).toMatchInlineSnapshot(`
+    {
+      "valid": true,
+    }
+  `)
   expect(
     fondamentaleStepIsComplete(
       {
@@ -290,7 +312,7 @@ test('fondamentaleStepIsComplete', () => {
   expect(
     fondamentaleStepIsComplete(
       {
-        duree: { value: 0, heritee: false, etapeHeritee: null },
+        duree: { value: 3, heritee: false, etapeHeritee: null },
         substances: { value: [SUBSTANCES_FISCALES_IDS.or], heritee: false, etapeHeritee: null },
         typeId: 'mfr',
         titulaires: { value: [entreprise1Id], heritee: false, etapeHeritee: null },
@@ -299,12 +321,16 @@ test('fondamentaleStepIsComplete', () => {
       'oct',
       'arm',
       { ...testBlankUser, role: 'entreprise', entrepriseIds: [entreprise1Id] }
-    ).valid
-  ).toBe(true)
+    )
+  ).toMatchInlineSnapshot(`
+    {
+      "valid": true,
+    }
+  `)
   expect(
     fondamentaleStepIsComplete(
       {
-        duree: { value: 0, heritee: false, etapeHeritee: null },
+        duree: { value: 2, heritee: false, etapeHeritee: null },
         substances: { value: [SUBSTANCES_FISCALES_IDS.or], heritee: false, etapeHeritee: null },
         typeId: 'mfr',
         titulaires: { value: [], heritee: false, etapeHeritee: null },
@@ -313,8 +339,12 @@ test('fondamentaleStepIsComplete', () => {
       DEMARCHES_TYPES_IDS.Amodiation,
       TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_METAUX,
       { ...testBlankUser, role: 'super' }
-    ).valid
-  ).toBe(true)
+    )
+  ).toMatchInlineSnapshot(`
+    {
+      "valid": true,
+    }
+  `)
   expect(
     fondamentaleStepIsComplete(
       {
@@ -329,13 +359,14 @@ test('fondamentaleStepIsComplete', () => {
       { ...testBlankUser, role: 'super' }
     )
   ).toMatchInlineSnapshot(`
-        {
-          "errors": [
-            "les amodiataires sont obligatoires pour les démarches d'Amodiation",
-          ],
-          "valid": false,
-        }
-      `)
+    {
+      "errors": [
+        "la durée est obligatoire pour une démarche amodiation",
+        "les amodiataires sont obligatoires pour les démarches d'Amodiation",
+      ],
+      "valid": false,
+    }
+  `)
 })
 test('sectionsStepIsVisible', () => {
   expect(sectionsStepIsVisible({ typeId: 'mfr' }, 'oct', 'arm')).toBe(true)
@@ -348,86 +379,137 @@ test('sectionsStepIsComplete', () => {
 })
 
 test('perimetreStepIsVisible', () => {
-  expect(perimetreStepIsVisible({ typeId: 'mfr' })).toBe(true)
-  expect(perimetreStepIsVisible({ typeId: 'acg' })).toBe(false)
+  expect(perimetreStepIsVisible({ typeId: 'mfr' }, DEMARCHES_TYPES_IDS.Octroi)).toBe(true)
+  expect(perimetreStepIsVisible({ typeId: 'acg' }, DEMARCHES_TYPES_IDS.Octroi)).toBe(false)
+
+  expect(perimetreStepIsVisible({ typeId: 'mfr' }, DEMARCHES_TYPES_IDS.Mutation)).toBe(false)
+  expect(perimetreStepIsVisible({ typeId: 'acg' }, DEMARCHES_TYPES_IDS.Mutation)).toBe(false)
 })
 
 test('perimetreStepIsComplete', () => {
   expect(
-    perimetreStepIsComplete({
-      typeId: 'mfr',
-      perimetre: {
-        value: {
-          geojson4326Perimetre: null,
-          geojson4326Forages: null,
-          geojson4326Points: null,
-          geojsonOrigineForages: null,
-          geojsonOrigineGeoSystemeId: null,
-          geojsonOriginePerimetre: null,
-          geojsonOriginePoints: null,
-          surface: null,
+    perimetreStepIsComplete(
+      {
+        typeId: 'mfr',
+        perimetre: {
+          value: {
+            geojson4326Perimetre: null,
+            geojson4326Forages: null,
+            geojson4326Points: null,
+            geojsonOrigineForages: null,
+            geojsonOrigineGeoSystemeId: null,
+            geojsonOriginePerimetre: null,
+            geojsonOriginePoints: null,
+            surface: null,
+          },
+          heritee: false,
+          etapeHeritee: null,
         },
-        heritee: false,
-        etapeHeritee: null,
       },
-    }).valid
-  ).toBe(false)
+      DEMARCHES_TYPES_IDS.Octroi
+    )
+  ).toMatchInlineSnapshot(`
+    {
+      "errors": [
+        "le périmètre est obligatoire pour une démarche octroi",
+      ],
+      "valid": false,
+    }
+  `)
   expect(
-    perimetreStepIsComplete({
-      typeId: 'mfr',
-      perimetre: {
-        value: {
-          geojson4326Perimetre: { type: 'Feature', properties: {}, geometry: { type: 'MultiPolygon', coordinates: [] } },
-          geojson4326Forages: null,
-          geojson4326Points: null,
-          geojsonOrigineForages: null,
-          geojsonOrigineGeoSystemeId: null,
-          geojsonOriginePerimetre: null,
-          geojsonOriginePoints: null,
-          surface: null,
+    perimetreStepIsComplete(
+      {
+        typeId: 'mfr',
+        perimetre: {
+          value: {
+            geojson4326Perimetre: { type: 'Feature', properties: {}, geometry: { type: 'MultiPolygon', coordinates: [] } },
+            geojson4326Forages: null,
+            geojson4326Points: null,
+            geojsonOrigineForages: null,
+            geojsonOrigineGeoSystemeId: null,
+            geojsonOriginePerimetre: null,
+            geojsonOriginePoints: null,
+            surface: null,
+          },
+          heritee: false,
+          etapeHeritee: null,
         },
-        heritee: false,
-        etapeHeritee: null,
       },
-    }).valid
+      DEMARCHES_TYPES_IDS.Octroi
+    ).valid
   ).toBe(true)
   expect(
-    perimetreStepIsComplete({
-      typeId: 'acg',
-      perimetre: {
-        value: {
-          geojson4326Perimetre: null,
-          geojson4326Forages: null,
-          geojson4326Points: null,
-          geojsonOrigineForages: null,
-          geojsonOrigineGeoSystemeId: null,
-          geojsonOriginePerimetre: null,
-          geojsonOriginePoints: null,
-          surface: null,
+    perimetreStepIsComplete(
+      {
+        typeId: 'acg',
+        perimetre: {
+          value: {
+            geojson4326Perimetre: null,
+            geojson4326Forages: null,
+            geojson4326Points: null,
+            geojsonOrigineForages: null,
+            geojsonOrigineGeoSystemeId: null,
+            geojsonOriginePerimetre: null,
+            geojsonOriginePoints: null,
+            surface: null,
+          },
+          heritee: false,
+          etapeHeritee: null,
         },
-        heritee: false,
-        etapeHeritee: null,
       },
-    }).valid
+      DEMARCHES_TYPES_IDS.Octroi
+    ).valid
   ).toBe(true)
   expect(
-    perimetreStepIsComplete({
-      typeId: 'dpu',
-      perimetre: {
-        value: {
-          geojson4326Perimetre: null,
-          geojson4326Forages: null,
-          geojson4326Points: null,
-          geojsonOrigineForages: null,
-          geojsonOrigineGeoSystemeId: null,
-          geojsonOriginePerimetre: null,
-          geojsonOriginePoints: null,
-          surface: null,
+    perimetreStepIsComplete(
+      {
+        typeId: 'dpu',
+        perimetre: {
+          value: {
+            geojson4326Perimetre: null,
+            geojson4326Forages: null,
+            geojson4326Points: null,
+            geojsonOrigineForages: null,
+            geojsonOrigineGeoSystemeId: null,
+            geojsonOriginePerimetre: null,
+            geojsonOriginePoints: null,
+            surface: null,
+          },
+          heritee: false,
+          etapeHeritee: null,
         },
-        heritee: false,
-        etapeHeritee: null,
       },
-    }).valid
+      DEMARCHES_TYPES_IDS.Octroi
+    )
+  ).toMatchInlineSnapshot(`
+    {
+      "errors": [
+        "le périmètre est obligatoire pour une démarche octroi",
+      ],
+      "valid": false,
+    }
+  `)
+  expect(
+    perimetreStepIsComplete(
+      {
+        typeId: 'dpu',
+        perimetre: {
+          value: {
+            geojson4326Perimetre: { type: 'Feature', properties: {}, geometry: { type: 'MultiPolygon', coordinates: [] } },
+            geojson4326Forages: null,
+            geojson4326Points: null,
+            geojsonOrigineForages: null,
+            geojsonOrigineGeoSystemeId: null,
+            geojsonOriginePerimetre: null,
+            geojsonOriginePoints: null,
+            surface: null,
+          },
+          heritee: false,
+          etapeHeritee: null,
+        },
+      },
+      DEMARCHES_TYPES_IDS.Octroi
+    ).valid
   ).toBe(true)
 })
 
