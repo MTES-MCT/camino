@@ -268,6 +268,10 @@ const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: De
               guard: and(['canHaveMiseEnConcurrence', 'isPremiereDemandePourMiseEnConcurrence', ({ event }) => event.status === ETAPES_STATUTS.EN_COURS]),
               actions: assign({ visibilite: 'publique' }),
             },
+            {
+              target: 'enAttente',
+              guard: and(['canHaveMiseEnConcurrence', 'isPremiereDemandePourMiseEnConcurrence', ({ event }) => event.status === ETAPES_STATUTS.PROGRAMME]),
+            },
           ],
           // FIXMACHINE à mettre autre part
           NOTIFIER_DEMANDEUR: {

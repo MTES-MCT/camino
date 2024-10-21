@@ -88,6 +88,23 @@ describe('vérifie l’arbre des procédures spécifique', () => {
       ]
     `)
   })
+  test('on peut programmer une mise en concurrence', () => {
+    const tree = getEventsTree(psCxmOctMachine, '1999-04-14', [
+      { ...ETES.demande.FAIT, concurrence: { amIFirst: true }, hasTitreFrom: false },
+      ETES.depotDeLaDemande.FAIT,
+      ETES.recevabiliteDeLaDemande.FAVORABLE,
+      ETES.avisDeMiseEnConcurrenceAuJORF.PROGRAMME,
+    ])
+    expect(tree).toMatchInlineSnapshot(`
+      [
+        "RIEN                         (confidentielle, en construction        ) -> [FAIRE_DEMANDE]",
+        "FAIRE_DEMANDE                (confidentielle, en instruction         ) -> [DEPOSER_DEMANDE]",
+        "DEPOSER_DEMANDE              (confidentielle, en instruction         ) -> [FAIRE_RECEVABILITE_DEFAVORABLE,FAIRE_RECEVABILITE_FAVORABLE]",
+        "FAIRE_RECEVABILITE_FAVORABLE (confidentielle, en instruction         ) -> [FAIRE_MISE_EN_CONCURRENCE,NOTIFIER_DEMANDEUR]",
+        "FAIRE_MISE_EN_CONCURRENCE    (confidentielle, en instruction         ) -> []",
+      ]
+    `)
+  })
 
   test('on peut rejeter à la fin de la mise en concurrence', () => {
     const { service, dateFin, machine } = setDateAndOrderAndInterpretMachine(psCxmOctMachine, '1999-04-14', [
