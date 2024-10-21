@@ -1,6 +1,6 @@
 import { and, assign, not, or, setup } from 'xstate'
 import { CaminoMachine } from '../machine-helper'
-import { CaminoCommonContext, Concurrence, DBEtat, DemarcheVisibilite, Etape, globalGuards } from '../machine-common'
+import { CaminoCommonContext, Concurrence, DBEtat, Etape, globalGuards } from '../machine-common'
 import { EtapesTypesEtapesStatuts as ETES } from 'camino-common/src/static/etapesTypesEtapesStatuts'
 import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts'
 import { TITRES_TYPES_IDS, TitreTypeId, getTitreTypeType } from 'camino-common/src/static/titresTypes'
@@ -11,6 +11,7 @@ import { KM2, km2Validator } from 'camino-common/src/number'
 import { CaminoDate } from 'camino-common/src/date'
 import { isNullOrUndefined } from 'camino-common/src/typescript-tools'
 import { canHaveMiseEnConcurrence } from 'camino-common/src/demarche'
+import { DemarcheVisibilite } from 'camino-common/src/etape-form'
 
 type ParticipationDuPublic = {
   surface: KM2

@@ -58,7 +58,7 @@ const titre: Omit<ITitre, 'id' | 'typeId'> = {
   titreStatutId: TitresStatutIds.DemandeInitiale,
 }
 
-const etape: Omit<ITitreEtape, 'id' | 'titreDemarcheId'> = {
+const etape: Omit<ITitreEtape, 'id' | 'titreDemarcheId' | 'concurrence' | 'hasTitreFrom'> = {
   date: dateAddDays(DATE_DEBUT_PROCEDURE_SPECIFIQUE, 14),
   isBrouillon: ETAPE_IS_NOT_BROUILLON,
   typeId: ETAPES_TYPES.demande,

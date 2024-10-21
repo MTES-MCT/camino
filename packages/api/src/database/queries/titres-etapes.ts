@@ -68,7 +68,7 @@ export const titresEtapesGet = async (
   return q
 }
 
-export const titreEtapeCreate = async (titreEtape: Omit<ITitreEtape, 'id'>, user: UserNotNull, titreId: TitreId): Promise<TitresEtapes> => {
+export const titreEtapeCreate = async (titreEtape: Omit<ITitreEtape, 'id' | 'concurrence' | 'hasTitreFrom'>, user: UserNotNull, titreId: TitreId): Promise<TitresEtapes> => {
   const newValue = await TitresEtapes.query().insertAndFetch(titreEtape).withGraphFetched('[]')
 
   await createJournalCreate(newValue.id, user.id, titreId)
@@ -80,5 +80,8 @@ export const titreEtapeUpdate = async (id: EtapeId, titreEtape: Partial<DBTitres
   return patchJournalCreate(id, titreEtape, user.id, titreId)
 }
 
-export const titreEtapeUpsert = async (titreEtape: Partial<Pick<ITitreEtape, 'id'>> & Omit<ITitreEtape, 'id'>, user: DeepReadonly<UserNotNull>, titreId: TitreId): Promise<ITitreEtape | undefined> =>
-  upsertJournalCreate(titreEtape.id, titreEtape, user.id, titreId)
+export const titreEtapeUpsert = async (
+  titreEtape: Partial<Pick<ITitreEtape, 'id'>> & Omit<ITitreEtape, 'id' | 'concurrence' | 'hasTitreFrom'>,
+  user: DeepReadonly<UserNotNull>,
+  titreId: TitreId
+): Promise<ITitreEtape | undefined> => upsertJournalCreate(titreEtape.id, titreEtape, user.id, titreId)

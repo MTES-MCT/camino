@@ -113,7 +113,7 @@ afterAll(async () => {
   await dbManager.closeKnex()
 })
 
-const titreEtapesCreate = async (demarche: ITitreDemarche, etapes: Omit<ITitreEtape, 'id' | 'titreDemarcheId'>[]) => {
+const titreEtapesCreate = async (demarche: ITitreDemarche, etapes: Omit<ITitreEtape, 'id' | 'titreDemarcheId' | 'concurrence' | 'hasTitreFrom'>[]) => {
   const etapesCrees = []
   for (const etape of etapes) {
     etapesCrees.push(
@@ -131,7 +131,7 @@ const titreEtapesCreate = async (demarche: ITitreDemarche, etapes: Omit<ITitreEt
   return etapesCrees
 }
 
-async function createTitreWithEtapes(nomTitre: string, etapes: Omit<ITitreEtape, 'id' | 'titreDemarcheId'>[], entreprises: any) {
+async function createTitreWithEtapes(nomTitre: string, etapes: Omit<ITitreEtape, 'id' | 'titreDemarcheId' | 'concurrence' | 'hasTitreFrom'>[], entreprises: any) {
   const titreId = newTitreId()
   await insertTitreGraph({
     id: titreId,

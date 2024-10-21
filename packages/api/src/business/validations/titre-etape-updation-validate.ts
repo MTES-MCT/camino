@@ -11,12 +11,12 @@ import { EntrepriseDocument, EntrepriseId } from 'camino-common/src/entreprise'
 import { ETAPE_IS_NOT_BROUILLON, EtapeAvis, EtapeDocument, GetEtapeDocumentsByEtapeIdAslDocument, GetEtapeDocumentsByEtapeIdDaeDocument } from 'camino-common/src/etape'
 import { CommuneId } from 'camino-common/src/static/communes'
 import { DeepReadonly, isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools'
-import { FlattenEtape } from 'camino-common/src/etape-form'
 import { flattenContenuToSimpleContenu } from 'camino-common/src/sections'
 import { equalGeojson } from 'camino-common/src/perimetre'
+import { ApiFlattenEtape } from '../../api/_format/titres-etapes'
 
 export const titreEtapeUpdationValidate = (
-  etape: Pick<Partial<FlattenEtape>, 'id'> & Omit<FlattenEtape, 'id'>,
+  etape: Pick<Partial<ApiFlattenEtape>, 'id'> & Omit<ApiFlattenEtape, 'id'>,
   titreDemarche: ITitreDemarche,
   titre: Pick<ITitre, 'typeId' | 'demarches'>,
   documents: Pick<EtapeDocument, 'etape_document_type_id'>[],
@@ -111,7 +111,7 @@ export const titreEtapeUpdationValidate = (
 }
 
 const titreEtapeUpdationBusinessValidate = (
-  titreEtape: Pick<Partial<FlattenEtape>, 'id'> & Pick<FlattenEtape, 'statutId' | 'typeId' | 'date' | 'contenu' | 'perimetre' | 'isBrouillon'>,
+  titreEtape: Pick<Partial<ApiFlattenEtape>, 'id'> & Pick<ApiFlattenEtape, 'statutId' | 'typeId' | 'date' | 'contenu' | 'perimetre' | 'isBrouillon' | 'concurrence' | 'hasTitreFrom'>,
   titreDemarche: ITitreDemarche,
   titre: Pick<ITitre, 'typeId' | 'demarches'>,
   communes: ITitreEtape['communes']

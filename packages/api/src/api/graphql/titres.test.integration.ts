@@ -2,7 +2,6 @@
 import { dbManager } from '../../../tests/db-manager'
 import { graphQLCall, queryImport } from '../../../tests/_utils/index'
 import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations'
-import { ITitre } from '../../types'
 import { newDemarcheId, newEtapeId, newTitreId } from '../../database/models/_format/id-create'
 import { toCaminoDate } from 'camino-common/src/date'
 
@@ -13,7 +12,7 @@ import { newEntrepriseId } from 'camino-common/src/entreprise'
 import { communeIdValidator } from 'camino-common/src/static/communes'
 import type { Knex } from 'knex'
 import { ETAPE_IS_NOT_BROUILLON } from 'camino-common/src/etape'
-import { insertTitreGraph } from '../../../tests/integration-test-helper'
+import { insertTitreGraph, ITitreInsert } from '../../../tests/integration-test-helper'
 
 console.info = vi.fn()
 console.error = vi.fn()
@@ -32,7 +31,7 @@ afterAll(async () => {
   await dbManager.closeKnex()
 })
 
-const titrePublicLectureFalse: ITitre = {
+const titrePublicLectureFalse: ITitreInsert = {
   id: newTitreId('titre-id'),
   nom: 'mon titre',
   typeId: 'arm',
@@ -41,7 +40,7 @@ const titrePublicLectureFalse: ITitre = {
   propsTitreEtapesIds: {},
 }
 
-const titreDemarchesPubliques: ITitre = {
+const titreDemarchesPubliques: ITitreInsert = {
   id: newTitreId('titre-id'),
   nom: 'mon titre',
   typeId: 'arm',
@@ -63,7 +62,7 @@ const titreDemarchesPubliques: ITitre = {
     },
   ],
 }
-const titreEtapesPubliques: ITitre = {
+const titreEtapesPubliques: ITitreInsert = {
   id: newTitreId('titre-id'),
   nom: 'mon titre',
   typeId: 'arm',
@@ -160,7 +159,7 @@ describe('titre', () => {
   const titreQuery = queryImport('titre')
 
   test('peut voir un titre qui est en "lecture publique" (utilisateur anonyme)', async () => {
-    const titrePublicLecture: ITitre = {
+    const titrePublicLecture: ITitreInsert = {
       id: newTitreId('titre-id'),
       nom: 'mon titre',
       typeId: 'arm',
@@ -264,7 +263,7 @@ describe('titres', () => {
   const entrepriseId1 = newEntrepriseId('fr-12341234')
   const nomRef = 'MA_REF'
   const communeId = communeIdValidator.parse('31200')
-  const titre: ITitre = {
+  const titre: ITitreInsert = {
     id: newTitreId('titre-id'),
     nom: 'mon titre',
     typeId: 'arm',

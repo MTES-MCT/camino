@@ -257,8 +257,8 @@ type ITitreEtape = {
   heritageProps?: IHeritageProps | null
   heritageContenu?: IHeritageContenu | null
   note?: EtapeNote
-  concurrence?: TitreEtapeForMachine['concurrence']
-  hasTitreFrom?: TitreEtapeForMachine['hasTitreFrom']
+  concurrence: TitreEtapeForMachine['concurrence']
+  hasTitreFrom: TitreEtapeForMachine['hasTitreFrom']
   demarcheIdEnConcurrence?: DemarcheId | null
 } & Partial<ITitreEtapePerimetre>
 

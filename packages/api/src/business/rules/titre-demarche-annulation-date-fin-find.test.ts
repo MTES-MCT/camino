@@ -16,6 +16,8 @@ describe("date de fin d'une démarche d'annulation", () => {
         isBrouillon: ETAPE_IS_NOT_BROUILLON,
         ordre: 1,
         date: toCaminoDate('2013-05-21'),
+        concurrence: { amIFirst: true },
+        hasTitreFrom: true,
       },
     ]
     expect(titreDemarcheAnnulationDateFinFind(titreDemarcheAnnulationEtapes)).toEqual('2013-05-21')
@@ -32,6 +34,8 @@ describe("date de fin d'une démarche d'annulation", () => {
         ordre: 1,
         date: toCaminoDate('2013-05-21'),
         dateFin: toCaminoDate('2013-05-25'),
+        concurrence: { amIFirst: true },
+        hasTitreFrom: true,
       },
     ]
     expect(titreDemarcheAnnulationDateFinFind(titreDemarcheAnnulationEtapesDateFin)).toEqual('2013-05-25')
@@ -65,6 +69,8 @@ describe("date de fin d'une démarche d'annulation", () => {
         ordre: 1,
         date: toCaminoDate('2013-05-21'),
         dateFin: toCaminoDate('2013-05-25'),
+        concurrence: 'non-applicable',
+        hasTitreFrom: 'non-applicable',
       },
     ]
     expect(titreDemarcheAnnulationDateFinFind(titreDemarcheACOFaitEtapesDateFin)).toEqual('2013-05-25')

@@ -11,14 +11,10 @@ import { PaysId } from 'camino-common/src/static/pays'
 import { communeIdValidator } from 'camino-common/src/static/communes'
 import { z } from 'zod'
 import { ETAPE_IS_NOT_BROUILLON, etapeBrouillonValidator, etapeIdValidator } from 'camino-common/src/etape'
-import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
+import { DeepReadonly, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
 import { km2Validator } from 'camino-common/src/number'
-const demarcheVisibiliteValidator = z.enum(['confidentielle', 'publique'])
-export type DemarcheVisibilite = z.infer<typeof demarcheVisibiliteValidator>
-const concurrenceValidator = z.discriminatedUnion('amIFirst', [
-  z.object({ amIFirst: z.literal(true) }),
-  z.object({ amIFirst: z.literal(false), demarcheConcurrenteVisibilite: demarcheVisibiliteValidator }),
-])
+import { concurrenceValidator, DemarcheVisibilite } from 'camino-common/src/etape-form'
+
 export type Concurrence = z.infer<typeof concurrenceValidator>
 export interface Etape {
   // TODO 2022-07-28 : ceci pourrait être réduit en utilisant les états de 'trad'
@@ -74,7 +70,7 @@ export const titreEtapeForMachineValidator = z.object({
 
 export type TitreEtapeForMachine = z.infer<typeof titreEtapeForMachineValidator>
 
-export const toMachineEtapes = (etapes: (Pick<Partial<TitreEtapeForMachine>, 'ordre'> & Omit<TitreEtapeForMachine, 'id' | 'ordre'>)[]): Etape[] => {
+export const toMachineEtapes = (etapes: DeepReadonly<(Pick<Partial<TitreEtapeForMachine>, 'ordre'> & Omit<TitreEtapeForMachine, 'id' | 'ordre'>)[]>): Etape[] => {
   // TODO 2022-10-12 si on appelle titreEtapesSortAscByOrdre on se retrouve avec une grosse dépendance cyclique
   return etapes
     .filter(dbEtape => dbEtape.isBrouillon === ETAPE_IS_NOT_BROUILLON)
@@ -82,7 +78,7 @@ export const toMachineEtapes = (etapes: (Pick<Partial<TitreEtapeForMachine>, 'or
     .map(dbEtape => toMachineEtape(dbEtape))
 }
 
-const toMachineEtape = (dbEtape: Omit<TitreEtapeForMachine, 'id' | 'ordre'>): Etape => {
+const toMachineEtape = (dbEtape: DeepReadonly<Omit<TitreEtapeForMachine, 'id' | 'ordre'>>): Etape => {
   let typeId
   if (isEtapeTypeId(dbEtape.typeId)) {
     typeId = dbEtape.typeId

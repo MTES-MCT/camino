@@ -132,7 +132,12 @@ const flattenedContenuElementValidator = makeFlattenValidator(z.union([caminoDat
 export type FlattenedContenuElement = z.infer<typeof flattenedContenuElementValidator>
 const flattenedContenuValidator = z.record(z.string(), z.record(z.string(), flattenedContenuElementValidator.optional()).optional())
 export type FlattenedContenu = z.infer<typeof flattenedContenuValidator>
-
+const demarcheVisibiliteValidator = z.enum(['confidentielle', 'publique'])
+export type DemarcheVisibilite = z.infer<typeof demarcheVisibiliteValidator>
+export const concurrenceValidator = z.discriminatedUnion('amIFirst', [
+  z.object({ amIFirst: z.literal(true) }),
+  z.object({ amIFirst: z.literal(false), demarcheConcurrenteVisibilite: demarcheVisibiliteValidator }),
+])
 export const flattenEtapeValidator = graphqlEtapeValidator
   .omit({
     heritageProps: true,

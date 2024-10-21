@@ -1,30 +1,42 @@
-import { ITitre, ITitreEtape } from '../../types'
+import { ITitreEtape } from '../../types'
 
 import { getPossiblesEtapesTypes, titreDemarcheUpdatedEtatValidate } from './titre-demarche-etat-validate'
 import { newDemarcheId, newEtapeId } from '../../database/models/_format/id-create'
 import { EtapesTypesEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStatuts'
 import { describe, test, expect, vi } from 'vitest'
 import { caminoDateValidator, toCaminoDate } from 'camino-common/src/date'
-import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
+import { ETAPES_TYPES, EtapeTypeId } from 'camino-common/src/static/etapesTypes'
 import { ETAPE_IS_BROUILLON, ETAPE_IS_NOT_BROUILLON, etapeIdValidator } from 'camino-common/src/etape'
 import { ArmOctMachine } from '../rules-demarches/arm/oct.machine'
 import { TitreEtapeForMachine } from '../rules-demarches/machine-common'
 import { communeIdValidator } from 'camino-common/src/static/communes'
 import { km2Validator } from 'camino-common/src/number'
 import { ProcedureSpecifiqueMachine } from '../rules-demarches/procedure-specifique/procedure-specifique.machine'
+import { ETAPES_STATUTS } from 'camino-common/src/static/etapesStatuts'
 
 console.warn = vi.fn()
 
 describe('titreDemarcheUpdatedEtatValidate', () => {
   test('ajoute une étape à une démarche vide', () => {
+    const demarcheId = newDemarcheId()
     const valid = titreDemarcheUpdatedEtatValidate(
       'oct',
       {
         typeId: 'arm',
-        demarches: [{ typeId: 'oct' }],
-      } as ITitre,
-      { typeId: 'mfr', date: caminoDateValidator.parse('2030-01-01'), isBrouillon: ETAPE_IS_BROUILLON, statutId: 'fai', contenu: {}, communes: [], surface: null },
-      newDemarcheId(),
+        demarches: [{ id: demarcheId }],
+      },
+      {
+        typeId: 'mfr',
+        date: caminoDateValidator.parse('2030-01-01'),
+        isBrouillon: ETAPE_IS_BROUILLON,
+        statutId: 'fai',
+        contenu: {},
+        communes: [],
+        surface: null,
+        concurrence: { amIFirst: true },
+        hasTitreFrom: true,
+      },
+      demarcheId,
       null
     )
 
@@ -32,23 +44,49 @@ describe('titreDemarcheUpdatedEtatValidate', () => {
   })
 
   test('ajoute une étape à une démarche qui contient déjà une étape', () => {
+    const demarcheId = newDemarcheId()
     const valid = titreDemarcheUpdatedEtatValidate(
       'oct',
       {
         typeId: 'arm',
-        demarches: [{ typeId: 'pro' }, { typeId: 'oct' }],
-      } as ITitre,
-      { typeId: 'mdp', statutId: 'fai', isBrouillon: ETAPE_IS_NOT_BROUILLON, date: toCaminoDate('2022-05-04'), communes: null, contenu: null, surface: null },
-      newDemarcheId(),
+        demarches: [{ id: demarcheId }],
+      },
+      {
+        typeId: 'mdp',
+        statutId: 'fai',
+        isBrouillon: ETAPE_IS_NOT_BROUILLON,
+        date: toCaminoDate('2022-05-04'),
+        communes: null,
+        contenu: null,
+        surface: null,
+        concurrence: { amIFirst: true },
+        hasTitreFrom: true,
+      },
+      demarcheId,
 
-      [{ id: newEtapeId('1'), typeId: 'mfr', statutId: 'fai', isBrouillon: ETAPE_IS_NOT_BROUILLON, date: toCaminoDate('2022-05-03'), communes: null, contenu: null, ordre: 1, surface: null }]
+      [
+        {
+          id: newEtapeId('1'),
+          typeId: 'mfr',
+          statutId: 'fai',
+          isBrouillon: ETAPE_IS_NOT_BROUILLON,
+          date: toCaminoDate('2022-05-03'),
+          communes: null,
+          contenu: null,
+          ordre: 1,
+          surface: null,
+          concurrence: { amIFirst: true },
+          hasTitreFrom: true,
+        },
+      ]
     )
 
     expect(valid.valid).toBe(true)
   })
 
   test('prend en compte les données des étapes pour la machine', () => {
-    const demande: Pick<ITitreEtape, 'id' | 'statutId' | 'ordre' | 'typeId' | 'date' | 'contenu' | 'surface' | 'communes' | 'isBrouillon'> = {
+    const demarcheId = newDemarcheId()
+    const demande: Pick<ITitreEtape, 'id' | 'statutId' | 'ordre' | 'typeId' | 'date' | 'contenu' | 'surface' | 'communes' | 'isBrouillon' | 'concurrence' | 'hasTitreFrom'> = {
       id: etapeIdValidator.parse('idMfr'),
       typeId: 'mfr',
       statutId: 'fai',
@@ -58,24 +96,89 @@ describe('titreDemarcheUpdatedEtatValidate', () => {
       ordre: 1,
       contenu: null,
       surface: km2Validator.parse(51),
+      concurrence: { amIFirst: true },
+      hasTitreFrom: true,
     }
     const valid = titreDemarcheUpdatedEtatValidate(
       'oct',
       {
         typeId: 'prm',
-        demarches: [{ typeId: 'oct' }],
-      } as ITitre,
+        demarches: [{ id: demarcheId }],
+      },
       demande,
-      newDemarcheId(),
+      demarcheId,
       [
         demande,
-        { id: etapeIdValidator.parse('idMdp'), typeId: 'mdp', statutId: 'fai', isBrouillon: ETAPE_IS_NOT_BROUILLON, date: toCaminoDate('2020-12-17'), ordre: 2 },
-        { id: etapeIdValidator.parse('idSpp'), typeId: 'spp', statutId: 'fai', isBrouillon: ETAPE_IS_NOT_BROUILLON, date: toCaminoDate('2021-01-18'), ordre: 3 },
-        { id: etapeIdValidator.parse('idMcr'), typeId: 'mcr', statutId: 'fav', isBrouillon: ETAPE_IS_NOT_BROUILLON, date: toCaminoDate('2022-11-17'), ordre: 4 },
-        { id: etapeIdValidator.parse('idAnf'), typeId: 'anf', statutId: 'ter', isBrouillon: ETAPE_IS_NOT_BROUILLON, date: toCaminoDate('2022-11-17'), ordre: 5 },
-        { id: etapeIdValidator.parse('idAsc'), typeId: 'asc', statutId: 'fai', isBrouillon: ETAPE_IS_NOT_BROUILLON, date: toCaminoDate('2022-11-17'), ordre: 6 },
-        { id: etapeIdValidator.parse('idAdc'), typeId: 'adc', statutId: 'fai', isBrouillon: ETAPE_IS_NOT_BROUILLON, date: toCaminoDate('2022-11-17'), ordre: 7 },
-        { id: etapeIdValidator.parse('idApo'), typeId: 'apo', statutId: 'fav', isBrouillon: ETAPE_IS_NOT_BROUILLON, date: toCaminoDate('2023-02-08'), ordre: 8 },
+        {
+          id: etapeIdValidator.parse('idMdp'),
+          typeId: 'mdp',
+          statutId: 'fai',
+          isBrouillon: ETAPE_IS_NOT_BROUILLON,
+          date: toCaminoDate('2020-12-17'),
+          ordre: 2,
+          concurrence: { amIFirst: true },
+          hasTitreFrom: true,
+        },
+        {
+          id: etapeIdValidator.parse('idSpp'),
+          typeId: 'spp',
+          statutId: 'fai',
+          isBrouillon: ETAPE_IS_NOT_BROUILLON,
+          date: toCaminoDate('2021-01-18'),
+          ordre: 3,
+          concurrence: { amIFirst: true },
+          hasTitreFrom: true,
+        },
+        {
+          id: etapeIdValidator.parse('idMcr'),
+          typeId: 'mcr',
+          statutId: 'fav',
+          isBrouillon: ETAPE_IS_NOT_BROUILLON,
+          date: toCaminoDate('2022-11-17'),
+          ordre: 4,
+          concurrence: { amIFirst: true },
+          hasTitreFrom: true,
+        },
+        {
+          id: etapeIdValidator.parse('idAnf'),
+          typeId: 'anf',
+          statutId: 'ter',
+          isBrouillon: ETAPE_IS_NOT_BROUILLON,
+          date: toCaminoDate('2022-11-17'),
+          ordre: 5,
+          concurrence: { amIFirst: true },
+          hasTitreFrom: true,
+        },
+        {
+          id: etapeIdValidator.parse('idAsc'),
+          typeId: 'asc',
+          statutId: 'fai',
+          isBrouillon: ETAPE_IS_NOT_BROUILLON,
+          date: toCaminoDate('2022-11-17'),
+          ordre: 6,
+          concurrence: { amIFirst: true },
+          hasTitreFrom: true,
+        },
+        {
+          id: etapeIdValidator.parse('idAdc'),
+          typeId: 'adc',
+          statutId: 'fai',
+          isBrouillon: ETAPE_IS_NOT_BROUILLON,
+          date: toCaminoDate('2022-11-17'),
+          ordre: 7,
+          concurrence: { amIFirst: true },
+          hasTitreFrom: true,
+        },
+        {
+          id: etapeIdValidator.parse('idApo'),
+          typeId: 'apo',
+          statutId: 'fav',
+          isBrouillon: ETAPE_IS_NOT_BROUILLON,
+          date: toCaminoDate('2023-02-08'),
+          ordre: 8,
+          concurrence: { amIFirst: true },
+          hasTitreFrom: true,
+        },
       ]
     )
 
@@ -88,12 +191,13 @@ describe('titreDemarcheUpdatedEtatValidate', () => {
   })
 
   test('modifie une étape à une démarche', () => {
+    const demarcheId = newDemarcheId()
     const valid = titreDemarcheUpdatedEtatValidate(
       'oct',
       {
         typeId: 'arm',
-        demarches: [{ typeId: 'oct' }],
-      } as ITitre,
+        demarches: [{ id: demarcheId }],
+      },
       {
         id: newEtapeId('1'),
         typeId: 'mfr',
@@ -103,12 +207,38 @@ describe('titreDemarcheUpdatedEtatValidate', () => {
         communes: null,
         contenu: null,
         surface: null,
+        concurrence: { amIFirst: true },
+        hasTitreFrom: true,
       },
-      newDemarcheId(),
+      demarcheId,
 
       [
-        { id: newEtapeId('1'), typeId: 'mfr', date: toCaminoDate('2022-05-03'), statutId: 'fai', isBrouillon: ETAPE_IS_NOT_BROUILLON, communes: null, contenu: null, ordre: 1, surface: null },
-        { id: newEtapeId('2'), typeId: 'mdp', date: toCaminoDate('2022-05-04'), statutId: 'fai', isBrouillon: ETAPE_IS_NOT_BROUILLON, communes: null, contenu: null, ordre: 2, surface: null },
+        {
+          id: newEtapeId('1'),
+          typeId: 'mfr',
+          date: toCaminoDate('2022-05-03'),
+          statutId: 'fai',
+          isBrouillon: ETAPE_IS_NOT_BROUILLON,
+          communes: null,
+          contenu: null,
+          ordre: 1,
+          surface: null,
+          concurrence: { amIFirst: true },
+          hasTitreFrom: true,
+        },
+        {
+          id: newEtapeId('2'),
+          typeId: 'mdp',
+          date: toCaminoDate('2022-05-04'),
+          statutId: 'fai',
+          isBrouillon: ETAPE_IS_NOT_BROUILLON,
+          communes: null,
+          contenu: null,
+          ordre: 2,
+          surface: null,
+          concurrence: { amIFirst: true },
+          hasTitreFrom: true,
+        },
       ]
     )
 
@@ -116,31 +246,48 @@ describe('titreDemarcheUpdatedEtatValidate', () => {
   })
 
   test('l’ajout d’une étape d’une démarche historique est valide', () => {
+    const demarcheId = newDemarcheId()
     const valid = titreDemarcheUpdatedEtatValidate(
       'oct',
       {
         typeId: 'arm',
-        demarches: [{ typeId: 'oct' }],
-      } as ITitre,
-      { typeId: 'mfr', isBrouillon: ETAPE_IS_BROUILLON, date: caminoDateValidator.parse('2000-02-02'), statutId: 'fai' },
-      newDemarcheId(),
+        demarches: [{ id: demarcheId }],
+      },
+      { typeId: 'mfr', isBrouillon: ETAPE_IS_BROUILLON, date: caminoDateValidator.parse('2000-02-02'), statutId: 'fai', concurrence: { amIFirst: true }, hasTitreFrom: true },
+      demarcheId,
 
-      [{ id: '1', typeId: 'mfr', date: '2000-01-01' }] as Pick<Required<ITitreEtape>, 'id' | 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'titreDemarcheId' | 'communes' | 'isBrouillon'>[],
+      [
+        {
+          id: etapeIdValidator.parse('1'),
+          typeId: ETAPES_TYPES.demande,
+          date: caminoDateValidator.parse('2000-01-01'),
+          concurrence: { amIFirst: true },
+          hasTitreFrom: true,
+          statutId: ETAPES_STATUTS.FAIT,
+          isBrouillon: ETAPE_IS_NOT_BROUILLON,
+        },
+      ],
       false
     )
 
-    expect(valid.valid).toBe(true)
+    expect(valid).toMatchInlineSnapshot(`
+      {
+        "errors": null,
+        "valid": true,
+      }
+    `)
   })
 
   test('l’ajout d’une étape à une démarche sans étape est valide', () => {
+    const demarcheId = newDemarcheId()
     const valid = titreDemarcheUpdatedEtatValidate(
       'oct',
       {
         typeId: 'arm',
-        demarches: [{ typeId: 'oct' }],
-      } as ITitre,
-      { typeId: 'mfr', isBrouillon: ETAPE_IS_BROUILLON, date: caminoDateValidator.parse('2000-01-01'), statutId: 'fai' },
-      newDemarcheId(),
+        demarches: [{ id: demarcheId }],
+      },
+      { typeId: 'mfr', isBrouillon: ETAPE_IS_BROUILLON, date: caminoDateValidator.parse('2000-01-01'), statutId: 'fai', concurrence: { amIFirst: true }, hasTitreFrom: true },
+      demarcheId,
       []
     )
 
@@ -148,22 +295,31 @@ describe('titreDemarcheUpdatedEtatValidate', () => {
   })
 
   test("retourne une erreur si la démarche en cours de modification n'existe pas", () => {
+    const demarcheId = newDemarcheId()
     expect(
       titreDemarcheUpdatedEtatValidate(
         'oct',
         {
           typeId: 'arm',
-          demarches: [{ typeId: 'pro' }],
-        } as ITitre,
-        { id: '1', typeId: 'mfr' } as Pick<Required<ITitreEtape>, 'id' | 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'titreDemarcheId' | 'communes' | 'isBrouillon'>,
-        newDemarcheId(),
+          demarches: [{ id: newDemarcheId() }],
+        },
+        {
+          id: etapeIdValidator.parse('1'),
+          typeId: ETAPES_TYPES.demande,
+          date: caminoDateValidator.parse('2000-01-01'),
+          concurrence: { amIFirst: true },
+          hasTitreFrom: true,
+          statutId: ETAPES_STATUTS.FAIT,
+          isBrouillon: ETAPE_IS_NOT_BROUILLON,
+        },
+        demarcheId,
 
         []
       )
     ).toMatchInlineSnapshot(`
       {
         "errors": [
-          "les étapes de la démarche machine ne sont pas valides",
+          "le titre ne contient pas la démarche en cours de modification",
         ],
         "valid": false,
       }
@@ -174,32 +330,59 @@ describe('titreDemarcheUpdatedEtatValidate', () => {
         'oct',
         {
           typeId: 'arm',
-        } as ITitre,
-        { id: '1', typeId: 'mfr' } as Pick<Required<ITitreEtape>, 'id' | 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'titreDemarcheId' | 'communes' | 'isBrouillon'>,
-        newDemarcheId(),
+          demarches: [{ id: demarcheId }],
+        },
+        {
+          id: etapeIdValidator.parse('1'),
+          typeId: ETAPES_TYPES.demande,
+          date: caminoDateValidator.parse('2025-01-01'),
+          concurrence: { amIFirst: true },
+          hasTitreFrom: false,
+          statutId: ETAPES_STATUTS.FAIT,
+          isBrouillon: ETAPE_IS_NOT_BROUILLON,
+        },
+        demarcheId,
 
         []
       )
     ).toMatchInlineSnapshot(`
       {
-        "errors": [
-          "les étapes de la démarche machine ne sont pas valides",
-        ],
-        "valid": false,
+        "errors": null,
+        "valid": true,
       }
     `)
   })
 
   test('supprime une étape', () => {
+    const demarcheId = newDemarcheId()
     const valid = titreDemarcheUpdatedEtatValidate(
       'oct',
       {
         typeId: 'arm',
-        demarches: [{ typeId: 'oct' }],
-      } as ITitre,
-      { id: etapeIdValidator.parse('1'), typeId: 'mfr', date: caminoDateValidator.parse('2023-01-01'), statutId: 'fai', isBrouillon: ETAPE_IS_BROUILLON },
-      newDemarcheId(),
-      [{ id: etapeIdValidator.parse('1'), typeId: 'mfr', date: caminoDateValidator.parse('2023-01-01'), statutId: 'fai', isBrouillon: ETAPE_IS_BROUILLON, ordre: 1 }],
+        demarches: [{ id: demarcheId }],
+      },
+      {
+        id: etapeIdValidator.parse('1'),
+        typeId: 'mfr',
+        date: caminoDateValidator.parse('2023-01-01'),
+        statutId: 'fai',
+        isBrouillon: ETAPE_IS_BROUILLON,
+        concurrence: { amIFirst: true },
+        hasTitreFrom: true,
+      },
+      demarcheId,
+      [
+        {
+          id: etapeIdValidator.parse('1'),
+          typeId: 'mfr',
+          date: caminoDateValidator.parse('2023-01-01'),
+          statutId: 'fai',
+          isBrouillon: ETAPE_IS_BROUILLON,
+          ordre: 1,
+          concurrence: { amIFirst: true },
+          hasTitreFrom: true,
+        },
+      ],
       true
     )
 
@@ -207,72 +390,122 @@ describe('titreDemarcheUpdatedEtatValidate', () => {
   })
 
   test('ajoute une étape à une démarche sans machine', () => {
+    const demarcheId = newDemarcheId()
     const valid = titreDemarcheUpdatedEtatValidate(
       'oct',
       {
         typeId: 'arm',
         demarches: [
           {
-            typeId: 'oct',
+            id: demarcheId,
           },
         ],
-      } as ITitre,
-      { typeId: 'mfr', date: '1030-01-01', statutId: 'fai' } as Pick<
-        Required<ITitreEtape>,
-        'id' | 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'titreDemarcheId' | 'communes' | 'isBrouillon'
-      >,
-      newDemarcheId()
+      },
+      {
+        id: etapeIdValidator.parse('1'),
+        typeId: ETAPES_TYPES.demande,
+        date: caminoDateValidator.parse('1030-01-01'),
+        concurrence: { amIFirst: true },
+        hasTitreFrom: true,
+        statutId: ETAPES_STATUTS.FAIT,
+        isBrouillon: ETAPE_IS_NOT_BROUILLON,
+      },
+      demarcheId
     )
 
     expect(valid.valid).toBe(true)
   })
 
   test('ajoute une demande en construction à une démarche vide', () => {
+    const demarcheId = newDemarcheId()
     const valid = titreDemarcheUpdatedEtatValidate(
       'oct',
       {
         typeId: 'axm',
-        demarches: [{ typeId: 'oct' }],
-      } as ITitre,
-      { typeId: 'mfr', statutId: 'fai', isBrouillon: ETAPE_IS_BROUILLON, date: '2030-01-01' } as Pick<
-        Required<ITitreEtape>,
-        'id' | 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'titreDemarcheId' | 'communes' | 'isBrouillon'
-      >,
-      newDemarcheId()
+        demarches: [{ id: demarcheId }],
+      },
+      {
+        id: etapeIdValidator.parse('1'),
+        typeId: ETAPES_TYPES.demande,
+        date: caminoDateValidator.parse('2030-01-01'),
+        concurrence: { amIFirst: true },
+        hasTitreFrom: true,
+        statutId: ETAPES_STATUTS.FAIT,
+        isBrouillon: ETAPE_IS_NOT_BROUILLON,
+      },
+      demarcheId
     )
 
     expect(valid.valid).toBe(true)
   })
 
   test('ajoute une demande en construction à une démarche qui contient déjà une étape', () => {
+    const demarcheId = newDemarcheId()
     const valid = titreDemarcheUpdatedEtatValidate(
       'oct',
       {
         typeId: 'axm',
-        demarches: [{ typeId: 'oct' }],
-      } as ITitre,
-      { typeId: 'mfr', statutId: 'fai', isBrouillon: ETAPE_IS_BROUILLON, date: caminoDateValidator.parse('2024-01-01') },
-      newDemarcheId(),
+        demarches: [{ id: demarcheId }],
+      },
+      { typeId: 'mfr', statutId: 'fai', isBrouillon: ETAPE_IS_BROUILLON, date: caminoDateValidator.parse('2024-01-01'), concurrence: { amIFirst: true }, hasTitreFrom: true },
+      demarcheId,
 
-      [{ id: etapeIdValidator.parse('1'), date: caminoDateValidator.parse('2020-01-01'), typeId: 'dae', statutId: 'exe', isBrouillon: ETAPE_IS_NOT_BROUILLON, ordre: 1 }]
+      [
+        {
+          id: etapeIdValidator.parse('1'),
+          date: caminoDateValidator.parse('2020-01-01'),
+          typeId: 'dae',
+          statutId: 'exe',
+          isBrouillon: ETAPE_IS_NOT_BROUILLON,
+          ordre: 1,
+          concurrence: { amIFirst: true },
+          hasTitreFrom: true,
+        },
+      ]
     )
 
     expect(valid.valid).toBe(true)
   })
 
   test('modifie une demande en construction à une démarche', () => {
+    const demarcheId = newDemarcheId()
     const valid = titreDemarcheUpdatedEtatValidate(
       'oct',
       {
         typeId: 'axm',
-        demarches: [{ typeId: 'oct' }],
-      } as ITitre,
-      { id: etapeIdValidator.parse('1'), typeId: 'mfr', statutId: 'fai', isBrouillon: ETAPE_IS_BROUILLON, date: caminoDateValidator.parse('2024-01-01') },
-      newDemarcheId(),
-
+        demarches: [{ id: demarcheId }],
+      },
+      {
+        id: etapeIdValidator.parse('1'),
+        typeId: 'mfr',
+        statutId: 'fai',
+        isBrouillon: ETAPE_IS_BROUILLON,
+        date: caminoDateValidator.parse('2024-01-01'),
+        concurrence: { amIFirst: true },
+        hasTitreFrom: true,
+      },
+      demarcheId,
       [
-        { id: etapeIdValidator.parse('1'), typeId: 'mfr', statutId: 'fai', isBrouillon: ETAPE_IS_BROUILLON, date: caminoDateValidator.parse('2024-01-01'), ordre: 2 },
-        { id: etapeIdValidator.parse('2'), typeId: 'dae', date: caminoDateValidator.parse('2020-01-01'), isBrouillon: ETAPE_IS_NOT_BROUILLON, statutId: 'exe', ordre: 1 },
+        {
+          id: etapeIdValidator.parse('1'),
+          typeId: 'mfr',
+          statutId: 'fai',
+          isBrouillon: ETAPE_IS_BROUILLON,
+          date: caminoDateValidator.parse('2024-01-01'),
+          ordre: 2,
+          concurrence: { amIFirst: true },
+          hasTitreFrom: true,
+        },
+        {
+          id: etapeIdValidator.parse('2'),
+          typeId: 'dae',
+          date: caminoDateValidator.parse('2020-01-01'),
+          isBrouillon: ETAPE_IS_NOT_BROUILLON,
+          statutId: 'exe',
+          ordre: 1,
+          concurrence: { amIFirst: true },
+          hasTitreFrom: true,
+        },
       ]
     )
 
@@ -280,17 +513,29 @@ describe('titreDemarcheUpdatedEtatValidate', () => {
   })
 
   test('ne peut pas ajouter une 2ème demande en construction à une démarche', () => {
+    const demarcheId = newDemarcheId()
     expect(
       titreDemarcheUpdatedEtatValidate(
         'oct',
         {
           typeId: 'axm',
-          demarches: [{ typeId: 'oct' }],
-        } as ITitre,
-        { typeId: 'mfr', statutId: 'fai', isBrouillon: ETAPE_IS_BROUILLON, date: caminoDateValidator.parse('2024-01-02') },
-        newDemarcheId(),
+          demarches: [{ id: demarcheId }],
+        },
+        { typeId: 'mfr', statutId: 'fai', isBrouillon: ETAPE_IS_BROUILLON, date: caminoDateValidator.parse('2024-01-02'), concurrence: { amIFirst: true }, hasTitreFrom: true },
+        demarcheId,
 
-        [{ id: etapeIdValidator.parse('1'), typeId: 'mfr', statutId: 'fai', isBrouillon: ETAPE_IS_BROUILLON, date: caminoDateValidator.parse('2024-01-01'), ordre: 1 }]
+        [
+          {
+            id: etapeIdValidator.parse('1'),
+            typeId: 'mfr',
+            statutId: 'fai',
+            isBrouillon: ETAPE_IS_BROUILLON,
+            date: caminoDateValidator.parse('2024-01-01'),
+            ordre: 1,
+            concurrence: { amIFirst: true },
+            hasTitreFrom: true,
+          },
+        ]
       )
     ).toMatchInlineSnapshot(`
       {
@@ -303,13 +548,14 @@ describe('titreDemarcheUpdatedEtatValidate', () => {
   })
 
   test('ne peut pas ajouter une étape de type inconnu sur une machine', () => {
+    const demarcheId = newDemarcheId()
     expect(
       titreDemarcheUpdatedEtatValidate(
         'oct',
         {
           typeId: 'axm',
-          demarches: [{ typeId: 'oct' }],
-        } as ITitre,
+          demarches: [{ id: demarcheId }],
+        },
         {
           typeId: 'aaa' as EtapeTypeId,
           date: toCaminoDate('2022-01-01'),
@@ -318,8 +564,10 @@ describe('titreDemarcheUpdatedEtatValidate', () => {
           communes: null,
           contenu: null,
           surface: null,
+          concurrence: { amIFirst: true },
+          hasTitreFrom: true,
         },
-        newDemarcheId(),
+        demarcheId,
 
         [
           {
@@ -332,6 +580,8 @@ describe('titreDemarcheUpdatedEtatValidate', () => {
             contenu: null,
             ordre: 1,
             surface: null,
+            concurrence: { amIFirst: true },
+            hasTitreFrom: true,
           },
           {
             id: newEtapeId('2'),
@@ -343,6 +593,8 @@ describe('titreDemarcheUpdatedEtatValidate', () => {
             contenu: null,
             ordre: 1,
             surface: null,
+            concurrence: { amIFirst: true },
+            hasTitreFrom: true,
           },
         ]
       )

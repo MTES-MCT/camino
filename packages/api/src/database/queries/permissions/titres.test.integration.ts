@@ -66,6 +66,8 @@ describe('titresQueryModify', () => {
           statutId: 'fai',
           titulaireIds: withTitulaire ? [entrepriseId1] : [],
           isBrouillon: ETAPE_IS_NOT_BROUILLON,
+          concurrence: { amIFirst: true },
+          hasTitreFrom: true,
         }
       )
 
@@ -105,6 +107,8 @@ describe('titresQueryModify', () => {
           statutId: 'fai',
           amodiataireIds: withAmodiataire ? [entrepriseId2] : [],
           isBrouillon: ETAPE_IS_NOT_BROUILLON,
+          concurrence: { amIFirst: true },
+          hasTitreFrom: true,
         }
       )
 
@@ -157,6 +161,8 @@ describe('titresQueryModify', () => {
           statutId: etapeStatutId,
           date: toCaminoDate('2020-01-01'),
           isBrouillon: ETAPE_IS_NOT_BROUILLON,
+          concurrence: { amIFirst: true },
+          hasTitreFrom: true,
         }
       )
 
@@ -242,6 +248,8 @@ describe('titresQueryModify', () => {
           statutId: 'fav',
           titulaireIds: withTitulaire ? [entrepriseId1] : [],
           isBrouillon: ETAPE_IS_NOT_BROUILLON,
+          concurrence: { amIFirst: true },
+          hasTitreFrom: true,
         }
       )
 

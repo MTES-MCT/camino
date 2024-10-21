@@ -321,6 +321,8 @@ const titreBuild = (
             isBrouillon: ETAPE_IS_NOT_BROUILLON,
             date: toCaminoDate('2020-01-01'),
             administrationsLocales: administrationIdLocale ? [administrationIdLocale] : [],
+            concurrence: { amIFirst: true },
+            hasTitreFrom: true,
           },
         ],
       },

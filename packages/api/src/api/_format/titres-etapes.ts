@@ -6,6 +6,8 @@ import { ITitreEtape } from '../../types'
 import { titreEtapeFormatFields } from './_fields'
 import { titreDemarcheFormat } from './titres-demarches'
 import { EtapesTypes } from 'camino-common/src/static/etapesTypes'
+import { titreEtapeForMachineValidator } from '../../business/rules-demarches/machine-common'
+import { z } from 'zod'
 
 const getPerimetreFromITitreEtape = (
   titreEtape: Pick<
@@ -23,7 +25,10 @@ const getPerimetreFromITitreEtape = (
   surface: titreEtape.surface ?? null,
 })
 
-export const iTitreEtapeToFlattenEtape = (titreEtape: ITitreEtape): FlattenEtape => {
+const apiFlattenEtapeValidator = flattenEtapeValidator.and(titreEtapeForMachineValidator.pick({ concurrence: true, hasTitreFrom: true }))
+export type ApiFlattenEtape = z.infer<typeof apiFlattenEtapeValidator>
+
+export const iTitreEtapeToFlattenEtape = (titreEtape: ITitreEtape): ApiFlattenEtape => {
   const titreTypeId = titreEtape.demarche?.titre?.typeId
   const demarcheTypeId = titreEtape.demarche?.typeId
   const heritageProps = EtapesTypes[titreEtape.typeId].fondamentale ? titreEtape.heritageProps : defaultHeritageProps
@@ -142,9 +147,9 @@ export const iTitreEtapeToFlattenEtape = (titreEtape: ITitreEtape): FlattenEtape
   }
 
   // On zod parse ici pour enlever les champs supplémentaires qu'il y'a par exemple dans perimetre
-  return flattenEtapeValidator.parse(flattenEtape)
+  return apiFlattenEtapeValidator.parse(flattenEtape)
 }
-export const titreEtapeFormat = (titreEtape: ITitreEtape, fields = titreEtapeFormatFields) => {
+export const titreEtapeFormat = (titreEtape: ITitreEtape, fields = titreEtapeFormatFields): ITitreEtape => {
   if (titreEtape.demarche) {
     titreEtape.demarche = titreDemarcheFormat(titreEtape.demarche, fields.demarche)
   }

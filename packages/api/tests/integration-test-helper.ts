@@ -1,9 +1,12 @@
 import Titres from '../src/database/models/titres'
 import TitresDemarches from '../src/database/models/titres-demarches'
 import TitresEtapes from '../src/database/models/titres-etapes'
-import { ITitre } from '../src/types'
+import { ITitre, ITitreDemarche, ITitreEtape } from '../src/types'
 
-export const insertTitreGraph = async (titreGraph: ITitre): Promise<void> => {
+type IEtapeInsert = Omit<ITitreEtape, 'concurrence' | 'hasTitreFrom'>
+type IDemarcheInsert = Omit<ITitreDemarche, 'etapes'> & { etapes?: IEtapeInsert[] }
+export type ITitreInsert = Omit<ITitre, 'demarches'> & { demarches?: IDemarcheInsert[] }
+export const insertTitreGraph = async (titreGraph: ITitreInsert): Promise<void> => {
   const { demarches, ...titre } = titreGraph
   await Titres.query().insert(titre)
 

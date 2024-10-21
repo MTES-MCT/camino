@@ -30,7 +30,8 @@ import { userSuper } from '../../database/user-super'
 import { titreEtapeGet, titreEtapeUpdate, titreEtapeUpsert } from '../../database/queries/titres-etapes'
 import { User, isBureauDEtudes, isEntreprise } from 'camino-common/src/roles'
 import { canCreateEtape, canDeposeEtape, canDeleteEtape, canEditEtape } from 'camino-common/src/permissions/titres-etapes'
-import { canBeBrouillon, isEtapeTypeId } from 'camino-common/src/static/etapesTypes'
+import { canBeBrouillon, ETAPES_TYPES, isEtapeTypeId } from 'camino-common/src/static/etapesTypes'
+
 import {
   DeepReadonly,
   NotNullableKeys,
@@ -68,7 +69,7 @@ import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { AdministrationId } from 'camino-common/src/static/administrations'
 import { titreDemarcheUpdatedEtatValidate, getPossiblesEtapesTypes } from '../../business/validations/titre-demarche-etat-validate'
 import { FlattenEtape, GraphqlEtape, RestEtapeCreation, RestEtapeModification, restEtapeCreationValidator, restEtapeModificationValidator } from 'camino-common/src/etape-form'
-import { iTitreEtapeToFlattenEtape } from '../_format/titres-etapes'
+import { ApiFlattenEtape, iTitreEtapeToFlattenEtape } from '../_format/titres-etapes'
 import { CommuneId } from 'camino-common/src/static/communes'
 import { titreEtapeUpdationValidate } from '../../business/validations/titre-etape-updation-validate'
 import { CaminoApiError, IHeritageContenu, IHeritageProps, ITitre, ITitreDemarche, ITitreEtape } from '../../types'
@@ -85,6 +86,7 @@ import { Effect, Match, pipe } from 'effect'
 import { DbQueryAccessError } from '../../pg-database'
 import { CaminoError } from 'camino-common/src/zod-tools'
 import { machineFind } from '../../business/rules-demarches/machines'
+import { TitreEtapeForMachine } from '../../business/rules-demarches/machine-common'
 
 export const getEtapeEntrepriseDocuments =
   (pool: Pool) =>
@@ -459,8 +461,10 @@ const getFlattenEtape = async (
   titreTypeId: TitreTypeId,
   isBrouillon: EtapeBrouillon,
   etapeSlug: EtapeSlug | undefined,
+  etapeOldConcurrence: TitreEtapeForMachine['concurrence'],
+  etapeOldHasTitreFrom: TitreEtapeForMachine['hasTitreFrom'],
   pool: Pool
-): Promise<{ flattenEtape: Partial<Pick<FlattenEtape, 'id'>> & Omit<FlattenEtape, 'id'>; perimetreInfos: PerimetreInfos }> => {
+): Promise<{ flattenEtape: Partial<Pick<ApiFlattenEtape, 'id'>> & Omit<ApiFlattenEtape, 'id'>; perimetreInfos: PerimetreInfos }> => {
   const perimetreInfos = await getPerimetreInfosInternal(
     pool,
     etape.geojson4326Perimetre,
@@ -506,6 +510,8 @@ const getFlattenEtape = async (
     // On ne voit pas comment mieux faire
     id: 'id' in etape ? etape.id : fakeEtapeId,
     slug: etapeSlug,
+    concurrence: etapeOldConcurrence,
+    hasTitreFrom: etapeOldHasTitreFrom,
   })
 
   return {
@@ -557,7 +563,16 @@ export const createEtape =
             } else {
               const titreTypeId = titreDemarche.titre.typeId
               const isBrouillon = canBeBrouillon(etape.typeId)
-              const { flattenEtape, perimetreInfos } = await getFlattenEtape(etape, titreDemarche, titreTypeId, isBrouillon, etapeSlugValidator.parse('unknown'), pool)
+              const { flattenEtape, perimetreInfos } = await getFlattenEtape(
+                etape,
+                titreDemarche,
+                titreTypeId,
+                isBrouillon,
+                etapeSlugValidator.parse('unknown'),
+                etape.typeId === ETAPES_TYPES.demande ? { amIFirst: true } : 'non-applicable',
+                etape.typeId === ETAPES_TYPES.demande ? true : 'non-applicable',
+                pool
+              )
               const entrepriseDocuments: EntrepriseDocument[] = await validateAndGetEntrepriseDocuments(pool, flattenEtape, etape.entrepriseDocumentIds, user)
 
               const etapeDocumentsParsed = z.array(tempEtapeDocumentValidator).safeParse(etape.etapeDocuments)
@@ -706,12 +721,17 @@ export const updateEtape =
           if (isNullOrUndefined(titreDemarche.titre.titulaireIds) || isNullOrUndefined(titreDemarche.titre.amodiataireIds)) throw new Error('la démarche n’est pas chargée complètement')
           const titreTypeId = titreDemarche.titre.typeId
           const isBrouillon = titreEtapeOld.isBrouillon
-          const { flattenEtape, perimetreInfos } = await getFlattenEtape(etape, titreDemarche, titreTypeId, isBrouillon, titreEtapeOld.slug, pool)
-          // FIXMACHINE WTF
-          // @ts-ignore
-          flattenEtape.concurrence = titreEtapeOld.concurrence
-          // @ts-ignore
-          flattenEtape.hasTitreFrom = titreEtapeOld.hasTitreFrom
+          const { flattenEtape, perimetreInfos } = await getFlattenEtape(
+            etape,
+            titreDemarche,
+            titreTypeId,
+            isBrouillon,
+            titreEtapeOld.slug,
+            titreEtapeOld.concurrence,
+            titreEtapeOld.hasTitreFrom,
+            pool
+          )
+
           const entrepriseDocuments: EntrepriseDocument[] = await validateAndGetEntrepriseDocuments(pool, flattenEtape, etape.entrepriseDocumentIds, user)
 
           const etapeDocumentsParsed = z.array(etapeDocumentModificationValidator).safeParse(etape.etapeDocuments)

@@ -15,7 +15,26 @@ const currentDate = toCaminoDate('2023-04-06')
 describe("id de l'étape d'une propriété valide (dé-normalise)", () => {
   test("trouve l'id de la dernière étape acceptée de la démarche d'octroi acceptée ayant la propriété 'geojson4326Perimetre'", () => {
     expect(
-      titrePropTitreEtapeFind(
+      titrePropTitreEtapeFind<
+        Pick<
+          ITitreEtape,
+          | 'id'
+          | 'ordre'
+          | 'date'
+          | 'typeId'
+          | 'isBrouillon'
+          | 'statutId'
+          | 'titulaireIds'
+          | 'amodiataireIds'
+          | 'surface'
+          | 'substances'
+          | 'administrationsLocales'
+          | 'communes'
+          | 'forets'
+          | 'titreDemarcheId'
+          | 'geojson4326Perimetre'
+        >
+      >(
         currentDate,
         'points',
         [
@@ -59,6 +78,7 @@ describe("id de l'étape d'une propriété valide (dé-normalise)", () => {
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 date: toCaminoDate('1989-02-03'),
                 ordre: 2,
+                geojson4326Perimetre: undefined,
               },
               {
                 id: newEtapeId('h-cx-courdemanges-1989-mut01-dex01'),
@@ -117,7 +137,26 @@ describe("id de l'étape d'une propriété valide (dé-normalise)", () => {
 
   test("trouve l'id de la dernière étape acceptée de la démarche de mutation acceptée ayant la propriété 'points'", () => {
     expect(
-      titrePropTitreEtapeFind(
+      titrePropTitreEtapeFind<
+        Pick<
+          ITitreEtape,
+          | 'id'
+          | 'ordre'
+          | 'date'
+          | 'typeId'
+          | 'isBrouillon'
+          | 'statutId'
+          | 'titulaireIds'
+          | 'amodiataireIds'
+          | 'surface'
+          | 'substances'
+          | 'administrationsLocales'
+          | 'communes'
+          | 'forets'
+          | 'titreDemarcheId'
+          | 'geojson4326Perimetre'
+        >
+      >(
         currentDate,
         'points',
         [
@@ -160,6 +199,7 @@ describe("id de l'étape d'une propriété valide (dé-normalise)", () => {
                 ordre: 2,
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 date: toCaminoDate('1986-02-02'),
+
                 geojson4326Perimetre: { type: 'Feature', properties: {}, geometry: { type: 'MultiPolygon', coordinates: [[[[1, 2]]]] } },
               },
               {
@@ -222,7 +262,6 @@ describe("id de l'étape d'une propriété valide (dé-normalise)", () => {
                 typeId: 'dpu',
                 statutId: 'acc',
                 ordre: 2,
-                geojson4326Perimetre: { type: 'Feature', properties: {}, geometry: { type: 'MultiPolygon', coordinates: [[[[1, 2]]]] } },
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 date: toCaminoDate('1986-02-02'),
               },
@@ -454,6 +493,8 @@ describe("id de l'étape d'une propriété valide (dé-normalise)", () => {
                 date: toCaminoDate('1981-01-01'),
                 statutId: 'acc',
                 ordre: 1,
+                concurrence: 'non-applicable',
+                hasTitreFrom: 'non-applicable',
               },
             ],
           },
@@ -849,6 +890,8 @@ describe("id de l'étape qui a un contenu", () => {
               date: toCaminoDate('2020-01-01'),
               statutId: 'acc',
               contenu: { arm: { mecanisee: true } },
+              concurrence: 'non-applicable',
+              hasTitreFrom: 'non-applicable',
             },
           ],
         },
@@ -878,6 +921,8 @@ describe("id de l'étape qui a un contenu", () => {
               date: toCaminoDate('2020-01-03'),
               statutId: 'acc',
               contenu: { arm: { mecanisee: true } },
+              concurrence: 'non-applicable',
+              hasTitreFrom: 'non-applicable',
             },
           ],
         },
@@ -893,6 +938,8 @@ describe("id de l'étape qui a un contenu", () => {
               isBrouillon: ETAPE_IS_NOT_BROUILLON,
               date: toCaminoDate('2020-01-01'),
               statutId: 'fai',
+              concurrence: 'non-applicable',
+              hasTitreFrom: 'non-applicable',
             },
           ],
         },
@@ -918,6 +965,8 @@ describe("id de l'étape qui a un contenu", () => {
               date: toCaminoDate('2020-01-01'),
               statutId: 'acc',
               contenu: { arm: { mecanisee: true } },
+              concurrence: 'non-applicable',
+              hasTitreFrom: 'non-applicable',
             },
           ],
         },
@@ -945,6 +994,8 @@ describe("id de l'étape qui a un contenu", () => {
               date: toCaminoDate('2020-01-03'),
               statutId: 'fai',
               contenu: { arm: { mecanisee: true } },
+              concurrence: { amIFirst: true },
+              hasTitreFrom: true,
             },
           ],
         },
@@ -971,6 +1022,8 @@ describe("id de l'étape qui a un contenu", () => {
               date: toCaminoDate('2020-01-03'),
               statutId: 'fai',
               contenu: { arm: { mecanisee: true } },
+              concurrence: { amIFirst: true },
+              hasTitreFrom: true,
             },
           ],
         },

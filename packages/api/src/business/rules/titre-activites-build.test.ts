@@ -73,6 +73,8 @@ describe("construction des activités d'un titre", () => {
             surface: null,
             ordre: 1,
             communes: null,
+            concurrence: 'non-applicable',
+            hasTitreFrom: 'non-applicable',
           },
         ],
       },

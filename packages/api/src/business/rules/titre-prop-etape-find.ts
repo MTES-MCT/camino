@@ -16,7 +16,7 @@ import { isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/type
 import { ETAPES_STATUTS } from 'camino-common/src/static/etapesStatuts'
 import { ETAPE_IS_BROUILLON } from 'camino-common/src/etape'
 
-const etapeAmodiataireFind = (date: CaminoDate, titreEtape: ITitreEtape, titreDemarches: Pick<ITitreDemarche, 'demarcheDateDebut' | 'demarcheDateFin' | 'id'>[]) => {
+const etapeAmodiataireFind = (date: CaminoDate, titreEtape: Pick<ITitreEtape, 'titreDemarcheId'>, titreDemarches: Pick<ITitreDemarche, 'demarcheDateDebut' | 'demarcheDateFin' | 'id'>[]) => {
   const titreDemarche = titreDemarches.find(td => td.id === titreEtape.titreDemarcheId)
 
   if (isDemarchePhaseValide(date, titreDemarche)) {
@@ -32,7 +32,7 @@ const etapeAmodiataireFind = (date: CaminoDate, titreEtape: ITitreEtape, titreDe
   return false
 }
 const etapesStatutAccepteeFaitOuFavorable = [ETAPES_STATUTS.ACCEPTE, ETAPES_STATUTS.FAIT, ETAPES_STATUTS.FAVORABLE]
-const etapeValideCheck = (titreEtape: ITitreEtape, titreDemarcheTypeId: DemarcheTypeId, titreStatutId: TitreStatutId, propId?: IPropId) => {
+const etapeValideCheck = (titreEtape: Pick<ITitreEtape, 'typeId' | 'statutId' | 'isBrouillon'>, titreDemarcheTypeId: DemarcheTypeId, titreStatutId: TitreStatutId, propId?: IPropId) => {
   // si l'étape est une demande et que le titre est en demande initiale (statut réservé au octroi)
   if (titreEtape.typeId === 'mfr' && titreStatutId === 'dmi') {
     return true
@@ -64,15 +64,32 @@ const etapeValideCheck = (titreEtape: ITitreEtape, titreDemarcheTypeId: Demarche
   return false
 }
 
-const titreDemarchePropTitreEtapeFind = (
+const titreDemarchePropTitreEtapeFind = <
+  T extends Pick<
+    ITitreEtape,
+    | 'ordre'
+    | 'typeId'
+    | 'isBrouillon'
+    | 'statutId'
+    | 'titulaireIds'
+    | 'amodiataireIds'
+    | 'surface'
+    | 'substances'
+    | 'administrationsLocales'
+    | 'communes'
+    | 'forets'
+    | 'titreDemarcheId'
+    | 'geojson4326Perimetre'
+  >,
+>(
   date: CaminoDate,
   propId: IPropId,
-  titreDemarcheEtapes: ITitreEtape[],
+  titreDemarcheEtapes: T[],
   titreDemarcheTypeId: DemarcheTypeId,
   titreStatutId: TitreStatutId,
   titreDemarches: Pick<ITitreDemarche, 'demarcheDateDebut' | 'demarcheDateFin' | 'id'>[]
-) =>
-  titreEtapesSortDescByOrdre(titreDemarcheEtapes).find((titreEtape: ITitreEtape) => {
+): T | null =>
+  titreEtapesSortDescByOrdre(titreDemarcheEtapes).find(titreEtape => {
     const isEtapeValide = etapeValideCheck(titreEtape, titreDemarcheTypeId, titreStatutId, propId)
 
     if (!isEtapeValide) return false
@@ -107,15 +124,33 @@ const titreDemarcheContenuTitreEtapeFind = ({ sectionId, elementId }: IContenuId
  * @returns id d'une etape
  */
 
-export const titrePropTitreEtapeFind = (
+export const titrePropTitreEtapeFind = <
+  T extends Pick<
+    ITitreEtape,
+    | 'ordre'
+    | 'date'
+    | 'typeId'
+    | 'isBrouillon'
+    | 'statutId'
+    | 'titulaireIds'
+    | 'amodiataireIds'
+    | 'surface'
+    | 'substances'
+    | 'administrationsLocales'
+    | 'communes'
+    | 'forets'
+    | 'titreDemarcheId'
+    | 'geojson4326Perimetre'
+  >,
+>(
   date: CaminoDate,
   propId: IPropId,
-  titreDemarches: Pick<ITitreDemarche, 'ordre' | 'typeId' | 'statutId' | 'demarcheDateDebut' | 'demarcheDateFin' | 'etapes' | 'id'>[],
+  titreDemarches: (Pick<ITitreDemarche, 'ordre' | 'typeId' | 'statutId' | 'demarcheDateDebut' | 'demarcheDateFin' | 'id'> & { etapes?: T[] })[],
   titreStatutId: TitreStatutId
-): ITitreEtape | null => {
+): NoInfer<T> | null => {
   const titreDemarchesSorted = titreDemarcheSortAsc(titreDemarches).reverse()
 
-  const titreEtape = titreDemarchesSorted.reduce((etape: ITitreEtape | null, titreDemarche) => {
+  const titreEtape = titreDemarchesSorted.reduce((etape: T | null, titreDemarche) => {
     // si une étape a déjà été trouvée
     if (etape) return etape
 
@@ -123,7 +158,12 @@ export const titrePropTitreEtapeFind = (
       return null
     }
 
-    return titreDemarchePropTitreEtapeFind(date, propId, titreDemarche.etapes!, titreDemarche.typeId, titreStatutId, titreDemarchesSorted)
+    const etapes = titreDemarche.etapes
+    if (isNullOrUndefined(etapes)) {
+      return etape
+    }
+
+    return titreDemarchePropTitreEtapeFind(date, propId, etapes, titreDemarche.typeId, titreStatutId, titreDemarchesSorted)
   }, null)
 
   return titreEtape

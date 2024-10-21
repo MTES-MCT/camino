@@ -112,7 +112,7 @@ export const titreDemandeCreer: RestNewPostCall<'/rest/titres'> = ({ pool, user,
               if (isNullOrUndefinedOrEmpty(titreDemande.entrepriseId)) {
                 throw new Error('Ne devrait jamais se produire, réduction pour typescript qui ne voit pas le filterOrFail au dessus')
               }
-              const titreEtape: Omit<ITitreEtape, 'id'> = {
+              const titreEtape: Omit<ITitreEtape, 'id' | 'concurrence' | 'hasTitreFrom'> = {
                 titreDemarcheId: demarcheId,
                 typeId: 'mfr',
                 statutId: 'fai',

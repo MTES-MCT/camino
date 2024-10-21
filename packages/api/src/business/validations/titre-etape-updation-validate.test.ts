@@ -3,14 +3,14 @@ import { ITitreDemarche, ITitre } from '../../types'
 import { titreEtapeUpdationValidate } from './titre-etape-updation-validate'
 import { userSuper } from '../../database/user-super'
 import { describe, test, expect } from 'vitest'
-import { FlattenEtape } from 'camino-common/src/etape-form'
 import { ETAPE_IS_BROUILLON, ETAPE_IS_NOT_BROUILLON, etapeIdValidator, etapeSlugValidator } from 'camino-common/src/etape'
 import { caminoDateValidator, toCaminoDate } from 'camino-common/src/date'
 import { demarcheIdValidator } from 'camino-common/src/demarche'
 import { entrepriseIdValidator } from 'camino-common/src/entreprise'
 import { titreIdValidator } from 'camino-common/src/validators/titres'
 import { km2Validator } from 'camino-common/src/number'
-const etapeBrouillonValide: Omit<FlattenEtape, 'id'> = {
+import { ApiFlattenEtape } from '../../api/_format/titres-etapes'
+const etapeBrouillonValide: Omit<ApiFlattenEtape, 'id'> = {
   titulaires: {
     value: [],
     heritee: false,
@@ -57,8 +57,10 @@ const etapeBrouillonValide: Omit<FlattenEtape, 'id'> = {
   statutId: 'fai',
   titreDemarcheId: demarcheIdValidator.parse('demarcheId'),
   typeId: 'mfr',
+  concurrence: { amIFirst: true },
+  hasTitreFrom: true,
 }
-const etapeComplete: Omit<FlattenEtape, 'id'> = {
+const etapeComplete: Omit<ApiFlattenEtape, 'id'> = {
   ...etapeBrouillonValide,
   isBrouillon: ETAPE_IS_NOT_BROUILLON,
   typeId: 'mdp',
@@ -80,6 +82,8 @@ const titreDemarche: ITitreDemarche = {
       communes: [],
       surface: km2Validator.parse(12),
       ordre: 0,
+      concurrence: { amIFirst: true },
+      hasTitreFrom: true,
     },
   ],
 }
@@ -90,7 +94,7 @@ const titreARM: Pick<ITitre, 'typeId' | 'demarches'> = {
 describe('valide l’étape avant de l’enregistrer', () => {
   test("une ARM ou une AXM ne peuvent pas recevoir d'amodiataires", () => {
     // ARM
-    const titreEtape: FlattenEtape = {
+    const titreEtape: ApiFlattenEtape = {
       id: etapeIdValidator.parse('etapeId'),
       titulaires: {
         value: [],
@@ -138,6 +142,8 @@ describe('valide l’étape avant de l’enregistrer', () => {
       statutId: 'fai',
       titreDemarcheId: demarcheIdValidator.parse('demarcheId'),
       typeId: 'mfr',
+      concurrence: { amIFirst: true },
+      hasTitreFrom: true,
     }
 
     let errors = titreEtapeUpdationValidate(titreEtape, titreDemarche, titreARM, [], [], [], [], [], userSuper, null, null)

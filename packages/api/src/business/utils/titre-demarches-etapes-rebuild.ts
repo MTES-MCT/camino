@@ -21,8 +21,8 @@ const titreEtapesFilter = (titreEtapes: ITitreEtape[], date: string) => titreEta
  * @param titreTypeId - id du type du titre
  * @returns démarches du titre
  */
-export const titreDemarchesEtapesRebuild = (date: CaminoDate, titreDemarches: ITitreDemarche[], titreTypeId: TitreTypeId): ITitreDemarche[] => {
-  const titreDemarchesRebuilt: ITitreDemarche[] = []
+export const titreDemarchesEtapesRebuild = (date: CaminoDate, titreDemarches: ITitreDemarche[], titreTypeId: TitreTypeId): (Omit<ITitreDemarche, 'etapes'> & { etapes: ITitreEtape[] })[] => {
+  const titreDemarchesRebuilt: ReturnType<typeof titreDemarchesEtapesRebuild> = []
   for (const td of titreDemarches) {
     if (isNullOrUndefinedOrEmpty(td.etapes)) {
       continue
@@ -31,9 +31,7 @@ export const titreDemarchesEtapesRebuild = (date: CaminoDate, titreDemarches: IT
     const titreEtapesFiltered = titreEtapesFilter(td.etapes, date)
 
     if (isNotNullNorUndefinedNorEmpty(titreEtapesFiltered)) {
-      const titreDemarche = { ...td }
-
-      titreDemarche.etapes = titreEtapesFiltered
+      const titreDemarche = { ...td, etapes: titreEtapesFiltered }
 
       const etapes = titreDemarche.etapes.map(etape => titreEtapeForMachineValidator.parse(etape))
       titreDemarche.statutId = titreDemarcheStatutIdFind(titreDemarche.typeId, etapes, titreTypeId, titreDemarche.id)

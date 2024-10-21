@@ -47,10 +47,10 @@ const titreDemarcheEtapesBuild = <T extends Pick<Partial<ITitreEtape>, 'id'>>(ti
 // est valide par rapport aux définitions des types d'étape
 export const titreDemarcheUpdatedEtatValidate = (
   demarcheTypeId: DemarcheTypeId,
-  titre: { typeId: TitreTypeId; demarches?: { typeId: DemarcheTypeId }[] },
-  titreEtape: Pick<Partial<ITitreEtape>, 'id'> & Pick<ITitreEtape, 'statutId' | 'typeId' | 'date' | 'contenu' | 'surface' | 'communes' | 'isBrouillon'>,
+  titre: { typeId: TitreTypeId; demarches?: { id: DemarcheId }[] },
+  titreEtape: Pick<Partial<ITitreEtape>, 'id'> & Pick<ITitreEtape, 'statutId' | 'typeId' | 'date' | 'contenu' | 'surface' | 'communes' | 'isBrouillon' | 'hasTitreFrom' | 'concurrence'>,
   demarcheId: DemarcheId,
-  titreDemarcheEtapes?: Pick<ITitreEtape, 'id' | 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'communes' | 'surface' | 'isBrouillon'>[] | null,
+  titreDemarcheEtapes?: Pick<ITitreEtape, 'id' | 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'communes' | 'surface' | 'isBrouillon' | 'hasTitreFrom' | 'concurrence'>[] | null,
   suppression = false
 ): { valid: true; errors: null } | { valid: false; errors: NonEmptyArray<string> } => {
   const titreDemarcheEtapesNew = titreDemarcheEtapesBuild(titreEtape, suppression, titreDemarcheEtapes)
@@ -61,8 +61,7 @@ export const titreDemarcheUpdatedEtatValidate = (
   const titreDemarchesErrors: string[] = []
 
   // vérifie que la démarche existe dans le titre
-  const titreDemarche = titre.demarches?.find(d => d.typeId === demarcheTypeId)
-  if (!titreDemarche) {
+  if (!(titre.demarches?.some(({ id }) => id === demarcheId) ?? false)) {
     titreDemarchesErrors.push('le titre ne contient pas la démarche en cours de modification')
   }
   // on récupère tous les type d'étapes et les statuts associés applicable à la date souhaitée
@@ -84,9 +83,7 @@ export const titreDemarcheUpdatedEtatValidate = (
   if (isNotNullNorUndefined(machine)) {
     // vérifie que toutes les étapes existent dans l’arbre
     try {
-      // FIXMACHINE ne pas faire de parse ici
-      const etapes = titreDemarcheEtapesNew.map(etape => titreEtapeForMachineValidator.omit({ id: true, ordre: true }).parse(etape))
-      const ok = machine.isEtapesOk(machine.orderMachine(toMachineEtapes(etapes)))
+      const ok = machine.isEtapesOk(machine.orderMachine(toMachineEtapes(titreDemarcheEtapesNew.map(etape => ({ ...etape, surface: etape.surface ?? null, communes: etape.communes ?? null })))))
       if (!ok) {
         titreDemarchesErrors.push('la démarche machine n’est pas valide')
       }
