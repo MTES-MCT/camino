@@ -12,6 +12,7 @@ export const mailjet = new Mailjet({
       ? {
           host: proxy.host,
           port: proxy.port,
+          protocol: proxy.protocol,
         }
       : undefined,
   },

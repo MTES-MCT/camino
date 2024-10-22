@@ -4,12 +4,14 @@ import { capitalize, levenshtein, slugify, urlToSplit } from './strings'
 test('urlToSplit', () => {
   expect(urlToSplit('http://proxy-paas.dgaln-pre1.eco4.sihc.fr:3128')).toStrictEqual({
     value: 'http://proxy-paas.dgaln-pre1.eco4.sihc.fr:3128',
+    protocol: 'http',
     host: 'proxy-paas.dgaln-pre1.eco4.sihc.fr',
     port: 3128,
   })
   expect(urlToSplit(undefined)).toStrictEqual(undefined)
-  expect(urlToSplit('http://google.fr')).toStrictEqual({ value: 'http://google.fr', host: 'google.fr', port: 80 })
-  expect(urlToSplit('https://google.fr')).toStrictEqual({ value: 'https://google.fr', host: 'google.fr', port: 443 })
+  expect(urlToSplit('http://google.fr')).toStrictEqual({ value: 'http://google.fr', protocol: 'http', host: 'google.fr', port: 80 })
+  expect(urlToSplit('https://google.fr')).toStrictEqual({ value: 'https://google.fr', protocol: 'https', host: 'google.fr', port: 443 })
+  expect(urlToSplit('tcp://google.fr:5432')).toStrictEqual({ value: 'tcp://google.fr:5432', protocol: 'tcp:', host: 'google.fr', port: 5432 })
 })
 
 test('capitalize', () => {

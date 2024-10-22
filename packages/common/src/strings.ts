@@ -8,7 +8,7 @@ export const capitalize = <T extends string>(text: T): Capitalize<T> => {
   return text as Capitalize<T>
 }
 
-export const urlToSplit = (url: undefined | string): { value: string; host: string; port: number } | undefined => {
+export const urlToSplit = (url: undefined | string): { value: string; host: string; port: number; protocol: string } | undefined => {
   if (isNullOrUndefined(url)) {
     return url
   }
@@ -24,6 +24,7 @@ export const urlToSplit = (url: undefined | string): { value: string; host: stri
     value: url,
     host: value.hostname,
     port: port,
+    protocol: url.startsWith('https://') ? 'https' : url.startsWith('http://') ? 'http' : value.protocol,
   }
 }
 
