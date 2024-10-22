@@ -49,10 +49,8 @@ const titresQueryBuild = ({ fields }: { fields?: FieldsTitre }, user: DeepReadon
  * @returns un titre
  *
  */
-export const titreGet = async (id: string, { fields, fetchHeritage }: { fields?: FieldsTitre; fetchHeritage?: boolean }, user: DeepReadonly<User>): Promise<DBTitre | undefined> => {
+export const titreGet = async (id: string, { fields }: { fields?: FieldsTitre }, user: DeepReadonly<User>): Promise<DBTitre | undefined> => {
   const q = titresQueryBuild({ fields }, user)
-
-  q.context({ fetchHeritage })
 
   return q
     .andWhere(b => {

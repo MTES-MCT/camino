@@ -724,7 +724,7 @@ export const deposeEtape =
           throw new Error("l'étape n'existe pas")
         }
 
-        const titreEtape = await titreEtapeGet(id, { fields: { id: {} } }, user)
+        const titreEtape = await titreEtapeGet(id, { fields: { id: {} }, fetchHeritage: true }, user)
 
         if (isNullOrUndefined(titreEtape)) throw new Error("l'étape n'existe pas")
         const titreEtapeOld = objectClone(titreEtape)
