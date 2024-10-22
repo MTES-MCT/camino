@@ -1,9 +1,30 @@
+import { isNullOrUndefined } from './typescript-tools'
+
 export const capitalize = <T extends string>(text: T): Capitalize<T> => {
   if (text.length > 0) {
     return (text.substring(0, 1).toUpperCase() + text.substring(1)) as Capitalize<T>
   }
 
   return text as Capitalize<T>
+}
+
+export const urlToSplit = (url: undefined | string): { value: string; host: string; port: number } | undefined => {
+  if (isNullOrUndefined(url)) {
+    return url
+  }
+  const value = new URL(url)
+
+  let port = parseInt(value.port)
+
+  if (isNaN(port)) {
+    port = url.startsWith('https://') ? 443 : 80
+  }
+
+  return {
+    value: url,
+    host: value.hostname,
+    port: port,
+  }
 }
 
 export const levenshtein = (s: string, t: string): number => {

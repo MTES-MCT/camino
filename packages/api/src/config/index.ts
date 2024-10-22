@@ -4,24 +4,14 @@ import { caminoAnneeValidator, getCurrentAnnee } from 'camino-common/src/date'
 import { caminoConfigValidator } from 'camino-common/src/static/config'
 import { isNullOrUndefined } from 'camino-common/src/typescript-tools'
 import { z } from 'zod'
+import { urlToSplit } from 'camino-common/src/strings'
 
 if (process.env.VITEST !== 'true') {
   dotenv.config({ path: resolve(process.cwd(), '../../.env') })
 }
 
 const JWT_ALGORITHMS = ['HS256', 'HS384', 'HS512', 'RS256', 'RS384', 'RS512', 'ES256', 'ES384', 'ES512', 'PS256', 'PS384', 'PS512', 'none'] as const
-const urlToSplit = (url: undefined | string): { value: string; host: string; port: number } | undefined => {
-  if (isNullOrUndefined(url)) {
-    return url
-  }
-  const value = new URL(url)
 
-  return {
-    value: url,
-    host: value.host,
-    port: parseInt(value.port),
-  }
-}
 const httpsProxyValidator = z.string().url().optional().transform(urlToSplit)
 
 const configValidator = caminoConfigValidator.extend({

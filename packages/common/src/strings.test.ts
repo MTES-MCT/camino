@@ -1,5 +1,16 @@
 import { test, expect } from 'vitest'
-import { capitalize, levenshtein, slugify } from './strings'
+import { capitalize, levenshtein, slugify, urlToSplit } from './strings'
+
+test('urlToSplit', () => {
+  expect(urlToSplit('http://proxy-paas.dgaln-pre1.eco4.sihc.fr:3128')).toStrictEqual({
+    value: 'http://proxy-paas.dgaln-pre1.eco4.sihc.fr:3128',
+    host: 'proxy-paas.dgaln-pre1.eco4.sihc.fr',
+    port: 3128,
+  })
+  expect(urlToSplit(undefined)).toStrictEqual(undefined)
+  expect(urlToSplit('http://google.fr')).toStrictEqual({ value: 'http://google.fr', host: 'google.fr', port: 80 })
+  expect(urlToSplit('https://google.fr')).toStrictEqual({ value: 'https://google.fr', host: 'google.fr', port: 443 })
+})
 
 test('capitalize', () => {
   expect(capitalize('')).toBe('')
