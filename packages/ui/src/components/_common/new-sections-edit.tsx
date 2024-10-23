@@ -12,6 +12,7 @@ import { DsfrInputRadio } from '../_ui/dsfr-input-radio'
 import { DsfrSelect } from '../_ui/dsfr-select'
 import { useState } from '../../utils/vue-tsx-utils'
 import { CaminoDate, dateAddDays, dateFormat } from 'camino-common/src/date'
+import { sectionDureeIds } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections'
 interface Props {
   sectionsWithValue: DeepReadonly<SectionWithValue[]>
   completeUpdate: (complete: boolean, newContenu: Props['sectionsWithValue']) => void
@@ -88,7 +89,7 @@ export const getInfo = (element: DeepReadonly<ElementWithValue>, sectionId: stri
     if (element.id === 'volumeGranulatsExtrait' && isNumberElement(element)) {
       return `Soit l’équivalent de ${numberFormat(element.value * 1.5)} tonnes`
     }
-    if (sectionId === 'opdp' && element.id === 'duree' && isNumberElement(element) && isNotNullNorUndefined(etapeDate)) {
+    if (Object.values(sectionDureeIds).includes(sectionId) && element.id === 'duree' && isNumberElement(element) && isNotNullNorUndefined(etapeDate)) {
       const dateFin = dateAddDays(etapeDate, element.value - 1)
       return `Du ${dateFormat(etapeDate)} au ${dateFormat(dateFin)} (inclus)`
     }

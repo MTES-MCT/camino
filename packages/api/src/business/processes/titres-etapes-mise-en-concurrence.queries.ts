@@ -9,11 +9,17 @@ import { Pool } from 'pg'
 import { ZodUnparseable } from '../../tools/fp-tools'
 import { DemarcheId, demarcheIdValidator } from 'camino-common/src/demarche'
 import { ETAPE_TYPE_FOR_CONCURRENCY_DATA } from 'camino-common/src/static/etapesTypes'
+import { miseEnConcurrenceDureeId } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections'
 
 export type MiseEnConcurrenceErrors = DbQueryAccessError | ZodUnparseable | 'Plusieurs mises en concurrence pour le même périmètre'
 export const miseEnConcurrence = (pool: Pool, etapeDemandeId: EtapeId): Effect.Effect<GetDemarchesWithMiseEnConcurrence | null, CaminoError<MiseEnConcurrenceErrors>> => {
   return pipe(
-    effectDbQueryAndValidate(getDemarchesWithMiseEnConcurrenceDb, { etapeDemandeId, demandeTypeId: ETAPE_TYPE_FOR_CONCURRENCY_DATA }, pool, getDemarchesWithMiseEnConcurrenceValidator),
+    effectDbQueryAndValidate(
+      getDemarchesWithMiseEnConcurrenceDb,
+      { etapeDemandeId, demandeTypeId: ETAPE_TYPE_FOR_CONCURRENCY_DATA, sectionDureeId: miseEnConcurrenceDureeId },
+      pool,
+      getDemarchesWithMiseEnConcurrenceValidator
+    ),
     Effect.filterOrFail(
       result => result.length <= 1,
       result => ({ message: 'Plusieurs mises en concurrence pour le même périmètre' as const, extra: { etapeDemandeId, perimetres: result.map(({ id }) => id) } })
@@ -26,7 +32,11 @@ const getDemarchesWithMiseEnConcurrenceValidator = z.object({ id: demarcheIdVali
 type GetDemarchesWithMiseEnConcurrence = z.infer<typeof getDemarchesWithMiseEnConcurrenceValidator>
 
 const getDemarchesWithMiseEnConcurrenceDb = sql<
-  Redefine<IGetDemarchesWithMiseEnConcurrenceDbQuery, { etapeDemandeId: EtapeId; demandeTypeId: typeof ETAPE_TYPE_FOR_CONCURRENCY_DATA }, GetDemarchesWithMiseEnConcurrence>
+  Redefine<
+    IGetDemarchesWithMiseEnConcurrenceDbQuery,
+    { etapeDemandeId: EtapeId; demandeTypeId: typeof ETAPE_TYPE_FOR_CONCURRENCY_DATA; sectionDureeId: typeof miseEnConcurrenceDureeId },
+    GetDemarchesWithMiseEnConcurrence
+  >
 >`
   SELECT
     td.id,
@@ -84,7 +94,7 @@ const getDemarchesWithMiseEnConcurrenceDb = sql<
     AND (
       td_anf is null
       OR (
-        date (td_anf.date) + (td_anf.contenu -> 'opdp' -> 'duree')::int
+        date (td_anf.date) + (td_anf.contenu -> $ sectionDureeId ! -> 'duree')::int
       ) >= date (demande.date)
     );
   `

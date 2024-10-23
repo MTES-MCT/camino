@@ -1295,6 +1295,7 @@ export const canBeBrouillon = (etapeTypeId: EtapeTypeId): EtapeBrouillon => ETAP
 
 export const ETAPES_WITH_AUTOMATIC_STATUTS = [ETAPES_TYPES.participationDuPublic, ETAPES_TYPES.enquetePublique, ETAPES_TYPES.avisDeMiseEnConcurrenceAuJORF] as const satisfies Readonly<EtapeTypeId[]>
 
-export const isEtapeWithAutomaticStatuts = (etapeTypeId: EtapeTypeId | null): boolean => etapeTypeId !== null && ETAPES_WITH_AUTOMATIC_STATUTS.includes(etapeTypeId)
+export const isEtapeWithAutomaticStatuts = (etapeTypeId: EtapeTypeId | null): etapeTypeId is (typeof ETAPES_WITH_AUTOMATIC_STATUTS)[number] =>
+  etapeTypeId !== null && ETAPES_WITH_AUTOMATIC_STATUTS.includes(etapeTypeId)
 
 export const ETAPE_TYPE_FOR_CONCURRENCY_DATA = ETAPES_TYPES.demande

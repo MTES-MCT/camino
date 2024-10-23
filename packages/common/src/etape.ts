@@ -8,6 +8,7 @@ import { tempDocumentNameValidator } from './document'
 import { autreAvisTypeIdValidator, avisStatutIdValidator, avisTypeIdSansAutreValidator, avisVisibilityIdValidator } from './static/avisTypes'
 import { FlattenEtape, GraphqlEtape } from './etape-form'
 import { DeepReadonly } from './typescript-tools'
+import { sectionDureeIds } from './static/titresTypes_demarchesTypes_etapesTypes/sections'
 
 export const etapeBrouillonValidator = z.boolean().brand('EtapeBrouillon')
 export type EtapeBrouillon = z.infer<typeof etapeBrouillonValidator>
@@ -135,9 +136,11 @@ export const getStatutId = (etape: Pick<DeepReadonly<FlattenEtape>, 'date' | 'co
     return etape.statutId
   }
 
+  const duree = etape.contenu[sectionDureeIds[etape.typeId]]?.duree?.value ?? 0
+
   if (isBefore(currentDate, etape.date)) {
     return ETAPES_STATUTS.PROGRAMME
-  } else if (isBefore(currentDate, dateAddDays(etape.date, z.number().parse(etape.contenu.opdp?.duree?.value ?? 0)))) {
+  } else if (isBefore(currentDate, dateAddDays(etape.date, z.number().parse(duree)))) {
     return ETAPES_STATUTS.EN_COURS
   } else {
     return ETAPES_STATUTS.TERMINE

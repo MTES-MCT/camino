@@ -4,7 +4,7 @@ import { SectionsEdit } from './new-sections-edit'
 import { caminoDateValidator, toCaminoDate } from 'camino-common/src/date'
 import { UNITES, Unite, Unites } from 'camino-common/src/static/unites'
 import { ActiviteSectionElement, ActivitesTypes, isSubstancesFiscales } from 'camino-common/src/static/activitesTypes'
-import { getSectionsWithValue } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections'
+import { getSectionsWithValue, sectionDureeIds } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections'
 import { SubstancesFiscale } from 'camino-common/src/static/substancesFiscales'
 import { DeepReadonly, NonEmptyArray } from 'camino-common/src/typescript-tools'
 
@@ -429,7 +429,7 @@ export const ParticipationDuPublic: StoryFn = () => (
     }}
     sectionsWithValue={[
       {
-        id: 'opdp',
+        id: sectionDureeIds.ppu,
         elements: [
           {
             id: 'duree',

@@ -4,6 +4,7 @@
 export interface IGetDemarchesWithMiseEnConcurrenceDbParams {
   demandeTypeId: string;
   etapeDemandeId?: string | null | void;
+  sectionDureeId: string;
 }
 
 /** 'GetDemarchesWithMiseEnConcurrenceDb' return type */

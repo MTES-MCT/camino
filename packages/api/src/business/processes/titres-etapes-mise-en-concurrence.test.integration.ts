@@ -19,6 +19,7 @@ import { callAndExit } from '../../tools/fp-tools'
 import { ITitre, ITitreEtape } from '../../types'
 import { linkTitres } from '../../database/queries/titres-titres.queries'
 import TitresEtapes from '../../database/models/titres-etapes'
+import { sectionDureeIds } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections'
 
 console.info = vi.fn()
 console.error = vi.fn()
@@ -170,7 +171,7 @@ describe('etapeMiseEnConcurrenceUpdate', () => {
               id: etapeIdMiseEnConcurrence,
               titreDemarcheId: demarcheId,
               date: debutMiseEnConcurrence,
-              contenu: { opdp: { duree: dureeMiseEnConcurrence } },
+              contenu: { [sectionDureeIds.anf]: { duree: dureeMiseEnConcurrence } },
             },
           ],
         },

@@ -1,7 +1,7 @@
 import { caminoDateValidator } from '../../date'
 import { DEMARCHES_TYPES_IDS, DemarcheTypeId } from '../demarchesTypes'
 import { TITRES_TYPES_IDS, TitreTypeId } from '../titresTypes'
-import { ETAPES_TYPES, EtapeTypeId } from '../etapesTypes'
+import { ETAPES_TYPES, ETAPES_WITH_AUTOMATIC_STATUTS, EtapeTypeId } from '../etapesTypes'
 import { TDEType } from './index'
 import { DeepReadonly, exhaustiveCheck, isNotNullNorUndefined } from '../../typescript-tools'
 import { uniteIdValidator, UNITES, Unites } from '../unites'
@@ -72,15 +72,12 @@ const publication: Section[] = [
   },
 ]
 
-const participationDuPublic: Section[] = [
-  {
-    id: 'opdp',
-    elements: [
-      { id: 'lien', nom: 'Lien public externe', type: 'url', optionnel: true, description: '' },
-      { id: 'duree', nom: "Durée en jours de l'enquête publique", type: 'number', optionnel: false },
-    ],
-  },
-]
+export const miseEnConcurrenceDureeId = 'anf' as const
+export const sectionDureeIds = {
+  [ETAPES_TYPES.participationDuPublic]: 'opdp',
+  [ETAPES_TYPES.enquetePublique]: 'epu',
+  [ETAPES_TYPES.avisDeMiseEnConcurrenceAuJORF]: miseEnConcurrenceDureeId,
+} as const satisfies { [key in (typeof ETAPES_WITH_AUTOMATIC_STATUTS)[number]]: string }
 
 const EtapesTypesSections = {
   [ETAPES_TYPES.decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_]: [
@@ -184,14 +181,30 @@ const EtapesTypesSections = {
   [ETAPES_TYPES.avisDeMiseEnConcurrenceAuJORF]: [
     ...publicationAuJorf,
     {
-      id: 'opdp',
+      id: sectionDureeIds[ETAPES_TYPES.avisDeMiseEnConcurrenceAuJORF],
       elements: [{ id: 'duree', nom: 'Durée en jours de la mise en concurrence', type: 'number', optionnel: false }],
     },
   ],
   [ETAPES_TYPES.publicationDeLavisDeDecisionImplicite]: publication,
   [ETAPES_TYPES.abrogationDeLaDecision]: publication,
-  [ETAPES_TYPES.participationDuPublic]: participationDuPublic,
-  [ETAPES_TYPES.enquetePublique]: participationDuPublic,
+  [ETAPES_TYPES.participationDuPublic]: [
+    {
+      id: sectionDureeIds[ETAPES_TYPES.participationDuPublic],
+      elements: [
+        { id: 'lien', nom: 'Lien public externe', type: 'url', optionnel: true, description: '' },
+        { id: 'duree', nom: 'Durée en jours de la participation du public', type: 'number', optionnel: false },
+      ],
+    },
+  ],
+  [ETAPES_TYPES.enquetePublique]: [
+    {
+      id: sectionDureeIds[ETAPES_TYPES.enquetePublique],
+      elements: [
+        { id: 'lien', nom: 'Lien public externe', type: 'url', optionnel: true, description: '' },
+        { id: 'duree', nom: "Durée en jours de l'enquête publique", type: 'number', optionnel: false },
+      ],
+    },
+  ],
 } as const satisfies { [key in EtapeTypeId]?: DeepReadonly<Section[]> }
 
 const proprietesDeLaConcession: Section[] = [

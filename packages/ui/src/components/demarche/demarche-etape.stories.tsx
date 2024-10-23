@@ -12,6 +12,7 @@ import { ApiClient } from '@/api/api-client'
 import { FeatureMultiPolygon } from 'camino-common/src/perimetre'
 import { ZERO_KM2, km2Validator } from 'camino-common/src/number'
 import { CaminoRouter } from '@/typings/vue-router'
+import { sectionDureeIds } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections'
 
 const meta: Meta = {
   title: 'Components/Demarche/Etape',
@@ -331,7 +332,7 @@ export const DemandeMultipleEntreprisesDocuments: StoryFn = () => (
       sections_with_values: [
         { id: 'arm', elements: [{ id: 'mecanise', type: 'radio', value: true, nom: 'Mécanisation', optionnel: false }], nom: 'Arm' },
         {
-          id: 'opdp',
+          id: sectionDureeIds.epu,
           elements: [
             {
               id: 'lien',
@@ -403,7 +404,7 @@ export const DemandeNoMap: StoryFn = () => (
       sections_with_values: [
         { id: 'arm', elements: [{ id: 'mecanise', type: 'radio', value: true, nom: 'Mécanisation', optionnel: false }], nom: 'Arm' },
         {
-          id: 'opdp',
+          id: sectionDureeIds.epu,
           elements: [
             {
               id: 'lien',
