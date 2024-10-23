@@ -311,7 +311,9 @@ export const commonTitreEnConcurrenceValidator = z.object({
 const commonPerimetreValidator = z.object({ geojson4326_perimetre: featureMultiPolygonValidator, surface: km2Validator })
 const pivotValidator = commonTitreEnConcurrenceValidator.extend({
   perimetreTotal: commonPerimetreValidator,
-  perimetreSansSatellite: commonPerimetreValidator,
+  perimetreSansSatellite: commonPerimetreValidator.pick({ surface: true }).extend({
+    geojson4326_perimetre: featureMultiPolygonValidator.nullable(),
+  }),
 })
 
 export const getResultatMiseEnConcurrenceValidator = z.object({

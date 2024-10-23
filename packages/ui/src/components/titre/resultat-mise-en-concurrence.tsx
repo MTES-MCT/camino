@@ -25,10 +25,11 @@ export type Props = {
   initTab?: TabId
   entreprises: Entreprise[]
   initDate?: CaminoDate
+  initDecision?: 'acc' | 'rej'
 } & DeepReadonly<GetResultatMiseEnConcurrence>
 
 export const ResultatMiseEnConcurrence = defineComponent<Props>(props => {
-  const [decision, setDecision] = useState<'acc' | 'rej' | null>(null)
+  const [decision, setDecision] = useState<'acc' | 'rej' | null>(props.initDecision ?? null)
   const [updatePerimetre, setUpdatePerimetre] = useState<'origin' | 'origin_without_satellite' | 'custom' | null>(null)
   const [date, setDate] = useState<CaminoDate | null>(props.initDate ?? getCurrent())
   const [possibleEtapes, setPossibleEtapes] = useState<AsyncData<boolean>>({ status: 'LOADING' })
@@ -62,7 +63,12 @@ export const ResultatMiseEnConcurrence = defineComponent<Props>(props => {
     })
 
     if (updatePerimetre.value === 'origin_without_satellite') {
-      return toPerimetre(props.pivot.perimetreSansSatellite)
+      const { geojson4326_perimetre } = props.pivot.perimetreSansSatellite
+      if (isNotNullNorUndefined(geojson4326_perimetre)) {
+        return toPerimetre({ ...props.pivot.perimetreSansSatellite, geojson4326_perimetre })
+      } else {
+        throw Error("L'option Sans satellite n'est pas possible car le périmètre est vide")
+      }
     }
 
     return toPerimetre(props.pivot.perimetreTotal)
@@ -164,6 +170,7 @@ export const ResultatMiseEnConcurrence = defineComponent<Props>(props => {
             </span>
             <DsfrInputRadio
               legend={{ main: 'Décision' }}
+              initialValue={decision.value}
               elements={[ETAPES_STATUTS.ACCEPTE, ETAPES_STATUTS.REJETE].map(status => ({ itemId: status, legend: { main: capitalize(EtapesStatuts[status].nom) } }))}
               valueChanged={setDecision}
             />
@@ -174,7 +181,9 @@ export const ResultatMiseEnConcurrence = defineComponent<Props>(props => {
                     legend={{ main: 'Quel périmètre acceptez-vous ?' }}
                     elements={[
                       { itemId: 'origin', legend: { main: 'Celui de la demande' } },
-                      { itemId: 'origin_without_satellite', legend: { main: 'Celui de la demande en excluant celui des concurrents' } },
+                      ...(isNotNullNorUndefined(props.pivot.perimetreSansSatellite.geojson4326_perimetre)
+                        ? [{ itemId: 'origin_without_satellite' as const, legend: { main: 'Celui de la demande en excluant celui des concurrents' } }]
+                        : []),
                       { itemId: 'custom', legend: { main: 'Personnalisé' } },
                     ]}
                     valueChanged={setUpdatePerimetre}
@@ -228,4 +237,4 @@ export const ResultatMiseEnConcurrence = defineComponent<Props>(props => {
 })
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-ResultatMiseEnConcurrence.props = ['initTab', 'pivot', 'satellites', 'entreprises', 'apiClient', 'initDate']
+ResultatMiseEnConcurrence.props = ['initTab', 'pivot', 'satellites', 'entreprises', 'apiClient', 'initDate', 'initDecision']

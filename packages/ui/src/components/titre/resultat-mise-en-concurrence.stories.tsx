@@ -58,6 +58,7 @@ export const Default: StoryFn = () => (
   <ResultatMiseEnConcurrence
     initTab="carte"
     initDate={toCaminoDate('2024-10-16')}
+    initDecision="acc"
     entreprises={entreprises}
     apiClient={{
       getEtapesTypesEtapesStatuts(titreDemarcheId, titreEtapeId, date) {
@@ -153,6 +154,46 @@ export const WithError: StoryFn = () => (
       titreTypeId: TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX,
       titulaireId: entrepriseId1,
       perimetreSansSatellite: perimetre,
+      perimetreTotal: perimetre,
+    }}
+    satellites={[
+      {
+        demarcheId: demarcheIdValidator.parse('idSatellite'),
+        demarcheTypeId: 'oct',
+        titreNom: 'Satellite',
+        titreSlug: titreSlugValidator.parse('titreSatelliteSlug'),
+        titreTypeId: TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX,
+        titulaireId: entrepriseId2,
+        perimetreEnCommun: perimetre,
+      },
+    ]}
+  />
+)
+
+export const PerimetreSansSatelliteVide: StoryFn = () => (
+  <ResultatMiseEnConcurrence
+    initTab="carte"
+    initDate={toCaminoDate('2024-10-16')}
+    initDecision="acc"
+    entreprises={entreprises}
+    apiClient={{
+      getEtapesTypesEtapesStatuts(titreDemarcheId, titreEtapeId, date) {
+        getEtapesTypesEtapesStatutsAction(titreDemarcheId, titreEtapeId, date)
+        return Promise.resolve({ [ETAPES_TYPES.resultatMiseEnConcurrence]: { etapeStatutIds: ['acc', 'rej'], mainStep: true } })
+      },
+      etapeCreer(etape) {
+        etapeCreerAction(etape)
+        return new Promise(() => ({}))
+      },
+    }}
+    pivot={{
+      demarcheId,
+      demarcheTypeId: 'oct',
+      titreNom: 'Pivot',
+      titreSlug: titreSlugValidator.parse('titrePivotSlug'),
+      titreTypeId: TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX,
+      titulaireId: entrepriseId1,
+      perimetreSansSatellite: { geojson4326_perimetre: null, surface: km2Validator.parse(0) },
       perimetreTotal: perimetre,
     }}
     satellites={[

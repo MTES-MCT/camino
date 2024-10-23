@@ -33,11 +33,11 @@ import { etapeHeritagePropsValidator } from 'camino-common/src/heritage'
 import { getDemarcheByIdOrSlugValidator as commonGetDemarcheByIdOrSlugValidator } from 'camino-common/src/titres'
 import { geoSystemeIdValidator } from 'camino-common/src/static/geoSystemes'
 import { entrepriseIdValidator } from 'camino-common/src/entreprise'
-import { km2Validator, m2toKm2, m2Validator } from 'camino-common/src/number'
+import { KM2, km2Validator, m2toKm2, m2Validator } from 'camino-common/src/number'
 import { Effect, pipe } from 'effect'
 import { CaminoError } from 'camino-common/src/zod-tools'
 import { isAdministration, isSuper, User } from 'camino-common/src/roles'
-import { DeepReadonly, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
+import { DeepReadonly, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined } from 'camino-common/src/typescript-tools'
 
 const getEtapesByDemarcheIdDbValidator = z.object({
   id: etapeIdValidator,
@@ -239,8 +239,20 @@ export const getDemarchePivotEnConcurrence = (
       effectDbQueryAndValidate(getDemarchesSatellitesEnConcurrenceDb, { demarcheIdPivot, perimetrePivot: pivot.perimetreTotalGeojson4326 }, pool, getDemarchesSatellitesEnConcurrenceDbValidator)
     ),
     Effect.flatMap(({ pivot, satellites }) => {
+      const initialAcc: {
+        geojson_4326: MultiPolygon | null
+        surface: KM2
+      } = {
+        geojson_4326: pivot.perimetreTotalGeojson4326,
+        surface: pivot.perimetreTotalSurface,
+      }
+
       return pipe(
-        Effect.reduce(satellites, { geojson_4326: pivot.perimetreTotalGeojson4326, surface: pivot.perimetreTotalSurface }, (acc, satellite) => {
+        Effect.reduce(satellites, initialAcc, (acc, satellite) => {
+          if (isNullOrUndefined(acc.geojson_4326)) {
+            return Effect.succeed(acc)
+          }
+
           return pipe(
             effectDbQueryAndValidate(getPerimetreSansSatelliteDb, { perimetrePivot: acc.geojson_4326, perimetreSatellite: satellite.perimetre }, pool, getPerimetreSansSatelliteValidator),
             Effect.map(result => ({
@@ -260,7 +272,7 @@ export const getDemarchePivotEnConcurrence = (
                 surface: pivot.perimetreTotalSurface,
               },
               perimetreSansSatellite: {
-                geojson4326_perimetre: multipolygontoFeatureMultipolygon(perimetreSansSatellite.geojson_4326),
+                geojson4326_perimetre: isNotNullNorUndefined(perimetreSansSatellite.geojson_4326) ? multipolygontoFeatureMultipolygon(perimetreSansSatellite.geojson_4326) : null,
                 surface: perimetreSansSatellite.surface,
               },
             },
@@ -349,7 +361,7 @@ const getDemarchesSatellitesEnConcurrenceDb = sql<
   `
 
 const getPerimetreSansSatelliteValidator = z.object({
-  perimetre_sans_satellite: multiPolygonValidator,
+  perimetre_sans_satellite: multiPolygonValidator.nullable(),
   surface_sans_satellite: m2Validator,
 })
 const getPerimetreSansSatelliteDb = sql<
@@ -357,7 +369,10 @@ const getPerimetreSansSatelliteDb = sql<
 >`
 SELECT
   ST_AREA(perimetre_geom_sans_satellite, TRUE) AS surface_sans_satellite,
-  ST_AsGeoJSON(ST_MakeValid(ST_Multi(perimetre_geom_sans_satellite)))::json AS perimetre_sans_satellite
+  CASE WHEN
+    ST_IsEmpty(ST_MakeValid(ST_Multi(perimetre_geom_sans_satellite))) THEN NULL
+    ELSE ST_AsGeoJSON(ST_MakeValid(ST_Multi(perimetre_geom_sans_satellite)))::json
+  END AS perimetre_sans_satellite
 FROM (
   select
     ST_DIFFERENCE(ST_GeomFromGeoJSON($ perimetrePivot !), ST_GeomFromGeoJSON($ perimetreSatellite !)) AS perimetre_geom_sans_satellite
