@@ -35,7 +35,7 @@ export type PerimetreUploadType = z.infer<typeof perimetreFileUploadTypeValidato
 export type FileUploadType = z.infer<typeof fileUploadTypeValidator>
 
 // prettier-ignore
-const IDS_WITHOUT_AUTRE = ["aac","acc","acd","acg","acm","acr","adr","aep","aot","apd","apf","apm","apu","are","arm","arp","arr","atf","avc","ave","avi","bil","cam","car","cco","cdc","cnr","cnt","cod","con","cou","csp","cur","dcl","deb","dec","dei","dep","doe","dom","dos","erd","fac","fic","fip","for","idm","jac","jcf","jct","jeg","jid","jpa","kbi","lac","lce","lcg","lcm","ldc","lem","let","lis","lpf","mes","met","mot","nas","ndc","ndd","nip","nir","noi","not","ocd","odr","ord","prg","pro","pub","pvr","rad","rce","rcr","rdr","rdt","rec","ree","ref","rfe","rgr","rie","rse","sch","sir" ] as const
+const IDS_WITHOUT_AUTRE = ["aac","acc","acd","acg","acm","acr","adr","aep","aot","apd","apf","apm","apu","are","arm","arp","arr","atf","avc","ave","avi","bil","cam","car","cco","cdc","cnr","cnt","cod","con","cou","csp","cur","dcl","deb","dec","dei","dep","doe","dom","dos","erd","fac","fic","fip","for","idm","jac","jcf","jct","jeg","jid","jpa","kbi","lac","lce","lcg","lcm","ldc","lem","let","lis","lpf","mes","met","mot","nas","ndc","ndd","nip","nir","noi","not","ocd","odr","ord","prg","pro","pub","pvr","rac","rad","rce","rcr","rdr","rdt","rec","ree","ref","rfe","rgr","rie","rse","sch","sir" ] as const
 
 const AUTRE_IDS = ['aut'] as const
 const IDS = [...IDS_WITHOUT_AUTRE, ...AUTRE_IDS] as const
@@ -121,6 +121,7 @@ export const DOCUMENTS_TYPES_IDS = {
   projetDePrescriptions: 'pro',
   publicationAuJorf: 'pub',
   pvDeRecolement: 'pvr',
+  rapportDeLAdministrationCentraleChargeDesMines: 'rac',
   rapportDreal: 'rad',
   rapportDuCommissaireEnqueteur: 'rce',
   rapportDeRecevabilite: 'rcr',
@@ -256,6 +257,7 @@ export const DocumentsTypes: { [key in DocumentTypeId | AutreDocumentTypeId]: De
   pro: { id: 'pro', nom: 'Projet de prescriptions' },
   pub: { id: 'pub', nom: 'Publication au JORF' },
   pvr: { id: 'pvr', nom: 'PV de récolement' },
+  rac: { id: 'rac', nom: "Rapport de l'administration centrale chargé des mines" },
   rad: { id: 'rad', nom: 'Rapport DREAL' },
   rce: { id: 'rce', nom: 'Rapport du commissaire enquêteur' },
   rcr: { id: 'rcr', nom: 'Rapport de recevabilité' },
