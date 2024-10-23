@@ -74,7 +74,7 @@ export const PureFormSaveBtn = defineComponent<Props>(props => {
               buttonType="primary"
               type="submit"
               class="fr-ml-2w"
-              title={props.etapeTypeId === 'mfr' ? "Enregistrer puis déposer l'étape" : "Enregistrer puis finaliser l'étape"}
+              title="Enregistrer puis finaliser l'étape"
               disabled={!props.canDepose || saveContext.value.status === 'LOADING'}
               onClick={props.depose}
             />

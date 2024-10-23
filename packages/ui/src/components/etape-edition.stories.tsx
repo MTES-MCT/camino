@@ -231,7 +231,7 @@ const apiClient: Props['apiClient'] = {
   getEtapeDocumentsByEtapeId(etapeId: EtapeId) {
     getEtapeDocumentsByEtapeIdAction(etapeId)
 
-    return Promise.resolve({ etapeDocuments: [], dae: null, asl: null })
+    return Promise.resolve({ etapeDocuments: [] })
   },
   getEtapeEntrepriseDocuments(etapeId: EtapeId): Promise<EtapeEntrepriseDocument[]> {
     getEtapeEntrepriseDocumentsAction(etapeId)
@@ -533,8 +533,6 @@ export const DemandeArmComplete: StoryFn = () => (
               entreprises_lecture: true,
             },
           ],
-          dae: null,
-          asl: null,
         })
       },
       getEtape(etapeIdOrSlug) {

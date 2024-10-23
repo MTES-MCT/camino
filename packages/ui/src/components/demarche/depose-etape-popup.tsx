@@ -9,21 +9,7 @@ interface Props {
 }
 
 export const DeposeEtapePopup: FunctionalComponent<Props> = props => {
-  const content = () => (
-    <Alert
-      type="warning"
-      title="Attention : cette opération est définitive et ne peut pas être annulée."
-      description={props.etapeTypeId === 'mfr' ? 'Souhaitez-vous effectuer le dépôt ?' : "Souhaitez-vous finaliser l'étape ?"}
-    />
-  )
+  const content = () => <Alert type="warning" title="Attention : cette opération est définitive et ne peut pas être annulée." description="Souhaitez-vous finaliser l'étape ?" />
 
-  return (
-    <FunctionalPopup
-      title="Confirmation"
-      content={content}
-      close={props.close}
-      validate={{ action: props.deposeEtape, text: props.etapeTypeId === 'mfr' ? 'Déposer' : 'Finaliser' }}
-      canValidate={true}
-    />
-  )
+  return <FunctionalPopup title="Confirmation" content={content} close={props.close} validate={{ action: props.deposeEtape, text: 'Finaliser' }} canValidate={true} />
 }

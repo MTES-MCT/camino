@@ -53,7 +53,7 @@ const apiClient: Pick<ApiClient, 'uploadTempDocument' | 'getEtapeDocumentsByEtap
   getEtapeDocumentsByEtapeId: etapeId => {
     getEtapeDocumentsByEtapeIdAction(etapeId)
 
-    return Promise.resolve({ etapeDocuments: documents, asl: null, dae: null })
+    return Promise.resolve({ etapeDocuments: documents })
   },
   uploadTempDocument: document => {
     uploadTempDocumentAction(document)
@@ -66,7 +66,7 @@ const completeUpdateAction = action('completeUpdate')
 
 export const Empty: StoryFn = () => (
   <EtapeDocumentsEdit
-    apiClient={{ ...apiClient, getEtapeDocumentsByEtapeId: () => Promise.resolve({ etapeDocuments: [], asl: null, dae: null }) }}
+    apiClient={{ ...apiClient, getEtapeDocumentsByEtapeId: () => Promise.resolve({ etapeDocuments: [] }) }}
     contenu={{}}
     etapeId={etapeIdValidator.parse('etapeId')}
     sdomZoneIds={[]}
@@ -132,8 +132,6 @@ export const Complet: StoryFn = () => (
               entreprises_lecture: false,
             },
           ],
-          asl: null,
-          dae: null,
         }),
     }}
     contenu={{}}

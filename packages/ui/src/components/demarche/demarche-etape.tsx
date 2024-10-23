@@ -214,16 +214,7 @@ export const DemarcheEtape = defineComponent<Props>(props => {
           <div style={{ display: 'flex' }}>
             {canEditOrDeleteEtape.value ? (
               <>
-                {isBrouillon.value ? (
-                  <DsfrButton
-                    class="fr-mr-1v"
-                    buttonType="primary"
-                    label={props.etape.etape_type_id === 'mfr' ? 'Déposer' : 'Finaliser'}
-                    title={props.etape.etape_type_id === 'mfr' ? "Déposer l'étape" : "Finaliser l'étape"}
-                    onClick={deposePopupOpen}
-                    disabled={!isDeposable.value}
-                  />
-                ) : null}
+                {isBrouillon.value ? <DsfrButton class="fr-mr-1v" buttonType="primary" label="Finaliser" title="Finaliser l'étape" onClick={deposePopupOpen} disabled={!isDeposable.value} /> : null}
                 <DsfrLink
                   icon={'fr-icon-pencil-line'}
                   disabled={false}
