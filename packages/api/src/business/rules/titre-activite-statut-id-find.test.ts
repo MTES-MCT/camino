@@ -1,6 +1,31 @@
+import { ACTIVITES_STATUTS_IDS } from 'camino-common/src/static/activitesStatuts'
+import { ITitreActivite } from '../../types'
 import { titreActiviteStatutIdFind } from './titre-activite-statut-id-find'
 import { describe, expect, test } from 'vitest'
-import { titreActiviteFermee, titreActiviteDeposee, titreActiviteAbsenteDelaiDepasse, titreActiviteEnCoursDelaiNonDepasse } from './__mocks__/titre-activite-statut-id-find-activites'
+
+const titreActiviteFermee = {
+  activiteStatutId: ACTIVITES_STATUTS_IDS.CLOTURE,
+  date: '1000-01-01',
+  typeId: 'gra',
+} as ITitreActivite
+
+const titreActiviteDeposee = {
+  activiteStatutId: ACTIVITES_STATUTS_IDS.DEPOSE,
+  date: '1000-01-01',
+  typeId: 'gra',
+} as ITitreActivite
+
+const titreActiviteAbsenteDelaiDepasse = {
+  activiteStatutId: ACTIVITES_STATUTS_IDS.ABSENT,
+  date: '1000-01-01',
+  typeId: 'gra',
+} as ITitreActivite
+
+const titreActiviteEnCoursDelaiNonDepasse = {
+  activiteStatutId: ACTIVITES_STATUTS_IDS.EN_CONSTRUCTION,
+  date: '3000-01-01',
+  typeId: 'gra',
+} as ITitreActivite
 
 describe("statut d'une activité", () => {
   test('une activité dont le statut est “fermé" garde le statut "fermé"', () => {

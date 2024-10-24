@@ -1,7 +1,59 @@
+import { newDemarcheId, newTitreId } from '../../database/models/_format/id-create'
+import { ITitreDemarche } from '../../types'
 import { titreDateDemandeFind } from './titre-date-demande-find'
 
-import { titreDemarcheOctEtapeMen, titreDemarcheOctSansEtapes, titreDemarcheOctSansEtapeMen } from './__mocks__/titre-date-demande-find-demarches'
 import { describe, expect, test } from 'vitest'
+
+const titreDemarcheOctEtapeMen = [
+  {
+    id: 'h-cx-courdemanges-1988-oct01',
+    titreId: 'h-cx-courdemanges-1988',
+    typeId: 'oct',
+    statutId: 'acc',
+    ordre: 1,
+    etapes: [
+      {
+        id: 'h-cx-courdemanges-1988-oct01-dpu01',
+        titreDemarcheId: 'h-cx-courdemanges-1988-oct01',
+        typeId: 'men',
+        statutId: 'dep',
+        ordre: 1,
+        date: '1988-03-11',
+      },
+    ],
+  },
+] as ITitreDemarche[]
+
+const titreDemarcheOctSansEtapes = [
+  {
+    id: newDemarcheId('h-cx-courdemanges-1988-oct01'),
+    titreId: newTitreId('h-cx-courdemanges-1988'),
+    typeId: 'oct',
+    statutId: 'acc',
+    ordre: 1,
+    etapes: [],
+  },
+] as ITitreDemarche[]
+
+const titreDemarcheOctSansEtapeMen = [
+  {
+    id: 'h-cx-courdemanges-1988-oct01',
+    titreId: 'h-cx-courdemanges-1988',
+    typeId: 'oct',
+    statutId: 'acc',
+    ordre: 1,
+    etapes: [
+      {
+        id: 'h-cx-courdemanges-1988-oct01-dpu01',
+        titreDemarcheId: 'h-cx-courdemanges-1988-oct01',
+        typeId: 'dex',
+        statutId: 'acc',
+        ordre: 1,
+        date: '1988-03-11',
+      },
+    ],
+  },
+] as ITitreDemarche[]
 describe("cherche la date de demande initiale d'un titre", () => {
   test("retourne null si le titre n'a pas de démarches", () => {
     expect(titreDateDemandeFind([])).toBeNull()

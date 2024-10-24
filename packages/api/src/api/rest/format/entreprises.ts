@@ -1,6 +1,6 @@
 import { IEntreprise } from '../../../types'
 
-const entreprisesFormatTable = (entreprises: IEntreprise[]) =>
+export const entreprisesFormatTable = (entreprises: IEntreprise[]) =>
   entreprises.map(entreprise => {
     const entrepriseNew = {
       nom: entreprise.nom,
@@ -9,5 +9,3 @@ const entreprisesFormatTable = (entreprises: IEntreprise[]) =>
 
     return entrepriseNew
   })
-
-export { entreprisesFormatTable }

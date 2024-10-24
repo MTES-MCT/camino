@@ -33,7 +33,7 @@ import { HttpStatus } from 'camino-common/src/http'
 import { CaminoError } from 'camino-common/src/zod-tools'
 import { TitreEtapeForMachine } from './business/rules-demarches/machine-common'
 
-const TitreEtapesTravauxTypes = {
+export const TitreEtapesTravauxTypes = {
   AvisDesServicesEtCommissionsConsultatives: 'asc',
   DemandeAutorisationOuverture: 'wfa',
   DeclarationOuverture: 'wfo',
@@ -67,11 +67,11 @@ export interface IFields {
   [key: string]: IFields
 }
 
-interface Index<T> {
+export interface Index<T> {
   [id: string]: T
 }
 
-interface IColonne<T> {
+export interface IColonne<T> {
   id: T
   relation?: string
   groupBy?: boolean | string[]
@@ -80,26 +80,26 @@ interface IColonne<T> {
 export const propsTitreEtapeIdKeys = ['points', 'titulaires', 'amodiataires', 'substances'] as const
 type PropsTitreEtapeIdKeys = (typeof propsTitreEtapeIdKeys)[number]
 
-type IPropId = PropsTitreEtapeIdKeys | 'administrationsLocales' | 'communes' | 'forets' | 'surface'
+export type IPropId = PropsTitreEtapeIdKeys | 'administrationsLocales' | 'communes' | 'forets' | 'surface'
 
-type ITitreColonneId = 'nom' | 'domaine' | 'type' | 'statut'
+export type ITitreColonneId = 'nom' | 'domaine' | 'type' | 'statut'
 
-type ITitreDemarcheColonneId = 'titreNom' | 'titreDomaine' | 'titreType' | 'titreStatut' | 'type' | 'statut'
+export type ITitreDemarcheColonneId = 'titreNom' | 'titreDomaine' | 'titreType' | 'titreStatut' | 'type' | 'statut'
 
-type ITitreActiviteColonneId = 'titre' | 'titreDomaine' | 'titreType' | 'titreStatut' | 'titulaires' | 'annee' | 'periode' | 'statut'
+export type ITitreActiviteColonneId = 'titre' | 'titreDomaine' | 'titreType' | 'titreStatut' | 'titulaires' | 'annee' | 'periode' | 'statut'
 
-type IEntrepriseColonneId = 'nom' | 'siren'
+export type IEntrepriseColonneId = 'nom' | 'siren'
 
-interface IContenuId {
+export interface IContenuId {
   sectionId: string
   elementId: string
 }
 
-type IContenuValeur = ElementWithValue['value'] | null
+export type IContenuValeur = ElementWithValue['value'] | null
 
-type IContenu = RecordPartial<string, RecordPartial<string, ElementWithValue['value']>>
+export type IContenu = RecordPartial<string, RecordPartial<string, ElementWithValue['value']>>
 
-type IPropsTitreEtapesIds = {
+export type IPropsTitreEtapesIds = {
   [key in PropsTitreEtapeIdKeys]?: string
 }
 
@@ -109,16 +109,16 @@ export interface IHeritageElement {
   etape?: ITitreEtape
 }
 
-type IHeritageProps = Record<EtapeHeritageProps, IHeritageElement>
+export type IHeritageProps = Record<EtapeHeritageProps, IHeritageElement>
 
-type IHeritageContenu = RecordPartial<string, RecordPartial<string, IHeritageElement>>
+export type IHeritageContenu = RecordPartial<string, RecordPartial<string, IHeritageElement>>
 
-interface ICommune {
+export interface ICommune {
   id: CommuneId
   surface?: number | null
 }
 
-interface IEntrepriseEtablissement {
+export interface IEntrepriseEtablissement {
   id: string
   entrepriseId: string
   dateDebut: string
@@ -127,7 +127,7 @@ interface IEntrepriseEtablissement {
   dateFin?: string | null
 }
 
-interface IEntreprise {
+export interface IEntreprise {
   id: EntrepriseId
   nom?: string
   paysId?: string | null
@@ -152,7 +152,7 @@ export interface ITitreTitre {
   titreToId: TitreId
 }
 
-interface ITitre {
+export interface ITitre {
   id: TitreId
   slug?: TitreSlug
   nom: string
@@ -186,7 +186,7 @@ interface ITitre {
   geojson4326Perimetre?: MultiPolygon | null
 }
 
-interface ITitreActivite {
+export interface ITitreActivite {
   id: ActiviteId
   slug?: string
   titreId: TitreId
@@ -203,7 +203,7 @@ interface ITitreActivite {
   suppression?: boolean
 }
 
-interface ITitreDemarche {
+export interface ITitreDemarche {
   id: DemarcheId
   description?: string
   slug?: DemarcheSlug
@@ -230,7 +230,7 @@ export interface ITitreEtapePerimetre {
   geojsonOrigineForages: FeatureCollectionForages | null | undefined
   surface: KM2 | null | undefined
 }
-type ITitreEtape = {
+export type ITitreEtape = {
   id: EtapeId
   slug?: EtapeSlug
   typeId: EtapeTypeId
@@ -262,21 +262,21 @@ type ITitreEtape = {
   demarcheIdEnConcurrence?: DemarcheId | null
 } & Partial<ITitreEtapePerimetre>
 
-interface ITitreEtapeFiltre {
+export interface ITitreEtapeFiltre {
   typeId: string
   statutId?: string
   dateDebut?: string
   dateFin?: string
 }
 
-interface IUtilisateurTitre {
+export interface IUtilisateurTitre {
   utilisateurId: string
   titreId: string
 }
 
 export type Context = { user: User; pool: Pool }
 
-interface IJournaux {
+export interface IJournaux {
   id: string
   utilisateurId: string
   utilisateur: {
@@ -291,31 +291,4 @@ interface IJournaux {
   titre: {
     nom: string
   }
-}
-
-export {
-  TitreEtapesTravauxTypes,
-  Index,
-  ICommune,
-  IContenu,
-  IContenuValeur,
-  IEntreprise,
-  IEntrepriseEtablissement,
-  ITitre,
-  ITitreActivite,
-  ITitreDemarche,
-  ITitreEtape,
-  ITitreEtapeFiltre,
-  IUtilisateurTitre,
-  IPropId,
-  ITitreColonneId,
-  ITitreDemarcheColonneId,
-  ITitreActiviteColonneId,
-  IEntrepriseColonneId,
-  IColonne,
-  IContenuId,
-  IPropsTitreEtapesIds,
-  IHeritageProps,
-  IHeritageContenu,
-  IJournaux,
 }
