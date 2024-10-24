@@ -3,18 +3,22 @@ import { defineComponent, markRaw } from 'vue'
 import { TableRow } from './_ui/table'
 import { useRouter } from 'vue-router'
 import { Liste, Params } from './_common/liste'
-import { CaminoFiltre } from 'camino-common/src/filters'
 import { ApiClient, apiClient } from '@/api/api-client'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 
 import { Differences } from './journaux/differences'
+import { CaminoRouteLocation, routesDefinitions } from '@/router/routes'
+import { CaminoRouter } from '@/typings/vue-router'
 
 export const Journaux = defineComponent(() => {
-  return () => <PureJournaux apiClient={apiClient} />
+  const router = useRouter()
+  return () => <PureJournaux apiClient={apiClient} updateUrlQuery={router} currentRoute={router.currentRoute.value} />
 })
 
 interface Props {
   apiClient: Pick<ApiClient, 'titresRechercherByNom' | 'getTitresByIds' | 'getJournaux'>
+  currentRoute: CaminoRouteLocation
+  updateUrlQuery: Pick<CaminoRouter, 'push'>
 }
 
 const colonnesData = [
@@ -60,11 +64,7 @@ const lignes = (journaux: JournauxData): TableRow<ColonneId>[] => {
   })
 }
 
-const filtres = ['titresIds'] as const satisfies readonly CaminoFiltre[]
-
 export const PureJournaux = defineComponent<Props>(props => {
-  const router = useRouter()
-
   const getData = async (event: Params<string>) => {
     const values = await props.apiClient.getJournaux({ page: event.page ?? 1, recherche: null, ...event.filtres })
 
@@ -74,19 +74,19 @@ export const PureJournaux = defineComponent<Props>(props => {
   return () => (
     <Liste
       listeFiltre={{
-        filtres,
+        filtres: routesDefinitions[props.currentRoute.name].meta.filtres,
         apiClient: props.apiClient,
-        updateUrlQuery: router,
+        updateUrlQuery: props.updateUrlQuery,
         entreprises: [],
       }}
       renderButton={null}
       download={null}
       colonnes={colonnesData}
-      route={router.currentRoute.value}
+      route={props.currentRoute}
       getData={getData}
       nom="Journaux"
     />
   )
 })
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-PureJournaux.props = ['apiClient']
+PureJournaux.props = ['apiClient', 'currentRoute', 'updateUrlQuery']

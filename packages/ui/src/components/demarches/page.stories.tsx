@@ -2,10 +2,9 @@ import { Meta, StoryFn } from '@storybook/vue3'
 import { PurePage } from './page'
 import { action } from '@storybook/addon-actions'
 import { ApiClient } from '@/api/api-client'
-import { filtres as demarchesFiltres } from '../demarches'
-import { filtres as travauxFiltres } from '../travaux'
 import { demarcheSlugValidator } from 'camino-common/src/demarche'
 import { CaminoRouter } from '@/typings/vue-router'
+import { routesDefinitions } from '@/router/routes'
 
 const meta: Meta = {
   title: 'Components/Demarches/Page',
@@ -60,16 +59,30 @@ export const Loading: StoryFn = () => (
     entreprises={[]}
     currentRoute={{ name: 'demarches', query: { titresIds: ['id1'] }, params: {} }}
     apiClient={{ ...apiClient, getDemarches: () => new Promise(() => ({})), getTitresByIds: () => new Promise(() => ({})) }}
-    filtres={demarchesFiltres}
+    filtres={routesDefinitions.demarches.meta.filtres}
   />
 )
 
 export const Travaux: StoryFn = () => (
-  <PurePage travaux entreprises={[]} updateUrlQuery={updateUrlQuery} currentRoute={{ name: 'demarches', query: {}, params: {} }} apiClient={apiClient} filtres={travauxFiltres} />
+  <PurePage
+    travaux
+    entreprises={[]}
+    updateUrlQuery={updateUrlQuery}
+    currentRoute={{ name: 'demarches', query: {}, params: {} }}
+    apiClient={apiClient}
+    filtres={routesDefinitions.travaux.meta.filtres}
+  />
 )
 
 export const Demarches: StoryFn = () => (
-  <PurePage travaux={false} entreprises={[]} updateUrlQuery={updateUrlQuery} currentRoute={{ name: 'demarches', query: {}, params: {} }} apiClient={apiClient} filtres={demarchesFiltres} />
+  <PurePage
+    travaux={false}
+    entreprises={[]}
+    updateUrlQuery={updateUrlQuery}
+    currentRoute={{ name: 'demarches', query: {}, params: {} }}
+    apiClient={apiClient}
+    filtres={routesDefinitions.demarches.meta.filtres}
+  />
 )
 
 export const WithError: StoryFn = () => (
@@ -79,6 +92,6 @@ export const WithError: StoryFn = () => (
     entreprises={[]}
     currentRoute={{ name: 'demarches', query: { titresIds: ['id1'] }, params: {} }}
     apiClient={{ ...apiClient, getTitresByIds: () => Promise.reject(new Error('Cassé')), getDemarches: () => Promise.reject(new Error('Cassé')) }}
-    filtres={demarchesFiltres}
+    filtres={routesDefinitions.demarches.meta.filtres}
   />
 )

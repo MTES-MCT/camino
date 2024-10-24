@@ -49,11 +49,6 @@
   padding-top: var(--unit);
 }
 
-.accordion-header {
-  align-items: stretch;
-  flex-flow: column wrap;
-}
-
 .dropdown {
   z-index: 1;
 }
@@ -94,9 +89,5 @@
 
   .table-view {
     min-height: calc(24 * var(--unit));
-  }
-
-  .accordion-header {
-    flex-direction: row;
   }
 }

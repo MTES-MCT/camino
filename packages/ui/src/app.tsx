@@ -7,14 +7,15 @@ import { Footer } from './components/page/footer'
 import { MapPattern } from './components/_map/pattern'
 
 import { RouterView, useRoute } from 'vue-router'
-import { isNullOrUndefined } from 'camino-common/src/typescript-tools'
+import { isNullOrUndefined, isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools'
 import { userKey } from './moi'
 export const App = defineComponent(() => {
   const route = useRoute()
 
   const loaded = ref<boolean>(false)
 
-  const currentMenuSection = computed(() => route.meta?.menuSection)
+  const currentMenuSection = computed(() => route.meta.menuSection)
+  const hasGutter = computed(() => isNullOrUndefinedOrEmpty(route.meta.filtres))
 
   const user = inject(userKey)
 
@@ -39,7 +40,7 @@ export const App = defineComponent(() => {
       <Header user={user} currentMenuSection={currentMenuSection.value} routePath={route.fullPath} />
 
       <main role="main">
-        <div class="fr-container">{loaded.value ? <RouterView /> : null}</div>
+        <div class={hasGutter.value ? ['fr-container', 'fr-py-3w'] : null}>{loaded.value ? <RouterView /> : null}</div>
       </main>
 
       <Footer displayNewsletter={displayNewsletter.value} version={version.value} />

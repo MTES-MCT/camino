@@ -130,106 +130,104 @@ export const Header = defineComponent<Props>(props => {
   }
 
   return () => (
-    <div style={{ paddingBottom: '20px' }}>
-      <header role="banner" class="fr-header">
-        <div class="fr-header__body">
-          <div class="fr-container">
-            <div class="fr-header__body-row">
-              <div class="fr-header__brand fr-enlarge-link">
-                <div class="fr-header__brand-top">
-                  <div class="fr-header__logo">
-                    <p class="fr-logo">
-                      République
-                      <br />
-                      française
-                    </p>
-                  </div>
-                  <nav class="fr-header__navbar" role="navigation">
-                    <button class="fr-btn--search fr-btn" data-fr-opened="false" onClick={openModalSearch} aria-controls={searchModalId} aria-haspopup="dialog" id="button-search" title="Rechercher">
-                      Rechercher
-                    </button>
-                    <button class="fr-btn--menu fr-btn" data-fr-opened="false" onClick={openModalMenu} aria-controls={navigationModalId} aria-haspopup="dialog" id="button-menu" title="Menu">
-                      Menu
-                    </button>
-                  </nav>
+    <header role="banner" class="fr-header">
+      <div class="fr-header__body">
+        <div class="fr-container">
+          <div class="fr-header__body-row">
+            <div class="fr-header__brand fr-enlarge-link">
+              <div class="fr-header__brand-top">
+                <div class="fr-header__logo">
+                  <p class="fr-logo">
+                    République
+                    <br />
+                    française
+                  </p>
                 </div>
-                <div class="fr-header__service">
-                  <router-link to={{ name: 'homepage' }} title="Accueil - Camino - République Française">
-                    <p class="fr-header__service-title">Camino</p>
-                  </router-link>
-                  <p class="fr-header__service-tagline">Le cadastre minier numérique</p>
-                </div>
+                <nav class="fr-header__navbar" role="navigation">
+                  <button class="fr-btn--search fr-btn" data-fr-opened="false" onClick={openModalSearch} aria-controls={searchModalId} aria-haspopup="dialog" id="button-search" title="Rechercher">
+                    Rechercher
+                  </button>
+                  <button class="fr-btn--menu fr-btn" data-fr-opened="false" onClick={openModalMenu} aria-controls={navigationModalId} aria-haspopup="dialog" id="button-menu" title="Menu">
+                    Menu
+                  </button>
+                </nav>
               </div>
-              <div class="fr-header__tools">
-                <div class="fr-header__tools-links">
-                  <HeaderLinks user={props.user} routePath={props.routePath} userLinkClicked={closeModals} />
-                </div>
-                <div class={`fr-header__search fr-modal ${modalSearchOpened.value ? 'fr-modal--opened' : ''}`} id={searchModalId} aria-labelledby="button-search" aria-label="Recherche dans le site">
-                  <div class="fr-container">
-                    <DsfrButtonIcon
-                      icon="fr-icon-close-line"
-                      buttonType="tertiary-no-outline"
-                      onClick={closeModals}
-                      aria-controls={searchModalId}
-                      title="Fermer la fenêtre de dialogue"
-                      label="Fermer"
-                      class="fr-btn--close"
-                    />
-                    <QuickAccessTitre id="search-473-input" onSelectTitre={closeModals} />
-                  </div>
+              <div class="fr-header__service">
+                <router-link to={{ name: 'homepage' }} title="Accueil - Camino - République Française">
+                  <p class="fr-header__service-title">Camino</p>
+                </router-link>
+                <p class="fr-header__service-tagline">Le cadastre minier numérique</p>
+              </div>
+            </div>
+            <div class="fr-header__tools">
+              <div class="fr-header__tools-links">
+                <HeaderLinks user={props.user} routePath={props.routePath} userLinkClicked={closeModals} />
+              </div>
+              <div class={`fr-header__search fr-modal ${modalSearchOpened.value ? 'fr-modal--opened' : ''}`} id={searchModalId} aria-labelledby="button-search" aria-label="Recherche dans le site">
+                <div class="fr-container">
+                  <DsfrButtonIcon
+                    icon="fr-icon-close-line"
+                    buttonType="tertiary-no-outline"
+                    onClick={closeModals}
+                    aria-controls={searchModalId}
+                    title="Fermer la fenêtre de dialogue"
+                    label="Fermer"
+                    class="fr-btn--close"
+                  />
+                  <QuickAccessTitre id="search-473-input" onSelectTitre={closeModals} />
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div class={`fr-header__menu fr-modal ${modalMenuOpened.value ? 'fr-modal--opened' : ''}`} id={navigationModalId} aria-labelledby="button-menu" aria-label="Connexion et menu de navigation">
-          <div class="fr-container">
-            <DsfrButtonIcon
-              icon="fr-icon-close-line"
-              buttonType="tertiary-no-outline"
-              onClick={closeModals}
-              aria-controls={searchModalId}
-              title="Fermer la fenêtre de dialogue"
-              label="Fermer"
-              class="fr-btn--close"
-            />
-            <div class="fr-header__menu-links">
-              <HeaderLinks user={props.user} routePath={props.routePath} userLinkClicked={closeModals} />
-            </div>
-            <nav class="fr-nav" id={navigationId} role="navigation" aria-label="Menu principal">
-              <ul class="fr-nav__list">
-                {linksByRole.value[props.user?.role ?? 'defaut'].map((link, index) => (
-                  <li key={link.label} class="fr-nav__item">
-                    {isDirectLink(link) ? (
-                      <router-link class="fr-nav__link" to={{ name: link.path }} target="_self" onClick={linkClick} {...getAriaPage(link)}>
+      </div>
+      <div class={`fr-header__menu fr-modal ${modalMenuOpened.value ? 'fr-modal--opened' : ''}`} id={navigationModalId} aria-labelledby="button-menu" aria-label="Connexion et menu de navigation">
+        <div class="fr-container">
+          <DsfrButtonIcon
+            icon="fr-icon-close-line"
+            buttonType="tertiary-no-outline"
+            onClick={closeModals}
+            aria-controls={searchModalId}
+            title="Fermer la fenêtre de dialogue"
+            label="Fermer"
+            class="fr-btn--close"
+          />
+          <div class="fr-header__menu-links">
+            <HeaderLinks user={props.user} routePath={props.routePath} userLinkClicked={closeModals} />
+          </div>
+          <nav class="fr-nav" id={navigationId} role="navigation" aria-label="Menu principal">
+            <ul class="fr-nav__list">
+              {linksByRole.value[props.user?.role ?? 'defaut'].map((link, index) => (
+                <li key={link.label} class="fr-nav__item">
+                  {isDirectLink(link) ? (
+                    <router-link class="fr-nav__link" to={{ name: link.path }} target="_self" onClick={linkClick} {...getAriaPage(link)}>
+                      {link.label}
+                    </router-link>
+                  ) : (
+                    <>
+                      <button class="fr-nav__btn" aria-expanded="false" aria-controls={`collapse-${index}`} {...getAriaCurrent(link)}>
                         {link.label}
-                      </router-link>
-                    ) : (
-                      <>
-                        <button class="fr-nav__btn" aria-expanded="false" aria-controls={`collapse-${index}`} {...getAriaCurrent(link)}>
-                          {link.label}
-                        </button>
-                        <div class="fr-collapse fr-menu" id={`collapse-${index}`}>
-                          <ul class="fr-menu__list">
-                            {link.sublinks.map((sublink, subIndex) => (
-                              <li key={sublink.label}>
-                                <router-link onClick={sublinkClick} class="fr-nav__link" to={{ name: sublink.path }} target="_self" id={`nav-${index}-${subIndex}`}>
-                                  {sublink.label}
-                                </router-link>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      </>
-                    )}
-                  </li>
-                ))}
-              </ul>
-            </nav>
-          </div>
+                      </button>
+                      <div class="fr-collapse fr-menu" id={`collapse-${index}`}>
+                        <ul class="fr-menu__list">
+                          {link.sublinks.map((sublink, subIndex) => (
+                            <li key={sublink.label}>
+                              <router-link onClick={sublinkClick} class="fr-nav__link" to={{ name: sublink.path }} target="_self" id={`nav-${index}-${subIndex}`}>
+                                {sublink.label}
+                              </router-link>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </nav>
         </div>
-      </header>
-    </div>
+      </div>
+    </header>
   )
 })
 

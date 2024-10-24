@@ -8,12 +8,12 @@ import { entrepriseApiClient } from './entreprise/entreprise-api-client'
 import { Entreprise, Siren } from 'camino-common/src/entreprise'
 import { DsfrButtonIcon } from './_ui/dsfr-button'
 import { ApiClient, apiClient } from '../api/api-client'
-import { entreprisesDownloadFormats, entreprisesFiltresNames } from 'camino-common/src/filters'
+import { entreprisesDownloadFormats } from 'camino-common/src/filters'
 import { Column, TableRow } from './_ui/table'
 import { entreprisesKey, userKey } from '@/moi'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { getWithJson } from '@/api/client-rest'
-import { CaminoRouteLocation } from '@/router/routes'
+import { CaminoRouteLocation, routesDefinitions } from '@/router/routes'
 import { CaminoRouter } from '@/typings/vue-router'
 
 const entreprisesColonnes = [
@@ -83,7 +83,7 @@ export const PureEntreprises = defineComponent<Props>(props => {
       download={{ id: 'entreprisesDownload', downloadRoute: '/entreprises', formats: entreprisesDownloadFormats, params: {} }}
       getData={getData}
       listeFiltre={{
-        filtres: entreprisesFiltresNames,
+        filtres: routesDefinitions[props.currentRoute.name].meta.filtres,
         apiClient: props.apiClient,
         updateUrlQuery: props.updateUrlQuery,
         entreprises: props.entreprises,

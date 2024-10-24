@@ -4,6 +4,8 @@ import { Dashboard } from '../components/dashboard'
 import { Titres } from '../components/titres'
 import { isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools'
 import { CaminoRouteNames, routesDefinitions } from './routes'
+import { CaminoFiltre } from 'camino-common/src/filters'
+import { DeepReadonly } from 'vue'
 const PageIntrouvableAlert = async () => {
   const { PageIntrouvableAlert } = await import('@/components/_ui/alert')
 
@@ -125,6 +127,7 @@ declare module 'vue-router' {
   interface RouteMeta {
     menuSection: MenuSection | null
     title: string
+    filtres: DeepReadonly<CaminoFiltre[]>
   }
 }
 const routes = {
@@ -258,7 +261,7 @@ const router = createRouter({
       })
     } else if (to.name === 'titres' && 'vueId' in to.query && !Array.isArray(to.query.vueId) && to.query.vueId === 'carte') {
       return false
-    } else if (to.name === 'titre' && from.name === 'titre') {
+    } else if (to.name === from.name) {
       return false
     } else {
       return { top: 0 }

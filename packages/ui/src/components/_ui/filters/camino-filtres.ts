@@ -6,7 +6,7 @@ export type EtapeCaminoFiltres = (typeof caminoEtapesFiltres)[number]['id']
 export const isEtapeCaminoFiltre = (value: CaminoFiltre): value is EtapeCaminoFiltres => caminoEtapesFiltresArrayIds.includes(value)
 
 const caminoInputFiltresArrayIds = ['nomsAdministration', 'nomsUtilisateurs', 'emails', 'references', 'communes', 'nomsEntreprise'] as const
-export const caminoInputFiltres = [
+const caminoInputFiltres = [
   caminoFiltres.nomsAdministration,
   caminoFiltres.nomsUtilisateurs,
   caminoFiltres.emails,

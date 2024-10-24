@@ -7,10 +7,10 @@ import { CaminoAccessError } from './error'
 import { utilisateursColonnes, utilisateursLignesBuild } from './utilisateurs/table'
 import { ApiClient, apiClient } from '../api/api-client'
 import { TableRow } from './_ui/table'
-import { utilisateursDownloadFormats, utilisateursFiltresNames } from 'camino-common/src/filters'
+import { utilisateursDownloadFormats } from 'camino-common/src/filters'
 import { entreprisesKey, userKey } from '@/moi'
 import { Entreprise } from 'camino-common/src/entreprise'
-import { CaminoRouteLocation } from '@/router/routes'
+import { CaminoRouteLocation, routesDefinitions } from '@/router/routes'
 import { CaminoRouter } from '@/typings/vue-router'
 import { UtilisateursColonneIdSortable } from 'camino-common/src/utilisateur'
 
@@ -47,7 +47,7 @@ export const PureUtilisateurs = defineComponent<Props>(props => {
       {canReadUtilisateurs(props.user) ? (
         <Liste
           nom="utilisateurs"
-          listeFiltre={{ filtres: utilisateursFiltresNames, updateUrlQuery: props.updateUrlQuery, apiClient: props.apiClient, entreprises: props.entreprises }}
+          listeFiltre={{ filtres: routesDefinitions[props.currentRoute.name].meta.filtres, updateUrlQuery: props.updateUrlQuery, apiClient: props.apiClient, entreprises: props.entreprises }}
           route={props.currentRoute}
           colonnes={utilisateursColonnes}
           getData={load}

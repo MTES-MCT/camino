@@ -62,12 +62,7 @@ export const InputAutocomplete = defineComponent<Props>(props => {
     props.onFilterAutocomplete(items.map(({ id }) => id))
   }
 
-  return () => (
-    <div class="fr-mb-2w">
-      <span>{filter.value.name}</span>
-      <TypeAheadSmartMultiple class="fr-mt-1w" filter={filterFull.value} onSelectItems={onSelectItems} />
-    </div>
-  )
+  return () => <TypeAheadSmartMultiple filter={filterFull.value} onSelectItems={onSelectItems} />
 })
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833

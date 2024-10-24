@@ -2,6 +2,9 @@ import { Journal } from 'camino-common/src/journaux'
 import { PureJournaux } from './journaux'
 import { Meta, StoryFn } from '@storybook/vue3'
 import { ApiClient } from '@/api/api-client'
+import { action } from '@storybook/addon-actions'
+import { CaminoRouteLocation } from '@/router/routes'
+import { CaminoRouter } from '@/typings/vue-router'
 
 const meta: Meta = {
   title: 'Components/Journaux',
@@ -25,6 +28,7 @@ const element: Journal = {
   },
 }
 
+const updateUrlQueryAction = action('updateUrlQuery')
 const apiClient: Pick<ApiClient, 'titresRechercherByNom' | 'getTitresByIds' | 'getJournaux'> = {
   titresRechercherByNom: () => {
     return Promise.resolve({ elements: [] })
@@ -41,13 +45,23 @@ const apiClient: Pick<ApiClient, 'titresRechercherByNom' | 'getTitresByIds' | 'g
     }
   },
 }
-
-export const Loading: StoryFn = () => <PureJournaux apiClient={{ ...apiClient, getJournaux: () => new Promise(() => ({})) }} />
-export const WithError: StoryFn = () => <PureJournaux apiClient={{ ...apiClient, getJournaux: () => Promise.reject(new Error('erreur')) }} />
-export const Default: StoryFn = () => <PureJournaux apiClient={apiClient} />
+const currentRoute: CaminoRouteLocation = { name: 'journaux', params: {}, query: {} }
+const updateUrlQuery: Pick<CaminoRouter, 'push'> = {
+  push: value => {
+    updateUrlQueryAction(value)
+    return Promise.resolve()
+  },
+}
+export const Loading: StoryFn = () => <PureJournaux currentRoute={currentRoute} updateUrlQuery={updateUrlQuery} apiClient={{ ...apiClient, getJournaux: () => new Promise(() => ({})) }} />
+export const WithError: StoryFn = () => (
+  <PureJournaux currentRoute={currentRoute} updateUrlQuery={updateUrlQuery} apiClient={{ ...apiClient, getJournaux: () => Promise.reject(new Error('erreur')) }} />
+)
+export const Default: StoryFn = () => <PureJournaux currentRoute={currentRoute} updateUrlQuery={updateUrlQuery} apiClient={apiClient} />
 
 export const AvecPagination: StoryFn = () => (
   <PureJournaux
+    currentRoute={currentRoute}
+    updateUrlQuery={updateUrlQuery}
     apiClient={{
       ...apiClient,
       getJournaux: async () => {

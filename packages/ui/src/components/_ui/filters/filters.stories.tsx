@@ -30,82 +30,36 @@ const apiClient: Pick<ApiClient, 'titresRechercherByNom' | 'getTitresByIds'> = {
   },
 }
 
-export const Loading: StoryFn = () => (
-  <Filters
-    filters={['titresIds']}
-    entreprises={[]}
-    apiClient={{ ...apiClient, getTitresByIds: () => new Promise(() => ({})) }}
-    updateUrlQuery={{ push }}
-    route={{ query: { titresIds: ['toto'] }, name: 'dashboard', params: {} }}
-    toggle={action('toggle')}
-    validate={action('validate')}
-  />
-)
-
-export const ClosedWithoutValue: StoryFn = () => (
-  <Filters
-    entreprises={[]}
-    filters={['nomsAdministration']}
-    apiClient={apiClient}
-    updateUrlQuery={{ push }}
-    route={{ query: {}, name: 'dashboard', params: {} }}
-    toggle={action('toggle')}
-    validate={action('validate')}
-  />
-)
-
-export const AllFiltersClosedWithValues: StoryFn = () => (
-  <Filters
-    entreprises={[]}
-    filters={allCaminoFiltres}
-    updateUrlQuery={{ push }}
-    route={{ query: { nomsAdministration: 'test', substancesIds: ['arge', 'auru'] }, name: 'dashboard', params: {} }}
-    toggle={action('toggle')}
-    validate={action('validate')}
-    opened={false}
-    apiClient={apiClient}
-  />
+export const WithoutValue: StoryFn = () => (
+  <Filters entreprises={[]} filters={['nomsAdministration']} apiClient={apiClient} updateUrlQuery={{ push }} route={{ query: {}, name: 'dashboard', params: {} }} validate={action('validate')} />
 )
 
 const allSubstances: SubstanceLegaleId[] = SubstancesLegales.map(({ id }) => id)
-export const AllFiltersOpenedWithValues: StoryFn = () => (
+export const AllFiltersWithValues: StoryFn = () => (
   <Filters
     entreprises={[]}
     filters={allCaminoFiltres}
     updateUrlQuery={{ push }}
     route={{ query: { nomsAdministration: 'test', substancesIds: allSubstances }, name: 'dashboard', params: {} }}
-    toggle={action('toggle')}
     validate={action('validate')}
-    opened={true}
     apiClient={apiClient}
   />
 )
 
-export const CustomOpenedWithValues: StoryFn = () => (
+export const CustomWithValues: StoryFn = () => (
   <Filters
     entreprises={[]}
     filters={['nomsAdministration', 'substancesIds']}
     updateUrlQuery={{ push }}
     route={{ query: { nomsAdministration: 'test', substancesIds: ['arge', 'auru'] }, name: 'dashboard', params: {} }}
-    toggle={action('toggle')}
     validate={action('validate')}
-    opened={true}
     apiClient={apiClient}
   />
 )
 
-export const Opened: StoryFn = () => (
+export const AllFiltersWithoutValues: StoryFn = () => (
   <>
     <MapPattern />
-    <Filters
-      entreprises={[]}
-      filters={allCaminoFiltres}
-      updateUrlQuery={{ push }}
-      route={{ query: {}, name: 'dashboard', params: {} }}
-      apiClient={apiClient}
-      toggle={action('toggle')}
-      validate={action('validate')}
-      opened={true}
-    />
+    <Filters entreprises={[]} filters={allCaminoFiltres} updateUrlQuery={{ push }} route={{ query: {}, name: 'dashboard', params: {} }} apiClient={apiClient} validate={action('validate')} />
   </>
 )

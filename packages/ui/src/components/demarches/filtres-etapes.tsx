@@ -75,7 +75,7 @@ export const FiltresEtapes = defineComponent<Props>(props => {
 
   // TODO 2023-07-13 mettre un composant typeahead pour les types d'étapes plutôt qu'un select de l'enfer
   return () => (
-    <div class={`mb ${props.class}`}>
+    <div>
       <h5>{fullFilter.value.name}</h5>
       <hr class="mb-s" />
 

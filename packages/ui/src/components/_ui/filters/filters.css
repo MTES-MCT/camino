@@ -1,0 +1,14 @@
+.filter-collapsable.fr-collapse--expanded {
+  overflow: visible;
+  animation-name: hideduringdsfranimation;
+  animation-duration: 1s;
+}
+
+@keyframes hideduringdsfranimation {
+  from {
+    overflow: hidden;
+  }
+  to {
+    overflow: visible;
+  }
+}

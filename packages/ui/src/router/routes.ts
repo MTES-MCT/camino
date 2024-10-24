@@ -1,8 +1,38 @@
+import { activitesFiltresNames, CaminoFiltre, entreprisesFiltresNames, titresFiltresNames, utilisateursFiltresNames } from 'camino-common/src/filters'
 import type { LocationQueryRaw, RouteRecordRaw } from 'vue-router'
+import { RouteMeta } from 'vue-router'
+const demarchesFiltres = [
+  'titresIds',
+  'domainesIds',
+  'typesIds',
+  'statutsIds',
+  'entreprisesIds',
+  'substancesIds',
+  'references',
+  'demarchesTypesIds',
+  'demarchesStatutsIds',
+  'etapesInclues',
+  'etapesExclues',
+] as const satisfies readonly CaminoFiltre[]
+
+const travauxFiltres = [
+  'titresIds',
+  'domainesIds',
+  'typesIds',
+  'statutsIds',
+  'entreprisesIds',
+  'substancesIds',
+  'references',
+  'travauxTypesIds',
+  'demarchesStatutsIds',
+  'etapesInclues',
+  'etapesExclues',
+] as const satisfies readonly CaminoFiltre[]
+const administrationsFiltres: readonly CaminoFiltre[] = ['nomsAdministration', 'administrationTypesIds'] as const
 
 // prettier-ignore
 const ROUTES = ['dashboard','statsDGTM','titres','titreCreation','titre','demarches','demarche','travaux','etape','etapeCreation','etapeEdition','resultatMiseEnConcurrence','utilisateurs','utilisateur','entreprises','entreprise','administrations','administration','activites','activite','activiteEdition','statistiques','journaux','statistiquesbetagouv','aPropos','homepage','erreur' ] as const
-type CaminoRoute<T extends CaminoRouteNames> = Pick<RouteRecordRaw, 'path' | 'meta'> & { name: T }
+type CaminoRoute<T extends CaminoRouteNames> = Pick<RouteRecordRaw, 'path'> & { name: T; meta: RouteMeta }
 export const routesDefinitions = {
   dashboard: {
     path: '/dashboard',
@@ -10,6 +40,7 @@ export const routesDefinitions = {
     meta: {
       title: 'Tableau de bord',
       menuSection: 'dashboard',
+      filtres: [],
     },
   },
   statsDGTM: {
@@ -18,6 +49,7 @@ export const routesDefinitions = {
     meta: {
       title: 'Statistiques de la DGTM',
       menuSection: 'dashboard',
+      filtres: [],
     },
   },
   titres: {
@@ -26,6 +58,7 @@ export const routesDefinitions = {
     meta: {
       title: 'Titres',
       menuSection: 'titres',
+      filtres: titresFiltresNames,
     },
   },
   titreCreation: {
@@ -34,6 +67,7 @@ export const routesDefinitions = {
     meta: {
       title: "Création d'un titre",
       menuSection: 'titres',
+      filtres: [],
     },
   },
   titre: {
@@ -42,6 +76,7 @@ export const routesDefinitions = {
     meta: {
       title: 'Détail du titre',
       menuSection: 'titres',
+      filtres: [],
     },
   },
   demarches: {
@@ -50,15 +85,26 @@ export const routesDefinitions = {
     meta: {
       title: 'Liste des démarches',
       menuSection: 'demarches',
+      filtres: demarchesFiltres,
     },
   },
   demarche: {
     path: '/demarches/:demarcheId',
     name: 'demarche',
+    meta: {
+      title: 'Détail de la démarche',
+      menuSection: 'demarches',
+      filtres: [],
+    },
   },
   resultatMiseEnConcurrence: {
     path: '/demarches/:demarcheId/resultat-mise-en-concurrence',
     name: 'resultatMiseEnConcurrence',
+    meta: {
+      title: 'Résultat de la mise en concurrence',
+      filtres: [],
+      menuSection: null,
+    },
   },
   travaux: {
     path: '/travaux',
@@ -66,11 +112,17 @@ export const routesDefinitions = {
     meta: {
       title: 'Liste des travaux',
       menuSection: 'travaux',
+      filtres: travauxFiltres,
     },
   },
   etape: {
     path: '/etapes/:id',
     name: 'etape',
+    meta: {
+      title: "Détail d'une étape",
+      filtres: [],
+      menuSection: 'titres',
+    },
   },
   etapeCreation: {
     path: '/etapes/creation',
@@ -78,6 +130,7 @@ export const routesDefinitions = {
     meta: {
       title: "Création d'une étape",
       menuSection: 'titres',
+      filtres: [],
     },
   },
   etapeEdition: {
@@ -86,6 +139,7 @@ export const routesDefinitions = {
     meta: {
       title: "Édition d'une étape",
       menuSection: 'titres',
+      filtres: [],
     },
   },
   utilisateurs: {
@@ -94,6 +148,7 @@ export const routesDefinitions = {
     meta: {
       title: 'Liste des utilisateurs',
       menuSection: 'utilisateurs',
+      filtres: utilisateursFiltresNames,
     },
   },
   utilisateur: {
@@ -102,6 +157,7 @@ export const routesDefinitions = {
     meta: {
       title: "Détail d'un utilisateur",
       menuSection: 'utilisateurs',
+      filtres: [],
     },
   },
   entreprises: {
@@ -110,6 +166,7 @@ export const routesDefinitions = {
     meta: {
       title: 'Liste des entreprises',
       menuSection: 'entreprises',
+      filtres: entreprisesFiltresNames,
     },
   },
   entreprise: {
@@ -118,6 +175,7 @@ export const routesDefinitions = {
     meta: {
       title: "Détail d'une entreprise",
       menuSection: 'entreprises',
+      filtres: [],
     },
   },
   administrations: {
@@ -126,6 +184,7 @@ export const routesDefinitions = {
     meta: {
       title: 'Liste des administrations',
       menuSection: 'administrations',
+      filtres: administrationsFiltres,
     },
   },
   administration: {
@@ -134,6 +193,7 @@ export const routesDefinitions = {
     meta: {
       title: "Détail d'une administration",
       menuSection: 'administrations',
+      filtres: [],
     },
   },
   activites: {
@@ -142,6 +202,7 @@ export const routesDefinitions = {
     meta: {
       title: 'Liste des activités',
       menuSection: 'activites',
+      filtres: activitesFiltresNames,
     },
   },
   activite: {
@@ -150,6 +211,7 @@ export const routesDefinitions = {
     meta: {
       title: "Détail d'une activité",
       menuSection: 'activites',
+      filtres: [],
     },
   },
   activiteEdition: {
@@ -158,6 +220,7 @@ export const routesDefinitions = {
     meta: {
       title: "Édition de l'activité",
       menuSection: 'activites',
+      filtres: [],
     },
   },
   statistiques: {
@@ -166,6 +229,7 @@ export const routesDefinitions = {
     meta: {
       menuSection: null,
       title: 'Statistiques',
+      filtres: [],
     },
   },
   journaux: {
@@ -174,6 +238,7 @@ export const routesDefinitions = {
     meta: {
       menuSection: 'journaux',
       title: 'Journaux',
+      filtres: ['titresIds'],
     },
   },
   // url /stats : demande de Samuel
@@ -181,6 +246,11 @@ export const routesDefinitions = {
   statistiquesbetagouv: {
     path: '/stats',
     name: 'statistiquesbetagouv',
+    meta: {
+      title: 'Statistiques',
+      menuSection: null,
+      filtres: [],
+    },
   },
   aPropos: {
     path: '/a-propos',
@@ -188,11 +258,17 @@ export const routesDefinitions = {
     meta: {
       title: 'À propos',
       menuSection: null,
+      filtres: [],
     },
   },
   homepage: {
     path: '/',
     name: 'homepage',
+    meta: {
+      title: 'Page principale',
+      filtres: [],
+      menuSection: null,
+    },
   },
   erreur: {
     path: '/:pathMatch(.*)*',
@@ -200,6 +276,7 @@ export const routesDefinitions = {
     meta: {
       title: 'Erreur',
       menuSection: null,
+      filtres: [],
     },
   },
 } as const satisfies { [key in CaminoRouteNames]: CaminoRoute<key> }

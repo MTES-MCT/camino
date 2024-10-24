@@ -90,10 +90,9 @@ export const FiltersCheckboxes = defineComponent((props: Props) => {
 
   return () => (
     <div>
-      {fullFilter.name}
-      <ul style={{ listStyleType: 'none', paddingLeft: 0 }}>
+      <ul style={{ listStyleType: 'none', paddingLeft: 0, fontWeight: 'normal' }} class="fr-pb-1w">
         {fullFilter.elements.map((element, index) => (
-          <li key={element.id}>
+          <li key={element.id} class="fr-p-1v">
             <label style={{ display: 'flex', flexDirection: 'row' }}>
               <DsfrInputCheckbox legend={{ main: '' }} initialValue={selectedValues.value.includes(element.id)} valueChanged={checkboxToggle(element.id)} />
               {DrawComponent(props.filter, index)}

@@ -12,5 +12,5 @@ type Props = {
 export function FiltersInput(props: Props): JSX.Element {
   const filter = caminoFiltres[props.filter]
 
-  return <DsfrInput initialValue={props.initialValue} class="fr-mb-2w" type={{ type: 'text' }} legend={{ placeholder: filter.placeholder, main: filter.name }} valueChanged={props.onFilterInput} />
+  return <DsfrInput initialValue={props.initialValue} type={{ type: 'text' }} legend={{ placeholder: filter.placeholder, main: filter.name, visible: false }} valueChanged={props.onFilterInput} />
 }

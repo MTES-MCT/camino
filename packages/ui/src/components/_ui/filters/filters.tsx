@@ -1,4 +1,4 @@
-import { HTMLAttributes, computed, defineComponent, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { FunctionalComponent, HTMLAttributes, Ref, computed, defineComponent, onMounted, ref, watch } from 'vue'
 import { FiltersInput } from './filters-input'
 import { FiltersCheckboxes } from './filters-checkboxes'
 import { InputAutocomplete, InputAutocompleteValues } from './filters-input-autocomplete'
@@ -6,32 +6,19 @@ import { FiltresEtapes, FilterEtapeValue } from '../../demarches/filtres-etapes'
 import { EtapesStatuts } from 'camino-common/src/static/etapesStatuts'
 import { EtapeTypeId, EtapesTypes } from 'camino-common/src/static/etapesTypes'
 import { onBeforeRouteLeave } from 'vue-router'
-import {
-  AutocompleteCaminoFiltres,
-  CheckboxesCaminoFiltres,
-  EtapeCaminoFiltres,
-  InputCaminoFiltres,
-  allCaminoFiltres,
-  caminoAutocompleteFiltres,
-  caminoInputFiltres,
-  isAutocompleteCaminoFiltre,
-  isCheckboxeCaminoFiltre,
-  isEtapeCaminoFiltre,
-  isInputCaminoFiltre,
-} from './camino-filtres'
+import './filters.css'
+import { AutocompleteCaminoFiltres, EtapeCaminoFiltres, allCaminoFiltres, isAutocompleteCaminoFiltre, isCheckboxeCaminoFiltre, isEtapeCaminoFiltre, isInputCaminoFiltre } from './camino-filtres'
 
 import { CaminoFiltre, caminoFiltres } from 'camino-common/src/filters'
-import { CaminoRouterLink, routerQueryToString, routerQueryToStringArray } from '@/router/camino-router-link'
+import { routerQueryToString, routerQueryToStringArray } from '@/router/camino-router-link'
 import { ApiClient } from '../../../api/api-client'
 import { AsyncData } from '../../../api/client-rest'
-import { LoadingElement } from '../functional-loader'
-import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
+import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
 import { Entreprise } from 'camino-common/src/entreprise'
-import { DeprecatedAccordion } from '../accordion'
 import { CaminoRouteLocation, CaminoRouteNames, CaminoVueRoute } from '@/router/routes'
 import { CaminoRouter } from '@/typings/vue-router'
-import { DsfrButton, DsfrButtonIcon } from '../dsfr-button'
-import { DsfrTag } from '../tag'
+import { DsfrButton } from '../dsfr-button'
+import { createDebounce } from '@/utils/debounce'
 
 type FormatedLabel = { id: CaminoFiltre; name: string; value: string | string[] | FilterEtapeValue; valueName?: string | string[] }
 
@@ -40,9 +27,7 @@ type Props = {
   route: CaminoRouteLocation
   updateUrlQuery: Pick<CaminoRouter, 'push'>
   subtitle?: string
-  opened?: boolean
   validate: (param: { [key in Props['filters'][number]]: (typeof caminoFiltres)[key]['validator']['_output'] }) => void
-  toggle: () => void
   apiClient: Pick<ApiClient, 'titresRechercherByNom' | 'getTitresByIds'>
   entreprises: Entreprise[]
 } & Pick<HTMLAttributes, 'class'>
@@ -112,10 +97,6 @@ export const getInitialFiltres = (route: CaminoRouteLocation, filters: readonly 
 }
 
 export const Filters = defineComponent((props: Props) => {
-  const opened = computed<boolean>(() => {
-    return props.opened ?? false
-  })
-
   const urlQuery = computed<CaminoVueRoute<CaminoRouteNames>>(() => {
     const filtres = { ...nonValidatedValues.value }
     // TODO 2023-08-21 regarder du côté des zod redefine si on peut pas faire ça directement dans le validator
@@ -148,51 +129,14 @@ export const Filters = defineComponent((props: Props) => {
     }
   })
 
+  const initialFiltres = getInitialFiltres(props.route, props.filters)
+
   const nonValidatedValues = ref<{ [key in CaminoFiltre]: (typeof caminoFiltres)[key]['validator']['_output'] }>(getInitialFiltres(props.route, props.filters))
 
-  const keyup = (e: KeyboardEvent) => {
-    if ((e.which || e.keyCode) === 13 && opened.value) {
-      props.updateUrlQuery.push(urlQuery.value)
-    }
-  }
   const loading = ref<AsyncData<true>>({ status: 'LOADING' })
   onMounted(async () => {
-    document.addEventListener('keyup', keyup)
     await refreshLabels()
   })
-  onBeforeUnmount(() => {
-    document.removeEventListener('keyup', keyup)
-  })
-
-  const inputsErase = () => {
-    caminoInputFiltres.forEach(filtre => {
-      nonValidatedValues.value[filtre.id] = ''
-    })
-    caminoAutocompleteFiltres.forEach(filtre => {
-      nonValidatedValues.value[filtre.id] = []
-    })
-  }
-
-  const labelRemove = (label: FormatedLabel) => () => {
-    if (!opened.value) {
-      const labelId = label.id
-      if (isInputCaminoFiltre(labelId)) {
-        nonValidatedValues.value[labelId] = ''
-      } else if (isAutocompleteCaminoFiltre(labelId) || isCheckboxeCaminoFiltre(labelId) || isEtapeCaminoFiltre(labelId)) {
-        const data = caminoFiltres[labelId].validator.parse([label.value])
-        const index: number = nonValidatedValues.value[labelId].indexOf(data[0])
-        if (index !== -1) {
-          nonValidatedValues.value[labelId].splice(index, 1)
-        }
-      }
-      props.updateUrlQuery.push(urlQuery.value)
-    }
-  }
-
-  const onFilterAutocomplete = (input: AutocompleteCaminoFiltres) => (items: InputAutocompleteValues) => {
-    // @ts-ignore typescript est perdu ici (probablement un distributive qu'il faut supprimer en rendant InputAutocompleteValues generique)
-    nonValidatedValues.value[input] = items
-  }
 
   const labelsReset = () => {
     props.filters.forEach(filter => {
@@ -202,36 +146,15 @@ export const Filters = defineComponent((props: Props) => {
         nonValidatedValues.value[filter] = []
       }
     })
-
-    if (!opened.value) {
-      props.updateUrlQuery.push(urlQuery.value)
-    }
   }
-
-  const inputs = computed<InputCaminoFiltres[]>(() => {
-    return props.filters.filter(isInputCaminoFiltre)
-  })
-  const autocompletes = computed<AutocompleteCaminoFiltres[]>(() => {
-    return props.filters.filter(isAutocompleteCaminoFiltre)
-  })
-
-  const checkboxes = computed<CheckboxesCaminoFiltres[]>(() => {
-    return props.filters.filter(isCheckboxeCaminoFiltre)
-  })
-
-  const etapes = computed<EtapeCaminoFiltres[]>(() => {
-    return props.filters.filter(isEtapeCaminoFiltre)
-  })
 
   const labels = ref<FormatedLabel[]>([])
 
-  watch(
-    nonValidatedValues,
-    async () => {
-      await refreshLabels()
-    },
-    { deep: true }
-  )
+  const debounce = createDebounce()
+
+  watch(urlQuery, () => {
+    debounce(() => props.updateUrlQuery.push(urlQuery.value), 500)
+  })
 
   const refreshLabels = async () => {
     let titresIds: Awaited<ReturnType<typeof props.apiClient.getTitresByIds>> = { elements: [] }
@@ -282,115 +205,94 @@ export const Filters = defineComponent((props: Props) => {
   }
 
   return () => (
-    <DeprecatedAccordion opened={opened.value} slotSub={loading.value.status === 'LOADING' || loading.value.status === 'ERROR' || labels.value?.length > 0} class="mb-s" toggle={props.toggle}>
-      {{
-        title: () => (
-          <div style="display: flex; align-items: center">
-            <div>Filtres</div>
-            {isNotNullNorUndefined(props.subtitle) ? <div class="pl-s small">{props.subtitle}</div> : null}
+    <nav class="fr-sidemenu fr-pr-2w" aria-labelledby="fr-sidemenu-title">
+      <div class="fr-sidemenu__inner fr-pt-3w fr-pl-2w fr-pb-3w fr-pr-2w">
+        <button class="fr-sidemenu__btn" aria-controls="fr-sidemenu-wrapper" aria-expanded="false">
+          Filtres
+        </button>
+        <div class="fr-collapse" id="fr-sidemenu-wrapper">
+          <div class="fr-sidemenu__title" id="fr-sidemenu-title">
+            Filtres {props.subtitle}
           </div>
-        ),
-        sub: () => (
-          <LoadingElement
-            data={loading.value}
-            renderItem={_item => (
-              <>
-                {labels.value.length ? (
-                  <div class={['flex', opened.value ? 'border-b-s' : null]} style={{ justifyContent: 'center', alignItems: 'center' }}>
-                    <ul class="fr-tags-group fr-ml-2w fr-mt-3v">
-                      {labels.value.map(label => (
-                        <li>
-                          <DsfrTag
-                            ariaLabel={`${!opened.value ? 'Retirer ' : ''}${label.name} : ${isNotNullNorUndefined(label.valueName) ? label.valueName : label.value}`}
-                            label={`${label.name} : ${isNotNullNorUndefined(label.valueName) ? label.valueName : label.value}`}
-                            onClicked={opened.value ? undefined : labelRemove(label)}
-                          />
-                        </li>
-                      ))}
-                    </ul>
-                    <DsfrButtonIcon
-                      class="fr-mr-1w"
-                      buttonType="tertiary-no-outline"
-                      style={{ marginLeft: 'auto' }}
-                      onClick={labelsReset}
-                      icon="fr-icon-close-line"
-                      title="Réinitialiser les filtres"
-                    />
-                  </div>
-                ) : null}
-              </>
-            )}
-          />
-        ),
-        default: () => (
-          <div class="px-m">
-            <div class="tablet-blobs mt">
-              {inputs.value.length || autocompletes.value.length ? (
-                <div class="tablet-blob-1-2 large-blob-1-3 fr-mb-2w">
-                  {inputs.value.map(input => (
-                    <div key={input}>
-                      <FiltersInput
-                        filter={input}
-                        initialValue={nonValidatedValues.value[input]}
-                        onFilterInput={value => {
-                          nonValidatedValues.value[input] = value
-                        }}
-                      />
-                    </div>
-                  ))}
-                  {autocompletes.value.map(input => (
-                    <div key={input}>
-                      <InputAutocomplete
-                        entreprises={props.entreprises}
-                        filter={input}
-                        apiClient={props.apiClient}
-                        initialValue={nonValidatedValues.value[input]}
-                        onFilterAutocomplete={onFilterAutocomplete(input)}
-                      />
-                    </div>
-                  ))}
-                  <DsfrButton title="Tout effacer" buttonType="tertiary" buttonSize="sm" onClick={inputsErase} />
+
+          <ul class="fr-sidemenu__list" style={{ display: 'flex', flexDirection: 'column' }}>
+            {props.filters.map((filter, index) => (
+              <li class="fr-sidemenu__item" key={filter} style={{ order: isNotNullNorUndefinedNorEmpty(initialFiltres[filter]) ? -1 : index }}>
+                <button class="fr-sidemenu__btn" aria-expanded={index < 6 || isNotNullNorUndefinedNorEmpty(nonValidatedValues.value[filter])} aria-controls={`fr-sidemenu-item-${filter}`}>
+                  {caminoFiltres[filter].name}
+                </button>
+                <div class={['fr-collapse', 'filter-collapsable']} id={`fr-sidemenu-item-${filter}`}>
+                  <DisplayFiltre filtre={filter} nonValidatedValues={nonValidatedValues} apiClient={props.apiClient} entreprises={props.entreprises} />
                 </div>
-              ) : null}
-
-              {checkboxes.value.map(filter => (
-                <FiltersCheckboxes
-                  key={filter}
-                  filter={filter}
-                  initialValues={nonValidatedValues.value[filter]}
-                  valuesSelected={values => {
-                    // @ts-ignore typescript est perdu ici (probablement un distributive qu'il faut supprimer)
-                    nonValidatedValues.value[filter] = values
-                  }}
-                  class="tablet-blob-1-2 large-blob-1-3"
-                />
-              ))}
-
-              {etapes.value.map(filter => (
-                <FiltresEtapes
-                  key={filter}
-                  filter={filter}
-                  initialValues={nonValidatedValues.value[filter]}
-                  valuesSelected={values => {
-                    // @ts-ignore typescript est perdu ici (probablement un distributive qu'il faut supprimer)
-                    nonValidatedValues.value[filter] = values
-                  }}
-                  class="tablet-blob-1-2 large-blob-1-3"
-                />
-              ))}
-            </div>
-
-            <div>
-              <CaminoRouterLink isDisabled={false} class="fr-btn fr-mb-2w" to={urlQuery.value} title="Valider les filtres" anchorHTMLAttributes={{ onClick: props.toggle }}>
-                Valider
-              </CaminoRouterLink>
-            </div>
+              </li>
+            ))}
+          </ul>
+          <div style={{ display: 'flex', justifyContent: 'end' }} class="fr-mt-2w">
+            <DsfrButton buttonType="secondary" icon={undefined} title="Réinitialiser les filtres" onClick={labelsReset} />
           </div>
-        ),
-      }}
-    </DeprecatedAccordion>
+        </div>
+      </div>
+    </nav>
   )
 })
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-Filters.props = ['filters', 'subtitle', 'opened', 'validate', 'toggle', 'class', 'route', 'updateUrlQuery', 'apiClient', 'entreprises']
+Filters.props = ['filters', 'subtitle', 'validate', 'class', 'route', 'updateUrlQuery', 'apiClient', 'entreprises']
+type MyProp = {
+  filtre: CaminoFiltre
+  nonValidatedValues: Ref<{ [key in CaminoFiltre]: (typeof caminoFiltres)[key]['validator']['_output'] }>
+  apiClient: Pick<ApiClient, 'titresRechercherByNom' | 'getTitresByIds'>
+  entreprises: Entreprise[]
+}
+const DisplayFiltre: FunctionalComponent<MyProp> = props => {
+  const onFilterAutocomplete = (input: AutocompleteCaminoFiltres) => (items: InputAutocompleteValues) => {
+    // @ts-ignore typescript est perdu ici (probablement un distributive qu'il faut supprimer en rendant InputAutocompleteValues generique)
+    props.nonValidatedValues.value[input] = items
+  }
+
+  return (
+    <div class="fr-py-2w">
+      {isInputCaminoFiltre(props.filtre) ? (
+        <FiltersInput
+          filter={props.filtre}
+          initialValue={props.nonValidatedValues.value[props.filtre]}
+          onFilterInput={value => {
+            props.nonValidatedValues.value[props.filtre] = value
+          }}
+        />
+      ) : null}
+      {isAutocompleteCaminoFiltre(props.filtre) ? (
+        <InputAutocomplete
+          entreprises={props.entreprises}
+          filter={props.filtre}
+          apiClient={props.apiClient}
+          initialValue={props.nonValidatedValues.value[props.filtre]}
+          onFilterAutocomplete={onFilterAutocomplete(props.filtre)}
+        />
+      ) : null}
+      {isCheckboxeCaminoFiltre(props.filtre) ? (
+        <FiltersCheckboxes
+          key={props.filtre}
+          filter={props.filtre}
+          initialValues={props.nonValidatedValues.value[props.filtre]}
+          valuesSelected={values => {
+            // @ts-ignore typescript est perdu ici (probablement un distributive qu'il faut supprimer)
+            props.nonValidatedValues.value[props.filtre] = values
+          }}
+        />
+      ) : null}
+
+      {isEtapeCaminoFiltre(props.filtre) ? (
+        <FiltresEtapes
+          key={props.filtre}
+          filter={props.filtre}
+          initialValues={props.nonValidatedValues.value[props.filtre]}
+          valuesSelected={values => {
+            // @ts-ignore typescript est perdu ici (probablement un distributive qu'il faut supprimer)
+            props.nonValidatedValues.value[props.filtre] = values
+          }}
+        />
+      ) : null}
+    </div>
+  )
+}

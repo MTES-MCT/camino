@@ -4,9 +4,9 @@ import { ADMINISTRATION_TYPES, Administrations as Adms } from 'camino-common/src
 import { Column, ComponentColumnData, TableRow, TextColumnData } from './_ui/table'
 import { useRoute, useRouter } from 'vue-router'
 import { DsfrTag } from './_ui/tag'
-import { CaminoFiltre } from 'camino-common/src/filters'
 import { apiClient } from '../api/api-client'
 import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
+import { routesDefinitions } from '@/router/routes'
 
 const colonnes = [
   {
@@ -23,7 +23,6 @@ const colonnes = [
   },
 ] as const satisfies readonly Column[]
 
-const filtres: readonly CaminoFiltre[] = ['nomsAdministration', 'administrationTypesIds'] as const
 type ColonneId = (typeof colonnes)[number]['id']
 
 const administrations = Object.values(Adms)
@@ -97,7 +96,7 @@ export const Administrations = defineComponent({
     return () => (
       <Liste
         nom="administrations"
-        listeFiltre={{ filtres, apiClient, updateUrlQuery: router, entreprises: [] }}
+        listeFiltre={{ filtres: routesDefinitions.administrations.meta.filtres, apiClient, updateUrlQuery: router, entreprises: [] }}
         colonnes={colonnes}
         getData={getData}
         route={route}

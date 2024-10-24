@@ -234,44 +234,44 @@ export type CaminoFiltre = keyof typeof caminoFiltres
 
 export const demarchesFiltresNames = [
   'titresIds',
+  'substancesIds',
   'domainesIds',
   'typesIds',
   'statutsIds',
   'entreprisesIds',
-  'substancesIds',
-  'references',
   'demarchesTypesIds',
   'travauxTypesIds',
   'demarchesStatutsIds',
+  'references',
   'etapesInclues',
   'etapesExclues',
 ] as const satisfies readonly CaminoFiltre[]
 
 export const titresFiltresNames = [
   'titresIds',
-  'entreprisesIds',
   'substancesIds',
+  'domainesIds',
+  'typesIds',
+  'statutsIds',
+  'entreprisesIds',
   'references',
   'communes',
   'departements',
   'regions',
   'facadesMaritimes',
-  'domainesIds',
-  'typesIds',
-  'statutsIds',
 ] as const satisfies readonly CaminoFiltre[]
 
 export const activitesFiltresNames = [
   'titresIds',
-  'entreprisesIds',
   'substancesIds',
-  'references',
   'domainesIds',
   'typesIds',
   'statutsIds',
+  'annees',
+  'entreprisesIds',
   'activiteTypesIds',
   'activiteStatutsIds',
-  'annees',
+  'references',
 ] as const satisfies readonly CaminoFiltre[]
 
 export const entreprisesFiltresNames = ['nomsEntreprise'] as const satisfies readonly CaminoFiltre[]
