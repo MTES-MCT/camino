@@ -22,7 +22,7 @@ const communesUpdate = async (pool: Pool) => {
   const communesIdsKnown: string[] = await getCommuneIds(pool)
   console.info('Téléchargement du fichier des communes')
 
-  const communesFetch = await fetch('http://etalab-datasets.geo.data.gouv.fr/contours-administratifs/latest/geojson/communes-5m.geojson')
+  const communesFetch = await fetch('https://etalab-datasets.geo.data.gouv.fr/contours-administratifs/latest/geojson/communes-5m.geojson')
 
   console.info('Traitement du fichier des communes')
   if (communesFetch.body === null) {
