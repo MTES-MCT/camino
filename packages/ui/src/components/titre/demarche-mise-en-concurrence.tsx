@@ -12,11 +12,12 @@ import { watch } from 'vue'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
 import { machineIdFind } from 'camino-common/src/machines'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
+import { ETAPES_STATUTS } from 'camino-common/src/static/etapesStatuts'
 export type Props = {
   apiClient: Pick<ApiClient, 'getDemarcheMiseEnConcurrence'>
   titre: {
     titre_type_id: TitreTypeId
-    demarches: { id: DemarcheId; demarche_type_id: DemarcheTypeId; etapes: PickDistributive<DemarcheEtape, 'etape_type_id' | 'demarche_id_en_concurrence' | 'date'>[] }[]
+    demarches: { id: DemarcheId; demarche_type_id: DemarcheTypeId; etapes: PickDistributive<DemarcheEtape, 'etape_type_id' | 'demarche_id_en_concurrence' | 'date' | 'etape_statut_id'>[] }[]
   }
   user: Pick<UserNotNull, 'role'> | null
   hasTitresFrom: boolean | 'LOADING'
@@ -118,6 +119,26 @@ export const DemarcheMiseEnConcurrence = defineComponent<Props>(props => {
     return 'warning'
   })
 
+  const alertTitle = computed<string>(() => {
+    if (conf.value?.type === 'hasAlert') {
+      const demarcheId = conf.value.demarcheId
+      const demarche = props.titre.demarches.find(({ id }) => id === demarcheId)
+      const anf = demarche?.etapes.find(({ etape_type_id }) => etape_type_id === ETAPES_TYPES.avisDeMiseEnConcurrenceAuJORF)
+
+      if (isNotNullNorUndefined(anf)) {
+        switch (anf.etape_statut_id) {
+          case ETAPES_STATUTS.PROGRAMME:
+            return 'Concurrence de fait'
+          case ETAPES_STATUTS.EN_COURS:
+            return 'Mise en concurrence en cours'
+          case ETAPES_STATUTS.TERMINE:
+            return 'Mise en concurrence terminée'
+        }
+      }
+    }
+    return 'Démarche en superposition avec une demande déjà déposée'
+  })
+
   return () => (
     <>
       {isNotNullNorUndefined(conf.value) ? (
@@ -126,7 +147,7 @@ export const DemarcheMiseEnConcurrence = defineComponent<Props>(props => {
             <Alert
               class="fr-mt-2w"
               type={alerteType.value}
-              title="Mise en concurrence en cours"
+              title={alertTitle.value}
               description={<LoadingElement data={conf.value.demarches} renderItem={item => <DemarcheMiseEnConcurrenceLoaded demarches={item} />} />}
             />
           ) : (
@@ -135,7 +156,7 @@ export const DemarcheMiseEnConcurrence = defineComponent<Props>(props => {
               renderItem={items => (
                 <>
                   {isNotNullNorUndefinedNorEmpty(items) ? (
-                    <Alert class="fr-mt-2w" type={alerteType.value} title="Des mises en concurrence de fait sont présentes" description={<DemarcheMiseEnConcurrenceLoaded demarches={items} />} />
+                    <Alert class="fr-mt-2w" type={alerteType.value} title="Concurrence de fait" description={<DemarcheMiseEnConcurrenceLoaded demarches={items} />} />
                   ) : null}
                 </>
               )}
