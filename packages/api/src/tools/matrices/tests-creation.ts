@@ -29,7 +29,7 @@ const titreIdsIndex: RecordPartial<TitreId, TitreId> = {}
 
 const titreIdTransformer = titreIdValidator.transform((value: TitreId): TitreId => {
   if (titreIdsIndex[value] === undefined) {
-    const newId = newTitreId()
+    const newId = `fakeTitreId-${newTitreId()}` as TitreId
     titreIdsIndex[value] = newId
   }
 
@@ -41,7 +41,7 @@ const communeIdsIndex: RecordPartial<CommuneId, CommuneId> = {}
 
 const entrepriseIdTransformer = entrepriseIdValidator.transform((value: EntrepriseId): EntrepriseId => {
   if (entrepriseIdsIndex[value] === undefined) {
-    const newId = idGenerate(8) as EntrepriseId
+    const newId = `fakeEntrepriseId${idGenerate(8)}` as EntrepriseId
     entrepriseIdsIndex[value] = newId
   }
 
@@ -90,7 +90,7 @@ const entryValidator = z.object({
     })
   ),
   annee: caminoAnneeValidator,
-  entreprises: z.array(getEntreprisesValidor),
+  entreprises: z.array(getEntreprisesValidor.omit({ id: true }).extend({ id: entrepriseIdTransformer })),
 })
 
 export type BodyMatrice = {

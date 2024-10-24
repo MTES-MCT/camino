@@ -64,8 +64,8 @@ const writePhasesForTest = async () => {
       }
     }
 
-    const fakeDemarcheId = newDemarcheId()
-    const fakeTitreId = newTitreId()
+    const fakeDemarcheId = `fakeDemarcheId-${newDemarcheId()}` as DemarcheId
+    const fakeTitreId = `fakeTitreId-${newTitreId()}` as TitreId
 
     const etapes: TitreEtapePhaseFind[] = etapesDb.rows
       .filter(({ titre_demarche_id }) => titre_demarche_id === row.id)
