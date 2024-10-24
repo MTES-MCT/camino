@@ -555,7 +555,12 @@ const TDESections = {
       [ETAPES_TYPES.decisionDuJugeAdministratif]: proprietesDeLaConcession,
       [ETAPES_TYPES.informationsHistoriquesIncompletes]: proprietesDeLaConcession,
     },
-    [DEMARCHES_TYPES_IDS.Renonciation]: {
+    [DEMARCHES_TYPES_IDS.RenonciationTotale]: {
+      [ETAPES_TYPES.demande]: proprietesDeLaConcession,
+      [ETAPES_TYPES.decisionDeLAutoriteAdministrative]: proprietesDeLaConcession,
+      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDeLaConcession,
+    },
+    [DEMARCHES_TYPES_IDS.RenonciationPartielle]: {
       [ETAPES_TYPES.demande]: proprietesDeLaConcession,
       [ETAPES_TYPES.decisionDeLAutoriteAdministrative]: proprietesDeLaConcession,
       [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDeLaConcession,
@@ -601,7 +606,12 @@ const TDESections = {
       [ETAPES_TYPES.decisionDeLAutoriteAdministrative]: proprietesDuPermisExclusifDeRecherches,
       [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches,
     },
-    [DEMARCHES_TYPES_IDS.Renonciation]: {
+    [DEMARCHES_TYPES_IDS.RenonciationTotale]: {
+      [ETAPES_TYPES.demande]: proprietesDuPermisExclusifDeRecherches,
+      [ETAPES_TYPES.decisionDeLAutoriteAdministrative]: proprietesDuPermisExclusifDeRecherches,
+      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches,
+    },
+    [DEMARCHES_TYPES_IDS.RenonciationPartielle]: {
       [ETAPES_TYPES.demande]: proprietesDuPermisExclusifDeRecherches,
       [ETAPES_TYPES.decisionDeLAutoriteAdministrative]: proprietesDuPermisExclusifDeRecherches,
       [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches,
@@ -647,7 +657,12 @@ const TDESections = {
       [ETAPES_TYPES.decisionDeLAutoriteAdministrative]: proprietesDuPermisExclusifDeRecherches,
       [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches,
     },
-    [DEMARCHES_TYPES_IDS.Renonciation]: {
+    [DEMARCHES_TYPES_IDS.RenonciationTotale]: {
+      [ETAPES_TYPES.demande]: proprietesDuPermisExclusifDeRecherches,
+      [ETAPES_TYPES.decisionDeLAutoriteAdministrative]: proprietesDuPermisExclusifDeRecherches,
+      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches,
+    },
+    [DEMARCHES_TYPES_IDS.RenonciationPartielle]: {
       [ETAPES_TYPES.demande]: proprietesDuPermisExclusifDeRecherches,
       [ETAPES_TYPES.decisionDeLAutoriteAdministrative]: proprietesDuPermisExclusifDeRecherches,
       [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches,
@@ -663,7 +678,12 @@ const TDESections = {
       [ETAPES_TYPES.decisionDeLAutoriteAdministrative]: proprietesDuPermisExclusifDeRecherches,
       [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches,
     },
-    [DEMARCHES_TYPES_IDS.Renonciation]: {
+    [DEMARCHES_TYPES_IDS.RenonciationTotale]: {
+      [ETAPES_TYPES.demande]: proprietesDuPermisExclusifDeRecherches,
+      [ETAPES_TYPES.decisionDeLAutoriteAdministrative]: proprietesDuPermisExclusifDeRecherches,
+      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches,
+    },
+    [DEMARCHES_TYPES_IDS.RenonciationPartielle]: {
       [ETAPES_TYPES.demande]: proprietesDuPermisExclusifDeRecherches,
       [ETAPES_TYPES.decisionDeLAutoriteAdministrative]: proprietesDuPermisExclusifDeRecherches,
       [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches,
@@ -745,7 +765,12 @@ const TDESections = {
       [ETAPES_TYPES.decisionDeLAutoriteAdministrative]: proprietesDuPermisExclusifDeRecherches,
       [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches,
     },
-    [DEMARCHES_TYPES_IDS.Renonciation]: {
+    [DEMARCHES_TYPES_IDS.RenonciationTotale]: {
+      [ETAPES_TYPES.demande]: proprietesDuPermisExclusifDeRecherches,
+      [ETAPES_TYPES.decisionDeLAutoriteAdministrative]: proprietesDuPermisExclusifDeRecherches,
+      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches,
+    },
+    [DEMARCHES_TYPES_IDS.RenonciationPartielle]: {
       [ETAPES_TYPES.demande]: proprietesDuPermisExclusifDeRecherches,
       [ETAPES_TYPES.decisionDeLAutoriteAdministrative]: proprietesDuPermisExclusifDeRecherches,
       [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches,
@@ -786,7 +811,12 @@ const TDESections = {
       [ETAPES_TYPES.decisionDeLAutoriteAdministrative]: proprietesDuPermisExclusifDeRecherches,
       [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches,
     },
-    [DEMARCHES_TYPES_IDS.Renonciation]: {
+    [DEMARCHES_TYPES_IDS.RenonciationTotale]: {
+      [ETAPES_TYPES.demande]: proprietesDuPermisExclusifDeRecherches,
+      [ETAPES_TYPES.decisionDeLAutoriteAdministrative]: proprietesDuPermisExclusifDeRecherches,
+      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches,
+    },
+    [DEMARCHES_TYPES_IDS.RenonciationPartielle]: {
       [ETAPES_TYPES.demande]: proprietesDuPermisExclusifDeRecherches,
       [ETAPES_TYPES.decisionDeLAutoriteAdministrative]: proprietesDuPermisExclusifDeRecherches,
       [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches,
@@ -802,7 +832,12 @@ const TDESections = {
     },
   },
   [TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_GRANULATS_MARINS]: {
-    [DEMARCHES_TYPES_IDS.Renonciation]: {
+    [DEMARCHES_TYPES_IDS.RenonciationTotale]: {
+      [ETAPES_TYPES.demande]: proprietesDuPermisExclusifDeRecherches,
+      [ETAPES_TYPES.decisionDeLAutoriteAdministrative]: proprietesDuPermisExclusifDeRecherches,
+      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches,
+    },
+    [DEMARCHES_TYPES_IDS.RenonciationPartielle]: {
       [ETAPES_TYPES.demande]: proprietesDuPermisExclusifDeRecherches,
       [ETAPES_TYPES.decisionDeLAutoriteAdministrative]: proprietesDuPermisExclusifDeRecherches,
       [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches,
@@ -860,7 +895,13 @@ const TDESections = {
       [ETAPES_TYPES.decisionDeLAutoriteAdministrative]: proprietesDuPermisDExploitation,
       [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisDExploitation,
     },
-    [DEMARCHES_TYPES_IDS.Renonciation]: {
+    [DEMARCHES_TYPES_IDS.RenonciationTotale]: {
+      [ETAPES_TYPES.demande]: proprietesDuPermisDExploitation,
+      [ETAPES_TYPES.modificationDeLaDemande]: proprietesDuPermisDExploitation,
+      [ETAPES_TYPES.decisionDeLAutoriteAdministrative]: proprietesDuPermisDExploitation,
+      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisDExploitation,
+    },
+    [DEMARCHES_TYPES_IDS.RenonciationPartielle]: {
       [ETAPES_TYPES.demande]: proprietesDuPermisDExploitation,
       [ETAPES_TYPES.modificationDeLaDemande]: proprietesDuPermisDExploitation,
       [ETAPES_TYPES.decisionDeLAutoriteAdministrative]: proprietesDuPermisDExploitation,

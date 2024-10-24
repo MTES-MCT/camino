@@ -11,7 +11,7 @@ const demarcheTypeIdsCxPr_G = [
   DEMARCHES_TYPES_IDS.DeplacementDePerimetre,
   DEMARCHES_TYPES_IDS.Fusion,
   DEMARCHES_TYPES_IDS.MutationPartielle,
-  DEMARCHES_TYPES_IDS.Renonciation,
+  'ren',
   DEMARCHES_TYPES_IDS.ResiliationAnticipeeDAmodiation,
   DEMARCHES_TYPES_IDS.Retrait,
 ]

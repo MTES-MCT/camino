@@ -4,7 +4,7 @@ import { DemarcheId } from 'camino-common/src/demarche'
 import { titreEtapesSortAscByOrdre, titreEtapesSortDescByOrdre } from '../utils/titre-etapes-sort'
 import { titreEtapePublicationCheck } from './titre-etape-publication-check'
 import { titreDemarcheAnnulationDateFinFind } from './titre-demarche-annulation-date-fin-find'
-import { isDemarcheTypeOctroi, isDemarcheTypeWithPhase } from 'camino-common/src/static/demarchesTypes'
+import { DEMARCHES_TYPES_IDS, isDemarcheTypeOctroi, isDemarcheTypeWithPhase } from 'camino-common/src/static/demarchesTypes'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { CaminoDate, dateAddMonths, isBefore, toCaminoDate } from 'camino-common/src/date'
 import { titreDemarcheSortAsc } from '../utils/titre-elements-sort-asc'
@@ -22,11 +22,7 @@ const DATE_PAR_DEFAUT_TITRE_INFINI = toCaminoDate('2018-12-31')
  *   (= ne contient pas d'étape avec des infos géo (points)
  */
 const titreDemarcheAnnulationFind = (titreDemarches: TitreDemarchePhaseFind[]) =>
-  titreDemarches.find(
-    titreDemarche =>
-      demarcheStatutIdsSuccess.has(titreDemarche.statutId!) &&
-      (titreDemarche.typeId === 'ret' || (titreDemarche.typeId === 'ren' && !titreDemarche.etapes!.find(te => isNotNullNorUndefined(te.geojson4326Perimetre))))
-  )
+  titreDemarches.find(titreDemarche => demarcheStatutIdsSuccess.has(titreDemarche.statutId!) && [DEMARCHES_TYPES_IDS.Retrait, DEMARCHES_TYPES_IDS.RenonciationTotale].includes(titreDemarche.typeId))
 
 const findDateDebut = (demarche: TitreDemarchePhaseFind, titreTypeId: TitreTypeId, isEtapeDateEnough: boolean): CaminoDate | null => {
   let dateDebut = null

@@ -24,7 +24,7 @@ const defaultOptions: { [key in keyof Omit<DemarcheType<DemarcheTypeId>, keyof D
 }
 
 // prettier-ignore
-const IDS = ["amo", "aom", "ces", "con", "dam", "dec", "dep", "dot", "exp", "exs", "fus", "mut", "oct", "pr1", "pr2", "pre", "pro", "prr", "ren", "res", "ret", "vct", "vut",] as const
+const IDS = ["amo", "aom", "ces", "con", "dam", "dec", "dep", "dot", "exp", "exs", "fus", "mut", "oct", "pr1", "pr2", "pre", "pro", "prr", "rec", "rep", "res", "ret", "vct", "vut",] as const
 
 export const DEMARCHES_TYPES_IDS = {
   Amodiation: 'amo',
@@ -45,7 +45,8 @@ export const DEMARCHES_TYPES_IDS = {
   ProlongationExceptionnelle: 'pre',
   Prolongation: 'pro',
   Prorogation: 'prr',
-  Renonciation: 'ren',
+  RenonciationTotale: 'rec',
+  RenonciationPartielle: 'rep',
   ResiliationAnticipeeDAmodiation: 'res',
   Retrait: 'ret',
   DemandeDeTitreDExploitation: 'vct',
@@ -217,15 +218,26 @@ export const DemarchesTypes = {
     points: true,
     renouvelable: true,
   },
-  ren: {
+  rec: {
     ...defaultOptions,
-    id: 'ren',
-    nom: 'renonciation',
+    id: 'rec',
+    nom: 'renonciation totale',
     description:
-      "Démarche appliquée à une autorisation ou un titre minier pour anticiper son échéance. Elle peut porter sur tout ou partie du périmètre. Cela est possible sous réserve d'avoir procédé aux mesures de remise en état dont le préfet lui aura a donné acte définitivement. La renonciation a pour effet de replacer le gisement dans la catégorie de ceux ouverts aux recherches.",
+      "Démarche appliquée à une autorisation ou un titre minier pour anticiper son échéance. Cela est possible sous réserve d'avoir procédé aux mesures de remise en état dont le préfet lui aura a donné acte définitivement. La renonciation a pour effet de replacer le gisement dans la catégorie de ceux ouverts aux recherches.",
     duree: true,
     points: true,
     titulaires: true,
+    renouvelable: true,
+  },
+  rep: {
+    ...defaultOptions,
+    id: 'rep',
+    nom: 'renonciation partielle',
+    description:
+      "Démarche appliquée à une autorisation ou un titre minier pour anticiper son échéance. Elle porte sur une partie du périmètre. Cela est possible sous réserve d'avoir procédé aux mesures de remise en état dont le préfet lui aura a donné acte définitivement. La renonciation a pour effet de replacer le gisement dans la catégorie de ceux ouverts aux recherches.",
+    duree: false,
+    points: true,
+    titulaires: false,
     renouvelable: true,
   },
   res: {

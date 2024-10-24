@@ -569,7 +569,7 @@ describe("publicité d'une démarche", () => {
     ).toMatchObject({ publicLecture: false })
   })
 
-  test.each<DemarcheTypeId>(['ren', 'pro'])("une démarche %s dont l'étape la plus récente est le dépot de la demande n'est pas publique", demarcheTypeId => {
+  test.each<DemarcheTypeId>(['rec', 'rep', 'pro'])("une démarche %s dont l'étape la plus récente est le dépot de la demande n'est pas publique", demarcheTypeId => {
     expect(
       titreDemarchePublicFind(
         {
@@ -601,7 +601,7 @@ describe("publicité d'une démarche", () => {
     ).toMatchObject({ publicLecture: false })
   })
 
-  test.each<DemarcheTypeId>(['ren', 'pro'])("une démarche %s dont l'étape la plus récente est recevabilité de la demande est publique", demarcheTypeId => {
+  test.each<DemarcheTypeId>(['rec', 'rep', 'pro'])("une démarche %s dont l'étape la plus récente est recevabilité de la demande est publique", demarcheTypeId => {
     expect(
       titreDemarchePublicFind(
         {
@@ -635,7 +635,7 @@ describe("publicité d'une démarche", () => {
     ).toMatchObject({ publicLecture: true })
   })
 
-  test.each<DemarcheTypeId>(['ren', 'pro'])("une démarche %s dont l'étape la plus récente est l’expertise de l’onf est publique", demarcheTypeId => {
+  test.each<DemarcheTypeId>(['rep', 'rec', 'pro'])("une démarche %s dont l'étape la plus récente est l’expertise de l’onf est publique", demarcheTypeId => {
     expect(
       titreDemarchePublicFind(
         {
@@ -672,7 +672,7 @@ describe("publicité d'une démarche", () => {
     ).toMatchObject({ publicLecture: true })
   })
 
-  test.each<DemarcheTypeId>(['ren', 'pro'])("une démarche %s dont l'étape la plus récente est la décision de classement sans suite est publique", demarcheTypeId => {
+  test.each<DemarcheTypeId>(['rep', 'rec', 'pro'])("une démarche %s dont l'étape la plus récente est la décision de classement sans suite est publique", demarcheTypeId => {
     expect(
       titreDemarchePublicFind(
         {
@@ -706,7 +706,7 @@ describe("publicité d'une démarche", () => {
     ).toMatchObject({ publicLecture: true })
   })
 
-  test.each<DemarcheTypeId>(['ren', 'pro'])("une démarche %s dont l'étape la plus récente est le désistement est publique", demarcheTypeId => {
+  test.each<DemarcheTypeId>(['rep', 'rec', 'pro'])("une démarche %s dont l'étape la plus récente est le désistement est publique", demarcheTypeId => {
     // sans machine
     expect(
       titreDemarchePublicFind(

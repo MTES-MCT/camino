@@ -83,8 +83,12 @@ exports[`canEditAmodiataires by demarcheTypeId 1`] = `
     "required": false,
     "visibility": "present",
   },
-  "Renonciation": {
-    "message": "une démarche renonciation ne peut pas inclure d'amodiataire",
+  "RenonciationPartielle": {
+    "message": "une démarche renonciation partielle ne peut pas inclure d'amodiataire",
+    "visibility": "absent",
+  },
+  "RenonciationTotale": {
+    "message": "une démarche renonciation totale ne peut pas inclure d'amodiataire",
     "visibility": "absent",
   },
   "ResiliationAnticipeeDAmodiation": {
@@ -196,8 +200,13 @@ exports[`canEditPerimetre by demarcheTypeId 1`] = `
     "required": true,
     "visibility": "present",
   },
-  "Renonciation": {
-    "message": "une démarche renonciation ne peut pas inclure de périmètre",
+  "RenonciationPartielle": {
+    "message": "le périmètre est obligatoire pour une démarche renonciation partielle",
+    "required": true,
+    "visibility": "present",
+  },
+  "RenonciationTotale": {
+    "message": "une démarche renonciation totale ne peut pas inclure de périmètre",
     "visibility": "absent",
   },
   "ResiliationAnticipeeDAmodiation": {
@@ -310,8 +319,12 @@ exports[`canEditTitulaires by demarcheTypeId 1`] = `
     "required": true,
     "visibility": "present",
   },
-  "Renonciation": {
-    "message": "une démarche renonciation ne peut pas inclure de titulaire",
+  "RenonciationPartielle": {
+    "message": "une démarche renonciation partielle ne peut pas inclure de titulaire",
+    "visibility": "absent",
+  },
+  "RenonciationTotale": {
+    "message": "une démarche renonciation totale ne peut pas inclure de titulaire",
     "visibility": "absent",
   },
   "ResiliationAnticipeeDAmodiation": {

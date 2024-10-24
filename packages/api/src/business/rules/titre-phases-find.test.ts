@@ -343,7 +343,7 @@ describe("phases d'une démarche", () => {
           {
             titreId: newTitreId('titreId'),
             id: newDemarcheId('h-cx-courdemanges-1988-ren01'),
-            typeId: 'ren',
+            typeId: 'rec',
             statutId: 'acc',
             ordre: 2,
             etapes: [
@@ -410,7 +410,7 @@ describe("phases d'une démarche", () => {
           {
             titreId: newTitreId('titreId'),
             id: newDemarcheId('h-cx-courdemanges-1988-ren01'),
-            typeId: 'ren',
+            typeId: 'rep',
             statutId: 'acc',
             ordre: 2,
             etapes: [
@@ -1056,7 +1056,7 @@ describe("phases d'une démarche", () => {
       {
         id: newDemarcheId('demarcheId3'),
         titreId: newTitreId('titreId'),
-        typeId: 'ren',
+        typeId: 'rec',
         statutId: 'acc',
         ordre: 3,
         etapes: [
@@ -1215,7 +1215,7 @@ describe("phases d'une démarche", () => {
       {
         id: newDemarcheId('demarcheId3'),
         titreId: newTitreId('titreId'),
-        typeId: 'ren',
+        typeId: 'rec',
         statutId: 'acc',
         ordre: 3,
         etapes: [

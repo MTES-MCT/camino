@@ -6,7 +6,8 @@ const demarchesEverywhere = [
   DEMARCHES_TYPES_IDS.DeclarationDArretDefinitifDesTravaux,
   DEMARCHES_TYPES_IDS.DeclarationDOuvertureDeTravaux,
   DEMARCHES_TYPES_IDS.Octroi,
-  DEMARCHES_TYPES_IDS.Renonciation,
+  DEMARCHES_TYPES_IDS.RenonciationTotale,
+  DEMARCHES_TYPES_IDS.RenonciationPartielle,
   DEMARCHES_TYPES_IDS.Retrait,
 ]
 

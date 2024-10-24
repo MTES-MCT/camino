@@ -25,7 +25,8 @@ const demarcheTypeIdsCxPr_G: DemarcheTypeId[] = [
   DEMARCHES_TYPES_IDS.DeplacementDePerimetre,
   DEMARCHES_TYPES_IDS.Fusion,
   DEMARCHES_TYPES_IDS.MutationPartielle,
-  DEMARCHES_TYPES_IDS.Renonciation,
+  DEMARCHES_TYPES_IDS.RenonciationTotale,
+  DEMARCHES_TYPES_IDS.RenonciationPartielle,
   DEMARCHES_TYPES_IDS.ResiliationAnticipeeDAmodiation,
   DEMARCHES_TYPES_IDS.Retrait,
 ]
@@ -42,7 +43,7 @@ export const demarchesDefinitions = [
   },
   {
     titreTypeIds: ['arm'],
-    demarcheTypeIds: ['ren', 'pro'],
+    demarcheTypeIds: [DEMARCHES_TYPES_IDS.RenonciationTotale, DEMARCHES_TYPES_IDS.RenonciationPartielle, DEMARCHES_TYPES_IDS.Prolongation],
     dateDebut: toCaminoDate('2019-10-31'),
     demarcheIdExceptions: [],
     machineId: 'ArmRenPro',

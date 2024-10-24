@@ -35,7 +35,7 @@ const titreEtapesDecisivesDemandesTypes: EtapeTypeId[] = [
   ...titreEtapesDecisivesCommunesTypes,
 ]
 
-const titreDemarchesDemandesTypes: DemarcheTypeId[] = ['oct', 'pro', 'pr1', 'pr2', 'pre', 'ren', 'fus', 'exp', 'exs', 'mut', 'vut', 'amo', 'res', 'ces', 'dep', 'vct']
+const titreDemarchesDemandesTypes: DemarcheTypeId[] = ['oct', 'pro', 'pr1', 'pr2', 'pre', 'rec', 'rep', 'fus', 'exp', 'exs', 'mut', 'vut', 'amo', 'res', 'ces', 'dep', 'vct']
 
 const titreDemarchesTravauxTypes = ['aom', 'dam', 'dot'] as const satisfies readonly TravauxIds[]
 

@@ -340,7 +340,10 @@ const TDEDocumentsTypes = {
   [TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_GEOTHERMIE]: {
     [DEMARCHES_TYPES_IDS.MutationPartielle]: { [ETAPES_TYPES.decisionDeLAutoriteAdministrative]: { [DOCUMENTS_TYPES_IDS.arrete]: { optionnel: true } } },
   },
-  [TITRES_TYPES_IDS.CONCESSION_METAUX]: { [DEMARCHES_TYPES_IDS.Renonciation]: { [ETAPES_TYPES.decisionImplicite]: { [DOCUMENTS_TYPES_IDS.courrier]: { optionnel: true } } } },
+  [TITRES_TYPES_IDS.CONCESSION_METAUX]: {
+    [DEMARCHES_TYPES_IDS.RenonciationTotale]: { [ETAPES_TYPES.decisionImplicite]: { [DOCUMENTS_TYPES_IDS.courrier]: { optionnel: true } } },
+    [DEMARCHES_TYPES_IDS.RenonciationPartielle]: { [ETAPES_TYPES.decisionImplicite]: { [DOCUMENTS_TYPES_IDS.courrier]: { optionnel: true } } },
+  },
   [TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX]: {
     [DEMARCHES_TYPES_IDS.Octroi]: {
       [ETAPES_TYPES.decisionDuProprietaireDuSol]: { [DOCUMENTS_TYPES_IDS.lettre]: { optionnel: false, description: "Avis suite à la demande d'accord du propriétaire du sol" } },

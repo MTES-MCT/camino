@@ -143,7 +143,7 @@ const titreDemarchePublicLectureFind = (
   // et que l’expertise de l’onf est cours (recevabilité de la demande faite), ou si la démarche a été désistée ou si classée sans suite
   if (
     titreTypeId === TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX &&
-    [DEMARCHES_TYPES_IDS.Renonciation, DEMARCHES_TYPES_IDS.Prolongation].includes(demarcheTypeId) &&
+    [DEMARCHES_TYPES_IDS.RenonciationPartielle, DEMARCHES_TYPES_IDS.RenonciationTotale, DEMARCHES_TYPES_IDS.Prolongation].includes(demarcheTypeId) &&
     [ETAPES_TYPES.recevabiliteDeLaDemande, ETAPES_TYPES.classementSansSuite, ETAPES_TYPES.desistementDuDemandeur].includes(titreEtape.typeId)
   ) {
     return true

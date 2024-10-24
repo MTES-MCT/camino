@@ -40,7 +40,8 @@ export const canEditAmodiataires = (titreTypeId: TitreTypeId, demarcheTypeId: De
       DEMARCHES_TYPES_IDS.Fusion,
       DEMARCHES_TYPES_IDS.Mutation,
       DEMARCHES_TYPES_IDS.MutationPartielle,
-      DEMARCHES_TYPES_IDS.Renonciation,
+      DEMARCHES_TYPES_IDS.RenonciationTotale,
+      DEMARCHES_TYPES_IDS.RenonciationPartielle,
       DEMARCHES_TYPES_IDS.Conversion,
       DEMARCHES_TYPES_IDS.DeplacementDePerimetre,
       DEMARCHES_TYPES_IDS.ResiliationAnticipeeDAmodiation,
@@ -84,7 +85,8 @@ export const canEditTitulaires = (_titreTypeId: TitreTypeId, demarcheTypeId: Dem
   if (
     [
       DEMARCHES_TYPES_IDS.Fusion,
-      DEMARCHES_TYPES_IDS.Renonciation,
+      DEMARCHES_TYPES_IDS.RenonciationTotale,
+      DEMARCHES_TYPES_IDS.RenonciationPartielle,
       DEMARCHES_TYPES_IDS.Amodiation,
       DEMARCHES_TYPES_IDS.Conversion,
       DEMARCHES_TYPES_IDS.DeplacementDePerimetre,
@@ -120,7 +122,7 @@ export const canEditPerimetre = (demarcheTypeId: DemarcheTypeId, etapeTypeId: Et
     [
       DEMARCHES_TYPES_IDS.Fusion,
       DEMARCHES_TYPES_IDS.Mutation,
-      DEMARCHES_TYPES_IDS.Renonciation,
+      DEMARCHES_TYPES_IDS.RenonciationTotale,
       DEMARCHES_TYPES_IDS.Amodiation,
       DEMARCHES_TYPES_IDS.Conversion,
       DEMARCHES_TYPES_IDS.ResiliationAnticipeeDAmodiation,
