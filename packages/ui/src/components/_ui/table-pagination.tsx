@@ -27,17 +27,6 @@ export const getInitialParams = <ColumnId extends string>(route: Pick<CaminoRout
 
 const getPageNumberFromRoute = (route: Pick<CaminoRouteLocation, 'query'>) => routerQueryToNumber(route.query.page, 1)
 export const TablePagination = defineComponent(<ColumnId extends string>(props: Props<ColumnId>) => {
-  watch(
-    () => props.data,
-    () => {
-      // TODO 2023-07-06 si on met un ref sur la div, le scrollIntoView pète le layout des onglets... à retester plus tard
-      const main = document.querySelector<HTMLElement>('main')
-      if (main) {
-        main.scrollIntoView(true)
-      }
-    }
-  )
-
   const initParams = getInitialParams(props.route, props.columns)
 
   const colonne = ref<ColumnId>(initParams.colonne) as Ref<ColumnId>

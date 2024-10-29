@@ -152,8 +152,11 @@ export const Filters = defineComponent((props: Props) => {
 
   const debounce = createDebounce()
 
-  watch(urlQuery, () => {
-    debounce(() => props.updateUrlQuery.push(urlQuery.value), 500)
+  watch(urlQuery, (newValue, old) => {
+    // TODO 2024-10-29 la pagination redéclenche la computed urlQuery, qui trigger un updateUrlQuery qui remet la pagination à 1...
+    if (JSON.stringify(old) !== JSON.stringify(newValue)) {
+      debounce(() => props.updateUrlQuery.push(newValue), 500)
+    }
   })
 
   const refreshLabels = async () => {
