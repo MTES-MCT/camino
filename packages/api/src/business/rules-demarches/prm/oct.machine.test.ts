@@ -39,6 +39,22 @@ describe('vérifie l’arbre d’octroi de PRM', () => {
     `)
   })
 
+  test('peut classer sans suite une demande déposée, qui reste confidentielle', () => {
+    const { service, etapes, dateFin } = setDateAndOrderAndInterpretMachine(prmOctMachine, '2022-07-01', [
+      ETES.demande.FAIT,
+      ETES.depotDeLaDemande.FAIT,
+      ETES.saisineDuPrefet.FAIT,
+      ETES.classementSansSuite.FAIT,
+    ])
+    expect(service).canOnlyTransitionTo({ machine: prmOctMachine, date: dateFin }, [])
+    expect(prmOctMachine.demarcheStatut(etapes)).toMatchInlineSnapshot(`
+    {
+      "demarcheStatut": "cls",
+      "publique": false,
+    }
+  `)
+  })
+
   test('peut créer une demande d’octroi de PRM en Guyane', () => {
     const etapes = [
       { ...ETES.demande.FAIT, paysId: PAYS_IDS['Département de la Guyane'], surface: 200 },

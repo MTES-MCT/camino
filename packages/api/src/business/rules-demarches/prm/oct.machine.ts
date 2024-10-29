@@ -251,10 +251,10 @@ const prmOctMachine = createMachine({
     },
     CLASSER_SANS_SUITE: {
       target: '.done',
-      guard: ({ context }) => context.demarcheStatut === DemarchesStatutsIds.EnInstruction,
+      guard: ({ context }) => context.demarcheStatut === DemarchesStatutsIds.EnInstruction || context.demarcheStatut === DemarchesStatutsIds.Depose,
       actions: assign({
         demarcheStatut: DemarchesStatutsIds.ClasseSansSuite,
-        visibilite: 'publique',
+        visibilite: ({ context }) => (context.demarcheStatut === DemarchesStatutsIds.Depose ? 'confidentielle' : 'publique'),
       }),
     },
   },
