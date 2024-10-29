@@ -3,13 +3,13 @@ import { getEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStat
 import { CaminoDate } from 'camino-common/src/date'
 import { HTMLAttributes, computed, defineComponent, ref, watch } from 'vue'
 import { EtapeCaminoFiltres } from '../_ui/filters/camino-filtres'
-import { caminoFiltres } from 'camino-common/src/filters'
-import { EtapeStatutId, isStatut } from 'camino-common/src/static/etapesStatuts'
-import { isEventWithTarget } from '@/utils/vue-tsx-utils'
-import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
+import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts'
+import { isNotNullNorUndefined, map } from 'camino-common/src/typescript-tools'
 import { TypeAheadSingle } from '../_ui/typeahead-single'
 import { DsfrInput } from '../_ui/dsfr-input'
 import { DsfrButtonIcon } from '../_ui/dsfr-button'
+import { capitalize } from 'camino-common/src/strings'
+import { DsfrSelect } from '../_ui/dsfr-select'
 
 export type FilterEtapeValue = {
   typeId: EtapeTypeId | ''
@@ -33,7 +33,6 @@ export const FiltresEtapes = defineComponent<Props>(props => {
     { deep: true }
   )
   const clonedValues = ref<FilterEtapeValue[]>(props.initialValues.map(value => ({ ...value })))
-  const fullFilter = computed(() => caminoFiltres[props.filter])
   const dateDebutChanged = (n: number) => (date: CaminoDate | null) => {
     if (date !== clonedValues.value[n].dateDebut) {
       clonedValues.value[n].dateDebut = date
@@ -62,28 +61,17 @@ export const FiltresEtapes = defineComponent<Props>(props => {
     props.valuesSelected(clonedValues.value)
   }
 
-  const statutValueSelected = (n: number, event: Event) => {
-    if (isEventWithTarget(event)) {
-      if (event.target.value === '') {
-        delete clonedValues.value[n].statutId
-      } else if (isStatut(event.target.value)) {
-        clonedValues.value[n].statutId = event.target.value
-      }
-      props.valuesSelected(clonedValues.value)
-    }
+  const statutValueSelected = (n: number) => (newStatut: null | EtapeStatutId) => {
+    clonedValues.value[n].statutId = newStatut ?? undefined
+    props.valuesSelected(clonedValues.value)
   }
 
-  // TODO 2023-07-13 mettre un composant typeahead pour les types d'étapes plutôt qu'un select de l'enfer
   return () => (
-    <div>
-      <h5>{fullFilter.value.name}</h5>
-      <hr class="mb-s" />
-
+    <div style={{ display: 'flex', flexDirection: 'column', fontWeight: 'normal', gap: '1rem' }}>
       {clonedValues.value.map((value, n) => (
-        <div key={n}>
-          <div class="flex mb-s" style={{ alignItems: 'center' }}>
+        <div key={n} class="fr-p-2w fr-tile--shadow" style={{ display: 'flex', flexDirection: 'column', fontWeight: 'normal', gap: '1rem' }}>
+          <div class="flex" style={{ alignItems: 'center' }}>
             <EtapeTypeSearch
-              class="p-s mr-s"
               index={n}
               initialEtapeTypeId={value.typeId !== '' ? value.typeId : null}
               selectedEtapeType={etapeType => {
@@ -91,48 +79,21 @@ export const FiltresEtapes = defineComponent<Props>(props => {
                 valueReset(n)
               }}
             />
-            <DsfrButtonIcon onClick={() => valueRemove(n)} icon="fr-icon-delete-bin-line" title="Supprime la valeur" buttonType="tertiary" />
+            <DsfrButtonIcon class="fr-ml-1w" onClick={() => valueRemove(n)} icon="fr-icon-delete-bin-line" title="Supprime la valeur" buttonType="tertiary" />
           </div>
           {value.typeId ? (
-            <div>
-              <div class="blobs mb-s">
-                <div class="blob-1-4">
-                  <h5 class="mb-0">Statut</h5>
-                  <p class="h6 italic mb-0">Optionnel</p>
-                </div>
-                <div class="blob-3-4">
-                  <select class="p-s mr-s" onChange={event => statutValueSelected(n, event)}>
-                    <option value="">–</option>
-                    {getEtapesStatuts(value.typeId).map(statut => (
-                      <option key={statut.id} value={statut.id} selected={value.statutId === statut.id}>
-                        {statut.nom}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-              <div class="blobs mb-s">
-                <div class="blob-1-4">
-                  <h5 class="mb-0">Après le</h5>
-                  <p class="h6 italic mb-0">Optionnel</p>
-                </div>
-                <div class="blob-3-4">
-                  <DsfrInput initialValue={value.dateDebut} legend={{ main: '' }} type={{ type: 'date' }} valueChanged={dateDebutChanged(n)} />
-                </div>
-              </div>
-              <div class="blobs mb-s">
-                <div class="blob-1-4">
-                  <h5 class="mb-0">Avant le</h5>
-                  <p class="h6 italic mb-0">Optionnel</p>
-                </div>
-                <div class="blob-3-4">
-                  <DsfrInput initialValue={value.dateFin} legend={{ main: '' }} type={{ type: 'date' }} valueChanged={dateFinChanged(n)} />
-                </div>
-              </div>
-            </div>
+            <>
+              <DsfrSelect
+                class="fr-mb-0"
+                initialValue={value.statutId ?? null}
+                legend={{ main: 'Statut' }}
+                items={map(getEtapesStatuts(value.typeId), ({ id, nom }) => ({ id, label: nom }))}
+                valueChanged={statutValueSelected(n)}
+              />
+              <DsfrInput initialValue={value.dateDebut} legend={{ main: 'Après le' }} type={{ type: 'date' }} valueChanged={dateDebutChanged(n)} />
+              <DsfrInput initialValue={value.dateFin} legend={{ main: 'Avant le' }} type={{ type: 'date' }} valueChanged={dateFinChanged(n)} />
+            </>
           ) : null}
-
-          <hr class="mb-s" />
         </div>
       ))}
 
@@ -181,7 +142,7 @@ const EtapeTypeSearch = defineComponent<EtapeTypeSearchProps>(props => {
         items: items.value,
         minInputLength: 0,
         itemKey: 'id',
-        itemChipLabel: item => item.nom,
+        itemChipLabel: item => capitalize(item.nom),
         onSelectItem,
         onInput: onInputSearchEtapeType,
       }}

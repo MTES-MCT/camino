@@ -1,4 +1,4 @@
-import { getEntriesHardcore } from '../typescript-tools'
+import { getEntriesHardcore, NonEmptyArray } from '../typescript-tools'
 import { EtapesStatuts, EtapeStatut, EtapeStatutId, ETAPES_STATUTS } from './etapesStatuts'
 import { ETAPES_TYPES, EtapeTypeId } from './etapesTypes'
 
@@ -246,7 +246,7 @@ type GetStuff<T> = T extends { [key in keyof typeof ETAPES_TYPES]: { [other in k
 export type EtapeTypeEtapeStatutValidPair = GetStuff<typeof EtapesTypesEtapesStatuts>
 
 const etapesTypeEntries = getEntriesHardcore(ETAPES_TYPES)
-export const getEtapesStatuts = (etapeTypeIdToFind: EtapeTypeId): EtapeStatut[] => {
+export const getEtapesStatuts = (etapeTypeIdToFind: EtapeTypeId): NonEmptyArray<EtapeStatut> => {
   const entry = etapesTypeEntries.find(([_key, value]) => value === etapeTypeIdToFind)
   if (!entry) {
     throw new Error("Cas impossible, cet etapeTypeId n'existe pas")
@@ -254,5 +254,5 @@ export const getEtapesStatuts = (etapeTypeIdToFind: EtapeTypeId): EtapeStatut[] 
   const etapesTypesEtapesStatutsKey = entry[0]
   const tuple = EtapesTypesEtapesStatuts[etapesTypesEtapesStatutsKey]
 
-  return Object.values(tuple).map(({ etapeStatutId }: { etapeStatutId: EtapeStatutId }) => EtapesStatuts[etapeStatutId])
+  return Object.values(tuple).map(({ etapeStatutId }: { etapeStatutId: EtapeStatutId }) => EtapesStatuts[etapeStatutId]) as NonEmptyArray<EtapeStatut>
 }
