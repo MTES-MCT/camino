@@ -1,6 +1,6 @@
 import { test, expect } from 'vitest'
-import { isRadioElement, simpleContenuToFlattenedContenu, valeurFind } from './sections'
-import { caminoDateValidator } from './date'
+import { flattenContenuToSimpleContenu, isRadioElement, simpleContenuToFlattenedContenu, valeurFind } from './sections'
+import { caminoDateValidator, toCaminoDate } from './date'
 
 test('valeurFind', () => {
   expect(valeurFind({ id: 'camino', type: 'text', value: null, optionnel: false })).toBe('–')
@@ -19,6 +19,15 @@ test('valeurFind', () => {
       optionnel: false,
     })
   ).toBe('A, B')
+  expect(
+    valeurFind({
+      id: 'camino',
+      type: 'checkboxes',
+      value: ['c'],
+      options: [{ id: 'a', nom: 'A' }],
+      optionnel: false,
+    })
+  ).toBe('–')
   expect(
     valeurFind({
       id: 'camino',
@@ -60,6 +69,7 @@ test('valeurFind', () => {
   expect(valeurFind({ id: 'camino', type: 'radio', value: false, optionnel: false })).toBe('Non')
   expect(valeurFind({ id: 'camino', type: 'checkbox', value: true, optionnel: false })).toBe('Oui')
   expect(valeurFind({ id: 'camino', type: 'checkbox', value: false, optionnel: false })).toBe('Non')
+  expect(valeurFind({ id: 'camino', type: 'checkbox', value: null, optionnel: false })).toBe('–')
   expect(valeurFind({ id: 'camino', type: 'url', value: 'test', optionnel: false })).toBe('test')
 })
 
@@ -125,4 +135,64 @@ test('simpleContenuToFlattenedContenu', () => {
         },
       }
     `)
+  expect(
+    simpleContenuToFlattenedContenu(
+      'arm',
+      'oct',
+      'mfr',
+      { arm: {} },
+      { arm: { mecanise: { actif: true, etape: { date: caminoDateValidator.parse('2023-02-02'), typeId: 'mfr', contenu: { arm: {} } } } } }
+    )
+  ).toMatchInlineSnapshot(`
+        {
+          "arm": {
+            "franchissements": {
+              "etapeHeritee": null,
+              "heritee": false,
+              "value": null,
+            },
+            "mecanise": {
+              "etapeHeritee": {
+                "date": "2023-02-02",
+                "etapeTypeId": "mfr",
+                "value": null,
+              },
+              "heritee": true,
+              "value": null,
+            },
+          },
+        }
+      `)
+})
+
+test('flattenContenuToSimpleContenu', () => {
+  expect(
+    flattenContenuToSimpleContenu({
+      plop: undefined,
+      arm: {
+        franchissements: {
+          etapeHeritee: null,
+          heritee: false,
+          value: null,
+        },
+        mecanise: {
+          etapeHeritee: {
+            date: toCaminoDate('2023-02-02'),
+            etapeTypeId: 'mfr',
+            value: false,
+          },
+          heritee: false,
+          value: true,
+        },
+      },
+    })
+  ).toMatchInlineSnapshot(`
+    {
+      "arm": {
+        "franchissements": null,
+        "mecanise": true,
+      },
+      "plop": {},
+    }
+  `)
 })

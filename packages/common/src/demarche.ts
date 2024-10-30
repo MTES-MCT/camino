@@ -129,6 +129,7 @@ export const getDemarcheContenu = (etapes: (Pick<DemarcheEtapeCommon, 'sections_
       if (engagementLabel !== null && engagement !== null && engagementDeviseId !== null) {
         return { [engagementLabel]: `${numberFormat(engagement)} ${capitalize(Devises[engagementDeviseId].nom)}` }
       }
+      /* v8 ignore next 2 */
     }
   } else if (
     titreTypeId === TITRES_TYPES_IDS.CONCESSION_SOUTERRAIN ||

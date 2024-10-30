@@ -1,8 +1,9 @@
 import { describe, expect, test } from 'vitest'
-import { TitrePropTitreEtapeFindDemarcheEtape, getMostRecentValuePropFromEtapeFondamentaleValide } from './titres'
+import { TitrePropTitreEtapeFindDemarcheEtape, createAutomaticallyEtapeWhenCreatingTitre, getMostRecentValuePropFromEtapeFondamentaleValide } from './titres'
 import { toCaminoDate } from './date'
 import { entrepriseIdValidator } from './entreprise'
 import { ETAPE_IS_BROUILLON, ETAPE_IS_NOT_BROUILLON } from './etape'
+import { testBlankUser } from './tests-utils'
 describe('getMostRecentValuePropFromEtapeFondamentaleValide', () => {
   test("retourne le titulaire de la demande même si elle est en brouillon, si elle est l'unique étape", () => {
     const asl: TitrePropTitreEtapeFindDemarcheEtape = {
@@ -75,6 +76,10 @@ describe('getMostRecentValuePropFromEtapeFondamentaleValide', () => {
           etapes: [dpu, dex],
           ordre: 1,
         },
+        {
+          etapes: [],
+          ordre: 2,
+        },
       ])
     ).toStrictEqual(dpu.fondamentale.titulaireIds)
 
@@ -134,4 +139,9 @@ describe('getMostRecentValuePropFromEtapeFondamentaleValide', () => {
       ])
     ).toStrictEqual(240)
   })
+})
+
+test('createAutomaticallyEtapeWhenCreatingTitre', () => {
+  expect(createAutomaticallyEtapeWhenCreatingTitre({ ...testBlankUser, role: 'entreprise', entrepriseIds: [entrepriseIdValidator.parse('id')] })).toBe(true)
+  expect(createAutomaticallyEtapeWhenCreatingTitre({ ...testBlankUser, role: 'super' })).toBe(false)
 })

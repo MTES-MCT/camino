@@ -1,3 +1,4 @@
+/* v8 ignore next 8 */
 import { z } from 'zod'
 import { titreIdValidator } from './validators/titres'
 

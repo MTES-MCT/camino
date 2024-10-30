@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest'
 import { AdministrationId } from '../static/administrations'
-import { canEditDemarche, canCreateTravaux, canDeleteDemarche, canCreateDemarche, canPublishResultatMiseEnConcurrence } from './titres-demarches'
+import { canEditDemarche, canCreateTravaux, canDeleteDemarche, canCreateDemarche, canPublishResultatMiseEnConcurrence, canCreateEtapeByDemarche } from './titres-demarches'
 import { testBlankUser, TestUser } from '../tests-utils'
 import { TitresStatutIds } from '../static/titresStatuts'
 import { caminoDateValidator, dateAddDays, toCaminoDate } from '../date'
@@ -217,4 +217,8 @@ describe('canPublishResultatMiseEnConcurrence', () => {
       }
     `)
   })
+})
+
+test('canCreateEtapeByDemarche', () => {
+  canCreateEtapeByDemarche({ ...testBlankUser, role: 'super' }, 'arm', 'oct', [], 'dmi')
 })

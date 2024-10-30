@@ -88,6 +88,8 @@ export const canEditActivite = async (
     const entrepriseFetched = await entreprises()
 
     return user.entrepriseIds.some(entrepriseId => entrepriseFetched.includes(entrepriseId)) && [ACTIVITES_STATUTS_IDS.ABSENT, ACTIVITES_STATUTS_IDS.EN_CONSTRUCTION].includes(activiteStatutId)
+    // code unreachable due to canReadTitreActivites
+    /* v8 ignore next 4 */
   }
 
   return false

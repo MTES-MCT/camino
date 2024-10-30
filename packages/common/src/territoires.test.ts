@@ -8,7 +8,6 @@ describe('territoiresFind', () => {
         {
           [toCommuneId('72500')]: 'Flée',
           [toCommuneId('72200')]: 'Montval-sur-loir',
-          [toCommuneId('37000')]: 'Tours',
         },
         [
           { id: toCommuneId('72500'), surface: 100000 },
@@ -35,7 +34,7 @@ describe('territoiresFind', () => {
             "surface": 0.105,
           },
           {
-            "nom": "Tours",
+            "nom": "",
             "surface": 0.1,
           },
         ],

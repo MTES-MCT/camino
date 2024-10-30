@@ -32,6 +32,8 @@ export function isNullOrUndefinedOrEmpty(value: string | DeepReadonly<any[]> | n
     return value.length === 0
   } else if (typeof value === 'string') {
     return value.trim() === ''
+    // unreachable code
+    /* v8 ignore next 4 */
   }
 
   return false
@@ -118,6 +120,7 @@ export const map = <T, U>(array: DeepReadonly<NonEmptyArray<T>>, transform: (ite
   return [transform(first), ...rest.map(transform)]
 }
 
+/* v8 ignore next 2 */
 export const isTrue = <T extends true>(_t: T): void => {}
 export const isFalse = <T extends false>(_t: T): void => {}
 

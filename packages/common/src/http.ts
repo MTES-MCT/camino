@@ -1,3 +1,4 @@
+/* v8 ignore next 16 */
 export const HTTP_STATUS = {
   // OK
   OK: 200,

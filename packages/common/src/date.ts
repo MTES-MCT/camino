@@ -81,16 +81,11 @@ export function toCaminoAnnee(annee: string | number): CaminoAnnee {
 
 export const dateValidate = (str: CaminoDate | string | undefined | null): { valid: true; date: CaminoDate } | { valid: false; error: 'Date manquante' | 'Date invalide' } => {
   if (isNullOrUndefined(str)) return { valid: false, error: 'Date manquante' }
-
-  if (typeof str === 'string') {
-    try {
-      return { valid: true, date: toCaminoDate(str) }
-    } catch (e) {
-      return { valid: false, error: 'Date invalide' }
-    }
+  try {
+    return { valid: true, date: toCaminoDate(str) }
+  } catch (e) {
+    return { valid: false, error: 'Date invalide' }
   }
-
-  return { valid: true, date: str }
 }
 
 export const intervalleAnnees = (anneeDepart: CaminoAnnee, anneeArrivee: CaminoAnnee): CaminoAnnee[] => {

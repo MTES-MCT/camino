@@ -5,6 +5,7 @@ import { proprietesGeothermieForagesElementIds } from './static/titresTypes_dema
 import { ETAPES_TYPES } from './static/etapesTypes'
 import { toCaminoDate } from './date'
 import { DEMARCHES_TYPES_IDS } from './static/demarchesTypes'
+import { TITRES_TYPES_IDS, TitreTypeId } from './static/titresTypes'
 
 test('getDemarcheContenu arm', () => {
   expect(
@@ -161,7 +162,67 @@ test('getDemarcheContenu prm', () => {
     }
   `)
 })
-test('getDemarcheContenu cxw', () => {
+test('getDemarcheContenu prm edgeCasess', () => {
+  expect(
+    getDemarcheContenu(
+      [
+        {
+          sections_with_values: [
+            {
+              id: 'prx',
+              nom: 'Propriétés du permis exclusif de recherches',
+              elements: [
+                { id: 'engagement', optionnel: true, type: 'number', value: 3201430 },
+                {
+                  id: 'engagementDeviseId',
+                  nom: "Devise de l'engagement",
+                  description: '',
+                  optionnel: true,
+                  type: 'select',
+                  options: [
+                    { id: 'EUR', nom: 'Euros' },
+                    { id: 'FRF', nom: 'Francs' },
+                    { id: 'XPF', nom: 'Francs Pacifique' },
+                  ],
+                  value: 'NET',
+                },
+              ],
+            },
+            {
+              id: 'publication',
+              nom: 'Références Légifrance',
+              elements: [
+                { id: 'jorf', nom: 'Numéro JORF', description: '', optionnel: false, type: 'text', value: 'JORFTEXT000000774145' },
+                { id: 'nor', nom: 'Numéro NOR', description: '', optionnel: true, type: 'text', value: 'ECOI0100462D' },
+              ],
+            },
+          ],
+          etape_type_id: 'dpu',
+        },
+      ],
+      'prm'
+    )
+  ).toMatchInlineSnapshot(`
+    {
+      "": "3 201 430 Euros",
+    }
+  `)
+})
+test.each<{ titreTypeId: TitreTypeId; result: unknown }>([
+  {
+    titreTypeId: TITRES_TYPES_IDS.CONCESSION_SOUTERRAIN,
+    result: {
+      Volume: '3 000 000 Mètre cube par an',
+    },
+  },
+  {
+    titreTypeId: TITRES_TYPES_IDS.CONCESSION_GRANULATS_MARINS,
+    result: {
+      Volume: '3 000 000 Mètre cube par an',
+    },
+  },
+  { titreTypeId: TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_GRANULATS_MARINS, result: {} },
+])('getDemarcheContenu %s', ({ titreTypeId, result }) => {
   expect(
     getDemarcheContenu(
       [
@@ -254,15 +315,97 @@ test('getDemarcheContenu cxw', () => {
           etape_type_id: 'dex',
         },
       ],
+      titreTypeId
+    )
+  ).toStrictEqual(result)
+})
+
+test('edge cases', () => {
+  expect(
+    getDemarcheContenu(
+      [
+        {
+          sections_with_values: [
+            {
+              id: 'cxx',
+              nom: 'Propriétés de la concession',
+              elements: [
+                { id: 'volume', optionnel: true, type: 'text', value: 'notANumber' },
+                {
+                  id: 'volumeUniteId',
+                  nom: 'Unité du volume',
+                  description: '',
+                  optionnel: true,
+                  type: 'select',
+                  options: [{ id: 'deg', nom: 'degré' }],
+                  value: 'unknown',
+                },
+              ],
+            },
+          ],
+          etape_type_id: 'dpu',
+        },
+      ],
       'cxw'
     )
   ).toMatchInlineSnapshot(`
+      {
+        "": "0 Mètre cube",
+      }
+    `)
+
+  expect(
+    getDemarcheContenu(
+      [
+        {
+          etape_type_id: 'mfr',
+          sections_with_values: [
+            {
+              id: 'arm',
+              elements: [
+                { id: 'franchissements', type: 'text', value: null, optionnel: false },
+                { id: 'mecanise', type: 'text', value: null, optionnel: false },
+              ],
+            },
+          ],
+        },
+      ],
+      TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX
+    )
+  ).toMatchInlineSnapshot(`
     {
-      "Volume": "3 000 000 Mètre cube par an",
+      "": "Non",
     }
   `)
-})
 
+  expect(
+    getDemarcheContenu(
+      [
+        {
+          etape_type_id: 'mfr',
+          sections_with_values: [
+            {
+              id: 'pxg',
+              elements: [
+                { id: 'volume', type: 'number', value: 12, optionnel: false, uniteId: 'deg' },
+                { id: 'debit', type: 'number', value: 13, optionnel: false, uniteId: 'deg' },
+                { id: 'profondeurToitNappe', type: 'number', value: 13, optionnel: false, uniteId: 'deg' },
+                { id: 'profondeurBaseNappe', type: 'number', value: 13, optionnel: false, uniteId: 'deg' },
+              ],
+            },
+          ],
+        },
+      ],
+      TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_GEOTHERMIE
+    )
+  ).toMatchInlineSnapshot(`
+    {
+      "": "13 undefined",
+    }
+  `)
+
+  expect(getDemarcheContenu([], TITRES_TYPES_IDS.CONCESSION_FOSSILES)).toMatchInlineSnapshot(`{}`)
+})
 test('getDemarcheContenu pxg', () => {
   expect(
     getDemarcheContenu(

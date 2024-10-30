@@ -17,6 +17,7 @@ import {
   isEtapeDeposable,
   InputPresence,
   canEditPerimetre,
+  canDeposeEtape,
 } from './titres-etapes'
 import { AdministrationId, ADMINISTRATION_IDS } from '../static/administrations'
 import { test, expect, describe, vi } from 'vitest'
@@ -78,6 +79,7 @@ test.each<{ titreTypeId: TitreTypeId; demarcheTypeId: DemarcheTypeId; etapeTypeI
   { titreTypeId: 'prm', etapeTypeId: 'mfr', demarcheTypeId: 'dep', user: { role: 'lecteur', administrationId: ADMINISTRATION_IDS.BRGM }, canEdit: false },
   { titreTypeId: 'prm', etapeTypeId: 'mfr', demarcheTypeId: 'exp', user: { role: 'super' }, canEdit: false },
   { titreTypeId: 'prm', etapeTypeId: 'mfr', demarcheTypeId: 'mut', user: { role: 'super' }, canEdit: false },
+  { titreTypeId: 'prm', etapeTypeId: 'dpu', demarcheTypeId: 'dec', user: { role: 'defaut' }, canEdit: false },
 ])('canEditDate $titreTypeId | $demarcheTypeId | $etapeTypeId | $user | $canEdit', ({ titreTypeId, demarcheTypeId, etapeTypeId, user, canEdit }) => {
   expect(canEditDates(titreTypeId, demarcheTypeId, etapeTypeId, { ...user, ...testBlankUser }).visibility === 'present').toEqual(canEdit)
 })
@@ -312,6 +314,13 @@ test('une entreprise peut modifier sa demande mais ne peut pas la supprimer', ()
   expect(canDeleteEtape(user, 'mfr', ETAPE_IS_BROUILLON, [entrepriseId], [], 'oct', { typeId: 'arm', titreStatutId: 'ind' })).toBe(false)
 })
 
+test('canDeleteEtape', () => {
+  const entrepriseId = entrepriseIdValidator.parse('entrepriseId')
+  const user: EntrepriseUserNotNull = { ...testBlankUser, role: 'entreprise', entrepriseIds: [entrepriseId] }
+
+  expect(canDeleteEtape(user, 'mfr', ETAPE_IS_BROUILLON, [entrepriseId], [], 'oct', { typeId: 'arm', titreStatutId: 'ind' })).toBe(false)
+  expect(canDeleteEtape({ ...testBlankUser, role: 'super' }, 'mfr', ETAPE_IS_BROUILLON, [entrepriseId], [], 'oct', { typeId: 'arm', titreStatutId: 'ind' })).toBe(true)
+})
 const multiPolygonWith4Points: FeatureMultiPolygon = {
   type: 'Feature',
   properties: {},
@@ -581,6 +590,28 @@ test.each<[number | null, EtapeTypeId, TitreTypeId, IsEtapeCompleteDocuments, Is
   }
 })
 
+describe('canDeposeEtape', () => {
+  test("Une demande d'ARM complète brouillon", () => {
+    expect(
+      canDeposeEtape(
+        { ...testBlankUser, role: 'super' },
+        {
+          typeId: 'arm',
+          titreStatutId: 'dmi',
+          titulaires: [],
+          administrationsLocales: [],
+        },
+        'oct',
+        { ...etapeComplete, isBrouillon: ETAPE_IS_BROUILLON, contenu: { arm: { mecanise: { value: false, etapeHeritee: null, heritee: false } } } },
+        [...armDocuments],
+        [...armEntrepriseDocuments],
+        [],
+        [],
+        []
+      )
+    ).toStrictEqual(true)
+  })
+})
 describe('isEtapeDeposable', () => {
   test("Une demande d'ARM complète brouillon", () => {
     expect(

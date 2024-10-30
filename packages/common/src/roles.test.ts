@@ -11,6 +11,11 @@ import {
   isBureauDEtudes,
   BaseUserNotNull,
   toUtilisateurId,
+  isAdministrationRole,
+  isSuperRole,
+  isDefautRole,
+  isEntrepriseRole,
+  isEntrepriseOrBureauDetudeRole,
 } from './roles'
 import { ADMINISTRATION_IDS } from './static/administrations'
 import { test, expect, describe } from 'vitest'
@@ -105,4 +110,10 @@ test('isRole', () => {
   expect(isRole('')).toBe(false)
   expect(isRole(undefined)).toBe(false)
   expect(isRole(null)).toBe(false)
+
+  expect(isAdministrationRole('defaut')).toBe(false)
+  expect(isSuperRole('defaut')).toBe(false)
+  expect(isDefautRole('defaut')).toBe(true)
+  expect(isEntrepriseRole('defaut')).toBe(false)
+  expect(isEntrepriseOrBureauDetudeRole('defaut')).toBe(false)
 })

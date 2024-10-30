@@ -29,6 +29,10 @@ test('levenshtein', () => {
   expect(levenshtein('port', 'or')).toBe(2)
   expect(levenshtein('or', 'port')).toBe(2)
   expect(levenshtein('', 'port')).toBe(4)
+  expect(levenshtein('chien', 'chine')).toBe(2)
+  expect(levenshtein('abcd', 'xyzw')).toBe(4)
+  expect(levenshtein('chat', 'cha t')).toBe(1)
+  expect(levenshtein('p@ssw0rd!', 'password!')).toBe(2)
 })
 
 test('slugify', () => {

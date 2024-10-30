@@ -27,6 +27,8 @@ export const canReadActivitesTypesEmails = (user: User, administrationId: Admini
     administrationIds.push(user.administrationId)
 
     return administrationIds.includes(administrationId)
+    // unreachable code due to canReadAdministrations
+    /* v8 ignore next 4 */
   }
 
   return false

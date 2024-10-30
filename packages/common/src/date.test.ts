@@ -14,6 +14,7 @@ import {
   isBefore,
   intervalleAnnees,
   caminoDateValidator,
+  CaminoDate,
 } from './date'
 import { test, expect } from 'vitest'
 
@@ -76,7 +77,9 @@ test('anneePrecedente', () => {
 })
 test('intervalleAnnees', () => {
   expect(intervalleAnnees(toCaminoAnnee('1997'), toCaminoAnnee('1999'))).toStrictEqual([toCaminoAnnee('1997'), toCaminoAnnee('1998'), toCaminoAnnee('1999')])
+  expect(() => intervalleAnnees(toCaminoAnnee('1999'), toCaminoAnnee('1980'))).toThrowErrorMatchingInlineSnapshot(`[Error: L'année de départ 1999 doit être inférieure à l'année d'arrivée 1980]`)
 })
+
 test("retourne une erreur si aucune date n'est fournie", () => {
   let tested = dateValidate(null)
 
@@ -106,6 +109,10 @@ test.each([
   ['2020-12-31', 1, '2021-01-01'],
 ])('ajoute des jours à une date', (date, days, result) => {
   expect(dateAddDays(toCaminoDate(date), days)).toBe(result)
+})
+
+test("ajoute une date qui n'en est pas une", () => {
+  expect(() => dateAddDays('plop' as CaminoDate, 12)).toThrowErrorMatchingInlineSnapshot(`[Error: Cette camino date plop n'est pas vraiment une caminoDate]`)
 })
 
 test.each([

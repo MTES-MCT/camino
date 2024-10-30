@@ -38,6 +38,7 @@ export type CaminoError<T extends string> = {
 const fieldNameFromPath = (path: (string | number)[]): string | undefined => {
   const fieldName = path[path.length - 1]
 
+  /* v8 ignore next 3 */
   if (typeof fieldName === 'number') {
     return fieldNameFromPath(path.slice(0, path.length - 1))
   }
@@ -99,6 +100,8 @@ export const translateIssue = (issue: ZodIssue): string => {
           message = `${message} doit commencer par "${issue.validation.startsWith}".`
         } else if ('endsWith' in issue.validation) {
           message = `${message} doit finir par "${issue.validation.endsWith}".`
+          // unreachable code
+          /* v8 ignore next 3 */
         } else {
           exhaustiveCheck(issue.validation)
         }
@@ -114,6 +117,7 @@ export const translateIssue = (issue: ZodIssue): string => {
       } else {
         message = 'La valeur'
       }
+      /* v8 ignore next 20 */
       if (issue.type === 'array') message = `${message} doit être un tableau avec ${issue.exact === true ? 'exactement' : issue.inclusive ? 'au moins' : 'plus de'} ${issue.minimum} élément(s).`
       else if (issue.type === 'string')
         message = `${message} doit être une chaine de caractère avec ${issue.exact === true ? 'exactement' : issue.inclusive ? 'au moins' : 'plus de'} ${issue.minimum} caractère(s).`

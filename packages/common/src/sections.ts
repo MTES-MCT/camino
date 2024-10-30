@@ -12,7 +12,7 @@ import {
   urlElementValidator,
 } from './static/titresTypes_demarchesTypes_etapesTypes/sections'
 import { z } from 'zod'
-import { DeepReadonly, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined } from './typescript-tools'
+import { DeepReadonly, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from './typescript-tools'
 import { TitreTypeId } from './static/titresTypes'
 import { DemarcheTypeId } from './static/demarchesTypes'
 import { EtapeTypeId } from './static/etapesTypes'
@@ -93,9 +93,7 @@ export const valeurFind = (element: ElementWithValue): string | '–' => {
   }
 
   if (element.type === 'radio' || element.type === 'checkbox') {
-    if (isNullOrUndefined(element.value)) return '–'
-    else if (element.value) return 'Oui'
-    else return 'Non'
+    return element.value ? 'Oui' : 'Non'
   }
 
   return element.value
@@ -134,10 +132,10 @@ export const simpleContenuToFlattenedContenu = (
 }
 
 export const flattenContenuToSimpleContenu = (flattenContenu: FlattenEtape['contenu']): RestEtapeCreation['contenu'] => {
-  return Object.keys(flattenContenu).reduce<RestEtapeCreation['contenu']>((sectionsAcc, section) => {
+  return Object.entries(flattenContenu).reduce<RestEtapeCreation['contenu']>((sectionsAcc, [section, value]) => {
     sectionsAcc = {
       ...sectionsAcc,
-      [section]: Object.keys(flattenContenu[section] ?? {}).reduce<RestEtapeCreation['contenu'][string]>((elementsAcc, element) => {
+      [section]: Object.keys(value ?? {}).reduce<RestEtapeCreation['contenu'][string]>((elementsAcc, element) => {
         elementsAcc = { ...elementsAcc, [element]: flattenContenu[section]?.[element]?.value ?? null }
 
         return elementsAcc

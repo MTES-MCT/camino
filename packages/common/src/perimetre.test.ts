@@ -1,5 +1,5 @@
 import { test, expect } from 'vitest'
-import { crsUrnValidator, equalGeojson } from './perimetre'
+import { crsUrnValidator, equalGeojson, featureMultiPolygonValidator } from './perimetre'
 
 test('equalGeojson', () => {
   expect(equalGeojson(null, null)).toBe(true)
@@ -51,4 +51,40 @@ test('crsUrnValidator', () => {
   expect(crsUrnValidator.safeParse('urn:ogc:def:crs:EPSG::PLOP').success).toBe(false)
   expect(crsUrnValidator.safeParse('urn:ogc:def:crs:EPSG::').success).toBe(false)
   expect(crsUrnValidator.safeParse('urn:ogc:def:crs:EPSG::27572').success).toBe(true)
+  expect(crsUrnValidator.safeParse(12).success).toBe(false)
+})
+
+test('nullableToEmptyObject', () => {
+  featureMultiPolygonValidator.parse({
+    type: 'Feature',
+    properties: null,
+    geometry: {
+      type: 'MultiPolygon',
+      coordinates: [
+        [
+          [
+            [1, 2],
+            [1, 2],
+            [1, 2],
+          ],
+        ],
+      ],
+    },
+  })
+  featureMultiPolygonValidator.parse({
+    type: 'Feature',
+    properties: {},
+    geometry: {
+      type: 'MultiPolygon',
+      coordinates: [
+        [
+          [
+            [1, 2],
+            [1, 2],
+            [1, 2],
+          ],
+        ],
+      ],
+    },
+  })
 })

@@ -3,6 +3,7 @@ import {
   dateTypeStepIsComplete,
   entrepriseDocumentsStepIsComplete,
   entrepriseDocumentsStepIsVisible,
+  etapeAvisStepIsComplete,
   etapeAvisStepIsVisible,
   etapeDocumentsStepIsComplete,
   etapeDocumentsStepIsVisible,
@@ -25,6 +26,7 @@ import { ADMINISTRATION_IDS } from '../static/administrations'
 import { SUBSTANCES_FISCALES_IDS } from '../static/substancesFiscales'
 import { DEMARCHES_TYPES_IDS } from '../static/demarchesTypes'
 import { TITRES_TYPES_IDS } from '../static/titresTypes'
+import { ETAPES_TYPES } from '../static/etapesTypes'
 
 describe('dateTypeStepIsComplete', () => {
   test.each<User>([
@@ -599,6 +601,12 @@ test('etapeDocumentsStepIsComplete', () => {
       "valid": true,
     }
   `)
+
+  expect(etapeDocumentsStepIsComplete({ typeId: 'pqr', contenu: {}, isBrouillon: ETAPE_IS_BROUILLON }, 'oct', 'axm', [], [])).toMatchInlineSnapshot(`
+    {
+      "valid": true,
+    }
+  `)
 })
 
 test('entrepriseDocumentsStepIsVisible', () => {
@@ -911,6 +919,15 @@ test('getDocumentsTypes', () => {
 })
 
 test('getAvisType', () => {
+  expect(getAvisTypes(ETAPES_TYPES.avisDesCollectivites, 'arm', [])).toMatchInlineSnapshot(`
+    [
+      {
+        "id": "avisDUneCollectivite",
+        "nom": "Avis d'une collectivité",
+        "optionnel": true,
+      },
+    ]
+  `)
   expect(getAvisTypes('mfr', 'arm', [])).toMatchInlineSnapshot('[]')
   expect(getAvisTypes('asc', 'arm', [])).toMatchInlineSnapshot(`
     [
@@ -1218,4 +1235,9 @@ test('getAvisType', () => {
 test('etapeAvisStepIsVisible', () => {
   expect(etapeAvisStepIsVisible({ typeId: 'mfr' }, 'arm', [])).toBe(false)
   expect(etapeAvisStepIsVisible({ typeId: 'asc' }, 'arm', [])).toBe(true)
+})
+
+test('etapeAvisStepIsComplete', () => {
+  expect(etapeAvisStepIsComplete({ typeId: ETAPES_TYPES.avisDesServicesEtCommissionsConsultatives }, [{ avis_type_id: 'autreAvis' }], 'arm', []).valid).toBe(false)
+  expect(etapeAvisStepIsComplete({ typeId: ETAPES_TYPES.avisDesCollectivites }, [{ avis_type_id: 'autreAvis' }], 'arm', []).valid).toBe(true)
 })
