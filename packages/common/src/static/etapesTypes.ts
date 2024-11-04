@@ -5,14 +5,14 @@ import { EtapeBrouillon } from '../etape'
 
 // prettier-ignore
 
-const IDS = ["abd", "aca","aco","and","anf","def","dex","dim", "dpu",  "ihi", "mfr","mod","mom","rca","rcb","rcd","rcm","rco","rcs","rie","rif","rim","rmc", "rpu","sco","acg","acf","apd","ape","apo","app","apu","asl","cac","cim","css","dae","des","ede","edm","epu","esb","mca","mcb","mcd", "mci","mcm","mco","mcp","mcr","mcs","mec","men","meo","mie","mif","mim","mna","mnb","mnc","mnd","mni","mno","mns","mnv","ncl","npp","pfc","pfd","ppu","pqr","rcg","rde","rpe","sas","sca","scg","spe","spo","spp","vfc","vfd","wab","wae","wao","war","wau","wco","wda","wdc","wdd","wde","wfa","wfd","wfo","wmt","wpb","wpc","wpo","wpp","wps","wrc","wre","wrt","wse","wtp", "asc", "adc"] as const
+const IDS = ["abd", "aca","aco","and","anf","def","dex","dim", "dpu",  "ihi", "mfr","mod","mom","rca","rcb","rcd","rcm","rco","rcs","rie","rif","rim","rmc", "rpu","sco","acg","acf","apd","ape","apo","app","apu","asl","cac","cim","css","dae","des","dma", "ede","edm","epu","esb","mca","mcb","mcd", "mci","mcm","mco","mcp","mcr","mcs","mec","men","meo","mie","mif","mim","mna","mnb","mnc","mnd","mni","mno","mns","mnv","ncl","npp","pfc","pfd","ppu","pqr","rcg","rde","rno","rpe","sas","sca","scg","spe","spo","spp","vfc","vfd","wab","wae","wao","war","wau","wco","wda","wdc","wdd","wde","wfa","wfd","wfo","wmt","wpb","wpc","wpo","wpp","wps","wrc","wre","wrt","wse","wtp", "asc", "adc"] as const
 
 // prettier-ignore
 const FONDAMENTALES_IDS = ["abd", "aca","aco","and","anf","def","dex","dim", "dpu","ihi", "mfr","mod","mom","rca","rcb","rcd","rcm","rco","rcs","rie","rif","rim","rmc", "rpu","sco"] as const satisfies Readonly<EtapeTypeIdFondamentaleArray>
 
 // prettier-ignore
 
-const NON_FONDAMENTALES_IDS = ["acg", "acf","apd","ape","apo","app","apu","asl","cac","cim","css","dae","des","ede","edm","epu","esb","mca","mcb","mcd","mci", "mcm","mco","mcp","mcr", "mcs","mec","men","meo","mie","mif","mim","mna","mnb","mnc","mnd","mni","mno","mns","mnv","ncl","npp","pfc","pfd","ppu","pqr","rcg","rde","rpe","sas","sca","scg","spe","spo","spp","vfc","vfd","wab","wae","wao","war","wau","wco","wda","wdc","wdd","wde","wfa","wfd","wfo","wmt","wpb","wpc","wpo","wpp","wps","wrc","wre","wrt","wse","wtp", "asc", "adc"] as const satisfies Readonly<EtapeTypeIdNonFondamentale[]>
+const NON_FONDAMENTALES_IDS = ["acg", "acf","apd","ape","apo","app","apu","asl","cac","cim","css","dae","des","dma", "ede","edm","epu","esb","mca","mcb","mcd","mci", "mcm","mco","mcp","mcr", "mcs","mec","men","meo","mie","mif","mim","mna","mnb","mnc","mnd","mni","mno","mns","mnv","ncl","npp","pfc","pfd","ppu","pqr","rcg","rde","rno", "rpe","sas","sca","scg","spe","spo","spp","vfc","vfd","wab","wae","wao","war","wau","wco","wda","wdc","wdd","wde","wfa","wfd","wfo","wmt","wpb","wpc","wpo","wpp","wps","wrc","wre","wrt","wse","wtp", "asc", "adc"] as const satisfies Readonly<EtapeTypeIdNonFondamentale[]>
 
 // Ceci est un test :)
 ;[...FONDAMENTALES_IDS, ...NON_FONDAMENTALES_IDS] as const satisfies typeof IDS
@@ -86,6 +86,7 @@ export const ETAPES_TYPES = {
   receptionDinformation_AvisDuDREALDEALOuDGTM_: 'rie',
   receptionDinformation: 'rif',
   receptionDinformation_RecevabiliteDeLaDemande_: 'rim',
+  reponseDuDemandeur: 'rno',
   rapportDuConseilDEtat: 'rpe',
   publicationDeDecisionAuRecueilDesActesAdministratifs: 'rpu',
   saisineDeLautoriteSignataire: 'sas',
@@ -126,6 +127,7 @@ export const ETAPES_TYPES = {
   avisDesCollectivites: 'adc',
   declarationDIrrecevabilite: 'mci',
   attestationDeConstitutionDeGarantiesFinancieres: 'acf',
+  demandeDeModificationAES: 'dma',
 } as const satisfies Record<string, EtapeTypeId>
 
 export const etapeTypeIdValidator = z.enum(IDS)
@@ -915,6 +917,16 @@ export const EtapesTypes = {
     public_lecture: false,
     entreprises_lecture: true,
   },
+  rno: {
+    id: 'rno',
+    nom: 'réponse du demandeur',
+    description: 'après une notification au demandeur',
+    fondamentale: false,
+    unique: false,
+    date_fin: null,
+    public_lecture: false,
+    entreprises_lecture: true,
+  },
   mcr: {
     id: 'mcr',
     nom: 'recevabilité de la demande',
@@ -1239,6 +1251,16 @@ export const EtapesTypes = {
     public_lecture: true,
     entreprises_lecture: true,
   },
+  dma: {
+    id: 'dma',
+    nom: "demande de modification de l'AES",
+    description: '',
+    fondamentale: false,
+    unique: false,
+    date_fin: null,
+    public_lecture: false,
+    entreprises_lecture: false,
+  },
 } as const satisfies { [key in EtapeTypeId]: EtapeType<key> }
 
 type IsFondamentale<T> = T extends EtapeTypeId ? ((typeof EtapesTypes)[T] extends { fondamentale: true } ? T : never) : never
@@ -1276,6 +1298,8 @@ const ETAPES_BROUILLONS_IDS = [
   ETAPES_TYPES.receptionDinformation,
   ETAPES_TYPES.consultationDesAdministrationsCentrales,
   ETAPES_TYPES.receptionDeComplements,
+  ETAPES_TYPES.reponseDuDemandeur,
+  ETAPES_TYPES.avisDuConseilGeneralDeLeconomie_CGE_,
 ] as const satisfies Readonly<EtapeTypeId[]>
 
 export const isEtapeDecision = (etapeTypeId: EtapeTypeId): boolean => ETAPES_DECISIONS_IDS.includes(etapeTypeId)

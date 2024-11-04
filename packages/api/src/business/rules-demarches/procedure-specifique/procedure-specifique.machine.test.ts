@@ -10,6 +10,7 @@ const psCxmOctMachine = new ProcedureSpecifiqueMachine('cxm', 'oct')
 const psPrmProMachine = new ProcedureSpecifiqueMachine('prm', 'pro')
 const psArmProMachine = new ProcedureSpecifiqueMachine('arm', 'pro')
 const psAxmProMachine = new ProcedureSpecifiqueMachine('axm', 'pro')
+const psCxwOctMachine = new ProcedureSpecifiqueMachine('cxw', 'oct')
 
 describe('vérifie l’arbre des procédures spécifique', () => {
   test('statut de la démarche simplifiee sans étape', () => {
@@ -82,9 +83,9 @@ describe('vérifie l’arbre des procédures spécifique', () => {
         "FAIRE_RECEVABILITE_FAVORABLE                 (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_MISE_EN_CONCURRENCE,NOTIFIER_DEMANDEUR]",
         "FAIRE_MISE_EN_CONCURRENCE                    (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,RENDRE_RESULTAT_MISE_EN_CONCURRENCE_ACCEPTEE,RENDRE_RESULTAT_MISE_EN_CONCURRENCE_REJETEE]",
         "RENDRE_RESULTAT_MISE_EN_CONCURRENCE_ACCEPTEE (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,RENDRE_AVIS_CGE_IGEDD]",
-        "RENDRE_AVIS_CGE_IGEDD                        (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,NOTIFIER_DEMANDEUR]",
-        "NOTIFIER_DEMANDEUR                           (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_LETTRE_SAISINE_PREFET]",
-        "FAIRE_LETTRE_SAISINE_PREFET                  (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_ENQUETE_PUBLIQUE,OUVRIR_PARTICIPATION_DU_PUBLIC,RENDRE_AVIS_COLLECTIVITES,RENDRE_AVIS_SERVICES_COMMISSIONS]",
+        "RENDRE_AVIS_CGE_IGEDD                        (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_DEMANDE_MODIFICATION_AES,NOTIFIER_DEMANDEUR]",
+        "NOTIFIER_DEMANDEUR                           (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_LETTRE_SAISINE_PREFET,RECEVOIR_REPONSE_DEMANDEUR]",
+        "FAIRE_LETTRE_SAISINE_PREFET                  (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_ENQUETE_PUBLIQUE,RENDRE_AVIS_COLLECTIVITES,RENDRE_AVIS_SERVICES_COMMISSIONS]",
       ]
     `)
   })
@@ -434,6 +435,56 @@ describe('vérifie l’arbre des procédures spécifique', () => {
     `)
   })
 
+  test('réalise une demande de concession granulats marins complète', () => {
+    const result = getEventsTree(psCxwOctMachine, '1999-04-14', [
+      {
+        ...ETES.demande.FAIT,
+        concurrence: { amIFirst: true },
+        hasTitreFrom: false,
+      },
+      ETES.enregistrementDeLaDemande.FAIT,
+      ETES.recevabiliteDeLaDemande.FAVORABLE,
+      ETES.avisDeMiseEnConcurrenceAuJORF.TERMINE,
+      ETES.resultatMiseEnConcurrence.ACCEPTE,
+      ETES.avisDuConseilGeneralDeLeconomie_CGE_.FAVORABLE,
+      ETES.notificationAuDemandeur.FAIT,
+      ETES.saisineDuPrefet.FAIT,
+      ETES.avisDesCollectivites.FAIT,
+      ETES.avisDesServicesEtCommissionsConsultatives.FAIT,
+      ETES.avisDuPrefet.FAVORABLE,
+      ETES.enquetePublique.TERMINE,
+      ETES.consultationDesAdministrationsCentrales.FAIT,
+      ETES.decisionDeLAutoriteAdministrative.ACCEPTE,
+      ETES.publicationDeDecisionAuJORF.FAIT,
+      ETES.notificationAuDemandeur.FAIT,
+      ETES.abrogationDeLaDecision.FAIT,
+      ETES.publicationDeDecisionAuJORF.FAIT,
+    ])
+
+    expect(result).toMatchInlineSnapshot(`
+        [
+          "RIEN                                             (confidentielle, en construction        ) -> [FAIRE_DEMANDE]",
+          "FAIRE_DEMANDE                                    (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,ENREGISTRER_DEMANDE]",
+          "ENREGISTRER_DEMANDE                              (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_RECEVABILITE_DEFAVORABLE,FAIRE_RECEVABILITE_FAVORABLE]",
+          "FAIRE_RECEVABILITE_FAVORABLE                     (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_MISE_EN_CONCURRENCE,NOTIFIER_DEMANDEUR]",
+          "FAIRE_MISE_EN_CONCURRENCE                        (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,RENDRE_RESULTAT_MISE_EN_CONCURRENCE_ACCEPTEE,RENDRE_RESULTAT_MISE_EN_CONCURRENCE_REJETEE]",
+          "RENDRE_RESULTAT_MISE_EN_CONCURRENCE_ACCEPTEE     (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,RENDRE_AVIS_CGE_IGEDD]",
+          "RENDRE_AVIS_CGE_IGEDD                            (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_DEMANDE_MODIFICATION_AES,NOTIFIER_DEMANDEUR]",
+          "NOTIFIER_DEMANDEUR                               (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_LETTRE_SAISINE_PREFET,RECEVOIR_REPONSE_DEMANDEUR]",
+          "FAIRE_LETTRE_SAISINE_PREFET                      (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_ENQUETE_PUBLIQUE,RENDRE_AVIS_COLLECTIVITES,RENDRE_AVIS_SERVICES_COMMISSIONS]",
+          "RENDRE_AVIS_COLLECTIVITES                        (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_ENQUETE_PUBLIQUE,RENDRE_AVIS_SERVICES_COMMISSIONS]",
+          "RENDRE_AVIS_SERVICES_COMMISSIONS                 (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_ENQUETE_PUBLIQUE,RENDRE_AVIS_PREFET]",
+          "RENDRE_AVIS_PREFET                               (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_ENQUETE_PUBLIQUE]",
+          "OUVRIR_ENQUETE_PUBLIQUE                          (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_CONSULTATION_DES_ADMINISTRATIONS_CENTRALES]",
+          "FAIRE_CONSULTATION_DES_ADMINISTRATIONS_CENTRALES (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,RENDRE_DECISION_ADMINISTRATION_ACCEPTEE,RENDRE_DECISION_ADMINISTRATION_REJETEE,RENDRE_DECISION_ADMINISTRATION_REJETEE_DECISION_IMPLICITE]",
+          "RENDRE_DECISION_ADMINISTRATION_ACCEPTEE          (publique      , accepté                ) -> [PUBLIER_DECISION_ACCEPTEE_AU_JORF,PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS]",
+          "PUBLIER_DECISION_ACCEPTEE_AU_JORF                (publique      , accepté et publié      ) -> [FAIRE_ABROGATION,NOTIFIER_DEMANDEUR]",
+          "NOTIFIER_DEMANDEUR                               (publique      , accepté et publié      ) -> [FAIRE_ABROGATION]",
+          "FAIRE_ABROGATION                                 (publique      , accepté et publié      ) -> [PUBLIER_DECISION_ACCEPTEE_AU_JORF,PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS]",
+          "PUBLIER_DECISION_ACCEPTEE_AU_JORF                (publique      , rejeté après abrogation) -> []",
+        ]
+      `)
+  })
   test("vérifie l'arbre pour la prolongation d'ARM", () => {
     const result = getEventsTree(psArmProMachine, '1999-04-14', [
       {

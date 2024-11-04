@@ -47,13 +47,16 @@ type ProcedureSpecifiqueXStateEvent =
   | { type: 'RENDRE_RESULTAT_MISE_EN_CONCURRENCE_ACCEPTEE' }
   | { type: 'RENDRE_RESULTAT_MISE_EN_CONCURRENCE_REJETEE' }
   | { type: 'NOTIFIER_DEMANDEUR' }
+  | { type: 'RECEVOIR_REPONSE_DEMANDEUR' }
   | { type: 'RENDRE_AVIS_CGE_IGEDD' }
+  | { type: 'FAIRE_DEMANDE_MODIFICATION_AES' }
   | { type: 'FAIRE_LETTRE_SAISINE_PREFET' }
   | { type: 'RENDRE_AVIS_COLLECTIVITES' }
   | { type: 'RENDRE_AVIS_SERVICES_COMMISSIONS' }
   | { type: 'RENDRE_AVIS_PREFET' }
   | ParticipationDuPublic
   | EnqueteDuPublic
+  | { type: 'FAIRE_CONSULTATION_DES_ADMINISTRATIONS_CENTRALES' }
   | { type: 'RENDRE_DECISION_ADMINISTRATION_ACCEPTEE' }
   | { type: 'RENDRE_DECISION_ADMINISTRATION_REJETEE' }
   | { type: 'RENDRE_DECISION_ADMINISTRATION_REJETEE_DECISION_IMPLICITE' }
@@ -80,13 +83,16 @@ const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
   RENDRE_RESULTAT_MISE_EN_CONCURRENCE_ACCEPTEE: { db: { ACCEPTE: ETES.resultatMiseEnConcurrence.ACCEPTE }, mainStep: true },
   RENDRE_RESULTAT_MISE_EN_CONCURRENCE_REJETEE: { db: { REJETE: ETES.resultatMiseEnConcurrence.REJETE }, mainStep: true },
   NOTIFIER_DEMANDEUR: { db: ETES.notificationAuDemandeur, mainStep: false },
+  RECEVOIR_REPONSE_DEMANDEUR: { db: ETES.reponseDuDemandeur, mainStep: false },
   RENDRE_AVIS_CGE_IGEDD: { db: ETES.avisDuConseilGeneralDeLeconomie_CGE_, mainStep: true },
+  FAIRE_DEMANDE_MODIFICATION_AES: { db: ETES.demandeDeModificationAES, mainStep: false },
   FAIRE_LETTRE_SAISINE_PREFET: { db: ETES.saisineDuPrefet, mainStep: true },
   RENDRE_AVIS_COLLECTIVITES: { db: ETES.avisDesCollectivites, mainStep: true },
   RENDRE_AVIS_SERVICES_COMMISSIONS: { db: ETES.avisDesServicesEtCommissionsConsultatives, mainStep: true },
   RENDRE_AVIS_PREFET: { db: ETES.avisDuPrefet, mainStep: true },
   OUVRIR_ENQUETE_PUBLIQUE: { db: ETES.enquetePublique, mainStep: true },
   OUVRIR_PARTICIPATION_DU_PUBLIC: { db: ETES.participationDuPublic, mainStep: true },
+  FAIRE_CONSULTATION_DES_ADMINISTRATIONS_CENTRALES: { db: ETES.consultationDesAdministrationsCentrales, mainStep: true },
   RENDRE_DECISION_ADMINISTRATION_ACCEPTEE: { db: { ACCEPTE: ETES.decisionDeLAutoriteAdministrative.ACCEPTE }, mainStep: true },
   RENDRE_DECISION_ADMINISTRATION_REJETEE: { db: { REJETE: ETES.decisionDeLAutoriteAdministrative.REJETE }, mainStep: true },
   RENDRE_DECISION_ADMINISTRATION_REJETEE_DECISION_IMPLICITE: { db: { REJETE_DECISION_IMPLICITE: ETES.decisionDeLAutoriteAdministrative.REJETE_DECISION_IMPLICITE }, mainStep: true },
@@ -160,6 +166,7 @@ const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: De
     guards: {
       isAxm: () => TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX === titreTypeId,
       isPerOuConcession: () => [TITRES_TYPES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES, TITRES_TYPES_TYPES_IDS.CONCESSION].includes(getTitreTypeType(titreTypeId)),
+      isPerOuConcessionGranulatsMarins: () => [TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_GRANULATS_MARINS, TITRES_TYPES_IDS.CONCESSION_GRANULATS_MARINS].includes(titreTypeId),
       canHaveMiseEnConcurrence: ({ context }) => {
         if (context.hasTitreFrom === 'inconnu') {
           throw new Error("hasTitreFrom n'est pas initialisé")
@@ -309,7 +316,6 @@ const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: De
               guard: and(['canHaveMiseEnConcurrence', 'isPremiereDemandePourMiseEnConcurrence', ({ event }) => event.status === ETAPES_STATUTS.PROGRAMME]),
             },
           ],
-          // FIXMACHINE à mettre autre part
           NOTIFIER_DEMANDEUR: {
             target: 'recevabiliteFavorableFaite',
             guard: 'isPerOuConcession',
@@ -317,8 +323,11 @@ const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: De
         },
       },
       enAttente: {},
-      notificationAuDemandeurAFaire: {
-        on: { NOTIFIER_DEMANDEUR: 'lettreDeSaisineDuPrefetOuReponseDuDemandeurAFaire' },
+      notificationAuDemandeurOuDemandeDeModificationAESAFaire: {
+        on: {
+          FAIRE_DEMANDE_MODIFICATION_AES: 'avisCGE_IGEDD_AFaire',
+          NOTIFIER_DEMANDEUR: 'lettreDeSaisineDuPrefetOuReponseDuDemandeurAFaire',
+        },
       },
       resultatMiseEnConcurrenceAFaire: {
         on: {
@@ -336,16 +345,14 @@ const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: De
         },
         on: {
           RENDRE_AVIS_CGE_IGEDD: {
-            // FIXMACHINE ajouter la demande de modification de l'aes
-            target: 'notificationAuDemandeurAFaire',
+            target: 'notificationAuDemandeurOuDemandeDeModificationAESAFaire',
             guard: not('isAxmOuAr'),
           },
         },
       },
       lettreDeSaisineDuPrefetOuReponseDuDemandeurAFaire: {
         on: {
-          // FIXMACHINE brouillon
-          // FIXMACHINE 'RECEVOIR_REPONSE_DEMANDEUR': 'lettreDeSaisineDuPrefetOuReponseDuDemandeurAFaire',
+          RECEVOIR_REPONSE_DEMANDEUR: 'lettreDeSaisineDuPrefetOuReponseDuDemandeurAFaire',
           FAIRE_LETTRE_SAISINE_PREFET: 'avisCollectivitesEtServicesEtCommissionsAFaireMachine',
         },
       },
@@ -421,12 +428,12 @@ const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: De
                     },
                     {
                       target: 'enAttente',
-                      guard: ({ event }) => event.status === ETAPES_STATUTS.EN_COURS,
+                      guard: and([not('isEnquetePubliqueRequired'), ({ event }) => event.status === ETAPES_STATUTS.EN_COURS]),
                       actions: assign({ visibilite: 'publique' }),
                     },
                     {
                       target: 'enAttente',
-                      guard: ({ event }) => event.status === ETAPES_STATUTS.PROGRAMME,
+                      guard: and([not('isEnquetePubliqueRequired'), ({ event }) => event.status === ETAPES_STATUTS.PROGRAMME]),
                     },
                   ],
                 },
@@ -438,7 +445,16 @@ const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: De
             },
           },
         },
-        onDone: 'decisionAdministrationAFaire',
+        onDone: 'consultationDesAdministrationsCentralesOuDecisionAdministrationAFaire',
+      },
+      consultationDesAdministrationsCentralesOuDecisionAdministrationAFaire: {
+        always: {
+          target: 'decisionAdministrationAFaire',
+          guard: not('isPerOuConcessionGranulatsMarins'),
+        },
+        on: {
+          FAIRE_CONSULTATION_DES_ADMINISTRATIONS_CENTRALES: 'decisionAdministrationAFaire',
+        },
       },
       decisionAdministrationAFaire: {
         on: {
