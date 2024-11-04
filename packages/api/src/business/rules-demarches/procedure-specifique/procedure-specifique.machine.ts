@@ -61,6 +61,10 @@ type ProcedureSpecifiqueXStateEvent =
   | { type: 'PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS' }
   | { type: 'FAIRE_ABROGATION' }
   | { type: 'FAIRE_ATTESTATION_DE_CONSTITUTION_DE_GARANTIES_FINANCIERES' }
+  | { type: 'CLASSER_SANS_SUITE' }
+  | { type: 'DESISTER_PAR_LE_DEMANDEUR' }
+  | { type: 'DEMANDER_INFORMATION' }
+  | { type: 'RECEVOIR_INFORMATION' }
 
 type Event = ProcedureSpecifiqueXStateEvent['type']
 
@@ -90,6 +94,10 @@ const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
   PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS: { db: ETES.publicationDeDecisionAuRecueilDesActesAdministratifs, mainStep: true },
   FAIRE_ABROGATION: { db: ETES.abrogationDeLaDecision, mainStep: true },
   FAIRE_ATTESTATION_DE_CONSTITUTION_DE_GARANTIES_FINANCIERES: { db: ETES.attestationDeConstitutionDeGarantiesFinancieres, mainStep: true },
+  CLASSER_SANS_SUITE: { db: ETES.classementSansSuite, mainStep: false },
+  DESISTER_PAR_LE_DEMANDEUR: { db: ETES.desistementDuDemandeur, mainStep: false },
+  DEMANDER_INFORMATION: { db: ETES.demandeDinformations, mainStep: false },
+  RECEVOIR_INFORMATION: { db: ETES.receptionDinformation, mainStep: false },
 }
 
 // basé sur https://drive.google.com/drive/u/1/folders/1U_in35zSb837xCp_fp31I0vOmb36QguL
@@ -143,6 +151,7 @@ export class ProcedureSpecifiqueMachine extends CaminoMachine<ProcedureSpecifiqu
 interface ProcedureSpecifiqueContext extends CaminoCommonContext {
   concurrence: 'inconnu' | { amIFirst: true } | { amIFirst: false; demarcheConcurrenteVisibilite: DemarcheVisibilite }
   hasTitreFrom: 'inconnu' | boolean
+  demandeInformationEnCours: boolean
 }
 const defaultDemarcheStatut = DemarchesStatutsIds.EnConstruction
 const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId) =>
@@ -157,6 +166,8 @@ const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: De
         }
         return canHaveMiseEnConcurrence(demarcheTypeId, context.hasTitreFrom)
       },
+      isDemarcheEnInstruction: ({ context }) => context.demarcheStatut === DemarchesStatutsIds.EnInstruction,
+      isDemandeInformationEnCours: ({ context }) => context.demandeInformationEnCours,
       isPremiereDemandePourMiseEnConcurrence: ({ context }) => {
         if (context.concurrence === 'inconnu') {
           throw new Error("concurrence n'est pas initialisé")
@@ -188,6 +199,31 @@ const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: De
       visibilite: 'confidentielle',
       concurrence: 'inconnu',
       hasTitreFrom: 'inconnu',
+      demandeInformationEnCours: false,
+    },
+    on: {
+      CLASSER_SANS_SUITE: {
+        guard: 'isDemarcheEnInstruction',
+        target: '.finDeMachine',
+        actions: assign({
+          demarcheStatut: DemarchesStatutsIds.ClasseSansSuite,
+        }),
+      },
+      DESISTER_PAR_LE_DEMANDEUR: {
+        guard: 'isDemarcheEnInstruction',
+        target: '.finDeMachine',
+        actions: assign({
+          demarcheStatut: DemarchesStatutsIds.Desiste,
+        }),
+      },
+      DEMANDER_INFORMATION: {
+        guard: and(['isDemarcheEnInstruction', not('isDemandeInformationEnCours')]),
+        actions: assign({ demandeInformationEnCours: true }),
+      },
+      RECEVOIR_INFORMATION: {
+        guard: and(['isDemarcheEnInstruction', 'isDemandeInformationEnCours']),
+        actions: assign({ demandeInformationEnCours: false }),
+      },
     },
     states: {
       demandeAFaire: {

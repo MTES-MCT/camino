@@ -41,7 +41,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
       ETES.recevabiliteDeLaDemande.FAVORABLE,
       ETES.notificationAuDemandeur.FAIT,
     ])
-    expect(service).canOnlyTransitionTo({ machine, date: dateFin }, ['FAIRE_MISE_EN_CONCURRENCE', 'NOTIFIER_DEMANDEUR'])
+    expect(service).canOnlyTransitionTo({ machine, date: dateFin }, ['CLASSER_SANS_SUITE', 'DEMANDER_INFORMATION', 'DESISTER_PAR_LE_DEMANDEUR', 'FAIRE_MISE_EN_CONCURRENCE', 'NOTIFIER_DEMANDEUR'])
   })
 
   // FIXMACHINE pour le moment on ne peut pas écrire ce test
@@ -61,7 +61,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
       ETES.recevabiliteDeLaDemande.FAVORABLE,
       ETES.avisDeMiseEnConcurrenceAuJORF.EN_COURS,
     ])
-    expect(service).canOnlyTransitionTo({ machine, date: dateFin }, [])
+    expect(service).canOnlyTransitionTo({ machine, date: dateFin }, ['CLASSER_SANS_SUITE', 'DEMANDER_INFORMATION', 'DESISTER_PAR_LE_DEMANDEUR'])
   })
   test('on peut publier le résultat de la mise en concurrence, une fois celle-ci terminée', () => {
     const tree = getEventsTree(psCxmOctMachine, '1999-04-14', [
@@ -77,14 +77,14 @@ describe('vérifie l’arbre des procédures spécifique', () => {
     expect(tree).toMatchInlineSnapshot(`
       [
         "RIEN                                         (confidentielle, en construction        ) -> [FAIRE_DEMANDE]",
-        "FAIRE_DEMANDE                                (confidentielle, en instruction         ) -> [DEPOSER_DEMANDE]",
-        "DEPOSER_DEMANDE                              (confidentielle, en instruction         ) -> [FAIRE_RECEVABILITE_DEFAVORABLE,FAIRE_RECEVABILITE_FAVORABLE]",
-        "FAIRE_RECEVABILITE_FAVORABLE                 (confidentielle, en instruction         ) -> [FAIRE_MISE_EN_CONCURRENCE,NOTIFIER_DEMANDEUR]",
-        "FAIRE_MISE_EN_CONCURRENCE                    (publique      , en instruction         ) -> [RENDRE_RESULTAT_MISE_EN_CONCURRENCE_ACCEPTEE,RENDRE_RESULTAT_MISE_EN_CONCURRENCE_REJETEE]",
-        "RENDRE_RESULTAT_MISE_EN_CONCURRENCE_ACCEPTEE (publique      , en instruction         ) -> [RENDRE_AVIS_CGE_IGEDD]",
-        "RENDRE_AVIS_CGE_IGEDD                        (publique      , en instruction         ) -> [NOTIFIER_DEMANDEUR]",
-        "NOTIFIER_DEMANDEUR                           (publique      , en instruction         ) -> [FAIRE_LETTRE_SAISINE_PREFET]",
-        "FAIRE_LETTRE_SAISINE_PREFET                  (publique      , en instruction         ) -> [OUVRIR_ENQUETE_PUBLIQUE,OUVRIR_PARTICIPATION_DU_PUBLIC,RENDRE_AVIS_COLLECTIVITES,RENDRE_AVIS_SERVICES_COMMISSIONS]",
+        "FAIRE_DEMANDE                                (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DEPOSER_DEMANDE,DESISTER_PAR_LE_DEMANDEUR]",
+        "DEPOSER_DEMANDE                              (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_RECEVABILITE_DEFAVORABLE,FAIRE_RECEVABILITE_FAVORABLE]",
+        "FAIRE_RECEVABILITE_FAVORABLE                 (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_MISE_EN_CONCURRENCE,NOTIFIER_DEMANDEUR]",
+        "FAIRE_MISE_EN_CONCURRENCE                    (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,RENDRE_RESULTAT_MISE_EN_CONCURRENCE_ACCEPTEE,RENDRE_RESULTAT_MISE_EN_CONCURRENCE_REJETEE]",
+        "RENDRE_RESULTAT_MISE_EN_CONCURRENCE_ACCEPTEE (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,RENDRE_AVIS_CGE_IGEDD]",
+        "RENDRE_AVIS_CGE_IGEDD                        (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,NOTIFIER_DEMANDEUR]",
+        "NOTIFIER_DEMANDEUR                           (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_LETTRE_SAISINE_PREFET]",
+        "FAIRE_LETTRE_SAISINE_PREFET                  (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_ENQUETE_PUBLIQUE,OUVRIR_PARTICIPATION_DU_PUBLIC,RENDRE_AVIS_COLLECTIVITES,RENDRE_AVIS_SERVICES_COMMISSIONS]",
       ]
     `)
   })
@@ -98,10 +98,10 @@ describe('vérifie l’arbre des procédures spécifique', () => {
     expect(tree).toMatchInlineSnapshot(`
       [
         "RIEN                         (confidentielle, en construction        ) -> [FAIRE_DEMANDE]",
-        "FAIRE_DEMANDE                (confidentielle, en instruction         ) -> [DEPOSER_DEMANDE]",
-        "DEPOSER_DEMANDE              (confidentielle, en instruction         ) -> [FAIRE_RECEVABILITE_DEFAVORABLE,FAIRE_RECEVABILITE_FAVORABLE]",
-        "FAIRE_RECEVABILITE_FAVORABLE (confidentielle, en instruction         ) -> [FAIRE_MISE_EN_CONCURRENCE,NOTIFIER_DEMANDEUR]",
-        "FAIRE_MISE_EN_CONCURRENCE    (confidentielle, en instruction         ) -> []",
+        "FAIRE_DEMANDE                (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DEPOSER_DEMANDE,DESISTER_PAR_LE_DEMANDEUR]",
+        "DEPOSER_DEMANDE              (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_RECEVABILITE_DEFAVORABLE,FAIRE_RECEVABILITE_FAVORABLE]",
+        "FAIRE_RECEVABILITE_FAVORABLE (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_MISE_EN_CONCURRENCE,NOTIFIER_DEMANDEUR]",
+        "FAIRE_MISE_EN_CONCURRENCE    (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR]",
       ]
     `)
   })
@@ -144,7 +144,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
       ETES.recevabiliteDeLaDemande.FAVORABLE,
     ])
 
-    expect(service).canOnlyTransitionTo({ machine, date: dateFin }, ['RENDRE_AVIS_CGE_IGEDD'])
+    expect(service).canOnlyTransitionTo({ machine, date: dateFin }, ['CLASSER_SANS_SUITE', 'DEMANDER_INFORMATION', 'DESISTER_PAR_LE_DEMANDEUR', 'RENDRE_AVIS_CGE_IGEDD'])
     expect(service.getSnapshot().context.visibilite).toBe('confidentielle')
   })
   test('après la recevabilité favorable la démarche reste confidentielle si il y a une mise en concurrence', () => {
@@ -154,7 +154,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
       ETES.recevabiliteDeLaDemande.FAVORABLE,
     ])
 
-    expect(service).canOnlyTransitionTo({ machine, date: dateFin }, ['NOTIFIER_DEMANDEUR', 'FAIRE_MISE_EN_CONCURRENCE'])
+    expect(service).canOnlyTransitionTo({ machine, date: dateFin }, ['CLASSER_SANS_SUITE', 'DEMANDER_INFORMATION', 'DESISTER_PAR_LE_DEMANDEUR', 'NOTIFIER_DEMANDEUR', 'FAIRE_MISE_EN_CONCURRENCE'])
     expect(service.getSnapshot().context.visibilite).toBe('confidentielle')
   })
 
@@ -165,7 +165,13 @@ describe('vérifie l’arbre des procédures spécifique', () => {
       ETES.recevabiliteDeLaDemande.FAVORABLE,
     ])
 
-    expect(service).canOnlyTransitionTo({ machine, date: dateFin }, ['RENDRE_RESULTAT_MISE_EN_CONCURRENCE_ACCEPTEE', 'RENDRE_RESULTAT_MISE_EN_CONCURRENCE_REJETEE'])
+    expect(service).canOnlyTransitionTo({ machine, date: dateFin }, [
+      'CLASSER_SANS_SUITE',
+      'DEMANDER_INFORMATION',
+      'DESISTER_PAR_LE_DEMANDEUR',
+      'RENDRE_RESULTAT_MISE_EN_CONCURRENCE_ACCEPTEE',
+      'RENDRE_RESULTAT_MISE_EN_CONCURRENCE_REJETEE',
+    ])
     expect(service.getSnapshot().context.visibilite).toBe('publique')
   })
 
@@ -176,7 +182,13 @@ describe('vérifie l’arbre des procédures spécifique', () => {
       ETES.recevabiliteDeLaDemande.FAVORABLE,
     ])
 
-    expect(service).canOnlyTransitionTo({ machine, date: dateFin }, ['RENDRE_RESULTAT_MISE_EN_CONCURRENCE_ACCEPTEE', 'RENDRE_RESULTAT_MISE_EN_CONCURRENCE_REJETEE'])
+    expect(service).canOnlyTransitionTo({ machine, date: dateFin }, [
+      'CLASSER_SANS_SUITE',
+      'DEMANDER_INFORMATION',
+      'DESISTER_PAR_LE_DEMANDEUR',
+      'RENDRE_RESULTAT_MISE_EN_CONCURRENCE_ACCEPTEE',
+      'RENDRE_RESULTAT_MISE_EN_CONCURRENCE_REJETEE',
+    ])
     expect(service.getSnapshot().context.visibilite).toBe('confidentielle')
   })
   test("ne peut pas rendre la décision de l'administration si la participation du public n'est pas terminée", () => {
@@ -194,7 +206,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
       ETES.participationDuPublic.EN_COURS,
     ])
 
-    expect(service).canOnlyTransitionTo({ machine, date: dateFin }, [])
+    expect(service).canOnlyTransitionTo({ machine, date: dateFin }, ['CLASSER_SANS_SUITE', 'DEMANDER_INFORMATION', 'DESISTER_PAR_LE_DEMANDEUR'])
     expect(service.getSnapshot().context.visibilite).toBe('publique')
   })
 
@@ -209,7 +221,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
       ETES.recevabiliteDeLaDemande.FAVORABLE,
     ])
 
-    expect(service).canOnlyTransitionTo({ machine, date: dateFin }, ['RENDRE_AVIS_CGE_IGEDD'])
+    expect(service).canOnlyTransitionTo({ machine, date: dateFin }, ['CLASSER_SANS_SUITE', 'DEMANDER_INFORMATION', 'DESISTER_PAR_LE_DEMANDEUR', 'RENDRE_AVIS_CGE_IGEDD'])
   })
 
   test("doit faire une mise en concurrence si on n'a pas de titre from", () => {
@@ -223,7 +235,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
       ETES.recevabiliteDeLaDemande.FAVORABLE,
     ])
 
-    expect(service).canOnlyTransitionTo({ machine, date: dateFin }, ['FAIRE_MISE_EN_CONCURRENCE', 'NOTIFIER_DEMANDEUR'])
+    expect(service).canOnlyTransitionTo({ machine, date: dateFin }, ['CLASSER_SANS_SUITE', 'DEMANDER_INFORMATION', 'DESISTER_PAR_LE_DEMANDEUR', 'FAIRE_MISE_EN_CONCURRENCE', 'NOTIFIER_DEMANDEUR'])
   })
   test("réalise une demande de prolongation d'ARM complète", async () => {
     const { service, dateFin, machine } = setDateAndOrderAndInterpretMachine(psArmProMachine, '1999-04-14', [
@@ -263,7 +275,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
       ETES.decisionDeLAutoriteAdministrative.REJETE,
     ])
 
-    expect(service).canOnlyTransitionTo({ machine: psArmProMachine, date: dateFin }, ['NOTIFIER_DEMANDEUR'])
+    expect(service).canOnlyTransitionTo({ machine: psArmProMachine, date: dateFin }, ['CLASSER_SANS_SUITE', 'DEMANDER_INFORMATION', 'DESISTER_PAR_LE_DEMANDEUR', 'NOTIFIER_DEMANDEUR'])
     expect(service.getSnapshot().context.visibilite).toBe('confidentielle')
   })
   test("réalise une demande de prolongation d'ARM rejetée puis une notification au demandeur", () => {
@@ -288,6 +300,82 @@ describe('vérifie l’arbre des procédures spécifique', () => {
     expect(service.getSnapshot().context.demarcheStatut).toBe(DemarchesStatutsIds.Rejete)
   })
 
+  test('Peut classer sans suite', () => {
+    const { service, dateFin, machine } = setDateAndOrderAndInterpretMachine(psArmProMachine, '1999-04-14', [
+      {
+        ...ETES.demande.FAIT,
+        concurrence: { amIFirst: true },
+        hasTitreFrom: false,
+      },
+      ETES.depotDeLaDemande.FAIT,
+      ETES.recevabiliteDeLaDemande.FAVORABLE,
+      ETES.avisDesCollectivites.FAIT,
+      ETES.avisDesServicesEtCommissionsConsultatives.FAIT,
+      ETES.avisDuPrefet.FAVORABLE,
+      ETES.participationDuPublic.TERMINE,
+      ETES.classementSansSuite.FAIT,
+    ])
+
+    expect(service).canOnlyTransitionTo({ machine, date: dateFin }, [])
+    expect(service.getSnapshot().context.visibilite).toBe('publique')
+    expect(service.getSnapshot().context.demarcheStatut).toBe(DemarchesStatutsIds.ClasseSansSuite)
+  })
+
+  test('Peut désister par le demandeur', () => {
+    const { service, dateFin, machine } = setDateAndOrderAndInterpretMachine(psArmProMachine, '1999-04-14', [
+      {
+        ...ETES.demande.FAIT,
+        concurrence: { amIFirst: true },
+        hasTitreFrom: false,
+      },
+      ETES.depotDeLaDemande.FAIT,
+      ETES.recevabiliteDeLaDemande.FAVORABLE,
+      ETES.avisDesCollectivites.FAIT,
+      ETES.avisDesServicesEtCommissionsConsultatives.FAIT,
+      ETES.avisDuPrefet.FAVORABLE,
+      ETES.participationDuPublic.TERMINE,
+      ETES.desistementDuDemandeur.FAIT,
+    ])
+
+    expect(service).canOnlyTransitionTo({ machine, date: dateFin }, [])
+    expect(service.getSnapshot().context.visibilite).toBe('publique')
+    expect(service.getSnapshot().context.demarcheStatut).toBe(DemarchesStatutsIds.Desiste)
+  })
+
+  test("peut faire plusieurs demande/réception d'information à la suite", () => {
+    const result = getEventsTree(psAxmProMachine, '1999-04-14', [
+      {
+        ...ETES.demande.FAIT,
+        concurrence: { amIFirst: true },
+        hasTitreFrom: false,
+      },
+      ETES.depotDeLaDemande.FAIT,
+      ETES.recevabiliteDeLaDemande.FAVORABLE,
+      ETES.avisDesCollectivites.FAIT,
+      ETES.avisDesServicesEtCommissionsConsultatives.FAIT,
+      ETES.avisDuPrefet.FAVORABLE,
+      ETES.participationDuPublic.TERMINE,
+      ETES.demandeDinformations.FAIT,
+      ETES.receptionDinformation.FAIT,
+      ETES.demandeDinformations.FAIT,
+    ])
+
+    expect(result).toMatchInlineSnapshot(`
+      [
+        "RIEN                             (confidentielle, en construction        ) -> [FAIRE_DEMANDE]",
+        "FAIRE_DEMANDE                    (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DEPOSER_DEMANDE,DESISTER_PAR_LE_DEMANDEUR]",
+        "DEPOSER_DEMANDE                  (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_RECEVABILITE_DEFAVORABLE,FAIRE_RECEVABILITE_FAVORABLE]",
+        "FAIRE_RECEVABILITE_FAVORABLE     (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_ENQUETE_PUBLIQUE,OUVRIR_PARTICIPATION_DU_PUBLIC,RENDRE_AVIS_COLLECTIVITES,RENDRE_AVIS_SERVICES_COMMISSIONS]",
+        "RENDRE_AVIS_COLLECTIVITES        (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_ENQUETE_PUBLIQUE,OUVRIR_PARTICIPATION_DU_PUBLIC,RENDRE_AVIS_SERVICES_COMMISSIONS]",
+        "RENDRE_AVIS_SERVICES_COMMISSIONS (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_ENQUETE_PUBLIQUE,OUVRIR_PARTICIPATION_DU_PUBLIC,RENDRE_AVIS_PREFET]",
+        "RENDRE_AVIS_PREFET               (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_ENQUETE_PUBLIQUE,OUVRIR_PARTICIPATION_DU_PUBLIC]",
+        "OUVRIR_PARTICIPATION_DU_PUBLIC   (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,RENDRE_DECISION_ADMINISTRATION_ACCEPTEE,RENDRE_DECISION_ADMINISTRATION_REJETEE,RENDRE_DECISION_ADMINISTRATION_REJETEE_DECISION_IMPLICITE]",
+        "DEMANDER_INFORMATION             (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,RECEVOIR_INFORMATION,RENDRE_DECISION_ADMINISTRATION_ACCEPTEE,RENDRE_DECISION_ADMINISTRATION_REJETEE,RENDRE_DECISION_ADMINISTRATION_REJETEE_DECISION_IMPLICITE]",
+        "RECEVOIR_INFORMATION             (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,RENDRE_DECISION_ADMINISTRATION_ACCEPTEE,RENDRE_DECISION_ADMINISTRATION_REJETEE,RENDRE_DECISION_ADMINISTRATION_REJETEE_DECISION_IMPLICITE]",
+        "DEMANDER_INFORMATION             (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,RECEVOIR_INFORMATION,RENDRE_DECISION_ADMINISTRATION_ACCEPTEE,RENDRE_DECISION_ADMINISTRATION_REJETEE,RENDRE_DECISION_ADMINISTRATION_REJETEE_DECISION_IMPLICITE]",
+      ]
+    `)
+  })
   test("réalise une demande de prolongation d'ARM rejetée suite à une décision implicite", () => {
     const { service, dateFin, machine } = setDateAndOrderAndInterpretMachine(psArmProMachine, '1999-04-14', [
       {
@@ -331,13 +419,13 @@ describe('vérifie l’arbre des procédures spécifique', () => {
     expect(result).toMatchInlineSnapshot(`
       [
         "RIEN                                                       (confidentielle, en construction        ) -> [FAIRE_DEMANDE]",
-        "FAIRE_DEMANDE                                              (confidentielle, en instruction         ) -> [DEPOSER_DEMANDE]",
-        "DEPOSER_DEMANDE                                            (confidentielle, en instruction         ) -> [FAIRE_RECEVABILITE_DEFAVORABLE,FAIRE_RECEVABILITE_FAVORABLE]",
-        "FAIRE_RECEVABILITE_FAVORABLE                               (confidentielle, en instruction         ) -> [OUVRIR_ENQUETE_PUBLIQUE,OUVRIR_PARTICIPATION_DU_PUBLIC,RENDRE_AVIS_COLLECTIVITES,RENDRE_AVIS_SERVICES_COMMISSIONS]",
-        "RENDRE_AVIS_COLLECTIVITES                                  (confidentielle, en instruction         ) -> [OUVRIR_ENQUETE_PUBLIQUE,OUVRIR_PARTICIPATION_DU_PUBLIC,RENDRE_AVIS_SERVICES_COMMISSIONS]",
-        "RENDRE_AVIS_SERVICES_COMMISSIONS                           (confidentielle, en instruction         ) -> [OUVRIR_ENQUETE_PUBLIQUE,OUVRIR_PARTICIPATION_DU_PUBLIC,RENDRE_AVIS_PREFET]",
-        "RENDRE_AVIS_PREFET                                         (confidentielle, en instruction         ) -> [OUVRIR_ENQUETE_PUBLIQUE,OUVRIR_PARTICIPATION_DU_PUBLIC]",
-        "OUVRIR_PARTICIPATION_DU_PUBLIC                             (publique      , en instruction         ) -> [RENDRE_DECISION_ADMINISTRATION_ACCEPTEE,RENDRE_DECISION_ADMINISTRATION_REJETEE,RENDRE_DECISION_ADMINISTRATION_REJETEE_DECISION_IMPLICITE]",
+        "FAIRE_DEMANDE                                              (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DEPOSER_DEMANDE,DESISTER_PAR_LE_DEMANDEUR]",
+        "DEPOSER_DEMANDE                                            (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_RECEVABILITE_DEFAVORABLE,FAIRE_RECEVABILITE_FAVORABLE]",
+        "FAIRE_RECEVABILITE_FAVORABLE                               (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_ENQUETE_PUBLIQUE,OUVRIR_PARTICIPATION_DU_PUBLIC,RENDRE_AVIS_COLLECTIVITES,RENDRE_AVIS_SERVICES_COMMISSIONS]",
+        "RENDRE_AVIS_COLLECTIVITES                                  (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_ENQUETE_PUBLIQUE,OUVRIR_PARTICIPATION_DU_PUBLIC,RENDRE_AVIS_SERVICES_COMMISSIONS]",
+        "RENDRE_AVIS_SERVICES_COMMISSIONS                           (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_ENQUETE_PUBLIQUE,OUVRIR_PARTICIPATION_DU_PUBLIC,RENDRE_AVIS_PREFET]",
+        "RENDRE_AVIS_PREFET                                         (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_ENQUETE_PUBLIQUE,OUVRIR_PARTICIPATION_DU_PUBLIC]",
+        "OUVRIR_PARTICIPATION_DU_PUBLIC                             (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,RENDRE_DECISION_ADMINISTRATION_ACCEPTEE,RENDRE_DECISION_ADMINISTRATION_REJETEE,RENDRE_DECISION_ADMINISTRATION_REJETEE_DECISION_IMPLICITE]",
         "RENDRE_DECISION_ADMINISTRATION_ACCEPTEE                    (publique      , accepté                ) -> [PUBLIER_DECISION_ACCEPTEE_AU_JORF,PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS]",
         "PUBLIER_DECISION_ACCEPTEE_AU_JORF                          (publique      , accepté et publié      ) -> [FAIRE_ABROGATION,NOTIFIER_DEMANDEUR]",
         "NOTIFIER_DEMANDEUR                                         (publique      , accepté et publié      ) -> [FAIRE_ABROGATION,FAIRE_ATTESTATION_DE_CONSTITUTION_DE_GARANTIES_FINANCIERES]",
@@ -368,13 +456,13 @@ describe('vérifie l’arbre des procédures spécifique', () => {
     expect(result).toMatchInlineSnapshot(`
       [
         "RIEN                                                 (confidentielle, en construction        ) -> [FAIRE_DEMANDE]",
-        "FAIRE_DEMANDE                                        (confidentielle, en instruction         ) -> [DEPOSER_DEMANDE]",
-        "DEPOSER_DEMANDE                                      (confidentielle, en instruction         ) -> [FAIRE_RECEVABILITE_DEFAVORABLE,FAIRE_RECEVABILITE_FAVORABLE]",
-        "FAIRE_RECEVABILITE_FAVORABLE                         (confidentielle, en instruction         ) -> [OUVRIR_ENQUETE_PUBLIQUE,OUVRIR_PARTICIPATION_DU_PUBLIC,RENDRE_AVIS_COLLECTIVITES,RENDRE_AVIS_SERVICES_COMMISSIONS]",
-        "RENDRE_AVIS_COLLECTIVITES                            (confidentielle, en instruction         ) -> [OUVRIR_ENQUETE_PUBLIQUE,OUVRIR_PARTICIPATION_DU_PUBLIC,RENDRE_AVIS_SERVICES_COMMISSIONS]",
-        "RENDRE_AVIS_SERVICES_COMMISSIONS                     (confidentielle, en instruction         ) -> [OUVRIR_ENQUETE_PUBLIQUE,OUVRIR_PARTICIPATION_DU_PUBLIC,RENDRE_AVIS_PREFET]",
-        "RENDRE_AVIS_PREFET                                   (confidentielle, en instruction         ) -> [OUVRIR_ENQUETE_PUBLIQUE,OUVRIR_PARTICIPATION_DU_PUBLIC]",
-        "OUVRIR_PARTICIPATION_DU_PUBLIC                       (publique      , en instruction         ) -> [RENDRE_DECISION_ADMINISTRATION_ACCEPTEE,RENDRE_DECISION_ADMINISTRATION_REJETEE,RENDRE_DECISION_ADMINISTRATION_REJETEE_DECISION_IMPLICITE]",
+        "FAIRE_DEMANDE                                        (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DEPOSER_DEMANDE,DESISTER_PAR_LE_DEMANDEUR]",
+        "DEPOSER_DEMANDE                                      (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_RECEVABILITE_DEFAVORABLE,FAIRE_RECEVABILITE_FAVORABLE]",
+        "FAIRE_RECEVABILITE_FAVORABLE                         (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_ENQUETE_PUBLIQUE,OUVRIR_PARTICIPATION_DU_PUBLIC,RENDRE_AVIS_COLLECTIVITES,RENDRE_AVIS_SERVICES_COMMISSIONS]",
+        "RENDRE_AVIS_COLLECTIVITES                            (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_ENQUETE_PUBLIQUE,OUVRIR_PARTICIPATION_DU_PUBLIC,RENDRE_AVIS_SERVICES_COMMISSIONS]",
+        "RENDRE_AVIS_SERVICES_COMMISSIONS                     (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_ENQUETE_PUBLIQUE,OUVRIR_PARTICIPATION_DU_PUBLIC,RENDRE_AVIS_PREFET]",
+        "RENDRE_AVIS_PREFET                                   (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_ENQUETE_PUBLIQUE,OUVRIR_PARTICIPATION_DU_PUBLIC]",
+        "OUVRIR_PARTICIPATION_DU_PUBLIC                       (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,RENDRE_DECISION_ADMINISTRATION_ACCEPTEE,RENDRE_DECISION_ADMINISTRATION_REJETEE,RENDRE_DECISION_ADMINISTRATION_REJETEE_DECISION_IMPLICITE]",
         "RENDRE_DECISION_ADMINISTRATION_ACCEPTEE              (publique      , accepté                ) -> [PUBLIER_DECISION_ACCEPTEE_AU_JORF,PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS]",
         "PUBLIER_DECISION_ACCEPTEE_AU_JORF                    (publique      , accepté et publié      ) -> [FAIRE_ABROGATION,NOTIFIER_DEMANDEUR]",
         "FAIRE_ABROGATION                                     (publique      , accepté et publié      ) -> [NOTIFIER_DEMANDEUR,PUBLIER_DECISION_ACCEPTEE_AU_JORF,PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS]",
