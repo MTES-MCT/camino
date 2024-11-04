@@ -1,0 +1,4 @@
+FROM nginxproxy/nginx-proxy:1.6.1
+
+# Utiliser le makefile, mettre à jour la version à la main
+COPY proxy.conf /etc/nginx/proxy.conf

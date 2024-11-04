@@ -21,6 +21,7 @@ docs/generate-schema:
 daily:
 ifdef CAMINO_STAGE
 	npm run daily -w packages/api
+	@curl -i -X POST -H 'Content-Type: application/json' -d "{\"message\": \":tada: daily fini sur ${ENV} :tada:\"}" ${TCHAP_HOOK}
 else
 	@echo 'lancement du daily en mode local avec la migration'
 	npm run db:migrate -w packages/api
@@ -186,9 +187,6 @@ endif
 	@echo 'on déploie sur ${DEPLOY_URL} la version ${GIT_SHA}'
 	@curl --insecure --fail-with-body -I https://cd.${DEPLOY_URL}/update/${GIT_SHA} -H 'authorization: ${CD_TOKEN}'
 
-deploy/dev:
-	$(MAKE) DEPLOY_URL=dev.camino.beta.gouv.fr _deploy
-
 deploy/preprod:
 	$(MAKE) DEPLOY_URL=preprod.camino.beta.gouv.fr _deploy
 
@@ -240,3 +238,60 @@ graphql/check:
 		echo $$f; \
 		graphql-inspector validate --noStrictFragments "$$f" packages/api/src/api/graphql/schemas/index.graphql || exit 1; \
 	done
+
+
+dev/chiffre:
+	$(MAKE) INPUT_ENV=dev _chiffre
+
+dev/dechiffre:
+	$(MAKE) INPUT_ENV=dev _dechiffre
+
+
+preprod/chiffre:
+	$(MAKE) INPUT_ENV=preprod _chiffre
+
+preprod/dechiffre:
+	$(MAKE) INPUT_ENV=preprod _dechiffre
+
+prod/chiffre:
+	$(MAKE) INPUT_ENV=prod _chiffre
+
+prod/dechiffre:
+	$(MAKE) INPUT_ENV=prod _dechiffre
+_chiffre:
+ifndef INPUT_ENV
+	@echo 'INPUT_ENV est obligatoire'
+	@exit 1
+endif
+	@echo 'on chiffre ${INPUT_ENV}'
+	SOPS_AGE_RECIPIENTS=$$(cat team.age.pub ecocompose.age.pub | sed -z 's/\n/,/g;s/,$$/\n/') sops --encrypt --input-type dotenv --output-type dotenv .${INPUT_ENV}.no-commit.env > .${INPUT_ENV}.env
+
+_dechiffre:
+ifndef INPUT_ENV
+	@echo 'INPUT_ENV est obligatoire'
+	@exit 1
+endif
+	SOPS_AGE_KEY_FILE=team.age sops -d --input-type dotenv --output-type dotenv .${INPUT_ENV}.env > .${INPUT_ENV}.no-commit.env
+
+# TODO 2024-10-21 une fois tout migré sur ecoCompose, il faudra supprimer tout ce qu'il y a dans infra sauf le dossier ecocompose
+keycloak/build:
+	docker build -t caminofr/camino-keycloak:25.0.5 -f Dockerfile.keycloak infra/ecocompose/keycloak/
+
+keycloak/push:
+	docker push caminofr/camino-keycloak:25.0.5
+
+nginx-proxy/build:
+	docker build -t caminofr/camino-nginx-proxy:1.6.1 -f Dockerfile.nginx-proxy infra/ecocompose/nginx-proxy/
+
+nginx-proxy/push:
+	docker push caminofr/camino-nginx-proxy:1.6.1
+
+cron/build:
+	docker build -t caminofr/cron:1.0.0-dev --build-arg BUILD_ENV=dev -f Dockerfile.cron infra/ecocompose/crons/
+	docker build -t caminofr/cron:1.0.0-preprod --build-arg BUILD_ENV=preprod -f Dockerfile.cron infra/ecocompose/crons/
+	docker build -t caminofr/cron:1.0.0-prod --build-arg BUILD_ENV=prod -f Dockerfile.cron infra/ecocompose/crons/
+
+cron/push:
+	docker push caminofr/cron:1.0.0-dev
+	docker push caminofr/cron:1.0.0-preprod
+	docker push caminofr/cron:1.0.0-prod

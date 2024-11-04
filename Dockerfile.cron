@@ -1,0 +1,9 @@
+FROM mcuadros/ofelia:0.3.13
+
+RUN apk add -U curl restic postgresql16-client postgresql16-contrib docker-cli bash
+
+COPY restore-last-backup /
+COPY backup /
+
+ARG BUILD_ENV
+COPY config-$BUILD_ENV.ini /etc/ofelia/config.ini

@@ -1,0 +1,20 @@
+#!/bin/bash
+set -eufo pipefail
+
+if [ "${ENV}" = "prod" ]; then
+   echo "This script must not run in production" 1>&2
+   exit 1
+fi
+
+echo 'Mise en place des fichiers de prod'
+restic restore latest --no-lock -t /
+echo "Arrêt de l'api et de keycloak"
+docker stop camino_api_app camino_keycloak
+echo "Insertion du dump de la BDD"
+docker exec -i camino_api_db dropdb --username=postgres camino
+docker exec -i camino_api_db createdb  --username=postgres camino
+docker exec -i camino_api_db pg_restore --clean --if-exists --no-owner --no-privileges --dbname=camino /dump
+echo "Redémarrage de l'api et de keycloak"
+docker restart camino_api_app camino_keycloak camino_ui_app
+
+curl -i -X POST -H 'Content-Type: application/json' -d "{\"message\": \":tada: Dernier backup appliqué sur ${ENV} $(restic snapshots --no-lock | tail -3 | head -1 | cut -d' ' -f3) :tada:\"}" ${TCHAP_HOOK}

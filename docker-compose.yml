@@ -11,13 +11,11 @@ services:
       APPLICATION_VERSION: ${CAMINO_TAG}
       VIRTUAL_HOST: ${API_HOST}
       VIRTUAL_PORT: ${API_PORT}
-      LETSENCRYPT_HOST: ${API_HOST}
-      LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL}
       PGHOST: db
     expose:
       - ${API_PORT}
     volumes:
-      - ./files:/project/packages/api/files
+      - $EDCS_DATA_STACK/files:/project/packages/api/files
       - ./.env:/project/.env
     networks:
       - default
@@ -31,13 +29,16 @@ services:
       POSTGRES_USER: ${PGUSER}
       POSTGRES_PASSWORD: ${PGPASSWORD}
       POSTGRES_DB: ${PGDATABASE}
+      # from https://github.com/docker-library/docs/blob/master/postgres/README.md
+      # On autorise tout, on part du principe que la vm est sécurisée et que les conteneurs qui ont accès à cette VM ne peuvent être que les notres
+      POSTGRES_HOST_AUTH_METHOD: trust
     expose:
       - ${PGPORT}
     networks:
       - default
     volumes:
-      - ./postgresql:/var/lib/postgresql/data
-      - /srv/backups/dump/:/dump/
+      - $EDCS_DATA_STACK/postgresql:/var/lib/postgresql/data
+      - $EDCS_DATA_STACK/backups/dump/:/dump/
     restart: unless-stopped
   docs:
     container_name: camino_docs
@@ -45,8 +46,6 @@ services:
     environment:
       VIRTUAL_HOST: ${DOC_HOST}
       VIRTUAL_PORT: ${DOC_PORT}
-      LETSENCRYPT_HOST: ${DOC_HOST}
-      LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL}
     expose:
       - ${DOC_PORT}
     networks:
@@ -68,6 +67,22 @@ services:
       - default
       - nginx-proxy
     restart: unless-stopped
+  cron:
+    container_name: camino_cron
+    image: caminofr/cron:1.0.0-${ENV}
+    environment:
+      ENV: ${ENV}
+      TCHAP_HOOK: ${TCHAP_HOOK}
+      RESTIC_REPOSITORY: ${RESTIC_REPOSITORY}
+      RESTIC_PASSWORD: ${RESTIC_PASSWORD}
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+    networks:
+      - default
+    restart: unless-stopped
+    volumes:
+      - $EDCS_DATA_STACK/backups/:/srv/backups/
+      - /var/run/docker.sock:/var/run/docker.sock:ro
   oauth2:
     container_name: camino_oauth2
     image: quay.io/oauth2-proxy/oauth2-proxy:v7.6.0
@@ -77,8 +92,6 @@ services:
     environment:
       VIRTUAL_HOST: ${OAUTH_HOST}
       VIRTUAL_PORT: ${OAUTH_PORT}
-      LETSENCRYPT_HOST: ${OAUTH_HOST}
-      LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL}
       OAUTH2_PROXY_PROVIDER: 'keycloak-oidc'
       OAUTH2_PROXY_CLIENT_ID: ${KEYCLOAK_CLIENT_ID}
       OAUTH2_PROXY_CLIENT_SECRET: ${KEYCLOAK_CLIENT_SECRET}
@@ -86,11 +99,13 @@ services:
       OAUTH2_PROXY_OIDC_ISSUER_URL: https://${KEYCLOAK_HOST}/realms/Camino
       OAUTH2_PROXY_REDIRECT_URL: https://${OAUTH_HOST}
       OAUTH2_PROXY_HTTP_ADDRESS: 0.0.0.0:${OAUTH_PORT}
-      OAUTH2_PROXY_UPSTREAMS: http://ui:${UI_PORT}
+      OAUTH2_PROXY_UPSTREAMS: http://camino_ui_app:${UI_PORT}
       OAUTH2_PROXY_EMAIL_DOMAINS: "*"
       OAUTH2_PROXY_SKIP_PROVIDER_BUTTON: true
       OAUTH2_PROXY_PASS_ACCESS_TOKEN: true
       OAUTH2_PROXY_SKIP_AUTH_ROUTES: "/*"
+      NO_PROXY: ${EDCS_PROXY_NO},camino_ui_app
+      no_proxy: ${EDCS_PROXY_NO},camino_ui_app
       # nécessaire pour garder le basic auth
       OAUTH2_PROXY_PASS_BASIC_AUTH: true
       OAUTH2_PROXY_SKIP_AUTH_STRIP_HEADERS: false
@@ -108,7 +123,7 @@ services:
       - nginx-proxy
   keycloak:
     container_name: camino_keycloak
-    image: quay.io/keycloak/keycloak:25.0.5
+    image: caminofr/camino-keycloak:25.0.5
     depends_on:
       - db
     environment:
@@ -121,14 +136,6 @@ services:
       KC_PROXY: "edge"
       VIRTUAL_HOST: ${KEYCLOAK_HOST}
       VIRTUAL_PORT: ${KEYCLOAK_PORT}
-      LETSENCRYPT_HOST: ${KEYCLOAK_HOST}
-      LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL}
-    volumes:
-      # A Synchroniser avec ansible infra/roles/camino/tasks
-      - ./keycloak-franceconnect-6.2.0.jar:/opt/keycloak/providers/keycloak-franceconnect-6.2.0.jar
-      # FROM https://github.com/leroyguillaume/keycloak-bcrypt
-      - ./keycloak-bcrypt-1.6.0.jar:/opt/keycloak/providers/keycloak-bcrypt-1.6.0.jar
-      - ./keycloak_theme/:/opt/keycloak/themes/camino/
     command: "start"
     expose:
       - ${KEYCLOAK_PORT}
@@ -136,7 +143,19 @@ services:
     networks:
       - default
       - nginx-proxy
-
+  nginx-proxy:
+    image: caminofr/camino-nginx-proxy:1.6.1
+    container_name: nginx-proxy
+    restart: unless-stopped
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"
+    ports:
+      - "80:80"
+    volumes:
+      - $EDCS_DATA_STACK/nginx_vhost:/etc/nginx/vhost.d
+      - $EDCS_DATA_STACK/nginx_html:/usr/share/nginx/html
+      - /var/run/docker.sock:/tmp/docker.sock:ro
 networks:
   nginx-proxy:
-    external: true

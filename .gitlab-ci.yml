@@ -2,6 +2,7 @@ default:
   tags: [global, shared]
   interruptible: true
 
+
 stages:
   - prepare
   - test
@@ -21,6 +22,9 @@ build-ci-image:
     max: 2
 
 include:
+  - project: 'share/devops/squelettes/gitlab/eco'
+    file: 'deploy_eco_compose.yaml'
+    ref: 'main'
   - local: .gitlab/global.yml
   - local: .gitlab/deploy.yml
   - local: .gitlab/ci/*.yml

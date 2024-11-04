@@ -1,0 +1,7 @@
+FROM quay.io/keycloak/keycloak:25.0.5
+
+# Utiliser le makefile, mettre à jour la version à la main
+
+COPY keycloak-franceconnect-6.2.0.jar /opt/keycloak/providers/keycloak-franceconnect-6.2.0.jar
+COPY keycloak-bcrypt-1.6.0.jar /opt/keycloak/providers/keycloak-bcrypt-1.6.0.jar
+COPY keycloak_theme/ /opt/keycloak/themes/camino/

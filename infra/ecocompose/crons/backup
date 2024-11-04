@@ -1,0 +1,12 @@
+#!/bin/bash
+set -eufo pipefail
+
+docker exec camino_api_db pg_dump --clean --if-exists --no-owner --no-privileges -B --dbname=camino --format c > /srv/backups/dump_without_files.backup
+
+docker exec camino_api_db /bin/bash -c 'rm -rf /dump/*'
+docker exec camino_api_db vacuumlo camino
+docker exec camino_api_db pg_dump --clean --if-exists --format=d --no-owner --no-privileges --dbname=camino -f /dump
+
+restic backup /srv/backups/
+
+curl -i -X POST -H 'Content-Type: application/json' -d "{\"message\": \":tada: backup effectué sur ${ENV} :tada:\"}" ${TCHAP_HOOK}

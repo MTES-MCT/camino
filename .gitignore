@@ -12,3 +12,5 @@ packages/ui/storybook-static/
 .vscode
 **/coverage
 .cargo
+team.age
+*.no-commit.env
