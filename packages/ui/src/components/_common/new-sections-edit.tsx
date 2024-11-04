@@ -93,6 +93,10 @@ export const getInfo = (element: DeepReadonly<ElementWithValue>, sectionId: stri
       const dateFin = dateAddDays(etapeDate, element.value - 1)
       return `Du ${dateFormat(etapeDate)} au ${dateFormat(dateFin)} (inclus)`
     }
+    if (element.id === 'delaifixe' && isNumberElement(element) && isNotNullNorUndefined(etapeDate)) {
+      const dateFin = dateAddDays(etapeDate, element.value - 1)
+      return `Du ${dateFormat(etapeDate)} au ${dateFormat(dateFin)} (inclus)`
+    }
   }
 
   return ''

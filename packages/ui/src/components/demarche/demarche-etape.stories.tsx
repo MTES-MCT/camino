@@ -1183,3 +1183,27 @@ export const EtapeAvecNoteAvertissement: StoryFn = () => (
     entreprises={entreprises}
   />
 )
+
+export const DemandeDeComplement: StoryFn = () => (
+  <DemarcheEtape
+    titre={{ titreStatutId: 'val', typeId: 'arm', nom: 'nom du titre', slug: titreSlug }}
+    demarche={{ demarche_type_id: 'oct', titulaireIds: [entrepriseIdValidator.parse('titulaire1')], administrationsLocales: [], sdom_zones: [], etapes: [], communes: [] }}
+    router={routerPushMock}
+    user={{ ...testBlankUser, role: 'super' }}
+    etape={{
+      id: etapeIdValidator.parse('etapeId'),
+      slug: etapeSlugValidator.parse('etape-slug'),
+      note: { valeur: '', is_avertissement: false },
+      etape_type_id: EtapesTypesEtapesStatuts.demandeDeComplements.FAIT.etapeTypeId,
+      etape_statut_id: EtapesTypesEtapesStatuts.demandeDeComplements.FAIT.etapeStatutId,
+      is_brouillon: ETAPE_IS_NOT_BROUILLON,
+      date,
+      sections_with_values: [{ id: 'mcox', elements: [{ id: 'delaifixe', nom: 'Délai fixé (jour)', type: 'number', optionnel: true, value: 12 }] }],
+      etape_documents: [],
+      entreprises_documents: [],
+      avis_documents: [],
+    }}
+    apiClient={apiClient}
+    entreprises={entreprises}
+  />
+)
