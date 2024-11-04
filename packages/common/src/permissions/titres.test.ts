@@ -1,4 +1,15 @@
-import { canCreateTitre, canDeleteTitre, canEditTitre, canHaveActivites, canHaveActiviteTypeId, canHaveForages, canLinkTitres, canReadTitre, getLinkConfig } from './titres'
+import {
+  canCreateTitre,
+  canDeleteTitre,
+  canEditTitre,
+  canHaveActivites,
+  canHaveActiviteTypeId,
+  canHaveForages,
+  canLinkTitres,
+  canReadTitre,
+  canSeeTitreLastModifiedDate,
+  getLinkConfig,
+} from './titres'
 import { TitresTypesIds, TitreTypeId } from '../static/titresTypes'
 import { ADMINISTRATION_IDS, AdministrationId } from '../static/administrations'
 import { test, expect, describe } from 'vitest'
@@ -346,4 +357,15 @@ describe('canReadTitre', () => {
       ).toBe(false)
     })
   })
+})
+
+test('canSeeTitreLastModifiedDate', () => {
+  expect(canSeeTitreLastModifiedDate({ ...testBlankUser, role: 'super' })).toBe(true)
+  expect(canSeeTitreLastModifiedDate({ ...testBlankUser, role: 'admin', administrationId: 'aut-97300-01' })).toBe(true)
+  expect(canSeeTitreLastModifiedDate({ ...testBlankUser, role: 'editeur', administrationId: 'aut-97300-01' })).toBe(true)
+  expect(canSeeTitreLastModifiedDate({ ...testBlankUser, role: 'lecteur', administrationId: 'aut-97300-01' })).toBe(true)
+  expect(canSeeTitreLastModifiedDate({ ...testBlankUser, role: 'entreprise', entrepriseIds: [] })).toBe(false)
+  expect(canSeeTitreLastModifiedDate({ ...testBlankUser, role: "bureau d'études", entrepriseIds: [] })).toBe(false)
+  expect(canSeeTitreLastModifiedDate({ ...testBlankUser, role: 'defaut' })).toBe(false)
+  expect(canSeeTitreLastModifiedDate(null)).toBe(false)
 })

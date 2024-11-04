@@ -34,7 +34,7 @@ import { ETAPE_TYPE_FOR_CONCURRENCY_DATA, isEtapeTypeIdFondamentale } from 'cami
 import { getCommunes } from '../../database/queries/communes.queries'
 import { EtapeAvis, EtapeDocument } from 'camino-common/src/etape'
 import { getDateLastJournal } from './journal.queries'
-import { canHaveActivites, canReadTitre } from 'camino-common/src/permissions/titres'
+import { canHaveActivites, canReadTitre, canSeeTitreLastModifiedDate } from 'camino-common/src/permissions/titres'
 import { canReadTitreActivites } from 'camino-common/src/permissions/activites'
 import { TitreIdOrSlug, titreIdValidator, titreSlugValidator, TitreId } from 'camino-common/src/validators/titres'
 import { EntrepriseId, entrepriseIdValidator } from 'camino-common/src/entreprise'
@@ -53,7 +53,7 @@ export const getTitre = async (pool: Pool, user: User, idOrSlug: TitreIdOrSlug):
   } else {
     const titre = titres[0]
 
-    const titreDateLastModified = await getDateLastJournal(pool, titre.id)
+    const titreDateLastModified = canSeeTitreLastModifiedDate(user) ? await getDateLastJournal(pool, titre.id) : null
     const titreDoublon = titre.titre_doublon_id !== null && titre.titre_doublon_nom !== null ? { id: titre.titre_doublon_id, nom: titre.titre_doublon_nom } : null
 
     const demarchesFromDatabase = await getDemarchesByTitreId(pool, titre.id)

@@ -15,6 +15,7 @@ import { SecteursMaritimes } from '../static/facades'
 import { EntrepriseId } from '../entreprise'
 import { TITRES_TYPES_TYPES_IDS } from '../static/titresTypesTypes'
 
+export const canSeeTitreLastModifiedDate = (user: User): boolean => isSuper(user) || isAdministration(user)
 export const getLinkConfig = (typeId: TitreTypeId, demarches: { demarche_type_id: DemarcheTypeId }[]): { count: 'single' | 'multiple'; typeId: TitreTypeId } | null => {
   const titreType = TitresTypes[typeId]
 

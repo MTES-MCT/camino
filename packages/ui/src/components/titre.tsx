@@ -24,7 +24,7 @@ import { TitresLinkForm } from './titre/titres-link-form'
 import { canReadTitreActivites } from 'camino-common/src/permissions/activites'
 import { TitreTimeline } from './titre/titre-timeline'
 import { CommuneId } from 'camino-common/src/static/communes'
-import { canDeleteTitre, canEditTitre, canHaveActivites } from 'camino-common/src/permissions/titres'
+import { canDeleteTitre, canEditTitre, canHaveActivites, canSeeTitreLastModifiedDate } from 'camino-common/src/permissions/titres'
 import { TitreDemarche } from '@/components/titre/titre-demarche'
 import { isNotNullNorUndefined, isNullOrUndefined, isNullOrUndefinedOrEmpty, onlyUnique } from 'camino-common/src/typescript-tools'
 import { DsfrSeparator } from './_ui/dsfr-separator'
@@ -375,7 +375,7 @@ export const PureTitre = defineComponent<Props>(props => {
             ) : null}
 
             <div class="fr-grid-row fr-grid-row--middle fr-mt-4w">
-              {titre.titre_last_modified_date !== null ? <ModifiedDate modified_date={titre.titre_last_modified_date} /> : null}
+              {titre.titre_last_modified_date !== null && canSeeTitreLastModifiedDate(props.user) ? <ModifiedDate modified_date={titre.titre_last_modified_date} /> : null}
 
               {isSuper(props.user) ? (
                 <DsfrLink
