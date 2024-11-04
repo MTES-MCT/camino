@@ -4,33 +4,7 @@ release-gitlab:
   script: npx semantic-release
   rules:
     - if: $CI_COMMIT_BRANCH == "prod"
-get_camino_tag:
-  stage: deploy
-  script: echo "CAMINO_TAG=${CI_COMMIT_SHA}" > out.env
-  artifacts:
-    reports:
-      dotenv: out.env
-  rules:
-    - if: $CI_COMMIT_BRANCH == "master"
-    - if: $CI_COMMIT_BRANCH == "preprod"
-    - if: $CI_COMMIT_BRANCH == "prod"
-deploy_app_via_compose:
-  tags: [dnum-paas-eco]
-  needs: [get_camino_tag]
-  extends: .deploy_eco_compose
-  stage: deploy
-  script:
-    - paas-docker-down-and-up --compose-path docker-compose.yml --dotenv-path .${INPUT_ENV}.env --vars CAMINO_TAG
-  rules:
-    # - if: $CI_COMMIT_BRANCH == "preprod"
-    #   variables:
-    #     INPUT_ENV: preprod
-    # - if: $CI_COMMIT_BRANCH == "prod"
-    #   variables:
-    #     INPUT_ENV: prod
-    - if: $CI_COMMIT_BRANCH == "master"
-      variables:
-        INPUT_ENV: dev
+
 deploy:
   extends: .prepare-node-run
   stage: deploy

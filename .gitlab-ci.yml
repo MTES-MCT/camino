@@ -30,3 +30,32 @@ include:
   - local: .gitlab/ci/*.yml
     rules:
       - if: $CI_COMMIT_BRANCH && $CI_COMMIT_BRANCH != "prod" && $CI_COMMIT_BRANCH != "preprod"
+
+# TODO 2024-11-04 https://tchap.gouv.fr/#/room/!MjIxJGpTxosDIKuxio:agent.dev-durable.tchap.gouv.fr/$3upSEeEngpERirmTbbg3wmQWT8nlpjmbBWIGgn8oUfw?via=agent.dev-durable.tchap.gouv.fr&via=agent.dinum.tchap.gouv.fr impossible de mettre ça dans un autre fichier que le gitlab-ci.yml
+get_camino_tag:
+  stage: deploy
+  script: echo "CAMINO_TAG=${CI_COMMIT_SHA}" > out.env
+  artifacts:
+    reports:
+      dotenv: out.env
+  rules:
+    - if: $CI_COMMIT_BRANCH == "master"
+    - if: $CI_COMMIT_BRANCH == "preprod"
+    - if: $CI_COMMIT_BRANCH == "prod"
+deploy_app_via_compose:
+  tags: [dnum-paas-eco]
+  needs: [get_camino_tag]
+  extends: .deploy_eco_compose
+  stage: deploy
+  script:
+    - paas-docker-down-and-up --compose-path docker-compose.yml --dotenv-path .${INPUT_ENV}.env --vars CAMINO_TAG
+  rules:
+    # - if: $CI_COMMIT_BRANCH == "preprod"
+    #   variables:
+    #     INPUT_ENV: preprod
+    # - if: $CI_COMMIT_BRANCH == "prod"
+    #   variables:
+    #     INPUT_ENV: prod
+    - if: $CI_COMMIT_BRANCH == "master"
+      variables:
+        INPUT_ENV: dev
