@@ -81,31 +81,30 @@ const commonEtapeAvisValidator = z.object({
   has_file: z.boolean(),
   avis_visibility_id: avisVisibilityIdValidator,
 })
-const regularEtapeAvisValidator = commonEtapeAvisValidator.extend({
+export const regularEtapeAvisValidator = commonEtapeAvisValidator.extend({
   avis_type_id: avisTypeIdSansAutreValidator,
-  description: z.string().nullable(),
+  description: z.string(),
 })
-const autreEtapeAvisValidator = commonEtapeAvisValidator.extend({
+export const autreEtapeAvisValidator = commonEtapeAvisValidator.extend({
   avis_type_id: autreAvisTypeIdValidator,
   description: z.string().min(1),
 })
-
-export const etapeAvisValidator = z.union([regularEtapeAvisValidator, autreEtapeAvisValidator])
+export const etapeAvisValidator = z.discriminatedUnion('avis_type_id', [regularEtapeAvisValidator, autreEtapeAvisValidator])
 export type EtapeAvis = z.infer<typeof etapeAvisValidator>
 
 // L'étape (input de modification)
 const tempDocumentName = {
   temp_document_name: tempDocumentNameValidator.optional(),
 }
-const etapeAvisWithFileModificationValidator = z.union([regularEtapeAvisValidator.extend(tempDocumentName), autreEtapeAvisValidator.extend(tempDocumentName)])
+const etapeAvisWithFileModificationValidator = z.discriminatedUnion('avis_type_id', [regularEtapeAvisValidator.extend(tempDocumentName), autreEtapeAvisValidator.extend(tempDocumentName)])
 export type EtapeAvisWithFileModification = z.infer<typeof etapeAvisWithFileModificationValidator>
 
 // L'étape (input de création)
 const regularEtapeAvisWithoutIdValidator = regularEtapeAvisValidator.omit({ id: true, has_file: true })
 const autreEtapeAvisWithoutIdValidator = autreEtapeAvisValidator.omit({ id: true, has_file: true })
-export const etapeAvisWithoutIdValidator = z.union([regularEtapeAvisWithoutIdValidator, autreEtapeAvisWithoutIdValidator])
+export const etapeAvisWithoutIdValidator = z.discriminatedUnion('avis_type_id', [regularEtapeAvisWithoutIdValidator, autreEtapeAvisWithoutIdValidator])
 
-export const tempEtapeAvisValidator = z.union([regularEtapeAvisWithoutIdValidator.extend(tempDocumentName), autreEtapeAvisWithoutIdValidator.extend(tempDocumentName)])
+export const tempEtapeAvisValidator = z.discriminatedUnion('avis_type_id', [regularEtapeAvisWithoutIdValidator.extend(tempDocumentName), autreEtapeAvisWithoutIdValidator.extend(tempDocumentName)])
 export type TempEtapeAvis = z.infer<typeof tempEtapeAvisValidator>
 
 // Divers inputs de fonctions externes

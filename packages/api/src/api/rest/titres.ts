@@ -1,6 +1,6 @@
 import { titreArchive, titresGet, titreGet, titreUpdate } from '../../database/queries/titres'
 import { HTTP_STATUS } from 'camino-common/src/http'
-import { CommonTitreAdministration, editableTitreValidator, TitreLink, TitreLinks, TitreGet, utilisateurTitreAbonneValidator } from 'camino-common/src/titres'
+import { CommonTitreAdministration, editableTitreValidator, TitreLink, TitreLinks, TitreGet, utilisateurTitreAbonneValidator, titreGetValidator } from 'camino-common/src/titres'
 import { CaminoRequest, CustomResponse } from './express-type'
 import { userSuper } from '../../database/user-super'
 import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined, onlyUnique } from 'camino-common/src/typescript-tools'
@@ -473,7 +473,8 @@ export const getTitre =
         if (titre === null) {
           res.sendStatus(HTTP_STATUS.NOT_FOUND)
         } else {
-          res.json(titre)
+          const titreStripped = titreGetValidator.parse(titre)
+          res.json(titreStripped)
         }
       } catch (e) {
         console.error(e)

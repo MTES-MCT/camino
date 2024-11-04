@@ -20,6 +20,7 @@ import {
   IUpdateEtapeStatutDbQuery,
 } from './titres-etapes.queries.types'
 import {
+  autreEtapeAvisValidator,
   ETAPE_IS_NOT_BROUILLON,
   EtapeAvisId,
   etapeAvisIdValidator,
@@ -35,6 +36,7 @@ import {
   EtapeDocumentWithFileModification,
   EtapeId,
   etapeIdValidator,
+  regularEtapeAvisValidator,
   TempEtapeAvis,
   TempEtapeDocument,
 } from 'camino-common/src/etape'
@@ -53,7 +55,7 @@ import { CanReadDemarche } from '../../api/rest/permissions/demarches'
 import { newEtapeAvisId, newEtapeDocumentId } from '../models/_format/id-create'
 import { caminoDateValidator, getCurrent } from 'camino-common/src/date'
 import { createLargeObject, LargeObjectId, largeObjectIdValidator } from '../largeobjects'
-import { avisStatutIdValidator, avisTypeIdValidator, avisVisibilityIdValidator } from 'camino-common/src/static/avisTypes'
+import { avisStatutIdValidator, avisVisibilityIdValidator } from 'camino-common/src/static/avisTypes'
 import { canReadAvis } from '../../api/rest/permissions/avis'
 import { getEtapeDataForEdition } from '../../api/rest/etapes.queries'
 import { etapeAvisStepIsComplete } from 'camino-common/src/permissions/etape-form'
@@ -309,15 +311,17 @@ export const getEtapeDocumentLargeObjectIdsByEtapeId = async (
 
   return filteredDocuments
 }
-const etapeAvisDbValidator = z.object({
-  id: etapeAvisIdValidator,
-  description: z.string(),
-  avis_type_id: avisTypeIdValidator,
-  avis_statut_id: avisStatutIdValidator,
-  largeobject_id: largeObjectIdValidator.nullable(),
-  date: caminoDateValidator,
-  avis_visibility_id: avisVisibilityIdValidator,
-})
+const etapeAvisDbValidator = z
+  .discriminatedUnion('avis_type_id', [regularEtapeAvisValidator.pick({ avis_type_id: true, description: true }), autreEtapeAvisValidator.pick({ avis_type_id: true, description: true })])
+  .and(
+    z.object({
+      id: etapeAvisIdValidator,
+      avis_statut_id: avisStatutIdValidator,
+      largeobject_id: largeObjectIdValidator.nullable(),
+      date: caminoDateValidator,
+      avis_visibility_id: avisVisibilityIdValidator,
+    })
+  )
 type EtapeAvisDb = z.infer<typeof etapeAvisDbValidator>
 const getAvisByEtapeIdQuery = sql<Redefine<IGetAvisByEtapeIdQueryQuery, { titre_etape_id: EtapeId }, EtapeAvisDb>>`
 select

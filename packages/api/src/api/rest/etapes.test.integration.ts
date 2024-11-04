@@ -11,7 +11,7 @@ import { entrepriseIdValidator } from 'camino-common/src/entreprise'
 import { TestUser, testBlankUser } from 'camino-common/src/tests-utils'
 import { entrepriseUpsert } from '../../database/queries/entreprises'
 import { Knex } from 'knex'
-import { ETAPE_IS_BROUILLON, etapeAvisIdValidator } from 'camino-common/src/etape'
+import { ETAPE_IS_BROUILLON, etapeAvisIdValidator, TempEtapeAvis } from 'camino-common/src/etape'
 import { insertEtapeAvisWithLargeObjectId } from '../../database/queries/titres-etapes.queries'
 import { largeObjectIdValidator } from '../../database/largeobjects'
 import { AvisVisibilityIds } from 'camino-common/src/static/avisTypes'
@@ -319,20 +319,21 @@ describe('getEtapeAvis', () => {
     expect(getAvis.statusCode).toBe(HTTP_STATUS.OK)
     expect(getAvis.body).toStrictEqual([])
 
-    await insertEtapeAvisWithLargeObjectId(
-      dbPool,
-      etapeId,
-      {
-        avis_type_id: 'autreAvis',
-        date: caminoDateValidator.parse('2023-02-01'),
-        avis_statut_id: 'Favorable',
-        description: 'Super',
-        avis_visibility_id: AvisVisibilityIds.Administrations,
-        temp_document_name: tempDocumentNameValidator.parse('fakeTempDocumentName'),
-      },
-      etapeAvisIdValidator.parse('avisId'),
-      largeObjectIdValidator.parse(42)
-    )
+    const avis: TempEtapeAvis = {
+      avis_type_id: 'autreAvis',
+      date: caminoDateValidator.parse('2023-02-01'),
+      avis_statut_id: 'Favorable',
+      description: 'Super',
+      avis_visibility_id: AvisVisibilityIds.Administrations,
+      temp_document_name: tempDocumentNameValidator.parse('fakeTempDocumentName'),
+    }
+
+    await expect(
+      insertEtapeAvisWithLargeObjectId(dbPool, etapeId, { ...avis, description: '' }, etapeAvisIdValidator.parse('avisId'), largeObjectIdValidator.parse(42))
+    ).rejects.toThrowErrorMatchingInlineSnapshot(`[error: new row for relation "etape_avis" violates check constraint "etape_avis_description_required"]`)
+
+    await insertEtapeAvisWithLargeObjectId(dbPool, etapeId, avis, etapeAvisIdValidator.parse('avisId'), largeObjectIdValidator.parse(42))
+
     getAvis = await restCall(dbPool, '/rest/etapes/:etapeId/etapeAvis', { etapeId: etapeId }, userSuper)
     expect(getAvis.statusCode).toBe(HTTP_STATUS.OK)
     expect(getAvis.body).toMatchInlineSnapshot(`

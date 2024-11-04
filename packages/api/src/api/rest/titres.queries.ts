@@ -1,5 +1,5 @@
 import { sql } from '@pgtyped/runtime'
-import { getMostRecentValuePropFromEtapeFondamentaleValide, TitreGet, TitreGetDemarche, titreGetValidator } from 'camino-common/src/titres'
+import { getMostRecentValuePropFromEtapeFondamentaleValide, TitreGet, TitreGetDemarche } from 'camino-common/src/titres'
 import { Redefine, dbQueryAndValidate } from '../../pg-database'
 import {
   IGetAdministrationsLocalesByTitreIdDbQuery,
@@ -289,7 +289,7 @@ export const getTitre = async (pool: Pool, user: User, idOrSlug: TitreIdOrSlug):
       demarches: formattedDemarches,
     }
 
-    return titreGetValidator.parse(titreFinal)
+    return titreFinal
   }
 }
 
