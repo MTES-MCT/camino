@@ -181,8 +181,8 @@ export const PureGranulatsMarins = defineComponent<Props>(props => {
 
   return () => (
     <>
-      <div class="content">
-        <div id="etat" class="mb-xxl mt">
+      <div class="fr-container--fluid">
+        <div id="etat">
           <h2>État du domaine minier en temps réel</h2>
           <span class="separator" />
           <p>
@@ -193,11 +193,11 @@ export const PureGranulatsMarins = defineComponent<Props>(props => {
             Les surfaces cumulées concernées par un titre ou une autorisation n’impliquent pas qu’elles sont effectivement explorées ou exploitées sur tout ou partie de l'année. Les travaux miniers
             font l’objet de déclarations ou d’autorisations distinctes portant sur une partie seulement de la surface des titres miniers.
           </p>
-          <div class="mb-xxl">
-            <h3>Titres d’exploration</h3>
+          <div class="fr-mb-2w">
+            <h3>Titres d'exploration</h3>
             <hr />
-            <div class="tablet-blobs">
-              <div class="tablet-blob-1-3">
+            <div class="fr-grid-row">
+              <div class="fr-col-12 fr-col-md-4">
                 <p class={['fr-display--xs', styles['donnee-importante']]}>
                   <LoadingElement data={statistiquesGranulatsMarins.value} renderItem={item => <>{item.raw.titresInstructionExploration}</>} />
                 </p>
@@ -208,13 +208,13 @@ export const PureGranulatsMarins = defineComponent<Props>(props => {
                     if (item.raw.titresInstructionExploration > 1) {
                       return (
                         <div>
-                          <p class="bold text-center">Demandes en cours d'instruction (initiale, modification en instance et survie provisoire)</p>
+                          <p class="text-center">Demandes en cours d'instruction (initiale, modification en instance et survie provisoire)</p>
                         </div>
                       )
                     } else {
                       return (
                         <div>
-                          <p class="bold text-center">Demande en cours d'instruction (initiale, modification en instance et survie provisoire)</p>
+                          <p class="text-center">Demande en cours d'instruction (initiale, modification en instance et survie provisoire)</p>
                         </div>
                       )
                     }
@@ -236,11 +236,11 @@ export const PureGranulatsMarins = defineComponent<Props>(props => {
                   </router-link>
                 </p>
               </div>
-              <div class="tablet-blob-1-3">
+              <div class="fr-col-12 fr-col-md-4">
                 <p class={['fr-display--xs', styles['donnee-importante']]}>
                   <LoadingElement data={statistiquesGranulatsMarins.value} renderItem={item => <>{item.raw.titresValPrw}</>} />
                 </p>
-                <p class="bold text-center">Permis exclusifs de recherches</p>
+                <p class="text-center">Permis exclusifs de recherches</p>
                 <p class="h6 text-center">
                   <router-link
                     to={{
@@ -257,19 +257,19 @@ export const PureGranulatsMarins = defineComponent<Props>(props => {
                   </router-link>
                 </p>
               </div>
-              <div class="tablet-blob-1-3">
+              <div class="fr-col-12 fr-col-md-4">
                 <p class={['fr-display--xs', styles['donnee-importante']]}>
                   <LoadingElement data={statistiquesGranulatsMarins.value} renderItem={item => <>{numberFormat(item.raw.surfaceExploration)} ha</>} />
                 </p>
-                <p class="bold text-center">Surfaces cumulées des titres pouvant faire l'objet d'une activité d’exploration</p>
+                <p class="text-center">Surfaces cumulées des titres pouvant faire l'objet d'une activité d’exploration</p>
               </div>
             </div>
           </div>
-          <div class="mb-xxl">
+          <div class="fr-mb-2w">
             <h3>Titres d’exploitation</h3>
             <hr />
-            <div class="tablet-blobs">
-              <div class="tablet-blob-1-3">
+            <div class="fr-grid-row">
+              <div class="fr-col-12 fr-col-md-4">
                 <p class={['fr-display--xs', styles['donnee-importante']]}>
                   <LoadingElement data={statistiquesGranulatsMarins.value} renderItem={item => <>{item.raw.titresInstructionExploitation}</>} />
                 </p>
@@ -279,13 +279,13 @@ export const PureGranulatsMarins = defineComponent<Props>(props => {
                     if (item.raw.titresInstructionExploitation > 1) {
                       return (
                         <div>
-                          <p class="bold text-center">Demandes en cours d'instruction (initiale, modification en instance et survie provisoire)</p>
+                          <p class="text-center">Demandes en cours d'instruction (initiale, modification en instance et survie provisoire)</p>
                         </div>
                       )
                     } else {
                       return (
                         <div>
-                          <p class="bold text-center">Demande en cours d'instruction (initiale, modification en instance et survie provisoire)</p>
+                          <p class="text-center">Demande en cours d'instruction (initiale, modification en instance et survie provisoire)</p>
                         </div>
                       )
                     }
@@ -308,7 +308,7 @@ export const PureGranulatsMarins = defineComponent<Props>(props => {
                   </router-link>
                 </p>
               </div>
-              <div class="tablet-blob-1-3">
+              <div class="fr-col-12 fr-col-md-4">
                 <p class={['fr-display--xs', styles['donnee-importante']]}>
                   <LoadingElement data={statistiquesGranulatsMarins.value} renderItem={item => <>{item.raw.titresValCxw}</>} />
                 </p>
@@ -316,7 +316,7 @@ export const PureGranulatsMarins = defineComponent<Props>(props => {
                   data={statistiquesGranulatsMarins.value}
                   renderItem={item => (
                     <div>
-                      <p class="bold text-center">Concession{item.raw.titresValCxw > 1 ? 's' : ''}</p>
+                      <p class="text-center">Concession{item.raw.titresValCxw > 1 ? 's' : ''}</p>
                     </div>
                   )}
                 />
@@ -337,23 +337,23 @@ export const PureGranulatsMarins = defineComponent<Props>(props => {
                   </router-link>
                 </p>
               </div>
-              <div class="tablet-blob-1-3">
+              <div class="fr-col-12 fr-col-md-4">
                 <p class={['fr-display--xs', styles['donnee-importante']]}>
                   <LoadingElement data={statistiquesGranulatsMarins.value} renderItem={item => <>{numberFormat(item.raw.surfaceExploitation)} ha</>} />
                 </p>
-                <p class="bold text-center">Surfaces cumulées des titres pouvant faire l'objet d'une activité d’exploitation</p>
+                <p class="text-center">Surfaces cumulées des titres pouvant faire l'objet d'une activité d’exploitation</p>
               </div>
             </div>
           </div>
         </div>
 
-        <div class="line-neutral width-full mb" />
+        <DsfrSeparator />
 
         <h2>Production annuelle</h2>
         <span class="separator" />
-        <p class="mb-xl">Données contenues dans la base de données Camino, stabilisées pour l’année n-1.</p>
+        <p class="fr-mb-3w">Données contenues dans la base de données Camino, stabilisées pour l’année n-1.</p>
 
-        <div class="tablet-pt-s pb-s">
+        <div class="fr-pt-1w fr-pb-1w">
           <LoadingElement
             data={statistiquesGranulatsMarins.value}
             renderItem={({ statsAnneesAfter2010 }) => {
@@ -404,7 +404,7 @@ export const PureGranulatsMarins = defineComponent<Props>(props => {
           }}
         />
 
-        <div class="line-neutral width-full mb-xl" />
+        <DsfrSeparator />
 
         <div id="evolution" class="mb-xxl">
           <h2>Titres octroyés et surface</h2>
@@ -412,14 +412,14 @@ export const PureGranulatsMarins = defineComponent<Props>(props => {
           <p>Données contenues dans la base de données Camino, concernant exclusivement le territoire français.</p>
           <h3>Permis exclusif de recherche (PER) octroyés</h3>
           <hr />
-          <div class="tablet-float-blobs clearfix">
-            <div class="tablet-float-blob-1-3 mb-xl mt">
+          <div class="fr-grid-row">
+            <div class="fr-col-12 fr-col-md-3 fr-mb-3w mt">
               <p class={['fr-display--xs', styles['donnee-importante']]}>
                 <LoadingElement data={statistiquesGranulatsMarins.value} renderItem={item => <>{item.statistiques[anneeCurrent - 1].titresPrw.quantite}</>} />
               </p>
               <p>Permis exclusifs de recherches octroyés l’an dernier</p>
             </div>
-            <div class="tablet-float-blob-2-3 relative mb-xl">
+            <div class="fr-col-12 fr-col-md-9 relative fr-mb-3w">
               <LoadingElement
                 data={statistiquesGranulatsMarins.value}
                 renderItem={item => (
@@ -452,12 +452,12 @@ export const PureGranulatsMarins = defineComponent<Props>(props => {
                     <div>
                       <h3>Permis d'exploitation (PEX) octroyés</h3>
                       <hr />
-                      <div class="tablet-float-blobs clearfix">
-                        <div class="tablet-float-blob-1-3 mb-xl mt">
+                      <div class="fr-grid-row">
+                        <div class="fr-col-12 fr-col-md-3 fr-mb-3w mt">
                           <p class={['fr-display--xs', styles['donnee-importante']]}>{statistiques[anneeCurrent - 1].titresPxw.quantite}</p>
                           <p>Permis d’exploitation octroyés l’an dernier</p>
                         </div>
-                        <div class="tablet-float-blob-2-3 relative mb-xl">
+                        <div class="fr-col-12 fr-col-md-9 relative fr-mb-3w">
                           <ConfigurableChart
                             chartConfiguration={barChartConfig(
                               statsBarFormat({
@@ -484,14 +484,14 @@ export const PureGranulatsMarins = defineComponent<Props>(props => {
 
           <h3>Concessions octroyées</h3>
           <hr />
-          <div class="tablet-float-blobs clearfix">
-            <div class="tablet-float-blob-1-3 mb-xl mt">
+          <div class="fr-grid-row">
+            <div class="fr-col-12 fr-col-md-3 fr-mb-3w mt">
               <p class={['fr-display--xs', styles['donnee-importante']]}>
                 <LoadingElement data={statistiquesGranulatsMarins.value} renderItem={item => <>{item.statistiques[anneeCurrent - 1].titresCxw.quantite}</>} />
               </p>
               <p>Concessions octroyées l’an dernier</p>
             </div>
-            <div class="tablet-float-blob-2-3 relative mb-xl">
+            <div class="fr-col-12 fr-col-md-9 relative fr-mb-3w">
               <LoadingElement
                 data={statistiquesGranulatsMarins.value}
                 renderItem={item => (
@@ -514,14 +514,14 @@ export const PureGranulatsMarins = defineComponent<Props>(props => {
           </div>
           <h3>Concessions valides</h3>
           <hr />
-          <div class="tablet-float-blobs clearfix">
-            <div class="tablet-float-blob-1-3 mb-xl mt">
+          <div class="fr-grid-row">
+            <div class="fr-col-12 fr-col-md-3 fr-mb-3w mt">
               <p class={['fr-display--xs', styles['donnee-importante']]}>
                 <LoadingElement data={statistiquesGranulatsMarins.value} renderItem={item => <>{item.statistiques[anneeCurrent - 1].concessionsValides.quantite}</>} />
               </p>
               <p>Concessions valides l’an dernier</p>
             </div>
-            <div class="tablet-float-blob-2-3 relative mb-xl">
+            <div class="fr-col-12 fr-col-md-9 relative fr-mb-3w">
               <LoadingElement
                 data={statistiquesGranulatsMarins.value}
                 renderItem={item => (

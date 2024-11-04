@@ -11,11 +11,6 @@
 
 @import 'icons/icons.css';
 
-/* Grids          ------------------------------- */
-
-@import 'grids/grid-fluid.css';
-@import 'grids/grid-utils.css';
-
 /* Layout          ------------------------------- */
 
 @import 'system/typography.css';

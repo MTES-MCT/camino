@@ -77,7 +77,7 @@ export const ActivitesTypesEmails = defineComponent<Props>(props => {
     <div>
       <h3>Emails à notifier lors du dépôt d’un type d’activité</h3>
 
-      <div class="tablet-blob-3-4">
+      <div>
         <div class="h6">
           <p>
             Lors d’un dépôt d’une activité d’un type en particulier

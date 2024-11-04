@@ -286,8 +286,8 @@ export const PureGuyane = defineComponent<Props>(props => {
   })
 
   return () => (
-    <div class="content">
-      <div id="etat" class="mb-xxl mt">
+    <div class="fr-container--fluid">
+      <div id="etat">
         <h2>État du domaine minier en temps réel</h2>
         <span class="separator" />
         <p>
@@ -298,15 +298,15 @@ export const PureGuyane = defineComponent<Props>(props => {
           Les surfaces cumulées concernées par un titre ou une autorisation d’exploration et ou d’exploitation n’impliquent pas qu’elles sont effectivement explorées ou exploitées sur tout ou partie
           de l'année. Les travaux miniers font l’objet de déclarations ou d’autorisations distinctes portant sur une partie seulement de la surface des titres miniers.
         </p>
-        <div class="mb-xxl">
+        <div class="fr-mb-2w">
           <h3>Autorisations et titres d’exploration</h3>
           <hr />
-          <div class="tablet-blobs">
-            <div class="tablet-blob-1-4">
+          <div class="fr-grid-row">
+            <div class="fr-col-12 fr-col-md-4">
               <p class={['fr-display--xs', styles['donnee-importante']]}>
                 <LoadingElement data={data.value} renderItem={item => <>{item.data.titresArm}</>} />
               </p>
-              <p class="bold text-center">Autorisations de recherche</p>
+              <p class="text-center">Autorisations de recherche</p>
               <p class="h6 text-center">
                 <router-link
                   to={{
@@ -324,11 +324,11 @@ export const PureGuyane = defineComponent<Props>(props => {
                 </router-link>
               </p>
             </div>
-            <div class="tablet-blob-1-4">
+            <div class="fr-col-12 fr-col-md-4">
               <p class={['fr-display--xs', styles['donnee-importante']]}>
                 <LoadingElement data={data.value} renderItem={item => <>{item.data.titresPrm}</>} />
               </p>
-              <p class="bold text-center">Permis exclusifs de recherches</p>
+              <p class="text-center">Permis exclusifs de recherches</p>
               <p class="h6 text-center">
                 <router-link
                   to={{
@@ -346,23 +346,23 @@ export const PureGuyane = defineComponent<Props>(props => {
                 </router-link>
               </p>
             </div>
-            <div class="tablet-blob-1-2">
+            <div class="fr-col-12 fr-col-md-4">
               <p class={['fr-display--xs', styles['donnee-importante']]}>
                 <LoadingElement data={data.value} renderItem={item => <>{numberFormat(item.data.surfaceExploration)} ha</>} />
               </p>
-              <p class="bold text-center">Surfaces cumulées des titres pouvant faire l'objet d'une activité d’exploration</p>
+              <p class="text-center">Surfaces cumulées des titres pouvant faire l'objet d'une activité d’exploration</p>
             </div>
           </div>
         </div>
-        <div class="mb-xxl">
+        <div class="fr-mb-6w">
           <h3>Autorisations et titres d’exploitation</h3>
           <hr />
-          <div class="tablet-blobs">
-            <div class="tablet-blob-1-4">
+          <div class="fr-grid-row">
+            <div class="fr-col-12 fr-col-md-4">
               <p class={['fr-display--xs', styles['donnee-importante']]}>
                 <LoadingElement data={data.value} renderItem={item => <>{item.data.titresAxm}</>} />
               </p>
-              <p class="bold text-center">Autorisations d'exploitation</p>
+              <p class="text-center">Autorisations d'exploitation</p>
               <p class="h6 text-center">
                 <router-link
                   to={{
@@ -380,11 +380,11 @@ export const PureGuyane = defineComponent<Props>(props => {
                 </router-link>
               </p>
             </div>
-            <div class="tablet-blob-1-4">
+            <div class="fr-col-12 fr-col-md-4">
               <p class={['fr-display--xs', styles['donnee-importante']]}>
                 <LoadingElement data={data.value} renderItem={item => <>{item.data.titresCxm}</>} />
               </p>
-              <p class="bold text-center">Concessions</p>
+              <p class="text-center">Concessions</p>
               <p class="h6 text-center">
                 <router-link
                   to={{
@@ -402,11 +402,11 @@ export const PureGuyane = defineComponent<Props>(props => {
                 </router-link>
               </p>
             </div>
-            <div class="tablet-blob-1-2">
+            <div class="fr-col-12 fr-col-md-4">
               <p class={['fr-display--xs', styles['donnee-importante']]}>
                 <LoadingElement data={data.value} renderItem={item => <>{numberFormat(item.data.surfaceExploitation)} ha</>} />
               </p>
-              <p class="bold text-center">Surfaces cumulées des titres pouvant faire l'objet d'une activité d’exploitation</p>
+              <p class="text-center">Surfaces cumulées des titres pouvant faire l'objet d'une activité d’exploitation</p>
             </div>
           </div>
         </div>
@@ -414,7 +414,7 @@ export const PureGuyane = defineComponent<Props>(props => {
 
       <h2>Production et activité minière légales</h2>
       <span class="separator" />
-      <p class="mb-xl">
+      <p class="fr-mb-3w">
         Les données affichées ici sont celles contenues dans la base de donnée Camino. Elles sont stabilisées pour l’année n-2 mais sont susceptibles d’évoluer jusqu’à la cloture de la collecte des
         déclarations règlementaires de l’année précédente et l'année en cours. Ces données concernent exclusivement le territoire guyanais.
       </p>
@@ -431,22 +431,22 @@ export const PureGuyane = defineComponent<Props>(props => {
           Les données affichées ici sont celles contenues dans la base de donnée Camino. Les données antérieures à 2018 reprises d’anciens systèmes peuvent ne pas être exhaustives. Ces données
           concernent exclusivement le territoire guyanais.
         </p>
-        <div class="mb-xl">
+        <div class="fr-mb-3w">
           <h3>Autorisations de recherche</h3>
           <hr />
           <LoadingElement data={data.value} renderItem={item => <ConfigurableChart chartConfiguration={armChartConfiguration(item.data)} />} />
         </div>
-        <div class="mb-xl">
+        <div class="fr-mb-3w">
           <h3>Permis de recherches</h3>
           <hr />
           <LoadingElement data={data.value} renderItem={item => <ConfigurableChart chartConfiguration={prmChartConfiguration(item.data)} />} />
         </div>
-        <div class="mb-xl">
+        <div class="fr-mb-3w">
           <h3>Autorisations d'exploitation</h3>
           <hr />
           <LoadingElement data={data.value} renderItem={item => <ConfigurableChart chartConfiguration={axmChartConfiguration(item.data)} />} />
         </div>
-        <div class="mb-xl">
+        <div class="fr-mb-3w">
           <h3>Concessions</h3>
           <hr />
           <LoadingElement data={data.value} renderItem={item => <ConfigurableChart chartConfiguration={cxmChartConfiguration(item.data)} />} />

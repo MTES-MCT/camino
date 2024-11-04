@@ -14,6 +14,7 @@ import { CHART_COLORS, nextColor } from '../_charts/utils'
 import styles from './mineraux-metaux-metropole.module.css'
 import { numberFormat } from 'camino-common/src/number'
 import statsStyles from './statistiques.module.css'
+import { DsfrSeparator } from '../_ui/dsfr-separator'
 
 const getStats = async (): Promise<StatistiquesMinerauxMetauxMetropole> => getWithJson('/rest/statistiques/minerauxMetauxMetropole', {})
 
@@ -331,8 +332,8 @@ export const PureMinerauxMetauxMetropole = defineComponent<Props>(props => {
   })
 
   return () => (
-    <div class="content">
-      <div id="etat" class="mb-xxl mt">
+    <div class="fr-container--fluid">
+      <div id="etat">
         <h2>État du domaine minier des substances non énergétiques, dans l’Hexagone, en temps réel</h2>
         <span class="separator" />
         <p>
@@ -343,16 +344,16 @@ export const PureMinerauxMetauxMetropole = defineComponent<Props>(props => {
           Les surfaces cumulées concernées par un titre ou une autorisation n’impliquent pas qu’elles sont effectivement explorées ou exploitées sur tout ou partie de l'année. Les travaux miniers font
           l’objet de déclarations ou d’autorisations distinctes portant sur une partie seulement de la surface des titres miniers.
         </p>
-        <div class="mb-xxl">
+        <div class="fr-mb-2w">
           <h3>Titres d’exploration</h3>
           <hr />
-          <div class="tablet-blobs">
-            <div class="tablet-blob-1-3">
+          <div class="fr-grid-row">
+            <div class="fr-col-12 fr-col-md-4">
               <p class={['fr-display--xs', statsStyles['donnee-importante']]}>
                 <LoadingElement data={data.value} renderItem={item => <>{item.titres.instructionExploration}</>} />
               </p>
               <div>
-                <p class="bold text-center">
+                <p class="text-center">
                   Demande
                   {data.value.status === 'LOADED' && data.value.value.titres.instructionExploration > 1 ? 's ' : ' '}
                   en cours d'instruction (initiale et modification en instance)
@@ -375,11 +376,11 @@ export const PureMinerauxMetauxMetropole = defineComponent<Props>(props => {
                 </router-link>
               </p>
             </div>
-            <div class="tablet-blob-1-3">
+            <div class="fr-col-12 fr-col-md-4">
               <p class={['fr-display--xs', statsStyles['donnee-importante']]}>
                 <LoadingElement data={data.value} renderItem={item => <>{item.titres.valPrm}</>} />
               </p>
-              <p class="bold text-center">Permis exclusifs de recherches</p>
+              <p class="text-center">Permis exclusifs de recherches</p>
               <p class="h6 text-center">
                 <router-link
                   to={{
@@ -397,24 +398,24 @@ export const PureMinerauxMetauxMetropole = defineComponent<Props>(props => {
                 </router-link>
               </p>
             </div>
-            <div class="tablet-blob-1-3">
+            <div class="fr-col-12 fr-col-md-4">
               <p class={['fr-display--xs', statsStyles['donnee-importante']]}>
                 <LoadingElement data={data.value} renderItem={item => <>{numberFormat(item.surfaceExploration)} ha</>} />
               </p>
-              <p class="bold text-center">Surfaces cumulées des titres pouvant faire l'objet d'une activité d’exploration</p>
+              <p class="text-center">Surfaces cumulées des titres pouvant faire l'objet d'une activité d’exploration</p>
             </div>
           </div>
         </div>
-        <div class="mb-xxl">
+        <div class="fr-mb-6w">
           <h3>Titres d’exploitation</h3>
           <hr />
-          <div class="tablet-blobs">
-            <div class="tablet-blob-1-3">
+          <div class="fr-grid-row">
+            <div class="fr-col-12 fr-col-md-4">
               <p class={['fr-display--xs', statsStyles['donnee-importante']]}>
                 <LoadingElement data={data.value} renderItem={item => <>{numberFormat(item.titres.instructionExploitation)}</>} />
               </p>
               <div>
-                <p class="bold text-center">
+                <p class="text-center">
                   Demande
                   {data.value.status === 'LOADED' && data.value.value.titres.instructionExploitation > 1 ? 's ' : ' '}
                   en cours d'instruction (initiale et modification en instance)
@@ -437,12 +438,12 @@ export const PureMinerauxMetauxMetropole = defineComponent<Props>(props => {
                 </router-link>
               </p>
             </div>
-            <div class="tablet-blob-1-3">
+            <div class="fr-col-12 fr-col-md-4">
               <p class={['fr-display--xs', statsStyles['donnee-importante']]}>
                 <LoadingElement data={data.value} renderItem={item => <>{numberFormat(item.titres.valCxm)}</>} />
               </p>
               <div>
-                <p class="bold text-center">
+                <p class="text-center">
                   Concession
                   {data.value.status === 'LOADED' && data.value.value.titres.valCxm > 1 ? 's' : ''}
                 </p>
@@ -464,17 +465,17 @@ export const PureMinerauxMetauxMetropole = defineComponent<Props>(props => {
                 </router-link>
               </p>
             </div>
-            <div class="tablet-blob-1-3">
+            <div class="fr-col-12 fr-col-md-4">
               <p class={['fr-display--xs', statsStyles['donnee-importante']]}>
                 <LoadingElement data={data.value} renderItem={item => <>{numberFormat(item.surfaceExploitation)} ha</>} />
               </p>
-              <p class="bold text-center">Surfaces cumulées des titres pouvant faire l'objet d'une activité d’exploitation</p>
+              <p class="text-center">Surfaces cumulées des titres pouvant faire l'objet d'une activité d’exploitation</p>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="line-neutral width-full mb" />
+      <DsfrSeparator />
 
       <h2>Production annuelle et fiscalité minière des ressources minérales non énergétiques, par famille de substances</h2>
       <span class="separator" />
@@ -505,16 +506,16 @@ export const PureMinerauxMetauxMetropole = defineComponent<Props>(props => {
           Au titre du secret des informations économiques et financières, les volumes d'exploitation ne sont pas communicables.
         </div>
       </div>
-      <div class="line-neutral width-full mb mt" />
+      <DsfrSeparator />
       <h2>Evolution du nombre de titre et de leur surface</h2>
       <span class="separator" />
-      <p class="mb-xl">Les données affichées ici sont celles contenues dans la base de donnée Camino. Ces données concernent exclusivement le territoire métropolitain.</p>
-      <div class="mb-xl">
+      <p class="fr-mb-3w">Les données affichées ici sont celles contenues dans la base de donnée Camino. Ces données concernent exclusivement le territoire métropolitain.</p>
+      <div class="fr-mb-3w">
         <h3>Permis Exclusif de Recherche (PER)</h3>
         <hr />
         <ChartWithExport data={data.value} getConfiguration={item => perChartConfiguration(item)} />
       </div>
-      <div class="mb-xl">
+      <div class="fr-mb-3w">
         <h3>Concession</h3>
         <hr />
         <ChartWithExport data={data.value} getConfiguration={item => concessionChartConfiguration(item)} />

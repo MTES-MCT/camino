@@ -40,7 +40,7 @@ export const DGTMStatsFull = defineComponent<Props>(props => {
   })
 
   return () => (
-    <div class="width-full-p">
+    <div class="fr-py-3w">
       <div style="display: grid; grid-template-columns: 1fr 1fr 1fr">
         {charts.map(chart => (
           <ChartWithExport data={data.value} getConfiguration={data => chart(data)} />

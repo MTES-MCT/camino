@@ -49,7 +49,8 @@ export const routesDefinitions = {
     meta: {
       title: 'Statistiques de la DGTM',
       menuSection: 'dashboard',
-      filtres: [],
+      // TODO 2024-10-29 ici on triche pour avoir le full width... trouver mieux ?
+      filtres: ['activiteStatutsIds'],
     },
   },
   titres: {

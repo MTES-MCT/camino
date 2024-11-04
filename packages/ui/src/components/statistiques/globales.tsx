@@ -156,63 +156,63 @@ export const PureGlobales: FunctionalComponent<Props> = props => {
 
   return (
     <div>
-      <div id="utilisateurs" class="mb-xxl content">
+      <div id="utilisateurs" class="fr-container--fluid">
         <h2>Les différents profils des utilisateurs de Camino</h2>
         <span class="separator" />
-        <div class="tablet-float-blobs clearfix">
-          <div class="tablet-float-blob-1-3">
-            <div class="mb-xl mt">
+        <div class="fr-grid-row">
+          <div class="fr-col-12 fr-col-md-4">
+            <div class="fr-mb-6w fr-mt-3w">
               <p class={['fr-display--xs', styles['donnee-importante']]}>{numberFormat(totalUtilisateurs)}</p>
-              <p class="bold text-center">utilisateurs sur la plateforme</p>
+              <p class="text-center">utilisateurs sur la plateforme</p>
             </div>
-            <div class="mb-xl mt">
+            <div class="fr-mb-6w fr-mt-3w">
               <p class={['fr-display--xs', styles['donnee-importante']]}>{numberFormat(props.statistiques["Nombre d'utilisateurs affiliés à une entreprise"])}</p>
-              <p class="bold text-center">utilisateurs affiliés à une Entreprise</p>
+              <p class="text-center">utilisateurs affiliés à une Entreprise</p>
             </div>
 
-            <div class="mb-xl mt">
+            <div class="fr-mb-6w fr-mt-3w">
               <p class={['fr-display--xs', styles['donnee-importante']]}>{numberFormat(utilisateursAdmin)}</p>
-              <p class="bold text-center">utilisateurs rattachés à un compte Administration</p>
+              <p class="text-center">utilisateurs rattachés à un compte Administration</p>
             </div>
           </div>
-          <div class="tablet-float-blob-2-3 mb-xxl flex" style="justify-content: center">
+          <div class="fr-col-12 fr-col-md-8 flex" style="justify-content: center">
             <div style="width: 70%">
               <ConfigurableChart chartConfiguration={pieConfiguration(utilisateurs)} />
             </div>
           </div>
         </div>
       </div>
-      <div id="administrations" class="mb-xxl content">
+      <div id="administrations" class="fr-mb-6w content">
         <h2>Répartition des différentes administrations sur Camino</h2>
         <span class="separator" />
-        <div class="tablet-float-blobs clearfix">
-          <div class="tablet-float-blob-1-3">
-            <div class="mb-xl mt">
+        <div class="fr-grid-row">
+          <div class="fr-col-12 fr-col-md-4">
+            <div class="fr-mb-6w fr-mt-3w">
               <p class={['fr-display--xs', styles['donnee-importante']]}>{numberFormat(utilisateursAdmin)}</p>
-              <p class="bold text-center">utilisateurs rattachés à un compte Administration</p>
+              <p class="text-center">utilisateurs rattachés à un compte Administration</p>
             </div>
           </div>
-          <div class="tablet-float-blob-2-3 flex" style="justify-content: center">
+          <div class="fr-col-12 fr-col-md-8 flex" style="justify-content: center">
             <div style="width: 70%">
               <ConfigurableChart chartConfiguration={pieConfiguration(utilisateursAdminChart)} />
             </div>
           </div>
         </div>
       </div>
-      <div id="amelioration" class="mb-xxl content">
+      <div id="amelioration" class="fr-mb-6w content">
         <h2>Amélioration continue et accès aux données publiques</h2>
         <span class="separator" />
-        <p class="mb-xl">En tant que secteur régulé par l'État, la publication en ligne des données minières doit permettre leur amélioration et leur utilisation par la communauté</p>
-        <div class="tablet-float-blobs clearfix">
-          <div class="tablet-float-blob-1-3 mb-xl">
+        <p class="fr-mb-3w">En tant que secteur régulé par l'État, la publication en ligne des données minières doit permettre leur amélioration et leur utilisation par la communauté</p>
+        <div class="fr-grid-row">
+          <div class="fr-col-12 fr-col-md-4 fr-mb-3w">
             <p class={['fr-display--xs', styles['donnee-importante']]}>{titresModifies}</p>
-            <p class="bold text-center">mise à jour de titres miniers par l'administration et les entreprises du secteur le mois dernier</p>
+            <p class="text-center">mise à jour de titres miniers par l'administration et les entreprises du secteur le mois dernier</p>
             <p>
               Le nombre de mises à jour mensuelles du cadastre par les différents services de l'administration ou par les professionnels du secteur reflète l'intensité de l'activité d'instruction et
               administrative sur le domaine minier en France. Une mise à jour peut être l'ajout d'un titre, une modification de son statut ou des documents concernant son instruction.
             </p>
           </div>
-          <div class="tablet-float-blob-2-3 mb-xxl">
+          <div class="fr-col-12 fr-col-md-8 fr-mb-6w">
             <ConfigurableChart
               chartConfiguration={lineConfiguration(
                 statsLineFormat({
@@ -225,26 +225,26 @@ export const PureGlobales: FunctionalComponent<Props> = props => {
         </div>
       </div>
 
-      <div id="gains" class="mb-xxl">
+      <div id="gains" class="fr-mb-6w">
         <h2>Gains de la dématérialisation sur l'instruction minière</h2>
         <span class="separator" />
         <p>La dématérialisation des démarches relatives à l'instruction minière doit permettre un gain de temps pour ceux qui les effectuent et ceux qui les instruisent</p>
-        <div class="desktop-blobs">
-          <div class="desktop-blob-1-3 mb-xl">
+        <div class="fr-grid-row">
+          <div class="fr-col-12 fr-col-md-4 fr-mb-3w">
             <p class={['fr-display--xs', styles['donnee-importante']]}>{props.statistiques.demarches}</p>
-            <p class="bold text-center">démarches effectuées en ligne cette année</p>
+            <p class="text-center">démarches effectuées en ligne cette année</p>
           </div>
-          <div class="desktop-blob-1-3 mb-xl">
+          <div class="fr-col-12 fr-col-md-4 fr-mb-3w">
             <p class={['fr-display--xs', styles['donnee-importante']]}>{props.statistiques.titresActivitesBeneficesEntreprise}</p>
-            <p class="bold text-center">jours de travail sans valeur ajoutée économisés par les entreprises en Guyane</p>
+            <p class="text-center">jours de travail sans valeur ajoutée économisés par les entreprises en Guyane</p>
             <p>
               La dématérialisation d’un rapport trimestriel d’activité de production d’or en Guyane permet en moyenne l’économie de 2 heures de travail de saisie ou de déplacement pour son dépôt
               physique à l’administration.
             </p>
           </div>
-          <div class="desktop-blob-1-3 mb-xl">
+          <div class="fr-col-12 fr-col-md-4 fr-mb-3w">
             <p class={['fr-display--xs', styles['donnee-importante']]}>{props.statistiques.titresActivitesBeneficesAdministration}</p>
-            <p class="bold text-center">jours de travail à faible valeur ajoutée économisés par l’administration</p>
+            <p class="text-center">jours de travail à faible valeur ajoutée économisés par l’administration</p>
             <p>
               La dématérialisation d’un rapport trimestriel d’activité de production d’or en Guyane permet en moyenne l’économie d’une heure de travail de traitement et re-saisie de données par un
               agent de l’administration. Le gain de temps est réinvesti sur l’accompagnement et le contrôle de l’activité.
