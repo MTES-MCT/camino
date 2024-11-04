@@ -344,7 +344,7 @@ describe('etapeModifier', () => {
       typeId: 'men',
       statutId: 'fai',
       titreDemarcheId,
-      date: toCaminoDate('2020-01-01'),
+      date: toCaminoDate('2018-01-01'),
       etapeDocuments: [],
       duree: null,
       dateDebut: null,

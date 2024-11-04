@@ -20,7 +20,7 @@ export const Multiple: StoryFn = () => (
     filter="etapesExclues"
     initialValues={[
       { typeId: 'mfr', statutId: 'fai', dateDebut: toCaminoDate('2022-01-01'), dateFin: toCaminoDate('2022-03-03') },
-      { typeId: 'mdp', statutId: 'fai', dateDebut: toCaminoDate('2024-01-01'), dateFin: toCaminoDate('2025-03-03') },
+      { typeId: 'men', statutId: 'fai', dateDebut: toCaminoDate('2024-01-01'), dateFin: toCaminoDate('2025-03-03') },
     ]}
     valuesSelected={action('valuesSelected')}
   />

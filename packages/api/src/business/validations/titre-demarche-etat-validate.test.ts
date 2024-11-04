@@ -52,7 +52,7 @@ describe('titreDemarcheUpdatedEtatValidate', () => {
         demarches: [{ id: demarcheId }],
       },
       {
-        typeId: 'mdp',
+        typeId: 'men',
         statutId: 'fai',
         isBrouillon: ETAPE_IS_NOT_BROUILLON,
         date: toCaminoDate('2022-05-04'),
@@ -111,7 +111,7 @@ describe('titreDemarcheUpdatedEtatValidate', () => {
         demande,
         {
           id: etapeIdValidator.parse('idMdp'),
-          typeId: 'mdp',
+          typeId: 'men',
           statutId: 'fai',
           isBrouillon: ETAPE_IS_NOT_BROUILLON,
           date: toCaminoDate('2020-12-17'),
@@ -228,7 +228,7 @@ describe('titreDemarcheUpdatedEtatValidate', () => {
         },
         {
           id: newEtapeId('2'),
-          typeId: 'mdp',
+          typeId: 'men',
           date: toCaminoDate('2022-05-04'),
           statutId: 'fai',
           isBrouillon: ETAPE_IS_NOT_BROUILLON,
@@ -768,7 +768,7 @@ describe('getPossiblesEtapesTypes', () => {
     },
     {
       id: newEtapeId('etapeId2'),
-      typeId: 'mdp',
+      typeId: 'men',
       statutId: 'fai',
       concurrence: 'non-applicable',
       hasTitreFrom: 'non-applicable',
@@ -894,7 +894,7 @@ describe('getPossiblesEtapesTypes', () => {
       {
         id: newEtapeId('idMdp'),
         ordre: 2,
-        typeId: 'mdp',
+        typeId: 'men',
         statutId: 'fai',
         concurrence: 'non-applicable',
         hasTitreFrom: 'non-applicable',
@@ -928,7 +928,7 @@ describe('getPossiblesEtapesTypes', () => {
       {
         id: newEtapeId('idMdp'),
         ordre: 2,
-        typeId: 'mdp',
+        typeId: 'men',
         statutId: 'fai',
         concurrence: 'non-applicable',
         hasTitreFrom: 'non-applicable',
@@ -1090,9 +1090,9 @@ describe('getPossiblesEtapesTypes', () => {
         surface: null,
       },
       {
-        id: newEtapeId('idmdp'),
+        id: newEtapeId('idmen'),
         date: toCaminoDate('2021-11-02'),
-        typeId: 'mdp',
+        typeId: 'men',
         statutId: 'fai',
         concurrence: 'non-applicable',
         hasTitreFrom: 'non-applicable',
@@ -1121,7 +1121,7 @@ describe('getPossiblesEtapesTypes', () => {
     expect(Object.keys(tested).toSorted()).toStrictEqual(['asc', 'css', 'des', 'ede', 'mcb', 'mod', 'rcb', 'rde'])
     vi.resetAllMocks()
   })
-  test('peut faire une completude (mcp) le même jour que le dépôt (mdp) de la demande', () => {
+  test('peut faire une completude (mcp) le même jour que le dépôt (men) de la demande', () => {
     const etapes: TitreEtapeForMachine[] = [
       {
         id: newEtapeId('id3'),
@@ -1157,7 +1157,7 @@ describe('getPossiblesEtapesTypes', () => {
       {
         id: newEtapeId('id4'),
 
-        typeId: 'mdp',
+        typeId: 'men',
         statutId: 'fai',
         concurrence: 'non-applicable',
         hasTitreFrom: 'non-applicable',

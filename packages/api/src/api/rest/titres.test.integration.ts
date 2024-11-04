@@ -56,7 +56,7 @@ beforeAll(async () => {
         communes: [{ id: toCommuneId('97300'), surface: 12 }],
       },
       {
-        typeId: 'mdp',
+        typeId: 'men',
         statutId: 'fai',
         isBrouillon: ETAPE_IS_NOT_BROUILLON,
         date: toCaminoDate('2022-02-01'),
@@ -91,7 +91,7 @@ beforeAll(async () => {
         administrationsLocales: [ADMINISTRATION_IDS['DGTM - GUYANE']],
       },
       {
-        typeId: 'mdp',
+        typeId: 'men',
         statutId: 'fai',
         isBrouillon: ETAPE_IS_NOT_BROUILLON,
         date: toCaminoDate('2022-02-01'),

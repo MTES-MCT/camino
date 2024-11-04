@@ -63,7 +63,7 @@ const etapeBrouillonValide: Omit<ApiFlattenEtape, 'id'> = {
 const etapeComplete: Omit<ApiFlattenEtape, 'id'> = {
   ...etapeBrouillonValide,
   isBrouillon: ETAPE_IS_NOT_BROUILLON,
-  typeId: 'mdp',
+  typeId: 'men',
   contenu: { arm: { mecanise: { value: true, heritee: true, etapeHeritee: { date: toCaminoDate('2022-01-01'), etapeTypeId: 'mfr', value: true } } } },
 }
 const demarcheId = demarcheIdValidator.parse('demarcheId')
@@ -193,7 +193,7 @@ describe('valide l’étape avant de l’enregistrer', () => {
     const errors = titreEtapeUpdationValidate(etapeComplete, titreDemarche, titreARM, [{ etape_document_type_id: 'doe' }], [], [], [], [], userSuper)
     expect(errors).toStrictEqual([])
   })
-  test('invalide car on ne peut pas faire de mod sans mdp', () => {
+  test('invalide car on ne peut pas faire de mod sans men', () => {
     const errors = titreEtapeUpdationValidate(
       {
         ...etapeComplete,

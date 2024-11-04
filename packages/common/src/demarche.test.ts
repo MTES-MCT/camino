@@ -1,6 +1,6 @@
 /* eslint-disable no-irregular-whitespace */
 import { test, expect, describe } from 'vitest'
-import { canHaveMiseEnConcurrence, demarcheDepotDemandeDateFind, getDemarcheContenu } from './demarche'
+import { canHaveMiseEnConcurrence, demarcheEnregistrementDemandeDateFind, getDemarcheContenu } from './demarche'
 import { proprietesGeothermieForagesElementIds } from './static/titresTypes_demarchesTypes_etapesTypes/sections'
 import { ETAPES_TYPES } from './static/etapesTypes'
 import { toCaminoDate } from './date'
@@ -40,7 +40,7 @@ test('getDemarcheContenu arm', () => {
           etape_type_id: 'rde',
         },
         { sections_with_values: [], etape_type_id: 'mcr' },
-        { sections_with_values: [], etape_type_id: 'mdp' },
+        { sections_with_values: [], etape_type_id: 'men' },
         {
           sections_with_values: [
             {
@@ -453,20 +453,20 @@ test('getDemarcheContenu pxg', () => {
 
 describe('demarcheDepotDemandeDateFind', () => {
   test("pas d'étapes", () => {
-    expect(demarcheDepotDemandeDateFind([])).toBe(undefined)
+    expect(demarcheEnregistrementDemandeDateFind([])).toBe(undefined)
   })
 
-  test('un dépot de la demande', () => {
+  test('un enregistrement de la demande', () => {
     expect(
-      demarcheDepotDemandeDateFind([
+      demarcheEnregistrementDemandeDateFind([
         { typeId: ETAPES_TYPES.demande, date: toCaminoDate('2020-01-01') },
-        { typeId: ETAPES_TYPES.depotDeLaDemande, date: toCaminoDate('2024-01-01') },
+        { typeId: ETAPES_TYPES.enregistrementDeLaDemande, date: toCaminoDate('2024-01-01') },
       ])
     ).toBe(toCaminoDate('2024-01-01'))
   })
-  test('sans dépot de la demande', () => {
+  test('sans enregistrement de la demande', () => {
     expect(
-      demarcheDepotDemandeDateFind([
+      demarcheEnregistrementDemandeDateFind([
         { typeId: ETAPES_TYPES.demande, date: toCaminoDate('2020-01-01') },
         { typeId: ETAPES_TYPES.abrogationDeLaDecision, date: toCaminoDate('2024-01-01') },
       ])

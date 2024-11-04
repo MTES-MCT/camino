@@ -176,7 +176,7 @@ const titreDemarchePublicLectureFind = (
   // Pour les PRM d’un titre en survie provisoire, les demandes de prolongations sont public
   if (
     titreTypeId === TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_METAUX &&
-    titreEtape.typeId === ETAPES_TYPES.depotDeLaDemande &&
+    titreEtape.typeId === ETAPES_TYPES.enregistrementDeLaDemande &&
     [DEMARCHES_TYPES_IDS.Prolongation1, DEMARCHES_TYPES_IDS.Prolongation2].includes(demarcheTypeId) &&
     titreInModificationEnInstance([demarche])
   ) {

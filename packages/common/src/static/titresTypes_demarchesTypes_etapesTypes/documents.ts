@@ -136,7 +136,7 @@ const EtapesTypesDocumentsTypes = {
     { documentTypeId: DOCUMENTS_TYPES_IDS.rapportDeRecevabilite, optionnel: true },
     { documentTypeId: DOCUMENTS_TYPES_IDS.rapportDeLaDirectionRegionaleChargeeDesMines, optionnel: true },
   ],
-  [ETAPES_TYPES.depotDeLaDemande]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.accuseDeReceptionDUneDemande, optionnel: true }],
+  [ETAPES_TYPES.enregistrementDeLaDemande]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.accuseDeReceptionDUneDemande, optionnel: true }],
   [ETAPES_TYPES.demande]: [
     { documentTypeId: DOCUMENTS_TYPES_IDS.contratDAmodiation, optionnel: true },
     { documentTypeId: DOCUMENTS_TYPES_IDS.documentsCartographiques, optionnel: true },

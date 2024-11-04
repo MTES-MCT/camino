@@ -8,16 +8,21 @@ const etapesProd = require('./2019-10-31-ren-pro.cas.json') // eslint-disable-li
 describe('vérifie l’arbre de renonciation et de prolongation d’ARM', () => {
   const armRenProMachine = new ArmRenProMachine()
 
-  test('peut créer une étape "mdp" après une "mfr"', () => {
-    const { service } = setDateAndOrderAndInterpretMachine(armRenProMachine, '2020-05-27', [ETES.demande.FAIT, ETES.depotDeLaDemande.FAIT])
+  test('peut créer une étape "men" après une "mfr"', () => {
+    const { service } = setDateAndOrderAndInterpretMachine(armRenProMachine, '2020-05-27', [ETES.demande.FAIT, ETES.enregistrementDeLaDemande.FAIT])
     expect(service.getSnapshot().context.demarcheStatut).toBe(DemarchesStatutsIds.Depose)
   })
 
   test('ne peut pas faire de "mod" après une "mcr"', () => {
     expect(() =>
-      setDateAndOrderAndInterpretMachine(armRenProMachine, '2020-05-26', [ETES.demande.FAIT, ETES.depotDeLaDemande.FAIT, ETES.recevabiliteDeLaDemande.FAVORABLE, ETES.modificationDeLaDemande.FAIT])
+      setDateAndOrderAndInterpretMachine(armRenProMachine, '2020-05-26', [
+        ETES.demande.FAIT,
+        ETES.enregistrementDeLaDemande.FAIT,
+        ETES.recevabiliteDeLaDemande.FAVORABLE,
+        ETES.modificationDeLaDemande.FAIT,
+      ])
     ).toThrowErrorMatchingInlineSnapshot(
-      `[Error: Error: cannot execute step: '{"etapeTypeId":"mod","etapeStatutId":"fai","date":"2020-05-30"}' after '["mfr_fai","mdp_fai","mcr_fav"]'. The event {"type":"RECEVOIR_MODIFICATION_DE_LA_DEMANDE","date":"2020-05-30","status":"fai"} should be one of 'CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES']`
+      `[Error: Error: cannot execute step: '{"etapeTypeId":"mod","etapeStatutId":"fai","date":"2020-05-30"}' after '["mfr_fai","men_fai","mcr_fav"]'. The event {"type":"RECEVOIR_MODIFICATION_DE_LA_DEMANDE","date":"2020-05-30","status":"fai"} should be one of 'CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES']`
     )
   })
 
@@ -25,20 +30,20 @@ describe('vérifie l’arbre de renonciation et de prolongation d’ARM', () => 
     expect(() =>
       setDateAndOrderAndInterpretMachine(armRenProMachine, '2020-05-27', [
         ETES.demande.FAIT,
-        ETES.depotDeLaDemande.FAIT,
+        ETES.enregistrementDeLaDemande.FAIT,
         ETES.demandeDeComplements_RecevabiliteDeLaDemande_.FAIT,
         ETES.demandeDeComplements_RecevabiliteDeLaDemande_.FAIT,
         // {...ETES.recevabiliteDeLaDemande.DEFAVORABLE, date: toCaminoDate('2020-05-30') },
       ])
     ).toThrowErrorMatchingInlineSnapshot(
-      `[Error: Error: cannot execute step: '{"etapeTypeId":"mca","etapeStatutId":"fai","date":"2020-05-31"}' after '["mfr_fai","mdp_fai","mca_fai"]'. The event {"type":"DEMANDER_COMPLEMENTS_POUR_RECEVABILITE","date":"2020-05-31","status":"fai"} should be one of 'DESISTER_PAR_LE_DEMANDEUR,FAIRE_RECEVABILITE_DEMANDE_DEFAVORABLE,FAIRE_RECEVABILITE_DEMANDE_FAVORABLE,RECEVOIR_COMPLEMENTS_POUR_RECEVABILITE']`
+      `[Error: Error: cannot execute step: '{"etapeTypeId":"mca","etapeStatutId":"fai","date":"2020-05-31"}' after '["mfr_fai","men_fai","mca_fai"]'. The event {"type":"DEMANDER_COMPLEMENTS_POUR_RECEVABILITE","date":"2020-05-31","status":"fai"} should be one of 'DESISTER_PAR_LE_DEMANDEUR,FAIRE_RECEVABILITE_DEMANDE_DEFAVORABLE,FAIRE_RECEVABILITE_DEMANDE_FAVORABLE,RECEVOIR_COMPLEMENTS_POUR_RECEVABILITE']`
     )
   })
 
   test('peut mettre une "asc" après une "mcp"', () => {
     const { service } = setDateAndOrderAndInterpretMachine(armRenProMachine, '2020-06-30', [
       ETES.demande.FAIT,
-      ETES.depotDeLaDemande.FAIT,
+      ETES.enregistrementDeLaDemande.FAIT,
       ETES.recevabiliteDeLaDemande.FAVORABLE,
       ETES.avisDesServicesEtCommissionsConsultatives.FAIT,
     ])

@@ -24,7 +24,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
   test('quelles sont mes prochaines étapes sur un titre mécanisé', () => {
     const { service } = setDateAndOrderAndInterpretMachine(armOctMachine, '2020-01-01', [
       { etapeTypeId: 'mfr', etapeStatutId: 'fai', contenu: { arm: { mecanise: true } } },
-      { etapeTypeId: 'mdp', etapeStatutId: 'fai' },
+      { etapeTypeId: 'men', etapeStatutId: 'fai' },
       { etapeTypeId: 'pfd', etapeStatutId: 'fai' },
     ])
 
@@ -44,7 +44,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
   test('quelles sont mes prochaines étapes sur un titre mécanisé avec franchissements', () => {
     const { service, dateFin } = setDateAndOrderAndInterpretMachine(armOctMachine, '2020-02-03', [
       { etapeTypeId: 'mfr', etapeStatutId: 'fai', contenu: { arm: { mecanise: true, franchissements: 1 } } },
-      { etapeTypeId: 'mdp', etapeStatutId: 'fai' },
+      { etapeTypeId: 'men', etapeStatutId: 'fai' },
       { etapeTypeId: 'pfd', etapeStatutId: 'fai' },
     ])
 
@@ -64,7 +64,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
   test('quelles sont mes prochaines étapes non mécanisé', () => {
     const { service, dateFin } = setDateAndOrderAndInterpretMachine(armOctMachine, '2020-02-03', [
       { etapeTypeId: 'mfr', etapeStatutId: 'fai', contenu: { arm: { mecanise: false } } },
-      { etapeTypeId: 'mdp', etapeStatutId: 'fai' },
+      { etapeTypeId: 'men', etapeStatutId: 'fai' },
       { etapeTypeId: 'pfd', etapeStatutId: 'fai' },
     ])
 
@@ -74,7 +74,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
     const etapes = [
       ETES.paiementDesFraisDeDossier.FAIT,
       ETES.demande.FAIT,
-      ETES.depotDeLaDemande.FAIT,
+      ETES.enregistrementDeLaDemande.FAIT,
       ETES.completudeDeLaDemande.COMPLETE,
       ETES.validationDuPaiementDesFraisDeDossier.FAIT,
       ETES.recevabiliteDeLaDemande.FAVORABLE,
@@ -88,20 +88,20 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
       setDateAndOrderAndInterpretMachine(armOctMachine, '2023-09-26', [
         ETES.paiementDesFraisDeDossier.FAIT,
         ETES.demande.FAIT,
-        ETES.depotDeLaDemande.FAIT,
+        ETES.enregistrementDeLaDemande.FAIT,
         ETES.completudeDeLaDemande.COMPLETE,
         ETES.validationDuPaiementDesFraisDeDossier.FAIT,
         ETES.recevabiliteDeLaDemande.FAVORABLE,
         ETES.saisineDeLaCommissionDesAutorisationsDeRecherchesMinieres_CARM_.FAIT,
       ])
     ).toThrowErrorMatchingInlineSnapshot(
-      `[Error: Error: cannot execute step: '{"etapeTypeId":"sca","etapeStatutId":"fai","date":"2023-10-03"}' after '["pfd_fai","mfr_fai","mdp_fai","mcp_com","vfd_fai","mcr_fav"]'. The event {"type":"FAIRE_SAISINE_CARM","date":"2023-10-03","status":"fai"} should be one of 'CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE_SERVICE_EAU,RECEVOIR_EXPERTISE_SERVICE_MINES,RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES']`
+      `[Error: Error: cannot execute step: '{"etapeTypeId":"sca","etapeStatutId":"fai","date":"2023-10-03"}' after '["pfd_fai","mfr_fai","men_fai","mcp_com","vfd_fai","mcr_fav"]'. The event {"type":"FAIRE_SAISINE_CARM","date":"2023-10-03","status":"fai"} should be one of 'CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE_SERVICE_EAU,RECEVOIR_EXPERTISE_SERVICE_MINES,RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES']`
     )
   })
   test('la demande ne peut pas être effectuée après une modification de la demande', () => {
     const { service, dateFin } = setDateAndOrderAndInterpretMachine(armOctMachine, '2020-01-01', [
       { etapeTypeId: 'mfr', etapeStatutId: 'fai', contenu: { arm: { mecanise: false } } },
-      { etapeTypeId: 'mdp', etapeStatutId: 'fai' },
+      { etapeTypeId: 'men', etapeStatutId: 'fai' },
       { etapeTypeId: 'mod', etapeStatutId: 'fai' },
     ])
 
@@ -111,7 +111,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
   test('on peut faire une demande de compléments après une complétude incomplète', () => {
     const { service, dateFin } = setDateAndOrderAndInterpretMachine(armOctMachine, '2020-01-01', [
       { etapeTypeId: 'mfr', etapeStatutId: 'fai', contenu: { arm: { mecanise: false } } },
-      { etapeTypeId: 'mdp', etapeStatutId: 'fai' },
+      { etapeTypeId: 'men', etapeStatutId: 'fai' },
       { etapeTypeId: 'pfd', etapeStatutId: 'fai' },
       { etapeTypeId: 'mcp', etapeStatutId: 'inc' },
     ])
@@ -126,14 +126,14 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
     }
   )
 
-  test('peut créer une étape "mdp" juste après une "mfr"', () => {
+  test('peut créer une étape "men" juste après une "mfr"', () => {
     setDateAndOrderAndInterpretMachine(armOctMachine, '2022-04-16', [
       { etapeTypeId: 'mfr', etapeStatutId: 'fai' },
-      { etapeTypeId: 'mdp', etapeStatutId: 'fai' },
+      { etapeTypeId: 'men', etapeStatutId: 'fai' },
     ])
   })
 
-  test('ne peut pas créer une étape "mcp" sans "mdp"', () => {
+  test('ne peut pas créer une étape "mcp" sans "men"', () => {
     expect(() =>
       setDateAndOrderAndInterpretMachine(armOctMachine, '2022-04-14', [
         { etapeTypeId: 'mfr', etapeStatutId: 'fai' },
@@ -146,16 +146,16 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
     expect(() =>
       setDateAndOrderAndInterpretMachine(armOctMachine, '2019-12-31', [
         { etapeTypeId: 'mfr', etapeStatutId: 'fai' },
-        { etapeTypeId: 'mdp', etapeStatutId: 'fai' },
+        { etapeTypeId: 'men', etapeStatutId: 'fai' },
         { etapeTypeId: 'mfr', etapeStatutId: 'fai' },
       ])
     ).toThrowErrorMatchingSnapshot()
   })
 
-  test('ne peut pas déplacer une étape "mdp" sans "mfr"', () => {
+  test('ne peut pas déplacer une étape "men" sans "mfr"', () => {
     expect(() =>
       setDateAndOrderAndInterpretMachine(armOctMachine, '2020-02-01', [
-        { etapeTypeId: 'mdp', etapeStatutId: 'fai' },
+        { etapeTypeId: 'men', etapeStatutId: 'fai' },
         { etapeTypeId: 'mfr', etapeStatutId: 'fai' },
       ])
     ).toThrowErrorMatchingSnapshot()
@@ -170,29 +170,29 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
       ...ETES.decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_.EXEMPTE,
     },
   ])(
-    'peut créer une étape "%s" juste après une "mdp" et que le titre est mécanisé avec franchissement d’eau',
+    'peut créer une étape "%s" juste après une "men" et que le titre est mécanisé avec franchissement d’eau',
     (etape: EtapeTypeEtapeStatutValidPair & Omit<Etape, 'date' | 'etapeTypeId' | 'etapeStatutId'>) => {
       setDateAndOrderAndInterpretMachine(armOctMachine, '2020-01-01', [
         { etapeTypeId: 'mfr', etapeStatutId: 'fai', contenu: { arm: { mecanise: true, franchissements: 1 } } },
-        { etapeTypeId: 'mdp', etapeStatutId: 'fai' },
+        { etapeTypeId: 'men', etapeStatutId: 'fai' },
         etape,
       ])
     }
   )
 
-  test('peut créer une étape "mcp" après une "mdp"', () => {
+  test('peut créer une étape "mcp" après une "men"', () => {
     setDateAndOrderAndInterpretMachine(armOctMachine, '2020-01-01', [
       { etapeTypeId: 'mfr', etapeStatutId: 'fai' },
-      { etapeTypeId: 'mdp', etapeStatutId: 'fai' },
+      { etapeTypeId: 'men', etapeStatutId: 'fai' },
       { etapeTypeId: 'pfd', etapeStatutId: 'fai' },
       { etapeTypeId: 'mcp', etapeStatutId: 'com' },
     ])
   })
 
-  test('peut créer une "des" après "mdp"', () => {
+  test('peut créer une "des" après "men"', () => {
     setDateAndOrderAndInterpretMachine(armOctMachine, '2020-02-02', [
       { etapeTypeId: 'mfr', etapeStatutId: 'fai' },
-      { etapeTypeId: 'mdp', etapeStatutId: 'fai' },
+      { etapeTypeId: 'men', etapeStatutId: 'fai' },
       { etapeTypeId: 'des', etapeStatutId: 'fai' },
     ])
   })
@@ -205,7 +205,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
           etapeStatutId: 'fai',
         },
         {
-          etapeTypeId: 'mdp',
+          etapeTypeId: 'men',
           etapeStatutId: 'fai',
         },
         {
@@ -228,7 +228,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
           date: toCaminoDate('2020-01-01'),
         },
         {
-          etapeTypeId: 'mdp',
+          etapeTypeId: 'men',
           etapeStatutId: 'fai',
           date: toCaminoDate('2020-01-02'),
         },
@@ -254,7 +254,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
         contenu: { arm: { mecanise: true } },
       },
       {
-        etapeTypeId: 'mdp',
+        etapeTypeId: 'men',
         etapeStatutId: 'fai',
         date: toCaminoDate('2020-01-02'),
       },
@@ -325,7 +325,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
           date: toCaminoDate('2020-01-01'),
         },
         {
-          etapeTypeId: 'mdp',
+          etapeTypeId: 'men',
           etapeStatutId: 'fai',
           date: toCaminoDate('2020-01-01'),
         },
@@ -411,7 +411,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
         etapeStatutId: 'com',
       },
       {
-        etapeTypeId: 'mdp',
+        etapeTypeId: 'men',
         date: toCaminoDate('2020-05-04'),
         etapeStatutId: 'fai',
       },
@@ -436,7 +436,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
         etapeStatutId: 'fai',
       },
       {
-        etapeTypeId: 'mdp',
+        etapeTypeId: 'men',
         date: toCaminoDate('2019-12-12'),
         etapeStatutId: 'fai',
       },
@@ -473,7 +473,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
     ])
   })
 
-  test('peut créer une "mcp" après une "pfd" et "mdp"', () => {
+  test('peut créer une "mcp" après une "pfd" et "men"', () => {
     orderAndInterpretMachine(armOctMachine, [
       {
         etapeTypeId: 'mfr',
@@ -481,7 +481,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
         etapeStatutId: 'fai',
       },
       {
-        etapeTypeId: 'mdp',
+        etapeTypeId: 'men',
         date: toCaminoDate('2020-02-23'),
         etapeStatutId: 'fai',
       },
@@ -517,7 +517,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
         etapeStatutId: 'fai',
       },
       {
-        etapeTypeId: 'mdp',
+        etapeTypeId: 'men',
         date: toCaminoDate('2020-07-17'),
         etapeStatutId: 'fai',
       },
@@ -624,7 +624,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
         date: toCaminoDate('2019-12-13'),
       },
       {
-        etapeTypeId: 'mdp',
+        etapeTypeId: 'men',
         etapeStatutId: 'fai',
         date: toCaminoDate('2019-12-11'),
       },
@@ -670,7 +670,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
         date: toCaminoDate('2021-05-20'),
       },
       {
-        etapeTypeId: 'mdp',
+        etapeTypeId: 'men',
         etapeStatutId: 'fai',
         date: toCaminoDate('2021-05-20'),
       },
@@ -697,7 +697,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
         date: toCaminoDate('2021-02-26'),
       },
       {
-        etapeTypeId: 'mdp',
+        etapeTypeId: 'men',
         etapeStatutId: 'fai',
         date: toCaminoDate('2021-02-26'),
       },
@@ -758,7 +758,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
         date: toCaminoDate('2021-02-26'),
       },
       {
-        etapeTypeId: 'mdp',
+        etapeTypeId: 'men',
         etapeStatutId: 'fai',
         date: toCaminoDate('2021-02-26'),
       },
@@ -834,7 +834,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
         date: toCaminoDate('2021-02-26'),
       },
       {
-        etapeTypeId: 'mdp',
+        etapeTypeId: 'men',
         etapeStatutId: 'fai',
         date: toCaminoDate('2021-02-26'),
       },
@@ -904,7 +904,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
         date: toCaminoDate('2021-02-26'),
       },
       {
-        etapeTypeId: 'mdp',
+        etapeTypeId: 'men',
         etapeStatutId: 'fai',
         date: toCaminoDate('2021-02-26'),
       },
@@ -994,7 +994,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
         date: toCaminoDate('2021-02-27'),
       },
       {
-        etapeTypeId: 'mdp',
+        etapeTypeId: 'men',
         etapeStatutId: 'fai',
         date: toCaminoDate('2021-02-26'),
       },
@@ -1030,7 +1030,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
         date: toCaminoDate('2020-08-25'),
       },
       {
-        etapeTypeId: 'mdp',
+        etapeTypeId: 'men',
         etapeStatutId: 'fai',
         date: toCaminoDate('2020-08-25'),
       },
@@ -1142,7 +1142,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
         date: toCaminoDate('2021-02-27'),
       },
       {
-        etapeTypeId: 'mdp',
+        etapeTypeId: 'men',
         etapeStatutId: 'fai',
         date: toCaminoDate('2021-02-26'),
       },
@@ -1191,7 +1191,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
         date: toCaminoDate('2021-02-27'),
       },
       {
-        etapeTypeId: 'mdp',
+        etapeTypeId: 'men',
         etapeStatutId: 'fai',
         date: toCaminoDate('2021-02-26'),
       },
@@ -1244,7 +1244,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
         date: toCaminoDate('2021-02-27'),
       },
       {
-        etapeTypeId: 'mdp',
+        etapeTypeId: 'men',
         etapeStatutId: 'fai',
         date: toCaminoDate('2021-02-26'),
       },
@@ -1288,7 +1288,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
         date: toCaminoDate('2021-02-27'),
       },
       {
-        etapeTypeId: 'mdp',
+        etapeTypeId: 'men',
         etapeStatutId: 'fai',
         date: toCaminoDate('2021-02-26'),
       },

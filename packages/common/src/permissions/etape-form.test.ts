@@ -517,7 +517,7 @@ test('perimetreStepIsComplete', () => {
 
 test('etapeDocumentsStepIsVisible', () => {
   expect(etapeDocumentsStepIsVisible({ typeId: 'asl' }, 'oct', 'axm')).toBe(true)
-  expect(etapeDocumentsStepIsVisible({ typeId: 'mdp' }, 'oct', 'axm')).toBe(true)
+  expect(etapeDocumentsStepIsVisible({ typeId: 'men' }, 'oct', 'axm')).toBe(true)
   expect(etapeDocumentsStepIsVisible({ typeId: 'pqr' }, 'oct', 'axm')).toBe(false)
 })
 

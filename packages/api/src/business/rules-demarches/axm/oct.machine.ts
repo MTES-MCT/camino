@@ -18,7 +18,7 @@ type RendreAvisDreal = {
 
 type AXMOctXStateEvent =
   | { type: 'FAIRE_DEMANDE' }
-  | { type: 'DEPOSER_DEMANDE' }
+  | { type: 'ENREGISTRER_DEMANDE' }
   | { type: 'RENDRE_DAE_EXEMPTEE' }
   | { type: 'RENDRE_DECISION_DU_PROPRIETAIRE_DU_SOL_FAVORABLE' }
   | { type: 'RENDRE_DECISION_DU_PROPRIETAIRE_DU_SOL_FAVORABLE_AVEC_RESERVE' }
@@ -124,7 +124,7 @@ const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
     mainStep: true,
   },
   FAIRE_DEMANDE: { db: ETES.demande, mainStep: true },
-  DEPOSER_DEMANDE: { db: ETES.depotDeLaDemande, mainStep: true },
+  ENREGISTRER_DEMANDE: { db: ETES.enregistrementDeLaDemande, mainStep: true },
   MODIFIER_DEMANDE_APRES_DAE: { db: ETES.modificationDeLaDemande_DecisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_, mainStep: true },
   DEMANDER_COMPLEMENTS_POUR_RECEVABILITE: { db: ETES.demandeDeComplements_RecevabiliteDeLaDemande_, mainStep: false },
   RECEVOIR_COMPLEMENTS_POUR_RECEVABILITE: { db: ETES.receptionDeComplements_RecevabiliteDeLaDemande_, mainStep: false },
@@ -141,7 +141,7 @@ const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
   RENDRE_DECISION_ABROGATION: { db: ETES.abrogationDeLaDecision, mainStep: false },
   DEMANDER_INFORMATION_POUR_AVIS_DREAL: { db: ETES.demandeDinformations_AvisDuDREALDEALOuDGTM_, mainStep: false },
   RECEVOIR_INFORMATION_POUR_AVIS_DREAL: { db: ETES.receptionDinformation_AvisDuDREALDEALOuDGTM_, mainStep: false },
-  // TODO 2023-04-19 RENDRE_DECISION_IMPLICITE_REJET est une étape principale le jour où on gère le délai entre la mdp et le rejet implicite
+  // TODO 2023-04-19 RENDRE_DECISION_IMPLICITE_REJET est une étape principale le jour où on gère le délai entre la men et le rejet implicite
   RENDRE_DECISION_IMPLICITE_REJET: { db: { REJETE: ETES.decisionImplicite.REJETE }, mainStep: false },
   RENDRE_DECISION_ANNULATION_PAR_JUGE_ADMINISTRATIF: { db: ETES.decisionDuJugeAdministratif, mainStep: false },
   FAIRE_DESISTEMENT_DEMANDEUR: { db: ETES.desistementDuDemandeur, mainStep: false },
@@ -267,13 +267,13 @@ const axmOctMachine = createMachine({
       },
 
       onDone: {
-        target: 'depotDeLaDemandeAFaire',
+        target: 'enregistrementDemandeAFaire',
       },
     },
-    depotDeLaDemandeAFaire: {
+    enregistrementDemandeAFaire: {
       tags: [tags.responsable[ADMINISTRATION_IDS['DGTM - GUYANE']]],
       on: {
-        DEPOSER_DEMANDE: {
+        ENREGISTRER_DEMANDE: {
           target: 'recevabiliteDeLaDemandeAFaire',
           actions: assign({
             demarcheStatut: DemarchesStatutsIds.Depose,

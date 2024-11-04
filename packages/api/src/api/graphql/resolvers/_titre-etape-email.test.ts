@@ -42,7 +42,7 @@ test("envoie un email sur un octroi d'AEX", () => {
 test("envoie un email sur un octroi d'ARM", () => {
   const actual = emailsForAdministrationsGet(
     {
-      typeId: 'mdp',
+      typeId: 'men',
       statutId: 'fai',
       isBrouillon: ETAPE_IS_NOT_BROUILLON,
     },
@@ -53,5 +53,21 @@ test("envoie un email sur un octroi d'ARM", () => {
     undefined
   )
 
-  expect(actual).toMatchSnapshot()
+  expect(actual).toMatchInlineSnapshot(`
+    {
+      "content": "
+      <h3>L’étape « enregistrement de la demande » d’une demande d’ARM vient d’être réalisée.</h3>
+
+      <hr>
+
+      <b>Lien</b> : <a href="http://plop.plop/titres/titreId">http://plop.plop/titres/titreId</a> <br>
+      <b>Effectué par</b> :  Camino (camino@beta.gouv.fr)<br>
+
+      ",
+      "emails": [
+        "dgtm-datte-prie-uie@guyane.gouv.fr",
+      ],
+      "subject": "enregistrement de la demande | Nouvelle demande déposée",
+    }
+  `)
 })

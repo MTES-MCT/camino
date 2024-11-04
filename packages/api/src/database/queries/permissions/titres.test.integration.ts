@@ -198,8 +198,8 @@ describe('titresQueryModify', () => {
     })
 
     test.each<[EtapeTypeId, EtapeStatutId, boolean]>([
-      ['mdp', 'fai', false],
-      ['mdp', 'fav', false],
+      ['men', 'fai', false],
+      ['men', 'fav', false],
       ['mcr', 'fai', false],
       ['mcr', 'fav', true],
     ])('Vérifie si il y a une « Recevabilité de la demande » favorable', async (etapeTypeId, etapeStatutId, visible) => {

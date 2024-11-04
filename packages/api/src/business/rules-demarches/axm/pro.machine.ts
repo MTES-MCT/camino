@@ -18,7 +18,7 @@ type RendreAvisDreal = {
 
 type AXMProXStateEvent =
   | { type: 'FAIRE_DEMANDE' }
-  | { type: 'DEPOSER_DEMANDE' }
+  | { type: 'ENREGISTRER_DEMANDE' }
   | { type: 'DEMANDER_COMPLEMENTS_POUR_RECEVABILITE' }
   | { type: 'RECEVOIR_COMPLEMENTS_POUR_RECEVABILITE' }
   | { type: 'FAIRE_RECEVABILITE_DEMANDE_FAVORABLE' }
@@ -49,7 +49,7 @@ type Event = AXMProXStateEvent['type']
 
 const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
   FAIRE_DEMANDE: { db: ETES.demande, mainStep: true },
-  DEPOSER_DEMANDE: { db: ETES.depotDeLaDemande, mainStep: true },
+  ENREGISTRER_DEMANDE: { db: ETES.enregistrementDeLaDemande, mainStep: true },
   DEMANDER_COMPLEMENTS_POUR_RECEVABILITE: { db: ETES.demandeDeComplements_RecevabiliteDeLaDemande_, mainStep: false },
   RECEVOIR_COMPLEMENTS_POUR_RECEVABILITE: { db: ETES.receptionDeComplements_RecevabiliteDeLaDemande_, mainStep: false },
   MODIFIER_LA_DEMANDE: { db: ETES.modificationDeLaDemande, mainStep: true },
@@ -99,7 +99,7 @@ const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
     },
     mainStep: false,
   },
-  // TODO 2023-04-19 RENDRE_DECISION_IMPLICITE_REJET est une étape principale le jour où on gère le délai entre la mdp et le rejet implicite
+  // TODO 2023-04-19 RENDRE_DECISION_IMPLICITE_REJET est une étape principale le jour où on gère le délai entre la men et le rejet implicite
   RENDRE_DECISION_IMPLICITE_REJET: {
     db: {
       REJETE: ETES.decisionImplicite.REJETE,
@@ -189,13 +189,13 @@ const axmProMachine = createMachine({
   states: {
     demandeAFaire: {
       on: {
-        FAIRE_DEMANDE: 'depotDeLaDemandeAFaire',
+        FAIRE_DEMANDE: 'enregistrementDeLaDemandeAFaire',
       },
     },
-    depotDeLaDemandeAFaire: {
+    enregistrementDeLaDemandeAFaire: {
       tags: [tags.responsable[ADMINISTRATION_IDS['DGTM - GUYANE']]],
       on: {
-        DEPOSER_DEMANDE: {
+        ENREGISTRER_DEMANDE: {
           target: 'recevabiliteDeLaDemandeAFaire',
           actions: assign({
             demarcheStatut: DemarchesStatutsIds.Depose,

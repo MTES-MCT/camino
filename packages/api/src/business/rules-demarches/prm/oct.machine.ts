@@ -42,7 +42,7 @@ type FaireDemande = {
 
 type XStateEvent =
   | FaireDemande
-  | { type: 'DEPOSER_DEMANDE' }
+  | { type: 'ENREGISTRER_DEMANDE' }
   | { type: 'FAIRE_SAISINE_PREFET' }
   | { type: 'DEMANDER_COMPLEMENTS_POUR_RECEVABILITE' }
   | { type: 'RECEVOIR_COMPLEMENTS_POUR_RECEVABILITE' }
@@ -81,7 +81,7 @@ type Event = XStateEvent['type']
 
 const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
   FAIRE_DEMANDE: { db: EtapesTypesEtapesStatuts.demande, mainStep: true },
-  DEPOSER_DEMANDE: { db: EtapesTypesEtapesStatuts.depotDeLaDemande, mainStep: true },
+  ENREGISTRER_DEMANDE: { db: EtapesTypesEtapesStatuts.enregistrementDeLaDemande, mainStep: true },
   FAIRE_SAISINE_PREFET: { db: EtapesTypesEtapesStatuts.saisineDuPrefet, mainStep: true },
   DEMANDER_COMPLEMENTS_POUR_RECEVABILITE: { db: EtapesTypesEtapesStatuts.demandeDeComplements_RecevabiliteDeLaDemande_, mainStep: false },
   RECEVOIR_COMPLEMENTS_POUR_RECEVABILITE: { db: EtapesTypesEtapesStatuts.receptionDeComplements_RecevabiliteDeLaDemande_, mainStep: false },
@@ -262,7 +262,7 @@ const prmOctMachine = createMachine({
     demandeAFaire: {
       on: {
         FAIRE_DEMANDE: {
-          target: 'depotDeLaDemandeAFaire',
+          target: 'enregistrementDeLaDemandeAFaire',
           actions: assign({
             paysId: ({ event }) => {
               return event.paysId
@@ -274,9 +274,9 @@ const prmOctMachine = createMachine({
         },
       },
     },
-    depotDeLaDemandeAFaire: {
+    enregistrementDeLaDemandeAFaire: {
       on: {
-        DEPOSER_DEMANDE: {
+        ENREGISTRER_DEMANDE: {
           target: 'saisineDuPrefetAFaire',
           actions: assign({
             demarcheStatut: DemarchesStatutsIds.Depose,

@@ -210,35 +210,13 @@ describe('etapeCreer', () => {
         typeId: 'men',
         statutId: 'fai',
         titreDemarcheId,
-        date: toCaminoDate('2020-01-01'),
+        date: toCaminoDate('2018-01-01'),
         ...blankEtapeProps,
       }
     )
-
-    expect(res.statusCode).toBe(HTTP_STATUS.OK)
+    expect(res.statusCode, JSON.stringify(res.body)).toBe(HTTP_STATUS.OK)
   })
 
-  test("ne peut pas créer une étape MEN si c'est la première étape (utilisateur admin)", async () => {
-    const titreDemarcheId = await demarcheCreate()
-    const res = await restPostCall(
-      dbPool,
-      '/rest/etapes',
-      {},
-      {
-        role: 'admin',
-        administrationId: ADMINISTRATION_IDS['DGTM - GUYANE'],
-      },
-      {
-        typeId: 'men',
-        statutId: 'fai',
-        titreDemarcheId,
-        date: toCaminoDate('2017-01-01'),
-        ...blankEtapeProps,
-      }
-    )
-
-    expect(res.statusCode).toBe(HTTP_STATUS.BAD_REQUEST)
-  })
   test('ne peut pas créer une étape EDE sur un titre ARM en tant que DGTM (utilisateur admin)', async () => {
     const titreDemarcheId = await demarcheCreate()
 

@@ -95,7 +95,7 @@ export const getDGTMStatsInside =
       .leftJoin('titres', 'titresDemarches.titreId', 'titres.id')
       .joinRaw("left join titres_etapes titre_etape_point on titre_etape_point.id = titres.props_titre_etapes_ids ->> 'points'")
       .where('titresEtapes.archive', false)
-      .where('titresEtapes.typeId', 'mdp')
+      .where('titresEtapes.typeId', ETAPES_TYPES.enregistrementDeLaDemande)
       .andWhere('titresDemarches.typeId', 'oct')
       .andWhere('titresEtapes.date', '>=', `${anneeDepartStats}-01-01`)
       .andWhere(builder => {
@@ -163,7 +163,9 @@ export const getDGTMStatsInside =
       })
       .leftJoin('titres', 'titresDemarches.titreId', 'titres.id')
       .joinRaw("left join titres_etapes on titres_etapes.id = titres.props_titre_etapes_ids ->> 'points'")
-      .joinRaw(`left join titres_etapes depot_de_la_demande on (depot_de_la_demande.titre_demarche_id = "titres_demarches"."id" and depot_de_la_demande.type_id = '${ETAPES_TYPES.depotDeLaDemande}')`)
+      .joinRaw(
+        `left join titres_etapes depot_de_la_demande on (depot_de_la_demande.titre_demarche_id = "titres_demarches"."id" and depot_de_la_demande.type_id = '${ETAPES_TYPES.enregistrementDeLaDemande}')`
+      )
       .joinRaw(`left join titres_etapes APO on (APO.titre_demarche_id = "titres_demarches"."id" and APO.type_id = '${ETAPES_TYPES.avisDeLaCommissionDepartementaleDesMines_CDM_}')`)
       .joinRaw(
         `left join titres_etapes decision_administration on (decision_administration.titre_demarche_id = "titres_demarches"."id" and decision_administration.type_id = '${ETAPES_TYPES.decisionDeLAutoriteAdministrative}')`

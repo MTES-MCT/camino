@@ -24,7 +24,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
         concurrence: { amIFirst: true },
         hasTitreFrom: false,
       },
-      ETES.depotDeLaDemande.FAIT,
+      ETES.enregistrementDeLaDemande.FAIT,
       ETES.recevabiliteDeLaDemande.DEFAVORABLE,
       ETES.demandeDeComplements.FAIT,
       ETES.receptionDeComplements.FAIT,
@@ -37,7 +37,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
   test('on peut notifier le demandeur apres une recevabilité favorable pour un PER ou une concession', () => {
     const { service, dateFin, machine } = setDateAndOrderAndInterpretMachine(psCxmOctMachine, '1999-04-14', [
       { ...ETES.demande.FAIT, concurrence: { amIFirst: true }, hasTitreFrom: false },
-      ETES.depotDeLaDemande.FAIT,
+      ETES.enregistrementDeLaDemande.FAIT,
       ETES.recevabiliteDeLaDemande.FAVORABLE,
       ETES.notificationAuDemandeur.FAIT,
     ])
@@ -48,7 +48,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
   // test('on peut notifier le demandeur apres une recevabilité favorable pour un PER ou une concession qui n'est pas la première demande pour la mise en concurrence', () => {
   //    const { service, dateFin, machine } = setDateAndOrderAndInterpretMachine(psCxmOctMachine, '1999-04-14', [
   //      ETES.demande.FAIT,
-  //      ETES.depotDeLaDemande.FAIT,
+  //      ETES.enregistrementDeLaDemande.FAIT,
   //      ETES.recevabiliteDeLaDemande.FAVORABLE,
   //      ETES.notificationAuDemandeur.FAIT,
   //    ])
@@ -57,7 +57,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
   test('on ne peut plus rien faire pendant que la mise en concurrence est en cours', () => {
     const { service, dateFin, machine } = setDateAndOrderAndInterpretMachine(psCxmOctMachine, '1999-04-14', [
       { ...ETES.demande.FAIT, concurrence: { amIFirst: true }, hasTitreFrom: false },
-      ETES.depotDeLaDemande.FAIT,
+      ETES.enregistrementDeLaDemande.FAIT,
       ETES.recevabiliteDeLaDemande.FAVORABLE,
       ETES.avisDeMiseEnConcurrenceAuJORF.EN_COURS,
     ])
@@ -66,7 +66,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
   test('on peut publier le résultat de la mise en concurrence, une fois celle-ci terminée', () => {
     const tree = getEventsTree(psCxmOctMachine, '1999-04-14', [
       { ...ETES.demande.FAIT, concurrence: { amIFirst: true }, hasTitreFrom: false },
-      ETES.depotDeLaDemande.FAIT,
+      ETES.enregistrementDeLaDemande.FAIT,
       ETES.recevabiliteDeLaDemande.FAVORABLE,
       ETES.avisDeMiseEnConcurrenceAuJORF.TERMINE,
       ETES.resultatMiseEnConcurrence.ACCEPTE,
@@ -77,8 +77,8 @@ describe('vérifie l’arbre des procédures spécifique', () => {
     expect(tree).toMatchInlineSnapshot(`
       [
         "RIEN                                         (confidentielle, en construction        ) -> [FAIRE_DEMANDE]",
-        "FAIRE_DEMANDE                                (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DEPOSER_DEMANDE,DESISTER_PAR_LE_DEMANDEUR]",
-        "DEPOSER_DEMANDE                              (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_RECEVABILITE_DEFAVORABLE,FAIRE_RECEVABILITE_FAVORABLE]",
+        "FAIRE_DEMANDE                                (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,ENREGISTRER_DEMANDE]",
+        "ENREGISTRER_DEMANDE                          (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_RECEVABILITE_DEFAVORABLE,FAIRE_RECEVABILITE_FAVORABLE]",
         "FAIRE_RECEVABILITE_FAVORABLE                 (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_MISE_EN_CONCURRENCE,NOTIFIER_DEMANDEUR]",
         "FAIRE_MISE_EN_CONCURRENCE                    (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,RENDRE_RESULTAT_MISE_EN_CONCURRENCE_ACCEPTEE,RENDRE_RESULTAT_MISE_EN_CONCURRENCE_REJETEE]",
         "RENDRE_RESULTAT_MISE_EN_CONCURRENCE_ACCEPTEE (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,RENDRE_AVIS_CGE_IGEDD]",
@@ -91,15 +91,15 @@ describe('vérifie l’arbre des procédures spécifique', () => {
   test('on peut programmer une mise en concurrence', () => {
     const tree = getEventsTree(psCxmOctMachine, '1999-04-14', [
       { ...ETES.demande.FAIT, concurrence: { amIFirst: true }, hasTitreFrom: false },
-      ETES.depotDeLaDemande.FAIT,
+      ETES.enregistrementDeLaDemande.FAIT,
       ETES.recevabiliteDeLaDemande.FAVORABLE,
       ETES.avisDeMiseEnConcurrenceAuJORF.PROGRAMME,
     ])
     expect(tree).toMatchInlineSnapshot(`
       [
         "RIEN                         (confidentielle, en construction        ) -> [FAIRE_DEMANDE]",
-        "FAIRE_DEMANDE                (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DEPOSER_DEMANDE,DESISTER_PAR_LE_DEMANDEUR]",
-        "DEPOSER_DEMANDE              (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_RECEVABILITE_DEFAVORABLE,FAIRE_RECEVABILITE_FAVORABLE]",
+        "FAIRE_DEMANDE                (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,ENREGISTRER_DEMANDE]",
+        "ENREGISTRER_DEMANDE          (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_RECEVABILITE_DEFAVORABLE,FAIRE_RECEVABILITE_FAVORABLE]",
         "FAIRE_RECEVABILITE_FAVORABLE (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_MISE_EN_CONCURRENCE,NOTIFIER_DEMANDEUR]",
         "FAIRE_MISE_EN_CONCURRENCE    (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR]",
       ]
@@ -109,7 +109,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
   test('on peut rejeter à la fin de la mise en concurrence', () => {
     const { service, dateFin, machine } = setDateAndOrderAndInterpretMachine(psCxmOctMachine, '1999-04-14', [
       { ...ETES.demande.FAIT, concurrence: { amIFirst: true }, hasTitreFrom: false },
-      ETES.depotDeLaDemande.FAIT,
+      ETES.enregistrementDeLaDemande.FAIT,
       ETES.recevabiliteDeLaDemande.FAVORABLE,
       ETES.avisDeMiseEnConcurrenceAuJORF.TERMINE,
       ETES.resultatMiseEnConcurrence.REJETE,
@@ -125,12 +125,12 @@ describe('vérifie l’arbre des procédures spécifique', () => {
           concurrence: { amIFirst: true },
           hasTitreFrom: false,
         },
-        ETES.depotDeLaDemande.FAIT,
+        ETES.enregistrementDeLaDemande.FAIT,
         ETES.recevabiliteDeLaDemande.FAVORABLE,
         ETES.notificationAuDemandeur.FAIT,
       ])
     ).toThrowErrorMatchingInlineSnapshot(
-      `[Error: Error: cannot execute step: '{"etapeTypeId":"mno","etapeStatutId":"fai","date":"1999-04-18"}' after '["mfr_fai","mdp_fai","mcr_fav"]'. The event {"type":"NOTIFIER_DEMANDEUR","date":"1999-04-18","status":"fai"} should be one of '']`
+      `[Error: Error: cannot execute step: '{"etapeTypeId":"mno","etapeStatutId":"fai","date":"1999-04-18"}' after '["mfr_fai","men_fai","mcr_fav"]'. The event {"type":"NOTIFIER_DEMANDEUR","date":"1999-04-18","status":"fai"} should be one of '']`
     )
   })
   test("après la recevabilité favorable la démarche reste confidentielle si il n'y a pas de mise en concurrence", () => {
@@ -140,7 +140,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
         concurrence: { amIFirst: true },
         hasTitreFrom: false,
       },
-      ETES.depotDeLaDemande.FAIT,
+      ETES.enregistrementDeLaDemande.FAIT,
       ETES.recevabiliteDeLaDemande.FAVORABLE,
     ])
 
@@ -150,7 +150,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
   test('après la recevabilité favorable la démarche reste confidentielle si il y a une mise en concurrence', () => {
     const { service, dateFin, machine } = setDateAndOrderAndInterpretMachine(psCxmOctMachine, '1999-04-14', [
       { ...ETES.demande.FAIT, concurrence: { amIFirst: true }, hasTitreFrom: false },
-      ETES.depotDeLaDemande.FAIT,
+      ETES.enregistrementDeLaDemande.FAIT,
       ETES.recevabiliteDeLaDemande.FAVORABLE,
     ])
 
@@ -161,7 +161,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
   test('après la recevabilité la démarche devient publique si la démarche concurrente est visible', () => {
     const { service, dateFin, machine } = setDateAndOrderAndInterpretMachine(psCxmOctMachine, '1999-04-14', [
       { ...ETES.demande.FAIT, concurrence: { amIFirst: false, demarcheConcurrenteVisibilite: 'publique' }, hasTitreFrom: false },
-      ETES.depotDeLaDemande.FAIT,
+      ETES.enregistrementDeLaDemande.FAIT,
       ETES.recevabiliteDeLaDemande.FAVORABLE,
     ])
 
@@ -178,7 +178,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
   test('après la recevabilité la démarche reste confidentielle si la démarche concurrente est confidentielle', () => {
     const { service, dateFin, machine } = setDateAndOrderAndInterpretMachine(psCxmOctMachine, '1999-04-14', [
       { ...ETES.demande.FAIT, concurrence: { amIFirst: false, demarcheConcurrenteVisibilite: 'confidentielle' }, hasTitreFrom: false },
-      ETES.depotDeLaDemande.FAIT,
+      ETES.enregistrementDeLaDemande.FAIT,
       ETES.recevabiliteDeLaDemande.FAVORABLE,
     ])
 
@@ -198,7 +198,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
         concurrence: { amIFirst: true },
         hasTitreFrom: false,
       },
-      ETES.depotDeLaDemande.FAIT,
+      ETES.enregistrementDeLaDemande.FAIT,
       ETES.recevabiliteDeLaDemande.FAVORABLE,
       ETES.avisDesCollectivites.FAIT,
       ETES.avisDesServicesEtCommissionsConsultatives.FAIT,
@@ -217,7 +217,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
         concurrence: { amIFirst: true },
         hasTitreFrom: true,
       },
-      ETES.depotDeLaDemande.FAIT,
+      ETES.enregistrementDeLaDemande.FAIT,
       ETES.recevabiliteDeLaDemande.FAVORABLE,
     ])
 
@@ -231,7 +231,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
         concurrence: { amIFirst: true },
         hasTitreFrom: false,
       },
-      ETES.depotDeLaDemande.FAIT,
+      ETES.enregistrementDeLaDemande.FAIT,
       ETES.recevabiliteDeLaDemande.FAVORABLE,
     ])
 
@@ -244,7 +244,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
         concurrence: { amIFirst: true },
         hasTitreFrom: false,
       },
-      ETES.depotDeLaDemande.FAIT,
+      ETES.enregistrementDeLaDemande.FAIT,
       ETES.recevabiliteDeLaDemande.FAVORABLE,
       ETES.avisDesCollectivites.FAIT,
       ETES.avisDesServicesEtCommissionsConsultatives.FAIT,
@@ -266,7 +266,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
         concurrence: { amIFirst: true },
         hasTitreFrom: false,
       },
-      ETES.depotDeLaDemande.FAIT,
+      ETES.enregistrementDeLaDemande.FAIT,
       ETES.recevabiliteDeLaDemande.FAVORABLE,
       ETES.avisDesCollectivites.FAIT,
       ETES.avisDesServicesEtCommissionsConsultatives.FAIT,
@@ -285,7 +285,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
         concurrence: { amIFirst: true },
         hasTitreFrom: false,
       },
-      ETES.depotDeLaDemande.FAIT,
+      ETES.enregistrementDeLaDemande.FAIT,
       ETES.recevabiliteDeLaDemande.FAVORABLE,
       ETES.avisDesCollectivites.FAIT,
       ETES.avisDesServicesEtCommissionsConsultatives.FAIT,
@@ -307,7 +307,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
         concurrence: { amIFirst: true },
         hasTitreFrom: false,
       },
-      ETES.depotDeLaDemande.FAIT,
+      ETES.enregistrementDeLaDemande.FAIT,
       ETES.recevabiliteDeLaDemande.FAVORABLE,
       ETES.avisDesCollectivites.FAIT,
       ETES.avisDesServicesEtCommissionsConsultatives.FAIT,
@@ -328,7 +328,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
         concurrence: { amIFirst: true },
         hasTitreFrom: false,
       },
-      ETES.depotDeLaDemande.FAIT,
+      ETES.enregistrementDeLaDemande.FAIT,
       ETES.recevabiliteDeLaDemande.FAVORABLE,
       ETES.avisDesCollectivites.FAIT,
       ETES.avisDesServicesEtCommissionsConsultatives.FAIT,
@@ -349,7 +349,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
         concurrence: { amIFirst: true },
         hasTitreFrom: false,
       },
-      ETES.depotDeLaDemande.FAIT,
+      ETES.enregistrementDeLaDemande.FAIT,
       ETES.recevabiliteDeLaDemande.FAVORABLE,
       ETES.avisDesCollectivites.FAIT,
       ETES.avisDesServicesEtCommissionsConsultatives.FAIT,
@@ -363,8 +363,8 @@ describe('vérifie l’arbre des procédures spécifique', () => {
     expect(result).toMatchInlineSnapshot(`
       [
         "RIEN                             (confidentielle, en construction        ) -> [FAIRE_DEMANDE]",
-        "FAIRE_DEMANDE                    (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DEPOSER_DEMANDE,DESISTER_PAR_LE_DEMANDEUR]",
-        "DEPOSER_DEMANDE                  (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_RECEVABILITE_DEFAVORABLE,FAIRE_RECEVABILITE_FAVORABLE]",
+        "FAIRE_DEMANDE                    (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,ENREGISTRER_DEMANDE]",
+        "ENREGISTRER_DEMANDE              (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_RECEVABILITE_DEFAVORABLE,FAIRE_RECEVABILITE_FAVORABLE]",
         "FAIRE_RECEVABILITE_FAVORABLE     (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_ENQUETE_PUBLIQUE,OUVRIR_PARTICIPATION_DU_PUBLIC,RENDRE_AVIS_COLLECTIVITES,RENDRE_AVIS_SERVICES_COMMISSIONS]",
         "RENDRE_AVIS_COLLECTIVITES        (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_ENQUETE_PUBLIQUE,OUVRIR_PARTICIPATION_DU_PUBLIC,RENDRE_AVIS_SERVICES_COMMISSIONS]",
         "RENDRE_AVIS_SERVICES_COMMISSIONS (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_ENQUETE_PUBLIQUE,OUVRIR_PARTICIPATION_DU_PUBLIC,RENDRE_AVIS_PREFET]",
@@ -383,7 +383,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
         concurrence: { amIFirst: true },
         hasTitreFrom: false,
       },
-      ETES.depotDeLaDemande.FAIT,
+      ETES.enregistrementDeLaDemande.FAIT,
       ETES.recevabiliteDeLaDemande.FAVORABLE,
       ETES.avisDesCollectivites.FAIT,
       ETES.avisDesServicesEtCommissionsConsultatives.FAIT,
@@ -404,7 +404,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
         concurrence: { amIFirst: true },
         hasTitreFrom: false,
       },
-      ETES.depotDeLaDemande.FAIT,
+      ETES.enregistrementDeLaDemande.FAIT,
       ETES.recevabiliteDeLaDemande.FAVORABLE,
       ETES.avisDesCollectivites.FAIT,
       ETES.avisDesServicesEtCommissionsConsultatives.FAIT,
@@ -419,8 +419,8 @@ describe('vérifie l’arbre des procédures spécifique', () => {
     expect(result).toMatchInlineSnapshot(`
       [
         "RIEN                                                       (confidentielle, en construction        ) -> [FAIRE_DEMANDE]",
-        "FAIRE_DEMANDE                                              (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DEPOSER_DEMANDE,DESISTER_PAR_LE_DEMANDEUR]",
-        "DEPOSER_DEMANDE                                            (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_RECEVABILITE_DEFAVORABLE,FAIRE_RECEVABILITE_FAVORABLE]",
+        "FAIRE_DEMANDE                                              (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,ENREGISTRER_DEMANDE]",
+        "ENREGISTRER_DEMANDE                                        (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_RECEVABILITE_DEFAVORABLE,FAIRE_RECEVABILITE_FAVORABLE]",
         "FAIRE_RECEVABILITE_FAVORABLE                               (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_ENQUETE_PUBLIQUE,OUVRIR_PARTICIPATION_DU_PUBLIC,RENDRE_AVIS_COLLECTIVITES,RENDRE_AVIS_SERVICES_COMMISSIONS]",
         "RENDRE_AVIS_COLLECTIVITES                                  (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_ENQUETE_PUBLIQUE,OUVRIR_PARTICIPATION_DU_PUBLIC,RENDRE_AVIS_SERVICES_COMMISSIONS]",
         "RENDRE_AVIS_SERVICES_COMMISSIONS                           (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_ENQUETE_PUBLIQUE,OUVRIR_PARTICIPATION_DU_PUBLIC,RENDRE_AVIS_PREFET]",
@@ -441,7 +441,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
         concurrence: { amIFirst: true },
         hasTitreFrom: false,
       },
-      ETES.depotDeLaDemande.FAIT,
+      ETES.enregistrementDeLaDemande.FAIT,
       ETES.recevabiliteDeLaDemande.FAVORABLE,
       ETES.avisDesCollectivites.FAIT,
       ETES.avisDesServicesEtCommissionsConsultatives.FAIT,
@@ -456,8 +456,8 @@ describe('vérifie l’arbre des procédures spécifique', () => {
     expect(result).toMatchInlineSnapshot(`
       [
         "RIEN                                                 (confidentielle, en construction        ) -> [FAIRE_DEMANDE]",
-        "FAIRE_DEMANDE                                        (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DEPOSER_DEMANDE,DESISTER_PAR_LE_DEMANDEUR]",
-        "DEPOSER_DEMANDE                                      (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_RECEVABILITE_DEFAVORABLE,FAIRE_RECEVABILITE_FAVORABLE]",
+        "FAIRE_DEMANDE                                        (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,ENREGISTRER_DEMANDE]",
+        "ENREGISTRER_DEMANDE                                  (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_RECEVABILITE_DEFAVORABLE,FAIRE_RECEVABILITE_FAVORABLE]",
         "FAIRE_RECEVABILITE_FAVORABLE                         (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_ENQUETE_PUBLIQUE,OUVRIR_PARTICIPATION_DU_PUBLIC,RENDRE_AVIS_COLLECTIVITES,RENDRE_AVIS_SERVICES_COMMISSIONS]",
         "RENDRE_AVIS_COLLECTIVITES                            (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_ENQUETE_PUBLIQUE,OUVRIR_PARTICIPATION_DU_PUBLIC,RENDRE_AVIS_SERVICES_COMMISSIONS]",
         "RENDRE_AVIS_SERVICES_COMMISSIONS                     (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_ENQUETE_PUBLIQUE,OUVRIR_PARTICIPATION_DU_PUBLIC,RENDRE_AVIS_PREFET]",

@@ -37,7 +37,7 @@ type FaireDemande = {
 }
 type ProcedureSpecifiqueXStateEvent =
   | FaireDemande
-  | { type: 'DEPOSER_DEMANDE' }
+  | { type: 'ENREGISTRER_DEMANDE' }
   | { type: 'FAIRE_RECEVABILITE_FAVORABLE' }
   | { type: 'FAIRE_RECEVABILITE_DEFAVORABLE' }
   | { type: 'FAIRE_DEMANDE_DE_COMPLEMENTS' }
@@ -70,7 +70,7 @@ type Event = ProcedureSpecifiqueXStateEvent['type']
 
 const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
   FAIRE_DEMANDE: { db: ETES.demande, mainStep: true },
-  DEPOSER_DEMANDE: { db: ETES.depotDeLaDemande, mainStep: true },
+  ENREGISTRER_DEMANDE: { db: ETES.enregistrementDeLaDemande, mainStep: true },
   FAIRE_RECEVABILITE_FAVORABLE: { db: { FAVORABLE: ETES.recevabiliteDeLaDemande.FAVORABLE }, mainStep: true },
   FAIRE_RECEVABILITE_DEFAVORABLE: { db: { DEFAVORABLE: ETES.recevabiliteDeLaDemande.DEFAVORABLE }, mainStep: false },
   FAIRE_DEMANDE_DE_COMPLEMENTS: { db: ETES.demandeDeComplements, mainStep: false },
@@ -229,7 +229,7 @@ const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: De
       demandeAFaire: {
         on: {
           FAIRE_DEMANDE: {
-            target: 'depotDeLaDemandeAFaire',
+            target: 'enregistrementDeLaDemandeAFaire',
             actions: assign({
               demarcheStatut: DemarchesStatutsIds.EnInstruction,
               concurrence: ({ event }) => event.concurrence,
@@ -238,9 +238,9 @@ const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: De
           },
         },
       },
-      depotDeLaDemandeAFaire: {
+      enregistrementDeLaDemandeAFaire: {
         on: {
-          DEPOSER_DEMANDE: 'recevabiliteOuInformationDuPrefetEtCollectivitesAFaire',
+          ENREGISTRER_DEMANDE: 'recevabiliteOuInformationDuPrefetEtCollectivitesAFaire',
         },
       },
 

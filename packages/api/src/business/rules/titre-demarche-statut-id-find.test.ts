@@ -1,7 +1,7 @@
 import { ITitreEtape, TitreEtapesTravauxTypes as Travaux } from '../../types'
 
 import { titreDemarcheStatutIdFind } from './titre-demarche-statut-id-find'
-import { DemarchesStatutsIds as Demarches, DemarcheStatutId } from 'camino-common/src/static/demarchesStatuts'
+import { DemarchesStatutsIds as Demarches, DemarchesStatutsIds, DemarcheStatutId } from 'camino-common/src/static/demarchesStatuts'
 import { newDemarcheId } from '../../database/models/_format/id-create'
 import { toCaminoDate } from 'camino-common/src/date'
 import { describe, expect, test } from 'vitest'
@@ -101,7 +101,7 @@ describe("statut d'une démarche", () => {
             date: toCaminoDate('2019-12-10'),
             contenu: { arm: { mecanise: true, franchissements: 3 } },
           },
-          { typeId: 'mdp', statutId: 'fai', date: toCaminoDate('2019-12-11') },
+          { typeId: 'men', statutId: 'fai', date: toCaminoDate('2019-12-11') },
           { typeId: 'pfd', statutId: 'fai', date: toCaminoDate('2019-12-13') },
           { typeId: 'dae', statutId: 'exe', date: toCaminoDate('2020-01-14') },
           { typeId: 'mcp', statutId: 'com', date: toCaminoDate('2020-01-23') },
@@ -167,18 +167,18 @@ describe("statut d'une démarche", () => {
     expect(titreDemarcheStatutIdFind('oct', etapesBuild([{ typeId: 'dex', statutId: 'rej' }]), 'pxm', newDemarcheId())).toEqual('rej')
   })
 
-  test("une démarche d'octroi dont l'étape est men a le statut “en instruction”", () => {
-    expect(titreDemarcheStatutIdFind('oct', etapesBuild([{ typeId: 'men' }]), 'pxm', newDemarcheId())).toEqual('ind')
+  test("une démarche d'octroi dont l'étape est men a le statut “déposé”", () => {
+    expect(titreDemarcheStatutIdFind('oct', etapesBuild([{ typeId: 'men' }]), 'pxm', newDemarcheId())).toEqual(DemarchesStatutsIds.Depose)
   })
 
-  test("une démarche d'octroi d'un titre ARM dont l'étape de mdp (statut fai) a le statut “en instruction”", () => {
+  test("une démarche d'octroi d'un titre ARM dont l'étape de men (statut fai) a le statut “en instruction”", () => {
     expect(
       titreDemarcheStatutIdFind(
         'oct',
         etapesBuild(
           [
             { typeId: 'mfr', statutId: 'fai' },
-            { typeId: 'mdp', statutId: 'fai' },
+            { typeId: 'men', statutId: 'fai' },
           ],
           'oct',
           'arm'
@@ -195,7 +195,7 @@ describe("statut d'une démarche", () => {
         'oct',
         etapesBuild([
           { typeId: 'mfr', statutId: 'fai' },
-          { typeId: 'mdp', statutId: 'fai' },
+          { typeId: 'men', statutId: 'fai' },
           { typeId: 'pfd', statutId: 'fai' },
           { typeId: 'mcp', statutId: 'com' },
         ]),
@@ -247,10 +247,6 @@ describe("statut d'une démarche", () => {
     expect(titreDemarcheStatutIdFind('oct', etapesBuild([{ typeId: 'des' }]), 'pxm', newDemarcheId())).toEqual('des')
   })
 
-  test("une démarche d'octroi dont l'étape la plus récente est mdp (statut fai) a le statut “déposé”", () => {
-    expect(titreDemarcheStatutIdFind('oct', etapesBuild([{ typeId: 'mdp', statutId: 'fai' }]), 'pxm', newDemarcheId())).toEqual('dep')
-  })
-
   test("une démarche d'octroi dont l'étape la plus récente est mfr a le statut “en construction”", () => {
     expect(titreDemarcheStatutIdFind('oct', etapesBuild([{ typeId: 'mfr', statutId: 'fai', isBrouillon: ETAPE_IS_BROUILLON }]), 'pxm', newDemarcheId())).toEqual('eco')
   })
@@ -269,7 +265,7 @@ describe("statut d'une démarche", () => {
         'oct',
         etapesBuild([
           { typeId: 'mfr', statutId: 'fai', date: toCaminoDate('2021-02-25') },
-          { typeId: 'mdp', statutId: 'fai', date: toCaminoDate('2021-02-26') },
+          { typeId: 'men', statutId: 'fai', date: toCaminoDate('2021-02-26') },
           { typeId: 'pfd', statutId: 'fai', date: toCaminoDate('2020-09-03') },
           { typeId: 'mcp', statutId: 'com', date: toCaminoDate('2021-02-27') },
           { typeId: 'vfd', statutId: 'fai', date: toCaminoDate('2021-03-10') },
@@ -290,7 +286,7 @@ describe("statut d'une démarche", () => {
         'oct',
         etapesBuild([
           { typeId: 'mfr', statutId: 'fai', date: toCaminoDate('2021-02-25') },
-          { typeId: 'mdp', statutId: 'fai', date: toCaminoDate('2021-02-26') },
+          { typeId: 'men', statutId: 'fai', date: toCaminoDate('2021-02-26') },
           { typeId: 'pfd', statutId: 'fai', date: toCaminoDate('2020-09-03') },
           { typeId: 'mcp', statutId: 'com', date: toCaminoDate('2021-02-27') },
           { typeId: 'vfd', statutId: 'fai', date: toCaminoDate('2021-03-10') },

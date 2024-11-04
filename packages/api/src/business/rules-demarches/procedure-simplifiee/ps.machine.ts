@@ -38,7 +38,7 @@ type ParticipationDuPublic = {
 
 type ProcedureSimplifieeXStateEvent =
   | { type: 'FAIRE_DEMANDE' }
-  | { type: 'DEPOSER_DEMANDE' }
+  | { type: 'ENREGISTRER_DEMANDE' }
   | ParticipationDuPublic
   | RendreDecisionAdministrationAcceptee
   | RendreDecisionAdministrationRejetee
@@ -56,7 +56,7 @@ type Event = ProcedureSimplifieeXStateEvent['type']
 
 const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
   FAIRE_DEMANDE: { db: ETES.demande, mainStep: true },
-  DEPOSER_DEMANDE: { db: ETES.depotDeLaDemande, mainStep: true },
+  ENREGISTRER_DEMANDE: { db: ETES.enregistrementDeLaDemande, mainStep: true },
   OUVRIR_PARTICIPATION_DU_PUBLIC: { db: ETES.participationDuPublic, mainStep: true },
   RENDRE_DECISION_ADMINISTRATION_ACCEPTEE: { db: { ACCEPTE: ETES.decisionDeLAutoriteAdministrative.ACCEPTE }, mainStep: true },
   RENDRE_DECISION_ADMINISTRATION_REJETEE: { db: { REJETE: ETES.decisionDeLAutoriteAdministrative.REJETE }, mainStep: true },
@@ -99,7 +99,7 @@ export class ProcedureSimplifieeMachine extends CaminoMachine<ProcedureSimplifie
 }
 
 interface ProcedureSimplifieeContext extends CaminoCommonContext {
-  depotDeLaDemandeFaite: boolean
+  enregistrementDeLaDemandeFaite: boolean
   ouverturePublicStatut: EtapeStatutId | null
 }
 const defaultDemarcheStatut = DemarchesStatutsIds.EnConstruction
@@ -118,7 +118,7 @@ const procedureSimplifieeMachine = setup({
   context: {
     demarcheStatut: defaultDemarcheStatut,
     visibilite: 'confidentielle',
-    depotDeLaDemandeFaite: false,
+    enregistrementDeLaDemandeFaite: false,
     ouverturePublicStatut: null,
     asyncTasks: new Set(),
   },
@@ -207,11 +207,11 @@ const procedureSimplifieeMachine = setup({
     },
     receptionDeLaDemandeOuOuverturePublicOuDecisionAdministrationAFaire: {
       on: {
-        DEPOSER_DEMANDE: {
-          guard: ({ context }) => !context.depotDeLaDemandeFaite && isNullOrUndefined(context.ouverturePublicStatut),
+        ENREGISTRER_DEMANDE: {
+          guard: ({ context }) => !context.enregistrementDeLaDemandeFaite && isNullOrUndefined(context.ouverturePublicStatut),
           target: 'receptionDeLaDemandeOuOuverturePublicOuDecisionAdministrationAFaire',
           actions: assign({
-            depotDeLaDemandeFaite: true,
+            enregistrementDeLaDemandeFaite: true,
           }),
         },
         OUVRIR_PARTICIPATION_DU_PUBLIC: {

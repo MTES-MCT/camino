@@ -141,7 +141,6 @@ export const EtapesTypesEtapesStatuts = {
     FAIT: { etapeTypeId: 'mci', etapeStatutId: 'fai' },
   },
   demandeDeComplements_SaisineDeLaCARM_: { FAIT: { etapeTypeId: 'mcs', etapeStatutId: 'fai' } },
-  depotDeLaDemande: { FAIT: { etapeTypeId: 'mdp', etapeStatutId: 'fai' } },
   avisDeDemandeConcurrente: { FAIT: { etapeTypeId: 'mec', etapeStatutId: 'fai' } },
   enregistrementDeLaDemande: { FAIT: { etapeTypeId: 'men', etapeStatutId: 'fai' } },
   priseEnChargeParLOfficeNationalDesForets: { FAIT: { etapeTypeId: 'meo', etapeStatutId: 'fai' } },

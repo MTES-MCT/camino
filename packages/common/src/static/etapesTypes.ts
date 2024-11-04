@@ -5,14 +5,14 @@ import { EtapeBrouillon } from '../etape'
 
 // prettier-ignore
 
-const IDS = ["abd", "aca","aco","and","anf","def","dex","dim", "dpu",  "ihi", "mfr","mod","mom","rca","rcb","rcd","rcm","rco","rcs","rie","rif","rim","rmc", "rpu","sco","acg","acf","apd","ape","apo","app","apu","asl","cac","cim","css","dae","des","ede","edm","epu","esb","mca","mcb","mcd", "mci","mcm","mco","mcp","mcr","mcs","mdp","mec","men","meo","mie","mif","mim","mna","mnb","mnc","mnd","mni","mno","mns","mnv","ncl","npp","pfc","pfd","ppu","pqr","rcg","rde","rpe","sas","sca","scg","spe","spo","spp","vfc","vfd","wab","wae","wao","war","wau","wco","wda","wdc","wdd","wde","wfa","wfd","wfo","wmt","wpb","wpc","wpo","wpp","wps","wrc","wre","wrt","wse","wtp", "asc", "adc"] as const
+const IDS = ["abd", "aca","aco","and","anf","def","dex","dim", "dpu",  "ihi", "mfr","mod","mom","rca","rcb","rcd","rcm","rco","rcs","rie","rif","rim","rmc", "rpu","sco","acg","acf","apd","ape","apo","app","apu","asl","cac","cim","css","dae","des","ede","edm","epu","esb","mca","mcb","mcd", "mci","mcm","mco","mcp","mcr","mcs","mec","men","meo","mie","mif","mim","mna","mnb","mnc","mnd","mni","mno","mns","mnv","ncl","npp","pfc","pfd","ppu","pqr","rcg","rde","rpe","sas","sca","scg","spe","spo","spp","vfc","vfd","wab","wae","wao","war","wau","wco","wda","wdc","wdd","wde","wfa","wfd","wfo","wmt","wpb","wpc","wpo","wpp","wps","wrc","wre","wrt","wse","wtp", "asc", "adc"] as const
 
 // prettier-ignore
 const FONDAMENTALES_IDS = ["abd", "aca","aco","and","anf","def","dex","dim", "dpu","ihi", "mfr","mod","mom","rca","rcb","rcd","rcm","rco","rcs","rie","rif","rim","rmc", "rpu","sco"] as const satisfies Readonly<EtapeTypeIdFondamentaleArray>
 
 // prettier-ignore
 
-const NON_FONDAMENTALES_IDS = ["acg", "acf","apd","ape","apo","app","apu","asl","cac","cim","css","dae","des","ede","edm","epu","esb","mca","mcb","mcd","mci", "mcm","mco","mcp","mcr", "mcs","mdp","mec","men","meo","mie","mif","mim","mna","mnb","mnc","mnd","mni","mno","mns","mnv","ncl","npp","pfc","pfd","ppu","pqr","rcg","rde","rpe","sas","sca","scg","spe","spo","spp","vfc","vfd","wab","wae","wao","war","wau","wco","wda","wdc","wdd","wde","wfa","wfd","wfo","wmt","wpb","wpc","wpo","wpp","wps","wrc","wre","wrt","wse","wtp", "asc", "adc"] as const satisfies Readonly<EtapeTypeIdNonFondamentale[]>
+const NON_FONDAMENTALES_IDS = ["acg", "acf","apd","ape","apo","app","apu","asl","cac","cim","css","dae","des","ede","edm","epu","esb","mca","mcb","mcd","mci", "mcm","mco","mcp","mcr", "mcs","mec","men","meo","mie","mif","mim","mna","mnb","mnc","mnd","mni","mno","mns","mnv","ncl","npp","pfc","pfd","ppu","pqr","rcg","rde","rpe","sas","sca","scg","spe","spo","spp","vfc","vfd","wab","wae","wao","war","wau","wco","wda","wdc","wdd","wde","wfa","wfd","wfo","wmt","wpb","wpc","wpo","wpp","wps","wrc","wre","wrt","wse","wtp", "asc", "adc"] as const satisfies Readonly<EtapeTypeIdNonFondamentale[]>
 
 // Ceci est un test :)
 ;[...FONDAMENTALES_IDS, ...NON_FONDAMENTALES_IDS] as const satisfies typeof IDS
@@ -52,7 +52,6 @@ export const ETAPES_TYPES = {
   completudeDeLaDemande: 'mcp',
   recevabiliteDeLaDemande: 'mcr',
   demandeDeComplements_SaisineDeLaCARM_: 'mcs',
-  depotDeLaDemande: 'mdp',
   avisDeDemandeConcurrente: 'mec',
   enregistrementDeLaDemande: 'men',
   priseEnChargeParLOfficeNationalDesForets: 'meo',
@@ -699,7 +698,7 @@ export const EtapesTypes = {
     description: "L'enregistrement de la demande est une étape de gestion administrative interne du dossier qui se confond au dépôt de la demande lorsqu'elle est numérique et dématérialisée.",
     fondamentale: false,
     unique: true,
-    date_fin: toCaminoDate('2019-01-01'),
+    date_fin: null,
     public_lecture: true,
     entreprises_lecture: true,
   },
@@ -997,17 +996,6 @@ export const EtapesTypes = {
     unique: false,
     date_fin: null,
     public_lecture: false,
-    entreprises_lecture: true,
-  },
-  mdp: {
-    id: 'mdp',
-    nom: 'dépôt de la demande',
-    description:
-      "Le dépôt de la demande formalise la prise en charge de la demande par l'administration compétente. Cette étape fait l'objet d'un accusé de réception qui informe le demandeur des modalités d'instruction, du délai au-delà duquel une décision implicite d'accord ou de rejet sera formée et des voies de recours.",
-    fondamentale: false,
-    unique: true,
-    date_fin: null,
-    public_lecture: true,
     entreprises_lecture: true,
   },
   mfr: {

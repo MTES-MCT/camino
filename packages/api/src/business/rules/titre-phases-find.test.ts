@@ -484,7 +484,7 @@ describe("phases d'une démarche", () => {
             ordre: 2,
             isBrouillon: ETAPE_IS_NOT_BROUILLON,
             date: toCaminoDate('2016-12-28'),
-            typeId: 'mdp',
+            typeId: 'men',
             statutId: 'fai',
             concurrence: 'non-applicable',
             hasTitreFrom: 'non-applicable',
@@ -528,7 +528,7 @@ describe("phases d'une démarche", () => {
             ordre: 2,
             isBrouillon: ETAPE_IS_NOT_BROUILLON,
             date: toCaminoDate('2016-12-28'),
-            typeId: 'mdp',
+            typeId: 'men',
             statutId: 'fai',
             concurrence: 'non-applicable',
             hasTitreFrom: 'non-applicable',
@@ -877,7 +877,7 @@ describe("phases d'une démarche", () => {
             ordre: 2,
             isBrouillon: ETAPE_IS_NOT_BROUILLON,
             date: toCaminoDate('2008-12-28'),
-            typeId: 'mdp',
+            typeId: 'men',
             statutId: 'fai',
             concurrence: 'non-applicable',
             hasTitreFrom: 'non-applicable',
@@ -1074,7 +1074,7 @@ describe("phases d'une démarche", () => {
           {
             id: newEtapeId('demarcheId3etapeId2'),
             titreDemarcheId: newDemarcheId('demarcheId3'),
-            typeId: 'mdp',
+            typeId: 'men',
             statutId: 'fai',
             ordre: 2,
             isBrouillon: ETAPE_IS_NOT_BROUILLON,
@@ -1233,7 +1233,7 @@ describe("phases d'une démarche", () => {
           {
             id: newEtapeId('demarcheId3etapeId2'),
             titreDemarcheId: newDemarcheId('demarcheId3'),
-            typeId: 'mdp',
+            typeId: 'men',
             statutId: 'fai',
             ordre: 2,
             isBrouillon: ETAPE_IS_NOT_BROUILLON,
@@ -1769,7 +1769,7 @@ describe("phases d'une démarche", () => {
               {
                 titreDemarcheId: demarcheId2,
                 ordre: 2,
-                typeId: 'mdp',
+                typeId: 'men',
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 date: toCaminoDate('2013-10-30'),
                 statutId: 'fai',
@@ -1802,7 +1802,7 @@ describe("phases d'une démarche", () => {
               {
                 titreDemarcheId: demarcheId3,
                 ordre: 2,
-                typeId: 'mdp',
+                typeId: 'men',
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 date: toCaminoDate('2015-07-31'),
                 statutId: 'fai',
@@ -1878,7 +1878,7 @@ describe("phases d'une démarche", () => {
               {
                 titreDemarcheId: demarcheId4,
                 ordre: 2,
-                typeId: 'mdp',
+                typeId: 'men',
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 date: toCaminoDate('2018-07-04'),
                 statutId: 'fai',
@@ -2038,7 +2038,7 @@ describe("phases d'une démarche", () => {
               {
                 titreDemarcheId: newDemarcheId('demarcheIdPr1'),
                 ordre: 2,
-                typeId: 'mdp',
+                typeId: 'men',
                 dateFin: null,
                 duree: null,
                 dateDebut: null,
@@ -2147,7 +2147,7 @@ describe("phases d'une démarche", () => {
               {
                 titreDemarcheId: newDemarcheId('demarcheIdPr1'),
                 ordre: 2,
-                typeId: 'mdp',
+                typeId: 'men',
                 dateFin: null,
                 duree: null,
                 dateDebut: null,
@@ -2268,7 +2268,7 @@ describe("phases d'une démarche", () => {
               {
                 titreDemarcheId: newDemarcheId('demarcheIdPr1'),
                 ordre: 2,
-                typeId: 'mdp',
+                typeId: 'men',
                 dateFin: null,
                 duree: null,
                 dateDebut: null,

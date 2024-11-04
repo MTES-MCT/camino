@@ -62,7 +62,7 @@ const travaux = {
 const permisExclusifDeRecherchesMetauxEtGranulatsMarinsProlongationsEtapes = [
   ETAPES_TYPES.demande,
   ETAPES_TYPES.avisDesServicesEtCommissionsConsultatives,
-  ETAPES_TYPES.depotDeLaDemande,
+  ETAPES_TYPES.enregistrementDeLaDemande,
   ETAPES_TYPES.saisineDuPrefet,
   ETAPES_TYPES.desistementDuDemandeur,
   ETAPES_TYPES.modificationDeLaDemande,
@@ -96,7 +96,7 @@ const permisExclusifDeRecherchesMetauxEtGranulatsMarinsProlongations = {
 
 const permisExploitationMetauxEtGranulatsMarinsProlongationsEtapes = [
   ETAPES_TYPES.demande,
-  ETAPES_TYPES.depotDeLaDemande,
+  ETAPES_TYPES.enregistrementDeLaDemande,
   ETAPES_TYPES.modificationDeLaDemande,
   ETAPES_TYPES.desistementDuDemandeur,
   ETAPES_TYPES.saisineDuPrefet,
@@ -135,7 +135,7 @@ const permisExploitationMetauxEtGranulatsMarinsProlongations = {
 
 const permisExclusifRechercheGeothermieOctroiEtProlongationsEtapes = [
   ETAPES_TYPES.demande,
-  ETAPES_TYPES.depotDeLaDemande,
+  ETAPES_TYPES.enregistrementDeLaDemande,
   ETAPES_TYPES.recevabiliteDeLaDemande,
   ETAPES_TYPES.avisDeMiseEnConcurrenceAuJORF,
   ETAPES_TYPES.avisDeDemandeConcurrente,
@@ -165,7 +165,7 @@ const TDE = {
     ...travaux,
     [DEMARCHES_TYPES_IDS.RenonciationTotale]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -179,7 +179,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.RenonciationPartielle]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -202,7 +202,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.Octroi]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -218,7 +218,7 @@ const TDE = {
     ...travaux,
     [DEMARCHES_TYPES_IDS.Octroi]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -231,7 +231,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.RenonciationTotale]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -245,7 +245,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.RenonciationPartielle]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -272,7 +272,7 @@ const TDE = {
     [DEMARCHES_TYPES_IDS.Octroi]: [
       ETAPES_TYPES.informationsHistoriquesIncompletes,
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.decisionImplicite,
@@ -285,7 +285,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.RenonciationTotale]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -299,7 +299,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.RenonciationPartielle]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -326,7 +326,7 @@ const TDE = {
     [DEMARCHES_TYPES_IDS.Octroi]: [
       ETAPES_TYPES.informationsHistoriquesIncompletes,
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -339,7 +339,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.RenonciationTotale]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -353,7 +353,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.RenonciationPartielle]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -379,7 +379,7 @@ const TDE = {
     ...travaux,
     [DEMARCHES_TYPES_IDS.Octroi]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -392,7 +392,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.Prolongation]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -405,7 +405,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.RenonciationTotale]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -419,7 +419,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.RenonciationPartielle]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -445,7 +445,7 @@ const TDE = {
     ...travaux,
     [DEMARCHES_TYPES_IDS.ExtensionDePerimetre]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -458,7 +458,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.Mutation]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -471,7 +471,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.Octroi]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -484,7 +484,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.RenonciationTotale]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -498,7 +498,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.RenonciationPartielle]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -524,7 +524,7 @@ const TDE = {
     ...travaux,
     [DEMARCHES_TYPES_IDS.Prolongation]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.desistementDuDemandeur,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.demandeDeComplements_RecevabiliteDeLaDemande_,
@@ -540,7 +540,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.RenonciationTotale]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.desistementDuDemandeur,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.demandeDeComplements_RecevabiliteDeLaDemande_,
@@ -555,7 +555,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.RenonciationPartielle]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.desistementDuDemandeur,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.demandeDeComplements_RecevabiliteDeLaDemande_,
@@ -581,7 +581,6 @@ const TDE = {
       ETAPES_TYPES.receptionDeComplements_DecisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet__,
       ETAPES_TYPES.receptionDeComplements_RecepisseDeDeclarationLoiSurLeau_,
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
       ETAPES_TYPES.demandeDeComplements_DecisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_,
       ETAPES_TYPES.demandeDeComplements_RecepisseDeDeclarationLoiSurLeau_,
       ETAPES_TYPES.decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_,
@@ -626,7 +625,7 @@ const TDE = {
     ...travaux,
     [DEMARCHES_TYPES_IDS.DeplacementDePerimetre]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.recevabiliteDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
       ETAPES_TYPES.avisDeLaCommissionDepartementaleDesMines_CDM_,
@@ -640,7 +639,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.Octroi]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.decisionDuProprietaireDuSol,
       ETAPES_TYPES.decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_,
       ETAPES_TYPES.modificationDeLaDemande_DecisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_,
@@ -670,7 +669,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.RenonciationTotale]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.recevabiliteDeLaDemande,
       ETAPES_TYPES.avisDeLaCommissionDepartementaleDesMines_CDM_,
@@ -686,7 +685,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.RenonciationPartielle]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.recevabiliteDeLaDemande,
       ETAPES_TYPES.avisDeLaCommissionDepartementaleDesMines_CDM_,
@@ -711,7 +710,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.DemandeDeTitreDExploitation]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.recevabiliteDeLaDemande,
       ETAPES_TYPES.saisineDeLautoriteSignataire,
@@ -724,7 +723,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.Prolongation]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.recevabiliteDeLaDemande,
       ETAPES_TYPES.avisDeLaCommissionDepartementaleDesMines_CDM_,
@@ -742,7 +741,7 @@ const TDE = {
     ...travaux,
     [DEMARCHES_TYPES_IDS.ExtensionDePerimetre]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.decisionDeLAutoriteAdministrative,
       ETAPES_TYPES.publicationDeDecisionAuJORF,
@@ -750,7 +749,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.Mutation]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.decisionDeLAutoriteAdministrative,
       ETAPES_TYPES.publicationDeDecisionAuJORF,
@@ -759,7 +758,7 @@ const TDE = {
     [DEMARCHES_TYPES_IDS.Octroi]: [
       ETAPES_TYPES.desistementDuDemandeur,
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.demandeDeComplements,
@@ -796,7 +795,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.Prolongation]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.decisionDeLAutoriteAdministrative,
       ETAPES_TYPES.publicationDeDecisionAuJORF,
@@ -804,7 +803,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.RenonciationTotale]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.decisionDeLAutoriteAdministrative,
       ETAPES_TYPES.publicationDeDecisionAuJORF,
@@ -812,7 +811,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.RenonciationPartielle]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.decisionDeLAutoriteAdministrative,
       ETAPES_TYPES.publicationDeDecisionAuJORF,
@@ -820,7 +819,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.ResiliationAnticipeeDAmodiation]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.decisionDeLAutoriteAdministrative,
       ETAPES_TYPES.publicationDeDecisionAuJORF,
@@ -829,7 +828,7 @@ const TDE = {
     [DEMARCHES_TYPES_IDS.Retrait]: [ETAPES_TYPES.saisineDuPrefet, ETAPES_TYPES.decisionDeLAutoriteAdministrative, ETAPES_TYPES.publicationDeDecisionAuJORF, ETAPES_TYPES.classementSansSuite],
     [DEMARCHES_TYPES_IDS.Amodiation]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.decisionDeLAutoriteAdministrative,
       ETAPES_TYPES.publicationDeDecisionAuJORF,
@@ -840,7 +839,7 @@ const TDE = {
     ...travaux,
     [DEMARCHES_TYPES_IDS.Amodiation]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.decisionDeLAutoriteAdministrative,
       ETAPES_TYPES.publicationDeDecisionAuJORF,
@@ -849,7 +848,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.ExtensionDePerimetre]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.decisionDeLAutoriteAdministrative,
       ETAPES_TYPES.publicationDeDecisionAuJORF,
@@ -858,7 +857,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.Mutation]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.decisionDeLAutoriteAdministrative,
       ETAPES_TYPES.publicationDeDecisionAuJORF,
@@ -867,7 +866,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.Octroi]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.desistementDuDemandeur,
       ETAPES_TYPES.modificationDeLaDemande,
@@ -905,7 +904,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.Prolongation]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.decisionDeLAutoriteAdministrative,
       ETAPES_TYPES.publicationDeDecisionAuJORF,
@@ -914,7 +913,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.RenonciationTotale]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.decisionDeLAutoriteAdministrative,
       ETAPES_TYPES.publicationDeDecisionAuJORF,
@@ -923,7 +922,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.RenonciationPartielle]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.decisionDeLAutoriteAdministrative,
       ETAPES_TYPES.publicationDeDecisionAuJORF,
@@ -932,7 +931,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.ResiliationAnticipeeDAmodiation]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.decisionDeLAutoriteAdministrative,
       ETAPES_TYPES.publicationDeDecisionAuJORF,
@@ -951,7 +950,7 @@ const TDE = {
     ...travaux,
     [DEMARCHES_TYPES_IDS.Amodiation]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.recevabiliteDeLaDemande,
       ETAPES_TYPES.decisionDeLAutoriteAdministrative,
@@ -960,7 +959,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.Conversion]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.recevabiliteDeLaDemande,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -974,7 +973,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.ExtensionDePerimetre]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.recevabiliteDeLaDemande,
       ETAPES_TYPES.decisionDeLAutoriteAdministrative,
@@ -983,7 +982,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.Mutation]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.recevabiliteDeLaDemande,
       ETAPES_TYPES.decisionDeLAutoriteAdministrative,
@@ -992,7 +991,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.Octroi]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.desistementDuDemandeur,
       ETAPES_TYPES.modificationDeLaDemande,
@@ -1029,7 +1028,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.Prolongation]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.recevabiliteDeLaDemande,
       ETAPES_TYPES.decisionDeLAutoriteAdministrative,
@@ -1038,7 +1037,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.RenonciationTotale]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.recevabiliteDeLaDemande,
       ETAPES_TYPES.decisionDeLAutoriteAdministrative,
@@ -1047,7 +1046,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.RenonciationPartielle]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.recevabiliteDeLaDemande,
       ETAPES_TYPES.decisionDeLAutoriteAdministrative,
@@ -1056,7 +1055,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.ResiliationAnticipeeDAmodiation]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.recevabiliteDeLaDemande,
       ETAPES_TYPES.decisionDeLAutoriteAdministrative,
@@ -1075,7 +1074,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.Prolongation]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.desistementDuDemandeur,
       ETAPES_TYPES.saisineDuPrefet,
@@ -1114,7 +1113,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.RenonciationTotale]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.desistementDuDemandeur,
       ETAPES_TYPES.modificationDeLaDemande,
@@ -1148,7 +1147,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.RenonciationPartielle]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.desistementDuDemandeur,
       ETAPES_TYPES.modificationDeLaDemande,
@@ -1182,7 +1181,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.ResiliationAnticipeeDAmodiation]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.desistementDuDemandeur,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.demandeDeComplements,
@@ -1203,7 +1202,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.Amodiation]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.decisionImplicite,
       ETAPES_TYPES.publicationDeLavisDeDecisionImplicite,
@@ -1217,7 +1216,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.Cession]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.demandeDeComplements,
@@ -1246,7 +1245,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.ExtensionDePerimetre]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.demandeDeComplements,
       ETAPES_TYPES.receptionDeComplements,
@@ -1261,7 +1260,7 @@ const TDE = {
     [DEMARCHES_TYPES_IDS.Octroi]: [
       ETAPES_TYPES.informationsHistoriquesIncompletes,
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.desistementDuDemandeur,
       ETAPES_TYPES.modificationDeLaDemande,
@@ -1300,7 +1299,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.Mutation]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.recevabiliteDeLaDemande,
       ETAPES_TYPES.demandeDeComplements,
@@ -1325,7 +1324,7 @@ const TDE = {
     ...travaux,
     [DEMARCHES_TYPES_IDS.Amodiation]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.decisionDeLAutoriteAdministrative,
       ETAPES_TYPES.publicationDeDecisionAuJORF,
@@ -1333,7 +1332,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.ExtensionDePerimetre]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.decisionDeLAutoriteAdministrative,
       ETAPES_TYPES.publicationDeDecisionAuJORF,
@@ -1341,7 +1340,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.Mutation]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.decisionDeLAutoriteAdministrative,
       ETAPES_TYPES.publicationDeDecisionAuJORF,
@@ -1349,7 +1348,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.Octroi]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.desistementDuDemandeur,
       ETAPES_TYPES.modificationDeLaDemande,
@@ -1387,7 +1386,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.Prolongation]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.decisionDeLAutoriteAdministrative,
       ETAPES_TYPES.publicationDeDecisionAuJORF,
@@ -1395,7 +1394,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.RenonciationTotale]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.decisionDeLAutoriteAdministrative,
       ETAPES_TYPES.publicationDeDecisionAuJORF,
@@ -1403,7 +1402,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.RenonciationPartielle]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.decisionDeLAutoriteAdministrative,
       ETAPES_TYPES.publicationDeDecisionAuJORF,
@@ -1411,7 +1410,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.ResiliationAnticipeeDAmodiation]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.decisionDeLAutoriteAdministrative,
       ETAPES_TYPES.publicationDeDecisionAuJORF,
@@ -1423,14 +1422,14 @@ const TDE = {
     ...travaux,
     [DEMARCHES_TYPES_IDS.Amodiation]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.decisionDeLAutoriteAdministrative,
       ETAPES_TYPES.publicationDeDecisionAuJORF,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.ExtensionDePerimetre]: [
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.demande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.decisionDeLAutoriteAdministrative,
@@ -1439,7 +1438,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.Mutation]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.decisionDeLAutoriteAdministrative,
       ETAPES_TYPES.publicationDeDecisionAuJORF,
@@ -1447,7 +1446,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.Octroi]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.desistementDuDemandeur,
       ETAPES_TYPES.modificationDeLaDemande,
@@ -1485,7 +1484,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.Prolongation]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.decisionDeLAutoriteAdministrative,
       ETAPES_TYPES.publicationDeDecisionAuJORF,
@@ -1493,7 +1492,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.RenonciationTotale]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.decisionDeLAutoriteAdministrative,
       ETAPES_TYPES.publicationDeDecisionAuJORF,
@@ -1501,7 +1500,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.RenonciationPartielle]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.decisionDeLAutoriteAdministrative,
       ETAPES_TYPES.publicationDeDecisionAuJORF,
@@ -1509,7 +1508,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.ResiliationAnticipeeDAmodiation]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.decisionDeLAutoriteAdministrative,
       ETAPES_TYPES.publicationDeDecisionAuJORF,
@@ -1521,7 +1520,7 @@ const TDE = {
     ...travaux,
     [DEMARCHES_TYPES_IDS.Amodiation]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.decisionDeLAutoriteAdministrative,
       ETAPES_TYPES.publicationDeDecisionAuJORF,
@@ -1529,7 +1528,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.ExtensionDePerimetre]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.decisionDeLAutoriteAdministrative,
       ETAPES_TYPES.publicationDeDecisionAuJORF,
@@ -1537,7 +1536,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.Mutation]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.rapportDuConseilGeneralDeLeconomie_CGE_,
       ETAPES_TYPES.avisDuConseilGeneralDeLeconomie_CGE_,
@@ -1547,7 +1546,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.Octroi]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.desistementDuDemandeur,
       ETAPES_TYPES.saisineDuPrefet,
@@ -1588,7 +1587,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.Prolongation]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.desistementDuDemandeur,
       ETAPES_TYPES.saisineDuPrefet,
@@ -1629,7 +1628,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.RenonciationTotale]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.decisionDeLAutoriteAdministrative,
       ETAPES_TYPES.publicationDeDecisionAuJORF,
@@ -1637,7 +1636,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.RenonciationPartielle]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.decisionDeLAutoriteAdministrative,
       ETAPES_TYPES.publicationDeDecisionAuJORF,
@@ -1645,7 +1644,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.ResiliationAnticipeeDAmodiation]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.decisionDeLAutoriteAdministrative,
       ETAPES_TYPES.publicationDeDecisionAuJORF,
@@ -1667,7 +1666,7 @@ const TDE = {
     ...travaux,
     [DEMARCHES_TYPES_IDS.Amodiation]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.saisineDeLautoriteSignataire,
@@ -1680,7 +1679,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.Mutation]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -1694,7 +1693,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.Octroi]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.recevabiliteDeLaDemande,
       ETAPES_TYPES.avisDeMiseEnConcurrenceAuJORF,
@@ -1713,7 +1712,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.Prolongation]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.receptionDeComplements,
       ETAPES_TYPES.modificationDeLaDemande,
@@ -1733,7 +1732,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.RenonciationTotale]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -1747,7 +1746,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.RenonciationPartielle]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -1761,7 +1760,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.ResiliationAnticipeeDAmodiation]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -1787,7 +1786,7 @@ const TDE = {
     ...travaux,
     [DEMARCHES_TYPES_IDS.Fusion]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -1802,7 +1801,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.Mutation]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -1816,7 +1815,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.Octroi]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.desistementDuDemandeur,
       ETAPES_TYPES.modificationDeLaDemande,
@@ -1851,7 +1850,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.Prolongation1]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -1865,7 +1864,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.Prolongation2]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.saisineDeLautoriteSignataire,
@@ -1879,7 +1878,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.ExtensionDePerimetre]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -1893,7 +1892,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.RenonciationTotale]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -1908,7 +1907,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.RenonciationPartielle]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -1933,7 +1932,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.DemandeDeTitreDExploitation]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.saisineDeLautoriteSignataire,
@@ -1948,7 +1947,7 @@ const TDE = {
     ...travaux,
     [DEMARCHES_TYPES_IDS.ExtensionDePerimetre]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -1962,7 +1961,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.Fusion]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -1977,7 +1976,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.Mutation]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -1999,7 +1998,7 @@ const TDE = {
     [DEMARCHES_TYPES_IDS.Prolongation2]: permisExclusifRechercheGeothermieOctroiEtProlongationsEtapes,
     [DEMARCHES_TYPES_IDS.RenonciationTotale]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -2014,7 +2013,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.RenonciationPartielle]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -2039,7 +2038,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.DemandeDeTitreDExploitation]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs,
       ETAPES_TYPES.classementSansSuite,
@@ -2049,7 +2048,7 @@ const TDE = {
     ...travaux,
     [DEMARCHES_TYPES_IDS.ExtensionDePerimetre]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -2062,7 +2061,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.Fusion]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -2076,7 +2075,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.Mutation]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -2089,7 +2088,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.Octroi]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -2102,7 +2101,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.Prolongation1]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.recevabiliteDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.desistementDuDemandeur,
@@ -2117,7 +2116,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.Prolongation2]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.recevabiliteDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
@@ -2131,7 +2130,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.ProlongationExceptionnelle]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.recevabiliteDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
@@ -2145,7 +2144,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.RenonciationTotale]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -2159,7 +2158,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.RenonciationPartielle]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -2186,7 +2185,7 @@ const TDE = {
     ...permisExclusifDeRecherchesMetauxEtGranulatsMarinsProlongations,
     [DEMARCHES_TYPES_IDS.ExtensionDePerimetre]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.recevabiliteDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
@@ -2209,7 +2208,7 @@ const TDE = {
     [DEMARCHES_TYPES_IDS.Fusion]: [
       ETAPES_TYPES.informationsHistoriquesIncompletes,
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.demandeDeComplements,
@@ -2232,7 +2231,7 @@ const TDE = {
     [DEMARCHES_TYPES_IDS.DemandeDeTitreDExploitation]: [
       ETAPES_TYPES.informationsHistoriquesIncompletes,
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.recevabiliteDeLaDemande,
       ETAPES_TYPES.modificationDeLaDemande,
@@ -2248,7 +2247,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.RenonciationTotale]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.recevabiliteDeLaDemande,
@@ -2267,7 +2266,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.RenonciationPartielle]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.recevabiliteDeLaDemande,
@@ -2301,7 +2300,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.ExtensionDeSubstance]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.demandeDeComplements,
@@ -2322,7 +2321,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.Mutation]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.desistementDuDemandeur,
       ETAPES_TYPES.modificationDeLaDemande,
@@ -2344,7 +2343,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.Octroi]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.desistementDuDemandeur,
       ETAPES_TYPES.modificationDeLaDemande,
@@ -2386,7 +2385,7 @@ const TDE = {
     [DEMARCHES_TYPES_IDS.ExtensionDeSubstance]: [ETAPES_TYPES.decisionDeLAutoriteAdministrative, ETAPES_TYPES.publicationDeDecisionAuJORF],
     [DEMARCHES_TYPES_IDS.ExtensionDePerimetre]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -2400,7 +2399,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.Fusion]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -2415,7 +2414,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.Mutation]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -2430,7 +2429,7 @@ const TDE = {
     [DEMARCHES_TYPES_IDS.Octroi]: [
       ETAPES_TYPES.avisDeMiseEnConcurrenceAuJORF,
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.desistementDuDemandeur,
       ETAPES_TYPES.modificationDeLaDemande,
@@ -2474,7 +2473,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.DemandeDeTitreDExploitation]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.saisineDeLautoriteSignataire,
@@ -2487,7 +2486,7 @@ const TDE = {
     [DEMARCHES_TYPES_IDS.Prorogation]: [ETAPES_TYPES.decisionDeLAutoriteAdministrative, ETAPES_TYPES.publicationDeDecisionAuJORF],
     [DEMARCHES_TYPES_IDS.Prolongation1]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -2501,7 +2500,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.Prolongation2]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -2515,7 +2514,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.RenonciationTotale]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -2530,7 +2529,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.RenonciationPartielle]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -2548,7 +2547,7 @@ const TDE = {
     ...travaux,
     [DEMARCHES_TYPES_IDS.ExtensionDePerimetre]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -2562,7 +2561,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.Fusion]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -2577,7 +2576,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.Mutation]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -2591,7 +2590,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.Octroi]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.desistementDuDemandeur,
       ETAPES_TYPES.modificationDeLaDemande,
@@ -2626,7 +2625,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.Prolongation1]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -2640,7 +2639,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.Prolongation2]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -2654,7 +2653,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.RenonciationTotale]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -2669,7 +2668,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.RenonciationPartielle]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -2694,7 +2693,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.DemandeDeTitreDExploitation]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.saisineDeLautoriteSignataire,
@@ -2711,7 +2710,7 @@ const TDE = {
     [DEMARCHES_TYPES_IDS.Octroi]: [
       ETAPES_TYPES.informationsHistoriquesIncompletes,
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.enquetePublique,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.desistementDuDemandeur,
@@ -2749,7 +2748,7 @@ const TDE = {
     [DEMARCHES_TYPES_IDS.DemandeDeTitreDExploitation]: [
       ETAPES_TYPES.informationsHistoriquesIncompletes,
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.saisineDeLautoriteSignataire,
@@ -2763,7 +2762,7 @@ const TDE = {
       ETAPES_TYPES.demande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
       ETAPES_TYPES.publicationDeLavisDeDecisionImplicite,
       ETAPES_TYPES.saisineDeLautoriteSignataire,
@@ -2778,7 +2777,7 @@ const TDE = {
       ETAPES_TYPES.demande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
       ETAPES_TYPES.publicationDeLavisDeDecisionImplicite,
       ETAPES_TYPES.saisineDeLautoriteSignataire,
@@ -2802,7 +2801,7 @@ const TDE = {
     [DEMARCHES_TYPES_IDS.Fusion]: [
       ETAPES_TYPES.informationsHistoriquesIncompletes,
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -2817,7 +2816,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.ExtensionDePerimetre]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -2831,7 +2830,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.Mutation]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -2848,7 +2847,7 @@ const TDE = {
     ...travaux,
     [DEMARCHES_TYPES_IDS.Amodiation]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -2862,7 +2861,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.ExtensionDePerimetre]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -2875,7 +2874,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.Mutation]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -2888,7 +2887,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.Octroi]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.avisDeMiseEnConcurrenceAuJORF,
       ETAPES_TYPES.modificationDeLaDemande,
@@ -2903,7 +2902,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.Prolongation]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -2916,7 +2915,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.RenonciationTotale]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -2930,7 +2929,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.RenonciationPartielle]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -2944,7 +2943,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.ResiliationAnticipeeDAmodiation]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -2966,7 +2965,7 @@ const TDE = {
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.Fusion]: [
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.demande,
       ETAPES_TYPES.modificationDeLaDemande,
@@ -2986,7 +2985,7 @@ const TDE = {
     ...travaux,
     [DEMARCHES_TYPES_IDS.Amodiation]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -2999,7 +2998,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.ExtensionDePerimetre]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -3012,7 +3011,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.Mutation]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -3025,7 +3024,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.Octroi]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -3038,7 +3037,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.Prolongation1]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -3051,7 +3050,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.Prolongation2]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -3064,7 +3063,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.RenonciationTotale]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -3077,7 +3076,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.RenonciationPartielle]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -3090,7 +3089,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.ResiliationAnticipeeDAmodiation]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -3112,7 +3111,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.DemandeDeTitreDExploitation]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.saisineDeLautoriteSignataire,
@@ -3136,7 +3135,7 @@ const TDE = {
     ...travaux,
     [DEMARCHES_TYPES_IDS.Amodiation]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -3151,7 +3150,7 @@ const TDE = {
     [DEMARCHES_TYPES_IDS.DemandeDeTitreDExploitation]: [
       ETAPES_TYPES.informationsHistoriquesIncompletes,
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.saisineDeLautoriteSignataire,
@@ -3163,7 +3162,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.Octroi]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.desistementDuDemandeur,
       ETAPES_TYPES.saisineDuPrefet,
@@ -3202,7 +3201,7 @@ const TDE = {
     ...permisExploitationMetauxEtGranulatsMarinsProlongations,
     [DEMARCHES_TYPES_IDS.RenonciationTotale]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -3216,7 +3215,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.RenonciationPartielle]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -3230,7 +3229,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.ResiliationAnticipeeDAmodiation]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -3253,7 +3252,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.ExtensionDePerimetre]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -3266,7 +3265,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.ExtensionDeSubstance]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -3279,7 +3278,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.Mutation]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.desistementDuDemandeur,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
@@ -3297,7 +3296,7 @@ const TDE = {
     ...travaux,
     [DEMARCHES_TYPES_IDS.Amodiation]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -3312,7 +3311,7 @@ const TDE = {
     [DEMARCHES_TYPES_IDS.Prorogation]: [ETAPES_TYPES.decisionDeLAutoriteAdministrative, ETAPES_TYPES.publicationDeDecisionAuJORF],
     [DEMARCHES_TYPES_IDS.ExtensionDePerimetre]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -3325,7 +3324,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.ExtensionDeSubstance]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -3338,7 +3337,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.Mutation]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -3351,7 +3350,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.Octroi]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -3364,7 +3363,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.Prolongation1]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -3377,7 +3376,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.Prolongation2]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -3390,7 +3389,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.RenonciationTotale]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -3404,7 +3403,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.RenonciationPartielle]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -3418,7 +3417,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.ResiliationAnticipeeDAmodiation]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -3441,7 +3440,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.DemandeDeTitreDExploitation]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.saisineDeLautoriteSignataire,
@@ -3456,7 +3455,7 @@ const TDE = {
     ...travaux,
     [DEMARCHES_TYPES_IDS.Amodiation]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -3470,7 +3469,7 @@ const TDE = {
     [DEMARCHES_TYPES_IDS.Octroi]: [
       ETAPES_TYPES.informationsHistoriquesIncompletes,
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -3483,7 +3482,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.ExtensionDePerimetre]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -3496,7 +3495,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.RenonciationTotale]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -3509,7 +3508,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.RenonciationPartielle]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -3522,7 +3521,7 @@ const TDE = {
     ],
     [DEMARCHES_TYPES_IDS.Mutation]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,
@@ -3536,7 +3535,7 @@ const TDE = {
     ...permisExploitationMetauxEtGranulatsMarinsProlongations,
     [DEMARCHES_TYPES_IDS.ResiliationAnticipeeDAmodiation]: [
       ETAPES_TYPES.demande,
-      ETAPES_TYPES.depotDeLaDemande,
+      ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.decisionImplicite,

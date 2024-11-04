@@ -51,7 +51,7 @@ export const titresDreal: CommonTitreAdministration[] = [
     ],
     titulaireIds: [entrepriseIdValidator.parse('Titulaire3')],
     enAttenteDeAdministration: true,
-    prochainesEtapes: [ETAPES_TYPES.depotDeLaDemande],
+    prochainesEtapes: [ETAPES_TYPES.enregistrementDeLaDemande],
     derniereEtape: { date: toCaminoDate('2022-01-01'), etapeTypeId: 'mcr' },
   },
   {

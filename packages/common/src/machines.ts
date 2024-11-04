@@ -1,5 +1,5 @@
 import { toCaminoDate, CaminoDate } from './date'
-import { demarcheDepotDemandeDateFind, DemarcheId, demarcheIdValidator } from './demarche'
+import { demarcheEnregistrementDemandeDateFind, DemarcheId, demarcheIdValidator } from './demarche'
 import { DemarcheTypeId, DEMARCHES_TYPES_IDS, DemarchesTypes } from './static/demarchesTypes'
 import { EtapeTypeId } from './static/etapesTypes'
 import { TitreTypeId } from './static/titresTypes'
@@ -140,7 +140,7 @@ export const machineIdFind = (
   demarcheId: DemarcheId,
   overrideDate: CaminoDate | null = null
 ): CaminoMachineId | undefined => {
-  const date = demarcheDepotDemandeDateFind(titreEtapes) ?? overrideDate
+  const date = demarcheEnregistrementDemandeDateFind(titreEtapes) ?? overrideDate
 
   const definition = toSorted(demarchesDefinitions, (a, b) => b.dateDebut.localeCompare(a.dateDebut)).find(
     d => (isNullOrUndefinedOrEmpty(date) || d.dateDebut < date) && d.titreTypeIds.includes(titreTypeId) && d.demarcheTypeIds.includes(demarcheTypeId)

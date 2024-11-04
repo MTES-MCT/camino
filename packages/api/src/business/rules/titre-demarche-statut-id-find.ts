@@ -16,7 +16,6 @@ const titreEtapesDecisivesCommunesTypes: EtapeTypeId[] = ['css', 'abd', 'and']
 
 const titreEtapesDecisivesDemandesTypes: EtapeTypeId[] = [
   'mfr',
-  'mdp',
   'men',
   'meo',
   'des',
@@ -196,7 +195,6 @@ const titreDemarcheDemandeStatutIdFind = (titreDemarcheEtapes: Pick<ITitreEtape,
     [ETAPES_TYPES.recevabiliteDeLaDemande, ETAPES_TYPES.decisionDeLAutoriteAdministrative].includes(titreEtapeRecent.typeId) ||
     (titreTypeId === TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX &&
       [
-        ETAPES_TYPES.depotDeLaDemande,
         ETAPES_TYPES.enregistrementDeLaDemande,
         ETAPES_TYPES.priseEnChargeParLOfficeNationalDesForets,
         ETAPES_TYPES.completudeDeLaDemande,
@@ -208,9 +206,9 @@ const titreDemarcheDemandeStatutIdFind = (titreDemarcheEtapes: Pick<ITitreEtape,
     return DemarchesStatutsIds.EnInstruction
   }
 
-  //  - le type de l’étape est dépôt de la demande (mdp)
+  //  - le type de l’étape est enregistrement de la demande (men)
   //  - il n’y a pas d’étape après
-  if (titreEtapeRecent.typeId === 'mdp') {
+  if (titreEtapeRecent.typeId === ETAPES_TYPES.enregistrementDeLaDemande) {
     //  - le statut de la démarche est “déposé”
     return DemarchesStatutsIds.Depose
   }

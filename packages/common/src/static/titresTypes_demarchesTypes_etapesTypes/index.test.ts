@@ -8,7 +8,6 @@ test('getEtapesTDE', () => {
       "rcd",
       "rcb",
       "mfr",
-      "mdp",
       "mcd",
       "mcb",
       "dae",

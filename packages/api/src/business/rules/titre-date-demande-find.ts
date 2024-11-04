@@ -4,8 +4,10 @@ import { ITitreDemarche } from '../../types'
 import { titreDemarcheSortAsc } from '../utils/titre-elements-sort-asc'
 import { titreEtapesSortAscByOrdre } from '../utils/titre-etapes-sort'
 import { isDemarcheTypeOctroi } from 'camino-common/src/static/demarchesTypes'
+import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes'
+import { CaminoDate } from 'camino-common/src/date'
 
-export const titreDateDemandeFind = (titreDemarches: ITitreDemarche[]) => {
+export const titreDateDemandeFind = (titreDemarches: ITitreDemarche[]): CaminoDate | null => {
   // trouve la démarche génératrice du titre
   // - première démarche d'octroi ou mutation partielle
   const titreDemarchesSorted = titreDemarcheSortAsc(titreDemarches)
@@ -17,11 +19,9 @@ export const titreDateDemandeFind = (titreDemarches: ITitreDemarche[]) => {
   // alors retourne null
   if (!titreDemarche || !titreDemarche.etapes!.length) return null
 
-  // dans la démarche génératrice, trouve
-  // - la demande déposée
-  // - ou l'enregistrement de la demande (pour les anciennes ARM)
+  // dans la démarche génératrice, trouve l'enregistrement de la demande
   const titreEtapesSorted = titreEtapesSortAscByOrdre(titreDemarche.etapes!)
-  const titreEtape = titreEtapesSorted.find(te => te.typeId === 'mdp' || te.typeId === 'men')
+  const titreEtape = titreEtapesSorted.find(te => te.typeId === ETAPES_TYPES.enregistrementDeLaDemande)
 
   // si
   // - il n'y a pas d'étape de dépôt ou d'enregistrement de la demande

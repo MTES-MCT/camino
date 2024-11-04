@@ -8,27 +8,12 @@ const etapesProd = require('./2020-09-30-oct.cas.json') // eslint-disable-line
 
 describe('vérifie l’arbre d’octroi d’AXM', () => {
   const axmOctMachine = new AxmOctMachine()
-  test('peut créer une "mdp" après une "mfr", "dae" et "asl"', () => {
-    const etapes = [ETES.decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_.EXEMPTE, ETES.decisionDuProprietaireDuSol.FAVORABLE, ETES.demande.FAIT, ETES.depotDeLaDemande.FAIT]
-    const { service, dateFin, etapes: fullEtapes } = setDateAndOrderAndInterpretMachine(axmOctMachine, '2020-01-01', etapes)
-    expect(service).canOnlyTransitionTo({ machine: axmOctMachine, date: dateFin }, [
-      'DEMANDER_COMPLEMENTS_POUR_RECEVABILITE',
-      'FAIRE_CLASSEMENT_SANS_SUITE',
-      'FAIRE_DESISTEMENT_DEMANDEUR',
-      'FAIRE_RECEVABILITE_DEMANDE_DEFAVORABLE',
-      'FAIRE_RECEVABILITE_DEMANDE_FAVORABLE',
-      'RENDRE_DECISION_IMPLICITE_REJET',
-    ])
-    expect(axmOctMachine.whoIsBlocking(fullEtapes)).toStrictEqual([ADMINISTRATION_IDS['DGTM - GUYANE']])
-  })
-
-  test('peut créer une "mdp" après une "mfr", "asl", "dae" requise', () => {
+  test('peut créer une "men" après une "mfr", "dae" et "asl"', () => {
     const etapes = [
-      ETES.decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_.REQUIS,
+      ETES.decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_.EXEMPTE,
       ETES.decisionDuProprietaireDuSol.FAVORABLE,
-      ETES.modificationDeLaDemande_DecisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_.FAIT,
       ETES.demande.FAIT,
-      ETES.depotDeLaDemande.FAIT,
+      ETES.enregistrementDeLaDemande.FAIT,
     ]
     const { service, dateFin, etapes: fullEtapes } = setDateAndOrderAndInterpretMachine(axmOctMachine, '2020-01-01', etapes)
     expect(service).canOnlyTransitionTo({ machine: axmOctMachine, date: dateFin }, [
@@ -42,7 +27,27 @@ describe('vérifie l’arbre d’octroi d’AXM', () => {
     expect(axmOctMachine.whoIsBlocking(fullEtapes)).toStrictEqual([ADMINISTRATION_IDS['DGTM - GUYANE']])
   })
 
-  test('ne peut pas créer une "mdp" avec une "dae" requise', () => {
+  test('peut créer une "men" après une "mfr", "asl", "dae" requise', () => {
+    const etapes = [
+      ETES.decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_.REQUIS,
+      ETES.decisionDuProprietaireDuSol.FAVORABLE,
+      ETES.modificationDeLaDemande_DecisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_.FAIT,
+      ETES.demande.FAIT,
+      ETES.enregistrementDeLaDemande.FAIT,
+    ]
+    const { service, dateFin, etapes: fullEtapes } = setDateAndOrderAndInterpretMachine(axmOctMachine, '2020-01-01', etapes)
+    expect(service).canOnlyTransitionTo({ machine: axmOctMachine, date: dateFin }, [
+      'DEMANDER_COMPLEMENTS_POUR_RECEVABILITE',
+      'FAIRE_CLASSEMENT_SANS_SUITE',
+      'FAIRE_DESISTEMENT_DEMANDEUR',
+      'FAIRE_RECEVABILITE_DEMANDE_DEFAVORABLE',
+      'FAIRE_RECEVABILITE_DEMANDE_FAVORABLE',
+      'RENDRE_DECISION_IMPLICITE_REJET',
+    ])
+    expect(axmOctMachine.whoIsBlocking(fullEtapes)).toStrictEqual([ADMINISTRATION_IDS['DGTM - GUYANE']])
+  })
+
+  test('ne peut pas créer une "men" avec une "dae" requise', () => {
     const { service, dateFin } = setDateAndOrderAndInterpretMachine(axmOctMachine, '2020-01-01', [
       ETES.decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_.REQUIS,
       ETES.decisionDuProprietaireDuSol.FAVORABLE,
@@ -62,7 +67,7 @@ describe('vérifie l’arbre d’octroi d’AXM', () => {
         date: toCaminoDate('2020-01-01'),
       },
       { ...ETES.demande.FAIT, date: toCaminoDate('2022-04-14') },
-      { ...ETES.depotDeLaDemande.FAIT, date: toCaminoDate('2022-04-15') },
+      { ...ETES.enregistrementDeLaDemande.FAIT, date: toCaminoDate('2022-04-15') },
       {
         ...ETES.recevabiliteDeLaDemande.FAVORABLE,
         date: toCaminoDate('2022-04-15'),
@@ -96,7 +101,7 @@ describe('vérifie l’arbre d’octroi d’AXM', () => {
         ...ETES.decisionDuProprietaireDuSol.FAVORABLE,
         date: toCaminoDate('2020-01-01'),
       },
-      { ...ETES.depotDeLaDemande.FAIT, date: toCaminoDate('2022-04-15') },
+      { ...ETES.enregistrementDeLaDemande.FAIT, date: toCaminoDate('2022-04-15') },
       {
         ...ETES.recevabiliteDeLaDemande.FAVORABLE,
         date: toCaminoDate('2022-04-15'),
@@ -163,7 +168,7 @@ describe('vérifie l’arbre d’octroi d’AXM', () => {
       ETES.decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_.EXEMPTE,
       ETES.decisionDuProprietaireDuSol.FAVORABLE,
       ETES.demande.FAIT,
-      ETES.depotDeLaDemande.FAIT,
+      ETES.enregistrementDeLaDemande.FAIT,
       ETES.decisionImplicite.REJETE,
     ])
     expect(service).canOnlyTransitionTo({ machine: axmOctMachine, date: dateFin }, ['RENDRE_DECISION_ANNULATION_PAR_JUGE_ADMINISTRATIF'])
@@ -200,7 +205,7 @@ describe('vérifie l’arbre d’octroi d’AXM', () => {
         ...ETES.decisionDuProprietaireDuSol.FAVORABLE,
         date: toCaminoDate('2020-01-01'),
       },
-      { ...ETES.depotDeLaDemande.FAIT, date: toCaminoDate('2022-04-11') },
+      { ...ETES.enregistrementDeLaDemande.FAIT, date: toCaminoDate('2022-04-11') },
       {
         ...ETES.demandeDeComplements_RecevabiliteDeLaDemande_.FAIT,
         date: toCaminoDate('2022-04-11'),
@@ -273,7 +278,7 @@ describe('vérifie l’arbre d’octroi d’AXM', () => {
         ...ETES.decisionDuProprietaireDuSol.FAVORABLE,
         date: toCaminoDate('2020-01-01'),
       },
-      { ...ETES.depotDeLaDemande.FAIT, date: toCaminoDate('2022-04-11') },
+      { ...ETES.enregistrementDeLaDemande.FAIT, date: toCaminoDate('2022-04-11') },
       {
         ...ETES.recevabiliteDeLaDemande.FAVORABLE,
         date: toCaminoDate('2022-04-15'),

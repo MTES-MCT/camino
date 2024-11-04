@@ -178,7 +178,7 @@ describe('trie les étapes', () => {
       },
       {
         id: newEtapeId('3'),
-        typeId: 'mdp',
+        typeId: 'men',
         ordre: 3,
         date: toCaminoDate('2020-01-01'),
         statutId: 'fai',
@@ -194,7 +194,7 @@ describe('trie les étapes', () => {
     const result = titreEtapesSortAscByDate(etapes, newDemarcheId(), DEMARCHES_TYPES_IDS.Octroi, TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX)
     expect(result[0].typeId).toEqual('pfd')
     expect(result[1].typeId).toEqual('mfr')
-    expect(result[2].typeId).toEqual('mdp')
+    expect(result[2].typeId).toEqual('men')
   })
 
   test("retourne une erreur si le type d'étape est absent dans la définition", () => {
@@ -276,9 +276,9 @@ describe('trie les étapes', () => {
         communes: [],
       },
       {
-        id: newEtapeId('mdp'),
+        id: newEtapeId('men'),
         ordre: 2,
-        typeId: 'mdp',
+        typeId: 'men',
         date: toCaminoDate('2020-01-01'),
         statutId: 'fai',
         concurrence: 'non-applicable',
@@ -337,9 +337,9 @@ describe('trie les étapes', () => {
         communes: [],
       },
       {
-        id: newEtapeId('mdp'),
+        id: newEtapeId('men'),
         ordre: 2,
-        typeId: 'mdp',
+        typeId: 'men',
         date: toCaminoDate('2020-01-02'),
         statutId: 'fai',
         concurrence: 'non-applicable',
@@ -420,7 +420,7 @@ describe('trie les étapes', () => {
     expect(result.map(({ id }) => id)).toMatchInlineSnapshot(`
       [
         "mfr",
-        "mdp",
+        "men",
         "pfd",
         "mcp",
         "vfd",

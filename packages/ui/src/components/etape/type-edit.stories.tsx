@@ -20,7 +20,7 @@ const apiClientMock: Pick<EtapeApiClient, 'getEtapesTypesEtapesStatuts'> = {
     return Promise.resolve({
       [ETAPES_TYPES.demande]: { etapeStatutIds: [ETAPES_STATUTS.FAIT], mainStep: false },
       css: { etapeStatutIds: [ETAPES_STATUTS.FAIT], mainStep: false },
-      mdp: { etapeStatutIds: [ETAPES_STATUTS.FAIT], mainStep: true },
+      men: { etapeStatutIds: [ETAPES_STATUTS.FAIT], mainStep: true },
       apd: { etapeStatutIds: [ETAPES_STATUTS.FAIT], mainStep: true },
     })
   },

@@ -27,7 +27,7 @@ type RefuserRDE = {
 }
 
 type XStateEvent =
-  | { type: 'DEPOSER_DEMANDE' }
+  | { type: 'ENREGISTRER_DEMANDE' }
   | { type: 'DESISTER_PAR_LE_DEMANDEUR' }
   | { type: 'CLASSER_SANS_SUITE' }
   | FaireDemandeEvent
@@ -77,7 +77,7 @@ type Event = XStateEvent['type']
 
 const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
   FAIRE_DEMANDE: { db: EtapesTypesEtapesStatuts.demande, mainStep: true },
-  DEPOSER_DEMANDE: { db: EtapesTypesEtapesStatuts.depotDeLaDemande, mainStep: true },
+  ENREGISTRER_DEMANDE: { db: EtapesTypesEtapesStatuts.enregistrementDeLaDemande, mainStep: true },
   PAYER_FRAIS_DE_DOSSIER: { db: EtapesTypesEtapesStatuts.paiementDesFraisDeDossier, mainStep: true },
   DEMANDER_MODIFICATION_DE_LA_DEMANDE: {
     db: {
@@ -433,7 +433,7 @@ const armOctMachine = createMachine({
                     demandeAFaire: {
                       on: {
                         FAIRE_DEMANDE: {
-                          target: 'demandeADeposer',
+                          target: 'demandeAEnregistrer',
                           actions: assign({
                             mecanisation: ({ context, event }): MecanisationInconnu => {
                               if (isMecanise(context.mecanisation) && context.mecanisation.franchissementCoursEau > 0 && (event.franchissements === null || event.franchissements === 0)) {
@@ -463,17 +463,17 @@ const armOctMachine = createMachine({
                         },
                       },
                     },
-                    demandeADeposer: {
+                    demandeAEnregistrer: {
                       on: {
-                        DEPOSER_DEMANDE: {
-                          target: 'demandeDeposee',
+                        ENREGISTRER_DEMANDE: {
+                          target: 'demandeEnregistree',
                           actions: assign({
                             demarcheStatut: DemarchesStatutsIds.EnInstruction,
                           }),
                         },
                       },
                     },
-                    demandeDeposee: {
+                    demandeEnregistree: {
                       type: 'final',
                     },
                   },

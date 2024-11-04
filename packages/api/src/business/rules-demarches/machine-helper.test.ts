@@ -14,7 +14,7 @@ describe('isEtapesOk', () => {
           date: toCaminoDate('2021-02-26'),
         },
         {
-          etapeTypeId: 'mdp',
+          etapeTypeId: 'men',
           etapeStatutId: 'fai',
           date: toCaminoDate('2021-02-10'),
         },
@@ -33,7 +33,7 @@ describe('orderMachine', () => {
           contenu: { arm: { mecanise: true } },
         },
         {
-          etapeTypeId: 'mdp',
+          etapeTypeId: 'men',
           etapeStatutId: 'fai',
           date: toCaminoDate('2020-01-02'),
         },
@@ -113,7 +113,7 @@ describe('orderMachine', () => {
         {
           "date": "2020-01-02",
           "etapeStatutId": "fai",
-          "etapeTypeId": "mdp",
+          "etapeTypeId": "men",
         },
         {
           "date": "2020-01-03",
@@ -192,7 +192,7 @@ describe('demarcheStatut', () => {
         },
         {
           date: toCaminoDate('2021-07-27'),
-          etapeTypeId: 'mdp',
+          etapeTypeId: 'men',
           etapeStatutId: 'fai',
         },
         {
@@ -291,7 +291,7 @@ describe('whoIsBlocking', () => {
           date: toCaminoDate('2021-02-01'),
         },
         {
-          etapeTypeId: 'mdp',
+          etapeTypeId: 'men',
           etapeStatutId: 'fai',
           date: toCaminoDate('2021-02-02'),
         },
@@ -313,7 +313,7 @@ describe('whoIsBlocking', () => {
           date: toCaminoDate('2021-02-01'),
         },
         {
-          etapeTypeId: 'mdp',
+          etapeTypeId: 'men',
           etapeStatutId: 'fai',
           date: toCaminoDate('2021-02-02'),
         },
@@ -340,7 +340,7 @@ describe('whoIsBlocking', () => {
           date: toCaminoDate('2021-02-01'),
         },
         {
-          etapeTypeId: 'mdp',
+          etapeTypeId: 'men',
           etapeStatutId: 'fai',
           date: toCaminoDate('2021-02-02'),
         },
@@ -380,7 +380,7 @@ describe('mainStep', () => {
             date: toCaminoDate('2021-02-01'),
           },
           {
-            etapeTypeId: 'mdp',
+            etapeTypeId: 'men',
             etapeStatutId: 'fai',
             date: toCaminoDate('2021-02-02'),
           },
@@ -421,7 +421,7 @@ describe('mainStep', () => {
       armOctMachine.possibleNextEtapes(
         [
           { etapeTypeId: 'mfr', etapeStatutId: 'fai', date: toCaminoDate('2021-02-01') },
-          { etapeTypeId: 'mdp', etapeStatutId: 'fai', date: toCaminoDate('2021-02-02') },
+          { etapeTypeId: 'men', etapeStatutId: 'fai', date: toCaminoDate('2021-02-02') },
           { etapeTypeId: 'pfd', etapeStatutId: 'fai', date: toCaminoDate('2021-02-02') },
           { etapeTypeId: 'mcp', etapeStatutId: 'com', date: toCaminoDate('2021-02-02') },
           { etapeTypeId: 'vfd', etapeStatutId: 'fai', date: toCaminoDate('2021-02-02') },
@@ -487,7 +487,7 @@ describe('mainStep', () => {
       armOctMachine.possibleNextEtapes(
         [
           { etapeTypeId: 'mfr', etapeStatutId: 'fai', date: toCaminoDate('2021-02-01') },
-          { etapeTypeId: 'mdp', etapeStatutId: 'fai', date: toCaminoDate('2021-02-02') },
+          { etapeTypeId: 'men', etapeStatutId: 'fai', date: toCaminoDate('2021-02-02') },
           { etapeTypeId: 'pfd', etapeStatutId: 'fai', date: toCaminoDate('2021-02-02') },
           { etapeTypeId: 'mcp', etapeStatutId: 'com', date: toCaminoDate('2021-02-02') },
           { etapeTypeId: 'vfd', etapeStatutId: 'fai', date: toCaminoDate('2021-02-02') },
@@ -554,7 +554,7 @@ describe('mainStep', () => {
       armOctMachine.possibleNextEtapes(
         [
           { etapeTypeId: 'mfr', etapeStatutId: 'fai', date: toCaminoDate('2021-02-01') },
-          { etapeTypeId: 'mdp', etapeStatutId: 'fai', date: toCaminoDate('2021-02-02') },
+          { etapeTypeId: 'men', etapeStatutId: 'fai', date: toCaminoDate('2021-02-02') },
           { etapeTypeId: 'pfd', etapeStatutId: 'fai', date: toCaminoDate('2021-02-02') },
           { etapeTypeId: 'mcp', etapeStatutId: 'com', date: toCaminoDate('2021-02-02') },
           { etapeTypeId: 'vfd', etapeStatutId: 'fai', date: toCaminoDate('2021-02-02') },
@@ -613,7 +613,7 @@ describe('mainStep', () => {
       armOctMachine.possibleNextEtapes(
         [
           { etapeTypeId: 'mfr', etapeStatutId: 'fai', date: toCaminoDate('2021-02-01') },
-          { etapeTypeId: 'mdp', etapeStatutId: 'fai', date: toCaminoDate('2021-02-02') },
+          { etapeTypeId: 'men', etapeStatutId: 'fai', date: toCaminoDate('2021-02-02') },
           { etapeTypeId: 'pfd', etapeStatutId: 'fai', date: toCaminoDate('2021-02-02') },
           { etapeTypeId: 'mcp', etapeStatutId: 'com', date: toCaminoDate('2021-02-02') },
           { etapeTypeId: 'vfd', etapeStatutId: 'fai', date: toCaminoDate('2021-02-02') },

@@ -5,7 +5,7 @@ import { demarcheIdValidator } from './demarche'
 
 describe('machineFind', () => {
   test('demarcheDefinitionFind retourne une machine', () => {
-    expect(machineIdFind('prm', 'oct', [{ date: toCaminoDate('2023-06-07'), typeId: 'mdp' }], demarcheIdValidator.parse('demarcheId'))).toStrictEqual('PrmOct')
+    expect(machineIdFind('prm', 'oct', [{ date: toCaminoDate('2023-06-07'), typeId: 'men' }], demarcheIdValidator.parse('demarcheId'))).toStrictEqual('PrmOct')
   })
 
   test("demarcheDefinitionFind retourne une machine quand il n'y a pas d'étape", () => {
@@ -13,11 +13,11 @@ describe('machineFind', () => {
   })
 
   test('demarcheDefinitionFind ne retourne pas une machine quand la démarche fait partie des exceptions', () => {
-    expect(machineIdFind('prm', 'oct', [{ date: toCaminoDate('2023-06-07'), typeId: 'mdp' }], demarcheIdValidator.parse('FfJTtP9EEfvf3VZy81hpF7ms'))).toBe(undefined)
+    expect(machineIdFind('prm', 'oct', [{ date: toCaminoDate('2023-06-07'), typeId: 'men' }], demarcheIdValidator.parse('FfJTtP9EEfvf3VZy81hpF7ms'))).toBe(undefined)
   })
 
   test('demarcheDefinitionFind ne retourne pas une machine quand les étapes sont trop anciennes', () => {
-    expect(machineIdFind('prm', 'oct', [{ date: toCaminoDate('2010-06-07'), typeId: 'mdp' }], demarcheIdValidator.parse('FfJTtP9EEfvf3VZy81hpF7ms'))).toBe(undefined)
+    expect(machineIdFind('prm', 'oct', [{ date: toCaminoDate('2010-06-07'), typeId: 'men' }], demarcheIdValidator.parse('FfJTtP9EEfvf3VZy81hpF7ms'))).toBe(undefined)
   })
 
   test('arm pro undef', () => {

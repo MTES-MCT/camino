@@ -270,12 +270,12 @@ export const demarcheCreationOutputValidator = z.object({
 
 export type DemarcheCreationOutput = z.infer<typeof demarcheCreationOutputValidator>
 
-export const demarcheDepotDemandeDateFind = (titreEtapes: DeepReadonly<{ date: CaminoDate; typeId: EtapeTypeId }[]> | undefined): undefined | CaminoDate => {
+export const demarcheEnregistrementDemandeDateFind = (titreEtapes: DeepReadonly<{ date: CaminoDate; typeId: EtapeTypeId }[]> | undefined): undefined | CaminoDate => {
   if (isNullOrUndefinedOrEmpty(titreEtapes)) {
     return undefined
   }
 
-  const titreEtapeDemande = titreEtapes.find(te => te.typeId === ETAPES_TYPES.depotDeLaDemande)
+  const titreEtapeDemande = titreEtapes.find(te => te.typeId === ETAPES_TYPES.enregistrementDeLaDemande)
 
   if (isNotNullNorUndefined(titreEtapeDemande)) {
     return titreEtapeDemande.date

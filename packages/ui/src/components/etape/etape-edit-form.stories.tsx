@@ -148,7 +148,7 @@ const etapeEditFormApiClient: Props['apiClient'] = {
 
     return Promise.resolve({
       mfr: { etapeStatutIds: ['fai'], mainStep: true },
-      mdp: { etapeStatutIds: ['fai'], mainStep: true },
+      men: { etapeStatutIds: ['fai'], mainStep: true },
       asc: { etapeStatutIds: ['fai'], mainStep: true },
       aca: { etapeStatutIds: ['fav', 'def'], mainStep: true },
       cac: { etapeStatutIds: ['fai'], mainStep: true },

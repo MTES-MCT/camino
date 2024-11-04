@@ -6,7 +6,7 @@ import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts'
 
 type XStateEvent =
   | { type: 'FAIRE_DEMANDE' }
-  | { type: 'DEPOSER_DEMANDE' }
+  | { type: 'ENREGISTRER_DEMANDE' }
   | { type: 'DEMANDER_COMPLEMENTS_POUR_RECEVABILITE' }
   | { type: 'FAIRE_RECEVABILITE_DEMANDE_FAVORABLE' }
   | { type: 'FAIRE_RECEVABILITE_DEMANDE_DEFAVORABLE' }
@@ -24,7 +24,7 @@ type Event = XStateEvent['type']
 // Si un jour on a un cas de rejet (peu probable car cette arbre ne sera plus utilisé avec la réforme), il faudra probablement rajouter une étape intermédiaire
 const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
   FAIRE_DEMANDE: { db: EtapesTypesEtapesStatuts.demande, mainStep: true },
-  DEPOSER_DEMANDE: { db: EtapesTypesEtapesStatuts.depotDeLaDemande, mainStep: true },
+  ENREGISTRER_DEMANDE: { db: EtapesTypesEtapesStatuts.enregistrementDeLaDemande, mainStep: true },
   DEMANDER_COMPLEMENTS_POUR_RECEVABILITE: { db: EtapesTypesEtapesStatuts.demandeDeComplements_RecevabiliteDeLaDemande_, mainStep: false },
   FAIRE_RECEVABILITE_DEMANDE_FAVORABLE: {
     db: {
@@ -83,12 +83,12 @@ const armRenProMachine = createMachine({
   states: {
     demandeAFaire: {
       on: {
-        FAIRE_DEMANDE: 'depotDeLaDemandeAFaire',
+        FAIRE_DEMANDE: 'enregistrementDeLaDemandeAFaire',
       },
     },
-    depotDeLaDemandeAFaire: {
+    enregistrementDeLaDemandeAFaire: {
       on: {
-        DEPOSER_DEMANDE: {
+        ENREGISTRER_DEMANDE: {
           target: 'recevabiliteDeLaDemandeAFaire',
           actions: assign({
             demarcheStatut: DemarchesStatutsIds.Depose,

@@ -28,7 +28,7 @@ export const evolutionTitres = async (pool: Pool, titreTypeTypeId: TitreTypeType
       anneeDepart,
       demarcheTypeIds: demarcheOctroiTypeIds,
       departements,
-      etapeTypeId: ETAPES_TYPES.depotDeLaDemande,
+      etapeTypeId: ETAPES_TYPES.enregistrementDeLaDemande,
       titreTypeId,
     }),
 

@@ -167,7 +167,7 @@ const apiClient: Props['apiClient'] = {
 
     return Promise.resolve({
       mfr: { etapeStatutIds: ['fai'], mainStep: true },
-      mdp: { etapeStatutIds: ['fai'], mainStep: true },
+      men: { etapeStatutIds: ['fai'], mainStep: true },
       mod: { etapeStatutIds: ['fai'], mainStep: true },
     })
   },
