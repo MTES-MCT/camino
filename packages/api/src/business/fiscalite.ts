@@ -1,10 +1,10 @@
 import { CaminoAnnee } from 'camino-common/src/date'
-import { SubstanceFiscaleId } from 'camino-common/src/static/substancesFiscales'
+import { SubstanceFiscaleId, SUBSTANCES_FISCALES_IDS } from 'camino-common/src/static/substancesFiscales'
 import { isNullOrUndefined } from 'camino-common/src/typescript-tools'
 import Decimal from 'decimal.js'
 import { z } from 'zod'
 
-const anneeData = ['2017', '2018', '2019', '2020', '2021', '2022', '2023'] as const
+const anneeData = ['2017', '2018', '2019', '2020', '2021', '2022', '2023', '2024'] as const
 const anneeDataValidator = z.enum(anneeData)
 type AnneeData = z.infer<typeof anneeDataValidator>
 const redevanceCommunale = {
@@ -259,6 +259,42 @@ const redevanceCommunale = {
     uran: new Decimal(357.2),
     zinc: new Decimal(601.8),
     reference: 'https://www.legifrance.gouv.fr/codes/id/LEGIARTI000045765025/2023-06-03/',
+  },
+  '2024': {
+    [SUBSTANCES_FISCALES_IDS.or]: new Decimal(190.8),
+    [SUBSTANCES_FISCALES_IDS.uranium]: new Decimal(371.5),
+    [SUBSTANCES_FISCALES_IDS['oxyde de tungstène (WO3)']]: new Decimal(170.7),
+    [SUBSTANCES_FISCALES_IDS.argent]: new Decimal(310.1),
+    [SUBSTANCES_FISCALES_IDS.bauxite]: new Decimal(730.4),
+    [SUBSTANCES_FISCALES_IDS.fluorine]: new Decimal(949.4),
+    [SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodium_extraitParAbattage]: new Decimal(902.9),
+    [SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodium_extraitEnDissolutionParSondage]: new Decimal(549.5),
+    [SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodiumContenu_]: new Decimal(183.6),
+    [SUBSTANCES_FISCALES_IDS.charbon]: new Decimal(291.6),
+    [SUBSTANCES_FISCALES_IDS['pétrole brut']]: new Decimal(1_401.6),
+    [SUBSTANCES_FISCALES_IDS['propane et le butane']]: new Decimal(10.6),
+    [SUBSTANCES_FISCALES_IDS['essence de dégazolinage']]: new Decimal(9.9),
+    [SUBSTANCES_FISCALES_IDS.soufre]: new Decimal(3.5),
+    [SUBSTANCES_FISCALES_IDS['lignites pouvoir calorifique égal ou supérieur à 13 MJ/kg']]: new Decimal(1_116.5),
+    [SUBSTANCES_FISCALES_IDS['lignites pouvoir calorifique inférieur à 13 MJ/kg']]: new Decimal(271.2),
+    [SUBSTANCES_FISCALES_IDS['gaz carbonique']]: new Decimal(408.8),
+    [SUBSTANCES_FISCALES_IDS['calcaires et grès bitumineux ou asphaltiques']]: new Decimal(1_876.5),
+    [SUBSTANCES_FISCALES_IDS['schistes carbobitumineux et schistes bitumineux']]: new Decimal(62.5),
+    [SUBSTANCES_FISCALES_IDS['pyrite de fer']]: new Decimal(625.9),
+    [SUBSTANCES_FISCALES_IDS['minerais de fer']]: new Decimal(431.2),
+    [SUBSTANCES_FISCALES_IDS.antimoine]: new Decimal(15),
+    [SUBSTANCES_FISCALES_IDS.plomb]: new Decimal(787.8),
+    [SUBSTANCES_FISCALES_IDS.zinc]: new Decimal(625.9),
+    [SUBSTANCES_FISCALES_IDS.étain]: new Decimal(152),
+    [SUBSTANCES_FISCALES_IDS.cuivre]: new Decimal(24.4),
+    [SUBSTANCES_FISCALES_IDS.arsenic]: new Decimal(839.7),
+    [SUBSTANCES_FISCALES_IDS.bismuth]: new Decimal(73.5),
+    [SUBSTANCES_FISCALES_IDS.manganèse]: new Decimal(466.2),
+    [SUBSTANCES_FISCALES_IDS.molybdène]: new Decimal(310.1),
+    [SUBSTANCES_FISCALES_IDS['oxyde de lithium']]: new Decimal(62.5),
+    [SUBSTANCES_FISCALES_IDS['oxyde de potassium']]: new Decimal(329),
+    [SUBSTANCES_FISCALES_IDS['gaz naturel']]: new Decimal(403.2),
+    reference: 'https://www.legifrance.gouv.fr/codes/id/LEGIARTI000045765025/2024-06-03/',
   },
 } as const satisfies Record<AnneeData, Record<SubstanceFiscaleId, Decimal> & { reference: string }>
 
@@ -515,6 +551,42 @@ const redevanceDepartementale = {
     zinc: new Decimal(122.9),
     reference: 'https://www.legifrance.gouv.fr/codes/id/LEGIARTI000045764991/2023-06-03/',
   },
+  '2024': {
+    [SUBSTANCES_FISCALES_IDS.or]: new Decimal(38.1),
+    [SUBSTANCES_FISCALES_IDS.uranium]: new Decimal(73.7),
+    [SUBSTANCES_FISCALES_IDS['oxyde de tungstène (WO3)']]: new Decimal(33.4),
+    [SUBSTANCES_FISCALES_IDS.argent]: new Decimal(61.8),
+    [SUBSTANCES_FISCALES_IDS.bauxite]: new Decimal(145.9),
+    [SUBSTANCES_FISCALES_IDS.fluorine]: new Decimal(192.9),
+    [SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodium_extraitParAbattage]: new Decimal(183.6),
+    [SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodium_extraitEnDissolutionParSondage]: new Decimal(108.4),
+    [SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodiumContenu_]: new Decimal(35.6),
+    [SUBSTANCES_FISCALES_IDS.charbon]: new Decimal(141.7),
+    [SUBSTANCES_FISCALES_IDS['pétrole brut']]: new Decimal(1_800.8),
+    [SUBSTANCES_FISCALES_IDS['propane et le butane']]: new Decimal(8.4),
+    [SUBSTANCES_FISCALES_IDS['essence de dégazolinage']]: new Decimal(7.5),
+    [SUBSTANCES_FISCALES_IDS.soufre]: new Decimal(2),
+    [SUBSTANCES_FISCALES_IDS['lignites pouvoir calorifique égal ou supérieur à 13 MJ/kg']]: new Decimal(221),
+    [SUBSTANCES_FISCALES_IDS['lignites pouvoir calorifique inférieur à 13 MJ/kg']]: new Decimal(60.1),
+    [SUBSTANCES_FISCALES_IDS['gaz carbonique']]: new Decimal(83.5),
+    [SUBSTANCES_FISCALES_IDS['calcaires et grès bitumineux ou asphaltiques']]: new Decimal(373.5),
+    [SUBSTANCES_FISCALES_IDS['schistes carbobitumineux et schistes bitumineux']]: new Decimal(12.9),
+    [SUBSTANCES_FISCALES_IDS['pyrite de fer']]: new Decimal(127.8),
+    [SUBSTANCES_FISCALES_IDS['minerais de fer']]: new Decimal(89.6),
+    [SUBSTANCES_FISCALES_IDS.antimoine]: new Decimal(3.4),
+    [SUBSTANCES_FISCALES_IDS.plomb]: new Decimal(152),
+    [SUBSTANCES_FISCALES_IDS.zinc]: new Decimal(127.8),
+    [SUBSTANCES_FISCALES_IDS.étain]: new Decimal(30.1),
+    [SUBSTANCES_FISCALES_IDS.cuivre]: new Decimal(4.9),
+    [SUBSTANCES_FISCALES_IDS.arsenic]: new Decimal(170.7),
+    [SUBSTANCES_FISCALES_IDS.bismuth]: new Decimal(14.9),
+    [SUBSTANCES_FISCALES_IDS.manganèse]: new Decimal(94.3),
+    [SUBSTANCES_FISCALES_IDS.molybdène]: new Decimal(62.5),
+    [SUBSTANCES_FISCALES_IDS['oxyde de lithium']]: new Decimal(12.8),
+    [SUBSTANCES_FISCALES_IDS['oxyde de potassium']]: new Decimal(65.5),
+    [SUBSTANCES_FISCALES_IDS['gaz naturel']]: new Decimal(588.7),
+    reference: 'https://www.legifrance.gouv.fr/codes/id/LEGIARTI000045764991/2024-06-03/',
+  },
 } as const satisfies Record<AnneeData, Record<SubstanceFiscaleId, Decimal> & { reference: string }>
 
 export type EntrepriseCategory = 'pme' | 'autre'
@@ -548,6 +620,10 @@ const categoriesForTaxeAurifereGuyane = {
       value: new Decimal(549.88),
       reference: 'https://www.legifrance.gouv.fr/codes/id/LEGIARTI000048046958/2023-09-07',
     },
+    '2024': {
+      value: new Decimal(549.88),
+      reference: 'https://www.legifrance.gouv.fr/codes/id/LEGIARTI000048046958/2024-09-07',
+    },
   },
   autre: {
     '2017': {
@@ -577,6 +653,10 @@ const categoriesForTaxeAurifereGuyane = {
     '2023': {
       value: new Decimal(1099.77),
       reference: 'https://www.legifrance.gouv.fr/codes/id/LEGIARTI000048046958/2023-09-07',
+    },
+    '2024': {
+      value: new Decimal(1099.77),
+      reference: 'https://www.legifrance.gouv.fr/codes/id/LEGIARTI000048046958/2024-09-07',
     },
   },
 } as const satisfies Record<EntrepriseCategory, Record<AnneeData, { value: Decimal; reference: string }>>
