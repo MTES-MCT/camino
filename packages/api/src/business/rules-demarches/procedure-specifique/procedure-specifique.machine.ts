@@ -12,6 +12,7 @@ import { CaminoDate } from 'camino-common/src/date'
 import { isNullOrUndefined } from 'camino-common/src/typescript-tools'
 import { canHaveMiseEnConcurrence } from 'camino-common/src/demarche'
 import { DemarcheVisibilite } from 'camino-common/src/etape-form'
+import { PAYS_IDS, PaysId } from 'camino-common/src/static/pays'
 
 type ParticipationDuPublic = {
   surface: KM2
@@ -33,6 +34,7 @@ type FaireMiseEnConcurrence = {
 type FaireDemande = {
   concurrence: Concurrence
   hasTitreFrom: boolean
+  paysId: PaysId
   type: 'FAIRE_DEMANDE'
 }
 type ProcedureSpecifiqueXStateEvent =
@@ -54,6 +56,7 @@ type ProcedureSpecifiqueXStateEvent =
   | { type: 'RENDRE_AVIS_COLLECTIVITES' }
   | { type: 'RENDRE_AVIS_SERVICES_COMMISSIONS' }
   | { type: 'RENDRE_AVIS_PREFET' }
+  | { type: 'RENDRE_AVIS_COMMISSION_DEPARTEMENTALE_DES_MINES' }
   | ParticipationDuPublic
   | EnqueteDuPublic
   | { type: 'FAIRE_CONSULTATION_DES_ADMINISTRATIONS_CENTRALES' }
@@ -62,6 +65,7 @@ type ProcedureSpecifiqueXStateEvent =
   | { type: 'RENDRE_DECISION_ADMINISTRATION_REJETEE_DECISION_IMPLICITE' }
   | { type: 'PUBLIER_DECISION_ACCEPTEE_AU_JORF' }
   | { type: 'PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS' }
+  | { type: 'RENDRE_MESURES_DE_PUBLICITE' }
   | { type: 'FAIRE_ABROGATION' }
   | { type: 'FAIRE_ATTESTATION_DE_CONSTITUTION_DE_GARANTIES_FINANCIERES' }
   | { type: 'CLASSER_SANS_SUITE' }
@@ -90,6 +94,7 @@ const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
   RENDRE_AVIS_COLLECTIVITES: { db: ETES.avisDesCollectivites, mainStep: true },
   RENDRE_AVIS_SERVICES_COMMISSIONS: { db: ETES.avisDesServicesEtCommissionsConsultatives, mainStep: true },
   RENDRE_AVIS_PREFET: { db: ETES.avisDuPrefet, mainStep: true },
+  RENDRE_AVIS_COMMISSION_DEPARTEMENTALE_DES_MINES: { db: { FAIT: ETES.avisDeLaCommissionDepartementaleDesMines_CDM_.FAIT }, mainStep: true },
   OUVRIR_ENQUETE_PUBLIQUE: { db: ETES.enquetePublique, mainStep: true },
   OUVRIR_PARTICIPATION_DU_PUBLIC: { db: ETES.participationDuPublic, mainStep: true },
   FAIRE_CONSULTATION_DES_ADMINISTRATIONS_CENTRALES: { db: ETES.consultationDesAdministrationsCentrales, mainStep: true },
@@ -98,6 +103,7 @@ const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
   RENDRE_DECISION_ADMINISTRATION_REJETEE_DECISION_IMPLICITE: { db: { REJETE_DECISION_IMPLICITE: ETES.decisionDeLAutoriteAdministrative.REJETE_DECISION_IMPLICITE }, mainStep: true },
   PUBLIER_DECISION_ACCEPTEE_AU_JORF: { db: { FAIT: ETES.publicationDeDecisionAuJORF.FAIT }, mainStep: true },
   PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS: { db: ETES.publicationDeDecisionAuRecueilDesActesAdministratifs, mainStep: true },
+  RENDRE_MESURES_DE_PUBLICITE: { db: ETES.mesuresDePublicite, mainStep: false },
   FAIRE_ABROGATION: { db: ETES.abrogationDeLaDecision, mainStep: true },
   FAIRE_ATTESTATION_DE_CONSTITUTION_DE_GARANTIES_FINANCIERES: { db: ETES.attestationDeConstitutionDeGarantiesFinancieres, mainStep: true },
   CLASSER_SANS_SUITE: { db: ETES.classementSansSuite, mainStep: false },
@@ -121,7 +127,10 @@ export class ProcedureSpecifiqueMachine extends CaminoMachine<ProcedureSpecifiqu
         if (isNullOrUndefined(etape.hasTitreFrom)) {
           throw new Error("L'attribut hasTitreFrom est obligatoire pour faire la demande")
         }
-        return { type: eventFromEntry, concurrence: etape.concurrence, hasTitreFrom: etape.hasTitreFrom }
+        if (isNullOrUndefined(etape.paysId)) {
+          throw new Error("L'attribut paysId est obligatoire pour faire la demande")
+        }
+        return { type: eventFromEntry, concurrence: etape.concurrence, hasTitreFrom: etape.hasTitreFrom, paysId: etape.paysId }
       }
       default:
         return super.eventFromEntry(eventFromEntry, etape)
@@ -131,7 +140,10 @@ export class ProcedureSpecifiqueMachine extends CaminoMachine<ProcedureSpecifiqu
   override toPotentialCaminoXStateEvent(event: ProcedureSpecifiqueXStateEvent['type'], date: CaminoDate): ProcedureSpecifiqueXStateEvent[] {
     switch (event) {
       case 'FAIRE_DEMANDE':
-        return [{ type: event, concurrence: { amIFirst: false, demarcheConcurrenteVisibilite: 'publique' }, hasTitreFrom: false }]
+        return [
+          { type: event, concurrence: { amIFirst: false, demarcheConcurrenteVisibilite: 'publique' }, hasTitreFrom: false, paysId: 'FR' },
+          { type: event, concurrence: { amIFirst: false, demarcheConcurrenteVisibilite: 'publique' }, hasTitreFrom: false, paysId: 'GF' },
+        ]
       case 'OUVRIR_ENQUETE_PUBLIQUE':
       case 'OUVRIR_PARTICIPATION_DU_PUBLIC':
         return [
@@ -158,6 +170,7 @@ interface ProcedureSpecifiqueContext extends CaminoCommonContext {
   concurrence: 'inconnu' | { amIFirst: true } | { amIFirst: false; demarcheConcurrenteVisibilite: DemarcheVisibilite }
   hasTitreFrom: 'inconnu' | boolean
   demandeInformationEnCours: boolean
+  paysId: 'inconnu' | PaysId
 }
 const defaultDemarcheStatut = DemarchesStatutsIds.EnConstruction
 const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId) =>
@@ -182,6 +195,12 @@ const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: De
         return context.concurrence.amIFirst
       },
       isAxmOuAr: () => TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX === titreTypeId || TITRES_TYPES_TYPES_IDS.AUTORISATION_DE_RECHERCHE === getTitreTypeType(titreTypeId),
+      isOutreMer: ({ context }) => {
+        if (context.paysId === 'inconnu') {
+          throw new Error("Le paysId n'est pas présent")
+        }
+        return context.paysId !== PAYS_IDS['République Française']
+      },
       // FIXMACHINE à vérifier et à tester
       isEnquetePubliqueRequired: ({ event }) =>
         ((DEMARCHES_TYPES_IDS.Octroi === demarcheTypeId || isDemarcheTypeProlongations(demarcheTypeId)) &&
@@ -206,6 +225,7 @@ const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: De
       visibilite: 'confidentielle',
       concurrence: 'inconnu',
       hasTitreFrom: 'inconnu',
+      paysId: 'inconnu',
       demandeInformationEnCours: false,
     },
     on: {
@@ -241,6 +261,7 @@ const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: De
               demarcheStatut: DemarchesStatutsIds.EnInstruction,
               concurrence: ({ event }) => event.concurrence,
               hasTitreFrom: ({ event }) => event.hasTitreFrom,
+              paysId: ({ event }) => event.paysId,
             }),
           },
         },
@@ -390,9 +411,22 @@ const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: De
                 },
                 onDone: 'avisDuPrefetARendre',
               },
+
               avisDuPrefetARendre: {
-                // FIXMACHINE gérer l'avis de la commission CDM
-                on: { RENDRE_AVIS_PREFET: 'fin' },
+                on: {
+                  RENDRE_AVIS_PREFET: [
+                    { target: 'fin', guard: not('isOutreMer') },
+                    {
+                      target: 'avisCommissionDepartementaleDesMinesARendre',
+                      guard: 'isOutreMer',
+                    },
+                  ],
+                },
+              },
+              avisCommissionDepartementaleDesMinesARendre: {
+                on: {
+                  RENDRE_AVIS_COMMISSION_DEPARTEMENTALE_DES_MINES: 'fin',
+                },
               },
               fin: {
                 type: 'final',
@@ -477,6 +511,7 @@ const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: De
       },
       publicationAuRecueilDesActesAdministratifsOupublicationAuJORFAFaire: {
         on: {
+          RENDRE_MESURES_DE_PUBLICITE: 'publicationAuRecueilDesActesAdministratifsOupublicationAuJORFAFaire',
           PUBLIER_DECISION_ACCEPTEE_AU_JORF: {
             target: 'abrogationOuNotificationAuDemandeurMachine',
             actions: assign({ demarcheStatut: DemarchesStatutsIds.AccepteEtPublie }),

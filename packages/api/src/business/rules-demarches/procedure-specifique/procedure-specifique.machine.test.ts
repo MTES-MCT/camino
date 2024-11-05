@@ -22,6 +22,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
     const { service, dateFin, machine } = setDateAndOrderAndInterpretMachine(psPccOctMachine, '1999-04-14', [
       {
         ...ETES.demande.FAIT,
+        paysId: 'FR',
         concurrence: { amIFirst: true },
         hasTitreFrom: false,
       },
@@ -37,7 +38,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
   })
   test('on peut notifier le demandeur apres une recevabilité favorable pour un PER ou une concession', () => {
     const { service, dateFin, machine } = setDateAndOrderAndInterpretMachine(psCxmOctMachine, '1999-04-14', [
-      { ...ETES.demande.FAIT, concurrence: { amIFirst: true }, hasTitreFrom: false },
+      { ...ETES.demande.FAIT, concurrence: { amIFirst: true }, paysId: 'FR', hasTitreFrom: false },
       ETES.enregistrementDeLaDemande.FAIT,
       ETES.recevabiliteDeLaDemande.FAVORABLE,
       ETES.notificationAuDemandeur.FAIT,
@@ -57,7 +58,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
   //  })
   test('on ne peut plus rien faire pendant que la mise en concurrence est en cours', () => {
     const { service, dateFin, machine } = setDateAndOrderAndInterpretMachine(psCxmOctMachine, '1999-04-14', [
-      { ...ETES.demande.FAIT, concurrence: { amIFirst: true }, hasTitreFrom: false },
+      { ...ETES.demande.FAIT, concurrence: { amIFirst: true }, paysId: 'FR', hasTitreFrom: false },
       ETES.enregistrementDeLaDemande.FAIT,
       ETES.recevabiliteDeLaDemande.FAVORABLE,
       ETES.avisDeMiseEnConcurrenceAuJORF.EN_COURS,
@@ -66,7 +67,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
   })
   test('on peut publier le résultat de la mise en concurrence, une fois celle-ci terminée', () => {
     const tree = getEventsTree(psCxmOctMachine, '1999-04-14', [
-      { ...ETES.demande.FAIT, concurrence: { amIFirst: true }, hasTitreFrom: false },
+      { ...ETES.demande.FAIT, concurrence: { amIFirst: true }, paysId: 'FR', hasTitreFrom: false },
       ETES.enregistrementDeLaDemande.FAIT,
       ETES.recevabiliteDeLaDemande.FAVORABLE,
       ETES.avisDeMiseEnConcurrenceAuJORF.TERMINE,
@@ -91,7 +92,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
   })
   test('on peut programmer une mise en concurrence', () => {
     const tree = getEventsTree(psCxmOctMachine, '1999-04-14', [
-      { ...ETES.demande.FAIT, concurrence: { amIFirst: true }, hasTitreFrom: false },
+      { ...ETES.demande.FAIT, concurrence: { amIFirst: true }, paysId: 'FR', hasTitreFrom: false },
       ETES.enregistrementDeLaDemande.FAIT,
       ETES.recevabiliteDeLaDemande.FAVORABLE,
       ETES.avisDeMiseEnConcurrenceAuJORF.PROGRAMME,
@@ -109,7 +110,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
 
   test('on peut rejeter à la fin de la mise en concurrence', () => {
     const { service, dateFin, machine } = setDateAndOrderAndInterpretMachine(psCxmOctMachine, '1999-04-14', [
-      { ...ETES.demande.FAIT, concurrence: { amIFirst: true }, hasTitreFrom: false },
+      { ...ETES.demande.FAIT, concurrence: { amIFirst: true }, paysId: 'FR', hasTitreFrom: false },
       ETES.enregistrementDeLaDemande.FAIT,
       ETES.recevabiliteDeLaDemande.FAVORABLE,
       ETES.avisDeMiseEnConcurrenceAuJORF.TERMINE,
@@ -124,6 +125,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
         {
           ...ETES.demande.FAIT,
           concurrence: { amIFirst: true },
+          paysId: 'FR',
           hasTitreFrom: false,
         },
         ETES.enregistrementDeLaDemande.FAIT,
@@ -139,6 +141,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
       {
         ...ETES.demande.FAIT,
         concurrence: { amIFirst: true },
+        paysId: 'FR',
         hasTitreFrom: false,
       },
       ETES.enregistrementDeLaDemande.FAIT,
@@ -150,7 +153,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
   })
   test('après la recevabilité favorable la démarche reste confidentielle si il y a une mise en concurrence', () => {
     const { service, dateFin, machine } = setDateAndOrderAndInterpretMachine(psCxmOctMachine, '1999-04-14', [
-      { ...ETES.demande.FAIT, concurrence: { amIFirst: true }, hasTitreFrom: false },
+      { ...ETES.demande.FAIT, concurrence: { amIFirst: true }, paysId: 'FR', hasTitreFrom: false },
       ETES.enregistrementDeLaDemande.FAIT,
       ETES.recevabiliteDeLaDemande.FAVORABLE,
     ])
@@ -161,7 +164,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
 
   test('après la recevabilité la démarche devient publique si la démarche concurrente est visible', () => {
     const { service, dateFin, machine } = setDateAndOrderAndInterpretMachine(psCxmOctMachine, '1999-04-14', [
-      { ...ETES.demande.FAIT, concurrence: { amIFirst: false, demarcheConcurrenteVisibilite: 'publique' }, hasTitreFrom: false },
+      { ...ETES.demande.FAIT, concurrence: { amIFirst: false, demarcheConcurrenteVisibilite: 'publique' }, paysId: 'FR', hasTitreFrom: false },
       ETES.enregistrementDeLaDemande.FAIT,
       ETES.recevabiliteDeLaDemande.FAVORABLE,
     ])
@@ -178,7 +181,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
 
   test('après la recevabilité la démarche reste confidentielle si la démarche concurrente est confidentielle', () => {
     const { service, dateFin, machine } = setDateAndOrderAndInterpretMachine(psCxmOctMachine, '1999-04-14', [
-      { ...ETES.demande.FAIT, concurrence: { amIFirst: false, demarcheConcurrenteVisibilite: 'confidentielle' }, hasTitreFrom: false },
+      { ...ETES.demande.FAIT, concurrence: { amIFirst: false, demarcheConcurrenteVisibilite: 'confidentielle' }, paysId: 'FR', hasTitreFrom: false },
       ETES.enregistrementDeLaDemande.FAIT,
       ETES.recevabiliteDeLaDemande.FAVORABLE,
     ])
@@ -197,6 +200,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
       {
         ...ETES.demande.FAIT,
         concurrence: { amIFirst: true },
+        paysId: 'FR',
         hasTitreFrom: false,
       },
       ETES.enregistrementDeLaDemande.FAIT,
@@ -216,6 +220,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
       {
         ...ETES.demande.FAIT,
         concurrence: { amIFirst: true },
+        paysId: 'FR',
         hasTitreFrom: true,
       },
       ETES.enregistrementDeLaDemande.FAIT,
@@ -230,6 +235,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
       {
         ...ETES.demande.FAIT,
         concurrence: { amIFirst: true },
+        paysId: 'FR',
         hasTitreFrom: false,
       },
       ETES.enregistrementDeLaDemande.FAIT,
@@ -243,6 +249,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
       {
         ...ETES.demande.FAIT,
         concurrence: { amIFirst: true },
+        paysId: 'FR',
         hasTitreFrom: false,
       },
       ETES.enregistrementDeLaDemande.FAIT,
@@ -265,6 +272,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
       {
         ...ETES.demande.FAIT,
         concurrence: { amIFirst: true },
+        paysId: 'FR',
         hasTitreFrom: false,
       },
       ETES.enregistrementDeLaDemande.FAIT,
@@ -284,6 +292,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
       {
         ...ETES.demande.FAIT,
         concurrence: { amIFirst: true },
+        paysId: 'FR',
         hasTitreFrom: false,
       },
       ETES.enregistrementDeLaDemande.FAIT,
@@ -306,6 +315,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
       {
         ...ETES.demande.FAIT,
         concurrence: { amIFirst: true },
+        paysId: 'FR',
         hasTitreFrom: false,
       },
       ETES.enregistrementDeLaDemande.FAIT,
@@ -327,6 +337,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
       {
         ...ETES.demande.FAIT,
         concurrence: { amIFirst: true },
+        paysId: 'FR',
         hasTitreFrom: false,
       },
       ETES.enregistrementDeLaDemande.FAIT,
@@ -348,6 +359,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
       {
         ...ETES.demande.FAIT,
         concurrence: { amIFirst: true },
+        paysId: 'FR',
         hasTitreFrom: false,
       },
       ETES.enregistrementDeLaDemande.FAIT,
@@ -382,6 +394,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
       {
         ...ETES.demande.FAIT,
         concurrence: { amIFirst: true },
+        paysId: 'FR',
         hasTitreFrom: false,
       },
       ETES.enregistrementDeLaDemande.FAIT,
@@ -403,6 +416,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
       {
         ...ETES.demande.FAIT,
         concurrence: { amIFirst: true },
+        paysId: 'FR',
         hasTitreFrom: false,
       },
       ETES.enregistrementDeLaDemande.FAIT,
@@ -427,7 +441,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
         "RENDRE_AVIS_SERVICES_COMMISSIONS                           (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_ENQUETE_PUBLIQUE,OUVRIR_PARTICIPATION_DU_PUBLIC,RENDRE_AVIS_PREFET]",
         "RENDRE_AVIS_PREFET                                         (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_ENQUETE_PUBLIQUE,OUVRIR_PARTICIPATION_DU_PUBLIC]",
         "OUVRIR_PARTICIPATION_DU_PUBLIC                             (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,RENDRE_DECISION_ADMINISTRATION_ACCEPTEE,RENDRE_DECISION_ADMINISTRATION_REJETEE,RENDRE_DECISION_ADMINISTRATION_REJETEE_DECISION_IMPLICITE]",
-        "RENDRE_DECISION_ADMINISTRATION_ACCEPTEE                    (publique      , accepté                ) -> [PUBLIER_DECISION_ACCEPTEE_AU_JORF,PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS]",
+        "RENDRE_DECISION_ADMINISTRATION_ACCEPTEE                    (publique      , accepté                ) -> [PUBLIER_DECISION_ACCEPTEE_AU_JORF,PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS,RENDRE_MESURES_DE_PUBLICITE]",
         "PUBLIER_DECISION_ACCEPTEE_AU_JORF                          (publique      , accepté et publié      ) -> [FAIRE_ABROGATION,NOTIFIER_DEMANDEUR]",
         "NOTIFIER_DEMANDEUR                                         (publique      , accepté et publié      ) -> [FAIRE_ABROGATION,FAIRE_ATTESTATION_DE_CONSTITUTION_DE_GARANTIES_FINANCIERES]",
         "FAIRE_ATTESTATION_DE_CONSTITUTION_DE_GARANTIES_FINANCIERES (publique      , accepté et publié      ) -> [FAIRE_ABROGATION]",
@@ -440,6 +454,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
       {
         ...ETES.demande.FAIT,
         concurrence: { amIFirst: true },
+        paysId: 'FR',
         hasTitreFrom: false,
       },
       ETES.enregistrementDeLaDemande.FAIT,
@@ -462,34 +477,89 @@ describe('vérifie l’arbre des procédures spécifique', () => {
     ])
 
     expect(result).toMatchInlineSnapshot(`
-        [
-          "RIEN                                             (confidentielle, en construction        ) -> [FAIRE_DEMANDE]",
-          "FAIRE_DEMANDE                                    (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,ENREGISTRER_DEMANDE]",
-          "ENREGISTRER_DEMANDE                              (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_RECEVABILITE_DEFAVORABLE,FAIRE_RECEVABILITE_FAVORABLE]",
-          "FAIRE_RECEVABILITE_FAVORABLE                     (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_MISE_EN_CONCURRENCE,NOTIFIER_DEMANDEUR]",
-          "FAIRE_MISE_EN_CONCURRENCE                        (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,RENDRE_RESULTAT_MISE_EN_CONCURRENCE_ACCEPTEE,RENDRE_RESULTAT_MISE_EN_CONCURRENCE_REJETEE]",
-          "RENDRE_RESULTAT_MISE_EN_CONCURRENCE_ACCEPTEE     (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,RENDRE_AVIS_CGE_IGEDD]",
-          "RENDRE_AVIS_CGE_IGEDD                            (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_DEMANDE_MODIFICATION_AES,NOTIFIER_DEMANDEUR]",
-          "NOTIFIER_DEMANDEUR                               (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_LETTRE_SAISINE_PREFET,RECEVOIR_REPONSE_DEMANDEUR]",
-          "FAIRE_LETTRE_SAISINE_PREFET                      (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_ENQUETE_PUBLIQUE,RENDRE_AVIS_COLLECTIVITES,RENDRE_AVIS_SERVICES_COMMISSIONS]",
-          "RENDRE_AVIS_COLLECTIVITES                        (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_ENQUETE_PUBLIQUE,RENDRE_AVIS_SERVICES_COMMISSIONS]",
-          "RENDRE_AVIS_SERVICES_COMMISSIONS                 (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_ENQUETE_PUBLIQUE,RENDRE_AVIS_PREFET]",
-          "RENDRE_AVIS_PREFET                               (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_ENQUETE_PUBLIQUE]",
-          "OUVRIR_ENQUETE_PUBLIQUE                          (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_CONSULTATION_DES_ADMINISTRATIONS_CENTRALES]",
-          "FAIRE_CONSULTATION_DES_ADMINISTRATIONS_CENTRALES (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,RENDRE_DECISION_ADMINISTRATION_ACCEPTEE,RENDRE_DECISION_ADMINISTRATION_REJETEE,RENDRE_DECISION_ADMINISTRATION_REJETEE_DECISION_IMPLICITE]",
-          "RENDRE_DECISION_ADMINISTRATION_ACCEPTEE          (publique      , accepté                ) -> [PUBLIER_DECISION_ACCEPTEE_AU_JORF,PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS]",
-          "PUBLIER_DECISION_ACCEPTEE_AU_JORF                (publique      , accepté et publié      ) -> [FAIRE_ABROGATION,NOTIFIER_DEMANDEUR]",
-          "NOTIFIER_DEMANDEUR                               (publique      , accepté et publié      ) -> [FAIRE_ABROGATION]",
-          "FAIRE_ABROGATION                                 (publique      , accepté et publié      ) -> [PUBLIER_DECISION_ACCEPTEE_AU_JORF,PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS]",
-          "PUBLIER_DECISION_ACCEPTEE_AU_JORF                (publique      , rejeté après abrogation) -> []",
-        ]
-      `)
+      [
+        "RIEN                                             (confidentielle, en construction        ) -> [FAIRE_DEMANDE]",
+        "FAIRE_DEMANDE                                    (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,ENREGISTRER_DEMANDE]",
+        "ENREGISTRER_DEMANDE                              (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_RECEVABILITE_DEFAVORABLE,FAIRE_RECEVABILITE_FAVORABLE]",
+        "FAIRE_RECEVABILITE_FAVORABLE                     (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_MISE_EN_CONCURRENCE,NOTIFIER_DEMANDEUR]",
+        "FAIRE_MISE_EN_CONCURRENCE                        (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,RENDRE_RESULTAT_MISE_EN_CONCURRENCE_ACCEPTEE,RENDRE_RESULTAT_MISE_EN_CONCURRENCE_REJETEE]",
+        "RENDRE_RESULTAT_MISE_EN_CONCURRENCE_ACCEPTEE     (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,RENDRE_AVIS_CGE_IGEDD]",
+        "RENDRE_AVIS_CGE_IGEDD                            (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_DEMANDE_MODIFICATION_AES,NOTIFIER_DEMANDEUR]",
+        "NOTIFIER_DEMANDEUR                               (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_LETTRE_SAISINE_PREFET,RECEVOIR_REPONSE_DEMANDEUR]",
+        "FAIRE_LETTRE_SAISINE_PREFET                      (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_ENQUETE_PUBLIQUE,RENDRE_AVIS_COLLECTIVITES,RENDRE_AVIS_SERVICES_COMMISSIONS]",
+        "RENDRE_AVIS_COLLECTIVITES                        (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_ENQUETE_PUBLIQUE,RENDRE_AVIS_SERVICES_COMMISSIONS]",
+        "RENDRE_AVIS_SERVICES_COMMISSIONS                 (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_ENQUETE_PUBLIQUE,RENDRE_AVIS_PREFET]",
+        "RENDRE_AVIS_PREFET                               (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_ENQUETE_PUBLIQUE]",
+        "OUVRIR_ENQUETE_PUBLIQUE                          (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_CONSULTATION_DES_ADMINISTRATIONS_CENTRALES]",
+        "FAIRE_CONSULTATION_DES_ADMINISTRATIONS_CENTRALES (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,RENDRE_DECISION_ADMINISTRATION_ACCEPTEE,RENDRE_DECISION_ADMINISTRATION_REJETEE,RENDRE_DECISION_ADMINISTRATION_REJETEE_DECISION_IMPLICITE]",
+        "RENDRE_DECISION_ADMINISTRATION_ACCEPTEE          (publique      , accepté                ) -> [PUBLIER_DECISION_ACCEPTEE_AU_JORF,PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS,RENDRE_MESURES_DE_PUBLICITE]",
+        "PUBLIER_DECISION_ACCEPTEE_AU_JORF                (publique      , accepté et publié      ) -> [FAIRE_ABROGATION,NOTIFIER_DEMANDEUR]",
+        "NOTIFIER_DEMANDEUR                               (publique      , accepté et publié      ) -> [FAIRE_ABROGATION]",
+        "FAIRE_ABROGATION                                 (publique      , accepté et publié      ) -> [PUBLIER_DECISION_ACCEPTEE_AU_JORF,PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS]",
+        "PUBLIER_DECISION_ACCEPTEE_AU_JORF                (publique      , rejeté après abrogation) -> []",
+      ]
+    `)
+  })
+
+  test('réalise une demande de concession granulats marins en outre mer complète', () => {
+    const result = getEventsTree(psCxwOctMachine, '1999-04-14', [
+      {
+        ...ETES.demande.FAIT,
+        concurrence: { amIFirst: true },
+        paysId: 'GF',
+        hasTitreFrom: false,
+      },
+      ETES.enregistrementDeLaDemande.FAIT,
+      ETES.recevabiliteDeLaDemande.FAVORABLE,
+      ETES.avisDeMiseEnConcurrenceAuJORF.TERMINE,
+      ETES.resultatMiseEnConcurrence.ACCEPTE,
+      ETES.avisDuConseilGeneralDeLeconomie_CGE_.FAVORABLE,
+      ETES.notificationAuDemandeur.FAIT,
+      ETES.saisineDuPrefet.FAIT,
+      ETES.avisDesCollectivites.FAIT,
+      ETES.avisDesServicesEtCommissionsConsultatives.FAIT,
+      ETES.avisDuPrefet.FAVORABLE,
+      ETES.avisDeLaCommissionDepartementaleDesMines_CDM_.FAIT,
+      ETES.enquetePublique.TERMINE,
+      ETES.consultationDesAdministrationsCentrales.FAIT,
+      ETES.decisionDeLAutoriteAdministrative.ACCEPTE,
+      ETES.publicationDeDecisionAuJORF.FAIT,
+      ETES.notificationAuDemandeur.FAIT,
+      ETES.abrogationDeLaDecision.FAIT,
+      ETES.publicationDeDecisionAuJORF.FAIT,
+    ])
+
+    expect(result).toMatchInlineSnapshot(`
+      [
+        "RIEN                                             (confidentielle, en construction        ) -> [FAIRE_DEMANDE]",
+        "FAIRE_DEMANDE                                    (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,ENREGISTRER_DEMANDE]",
+        "ENREGISTRER_DEMANDE                              (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_RECEVABILITE_DEFAVORABLE,FAIRE_RECEVABILITE_FAVORABLE]",
+        "FAIRE_RECEVABILITE_FAVORABLE                     (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_MISE_EN_CONCURRENCE,NOTIFIER_DEMANDEUR]",
+        "FAIRE_MISE_EN_CONCURRENCE                        (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,RENDRE_RESULTAT_MISE_EN_CONCURRENCE_ACCEPTEE,RENDRE_RESULTAT_MISE_EN_CONCURRENCE_REJETEE]",
+        "RENDRE_RESULTAT_MISE_EN_CONCURRENCE_ACCEPTEE     (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,RENDRE_AVIS_CGE_IGEDD]",
+        "RENDRE_AVIS_CGE_IGEDD                            (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_DEMANDE_MODIFICATION_AES,NOTIFIER_DEMANDEUR]",
+        "NOTIFIER_DEMANDEUR                               (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_LETTRE_SAISINE_PREFET,RECEVOIR_REPONSE_DEMANDEUR]",
+        "FAIRE_LETTRE_SAISINE_PREFET                      (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_ENQUETE_PUBLIQUE,RENDRE_AVIS_COLLECTIVITES,RENDRE_AVIS_SERVICES_COMMISSIONS]",
+        "RENDRE_AVIS_COLLECTIVITES                        (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_ENQUETE_PUBLIQUE,RENDRE_AVIS_SERVICES_COMMISSIONS]",
+        "RENDRE_AVIS_SERVICES_COMMISSIONS                 (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_ENQUETE_PUBLIQUE,RENDRE_AVIS_PREFET]",
+        "RENDRE_AVIS_PREFET                               (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_ENQUETE_PUBLIQUE,RENDRE_AVIS_COMMISSION_DEPARTEMENTALE_DES_MINES]",
+        "RENDRE_AVIS_COMMISSION_DEPARTEMENTALE_DES_MINES  (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_ENQUETE_PUBLIQUE]",
+        "OUVRIR_ENQUETE_PUBLIQUE                          (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_CONSULTATION_DES_ADMINISTRATIONS_CENTRALES]",
+        "FAIRE_CONSULTATION_DES_ADMINISTRATIONS_CENTRALES (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,RENDRE_DECISION_ADMINISTRATION_ACCEPTEE,RENDRE_DECISION_ADMINISTRATION_REJETEE,RENDRE_DECISION_ADMINISTRATION_REJETEE_DECISION_IMPLICITE]",
+        "RENDRE_DECISION_ADMINISTRATION_ACCEPTEE          (publique      , accepté                ) -> [PUBLIER_DECISION_ACCEPTEE_AU_JORF,PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS,RENDRE_MESURES_DE_PUBLICITE]",
+        "PUBLIER_DECISION_ACCEPTEE_AU_JORF                (publique      , accepté et publié      ) -> [FAIRE_ABROGATION,NOTIFIER_DEMANDEUR]",
+        "NOTIFIER_DEMANDEUR                               (publique      , accepté et publié      ) -> [FAIRE_ABROGATION]",
+        "FAIRE_ABROGATION                                 (publique      , accepté et publié      ) -> [PUBLIER_DECISION_ACCEPTEE_AU_JORF,PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS]",
+        "PUBLIER_DECISION_ACCEPTEE_AU_JORF                (publique      , rejeté après abrogation) -> []",
+      ]
+    `)
   })
   test("vérifie l'arbre pour la prolongation d'ARM", () => {
     const result = getEventsTree(psArmProMachine, '1999-04-14', [
       {
         ...ETES.demande.FAIT,
         concurrence: { amIFirst: true },
+        paysId: 'FR',
         hasTitreFrom: false,
       },
       ETES.enregistrementDeLaDemande.FAIT,
@@ -514,7 +584,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
         "RENDRE_AVIS_SERVICES_COMMISSIONS                     (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_ENQUETE_PUBLIQUE,OUVRIR_PARTICIPATION_DU_PUBLIC,RENDRE_AVIS_PREFET]",
         "RENDRE_AVIS_PREFET                                   (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_ENQUETE_PUBLIQUE,OUVRIR_PARTICIPATION_DU_PUBLIC]",
         "OUVRIR_PARTICIPATION_DU_PUBLIC                       (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,RENDRE_DECISION_ADMINISTRATION_ACCEPTEE,RENDRE_DECISION_ADMINISTRATION_REJETEE,RENDRE_DECISION_ADMINISTRATION_REJETEE_DECISION_IMPLICITE]",
-        "RENDRE_DECISION_ADMINISTRATION_ACCEPTEE              (publique      , accepté                ) -> [PUBLIER_DECISION_ACCEPTEE_AU_JORF,PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS]",
+        "RENDRE_DECISION_ADMINISTRATION_ACCEPTEE              (publique      , accepté                ) -> [PUBLIER_DECISION_ACCEPTEE_AU_JORF,PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS,RENDRE_MESURES_DE_PUBLICITE]",
         "PUBLIER_DECISION_ACCEPTEE_AU_JORF                    (publique      , accepté et publié      ) -> [FAIRE_ABROGATION,NOTIFIER_DEMANDEUR]",
         "FAIRE_ABROGATION                                     (publique      , accepté et publié      ) -> [NOTIFIER_DEMANDEUR,PUBLIER_DECISION_ACCEPTEE_AU_JORF,PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS]",
         "PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS (publique      , rejeté après abrogation) -> [NOTIFIER_DEMANDEUR]",

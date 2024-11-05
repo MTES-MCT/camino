@@ -59,6 +59,7 @@ export const EtapesTypesEtapesStatuts = {
   },
 
   avisDeLaCommissionDepartementaleDesMines_CDM_: {
+    FAIT: { etapeStatutId: 'fai', etapeTypeId: 'apo' },
     AJOURNE: { etapeTypeId: 'apo', etapeStatutId: 'ajo' },
     FAVORABLE: { etapeTypeId: 'apo', etapeStatutId: 'fav' },
     DEFAVORABLE: { etapeTypeId: 'apo', etapeStatutId: 'def' },
@@ -192,6 +193,7 @@ export const EtapesTypesEtapesStatuts = {
     DEFAVORABLE: { etapeTypeId: 'rpe', etapeStatutId: 'def' },
   },
   publicationDeDecisionAuRecueilDesActesAdministratifs: { FAIT: { etapeTypeId: 'rpu', etapeStatutId: 'fai' } },
+  mesuresDePublicite: { FAIT: { etapeTypeId: 'mpb', etapeStatutId: 'fai' } },
   saisineDeLautoriteSignataire: { FAIT: { etapeTypeId: 'sas', etapeStatutId: 'fai' } },
   saisineDeLaCommissionDesAutorisationsDeRecherchesMinieres_CARM_: { FAIT: { etapeTypeId: 'sca', etapeStatutId: 'fai' } },
   saisineDuConseilGeneralDeLeconomie_CGE_: { FAIT: { etapeTypeId: 'scg', etapeStatutId: 'fai' } },
