@@ -245,6 +245,7 @@ entity "**titres_etapes**" {
   *""amodiataire_ids"": //jsonb //
   *""is_brouillon"": //boolean //
   *""note"": //jsonb //
+  ""demarche_id_en_concurrence"": //character varying [FK]//
 }
 
 entity "**titres_etapes_entreprises_documents**" {
@@ -307,6 +308,8 @@ entity "**utilisateurs__titres**" {
 "**titres_activites**"   }--  "**utilisateurs**"
 
 "**titres_demarches**"   }--  "**titres**"
+
+"**titres_etapes**"   }--  "**titres_demarches**"
 
 "**titres_etapes**"   }--  "**titres_demarches**"
 
