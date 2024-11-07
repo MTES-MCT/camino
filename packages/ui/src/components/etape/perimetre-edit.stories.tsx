@@ -5,10 +5,11 @@ import { FeatureCollectionForages, FeatureCollectionPoints, FeatureMultiPolygon,
 import { tempDocumentNameValidator } from 'camino-common/src/document'
 import { PerimetreEdit, Props } from './perimetre-edit'
 import { toCaminoDate } from 'camino-common/src/date'
-import { EtapesTypes } from 'camino-common/src/static/etapesTypes'
+import { ETAPES_TYPES, EtapesTypes } from 'camino-common/src/static/etapesTypes'
 import { titreSlugValidator } from 'camino-common/src/validators/titres'
 import { km2Validator } from 'camino-common/src/number'
 import { GEO_SYSTEME_IDS } from 'camino-common/src/static/geoSystemes'
+import { demarcheIdValidator } from 'camino-common/src/demarche'
 
 const meta: Meta = {
   title: 'Components/Etape/PerimetreEdit',
@@ -79,6 +80,9 @@ const onHeritageChange = (heritage: Props['etape']['perimetre']) => {
   onHeritageChangeAction(heritage)
 }
 const etapeNoHeritage: Props['etape'] = {
+  date: toCaminoDate('2020-01-01'),
+  titreDemarcheId: demarcheIdValidator.parse('fakeDemarcheId'),
+  typeId: ETAPES_TYPES.publicationDeDecisionAuJORF,
   perimetre: {
     value: {
       geojson4326Perimetre: null,
@@ -102,6 +106,7 @@ export const EmptyNoHeritage: StoryFn = () => (
     apiClient={apiClient}
     etape={etapeNoHeritage}
     titreTypeId="arm"
+    demarcheTypeId="oct"
     titreSlug={titreSlug}
     onEtapeChange={onEtapeChange}
     onPointsChange={onPointsChange}
@@ -110,6 +115,9 @@ export const EmptyNoHeritage: StoryFn = () => (
   />
 )
 const etapeEmptyHeritage: Props['etape'] = {
+  date: toCaminoDate('2020-01-01'),
+  titreDemarcheId: demarcheIdValidator.parse('fakeDemarcheId'),
+  typeId: ETAPES_TYPES.publicationDeDecisionAuJORF,
   perimetre: {
     value: {
       geojson4326Perimetre: null,
@@ -136,6 +144,7 @@ export const EmptyHeritage: StoryFn = () => (
     apiClient={apiClient}
     etape={etapeEmptyHeritage}
     titreTypeId="arm"
+    demarcheTypeId="oct"
     titreSlug={titreSlug}
     onPointsChange={onPointsChange}
     onForagesChange={onForagesChange}
@@ -144,6 +153,9 @@ export const EmptyHeritage: StoryFn = () => (
 )
 
 const etapeHeritage: Props['etape'] = {
+  date: toCaminoDate('2020-01-01'),
+  titreDemarcheId: demarcheIdValidator.parse('fakeDemarcheId'),
+  typeId: ETAPES_TYPES.publicationDeDecisionAuJORF,
   perimetre: {
     value: {
       geojson4326Perimetre: null,
@@ -179,6 +191,7 @@ export const Heritage: StoryFn = () => (
     apiClient={apiClient}
     etape={etapeHeritage}
     titreTypeId="arm"
+    demarcheTypeId="oct"
     titreSlug={titreSlug}
     onPointsChange={onPointsChange}
     onForagesChange={onForagesChange}
@@ -187,6 +200,9 @@ export const Heritage: StoryFn = () => (
 )
 
 const etape: Props['etape'] = {
+  date: toCaminoDate('2020-01-01'),
+  titreDemarcheId: demarcheIdValidator.parse('fakeDemarcheId'),
+  typeId: ETAPES_TYPES.publicationDeDecisionAuJORF,
   perimetre: {
     value: {
       geojson4326Points: null,
@@ -209,6 +225,7 @@ export const FilledNoHeritage: StoryFn = () => (
     apiClient={apiClient}
     etape={etape}
     titreTypeId="arm"
+    demarcheTypeId="oct"
     titreSlug={titreSlug}
     onPointsChange={onPointsChange}
     onForagesChange={onForagesChange}
@@ -217,6 +234,9 @@ export const FilledNoHeritage: StoryFn = () => (
 )
 
 const etapeLegacy: Props['etape'] = {
+  date: toCaminoDate('2020-01-01'),
+  titreDemarcheId: demarcheIdValidator.parse('fakeDemarcheId'),
+  typeId: ETAPES_TYPES.publicationDeDecisionAuJORF,
   perimetre: {
     value: {
       geojson4326Points: null,
@@ -239,6 +259,7 @@ export const LegacyGeoSysteme: StoryFn = () => (
     apiClient={apiClient}
     etape={etapeLegacy}
     titreTypeId="arm"
+    demarcheTypeId="oct"
     titreSlug={titreSlug}
     onPointsChange={onPointsChange}
     onForagesChange={onForagesChange}
@@ -326,6 +347,9 @@ const perimetreForages: FeatureMultiPolygon = {
 }
 
 const etapeWithForages: Props['etape'] = {
+  date: toCaminoDate('2020-01-01'),
+  titreDemarcheId: demarcheIdValidator.parse('fakeDemarcheId'),
+  typeId: ETAPES_TYPES.publicationDeDecisionAuJORF,
   perimetre: {
     value: {
       geojson4326Points: null,
@@ -348,6 +372,7 @@ export const WithForages: StoryFn = () => (
     apiClient={apiClient}
     etape={etapeWithForages}
     titreTypeId="pxg"
+    demarcheTypeId="oct"
     titreSlug={titreSlug}
     onPointsChange={onPointsChange}
     onForagesChange={onForagesChange}

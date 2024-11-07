@@ -4,7 +4,7 @@ import { HeritageEdit } from './heritage-edit'
 import { AutocompleteEntreprises } from './autocomplete-entreprises'
 import { CaminoDate } from 'camino-common/src/date'
 import { SubstancesEdit } from './substances-edit'
-import { canEditAmodiataires, canEditTitulaires, canEditDuree, canEditDates, InputPresence, InputAbsent, InputPresentOptional } from 'camino-common/src/permissions/titres-etapes'
+import { canEditAmodiataires, canEditTitulaires, canEditDuree, canEditDates, InputPresence, InputAbsent, InputPresentOptional, dureeIsValide } from 'camino-common/src/permissions/titres-etapes'
 import { DomaineId } from 'camino-common/src/static/domaines'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
 import { getDomaineId, TitreTypeId } from 'camino-common/src/static/titresTypes'
@@ -14,8 +14,9 @@ import { User } from 'camino-common/src/roles'
 import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
 import { DsfrInput } from '../_ui/dsfr-input'
 import { FlattenEtape } from 'camino-common/src/etape-form'
+import { ZERO_KM2 } from 'camino-common/src/number'
 
-export type EtapeFondamentaleEdit = Pick<FlattenEtape, 'typeId' | 'dateDebut' | 'dateFin' | 'duree' | 'titulaires' | 'amodiataires' | 'substances'>
+export type EtapeFondamentaleEdit = Pick<FlattenEtape, 'typeId' | 'dateDebut' | 'dateFin' | 'duree' | 'titulaires' | 'amodiataires' | 'substances' | 'perimetre' | 'date' | 'titreDemarcheId'>
 interface Props {
   etape: DeepReadonly<EtapeFondamentaleEdit>
   demarcheTypeId: DemarcheTypeId
@@ -66,6 +67,17 @@ export const FondamentalesEdit = defineComponent<Props>(props => {
 
   const dureeEdit = computed<InputPresence>(() => canEditDuree(props.titreTypeId, props.demarcheTypeId, props.user))
   const dureeOptionalCheck = computed<boolean>(() => dureeEdit.value.visibility === 'present' && !dureeEdit.value.required)
+  const dureeValid = computed(() =>
+    dureeIsValide(
+      props.titreTypeId,
+      props.demarcheTypeId,
+      props.etape.typeId,
+      { value: mois.value + ans.value * 12 },
+      props.etape.perimetre.value?.surface ?? ZERO_KM2,
+      props.etape.titreDemarcheId,
+      props.etape.date
+    )
+  )
 
   const datesEdit = computed<InputAbsent | InputPresentOptional>(() => canEditDates(props.titreTypeId, props.demarcheTypeId, props.etape.typeId, props.user))
 
@@ -134,7 +146,12 @@ export const FondamentalesEdit = defineComponent<Props>(props => {
             label="Durée"
             write={() => (
               <div style={{ display: 'flex' }}>
-                <DsfrInput legend={{ main: `Durée (années)${!dureeOptionalCheck.value ? ' *' : ''}` }} type={{ type: 'number' }} valueChanged={updateAnsDuree} initialValue={ans.value} />
+                <DsfrInput
+                  legend={{ main: `Durée (années)${!dureeOptionalCheck.value ? ' *' : ''}`, info: !dureeValid.value.valid ? { type: 'error', value: dureeValid.value.message } : undefined }}
+                  type={{ type: 'number' }}
+                  valueChanged={updateAnsDuree}
+                  initialValue={ans.value}
+                />
                 <DsfrInput
                   legend={{ main: `Durée (mois)${!dureeOptionalCheck.value ? ' *' : ''}` }}
                   type={{ type: 'number' }}

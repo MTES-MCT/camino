@@ -14,11 +14,14 @@ import { ForagesImportPopup } from './forages-import-popup'
 import { canHaveForages } from 'camino-common/src/permissions/titres'
 import { CoreEtapeCreationOrModification } from './etape-api-client'
 import { CaminoError } from 'camino-common/src/zod-tools'
+import { perimetreIsValide } from 'camino-common/src/permissions/titres-etapes'
+import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
 
 export interface Props {
   apiClient: Pick<ApiClient, 'uploadTempDocument' | 'geojsonImport' | 'geojsonPointsImport' | 'geojsonForagesImport'>
-  etape: DeepReadonly<Pick<CoreEtapeCreationOrModification, 'perimetre'>>
+  etape: DeepReadonly<Pick<CoreEtapeCreationOrModification, 'perimetre' | 'date' | 'typeId' | 'titreDemarcheId'>>
   titreTypeId: TitreTypeId
+  demarcheTypeId: DemarcheTypeId
   titreSlug: TitreSlug
   onEtapeChange: (geojsonInformations: GeojsonInformations) => void
   onHeritageChange: (heritage: Props['etape']['perimetre']) => void
@@ -99,7 +102,12 @@ export const PerimetreEdit = defineComponent<Props>(props => {
 
   const result = (value: GeojsonInformations | CaminoError<string>) => {
     if ('geojson4326_perimetre' in value) {
-      importError.value = null
+      const isValid = perimetreIsValide(props.titreTypeId, props.demarcheTypeId, props.etape.typeId, value.surface, props.etape.titreDemarcheId, props.etape.date)
+      if (!isValid.valid) {
+        importError.value = { message: isValid.message }
+      } else {
+        importError.value = null
+      }
       props.onEtapeChange(value)
     } else {
       importError.value = value
@@ -173,4 +181,4 @@ export const PerimetreEdit = defineComponent<Props>(props => {
 })
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-PerimetreEdit.props = ['etape', 'apiClient', 'titreTypeId', 'titreSlug', 'onEtapeChange', 'initTab', 'onPointsChange', 'onForagesChange', 'onHeritageChange']
+PerimetreEdit.props = ['etape', 'apiClient', 'titreTypeId', 'demarcheTypeId', 'titreSlug', 'onEtapeChange', 'initTab', 'onPointsChange', 'onForagesChange', 'onHeritageChange']

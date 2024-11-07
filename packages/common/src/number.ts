@@ -42,3 +42,8 @@ export type KM2 = z.infer<typeof km2Validator>
 export type M2 = z.infer<typeof m2Validator>
 
 export const m2toKm2 = (m2: M2): KM2 => km2Validator.parse(m2 / 1000000)
+
+export const hectareValidator = z.number().nonnegative().brand('CAMINO_HECTARE')
+export type Hectare = z.infer<typeof hectareValidator>
+export const km2toHectare = (km2: KM2): Hectare => hectareValidator.parse(km2 * 100)
+export const hectareToKm2 = (hectare: Hectare): KM2 => km2Validator.parse(hectare / 100)

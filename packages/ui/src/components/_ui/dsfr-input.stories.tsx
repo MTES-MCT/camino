@@ -23,3 +23,11 @@ export const Number: StoryFn = () => <DsfrInput id="input1" type={{ type: 'numbe
 export const Date: StoryFn = () => (
   <DsfrInput id="input1" type={{ type: 'date' }} legend={{ main: 'Légende' }} valueChanged={valueChangedAction} initialValue={caminoDateValidator.parse('2023-02-26')} />
 )
+
+export const WithInfo: StoryFn = () => (
+  <DsfrInput type={{ type: 'text' }} id="input2" legend={{ main: 'Légende', info: { type: 'info', value: 'Ceci est une information' } }} valueChanged={valueChangedAction} />
+)
+
+export const WithError: StoryFn = () => (
+  <DsfrInput type={{ type: 'text' }} id="input2" legend={{ main: 'Légende', info: { type: 'error', value: 'Le champ est en erreur' } }} valueChanged={valueChangedAction} />
+)

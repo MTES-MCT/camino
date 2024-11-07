@@ -38,7 +38,7 @@ export const demarchesDefinitions = [
     titreTypeIds: ['arm'],
     demarcheTypeIds: ['oct'],
     dateDebut: toCaminoDate('2019-10-31'),
-    demarcheIdExceptions: [],
+    demarcheIdExceptions: [demarcheIdValidator.parse('QauHUIPuv1a5neW3JqVEWh8n'), demarcheIdValidator.parse('XrNwRcLK39y6JZKcsJTV7nju')],
     machineId: 'ArmOct',
   },
   {
@@ -66,7 +66,7 @@ export const demarchesDefinitions = [
     titreTypeIds: ['axm'],
     demarcheTypeIds: ['oct'],
     // https://camino.beta.gouv.fr/titres/m-ax-crique-tumuc-humac-2020
-    dateDebut: toCaminoDate('2020-09-30'),
+    dateDebut: toCaminoDate('2020-10-01'),
     demarcheIdExceptions: [
       demarcheIdValidator.parse('C3rs92l1eci3mLvsAGkv7gVV'),
       demarcheIdValidator.parse('YEWeODXiFb7xKJB2OQlTyc14'),
@@ -141,9 +141,8 @@ export const machineIdFind = (
   overrideDate: CaminoDate | null = null
 ): CaminoMachineId | undefined => {
   const date = demarcheEnregistrementDemandeDateFind(titreEtapes) ?? overrideDate
-
   const definition = toSorted(demarchesDefinitions, (a, b) => b.dateDebut.localeCompare(a.dateDebut)).find(
-    d => (isNullOrUndefinedOrEmpty(date) || d.dateDebut < date) && d.titreTypeIds.includes(titreTypeId) && d.demarcheTypeIds.includes(demarcheTypeId)
+    d => (isNullOrUndefinedOrEmpty(date) || d.dateDebut <= date) && d.titreTypeIds.includes(titreTypeId) && d.demarcheTypeIds.includes(demarcheTypeId)
   )
   if (isNotNullNorUndefined(definition) && isNotNullNorUndefinedNorEmpty(definition.demarcheIdExceptions) && definition.demarcheIdExceptions.includes(demarcheId)) {
     return undefined

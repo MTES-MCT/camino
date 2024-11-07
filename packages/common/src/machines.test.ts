@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest'
 import { toCaminoDate } from './date'
-import { machineIdFind } from './machines'
+import { DATE_DEBUT_PROCEDURE_SPECIFIQUE, machineIdFind } from './machines'
 import { demarcheIdValidator } from './demarche'
 
 describe('machineFind', () => {
@@ -22,5 +22,9 @@ describe('machineFind', () => {
 
   test('arm pro undef', () => {
     expect(machineIdFind('arm', 'pro', [{ date: toCaminoDate('2018-10-22'), typeId: 'def' }], demarcheIdValidator.parse('Anything'))).toBe(undefined)
+  })
+
+  test('demarcheDefinitionFind retourne ProcedureSpecfique dés sa date de début', () => {
+    expect(machineIdFind('arm', 'oct', [{ date: DATE_DEBUT_PROCEDURE_SPECIFIQUE, typeId: 'men' }], demarcheIdValidator.parse('Anything'))).toBe('ProcedureSpecifique')
   })
 })

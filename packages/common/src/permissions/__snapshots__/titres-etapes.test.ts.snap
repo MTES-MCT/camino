@@ -338,3 +338,154 @@ exports[`canEditTitulaires by demarcheTypeId 1`] = `
   },
 }
 `;
+
+exports[`dureeIsValide > dureeIsValide pour AXM pour octroi 1`] = `
+[
+  {
+    "duree": 2,
+    "dureeIsValide": {
+      "valid": true,
+    },
+    "surface": 10,
+  },
+  {
+    "duree": 4,
+    "dureeIsValide": {
+      "valid": true,
+    },
+    "surface": 10,
+  },
+  {
+    "duree": 10,
+    "dureeIsValide": {
+      "message": "Un octroi d'AEX inférieur ou égal à 25 hectares ne peut pas dépasser 4 ans",
+      "valid": false,
+    },
+    "surface": 10,
+  },
+  {
+    "duree": 11,
+    "dureeIsValide": {
+      "message": "Un octroi d'AEX inférieur ou égal à 25 hectares ne peut pas dépasser 4 ans",
+      "valid": false,
+    },
+    "surface": 10,
+  },
+  {
+    "duree": 2,
+    "dureeIsValide": {
+      "valid": true,
+    },
+    "surface": 25,
+  },
+  {
+    "duree": 4,
+    "dureeIsValide": {
+      "valid": true,
+    },
+    "surface": 25,
+  },
+  {
+    "duree": 10,
+    "dureeIsValide": {
+      "message": "Un octroi d'AEX inférieur ou égal à 25 hectares ne peut pas dépasser 4 ans",
+      "valid": false,
+    },
+    "surface": 25,
+  },
+  {
+    "duree": 11,
+    "dureeIsValide": {
+      "message": "Un octroi d'AEX inférieur ou égal à 25 hectares ne peut pas dépasser 4 ans",
+      "valid": false,
+    },
+    "surface": 25,
+  },
+  {
+    "duree": 2,
+    "dureeIsValide": {
+      "valid": true,
+    },
+    "surface": 26,
+  },
+  {
+    "duree": 4,
+    "dureeIsValide": {
+      "valid": true,
+    },
+    "surface": 26,
+  },
+  {
+    "duree": 10,
+    "dureeIsValide": {
+      "valid": true,
+    },
+    "surface": 26,
+  },
+  {
+    "duree": 11,
+    "dureeIsValide": {
+      "message": "Un octroi d'AEX supérieur à 25 hectares et inférieur ou égal à 100 hectares ne peut pas dépasser 10 ans",
+      "valid": false,
+    },
+    "surface": 26,
+  },
+  {
+    "duree": 2,
+    "dureeIsValide": {
+      "valid": true,
+    },
+    "surface": 100,
+  },
+  {
+    "duree": 4,
+    "dureeIsValide": {
+      "valid": true,
+    },
+    "surface": 100,
+  },
+  {
+    "duree": 10,
+    "dureeIsValide": {
+      "valid": true,
+    },
+    "surface": 100,
+  },
+  {
+    "duree": 11,
+    "dureeIsValide": {
+      "message": "Un octroi d'AEX supérieur à 25 hectares et inférieur ou égal à 100 hectares ne peut pas dépasser 10 ans",
+      "valid": false,
+    },
+    "surface": 100,
+  },
+  {
+    "duree": 2,
+    "dureeIsValide": {
+      "valid": true,
+    },
+    "surface": 110.00000000000001,
+  },
+  {
+    "duree": 4,
+    "dureeIsValide": {
+      "valid": true,
+    },
+    "surface": 110.00000000000001,
+  },
+  {
+    "duree": 10,
+    "dureeIsValide": {
+      "valid": true,
+    },
+    "surface": 110.00000000000001,
+  },
+  {
+    "duree": 11,
+    "dureeIsValide": {
+      "valid": true,
+    },
+    "surface": 110.00000000000001,
+  },
+]
+`;

@@ -3,7 +3,7 @@ import { ITitreEtape, ITitreDemarche, ITitre } from '../../types'
 import { titreDemarcheUpdatedEtatValidate } from './titre-demarche-etat-validate'
 import { contenuNumbersCheck } from './utils/contenu-numbers-check'
 import { contenuDatesCheck } from './utils/contenu-dates-check'
-import { canEditAmodiataires, canEditDates, canEditDuree, canEditPerimetre, canEditTitulaires, isEtapeComplete } from 'camino-common/src/permissions/titres-etapes'
+import { canEditAmodiataires, canEditDates, canEditDuree, canEditPerimetre, canEditTitulaires, isEtapeComplete, isEtapeValid } from 'camino-common/src/permissions/titres-etapes'
 import { User } from 'camino-common/src/roles'
 import { SDOMZoneId } from 'camino-common/src/static/sdom'
 import { getSections } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections'
@@ -93,7 +93,12 @@ export const titreEtapeUpdationValidate = (
     }
   }
 
-  // 4. si l’étape n’est pas en cours de construction
+  const etapeValid = isEtapeValid(etape, titre.typeId, titreDemarche.typeId, titreDemarche.id)
+  if (!etapeValid.valid) {
+    errors.push(...etapeValid.errors)
+  }
+
+  // si l’étape n’est pas en cours de construction
   if (etape.isBrouillon === ETAPE_IS_NOT_BROUILLON) {
     const etapeComplete = isEtapeComplete(etape, titre.typeId, titreDemarche.typeId, documents, entrepriseDocuments, sdomZones, communes ?? [], etapeAvis, user)
     if (!etapeComplete.valid) {

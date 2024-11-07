@@ -1,5 +1,5 @@
 import { test, expect } from 'vitest'
-import { indexToLetter, m2toKm2, m2Validator, toDegresMinutes } from './number'
+import { hectareToKm2, hectareValidator, indexToLetter, km2toHectare, km2Validator, m2toKm2, m2Validator, toDegresMinutes } from './number'
 import Decimal from 'decimal.js'
 
 test('indexToLetter', () => {
@@ -38,4 +38,12 @@ test('decimal round', () => {
 
 test('m2ToKm2', () => {
   expect(m2toKm2(m2Validator.parse(12))).toBe(0.000_012)
+})
+
+test('km2ToHectare', () => {
+  expect(km2toHectare(km2Validator.parse(1))).toBe(100)
+})
+
+test('hectareToKm2', () => {
+  expect(hectareToKm2(hectareValidator.parse(100))).toBe(1)
 })

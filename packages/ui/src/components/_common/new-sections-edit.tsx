@@ -130,7 +130,7 @@ const InnerComponent: FunctionalComponent<SectionElementEditProps> = props => {
             required={required}
             initialValue={element.value}
             valueChanged={(e: number | null) => props.onValueChange({ ...element, value: e })}
-            legend={{ main: element.nom ?? '', description: element.description, info }}
+            legend={{ main: element.nom ?? '', description: element.description, info: isNotNullNorUndefinedNorEmpty(info) ? { value: info, type: 'info' } : undefined }}
           />
         </div>
       )

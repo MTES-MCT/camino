@@ -18,6 +18,9 @@ import {
   InputPresence,
   canEditPerimetre,
   canDeposeEtape,
+  dureeIsValide,
+  perimetreIsValide,
+  isEtapeValid,
 } from './titres-etapes'
 import { AdministrationId, ADMINISTRATION_IDS } from '../static/administrations'
 import { test, expect, describe, vi } from 'vitest'
@@ -26,12 +29,15 @@ import { TitreStatutId } from '../static/titresStatuts'
 import { EntrepriseId, entrepriseIdValidator, newEntrepriseId } from '../entreprise'
 import { SubstanceLegaleId } from '../static/substancesLegales'
 import { FeatureMultiPolygon } from '../perimetre'
-import { caminoDateValidator } from '../date'
+import { caminoDateValidator, dateAddDays } from '../date'
 import { ETAPE_IS_BROUILLON, ETAPE_IS_NOT_BROUILLON, EtapeBrouillon } from '../etape'
 import { EntrepriseUserNotNull } from '../roles'
 import { communeIdValidator } from '../static/communes'
 import { SDOMZoneIds } from '../static/sdom'
 import { PartialRecord } from '../typescript-tools'
+import { Hectare, hectareToKm2, hectareValidator, KM2, km2toHectare, km2Validator } from '../number'
+import { demarcheIdValidator } from '../demarche'
+import { DATE_DEBUT_PROCEDURE_SPECIFIQUE } from '../machines'
 
 console.warn = vi.fn()
 
@@ -560,6 +566,30 @@ test("une demande d'ARM mécanisée a des documents obligatoires supplémentaire
   `)
 })
 
+test('isEtapeValide', () => {
+  expect(isEtapeValid({ ...etapeComplete }, TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX, DEMARCHES_TYPES_IDS.Octroi, demarcheIdValidator.parse('fakeId'))).toMatchInlineSnapshot(`
+      {
+        "valid": true,
+      }
+    `)
+
+  expect(
+    isEtapeValid(
+      { ...etapeComplete, date: DATE_DEBUT_PROCEDURE_SPECIFIQUE, typeId: ETAPES_TYPES.demande, duree: { value: 10 * 10, heritee: false, etapeHeritee: null } },
+      TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX,
+      DEMARCHES_TYPES_IDS.Octroi,
+      demarcheIdValidator.parse('fakeId')
+    )
+  ).toMatchInlineSnapshot(`
+      {
+        "errors": [
+          "Un octroi d'ARM ne peut pas dépasser 2 ans",
+        ],
+        "valid": false,
+      }
+    `)
+})
+
 test.each<[number | null, EtapeTypeId, TitreTypeId, IsEtapeCompleteDocuments, IsEtapeCompleteEntrepriseDocuments, boolean]>([
   [null, 'mfr', 'axm', axmDocuments, axmEntrepriseDocuments, true],
   [0, 'mfr', 'axm', axmDocuments, axmEntrepriseDocuments, true],
@@ -649,5 +679,345 @@ describe('isEtapeDeposable', () => {
     expect(isEtapeDeposable({ ...testBlankUser, role: 'super' }, 'arm', 'oct', { ...etapeComplete, isBrouillon: ETAPE_IS_BROUILLON }, armDocuments, armEntrepriseDocuments, [], [], [])).toStrictEqual(
       false
     )
+  })
+})
+
+const demarcheId = demarcheIdValidator.parse('fakeDemarcheId')
+const beforeProcedureSpecifique = dateAddDays(DATE_DEBUT_PROCEDURE_SPECIFIQUE, -1)
+const duringProcedureSpecifique = dateAddDays(DATE_DEBUT_PROCEDURE_SPECIFIQUE, 1)
+
+describe('dureeIsValide', () => {
+  test('dureeIsValide pour ARM', () => {
+    const titreTypeId = TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX
+    const demarcheTypeIds = [DEMARCHES_TYPES_IDS.Octroi, DEMARCHES_TYPES_IDS.Prolongation]
+
+    const dureesAnnees: (number | null)[] = [null, 0, 1, 2, 4]
+
+    const result: { demarcheTypeId: DemarcheTypeId; duree: number | null; dureeIsValide: ReturnType<typeof dureeIsValide> }[] = []
+    demarcheTypeIds.forEach(demarcheTypeId => {
+      const surface = km2Validator.parse(2)
+      dureesAnnees.forEach(dureeAnnees => {
+        result.push({
+          demarcheTypeId,
+          duree: dureeAnnees,
+          dureeIsValide: dureeIsValide(
+            titreTypeId,
+            demarcheTypeId,
+            ETAPES_TYPES.demande,
+            { value: dureeAnnees !== null ? dureeAnnees * 12 : dureeAnnees },
+            surface,
+            demarcheId,
+            duringProcedureSpecifique
+          ),
+        })
+      })
+    })
+
+    expect(result).toMatchInlineSnapshot(`
+       [
+         {
+           "demarcheTypeId": "oct",
+           "duree": null,
+           "dureeIsValide": {
+             "valid": true,
+           },
+         },
+         {
+           "demarcheTypeId": "oct",
+           "duree": 0,
+           "dureeIsValide": {
+             "valid": true,
+           },
+         },
+         {
+           "demarcheTypeId": "oct",
+           "duree": 1,
+           "dureeIsValide": {
+             "valid": true,
+           },
+         },
+         {
+           "demarcheTypeId": "oct",
+           "duree": 2,
+           "dureeIsValide": {
+             "valid": true,
+           },
+         },
+         {
+           "demarcheTypeId": "oct",
+           "duree": 4,
+           "dureeIsValide": {
+             "message": "Un octroi d'ARM ne peut pas dépasser 2 ans",
+             "valid": false,
+           },
+         },
+         {
+           "demarcheTypeId": "pro",
+           "duree": null,
+           "dureeIsValide": {
+             "valid": true,
+           },
+         },
+         {
+           "demarcheTypeId": "pro",
+           "duree": 0,
+           "dureeIsValide": {
+             "valid": true,
+           },
+         },
+         {
+           "demarcheTypeId": "pro",
+           "duree": 1,
+           "dureeIsValide": {
+             "valid": true,
+           },
+         },
+         {
+           "demarcheTypeId": "pro",
+           "duree": 2,
+           "dureeIsValide": {
+             "valid": true,
+           },
+         },
+         {
+           "demarcheTypeId": "pro",
+           "duree": 4,
+           "dureeIsValide": {
+             "valid": true,
+           },
+         },
+       ]
+     `)
+  })
+
+  test('dureeIsValide pour AXM pour octroi', () => {
+    const titreTypeId = TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX
+
+    const demarcheTypeId = DEMARCHES_TYPES_IDS.Octroi
+
+    const surfaces: KM2[] = [km2Validator.parse(0.1), km2Validator.parse(0.25), km2Validator.parse(0.26), km2Validator.parse(1), km2Validator.parse(1.1)]
+    const dureesAnnees: number[] = [2, 4, 10, 11]
+
+    const result: { surface: Hectare; duree: number; dureeIsValide: ReturnType<typeof dureeIsValide> }[] = []
+    surfaces.forEach(surface => {
+      dureesAnnees.forEach(dureeAnnees => {
+        result.push({
+          surface: km2toHectare(surface),
+          duree: dureeAnnees,
+          dureeIsValide: dureeIsValide(titreTypeId, demarcheTypeId, ETAPES_TYPES.demande, { value: dureeAnnees * 12 }, surface, demarcheId, duringProcedureSpecifique),
+        })
+      })
+    })
+
+    expect(result).toMatchSnapshot()
+  })
+
+  test('dureeIsValide pour AXM pour prolongation', () => {
+    const titreTypeId = TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX
+
+    const demarcheTypeId = DEMARCHES_TYPES_IDS.Prolongation
+
+    const surfaces: KM2[] = [km2Validator.parse(0.1), km2Validator.parse(0.25), km2Validator.parse(0.26)]
+    const dureesAnnees: number[] = [2, 4, 10]
+
+    const result: { surface: Hectare; duree: number; dureeIsValide: ReturnType<typeof dureeIsValide> }[] = []
+    surfaces.forEach(surface => {
+      dureesAnnees.forEach(dureeAnnees => {
+        result.push({
+          surface: km2toHectare(surface),
+          duree: dureeAnnees,
+          dureeIsValide: dureeIsValide(titreTypeId, demarcheTypeId, ETAPES_TYPES.demande, { value: dureeAnnees * 12 }, surface, demarcheId, duringProcedureSpecifique),
+        })
+      })
+    })
+
+    expect(result).toMatchInlineSnapshot(`
+        [
+          {
+            "duree": 2,
+            "dureeIsValide": {
+              "valid": true,
+            },
+            "surface": 10,
+          },
+          {
+            "duree": 4,
+            "dureeIsValide": {
+              "valid": true,
+            },
+            "surface": 10,
+          },
+          {
+            "duree": 10,
+            "dureeIsValide": {
+              "message": "Une prolongation d'AEX inférieure ou égale à 25 hectares ne peut pas dépasser 4 ans",
+              "valid": false,
+            },
+            "surface": 10,
+          },
+          {
+            "duree": 2,
+            "dureeIsValide": {
+              "valid": true,
+            },
+            "surface": 25,
+          },
+          {
+            "duree": 4,
+            "dureeIsValide": {
+              "valid": true,
+            },
+            "surface": 25,
+          },
+          {
+            "duree": 10,
+            "dureeIsValide": {
+              "message": "Une prolongation d'AEX inférieure ou égale à 25 hectares ne peut pas dépasser 4 ans",
+              "valid": false,
+            },
+            "surface": 25,
+          },
+          {
+            "duree": 2,
+            "dureeIsValide": {
+              "valid": true,
+            },
+            "surface": 26,
+          },
+          {
+            "duree": 4,
+            "dureeIsValide": {
+              "valid": true,
+            },
+            "surface": 26,
+          },
+          {
+            "duree": 10,
+            "dureeIsValide": {
+              "valid": true,
+            },
+            "surface": 26,
+          },
+        ]
+      `)
+  })
+  test('dureeIsValide toujours valide AXM Renonciation', () => {
+    const titreTypeId = TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX
+    const demarcheTypeId = DEMARCHES_TYPES_IDS.RenonciationTotale
+
+    const surfaces: KM2[] = [km2Validator.parse(0), km2Validator.parse(0.1), km2Validator.parse(0.25), km2Validator.parse(0.26), km2Validator.parse(1), km2Validator.parse(1.1)]
+    const dureesAnnees: number[] = [0, 2, 4, 10]
+
+    surfaces.forEach(surface => {
+      dureesAnnees.forEach(dureeAnnees => {
+        expect(dureeIsValide(titreTypeId, demarcheTypeId, ETAPES_TYPES.demande, { value: dureeAnnees * 12 }, surface, demarcheId, duringProcedureSpecifique).valid).toBe(true)
+      })
+    })
+  })
+})
+
+describe('perimetreIsValide', () => {
+  test('arm', () => {
+    expect(perimetreIsValide(TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX, DEMARCHES_TYPES_IDS.Octroi, ETAPES_TYPES.demande, km2Validator.parse(1), demarcheId, duringProcedureSpecifique))
+      .toMatchInlineSnapshot(`
+      {
+        "valid": true,
+      }
+    `)
+    expect(perimetreIsValide(TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX, DEMARCHES_TYPES_IDS.Octroi, ETAPES_TYPES.demande, km2Validator.parse(3), demarcheId, duringProcedureSpecifique))
+      .toMatchInlineSnapshot(`
+      {
+        "valid": true,
+      }
+    `)
+    expect(perimetreIsValide(TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX, DEMARCHES_TYPES_IDS.Octroi, ETAPES_TYPES.demande, km2Validator.parse(4), demarcheId, duringProcedureSpecifique))
+      .toMatchInlineSnapshot(`
+      {
+        "message": "Une ARM supérieure à 3km² est interdit",
+        "valid": false,
+      }
+    `)
+    expect(perimetreIsValide(TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX, DEMARCHES_TYPES_IDS.Prolongation, ETAPES_TYPES.demande, km2Validator.parse(4), demarcheId, duringProcedureSpecifique))
+      .toMatchInlineSnapshot(`
+      {
+        "message": "Une ARM supérieure à 3km² est interdit",
+        "valid": false,
+      }
+    `)
+
+    expect(perimetreIsValide(TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX, DEMARCHES_TYPES_IDS.Prolongation, ETAPES_TYPES.demande, km2Validator.parse(4), demarcheId, beforeProcedureSpecifique))
+      .toMatchInlineSnapshot(`
+      {
+        "valid": true,
+      }
+    `)
+    expect(
+      perimetreIsValide(
+        TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX,
+        DEMARCHES_TYPES_IDS.Prolongation,
+        ETAPES_TYPES.decisionDeLAutoriteAdministrative,
+        km2Validator.parse(4),
+        demarcheId,
+        duringProcedureSpecifique
+      )
+    ).toMatchInlineSnapshot(`
+      {
+        "valid": true,
+      }
+    `)
+  })
+
+  test('axm', () => {
+    const hectares_20 = hectareToKm2(hectareValidator.parse(20))
+    const hectares_25 = hectareToKm2(hectareValidator.parse(25))
+    const hectares_26 = hectareToKm2(hectareValidator.parse(26))
+    const hectares_100 = hectareToKm2(hectareValidator.parse(100))
+    const hectares_101 = hectareToKm2(hectareValidator.parse(101))
+
+    expect(perimetreIsValide(TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX, DEMARCHES_TYPES_IDS.Octroi, ETAPES_TYPES.demande, hectares_20, demarcheId, duringProcedureSpecifique))
+      .toMatchInlineSnapshot(`
+      {
+        "valid": true,
+      }
+    `)
+    expect(perimetreIsValide(TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX, DEMARCHES_TYPES_IDS.Octroi, ETAPES_TYPES.demande, hectares_100, demarcheId, duringProcedureSpecifique))
+      .toMatchInlineSnapshot(`
+      {
+        "valid": true,
+      }
+    `)
+    expect(perimetreIsValide(TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX, DEMARCHES_TYPES_IDS.Octroi, ETAPES_TYPES.demande, hectares_101, demarcheId, duringProcedureSpecifique))
+      .toMatchInlineSnapshot(`
+      {
+        "message": "Un octroi d'AEX supérieur à 100 hectares est interdit",
+        "valid": false,
+      }
+    `)
+    expect(perimetreIsValide(TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX, DEMARCHES_TYPES_IDS.Prolongation, ETAPES_TYPES.demande, hectares_20, demarcheId, duringProcedureSpecifique))
+      .toMatchInlineSnapshot(`
+      {
+        "valid": true,
+      }
+    `)
+    expect(perimetreIsValide(TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX, DEMARCHES_TYPES_IDS.Prolongation, ETAPES_TYPES.demande, hectares_25, demarcheId, duringProcedureSpecifique))
+      .toMatchInlineSnapshot(`
+      {
+        "valid": true,
+      }
+    `)
+    expect(perimetreIsValide(TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX, DEMARCHES_TYPES_IDS.Prolongation, ETAPES_TYPES.demande, hectares_26, demarcheId, duringProcedureSpecifique))
+      .toMatchInlineSnapshot(`
+      {
+        "message": "Une prolongation d'AEX supérieure à 25 hectares est interdit",
+        "valid": false,
+      }
+    `)
+
+    expect(perimetreIsValide(TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX, DEMARCHES_TYPES_IDS.RenonciationTotale, ETAPES_TYPES.demande, hectares_100, demarcheId, duringProcedureSpecifique))
+      .toMatchInlineSnapshot(`
+      {
+        "valid": true,
+      }
+    `)
   })
 })

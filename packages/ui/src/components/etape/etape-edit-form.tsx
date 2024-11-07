@@ -47,7 +47,7 @@ import { AsyncData } from '@/api/client-rest'
 import { CaminoDate } from 'camino-common/src/date'
 import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts'
 import { LoadingElement } from '../_ui/functional-loader'
-import { isEtapeDeposable } from 'camino-common/src/permissions/titres-etapes'
+import { isEtapeComplete, isEtapeDeposable, isEtapeValid } from 'camino-common/src/permissions/titres-etapes'
 import { getSections } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections'
 import { DsfrInputCheckbox } from '../_ui/dsfr-input-checkbox'
 
@@ -287,16 +287,24 @@ export const EtapeEditForm = defineComponent<Props>(props => {
 
   const canSave = computed<boolean>(() => {
     if (etape.value.status === 'LOADED' && isNotNullNorUndefined(etape.value.value)) {
+      const etapeValid = isEtapeValid(etape.value.value, props.titreTypeId, props.demarcheTypeId, props.demarcheId)
+      if (!etapeValid.valid) {
+        return false
+      }
+
       if (etape.value.value.isBrouillon === ETAPE_IS_NOT_BROUILLON) {
-        return (
-          dateTypeStepIsComplete(etape.value.value, props.user).valid &&
-          fondamentaleStepIsComplete(etape.value.value, props.demarcheTypeId, props.titreTypeId, props.user).valid &&
-          sectionsStepIsComplete(etape.value.value, props.demarcheTypeId, props.titreTypeId).valid &&
-          perimetreStepIsComplete(etape.value.value, props.demarcheTypeId).valid &&
-          etapeDocumentsStepIsComplete(etape.value.value, props.demarcheTypeId, props.titreTypeId, documents.value.etapeDocuments, props.perimetre.sdomZoneIds).valid &&
-          entrepriseDocumentsStepIsComplete(etape.value.value, props.demarcheTypeId, props.titreTypeId, documents.value.entrepriseDocuments).valid &&
-          etapeAvisStepIsComplete(etape.value.value, documents.value.etapeAvis, props.titreTypeId, props.perimetre.communes).valid
+        const { valid } = isEtapeComplete(
+          etape.value.value,
+          props.titreTypeId,
+          props.demarcheTypeId,
+          documents.value.etapeDocuments,
+          documents.value.entrepriseDocuments.map(e => ({ entreprise_document_type_id: e.documentTypeId, entreprise_id: e.entrepriseId })),
+          props.perimetre.sdomZoneIds,
+          props.perimetre.communes,
+          documents.value.etapeAvis,
+          props.user
         )
+        return valid
       }
       return dateTypeStepIsComplete(etape.value.value, props.user).valid && etape.value.value.isBrouillon
     }
@@ -596,6 +604,7 @@ const EtapeEditFormInternal = defineComponent<
           <PerimetreEdit
             etape={props.etape}
             titreTypeId={props.titreTypeId}
+            demarcheTypeId={props.demarcheTypeId}
             titreSlug={props.titreSlug}
             apiClient={props.apiClient}
             initTab={props.initTab}

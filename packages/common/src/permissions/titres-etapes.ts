@@ -21,9 +21,13 @@ import { CommuneId } from '../static/communes'
 import { FlattenEtape } from '../etape-form'
 import { TitreTypeId, TITRES_TYPES_IDS } from '../static/titresTypes'
 import { User, isSuper, isAdministrationAdmin, isAdministrationEditeur, isEntreprise, isBureauDEtudes } from '../roles'
-import { DemarcheTypeId, DEMARCHES_TYPES_IDS, DemarchesTypes } from '../static/demarchesTypes'
+import { DemarcheTypeId, DEMARCHES_TYPES_IDS, DemarchesTypes, isDemarcheTypeProlongations } from '../static/demarchesTypes'
 import { EtapeTypeId, ETAPES_TYPES, EtapesTypes, isEtapeDecision } from '../static/etapesTypes'
 import { TITRES_TYPES_IDS_DEMAT } from './titres'
+import { KM2, km2toHectare, ZERO_KM2 } from '../number'
+import { machineIdFind } from '../machines'
+import { DemarcheId } from '../demarche'
+import { CaminoDate } from '../date'
 
 export type InputAbsent = { visibility: 'absent'; message: string }
 type InputPresentRequired = { visibility: 'present'; required: true; message: string }
@@ -104,6 +108,44 @@ export const canEditTitulaires = (_titreTypeId: TitreTypeId, demarcheTypeId: Dem
   return { visibility: 'absent', message: 'droits insuffisants pour éditer les titulaires' }
 }
 
+export const dureeIsValide = (
+  titreTypeId: TitreTypeId,
+  demarcheTypeId: DemarcheTypeId,
+  etapeTypeId: EtapeTypeId,
+  dureeValue: Pick<FlattenEtape['duree'], 'value'>,
+  surfaceKm2: KM2,
+  demarcheId: DemarcheId,
+  date: CaminoDate
+): { valid: true } | { valid: false; message: string } => {
+  const machineId = machineIdFind(titreTypeId, demarcheTypeId, undefined, demarcheId, date)
+  if (etapeTypeId === ETAPES_TYPES.demande && machineId === 'ProcedureSpecifique') {
+    const duree = dureeValue.value ?? 0
+    const surface = km2toHectare(surfaceKm2)
+
+    if (titreTypeId === TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX && demarcheTypeId === DEMARCHES_TYPES_IDS.Octroi && duree > 2 * 12) {
+      return { valid: false, message: `Un octroi d'ARM ne peut pas dépasser 2 ans` }
+    }
+
+    if (titreTypeId === TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX) {
+      if (demarcheTypeId === DEMARCHES_TYPES_IDS.Octroi) {
+        if (surface <= 25 && duree > 4 * 12) {
+          return { valid: false, message: `Un octroi d'AEX inférieur ou égal à 25 hectares ne peut pas dépasser 4 ans` }
+        }
+        if (surface > 25 && surface <= 100 && duree > 10 * 12) {
+          return { valid: false, message: `Un octroi d'AEX supérieur à 25 hectares et inférieur ou égal à 100 hectares ne peut pas dépasser 10 ans` }
+        }
+      }
+      if (isDemarcheTypeProlongations(demarcheTypeId)) {
+        if (surface <= 25 && duree > 4 * 12) {
+          return { valid: false, message: `Une prolongation d'AEX inférieure ou égale à 25 hectares ne peut pas dépasser 4 ans` }
+        }
+      }
+    }
+  }
+
+  return { valid: true }
+}
+
 export const canEditDuree = (_titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId, _user: User): InputPresence => {
   // par exemple, ne peut pas ajouter de durée à la démarche déplacement de périmètre
   if (demarchesSansDatesNiDureePourLesEtapes.includes(demarcheTypeId)) {
@@ -113,6 +155,39 @@ export const canEditDuree = (_titreTypeId: TitreTypeId, demarcheTypeId: Demarche
   return { visibility: 'present', required: true, message: `la durée est obligatoire pour une démarche ${DemarchesTypes[demarcheTypeId].nom}` }
 }
 
+export const perimetreIsValide = (
+  titreTypeId: TitreTypeId,
+  demarcheTypeId: DemarcheTypeId,
+  etapeTypeId: EtapeTypeId,
+  surfaceKm2: KM2,
+  demarcheId: DemarcheId,
+  date: CaminoDate
+): { valid: true } | { valid: false; message: string } => {
+  const machineId = machineIdFind(titreTypeId, demarcheTypeId, undefined, demarcheId, date)
+  if (etapeTypeId === ETAPES_TYPES.demande && machineId === 'ProcedureSpecifique') {
+    const surface = km2toHectare(surfaceKm2)
+    if (titreTypeId === TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX) {
+      if (surfaceKm2 > 3) {
+        return { valid: false, message: `Une ARM supérieure à 3km² est interdit` }
+      }
+    }
+
+    if (titreTypeId === TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX) {
+      if (demarcheTypeId === DEMARCHES_TYPES_IDS.Octroi) {
+        if (surface > 100) {
+          return { valid: false, message: `Un octroi d'AEX supérieur à 100 hectares est interdit` }
+        }
+      }
+      if (isDemarcheTypeProlongations(demarcheTypeId)) {
+        if (surface > 25) {
+          return { valid: false, message: `Une prolongation d'AEX supérieure à 25 hectares est interdit` }
+        }
+      }
+    }
+  }
+
+  return { valid: true }
+}
 export const canEditPerimetre = (demarcheTypeId: DemarcheTypeId, etapeTypeId: EtapeTypeId): InputPresence => {
   if (!EtapesTypes[etapeTypeId].fondamentale) {
     return { visibility: 'absent', message: `une étape ${EtapesTypes[etapeTypeId].nom} ne peut pas inclure de périmètre` }
@@ -208,6 +283,32 @@ export type IsEtapeCompleteEntrepriseDocuments = DeepReadonly<Pick<EntrepriseDoc
 type IsEtapeCompleteSdomZones = DeepReadonly<SDOMZoneId[]> | null | undefined
 type IsEtapeCompleteCommunes = DeepReadonly<CommuneId[]>
 type IsEtapeCompleteEtapeAvis = DeepReadonly<Pick<EtapeAvis, 'avis_type_id'>[]>
+
+export const isEtapeValid = (
+  etape: IsEtapeCompleteEtape,
+  titreTypeId: TitreTypeId,
+  demarcheTypeId: DemarcheTypeId,
+  demarcheId: DemarcheId
+): { valid: true } | { valid: false; errors: NonEmptyArray<string> } => {
+  const surface = etape.perimetre.value?.surface ?? ZERO_KM2
+  const isValidChecks = [
+    dureeIsValide(titreTypeId, demarcheTypeId, etape.typeId, etape.duree, surface, demarcheId, etape.date),
+    perimetreIsValide(titreTypeId, demarcheTypeId, etape.typeId, surface, demarcheId, etape.date),
+  ]
+  const errors: string[] = isValidChecks.reduce<string[]>((acc, c) => {
+    if (!c.valid) {
+      acc.push(c.message)
+    }
+
+    return acc
+  }, [])
+
+  if (isNonEmptyArray(errors)) {
+    return { valid: false, errors }
+  }
+
+  return { valid: true }
+}
 
 export const isEtapeComplete = (
   etape: IsEtapeCompleteEtape,

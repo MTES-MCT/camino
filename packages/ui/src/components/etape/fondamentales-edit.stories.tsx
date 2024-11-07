@@ -7,6 +7,7 @@ import { testBlankUser } from 'camino-common/src/tests-utils'
 import { action } from '@storybook/addon-actions'
 import { FlattenEtape } from 'camino-common/src/etape-form'
 import { demarcheIdValidator } from 'camino-common/src/demarche'
+import { DATE_DEBUT_PROCEDURE_SPECIFIQUE } from 'camino-common/src/machines'
 
 const meta: Meta = {
   title: 'Components/Etape/FondamentalesEdit',
@@ -145,6 +146,17 @@ export const AxmDemandeONF: StoryFn = () => (
     demarcheTypeId="oct"
     titreTypeId="axm"
     user={{ role: 'admin', administrationId: 'ope-onf-973-01', ...testBlankUser }}
+    entreprises={entreprises}
+  />
+)
+
+export const AxmDemandeTropLongue: StoryFn = () => (
+  <FondamentalesEdit
+    etape={{ ...etape, date: DATE_DEBUT_PROCEDURE_SPECIFIQUE, duree: { value: 120, heritee: false, etapeHeritee: null } }}
+    completeUpdate={completeUpdate}
+    demarcheTypeId="oct"
+    titreTypeId="axm"
+    user={{ role: 'super', ...testBlankUser }}
     entreprises={entreprises}
   />
 )

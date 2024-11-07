@@ -19,7 +19,7 @@ type NumberInputType = {
 }
 type BaseProps = {
   id?: string
-  legend: { main: string; visible?: boolean; description?: string; placeholder?: string; info?: string }
+  legend: { main: string; visible?: boolean; description?: string; placeholder?: string; info?: { type: 'info' | 'error'; value: string } }
   disabled?: boolean
   required?: boolean
 }
@@ -73,7 +73,14 @@ export const DsfrInput = defineComponent<Props>(props => {
   }
 
   return () => (
-    <div class={['fr-input-group', isNotNullNorUndefined(props.disabled) && props.disabled ? 'fr-input-group--disabled' : null]} style={{ marginBottom: 0 }}>
+    <div
+      class={[
+        'fr-input-group',
+        isNotNullNorUndefined(props.disabled) && props.disabled ? 'fr-input-group--disabled' : null,
+        isNotNullNorUndefined(props.legend.info) && props.legend.info.type === 'error' ? 'fr-input-group--error' : null,
+      ]}
+      style={{ marginBottom: 0 }}
+    >
       {(props.legend.visible ?? true) ? (
         <label class="fr-label" for={id}>
           {props.legend.main} {isNotNullNorUndefined(props.required) && props.required ? ' *' : null}
@@ -84,17 +91,17 @@ export const DsfrInput = defineComponent<Props>(props => {
         onInput={updateFromEvent}
         placeholder={props.legend.placeholder}
         value={value.value}
-        class="fr-input"
+        class={['fr-input', isNotNullNorUndefined(props.legend.info) && props.legend.info.type === 'error' ? 'fr-input--error' : null]}
         name={id}
         id={id}
         disabled={props.disabled ?? false}
         required={props.required ?? false}
         {...(props.type ?? { type: 'text' })}
-        aria-describedby={isNotNullNorUndefined(props.legend.info) && props.legend.info !== '' ? `${id}-info` : undefined}
+        aria-describedby={isNotNullNorUndefined(props.legend.info) && props.legend.info.value !== '' ? `${id}-info` : undefined}
       />
-      {isNotNullNorUndefined(props.legend.info) && props.legend.info !== '' ? (
-        <p id={`${id}-info`} class="fr-info-text">
-          {props.legend.info}
+      {isNotNullNorUndefined(props.legend.info) && props.legend.info.value !== '' ? (
+        <p id={`${id}-info`} class={`fr-${props.legend.info.type}-text`}>
+          {props.legend.info.value}
         </p>
       ) : null}
     </div>
