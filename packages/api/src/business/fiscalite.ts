@@ -1,6 +1,5 @@
 import { CaminoAnnee } from 'camino-common/src/date'
 import { SubstanceFiscaleId, SUBSTANCES_FISCALES_IDS } from 'camino-common/src/static/substancesFiscales'
-import { isNullOrUndefined } from 'camino-common/src/typescript-tools'
 import Decimal from 'decimal.js'
 import { z } from 'zod'
 
@@ -710,9 +709,8 @@ export const getAllTarifsBySubstances = (annee: CaminoAnnee): TarifsBySubstances
     }
 
     data = anneeData[anneeData.length - 1]
-  }
-  if (isNullOrUndefined(data)) {
-    throw new Error('cas impossible, pour typescript seulement')
+  } else {
+    data = anneeParsed.data
   }
 
   return {
