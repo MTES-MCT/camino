@@ -9,6 +9,7 @@ import {
   IGetEtapesByDemarcheIdDbQuery,
   IGetPerimetreSansSatelliteDbQuery,
 } from './demarches.queries.types'
+import { IGetDemarchesDbQuery } from './demarches.queries.types'
 import { z } from 'zod'
 import { caminoDateValidator } from 'camino-common/src/date'
 import { communeValidator } from 'camino-common/src/static/communes'
@@ -70,6 +71,7 @@ const getEtapesByDemarcheIdDbValidator = z.object({
   amodiataire_ids: z.array(entrepriseIdValidator),
   is_brouillon: etapeBrouillonValidator,
   demarche_id_en_concurrence: demarcheIdValidator.nullable(),
+  etape_fondamentale_id: etapeIdValidator,
 })
 
 export const getEtapesByDemarcheId = (pool: Pool, demarcheId: DemarcheId): Effect.Effect<GetEtapesByDemarcheIdDb[], CaminoError<EffectDbQueryAndValidateErrors>> =>
@@ -107,7 +109,8 @@ select
     e.titulaire_ids,
     e.amodiataire_ids,
     e.is_brouillon,
-    e.demarche_id_en_concurrence
+    e.demarche_id_en_concurrence,
+    e.etape_fondamentale_id
 from
     titres_etapes e
 where
@@ -378,3 +381,9 @@ FROM (
     ST_DIFFERENCE(ST_GeomFromGeoJSON($ perimetrePivot !), ST_GeomFromGeoJSON($ perimetreSatellite !)) AS perimetre_geom_sans_satellite
 ) tmp
 `
+const getDemarchesValidator = z.object({ id: demarcheIdValidator })
+type GetDemarche = z.infer<typeof getDemarchesValidator>
+export const getDemarches = (pool: Pool): Effect.Effect<GetDemarche[], CaminoError<EffectDbQueryAndValidateErrors>> => effectDbQueryAndValidate(getDemarchesDb, {}, pool, getDemarchesValidator)
+
+const getDemarchesDb = sql<Redefine<IGetDemarchesDbQuery, {}, GetDemarche>>`
+  select td.id from titres_demarches td where td.archive is false`

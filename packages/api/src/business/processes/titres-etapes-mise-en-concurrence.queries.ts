@@ -71,7 +71,7 @@ const getDemarchesWithMiseEnConcurrenceDb = sql<
           where
             te.date <= demande.date
             AND te.titre_demarche_id = td.id
-            AND te.geojson4326_perimetre is not null
+            AND te.etape_fondamentale_id = te.id
           ORDER BY
             ordre desc
           LIMIT

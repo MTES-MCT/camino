@@ -1,5 +1,5 @@
 import { sql } from '@pgtyped/runtime'
-import { dbQueryAndValidate, Redefine } from '../../pg-database'
+import { dbQueryAndValidate, effectDbQueryAndValidate, EffectDbQueryAndValidateErrors, Redefine } from '../../pg-database'
 import {
   IDeleteTitreEtapeEntrepriseDocumentInternalQuery,
   IGetEntrepriseDocumentIdsByEtapeIdQueryQuery,
@@ -18,6 +18,7 @@ import {
   IDeleteEtapeAvisDbQuery,
   IGetEtapesWithAutomaticStatutDbQuery,
   IUpdateEtapeStatutDbQuery,
+  IUpdateEtapeFondamentaleIdDbQuery,
 } from './titres-etapes.queries.types'
 import {
   autreEtapeAvisValidator,
@@ -63,6 +64,8 @@ import { CommuneId } from 'camino-common/src/static/communes'
 import { EtapeStatutId, etapeStatutIdValidator } from 'camino-common/src/static/etapesStatuts'
 import { contenuValidator, heritageContenuValidator } from 'camino-common/src/etape-form'
 import { demarcheTypeIdValidator } from 'camino-common/src/static/demarchesTypes'
+import { Effect } from 'effect'
+import { CaminoError } from 'camino-common/src/zod-tools'
 
 export const insertTitreEtapeEntrepriseDocument = async (pool: Pool, params: { titre_etape_id: EtapeId; entreprise_document_id: EntrepriseDocumentId }): Promise<void[]> =>
   dbQueryAndValidate(insertTitreEtapeEntrepriseDocumentInternal, params, pool, z.void())
@@ -460,4 +463,11 @@ export const updateEtapeStatut = async (pool: Pool, etapeId: EtapeId, newStatut:
 
 const updateEtapeStatutDb = sql<Redefine<IUpdateEtapeStatutDbQuery, { newStatut: EtapeStatutId; etapeId: EtapeId }, void>>`
   UPDATE titres_etapes SET statut_id = $ newStatut ! where id = $ etapeId !
+`
+
+export const updateEtapeFondamentaleId = (pool: Pool, etapeId: EtapeId, etapeFondamentaleId: EtapeId): Effect.Effect<true, CaminoError<EffectDbQueryAndValidateErrors>> =>
+  effectDbQueryAndValidate(updateEtapeFondamentaleIdDb, { etapeId, etapeFondamentaleId }, pool, z.void()).pipe(Effect.map(() => true))
+
+const updateEtapeFondamentaleIdDb = sql<Redefine<IUpdateEtapeFondamentaleIdDbQuery, { etapeFondamentaleId: EtapeId; etapeId: EtapeId }, void>>`
+  UPDATE titres_etapes SET etape_fondamentale_id = $ etapeFondamentaleId ! where id = $ etapeId !
 `

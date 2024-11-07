@@ -15,7 +15,7 @@ export const insertTitreGraph = async (titreGraph: ITitreInsert): Promise<void> 
     await TitresDemarches.query().insert(demarche)
 
     for (const etape of etapes ?? []) {
-      await TitresEtapes.query().insert(etape)
+      await TitresEtapes.query().insert({ etapeFondamentaleId: etape.id, ...etape })
     }
   }
 }

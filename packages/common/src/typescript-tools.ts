@@ -5,6 +5,14 @@ export function isNotNullNorUndefined<T>(value: T | null | undefined): value is 
   return !isNullOrUndefined(value)
 }
 
+// @ts-ignore faisons confiance à notre code
+export function toSorted<U>(value: DeepReadonly<U[]>, comparator?: (a: DeepReadonly<U>, b: DeepReadonly<U>) => number): DeepReadonly<U[]>
+export function toSorted<U>(value: NonEmptyArray<U>, comparator?: (a: U, b: U) => number): NonEmptyArray<U>
+export function toSorted<U>(value: U[], comparator?: (a: U, b: U) => number): U[]
+export function toSorted<U>(value: U[], comparator?: (a: U, b: U) => number): U[] {
+  return [...value].sort(comparator)
+}
+
 export function isNotNullNorUndefinedNorEmpty<U>(value: DeepReadonly<U[]> | null | undefined): value is DeepReadonly<NonEmptyArray<U>>
 export function isNotNullNorUndefinedNorEmpty<U>(value: U[] | null | undefined): value is NonEmptyArray<U>
 export function isNotNullNorUndefinedNorEmpty(value: string | null | undefined): value is string
@@ -151,8 +159,4 @@ export const stringArrayEquals = (array1: string[], array2: string[]): boolean =
 
 export type RecordPartial<K extends keyof any, T> = {
   [P in K]?: T
-}
-
-export const toSorted = <T>(values: DeepReadonly<T[]>, compareFn?: (a: DeepReadonly<T>, b: DeepReadonly<T>) => number): DeepReadonly<T[]> => {
-  return [...values].sort(compareFn)
 }
