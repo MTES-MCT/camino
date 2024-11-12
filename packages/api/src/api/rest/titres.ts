@@ -27,7 +27,7 @@ import { titreIdValidator, titreIdOrSlugValidator, TitreId } from 'camino-common
 import { RestNewGetCall, RestNewPostCall } from '../../server/rest'
 import { Effect, Match, pipe } from 'effect'
 import { CaminoError } from 'camino-common/src/zod-tools'
-import { DbQueryAccessError } from '../../pg-database'
+import { DbQueryAccessError, EffectDbQueryAndValidateErrors } from '../../pg-database'
 import { machineFind } from '../../business/rules-demarches/machines'
 
 const etapesAMasquer = [ETAPES_TYPES.classementSansSuite, ETAPES_TYPES.desistementDuDemandeur, ETAPES_TYPES.decisionImplicite, ETAPES_TYPES.demandeDeComplements_RecevabiliteDeLaDemande_]
@@ -397,27 +397,24 @@ export const utilisateurTitreAbonner =
     }
   }
 
-export const getUtilisateurTitreAbonner =
-  (pool: Pool) =>
-  async (req: CaminoRequest, res: CustomResponse<boolean>): Promise<void> => {
-    const user = req.auth
-    const parsedTitreId = titreIdValidator.safeParse(req.params.titreId)
-    if (!parsedTitreId.success) {
-      res.sendStatus(HTTP_STATUS.BAD_REQUEST)
-    } else {
-      try {
-        if (!user) {
-          res.sendStatus(HTTP_STATUS.BAD_REQUEST)
-        } else {
-          res.send(await getTitreUtilisateur(pool, parsedTitreId.data, user.id))
-        }
-      } catch (e) {
-        console.error(e)
-
-        res.sendStatus(HTTP_STATUS.INTERNAL_SERVER_ERROR)
-      }
-    }
-  }
+type GetUtilisateurTitreAbonnerError = EffectDbQueryAndValidateErrors | typeof droitInsuffisant
+export const getUtilisateurTitreAbonner: RestNewGetCall<'/rest/titres/:titreId/abonne'> = ({ user, params, pool }): Effect.Effect<boolean, CaminoApiError<GetUtilisateurTitreAbonnerError>> =>
+  Effect.Do.pipe(
+    Effect.map(() => user),
+    Effect.filterOrFail(
+      userPipe => isNotNullNorUndefined(userPipe),
+      () => ({ message: droitInsuffisant })
+    ),
+    Effect.flatMap(userPipe => getTitreUtilisateur(pool, params.titreId, userPipe.id)),
+    Effect.mapError(caminoError =>
+      Match.value(caminoError.message).pipe(
+        Match.when("Impossible d'accéder à la base de données", () => ({ ...caminoError, status: HTTP_STATUS.INTERNAL_SERVER_ERROR })),
+        Match.when('Droit insuffisant pour accéder au titre ou titre inexistant', () => ({ ...caminoError, status: HTTP_STATUS.FORBIDDEN })),
+        Match.when('Problème de validation de données', () => ({ ...caminoError, status: HTTP_STATUS.INTERNAL_SERVER_ERROR })),
+        Match.exhaustive
+      )
+    )
+  )
 
 export const updateTitre =
   (pool: Pool) =>

@@ -540,3 +540,33 @@ test('utilisateurTitreAbonner', async () => {
 
   expect(tested.statusCode).toBe(HTTP_STATUS.NO_CONTENT)
 })
+
+test('getUtilisateurTitreAbonner', async () => {
+  const id = newTitreId()
+  await insertTitreGraph({
+    id,
+    nom: 'mon autre titre',
+    typeId: 'arm',
+    slug: titreSlugValidator.parse('slug'),
+    titreStatutId: 'val',
+    propsTitreEtapesIds: {},
+  })
+  let tested = await restNewCall(dbPool, '/rest/titres/:titreId/abonne', { titreId: id }, userSuper)
+
+  expect(tested.body).toBe(false)
+  const abonnement = await restPostCall(dbPool, '/rest/titres/:titreId/abonne', { titreId: id }, userSuper, { abonne: true })
+
+  expect(abonnement.statusCode).toBe(HTTP_STATUS.NO_CONTENT)
+
+  tested = await restNewCall(dbPool, '/rest/titres/:titreId/abonne', { titreId: id }, userSuper)
+
+  expect(tested.body).toBe(true)
+  tested = await restNewCall(dbPool, '/rest/titres/:titreId/abonne', { titreId: id }, undefined)
+
+  expect(tested.body).toMatchInlineSnapshot(`
+    {
+      "message": "Droit insuffisant pour accéder au titre ou titre inexistant",
+      "status": 403,
+    }
+  `)
+})

@@ -1,6 +1,6 @@
 import { newEntrepriseId } from 'camino-common/src/entreprise'
 import { dbManager } from '../../../tests/db-manager'
-import { restCall, restNewPostCall } from '../../../tests/_utils/index'
+import { restCall, restNewCall, restNewPostCall } from '../../../tests/_utils/index'
 import { entrepriseUpsert } from '../../database/queries/entreprises'
 import { afterAll, beforeAll, describe, test, expect, vi, beforeEach } from 'vitest'
 import type { Pool } from 'pg'
@@ -74,7 +74,7 @@ describe('titreDemandeCreer', () => {
     expect(getTitre.body.demarches[0].etapes).toHaveLength(1)
     expect(getTitre.body.demarches[0].etapes[0].id).toBe(tested.body.etapeId)
 
-    const isAbonne = await restCall(dbPool, '/rest/titres/:titreId/abonne', { titreId: tested.body.titreId }, user)
+    const isAbonne = await restNewCall(dbPool, '/rest/titres/:titreId/abonne', { titreId: tested.body.titreId }, user)
     expect(isAbonne.body).toBe(true)
   })
 

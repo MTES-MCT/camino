@@ -28,7 +28,11 @@ export const TitreAbonnerButton = defineComponent<Props>(props => {
     try {
       if (isNotNullNorUndefined(props.user)) {
         const abonne = await props.apiClient.getTitreUtilisateurAbonne(props.titreId)
-        data.value = { status: 'LOADED', value: abonne }
+        if (typeof abonne !== 'boolean') {
+          data.value = { status: 'NEW_ERROR', error: abonne }
+        } else {
+          data.value = { status: 'LOADED', value: abonne }
+        }
       }
     } catch (e: any) {
       console.error('error', e)

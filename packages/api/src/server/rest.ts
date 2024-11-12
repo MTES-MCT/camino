@@ -164,7 +164,7 @@ const restRouteImplementations: Readonly<{ [key in CaminoRestRoute]: Transform<k
   '/rest/etapesTypes/:demarcheId/:date': { newGetCall: getEtapesTypesEtapesStatusWithMainStep, ...CaminoRestRoutes['/rest/etapesTypes/:demarcheId/:date'] },
   '/rest/titres': { newPostCall: titreDemandeCreer, ...CaminoRestRoutes['/rest/titres'] },
   '/rest/titres/:titreId': { deleteCall: removeTitre, postCall: updateTitre, getCall: getTitre, ...CaminoRestRoutes['/rest/titres/:titreId'] },
-  '/rest/titres/:titreId/abonne': { postCall: utilisateurTitreAbonner, getCall: getUtilisateurTitreAbonner, ...CaminoRestRoutes['/rest/titres/:titreId/abonne'] },
+  '/rest/titres/:titreId/abonne': { postCall: utilisateurTitreAbonner, newGetCall: getUtilisateurTitreAbonner, ...CaminoRestRoutes['/rest/titres/:titreId/abonne'] },
   '/rest/titresAdministrations': { getCall: titresAdministrations, ...CaminoRestRoutes['/rest/titresAdministrations'] },
   '/rest/statistiques/minerauxMetauxMetropole': { getCall: getMinerauxMetauxMetropolesStats, ...CaminoRestRoutes['/rest/statistiques/minerauxMetauxMetropole'] }, // UNTESTED YET
   '/rest/statistiques/guyane': { getCall: getGuyaneStats, ...CaminoRestRoutes['/rest/statistiques/guyane'] },

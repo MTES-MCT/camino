@@ -1,6 +1,6 @@
 import { EditableTitre, TitreDemande, TitreDemandeOutput, TitreGet } from 'camino-common/src/titres'
 import { TitreId, TitreIdOrSlug } from 'camino-common/src/validators/titres'
-import { deleteWithJson, getWithJson, newPostWithJson, postWithJson } from '../../api/client-rest'
+import { deleteWithJson, getWithJson, newGetWithJson, newPostWithJson, postWithJson } from '../../api/client-rest'
 import { CaminoDate } from 'camino-common/src/date'
 import { CommuneId } from 'camino-common/src/static/communes'
 import { EntrepriseId } from 'camino-common/src/entreprise'
@@ -42,7 +42,7 @@ export type TitreForTitresRerchercherByNom = {
 export interface TitreApiClient {
   removeTitre: (titreId: TitreId) => Promise<void>
   titreUtilisateurAbonne: (titreId: TitreId, abonne: boolean) => Promise<void>
-  getTitreUtilisateurAbonne: (titreId: TitreId) => Promise<boolean>
+  getTitreUtilisateurAbonne: (titreId: TitreId) => Promise<boolean | CaminoError<string>>
   editTitre: (titre: EditableTitre) => Promise<void>
   getTitreById: (titreId: TitreIdOrSlug) => Promise<TitreGet>
   getTitresForTable: (params: {
@@ -110,8 +110,8 @@ export const titreApiClient: TitreApiClient = {
   titreUtilisateurAbonne: async (titreId: TitreId, abonne: boolean): Promise<void> => {
     return postWithJson('/rest/titres/:titreId/abonne', { titreId }, { abonne })
   },
-  getTitreUtilisateurAbonne: async (titreId: TitreId): Promise<boolean> => {
-    return getWithJson('/rest/titres/:titreId/abonne', { titreId })
+  getTitreUtilisateurAbonne: async (titreId: TitreId): Promise<boolean | CaminoError<string>> => {
+    return newGetWithJson('/rest/titres/:titreId/abonne', { titreId })
   },
   editTitre: (titre: EditableTitre): Promise<void> => {
     return postWithJson('/rest/titres/:titreId', { titreId: titre.id }, titre)
