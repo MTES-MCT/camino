@@ -58,6 +58,8 @@ export const EtapeDocuments: FunctionalComponent<Props> = props => {
     return acc
   }, {})
 
+  const hasEntrepriseDocumentsWithDescription = computed<boolean>(() => sortedEntrepriseDocuments.value.some(({ description }) => isNotNullNorUndefinedNorEmpty(description)))
+
   return (
     <div style={{ overflowX: 'auto' }}>
       <div class=" fr-table fr-m-0">
@@ -66,6 +68,7 @@ export const EtapeDocuments: FunctionalComponent<Props> = props => {
           <thead>
             <tr>
               <th scope="col">Nom</th>
+              {hasEntrepriseDocumentsWithDescription.value ? <th>Description</th> : null}
               {isSuper(props.user) || isAdministration(props.user) ? <th scope="col">Visibilité</th> : null}
             </tr>
           </thead>
@@ -75,6 +78,7 @@ export const EtapeDocuments: FunctionalComponent<Props> = props => {
                 <td>
                   <EtapeDocumentLink documentId={item.id} documentTypeId={item.etape_document_type_id} description={item.description} />
                 </td>
+                {hasEntrepriseDocumentsWithDescription.value ? <td></td> : null}
                 {isSuper(props.user) || isAdministration(props.user) ? <td>{getVisibilityLabel(item)}</td> : null}
               </tr>
             ))}
@@ -87,7 +91,7 @@ export const EtapeDocuments: FunctionalComponent<Props> = props => {
                     label={`${entreprisesIndex[item.entreprise_id] ?? ''} - ${DocumentsTypes[item.entreprise_document_type_id].nom} - (${item.date})`}
                   />
                 </td>
-                <td style={{ whiteSpace: 'pre-line' }}>{item.description}</td>
+                {hasEntrepriseDocumentsWithDescription.value ? <td style={{ whiteSpace: 'pre-line' }}>{item.description}</td> : null}
                 {isSuper(props.user) || isAdministration(props.user) ? <td>Visible seulement par les entreprises titulaires</td> : null}
               </tr>
             ))}

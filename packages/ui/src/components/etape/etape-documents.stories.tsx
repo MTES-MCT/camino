@@ -91,6 +91,14 @@ export const UserSuper: StoryFn = () => <EtapeDocuments etapeDocuments={document
 export const UserAdministration: StoryFn = () => (
   <EtapeDocuments etapeDocuments={documents} entrepriseDocuments={entrepriseDocuments} entreprises={entreprises} user={{ ...testBlankUser, role: 'admin', administrationId: 'aut-mrae-guyane-01' }} />
 )
+export const UserAdministrationWithoutDesc: StoryFn = () => (
+  <EtapeDocuments
+    etapeDocuments={documents}
+    entrepriseDocuments={entrepriseDocuments.map(e => ({ ...e, description: null }))}
+    entreprises={entreprises}
+    user={{ ...testBlankUser, role: 'admin', administrationId: 'aut-mrae-guyane-01' }}
+  />
+)
 export const UserEntreprise: StoryFn = () => (
   <EtapeDocuments
     etapeDocuments={documents}
