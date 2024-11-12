@@ -1,6 +1,6 @@
 import { CaminoDate, toCaminoDate } from 'camino-common/src/date'
 import { DemarcheId } from 'camino-common/src/demarche'
-import { EtapeId } from 'camino-common/src/etape'
+import { EtapeBrouillon, EtapeId } from 'camino-common/src/etape'
 import { EtapeTypeId, canBeBrouillon } from 'camino-common/src/static/etapesTypes'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
@@ -11,7 +11,8 @@ import { newDemarcheId, newEtapeId, newTitreId } from '../../database/models/_fo
 export async function etapeCreate(
   typeId?: EtapeTypeId,
   date: CaminoDate = toCaminoDate('2018-01-01'),
-  titreTypeId: TitreTypeId = 'arm'
+  titreTypeId: TitreTypeId = 'arm',
+  isBrouillon?: EtapeBrouillon
 ): Promise<{
   titreDemarcheId: DemarcheId
   titreEtapeId: EtapeId
@@ -41,7 +42,7 @@ export async function etapeCreate(
             ordre: 1,
             titreDemarcheId: demarcheId,
             date,
-            isBrouillon: canBeBrouillon(myTypeId),
+            isBrouillon: isNotNullNorUndefined(isBrouillon) ? isBrouillon : canBeBrouillon(myTypeId),
           },
         ],
       },

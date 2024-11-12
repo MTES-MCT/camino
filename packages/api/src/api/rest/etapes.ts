@@ -385,7 +385,7 @@ const getFlattenEtape = async (
     etape.geojsonOrigineGeoSystemeId,
     etape.geojsonOrigineForages
   )
-  const titreEtapeHeritage = titreEtapeHeritageBuild(etape.date, etape.typeId, demarche, titreTypeId, demarche.typeId, null)
+  const titreEtapeHeritage = titreEtapeHeritageBuild(etape.date, etape.typeId, demarche, titreTypeId, demarche.typeId, 'id' in etape ? etape.id : null)
 
   const heritageProps = ETAPE_HERITAGE_PROPS.reduce<IHeritageProps>((acc, propId) => {
     acc[propId] = {

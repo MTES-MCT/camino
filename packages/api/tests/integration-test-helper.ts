@@ -1,3 +1,4 @@
+import { FeatureMultiPolygon } from 'camino-common/src/perimetre'
 import Titres from '../src/database/models/titres'
 import TitresDemarches from '../src/database/models/titres-demarches'
 import TitresEtapes from '../src/database/models/titres-etapes'
@@ -18,4 +19,23 @@ export const insertTitreGraph = async (titreGraph: ITitreInsert): Promise<void> 
       await TitresEtapes.query().insert({ etapeFondamentaleId: etape.id, ...etape })
     }
   }
+}
+
+export const multiPolygonWith4Points: FeatureMultiPolygon = {
+  type: 'Feature',
+  properties: {},
+  geometry: {
+    type: 'MultiPolygon',
+    coordinates: [
+      [
+        [
+          [-53.16822754488772, 5.02935254143807],
+          [-53.15913163720232, 5.029382753429523],
+          [-53.15910186841349, 5.020342601941031],
+          [-53.168197650929095, 5.02031244452273],
+          [-53.16822754488772, 5.02935254143807],
+        ],
+      ],
+    ],
+  },
 }

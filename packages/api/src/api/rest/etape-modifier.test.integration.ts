@@ -8,16 +8,18 @@ import { caminoDateValidator, toCaminoDate } from 'camino-common/src/date'
 import { afterAll, beforeEach, beforeAll, describe, test, expect, vi } from 'vitest'
 import type { Pool } from 'pg'
 import { ETAPE_HERITAGE_PROPS, EtapeHeritageProps } from 'camino-common/src/heritage'
-import { idGenerate } from '../../database/models/_format/id-create'
+import { idGenerate, newDemarcheId, newEtapeId, newTitreId } from '../../database/models/_format/id-create'
 import { copyFileSync, mkdirSync } from 'fs'
-import { TempEtapeDocument } from 'camino-common/src/etape'
+import { ETAPE_IS_NOT_BROUILLON, TempEtapeDocument } from 'camino-common/src/etape'
 import { tempDocumentNameValidator } from 'camino-common/src/document'
 import { HTTP_STATUS } from 'camino-common/src/http'
 import { Knex } from 'knex'
 import { testDocumentCreateTemp } from '../../../tests/_utils/administrations-permissions'
 import { RestEtapeCreation, RestEtapeModification } from 'camino-common/src/etape-form'
-import { EntrepriseId } from 'camino-common/src/entreprise'
+import { EntrepriseId, entrepriseIdValidator } from 'camino-common/src/entreprise'
 import { etapeCreate } from './rest-test-utils'
+import { insertTitreGraph, ITitreInsert, multiPolygonWith4Points } from '../../../tests/integration-test-helper'
+import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes'
 
 vi.mock('../../tools/dir-create', () => ({
   __esModule: true,
@@ -59,6 +61,115 @@ describe('etapeModifier', () => {
     } as unknown as RestEtapeModification)
 
     expect(result.statusCode).toBe(HTTP_STATUS.BAD_REQUEST)
+  })
+
+  test("peut modifier une étape fondamentale avec de l'héritage (utilisateur super)", async () => {
+    const mfrId = newEtapeId('titre-id-demarche-id-mfr')
+    const rcoId = newEtapeId('titre-id-demarche-id-rco')
+    const demarcheId = newDemarcheId('titre-id-demarche-id')
+    const titreEtapesPubliques: ITitreInsert = {
+      id: newTitreId('titre-id'),
+      nom: 'mon titre',
+      typeId: 'cxw',
+      titreStatutId: 'ind',
+      publicLecture: true,
+      propsTitreEtapesIds: {},
+      demarches: [
+        {
+          id: demarcheId,
+          titreId: newTitreId('titre-id'),
+          typeId: 'oct',
+          statutId: 'acc',
+          publicLecture: true,
+          etapes: [
+            {
+              id: mfrId,
+              typeId: 'mfr',
+              ordre: 0,
+              titreDemarcheId: demarcheId,
+              statutId: 'acc',
+              date: toCaminoDate('2020-02-02'),
+              administrationsLocales: ['dea-guyane-01'],
+              isBrouillon: ETAPE_IS_NOT_BROUILLON,
+              substances: ['auru'],
+              titulaireIds: [entrepriseIdValidator.parse('entrepriseId')],
+              geojson4326Perimetre: multiPolygonWith4Points,
+              geojsonOriginePerimetre: multiPolygonWith4Points,
+              geojsonOrigineGeoSystemeId: '4326',
+              duree: 12,
+            },
+            {
+              id: newEtapeId('titre-id-enregistrement'),
+              date: toCaminoDate('2020-02-02'),
+              isBrouillon: ETAPE_IS_NOT_BROUILLON,
+              titreDemarcheId: demarcheId,
+              typeId: ETAPES_TYPES.enregistrementDeLaDemande,
+              statutId: 'fai',
+            },
+            {
+              id: rcoId,
+              typeId: 'rco',
+              ordre: 0,
+              titreDemarcheId: demarcheId,
+              statutId: 'fai',
+              date: toCaminoDate('2020-02-02'),
+              administrationsLocales: ['dea-guyane-01'],
+              isBrouillon: ETAPE_IS_NOT_BROUILLON,
+              duree: null,
+              heritageProps: {
+                duree: { actif: false },
+                amodiataires: { actif: true, etapeId: mfrId },
+                dateDebut: { actif: true, etapeId: mfrId },
+                dateFin: { actif: true, etapeId: mfrId },
+                perimetre: { actif: true, etapeId: mfrId },
+                substances: { actif: true, etapeId: mfrId },
+                titulaires: { actif: true, etapeId: mfrId },
+              },
+            },
+          ],
+        },
+      ],
+    }
+    await insertTitreGraph(titreEtapesPubliques)
+    const result = await restPutCall(dbPool, '/rest/etapes', {}, userSuper, {
+      id: rcoId,
+      typeId: 'rco',
+      statutId: 'fai',
+      titreDemarcheId: demarcheId,
+      date: caminoDateValidator.parse('2020-02-02'),
+      duree: null,
+      dateDebut: null,
+      dateFin: null,
+      substances: [],
+      geojson4326Perimetre: null,
+      geojsonOriginePerimetre: null,
+      geojson4326Points: null,
+      geojsonOriginePoints: null,
+      geojsonOrigineForages: null,
+      geojsonOrigineGeoSystemeId: null,
+      titulaireIds: [],
+      amodiataireIds: [],
+      note: { valeur: '', is_avertissement: false },
+      etapeAvis: [],
+      entrepriseDocumentIds: [],
+      heritageProps: {
+        ...ETAPE_HERITAGE_PROPS.reduce(
+          (acc, prop) => {
+            acc[prop] = { actif: true }
+
+            return acc
+          },
+          {} as {
+            [key in EtapeHeritageProps]: { actif: boolean }
+          }
+        ),
+        duree: { actif: true },
+      },
+      heritageContenu: {},
+      contenu: {},
+      etapeDocuments: [],
+    })
+    expect(result.statusCode, JSON.stringify(result.body)).toBe(HTTP_STATUS.OK)
   })
 
   test('peut modifier une étape mfr en brouillon (utilisateur super)', async () => {
