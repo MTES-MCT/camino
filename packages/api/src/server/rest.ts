@@ -178,7 +178,7 @@ const restRouteImplementations: Readonly<{ [key in CaminoRestRoute]: Transform<k
   '/rest/demarches/:demarcheId/miseEnConcurrence': { newGetCall: getDemarchesEnConcurrence, ...CaminoRestRoutes['/rest/demarches/:demarcheId/miseEnConcurrence'] },
   '/rest/demarches/:demarcheId/resultatMiseEnConcurrence': { newGetCall: getResultatEnConcurrence, ...CaminoRestRoutes['/rest/demarches/:demarcheId/resultatMiseEnConcurrence'] },
   '/rest/utilisateurs/registerToNewsletter': { newGetCall: registerToNewsletter, ...CaminoRestRoutes['/rest/utilisateurs/registerToNewsletter'] },
-  '/rest/utilisateur/generateQgisToken': { postCall: generateQgisToken, ...CaminoRestRoutes['/rest/utilisateur/generateQgisToken'] },
+  '/rest/utilisateur/generateQgisToken': { newPostCall: generateQgisToken, ...CaminoRestRoutes['/rest/utilisateur/generateQgisToken'] },
   '/rest/utilisateurs/:id/permission': { postCall: updateUtilisateurPermission, ...CaminoRestRoutes['/rest/utilisateurs/:id/permission'] },
   '/rest/utilisateurs/:id/delete': { getCall: deleteUtilisateur, ...CaminoRestRoutes['/rest/utilisateurs/:id/delete'] },
   '/rest/utilisateurs/:id/newsletter': { getCall: isSubscribedToNewsletter, postCall: manageNewsletterSubscription, ...CaminoRestRoutes['/rest/utilisateurs/:id/newsletter'] }, // UNTESTED YET

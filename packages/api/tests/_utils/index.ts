@@ -89,9 +89,7 @@ export const restPostCall = async <Route extends PostRestRoutes>(
   user: TestUser | undefined,
   body: DeepReadonly<z.infer<(typeof CaminoRestRoutes)[Route]['post']['input']>>
 ): Promise<request.Test> => {
-  const req = request(app(pool))
-    .post(getRestRoute(caminoRestRoute, params))
-    .send(body ?? undefined)
+  const req = request(app(pool)).post(getRestRoute(caminoRestRoute, params)).send(body)
 
   return jwtSet(pool, req, user)
 }

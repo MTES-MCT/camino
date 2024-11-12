@@ -6,17 +6,15 @@ import { User, UserNotNull, utilisateurIdValidator } from 'camino-common/src/rol
 import { utilisateursFormatTable } from './format/utilisateurs'
 import { tableConvert } from './_convert'
 import { fileNameCreate } from '../../tools/file-name-create'
-import { newsletterAbonnementValidator, QGISToken, utilisateursSearchParamsValidator, UtilisateursTable, utilisateurToEdit } from 'camino-common/src/utilisateur'
-import { knex } from '../../knex'
+import { newsletterAbonnementValidator, QGISTokenRest, qgisTokenValidator, utilisateursSearchParamsValidator, UtilisateursTable, utilisateurToEdit } from 'camino-common/src/utilisateur'
 import { idGenerate } from '../../database/models/_format/id-create'
-import bcrypt from 'bcryptjs'
 import { utilisateurUpdationValidate } from '../../business/validations/utilisateur-updation-validate'
 import { canDeleteUtilisateur } from 'camino-common/src/permissions/utilisateurs'
 import { Pool } from 'pg'
 import { DeepReadonly, isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools'
 import { config } from '../../config/index'
 import { Effect, Match, pipe } from 'effect'
-import { RestNewGetCall } from '../../server/rest'
+import { RestNewGetCall, RestNewPostCall } from '../../server/rest'
 import {
   getKeycloakIdByUserId,
   getUtilisateurById,
@@ -26,11 +24,12 @@ import {
   softDeleteUtilisateur,
   updateUtilisateurRole,
 } from '../../database/queries/utilisateurs.queries'
-import { DbQueryAccessError } from '../../pg-database'
-import { callAndExit, ZodUnparseable } from '../../tools/fp-tools'
+import { DbQueryAccessError, EffectDbQueryAndValidateErrors } from '../../pg-database'
+import { callAndExit, zodParseEffect, ZodUnparseable } from '../../tools/fp-tools'
 import { z } from 'zod'
 import { getEntreprises } from './entreprises.queries'
 import { fetch } from 'undici'
+import { updateQgisToken } from './utilisateurs.queries'
 
 export const isSubscribedToNewsletter =
   (pool: Pool) =>
@@ -207,21 +206,18 @@ export const manageNewsletterSubscription =
     }
   }
 
-export const generateQgisToken =
-  (_pool: Pool) =>
-  async (req: CaminoRequest, res: CustomResponse<QGISToken>): Promise<void> => {
-    const user = req.auth
-
-    if (!user) {
-      res.sendStatus(HTTP_STATUS.FORBIDDEN)
-    } else {
-      const token = idGenerate()
-      await knex('utilisateurs')
-        .update({ qgis_token: bcrypt.hashSync(token, 10) })
-        .where('email', user.email)
-      res.send({ token, url: `https://${user.email.replace('@', '%40')}:${token}@${config().API_HOST}/titres_qgis` })
-    }
-  }
+export const generateQgisToken: RestNewPostCall<'/rest/utilisateur/generateQgisToken'> = ({ pool, user }): Effect.Effect<QGISTokenRest, CaminoApiError<EffectDbQueryAndValidateErrors>> =>
+  pipe(
+    zodParseEffect(qgisTokenValidator, idGenerate()),
+    Effect.tap(token => updateQgisToken(pool, user, token)),
+    Effect.map(token => ({ token, url: `https://${user.email.replace('@', '%40')}:${token}@${config().API_HOST}/titres_qgis` })),
+    Effect.mapError(caminoError =>
+      Match.value(caminoError.message).pipe(
+        Match.whenOr("Impossible d'accéder à la base de données", 'Problème de validation de données', () => ({ ...caminoError, status: HTTP_STATUS.INTERNAL_SERVER_ERROR })),
+        Match.exhaustive
+      )
+    )
+  )
 
 export const registerToNewsletter: RestNewGetCall<'/rest/utilisateurs/registerToNewsletter'> = ({
   searchParams,

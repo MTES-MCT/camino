@@ -1,6 +1,6 @@
-import { QGISToken, UtilisateurToEdit, UtilisateursSearchParamsInput, UtilisateursTable } from 'camino-common/src/utilisateur'
+import { QGISTokenRest, UtilisateurToEdit, UtilisateursSearchParamsInput, UtilisateursTable } from 'camino-common/src/utilisateur'
 
-import { getWithJson, newGetWithJson, postWithJson } from '../../api/client-rest'
+import { getWithJson, newGetWithJson, newPostWithJson, postWithJson } from '../../api/client-rest'
 import { UserNotNull, UtilisateurId } from 'camino-common/src/roles'
 import { CaminoError } from 'camino-common/src/zod-tools'
 
@@ -11,7 +11,7 @@ export interface UtilisateurApiClient {
   registerToNewsletter: (email: string) => Promise<void>
   removeUtilisateur: (userId: UtilisateurId) => Promise<void>
   updateUtilisateur: (user: UtilisateurToEdit) => Promise<void>
-  getQGISToken: () => Promise<QGISToken>
+  getQGISToken: () => Promise<CaminoError<string> | QGISTokenRest>
   getUtilisateurs: (params: UtilisateursSearchParamsInput) => Promise<CaminoError<string> | UtilisateursTable>
 }
 
@@ -31,5 +31,5 @@ export const utilisateurApiClient: UtilisateurApiClient = {
   },
   removeUtilisateur: async (userId: UtilisateurId) => getWithJson('/rest/utilisateurs/:id/delete', { id: userId }),
   updateUtilisateur: async (utilisateur: UtilisateurToEdit) => postWithJson('/rest/utilisateurs/:id/permission', { id: utilisateur.id }, utilisateur),
-  getQGISToken: async () => postWithJson('/rest/utilisateur/generateQgisToken', {}, undefined),
+  getQGISToken: async () => newPostWithJson('/rest/utilisateur/generateQgisToken', {}, {}),
 }

@@ -18,7 +18,7 @@ import {
   getDemarcheMiseEnConcurrenceValidator,
   getResultatMiseEnConcurrenceValidator,
 } from './demarche'
-import { newsletterAbonnementValidator, newsletterRegistrationValidator, qgisTokenValidator, utilisateurToEdit, utilisateursSearchParamsValidator, utilisateursTableValidator } from './utilisateur'
+import { newsletterAbonnementValidator, newsletterRegistrationValidator, qgisTokenRestValidator, utilisateurToEdit, utilisateursSearchParamsValidator, utilisateursTableValidator } from './utilisateur'
 import {
   editableTitreValidator,
   getDemarcheByIdOrSlugValidator,
@@ -202,7 +202,7 @@ export const CaminoRestRoutes = {
     params: administrationIdParamsValidator,
     newPost: { input: administrationActiviteTypeEmailValidator, output: z.boolean() },
   },
-  '/rest/utilisateur/generateQgisToken': { params: noParamsValidator, post: { input: z.void(), output: qgisTokenValidator } },
+  '/rest/utilisateur/generateQgisToken': { params: noParamsValidator, newPost: { input: noParamsValidator, output: qgisTokenRestValidator } },
   '/rest/etapesTypes/:demarcheId/:date': {
     params: z.object({ demarcheId: demarcheIdValidator, date: caminoDateValidator }),
     newGet: { output: etapeTypeEtapeStatutWithMainStepValidator, searchParams: z.object({ etapeId: etapeIdValidator.optional() }) },

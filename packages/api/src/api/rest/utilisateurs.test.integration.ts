@@ -1,4 +1,4 @@
-import { restCall, restNewCall, restPostCall, userGenerate } from '../../../tests/_utils/index'
+import { restCall, restNewCall, restNewPostCall, restPostCall, userGenerate } from '../../../tests/_utils/index'
 import { dbManager } from '../../../tests/db-manager'
 import { Knex } from 'knex'
 import { expect, test, describe, afterAll, beforeAll, vi, beforeEach } from 'vitest'
@@ -146,8 +146,8 @@ describe('utilisateurSupprimer', () => {
 
 describe('generateQgisToken', () => {
   test('génère un token Qgis', async () => {
-    const tested = await restPostCall(dbPool, '/rest/utilisateur/generateQgisToken', {}, userSuper, undefined)
-    expect(tested.statusCode).toBe(200)
+    const tested = await restNewPostCall(dbPool, '/rest/utilisateur/generateQgisToken', {}, userSuper, {})
+    expect(tested.statusCode, JSON.stringify(tested.body)).toBe(200)
   })
 })
 

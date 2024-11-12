@@ -1,25 +1,31 @@
 import { AsyncData } from '@/api/client-rest'
-import { QGISToken } from 'camino-common/src/utilisateur'
+import { QGISTokenRest } from 'camino-common/src/utilisateur'
 import { defineComponent, ref } from 'vue'
 import { LoadingElement } from '../_ui/functional-loader'
 import { UtilisateurApiClient } from './utilisateur-api-client'
 import { DsfrButton } from '../_ui/dsfr-button'
 import { Alert } from '../_ui/alert'
+import { isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
 
 interface Props {
   apiClient: Pick<UtilisateurApiClient, 'getQGISToken'>
 }
 
 export const QGisToken = defineComponent<Props>(props => {
-  const data = ref<AsyncData<QGISToken> | null>(null)
+  const data = ref<AsyncData<QGISTokenRest> | null>(null)
   const alertMessage = ref<string>('')
 
   const generateToken = async () => {
     data.value = { status: 'LOADING' }
     try {
       const tokenData = await props.apiClient.getQGISToken()
-      data.value = { status: 'LOADED', value: tokenData }
-      if (tokenData.url) {
+      if ('message' in tokenData) {
+        data.value = {
+          status: 'NEW_ERROR',
+          error: tokenData,
+        }
+      } else if (tokenData.url) {
+        data.value = { status: 'LOADED', value: tokenData }
         copyToClipboard(`L'URL vient d'être copiée dans votre presse papier`, tokenData.url)
       }
     } catch (e: any) {
@@ -43,7 +49,7 @@ export const QGisToken = defineComponent<Props>(props => {
           data={data.value}
           renderItem={item => (
             <>
-              {item.token ? (
+              {isNotNullNorUndefinedNorEmpty(item.token) ? (
                 <>
                   <div>
                     Voici l'URL à utiliser dans QGis :{' '}

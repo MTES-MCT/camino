@@ -4,6 +4,7 @@ import { newEntrepriseId } from 'camino-common/src/entreprise'
 import { testBlankUser } from 'camino-common/src/tests-utils'
 import { PureUtilisateur, Props } from './utilisateur'
 import { toUtilisateurId, utilisateurIdValidator } from 'camino-common/src/roles'
+import { qgisTokenValidator } from 'camino-common/src/utilisateur'
 
 const meta: Meta<typeof PureUtilisateur> = {
   title: 'Components/Utilisateur',
@@ -45,7 +46,7 @@ const apiClientMock: Props['apiClient'] = {
 
     return Promise.resolve()
   },
-  getQGISToken: () => new Promise(resolve => setTimeout(() => resolve({ token: 'token123', url: 'https://google.fr' }), 1000)),
+  getQGISToken: () => new Promise(resolve => setTimeout(() => resolve({ token: qgisTokenValidator.parse('token123'), url: 'https://google.fr' }), 1000)),
 }
 
 export const MySelf: StoryFn = () => (

@@ -3,8 +3,11 @@ import { AdministrationId, administrationIdValidator, IDS } from './static/admin
 import { z } from 'zod'
 import { entrepriseIdValidator } from './entreprise'
 
-export const qgisTokenValidator = z.object({ token: z.string(), url: z.string() })
+export const qgisTokenValidator = z.string().brand('QGIS_TOKEN')
 export type QGISToken = z.infer<typeof qgisTokenValidator>
+
+export const qgisTokenRestValidator = z.object({ token: qgisTokenValidator, url: z.string() })
+export type QGISTokenRest = z.infer<typeof qgisTokenRestValidator>
 
 export const utilisateurToEdit = z.object({
   id: utilisateurIdValidator,
