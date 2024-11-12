@@ -11,7 +11,7 @@ type Props<T extends string> = {
   valueChanged: (value: T) => void
   initialValue?: T | null
   size?: 'sm' | 'md'
-  elements: { itemId: T; legend: { main: string; description?: string } }[]
+  elements: { itemId: T; legend: { main: string; description?: string }; disabled?: boolean }[]
 }
 
 export const DsfrInputRadio = defineComponent(<T extends string>(props: Props<T>) => {
@@ -41,7 +41,7 @@ export const DsfrInputRadio = defineComponent(<T extends string>(props: Props<T>
       {props.elements.map((element, index) => (
         <div key={element.itemId} class={['fr-fieldset__element', props.orientation === 'horizontal' ? 'fr-fieldset__element--inline' : null, props.size === 'sm' ? 'fr-mb-1v' : null]}>
           <div class={['fr-radio-group', props.size === 'sm' ? 'fr-radio-group--sm' : null]}>
-            <input type="radio" id={`${id}-${index}`} checked={props.initialValue === element.itemId} name={id} onChange={onChangeRadio(element.itemId)} />
+            <input disabled={element.disabled ?? false} type="radio" id={`${id}-${index}`} checked={props.initialValue === element.itemId} name={id} onChange={onChangeRadio(element.itemId)} />
             <label class="fr-label" for={`${id}-${index}`}>
               {element.legend.main}
               {isNotNullNorUndefined(element.legend.description) && element.legend.description !== '' ? <span class="fr-hint-text">{element.legend.description}</span> : null}

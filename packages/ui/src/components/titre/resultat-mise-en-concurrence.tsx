@@ -8,7 +8,7 @@ import { DsfrPerimetre, TabId } from '../_common/dsfr-perimetre'
 import { DsfrInput } from '../_ui/dsfr-input'
 import { Entreprise, EntrepriseId } from 'camino-common/src/entreprise'
 import { KM2 } from 'camino-common/src/number'
-import { FeatureMultiPolygon, FeatureCollectionPoints, FeatureCollectionForages } from 'camino-common/src/perimetre'
+import { FeatureMultiPolygon, FeatureCollectionPoints, FeatureCollectionForages, equalGeojson } from 'camino-common/src/perimetre'
 import { GEO_SYSTEME_IDS, GeoSystemeId } from 'camino-common/src/static/geoSystemes'
 import { Alert } from '../_ui/alert'
 import { ETAPES_TYPES, EtapesTypes } from 'camino-common/src/static/etapesTypes'
@@ -26,7 +26,8 @@ export type Props = {
   entreprises: Entreprise[]
   initDate?: CaminoDate
   initDecision?: 'acc' | 'rej'
-} & DeepReadonly<GetResultatMiseEnConcurrence>
+  pivot: DeepReadonly<GetResultatMiseEnConcurrence>
+}
 
 export const ResultatMiseEnConcurrence = defineComponent<Props>(props => {
   const [decision, setDecision] = useState<'acc' | 'rej' | null>(props.initDecision ?? null)
@@ -181,9 +182,13 @@ export const ResultatMiseEnConcurrence = defineComponent<Props>(props => {
                     legend={{ main: 'Quel périmètre acceptez-vous ?' }}
                     elements={[
                       { itemId: 'origin', legend: { main: 'Celui de la demande' } },
-                      ...(isNotNullNorUndefined(props.pivot.perimetreSansSatellite.geojson4326_perimetre)
-                        ? [{ itemId: 'origin_without_satellite' as const, legend: { main: 'Celui de la demande en excluant celui des concurrents' } }]
-                        : []),
+                      {
+                        itemId: 'origin_without_satellite',
+                        legend: { main: 'Celui de la demande en excluant celui des concurrents' },
+                        disabled:
+                          isNullOrUndefined(props.pivot.perimetreSansSatellite.geojson4326_perimetre) ||
+                          equalGeojson(props.pivot.perimetreTotal.geojson4326_perimetre.geometry, props.pivot.perimetreSansSatellite.geojson4326_perimetre.geometry),
+                      },
                       { itemId: 'custom', legend: { main: 'Personnalisé' } },
                     ]}
                     valueChanged={setUpdatePerimetre}
@@ -237,4 +242,4 @@ export const ResultatMiseEnConcurrence = defineComponent<Props>(props => {
 })
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-ResultatMiseEnConcurrence.props = ['initTab', 'pivot', 'satellites', 'entreprises', 'apiClient', 'initDate', 'initDecision']
+ResultatMiseEnConcurrence.props = ['initTab', 'pivot', 'entreprises', 'apiClient', 'initDate', 'initDecision']

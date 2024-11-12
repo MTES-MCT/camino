@@ -54,6 +54,28 @@ const perimetre: Props['pivot']['perimetreTotal'] = {
   surface: km2Validator.parse(5),
 }
 
+const perimetreSatellite: Props['pivot']['perimetreSansSatellite'] = {
+  geojson4326_perimetre: {
+    type: 'Feature',
+    properties: {},
+    geometry: {
+      type: 'MultiPolygon',
+      coordinates: [
+        [
+          [
+            [-53, 4.23944263425535],
+            [-52.5591878553913, 4.22269896902571],
+            [-52.5550566725882, 4.22438936251509],
+            [-52.5619271168799, 4.24113309117193],
+            [-53, 4.23944263425535],
+          ],
+        ],
+      ],
+    },
+  },
+  surface: km2Validator.parse(5),
+}
+
 export const Default: StoryFn = () => (
   <ResultatMiseEnConcurrence
     initTab="carte"
@@ -77,20 +99,9 @@ export const Default: StoryFn = () => (
       titreSlug: titreSlugValidator.parse('titrePivotSlug'),
       titreTypeId: TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX,
       titulaireId: entrepriseId1,
-      perimetreSansSatellite: perimetre,
+      perimetreSansSatellite: perimetreSatellite,
       perimetreTotal: perimetre,
     }}
-    satellites={[
-      {
-        demarcheId: demarcheIdValidator.parse('idSatellite'),
-        demarcheTypeId: 'oct',
-        titreNom: 'Satellite',
-        titreSlug: titreSlugValidator.parse('titreSatelliteSlug'),
-        titreTypeId: TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX,
-        titulaireId: entrepriseId2,
-        perimetreEnCommun: perimetre,
-      },
-    ]}
   />
 )
 
@@ -118,17 +129,6 @@ export const Loading: StoryFn = () => (
       perimetreSansSatellite: perimetre,
       perimetreTotal: perimetre,
     }}
-    satellites={[
-      {
-        demarcheId: demarcheIdValidator.parse('idSatellite'),
-        demarcheTypeId: 'oct',
-        titreNom: 'Satellite',
-        titreSlug: titreSlugValidator.parse('titreSatelliteSlug'),
-        titreTypeId: TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX,
-        titulaireId: entrepriseId2,
-        perimetreEnCommun: perimetre,
-      },
-    ]}
   />
 )
 
@@ -156,21 +156,10 @@ export const WithError: StoryFn = () => (
       perimetreSansSatellite: perimetre,
       perimetreTotal: perimetre,
     }}
-    satellites={[
-      {
-        demarcheId: demarcheIdValidator.parse('idSatellite'),
-        demarcheTypeId: 'oct',
-        titreNom: 'Satellite',
-        titreSlug: titreSlugValidator.parse('titreSatelliteSlug'),
-        titreTypeId: TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX,
-        titulaireId: entrepriseId2,
-        perimetreEnCommun: perimetre,
-      },
-    ]}
   />
 )
 
-export const PerimetreSansSatelliteVide: StoryFn = () => (
+export const PerimetreSansSatellite: StoryFn = () => (
   <ResultatMiseEnConcurrence
     initTab="carte"
     initDate={toCaminoDate('2024-10-16')}
@@ -196,16 +185,34 @@ export const PerimetreSansSatelliteVide: StoryFn = () => (
       perimetreSansSatellite: { geojson4326_perimetre: null, surface: km2Validator.parse(0) },
       perimetreTotal: perimetre,
     }}
-    satellites={[
-      {
-        demarcheId: demarcheIdValidator.parse('idSatellite'),
-        demarcheTypeId: 'oct',
-        titreNom: 'Satellite',
-        titreSlug: titreSlugValidator.parse('titreSatelliteSlug'),
-        titreTypeId: TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX,
-        titulaireId: entrepriseId2,
-        perimetreEnCommun: perimetre,
+  />
+)
+
+export const PerimetreAvecSatelliteEquivalent: StoryFn = () => (
+  <ResultatMiseEnConcurrence
+    initTab="carte"
+    initDate={toCaminoDate('2024-10-16')}
+    initDecision="acc"
+    entreprises={entreprises}
+    apiClient={{
+      getEtapesTypesEtapesStatuts(titreDemarcheId, titreEtapeId, date) {
+        getEtapesTypesEtapesStatutsAction(titreDemarcheId, titreEtapeId, date)
+        return Promise.resolve({ [ETAPES_TYPES.resultatMiseEnConcurrence]: { etapeStatutIds: ['acc', 'rej'], mainStep: true } })
       },
-    ]}
+      etapeCreer(etape) {
+        etapeCreerAction(etape)
+        return new Promise(() => ({}))
+      },
+    }}
+    pivot={{
+      demarcheId,
+      demarcheTypeId: 'oct',
+      titreNom: 'Pivot',
+      titreSlug: titreSlugValidator.parse('titrePivotSlug'),
+      titreTypeId: TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX,
+      titulaireId: entrepriseId1,
+      perimetreSansSatellite: perimetre,
+      perimetreTotal: perimetre,
+    }}
   />
 )

@@ -266,27 +266,17 @@ export const getDemarchePivotEnConcurrence = (
         }),
         Effect.map(perimetreSansSatellite => {
           return {
-            pivot: {
-              ...pivot,
+            ...pivot,
 
-              titulaireId: pivot.titulaireIds[0],
-              perimetreTotal: {
-                geojson4326_perimetre: multipolygontoFeatureMultipolygon(pivot.perimetreTotalGeojson4326),
-                surface: pivot.perimetreTotalSurface,
-              },
-              perimetreSansSatellite: {
-                geojson4326_perimetre: isNotNullNorUndefined(perimetreSansSatellite.geojson_4326) ? multipolygontoFeatureMultipolygon(perimetreSansSatellite.geojson_4326) : null,
-                surface: perimetreSansSatellite.surface,
-              },
+            titulaireId: pivot.titulaireIds[0],
+            perimetreTotal: {
+              geojson4326_perimetre: multipolygontoFeatureMultipolygon(pivot.perimetreTotalGeojson4326),
+              surface: pivot.perimetreTotalSurface,
             },
-            satellites: satellites.map(satellite => ({
-              ...satellite,
-              titulaireId: satellite.titulaireIds[0],
-              perimetreEnCommun: {
-                geojson4326_perimetre: multipolygontoFeatureMultipolygon(satellite.perimetreEnCommun),
-                surface: m2toKm2(satellite.surfaceEnCommun),
-              },
-            })),
+            perimetreSansSatellite: {
+              geojson4326_perimetre: isNotNullNorUndefined(perimetreSansSatellite.geojson_4326) ? multipolygontoFeatureMultipolygon(perimetreSansSatellite.geojson_4326) : null,
+              surface: perimetreSansSatellite.surface,
+            },
           }
         })
       )

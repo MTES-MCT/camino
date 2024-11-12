@@ -58,7 +58,7 @@ const PureDemarcheResultatMiseEnConcurrence = defineComponent<Props>(props => {
               return value
             },
           }}
-          {...item}
+          pivot={item}
           entreprises={entreprises.value}
         />
       )}

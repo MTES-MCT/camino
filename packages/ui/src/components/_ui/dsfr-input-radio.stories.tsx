@@ -61,6 +61,19 @@ export const Disabled: StoryFn = () => (
     ]}
   />
 )
+export const OneElementDisabled: StoryFn = () => (
+  <DsfrInputRadio
+    id="input5"
+    disabled={false}
+    legend={{ main: 'Légende élément 2 désactivé' }}
+    valueChanged={valueChangedAction}
+    elements={[
+      { legend: { main: 'checkbox1', description: 'avec description' }, itemId: '1' },
+      { legend: { main: 'checkbox2' }, itemId: '2', disabled: true },
+      { legend: { main: 'checkbox3' }, itemId: '3' },
+    ]}
+  />
+)
 export const Required: StoryFn = () => (
   <DsfrInputRadio
     id="input6"

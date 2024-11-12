@@ -146,7 +146,7 @@ export type GeojsonImportForagesBody = z.infer<typeof geojsonImportForagesBodyVa
 export const geojsonImportForagesResponseValidator = z.object({ geojson4326: featureCollectionForagesValidator, origin: featureCollectionForagesValidator })
 export type GeojsonImportForagesResponse = z.infer<typeof geojsonImportForagesResponseValidator>
 
-const internalEqualGeojson = (geo1: MultiPolygon, geo2: MultiPolygon): boolean => {
+const internalEqualGeojson = (geo1: DeepReadonly<MultiPolygon>, geo2: DeepReadonly<MultiPolygon>): boolean => {
   return geo1.coordinates.every((level1, indexLevel1) => {
     return level1.every((level2, indexLevel2) => {
       return level2.every((level3, indexLevel3) => {
@@ -156,7 +156,7 @@ const internalEqualGeojson = (geo1: MultiPolygon, geo2: MultiPolygon): boolean =
   })
 }
 
-export const equalGeojson = (geo1: MultiPolygon | null, geo2: MultiPolygon | null | undefined): boolean => {
+export const equalGeojson = (geo1: DeepReadonly<MultiPolygon> | null, geo2: DeepReadonly<MultiPolygon> | null | undefined): boolean => {
   if (isNullOrUndefined(geo1) && isNullOrUndefined(geo2)) {
     return true
   }
