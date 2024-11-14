@@ -23,6 +23,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
       {
         ...ETES.demande.FAIT,
         paysId: 'FR',
+        consentement: 'non-applicable',
         concurrence: { amIFirst: true },
         hasTitreFrom: false,
       },
@@ -36,43 +37,49 @@ describe('vérifie l’arbre des procédures spécifique', () => {
     expect(service.getSnapshot().context.demarcheStatut).toBe(DemarchesStatutsIds.Rejete)
     expect(service.getSnapshot().context.visibilite).toBe('confidentielle')
   })
-  test('on peut notifier le demandeur apres une recevabilité favorable pour un PER ou une concession', () => {
+  test('après une recevabilité favorable pour un PER ou une concession on doit pouvoir faire une notification au demandeur et aussi mise en concurrence et consentement', () => {
     const { service, dateFin, machine } = setDateAndOrderAndInterpretMachine(psCxmOctMachine, '1999-04-14', [
-      { ...ETES.demande.FAIT, concurrence: { amIFirst: true }, paysId: 'FR', hasTitreFrom: false },
+      { ...ETES.demande.FAIT, consentement: 'à faire', concurrence: { amIFirst: true }, paysId: 'FR', hasTitreFrom: false },
       ETES.enregistrementDeLaDemande.FAIT,
       ETES.recevabiliteDeLaDemande.FAVORABLE,
       ETES.notificationAuDemandeur.FAIT,
     ])
-    expect(service).canOnlyTransitionTo({ machine, date: dateFin }, ['CLASSER_SANS_SUITE', 'DEMANDER_INFORMATION', 'DESISTER_PAR_LE_DEMANDEUR', 'FAIRE_MISE_EN_CONCURRENCE', 'NOTIFIER_DEMANDEUR'])
+    expect(service).canOnlyTransitionTo({ machine, date: dateFin }, [
+      'CLASSER_SANS_SUITE',
+      'DEMANDER_INFORMATION',
+      'DESISTER_PAR_LE_DEMANDEUR',
+      'FAIRE_MISE_EN_CONCURRENCE',
+      'FAIRE_DEMANDE_DE_CONSENTEMENT',
+    ])
   })
 
-  // FIXMACHINE pour le moment on ne peut pas écrire ce test
-  // test('on peut notifier le demandeur apres une recevabilité favorable pour un PER ou une concession qui n'est pas la première demande pour la mise en concurrence', () => {
-  //    const { service, dateFin, machine } = setDateAndOrderAndInterpretMachine(psCxmOctMachine, '1999-04-14', [
-  //      ETES.demande.FAIT,
-  //      ETES.enregistrementDeLaDemande.FAIT,
-  //      ETES.recevabiliteDeLaDemande.FAVORABLE,
-  //      ETES.notificationAuDemandeur.FAIT,
-  //    ])
-  //    expect(service).canOnlyTransitionTo({ machine, date: dateFin }, ['NOTIFIER_DEMANDEUR'])
-  //  })
+  test('on peut notifier le demandeur apres une recevabilité favorable pour une concession suite à un PER ', () => {
+    const { service, dateFin, machine } = setDateAndOrderAndInterpretMachine(psCxmOctMachine, '1999-04-14', [
+      { ...ETES.demande.FAIT, consentement: 'non-applicable', concurrence: { amIFirst: true }, paysId: 'FR', hasTitreFrom: true },
+      ETES.enregistrementDeLaDemande.FAIT,
+      ETES.recevabiliteDeLaDemande.FAVORABLE,
+      ETES.notificationAuDemandeur.FAIT,
+    ])
+    expect(service).canOnlyTransitionTo({ machine, date: dateFin }, ['CLASSER_SANS_SUITE', 'DEMANDER_INFORMATION', 'DESISTER_PAR_LE_DEMANDEUR', 'RENDRE_AVIS_CGE_IGEDD'])
+  })
   test('on ne peut plus rien faire pendant que la mise en concurrence est en cours', () => {
     const { service, dateFin, machine } = setDateAndOrderAndInterpretMachine(psCxmOctMachine, '1999-04-14', [
-      { ...ETES.demande.FAIT, concurrence: { amIFirst: true }, paysId: 'FR', hasTitreFrom: false },
+      { ...ETES.demande.FAIT, consentement: 'non-applicable', concurrence: { amIFirst: true }, paysId: 'FR', hasTitreFrom: false },
       ETES.enregistrementDeLaDemande.FAIT,
       ETES.recevabiliteDeLaDemande.FAVORABLE,
       ETES.avisDeMiseEnConcurrenceAuJORF.EN_COURS,
     ])
-    expect(service).canOnlyTransitionTo({ machine, date: dateFin }, ['CLASSER_SANS_SUITE', 'DEMANDER_INFORMATION', 'DESISTER_PAR_LE_DEMANDEUR'])
+    expect(service).canOnlyTransitionTo({ machine, date: dateFin }, ['CLASSER_SANS_SUITE', 'DEMANDER_INFORMATION', 'DESISTER_PAR_LE_DEMANDEUR', 'NOTIFIER_DEMANDEUR'])
   })
   test('on peut publier le résultat de la mise en concurrence, une fois celle-ci terminée', () => {
     const tree = getEventsTree(psCxmOctMachine, '1999-04-14', [
-      { ...ETES.demande.FAIT, concurrence: { amIFirst: true }, paysId: 'FR', hasTitreFrom: false },
+      { ...ETES.demande.FAIT, consentement: 'non-applicable', concurrence: { amIFirst: true }, paysId: 'FR', hasTitreFrom: false },
       ETES.enregistrementDeLaDemande.FAIT,
       ETES.recevabiliteDeLaDemande.FAVORABLE,
+      ETES.notificationAuDemandeur.FAIT,
       ETES.avisDeMiseEnConcurrenceAuJORF.TERMINE,
       ETES.resultatMiseEnConcurrence.ACCEPTE,
-      ETES.avisDuConseilGeneralDeLeconomie_CGE_.FAVORABLE,
+      ETES.avisDuConseilGeneralDeLeconomie_CGE_.FAIT,
       ETES.notificationAuDemandeur.FAIT,
       ETES.saisineDuPrefet.FAIT,
     ])
@@ -82,6 +89,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
         "FAIRE_DEMANDE                                (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,ENREGISTRER_DEMANDE]",
         "ENREGISTRER_DEMANDE                          (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_RECEVABILITE_DEFAVORABLE,FAIRE_RECEVABILITE_FAVORABLE]",
         "FAIRE_RECEVABILITE_FAVORABLE                 (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_MISE_EN_CONCURRENCE,NOTIFIER_DEMANDEUR]",
+        "NOTIFIER_DEMANDEUR                           (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_MISE_EN_CONCURRENCE]",
         "FAIRE_MISE_EN_CONCURRENCE                    (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,RENDRE_RESULTAT_MISE_EN_CONCURRENCE_ACCEPTEE,RENDRE_RESULTAT_MISE_EN_CONCURRENCE_REJETEE]",
         "RENDRE_RESULTAT_MISE_EN_CONCURRENCE_ACCEPTEE (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,RENDRE_AVIS_CGE_IGEDD]",
         "RENDRE_AVIS_CGE_IGEDD                        (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_DEMANDE_MODIFICATION_AES,NOTIFIER_DEMANDEUR]",
@@ -92,7 +100,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
   })
   test('on peut programmer une mise en concurrence', () => {
     const tree = getEventsTree(psCxmOctMachine, '1999-04-14', [
-      { ...ETES.demande.FAIT, concurrence: { amIFirst: true }, paysId: 'FR', hasTitreFrom: false },
+      { ...ETES.demande.FAIT, consentement: 'non-applicable', concurrence: { amIFirst: true }, paysId: 'FR', hasTitreFrom: false },
       ETES.enregistrementDeLaDemande.FAIT,
       ETES.recevabiliteDeLaDemande.FAVORABLE,
       ETES.avisDeMiseEnConcurrenceAuJORF.PROGRAMME,
@@ -103,14 +111,14 @@ describe('vérifie l’arbre des procédures spécifique', () => {
         "FAIRE_DEMANDE                (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,ENREGISTRER_DEMANDE]",
         "ENREGISTRER_DEMANDE          (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_RECEVABILITE_DEFAVORABLE,FAIRE_RECEVABILITE_FAVORABLE]",
         "FAIRE_RECEVABILITE_FAVORABLE (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_MISE_EN_CONCURRENCE,NOTIFIER_DEMANDEUR]",
-        "FAIRE_MISE_EN_CONCURRENCE    (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR]",
+        "FAIRE_MISE_EN_CONCURRENCE    (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,NOTIFIER_DEMANDEUR]",
       ]
     `)
   })
 
   test('on peut rejeter à la fin de la mise en concurrence', () => {
     const { service, dateFin, machine } = setDateAndOrderAndInterpretMachine(psCxmOctMachine, '1999-04-14', [
-      { ...ETES.demande.FAIT, concurrence: { amIFirst: true }, paysId: 'FR', hasTitreFrom: false },
+      { ...ETES.demande.FAIT, consentement: 'non-applicable', concurrence: { amIFirst: true }, paysId: 'FR', hasTitreFrom: false },
       ETES.enregistrementDeLaDemande.FAIT,
       ETES.recevabiliteDeLaDemande.FAVORABLE,
       ETES.avisDeMiseEnConcurrenceAuJORF.TERMINE,
@@ -124,6 +132,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
       setDateAndOrderAndInterpretMachine(psPccOctMachine, '1999-04-14', [
         {
           ...ETES.demande.FAIT,
+          consentement: 'non-applicable',
           concurrence: { amIFirst: true },
           paysId: 'FR',
           hasTitreFrom: false,
@@ -140,6 +149,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
     const { service, dateFin, machine } = setDateAndOrderAndInterpretMachine(psPrmProMachine, '1999-04-14', [
       {
         ...ETES.demande.FAIT,
+        consentement: 'non-applicable',
         concurrence: { amIFirst: true },
         paysId: 'FR',
         hasTitreFrom: false,
@@ -148,12 +158,12 @@ describe('vérifie l’arbre des procédures spécifique', () => {
       ETES.recevabiliteDeLaDemande.FAVORABLE,
     ])
 
-    expect(service).canOnlyTransitionTo({ machine, date: dateFin }, ['CLASSER_SANS_SUITE', 'DEMANDER_INFORMATION', 'DESISTER_PAR_LE_DEMANDEUR', 'RENDRE_AVIS_CGE_IGEDD'])
+    expect(service).canOnlyTransitionTo({ machine, date: dateFin }, ['CLASSER_SANS_SUITE', 'DEMANDER_INFORMATION', 'DESISTER_PAR_LE_DEMANDEUR', 'NOTIFIER_DEMANDEUR'])
     expect(service.getSnapshot().context.visibilite).toBe('confidentielle')
   })
   test('après la recevabilité favorable la démarche reste confidentielle si il y a une mise en concurrence', () => {
     const { service, dateFin, machine } = setDateAndOrderAndInterpretMachine(psCxmOctMachine, '1999-04-14', [
-      { ...ETES.demande.FAIT, concurrence: { amIFirst: true }, paysId: 'FR', hasTitreFrom: false },
+      { ...ETES.demande.FAIT, consentement: 'non-applicable', concurrence: { amIFirst: true }, paysId: 'FR', hasTitreFrom: false },
       ETES.enregistrementDeLaDemande.FAIT,
       ETES.recevabiliteDeLaDemande.FAVORABLE,
     ])
@@ -164,7 +174,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
 
   test('après la recevabilité la démarche devient publique si la démarche concurrente est visible', () => {
     const { service, dateFin, machine } = setDateAndOrderAndInterpretMachine(psCxmOctMachine, '1999-04-14', [
-      { ...ETES.demande.FAIT, concurrence: { amIFirst: false, demarcheConcurrenteVisibilite: 'publique' }, paysId: 'FR', hasTitreFrom: false },
+      { ...ETES.demande.FAIT, consentement: 'non-applicable', concurrence: { amIFirst: false, demarcheConcurrenteVisibilite: 'publique' }, paysId: 'FR', hasTitreFrom: false },
       ETES.enregistrementDeLaDemande.FAIT,
       ETES.recevabiliteDeLaDemande.FAVORABLE,
     ])
@@ -173,6 +183,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
       'CLASSER_SANS_SUITE',
       'DEMANDER_INFORMATION',
       'DESISTER_PAR_LE_DEMANDEUR',
+      'NOTIFIER_DEMANDEUR',
       'RENDRE_RESULTAT_MISE_EN_CONCURRENCE_ACCEPTEE',
       'RENDRE_RESULTAT_MISE_EN_CONCURRENCE_REJETEE',
     ])
@@ -181,7 +192,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
 
   test('après la recevabilité la démarche reste confidentielle si la démarche concurrente est confidentielle', () => {
     const { service, dateFin, machine } = setDateAndOrderAndInterpretMachine(psCxmOctMachine, '1999-04-14', [
-      { ...ETES.demande.FAIT, concurrence: { amIFirst: false, demarcheConcurrenteVisibilite: 'confidentielle' }, paysId: 'FR', hasTitreFrom: false },
+      { ...ETES.demande.FAIT, consentement: 'non-applicable', concurrence: { amIFirst: false, demarcheConcurrenteVisibilite: 'confidentielle' }, paysId: 'FR', hasTitreFrom: false },
       ETES.enregistrementDeLaDemande.FAIT,
       ETES.recevabiliteDeLaDemande.FAVORABLE,
     ])
@@ -190,6 +201,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
       'CLASSER_SANS_SUITE',
       'DEMANDER_INFORMATION',
       'DESISTER_PAR_LE_DEMANDEUR',
+      'NOTIFIER_DEMANDEUR',
       'RENDRE_RESULTAT_MISE_EN_CONCURRENCE_ACCEPTEE',
       'RENDRE_RESULTAT_MISE_EN_CONCURRENCE_REJETEE',
     ])
@@ -199,6 +211,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
     const { service, dateFin, machine } = setDateAndOrderAndInterpretMachine(psArmProMachine, '1999-04-14', [
       {
         ...ETES.demande.FAIT,
+        consentement: 'non-applicable',
         concurrence: { amIFirst: true },
         paysId: 'FR',
         hasTitreFrom: false,
@@ -219,6 +232,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
     const { service, dateFin, machine } = setDateAndOrderAndInterpretMachine(psCxmOctMachine, '1999-04-14', [
       {
         ...ETES.demande.FAIT,
+        consentement: 'non-applicable',
         concurrence: { amIFirst: true },
         paysId: 'FR',
         hasTitreFrom: true,
@@ -227,13 +241,14 @@ describe('vérifie l’arbre des procédures spécifique', () => {
       ETES.recevabiliteDeLaDemande.FAVORABLE,
     ])
 
-    expect(service).canOnlyTransitionTo({ machine, date: dateFin }, ['CLASSER_SANS_SUITE', 'DEMANDER_INFORMATION', 'DESISTER_PAR_LE_DEMANDEUR', 'RENDRE_AVIS_CGE_IGEDD'])
+    expect(service).canOnlyTransitionTo({ machine, date: dateFin }, ['CLASSER_SANS_SUITE', 'DEMANDER_INFORMATION', 'DESISTER_PAR_LE_DEMANDEUR', 'NOTIFIER_DEMANDEUR'])
   })
 
   test("doit faire une mise en concurrence si on n'a pas de titre from", () => {
     const { service, dateFin, machine } = setDateAndOrderAndInterpretMachine(psCxmOctMachine, '1999-04-14', [
       {
         ...ETES.demande.FAIT,
+        consentement: 'non-applicable',
         concurrence: { amIFirst: true },
         paysId: 'FR',
         hasTitreFrom: false,
@@ -248,6 +263,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
     const { service, dateFin, machine } = setDateAndOrderAndInterpretMachine(psArmProMachine, '1999-04-14', [
       {
         ...ETES.demande.FAIT,
+        consentement: 'non-applicable',
         concurrence: { amIFirst: true },
         paysId: 'FR',
         hasTitreFrom: false,
@@ -271,6 +287,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
     const { service, dateFin } = setDateAndOrderAndInterpretMachine(psArmProMachine, '1999-04-14', [
       {
         ...ETES.demande.FAIT,
+        consentement: 'non-applicable',
         concurrence: { amIFirst: true },
         paysId: 'FR',
         hasTitreFrom: false,
@@ -291,6 +308,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
     const { service, dateFin, machine } = setDateAndOrderAndInterpretMachine(psArmProMachine, '1999-04-14', [
       {
         ...ETES.demande.FAIT,
+        consentement: 'non-applicable',
         concurrence: { amIFirst: true },
         paysId: 'FR',
         hasTitreFrom: false,
@@ -314,6 +332,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
     const { service, dateFin, machine } = setDateAndOrderAndInterpretMachine(psArmProMachine, '1999-04-14', [
       {
         ...ETES.demande.FAIT,
+        consentement: 'non-applicable',
         concurrence: { amIFirst: true },
         paysId: 'FR',
         hasTitreFrom: false,
@@ -336,6 +355,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
     const { service, dateFin, machine } = setDateAndOrderAndInterpretMachine(psArmProMachine, '1999-04-14', [
       {
         ...ETES.demande.FAIT,
+        consentement: 'non-applicable',
         concurrence: { amIFirst: true },
         paysId: 'FR',
         hasTitreFrom: false,
@@ -358,6 +378,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
     const result = getEventsTree(psAxmProMachine, '1999-04-14', [
       {
         ...ETES.demande.FAIT,
+        consentement: 'non-applicable',
         concurrence: { amIFirst: true },
         paysId: 'FR',
         hasTitreFrom: false,
@@ -393,6 +414,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
     const { service, dateFin, machine } = setDateAndOrderAndInterpretMachine(psArmProMachine, '1999-04-14', [
       {
         ...ETES.demande.FAIT,
+        consentement: 'non-applicable',
         concurrence: { amIFirst: true },
         paysId: 'FR',
         hasTitreFrom: false,
@@ -415,12 +437,14 @@ describe('vérifie l’arbre des procédures spécifique', () => {
     const result = getEventsTree(psAxmProMachine, '1999-04-14', [
       {
         ...ETES.demande.FAIT,
+        consentement: 'à faire',
         concurrence: { amIFirst: true },
         paysId: 'FR',
         hasTitreFrom: false,
       },
       ETES.enregistrementDeLaDemande.FAIT,
       ETES.recevabiliteDeLaDemande.FAVORABLE,
+      ETES.demandeDeConsentement.FAIT,
       ETES.avisDesCollectivites.FAIT,
       ETES.avisDesServicesEtCommissionsConsultatives.FAIT,
       ETES.avisDuPrefet.FAVORABLE,
@@ -436,7 +460,8 @@ describe('vérifie l’arbre des procédures spécifique', () => {
         "RIEN                                                       (confidentielle, en construction        ) -> [FAIRE_DEMANDE]",
         "FAIRE_DEMANDE                                              (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,ENREGISTRER_DEMANDE]",
         "ENREGISTRER_DEMANDE                                        (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_RECEVABILITE_DEFAVORABLE,FAIRE_RECEVABILITE_FAVORABLE]",
-        "FAIRE_RECEVABILITE_FAVORABLE                               (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_ENQUETE_PUBLIQUE,OUVRIR_PARTICIPATION_DU_PUBLIC,RENDRE_AVIS_COLLECTIVITES,RENDRE_AVIS_SERVICES_COMMISSIONS]",
+        "FAIRE_RECEVABILITE_FAVORABLE                               (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_DEMANDE_DE_CONSENTEMENT]",
+        "FAIRE_DEMANDE_DE_CONSENTEMENT                              (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_ENQUETE_PUBLIQUE,OUVRIR_PARTICIPATION_DU_PUBLIC,RENDRE_AVIS_COLLECTIVITES,RENDRE_AVIS_SERVICES_COMMISSIONS]",
         "RENDRE_AVIS_COLLECTIVITES                                  (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_ENQUETE_PUBLIQUE,OUVRIR_PARTICIPATION_DU_PUBLIC,RENDRE_AVIS_SERVICES_COMMISSIONS]",
         "RENDRE_AVIS_SERVICES_COMMISSIONS                           (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_ENQUETE_PUBLIQUE,OUVRIR_PARTICIPATION_DU_PUBLIC,RENDRE_AVIS_PREFET]",
         "RENDRE_AVIS_PREFET                                         (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_ENQUETE_PUBLIQUE,OUVRIR_PARTICIPATION_DU_PUBLIC]",
@@ -453,15 +478,17 @@ describe('vérifie l’arbre des procédures spécifique', () => {
     const result = getEventsTree(psCxwOctMachine, '1999-04-14', [
       {
         ...ETES.demande.FAIT,
+        consentement: 'non-applicable',
         concurrence: { amIFirst: true },
         paysId: 'FR',
         hasTitreFrom: false,
       },
       ETES.enregistrementDeLaDemande.FAIT,
       ETES.recevabiliteDeLaDemande.FAVORABLE,
+      ETES.notificationAuDemandeur.FAIT,
       ETES.avisDeMiseEnConcurrenceAuJORF.TERMINE,
       ETES.resultatMiseEnConcurrence.ACCEPTE,
-      ETES.avisDuConseilGeneralDeLeconomie_CGE_.FAVORABLE,
+      ETES.avisDuConseilGeneralDeLeconomie_CGE_.FAIT,
       ETES.notificationAuDemandeur.FAIT,
       ETES.saisineDuPrefet.FAIT,
       ETES.avisDesCollectivites.FAIT,
@@ -482,6 +509,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
         "FAIRE_DEMANDE                                    (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,ENREGISTRER_DEMANDE]",
         "ENREGISTRER_DEMANDE                              (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_RECEVABILITE_DEFAVORABLE,FAIRE_RECEVABILITE_FAVORABLE]",
         "FAIRE_RECEVABILITE_FAVORABLE                     (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_MISE_EN_CONCURRENCE,NOTIFIER_DEMANDEUR]",
+        "NOTIFIER_DEMANDEUR                               (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_MISE_EN_CONCURRENCE]",
         "FAIRE_MISE_EN_CONCURRENCE                        (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,RENDRE_RESULTAT_MISE_EN_CONCURRENCE_ACCEPTEE,RENDRE_RESULTAT_MISE_EN_CONCURRENCE_REJETEE]",
         "RENDRE_RESULTAT_MISE_EN_CONCURRENCE_ACCEPTEE     (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,RENDRE_AVIS_CGE_IGEDD]",
         "RENDRE_AVIS_CGE_IGEDD                            (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_DEMANDE_MODIFICATION_AES,NOTIFIER_DEMANDEUR]",
@@ -505,6 +533,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
     const result = getEventsTree(psCxwOctMachine, '1999-04-14', [
       {
         ...ETES.demande.FAIT,
+        consentement: 'non-applicable',
         concurrence: { amIFirst: true },
         paysId: 'GF',
         hasTitreFrom: false,
@@ -513,7 +542,8 @@ describe('vérifie l’arbre des procédures spécifique', () => {
       ETES.recevabiliteDeLaDemande.FAVORABLE,
       ETES.avisDeMiseEnConcurrenceAuJORF.TERMINE,
       ETES.resultatMiseEnConcurrence.ACCEPTE,
-      ETES.avisDuConseilGeneralDeLeconomie_CGE_.FAVORABLE,
+      ETES.notificationAuDemandeur.FAIT,
+      ETES.avisDuConseilGeneralDeLeconomie_CGE_.FAIT,
       ETES.notificationAuDemandeur.FAIT,
       ETES.saisineDuPrefet.FAIT,
       ETES.avisDesCollectivites.FAIT,
@@ -535,8 +565,9 @@ describe('vérifie l’arbre des procédures spécifique', () => {
         "FAIRE_DEMANDE                                    (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,ENREGISTRER_DEMANDE]",
         "ENREGISTRER_DEMANDE                              (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_RECEVABILITE_DEFAVORABLE,FAIRE_RECEVABILITE_FAVORABLE]",
         "FAIRE_RECEVABILITE_FAVORABLE                     (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_MISE_EN_CONCURRENCE,NOTIFIER_DEMANDEUR]",
-        "FAIRE_MISE_EN_CONCURRENCE                        (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,RENDRE_RESULTAT_MISE_EN_CONCURRENCE_ACCEPTEE,RENDRE_RESULTAT_MISE_EN_CONCURRENCE_REJETEE]",
-        "RENDRE_RESULTAT_MISE_EN_CONCURRENCE_ACCEPTEE     (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,RENDRE_AVIS_CGE_IGEDD]",
+        "FAIRE_MISE_EN_CONCURRENCE                        (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,NOTIFIER_DEMANDEUR,RENDRE_RESULTAT_MISE_EN_CONCURRENCE_ACCEPTEE,RENDRE_RESULTAT_MISE_EN_CONCURRENCE_REJETEE]",
+        "RENDRE_RESULTAT_MISE_EN_CONCURRENCE_ACCEPTEE     (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,NOTIFIER_DEMANDEUR]",
+        "NOTIFIER_DEMANDEUR                               (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,RENDRE_AVIS_CGE_IGEDD]",
         "RENDRE_AVIS_CGE_IGEDD                            (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_DEMANDE_MODIFICATION_AES,NOTIFIER_DEMANDEUR]",
         "NOTIFIER_DEMANDEUR                               (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_LETTRE_SAISINE_PREFET,RECEVOIR_REPONSE_DEMANDEUR]",
         "FAIRE_LETTRE_SAISINE_PREFET                      (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_ENQUETE_PUBLIQUE,RENDRE_AVIS_COLLECTIVITES,RENDRE_AVIS_SERVICES_COMMISSIONS]",
@@ -558,6 +589,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
     const result = getEventsTree(psArmProMachine, '1999-04-14', [
       {
         ...ETES.demande.FAIT,
+        consentement: 'non-applicable',
         concurrence: { amIFirst: true },
         paysId: 'FR',
         hasTitreFrom: false,
@@ -593,5 +625,4 @@ describe('vérifie l’arbre des procédures spécifique', () => {
   })
 
   // FIXMACHINE tester que la participation du public peut-être optionnelle
-  // FIXMACHINE migrer l'enquête publique sur master
 })

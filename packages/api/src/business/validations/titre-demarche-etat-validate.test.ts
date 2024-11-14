@@ -35,6 +35,7 @@ describe('titreDemarcheUpdatedEtatValidate', () => {
         surface: null,
         concurrence: { amIFirst: true },
         hasTitreFrom: true,
+        demarcheIdsConsentement: [],
       },
       demarcheId,
       null
@@ -61,6 +62,7 @@ describe('titreDemarcheUpdatedEtatValidate', () => {
         surface: null,
         concurrence: { amIFirst: true },
         hasTitreFrom: true,
+        demarcheIdsConsentement: [],
       },
       demarcheId,
 
@@ -77,6 +79,7 @@ describe('titreDemarcheUpdatedEtatValidate', () => {
           surface: null,
           concurrence: { amIFirst: true },
           hasTitreFrom: true,
+          demarcheIdsConsentement: [],
         },
       ]
     )
@@ -86,7 +89,10 @@ describe('titreDemarcheUpdatedEtatValidate', () => {
 
   test('prend en compte les données des étapes pour la machine', () => {
     const demarcheId = newDemarcheId()
-    const demande: Pick<ITitreEtape, 'id' | 'statutId' | 'ordre' | 'typeId' | 'date' | 'contenu' | 'surface' | 'communes' | 'isBrouillon' | 'concurrence' | 'hasTitreFrom'> = {
+    const demande: Pick<
+      ITitreEtape,
+      'id' | 'statutId' | 'ordre' | 'typeId' | 'date' | 'contenu' | 'surface' | 'communes' | 'isBrouillon' | 'concurrence' | 'hasTitreFrom' | 'demarcheIdsConsentement'
+    > = {
       id: etapeIdValidator.parse('idMfr'),
       typeId: 'mfr',
       statutId: 'fai',
@@ -98,6 +104,7 @@ describe('titreDemarcheUpdatedEtatValidate', () => {
       surface: km2Validator.parse(51),
       concurrence: { amIFirst: true },
       hasTitreFrom: true,
+      demarcheIdsConsentement: [],
     }
     const valid = titreDemarcheUpdatedEtatValidate(
       'oct',
@@ -118,6 +125,7 @@ describe('titreDemarcheUpdatedEtatValidate', () => {
           ordre: 2,
           concurrence: { amIFirst: true },
           hasTitreFrom: true,
+          demarcheIdsConsentement: [],
         },
         {
           id: etapeIdValidator.parse('idSpp'),
@@ -128,6 +136,7 @@ describe('titreDemarcheUpdatedEtatValidate', () => {
           ordre: 3,
           concurrence: { amIFirst: true },
           hasTitreFrom: true,
+          demarcheIdsConsentement: [],
         },
         {
           id: etapeIdValidator.parse('idMcr'),
@@ -138,6 +147,7 @@ describe('titreDemarcheUpdatedEtatValidate', () => {
           ordre: 4,
           concurrence: { amIFirst: true },
           hasTitreFrom: true,
+          demarcheIdsConsentement: [],
         },
         {
           id: etapeIdValidator.parse('idAnf'),
@@ -148,6 +158,7 @@ describe('titreDemarcheUpdatedEtatValidate', () => {
           ordre: 5,
           concurrence: { amIFirst: true },
           hasTitreFrom: true,
+          demarcheIdsConsentement: [],
         },
         {
           id: etapeIdValidator.parse('idAsc'),
@@ -158,6 +169,7 @@ describe('titreDemarcheUpdatedEtatValidate', () => {
           ordre: 6,
           concurrence: { amIFirst: true },
           hasTitreFrom: true,
+          demarcheIdsConsentement: [],
         },
         {
           id: etapeIdValidator.parse('idAdc'),
@@ -168,6 +180,7 @@ describe('titreDemarcheUpdatedEtatValidate', () => {
           ordre: 7,
           concurrence: { amIFirst: true },
           hasTitreFrom: true,
+          demarcheIdsConsentement: [],
         },
         {
           id: etapeIdValidator.parse('idApo'),
@@ -178,6 +191,7 @@ describe('titreDemarcheUpdatedEtatValidate', () => {
           ordre: 8,
           concurrence: { amIFirst: true },
           hasTitreFrom: true,
+          demarcheIdsConsentement: [],
         },
       ]
     )
@@ -209,6 +223,7 @@ describe('titreDemarcheUpdatedEtatValidate', () => {
         surface: null,
         concurrence: { amIFirst: true },
         hasTitreFrom: true,
+        demarcheIdsConsentement: [],
       },
       demarcheId,
 
@@ -225,6 +240,7 @@ describe('titreDemarcheUpdatedEtatValidate', () => {
           surface: null,
           concurrence: { amIFirst: true },
           hasTitreFrom: true,
+          demarcheIdsConsentement: [],
         },
         {
           id: newEtapeId('2'),
@@ -238,6 +254,7 @@ describe('titreDemarcheUpdatedEtatValidate', () => {
           surface: null,
           concurrence: { amIFirst: true },
           hasTitreFrom: true,
+          demarcheIdsConsentement: [],
         },
       ]
     )
@@ -253,7 +270,15 @@ describe('titreDemarcheUpdatedEtatValidate', () => {
         typeId: 'arm',
         demarches: [{ id: demarcheId }],
       },
-      { typeId: 'mfr', isBrouillon: ETAPE_IS_BROUILLON, date: caminoDateValidator.parse('2000-02-02'), statutId: 'fai', concurrence: { amIFirst: true }, hasTitreFrom: true },
+      {
+        typeId: 'mfr',
+        isBrouillon: ETAPE_IS_BROUILLON,
+        date: caminoDateValidator.parse('2000-02-02'),
+        statutId: 'fai',
+        concurrence: { amIFirst: true },
+        demarcheIdsConsentement: [],
+        hasTitreFrom: true,
+      },
       demarcheId,
 
       [
@@ -265,6 +290,7 @@ describe('titreDemarcheUpdatedEtatValidate', () => {
           hasTitreFrom: true,
           statutId: ETAPES_STATUTS.FAIT,
           isBrouillon: ETAPE_IS_NOT_BROUILLON,
+          demarcheIdsConsentement: [],
         },
       ],
       false
@@ -286,7 +312,15 @@ describe('titreDemarcheUpdatedEtatValidate', () => {
         typeId: 'arm',
         demarches: [{ id: demarcheId }],
       },
-      { typeId: 'mfr', isBrouillon: ETAPE_IS_BROUILLON, date: caminoDateValidator.parse('2000-01-01'), statutId: 'fai', concurrence: { amIFirst: true }, hasTitreFrom: true },
+      {
+        typeId: 'mfr',
+        isBrouillon: ETAPE_IS_BROUILLON,
+        date: caminoDateValidator.parse('2000-01-01'),
+        statutId: 'fai',
+        concurrence: { amIFirst: true },
+        demarcheIdsConsentement: [],
+        hasTitreFrom: true,
+      },
       demarcheId,
       []
     )
@@ -311,6 +345,7 @@ describe('titreDemarcheUpdatedEtatValidate', () => {
           hasTitreFrom: true,
           statutId: ETAPES_STATUTS.FAIT,
           isBrouillon: ETAPE_IS_NOT_BROUILLON,
+          demarcheIdsConsentement: [],
         },
         demarcheId,
 
@@ -340,6 +375,7 @@ describe('titreDemarcheUpdatedEtatValidate', () => {
           hasTitreFrom: false,
           statutId: ETAPES_STATUTS.FAIT,
           isBrouillon: ETAPE_IS_NOT_BROUILLON,
+          demarcheIdsConsentement: [],
         },
         demarcheId,
 
@@ -369,6 +405,7 @@ describe('titreDemarcheUpdatedEtatValidate', () => {
         isBrouillon: ETAPE_IS_BROUILLON,
         concurrence: { amIFirst: true },
         hasTitreFrom: true,
+        demarcheIdsConsentement: [],
       },
       demarcheId,
       [
@@ -381,6 +418,7 @@ describe('titreDemarcheUpdatedEtatValidate', () => {
           ordre: 1,
           concurrence: { amIFirst: true },
           hasTitreFrom: true,
+          demarcheIdsConsentement: [],
         },
       ],
       true
@@ -409,6 +447,7 @@ describe('titreDemarcheUpdatedEtatValidate', () => {
         hasTitreFrom: true,
         statutId: ETAPES_STATUTS.FAIT,
         isBrouillon: ETAPE_IS_NOT_BROUILLON,
+        demarcheIdsConsentement: [],
       },
       demarcheId
     )
@@ -432,6 +471,7 @@ describe('titreDemarcheUpdatedEtatValidate', () => {
         hasTitreFrom: true,
         statutId: ETAPES_STATUTS.FAIT,
         isBrouillon: ETAPE_IS_NOT_BROUILLON,
+        demarcheIdsConsentement: [],
       },
       demarcheId
     )
@@ -447,7 +487,15 @@ describe('titreDemarcheUpdatedEtatValidate', () => {
         typeId: 'axm',
         demarches: [{ id: demarcheId }],
       },
-      { typeId: 'mfr', statutId: 'fai', isBrouillon: ETAPE_IS_BROUILLON, date: caminoDateValidator.parse('2024-01-01'), concurrence: { amIFirst: true }, hasTitreFrom: true },
+      {
+        typeId: 'mfr',
+        statutId: 'fai',
+        isBrouillon: ETAPE_IS_BROUILLON,
+        date: caminoDateValidator.parse('2024-01-01'),
+        concurrence: { amIFirst: true },
+        demarcheIdsConsentement: [],
+        hasTitreFrom: true,
+      },
       demarcheId,
 
       [
@@ -460,6 +508,7 @@ describe('titreDemarcheUpdatedEtatValidate', () => {
           ordre: 1,
           concurrence: { amIFirst: true },
           hasTitreFrom: true,
+          demarcheIdsConsentement: [],
         },
       ]
     )
@@ -483,6 +532,7 @@ describe('titreDemarcheUpdatedEtatValidate', () => {
         date: caminoDateValidator.parse('2024-01-01'),
         concurrence: { amIFirst: true },
         hasTitreFrom: true,
+        demarcheIdsConsentement: [],
       },
       demarcheId,
       [
@@ -495,6 +545,7 @@ describe('titreDemarcheUpdatedEtatValidate', () => {
           ordre: 2,
           concurrence: { amIFirst: true },
           hasTitreFrom: true,
+          demarcheIdsConsentement: [],
         },
         {
           id: etapeIdValidator.parse('2'),
@@ -505,6 +556,7 @@ describe('titreDemarcheUpdatedEtatValidate', () => {
           ordre: 1,
           concurrence: { amIFirst: true },
           hasTitreFrom: true,
+          demarcheIdsConsentement: [],
         },
       ]
     )
@@ -521,7 +573,15 @@ describe('titreDemarcheUpdatedEtatValidate', () => {
           typeId: 'axm',
           demarches: [{ id: demarcheId }],
         },
-        { typeId: 'mfr', statutId: 'fai', isBrouillon: ETAPE_IS_BROUILLON, date: caminoDateValidator.parse('2024-01-02'), concurrence: { amIFirst: true }, hasTitreFrom: true },
+        {
+          typeId: 'mfr',
+          statutId: 'fai',
+          isBrouillon: ETAPE_IS_BROUILLON,
+          date: caminoDateValidator.parse('2024-01-02'),
+          concurrence: { amIFirst: true },
+          demarcheIdsConsentement: [],
+          hasTitreFrom: true,
+        },
         demarcheId,
 
         [
@@ -534,6 +594,7 @@ describe('titreDemarcheUpdatedEtatValidate', () => {
             ordre: 1,
             concurrence: { amIFirst: true },
             hasTitreFrom: true,
+            demarcheIdsConsentement: [],
           },
         ]
       )
@@ -566,6 +627,7 @@ describe('titreDemarcheUpdatedEtatValidate', () => {
           surface: null,
           concurrence: { amIFirst: true },
           hasTitreFrom: true,
+          demarcheIdsConsentement: [],
         },
         demarcheId,
 
@@ -582,6 +644,7 @@ describe('titreDemarcheUpdatedEtatValidate', () => {
             surface: null,
             concurrence: { amIFirst: true },
             hasTitreFrom: true,
+            demarcheIdsConsentement: [],
           },
         ]
       )
@@ -622,6 +685,7 @@ describe('getPossiblesEtapesTypes', () => {
       contenu: { arm: { mecanise: true } },
       communes: [],
       surface: null,
+      demarcheIdsConsentement: [],
     },
     {
       id: newEtapeId('etapeId1'),
@@ -635,6 +699,7 @@ describe('getPossiblesEtapesTypes', () => {
       contenu: { arm: { mecanise: true, franchissements: 19 } },
       communes: [],
       surface: null,
+      demarcheIdsConsentement: [],
     },
     {
       id: newEtapeId('etapeId5'),
@@ -648,6 +713,7 @@ describe('getPossiblesEtapesTypes', () => {
       contenu: null,
       communes: [],
       surface: null,
+      demarcheIdsConsentement: [],
     },
     {
       id: newEtapeId('etapeId10'),
@@ -661,6 +727,7 @@ describe('getPossiblesEtapesTypes', () => {
       contenu: null,
       communes: [],
       surface: null,
+      demarcheIdsConsentement: [],
     },
     {
       id: newEtapeId('etapeId14'),
@@ -674,6 +741,7 @@ describe('getPossiblesEtapesTypes', () => {
       contenu: null,
       communes: [],
       surface: null,
+      demarcheIdsConsentement: [],
     },
     {
       id: newEtapeId('etapeId8'),
@@ -687,6 +755,7 @@ describe('getPossiblesEtapesTypes', () => {
       contenu: null,
       communes: [],
       surface: null,
+      demarcheIdsConsentement: [],
     },
     {
       id: newEtapeId('etapeId4'),
@@ -700,6 +769,7 @@ describe('getPossiblesEtapesTypes', () => {
       contenu: null,
       communes: [],
       surface: null,
+      demarcheIdsConsentement: [],
     },
     {
       id: newEtapeId('etapeId15'),
@@ -713,6 +783,7 @@ describe('getPossiblesEtapesTypes', () => {
       contenu: null,
       communes: [],
       surface: null,
+      demarcheIdsConsentement: [],
     },
     {
       id: newEtapeId('etapeId13'),
@@ -726,6 +797,7 @@ describe('getPossiblesEtapesTypes', () => {
       contenu: null,
       communes: [],
       surface: null,
+      demarcheIdsConsentement: [],
     },
     {
       id: newEtapeId('etapeId12'),
@@ -739,6 +811,7 @@ describe('getPossiblesEtapesTypes', () => {
       contenu: null,
       communes: [],
       surface: null,
+      demarcheIdsConsentement: [],
     },
     {
       id: newEtapeId('etapeId6'),
@@ -752,6 +825,7 @@ describe('getPossiblesEtapesTypes', () => {
       communes: [],
       surface: null,
       contenu: { arm: { franchissements: 19 } },
+      demarcheIdsConsentement: [],
     },
     {
       id: newEtapeId('etapeId2'),
@@ -765,6 +839,7 @@ describe('getPossiblesEtapesTypes', () => {
       contenu: null,
       communes: [],
       surface: null,
+      demarcheIdsConsentement: [],
     },
     {
       id: newEtapeId('etapeId7'),
@@ -778,6 +853,7 @@ describe('getPossiblesEtapesTypes', () => {
       contenu: null,
       communes: [],
       surface: null,
+      demarcheIdsConsentement: [],
     },
     {
       id: newEtapeId('etapeId11'),
@@ -791,6 +867,7 @@ describe('getPossiblesEtapesTypes', () => {
       contenu: null,
       communes: [],
       surface: null,
+      demarcheIdsConsentement: [],
     },
     {
       id: newEtapeId('etapeId3'),
@@ -804,6 +881,7 @@ describe('getPossiblesEtapesTypes', () => {
       contenu: null,
       communes: [],
       surface: null,
+      demarcheIdsConsentement: [],
     },
     {
       id: newEtapeId('etapeId17'),
@@ -817,6 +895,7 @@ describe('getPossiblesEtapesTypes', () => {
       contenu: null,
       communes: [],
       surface: null,
+      demarcheIdsConsentement: [],
     },
   ]
 
@@ -877,6 +956,7 @@ describe('getPossiblesEtapesTypes', () => {
         contenu: { arm: { mecanise: true, franchissements: 2 } },
         communes: [],
         surface: null,
+        demarcheIdsConsentement: [],
       },
       {
         id: newEtapeId('idMdp'),
@@ -890,6 +970,7 @@ describe('getPossiblesEtapesTypes', () => {
         contenu: null,
         communes: [],
         surface: null,
+        demarcheIdsConsentement: [],
       },
     ]
 
@@ -911,6 +992,7 @@ describe('getPossiblesEtapesTypes', () => {
         contenu: { arm: { mecanise: false } },
         communes: [],
         surface: null,
+        demarcheIdsConsentement: [],
       },
       {
         id: newEtapeId('idMdp'),
@@ -924,6 +1006,7 @@ describe('getPossiblesEtapesTypes', () => {
         contenu: null,
         communes: [],
         surface: null,
+        demarcheIdsConsentement: [],
       },
     ]
 
@@ -951,6 +1034,7 @@ describe('getPossiblesEtapesTypes', () => {
         ordre: 3,
         communes: [],
         surface: null,
+        demarcheIdsConsentement: [],
       },
       {
         id: newEtapeId('idrcm'),
@@ -969,6 +1053,7 @@ describe('getPossiblesEtapesTypes', () => {
         ordre: 7,
         communes: [],
         surface: null,
+        demarcheIdsConsentement: [],
       },
       {
         id: newEtapeId('idMcp'),
@@ -982,6 +1067,7 @@ describe('getPossiblesEtapesTypes', () => {
         contenu: null,
         communes: [],
         surface: null,
+        demarcheIdsConsentement: [],
       },
       {
         id: newEtapeId('idmcp'),
@@ -995,6 +1081,7 @@ describe('getPossiblesEtapesTypes', () => {
         contenu: null,
         communes: [],
         surface: null,
+        demarcheIdsConsentement: [],
       },
       {
         id: newEtapeId('iddae'),
@@ -1009,6 +1096,7 @@ describe('getPossiblesEtapesTypes', () => {
         contenu: null,
         communes: [],
         surface: null,
+        demarcheIdsConsentement: [],
       },
       {
         id: newEtapeId('idmcr'),
@@ -1022,6 +1110,7 @@ describe('getPossiblesEtapesTypes', () => {
         ordre: 10,
         communes: [],
         surface: null,
+        demarcheIdsConsentement: [],
       },
       {
         id: newEtapeId('idmcb'),
@@ -1036,6 +1125,7 @@ describe('getPossiblesEtapesTypes', () => {
         contenu: null,
         communes: [],
         surface: null,
+        demarcheIdsConsentement: [],
       },
       {
         id: newEtapeId('idedm'),
@@ -1049,6 +1139,7 @@ describe('getPossiblesEtapesTypes', () => {
         contenu: null,
         communes: [],
         surface: null,
+        demarcheIdsConsentement: [],
       },
       {
         id: newEtapeId('idvfd'),
@@ -1062,6 +1153,7 @@ describe('getPossiblesEtapesTypes', () => {
         contenu: null,
         communes: [],
         surface: null,
+        demarcheIdsConsentement: [],
       },
       {
         id: newEtapeId('idpfd'),
@@ -1075,6 +1167,7 @@ describe('getPossiblesEtapesTypes', () => {
         contenu: null,
         communes: [],
         surface: null,
+        demarcheIdsConsentement: [],
       },
       {
         id: newEtapeId('idmen'),
@@ -1088,6 +1181,7 @@ describe('getPossiblesEtapesTypes', () => {
         contenu: null,
         communes: [],
         surface: null,
+        demarcheIdsConsentement: [],
       },
       {
         id: newEtapeId('idmcm'),
@@ -1101,6 +1195,7 @@ describe('getPossiblesEtapesTypes', () => {
         contenu: null,
         communes: [],
         surface: null,
+        demarcheIdsConsentement: [],
       },
     ]
 
@@ -1127,6 +1222,7 @@ describe('getPossiblesEtapesTypes', () => {
         ordre: 3,
         communes: [],
         surface: null,
+        demarcheIdsConsentement: [],
       },
       {
         id: newEtapeId('id1'),
@@ -1140,6 +1236,7 @@ describe('getPossiblesEtapesTypes', () => {
         contenu: null,
         communes: [],
         surface: null,
+        demarcheIdsConsentement: [],
       },
       {
         id: newEtapeId('id4'),
@@ -1154,6 +1251,7 @@ describe('getPossiblesEtapesTypes', () => {
         contenu: null,
         communes: [],
         surface: null,
+        demarcheIdsConsentement: [],
       },
       {
         id: newEtapeId('id2'),
@@ -1168,6 +1266,7 @@ describe('getPossiblesEtapesTypes', () => {
         contenu: null,
         communes: [],
         surface: null,
+        demarcheIdsConsentement: [],
       },
     ]
 

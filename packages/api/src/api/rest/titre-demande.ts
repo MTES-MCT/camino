@@ -120,6 +120,7 @@ export const titreDemandeCreer: RestNewPostCall<'/rest/titres'> = ({ pool, user,
                 date: getCurrent(),
                 duree: titreDemande.titreTypeId === 'arm' ? 4 : undefined,
                 titulaireIds: [titreDemande.entrepriseId],
+                demarcheIdsConsentement: [],
               }
 
               const updatedTitreEtape = await titreEtapeUpsert(titreEtape, user, titreId)
@@ -164,7 +165,7 @@ export const titreDemandeCreer: RestNewPostCall<'/rest/titres'> = ({ pool, user,
         Match.whenOr('Accès interdit', 'Permissions insuffisantes', () => ({ ...caminoError, status: HTTP_STATUS.FORBIDDEN })),
         Match.whenOr(
           'Création du titre impossible',
-          "Impossible d'accéder à la base de données",
+          "Impossible d'exécuter la requête dans la base de données",
           'Problème de validation de données',
           'Problème lors de la mise à jour des taches du titre',
           'Création de la démarche impossible',

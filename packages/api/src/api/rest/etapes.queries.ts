@@ -6,7 +6,7 @@ import { DBNotFound, DbQueryAccessError, Redefine, dbNotFoundError, dbQueryAndVa
 import { sql } from '@pgtyped/runtime'
 import {
   IGetAdministrationsLocalesByEtapeIdQuery,
-  IGetAllDemandesDbQuery,
+  IGetAllDemandesProcedureSpecifiqueDbQuery,
   IGetDemandesPotentialConcurrenceDbQuery,
   IGetEtapeByIdDbQuery,
   IGetEtapeDataForEditionDbQuery,
@@ -251,10 +251,10 @@ const getDemandesPotentialConcurrenceDb = sql<
     )
   `
 
-export const getAllDemandes = (pool: Pool): Effect.Effect<EtapeId[], CaminoError<DbQueryAccessError | ZodUnparseable>> => {
+export const getAllDemandesProcedureSpecifique = (pool: Pool): Effect.Effect<EtapeId[], CaminoError<DbQueryAccessError | ZodUnparseable>> => {
   return pipe(
     effectDbQueryAndValidate(
-      getAllDemandesDb,
+      getAllDemandesProcedureSpecifiqueDb,
       { demandeTypeId: ETAPE_TYPE_FOR_CONCURRENCY_DATA, dateDebutProcedureSpecifique: DATE_DEBUT_PROCEDURE_SPECIFIQUE },
       pool,
       z.object({ id: etapeIdValidator })
@@ -263,8 +263,8 @@ export const getAllDemandes = (pool: Pool): Effect.Effect<EtapeId[], CaminoError
   )
 }
 
-const getAllDemandesDb = sql<
-  Redefine<IGetAllDemandesDbQuery, { demandeTypeId: typeof ETAPE_TYPE_FOR_CONCURRENCY_DATA; dateDebutProcedureSpecifique: typeof DATE_DEBUT_PROCEDURE_SPECIFIQUE }, { id: EtapeId }>
+const getAllDemandesProcedureSpecifiqueDb = sql<
+  Redefine<IGetAllDemandesProcedureSpecifiqueDbQuery, { demandeTypeId: typeof ETAPE_TYPE_FOR_CONCURRENCY_DATA; dateDebutProcedureSpecifique: typeof DATE_DEBUT_PROCEDURE_SPECIFIQUE }, { id: EtapeId }>
 >`
  select te.id
  from titres_etapes te

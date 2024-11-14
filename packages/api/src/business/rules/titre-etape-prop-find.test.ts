@@ -6,6 +6,8 @@ import { toCaminoDate } from 'camino-common/src/date'
 import { ETAPE_IS_NOT_BROUILLON, etapeIdValidator } from 'camino-common/src/etape'
 import { titreIdValidator } from 'camino-common/src/validators/titres'
 import { demarcheIdValidator } from 'camino-common/src/demarche'
+import { ZERO_KM2 } from 'camino-common/src/number'
+import { newEntrepriseId } from 'camino-common/src/entreprise'
 console.error = vi.fn()
 
 describe("valeur d'une propriété pour une étape", () => {
@@ -42,6 +44,9 @@ describe("valeur d'une propriété pour une étape", () => {
                 ordre: 1,
                 communes: null,
                 surface: null,
+                concurrence: 'non-applicable',
+                demarcheIdsConsentement: [],
+                hasTitreFrom: 'non-applicable',
               },
               {
                 id: etapeIdValidator.parse('demarche-01-etape-02'),
@@ -50,14 +55,17 @@ describe("valeur d'une propriété pour une étape", () => {
                 statutId: 'fai',
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 date: toCaminoDate('1000-01-01'),
-                titulaireIds: ['fr-xxxxxxxxx'],
+                titulaireIds: [newEntrepriseId('fr-xxxxxxxxx')],
                 ordre: 1,
                 communes: null,
                 surface: null,
+                concurrence: 'non-applicable',
+                demarcheIdsConsentement: [],
+                hasTitreFrom: 'non-applicable',
               },
             ],
           },
-        ] as ITitreDemarche[],
+        ],
         'pxm'
       )
     ).toEqual(['fr-xxxxxxxxx'])
@@ -81,29 +89,39 @@ describe("valeur d'une propriété pour une étape", () => {
                 typeId: 'asc',
                 statutId: 'fai',
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
-                surface: 0,
+                surface: ZERO_KM2,
                 ordre: 1,
                 communes: null,
                 date: toCaminoDate('1000-01-01'),
+                demarcheIdsConsentement: [],
+                concurrence: 'non-applicable',
+                hasTitreFrom: 'non-applicable',
               },
             ],
           },
           {
+            id: demarcheIdValidator.parse('demarche-02'),
+            titreId: titreIdValidator.parse('titreId'),
+            statutId: 'acc',
             typeId: 'oct',
             etapes: [
               {
                 id: etapeIdValidator.parse('demarche-02-etape-01'),
+                titreDemarcheId: demarcheIdValidator.parse('demarche-02'),
                 date: toCaminoDate('1000-01-01'),
                 typeId: 'asc',
                 statutId: 'fai',
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
-                surface: 0,
+                surface: ZERO_KM2,
                 ordre: 1,
                 communes: null,
+                demarcheIdsConsentement: [],
+                concurrence: 'non-applicable',
+                hasTitreFrom: 'non-applicable',
               },
             ],
           },
-        ] as ITitreDemarche[],
+        ],
         'pxm'
       )
     ).toEqual(0)
@@ -128,13 +146,16 @@ describe("valeur d'une propriété pour une étape", () => {
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 titulaireIds: null,
                 typeId: 'asc',
-                surface: 0,
+                surface: ZERO_KM2,
                 ordre: 1,
                 communes: null,
+                demarcheIdsConsentement: [],
+                concurrence: 'non-applicable',
+                hasTitreFrom: 'non-applicable',
               },
             ],
           },
-        ] as ITitreDemarche[],
+        ],
         'pxm'
       )
     ).toBeNull()

@@ -19,6 +19,7 @@ describe('toMachineEtapes', () => {
           hasTitreFrom: 'non-applicable',
           surface: null,
           contenu: null,
+          demarcheIdsConsentement: [],
         },
       ])
     ).toEqual([
@@ -26,6 +27,7 @@ describe('toMachineEtapes', () => {
         etapeTypeId: 'mfr',
         etapeStatutId: 'fai',
         date: '2022-01-01',
+        consentement: 'non-applicable',
       },
     ])
 
@@ -42,6 +44,7 @@ describe('toMachineEtapes', () => {
           communes: [],
           ordre: 0,
           surface: null,
+          demarcheIdsConsentement: [],
         },
       ])
     ).toEqual([
@@ -49,6 +52,7 @@ describe('toMachineEtapes', () => {
         etapeTypeId: 'mfr',
         etapeStatutId: 'fai',
         date: '2022-01-01',
+        consentement: 'non-applicable',
         contenu: { arm: { mecanise: true } },
       },
     ])
@@ -68,6 +72,7 @@ describe('toMachineEtapes', () => {
           communes: [],
           ordre: 0,
           surface: null,
+          demarcheIdsConsentement: [],
         },
       ])
     ).toEqual([])

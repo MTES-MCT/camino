@@ -6,7 +6,7 @@ import { TitreStatutId } from 'camino-common/src/static/titresStatuts'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { DemarcheStatutId } from 'camino-common/src/static/demarchesStatuts'
 import { ReferenceTypeId } from 'camino-common/src/static/referencesTypes'
-import { GetDemarcheByIdOrSlugValidator } from 'camino-common/src/titres'
+import { GetDemarcheByIdOrSlug } from 'camino-common/src/titres'
 import { TitreId } from 'camino-common/src/validators/titres'
 import { DomaineId } from 'camino-common/src/static/domaines'
 import { EntrepriseId } from 'camino-common/src/entreprise'
@@ -54,8 +54,8 @@ export interface DemarcheApiClient {
   createDemarche: (demarche: DemarcheCreationInput) => Promise<DemarcheCreationOutput | CaminoError<string>>
   updateDemarche: (demarche: InputDemarcheUpdation) => Promise<DemarcheSlug>
   deleteDemarche: (demarcheId: DemarcheId) => Promise<void>
-  getDemarcheByIdOrSlug: (demarcheIdOrSlug: DemarcheIdOrSlug) => Promise<DeepReadonly<GetDemarcheByIdOrSlugValidator>>
-  getDemarcheMiseEnConcurrence: (demarcheId: DemarcheId) => Promise<DeepReadonly<GetDemarcheMiseEnConcurrence[] | CaminoError<string>>>
+  getDemarcheByIdOrSlug: (demarcheIdOrSlug: DemarcheIdOrSlug) => Promise<DeepReadonly<GetDemarcheByIdOrSlug>>
+  getDemarcheMiseEnConcurrence: (demarcheId: DemarcheId) => Promise<DeepReadonly<GetDemarcheMiseEnConcurrence[]> | CaminoError<string>>
   getResultatMiseEnConcurrence: (demarcheId: DemarcheId) => Promise<DeepReadonly<GetResultatMiseEnConcurrence | CaminoError<string>>>
   getDemarches: (params: GetDemarchesParams) => Promise<{ elements: GetDemarchesDemarche[]; total: number }>
 }

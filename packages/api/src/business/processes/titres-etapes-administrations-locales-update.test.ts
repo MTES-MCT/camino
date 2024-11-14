@@ -45,6 +45,7 @@ describe("administrations d'une étape", () => {
         ],
         concurrence: 'non-applicable',
         hasTitreFrom: 'non-applicable',
+        demarcheIdsConsentement: [],
       },
       {
         id: newEtapeId('h-cx-courdemanges-1988-oct01-dpu01'),
@@ -61,6 +62,7 @@ describe("administrations d'une étape", () => {
         ],
         concurrence: 'non-applicable',
         hasTitreFrom: 'non-applicable',
+        demarcheIdsConsentement: [],
       },
     ]
     titresEtapesGetMock.mockResolvedValue(titresEtapesCommunes)
@@ -86,6 +88,7 @@ describe("administrations d'une étape", () => {
         ],
         concurrence: 'non-applicable',
         hasTitreFrom: 'non-applicable',
+        demarcheIdsConsentement: [],
       },
     ]
 
@@ -109,6 +112,7 @@ describe("administrations d'une étape", () => {
         communes: [],
         concurrence: 'non-applicable',
         hasTitreFrom: 'non-applicable',
+        demarcheIdsConsentement: [],
       },
     ]
     titresEtapesGetMock.mockResolvedValue(titresEtapesCommunesVides)
@@ -130,6 +134,7 @@ describe("administrations d'une étape", () => {
       administrationsLocales: [ADMINISTRATION_IDS['DREAL - BRETAGNE']],
       concurrence: 'non-applicable',
       hasTitreFrom: 'non-applicable',
+      demarcheIdsConsentement: [],
     }
     titresEtapesGetMock.mockResolvedValue([titreEtape])
 
@@ -151,6 +156,7 @@ describe("administrations d'une étape", () => {
       administrationsLocales: ['ope-cacem-01'],
       concurrence: 'non-applicable',
       hasTitreFrom: 'non-applicable',
+      demarcheIdsConsentement: [],
     }
 
     titresEtapesGetMock.mockResolvedValue([titreEtape])

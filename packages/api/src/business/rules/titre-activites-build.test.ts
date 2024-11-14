@@ -75,6 +75,7 @@ describe("construction des activités d'un titre", () => {
             communes: null,
             concurrence: 'non-applicable',
             hasTitreFrom: 'non-applicable',
+            demarcheIdsConsentement: [],
           },
         ],
       },

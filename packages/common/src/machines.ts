@@ -5,7 +5,7 @@ import { EtapeTypeId } from './static/etapesTypes'
 import { TitreTypeId } from './static/titresTypes'
 import { NonEmptyArray, isNullOrUndefinedOrEmpty, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, DeepReadonly, toSorted } from './typescript-tools'
 
-export const DATE_DEBUT_PROCEDURE_SPECIFIQUE = toCaminoDate('4000-01-01')
+export const DATE_DEBUT_PROCEDURE_SPECIFIQUE = toCaminoDate('2400-01-01')
 
 interface DemarcheDefinition {
   titreTypeIds: NonEmptyArray<TitreTypeId>

@@ -59,6 +59,7 @@ const etapeBrouillonValide: Omit<ApiFlattenEtape, 'id'> = {
   typeId: 'mfr',
   concurrence: { amIFirst: true },
   hasTitreFrom: true,
+  demarcheIdsConsentement: [],
 }
 const etapeComplete: Omit<ApiFlattenEtape, 'id'> = {
   ...etapeBrouillonValide,
@@ -84,6 +85,7 @@ const titreDemarche: ITitreDemarche = {
       ordre: 0,
       concurrence: { amIFirst: true },
       hasTitreFrom: true,
+      demarcheIdsConsentement: [],
     },
   ],
 }
@@ -144,6 +146,7 @@ describe('valide l’étape avant de l’enregistrer', () => {
       typeId: 'mfr',
       concurrence: { amIFirst: true },
       hasTitreFrom: true,
+      demarcheIdsConsentement: [],
     }
 
     let errors = titreEtapeUpdationValidate(titreEtape, titreDemarche, titreARM, [], [], [], [], [], userSuper)

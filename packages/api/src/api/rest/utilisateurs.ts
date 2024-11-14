@@ -175,7 +175,7 @@ export const moi: RestNewGetCall<'/moi'> = ({ pool, cookie, user }): Effect.Effe
     Effect.mapError(caminoError =>
       Match.value(caminoError.message).pipe(
         Match.when('droits insuffisants', () => ({ ...caminoError, status: HTTP_STATUS.FORBIDDEN })),
-        Match.whenOr("Impossible d'accéder à la base de données", 'Problème de validation de données', () => ({ ...caminoError, status: HTTP_STATUS.BAD_REQUEST })),
+        Match.whenOr("Impossible d'exécuter la requête dans la base de données", 'Problème de validation de données', () => ({ ...caminoError, status: HTTP_STATUS.BAD_REQUEST })),
         Match.exhaustive
       )
     )
@@ -213,7 +213,7 @@ export const generateQgisToken: RestNewPostCall<'/rest/utilisateur/generateQgisT
     Effect.map(token => ({ token, url: `https://${user.email.replace('@', '%40')}:${token}@${config().API_HOST}/titres_qgis` })),
     Effect.mapError(caminoError =>
       Match.value(caminoError.message).pipe(
-        Match.whenOr("Impossible d'accéder à la base de données", 'Problème de validation de données', () => ({ ...caminoError, status: HTTP_STATUS.INTERNAL_SERVER_ERROR })),
+        Match.whenOr("Impossible d'exécuter la requête dans la base de données", 'Problème de validation de données', () => ({ ...caminoError, status: HTTP_STATUS.INTERNAL_SERVER_ERROR })),
         Match.exhaustive
       )
     )
@@ -290,7 +290,7 @@ export const getUtilisateurs: RestNewGetCall<'/rest/utilisateurs'> = ({ pool, us
     }),
     Effect.mapError(caminoError =>
       Match.value(caminoError.message).pipe(
-        Match.when("Impossible d'accéder à la base de données", () => ({ ...caminoError, status: HTTP_STATUS.INTERNAL_SERVER_ERROR })),
+        Match.when("Impossible d'exécuter la requête dans la base de données", () => ({ ...caminoError, status: HTTP_STATUS.INTERNAL_SERVER_ERROR })),
         Match.when('droits insuffisants', () => ({ ...caminoError, status: HTTP_STATUS.FORBIDDEN })),
         Match.when('Problème de validation de données', () => ({ ...caminoError, status: HTTP_STATUS.BAD_REQUEST })),
         Match.exhaustive
@@ -305,7 +305,7 @@ export const getUtilisateur: RestNewGetCall<'/rest/utilisateurs/:id'> = ({ pool,
     Effect.flatMap(() => newGetUtilisateurById(pool, params.id, user)),
     Effect.mapError(caminoError =>
       Match.value(caminoError.message).pipe(
-        Match.when("Impossible d'accéder à la base de données", () => ({ ...caminoError, status: HTTP_STATUS.INTERNAL_SERVER_ERROR })),
+        Match.when("Impossible d'exécuter la requête dans la base de données", () => ({ ...caminoError, status: HTTP_STATUS.INTERNAL_SERVER_ERROR })),
         Match.when('droits insuffisants', () => ({ ...caminoError, status: HTTP_STATUS.FORBIDDEN })),
         Match.when('Problème de validation de données', () => ({ ...caminoError, status: HTTP_STATUS.BAD_REQUEST })),
         Match.exhaustive

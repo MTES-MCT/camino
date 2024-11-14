@@ -25,6 +25,7 @@ export const EtapesTypesEtapesStatuts = {
     DEFAVORABLE: { etapeTypeId: 'acg', etapeStatutId: 'def' },
     FAVORABLE_AVEC_RESERVE: { etapeTypeId: 'acg', etapeStatutId: 'fre' },
     DEFAVORABLE_AVEC_RESERVES: { etapeTypeId: 'acg', etapeStatutId: 'dre' },
+    FAIT: { etapeStatutId: 'fai', etapeTypeId: 'acg' },
   },
   avisDesCollectivites: {
     FAIT: { etapeStatutId: 'fai', etapeTypeId: 'adc' },
@@ -236,6 +237,7 @@ export const EtapesTypesEtapesStatuts = {
   attestationDeConstitutionDeGarantiesFinancieres: { FAIT: { etapeTypeId: 'acf', etapeStatutId: 'fai' } },
   reponseDuDemandeur: { FAIT: { etapeTypeId: 'rno', etapeStatutId: 'fai' } },
   demandeDeModificationAES: { FAIT: { etapeStatutId: 'fai', etapeTypeId: 'dma' } },
+  demandeDeConsentement: { FAIT: { etapeTypeId: 'ddc', etapeStatutId: 'fai' } },
 } as const satisfies { [key in keyof typeof ETAPES_TYPES]: { [other in keyof typeof ETAPES_STATUTS]?: EtapeTypeEtapeStatut<(typeof ETAPES_TYPES)[key], (typeof ETAPES_STATUTS)[other]> } }
 
 type GetStuff<T> = T extends { [key in keyof typeof ETAPES_TYPES]: { [other in keyof typeof ETAPES_STATUTS]?: infer A } } ? A : never

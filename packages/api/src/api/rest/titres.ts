@@ -199,7 +199,7 @@ export const postTitreLiaisons: RestNewPostCall<'/rest/titres/:id/titreLiaisons'
             },
             user
           ),
-        catch: e => ({ message: "Impossible d'accéder à la base de données" as const, extra: e }),
+        catch: e => ({ message: "Impossible d'exécuter la requête dans la base de données" as const, extra: e }),
       })
     ),
     Effect.filterOrFail(
@@ -209,7 +209,7 @@ export const postTitreLiaisons: RestNewPostCall<'/rest/titres/:id/titreLiaisons'
     Effect.bind('administrations', ({ titre }) =>
       Effect.tryPromise({
         try: async () => titreAdministrationsGet(titre),
-        catch: e => ({ message: "Impossible d'accéder à la base de données" as const, extra: e }),
+        catch: e => ({ message: "Impossible d'exécuter la requête dans la base de données" as const, extra: e }),
       })
     ),
     Effect.filterOrFail(
@@ -223,7 +223,7 @@ export const postTitreLiaisons: RestNewPostCall<'/rest/titres/:id/titreLiaisons'
     Effect.bind('titresFrom', () =>
       Effect.tryPromise({
         try: async () => titresGet({ ids: [...titreFromIds] }, { fields: { id: {} } }, user),
-        catch: e => ({ message: "Impossible d'accéder à la base de données" as const, extra: e }),
+        catch: e => ({ message: "Impossible d'exécuter la requête dans la base de données" as const, extra: e }),
       })
     ),
     Effect.tap(({ titre, titresFrom }) => {
@@ -247,7 +247,7 @@ export const postTitreLiaisons: RestNewPostCall<'/rest/titres/:id/titreLiaisons'
     }),
     Effect.mapError(caminoError =>
       Match.value(caminoError.message).pipe(
-        Match.whenOr("Impossible d'accéder à la base de données", demarcheNonChargeesError, () => ({ ...caminoError, status: HTTP_STATUS.INTERNAL_SERVER_ERROR })),
+        Match.whenOr("Impossible d'exécuter la requête dans la base de données", demarcheNonChargeesError, () => ({ ...caminoError, status: HTTP_STATUS.INTERNAL_SERVER_ERROR })),
         Match.whenOr('Droit insuffisant pour accéder au titre ou titre inexistant', linkTitreError, 'droits insuffisants ou titre inexistant', () => ({
           ...caminoError,
           status: HTTP_STATUS.FORBIDDEN,
@@ -269,7 +269,7 @@ const titreLinksGet = (titreId: string, link: 'titreToId' | 'titreFromId', user:
   return pipe(
     Effect.tryPromise({
       try: async () => TitresTitres.query().where(link === 'titreToId' ? 'titreFromId' : 'titreToId', titreId),
-      catch: e => ({ message: "Impossible d'accéder à la base de données" as const, extra: e }),
+      catch: e => ({ message: "Impossible d'exécuter la requête dans la base de données" as const, extra: e }),
     }),
     Effect.map(titresTitres => titresTitres.map(t => t[link])),
     Effect.flatMap(titreIds =>
@@ -281,7 +281,7 @@ const titreLinksGet = (titreId: string, link: 'titreToId' | 'titreFromId', user:
             return titresGet({ ids: titreIds }, { fields: { id: {} } }, user)
           }
         },
-        catch: e => ({ message: "Impossible d'accéder à la base de données" as const, extra: e }),
+        catch: e => ({ message: "Impossible d'exécuter la requête dans la base de données" as const, extra: e }),
       })
     ),
     Effect.map(titres => titres.map(({ id, nom }) => ({ id, nom })))
@@ -295,7 +295,7 @@ export const getTitreLiaisons: RestNewGetCall<'/rest/titres/:id/titreLiaisons'> 
     Effect.flatMap(() =>
       Effect.tryPromise({
         try: async () => titreGet(params.id, { fields: { id: {} } }, user),
-        catch: e => ({ message: "Impossible d'accéder à la base de données" as const, extra: e }),
+        catch: e => ({ message: "Impossible d'exécuter la requête dans la base de données" as const, extra: e }),
       })
     ),
     Effect.filterOrFail(
@@ -311,7 +311,7 @@ export const getTitreLiaisons: RestNewGetCall<'/rest/titres/:id/titreLiaisons'> 
     }),
     Effect.mapError(caminoError =>
       Match.value(caminoError.message).pipe(
-        Match.when("Impossible d'accéder à la base de données", () => ({ ...caminoError, status: HTTP_STATUS.INTERNAL_SERVER_ERROR })),
+        Match.when("Impossible d'exécuter la requête dans la base de données", () => ({ ...caminoError, status: HTTP_STATUS.INTERNAL_SERVER_ERROR })),
         Match.when('Droit insuffisant pour accéder au titre ou titre inexistant', () => ({ ...caminoError, status: HTTP_STATUS.FORBIDDEN })),
         Match.exhaustive
       )
@@ -408,7 +408,7 @@ export const getUtilisateurTitreAbonner: RestNewGetCall<'/rest/titres/:titreId/a
     Effect.flatMap(userPipe => getTitreUtilisateur(pool, params.titreId, userPipe.id)),
     Effect.mapError(caminoError =>
       Match.value(caminoError.message).pipe(
-        Match.when("Impossible d'accéder à la base de données", () => ({ ...caminoError, status: HTTP_STATUS.INTERNAL_SERVER_ERROR })),
+        Match.when("Impossible d'exécuter la requête dans la base de données", () => ({ ...caminoError, status: HTTP_STATUS.INTERNAL_SERVER_ERROR })),
         Match.when('Droit insuffisant pour accéder au titre ou titre inexistant', () => ({ ...caminoError, status: HTTP_STATUS.FORBIDDEN })),
         Match.when('Problème de validation de données', () => ({ ...caminoError, status: HTTP_STATUS.INTERNAL_SERVER_ERROR })),
         Match.exhaustive

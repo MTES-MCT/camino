@@ -1,6 +1,6 @@
 import { sql } from '@pgtyped/runtime'
-import { IGetEtapesByDemarcheInternalQuery } from './titres-etapes-heritage-contenu-update.queries.types'
 import { Redefine, dbQueryAndValidate } from '../../pg-database'
+import { IGetEtapesByDemarcheInternalQuery } from './titres-etapes-heritage-contenu-update.queries.types'
 import { caminoDateValidator } from 'camino-common/src/date'
 import { DemarcheId, demarcheIdValidator } from 'camino-common/src/demarche'
 import { DemarcheStatutId, demarcheStatutIdValidator } from 'camino-common/src/static/demarchesStatuts'
@@ -36,6 +36,7 @@ const getEtapesByDemarcheValidator = z.object({
   type_id: etapeTypeIdValidator.nullable(),
   is_brouillon: etapeBrouillonValidator.nullable(),
   has_titre_from: z.boolean(),
+  demarche_ids_consentement: z.array(demarcheIdValidator).nullable(),
 })
 
 export const getDemarches = async (
@@ -101,6 +102,7 @@ export const getDemarches = async (
               ? { amIFirst: false, demarcheConcurrenteVisibilite: row.demarche_concurrente_public_lecture === true ? 'publique' : 'confidentielle' }
               : { amIFirst: true }
             : 'non-applicable',
+        demarcheIdsConsentement: row.demarche_ids_consentement ?? [],
         hasTitreFrom: row.has_titre_from,
       })
     }
@@ -123,10 +125,11 @@ SELECT
     etape.is_brouillon,
     etape.heritage_contenu,
     etape.demarche_id_en_concurrence,
+    etape.demarche_ids_consentement as demarche_ids_consentement,
     demarche.id as demarche_id,
     demarche.type_id as demarche_type_id,
     demarche.statut_id as demarche_statut_id,
-    etape.communes,
+    etape.communes AS communes,
     demarche_concurrente.public_lecture as demarche_concurrente_public_lecture,
     EXISTS(select 1 from titres__titres tt where titre.id = tt.titre_to_id) as has_titre_from
 from

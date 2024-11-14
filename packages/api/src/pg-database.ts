@@ -31,7 +31,7 @@ export const dbQueryAndValidate = async <Params, Result, T extends ZodType<Resul
 
 export const dbNotFoundError = 'Élément non trouvé dans la base de données' as const
 export type DBNotFound = typeof dbNotFoundError
-export type DbQueryAccessError = "Impossible d'accéder à la base de données"
+export type DbQueryAccessError = "Impossible d'exécuter la requête dans la base de données"
 export type EffectDbQueryAndValidateErrors = DbQueryAccessError | ZodUnparseable
 export const effectDbQueryAndValidate = <Params, Result, T extends ZodType<Result, ZodTypeDef, unknown>>(
   query: TaggedQuery<{ params: DeepReadonly<Params>; result: Result }>,
@@ -50,7 +50,7 @@ export const effectDbQueryAndValidate = <Params, Result, T extends ZodType<Resul
           extra = e.message
         }
 
-        return { message: "Impossible d'accéder à la base de données" as const, extra }
+        return { message: "Impossible d'exécuter la requête dans la base de données" as const, extra }
       },
     }),
     Effect.flatMap(zodParseEffectCallback(z.array(validator)))

@@ -15,6 +15,7 @@ export interface IGetEtapesByDemarcheIdDbResult {
   date_debut: string | null;
   date_fin: string | null;
   demarche_id_en_concurrence: string | null;
+  demarche_ids_consentement: Json;
   duree: number | null;
   etape_fondamentale_id: string;
   etape_statut_id: string;

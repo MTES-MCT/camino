@@ -114,7 +114,8 @@ export const titreEtapeUpdationValidate = (
 }
 
 const titreEtapeUpdationBusinessValidate = (
-  titreEtape: Pick<Partial<ApiFlattenEtape>, 'id'> & Pick<ApiFlattenEtape, 'statutId' | 'typeId' | 'date' | 'contenu' | 'perimetre' | 'isBrouillon' | 'concurrence' | 'hasTitreFrom'>,
+  titreEtape: Pick<Partial<ApiFlattenEtape>, 'id'> &
+    Pick<ApiFlattenEtape, 'statutId' | 'typeId' | 'date' | 'contenu' | 'perimetre' | 'isBrouillon' | 'concurrence' | 'demarcheIdsConsentement' | 'hasTitreFrom'>,
   titreDemarche: ITitreDemarche,
   titre: Pick<ITitre, 'typeId' | 'demarches'>,
   communes: ITitreEtape['communes']

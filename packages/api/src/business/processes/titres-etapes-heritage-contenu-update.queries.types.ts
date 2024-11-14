@@ -15,6 +15,7 @@ export interface IGetEtapesByDemarcheInternalResult {
   demarche_concurrente_public_lecture: boolean;
   demarche_id: string;
   demarche_id_en_concurrence: string | null;
+  demarche_ids_consentement: Json;
   demarche_statut_id: string;
   demarche_type_id: string;
   has_titre_from: boolean | null;

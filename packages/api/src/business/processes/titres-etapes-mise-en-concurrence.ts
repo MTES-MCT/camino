@@ -1,7 +1,7 @@
 import { EtapeId } from 'camino-common/src/etape'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { Pool } from 'pg'
-import { getAllDemandes, getDemandesPotentialConcurrence, getEtapeById } from '../../api/rest/etapes.queries'
+import { getAllDemandesProcedureSpecifique, getDemandesPotentialConcurrence, getEtapeById } from '../../api/rest/etapes.queries'
 import {
   miseEnConcurrence,
   MiseEnConcurrenceErrors,
@@ -67,7 +67,7 @@ export const allEtapesMiseEnConcurrenceUpdate = (
 ): Effect.Effect<DemandeMiseEnConcurrenceUpdateResult[], CaminoError<UpdateEtapeIdDeMiseEnConcurrenceErrors | DBNotFound | MiseEnConcurrenceErrors>> => {
   console.info('mise en concurrence des étapes…')
   return Effect.Do.pipe(
-    Effect.bind('etapes', () => getAllDemandes(pool)),
+    Effect.bind('etapes', () => getAllDemandesProcedureSpecifique(pool)),
     Effect.bind('allDemandesPotentialConcurrence', () => getDemandesPotentialConcurrence(pool)),
     Effect.flatMap(({ allDemandesPotentialConcurrence, etapes }) => Effect.forEach(etapes, etapeId => demandeMiseEnConcurrenceUpdate(pool, etapeId, allDemandesPotentialConcurrence))),
     Effect.map(results => results.filter(isNotNullNorUndefined))

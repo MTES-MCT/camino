@@ -323,6 +323,7 @@ const titreBuild = (
             administrationsLocales: administrationIdLocale ? [administrationIdLocale] : [],
             concurrence: { amIFirst: true },
             hasTitreFrom: true,
+            demarcheIdsConsentement: [],
           },
         ],
       },

@@ -116,20 +116,20 @@ export interface IGetDemandesPotentialConcurrenceDbQuery {
   result: IGetDemandesPotentialConcurrenceDbResult;
 }
 
-/** 'GetAllDemandesDb' parameters type */
-export interface IGetAllDemandesDbParams {
+/** 'GetAllDemandesProcedureSpecifiqueDb' parameters type */
+export interface IGetAllDemandesProcedureSpecifiqueDbParams {
   dateDebutProcedureSpecifique: string;
   demandeTypeId: string;
 }
 
-/** 'GetAllDemandesDb' return type */
-export interface IGetAllDemandesDbResult {
+/** 'GetAllDemandesProcedureSpecifiqueDb' return type */
+export interface IGetAllDemandesProcedureSpecifiqueDbResult {
   id: string;
 }
 
-/** 'GetAllDemandesDb' query type */
-export interface IGetAllDemandesDbQuery {
-  params: IGetAllDemandesDbParams;
-  result: IGetAllDemandesDbResult;
+/** 'GetAllDemandesProcedureSpecifiqueDb' query type */
+export interface IGetAllDemandesProcedureSpecifiqueDbQuery {
+  params: IGetAllDemandesProcedureSpecifiqueDbParams;
+  result: IGetAllDemandesProcedureSpecifiqueDbResult;
 }
 

@@ -10,7 +10,7 @@ import { featureCollectionForagesValidator, featureCollectionPointsValidator, fe
 import { etapeTypeIdValidator } from 'camino-common/src/static/etapesTypes'
 import { geoSystemeIdValidator } from 'camino-common/src/static/geoSystemes'
 import { substanceLegaleIdValidator } from 'camino-common/src/static/substancesLegales'
-import { GetDemarcheByIdOrSlugValidator } from 'camino-common/src/titres'
+import { GetDemarcheByIdOrSlug } from 'camino-common/src/titres'
 import { DeepReadonly, Nullable } from 'camino-common/src/typescript-tools'
 import { CaminoError, nullToDefault } from 'camino-common/src/zod-tools'
 import gql from 'graphql-tag'
@@ -85,7 +85,7 @@ export interface EtapeApiClient {
   getEtapeDocumentsByEtapeId: (etapeId: EtapeId) => Promise<GetEtapeDocumentsByEtapeId>
   getEtapeHeritagePotentiel: (etape: DeepReadonly<Pick<CoreEtapeCreationOrModification, 'id' | 'date' | 'typeId'>>, titreDemarcheId: DemarcheId) => Promise<DeepReadonly<GetEtapeHeritagePotentiel>>
   getEtapeAvisByEtapeId: (etapeId: EtapeId) => Promise<GetEtapeAvisByEtapeId>
-  getEtape: (etapeIdOrSlug: EtapeIdOrSlug) => Promise<DeepReadonly<{ etape: FlattenEtape; demarche: GetDemarcheByIdOrSlugValidator }>>
+  getEtape: (etapeIdOrSlug: EtapeIdOrSlug) => Promise<DeepReadonly<{ etape: FlattenEtape; demarche: GetDemarcheByIdOrSlug }>>
   etapeCreer: (etape: DeepReadonly<RestEtapeCreation>) => Promise<EtapeId>
   etapeModifier: (etape: DeepReadonly<RestEtapeModification>) => Promise<EtapeId>
 }

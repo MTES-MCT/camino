@@ -71,6 +71,7 @@ const getEtapesByDemarcheIdDbValidator = z.object({
   amodiataire_ids: z.array(entrepriseIdValidator),
   is_brouillon: etapeBrouillonValidator,
   demarche_id_en_concurrence: demarcheIdValidator.nullable(),
+  demarche_ids_consentement: z.array(demarcheIdValidator),
   etape_fondamentale_id: etapeIdValidator,
 })
 
@@ -110,6 +111,7 @@ select
     e.amodiataire_ids,
     e.is_brouillon,
     e.demarche_id_en_concurrence,
+    e.demarche_ids_consentement,
     e.etape_fondamentale_id
 from
     titres_etapes e

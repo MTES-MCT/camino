@@ -25,7 +25,7 @@ const getPerimetreFromITitreEtape = (
   surface: titreEtape.surface ?? null,
 })
 
-const apiFlattenEtapeValidator = flattenEtapeValidator.and(titreEtapeForMachineValidator.pick({ concurrence: true, hasTitreFrom: true }))
+const apiFlattenEtapeValidator = flattenEtapeValidator.and(titreEtapeForMachineValidator.pick({ concurrence: true, hasTitreFrom: true, demarcheIdsConsentement: true }))
 export type ApiFlattenEtape = z.infer<typeof apiFlattenEtapeValidator>
 
 export const iTitreEtapeToFlattenEtape = (titreEtape: ITitreEtape): ApiFlattenEtape => {

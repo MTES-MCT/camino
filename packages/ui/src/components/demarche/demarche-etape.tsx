@@ -10,7 +10,7 @@ import { EtapeStatut } from '../_common/etape-statut'
 import { PropDuree } from '../etape/prop-duree'
 import { SubstancesLegale } from 'camino-common/src/static/substancesLegales'
 import { EtapePropEntreprisesItem, EtapePropItem } from '../etape/etape-prop-item'
-import { DemarcheEtape as CommonDemarcheEtape } from 'camino-common/src/demarche'
+import { DemarcheEtape as CommonDemarcheEtape, DemarcheConsentement } from 'camino-common/src/demarche'
 import { DsfrPerimetre, TabId } from '../_common/dsfr-perimetre'
 import { TitreSlug } from 'camino-common/src/validators/titres'
 import { numberFormat } from 'camino-common/src/number'
@@ -41,6 +41,7 @@ import { FlattenEtape } from 'camino-common/src/etape-form'
 import { getSections } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections'
 import { Alert } from '../_ui/alert'
 import { getInfo } from '../_common/new-sections-edit'
+import { getDemandesConsentement } from '../titre/demarche-consentement'
 // Il ne faut pas utiliser de literal dans le 'in' il n'y aura jamais d'erreur typescript
 const fondamentalePropsName = 'fondamentale'
 
@@ -93,6 +94,13 @@ export const DemarcheEtape = defineComponent<Props>(props => {
     }
 
     return false
+  })
+
+  const consentement = computed<DemarcheConsentement[] | null>(() => {
+    if (props.etape.etape_type_id === ETAPES_TYPES.demandeDeConsentement) {
+      return getDemandesConsentement(props.demarche)
+    }
+    return null
   })
 
   const entreprisesIndex = props.entreprises.reduce<Record<EntrepriseId, string>>((acc, entreprise) => {
@@ -244,7 +252,20 @@ export const DemarcheEtape = defineComponent<Props>(props => {
         <div class="fr-mt-1w">
           <DsfrIcon name="fr-icon-calendar-line" color="text-title-blue-france" aria-hidden="true" /> {dateFormat(props.etape.date)}
         </div>
-      </div>
+      </div>{' '}
+      {isNotNullNorUndefinedNorEmpty(consentement.value) ? (
+        <>
+          <DsfrSeparator />
+          <span>Les titres suivants ont donné leur consentement :</span>
+          <ul>
+            {consentement.value.map(({ demarcheId, titreNom }) => (
+              <li>
+                <DsfrLink title={titreNom} disabled={false} icon={null} to={{ name: 'demarche', params: { demarcheId } }} />
+              </li>
+            ))}
+          </ul>
+        </>
+      ) : null}
       {hasContent.value ? (
         <>
           <DsfrSeparator />
@@ -319,7 +340,6 @@ export const DemarcheEtape = defineComponent<Props>(props => {
           </div>
         </>
       ) : null}
-
       {fondamentalePropsName in props.etape && isNotNullNorUndefined(props.etape.fondamentale.perimetre) && isNotNullNorUndefined(props.etape.fondamentale.perimetre.geojson4326_perimetre) ? (
         <DsfrPerimetre
           class="fr-pt-2w"
@@ -339,9 +359,7 @@ export const DemarcheEtape = defineComponent<Props>(props => {
           }}
         />
       ) : null}
-
       <EtapeDocuments etapeDocuments={props.etape.etape_documents} entrepriseDocuments={props.etape.entreprises_documents} user={props.user} entreprises={props.entreprises} />
-
       <EtapeAvisTable etapeAvis={props.etape.avis_documents} user={props.user} />
       {removePopupVisible.value ? (
         <RemoveEtapePopup

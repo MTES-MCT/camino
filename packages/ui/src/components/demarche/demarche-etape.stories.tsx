@@ -13,6 +13,7 @@ import { FeatureMultiPolygon } from 'camino-common/src/perimetre'
 import { ZERO_KM2, km2Validator } from 'camino-common/src/number'
 import { CaminoRouter } from '@/typings/vue-router'
 import { sectionDureeIds } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections'
+import { DemarcheEtapeFondamentale, demarcheIdValidator } from 'camino-common/src/demarche'
 
 const meta: Meta = {
   title: 'Components/Demarche/Etape',
@@ -170,7 +171,98 @@ const entrepriseDocuments: EtapeEntrepriseDocument[] = [
     description: 'Une description',
   },
 ]
-
+const fondamentale: DemarcheEtapeFondamentale['fondamentale'] = {
+  date_debut: toCaminoDate('2023-10-25'),
+  duree: 12,
+  date_fin: null,
+  substances: ['auru', 'arge'],
+  titulaireIds: [entrepriseIdValidator.parse('titulaire1'), entrepriseIdValidator.parse('titulaire2')],
+  amodiataireIds: [entrepriseIdValidator.parse('amodiataire1')],
+  perimetre: {
+    geojson4326_points: null,
+    geojson4326_perimetre: {
+      properties: {},
+      type: 'Feature',
+      geometry: {
+        type: 'MultiPolygon',
+        coordinates: [
+          [
+            [
+              [-53.58181013905019, 3.8309654861273],
+              [-53.58178306390299, 3.8219278216269807],
+              [-53.572785590706495, 3.82195493825841],
+              [-53.57281257175149, 3.8309926670647294],
+              [-53.58181013905019, 3.8309654861273],
+            ],
+          ],
+          [
+            [
+              [-53.60031408473134, 3.8224780986447566],
+              [-53.59891645305842, 3.8181831495446303],
+              [-53.58181205656814, 3.82379854768971],
+              [-53.58320964990986, 3.828093576227541],
+              [-53.60031408473134, 3.8224780986447566],
+            ],
+          ],
+          [
+            [
+              [-53.583861926103765, 3.8502114455117433],
+              [-53.592379712320195, 3.834289122043602],
+              [-53.588417035915334, 3.8321501920354253],
+              [-53.57989914401643, 3.8480725119510217],
+              [-53.583861926103765, 3.8502114455117433],
+            ],
+          ],
+        ],
+      },
+    },
+    geojson_origine_geo_systeme_id: '4326',
+    geojson_origine_perimetre: {
+      properties: {},
+      type: 'Feature',
+      geometry: {
+        type: 'MultiPolygon',
+        coordinates: [
+          [
+            [
+              [-53.58181013905019, 3.8309654861273],
+              [-53.58178306390299, 3.8219278216269807],
+              [-53.572785590706495, 3.82195493825841],
+              [-53.57281257175149, 3.8309926670647294],
+              [-53.58181013905019, 3.8309654861273],
+            ],
+          ],
+          [
+            [
+              [-53.60031408473134, 3.8224780986447566],
+              [-53.59891645305842, 3.8181831495446303],
+              [-53.58181205656814, 3.82379854768971],
+              [-53.58320964990986, 3.828093576227541],
+              [-53.60031408473134, 3.8224780986447566],
+            ],
+          ],
+          [
+            [
+              [-53.583861926103765, 3.8502114455117433],
+              [-53.592379712320195, 3.834289122043602],
+              [-53.588417035915334, 3.8321501920354253],
+              [-53.57989914401643, 3.8480725119510217],
+              [-53.583861926103765, 3.8502114455117433],
+            ],
+          ],
+        ],
+      },
+    },
+    geojson_origine_points: null,
+    geojson4326_forages: null,
+    geojson_origine_forages: null,
+    surface: km2Validator.parse(10),
+    communes: [],
+    sdom_zones: [],
+    forets: [],
+    secteurs_maritimes: [],
+  },
+}
 export const NoSnapshotDemande: StoryFn = () => (
   <DemarcheEtape
     titre={{ titreStatutId: 'val', typeId: 'arm', nom: 'nom du titre', slug: titreSlug }}
@@ -192,102 +284,11 @@ export const NoSnapshotDemande: StoryFn = () => (
       slug: etapeSlugValidator.parse('etape-slug'),
       etape_type_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeTypeId,
       demarche_id_en_concurrence: null,
+      demarches_consentement: [],
       etape_statut_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeStatutId,
       is_brouillon: ETAPE_IS_NOT_BROUILLON,
       date,
-
-      fondamentale: {
-        date_debut: toCaminoDate('2023-10-25'),
-        duree: 12,
-        date_fin: null,
-        substances: ['auru', 'arge'],
-        titulaireIds: [entrepriseIdValidator.parse('titulaire1'), entrepriseIdValidator.parse('titulaire2')],
-        amodiataireIds: [entrepriseIdValidator.parse('amodiataire1')],
-        perimetre: {
-          geojson4326_points: null,
-          geojson4326_perimetre: {
-            properties: {},
-            type: 'Feature',
-            geometry: {
-              type: 'MultiPolygon',
-              coordinates: [
-                [
-                  [
-                    [-53.58181013905019, 3.8309654861273],
-                    [-53.58178306390299, 3.8219278216269807],
-                    [-53.572785590706495, 3.82195493825841],
-                    [-53.57281257175149, 3.8309926670647294],
-                    [-53.58181013905019, 3.8309654861273],
-                  ],
-                ],
-                [
-                  [
-                    [-53.60031408473134, 3.8224780986447566],
-                    [-53.59891645305842, 3.8181831495446303],
-                    [-53.58181205656814, 3.82379854768971],
-                    [-53.58320964990986, 3.828093576227541],
-                    [-53.60031408473134, 3.8224780986447566],
-                  ],
-                ],
-                [
-                  [
-                    [-53.583861926103765, 3.8502114455117433],
-                    [-53.592379712320195, 3.834289122043602],
-                    [-53.588417035915334, 3.8321501920354253],
-                    [-53.57989914401643, 3.8480725119510217],
-                    [-53.583861926103765, 3.8502114455117433],
-                  ],
-                ],
-              ],
-            },
-          },
-          geojson_origine_geo_systeme_id: '4326',
-          geojson_origine_perimetre: {
-            properties: {},
-            type: 'Feature',
-            geometry: {
-              type: 'MultiPolygon',
-              coordinates: [
-                [
-                  [
-                    [-53.58181013905019, 3.8309654861273],
-                    [-53.58178306390299, 3.8219278216269807],
-                    [-53.572785590706495, 3.82195493825841],
-                    [-53.57281257175149, 3.8309926670647294],
-                    [-53.58181013905019, 3.8309654861273],
-                  ],
-                ],
-                [
-                  [
-                    [-53.60031408473134, 3.8224780986447566],
-                    [-53.59891645305842, 3.8181831495446303],
-                    [-53.58181205656814, 3.82379854768971],
-                    [-53.58320964990986, 3.828093576227541],
-                    [-53.60031408473134, 3.8224780986447566],
-                  ],
-                ],
-                [
-                  [
-                    [-53.583861926103765, 3.8502114455117433],
-                    [-53.592379712320195, 3.834289122043602],
-                    [-53.588417035915334, 3.8321501920354253],
-                    [-53.57989914401643, 3.8480725119510217],
-                    [-53.583861926103765, 3.8502114455117433],
-                  ],
-                ],
-              ],
-            },
-          },
-          geojson_origine_points: null,
-          geojson4326_forages: null,
-          geojson_origine_forages: null,
-          surface: km2Validator.parse(10),
-          communes: [],
-          sdom_zones: [],
-          forets: [],
-          secteurs_maritimes: [],
-        },
-      },
+      fondamentale,
       sections_with_values: [{ id: 'arm', elements: [{ id: 'mecanise', type: 'radio', value: true, nom: 'Mécanisation', optionnel: false }], nom: 'Arm' }],
       etape_documents: [],
       entreprises_documents: [],
@@ -316,6 +317,7 @@ export const DemandeMultipleEntreprisesDocuments: StoryFn = () => (
       slug: etapeSlugValidator.parse('etape-slug'),
       etape_type_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeTypeId,
       demarche_id_en_concurrence: null,
+      demarches_consentement: [],
       etape_statut_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeStatutId,
       is_brouillon: ETAPE_IS_NOT_BROUILLON,
       date,
@@ -389,6 +391,7 @@ export const DemandeNoMap: StoryFn = () => (
       slug: etapeSlugValidator.parse('etape-slug'),
       etape_type_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeTypeId,
       demarche_id_en_concurrence: null,
+      demarches_consentement: [],
       etape_statut_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeStatutId,
       is_brouillon: ETAPE_IS_NOT_BROUILLON,
       date,
@@ -444,6 +447,7 @@ export const DemandeNonDeposable: StoryFn = () => (
       slug: etapeSlugValidator.parse('etape-slug'),
       note: { valeur: '', is_avertissement: false },
       etape_type_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeTypeId,
+      demarches_consentement: [],
       demarche_id_en_concurrence: null,
       etape_statut_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeStatutId,
       is_brouillon: ETAPE_IS_BROUILLON,
@@ -484,6 +488,7 @@ export const DemandeNonSupprimable: StoryFn = () => (
       note: { valeur: '', is_avertissement: false },
       etape_type_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeTypeId,
       demarche_id_en_concurrence: null,
+      demarches_consentement: [],
       etape_statut_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeStatutId,
       is_brouillon: ETAPE_IS_BROUILLON,
       date,
@@ -555,6 +560,7 @@ export const DemandeArmMecaniseNonDeposable: StoryFn = () => (
       note: { valeur: '', is_avertissement: false },
       etape_type_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeTypeId,
       demarche_id_en_concurrence: null,
+      demarches_consentement: [],
       etape_statut_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeStatutId,
       is_brouillon: ETAPE_IS_BROUILLON,
       date,
@@ -640,6 +646,7 @@ export const DemandeArmMecaniseDeposable: StoryFn = () => (
       note: { valeur: '', is_avertissement: false },
       etape_type_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeTypeId,
       demarche_id_en_concurrence: null,
+      demarches_consentement: [],
       etape_statut_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeStatutId,
       is_brouillon: ETAPE_IS_BROUILLON,
       date,
@@ -729,6 +736,7 @@ export const DemandeArmNonMecaniseDeposable: StoryFn = () => (
       note: { valeur: '', is_avertissement: false },
       etape_type_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeTypeId,
       demarche_id_en_concurrence: null,
+      demarches_consentement: [],
       etape_statut_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeStatutId,
       is_brouillon: ETAPE_IS_BROUILLON,
       date,
@@ -845,6 +853,7 @@ export const DemandeAvecSeulementPerimetre: StoryFn = () => (
       note: { valeur: '', is_avertissement: false },
       etape_type_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeTypeId,
       demarche_id_en_concurrence: null,
+      demarches_consentement: [],
       etape_statut_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeStatutId,
       is_brouillon: ETAPE_IS_BROUILLON,
       date,
@@ -912,6 +921,7 @@ export const DemandeAvecGrosseNote: StoryFn = () => (
       note: { valeur: 'Ceci est une énorme note sur plusieurs lignes.\n Une seconde ligne.\n Incertitudes: \n * date \n * substances \n * titulaireIds', is_avertissement: false },
       etape_type_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeTypeId,
       demarche_id_en_concurrence: null,
+      demarches_consentement: [],
       etape_statut_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeStatutId,
       is_brouillon: ETAPE_IS_BROUILLON,
       date,
@@ -968,6 +978,7 @@ export const AxmDeposableAvecDaeEtAsl: StoryFn = () => (
       note: { valeur: '', is_avertissement: false },
       etape_type_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeTypeId,
       demarche_id_en_concurrence: null,
+      demarches_consentement: [],
       etape_statut_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeStatutId,
       is_brouillon: ETAPE_IS_BROUILLON,
       date,
@@ -1082,6 +1093,7 @@ export const DemandeAvecForage: StoryFn = () => (
       note: { valeur: '', is_avertissement: false },
       etape_type_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeTypeId,
       demarche_id_en_concurrence: null,
+      demarches_consentement: [],
       etape_statut_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeStatutId,
       is_brouillon: ETAPE_IS_BROUILLON,
       date,
@@ -1189,6 +1201,55 @@ export const DemandeDeComplement: StoryFn = () => (
       is_brouillon: ETAPE_IS_NOT_BROUILLON,
       date,
       sections_with_values: [{ id: 'mcox', elements: [{ id: 'delaifixe', nom: 'Délai fixé (jour)', type: 'number', optionnel: true, value: 12 }] }],
+      etape_documents: [],
+      entreprises_documents: [],
+      avis_documents: [],
+    }}
+    apiClient={apiClient}
+    entreprises={entreprises}
+  />
+)
+
+export const DemandeDeConsentement: StoryFn = () => (
+  <DemarcheEtape
+    titre={{ titreStatutId: 'val', typeId: 'arm', nom: 'nom du titre', slug: titreSlug }}
+    demarche={{
+      demarche_type_id: 'oct',
+      titulaireIds: [entrepriseIdValidator.parse('titulaire1')],
+      administrationsLocales: [],
+      sdom_zones: [],
+      etapes: [
+        {
+          id: etapeIdValidator.parse('demandeId'),
+          slug: etapeSlugValidator.parse('demande-slug'),
+          note: { valeur: '', is_avertissement: false },
+          etape_type_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeTypeId,
+          etape_statut_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeStatutId,
+          is_brouillon: ETAPE_IS_NOT_BROUILLON,
+          date,
+          sections_with_values: [],
+          etape_documents: [],
+          entreprises_documents: [],
+          avis_documents: [],
+          ordre: 0,
+          demarche_id_en_concurrence: null,
+          fondamentale,
+          demarches_consentement: [{ demarcheId: demarcheIdValidator.parse('demarcheId'), titreNom: 'Crique toto' }],
+        },
+      ],
+      communes: [],
+    }}
+    router={routerPushMock}
+    user={{ ...testBlankUser, role: 'super' }}
+    etape={{
+      id: etapeIdValidator.parse('etapeId'),
+      slug: etapeSlugValidator.parse('etape-slug'),
+      note: { valeur: '', is_avertissement: false },
+      etape_type_id: EtapesTypesEtapesStatuts.demandeDeConsentement.FAIT.etapeTypeId,
+      etape_statut_id: EtapesTypesEtapesStatuts.demandeDeConsentement.FAIT.etapeStatutId,
+      is_brouillon: ETAPE_IS_NOT_BROUILLON,
+      date,
+      sections_with_values: [],
       etape_documents: [],
       entreprises_documents: [],
       avis_documents: [],

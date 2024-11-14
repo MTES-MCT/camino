@@ -11,7 +11,7 @@ import { KM2, km2Validator } from 'camino-common/src/number'
 import { CaminoDate } from 'camino-common/src/date'
 import { isNullOrUndefined } from 'camino-common/src/typescript-tools'
 import { canHaveMiseEnConcurrence } from 'camino-common/src/demarche'
-import { DemarcheVisibilite } from 'camino-common/src/etape-form'
+import { Consentement, DemarcheVisibilite } from 'camino-common/src/etape-form'
 import { PAYS_IDS, PaysId } from 'camino-common/src/static/pays'
 
 type ParticipationDuPublic = {
@@ -33,6 +33,7 @@ type FaireMiseEnConcurrence = {
 
 type FaireDemande = {
   concurrence: Concurrence
+  consentement: Consentement
   hasTitreFrom: boolean
   paysId: PaysId
   type: 'FAIRE_DEMANDE'
@@ -72,6 +73,7 @@ type ProcedureSpecifiqueXStateEvent =
   | { type: 'DESISTER_PAR_LE_DEMANDEUR' }
   | { type: 'DEMANDER_INFORMATION' }
   | { type: 'RECEVOIR_INFORMATION' }
+  | { type: 'FAIRE_DEMANDE_DE_CONSENTEMENT' }
 
 type Event = ProcedureSpecifiqueXStateEvent['type']
 
@@ -86,9 +88,9 @@ const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
   FAIRE_MISE_EN_CONCURRENCE: { db: ETES.avisDeMiseEnConcurrenceAuJORF, mainStep: true },
   RENDRE_RESULTAT_MISE_EN_CONCURRENCE_ACCEPTEE: { db: { ACCEPTE: ETES.resultatMiseEnConcurrence.ACCEPTE }, mainStep: true },
   RENDRE_RESULTAT_MISE_EN_CONCURRENCE_REJETEE: { db: { REJETE: ETES.resultatMiseEnConcurrence.REJETE }, mainStep: true },
-  NOTIFIER_DEMANDEUR: { db: ETES.notificationAuDemandeur, mainStep: false },
+  NOTIFIER_DEMANDEUR: { db: ETES.notificationAuDemandeur, mainStep: true },
   RECEVOIR_REPONSE_DEMANDEUR: { db: ETES.reponseDuDemandeur, mainStep: false },
-  RENDRE_AVIS_CGE_IGEDD: { db: ETES.avisDuConseilGeneralDeLeconomie_CGE_, mainStep: true },
+  RENDRE_AVIS_CGE_IGEDD: { db: { FAIT: ETES.avisDuConseilGeneralDeLeconomie_CGE_.FAIT }, mainStep: true },
   FAIRE_DEMANDE_MODIFICATION_AES: { db: ETES.demandeDeModificationAES, mainStep: false },
   FAIRE_LETTRE_SAISINE_PREFET: { db: ETES.saisineDuPrefet, mainStep: true },
   RENDRE_AVIS_COLLECTIVITES: { db: ETES.avisDesCollectivites, mainStep: true },
@@ -110,6 +112,7 @@ const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
   DESISTER_PAR_LE_DEMANDEUR: { db: ETES.desistementDuDemandeur, mainStep: false },
   DEMANDER_INFORMATION: { db: ETES.demandeDinformations, mainStep: false },
   RECEVOIR_INFORMATION: { db: ETES.receptionDinformation, mainStep: false },
+  FAIRE_DEMANDE_DE_CONSENTEMENT: { db: ETES.demandeDeConsentement, mainStep: true },
 }
 
 // basé sur https://drive.google.com/drive/u/1/folders/1U_in35zSb837xCp_fp31I0vOmb36QguL
@@ -124,13 +127,16 @@ export class ProcedureSpecifiqueMachine extends CaminoMachine<ProcedureSpecifiqu
         if (isNullOrUndefined(etape.concurrence)) {
           throw new Error('La concurrence est obligatoire pour faire la demande')
         }
+        if (isNullOrUndefined(etape.consentement)) {
+          throw new Error('Le consentement est obligatoire pour faire la demande')
+        }
         if (isNullOrUndefined(etape.hasTitreFrom)) {
           throw new Error("L'attribut hasTitreFrom est obligatoire pour faire la demande")
         }
         if (isNullOrUndefined(etape.paysId)) {
           throw new Error("L'attribut paysId est obligatoire pour faire la demande")
         }
-        return { type: eventFromEntry, concurrence: etape.concurrence, hasTitreFrom: etape.hasTitreFrom, paysId: etape.paysId }
+        return { type: eventFromEntry, concurrence: etape.concurrence, consentement: etape.consentement, hasTitreFrom: etape.hasTitreFrom, paysId: etape.paysId }
       }
       default:
         return super.eventFromEntry(eventFromEntry, etape)
@@ -141,8 +147,8 @@ export class ProcedureSpecifiqueMachine extends CaminoMachine<ProcedureSpecifiqu
     switch (event) {
       case 'FAIRE_DEMANDE':
         return [
-          { type: event, concurrence: { amIFirst: false, demarcheConcurrenteVisibilite: 'publique' }, hasTitreFrom: false, paysId: 'FR' },
-          { type: event, concurrence: { amIFirst: false, demarcheConcurrenteVisibilite: 'publique' }, hasTitreFrom: false, paysId: 'GF' },
+          { type: event, concurrence: { amIFirst: false, demarcheConcurrenteVisibilite: 'publique' }, consentement: 'non-applicable', hasTitreFrom: false, paysId: 'FR' },
+          { type: event, concurrence: { amIFirst: false, demarcheConcurrenteVisibilite: 'publique' }, consentement: 'non-applicable', hasTitreFrom: false, paysId: 'GF' },
         ]
       case 'OUVRIR_ENQUETE_PUBLIQUE':
       case 'OUVRIR_PARTICIPATION_DU_PUBLIC':
@@ -171,6 +177,7 @@ interface ProcedureSpecifiqueContext extends CaminoCommonContext {
   hasTitreFrom: 'inconnu' | boolean
   demandeInformationEnCours: boolean
   paysId: 'inconnu' | PaysId
+  consentement: 'inconnu' | Consentement
 }
 const defaultDemarcheStatut = DemarchesStatutsIds.EnConstruction
 const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId) =>
@@ -186,6 +193,7 @@ const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: De
         }
         return canHaveMiseEnConcurrence(demarcheTypeId, context.hasTitreFrom)
       },
+      consentementAFaire: ({ context }) => context.consentement === 'à faire',
       isDemarcheEnInstruction: ({ context }) => context.demarcheStatut === DemarchesStatutsIds.EnInstruction,
       isDemandeInformationEnCours: ({ context }) => context.demandeInformationEnCours,
       isPremiereDemandePourMiseEnConcurrence: ({ context }) => {
@@ -227,6 +235,7 @@ const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: De
       hasTitreFrom: 'inconnu',
       paysId: 'inconnu',
       demandeInformationEnCours: false,
+      consentement: 'inconnu',
     },
     on: {
       CLASSER_SANS_SUITE: {
@@ -262,6 +271,7 @@ const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: De
               concurrence: ({ event }) => event.concurrence,
               hasTitreFrom: ({ event }) => event.hasTitreFrom,
               paysId: ({ event }) => event.paysId,
+              consentement: ({ event }) => event.consentement,
             }),
           },
         },
@@ -307,56 +317,105 @@ const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: De
         },
       },
       recevabiliteFavorableFaite: {
-        always: [
-          {
-            target: 'avisCGE_IGEDD_AFaire',
-            guard: and([not('canHaveMiseEnConcurrence')]),
+        type: 'parallel',
+        states: {
+          avisCGEouResultatMiseEnConcurrenceAFaireMachine: {
+            initial: 'avisCGEouResultatMiseEnConcurrenceAFaire',
+            states: {
+              avisCGEouResultatMiseEnConcurrenceAFaire: {
+                always: [
+                  {
+                    target: 'fin',
+                    guard: and([not('canHaveMiseEnConcurrence')]),
+                  },
+                  {
+                    target: 'resultatMiseEnConcurrenceAFaire',
+                    guard: and(['canHaveMiseEnConcurrence', not('isPremiereDemandePourMiseEnConcurrence')]),
+                    actions: assign({
+                      visibilite: ({ context }) => ('inconnu' !== context.concurrence && !context.concurrence.amIFirst ? context.concurrence.demarcheConcurrenteVisibilite : context.visibilite),
+                    }),
+                  },
+                ],
+                on: {
+                  FAIRE_MISE_EN_CONCURRENCE: [
+                    {
+                      target: 'resultatMiseEnConcurrenceAFaire',
+                      guard: and(['canHaveMiseEnConcurrence', 'isPremiereDemandePourMiseEnConcurrence', ({ event }) => event.status === ETAPES_STATUTS.TERMINE]),
+                      actions: assign({ visibilite: 'publique' }),
+                    },
+                    {
+                      target: 'enAttente',
+                      guard: and(['canHaveMiseEnConcurrence', 'isPremiereDemandePourMiseEnConcurrence', ({ event }) => event.status === ETAPES_STATUTS.EN_COURS]),
+                      actions: assign({ visibilite: 'publique' }),
+                    },
+                    {
+                      target: 'enAttente',
+                      guard: and(['canHaveMiseEnConcurrence', 'isPremiereDemandePourMiseEnConcurrence', ({ event }) => event.status === ETAPES_STATUTS.PROGRAMME]),
+                    },
+                  ],
+                },
+              },
+              enAttente: {},
+              resultatMiseEnConcurrenceAFaire: {
+                on: {
+                  RENDRE_RESULTAT_MISE_EN_CONCURRENCE_ACCEPTEE: 'fin',
+                  RENDRE_RESULTAT_MISE_EN_CONCURRENCE_REJETEE: {
+                    target: '#finDeMachine',
+                    actions: assign({ demarcheStatut: DemarchesStatutsIds.Rejete }),
+                  },
+                },
+              },
+
+              fin: {
+                type: 'final',
+              },
+            },
           },
-          {
-            target: 'resultatMiseEnConcurrenceAFaire',
-            guard: and(['canHaveMiseEnConcurrence', not('isPremiereDemandePourMiseEnConcurrence')]),
-            actions: assign({
-              visibilite: ({ context }) => ('inconnu' !== context.concurrence && !context.concurrence.amIFirst ? context.concurrence.demarcheConcurrenteVisibilite : context.visibilite),
-            }),
+
+          notificationAuDemandeurAFaireMachine: {
+            initial: 'notificationAuDemandeurAFaire',
+
+            states: {
+              notificationAuDemandeurAFaire: {
+                always: {
+                  guard: not('isPerOuConcession'),
+                  target: 'fin',
+                },
+                on: {
+                  NOTIFIER_DEMANDEUR: 'fin',
+                },
+              },
+              fin: {
+                type: 'final',
+              },
+            },
           },
-        ],
-        on: {
-          FAIRE_MISE_EN_CONCURRENCE: [
-            {
-              target: 'resultatMiseEnConcurrenceAFaire',
-              guard: and(['canHaveMiseEnConcurrence', 'isPremiereDemandePourMiseEnConcurrence', ({ event }) => event.status === ETAPES_STATUTS.TERMINE]),
-              actions: assign({ visibilite: 'publique' }),
+
+          demandeDeConsentementAFaireMachine: {
+            initial: 'demandeDeConsentementAFaire',
+
+            states: {
+              demandeDeConsentementAFaire: {
+                always: {
+                  guard: not('consentementAFaire'),
+                  target: 'fin',
+                },
+                on: {
+                  FAIRE_DEMANDE_DE_CONSENTEMENT: 'fin',
+                },
+              },
+              fin: {
+                type: 'final',
+              },
             },
-            {
-              target: 'enAttente',
-              guard: and(['canHaveMiseEnConcurrence', 'isPremiereDemandePourMiseEnConcurrence', ({ event }) => event.status === ETAPES_STATUTS.EN_COURS]),
-              actions: assign({ visibilite: 'publique' }),
-            },
-            {
-              target: 'enAttente',
-              guard: and(['canHaveMiseEnConcurrence', 'isPremiereDemandePourMiseEnConcurrence', ({ event }) => event.status === ETAPES_STATUTS.PROGRAMME]),
-            },
-          ],
-          NOTIFIER_DEMANDEUR: {
-            target: 'recevabiliteFavorableFaite',
-            guard: 'isPerOuConcession',
           },
         },
+        onDone: 'avisCGE_IGEDD_AFaire',
       },
-      enAttente: {},
       notificationAuDemandeurOuDemandeDeModificationAESAFaire: {
         on: {
           FAIRE_DEMANDE_MODIFICATION_AES: 'avisCGE_IGEDD_AFaire',
           NOTIFIER_DEMANDEUR: 'lettreDeSaisineDuPrefetOuReponseDuDemandeurAFaire',
-        },
-      },
-      resultatMiseEnConcurrenceAFaire: {
-        on: {
-          RENDRE_RESULTAT_MISE_EN_CONCURRENCE_ACCEPTEE: 'avisCGE_IGEDD_AFaire',
-          RENDRE_RESULTAT_MISE_EN_CONCURRENCE_REJETEE: {
-            target: 'finDeMachine',
-            actions: assign({ demarcheStatut: DemarchesStatutsIds.Rejete }),
-          },
         },
       },
       avisCGE_IGEDD_AFaire: {
@@ -585,27 +644,8 @@ const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: De
         },
       },
       finDeMachine: {
+        id: 'finDeMachine',
         type: 'final',
       },
     },
   })
-
-/**  FIXMACHINE questions POH
-- L'irrecevabilité est faisable que après une demande de compléments ? -> OUI
-- C'est une toute nouvelle étape « Information du préfet et des collectivités » ? Est-ce que ça serait pas une fusion d'anciennes étapes ? -> c'est tout nouveau
-- Est-ce que l'information du préfet et des collectivités est faite 2 fois ? -> Non que une fois
-- « avisDuConseilGeneralDeLeconomie_CGE_ » ça passe pour l'étape « avis du CGE et de l'IGEDD » ? => Renommer l'étape
-- l'étape « avis du CGE et de l'IGEDD » n'a pas de statut favorable / défavorable ? => C'est une étape d'avis donc c'est FAIT
-- comment on peut avoir une mise en concurrence si la démarche n'est pas publique ? => Modif du logigramme, ça devient publique dés que la mise en concurrence est « en cours »
-- Pour l'enquête et la participation du public, la démarche est déjà publique => Heuuuu non, modif à faire dans le logigramme
-- « Mesures de publicité» ça bloque tout ? -> NON
-- Pour la mise en concurrence, si ce n'est pas la demande initiale. L'utilisateur a le choix entre 2 « Notification au demandeur », sachant que celle après la mise en concurrence est beaucoup plus complète, on ne peut pas renommer cette dernière ?
-Si une démarche vient en concurrence d'une démarche existante, alors elle devient publique dès la recevabilité de la demande favorable ?
-Notification au demandeur après la mise en concurrence devrait être renommée "Conclusion suite à la mise en concurrence" ?
-Réecrire les conditions :
- - "octrois et extension de périmètres et prolongations de concessions"
- - "autres démarches et prolongations octroi de concessions suite à PER octroi d'AXM suite à ARM"
-En une seule condition
-- Pour « la mise en concurrence », c'est l'anf ?
-
-**/

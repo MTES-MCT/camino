@@ -129,6 +129,8 @@ export const concurrenceValidator = z.discriminatedUnion('amIFirst', [
   z.object({ amIFirst: z.literal(true) }),
   z.object({ amIFirst: z.literal(false), demarcheConcurrenteVisibilite: demarcheVisibiliteValidator }),
 ])
+const consentementValidator = z.enum(['à faire', 'non-applicable'] as const)
+export type Consentement = z.infer<typeof consentementValidator>
 export const flattenEtapeValidator = graphqlEtapeValidator
   .omit({
     heritageProps: true,

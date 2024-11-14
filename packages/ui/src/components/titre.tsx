@@ -42,6 +42,7 @@ import { Entreprise } from 'camino-common/src/entreprise'
 import { CaminoRouter } from '@/typings/vue-router'
 import { ModifiedDate } from './_common/modified-date'
 import { DemarcheMiseEnConcurrence } from './titre/demarche-mise-en-concurrence'
+import { DemarchesConsentement } from './titre/demarche-consentement'
 import { useState } from '@/utils/vue-tsx-utils'
 
 const activitesSort: TableSortEvent = {
@@ -438,6 +439,7 @@ export const PureTitre = defineComponent<Props>(props => {
             </div>
 
             <DemarcheMiseEnConcurrence apiClient={props.apiClient} titre={titre} user={props.user ?? null} hasTitresFrom={hasTitresFrom.value} />
+            {isNotNullNorUndefined(props.currentDemarcheSlug) ? <DemarchesConsentement titre={titre} demarcheSlug={props.currentDemarcheSlug} /> : null}
             <DsfrSeparator />
             {hasNoPhases.value ? <DsfrButton style={{ marginLeft: 'auto' }} buttonType="primary" title="Ajouter une démarche" onClick={openAddDemarchePopup} /> : null}
             {props.currentDemarcheSlug !== null ? (

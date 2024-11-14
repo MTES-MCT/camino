@@ -13,7 +13,8 @@ import { z } from 'zod'
 import { ETAPE_IS_NOT_BROUILLON, etapeBrouillonValidator, etapeIdValidator } from 'camino-common/src/etape'
 import { DeepReadonly, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
 import { km2Validator } from 'camino-common/src/number'
-import { concurrenceValidator, DemarcheVisibilite } from 'camino-common/src/etape-form'
+import { concurrenceValidator, Consentement, DemarcheVisibilite } from 'camino-common/src/etape-form'
+import { demarcheIdValidator } from 'camino-common/src/demarche'
 
 export type Concurrence = z.infer<typeof concurrenceValidator>
 export interface Etape {
@@ -26,6 +27,7 @@ export interface Etape {
   surface?: number
   concurrence?: Concurrence
   hasTitreFrom?: boolean
+  consentement?: Consentement
 }
 
 export const globalGuards = {
@@ -54,6 +56,7 @@ export const titreEtapeForMachineValidator = z.object({
     .nullable()
     .optional()
     .default(null),
+  demarcheIdsConsentement: z.array(demarcheIdValidator),
   communes: z
     .array(z.object({ id: communeIdValidator }))
     .nullable()
@@ -112,6 +115,11 @@ const toMachineEtape = (dbEtape: DeepReadonly<Omit<TitreEtapeForMachine, 'id' | 
   }
   if (dbEtape.surface !== null) {
     machineEtape.surface = dbEtape.surface
+  }
+  if (isNotNullNorUndefinedNorEmpty(dbEtape.demarcheIdsConsentement)) {
+    machineEtape.consentement = 'à faire'
+  } else {
+    machineEtape.consentement = 'non-applicable'
   }
   return machineEtape
 }

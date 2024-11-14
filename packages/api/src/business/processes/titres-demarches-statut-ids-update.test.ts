@@ -41,6 +41,7 @@ describe("statut des démarches d'un titre", () => {
             contenu: {},
             heritageContenu: {},
             surface: null,
+            demarcheIdsConsentement: [],
           },
           {
             id: newEtapeId('h-cx-courdemanges-1988-oct01-dex01'),
@@ -55,6 +56,7 @@ describe("statut des démarches d'un titre", () => {
             contenu: {},
             heritageContenu: {},
             surface: null,
+            demarcheIdsConsentement: [],
           },
         ],
       },
@@ -86,6 +88,7 @@ describe("statut des démarches d'un titre", () => {
             contenu: {},
             heritageContenu: {},
             surface: null,
+            demarcheIdsConsentement: [],
           },
           {
             id: newEtapeId('h-cx-courdemanges-1988-oct01-dex01'),
@@ -100,6 +103,7 @@ describe("statut des démarches d'un titre", () => {
             contenu: {},
             heritageContenu: {},
             surface: null,
+            demarcheIdsConsentement: [],
           },
         ],
       },

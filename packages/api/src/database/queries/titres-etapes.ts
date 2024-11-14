@@ -10,6 +10,7 @@ import { User, UserNotNull } from 'camino-common/src/roles'
 import { TitreId } from 'camino-common/src/validators/titres'
 import { EtapeId, EtapeIdOrSlug } from 'camino-common/src/etape'
 import { DeepReadonly } from 'camino-common/src/typescript-tools'
+import { DemarcheId } from 'camino-common/src/demarche'
 
 const titresEtapesQueryBuild = ({ fields }: { fields?: FieldsEtape }, user: DeepReadonly<User>) => {
   const graph = fields ? graphBuild(fields, 'etapes', fieldsFormat) : '[]'
@@ -68,7 +69,11 @@ export const titresEtapesGet = async (
   return q
 }
 
-export const titreEtapeCreate = async (titreEtape: Omit<ITitreEtape, 'id' | 'concurrence' | 'hasTitreFrom'>, user: UserNotNull, titreId: TitreId): Promise<TitresEtapes> => {
+export const titreEtapeCreate = async (
+  titreEtape: Omit<ITitreEtape, 'id' | 'concurrence' | 'hasTitreFrom' | 'demarcheIdsConsentement'> & { demarcheIdsConsentement?: DemarcheId[] },
+  user: UserNotNull,
+  titreId: TitreId
+): Promise<TitresEtapes> => {
   const newValue = await TitresEtapes.query().insertAndFetch(titreEtape).withGraphFetched('[]')
 
   await createJournalCreate(newValue.id, user.id, titreId)

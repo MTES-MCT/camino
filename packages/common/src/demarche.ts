@@ -45,6 +45,7 @@ const demarcheEtapeCommonValidator = z.object({
   etape_documents: z.array(etapeDocumentValidator),
   avis_documents: z.array(etapeAvisValidator),
   demarche_id_en_concurrence: z.never().optional(),
+  demarches_consentement: z.never().optional(),
 })
 
 export type DemarcheEtapeCommon = z.infer<typeof demarcheEtapeCommonValidator>
@@ -76,9 +77,16 @@ const demarcheEtapeFondamentaleCommonValidator = demarcheEtapeCommonValidator.ex
   }),
 })
 
+const demarcheConsentementValidator = z.object({
+  demarcheId: demarcheIdValidator,
+  titreNom: z.string(),
+})
+export type DemarcheConsentement = z.infer<typeof demarcheConsentementValidator>
+
 const demarcheEtapeFondamentaleWithConcurrencyValidator = demarcheEtapeFondamentaleCommonValidator.omit({ demarche_id_en_concurrence: true }).extend({
   etape_type_id: etapeTypeIdFondamentaleValidator.extract([ETAPE_TYPE_FOR_CONCURRENCY_DATA]),
   demarche_id_en_concurrence: demarcheIdValidator.nullable(),
+  demarches_consentement: z.array(demarcheConsentementValidator),
 })
 
 type DemarcheEtapeFondamentaleWithConcurrency = z.infer<typeof demarcheEtapeFondamentaleWithConcurrencyValidator>

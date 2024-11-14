@@ -23,6 +23,7 @@ import { titresEtapesStatutUpdate } from './processes/titres-etapes-statut-updat
 import { callAndExit } from '../tools/fp-tools'
 import { allEtapesMiseEnConcurrenceUpdate } from './processes/titres-etapes-mise-en-concurrence'
 import { etapesFondamentaleIdUpdateForAll } from './processes/titres-etapes-fondamentale-id-update'
+import { allEtapesConsentementUpdate } from './processes/titres-etapes-consentement'
 
 export const daily = async (pool: Pool): Promise<void> => {
   try {
@@ -33,6 +34,7 @@ export const daily = async (pool: Pool): Promise<void> => {
     const titresEtapesStatusUpdated = await titresEtapesStatutUpdate(pool)
 
     await callAndExit(allEtapesMiseEnConcurrenceUpdate(pool))
+    await callAndExit(allEtapesConsentementUpdate(pool))
     const titresEtapesOrdreUpdated = await titresEtapesOrdreUpdate(pool, userSuper)
     await callAndExit(etapesFondamentaleIdUpdateForAll(pool))
     const titresEtapesHeritagePropsUpdated = await titresEtapesHeritagePropsUpdate(userSuper)

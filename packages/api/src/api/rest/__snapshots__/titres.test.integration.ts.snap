@@ -3,6 +3,7 @@
 exports[`titresAdministration > teste la récupération des données pour les Administrations 1`] = `
 {
   "derniereEtape": {
+    "consentement": "non-applicable",
     "date": "2022-03-10",
     "etapeStatutId": "com",
     "etapeTypeId": "mcp",
@@ -32,6 +33,7 @@ exports[`titresAdministration > teste la récupération des données pour les Ad
 exports[`titresAdministration > teste la récupération des données pour les Administrations 2`] = `
 {
   "derniereEtape": {
+    "consentement": "non-applicable",
     "date": "2022-02-10",
     "etapeStatutId": "fai",
     "etapeTypeId": "pfd",

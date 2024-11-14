@@ -20,7 +20,7 @@ import { titreReferenceValidator } from 'camino-common/src/titres-references'
 import { DemarcheEtape, DemarcheEtapeCommon, DemarcheEtapeFondamentale, DemarcheEtapeNonFondamentale, DemarcheId, demarcheIdValidator, demarcheSlugValidator } from 'camino-common/src/demarche'
 import { demarcheStatutIdValidator } from 'camino-common/src/static/demarchesStatuts'
 import { demarcheTypeIdValidator } from 'camino-common/src/static/demarchesTypes'
-import { getEtapesByDemarcheId } from './demarches.queries'
+import { getDemarcheByIdOrSlug, getEtapesByDemarcheId } from './demarches.queries'
 import { canReadEtape } from './permissions/etapes'
 import { canReadDemarche } from './permissions/demarches'
 import { SectionWithValue } from 'camino-common/src/sections'
@@ -30,7 +30,7 @@ import { OmitDistributive, isNonEmptyArray, isNotNullNorUndefined, isNotNullNorU
 import { getEntrepriseDocumentIdsByEtapeId, getDocumentsByEtapeId, getEtapeAvisLargeObjectIdsByEtapeId } from '../../database/queries/titres-etapes.queries'
 import { getAdministrationsLocales } from 'camino-common/src/administrations'
 import { getEntrepriseDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/entrepriseDocuments'
-import { ETAPE_TYPE_FOR_CONCURRENCY_DATA, isEtapeTypeIdFondamentale } from 'camino-common/src/static/etapesTypes'
+import { ETAPE_TYPE_FOR_CONCURRENCY_DATA, ETAPE_TYPE_FOR_CONSENTEMENT_DATA, EtapeTypeId, isEtapeTypeIdFondamentale } from 'camino-common/src/static/etapesTypes'
 import { getCommunes } from '../../database/queries/communes.queries'
 import { EtapeAvis, EtapeDocument } from 'camino-common/src/etape'
 import { getDateLastJournal } from './journal.queries'
@@ -142,7 +142,7 @@ export const getTitre = async (pool: Pool, user: User, idOrSlug: TitreIdOrSlug):
             }
           }
 
-          const etapeFondamentale: Omit<DemarcheEtapeFondamentale, 'etape_documents' | 'avis_documents' | 'demarche_id_en_concurrence'> = {
+          const etapeFondamentale: Omit<DemarcheEtapeFondamentale, 'etape_documents' | 'avis_documents' | 'demarche_id_en_concurrence' | 'demarches_consentement'> = {
             etape_type_id: etape.etape_type_id,
             fondamentale: {
               amodiataireIds,
@@ -157,14 +157,25 @@ export const getTitre = async (pool: Pool, user: User, idOrSlug: TitreIdOrSlug):
           }
 
           const etape_type_id = etapeFondamentale.etape_type_id
-          if (etape_type_id === ETAPE_TYPE_FOR_CONCURRENCY_DATA) {
+
+          const isEtapesTypesForConsentementOrConcurrenceData = (typeId: EtapeTypeId): typeId is typeof ETAPE_TYPE_FOR_CONCURRENCY_DATA | typeof ETAPE_TYPE_FOR_CONSENTEMENT_DATA =>
+            [ETAPE_TYPE_FOR_CONCURRENCY_DATA, ETAPE_TYPE_FOR_CONSENTEMENT_DATA].includes(typeId)
+
+          if (isEtapesTypesForConsentementOrConcurrenceData(etape_type_id)) {
             let demarcheIdEnConcurrence: DemarcheId | null
+            let demarchesConsentement: { demarcheId: DemarcheId; titreNom: string }[] = []
             if (isAdministration(user) || isSuper(user) || demarche.public_lecture) {
               demarcheIdEnConcurrence = etape.demarche_id_en_concurrence
+              const demarcheIdsConsentement = etape.demarche_ids_consentement
+
+              demarchesConsentement = (await Promise.all(demarcheIdsConsentement.map(id => callAndExit(getDemarcheByIdOrSlug(pool, id))))).map(({ demarche_id, titre_nom }) => ({
+                demarcheId: demarche_id,
+                titreNom: titre_nom,
+              }))
             } else {
               demarcheIdEnConcurrence = null
             }
-            formatedEtapes.push({ ...etapeFondamentale, etape_type_id, demarche_id_en_concurrence: demarcheIdEnConcurrence })
+            formatedEtapes.push({ ...etapeFondamentale, etape_type_id, demarche_id_en_concurrence: demarcheIdEnConcurrence, demarches_consentement: demarchesConsentement })
           } else {
             formatedEtapes.push({ ...etapeFondamentale, etape_type_id })
           }

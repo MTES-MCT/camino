@@ -9,7 +9,7 @@ import {
   getDemarchesEnConcurrenceQuery,
   getEtapesByDemarcheId,
 } from './demarches.queries'
-import { GetDemarcheByIdOrSlugValidator, getDemarcheByIdOrSlugValidator } from 'camino-common/src/titres'
+import { GetDemarcheByIdOrSlug, getDemarcheByIdOrSlugValidator } from 'camino-common/src/titres'
 import { getAdministrationsLocalesByTitreId, getDemarchesByTitreId, getTitreByIdOrSlug, getTitulairesAmodiatairesByTitreId } from './titres.queries'
 import { isNullOrUndefined, memoize } from 'camino-common/src/typescript-tools'
 import { canReadDemarche } from './permissions/demarches'
@@ -27,7 +27,7 @@ import { callAndExit } from '../../tools/fp-tools'
 
 export const getDemarcheByIdOrSlug =
   (pool: Pool) =>
-  async (req: CaminoRequest, res: CustomResponse<GetDemarcheByIdOrSlugValidator>): Promise<void> => {
+  async (req: CaminoRequest, res: CustomResponse<GetDemarcheByIdOrSlug>): Promise<void> => {
     try {
       const demarcheIdOrSlugParsed = demarcheIdOrSlugValidator.safeParse(req.params.demarcheIdOrSlug)
       const user = req.auth
@@ -160,7 +160,7 @@ export const getDemarchesEnConcurrence: RestNewGetCall<'/rest/demarches/:demarch
     Effect.mapError(caminoError =>
       Match.value(caminoError.message).pipe(
         Match.when('Problème de validation de données', () => ({ ...caminoError, status: HTTP_STATUS.BAD_REQUEST })),
-        Match.when("Impossible d'accéder à la base de données", () => ({ ...caminoError, status: HTTP_STATUS.INTERNAL_SERVER_ERROR })),
+        Match.when("Impossible d'exécuter la requête dans la base de données", () => ({ ...caminoError, status: HTTP_STATUS.INTERNAL_SERVER_ERROR })),
         Match.exhaustive
       )
     )
@@ -187,7 +187,7 @@ export const getResultatEnConcurrence: RestNewGetCall<'/rest/demarches/:demarche
     Effect.mapError(caminoError =>
       Match.value(caminoError.message).pipe(
         Match.whenOr('Problème de validation de données', "La démarche n'existe pas", () => ({ ...caminoError, status: HTTP_STATUS.BAD_REQUEST })),
-        Match.when("Impossible d'accéder à la base de données", () => ({ ...caminoError, status: HTTP_STATUS.INTERNAL_SERVER_ERROR })),
+        Match.when("Impossible d'exécuter la requête dans la base de données", () => ({ ...caminoError, status: HTTP_STATUS.INTERNAL_SERVER_ERROR })),
         Match.when('droits insuffisants', () => ({ ...caminoError, status: HTTP_STATUS.FORBIDDEN })),
         Match.exhaustive
       )

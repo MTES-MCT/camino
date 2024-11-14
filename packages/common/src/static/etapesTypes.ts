@@ -5,13 +5,14 @@ import { EtapeBrouillon } from '../etape'
 
 // prettier-ignore
 
-const IDS = ["abd", "aca","aco","and","anf","def","dex","dim", "dpu",  "ihi", "mfr","mod","mom","rca","rcb","rcd","rcm","rco","rcs","rie","rif","rim","rmc", "rpu","sco","acg","acf","apd","ape","apo","app","apu","cac","cim","css","dae","des","dma", "ede","edm","epu","esb","mca","mcb","mcd", "mci","mcm","mco","mcp","mcr","mcs","mec","men","meo","mie","mif","mim","mna","mnb","mnc","mnd","mni","mno","mns","mnv","mpb", "ncl","npp","pfc","pfd","ppu","pqr","rcg","rde","rno","rpe","sas","sca","scg","spe","spo","spp","vfc","vfd","wab","wae","wao","war","wau","wco","wda","wdc","wdd","wde","wfa","wfd","wfo","wmt","wpb","wpc","wpo","wpp","wps","wrc","wre","wrt","wse","wtp", "asc", "adc"] as const
+const IDS = ["abd", "aca","aco","and","anf","def","dex","dim", "dpu",  "ihi", "mfr","mod","mom","rca","rcb","rcd","rcm","rco","rcs","rie","rif","rim","rmc", "rpu","sco","acg","acf","apd","ape","apo","app","apu","cac","cim","css","dae","ddc","des","dma", "ede","edm","epu","esb","mca","mcb","mcd", "mci","mcm","mco","mcp","mcr","mcs","mec","men","meo","mie","mif","mim","mna","mnb","mnc","mnd","mni","mno","mns","mnv","mpb", "ncl","npp","pfc","pfd","ppu","pqr","rcg","rde","rno","rpe","sas","sca","scg","spe","spo","spp","vfc","vfd","wab","wae","wao","war","wau","wco","wda","wdc","wdd","wde","wfa","wfd","wfo","wmt","wpb","wpc","wpo","wpp","wps","wrc","wre","wrt","wse","wtp", "asc", "adc"] as const
 
 // prettier-ignore
 const FONDAMENTALES_IDS = ["abd", "aca","aco","and","anf","def","dex","dim", "dpu","ihi", "mfr","mod","mom","rca","rcb","rcd","rcm","rco","rcs","rie","rif","rim","rmc", "rpu","sco"] as const satisfies Readonly<EtapeTypeIdFondamentaleArray>
 
 // prettier-ignore
-const NON_FONDAMENTALES_IDS = ["acg", "acf","apd","ape","apo","app","apu","cac","cim","css","dae","des","dma", "ede","edm","epu","esb","mca","mcb","mcd","mci", "mcm","mco","mcp","mcr", "mcs","mec","men","meo","mie","mif","mim","mna","mnb","mnc","mnd","mni","mno","mns","mnv","mpb", "ncl","npp","pfc","pfd","ppu","pqr","rcg","rde","rno", "rpe","sas","sca","scg","spe","spo","spp","vfc","vfd","wab","wae","wao","war","wau","wco","wda","wdc","wdd","wde","wfa","wfd","wfo","wmt","wpb","wpc","wpo","wpp","wps","wrc","wre","wrt","wse","wtp", "asc", "adc"] as const satisfies Readonly<EtapeTypeIdNonFondamentale[]>
+
+const NON_FONDAMENTALES_IDS = ["acg", "acf","apd","ape","apo","app","apu","cac","cim","css","dae","ddc","des","dma", "ede","edm","epu","esb","mca","mcb","mcd","mci", "mcm","mco","mcp","mcr", "mcs","mec","men","meo","mie","mif","mim","mna","mnb","mnc","mnd","mni","mno","mns","mnv","mpb", "ncl","npp","pfc","pfd","ppu","pqr","rcg","rde","rno", "rpe","sas","sca","scg","spe","spo","spp","vfc","vfd","wab","wae","wao","war","wau","wco","wda","wdc","wdd","wde","wfa","wfd","wfo","wmt","wpb","wpc","wpo","wpp","wps","wrc","wre","wrt","wse","wtp", "asc", "adc"] as const satisfies Readonly<EtapeTypeIdNonFondamentale[]>
 
 // Ceci est un test :)
 ;[...FONDAMENTALES_IDS, ...NON_FONDAMENTALES_IDS] as const satisfies typeof IDS
@@ -32,6 +33,7 @@ export const ETAPES_TYPES = {
   concertationInterministerielle: 'cim',
   classementSansSuite: 'css',
   decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_: 'dae',
+  demandeDeConsentement: 'ddc',
   decisionDeLOfficeNationalDesForets: 'def',
   desistementDuDemandeur: 'des',
   decisionDeLAutoriteAdministrative: 'dex',
@@ -959,7 +961,7 @@ export const EtapesTypes = {
   },
   acg: {
     id: 'acg',
-    nom: "avis du conseil général de l'économie (CGE)",
+    nom: "avis du CGE et de l'IGEDD",
     description: "Le conseil général de l'économie donne un avis sur la demande et sur son instruction au ministre chargé des mines. Cet avis n'est pas conforme.",
     fondamentale: false,
     unique: false,
@@ -1260,6 +1262,16 @@ export const EtapesTypes = {
     public_lecture: false,
     entreprises_lecture: false,
   },
+  ddc: {
+    id: 'ddc',
+    nom: 'demande de consentement',
+    description: '',
+    fondamentale: false,
+    unique: true,
+    date_fin: null,
+    public_lecture: false,
+    entreprises_lecture: false,
+  },
 } as const satisfies { [key in EtapeTypeId]: EtapeType<key> }
 
 type IsFondamentale<T> = T extends EtapeTypeId ? ((typeof EtapesTypes)[T] extends { fondamentale: true } ? T : never) : never
@@ -1310,3 +1322,4 @@ export const isEtapeWithAutomaticStatuts = (etapeTypeId: EtapeTypeId | null): et
   etapeTypeId !== null && ETAPES_WITH_AUTOMATIC_STATUTS.includes(etapeTypeId)
 
 export const ETAPE_TYPE_FOR_CONCURRENCY_DATA = ETAPES_TYPES.demande
+export const ETAPE_TYPE_FOR_CONSENTEMENT_DATA = ETAPES_TYPES.demande

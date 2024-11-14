@@ -18,6 +18,7 @@ describe("date de fin d'une démarche d'annulation", () => {
         date: toCaminoDate('2013-05-21'),
         concurrence: { amIFirst: true },
         hasTitreFrom: true,
+        demarcheIdsConsentement: [],
       },
     ]
     expect(titreDemarcheAnnulationDateFinFind(titreDemarcheAnnulationEtapes)).toEqual('2013-05-21')
@@ -36,6 +37,7 @@ describe("date de fin d'une démarche d'annulation", () => {
         dateFin: toCaminoDate('2013-05-25'),
         concurrence: { amIFirst: true },
         hasTitreFrom: true,
+        demarcheIdsConsentement: [],
       },
     ]
     expect(titreDemarcheAnnulationDateFinFind(titreDemarcheAnnulationEtapesDateFin)).toEqual('2013-05-25')
@@ -71,6 +73,7 @@ describe("date de fin d'une démarche d'annulation", () => {
         dateFin: toCaminoDate('2013-05-25'),
         concurrence: 'non-applicable',
         hasTitreFrom: 'non-applicable',
+        demarcheIdsConsentement: [],
       },
     ]
     expect(titreDemarcheAnnulationDateFinFind(titreDemarcheACOFaitEtapesDateFin)).toEqual('2013-05-25')

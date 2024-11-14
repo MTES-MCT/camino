@@ -58,6 +58,7 @@ describe("phases d'un titre", () => {
                 dateFin: toCaminoDate('2500-01-01'),
                 concurrence: { amIFirst: true },
                 hasTitreFrom: true,
+                demarcheIdsConsentement: [],
               },
               {
                 id: newEtapeId('h-cx-courdemanges-1988-oct01-dex01'),
@@ -70,6 +71,7 @@ describe("phases d'un titre", () => {
                 dateFin: toCaminoDate('2500-01-01'),
                 concurrence: { amIFirst: true },
                 hasTitreFrom: true,
+                demarcheIdsConsentement: [],
               },
             ],
           },
@@ -112,6 +114,7 @@ describe("phases d'un titre", () => {
                 dateFin: toCaminoDate('2500-01-01'),
                 concurrence: { amIFirst: true },
                 hasTitreFrom: true,
+                demarcheIdsConsentement: [],
               },
               {
                 id: newEtapeId('h-cx-courdemanges-1988-oct01-dex01'),
@@ -124,6 +127,7 @@ describe("phases d'un titre", () => {
                 dateFin: toCaminoDate('2500-01-01'),
                 concurrence: { amIFirst: true },
                 hasTitreFrom: true,
+                demarcheIdsConsentement: [],
               },
             ],
           },
@@ -194,6 +198,7 @@ describe("phases d'un titre", () => {
                 dateFin: toCaminoDate('2500-01-01'),
                 concurrence: { amIFirst: true },
                 hasTitreFrom: true,
+                demarcheIdsConsentement: [],
               },
               {
                 id: newEtapeId('h-cx-courdemanges-1988-oct01-dex01'),
@@ -206,6 +211,7 @@ describe("phases d'un titre", () => {
                 dateFin: toCaminoDate('2500-01-01'),
                 concurrence: { amIFirst: true },
                 hasTitreFrom: true,
+                demarcheIdsConsentement: [],
               },
             ],
           },

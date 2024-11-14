@@ -10,7 +10,7 @@ import { User, isAdministrationAdmin, isAdministrationEditeur, isSuper } from 'c
 import { Entreprise } from 'camino-common/src/entreprise'
 import { useState } from '../utils/vue-tsx-utils'
 import { AsyncData } from '../api/client-rest'
-import { GetDemarcheByIdOrSlugValidator } from 'camino-common/src/titres'
+import { GetDemarcheByIdOrSlug } from 'camino-common/src/titres'
 import { PerimetreInformations } from 'camino-common/src/perimetre'
 import { LoadingElement } from './_ui/functional-loader'
 import { DemarchesTypes } from 'camino-common/src/static/demarchesTypes'
@@ -84,7 +84,7 @@ const helpVisible = (user: User, titreTypeId: TitreTypeId, etapeTypeId: EtapeTyp
 }
 
 export const PureEtapeEdition = defineComponent<Props>(props => {
-  const [asyncData, setAsyncData] = useState<AsyncData<DeepReadonly<{ etape: EtapeEditFormProps['etape']; demarche: GetDemarcheByIdOrSlugValidator; perimetre: PerimetreInformations }>>>({
+  const [asyncData, setAsyncData] = useState<AsyncData<DeepReadonly<{ etape: EtapeEditFormProps['etape']; demarche: GetDemarcheByIdOrSlug; perimetre: PerimetreInformations }>>>({
     status: 'LOADING',
   })
 

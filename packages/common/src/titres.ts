@@ -152,7 +152,7 @@ export const getDemarcheByIdOrSlugValidator = z.object({
   titre_nom: z.string(),
 })
 
-export type GetDemarcheByIdOrSlugValidator = z.infer<typeof getDemarcheByIdOrSlugValidator>
+export type GetDemarcheByIdOrSlug = z.infer<typeof getDemarcheByIdOrSlugValidator>
 
 export const titreDemandeValidator = z.object({
   nom: z.string(),

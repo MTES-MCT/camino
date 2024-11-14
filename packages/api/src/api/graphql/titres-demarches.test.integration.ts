@@ -114,6 +114,7 @@ describe('demarcheModifier', () => {
         ordre: 1,
         date: toCaminoDate('2020-01-01'),
         isBrouillon: ETAPE_IS_NOT_BROUILLON,
+        demarcheIdsConsentement: [],
       },
       userSuper,
       titreId

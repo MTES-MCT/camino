@@ -43,6 +43,7 @@ const titresDemarchesEtapes: {
         isBrouillon: ETAPE_IS_NOT_BROUILLON,
         surface: ZERO_KM2,
         communes: null,
+        demarcheIdsConsentement: [],
       },
       {
         id: newEtapeId(),
@@ -55,6 +56,7 @@ const titresDemarchesEtapes: {
         isBrouillon: ETAPE_IS_NOT_BROUILLON,
         surface: ZERO_KM2,
         communes: null,
+        demarcheIdsConsentement: [],
       },
     ],
   },

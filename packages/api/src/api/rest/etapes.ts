@@ -374,6 +374,7 @@ const getFlattenEtape = async (
   etapeSlug: EtapeSlug | undefined,
   etapeOldConcurrence: TitreEtapeForMachine['concurrence'],
   etapeOldHasTitreFrom: TitreEtapeForMachine['hasTitreFrom'],
+  etapeOldDemarcheIdsConsentement: TitreEtapeForMachine['demarcheIdsConsentement'],
   pool: Pool
 ): Promise<{ flattenEtape: Partial<Pick<ApiFlattenEtape, 'id'>> & Omit<ApiFlattenEtape, 'id'>; perimetreInfos: PerimetreInfos }> => {
   const perimetreInfos = await getPerimetreInfosInternal(
@@ -422,6 +423,7 @@ const getFlattenEtape = async (
     id: 'id' in etape ? etape.id : fakeEtapeId,
     slug: etapeSlug,
     concurrence: etapeOldConcurrence,
+    demarcheIdsConsentement: etapeOldDemarcheIdsConsentement,
     hasTitreFrom: etapeOldHasTitreFrom,
   })
 
@@ -482,6 +484,7 @@ export const createEtape =
                 etapeSlugValidator.parse('unknown'),
                 etape.typeId === ETAPES_TYPES.demande ? { amIFirst: true } : 'non-applicable',
                 etape.typeId === ETAPES_TYPES.demande ? true : 'non-applicable',
+                [],
                 pool
               )
               const entrepriseDocuments: EntrepriseDocument[] = await validateAndGetEntrepriseDocuments(pool, flattenEtape, etape.entrepriseDocumentIds, user)
@@ -527,7 +530,7 @@ export const createEtape =
                   } else {
                     etape.statutId = getStatutId(flattenEtape, getCurrent())
 
-                    const etapeUpdated: ITitreEtape | undefined = await titreEtapeUpsert({ ...etape, ...perimetreInfos, isBrouillon }, user!, titreDemarche.titreId)
+                    const etapeUpdated: ITitreEtape | undefined = await titreEtapeUpsert({ ...etape, ...perimetreInfos, isBrouillon, demarcheIdsConsentement: [] }, user!, titreDemarche.titreId)
                     if (isNullOrUndefined(etapeUpdated)) {
                       res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ errorMessage: "Une erreur est survenue lors de la création de l'étape" })
                     } else {
@@ -638,6 +641,7 @@ export const updateEtape =
             titreEtapeOld.slug,
             titreEtapeOld.concurrence,
             titreEtapeOld.hasTitreFrom,
+            titreEtapeOld.demarcheIdsConsentement,
             pool
           )
 
@@ -675,7 +679,11 @@ export const updateEtape =
 
           etape.statutId = getStatutId(flattenEtape, getCurrent())
 
-          const etapeUpdated: ITitreEtape | undefined = await titreEtapeUpsert({ ...etape, ...perimetreInfos, isBrouillon: titreEtapeOld.isBrouillon }, user!, titreDemarche.titreId)
+          const etapeUpdated: ITitreEtape | undefined = await titreEtapeUpsert(
+            { ...etape, ...perimetreInfos, isBrouillon: titreEtapeOld.isBrouillon, demarcheIdsConsentement: titreEtapeOld.demarcheIdsConsentement },
+            user!,
+            titreDemarche.titreId
+          )
           if (isNullOrUndefined(etapeUpdated)) {
             throw new Error("Une erreur est survenue lors de la modification de l'étape")
           }
@@ -842,7 +850,7 @@ export const getEtapesTypesEtapesStatusWithMainStep: RestNewGetCall<'/rest/etape
         Match.whenOr(
           "la démarche n'est pas complète",
           'les étapes ne sont pas chargées',
-          "Impossible d'accéder à la base de données",
+          "Impossible d'exécuter la requête dans la base de données",
           "Impossible de récupérer les types d'étapes",
           "impossible de récupérer l'étape",
           'impossible de récupérer la démarche',

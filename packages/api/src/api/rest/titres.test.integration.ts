@@ -22,6 +22,7 @@ import TitresEtapes from '../../database/models/titres-etapes'
 import Titres from '../../database/models/titres'
 import { ETAPE_IS_NOT_BROUILLON } from 'camino-common/src/etape'
 import { insertTitreGraph } from '../../../tests/integration-test-helper'
+import { DemarcheId } from 'camino-common/src/demarche'
 
 console.info = vi.fn()
 console.error = vi.fn()
@@ -131,7 +132,11 @@ const titreEtapesCreate = async (demarche: ITitreDemarche, etapes: Omit<ITitreEt
   return etapesCrees
 }
 
-async function createTitreWithEtapes(nomTitre: string, etapes: Omit<ITitreEtape, 'id' | 'titreDemarcheId' | 'concurrence' | 'hasTitreFrom'>[], entreprises: any) {
+async function createTitreWithEtapes(
+  nomTitre: string,
+  etapes: (Omit<ITitreEtape, 'id' | 'titreDemarcheId' | 'concurrence' | 'demarcheIdsConsentement' | 'hasTitreFrom'> & { demarcheIdsConsentement?: DemarcheId[] })[],
+  entreprises: any
+) {
   const titreId = newTitreId()
   await insertTitreGraph({
     id: titreId,
@@ -154,7 +159,10 @@ async function createTitreWithEtapes(nomTitre: string, etapes: Omit<ITitreEtape,
 
   const [firstEtape, ...remainingEtapes] = etapes
 
-  const etapesCrees = await titreEtapesCreate(titreDemarche, [{ ...firstEtape, titulaireIds: [entreprises[0].id] }, ...remainingEtapes])
+  const etapesCrees = await titreEtapesCreate(titreDemarche, [
+    { demarcheIdsConsentement: [], ...firstEtape, titulaireIds: [entreprises[0].id] },
+    ...remainingEtapes.map(e => ({ demarcheIdsConsentement: [], ...e })),
+  ])
 
   await knex('titres')
     .update({ propsTitreEtapesIds: { titulaires: etapesCrees[0].id, points: etapesCrees[0].id } })
@@ -459,6 +467,7 @@ describe('getTitre', () => {
                 "avis_documents": [],
                 "date": "2022-01-01",
                 "demarche_id_en_concurrence": null,
+                "demarches_consentement": [],
                 "entreprises_documents": [],
                 "etape_documents": [],
                 "etape_statut_id": "fai",

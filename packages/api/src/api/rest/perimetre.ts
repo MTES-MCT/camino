@@ -368,7 +368,7 @@ export const geojsonImport: RestNewPostCall<'/rest/geojson/import/:geoSystemeId'
           'Une erreur est survenue lors de la lecture du csv',
           'Une erreur est survenue lors de la récupération des informations du CSV',
           'Une erreur inattendue est survenue lors de la récupération des informations geojson en base',
-          "Impossible d'accéder à la base de données",
+          "Impossible d'exécuter la requête dans la base de données",
           () => ({ ...caminoError, status: HTTP_STATUS.INTERNAL_SERVER_ERROR })
         ),
         Match.whenOr(
@@ -481,7 +481,7 @@ export const geojsonImportPoints: RestNewPostCall<'/rest/geojson_points/import/:
     Effect.mapError(caminoError =>
       Match.value(caminoError.message).pipe(
         Match.when('Accès interdit', () => ({ ...caminoError, status: HTTP_STATUS.FORBIDDEN })),
-        Match.when("Impossible d'accéder à la base de données", () => ({ ...caminoError, status: HTTP_STATUS.INTERNAL_SERVER_ERROR })),
+        Match.when("Impossible d'exécuter la requête dans la base de données", () => ({ ...caminoError, status: HTTP_STATUS.INTERNAL_SERVER_ERROR })),
         Match.whenOr(
           'Fichier incorrect',
           'Impossible de transformer la feature collection',
@@ -563,7 +563,7 @@ export const geojsonImportForages: RestNewPostCall<'/rest/geojson_forages/import
     }),
     Effect.mapError(caminoError =>
       Match.value(caminoError.message).pipe(
-        Match.when("Impossible d'accéder à la base de données", () => ({ ...caminoError, status: HTTP_STATUS.INTERNAL_SERVER_ERROR })),
+        Match.when("Impossible d'exécuter la requête dans la base de données", () => ({ ...caminoError, status: HTTP_STATUS.INTERNAL_SERVER_ERROR })),
         Match.whenOr(
           'Problème de validation de données',
           'Une erreur est survenue lors de la lecture du csv',

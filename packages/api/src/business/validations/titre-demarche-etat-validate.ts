@@ -48,9 +48,12 @@ const titreDemarcheEtapesBuild = <T extends Pick<Partial<ITitreEtape>, 'id'>>(ti
 export const titreDemarcheUpdatedEtatValidate = (
   demarcheTypeId: DemarcheTypeId,
   titre: { typeId: TitreTypeId; demarches?: { id: DemarcheId }[] },
-  titreEtape: Pick<Partial<ITitreEtape>, 'id'> & Pick<ITitreEtape, 'statutId' | 'typeId' | 'date' | 'contenu' | 'surface' | 'communes' | 'isBrouillon' | 'hasTitreFrom' | 'concurrence'>,
+  titreEtape: Pick<Partial<ITitreEtape>, 'id'> &
+    Pick<ITitreEtape, 'statutId' | 'typeId' | 'date' | 'contenu' | 'surface' | 'communes' | 'isBrouillon' | 'hasTitreFrom' | 'concurrence' | 'demarcheIdsConsentement'>,
   demarcheId: DemarcheId,
-  titreDemarcheEtapes?: Pick<ITitreEtape, 'id' | 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'communes' | 'surface' | 'isBrouillon' | 'hasTitreFrom' | 'concurrence'>[] | null,
+  titreDemarcheEtapes?:
+    | Pick<ITitreEtape, 'id' | 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'communes' | 'surface' | 'isBrouillon' | 'hasTitreFrom' | 'concurrence' | 'demarcheIdsConsentement'>[]
+    | null,
   suppression = false
 ): { valid: true; errors: null } | { valid: false; errors: NonEmptyArray<string> } => {
   const titreDemarcheEtapesNew = titreDemarcheEtapesBuild(titreEtape, suppression, titreDemarcheEtapes)

@@ -62,6 +62,7 @@ describe('trie les étapes', () => {
         communes: [],
         contenu: {},
         surface: null,
+        demarcheIdsConsentement: [],
       },
       {
         id: newEtapeId('2'),
@@ -75,6 +76,7 @@ describe('trie les étapes', () => {
         communes: [],
         contenu: {},
         surface: null,
+        demarcheIdsConsentement: [],
       },
     ]
 
@@ -98,6 +100,7 @@ describe('trie les étapes', () => {
         communes: [],
         contenu: {},
         surface: null,
+        demarcheIdsConsentement: [],
       },
       {
         id: newEtapeId('2'),
@@ -111,6 +114,7 @@ describe('trie les étapes', () => {
         communes: [],
         contenu: {},
         surface: null,
+        demarcheIdsConsentement: [],
       },
       {
         id: newEtapeId('3'),
@@ -124,6 +128,7 @@ describe('trie les étapes', () => {
         communes: [],
         contenu: {},
         surface: null,
+        demarcheIdsConsentement: [],
       },
     ]
     expect(titreEtapesSortAscByDate(titreEtapesMemesDatesOrdreEtapesTypesDesc, titreDemarcheId, DEMARCHES_TYPES_IDS.Retrait, TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX)).toMatchObject([
@@ -162,6 +167,7 @@ describe('trie les étapes', () => {
         communes: [],
         contenu: {},
         surface: null,
+        demarcheIdsConsentement: [],
       },
       {
         id: newEtapeId('2'),
@@ -175,6 +181,7 @@ describe('trie les étapes', () => {
         communes: [],
         contenu: {},
         surface: null,
+        demarcheIdsConsentement: [],
       },
       {
         id: newEtapeId('3'),
@@ -188,6 +195,7 @@ describe('trie les étapes', () => {
         surface: null,
         communes: [],
         contenu: {},
+        demarcheIdsConsentement: [],
       },
     ]
 
@@ -211,6 +219,7 @@ describe('trie les étapes', () => {
         ordre: 1,
         communes: [],
         contenu: null,
+        demarcheIdsConsentement: [],
       },
       {
         // @ts-ignore
@@ -238,6 +247,7 @@ describe('trie les étapes', () => {
         ordre: 3,
         communes: [],
         contenu: null,
+        demarcheIdsConsentement: [],
       },
     ]
 
@@ -259,6 +269,7 @@ describe('trie les étapes', () => {
       ordre: 5,
       contenu: {},
       communes: [],
+      demarcheIdsConsentement: [],
     }
 
     const etapes: TitreEtapeForMachine[] = [
@@ -273,6 +284,7 @@ describe('trie les étapes', () => {
         isBrouillon: ETAPE_IS_NOT_BROUILLON,
         surface: null,
         contenu: {},
+        demarcheIdsConsentement: [],
         communes: [],
       },
       {
@@ -287,6 +299,7 @@ describe('trie les étapes', () => {
         surface: null,
         contenu: {},
         communes: [],
+        demarcheIdsConsentement: [],
       },
       {
         id: newEtapeId('mcd'),
@@ -300,6 +313,7 @@ describe('trie les étapes', () => {
         surface: null,
         contenu: {},
         communes: [],
+        demarcheIdsConsentement: [],
       },
       {
         id: newEtapeId('rcd'),
@@ -313,6 +327,7 @@ describe('trie les étapes', () => {
         surface: null,
         contenu: {},
         communes: [],
+        demarcheIdsConsentement: [],
       },
       secondMcd,
     ]
@@ -335,6 +350,7 @@ describe('trie les étapes', () => {
         surface: null,
         contenu: {},
         communes: [],
+        demarcheIdsConsentement: [],
       },
       {
         id: newEtapeId('men'),
@@ -348,6 +364,7 @@ describe('trie les étapes', () => {
         surface: null,
         contenu: {},
         communes: [],
+        demarcheIdsConsentement: [],
       },
       {
         id: newEtapeId('pfd'),
@@ -361,6 +378,7 @@ describe('trie les étapes', () => {
         surface: null,
         contenu: {},
         communes: [],
+        demarcheIdsConsentement: [],
       },
       {
         id: newEtapeId('mcp'),
@@ -374,6 +392,7 @@ describe('trie les étapes', () => {
         surface: null,
         contenu: {},
         communes: [],
+        demarcheIdsConsentement: [],
       },
       {
         id: newEtapeId('vfd'),
@@ -387,6 +406,7 @@ describe('trie les étapes', () => {
         surface: null,
         contenu: {},
         communes: [],
+        demarcheIdsConsentement: [],
       },
       {
         id: newEtapeId('asc'),
@@ -400,6 +420,7 @@ describe('trie les étapes', () => {
         surface: null,
         contenu: {},
         communes: [],
+        demarcheIdsConsentement: [],
       },
       {
         id: newEtapeId('mcr'),
@@ -413,6 +434,7 @@ describe('trie les étapes', () => {
         surface: null,
         contenu: {},
         communes: [],
+        demarcheIdsConsentement: [],
       },
     ]
 
@@ -445,6 +467,7 @@ describe('trie les étapes', () => {
         ordre: 1,
         communes: [],
         contenu: null,
+        demarcheIdsConsentement: [],
       },
       {
         id: newEtapeId('dex'),
@@ -458,6 +481,7 @@ describe('trie les étapes', () => {
         ordre: 3,
         communes: [],
         contenu: null,
+        demarcheIdsConsentement: [],
       },
     ]
     const result = titreEtapesSortAscByDate(etapes, newDemarcheId(), DEMARCHES_TYPES_IDS.Octroi, TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_GEOTHERMIE)
@@ -484,6 +508,7 @@ describe('trie les étapes', () => {
         ordre: 1,
         communes: [],
         contenu: null,
+        demarcheIdsConsentement: [],
       },
       {
         id: newEtapeId('dex'),
@@ -497,6 +522,7 @@ describe('trie les étapes', () => {
         ordre: 3,
         communes: [],
         contenu: null,
+        demarcheIdsConsentement: [],
       },
     ]
     const result = titreEtapesSortAscByDate(etapes, newDemarcheId(), DEMARCHES_TYPES_IDS.Octroi, TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_GEOTHERMIE)
