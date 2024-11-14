@@ -152,16 +152,16 @@ const EtapeAvisLoaded = defineComponent<EtapeAvisLoadedProps>(props => {
               onClick={openAddPopupAdditionnalAvis}
             />
           </div>
-          {addOrEditPopupOpen.value.open ? (
-            <AddEtapeAvisPopup
-              avisTypeIds={addOrEditPopupOpen.value.avisTypeIds}
-              user={props.user}
-              apiClient={props.apiClient}
-              close={closeAddPopup}
-              initialAvis={addOrEditPopupOpen.value.etapeAvis || null}
-            />
-          ) : null}
         </>
+      ) : null}
+      {addOrEditPopupOpen.value.open ? (
+        <AddEtapeAvisPopup
+          avisTypeIds={addOrEditPopupOpen.value.avisTypeIds}
+          user={props.user}
+          apiClient={props.apiClient}
+          close={closeAddPopup}
+          initialAvis={addOrEditPopupOpen.value.etapeAvis || null}
+        />
       ) : null}
     </>
   )

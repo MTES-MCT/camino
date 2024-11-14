@@ -583,19 +583,6 @@ describe('titreDemarcheUpdatedEtatValidate', () => {
             concurrence: { amIFirst: true },
             hasTitreFrom: true,
           },
-          {
-            id: newEtapeId('2'),
-            typeId: EtapesTypesEtapesStatuts.decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_.REQUIS.etapeTypeId,
-            statutId: EtapesTypesEtapesStatuts.decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_.REQUIS.etapeStatutId,
-            isBrouillon: ETAPE_IS_NOT_BROUILLON,
-            date: toCaminoDate('2021-01-02'),
-            communes: null,
-            contenu: null,
-            ordre: 1,
-            surface: null,
-            concurrence: { amIFirst: true },
-            hasTitreFrom: true,
-          },
         ]
       )
     ).toMatchInlineSnapshot(`

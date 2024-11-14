@@ -1,5 +1,5 @@
 default:
-  tags: [global, shared]
+  tags: [global-shared, selfservice]
   interruptible: true
 
 

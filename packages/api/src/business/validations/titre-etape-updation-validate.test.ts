@@ -182,6 +182,7 @@ describe('valide l’étape avant de l’enregistrer', () => {
         "le document "Programme des travaux " (prg) est obligatoire",
         "le document "Schéma de pénétration du massif forestier" (sch) est obligatoire",
         "Il y a des documents d'entreprise obligatoires, mais il n'y a pas de titulaire",
+        "Il manque des avis obligatoires",
       ]
     `)
   })

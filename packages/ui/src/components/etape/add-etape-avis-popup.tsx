@@ -1,10 +1,10 @@
 import { computed, defineComponent, ref } from 'vue'
 import { FunctionalPopup } from '../_ui/functional-popup'
-import { AVIS_VISIBILITY_IDS, AvisStatutIds, AvisTypeId, AvisTypes, AvisVisibilityId, AvisVisibilityIds } from 'camino-common/src/static/avisTypes'
+import { AVIS_VISIBILITY_IDS, AvisTypeId, AvisTypes, AvisVisibilityId, AvisVisibilityIds } from 'camino-common/src/static/avisTypes'
 import { InputFile } from '../_ui/dsfr-input-file'
 import { ApiClient } from '@/api/api-client'
 import { TempDocumentName } from 'camino-common/src/document'
-import { NonEmptyArray, Nullable, isNotNullNorUndefined, map } from 'camino-common/src/typescript-tools'
+import { NonEmptyArray, Nullable, isNotNullNorUndefined, isNullOrUndefined, map } from 'camino-common/src/typescript-tools'
 import { DsfrInput } from '../_ui/dsfr-input'
 import { EtapeAvisModification, TempEtapeAvis, etapeAvisModificationValidator, etapeAvisWithoutIdValidator } from 'camino-common/src/etape'
 import { useState } from '../../utils/vue-tsx-utils'
@@ -24,7 +24,7 @@ interface Props {
 }
 
 export const AddEtapeAvisPopup = defineComponent<Props>(props => {
-  const etapeAvisTypeId = ref<AvisTypeId | null>(props.avisTypeIds.length === 1 ? props.avisTypeIds[0] : null)
+  const [etapeAvisTypeId, setEtapeAvisTypeId] = useState(props.initialAvis?.avis_type_id ?? (props.avisTypeIds.length === 1 ? props.avisTypeIds[0] : null))
   const etapeAvisFile = ref<File | null>(null)
   const avisDescription = ref<string>(props.initialAvis?.description ?? '')
   const [avisDate, setAvisDate] = useState(props.initialAvis?.date ?? null)
@@ -47,7 +47,8 @@ export const AddEtapeAvisPopup = defineComponent<Props>(props => {
   }
 
   const updateAvisTypeId = (avisTypeId: AvisTypeId | null) => {
-    etapeAvisTypeId.value = avisTypeId
+    setEtapeAvisTypeId(avisTypeId)
+    setAvisStatutId(null)
   }
 
   const visibilityChange = (value: AvisVisibilityId) => {
@@ -55,14 +56,14 @@ export const AddEtapeAvisPopup = defineComponent<Props>(props => {
   }
   const content = () => (
     <form>
-      {props.avisTypeIds.length === 1 ? null : (
+      {props.avisTypeIds.length === 1 || isNotNullNorUndefined(props.initialAvis) ? null : (
         <fieldset class="fr-fieldset" id="text">
           <div class="fr-fieldset__element">
             <div class="fr-select-group">
               <label class="fr-label" for="type">
                 Type d'avis
               </label>
-              <TypeaheadSmartSingle initialValue={props.initialAvis?.avis_type_id} possibleValues={props.avisTypeIds.map(id => AvisTypes[id])} valueIdSelected={updateAvisTypeId} />
+              <TypeaheadSmartSingle possibleValues={props.avisTypeIds.map(id => AvisTypes[id])} valueIdSelected={updateAvisTypeId} />
             </div>
           </div>
         </fieldset>
@@ -81,9 +82,15 @@ export const AddEtapeAvisPopup = defineComponent<Props>(props => {
         <div class="fr-fieldset__element">
           <DsfrInput legend={{ main: 'Date' }} required={true} type={{ type: 'date' }} initialValue={avisDate.value} valueChanged={setAvisDate} />
         </div>
-
         <div class="fr-fieldset__element">
-          <DsfrSelect legend={{ main: 'Statut' }} required={true} items={map(AvisStatutIds, avis => ({ id: avis, label: avis }))} initialValue={avisStatutId.value} valueChanged={setAvisStatutId} />
+          <DsfrSelect
+            legend={{ main: 'Statut' }}
+            disabled={isNullOrUndefined(etapeAvisTypeId.value)}
+            required={true}
+            items={map(etapeAvisTypeId.value ? AvisTypes[etapeAvisTypeId.value].statutIds : ['Non renseigné'], avis => ({ id: avis, label: avis }))}
+            initialValue={avisStatutId.value}
+            valueChanged={setAvisStatutId}
+          />
         </div>
 
         <div class="fr-fieldset__element">
@@ -111,7 +118,13 @@ export const AddEtapeAvisPopup = defineComponent<Props>(props => {
 
   return () => (
     <FunctionalPopup
-      title={props.avisTypeIds.length === 1 ? `${isNotNullNorUndefined(props.initialAvis) ? 'Éditer' : 'Ajouter'} ${AvisTypes[props.avisTypeIds[0]].nom}` : "Ajout d'un document"}
+      title={
+        isNotNullNorUndefined(props.initialAvis)
+          ? `Éditer ${AvisTypes[props.initialAvis.avis_type_id].nom}`
+          : props.avisTypeIds.length === 1
+            ? `Ajouter ${AvisTypes[props.avisTypeIds[0]].nom}`
+            : "Ajout d'un avis"
+      }
       content={content}
       close={() => {
         props.close(null)

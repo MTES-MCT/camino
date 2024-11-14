@@ -50,10 +50,6 @@ const EtapesTypesDocumentsTypes = {
     { documentTypeId: DOCUMENTS_TYPES_IDS.avis, optionnel: true },
     { documentTypeId: DOCUMENTS_TYPES_IDS.notes, optionnel: true },
   ],
-  [ETAPES_TYPES.decisionDuProprietaireDuSol]: [
-    { documentTypeId: DOCUMENTS_TYPES_IDS.decision, optionnel: true },
-    { documentTypeId: DOCUMENTS_TYPES_IDS.lettre, optionnel: true },
-  ],
   [ETAPES_TYPES.consultationDesAdministrationsCentrales]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.lettreDeSaisineDesServicesCivilsEtMilitaires, optionnel: false }],
   [ETAPES_TYPES.classementSansSuite]: [
     { documentTypeId: DOCUMENTS_TYPES_IDS.arrete, optionnel: true },
@@ -346,8 +342,6 @@ const TDEDocumentsTypes = {
   },
   [TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX]: {
     [DEMARCHES_TYPES_IDS.Octroi]: {
-      [ETAPES_TYPES.decisionDuProprietaireDuSol]: { [DOCUMENTS_TYPES_IDS.lettre]: { optionnel: false, description: "Avis suite à la demande d'accord du propriétaire du sol" } },
-      [ETAPES_TYPES.decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_]: { [DOCUMENTS_TYPES_IDS.arretePrefectoral]: { optionnel: false } },
       [ETAPES_TYPES.demande]: {
         [DOCUMENTS_TYPES_IDS.documentsCartographiques]: { optionnel: false, description: "Plan à l'échelle 1/50 000ème ou 1/100 000ème" },
         [DOCUMENTS_TYPES_IDS.identificationDeMateriel]: {

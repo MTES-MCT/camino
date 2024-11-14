@@ -77,12 +77,6 @@ export const EtapesTypesEtapesStatuts = {
     ACCEPTE: { etapeTypeId: 'apu', etapeStatutId: 'acc' },
     REJETE: { etapeTypeId: 'apu', etapeStatutId: 'rej' },
   },
-  decisionDuProprietaireDuSol: {
-    FAVORABLE: { etapeTypeId: 'asl', etapeStatutId: 'fav' },
-    FAVORABLE_AVEC_RESERVE: { etapeTypeId: 'asl', etapeStatutId: 'fre' },
-    DEFAVORABLE: { etapeTypeId: 'asl', etapeStatutId: 'def' },
-  },
-
   consultationDesAdministrationsCentrales: { FAIT: { etapeTypeId: 'cac', etapeStatutId: 'fai' } },
   concertationInterministerielle: { FAIT: { etapeTypeId: 'cim', etapeStatutId: 'fai' } },
 

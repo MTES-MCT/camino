@@ -21,6 +21,7 @@ import {
   dureeIsValide,
   perimetreIsValide,
   isEtapeValid,
+  IsEtapeCompleteEtapeAvis,
 } from './titres-etapes'
 import { AdministrationId, ADMINISTRATION_IDS } from '../static/administrations'
 import { test, expect, describe, vi } from 'vitest'
@@ -41,6 +42,7 @@ import { DATE_DEBUT_PROCEDURE_SPECIFIQUE } from '../machines'
 
 console.warn = vi.fn()
 
+const axmDemandeAvis: IsEtapeCompleteEtapeAvis = [{ avis_type_id: 'avisProprietaireDuSol' }, { avis_type_id: 'avisDeLaMissionAutoriteEnvironnementale' }]
 test.each<{ titreTypeId: TitreTypeId; demarcheTypeId: DemarcheTypeId; canEdit: boolean }>([
   { titreTypeId: 'arm', demarcheTypeId: 'dep', canEdit: false },
   { titreTypeId: 'arm', demarcheTypeId: 'oct', canEdit: true },
@@ -405,11 +407,21 @@ const axmEntrepriseDocuments: IsEtapeCompleteEntrepriseDocuments = [
 
 test("teste la complétude d'une demande d'AXM faite par un utilisateur entreprises en Guyane en Zone1 du SDOM", () => {
   expect(
-    isEtapeComplete({ ...etapeComplete, isBrouillon: ETAPE_IS_BROUILLON }, 'axm', 'oct', axmDocuments, axmEntrepriseDocuments, [SDOMZoneIds.Zone1], [communeIdValidator.parse('97302')], [], {
-      ...testBlankUser,
-      role: 'entreprise',
-      entrepriseIds: [entrepriseIdValidator.parse('id1')],
-    })
+    isEtapeComplete(
+      { ...etapeComplete, isBrouillon: ETAPE_IS_BROUILLON },
+      'axm',
+      'oct',
+      axmDocuments,
+      axmEntrepriseDocuments,
+      [SDOMZoneIds.Zone1],
+      [communeIdValidator.parse('97302')],
+      axmDemandeAvis,
+      {
+        ...testBlankUser,
+        role: 'entreprise',
+        entrepriseIds: [entrepriseIdValidator.parse('id1')],
+      }
+    )
   ).toMatchInlineSnapshot(`
     {
       "errors": [
@@ -422,7 +434,7 @@ test("teste la complétude d'une demande d'AXM faite par un utilisateur entrepri
 
 test("teste la complétude d'une demande d'AXM faite par un utilisateur entreprises", () => {
   expect(
-    isEtapeComplete({ ...etapeComplete, isBrouillon: ETAPE_IS_BROUILLON }, 'axm', 'oct', axmDocuments, axmEntrepriseDocuments, [], [], [], {
+    isEtapeComplete({ ...etapeComplete, isBrouillon: ETAPE_IS_BROUILLON }, 'axm', 'oct', axmDocuments, axmEntrepriseDocuments, [], [], axmDemandeAvis, {
       ...testBlankUser,
       role: 'entreprise',
       entrepriseIds: [entrepriseIdValidator.parse('id1')],
@@ -451,7 +463,7 @@ test.each<[SubstanceLegaleId[], EtapeTypeId, TitreTypeId, IsEtapeCompleteDocumen
     typeId: etapeType,
   }
 
-  const result = isEtapeComplete(titreEtape, titreType, 'oct', testDocuments, entrepriseDocuments, [], [], [], { ...testBlankUser, role: 'super' })
+  const result = isEtapeComplete(titreEtape, titreType, 'oct', testDocuments, entrepriseDocuments, [], [], axmDemandeAvis, { ...testBlankUser, role: 'super' })
 
   expect(result.valid, JSON.stringify(result)).toBe(true)
 })
@@ -538,7 +550,7 @@ test.each<[FeatureMultiPolygon | null, EtapeTypeId, TitreTypeId, IsEtapeComplete
     typeId: etapeType,
   }
 
-  const result = isEtapeComplete(titreEtape, titreType, 'oct', documents, entrepriseDocuments, [], [], [], { ...testBlankUser, role: 'super' })
+  const result = isEtapeComplete(titreEtape, titreType, 'oct', documents, entrepriseDocuments, [], [], axmDemandeAvis, { ...testBlankUser, role: 'super' })
 
   expect(result).toStrictEqual({ valid: true })
 })
@@ -590,15 +602,15 @@ test('isEtapeValide', () => {
     `)
 })
 
-test.each<[number | null, EtapeTypeId, TitreTypeId, IsEtapeCompleteDocuments, IsEtapeCompleteEntrepriseDocuments, boolean]>([
-  [null, 'mfr', 'axm', axmDocuments, axmEntrepriseDocuments, true],
-  [0, 'mfr', 'axm', axmDocuments, axmEntrepriseDocuments, true],
-  [0, 'mfr', 'arm', armDocuments, armEntrepriseDocuments, true],
-  [3, 'mfr', 'prm', armDocuments, armEntrepriseDocuments, false],
-  [3, 'rde', 'arm', [], [], false],
-  [4, 'mfr', 'arm', armDocuments, armEntrepriseDocuments, false],
-  [4, 'mfr', 'axm', axmDocuments, axmEntrepriseDocuments, false],
-])('%# teste la complétude de la durée %s pour une étapeType %s, un titreType %s', (duree, etapeType, titreType, documents, entreprisedocuments, error) => {
+test.each<[number | null, EtapeTypeId, TitreTypeId, IsEtapeCompleteDocuments, IsEtapeCompleteEntrepriseDocuments, IsEtapeCompleteEtapeAvis, boolean]>([
+  [null, 'mfr', 'axm', axmDocuments, axmEntrepriseDocuments, axmDemandeAvis, true],
+  [0, 'mfr', 'axm', axmDocuments, axmEntrepriseDocuments, axmDemandeAvis, true],
+  [0, 'mfr', 'arm', armDocuments, armEntrepriseDocuments, [], true],
+  [3, 'mfr', 'prm', armDocuments, armEntrepriseDocuments, [], false],
+  [3, 'rde', 'arm', [], [], [], false],
+  [4, 'mfr', 'arm', armDocuments, armEntrepriseDocuments, [], false],
+  [4, 'mfr', 'axm', axmDocuments, axmEntrepriseDocuments, axmDemandeAvis, false],
+])('%# teste la complétude de la durée %s pour une étapeType %s, un titreType %s', (duree, etapeType, titreType, documents, entreprisedocuments, avis, error) => {
   const titreEtape: IsEtapeCompleteEtape = {
     ...etapeComplete,
     duree: { value: duree, heritee: false, etapeHeritee: null },
@@ -606,7 +618,7 @@ test.each<[number | null, EtapeTypeId, TitreTypeId, IsEtapeCompleteDocuments, Is
     typeId: etapeType,
   }
 
-  const result = isEtapeComplete(titreEtape, titreType, 'oct', documents, entreprisedocuments, [], [], [], { ...testBlankUser, role: 'super' })
+  const result = isEtapeComplete(titreEtape, titreType, 'oct', documents, entreprisedocuments, [], [], avis, { ...testBlankUser, role: 'super' })
 
   const errorLabel = 'la durée est obligatoire pour une démarche octroi'
   if (error) {

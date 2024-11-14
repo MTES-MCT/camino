@@ -31,7 +31,10 @@ const writeEtapesForTest = async () => {
 
     const lesDemarchesFiltres = demarches
       .filter(demarche => demarche.etapes?.length)
-      .filter(demarche => isNotNullNorUndefined(machineIdFind(demarche.titre!.typeId, demarche.typeId, demarche.etapes!, demarche.id)))
+      .filter(demarche => {
+        const machineId = machineIdFind(demarche.titre!.typeId, demarche.typeId, demarche.etapes!, demarche.id)
+        return machineId === demarcheDefinition.machineId
+      })
 
     const toutesLesEtapes = (
       await Promise.all(

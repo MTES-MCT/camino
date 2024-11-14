@@ -66,3 +66,21 @@ export const DocumentInitialDejaSauvegarde: StoryFn = () => (
     user={{ ...testBlankUser, role: 'super' }}
   />
 )
+
+export const AvisDeLaMissionAutoriteEnvironnementaleADesStatutsDifferents: StoryFn = () => (
+  <AddEtapeAvisPopup
+    close={close}
+    initialAvis={{
+      description: 'description',
+      avis_type_id: 'avisDeLaMissionAutoriteEnvironnementale',
+      id: etapeAvisIdValidator.parse('documentId'),
+      date: toCaminoDate('2023-01-02'),
+      avis_statut_id: 'Exempté',
+      has_file: false,
+      avis_visibility_id: AvisVisibilityIds.TitulairesEtAdministrations,
+    }}
+    apiClient={apiClient}
+    avisTypeIds={avisTypeIds}
+    user={{ ...testBlankUser, role: 'super' }}
+  />
+)

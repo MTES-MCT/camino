@@ -1,21 +1,15 @@
-import { interpretMachine, orderAndInterpretMachine, setDateAndOrderAndInterpretMachine } from '../machine-test-helper'
+import { getEventsTree, interpretMachine, orderAndInterpretMachine, setDateAndOrderAndInterpretMachine } from '../machine-test-helper'
 import { AxmOctMachine } from './oct.machine'
 import { EtapesTypesEtapesStatuts as ETES } from 'camino-common/src/static/etapesTypesEtapesStatuts'
 import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations'
 import { toCaminoDate } from 'camino-common/src/date'
 import { describe, expect, test } from 'vitest'
-const etapesProd = require('./2020-09-30-oct.cas.json') // eslint-disable-line
+const etapesProd = require('./2020-10-01-oct.cas.json') // eslint-disable-line
 
 describe('vérifie l’arbre d’octroi d’AXM', () => {
   const axmOctMachine = new AxmOctMachine()
-  test('peut créer une "men" après une "mfr", "dae" et "asl"', () => {
-    const etapes = [
-      ETES.decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_.EXEMPTE,
-      ETES.decisionDuProprietaireDuSol.FAVORABLE,
-      ETES.demande.FAIT,
-      ETES.enregistrementDeLaDemande.FAIT,
-    ]
-    const { service, dateFin, etapes: fullEtapes } = setDateAndOrderAndInterpretMachine(axmOctMachine, '2020-01-01', etapes)
+  test('peut créer une "men" après une "mfr"', () => {
+    const { service, dateFin, etapes: fullEtapes } = setDateAndOrderAndInterpretMachine(axmOctMachine, '2020-01-01', [ETES.demande.FAIT, ETES.enregistrementDeLaDemande.FAIT])
     expect(service).canOnlyTransitionTo({ machine: axmOctMachine, date: dateFin }, [
       'DEMANDER_COMPLEMENTS_POUR_RECEVABILITE',
       'FAIRE_CLASSEMENT_SANS_SUITE',
@@ -25,62 +19,16 @@ describe('vérifie l’arbre d’octroi d’AXM', () => {
       'RENDRE_DECISION_IMPLICITE_REJET',
     ])
     expect(axmOctMachine.whoIsBlocking(fullEtapes)).toStrictEqual([ADMINISTRATION_IDS['DGTM - GUYANE']])
-  })
-
-  test('peut créer une "men" après une "mfr", "asl", "dae" requise', () => {
-    const etapes = [
-      ETES.decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_.REQUIS,
-      ETES.decisionDuProprietaireDuSol.FAVORABLE,
-      ETES.modificationDeLaDemande_DecisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_.FAIT,
-      ETES.demande.FAIT,
-      ETES.enregistrementDeLaDemande.FAIT,
-    ]
-    const { service, dateFin, etapes: fullEtapes } = setDateAndOrderAndInterpretMachine(axmOctMachine, '2020-01-01', etapes)
-    expect(service).canOnlyTransitionTo({ machine: axmOctMachine, date: dateFin }, [
-      'DEMANDER_COMPLEMENTS_POUR_RECEVABILITE',
-      'FAIRE_CLASSEMENT_SANS_SUITE',
-      'FAIRE_DESISTEMENT_DEMANDEUR',
-      'FAIRE_RECEVABILITE_DEMANDE_DEFAVORABLE',
-      'FAIRE_RECEVABILITE_DEMANDE_FAVORABLE',
-      'RENDRE_DECISION_IMPLICITE_REJET',
-    ])
-    expect(axmOctMachine.whoIsBlocking(fullEtapes)).toStrictEqual([ADMINISTRATION_IDS['DGTM - GUYANE']])
-  })
-
-  test('ne peut pas créer une "men" avec une "dae" requise', () => {
-    const { service, dateFin } = setDateAndOrderAndInterpretMachine(axmOctMachine, '2020-01-01', [
-      ETES.decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_.REQUIS,
-      ETES.decisionDuProprietaireDuSol.FAVORABLE,
-      ETES.demande.FAIT,
-    ])
-    expect(service).canOnlyTransitionTo({ machine: axmOctMachine, date: dateFin }, ['FAIRE_CLASSEMENT_SANS_SUITE', 'FAIRE_DESISTEMENT_DEMANDEUR', 'MODIFIER_DEMANDE_APRES_DAE'])
   })
 
   test('peut faire l’avis du DREAL sans aucun autre avis 30 jours après la saisine des services', () => {
-    const service = orderAndInterpretMachine(axmOctMachine, [
-      {
-        ...ETES.decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_.EXEMPTE,
-        date: toCaminoDate('2020-01-01'),
-      },
-      {
-        ...ETES.decisionDuProprietaireDuSol.FAVORABLE,
-        date: toCaminoDate('2020-01-01'),
-      },
-      { ...ETES.demande.FAIT, date: toCaminoDate('2022-04-14') },
-      { ...ETES.enregistrementDeLaDemande.FAIT, date: toCaminoDate('2022-04-15') },
-      {
-        ...ETES.recevabiliteDeLaDemande.FAVORABLE,
-        date: toCaminoDate('2022-04-15'),
-      },
-      {
-        ...ETES.avisDesCollectivites.FAIT,
-        date: toCaminoDate('2022-04-15'),
-      },
-      { ...ETES.avisDesServicesEtCommissionsConsultatives.FAIT, date: toCaminoDate('2022-04-15') },
-      {
-        ...ETES.rapportEtAvisDeLaDREAL.FAVORABLE,
-        date: toCaminoDate('2022-06-15'),
-      },
+    const { service } = setDateAndOrderAndInterpretMachine(axmOctMachine, '2020-01-01', [
+      ETES.demande.FAIT,
+      ETES.enregistrementDeLaDemande.FAIT,
+      ETES.recevabiliteDeLaDemande.FAVORABLE,
+      ETES.avisDesCollectivites.FAIT,
+      ETES.avisDesServicesEtCommissionsConsultatives.FAIT,
+      { ...ETES.rapportEtAvisDeLaDREAL.FAVORABLE, addDays: 31 },
     ])
     expect(service).canOnlyTransitionTo({ machine: axmOctMachine, date: toCaminoDate('2022-06-15') }, [
       'FAIRE_CLASSEMENT_SANS_SUITE',
@@ -91,99 +39,54 @@ describe('vérifie l’arbre d’octroi d’AXM', () => {
     ])
   })
   test('peut ajourner l’avis de la commission départementale des mines', () => {
-    const service = orderAndInterpretMachine(axmOctMachine, [
-      { ...ETES.demande.FAIT, date: toCaminoDate('2022-04-14') },
-      {
-        ...ETES.decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_.EXEMPTE,
-        date: toCaminoDate('2020-01-01'),
-      },
-      {
-        ...ETES.decisionDuProprietaireDuSol.FAVORABLE,
-        date: toCaminoDate('2020-01-01'),
-      },
-      { ...ETES.enregistrementDeLaDemande.FAIT, date: toCaminoDate('2022-04-15') },
-      {
-        ...ETES.recevabiliteDeLaDemande.FAVORABLE,
-        date: toCaminoDate('2022-04-15'),
-      },
-      {
-        ...ETES.avisDesCollectivites.FAIT,
-        date: toCaminoDate('2022-04-15'),
-      },
-      { ...ETES.avisDesServicesEtCommissionsConsultatives.FAIT, date: toCaminoDate('2022-04-15') },
-      {
-        ...ETES.rapportEtAvisDeLaDREAL.FAVORABLE,
-        date: toCaminoDate('2022-06-15'),
-      },
-      {
-        ...ETES.avisDeLaCommissionDepartementaleDesMines_CDM_.AJOURNE,
-        date: toCaminoDate('2022-06-16'),
-      },
-      {
-        ...ETES.rapportEtAvisDeLaDREAL.FAVORABLE,
-        date: toCaminoDate('2022-06-17'),
-      },
-      {
-        ...ETES.saisineDeLaCommissionDepartementaleDesMines_CDM_.FAIT,
-        date: toCaminoDate('2022-06-18'),
-      },
-      {
-        ...ETES.avisDeLaCommissionDepartementaleDesMines_CDM_.FAVORABLE,
-        date: toCaminoDate('2022-06-18'),
-      },
+    const actual = getEventsTree(axmOctMachine, '2022-04-14', [
+      ETES.demande.FAIT,
+      ETES.enregistrementDeLaDemande.FAIT,
+      ETES.recevabiliteDeLaDemande.FAVORABLE,
+      ETES.avisDesCollectivites.FAIT,
+      ETES.avisDesServicesEtCommissionsConsultatives.FAIT,
+      { ...ETES.rapportEtAvisDeLaDREAL.FAVORABLE, addDays: 31 },
+      ETES.avisDeLaCommissionDepartementaleDesMines_CDM_.AJOURNE,
+      ETES.rapportEtAvisDeLaDREAL.FAVORABLE,
+      ETES.saisineDeLaCommissionDepartementaleDesMines_CDM_.FAIT,
+      ETES.avisDeLaCommissionDepartementaleDesMines_CDM_.FAVORABLE,
     ])
-    expect(service).canOnlyTransitionTo({ machine: axmOctMachine, date: toCaminoDate('2022-06-18') }, [
-      'FAIRE_CLASSEMENT_SANS_SUITE',
-      'FAIRE_DESISTEMENT_DEMANDEUR',
-      'FAIRE_SAISINE_AUTORITE_SIGNATAIRE',
-      'RENDRE_DECISION_ADMINISTRATION_ACCEPTE',
-      'RENDRE_DECISION_ADMINISTRATION_REJETE',
-    ])
+    expect(actual).toMatchInlineSnapshot(`
+      [
+        "RIEN                                                    (confidentielle, en construction        ) -> [FAIRE_DEMANDE]",
+        "FAIRE_DEMANDE                                           (confidentielle, en construction        ) -> [ENREGISTRER_DEMANDE,FAIRE_CLASSEMENT_SANS_SUITE,FAIRE_DESISTEMENT_DEMANDEUR]",
+        "ENREGISTRER_DEMANDE                                     (confidentielle, déposé                 ) -> [DEMANDER_COMPLEMENTS_POUR_RECEVABILITE,FAIRE_CLASSEMENT_SANS_SUITE,FAIRE_DESISTEMENT_DEMANDEUR,FAIRE_RECEVABILITE_DEMANDE_DEFAVORABLE,FAIRE_RECEVABILITE_DEMANDE_FAVORABLE,RENDRE_DECISION_IMPLICITE_REJET]",
+        "FAIRE_RECEVABILITE_DEMANDE_FAVORABLE                    (publique      , en instruction         ) -> [DEMANDER_INFORMATION_POUR_AVIS_DREAL,FAIRE_CLASSEMENT_SANS_SUITE,FAIRE_DESISTEMENT_DEMANDEUR,RENDRE_AVIS_DES_COLLECTIVITES,RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES]",
+        "RENDRE_AVIS_DES_COLLECTIVITES                           (publique      , en instruction         ) -> [DEMANDER_INFORMATION_POUR_AVIS_DREAL,FAIRE_CLASSEMENT_SANS_SUITE,FAIRE_DESISTEMENT_DEMANDEUR,RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES]",
+        "RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES   (publique      , en instruction         ) -> [DEMANDER_INFORMATION_POUR_AVIS_DREAL,FAIRE_CLASSEMENT_SANS_SUITE,FAIRE_DESISTEMENT_DEMANDEUR]",
+        "RENDRE_AVIS_DREAL                                       (publique      , en instruction         ) -> [FAIRE_CLASSEMENT_SANS_SUITE,FAIRE_DESISTEMENT_DEMANDEUR,FAIRE_SAISINE_COMMISSION_DEPARTEMENTALE_DES_MINES,RENDRE_AVIS_COMMISSION_DEPARTEMENTALE_DES_MINES,RENDRE_AVIS_COMMISSION_DEPARTEMENTALE_DES_MINES_AJOURNE]",
+        "RENDRE_AVIS_COMMISSION_DEPARTEMENTALE_DES_MINES_AJOURNE (publique      , en instruction         ) -> [FAIRE_CLASSEMENT_SANS_SUITE,FAIRE_DESISTEMENT_DEMANDEUR]",
+        "RENDRE_AVIS_DREAL                                       (publique      , en instruction         ) -> [FAIRE_CLASSEMENT_SANS_SUITE,FAIRE_DESISTEMENT_DEMANDEUR,FAIRE_SAISINE_COMMISSION_DEPARTEMENTALE_DES_MINES,RENDRE_AVIS_COMMISSION_DEPARTEMENTALE_DES_MINES,RENDRE_AVIS_COMMISSION_DEPARTEMENTALE_DES_MINES_AJOURNE]",
+        "FAIRE_SAISINE_COMMISSION_DEPARTEMENTALE_DES_MINES       (publique      , en instruction         ) -> [FAIRE_CLASSEMENT_SANS_SUITE,FAIRE_DESISTEMENT_DEMANDEUR,RENDRE_AVIS_COMMISSION_DEPARTEMENTALE_DES_MINES,RENDRE_AVIS_COMMISSION_DEPARTEMENTALE_DES_MINES_AJOURNE]",
+        "RENDRE_AVIS_COMMISSION_DEPARTEMENTALE_DES_MINES         (publique      , en instruction         ) -> [FAIRE_CLASSEMENT_SANS_SUITE,FAIRE_DESISTEMENT_DEMANDEUR,FAIRE_SAISINE_AUTORITE_SIGNATAIRE,RENDRE_DECISION_ADMINISTRATION_ACCEPTE,RENDRE_DECISION_ADMINISTRATION_REJETE]",
+      ]
+    `)
   })
 
   test('ne peut pas faire de note interne signalée avant une demande', () => {
     const service = orderAndInterpretMachine(axmOctMachine, [])
-    expect(service).canOnlyTransitionTo({ machine: axmOctMachine, date: toCaminoDate('2022-04-16') }, [
-      'RENDRE_DAE_REQUISE',
-      'RENDRE_DAE_EXEMPTEE',
-      'FAIRE_DEMANDE',
-      'RENDRE_DECISION_DU_PROPRIETAIRE_DU_SOL_DEFAVORABLE',
-      'RENDRE_DECISION_DU_PROPRIETAIRE_DU_SOL_FAVORABLE',
-      'RENDRE_DECISION_DU_PROPRIETAIRE_DU_SOL_FAVORABLE_AVEC_RESERVE',
-    ])
+    expect(service).canOnlyTransitionTo({ machine: axmOctMachine, date: toCaminoDate('2022-04-16') }, ['FAIRE_DEMANDE'])
   })
 
   test('ne peut plus rien faire après un désistement', () => {
-    const { service, dateFin } = setDateAndOrderAndInterpretMachine(axmOctMachine, '2020-02-06', [
-      { etapeTypeId: 'mfr', etapeStatutId: 'fai' },
-      { etapeTypeId: 'dae', etapeStatutId: 'req' },
-      { etapeTypeId: 'asl', etapeStatutId: 'def' },
-      { etapeTypeId: 'des', etapeStatutId: 'fai' },
-    ])
+    const { service, dateFin } = setDateAndOrderAndInterpretMachine(axmOctMachine, '2020-02-06', [ETES.demande.FAIT, ETES.desistementDuDemandeur.FAIT])
     expect(service).canOnlyTransitionTo({ machine: axmOctMachine, date: dateFin }, [])
   })
 
   test('peut faire uniquement une decision annulation par le juge administratif après une décision implicite', () => {
-    const { service, dateFin } = setDateAndOrderAndInterpretMachine(axmOctMachine, '2020-01-01', [
-      ETES.decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_.EXEMPTE,
-      ETES.decisionDuProprietaireDuSol.FAVORABLE,
-      ETES.demande.FAIT,
-      ETES.enregistrementDeLaDemande.FAIT,
-      ETES.decisionImplicite.REJETE,
-    ])
+    const { service, dateFin } = setDateAndOrderAndInterpretMachine(axmOctMachine, '2020-01-01', [ETES.demande.FAIT, ETES.enregistrementDeLaDemande.FAIT, ETES.decisionImplicite.REJETE])
     expect(service).canOnlyTransitionTo({ machine: axmOctMachine, date: dateFin }, ['RENDRE_DECISION_ANNULATION_PAR_JUGE_ADMINISTRATIF'])
   })
 
   test('peut classer sans suite après une décision du propriétaire du sol défavorable', () => {
-    const { service, etapes, dateFin } = setDateAndOrderAndInterpretMachine(axmOctMachine, '2022-04-10', [ETES.decisionDuProprietaireDuSol.DEFAVORABLE, ETES.classementSansSuite.FAIT])
+    const { service, etapes, dateFin } = setDateAndOrderAndInterpretMachine(axmOctMachine, '2022-04-10', [ETES.demande.FAIT, ETES.classementSansSuite.FAIT])
     expect(service).canOnlyTransitionTo({ machine: axmOctMachine, date: dateFin }, [])
     expect(axmOctMachine.whoIsBlocking(etapes)).toStrictEqual([])
-  })
-
-  test('après une décision du propriétaire du sol défavorable, la DGTM est en attente', () => {
-    const { service, dateFin, etapes } = setDateAndOrderAndInterpretMachine(axmOctMachine, '2020-01-01', [ETES.decisionDuProprietaireDuSol.DEFAVORABLE])
-    expect(service).canOnlyTransitionTo({ machine: axmOctMachine, date: dateFin }, ['FAIRE_CLASSEMENT_SANS_SUITE'])
-    expect(axmOctMachine.whoIsBlocking(etapes)).toStrictEqual([ADMINISTRATION_IDS['DGTM - GUYANE']])
   })
 
   test('ne peut pas faire deux fois la même étape à la même date', () => {
@@ -195,108 +98,67 @@ describe('vérifie l’arbre d’octroi d’AXM', () => {
   })
 
   test('peut faire un octroi complet', () => {
-    const etapes = [
-      { ...ETES.demande.FAIT, date: toCaminoDate('2022-04-01') },
-      {
-        ...ETES.decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_.EXEMPTE,
-        date: toCaminoDate('2020-01-01'),
-      },
-      {
-        ...ETES.decisionDuProprietaireDuSol.FAVORABLE,
-        date: toCaminoDate('2020-01-01'),
-      },
-      { ...ETES.enregistrementDeLaDemande.FAIT, date: toCaminoDate('2022-04-11') },
-      {
-        ...ETES.demandeDeComplements_RecevabiliteDeLaDemande_.FAIT,
-        date: toCaminoDate('2022-04-11'),
-      },
-      {
-        ...ETES.receptionDeComplements_RecevabiliteDeLaDemande_.FAIT,
-        date: toCaminoDate('2022-04-11'),
-      },
-      {
-        ...ETES.recevabiliteDeLaDemande.DEFAVORABLE,
-        date: toCaminoDate('2022-04-12'),
-      },
-      {
-        ...ETES.modificationDeLaDemande.FAIT,
-        date: toCaminoDate('2022-04-13'),
-      },
-      {
-        ...ETES.recevabiliteDeLaDemande.FAVORABLE,
-        date: toCaminoDate('2022-04-15'),
-      },
-      { ...ETES.avisDesCollectivites.FAIT, date: toCaminoDate('2022-04-17') },
-      { ...ETES.avisDesServicesEtCommissionsConsultatives.FAIT, date: toCaminoDate('2022-04-18') },
-      {
-        ...ETES.rapportEtAvisDeLaDREAL.FAVORABLE,
-        date: toCaminoDate('2022-05-20'),
-      },
-      {
-        ...ETES.saisineDeLaCommissionDepartementaleDesMines_CDM_.FAIT,
-        date: toCaminoDate('2022-05-21'),
-      },
-      {
-        ...ETES.avisDeLaCommissionDepartementaleDesMines_CDM_.FAVORABLE,
-        date: toCaminoDate('2022-05-22'),
-      },
-      {
-        ...ETES.saisineDeLautoriteSignataire.FAIT,
-        date: toCaminoDate('2022-05-23'),
-      },
-      {
-        ...ETES.decisionDeLAutoriteAdministrative.ACCEPTE,
-        date: toCaminoDate('2022-05-24'),
-      },
-      {
-        ...ETES.notificationDesCollectivitesLocales.FAIT,
-        date: toCaminoDate('2022-05-25'),
-      },
-      {
-        ...ETES.publicationDansUnJournalLocalOuNational.FAIT,
-        date: toCaminoDate('2022-05-26'),
-      },
-      {
-        ...ETES.publicationDeDecisionAuRecueilDesActesAdministratifs.FAIT,
-        date: toCaminoDate('2022-05-27'),
-      },
-      { ...ETES.notificationAuDemandeur.FAIT, date: toCaminoDate('2022-05-28') },
-    ]
-    const service = orderAndInterpretMachine(axmOctMachine, etapes)
-    expect(service).canOnlyTransitionTo({ machine: axmOctMachine, date: toCaminoDate('2022-08-28') }, [])
-    expect(axmOctMachine.whoIsBlocking(etapes)).toStrictEqual([])
+    const actual = getEventsTree(axmOctMachine, '2022-04-01', [
+      ETES.demande.FAIT,
+      ETES.enregistrementDeLaDemande.FAIT,
+      ETES.demandeDeComplements_RecevabiliteDeLaDemande_.FAIT,
+      ETES.receptionDeComplements_RecevabiliteDeLaDemande_.FAIT,
+      ETES.recevabiliteDeLaDemande.DEFAVORABLE,
+      ETES.modificationDeLaDemande.FAIT,
+      ETES.recevabiliteDeLaDemande.FAVORABLE,
+      ETES.avisDesCollectivites.FAIT,
+      ETES.avisDesServicesEtCommissionsConsultatives.FAIT,
+      { ...ETES.rapportEtAvisDeLaDREAL.FAVORABLE, addDays: 31 },
+      ETES.saisineDeLaCommissionDepartementaleDesMines_CDM_.FAIT,
+      ETES.avisDeLaCommissionDepartementaleDesMines_CDM_.FAVORABLE,
+      ETES.saisineDeLautoriteSignataire.FAIT,
+      ETES.decisionDeLAutoriteAdministrative.ACCEPTE,
+      ETES.notificationDesCollectivitesLocales.FAIT,
+      ETES.publicationDansUnJournalLocalOuNational.FAIT,
+      ETES.publicationDeDecisionAuRecueilDesActesAdministratifs.FAIT,
+      ETES.notificationAuDemandeur.FAIT,
+    ])
+
+    expect(actual).toMatchInlineSnapshot(`
+      [
+        "RIEN                                                  (confidentielle, en construction        ) -> [FAIRE_DEMANDE]",
+        "FAIRE_DEMANDE                                         (confidentielle, en construction        ) -> [ENREGISTRER_DEMANDE,FAIRE_CLASSEMENT_SANS_SUITE,FAIRE_DESISTEMENT_DEMANDEUR]",
+        "ENREGISTRER_DEMANDE                                   (confidentielle, déposé                 ) -> [DEMANDER_COMPLEMENTS_POUR_RECEVABILITE,FAIRE_CLASSEMENT_SANS_SUITE,FAIRE_DESISTEMENT_DEMANDEUR,FAIRE_RECEVABILITE_DEMANDE_DEFAVORABLE,FAIRE_RECEVABILITE_DEMANDE_FAVORABLE,RENDRE_DECISION_IMPLICITE_REJET]",
+        "DEMANDER_COMPLEMENTS_POUR_RECEVABILITE                (confidentielle, déposé                 ) -> [FAIRE_CLASSEMENT_SANS_SUITE,FAIRE_DESISTEMENT_DEMANDEUR,FAIRE_RECEVABILITE_DEMANDE_DEFAVORABLE,FAIRE_RECEVABILITE_DEMANDE_FAVORABLE,RECEVOIR_COMPLEMENTS_POUR_RECEVABILITE]",
+        "RECEVOIR_COMPLEMENTS_POUR_RECEVABILITE                (confidentielle, déposé                 ) -> [DEMANDER_COMPLEMENTS_POUR_RECEVABILITE,FAIRE_CLASSEMENT_SANS_SUITE,FAIRE_DESISTEMENT_DEMANDEUR,FAIRE_RECEVABILITE_DEMANDE_DEFAVORABLE,FAIRE_RECEVABILITE_DEMANDE_FAVORABLE,RENDRE_DECISION_IMPLICITE_REJET]",
+        "FAIRE_RECEVABILITE_DEMANDE_DEFAVORABLE                (confidentielle, déposé                 ) -> [FAIRE_CLASSEMENT_SANS_SUITE,FAIRE_DESISTEMENT_DEMANDEUR,MODIFIER_LA_DEMANDE]",
+        "MODIFIER_LA_DEMANDE                                   (confidentielle, déposé                 ) -> [DEMANDER_COMPLEMENTS_POUR_RECEVABILITE,FAIRE_CLASSEMENT_SANS_SUITE,FAIRE_DESISTEMENT_DEMANDEUR,FAIRE_RECEVABILITE_DEMANDE_DEFAVORABLE,FAIRE_RECEVABILITE_DEMANDE_FAVORABLE,RENDRE_DECISION_IMPLICITE_REJET]",
+        "FAIRE_RECEVABILITE_DEMANDE_FAVORABLE                  (publique      , en instruction         ) -> [DEMANDER_INFORMATION_POUR_AVIS_DREAL,FAIRE_CLASSEMENT_SANS_SUITE,FAIRE_DESISTEMENT_DEMANDEUR,RENDRE_AVIS_DES_COLLECTIVITES,RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES]",
+        "RENDRE_AVIS_DES_COLLECTIVITES                         (publique      , en instruction         ) -> [DEMANDER_INFORMATION_POUR_AVIS_DREAL,FAIRE_CLASSEMENT_SANS_SUITE,FAIRE_DESISTEMENT_DEMANDEUR,RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES]",
+        "RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES (publique      , en instruction         ) -> [DEMANDER_INFORMATION_POUR_AVIS_DREAL,FAIRE_CLASSEMENT_SANS_SUITE,FAIRE_DESISTEMENT_DEMANDEUR]",
+        "RENDRE_AVIS_DREAL                                     (publique      , en instruction         ) -> [FAIRE_CLASSEMENT_SANS_SUITE,FAIRE_DESISTEMENT_DEMANDEUR,FAIRE_SAISINE_COMMISSION_DEPARTEMENTALE_DES_MINES,RENDRE_AVIS_COMMISSION_DEPARTEMENTALE_DES_MINES,RENDRE_AVIS_COMMISSION_DEPARTEMENTALE_DES_MINES_AJOURNE]",
+        "FAIRE_SAISINE_COMMISSION_DEPARTEMENTALE_DES_MINES     (publique      , en instruction         ) -> [FAIRE_CLASSEMENT_SANS_SUITE,FAIRE_DESISTEMENT_DEMANDEUR,RENDRE_AVIS_COMMISSION_DEPARTEMENTALE_DES_MINES,RENDRE_AVIS_COMMISSION_DEPARTEMENTALE_DES_MINES_AJOURNE]",
+        "RENDRE_AVIS_COMMISSION_DEPARTEMENTALE_DES_MINES       (publique      , en instruction         ) -> [FAIRE_CLASSEMENT_SANS_SUITE,FAIRE_DESISTEMENT_DEMANDEUR,FAIRE_SAISINE_AUTORITE_SIGNATAIRE,RENDRE_DECISION_ADMINISTRATION_ACCEPTE,RENDRE_DECISION_ADMINISTRATION_REJETE]",
+        "FAIRE_SAISINE_AUTORITE_SIGNATAIRE                     (publique      , en instruction         ) -> [FAIRE_CLASSEMENT_SANS_SUITE,FAIRE_DESISTEMENT_DEMANDEUR,RENDRE_DECISION_ADMINISTRATION_ACCEPTE,RENDRE_DECISION_ADMINISTRATION_REJETE]",
+        "RENDRE_DECISION_ADMINISTRATION_ACCEPTE                (publique      , accepté                ) -> [NOTIFIER_COLLECTIVITES_LOCALES,NOTIFIER_DEMANDEUR,PUBLIER_DANS_UN_JOURNAL_LOCAL_OU_NATIONAL,PUBLIER_DECISIONS_RECUEIL_ACTES_ADMINISTRATIFS,RENDRE_DECISION_ABROGATION,RENDRE_DECISION_ANNULATION_PAR_JUGE_ADMINISTRATIF]",
+        "NOTIFIER_COLLECTIVITES_LOCALES                        (publique      , accepté                ) -> [NOTIFIER_DEMANDEUR,PUBLIER_DANS_UN_JOURNAL_LOCAL_OU_NATIONAL,PUBLIER_DECISIONS_RECUEIL_ACTES_ADMINISTRATIFS]",
+        "PUBLIER_DANS_UN_JOURNAL_LOCAL_OU_NATIONAL             (publique      , accepté                ) -> [NOTIFIER_DEMANDEUR,PUBLIER_DECISIONS_RECUEIL_ACTES_ADMINISTRATIFS]",
+        "PUBLIER_DECISIONS_RECUEIL_ACTES_ADMINISTRATIFS        (publique      , accepté                ) -> [NOTIFIER_DEMANDEUR]",
+        "NOTIFIER_DEMANDEUR                                    (publique      , accepté                ) -> []",
+      ]
+    `)
   })
 
   test('peut rendre l’avis DREAL que 30 jours après la saisine des services', () => {
-    const etapes = [
-      { ...ETES.demande.FAIT, date: toCaminoDate('2022-04-01') },
-      {
-        ...ETES.decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_.EXEMPTE,
-        date: toCaminoDate('2020-01-01'),
-      },
-      {
-        ...ETES.decisionDuProprietaireDuSol.FAVORABLE,
-        date: toCaminoDate('2020-01-01'),
-      },
-      { ...ETES.enregistrementDeLaDemande.FAIT, date: toCaminoDate('2022-04-11') },
-      {
-        ...ETES.recevabiliteDeLaDemande.FAVORABLE,
-        date: toCaminoDate('2022-04-15'),
-      },
-      {
-        ...ETES.avisDesCollectivites.FAIT,
-        date: toCaminoDate('2022-04-16'),
-      },
-      { ...ETES.avisDesServicesEtCommissionsConsultatives.FAIT, date: toCaminoDate('2022-04-18') },
-    ]
-    const service = orderAndInterpretMachine(axmOctMachine, etapes)
-    expect(service).canOnlyTransitionTo({ machine: axmOctMachine, date: toCaminoDate('2022-05-18') }, [
+    const { service } = setDateAndOrderAndInterpretMachine(axmOctMachine, '2022-04-01', [
+      ETES.demande.FAIT,
+      ETES.enregistrementDeLaDemande.FAIT,
+      ETES.recevabiliteDeLaDemande.FAVORABLE,
+      ETES.avisDesCollectivites.FAIT,
+      ETES.avisDesServicesEtCommissionsConsultatives.FAIT,
+    ])
+    expect(service).canOnlyTransitionTo({ machine: axmOctMachine, date: toCaminoDate('2022-05-06') }, [
       'RENDRE_AVIS_DREAL',
       'FAIRE_CLASSEMENT_SANS_SUITE',
       'DEMANDER_INFORMATION_POUR_AVIS_DREAL',
       'FAIRE_DESISTEMENT_DEMANDEUR',
     ])
-    expect(service).canOnlyTransitionTo({ machine: axmOctMachine, date: toCaminoDate('2022-05-17') }, [
+    expect(service).canOnlyTransitionTo({ machine: axmOctMachine, date: toCaminoDate('2022-05-05') }, [
       'FAIRE_CLASSEMENT_SANS_SUITE',
       'DEMANDER_INFORMATION_POUR_AVIS_DREAL',
       'FAIRE_DESISTEMENT_DEMANDEUR',

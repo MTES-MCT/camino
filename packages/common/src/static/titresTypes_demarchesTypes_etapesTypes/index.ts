@@ -640,9 +640,6 @@ const TDE = {
     [DEMARCHES_TYPES_IDS.Octroi]: [
       ETAPES_TYPES.demande,
       ETAPES_TYPES.enregistrementDeLaDemande,
-      ETAPES_TYPES.decisionDuProprietaireDuSol,
-      ETAPES_TYPES.decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_,
-      ETAPES_TYPES.modificationDeLaDemande_DecisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.desistementDuDemandeur,
       ETAPES_TYPES.demandeDeComplements_RecevabiliteDeLaDemande_,

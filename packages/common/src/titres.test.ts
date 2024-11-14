@@ -6,8 +6,8 @@ import { ETAPE_IS_BROUILLON, ETAPE_IS_NOT_BROUILLON } from './etape'
 import { testBlankUser } from './tests-utils'
 describe('getMostRecentValuePropFromEtapeFondamentaleValide', () => {
   test("retourne le titulaire de la demande même si elle est en brouillon, si elle est l'unique étape", () => {
-    const asl: TitrePropTitreEtapeFindDemarcheEtape = {
-      etape_type_id: 'asl',
+    const acg: TitrePropTitreEtapeFindDemarcheEtape = {
+      etape_type_id: 'acg',
       etape_statut_id: 'fai',
       is_brouillon: ETAPE_IS_NOT_BROUILLON,
       ordre: 1,
@@ -31,7 +31,7 @@ describe('getMostRecentValuePropFromEtapeFondamentaleValide', () => {
     expect(
       getMostRecentValuePropFromEtapeFondamentaleValide('titulaireIds', [
         {
-          etapes: [asl, mfr],
+          etapes: [acg, mfr],
           ordre: 1,
         },
       ])

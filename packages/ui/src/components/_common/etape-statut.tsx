@@ -40,6 +40,8 @@ const avisStatutToEtapeStatut = {
   Défavorable: ETAPES_STATUTS.DEFAVORABLE,
   'Favorable avec réserves': ETAPES_STATUTS.FAVORABLE_AVEC_RESERVE,
   'Non renseigné': ETAPES_STATUTS.NON_APPLICABLE,
+  Exempté: ETAPES_STATUTS.EXEMPTE,
+  Requis: ETAPES_STATUTS.REQUIS,
 } as const satisfies Record<AvisStatutId, EtapeStatutId>
 
 export const AvisStatut: FunctionalComponent<{ avisStatutId: AvisStatutId }> = props => {

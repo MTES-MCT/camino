@@ -3,7 +3,7 @@ import { getDocuments, toDocuments } from './documents'
 import { test, expect } from 'vitest'
 
 test('toDocuments', () => {
-  expect(toDocuments()).toHaveLength(216)
+  expect(toDocuments()).toHaveLength(214)
 })
 
 test('getDocuments erreurs', () => {
@@ -27,40 +27,9 @@ test('getDocuments pas de surcharge', () => {
 })
 
 test('getDocuments surcharge', () => {
-  expect(getDocuments('axm', 'oct', 'dae')).toMatchInlineSnapshot(`
-    [
-      {
-        "description": undefined,
-        "id": "arp",
-        "nom": "Arrêté préfectoral",
-        "optionnel": false,
-      },
-      {
-        "id": "arr",
-        "nom": "Arrêté",
-        "optionnel": true,
-      },
-      {
-        "id": "dep",
-        "nom": "Décision cas par cas",
-        "optionnel": true,
-      },
-      {
-        "id": "let",
-        "nom": "Lettre",
-        "optionnel": true,
-      },
-      {
-        "id": "ndd",
-        "nom": "Notification de décision",
-        "optionnel": true,
-      },
-    ]
-  `)
-
   expect(getDocuments('axm', 'oct', 'mfr')).toMatchSnapshot()
 
-  expect(getDocuments('axm', 'oct', 'dae')).not.toEqual(getDocuments('axm', 'ces', 'dae'))
+  expect(getDocuments('axm', 'oct', 'mfr')).not.toEqual(getDocuments('axm', 'ces', 'mfr'))
 })
 
 test("la lettre des saisines est obligatoire pour l'avis des services et commissions consultatives", () => {

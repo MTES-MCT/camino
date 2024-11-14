@@ -3,7 +3,7 @@
 import { CaminoDate } from 'camino-common/src/date'
 import { DemarcheId } from 'camino-common/src/demarche'
 import { EtapeDocumentId, EtapeId } from 'camino-common/src/etape'
-import { AvisStatutId, AvisTypes, AvisVisibilityIds } from 'camino-common/src/static/avisTypes'
+import { AvisTypes, AvisVisibilityIds } from 'camino-common/src/static/avisTypes'
 import { isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools'
 import { Knex } from 'knex'
 import { LargeObjectId } from '../../database/largeobjects'
@@ -26,7 +26,7 @@ export const up = async (knex: Knex): Promise<void> => {
       throw new Error('Un avis des services est obligatoire')
     }
 
-    const nonRenseigneAvis: AvisStatutId = 'Non renseigné'
+    const nonRenseigneAvis: (typeof AvisTypes.autreAvis.statutIds)[number] = 'Non renseigné' as const
     for (const document of documents.rows) {
       const row = {
         id: document.id,

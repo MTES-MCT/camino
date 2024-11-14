@@ -20,6 +20,7 @@ import { EntrepriseId, entrepriseIdValidator } from 'camino-common/src/entrepris
 import { etapeCreate } from './rest-test-utils'
 import { insertTitreGraph, ITitreInsert, multiPolygonWith4Points } from '../../../tests/integration-test-helper'
 import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes'
+import { DOCUMENTS_TYPES_IDS } from 'camino-common/src/static/documentsTypes'
 
 vi.mock('../../tools/dir-create', () => ({
   __esModule: true,
@@ -340,14 +341,14 @@ describe('etapeModifier', () => {
   })
 
   test("ne peut pas supprimer un document obligatoire d'une étape qui n'est pas en brouillon (utilisateur super)", async () => {
-    const { titreDemarcheId, titreEtapeId } = await etapeCreate('dae', caminoDateValidator.parse('2018-01-01'), 'axm')
+    const { titreDemarcheId, titreEtapeId } = await etapeCreate(ETAPES_TYPES.avisDesCollectivites, caminoDateValidator.parse('2018-01-01'), 'axm')
     const dir = `${process.cwd()}/files/tmp/`
 
     const fileName = `existing_temp_file_${idGenerate()}`
     mkdirSync(dir, { recursive: true })
     copyFileSync(`./src/tools/small.pdf`, `${dir}/${fileName}`)
     const documentToInsert: TempEtapeDocument = {
-      etape_document_type_id: 'arp',
+      etape_document_type_id: DOCUMENTS_TYPES_IDS.lettreDeSaisineDesCollectivites,
       entreprises_lecture: true,
       public_lecture: true,
       description: 'desc',
@@ -356,8 +357,8 @@ describe('etapeModifier', () => {
 
     const etape: RestEtapeModification = {
       id: titreEtapeId,
-      typeId: 'dae',
-      statutId: 'exe',
+      typeId: ETAPES_TYPES.avisDesCollectivites,
+      statutId: 'fai',
       titreDemarcheId,
       date: caminoDateValidator.parse('2018-01-01'),
       duree: null,
@@ -399,11 +400,11 @@ describe('etapeModifier', () => {
 
     let res = await restPutCall(dbPool, '/rest/etapes', {}, userSuper, etape)
 
-    expect(res.statusCode).toBe(HTTP_STATUS.OK)
+    expect(res.statusCode, JSON.stringify(res.body)).toBe(HTTP_STATUS.OK)
 
     res = await restPutCall(dbPool, '/rest/etapes', {}, userSuper, { ...etape, etapeDocuments: [] })
 
-    expect(res.body.errorMessage).toBe('le document "Arrêté préfectoral" (arp) est obligatoire')
+    expect(res.body.errorMessage).toMatchInlineSnapshot(`"le document "Lettre de saisine des collectivités" (ldc) est obligatoire"`)
   })
 
   test('peut modifier une étape mia avec un statut fai (utilisateur super)', async () => {

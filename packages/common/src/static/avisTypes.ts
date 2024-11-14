@@ -3,9 +3,10 @@ import { z } from 'zod'
 interface Definition<T> {
   id: T
   nom: string
+  statutIds: AvisStatutId[]
 }
 // prettier-ignore
-const AVIS_TYPES_IDS_WITHOUT_AUTRE = [ "confirmationAccordProprietaireDuSol", "avisDirectionRegionaleDesAffairesCulturelles", "avisDirectionAlimentationAgricultureForet", "avisConseilDepartementalEnvironnementRisquesSanitairesTechnologiques", "avisDirectionsRégionalesEconomieEmploiTravailSolidarités", "avisDirectionRegionaleFinancesPubliques", "avisGendarmerieNationale", "avisParcNaturelMarin", "avisIFREMER", "avisInstitutNationalOrigineQualite", "avisEtatMajorOrpaillagePecheIllicite", "avisServiceAdministratifLocal", "avisAutoriteMilitaire", "avisParcNational", "avisDirectionDepartementaleTerritoiresMer", "avisAgenceRegionaleSante", "avisCaisseGeneraleSecuriteSociale", "avisServiceMilieuxNaturelsBiodiversiteSitesPaysages", "avisOfficeNationalDesForets", "expertiseOfficeNationalDesForets", "avisDUneCollectivite"] as const
+const AVIS_TYPES_IDS_WITHOUT_AUTRE = [ "confirmationAccordProprietaireDuSol", "avisDirectionRegionaleDesAffairesCulturelles", "avisDirectionAlimentationAgricultureForet", "avisConseilDepartementalEnvironnementRisquesSanitairesTechnologiques", "avisDirectionsRégionalesEconomieEmploiTravailSolidarités", "avisDirectionRegionaleFinancesPubliques", "avisGendarmerieNationale", "avisParcNaturelMarin", "avisIFREMER", "avisInstitutNationalOrigineQualite", "avisEtatMajorOrpaillagePecheIllicite", "avisServiceAdministratifLocal", "avisAutoriteMilitaire", "avisParcNational", "avisDirectionDepartementaleTerritoiresMer", "avisAgenceRegionaleSante", "avisCaisseGeneraleSecuriteSociale", "avisServiceMilieuxNaturelsBiodiversiteSitesPaysages", "avisOfficeNationalDesForets", "expertiseOfficeNationalDesForets", "avisDUneCollectivite", "avisDeLaMissionAutoriteEnvironnementale", "avisProprietaireDuSol"] as const
 const AVIS_TYPE_IDS_AUTRE = ['autreAvis'] as const
 
 const AVIS_TYPES_IDS = [...AVIS_TYPES_IDS_WITHOUT_AUTRE, ...AVIS_TYPE_IDS_AUTRE] as const
@@ -16,46 +17,66 @@ export type AvisTypeId = z.infer<typeof avisTypeIdValidator>
 export const autreAvisTypeIdValidator = z.enum(AVIS_TYPE_IDS_AUTRE)
 export const avisTypeIdSansAutreValidator = z.enum(AVIS_TYPES_IDS_WITHOUT_AUTRE)
 
-export const AvisTypes: { [key in AvisTypeId]: Definition<key> } = {
-  confirmationAccordProprietaireDuSol: { id: 'confirmationAccordProprietaireDuSol', nom: "Confirmation de l'accord du propriétaire du sol" },
-  avisDirectionRegionaleDesAffairesCulturelles: { id: 'avisDirectionRegionaleDesAffairesCulturelles', nom: 'Avis de la Direction Régionale Des Affaires Culturelles (DRAC)' },
-  avisDirectionAlimentationAgricultureForet: { id: 'avisDirectionAlimentationAgricultureForet', nom: "Avis de la Direction de l'Alimentation de l'Agriculture et de la Forêt (DRAF)" },
+const defaultStatutIds = ['Favorable', 'Défavorable', 'Favorable avec réserves', 'Non renseigné'] as const satisfies AvisStatutId[]
+export const AvisTypes = {
+  confirmationAccordProprietaireDuSol: { id: 'confirmationAccordProprietaireDuSol', nom: "Confirmation de l'accord du propriétaire du sol", statutIds: defaultStatutIds },
+  avisDirectionRegionaleDesAffairesCulturelles: {
+    id: 'avisDirectionRegionaleDesAffairesCulturelles',
+    nom: 'Avis de la Direction Régionale Des Affaires Culturelles (DRAC)',
+    statutIds: defaultStatutIds,
+  },
+  avisDirectionAlimentationAgricultureForet: {
+    id: 'avisDirectionAlimentationAgricultureForet',
+    nom: "Avis de la Direction de l'Alimentation de l'Agriculture et de la Forêt (DRAF)",
+    statutIds: defaultStatutIds,
+  },
   avisConseilDepartementalEnvironnementRisquesSanitairesTechnologiques: {
     id: 'avisConseilDepartementalEnvironnementRisquesSanitairesTechnologiques',
     nom: "Avis du Conseil Départemental de l'Environnement et des Risques Sanitaires et Technologiques (CODERST)",
+    statutIds: defaultStatutIds,
   },
   avisServiceMilieuxNaturelsBiodiversiteSitesPaysages: {
     id: 'avisServiceMilieuxNaturelsBiodiversiteSitesPaysages',
     nom: 'Avis du Service Milieux Naturels Biodiversité Sites Et Paysages (MNBST) de la DGTM',
+    statutIds: defaultStatutIds,
   },
   avisDirectionsRégionalesEconomieEmploiTravailSolidarités: {
     id: 'avisDirectionsRégionalesEconomieEmploiTravailSolidarités',
     nom: "Avis de la Direction régionale de l'économie, de l'emploi, du travail et des solidarités",
+    statutIds: defaultStatutIds,
   },
-  avisDirectionRegionaleFinancesPubliques: { id: 'avisDirectionRegionaleFinancesPubliques', nom: 'Avis de la Direction Regionale Des Finances Publiques' },
-  avisGendarmerieNationale: { id: 'avisGendarmerieNationale', nom: 'Avis de la Gendarmerie Nationale' },
-  avisParcNaturelMarin: { id: 'avisParcNaturelMarin', nom: 'Avis du Parc Naturel Marin' },
-  avisIFREMER: { id: 'avisIFREMER', nom: "Avis de l'IFREMER" },
-  avisOfficeNationalDesForets: { id: 'avisOfficeNationalDesForets', nom: "Avis de l'Office National des Forêts" },
-  expertiseOfficeNationalDesForets: { id: 'expertiseOfficeNationalDesForets', nom: "Expertise de l'Office National des Forêts" },
-  avisInstitutNationalOrigineQualite: { id: 'avisInstitutNationalOrigineQualite', nom: "Avis de l'Institut National de l'origine et de la Qualité" },
-  avisEtatMajorOrpaillagePecheIllicite: { id: 'avisEtatMajorOrpaillagePecheIllicite', nom: "Avis de l'État-major Orpaillage et Pêche Illicite (EMOPI)" },
-  avisServiceAdministratifLocal: { id: 'avisServiceAdministratifLocal', nom: "Avis d'un Service Administratif Local" },
-  avisAutoriteMilitaire: { id: 'avisAutoriteMilitaire', nom: "Avis de l'Autorité militaire" },
-  avisParcNational: { id: 'avisParcNational', nom: 'Avis du Parc National' },
-  avisDirectionDepartementaleTerritoiresMer: { id: 'avisDirectionDepartementaleTerritoiresMer', nom: 'Avis de la Direction Départementale des Territoires et de la Mer (DDTM)' },
-  avisAgenceRegionaleSante: { id: 'avisAgenceRegionaleSante', nom: "Avis de l'Agence Régionale de Santé (ARS)" },
-  avisCaisseGeneraleSecuriteSociale: { id: 'avisCaisseGeneraleSecuriteSociale', nom: 'Avis de la Caisse Générale de Sécurité Sociale' },
-  avisDUneCollectivite: { id: 'avisDUneCollectivite', nom: "Avis d'une collectivité" },
-  autreAvis: { id: 'autreAvis', nom: 'Autre avis' },
-}
+  avisDirectionRegionaleFinancesPubliques: { id: 'avisDirectionRegionaleFinancesPubliques', nom: 'Avis de la Direction Regionale Des Finances Publiques', statutIds: defaultStatutIds },
+  avisGendarmerieNationale: { id: 'avisGendarmerieNationale', nom: 'Avis de la Gendarmerie Nationale', statutIds: defaultStatutIds },
+  avisParcNaturelMarin: { id: 'avisParcNaturelMarin', nom: 'Avis du Parc Naturel Marin', statutIds: defaultStatutIds },
+  avisIFREMER: { id: 'avisIFREMER', nom: "Avis de l'IFREMER", statutIds: defaultStatutIds },
+  avisOfficeNationalDesForets: { id: 'avisOfficeNationalDesForets', nom: "Avis de l'Office National des Forêts", statutIds: defaultStatutIds },
+  expertiseOfficeNationalDesForets: { id: 'expertiseOfficeNationalDesForets', nom: "Expertise de l'Office National des Forêts", statutIds: defaultStatutIds },
+  avisInstitutNationalOrigineQualite: { id: 'avisInstitutNationalOrigineQualite', nom: "Avis de l'Institut National de l'origine et de la Qualité", statutIds: defaultStatutIds },
+  avisEtatMajorOrpaillagePecheIllicite: { id: 'avisEtatMajorOrpaillagePecheIllicite', nom: "Avis de l'État-major Orpaillage et Pêche Illicite (EMOPI)", statutIds: defaultStatutIds },
+  avisServiceAdministratifLocal: { id: 'avisServiceAdministratifLocal', nom: "Avis d'un Service Administratif Local", statutIds: defaultStatutIds },
+  avisAutoriteMilitaire: { id: 'avisAutoriteMilitaire', nom: "Avis de l'Autorité militaire", statutIds: defaultStatutIds },
+  avisParcNational: { id: 'avisParcNational', nom: 'Avis du Parc National', statutIds: defaultStatutIds },
+  avisDirectionDepartementaleTerritoiresMer: {
+    id: 'avisDirectionDepartementaleTerritoiresMer',
+    nom: 'Avis de la Direction Départementale des Territoires et de la Mer (DDTM)',
+    statutIds: defaultStatutIds,
+  },
+  avisAgenceRegionaleSante: { id: 'avisAgenceRegionaleSante', nom: "Avis de l'Agence Régionale de Santé (ARS)", statutIds: defaultStatutIds },
+  avisCaisseGeneraleSecuriteSociale: { id: 'avisCaisseGeneraleSecuriteSociale', nom: 'Avis de la Caisse Générale de Sécurité Sociale', statutIds: defaultStatutIds },
+  avisDUneCollectivite: { id: 'avisDUneCollectivite', nom: "Avis d'une collectivité", statutIds: defaultStatutIds },
+  avisDeLaMissionAutoriteEnvironnementale: { id: 'avisDeLaMissionAutoriteEnvironnementale', nom: 'avis de la mission autorité environnementale', statutIds: ['Exempté', 'Requis'] },
+  avisProprietaireDuSol: { id: 'avisProprietaireDuSol', nom: 'avis du propriétaire du sol', statutIds: defaultStatutIds },
+  autreAvis: { id: 'autreAvis', nom: 'Autre avis', statutIds: defaultStatutIds },
+} as const satisfies { [key in AvisTypeId]: Definition<key> }
 
 // prettier-ignore
-export const AvisStatutIds = [
+const AvisStatutIds = [
   "Favorable",
   "Défavorable",
   "Favorable avec réserves",
   "Non renseigné",
+  'Exempté',
+  "Requis"
 ] as const
 
 export const avisStatutIdValidator = z.enum(AvisStatutIds)

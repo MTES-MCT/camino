@@ -72,6 +72,10 @@ export const demarchesDefinitions = [
       demarcheIdValidator.parse('YEWeODXiFb7xKJB2OQlTyc14'),
       // avis dgtm moins de 30 jours après la saisine des services
       demarcheIdValidator.parse('ktPyoaDYzJi2faPMtAeKFZ5l'),
+      // pas d'enregistrement de la demande
+      demarcheIdValidator.parse('xbKfuhPmphDd68x4QqtyRctj'),
+      demarcheIdValidator.parse('TUI2aBCJRv7Fc1torDlVu8HB'),
+      demarcheIdValidator.parse('FPcbrdR79tjerabHbxtLkMZa'),
     ],
     machineId: 'AxmOct',
   },

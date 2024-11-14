@@ -6,7 +6,7 @@ import { Entreprise, EtapeEntrepriseDocument, entrepriseDocumentIdValidator, ent
 import { titreSlugValidator } from 'camino-common/src/validators/titres'
 import { action } from '@storybook/addon-actions'
 import { testBlankUser } from 'camino-common/src/tests-utils'
-import { ETAPE_IS_BROUILLON, ETAPE_IS_NOT_BROUILLON, EtapeDocument, etapeDocumentIdValidator, etapeIdValidator, etapeSlugValidator } from 'camino-common/src/etape'
+import { ETAPE_IS_BROUILLON, ETAPE_IS_NOT_BROUILLON, etapeAvisIdValidator, EtapeDocument, etapeDocumentIdValidator, etapeIdValidator, etapeSlugValidator } from 'camino-common/src/etape'
 import { DOCUMENTS_TYPES_IDS } from 'camino-common/src/static/documentsTypes'
 import { ApiClient } from '@/api/api-client'
 import { FeatureMultiPolygon } from 'camino-common/src/perimetre'
@@ -954,36 +954,7 @@ export const AxmDeposableAvecDaeEtAsl: StoryFn = () => (
       titulaireIds: [entrepriseIdValidator.parse('titulaire1')],
       administrationsLocales: [],
       sdom_zones: [],
-      etapes: [
-        {
-          date: toCaminoDate('2024-04-22'),
-          id: etapeIdValidator.parse('idDae'),
-          entreprises_documents: [],
-          etape_documents: [],
-          avis_documents: [],
-          etape_statut_id: 'exe',
-          etape_type_id: 'dae',
-          is_brouillon: ETAPE_IS_NOT_BROUILLON,
-          note: { valeur: '', is_avertissement: false },
-          sections_with_values: [],
-          ordre: 1,
-          slug: etapeSlugValidator.parse('slug-dae'),
-        },
-        {
-          date: toCaminoDate('2024-04-22'),
-          id: etapeIdValidator.parse('idAsl'),
-          entreprises_documents: [],
-          etape_documents: [],
-          avis_documents: [],
-          etape_statut_id: 'exe',
-          etape_type_id: 'asl',
-          is_brouillon: ETAPE_IS_NOT_BROUILLON,
-          note: { valeur: '', is_avertissement: false },
-          sections_with_values: [],
-          ordre: 2,
-          slug: etapeSlugValidator.parse('slug-asl'),
-        },
-      ],
+      etapes: [],
       communes: [],
     }}
     user={{ ...testBlankUser, role: 'entreprise', entrepriseIds: [entrepriseIdValidator.parse('titulaire1')] }}
@@ -1072,7 +1043,26 @@ export const AxmDeposableAvecDaeEtAsl: StoryFn = () => (
           id: entrepriseDocumentIdValidator.parse('iddeb'),
         },
       ],
-      avis_documents: [],
+      avis_documents: [
+        {
+          avis_type_id: 'avisProprietaireDuSol',
+          avis_statut_id: 'Favorable',
+          avis_visibility_id: 'Administrations',
+          date: toCaminoDate('2024-04-22'),
+          description: 'description',
+          id: etapeAvisIdValidator.parse('idavispds'),
+          has_file: true,
+        },
+        {
+          avis_type_id: 'avisDeLaMissionAutoriteEnvironnementale',
+          avis_statut_id: 'Requis',
+          avis_visibility_id: 'Administrations',
+          date: toCaminoDate('2024-04-22'),
+          description: 'description',
+          id: etapeAvisIdValidator.parse('idavismae'),
+          has_file: true,
+        },
+      ],
     }}
   />
 )

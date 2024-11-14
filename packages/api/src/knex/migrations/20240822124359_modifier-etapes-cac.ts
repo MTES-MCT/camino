@@ -6,7 +6,7 @@ import { Knex } from 'knex'
 import { LargeObjectId } from '../../database/largeobjects'
 import { isNullOrUndefined, isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools'
 import { CaminoDate } from 'camino-common/src/date'
-import { AvisStatutId, AvisTypeId, AvisTypes, AvisVisibilityId } from 'camino-common/src/static/avisTypes'
+import { AvisTypeId, AvisTypes, AvisVisibilityId } from 'camino-common/src/static/avisTypes'
 
 export const up = async (knex: Knex): Promise<void> => {
   // on récupère toutes les étapes concernées
@@ -78,7 +78,7 @@ export const up = async (knex: Knex): Promise<void> => {
                 const avis: {
                   id: EtapeDocumentId
                   avis_type_id: AvisTypeId
-                  avis_statut_id: AvisStatutId
+                  avis_statut_id: (typeof AvisTypes.autreAvis.statutIds)[number]
                   avis_visibility_id: AvisVisibilityId
                   etape_id: EtapeId
                   description?: string

@@ -25,7 +25,8 @@ export const up = async (knex: Knex): Promise<void> => {
     if (etapesByDemarche.length > 0) {
       let etapeFondamentaleId = etapesByDemarche[0].id
       for (const currentEtape of etapesByDemarche) {
-        if (EtapesTypes[currentEtape.type_id].fondamentale) {
+        // @ts-ignore asl n'existe plus dans la migration d'après
+        if (currentEtape.type_id === 'asl' || EtapesTypes[currentEtape.type_id].fondamentale) {
           etapeFondamentaleId = currentEtape.id
         }
         await knex.raw('UPDATE titres_etapes set etape_fondamentale_id=? where id=?', [etapeFondamentaleId, currentEtape.id])

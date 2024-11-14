@@ -282,7 +282,7 @@ export type IsEtapeCompleteDocuments = DeepReadonly<Pick<EtapeDocument | TempEta
 export type IsEtapeCompleteEntrepriseDocuments = DeepReadonly<Pick<EntrepriseDocument, 'entreprise_document_type_id' | 'entreprise_id'>[]>
 type IsEtapeCompleteSdomZones = DeepReadonly<SDOMZoneId[]> | null | undefined
 type IsEtapeCompleteCommunes = DeepReadonly<CommuneId[]>
-type IsEtapeCompleteEtapeAvis = DeepReadonly<Pick<EtapeAvis, 'avis_type_id'>[]>
+export type IsEtapeCompleteEtapeAvis = DeepReadonly<Pick<EtapeAvis, 'avis_type_id'>[]>
 
 export const isEtapeValid = (
   etape: IsEtapeCompleteEtape,

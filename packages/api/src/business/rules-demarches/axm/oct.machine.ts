@@ -19,12 +19,6 @@ type RendreAvisDreal = {
 type AXMOctXStateEvent =
   | { type: 'FAIRE_DEMANDE' }
   | { type: 'ENREGISTRER_DEMANDE' }
-  | { type: 'RENDRE_DAE_EXEMPTEE' }
-  | { type: 'RENDRE_DECISION_DU_PROPRIETAIRE_DU_SOL_FAVORABLE' }
-  | { type: 'RENDRE_DECISION_DU_PROPRIETAIRE_DU_SOL_FAVORABLE_AVEC_RESERVE' }
-  | { type: 'RENDRE_DECISION_DU_PROPRIETAIRE_DU_SOL_DEFAVORABLE' }
-  | { type: 'RENDRE_DAE_REQUISE' }
-  | { type: 'MODIFIER_DEMANDE_APRES_DAE' }
   | { type: 'DEMANDER_COMPLEMENTS_POUR_RECEVABILITE' }
   | { type: 'RECEVOIR_COMPLEMENTS_POUR_RECEVABILITE' }
   | { type: 'FAIRE_RECEVABILITE_DEMANDE_FAVORABLE' }
@@ -54,36 +48,6 @@ type AXMOctXStateEvent =
 type Event = AXMOctXStateEvent['type']
 
 const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
-  RENDRE_DAE_EXEMPTEE: {
-    db: {
-      EXEMPTE: ETES.decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_.EXEMPTE,
-    },
-    mainStep: true,
-  },
-  RENDRE_DECISION_DU_PROPRIETAIRE_DU_SOL_FAVORABLE: {
-    db: {
-      FAVORABLE: ETES.decisionDuProprietaireDuSol.FAVORABLE,
-    },
-    mainStep: true,
-  },
-  RENDRE_DECISION_DU_PROPRIETAIRE_DU_SOL_FAVORABLE_AVEC_RESERVE: {
-    db: {
-      FAVORABLE_AVEC_RESERVE: ETES.decisionDuProprietaireDuSol.FAVORABLE_AVEC_RESERVE,
-    },
-    mainStep: false,
-  },
-  RENDRE_DECISION_DU_PROPRIETAIRE_DU_SOL_DEFAVORABLE: {
-    db: {
-      DEFAVORABLE: ETES.decisionDuProprietaireDuSol.DEFAVORABLE,
-    },
-    mainStep: false,
-  },
-  RENDRE_DAE_REQUISE: {
-    db: {
-      REQUIS: ETES.decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_.REQUIS,
-    },
-    mainStep: false,
-  },
   FAIRE_RECEVABILITE_DEMANDE_FAVORABLE: {
     db: {
       FAVORABLE: ETES.recevabiliteDeLaDemande.FAVORABLE,
@@ -125,7 +89,6 @@ const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
   },
   FAIRE_DEMANDE: { db: ETES.demande, mainStep: true },
   ENREGISTRER_DEMANDE: { db: ETES.enregistrementDeLaDemande, mainStep: true },
-  MODIFIER_DEMANDE_APRES_DAE: { db: ETES.modificationDeLaDemande_DecisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_, mainStep: true },
   DEMANDER_COMPLEMENTS_POUR_RECEVABILITE: { db: ETES.demandeDeComplements_RecevabiliteDeLaDemande_, mainStep: false },
   RECEVOIR_COMPLEMENTS_POUR_RECEVABILITE: { db: ETES.receptionDeComplements_RecevabiliteDeLaDemande_, mainStep: false },
   MODIFIER_LA_DEMANDE: { db: ETES.modificationDeLaDemande, mainStep: true },
@@ -175,7 +138,6 @@ interface AxmContext extends CaminoCommonContext {
   notificationDesCollectivitesLocalesFaite: boolean
   publicationDecisionsRecueilActesAdministratifsFaite: boolean
   publicationDansUnJournalLocalOuNationalFaite: boolean
-  daeRequiseOuDemandeDeposee: boolean
   avisDesCollectivitesFaite: boolean
   avisDesServicesEtCommissionsConsultatives: RendreAvisDesServicesEtCommissonsConsultatives
 }
@@ -188,7 +150,7 @@ const axmOctMachine = createMachine({
   types: {} as { context: AxmContext; events: AXMOctXStateEvent },
 
   id: 'AXMOct',
-  initial: 'demandeAFaireEtDecisionsARendre',
+  initial: 'demandeAFaire',
   context: {
     demarcheStatut: DemarchesStatutsIds.EnConstruction,
     demandeFaite: false,
@@ -198,7 +160,6 @@ const axmOctMachine = createMachine({
     publicationDansUnJournalLocalOuNationalFaite: false,
     avisDesCollectivitesFaite: false,
     avisDesServicesEtCommissionsConsultatives: { faite: false },
-    daeRequiseOuDemandeDeposee: false,
     visibilite: 'confidentielle',
   },
   on: {
@@ -207,67 +168,17 @@ const axmOctMachine = createMachine({
       target: '.desistementDuDemandeurRendu',
     },
     FAIRE_CLASSEMENT_SANS_SUITE: {
-      guard: ({ context }) =>
-        context.daeRequiseOuDemandeDeposee && [DemarchesStatutsIds.EnConstruction, DemarchesStatutsIds.Depose, DemarchesStatutsIds.EnInstruction].includes(context.demarcheStatut),
+      guard: ({ context }) => context.demandeFaite && [DemarchesStatutsIds.EnConstruction, DemarchesStatutsIds.Depose, DemarchesStatutsIds.EnInstruction].includes(context.demarcheStatut),
       target: '.classementSansSuiteRendu',
     },
   },
   states: {
-    demandeAFaireEtDecisionsARendre: {
-      type: 'parallel',
-      states: {
-        demandeMachine: {
-          initial: 'demandeAFaire',
-          states: {
-            demandeAFaire: {
-              on: {
-                FAIRE_DEMANDE: 'demandeFaite',
-              },
-            },
-            demandeFaite: {
-              type: 'final',
-              entry: assign({ demandeFaite: true }),
-            },
-          },
+    demandeAFaire: {
+      on: {
+        FAIRE_DEMANDE: {
+          target: 'enregistrementDemandeAFaire',
+          actions: assign({ demandeFaite: true }),
         },
-        decisionAutoriteEnvironnementaleMachine: {
-          initial: 'decisionARendre',
-          states: {
-            decisionARendre: {
-              on: {
-                RENDRE_DAE_REQUISE: {
-                  target: 'demandeAModifier',
-                  actions: assign({
-                    daeRequiseOuDemandeDeposee: true,
-                  }),
-                },
-                RENDRE_DAE_EXEMPTEE: 'demandeExemptee',
-              },
-            },
-            demandeAModifier: {
-              on: { MODIFIER_DEMANDE_APRES_DAE: 'demandeModifiee' },
-            },
-            demandeExemptee: { type: 'final' },
-            demandeModifiee: { type: 'final' },
-          },
-        },
-        decisionDuProprietaireDuSolMachine: {
-          initial: 'decisionARendre',
-          states: {
-            decisionARendre: {
-              on: {
-                RENDRE_DECISION_DU_PROPRIETAIRE_DU_SOL_FAVORABLE: 'decisionRendue',
-                RENDRE_DECISION_DU_PROPRIETAIRE_DU_SOL_FAVORABLE_AVEC_RESERVE: 'decisionRendue',
-                RENDRE_DECISION_DU_PROPRIETAIRE_DU_SOL_DEFAVORABLE: '#classementSansSuiteAFaire',
-              },
-            },
-            decisionRendue: { type: 'final' },
-          },
-        },
-      },
-
-      onDone: {
-        target: 'enregistrementDemandeAFaire',
       },
     },
     enregistrementDemandeAFaire: {
@@ -277,7 +188,6 @@ const axmOctMachine = createMachine({
           target: 'recevabiliteDeLaDemandeAFaire',
           actions: assign({
             demarcheStatut: DemarchesStatutsIds.Depose,
-            daeRequiseOuDemandeDeposee: true,
           }),
         },
       },
@@ -565,14 +475,12 @@ const axmOctMachine = createMachine({
       type: 'final',
       entry: assign({
         demarcheStatut: DemarchesStatutsIds.Desiste,
-        visibilite: 'publique',
       }),
     },
     classementSansSuiteRendu: {
       type: 'final',
       entry: assign({
         demarcheStatut: DemarchesStatutsIds.ClasseSansSuite,
-        visibilite: 'publique',
       }),
     },
   },
