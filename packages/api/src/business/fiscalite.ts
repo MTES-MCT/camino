@@ -1,5 +1,6 @@
 import { CaminoAnnee } from 'camino-common/src/date'
 import { SubstanceFiscaleId, SUBSTANCES_FISCALES_IDS } from 'camino-common/src/static/substancesFiscales'
+import { RecordPartial } from 'camino-common/src/typescript-tools'
 import Decimal from 'decimal.js'
 import { z } from 'zod'
 
@@ -659,6 +660,93 @@ const categoriesForTaxeAurifereGuyane = {
     },
   },
 } as const satisfies Record<EntrepriseCategory, Record<AnneeData, { value: Decimal; reference: string }>>
+
+const SIP_IDS = ['cayenne', 'kourou', 'saintLaurentDuMaroni'] as const
+export const sipIdValidator = z.enum(SIP_IDS)
+export type Sip = z.infer<typeof sipIdValidator>
+export const isSip = (value: string): value is Sip => sipIdValidator.safeParse(value).success
+export const getSips = (annee: CaminoAnnee): RecordPartial<Sip, { nom: string; communes: string[] }> => {
+  const anneeData = anneeDataValidator.parse(annee)
+  if (anneeData < '2024') {
+    return oldSips
+  } else {
+    return newSips
+  }
+}
+const oldSips = {
+  cayenne: {
+    nom: 'SIP de Cayenne',
+    communes: [
+      '97313', // Montsinery-Tonnegrande
+      '97314', // Ouanary
+      '97356', // Camopi
+      '97302', // Cayenne
+      '97301', // Régina
+      '97309', // Remire-Montjoly
+      '97310', // Roura
+      '97308', // Saint-Georges
+      '97307', // Matoury
+    ],
+  },
+  kourou: {
+    nom: 'SIP de Kourou',
+    communes: [
+      '97304', // Kourou
+      '97305', // Macouria
+      '97303', // Iracoubo
+      '97312', // Sinnamary
+      '97358', // Saint-Élie
+    ],
+  },
+  saintLaurentDuMaroni: {
+    nom: 'SIP de Saint-Laurent du Maroni',
+    communes: [
+      '97362', //  Papaichton
+      '97360', //  Apatou
+      '97361', //  Awala-Yalimapo
+      '97357', //  Grand-Santi
+      '97306', //  Mana
+      '97352', //  Saül
+      '97353', //  Maripasoula
+      '97311', //  Saint-Laurent-du-Maroni
+    ],
+  },
+} as const satisfies Record<Sip, { nom: string; communes: string[] }>
+
+const newSips = {
+  cayenne: {
+    nom: 'SIP de Cayenne',
+    communes: [
+      '97313', // Montsinery-Tonnegrande
+      '97314', // Ouanary
+      '97356', // Camopi
+      '97302', // Cayenne
+      '97301', // Régina
+      '97309', // Remire-Montjoly
+      '97310', // Roura
+      '97308', // Saint-Georges
+      '97307', // Matoury
+    ],
+  },
+  saintLaurentDuMaroni: {
+    nom: 'SIP de Saint-Laurent du Maroni',
+    communes: [
+      '97362', //  Papaichton
+      '97360', //  Apatou
+      '97361', //  Awala-Yalimapo
+      '97357', //  Grand-Santi
+      '97306', //  Mana
+      '97352', //  Saül
+      '97353', //  Maripasoula
+      '97311', //  Saint-Laurent-du-Maroni
+      '97304', // Kourou
+      '97305', // Macouria
+      '97303', // Iracoubo
+      '97312', // Sinnamary
+      '97358', // Saint-Élie
+    ],
+  },
+} as const satisfies RecordPartial<Sip, { nom: string; communes: string[] }>
 
 export const getRedevanceCommunale = (annee: CaminoAnnee, substanceId: SubstanceFiscaleId): Decimal => {
   const { success, data } = anneeDataValidator.safeParse(annee)

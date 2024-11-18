@@ -22,53 +22,12 @@ import {
   getCategoriesForTaxeAurifereGuyane,
   getRedevanceCommunale,
   getRedevanceDepartementale,
+  getSips,
+  Sip,
+  sipIdValidator,
   taxeAurifereBrutDeductionTaux,
   taxeAurifereGuyaneDeductionMontantMax,
 } from './fiscalite'
-
-const SIP_IDS = ['cayenne', 'kourou', 'saintLaurentDuMaroni'] as const
-const sipIdValidator = z.enum(SIP_IDS)
-export const sips = {
-  cayenne: {
-    nom: 'SIP de Cayenne',
-    communes: [
-      '97313', // Montsinery-Tonnegrande
-      '97314', // Ouanary
-      '97356', // Camopi
-      '97302', // Cayenne
-      '97301', // Régina
-      '97309', // Remire-Montjoly
-      '97310', // Roura
-      '97308', // Saint-Georges
-      '97307', // Matoury
-    ],
-  },
-  kourou: {
-    nom: 'SIP de Kourou',
-    communes: [
-      '97304', // Kourou
-      '97305', // Macouria
-      '97303', // Iracoubo
-      '97312', // Sinnamary
-      '97358', // Saint-Élie
-    ],
-  },
-  saintLaurentDuMaroni: {
-    nom: 'SIP de Saint-Laurent du Maroni',
-    communes: [
-      '97362', //  Papaichton
-      '97360', //  Apatou
-      '97361', //  Awala-Yalimapo
-      '97357', //  Grand-Santi
-      '97306', //  Mana
-      '97352', //  Saül
-      '97353', //  Maripasoula
-      '97311', //  Saint-Laurent-du-Maroni
-    ],
-  },
-} as const satisfies Record<z.infer<typeof sipIdValidator>, { nom: string; communes: string[] }>
-export type Sips = keyof typeof sips
-export const isSip = (value: string): value is Sips => Object.keys(sips).includes(value)
 
 const matriceTitulaireValidator = z.object({
   nom: z.string(),
@@ -287,12 +246,14 @@ export const getRawLines = (
 
             const titreLabel = titreBuild.titre.slug ?? ''
 
-            let sip: Sips = 'saintLaurentDuMaroni'
-            if (sips.saintLaurentDuMaroni.communes.includes(commune.id)) {
+            let sip: Sip = 'saintLaurentDuMaroni'
+            const sips = getSips(annee)
+
+            if (sips.saintLaurentDuMaroni?.communes.includes(commune.id) ?? false) {
               sip = 'saintLaurentDuMaroni'
-            } else if (sips.cayenne.communes.includes(commune.id)) {
+            } else if (sips.cayenne?.communes.includes(commune.id) ?? false) {
               sip = 'cayenne'
-            } else if (sips.kourou.communes.includes(commune.id)) {
+            } else if (sips.kourou?.communes.includes(commune.id) ?? false) {
               sip = 'kourou'
             }
 
