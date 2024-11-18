@@ -15,7 +15,7 @@ import { titreEtapeForMachineValidator, toMachineEtapes } from '../../business/r
 import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts'
 import { ETAPES_TYPES, EtapeTypeId } from 'camino-common/src/static/etapesTypes'
 import { CaminoDate, getCurrent } from 'camino-common/src/date'
-import { isAdministration, User } from 'camino-common/src/roles'
+import { isAdministration, User, UserNotNull } from 'camino-common/src/roles'
 import { canEditDemarche, canCreateTravaux } from 'camino-common/src/permissions/titres-demarches'
 import { utilisateurTitreCreate, utilisateurTitreDelete } from '../../database/queries/utilisateurs-titres'
 import { titreUpdateTask } from '../../business/titre-update'
@@ -179,18 +179,13 @@ const linkTitreError = 'Droit insuffisant pour lier des titres entre eux' as con
 const demarcheNonChargeesError = 'Les démarches ne sont pas chargées' as const
 type PostTitreLiaisonErrors = DbQueryAccessError | typeof droitInsuffisant | typeof linkTitreError | typeof demarcheNonChargeesError | LinkTitresErrors | CheckTitreLinksError
 
-export const postTitreLiaisons: RestNewPostCall<'/rest/titres/:id/titreLiaisons'> = ({
-  pool,
-  user,
-  params: { id: titreId },
-  body: titreFromIds,
-}): Effect.Effect<TitreLinks, CaminoApiError<PostTitreLiaisonErrors>> => {
-  return Effect.Do.pipe(
-    Effect.bind('titre', () =>
+export const postTitreLiaisons: RestNewPostCall<'/rest/titres/:id/titreLiaisons'> = (rootPipe): Effect.Effect<TitreLinks, CaminoApiError<PostTitreLiaisonErrors>> => {
+  return rootPipe.pipe(
+    Effect.bind('titre', ({ user, params }) =>
       Effect.tryPromise({
         try: async () =>
           titreGet(
-            titreId,
+            params.id,
             {
               fields: {
                 pointsEtape: { id: {} },
@@ -213,21 +208,21 @@ export const postTitreLiaisons: RestNewPostCall<'/rest/titres/:id/titreLiaisons'
       })
     ),
     Effect.filterOrFail(
-      ({ administrations }) => canLinkTitres(user, administrations),
+      ({ administrations, user }) => canLinkTitres(user, administrations),
       () => ({ message: linkTitreError })
     ),
     Effect.filterOrFail(
       ({ titre }) => isNotNullNorUndefined(titre.demarches),
       () => ({ message: demarcheNonChargeesError })
     ),
-    Effect.bind('titresFrom', () =>
+    Effect.bind('titresFrom', ({ body, user }) =>
       Effect.tryPromise({
-        try: async () => titresGet({ ids: [...titreFromIds] }, { fields: { id: {} } }, user),
+        try: async () => titresGet({ ids: [...body] }, { fields: { id: {} } }, user),
         catch: e => ({ message: "Impossible d'exécuter la requête dans la base de données" as const, extra: e }),
       })
     ),
-    Effect.tap(({ titre, titresFrom }) => {
-      const result = checkTitreLinks(titre.typeId, titreFromIds, titresFrom, titre.demarches ?? [])
+    Effect.tap(({ titre, titresFrom, body }) => {
+      const result = checkTitreLinks(titre.typeId, body, titresFrom, titre.demarches ?? [])
 
       if (result.valid) {
         return Effect.succeed(null)
@@ -237,9 +232,9 @@ export const postTitreLiaisons: RestNewPostCall<'/rest/titres/:id/titreLiaisons'
         return Effect.fail({ message: result.errors[0], extra: result.errors })
       }
     }),
-    Effect.tap(linkTitres(pool, { linkTo: titreId, linkFrom: titreFromIds })),
-    Effect.bind('amont', () => titreLinksGet(titreId, 'titreFromId', user)),
-    Effect.bind('aval', () => titreLinksGet(titreId, 'titreToId', user)),
+    Effect.tap(({ pool, params, body }) => linkTitres(pool, { linkTo: params.id, linkFrom: body })),
+    Effect.bind('amont', ({ params, user }) => titreLinksGet(params.id, 'titreFromId', user)),
+    Effect.bind('aval', ({ params, user }) => titreLinksGet(params.id, 'titreToId', user)),
     Effect.map(({ amont, aval }) => {
       const result: TitreLinks = { amont, aval }
 
@@ -290,9 +285,9 @@ const titreLinksGet = (titreId: string, link: 'titreToId' | 'titreFromId', user:
 
 const droitInsuffisant = 'Droit insuffisant pour accéder au titre ou titre inexistant' as const
 type GetTitreLiaisonErrors = DbQueryAccessError | typeof droitInsuffisant
-export const getTitreLiaisons: RestNewGetCall<'/rest/titres/:id/titreLiaisons'> = ({ user, params }): Effect.Effect<TitreLinks, CaminoApiError<GetTitreLiaisonErrors>> => {
-  return Effect.Do.pipe(
-    Effect.flatMap(() =>
+export const getTitreLiaisons: RestNewGetCall<'/rest/titres/:id/titreLiaisons'> = (rootPipe): Effect.Effect<TitreLinks, CaminoApiError<GetTitreLiaisonErrors>> => {
+  return rootPipe.pipe(
+    Effect.bind('titre', ({ params, user }) =>
       Effect.tryPromise({
         try: async () => titreGet(params.id, { fields: { id: {} } }, user),
         catch: e => ({ message: "Impossible d'exécuter la requête dans la base de données" as const, extra: e }),
@@ -302,8 +297,8 @@ export const getTitreLiaisons: RestNewGetCall<'/rest/titres/:id/titreLiaisons'> 
       titre => isNotNullNorUndefined(titre),
       () => ({ message: droitInsuffisant })
     ),
-    Effect.bind('amont', () => titreLinksGet(params.id, 'titreFromId', user)),
-    Effect.bind('aval', () => titreLinksGet(params.id, 'titreToId', user)),
+    Effect.bind('amont', ({ params, user }) => titreLinksGet(params.id, 'titreFromId', user)),
+    Effect.bind('aval', ({ params, user }) => titreLinksGet(params.id, 'titreToId', user)),
     Effect.map(({ amont, aval }) => {
       const value: TitreLinks = { amont, aval }
 
@@ -398,14 +393,13 @@ export const utilisateurTitreAbonner =
   }
 
 type GetUtilisateurTitreAbonnerError = EffectDbQueryAndValidateErrors | typeof droitInsuffisant
-export const getUtilisateurTitreAbonner: RestNewGetCall<'/rest/titres/:titreId/abonne'> = ({ user, params, pool }): Effect.Effect<boolean, CaminoApiError<GetUtilisateurTitreAbonnerError>> =>
-  Effect.Do.pipe(
-    Effect.map(() => user),
+export const getUtilisateurTitreAbonner: RestNewGetCall<'/rest/titres/:titreId/abonne'> = (rootPipe): Effect.Effect<boolean, CaminoApiError<GetUtilisateurTitreAbonnerError>> =>
+  rootPipe.pipe(
     Effect.filterOrFail(
-      userPipe => isNotNullNorUndefined(userPipe),
+      (value): value is typeof value & { user: UserNotNull } => isNotNullNorUndefined(value.user),
       () => ({ message: droitInsuffisant })
     ),
-    Effect.flatMap(userPipe => getTitreUtilisateur(pool, params.titreId, userPipe.id)),
+    Effect.flatMap(({ user, pool, params }) => getTitreUtilisateur(pool, params.titreId, user.id)),
     Effect.mapError(caminoError =>
       Match.value(caminoError.message).pipe(
         Match.when("Impossible d'exécuter la requête dans la base de données", () => ({ ...caminoError, status: HTTP_STATUS.INTERNAL_SERVER_ERROR })),

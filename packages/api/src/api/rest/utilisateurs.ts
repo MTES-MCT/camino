@@ -13,7 +13,7 @@ import { canDeleteUtilisateur } from 'camino-common/src/permissions/utilisateurs
 import { Pool } from 'pg'
 import { DeepReadonly, isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools'
 import { config } from '../../config/index'
-import { Effect, Match, pipe } from 'effect'
+import { Effect, Match } from 'effect'
 import { RestNewGetCall, RestNewPostCall } from '../../server/rest'
 import {
   getKeycloakIdByUserId,
@@ -25,7 +25,7 @@ import {
   updateUtilisateurRole,
 } from '../../database/queries/utilisateurs.queries'
 import { DbQueryAccessError, EffectDbQueryAndValidateErrors } from '../../pg-database'
-import { callAndExit, zodParseEffect, ZodUnparseable } from '../../tools/fp-tools'
+import { callAndExit, shortCircuitError, zodParseEffect, ZodUnparseable } from '../../tools/fp-tools'
 import { z } from 'zod'
 import { getEntreprises } from './entreprises.queries'
 import { fetch } from 'undici'
@@ -164,14 +164,17 @@ export const deleteUtilisateur =
     }
   }
 
-export const moi: RestNewGetCall<'/moi'> = ({ pool, cookie, user }): Effect.Effect<User, CaminoApiError<GetUtilisateurByIdErrors>> => {
-  cookie.clearConnectedCookie()
-  if (isNullOrUndefined(user)) {
-    return Effect.succeed(null)
-  }
-  return pipe(
-    newGetUtilisateurById(pool, user.id, user),
-    Effect.tap(_ => cookie.addConnectedCookie()),
+export const moi: RestNewGetCall<'/moi'> = (rootPipe): Effect.Effect<User, CaminoApiError<GetUtilisateurByIdErrors>> => {
+  return rootPipe.pipe(
+    Effect.tap(({ cookie }) => cookie.clearConnectedCookie()),
+    Effect.filterOrFail(
+      (value): value is typeof value & { user: UserNotNull } => isNotNullNorUndefined(value.user),
+      () => shortCircuitError('utilisateur non connecté')
+    ),
+    Effect.bind('myUser', ({ user, pool }) => newGetUtilisateurById(pool, user.id, user)),
+    Effect.tap(({ cookie }) => cookie.addConnectedCookie()),
+    Effect.map(({ myUser }) => myUser),
+    Effect.catchTag('utilisateur non connecté', _myError => Effect.succeed(null)),
     Effect.mapError(caminoError =>
       Match.value(caminoError.message).pipe(
         Match.when('droits insuffisants', () => ({ ...caminoError, status: HTTP_STATUS.FORBIDDEN })),
@@ -206,11 +209,11 @@ export const manageNewsletterSubscription =
     }
   }
 
-export const generateQgisToken: RestNewPostCall<'/rest/utilisateur/generateQgisToken'> = ({ pool, user }): Effect.Effect<QGISTokenRest, CaminoApiError<EffectDbQueryAndValidateErrors>> =>
-  pipe(
-    zodParseEffect(qgisTokenValidator, idGenerate()),
-    Effect.tap(token => updateQgisToken(pool, user, token)),
-    Effect.map(token => ({ token, url: `https://${user.email.replace('@', '%40')}:${token}@${config().API_HOST}/titres_qgis` })),
+export const generateQgisToken: RestNewPostCall<'/rest/utilisateur/generateQgisToken'> = (rootPipe): Effect.Effect<QGISTokenRest, CaminoApiError<EffectDbQueryAndValidateErrors>> =>
+  rootPipe.pipe(
+    Effect.bind('token', () => zodParseEffect(qgisTokenValidator, idGenerate())),
+    Effect.tap(({ token, pool, user }) => updateQgisToken(pool, user, token)),
+    Effect.map(({ token, user }) => ({ token, url: `https://${user.email.replace('@', '%40')}:${token}@${config().API_HOST}/titres_qgis` })),
     Effect.mapError(caminoError =>
       Match.value(caminoError.message).pipe(
         Match.whenOr("Impossible d'exécuter la requête dans la base de données", 'Problème de validation de données', () => ({ ...caminoError, status: HTTP_STATUS.INTERNAL_SERVER_ERROR })),
@@ -219,27 +222,27 @@ export const generateQgisToken: RestNewPostCall<'/rest/utilisateur/generateQgisT
     )
   )
 
-export const registerToNewsletter: RestNewGetCall<'/rest/utilisateurs/registerToNewsletter'> = ({
-  searchParams,
-}): Effect.Effect<boolean, CaminoApiError<"Impossible de s'enregistrer à la newsletter">> => {
-  return pipe(
-    Effect.tryPromise({
-      try: async () => {
-        await newsletterSubscriberUpdate(searchParams.email, true)
+export const registerToNewsletter: RestNewGetCall<'/rest/utilisateurs/registerToNewsletter'> = (rootPipe): Effect.Effect<boolean, CaminoApiError<"Impossible de s'enregistrer à la newsletter">> => {
+  return rootPipe.pipe(
+    Effect.flatMap(({ searchParams }) =>
+      Effect.tryPromise({
+        try: async () => {
+          await newsletterSubscriberUpdate(searchParams.email, true)
 
-        return true
-      },
-      catch: e => {
-        let extra = ''
-        if (typeof e === 'string') {
-          extra = e.toUpperCase()
-        } else if (e instanceof Error) {
-          extra = e.message
-        }
+          return true
+        },
+        catch: e => {
+          let extra = ''
+          if (typeof e === 'string') {
+            extra = e.toUpperCase()
+          } else if (e instanceof Error) {
+            extra = e.message
+          }
 
-        return { message: "Impossible de s'enregistrer à la newsletter" as const, extra }
-      },
-    }),
+          return { message: "Impossible de s'enregistrer à la newsletter" as const, extra }
+        },
+      })
+    ),
     Effect.mapError(caminoError =>
       Match.value(caminoError.message).pipe(
         Match.when("Impossible de s'enregistrer à la newsletter", () => ({ ...caminoError, status: HTTP_STATUS.INTERNAL_SERVER_ERROR })),
@@ -279,10 +282,10 @@ export const utilisateurs =
 
 type GetUtilisateursError = DbQueryAccessError | ZodUnparseable | "Impossible d'accéder à la liste des utilisateurs" | 'droits insuffisants'
 
-export const getUtilisateurs: RestNewGetCall<'/rest/utilisateurs'> = ({ pool, user, searchParams }): Effect.Effect<DeepReadonly<UtilisateursTable>, CaminoApiError<GetUtilisateursError>> => {
-  return Effect.Do.pipe(
-    Effect.flatMap(() => getUtilisateursFilteredAndSorted(pool, user, searchParams)),
-    Effect.map(utilisateurs => {
+export const getUtilisateurs: RestNewGetCall<'/rest/utilisateurs'> = (rootPipe): Effect.Effect<DeepReadonly<UtilisateursTable>, CaminoApiError<GetUtilisateursError>> => {
+  return rootPipe.pipe(
+    Effect.bind('utilisateurs', ({ pool, user, searchParams }) => getUtilisateursFilteredAndSorted(pool, user, searchParams)),
+    Effect.map(({ utilisateurs, searchParams }) => {
       return {
         elements: utilisateurs.slice((searchParams.page - 1) * searchParams.intervalle, searchParams.page * searchParams.intervalle),
         total: utilisateurs.length,
@@ -300,9 +303,9 @@ export const getUtilisateurs: RestNewGetCall<'/rest/utilisateurs'> = ({ pool, us
 }
 
 type GetUtilisateurError = DbQueryAccessError | ZodUnparseable | 'droits insuffisants'
-export const getUtilisateur: RestNewGetCall<'/rest/utilisateurs/:id'> = ({ pool, user, params }): Effect.Effect<DeepReadonly<UserNotNull>, CaminoApiError<GetUtilisateurError>> => {
-  return Effect.Do.pipe(
-    Effect.flatMap(() => newGetUtilisateurById(pool, params.id, user)),
+export const getUtilisateur: RestNewGetCall<'/rest/utilisateurs/:id'> = (rootPipe): Effect.Effect<DeepReadonly<UserNotNull>, CaminoApiError<GetUtilisateurError>> => {
+  return rootPipe.pipe(
+    Effect.flatMap(({ pool, params, user }) => newGetUtilisateurById(pool, params.id, user)),
     Effect.mapError(caminoError =>
       Match.value(caminoError.message).pipe(
         Match.when("Impossible d'exécuter la requête dans la base de données", () => ({ ...caminoError, status: HTTP_STATUS.INTERNAL_SERVER_ERROR })),

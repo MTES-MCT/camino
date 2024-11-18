@@ -73,7 +73,7 @@ import { canHaveForages } from 'camino-common/src/permissions/titres'
 import { SecteursMaritimes, getSecteurMaritime } from 'camino-common/src/static/facades'
 import { callAndExit, shortCircuitError, zodParseEffect } from '../../tools/fp-tools'
 import { RestNewGetCall, RestNewPostCall } from '../../server/rest'
-import { Effect, Match, pipe } from 'effect'
+import { Effect, Match } from 'effect'
 import { DbQueryAccessError, EffectDbQueryAndValidateErrors } from '../../pg-database'
 import { CaminoError } from 'camino-common/src/zod-tools'
 import { machineFind } from '../../business/rules-demarches/machines'
@@ -462,9 +462,9 @@ type CreateEtapeError =
   | typeof erreurLorsDeLaCreationDeLEtape
   | typeof tachesAnnexes
   | typeof envoieMails
-export const createEtape: RestNewPostCall<'/rest/etapes'> = ({ body: etape, user, pool }): Effect.Effect<EtapeId, CaminoApiError<CreateEtapeError>> => {
-  return Effect.Do.pipe(
-    Effect.tap(() =>
+export const createEtape: RestNewPostCall<'/rest/etapes'> = (rootPipe): Effect.Effect<EtapeId, CaminoApiError<CreateEtapeError>> => {
+  return rootPipe.pipe(
+    Effect.tap(({ body: etape, user }) =>
       Effect.Do.pipe(
         Effect.flatMap(() =>
           Effect.tryPromise({
@@ -478,7 +478,7 @@ export const createEtape: RestNewPostCall<'/rest/etapes'> = ({ body: etape, user
         )
       )
     ),
-    Effect.bind('titreDemarche', () =>
+    Effect.bind('titreDemarche', ({ body: etape }) =>
       Effect.tryPromise({
         try: async () =>
           titreDemarcheGet(
@@ -500,19 +500,20 @@ export const createEtape: RestNewPostCall<'/rest/etapes'> = ({ body: etape, user
       })
     ),
     Effect.filterOrFail(
-      (value): value is { titreDemarche: Omit<ITitreDemarche, 'titre'> & { titre: ITitre } } => isNotNullNorUndefined(value.titreDemarche) && isNotNullNorUndefined(value.titreDemarche.titre),
+      (value): value is typeof value & { titreDemarche: Omit<ITitreDemarche, 'titre'> & { titre: ITitre } } =>
+        isNotNullNorUndefined(value.titreDemarche) && isNotNullNorUndefined(value.titreDemarche.titre),
       () => ({ message: titreExistePas })
     ),
-    Effect.let('isBrouillon', () => canBeBrouillon(etape.typeId)),
+    Effect.let('isBrouillon', ({ body: etape }) => canBeBrouillon(etape.typeId)),
     Effect.filterOrFail(
-      ({ isBrouillon, titreDemarche }) =>
+      ({ isBrouillon, titreDemarche, user, body: etape }) =>
         canCreateEtape(user, etape.typeId, isBrouillon, titreDemarche.titre.titulaireIds ?? [], titreDemarche.titre.administrationsLocales ?? [], titreDemarche.typeId, {
           typeId: titreDemarche.titre.typeId,
           titreStatutId: titreDemarche.titre.titreStatutId,
         }),
       () => ({ message: droitsInsuffisants })
     ),
-    Effect.bind('flattenEtapeAndPerimetreInfo', ({ titreDemarche, isBrouillon }) =>
+    Effect.bind('flattenEtapeAndPerimetreInfo', ({ titreDemarche, isBrouillon, body: etape, pool }) =>
       getFlattenEtape(
         etape as RestEtapeCreation, // TODO 2024-11-14 comment on fait là, si on met le deepReadonly ça transpire partout et c'est violent :(
         titreDemarche,
@@ -525,8 +526,10 @@ export const createEtape: RestNewPostCall<'/rest/etapes'> = ({ body: etape, user
         pool
       )
     ),
-    Effect.bind('entrepriseDocuments', ({ flattenEtapeAndPerimetreInfo }) => validateAndGetEntrepriseDocuments(pool, flattenEtapeAndPerimetreInfo.flattenEtape, etape.entrepriseDocumentIds, user)),
-    Effect.tap(({ flattenEtapeAndPerimetreInfo, titreDemarche, entrepriseDocuments }) => {
+    Effect.bind('entrepriseDocuments', ({ flattenEtapeAndPerimetreInfo, body: etape, user, pool }) =>
+      validateAndGetEntrepriseDocuments(pool, flattenEtapeAndPerimetreInfo.flattenEtape, etape.entrepriseDocumentIds, user)
+    ),
+    Effect.tap(({ flattenEtapeAndPerimetreInfo, titreDemarche, entrepriseDocuments, body: etape, user }) => {
       const rulesErrors = titreEtapeUpdationValidate(
         flattenEtapeAndPerimetreInfo.flattenEtape,
         titreDemarche,
@@ -543,8 +546,8 @@ export const createEtape: RestNewPostCall<'/rest/etapes'> = ({ body: etape, user
       }
       return Effect.succeed(null)
     }),
-    Effect.tap(() => checkEntreprisesExist(pool, [...etape.titulaireIds, ...etape.amodiataireIds])),
-    Effect.bind('etapeUpdated', ({ flattenEtapeAndPerimetreInfo, isBrouillon, titreDemarche }) =>
+    Effect.tap(({ pool, body: etape }) => checkEntreprisesExist(pool, [...etape.titulaireIds, ...etape.amodiataireIds])),
+    Effect.bind('etapeUpdated', ({ flattenEtapeAndPerimetreInfo, isBrouillon, titreDemarche, body: etape, user }) =>
       Effect.tryPromise({
         try: () =>
           titreEtapeUpsert(
@@ -560,17 +563,17 @@ export const createEtape: RestNewPostCall<'/rest/etapes'> = ({ body: etape, user
       () => ({ message: erreurLorsDeLaCreationDeLEtape })
     ),
 
-    Effect.tap(({ etapeUpdated }) => insertEtapeDocuments(pool, etapeUpdated.id, etape.etapeDocuments)),
-    Effect.tap(({ etapeUpdated, entrepriseDocuments }) => insertTitreEtapeEntrepriseDocuments(pool, etapeUpdated.id, entrepriseDocuments)),
-    Effect.tap(({ etapeUpdated }) => insertEtapeAvis(pool, etapeUpdated.id, etape.etapeAvis)),
-    Effect.tap(({ etapeUpdated }) =>
+    Effect.tap(({ etapeUpdated, pool, body }) => insertEtapeDocuments(pool, etapeUpdated.id, body.etapeDocuments)),
+    Effect.tap(({ etapeUpdated, entrepriseDocuments, pool }) => insertTitreEtapeEntrepriseDocuments(pool, etapeUpdated.id, entrepriseDocuments)),
+    Effect.tap(({ etapeUpdated, pool, body }) => insertEtapeAvis(pool, etapeUpdated.id, body.etapeAvis)),
+    Effect.tap(({ etapeUpdated, pool, user }) =>
       Effect.tryPromise({
         try: () => titreEtapeUpdateTask(pool, etapeUpdated.id, etapeUpdated.titreDemarcheId, user),
         catch: e => ({ message: tachesAnnexes, extra: e }),
       })
     ),
 
-    Effect.tap(({ etapeUpdated, titreDemarche }) =>
+    Effect.tap(({ etapeUpdated, titreDemarche, user, pool }) =>
       Effect.tryPromise({
         try: async () => {
           await titreEtapeAdministrationsEmailsSend(etapeUpdated, titreDemarche.typeId, titreDemarche.titreId, titreDemarche.titre.typeId, user)
@@ -872,13 +875,11 @@ export const deposeEtape =
     }
   }
 
-export const getEtapesTypesEtapesStatusWithMainStep: RestNewGetCall<'/rest/etapesTypes/:demarcheId/:date'> = ({
-  params,
-  searchParams,
-  user,
-}): Effect.Effect<EtapeTypeEtapeStatutWithMainStep, CaminoApiError<DemarcheEtapesTypesGetErrors>> => {
-  return pipe(
-    demarcheEtapesTypesGet(params.demarcheId, params.date, searchParams.etapeId ?? null, user),
+export const getEtapesTypesEtapesStatusWithMainStep: RestNewGetCall<'/rest/etapesTypes/:demarcheId/:date'> = (
+  rootPipe
+): Effect.Effect<EtapeTypeEtapeStatutWithMainStep, CaminoApiError<DemarcheEtapesTypesGetErrors>> => {
+  return rootPipe.pipe(
+    Effect.flatMap(({ params, searchParams, user }) => demarcheEtapesTypesGet(params.demarcheId, params.date, searchParams.etapeId ?? null, user)),
     Effect.mapError(caminoError =>
       Match.value(caminoError.message).pipe(
         Match.whenOr("l'étape n'existe pas", "la démarche n'existe pas", () => ({ ...caminoError, status: HTTP_STATUS.FORBIDDEN })),

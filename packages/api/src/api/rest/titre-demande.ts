@@ -35,13 +35,14 @@ type TitreDemandeCreerErrors =
   | "Problème lors de l'abonnement de l'utilisateur au titre"
   | "L'entreprise est obligatoire"
   | "L'entreprise ne doit pas être présente"
-export const titreDemandeCreer: RestNewPostCall<'/rest/titres'> = ({ pool, user, body: titreDemande }): Effect.Effect<TitreDemandeOutput, CaminoApiError<TitreDemandeCreerErrors>> => {
-  return Effect.Do.pipe(
+export const titreDemandeCreer: RestNewPostCall<'/rest/titres'> = (rootPipe): Effect.Effect<TitreDemandeOutput, CaminoApiError<TitreDemandeCreerErrors>> => {
+  return rootPipe.pipe(
+    Effect.let('titreDemande', ({ body }) => body),
     Effect.filterOrFail(
-      () => canCreateTitre(user, titreDemande.titreTypeId),
+      ({ user, titreDemande }) => canCreateTitre(user, titreDemande.titreTypeId),
       () => ({ message: 'Accès interdit' as const })
     ),
-    Effect.tap(() => {
+    Effect.tap(({ user, titreDemande }) => {
       if (createAutomaticallyEtapeWhenCreatingTitre(user)) {
         return Effect.fail({ message: "L'entreprise est obligatoire" as const }).pipe(Effect.when(() => isNullOrUndefined(titreDemande.entrepriseId)))
       } else {
@@ -49,11 +50,11 @@ export const titreDemandeCreer: RestNewPostCall<'/rest/titres'> = ({ pool, user,
       }
     }),
     Effect.filterOrFail(
-      () => isNullOrUndefinedOrEmpty(titreDemande.references) || !isEntrepriseOrBureauDEtude(user),
+      ({ titreDemande, user }) => isNullOrUndefinedOrEmpty(titreDemande.references) || !isEntrepriseOrBureauDEtude(user),
       () => ({ message: 'Permissions insuffisantes' as const, detail: "L'utilisateur n'a pas les droits pour mettre des références" })
     ),
-    Effect.bind('titreId', () => createTitre(pool, user, titreDemande)),
-    Effect.tap(() => {
+    Effect.bind('titreId', ({ pool, user, titreDemande }) => createTitre(pool, user, titreDemande)),
+    Effect.tap(({ titreDemande, user }) => {
       if (isNotNullNorUndefinedNorEmpty(titreDemande.titreFromIds)) {
         return Effect.tryPromise({
           try: async () => {
@@ -75,13 +76,13 @@ export const titreDemandeCreer: RestNewPostCall<'/rest/titres'> = ({ pool, user,
 
       return Effect.succeed(null)
     }),
-    Effect.tap(({ titreId }) =>
+    Effect.tap(({ titreId, titreDemande, pool }) =>
       linkTitres(pool, {
         linkTo: titreId,
         linkFrom: [...titreDemande.titreFromIds],
       })
     ),
-    Effect.tap(({ titreId }) =>
+    Effect.tap(({ titreId, pool }) =>
       Effect.tryPromise({
         try: async () => {
           await titreUpdateTask(pool, titreId)
@@ -89,8 +90,8 @@ export const titreDemandeCreer: RestNewPostCall<'/rest/titres'> = ({ pool, user,
         catch: unknown => ({ message: 'Problème lors de la mise à jour des taches du titre' as const, extra: unknown }),
       })
     ),
-    Effect.bind('demarcheId', ({ titreId }) => createDemarche(pool, titreId, 'oct')),
-    Effect.tap(({ titreId, demarcheId }) => {
+    Effect.bind('demarcheId', ({ titreId, pool }) => createDemarche(pool, titreId, 'oct')),
+    Effect.tap(({ titreId, demarcheId, pool }) => {
       return Effect.tryPromise({
         try: async () => {
           await titreDemarcheUpdateTask(pool, demarcheId, titreId)
@@ -104,7 +105,7 @@ export const titreDemandeCreer: RestNewPostCall<'/rest/titres'> = ({ pool, user,
         },
       })
     }),
-    Effect.flatMap(({ titreId, demarcheId }) => {
+    Effect.flatMap(({ titreId, demarcheId, user, titreDemande, pool }) => {
       if (createAutomaticallyEtapeWhenCreatingTitre(user)) {
         return pipe(
           Effect.tryPromise({

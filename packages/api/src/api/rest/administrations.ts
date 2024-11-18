@@ -60,18 +60,15 @@ export const getAdministrationActiviteTypeEmails =
     }
   }
 
-export const addAdministrationActiviteTypeEmails: RestNewPostCall<'/rest/administrations/:administrationId/activiteTypeEmails'> = ({
-  pool,
-  user,
-  body,
-  params,
-}): Effect.Effect<boolean, CaminoApiError<'Accès interdit' | ZodUnparseable | DbQueryAccessError>> => {
-  return Effect.Do.pipe(
+export const addAdministrationActiviteTypeEmails: RestNewPostCall<'/rest/administrations/:administrationId/activiteTypeEmails'> = (
+  rootPipe
+): Effect.Effect<boolean, CaminoApiError<'Accès interdit' | ZodUnparseable | DbQueryAccessError>> => {
+  return rootPipe.pipe(
     Effect.filterOrFail(
-      () => canReadAdministrations(user),
+      ({ user }) => canReadAdministrations(user),
       () => ({ message: 'Accès interdit' as const })
     ),
-    Effect.flatMap(() => insertAdministrationActiviteTypeEmail(pool, params.administrationId, body)),
+    Effect.flatMap(({ pool, params, body }) => insertAdministrationActiviteTypeEmail(pool, params.administrationId, body)),
     Effect.mapError(caminoError =>
       Match.value(caminoError.message).pipe(
         Match.when('Accès interdit', () => ({ ...caminoError, status: HTTP_STATUS.FORBIDDEN })),
@@ -83,18 +80,15 @@ export const addAdministrationActiviteTypeEmails: RestNewPostCall<'/rest/adminis
   )
 }
 
-export const deleteAdministrationActiviteTypeEmails: RestNewPostCall<'/rest/administrations/:administrationId/activiteTypeEmails/delete'> = ({
-  pool,
-  user,
-  body,
-  params,
-}): Effect.Effect<boolean, CaminoApiError<'Accès interdit' | ZodUnparseable | DbQueryAccessError>> => {
-  return Effect.Do.pipe(
+export const deleteAdministrationActiviteTypeEmails: RestNewPostCall<'/rest/administrations/:administrationId/activiteTypeEmails/delete'> = (
+  rootPipe
+): Effect.Effect<boolean, CaminoApiError<'Accès interdit' | ZodUnparseable | DbQueryAccessError>> => {
+  return rootPipe.pipe(
     Effect.filterOrFail(
-      () => canReadAdministrations(user),
+      ({ user }) => canReadAdministrations(user),
       () => ({ message: 'Accès interdit' as const })
     ),
-    Effect.flatMap(() => deleteAdministrationActiviteTypeEmail(pool, params.administrationId, body)),
+    Effect.flatMap(({ pool, params, body }) => deleteAdministrationActiviteTypeEmail(pool, params.administrationId, body)),
     Effect.mapError(caminoError =>
       Match.value(caminoError.message).pipe(
         Match.when('Accès interdit', () => ({ ...caminoError, status: HTTP_STATUS.FORBIDDEN })),
