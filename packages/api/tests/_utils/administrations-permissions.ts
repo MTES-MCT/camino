@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { ITitre } from '../../src/types'
 
-import { graphQLCall, queryImport, restNewPostCall, restPostCall } from './index'
+import { graphQLCall, queryImport, restNewPostCall } from './index'
 
 import Titres from '../../src/database/models/titres'
 import options from '../../src/database/queries/_options'
@@ -214,7 +214,7 @@ export const creationCheck = async (pool: Pool, administrationId: string, creer:
     for (const documentTypeId of documentTypesIds) {
       etapeDocuments.push(testDocumentCreateTemp(documentTypeId))
     }
-    const res = await restPostCall(pool, '/rest/etapes', {}, userSuper, {
+    const res = await restNewPostCall(pool, '/rest/etapes', {}, userSuper, {
       typeId: etapeTypeId,
       statutId: 'fai',
       titreDemarcheId: demarche.id,

@@ -35,7 +35,7 @@ const to4326GeoSystemeId: GeoSystemeId = GEO_SYSTEME_IDS.WGS84
 export const convertPoints = <T extends z.ZodTypeAny>(
   pool: Pool,
   fromGeoSystemeId: GeoSystemeId,
-  geojsonPoints: GenericFeatureCollection<T>
+  geojsonPoints: DeepReadonly<GenericFeatureCollection<T>>
 ): Effect.Effect<GenericFeatureCollection<T>, CaminoError<ConvertPointsErrors>> => {
   return pipe(
     Effect.try({
@@ -196,7 +196,7 @@ const m2ToKm2 = (value: M2): Effect.Effect<KM2, CaminoError<ZodUnparseable>> => 
 
 const requestError = 'Une erreur inattendue est survenue lors de la récupération des informations geojson en base' as const
 export type GetGeojsonInformationErrorMessages = ZodUnparseable | DbQueryAccessError | typeof requestError
-export const getGeojsonInformation = (pool: Pool, geojson4326_perimetre: MultiPolygon): Effect.Effect<GetGeojsonInformation, CaminoError<GetGeojsonInformationErrorMessages>> => {
+export const getGeojsonInformation = (pool: Pool, geojson4326_perimetre: DeepReadonly<MultiPolygon>): Effect.Effect<GetGeojsonInformation, CaminoError<GetGeojsonInformationErrorMessages>> => {
   return pipe(
     effectDbQueryAndValidate(getGeojsonInformationDb, { geojson4326_perimetre }, pool, getGeojsonInformationDbValidator),
     Effect.bind('response', result => (result.length === 1 ? Effect.succeed(result[0]) : Effect.fail({ message: requestError }))),

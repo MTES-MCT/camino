@@ -86,7 +86,13 @@ export const titreEtapeUpdate = async (id: EtapeId, titreEtape: Partial<DBTitres
 }
 
 export const titreEtapeUpsert = async (
-  titreEtape: Partial<Pick<ITitreEtape, 'id'>> & Omit<ITitreEtape, 'id' | 'concurrence' | 'hasTitreFrom'>,
+  titreEtape: DeepReadonly<Partial<Pick<ITitreEtape, 'id'>> & Omit<ITitreEtape, 'id' | 'concurrence' | 'hasTitreFrom'>>,
   user: DeepReadonly<UserNotNull>,
   titreId: TitreId
-): Promise<ITitreEtape | undefined> => upsertJournalCreate(titreEtape.id, titreEtape, user.id, titreId)
+): Promise<ITitreEtape | undefined> =>
+  upsertJournalCreate(
+    titreEtape.id,
+    titreEtape as Partial<Pick<ITitreEtape, 'id'>> & Omit<ITitreEtape, 'id' | 'concurrence' | 'hasTitreFrom'>, // TODO 2024-11-14 deep all the way down :(
+    user.id,
+    titreId
+  )

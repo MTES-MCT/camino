@@ -5,6 +5,8 @@ import { DsfrButton, DsfrLink } from '../_ui/dsfr-button'
 import { AsyncData } from '@/api/client-rest'
 import { LoadingElement } from '../_ui/functional-loader'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
+import { CaminoError } from 'camino-common/src/zod-tools'
+import { EtapeId } from 'camino-common/src/etape'
 
 export type EtapeAlerte = { message: string; url?: string }
 type Props = {
@@ -13,7 +15,7 @@ type Props = {
   canDepose: boolean
   showDepose: boolean
   initialContext?: AsyncData<undefined>
-  save: () => Promise<void>
+  save: () => Promise<EtapeId | null | CaminoError<string>>
   depose: () => void
   etapeTypeId: EtapeTypeId
 } & Pick<HTMLAttributes, 'class' | 'style'>
@@ -23,8 +25,12 @@ export const PureFormSaveBtn = defineComponent<Props>(props => {
   const save = async () => {
     saveContext.value = { status: 'LOADING' }
     try {
-      await props.save()
-      saveContext.value = { status: 'LOADED', value: undefined }
+      const value = await props.save()
+      if (isNotNullNorUndefined(value) && 'message' in value) {
+        saveContext.value = { status: 'NEW_ERROR', error: value }
+      } else {
+        saveContext.value = { status: 'LOADED', value: undefined }
+      }
     } catch (e: any) {
       console.error('error', e)
       saveContext.value = {

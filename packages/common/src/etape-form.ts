@@ -2,7 +2,16 @@ import { z } from 'zod'
 import { caminoDateValidator } from './date'
 import { demarcheIdValidator, demarcheSlugValidator } from './demarche'
 import { entrepriseDocumentIdValidator, entrepriseIdValidator } from './entreprise'
-import { etapeAvisModificationValidator, etapeBrouillonValidator, etapeDocumentModificationValidator, etapeIdValidator, etapeNoteValidator, etapeSlugValidator } from './etape'
+import {
+  etapeAvisModificationValidator,
+  etapeBrouillonValidator,
+  etapeDocumentModificationValidator,
+  etapeIdValidator,
+  etapeNoteValidator,
+  etapeSlugValidator,
+  tempEtapeAvisValidator,
+  tempEtapeDocumentValidator,
+} from './etape'
 import { km2Validator } from './number'
 import { featureCollectionForagesValidator, featureCollectionPointsValidator, featureMultiPolygonValidator } from './perimetre'
 import { demarcheTypeIdValidator } from './static/demarchesTypes'
@@ -205,14 +214,40 @@ export const restEtapeCreationValidator = graphqlEtapeValidator
     titreDemarcheId: demarcheIdValidator,
     heritageProps: graphqlInputHeritagePropsValidator,
     heritageContenu: z.record(z.string(), z.record(z.string(), z.object({ actif: z.boolean() }).optional()).optional()),
-    etapeDocuments: z.array(etapeDocumentModificationValidator),
+    etapeDocuments: z.array(tempEtapeDocumentValidator),
     entrepriseDocumentIds: z.array(entrepriseDocumentIdValidator),
-    etapeAvis: z.array(etapeAvisModificationValidator),
+    etapeAvis: z.array(tempEtapeAvisValidator),
   })
 
 export type RestEtapeCreation = z.infer<typeof restEtapeCreationValidator>
 
-export const restEtapeModificationValidator = restEtapeCreationValidator.extend({
-  id: etapeIdValidator,
-})
+export const restEtapeModificationValidator = graphqlEtapeValidator
+  .pick({
+    id: true,
+    typeId: true,
+    statutId: true,
+    date: true,
+    duree: true,
+    dateDebut: true,
+    dateFin: true,
+    substances: true,
+    geojson4326Perimetre: true,
+    geojson4326Points: true,
+    geojsonOriginePoints: true,
+    geojsonOriginePerimetre: true,
+    geojsonOrigineForages: true,
+    geojsonOrigineGeoSystemeId: true,
+    titulaireIds: true,
+    amodiataireIds: true,
+    note: true,
+    contenu: true,
+  })
+  .extend({
+    titreDemarcheId: demarcheIdValidator,
+    heritageProps: graphqlInputHeritagePropsValidator,
+    heritageContenu: z.record(z.string(), z.record(z.string(), z.object({ actif: z.boolean() }).optional()).optional()),
+    etapeDocuments: z.array(etapeDocumentModificationValidator),
+    entrepriseDocumentIds: z.array(entrepriseDocumentIdValidator),
+    etapeAvis: z.array(etapeAvisModificationValidator),
+  })
 export type RestEtapeModification = z.infer<typeof restEtapeModificationValidator>

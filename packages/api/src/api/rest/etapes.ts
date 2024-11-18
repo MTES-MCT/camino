@@ -1,4 +1,3 @@
-import { z } from 'zod'
 import { CaminoRequest, CustomResponse } from './express-type'
 import {
   EtapeTypeEtapeStatutWithMainStep,
@@ -9,11 +8,8 @@ import {
   etapeIdOrSlugValidator,
   GetEtapeAvisByEtapeId,
   getEtapeAvisByEtapeIdValidator,
-  tempEtapeAvisValidator,
-  tempEtapeDocumentValidator,
   EtapeBrouillon,
   etapeSlugValidator,
-  etapeDocumentModificationValidator,
   EtapeSlug,
   ETAPE_IS_BROUILLON,
   getStatutId,
@@ -40,15 +36,17 @@ import {
   onlyUnique,
 } from 'camino-common/src/typescript-tools'
 import { Pool } from 'pg'
-import { EntrepriseDocument, EntrepriseDocumentId, EntrepriseId, EtapeEntrepriseDocument } from 'camino-common/src/entreprise'
+import { EntrepriseDocument, EntrepriseDocumentId, EtapeEntrepriseDocument } from 'camino-common/src/entreprise'
 import {
   deleteTitreEtapeEntrepriseDocument,
   getDocumentsByEtapeId,
   getEntrepriseDocumentIdsByEtapeId,
   getEtapeAvisLargeObjectIdsByEtapeId,
   insertEtapeAvis,
+  InsertEtapeAvisErrors,
   insertEtapeDocuments,
-  insertTitreEtapeEntrepriseDocument,
+  InsertEtapeDocumentsErrors,
+  insertTitreEtapeEntrepriseDocuments,
   updateEtapeAvis,
   updateEtapeDocuments,
 } from '../../database/queries/titres-etapes.queries'
@@ -56,27 +54,27 @@ import { getEtapeDataForEdition } from './etapes.queries'
 import { SDOMZoneId } from 'camino-common/src/static/sdom'
 import { objectClone } from '../../tools/index'
 import { titreEtapeAdministrationsEmailsSend, titreEtapeUtilisateursEmailsSend } from '../graphql/resolvers/_titre-etape-email'
-import { GetGeojsonInformation, convertPoints, getGeojsonInformation } from './perimetre.queries'
+import { ConvertPointsErrors, GetGeojsonInformation, GetGeojsonInformationErrorMessages, convertPoints, getGeojsonInformation } from './perimetre.queries'
 import { titreEtapeUpdateTask } from '../../business/titre-etape-update'
 import { getSections } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { titreDemarcheUpdatedEtatValidate, getPossiblesEtapesTypes } from '../../business/validations/titre-demarche-etat-validate'
-import { FlattenEtape, GraphqlEtape, RestEtapeCreation, RestEtapeModification, restEtapeCreationValidator, restEtapeModificationValidator } from 'camino-common/src/etape-form'
-import { ApiFlattenEtape, iTitreEtapeToFlattenEtape } from '../_format/titres-etapes'
+import { FlattenEtape, GraphqlEtape, RestEtapeCreation, RestEtapeModification, restEtapeModificationValidator } from 'camino-common/src/etape-form'
+import { ApiFlattenEtape, iTitreEtapeToFlattenEtape, TitreEtapeToFlattenEtapeErrors } from '../_format/titres-etapes'
 import { CommuneId } from 'camino-common/src/static/communes'
 import { titreEtapeUpdationValidate } from '../../business/validations/titre-etape-updation-validate'
 import { CaminoApiError, IHeritageContenu, IHeritageProps, ITitre, ITitreDemarche, ITitreEtape } from '../../types'
-import { checkEntreprisesExist, getEntrepriseDocuments } from './entreprises.queries'
+import { checkEntreprisesExist, CheckEntreprisesExistErrors, getEntrepriseDocuments } from './entreprises.queries'
 import { ETAPE_HERITAGE_PROPS } from 'camino-common/src/heritage'
 import { titreEtapeHeritageBuild } from '../graphql/resolvers/_titre-etape'
 import { KM2 } from 'camino-common/src/number'
 import { FeatureMultiPolygon, FeatureCollectionPoints } from 'camino-common/src/perimetre'
 import { canHaveForages } from 'camino-common/src/permissions/titres'
 import { SecteursMaritimes, getSecteurMaritime } from 'camino-common/src/static/facades'
-import { callAndExit } from '../../tools/fp-tools'
-import { RestNewGetCall } from '../../server/rest'
+import { callAndExit, shortCircuitError, zodParseEffect } from '../../tools/fp-tools'
+import { RestNewGetCall, RestNewPostCall } from '../../server/rest'
 import { Effect, Match, pipe } from 'effect'
-import { DbQueryAccessError } from '../../pg-database'
+import { DbQueryAccessError, EffectDbQueryAndValidateErrors } from '../../pg-database'
 import { CaminoError } from 'camino-common/src/zod-tools'
 import { machineFind } from '../../business/rules-demarches/machines'
 import { TitreEtapeForMachine } from '../../business/rules-demarches/machine-common'
@@ -254,7 +252,7 @@ export const getEtape =
         ) {
           res.sendStatus(HTTP_STATUS.FORBIDDEN)
         } else {
-          res.json(iTitreEtapeToFlattenEtape(titreEtape))
+          res.json(await callAndExit(iTitreEtapeToFlattenEtape(titreEtape)))
         }
       } catch (e) {
         console.error(e)
@@ -263,39 +261,36 @@ export const getEtape =
       }
     }
   }
-const validateAndGetEntrepriseDocuments = async (
+
+const documentDEntrepriseIncorrects = "document d'entreprise incorrects" as const
+type ValidateAndGetEntrepriseDocumentsErrors = typeof documentDEntrepriseIncorrects | EffectDbQueryAndValidateErrors
+const validateAndGetEntrepriseDocuments = (
   pool: Pool,
   etape: Pick<FlattenEtape, 'titulaires' | 'amodiataires'>,
-  entrepriseDocumentIds: EntrepriseDocumentId[],
-  user: User
-): Promise<EntrepriseDocument[]> => {
-  const entrepriseDocuments: EntrepriseDocument[] = []
+  entrepriseDocumentIds: DeepReadonly<EntrepriseDocumentId[]>,
+  user: DeepReadonly<User>
+): Effect.Effect<EntrepriseDocument[], CaminoError<ValidateAndGetEntrepriseDocumentsErrors>> =>
+  Effect.Do.pipe(
+    Effect.filterOrFail(
+      () => isNotNullNorUndefinedNorEmpty(entrepriseDocumentIds),
+      () => shortCircuitError("pas de documents d'entreprise")
+    ),
+    Effect.map(() => {
+      return [...etape.titulaires.value, ...etape.amodiataires.value].filter(isNotNullNorUndefined).filter(onlyUnique)
+    }),
+    Effect.filterOrFail(
+      entrepriseIds => isNonEmptyArray(entrepriseIds),
+      () => shortCircuitError("pas de documents d'entreprise")
+    ),
+    Effect.flatMap(entrepriseIds => getEntrepriseDocuments(entrepriseDocumentIds, entrepriseIds, pool, user)),
+    Effect.filterOrFail(
+      entrepriseDocuments => entrepriseDocumentIds.length === entrepriseDocuments.length,
+      () => ({ message: documentDEntrepriseIncorrects, extra: "Tous les documents d'entreprises n'ont pas pu être retrouvés en base" })
+    ),
+    Effect.catchTag("pas de documents d'entreprise", _myError => Effect.succeed([]))
+  )
 
-  const titulaires = etape.titulaires.value
-  const amodiataires = etape.amodiataires.value
-  if (isNotNullNorUndefinedNorEmpty(entrepriseDocumentIds)) {
-    let entrepriseIds: EntrepriseId[] = []
-    if (isNotNullNorUndefinedNorEmpty(titulaires)) {
-      entrepriseIds.push(...titulaires)
-    }
-    if (isNotNullNorUndefinedNorEmpty(amodiataires)) {
-      entrepriseIds.push(...amodiataires)
-    }
-    entrepriseIds = entrepriseIds.filter(onlyUnique)
-
-    if (isNonEmptyArray(entrepriseIds)) {
-      entrepriseDocuments.push(...(await getEntrepriseDocuments(entrepriseDocumentIds, entrepriseIds, pool, user)))
-    }
-
-    if (entrepriseDocumentIds.length !== entrepriseDocuments.length) {
-      throw new Error("document d'entreprise incorrects")
-    }
-  }
-
-  return entrepriseDocuments
-}
-
-export const arePointsOnPerimeter = (perimetre: FeatureMultiPolygon, points: FeatureCollectionPoints): boolean => {
+export const arePointsOnPerimeter = (perimetre: DeepReadonly<FeatureMultiPolygon>, points: DeepReadonly<FeatureCollectionPoints>): boolean => {
   const coordinatesSet = new Set()
 
   perimetre.geometry.coordinates.forEach(geometry => geometry.forEach(sub => sub.forEach(coordinate => coordinatesSet.add(`${coordinate[0]}-${coordinate[1]}`))))
@@ -304,29 +299,31 @@ export const arePointsOnPerimeter = (perimetre: FeatureMultiPolygon, points: Fea
     return coordinatesSet.has(`${point.geometry.coordinates[0]}-${point.geometry.coordinates[1]}`)
   })
 }
-const getForagesProperties = async (
+const getForagesProperties = (
   titreTypeId: TitreTypeId,
   geojsonOrigineGeoSystemeId: GraphqlEtape['geojsonOrigineGeoSystemeId'],
   geojsonOrigineForages: GraphqlEtape['geojsonOrigineForages'],
   pool: Pool
-): Promise<Pick<GraphqlEtape, 'geojson4326Forages' | 'geojsonOrigineForages'>> => {
-  if (canHaveForages(titreTypeId) && isNotNullNorUndefined(geojsonOrigineForages) && isNotNullNorUndefined(geojsonOrigineGeoSystemeId)) {
-    const value = await callAndExit(convertPoints(pool, geojsonOrigineGeoSystemeId, geojsonOrigineForages))
-    return { geojson4326Forages: value, geojsonOrigineForages }
-  }
+): Effect.Effect<Pick<GraphqlEtape, 'geojson4326Forages' | 'geojsonOrigineForages'>, CaminoError<ConvertPointsErrors>> =>
+  Effect.Do.pipe(
+    Effect.flatMap(() => {
+      if (canHaveForages(titreTypeId) && isNotNullNorUndefined(geojsonOrigineForages) && isNotNullNorUndefined(geojsonOrigineGeoSystemeId)) {
+        return convertPoints(pool, geojsonOrigineGeoSystemeId, geojsonOrigineForages)
+      }
+      return Effect.succeed(null)
+    }),
+    Effect.map(value => ({ geojson4326Forages: value, geojsonOrigineForages }))
+  )
 
-  return {
-    geojson4326Forages: null,
-    geojsonOrigineForages: null,
-  }
-}
+const lespointsdoiventetresurleperimetreerror = 'les points doivent être sur le périmètre' as const
+type PerimetreInfosError = typeof lespointsdoiventetresurleperimetreerror | ConvertPointsErrors | GetGeojsonInformationErrorMessages
 type PerimetreInfos = {
   secteursMaritime: SecteursMaritimes[]
   sdomZones: DeepReadonly<SDOMZoneId[]>
   surface: KM2 | null
 } & Pick<GraphqlEtape, 'geojson4326Forages' | 'geojsonOrigineForages'> &
   Pick<GetGeojsonInformation, 'communes' | 'forets'>
-const getPerimetreInfosInternal = async (
+const getPerimetreInfosInternal = (
   pool: Pool,
   geojson4326Perimetre: GraphqlEtape['geojson4326Perimetre'],
   geojsonOriginePerimetre: GraphqlEtape['geojsonOriginePerimetre'],
@@ -334,18 +331,20 @@ const getPerimetreInfosInternal = async (
   titreTypeId: TitreTypeId,
   geojsonOrigineGeoSystemeId: GraphqlEtape['geojsonOrigineGeoSystemeId'],
   geojsonOrigineForages: GraphqlEtape['geojsonOrigineForages']
-): Promise<PerimetreInfos> => {
-  if (isNotNullNorUndefined(geojson4326Perimetre)) {
-    if (isNotNullNorUndefined(geojsonOriginePerimetre) && isNotNullNorUndefined(geojsonOriginePoints)) {
-      if (!arePointsOnPerimeter(geojsonOriginePerimetre, geojsonOriginePoints)) {
-        throw new Error(`les points doivent être sur le périmètre`)
-      }
-    }
-
-    const { communes, sdom, surface, forets, secteurs } = await callAndExit(getGeojsonInformation(pool, geojson4326Perimetre.geometry))
-    const { geojson4326Forages } = await getForagesProperties(titreTypeId, geojsonOrigineGeoSystemeId, geojsonOrigineForages, pool)
-
-    return {
+): Effect.Effect<PerimetreInfos, CaminoError<PerimetreInfosError>> => {
+  return Effect.Do.pipe(
+    Effect.map(() => geojson4326Perimetre),
+    Effect.filterOrFail(
+      (value): value is NonNullable<typeof value> => isNotNullNorUndefined(value),
+      () => shortCircuitError('Pas de périmètre')
+    ),
+    Effect.filterOrFail(
+      () => isNullOrUndefined(geojsonOriginePerimetre) || isNullOrUndefined(geojsonOriginePoints) || arePointsOnPerimeter(geojsonOriginePerimetre, geojsonOriginePoints),
+      () => ({ message: lespointsdoiventetresurleperimetreerror })
+    ),
+    Effect.bind('geojsonInformation', value => getGeojsonInformation(pool, value.geometry)),
+    Effect.bind('forage', () => getForagesProperties(titreTypeId, geojsonOrigineGeoSystemeId, geojsonOrigineForages, pool)),
+    Effect.map(({ geojsonInformation: { surface, communes, forets, secteurs, sdom }, forage: { geojson4326Forages } }) => ({
       surface,
       communes,
       forets,
@@ -353,20 +352,22 @@ const getPerimetreInfosInternal = async (
       sdomZones: sdom,
       geojson4326Forages,
       geojsonOrigineForages,
-    }
-  } else {
-    return {
-      communes: [],
-      forets: [],
-      secteursMaritime: [],
-      sdomZones: [],
-      surface: null,
-      geojson4326Forages: null,
-      geojsonOrigineForages: null,
-    }
-  }
+    })),
+    Effect.catchTag('Pas de périmètre', _myError =>
+      Effect.succeed({
+        communes: [],
+        forets: [],
+        secteursMaritime: [],
+        sdomZones: [],
+        surface: null,
+        geojson4326Forages: null,
+        geojsonOrigineForages: null,
+      })
+    )
+  )
 }
-const getFlattenEtape = async (
+type GetFlattenEtapeErrors = PerimetreInfosError | TitreEtapeToFlattenEtapeErrors
+const getFlattenEtape = (
   etape: RestEtapeCreation | RestEtapeModification,
   demarche: ITitreDemarche,
   titreTypeId: TitreTypeId,
@@ -376,195 +377,248 @@ const getFlattenEtape = async (
   etapeOldHasTitreFrom: TitreEtapeForMachine['hasTitreFrom'],
   etapeOldDemarcheIdsConsentement: TitreEtapeForMachine['demarcheIdsConsentement'],
   pool: Pool
-): Promise<{ flattenEtape: Partial<Pick<ApiFlattenEtape, 'id'>> & Omit<ApiFlattenEtape, 'id'>; perimetreInfos: PerimetreInfos }> => {
-  const perimetreInfos = await getPerimetreInfosInternal(
-    pool,
-    etape.geojson4326Perimetre,
-    etape.geojsonOriginePerimetre,
-    etape.geojsonOriginePoints,
-    titreTypeId,
-    etape.geojsonOrigineGeoSystemeId,
-    etape.geojsonOrigineForages
-  )
+): Effect.Effect<{ flattenEtape: Partial<Pick<ApiFlattenEtape, 'id'>> & Omit<ApiFlattenEtape, 'id'>; perimetreInfos: PerimetreInfos }, CaminoError<GetFlattenEtapeErrors>> => {
   const titreEtapeHeritage = titreEtapeHeritageBuild(etape.date, etape.typeId, demarche, titreTypeId, demarche.typeId, 'id' in etape ? etape.id : null)
+  return Effect.Do.pipe(
+    Effect.bind('perimetreInfos', () =>
+      getPerimetreInfosInternal(pool, etape.geojson4326Perimetre, etape.geojsonOriginePerimetre, etape.geojsonOriginePoints, titreTypeId, etape.geojsonOrigineGeoSystemeId, etape.geojsonOrigineForages)
+    ),
 
-  const heritageProps = ETAPE_HERITAGE_PROPS.reduce<IHeritageProps>((acc, propId) => {
-    acc[propId] = {
-      actif: etape.heritageProps[propId].actif,
-      etape: titreEtapeHeritage.heritageProps?.[propId].etape,
-    }
-
-    return acc
-  }, {} as IHeritageProps)
-
-  const sections = getSections(titreTypeId, demarche.typeId, etape.typeId)
-  const heritageContenu = sections.reduce<IHeritageContenu>((accSections, section) => {
-    accSections[section.id] = section.elements.reduce<NonNullable<IHeritageContenu[string]>>((accElements, element) => {
-      accElements[element.id] = {
-        actif: etape.heritageContenu?.[section.id]?.[element.id]?.actif ?? false, // eslint-disable-line @typescript-eslint/no-unnecessary-condition
-        etape: titreEtapeHeritage.heritageContenu?.[section.id]?.[element.id]?.etape ?? undefined,
-      }
-
-      return accElements
-    }, {})
-
-    return accSections
-  }, {})
-
-  const fakeEtapeId = etapeIdValidator.parse('newId')
-  const flattenEtape = iTitreEtapeToFlattenEtape({
-    ...etape,
-    demarche,
-    ...perimetreInfos,
-    isBrouillon,
-    heritageProps,
-    heritageContenu,
-    // On ne voit pas comment mieux faire
-    id: 'id' in etape ? etape.id : fakeEtapeId,
-    slug: etapeSlug,
-    concurrence: etapeOldConcurrence,
-    demarcheIdsConsentement: etapeOldDemarcheIdsConsentement,
-    hasTitreFrom: etapeOldHasTitreFrom,
-  })
-
-  return {
-    flattenEtape: {
-      ...flattenEtape,
-      // On ne voit pas comment mieux faire
-      id: flattenEtape.id !== fakeEtapeId ? flattenEtape.id : undefined,
-    },
-    perimetreInfos,
-  }
-}
-export const createEtape =
-  (pool: Pool) =>
-  async (req: CaminoRequest, res: CustomResponse<EtapeId>): Promise<void> => {
-    try {
-      const { success, data: etape, error } = restEtapeCreationValidator.safeParse(req.body)
-
-      if (!success) {
-        console.error('[etapeCreer] étape non correctement formatée', error)
-        res.status(HTTP_STATUS.BAD_REQUEST).json({ errorMessage: "l'étape n'est pas correctement formatée" })
-      } else {
-        const user = req.auth
-        if (!user) {
-          res.status(HTTP_STATUS.NOT_FOUND).json({ errorMessage: "la démarche n'existe pas" })
-        } else {
-          let titreDemarche = await titreDemarcheGet(etape.titreDemarcheId, { fields: {} }, user)
-
-          if (!titreDemarche) {
-            res.status(HTTP_STATUS.NOT_FOUND).json({ errorMessage: "la démarche n'existe pas" })
-          } else {
-            titreDemarche = await titreDemarcheGet(
-              etape.titreDemarcheId,
-              {
-                fields: {
-                  titre: {
-                    demarches: { etapes: { id: {} } },
-                    pointsEtape: { id: {} },
-                    titulairesEtape: { id: {} },
-                    amodiatairesEtape: { id: {} },
-                  },
-                  etapes: { id: {} },
-                },
-              },
-              userSuper
-            )
-
-            if (!titreDemarche || !titreDemarche.titre) {
-              res.status(HTTP_STATUS.NOT_FOUND).json({ errorMessage: "le titre n'existe pas" })
-            } else {
-              const titreTypeId = titreDemarche.titre.typeId
-              const isBrouillon = canBeBrouillon(etape.typeId)
-              const { flattenEtape, perimetreInfos } = await getFlattenEtape(
-                etape,
-                titreDemarche,
-                titreTypeId,
-                isBrouillon,
-                etapeSlugValidator.parse('unknown'),
-                etape.typeId === ETAPES_TYPES.demande ? { amIFirst: true } : 'non-applicable',
-                etape.typeId === ETAPES_TYPES.demande ? true : 'non-applicable',
-                [],
-                pool
-              )
-              const entrepriseDocuments: EntrepriseDocument[] = await validateAndGetEntrepriseDocuments(pool, flattenEtape, etape.entrepriseDocumentIds, user)
-
-              const etapeDocumentsParsed = z.array(tempEtapeDocumentValidator).safeParse(etape.etapeDocuments)
-
-              if (!etapeDocumentsParsed.success) {
-                console.warn(etapeDocumentsParsed.error)
-
-                res.status(HTTP_STATUS.BAD_REQUEST).json({ errorMessage: 'Les documents envoyés ne sont pas conformes' })
-              } else {
-                const etapeDocuments = etapeDocumentsParsed.data
-
-                const etapeAvisParsed = z.array(tempEtapeAvisValidator).safeParse(etape.etapeAvis)
-                if (!etapeAvisParsed.success) {
-                  console.warn(etapeAvisParsed.error)
-                  res.status(HTTP_STATUS.BAD_REQUEST).json({ errorMessage: 'Les avis envoyés ne sont pas conformes' })
-                } else {
-                  const etapeAvis = etapeAvisParsed.data
-                  const rulesErrors = titreEtapeUpdationValidate(
-                    flattenEtape,
-                    titreDemarche,
-                    titreDemarche.titre,
-                    etapeDocuments,
-                    etapeAvis,
-                    entrepriseDocuments,
-                    perimetreInfos.sdomZones,
-                    perimetreInfos.communes.map(({ id }) => id),
-                    user
-                  )
-
-                  if (rulesErrors.length) {
-                    res.status(HTTP_STATUS.BAD_REQUEST).json({ errorMessage: rulesErrors.join(', ') })
-                  } else if (
-                    !canCreateEtape(user, etape.typeId, isBrouillon, titreDemarche.titre.titulaireIds ?? [], titreDemarche.titre.administrationsLocales ?? [], titreDemarche.typeId, {
-                      typeId: titreDemarche.titre.typeId,
-                      titreStatutId: titreDemarche.titre.titreStatutId,
-                    })
-                  ) {
-                    res.status(HTTP_STATUS.BAD_REQUEST).json({ errorMessage: 'droits insuffisants pour créer cette étape' })
-                  } else if (!(await checkEntreprisesExist(pool, [...etape.titulaireIds, ...etape.amodiataireIds]))) {
-                    res.status(HTTP_STATUS.BAD_REQUEST).json({ errorMessage: "certaines entreprises n'existent pas" })
-                  } else {
-                    etape.statutId = getStatutId(flattenEtape, getCurrent())
-
-                    const etapeUpdated: ITitreEtape | undefined = await titreEtapeUpsert({ ...etape, ...perimetreInfos, isBrouillon, demarcheIdsConsentement: [] }, user!, titreDemarche.titreId)
-                    if (isNullOrUndefined(etapeUpdated)) {
-                      res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ errorMessage: "Une erreur est survenue lors de la création de l'étape" })
-                    } else {
-                      await insertEtapeDocuments(pool, etapeUpdated.id, etapeDocuments)
-                      for (const document of entrepriseDocuments) {
-                        await insertTitreEtapeEntrepriseDocument(pool, { titre_etape_id: etapeUpdated.id, entreprise_document_id: document.id })
-                      }
-
-                      await insertEtapeAvis(pool, etapeUpdated.id, etapeAvis)
-
-                      try {
-                        await titreEtapeUpdateTask(pool, etapeUpdated.id, etapeUpdated.titreDemarcheId, user)
-                      } catch (e) {
-                        console.error('une erreur est survenue lors des tâches annexes', e)
-                      }
-
-                      await titreEtapeAdministrationsEmailsSend(etapeUpdated, titreDemarche.typeId, titreDemarche.titreId, titreDemarche.titre.typeId, user)
-                      await titreEtapeUtilisateursEmailsSend(etapeUpdated, titreDemarche.titreId, pool)
-
-                      res.json(etapeUpdated.id)
-                    }
-                  }
-                }
-              }
-            }
+    Effect.bind('heritageProps', () =>
+      Effect.succeed(
+        ETAPE_HERITAGE_PROPS.reduce<IHeritageProps>((acc, propId) => {
+          acc[propId] = {
+            actif: etape.heritageProps[propId].actif,
+            etape: titreEtapeHeritage.heritageProps?.[propId].etape,
           }
-        }
-      }
-    } catch (e) {
-      console.error(e)
 
-      res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ errorMessage: "Une erreur est survenue lors de la création de l'étape", extra: e })
-    }
-  }
+          return acc
+        }, {} as IHeritageProps)
+      )
+    ),
+    Effect.bind('heritageContenu', () => {
+      const sections = getSections(titreTypeId, demarche.typeId, etape.typeId)
+
+      const heritageContenu = sections.reduce<IHeritageContenu>((accSections, section) => {
+        accSections[section.id] = section.elements.reduce<NonNullable<IHeritageContenu[string]>>((accElements, element) => {
+          accElements[element.id] = {
+            actif: etape.heritageContenu?.[section.id]?.[element.id]?.actif ?? false, // eslint-disable-line @typescript-eslint/no-unnecessary-condition
+            etape: titreEtapeHeritage.heritageContenu?.[section.id]?.[element.id]?.etape ?? undefined,
+          }
+
+          return accElements
+        }, {})
+
+        return accSections
+      }, {})
+      return Effect.succeed(heritageContenu)
+    }),
+    Effect.bind('fakeEtapeId', () => zodParseEffect(etapeIdValidator, 'newId')),
+    Effect.bind('flattenEtape', ({ perimetreInfos, heritageProps, heritageContenu, fakeEtapeId }) =>
+      iTitreEtapeToFlattenEtape({
+        ...etape,
+        demarche,
+        ...perimetreInfos,
+        isBrouillon,
+        heritageProps,
+        heritageContenu,
+        // On ne voit pas comment mieux faire
+        id: 'id' in etape ? etape.id : fakeEtapeId,
+        slug: etapeSlug,
+        concurrence: etapeOldConcurrence,
+        demarcheIdsConsentement: etapeOldDemarcheIdsConsentement,
+        hasTitreFrom: etapeOldHasTitreFrom,
+      })
+    ),
+    Effect.map(({ flattenEtape, perimetreInfos, fakeEtapeId }) => ({
+      flattenEtape: {
+        ...flattenEtape,
+        // On ne voit pas comment mieux faire
+        id: flattenEtape.id !== fakeEtapeId ? flattenEtape.id : undefined,
+      },
+      perimetreInfos,
+    }))
+  )
+}
+
+const demarcheExistePas = "la démarche n'existe pas" as const
+const titreExistePas = "le titre n'existe pas" as const
+const etapeNonValide = "l'étape n'est pas valide" as const
+const droitsInsuffisants = 'droits insuffisants pour créer cette étape' as const
+const erreurLorsDeLaCreationDeLEtape = "Une erreur est survenue lors de la création de l'étape" as const
+const tachesAnnexes = 'une erreur est survenue lors des tâches annexes' as const
+const envoieMails = 'une erreur est survenue lors des envois de mail' as const
+type CreateEtapeError =
+  | GetFlattenEtapeErrors
+  | EffectDbQueryAndValidateErrors
+  | ValidateAndGetEntrepriseDocumentsErrors
+  | InsertEtapeDocumentsErrors
+  | InsertEtapeAvisErrors
+  | CheckEntreprisesExistErrors
+  | typeof demarcheExistePas
+  | typeof titreExistePas
+  | typeof etapeNonValide
+  | typeof droitsInsuffisants
+  | typeof erreurLorsDeLaCreationDeLEtape
+  | typeof tachesAnnexes
+  | typeof envoieMails
+export const createEtape: RestNewPostCall<'/rest/etapes'> = ({ body: etape, user, pool }): Effect.Effect<EtapeId, CaminoApiError<CreateEtapeError>> => {
+  return Effect.Do.pipe(
+    Effect.tap(() =>
+      Effect.Do.pipe(
+        Effect.flatMap(() =>
+          Effect.tryPromise({
+            try: async () => titreDemarcheGet(etape.titreDemarcheId, { fields: {} }, user),
+            catch: e => ({ message: demarcheExistePas, extra: e }),
+          })
+        ),
+        Effect.filterOrFail(
+          titreDemarcheUser => isNotNullNorUndefined(titreDemarcheUser),
+          () => ({ message: demarcheExistePas, extra: "L'utilisateur n'a pas accès à la démarche" })
+        )
+      )
+    ),
+    Effect.bind('titreDemarche', () =>
+      Effect.tryPromise({
+        try: async () =>
+          titreDemarcheGet(
+            etape.titreDemarcheId,
+            {
+              fields: {
+                titre: {
+                  demarches: { etapes: { id: {} } },
+                  pointsEtape: { id: {} },
+                  titulairesEtape: { id: {} },
+                  amodiatairesEtape: { id: {} },
+                },
+                etapes: { id: {} },
+              },
+            },
+            userSuper
+          ),
+        catch: e => ({ message: demarcheExistePas, extra: e }),
+      })
+    ),
+    Effect.filterOrFail(
+      (value): value is { titreDemarche: Omit<ITitreDemarche, 'titre'> & { titre: ITitre } } => isNotNullNorUndefined(value.titreDemarche) && isNotNullNorUndefined(value.titreDemarche.titre),
+      () => ({ message: titreExistePas })
+    ),
+    Effect.let('isBrouillon', () => canBeBrouillon(etape.typeId)),
+    Effect.filterOrFail(
+      ({ isBrouillon, titreDemarche }) =>
+        canCreateEtape(user, etape.typeId, isBrouillon, titreDemarche.titre.titulaireIds ?? [], titreDemarche.titre.administrationsLocales ?? [], titreDemarche.typeId, {
+          typeId: titreDemarche.titre.typeId,
+          titreStatutId: titreDemarche.titre.titreStatutId,
+        }),
+      () => ({ message: droitsInsuffisants })
+    ),
+    Effect.bind('flattenEtapeAndPerimetreInfo', ({ titreDemarche, isBrouillon }) =>
+      getFlattenEtape(
+        etape as RestEtapeCreation, // TODO 2024-11-14 comment on fait là, si on met le deepReadonly ça transpire partout et c'est violent :(
+        titreDemarche,
+        titreDemarche.titre.typeId,
+        isBrouillon,
+        etapeSlugValidator.parse('unknown'),
+        etape.typeId === ETAPES_TYPES.demande ? { amIFirst: true } : 'non-applicable',
+        etape.typeId === ETAPES_TYPES.demande ? true : 'non-applicable',
+        [],
+        pool
+      )
+    ),
+    Effect.bind('entrepriseDocuments', ({ flattenEtapeAndPerimetreInfo }) => validateAndGetEntrepriseDocuments(pool, flattenEtapeAndPerimetreInfo.flattenEtape, etape.entrepriseDocumentIds, user)),
+    Effect.tap(({ flattenEtapeAndPerimetreInfo, titreDemarche, entrepriseDocuments }) => {
+      const rulesErrors = titreEtapeUpdationValidate(
+        flattenEtapeAndPerimetreInfo.flattenEtape,
+        titreDemarche,
+        titreDemarche.titre,
+        etape.etapeDocuments,
+        etape.etapeAvis,
+        entrepriseDocuments,
+        flattenEtapeAndPerimetreInfo.perimetreInfos.sdomZones,
+        flattenEtapeAndPerimetreInfo.perimetreInfos.communes.map(({ id }) => id),
+        user
+      )
+      if (isNotNullNorUndefinedNorEmpty(rulesErrors)) {
+        return Effect.fail({ message: etapeNonValide, extra: rulesErrors.join(', ') })
+      }
+      return Effect.succeed(null)
+    }),
+    Effect.tap(() => checkEntreprisesExist(pool, [...etape.titulaireIds, ...etape.amodiataireIds])),
+    Effect.bind('etapeUpdated', ({ flattenEtapeAndPerimetreInfo, isBrouillon, titreDemarche }) =>
+      Effect.tryPromise({
+        try: () =>
+          titreEtapeUpsert(
+            { ...etape, statutId: getStatutId(flattenEtapeAndPerimetreInfo.flattenEtape, getCurrent()), ...flattenEtapeAndPerimetreInfo.perimetreInfos, isBrouillon, demarcheIdsConsentement: [] },
+            user,
+            titreDemarche.titreId
+          ),
+        catch: e => ({ message: erreurLorsDeLaCreationDeLEtape, extra: e }),
+      })
+    ),
+    Effect.filterOrFail(
+      (value): value is typeof value & { etapeUpdated: ITitreEtape } => isNotNullNorUndefined(value.etapeUpdated),
+      () => ({ message: erreurLorsDeLaCreationDeLEtape })
+    ),
+
+    Effect.tap(({ etapeUpdated }) => insertEtapeDocuments(pool, etapeUpdated.id, etape.etapeDocuments)),
+    Effect.tap(({ etapeUpdated, entrepriseDocuments }) => insertTitreEtapeEntrepriseDocuments(pool, etapeUpdated.id, entrepriseDocuments)),
+    Effect.tap(({ etapeUpdated }) => insertEtapeAvis(pool, etapeUpdated.id, etape.etapeAvis)),
+    Effect.tap(({ etapeUpdated }) =>
+      Effect.tryPromise({
+        try: () => titreEtapeUpdateTask(pool, etapeUpdated.id, etapeUpdated.titreDemarcheId, user),
+        catch: e => ({ message: tachesAnnexes, extra: e }),
+      })
+    ),
+
+    Effect.tap(({ etapeUpdated, titreDemarche }) =>
+      Effect.tryPromise({
+        try: async () => {
+          await titreEtapeAdministrationsEmailsSend(etapeUpdated, titreDemarche.typeId, titreDemarche.titreId, titreDemarche.titre.typeId, user)
+          await titreEtapeUtilisateursEmailsSend(etapeUpdated, titreDemarche.titreId, pool)
+        },
+        catch: e => ({ message: envoieMails, extra: e }),
+      })
+    ),
+
+    Effect.map(({ etapeUpdated }) => etapeUpdated.id),
+    Effect.mapError(caminoError =>
+      Match.value(caminoError.message).pipe(
+        Match.whenOr("la démarche n'existe pas", "le titre n'existe pas", () => ({ ...caminoError, status: HTTP_STATUS.NOT_FOUND })),
+        Match.whenOr(
+          "l'étape n'est pas valide",
+          "certaines entreprises n'existent pas",
+          'les points doivent être sur le périmètre',
+          'Problème de validation de données',
+          "document d'entreprise incorrects",
+          'Problème de Système géographique (SRID)',
+          'Le nombre de points est invalide',
+          'La liste des points est vide',
+          () => ({
+            ...caminoError,
+            status: HTTP_STATUS.BAD_REQUEST,
+          })
+        ),
+        Match.when('droits insuffisants pour créer cette étape', () => ({ ...caminoError, status: HTTP_STATUS.FORBIDDEN })),
+        Match.whenOr(
+          "Impossible d'exécuter la requête dans la base de données",
+          "Une erreur est survenue lors de la création de l'étape",
+          'une erreur est survenue lors des envois de mail',
+          'une erreur est survenue lors des tâches annexes',
+          'impossible de créer un large object id',
+          'impossible de récupérer un large object id',
+          'Une erreur inattendue est survenue lors de la récupération des informations geojson en base',
+          'Impossible de transformer la feature collection',
+          'pas de démarche chargée',
+          'pas de démarche ou de titre chargé',
+          "pas d'héritage chargé",
+          'pas de slug',
+          () => ({ ...caminoError, status: HTTP_STATUS.INTERNAL_SERVER_ERROR })
+        ),
+        Match.exhaustive
+      )
+    )
+  )
+}
 
 export const updateEtape =
   (pool: Pool) =>
@@ -633,28 +687,13 @@ export const updateEtape =
           if (isNullOrUndefined(titreDemarche.titre.titulaireIds) || isNullOrUndefined(titreDemarche.titre.amodiataireIds)) throw new Error('la démarche n’est pas chargée complètement')
           const titreTypeId = titreDemarche.titre.typeId
           const isBrouillon = titreEtapeOld.isBrouillon
-          const { flattenEtape, perimetreInfos } = await getFlattenEtape(
-            etape,
-            titreDemarche,
-            titreTypeId,
-            isBrouillon,
-            titreEtapeOld.slug,
-            titreEtapeOld.concurrence,
-            titreEtapeOld.hasTitreFrom,
-            titreEtapeOld.demarcheIdsConsentement,
-            pool
+          const { flattenEtape, perimetreInfos } = await callAndExit(
+            getFlattenEtape(etape, titreDemarche, titreTypeId, isBrouillon, titreEtapeOld.slug, titreEtapeOld.concurrence, titreEtapeOld.hasTitreFrom, titreEtapeOld.demarcheIdsConsentement, pool)
           )
 
-          const entrepriseDocuments: EntrepriseDocument[] = await validateAndGetEntrepriseDocuments(pool, flattenEtape, etape.entrepriseDocumentIds, user)
+          const entrepriseDocuments: EntrepriseDocument[] = await callAndExit(validateAndGetEntrepriseDocuments(pool, flattenEtape, etape.entrepriseDocumentIds, user))
 
-          const etapeDocumentsParsed = z.array(etapeDocumentModificationValidator).safeParse(etape.etapeDocuments)
-
-          if (!etapeDocumentsParsed.success) {
-            console.warn(etapeDocumentsParsed.error)
-            throw new Error('Les documents envoyés ne sont pas conformes')
-          }
-
-          const etapeDocuments = etapeDocumentsParsed.data
+          const etapeDocuments = etape.etapeDocuments
 
           const rulesErrors = titreEtapeUpdationValidate(
             flattenEtape,
@@ -673,9 +712,7 @@ export const updateEtape =
             throw new Error(rulesErrors.join(', '))
           }
 
-          if (!(await checkEntreprisesExist(pool, [...etape.titulaireIds, ...etape.amodiataireIds]))) {
-            throw new Error("certaines entreprises n'existent pas")
-          }
+          await callAndExit(checkEntreprisesExist(pool, [...etape.titulaireIds, ...etape.amodiataireIds]))
 
           etape.statutId = getStatutId(flattenEtape, getCurrent())
 
@@ -689,9 +726,7 @@ export const updateEtape =
           }
           await updateEtapeDocuments(pool, user, etapeUpdated.id, etapeUpdated.isBrouillon, etapeDocuments)
           await deleteTitreEtapeEntrepriseDocument(pool, { titre_etape_id: etapeUpdated.id })
-          for (const document of entrepriseDocuments) {
-            await insertTitreEtapeEntrepriseDocument(pool, { titre_etape_id: etapeUpdated.id, entreprise_document_id: document.id })
-          }
+          await callAndExit(insertTitreEtapeEntrepriseDocuments(pool, etapeUpdated.id, entrepriseDocuments))
 
           await updateEtapeAvis(
             pool,
@@ -788,7 +823,7 @@ export const deposeEtape =
         })
 
         // TODO 2023-06-14 TS 5.1 n’arrive pas réduire le type de titre
-        const flattenEtape = iTitreEtapeToFlattenEtape(titreEtape)
+        const flattenEtape = await callAndExit(iTitreEtapeToFlattenEtape(titreEtape))
         const deposable = canDeposeEtape(
           user,
           { ...titre, titulaires: titre.titulaireIds ?? [], administrationsLocales: titre.administrationsLocales ?? [] },

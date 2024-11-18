@@ -1,5 +1,5 @@
 import { dbManager } from '../../../tests/db-manager'
-import { restPutCall, restCall, restPostCall } from '../../../tests/_utils/index'
+import { restPutCall, restCall, restNewPostCall } from '../../../tests/_utils/index'
 import Titres from '../../database/models/titres'
 import { userSuper } from '../../database/user-super'
 import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations'
@@ -265,7 +265,15 @@ describe('etapeModifier', () => {
       etapeDocuments: [],
     })
 
-    expect(result.body.errorMessage).toBe("certaines entreprises n'existent pas")
+    expect(result.body).toMatchInlineSnapshot(`
+      {
+        "errorMessage": "certaines entreprises n'existent pas
+       extra: undefined
+      detail: undefined
+       zod: undefined",
+        "extra": {},
+      }
+    `)
   })
 
   test("peut supprimer un document d'une demande en brouillon (utilisateur super)", async () => {
@@ -486,7 +494,7 @@ describe('etapeModifier', () => {
       heritageContenu: {},
       contenu: {},
     }
-    const res = await restPostCall(
+    const res = await restNewPostCall(
       dbPool,
       '/rest/etapes',
       {},

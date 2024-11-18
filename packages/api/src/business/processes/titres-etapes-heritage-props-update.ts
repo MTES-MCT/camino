@@ -39,7 +39,7 @@ export const titresEtapesHeritagePropsUpdate = async (user: DeepReadonly<UserNot
       const { hasChanged, titreEtape: newTitreEtape } = titreEtapeHeritagePropsFind(titreEtape, titreEtapePrecedente)
 
       if (hasChanged) {
-        await titreEtapeUpsert(newTitreEtape, user, titreDemarche.titreId)
+        await titreEtapeUpsert(newTitreEtape as DeepReadonly<ITitreEtape>, user, titreDemarche.titreId)
 
         console.info('titre / démarche / étape : héritage des propriétés (mise à jour) ->', titreEtape.id)
 

@@ -1,5 +1,5 @@
 import { sql } from '@pgtyped/runtime'
-import { Redefine, dbQueryAndValidate } from '../../pg-database'
+import { EffectDbQueryAndValidateErrors, Redefine, dbQueryAndValidate, effectDbQueryAndValidate } from '../../pg-database'
 import {
   ICheckEntreprisesExistQueryQuery,
   IDeleteEntrepriseDocumentQueryQuery,
@@ -21,31 +21,39 @@ import {
 } from 'camino-common/src/entreprise'
 import { EntrepriseDocumentTypeId } from 'camino-common/src/static/documentsTypes'
 import { CaminoDate } from 'camino-common/src/date'
-import { DeepReadonly, NonEmptyArray, isNonEmptyArray, onlyUnique } from 'camino-common/src/typescript-tools'
+import { DeepReadonly, NonEmptyArray, isNonEmptyArray, isNonEmptyArrayAndDeepReadonly, onlyUnique } from 'camino-common/src/typescript-tools'
 import { Pool } from 'pg'
 import { canSeeEntrepriseDocuments } from 'camino-common/src/permissions/entreprises'
 import { roleValidator, User } from 'camino-common/src/roles'
 import { z } from 'zod'
+import { Effect, pipe } from 'effect'
+import { CaminoError } from 'camino-common/src/zod-tools'
 
 const dummy = ['dummy'] as const
-export const getEntrepriseDocuments = async (entrepriseDocumentIds: EntrepriseDocumentId[], entrepriseIds: EntrepriseId[], pool: Pool, user: User) => {
-  const result = await dbQueryAndValidate(
-    getEntrepriseDocumentsInternal,
-    {
-      entrepriseDocumentIds: isNonEmptyArray(entrepriseDocumentIds) ? entrepriseDocumentIds : dummy,
-      entrepriseIds: isNonEmptyArray(entrepriseIds) ? entrepriseIds : dummy,
-    },
-    pool,
-    entrepriseDocumentValidator
+export const getEntrepriseDocuments = (
+  entrepriseDocumentIds: DeepReadonly<EntrepriseDocumentId[]>,
+  entrepriseIds: EntrepriseId[],
+  pool: Pool,
+  user: DeepReadonly<User>
+): Effect.Effect<EntrepriseDocument[], CaminoError<EffectDbQueryAndValidateErrors>> => {
+  return pipe(
+    effectDbQueryAndValidate(
+      getEntrepriseDocumentsInternal,
+      {
+        entrepriseDocumentIds: isNonEmptyArrayAndDeepReadonly(entrepriseDocumentIds) ? entrepriseDocumentIds : dummy,
+        entrepriseIds: isNonEmptyArray(entrepriseIds) ? entrepriseIds : dummy,
+      },
+      pool,
+      entrepriseDocumentValidator
+    ),
+    Effect.map(value => value.filter(r => canSeeEntrepriseDocuments(user, r.entreprise_id)))
   )
-
-  return result.filter(r => canSeeEntrepriseDocuments(user, r.entreprise_id))
 }
 
 const getEntrepriseDocumentsInternal = sql<
   Redefine<
     IGetEntrepriseDocumentsInternalQuery,
-    { entrepriseDocumentIds: NonEmptyArray<EntrepriseDocumentId> | typeof dummy; entrepriseIds: NonEmptyArray<EntrepriseId> | typeof dummy },
+    { entrepriseDocumentIds: DeepReadonly<NonEmptyArray<EntrepriseDocumentId>> | typeof dummy; entrepriseIds: DeepReadonly<NonEmptyArray<EntrepriseId>> | typeof dummy },
     EntrepriseDocument
   >
 >`
@@ -113,7 +121,7 @@ export const insertEntrepriseDocument = async (
     description: string
     largeobject_id: number
   }
-) => dbQueryAndValidate(insertEntrepriseDocumentInternal, params, pool, z.object({ id: entrepriseDocumentIdValidator }))
+): Promise<{ id: EntrepriseDocumentId }[]> => dbQueryAndValidate(insertEntrepriseDocumentInternal, params, pool, z.object({ id: entrepriseDocumentIdValidator }))
 const insertEntrepriseDocumentInternal = sql<
   Redefine<
     IInsertEntrepriseDocumentInternalQuery,
@@ -134,7 +142,7 @@ RETURNING
     id;
 `
 
-export const deleteEntrepriseDocument = async (pool: Pool, params: { id: EntrepriseDocumentId; entrepriseId: EntrepriseId }) =>
+export const deleteEntrepriseDocument = async (pool: Pool, params: { id: EntrepriseDocumentId; entrepriseId: EntrepriseId }): Promise<void[]> =>
   dbQueryAndValidate(deleteEntrepriseDocumentQuery, params, pool, z.void())
 const deleteEntrepriseDocumentQuery = sql<Redefine<IDeleteEntrepriseDocumentQueryQuery, { id: EntrepriseDocumentId; entrepriseId: EntrepriseId }, void>>`
 delete from entreprises_documents
@@ -216,7 +224,7 @@ const getEntrepriseUtilisateursValidator = z.object({
   role: roleValidator,
 })
 export type GetEntrepriseUtilisateurs = z.infer<typeof getEntrepriseUtilisateursValidator>
-export const getEntrepriseUtilisateurs = async (pool: Pool, entreprise_id: EntrepriseId) => {
+export const getEntrepriseUtilisateurs = async (pool: Pool, entreprise_id: EntrepriseId): Promise<GetEntrepriseUtilisateurs[]> => {
   return dbQueryAndValidate(getEntrepriseUtilisateursDb, { entreprise_id }, pool, getEntrepriseUtilisateursValidator)
 }
 
@@ -232,18 +240,24 @@ where
 `
 
 const checkEntreprisesExistValidator = z.object({ id: entrepriseIdValidator })
-export const checkEntreprisesExist = async (pool: Pool, entrepriseIds: DeepReadonly<EntrepriseId[]>): Promise<boolean> => {
+const entreprisesNonExistantes = "certaines entreprises n'existent pas" as const
+export type CheckEntreprisesExistErrors = EffectDbQueryAndValidateErrors | typeof entreprisesNonExistantes
+export const checkEntreprisesExist = (pool: Pool, entrepriseIds: DeepReadonly<EntrepriseId[]>): Effect.Effect<DeepReadonly<EntrepriseId[]>, CaminoError<CheckEntreprisesExistErrors>> => {
   if (entrepriseIds.length === 0) {
-    return true
+    return Effect.succeed(entrepriseIds)
   }
-
   const unique = [...entrepriseIds].filter(onlyUnique)
-  const result = await dbQueryAndValidate(checkEntreprisesExistQuery, { entrepriseIds: unique }, pool, checkEntreprisesExistValidator)
-
-  return result.length === unique.length
+  return pipe(
+    effectDbQueryAndValidate(checkEntreprisesExistQuery, { entrepriseIds: unique }, pool, checkEntreprisesExistValidator),
+    Effect.filterOrFail(
+      result => result.length === unique.length,
+      () => ({ message: entreprisesNonExistantes })
+    ),
+    Effect.map(() => entrepriseIds)
+  )
 }
 
-const checkEntreprisesExistQuery = sql<Redefine<ICheckEntreprisesExistQueryQuery, { entrepriseIds: EntrepriseId[] }, z.infer<typeof checkEntreprisesExistValidator>>>`
+const checkEntreprisesExistQuery = sql<Redefine<ICheckEntreprisesExistQueryQuery, { entrepriseIds: DeepReadonly<EntrepriseId[]> }, z.infer<typeof checkEntreprisesExistValidator>>>`
 SELECT
     id
 FROM

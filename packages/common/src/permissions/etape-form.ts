@@ -21,10 +21,10 @@ import { canEditAmodiataires, canEditDuree, canEditPerimetre, canEditTitulaires 
 
 type ValidReturn = { valid: true } | { valid: false; errors: NonEmptyArray<string> }
 
-export const dateTypeStepIsVisible = (user: User): boolean => {
+export const dateTypeStepIsVisible = (user: DeepReadonly<User>): boolean => {
   return isSuper(user) || isAdministrationAdmin(user) || isAdministrationEditeur(user)
 }
-export const dateTypeStepIsComplete = (etape: DeepReadonly<Nullable<Pick<FlattenEtape, 'typeId' | 'date' | 'statutId'>>>, user: User): ValidReturn => {
+export const dateTypeStepIsComplete = (etape: DeepReadonly<Nullable<Pick<FlattenEtape, 'typeId' | 'date' | 'statutId'>>>, user: DeepReadonly<User>): ValidReturn => {
   if (!dateTypeStepIsVisible(user)) {
     return { valid: true }
   }
@@ -57,7 +57,7 @@ export const fondamentaleStepIsComplete = (
   flattened: DeepReadonly<Pick<FlattenEtape, 'typeId' | 'duree' | 'substances' | 'titulaires' | 'amodiataires'>>,
   demarcheTypeId: DemarcheTypeId,
   titreTypeId: TitreTypeId,
-  user: User
+  user: DeepReadonly<User>
 ): ValidReturn => {
   if (!fondamentaleStepIsVisible(flattened.typeId)) {
     return { valid: true }

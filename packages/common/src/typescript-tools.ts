@@ -118,6 +118,10 @@ export const exhaustiveCheck = (param: never): never => {
 }
 
 export type NonEmptyArray<T> = [T, ...T[]]
+export const isNonEmptyArrayAndDeepReadonly = <T>(arr: DeepReadonly<T[]>): arr is DeepReadonly<NonEmptyArray<T>> => {
+  return arr.length > 0
+}
+
 export const isNonEmptyArray = <T>(arr: T[]): arr is NonEmptyArray<T> => {
   return arr.length > 0
 }

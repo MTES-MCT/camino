@@ -19,12 +19,12 @@ export const titreEtapeUpdationValidate = (
   etape: Pick<Partial<ApiFlattenEtape>, 'id'> & Omit<ApiFlattenEtape, 'id'>,
   titreDemarche: ITitreDemarche,
   titre: Pick<ITitre, 'typeId' | 'demarches'>,
-  documents: Pick<EtapeDocument, 'etape_document_type_id'>[],
-  etapeAvis: Pick<EtapeAvis, 'avis_type_id'>[],
+  documents: DeepReadonly<Pick<EtapeDocument, 'etape_document_type_id'>[]>,
+  etapeAvis: DeepReadonly<Pick<EtapeAvis, 'avis_type_id'>[]>,
   entrepriseDocuments: Pick<EntrepriseDocument, 'entreprise_document_type_id' | 'entreprise_id'>[],
   sdomZones: DeepReadonly<SDOMZoneId[]> | null | undefined,
   communes: CommuneId[] | null | undefined,
-  user: User,
+  user: DeepReadonly<User>,
   titreEtapeOld?: ITitreEtape
 ): string[] => {
   const errors: string[] = []

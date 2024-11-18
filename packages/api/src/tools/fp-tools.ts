@@ -35,7 +35,7 @@ export const callAndExit = async <A>(toCall: Effect.Effect<A, CaminoError<string
   } else {
     if (Cause.isFailType(pipeline.cause)) {
       console.error(pipeline.cause.error)
-      throw new Error(pipeline.cause.error.message)
+      throw new Error(`${pipeline.cause.error.message}\n extra: ${pipeline.cause.error.extra}\ndetail: ${pipeline.cause.error.detail}\n zod: ${pipeline.cause.error.zodErrorReadableMessage}`)
     } else {
       throw new Error(`Unexpected error ${pipeline.cause}`)
     }

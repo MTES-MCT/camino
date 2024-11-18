@@ -50,6 +50,7 @@ import { LoadingElement } from '../_ui/functional-loader'
 import { isEtapeComplete, isEtapeDeposable, isEtapeValid } from 'camino-common/src/permissions/titres-etapes'
 import { getSections } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections'
 import { DsfrInputCheckbox } from '../_ui/dsfr-input-checkbox'
+import { CaminoError } from 'camino-common/src/zod-tools'
 
 export type Props = {
   etape: DeepReadonly<Pick<Nullable<FlattenEtape>, 'id' | 'date' | 'typeId' | 'statutId' | 'slug'> & Omit<FlattenEtape, 'date' | 'typeId' | 'statutId' | 'id' | 'slug'>>
@@ -332,7 +333,7 @@ export const EtapeEditForm = defineComponent<Props>(props => {
   const save = async () => {
     if (canSave.value && etape.value.status === 'LOADED' && isNotNullNorUndefined(etape.value.value)) {
       const etapeValue = etape.value.value
-      let etapeId: EtapeId | null
+      let etapeId: EtapeId | null | CaminoError<string>
       const heritage = {
         dateDebut: etapeValue.dateDebut.value,
         dateFin: etapeValue.dateFin.value,
@@ -390,7 +391,8 @@ export const EtapeEditForm = defineComponent<Props>(props => {
         etapeId = await props.apiClient.etapeCreer({
           ...etape.value.value,
           titreDemarcheId: props.demarcheId,
-          ...documents.value,
+          etapeAvis: documents.value.etapeAvis,
+          etapeDocuments: documents.value.etapeDocuments.filter(value => 'temp_document_name' in value),
           entrepriseDocumentIds: documents.value.entrepriseDocuments.map(({ id }) => id),
           ...heritage,
         })
@@ -404,9 +406,10 @@ export const EtapeEditForm = defineComponent<Props>(props => {
 
   const saveAndReroute = async () => {
     const etapeId = await save()
-    if (isNotNullNorUndefined(etapeId)) {
+    if (isNotNullNorUndefined(etapeId) && !('message' in etapeId)) {
       props.goToDemarche(props.demarcheId)
     }
+    return etapeId
   }
 
   const showDeposeEtapePopup = ref<boolean>(false)
@@ -462,7 +465,7 @@ export const EtapeEditForm = defineComponent<Props>(props => {
                     close={closeDeposePopup}
                     deposeEtape={async () => {
                       const etapeIdToDepose = await save()
-                      if (isNotNullNorUndefined(etapeIdToDepose)) {
+                      if (isNotNullNorUndefined(etapeIdToDepose) && !('message' in etapeIdToDepose)) {
                         await props.apiClient.deposeEtape(etapeIdToDepose)
                         props.goToDemarche(props.demarcheId)
                       }

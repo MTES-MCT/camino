@@ -44,6 +44,7 @@ import { createLargeObject } from '../../database/largeobjects'
 import { z } from 'zod'
 import { getEntrepriseEtablissements } from './entreprises-etablissements.queries'
 import { RawLineMatrice, getRawLines } from '../../business/matrices'
+import { callAndExit } from '../../tools/fp-tools'
 
 type Reduced = { guyane: true; fiscalite: FiscaliteGuyane } | { guyane: false; fiscalite: FiscaliteFrance }
 // VisibleForTesting
@@ -210,7 +211,7 @@ export const getEntrepriseDocuments =
       console.warn(`l'utilisateur ${user} n'a pas le droit de voir les documents de l'entreprise ${entrepriseIdParsed.data}`)
       res.sendStatus(HTTP_STATUS.FORBIDDEN)
     } else {
-      const entrepriseDocuments = await getEntrepriseDocumentsQuery([], [entrepriseIdParsed.data], pool, user)
+      const entrepriseDocuments = await callAndExit(getEntrepriseDocumentsQuery([], [entrepriseIdParsed.data], pool, user))
       res.json(entrepriseDocuments)
     }
   }
@@ -273,7 +274,7 @@ export const deleteEntrepriseDocument =
       console.warn(`l'utilisateur ${user} n'a pas le droit de supprimer les documents de l'entreprise ${entrepriseIdParsed.data}`)
       res.sendStatus(HTTP_STATUS.FORBIDDEN)
     } else {
-      const entrepriseDocuments = await getEntrepriseDocumentsQuery([], [entrepriseIdParsed.data], pool, user)
+      const entrepriseDocuments = await callAndExit(getEntrepriseDocumentsQuery([], [entrepriseIdParsed.data], pool, user))
       const entrepriseDocument = entrepriseDocuments.find(({ id }) => id === entrepriseDocumentIdParsed.data)
 
       if (!entrepriseDocument || !entrepriseDocument.can_delete_document) {

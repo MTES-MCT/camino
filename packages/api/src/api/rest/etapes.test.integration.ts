@@ -18,6 +18,7 @@ import { AvisVisibilityIds } from 'camino-common/src/static/avisTypes'
 import { tempDocumentNameValidator } from 'camino-common/src/document'
 import { newDemarcheId, newEtapeId, newTitreId } from '../../database/models/_format/id-create'
 import { insertTitreGraph } from '../../../tests/integration-test-helper'
+import { callAndExit } from '../../tools/fp-tools'
 
 console.info = vi.fn()
 console.error = vi.fn()
@@ -328,11 +329,15 @@ describe('getEtapeAvis', () => {
       temp_document_name: tempDocumentNameValidator.parse('fakeTempDocumentName'),
     }
 
-    await expect(
-      insertEtapeAvisWithLargeObjectId(dbPool, etapeId, { ...avis, description: '' }, etapeAvisIdValidator.parse('avisId'), largeObjectIdValidator.parse(42))
-    ).rejects.toThrowErrorMatchingInlineSnapshot(`[error: new row for relation "etape_avis" violates check constraint "etape_avis_description_required"]`)
+    await expect(callAndExit(insertEtapeAvisWithLargeObjectId(dbPool, etapeId, { ...avis, description: '' }, etapeAvisIdValidator.parse('avisId'), largeObjectIdValidator.parse(42)))).rejects
+      .toThrowErrorMatchingInlineSnapshot(`
+      [Error: Impossible d'exécuter la requête dans la base de données
+       extra: new row for relation "etape_avis" violates check constraint "etape_avis_description_required"
+      detail: undefined
+       zod: undefined]
+    `)
 
-    await insertEtapeAvisWithLargeObjectId(dbPool, etapeId, avis, etapeAvisIdValidator.parse('avisId'), largeObjectIdValidator.parse(42))
+    await callAndExit(insertEtapeAvisWithLargeObjectId(dbPool, etapeId, avis, etapeAvisIdValidator.parse('avisId'), largeObjectIdValidator.parse(42)))
 
     getAvis = await restCall(dbPool, '/rest/etapes/:etapeId/etapeAvis', { etapeId: etapeId }, userSuper)
     expect(getAvis.statusCode).toBe(HTTP_STATUS.OK)

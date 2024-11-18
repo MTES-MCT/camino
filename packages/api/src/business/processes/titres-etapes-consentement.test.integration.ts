@@ -32,7 +32,12 @@ afterAll(async () => {
 describe('etapeConsentementUpdate', () => {
   test("gère un id d'étape inconnu", async () => {
     const etapeId = newEtapeId()
-    await expect(callAndExit(etapeConsentementUpdate(dbPool, etapeId))).rejects.toThrowErrorMatchingInlineSnapshot(`[Error: Élément non trouvé dans la base de données]`)
+    await expect(callAndExit(etapeConsentementUpdate(dbPool, etapeId))).rejects.toThrowErrorMatchingInlineSnapshot(`
+      [Error: Élément non trouvé dans la base de données
+       extra: [object Object]
+      detail: undefined
+       zod: undefined]
+    `)
   })
 
   const titre: Omit<ITitreInsert, 'id'> = {

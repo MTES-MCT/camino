@@ -41,7 +41,7 @@ import {
   TempEtapeAvis,
   TempEtapeDocument,
 } from 'camino-common/src/etape'
-import { EntrepriseDocumentId, entrepriseDocumentValidator, EntrepriseId, EtapeEntrepriseDocument, etapeEntrepriseDocumentValidator } from 'camino-common/src/entreprise'
+import { EntrepriseDocument, EntrepriseDocumentId, entrepriseDocumentValidator, EntrepriseId, EtapeEntrepriseDocument, etapeEntrepriseDocumentValidator } from 'camino-common/src/entreprise'
 import { Pool } from 'pg'
 import { User } from 'camino-common/src/roles'
 import { canSeeEntrepriseDocuments } from 'camino-common/src/permissions/entreprises'
@@ -64,11 +64,24 @@ import { CommuneId } from 'camino-common/src/static/communes'
 import { EtapeStatutId, etapeStatutIdValidator } from 'camino-common/src/static/etapesStatuts'
 import { contenuValidator, heritageContenuValidator } from 'camino-common/src/etape-form'
 import { demarcheTypeIdValidator } from 'camino-common/src/static/demarchesTypes'
-import { Effect } from 'effect'
+import { Effect, pipe } from 'effect'
 import { CaminoError } from 'camino-common/src/zod-tools'
+import { callAndExit } from '../../tools/fp-tools'
 
-export const insertTitreEtapeEntrepriseDocument = async (pool: Pool, params: { titre_etape_id: EtapeId; entreprise_document_id: EntrepriseDocumentId }): Promise<void[]> =>
-  dbQueryAndValidate(insertTitreEtapeEntrepriseDocumentInternal, params, pool, z.void())
+export const insertTitreEtapeEntrepriseDocuments = (
+  pool: Pool,
+  titre_etape_id: EtapeId,
+  entreprise_documents: Pick<EntrepriseDocument, 'id'>[]
+): Effect.Effect<true, CaminoError<EffectDbQueryAndValidateErrors>> =>
+  Effect.Do.pipe(
+    Effect.flatMap(() => Effect.forEach(entreprise_documents, entreprise_document => insertTitreEtapeEntrepriseDocument(pool, { titre_etape_id, entreprise_document_id: entreprise_document.id }))),
+    Effect.map(() => true as const)
+  )
+
+export const insertTitreEtapeEntrepriseDocument = (
+  pool: Pool,
+  params: { titre_etape_id: EtapeId; entreprise_document_id: EntrepriseDocumentId }
+): Effect.Effect<void[], CaminoError<EffectDbQueryAndValidateErrors>> => effectDbQueryAndValidate(insertTitreEtapeEntrepriseDocumentInternal, params, pool, z.void())
 
 const insertTitreEtapeEntrepriseDocumentInternal = sql<Redefine<IInsertTitreEtapeEntrepriseDocumentInternalQuery, { titre_etape_id: EtapeId; entreprise_document_id: EntrepriseDocumentId }, void>>`
 insert into titres_etapes_entreprises_documents (titre_etape_id, entreprise_document_id)
@@ -149,7 +162,7 @@ export const updateEtapeDocuments = async (pool: Pool, _user: User, titre_etape_
     }
   }
   if (isNotNullNorUndefinedNorEmpty(toInsertDocuments)) {
-    await insertEtapeDocuments(pool, titre_etape_id, toInsertDocuments)
+    await callAndExit(insertEtapeDocuments(pool, titre_etape_id, toInsertDocuments))
   }
   if (isNotNullNorUndefinedNorEmpty(toDeleteDocuments)) {
     await dbQueryAndValidate(deleteEtapeDocumentsDb, { ids: toDeleteDocuments.map(({ id }) => id) }, pool, z.void())
@@ -178,12 +191,25 @@ delete from etapes_documents
 where id in $$ ids !
 `
 
-export const insertEtapeDocuments = async (pool: Pool, titre_etape_id: EtapeId, etapeDocuments: TempEtapeDocument[]): Promise<void> => {
-  for (const document of etapeDocuments) {
-    const id = newEtapeDocumentId(getCurrent(), document.etape_document_type_id)
-    const largeobject_id = await createLargeObject(pool, document.temp_document_name)
-    await dbQueryAndValidate(insertEtapeDocumentDb, { ...document, etape_id: titre_etape_id, id, largeobject_id }, pool, z.void())
-  }
+const largeObjectIdError = 'impossible de récupérer un large object id' as const
+export type InsertEtapeDocumentsErrors = EffectDbQueryAndValidateErrors | typeof largeObjectIdError
+export const insertEtapeDocuments = (pool: Pool, titre_etape_id: EtapeId, etapeDocuments: DeepReadonly<TempEtapeDocument[]>): Effect.Effect<true, CaminoError<InsertEtapeDocumentsErrors>> => {
+  return Effect.Do.pipe(
+    Effect.map(() => etapeDocuments),
+    Effect.flatMap(documents =>
+      Effect.forEach(documents, document => {
+        const id = newEtapeDocumentId(getCurrent(), document.etape_document_type_id)
+        return pipe(
+          Effect.tryPromise({
+            try: () => createLargeObject(pool, document.temp_document_name),
+            catch: () => ({ message: largeObjectIdError }),
+          }),
+          Effect.flatMap(largeobject_id => effectDbQueryAndValidate(insertEtapeDocumentDb, { ...document, etape_id: titre_etape_id, id, largeobject_id }, pool, z.void()))
+        )
+      })
+    ),
+    Effect.map(() => true)
+  )
 }
 
 const insertEtapeDocumentDb = sql<
@@ -192,14 +218,25 @@ const insertEtapeDocumentDb = sql<
 insert into etapes_documents (id, etape_document_type_id, etape_id, description, public_lecture, entreprises_lecture, largeobject_id)
     values ($ id !, $ etape_document_type_id !, $ etape_id !, $ description, $ public_lecture !, $ entreprises_lecture !, $ largeobject_id !)
 `
+const impossibleDeCreerUnLargeObjectId = 'impossible de créer un large object id' as const
+export type InsertEtapeAvisErrors = EffectDbQueryAndValidateErrors | typeof impossibleDeCreerUnLargeObjectId
+export const insertEtapeAvis = (pool: Pool, titre_etape_id: EtapeId, etapeAvis: DeepReadonly<TempEtapeAvis[]>): Effect.Effect<true, CaminoError<InsertEtapeAvisErrors>> =>
+  Effect.Do.pipe(
+    Effect.flatMap(() =>
+      Effect.forEach(etapeAvis, avis => {
+        const id = newEtapeAvisId(avis.avis_type_id)
+        return pipe(
+          Effect.tryPromise({
+            try: async () => (isNotNullNorUndefined(avis.temp_document_name) ? createLargeObject(pool, avis.temp_document_name) : null),
+            catch: e => ({ message: impossibleDeCreerUnLargeObjectId, extra: e }),
+          }),
+          Effect.flatMap(largeobject_id => insertEtapeAvisWithLargeObjectId(pool, titre_etape_id, avis, id, largeobject_id))
+        )
+      })
+    ),
+    Effect.map(() => true as const)
+  )
 
-export const insertEtapeAvis = async (pool: Pool, titre_etape_id: EtapeId, etapeAvis: TempEtapeAvis[]): Promise<void> => {
-  for (const avis of etapeAvis) {
-    const id = newEtapeAvisId(avis.avis_type_id)
-    const largeobject_id = isNotNullNorUndefined(avis.temp_document_name) ? await createLargeObject(pool, avis.temp_document_name) : null
-    await insertEtapeAvisWithLargeObjectId(pool, titre_etape_id, avis, id, largeobject_id)
-  }
-}
 const updateEtapeAvisFileDb = sql<Redefine<IUpdateEtapeAvisFileDbQuery, { id: EtapeAvisId; largeobject_id: LargeObjectId }, void>>`
 update
     etape_avis
@@ -258,14 +295,23 @@ export const updateEtapeAvis = async (
     }
   }
   if (isNotNullNorUndefinedNorEmpty(toInsertAvis)) {
-    await insertEtapeAvis(pool, titre_etape_id, toInsertAvis)
+    await callAndExit(insertEtapeAvis(pool, titre_etape_id, toInsertAvis))
   }
 }
 
 // VISIBLE FOR TEST
-export const insertEtapeAvisWithLargeObjectId = async (pool: Pool, titre_etape_id: EtapeId, avis: TempEtapeAvis, id: EtapeAvisId, largeobject_id: LargeObjectId | null): Promise<void[]> => {
-  return dbQueryAndValidate(insertEtapeAvisDb, { ...avis, etape_id: titre_etape_id, id, largeobject_id }, pool, z.void())
-}
+export const insertEtapeAvisWithLargeObjectId = (
+  pool: Pool,
+  titre_etape_id: EtapeId,
+  avis: TempEtapeAvis,
+  id: EtapeAvisId,
+  largeobject_id: LargeObjectId | null
+): Effect.Effect<true, CaminoError<EffectDbQueryAndValidateErrors>> =>
+  pipe(
+    effectDbQueryAndValidate(insertEtapeAvisDb, { ...avis, etape_id: titre_etape_id, id, largeobject_id }, pool, z.void()),
+    Effect.map(() => true)
+  )
+
 const insertEtapeAvisDb = sql<Redefine<IInsertEtapeAvisDbQuery, { etape_id: EtapeId; id: EtapeAvisId; largeobject_id: LargeObjectId | null } & Omit<TempEtapeAvis, 'temp_document_name'>, void>>`
 insert into etape_avis (id, avis_type_id, etape_id, description, avis_statut_id, date, avis_visibility_id, largeobject_id)
     values ($ id !, $ avis_type_id !, $ etape_id !, $ description !, $ avis_statut_id !, $ date !, $ avis_visibility_id !, $ largeobject_id !)

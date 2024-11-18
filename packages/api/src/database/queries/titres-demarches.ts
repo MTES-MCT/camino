@@ -168,7 +168,7 @@ export const titresDemarchesCount = async (
   } = {},
   { fields }: { fields?: FieldsDemarche },
   user: User
-) => {
+): Promise<number> => {
   const q = titresDemarchesQueryBuild({ fields }, user)
 
   titresDemarchesFiltersQueryModify(
@@ -245,7 +245,7 @@ export const titresDemarchesGet = async (
   } = {},
   { fields }: { fields?: FieldsDemarche },
   user: User
-) => {
+): Promise<ITitreDemarche[]> => {
   const q = titresDemarchesQueryBuild({ fields }, user)
 
   titresDemarchesFiltersQueryModify(
@@ -303,7 +303,7 @@ export const titresDemarchesGet = async (
   return q
 }
 
-export const titreDemarcheGet = async (titreDemarcheId: string, { fields }: { fields?: FieldsDemarche }, user: DeepReadonly<User>) => {
+export const titreDemarcheGet = async (titreDemarcheId: string, { fields }: { fields?: FieldsDemarche }, user: DeepReadonly<User>): Promise<ITitreDemarche | undefined> => {
   const q = titresDemarchesQueryBuild({ fields }, user)
 
   return q
@@ -325,7 +325,7 @@ export const titreDemarcheUpdate = async (id: DemarcheId, titreDemarche: Partial
   return TitresDemarches.query().patchAndFetchById(id, { ...titreDemarche, id })
 }
 
-export const titreDemarcheArchive = async (id: string) => {
+export const titreDemarcheArchive = async (id: string): Promise<void> => {
   // archive la démarche
   await TitresDemarches.query().patch({ archive: true }).where('id', id)
 

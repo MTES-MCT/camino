@@ -202,7 +202,7 @@ const restRouteImplementations: Readonly<{ [key in CaminoRestRoute]: Transform<k
   '/rest/demarches/:demarcheId/geojson': { getCall: getPerimetreInfos, ...CaminoRestRoutes['/rest/demarches/:demarcheId/geojson'] },
   '/rest/etapes/:etapeId/geojson': { getCall: getPerimetreInfos, ...CaminoRestRoutes['/rest/etapes/:etapeId/geojson'] },
   '/rest/etapes/:etapeIdOrSlug': { deleteCall: deleteEtape, getCall: getEtape, ...CaminoRestRoutes['/rest/etapes/:etapeIdOrSlug'] },
-  '/rest/etapes': { postCall: createEtape, putCall: updateEtape, ...CaminoRestRoutes['/rest/etapes'] },
+  '/rest/etapes': { newPostCall: createEtape, putCall: updateEtape, ...CaminoRestRoutes['/rest/etapes'] },
   '/rest/etapes/:etapeId/depot': { putCall: deposeEtape, ...CaminoRestRoutes['/rest/etapes/:etapeId/depot'] },
   '/rest/etapes/:etapeId/entrepriseDocuments': { getCall: getEtapeEntrepriseDocuments, ...CaminoRestRoutes['/rest/etapes/:etapeId/entrepriseDocuments'] },
   '/rest/etapes/:etapeId/etapeDocuments': { getCall: getEtapeDocuments, ...CaminoRestRoutes['/rest/etapes/:etapeId/etapeDocuments'] },
@@ -324,7 +324,14 @@ export const restWithPool = (dbPool: Pool): Router => {
               // TODO 2024-06-26 ici, si on ne met pas le body et params à any, on se retrouve avec une typescript union hell qui fait tout planter
               Effect.bind<'result', { body: any; user: UserNotNull; params: any }, DeepReadonly<z.infer<(typeof maRoute)['newPost']['output']>>, CaminoApiError<string>, never>(
                 'result',
-                ({ user, body, params }) => maRoute.newPostCall({ pool: dbPool, user, body, params })
+                ({ user, body, params }) =>
+                  maRoute.newPostCall({
+                    pool: dbPool,
+                    user,
+                    // @ts-ignore il est perdu à cause d'un typeId qui est des fois un etapeTypeId, des fois un titreTypeId
+                    body,
+                    params,
+                  })
               ),
               Effect.bind('parsedResult', ({ result }) =>
                 pipe(

@@ -34,7 +34,7 @@ type InputPresentRequired = { visibility: 'present'; required: true; message: st
 export type InputPresentOptional = { visibility: 'present'; required: false }
 export type InputPresence = InputAbsent | InputPresentRequired | InputPresentOptional
 
-export const canEditAmodiataires = (titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId, user: User): InputPresence => {
+export const canEditAmodiataires = (titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId, user: DeepReadonly<User>): InputPresence => {
   if (titreTypeId === TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX || titreTypeId === TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX) {
     return { visibility: 'absent', message: `une autorisation ${titreTypeId === 'arm' ? 'de recherche' : "d'exploitation"} ne peut pas inclure d'amodiataires` }
   }
@@ -69,7 +69,7 @@ export const canEditAmodiataires = (titreTypeId: TitreTypeId, demarcheTypeId: De
 const demarchesSansDatesNiDureePourLesEtapes = [DEMARCHES_TYPES_IDS.DeplacementDePerimetre, DEMARCHES_TYPES_IDS.Mutation, DEMARCHES_TYPES_IDS.ExtensionDePerimetre] as const
 
 // Attention les champs dates ne sont jamais obligatoires, si ils le deviennent il faudra faire des modifs dans la validation et dans l'ui
-export const canEditDates = (_titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId, etapeTypeId: EtapeTypeId, user: User): InputAbsent | InputPresentOptional => {
+export const canEditDates = (_titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId, etapeTypeId: EtapeTypeId, user: DeepReadonly<User>): InputAbsent | InputPresentOptional => {
   if (demarchesSansDatesNiDureePourLesEtapes.includes(demarcheTypeId)) {
     return { visibility: 'absent', message: `une démarche ${DemarchesTypes[demarcheTypeId].nom} ne peut pas inclure de date` }
   }
@@ -85,7 +85,7 @@ export const canEditDates = (_titreTypeId: TitreTypeId, demarcheTypeId: Demarche
   return { visibility: 'absent', message: 'droits insuffisants pour éditer les dates' }
 }
 
-export const canEditTitulaires = (_titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId, user: User): InputPresence => {
+export const canEditTitulaires = (_titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId, user: DeepReadonly<User>): InputPresence => {
   if (
     [
       DEMARCHES_TYPES_IDS.Fusion,
@@ -146,7 +146,7 @@ export const dureeIsValide = (
   return { valid: true }
 }
 
-export const canEditDuree = (_titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId, _user: User): InputPresence => {
+export const canEditDuree = (_titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId, _user: DeepReadonly<User>): InputPresence => {
   // par exemple, ne peut pas ajouter de durée à la démarche déplacement de périmètre
   if (demarchesSansDatesNiDureePourLesEtapes.includes(demarcheTypeId)) {
     return { visibility: 'absent', message: `une démarche ${DemarchesTypes[demarcheTypeId].nom} ne peut pas inclure de durée` }
@@ -319,7 +319,7 @@ export const isEtapeComplete = (
   sdomZones: IsEtapeCompleteSdomZones,
   communes: IsEtapeCompleteCommunes,
   etapeAvis: IsEtapeCompleteEtapeAvis,
-  user: User
+  user: DeepReadonly<User>
 ): { valid: true } | { valid: false; errors: NonEmptyArray<string> } => {
   const isCompleteChecks = [
     dateTypeStepIsComplete(etape, user),

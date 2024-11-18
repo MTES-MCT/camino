@@ -1,6 +1,8 @@
 import { PureFormSaveBtn } from './pure-form-save-btn'
 import { Meta, StoryFn } from '@storybook/vue3'
 import { action } from '@storybook/addon-actions'
+import { EtapeId } from 'camino-common/src/etape'
+import { CaminoError } from 'camino-common/src/zod-tools'
 
 const meta: Meta = {
   title: 'Components/Etape/FormSaveBtn',
@@ -13,10 +15,10 @@ const onSaveAction = action('onSave')
 const onDeposeAction = action('onDepose')
 
 const onSave = () => {
-  return new Promise<void>(resolve =>
+  return new Promise<EtapeId | null | CaminoError<string>>(resolve =>
     setTimeout(() => {
       onSaveAction()
-      resolve(undefined)
+      resolve(null)
     }, 1000)
   )
 }

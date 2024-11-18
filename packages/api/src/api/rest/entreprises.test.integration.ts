@@ -22,6 +22,7 @@ import type { Knex } from 'knex'
 import { ETAPE_IS_NOT_BROUILLON } from 'camino-common/src/etape'
 import { etapeCreate } from './rest-test-utils'
 import { insertTitreGraph } from '../../../tests/integration-test-helper'
+import { callAndExit } from '../../tools/fp-tools'
 console.info = vi.fn()
 console.warn = vi.fn()
 console.error = vi.fn()
@@ -361,7 +362,7 @@ describe('getEntrepriseDocument', () => {
     expect(secondDocumentCall.statusCode).toBe(HTTP_STATUS.OK)
 
     const entrepriseDocumentId = entrepriseDocumentIdValidator.parse(documentCall.body)
-    await insertTitreEtapeEntrepriseDocument(dbPool, { entreprise_document_id: entrepriseDocumentId, titre_etape_id: titreEtape.id })
+    await callAndExit(insertTitreEtapeEntrepriseDocument(dbPool, { entreprise_document_id: entrepriseDocumentId, titre_etape_id: titreEtape.id }))
 
     const tested = await restCall(dbPool, '/rest/entreprises/:entrepriseId/documents', { entrepriseId }, { ...testBlankUser, role: 'super' })
     expect(tested.statusCode).toBe(HTTP_STATUS.OK)

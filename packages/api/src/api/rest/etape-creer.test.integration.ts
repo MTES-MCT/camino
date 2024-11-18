@@ -1,5 +1,5 @@
 import { dbManager } from '../../../tests/db-manager'
-import { restPostCall } from '../../../tests/_utils/index'
+import { restNewPostCall } from '../../../tests/_utils/index'
 import Titres from '../../database/models/titres'
 import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations'
 import { userSuper } from '../../database/user-super'
@@ -97,24 +97,31 @@ const blankEtapeProps: Pick<
 } as const
 describe('etapeCreer', () => {
   test('ne peut pas créer une étape (utilisateur non authentifié)', async () => {
-    const result = await restPostCall(dbPool, '/rest/etapes', {}, undefined, { typeId: '', statutId: '', titreDemarcheId: '', date: '' } as unknown as RestEtapeCreation)
+    const result = await restNewPostCall(dbPool, '/rest/etapes', {}, undefined, { typeId: '', statutId: '', titreDemarcheId: '', date: '' } as unknown as RestEtapeCreation)
 
     expect(result.statusCode).toBe(HTTP_STATUS.FORBIDDEN)
   })
   test('ne peut pas créer une étape (utilisateur administration)', async () => {
-    const result = await restPostCall(dbPool, '/rest/etapes', {}, { role: 'editeur', administrationId: 'ope-onf-973-01' }, {
-      typeId: '',
-      statutId: '',
+    const result = await restNewPostCall(dbPool, '/rest/etapes', {}, { role: 'editeur', administrationId: 'ope-onf-973-01' }, {
+      typeId: 'mfr',
+      statutId: 'fai',
       titreDemarcheId: '',
       date: '',
     } as unknown as RestEtapeCreation)
 
     expect(result.statusCode).toBe(HTTP_STATUS.BAD_REQUEST)
-    expect(result.body).toStrictEqual({ errorMessage: "l'étape n'est pas correctement formatée" })
+    expect(result.body).toMatchInlineSnapshot(`
+      {
+        "detail": "La valeur du champ "date" est invalide.",
+        "message": "Problème de validation de données",
+        "status": 400,
+        "zodErrorReadableMessage": "Validation error: Invalid at "date"; date invalide at "date"; Required at "duree"; Required at "dateDebut"; Required at "dateFin"; Required at "substances"; Required at "geojson4326Perimetre"; Required at "geojson4326Points"; Required at "geojsonOriginePoints"; Required at "geojsonOriginePerimetre"; Required at "geojsonOrigineForages"; Required at "geojsonOrigineGeoSystemeId"; Required at "titulaireIds"; Required at "amodiataireIds"; Required at "note"; Required at "contenu"; Required at "heritageProps"; Required at "heritageContenu"; Required at "etapeDocuments"; Required at "entrepriseDocumentIds"; Required at "etapeAvis"",
+      }
+    `)
   })
 
   test('ne peut pas créer une étape sur une démarche inexistante (utilisateur admin)', async () => {
-    const res = await restPostCall(
+    const res = await restNewPostCall(
       dbPool,
       '/rest/etapes',
       {},
@@ -131,7 +138,9 @@ describe('etapeCreer', () => {
     expect(res.statusCode).toBe(HTTP_STATUS.NOT_FOUND)
     expect(res.body).toMatchInlineSnapshot(`
       {
-        "errorMessage": "la démarche n'existe pas",
+        "extra": "L'utilisateur n'a pas accès à la démarche",
+        "message": "la démarche n'existe pas",
+        "status": 404,
       }
     `)
   })
@@ -139,7 +148,7 @@ describe('etapeCreer', () => {
   test('ne peut pas créer une étape incohérente (asc avec statut fav) (utilisateur admin)', async () => {
     const titreDemarcheId = await demarcheCreate()
 
-    const res = await restPostCall(
+    const res = await restNewPostCall(
       dbPool,
       '/rest/etapes',
       {},
@@ -159,7 +168,9 @@ describe('etapeCreer', () => {
     expect(res.statusCode).toBe(HTTP_STATUS.BAD_REQUEST)
     expect(res.body).toMatchInlineSnapshot(`
       {
-        "errorMessage": "les étapes de la démarche TDE ne sont pas valides",
+        "extra": "les étapes de la démarche TDE ne sont pas valides",
+        "message": "l'étape n'est pas valide",
+        "status": 400,
       }
     `)
   })
@@ -167,7 +178,7 @@ describe('etapeCreer', () => {
   test('peut créer une étape asc avec un statut fai (utilisateur super)', async () => {
     const titreDemarcheId = await demarcheCreate()
 
-    const res = await restPostCall(dbPool, '/rest/etapes', {}, userSuper, {
+    const res = await restNewPostCall(dbPool, '/rest/etapes', {}, userSuper, {
       typeId: 'asc',
       statutId: 'fai',
       titreDemarcheId,
@@ -182,7 +193,7 @@ describe('etapeCreer', () => {
     const titreDemarcheId = await demarcheCreate()
 
     // une demande antérieure au 01/01/2018 est obligatoire pour pouvoir créer une MEN
-    await restPostCall(
+    await restNewPostCall(
       dbPool,
       '/rest/etapes',
       {},
@@ -198,7 +209,7 @@ describe('etapeCreer', () => {
         ...blankEtapeProps,
       }
     )
-    const res = await restPostCall(
+    const res = await restNewPostCall(
       dbPool,
       '/rest/etapes',
       {},
@@ -220,7 +231,7 @@ describe('etapeCreer', () => {
   test('ne peut pas créer une étape EDE sur un titre ARM en tant que DGTM (utilisateur admin)', async () => {
     const titreDemarcheId = await demarcheCreate()
 
-    const res = await restPostCall(
+    const res = await restNewPostCall(
       dbPool,
       '/rest/etapes',
       {},
@@ -246,7 +257,9 @@ describe('etapeCreer', () => {
     expect(res.statusCode).toBe(HTTP_STATUS.BAD_REQUEST)
     expect(res.body).toMatchInlineSnapshot(`
       {
-        "errorMessage": "les étapes de la démarche TDE ne sont pas valides",
+        "extra": "les étapes de la démarche TDE ne sont pas valides",
+        "message": "l'étape n'est pas valide",
+        "status": 400,
       }
     `)
   })
@@ -254,7 +267,7 @@ describe('etapeCreer', () => {
   test('ne peut pas créer une étape avec des titulaires inexistants', async () => {
     const titreDemarcheId = await demarcheCreate()
 
-    const res = await restPostCall(dbPool, '/rest/etapes', {}, userSuper, {
+    const res = await restNewPostCall(dbPool, '/rest/etapes', {}, userSuper, {
       typeId: 'ede',
       statutId: 'fav',
       titreDemarcheId,
@@ -272,14 +285,15 @@ describe('etapeCreer', () => {
     expect(res.statusCode).toBe(HTTP_STATUS.BAD_REQUEST)
     expect(res.body).toMatchInlineSnapshot(`
       {
-        "errorMessage": "certaines entreprises n'existent pas",
+        "message": "certaines entreprises n'existent pas",
+        "status": 400,
       }
     `)
   })
 
   test('peut créer une étape mfr en brouillon avec un champ obligatoire manquant (utilisateur super)', async () => {
     const titreDemarcheId = await demarcheCreate()
-    const res = await restPostCall(dbPool, '/rest/etapes', {}, userSuper, {
+    const res = await restNewPostCall(dbPool, '/rest/etapes', {}, userSuper, {
       typeId: 'mfr',
       statutId: 'fai',
       titreDemarcheId,
