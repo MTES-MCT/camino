@@ -3,6 +3,7 @@ import { PrmOctMachine } from './oct.machine'
 import { EtapesTypesEtapesStatuts as ETES } from 'camino-common/src/static/etapesTypesEtapesStatuts'
 import { describe, expect, test } from 'vitest'
 import { PAYS_IDS } from 'camino-common/src/static/pays'
+import { km2Validator } from 'camino-common/src/number'
 const etapesProd = require('./2019-10-31-oct.cas.json') // eslint-disable-line
 
 describe('vérifie l’arbre d’octroi de PRM', () => {
@@ -57,7 +58,7 @@ describe('vérifie l’arbre d’octroi de PRM', () => {
 
   test('peut créer une demande d’octroi de PRM en Guyane', () => {
     const etapes = [
-      { ...ETES.demande.FAIT, paysId: PAYS_IDS['Département de la Guyane'], surface: 200 },
+      { ...ETES.demande.FAIT, paysId: PAYS_IDS['Département de la Guyane'], surface: km2Validator.parse(200) },
       ETES.enregistrementDeLaDemande.FAIT,
       ETES.saisineDuPrefet.FAIT,
       ETES.recevabiliteDeLaDemande.FAVORABLE,
@@ -74,7 +75,7 @@ describe('vérifie l’arbre d’octroi de PRM', () => {
 
   test('peut créer une demande d’octroi de PRM en Guyane sans avis du maire', () => {
     const etapes = [
-      { ...ETES.demande.FAIT, paysId: PAYS_IDS['Département de la Guyane'], surface: 14 },
+      { ...ETES.demande.FAIT, paysId: PAYS_IDS['Département de la Guyane'], surface: km2Validator.parse(14) },
       ETES.enregistrementDeLaDemande.FAIT,
       ETES.saisineDuPrefet.FAIT,
       ETES.demandeDeComplements_RecevabiliteDeLaDemande_.FAIT,

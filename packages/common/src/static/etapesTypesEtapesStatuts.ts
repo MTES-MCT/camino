@@ -238,6 +238,7 @@ export const EtapesTypesEtapesStatuts = {
   reponseDuDemandeur: { FAIT: { etapeTypeId: 'rno', etapeStatutId: 'fai' } },
   demandeDeModificationAES: { FAIT: { etapeStatutId: 'fai', etapeTypeId: 'dma' } },
   demandeDeConsentement: { FAIT: { etapeTypeId: 'ddc', etapeStatutId: 'fai' } },
+  informationDuPrefetEtDesCollectivites: { FAIT: { etapeTypeId: 'ipc', etapeStatutId: 'fai' } },
 } as const satisfies { [key in keyof typeof ETAPES_TYPES]: { [other in keyof typeof ETAPES_STATUTS]?: EtapeTypeEtapeStatut<(typeof ETAPES_TYPES)[key], (typeof ETAPES_STATUTS)[other]> } }
 
 type GetStuff<T> = T extends { [key in keyof typeof ETAPES_TYPES]: { [other in keyof typeof ETAPES_STATUTS]?: infer A } } ? A : never

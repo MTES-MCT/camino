@@ -12,7 +12,7 @@ import { communeIdValidator } from 'camino-common/src/static/communes'
 import { z } from 'zod'
 import { ETAPE_IS_NOT_BROUILLON, etapeBrouillonValidator, etapeIdValidator } from 'camino-common/src/etape'
 import { DeepReadonly, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
-import { km2Validator } from 'camino-common/src/number'
+import { KM2, km2Validator } from 'camino-common/src/number'
 import { concurrenceValidator, Consentement, DemarcheVisibilite } from 'camino-common/src/etape-form'
 import { demarcheIdValidator } from 'camino-common/src/demarche'
 
@@ -24,7 +24,7 @@ export interface Etape {
   date: CaminoDate
   contenu?: IContenu
   paysId?: PaysId
-  surface?: number
+  surface?: KM2
   concurrence?: Concurrence
   hasTitreFrom?: boolean
   consentement?: Consentement

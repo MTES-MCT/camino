@@ -7,7 +7,7 @@ import { TITRES_TYPES_IDS, TitreTypeId, getTitreTypeType } from 'camino-common/s
 import { DEMARCHES_TYPES_IDS, DemarcheTypeId, isDemarcheTypeProlongations } from 'camino-common/src/static/demarchesTypes'
 import { TITRES_TYPES_TYPES_IDS } from 'camino-common/src/static/titresTypesTypes'
 import { ETAPES_STATUTS, EtapeStatutId } from 'camino-common/src/static/etapesStatuts'
-import { KM2, km2Validator } from 'camino-common/src/number'
+import { hectareToKm2, hectareValidator, KM2, km2Validator } from 'camino-common/src/number'
 import { CaminoDate } from 'camino-common/src/date'
 import { isNullOrUndefined } from 'camino-common/src/typescript-tools'
 import { canHaveMiseEnConcurrence } from 'camino-common/src/demarche'
@@ -15,13 +15,11 @@ import { Consentement, DemarcheVisibilite } from 'camino-common/src/etape-form'
 import { PAYS_IDS, PaysId } from 'camino-common/src/static/pays'
 
 type ParticipationDuPublic = {
-  surface: KM2
   status: EtapeStatutId
   type: 'OUVRIR_PARTICIPATION_DU_PUBLIC'
 }
 
 type EnqueteDuPublic = {
-  surface: KM2
   status: EtapeStatutId
   type: 'OUVRIR_ENQUETE_PUBLIQUE'
 }
@@ -36,6 +34,7 @@ type FaireDemande = {
   consentement: Consentement
   hasTitreFrom: boolean
   paysId: PaysId
+  surface: KM2
   type: 'FAIRE_DEMANDE'
 }
 type ProcedureSpecifiqueXStateEvent =
@@ -74,6 +73,7 @@ type ProcedureSpecifiqueXStateEvent =
   | { type: 'DEMANDER_INFORMATION' }
   | { type: 'RECEVOIR_INFORMATION' }
   | { type: 'FAIRE_DEMANDE_DE_CONSENTEMENT' }
+  | { type: 'RENDRE_INFORMATION_DU_PREFET_ET_DES_COLLECTIVITES' }
 
 type Event = ProcedureSpecifiqueXStateEvent['type']
 
@@ -113,6 +113,7 @@ const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
   DEMANDER_INFORMATION: { db: ETES.demandeDinformations, mainStep: false },
   RECEVOIR_INFORMATION: { db: ETES.receptionDinformation, mainStep: false },
   FAIRE_DEMANDE_DE_CONSENTEMENT: { db: ETES.demandeDeConsentement, mainStep: true },
+  RENDRE_INFORMATION_DU_PREFET_ET_DES_COLLECTIVITES: { db: ETES.informationDuPrefetEtDesCollectivites, mainStep: true },
 }
 
 // basé sur https://drive.google.com/drive/u/1/folders/1U_in35zSb837xCp_fp31I0vOmb36QguL
@@ -136,7 +137,10 @@ export class ProcedureSpecifiqueMachine extends CaminoMachine<ProcedureSpecifiqu
         if (isNullOrUndefined(etape.paysId)) {
           throw new Error("L'attribut paysId est obligatoire pour faire la demande")
         }
-        return { type: eventFromEntry, concurrence: etape.concurrence, consentement: etape.consentement, hasTitreFrom: etape.hasTitreFrom, paysId: etape.paysId }
+        if (isNullOrUndefined(etape.surface)) {
+          throw new Error("L'attribut surface est obligatoire pour faire la demande")
+        }
+        return { type: eventFromEntry, concurrence: etape.concurrence, consentement: etape.consentement, hasTitreFrom: etape.hasTitreFrom, paysId: etape.paysId, surface: etape.surface }
       }
       default:
         return super.eventFromEntry(eventFromEntry, etape)
@@ -147,18 +151,29 @@ export class ProcedureSpecifiqueMachine extends CaminoMachine<ProcedureSpecifiqu
     switch (event) {
       case 'FAIRE_DEMANDE':
         return [
-          { type: event, concurrence: { amIFirst: false, demarcheConcurrenteVisibilite: 'publique' }, consentement: 'non-applicable', hasTitreFrom: false, paysId: 'FR' },
-          { type: event, concurrence: { amIFirst: false, demarcheConcurrenteVisibilite: 'publique' }, consentement: 'non-applicable', hasTitreFrom: false, paysId: 'GF' },
+          {
+            type: event,
+            concurrence: { amIFirst: false, demarcheConcurrenteVisibilite: 'publique' },
+            consentement: 'non-applicable',
+            hasTitreFrom: false,
+            paysId: 'FR',
+            surface: km2Validator.parse(12),
+          },
+          {
+            type: event,
+            concurrence: { amIFirst: false, demarcheConcurrenteVisibilite: 'publique' },
+            consentement: 'non-applicable',
+            hasTitreFrom: false,
+            paysId: 'GF',
+            surface: km2Validator.parse(12),
+          },
         ]
       case 'OUVRIR_ENQUETE_PUBLIQUE':
       case 'OUVRIR_PARTICIPATION_DU_PUBLIC':
         return [
-          { type: event, status: ETAPES_STATUTS.PROGRAMME, surface: km2Validator.parse(0.24) },
-          { type: event, status: ETAPES_STATUTS.EN_COURS, surface: km2Validator.parse(0.24) },
-          { type: event, status: ETAPES_STATUTS.TERMINE, surface: km2Validator.parse(0.24) },
-          { type: event, status: ETAPES_STATUTS.PROGRAMME, surface: km2Validator.parse(0.26) },
-          { type: event, status: ETAPES_STATUTS.EN_COURS, surface: km2Validator.parse(0.26) },
-          { type: event, status: ETAPES_STATUTS.TERMINE, surface: km2Validator.parse(0.26) },
+          { type: event, status: ETAPES_STATUTS.PROGRAMME },
+          { type: event, status: ETAPES_STATUTS.EN_COURS },
+          { type: event, status: ETAPES_STATUTS.TERMINE },
         ]
       case 'FAIRE_MISE_EN_CONCURRENCE':
         return [
@@ -177,13 +192,16 @@ interface ProcedureSpecifiqueContext extends CaminoCommonContext {
   hasTitreFrom: 'inconnu' | boolean
   demandeInformationEnCours: boolean
   paysId: 'inconnu' | PaysId
+  surface: 'inconnu' | KM2
   consentement: 'inconnu' | Consentement
 }
+const LIMITE_SURFACE_AXM = hectareValidator.parse(25)
 const defaultDemarcheStatut = DemarchesStatutsIds.EnConstruction
 const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId) =>
   setup({
     types: {} as { context: ProcedureSpecifiqueContext; events: ProcedureSpecifiqueXStateEvent },
     guards: {
+      isARM: () => TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX === titreTypeId,
       isAxm: () => TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX === titreTypeId,
       isPerOuConcession: () => [TITRES_TYPES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES, TITRES_TYPES_TYPES_IDS.CONCESSION].includes(getTitreTypeType(titreTypeId)),
       isPerOuConcessionGranulatsMarins: () => [TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_GRANULATS_MARINS, TITRES_TYPES_IDS.CONCESSION_GRANULATS_MARINS].includes(titreTypeId),
@@ -209,8 +227,7 @@ const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: De
         }
         return context.paysId !== PAYS_IDS['République Française']
       },
-      // FIXMACHINE à vérifier et à tester
-      isEnquetePubliqueRequired: ({ event }) =>
+      isEnquetePubliqueRequired: ({ context }) =>
         ((DEMARCHES_TYPES_IDS.Octroi === demarcheTypeId || isDemarcheTypeProlongations(demarcheTypeId)) &&
           [
             TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_GRANULATS_MARINS,
@@ -220,15 +237,16 @@ const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: De
             TITRES_TYPES_IDS.CONCESSION_SOUTERRAIN,
             TITRES_TYPES_IDS.CONCESSION_GEOTHERMIE,
           ].includes(titreTypeId)) ||
-        (titreTypeId === TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX && (event.type === 'OUVRIR_PARTICIPATION_DU_PUBLIC' || event.type === 'OUVRIR_ENQUETE_PUBLIQUE') && event.surface > 0.25),
-      isEnquetePubliquePossible: ({ event }) =>
-        titreTypeId === TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX && (event.type === 'OUVRIR_PARTICIPATION_DU_PUBLIC' || event.type === 'OUVRIR_ENQUETE_PUBLIQUE') && event.surface <= 0.25,
+        (titreTypeId === TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX && context.surface !== 'inconnu' && context.surface > hectareToKm2(LIMITE_SURFACE_AXM)),
+      isEnquetePubliquePossible: ({ context }) =>
+        titreTypeId === TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX && context.surface !== 'inconnu' && context.surface <= hectareToKm2(LIMITE_SURFACE_AXM),
       ...globalGuards,
     },
   }).createMachine({
     id: 'ProcedureSpecifique',
     initial: 'demandeAFaire',
     context: {
+      surface: 'inconnu',
       demarcheStatut: defaultDemarcheStatut,
       visibilite: 'confidentielle',
       concurrence: 'inconnu',
@@ -272,6 +290,7 @@ const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: De
               hasTitreFrom: ({ event }) => event.hasTitreFrom,
               paysId: ({ event }) => event.paysId,
               consentement: ({ event }) => event.consentement,
+              surface: ({ event }) => event.surface,
             }),
           },
         },
@@ -281,42 +300,62 @@ const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: De
           ENREGISTRER_DEMANDE: 'recevabiliteOuInformationDuPrefetEtCollectivitesAFaire',
         },
       },
-
       recevabiliteOuInformationDuPrefetEtCollectivitesAFaire: {
-        on: {
-          // FIXMACHINE
-          // RENDRE_INFORMATION_DU_PREFET_ET_DES_COLLECTIVITES: {
-          //   target: 'recevabiliteOuInformationDuPrefetEtCollectivitesAFaire',
-          // guard: 'isPerOuConcession'
-          // },
-          FAIRE_RECEVABILITE_FAVORABLE: 'recevabiliteFavorableFaite',
-          FAIRE_RECEVABILITE_DEFAVORABLE: 'demandeDeComplementsAFaire',
-        },
-      },
-      demandeDeComplementsAFaire: {
-        on: {
-          FAIRE_DEMANDE_DE_COMPLEMENTS: 'reponseALaDemandeDeComplements',
-        },
-      },
-      // FIXMACHINE brouillonable
-      reponseALaDemandeDeComplements: {
-        on: {
-          RECEVOIR_COMPLEMENTS: 'recevabiliteOuIrrecevabiliteAFaire',
-        },
-      },
-      recevabiliteOuIrrecevabiliteAFaire: {
-        on: {
-          FAIRE_RECEVABILITE_FAVORABLE: 'recevabiliteFavorableFaite',
-          FAIRE_RECEVABILITE_DEFAVORABLE: 'demandeDeComplementsAFaire',
-          FAIRE_DECLARATION_IRRECEVABILITE: {
-            target: 'finDeMachine',
-            actions: assign({
-              demarcheStatut: DemarchesStatutsIds.Rejete,
-            }),
+        type: 'parallel',
+        states: {
+          recevabiliteAFaireMachine: {
+            initial: 'recevabiliteAFaire',
+            states: {
+              recevabiliteAFaire: {
+                on: {
+                  FAIRE_RECEVABILITE_FAVORABLE: 'recevabiliteFavorableFaite',
+                  FAIRE_RECEVABILITE_DEFAVORABLE: 'demandeDeComplementsAFaire',
+                },
+              },
+              demandeDeComplementsAFaire: {
+                on: {
+                  FAIRE_DEMANDE_DE_COMPLEMENTS: 'reponseALaDemandeDeComplements',
+                },
+              },
+              reponseALaDemandeDeComplements: {
+                on: {
+                  FAIRE_DECLARATION_IRRECEVABILITE: '#finDeMachineIrrecevable',
+                  RECEVOIR_COMPLEMENTS: 'recevabiliteOuIrrecevabiliteAFaire',
+                },
+              },
+              recevabiliteOuIrrecevabiliteAFaire: {
+                on: {
+                  FAIRE_RECEVABILITE_FAVORABLE: 'recevabiliteFavorableFaite',
+                  FAIRE_RECEVABILITE_DEFAVORABLE: 'demandeDeComplementsAFaire',
+                  FAIRE_DECLARATION_IRRECEVABILITE: '#finDeMachineIrrecevable',
+                },
+              },
+              recevabiliteFavorableFaite: {
+                type: 'final',
+              },
+            },
+          },
+          informationDuPrefetEtCollectivitesAFaireMachine: {
+            initial: 'informationDuPrefetEtCollectivitesAFaire',
+            states: {
+              informationDuPrefetEtCollectivitesAFaire: {
+                always: {
+                  target: 'fin',
+                  guard: not('isPerOuConcession'),
+                },
+                on: {
+                  RENDRE_INFORMATION_DU_PREFET_ET_DES_COLLECTIVITES: 'fin',
+                },
+              },
+              fin: {
+                type: 'final',
+              },
+            },
           },
         },
+        onDone: 'recevabiliteFavorableEtInformationDuPrefetEtDeCollectivitesFaite',
       },
-      recevabiliteFavorableFaite: {
+      recevabiliteFavorableEtInformationDuPrefetEtDeCollectivitesFaite: {
         type: 'parallel',
         states: {
           avisCGEouResultatMiseEnConcurrenceAFaireMachine: {
@@ -496,6 +535,10 @@ const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: De
             initial: 'participationOuEnquetePublicAFaire',
             states: {
               participationOuEnquetePublicAFaire: {
+                always: {
+                  guard: 'isARM',
+                  target: 'fin',
+                },
                 on: {
                   OUVRIR_ENQUETE_PUBLIQUE: [
                     {
@@ -637,10 +680,14 @@ const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: De
 
       notificationAuDemandeurApresDecisionRejetAFaire: {
         on: {
-          NOTIFIER_DEMANDEUR: {
-            target: 'finDeMachine',
-            actions: assign({ demarcheStatut: DemarchesStatutsIds.Rejete }),
-          },
+          NOTIFIER_DEMANDEUR: 'finDeMachineIrrecevable',
+        },
+      },
+      finDeMachineIrrecevable: {
+        id: 'finDeMachineIrrecevable',
+        always: {
+          target: 'finDeMachine',
+          actions: assign({ demarcheStatut: DemarchesStatutsIds.Rejete }),
         },
       },
       finDeMachine: {
