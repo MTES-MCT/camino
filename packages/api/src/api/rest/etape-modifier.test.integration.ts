@@ -156,7 +156,7 @@ describe('etapeModifier', () => {
       duree: null,
       dateDebut: null,
       dateFin: null,
-      substances: [],
+      substances: ['geob'],
       geojson4326Perimetre: null,
       geojsonOriginePerimetre: null,
       geojson4326Points: null,

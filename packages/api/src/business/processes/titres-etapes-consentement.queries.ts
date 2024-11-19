@@ -13,7 +13,7 @@ import { shortCircuitError, ZodUnparseable } from '../../tools/fp-tools'
 import { etapeTypeIdValidator } from 'camino-common/src/static/etapesTypes'
 import { MultiPolygon, multiPolygonValidator } from 'camino-common/src/perimetre'
 import { DeepReadonly, isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
-import { SubstanceFiscaleId, substanceFiscaleIdValidator } from 'camino-common/src/static/substancesFiscales'
+import { SubstanceLegaleId, substanceLegaleIdValidator } from 'camino-common/src/static/substancesLegales'
 
 type GetEtapeConsentement = Omit<GetEtapeConsentementDb, 'geojson4326_perimetre'> & { geojson4326_perimetre: MultiPolygon }
 export const getEtapeConsentement = (pool: Pool, etapeId: EtapeId): Effect.Effect<GetEtapeConsentement | null, CaminoError<DBNotFound | DbQueryAccessError | ZodUnparseable>> => {
@@ -39,7 +39,7 @@ const getEtapeConsentementDbValidator = z.object({
   type_id: etapeTypeIdValidator,
   date: caminoDateValidator,
   geojson4326_perimetre: multiPolygonValidator.nullable(),
-  substances: z.array(substanceFiscaleIdValidator),
+  substances: z.array(substanceLegaleIdValidator),
   titre_type_id: titreTypeIdValidator,
   demarche_ids_consentement: z.array(demarcheIdValidator),
 })
@@ -67,7 +67,7 @@ export const updateEtapeConsentement = (
   etapeId: EtapeId,
   dateDemande: CaminoDate,
   perimetreDemande: MultiPolygon,
-  substancesDemande: SubstanceFiscaleId[],
+  substancesDemande: SubstanceLegaleId[],
   oldDemarcheIds: DemarcheId[]
 ): Effect.Effect<UpdateEtapeConsentement, CaminoError<DbQueryAccessError | ZodUnparseable>> => {
   return pipe(
@@ -102,7 +102,7 @@ type GetDemarchesEnSuperpositionPourConsentement = z.infer<typeof getDemarchesEn
 const getDemarchesEnSuperpositionPourConsentementDb = sql<
   Redefine<
     IGetDemarchesEnSuperpositionPourConsentementDbQuery,
-    { dateDemande: CaminoDate; perimetreDemande: DeepReadonly<MultiPolygon>; substancesDemande: DeepReadonly<SubstanceFiscaleId[]> },
+    { dateDemande: CaminoDate; perimetreDemande: DeepReadonly<MultiPolygon>; substancesDemande: DeepReadonly<SubstanceLegaleId[]> },
     GetDemarchesEnSuperpositionPourConsentement
   >
 >`
