@@ -138,7 +138,7 @@ describe('etapeCreer', () => {
     expect(res.statusCode).toBe(HTTP_STATUS.NOT_FOUND)
     expect(res.body).toMatchInlineSnapshot(`
       {
-        "extra": "L'utilisateur n'a pas accès à la démarche",
+        "detail": "L'utilisateur n'a pas accès à la démarche",
         "message": "la démarche n'existe pas",
         "status": 404,
       }
@@ -168,7 +168,7 @@ describe('etapeCreer', () => {
     expect(res.statusCode).toBe(HTTP_STATUS.BAD_REQUEST)
     expect(res.body).toMatchInlineSnapshot(`
       {
-        "extra": "les étapes de la démarche TDE ne sont pas valides",
+        "detail": "les étapes de la démarche TDE ne sont pas valides",
         "message": "l'étape n'est pas valide",
         "status": 400,
       }
@@ -257,7 +257,7 @@ describe('etapeCreer', () => {
     expect(res.statusCode).toBe(HTTP_STATUS.BAD_REQUEST)
     expect(res.body).toMatchInlineSnapshot(`
       {
-        "extra": "les étapes de la démarche TDE ne sont pas valides",
+        "detail": "les étapes de la démarche TDE ne sont pas valides",
         "message": "l'étape n'est pas valide",
         "status": 400,
       }

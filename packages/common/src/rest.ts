@@ -73,6 +73,7 @@ type CaminoRoute<T extends string> = { params: ZodObjectParsUrlParams<T> } & {
   post?: { input: ZodType; output: ZodType }
   newPost?: { input: ZodType; output: ZodType }
   put?: { input: ZodType; output: ZodType }
+  newPut?: { input: ZodType; output: ZodType }
   delete?: true
   download?: true
   newDownload?: true
@@ -216,7 +217,11 @@ export const CaminoRestRoutes = {
   '/rest/etapes/:etapeId/entrepriseDocuments': { params: etapeIdParamsValidator, get: { output: z.array(etapeEntrepriseDocumentValidator) } },
   '/rest/etapes/:etapeIdOrSlug': { params: z.object({ etapeIdOrSlug: etapeIdOrSlugValidator }), delete: true, get: { output: flattenEtapeValidator } },
   '/rest/etapes/:etapeId/depot': { params: etapeIdParamsValidator, put: { input: z.undefined(), output: z.void() } },
-  '/rest/etapes': { params: noParamsValidator, newPost: { input: restEtapeCreationValidator, output: etapeIdValidator }, put: { input: restEtapeModificationValidator, output: etapeIdValidator } },
+  '/rest/etapes': {
+    params: noParamsValidator,
+    newPost: { input: restEtapeCreationValidator, output: z.object({ id: etapeIdValidator }) },
+    newPut: { input: restEtapeModificationValidator, output: z.object({ id: etapeIdValidator }) },
+  },
   '/rest/activites/:activiteId': {
     params: z.object({ activiteId: activiteIdOrSlugValidator }),
     get: { output: activiteValidator },
@@ -291,6 +296,7 @@ export type GetRestRoutes = CaminoRestRouteList<typeof IDS, 'get'>[number]
 export type NewGetRestRoutes = CaminoRestRouteList<typeof IDS, 'newGet'>[number]
 export type PostRestRoutes = CaminoRestRouteList<typeof IDS, 'post'>[number]
 export type NewPostRestRoutes = CaminoRestRouteList<typeof IDS, 'newPost'>[number]
+export type NewPutRestRoutes = CaminoRestRouteList<typeof IDS, 'newPut'>[number]
 export type DeleteRestRoutes = CaminoRestRouteList<typeof IDS, 'delete'>[number]
 export type DownloadRestRoutes = CaminoRestRouteList<typeof IDS, 'download'>[number]
 export type NewDownloadRestRoutes = CaminoRestRouteList<typeof IDS, 'newDownload'>[number]

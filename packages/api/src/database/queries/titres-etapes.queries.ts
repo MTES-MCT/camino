@@ -22,7 +22,7 @@ import {
 } from './titres-etapes.queries.types'
 import {
   autreEtapeAvisValidator,
-  ETAPE_IS_NOT_BROUILLON,
+  ETAPE_IS_BROUILLON,
   EtapeAvisId,
   etapeAvisIdValidator,
   EtapeAvisModification,
@@ -64,9 +64,10 @@ import { CommuneId } from 'camino-common/src/static/communes'
 import { EtapeStatutId, etapeStatutIdValidator } from 'camino-common/src/static/etapesStatuts'
 import { contenuValidator, heritageContenuValidator } from 'camino-common/src/etape-form'
 import { demarcheTypeIdValidator } from 'camino-common/src/static/demarchesTypes'
-import { Effect, pipe } from 'effect'
+import { Effect, Option, pipe } from 'effect'
 import { CaminoError } from 'camino-common/src/zod-tools'
-import { callAndExit } from '../../tools/fp-tools'
+import { shortCircuitError } from '../../tools/fp-tools'
+import { TempDocumentName } from 'camino-common/src/document'
 
 export const insertTitreEtapeEntrepriseDocuments = (
   pool: Pool,
@@ -87,8 +88,8 @@ const insertTitreEtapeEntrepriseDocumentInternal = sql<Redefine<IInsertTitreEtap
 insert into titres_etapes_entreprises_documents (titre_etape_id, entreprise_document_id)
     values ($ titre_etape_id, $ entreprise_document_id)
 `
-export const deleteTitreEtapeEntrepriseDocument = async (pool: Pool, params: { titre_etape_id: EtapeId }): Promise<void[]> =>
-  dbQueryAndValidate(deleteTitreEtapeEntrepriseDocumentInternal, params, pool, z.void())
+export const deleteTitreEtapeEntrepriseDocument = (pool: Pool, params: { titre_etape_id: EtapeId }): Effect.Effect<Option.Option<never>, CaminoError<EffectDbQueryAndValidateErrors>> =>
+  effectDbQueryAndValidate(deleteTitreEtapeEntrepriseDocumentInternal, params, pool, z.void()).pipe(Effect.map(() => Option.none()))
 
 const deleteTitreEtapeEntrepriseDocumentInternal = sql<Redefine<IDeleteTitreEtapeEntrepriseDocumentInternalQuery, { titre_etape_id: EtapeId }, void>>`
 delete from titres_etapes_entreprises_documents
@@ -139,34 +140,60 @@ export const getEntrepriseDocumentLargeObjectIdsByEtapeId = async (params: { tit
   return result.filter(r => canSeeEntrepriseDocuments(user, r.entreprise_id))
 }
 
-export const updateEtapeDocuments = async (pool: Pool, _user: User, titre_etape_id: EtapeId, _isBrouillon: EtapeBrouillon, etapeDocuments: EtapeDocumentModification[]): Promise<void> => {
-  const documentsInDb = await dbQueryAndValidate(getDocumentsByEtapeIdQuery, { titre_etape_id }, pool, getDocumentsByEtapeIdQueryValidator)
-
-  const etapeDocumentToUpdate = etapeDocuments.filter((document): document is EtapeDocumentWithFileModification => 'id' in document)
-  const etapeDocumentIdsToUpdate = etapeDocumentToUpdate.map(({ id }) => id)
-  const toDeleteDocuments = documentsInDb.filter(({ id }) => !etapeDocumentIdsToUpdate.includes(id))
-  const toInsertDocuments = etapeDocuments.filter((document): document is TempEtapeDocument => !('id' in document))
-
-  if (isNotNullNorUndefinedNorEmpty(etapeDocumentToUpdate)) {
-    for (const documentToUpdate of etapeDocumentToUpdate) {
-      if (isNotNullNorUndefined(documentToUpdate.temp_document_name)) {
-        const largeobject_id = await createLargeObject(pool, documentToUpdate.temp_document_name)
-        await dbQueryAndValidate(updateEtapeDocumentFileDb, { id: documentToUpdate.id, largeobject_id }, pool, z.void())
+const erreurLargeObject = 'Impossible de créer le document en base' as const
+export type UpdateEtapeDocumentsErrors = EffectDbQueryAndValidateErrors | InsertEtapeDocumentsErrors | typeof erreurLargeObject
+export const updateEtapeDocuments = (
+  pool: Pool,
+  titre_etape_id: EtapeId,
+  etapeDocuments: DeepReadonly<EtapeDocumentModification[]>
+): Effect.Effect<Option.Option<never>, CaminoError<UpdateEtapeDocumentsErrors>> => {
+  return Effect.Do.pipe(
+    Effect.bind('documentsInDb', () => effectDbQueryAndValidate(getDocumentsByEtapeIdQuery, { titre_etape_id }, pool, getDocumentsByEtapeIdQueryValidator)),
+    Effect.let('etapeDocumentToUpdate', () => etapeDocuments.filter((document): document is EtapeDocumentWithFileModification => 'id' in document)),
+    Effect.tap(({ etapeDocumentToUpdate }) =>
+      Effect.forEach(etapeDocumentToUpdate, documentToUpdate => {
+        return Effect.Do.pipe(
+          Effect.map(() => documentToUpdate),
+          Effect.filterOrFail(
+            (document): document is EtapeDocumentWithFileModification & { temp_document_name: TempDocumentName } => isNotNullNorUndefined(document.temp_document_name),
+            () => shortCircuitError('pas de document' as const)
+          ),
+          Effect.flatMap(document =>
+            Effect.tryPromise({
+              try: () => createLargeObject(pool, document.temp_document_name),
+              catch: e => ({ message: erreurLargeObject, extra: e }),
+            })
+          ),
+          Effect.tap(largeobject_id => effectDbQueryAndValidate(updateEtapeDocumentFileDb, { id: documentToUpdate.id, largeobject_id }, pool, z.void())),
+          Effect.catchTag('pas de document', _ => Effect.succeed(null)),
+          Effect.tap(() =>
+            effectDbQueryAndValidate(
+              updateEtapeDocumentInfoDb,
+              { id: documentToUpdate.id, public_lecture: documentToUpdate.public_lecture, entreprises_lecture: documentToUpdate.entreprises_lecture, description: documentToUpdate.description },
+              pool,
+              z.void()
+            )
+          )
+        )
+      })
+    ),
+    Effect.tap(() => {
+      const toInsertDocuments = etapeDocuments.filter((document): document is TempEtapeDocument => !('id' in document))
+      if (isNotNullNorUndefinedNorEmpty(toInsertDocuments)) {
+        return insertEtapeDocuments(pool, titre_etape_id, toInsertDocuments)
       }
-      await dbQueryAndValidate(
-        updateEtapeDocumentInfoDb,
-        { id: documentToUpdate.id, public_lecture: documentToUpdate.public_lecture, entreprises_lecture: documentToUpdate.entreprises_lecture, description: documentToUpdate.description },
-        pool,
-        z.void()
-      )
-    }
-  }
-  if (isNotNullNorUndefinedNorEmpty(toInsertDocuments)) {
-    await callAndExit(insertEtapeDocuments(pool, titre_etape_id, toInsertDocuments))
-  }
-  if (isNotNullNorUndefinedNorEmpty(toDeleteDocuments)) {
-    await dbQueryAndValidate(deleteEtapeDocumentsDb, { ids: toDeleteDocuments.map(({ id }) => id) }, pool, z.void())
-  }
+      return Effect.succeed(null)
+    }),
+    Effect.tap(({ documentsInDb, etapeDocumentToUpdate }) => {
+      const etapeDocumentIdsToUpdate = etapeDocumentToUpdate.map(({ id }) => id)
+      const toDeleteDocuments = documentsInDb.filter(({ id }) => !etapeDocumentIdsToUpdate.includes(id))
+      if (isNotNullNorUndefinedNorEmpty(toDeleteDocuments)) {
+        return effectDbQueryAndValidate(deleteEtapeDocumentsDb, { ids: toDeleteDocuments.map(({ id }) => id) }, pool, z.void())
+      }
+      return Effect.succeed(null)
+    }),
+    Effect.map(() => Option.none())
+  )
 }
 const updateEtapeDocumentFileDb = sql<Redefine<IUpdateEtapeDocumentFileDbQuery, { id: EtapeDocumentId; largeobject_id: LargeObjectId }, void>>`
 update
@@ -186,7 +213,7 @@ set
 where
     id = $ id !
 `
-const deleteEtapeDocumentsDb = sql<Redefine<IDeleteEtapeDocumentsDbQuery, { ids: EtapeDocumentId[] }, void>>`
+const deleteEtapeDocumentsDb = sql<Redefine<IDeleteEtapeDocumentsDbQuery, { ids: DeepReadonly<EtapeDocumentId[]> }, void>>`
 delete from etapes_documents
 where id in $$ ids !
 `
@@ -195,9 +222,8 @@ const largeObjectIdError = 'impossible de récupérer un large object id' as con
 export type InsertEtapeDocumentsErrors = EffectDbQueryAndValidateErrors | typeof largeObjectIdError
 export const insertEtapeDocuments = (pool: Pool, titre_etape_id: EtapeId, etapeDocuments: DeepReadonly<TempEtapeDocument[]>): Effect.Effect<true, CaminoError<InsertEtapeDocumentsErrors>> => {
   return Effect.Do.pipe(
-    Effect.map(() => etapeDocuments),
-    Effect.flatMap(documents =>
-      Effect.forEach(documents, document => {
+    Effect.flatMap(() =>
+      Effect.forEach(etapeDocuments, document => {
         const id = newEtapeDocumentId(getCurrent(), document.etape_document_type_id)
         return pipe(
           Effect.tryPromise({
@@ -257,46 +283,65 @@ set
 where
     id = $ id !
 `
-const deleteEtapeAvisDb = sql<Redefine<IDeleteEtapeAvisDbQuery, { ids: EtapeAvisId[] }, void>>`
+const deleteEtapeAvisDb = sql<Redefine<IDeleteEtapeAvisDbQuery, { ids: DeepReadonly<EtapeAvisId[]> }, void>>`
 delete from etape_avis
 where id in $$ ids !
 `
-
-export const updateEtapeAvis = async (
+const avisIncomplets = 'Impossible de mettre à jour les avis, car ils ne sont pas complets' as const
+export type UpdateEtapeAvisErrors = EffectDbQueryAndValidateErrors | typeof avisIncomplets | typeof erreurLargeObject | InsertEtapeAvisErrors
+export const updateEtapeAvis = (
   pool: Pool,
   titre_etape_id: EtapeId,
   isBrouillon: EtapeBrouillon,
-  etapeAvis: EtapeAvisModification[],
+  etapeAvis: DeepReadonly<EtapeAvisModification[]>,
   etapeTypeId: EtapeTypeId,
   titreTypeId: TitreTypeId,
   communeIds: DeepReadonly<CommuneId[]>
-): Promise<void> => {
-  if (isBrouillon === ETAPE_IS_NOT_BROUILLON && !etapeAvisStepIsComplete({ typeId: etapeTypeId }, etapeAvis, titreTypeId, communeIds).valid) {
-    throw new Error('Impossible de mettre à jour les avis, car ils ne sont pas complets')
-  }
-
-  const avisInDb = await dbQueryAndValidate(getAvisByEtapeIdQuery, { titre_etape_id }, pool, etapeAvisDbValidator)
-
-  const avisListToUpdate = etapeAvis.filter((avis): avis is EtapeAvisWithFileModification => 'id' in avis)
-
-  const etapeDocumentIdsToUpdate = avisListToUpdate.map(({ id }) => id)
-  const toDeleteAvis = avisInDb.filter(({ id }) => !etapeDocumentIdsToUpdate.includes(id))
-  const toInsertAvis = etapeAvis.filter((avis): avis is TempEtapeAvis => !('id' in avis))
-  if (isNotNullNorUndefinedNorEmpty(toDeleteAvis)) {
-    await dbQueryAndValidate(deleteEtapeAvisDb, { ids: toDeleteAvis.map(({ id }) => id) }, pool, z.void())
-  }
-  if (isNotNullNorUndefinedNorEmpty(avisListToUpdate)) {
-    for (const avisToUpdate of avisListToUpdate) {
-      if (isNotNullNorUndefined(avisToUpdate.temp_document_name)) {
-        const largeobject_id = await createLargeObject(pool, avisToUpdate.temp_document_name)
-        await dbQueryAndValidate(updateEtapeAvisFileDb, { id: avisToUpdate.id, largeobject_id }, pool, z.void())
+): Effect.Effect<Option.Option<never>, CaminoError<UpdateEtapeAvisErrors>> => {
+  return Effect.Do.pipe(
+    Effect.filterOrFail(
+      () => isBrouillon === ETAPE_IS_BROUILLON || etapeAvisStepIsComplete({ typeId: etapeTypeId }, etapeAvis, titreTypeId, communeIds).valid,
+      () => ({ message: avisIncomplets })
+    ),
+    Effect.bind('avisInDb', () => effectDbQueryAndValidate(getAvisByEtapeIdQuery, { titre_etape_id }, pool, etapeAvisDbValidator)),
+    Effect.let('avisListToUpdate', () => etapeAvis.filter((avis): avis is EtapeAvisWithFileModification => 'id' in avis)),
+    Effect.let('etapeDocumentIdsToUpdate', ({ avisListToUpdate }) => avisListToUpdate.map(({ id }) => id)),
+    Effect.let('toDeleteAvis', ({ avisInDb, etapeDocumentIdsToUpdate }) => avisInDb.filter(({ id }) => !etapeDocumentIdsToUpdate.includes(id))),
+    Effect.let('toInsertAvis', () => etapeAvis.filter((avis): avis is TempEtapeAvis => !('id' in avis))),
+    Effect.tap(({ toDeleteAvis }) => {
+      if (isNotNullNorUndefinedNorEmpty(toDeleteAvis)) {
+        return effectDbQueryAndValidate(deleteEtapeAvisDb, { ids: toDeleteAvis.map(({ id }) => id) }, pool, z.void())
       }
-      await dbQueryAndValidate(updateEtapeAvisInfoDb, avisToUpdate, pool, z.void())
-    }
-  }
-  if (isNotNullNorUndefinedNorEmpty(toInsertAvis)) {
-    await callAndExit(insertEtapeAvis(pool, titre_etape_id, toInsertAvis))
-  }
+      return Effect.succeed(null)
+    }),
+    Effect.tap(({ avisListToUpdate }) =>
+      Effect.forEach(avisListToUpdate, avisToUpdate => {
+        return Effect.Do.pipe(
+          Effect.map(() => avisToUpdate),
+          Effect.filterOrFail(
+            (avis): avis is EtapeAvisWithFileModification & { temp_document_name: TempDocumentName } => isNotNullNorUndefined(avis.temp_document_name),
+            () => shortCircuitError('pas de document' as const)
+          ),
+          Effect.flatMap(avis =>
+            Effect.tryPromise({
+              try: () => createLargeObject(pool, avis.temp_document_name),
+              catch: e => ({ message: erreurLargeObject, extra: e }),
+            })
+          ),
+          Effect.tap(largeobject_id => effectDbQueryAndValidate(updateEtapeAvisFileDb, { id: avisToUpdate.id, largeobject_id }, pool, z.void())),
+          Effect.catchTag('pas de document', _ => Effect.succeed(null)),
+          Effect.tap(() => effectDbQueryAndValidate(updateEtapeAvisInfoDb, avisToUpdate, pool, z.void()))
+        )
+      })
+    ),
+    Effect.tap(({ toInsertAvis }) => {
+      if (isNotNullNorUndefinedNorEmpty(toInsertAvis)) {
+        return insertEtapeAvis(pool, titre_etape_id, toInsertAvis)
+      }
+      return Effect.succeed(null)
+    }),
+    Effect.map(() => Option.none())
+  )
 }
 
 // VISIBLE FOR TEST

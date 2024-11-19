@@ -1,5 +1,5 @@
 import { dbManager } from '../../../tests/db-manager'
-import { restPutCall, restCall, restNewPostCall } from '../../../tests/_utils/index'
+import { restNewPutCall, restCall, restNewPostCall } from '../../../tests/_utils/index'
 import Titres from '../../database/models/titres'
 import { userSuper } from '../../database/user-super'
 import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations'
@@ -29,6 +29,9 @@ vi.mock('../../tools/dir-create', () => ({
 
 console.info = vi.fn()
 console.error = vi.fn()
+console.debug = vi.fn()
+console.warn = vi.fn()
+
 let dbPool: Pool
 let knexInstance: Knex
 beforeAll(async () => {
@@ -48,20 +51,32 @@ afterAll(async () => {
 
 describe('etapeModifier', () => {
   test('ne peut pas modifier une étape (utilisateur anonyme)', async () => {
-    const result = await restPutCall(dbPool, '/rest/etapes', {}, undefined, { id: '', typeId: '', statutId: '', titreDemarcheId: '', date: '' } as unknown as RestEtapeModification)
+    const result = await restNewPutCall(dbPool, '/rest/etapes', {}, undefined, { id: '', typeId: '', statutId: '', titreDemarcheId: '', date: '' } as unknown as RestEtapeModification)
 
-    expect(result.statusCode).toBe(HTTP_STATUS.FORBIDDEN)
+    expect(result.body).toMatchInlineSnapshot(`
+      {
+        "message": "Accès interdit",
+        "status": 403,
+      }
+    `)
   })
 
   test('ne peut pas modifier une étape mal formatée (utilisateur super)', async () => {
-    const result = await restPutCall(dbPool, '/rest/etapes', {}, userSuper, {
+    const result = await restNewPutCall(dbPool, '/rest/etapes', {}, userSuper, {
       id: '',
-      typeId: '',
-      statutId: '',
+      typeId: 'mfr',
+      statutId: 'fai',
       date: '',
     } as unknown as RestEtapeModification)
 
-    expect(result.statusCode).toBe(HTTP_STATUS.BAD_REQUEST)
+    expect(result.body).toMatchInlineSnapshot(`
+      {
+        "detail": "La valeur du champ "date" est invalide.",
+        "message": "Problème de validation de données",
+        "status": 400,
+        "zodErrorReadableMessage": "Validation error: Invalid at "date"; date invalide at "date"; Required at "duree"; Required at "dateDebut"; Required at "dateFin"; Required at "substances"; Required at "geojson4326Perimetre"; Required at "geojson4326Points"; Required at "geojsonOriginePoints"; Required at "geojsonOriginePerimetre"; Required at "geojsonOrigineForages"; Required at "geojsonOrigineGeoSystemeId"; Required at "titulaireIds"; Required at "amodiataireIds"; Required at "note"; Required at "contenu"; Required at "titreDemarcheId"; Required at "heritageProps"; Required at "heritageContenu"; Required at "etapeDocuments"; Required at "entrepriseDocumentIds"; Required at "etapeAvis"",
+      }
+    `)
   })
 
   test("peut modifier une étape fondamentale avec de l'héritage (utilisateur super)", async () => {
@@ -132,7 +147,7 @@ describe('etapeModifier', () => {
       ],
     }
     await insertTitreGraph(titreEtapesPubliques)
-    const result = await restPutCall(dbPool, '/rest/etapes', {}, userSuper, {
+    const result = await restNewPutCall(dbPool, '/rest/etapes', {}, userSuper, {
       id: rcoId,
       typeId: 'rco',
       statutId: 'fai',
@@ -175,7 +190,7 @@ describe('etapeModifier', () => {
 
   test('peut modifier une étape mfr en brouillon (utilisateur super)', async () => {
     const { titreDemarcheId, titreEtapeId } = await etapeCreate()
-    const result = await restPutCall(dbPool, '/rest/etapes', {}, userSuper, {
+    const result = await restNewPutCall(dbPool, '/rest/etapes', {}, userSuper, {
       id: titreEtapeId,
       typeId: 'mfr',
       statutId: 'fai',
@@ -222,7 +237,7 @@ describe('etapeModifier', () => {
 
   test("ne peut pas modifier une étape avec des entreprises qui n'existent pas", async () => {
     const { titreDemarcheId, titreEtapeId } = await etapeCreate()
-    const result = await restPutCall(dbPool, '/rest/etapes', {}, userSuper, {
+    const result = await restNewPutCall(dbPool, '/rest/etapes', {}, userSuper, {
       id: titreEtapeId,
       typeId: 'mfr',
       statutId: 'fai',
@@ -267,11 +282,8 @@ describe('etapeModifier', () => {
 
     expect(result.body).toMatchInlineSnapshot(`
       {
-        "errorMessage": "certaines entreprises n'existent pas
-       extra: undefined
-      detail: undefined
-       zod: undefined",
-        "extra": {},
+        "message": "certaines entreprises n'existent pas",
+        "status": 400,
       }
     `)
   })
@@ -324,11 +336,11 @@ describe('etapeModifier', () => {
       etapeDocuments: [documentToInsert],
     }
 
-    let res = await restPutCall(dbPool, '/rest/etapes', {}, userSuper, etape)
+    let res = await restNewPutCall(dbPool, '/rest/etapes', {}, userSuper, etape)
 
-    expect(res.statusCode).toBe(HTTP_STATUS.OK)
+    expect(res.statusCode, JSON.stringify(res.body)).toBe(HTTP_STATUS.OK)
 
-    const documents = await restCall(dbPool, '/rest/etapes/:etapeId/etapeDocuments', { etapeId: titreEtapeId }, userSuper)
+    let documents = await restCall(dbPool, '/rest/etapes/:etapeId/etapeDocuments', { etapeId: titreEtapeId }, userSuper)
     expect(documents.statusCode).toBe(HTTP_STATUS.OK)
     expect(documents.body.etapeDocuments).toHaveLength(1)
     expect(documents.body.etapeDocuments[0]).toMatchInlineSnapshot(
@@ -343,9 +355,13 @@ describe('etapeModifier', () => {
       }
     `
     )
-    res = await restPutCall(dbPool, '/rest/etapes', {}, userSuper, { ...etape, etapeDocuments: [] })
+    res = await restNewPutCall(dbPool, '/rest/etapes', {}, userSuper, { ...etape, etapeDocuments: [] })
 
     expect(res.statusCode).toBe(HTTP_STATUS.OK)
+
+    documents = await restCall(dbPool, '/rest/etapes/:etapeId/etapeDocuments', { etapeId: titreEtapeId }, userSuper)
+    expect(documents.statusCode).toBe(HTTP_STATUS.OK)
+    expect(documents.body.etapeDocuments).toHaveLength(0)
   })
 
   test("ne peut pas supprimer un document obligatoire d'une étape qui n'est pas en brouillon (utilisateur super)", async () => {
@@ -406,19 +422,25 @@ describe('etapeModifier', () => {
       etapeDocuments: [documentToInsert],
     }
 
-    let res = await restPutCall(dbPool, '/rest/etapes', {}, userSuper, etape)
+    let res = await restNewPutCall(dbPool, '/rest/etapes', {}, userSuper, etape)
 
     expect(res.statusCode, JSON.stringify(res.body)).toBe(HTTP_STATUS.OK)
 
-    res = await restPutCall(dbPool, '/rest/etapes', {}, userSuper, { ...etape, etapeDocuments: [] })
+    res = await restNewPutCall(dbPool, '/rest/etapes', {}, userSuper, { ...etape, etapeDocuments: [] })
 
-    expect(res.body.errorMessage).toMatchInlineSnapshot(`"le document "Lettre de saisine des collectivités" (ldc) est obligatoire"`)
+    expect(res.body).toMatchInlineSnapshot(`
+      {
+        "detail": "le document "Lettre de saisine des collectivités" (ldc) est obligatoire",
+        "message": "l'étape n'est pas valide",
+        "status": 400,
+      }
+    `)
   })
 
   test('peut modifier une étape mia avec un statut fai (utilisateur super)', async () => {
     const { titreDemarcheId, titreEtapeId } = await etapeCreate('asc')
 
-    const res = await restPutCall(dbPool, '/rest/etapes', {}, userSuper, {
+    const res = await restNewPutCall(dbPool, '/rest/etapes', {}, userSuper, {
       id: titreEtapeId,
       typeId: 'asc',
       statutId: 'fai',
@@ -505,9 +527,9 @@ describe('etapeModifier', () => {
       menEtape
     )
 
-    const titreEtapeId = res.body
+    const titreEtapeId = res.body.id
 
-    const putRes = await restPutCall(
+    const putRes = await restNewPutCall(
       dbPool,
       '/rest/etapes',
       {},
@@ -521,12 +543,12 @@ describe('etapeModifier', () => {
       }
     )
 
-    expect(putRes.statusCode).toBe(HTTP_STATUS.OK)
+    expect(putRes.statusCode, JSON.stringify(putRes.body)).toBe(HTTP_STATUS.OK)
   })
 
   test('ne peut pas modifier une étape EDE sur un titre ARM en tant que PTMG (utilisateur admin)', async () => {
     const { titreDemarcheId, titreEtapeId } = await etapeCreate('ede')
-    const res = await restPutCall(
+    const res = await restNewPutCall(
       dbPool,
       '/rest/etapes',
       {},
@@ -573,6 +595,11 @@ describe('etapeModifier', () => {
       }
     )
 
-    expect(res.body.errorMessage).toBe("l'étape n'existe pas")
+    expect(res.body).toMatchInlineSnapshot(`
+      {
+        "message": "L'étape n'existe pas",
+        "status": 404,
+      }
+    `)
   })
 })

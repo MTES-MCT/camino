@@ -133,12 +133,12 @@ const etapeEditFormApiClient: Props['apiClient'] = {
   etapeCreer(etape) {
     etapeCreerAction(etape)
 
-    return Promise.resolve(etapeIdValidator.parse('etapeIdSaved'))
+    return Promise.resolve({ id: etapeIdValidator.parse('etapeIdSaved') })
   },
   etapeModifier(etape) {
     etapeModifierAction(etape)
 
-    return Promise.resolve(etape.id)
+    return Promise.resolve({ id: etape.id })
   },
   getEntrepriseDocuments() {
     return Promise.resolve([])

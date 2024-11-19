@@ -15,7 +15,7 @@ const onSaveAction = action('onSave')
 const onDeposeAction = action('onDepose')
 
 const onSave = () => {
-  return new Promise<EtapeId | null | CaminoError<string>>(resolve =>
+  return new Promise<{ id: EtapeId } | null | CaminoError<string>>(resolve =>
     setTimeout(() => {
       onSaveAction()
       resolve(null)

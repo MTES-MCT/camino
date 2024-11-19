@@ -333,7 +333,7 @@ export const EtapeEditForm = defineComponent<Props>(props => {
   const save = async () => {
     if (canSave.value && etape.value.status === 'LOADED' && isNotNullNorUndefined(etape.value.value)) {
       const etapeValue = etape.value.value
-      let etapeId: EtapeId | null | CaminoError<string>
+      let etapeId: { id: EtapeId } | null | CaminoError<string>
       const heritage = {
         dateDebut: etapeValue.dateDebut.value,
         dateFin: etapeValue.dateFin.value,
@@ -466,7 +466,7 @@ export const EtapeEditForm = defineComponent<Props>(props => {
                     deposeEtape={async () => {
                       const etapeIdToDepose = await save()
                       if (isNotNullNorUndefined(etapeIdToDepose) && !('message' in etapeIdToDepose)) {
-                        await props.apiClient.deposeEtape(etapeIdToDepose)
+                        await props.apiClient.deposeEtape(etapeIdToDepose.id)
                         props.goToDemarche(props.demarcheId)
                       }
                     }}

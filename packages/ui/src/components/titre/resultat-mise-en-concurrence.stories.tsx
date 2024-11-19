@@ -116,7 +116,7 @@ export const Loading: StoryFn = () => (
       },
       etapeCreer(etape) {
         etapeCreerAction(etape)
-        return Promise.resolve(etapeIdValidator.parse('etapeId'))
+        return Promise.resolve({ id: etapeIdValidator.parse('etapeId') })
       },
     }}
     pivot={{
@@ -143,7 +143,7 @@ export const WithError: StoryFn = () => (
       },
       etapeCreer(etape) {
         etapeCreerAction(etape)
-        return Promise.resolve(etapeIdValidator.parse('etapeId'))
+        return Promise.resolve({ id: etapeIdValidator.parse('etapeId') })
       },
     }}
     pivot={{

@@ -48,7 +48,9 @@ import {
   InsertEtapeDocumentsErrors,
   insertTitreEtapeEntrepriseDocuments,
   updateEtapeAvis,
+  UpdateEtapeAvisErrors,
   updateEtapeDocuments,
+  UpdateEtapeDocumentsErrors,
 } from '../../database/queries/titres-etapes.queries'
 import { getEtapeDataForEdition } from './etapes.queries'
 import { SDOMZoneId } from 'camino-common/src/static/sdom'
@@ -59,7 +61,7 @@ import { titreEtapeUpdateTask } from '../../business/titre-etape-update'
 import { getSections } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { titreDemarcheUpdatedEtatValidate, getPossiblesEtapesTypes } from '../../business/validations/titre-demarche-etat-validate'
-import { FlattenEtape, GraphqlEtape, RestEtapeCreation, RestEtapeModification, restEtapeModificationValidator } from 'camino-common/src/etape-form'
+import { FlattenEtape, GraphqlEtape, RestEtapeCreation, RestEtapeModification } from 'camino-common/src/etape-form'
 import { ApiFlattenEtape, iTitreEtapeToFlattenEtape, TitreEtapeToFlattenEtapeErrors } from '../_format/titres-etapes'
 import { CommuneId } from 'camino-common/src/static/communes'
 import { titreEtapeUpdationValidate } from '../../business/validations/titre-etape-updation-validate'
@@ -72,7 +74,7 @@ import { FeatureMultiPolygon, FeatureCollectionPoints } from 'camino-common/src/
 import { canHaveForages } from 'camino-common/src/permissions/titres'
 import { SecteursMaritimes, getSecteurMaritime } from 'camino-common/src/static/facades'
 import { callAndExit, shortCircuitError, zodParseEffect } from '../../tools/fp-tools'
-import { RestNewGetCall, RestNewPostCall } from '../../server/rest'
+import { RestNewGetCall, RestNewPostCall, RestNewPutCall } from '../../server/rest'
 import { Effect, Match } from 'effect'
 import { DbQueryAccessError, EffectDbQueryAndValidateErrors } from '../../pg-database'
 import { CaminoError } from 'camino-common/src/zod-tools'
@@ -285,7 +287,7 @@ const validateAndGetEntrepriseDocuments = (
     Effect.flatMap(entrepriseIds => getEntrepriseDocuments(entrepriseDocumentIds, entrepriseIds, pool, user)),
     Effect.filterOrFail(
       entrepriseDocuments => entrepriseDocumentIds.length === entrepriseDocuments.length,
-      () => ({ message: documentDEntrepriseIncorrects, extra: "Tous les documents d'entreprises n'ont pas pu être retrouvés en base" })
+      () => ({ message: documentDEntrepriseIncorrects, detail: "Tous les documents d'entreprises n'ont pas pu être retrouvés en base" })
     ),
     Effect.catchTag("pas de documents d'entreprise", _myError => Effect.succeed([]))
   )
@@ -462,7 +464,7 @@ type CreateEtapeError =
   | typeof erreurLorsDeLaCreationDeLEtape
   | typeof tachesAnnexes
   | typeof envoieMails
-export const createEtape: RestNewPostCall<'/rest/etapes'> = (rootPipe): Effect.Effect<EtapeId, CaminoApiError<CreateEtapeError>> => {
+export const createEtape: RestNewPostCall<'/rest/etapes'> = (rootPipe): Effect.Effect<{ id: EtapeId }, CaminoApiError<CreateEtapeError>> => {
   return rootPipe.pipe(
     Effect.tap(({ body: etape, user }) =>
       Effect.Do.pipe(
@@ -474,7 +476,7 @@ export const createEtape: RestNewPostCall<'/rest/etapes'> = (rootPipe): Effect.E
         ),
         Effect.filterOrFail(
           titreDemarcheUser => isNotNullNorUndefined(titreDemarcheUser),
-          () => ({ message: demarcheExistePas, extra: "L'utilisateur n'a pas accès à la démarche" })
+          () => ({ message: demarcheExistePas, detail: "L'utilisateur n'a pas accès à la démarche" })
         )
       )
     ),
@@ -542,7 +544,7 @@ export const createEtape: RestNewPostCall<'/rest/etapes'> = (rootPipe): Effect.E
         user
       )
       if (isNotNullNorUndefinedNorEmpty(rulesErrors)) {
-        return Effect.fail({ message: etapeNonValide, extra: rulesErrors.join(', ') })
+        return Effect.fail({ message: etapeNonValide, detail: rulesErrors.join(', ') })
       }
       return Effect.succeed(null)
     }),
@@ -583,7 +585,7 @@ export const createEtape: RestNewPostCall<'/rest/etapes'> = (rootPipe): Effect.E
       })
     ),
 
-    Effect.map(({ etapeUpdated }) => etapeUpdated.id),
+    Effect.map(({ etapeUpdated }) => ({ id: etapeUpdated.id })),
     Effect.mapError(caminoError =>
       Match.value(caminoError.message).pipe(
         Match.whenOr("la démarche n'existe pas", "le titre n'existe pas", () => ({ ...caminoError, status: HTTP_STATUS.NOT_FOUND })),
@@ -623,21 +625,37 @@ export const createEtape: RestNewPostCall<'/rest/etapes'> = (rootPipe): Effect.E
   )
 }
 
-export const updateEtape =
-  (pool: Pool) =>
-  async (req: CaminoRequest, res: CustomResponse<EtapeId>): Promise<void> => {
-    try {
-      const { success, data: etape, error } = restEtapeModificationValidator.safeParse(req.body)
-
-      if (!success) {
-        console.error('[etapeModifier] étape non correctement formatée', error)
-        res.status(HTTP_STATUS.BAD_REQUEST).json({ errorMessage: "l'étape n'est pas correctement formatée" })
-      } else {
-        const user = req.auth
-        if (!user) {
-          res.status(HTTP_STATUS.NOT_FOUND).json({ errorMessage: "la démarche n'existe pas" })
-        } else {
-          const titreEtapeOld = await titreEtapeGet(
+const etapeNExistePas = "L'étape n'existe pas" as const
+const demarcheNonChargee = "la démarche n'est pas chargée complètement" as const
+const droitsInsuffisantsUpdate = 'droits insuffisant pour modifier cette étape' as const
+const interditTypeEtapeEdition = "Il est interdit d'éditer le type d'étape" as const
+const interditDeChangerDeDemarche = "Il est interdit de changer la démarche d'une étape" as const
+const erreurEtapeUpdate = "Une erreur est survenue lors de la modification de l'étape" as const
+type UpdateEtapeErrors =
+  | EffectDbQueryAndValidateErrors
+  | typeof etapeNExistePas
+  | typeof demarcheNonChargee
+  | typeof droitsInsuffisantsUpdate
+  | typeof interditTypeEtapeEdition
+  | typeof interditDeChangerDeDemarche
+  | typeof demarcheExistePas
+  | ValidateAndGetEntrepriseDocumentsErrors
+  | CheckEntreprisesExistErrors
+  | typeof erreurEtapeUpdate
+  | typeof tachesAnnexes
+  | typeof envoieMails
+  | GetFlattenEtapeErrors
+  | typeof etapeNonValide
+  | InsertEtapeDocumentsErrors
+  | UpdateEtapeDocumentsErrors
+  | UpdateEtapeAvisErrors
+export const updateEtape: RestNewPutCall<'/rest/etapes'> = (rootPipe): Effect.Effect<{ id: EtapeId }, CaminoApiError<UpdateEtapeErrors>> => {
+  return rootPipe.pipe(
+    Effect.let('etape', ({ body }) => body),
+    Effect.bind('titreEtapeOld', ({ etape, user }) =>
+      Effect.tryPromise({
+        try: () =>
+          titreEtapeGet(
             etape.id,
             {
               fields: {
@@ -645,15 +663,21 @@ export const updateEtape =
               },
             },
             user
-          )
-
-          if (isNullOrUndefined(titreEtapeOld)) throw new Error("l'étape n'existe pas")
-          if (!titreEtapeOld.demarche || !titreEtapeOld.demarche.titre || titreEtapeOld.demarche.titre.administrationsLocales === undefined) {
-            throw new Error('la démarche n’est pas chargée complètement')
-          }
-
-          if (
-            !canEditEtape(
+          ),
+        catch: e => ({ message: etapeNExistePas, extra: e }),
+      }).pipe(
+        Effect.filterOrFail(
+          (value): value is ITitreEtape => isNotNullNorUndefined(value),
+          () => ({ message: etapeNExistePas })
+        ),
+        Effect.filterOrFail(
+          (value): value is ITitreEtape & { demarche: ITitreDemarche & { titre: ITitre } } =>
+            isNotNullNorUndefined(value.demarche) && isNotNullNorUndefined(value.demarche.titre) && value.demarche.titre.administrationsLocales !== undefined,
+          () => ({ message: demarcheNonChargee })
+        ),
+        Effect.filterOrFail(
+          titreEtapeOld =>
+            canEditEtape(
               user,
               titreEtapeOld.typeId,
               titreEtapeOld.isBrouillon,
@@ -664,14 +688,24 @@ export const updateEtape =
                 typeId: titreEtapeOld.demarche.titre.typeId,
                 titreStatutId: titreEtapeOld.demarche.titre.titreStatutId,
               }
-            )
-          )
-            throw new Error('droits insuffisants')
+            ),
+          () => ({ message: droitsInsuffisantsUpdate })
+        ),
+        Effect.filterOrFail(
+          titreEtapeOld => titreEtapeOld.typeId === etape.typeId,
+          () => ({ message: interditTypeEtapeEdition })
+        ),
+        Effect.filterOrFail(
+          titreEtapeOld => titreEtapeOld.titreDemarcheId === etape.titreDemarcheId,
+          () => ({ message: interditDeChangerDeDemarche })
+        )
+      )
+    ),
 
-          if (titreEtapeOld.typeId !== etape.typeId) throw new Error("Il est interdit d'éditer le type d'étape")
-
-          if (titreEtapeOld.titreDemarcheId !== etape.titreDemarcheId) throw new Error("la démarche n'existe pas")
-          const titreDemarche = await titreDemarcheGet(
+    Effect.bind('titreDemarche', ({ etape }) =>
+      Effect.tryPromise({
+        try: () =>
+          titreDemarcheGet(
             etape.titreDemarcheId,
             {
               fields: {
@@ -684,75 +718,149 @@ export const updateEtape =
               },
             },
             userSuper
-          )
+          ),
+        catch: e => ({ message: demarcheExistePas, extra: e }),
+      }).pipe(
+        Effect.filterOrFail(
+          (value): value is ITitreDemarche & { titre: ITitre } => isNotNullNorUndefined(value) && isNotNullNorUndefined(value.titre),
+          () => ({ message: demarcheExistePas })
+        ),
+        Effect.filterOrFail(
+          value => isNotNullNorUndefined(value.titre.titulaireIds) && isNotNullNorUndefined(value.titre.amodiataireIds),
+          () => ({ message: demarcheNonChargee })
+        )
+      )
+    ),
+    Effect.let('titreTypeId', ({ titreDemarche }) => titreDemarche.titre.typeId),
+    Effect.let('isBrouillon', ({ titreEtapeOld }) => titreEtapeOld.isBrouillon),
 
-          if (!titreDemarche || !titreDemarche.titre) throw new Error("le titre n'existe pas")
-          if (isNullOrUndefined(titreDemarche.titre.titulaireIds) || isNullOrUndefined(titreDemarche.titre.amodiataireIds)) throw new Error('la démarche n’est pas chargée complètement')
-          const titreTypeId = titreDemarche.titre.typeId
-          const isBrouillon = titreEtapeOld.isBrouillon
-          const { flattenEtape, perimetreInfos } = await callAndExit(
-            getFlattenEtape(etape, titreDemarche, titreTypeId, isBrouillon, titreEtapeOld.slug, titreEtapeOld.concurrence, titreEtapeOld.hasTitreFrom, titreEtapeOld.demarcheIdsConsentement, pool)
-          )
-
-          const entrepriseDocuments: EntrepriseDocument[] = await callAndExit(validateAndGetEntrepriseDocuments(pool, flattenEtape, etape.entrepriseDocumentIds, user))
-
-          const etapeDocuments = etape.etapeDocuments
-
-          const rulesErrors = titreEtapeUpdationValidate(
-            flattenEtape,
-            titreDemarche,
-            titreDemarche.titre,
-            etapeDocuments,
-            etape.etapeAvis,
-            entrepriseDocuments,
-            perimetreInfos.sdomZones,
-            perimetreInfos.communes.map(({ id }) => id),
+    Effect.bind('flattenEtapeAndPerimetre', ({ etape, titreDemarche, titreTypeId, isBrouillon, titreEtapeOld, pool }) =>
+      getFlattenEtape(
+        etape as RestEtapeModification, // TODO 2024-11-14 comment on fait là, si on met le deepReadonly ça transpire partout et c'est violent :(
+        titreDemarche,
+        titreTypeId,
+        isBrouillon,
+        titreEtapeOld.slug,
+        titreEtapeOld.concurrence,
+        titreEtapeOld.hasTitreFrom,
+        titreEtapeOld.demarcheIdsConsentement,
+        pool
+      )
+    ),
+    Effect.bind('entrepriseDocuments', ({ pool, flattenEtapeAndPerimetre, etape, user }) =>
+      validateAndGetEntrepriseDocuments(pool, flattenEtapeAndPerimetre.flattenEtape, etape.entrepriseDocumentIds, user)
+    ),
+    Effect.tap(({ flattenEtapeAndPerimetre, titreDemarche, entrepriseDocuments, etape, user, titreEtapeOld }) => {
+      const rulesErrors = titreEtapeUpdationValidate(
+        flattenEtapeAndPerimetre.flattenEtape,
+        titreDemarche,
+        titreDemarche.titre,
+        etape.etapeDocuments,
+        etape.etapeAvis,
+        entrepriseDocuments,
+        flattenEtapeAndPerimetre.perimetreInfos.sdomZones,
+        flattenEtapeAndPerimetre.perimetreInfos.communes.map(({ id }) => id),
+        user,
+        titreEtapeOld
+      )
+      if (isNotNullNorUndefinedNorEmpty(rulesErrors)) {
+        return Effect.fail({ message: etapeNonValide, detail: rulesErrors.join(', ') })
+      }
+      return Effect.succeed(null)
+    }),
+    Effect.tap(({ etape, pool }) => checkEntreprisesExist(pool, [...etape.titulaireIds, ...etape.amodiataireIds])),
+    Effect.bind('etapeUpdated', ({ etape, flattenEtapeAndPerimetre, titreEtapeOld, user, titreDemarche, isBrouillon }) =>
+      Effect.tryPromise({
+        try: async () => {
+          const value = await titreEtapeUpsert(
+            {
+              ...etape,
+              statutId: getStatutId(flattenEtapeAndPerimetre.flattenEtape, getCurrent()),
+              ...flattenEtapeAndPerimetre.perimetreInfos,
+              isBrouillon,
+              demarcheIdsConsentement: titreEtapeOld.demarcheIdsConsentement,
+            },
             user,
-            titreEtapeOld
-          )
-
-          if (rulesErrors.length) {
-            throw new Error(rulesErrors.join(', '))
-          }
-
-          await callAndExit(checkEntreprisesExist(pool, [...etape.titulaireIds, ...etape.amodiataireIds]))
-
-          etape.statutId = getStatutId(flattenEtape, getCurrent())
-
-          const etapeUpdated: ITitreEtape | undefined = await titreEtapeUpsert(
-            { ...etape, ...perimetreInfos, isBrouillon: titreEtapeOld.isBrouillon, demarcheIdsConsentement: titreEtapeOld.demarcheIdsConsentement },
-            user!,
             titreDemarche.titreId
           )
-          if (isNullOrUndefined(etapeUpdated)) {
-            throw new Error("Une erreur est survenue lors de la modification de l'étape")
+          if (isNullOrUndefined(value)) {
+            throw new Error('Etape vide')
           }
-          await updateEtapeDocuments(pool, user, etapeUpdated.id, etapeUpdated.isBrouillon, etapeDocuments)
-          await deleteTitreEtapeEntrepriseDocument(pool, { titre_etape_id: etapeUpdated.id })
-          await callAndExit(insertTitreEtapeEntrepriseDocuments(pool, etapeUpdated.id, entrepriseDocuments))
-
-          await updateEtapeAvis(
-            pool,
-            etapeUpdated.id,
-            isBrouillon,
-            etape.etapeAvis,
-            etape.typeId,
-            titreTypeId,
-            perimetreInfos.communes.map(({ id }) => id)
-          )
-
-          await titreEtapeUpdateTask(pool, etapeUpdated.id, etapeUpdated.titreDemarcheId, user)
-
-          await titreEtapeAdministrationsEmailsSend(flattenEtape, titreDemarche.typeId, titreDemarche.titreId, titreDemarche.titre.typeId, user, titreEtapeOld)
-          res.json(titreEtapeOld.id)
-        }
-      }
-    } catch (e: any) {
-      console.error(e)
-
-      res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ errorMessage: e.message, extra: e })
-    }
-  }
+          return value
+        },
+        catch: e => ({ message: erreurEtapeUpdate, extra: e }),
+      })
+    ),
+    Effect.tap(({ pool, etapeUpdated, etape }) => updateEtapeDocuments(pool, etapeUpdated.id, etape.etapeDocuments)),
+    Effect.tap(({ pool, etapeUpdated }) => deleteTitreEtapeEntrepriseDocument(pool, { titre_etape_id: etapeUpdated.id })),
+    Effect.tap(({ pool, etapeUpdated, entrepriseDocuments }) => insertTitreEtapeEntrepriseDocuments(pool, etapeUpdated.id, entrepriseDocuments)),
+    Effect.tap(({ pool, isBrouillon, etapeUpdated, etape, titreTypeId, flattenEtapeAndPerimetre }) =>
+      updateEtapeAvis(
+        pool,
+        etapeUpdated.id,
+        isBrouillon,
+        etape.etapeAvis,
+        etape.typeId,
+        titreTypeId,
+        flattenEtapeAndPerimetre.perimetreInfos.communes.map(({ id }) => id)
+      )
+    ),
+    Effect.tap(({ pool, etapeUpdated, user }) =>
+      Effect.tryPromise({
+        try: () => titreEtapeUpdateTask(pool, etapeUpdated.id, etapeUpdated.titreDemarcheId, user),
+        catch: e => ({ message: tachesAnnexes, extra: e }),
+      })
+    ),
+    Effect.tap(({ titreDemarche, titreEtapeOld, flattenEtapeAndPerimetre, user }) =>
+      Effect.tryPromise({
+        try: () => titreEtapeAdministrationsEmailsSend(flattenEtapeAndPerimetre.flattenEtape, titreDemarche.typeId, titreDemarche.titreId, titreDemarche.titre.typeId, user, titreEtapeOld),
+        catch: e => ({ message: envoieMails, extra: e }),
+      })
+    ),
+    Effect.map(({ titreEtapeOld }) => ({ id: titreEtapeOld.id })),
+    Effect.mapError(caminoError =>
+      Match.value(caminoError.message).pipe(
+        Match.whenOr("la démarche n'existe pas", "L'étape n'existe pas", () => ({ ...caminoError, status: HTTP_STATUS.NOT_FOUND })),
+        Match.whenOr(
+          "l'étape n'est pas valide",
+          "certaines entreprises n'existent pas",
+          'les points doivent être sur le périmètre',
+          'Problème de validation de données',
+          "document d'entreprise incorrects",
+          'Problème de Système géographique (SRID)',
+          'Le nombre de points est invalide',
+          'La liste des points est vide',
+          "Il est interdit d'éditer le type d'étape",
+          "Il est interdit de changer la démarche d'une étape",
+          'Impossible de mettre à jour les avis, car ils ne sont pas complets',
+          () => ({
+            ...caminoError,
+            status: HTTP_STATUS.BAD_REQUEST,
+          })
+        ),
+        Match.when('droits insuffisant pour modifier cette étape', () => ({ ...caminoError, status: HTTP_STATUS.FORBIDDEN })),
+        Match.whenOr(
+          "Impossible d'exécuter la requête dans la base de données",
+          "la démarche n'est pas chargée complètement",
+          "Une erreur est survenue lors de la modification de l'étape",
+          'une erreur est survenue lors des envois de mail',
+          'une erreur est survenue lors des tâches annexes',
+          'impossible de créer un large object id',
+          'Impossible de créer le document en base',
+          'impossible de récupérer un large object id',
+          'Une erreur inattendue est survenue lors de la récupération des informations geojson en base',
+          'Impossible de transformer la feature collection',
+          'pas de démarche chargée',
+          'pas de démarche ou de titre chargé',
+          "pas d'héritage chargé",
+          'pas de slug',
+          () => ({ ...caminoError, status: HTTP_STATUS.INTERNAL_SERVER_ERROR })
+        ),
+        Match.exhaustive
+      )
+    )
+  )
+}
 
 export const deposeEtape =
   (pool: Pool) =>

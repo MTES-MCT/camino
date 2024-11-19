@@ -15,7 +15,7 @@ type Props = {
   canDepose: boolean
   showDepose: boolean
   initialContext?: AsyncData<undefined>
-  save: () => Promise<EtapeId | null | CaminoError<string>>
+  save: () => Promise<{ id: EtapeId } | null | CaminoError<string>>
   depose: () => void
   etapeTypeId: EtapeTypeId
 } & Pick<HTMLAttributes, 'class' | 'style'>
@@ -62,10 +62,8 @@ export const PureFormSaveBtn = defineComponent<Props>(props => {
           />
         ))}
 
-        {saveContext.value.status === 'ERROR' ? <Alert small={true} type="error" title={saveContext.value.message} /> : null}
-
         <div style={{ display: 'flex', justifyContent: 'end', alignItems: 'center' }} class="fr-mt-2w">
-          {saveContext.value.status !== 'ERROR' ? <LoadingElement data={saveContext.value} renderItem={() => null} /> : null}
+          {saveContext.value.status === 'LOADING' ? <LoadingElement data={saveContext.value} renderItem={() => null} /> : null}
 
           <DsfrButton
             buttonType={props.showDepose ? 'secondary' : 'primary'}
@@ -86,6 +84,7 @@ export const PureFormSaveBtn = defineComponent<Props>(props => {
             />
           ) : null}
         </div>
+        {saveContext.value.status !== 'LOADING' ? <LoadingElement data={saveContext.value} renderItem={() => null} /> : null}
       </div>
     </div>
   )

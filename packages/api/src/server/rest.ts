@@ -47,6 +47,7 @@ import {
   NewDownloadRestRoutes,
   NewPostRestRoutes,
   NewGetRestRoutes,
+  NewPutRestRoutes,
 } from 'camino-common/src/rest'
 import { CaminoConfig } from 'camino-common/src/static/config'
 import { CaminoRequest, CustomResponse } from '../api/rest/express-type'
@@ -101,7 +102,18 @@ export type RestNewPostCall<Route extends NewPostRestRoutes> = (
     never
   >
 ) => Effect.Effect<DeepReadonly<z.infer<CaminoRestRoutesType[Route]['newPost']['output']>>, CaminoApiError<string>>
-
+export type RestNewPutCall<Route extends NewPutRestRoutes> = (
+  data: Effect.Effect<
+    {
+      pool: Pool
+      user: DeepReadonly<UserNotNull>
+      body: DeepReadonly<z.infer<CaminoRestRoutesType[Route]['newPut']['input']>>
+      params: DeepReadonly<z.infer<CaminoRestRoutesType[Route]['params']>>
+    },
+    never,
+    never
+  >
+) => Effect.Effect<DeepReadonly<z.infer<CaminoRestRoutesType[Route]['newPut']['output']>>, CaminoApiError<string>>
 type SearchParams<Route extends NewGetRestRoutes> = CaminoRestRoutesType[Route]['newGet'] extends { searchParams: ZodType }
   ? z.infer<CaminoRestRoutesType[Route]['newGet']['searchParams']>
   : Record<never, string>
@@ -132,6 +144,7 @@ type Transform<Route> = (Route extends GetRestRoutes ? { getCall: RestGetCall<Ro
   (Route extends NewGetRestRoutes ? { newGetCall: RestNewGetCall<Route> } : {}) &
   (Route extends PostRestRoutes ? { postCall: RestPostCall<Route> } : {}) &
   (Route extends NewPostRestRoutes ? { newPostCall: RestNewPostCall<Route> } : {}) &
+  (Route extends NewPutRestRoutes ? { newPutCall: RestNewPutCall<Route> } : {}) &
   (Route extends PutRestRoutes ? { putCall: RestPutCall<Route> } : {}) &
   (Route extends DeleteRestRoutes ? { deleteCall: RestDeleteCall } : {}) &
   (Route extends NewDownloadRestRoutes ? { newDownloadCall: NewDownload } : {}) &
@@ -214,7 +227,7 @@ const restRouteImplementations: Readonly<{ [key in CaminoRestRoute]: Transform<k
   '/rest/demarches/:demarcheId/geojson': { getCall: getPerimetreInfos, ...CaminoRestRoutes['/rest/demarches/:demarcheId/geojson'] },
   '/rest/etapes/:etapeId/geojson': { getCall: getPerimetreInfos, ...CaminoRestRoutes['/rest/etapes/:etapeId/geojson'] },
   '/rest/etapes/:etapeIdOrSlug': { deleteCall: deleteEtape, getCall: getEtape, ...CaminoRestRoutes['/rest/etapes/:etapeIdOrSlug'] },
-  '/rest/etapes': { newPostCall: createEtape, putCall: updateEtape, ...CaminoRestRoutes['/rest/etapes'] },
+  '/rest/etapes': { newPostCall: createEtape, newPutCall: updateEtape, ...CaminoRestRoutes['/rest/etapes'] },
   '/rest/etapes/:etapeId/depot': { putCall: deposeEtape, ...CaminoRestRoutes['/rest/etapes/:etapeId/depot'] },
   '/rest/etapes/:etapeId/entrepriseDocuments': { getCall: getEtapeEntrepriseDocuments, ...CaminoRestRoutes['/rest/etapes/:etapeId/entrepriseDocuments'] },
   '/rest/etapes/:etapeId/etapeDocuments': { getCall: getEtapeDocuments, ...CaminoRestRoutes['/rest/etapes/:etapeId/etapeDocuments'] },
@@ -386,7 +399,79 @@ export const restWithPool = (dbPool: Pool): Router => {
           }
         })
       }
+      if ('newPutCall' in maRoute) {
+        console.info(`PUT ${route}`)
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises
+        rest.put(route, async (req: CaminoRequest, res: express.Response, _next: express.NextFunction) => {
+          try {
+            const call = Effect.Do.pipe(
+              Effect.bind('user', () => {
+                if (isNotNullNorUndefined(req.auth)) {
+                  return Effect.succeed(req.auth as UserNotNull)
+                } else {
+                  return Effect.fail({ message: 'Accès interdit', status: HTTP_STATUS.FORBIDDEN })
+                }
+              }),
+              Effect.bind('body', () => zodParseEffect(maRoute.newPut.input, req.body)),
+              Effect.bind('params', () => zodParseEffect(maRoute.params, req.params)),
+              Effect.mapError(caminoError => {
+                if (!('status' in caminoError)) {
+                  return { ...caminoError, status: HTTP_STATUS.BAD_REQUEST }
+                }
 
+                return caminoError
+              }),
+              // TODO 2024-06-26 ici, si on ne met pas le body et params à any, on se retrouve avec une typescript union hell qui fait tout planter
+              Effect.bind<'result', { body: any; user: UserNotNull; params: any }, DeepReadonly<z.infer<(typeof maRoute)['newPut']['output']>>, CaminoApiError<string>, never>(
+                'result',
+                ({ user, body, params }) =>
+                  maRoute.newPutCall(
+                    Effect.Do.pipe(
+                      Effect.let('user', () => user),
+                      Effect.let('pool', () => dbPool),
+                      Effect.let('params', () => params),
+                      Effect.let('body', () => body)
+                    )
+                  )
+              ),
+              Effect.bind('parsedResult', ({ result }) =>
+                pipe(
+                  zodParseEffect(maRoute.newPut.output, result),
+                  Effect.mapError(caminoError => ({ ...caminoError, status: HTTP_STATUS.INTERNAL_SERVER_ERROR }))
+                )
+              ),
+              Effect.tap(({ user }) => addLog(dbPool, user.id, 'post', req.url, req.body)),
+              Effect.mapBoth({
+                onFailure: caminoError => {
+                  console.warn(`problem with route ${route}: ${caminoError.message}`)
+
+                  if (!('status' in caminoError)) {
+                    res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json(caminoError)
+                  } else {
+                    res.status(caminoError.status).json(caminoError)
+                  }
+                },
+                onSuccess: ({ parsedResult }) => {
+                  res.json(parsedResult)
+                },
+              }),
+              Effect.runPromiseExit
+            )
+
+            const pipeline = await call
+
+            if (Exit.isFailure(pipeline)) {
+              if (!Cause.isFailType(pipeline.cause)) {
+                console.error('catching error on newPut route', route, pipeline.cause, req.body)
+                res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: "une erreur inattendue s'est produite", extra: pipeline.cause })
+              }
+            }
+          } catch (e) {
+            console.error('catching error on newPut route', route, e, req.body)
+            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: "une erreur inattendue s'est produite", extra: e })
+          }
+        })
+      }
       if ('putCall' in maRoute) {
         console.info(`PUT ${route}`)
         rest.put(route, restCatcherWithMutation('put', maRoute.putCall(dbPool), dbPool)) // eslint-disable-line @typescript-eslint/no-misused-promises

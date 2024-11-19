@@ -236,7 +236,7 @@ export const canDeleteEtape = (
 }
 
 export const canEditEtape = (
-  user: User,
+  user: DeepReadonly<User>,
   etapeTypeId: EtapeTypeId,
   isBrouillon: EtapeBrouillon,
   titulaireIds: EntrepriseId[],
