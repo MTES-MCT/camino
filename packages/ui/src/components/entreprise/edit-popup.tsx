@@ -14,9 +14,9 @@ interface Props {
 }
 
 export const EntrepriseEditPopup = defineComponent<Props>(props => {
-  const telephone = ref(props.entreprise.telephone ?? '')
-  const email = ref(props.entreprise.email ?? '')
-  const url = ref(props.entreprise.url ?? '')
+  const telephone = ref(props.entreprise.telephone ?? undefined)
+  const email = ref(props.entreprise.email ?? undefined)
+  const url = ref(props.entreprise.url ?? undefined)
   const archive = ref(props.entreprise.archive ?? false)
 
   const telephoneChange = (value: string) => {
@@ -37,12 +37,12 @@ export const EntrepriseEditPopup = defineComponent<Props>(props => {
       <DsfrInput legend={{ main: 'Adresse électronique' }} type={{ type: 'text' }} valueChanged={emailChange} initialValue={email.value} />
       <DsfrInput legend={{ main: 'Site internet' }} type={{ type: 'text' }} valueChanged={urlChange} initialValue={url.value} />
 
-      {isSuper(props.user) ? <DsfrInputCheckbox legend={{ main: 'Archivée' }} initialValue={archive.value} valueChanged={archiveChange} /> : null}
+      {isSuper(props.user) ? <DsfrInputCheckbox class="fr-mt-2w" legend={{ main: 'Archivée' }} initialValue={archive.value} valueChanged={archiveChange} /> : null}
     </form>
   )
 
   const save = async () => {
-    await props.apiClient.modifierEntreprise({
+    return props.apiClient.modifierEntreprise({
       id: props.entreprise.id,
       telephone: telephone.value,
       email: email.value,

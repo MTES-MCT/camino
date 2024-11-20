@@ -210,7 +210,7 @@ const restRouteImplementations: Readonly<{ [key in CaminoRestRoute]: Transform<k
   '/rest/utilisateurs/:id': { newGetCall: getUtilisateur, ...CaminoRestRoutes['/rest/utilisateurs/:id'] },
   '/rest/utilisateurs': { newGetCall: getUtilisateurs, ...CaminoRestRoutes['/rest/utilisateurs'] },
   '/rest/entreprises/:entrepriseId/fiscalite/:annee': { getCall: fiscalite, ...CaminoRestRoutes['/rest/entreprises/:entrepriseId/fiscalite/:annee'] }, // UNTESTED YET
-  '/rest/entreprises/:entrepriseId': { getCall: getEntreprise, putCall: modifierEntreprise, ...CaminoRestRoutes['/rest/entreprises/:entrepriseId'] },
+  '/rest/entreprises/:entrepriseId': { getCall: getEntreprise, newPutCall: modifierEntreprise, ...CaminoRestRoutes['/rest/entreprises/:entrepriseId'] },
   '/rest/entreprises/:entrepriseId/documents': { getCall: getEntrepriseDocuments, postCall: postEntrepriseDocument, ...CaminoRestRoutes['/rest/entreprises/:entrepriseId/documents'] },
   '/rest/entreprises/:entrepriseId/documents/:entrepriseDocumentId': { deleteCall: deleteEntrepriseDocument, ...CaminoRestRoutes['/rest/entreprises/:entrepriseId/documents/:entrepriseDocumentId'] },
   '/rest/entreprises': { postCall: creerEntreprise, getCall: getAllEntreprises, ...CaminoRestRoutes['/rest/entreprises'] },

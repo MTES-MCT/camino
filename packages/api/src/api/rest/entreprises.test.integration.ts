@@ -1,7 +1,7 @@
 /* eslint-disable sql/no-unsafe-query */
 import { entrepriseDocumentIdValidator, EntrepriseDocumentInput, newEntrepriseId, Siren, sirenValidator } from 'camino-common/src/entreprise'
 import { dbManager } from '../../../tests/db-manager'
-import { restCall, restDeleteCall, restPostCall, restPutCall, userGenerate } from '../../../tests/_utils/index'
+import { restCall, restDeleteCall, restNewPutCall, restPostCall, userGenerate } from '../../../tests/_utils/index'
 import { entrepriseUpsert } from '../../database/queries/entreprises'
 import { afterAll, beforeAll, describe, test, expect, vi, beforeEach } from 'vitest'
 import { userSuper } from '../../database/user-super'
@@ -147,7 +147,7 @@ describe('entrepriseModifier', () => {
       id: newEntrepriseId('anonymous'),
       nom: 'Mon Entreprise',
     })
-    const tested = await restPutCall(dbPool, '/rest/entreprises/:entrepriseId', { entrepriseId: entreprise.id }, undefined, { id: entreprise.id, email: 'toto@gmail.com' })
+    const tested = await restNewPutCall(dbPool, '/rest/entreprises/:entrepriseId', { entrepriseId: entreprise.id }, undefined, { id: entreprise.id, email: 'toto@gmail.com' })
     expect(tested.statusCode).toBe(403)
   })
 
@@ -156,8 +156,8 @@ describe('entrepriseModifier', () => {
       id: newEntrepriseId('super'),
       nom: 'Mon Entreprise',
     })
-    const tested = await restPutCall(dbPool, '/rest/entreprises/:entrepriseId', { entrepriseId: entreprise.id }, userSuper, { id: entreprise.id, email: 'toto@gmail.com' })
-    expect(tested.statusCode).toBe(204)
+    const tested = await restNewPutCall(dbPool, '/rest/entreprises/:entrepriseId', { entrepriseId: entreprise.id }, userSuper, { id: entreprise.id, email: 'toto@gmail.com' })
+    expect(tested.statusCode).toBe(200)
   })
 
   test("peut modifier une entreprise (un utilisateur 'entreprise')", async () => {
@@ -165,14 +165,14 @@ describe('entrepriseModifier', () => {
       id: entrepriseId,
       nom: 'Mon Entreprise',
     })
-    const tested = await restPutCall(
+    const tested = await restNewPutCall(
       dbPool,
       '/rest/entreprises/:entrepriseId',
       { entrepriseId: entreprise.id },
       { ...testBlankUser, role: 'entreprise', entrepriseIds: [entreprise.id] },
       { id: entreprise.id, email: 'toto@gmail.com' }
     )
-    expect(tested.statusCode).toBe(204)
+    expect(tested.statusCode).toBe(200)
   })
 
   test('un utilisateur entreprise ne peut pas modifier une entreprise qui ne lui appartient pas', async () => {
@@ -180,7 +180,7 @@ describe('entrepriseModifier', () => {
       id: newEntrepriseId('otherEntreprise'),
       nom: 'Mon Entreprise',
     })
-    const tested = await restPutCall(
+    const tested = await restNewPutCall(
       dbPool,
       '/rest/entreprises/:entrepriseId',
       { entrepriseId: entreprise.id },
@@ -195,13 +195,13 @@ describe('entrepriseModifier', () => {
       id: newEntrepriseId('super'),
       nom: 'Mon Entreprise',
     })
-    const tested = await restPutCall(dbPool, '/rest/entreprises/:entrepriseId', { entrepriseId: entreprise.id }, userSuper, { id: entreprise.id, email: 'totogmailcom' })
+    const tested = await restNewPutCall(dbPool, '/rest/entreprises/:entrepriseId', { entrepriseId: entreprise.id }, userSuper, { id: entreprise.id, email: 'totogmailcom' })
     expect(tested.statusCode).toBe(400)
   })
 
   test("ne peut pas modifier une entreprise inexistante (un utilisateur 'super')", async () => {
     const entrepriseId = newEntrepriseId('unknown')
-    const tested = await restPutCall(dbPool, '/rest/entreprises/:entrepriseId', { entrepriseId: newEntrepriseId('unknown') }, userSuper, { id: entrepriseId, email: 'totogmailcom' })
+    const tested = await restNewPutCall(dbPool, '/rest/entreprises/:entrepriseId', { entrepriseId: newEntrepriseId('unknown') }, userSuper, { id: entrepriseId, email: 'totogmailcom' })
     expect(tested.statusCode).toBe(400)
   })
 
@@ -211,8 +211,8 @@ describe('entrepriseModifier', () => {
       nom: 'Mon Entreprise',
       archive: false,
     })
-    const tested = await restPutCall(dbPool, '/rest/entreprises/:entrepriseId', { entrepriseId: entreprise.id }, userSuper, { id: entreprise.id, archive: true })
-    expect(tested.statusCode).toBe(204)
+    const tested = await restNewPutCall(dbPool, '/rest/entreprises/:entrepriseId', { entrepriseId: entreprise.id }, userSuper, { id: entreprise.id, archive: true })
+    expect(tested.statusCode).toBe(200)
   })
   test('ne peut pas archiver une entreprise', async () => {
     const entreprise = await entrepriseUpsert({
@@ -220,7 +220,7 @@ describe('entrepriseModifier', () => {
       nom: 'Mon Entreprise',
       archive: false,
     })
-    const tested = await restPutCall(
+    const tested = await restNewPutCall(
       dbPool,
       '/rest/entreprises/:entrepriseId',
       { entrepriseId: entreprise.id },

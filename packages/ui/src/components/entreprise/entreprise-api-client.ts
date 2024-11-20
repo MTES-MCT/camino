@@ -1,4 +1,4 @@
-import { deleteWithJson, getWithJson, postWithJson, putWithJson } from '@/api/client-rest'
+import { deleteWithJson, getWithJson, newPutWithJson, postWithJson } from '@/api/client-rest'
 import { CaminoAnnee } from 'camino-common/src/date'
 import {
   EntrepriseId,
@@ -14,10 +14,11 @@ import { TempDocumentName } from 'camino-common/src/document'
 import { EtapeId } from 'camino-common/src/etape'
 import { Fiscalite } from 'camino-common/src/validators/fiscalite'
 import { z } from 'zod'
+import { CaminoError } from 'camino-common/src/zod-tools'
 
 export interface EntrepriseApiClient {
   getFiscaliteEntreprise: (annee: CaminoAnnee, entrepriseId: EntrepriseId) => Promise<Fiscalite>
-  modifierEntreprise: (entreprise: { id: EntrepriseId; telephone?: string; email?: string; url?: string; archive?: boolean }) => Promise<void>
+  modifierEntreprise: (entreprise: { id: EntrepriseId; telephone?: string; email?: string; url?: string; archive?: boolean }) => Promise<CaminoError<string> | { id: EntrepriseId }>
   creerEntreprise: (siren: Siren) => Promise<void>
   getEntreprise: (id: EntrepriseId) => Promise<EntrepriseType>
   getEntrepriseDocuments: (id: EntrepriseId) => Promise<EntrepriseDocument[]>
@@ -36,8 +37,8 @@ export const entrepriseApiClient: EntrepriseApiClient = {
       entrepriseId,
     })
   },
-  modifierEntreprise: async (entreprise): Promise<void> => {
-    return putWithJson('/rest/entreprises/:entrepriseId', { entrepriseId: entreprise.id }, entreprise)
+  modifierEntreprise: async (entreprise): Promise<CaminoError<string> | { id: EntrepriseId }> => {
+    return newPutWithJson('/rest/entreprises/:entrepriseId', { entrepriseId: entreprise.id }, entreprise)
   },
   creerEntreprise: async (siren: Siren): Promise<void> => {
     return postWithJson('/rest/entreprises', {}, { siren })

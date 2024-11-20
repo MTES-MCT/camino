@@ -2,7 +2,7 @@ import { EntrepriseEditPopup } from './edit-popup'
 import { Meta, StoryFn } from '@storybook/vue3'
 import { testBlankUser } from 'camino-common/src/tests-utils'
 import { action } from '@storybook/addon-actions'
-import { newEntrepriseId } from 'camino-common/src/entreprise'
+import { entrepriseIdValidator, newEntrepriseId } from 'camino-common/src/entreprise'
 
 const meta: Meta = {
   title: 'Components/Entreprise/Edition',
@@ -18,7 +18,7 @@ const apiClient = {
   modifierEntreprise: (...params: unknown[]) => {
     save(params)
 
-    return Promise.resolve()
+    return Promise.resolve({ id: entrepriseIdValidator.parse('id') })
   },
 }
 export const Ok: StoryFn = () => (

@@ -2,21 +2,21 @@ import { AsyncData } from '@/api/client-rest'
 import { Teleport, computed, defineComponent, onBeforeUnmount, onMounted, ref } from 'vue'
 import { LoadingElement } from './functional-loader'
 import type { JSX } from 'vue/jsx-runtime'
-import { Alert } from './alert'
+import { CaminoError } from 'camino-common/src/zod-tools'
 
-interface Props {
+interface Props<T> {
   id?: string
   title: string
   content: () => JSX.Element
   close: () => void
   validate: {
     text?: string
-    action: () => Promise<void>
+    action: () => Promise<CaminoError<string> | T>
   }
   canValidate: boolean
 }
 
-export const FunctionalPopup = defineComponent<Props>((props: Props) => {
+export const FunctionalPopup = defineComponent(<T,>(props: Props<T>) => {
   const canValidate = computed<boolean>(() => {
     return props.canValidate
   })
@@ -35,12 +35,19 @@ export const FunctionalPopup = defineComponent<Props>((props: Props) => {
         status: 'LOADING',
       }
       try {
-        await props.validate.action()
-        validateProcess.value = {
-          status: 'LOADED',
-          value: null,
+        const value: CaminoError<string> | T = await props.validate.action()
+        if (typeof value === 'object' && value !== null && 'message' in value) {
+          validateProcess.value = {
+            status: 'NEW_ERROR',
+            error: value,
+          }
+        } else {
+          validateProcess.value = {
+            status: 'LOADED',
+            value: null,
+          }
+          props.close()
         }
-        props.close()
       } catch (e: any) {
         console.error('error', e)
         validateProcess.value = {
@@ -92,13 +99,13 @@ export const FunctionalPopup = defineComponent<Props>((props: Props) => {
                     </h1>
                     <div class="fr-container">
                       {props.content()}
-                      {validateProcess.value.status === 'ERROR' ? <Alert small={true} type="error" title={validateProcess.value.message} /> : null}
+                      {validateProcess.value.status === 'ERROR' || validateProcess.value.status === 'NEW_ERROR' ? <LoadingElement data={validateProcess.value} renderItem={() => null} /> : null}
                     </div>
                   </div>
 
                   <div class="fr-modal__footer">
                     <div style={{ display: 'flex', width: '100%', justifyContent: 'end', alignItems: 'center', gap: '1rem' }}>
-                      {validateProcess.value.status !== 'ERROR' ? <LoadingElement data={validateProcess.value} renderItem={() => null} /> : null}
+                      {validateProcess.value.status !== 'ERROR' && validateProcess.value.status !== 'NEW_ERROR' ? <LoadingElement data={validateProcess.value} renderItem={() => null} /> : null}
                       <ul class="fr-btns-group fr-btns-group--right fr-btns-group--inline-reverse fr-btns-group--inline-lg fr-btns-group--icon-left" style={{ width: 'auto' }}>
                         <li>
                           <button

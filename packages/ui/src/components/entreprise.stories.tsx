@@ -88,7 +88,7 @@ const apiClient: Pick<
   modifierEntreprise: entreprise => {
     modifierEntrepriseAction(entreprise)
 
-    return Promise.resolve()
+    return Promise.resolve({ id: entreprise.id })
   },
   creerEntreprise: siren => {
     creerEntrepriseAction(siren)

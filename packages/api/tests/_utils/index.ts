@@ -16,7 +16,6 @@ import {
   getRestRoute,
   GetRestRoutes,
   PostRestRoutes,
-  PutRestRoutes,
   CaminoRestParams,
   DownloadRestRoutes,
   NewPostRestRoutes,
@@ -114,20 +113,6 @@ export const restNewPutCall = async <Route extends NewPutRestRoutes>(
   body: DeepReadonly<z.infer<(typeof CaminoRestRoutes)[Route]['newPut']['input']>>
 ): Promise<request.Test> => {
   const req = request(app(pool)).put(getRestRoute(path, params)).send(body)
-
-  return jwtSet(pool, req, user)
-}
-
-export const restPutCall = async <Route extends PutRestRoutes>(
-  pool: Pool,
-  path: Route,
-  params: CaminoRestParams<Route>,
-  user: TestUser | undefined,
-  body: z.infer<(typeof CaminoRestRoutes)[Route]['put']['input']>
-): Promise<request.Test> => {
-  const req = request(app(pool))
-    .put(getRestRoute(path, params))
-    .send(body ?? undefined)
 
   return jwtSet(pool, req, user)
 }

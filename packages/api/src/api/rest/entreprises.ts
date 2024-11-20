@@ -11,7 +11,6 @@ import { isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/type
 import { anneePrecedente, isAnnee } from 'camino-common/src/date'
 import {
   entrepriseIdValidator,
-  entrepriseModificationValidator,
   EntrepriseType,
   sirenValidator,
   EntrepriseDocument,
@@ -22,6 +21,7 @@ import {
   Entreprise,
   entrepriseValidator,
   entrepriseTypeValidator,
+  EntrepriseId,
 } from 'camino-common/src/entreprise'
 import { isSuper, User } from 'camino-common/src/roles'
 import { canCreateEntreprise, canEditEntreprise, canSeeEntrepriseDocuments } from 'camino-common/src/permissions/entreprises'
@@ -45,6 +45,10 @@ import { z } from 'zod'
 import { getEntrepriseEtablissements } from './entreprises-etablissements.queries'
 import { RawLineMatrice, getRawLines } from '../../business/matrices'
 import { callAndExit } from '../../tools/fp-tools'
+import { RestNewPutCall } from '../../server/rest'
+import { Effect, Match } from 'effect'
+import { EffectDbQueryAndValidateErrors } from '../../pg-database'
+import { CaminoApiError } from '../../types'
 
 type Reduced = { guyane: true; fiscalite: FiscaliteGuyane } | { guyane: false; fiscalite: FiscaliteFrance }
 // VisibleForTesting
@@ -84,52 +88,71 @@ export const responseExtractor = (lines: Pick<RawLineMatrice, 'fiscalite'>[]): F
   return redevances.fiscalite
 }
 
-export const modifierEntreprise =
-  (_pool: Pool) =>
-  async (req: JWTRequest<User>, res: CustomResponse<void>): Promise<void> => {
-    const user = req.auth
-    const entreprise = entrepriseModificationValidator.safeParse(req.body)
-    if (!user) {
-      res.sendStatus(HTTP_STATUS.FORBIDDEN)
-    } else if (!entreprise.success) {
-      res.sendStatus(HTTP_STATUS.BAD_REQUEST)
-    } else {
-      try {
-        if (!canEditEntreprise(user, entreprise.data.id)) {
-          res.sendStatus(HTTP_STATUS.FORBIDDEN)
-        } else {
-          const errors = []
-
-          if (isNotNullNorUndefined(entreprise.data.email) && !emailCheck(entreprise.data.email)) {
-            errors.push('adresse email invalide')
-          }
-
-          const entrepriseOld = await entrepriseGet(entreprise.data.id, { fields: { id: {} } }, user)
-          if (isNullOrUndefined(entrepriseOld)) {
-            errors.push('entreprise inconnue')
-          }
-
-          if (entrepriseOld && (entrepriseOld.archive ?? false) !== (entreprise.data.archive ?? false) && !isSuper(user)) {
-            errors.push(`interdit d'archiver une entreprise`)
-            console.error(`l'utilisateur ${user.id} a essayé de changer le statut d'archivage de l'entreprise ${entreprise.data.id}`)
-          }
-
-          if (errors.length) {
-            res.sendStatus(HTTP_STATUS.BAD_REQUEST)
-          } else {
-            await entrepriseUpsert({
-              ...entrepriseOld,
-              ...entreprise.data,
-            })
-            res.sendStatus(HTTP_STATUS.NO_CONTENT)
-          }
-        }
-      } catch (e) {
-        console.error(e)
-        res.sendStatus(HTTP_STATUS.INTERNAL_SERVER_ERROR)
-      }
-    }
-  }
+const miseAJourEntrepriseImpossible = "Erreur lors de la mise à jour de l'entreprise" as const
+const entrepriseDifferente = "Impossible de changer l'identifiant de l'entreprise" as const
+const archivageInterdit = "interdit d'archiver une entreprise" as const
+const entrepriseInconnue = 'entreprise inconnue' as const
+const adresseEmailInvalide = 'adresse email invalide' as const
+const editionEntrepriseImpossible = "Interdiction d'éditer l'entreprise" as const
+type ModifierEntrepriseErrors =
+  | EffectDbQueryAndValidateErrors
+  | typeof editionEntrepriseImpossible
+  | typeof adresseEmailInvalide
+  | typeof entrepriseInconnue
+  | typeof archivageInterdit
+  | typeof entrepriseDifferente
+  | typeof miseAJourEntrepriseImpossible
+export const modifierEntreprise: RestNewPutCall<'/rest/entreprises/:entrepriseId'> = (rootPipe): Effect.Effect<{ id: EntrepriseId }, CaminoApiError<ModifierEntrepriseErrors>> =>
+  rootPipe.pipe(
+    Effect.filterOrFail(
+      ({ params, body }) => body.id === params.entrepriseId,
+      () => ({ message: entrepriseDifferente })
+    ),
+    Effect.filterOrFail(
+      ({ user, body }) => canEditEntreprise(user, body.id),
+      () => ({ message: editionEntrepriseImpossible })
+    ),
+    Effect.filterOrFail(
+      ({ body }) => isNullOrUndefined(body.email) || emailCheck(body.email),
+      () => ({ message: adresseEmailInvalide })
+    ),
+    Effect.bind('entrepriseOld', ({ user, body }) =>
+      Effect.tryPromise({
+        try: () => entrepriseGet(body.id, { fields: { id: {} } }, user),
+        catch: e => ({ message: entrepriseInconnue, extra: e }),
+      })
+    ),
+    Effect.filterOrFail(
+      ({ entrepriseOld }) => isNotNullNorUndefined(entrepriseOld),
+      () => ({ message: entrepriseInconnue })
+    ),
+    Effect.filterOrFail(
+      ({ entrepriseOld, body, user }) => (entrepriseOld?.archive ?? false) === (body.archive ?? false) || isSuper(user),
+      () => ({ message: archivageInterdit })
+    ),
+    Effect.tap(({ entrepriseOld, body }) =>
+      Effect.tryPromise({
+        try: () =>
+          entrepriseUpsert({
+            ...entrepriseOld,
+            ...body,
+          }),
+        catch: e => ({ message: miseAJourEntrepriseImpossible, extra: e }),
+      })
+    ),
+    Effect.map(({ body }) => ({ id: body.id })),
+    Effect.mapError(caminoError =>
+      Match.value(caminoError.message).pipe(
+        Match.when("Interdiction d'éditer l'entreprise", () => ({ ...caminoError, status: HTTP_STATUS.FORBIDDEN })),
+        Match.whenOr('adresse email invalide', 'entreprise inconnue', "interdit d'archiver une entreprise", "Impossible de changer l'identifiant de l'entreprise", () => ({
+          ...caminoError,
+          status: HTTP_STATUS.BAD_REQUEST,
+        })),
+        Match.when("Erreur lors de la mise à jour de l'entreprise", () => ({ ...caminoError, status: HTTP_STATUS.INTERNAL_SERVER_ERROR })),
+        Match.exhaustive
+      )
+    )
+  )
 
 export const creerEntreprise =
   (_pool: Pool) =>

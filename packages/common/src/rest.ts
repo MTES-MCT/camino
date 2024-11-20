@@ -184,7 +184,7 @@ export const CaminoRestRoutes = {
   '/rest/entreprises/:entrepriseId': {
     params: entrepriseIdParamsValidator,
     get: { output: entrepriseTypeValidator },
-    put: { input: entrepriseModificationValidator, output: z.void() },
+    newPut: { input: entrepriseModificationValidator, output: z.object({ id: entrepriseIdValidator }) },
   },
   '/rest/entreprises/:entrepriseId/documents': {
     params: entrepriseIdParamsValidator,

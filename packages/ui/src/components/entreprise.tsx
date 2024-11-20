@@ -172,8 +172,11 @@ export const PureEntreprise = defineComponent<Props>(props => {
               apiClient={{
                 ...props.apiClient,
                 modifierEntreprise: async entreprise => {
-                  await props.apiClient.modifierEntreprise(entreprise)
-                  await refreshEntreprise()
+                  const response = await props.apiClient.modifierEntreprise(entreprise)
+                  if (!('message' in response)) {
+                    await refreshEntreprise()
+                  }
+                  return response
                 },
               }}
               user={props.user}
