@@ -47,23 +47,16 @@ export const TitresLinkForm = defineComponent<Props>(props => {
 
   const init = async () => {
     titresLinks.value = { status: 'LOADING' }
-    try {
-      const result = await props.apiClient.loadTitreLinks(props.titre.id)
-      if ('message' in result) {
-        titresLinks.value = {
-          status: 'NEW_ERROR',
-          error: result,
-        }
-      } else {
-        titresLinks.value = { status: 'LOADED', value: result }
-        props.onTitresFromLoaded(result.amont.length > 0)
-        selectedTitres.value = titresLinks.value.value.amont
-      }
-    } catch (e: any) {
+    const result = await props.apiClient.loadTitreLinks(props.titre.id)
+    if ('message' in result) {
       titresLinks.value = {
-        status: 'ERROR',
-        message: e.message ?? 'something wrong happened',
+        status: 'NEW_ERROR',
+        error: result,
       }
+    } else {
+      titresLinks.value = { status: 'LOADED', value: result }
+      props.onTitresFromLoaded(result.amont.length > 0)
+      selectedTitres.value = titresLinks.value.value.amont
     }
   }
 

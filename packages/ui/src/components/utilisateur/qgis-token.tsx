@@ -17,22 +17,15 @@ export const QGisToken = defineComponent<Props>(props => {
 
   const generateToken = async () => {
     data.value = { status: 'LOADING' }
-    try {
-      const tokenData = await props.apiClient.getQGISToken()
-      if ('message' in tokenData) {
-        data.value = {
-          status: 'NEW_ERROR',
-          error: tokenData,
-        }
-      } else if (tokenData.url) {
-        data.value = { status: 'LOADED', value: tokenData }
-        copyToClipboard(`L'URL vient d'être copiée dans votre presse papier`, tokenData.url)
-      }
-    } catch (e: any) {
+    const tokenData = await props.apiClient.getQGISToken()
+    if ('message' in tokenData) {
       data.value = {
-        status: 'ERROR',
-        message: e.message ?? 'something wrong happened',
+        status: 'NEW_ERROR',
+        error: tokenData,
       }
+    } else if (tokenData.url) {
+      data.value = { status: 'LOADED', value: tokenData }
+      copyToClipboard(`L'URL vient d'être copiée dans votre presse papier`, tokenData.url)
     }
   }
 

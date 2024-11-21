@@ -25,12 +25,14 @@ import { isDemarcheStatutNonStatue, isDemarcheStatutNonValide } from 'camino-com
 import { capitalize } from 'camino-common/src/strings'
 import { CaminoRouter } from '@/typings/vue-router'
 import { Alert } from '../_ui/alert'
+import { CaminoDate } from 'camino-common/src/date'
 
 type Props = {
   titre: Pick<TitreGet, 'id' | 'slug' | 'titre_type_id' | 'titre_statut_id' | 'nom'>
   demarches: TitreGetDemarche[]
   currentDemarcheSlug: DemarcheSlug
-  apiClient: Pick<ApiClient, 'deleteEtape' | 'deposeEtape' | 'getTitresWithPerimetreForCarte' | 'createDemarche' | 'updateDemarche' | 'deleteDemarche'>
+  currentDate: CaminoDate
+  apiClient: Pick<ApiClient, 'deleteEtape' | 'deposeEtape' | 'getTitresWithPerimetreForCarte' | 'createDemarche' | 'updateDemarche' | 'deleteDemarche' | 'getEtapesTypesEtapesStatuts' | 'etapeCreer'>
   demarcheCreatedOrUpdated: (demarcheSlug: DemarcheSlug) => Promise<void>
   demarcheDeleted: () => Promise<void>
   router: Pick<CaminoRouter, 'push'>
@@ -255,14 +257,17 @@ export const TitreDemarche = defineComponent<Props>(props => {
                         entreprises={props.entreprises}
                         titre={{ typeId: props.titre.titre_type_id, titreStatutId: props.titre.titre_statut_id, slug: props.titre.slug, nom: props.titre.nom }}
                         demarche={{
+                          id: demarche.value.id,
                           administrationsLocales: getAdministrationsLocales(perimetre.value?.communes.map(({ id }) => id) ?? [], perimetre.value?.secteurs_maritimes ?? []),
                           demarche_type_id: demarche.value.demarche_type_id,
+                          demarche_statut_id: demarche.value.demarche_statut_id,
                           titulaireIds: titulaires.value ?? [],
                           sdom_zones: perimetre.value?.sdom_zones ?? [],
                           communes: perimetre.value?.communes?.map(({ id }) => id) ?? [],
                           etapes: demarche.value.etapes,
                         }}
                         apiClient={props.apiClient}
+                        currentDate={props.currentDate}
                         initTab={props.initTab}
                       />
                     </div>
@@ -311,7 +316,7 @@ export const TitreDemarche = defineComponent<Props>(props => {
 })
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-TitreDemarche.props = ['titre', 'demarches', 'currentDemarcheSlug', 'apiClient', 'user', 'entreprises', 'router', 'initTab', 'demarcheCreatedOrUpdated', 'demarcheDeleted']
+TitreDemarche.props = ['titre', 'demarches', 'currentDemarcheSlug', 'currentDate', 'apiClient', 'user', 'entreprises', 'router', 'initTab', 'demarcheCreatedOrUpdated', 'demarcheDeleted']
 
 const DisplayLocalisation: FunctionalComponent<Pick<DemarcheEtapeFondamentale['fondamentale'], 'perimetre'>> = props => {
   if (isNullOrUndefined(props.perimetre)) {

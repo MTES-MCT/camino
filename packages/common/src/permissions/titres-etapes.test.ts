@@ -242,6 +242,16 @@ test.each<{
     canCreate: true,
   },
   {
+    user: { role: 'entreprise', entrepriseIds: [newEntrepriseId('1')] },
+    etapeTypeId: ETAPES_TYPES.receptionDeComplements,
+    isBrouillon: ETAPE_IS_BROUILLON,
+    titreTitulaires: [newEntrepriseId('1')],
+    titresAdministrationsLocales: [],
+    demarcheTypeId: 'oct',
+    titre: { typeId: 'arm', titreStatutId: 'dmc' },
+    canCreate: true,
+  },
+  {
     user: { role: 'admin', administrationId: 'ope-brgm-01' },
     etapeTypeId: 'mfr',
     isBrouillon: ETAPE_IS_BROUILLON,

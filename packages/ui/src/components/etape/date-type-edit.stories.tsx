@@ -48,7 +48,7 @@ export const Loading: StoryFn = () => (
 
 export const WithError: StoryFn = () => (
   <DateTypeEdit
-    apiClient={{ ...apiClient, getEtapesTypesEtapesStatuts: () => Promise.reject(new Error('Une erreur est survenue')) }}
+    apiClient={{ ...apiClient, getEtapesTypesEtapesStatuts: async () => ({ message: 'Une erreur est survenue' }) }}
     demarcheId={demarcheId}
     etape={{ date: toCaminoDate('2023-01-01'), id: null, statutId: 'fai', typeId: 'mfr' }}
     completeUpdate={completeUpdate}

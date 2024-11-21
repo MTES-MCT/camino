@@ -1,5 +1,5 @@
 import { ETAPES_TYPES, EtapeTypeId, EtapesTypes } from 'camino-common/src/static/etapesTypes'
-import { computed, defineComponent, ref } from 'vue'
+import { computed, defineComponent, onMounted, ref } from 'vue'
 import { DsfrSeparator } from '../_ui/dsfr-separator'
 import { capitalize } from 'camino-common/src/strings'
 import { ETAPES_STATUTS, EtapeStatutId } from 'camino-common/src/static/etapesStatuts'
@@ -10,18 +10,18 @@ import { EtapeStatut } from '../_common/etape-statut'
 import { PropDuree } from '../etape/prop-duree'
 import { SubstancesLegale } from 'camino-common/src/static/substancesLegales'
 import { EtapePropEntreprisesItem, EtapePropItem } from '../etape/etape-prop-item'
-import { DemarcheEtape as CommonDemarcheEtape, DemarcheConsentement } from 'camino-common/src/demarche'
+import { DemarcheEtape as CommonDemarcheEtape, DemarcheConsentement, DemarcheId } from 'camino-common/src/demarche'
 import { DsfrPerimetre, TabId } from '../_common/dsfr-perimetre'
 import { TitreSlug } from 'camino-common/src/validators/titres'
 import { numberFormat } from 'camino-common/src/number'
 import { OmitDistributive, getValues, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
 import { ElementWithValue, valeurFind } from 'camino-common/src/sections'
 import { EtapeDocuments } from '../etape/etape-documents'
-import { User } from 'camino-common/src/roles'
+import { isEntrepriseOrBureauDEtude, User } from 'camino-common/src/roles'
 import styles from './demarche-etape.module.css'
 import { DsfrButton, DsfrButtonIcon, DsfrLink } from '../_ui/dsfr-button'
 import { PureDownloads } from '../_common/downloads'
-import { canDeleteEtape, canDeposeEtape, canEditEtape } from 'camino-common/src/permissions/titres-etapes'
+import { canCreateEtape, canDeleteEtape, canDeposeEtape, canEditEtape } from 'camino-common/src/permissions/titres-etapes'
 import { AdministrationId } from 'camino-common/src/static/administrations'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
 import { TitreStatutId } from 'camino-common/src/static/titresStatuts'
@@ -42,15 +42,23 @@ import { getSections } from 'camino-common/src/static/titresTypes_demarchesTypes
 import { Alert } from '../_ui/alert'
 import { getInfo } from '../_common/new-sections-edit'
 import { getDemandesConsentement } from '../titre/demarche-consentement'
+import { DemarcheStatutId } from 'camino-common/src/static/demarchesStatuts'
+import { ETAPE_IS_BROUILLON } from 'camino-common/src/etape'
+
+import { AsyncData } from '@/api/client-rest'
+import { LoadingElement } from '../_ui/functional-loader'
+import { useState } from '@/utils/vue-tsx-utils'
 // Il ne faut pas utiliser de literal dans le 'in' il n'y aura jamais d'erreur typescript
 const fondamentalePropsName = 'fondamentale'
 
 type Props = {
   etape: OmitDistributive<CommonDemarcheEtape, 'ordre'>
   demarche: {
+    id: DemarcheId
     titulaireIds: EntrepriseId[]
     administrationsLocales: AdministrationId[]
     demarche_type_id: DemarcheTypeId
+    demarche_statut_id: DemarcheStatutId
     sdom_zones: SDOMZoneId[]
     communes: CommuneId[]
     etapes: TitreGetDemarche['etapes']
@@ -61,10 +69,11 @@ type Props = {
     nom: string
     titreStatutId: TitreStatutId
   }
-  apiClient: Pick<ApiClient, 'deleteEtape' | 'deposeEtape'>
+  apiClient: Pick<ApiClient, 'deleteEtape' | 'deposeEtape' | 'getEtapesTypesEtapesStatuts' | 'etapeCreer'>
   router: Pick<CaminoRouter, 'push'>
   user: User
   entreprises: Entreprise[]
+  currentDate: CaminoDate
   initTab?: TabId
 }
 
@@ -204,6 +213,74 @@ export const DemarcheEtape = defineComponent<Props>(props => {
 
   const isBrouillon = computed<boolean>(() => props.etape.is_brouillon)
 
+  const [showReponseComplementButton, setShowReponseComplementButton] = useState<AsyncData<boolean>>({ status: 'LOADED', value: false })
+  onMounted(async () => {
+    const lastDemandeComplements = props.demarche.etapes.findLast(({ etape_type_id }) => etape_type_id === ETAPES_TYPES.demandeDeComplements)
+    if (isNotNullNorUndefined(lastDemandeComplements) && lastDemandeComplements.id === props.etape.id) {
+      const canCreateReponseComplement = canCreateEtape(
+        props.user,
+        ETAPES_TYPES.receptionDeComplements,
+        ETAPE_IS_BROUILLON,
+        props.demarche.titulaireIds,
+        props.demarche.administrationsLocales,
+        props.demarche.demarche_type_id,
+        props.titre
+      )
+      if (canCreateReponseComplement) {
+        setShowReponseComplementButton({ status: 'LOADING' })
+        const etapeTypesPotential = await props.apiClient.getEtapesTypesEtapesStatuts(props.demarche.id, null, props.currentDate)
+        if ('message' in etapeTypesPotential) {
+          setShowReponseComplementButton({ status: 'NEW_ERROR', error: etapeTypesPotential })
+        } else {
+          setShowReponseComplementButton({ status: 'LOADED', value: Object.keys(etapeTypesPotential).includes(ETAPES_TYPES.receptionDeComplements) })
+        }
+      }
+    }
+  })
+
+  const goToEditEtapeReponseComplement = async () => {
+    setShowReponseComplementButton({ status: 'LOADING' })
+    const result = await props.apiClient.etapeCreer({
+      typeId: ETAPES_TYPES.receptionDeComplements,
+      statutId: ETAPES_STATUTS.FAIT,
+      date: props.currentDate,
+      titreDemarcheId: props.demarche.id,
+      note: { valeur: '', is_avertissement: false },
+      dateDebut: null,
+      dateFin: null,
+      duree: null,
+      substances: [],
+      titulaireIds: [],
+      amodiataireIds: [],
+      geojson4326Perimetre: null,
+      geojson4326Points: null,
+      geojsonOriginePoints: null,
+      geojsonOriginePerimetre: null,
+      geojsonOrigineGeoSystemeId: null,
+      geojsonOrigineForages: null,
+      contenu: {},
+      heritageProps: {
+        dateDebut: { actif: true },
+        dateFin: { actif: true },
+        duree: { actif: true },
+        perimetre: { actif: true },
+        substances: { actif: true },
+        titulaires: { actif: true },
+        amodiataires: { actif: true },
+      },
+      heritageContenu: {},
+      etapeDocuments: [],
+      entrepriseDocumentIds: [],
+      etapeAvis: [],
+    })
+
+    if ('message' in result) {
+      setShowReponseComplementButton({ status: 'NEW_ERROR', error: result })
+    } else {
+      props.router.push({ name: 'etapeEdition', params: { id: result.id } })
+    }
+  }
+
   const deposeEtape = async () => {
     await props.apiClient.deposeEtape(props.etape.id)
   }
@@ -219,25 +296,26 @@ export const DemarcheEtape = defineComponent<Props>(props => {
             {isBrouillon.value ? <Badge class="fr-ml-1w" systemLevel="new" ariaLabel={`Brouillon de l'étape ${EtapesTypes[props.etape.etape_type_id].nom}`} label="Brouillon" /> : null}
           </div>
 
-          <div style={{ display: 'flex' }}>
+          <div style={{ display: 'flex', gap: '0.25rem' }}>
+            <LoadingElement data={showReponseComplementButton.value} renderItem={() => <></>} />
+            {showReponseComplementButton.value.status === 'LOADED' && showReponseComplementButton.value.value === false ? null : (
+              <DsfrButton
+                label="Répondre à la demande de compléments"
+                disabled={showReponseComplementButton.value.status === 'LOADING'}
+                buttonType={isEntrepriseOrBureauDEtude(props.user) ? 'primary' : 'secondary'}
+                onClick={goToEditEtapeReponseComplement}
+                title={`Répondre à la demande de compléments du ${props.etape.date}`}
+              />
+            )}
             {canEditOrDeleteEtape.value ? (
               <>
-                {isBrouillon.value ? <DsfrButton class="fr-mr-1v" buttonType="primary" label="Finaliser" title="Finaliser l'étape" onClick={deposePopupOpen} disabled={!isDeposable.value} /> : null}
-                <DsfrLink
-                  icon={'fr-icon-pencil-line'}
-                  disabled={false}
-                  to={{ name: 'etapeEdition', params: { id: props.etape.slug } }}
-                  class="fr-mr-1v"
-                  buttonType="secondary"
-                  title="Modifier l’étape"
-                  label={null}
-                />
-                {canDelete.value ? <DsfrButtonIcon icon={'fr-icon-delete-bin-line'} class="fr-mr-1v" buttonType="secondary" title="Supprimer l’étape" onClick={removePopupOpen} /> : null}
+                {isBrouillon.value ? <DsfrButton buttonType="primary" label="Finaliser" title="Finaliser l'étape" onClick={deposePopupOpen} disabled={!isDeposable.value} /> : null}
+                <DsfrLink icon={'fr-icon-pencil-line'} disabled={false} to={{ name: 'etapeEdition', params: { id: props.etape.slug } }} buttonType="secondary" title="Modifier l’étape" label={null} />
+                {canDelete.value ? <DsfrButtonIcon icon={'fr-icon-delete-bin-line'} buttonType="secondary" title="Supprimer l’étape" onClick={removePopupOpen} /> : null}
               </>
             ) : null}
             {canDownloadZip.value ? (
               <PureDownloads
-                class="fr-mr-1v"
                 downloadTitle={`Télécharger l’ensemble des documents de l'étape "${EtapesTypes[props.etape.etape_type_id].nom}" dans un fichier .zip`}
                 downloadRoute="/etape/zip/:etapeId"
                 params={{ etapeId: props.etape.id }}
@@ -387,4 +465,4 @@ const SectionElementInfo = (props: { element: ElementWithValue; sectionId: strin
 }
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-DemarcheEtape.props = ['demarche', 'titre', 'router', 'user', 'entreprises', 'etape', 'apiClient', 'initTab']
+DemarcheEtape.props = ['demarche', 'titre', 'router', 'user', 'entreprises', 'etape', 'apiClient', 'initTab', 'currentDate']

@@ -39,6 +39,8 @@ const getTitreUtilisateurAbonneAction = action('getTitreUtilisateurAbonneAction'
 const titreUtilisateurAbonneAction = action('titreUtilisateurAbonneAction')
 const linkTitresAction = action('linkTitresAction')
 const getDemarcheMiseEnConcurrenceAction = action('getDemarcheMiseEnConcurrence')
+const getEtapesTypesEtapesStatutsAction = action('getEtapesTypesEtapesStatuts')
+const etapeCreerAction = action('etapeCreer')
 
 type PropsApiClient = Props['apiClient']
 const routerPushMock: Pick<CaminoRouter, 'push' | 'replace'> = {
@@ -323,6 +325,15 @@ const apiClient: PropsApiClient = {
   getDemarcheMiseEnConcurrence: demarcheId => {
     getDemarcheMiseEnConcurrenceAction(demarcheId)
     return Promise.resolve([{ demarcheId: demarcheIdValidator.parse('idSatellite'), titreNom: 'Titre Satellite' }])
+  },
+
+  getEtapesTypesEtapesStatuts: async () => {
+    getEtapesTypesEtapesStatutsAction()
+    return {}
+  },
+  etapeCreer: async () => {
+    etapeCreerAction()
+    return { id: etapeIdValidator.parse('newEtapeId') }
   },
 }
 

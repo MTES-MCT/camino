@@ -102,9 +102,7 @@ export const SelectedEtapeNotPossible: StoryFn = () => (
   <TypeEdit
     onEtapeChange={onEtapeChange}
     apiClient={{
-      getEtapesTypesEtapesStatuts: () => {
-        return Promise.resolve({ mcd: { etapeStatutIds: ['fai'], mainStep: false } })
-      },
+      getEtapesTypesEtapesStatuts: async () => ({ mcd: { etapeStatutIds: [ETAPES_STATUTS.FAIT], mainStep: false } }),
     }}
     demarcheId={demarcheIdValidator.parse('demarcheID')}
     etape={{
@@ -131,7 +129,7 @@ export const Loading: StoryFn = () => (
 export const WithError: StoryFn = () => (
   <TypeEdit
     onEtapeChange={onEtapeChange}
-    apiClient={{ getEtapesTypesEtapesStatuts: () => Promise.reject(new Error('Cassé')) }}
+    apiClient={{ getEtapesTypesEtapesStatuts: async () => ({ message: 'Cassé' }) }}
     demarcheId={demarcheIdValidator.parse('demarcheID')}
     etape={{
       statutId: null,

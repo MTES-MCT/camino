@@ -12,6 +12,7 @@ import { Alert } from '../_ui/alert'
 import { TypeAheadSingle } from '../_ui/typeahead-single'
 import { DsfrSelect, Item } from '../_ui/dsfr-select'
 import type { JSX } from 'vue/jsx-runtime'
+import { capitalize } from 'camino-common/src/strings'
 
 type Props = {
   etape: DeepReadonly<{
@@ -49,24 +50,17 @@ export const TypeEdit = defineComponent<Props>(props => {
   watch(
     () => props.etape.date,
     async newEtapeDate => {
-      try {
-        const newEtapeTypesAndStatuts = await props.apiClient.getEtapesTypesEtapesStatuts(props.demarcheId, props.etape?.id ?? null, newEtapeDate)
-        if ('message' in newEtapeTypesAndStatuts) {
-          possibleEtapes.value = {
-            status: 'NEW_ERROR',
-            error: newEtapeTypesAndStatuts,
-          }
-        } else {
-          possibleEtapes.value = { status: 'LOADED', value: newEtapeTypesAndStatuts }
-          const typeId = etapeTypeId.value
-          if (isNotNullNorUndefined(typeId)) {
-            updatePossibleStatuts(typeId)
-          }
-        }
-      } catch (e: any) {
+      const newEtapeTypesAndStatuts = await props.apiClient.getEtapesTypesEtapesStatuts(props.demarcheId, props.etape?.id ?? null, newEtapeDate)
+      if ('message' in newEtapeTypesAndStatuts) {
         possibleEtapes.value = {
-          status: 'ERROR',
-          message: e.message ?? 'something wrong happened',
+          status: 'NEW_ERROR',
+          error: newEtapeTypesAndStatuts,
+        }
+      } else {
+        possibleEtapes.value = { status: 'LOADED', value: newEtapeTypesAndStatuts }
+        const typeId = etapeTypeId.value
+        if (isNotNullNorUndefined(typeId)) {
+          updatePossibleStatuts(typeId)
         }
       }
     },
@@ -99,7 +93,7 @@ export const TypeEdit = defineComponent<Props>(props => {
   const displayItemInList = (item: EtapeType, etapeTypeEtapeStatutWithMainStep: EtapeTypeEtapeStatutWithMainStep): JSX.Element => {
     const isMainStep = etapeTypeEtapeStatutWithMainStep[item.id]?.mainStep ?? false
 
-    return isMainStep ? <strong>{item.nom}</strong> : <>{item.nom}</>
+    return isMainStep ? <strong>{capitalize(item.nom)}</strong> : <>{capitalize(item.nom)}</>
   }
 
   const noItemsText = computed<string | null>(() => {

@@ -14,6 +14,9 @@ import { ZERO_KM2, km2Validator } from 'camino-common/src/number'
 import { CaminoRouter } from '@/typings/vue-router'
 import { sectionDureeIds } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections'
 import { DemarcheEtapeFondamentale, demarcheIdValidator } from 'camino-common/src/demarche'
+import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts'
+import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes'
+import { ETAPES_STATUTS } from 'camino-common/src/static/etapesStatuts'
 
 const meta: Meta = {
   title: 'Components/Demarche/Etape',
@@ -28,6 +31,8 @@ const titreSlug = titreSlugValidator.parse('titre-slug')
 const routerPushAction = action('routerPushAction')
 const deleteEtapeAction = action('deleteEtapeAction')
 const deposeEtapeAction = action('deposeEtapeAction')
+const getEtapesTypesEtapesStatutsAction = action('getEtapesTypesEtapesStatutsAction')
+const etapeCreerAction = action('etapeCreerAction')
 
 const entreprises: Entreprise[] = [
   { id: entrepriseIdValidator.parse('titulaire1'), nom: 'titulaire1', legal_siren: '' },
@@ -35,7 +40,7 @@ const entreprises: Entreprise[] = [
   { id: entrepriseIdValidator.parse('amodiataire1'), nom: 'amodiataire1', legal_siren: '' },
 ]
 
-const apiClient: Pick<ApiClient, 'deleteEtape' | 'deposeEtape'> = {
+const apiClient: Pick<ApiClient, 'deleteEtape' | 'deposeEtape' | 'getEtapesTypesEtapesStatuts' | 'etapeCreer'> = {
   deleteEtape: etapeId => {
     deleteEtapeAction(etapeId)
 
@@ -45,6 +50,15 @@ const apiClient: Pick<ApiClient, 'deleteEtape' | 'deposeEtape'> = {
     deposeEtapeAction(etapeId)
 
     return Promise.resolve()
+  },
+  getEtapesTypesEtapesStatuts: () => {
+    getEtapesTypesEtapesStatutsAction()
+
+    return Promise.resolve({})
+  },
+  etapeCreer: async () => {
+    etapeCreerAction()
+    return { id: etapeIdValidator.parse('newEtapeId') }
   },
 }
 
@@ -267,6 +281,8 @@ export const NoSnapshotDemande: StoryFn = () => (
   <DemarcheEtape
     titre={{ titreStatutId: 'val', typeId: 'arm', nom: 'nom du titre', slug: titreSlug }}
     demarche={{
+      id: demarcheIdValidator.parse('demarcheId'),
+      demarche_statut_id: DemarchesStatutsIds.EnInstruction,
       demarche_type_id: 'oct',
       titulaireIds: [entrepriseIdValidator.parse('titulaire1'), entrepriseIdValidator.parse('titulaire2')],
       administrationsLocales: [],
@@ -277,6 +293,7 @@ export const NoSnapshotDemande: StoryFn = () => (
     user={{ ...testBlankUser, role: 'super' }}
     router={routerPushMock}
     apiClient={apiClient}
+    currentDate={toCaminoDate('3000-01-01')}
     entreprises={entreprises}
     etape={{
       id: etapeIdValidator.parse('etapeId'),
@@ -302,6 +319,8 @@ export const DemandeMultipleEntreprisesDocuments: StoryFn = () => (
     titre={{ titreStatutId: 'val', typeId: 'arm', nom: 'nom du titre', slug: titreSlug }}
     demarche={{
       demarche_type_id: 'oct',
+      id: demarcheIdValidator.parse('demarcheId'),
+      demarche_statut_id: DemarchesStatutsIds.EnInstruction,
       titulaireIds: [entrepriseIdValidator.parse('titulaire1'), entrepriseIdValidator.parse('titulaire2')],
       administrationsLocales: [],
       sdom_zones: [],
@@ -311,6 +330,7 @@ export const DemandeMultipleEntreprisesDocuments: StoryFn = () => (
     user={{ ...testBlankUser, role: 'super' }}
     router={routerPushMock}
     apiClient={apiClient}
+    currentDate={toCaminoDate('3000-01-01')}
     entreprises={entreprises}
     etape={{
       id: etapeIdValidator.parse('etapeId'),
@@ -380,10 +400,20 @@ export const DemandeMultipleEntreprisesDocuments: StoryFn = () => (
 export const DemandeNoMap: StoryFn = () => (
   <DemarcheEtape
     titre={{ titreStatutId: 'val', typeId: 'arm', nom: 'nom du titre', slug: titreSlug }}
-    demarche={{ demarche_type_id: 'oct', titulaireIds: [entrepriseIdValidator.parse('titulaire1')], administrationsLocales: [], sdom_zones: [], etapes: [], communes: [] }}
+    demarche={{
+      id: demarcheIdValidator.parse('demarcheId'),
+      demarche_statut_id: DemarchesStatutsIds.EnInstruction,
+      demarche_type_id: 'oct',
+      titulaireIds: [entrepriseIdValidator.parse('titulaire1')],
+      administrationsLocales: [],
+      sdom_zones: [],
+      etapes: [],
+      communes: [],
+    }}
     user={{ ...testBlankUser, role: 'super' }}
     router={routerPushMock}
     apiClient={apiClient}
+    currentDate={toCaminoDate('3000-01-01')}
     entreprises={entreprises}
     etape={{
       id: etapeIdValidator.parse('etapeId'),
@@ -437,10 +467,20 @@ export const DemandeNoMap: StoryFn = () => (
 export const DemandeNonDeposable: StoryFn = () => (
   <DemarcheEtape
     titre={{ titreStatutId: 'val', typeId: 'arm', nom: 'nom du titre', slug: titreSlug }}
-    demarche={{ demarche_type_id: 'oct', titulaireIds: [], administrationsLocales: [], sdom_zones: [], etapes: [], communes: [] }}
+    demarche={{
+      id: demarcheIdValidator.parse('demarcheId'),
+      demarche_statut_id: DemarchesStatutsIds.EnInstruction,
+      demarche_type_id: 'oct',
+      titulaireIds: [],
+      administrationsLocales: [],
+      sdom_zones: [],
+      etapes: [],
+      communes: [],
+    }}
     user={{ ...testBlankUser, role: 'super' }}
     router={routerPushMock}
     apiClient={apiClient}
+    currentDate={toCaminoDate('3000-01-01')}
     entreprises={entreprises}
     etape={{
       id: etapeIdValidator.parse('etapeId'),
@@ -473,7 +513,16 @@ export const DemandeNonDeposable: StoryFn = () => (
 export const DemandeNonSupprimable: StoryFn = () => (
   <DemarcheEtape
     titre={{ titreStatutId: 'val', typeId: 'arm', nom: 'nom du titre', slug: titreSlug }}
-    demarche={{ demarche_type_id: 'oct', titulaireIds: [entrepriseIdValidator.parse('titulaire1')], administrationsLocales: [], sdom_zones: [], communes: [], etapes: [] }}
+    demarche={{
+      id: demarcheIdValidator.parse('demarcheId'),
+      demarche_statut_id: DemarchesStatutsIds.EnInstruction,
+      demarche_type_id: 'oct',
+      titulaireIds: [entrepriseIdValidator.parse('titulaire1')],
+      administrationsLocales: [],
+      sdom_zones: [],
+      communes: [],
+      etapes: [],
+    }}
     user={{
       ...testBlankUser,
       role: 'entreprise',
@@ -481,6 +530,7 @@ export const DemandeNonSupprimable: StoryFn = () => (
     }}
     router={routerPushMock}
     apiClient={apiClient}
+    currentDate={toCaminoDate('3000-01-01')}
     entreprises={entreprises}
     etape={{
       id: etapeIdValidator.parse('etapeId'),
@@ -548,10 +598,20 @@ const demandeArmMecaniseNonDeposable: FeatureMultiPolygon = {
 export const DemandeArmMecaniseNonDeposable: StoryFn = () => (
   <DemarcheEtape
     titre={{ titreStatutId: 'val', typeId: 'arm', nom: 'nom du titre', slug: titreSlug }}
-    demarche={{ demarche_type_id: 'oct', titulaireIds: [entrepriseIdValidator.parse('titulaire1')], administrationsLocales: [], sdom_zones: [], etapes: [], communes: [] }}
+    demarche={{
+      id: demarcheIdValidator.parse('demarcheId'),
+      demarche_statut_id: DemarchesStatutsIds.EnInstruction,
+      demarche_type_id: 'oct',
+      titulaireIds: [entrepriseIdValidator.parse('titulaire1')],
+      administrationsLocales: [],
+      sdom_zones: [],
+      etapes: [],
+      communes: [],
+    }}
     user={{ ...testBlankUser, role: 'super' }}
     router={routerPushMock}
     apiClient={apiClient}
+    currentDate={toCaminoDate('3000-01-01')}
     entreprises={entreprises}
     initTab="points"
     etape={{
@@ -634,10 +694,20 @@ const demandeArmMecaniseDeposable: FeatureMultiPolygon = {
 export const DemandeArmMecaniseDeposable: StoryFn = () => (
   <DemarcheEtape
     titre={{ titreStatutId: 'val', typeId: 'arm', nom: 'nom du titre', slug: titreSlug }}
-    demarche={{ demarche_type_id: 'oct', titulaireIds: [entrepriseIdValidator.parse('titulaire1')], administrationsLocales: [], sdom_zones: [], etapes: [], communes: [] }}
+    demarche={{
+      id: demarcheIdValidator.parse('demarcheId'),
+      demarche_statut_id: DemarchesStatutsIds.EnInstruction,
+      demarche_type_id: 'oct',
+      titulaireIds: [entrepriseIdValidator.parse('titulaire1')],
+      administrationsLocales: [],
+      sdom_zones: [],
+      etapes: [],
+      communes: [],
+    }}
     user={{ ...testBlankUser, role: 'super' }}
     router={routerPushMock}
     apiClient={apiClient}
+    currentDate={toCaminoDate('3000-01-01')}
     entreprises={entreprises}
     initTab="points"
     etape={{
@@ -724,10 +794,20 @@ const demandeArmNonMecaniseDeposable: FeatureMultiPolygon = {
 export const DemandeArmNonMecaniseDeposable: StoryFn = () => (
   <DemarcheEtape
     titre={{ titreStatutId: 'val', typeId: 'arm', nom: 'nom du titre', slug: titreSlug }}
-    demarche={{ demarche_type_id: 'oct', titulaireIds: [entrepriseIdValidator.parse('titulaire1')], administrationsLocales: [], sdom_zones: [], etapes: [], communes: [] }}
+    demarche={{
+      id: demarcheIdValidator.parse('demarcheId'),
+      demarche_statut_id: DemarchesStatutsIds.EnInstruction,
+      demarche_type_id: 'oct',
+      titulaireIds: [entrepriseIdValidator.parse('titulaire1')],
+      administrationsLocales: [],
+      sdom_zones: [],
+      etapes: [],
+      communes: [],
+    }}
     user={{ ...testBlankUser, role: 'super' }}
     router={routerPushMock}
     apiClient={apiClient}
+    currentDate={toCaminoDate('3000-01-01')}
     entreprises={entreprises}
     initTab="points"
     etape={{
@@ -774,7 +854,16 @@ export const DemandeArmNonMecaniseDeposable: StoryFn = () => (
 export const Depot: StoryFn = () => (
   <DemarcheEtape
     titre={{ titreStatutId: 'val', typeId: 'arm', nom: 'nom du titre', slug: titreSlug }}
-    demarche={{ demarche_type_id: 'oct', titulaireIds: [entrepriseIdValidator.parse('titulaire1')], administrationsLocales: [], sdom_zones: [], etapes: [], communes: [] }}
+    demarche={{
+      id: demarcheIdValidator.parse('demarcheId'),
+      demarche_statut_id: DemarchesStatutsIds.EnInstruction,
+      demarche_type_id: 'oct',
+      titulaireIds: [entrepriseIdValidator.parse('titulaire1')],
+      administrationsLocales: [],
+      sdom_zones: [],
+      etapes: [],
+      communes: [],
+    }}
     router={routerPushMock}
     user={{ ...testBlankUser, role: 'super' }}
     etape={{
@@ -791,6 +880,7 @@ export const Depot: StoryFn = () => (
       avis_documents: [],
     }}
     apiClient={apiClient}
+    currentDate={toCaminoDate('3000-01-01')}
     entreprises={entreprises}
   />
 )
@@ -798,7 +888,16 @@ export const Depot: StoryFn = () => (
 export const AvisDefavorable: StoryFn = () => (
   <DemarcheEtape
     titre={{ titreStatutId: 'val', typeId: 'arm', nom: 'nom du titre', slug: titreSlug }}
-    demarche={{ demarche_type_id: 'oct', titulaireIds: [], administrationsLocales: [], sdom_zones: [], etapes: [], communes: [] }}
+    demarche={{
+      id: demarcheIdValidator.parse('demarcheId'),
+      demarche_statut_id: DemarchesStatutsIds.EnInstruction,
+      demarche_type_id: 'oct',
+      titulaireIds: [],
+      administrationsLocales: [],
+      sdom_zones: [],
+      etapes: [],
+      communes: [],
+    }}
     user={{ ...testBlankUser, role: 'super' }}
     router={routerPushMock}
     etape={{
@@ -816,6 +915,7 @@ export const AvisDefavorable: StoryFn = () => (
       avis_documents: [],
     }}
     apiClient={apiClient}
+    currentDate={toCaminoDate('3000-01-01')}
     entreprises={entreprises}
   />
 )
@@ -841,10 +941,20 @@ const demandeAvecSeulementPerimetre: FeatureMultiPolygon = {
 export const DemandeAvecSeulementPerimetre: StoryFn = () => (
   <DemarcheEtape
     titre={{ titreStatutId: 'val', typeId: 'arm', nom: 'nom du titre', slug: titreSlug }}
-    demarche={{ demarche_type_id: 'oct', titulaireIds: [], administrationsLocales: [], sdom_zones: [], etapes: [], communes: [] }}
+    demarche={{
+      id: demarcheIdValidator.parse('demarcheId'),
+      demarche_statut_id: DemarchesStatutsIds.EnInstruction,
+      demarche_type_id: 'oct',
+      titulaireIds: [],
+      administrationsLocales: [],
+      sdom_zones: [],
+      etapes: [],
+      communes: [],
+    }}
     user={{ ...testBlankUser, role: 'super' }}
     router={routerPushMock}
     apiClient={apiClient}
+    currentDate={toCaminoDate('3000-01-01')}
     entreprises={entreprises}
     initTab="points"
     etape={{
@@ -909,10 +1019,20 @@ const demandeAvecGrosseNote: FeatureMultiPolygon = {
 export const DemandeAvecGrosseNote: StoryFn = () => (
   <DemarcheEtape
     titre={{ titreStatutId: 'val', typeId: 'arm', nom: 'nom du titre', slug: titreSlug }}
-    demarche={{ demarche_type_id: 'oct', titulaireIds: [], administrationsLocales: [], sdom_zones: [], etapes: [], communes: [] }}
+    demarche={{
+      id: demarcheIdValidator.parse('demarcheId'),
+      demarche_statut_id: DemarchesStatutsIds.EnInstruction,
+      demarche_type_id: 'oct',
+      titulaireIds: [],
+      administrationsLocales: [],
+      sdom_zones: [],
+      etapes: [],
+      communes: [],
+    }}
     user={{ ...testBlankUser, role: 'super' }}
     router={routerPushMock}
     apiClient={apiClient}
+    currentDate={toCaminoDate('3000-01-01')}
     entreprises={entreprises}
     initTab="points"
     etape={{
@@ -960,6 +1080,8 @@ export const AxmDeposableAvecDaeEtAsl: StoryFn = () => (
   <DemarcheEtape
     titre={{ titreStatutId: 'dmi', typeId: 'axm', nom: 'nom du titre', slug: titreSlug }}
     demarche={{
+      id: demarcheIdValidator.parse('demarcheId'),
+      demarche_statut_id: DemarchesStatutsIds.EnInstruction,
       demarche_type_id: 'oct',
       titulaireIds: [entrepriseIdValidator.parse('titulaire1')],
       administrationsLocales: [],
@@ -970,6 +1092,7 @@ export const AxmDeposableAvecDaeEtAsl: StoryFn = () => (
     user={{ ...testBlankUser, role: 'entreprise', entrepriseIds: [entrepriseIdValidator.parse('titulaire1')] }}
     router={routerPushMock}
     apiClient={apiClient}
+    currentDate={toCaminoDate('3000-01-01')}
     entreprises={entreprises}
     initTab="points"
     etape={{
@@ -1081,11 +1204,21 @@ export const AxmDeposableAvecDaeEtAsl: StoryFn = () => (
 export const DemandeAvecForage: StoryFn = () => (
   <DemarcheEtape
     titre={{ titreStatutId: 'val', typeId: 'pxg', nom: 'nom du titre', slug: titreSlug }}
-    demarche={{ demarche_type_id: 'oct', titulaireIds: [], administrationsLocales: [], sdom_zones: [], etapes: [], communes: [] }}
+    demarche={{
+      id: demarcheIdValidator.parse('demarcheId'),
+      demarche_statut_id: DemarchesStatutsIds.EnInstruction,
+      demarche_type_id: 'oct',
+      titulaireIds: [],
+      administrationsLocales: [],
+      sdom_zones: [],
+      etapes: [],
+      communes: [],
+    }}
     user={{ ...testBlankUser, role: 'super' }}
     router={routerPushMock}
     entreprises={entreprises}
     apiClient={apiClient}
+    currentDate={toCaminoDate('3000-01-01')}
     initTab="points"
     etape={{
       id: etapeIdValidator.parse('etapeId'),
@@ -1141,7 +1274,16 @@ export const DemandeAvecForage: StoryFn = () => (
 export const AvisDesServices: StoryFn = () => (
   <DemarcheEtape
     titre={{ titreStatutId: 'val', typeId: 'arm', nom: 'nom du titre', slug: titreSlug }}
-    demarche={{ demarche_type_id: 'oct', titulaireIds: [entrepriseIdValidator.parse('titulaire1')], administrationsLocales: [], sdom_zones: [], etapes: [], communes: [] }}
+    demarche={{
+      id: demarcheIdValidator.parse('demarcheId'),
+      demarche_statut_id: DemarchesStatutsIds.EnInstruction,
+      demarche_type_id: 'oct',
+      titulaireIds: [entrepriseIdValidator.parse('titulaire1')],
+      administrationsLocales: [],
+      sdom_zones: [],
+      etapes: [],
+      communes: [],
+    }}
     router={routerPushMock}
     user={{ ...testBlankUser, role: 'super' }}
     etape={{
@@ -1158,6 +1300,7 @@ export const AvisDesServices: StoryFn = () => (
       avis_documents: [],
     }}
     apiClient={apiClient}
+    currentDate={toCaminoDate('3000-01-01')}
     entreprises={entreprises}
   />
 )
@@ -1165,7 +1308,16 @@ export const AvisDesServices: StoryFn = () => (
 export const EtapeAvecNoteAvertissement: StoryFn = () => (
   <DemarcheEtape
     titre={{ titreStatutId: 'val', typeId: 'arm', nom: 'nom du titre', slug: titreSlug }}
-    demarche={{ demarche_type_id: 'oct', titulaireIds: [entrepriseIdValidator.parse('titulaire1')], administrationsLocales: [], sdom_zones: [], etapes: [], communes: [] }}
+    demarche={{
+      id: demarcheIdValidator.parse('demarcheId'),
+      demarche_statut_id: DemarchesStatutsIds.EnInstruction,
+      demarche_type_id: 'oct',
+      titulaireIds: [entrepriseIdValidator.parse('titulaire1')],
+      administrationsLocales: [],
+      sdom_zones: [],
+      etapes: [],
+      communes: [],
+    }}
     router={routerPushMock}
     user={{ ...testBlankUser, role: 'super' }}
     etape={{
@@ -1182,6 +1334,7 @@ export const EtapeAvecNoteAvertissement: StoryFn = () => (
       avis_documents: [],
     }}
     apiClient={apiClient}
+    currentDate={toCaminoDate('3000-01-01')}
     entreprises={entreprises}
   />
 )
@@ -1189,7 +1342,31 @@ export const EtapeAvecNoteAvertissement: StoryFn = () => (
 export const DemandeDeComplement: StoryFn = () => (
   <DemarcheEtape
     titre={{ titreStatutId: 'val', typeId: 'arm', nom: 'nom du titre', slug: titreSlug }}
-    demarche={{ demarche_type_id: 'oct', titulaireIds: [entrepriseIdValidator.parse('titulaire1')], administrationsLocales: [], sdom_zones: [], etapes: [], communes: [] }}
+    demarche={{
+      id: demarcheIdValidator.parse('demarcheId'),
+      demarche_statut_id: DemarchesStatutsIds.EnInstruction,
+      demarche_type_id: 'oct',
+      titulaireIds: [entrepriseIdValidator.parse('titulaire1')],
+      administrationsLocales: [],
+      sdom_zones: [],
+      etapes: [
+        {
+          ordre: 1,
+          id: etapeIdValidator.parse('etapeId'),
+          slug: etapeSlugValidator.parse('etape-slug'),
+          note: { valeur: '', is_avertissement: false },
+          etape_type_id: EtapesTypesEtapesStatuts.demandeDeComplements.FAIT.etapeTypeId,
+          etape_statut_id: EtapesTypesEtapesStatuts.demandeDeComplements.FAIT.etapeStatutId,
+          is_brouillon: ETAPE_IS_NOT_BROUILLON,
+          date,
+          sections_with_values: [{ id: 'mcox', elements: [{ id: 'delaifixe', nom: 'Délai fixé (jour)', type: 'number', optionnel: true, value: 12 }] }],
+          etape_documents: [],
+          entreprises_documents: [],
+          avis_documents: [],
+        },
+      ],
+      communes: [],
+    }}
     router={routerPushMock}
     user={{ ...testBlankUser, role: 'super' }}
     etape={{
@@ -1205,7 +1382,13 @@ export const DemandeDeComplement: StoryFn = () => (
       entreprises_documents: [],
       avis_documents: [],
     }}
-    apiClient={apiClient}
+    apiClient={{
+      ...apiClient,
+      getEtapesTypesEtapesStatuts: async () => {
+        return { [ETAPES_TYPES.receptionDeComplements]: { etapeStatutIds: [ETAPES_STATUTS.FAIT], mainStep: true } }
+      },
+    }}
+    currentDate={toCaminoDate('3000-01-01')}
     entreprises={entreprises}
   />
 )
@@ -1214,6 +1397,8 @@ export const DemandeDeConsentement: StoryFn = () => (
   <DemarcheEtape
     titre={{ titreStatutId: 'val', typeId: 'arm', nom: 'nom du titre', slug: titreSlug }}
     demarche={{
+      id: demarcheIdValidator.parse('demarcheId'),
+      demarche_statut_id: DemarchesStatutsIds.EnInstruction,
       demarche_type_id: 'oct',
       titulaireIds: [entrepriseIdValidator.parse('titulaire1')],
       administrationsLocales: [],
@@ -1255,6 +1440,61 @@ export const DemandeDeConsentement: StoryFn = () => (
       avis_documents: [],
     }}
     apiClient={apiClient}
+    currentDate={toCaminoDate('3000-01-01')}
+    entreprises={entreprises}
+  />
+)
+
+export const DemandeDeComplementEntreprise: StoryFn = () => (
+  <DemarcheEtape
+    titre={{ titreStatutId: 'val', typeId: 'arm', nom: 'nom du titre', slug: titreSlug }}
+    demarche={{
+      id: demarcheIdValidator.parse('demarcheId'),
+      demarche_statut_id: DemarchesStatutsIds.EnInstruction,
+      demarche_type_id: 'oct',
+      titulaireIds: [entrepriseIdValidator.parse('titulaire1')],
+      administrationsLocales: [],
+      sdom_zones: [],
+      etapes: [
+        {
+          id: etapeIdValidator.parse('etapeId'),
+          slug: etapeSlugValidator.parse('demande-slug'),
+          note: { valeur: '', is_avertissement: false },
+          etape_type_id: EtapesTypesEtapesStatuts.demandeDeComplements.FAIT.etapeTypeId,
+          etape_statut_id: EtapesTypesEtapesStatuts.demandeDeComplements.FAIT.etapeStatutId,
+          is_brouillon: ETAPE_IS_NOT_BROUILLON,
+          date,
+          sections_with_values: [],
+          etape_documents: [],
+          entreprises_documents: [],
+          avis_documents: [],
+          ordre: 0,
+        },
+      ],
+      communes: [],
+    }}
+    router={routerPushMock}
+    user={{ ...testBlankUser, role: 'entreprise', entrepriseIds: [entrepriseIdValidator.parse('titulaire1')] }}
+    etape={{
+      id: etapeIdValidator.parse('etapeId'),
+      slug: etapeSlugValidator.parse('etape-slug'),
+      note: { valeur: '', is_avertissement: false },
+      etape_type_id: EtapesTypesEtapesStatuts.demandeDeComplements.FAIT.etapeTypeId,
+      etape_statut_id: EtapesTypesEtapesStatuts.demandeDeComplements.FAIT.etapeStatutId,
+      is_brouillon: ETAPE_IS_NOT_BROUILLON,
+      date,
+      sections_with_values: [],
+      etape_documents: [],
+      entreprises_documents: [],
+      avis_documents: [],
+    }}
+    apiClient={{
+      ...apiClient,
+      getEtapesTypesEtapesStatuts: async () => {
+        return { [ETAPES_TYPES.receptionDeComplements]: { etapeStatutIds: [ETAPES_STATUTS.FAIT], mainStep: true } }
+      },
+    }}
+    currentDate={toCaminoDate('3000-01-01')}
     entreprises={entreprises}
   />
 )

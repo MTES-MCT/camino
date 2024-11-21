@@ -118,6 +118,8 @@ export interface Props {
     | 'updateDemarche'
     | 'deleteDemarche'
     | 'getDemarcheMiseEnConcurrence'
+    | 'getEtapesTypesEtapesStatuts'
+    | 'etapeCreer'
   >
   router: Pick<CaminoRouter, 'push' | 'replace'>
   initTab?: TabId
@@ -451,6 +453,7 @@ export const PureTitre = defineComponent<Props>(props => {
                   demarcheDeleted={demarcheDeleted}
                   demarches={titre.demarches}
                   currentDemarcheSlug={props.currentDemarcheSlug}
+                  currentDate={props.currentDate}
                   user={props.user}
                   entreprises={props.entreprises}
                   apiClient={customApiClient.value}

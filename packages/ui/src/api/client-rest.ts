@@ -85,32 +85,37 @@ type GetWithJsonArgs<T extends GetRestRoutes | NewGetRestRoutes, Method extends 
 export const getWithJson = async <T extends GetRestRoutes>(...args: GetWithJsonArgs<T, 'get'>): Promise<z.infer<(typeof CaminoRestRoutes)[T]['get']['output']>> =>
   callFetch(args[0], args[1], 'get', args.length === 3 ? args[2] : {})
 
+const errorMessage: CaminoError<string> = { message: "L'api est inaccessible" }
 export const newGetWithJson = async <T extends NewGetRestRoutes>(...args: GetWithJsonArgs<T, 'newGet'>): Promise<CaminoError<string> | z.infer<(typeof CaminoRestRoutes)[T]['newGet']['output']>> => {
-  const url = getUiRestRoute(args[0], args[1], args.length === 3 ? args[2] : {})
+  try {
+    const url = getUiRestRoute(args[0], args[1], args.length === 3 ? args[2] : {})
 
-  const defaultOptions = {
-    method: 'get',
-    headers: { 'Content-Type': 'application/json' },
-  }
-
-  const fetched = await fetch(url, defaultOptions)
-  if (fetched.ok) {
-    if (fetched.status === 200) {
-      // TODO 2024-08-21 parser le body via les validator de rest.ts
-      const body = await fetched.json()
-
-      return body
+    const defaultOptions = {
+      method: 'get',
+      headers: { 'Content-Type': 'application/json' },
     }
 
-    return
-  }
+    const fetched = await fetch(url, defaultOptions)
+    if (fetched.ok) {
+      if (fetched.status === 200) {
+        // TODO 2024-08-21 parser le body via les validator de rest.ts
+        const body = await fetched.json()
 
-  if (fetched.status === HTTP_STATUS.UNAUTHORIZED) {
-    window.location.replace('/oauth2/sign_in?rd=' + encodeURIComponent(window.location.href))
-  }
+        return body
+      }
 
-  const bodyErrorResponse = await fetched.json()
-  return bodyErrorResponse
+      return
+    }
+
+    if (fetched.status === HTTP_STATUS.UNAUTHORIZED) {
+      window.location.replace('/oauth2/sign_in?rd=' + encodeURIComponent(window.location.href))
+    }
+
+    const bodyErrorResponse = await fetched.json()
+    return bodyErrorResponse
+  } catch (e: any) {
+    return { ...errorMessage, extra: e }
+  }
 }
 
 export const deleteWithJson = async <T extends DeleteRestRoutes>(path: T, params: CaminoRestParams<T>, searchParams: Record<string, string | string[]> = {}): Promise<void> =>
@@ -127,23 +132,27 @@ export const newPostWithJson = async <T extends NewPostRestRoutes>(
   params: CaminoRestParams<T>,
   body: z.infer<(typeof CaminoRestRoutes)[T]['newPost']['input']>
 ): Promise<CaminoError<string> | z.infer<(typeof CaminoRestRoutes)[T]['newPost']['output']>> => {
-  const url = getUiRestRoute(path, params, {})
+  try {
+    const url = getUiRestRoute(path, params, {})
 
-  const defaultOptions = {
-    method: 'post',
-    headers: { 'Content-Type': 'application/json' },
-  }
+    const defaultOptions = {
+      method: 'post',
+      headers: { 'Content-Type': 'application/json' },
+    }
 
-  const fetched = await fetch(url, { ...defaultOptions, body: JSON.stringify(body) })
-  if (fetched.ok) {
-    const bodyResponse = await fetched.json()
-    return bodyResponse
+    const fetched = await fetch(url, { ...defaultOptions, body: JSON.stringify(body) })
+    if (fetched.ok) {
+      const bodyResponse = await fetched.json()
+      return bodyResponse
+    }
+    if (fetched.status === HTTP_STATUS.UNAUTHORIZED) {
+      window.location.replace('/oauth2/sign_in?rd=' + encodeURIComponent(window.location.href))
+    }
+    const bodyErrorResponse = await fetched.json()
+    return bodyErrorResponse
+  } catch (e: any) {
+    return { ...errorMessage, extra: e }
   }
-  if (fetched.status === HTTP_STATUS.UNAUTHORIZED) {
-    window.location.replace('/oauth2/sign_in?rd=' + encodeURIComponent(window.location.href))
-  }
-  const bodyErrorResponse = await fetched.json()
-  return bodyErrorResponse
 }
 
 export const putWithJson = async <T extends PutRestRoutes>(
@@ -157,21 +166,25 @@ export const newPutWithJson = async <T extends NewPutRestRoutes>(
   params: CaminoRestParams<T>,
   body: DeepReadonly<z.infer<(typeof CaminoRestRoutes)[T]['newPut']['input']>>
 ): Promise<CaminoError<string> | z.infer<(typeof CaminoRestRoutes)[T]['newPut']['output']>> => {
-  const url = getUiRestRoute(path, params, {})
+  try {
+    const url = getUiRestRoute(path, params, {})
 
-  const defaultOptions = {
-    method: 'put',
-    headers: { 'Content-Type': 'application/json' },
-  }
+    const defaultOptions = {
+      method: 'put',
+      headers: { 'Content-Type': 'application/json' },
+    }
 
-  const fetched = await fetch(url, { ...defaultOptions, body: JSON.stringify(body) })
-  if (fetched.ok) {
-    const bodyResponse = await fetched.json()
-    return bodyResponse
+    const fetched = await fetch(url, { ...defaultOptions, body: JSON.stringify(body) })
+    if (fetched.ok) {
+      const bodyResponse = await fetched.json()
+      return bodyResponse
+    }
+    if (fetched.status === HTTP_STATUS.UNAUTHORIZED) {
+      window.location.replace('/oauth2/sign_in?rd=' + encodeURIComponent(window.location.href))
+    }
+    const bodyErrorResponse = await fetched.json()
+    return bodyErrorResponse
+  } catch (e: any) {
+    return { ...errorMessage, extra: e }
   }
-  if (fetched.status === HTTP_STATUS.UNAUTHORIZED) {
-    window.location.replace('/oauth2/sign_in?rd=' + encodeURIComponent(window.location.href))
-  }
-  const bodyErrorResponse = await fetched.json()
-  return bodyErrorResponse
 }

@@ -266,10 +266,9 @@ const canCreateOrEditEtape = (
   } else if (isEntreprise(user) || isBureauDEtudes(user)) {
     return (
       user.entrepriseIds.length > 0 &&
-      demarcheTypeId === DEMARCHES_TYPES_IDS.Octroi &&
-      etapeTypeId === ETAPES_TYPES.demande &&
+      ((demarcheTypeId === DEMARCHES_TYPES_IDS.Octroi && etapeTypeId === ETAPES_TYPES.demande && TITRES_TYPES_IDS_DEMAT.includes(titre.typeId)) ||
+        etapeTypeId === ETAPES_TYPES.receptionDeComplements) &&
       isBrouillon === ETAPE_IS_BROUILLON &&
-      TITRES_TYPES_IDS_DEMAT.includes(titre.typeId) &&
       titulaireIds.some(id => user.entrepriseIds.includes(id))
     )
   }
