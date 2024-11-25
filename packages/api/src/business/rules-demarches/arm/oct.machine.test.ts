@@ -1,74 +1,68 @@
 import { ArmOctMachine } from './oct.machine'
-import { setDateAndOrderAndInterpretMachine, orderAndInterpretMachine } from '../machine-test-helper'
+import { setDateAndOrderAndInterpretMachine } from '../machine-test-helper'
 import { EtapeTypeEtapeStatutValidPair, EtapesTypesEtapesStatuts as ETES } from 'camino-common/src/static/etapesTypesEtapesStatuts'
 import { Etape } from '../machine-common'
-import { toCaminoDate } from 'camino-common/src/date'
 import { describe, expect, test } from 'vitest'
 const etapesProd = require('./2019-10-31-oct.cas.json') // eslint-disable-line
 
 describe('vérifie l’arbre d’octroi d’ARM', () => {
   const armOctMachine = new ArmOctMachine()
   test('ne peut pas désister', () => {
-    const { service, dateFin } = setDateAndOrderAndInterpretMachine(armOctMachine, '2020-01-01', [])
-
-    expect(service).canOnlyTransitionTo({ machine: armOctMachine, date: dateFin }, [
-      'ACCEPTER_RDE',
-      'DEMANDER_MODIFICATION_DE_LA_DEMANDE',
-      'EXEMPTER_DAE',
-      'FAIRE_DEMANDE',
-      'PAYER_FRAIS_DE_DOSSIER',
-      'REFUSER_RDE',
-    ])
+    const { tree } = setDateAndOrderAndInterpretMachine(armOctMachine, '2020-01-01', [])
+    expect(tree).toMatchInlineSnapshot(`
+      [
+        "RIEN (confidentielle, en construction        ) -> [ACCEPTER_RDE,DEMANDER_MODIFICATION_DE_LA_DEMANDE,EXEMPTER_DAE,FAIRE_DEMANDE,PAYER_FRAIS_DE_DOSSIER,REFUSER_RDE]",
+      ]
+    `)
   })
 
   test('quelles sont mes prochaines étapes sur un titre mécanisé', () => {
-    const { service } = setDateAndOrderAndInterpretMachine(armOctMachine, '2020-01-01', [
+    const { tree } = setDateAndOrderAndInterpretMachine(armOctMachine, '2020-01-01', [
       { etapeTypeId: 'mfr', etapeStatutId: 'fai', contenu: { arm: { mecanise: true } } },
       { etapeTypeId: 'men', etapeStatutId: 'fai' },
       { etapeTypeId: 'pfd', etapeStatutId: 'fai' },
     ])
-
-    expect(service).canOnlyTransitionTo({ machine: armOctMachine, date: toCaminoDate('2020-02-03') }, [
-      'ACCEPTER_RDE',
-      'CLASSER_SANS_SUITE',
-      'DESISTER_PAR_LE_DEMANDEUR',
-      'EXEMPTER_DAE',
-      'DEMANDER_MODIFICATION_DE_LA_DEMANDE',
-      'DEMANDER_COMPLEMENTS_DAE',
-      'DEMANDER_COMPLEMENTS_RDE',
-      'MODIFIER_DEMANDE',
-      'REFUSER_RDE',
-    ])
+    expect(tree).toMatchInlineSnapshot(`
+  [
+    "RIEN                   (confidentielle, en construction        ) -> [ACCEPTER_RDE,DEMANDER_MODIFICATION_DE_LA_DEMANDE,EXEMPTER_DAE,FAIRE_DEMANDE,PAYER_FRAIS_DE_DOSSIER,REFUSER_RDE]",
+    "FAIRE_DEMANDE          (confidentielle, en construction        ) -> [ACCEPTER_RDE,DEMANDER_MODIFICATION_DE_LA_DEMANDE,ENREGISTRER_DEMANDE,EXEMPTER_DAE,PAYER_FRAIS_DE_DOSSIER,REFUSER_RDE]",
+    "ENREGISTRER_DEMANDE    (confidentielle, en instruction         ) -> [ACCEPTER_RDE,CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_DAE,DEMANDER_COMPLEMENTS_RDE,DEMANDER_MODIFICATION_DE_LA_DEMANDE,DESISTER_PAR_LE_DEMANDEUR,EXEMPTER_DAE,MODIFIER_DEMANDE,PAYER_FRAIS_DE_DOSSIER,REFUSER_RDE]",
+    "PAYER_FRAIS_DE_DOSSIER (confidentielle, en instruction         ) -> [ACCEPTER_RDE,CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_DAE,DEMANDER_COMPLEMENTS_RDE,DEMANDER_MODIFICATION_DE_LA_DEMANDE,DESISTER_PAR_LE_DEMANDEUR,EXEMPTER_DAE,MODIFIER_DEMANDE,REFUSER_RDE]",
+  ]
+`)
   })
 
   test('quelles sont mes prochaines étapes sur un titre mécanisé avec franchissements', () => {
-    const { service, dateFin } = setDateAndOrderAndInterpretMachine(armOctMachine, '2020-02-03', [
+    const { tree } = setDateAndOrderAndInterpretMachine(armOctMachine, '2020-02-03', [
       { etapeTypeId: 'mfr', etapeStatutId: 'fai', contenu: { arm: { mecanise: true, franchissements: 1 } } },
       { etapeTypeId: 'men', etapeStatutId: 'fai' },
       { etapeTypeId: 'pfd', etapeStatutId: 'fai' },
     ])
-
-    expect(service).canOnlyTransitionTo({ machine: armOctMachine, date: dateFin }, [
-      'ACCEPTER_RDE',
-      'CLASSER_SANS_SUITE',
-      'DEMANDER_COMPLEMENTS_DAE',
-      'DEMANDER_COMPLEMENTS_RDE',
-      'DEMANDER_MODIFICATION_DE_LA_DEMANDE',
-      'DESISTER_PAR_LE_DEMANDEUR',
-      'EXEMPTER_DAE',
-      'MODIFIER_DEMANDE',
-      'REFUSER_RDE',
-    ])
+    expect(tree).toMatchInlineSnapshot(`
+  [
+    "RIEN                   (confidentielle, en construction        ) -> [ACCEPTER_RDE,DEMANDER_MODIFICATION_DE_LA_DEMANDE,EXEMPTER_DAE,FAIRE_DEMANDE,PAYER_FRAIS_DE_DOSSIER,REFUSER_RDE]",
+    "FAIRE_DEMANDE          (confidentielle, en construction        ) -> [ACCEPTER_RDE,DEMANDER_COMPLEMENTS_RDE,DEMANDER_MODIFICATION_DE_LA_DEMANDE,ENREGISTRER_DEMANDE,EXEMPTER_DAE,PAYER_FRAIS_DE_DOSSIER,REFUSER_RDE]",
+    "ENREGISTRER_DEMANDE    (confidentielle, en instruction         ) -> [ACCEPTER_RDE,CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_DAE,DEMANDER_COMPLEMENTS_RDE,DEMANDER_MODIFICATION_DE_LA_DEMANDE,DESISTER_PAR_LE_DEMANDEUR,EXEMPTER_DAE,MODIFIER_DEMANDE,PAYER_FRAIS_DE_DOSSIER,REFUSER_RDE]",
+    "PAYER_FRAIS_DE_DOSSIER (confidentielle, en instruction         ) -> [ACCEPTER_RDE,CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_DAE,DEMANDER_COMPLEMENTS_RDE,DEMANDER_MODIFICATION_DE_LA_DEMANDE,DESISTER_PAR_LE_DEMANDEUR,EXEMPTER_DAE,MODIFIER_DEMANDE,REFUSER_RDE]",
+  ]
+`)
   })
 
   test('quelles sont mes prochaines étapes non mécanisé', () => {
-    const { service, dateFin } = setDateAndOrderAndInterpretMachine(armOctMachine, '2020-02-03', [
+    const { tree } = setDateAndOrderAndInterpretMachine(armOctMachine, '2020-02-03', [
       { etapeTypeId: 'mfr', etapeStatutId: 'fai', contenu: { arm: { mecanise: false } } },
       { etapeTypeId: 'men', etapeStatutId: 'fai' },
       { etapeTypeId: 'pfd', etapeStatutId: 'fai' },
     ])
 
-    expect(service).canOnlyTransitionTo({ machine: armOctMachine, date: dateFin }, ['ACCEPTER_COMPLETUDE', 'CLASSER_SANS_SUITE', 'DESISTER_PAR_LE_DEMANDEUR', 'REFUSER_COMPLETUDE', 'MODIFIER_DEMANDE'])
+    expect(tree).toMatchInlineSnapshot(`
+      [
+        "RIEN                   (confidentielle, en construction        ) -> [ACCEPTER_RDE,DEMANDER_MODIFICATION_DE_LA_DEMANDE,EXEMPTER_DAE,FAIRE_DEMANDE,PAYER_FRAIS_DE_DOSSIER,REFUSER_RDE]",
+        "FAIRE_DEMANDE          (confidentielle, en construction        ) -> [ENREGISTRER_DEMANDE,PAYER_FRAIS_DE_DOSSIER]",
+        "ENREGISTRER_DEMANDE    (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,PAYER_FRAIS_DE_DOSSIER]",
+        "PAYER_FRAIS_DE_DOSSIER (confidentielle, en instruction         ) -> [ACCEPTER_COMPLETUDE,CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,REFUSER_COMPLETUDE]",
+      ]
+    `)
   })
   test('peut faire une edm après une asc', () => {
     const etapes = [
@@ -81,7 +75,20 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
       ETES.avisDesServicesEtCommissionsConsultatives.FAIT,
       ETES.expertiseDGTMServicePreventionDesRisquesEtIndustriesExtractives_DATE_.FAVORABLE,
     ]
-    expect(() => setDateAndOrderAndInterpretMachine(armOctMachine, '2023-09-01', etapes)).not.toThrowError()
+    const { tree } = setDateAndOrderAndInterpretMachine(armOctMachine, '2023-09-01', etapes)
+    expect(tree).toMatchInlineSnapshot(`
+      [
+        "RIEN                                                  (confidentielle, en construction        ) -> [ACCEPTER_RDE,DEMANDER_MODIFICATION_DE_LA_DEMANDE,EXEMPTER_DAE,FAIRE_DEMANDE,PAYER_FRAIS_DE_DOSSIER,REFUSER_RDE]",
+        "PAYER_FRAIS_DE_DOSSIER                                (confidentielle, en construction        ) -> [ACCEPTER_RDE,DEMANDER_MODIFICATION_DE_LA_DEMANDE,EXEMPTER_DAE,FAIRE_DEMANDE,REFUSER_RDE]",
+        "FAIRE_DEMANDE                                         (confidentielle, en construction        ) -> [ENREGISTRER_DEMANDE]",
+        "ENREGISTRER_DEMANDE                                   (confidentielle, en instruction         ) -> [ACCEPTER_COMPLETUDE,CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,REFUSER_COMPLETUDE]",
+        "ACCEPTER_COMPLETUDE                                   (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,VALIDER_FRAIS_DE_DOSSIER]",
+        "VALIDER_FRAIS_DE_DOSSIER                              (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DECLARER_DEMANDE_DEFAVORABLE,DECLARER_DEMANDE_FAVORABLE,DEMANDER_COMPLEMENTS_MCR,DEMANDER_INFORMATION_MCR,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE]",
+        "DECLARER_DEMANDE_FAVORABLE                            (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE_SERVICE_EAU,RECEVOIR_EXPERTISE_SERVICE_MINES,RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES]",
+        "RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,FAIRE_SAISINE_CARM,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE_SERVICE_EAU,RECEVOIR_EXPERTISE_SERVICE_MINES]",
+        "RECEVOIR_EXPERTISE_SERVICE_MINES                      (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,FAIRE_SAISINE_CARM,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE_SERVICE_EAU]",
+      ]
+    `)
   })
   test('ne peut pas faire une sca avant la asc', () => {
     expect(() =>
@@ -99,24 +106,39 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
     )
   })
   test('la demande ne peut pas être effectuée après une modification de la demande', () => {
-    const { service, dateFin } = setDateAndOrderAndInterpretMachine(armOctMachine, '2020-01-01', [
+    const { tree } = setDateAndOrderAndInterpretMachine(armOctMachine, '2020-01-01', [
       { etapeTypeId: 'mfr', etapeStatutId: 'fai', contenu: { arm: { mecanise: false } } },
       { etapeTypeId: 'men', etapeStatutId: 'fai' },
       { etapeTypeId: 'mod', etapeStatutId: 'fai' },
     ])
 
-    expect(service).canOnlyTransitionTo({ machine: armOctMachine, date: dateFin }, ['CLASSER_SANS_SUITE', 'DESISTER_PAR_LE_DEMANDEUR', 'MODIFIER_DEMANDE', 'PAYER_FRAIS_DE_DOSSIER'])
+    expect(tree).toMatchInlineSnapshot(`
+      [
+        "RIEN                (confidentielle, en construction        ) -> [ACCEPTER_RDE,DEMANDER_MODIFICATION_DE_LA_DEMANDE,EXEMPTER_DAE,FAIRE_DEMANDE,PAYER_FRAIS_DE_DOSSIER,REFUSER_RDE]",
+        "FAIRE_DEMANDE       (confidentielle, en construction        ) -> [ENREGISTRER_DEMANDE,PAYER_FRAIS_DE_DOSSIER]",
+        "ENREGISTRER_DEMANDE (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,PAYER_FRAIS_DE_DOSSIER]",
+        "MODIFIER_DEMANDE    (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,PAYER_FRAIS_DE_DOSSIER]",
+      ]
+    `)
   })
 
   test('on peut faire une demande de compléments après une complétude incomplète', () => {
-    const { service, dateFin } = setDateAndOrderAndInterpretMachine(armOctMachine, '2020-01-01', [
+    const { tree } = setDateAndOrderAndInterpretMachine(armOctMachine, '2020-01-01', [
       { etapeTypeId: 'mfr', etapeStatutId: 'fai', contenu: { arm: { mecanise: false } } },
       { etapeTypeId: 'men', etapeStatutId: 'fai' },
       { etapeTypeId: 'pfd', etapeStatutId: 'fai' },
       { etapeTypeId: 'mcp', etapeStatutId: 'inc' },
     ])
 
-    expect(service).canOnlyTransitionTo({ machine: armOctMachine, date: dateFin }, ['CLASSER_SANS_SUITE', 'DEMANDER_COMPLEMENTS_COMPLETUDE', 'DESISTER_PAR_LE_DEMANDEUR', 'MODIFIER_DEMANDE'])
+    expect(tree).toMatchInlineSnapshot(`
+      [
+        "RIEN                   (confidentielle, en construction        ) -> [ACCEPTER_RDE,DEMANDER_MODIFICATION_DE_LA_DEMANDE,EXEMPTER_DAE,FAIRE_DEMANDE,PAYER_FRAIS_DE_DOSSIER,REFUSER_RDE]",
+        "FAIRE_DEMANDE          (confidentielle, en construction        ) -> [ENREGISTRER_DEMANDE,PAYER_FRAIS_DE_DOSSIER]",
+        "ENREGISTRER_DEMANDE    (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,PAYER_FRAIS_DE_DOSSIER]",
+        "PAYER_FRAIS_DE_DOSSIER (confidentielle, en instruction         ) -> [ACCEPTER_COMPLETUDE,CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,REFUSER_COMPLETUDE]",
+        "REFUSER_COMPLETUDE     (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_COMPLETUDE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE]",
+      ]
+    `)
   })
 
   test.each([ETES.demandeDeComplements_DecisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_.FAIT, ETES.demandeDeComplements_RecepisseDeDeclarationLoiSurLeau_.FAIT])(
@@ -127,10 +149,17 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
   )
 
   test('peut créer une étape "men" juste après une "mfr"', () => {
-    setDateAndOrderAndInterpretMachine(armOctMachine, '2022-04-16', [
+    const { tree } = setDateAndOrderAndInterpretMachine(armOctMachine, '2022-04-16', [
       { etapeTypeId: 'mfr', etapeStatutId: 'fai' },
       { etapeTypeId: 'men', etapeStatutId: 'fai' },
     ])
+    expect(tree).toMatchInlineSnapshot(`
+      [
+        "RIEN                (confidentielle, en construction        ) -> [ACCEPTER_RDE,DEMANDER_MODIFICATION_DE_LA_DEMANDE,EXEMPTER_DAE,FAIRE_DEMANDE,PAYER_FRAIS_DE_DOSSIER,REFUSER_RDE]",
+        "FAIRE_DEMANDE       (confidentielle, en construction        ) -> [ENREGISTRER_DEMANDE,PAYER_FRAIS_DE_DOSSIER]",
+        "ENREGISTRER_DEMANDE (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,PAYER_FRAIS_DE_DOSSIER]",
+      ]
+    `)
   })
 
   test('ne peut pas créer une étape "mcp" sans "men"', () => {
@@ -181,20 +210,37 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
   )
 
   test('peut créer une étape "mcp" après une "men"', () => {
-    setDateAndOrderAndInterpretMachine(armOctMachine, '2020-01-01', [
+    const { tree } = setDateAndOrderAndInterpretMachine(armOctMachine, '2020-01-01', [
       { etapeTypeId: 'mfr', etapeStatutId: 'fai' },
       { etapeTypeId: 'men', etapeStatutId: 'fai' },
       { etapeTypeId: 'pfd', etapeStatutId: 'fai' },
       { etapeTypeId: 'mcp', etapeStatutId: 'com' },
     ])
+    expect(tree).toMatchInlineSnapshot(`
+      [
+        "RIEN                   (confidentielle, en construction        ) -> [ACCEPTER_RDE,DEMANDER_MODIFICATION_DE_LA_DEMANDE,EXEMPTER_DAE,FAIRE_DEMANDE,PAYER_FRAIS_DE_DOSSIER,REFUSER_RDE]",
+        "FAIRE_DEMANDE          (confidentielle, en construction        ) -> [ENREGISTRER_DEMANDE,PAYER_FRAIS_DE_DOSSIER]",
+        "ENREGISTRER_DEMANDE    (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,PAYER_FRAIS_DE_DOSSIER]",
+        "PAYER_FRAIS_DE_DOSSIER (confidentielle, en instruction         ) -> [ACCEPTER_COMPLETUDE,CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,REFUSER_COMPLETUDE]",
+        "ACCEPTER_COMPLETUDE    (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,VALIDER_FRAIS_DE_DOSSIER]",
+      ]
+    `)
   })
 
   test('peut créer une "des" après "men"', () => {
-    setDateAndOrderAndInterpretMachine(armOctMachine, '2020-02-02', [
+    const { tree } = setDateAndOrderAndInterpretMachine(armOctMachine, '2020-02-02', [
       { etapeTypeId: 'mfr', etapeStatutId: 'fai' },
       { etapeTypeId: 'men', etapeStatutId: 'fai' },
       { etapeTypeId: 'des', etapeStatutId: 'fai' },
     ])
+    expect(tree).toMatchInlineSnapshot(`
+      [
+        "RIEN                      (confidentielle, en construction        ) -> [ACCEPTER_RDE,DEMANDER_MODIFICATION_DE_LA_DEMANDE,EXEMPTER_DAE,FAIRE_DEMANDE,PAYER_FRAIS_DE_DOSSIER,REFUSER_RDE]",
+        "FAIRE_DEMANDE             (confidentielle, en construction        ) -> [ENREGISTRER_DEMANDE,PAYER_FRAIS_DE_DOSSIER]",
+        "ENREGISTRER_DEMANDE       (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,PAYER_FRAIS_DE_DOSSIER]",
+        "DESISTER_PAR_LE_DEMANDEUR (publique      , désisté                ) -> [VALIDER_FRAIS_DE_DOSSIER]",
+      ]
+    `)
   })
 
   test('ne peut pas créer deux "des"', () => {
@@ -221,854 +267,601 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
   })
   test('ne peut pas créer une "css" après une "des"', () => {
     expect(() =>
-      orderAndInterpretMachine(armOctMachine, [
+      setDateAndOrderAndInterpretMachine(armOctMachine, '2020-01-01', [
         {
           etapeTypeId: 'mfr',
           etapeStatutId: 'fai',
-          date: toCaminoDate('2020-01-01'),
         },
         {
           etapeTypeId: 'men',
           etapeStatutId: 'fai',
-          date: toCaminoDate('2020-01-02'),
         },
         {
           etapeTypeId: 'des',
           etapeStatutId: 'fai',
-          date: toCaminoDate('2020-01-04'),
         },
         {
           etapeTypeId: 'css',
           etapeStatutId: 'fai',
-          date: toCaminoDate('2020-01-05'),
         },
       ])
     ).toThrowErrorMatchingSnapshot()
   })
   test('peut créer une "des" si le titre est en attente de "pfc"', () => {
-    orderAndInterpretMachine(armOctMachine, [
+    const { tree } = setDateAndOrderAndInterpretMachine(armOctMachine, '2020-01-01', [
       {
         etapeTypeId: 'mfr',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2020-01-01'),
         contenu: { arm: { mecanise: true } },
       },
       {
         etapeTypeId: 'men',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2020-01-02'),
       },
       {
         etapeTypeId: 'dae',
         etapeStatutId: 'exe',
-        date: toCaminoDate('2020-01-03'),
       },
       {
         etapeTypeId: 'pfd',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2020-01-04'),
       },
       {
         etapeTypeId: 'mcp',
         etapeStatutId: 'com',
-        date: toCaminoDate('2020-01-05'),
       },
       {
         etapeTypeId: 'mod',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2020-01-06'),
       },
       {
         etapeTypeId: 'vfd',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2020-01-06'),
       },
       {
         etapeTypeId: 'mcr',
         etapeStatutId: 'fav',
-        date: toCaminoDate('2020-01-07'),
       },
       {
         etapeTypeId: 'asc',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2020-01-09'),
       },
       {
         etapeTypeId: 'sca',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2020-01-10'),
       },
       {
         etapeTypeId: 'aca',
         etapeStatutId: 'fav',
-        date: toCaminoDate('2020-01-11'),
       },
       {
         etapeTypeId: 'mnb',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2020-01-12'),
       },
       {
         etapeTypeId: 'des',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2020-01-13'),
       },
     ])
+    expect(tree).toMatchInlineSnapshot(`
+      [
+        "RIEN                                                  (confidentielle, en construction        ) -> [ACCEPTER_RDE,DEMANDER_MODIFICATION_DE_LA_DEMANDE,EXEMPTER_DAE,FAIRE_DEMANDE,PAYER_FRAIS_DE_DOSSIER,REFUSER_RDE]",
+        "FAIRE_DEMANDE                                         (confidentielle, en construction        ) -> [ACCEPTER_RDE,DEMANDER_MODIFICATION_DE_LA_DEMANDE,ENREGISTRER_DEMANDE,EXEMPTER_DAE,PAYER_FRAIS_DE_DOSSIER,REFUSER_RDE]",
+        "ENREGISTRER_DEMANDE                                   (confidentielle, en instruction         ) -> [ACCEPTER_RDE,CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_DAE,DEMANDER_COMPLEMENTS_RDE,DEMANDER_MODIFICATION_DE_LA_DEMANDE,DESISTER_PAR_LE_DEMANDEUR,EXEMPTER_DAE,MODIFIER_DEMANDE,PAYER_FRAIS_DE_DOSSIER,REFUSER_RDE]",
+        "EXEMPTER_DAE                                          (confidentielle, en instruction         ) -> [ACCEPTER_RDE,CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_RDE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,PAYER_FRAIS_DE_DOSSIER,REFUSER_RDE]",
+        "PAYER_FRAIS_DE_DOSSIER                                (confidentielle, en instruction         ) -> [ACCEPTER_COMPLETUDE,ACCEPTER_RDE,CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_RDE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,REFUSER_COMPLETUDE,REFUSER_RDE]",
+        "ACCEPTER_COMPLETUDE                                   (confidentielle, en instruction         ) -> [ACCEPTER_RDE,CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_RDE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,REFUSER_RDE,VALIDER_FRAIS_DE_DOSSIER]",
+        "MODIFIER_DEMANDE                                      (confidentielle, en instruction         ) -> [ACCEPTER_RDE,CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_RDE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,REFUSER_RDE,VALIDER_FRAIS_DE_DOSSIER]",
+        "VALIDER_FRAIS_DE_DOSSIER                              (confidentielle, en instruction         ) -> [ACCEPTER_RDE,CLASSER_SANS_SUITE,DECLARER_DEMANDE_DEFAVORABLE,DECLARER_DEMANDE_FAVORABLE,DEMANDER_COMPLEMENTS_MCR,DEMANDER_COMPLEMENTS_RDE,DEMANDER_INFORMATION_MCR,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,REFUSER_RDE]",
+        "DECLARER_DEMANDE_FAVORABLE                            (confidentielle, en instruction         ) -> [ACCEPTER_RDE,CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_RDE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE_SERVICE_EAU,RECEVOIR_EXPERTISE_SERVICE_MINES,REFUSER_RDE,RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES]",
+        "RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES (confidentielle, en instruction         ) -> [ACCEPTER_RDE,CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_RDE,DESISTER_PAR_LE_DEMANDEUR,FAIRE_SAISINE_CARM,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE_SERVICE_EAU,RECEVOIR_EXPERTISE_SERVICE_MINES,REFUSER_RDE]",
+        "FAIRE_SAISINE_CARM                                    (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,RENDRE_AVIS_AJOURNE_CARM,RENDRE_AVIS_DEFAVORABLE_CARM,RENDRE_AVIS_FAVORABLE_CARM]",
+        "RENDRE_AVIS_FAVORABLE_CARM                            (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,NOTIFIER_DEMANDEUR_AVIS_FAVORABLE_CARM]",
+        "NOTIFIER_DEMANDEUR_AVIS_FAVORABLE_CARM                (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,PAYER_FRAIS_DE_DOSSIER_COMPLEMENTAIRES]",
+        "DESISTER_PAR_LE_DEMANDEUR                             (publique      , désisté                ) -> [VALIDER_PAIEMENT_FRAIS_DE_DOSSIER_COMPLEMENTAIRES]",
+      ]
+    `)
   })
 
   test('ne peut pas créer une "mno" après la "aca" si le titre n’est pas mécanisé', () => {
     expect(() =>
-      orderAndInterpretMachine(armOctMachine, [
+      setDateAndOrderAndInterpretMachine(armOctMachine, '2020-01-01', [
         {
           etapeTypeId: 'mfr',
           etapeStatutId: 'fai',
-          date: toCaminoDate('2020-01-01'),
         },
         {
           etapeTypeId: 'men',
           etapeStatutId: 'fai',
-          date: toCaminoDate('2020-01-01'),
         },
         {
           etapeTypeId: 'pfd',
           etapeStatutId: 'fai',
-          date: toCaminoDate('2020-01-01'),
         },
         {
           etapeTypeId: 'mcp',
           etapeStatutId: 'com',
-          date: toCaminoDate('2020-01-01'),
         },
         {
           etapeTypeId: 'vfd',
           etapeStatutId: 'fai',
-          date: toCaminoDate('2020-01-01'),
         },
         {
           etapeTypeId: 'mcr',
           etapeStatutId: 'fav',
-          date: toCaminoDate('2020-01-01'),
         },
         {
           etapeTypeId: 'asc',
           etapeStatutId: 'fai',
-          date: toCaminoDate('2020-01-01'),
         },
         {
           etapeTypeId: 'sca',
           etapeStatutId: 'fai',
-          date: toCaminoDate('2020-01-02'),
         },
         {
           etapeTypeId: 'aca',
           etapeStatutId: 'fav',
-          date: toCaminoDate('2020-01-03'),
         },
         {
           etapeTypeId: 'mnb',
           etapeStatutId: 'fai',
-          date: toCaminoDate('2020-01-04'),
         },
       ])
     ).toThrowErrorMatchingSnapshot()
   })
 
   test('peut créer une "mnd" apres une "aca" défavorable', () => {
-    orderAndInterpretMachine(armOctMachine, [
-      {
-        etapeTypeId: 'mnd',
-        date: toCaminoDate('2020-08-18'),
-        etapeStatutId: 'fai',
-      },
-      {
-        etapeTypeId: 'aca',
-        date: toCaminoDate('2020-08-18'),
-        etapeStatutId: 'def',
-      },
-      {
-        etapeTypeId: 'sca',
-        date: toCaminoDate('2020-08-07'),
-        etapeStatutId: 'fai',
-      },
-      {
-        etapeTypeId: 'asc',
-        date: toCaminoDate('2020-06-19'),
-        etapeStatutId: 'fai',
-      },
-      {
-        etapeTypeId: 'mcr',
-        date: toCaminoDate('2020-06-15'),
-        etapeStatutId: 'fav',
-      },
-      {
-        etapeTypeId: 'vfd',
-        date: toCaminoDate('2020-06-15'),
-        etapeStatutId: 'fai',
-      },
-      {
-        etapeTypeId: 'mcp',
-        date: toCaminoDate('2020-05-29'),
-        etapeStatutId: 'com',
-      },
-      {
-        etapeTypeId: 'men',
-        date: toCaminoDate('2020-05-04'),
-        etapeStatutId: 'fai',
-      },
-      {
-        etapeTypeId: 'pfd',
-        date: toCaminoDate('2020-05-01'),
-        etapeStatutId: 'fai',
-      },
-      {
-        etapeTypeId: 'mfr',
-        date: toCaminoDate('2020-04-29'),
-        etapeStatutId: 'fai',
-      },
+    const { tree } = setDateAndOrderAndInterpretMachine(armOctMachine, '2020-08-18', [
+      { etapeTypeId: 'mfr', etapeStatutId: 'fai' },
+      { etapeTypeId: 'pfd', etapeStatutId: 'fai' },
+      { etapeTypeId: 'men', etapeStatutId: 'fai' },
+      { etapeTypeId: 'mcp', etapeStatutId: 'com' },
+      { etapeTypeId: 'vfd', etapeStatutId: 'fai' },
+      { etapeTypeId: 'mcr', etapeStatutId: 'fav' },
+      { etapeTypeId: 'asc', etapeStatutId: 'fai' },
+      { etapeTypeId: 'sca', etapeStatutId: 'fai' },
+      { etapeTypeId: 'aca', etapeStatutId: 'def' },
+      { etapeTypeId: 'mnd', etapeStatutId: 'fai' },
     ])
+    expect(tree).toMatchInlineSnapshot(`
+      [
+        "RIEN                                                  (confidentielle, en construction        ) -> [ACCEPTER_RDE,DEMANDER_MODIFICATION_DE_LA_DEMANDE,EXEMPTER_DAE,FAIRE_DEMANDE,PAYER_FRAIS_DE_DOSSIER,REFUSER_RDE]",
+        "FAIRE_DEMANDE                                         (confidentielle, en construction        ) -> [ENREGISTRER_DEMANDE,PAYER_FRAIS_DE_DOSSIER]",
+        "PAYER_FRAIS_DE_DOSSIER                                (confidentielle, en construction        ) -> [ENREGISTRER_DEMANDE]",
+        "ENREGISTRER_DEMANDE                                   (confidentielle, en instruction         ) -> [ACCEPTER_COMPLETUDE,CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,REFUSER_COMPLETUDE]",
+        "ACCEPTER_COMPLETUDE                                   (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,VALIDER_FRAIS_DE_DOSSIER]",
+        "VALIDER_FRAIS_DE_DOSSIER                              (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DECLARER_DEMANDE_DEFAVORABLE,DECLARER_DEMANDE_FAVORABLE,DEMANDER_COMPLEMENTS_MCR,DEMANDER_INFORMATION_MCR,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE]",
+        "DECLARER_DEMANDE_FAVORABLE                            (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE_SERVICE_EAU,RECEVOIR_EXPERTISE_SERVICE_MINES,RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES]",
+        "RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,FAIRE_SAISINE_CARM,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE_SERVICE_EAU,RECEVOIR_EXPERTISE_SERVICE_MINES]",
+        "FAIRE_SAISINE_CARM                                    (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,RENDRE_AVIS_AJOURNE_CARM,RENDRE_AVIS_DEFAVORABLE_CARM,RENDRE_AVIS_FAVORABLE_CARM]",
+        "RENDRE_AVIS_DEFAVORABLE_CARM                          (publique      , rejeté                 ) -> [NOTIFIER_DEMANDEUR_AVIS_DEFAVORABLE_CARM]",
+        "NOTIFIER_DEMANDEUR_AVIS_DEFAVORABLE_CARM              (publique      , rejeté                 ) -> []",
+      ]
+    `)
   })
 
   test('peut créer une "mod" si il n’y a pas de sca', () => {
-    orderAndInterpretMachine(armOctMachine, [
+    const { tree } = setDateAndOrderAndInterpretMachine(armOctMachine, '2019-12-12', [
       {
         etapeTypeId: 'mfr',
-        date: toCaminoDate('2019-12-12'),
         etapeStatutId: 'fai',
       },
       {
         etapeTypeId: 'men',
-        date: toCaminoDate('2019-12-12'),
         etapeStatutId: 'fai',
       },
       {
         etapeTypeId: 'pfd',
-        date: toCaminoDate('2019-12-12'),
         etapeStatutId: 'fai',
       },
       {
         etapeTypeId: 'mcp',
-        date: toCaminoDate('2020-01-21'),
         etapeStatutId: 'com',
       },
       {
         etapeTypeId: 'vfd',
-        date: toCaminoDate('2020-02-05'),
         etapeStatutId: 'fai',
       },
       {
         etapeTypeId: 'mcr',
-        date: toCaminoDate('2020-02-05'),
         etapeStatutId: 'fav',
       },
       {
         etapeTypeId: 'asc',
-        date: toCaminoDate('2020-02-05'),
         etapeStatutId: 'fai',
       },
       {
         etapeTypeId: 'mod',
-        date: toCaminoDate('2020-06-17'),
         etapeStatutId: 'fai',
       },
     ])
+    expect(tree).toMatchInlineSnapshot(`
+      [
+        "RIEN                                                  (confidentielle, en construction        ) -> [ACCEPTER_RDE,DEMANDER_MODIFICATION_DE_LA_DEMANDE,EXEMPTER_DAE,FAIRE_DEMANDE,PAYER_FRAIS_DE_DOSSIER,REFUSER_RDE]",
+        "FAIRE_DEMANDE                                         (confidentielle, en construction        ) -> [ENREGISTRER_DEMANDE,PAYER_FRAIS_DE_DOSSIER]",
+        "ENREGISTRER_DEMANDE                                   (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,PAYER_FRAIS_DE_DOSSIER]",
+        "PAYER_FRAIS_DE_DOSSIER                                (confidentielle, en instruction         ) -> [ACCEPTER_COMPLETUDE,CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,REFUSER_COMPLETUDE]",
+        "ACCEPTER_COMPLETUDE                                   (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,VALIDER_FRAIS_DE_DOSSIER]",
+        "VALIDER_FRAIS_DE_DOSSIER                              (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DECLARER_DEMANDE_DEFAVORABLE,DECLARER_DEMANDE_FAVORABLE,DEMANDER_COMPLEMENTS_MCR,DEMANDER_INFORMATION_MCR,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE]",
+        "DECLARER_DEMANDE_FAVORABLE                            (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE_SERVICE_EAU,RECEVOIR_EXPERTISE_SERVICE_MINES,RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES]",
+        "RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,FAIRE_SAISINE_CARM,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE_SERVICE_EAU,RECEVOIR_EXPERTISE_SERVICE_MINES]",
+        "MODIFIER_DEMANDE                                      (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,FAIRE_SAISINE_CARM,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE_SERVICE_EAU,RECEVOIR_EXPERTISE_SERVICE_MINES]",
+      ]
+    `)
   })
 
   test('peut créer une "mcp" après une "pfd" et "men"', () => {
-    orderAndInterpretMachine(armOctMachine, [
+    const { tree } = setDateAndOrderAndInterpretMachine(armOctMachine, '2020-01-30', [
       {
         etapeTypeId: 'mfr',
-        date: toCaminoDate('2020-01-30'),
         etapeStatutId: 'fai',
       },
       {
         etapeTypeId: 'men',
-        date: toCaminoDate('2020-02-23'),
         etapeStatutId: 'fai',
       },
       {
         etapeTypeId: 'pfd',
-        date: toCaminoDate('2020-02-23'),
         etapeStatutId: 'fai',
       },
       {
         etapeTypeId: 'mcp',
-        date: toCaminoDate('2020-02-28'),
         etapeStatutId: 'com',
       },
     ])
+    expect(tree).toMatchInlineSnapshot(`
+      [
+        "RIEN                   (confidentielle, en construction        ) -> [ACCEPTER_RDE,DEMANDER_MODIFICATION_DE_LA_DEMANDE,EXEMPTER_DAE,FAIRE_DEMANDE,PAYER_FRAIS_DE_DOSSIER,REFUSER_RDE]",
+        "FAIRE_DEMANDE          (confidentielle, en construction        ) -> [ENREGISTRER_DEMANDE,PAYER_FRAIS_DE_DOSSIER]",
+        "ENREGISTRER_DEMANDE    (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,PAYER_FRAIS_DE_DOSSIER]",
+        "PAYER_FRAIS_DE_DOSSIER (confidentielle, en instruction         ) -> [ACCEPTER_COMPLETUDE,CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,REFUSER_COMPLETUDE]",
+        "ACCEPTER_COMPLETUDE    (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,VALIDER_FRAIS_DE_DOSSIER]",
+      ]
+    `)
   })
 
   test('peut créer une "sca" après une "asc" et "rde"', () => {
-    orderAndInterpretMachine(armOctMachine, [
+    const { tree } = setDateAndOrderAndInterpretMachine(armOctMachine, '2020-06-22', [
       {
         etapeTypeId: 'dae',
-        date: toCaminoDate('2020-06-22'),
         etapeStatutId: 'exe',
       },
       {
         etapeTypeId: 'mfr',
-        date: toCaminoDate('2020-07-09'),
         etapeStatutId: 'fai',
         contenu: { arm: { mecanise: true, franchissements: 3 } },
       },
       {
         etapeTypeId: 'pfd',
-        date: toCaminoDate('2020-07-10'),
         etapeStatutId: 'fai',
       },
       {
         etapeTypeId: 'men',
-        date: toCaminoDate('2020-07-17'),
         etapeStatutId: 'fai',
       },
       {
         etapeTypeId: 'mcp',
-        date: toCaminoDate('2020-07-17'),
         etapeStatutId: 'com',
       },
       {
         etapeTypeId: 'rde',
-        date: toCaminoDate('2020-07-30'),
         etapeStatutId: 'fav',
         contenu: { arm: { franchissements: 3 } },
       },
       {
         etapeTypeId: 'vfd',
-        date: toCaminoDate('2020-07-31'),
         etapeStatutId: 'fai',
       },
       {
         etapeTypeId: 'mcr',
-        date: toCaminoDate('2020-07-31'),
         etapeStatutId: 'fav',
       },
       {
         etapeTypeId: 'asc',
-        date: toCaminoDate('2020-08-10'),
         etapeStatutId: 'fai',
       },
       {
         etapeTypeId: 'sca',
-        date: toCaminoDate('2020-09-04'),
         etapeStatutId: 'fai',
       },
     ])
+    expect(tree).toMatchInlineSnapshot(`
+      [
+        "RIEN                                                  (confidentielle, en construction        ) -> [ACCEPTER_RDE,DEMANDER_MODIFICATION_DE_LA_DEMANDE,EXEMPTER_DAE,FAIRE_DEMANDE,PAYER_FRAIS_DE_DOSSIER,REFUSER_RDE]",
+        "EXEMPTER_DAE                                          (confidentielle, en construction        ) -> [ACCEPTER_RDE,FAIRE_DEMANDE,PAYER_FRAIS_DE_DOSSIER,REFUSER_RDE]",
+        "FAIRE_DEMANDE                                         (confidentielle, en construction        ) -> [ACCEPTER_RDE,DEMANDER_COMPLEMENTS_RDE,ENREGISTRER_DEMANDE,PAYER_FRAIS_DE_DOSSIER,REFUSER_RDE]",
+        "PAYER_FRAIS_DE_DOSSIER                                (confidentielle, en construction        ) -> [ACCEPTER_RDE,DEMANDER_COMPLEMENTS_RDE,ENREGISTRER_DEMANDE,REFUSER_RDE]",
+        "ENREGISTRER_DEMANDE                                   (confidentielle, en instruction         ) -> [ACCEPTER_COMPLETUDE,ACCEPTER_RDE,CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_RDE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,REFUSER_COMPLETUDE,REFUSER_RDE]",
+        "ACCEPTER_COMPLETUDE                                   (confidentielle, en instruction         ) -> [ACCEPTER_RDE,CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_RDE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,REFUSER_RDE,VALIDER_FRAIS_DE_DOSSIER]",
+        "ACCEPTER_RDE                                          (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,VALIDER_FRAIS_DE_DOSSIER]",
+        "VALIDER_FRAIS_DE_DOSSIER                              (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DECLARER_DEMANDE_DEFAVORABLE,DECLARER_DEMANDE_FAVORABLE,DEMANDER_COMPLEMENTS_MCR,DEMANDER_INFORMATION_MCR,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE]",
+        "DECLARER_DEMANDE_FAVORABLE                            (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE_SERVICE_EAU,RECEVOIR_EXPERTISE_SERVICE_MINES,RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES]",
+        "RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,FAIRE_SAISINE_CARM,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE_SERVICE_EAU,RECEVOIR_EXPERTISE_SERVICE_MINES]",
+        "FAIRE_SAISINE_CARM                                    (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,RENDRE_AVIS_AJOURNE_CARM,RENDRE_AVIS_DEFAVORABLE_CARM,RENDRE_AVIS_FAVORABLE_CARM]",
+      ]
+    `)
   })
 
   test('peut faire une "sco" après une "aca" favorable en mécanisé', () => {
-    orderAndInterpretMachine(armOctMachine, [
-      {
-        etapeTypeId: 'sco',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2020-09-28'),
-      },
-      {
-        etapeTypeId: 'vfc',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2020-07-17'),
-      },
-      {
-        etapeTypeId: 'pfc',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2020-07-16'),
-      },
-      {
-        etapeTypeId: 'mnb',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2020-07-09'),
-      },
-      {
-        etapeTypeId: 'aca',
-        etapeStatutId: 'fav',
-        date: toCaminoDate('2020-06-17'),
-      },
-      {
-        etapeTypeId: 'sca',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2020-06-15'),
-      },
-      {
-        etapeTypeId: 'rde',
-        etapeStatutId: 'fav',
-        date: toCaminoDate('2020-02-11'),
-        contenu: { arm: { franchissements: 3 } },
-      },
-      {
-        etapeTypeId: 'asc',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2020-02-07'),
-      },
-      {
-        etapeTypeId: 'mcr',
-        etapeStatutId: 'fav',
-        date: toCaminoDate('2020-02-06'),
-      },
-      {
-        etapeTypeId: 'vfd',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2020-02-05'),
-      },
-      {
-        etapeTypeId: 'mcp',
-        etapeStatutId: 'com',
-        date: toCaminoDate('2020-01-23'),
-      },
-      {
-        etapeTypeId: 'dae',
-        etapeStatutId: 'exe',
-        date: toCaminoDate('2020-01-14'),
-      },
-      {
-        etapeTypeId: 'pfd',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2019-12-13'),
-      },
-      {
-        etapeTypeId: 'men',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2019-12-11'),
-      },
-      {
-        etapeTypeId: 'mfr',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2019-12-10'),
-        contenu: { arm: { mecanise: true, franchissements: 3 } },
-      },
+    const { tree } = setDateAndOrderAndInterpretMachine(armOctMachine, '2020-09-28', [
+      { etapeTypeId: 'mfr', etapeStatutId: 'fai', contenu: { arm: { mecanise: true, franchissements: 3 } } },
+      { etapeTypeId: 'men', etapeStatutId: 'fai' },
+      { etapeTypeId: 'pfd', etapeStatutId: 'fai' },
+      { etapeTypeId: 'dae', etapeStatutId: 'exe' },
+      { etapeTypeId: 'mcp', etapeStatutId: 'com' },
+      { etapeTypeId: 'vfd', etapeStatutId: 'fai' },
+      { etapeTypeId: 'mcr', etapeStatutId: 'fav' },
+      { etapeTypeId: 'asc', etapeStatutId: 'fai' },
+      { etapeTypeId: 'rde', etapeStatutId: 'fav', contenu: { arm: { franchissements: 3 } } },
+      { etapeTypeId: 'sca', etapeStatutId: 'fai' },
+      { etapeTypeId: 'aca', etapeStatutId: 'fav' },
+      { etapeTypeId: 'mnb', etapeStatutId: 'fai' },
+      { etapeTypeId: 'pfc', etapeStatutId: 'fai' },
+      { etapeTypeId: 'vfc', etapeStatutId: 'fai' },
+      { etapeTypeId: 'sco', etapeStatutId: 'fai' },
     ])
+    expect(tree).toMatchInlineSnapshot(`
+      [
+        "RIEN                                                  (confidentielle, en construction        ) -> [ACCEPTER_RDE,DEMANDER_MODIFICATION_DE_LA_DEMANDE,EXEMPTER_DAE,FAIRE_DEMANDE,PAYER_FRAIS_DE_DOSSIER,REFUSER_RDE]",
+        "FAIRE_DEMANDE                                         (confidentielle, en construction        ) -> [ACCEPTER_RDE,DEMANDER_COMPLEMENTS_RDE,DEMANDER_MODIFICATION_DE_LA_DEMANDE,ENREGISTRER_DEMANDE,EXEMPTER_DAE,PAYER_FRAIS_DE_DOSSIER,REFUSER_RDE]",
+        "ENREGISTRER_DEMANDE                                   (confidentielle, en instruction         ) -> [ACCEPTER_RDE,CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_DAE,DEMANDER_COMPLEMENTS_RDE,DEMANDER_MODIFICATION_DE_LA_DEMANDE,DESISTER_PAR_LE_DEMANDEUR,EXEMPTER_DAE,MODIFIER_DEMANDE,PAYER_FRAIS_DE_DOSSIER,REFUSER_RDE]",
+        "PAYER_FRAIS_DE_DOSSIER                                (confidentielle, en instruction         ) -> [ACCEPTER_RDE,CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_DAE,DEMANDER_COMPLEMENTS_RDE,DEMANDER_MODIFICATION_DE_LA_DEMANDE,DESISTER_PAR_LE_DEMANDEUR,EXEMPTER_DAE,MODIFIER_DEMANDE,REFUSER_RDE]",
+        "EXEMPTER_DAE                                          (confidentielle, en instruction         ) -> [ACCEPTER_COMPLETUDE,ACCEPTER_RDE,CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_RDE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,REFUSER_COMPLETUDE,REFUSER_RDE]",
+        "ACCEPTER_COMPLETUDE                                   (confidentielle, en instruction         ) -> [ACCEPTER_RDE,CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_RDE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,REFUSER_RDE,VALIDER_FRAIS_DE_DOSSIER]",
+        "VALIDER_FRAIS_DE_DOSSIER                              (confidentielle, en instruction         ) -> [ACCEPTER_RDE,CLASSER_SANS_SUITE,DECLARER_DEMANDE_DEFAVORABLE,DECLARER_DEMANDE_FAVORABLE,DEMANDER_COMPLEMENTS_MCR,DEMANDER_COMPLEMENTS_RDE,DEMANDER_INFORMATION_MCR,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,REFUSER_RDE]",
+        "DECLARER_DEMANDE_FAVORABLE                            (confidentielle, en instruction         ) -> [ACCEPTER_RDE,CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_RDE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE_SERVICE_EAU,RECEVOIR_EXPERTISE_SERVICE_MINES,REFUSER_RDE,RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES]",
+        "RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES (confidentielle, en instruction         ) -> [ACCEPTER_RDE,CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_RDE,DESISTER_PAR_LE_DEMANDEUR,FAIRE_SAISINE_CARM,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE_SERVICE_EAU,RECEVOIR_EXPERTISE_SERVICE_MINES,REFUSER_RDE]",
+        "ACCEPTER_RDE                                          (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,FAIRE_SAISINE_CARM,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE_SERVICE_EAU,RECEVOIR_EXPERTISE_SERVICE_MINES]",
+        "FAIRE_SAISINE_CARM                                    (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,RENDRE_AVIS_AJOURNE_CARM,RENDRE_AVIS_DEFAVORABLE_CARM,RENDRE_AVIS_FAVORABLE_CARM]",
+        "RENDRE_AVIS_FAVORABLE_CARM                            (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,NOTIFIER_DEMANDEUR_AVIS_FAVORABLE_CARM]",
+        "NOTIFIER_DEMANDEUR_AVIS_FAVORABLE_CARM                (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,PAYER_FRAIS_DE_DOSSIER_COMPLEMENTAIRES]",
+        "PAYER_FRAIS_DE_DOSSIER_COMPLEMENTAIRES                (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,VALIDER_PAIEMENT_FRAIS_DE_DOSSIER_COMPLEMENTAIRES]",
+        "VALIDER_PAIEMENT_FRAIS_DE_DOSSIER_COMPLEMENTAIRES     (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,SIGNER_AUTORISATION_DE_RECHERCHE_MINIERE]",
+        "SIGNER_AUTORISATION_DE_RECHERCHE_MINIERE              (publique      , accepté                ) -> [FAIRE_AVENANT_ARM]",
+      ]
+    `)
   })
 
   test('les étapes sont vérifiées dans le bon ordre', () => {
-    orderAndInterpretMachine(armOctMachine, [
-      {
-        etapeTypeId: 'asc',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2021-06-02'),
-      },
-      {
-        etapeTypeId: 'mcp',
-        etapeStatutId: 'com',
-        date: toCaminoDate('2021-05-20'),
-      },
-      {
-        etapeTypeId: 'mcr',
-        etapeStatutId: 'fav',
-        date: toCaminoDate('2021-05-20'),
-      },
-      {
-        etapeTypeId: 'vfd',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2021-05-20'),
-      },
-      {
-        etapeTypeId: 'pfd',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2021-05-20'),
-      },
-      {
-        etapeTypeId: 'dae',
-        etapeStatutId: 'exe',
-        date: toCaminoDate('2021-05-20'),
-      },
-      {
-        etapeTypeId: 'men',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2021-05-20'),
-      },
-      {
-        etapeTypeId: 'mfr',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2021-05-20'),
-        contenu: { arm: { mecanise: true, franchissements: 3 } },
-      },
-      {
-        etapeTypeId: 'rde',
-        etapeStatutId: 'fav',
-        date: toCaminoDate('2021-04-09'),
-        contenu: { arm: { franchissements: 3 } },
-      },
+    const { tree } = setDateAndOrderAndInterpretMachine(armOctMachine, '2021-04-09', [
+      { etapeTypeId: 'rde', etapeStatutId: 'fav', contenu: { arm: { franchissements: 3 } } },
+      { etapeTypeId: 'mfr', etapeStatutId: 'fai', contenu: { arm: { mecanise: true, franchissements: 3 } } },
+      { etapeTypeId: 'men', etapeStatutId: 'fai' },
+      { etapeTypeId: 'dae', etapeStatutId: 'exe' },
+      { etapeTypeId: 'pfd', etapeStatutId: 'fai' },
+      { etapeTypeId: 'mcp', etapeStatutId: 'com' },
+      { etapeTypeId: 'vfd', etapeStatutId: 'fai' },
+      { etapeTypeId: 'mcr', etapeStatutId: 'fav' },
+      { etapeTypeId: 'asc', etapeStatutId: 'fai' },
     ])
+    expect(tree).toMatchInlineSnapshot(`
+      [
+        "RIEN                                                  (confidentielle, en construction        ) -> [ACCEPTER_RDE,DEMANDER_MODIFICATION_DE_LA_DEMANDE,EXEMPTER_DAE,FAIRE_DEMANDE,PAYER_FRAIS_DE_DOSSIER,REFUSER_RDE]",
+        "ACCEPTER_RDE                                          (confidentielle, en construction        ) -> [DEMANDER_MODIFICATION_DE_LA_DEMANDE,EXEMPTER_DAE,FAIRE_DEMANDE,PAYER_FRAIS_DE_DOSSIER]",
+        "FAIRE_DEMANDE                                         (confidentielle, en construction        ) -> [DEMANDER_MODIFICATION_DE_LA_DEMANDE,ENREGISTRER_DEMANDE,EXEMPTER_DAE,PAYER_FRAIS_DE_DOSSIER]",
+        "ENREGISTRER_DEMANDE                                   (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_DAE,DEMANDER_MODIFICATION_DE_LA_DEMANDE,DESISTER_PAR_LE_DEMANDEUR,EXEMPTER_DAE,MODIFIER_DEMANDE,PAYER_FRAIS_DE_DOSSIER]",
+        "EXEMPTER_DAE                                          (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,PAYER_FRAIS_DE_DOSSIER]",
+        "PAYER_FRAIS_DE_DOSSIER                                (confidentielle, en instruction         ) -> [ACCEPTER_COMPLETUDE,CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,REFUSER_COMPLETUDE]",
+        "ACCEPTER_COMPLETUDE                                   (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,VALIDER_FRAIS_DE_DOSSIER]",
+        "VALIDER_FRAIS_DE_DOSSIER                              (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DECLARER_DEMANDE_DEFAVORABLE,DECLARER_DEMANDE_FAVORABLE,DEMANDER_COMPLEMENTS_MCR,DEMANDER_INFORMATION_MCR,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE]",
+        "DECLARER_DEMANDE_FAVORABLE                            (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE_SERVICE_EAU,RECEVOIR_EXPERTISE_SERVICE_MINES,RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES]",
+        "RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,FAIRE_SAISINE_CARM,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE_SERVICE_EAU,RECEVOIR_EXPERTISE_SERVICE_MINES]",
+      ]
+    `)
   })
 
   test('des étapes qui se font la même journée', () => {
-    orderAndInterpretMachine(armOctMachine, [
+    const { tree } = setDateAndOrderAndInterpretMachine(armOctMachine, '2020-09-03', [
       {
-        etapeTypeId: 'mcp',
-        etapeStatutId: 'com',
-        date: toCaminoDate('2021-02-26'),
-      },
-      {
-        etapeTypeId: 'men',
+        etapeTypeId: 'pfd',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2021-02-26'),
       },
       {
         etapeTypeId: 'mfr',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2021-02-26'),
       },
       {
-        etapeTypeId: 'pfd',
+        etapeTypeId: 'men',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2020-09-03'),
+      },
+      {
+        etapeTypeId: 'mcp',
+        etapeStatutId: 'com',
       },
     ])
+    expect(tree).toMatchInlineSnapshot(`
+      [
+        "RIEN                   (confidentielle, en construction        ) -> [ACCEPTER_RDE,DEMANDER_MODIFICATION_DE_LA_DEMANDE,EXEMPTER_DAE,FAIRE_DEMANDE,PAYER_FRAIS_DE_DOSSIER,REFUSER_RDE]",
+        "PAYER_FRAIS_DE_DOSSIER (confidentielle, en construction        ) -> [ACCEPTER_RDE,DEMANDER_MODIFICATION_DE_LA_DEMANDE,EXEMPTER_DAE,FAIRE_DEMANDE,REFUSER_RDE]",
+        "FAIRE_DEMANDE          (confidentielle, en construction        ) -> [ENREGISTRER_DEMANDE]",
+        "ENREGISTRER_DEMANDE    (confidentielle, en instruction         ) -> [ACCEPTER_COMPLETUDE,CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,REFUSER_COMPLETUDE]",
+        "ACCEPTER_COMPLETUDE    (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,VALIDER_FRAIS_DE_DOSSIER]",
+      ]
+    `)
   })
 
   test('peut réaliser une saisine de la CARM après un récépissé de la déclaration sur l’eau défavorable', () => {
-    orderAndInterpretMachine(armOctMachine, [
-      {
-        etapeTypeId: 'sca',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2021-09-24'),
-      },
-      {
-        etapeTypeId: 'asc',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2021-09-23'),
-      },
-      {
-        etapeTypeId: 'rde',
-        etapeStatutId: 'def',
-        date: toCaminoDate('2021-09-22'),
-        contenu: { arm: { franchissements: 3 } },
-      },
-      {
-        etapeTypeId: 'edm',
-        etapeStatutId: 'fav',
-        date: toCaminoDate('2021-04-30'),
-      },
-      {
-        etapeTypeId: 'mcb',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2021-03-16'),
-      },
-      {
-        etapeTypeId: 'mcr',
-        etapeStatutId: 'fav',
-        date: toCaminoDate('2021-03-11'),
-      },
-      {
-        etapeTypeId: 'vfd',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2021-03-10'),
-      },
-      {
-        etapeTypeId: 'mcp',
-        etapeStatutId: 'com',
-        date: toCaminoDate('2021-02-26'),
-      },
-      {
-        etapeTypeId: 'men',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2021-02-26'),
-      },
-      {
-        etapeTypeId: 'mfr',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2021-02-26'),
-        contenu: { arm: { mecanise: true, franchissements: 3 } },
-      },
-      {
-        etapeTypeId: 'pfd',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2020-09-03'),
-      },
-      {
-        etapeTypeId: 'dae',
-        etapeStatutId: 'exe',
-        date: toCaminoDate('2020-07-28'),
-      },
+    const { tree } = setDateAndOrderAndInterpretMachine(armOctMachine, '2020-07-28', [
+      { etapeTypeId: 'dae', etapeStatutId: 'exe' },
+      { etapeTypeId: 'pfd', etapeStatutId: 'fai' },
+      { etapeTypeId: 'mfr', etapeStatutId: 'fai', contenu: { arm: { mecanise: true, franchissements: 3 } } },
+      { etapeTypeId: 'men', etapeStatutId: 'fai' },
+      { etapeTypeId: 'mcp', etapeStatutId: 'com' },
+      { etapeTypeId: 'vfd', etapeStatutId: 'fai' },
+      { etapeTypeId: 'mcr', etapeStatutId: 'fav' },
+      { etapeTypeId: 'mcb', etapeStatutId: 'fai' },
+      { etapeTypeId: 'edm', etapeStatutId: 'fav' },
+      { etapeTypeId: 'rde', etapeStatutId: 'def', contenu: { arm: { franchissements: 3 } } },
+      { etapeTypeId: 'asc', etapeStatutId: 'fai' },
+      { etapeTypeId: 'sca', etapeStatutId: 'fai' },
     ])
+    expect(tree).toMatchInlineSnapshot(`
+      [
+        "RIEN                                                  (confidentielle, en construction        ) -> [ACCEPTER_RDE,DEMANDER_MODIFICATION_DE_LA_DEMANDE,EXEMPTER_DAE,FAIRE_DEMANDE,PAYER_FRAIS_DE_DOSSIER,REFUSER_RDE]",
+        "EXEMPTER_DAE                                          (confidentielle, en construction        ) -> [ACCEPTER_RDE,FAIRE_DEMANDE,PAYER_FRAIS_DE_DOSSIER,REFUSER_RDE]",
+        "PAYER_FRAIS_DE_DOSSIER                                (confidentielle, en construction        ) -> [ACCEPTER_RDE,FAIRE_DEMANDE,REFUSER_RDE]",
+        "FAIRE_DEMANDE                                         (confidentielle, en construction        ) -> [ACCEPTER_RDE,DEMANDER_COMPLEMENTS_RDE,ENREGISTRER_DEMANDE,REFUSER_RDE]",
+        "ENREGISTRER_DEMANDE                                   (confidentielle, en instruction         ) -> [ACCEPTER_COMPLETUDE,ACCEPTER_RDE,CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_RDE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,REFUSER_COMPLETUDE,REFUSER_RDE]",
+        "ACCEPTER_COMPLETUDE                                   (confidentielle, en instruction         ) -> [ACCEPTER_RDE,CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_RDE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,REFUSER_RDE,VALIDER_FRAIS_DE_DOSSIER]",
+        "VALIDER_FRAIS_DE_DOSSIER                              (confidentielle, en instruction         ) -> [ACCEPTER_RDE,CLASSER_SANS_SUITE,DECLARER_DEMANDE_DEFAVORABLE,DECLARER_DEMANDE_FAVORABLE,DEMANDER_COMPLEMENTS_MCR,DEMANDER_COMPLEMENTS_RDE,DEMANDER_INFORMATION_MCR,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,REFUSER_RDE]",
+        "DECLARER_DEMANDE_FAVORABLE                            (confidentielle, en instruction         ) -> [ACCEPTER_RDE,CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_RDE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE_SERVICE_EAU,RECEVOIR_EXPERTISE_SERVICE_MINES,REFUSER_RDE,RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES]",
+        "DEMANDER_COMPLEMENTS_RDE                              (confidentielle, en instruction         ) -> [ACCEPTER_RDE,CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_RDE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,RECEVOIR_COMPLEMENTS_RDE,RECEVOIR_EXPERTISE_SERVICE_EAU,RECEVOIR_EXPERTISE_SERVICE_MINES,REFUSER_RDE,RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES]",
+        "RECEVOIR_EXPERTISE_SERVICE_MINES                      (confidentielle, en instruction         ) -> [ACCEPTER_RDE,CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_RDE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,RECEVOIR_COMPLEMENTS_RDE,RECEVOIR_EXPERTISE_SERVICE_EAU,REFUSER_RDE,RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES]",
+        "REFUSER_RDE                                           (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE_SERVICE_EAU,RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES]",
+        "RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,FAIRE_SAISINE_CARM,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE_SERVICE_EAU]",
+        "FAIRE_SAISINE_CARM                                    (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,RENDRE_AVIS_AJOURNE_CARM,RENDRE_AVIS_DEFAVORABLE_CARM,RENDRE_AVIS_FAVORABLE_CARM]",
+      ]
+    `)
   })
 
   test('peut réaliser une demande de compléments après un avis de la CARM ajourné', () => {
-    orderAndInterpretMachine(armOctMachine, [
-      {
-        etapeTypeId: 'sca',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2021-09-30'),
-      },
-      {
-        etapeTypeId: 'rcs',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2021-09-28'),
-      },
-      {
-        etapeTypeId: 'mcs',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2021-09-27'),
-      },
-      {
-        etapeTypeId: 'mna',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2021-09-26'),
-      },
-      {
-        etapeTypeId: 'aca',
-        etapeStatutId: 'ajo',
-        date: toCaminoDate('2021-09-25'),
-      },
-      {
-        etapeTypeId: 'sca',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2021-09-24'),
-      },
-      {
-        etapeTypeId: 'asc',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2021-09-23'),
-      },
-      {
-        etapeTypeId: 'mcr',
-        etapeStatutId: 'fav',
-        date: toCaminoDate('2021-03-10'),
-      },
-      {
-        etapeTypeId: 'vfd',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2021-03-10'),
-      },
-      {
-        etapeTypeId: 'mcp',
-        etapeStatutId: 'com',
-        date: toCaminoDate('2021-02-26'),
-      },
-      {
-        etapeTypeId: 'men',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2021-02-26'),
-      },
-      {
-        etapeTypeId: 'mfr',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2021-02-26'),
-      },
-      {
-        etapeTypeId: 'pfd',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2020-09-03'),
-      },
+    const { tree } = setDateAndOrderAndInterpretMachine(armOctMachine, '2020-09-03', [
+      { etapeTypeId: 'pfd', etapeStatutId: 'fai' },
+      { etapeTypeId: 'mfr', etapeStatutId: 'fai' },
+      { etapeTypeId: 'men', etapeStatutId: 'fai' },
+      { etapeTypeId: 'mcp', etapeStatutId: 'com' },
+      { etapeTypeId: 'vfd', etapeStatutId: 'fai' },
+      { etapeTypeId: 'mcr', etapeStatutId: 'fav' },
+      { etapeTypeId: 'asc', etapeStatutId: 'fai' },
+      { etapeTypeId: 'sca', etapeStatutId: 'fai' },
+      { etapeTypeId: 'aca', etapeStatutId: 'ajo' },
+      { etapeTypeId: 'mna', etapeStatutId: 'fai' },
+      { etapeTypeId: 'mcs', etapeStatutId: 'fai' },
+      { etapeTypeId: 'rcs', etapeStatutId: 'fai' },
+      { etapeTypeId: 'sca', etapeStatutId: 'fai' },
     ])
+    expect(tree).toMatchInlineSnapshot(`
+      [
+        "RIEN                                                  (confidentielle, en construction        ) -> [ACCEPTER_RDE,DEMANDER_MODIFICATION_DE_LA_DEMANDE,EXEMPTER_DAE,FAIRE_DEMANDE,PAYER_FRAIS_DE_DOSSIER,REFUSER_RDE]",
+        "PAYER_FRAIS_DE_DOSSIER                                (confidentielle, en construction        ) -> [ACCEPTER_RDE,DEMANDER_MODIFICATION_DE_LA_DEMANDE,EXEMPTER_DAE,FAIRE_DEMANDE,REFUSER_RDE]",
+        "FAIRE_DEMANDE                                         (confidentielle, en construction        ) -> [ENREGISTRER_DEMANDE]",
+        "ENREGISTRER_DEMANDE                                   (confidentielle, en instruction         ) -> [ACCEPTER_COMPLETUDE,CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,REFUSER_COMPLETUDE]",
+        "ACCEPTER_COMPLETUDE                                   (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,VALIDER_FRAIS_DE_DOSSIER]",
+        "VALIDER_FRAIS_DE_DOSSIER                              (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DECLARER_DEMANDE_DEFAVORABLE,DECLARER_DEMANDE_FAVORABLE,DEMANDER_COMPLEMENTS_MCR,DEMANDER_INFORMATION_MCR,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE]",
+        "DECLARER_DEMANDE_FAVORABLE                            (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE_SERVICE_EAU,RECEVOIR_EXPERTISE_SERVICE_MINES,RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES]",
+        "RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,FAIRE_SAISINE_CARM,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE_SERVICE_EAU,RECEVOIR_EXPERTISE_SERVICE_MINES]",
+        "FAIRE_SAISINE_CARM                                    (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,RENDRE_AVIS_AJOURNE_CARM,RENDRE_AVIS_DEFAVORABLE_CARM,RENDRE_AVIS_FAVORABLE_CARM]",
+        "RENDRE_AVIS_AJOURNE_CARM                              (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,NOTIFIER_DEMANDEUR_AVIS_AJOURNE_CARM]",
+        "NOTIFIER_DEMANDEUR_AVIS_AJOURNE_CARM                  (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_COMPLEMENT_SAISINE_CARM,DESISTER_PAR_LE_DEMANDEUR,FAIRE_SAISINE_CARM]",
+        "DEMANDER_COMPLEMENT_SAISINE_CARM                      (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,FAIRE_SAISINE_CARM,RECEVOIR_COMPLEMENT_SAISINE_CARM]",
+        "RECEVOIR_COMPLEMENT_SAISINE_CARM                      (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_COMPLEMENT_SAISINE_CARM,DESISTER_PAR_LE_DEMANDEUR,FAIRE_SAISINE_CARM]",
+        "FAIRE_SAISINE_CARM                                    (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,RENDRE_AVIS_AJOURNE_CARM,RENDRE_AVIS_DEFAVORABLE_CARM,RENDRE_AVIS_FAVORABLE_CARM]",
+      ]
+    `)
   })
 
   test('peut réaliser une demande d’ARM non mécanisée et un avenant', () => {
-    orderAndInterpretMachine(armOctMachine, [
-      {
-        etapeTypeId: 'mnv',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2021-09-29'),
-      },
-      {
-        etapeTypeId: 'aco',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2021-09-28'),
-      },
-      {
-        etapeTypeId: 'mns',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2021-09-27'),
-      },
-      {
-        etapeTypeId: 'sco',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2021-09-26'),
-      },
-      {
-        etapeTypeId: 'aca',
-        etapeStatutId: 'fav',
-        date: toCaminoDate('2021-09-25'),
-      },
-      {
-        etapeTypeId: 'sca',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2021-09-24'),
-      },
-      {
-        etapeTypeId: 'asc',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2021-09-23'),
-      },
-      {
-        etapeTypeId: 'mcr',
-        etapeStatutId: 'fav',
-        date: toCaminoDate('2021-03-10'),
-      },
-      {
-        etapeTypeId: 'vfd',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2021-03-10'),
-      },
-      {
-        etapeTypeId: 'mcp',
-        etapeStatutId: 'com',
-        date: toCaminoDate('2021-02-26'),
-      },
-      {
-        etapeTypeId: 'men',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2021-02-26'),
-      },
-      {
-        etapeTypeId: 'mfr',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2021-02-26'),
-      },
-      {
-        etapeTypeId: 'pfd',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2020-09-03'),
-      },
+    const { tree } = setDateAndOrderAndInterpretMachine(armOctMachine, '2020-09-03', [
+      { etapeTypeId: 'pfd', etapeStatutId: 'fai' },
+      { etapeTypeId: 'mfr', etapeStatutId: 'fai' },
+      { etapeTypeId: 'men', etapeStatutId: 'fai' },
+      { etapeTypeId: 'mcp', etapeStatutId: 'com' },
+      { etapeTypeId: 'vfd', etapeStatutId: 'fai' },
+      { etapeTypeId: 'mcr', etapeStatutId: 'fav' },
+      { etapeTypeId: 'asc', etapeStatutId: 'fai' },
+      { etapeTypeId: 'sca', etapeStatutId: 'fai' },
+      { etapeTypeId: 'aca', etapeStatutId: 'fav' },
+      { etapeTypeId: 'sco', etapeStatutId: 'fai' },
+      { etapeTypeId: 'mns', etapeStatutId: 'fai' },
+      { etapeTypeId: 'aco', etapeStatutId: 'fai' },
+      { etapeTypeId: 'mnv', etapeStatutId: 'fai' },
     ])
+    expect(tree).toMatchInlineSnapshot(`
+      [
+        "RIEN                                                  (confidentielle, en construction        ) -> [ACCEPTER_RDE,DEMANDER_MODIFICATION_DE_LA_DEMANDE,EXEMPTER_DAE,FAIRE_DEMANDE,PAYER_FRAIS_DE_DOSSIER,REFUSER_RDE]",
+        "PAYER_FRAIS_DE_DOSSIER                                (confidentielle, en construction        ) -> [ACCEPTER_RDE,DEMANDER_MODIFICATION_DE_LA_DEMANDE,EXEMPTER_DAE,FAIRE_DEMANDE,REFUSER_RDE]",
+        "FAIRE_DEMANDE                                         (confidentielle, en construction        ) -> [ENREGISTRER_DEMANDE]",
+        "ENREGISTRER_DEMANDE                                   (confidentielle, en instruction         ) -> [ACCEPTER_COMPLETUDE,CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,REFUSER_COMPLETUDE]",
+        "ACCEPTER_COMPLETUDE                                   (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,VALIDER_FRAIS_DE_DOSSIER]",
+        "VALIDER_FRAIS_DE_DOSSIER                              (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DECLARER_DEMANDE_DEFAVORABLE,DECLARER_DEMANDE_FAVORABLE,DEMANDER_COMPLEMENTS_MCR,DEMANDER_INFORMATION_MCR,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE]",
+        "DECLARER_DEMANDE_FAVORABLE                            (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE_SERVICE_EAU,RECEVOIR_EXPERTISE_SERVICE_MINES,RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES]",
+        "RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,FAIRE_SAISINE_CARM,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE_SERVICE_EAU,RECEVOIR_EXPERTISE_SERVICE_MINES]",
+        "FAIRE_SAISINE_CARM                                    (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,RENDRE_AVIS_AJOURNE_CARM,RENDRE_AVIS_DEFAVORABLE_CARM,RENDRE_AVIS_FAVORABLE_CARM]",
+        "RENDRE_AVIS_FAVORABLE_CARM                            (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,SIGNER_AUTORISATION_DE_RECHERCHE_MINIERE]",
+        "SIGNER_AUTORISATION_DE_RECHERCHE_MINIERE              (publique      , accepté                ) -> [NOTIFIER_DEMANDEUR_SIGNATURE_ARM]",
+        "NOTIFIER_DEMANDEUR_SIGNATURE_ARM                      (publique      , accepté                ) -> [FAIRE_AVENANT_ARM]",
+        "FAIRE_AVENANT_ARM                                     (publique      , accepté                ) -> [NOTIFIER_AVENANT_ARM]",
+        "NOTIFIER_AVENANT_ARM                                  (publique      , accepté                ) -> [FAIRE_AVENANT_ARM]",
+      ]
+    `)
   })
 
   test('peut réaliser une demande d’ARM mécanisée et un avenant', () => {
-    orderAndInterpretMachine(armOctMachine, [
-      {
-        etapeTypeId: 'mnv',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2021-10-02'),
-      },
-      {
-        etapeTypeId: 'aco',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2021-10-01'),
-      },
-      {
-        etapeTypeId: 'sco',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2021-09-29'),
-      },
-      {
-        etapeTypeId: 'vfc',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2021-09-28'),
-      },
-      {
-        etapeTypeId: 'pfc',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2021-09-27'),
-      },
-      {
-        etapeTypeId: 'mnb',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2021-09-26'),
-      },
-      {
-        etapeTypeId: 'aca',
-        etapeStatutId: 'fav',
-        date: toCaminoDate('2021-09-25'),
-      },
-      {
-        etapeTypeId: 'sca',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2021-09-24'),
-      },
-      {
-        etapeTypeId: 'asc',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2021-09-23'),
-      },
-      {
-        etapeTypeId: 'mcr',
-        etapeStatutId: 'fav',
-        date: toCaminoDate('2021-03-11'),
-      },
-      {
-        etapeTypeId: 'vfd',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2021-03-10'),
-      },
-      {
-        etapeTypeId: 'mcp',
-        etapeStatutId: 'com',
-        date: toCaminoDate('2021-02-29'),
-      },
-      {
-        etapeTypeId: 'pfd',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2021-02-28'),
-      },
-      {
-        etapeTypeId: 'dae',
-        etapeStatutId: 'exe',
-        date: toCaminoDate('2021-02-27'),
-      },
-      {
-        etapeTypeId: 'men',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2021-02-26'),
-      },
-      {
-        etapeTypeId: 'mfr',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2021-02-25'),
-        contenu: { arm: { mecanise: true } },
-      },
+    const { tree } = setDateAndOrderAndInterpretMachine(armOctMachine, '2021-02-25', [
+      { etapeTypeId: 'mfr', etapeStatutId: 'fai', contenu: { arm: { mecanise: true } } },
+      { etapeTypeId: 'men', etapeStatutId: 'fai' },
+      { etapeTypeId: 'dae', etapeStatutId: 'exe' },
+      { etapeTypeId: 'pfd', etapeStatutId: 'fai' },
+      { etapeTypeId: 'mcp', etapeStatutId: 'com' },
+      { etapeTypeId: 'vfd', etapeStatutId: 'fai' },
+      { etapeTypeId: 'mcr', etapeStatutId: 'fav' },
+      { etapeTypeId: 'asc', etapeStatutId: 'fai' },
+      { etapeTypeId: 'sca', etapeStatutId: 'fai' },
+      { etapeTypeId: 'aca', etapeStatutId: 'fav' },
+      { etapeTypeId: 'mnb', etapeStatutId: 'fai' },
+      { etapeTypeId: 'pfc', etapeStatutId: 'fai' },
+      { etapeTypeId: 'vfc', etapeStatutId: 'fai' },
+      { etapeTypeId: 'sco', etapeStatutId: 'fai' },
+      { etapeTypeId: 'aco', etapeStatutId: 'fai' },
+      { etapeTypeId: 'mnv', etapeStatutId: 'fai' },
     ])
+    expect(tree).toMatchInlineSnapshot(`
+      [
+        "RIEN                                                  (confidentielle, en construction        ) -> [ACCEPTER_RDE,DEMANDER_MODIFICATION_DE_LA_DEMANDE,EXEMPTER_DAE,FAIRE_DEMANDE,PAYER_FRAIS_DE_DOSSIER,REFUSER_RDE]",
+        "FAIRE_DEMANDE                                         (confidentielle, en construction        ) -> [ACCEPTER_RDE,DEMANDER_MODIFICATION_DE_LA_DEMANDE,ENREGISTRER_DEMANDE,EXEMPTER_DAE,PAYER_FRAIS_DE_DOSSIER,REFUSER_RDE]",
+        "ENREGISTRER_DEMANDE                                   (confidentielle, en instruction         ) -> [ACCEPTER_RDE,CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_DAE,DEMANDER_COMPLEMENTS_RDE,DEMANDER_MODIFICATION_DE_LA_DEMANDE,DESISTER_PAR_LE_DEMANDEUR,EXEMPTER_DAE,MODIFIER_DEMANDE,PAYER_FRAIS_DE_DOSSIER,REFUSER_RDE]",
+        "EXEMPTER_DAE                                          (confidentielle, en instruction         ) -> [ACCEPTER_RDE,CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_RDE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,PAYER_FRAIS_DE_DOSSIER,REFUSER_RDE]",
+        "PAYER_FRAIS_DE_DOSSIER                                (confidentielle, en instruction         ) -> [ACCEPTER_COMPLETUDE,ACCEPTER_RDE,CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_RDE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,REFUSER_COMPLETUDE,REFUSER_RDE]",
+        "ACCEPTER_COMPLETUDE                                   (confidentielle, en instruction         ) -> [ACCEPTER_RDE,CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_RDE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,REFUSER_RDE,VALIDER_FRAIS_DE_DOSSIER]",
+        "VALIDER_FRAIS_DE_DOSSIER                              (confidentielle, en instruction         ) -> [ACCEPTER_RDE,CLASSER_SANS_SUITE,DECLARER_DEMANDE_DEFAVORABLE,DECLARER_DEMANDE_FAVORABLE,DEMANDER_COMPLEMENTS_MCR,DEMANDER_COMPLEMENTS_RDE,DEMANDER_INFORMATION_MCR,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,REFUSER_RDE]",
+        "DECLARER_DEMANDE_FAVORABLE                            (confidentielle, en instruction         ) -> [ACCEPTER_RDE,CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_RDE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE_SERVICE_EAU,RECEVOIR_EXPERTISE_SERVICE_MINES,REFUSER_RDE,RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES]",
+        "RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES (confidentielle, en instruction         ) -> [ACCEPTER_RDE,CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_RDE,DESISTER_PAR_LE_DEMANDEUR,FAIRE_SAISINE_CARM,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE_SERVICE_EAU,RECEVOIR_EXPERTISE_SERVICE_MINES,REFUSER_RDE]",
+        "FAIRE_SAISINE_CARM                                    (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,RENDRE_AVIS_AJOURNE_CARM,RENDRE_AVIS_DEFAVORABLE_CARM,RENDRE_AVIS_FAVORABLE_CARM]",
+        "RENDRE_AVIS_FAVORABLE_CARM                            (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,NOTIFIER_DEMANDEUR_AVIS_FAVORABLE_CARM]",
+        "NOTIFIER_DEMANDEUR_AVIS_FAVORABLE_CARM                (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,PAYER_FRAIS_DE_DOSSIER_COMPLEMENTAIRES]",
+        "PAYER_FRAIS_DE_DOSSIER_COMPLEMENTAIRES                (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,VALIDER_PAIEMENT_FRAIS_DE_DOSSIER_COMPLEMENTAIRES]",
+        "VALIDER_PAIEMENT_FRAIS_DE_DOSSIER_COMPLEMENTAIRES     (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,SIGNER_AUTORISATION_DE_RECHERCHE_MINIERE]",
+        "SIGNER_AUTORISATION_DE_RECHERCHE_MINIERE              (publique      , accepté                ) -> [FAIRE_AVENANT_ARM]",
+        "FAIRE_AVENANT_ARM                                     (publique      , accepté                ) -> [NOTIFIER_AVENANT_ARM]",
+        "NOTIFIER_AVENANT_ARM                                  (publique      , accepté                ) -> [FAIRE_AVENANT_ARM]",
+      ]
+    `)
   })
 
   test("peut faire une demande de compléments pour la RDE si les franchissements d'eau ne sont pas spécifiés sur une ARM mécanisée", () => {
-    orderAndInterpretMachine(armOctMachine, [
-      {
-        etapeTypeId: 'rcb',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2020-10-08'),
-        contenu: {
-          arm: {
-            franchissements: 4,
-          },
-        },
-      },
-      {
-        etapeTypeId: 'mcb',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2020-10-05'),
-      },
-      {
-        etapeTypeId: 'mcp',
-        etapeStatutId: 'com',
-        date: toCaminoDate('2020-08-25'),
-      },
-      {
-        etapeTypeId: 'men',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2020-08-25'),
-      },
-      {
-        etapeTypeId: 'pfd',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2020-08-20'),
-      },
-      {
-        etapeTypeId: 'dae',
-        etapeStatutId: 'exe',
-        date: toCaminoDate('2020-07-30'),
-      },
-      {
-        etapeTypeId: 'mfr',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2020-07-14'),
-        contenu: {
-          arm: {
-            mecanise: true,
-          },
-        },
-      },
+    const { tree } = setDateAndOrderAndInterpretMachine(armOctMachine, '2020-07-14', [
+      { etapeTypeId: 'mfr', etapeStatutId: 'fai', contenu: { arm: { mecanise: true } } },
+      { etapeTypeId: 'dae', etapeStatutId: 'exe' },
+      { etapeTypeId: 'pfd', etapeStatutId: 'fai' },
+      { etapeTypeId: 'men', etapeStatutId: 'fai' },
+      { etapeTypeId: 'mcp', etapeStatutId: 'com' },
+      { etapeTypeId: 'mcb', etapeStatutId: 'fai' },
+      { etapeTypeId: 'rcb', etapeStatutId: 'fai', contenu: { arm: { franchissements: 4 } } },
     ])
+    expect(tree).toMatchInlineSnapshot(`
+      [
+        "RIEN                     (confidentielle, en construction        ) -> [ACCEPTER_RDE,DEMANDER_MODIFICATION_DE_LA_DEMANDE,EXEMPTER_DAE,FAIRE_DEMANDE,PAYER_FRAIS_DE_DOSSIER,REFUSER_RDE]",
+        "FAIRE_DEMANDE            (confidentielle, en construction        ) -> [ACCEPTER_RDE,DEMANDER_MODIFICATION_DE_LA_DEMANDE,ENREGISTRER_DEMANDE,EXEMPTER_DAE,PAYER_FRAIS_DE_DOSSIER,REFUSER_RDE]",
+        "EXEMPTER_DAE             (confidentielle, en construction        ) -> [ACCEPTER_RDE,ENREGISTRER_DEMANDE,PAYER_FRAIS_DE_DOSSIER,REFUSER_RDE]",
+        "PAYER_FRAIS_DE_DOSSIER   (confidentielle, en construction        ) -> [ACCEPTER_RDE,ENREGISTRER_DEMANDE,REFUSER_RDE]",
+        "ENREGISTRER_DEMANDE      (confidentielle, en instruction         ) -> [ACCEPTER_COMPLETUDE,ACCEPTER_RDE,CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_RDE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,REFUSER_COMPLETUDE,REFUSER_RDE]",
+        "ACCEPTER_COMPLETUDE      (confidentielle, en instruction         ) -> [ACCEPTER_RDE,CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_RDE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,REFUSER_RDE,VALIDER_FRAIS_DE_DOSSIER]",
+        "DEMANDER_COMPLEMENTS_RDE (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_RDE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,RECEVOIR_COMPLEMENTS_RDE,VALIDER_FRAIS_DE_DOSSIER]",
+        "RECEVOIR_COMPLEMENTS_RDE (confidentielle, en instruction         ) -> [ACCEPTER_RDE,CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_RDE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,REFUSER_RDE,VALIDER_FRAIS_DE_DOSSIER]",
+      ]
+    `)
   })
 
   test('ne peut pas faire de mfr non mécanisée après une dae', () => {
     expect(() =>
-      orderAndInterpretMachine(armOctMachine, [
+      setDateAndOrderAndInterpretMachine(armOctMachine, '2021-02-23', [
         {
           etapeTypeId: 'dae',
           etapeStatutId: 'exe',
-          date: toCaminoDate('2021-02-23'),
         },
         {
           etapeTypeId: 'mfr',
           etapeStatutId: 'fai',
-          date: toCaminoDate('2021-02-25'),
           contenu: { arm: { mecanise: false } },
         },
       ])
@@ -1077,17 +870,15 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
 
   test('ne peut pas faire de mfr non mécanisée après une rde', () => {
     expect(() =>
-      orderAndInterpretMachine(armOctMachine, [
+      setDateAndOrderAndInterpretMachine(armOctMachine, '2021-02-23', [
         {
           etapeTypeId: 'rde',
           etapeStatutId: 'fav',
-          date: toCaminoDate('2021-02-23'),
           contenu: { arm: { franchissements: 1 } },
         },
         {
           etapeTypeId: 'mfr',
           etapeStatutId: 'fai',
-          date: toCaminoDate('2021-02-25'),
           contenu: { arm: { mecanise: false } },
         },
       ])
@@ -1095,221 +886,129 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
   })
 
   test('peut réaliser une validation des frais de dossier complémentaire après un désistement', () => {
-    orderAndInterpretMachine(armOctMachine, [
-      {
-        etapeTypeId: 'vfc',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2021-10-04'),
-      },
-      {
-        etapeTypeId: 'mnc',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2021-10-02'),
-      },
-      {
-        etapeTypeId: 'css',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2021-10-01'),
-      },
-      {
-        etapeTypeId: 'asc',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2021-09-23'),
-      },
-      {
-        etapeTypeId: 'mcr',
-        etapeStatutId: 'fav',
-        date: toCaminoDate('2021-03-11'),
-      },
-      {
-        etapeTypeId: 'vfd',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2021-03-10'),
-      },
-      {
-        etapeTypeId: 'mcp',
-        etapeStatutId: 'com',
-        date: toCaminoDate('2021-02-29'),
-      },
-      {
-        etapeTypeId: 'pfd',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2021-02-28'),
-      },
-      {
-        etapeTypeId: 'dae',
-        etapeStatutId: 'exe',
-        date: toCaminoDate('2021-02-27'),
-      },
-      {
-        etapeTypeId: 'men',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2021-02-26'),
-      },
-      {
-        etapeTypeId: 'mfr',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2021-02-25'),
-        contenu: { arm: { mecanise: true } },
-      },
+    let result = setDateAndOrderAndInterpretMachine(armOctMachine, '2021-02-25', [
+      { etapeTypeId: 'mfr', etapeStatutId: 'fai', contenu: { arm: { mecanise: true } } },
+      { etapeTypeId: 'men', etapeStatutId: 'fai' },
+      { etapeTypeId: 'dae', etapeStatutId: 'exe' },
+      { etapeTypeId: 'pfd', etapeStatutId: 'fai' },
+      { etapeTypeId: 'mcp', etapeStatutId: 'com' },
+      { etapeTypeId: 'vfd', etapeStatutId: 'fai' },
+      { etapeTypeId: 'mcr', etapeStatutId: 'fav' },
+      { etapeTypeId: 'asc', etapeStatutId: 'fai' },
+      { etapeTypeId: 'css', etapeStatutId: 'fai' },
+      { etapeTypeId: 'mnc', etapeStatutId: 'fai' },
+      { etapeTypeId: 'vfc', etapeStatutId: 'fai' },
     ])
+    expect(result.tree).toMatchInlineSnapshot(`
+      [
+        "RIEN                                                  (confidentielle, en construction        ) -> [ACCEPTER_RDE,DEMANDER_MODIFICATION_DE_LA_DEMANDE,EXEMPTER_DAE,FAIRE_DEMANDE,PAYER_FRAIS_DE_DOSSIER,REFUSER_RDE]",
+        "FAIRE_DEMANDE                                         (confidentielle, en construction        ) -> [ACCEPTER_RDE,DEMANDER_MODIFICATION_DE_LA_DEMANDE,ENREGISTRER_DEMANDE,EXEMPTER_DAE,PAYER_FRAIS_DE_DOSSIER,REFUSER_RDE]",
+        "ENREGISTRER_DEMANDE                                   (confidentielle, en instruction         ) -> [ACCEPTER_RDE,CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_DAE,DEMANDER_COMPLEMENTS_RDE,DEMANDER_MODIFICATION_DE_LA_DEMANDE,DESISTER_PAR_LE_DEMANDEUR,EXEMPTER_DAE,MODIFIER_DEMANDE,PAYER_FRAIS_DE_DOSSIER,REFUSER_RDE]",
+        "EXEMPTER_DAE                                          (confidentielle, en instruction         ) -> [ACCEPTER_RDE,CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_RDE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,PAYER_FRAIS_DE_DOSSIER,REFUSER_RDE]",
+        "PAYER_FRAIS_DE_DOSSIER                                (confidentielle, en instruction         ) -> [ACCEPTER_COMPLETUDE,ACCEPTER_RDE,CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_RDE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,REFUSER_COMPLETUDE,REFUSER_RDE]",
+        "ACCEPTER_COMPLETUDE                                   (confidentielle, en instruction         ) -> [ACCEPTER_RDE,CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_RDE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,REFUSER_RDE,VALIDER_FRAIS_DE_DOSSIER]",
+        "VALIDER_FRAIS_DE_DOSSIER                              (confidentielle, en instruction         ) -> [ACCEPTER_RDE,CLASSER_SANS_SUITE,DECLARER_DEMANDE_DEFAVORABLE,DECLARER_DEMANDE_FAVORABLE,DEMANDER_COMPLEMENTS_MCR,DEMANDER_COMPLEMENTS_RDE,DEMANDER_INFORMATION_MCR,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,REFUSER_RDE]",
+        "DECLARER_DEMANDE_FAVORABLE                            (confidentielle, en instruction         ) -> [ACCEPTER_RDE,CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_RDE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE_SERVICE_EAU,RECEVOIR_EXPERTISE_SERVICE_MINES,REFUSER_RDE,RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES]",
+        "RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES (confidentielle, en instruction         ) -> [ACCEPTER_RDE,CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_RDE,DESISTER_PAR_LE_DEMANDEUR,FAIRE_SAISINE_CARM,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE_SERVICE_EAU,RECEVOIR_EXPERTISE_SERVICE_MINES,REFUSER_RDE]",
+        "CLASSER_SANS_SUITE                                    (publique      , classé sans suite      ) -> [NOTIFIER_DEMANDEUR_CSS]",
+        "NOTIFIER_DEMANDEUR_CSS                                (publique      , classé sans suite      ) -> [VALIDER_PAIEMENT_FRAIS_DE_DOSSIER_COMPLEMENTAIRES]",
+        "VALIDER_PAIEMENT_FRAIS_DE_DOSSIER_COMPLEMENTAIRES     (publique      , classé sans suite      ) -> []",
+      ]
+    `)
 
-    orderAndInterpretMachine(armOctMachine, [
-      {
-        etapeTypeId: 'vfc',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2021-10-05'),
-      },
-      {
-        etapeTypeId: 'vfd',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2021-10-04'),
-      },
-      {
-        etapeTypeId: 'mnc',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2021-10-02'),
-      },
-      {
-        etapeTypeId: 'css',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2021-10-01'),
-      },
-      {
-        etapeTypeId: 'mcp',
-        etapeStatutId: 'com',
-        date: toCaminoDate('2021-02-29'),
-      },
-      {
-        etapeTypeId: 'pfd',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2021-02-28'),
-      },
-      {
-        etapeTypeId: 'dae',
-        etapeStatutId: 'exe',
-        date: toCaminoDate('2021-02-27'),
-      },
-      {
-        etapeTypeId: 'men',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2021-02-26'),
-      },
-      {
-        etapeTypeId: 'mfr',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2021-02-25'),
-        contenu: { arm: { mecanise: true } },
-      },
+    result = setDateAndOrderAndInterpretMachine(armOctMachine, '2021-02-25', [
+      { etapeTypeId: 'mfr', etapeStatutId: 'fai', contenu: { arm: { mecanise: true } } },
+      { etapeTypeId: 'men', etapeStatutId: 'fai' },
+      { etapeTypeId: 'dae', etapeStatutId: 'exe' },
+      { etapeTypeId: 'pfd', etapeStatutId: 'fai' },
+      { etapeTypeId: 'mcp', etapeStatutId: 'com' },
+      { etapeTypeId: 'css', etapeStatutId: 'fai' },
+      { etapeTypeId: 'mnc', etapeStatutId: 'fai' },
+      { etapeTypeId: 'vfd', etapeStatutId: 'fai' },
+      { etapeTypeId: 'vfc', etapeStatutId: 'fai' },
     ])
-    orderAndInterpretMachine(armOctMachine, [
-      {
-        etapeTypeId: 'vfc',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2021-10-04'),
-      },
-      {
-        etapeTypeId: 'des',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2021-10-01'),
-      },
-      {
-        etapeTypeId: 'asc',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2021-09-23'),
-      },
-      {
-        etapeTypeId: 'mcr',
-        etapeStatutId: 'fav',
-        date: toCaminoDate('2021-03-11'),
-      },
-      {
-        etapeTypeId: 'vfd',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2021-03-10'),
-      },
-      {
-        etapeTypeId: 'mcp',
-        etapeStatutId: 'com',
-        date: toCaminoDate('2021-02-29'),
-      },
-      {
-        etapeTypeId: 'pfd',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2021-02-28'),
-      },
-      {
-        etapeTypeId: 'dae',
-        etapeStatutId: 'exe',
-        date: toCaminoDate('2021-02-27'),
-      },
-      {
-        etapeTypeId: 'men',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2021-02-26'),
-      },
-      {
-        etapeTypeId: 'mfr',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2021-02-25'),
-        contenu: { arm: { mecanise: true } },
-      },
-    ])
+    expect(result.tree).toMatchInlineSnapshot(`
+      [
+        "RIEN                                              (confidentielle, en construction        ) -> [ACCEPTER_RDE,DEMANDER_MODIFICATION_DE_LA_DEMANDE,EXEMPTER_DAE,FAIRE_DEMANDE,PAYER_FRAIS_DE_DOSSIER,REFUSER_RDE]",
+        "FAIRE_DEMANDE                                     (confidentielle, en construction        ) -> [ACCEPTER_RDE,DEMANDER_MODIFICATION_DE_LA_DEMANDE,ENREGISTRER_DEMANDE,EXEMPTER_DAE,PAYER_FRAIS_DE_DOSSIER,REFUSER_RDE]",
+        "ENREGISTRER_DEMANDE                               (confidentielle, en instruction         ) -> [ACCEPTER_RDE,CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_DAE,DEMANDER_COMPLEMENTS_RDE,DEMANDER_MODIFICATION_DE_LA_DEMANDE,DESISTER_PAR_LE_DEMANDEUR,EXEMPTER_DAE,MODIFIER_DEMANDE,PAYER_FRAIS_DE_DOSSIER,REFUSER_RDE]",
+        "EXEMPTER_DAE                                      (confidentielle, en instruction         ) -> [ACCEPTER_RDE,CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_RDE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,PAYER_FRAIS_DE_DOSSIER,REFUSER_RDE]",
+        "PAYER_FRAIS_DE_DOSSIER                            (confidentielle, en instruction         ) -> [ACCEPTER_COMPLETUDE,ACCEPTER_RDE,CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_RDE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,REFUSER_COMPLETUDE,REFUSER_RDE]",
+        "ACCEPTER_COMPLETUDE                               (confidentielle, en instruction         ) -> [ACCEPTER_RDE,CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_RDE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,REFUSER_RDE,VALIDER_FRAIS_DE_DOSSIER]",
+        "CLASSER_SANS_SUITE                                (publique      , classé sans suite      ) -> [NOTIFIER_DEMANDEUR_CSS]",
+        "NOTIFIER_DEMANDEUR_CSS                            (publique      , classé sans suite      ) -> [ACCEPTER_RDE,REFUSER_RDE,VALIDER_FRAIS_DE_DOSSIER]",
+        "VALIDER_FRAIS_DE_DOSSIER                          (publique      , classé sans suite      ) -> [VALIDER_PAIEMENT_FRAIS_DE_DOSSIER_COMPLEMENTAIRES]",
+        "VALIDER_PAIEMENT_FRAIS_DE_DOSSIER_COMPLEMENTAIRES (publique      , classé sans suite      ) -> []",
+      ]
+    `)
 
-    orderAndInterpretMachine(armOctMachine, [
-      {
-        etapeTypeId: 'vfc',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2021-10-05'),
-      },
-      {
-        etapeTypeId: 'vfd',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2021-10-04'),
-      },
-      {
-        etapeTypeId: 'des',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2021-10-01'),
-      },
-      {
-        etapeTypeId: 'mcp',
-        etapeStatutId: 'com',
-        date: toCaminoDate('2021-02-29'),
-      },
-      {
-        etapeTypeId: 'pfd',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2021-02-28'),
-      },
-      {
-        etapeTypeId: 'dae',
-        etapeStatutId: 'exe',
-        date: toCaminoDate('2021-02-27'),
-      },
-      {
-        etapeTypeId: 'men',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2021-02-26'),
-      },
-      {
-        etapeTypeId: 'mfr',
-        etapeStatutId: 'fai',
-        date: toCaminoDate('2021-02-25'),
-        contenu: { arm: { mecanise: true } },
-      },
+    result = setDateAndOrderAndInterpretMachine(armOctMachine, '2021-02-25', [
+      { etapeTypeId: 'mfr', etapeStatutId: 'fai', contenu: { arm: { mecanise: true } } },
+      { etapeTypeId: 'men', etapeStatutId: 'fai' },
+      { etapeTypeId: 'dae', etapeStatutId: 'exe' },
+      { etapeTypeId: 'pfd', etapeStatutId: 'fai' },
+      { etapeTypeId: 'mcp', etapeStatutId: 'com' },
+      { etapeTypeId: 'vfd', etapeStatutId: 'fai' },
+      { etapeTypeId: 'mcr', etapeStatutId: 'fav' },
+      { etapeTypeId: 'asc', etapeStatutId: 'fai' },
+      { etapeTypeId: 'des', etapeStatutId: 'fai' },
+      { etapeTypeId: 'vfc', etapeStatutId: 'fai' },
     ])
+    expect(result.tree).toMatchInlineSnapshot(`
+      [
+        "RIEN                                                  (confidentielle, en construction        ) -> [ACCEPTER_RDE,DEMANDER_MODIFICATION_DE_LA_DEMANDE,EXEMPTER_DAE,FAIRE_DEMANDE,PAYER_FRAIS_DE_DOSSIER,REFUSER_RDE]",
+        "FAIRE_DEMANDE                                         (confidentielle, en construction        ) -> [ACCEPTER_RDE,DEMANDER_MODIFICATION_DE_LA_DEMANDE,ENREGISTRER_DEMANDE,EXEMPTER_DAE,PAYER_FRAIS_DE_DOSSIER,REFUSER_RDE]",
+        "ENREGISTRER_DEMANDE                                   (confidentielle, en instruction         ) -> [ACCEPTER_RDE,CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_DAE,DEMANDER_COMPLEMENTS_RDE,DEMANDER_MODIFICATION_DE_LA_DEMANDE,DESISTER_PAR_LE_DEMANDEUR,EXEMPTER_DAE,MODIFIER_DEMANDE,PAYER_FRAIS_DE_DOSSIER,REFUSER_RDE]",
+        "EXEMPTER_DAE                                          (confidentielle, en instruction         ) -> [ACCEPTER_RDE,CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_RDE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,PAYER_FRAIS_DE_DOSSIER,REFUSER_RDE]",
+        "PAYER_FRAIS_DE_DOSSIER                                (confidentielle, en instruction         ) -> [ACCEPTER_COMPLETUDE,ACCEPTER_RDE,CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_RDE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,REFUSER_COMPLETUDE,REFUSER_RDE]",
+        "ACCEPTER_COMPLETUDE                                   (confidentielle, en instruction         ) -> [ACCEPTER_RDE,CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_RDE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,REFUSER_RDE,VALIDER_FRAIS_DE_DOSSIER]",
+        "VALIDER_FRAIS_DE_DOSSIER                              (confidentielle, en instruction         ) -> [ACCEPTER_RDE,CLASSER_SANS_SUITE,DECLARER_DEMANDE_DEFAVORABLE,DECLARER_DEMANDE_FAVORABLE,DEMANDER_COMPLEMENTS_MCR,DEMANDER_COMPLEMENTS_RDE,DEMANDER_INFORMATION_MCR,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,REFUSER_RDE]",
+        "DECLARER_DEMANDE_FAVORABLE                            (confidentielle, en instruction         ) -> [ACCEPTER_RDE,CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_RDE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE_SERVICE_EAU,RECEVOIR_EXPERTISE_SERVICE_MINES,REFUSER_RDE,RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES]",
+        "RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES (confidentielle, en instruction         ) -> [ACCEPTER_RDE,CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_RDE,DESISTER_PAR_LE_DEMANDEUR,FAIRE_SAISINE_CARM,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE_SERVICE_EAU,RECEVOIR_EXPERTISE_SERVICE_MINES,REFUSER_RDE]",
+        "DESISTER_PAR_LE_DEMANDEUR                             (publique      , désisté                ) -> [VALIDER_PAIEMENT_FRAIS_DE_DOSSIER_COMPLEMENTAIRES]",
+        "VALIDER_PAIEMENT_FRAIS_DE_DOSSIER_COMPLEMENTAIRES     (publique      , désisté                ) -> []",
+      ]
+    `)
+
+    result = setDateAndOrderAndInterpretMachine(armOctMachine, '2021-02-25', [
+      { etapeTypeId: 'mfr', etapeStatutId: 'fai', contenu: { arm: { mecanise: true } } },
+      { etapeTypeId: 'men', etapeStatutId: 'fai' },
+      { etapeTypeId: 'dae', etapeStatutId: 'exe' },
+      { etapeTypeId: 'pfd', etapeStatutId: 'fai' },
+      { etapeTypeId: 'mcp', etapeStatutId: 'com' },
+      { etapeTypeId: 'des', etapeStatutId: 'fai' },
+      { etapeTypeId: 'vfd', etapeStatutId: 'fai' },
+      { etapeTypeId: 'vfc', etapeStatutId: 'fai' },
+    ])
+    expect(result.tree).toMatchInlineSnapshot(`
+      [
+        "RIEN                                              (confidentielle, en construction        ) -> [ACCEPTER_RDE,DEMANDER_MODIFICATION_DE_LA_DEMANDE,EXEMPTER_DAE,FAIRE_DEMANDE,PAYER_FRAIS_DE_DOSSIER,REFUSER_RDE]",
+        "FAIRE_DEMANDE                                     (confidentielle, en construction        ) -> [ACCEPTER_RDE,DEMANDER_MODIFICATION_DE_LA_DEMANDE,ENREGISTRER_DEMANDE,EXEMPTER_DAE,PAYER_FRAIS_DE_DOSSIER,REFUSER_RDE]",
+        "ENREGISTRER_DEMANDE                               (confidentielle, en instruction         ) -> [ACCEPTER_RDE,CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_DAE,DEMANDER_COMPLEMENTS_RDE,DEMANDER_MODIFICATION_DE_LA_DEMANDE,DESISTER_PAR_LE_DEMANDEUR,EXEMPTER_DAE,MODIFIER_DEMANDE,PAYER_FRAIS_DE_DOSSIER,REFUSER_RDE]",
+        "EXEMPTER_DAE                                      (confidentielle, en instruction         ) -> [ACCEPTER_RDE,CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_RDE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,PAYER_FRAIS_DE_DOSSIER,REFUSER_RDE]",
+        "PAYER_FRAIS_DE_DOSSIER                            (confidentielle, en instruction         ) -> [ACCEPTER_COMPLETUDE,ACCEPTER_RDE,CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_RDE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,REFUSER_COMPLETUDE,REFUSER_RDE]",
+        "ACCEPTER_COMPLETUDE                               (confidentielle, en instruction         ) -> [ACCEPTER_RDE,CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_RDE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,REFUSER_RDE,VALIDER_FRAIS_DE_DOSSIER]",
+        "DESISTER_PAR_LE_DEMANDEUR                         (publique      , désisté                ) -> [ACCEPTER_RDE,REFUSER_RDE,VALIDER_FRAIS_DE_DOSSIER]",
+        "VALIDER_FRAIS_DE_DOSSIER                          (publique      , désisté                ) -> [VALIDER_PAIEMENT_FRAIS_DE_DOSSIER_COMPLEMENTAIRES]",
+        "VALIDER_PAIEMENT_FRAIS_DE_DOSSIER_COMPLEMENTAIRES (publique      , désisté                ) -> []",
+      ]
+    `)
   })
 
   test('peut faire une "mfr" non mécanisée avec un franchissement d’eau', () => {
-    orderAndInterpretMachine(armOctMachine, [
+    const { tree } = setDateAndOrderAndInterpretMachine(armOctMachine, '2019-12-10', [
       {
         etapeTypeId: 'mfr',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2019-12-10'),
         contenu: { arm: { mecanise: false, franchissements: 3 } },
       },
     ])
+    expect(tree).toMatchInlineSnapshot(`
+      [
+        "RIEN          (confidentielle, en construction        ) -> [ACCEPTER_RDE,DEMANDER_MODIFICATION_DE_LA_DEMANDE,EXEMPTER_DAE,FAIRE_DEMANDE,PAYER_FRAIS_DE_DOSSIER,REFUSER_RDE]",
+        "FAIRE_DEMANDE (confidentielle, en construction        ) -> [ENREGISTRER_DEMANDE,PAYER_FRAIS_DE_DOSSIER]",
+      ]
+    `)
   })
 
   // pour regénérer le oct.cas.json: `npm run test:generate-data -w packages/api`

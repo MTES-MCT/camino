@@ -1,7 +1,5 @@
-import { getEventsTree, orderAndInterpretMachine, setDateAndOrderAndInterpretMachine } from '../machine-test-helper'
-import { toCaminoDate } from 'camino-common/src/date'
+import { setDateAndOrderAndInterpretMachine } from '../machine-test-helper'
 import { describe, expect, test } from 'vitest'
-import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts'
 import { ProcedureSpecifiqueMachine } from './procedure-specifique.machine'
 import { EtapesTypesEtapesStatuts as ETES } from 'camino-common/src/static/etapesTypesEtapesStatuts'
 import { hectareToKm2, hectareValidator } from 'camino-common/src/number'
@@ -17,13 +15,16 @@ const psCxwOctMachine = new ProcedureSpecifiqueMachine('cxw', 'oct')
 
 describe('vérifie l’arbre des procédures spécifique', () => {
   test('statut de la démarche simplifiee sans étape', () => {
-    const service = orderAndInterpretMachine(psPccOctMachine, [])
-    expect(service).canOnlyTransitionTo({ machine: psPccOctMachine, date: toCaminoDate('2024-10-10') }, ['FAIRE_DEMANDE'])
-    expect(service.getSnapshot().context.demarcheStatut).toBe(DemarchesStatutsIds.EnConstruction)
+    const { tree } = setDateAndOrderAndInterpretMachine(psPccOctMachine, '2024-10-10', [])
+    expect(tree).toMatchInlineSnapshot(`
+      [
+        "RIEN (confidentielle, en construction        ) -> [FAIRE_DEMANDE]",
+      ]
+    `)
   })
 
   test('demande irrecevable', async () => {
-    const { service, dateFin, machine } = setDateAndOrderAndInterpretMachine(psPccOctMachine, '1999-04-14', [
+    const { tree } = setDateAndOrderAndInterpretMachine(psPccOctMachine, '1999-04-14', [
       {
         ...ETES.demande.FAIT,
         paysId: 'FR',
@@ -38,49 +39,78 @@ describe('vérifie l’arbre des procédures spécifique', () => {
       ETES.receptionDeComplements.FAIT,
       ETES.declarationDIrrecevabilite.FAIT,
     ])
-    expect(service).canOnlyTransitionTo({ machine, date: dateFin }, [])
-    expect(service.getSnapshot().context.demarcheStatut).toBe(DemarchesStatutsIds.Rejete)
-    expect(service.getSnapshot().context.visibilite).toBe('confidentielle')
+    expect(tree).toMatchInlineSnapshot(`
+      [
+        "RIEN                             (confidentielle, en construction        ) -> [FAIRE_DEMANDE]",
+        "FAIRE_DEMANDE                    (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,ENREGISTRER_DEMANDE]",
+        "ENREGISTRER_DEMANDE              (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_RECEVABILITE_DEFAVORABLE,FAIRE_RECEVABILITE_FAVORABLE]",
+        "FAIRE_RECEVABILITE_DEFAVORABLE   (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_DEMANDE_DE_COMPLEMENTS]",
+        "FAIRE_DEMANDE_DE_COMPLEMENTS     (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_DECLARATION_IRRECEVABILITE,RECEVOIR_COMPLEMENTS]",
+        "RECEVOIR_COMPLEMENTS             (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_DECLARATION_IRRECEVABILITE,FAIRE_RECEVABILITE_DEFAVORABLE,FAIRE_RECEVABILITE_FAVORABLE]",
+        "FAIRE_DECLARATION_IRRECEVABILITE (confidentielle, rejeté                 ) -> []",
+      ]
+    `)
   })
   test('après une recevabilité favorable pour un PER ou une concession on doit pouvoir faire une notification au demandeur et aussi mise en concurrence et consentement', () => {
-    const { service, dateFin, machine } = setDateAndOrderAndInterpretMachine(psCxmOctMachine, '1999-04-14', [
+    const { tree } = setDateAndOrderAndInterpretMachine(psCxmOctMachine, '1999-04-14', [
       { ...ETES.demande.FAIT, consentement: 'à faire', concurrence: { amIFirst: true }, paysId: 'FR', hasTitreFrom: false, surface: hectareToKm2(hectareValidator.parse(10)) },
       ETES.enregistrementDeLaDemande.FAIT,
       ETES.informationDuPrefetEtDesCollectivites.FAIT,
       ETES.recevabiliteDeLaDemande.FAVORABLE,
       ETES.notificationAuDemandeur.FAIT,
     ])
-    expect(service).canOnlyTransitionTo({ machine, date: dateFin }, [
-      'CLASSER_SANS_SUITE',
-      'DEMANDER_INFORMATION',
-      'DESISTER_PAR_LE_DEMANDEUR',
-      'FAIRE_MISE_EN_CONCURRENCE',
-      'FAIRE_DEMANDE_DE_CONSENTEMENT',
-    ])
+    expect(tree).toMatchInlineSnapshot(`
+      [
+        "RIEN                                              (confidentielle, en construction        ) -> [FAIRE_DEMANDE]",
+        "FAIRE_DEMANDE                                     (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,ENREGISTRER_DEMANDE]",
+        "ENREGISTRER_DEMANDE                               (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_RECEVABILITE_DEFAVORABLE,FAIRE_RECEVABILITE_FAVORABLE,RENDRE_INFORMATION_DU_PREFET_ET_DES_COLLECTIVITES]",
+        "RENDRE_INFORMATION_DU_PREFET_ET_DES_COLLECTIVITES (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_RECEVABILITE_DEFAVORABLE,FAIRE_RECEVABILITE_FAVORABLE]",
+        "FAIRE_RECEVABILITE_FAVORABLE                      (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_DEMANDE_DE_CONSENTEMENT,FAIRE_MISE_EN_CONCURRENCE,NOTIFIER_DEMANDEUR]",
+        "NOTIFIER_DEMANDEUR                                (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_DEMANDE_DE_CONSENTEMENT,FAIRE_MISE_EN_CONCURRENCE]",
+      ]
+    `)
   })
 
   test('on peut notifier le demandeur apres une recevabilité favorable pour une concession suite à un PER ', () => {
-    const { service, dateFin, machine } = setDateAndOrderAndInterpretMachine(psCxmOctMachine, '1999-04-14', [
+    const { tree } = setDateAndOrderAndInterpretMachine(psCxmOctMachine, '1999-04-14', [
       { ...ETES.demande.FAIT, consentement: 'non-applicable', concurrence: { amIFirst: true }, paysId: 'FR', hasTitreFrom: true, surface: hectareToKm2(hectareValidator.parse(10)) },
       ETES.enregistrementDeLaDemande.FAIT,
       ETES.informationDuPrefetEtDesCollectivites.FAIT,
       ETES.recevabiliteDeLaDemande.FAVORABLE,
       ETES.notificationAuDemandeur.FAIT,
     ])
-    expect(service).canOnlyTransitionTo({ machine, date: dateFin }, ['CLASSER_SANS_SUITE', 'DEMANDER_INFORMATION', 'DESISTER_PAR_LE_DEMANDEUR', 'RENDRE_AVIS_CGE_IGEDD'])
+    expect(tree).toMatchInlineSnapshot(`
+      [
+        "RIEN                                              (confidentielle, en construction        ) -> [FAIRE_DEMANDE]",
+        "FAIRE_DEMANDE                                     (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,ENREGISTRER_DEMANDE]",
+        "ENREGISTRER_DEMANDE                               (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_RECEVABILITE_DEFAVORABLE,FAIRE_RECEVABILITE_FAVORABLE,RENDRE_INFORMATION_DU_PREFET_ET_DES_COLLECTIVITES]",
+        "RENDRE_INFORMATION_DU_PREFET_ET_DES_COLLECTIVITES (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_RECEVABILITE_DEFAVORABLE,FAIRE_RECEVABILITE_FAVORABLE]",
+        "FAIRE_RECEVABILITE_FAVORABLE                      (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,NOTIFIER_DEMANDEUR]",
+        "NOTIFIER_DEMANDEUR                                (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,RENDRE_AVIS_CGE_IGEDD]",
+      ]
+    `)
   })
   test('on ne peut plus rien faire pendant que la mise en concurrence est en cours', () => {
-    const { service, dateFin, machine } = setDateAndOrderAndInterpretMachine(psCxmOctMachine, '1999-04-14', [
+    const { tree } = setDateAndOrderAndInterpretMachine(psCxmOctMachine, '1999-04-14', [
       { ...ETES.demande.FAIT, consentement: 'non-applicable', concurrence: { amIFirst: true }, paysId: 'FR', hasTitreFrom: false, surface: hectareToKm2(hectareValidator.parse(10)) },
       ETES.enregistrementDeLaDemande.FAIT,
       ETES.recevabiliteDeLaDemande.FAVORABLE,
       ETES.informationDuPrefetEtDesCollectivites.FAIT,
       ETES.avisDeMiseEnConcurrenceAuJORF.EN_COURS,
     ])
-    expect(service).canOnlyTransitionTo({ machine, date: dateFin }, ['CLASSER_SANS_SUITE', 'DEMANDER_INFORMATION', 'DESISTER_PAR_LE_DEMANDEUR', 'NOTIFIER_DEMANDEUR'])
+    expect(tree).toMatchInlineSnapshot(`
+      [
+        "RIEN                                              (confidentielle, en construction        ) -> [FAIRE_DEMANDE]",
+        "FAIRE_DEMANDE                                     (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,ENREGISTRER_DEMANDE]",
+        "ENREGISTRER_DEMANDE                               (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_RECEVABILITE_DEFAVORABLE,FAIRE_RECEVABILITE_FAVORABLE,RENDRE_INFORMATION_DU_PREFET_ET_DES_COLLECTIVITES]",
+        "FAIRE_RECEVABILITE_FAVORABLE                      (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,RENDRE_INFORMATION_DU_PREFET_ET_DES_COLLECTIVITES]",
+        "RENDRE_INFORMATION_DU_PREFET_ET_DES_COLLECTIVITES (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_MISE_EN_CONCURRENCE,NOTIFIER_DEMANDEUR]",
+        "FAIRE_MISE_EN_CONCURRENCE                         (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,NOTIFIER_DEMANDEUR]",
+      ]
+    `)
   })
   test('on peut publier le résultat de la mise en concurrence, une fois celle-ci terminée', () => {
-    const tree = getEventsTree(psCxmOctMachine, '1999-04-14', [
+    const { tree } = setDateAndOrderAndInterpretMachine(psCxmOctMachine, '1999-04-14', [
       { ...ETES.demande.FAIT, consentement: 'non-applicable', concurrence: { amIFirst: true }, paysId: 'FR', hasTitreFrom: false, surface: hectareToKm2(hectareValidator.parse(10)) },
       ETES.enregistrementDeLaDemande.FAIT,
       ETES.recevabiliteDeLaDemande.FAVORABLE,
@@ -109,7 +139,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
     `)
   })
   test('on peut programmer une mise en concurrence', () => {
-    const tree = getEventsTree(psCxmOctMachine, '1999-04-14', [
+    const { tree } = setDateAndOrderAndInterpretMachine(psCxmOctMachine, '1999-04-14', [
       { ...ETES.demande.FAIT, consentement: 'non-applicable', concurrence: { amIFirst: true }, paysId: 'FR', hasTitreFrom: false, surface: hectareToKm2(hectareValidator.parse(10)) },
       ETES.enregistrementDeLaDemande.FAIT,
       ETES.recevabiliteDeLaDemande.FAVORABLE,
@@ -129,7 +159,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
   })
 
   test('on peut rejeter à la fin de la mise en concurrence', () => {
-    const { service, dateFin, machine } = setDateAndOrderAndInterpretMachine(psCxmOctMachine, '1999-04-14', [
+    const { tree } = setDateAndOrderAndInterpretMachine(psCxmOctMachine, '1999-04-14', [
       { ...ETES.demande.FAIT, consentement: 'non-applicable', concurrence: { amIFirst: true }, paysId: 'FR', hasTitreFrom: false, surface: hectareToKm2(hectareValidator.parse(10)) },
       ETES.enregistrementDeLaDemande.FAIT,
       ETES.recevabiliteDeLaDemande.FAVORABLE,
@@ -137,8 +167,17 @@ describe('vérifie l’arbre des procédures spécifique', () => {
       ETES.avisDeMiseEnConcurrenceAuJORF.TERMINE,
       ETES.resultatMiseEnConcurrence.REJETE,
     ])
-    expect(service).canOnlyTransitionTo({ machine, date: dateFin }, [])
-    expect(service.getSnapshot().context.demarcheStatut).toBe(DemarchesStatutsIds.Rejete)
+    expect(tree).toMatchInlineSnapshot(`
+      [
+        "RIEN                                              (confidentielle, en construction        ) -> [FAIRE_DEMANDE]",
+        "FAIRE_DEMANDE                                     (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,ENREGISTRER_DEMANDE]",
+        "ENREGISTRER_DEMANDE                               (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_RECEVABILITE_DEFAVORABLE,FAIRE_RECEVABILITE_FAVORABLE,RENDRE_INFORMATION_DU_PREFET_ET_DES_COLLECTIVITES]",
+        "FAIRE_RECEVABILITE_FAVORABLE                      (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,RENDRE_INFORMATION_DU_PREFET_ET_DES_COLLECTIVITES]",
+        "RENDRE_INFORMATION_DU_PREFET_ET_DES_COLLECTIVITES (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_MISE_EN_CONCURRENCE,NOTIFIER_DEMANDEUR]",
+        "FAIRE_MISE_EN_CONCURRENCE                         (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,NOTIFIER_DEMANDEUR,RENDRE_RESULTAT_MISE_EN_CONCURRENCE_ACCEPTEE,RENDRE_RESULTAT_MISE_EN_CONCURRENCE_REJETEE]",
+        "RENDRE_RESULTAT_MISE_EN_CONCURRENCE_REJETEE       (publique      , rejeté                 ) -> []",
+      ]
+    `)
   })
   test('on ne peut pas notifier le demandeur apres une recevabilité favorable pour pcc', () => {
     expect(() =>
@@ -160,7 +199,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
     )
   })
   test("après la recevabilité favorable la démarche reste confidentielle si il n'y a pas de mise en concurrence", () => {
-    const { service, dateFin, machine } = setDateAndOrderAndInterpretMachine(psPrmProMachine, '1999-04-14', [
+    const { tree } = setDateAndOrderAndInterpretMachine(psPrmProMachine, '1999-04-14', [
       {
         ...ETES.demande.FAIT,
         consentement: 'non-applicable',
@@ -174,23 +213,37 @@ describe('vérifie l’arbre des procédures spécifique', () => {
       ETES.recevabiliteDeLaDemande.FAVORABLE,
     ])
 
-    expect(service).canOnlyTransitionTo({ machine, date: dateFin }, ['CLASSER_SANS_SUITE', 'DEMANDER_INFORMATION', 'DESISTER_PAR_LE_DEMANDEUR', 'NOTIFIER_DEMANDEUR'])
-    expect(service.getSnapshot().context.visibilite).toBe('confidentielle')
+    expect(tree).toMatchInlineSnapshot(`
+      [
+        "RIEN                                              (confidentielle, en construction        ) -> [FAIRE_DEMANDE]",
+        "FAIRE_DEMANDE                                     (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,ENREGISTRER_DEMANDE]",
+        "ENREGISTRER_DEMANDE                               (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_RECEVABILITE_DEFAVORABLE,FAIRE_RECEVABILITE_FAVORABLE,RENDRE_INFORMATION_DU_PREFET_ET_DES_COLLECTIVITES]",
+        "RENDRE_INFORMATION_DU_PREFET_ET_DES_COLLECTIVITES (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_RECEVABILITE_DEFAVORABLE,FAIRE_RECEVABILITE_FAVORABLE]",
+        "FAIRE_RECEVABILITE_FAVORABLE                      (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,NOTIFIER_DEMANDEUR]",
+      ]
+    `)
   })
   test('après la recevabilité favorable la démarche reste confidentielle si il y a une mise en concurrence', () => {
-    const { service, dateFin, machine } = setDateAndOrderAndInterpretMachine(psCxmOctMachine, '1999-04-14', [
+    const { tree } = setDateAndOrderAndInterpretMachine(psCxmOctMachine, '1999-04-14', [
       { ...ETES.demande.FAIT, consentement: 'non-applicable', concurrence: { amIFirst: true }, paysId: 'FR', hasTitreFrom: false, surface: hectareToKm2(hectareValidator.parse(10)) },
       ETES.enregistrementDeLaDemande.FAIT,
       ETES.recevabiliteDeLaDemande.FAVORABLE,
       ETES.informationDuPrefetEtDesCollectivites.FAIT,
     ])
 
-    expect(service).canOnlyTransitionTo({ machine, date: dateFin }, ['CLASSER_SANS_SUITE', 'DEMANDER_INFORMATION', 'DESISTER_PAR_LE_DEMANDEUR', 'NOTIFIER_DEMANDEUR', 'FAIRE_MISE_EN_CONCURRENCE'])
-    expect(service.getSnapshot().context.visibilite).toBe('confidentielle')
+    expect(tree).toMatchInlineSnapshot(`
+      [
+        "RIEN                                              (confidentielle, en construction        ) -> [FAIRE_DEMANDE]",
+        "FAIRE_DEMANDE                                     (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,ENREGISTRER_DEMANDE]",
+        "ENREGISTRER_DEMANDE                               (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_RECEVABILITE_DEFAVORABLE,FAIRE_RECEVABILITE_FAVORABLE,RENDRE_INFORMATION_DU_PREFET_ET_DES_COLLECTIVITES]",
+        "FAIRE_RECEVABILITE_FAVORABLE                      (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,RENDRE_INFORMATION_DU_PREFET_ET_DES_COLLECTIVITES]",
+        "RENDRE_INFORMATION_DU_PREFET_ET_DES_COLLECTIVITES (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_MISE_EN_CONCURRENCE,NOTIFIER_DEMANDEUR]",
+      ]
+    `)
   })
 
   test('après la recevabilité la démarche devient publique si la démarche concurrente est visible', () => {
-    const { service, dateFin, machine } = setDateAndOrderAndInterpretMachine(psCxmOctMachine, '1999-04-14', [
+    const { tree } = setDateAndOrderAndInterpretMachine(psCxmOctMachine, '1999-04-14', [
       {
         ...ETES.demande.FAIT,
         consentement: 'non-applicable',
@@ -203,20 +256,19 @@ describe('vérifie l’arbre des procédures spécifique', () => {
       ETES.recevabiliteDeLaDemande.FAVORABLE,
       ETES.informationDuPrefetEtDesCollectivites.FAIT,
     ])
-
-    expect(service).canOnlyTransitionTo({ machine, date: dateFin }, [
-      'CLASSER_SANS_SUITE',
-      'DEMANDER_INFORMATION',
-      'DESISTER_PAR_LE_DEMANDEUR',
-      'NOTIFIER_DEMANDEUR',
-      'RENDRE_RESULTAT_MISE_EN_CONCURRENCE_ACCEPTEE',
-      'RENDRE_RESULTAT_MISE_EN_CONCURRENCE_REJETEE',
-    ])
-    expect(service.getSnapshot().context.visibilite).toBe('publique')
+    expect(tree).toMatchInlineSnapshot(`
+  [
+    "RIEN                                              (confidentielle, en construction        ) -> [FAIRE_DEMANDE]",
+    "FAIRE_DEMANDE                                     (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,ENREGISTRER_DEMANDE]",
+    "ENREGISTRER_DEMANDE                               (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_RECEVABILITE_DEFAVORABLE,FAIRE_RECEVABILITE_FAVORABLE,RENDRE_INFORMATION_DU_PREFET_ET_DES_COLLECTIVITES]",
+    "FAIRE_RECEVABILITE_FAVORABLE                      (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,RENDRE_INFORMATION_DU_PREFET_ET_DES_COLLECTIVITES]",
+    "RENDRE_INFORMATION_DU_PREFET_ET_DES_COLLECTIVITES (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,NOTIFIER_DEMANDEUR,RENDRE_RESULTAT_MISE_EN_CONCURRENCE_ACCEPTEE,RENDRE_RESULTAT_MISE_EN_CONCURRENCE_REJETEE]",
+  ]
+`)
   })
 
   test('après la recevabilité la démarche reste confidentielle si la démarche concurrente est confidentielle', () => {
-    const { service, dateFin, machine } = setDateAndOrderAndInterpretMachine(psCxmOctMachine, '1999-04-14', [
+    const { tree } = setDateAndOrderAndInterpretMachine(psCxmOctMachine, '1999-04-14', [
       {
         ...ETES.demande.FAIT,
         consentement: 'non-applicable',
@@ -230,18 +282,18 @@ describe('vérifie l’arbre des procédures spécifique', () => {
       ETES.recevabiliteDeLaDemande.FAVORABLE,
     ])
 
-    expect(service).canOnlyTransitionTo({ machine, date: dateFin }, [
-      'CLASSER_SANS_SUITE',
-      'DEMANDER_INFORMATION',
-      'DESISTER_PAR_LE_DEMANDEUR',
-      'NOTIFIER_DEMANDEUR',
-      'RENDRE_RESULTAT_MISE_EN_CONCURRENCE_ACCEPTEE',
-      'RENDRE_RESULTAT_MISE_EN_CONCURRENCE_REJETEE',
-    ])
-    expect(service.getSnapshot().context.visibilite).toBe('confidentielle')
+    expect(tree).toMatchInlineSnapshot(`
+      [
+        "RIEN                                              (confidentielle, en construction        ) -> [FAIRE_DEMANDE]",
+        "FAIRE_DEMANDE                                     (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,ENREGISTRER_DEMANDE]",
+        "ENREGISTRER_DEMANDE                               (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_RECEVABILITE_DEFAVORABLE,FAIRE_RECEVABILITE_FAVORABLE,RENDRE_INFORMATION_DU_PREFET_ET_DES_COLLECTIVITES]",
+        "RENDRE_INFORMATION_DU_PREFET_ET_DES_COLLECTIVITES (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_RECEVABILITE_DEFAVORABLE,FAIRE_RECEVABILITE_FAVORABLE]",
+        "FAIRE_RECEVABILITE_FAVORABLE                      (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,NOTIFIER_DEMANDEUR,RENDRE_RESULTAT_MISE_EN_CONCURRENCE_ACCEPTEE,RENDRE_RESULTAT_MISE_EN_CONCURRENCE_REJETEE]",
+      ]
+    `)
   })
   test("ne peut pas rendre la décision de l'administration si la participation du public n'est pas terminée", () => {
-    const { service, dateFin, machine } = setDateAndOrderAndInterpretMachine(psAxmProMachine, '1999-04-14', [
+    const { tree } = setDateAndOrderAndInterpretMachine(psAxmProMachine, '1999-04-14', [
       {
         ...ETES.demande.FAIT,
         consentement: 'non-applicable',
@@ -257,13 +309,22 @@ describe('vérifie l’arbre des procédures spécifique', () => {
       ETES.avisDuPrefet.FAVORABLE,
       ETES.participationDuPublic.EN_COURS,
     ])
-
-    expect(service).canOnlyTransitionTo({ machine, date: dateFin }, ['CLASSER_SANS_SUITE', 'DEMANDER_INFORMATION', 'DESISTER_PAR_LE_DEMANDEUR'])
-    expect(service.getSnapshot().context.visibilite).toBe('publique')
+    expect(tree).toMatchInlineSnapshot(`
+      [
+        "RIEN                             (confidentielle, en construction        ) -> [FAIRE_DEMANDE]",
+        "FAIRE_DEMANDE                    (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,ENREGISTRER_DEMANDE]",
+        "ENREGISTRER_DEMANDE              (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_RECEVABILITE_DEFAVORABLE,FAIRE_RECEVABILITE_FAVORABLE]",
+        "FAIRE_RECEVABILITE_FAVORABLE     (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_ENQUETE_PUBLIQUE,OUVRIR_PARTICIPATION_DU_PUBLIC,RENDRE_AVIS_COLLECTIVITES,RENDRE_AVIS_SERVICES_COMMISSIONS]",
+        "RENDRE_AVIS_COLLECTIVITES        (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_ENQUETE_PUBLIQUE,OUVRIR_PARTICIPATION_DU_PUBLIC,RENDRE_AVIS_SERVICES_COMMISSIONS]",
+        "RENDRE_AVIS_SERVICES_COMMISSIONS (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_ENQUETE_PUBLIQUE,OUVRIR_PARTICIPATION_DU_PUBLIC,RENDRE_AVIS_PREFET]",
+        "RENDRE_AVIS_PREFET               (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_ENQUETE_PUBLIQUE,OUVRIR_PARTICIPATION_DU_PUBLIC]",
+        "OUVRIR_PARTICIPATION_DU_PUBLIC   (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR]",
+      ]
+    `)
   })
 
   test('ne peut pas faire une mise en concurrence si on a un titre from', () => {
-    const { service, dateFin, machine } = setDateAndOrderAndInterpretMachine(psCxmOctMachine, '1999-04-14', [
+    const { tree } = setDateAndOrderAndInterpretMachine(psCxmOctMachine, '1999-04-14', [
       {
         ...ETES.demande.FAIT,
         consentement: 'non-applicable',
@@ -277,11 +338,19 @@ describe('vérifie l’arbre des procédures spécifique', () => {
       ETES.informationDuPrefetEtDesCollectivites.FAIT,
     ])
 
-    expect(service).canOnlyTransitionTo({ machine, date: dateFin }, ['CLASSER_SANS_SUITE', 'DEMANDER_INFORMATION', 'DESISTER_PAR_LE_DEMANDEUR', 'NOTIFIER_DEMANDEUR'])
+    expect(tree).toMatchInlineSnapshot(`
+      [
+        "RIEN                                              (confidentielle, en construction        ) -> [FAIRE_DEMANDE]",
+        "FAIRE_DEMANDE                                     (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,ENREGISTRER_DEMANDE]",
+        "ENREGISTRER_DEMANDE                               (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_RECEVABILITE_DEFAVORABLE,FAIRE_RECEVABILITE_FAVORABLE,RENDRE_INFORMATION_DU_PREFET_ET_DES_COLLECTIVITES]",
+        "FAIRE_RECEVABILITE_FAVORABLE                      (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,RENDRE_INFORMATION_DU_PREFET_ET_DES_COLLECTIVITES]",
+        "RENDRE_INFORMATION_DU_PREFET_ET_DES_COLLECTIVITES (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,NOTIFIER_DEMANDEUR]",
+      ]
+    `)
   })
 
   test("doit faire une mise en concurrence si on n'a pas de titre from", () => {
-    const { service, dateFin, machine } = setDateAndOrderAndInterpretMachine(psCxmOctMachine, '1999-04-14', [
+    const { tree } = setDateAndOrderAndInterpretMachine(psCxmOctMachine, '1999-04-14', [
       {
         ...ETES.demande.FAIT,
         consentement: 'non-applicable',
@@ -295,10 +364,18 @@ describe('vérifie l’arbre des procédures spécifique', () => {
       ETES.informationDuPrefetEtDesCollectivites.FAIT,
     ])
 
-    expect(service).canOnlyTransitionTo({ machine, date: dateFin }, ['CLASSER_SANS_SUITE', 'DEMANDER_INFORMATION', 'DESISTER_PAR_LE_DEMANDEUR', 'FAIRE_MISE_EN_CONCURRENCE', 'NOTIFIER_DEMANDEUR'])
+    expect(tree).toMatchInlineSnapshot(`
+      [
+        "RIEN                                              (confidentielle, en construction        ) -> [FAIRE_DEMANDE]",
+        "FAIRE_DEMANDE                                     (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,ENREGISTRER_DEMANDE]",
+        "ENREGISTRER_DEMANDE                               (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_RECEVABILITE_DEFAVORABLE,FAIRE_RECEVABILITE_FAVORABLE,RENDRE_INFORMATION_DU_PREFET_ET_DES_COLLECTIVITES]",
+        "FAIRE_RECEVABILITE_FAVORABLE                      (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,RENDRE_INFORMATION_DU_PREFET_ET_DES_COLLECTIVITES]",
+        "RENDRE_INFORMATION_DU_PREFET_ET_DES_COLLECTIVITES (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_MISE_EN_CONCURRENCE,NOTIFIER_DEMANDEUR]",
+      ]
+    `)
   })
   test("réalise une demande de prolongation d'ARM complète", async () => {
-    const { service, dateFin, machine } = setDateAndOrderAndInterpretMachine(psArmProMachine, '1999-04-14', [
+    const { tree } = setDateAndOrderAndInterpretMachine(psArmProMachine, '1999-04-14', [
       {
         ...ETES.demande.FAIT,
         consentement: 'non-applicable',
@@ -318,12 +395,24 @@ describe('vérifie l’arbre des procédures spécifique', () => {
       ETES.notificationAuDemandeur.FAIT,
     ])
 
-    expect(service.getSnapshot().context.visibilite).toBe('publique')
-    expect(service.getSnapshot().context.demarcheStatut).toBe(DemarchesStatutsIds.AccepteEtPublie)
-    expect(service).canOnlyTransitionTo({ machine, date: dateFin }, ['FAIRE_ABROGATION'])
+    expect(tree).toMatchInlineSnapshot(`
+      [
+        "RIEN                                    (confidentielle, en construction        ) -> [FAIRE_DEMANDE]",
+        "FAIRE_DEMANDE                           (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,ENREGISTRER_DEMANDE]",
+        "ENREGISTRER_DEMANDE                     (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_RECEVABILITE_DEFAVORABLE,FAIRE_RECEVABILITE_FAVORABLE]",
+        "FAIRE_RECEVABILITE_FAVORABLE            (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,RENDRE_AVIS_COLLECTIVITES,RENDRE_AVIS_SERVICES_COMMISSIONS]",
+        "RENDRE_AVIS_COLLECTIVITES               (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,RENDRE_AVIS_SERVICES_COMMISSIONS]",
+        "RENDRE_AVIS_SERVICES_COMMISSIONS        (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,RENDRE_AVIS_PREFET]",
+        "RENDRE_AVIS_PREFET                      (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,RENDRE_DECISION_ADMINISTRATION_ACCEPTEE,RENDRE_DECISION_ADMINISTRATION_REJETEE,RENDRE_DECISION_ADMINISTRATION_REJETEE_DECISION_IMPLICITE]",
+        "RENDRE_DECISION_ADMINISTRATION_ACCEPTEE (publique      , accepté                ) -> [PUBLIER_DECISION_ACCEPTEE_AU_JORF,PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS,RENDRE_MESURES_DE_PUBLICITE]",
+        "RENDRE_MESURES_DE_PUBLICITE             (publique      , accepté                ) -> [PUBLIER_DECISION_ACCEPTEE_AU_JORF,PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS]",
+        "PUBLIER_DECISION_ACCEPTEE_AU_JORF       (publique      , accepté et publié      ) -> [FAIRE_ABROGATION,NOTIFIER_DEMANDEUR]",
+        "NOTIFIER_DEMANDEUR                      (publique      , accepté et publié      ) -> [FAIRE_ABROGATION]",
+      ]
+    `)
   })
   test("réalise une demande de prolongation d'ARM rejetée", () => {
-    const { service, dateFin } = setDateAndOrderAndInterpretMachine(psArmProMachine, '1999-04-14', [
+    const { tree } = setDateAndOrderAndInterpretMachine(psArmProMachine, '1999-04-14', [
       {
         ...ETES.demande.FAIT,
         consentement: 'non-applicable',
@@ -340,11 +429,21 @@ describe('vérifie l’arbre des procédures spécifique', () => {
       ETES.decisionDeLAutoriteAdministrative.REJETE,
     ])
 
-    expect(service).canOnlyTransitionTo({ machine: psArmProMachine, date: dateFin }, ['CLASSER_SANS_SUITE', 'DEMANDER_INFORMATION', 'DESISTER_PAR_LE_DEMANDEUR', 'NOTIFIER_DEMANDEUR'])
-    expect(service.getSnapshot().context.visibilite).toBe('confidentielle')
+    expect(tree).toMatchInlineSnapshot(`
+      [
+        "RIEN                                   (confidentielle, en construction        ) -> [FAIRE_DEMANDE]",
+        "FAIRE_DEMANDE                          (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,ENREGISTRER_DEMANDE]",
+        "ENREGISTRER_DEMANDE                    (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_RECEVABILITE_DEFAVORABLE,FAIRE_RECEVABILITE_FAVORABLE]",
+        "FAIRE_RECEVABILITE_FAVORABLE           (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,RENDRE_AVIS_COLLECTIVITES,RENDRE_AVIS_SERVICES_COMMISSIONS]",
+        "RENDRE_AVIS_COLLECTIVITES              (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,RENDRE_AVIS_SERVICES_COMMISSIONS]",
+        "RENDRE_AVIS_SERVICES_COMMISSIONS       (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,RENDRE_AVIS_PREFET]",
+        "RENDRE_AVIS_PREFET                     (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,RENDRE_DECISION_ADMINISTRATION_ACCEPTEE,RENDRE_DECISION_ADMINISTRATION_REJETEE,RENDRE_DECISION_ADMINISTRATION_REJETEE_DECISION_IMPLICITE]",
+        "RENDRE_DECISION_ADMINISTRATION_REJETEE (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,NOTIFIER_DEMANDEUR]",
+      ]
+    `)
   })
   test("réalise une demande de prolongation d'ARM rejetée puis une notification au demandeur", () => {
-    const { service, dateFin, machine } = setDateAndOrderAndInterpretMachine(psArmProMachine, '1999-04-14', [
+    const { tree } = setDateAndOrderAndInterpretMachine(psArmProMachine, '1999-04-14', [
       {
         ...ETES.demande.FAIT,
         consentement: 'non-applicable',
@@ -362,13 +461,23 @@ describe('vérifie l’arbre des procédures spécifique', () => {
       ETES.notificationAuDemandeur.FAIT,
     ])
 
-    expect(service).canOnlyTransitionTo({ machine, date: dateFin }, [])
-    expect(service.getSnapshot().context.visibilite).toBe('confidentielle')
-    expect(service.getSnapshot().context.demarcheStatut).toBe(DemarchesStatutsIds.Rejete)
+    expect(tree).toMatchInlineSnapshot(`
+      [
+        "RIEN                                   (confidentielle, en construction        ) -> [FAIRE_DEMANDE]",
+        "FAIRE_DEMANDE                          (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,ENREGISTRER_DEMANDE]",
+        "ENREGISTRER_DEMANDE                    (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_RECEVABILITE_DEFAVORABLE,FAIRE_RECEVABILITE_FAVORABLE]",
+        "FAIRE_RECEVABILITE_FAVORABLE           (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,RENDRE_AVIS_COLLECTIVITES,RENDRE_AVIS_SERVICES_COMMISSIONS]",
+        "RENDRE_AVIS_COLLECTIVITES              (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,RENDRE_AVIS_SERVICES_COMMISSIONS]",
+        "RENDRE_AVIS_SERVICES_COMMISSIONS       (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,RENDRE_AVIS_PREFET]",
+        "RENDRE_AVIS_PREFET                     (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,RENDRE_DECISION_ADMINISTRATION_ACCEPTEE,RENDRE_DECISION_ADMINISTRATION_REJETEE,RENDRE_DECISION_ADMINISTRATION_REJETEE_DECISION_IMPLICITE]",
+        "RENDRE_DECISION_ADMINISTRATION_REJETEE (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,NOTIFIER_DEMANDEUR]",
+        "NOTIFIER_DEMANDEUR                     (confidentielle, rejeté                 ) -> []",
+      ]
+    `)
   })
 
   test('Peut classer sans suite', () => {
-    const { service, dateFin, machine } = setDateAndOrderAndInterpretMachine(psArmProMachine, '1999-04-14', [
+    const { tree } = setDateAndOrderAndInterpretMachine(psArmProMachine, '1999-04-14', [
       {
         ...ETES.demande.FAIT,
         consentement: 'non-applicable',
@@ -385,13 +494,22 @@ describe('vérifie l’arbre des procédures spécifique', () => {
       ETES.classementSansSuite.FAIT,
     ])
 
-    expect(service).canOnlyTransitionTo({ machine, date: dateFin }, [])
-    expect(service.getSnapshot().context.visibilite).toBe('confidentielle')
-    expect(service.getSnapshot().context.demarcheStatut).toBe(DemarchesStatutsIds.ClasseSansSuite)
+    expect(tree).toMatchInlineSnapshot(`
+      [
+        "RIEN                             (confidentielle, en construction        ) -> [FAIRE_DEMANDE]",
+        "FAIRE_DEMANDE                    (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,ENREGISTRER_DEMANDE]",
+        "ENREGISTRER_DEMANDE              (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_RECEVABILITE_DEFAVORABLE,FAIRE_RECEVABILITE_FAVORABLE]",
+        "FAIRE_RECEVABILITE_FAVORABLE     (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,RENDRE_AVIS_COLLECTIVITES,RENDRE_AVIS_SERVICES_COMMISSIONS]",
+        "RENDRE_AVIS_COLLECTIVITES        (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,RENDRE_AVIS_SERVICES_COMMISSIONS]",
+        "RENDRE_AVIS_SERVICES_COMMISSIONS (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,RENDRE_AVIS_PREFET]",
+        "RENDRE_AVIS_PREFET               (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,RENDRE_DECISION_ADMINISTRATION_ACCEPTEE,RENDRE_DECISION_ADMINISTRATION_REJETEE,RENDRE_DECISION_ADMINISTRATION_REJETEE_DECISION_IMPLICITE]",
+        "CLASSER_SANS_SUITE               (confidentielle, classé sans suite      ) -> []",
+      ]
+    `)
   })
 
   test('Peut désister par le demandeur', () => {
-    const { service, dateFin, machine } = setDateAndOrderAndInterpretMachine(psArmProMachine, '1999-04-14', [
+    const { tree } = setDateAndOrderAndInterpretMachine(psArmProMachine, '1999-04-14', [
       {
         ...ETES.demande.FAIT,
         consentement: 'non-applicable',
@@ -408,13 +526,22 @@ describe('vérifie l’arbre des procédures spécifique', () => {
       ETES.desistementDuDemandeur.FAIT,
     ])
 
-    expect(service).canOnlyTransitionTo({ machine, date: dateFin }, [])
-    expect(service.getSnapshot().context.visibilite).toBe('confidentielle')
-    expect(service.getSnapshot().context.demarcheStatut).toBe(DemarchesStatutsIds.Desiste)
+    expect(tree).toMatchInlineSnapshot(`
+      [
+        "RIEN                             (confidentielle, en construction        ) -> [FAIRE_DEMANDE]",
+        "FAIRE_DEMANDE                    (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,ENREGISTRER_DEMANDE]",
+        "ENREGISTRER_DEMANDE              (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_RECEVABILITE_DEFAVORABLE,FAIRE_RECEVABILITE_FAVORABLE]",
+        "FAIRE_RECEVABILITE_FAVORABLE     (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,RENDRE_AVIS_COLLECTIVITES,RENDRE_AVIS_SERVICES_COMMISSIONS]",
+        "RENDRE_AVIS_COLLECTIVITES        (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,RENDRE_AVIS_SERVICES_COMMISSIONS]",
+        "RENDRE_AVIS_SERVICES_COMMISSIONS (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,RENDRE_AVIS_PREFET]",
+        "RENDRE_AVIS_PREFET               (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,RENDRE_DECISION_ADMINISTRATION_ACCEPTEE,RENDRE_DECISION_ADMINISTRATION_REJETEE,RENDRE_DECISION_ADMINISTRATION_REJETEE_DECISION_IMPLICITE]",
+        "DESISTER_PAR_LE_DEMANDEUR        (confidentielle, désisté                ) -> []",
+      ]
+    `)
   })
 
   test("peut faire plusieurs demande/réception d'information à la suite", () => {
-    const result = getEventsTree(psAxmProMachine, '1999-04-14', [
+    const result = setDateAndOrderAndInterpretMachine(psAxmProMachine, '1999-04-14', [
       {
         ...ETES.demande.FAIT,
         consentement: 'non-applicable',
@@ -434,7 +561,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
       ETES.demandeDinformations.FAIT,
     ])
 
-    expect(result).toMatchInlineSnapshot(`
+    expect(result.tree).toMatchInlineSnapshot(`
       [
         "RIEN                             (confidentielle, en construction        ) -> [FAIRE_DEMANDE]",
         "FAIRE_DEMANDE                    (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,ENREGISTRER_DEMANDE]",
@@ -478,7 +605,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
   })
 
   test("réalise une demande de prolongation d'AXM complète", () => {
-    const result = getEventsTree(psAxmProMachine, '1999-04-14', [
+    const result = setDateAndOrderAndInterpretMachine(psAxmProMachine, '1999-04-14', [
       {
         ...ETES.demande.FAIT,
         consentement: 'à faire',
@@ -501,7 +628,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
       ETES.attestationDeConstitutionDeGarantiesFinancieres.FAIT,
     ])
 
-    expect(result).toMatchInlineSnapshot(`
+    expect(result.tree).toMatchInlineSnapshot(`
       [
         "RIEN                                                       (confidentielle, en construction        ) -> [FAIRE_DEMANDE]",
         "FAIRE_DEMANDE                                              (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,ENREGISTRER_DEMANDE]",
@@ -522,7 +649,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
   })
 
   test('peut faire une enquête publique ou une participation du publique si AXM <= 25 hectares', () => {
-    const result = getEventsTree(psAxmProMachine, '1999-04-14', [
+    const result = setDateAndOrderAndInterpretMachine(psAxmProMachine, '1999-04-14', [
       {
         ...ETES.demande.FAIT,
         consentement: 'à faire',
@@ -536,7 +663,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
       ETES.demandeDeConsentement.FAIT,
     ])
 
-    expect(result).toMatchInlineSnapshot(`
+    expect(result.tree).toMatchInlineSnapshot(`
       [
         "RIEN                          (confidentielle, en construction        ) -> [FAIRE_DEMANDE]",
         "FAIRE_DEMANDE                 (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,ENREGISTRER_DEMANDE]",
@@ -548,7 +675,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
   })
 
   test('ne peut pas faire une participation du publique si AXM > 25 hectares', () => {
-    const result = getEventsTree(psAxmProMachine, '1999-04-14', [
+    const result = setDateAndOrderAndInterpretMachine(psAxmProMachine, '1999-04-14', [
       {
         ...ETES.demande.FAIT,
         consentement: 'à faire',
@@ -562,7 +689,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
       ETES.demandeDeConsentement.FAIT,
     ])
 
-    expect(result).toMatchInlineSnapshot(`
+    expect(result.tree).toMatchInlineSnapshot(`
         [
           "RIEN                          (confidentielle, en construction        ) -> [FAIRE_DEMANDE]",
           "FAIRE_DEMANDE                 (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,ENREGISTRER_DEMANDE]",
@@ -574,7 +701,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
   })
 
   test('réalise une demande de concession granulats marins complète', () => {
-    const result = getEventsTree(psCxwOctMachine, '1999-04-14', [
+    const result = setDateAndOrderAndInterpretMachine(psCxwOctMachine, '1999-04-14', [
       {
         ...ETES.demande.FAIT,
         consentement: 'non-applicable',
@@ -605,7 +732,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
       ETES.publicationDeDecisionAuJORF.FAIT,
     ])
 
-    expect(result).toMatchInlineSnapshot(`
+    expect(result.tree).toMatchInlineSnapshot(`
       [
         "RIEN                                              (confidentielle, en construction        ) -> [FAIRE_DEMANDE]",
         "FAIRE_DEMANDE                                     (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,ENREGISTRER_DEMANDE]",
@@ -634,7 +761,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
   })
 
   test('réalise une demande de concession granulats marins en outre mer complète', () => {
-    const result = getEventsTree(psCxwOctMachine, '1999-04-14', [
+    const result = setDateAndOrderAndInterpretMachine(psCxwOctMachine, '1999-04-14', [
       {
         ...ETES.demande.FAIT,
         consentement: 'non-applicable',
@@ -666,7 +793,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
       ETES.publicationDeDecisionAuJORF.FAIT,
     ])
 
-    expect(result).toMatchInlineSnapshot(`
+    expect(result.tree).toMatchInlineSnapshot(`
       [
         "RIEN                                              (confidentielle, en construction        ) -> [FAIRE_DEMANDE]",
         "FAIRE_DEMANDE                                     (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,ENREGISTRER_DEMANDE]",
@@ -695,7 +822,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
     `)
   })
   test("vérifie l'arbre pour la prolongation d'ARM", () => {
-    const result = getEventsTree(psArmProMachine, '1999-04-14', [
+    const result = setDateAndOrderAndInterpretMachine(psArmProMachine, '1999-04-14', [
       {
         ...ETES.demande.FAIT,
         consentement: 'non-applicable',
@@ -716,7 +843,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
       ETES.publicationDeDecisionAuRecueilDesActesAdministratifs.FAIT,
     ])
 
-    expect(result).toMatchInlineSnapshot(`
+    expect(result.tree).toMatchInlineSnapshot(`
       [
         "RIEN                                                 (confidentielle, en construction        ) -> [FAIRE_DEMANDE]",
         "FAIRE_DEMANDE                                        (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,ENREGISTRER_DEMANDE]",
@@ -735,7 +862,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
   })
 
   test("vérifie l'arbre pour la déclaration d'irrecevabilité", () => {
-    const result = getEventsTree(psArmProMachine, '1999-04-14', [
+    const result = setDateAndOrderAndInterpretMachine(psArmProMachine, '1999-04-14', [
       {
         ...ETES.demande.FAIT,
         consentement: 'non-applicable',
@@ -750,7 +877,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
       ETES.receptionDeComplements.FAIT,
       ETES.declarationDIrrecevabilite.FAIT,
     ])
-    expect(result).toMatchInlineSnapshot(`
+    expect(result.tree).toMatchInlineSnapshot(`
           [
             "RIEN                             (confidentielle, en construction        ) -> [FAIRE_DEMANDE]",
             "FAIRE_DEMANDE                    (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,ENREGISTRER_DEMANDE]",

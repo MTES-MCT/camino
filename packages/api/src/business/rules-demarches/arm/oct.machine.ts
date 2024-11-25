@@ -183,7 +183,7 @@ export class ArmOctMachine extends CaminoMachine<OctARMContext, XStateEvent> {
     super(armOctMachine, trad)
   }
 
-  override caminoXStateEventToEtapes(event: XStateEvent): (Omit<Etape, 'date' | 'titreTypeId' | 'demarcheTypeId'> & { mainStep: boolean })[] {
+  override caminoXStateEventToEtapes(event: XStateEvent): (Omit<Etape, 'date' | 'titreTypeId' | 'demarcheTypeId'> & { mainStep: boolean; type: XStateEvent['type'] })[] {
     const dbEtat: DBEtat = trad[event.type].db
     let contenu: IContenu | undefined
     switch (event.type) {
@@ -208,6 +208,7 @@ export class ArmOctMachine extends CaminoMachine<OctARMContext, XStateEvent> {
       etapeStatutId,
       contenu,
       mainStep: trad[event.type].mainStep,
+      type: event.type,
     }))
   }
 

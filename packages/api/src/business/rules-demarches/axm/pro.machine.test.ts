@@ -9,15 +9,15 @@ const etapesProd = require('./2000-01-01-pro.cas.json') // eslint-disable-line
 describe('vérifie l’arbre de prolongation d’AXM', () => {
   const axmProMachine = new AxmProMachine()
   test('après la recevabilité, on peut faire une saisine des services', () => {
-    const { service, dateFin } = setDateAndOrderAndInterpretMachine(axmProMachine, '2022-04-14', [ETES.demande.FAIT, ETES.enregistrementDeLaDemande.FAIT, ETES.recevabiliteDeLaDemande.FAVORABLE])
-    expect(service).canOnlyTransitionTo({ machine: axmProMachine, date: dateFin }, [
-      'DEMANDER_INFORMATION_POUR_AVIS_DREAL',
-      'FAIRE_CLASSEMENT_SANS_SUITE',
-      'FAIRE_DESISTEMENT_DEMANDEUR',
-      'RENDRE_AVIS_DE_COLLECTIVITES',
-      'RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES',
-      'RENDRE_DECISION_IMPLICITE_REJET',
-    ])
+    const { tree } = setDateAndOrderAndInterpretMachine(axmProMachine, '2022-04-14', [ETES.demande.FAIT, ETES.enregistrementDeLaDemande.FAIT, ETES.recevabiliteDeLaDemande.FAVORABLE])
+    expect(tree).toMatchInlineSnapshot(`
+      [
+        "RIEN                                 (confidentielle, en construction        ) -> [FAIRE_DEMANDE]",
+        "FAIRE_DEMANDE                        (confidentielle, en construction        ) -> [ENREGISTRER_DEMANDE]",
+        "ENREGISTRER_DEMANDE                  (confidentielle, déposé                 ) -> [DEMANDER_COMPLEMENTS_POUR_RECEVABILITE,FAIRE_CLASSEMENT_SANS_SUITE,FAIRE_DESISTEMENT_DEMANDEUR,FAIRE_RECEVABILITE_DEMANDE_DEFAVORABLE,FAIRE_RECEVABILITE_DEMANDE_FAVORABLE,RENDRE_DECISION_IMPLICITE_REJET]",
+        "FAIRE_RECEVABILITE_DEMANDE_FAVORABLE (publique      , en instruction         ) -> [DEMANDER_INFORMATION_POUR_AVIS_DREAL,FAIRE_CLASSEMENT_SANS_SUITE,FAIRE_DESISTEMENT_DEMANDEUR,RENDRE_AVIS_DE_COLLECTIVITES,RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES,RENDRE_DECISION_IMPLICITE_REJET]",
+      ]
+    `)
   })
 
   // pour regénérer le pro.cas.json: `npm run test:generate-data -w packages/api`

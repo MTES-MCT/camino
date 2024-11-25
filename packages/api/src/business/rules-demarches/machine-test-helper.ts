@@ -1,93 +1,39 @@
 import { CaminoCommonContext, Etape } from './machine-common'
-import { Actor, EventObject } from 'xstate'
-import { CaminoMachine, getNextEvents } from './machine-helper'
-import { expect } from 'vitest'
+import { EventObject } from 'xstate'
+import { CaminoMachine } from './machine-helper'
 import { CaminoDate, dateAddDays, toCaminoDate } from 'camino-common/src/date'
 import { EtapeTypeEtapeStatutValidPair } from 'camino-common/src/static/etapesTypesEtapesStatuts'
 import { isNotNullNorUndefined, onlyUnique } from 'camino-common/src/typescript-tools'
 import { DemarchesStatuts } from 'camino-common/src/static/demarchesStatuts'
-interface CustomMatchers<R = unknown> {
-  /**
-   * @deprecated use machine.getPossibleNextEtapes
-   **/
-  canOnlyTransitionTo<T extends EventObject, C extends CaminoCommonContext>(context: { machine: CaminoMachine<C, T>; date: CaminoDate }, _events: T['type'][]): R
-}
 
-declare global {
-  // eslint-disable-next-line @typescript-eslint/no-namespace
-  namespace jest {
-    interface Expect extends CustomMatchers {}
-
-    interface Matchers<R> extends CustomMatchers<R> {}
-
-    interface InverseAsymmetricMatchers extends CustomMatchers {}
-  }
-}
-expect.extend({
-  /**
-   * @deprecated use machine.getPossibleNextEtapes
-   **/
-  canOnlyTransitionTo<T extends EventObject, C extends CaminoCommonContext>(
-    service: Actor<CaminoMachine<C, T>['machine']>,
-    { machine, date }: { machine: CaminoMachine<C, T>; date: CaminoDate },
-    events: T['type'][]
-  ) {
-    events = events.toSorted()
-    const passEvents: (typeof events)[number][] = getNextEvents(service.getSnapshot())
-      .filter((event: string) => machine.isEvent(event))
-      .filter((event: (typeof events)[number]) => {
-        const events = machine.toPotentialCaminoXStateEvent(event, date)
-
-        return events.some(event => service.getSnapshot().can(event) && service.getSnapshot().status !== 'done')
-      })
-      .toSorted()
-
-    if (passEvents.length !== events.length || passEvents.some((entry, index) => entry !== events[index])) {
-      return {
-        pass: false,
-        message: () => `Expected possible transitions to be ['${events.join("','")}'] but were ['${passEvents.join("','")}']`,
-      }
-    }
-
-    return {
-      pass: true,
-      message: () => 'OK',
-    }
-  },
-})
-
-export const getEventsTree = <T extends EventObject, C extends CaminoCommonContext>(
-  machine: CaminoMachine<C, T>,
-  initDate: `${number}-${number}-${number}`,
-  etapes: readonly (EtapeTypeEtapeStatutValidPair & Omit<Etape, 'date' | 'etapeTypeId' | 'etapeStatutId' | 'titreTypeId' | 'demarcheTypeId'> & { addDays?: number })[]
-): string[] => {
-  const { service, dateFin } = setDateAndOrderAndInterpretMachine(machine, initDate, [])
+const getEventsTree = <T extends EventObject, C extends CaminoCommonContext>(machine: CaminoMachine<C, T>, initDate: `${number}-${number}-${number}`, etapes: Etape[]): string[] => {
+  const service = machine.interpretMachine([])
   const passEvents: T['type'][] = machine
-    .possibleNextEvents(service.getSnapshot(), dateFin)
+    .possibleNextEvents(service.getSnapshot(), toCaminoDate(initDate))
     .map(({ type }) => type)
     .filter(onlyUnique)
 
   const steps = [
     {
       type: 'RIEN',
-      visibilite: service.getSnapshot().context.visibilite,
-      demarcheStatut: DemarchesStatuts[service.getSnapshot().context.demarcheStatut].nom,
+      visibilite: machine.demarcheStatut([]).publique ? 'publique' : 'confidentielle',
+      demarcheStatut: DemarchesStatuts[machine.demarcheStatut([]).demarcheStatut].nom,
       events: passEvents,
     },
     ...etapes.map((_etape, index) => {
       const etapesToLaunch = etapes.slice(0, index + 1)
-      const { service, dateFin, etapes: etapesWithDates } = setDateAndOrderAndInterpretMachine(machine, initDate, etapesToLaunch)
+      const service = machine.interpretMachine(etapesToLaunch)
 
       const passEvents: T['type'][] = machine
-        .possibleNextEvents(service.getSnapshot(), dateFin)
+        .possibleNextEvents(service.getSnapshot(), etapesToLaunch[index].date)
         .map(({ type }) => type)
         .filter(onlyUnique)
-      const event = machine.eventFrom(etapesWithDates[etapesWithDates.length - 1])
+      const event = machine.eventFrom(etapesToLaunch[etapesToLaunch.length - 1])
 
       return {
         type: event.type,
-        visibilite: service.getSnapshot().context.visibilite,
-        demarcheStatut: DemarchesStatuts[service.getSnapshot().context.demarcheStatut].nom,
+        visibilite: machine.demarcheStatut(etapesToLaunch).publique ? 'publique' : 'confidentielle',
+        demarcheStatut: DemarchesStatuts[machine.demarcheStatut(etapesToLaunch).demarcheStatut].nom,
         events: passEvents,
       }
     }),
@@ -106,13 +52,10 @@ export const setDateAndOrderAndInterpretMachine = <T extends EventObject, C exte
   initDate: `${number}-${number}-${number}`,
   etapes: readonly (EtapeTypeEtapeStatutValidPair & Omit<Etape, 'date' | 'etapeTypeId' | 'etapeStatutId' | 'titreTypeId' | 'demarcheTypeId'> & { addDays?: number })[]
 ): {
-  /**
-   * @deprecated
-   **/
-  service: Actor<(typeof machine)['machine']>
   machine: CaminoMachine<C, T>
   dateFin: CaminoDate
   etapes: Etape[]
+  tree: string[]
 } => {
   const firstDate = toCaminoDate(initDate)
   let index = 0
@@ -125,17 +68,8 @@ export const setDateAndOrderAndInterpretMachine = <T extends EventObject, C exte
 
     return { ...etape, date: dateAddDays(firstDate, index) }
   })
-  const service = orderAndInterpretMachine(machine, fullEtapes)
 
-  return { service, machine, dateFin: dateAddDays(firstDate, etapes.length), etapes: fullEtapes }
-}
+  machine.interpretMachine(fullEtapes)
 
-/**
- * @deprecated use new orderAndInterpretMachine
- **/
-export const orderAndInterpretMachine = <T extends EventObject, C extends CaminoCommonContext>(
-  machine: CaminoMachine<C, T>,
-  etapes: readonly Omit<Etape, 'titreTypeId' | 'demarcheTypeId'>[]
-): Actor<(typeof machine)['machine']> => {
-  return machine.interpretMachine(machine.orderMachine(etapes))
+  return { machine, dateFin: dateAddDays(firstDate, etapes.length), etapes: fullEtapes, tree: getEventsTree(machine, initDate, fullEtapes) }
 }

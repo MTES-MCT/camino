@@ -1,7 +1,6 @@
 import { describe, expect, test } from 'vitest'
 import { ArmRenProMachine } from './ren-pro.machine'
 import { setDateAndOrderAndInterpretMachine } from '../machine-test-helper'
-import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts'
 import { EtapesTypesEtapesStatuts as ETES } from 'camino-common/src/static/etapesTypesEtapesStatuts'
 const etapesProd = require('./2019-10-31-rec-rep-pro.cas.json') // eslint-disable-line
 
@@ -9,8 +8,14 @@ describe('vérifie l’arbre de renonciation et de prolongation d’ARM', () => 
   const armRenProMachine = new ArmRenProMachine()
 
   test('peut créer une étape "men" après une "mfr"', () => {
-    const { service } = setDateAndOrderAndInterpretMachine(armRenProMachine, '2020-05-27', [ETES.demande.FAIT, ETES.enregistrementDeLaDemande.FAIT])
-    expect(service.getSnapshot().context.demarcheStatut).toBe(DemarchesStatutsIds.Depose)
+    const { tree } = setDateAndOrderAndInterpretMachine(armRenProMachine, '2020-05-27', [ETES.demande.FAIT, ETES.enregistrementDeLaDemande.FAIT])
+    expect(tree).toMatchInlineSnapshot(`
+      [
+        "RIEN                (confidentielle, en construction        ) -> [FAIRE_DEMANDE]",
+        "FAIRE_DEMANDE       (confidentielle, en construction        ) -> [ENREGISTRER_DEMANDE]",
+        "ENREGISTRER_DEMANDE (confidentielle, déposé                 ) -> [DEMANDER_COMPLEMENTS_POUR_RECEVABILITE,DESISTER_PAR_LE_DEMANDEUR,FAIRE_RECEVABILITE_DEMANDE_DEFAVORABLE,FAIRE_RECEVABILITE_DEMANDE_FAVORABLE]",
+      ]
+    `)
   })
 
   test('ne peut pas faire de "mod" après une "mcr"', () => {
@@ -41,13 +46,21 @@ describe('vérifie l’arbre de renonciation et de prolongation d’ARM', () => 
   })
 
   test('peut mettre une "asc" après une "mcp"', () => {
-    const { service } = setDateAndOrderAndInterpretMachine(armRenProMachine, '2020-06-30', [
+    const { tree } = setDateAndOrderAndInterpretMachine(armRenProMachine, '2020-06-30', [
       ETES.demande.FAIT,
       ETES.enregistrementDeLaDemande.FAIT,
       ETES.recevabiliteDeLaDemande.FAVORABLE,
       ETES.avisDesServicesEtCommissionsConsultatives.FAIT,
     ])
-    expect(service.getSnapshot().context.demarcheStatut).toBe(DemarchesStatutsIds.Accepte)
+    expect(tree).toMatchInlineSnapshot(`
+      [
+        "RIEN                                                  (confidentielle, en construction        ) -> [FAIRE_DEMANDE]",
+        "FAIRE_DEMANDE                                         (confidentielle, en construction        ) -> [ENREGISTRER_DEMANDE]",
+        "ENREGISTRER_DEMANDE                                   (confidentielle, déposé                 ) -> [DEMANDER_COMPLEMENTS_POUR_RECEVABILITE,DESISTER_PAR_LE_DEMANDEUR,FAIRE_RECEVABILITE_DEMANDE_DEFAVORABLE,FAIRE_RECEVABILITE_DEMANDE_FAVORABLE]",
+        "FAIRE_RECEVABILITE_DEMANDE_FAVORABLE                  (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES]",
+        "RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES (publique      , accepté                ) -> [FAIRE_AVENANT_ARM]",
+      ]
+    `)
   })
 
   // pour regénérer le ren.cas.json: `npm run test:generate-data -w packages/api`

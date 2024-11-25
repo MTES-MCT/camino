@@ -43,7 +43,7 @@ export abstract class CaminoMachine<CaminoContext extends CaminoCommonContext, C
     return result
   }
 
-  protected caminoXStateEventToEtapes(event: CaminoEvent): (OmitDistributive<Etape, 'date' | 'titreTypeId' | 'demarcheTypeId'> & { mainStep: boolean })[] {
+  protected caminoXStateEventToEtapes(event: CaminoEvent): (OmitDistributive<Etape, 'date' | 'titreTypeId' | 'demarcheTypeId'> & { mainStep: boolean; type: CaminoEvent['type'] })[] {
     const dbEtat: { db: DBEtat; mainStep: boolean } = this.trad[event.type as CaminoEvent['type']]
 
     return Object.values(dbEtat.db).map(({ etapeTypeId, etapeStatutId }) => ({
@@ -255,7 +255,7 @@ export abstract class CaminoMachine<CaminoContext extends CaminoCommonContext, C
       .toSorted((a, b) => a.type.localeCompare(b.type))
   }
 
-  public possibleNextEtapes(etapes: readonly Etape[], date: CaminoDate): (OmitDistributive<Etape, 'date' | 'titreTypeId' | 'demarcheTypeId'> & { mainStep: boolean })[] {
+  public possibleNextEtapes(etapes: readonly Etape[], date: CaminoDate): (OmitDistributive<Etape, 'date' | 'titreTypeId' | 'demarcheTypeId'> & { mainStep: boolean; type: CaminoEvent['type'] })[] {
     const state = this.assertGoTo(etapes)
 
     if (isNotNullNorUndefined(state)) {
@@ -269,6 +269,6 @@ export abstract class CaminoMachine<CaminoContext extends CaminoCommonContext, C
   }
 }
 
-export function getNextEvents(snapshot: AnyMachineSnapshot): string[] {
+function getNextEvents(snapshot: AnyMachineSnapshot): string[] {
   return [...new Set([...snapshot._nodes.flatMap(sn => sn.ownEvents)])]
 }
