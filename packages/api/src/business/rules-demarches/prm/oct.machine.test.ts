@@ -1,4 +1,4 @@
-import { interpretMachine, setDateAndOrderAndInterpretMachine } from '../machine-test-helper'
+import { setDateAndOrderAndInterpretMachine } from '../machine-test-helper'
 import { PrmOctMachine } from './oct.machine'
 import { EtapesTypesEtapesStatuts as ETES } from 'camino-common/src/static/etapesTypesEtapesStatuts'
 import { describe, expect, test } from 'vitest'
@@ -178,7 +178,7 @@ describe('vérifie l’arbre d’octroi de PRM', () => {
   // pour regénérer le oct.cas.json: `npm run test:generate-data -w packages/api`
   test.each(etapesProd as any[])('cas réel N°$id', demarche => {
     // ici les étapes sont déjà ordonnées
-    interpretMachine(prmOctMachine, demarche.etapes)
+    prmOctMachine.interpretMachine(demarche.etapes)
     expect(prmOctMachine.demarcheStatut(demarche.etapes)).toStrictEqual({
       demarcheStatut: demarche.demarcheStatutId,
       publique: demarche.demarchePublique,

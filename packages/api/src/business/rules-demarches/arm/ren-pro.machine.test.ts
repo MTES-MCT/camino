@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest'
 import { ArmRenProMachine } from './ren-pro.machine'
-import { interpretMachine, setDateAndOrderAndInterpretMachine } from '../machine-test-helper'
+import { setDateAndOrderAndInterpretMachine } from '../machine-test-helper'
 import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts'
 import { EtapesTypesEtapesStatuts as ETES } from 'camino-common/src/static/etapesTypesEtapesStatuts'
 const etapesProd = require('./2019-10-31-rec-rep-pro.cas.json') // eslint-disable-line
@@ -53,7 +53,7 @@ describe('vérifie l’arbre de renonciation et de prolongation d’ARM', () => 
   // pour regénérer le ren.cas.json: `npm run test:generate-data -w packages/api`
   test.each(etapesProd as any[])('cas réel N°$id', demarche => {
     // ici les étapes sont déjà ordonnées
-    interpretMachine(armRenProMachine, demarche.etapes)
+    armRenProMachine.interpretMachine(demarche.etapes)
     expect(armRenProMachine.demarcheStatut(demarche.etapes)).toStrictEqual({
       demarcheStatut: demarche.demarcheStatutId,
       publique: demarche.demarchePublique,

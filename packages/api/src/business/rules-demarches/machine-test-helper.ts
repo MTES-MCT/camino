@@ -1,5 +1,5 @@
 import { CaminoCommonContext, Etape } from './machine-common'
-import { Actor, EventObject, createActor } from 'xstate'
+import { Actor, EventObject } from 'xstate'
 import { CaminoMachine, getNextEvents } from './machine-helper'
 import { expect } from 'vitest'
 import { CaminoDate, dateAddDays, toCaminoDate } from 'camino-common/src/date'
@@ -7,6 +7,9 @@ import { EtapeTypeEtapeStatutValidPair } from 'camino-common/src/static/etapesTy
 import { isNotNullNorUndefined, onlyUnique } from 'camino-common/src/typescript-tools'
 import { DemarchesStatuts } from 'camino-common/src/static/demarchesStatuts'
 interface CustomMatchers<R = unknown> {
+  /**
+   * @deprecated use machine.getPossibleNextEtapes
+   **/
   canOnlyTransitionTo<T extends EventObject, C extends CaminoCommonContext>(context: { machine: CaminoMachine<C, T>; date: CaminoDate }, _events: T['type'][]): R
 }
 
@@ -21,6 +24,9 @@ declare global {
   }
 }
 expect.extend({
+  /**
+   * @deprecated use machine.getPossibleNextEtapes
+   **/
   canOnlyTransitionTo<T extends EventObject, C extends CaminoCommonContext>(
     service: Actor<CaminoMachine<C, T>['machine']>,
     { machine, date }: { machine: CaminoMachine<C, T>; date: CaminoDate },
@@ -49,32 +55,6 @@ expect.extend({
     }
   },
 })
-
-export const interpretMachine = <T extends EventObject, C extends CaminoCommonContext>(machine: CaminoMachine<C, T>, etapes: readonly Etape[]): Actor<(typeof machine)['machine']> => {
-  const service = createActor(machine.machine, {})
-
-  service.start()
-
-  for (let i = 0; i < etapes.length; i++) {
-    const etapeAFaire = etapes[i]
-    const event = machine.eventFrom(etapeAFaire)
-
-    if (!service.getSnapshot().can(event) || service.getSnapshot().status === 'done') {
-      throw new Error(
-        `Error: cannot execute step: '${JSON.stringify(etapeAFaire)}' after '${JSON.stringify(
-          etapes.slice(0, i).map(etape => etape.etapeTypeId + '_' + etape.etapeStatutId)
-        )}'. The event ${JSON.stringify(event)} should be one of '${machine
-          .possibleNextEvents(service.getSnapshot(), etapeAFaire.date)
-          .map(({ type }) => type)
-          .filter(onlyUnique)
-          .toSorted()}'`
-      )
-    }
-    service.send(event)
-  }
-
-  return service
-}
 
 export const getEventsTree = <T extends EventObject, C extends CaminoCommonContext>(
   machine: CaminoMachine<C, T>,
@@ -120,11 +100,20 @@ export const getEventsTree = <T extends EventObject, C extends CaminoCommonConte
   })
 }
 
+// TODO 2024-11-25 ne devrait plus jamais retourner le service, mais plutôt la machine, les étapes, le getTree
 export const setDateAndOrderAndInterpretMachine = <T extends EventObject, C extends CaminoCommonContext>(
   machine: CaminoMachine<C, T>,
   initDate: `${number}-${number}-${number}`,
   etapes: readonly (EtapeTypeEtapeStatutValidPair & Omit<Etape, 'date' | 'etapeTypeId' | 'etapeStatutId' | 'titreTypeId' | 'demarcheTypeId'> & { addDays?: number })[]
-): { service: Actor<(typeof machine)['machine']>; machine: CaminoMachine<C, T>; dateFin: CaminoDate; etapes: Etape[] } => {
+): {
+  /**
+   * @deprecated
+   **/
+  service: Actor<(typeof machine)['machine']>
+  machine: CaminoMachine<C, T>
+  dateFin: CaminoDate
+  etapes: Etape[]
+} => {
   const firstDate = toCaminoDate(initDate)
   let index = 0
   const fullEtapes = etapes.map(etape => {
@@ -140,9 +129,13 @@ export const setDateAndOrderAndInterpretMachine = <T extends EventObject, C exte
 
   return { service, machine, dateFin: dateAddDays(firstDate, etapes.length), etapes: fullEtapes }
 }
+
+/**
+ * @deprecated use new orderAndInterpretMachine
+ **/
 export const orderAndInterpretMachine = <T extends EventObject, C extends CaminoCommonContext>(
   machine: CaminoMachine<C, T>,
   etapes: readonly Omit<Etape, 'titreTypeId' | 'demarcheTypeId'>[]
 ): Actor<(typeof machine)['machine']> => {
-  return interpretMachine(machine, machine.orderMachine(etapes))
+  return machine.interpretMachine(machine.orderMachine(etapes))
 }

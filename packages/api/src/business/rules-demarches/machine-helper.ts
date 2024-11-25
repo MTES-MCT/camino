@@ -1,8 +1,8 @@
-import { AnyMachineSnapshot, createActor, EventObject, MachineSnapshot, StateMachine } from 'xstate'
+import { AnyMachineSnapshot, createActor, EventObject, MachineSnapshot, StateMachine, Actor } from 'xstate'
 import { CaminoCommonContext, DBEtat, Etape, Intervenant, intervenants, tags } from './machine-common'
 import { DemarchesStatutsIds, DemarcheStatutId } from 'camino-common/src/static/demarchesStatuts'
 import { CaminoDate } from 'camino-common/src/date'
-import { isNotNullNorUndefined, OmitDistributive } from 'camino-common/src/typescript-tools'
+import { isNotNullNorUndefined, OmitDistributive, onlyUnique } from 'camino-common/src/typescript-tools'
 
 type CaminoState<CaminoContext extends CaminoCommonContext, CaminoEvent extends EventObject> = MachineSnapshot<CaminoContext, CaminoEvent, any, any, any, any, any, any>
 
@@ -177,6 +177,32 @@ export abstract class CaminoMachine<CaminoContext extends CaminoCommonContext, C
     return { valid: true, state }
   }
 
+  // visibleForTesting
+  public interpretMachine = (etapes: readonly Etape[]): Actor<StateMachine<CaminoContext, CaminoEvent, any, any, any, any, any, any, any, any, any, EventObject, any, any>> => {
+    const service = createActor(this.machine, {})
+
+    service.start()
+
+    for (let i = 0; i < etapes.length; i++) {
+      const etapeAFaire = etapes[i]
+      const event = this.eventFrom(etapeAFaire)
+
+      if (!service.getSnapshot().can(event) || service.getSnapshot().status === 'done') {
+        throw new Error(
+          `Error: cannot execute step: '${JSON.stringify(etapeAFaire)}' after '${JSON.stringify(
+            etapes.slice(0, i).map(etape => etape.etapeTypeId + '_' + etape.etapeStatutId)
+          )}'. The event ${JSON.stringify(event)} should be one of '${this.possibleNextEvents(service.getSnapshot(), etapeAFaire.date)
+            .map(({ type }) => type)
+            .filter(onlyUnique)
+            .toSorted()}'`
+        )
+      }
+      service.send(event)
+    }
+
+    return service
+  }
+
   public demarcheStatut(etapes: readonly Etape[]): {
     demarcheStatut: DemarcheStatutId
     publique: boolean
@@ -214,6 +240,7 @@ export abstract class CaminoMachine<CaminoContext extends CaminoCommonContext, C
     return intervenants.filter(r => responsables.includes(tags.responsable[r]))
   }
 
+  // visibleForTesting
   public possibleNextEvents(state: CaminoState<CaminoContext, CaminoEvent>, date: CaminoDate): CaminoEvent[] {
     return getNextEvents(state)
       .filter((event: string) => this.isEvent(event))

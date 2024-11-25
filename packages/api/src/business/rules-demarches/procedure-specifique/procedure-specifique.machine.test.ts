@@ -5,7 +5,9 @@ import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts'
 import { ProcedureSpecifiqueMachine } from './procedure-specifique.machine'
 import { EtapesTypesEtapesStatuts as ETES } from 'camino-common/src/static/etapesTypesEtapesStatuts'
 import { hectareToKm2, hectareValidator } from 'camino-common/src/number'
-
+import { machineFind } from '../machines'
+import { isNullOrUndefined } from 'camino-common/src/typescript-tools'
+const etapesProdSpecifiqueArmAxm = require('../arm-axm/2024-07-01-oct-pro-pr1-pr2-pre-exp-exs-prr.cas.json') // eslint-disable-line
 const psPccOctMachine = new ProcedureSpecifiqueMachine('pcc', 'oct')
 const psCxmOctMachine = new ProcedureSpecifiqueMachine('cxm', 'oct')
 const psPrmProMachine = new ProcedureSpecifiqueMachine('prm', 'pro')
@@ -19,6 +21,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
     expect(service).canOnlyTransitionTo({ machine: psPccOctMachine, date: toCaminoDate('2024-10-10') }, ['FAIRE_DEMANDE'])
     expect(service.getSnapshot().context.demarcheStatut).toBe(DemarchesStatutsIds.EnConstruction)
   })
+
   test('demande irrecevable', async () => {
     const { service, dateFin, machine } = setDateAndOrderAndInterpretMachine(psPccOctMachine, '1999-04-14', [
       {
@@ -447,7 +450,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
     `)
   })
   test("réalise une demande de prolongation d'ARM rejetée suite à une décision implicite", () => {
-    const { service, dateFin, machine } = setDateAndOrderAndInterpretMachine(psArmProMachine, '1999-04-14', [
+    const { dateFin, machine, etapes } = setDateAndOrderAndInterpretMachine(psArmProMachine, '1999-04-14', [
       {
         ...ETES.demande.FAIT,
         consentement: 'non-applicable',
@@ -464,9 +467,13 @@ describe('vérifie l’arbre des procédures spécifique', () => {
       ETES.decisionDeLAutoriteAdministrative.REJETE_DECISION_IMPLICITE,
     ])
 
-    expect(service).canOnlyTransitionTo({ machine, date: dateFin }, [])
-    expect(service.getSnapshot().context.visibilite).toBe('publique')
-    expect(service.getSnapshot().context.demarcheStatut).toBe(DemarchesStatutsIds.Rejete)
+    expect(machine.possibleNextEtapes(etapes, dateFin)).toStrictEqual([])
+    expect(machine.demarcheStatut(etapes)).toMatchInlineSnapshot(`
+      {
+        "demarcheStatut": "rej",
+        "publique": true,
+      }
+    `)
   })
 
   test("réalise une demande de prolongation d'AXM complète", () => {
@@ -747,5 +754,18 @@ describe('vérifie l’arbre des procédures spécifique', () => {
         `)
   })
 
+  // pour regénérer le oct.cas.json: `npm run test:generate-data -w packages/api`
+  test.each(etapesProdSpecifiqueArmAxm as any[])('cas réel N°$id', demarche => {
+    // ici les étapes sont déjà ordonnées
+    const machine = machineFind(demarche.titreTypeId, demarche.demarcheTypeId, demarche.etapes, demarche.id)
+    if (isNullOrUndefined(machine)) {
+      throw new Error('Impossible de trouver une machine')
+    }
+    machine.interpretMachine(demarche.etapes)
+    expect(machine.demarcheStatut(demarche.etapes)).toStrictEqual({
+      demarcheStatut: demarche.demarcheStatutId,
+      publique: demarche.demarchePublique,
+    })
+  })
   // FIXMACHINE tester que la participation du public peut-être optionnelle
 })

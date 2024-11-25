@@ -38,7 +38,7 @@ import { SDOMZoneIds } from '../static/sdom'
 import { PartialRecord } from '../typescript-tools'
 import { Hectare, hectareToKm2, hectareValidator, KM2, km2toHectare, km2Validator } from '../number'
 import { demarcheIdValidator } from '../demarche'
-import { DATE_DEBUT_PROCEDURE_SPECIFIQUE } from '../machines'
+import { DATE_DEBUT_PROCEDURE_SPECIFIQUE, DATE_DEBUT_PROCEDURE_SPECIFIQUE_AXM_ARM } from '../machines'
 
 console.warn = vi.fn()
 
@@ -705,7 +705,7 @@ describe('isEtapeDeposable', () => {
 })
 
 const demarcheId = demarcheIdValidator.parse('fakeDemarcheId')
-const beforeProcedureSpecifique = dateAddDays(DATE_DEBUT_PROCEDURE_SPECIFIQUE, -1)
+const beforeProcedureSpecifiqueAxmArm = dateAddDays(DATE_DEBUT_PROCEDURE_SPECIFIQUE_AXM_ARM, -1)
 const duringProcedureSpecifique = dateAddDays(DATE_DEBUT_PROCEDURE_SPECIFIQUE, 1)
 
 describe('dureeIsValide', () => {
@@ -967,8 +967,9 @@ describe('perimetreIsValide', () => {
       }
     `)
 
-    expect(perimetreIsValide(TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX, DEMARCHES_TYPES_IDS.Prolongation, ETAPES_TYPES.demande, km2Validator.parse(4), demarcheId, beforeProcedureSpecifique))
-      .toMatchInlineSnapshot(`
+    expect(
+      perimetreIsValide(TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX, DEMARCHES_TYPES_IDS.Prolongation, ETAPES_TYPES.demande, km2Validator.parse(4), demarcheId, beforeProcedureSpecifiqueAxmArm)
+    ).toMatchInlineSnapshot(`
       {
         "valid": true,
       }

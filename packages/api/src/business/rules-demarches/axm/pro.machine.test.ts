@@ -1,4 +1,4 @@
-import { interpretMachine, setDateAndOrderAndInterpretMachine } from '../machine-test-helper'
+import { setDateAndOrderAndInterpretMachine } from '../machine-test-helper'
 import { AxmProMachine } from './pro.machine'
 import { describe, expect, test } from 'vitest'
 
@@ -23,7 +23,7 @@ describe('vérifie l’arbre de prolongation d’AXM', () => {
   // pour regénérer le pro.cas.json: `npm run test:generate-data -w packages/api`
   test.each(etapesProd as any[])('cas réel N°$id', demarche => {
     // ici les étapes sont déjà ordonnées
-    interpretMachine(axmProMachine, demarche.etapes)
+    axmProMachine.interpretMachine(demarche.etapes)
     expect(axmProMachine.demarcheStatut(demarche.etapes)).toStrictEqual({
       demarcheStatut: demarche.demarcheStatutId,
       publique: demarche.demarchePublique,

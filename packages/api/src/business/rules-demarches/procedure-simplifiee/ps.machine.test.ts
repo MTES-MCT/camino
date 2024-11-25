@@ -1,4 +1,4 @@
-import { interpretMachine, orderAndInterpretMachine, setDateAndOrderAndInterpretMachine } from '../machine-test-helper'
+import { orderAndInterpretMachine, setDateAndOrderAndInterpretMachine } from '../machine-test-helper'
 import { EtapesTypesEtapesStatuts as ETES } from 'camino-common/src/static/etapesTypesEtapesStatuts'
 import { toCaminoDate } from 'camino-common/src/date'
 import { describe, expect, test } from 'vitest'
@@ -251,7 +251,7 @@ describe('vérifie l’arbre des procédures historiques et simplifiées', () =>
   // pour regénérer le oct.cas.json: `npm run test:generate-data -w packages/api`
   test.each(etapesProdProceduresHistoriques as any[])('cas réel N°$id', demarche => {
     // ici les étapes sont déjà ordonnées
-    interpretMachine(psMachine, demarche.etapes)
+    psMachine.interpretMachine(demarche.etapes)
     expect(psMachine.demarcheStatut(demarche.etapes)).toStrictEqual({
       demarcheStatut: demarche.demarcheStatutId,
       publique: demarche.demarchePublique,

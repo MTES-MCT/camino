@@ -6,6 +6,7 @@ import { TitreTypeId } from './static/titresTypes'
 import { NonEmptyArray, isNullOrUndefinedOrEmpty, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, DeepReadonly, toSorted } from './typescript-tools'
 
 export const DATE_DEBUT_PROCEDURE_SPECIFIQUE = toCaminoDate('2400-01-01')
+export const DATE_DEBUT_PROCEDURE_SPECIFIQUE_AXM_ARM = toCaminoDate('2024-07-01')
 
 interface DemarcheDefinition {
   titreTypeIds: NonEmptyArray<TitreTypeId>
@@ -120,7 +121,7 @@ export const demarchesDefinitions = [
     machineId: 'ProcedureSimplifiee',
   },
   {
-    titreTypeIds: ['arm', 'arc', 'axm', 'cxg', 'cxw', 'cxh', 'cxm', 'cxs', 'pcc', 'prg', 'prw', 'prh', 'prm', 'prs'],
+    titreTypeIds: ['arc', 'cxg', 'cxw', 'cxh', 'cxm', 'cxs', 'pcc', 'prg', 'prw', 'prh', 'prm', 'prs'],
     demarcheTypeIds: [
       DEMARCHES_TYPES_IDS.Octroi,
       DEMARCHES_TYPES_IDS.Prolongation,
@@ -132,6 +133,22 @@ export const demarchesDefinitions = [
       DEMARCHES_TYPES_IDS.Prorogation,
     ],
     dateDebut: DATE_DEBUT_PROCEDURE_SPECIFIQUE,
+    demarcheIdExceptions: [],
+    machineId: 'ProcedureSpecifique',
+  },
+  {
+    titreTypeIds: ['arm', 'axm'],
+    demarcheTypeIds: [
+      DEMARCHES_TYPES_IDS.Octroi,
+      DEMARCHES_TYPES_IDS.Prolongation,
+      DEMARCHES_TYPES_IDS.Prolongation1,
+      DEMARCHES_TYPES_IDS.Prolongation2,
+      DEMARCHES_TYPES_IDS.ProlongationExceptionnelle,
+      DEMARCHES_TYPES_IDS.ExtensionDePerimetre,
+      DEMARCHES_TYPES_IDS.ExtensionDeSubstance,
+      DEMARCHES_TYPES_IDS.Prorogation,
+    ],
+    dateDebut: DATE_DEBUT_PROCEDURE_SPECIFIQUE_AXM_ARM,
     demarcheIdExceptions: [],
     machineId: 'ProcedureSpecifique',
   },

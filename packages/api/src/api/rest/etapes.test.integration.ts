@@ -1,7 +1,7 @@
 import { dbManager } from '../../../tests/db-manager'
 import { userSuper } from '../../database/user-super'
 import { restCall, restDeleteCall, restNewCall } from '../../../tests/_utils/index'
-import { caminoDateValidator, toCaminoDate } from 'camino-common/src/date'
+import { caminoDateValidator, dateAddDays, toCaminoDate } from 'camino-common/src/date'
 import { afterAll, beforeAll, test, expect, describe, vi } from 'vitest'
 import type { Pool } from 'pg'
 import { HTTP_STATUS } from 'camino-common/src/http'
@@ -19,6 +19,7 @@ import { tempDocumentNameValidator } from 'camino-common/src/document'
 import { newDemarcheId, newEtapeId, newTitreId } from '../../database/models/_format/id-create'
 import { insertTitreGraph } from '../../../tests/integration-test-helper'
 import { callAndExit } from '../../tools/fp-tools'
+import { DATE_DEBUT_PROCEDURE_SPECIFIQUE_AXM_ARM } from 'camino-common/src/machines'
 
 console.info = vi.fn()
 console.error = vi.fn()
@@ -36,7 +37,7 @@ afterAll(async () => {
 })
 
 describe('getEtapesTypesEtapesStatusWithMainStep', () => {
-  test('nouvelle étapes possibles', async () => {
+  test('nouvelle étapes possibles procédure dédiée octroi ARM', async () => {
     const titreId = newTitreId()
     const demarcheId = newDemarcheId()
     await insertTitreGraph({
@@ -54,7 +55,7 @@ describe('getEtapesTypesEtapesStatusWithMainStep', () => {
       ],
     })
 
-    const tested = await restNewCall(dbPool, '/rest/etapesTypes/:demarcheId/:date', { demarcheId: demarcheId, date: toCaminoDate('2024-09-01') }, userSuper)
+    const tested = await restNewCall(dbPool, '/rest/etapesTypes/:demarcheId/:date', { demarcheId: demarcheId, date: dateAddDays(DATE_DEBUT_PROCEDURE_SPECIFIQUE_AXM_ARM, -5) }, userSuper)
 
     expect(tested.statusCode).toBe(HTTP_STATUS.OK)
     expect(tested.body).toMatchInlineSnapshot(`
@@ -87,6 +88,38 @@ describe('getEtapesTypesEtapesStatusWithMainStep', () => {
         },
       }
     `)
+  })
+  test('nouvelle étapes possibles (procédure spécifique, octroi ARM)', async () => {
+    const titreId = newTitreId()
+    const demarcheId = newDemarcheId()
+    await insertTitreGraph({
+      id: titreId,
+      nom: 'nomTitre',
+      typeId: 'arm',
+      titreStatutId: 'val',
+      propsTitreEtapesIds: {},
+      demarches: [
+        {
+          id: demarcheId,
+          titreId,
+          typeId: 'oct',
+        },
+      ],
+    })
+
+    const tested = await restNewCall(dbPool, '/rest/etapesTypes/:demarcheId/:date', { demarcheId: demarcheId, date: DATE_DEBUT_PROCEDURE_SPECIFIQUE_AXM_ARM }, userSuper)
+
+    expect(tested.statusCode).toBe(HTTP_STATUS.OK)
+    expect(tested.body).toMatchInlineSnapshot(`
+        {
+          "mfr": {
+            "etapeStatutIds": [
+              "fai",
+            ],
+            "mainStep": true,
+          },
+        }
+      `)
   })
   test('nouvelle étapes possibles prends en compte les brouillons', async () => {
     const titreId = newTitreId()

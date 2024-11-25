@@ -7,27 +7,32 @@ import { Etape, titreEtapeForMachineValidator, toMachineEtapes } from '../../bus
 import { dateAddDays, daysBetween, setDayInMonth } from 'camino-common/src/date'
 import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes'
 import { toCommuneId } from 'camino-common/src/static/communes'
-import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined, isNullOrUndefinedOrEmpty, onlyUnique } from 'camino-common/src/typescript-tools'
+import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined, isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools'
 import { getDomaineId, getTitreTypeType } from 'camino-common/src/static/titresTypes'
 import { demarchesDefinitions, machineIdFind } from 'camino-common/src/machines'
 import { getMachineFromId } from '../../business/rules-demarches/machines'
 
 const writeEtapesForTest = async () => {
   for (const demarcheDefinition of demarchesDefinitions) {
-    const demarches = await titresDemarchesGet(
-      {
-        titresTypesIds: demarcheDefinition.titreTypeIds.map(getTitreTypeType).filter(onlyUnique),
-        titresDomainesIds: demarcheDefinition.titreTypeIds.map(getDomaineId).filter(onlyUnique),
-        typesIds: demarcheDefinition.demarcheTypeIds,
-      },
-      {
-        fields: {
-          titre: { id: {}, demarches: { etapes: { id: {} } } },
-          etapes: { id: {} },
-        },
-      },
-      userSuper
-    )
+    const demarches = []
+    for (const titreTypeId of demarcheDefinition.titreTypeIds) {
+      demarches.push(
+        ...(await titresDemarchesGet(
+          {
+            titresTypesIds: [getTitreTypeType(titreTypeId)],
+            titresDomainesIds: [getDomaineId(titreTypeId)],
+            typesIds: demarcheDefinition.demarcheTypeIds,
+          },
+          {
+            fields: {
+              titre: { id: {}, demarches: { etapes: { id: {} } } },
+              etapes: { id: {} },
+            },
+          },
+          userSuper
+        ))
+      )
+    }
 
     const lesDemarchesFiltres = demarches
       .filter(demarche => demarche.etapes?.length)
@@ -88,6 +93,8 @@ const writeEtapesForTest = async () => {
 
           return {
             id: index,
+            titreTypeId: demarche.titre?.typeId,
+            demarcheTypeId: demarche.typeId,
             demarcheStatutId: demarche.statutId,
             demarchePublique: demarche.publicLecture ?? false,
             etapes: etapesAnonymes,

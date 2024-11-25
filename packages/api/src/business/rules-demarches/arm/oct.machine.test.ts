@@ -1,5 +1,5 @@
 import { ArmOctMachine } from './oct.machine'
-import { interpretMachine, setDateAndOrderAndInterpretMachine, orderAndInterpretMachine } from '../machine-test-helper'
+import { setDateAndOrderAndInterpretMachine, orderAndInterpretMachine } from '../machine-test-helper'
 import { EtapeTypeEtapeStatutValidPair, EtapesTypesEtapesStatuts as ETES } from 'camino-common/src/static/etapesTypesEtapesStatuts'
 import { Etape } from '../machine-common'
 import { toCaminoDate } from 'camino-common/src/date'
@@ -1315,7 +1315,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
   // pour regénérer le oct.cas.json: `npm run test:generate-data -w packages/api`
   test.each(etapesProd as any[])('cas réel N°$id', demarche => {
     // ici les étapes sont déjà ordonnées
-    interpretMachine(armOctMachine, demarche.etapes)
+    armOctMachine.interpretMachine(demarche.etapes)
     expect(armOctMachine.demarcheStatut(demarche.etapes)).toStrictEqual({
       demarcheStatut: demarche.demarcheStatutId,
       publique: demarche.demarchePublique,

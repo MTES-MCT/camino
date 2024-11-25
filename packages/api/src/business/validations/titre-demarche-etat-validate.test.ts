@@ -9,7 +9,7 @@ import { ETAPES_TYPES, EtapeTypeId } from 'camino-common/src/static/etapesTypes'
 import { ETAPE_IS_BROUILLON, ETAPE_IS_NOT_BROUILLON, etapeIdValidator } from 'camino-common/src/etape'
 import { ArmOctMachine } from '../rules-demarches/arm/oct.machine'
 import { TitreEtapeForMachine } from '../rules-demarches/machine-common'
-import { communeIdValidator } from 'camino-common/src/static/communes'
+import { communeIdValidator, toCommuneId } from 'camino-common/src/static/communes'
 import { km2Validator } from 'camino-common/src/number'
 import { ProcedureSpecifiqueMachine } from '../rules-demarches/procedure-specifique/procedure-specifique.machine'
 import { ETAPES_STATUTS } from 'camino-common/src/static/etapesStatuts'
@@ -376,6 +376,8 @@ describe('titreDemarcheUpdatedEtatValidate', () => {
           statutId: ETAPES_STATUTS.FAIT,
           isBrouillon: ETAPE_IS_NOT_BROUILLON,
           demarcheIdsConsentement: [],
+          communes: [{ id: toCommuneId('97300') }],
+          surface: km2Validator.parse(12),
         },
         demarcheId,
 
@@ -472,11 +474,18 @@ describe('titreDemarcheUpdatedEtatValidate', () => {
         statutId: ETAPES_STATUTS.FAIT,
         isBrouillon: ETAPE_IS_NOT_BROUILLON,
         demarcheIdsConsentement: [],
+        communes: [{ id: toCommuneId('97300') }],
+        surface: km2Validator.parse(12),
       },
       demarcheId
     )
 
-    expect(valid.valid).toBe(true)
+    expect(valid).toMatchInlineSnapshot(`
+      {
+        "errors": null,
+        "valid": true,
+      }
+    `)
   })
 
   test('ajoute une demande en construction à une démarche qui contient déjà une étape', () => {

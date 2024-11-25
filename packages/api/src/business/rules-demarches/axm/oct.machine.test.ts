@@ -1,4 +1,4 @@
-import { getEventsTree, interpretMachine, orderAndInterpretMachine, setDateAndOrderAndInterpretMachine } from '../machine-test-helper'
+import { getEventsTree, orderAndInterpretMachine, setDateAndOrderAndInterpretMachine } from '../machine-test-helper'
 import { AxmOctMachine } from './oct.machine'
 import { EtapesTypesEtapesStatuts as ETES } from 'camino-common/src/static/etapesTypesEtapesStatuts'
 import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations'
@@ -168,7 +168,7 @@ describe('vérifie l’arbre d’octroi d’AXM', () => {
   // pour regénérer le oct.cas.json: `npm run test:generate-data -w packages/api`
   test.each(etapesProd as any[])('cas réel N°$id', demarche => {
     // ici les étapes sont déjà ordonnées
-    interpretMachine(axmOctMachine, demarche.etapes)
+    axmOctMachine.interpretMachine(demarche.etapes)
     expect(axmOctMachine.demarcheStatut(demarche.etapes)).toStrictEqual({
       demarcheStatut: demarche.demarcheStatutId,
       publique: demarche.demarchePublique,
