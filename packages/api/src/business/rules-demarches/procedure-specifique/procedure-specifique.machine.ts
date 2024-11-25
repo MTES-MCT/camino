@@ -595,7 +595,7 @@ const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: De
       decisionAdministrationAFaire: {
         on: {
           RENDRE_DECISION_ADMINISTRATION_ACCEPTEE: {
-            target: 'publicationAuRecueilDesActesAdministratifsOupublicationAuJORFAFaire',
+            target: 'publicationAuRecueilDesActesAdministratifsOupublicationAuJORFOuMesuresDePubliciteMachine',
             actions: assign({ demarcheStatut: DemarchesStatutsIds.Accepte, visibilite: 'publique' }),
           },
           RENDRE_DECISION_ADMINISTRATION_REJETEE: {
@@ -611,18 +611,38 @@ const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: De
           },
         },
       },
-      publicationAuRecueilDesActesAdministratifsOupublicationAuJORFAFaire: {
-        on: {
-          RENDRE_MESURES_DE_PUBLICITE: 'publicationAuRecueilDesActesAdministratifsOupublicationAuJORFAFaire',
-          PUBLIER_DECISION_ACCEPTEE_AU_JORF: {
-            target: 'abrogationOuNotificationAuDemandeurMachine',
-            actions: assign({ demarcheStatut: DemarchesStatutsIds.AccepteEtPublie }),
+      publicationAuRecueilDesActesAdministratifsOupublicationAuJORFOuMesuresDePubliciteMachine: {
+        type: 'parallel',
+        states: {
+          mesuresDePubliciteMachine: {
+            initial: 'mesuresDePubliciteAFaire',
+            states: {
+              mesuresDePubliciteAFaire: {
+                on: { RENDRE_MESURES_DE_PUBLICITE: 'finMesuresDePublicite' },
+              },
+              finMesuresDePublicite: { type: 'final' },
+            },
           },
-          PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS: {
-            target: 'abrogationOuNotificationAuDemandeurMachine',
-            actions: assign({ demarcheStatut: DemarchesStatutsIds.AccepteEtPublie }),
+          publicationAuRecueilDesActesAdministratifsOupublicationAuJORFMachine: {
+            initial: 'publicationAuRecueilDesActesAdministratifsOupublicationAuJORFAFaire',
+            states: {
+              publicationAuRecueilDesActesAdministratifsOupublicationAuJORFAFaire: {
+                on: {
+                  PUBLIER_DECISION_ACCEPTEE_AU_JORF: {
+                    target: 'fin',
+                    actions: assign({ demarcheStatut: DemarchesStatutsIds.AccepteEtPublie }),
+                  },
+                  PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS: {
+                    target: 'fin',
+                    actions: assign({ demarcheStatut: DemarchesStatutsIds.AccepteEtPublie }),
+                  },
+                },
+              },
+              fin: { type: 'final' },
+            },
           },
         },
+        onDone: 'abrogationOuNotificationAuDemandeurMachine',
       },
       abrogationOuNotificationAuDemandeurMachine: {
         type: 'parallel',
