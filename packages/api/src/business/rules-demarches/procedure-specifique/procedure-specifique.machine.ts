@@ -629,27 +629,15 @@ const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: De
               publicationAuRecueilDesActesAdministratifsOupublicationAuJORFAFaire: {
                 on: {
                   PUBLIER_DECISION_ACCEPTEE_AU_JORF: {
-                    target: 'fin',
+                    target: 'notificationAuDemandeurAFaire',
                     actions: assign({ demarcheStatut: DemarchesStatutsIds.AccepteEtPublie }),
                   },
                   PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS: {
-                    target: 'fin',
+                    target: 'notificationAuDemandeurAFaire',
                     actions: assign({ demarcheStatut: DemarchesStatutsIds.AccepteEtPublie }),
                   },
                 },
               },
-              fin: { type: 'final' },
-            },
-          },
-        },
-        onDone: 'abrogationOuNotificationAuDemandeurMachine',
-      },
-      abrogationOuNotificationAuDemandeurMachine: {
-        type: 'parallel',
-        states: {
-          notificationAuDemandeurMachine: {
-            initial: 'notificationAuDemandeurAFaire',
-            states: {
               notificationAuDemandeurAFaire: {
                 on: {
                   NOTIFIER_DEMANDEUR: 'attestationDeConstitutionDeGarantiesFinancieresAFaire',
@@ -664,40 +652,29 @@ const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: De
                   FAIRE_ATTESTATION_DE_CONSTITUTION_DE_GARANTIES_FINANCIERES: 'attestationDeConstitutionDeGarantiesFinancieresFait',
                 },
               },
-
               attestationDeConstitutionDeGarantiesFinancieresFait: { type: 'final' },
             },
           },
-
-          abrogationMachine: {
-            initial: 'abrogationAFaire',
-            states: {
-              abrogationAFaire: {
-                on: {
-                  FAIRE_ABROGATION: 'publicationsAFaire',
-                },
-              },
-              publicationsAFaire: {
-                on: {
-                  PUBLIER_DECISION_ACCEPTEE_AU_JORF: {
-                    target: 'publicationsFaites',
-                    actions: assign({ demarcheStatut: DemarchesStatutsIds.RejeteApresAbrogation }),
-                  },
-                  PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS: {
-                    target: 'publicationsFaites',
-                    actions: assign({ demarcheStatut: DemarchesStatutsIds.RejeteApresAbrogation }),
-                  },
-                },
-              },
-              publicationsFaites: {
-                type: 'final',
-              },
-            },
+        },
+        onDone: 'abrogationAFaire',
+      },
+      abrogationAFaire: {
+        on: {
+          FAIRE_ABROGATION: 'publicationsAFaire',
+        },
+      },
+      publicationsAFaire: {
+        on: {
+          PUBLIER_DECISION_ACCEPTEE_AU_JORF: {
+            target: 'finDeMachine',
+            actions: assign({ demarcheStatut: DemarchesStatutsIds.RejeteApresAbrogation }),
+          },
+          PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS: {
+            target: 'finDeMachine',
+            actions: assign({ demarcheStatut: DemarchesStatutsIds.RejeteApresAbrogation }),
           },
         },
-        onDone: 'finDeMachine',
       },
-
       notificationAuDemandeurApresDecisionRejetAFaire: {
         on: {
           NOTIFIER_DEMANDEUR: 'finDeMachineIrrecevable',
