@@ -213,7 +213,7 @@ export const generateQgisToken: RestNewPostCall<'/rest/utilisateur/generateQgisT
   rootPipe.pipe(
     Effect.bind('token', () => zodParseEffect(qgisTokenValidator, idGenerate())),
     Effect.tap(({ token, pool, user }) => updateQgisToken(pool, user, token)),
-    Effect.map(({ token, user }) => ({ token, url: `https://${user.email.replace('@', '%40')}:${token}@${config().API_HOST}/titres_qgis` })),
+    Effect.map(({ token, user }) => ({ token, url: `https://${user.email.replace('@', '%40')}:${token}@${config().API_HOST}/titres_qgis?` })),
     Effect.mapError(caminoError =>
       Match.value(caminoError.message).pipe(
         Match.whenOr("Impossible d'exécuter la requête dans la base de données", 'Problème de validation de données', () => ({ ...caminoError, status: HTTP_STATUS.INTERNAL_SERVER_ERROR })),
