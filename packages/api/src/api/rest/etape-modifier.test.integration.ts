@@ -365,7 +365,7 @@ describe('etapeModifier', () => {
   })
 
   test("ne peut pas supprimer un document obligatoire d'une étape qui n'est pas en brouillon (utilisateur super)", async () => {
-    const { titreDemarcheId, titreEtapeId } = await etapeCreate(ETAPES_TYPES.avisDesCollectivites, caminoDateValidator.parse('2018-01-01'), 'axm')
+    const { titreDemarcheId, titreEtapeId } = await etapeCreate(ETAPES_TYPES.avisDesCollectivites, caminoDateValidator.parse('2018-01-01'), 'axm', ETAPE_IS_NOT_BROUILLON)
     const dir = `${process.cwd()}/files/tmp/`
 
     const fileName = `existing_temp_file_${idGenerate()}`

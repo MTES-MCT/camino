@@ -153,7 +153,7 @@ test('canBeBrouillon', () => {
       "avisDeLautoriteEnvironnementale": false,
       "avisDeMiseEnConcurrenceAuJORF": false,
       "avisDeReception": false,
-      "avisDesCollectivites": false,
+      "avisDesCollectivites": true,
       "avisDesServicesEtCommissionsConsultatives": true,
       "avisDuConseilDEtat": false,
       "avisDuConseilGeneralDeLeconomie_CGE_": true,

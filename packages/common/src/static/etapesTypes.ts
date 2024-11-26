@@ -1321,6 +1321,7 @@ const ETAPES_BROUILLONS_IDS = [
   ETAPES_TYPES.receptionDeComplements,
   ETAPES_TYPES.reponseDuDemandeur,
   ETAPES_TYPES.avisDuConseilGeneralDeLeconomie_CGE_,
+  ETAPES_TYPES.avisDesCollectivites,
 ] as const satisfies Readonly<EtapeTypeId[]>
 
 export const isEtapeDecision = (etapeTypeId: EtapeTypeId): boolean => ETAPES_DECISIONS_IDS.includes(etapeTypeId)
