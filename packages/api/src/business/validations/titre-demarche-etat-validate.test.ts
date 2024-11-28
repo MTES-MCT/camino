@@ -4,7 +4,7 @@ import { getPossiblesEtapesTypes, titreDemarcheUpdatedEtatValidate } from './tit
 import { newDemarcheId, newEtapeId } from '../../database/models/_format/id-create'
 import { EtapesTypesEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStatuts'
 import { describe, test, expect, vi } from 'vitest'
-import { caminoDateValidator, toCaminoDate } from 'camino-common/src/date'
+import { caminoDateValidator, dateAddDays, toCaminoDate } from 'camino-common/src/date'
 import { ETAPES_TYPES, EtapeTypeId } from 'camino-common/src/static/etapesTypes'
 import { ETAPE_IS_BROUILLON, ETAPE_IS_NOT_BROUILLON, etapeIdValidator } from 'camino-common/src/etape'
 import { ArmOctMachine } from '../rules-demarches/arm/oct.machine'
@@ -13,6 +13,8 @@ import { communeIdValidator, toCommuneId } from 'camino-common/src/static/commun
 import { km2Validator } from 'camino-common/src/number'
 import { ProcedureSpecifiqueMachine } from '../rules-demarches/procedure-specifique/procedure-specifique.machine'
 import { ETAPES_STATUTS } from 'camino-common/src/static/etapesStatuts'
+import { TITRES_TYPES_IDS } from 'camino-common/src/static/titresTypes'
+import { DEMARCHES_TYPES_IDS } from 'camino-common/src/static/demarchesTypes'
 
 console.warn = vi.fn()
 
@@ -1281,5 +1283,70 @@ describe('getPossiblesEtapesTypes', () => {
 
     const tested = getPossiblesEtapesTypes(machine, 'arm', 'oct', undefined, undefined, toCaminoDate('2022-07-01'), etapes)
     expect(Object.keys(tested).toSorted()).toStrictEqual(['css', 'des', 'mcb', 'mcp', 'mod', 'rde'])
+  })
+
+  const commonEtape: Pick<TitreEtapeForMachine, 'hasTitreFrom' | 'concurrence' | 'contenu' | 'communes' | 'surface' | 'demarcheIdsConsentement' | 'hasTitreFrom'> = {
+    hasTitreFrom: 'non-applicable',
+    concurrence: 'non-applicable',
+    contenu: {},
+    communes: [],
+    surface: null,
+    demarcheIdsConsentement: [],
+  } as const
+  const procedureSpecifiqueMachine = new ProcedureSpecifiqueMachine('arm', 'oct')
+  test("peut éditer une mfr sur la procédure spécifique d'une démarche bien avancée", () => {
+    const demandeId = newEtapeId('idMfr')
+    const dateDemande = toCaminoDate('2024-12-01')
+    const etapes: TitreEtapeForMachine[] = [
+      {
+        id: demandeId,
+        ordre: 1,
+        typeId: ETAPES_TYPES.demande,
+        statutId: ETAPES_STATUTS.FAIT,
+        isBrouillon: ETAPE_IS_NOT_BROUILLON,
+        date: dateDemande,
+        ...commonEtape,
+      },
+      {
+        id: newEtapeId('idEnregistrement'),
+        ordre: 2,
+        typeId: ETAPES_TYPES.enregistrementDeLaDemande,
+        statutId: ETAPES_STATUTS.FAIT,
+        date: dateAddDays(dateDemande, 1),
+        isBrouillon: ETAPE_IS_NOT_BROUILLON,
+        ...commonEtape,
+      },
+      {
+        id: newEtapeId('idRecevabilite'),
+        ordre: 3,
+        typeId: ETAPES_TYPES.recevabiliteDeLaDemande,
+        statutId: ETAPES_STATUTS.FAVORABLE,
+        date: dateAddDays(dateDemande, 2),
+        isBrouillon: ETAPE_IS_NOT_BROUILLON,
+        ...commonEtape,
+        hasTitreFrom: false,
+      },
+      {
+        id: newEtapeId('idConsentement'),
+        ordre: 4,
+        typeId: ETAPES_TYPES.demandeDeConsentement,
+        statutId: ETAPES_STATUTS.FAIT,
+        date: dateAddDays(dateDemande, 3),
+        isBrouillon: ETAPE_IS_NOT_BROUILLON,
+        ...commonEtape,
+      },
+    ]
+
+    const tested = getPossiblesEtapesTypes(
+      procedureSpecifiqueMachine,
+      TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX,
+      DEMARCHES_TYPES_IDS.Octroi,
+      ETAPES_TYPES.demande,
+      demandeId,
+      dateDemande,
+      etapes
+    )
+
+    expect(Object.keys(tested)).toStrictEqual([ETAPES_TYPES.demande])
   })
 })

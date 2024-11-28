@@ -30,7 +30,6 @@ describe('vérifie l’arbre des procédures spécifique', () => {
         paysId: 'FR',
         consentement: 'non-applicable',
         concurrence: { amIFirst: true },
-        hasTitreFrom: false,
         surface: hectareToKm2(hectareValidator.parse(10)),
       },
       ETES.enregistrementDeLaDemande.FAIT,
@@ -53,10 +52,10 @@ describe('vérifie l’arbre des procédures spécifique', () => {
   })
   test('après une recevabilité favorable pour un PER ou une concession on doit pouvoir faire une notification au demandeur et aussi mise en concurrence et consentement', () => {
     const { tree } = setDateAndOrderAndInterpretMachine(psCxmOctMachine, '1999-04-14', [
-      { ...ETES.demande.FAIT, consentement: 'à faire', concurrence: { amIFirst: true }, paysId: 'FR', hasTitreFrom: false, surface: hectareToKm2(hectareValidator.parse(10)) },
+      { ...ETES.demande.FAIT, consentement: 'à faire', concurrence: { amIFirst: true }, paysId: 'FR', surface: hectareToKm2(hectareValidator.parse(10)) },
       ETES.enregistrementDeLaDemande.FAIT,
       ETES.informationDuPrefetEtDesCollectivites.FAIT,
-      ETES.recevabiliteDeLaDemande.FAVORABLE,
+      { ...ETES.recevabiliteDeLaDemande.FAVORABLE, hasTitreFrom: false },
       ETES.notificationAuDemandeur.FAIT,
     ])
     expect(tree).toMatchInlineSnapshot(`
@@ -73,10 +72,10 @@ describe('vérifie l’arbre des procédures spécifique', () => {
 
   test('on peut notifier le demandeur apres une recevabilité favorable pour une concession suite à un PER ', () => {
     const { tree } = setDateAndOrderAndInterpretMachine(psCxmOctMachine, '1999-04-14', [
-      { ...ETES.demande.FAIT, consentement: 'non-applicable', concurrence: { amIFirst: true }, paysId: 'FR', hasTitreFrom: true, surface: hectareToKm2(hectareValidator.parse(10)) },
+      { ...ETES.demande.FAIT, consentement: 'non-applicable', concurrence: { amIFirst: true }, paysId: 'FR', surface: hectareToKm2(hectareValidator.parse(10)) },
       ETES.enregistrementDeLaDemande.FAIT,
       ETES.informationDuPrefetEtDesCollectivites.FAIT,
-      ETES.recevabiliteDeLaDemande.FAVORABLE,
+      { ...ETES.recevabiliteDeLaDemande.FAVORABLE, hasTitreFrom: true },
       ETES.notificationAuDemandeur.FAIT,
     ])
     expect(tree).toMatchInlineSnapshot(`
@@ -92,9 +91,9 @@ describe('vérifie l’arbre des procédures spécifique', () => {
   })
   test('on ne peut plus rien faire pendant que la mise en concurrence est en cours', () => {
     const { tree } = setDateAndOrderAndInterpretMachine(psCxmOctMachine, '1999-04-14', [
-      { ...ETES.demande.FAIT, consentement: 'non-applicable', concurrence: { amIFirst: true }, paysId: 'FR', hasTitreFrom: false, surface: hectareToKm2(hectareValidator.parse(10)) },
+      { ...ETES.demande.FAIT, consentement: 'non-applicable', concurrence: { amIFirst: true }, paysId: 'FR', surface: hectareToKm2(hectareValidator.parse(10)) },
       ETES.enregistrementDeLaDemande.FAIT,
-      ETES.recevabiliteDeLaDemande.FAVORABLE,
+      { ...ETES.recevabiliteDeLaDemande.FAVORABLE, hasTitreFrom: false },
       ETES.informationDuPrefetEtDesCollectivites.FAIT,
       ETES.avisDeMiseEnConcurrenceAuJORF.EN_COURS,
     ])
@@ -111,9 +110,9 @@ describe('vérifie l’arbre des procédures spécifique', () => {
   })
   test('on peut publier le résultat de la mise en concurrence, une fois celle-ci terminée', () => {
     const { tree } = setDateAndOrderAndInterpretMachine(psCxmOctMachine, '1999-04-14', [
-      { ...ETES.demande.FAIT, consentement: 'non-applicable', concurrence: { amIFirst: true }, paysId: 'FR', hasTitreFrom: false, surface: hectareToKm2(hectareValidator.parse(10)) },
+      { ...ETES.demande.FAIT, consentement: 'non-applicable', concurrence: { amIFirst: true }, paysId: 'FR', surface: hectareToKm2(hectareValidator.parse(10)) },
       ETES.enregistrementDeLaDemande.FAIT,
-      ETES.recevabiliteDeLaDemande.FAVORABLE,
+      { ...ETES.recevabiliteDeLaDemande.FAVORABLE, hasTitreFrom: false },
       ETES.informationDuPrefetEtDesCollectivites.FAIT,
       ETES.notificationAuDemandeur.FAIT,
       ETES.avisDeMiseEnConcurrenceAuJORF.TERMINE,
@@ -140,9 +139,9 @@ describe('vérifie l’arbre des procédures spécifique', () => {
   })
   test('on peut programmer une mise en concurrence', () => {
     const { tree } = setDateAndOrderAndInterpretMachine(psCxmOctMachine, '1999-04-14', [
-      { ...ETES.demande.FAIT, consentement: 'non-applicable', concurrence: { amIFirst: true }, paysId: 'FR', hasTitreFrom: false, surface: hectareToKm2(hectareValidator.parse(10)) },
+      { ...ETES.demande.FAIT, consentement: 'non-applicable', concurrence: { amIFirst: true }, paysId: 'FR', surface: hectareToKm2(hectareValidator.parse(10)) },
       ETES.enregistrementDeLaDemande.FAIT,
-      ETES.recevabiliteDeLaDemande.FAVORABLE,
+      { ...ETES.recevabiliteDeLaDemande.FAVORABLE, hasTitreFrom: false },
       ETES.informationDuPrefetEtDesCollectivites.FAIT,
       ETES.avisDeMiseEnConcurrenceAuJORF.PROGRAMME,
     ])
@@ -160,9 +159,9 @@ describe('vérifie l’arbre des procédures spécifique', () => {
 
   test('on peut rejeter à la fin de la mise en concurrence', () => {
     const { tree } = setDateAndOrderAndInterpretMachine(psCxmOctMachine, '1999-04-14', [
-      { ...ETES.demande.FAIT, consentement: 'non-applicable', concurrence: { amIFirst: true }, paysId: 'FR', hasTitreFrom: false, surface: hectareToKm2(hectareValidator.parse(10)) },
+      { ...ETES.demande.FAIT, consentement: 'non-applicable', concurrence: { amIFirst: true }, paysId: 'FR', surface: hectareToKm2(hectareValidator.parse(10)) },
       ETES.enregistrementDeLaDemande.FAIT,
-      ETES.recevabiliteDeLaDemande.FAVORABLE,
+      { ...ETES.recevabiliteDeLaDemande.FAVORABLE, hasTitreFrom: false },
       ETES.informationDuPrefetEtDesCollectivites.FAIT,
       ETES.avisDeMiseEnConcurrenceAuJORF.TERMINE,
       ETES.resultatMiseEnConcurrence.REJETE,
@@ -187,11 +186,10 @@ describe('vérifie l’arbre des procédures spécifique', () => {
           consentement: 'non-applicable',
           concurrence: { amIFirst: true },
           paysId: 'FR',
-          hasTitreFrom: false,
           surface: hectareToKm2(hectareValidator.parse(10)),
         },
         ETES.enregistrementDeLaDemande.FAIT,
-        ETES.recevabiliteDeLaDemande.FAVORABLE,
+        { ...ETES.recevabiliteDeLaDemande.FAVORABLE, hasTitreFrom: false },
         ETES.notificationAuDemandeur.FAIT,
       ])
     ).toThrowErrorMatchingInlineSnapshot(
@@ -205,12 +203,11 @@ describe('vérifie l’arbre des procédures spécifique', () => {
         consentement: 'non-applicable',
         concurrence: { amIFirst: true },
         paysId: 'FR',
-        hasTitreFrom: false,
         surface: hectareToKm2(hectareValidator.parse(10)),
       },
       ETES.enregistrementDeLaDemande.FAIT,
       ETES.informationDuPrefetEtDesCollectivites.FAIT,
-      ETES.recevabiliteDeLaDemande.FAVORABLE,
+      { ...ETES.recevabiliteDeLaDemande.FAVORABLE, hasTitreFrom: false },
     ])
 
     expect(tree).toMatchInlineSnapshot(`
@@ -225,9 +222,9 @@ describe('vérifie l’arbre des procédures spécifique', () => {
   })
   test('après la recevabilité favorable la démarche reste confidentielle si il y a une mise en concurrence', () => {
     const { tree } = setDateAndOrderAndInterpretMachine(psCxmOctMachine, '1999-04-14', [
-      { ...ETES.demande.FAIT, consentement: 'non-applicable', concurrence: { amIFirst: true }, paysId: 'FR', hasTitreFrom: false, surface: hectareToKm2(hectareValidator.parse(10)) },
+      { ...ETES.demande.FAIT, consentement: 'non-applicable', concurrence: { amIFirst: true }, paysId: 'FR', surface: hectareToKm2(hectareValidator.parse(10)) },
       ETES.enregistrementDeLaDemande.FAIT,
-      ETES.recevabiliteDeLaDemande.FAVORABLE,
+      { ...ETES.recevabiliteDeLaDemande.FAVORABLE, hasTitreFrom: false },
       ETES.informationDuPrefetEtDesCollectivites.FAIT,
     ])
 
@@ -249,11 +246,10 @@ describe('vérifie l’arbre des procédures spécifique', () => {
         consentement: 'non-applicable',
         concurrence: { amIFirst: false, demarcheConcurrenteVisibilite: 'publique' },
         paysId: 'FR',
-        hasTitreFrom: false,
         surface: hectareToKm2(hectareValidator.parse(10)),
       },
       ETES.enregistrementDeLaDemande.FAIT,
-      ETES.recevabiliteDeLaDemande.FAVORABLE,
+      { ...ETES.recevabiliteDeLaDemande.FAVORABLE, hasTitreFrom: false },
       ETES.informationDuPrefetEtDesCollectivites.FAIT,
     ])
     expect(tree).toMatchInlineSnapshot(`
@@ -274,12 +270,11 @@ describe('vérifie l’arbre des procédures spécifique', () => {
         consentement: 'non-applicable',
         concurrence: { amIFirst: false, demarcheConcurrenteVisibilite: 'confidentielle' },
         paysId: 'FR',
-        hasTitreFrom: false,
         surface: hectareToKm2(hectareValidator.parse(10)),
       },
       ETES.enregistrementDeLaDemande.FAIT,
       ETES.informationDuPrefetEtDesCollectivites.FAIT,
-      ETES.recevabiliteDeLaDemande.FAVORABLE,
+      { ...ETES.recevabiliteDeLaDemande.FAVORABLE, hasTitreFrom: false },
     ])
 
     expect(tree).toMatchInlineSnapshot(`
@@ -299,11 +294,10 @@ describe('vérifie l’arbre des procédures spécifique', () => {
         consentement: 'non-applicable',
         concurrence: { amIFirst: true },
         paysId: 'FR',
-        hasTitreFrom: false,
         surface: hectareToKm2(hectareValidator.parse(10)),
       },
       ETES.enregistrementDeLaDemande.FAIT,
-      ETES.recevabiliteDeLaDemande.FAVORABLE,
+      { ...ETES.recevabiliteDeLaDemande.FAVORABLE, hasTitreFrom: false },
       ETES.avisDesCollectivites.FAIT,
       ETES.avisDesServicesEtCommissionsConsultatives.FAIT,
       ETES.avisDuPrefet.FAVORABLE,
@@ -330,11 +324,10 @@ describe('vérifie l’arbre des procédures spécifique', () => {
         consentement: 'non-applicable',
         concurrence: { amIFirst: true },
         paysId: 'FR',
-        hasTitreFrom: true,
         surface: hectareToKm2(hectareValidator.parse(10)),
       },
       ETES.enregistrementDeLaDemande.FAIT,
-      ETES.recevabiliteDeLaDemande.FAVORABLE,
+      { ...ETES.recevabiliteDeLaDemande.FAVORABLE, hasTitreFrom: true },
       ETES.informationDuPrefetEtDesCollectivites.FAIT,
     ])
 
@@ -356,11 +349,10 @@ describe('vérifie l’arbre des procédures spécifique', () => {
         consentement: 'non-applicable',
         concurrence: { amIFirst: true },
         paysId: 'FR',
-        hasTitreFrom: false,
         surface: hectareToKm2(hectareValidator.parse(10)),
       },
       ETES.enregistrementDeLaDemande.FAIT,
-      ETES.recevabiliteDeLaDemande.FAVORABLE,
+      { ...ETES.recevabiliteDeLaDemande.FAVORABLE, hasTitreFrom: false },
       ETES.informationDuPrefetEtDesCollectivites.FAIT,
     ])
 
@@ -381,11 +373,10 @@ describe('vérifie l’arbre des procédures spécifique', () => {
         consentement: 'non-applicable',
         concurrence: { amIFirst: true },
         paysId: 'FR',
-        hasTitreFrom: false,
         surface: hectareToKm2(hectareValidator.parse(10)),
       },
       ETES.enregistrementDeLaDemande.FAIT,
-      ETES.recevabiliteDeLaDemande.FAVORABLE,
+      { ...ETES.recevabiliteDeLaDemande.FAVORABLE, hasTitreFrom: false },
       ETES.avisDesCollectivites.FAIT,
       ETES.avisDesServicesEtCommissionsConsultatives.FAIT,
       ETES.avisDuPrefet.FAVORABLE,
@@ -418,11 +409,10 @@ describe('vérifie l’arbre des procédures spécifique', () => {
         consentement: 'non-applicable',
         concurrence: { amIFirst: true },
         paysId: 'FR',
-        hasTitreFrom: false,
         surface: hectareToKm2(hectareValidator.parse(10)),
       },
       ETES.enregistrementDeLaDemande.FAIT,
-      ETES.recevabiliteDeLaDemande.FAVORABLE,
+      { ...ETES.recevabiliteDeLaDemande.FAVORABLE, hasTitreFrom: false },
       ETES.avisDesCollectivites.FAIT,
       ETES.avisDesServicesEtCommissionsConsultatives.FAIT,
       ETES.avisDuPrefet.FAVORABLE,
@@ -449,11 +439,10 @@ describe('vérifie l’arbre des procédures spécifique', () => {
         consentement: 'non-applicable',
         concurrence: { amIFirst: true },
         paysId: 'FR',
-        hasTitreFrom: false,
         surface: hectareToKm2(hectareValidator.parse(10)),
       },
       ETES.enregistrementDeLaDemande.FAIT,
-      ETES.recevabiliteDeLaDemande.FAVORABLE,
+      { ...ETES.recevabiliteDeLaDemande.FAVORABLE, hasTitreFrom: false },
       ETES.avisDesCollectivites.FAIT,
       ETES.avisDesServicesEtCommissionsConsultatives.FAIT,
       ETES.avisDuPrefet.FAVORABLE,
@@ -483,11 +472,10 @@ describe('vérifie l’arbre des procédures spécifique', () => {
         consentement: 'non-applicable',
         concurrence: { amIFirst: true },
         paysId: 'FR',
-        hasTitreFrom: false,
         surface: hectareToKm2(hectareValidator.parse(10)),
       },
       ETES.enregistrementDeLaDemande.FAIT,
-      ETES.recevabiliteDeLaDemande.FAVORABLE,
+      { ...ETES.recevabiliteDeLaDemande.FAVORABLE, hasTitreFrom: false },
       ETES.avisDesCollectivites.FAIT,
       ETES.avisDesServicesEtCommissionsConsultatives.FAIT,
       ETES.avisDuPrefet.FAVORABLE,
@@ -515,11 +503,10 @@ describe('vérifie l’arbre des procédures spécifique', () => {
         consentement: 'non-applicable',
         concurrence: { amIFirst: true },
         paysId: 'FR',
-        hasTitreFrom: false,
         surface: hectareToKm2(hectareValidator.parse(10)),
       },
       ETES.enregistrementDeLaDemande.FAIT,
-      ETES.recevabiliteDeLaDemande.FAVORABLE,
+      { ...ETES.recevabiliteDeLaDemande.FAVORABLE, hasTitreFrom: false },
       ETES.avisDesCollectivites.FAIT,
       ETES.avisDesServicesEtCommissionsConsultatives.FAIT,
       ETES.avisDuPrefet.FAVORABLE,
@@ -547,11 +534,10 @@ describe('vérifie l’arbre des procédures spécifique', () => {
         consentement: 'non-applicable',
         concurrence: { amIFirst: true },
         paysId: 'FR',
-        hasTitreFrom: false,
         surface: hectareToKm2(hectareValidator.parse(10)),
       },
       ETES.enregistrementDeLaDemande.FAIT,
-      ETES.recevabiliteDeLaDemande.FAVORABLE,
+      { ...ETES.recevabiliteDeLaDemande.FAVORABLE, hasTitreFrom: false },
       ETES.avisDesCollectivites.FAIT,
       ETES.avisDesServicesEtCommissionsConsultatives.FAIT,
       ETES.avisDuPrefet.FAVORABLE,
@@ -584,11 +570,10 @@ describe('vérifie l’arbre des procédures spécifique', () => {
         consentement: 'non-applicable',
         concurrence: { amIFirst: true },
         paysId: 'FR',
-        hasTitreFrom: false,
         surface: hectareToKm2(hectareValidator.parse(10)),
       },
       ETES.enregistrementDeLaDemande.FAIT,
-      ETES.recevabiliteDeLaDemande.FAVORABLE,
+      { ...ETES.recevabiliteDeLaDemande.FAVORABLE, hasTitreFrom: false },
       ETES.avisDesCollectivites.FAIT,
       ETES.avisDesServicesEtCommissionsConsultatives.FAIT,
       ETES.avisDuPrefet.FAVORABLE,
@@ -611,11 +596,10 @@ describe('vérifie l’arbre des procédures spécifique', () => {
         consentement: 'à faire',
         concurrence: { amIFirst: true },
         paysId: 'FR',
-        hasTitreFrom: false,
         surface: hectareToKm2(hectareValidator.parse(10)),
       },
       ETES.enregistrementDeLaDemande.FAIT,
-      ETES.recevabiliteDeLaDemande.FAVORABLE,
+      { ...ETES.recevabiliteDeLaDemande.FAVORABLE, hasTitreFrom: false },
       ETES.demandeDeConsentement.FAIT,
       ETES.avisDesCollectivites.FAIT,
       ETES.avisDesServicesEtCommissionsConsultatives.FAIT,
@@ -655,11 +639,10 @@ describe('vérifie l’arbre des procédures spécifique', () => {
         consentement: 'à faire',
         concurrence: { amIFirst: true },
         paysId: 'FR',
-        hasTitreFrom: false,
         surface: hectareToKm2(hectareValidator.parse(10)),
       },
       ETES.enregistrementDeLaDemande.FAIT,
-      ETES.recevabiliteDeLaDemande.FAVORABLE,
+      { ...ETES.recevabiliteDeLaDemande.FAVORABLE, hasTitreFrom: false },
       ETES.demandeDeConsentement.FAIT,
     ])
 
@@ -681,11 +664,10 @@ describe('vérifie l’arbre des procédures spécifique', () => {
         consentement: 'à faire',
         concurrence: { amIFirst: true },
         paysId: 'FR',
-        hasTitreFrom: false,
         surface: hectareToKm2(hectareValidator.parse(30)),
       },
       ETES.enregistrementDeLaDemande.FAIT,
-      ETES.recevabiliteDeLaDemande.FAVORABLE,
+      { ...ETES.recevabiliteDeLaDemande.FAVORABLE, hasTitreFrom: false },
       ETES.demandeDeConsentement.FAIT,
     ])
 
@@ -707,12 +689,11 @@ describe('vérifie l’arbre des procédures spécifique', () => {
         consentement: 'non-applicable',
         concurrence: { amIFirst: true },
         paysId: 'FR',
-        hasTitreFrom: false,
         surface: hectareToKm2(hectareValidator.parse(10)),
       },
       ETES.enregistrementDeLaDemande.FAIT,
       ETES.informationDuPrefetEtDesCollectivites.FAIT,
-      ETES.recevabiliteDeLaDemande.FAVORABLE,
+      { ...ETES.recevabiliteDeLaDemande.FAVORABLE, hasTitreFrom: false },
       ETES.notificationAuDemandeur.FAIT,
       ETES.avisDeMiseEnConcurrenceAuJORF.TERMINE,
       ETES.resultatMiseEnConcurrence.ACCEPTE,
@@ -767,11 +748,10 @@ describe('vérifie l’arbre des procédures spécifique', () => {
         consentement: 'non-applicable',
         concurrence: { amIFirst: true },
         paysId: 'GF',
-        hasTitreFrom: false,
         surface: hectareToKm2(hectareValidator.parse(10)),
       },
       ETES.enregistrementDeLaDemande.FAIT,
-      ETES.recevabiliteDeLaDemande.FAVORABLE,
+      { ...ETES.recevabiliteDeLaDemande.FAVORABLE, hasTitreFrom: false },
       ETES.informationDuPrefetEtDesCollectivites.FAIT,
       ETES.avisDeMiseEnConcurrenceAuJORF.TERMINE,
       ETES.resultatMiseEnConcurrence.ACCEPTE,
@@ -828,11 +808,10 @@ describe('vérifie l’arbre des procédures spécifique', () => {
         consentement: 'non-applicable',
         concurrence: { amIFirst: true },
         paysId: 'FR',
-        hasTitreFrom: false,
         surface: hectareToKm2(hectareValidator.parse(10)),
       },
       ETES.enregistrementDeLaDemande.FAIT,
-      ETES.recevabiliteDeLaDemande.FAVORABLE,
+      { ...ETES.recevabiliteDeLaDemande.FAVORABLE, hasTitreFrom: false },
       ETES.avisDesCollectivites.FAIT,
       ETES.avisDesServicesEtCommissionsConsultatives.FAIT,
       ETES.avisDuPrefet.FAVORABLE,

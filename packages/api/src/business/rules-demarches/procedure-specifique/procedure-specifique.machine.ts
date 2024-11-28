@@ -9,7 +9,7 @@ import { TITRES_TYPES_TYPES_IDS } from 'camino-common/src/static/titresTypesType
 import { ETAPES_STATUTS, EtapeStatutId } from 'camino-common/src/static/etapesStatuts'
 import { hectareToKm2, hectareValidator, KM2, km2Validator } from 'camino-common/src/number'
 import { CaminoDate } from 'camino-common/src/date'
-import { isNullOrUndefined } from 'camino-common/src/typescript-tools'
+import { getEntriesHardcore, isNullOrUndefined } from 'camino-common/src/typescript-tools'
 import { canHaveMiseEnConcurrence } from 'camino-common/src/demarche'
 import { Consentement, DemarcheVisibilite } from 'camino-common/src/etape-form'
 import { PAYS_IDS, PaysId } from 'camino-common/src/static/pays'
@@ -32,15 +32,18 @@ type FaireMiseEnConcurrence = {
 type FaireDemande = {
   concurrence: Concurrence
   consentement: Consentement
-  hasTitreFrom: boolean
   paysId: PaysId
   surface: KM2
   type: 'FAIRE_DEMANDE'
 }
+type FaireRecevabiliteFavorable = {
+  type: 'FAIRE_RECEVABILITE_FAVORABLE'
+  hasTitreFrom: boolean
+}
 type ProcedureSpecifiqueXStateEvent =
   | FaireDemande
   | { type: 'ENREGISTRER_DEMANDE' }
-  | { type: 'FAIRE_RECEVABILITE_FAVORABLE' }
+  | FaireRecevabiliteFavorable
   | { type: 'FAIRE_RECEVABILITE_DEFAVORABLE' }
   | { type: 'FAIRE_DEMANDE_DE_COMPLEMENTS' }
   | { type: 'RECEVOIR_COMPLEMENTS' }
@@ -116,6 +119,25 @@ const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
   RENDRE_INFORMATION_DU_PREFET_ET_DES_COLLECTIVITES: { db: ETES.informationDuPrefetEtDesCollectivites, mainStep: true },
 }
 
+const LIMITE_SURFACE_AXM = hectareValidator.parse(25)
+const keys = {
+  concurrence: [{ amIFirst: false, demarcheConcurrenteVisibilite: 'publique' }, { amIFirst: true }],
+  consentement: ['non-applicable', 'à faire'],
+  paysId: ['FR', 'GF'],
+  surface: [hectareToKm2(hectareValidator.parse(LIMITE_SURFACE_AXM - 1)), hectareToKm2(hectareValidator.parse(LIMITE_SURFACE_AXM + 1))],
+} as const satisfies { [key in keyof Omit<FaireDemande, 'type'>]: FaireDemande[key][] }
+
+const getCombinaisonsFaireDemande = (): FaireDemande[] => {
+  return getEntriesHardcore(keys).reduce<FaireDemande[]>(
+    (acc, [key, array]) => {
+      const value = acc.flatMap(d => array.map(e => ({ ...d, [key]: e })))
+      return value
+    },
+    // on initialise les valeurs ici parce qu'on est obligés par le typage mais elles seront écrasées par la boucle du reduce
+    [{ type: 'FAIRE_DEMANDE', concurrence: { amIFirst: true }, consentement: 'non-applicable', paysId: 'FR', surface: km2Validator.parse(0) }]
+  )
+}
+
 // basé sur https://drive.google.com/drive/u/1/folders/1U_in35zSb837xCp_fp31I0vOmb36QguL
 export class ProcedureSpecifiqueMachine extends CaminoMachine<ProcedureSpecifiqueContext, ProcedureSpecifiqueXStateEvent> {
   constructor(titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId) {
@@ -131,16 +153,20 @@ export class ProcedureSpecifiqueMachine extends CaminoMachine<ProcedureSpecifiqu
         if (isNullOrUndefined(etape.consentement)) {
           throw new Error('Le consentement est obligatoire pour faire la demande')
         }
-        if (isNullOrUndefined(etape.hasTitreFrom)) {
-          throw new Error("L'attribut hasTitreFrom est obligatoire pour faire la demande")
-        }
+
         if (isNullOrUndefined(etape.paysId)) {
           throw new Error("L'attribut paysId est obligatoire pour faire la demande")
         }
         if (isNullOrUndefined(etape.surface)) {
           throw new Error("L'attribut surface est obligatoire pour faire la demande")
         }
-        return { type: eventFromEntry, concurrence: etape.concurrence, consentement: etape.consentement, hasTitreFrom: etape.hasTitreFrom, paysId: etape.paysId, surface: etape.surface }
+        return { type: eventFromEntry, concurrence: etape.concurrence, consentement: etape.consentement, paysId: etape.paysId, surface: etape.surface }
+      }
+      case 'FAIRE_RECEVABILITE_FAVORABLE': {
+        if (isNullOrUndefined(etape.hasTitreFrom)) {
+          throw new Error("L'attribut hasTitreFrom est obligatoire pour faire la recevabilité")
+        }
+        return { type: eventFromEntry, hasTitreFrom: etape.hasTitreFrom }
       }
       default:
         return super.eventFromEntry(eventFromEntry, etape)
@@ -150,24 +176,7 @@ export class ProcedureSpecifiqueMachine extends CaminoMachine<ProcedureSpecifiqu
   override toPotentialCaminoXStateEvent(event: ProcedureSpecifiqueXStateEvent['type'], date: CaminoDate): ProcedureSpecifiqueXStateEvent[] {
     switch (event) {
       case 'FAIRE_DEMANDE':
-        return [
-          {
-            type: event,
-            concurrence: { amIFirst: false, demarcheConcurrenteVisibilite: 'publique' },
-            consentement: 'non-applicable',
-            hasTitreFrom: false,
-            paysId: 'FR',
-            surface: km2Validator.parse(12),
-          },
-          {
-            type: event,
-            concurrence: { amIFirst: false, demarcheConcurrenteVisibilite: 'publique' },
-            consentement: 'non-applicable',
-            hasTitreFrom: false,
-            paysId: 'GF',
-            surface: km2Validator.parse(12),
-          },
-        ]
+        return getCombinaisonsFaireDemande()
       case 'OUVRIR_ENQUETE_PUBLIQUE':
       case 'OUVRIR_PARTICIPATION_DU_PUBLIC':
         return [
@@ -180,6 +189,11 @@ export class ProcedureSpecifiqueMachine extends CaminoMachine<ProcedureSpecifiqu
           { type: event, status: ETAPES_STATUTS.PROGRAMME },
           { type: event, status: ETAPES_STATUTS.EN_COURS },
           { type: event, status: ETAPES_STATUTS.TERMINE },
+        ]
+      case 'FAIRE_RECEVABILITE_FAVORABLE':
+        return [
+          { type: event, hasTitreFrom: true },
+          { type: event, hasTitreFrom: false },
         ]
       default:
         return super.toPotentialCaminoXStateEvent(event, date)
@@ -195,7 +209,6 @@ interface ProcedureSpecifiqueContext extends CaminoCommonContext {
   surface: 'inconnu' | KM2
   consentement: 'inconnu' | Consentement
 }
-const LIMITE_SURFACE_AXM = hectareValidator.parse(25)
 const defaultDemarcheStatut = DemarchesStatutsIds.EnConstruction
 const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId) =>
   setup({
@@ -287,7 +300,6 @@ const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: De
             actions: assign({
               demarcheStatut: DemarchesStatutsIds.EnInstruction,
               concurrence: ({ event }) => event.concurrence,
-              hasTitreFrom: ({ event }) => event.hasTitreFrom,
               paysId: ({ event }) => event.paysId,
               consentement: ({ event }) => event.consentement,
               surface: ({ event }) => event.surface,
@@ -308,7 +320,7 @@ const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: De
             states: {
               recevabiliteAFaire: {
                 on: {
-                  FAIRE_RECEVABILITE_FAVORABLE: 'recevabiliteFavorableFaite',
+                  FAIRE_RECEVABILITE_FAVORABLE: { target: 'recevabiliteFavorableFaite', actions: assign({ hasTitreFrom: ({ event }) => event.hasTitreFrom }) },
                   FAIRE_RECEVABILITE_DEFAVORABLE: 'demandeDeComplementsAFaire',
                 },
               },
@@ -325,7 +337,7 @@ const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: De
               },
               recevabiliteOuIrrecevabiliteAFaire: {
                 on: {
-                  FAIRE_RECEVABILITE_FAVORABLE: 'recevabiliteFavorableFaite',
+                  FAIRE_RECEVABILITE_FAVORABLE: { target: 'recevabiliteFavorableFaite', actions: assign({ hasTitreFrom: ({ event }) => event.hasTitreFrom }) },
                   FAIRE_RECEVABILITE_DEFAVORABLE: 'demandeDeComplementsAFaire',
                   FAIRE_DECLARATION_IRRECEVABILITE: '#finDeMachineIrrecevable',
                 },

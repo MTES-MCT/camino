@@ -13,6 +13,7 @@ import { EtapeId, etapeSlugValidator } from 'camino-common/src/etape'
 import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined } from 'camino-common/src/typescript-tools'
 import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes'
 import { DemarcheId } from 'camino-common/src/demarche'
+import { ETAPES_STATUTS } from 'camino-common/src/static/etapesStatuts'
 
 export interface DBTitresEtapes extends ITitreEtape {
   archive: boolean
@@ -128,13 +129,13 @@ class TitresEtapes extends Model {
       this.concurrence = { amIFirst: true }
     }
 
-    if (this.typeId !== ETAPES_TYPES.demande) {
-      this.hasTitreFrom = 'non-applicable'
-    } else {
+    if (this.typeId === ETAPES_TYPES.recevabiliteDeLaDemande && this.statutId === ETAPES_STATUTS.FAVORABLE) {
       const titreFromId = await context.transaction.raw('select tt.titre_from_id from titres_demarches td join titres__titres tt on td.titre_id = tt.titre_to_id where td.id= ?', [
         this.titreDemarcheId,
       ])
       this.hasTitreFrom = isNotNullNorUndefinedNorEmpty(titreFromId.rows)
+    } else {
+      this.hasTitreFrom = 'non-applicable'
     }
     // BUG Objection
     // Obligé de vérifier qu’on a pas déjà un geojson correct, des fois dans le $afterFind on a déjà ce qu’on souhaite
