@@ -7,7 +7,7 @@ import {
   getSections,
   numberElementValidator,
   radioElementValidator,
-  selectElementWithOptionsValidator,
+  selectElementValidator,
   textElementValidator,
   urlElementValidator,
 } from './static/titresTypes_demarchesTypes_etapesTypes/sections'
@@ -35,7 +35,7 @@ const checkboxElementWithValueValidator = checkboxElementValidator.extend({ valu
 
 const checkboxesElementWithValueValidator = checkboxesElementValidator.extend({ value: z.array(z.string()) })
 
-const selectElementWithValueValidator = selectElementWithOptionsValidator.extend({
+const selectElementWithValueValidator = selectElementValidator.extend({
   value: z.string().nullable(),
 })
 const elementWithValueValidator = z.union([

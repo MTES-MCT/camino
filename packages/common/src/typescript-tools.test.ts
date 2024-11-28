@@ -1,4 +1,14 @@
-import { isNonEmptyArrayAndDeepReadonly, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefinedOrEmpty, memoize, onlyUnique, stringArrayEquals, toSorted } from './typescript-tools'
+import {
+  exhaustiveCheck,
+  isNonEmptyArrayAndDeepReadonly,
+  isNotNullNorUndefined,
+  isNotNullNorUndefinedNorEmpty,
+  isNullOrUndefinedOrEmpty,
+  memoize,
+  onlyUnique,
+  stringArrayEquals,
+  toSorted,
+} from './typescript-tools'
 import { Role } from './roles'
 import { AdministrationId } from './static/administrations'
 import { Departements } from './static/departement'
@@ -13,6 +23,13 @@ describe('isNotNullNorUndefined', () => {
   test('isNotNullNorUndefined', () => {
     const tested: { role: Role; administrationId: undefined | null | AdministrationId } | undefined | null = { role: 'admin', administrationId: null }
     expect(isNotNullNorUndefined(tested)).toBe(true)
+  })
+})
+
+describe('exhaustiveCheck', () => {
+  test('lance une exception', () => {
+    // @ts-ignore
+    expect(() => exhaustiveCheck('toto')).toThrowErrorMatchingInlineSnapshot(`[Error: Unreachable case: "toto"]`)
   })
 })
 

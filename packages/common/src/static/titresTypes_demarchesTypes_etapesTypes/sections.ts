@@ -3,13 +3,16 @@ import { DEMARCHES_TYPES_IDS, DemarcheTypeId } from '../demarchesTypes'
 import { TITRES_TYPES_IDS, TitreTypeId } from '../titresTypes'
 import { ETAPES_TYPES, ETAPES_WITH_AUTOMATIC_STATUTS, EtapeTypeId } from '../etapesTypes'
 import { TDEType } from './index'
-import { DeepReadonly, exhaustiveCheck, isNotNullNorUndefined } from '../../typescript-tools'
-import { uniteIdValidator, UNITES, Unites } from '../unites'
-import { sortedDevises } from '../devise'
+import { DeepReadonly, isNotNullNorUndefined, NonEmptyArray } from '../../typescript-tools'
+import { UniteId, uniteIdValidator, Unites } from '../unites'
+import { DeviseId, sortedDevises } from '../devise'
 import { z } from 'zod'
 import { ElementWithValue, SectionWithValue } from '../../sections'
 import { Contenu } from '../../permissions/sections'
 import { FlattenEtape } from '../../etape-form'
+
+const sectionUnites = Object.values(Unites).map(({ id, nom }) => ({ id, nom })) as NonEmptyArray<{ id: UniteId; nom: string }>
+const sectionDevises = sortedDevises as NonEmptyArray<{ id: DeviseId; nom: string }>
 
 const gestionDeLaDemandeDeComplements: Section[] = [
   {
@@ -213,7 +216,7 @@ const proprietesDeLaConcession: Section[] = [
     nom: 'Propriétés de la concession',
     elements: [
       { id: 'volume', nom: 'Volume', type: 'number', optionnel: true },
-      { id: 'volumeUniteId', nom: 'Unité du volume', type: 'select', optionnel: true, description: '', valeursMetasNom: 'unites' },
+      { id: 'volumeUniteId', nom: 'Unité du volume', type: 'select', optionnel: true, description: '', options: sectionUnites },
     ],
   },
 ]
@@ -224,7 +227,7 @@ const proprietesDuPermisExclusifDeRecherches: Section[] = [
     nom: 'Propriétés du permis exclusif de recherches',
     elements: [
       { id: 'engagement', nom: 'Engagement', type: 'number', optionnel: true },
-      { id: 'engagementDeviseId', nom: "Devise de l'engagement", type: 'select', optionnel: true, description: '', valeursMetasNom: 'devises' },
+      { id: 'engagementDeviseId', nom: "Devise de l'engagement", type: 'select', optionnel: true, description: '', options: sectionDevises },
     ],
   },
 ]
@@ -235,7 +238,7 @@ const proprietesDuPermisDExploitation: Section[] = [
     nom: "Propriétés du permis d'exploitation",
     elements: [
       { id: 'volume', nom: 'Volume', type: 'number', optionnel: true, description: 'Volume' },
-      { id: 'volumeUniteId', nom: 'Unité du volume', type: 'select', optionnel: true, description: '', valeursMetasNom: 'unites' },
+      { id: 'volumeUniteId', nom: 'Unité du volume', type: 'select', optionnel: true, description: '', options: sectionUnites },
     ],
   },
 ]
@@ -509,7 +512,7 @@ const TDESections = {
           nom: "Propriétés de l'arrêté d'ouverture de travaux",
           elements: [
             { id: 'volume', nom: 'Volume', type: 'number', optionnel: true },
-            { id: 'volumeUniteId', nom: 'Unité du volume', type: 'select', optionnel: true, description: '', valeursMetasNom: 'unites' },
+            { id: 'volumeUniteId', nom: 'Unité du volume', type: 'select', optionnel: true, description: '', options: sectionUnites },
           ],
         },
       ],
@@ -980,22 +983,15 @@ export const checkboxElementValidator = basicElementValidator.extend({ type: z.l
 export const checkboxesElementValidator = basicElementValidator.extend({
   type: z.literal('checkboxes'),
   options: z.array(z.object({ id: z.string(), nom: z.string() })),
-  optionnel: z.literal(false).optional().default(false),
+  // TODO 2024-06-20: virer le optional quand on a viré la colonne sections dans la table activités
+  optionnel: z.boolean().optional().default(false),
 })
 
-const isSelectElementWithMetas = (element: DeepReadonly<SelectElement>): element is SelectElementWithMetas => 'valeursMetasNom' in element
-const isSelectElementWithOptions = (element: DeepReadonly<SelectElement>): element is SelectElementWithOptions => 'options' in element
+export const selectElementValidator = basicElementValidator.extend({ type: z.literal('select'), options: z.array(z.object({ id: z.string(), nom: z.string() })).nonempty() })
 
-const selectElementWithMetasValidator = basicElementValidator.extend({ type: z.literal('select'), valeursMetasNom: z.enum(['devises', 'unites']) })
-type SelectElementWithMetas = z.infer<typeof selectElementWithMetasValidator>
-
-export const selectElementWithOptionsValidator = basicElementValidator.extend({ type: z.literal('select'), options: z.array(z.object({ id: z.string(), nom: z.string() })).nonempty() })
-type SelectElementWithOptions = z.infer<typeof selectElementWithOptionsValidator>
-
-const selectElementValidator = z.union([selectElementWithMetasValidator, selectElementWithOptionsValidator])
 type SelectElement = z.infer<typeof selectElementValidator>
 
-const sectionsElementValidator = z.union([
+const sectionsElementValidator = z.discriminatedUnion('type', [
   dateElementValidator,
   textElementValidator,
   urlElementValidator,
@@ -1039,21 +1035,8 @@ export const getSections = (titreTypeId: TitreTypeId | undefined, demarcheTypeId
   }
 }
 
-const getElementValeurs = (element: DeepReadonly<SelectElement>): { id: string; nom: string }[] => {
-  if (isSelectElementWithMetas(element)) {
-    switch (element.valeursMetasNom) {
-      case 'devises':
-        return sortedDevises
-      case 'unites':
-        return UNITES
-      default:
-        exhaustiveCheck(element.valeursMetasNom)
-    }
-  } else if (isSelectElementWithOptions(element)) {
-    return element.options
-  }
-
-  return []
+const getElementValeurs = (element: DeepReadonly<SelectElement>): DeepReadonly<{ id: string; nom: string }[]> => {
+  return element.options
 }
 
 export const getElementWithValue = (sectionsWithValue: SectionWithValue[], sectionId: string, elementId: string): ElementWithValue | null => {
@@ -1093,6 +1076,7 @@ export const getSectionsWithValue = (sections: DeepReadonly<Section[]>, contenu:
           }
         }
       } else if (element.type === 'select') {
+        // @ts-ignore FIXME typescript est perdu ici
         optionsObject.options = getElementValeurs(element)
       }
 
