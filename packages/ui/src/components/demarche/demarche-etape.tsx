@@ -10,11 +10,11 @@ import { EtapeStatut } from '../_common/etape-statut'
 import { PropDuree } from '../etape/prop-duree'
 import { SubstancesLegale } from 'camino-common/src/static/substancesLegales'
 import { EtapePropEntreprisesItem, EtapePropItem } from '../etape/etape-prop-item'
-import { DemarcheEtape as CommonDemarcheEtape, DemarcheConsentement, DemarcheId } from 'camino-common/src/demarche'
+import { DemarcheEtape as CommonDemarcheEtape, DemarcheConsentement, demarcheEnregistrementDemandeDateFind, DemarcheId } from 'camino-common/src/demarche'
 import { DsfrPerimetre, TabId } from '../_common/dsfr-perimetre'
 import { TitreSlug } from 'camino-common/src/validators/titres'
 import { numberFormat } from 'camino-common/src/number'
-import { OmitDistributive, getValues, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
+import { OmitDistributive, getValues, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined } from 'camino-common/src/typescript-tools'
 import { ElementWithValue, valeurFind } from 'camino-common/src/sections'
 import { EtapeDocuments } from '../etape/etape-documents'
 import { isEntrepriseOrBureauDEtude, User } from 'camino-common/src/roles'
@@ -173,9 +173,16 @@ export const DemarcheEtape = defineComponent<Props>(props => {
         contenu[section.id]![element.id] = { value: elementValue, heritee: false, etapeHeritee: null }
       })
     })
+
+    const firstEtapeDate = demarcheEnregistrementDemandeDateFind(props.demarche.etapes.map(({ date, etape_type_id }) => ({ date, typeId: etape_type_id })))
+    if (isNullOrUndefined(firstEtapeDate)) {
+      return false
+    }
+
     return canDeposeEtape(
       props.user,
       { typeId: props.titre.typeId, titreStatutId: props.titre.titreStatutId, titulaires: props.demarche.titulaireIds, administrationsLocales: props.demarche.administrationsLocales },
+      props.demarche.id,
       props.demarche.demarche_type_id,
       {
         amodiataires: { value: amodiataireIds ?? [], heritee: false, etapeHeritee: null },
@@ -207,7 +214,8 @@ export const DemarcheEtape = defineComponent<Props>(props => {
       props.etape.entreprises_documents,
       props.demarche.sdom_zones,
       props.demarche.communes,
-      props.etape.avis_documents
+      props.etape.avis_documents,
+      firstEtapeDate
     )
   })
 

@@ -1,7 +1,7 @@
 import { TitreStatutId, titreStatutIdValidator } from './static/titresStatuts'
 import { TitreReference, titreReferenceValidator } from './titres-references'
 import { etapeTypeIdValidator } from './static/etapesTypes'
-import { caminoDateValidator } from './date'
+import { caminoDateValidator, firstEtapeDateValidator } from './date'
 import { TitreTypeId, titreTypeIdValidator } from './static/titresTypes'
 import { z } from 'zod'
 import { administrationIdValidator } from './static/administrations'
@@ -150,6 +150,7 @@ export const getDemarcheByIdOrSlugValidator = z.object({
   titre_slug: titreSlugValidator,
   titre_type_id: titreTypeIdValidator,
   titre_nom: z.string(),
+  first_etape_date: firstEtapeDateValidator.nullable(),
 })
 
 export type GetDemarcheByIdOrSlug = z.infer<typeof getDemarcheByIdOrSlugValidator>

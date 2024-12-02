@@ -14,12 +14,16 @@ import { getVisibilityLabel, sortDocumentsColumn } from './etape-documents'
 import { AddEtapeDocumentPopup } from './add-etape-document-popup'
 import { User } from 'camino-common/src/roles'
 import { getDocumentsTypes } from 'camino-common/src/permissions/etape-form'
+import { FirstEtapeDate } from 'camino-common/src/date'
+import { DemarcheId } from 'camino-common/src/demarche'
 
 interface Props {
   tde: {
     titreTypeId: TitreTypeId
     demarcheTypeId: DemarcheTypeId
     etapeTypeId: EtapeTypeId
+    demarcheId: DemarcheId
+    firstEtapeDate: FirstEtapeDate
   }
   isBrouillon: EtapeBrouillon
   sdomZoneIds: DeepReadonly<SDOMZoneId[]>
@@ -78,7 +82,15 @@ const EtapeDocumentsLoaded = defineComponent<EtapeDocumentsLoadedProps>(props =>
   })
 
   const documentTypes = computed<(DocumentType | AutreDocumentType)[]>(() => {
-    return getDocumentsTypes({ typeId: props.tde.etapeTypeId }, props.tde.demarcheTypeId, props.tde.titreTypeId, props.sdomZoneIds, props.contenu.arm?.mecanise?.value === true)
+    return getDocumentsTypes(
+      { typeId: props.tde.etapeTypeId },
+      props.tde.demarcheTypeId,
+      props.tde.titreTypeId,
+      props.tde.demarcheId,
+      props.sdomZoneIds,
+      props.contenu.arm?.mecanise?.value === true,
+      props.tde.firstEtapeDate
+    )
   })
 
   const completeRequiredDocuments = computed<PropsTable['documents']>(() => {

@@ -186,6 +186,7 @@ export const PureEtapeEdition = defineComponent<Props>(props => {
               demarcheTypeId={demarche.demarche_type_id}
               titreSlug={demarche.titre_slug}
               titreTypeId={demarche.titre_type_id}
+              firstEtapeDate={demarche.first_etape_date}
               user={props.user}
               entreprises={props.entreprises}
               apiClient={props.apiClient}

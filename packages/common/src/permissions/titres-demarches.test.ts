@@ -164,6 +164,15 @@ describe('canPublishResultatMiseEnConcurrence', () => {
     `)
   })
 
+  test("pas d'étapes", () => {
+    expect(canPublishResultatMiseEnConcurrence({ ...testBlankUser, role: 'super' }, 'arm', 'oct', [], demarcheId)).toMatchInlineSnapshot(`
+      {
+        "error": "Au moins une étape est nécessaire",
+        "valid": false,
+      }
+    `)
+  })
+
   test('peut publier le résultat de la mise en concurrence', () => {
     expect(
       canPublishResultatMiseEnConcurrence(
@@ -188,7 +197,7 @@ describe('canPublishResultatMiseEnConcurrence', () => {
     `)
   })
 
-  test('ne peut publier pas le résultat de la mise en concurrence si déjà existant', () => {
+  test('ne peut pas publier le résultat de la mise en concurrence si déjà existant', () => {
     expect(
       canPublishResultatMiseEnConcurrence(
         { ...testBlankUser, role: 'editeur', administrationId: 'aut-mrae-guyane-01' },

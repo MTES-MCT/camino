@@ -17,7 +17,7 @@ import {
   sectionsStepIsVisible,
 } from './etape-form'
 import { ETAPE_IS_BROUILLON, ETAPE_IS_NOT_BROUILLON, etapeDocumentIdValidator } from '../etape'
-import { toCaminoDate } from '../date'
+import { firstEtapeDateValidator, toCaminoDate } from '../date'
 import { testBlankUser } from '../tests-utils'
 import { entrepriseIdValidator } from '../entreprise'
 import { communeIdValidator } from '../static/communes'
@@ -27,6 +27,7 @@ import { SUBSTANCES_FISCALES_IDS } from '../static/substancesFiscales'
 import { DEMARCHES_TYPES_IDS } from '../static/demarchesTypes'
 import { TITRES_TYPES_IDS } from '../static/titresTypes'
 import { ETAPES_TYPES } from '../static/etapesTypes'
+import { demarcheIdValidator } from '../demarche'
 
 describe('dateTypeStepIsComplete', () => {
   test.each<User>([
@@ -587,7 +588,17 @@ const axmDocumentsComplete = [
 
 const entreprise1Id = entrepriseIdValidator.parse('id1')
 test('etapeDocumentsStepIsComplete', () => {
-  expect(etapeDocumentsStepIsComplete({ typeId: 'cac', contenu: {}, isBrouillon: ETAPE_IS_NOT_BROUILLON }, 'oct', 'arm', [{ etape_document_type_id: 'dec' }], [])).toMatchInlineSnapshot(`
+  expect(
+    etapeDocumentsStepIsComplete(
+      { typeId: 'cac', contenu: {}, isBrouillon: ETAPE_IS_NOT_BROUILLON },
+      'oct',
+      'arm',
+      demarcheIdValidator.parse('demarcheId'),
+      [{ etape_document_type_id: 'dec' }],
+      [],
+      firstEtapeDateValidator.parse('2022-01-01')
+    )
+  ).toMatchInlineSnapshot(`
     {
       "errors": [
         "le document "Lettre de saisine des services civils et militaires" (lcm) est obligatoire",
@@ -596,13 +607,33 @@ test('etapeDocumentsStepIsComplete', () => {
     }
   `)
 
-  expect(etapeDocumentsStepIsComplete({ typeId: 'mfr', contenu: {}, isBrouillon: ETAPE_IS_BROUILLON }, 'oct', 'axm', axmDocumentsComplete, [])).toMatchInlineSnapshot(`
+  expect(
+    etapeDocumentsStepIsComplete(
+      { typeId: 'mfr', contenu: {}, isBrouillon: ETAPE_IS_BROUILLON },
+      'oct',
+      'axm',
+      demarcheIdValidator.parse('demarcheId'),
+      axmDocumentsComplete,
+      [],
+      firstEtapeDateValidator.parse('2022-01-01')
+    )
+  ).toMatchInlineSnapshot(`
     {
       "valid": true,
     }
   `)
 
-  expect(etapeDocumentsStepIsComplete({ typeId: 'pqr', contenu: {}, isBrouillon: ETAPE_IS_BROUILLON }, 'oct', 'axm', [], [])).toMatchInlineSnapshot(`
+  expect(
+    etapeDocumentsStepIsComplete(
+      { typeId: 'pqr', contenu: {}, isBrouillon: ETAPE_IS_BROUILLON },
+      'oct',
+      'axm',
+      demarcheIdValidator.parse('demarcheId'),
+      [],
+      [],
+      firstEtapeDateValidator.parse('2022-01-01')
+    )
+  ).toMatchInlineSnapshot(`
     {
       "valid": true,
     }
@@ -691,7 +722,7 @@ test('entrepriseDocumentsStepIsComplete', () => {
 })
 
 test('getDocumentsTypes', () => {
-  expect(getDocumentsTypes({ typeId: 'cac' }, 'oct', 'axm', [], false)).toMatchInlineSnapshot(`
+  expect(getDocumentsTypes({ typeId: 'cac' }, 'oct', 'axm', demarcheIdValidator.parse('demarcheId'), [], false, firstEtapeDateValidator.parse('2022-01-01'))).toMatchInlineSnapshot(`
     [
       {
         "id": "lcm",
@@ -706,7 +737,7 @@ test('getDocumentsTypes', () => {
     ]
   `)
 
-  expect(getDocumentsTypes({ typeId: 'mfr' }, 'oct', 'arm', [], false)).toMatchInlineSnapshot(`
+  expect(getDocumentsTypes({ typeId: 'mfr' }, 'oct', 'arm', demarcheIdValidator.parse('demarcheId'), [], false, firstEtapeDateValidator.parse('2022-01-01'))).toMatchInlineSnapshot(`
     [
       {
         "id": "cam",
@@ -807,7 +838,7 @@ test('getDocumentsTypes', () => {
     ]
   `)
 
-  expect(getDocumentsTypes({ typeId: 'mfr' }, 'oct', 'arm', [], true)).toMatchInlineSnapshot(`
+  expect(getDocumentsTypes({ typeId: 'mfr' }, 'oct', 'arm', demarcheIdValidator.parse('demarcheId'), [], true, firstEtapeDateValidator.parse('2022-01-01'))).toMatchInlineSnapshot(`
     [
       {
         "id": "cam",
@@ -908,8 +939,9 @@ test('getDocumentsTypes', () => {
     ]
   `)
 
-  expect(getDocumentsTypes({ typeId: 'mfr' }, 'oct', 'axm', ['1'], false)).toMatchSnapshot()
-  expect(getDocumentsTypes({ typeId: 'mfr' }, 'oct', 'axm', ['2'], false)).toMatchSnapshot()
+  expect(getDocumentsTypes({ typeId: 'mfr' }, 'oct', 'axm', demarcheIdValidator.parse('demarcheId'), ['1'], false, firstEtapeDateValidator.parse('2022-01-01'))).toMatchSnapshot()
+  expect(getDocumentsTypes({ typeId: 'mfr' }, 'oct', 'axm', demarcheIdValidator.parse('demarcheId'), ['2'], false, firstEtapeDateValidator.parse('2022-01-01'))).toMatchSnapshot()
+  expect(getDocumentsTypes({ typeId: 'mfr' }, 'oct', 'axm', demarcheIdValidator.parse('demarcheId'), ['2'], false, firstEtapeDateValidator.parse('2024-12-01'))).toMatchSnapshot()
 })
 
 test('getAvisType', () => {

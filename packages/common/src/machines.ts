@@ -1,9 +1,8 @@
-import { toCaminoDate, CaminoDate } from './date'
-import { demarcheEnregistrementDemandeDateFind, DemarcheId, demarcheIdValidator } from './demarche'
+import { toCaminoDate, CaminoDate, FirstEtapeDate } from './date'
+import { DemarcheId, demarcheIdValidator } from './demarche'
 import { DemarcheTypeId, DEMARCHES_TYPES_IDS, DemarchesTypes } from './static/demarchesTypes'
-import { EtapeTypeId } from './static/etapesTypes'
 import { TitreTypeId } from './static/titresTypes'
-import { NonEmptyArray, isNullOrUndefinedOrEmpty, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, DeepReadonly, toSorted } from './typescript-tools'
+import { NonEmptyArray, isNullOrUndefinedOrEmpty, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, toSorted } from './typescript-tools'
 
 export const DATE_DEBUT_PROCEDURE_SPECIFIQUE = toCaminoDate('2400-01-01')
 export const DATE_DEBUT_PROCEDURE_SPECIFIQUE_AXM_ARM = toCaminoDate('2024-07-01')
@@ -154,14 +153,7 @@ export const demarchesDefinitions = [
   },
 ] as const satisfies readonly DemarcheDefinition[]
 
-export const machineIdFind = (
-  titreTypeId: TitreTypeId,
-  demarcheTypeId: DemarcheTypeId,
-  titreEtapes: DeepReadonly<{ date: CaminoDate; typeId: EtapeTypeId }[]> | undefined,
-  demarcheId: DemarcheId,
-  overrideDate: CaminoDate | null = null
-): CaminoMachineId | undefined => {
-  const date = demarcheEnregistrementDemandeDateFind(titreEtapes) ?? overrideDate
+export const machineIdFind = (titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId, demarcheId: DemarcheId, date: FirstEtapeDate): CaminoMachineId | undefined => {
   const definition = toSorted(demarchesDefinitions, (a, b) => b.dateDebut.localeCompare(a.dateDebut)).find(
     d => (isNullOrUndefinedOrEmpty(date) || d.dateDebut <= date) && d.titreTypeIds.includes(titreTypeId) && d.demarcheTypeIds.includes(demarcheTypeId)
   )

@@ -30,7 +30,7 @@ import { TitreStatutId } from '../static/titresStatuts'
 import { EntrepriseId, entrepriseIdValidator, newEntrepriseId } from '../entreprise'
 import { SubstanceLegaleId } from '../static/substancesLegales'
 import { FeatureMultiPolygon } from '../perimetre'
-import { caminoDateValidator, dateAddDays } from '../date'
+import { caminoDateValidator, dateAddDays, firstEtapeDateValidator } from '../date'
 import { ETAPE_IS_BROUILLON, ETAPE_IS_NOT_BROUILLON, EtapeBrouillon } from '../etape'
 import { EntrepriseUserNotNull } from '../roles'
 import { communeIdValidator } from '../static/communes'
@@ -420,6 +420,7 @@ test("teste la complétude d'une demande d'AXM faite par un utilisateur entrepri
     isEtapeComplete(
       { ...etapeComplete, isBrouillon: ETAPE_IS_BROUILLON },
       'axm',
+      demarcheIdValidator.parse('demarcheId'),
       'oct',
       axmDocuments,
       axmEntrepriseDocuments,
@@ -430,7 +431,8 @@ test("teste la complétude d'une demande d'AXM faite par un utilisateur entrepri
         ...testBlankUser,
         role: 'entreprise',
         entrepriseIds: [entrepriseIdValidator.parse('id1')],
-      }
+      },
+      firstEtapeDateValidator.parse('2022-01-01')
     )
   ).toMatchInlineSnapshot(`
     {
@@ -444,20 +446,44 @@ test("teste la complétude d'une demande d'AXM faite par un utilisateur entrepri
 
 test("teste la complétude d'une demande d'AXM faite par un utilisateur entreprises", () => {
   expect(
-    isEtapeComplete({ ...etapeComplete, isBrouillon: ETAPE_IS_BROUILLON }, 'axm', 'oct', axmDocuments, axmEntrepriseDocuments, [], [], axmDemandeAvis, {
-      ...testBlankUser,
-      role: 'entreprise',
-      entrepriseIds: [entrepriseIdValidator.parse('id1')],
-    })
+    isEtapeComplete(
+      { ...etapeComplete, isBrouillon: ETAPE_IS_BROUILLON },
+      'axm',
+      demarcheIdValidator.parse('demarcheId'),
+      'oct',
+      axmDocuments,
+      axmEntrepriseDocuments,
+      [],
+      [],
+      axmDemandeAvis,
+      {
+        ...testBlankUser,
+        role: 'entreprise',
+        entrepriseIds: [entrepriseIdValidator.parse('id1')],
+      },
+      firstEtapeDateValidator.parse('2022-01-01')
+    )
   ).toStrictEqual({ valid: true })
 })
 
 test("teste la complétude d'une demande d'ARM", () => {
   expect(
-    isEtapeComplete({ ...etapeComplete, contenu: { arm: { mecanise: { value: false, etapeHeritee: null, heritee: false } } } }, 'arm', 'oct', armDocuments, armEntrepriseDocuments, [], [], [], {
-      ...testBlankUser,
-      role: 'super',
-    })
+    isEtapeComplete(
+      { ...etapeComplete, contenu: { arm: { mecanise: { value: false, etapeHeritee: null, heritee: false } } } },
+      'arm',
+      demarcheIdValidator.parse('demarcheId'),
+      'oct',
+      armDocuments,
+      armEntrepriseDocuments,
+      [],
+      [],
+      [],
+      {
+        ...testBlankUser,
+        role: 'super',
+      },
+      firstEtapeDateValidator.parse('2022-01-01')
+    )
   ).toStrictEqual({ valid: true })
 })
 
@@ -473,7 +499,19 @@ test.each<[SubstanceLegaleId[], EtapeTypeId, TitreTypeId, IsEtapeCompleteDocumen
     typeId: etapeType,
   }
 
-  const result = isEtapeComplete(titreEtape, titreType, 'oct', testDocuments, entrepriseDocuments, [], [], axmDemandeAvis, { ...testBlankUser, role: 'super' })
+  const result = isEtapeComplete(
+    titreEtape,
+    titreType,
+    demarcheIdValidator.parse('demarcheId'),
+    'oct',
+    testDocuments,
+    entrepriseDocuments,
+    [],
+    [],
+    axmDemandeAvis,
+    { ...testBlankUser, role: 'super' },
+    firstEtapeDateValidator.parse('2022-01-01')
+  )
 
   expect(result.valid, JSON.stringify(result)).toBe(true)
 })
@@ -490,7 +528,19 @@ test.each<[SubstanceLegaleId[], EtapeTypeId, TitreTypeId, IsEtapeCompleteDocumen
     typeId: etapeType,
   }
 
-  const result = isEtapeComplete(titreEtape, titreType, 'oct', testDocuments, entrepriseDocuments, [], [], [], { ...testBlankUser, role: 'super' })
+  const result = isEtapeComplete(
+    titreEtape,
+    titreType,
+    demarcheIdValidator.parse('demarcheId'),
+    'oct',
+    testDocuments,
+    entrepriseDocuments,
+    [],
+    [],
+    [],
+    { ...testBlankUser, role: 'super' },
+    firstEtapeDateValidator.parse('2022-01-01')
+  )
 
   const errorLabel = 'Les substances sont obligatoires'
   expect(result.valid).toBe(false)
@@ -525,7 +575,19 @@ test.each<[FeatureMultiPolygon | null, EtapeTypeId, TitreTypeId, IsEtapeComplete
     typeId: etapeType,
   }
 
-  const result = isEtapeComplete(titreEtape, titreType, 'oct', documents, entrepriseDocuments, [], [], [], { ...testBlankUser, role: 'super' })
+  const result = isEtapeComplete(
+    titreEtape,
+    titreType,
+    demarcheIdValidator.parse('demarcheId'),
+    'oct',
+    documents,
+    entrepriseDocuments,
+    [],
+    [],
+    [],
+    { ...testBlankUser, role: 'super' },
+    firstEtapeDateValidator.parse('2022-01-01')
+  )
 
   const errorLabel = 'le périmètre est obligatoire pour une démarche octroi'
   expect(result.valid).toBe(false)
@@ -560,7 +622,19 @@ test.each<[FeatureMultiPolygon | null, EtapeTypeId, TitreTypeId, IsEtapeComplete
     typeId: etapeType,
   }
 
-  const result = isEtapeComplete(titreEtape, titreType, 'oct', documents, entrepriseDocuments, [], [], axmDemandeAvis, { ...testBlankUser, role: 'super' })
+  const result = isEtapeComplete(
+    titreEtape,
+    titreType,
+    demarcheIdValidator.parse('demarcheId'),
+    'oct',
+    documents,
+    entrepriseDocuments,
+    [],
+    [],
+    axmDemandeAvis,
+    { ...testBlankUser, role: 'super' },
+    firstEtapeDateValidator.parse('2022-01-01')
+  )
 
   expect(result).toStrictEqual({ valid: true })
 })
@@ -569,13 +643,15 @@ test("une demande d'ARM mécanisée a des documents obligatoires supplémentaire
   const errors = isEtapeComplete(
     { ...etapeComplete, contenu: { arm: { mecanise: { value: true, heritee: false, etapeHeritee: null } } } },
     'arm',
+    demarcheIdValidator.parse('demarcheId'),
     'oct',
     armDocuments,
     armEntrepriseDocuments,
     null,
     [],
     [],
-    { ...testBlankUser, role: 'super' }
+    { ...testBlankUser, role: 'super' },
+    firstEtapeDateValidator.parse('2022-01-01')
   )
   expect(errors).toMatchInlineSnapshot(`
     {
@@ -589,7 +665,15 @@ test("une demande d'ARM mécanisée a des documents obligatoires supplémentaire
 })
 
 test('isEtapeValide', () => {
-  expect(isEtapeValid({ ...etapeComplete }, TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX, DEMARCHES_TYPES_IDS.Octroi, demarcheIdValidator.parse('fakeId'))).toMatchInlineSnapshot(`
+  expect(
+    isEtapeValid(
+      { ...etapeComplete },
+      TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX,
+      DEMARCHES_TYPES_IDS.Octroi,
+      demarcheIdValidator.parse('fakeId'),
+      firstEtapeDateValidator.parse(etapeComplete.date)
+    )
+  ).toMatchInlineSnapshot(`
       {
         "valid": true,
       }
@@ -600,7 +684,8 @@ test('isEtapeValide', () => {
       { ...etapeComplete, date: DATE_DEBUT_PROCEDURE_SPECIFIQUE, typeId: ETAPES_TYPES.demande, duree: { value: 10 * 10, heritee: false, etapeHeritee: null } },
       TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX,
       DEMARCHES_TYPES_IDS.Octroi,
-      demarcheIdValidator.parse('fakeId')
+      demarcheIdValidator.parse('fakeId'),
+      firstEtapeDateValidator.parse(DATE_DEBUT_PROCEDURE_SPECIFIQUE)
     )
   ).toMatchInlineSnapshot(`
       {
@@ -628,7 +713,19 @@ test.each<[number | null, EtapeTypeId, TitreTypeId, IsEtapeCompleteDocuments, Is
     typeId: etapeType,
   }
 
-  const result = isEtapeComplete(titreEtape, titreType, 'oct', documents, entreprisedocuments, [], [], avis, { ...testBlankUser, role: 'super' })
+  const result = isEtapeComplete(
+    titreEtape,
+    titreType,
+    demarcheIdValidator.parse('demarcheId'),
+    'oct',
+    documents,
+    entreprisedocuments,
+    [],
+    [],
+    avis,
+    { ...testBlankUser, role: 'super' },
+    firstEtapeDateValidator.parse('2022-01-01')
+  )
 
   const errorLabel = 'la durée est obligatoire pour une démarche octroi'
   if (error) {
@@ -653,13 +750,15 @@ describe('canDeposeEtape', () => {
           titulaires: [],
           administrationsLocales: [],
         },
+        demarcheIdValidator.parse('demarcheId'),
         'oct',
         { ...etapeComplete, isBrouillon: ETAPE_IS_BROUILLON, contenu: { arm: { mecanise: { value: false, etapeHeritee: null, heritee: false } } } },
         [...armDocuments],
         [...armEntrepriseDocuments],
         [],
         [],
-        []
+        [],
+        firstEtapeDateValidator.parse('2022-01-01')
       )
     ).toStrictEqual(true)
   })
@@ -670,13 +769,15 @@ describe('isEtapeDeposable', () => {
       isEtapeDeposable(
         { ...testBlankUser, role: 'super' },
         'arm',
+        demarcheIdValidator.parse('demarcheId'),
         'oct',
         { ...etapeComplete, isBrouillon: ETAPE_IS_BROUILLON, contenu: { arm: { mecanise: { value: false, etapeHeritee: null, heritee: false } } } },
         armDocuments,
         armEntrepriseDocuments,
         [],
         [],
-        []
+        [],
+        firstEtapeDateValidator.parse('2022-01-01')
       )
     ).toStrictEqual(true)
   })
@@ -686,21 +787,35 @@ describe('isEtapeDeposable', () => {
       isEtapeDeposable(
         { ...testBlankUser, role: 'super' },
         'arm',
+        demarcheIdValidator.parse('demarcheId'),
         'oct',
         { ...etapeComplete, isBrouillon: ETAPE_IS_NOT_BROUILLON, contenu: { arm: { mecanise: { value: false, etapeHeritee: null, heritee: false } } } },
         armDocuments,
         armEntrepriseDocuments,
         [],
         [],
-        []
+        [],
+        firstEtapeDateValidator.parse('2022-01-01')
       )
     ).toStrictEqual(false)
   })
 
   test("Une demande d'ARM incomplète", () => {
-    expect(isEtapeDeposable({ ...testBlankUser, role: 'super' }, 'arm', 'oct', { ...etapeComplete, isBrouillon: ETAPE_IS_BROUILLON }, armDocuments, armEntrepriseDocuments, [], [], [])).toStrictEqual(
-      false
-    )
+    expect(
+      isEtapeDeposable(
+        { ...testBlankUser, role: 'super' },
+        'arm',
+        demarcheIdValidator.parse('demarcheId'),
+        'oct',
+        { ...etapeComplete, isBrouillon: ETAPE_IS_BROUILLON },
+        armDocuments,
+        armEntrepriseDocuments,
+        [],
+        [],
+        [],
+        firstEtapeDateValidator.parse('2022-01-01')
+      )
+    ).toStrictEqual(false)
   })
 })
 
@@ -729,7 +844,7 @@ describe('dureeIsValide', () => {
             { value: dureeAnnees !== null ? dureeAnnees * 12 : dureeAnnees },
             surface,
             demarcheId,
-            duringProcedureSpecifique
+            firstEtapeDateValidator.parse(duringProcedureSpecifique)
           ),
         })
       })
@@ -826,7 +941,7 @@ describe('dureeIsValide', () => {
         result.push({
           surface: km2toHectare(surface),
           duree: dureeAnnees,
-          dureeIsValide: dureeIsValide(titreTypeId, demarcheTypeId, ETAPES_TYPES.demande, { value: dureeAnnees * 12 }, surface, demarcheId, duringProcedureSpecifique),
+          dureeIsValide: dureeIsValide(titreTypeId, demarcheTypeId, ETAPES_TYPES.demande, { value: dureeAnnees * 12 }, surface, demarcheId, firstEtapeDateValidator.parse(duringProcedureSpecifique)),
         })
       })
     })
@@ -848,7 +963,7 @@ describe('dureeIsValide', () => {
         result.push({
           surface: km2toHectare(surface),
           duree: dureeAnnees,
-          dureeIsValide: dureeIsValide(titreTypeId, demarcheTypeId, ETAPES_TYPES.demande, { value: dureeAnnees * 12 }, surface, demarcheId, duringProcedureSpecifique),
+          dureeIsValide: dureeIsValide(titreTypeId, demarcheTypeId, ETAPES_TYPES.demande, { value: dureeAnnees * 12 }, surface, demarcheId, firstEtapeDateValidator.parse(duringProcedureSpecifique)),
         })
       })
     })
@@ -932,7 +1047,9 @@ describe('dureeIsValide', () => {
 
     surfaces.forEach(surface => {
       dureesAnnees.forEach(dureeAnnees => {
-        expect(dureeIsValide(titreTypeId, demarcheTypeId, ETAPES_TYPES.demande, { value: dureeAnnees * 12 }, surface, demarcheId, duringProcedureSpecifique).valid).toBe(true)
+        expect(dureeIsValide(titreTypeId, demarcheTypeId, ETAPES_TYPES.demande, { value: dureeAnnees * 12 }, surface, demarcheId, firstEtapeDateValidator.parse(duringProcedureSpecifique)).valid).toBe(
+          true
+        )
       })
     })
   })
@@ -940,27 +1057,59 @@ describe('dureeIsValide', () => {
 
 describe('perimetreIsValide', () => {
   test('arm', () => {
-    expect(perimetreIsValide(TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX, DEMARCHES_TYPES_IDS.Octroi, ETAPES_TYPES.demande, km2Validator.parse(1), demarcheId, duringProcedureSpecifique))
-      .toMatchInlineSnapshot(`
+    expect(
+      perimetreIsValide(
+        TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX,
+        DEMARCHES_TYPES_IDS.Octroi,
+        ETAPES_TYPES.demande,
+        km2Validator.parse(1),
+        demarcheId,
+        firstEtapeDateValidator.parse(duringProcedureSpecifique)
+      )
+    ).toMatchInlineSnapshot(`
       {
         "valid": true,
       }
     `)
-    expect(perimetreIsValide(TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX, DEMARCHES_TYPES_IDS.Octroi, ETAPES_TYPES.demande, km2Validator.parse(3), demarcheId, duringProcedureSpecifique))
-      .toMatchInlineSnapshot(`
+    expect(
+      perimetreIsValide(
+        TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX,
+        DEMARCHES_TYPES_IDS.Octroi,
+        ETAPES_TYPES.demande,
+        km2Validator.parse(3),
+        demarcheId,
+        firstEtapeDateValidator.parse(duringProcedureSpecifique)
+      )
+    ).toMatchInlineSnapshot(`
       {
         "valid": true,
       }
     `)
-    expect(perimetreIsValide(TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX, DEMARCHES_TYPES_IDS.Octroi, ETAPES_TYPES.demande, km2Validator.parse(4), demarcheId, duringProcedureSpecifique))
-      .toMatchInlineSnapshot(`
+    expect(
+      perimetreIsValide(
+        TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX,
+        DEMARCHES_TYPES_IDS.Octroi,
+        ETAPES_TYPES.demande,
+        km2Validator.parse(4),
+        demarcheId,
+        firstEtapeDateValidator.parse(duringProcedureSpecifique)
+      )
+    ).toMatchInlineSnapshot(`
       {
         "message": "Une ARM supérieure à 3km² est interdit",
         "valid": false,
       }
     `)
-    expect(perimetreIsValide(TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX, DEMARCHES_TYPES_IDS.Prolongation, ETAPES_TYPES.demande, km2Validator.parse(4), demarcheId, duringProcedureSpecifique))
-      .toMatchInlineSnapshot(`
+    expect(
+      perimetreIsValide(
+        TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX,
+        DEMARCHES_TYPES_IDS.Prolongation,
+        ETAPES_TYPES.demande,
+        km2Validator.parse(4),
+        demarcheId,
+        firstEtapeDateValidator.parse(duringProcedureSpecifique)
+      )
+    ).toMatchInlineSnapshot(`
       {
         "message": "Une ARM supérieure à 3km² est interdit",
         "valid": false,
@@ -968,7 +1117,14 @@ describe('perimetreIsValide', () => {
     `)
 
     expect(
-      perimetreIsValide(TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX, DEMARCHES_TYPES_IDS.Prolongation, ETAPES_TYPES.demande, km2Validator.parse(4), demarcheId, beforeProcedureSpecifiqueAxmArm)
+      perimetreIsValide(
+        TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX,
+        DEMARCHES_TYPES_IDS.Prolongation,
+        ETAPES_TYPES.demande,
+        km2Validator.parse(4),
+        demarcheId,
+        firstEtapeDateValidator.parse(beforeProcedureSpecifiqueAxmArm)
+      )
     ).toMatchInlineSnapshot(`
       {
         "valid": true,
@@ -981,7 +1137,7 @@ describe('perimetreIsValide', () => {
         ETAPES_TYPES.decisionDeLAutoriteAdministrative,
         km2Validator.parse(4),
         demarcheId,
-        duringProcedureSpecifique
+        firstEtapeDateValidator.parse(duringProcedureSpecifique)
       )
     ).toMatchInlineSnapshot(`
       {
@@ -997,47 +1153,103 @@ describe('perimetreIsValide', () => {
     const hectares_100 = hectareToKm2(hectareValidator.parse(100))
     const hectares_101 = hectareToKm2(hectareValidator.parse(101))
 
-    expect(perimetreIsValide(TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX, DEMARCHES_TYPES_IDS.Octroi, ETAPES_TYPES.demande, hectares_20, demarcheId, duringProcedureSpecifique))
-      .toMatchInlineSnapshot(`
+    expect(
+      perimetreIsValide(
+        TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX,
+        DEMARCHES_TYPES_IDS.Octroi,
+        ETAPES_TYPES.demande,
+        hectares_20,
+        demarcheId,
+        firstEtapeDateValidator.parse(duringProcedureSpecifique)
+      )
+    ).toMatchInlineSnapshot(`
       {
         "valid": true,
       }
     `)
-    expect(perimetreIsValide(TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX, DEMARCHES_TYPES_IDS.Octroi, ETAPES_TYPES.demande, hectares_100, demarcheId, duringProcedureSpecifique))
-      .toMatchInlineSnapshot(`
+    expect(
+      perimetreIsValide(
+        TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX,
+        DEMARCHES_TYPES_IDS.Octroi,
+        ETAPES_TYPES.demande,
+        hectares_100,
+        demarcheId,
+        firstEtapeDateValidator.parse(duringProcedureSpecifique)
+      )
+    ).toMatchInlineSnapshot(`
       {
         "valid": true,
       }
     `)
-    expect(perimetreIsValide(TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX, DEMARCHES_TYPES_IDS.Octroi, ETAPES_TYPES.demande, hectares_101, demarcheId, duringProcedureSpecifique))
-      .toMatchInlineSnapshot(`
+    expect(
+      perimetreIsValide(
+        TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX,
+        DEMARCHES_TYPES_IDS.Octroi,
+        ETAPES_TYPES.demande,
+        hectares_101,
+        demarcheId,
+        firstEtapeDateValidator.parse(duringProcedureSpecifique)
+      )
+    ).toMatchInlineSnapshot(`
       {
         "message": "Un octroi d'AEX supérieur à 100 hectares est interdit",
         "valid": false,
       }
     `)
-    expect(perimetreIsValide(TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX, DEMARCHES_TYPES_IDS.Prolongation, ETAPES_TYPES.demande, hectares_20, demarcheId, duringProcedureSpecifique))
-      .toMatchInlineSnapshot(`
+    expect(
+      perimetreIsValide(
+        TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX,
+        DEMARCHES_TYPES_IDS.Prolongation,
+        ETAPES_TYPES.demande,
+        hectares_20,
+        demarcheId,
+        firstEtapeDateValidator.parse(duringProcedureSpecifique)
+      )
+    ).toMatchInlineSnapshot(`
       {
         "valid": true,
       }
     `)
-    expect(perimetreIsValide(TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX, DEMARCHES_TYPES_IDS.Prolongation, ETAPES_TYPES.demande, hectares_25, demarcheId, duringProcedureSpecifique))
-      .toMatchInlineSnapshot(`
+    expect(
+      perimetreIsValide(
+        TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX,
+        DEMARCHES_TYPES_IDS.Prolongation,
+        ETAPES_TYPES.demande,
+        hectares_25,
+        demarcheId,
+        firstEtapeDateValidator.parse(duringProcedureSpecifique)
+      )
+    ).toMatchInlineSnapshot(`
       {
         "valid": true,
       }
     `)
-    expect(perimetreIsValide(TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX, DEMARCHES_TYPES_IDS.Prolongation, ETAPES_TYPES.demande, hectares_26, demarcheId, duringProcedureSpecifique))
-      .toMatchInlineSnapshot(`
+    expect(
+      perimetreIsValide(
+        TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX,
+        DEMARCHES_TYPES_IDS.Prolongation,
+        ETAPES_TYPES.demande,
+        hectares_26,
+        demarcheId,
+        firstEtapeDateValidator.parse(duringProcedureSpecifique)
+      )
+    ).toMatchInlineSnapshot(`
       {
         "message": "Une prolongation d'AEX supérieure à 25 hectares est interdit",
         "valid": false,
       }
     `)
 
-    expect(perimetreIsValide(TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX, DEMARCHES_TYPES_IDS.RenonciationTotale, ETAPES_TYPES.demande, hectares_100, demarcheId, duringProcedureSpecifique))
-      .toMatchInlineSnapshot(`
+    expect(
+      perimetreIsValide(
+        TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX,
+        DEMARCHES_TYPES_IDS.RenonciationTotale,
+        ETAPES_TYPES.demande,
+        hectares_100,
+        demarcheId,
+        firstEtapeDateValidator.parse(duringProcedureSpecifique)
+      )
+    ).toMatchInlineSnapshot(`
       {
         "valid": true,
       }

@@ -453,7 +453,7 @@ test('getDemarcheContenu pxg', () => {
 
 describe('demarcheDepotDemandeDateFind', () => {
   test("pas d'étapes", () => {
-    expect(demarcheEnregistrementDemandeDateFind([])).toBe(undefined)
+    expect(demarcheEnregistrementDemandeDateFind([])).toBe(null)
   })
 
   test('un enregistrement de la demande', () => {

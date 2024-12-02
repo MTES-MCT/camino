@@ -8,7 +8,9 @@ import { titreEtapesSortAscByOrdre } from '../utils/titre-etapes-sort'
 import { titreInModificationEnInstance } from './titre-statut-id-find'
 import { ETAPES_STATUTS, isEtapeStatusRejete } from 'camino-common/src/static/etapesStatuts'
 import { DOMAINES_IDS } from 'camino-common/src/static/domaines'
-import { machineFind } from '../rules-demarches/machines'
+import { CaminoMachines, machineFind } from '../rules-demarches/machines'
+import { demarcheEnregistrementDemandeDateFind } from 'camino-common/src/demarche'
+import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 const titreDemarchePublicLectureFind = (
   publicLecture: boolean,
   demarcheTypeId: DemarcheTypeId,
@@ -209,9 +211,14 @@ export const titreDemarchePublicFind = (
   if (titreDemarche.titreId === 'WQaZgPfDcQw9tFliMgBIDH3Z') {
     publicLecture = false
   } else {
-    const machine = machineFind(titreTypeId, titreDemarche.typeId, titreDemarcheEtapes, titreDemarche.id)
+    const firstEtapeDate = demarcheEnregistrementDemandeDateFind(titreDemarcheEtapes)
 
-    if (machine) {
+    let machine: CaminoMachines | undefined
+    if (isNotNullNorUndefined(firstEtapeDate)) {
+      machine = machineFind(titreTypeId, titreDemarche.typeId, titreDemarche.id, firstEtapeDate)
+    }
+
+    if (isNotNullNorUndefined(machine)) {
       publicLecture = machine.demarcheStatut(toMachineEtapes(titreDemarcheEtapes.map(etape => titreEtapeForMachineValidator.parse(etape)))).publique
     } else {
       const demarcheTypeEtapesTypes = getEtapesTDE(titreTypeId, titreDemarche.typeId)

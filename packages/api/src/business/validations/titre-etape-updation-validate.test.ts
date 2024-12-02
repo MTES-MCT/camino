@@ -4,7 +4,7 @@ import { titreEtapeUpdationValidate } from './titre-etape-updation-validate'
 import { userSuper } from '../../database/user-super'
 import { describe, test, expect } from 'vitest'
 import { ETAPE_IS_BROUILLON, ETAPE_IS_NOT_BROUILLON, etapeIdValidator, etapeSlugValidator } from 'camino-common/src/etape'
-import { caminoDateValidator, toCaminoDate } from 'camino-common/src/date'
+import { caminoDateValidator, firstEtapeDateValidator, toCaminoDate } from 'camino-common/src/date'
 import { demarcheIdValidator } from 'camino-common/src/demarche'
 import { entrepriseIdValidator } from 'camino-common/src/entreprise'
 import { titreIdValidator } from 'camino-common/src/validators/titres'
@@ -149,7 +149,7 @@ describe('valide l’étape avant de l’enregistrer', () => {
       demarcheIdsConsentement: [],
     }
 
-    let errors = titreEtapeUpdationValidate(titreEtape, titreDemarche, titreARM, [], [], [], [], [], userSuper)
+    let errors = titreEtapeUpdationValidate(titreEtape, titreDemarche, titreARM, [], [], [], [], [], userSuper, firstEtapeDateValidator.parse('2022-01-01'))
     expect(errors).toMatchInlineSnapshot(`
       [
         "une date peut-être spécifiée que sur une étape de décision",
@@ -169,7 +169,7 @@ describe('valide l’étape avant de l’enregistrer', () => {
       typeId: 'axm',
     }
 
-    errors = titreEtapeUpdationValidate(titreEtape, titreDemarche, titreAxm, [], [], [], [], [], userSuper)
+    errors = titreEtapeUpdationValidate(titreEtape, titreDemarche, titreAxm, [], [], [], [], [], userSuper, firstEtapeDateValidator.parse('2022-01-01'))
     expect(errors).toMatchInlineSnapshot(`
       [
         "une date peut-être spécifiée que sur une étape de décision",
@@ -190,11 +190,11 @@ describe('valide l’étape avant de l’enregistrer', () => {
     `)
   })
   test('valide brouillon', () => {
-    const errors = titreEtapeUpdationValidate(etapeBrouillonValide, { ...titreDemarche, etapes: [] }, titreARM, [], [], [], [], [], userSuper)
+    const errors = titreEtapeUpdationValidate(etapeBrouillonValide, { ...titreDemarche, etapes: [] }, titreARM, [], [], [], [], [], userSuper, firstEtapeDateValidator.parse('2022-01-01'))
     expect(errors).toStrictEqual([])
   })
   test('valide complète', () => {
-    const errors = titreEtapeUpdationValidate(etapeComplete, titreDemarche, titreARM, [{ etape_document_type_id: 'doe' }], [], [], [], [], userSuper)
+    const errors = titreEtapeUpdationValidate(etapeComplete, titreDemarche, titreARM, [{ etape_document_type_id: 'doe' }], [], [], [], [], userSuper, firstEtapeDateValidator.parse('2022-01-01'))
     expect(errors).toStrictEqual([])
   })
   test('invalide car on ne peut pas faire de mod sans men', () => {
@@ -226,7 +226,8 @@ describe('valide l’étape avant de l’enregistrer', () => {
       [],
       [],
       [],
-      userSuper
+      userSuper,
+      firstEtapeDateValidator.parse('2022-01-01')
     )
     expect(errors).toMatchInlineSnapshot(`
       [
@@ -245,7 +246,8 @@ describe('valide l’étape avant de l’enregistrer', () => {
       [],
       [],
       [],
-      userSuper
+      userSuper,
+      firstEtapeDateValidator.parse('2022-01-01')
     )
     expect(errors).toStrictEqual([])
   })
@@ -259,7 +261,8 @@ describe('valide l’étape avant de l’enregistrer', () => {
       [],
       [],
       [],
-      userSuper
+      userSuper,
+      firstEtapeDateValidator.parse('2022-01-01')
     )
     expect(errors).toMatchInlineSnapshot(`
       [

@@ -44,7 +44,7 @@ import { EtapeTypeId, canBeBrouillon } from 'camino-common/src/static/etapesType
 import { CoreEtapeCreationOrModification, GetEtapeHeritagePotentiel } from './etape-api-client'
 import { FlattenedContenuElement, FlattenEtape, RestEtapeCreation } from 'camino-common/src/etape-form'
 import { AsyncData } from '@/api/client-rest'
-import { CaminoDate } from 'camino-common/src/date'
+import { CaminoDate, FirstEtapeDate, firstEtapeDateValidator } from 'camino-common/src/date'
 import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts'
 import { LoadingElement } from '../_ui/functional-loader'
 import { isEtapeComplete, isEtapeDeposable, isEtapeValid } from 'camino-common/src/permissions/titres-etapes'
@@ -63,6 +63,7 @@ export type Props = {
   perimetre: DeepReadonly<PerimetreInformations>
   initTab?: 'points' | 'carte'
   goToDemarche: (demarcheId: DemarcheId) => void
+  firstEtapeDate: FirstEtapeDate | null
   apiClient: Pick<
     ApiClient,
     | 'getEntrepriseDocuments'
@@ -288,7 +289,7 @@ export const EtapeEditForm = defineComponent<Props>(props => {
 
   const canSave = computed<boolean>(() => {
     if (etape.value.status === 'LOADED' && isNotNullNorUndefined(etape.value.value)) {
-      const etapeValid = isEtapeValid(etape.value.value, props.titreTypeId, props.demarcheTypeId, props.demarcheId)
+      const etapeValid = isEtapeValid(etape.value.value, props.titreTypeId, props.demarcheTypeId, props.demarcheId, props.firstEtapeDate ?? firstEtapeDateValidator.parse(etape.value.value.date))
       if (!etapeValid.valid) {
         return false
       }
@@ -297,13 +298,15 @@ export const EtapeEditForm = defineComponent<Props>(props => {
         const { valid } = isEtapeComplete(
           etape.value.value,
           props.titreTypeId,
+          props.demarcheId,
           props.demarcheTypeId,
           documents.value.etapeDocuments,
           documents.value.entrepriseDocuments.map(e => ({ entreprise_document_type_id: e.documentTypeId, entreprise_id: e.entrepriseId })),
           props.perimetre.sdomZoneIds,
           props.perimetre.communes,
           documents.value.etapeAvis,
-          props.user
+          props.user,
+          props.firstEtapeDate ?? firstEtapeDateValidator.parse(etape.value.value.date)
         )
         return valid
       }
@@ -317,13 +320,15 @@ export const EtapeEditForm = defineComponent<Props>(props => {
       return isEtapeDeposable(
         props.user,
         props.titreTypeId,
+        props.demarcheId,
         props.demarcheTypeId,
         etape.value.value,
         documents.value.etapeDocuments,
         documents.value.entrepriseDocuments.map(({ documentTypeId, entrepriseId }) => ({ entreprise_document_type_id: documentTypeId, entreprise_id: entrepriseId })),
         props.perimetre.sdomZoneIds,
         props.perimetre.communes,
-        documents.value.etapeAvis
+        documents.value.etapeAvis,
+        props.firstEtapeDate ?? firstEtapeDateValidator.parse(etape.value.value.date)
       )
     }
 
@@ -586,6 +591,7 @@ const EtapeEditFormInternal = defineComponent<
             user={props.user}
             entreprises={props.entreprises}
             completeUpdate={fondamentalesCompleteUpdate}
+            firstEtapeDate={props.firstEtapeDate ?? firstEtapeDateValidator.parse(props.etape.date)}
           />
         </Bloc>
       ) : null}
@@ -615,6 +621,7 @@ const EtapeEditFormInternal = defineComponent<
             onPointsChange={onEtapePointsChange}
             onForagesChange={onEtapeForagesChange}
             onHeritageChange={onEtapePerimetreHeritageChange}
+            firstEtapeDate={props.firstEtapeDate ?? firstEtapeDateValidator.parse(props.etape.date)}
           />
         </Bloc>
       ) : null}
@@ -622,11 +629,27 @@ const EtapeEditFormInternal = defineComponent<
       {etapeDocumentsStepIsVisible(props.etape, props.demarcheTypeId, props.titreTypeId) ? (
         <Bloc
           step={{ name: 'Liste des documents', help: null }}
-          complete={etapeDocumentsStepIsComplete(props.etape, props.demarcheTypeId, props.titreTypeId, props.documents.etapeDocuments, props.perimetre.sdomZoneIds).valid}
+          complete={
+            etapeDocumentsStepIsComplete(
+              props.etape,
+              props.demarcheTypeId,
+              props.titreTypeId,
+              props.demarcheId,
+              props.documents.etapeDocuments,
+              props.perimetre.sdomZoneIds,
+              props.firstEtapeDate ?? firstEtapeDateValidator.parse(props.etape.date)
+            ).valid
+          }
         >
           <EtapeDocumentsEdit
             apiClient={props.apiClient}
-            tde={{ titreTypeId: props.titreTypeId, demarcheTypeId: props.demarcheTypeId, etapeTypeId: props.etape.typeId }}
+            tde={{
+              titreTypeId: props.titreTypeId,
+              demarcheTypeId: props.demarcheTypeId,
+              etapeTypeId: props.etape.typeId,
+              demarcheId: props.demarcheId,
+              firstEtapeDate: props.firstEtapeDate ?? firstEtapeDateValidator.parse(props.etape.date),
+            }}
             etapeId={props.etape.id}
             completeUpdate={documentsCompleteUpdate}
             sdomZoneIds={props.perimetre.sdomZoneIds}
@@ -682,7 +705,7 @@ const EtapeEditFormInternal = defineComponent<
 })
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-EtapeEditForm.props = ['etape', 'demarcheId', 'demarcheTypeId', 'titreTypeId', 'titreSlug', 'user', 'perimetre', 'entreprises', 'apiClient', 'initTab', 'goToDemarche']
+EtapeEditForm.props = ['etape', 'demarcheId', 'demarcheTypeId', 'titreTypeId', 'titreSlug', 'user', 'perimetre', 'entreprises', 'apiClient', 'initTab', 'goToDemarche', 'firstEtapeDate']
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
 EtapeEditFormInternal.props = [
@@ -699,4 +722,5 @@ EtapeEditFormInternal.props = [
   'initTab',
   'setEtape',
   'documents',
+  'firstEtapeDate',
 ]

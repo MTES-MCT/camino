@@ -3,11 +3,11 @@ import { TitreEtapeForMachine, toMachineEtapes } from '../rules-demarches/machin
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
 import { getEtapesTDE } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/index'
-import { DemarcheId } from 'camino-common/src/demarche'
+import { demarcheEnregistrementDemandeDateFind, DemarcheId } from 'camino-common/src/demarche'
 import { isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
 import { ETAPE_IS_BROUILLON } from 'camino-common/src/etape'
 import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes'
-import { machineFind } from '../rules-demarches/machines'
+import { CaminoMachines, machineFind } from '../rules-demarches/machines'
 
 // classe les étapes selon leur ordre inverse: 3, 2, 1.
 export const titreEtapesSortDescByOrdre = <T extends Pick<ITitreEtape, 'ordre'>>(titreEtapes: T[]): T[] => titreEtapes.toSorted((a, b) => b.ordre! - a.ordre!)
@@ -16,7 +16,12 @@ export const titreEtapesSortDescByOrdre = <T extends Pick<ITitreEtape, 'ordre'>>
 export const titreEtapesSortAscByOrdre = <T extends Pick<ITitreEtape, 'ordre'>>(titreEtapes: T[]): T[] => titreEtapes.toSorted((a, b) => a.ordre! - b.ordre!)
 // classe les étapes selon leur dates, ordre et etapesTypes.ordre le cas échéant
 export const titreEtapesSortAscByDate = <T extends TitreEtapeForMachine>(titreEtapes: T[], demarcheId: DemarcheId, demarcheTypeId: DemarcheTypeId, titreTypeId: TitreTypeId): T[] => {
-  const machine = machineFind(titreTypeId, demarcheTypeId, titreEtapes, demarcheId)
+  const firstEtapeDate = demarcheEnregistrementDemandeDateFind(titreEtapes)
+  let machine: CaminoMachines | undefined
+  if (isNotNullNorUndefinedNorEmpty(firstEtapeDate)) {
+    machine = machineFind(titreTypeId, demarcheTypeId, demarcheId, firstEtapeDate)
+  }
+
   if (machine) {
     const etapes = machine.orderMachine(toMachineEtapes(titreEtapes))
     if (!machine.isEtapesOk(etapes)) {

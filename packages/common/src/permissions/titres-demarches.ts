@@ -10,7 +10,7 @@ import { canCreateEtape } from './titres-etapes'
 import { TitreGetDemarche } from '../titres'
 import { DeepReadonly, isNotNullNorUndefinedNorEmpty, isNullOrUndefined } from '../typescript-tools'
 import { ETAPE_IS_BROUILLON } from '../etape'
-import { DemarcheEtape, DemarcheId } from '../demarche'
+import { demarcheEnregistrementDemandeDateFind, DemarcheEtape, DemarcheId } from '../demarche'
 import { machineIdFind } from '../machines'
 import { ETAPES_TYPES, EtapesTypes } from '../static/etapesTypes'
 import { EtapesTypesEtapesStatuts } from '../static/etapesTypesEtapesStatuts'
@@ -98,12 +98,12 @@ export const canPublishResultatMiseEnConcurrence = (
   if (!isSuper(user) && !isAdministrationAdmin(user) && !isAdministrationEditeur(user)) {
     return { valid: false, error: "L'utilisateur ne dispose pas des droits suffisants" }
   }
-  const machineId = machineIdFind(
-    titre_type_id,
-    demarche_type_id,
-    etapes.map(etape => ({ ...etape, typeId: etape.etape_type_id })),
-    id
-  )
+
+  const firstEtapeDate = demarcheEnregistrementDemandeDateFind(etapes.map(etape => ({ ...etape, typeId: etape.etape_type_id })))
+  if (isNullOrUndefined(firstEtapeDate)) {
+    return { valid: false, error: 'Au moins une étape est nécessaire' }
+  }
+  const machineId = machineIdFind(titre_type_id, demarche_type_id, id, firstEtapeDate)
 
   if (machineId !== 'ProcedureSpecifique') {
     return { valid: false, error: "Cette démarche n'est pas une procédure spécifique" }

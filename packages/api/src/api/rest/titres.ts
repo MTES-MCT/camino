@@ -28,7 +28,8 @@ import { RestNewGetCall, RestNewPostCall } from '../../server/rest'
 import { Effect, Match, pipe } from 'effect'
 import { CaminoError } from 'camino-common/src/zod-tools'
 import { DbQueryAccessError, EffectDbQueryAndValidateErrors } from '../../pg-database'
-import { machineFind } from '../../business/rules-demarches/machines'
+import { CaminoMachines, machineFind } from '../../business/rules-demarches/machines'
+import { demarcheEnregistrementDemandeDateFind } from 'camino-common/src/demarche'
 
 const etapesAMasquer = [ETAPES_TYPES.classementSansSuite, ETAPES_TYPES.desistementDuDemandeur, ETAPES_TYPES.decisionImplicite, ETAPES_TYPES.demandeDeComplements_RecevabiliteDeLaDemande_]
 
@@ -115,16 +116,21 @@ export const titresAdministrations =
               etapeTypeId: EtapeTypeId
               date: CaminoDate
             } | null = null
-            if (demarcheLaPlusRecente !== null) {
-              if (!demarcheLaPlusRecente.etapes) {
+            if (isNotNullNorUndefined(demarcheLaPlusRecente)) {
+              if (isNullOrUndefinedOrEmpty(demarcheLaPlusRecente.etapes)) {
                 throw new Error('les étapes ne sont pas chargées')
               }
               if (demarcheLaPlusRecente.statutId !== DemarchesStatutsIds.EnConstruction) {
                 const etapes = demarcheLaPlusRecente.etapes.map(etape => titreEtapeForMachineValidator.parse(etape))
                 const etapesDerniereDemarche = toMachineEtapes(etapes)
+                const firstEtapeDate = demarcheEnregistrementDemandeDateFind(demarcheLaPlusRecente.etapes)
+                let machine: CaminoMachines | undefined
+                // TODO 2024-12-02 à virer quand on enlève deepreadonly et qu'on type mieux demarcheEnregistrementDemandeDateFind
+                if (isNotNullNorUndefined(firstEtapeDate)) {
+                  machine = machineFind(titre.typeId, demarcheLaPlusRecente.typeId, demarcheLaPlusRecente.id, firstEtapeDate)
+                }
                 derniereEtape = etapesDerniereDemarche[etapesDerniereDemarche.length - 1]
-                const machine = machineFind(titre.typeId, demarcheLaPlusRecente.typeId, demarcheLaPlusRecente.etapes, demarcheLaPlusRecente.id)
-                if (machine) {
+                if (isNotNullNorUndefined(machine)) {
                   try {
                     enAttenteDeAdministration = machine.whoIsBlocking(etapesDerniereDemarche).includes(user.administrationId)
                     const nextEtapes = machine.possibleNextEtapes(etapesDerniereDemarche, getCurrent())

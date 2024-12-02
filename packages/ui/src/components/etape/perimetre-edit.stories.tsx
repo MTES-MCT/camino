@@ -4,7 +4,7 @@ import { ApiClient } from '@/api/api-client'
 import { FeatureCollectionForages, FeatureCollectionPoints, FeatureMultiPolygon, GeojsonInformations } from 'camino-common/src/perimetre'
 import { tempDocumentNameValidator } from 'camino-common/src/document'
 import { PerimetreEdit, Props } from './perimetre-edit'
-import { toCaminoDate } from 'camino-common/src/date'
+import { firstEtapeDateValidator, toCaminoDate } from 'camino-common/src/date'
 import { ETAPES_TYPES, EtapesTypes } from 'camino-common/src/static/etapesTypes'
 import { titreSlugValidator } from 'camino-common/src/validators/titres'
 import { km2Validator } from 'camino-common/src/number'
@@ -99,6 +99,8 @@ const etapeNoHeritage: Props['etape'] = {
   },
 }
 
+const firstEtapeDate = firstEtapeDateValidator.parse('2022-01-01')
+
 const titreSlug = titreSlugValidator.parse('titre-slug')
 export const EmptyNoHeritage: StoryFn = () => (
   <PerimetreEdit
@@ -112,6 +114,7 @@ export const EmptyNoHeritage: StoryFn = () => (
     onPointsChange={onPointsChange}
     onForagesChange={onForagesChange}
     onHeritageChange={onHeritageChange}
+    firstEtapeDate={firstEtapeDate}
   />
 )
 const etapeEmptyHeritage: Props['etape'] = {
@@ -149,6 +152,7 @@ export const EmptyHeritage: StoryFn = () => (
     onPointsChange={onPointsChange}
     onForagesChange={onForagesChange}
     onHeritageChange={onHeritageChange}
+    firstEtapeDate={firstEtapeDate}
   />
 )
 
@@ -196,6 +200,7 @@ export const Heritage: StoryFn = () => (
     onPointsChange={onPointsChange}
     onForagesChange={onForagesChange}
     onHeritageChange={onHeritageChange}
+    firstEtapeDate={firstEtapeDate}
   />
 )
 
@@ -230,6 +235,7 @@ export const FilledNoHeritage: StoryFn = () => (
     onPointsChange={onPointsChange}
     onForagesChange={onForagesChange}
     onHeritageChange={onHeritageChange}
+    firstEtapeDate={firstEtapeDate}
   />
 )
 
@@ -264,6 +270,7 @@ export const LegacyGeoSysteme: StoryFn = () => (
     onPointsChange={onPointsChange}
     onForagesChange={onForagesChange}
     onHeritageChange={onHeritageChange}
+    firstEtapeDate={firstEtapeDate}
   />
 )
 
@@ -377,5 +384,6 @@ export const WithForages: StoryFn = () => (
     onPointsChange={onPointsChange}
     onForagesChange={onForagesChange}
     onHeritageChange={onHeritageChange}
+    firstEtapeDate={firstEtapeDate}
   />
 )

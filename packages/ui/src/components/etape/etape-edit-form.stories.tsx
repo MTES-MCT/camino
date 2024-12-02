@@ -2,7 +2,7 @@ import { EtapeEditForm, Props } from './etape-edit-form'
 import { Meta, StoryFn } from '@storybook/vue3'
 import { ETAPE_IS_BROUILLON, ETAPE_IS_NOT_BROUILLON, EtapeId, etapeIdValidator, etapeSlugValidator } from 'camino-common/src/etape'
 import { Entreprise, EntrepriseDocumentId, EntrepriseId, EtapeEntrepriseDocument, entrepriseDocumentIdValidator, entrepriseIdValidator, newEntrepriseId } from 'camino-common/src/entreprise'
-import { CaminoDate, toCaminoDate } from 'camino-common/src/date'
+import { CaminoDate, firstEtapeDateValidator, toCaminoDate } from 'camino-common/src/date'
 import { testBlankUser } from 'camino-common/src/tests-utils'
 import { action } from '@storybook/addon-actions'
 import { DemarcheId, demarcheIdValidator } from 'camino-common/src/demarche'
@@ -241,7 +241,6 @@ export const Default: StoryFn = () => (
     titreTypeId="arm"
     etape={{
       ...etape,
-
       contenu: { arm: { mecanise: { value: true, heritee: false, etapeHeritee: null }, franchissements: { value: 2, heritee: false, etapeHeritee: null } } },
     }}
     user={{
@@ -250,6 +249,7 @@ export const Default: StoryFn = () => (
     }}
     entreprises={entreprises}
     goToDemarche={goToDemarcheAction}
+    firstEtapeDate={firstEtapeDateValidator.parse('2022-01-01')}
   />
 )
 
@@ -286,6 +286,7 @@ export const EtapeModification: StoryFn = () => (
     }}
     entreprises={entreprises}
     goToDemarche={goToDemarcheAction}
+    firstEtapeDate={firstEtapeDateValidator.parse('2022-01-01')}
   />
 )
 
@@ -309,6 +310,7 @@ export const EtapeModificationAvis: StoryFn = () => (
     }}
     entreprises={entreprises}
     goToDemarche={goToDemarcheAction}
+    firstEtapeDate={firstEtapeDateValidator.parse('2022-01-01')}
   />
 )
 export const EtapeDecisionAdministration: StoryFn = () => (
@@ -333,6 +335,7 @@ export const EtapeDecisionAdministration: StoryFn = () => (
     }}
     entreprises={entreprises}
     goToDemarche={goToDemarcheAction}
+    firstEtapeDate={firstEtapeDateValidator.parse('2022-01-01')}
   />
 )
 export const EtapeConsultationAdministrationsCentrales: StoryFn = () => (
@@ -356,5 +359,6 @@ export const EtapeConsultationAdministrationsCentrales: StoryFn = () => (
     }}
     entreprises={entreprises}
     goToDemarche={goToDemarcheAction}
+    firstEtapeDate={firstEtapeDateValidator.parse('2022-01-01')}
   />
 )

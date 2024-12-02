@@ -3,7 +3,7 @@ import { DeepReadonly, NonEmptyArray, isNonEmptyArray, isNotNullNorUndefined, is
 import type { ITitreEtape } from '../../types'
 
 import { Etape, TitreEtapeForMachine, titreEtapeForMachineValidator, toMachineEtapes } from '../rules-demarches/machine-common'
-import { DemarcheId } from 'camino-common/src/demarche'
+import { demarcheEnregistrementDemandeDateFind, DemarcheId } from 'camino-common/src/demarche'
 import { DemarchesTypes, DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
 import { EtapeId, EtapeTypeEtapeStatutWithMainStep } from 'camino-common/src/etape'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
@@ -57,10 +57,16 @@ export const titreDemarcheUpdatedEtatValidate = (
   suppression = false
 ): { valid: true; errors: null } | { valid: false; errors: NonEmptyArray<string> } => {
   const titreDemarcheEtapesNew = titreDemarcheEtapesBuild(titreEtape, suppression, titreDemarcheEtapes)
+  let machine: CaminoMachines | undefined
   if (isNullOrUndefinedOrEmpty(titreDemarcheEtapesNew)) {
     return { valid: true, errors: null }
+  } else {
+    const firstEtapeDate = demarcheEnregistrementDemandeDateFind(titreDemarcheEtapesNew)
+    if (isNotNullNorUndefined(firstEtapeDate)) {
+      machine = machineFind(titre.typeId, demarcheTypeId, demarcheId, firstEtapeDate)
+    }
   }
-  const machine = machineFind(titre.typeId, demarcheTypeId, titreDemarcheEtapesNew, demarcheId)
+
   const titreDemarchesErrors: string[] = []
 
   // vérifie que la démarche existe dans le titre

@@ -6,7 +6,7 @@ import { DemarcheId, demarcheIdOrSlugValidator, demarcheIdValidator, demarcheSlu
 import { ETAPE_IS_BROUILLON, ETAPE_IS_NOT_BROUILLON, EtapeId, etapeDocumentIdValidator, etapeIdOrSlugValidator, etapeIdValidator, etapeSlugValidator } from 'camino-common/src/etape'
 import { titreIdValidator, titreSlugValidator } from 'camino-common/src/validators/titres'
 import { FeatureMultiPolygon, PerimetreInformations } from 'camino-common/src/perimetre'
-import { CaminoDate, caminoDateValidator, toCaminoDate } from 'camino-common/src/date'
+import { CaminoDate, caminoDateValidator, firstEtapeDateValidator, toCaminoDate } from 'camino-common/src/date'
 import { testBlankUser } from 'camino-common/src/tests-utils'
 import { UiEntrepriseDocumentInput } from './entreprise/entreprise-api-client'
 import { demarcheTypeIdValidator } from 'camino-common/src/static/demarchesTypes'
@@ -288,6 +288,7 @@ const apiClient: Props['apiClient'] = {
         titre_slug: titreSlugValidator.parse('titre-slug'),
         titre_nom: 'Nom du titre',
         titre_type_id: 'arm',
+        first_etape_date: firstEtapeDateValidator.parse('2022-01-01'),
       },
     })
   },
@@ -303,6 +304,7 @@ const apiClient: Props['apiClient'] = {
       titre_nom: 'Nom du titre',
       titre_slug: titreSlugValidator.parse('titre-slug'),
       titre_type_id: 'arm',
+      first_etape_date: firstEtapeDateValidator.parse('2022-01-01'),
     })
   },
   getPerimetreInfosByDemarcheId(demarcheId) {
@@ -392,6 +394,7 @@ export const AffichageAide: StoryFn = () => (
             titre_slug: titreSlugValidator.parse('titre-slug'),
             titre_nom: 'Nom du titre',
             titre_type_id: 'arm',
+            first_etape_date: firstEtapeDateValidator.parse('2022-01-01'),
           },
         })
       },
@@ -580,6 +583,7 @@ export const DemandeArmComplete: StoryFn = () => (
             titre_slug: titreSlugValidator.parse('titre-slug'),
             titre_nom: 'Nom du titre',
             titre_type_id: 'arm',
+            first_etape_date: firstEtapeDateValidator.parse('2022-01-01'),
           },
         })
       },
@@ -748,6 +752,7 @@ export const ModificationDemandeHeritee: StoryFn = () => (
             titre_slug: titreSlugValidator.parse('titre-slug'),
             titre_nom: 'Nom du titre',
             titre_type_id: 'arm',
+            first_etape_date: firstEtapeDateValidator.parse('2022-01-01'),
           },
         })
       },
@@ -871,6 +876,7 @@ export const AxmEnZoneDuSdom: StoryFn = () => (
             titre_slug: titreSlugValidator.parse('titre-slug'),
             titre_nom: 'Nom du titre',
             titre_type_id: 'axm',
+            first_etape_date: firstEtapeDateValidator.parse('2022-01-01'),
           },
         })
       },

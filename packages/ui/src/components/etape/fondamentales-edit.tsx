@@ -2,7 +2,7 @@ import { useState } from '@/utils/vue-tsx-utils'
 import { DsfrTag } from '../_ui/tag'
 import { HeritageEdit } from './heritage-edit'
 import { AutocompleteEntreprises } from './autocomplete-entreprises'
-import { CaminoDate } from 'camino-common/src/date'
+import { CaminoDate, FirstEtapeDate } from 'camino-common/src/date'
 import { SubstancesEdit } from './substances-edit'
 import { canEditAmodiataires, canEditTitulaires, canEditDuree, canEditDates, InputPresence, InputAbsent, InputPresentOptional, dureeIsValide } from 'camino-common/src/permissions/titres-etapes'
 import { DomaineId } from 'camino-common/src/static/domaines'
@@ -24,6 +24,7 @@ interface Props {
   user: User
   entreprises: DeepReadonly<Entreprise[]>
   completeUpdate: (etape: Props['etape']) => void
+  firstEtapeDate: FirstEtapeDate
 }
 
 const dureeToAns = (duree: number | null | undefined) => {
@@ -75,7 +76,7 @@ export const FondamentalesEdit = defineComponent<Props>(props => {
       { value: mois.value + ans.value * 12 },
       props.etape.perimetre.value?.surface ?? ZERO_KM2,
       props.etape.titreDemarcheId,
-      props.etape.date
+      props.firstEtapeDate
     )
   )
 
@@ -271,4 +272,4 @@ export const FondamentalesEdit = defineComponent<Props>(props => {
 })
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-FondamentalesEdit.props = ['etape', 'demarcheTypeId', 'titreTypeId', 'user', 'entreprises', 'completeUpdate']
+FondamentalesEdit.props = ['etape', 'demarcheTypeId', 'titreTypeId', 'user', 'entreprises', 'completeUpdate', 'firstEtapeDate']

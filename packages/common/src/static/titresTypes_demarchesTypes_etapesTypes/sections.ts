@@ -1076,7 +1076,7 @@ export const getSectionsWithValue = (sections: DeepReadonly<Section[]>, contenu:
           }
         }
       } else if (element.type === 'select') {
-        // @ts-ignore FIXME typescript est perdu ici
+        // @ts-ignore TODO 2024-12-02 virer deepreadonly
         optionsObject.options = getElementValeurs(element)
       }
 

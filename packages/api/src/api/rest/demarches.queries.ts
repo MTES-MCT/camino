@@ -132,7 +132,7 @@ type GetDemarcheByIdOrSlugValidator = z.infer<typeof getDemarcheByIdOrSlugValida
 export type GetDemarcheByIdOrSlugErrors = EffectDbQueryAndValidateErrors | "La démarche n'existe pas"
 export const getDemarcheByIdOrSlug = (pool: Pool, idOrSlug: DemarcheIdOrSlug): Effect.Effect<GetDemarcheByIdOrSlugValidator, CaminoError<GetDemarcheByIdOrSlugErrors>> =>
   pipe(
-    effectDbQueryAndValidate(getDemarcheByIdOrSlugDb, { idOrSlug }, pool, getDemarcheByIdOrSlugValidator),
+    effectDbQueryAndValidate(getDemarcheByIdOrSlugDb, { idOrSlug, enregistrementDeLaDemandeId: ETAPES_TYPES.enregistrementDeLaDemande }, pool, getDemarcheByIdOrSlugValidator),
     Effect.filterOrFail(
       demarches => isNotNullNorUndefinedNorEmpty(demarches),
       () => ({ message: "La démarche n'existe pas" as const })
@@ -140,7 +140,9 @@ export const getDemarcheByIdOrSlug = (pool: Pool, idOrSlug: DemarcheIdOrSlug): E
     Effect.map(demarches => demarches[0])
   )
 
-const getDemarcheByIdOrSlugDb = sql<Redefine<IGetDemarcheByIdOrSlugDbQuery, { idOrSlug: DemarcheIdOrSlug }, GetDemarcheByIdOrSlugValidator>>`
+const getDemarcheByIdOrSlugDb = sql<
+  Redefine<IGetDemarcheByIdOrSlugDbQuery, { idOrSlug: DemarcheIdOrSlug; enregistrementDeLaDemandeId: typeof ETAPES_TYPES.enregistrementDeLaDemande }, GetDemarcheByIdOrSlugValidator>
+>`
 select
     td.id as demarche_id,
     td.slug as demarche_slug,
@@ -151,9 +153,11 @@ select
     t.id as titre_id,
     t.slug as titre_slug,
     t.type_id as titre_type_id,
-    t.nom as titre_nom
+    t.nom as titre_nom,
+    te.date as first_etape_date
 from
     titres_demarches td
+    left join titres_etapes te on te.titre_demarche_id = td.id AND (te.type_id = $enregistrementDeLaDemandeId! OR te.ordre = 1) AND te.archive IS FALSE
     join titres t on t.id = td.titre_id
 where (td.id = $ idOrSlug !
     or td.slug = $ idOrSlug !)

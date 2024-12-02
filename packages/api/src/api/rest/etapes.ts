@@ -14,9 +14,9 @@ import {
   ETAPE_IS_BROUILLON,
   getStatutId,
 } from 'camino-common/src/etape'
-import { DemarcheId } from 'camino-common/src/demarche'
+import { demarcheEnregistrementDemandeDateFind, DemarcheId } from 'camino-common/src/demarche'
 import { HTTP_STATUS } from 'camino-common/src/http'
-import { CaminoDate, getCurrent } from 'camino-common/src/date'
+import { CaminoDate, firstEtapeDateValidator, getCurrent } from 'camino-common/src/date'
 import { titreDemarcheGet } from '../../database/queries/titres-demarches'
 import { userSuper } from '../../database/user-super'
 import { titreEtapeGet, titreEtapeUpdate, titreEtapeUpsert } from '../../database/queries/titres-etapes'
@@ -532,6 +532,7 @@ export const createEtape: RestNewPostCall<'/rest/etapes'> = (rootPipe): Effect.E
       validateAndGetEntrepriseDocuments(pool, flattenEtapeAndPerimetreInfo.flattenEtape, etape.entrepriseDocumentIds, user)
     ),
     Effect.tap(({ flattenEtapeAndPerimetreInfo, titreDemarche, entrepriseDocuments, body: etape, user }) => {
+      const firstEtapeDate = demarcheEnregistrementDemandeDateFind(titreDemarche.etapes)
       const rulesErrors = titreEtapeUpdationValidate(
         flattenEtapeAndPerimetreInfo.flattenEtape,
         titreDemarche,
@@ -541,7 +542,8 @@ export const createEtape: RestNewPostCall<'/rest/etapes'> = (rootPipe): Effect.E
         entrepriseDocuments,
         flattenEtapeAndPerimetreInfo.perimetreInfos.sdomZones,
         flattenEtapeAndPerimetreInfo.perimetreInfos.communes.map(({ id }) => id),
-        user
+        user,
+        isNotNullNorUndefined(firstEtapeDate) ? firstEtapeDate : firstEtapeDateValidator.parse(etape.date)
       )
       if (isNotNullNorUndefinedNorEmpty(rulesErrors)) {
         return Effect.fail({ message: etapeNonValide, detail: rulesErrors.join(', ') })
@@ -751,6 +753,7 @@ export const updateEtape: RestNewPutCall<'/rest/etapes'> = (rootPipe): Effect.Ef
       validateAndGetEntrepriseDocuments(pool, flattenEtapeAndPerimetre.flattenEtape, etape.entrepriseDocumentIds, user)
     ),
     Effect.tap(({ flattenEtapeAndPerimetre, titreDemarche, entrepriseDocuments, etape, user, titreEtapeOld }) => {
+      const firstEtapeDate = demarcheEnregistrementDemandeDateFind(titreDemarche.etapes)
       const rulesErrors = titreEtapeUpdationValidate(
         flattenEtapeAndPerimetre.flattenEtape,
         titreDemarche,
@@ -761,6 +764,7 @@ export const updateEtape: RestNewPutCall<'/rest/etapes'> = (rootPipe): Effect.Ef
         flattenEtapeAndPerimetre.perimetreInfos.sdomZones,
         flattenEtapeAndPerimetre.perimetreInfos.communes.map(({ id }) => id),
         user,
+        isNotNullNorUndefined(firstEtapeDate) ? firstEtapeDate : firstEtapeDateValidator.parse(etape.date),
         titreEtapeOld
       )
       if (isNotNullNorUndefinedNorEmpty(rulesErrors)) {
@@ -935,24 +939,26 @@ export const deposeEtape =
 
         // TODO 2023-06-14 TS 5.1 n’arrive pas réduire le type de titre
         const flattenEtape = await callAndExit(iTitreEtapeToFlattenEtape(titreEtape))
+        const firstEtapeDate = demarcheEnregistrementDemandeDateFind(titreDemarche.etapes)
+        const date = isEntreprise(user) || isBureauDEtudes(user) ? getCurrent() : titreEtape.date
         const deposable = canDeposeEtape(
           user,
           { ...titre, titulaires: titre.titulaireIds ?? [], administrationsLocales: titre.administrationsLocales ?? [] },
+          titreDemarche.id,
           titreDemarche.typeId,
           flattenEtape,
           etapeDocuments,
           entrepriseDocuments,
           sdomZones,
           communes,
-          etapeAvis
+          etapeAvis,
+          isNotNullNorUndefined(firstEtapeDate) ? firstEtapeDate : firstEtapeDateValidator.parse(date)
         )
         if (!deposable) throw new Error('droits insuffisants')
 
         if (canBeBrouillon(titreEtape.typeId) === ETAPE_IS_NOT_BROUILLON) {
           throw new Error('cette étape ne peut-être déposée')
         }
-
-        const date = isEntreprise(user) || isBureauDEtudes(user) ? getCurrent() : titreEtape.date
 
         await titreEtapeUpdate(
           titreEtape.id,
@@ -1077,7 +1083,10 @@ const demarcheEtapesTypesGet = (
       ({ etape }) => isNullOrUndefined(titreEtapeId) || (isNotNullNorUndefined(titreEtapeId) && isNotNullNorUndefined(etape)),
       () => ({ message: etapeNonExistante })
     ),
-    Effect.bind('machine', ({ titreDemarche }) => Effect.succeed(machineFind(titreDemarche.titre.typeId, titreDemarche.typeId, titreDemarche.etapes, titreDemarche.id, date))),
+    Effect.let('firstEtapeDate', ({ titreDemarche }) => demarcheEnregistrementDemandeDateFind(titreDemarche.etapes)),
+    Effect.let('machine', ({ titreDemarche, firstEtapeDate }) =>
+      machineFind(titreDemarche.titre.typeId, titreDemarche.typeId, titreDemarche.id, isNotNullNorUndefined(firstEtapeDate) ? firstEtapeDate : firstEtapeDateValidator.parse(date))
+    ),
     Effect.bind('etapesTypes', ({ machine, titreDemarche, etape }) =>
       Effect.try({
         try: () => {

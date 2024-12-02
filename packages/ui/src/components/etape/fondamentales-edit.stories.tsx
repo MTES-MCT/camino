@@ -2,7 +2,7 @@ import { FondamentalesEdit } from './fondamentales-edit'
 import { Meta, StoryFn } from '@storybook/vue3'
 import { ETAPE_IS_BROUILLON, etapeIdValidator, etapeSlugValidator } from 'camino-common/src/etape'
 import { newEntrepriseId } from 'camino-common/src/entreprise'
-import { toCaminoDate } from 'camino-common/src/date'
+import { firstEtapeDateValidator, toCaminoDate } from 'camino-common/src/date'
 import { testBlankUser } from 'camino-common/src/tests-utils'
 import { action } from '@storybook/addon-actions'
 import { FlattenEtape } from 'camino-common/src/etape-form'
@@ -87,6 +87,7 @@ const entreprises = [
 ]
 
 const completeUpdate = action('completeUpdate')
+const firstEtapeDate = firstEtapeDateValidator.parse('2022-01-01')
 
 export const AxmDemandeSuper: StoryFn = () => (
   <FondamentalesEdit
@@ -99,6 +100,7 @@ export const AxmDemandeSuper: StoryFn = () => (
       ...testBlankUser,
     }}
     entreprises={entreprises}
+    firstEtapeDate={firstEtapeDate}
   />
 )
 
@@ -114,6 +116,7 @@ export const ArmDemandeONF: StoryFn = () => (
       ...testBlankUser,
     }}
     entreprises={entreprises}
+    firstEtapeDate={firstEtapeDate}
   />
 )
 
@@ -125,6 +128,7 @@ export const ArmDemandeOperateur: StoryFn = () => (
     titreTypeId="arm"
     user={{ role: 'entreprise', entrepriseIds: [], ...testBlankUser }}
     entreprises={entreprises}
+    firstEtapeDate={firstEtapeDate}
   />
 )
 
@@ -136,6 +140,7 @@ export const ArmJorfONF: StoryFn = () => (
     titreTypeId="arm"
     user={{ role: 'admin', administrationId: 'ope-onf-973-01', ...testBlankUser }}
     entreprises={entreprises}
+    firstEtapeDate={firstEtapeDate}
   />
 )
 
@@ -147,6 +152,7 @@ export const AxmDemandeONF: StoryFn = () => (
     titreTypeId="axm"
     user={{ role: 'admin', administrationId: 'ope-onf-973-01', ...testBlankUser }}
     entreprises={entreprises}
+    firstEtapeDate={firstEtapeDate}
   />
 )
 
@@ -158,6 +164,7 @@ export const AxmDemandeTropLongue: StoryFn = () => (
     titreTypeId="axm"
     user={{ role: 'super', ...testBlankUser }}
     entreprises={entreprises}
+    firstEtapeDate={firstEtapeDateValidator.parse(DATE_DEBUT_PROCEDURE_SPECIFIQUE)}
   />
 )
 
@@ -169,6 +176,7 @@ export const PrmDemandeONF: StoryFn = () => (
     titreTypeId="prm"
     user={{ role: 'admin', administrationId: 'ope-onf-973-01', ...testBlankUser }}
     entreprises={entreprises}
+    firstEtapeDate={firstEtapeDate}
   />
 )
 
@@ -180,5 +188,6 @@ export const PrmDeplacementDePerimetreONF: StoryFn = () => (
     titreTypeId="prm"
     user={{ role: 'admin', administrationId: 'ope-onf-973-01', ...testBlankUser }}
     entreprises={entreprises}
+    firstEtapeDate={firstEtapeDate}
   />
 )

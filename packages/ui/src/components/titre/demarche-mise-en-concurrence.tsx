@@ -1,6 +1,6 @@
 import type { ApiClient } from '@/api/api-client'
 import { AsyncData } from '@/api/client-rest'
-import { canHaveMiseEnConcurrence, DemarcheEtape, DemarcheId, demarcheIdValidator, GetDemarcheMiseEnConcurrence } from 'camino-common/src/demarche'
+import { canHaveMiseEnConcurrence, demarcheEnregistrementDemandeDateFind, DemarcheEtape, DemarcheId, demarcheIdValidator, GetDemarcheMiseEnConcurrence } from 'camino-common/src/demarche'
 import { computed, defineComponent, FunctionalComponent, ref } from 'vue'
 import { LoadingElement } from '../_ui/functional-loader'
 import { DeepReadonly, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, PickDistributive } from 'camino-common/src/typescript-tools'
@@ -10,7 +10,7 @@ import { ETAPE_TYPE_FOR_CONCURRENCY_DATA, ETAPES_TYPES } from 'camino-common/src
 import { isAdministrationRole, isSuperRole, UserNotNull } from 'camino-common/src/roles'
 import { watch } from 'vue'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
-import { machineIdFind } from 'camino-common/src/machines'
+import { CaminoMachineId, machineIdFind } from 'camino-common/src/machines'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { ETAPES_STATUTS } from 'camino-common/src/static/etapesStatuts'
 export type Props = {
@@ -46,12 +46,11 @@ export const DemarcheMiseEnConcurrence = defineComponent<Props>(props => {
 
       const demarchesSansResultat = props.titre.demarches
         .filter(({ demarche_type_id, etapes, id }) => {
-          const machineId = machineIdFind(
-            props.titre.titre_type_id,
-            demarche_type_id,
-            etapes.map(etape => ({ ...etape, typeId: etape.etape_type_id })),
-            id
-          )
+          const firstEtapeDate = demarcheEnregistrementDemandeDateFind(etapes.map(etape => ({ ...etape, typeId: etape.etape_type_id })))
+          let machineId: CaminoMachineId | undefined
+          if (isNotNullNorUndefined(firstEtapeDate)) {
+            machineId = machineIdFind(props.titre.titre_type_id, demarche_type_id, id, firstEtapeDate)
+          }
 
           return machineId === 'ProcedureSpecifique' && canHaveMiseEnConcurrence(demarche_type_id, hasTitresFrom)
         })

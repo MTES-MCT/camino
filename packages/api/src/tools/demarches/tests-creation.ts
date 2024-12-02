@@ -9,8 +9,9 @@ import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes'
 import { toCommuneId } from 'camino-common/src/static/communes'
 import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined, isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools'
 import { getDomaineId, getTitreTypeType } from 'camino-common/src/static/titresTypes'
-import { demarchesDefinitions, machineIdFind } from 'camino-common/src/machines'
+import { CaminoMachineId, demarchesDefinitions, machineIdFind } from 'camino-common/src/machines'
 import { getMachineFromId } from '../../business/rules-demarches/machines'
+import { demarcheEnregistrementDemandeDateFind } from 'camino-common/src/demarche'
 
 const writeEtapesForTest = async () => {
   for (const demarcheDefinition of demarchesDefinitions) {
@@ -37,7 +38,11 @@ const writeEtapesForTest = async () => {
     const lesDemarchesFiltres = demarches
       .filter(demarche => demarche.etapes?.length)
       .filter(demarche => {
-        const machineId = machineIdFind(demarche.titre!.typeId, demarche.typeId, demarche.etapes!, demarche.id)
+        const firstEtapeDate = demarcheEnregistrementDemandeDateFind(demarche.etapes)
+        let machineId: CaminoMachineId | undefined
+        if (isNotNullNorUndefined(firstEtapeDate)) {
+          machineId = machineIdFind(demarche.titre!.typeId, demarche.typeId, demarche.id, firstEtapeDate)
+        }
         return machineId === demarcheDefinition.machineId
       })
 

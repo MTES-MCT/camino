@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import { TITRES_TYPES_IDS, TitreTypeId, getTitreTypeType, titreTypeIdValidator } from './static/titresTypes'
-import { CaminoDate, caminoDateValidator } from './date'
+import { CaminoDate, caminoDateValidator, FirstEtapeDate, firstEtapeDateValidator } from './date'
 import { communeIdValidator } from './static/communes'
 import { secteurMaritimeValidator } from './static/facades'
 import { substanceLegaleIdValidator } from './static/substancesLegales'
@@ -278,18 +278,20 @@ export const demarcheCreationOutputValidator = z.object({
 
 export type DemarcheCreationOutput = z.infer<typeof demarcheCreationOutputValidator>
 
-export const demarcheEnregistrementDemandeDateFind = (titreEtapes: DeepReadonly<{ date: CaminoDate; typeId: EtapeTypeId }[]> | undefined): undefined | CaminoDate => {
+// TODO 2024-12-02 quand on a viré le DeepReadonly, on peut re-essayer d'avoir un typage plus concret, avec : si on a un tableau non vide, alors on a forcément un FirstEtapeDate
+// T extends [any, ...any[]] ? FirstEtapeDate : FirstEtapeDate | null
+export const demarcheEnregistrementDemandeDateFind = (titreEtapes: DeepReadonly<{ date: CaminoDate; typeId: EtapeTypeId }[]> | undefined): null | FirstEtapeDate => {
   if (isNullOrUndefinedOrEmpty(titreEtapes)) {
-    return undefined
+    return null
   }
 
   const titreEtapeDemande = titreEtapes.find(te => te.typeId === ETAPES_TYPES.enregistrementDeLaDemande)
 
   if (isNotNullNorUndefined(titreEtapeDemande)) {
-    return titreEtapeDemande.date
+    return firstEtapeDateValidator.parse(titreEtapeDemande.date)
   }
 
-  return toSorted(titreEtapes.map(te => te.date))[0]
+  return firstEtapeDateValidator.parse(toSorted(titreEtapes.map(te => te.date))[0])
 }
 
 export const getDemarcheMiseEnConcurrenceValidator = z.object({

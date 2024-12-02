@@ -14,6 +14,7 @@ import { DeepReadonly, isNotNullNorUndefined, isNullOrUndefined } from 'camino-c
 import { flattenContenuToSimpleContenu } from 'camino-common/src/sections'
 import { equalGeojson } from 'camino-common/src/perimetre'
 import { ApiFlattenEtape } from '../../api/_format/titres-etapes'
+import { FirstEtapeDate } from 'camino-common/src/date'
 
 export const titreEtapeUpdationValidate = (
   etape: Pick<Partial<ApiFlattenEtape>, 'id'> & Omit<ApiFlattenEtape, 'id'>,
@@ -25,6 +26,7 @@ export const titreEtapeUpdationValidate = (
   sdomZones: DeepReadonly<SDOMZoneId[]> | null | undefined,
   communes: CommuneId[] | null | undefined,
   user: DeepReadonly<User>,
+  firstEtapeDate: FirstEtapeDate,
   titreEtapeOld?: ITitreEtape
 ): string[] => {
   const errors: string[] = []
@@ -93,14 +95,14 @@ export const titreEtapeUpdationValidate = (
     }
   }
 
-  const etapeValid = isEtapeValid(etape, titre.typeId, titreDemarche.typeId, titreDemarche.id)
+  const etapeValid = isEtapeValid(etape, titre.typeId, titreDemarche.typeId, titreDemarche.id, firstEtapeDate)
   if (!etapeValid.valid) {
     errors.push(...etapeValid.errors)
   }
 
   // si l’étape n’est pas en cours de construction
   if (etape.isBrouillon === ETAPE_IS_NOT_BROUILLON) {
-    const etapeComplete = isEtapeComplete(etape, titre.typeId, titreDemarche.typeId, documents, entrepriseDocuments, sdomZones, communes ?? [], etapeAvis, user)
+    const etapeComplete = isEtapeComplete(etape, titre.typeId, titreDemarche.id, titreDemarche.typeId, documents, entrepriseDocuments, sdomZones, communes ?? [], etapeAvis, user, firstEtapeDate)
     if (!etapeComplete.valid) {
       errors.push(...etapeComplete.errors)
     }

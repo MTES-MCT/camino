@@ -4,9 +4,9 @@ import { EtapeAvis, EtapeDocument, TempEtapeAvis, TempEtapeDocument } from '../e
 import { User, isAdministrationAdmin, isAdministrationEditeur, isSuper } from '../roles'
 import { AvisTypeId, AvisTypes } from '../static/avisTypes'
 import { CommuneId } from '../static/communes'
-import { DemarcheTypeId } from '../static/demarchesTypes'
+import { DEMARCHES_TYPES_IDS, DemarcheTypeId } from '../static/demarchesTypes'
 import { DEPARTEMENT_IDS, toDepartementId } from '../static/departement'
-import { AutreDocumentType, DocumentType, DocumentsTypes, EntrepriseDocumentTypeId } from '../static/documentsTypes'
+import { AutreDocumentType, DOCUMENTS_TYPES_IDS, DocumentType, DocumentsTypes, EntrepriseDocumentTypeId } from '../static/documentsTypes'
 import { ETAPES_TYPES, EtapeTypeId, EtapesTypes } from '../static/etapesTypes'
 import { SDOMZoneId } from '../static/sdom'
 import { TITRES_TYPES_IDS, TitreTypeId, TitresTypes } from '../static/titresTypes'
@@ -18,6 +18,9 @@ import { getSections, getSectionsWithValue } from '../static/titresTypes_demarch
 import { isNotNullNorUndefinedNorEmpty, DeepReadonly, onlyUnique, NonEmptyArray, isNonEmptyArray, isNullOrUndefinedOrEmpty, isNullOrUndefined, Nullable } from '../typescript-tools'
 import { sectionsWithValueCompleteValidate } from './sections'
 import { canEditAmodiataires, canEditDuree, canEditPerimetre, canEditTitulaires } from './titres-etapes'
+import { machineIdFind } from '../machines'
+import { DemarcheId } from '../demarche'
+import { FirstEtapeDate } from '../date'
 
 type ValidReturn = { valid: true } | { valid: false; errors: NonEmptyArray<string> }
 
@@ -136,15 +139,30 @@ export const getDocumentsTypes = (
   etape: DeepReadonly<Pick<FlattenEtape, 'typeId'>>,
   demarcheTypeId: DemarcheTypeId,
   titreTypeId: TitreTypeId,
+  demarcheId: DemarcheId,
   sdomZoneIds: DeepReadonly<SDOMZoneId[]>,
-  isArmMecanise: boolean
+  isArmMecanise: boolean,
+  firstEtapeDate: FirstEtapeDate
 ): (DocumentType | AutreDocumentType)[] => {
   const dts = getDocuments(titreTypeId, demarcheTypeId, etape.typeId)
 
+  const machineId = machineIdFind(titreTypeId, demarcheTypeId, demarcheId, firstEtapeDate)
+  if (
+    machineId === 'ProcedureSpecifique' &&
+    titreTypeId === TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX &&
+    demarcheTypeId === DEMARCHES_TYPES_IDS.Octroi &&
+    etape.typeId === ETAPES_TYPES.demande
+  ) {
+    for (const documentType of dts) {
+      if ([DOCUMENTS_TYPES_IDS.justificationDExistenceDuGisement].includes(documentType.id)) {
+        documentType.optionnel = false
+      }
+    }
+  }
   // si la démarche est mécanisée il faut ajouter des documents obligatoires
   if (isArmMecanise) {
     for (const documentType of dts) {
-      if (['doe', 'dep'].includes(documentType.id)) {
+      if ([DOCUMENTS_TYPES_IDS.dossierLoiSurLEau, DOCUMENTS_TYPES_IDS.decisionCasParCas].includes(documentType.id)) {
         documentType.optionnel = false
       }
     }
@@ -217,19 +235,22 @@ export const getAvisTypes = (etapeTypeId: EtapeTypeId, titreTypeId: TitreTypeId,
 export const etapeDocumentsStepIsVisible = (etape: Pick<FlattenEtape, 'typeId'>, demarcheTypeId: DemarcheTypeId, titreTypeId: TitreTypeId): boolean => {
   return getDocuments(titreTypeId, demarcheTypeId, etape.typeId).length > 0
 }
+
 export const etapeDocumentsStepIsComplete = (
   etape: DeepReadonly<Pick<FlattenEtape, 'typeId' | 'contenu' | 'isBrouillon'>>,
   demarcheTypeId: DemarcheTypeId,
   titreTypeId: TitreTypeId,
+  demarcheId: DemarcheId,
   etapeDocuments: DeepReadonly<Pick<EtapeDocument | TempEtapeDocument, 'etape_document_type_id'>[]>,
-  sdomZoneIds: DeepReadonly<SDOMZoneId[]>
+  sdomZoneIds: DeepReadonly<SDOMZoneId[]>,
+  firstEtapeDate: FirstEtapeDate
 ): ValidReturn => {
   if (!etapeDocumentsStepIsVisible(etape, demarcheTypeId, titreTypeId)) {
     return { valid: true }
   }
 
   const errors: string[] = []
-  const documentTypes = getDocumentsTypes({ typeId: etape.typeId }, demarcheTypeId, titreTypeId, sdomZoneIds, etape.contenu.arm?.mecanise?.value === true)
+  const documentTypes = getDocumentsTypes({ typeId: etape.typeId }, demarcheTypeId, titreTypeId, demarcheId, sdomZoneIds, etape.contenu.arm?.mecanise?.value === true, firstEtapeDate)
 
   errors.push(
     ...documentTypes

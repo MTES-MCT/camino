@@ -1,5 +1,5 @@
 import { ITitreEtape, TitreEtapesTravauxTypes as Travaux } from '../../types'
-import { DemarcheId } from 'camino-common/src/demarche'
+import { demarcheEnregistrementDemandeDateFind, DemarcheId } from 'camino-common/src/demarche'
 
 import { titreEtapesSortDescByOrdre } from '../utils/titre-etapes-sort'
 import { titreEtapePublicationCheck } from './titre-etape-publication-check'
@@ -10,7 +10,7 @@ import { DemarcheTypeId, TravauxIds } from 'camino-common/src/static/demarchesTy
 import { ETAPES_TYPES, EtapeTypeId } from 'camino-common/src/static/etapesTypes'
 import { isEtapeStatusRejete } from 'camino-common/src/static/etapesStatuts'
 import { isNotNullNorUndefined, RecordPartial } from 'camino-common/src/typescript-tools'
-import { machineFind } from '../rules-demarches/machines'
+import { CaminoMachines, machineFind } from '../rules-demarches/machines'
 
 const titreEtapesDecisivesCommunesTypes: EtapeTypeId[] = ['css', 'abd', 'and']
 
@@ -288,7 +288,12 @@ export const titreDemarcheStatutIdFind = (demarcheTypeId: DemarcheTypeId, titreD
     return titreDemarcheTravauxStatutIdFind(titreDemarcheEtapes, demarcheTypeId)
   }
 
-  const machine = machineFind(titreTypeId, demarcheTypeId, titreDemarcheEtapes, demarcheId)
+  const firstEtapeDate = demarcheEnregistrementDemandeDateFind(titreDemarcheEtapes)
+
+  let machine: CaminoMachines | undefined
+  if (isNotNullNorUndefined(firstEtapeDate)) {
+    machine = machineFind(titreTypeId, demarcheTypeId, demarcheId, firstEtapeDate)
+  }
 
   if (isNotNullNorUndefined(machine)) {
     return machine.demarcheStatut(toMachineEtapes(titreDemarcheEtapes)).demarcheStatut

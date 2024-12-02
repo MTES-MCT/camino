@@ -3,8 +3,9 @@ import { describe, expect, test } from 'vitest'
 import { ProcedureSpecifiqueMachine } from './procedure-specifique.machine'
 import { EtapesTypesEtapesStatuts as ETES } from 'camino-common/src/static/etapesTypesEtapesStatuts'
 import { hectareToKm2, hectareValidator } from 'camino-common/src/number'
-import { machineFind } from '../machines'
-import { isNullOrUndefined } from 'camino-common/src/typescript-tools'
+import { CaminoMachines, machineFind } from '../machines'
+import { isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools'
+import { demarcheEnregistrementDemandeDateFind } from 'camino-common/src/demarche'
 const etapesProdSpecifiqueArmAxm = require('../arm-axm/2024-07-01-oct-pro-pr1-pr2-pre-exp-exs-prr.cas.json') // eslint-disable-line
 const psPccOctMachine = new ProcedureSpecifiqueMachine('pcc', 'oct')
 const psCxmOctMachine = new ProcedureSpecifiqueMachine('cxm', 'oct')
@@ -874,7 +875,11 @@ describe('vérifie l’arbre des procédures spécifique', () => {
   // pour regénérer le oct.cas.json: `npm run test:generate-data -w packages/api`
   test.each(etapesProdSpecifiqueArmAxm as any[])('cas réel N°$id', demarche => {
     // ici les étapes sont déjà ordonnées
-    const machine = machineFind(demarche.titreTypeId, demarche.demarcheTypeId, demarche.etapes, demarche.id)
+    const firstEtapeDate = demarcheEnregistrementDemandeDateFind(demarche.etapes)
+    let machine: CaminoMachines | undefined
+    if (isNotNullNorUndefined(firstEtapeDate)) {
+      machine = machineFind(demarche.titreTypeId, demarche.demarcheTypeId, demarche.id, firstEtapeDate)
+    }
     if (isNullOrUndefined(machine)) {
       throw new Error('Impossible de trouver une machine')
     }

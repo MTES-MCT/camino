@@ -23,6 +23,9 @@ export const caminoDateValidator = z
   .refine(date => !isNaN(new Date(date).getTime()), { message: 'date invalide' })
 export type CaminoDate = z.infer<typeof caminoDateValidator>
 
+export const firstEtapeDateValidator = caminoDateValidator.brand<'FirstEtapeDate'>()
+export type FirstEtapeDate = z.infer<typeof firstEtapeDateValidator>
+
 export type CaminoDateFormated = string & { __camino: 'DateFormated' }
 
 // TODO 2024-06-12 utiliser le validateur zod pour faire tout ça directement, avec une union string/date et un transform

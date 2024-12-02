@@ -50,6 +50,7 @@ export interface IGetEtapesByDemarcheIdDbQuery {
 
 /** 'GetDemarcheByIdOrSlugDb' parameters type */
 export interface IGetDemarcheByIdOrSlugDbParams {
+  enregistrementDeLaDemandeId: string;
   idOrSlug: string;
 }
 
@@ -60,6 +61,7 @@ export interface IGetDemarcheByIdOrSlugDbResult {
   demarche_slug: string | null;
   demarche_type_id: string;
   entreprises_lecture: boolean;
+  first_etape_date: string;
   public_lecture: boolean;
   titre_id: string;
   titre_nom: string;

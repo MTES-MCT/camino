@@ -16,6 +16,7 @@ import { CoreEtapeCreationOrModification } from './etape-api-client'
 import { CaminoError } from 'camino-common/src/zod-tools'
 import { perimetreIsValide } from 'camino-common/src/permissions/titres-etapes'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
+import { FirstEtapeDate } from 'camino-common/src/date'
 
 export interface Props {
   apiClient: Pick<ApiClient, 'uploadTempDocument' | 'geojsonImport' | 'geojsonPointsImport' | 'geojsonForagesImport'>
@@ -28,6 +29,7 @@ export interface Props {
   onPointsChange: (geojson4326Points: FeatureCollectionPoints, geojsonOriginePoints: FeatureCollectionPoints) => void
   onForagesChange: (geojson4326Forages: FeatureCollectionForages, geojsonOrigineForages: FeatureCollectionForages) => void
   initTab?: 'points' | 'carte'
+  firstEtapeDate: FirstEtapeDate
 }
 
 type DisplayPerimetreProps = {
@@ -102,7 +104,7 @@ export const PerimetreEdit = defineComponent<Props>(props => {
 
   const result = (value: GeojsonInformations | CaminoError<string>) => {
     if ('geojson4326_perimetre' in value) {
-      const isValid = perimetreIsValide(props.titreTypeId, props.demarcheTypeId, props.etape.typeId, value.surface, props.etape.titreDemarcheId, props.etape.date)
+      const isValid = perimetreIsValide(props.titreTypeId, props.demarcheTypeId, props.etape.typeId, value.surface, props.etape.titreDemarcheId, props.firstEtapeDate)
       if (!isValid.valid) {
         importError.value = { message: isValid.message }
       } else {
@@ -181,4 +183,4 @@ export const PerimetreEdit = defineComponent<Props>(props => {
 })
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-PerimetreEdit.props = ['etape', 'apiClient', 'titreTypeId', 'demarcheTypeId', 'titreSlug', 'onEtapeChange', 'initTab', 'onPointsChange', 'onForagesChange', 'onHeritageChange']
+PerimetreEdit.props = ['etape', 'apiClient', 'titreTypeId', 'demarcheTypeId', 'titreSlug', 'onEtapeChange', 'initTab', 'onPointsChange', 'onForagesChange', 'onHeritageChange', 'firstEtapeDate']

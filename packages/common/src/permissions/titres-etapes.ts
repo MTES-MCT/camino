@@ -27,7 +27,7 @@ import { TITRES_TYPES_IDS_DEMAT } from './titres'
 import { KM2, km2toHectare, ZERO_KM2 } from '../number'
 import { machineIdFind } from '../machines'
 import { DemarcheId } from '../demarche'
-import { CaminoDate } from '../date'
+import { FirstEtapeDate } from '../date'
 
 export type InputAbsent = { visibility: 'absent'; message: string }
 type InputPresentRequired = { visibility: 'present'; required: true; message: string }
@@ -115,9 +115,9 @@ export const dureeIsValide = (
   dureeValue: Pick<FlattenEtape['duree'], 'value'>,
   surfaceKm2: KM2,
   demarcheId: DemarcheId,
-  date: CaminoDate
+  date: FirstEtapeDate
 ): { valid: true } | { valid: false; message: string } => {
-  const machineId = machineIdFind(titreTypeId, demarcheTypeId, undefined, demarcheId, date)
+  const machineId = machineIdFind(titreTypeId, demarcheTypeId, demarcheId, date)
   if (etapeTypeId === ETAPES_TYPES.demande && machineId === 'ProcedureSpecifique') {
     const duree = dureeValue.value ?? 0
     const surface = km2toHectare(surfaceKm2)
@@ -161,9 +161,9 @@ export const perimetreIsValide = (
   etapeTypeId: EtapeTypeId,
   surfaceKm2: KM2,
   demarcheId: DemarcheId,
-  date: CaminoDate
+  date: FirstEtapeDate
 ): { valid: true } | { valid: false; message: string } => {
-  const machineId = machineIdFind(titreTypeId, demarcheTypeId, undefined, demarcheId, date)
+  const machineId = machineIdFind(titreTypeId, demarcheTypeId, demarcheId, date)
   if (etapeTypeId === ETAPES_TYPES.demande && machineId === 'ProcedureSpecifique') {
     const surface = km2toHectare(surfaceKm2)
     if (titreTypeId === TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX) {
@@ -287,12 +287,13 @@ export const isEtapeValid = (
   etape: IsEtapeCompleteEtape,
   titreTypeId: TitreTypeId,
   demarcheTypeId: DemarcheTypeId,
-  demarcheId: DemarcheId
+  demarcheId: DemarcheId,
+  firstEtapeDate: FirstEtapeDate
 ): { valid: true } | { valid: false; errors: NonEmptyArray<string> } => {
   const surface = etape.perimetre.value?.surface ?? ZERO_KM2
   const isValidChecks = [
-    dureeIsValide(titreTypeId, demarcheTypeId, etape.typeId, etape.duree, surface, demarcheId, etape.date),
-    perimetreIsValide(titreTypeId, demarcheTypeId, etape.typeId, surface, demarcheId, etape.date),
+    dureeIsValide(titreTypeId, demarcheTypeId, etape.typeId, etape.duree, surface, demarcheId, firstEtapeDate),
+    perimetreIsValide(titreTypeId, demarcheTypeId, etape.typeId, surface, demarcheId, firstEtapeDate),
   ]
   const errors: string[] = isValidChecks.reduce<string[]>((acc, c) => {
     if (!c.valid) {
@@ -312,20 +313,22 @@ export const isEtapeValid = (
 export const isEtapeComplete = (
   etape: IsEtapeCompleteEtape,
   titreTypeId: TitreTypeId,
+  demarcheId: DemarcheId,
   demarcheTypeId: DemarcheTypeId,
   documents: IsEtapeCompleteDocuments,
   entrepriseDocuments: IsEtapeCompleteEntrepriseDocuments,
   sdomZones: IsEtapeCompleteSdomZones,
   communes: IsEtapeCompleteCommunes,
   etapeAvis: IsEtapeCompleteEtapeAvis,
-  user: DeepReadonly<User>
+  user: DeepReadonly<User>,
+  firstEtapeDate: FirstEtapeDate
 ): { valid: true } | { valid: false; errors: NonEmptyArray<string> } => {
   const isCompleteChecks = [
     dateTypeStepIsComplete(etape, user),
     fondamentaleStepIsComplete(etape, demarcheTypeId, titreTypeId, user),
     sectionsStepIsComplete(etape, demarcheTypeId, titreTypeId),
     perimetreStepIsComplete(etape, demarcheTypeId),
-    etapeDocumentsStepIsComplete(etape, demarcheTypeId, titreTypeId, documents, sdomZones ?? []),
+    etapeDocumentsStepIsComplete(etape, demarcheTypeId, titreTypeId, demarcheId, documents, sdomZones ?? [], firstEtapeDate),
     entrepriseDocumentsStepIsComplete(
       etape,
       demarcheTypeId,
@@ -353,16 +356,18 @@ type IsEtapeDeposableEtapeAvis = DeepReadonly<Pick<EtapeAvis | TempEtapeAvis, 'a
 export const isEtapeDeposable = (
   user: User,
   titreTypeId: TitreTypeId,
+  demarcheId: DemarcheId,
   demarcheTypeId: DemarcheTypeId,
   titreEtape: DeepReadonly<Pick<FlattenEtape, 'typeId' | 'date' | 'statutId' | 'duree' | 'contenu' | 'substances' | 'perimetre' | 'isBrouillon' | 'titulaires' | 'amodiataires'>>,
   etapeDocuments: IsEtapeCompleteDocuments,
   entrepriseDocuments: IsEtapeCompleteEntrepriseDocuments,
   sdomZones: IsEtapeCompleteSdomZones,
   communes: IsEtapeCompleteCommunes,
-  etapeAvis: IsEtapeDeposableEtapeAvis
+  etapeAvis: IsEtapeDeposableEtapeAvis,
+  firstEtapeDate: FirstEtapeDate
 ): boolean => {
   if (titreEtape.isBrouillon === ETAPE_IS_BROUILLON) {
-    const complete = isEtapeComplete(titreEtape, titreTypeId, demarcheTypeId, etapeDocuments, entrepriseDocuments, sdomZones, communes, etapeAvis, user)
+    const complete = isEtapeComplete(titreEtape, titreTypeId, demarcheId, demarcheTypeId, etapeDocuments, entrepriseDocuments, sdomZones, communes, etapeAvis, user, firstEtapeDate)
     if (!complete.valid) {
       console.warn(complete.errors)
 
@@ -383,16 +388,18 @@ export const canDeposeEtape = (
     titulaires: EntrepriseId[]
     administrationsLocales: AdministrationId[]
   },
+  demarcheId: DemarcheId,
   demarcheTypeId: DemarcheTypeId,
   titreEtape: DeepReadonly<Pick<FlattenEtape, 'typeId' | 'date' | 'statutId' | 'duree' | 'contenu' | 'substances' | 'perimetre' | 'isBrouillon' | 'titulaires' | 'amodiataires'>>,
   etapeDocuments: Pick<EtapeDocument, 'etape_document_type_id'>[],
   entrepriseDocuments: Pick<EntrepriseDocument, 'entreprise_document_type_id' | 'entreprise_id'>[],
   sdomZones: SDOMZoneId[] | null | undefined,
   communes: CommuneId[],
-  etapeAvis: IsEtapeDeposableEtapeAvis
+  etapeAvis: IsEtapeDeposableEtapeAvis,
+  firstEtapeDate: FirstEtapeDate
 ): boolean => {
   return (
-    isEtapeDeposable(user, titre.typeId, demarcheTypeId, titreEtape, etapeDocuments, entrepriseDocuments, sdomZones, communes, etapeAvis) &&
+    isEtapeDeposable(user, titre.typeId, demarcheId, demarcheTypeId, titreEtape, etapeDocuments, entrepriseDocuments, sdomZones, communes, etapeAvis, firstEtapeDate) &&
     canCreateOrEditEtape(
       user,
       titreEtape.typeId,
