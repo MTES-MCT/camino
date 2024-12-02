@@ -49,7 +49,7 @@ import {
 } from './statistiques'
 import { fiscaliteValidator } from './validators/fiscalite'
 import { caminoConfigValidator } from './static/config'
-import { communeValidator } from './static/communes'
+import { communeIdValidator, communeValidator } from './static/communes'
 import { Expect, isFalse, isNotNullNorUndefined, isTrue } from './typescript-tools'
 import { activiteDocumentIdValidator, activiteEditionValidator, activiteIdOrSlugValidator, activiteValidator } from './activite'
 import { geoSystemeIdValidator } from './static/geoSystemes'
@@ -157,7 +157,11 @@ const geoSystemIdParamsValidator = z.object({ geoSystemeId: geoSystemeIdValidato
 export const CaminoRestRoutes = {
   '/config': { params: noParamsValidator, newGet: { output: caminoConfigValidator } },
   '/moi': { params: noParamsValidator, newGet: { output: userValidator } },
-  '/rest/utilisateurs/:id/newsletter': { params: utilisateurIdParamsValidator, get: { output: z.boolean() }, post: { input: newsletterAbonnementValidator, output: z.boolean() } },
+  '/rest/utilisateurs/:id/newsletter': {
+    params: utilisateurIdParamsValidator,
+    newGet: { output: z.object({ subscribed: z.boolean() }) },
+    post: { input: newsletterAbonnementValidator, output: z.boolean() },
+  },
   '/rest/utilisateurs/:id': { params: utilisateurIdParamsValidator, newGet: { output: userNotNullValidator } },
   '/rest/utilisateurs/registerToNewsletter': { params: noParamsValidator, newGet: { output: z.boolean(), searchParams: newsletterRegistrationValidator } },
   // On passe par un http get plutot qu'un http delete car nous terminons par une redirection vers la deconnexion de oauth2, qui se traduit mal sur certains navigateurs et essaie de faire un delete sur une route get
@@ -228,7 +232,7 @@ export const CaminoRestRoutes = {
     put: { input: activiteEditionValidator, output: z.void() },
     delete: true,
   },
-  '/rest/communes': { params: noParamsValidator, get: { output: z.array(communeValidator) } },
+  '/rest/communes': { params: noParamsValidator, newGet: { output: z.array(communeValidator), searchParams: z.object({ ids: z.array(communeIdValidator).nonempty() }) } },
   '/rest/geojson/import/:geoSystemeId': {
     params: geoSystemIdParamsValidator,
     newPost: { input: geojsonImportBodyValidator, output: geojsonInformationsValidator },

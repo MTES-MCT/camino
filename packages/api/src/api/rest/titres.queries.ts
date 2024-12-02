@@ -98,7 +98,7 @@ export const getTitre = async (pool: Pool, user: User, idOrSlug: TitreIdOrSlug):
               if (isNonEmptyArray(etape.communes)) {
                 const ids = etape.communes.map(({ id }) => id)
                 if (isNonEmptyArray(ids)) {
-                  communes.push(...(await getCommunes(pool, { ids })))
+                  communes.push(...(await callAndExit(getCommunes(pool, { ids }))))
                 }
               }
 

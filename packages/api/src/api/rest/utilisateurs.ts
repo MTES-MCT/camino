@@ -31,24 +31,34 @@ import { getEntreprises } from './entreprises.queries'
 import { fetch } from 'undici'
 import { updateQgisToken } from './utilisateurs.queries'
 
-export const isSubscribedToNewsletter =
-  (pool: Pool) =>
-  async (req: CaminoRequest, res: CustomResponse<boolean>): Promise<void> => {
-    const user = req.auth
+const mailjetError = 'communication avec le serveur de mail impossible' as const
+type IsSubscribedToNewsletterErrors = GetUtilisateurByIdErrors | typeof mailjetError
+export const isSubscribedToNewsletter: RestNewGetCall<'/rest/utilisateurs/:id/newsletter'> = (rootPipe): Effect.Effect<{ subscribed: boolean }, CaminoApiError<IsSubscribedToNewsletterErrors>> =>
+  rootPipe.pipe(
+    Effect.filterOrFail(
+      ({ user }) => isNotNullNorUndefined(user),
+      () => ({ message: 'droits insuffisants' as const })
+    ),
+    Effect.flatMap(({ pool, params, user }) => newGetUtilisateurById(pool, params.id, user)),
+    Effect.flatMap(utilisateur =>
+      Effect.tryPromise({
+        try: () => isSubscribedToNewsLetter(utilisateur.email),
+        catch: e => ({ message: mailjetError, extra: e }),
+      })
+    ),
+    Effect.map(subscribed => ({ subscribed })),
+    Effect.mapError(caminoError =>
+      Match.value(caminoError.message).pipe(
+        Match.when('droits insuffisants', () => ({ ...caminoError, status: HTTP_STATUS.FORBIDDEN })),
+        Match.whenOr("Impossible d'exécuter la requête dans la base de données", 'communication avec le serveur de mail impossible', 'Problème de validation de données', () => ({
+          ...caminoError,
+          status: HTTP_STATUS.INTERNAL_SERVER_ERROR,
+        })),
+        Match.exhaustive
+      )
+    )
+  )
 
-    if (!req.params.id) {
-      res.sendStatus(HTTP_STATUS.FORBIDDEN)
-    } else {
-      const utilisateur = await getUtilisateurById(pool, utilisateurIdValidator.parse(req.params.id), user)
-
-      if (!user || !utilisateur) {
-        res.sendStatus(HTTP_STATUS.FORBIDDEN)
-      } else {
-        const subscribed = await isSubscribedToNewsLetter(utilisateur.email)
-        res.json(subscribed)
-      }
-    }
-  }
 export const updateUtilisateurPermission =
   (pool: Pool) =>
   async (req: CaminoRequest, res: CustomResponse<void>): Promise<void> => {

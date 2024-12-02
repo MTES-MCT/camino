@@ -1,22 +1,19 @@
-import { Commune, communeIdValidator } from 'camino-common/src/static/communes'
-import { Pool } from 'pg'
+import { Commune } from 'camino-common/src/static/communes'
 import { HTTP_STATUS } from 'camino-common/src/http'
-import { CaminoRequest, CustomResponse } from './express-type'
 import { getCommunes as getCommunesQuery } from '../../database/queries/communes.queries'
-import { z } from 'zod'
+import { RestNewGetCall } from '../../server/rest'
+import { CaminoApiError } from '../../types'
+import { EffectDbQueryAndValidateErrors } from '../../pg-database'
+import { Effect, Match } from 'effect'
 
-export const getCommunes = (pool: Pool) => async (req: CaminoRequest, res: CustomResponse<Commune[]>) => {
-  try {
-    const communeIds = z.array(communeIdValidator).nonempty().safeParse(req.query.ids)
-    if (communeIds.success) {
-      const communes = await getCommunesQuery(pool, { ids: communeIds.data })
-      res.json(communes)
-    } else {
-      res.sendStatus(HTTP_STATUS.BAD_REQUEST)
-    }
-  } catch (e) {
-    console.error(e)
-
-    res.sendStatus(HTTP_STATUS.INTERNAL_SERVER_ERROR)
-  }
-}
+export const getCommunes: RestNewGetCall<'/rest/communes'> = (rootPipe): Effect.Effect<Commune[], CaminoApiError<EffectDbQueryAndValidateErrors>> =>
+  rootPipe.pipe(
+    Effect.flatMap(({ searchParams, pool }) => getCommunesQuery(pool, { ids: searchParams.ids })),
+    Effect.mapError(caminoError =>
+      Match.value(caminoError.message).pipe(
+        Match.when("Impossible d'exécuter la requête dans la base de données", () => ({ ...caminoError, status: HTTP_STATUS.INTERNAL_SERVER_ERROR })),
+        Match.whenOr('Problème de validation de données', () => ({ ...caminoError, status: HTTP_STATUS.BAD_REQUEST })),
+        Match.exhaustive
+      )
+    )
+  )

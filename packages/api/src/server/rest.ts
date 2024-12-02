@@ -206,7 +206,7 @@ const restRouteImplementations: Readonly<{ [key in CaminoRestRoute]: Transform<k
   '/rest/utilisateur/generateQgisToken': { newPostCall: generateQgisToken, ...CaminoRestRoutes['/rest/utilisateur/generateQgisToken'] },
   '/rest/utilisateurs/:id/permission': { postCall: updateUtilisateurPermission, ...CaminoRestRoutes['/rest/utilisateurs/:id/permission'] },
   '/rest/utilisateurs/:id/delete': { getCall: deleteUtilisateur, ...CaminoRestRoutes['/rest/utilisateurs/:id/delete'] },
-  '/rest/utilisateurs/:id/newsletter': { getCall: isSubscribedToNewsletter, postCall: manageNewsletterSubscription, ...CaminoRestRoutes['/rest/utilisateurs/:id/newsletter'] }, // UNTESTED YET
+  '/rest/utilisateurs/:id/newsletter': { newGetCall: isSubscribedToNewsletter, postCall: manageNewsletterSubscription, ...CaminoRestRoutes['/rest/utilisateurs/:id/newsletter'] }, // UNTESTED YET
   '/rest/utilisateurs/:id': { newGetCall: getUtilisateur, ...CaminoRestRoutes['/rest/utilisateurs/:id'] },
   '/rest/utilisateurs': { newGetCall: getUtilisateurs, ...CaminoRestRoutes['/rest/utilisateurs'] },
   '/rest/entreprises/:entrepriseId/fiscalite/:annee': { getCall: fiscalite, ...CaminoRestRoutes['/rest/entreprises/:entrepriseId/fiscalite/:annee'] }, // UNTESTED YET
@@ -233,7 +233,7 @@ const restRouteImplementations: Readonly<{ [key in CaminoRestRoute]: Transform<k
   '/rest/etapes/:etapeId/etapeDocuments': { getCall: getEtapeDocuments, ...CaminoRestRoutes['/rest/etapes/:etapeId/etapeDocuments'] },
   '/rest/etapes/:etapeId/etapeAvis': { getCall: getEtapeAvis, ...CaminoRestRoutes['/rest/etapes/:etapeId/etapeAvis'] },
   '/rest/activites/:activiteId': { getCall: getActivite, putCall: updateActivite, deleteCall: deleteActivite, ...CaminoRestRoutes['/rest/activites/:activiteId'] },
-  '/rest/communes': { getCall: getCommunes, ...CaminoRestRoutes['/rest/communes'] },
+  '/rest/communes': { newGetCall: getCommunes, ...CaminoRestRoutes['/rest/communes'] },
   '/rest/geojson/import/:geoSystemeId': { newPostCall: geojsonImport, ...CaminoRestRoutes['/rest/geojson/import/:geoSystemeId'] },
   '/rest/geojson_points/import/:geoSystemeId': { newPostCall: geojsonImportPoints, ...CaminoRestRoutes['/rest/geojson_points/import/:geoSystemeId'] },
   '/rest/geojson_forages/import/:geoSystemeId': { newPostCall: geojsonImportForages, ...CaminoRestRoutes['/rest/geojson_forages/import/:geoSystemeId'] },

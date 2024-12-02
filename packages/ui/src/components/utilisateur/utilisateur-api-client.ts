@@ -6,7 +6,7 @@ import { CaminoError } from 'camino-common/src/zod-tools'
 
 export interface UtilisateurApiClient {
   getUtilisateur: (userId: UtilisateurId) => Promise<CaminoError<string> | UserNotNull>
-  getUtilisateurNewsletter: (userId: UtilisateurId) => Promise<boolean>
+  getUtilisateurNewsletter: (userId: UtilisateurId) => Promise<{ subscribed: boolean } | CaminoError<string>>
   updateUtilisateurNewsletter: (userId: UtilisateurId, subscribe: boolean) => Promise<void>
   registerToNewsletter: (email: string) => Promise<void>
   removeUtilisateur: (userId: UtilisateurId) => Promise<void>
@@ -22,7 +22,7 @@ export const utilisateurApiClient: UtilisateurApiClient = {
   getUtilisateur: async (userId: UtilisateurId) => {
     return newGetWithJson('/rest/utilisateurs/:id', { id: userId })
   },
-  getUtilisateurNewsletter: async (userId: UtilisateurId) => getWithJson('/rest/utilisateurs/:id/newsletter', { id: userId }),
+  getUtilisateurNewsletter: async (userId: UtilisateurId) => newGetWithJson('/rest/utilisateurs/:id/newsletter', { id: userId }),
   updateUtilisateurNewsletter: async (userId: UtilisateurId, newsletter: boolean) => {
     await postWithJson('/rest/utilisateurs/:id/newsletter', { id: userId }, { newsletter })
   },

@@ -111,16 +111,16 @@ export const PureUtilisateur = defineComponent<Props>(props => {
     }
 
     if (isMe.value) {
-      try {
+      const value = await props.apiClient.getUtilisateurNewsletter(props.utilisateurId)
+      if ('message' in value) {
+        subscription.value = {
+          status: 'NEW_ERROR',
+          error: value,
+        }
+      } else {
         subscription.value = {
           status: 'LOADED',
-          value: await props.apiClient.getUtilisateurNewsletter(props.utilisateurId),
-        }
-      } catch (e: any) {
-        console.error('error', e)
-        subscription.value = {
-          status: 'ERROR',
-          message: e.message ?? "Une erreur s'est produite",
+          value: value.subscribed,
         }
       }
     }

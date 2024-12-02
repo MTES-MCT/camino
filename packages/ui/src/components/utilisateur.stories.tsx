@@ -30,7 +30,7 @@ const apiClientMock: Props['apiClient'] = {
       telephone_fixe: null,
       telephone_mobile: null,
     }),
-  getUtilisateurNewsletter: () => Promise.resolve(true),
+  getUtilisateurNewsletter: () => Promise.resolve({ subscribed: true }),
   removeUtilisateur: params => {
     deleteUtilisateur(params)
 

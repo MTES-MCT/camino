@@ -22,6 +22,7 @@ import { RawLineMatrice, Titulaire, getRawLines } from '../business/matrices'
 import Titres from '../database/models/titres'
 import TitresActivites from '../database/models/titres-activites'
 import { SubstanceFiscaleId } from 'camino-common/src/static/substancesFiscales'
+import { callAndExit } from '../tools/fp-tools'
 // Le pool ne doit être qu'aux entrypoints : le daily, le monthly, et l'application.
 const pool = new pg.Pool({
   host: config().PGHOST,
@@ -319,7 +320,7 @@ const matrices = async (annee: CaminoAnnee, pool: Pool): Promise<void> => {
     .flatMap(({ communes }) => communes?.map(({ id }) => id))
     .filter(onlyUnique)
     .filter(isNotNullNorUndefined)
-  const communes = isNonEmptyArray(communesIds) ? await getCommunes(pool, { ids: communesIds }) : []
+  const communes = isNonEmptyArray(communesIds) ? await callAndExit(getCommunes(pool, { ids: communesIds })) : []
 
   const { matrice1121, matrice1122, matrice1403, matrice1404, rawLines } = buildMatrices(activites, activitesTrimestrielles, titres, annee, communes, entreprises)
 

@@ -1,4 +1,4 @@
-import { restCall } from '../../../tests/_utils/index'
+import { restNewCall } from '../../../tests/_utils/index'
 import { dbManager } from '../../../tests/db-manager'
 import { expect, test, describe, afterAll, beforeAll, vi } from 'vitest'
 import type { Pool } from 'pg'
@@ -20,7 +20,7 @@ afterAll(async () => {
 
 describe('getCommunes', () => {
   test('ne peut pas récupérer des communes sans ids', async () => {
-    const tested = await restCall(dbPool, '/rest/communes', {}, undefined, { ids: [] })
+    const tested = await restNewCall(dbPool, '/rest/communes', {}, undefined, { ids: [] })
 
     expect(tested.statusCode).toBe(HTTP_STATUS.BAD_REQUEST)
   })
@@ -31,17 +31,30 @@ describe('getCommunes', () => {
     await insertCommune(dbPool, { id: toCommuneId('37000'), nom: 'Tours', geometry: fakeGeometry })
     await insertCommune(dbPool, { id: toCommuneId('31000'), nom: 'Toulouse', geometry: fakeGeometry })
 
-    let tested = await restCall(dbPool, '/rest/communes', {}, undefined, { ids: ['72000', '37000'] })
+    let tested = await restNewCall(dbPool, '/rest/communes', {}, undefined, { ids: ['72000', '37000'] })
 
-    expect(tested.statusCode).toBe(HTTP_STATUS.OK)
-    expect(tested.body).toStrictEqual([
-      { id: toCommuneId('72000'), nom: 'Le Mans' },
-      { id: toCommuneId('37000'), nom: 'Tours' },
-    ])
+    expect(tested.body).toMatchInlineSnapshot(`
+      [
+        {
+          "id": "72000",
+          "nom": "Le Mans",
+        },
+        {
+          "id": "37000",
+          "nom": "Tours",
+        },
+      ]
+    `)
 
-    tested = await restCall(dbPool, '/rest/communes', {}, undefined, { ids: ['72000'] })
+    tested = await restNewCall(dbPool, '/rest/communes', {}, undefined, { ids: ['72000'] })
 
-    expect(tested.statusCode).toBe(HTTP_STATUS.OK)
-    expect(tested.body).toStrictEqual([{ id: toCommuneId('72000'), nom: 'Le Mans' }])
+    expect(tested.body).toMatchInlineSnapshot(`
+      [
+        {
+          "id": "72000",
+          "nom": "Le Mans",
+        },
+      ]
+    `)
   })
 })
