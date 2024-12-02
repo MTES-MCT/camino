@@ -3,7 +3,7 @@ FROM node:20.15.1-alpine
 # on profite que
 # - l'utilisateur a le même uid/gid sur toutes les machines
 # - ansible crée les dossiers avec les bons droits
-RUN apk add make && \
+RUN apk add make curl && \
     addgroup -g 1002 nonroot && \
     adduser -u 1002 -D -G nonroot nonroot && \
     mkdir -p project/node_modules && \
