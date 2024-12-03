@@ -117,7 +117,7 @@ export type EtapeAvisModification = z.infer<typeof etapeAvisModificationValidato
 
 export const tempEtapeDocumentDescriptionOptionnelleValidator = etapeDocumentDescriptionOptionnelleValidator.omit({ id: true }).extend({ temp_document_name: tempDocumentNameValidator })
 export const tempEtapeDocumentDescriptionObligatoireValidator = etapeDocumentDescriptionObligatoireValidator.omit({ id: true }).extend({ temp_document_name: tempDocumentNameValidator })
-export const tempEtapeDocumentValidator = z.union([tempEtapeDocumentDescriptionOptionnelleValidator, tempEtapeDocumentDescriptionObligatoireValidator])
+export const tempEtapeDocumentValidator = z.discriminatedUnion('etape_document_type_id', [tempEtapeDocumentDescriptionOptionnelleValidator, tempEtapeDocumentDescriptionObligatoireValidator])
 export type TempEtapeDocument = z.infer<typeof tempEtapeDocumentValidator>
 
 const etapeDocumentDescriptionOptionnelleWithFileModificationValidator = etapeDocumentDescriptionOptionnelleValidator.extend({ temp_document_name: tempDocumentNameValidator.optional() })

@@ -145,5 +145,10 @@ demandeur
     "nom": "Schéma de pénétration du massif forestier",
     "optionnel": false,
   },
+  {
+    "id": "aut",
+    "nom": "Autre document",
+    "optionnel": true,
+  },
 ]
 `;

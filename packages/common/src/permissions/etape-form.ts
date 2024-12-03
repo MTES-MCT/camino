@@ -177,7 +177,7 @@ export const getDocumentsTypes = (
     }
   }
 
-  return [...dts, { ...DocumentsTypes.aut, optionnel: true }]
+  return dts
 }
 
 export const getAvisTypes = (etapeTypeId: EtapeTypeId, titreTypeId: TitreTypeId, communeIds: DeepReadonly<CommuneId[]>): { id: AvisTypeId; optionnel: boolean }[] => {
@@ -232,8 +232,8 @@ export const getAvisTypes = (etapeTypeId: EtapeTypeId, titreTypeId: TitreTypeId,
   return avis
 }
 
-export const etapeDocumentsStepIsVisible = (etape: Pick<FlattenEtape, 'typeId'>, demarcheTypeId: DemarcheTypeId, titreTypeId: TitreTypeId): boolean => {
-  return getDocuments(titreTypeId, demarcheTypeId, etape.typeId).length > 0
+export const etapeDocumentsStepIsVisible = (): boolean => {
+  return true // il y'a forcément au moins le document "Autre" que l'on peut saisir, donc si on a le droit d'éditer une étape, on peut voir les documents dans la page d'édition d'une étape
 }
 
 export const etapeDocumentsStepIsComplete = (
@@ -245,10 +245,6 @@ export const etapeDocumentsStepIsComplete = (
   sdomZoneIds: DeepReadonly<SDOMZoneId[]>,
   firstEtapeDate: FirstEtapeDate
 ): ValidReturn => {
-  if (!etapeDocumentsStepIsVisible(etape, demarcheTypeId, titreTypeId)) {
-    return { valid: true }
-  }
-
   const errors: string[] = []
   const documentTypes = getDocumentsTypes({ typeId: etape.typeId }, demarcheTypeId, titreTypeId, demarcheId, sdomZoneIds, etape.contenu.arm?.mecanise?.value === true, firstEtapeDate)
 

@@ -626,7 +626,7 @@ const EtapeEditFormInternal = defineComponent<
         </Bloc>
       ) : null}
 
-      {etapeDocumentsStepIsVisible(props.etape, props.demarcheTypeId, props.titreTypeId) ? (
+      {etapeDocumentsStepIsVisible() ? (
         <Bloc
           step={{ name: 'Liste des documents', help: null }}
           complete={

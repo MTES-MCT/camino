@@ -11,7 +11,15 @@ test('getDocuments erreurs', () => {
 })
 
 test('getDocuments pas de surcharge mais pas de documents', () => {
-  expect(getDocuments('apm', 'amo', 'pqr')).toMatchInlineSnapshot('[]')
+  expect(getDocuments('apm', 'amo', 'pqr')).toMatchInlineSnapshot(`
+    [
+      {
+        "id": "aut",
+        "nom": "Autre document",
+        "optionnel": true,
+      },
+    ]
+  `)
 })
 
 test('getDocuments pas de surcharge', () => {
@@ -20,6 +28,11 @@ test('getDocuments pas de surcharge', () => {
       {
         "id": "dcl",
         "nom": "Déclaration",
+        "optionnel": true,
+      },
+      {
+        "id": "aut",
+        "nom": "Autre document",
         "optionnel": true,
       },
     ]
@@ -39,6 +52,11 @@ test("la lettre des saisines est obligatoire pour l'avis des services et commiss
         "id": "lcm",
         "nom": "Lettre de saisine des services civils et militaires",
         "optionnel": false,
+      },
+      {
+        "id": "aut",
+        "nom": "Autre document",
+        "optionnel": true,
       },
     ]
   `)

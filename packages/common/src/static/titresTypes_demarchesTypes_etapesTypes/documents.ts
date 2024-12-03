@@ -1,6 +1,6 @@
 import { getEntriesHardcore, isNotNullNorUndefined } from '../../typescript-tools'
 import { DEMARCHES_TYPES_IDS, DemarcheTypeId } from './../demarchesTypes'
-import { DocumentsTypes, DOCUMENTS_TYPES_IDS, DocumentType, DocumentTypeId, isDocumentTypeId } from './../documentsTypes'
+import { DocumentsTypes, DOCUMENTS_TYPES_IDS, DocumentType, DocumentTypeId, isDocumentTypeId, AutreDocumentType } from './../documentsTypes'
 import { ETAPES_TYPES, EtapeTypeId } from './../etapesTypes'
 import { TitreTypeId, TITRES_TYPES_IDS } from './../titresTypes'
 import { TDEType } from './index'
@@ -384,9 +384,9 @@ export const toDocuments = (): { etapeTypeId: EtapeTypeId; documentTypeId: Docum
   )
 }
 
-export const getDocuments = (titreTypeId?: TitreTypeId, demarcheId?: DemarcheTypeId, etapeTypeId?: EtapeTypeId): DocumentType[] => {
+export const getDocuments = (titreTypeId?: TitreTypeId, demarcheId?: DemarcheTypeId, etapeTypeId?: EtapeTypeId): (DocumentType | AutreDocumentType)[] => {
   if (isNotNullNorUndefined(titreTypeId) && isNotNullNorUndefined(demarcheId) && isNotNullNorUndefined(etapeTypeId)) {
-    const documentTypes: DocumentType[] = []
+    const documentTypes: (DocumentType | AutreDocumentType)[] = []
 
     if (isEtapesTypesEtapesTypesDocumentsTypes(etapeTypeId)) {
       documentTypes.push(...EtapesTypesDocumentsTypes[etapeTypeId].map(({ documentTypeId, optionnel }) => ({ ...DocumentsTypes[documentTypeId], optionnel })))
@@ -411,7 +411,7 @@ export const getDocuments = (titreTypeId?: TitreTypeId, demarcheId?: DemarcheTyp
         }
       })
 
-    return documentTypes
+    return [...documentTypes, { ...DocumentsTypes.aut, optionnel: true }]
   } else {
     throw new Error(`il manque des éléments pour trouver les documents titreTypeId: '${titreTypeId}', demarcheId: ${demarcheId}, etapeTypeId: ${etapeTypeId}`)
   }

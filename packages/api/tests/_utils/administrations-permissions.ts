@@ -18,7 +18,7 @@ import { getSections } from 'camino-common/src/static/titresTypes_demarchesTypes
 import { TitreId } from 'camino-common/src/validators/titres'
 import TitresDemarches from '../../src/database/models/titres-demarches'
 import { GEO_SYSTEME_IDS } from 'camino-common/src/static/geoSystemes'
-import { DocumentTypeId } from 'camino-common/src/static/documentsTypes'
+import { AutreDocumentTypeId, DocumentTypeId } from 'camino-common/src/static/documentsTypes'
 import { copyFileSync, mkdirSync } from 'node:fs'
 import { ETAPE_IS_NOT_BROUILLON, TempEtapeDocument } from 'camino-common/src/etape'
 import { tempDocumentNameValidator } from 'camino-common/src/document'
@@ -30,18 +30,25 @@ import { insertTitreGraph } from '../integration-test-helper'
 
 const dir = `${process.cwd()}/files/tmp/`
 
-export const testDocumentCreateTemp = (typeId: DocumentTypeId): TempEtapeDocument => {
+export const testDocumentCreateTemp = (typeId: DocumentTypeId | AutreDocumentTypeId): TempEtapeDocument => {
   const fileName = `existing_temp_file_${idGenerate()}`
   mkdirSync(dir, { recursive: true })
   copyFileSync(`./src/tools/small.pdf`, `${dir}/${fileName}`)
-
-  return {
-    etape_document_type_id: typeId,
-    entreprises_lecture: true,
-    public_lecture: true,
-    description: 'desc',
-    temp_document_name: tempDocumentNameValidator.parse(fileName),
-  }
+  return typeId === 'aut'
+    ? {
+        etape_document_type_id: typeId,
+        entreprises_lecture: true,
+        public_lecture: true,
+        description: 'desc',
+        temp_document_name: tempDocumentNameValidator.parse(fileName),
+      }
+    : {
+        etape_document_type_id: typeId,
+        entreprises_lecture: true,
+        public_lecture: true,
+        description: 'desc',
+        temp_document_name: tempDocumentNameValidator.parse(fileName),
+      }
 }
 
 export const visibleCheck = async (
