@@ -98,6 +98,22 @@ export interface IGetTitulairesAmodiatairesTitreEtapeQuery {
   result: IGetTitulairesAmodiatairesTitreEtapeResult;
 }
 
+/** 'HasTitreFromDb' parameters type */
+export interface IHasTitreFromDbParams {
+  titreId: string;
+}
+
+/** 'HasTitreFromDb' return type */
+export interface IHasTitreFromDbResult {
+  has_titre_from: boolean | null;
+}
+
+/** 'HasTitreFromDb' query type */
+export interface IHasTitreFromDbQuery {
+  params: IHasTitreFromDbParams;
+  result: IHasTitreFromDbResult;
+}
+
 /** 'GetDemandesPotentialConcurrenceDb' parameters type */
 export interface IGetDemandesPotentialConcurrenceDbParams {
   dateDebutProcedureSpecifique: string;

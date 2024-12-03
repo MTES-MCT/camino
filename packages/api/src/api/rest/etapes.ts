@@ -52,7 +52,7 @@ import {
   updateEtapeDocuments,
   UpdateEtapeDocumentsErrors,
 } from '../../database/queries/titres-etapes.queries'
-import { getEtapeDataForEdition } from './etapes.queries'
+import { getEtapeDataForEdition, hasTitreFrom } from './etapes.queries'
 import { SDOMZoneId } from 'camino-common/src/static/sdom'
 import { objectClone } from '../../tools/index'
 import { titreEtapeAdministrationsEmailsSend, titreEtapeUtilisateursEmailsSend } from '../graphql/resolvers/_titre-etape-email'
@@ -515,7 +515,8 @@ export const createEtape: RestNewPostCall<'/rest/etapes'> = (rootPipe): Effect.E
         }),
       () => ({ message: droitsInsuffisants })
     ),
-    Effect.bind('flattenEtapeAndPerimetreInfo', ({ titreDemarche, isBrouillon, body: etape, pool }) =>
+    Effect.bind('hasTitreFrom', ({ titreDemarche, pool }) => hasTitreFrom(pool, titreDemarche.titre.id)),
+    Effect.bind('flattenEtapeAndPerimetreInfo', ({ titreDemarche, isBrouillon, body: etape, pool, hasTitreFrom }) =>
       getFlattenEtape(
         etape as RestEtapeCreation, // TODO 2024-11-14 comment on fait là, si on met le deepReadonly ça transpire partout et c'est violent :(
         titreDemarche,
@@ -523,7 +524,7 @@ export const createEtape: RestNewPostCall<'/rest/etapes'> = (rootPipe): Effect.E
         isBrouillon,
         etapeSlugValidator.parse('unknown'),
         etape.typeId === ETAPES_TYPES.demande ? { amIFirst: true } : 'non-applicable',
-        etape.typeId === ETAPES_TYPES.demande ? true : 'non-applicable',
+        hasTitreFrom,
         [],
         pool
       )

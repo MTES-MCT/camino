@@ -2,7 +2,7 @@ import { EtapeDocumentId, EtapeId, EtapeIdOrSlug, etapeBrouillonValidator, etape
 import { ETAPE_TYPE_FOR_CONCURRENCY_DATA, etapeTypeIdValidator } from 'camino-common/src/static/etapesTypes'
 import { Pool } from 'pg'
 import { z } from 'zod'
-import { DBNotFound, DbQueryAccessError, Redefine, dbNotFoundError, dbQueryAndValidate, effectDbQueryAndValidate } from '../../pg-database'
+import { DBNotFound, DbQueryAccessError, EffectDbQueryAndValidateErrors, Redefine, dbNotFoundError, dbQueryAndValidate, effectDbQueryAndValidate } from '../../pg-database'
 import { sql } from '@pgtyped/runtime'
 import {
   IGetAdministrationsLocalesByEtapeIdQuery,
@@ -12,6 +12,7 @@ import {
   IGetEtapeDataForEditionDbQuery,
   IGetLargeobjectIdByEtapeDocumentIdInternalQuery,
   IGetTitulairesAmodiatairesTitreEtapeQuery,
+  IHasTitreFromDbQuery,
 } from './etapes.queries.types'
 import { demarcheIdValidator } from 'camino-common/src/demarche'
 import { sdomZoneIdValidator } from 'camino-common/src/static/sdom'
@@ -29,6 +30,7 @@ import { CaminoError } from 'camino-common/src/zod-tools'
 import { ZodUnparseable } from '../../tools/fp-tools'
 import { Effect, pipe } from 'effect'
 import { DATE_DEBUT_PROCEDURE_SPECIFIQUE } from 'camino-common/src/machines'
+import { TitreId } from 'camino-common/src/validators/titres'
 
 const getEtapeByIdValidator = z.object({
   etape_id: etapeIdValidator,
@@ -209,6 +211,22 @@ where
     and (etape_titulaires.titulaire_ids ? e.id
         or etape_amodiataires.amodiataire_ids ? e.id)
 `
+const titreInexistant = "le titre n'existe pas" as const
+const hasTitreFromValidator = z.object({ has_titre_from: z.boolean() })
+type HasTitreFromErrors = EffectDbQueryAndValidateErrors | typeof titreInexistant
+export const hasTitreFrom = (pool: Pool, titreId: TitreId): Effect.Effect<boolean, CaminoError<HasTitreFromErrors>> =>
+  pipe(
+    effectDbQueryAndValidate(hasTitreFromDb, { titreId }, pool, hasTitreFromValidator),
+    Effect.filterOrFail(
+      values => values.length === 1,
+      () => ({ message: titreInexistant })
+    ),
+    Effect.map(values => values[0].has_titre_from)
+  )
+
+const hasTitreFromDb = sql<Redefine<IHasTitreFromDbQuery, { titreId: TitreId }, z.infer<typeof hasTitreFromValidator>>>`
+  SELECT EXISTS(select 1 from titres__titres tt where tt.titre_to_id=$titreId!) as has_titre_from
+  `
 
 export const getDemandesPotentialConcurrence = (pool: Pool): Effect.Effect<EtapeId[], CaminoError<DbQueryAccessError | ZodUnparseable>> => {
   return pipe(

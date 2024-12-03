@@ -11,12 +11,22 @@ import { RestEtapeCreation, defaultHeritageProps } from 'camino-common/src/etape
 import { HTTP_STATUS } from 'camino-common/src/http'
 import { toCaminoDate } from 'camino-common/src/date'
 import { entrepriseIdValidator } from 'camino-common/src/entreprise'
-import { TitreTypeId } from 'camino-common/src/static/titresTypes'
-import { newDemarcheId, newTitreId } from '../../database/models/_format/id-create'
+import { TITRES_TYPES_IDS, TitreTypeId } from 'camino-common/src/static/titresTypes'
+import { newDemarcheId, newEtapeId, newTitreId } from '../../database/models/_format/id-create'
 import { insertTitreGraph } from '../../../tests/integration-test-helper'
+import { TitresStatutIds } from 'camino-common/src/static/titresStatuts'
+import { DEMARCHES_TYPES_IDS } from 'camino-common/src/static/demarchesTypes'
+import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts'
+import { ETAPE_IS_NOT_BROUILLON } from 'camino-common/src/etape'
+import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes'
+import { ETAPES_STATUTS } from 'camino-common/src/static/etapesStatuts'
+import { communeIdValidator } from 'camino-common/src/static/communes'
+import { km2Validator } from 'camino-common/src/number'
 
 console.info = vi.fn()
 console.error = vi.fn()
+console.debug = vi.fn()
+console.warn = vi.fn()
 let dbPool: Pool
 
 beforeAll(async () => {
@@ -101,6 +111,59 @@ describe('etapeCreer', () => {
 
     expect(result.statusCode).toBe(HTTP_STATUS.FORBIDDEN)
   })
+
+  test('peut créer une recevabilité favorable sur la procédure spécifique', async () => {
+    const titreId = newTitreId('titreId')
+    const demarcheId = newDemarcheId('demarcheId')
+    const demandeId = newEtapeId('etapeIdDemande')
+    const enregistrementId = newEtapeId('etapeIdEnregistrement')
+    await insertTitreGraph({
+      id: titreId,
+      nom: 'test',
+      typeId: TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX,
+      titreStatutId: TitresStatutIds.DemandeInitiale,
+      propsTitreEtapesIds: {},
+      demarches: [
+        {
+          id: demarcheId,
+          titreId: titreId,
+          typeId: DEMARCHES_TYPES_IDS.Octroi,
+          statutId: DemarchesStatutsIds.EnInstruction,
+          etapes: [
+            {
+              id: demandeId,
+              date: toCaminoDate('2024-11-01'),
+              isBrouillon: ETAPE_IS_NOT_BROUILLON,
+              titreDemarcheId: demarcheId,
+              typeId: ETAPES_TYPES.demande,
+              statutId: ETAPES_STATUTS.FAIT,
+              communes: [{ id: communeIdValidator.parse('31200'), surface: 12 }],
+              surface: km2Validator.parse(12),
+            },
+            {
+              id: enregistrementId,
+              date: toCaminoDate('2024-11-02'),
+              isBrouillon: ETAPE_IS_NOT_BROUILLON,
+              titreDemarcheId: demarcheId,
+              typeId: ETAPES_TYPES.enregistrementDeLaDemande,
+              statutId: ETAPES_STATUTS.FAIT,
+            },
+          ],
+        },
+      ],
+    })
+
+    const res = await restNewPostCall(dbPool, '/rest/etapes', {}, userSuper, {
+      typeId: ETAPES_TYPES.recevabiliteDeLaDemande,
+      statutId: ETAPES_STATUTS.FAVORABLE,
+      titreDemarcheId: demarcheId,
+      date: toCaminoDate('2024-11-03'),
+      ...blankEtapeProps,
+    })
+
+    expect(res.statusCode, JSON.stringify(res.body)).toBe(HTTP_STATUS.OK)
+  })
+
   test('ne peut pas créer une étape (utilisateur administration)', async () => {
     const result = await restNewPostCall(dbPool, '/rest/etapes', {}, { role: 'editeur', administrationId: 'ope-onf-973-01' }, {
       typeId: 'mfr',
