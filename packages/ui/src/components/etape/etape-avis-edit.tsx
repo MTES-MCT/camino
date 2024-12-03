@@ -10,18 +10,21 @@ import { AsyncData } from '../../api/client-rest'
 import { DsfrButtonIcon } from '../_ui/dsfr-button'
 import { AddEtapeAvisPopup } from './add-etape-avis-popup'
 import { getAvisTypes } from 'camino-common/src/permissions/etape-form'
-import { dateFormat } from 'camino-common/src/date'
+import { dateFormat, FirstEtapeDate } from 'camino-common/src/date'
 import { AvisStatut } from '../_common/etape-statut'
 import { AvisTypeId, AvisTypes } from 'camino-common/src/static/avisTypes'
 import { CommuneId } from 'camino-common/src/static/communes'
 import { getAvisVisibilityLabel } from './etape-avis'
 import { User } from 'camino-common/src/roles'
+import { DemarcheId } from 'camino-common/src/demarche'
 
 interface Props {
   tde: {
     titreTypeId: TitreTypeId
     demarcheTypeId: DemarcheTypeId
     etapeTypeId: EtapeTypeId
+    demarcheId: DemarcheId
+    firstEtapeDate: FirstEtapeDate
   }
   onChange: (etapeAvis: (EtapeAvis | TempEtapeAvis)[]) => void
   etapeId: EtapeId | null
@@ -76,7 +79,7 @@ const EtapeAvisLoaded = defineComponent<EtapeAvisLoadedProps>(props => {
   const addOrEditPopupOpen = ref<{ open: true; avisTypeIds: NonEmptyArray<AvisTypeId>; etapeAvis?: (EtapeAvis | TempEtapeAvis) & WithIndex } | { open: false }>({ open: false })
 
   const avisTypes = computed(() => {
-    return getAvisTypes(props.tde.etapeTypeId, props.tde.titreTypeId, props.communeIds)
+    return getAvisTypes(props.tde.etapeTypeId, props.tde.titreTypeId, props.tde.demarcheTypeId, props.tde.demarcheId, props.tde.firstEtapeDate, props.communeIds)
   })
 
   const completeRequiredAvis = computed<PropsTable['avis']>(() => {

@@ -180,7 +180,14 @@ export const getDocumentsTypes = (
   return dts
 }
 
-export const getAvisTypes = (etapeTypeId: EtapeTypeId, titreTypeId: TitreTypeId, communeIds: DeepReadonly<CommuneId[]>): { id: AvisTypeId; optionnel: boolean }[] => {
+export const getAvisTypes = (
+  etapeTypeId: EtapeTypeId,
+  titreTypeId: TitreTypeId,
+  demarcheTypeId: DemarcheTypeId,
+  demarcheId: DemarcheId,
+  firstEtapeDate: FirstEtapeDate,
+  communeIds: DeepReadonly<CommuneId[]>
+): { id: AvisTypeId; optionnel: boolean }[] => {
   const avis: { id: AvisTypeId; optionnel: boolean }[] = []
   if (etapeTypeId === ETAPES_TYPES.demande && titreTypeId === TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX) {
     avis.push({ ...AvisTypes.avisProprietaireDuSol, optionnel: false }, { ...AvisTypes.avisDeLaMissionAutoriteEnvironnementale, optionnel: false })
@@ -188,6 +195,7 @@ export const getAvisTypes = (etapeTypeId: EtapeTypeId, titreTypeId: TitreTypeId,
   if (etapeTypeId === ETAPES_TYPES.avisDesCollectivites) {
     avis.push({ ...AvisTypes.avisDUneCollectivite, optionnel: true })
   } else if (etapeTypeId === ETAPES_TYPES.avisDesServicesEtCommissionsConsultatives) {
+    const machineId = machineIdFind(titreTypeId, demarcheTypeId, demarcheId, firstEtapeDate)
     avis.push(
       ...[
         { ...AvisTypes.avisDirectionRegionaleDesAffairesCulturelles, optionnel: true },
@@ -205,7 +213,7 @@ export const getAvisTypes = (etapeTypeId: EtapeTypeId, titreTypeId: TitreTypeId,
         { ...AvisTypes.avisCaisseGeneraleSecuriteSociale, optionnel: true },
         { ...AvisTypes.autreAvis, optionnel: true },
         // L'avis de l'onf est obligatoire que pour les ARM
-        { ...AvisTypes.avisOfficeNationalDesForets, optionnel: titreTypeId !== 'arm' },
+        { ...AvisTypes.avisOfficeNationalDesForets, optionnel: machineId === 'ProcedureSpecifique' || titreTypeId !== 'arm' },
         { ...AvisTypes.expertiseOfficeNationalDesForets, optionnel: true },
         // TODO 2024-05-14: rendre obligatoire pour les PNMs quand ces derniers seront implémentés
         { ...AvisTypes.avisParcNaturelMarin, optionnel: true },
@@ -261,21 +269,31 @@ export const etapeDocumentsStepIsComplete = (
   return { valid: true }
 }
 
-export const etapeAvisStepIsVisible = (etape: Pick<FlattenEtape, 'typeId'>, titreTypeId: TitreTypeId, communeIds: DeepReadonly<CommuneId[]>): boolean => {
-  return getAvisTypes(etape.typeId, titreTypeId, communeIds).length > 0
+export const etapeAvisStepIsVisible = (
+  etape: Pick<FlattenEtape, 'typeId'>,
+  titreTypeId: TitreTypeId,
+  demarcheTypeId: DemarcheTypeId,
+  demarcheId: DemarcheId,
+  firstEtapeDate: FirstEtapeDate,
+  communeIds: DeepReadonly<CommuneId[]>
+): boolean => {
+  return getAvisTypes(etape.typeId, titreTypeId, demarcheTypeId, demarcheId, firstEtapeDate, communeIds).length > 0
 }
 
 export const etapeAvisStepIsComplete = (
   etape: DeepReadonly<Pick<FlattenEtape, 'typeId'>>,
   etapeAvis: DeepReadonly<Pick<EtapeAvis | TempEtapeAvis, 'avis_type_id'>[]>,
   titreTypeId: TitreTypeId,
+  demarcheTypeId: DemarcheTypeId,
+  demarcheId: DemarcheId,
+  firstEtapeDate: FirstEtapeDate,
   communeIds: DeepReadonly<CommuneId[]>
 ): ValidReturn => {
-  if (!etapeAvisStepIsVisible(etape, titreTypeId, communeIds)) {
+  if (!etapeAvisStepIsVisible(etape, titreTypeId, demarcheTypeId, demarcheId, firstEtapeDate, communeIds)) {
     return { valid: true }
   }
 
-  const avisTypes = getAvisTypes(etape.typeId, titreTypeId, communeIds)
+  const avisTypes = getAvisTypes(etape.typeId, titreTypeId, demarcheTypeId, demarcheId, firstEtapeDate, communeIds)
   if (avisTypes.some(avisType => !avisType.optionnel && etapeAvis.every(avis => avis.avis_type_id !== avisType.id))) {
     return { valid: false, errors: ['Il manque des avis obligatoires'] }
   }

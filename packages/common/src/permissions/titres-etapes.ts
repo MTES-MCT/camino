@@ -335,7 +335,7 @@ export const isEtapeComplete = (
       titreTypeId,
       entrepriseDocuments.map(ed => ({ documentTypeId: ed.entreprise_document_type_id, entrepriseId: ed.entreprise_id }))
     ),
-    etapeAvisStepIsComplete(etape, etapeAvis, titreTypeId, communes),
+    etapeAvisStepIsComplete(etape, etapeAvis, titreTypeId, demarcheTypeId, demarcheId, firstEtapeDate, communes),
   ]
   const errors: string[] = isCompleteChecks.reduce<string[]>((acc, c) => {
     if (!c.valid) {

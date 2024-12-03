@@ -942,8 +942,26 @@ test('getDocumentsTypes', () => {
   expect(getDocumentsTypes({ typeId: 'mfr' }, 'oct', 'axm', demarcheIdValidator.parse('demarcheId'), ['2'], false, firstEtapeDateValidator.parse('2024-12-01'))).toMatchSnapshot()
 })
 
+const demarcheId = demarcheIdValidator.parse('demarcheId')
+const firstEtapeDate = firstEtapeDateValidator.parse('2022-01-01')
+test("getAvisType avis de l'office national des forêts est optionnel pour la procédure spécifique", () => {
+  const avis = getAvisTypes('asc', 'arm', 'oct', demarcheId, firstEtapeDateValidator.parse('2024-11-01'), [])
+  expect(avis.find(unAvis => unAvis.id === 'avisOfficeNationalDesForets' && unAvis.optionnel)).toMatchInlineSnapshot(`
+      {
+        "id": "avisOfficeNationalDesForets",
+        "nom": "Avis de l'Office National des Forêts",
+        "optionnel": true,
+        "statutIds": [
+          "Favorable",
+          "Défavorable",
+          "Favorable avec réserves",
+          "Non renseigné",
+        ],
+      }
+    `)
+})
 test('getAvisType', () => {
-  expect(getAvisTypes(ETAPES_TYPES.avisDesCollectivites, 'arm', [])).toMatchInlineSnapshot(`
+  expect(getAvisTypes(ETAPES_TYPES.avisDesCollectivites, 'arm', 'oct', demarcheId, firstEtapeDate, [])).toMatchInlineSnapshot(`
     [
       {
         "id": "avisDUneCollectivite",
@@ -958,8 +976,8 @@ test('getAvisType', () => {
       },
     ]
   `)
-  expect(getAvisTypes('mfr', 'arm', [])).toMatchInlineSnapshot('[]')
-  expect(getAvisTypes('asc', 'arm', [])).toMatchInlineSnapshot(`
+  expect(getAvisTypes('mfr', 'arm', 'oct', demarcheId, firstEtapeDate, [])).toMatchInlineSnapshot('[]')
+  expect(getAvisTypes('asc', 'arm', 'oct', demarcheId, firstEtapeDate, [])).toMatchInlineSnapshot(`
     [
       {
         "id": "avisDirectionRegionaleDesAffairesCulturelles",
@@ -1150,7 +1168,7 @@ test('getAvisType', () => {
       },
     ]
   `)
-  expect(getAvisTypes('asc', 'arm', [communeIdValidator.parse('97302')])).toMatchInlineSnapshot(`
+  expect(getAvisTypes('asc', 'arm', 'oct', demarcheId, firstEtapeDate, [communeIdValidator.parse('97302')])).toMatchInlineSnapshot(`
     [
       {
         "id": "avisDirectionRegionaleDesAffairesCulturelles",
@@ -1363,7 +1381,7 @@ test('getAvisType', () => {
       },
     ]
   `)
-  expect(getAvisTypes('asc', 'axm', [communeIdValidator.parse('97302')])).toMatchInlineSnapshot(`
+  expect(getAvisTypes('asc', 'axm', 'oct', demarcheId, firstEtapeDate, [communeIdValidator.parse('97302')])).toMatchInlineSnapshot(`
     [
       {
         "id": "avisDirectionRegionaleDesAffairesCulturelles",
@@ -1587,7 +1605,7 @@ test('getAvisType', () => {
       },
     ]
   `)
-  expect(getAvisTypes('cac', 'prw', [])).toMatchInlineSnapshot(`
+  expect(getAvisTypes('cac', 'prw', 'oct', demarcheId, firstEtapeDate, [])).toMatchInlineSnapshot(`
     [
       {
         "id": "autreAvis",
@@ -1605,11 +1623,11 @@ test('getAvisType', () => {
 })
 
 test('etapeAvisStepIsVisible', () => {
-  expect(etapeAvisStepIsVisible({ typeId: 'mfr' }, 'arm', [])).toBe(false)
-  expect(etapeAvisStepIsVisible({ typeId: 'asc' }, 'arm', [])).toBe(true)
+  expect(etapeAvisStepIsVisible({ typeId: 'mfr' }, 'arm', 'oct', demarcheId, firstEtapeDate, [])).toBe(false)
+  expect(etapeAvisStepIsVisible({ typeId: 'asc' }, 'arm', 'oct', demarcheId, firstEtapeDate, [])).toBe(true)
 })
 
 test('etapeAvisStepIsComplete', () => {
-  expect(etapeAvisStepIsComplete({ typeId: ETAPES_TYPES.avisDesServicesEtCommissionsConsultatives }, [{ avis_type_id: 'autreAvis' }], 'arm', []).valid).toBe(false)
-  expect(etapeAvisStepIsComplete({ typeId: ETAPES_TYPES.avisDesCollectivites }, [{ avis_type_id: 'autreAvis' }], 'arm', []).valid).toBe(true)
+  expect(etapeAvisStepIsComplete({ typeId: ETAPES_TYPES.avisDesServicesEtCommissionsConsultatives }, [{ avis_type_id: 'autreAvis' }], 'arm', 'oct', demarcheId, firstEtapeDate, []).valid).toBe(false)
+  expect(etapeAvisStepIsComplete({ typeId: ETAPES_TYPES.avisDesCollectivites }, [{ avis_type_id: 'autreAvis' }], 'arm', 'oct', demarcheId, firstEtapeDate, []).valid).toBe(true)
 })

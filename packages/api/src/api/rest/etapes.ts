@@ -753,8 +753,12 @@ export const updateEtape: RestNewPutCall<'/rest/etapes'> = (rootPipe): Effect.Ef
     Effect.bind('entrepriseDocuments', ({ pool, flattenEtapeAndPerimetre, etape, user }) =>
       validateAndGetEntrepriseDocuments(pool, flattenEtapeAndPerimetre.flattenEtape, etape.entrepriseDocumentIds, user)
     ),
-    Effect.tap(({ flattenEtapeAndPerimetre, titreDemarche, entrepriseDocuments, etape, user, titreEtapeOld }) => {
+    Effect.let('firstEtapeDate', ({ titreDemarche, etape }) => {
       const firstEtapeDate = demarcheEnregistrementDemandeDateFind(titreDemarche.etapes)
+
+      return isNotNullNorUndefined(firstEtapeDate) ? firstEtapeDate : firstEtapeDateValidator.parse(etape.date)
+    }),
+    Effect.tap(({ flattenEtapeAndPerimetre, titreDemarche, entrepriseDocuments, etape, user, titreEtapeOld, firstEtapeDate }) => {
       const rulesErrors = titreEtapeUpdationValidate(
         flattenEtapeAndPerimetre.flattenEtape,
         titreDemarche,
@@ -765,7 +769,7 @@ export const updateEtape: RestNewPutCall<'/rest/etapes'> = (rootPipe): Effect.Ef
         flattenEtapeAndPerimetre.perimetreInfos.sdomZones,
         flattenEtapeAndPerimetre.perimetreInfos.communes.map(({ id }) => id),
         user,
-        isNotNullNorUndefined(firstEtapeDate) ? firstEtapeDate : firstEtapeDateValidator.parse(etape.date),
+        firstEtapeDate,
         titreEtapeOld
       )
       if (isNotNullNorUndefinedNorEmpty(rulesErrors)) {
@@ -799,7 +803,7 @@ export const updateEtape: RestNewPutCall<'/rest/etapes'> = (rootPipe): Effect.Ef
     Effect.tap(({ pool, etapeUpdated, etape }) => updateEtapeDocuments(pool, etapeUpdated.id, etape.etapeDocuments)),
     Effect.tap(({ pool, etapeUpdated }) => deleteTitreEtapeEntrepriseDocument(pool, { titre_etape_id: etapeUpdated.id })),
     Effect.tap(({ pool, etapeUpdated, entrepriseDocuments }) => insertTitreEtapeEntrepriseDocuments(pool, etapeUpdated.id, entrepriseDocuments)),
-    Effect.tap(({ pool, isBrouillon, etapeUpdated, etape, titreTypeId, flattenEtapeAndPerimetre }) =>
+    Effect.tap(({ pool, isBrouillon, etapeUpdated, etape, titreTypeId, titreDemarche, flattenEtapeAndPerimetre, firstEtapeDate }) =>
       updateEtapeAvis(
         pool,
         etapeUpdated.id,
@@ -807,6 +811,9 @@ export const updateEtape: RestNewPutCall<'/rest/etapes'> = (rootPipe): Effect.Ef
         etape.etapeAvis,
         etape.typeId,
         titreTypeId,
+        titreDemarche.typeId,
+        titreDemarche.id,
+        firstEtapeDate,
         flattenEtapeAndPerimetre.perimetreInfos.communes.map(({ id }) => id)
       )
     ),

@@ -54,7 +54,7 @@ import { TitreTypeId, titreTypeIdValidator } from 'camino-common/src/static/titr
 import { DeepReadonly, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, SimplePromiseFn } from 'camino-common/src/typescript-tools'
 import { CanReadDemarche } from '../../api/rest/permissions/demarches'
 import { newEtapeAvisId, newEtapeDocumentId } from '../models/_format/id-create'
-import { caminoDateValidator, getCurrent } from 'camino-common/src/date'
+import { caminoDateValidator, FirstEtapeDate, getCurrent } from 'camino-common/src/date'
 import { createLargeObject, LargeObjectId, largeObjectIdValidator } from '../largeobjects'
 import { avisStatutIdValidator, avisVisibilityIdValidator } from 'camino-common/src/static/avisTypes'
 import { canReadAvis } from '../../api/rest/permissions/avis'
@@ -63,11 +63,12 @@ import { etapeAvisStepIsComplete } from 'camino-common/src/permissions/etape-for
 import { CommuneId } from 'camino-common/src/static/communes'
 import { EtapeStatutId, etapeStatutIdValidator } from 'camino-common/src/static/etapesStatuts'
 import { contenuValidator, heritageContenuValidator } from 'camino-common/src/etape-form'
-import { demarcheTypeIdValidator } from 'camino-common/src/static/demarchesTypes'
+import { DemarcheTypeId, demarcheTypeIdValidator } from 'camino-common/src/static/demarchesTypes'
 import { Effect, Option, pipe } from 'effect'
 import { CaminoError } from 'camino-common/src/zod-tools'
 import { shortCircuitError } from '../../tools/fp-tools'
 import { TempDocumentName } from 'camino-common/src/document'
+import { DemarcheId } from 'camino-common/src/demarche'
 
 export const insertTitreEtapeEntrepriseDocuments = (
   pool: Pool,
@@ -296,11 +297,14 @@ export const updateEtapeAvis = (
   etapeAvis: DeepReadonly<EtapeAvisModification[]>,
   etapeTypeId: EtapeTypeId,
   titreTypeId: TitreTypeId,
+  demarcheTypeId: DemarcheTypeId,
+  demarcheId: DemarcheId,
+  firstEtapeDate: FirstEtapeDate,
   communeIds: DeepReadonly<CommuneId[]>
 ): Effect.Effect<Option.Option<never>, CaminoError<UpdateEtapeAvisErrors>> => {
   return Effect.Do.pipe(
     Effect.filterOrFail(
-      () => isBrouillon === ETAPE_IS_BROUILLON || etapeAvisStepIsComplete({ typeId: etapeTypeId }, etapeAvis, titreTypeId, communeIds).valid,
+      () => isBrouillon === ETAPE_IS_BROUILLON || etapeAvisStepIsComplete({ typeId: etapeTypeId }, etapeAvis, titreTypeId, demarcheTypeId, demarcheId, firstEtapeDate, communeIds).valid,
       () => ({ message: avisIncomplets })
     ),
     Effect.bind('avisInDb', () => effectDbQueryAndValidate(getAvisByEtapeIdQuery, { titre_etape_id }, pool, etapeAvisDbValidator)),

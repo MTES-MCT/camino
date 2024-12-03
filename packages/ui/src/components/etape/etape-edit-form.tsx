@@ -502,6 +502,10 @@ const EtapeEditFormInternal = defineComponent<
     })
   }
 
+  const firstEtapeDate = computed<FirstEtapeDate>(() => {
+    return props.firstEtapeDate ?? firstEtapeDateValidator.parse(props.etape.date)
+  })
+
   const avisCompleteUpdate = (etapeAvis: (EtapeAvis | TempEtapeAvis)[]) => {
     props.setEtape(props.etape, {
       ...props.documents,
@@ -591,7 +595,7 @@ const EtapeEditFormInternal = defineComponent<
             user={props.user}
             entreprises={props.entreprises}
             completeUpdate={fondamentalesCompleteUpdate}
-            firstEtapeDate={props.firstEtapeDate ?? firstEtapeDateValidator.parse(props.etape.date)}
+            firstEtapeDate={firstEtapeDate.value}
           />
         </Bloc>
       ) : null}
@@ -621,7 +625,7 @@ const EtapeEditFormInternal = defineComponent<
             onPointsChange={onEtapePointsChange}
             onForagesChange={onEtapeForagesChange}
             onHeritageChange={onEtapePerimetreHeritageChange}
-            firstEtapeDate={props.firstEtapeDate ?? firstEtapeDateValidator.parse(props.etape.date)}
+            firstEtapeDate={firstEtapeDate.value}
           />
         </Bloc>
       ) : null}
@@ -630,15 +634,8 @@ const EtapeEditFormInternal = defineComponent<
         <Bloc
           step={{ name: 'Liste des documents', help: null }}
           complete={
-            etapeDocumentsStepIsComplete(
-              props.etape,
-              props.demarcheTypeId,
-              props.titreTypeId,
-              props.demarcheId,
-              props.documents.etapeDocuments,
-              props.perimetre.sdomZoneIds,
-              props.firstEtapeDate ?? firstEtapeDateValidator.parse(props.etape.date)
-            ).valid
+            etapeDocumentsStepIsComplete(props.etape, props.demarcheTypeId, props.titreTypeId, props.demarcheId, props.documents.etapeDocuments, props.perimetre.sdomZoneIds, firstEtapeDate.value)
+              .valid
           }
         >
           <EtapeDocumentsEdit
@@ -648,7 +645,7 @@ const EtapeEditFormInternal = defineComponent<
               demarcheTypeId: props.demarcheTypeId,
               etapeTypeId: props.etape.typeId,
               demarcheId: props.demarcheId,
-              firstEtapeDate: props.firstEtapeDate ?? firstEtapeDateValidator.parse(props.etape.date),
+              firstEtapeDate: firstEtapeDate.value,
             }}
             etapeId={props.etape.id}
             completeUpdate={documentsCompleteUpdate}
@@ -660,11 +657,20 @@ const EtapeEditFormInternal = defineComponent<
         </Bloc>
       ) : null}
 
-      {etapeAvisStepIsVisible(props.etape, props.titreTypeId, props.perimetre.communes) ? (
-        <Bloc step={{ name: 'Liste des avis', help: null }} complete={etapeAvisStepIsComplete(props.etape, props.documents.etapeAvis, props.titreTypeId, props.perimetre.communes).valid}>
+      {etapeAvisStepIsVisible(props.etape, props.titreTypeId, props.demarcheTypeId, props.demarcheId, firstEtapeDate.value, props.perimetre.communes) ? (
+        <Bloc
+          step={{ name: 'Liste des avis', help: null }}
+          complete={etapeAvisStepIsComplete(props.etape, props.documents.etapeAvis, props.titreTypeId, props.demarcheTypeId, props.demarcheId, firstEtapeDate.value, props.perimetre.communes).valid}
+        >
           <EtapeAvisEdit
             apiClient={props.apiClient}
-            tde={{ titreTypeId: props.titreTypeId, demarcheTypeId: props.demarcheTypeId, etapeTypeId: props.etape.typeId }}
+            tde={{
+              titreTypeId: props.titreTypeId,
+              demarcheTypeId: props.demarcheTypeId,
+              etapeTypeId: props.etape.typeId,
+              demarcheId: props.demarcheId,
+              firstEtapeDate: firstEtapeDate.value,
+            }}
             etapeId={props.etape.id}
             communeIds={props.perimetre.communes}
             onChange={avisCompleteUpdate}

@@ -4,10 +4,11 @@ import { EtapeAvis, etapeAvisIdValidator, etapeIdValidator } from 'camino-common
 import { ApiClient } from '../../api/api-client'
 import { action } from '@storybook/addon-actions'
 import { tempDocumentNameValidator } from 'camino-common/src/document'
-import { caminoDateValidator } from 'camino-common/src/date'
+import { caminoDateValidator, firstEtapeDateValidator } from 'camino-common/src/date'
 import { AvisVisibilityIds } from 'camino-common/src/static/avisTypes'
 import { testBlankUser } from 'camino-common/src/tests-utils'
 import { communeIdValidator } from 'camino-common/src/static/communes'
+import { demarcheIdValidator } from 'camino-common/src/demarche'
 
 const meta: Meta = {
   title: 'Components/Etape/EtapeAvisEdit',
@@ -61,7 +62,7 @@ export const Empty: StoryFn = () => (
     apiClient={{ ...apiClient, getEtapeAvisByEtapeId: () => Promise.resolve([]) }}
     etapeId={etapeIdValidator.parse('etapeId')}
     communeIds={[]}
-    tde={{ titreTypeId: 'arm', demarcheTypeId: 'oct', etapeTypeId: 'mfr' }}
+    tde={{ titreTypeId: 'arm', demarcheTypeId: 'oct', etapeTypeId: 'mfr', demarcheId: demarcheIdValidator.parse('demarcheId'), firstEtapeDate: firstEtapeDateValidator.parse('2022-01-01') }}
     onChange={completeUpdateAction}
     user={{ ...testBlankUser, role: 'super' }}
   />
@@ -71,7 +72,7 @@ export const Rempli: StoryFn = () => (
     apiClient={apiClient}
     etapeId={etapeIdValidator.parse('etapeId')}
     communeIds={[]}
-    tde={{ titreTypeId: 'axm', demarcheTypeId: 'oct', etapeTypeId: 'asc' }}
+    tde={{ titreTypeId: 'axm', demarcheTypeId: 'oct', etapeTypeId: 'asc', demarcheId: demarcheIdValidator.parse('demarcheId'), firstEtapeDate: firstEtapeDateValidator.parse('2022-01-01') }}
     onChange={completeUpdateAction}
     user={{ ...testBlankUser, role: 'super' }}
   />
@@ -97,7 +98,7 @@ export const AvisEnGuyane: StoryFn = () => (
     }}
     etapeId={etapeIdValidator.parse('etapeId')}
     communeIds={[communeIdValidator.parse('97302')]}
-    tde={{ titreTypeId: 'arm', demarcheTypeId: 'oct', etapeTypeId: 'asc' }}
+    tde={{ titreTypeId: 'arm', demarcheTypeId: 'oct', etapeTypeId: 'asc', demarcheId: demarcheIdValidator.parse('demarcheId'), firstEtapeDate: firstEtapeDateValidator.parse('2022-01-01') }}
     onChange={completeUpdateAction}
     user={{ ...testBlankUser, role: 'super' }}
   />

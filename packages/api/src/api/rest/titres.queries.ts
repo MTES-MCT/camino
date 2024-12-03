@@ -9,7 +9,7 @@ import {
   IGetTitreInternalQuery,
   IGetTitulairesAmodiatairesByTitreIdDbQuery,
 } from './titres.queries.types'
-import { caminoDateValidator } from 'camino-common/src/date'
+import { caminoDateValidator, firstEtapeDateValidator } from 'camino-common/src/date'
 import { z } from 'zod'
 import { Commune, communeIdValidator } from 'camino-common/src/static/communes'
 import { Pool } from 'pg'
@@ -17,7 +17,16 @@ import { titreTypeIdValidator } from 'camino-common/src/static/titresTypes'
 import { isAdministration, isSuper, User } from 'camino-common/src/roles'
 import { titreStatutIdValidator } from 'camino-common/src/static/titresStatuts'
 import { titreReferenceValidator } from 'camino-common/src/titres-references'
-import { DemarcheEtape, DemarcheEtapeCommon, DemarcheEtapeFondamentale, DemarcheEtapeNonFondamentale, DemarcheId, demarcheIdValidator, demarcheSlugValidator } from 'camino-common/src/demarche'
+import {
+  demarcheEnregistrementDemandeDateFind,
+  DemarcheEtape,
+  DemarcheEtapeCommon,
+  DemarcheEtapeFondamentale,
+  DemarcheEtapeNonFondamentale,
+  DemarcheId,
+  demarcheIdValidator,
+  demarcheSlugValidator,
+} from 'camino-common/src/demarche'
 import { demarcheStatutIdValidator } from 'camino-common/src/static/demarchesStatuts'
 import { demarcheTypeIdValidator } from 'camino-common/src/static/demarchesTypes'
 import { getDemarcheByIdOrSlug, getEtapesByDemarcheId } from './demarches.queries'
@@ -240,7 +249,16 @@ export const getTitre = async (pool: Pool, user: User, idOrSlug: TitreIdOrSlug):
             }
 
             const avis_documents: EtapeAvis[] = []
-            const avisTypes = getAvisTypes(superEtape.etape_type_id, titre.titre_type_id, perimetre?.communes.map(({ id }) => id) ?? [])
+            const firstEtapeDate = demarcheEnregistrementDemandeDateFind(superDemarche.etapes.map(({ etape_type_id, date }) => ({ date, typeId: etape_type_id })))
+
+            const avisTypes = getAvisTypes(
+              superEtape.etape_type_id,
+              titre.titre_type_id,
+              superDemarche.demarche_type_id,
+              superDemarche.id,
+              isNotNullNorUndefined(firstEtapeDate) ? firstEtapeDate : firstEtapeDateValidator.parse(superEtape.date),
+              perimetre?.communes.map(({ id }) => id) ?? []
+            )
             if (isNotNullNorUndefinedNorEmpty(avisTypes)) {
               const avisWithLargeObjectId = await getEtapeAvisLargeObjectIdsByEtapeId(
                 superEtape.id,
