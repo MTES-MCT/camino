@@ -6,7 +6,7 @@ import { LinkableTitre, TitresLinkConfig } from '@/components/titre/titres-link-
 import { TitreStatut } from '../_common/titre-statut'
 import { TypeAheadSingle } from '../_ui/typeahead-single'
 import { TypeAheadMultiple } from '../_ui/typeahead-multiple'
-import { DeepReadonly, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
+import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
 
 import { capitalize } from 'camino-common/src/strings'
 
@@ -16,7 +16,7 @@ interface Props {
   onSelectTitres: (titres: TitreLink[]) => void
 }
 export const TitresLink = defineComponent<Props>(props => {
-  const display = (item: DeepReadonly<LinkableTitre>) => {
+  const display = (item: LinkableTitre) => {
     return (
       <div class="flex flex-center">
         <TitreStatut titreStatutId={item.titreStatutId} />
@@ -76,7 +76,7 @@ export const TitresLink = defineComponent<Props>(props => {
     search.value = searchLabel.toLowerCase()
   }
 
-  const getDateDebutEtDateFin = (titre: DeepReadonly<LinkableTitre>): string => {
+  const getDateDebutEtDateFin = (titre: LinkableTitre): string => {
     const dateDebut = titre.demarches
       .filter(({ demarcheDateDebut }) => !!demarcheDateDebut)
       .map(({ demarcheDateDebut }) => demarcheDateDebut)

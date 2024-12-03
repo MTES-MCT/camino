@@ -9,14 +9,14 @@ import { FrequenceId, Frequences, getNumberOfMonths } from 'camino-common/src/st
 import { SubstanceLegaleId } from 'camino-common/src/static/substancesLegales'
 import { CaminoDate, toCaminoDate } from 'camino-common/src/date'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
-import { DeepReadonly, isNotNullNorUndefinedNorEmpty, isNullOrUndefined } from 'camino-common/src/typescript-tools'
+import { isNotNullNorUndefinedNorEmpty, isNullOrUndefined } from 'camino-common/src/typescript-tools'
 import { ActiviteSection, ActiviteSectionElement, ActivitesTypes, ActivitesTypesId, isSubstancesFiscales } from 'camino-common/src/static/activitesTypes'
 import { TitreId } from 'camino-common/src/validators/titres'
 
 const substancesFiscalesFind = (substances: (SubstanceLegaleId | undefined)[]): SubstanceFiscale[] =>
   substances.filter(s => !!s).flatMap(substanceId => substancesFiscalesBySubstanceLegale(substanceId))
 
-const titreActiviteSectionElementsFormat = (elements: DeepReadonly<ActiviteSectionElement[]>, periodeId: number, date: CaminoDate) =>
+const titreActiviteSectionElementsFormat = (elements: ActiviteSectionElement[], periodeId: number, date: CaminoDate) =>
   elements.filter(
     e =>
       // ne conserve que les éléments dont
@@ -35,16 +35,9 @@ const titreActiviteSectionElementsFormat = (elements: DeepReadonly<ActiviteSecti
  * @param titreDemarches - démarches du titre
  * @param titreTypeId - le type id du titre
  */
-const titreActiviteSectionsBuild = (
-  activiteTypeId: string,
-  sections: DeepReadonly<ActiviteSection[]>,
-  periodeId: number,
-  date: CaminoDate,
-  titreDemarches: ITitreDemarche[],
-  titreTypeId: TitreTypeId
-) => {
-  return sections.reduce<DeepReadonly<ActiviteSection[]>>((newSections: DeepReadonly<ActiviteSection[]>, s) => {
-    let elements: DeepReadonly<ActiviteSectionElement[]> = []
+const titreActiviteSectionsBuild = (activiteTypeId: string, sections: ActiviteSection[], periodeId: number, date: CaminoDate, titreDemarches: ITitreDemarche[], titreTypeId: TitreTypeId) => {
+  return sections.reduce<ActiviteSection[]>((newSections: ActiviteSection[], s) => {
+    let elements: ActiviteSectionElement[] = []
 
     if (!isSubstancesFiscales(s) && isNotNullNorUndefinedNorEmpty(s.elements)) {
       elements = titreActiviteSectionElementsFormat(s.elements, periodeId, date)
@@ -56,7 +49,7 @@ const titreActiviteSectionsBuild = (
 
         elements = substancesFiscales.map(sf => {
           const unite = Unites[sf.uniteId]
-          const element: DeepReadonly<ActiviteSectionElement> = {
+          const element: ActiviteSectionElement = {
             id: sf.id,
             nom: `${sf.nom}`,
             type: 'number',
@@ -104,7 +97,7 @@ const titreActiviteFind = (activiteTypeId: ActivitesTypesId, annee: number, peri
 const titreActiviteBuild = (
   typeId: ActivitesTypesId,
   periodeId: number,
-  activiteTypeSections: DeepReadonly<ActiviteSection[]>,
+  activiteTypeSections: ActiviteSection[],
   annee: number,
   frequenceId: FrequenceId,
   aujourdhui: CaminoDate,

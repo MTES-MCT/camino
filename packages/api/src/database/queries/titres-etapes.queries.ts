@@ -51,7 +51,7 @@ import { canReadDocument } from '../../api/rest/permissions/documents'
 import { AdministrationId } from 'camino-common/src/static/administrations'
 import { ETAPES_WITH_AUTOMATIC_STATUTS, EtapeTypeId, etapeTypeIdValidator } from 'camino-common/src/static/etapesTypes'
 import { TitreTypeId, titreTypeIdValidator } from 'camino-common/src/static/titresTypes'
-import { DeepReadonly, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, SimplePromiseFn } from 'camino-common/src/typescript-tools'
+import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, SimplePromiseFn } from 'camino-common/src/typescript-tools'
 import { CanReadDemarche } from '../../api/rest/permissions/demarches'
 import { newEtapeAvisId, newEtapeDocumentId } from '../models/_format/id-create'
 import { caminoDateValidator, FirstEtapeDate, getCurrent } from 'camino-common/src/date'
@@ -146,7 +146,7 @@ export type UpdateEtapeDocumentsErrors = EffectDbQueryAndValidateErrors | Insert
 export const updateEtapeDocuments = (
   pool: Pool,
   titre_etape_id: EtapeId,
-  etapeDocuments: DeepReadonly<EtapeDocumentModification[]>
+  etapeDocuments: EtapeDocumentModification[]
 ): Effect.Effect<Option.Option<never>, CaminoError<UpdateEtapeDocumentsErrors>> => {
   return Effect.Do.pipe(
     Effect.bind('documentsInDb', () => effectDbQueryAndValidate(getDocumentsByEtapeIdQuery, { titre_etape_id }, pool, getDocumentsByEtapeIdQueryValidator)),
@@ -214,14 +214,14 @@ set
 where
     id = $ id !
 `
-const deleteEtapeDocumentsDb = sql<Redefine<IDeleteEtapeDocumentsDbQuery, { ids: DeepReadonly<EtapeDocumentId[]> }, void>>`
+const deleteEtapeDocumentsDb = sql<Redefine<IDeleteEtapeDocumentsDbQuery, { ids: EtapeDocumentId[] }, void>>`
 delete from etapes_documents
 where id in $$ ids !
 `
 
 const largeObjectIdError = 'impossible de récupérer un large object id' as const
 export type InsertEtapeDocumentsErrors = EffectDbQueryAndValidateErrors | typeof largeObjectIdError
-export const insertEtapeDocuments = (pool: Pool, titre_etape_id: EtapeId, etapeDocuments: DeepReadonly<TempEtapeDocument[]>): Effect.Effect<true, CaminoError<InsertEtapeDocumentsErrors>> => {
+export const insertEtapeDocuments = (pool: Pool, titre_etape_id: EtapeId, etapeDocuments: TempEtapeDocument[]): Effect.Effect<true, CaminoError<InsertEtapeDocumentsErrors>> => {
   return Effect.Do.pipe(
     Effect.flatMap(() =>
       Effect.forEach(etapeDocuments, document => {
@@ -247,7 +247,7 @@ insert into etapes_documents (id, etape_document_type_id, etape_id, description,
 `
 const impossibleDeCreerUnLargeObjectId = 'impossible de créer un large object id' as const
 export type InsertEtapeAvisErrors = EffectDbQueryAndValidateErrors | typeof impossibleDeCreerUnLargeObjectId
-export const insertEtapeAvis = (pool: Pool, titre_etape_id: EtapeId, etapeAvis: DeepReadonly<TempEtapeAvis[]>): Effect.Effect<true, CaminoError<InsertEtapeAvisErrors>> =>
+export const insertEtapeAvis = (pool: Pool, titre_etape_id: EtapeId, etapeAvis: TempEtapeAvis[]): Effect.Effect<true, CaminoError<InsertEtapeAvisErrors>> =>
   Effect.Do.pipe(
     Effect.flatMap(() =>
       Effect.forEach(etapeAvis, avis => {
@@ -284,7 +284,7 @@ set
 where
     id = $ id !
 `
-const deleteEtapeAvisDb = sql<Redefine<IDeleteEtapeAvisDbQuery, { ids: DeepReadonly<EtapeAvisId[]> }, void>>`
+const deleteEtapeAvisDb = sql<Redefine<IDeleteEtapeAvisDbQuery, { ids: EtapeAvisId[] }, void>>`
 delete from etape_avis
 where id in $$ ids !
 `
@@ -294,13 +294,13 @@ export const updateEtapeAvis = (
   pool: Pool,
   titre_etape_id: EtapeId,
   isBrouillon: EtapeBrouillon,
-  etapeAvis: DeepReadonly<EtapeAvisModification[]>,
+  etapeAvis: EtapeAvisModification[],
   etapeTypeId: EtapeTypeId,
   titreTypeId: TitreTypeId,
   demarcheTypeId: DemarcheTypeId,
   demarcheId: DemarcheId,
   firstEtapeDate: FirstEtapeDate,
-  communeIds: DeepReadonly<CommuneId[]>
+  communeIds: CommuneId[]
 ): Effect.Effect<Option.Option<never>, CaminoError<UpdateEtapeAvisErrors>> => {
   return Effect.Do.pipe(
     Effect.filterOrFail(

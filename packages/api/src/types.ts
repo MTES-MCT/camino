@@ -12,7 +12,7 @@ import { TitreReference } from 'camino-common/src/titres-references'
 import { SecteursMaritimes } from 'camino-common/src/static/facades'
 import { CaminoDate } from 'camino-common/src/date'
 import { EntrepriseDocumentId, EntrepriseId } from 'camino-common/src/entreprise'
-import { DeepReadonly, RecordPartial } from 'camino-common/src/typescript-tools'
+import { RecordPartial } from 'camino-common/src/typescript-tools'
 import { SDOMZoneId } from 'camino-common/src/static/sdom'
 import { ActivitesStatutId } from 'camino-common/src/static/activitesStatuts'
 import { DemarcheId, DemarcheSlug } from 'camino-common/src/demarche'
@@ -170,9 +170,9 @@ export interface ITitre {
   administrationsLocales?: AdministrationId[] | null
   administrations?: AdministrationId[] | null
   surface?: number | null
-  communes?: DeepReadonly<ICommune[]> | null
-  forets?: DeepReadonly<ForetId[]> | null
-  sdomZones?: DeepReadonly<SDOMZoneId[]> | null
+  communes?: ICommune[] | null
+  forets?: ForetId[] | null
+  sdomZones?: SDOMZoneId[] | null
   pointsEtape?: ITitreEtape | null
   secteursMaritime?: SecteursMaritimes[] | null
   demarches?: ITitreDemarche[]
@@ -199,7 +199,7 @@ export interface ITitreActivite {
   utilisateurId?: string | null
   dateSaisie?: CaminoDate
   contenu?: IContenu | null
-  sections: DeepReadonly<Section[]>
+  sections: Section[]
   suppression?: boolean
 }
 
@@ -250,9 +250,9 @@ export type ITitreEtape = {
   administrationsLocales?: AdministrationId[] | null
   entrepriseDocumentIds?: EntrepriseDocumentId[] | null
   etapeDocuments?: unknown[]
-  communes?: DeepReadonly<ICommune[]> | null
-  forets?: DeepReadonly<ForetId[]> | null
-  sdomZones?: DeepReadonly<SDOMZoneId[]> | null
+  communes?: ICommune[] | null
+  forets?: ForetId[] | null
+  sdomZones?: SDOMZoneId[] | null
   secteursMaritime?: SecteursMaritimes[] | null
   heritageProps?: IHeritageProps | null
   heritageContenu?: IHeritageContenu | null

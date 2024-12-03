@@ -1,10 +1,10 @@
 import { ElementWithValue } from '../sections'
-import { DeepReadonly, isNullOrUndefined } from '../typescript-tools'
+import { isNullOrUndefined } from '../typescript-tools'
 
 // @deprecated ==> type better
 export type Contenu = { [key in string]?: { [secondKey in string]?: unknown } } | null
 
-export const sectionsWithValueCompleteValidate = (sections_with_value: DeepReadonly<{ nom?: string; elements: Pick<ElementWithValue, 'nom' | 'optionnel' | 'value' | 'type'>[] }[]>): string[] => {
+export const sectionsWithValueCompleteValidate = (sections_with_value: { nom?: string; elements: Pick<ElementWithValue, 'nom' | 'optionnel' | 'value' | 'type'>[] }[]): string[] => {
   const errors: string[] = []
   sections_with_value.forEach(s =>
     s.elements.forEach(e => {
@@ -17,7 +17,7 @@ export const sectionsWithValueCompleteValidate = (sections_with_value: DeepReado
   return errors
 }
 
-export const sectionElementWithValueCompleteValidate = (elementWithValue: DeepReadonly<Pick<ElementWithValue, 'optionnel' | 'value' | 'type'>>): boolean => {
+export const sectionElementWithValueCompleteValidate = (elementWithValue: Pick<ElementWithValue, 'optionnel' | 'value' | 'type'>): boolean => {
   if ((isNullOrUndefined(elementWithValue.optionnel) || !elementWithValue.optionnel) && !['checkbox'].includes(elementWithValue.type)) {
     if (isNullOrUndefined(elementWithValue.value) || elementWithValue.value === '') {
       return false

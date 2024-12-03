@@ -3,7 +3,7 @@ import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { ApiClient } from '../../api/api-client'
-import { DeepReadonly, FunctionalComponent, computed, defineComponent, onMounted, ref, watch } from 'vue'
+import { FunctionalComponent, computed, defineComponent, onMounted, ref, watch } from 'vue'
 import { SDOMZoneId } from 'camino-common/src/static/sdom'
 import { isNonEmptyArray, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined, NonEmptyArray } from 'camino-common/src/typescript-tools'
 import { AutreDocumentType, AutreDocumentTypeId, DocumentType, DocumentTypeId, DocumentsTypes } from 'camino-common/src/static/documentsTypes'
@@ -26,11 +26,11 @@ interface Props {
     firstEtapeDate: FirstEtapeDate
   }
   isBrouillon: EtapeBrouillon
-  sdomZoneIds: DeepReadonly<SDOMZoneId[]>
+  sdomZoneIds: SDOMZoneId[]
   completeUpdate: (etapeDocuments: (EtapeDocument | TempEtapeDocument)[]) => void
   etapeId: EtapeId | null
   apiClient: Pick<ApiClient, 'uploadTempDocument' | 'getEtapeDocumentsByEtapeId'>
-  contenu: DeepReadonly<{ arm?: { mecanise?: { value: boolean } } }>
+  contenu: { arm?: { mecanise?: { value: boolean } } }
   user: User
 }
 

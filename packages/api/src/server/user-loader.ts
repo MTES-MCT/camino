@@ -3,7 +3,7 @@ import { Request as JWTRequest } from 'express-jwt'
 import { emailsSend, emailsWithTemplateSend } from '../tools/api-mailjet/emails'
 import { getCurrent } from 'camino-common/src/date'
 import { EmailTemplateId } from '../tools/api-mailjet/types'
-import { DeepReadonly, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined, isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools'
+import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined, isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools'
 import { config } from '../config/index'
 import { Pool } from 'pg'
 import { createUtilisateur, getUtilisateurById, getUtilisateurByKeycloakId, updateUtilisateur } from '../database/queries/utilisateurs.queries'
@@ -29,7 +29,7 @@ export const userLoader =
     try {
       const reqUser: JWTUser | undefined = req.auth as JWTUser
       if (isNotNullNorUndefined(reqUser) && isNotNullNorUndefinedNorEmpty(reqUser.sub)) {
-        let user: DeepReadonly<User> = await getUtilisateurByKeycloakId(pool, reqUser.sub)
+        let user: User = await getUtilisateurByKeycloakId(pool, reqUser.sub)
         if (isNullOrUndefined(user)) {
           if (isNullOrUndefined(reqUser.family_name) || isNullOrUndefined(reqUser.given_name)) {
             next(new Error('utilisateur inconnu'))

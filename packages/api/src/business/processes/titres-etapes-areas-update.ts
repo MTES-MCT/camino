@@ -6,7 +6,7 @@ import { SecteursMaritimes, SecteursMaritimesIds, getSecteurMaritime } from 'cam
 import { knex } from '../../knex'
 import { ForetId } from 'camino-common/src/static/forets'
 import { CommuneId, toCommuneId } from 'camino-common/src/static/communes'
-import { DeepReadonly, isNotNullNorUndefined, onlyUnique } from 'camino-common/src/typescript-tools'
+import { isNotNullNorUndefined, onlyUnique } from 'camino-common/src/typescript-tools'
 import { getGeojsonInformation } from '../../api/rest/perimetre.queries'
 import type { Pool } from 'pg'
 import { SDOMZoneId } from 'camino-common/src/static/sdom'
@@ -53,7 +53,7 @@ export const titresEtapesAreasUpdate = async (pool: Pool, titresEtapesIds?: stri
     }
   }
 }
-async function intersectSdom(titreEtape: Pick<ITitreEtape, 'sdomZones' | 'id'>, sdomZonesIds: DeepReadonly<SDOMZoneId[]>) {
+async function intersectSdom(titreEtape: Pick<ITitreEtape, 'sdomZones' | 'id'>, sdomZonesIds: SDOMZoneId[]) {
   if (sdomZonesIds.length > 0) {
     const sortedSdomZonesIds = sdomZonesIds.toSorted()
 
@@ -64,7 +64,7 @@ async function intersectSdom(titreEtape: Pick<ITitreEtape, 'sdomZones' | 'id'>, 
   }
 }
 
-async function intersectForets(titreEtape: Pick<ITitreEtape, 'forets' | 'id'>, foretsNew: DeepReadonly<ForetId[]>) {
+async function intersectForets(titreEtape: Pick<ITitreEtape, 'forets' | 'id'>, foretsNew: ForetId[]) {
   if (!titreEtape.forets) {
     throw new Error('les forêts de l’étape ne sont pas chargées')
   }
@@ -79,7 +79,7 @@ async function intersectForets(titreEtape: Pick<ITitreEtape, 'forets' | 'id'>, f
   }
 }
 
-async function intersectCommunes(titreEtape: Pick<ITitreEtape, 'communes' | 'id' | 'geojson4326Perimetre'>, communes: DeepReadonly<{ id: CommuneId; surface: M2 }[]>) {
+async function intersectCommunes(titreEtape: Pick<ITitreEtape, 'communes' | 'id' | 'geojson4326Perimetre'>, communes: { id: CommuneId; surface: M2 }[]) {
   const communesNew: { id: CommuneId; surface: M2 }[] = communes.map(({ id, surface }) => ({ id: toCommuneId(id), surface })).toSorted((a, b) => a.id.localeCompare(b.id))
   if (titreEtape.communes?.length !== communesNew.length || titreEtape.communes.some((value, index) => value.id !== communesNew[index].id || value.surface !== communesNew[index].surface)) {
     console.info(`Mise à jour des communes sur l'étape ${titreEtape.id}, ancien: '${JSON.stringify(titreEtape.communes)}', nouveaux: '${JSON.stringify(communesNew)}'`)
@@ -89,7 +89,7 @@ async function intersectCommunes(titreEtape: Pick<ITitreEtape, 'communes' | 'id'
   }
 }
 
-async function intersectSecteursMaritime(titreEtape: Pick<ITitreEtape, 'secteursMaritime' | 'id'>, secteursMaritime: DeepReadonly<SecteursMaritimesIds[]>) {
+async function intersectSecteursMaritime(titreEtape: Pick<ITitreEtape, 'secteursMaritime' | 'id'>, secteursMaritime: SecteursMaritimesIds[]) {
   const secteurMaritimeNew: SecteursMaritimes[] = secteursMaritime
     .map(id => getSecteurMaritime(id))
     .filter(onlyUnique)

@@ -2,7 +2,7 @@ import { Definition } from '../definition'
 import { RegionId } from './region'
 import { DepartementId } from './departement'
 import { z } from 'zod'
-import { map } from '../typescript-tools'
+import { map, toSorted } from '../typescript-tools'
 
 const ADMINISTRATION_TYPE_IDS_ARRAY = ['aut', 'dre', 'min', 'ope', 'pre'] as const
 
@@ -1889,4 +1889,7 @@ export const Administrations: {
     },
   } // ----- ne pas supprimer cette ligne : fin
 
-export const sortedAdministrations = map(IDS, id => Administrations[id]).sort((a, b) => a.abreviation.localeCompare(b.abreviation))
+export const sortedAdministrations = toSorted(
+  map(IDS, id => Administrations[id]),
+  (a, b) => a.abreviation.localeCompare(b.abreviation)
+)

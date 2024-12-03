@@ -38,7 +38,7 @@ import { KM2, km2Validator, m2toKm2, m2Validator } from 'camino-common/src/numbe
 import { Effect, pipe } from 'effect'
 import { CaminoError } from 'camino-common/src/zod-tools'
 import { isAdministration, isSuper, User } from 'camino-common/src/roles'
-import { DeepReadonly, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined } from 'camino-common/src/typescript-tools'
+import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined } from 'camino-common/src/typescript-tools'
 
 const getEtapesByDemarcheIdDbValidator = z.object({
   id: etapeIdValidator,
@@ -169,11 +169,7 @@ const getDemarchesEnConcurrenceDbValidator = z.object({
   demarche_id: demarcheIdValidator,
   demarche_public_lecture: z.boolean(),
 })
-export const getDemarchesEnConcurrenceQuery = (
-  pool: Pool,
-  demarcheIdPivot: DemarcheId,
-  user: DeepReadonly<User>
-): Effect.Effect<GetDemarcheMiseEnConcurrence[], CaminoError<EffectDbQueryAndValidateErrors>> => {
+export const getDemarchesEnConcurrenceQuery = (pool: Pool, demarcheIdPivot: DemarcheId, user: User): Effect.Effect<GetDemarcheMiseEnConcurrence[], CaminoError<EffectDbQueryAndValidateErrors>> => {
   return pipe(
     effectDbQueryAndValidate(getDemarchesEnConcurrenceDb, { demarcheIdPivot }, pool, getDemarchesEnConcurrenceDbValidator),
     Effect.map(demarches =>
@@ -228,7 +224,7 @@ const getDemarchePivotEnConcurrenceDbValidator = commonTitreEnConcurrenceValidat
 export const getDemarchePivotEnConcurrence = (
   pool: Pool,
   demarcheIdPivot: DemarcheId,
-  _user: DeepReadonly<User>
+  _user: User
 ): Effect.Effect<GetResultatMiseEnConcurrence, CaminoError<EffectDbQueryAndValidateErrors | "La démarche n'existe pas">> => {
   return Effect.Do.pipe(
     Effect.bind('pivots', () =>
@@ -327,7 +323,7 @@ const getDemarchesSatellitesEnConcurrenceDbValidator = commonTitreEnConcurrenceV
     surfaceEnCommun: m2Validator,
   })
 const getDemarchesSatellitesEnConcurrenceDb = sql<
-  Redefine<IGetDemarchesSatellitesEnConcurrenceDbQuery, { demarcheIdPivot: DemarcheId; perimetrePivot: DeepReadonly<MultiPolygon> }, z.infer<typeof getDemarchesSatellitesEnConcurrenceDbValidator>>
+  Redefine<IGetDemarchesSatellitesEnConcurrenceDbQuery, { demarcheIdPivot: DemarcheId; perimetrePivot: MultiPolygon }, z.infer<typeof getDemarchesSatellitesEnConcurrenceDbValidator>>
 >`
   select
     tmp."titreNom",
@@ -364,7 +360,7 @@ const getPerimetreSansSatelliteValidator = z.object({
   surface_sans_satellite: m2Validator,
 })
 const getPerimetreSansSatelliteDb = sql<
-  Redefine<IGetPerimetreSansSatelliteDbQuery, { perimetrePivot: DeepReadonly<MultiPolygon>; perimetreSatellite: DeepReadonly<MultiPolygon> }, z.infer<typeof getPerimetreSansSatelliteValidator>>
+  Redefine<IGetPerimetreSansSatelliteDbQuery, { perimetrePivot: MultiPolygon; perimetreSatellite: MultiPolygon }, z.infer<typeof getPerimetreSansSatelliteValidator>>
 >`
 SELECT
   ST_AREA(perimetre_geom_sans_satellite, TRUE) AS surface_sans_satellite,

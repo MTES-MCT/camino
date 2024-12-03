@@ -1,4 +1,4 @@
-import { DeepReadonly, computed, defineComponent, onMounted, ref } from 'vue'
+import { computed, defineComponent, onMounted, ref } from 'vue'
 import { Bloc } from './bloc'
 import { EtapeFondamentaleEdit, FondamentalesEdit } from './fondamentales-edit'
 import { PerimetreEdit } from './perimetre-edit'
@@ -53,14 +53,14 @@ import { DsfrInputCheckbox } from '../_ui/dsfr-input-checkbox'
 import { CaminoError } from 'camino-common/src/zod-tools'
 
 export type Props = {
-  etape: DeepReadonly<Pick<Nullable<FlattenEtape>, 'id' | 'date' | 'typeId' | 'statutId' | 'slug'> & Omit<FlattenEtape, 'date' | 'typeId' | 'statutId' | 'id' | 'slug'>>
+  etape: Pick<Nullable<FlattenEtape>, 'id' | 'date' | 'typeId' | 'statutId' | 'slug'> & Omit<FlattenEtape, 'date' | 'typeId' | 'statutId' | 'id' | 'slug'>
   demarcheId: DemarcheId
   demarcheTypeId: DemarcheTypeId
   titreTypeId: TitreTypeId
   titreSlug: TitreSlug
   user: User
-  entreprises: DeepReadonly<Entreprise[]>
-  perimetre: DeepReadonly<PerimetreInformations>
+  entreprises: Entreprise[]
+  perimetre: PerimetreInformations
   initTab?: 'points' | 'carte'
   goToDemarche: (demarcheId: DemarcheId) => void
   firstEtapeDate: FirstEtapeDate | null
@@ -83,25 +83,25 @@ export type Props = {
   >
 }
 
-type EtapeEditFormDocuments = DeepReadonly<{
+type EtapeEditFormDocuments = {
   etapeDocuments: (EtapeDocument | TempEtapeDocument)[]
   entrepriseDocuments: SelectedEntrepriseDocument[]
   etapeAvis: (EtapeAvis | TempEtapeAvis)[]
-}>
+}
 
 const mergeFlattenEtapeWithNewHeritage = (
-  etape: DeepReadonly<CoreEtapeCreationOrModification>,
+  etape: CoreEtapeCreationOrModification,
   titreTypeId: TitreTypeId,
   demarcheTypeId: DemarcheTypeId,
-  heritageData: DeepReadonly<GetEtapeHeritagePotentiel>
-): DeepReadonly<CoreEtapeCreationOrModification> => {
+  heritageData: GetEtapeHeritagePotentiel
+): CoreEtapeCreationOrModification => {
   const sections = getSections(titreTypeId, demarcheTypeId, etape.typeId)
-  const flattenEtape: DeepReadonly<CoreEtapeCreationOrModification> = {
+  const flattenEtape: CoreEtapeCreationOrModification = {
     ...etape,
-    contenu: sections.reduce<DeepReadonly<FlattenEtape['contenu']>>((accSection, section) => {
-      const newSection = section.elements.reduce<DeepReadonly<FlattenEtape['contenu'][string]>>((accElement, element) => {
+    contenu: sections.reduce<FlattenEtape['contenu']>((accSection, section) => {
+      const newSection = section.elements.reduce<FlattenEtape['contenu'][string]>((accElement, element) => {
         const elementHeritage = heritageData.heritageContenu[section.id]?.[element.id] ?? { actif: false, etape: null }
-        const currentHeritage: DeepReadonly<FlattenedContenuElement> = etape.contenu[section.id]?.[element.id] ?? { value: null, heritee: true, etapeHeritee: null }
+        const currentHeritage: FlattenedContenuElement = etape.contenu[section.id]?.[element.id] ?? { value: null, heritee: true, etapeHeritee: null }
 
         // L'héritage ne peut pas être activé si le champ est obligatoire et que la valeur du champ dans l'étape héritable est null
         const canHaveHeritage: boolean = element.optionnel || isNotNullNorUndefined(elementHeritage.etape?.contenu?.[section.id]?.[element.id])
@@ -217,7 +217,7 @@ const mergeFlattenEtapeWithNewHeritage = (
 }
 export const EtapeEditForm = defineComponent<Props>(props => {
   const [etape, setEtape] = useState<AsyncData<CoreEtapeCreationOrModification | null>>({ status: 'LOADED', value: null })
-  const [perimetreInfos, setPerimetreInfos] = useState<DeepReadonly<Omit<PerimetreInformations, 'communes'>>>(props.perimetre)
+  const [perimetreInfos, setPerimetreInfos] = useState<Omit<PerimetreInformations, 'communes'>>(props.perimetre)
 
   const [documents, setDocuments] = useState<EtapeEditFormDocuments>({
     etapeDocuments: [],
@@ -258,7 +258,7 @@ export const EtapeEditForm = defineComponent<Props>(props => {
     }
   }
 
-  const setEtapeAndDocument = (etape: DeepReadonly<CoreEtapeCreationOrModification>, documents: EtapeEditFormDocuments) => {
+  const setEtapeAndDocument = (etape: CoreEtapeCreationOrModification, documents: EtapeEditFormDocuments) => {
     setEtape({ status: 'LOADED', value: etape })
     setDocuments(documents)
   }
@@ -361,10 +361,10 @@ export const EtapeEditForm = defineComponent<Props>(props => {
           titulaires: { actif: etapeValue.titulaires.heritee },
           amodiataires: { actif: etapeValue.amodiataires.heritee },
         },
-        contenu: Object.keys(etapeValue.contenu).reduce<DeepReadonly<RestEtapeCreation['contenu']>>((sectionsAcc, section) => {
+        contenu: Object.keys(etapeValue.contenu).reduce<RestEtapeCreation['contenu']>((sectionsAcc, section) => {
           sectionsAcc = {
             ...sectionsAcc,
-            [section]: Object.keys(etapeValue.contenu[section] ?? {}).reduce<DeepReadonly<RestEtapeCreation['contenu'][string]>>((elementsAcc, element) => {
+            [section]: Object.keys(etapeValue.contenu[section] ?? {}).reduce<RestEtapeCreation['contenu'][string]>((elementsAcc, element) => {
               elementsAcc = { ...elementsAcc, [element]: etapeValue.contenu[section]?.[element]?.value }
 
               return elementsAcc
@@ -373,10 +373,10 @@ export const EtapeEditForm = defineComponent<Props>(props => {
 
           return sectionsAcc
         }, {}),
-        heritageContenu: Object.keys(etapeValue.contenu).reduce<DeepReadonly<RestEtapeCreation['heritageContenu']>>((sectionsAcc, section) => {
+        heritageContenu: Object.keys(etapeValue.contenu).reduce<RestEtapeCreation['heritageContenu']>((sectionsAcc, section) => {
           return {
             ...sectionsAcc,
-            [section]: Object.keys(etapeValue.contenu[section] ?? {}).reduce<DeepReadonly<RestEtapeCreation['heritageContenu'][string]>>((elementsAcc, element) => {
+            [section]: Object.keys(etapeValue.contenu[section] ?? {}).reduce<RestEtapeCreation['heritageContenu'][string]>((elementsAcc, element) => {
               return { ...elementsAcc, [element]: { actif: etapeValue.contenu[section]?.[element]?.heritee ?? false } }
             }, {}),
           }
@@ -489,10 +489,10 @@ export const EtapeEditForm = defineComponent<Props>(props => {
 
 const EtapeEditFormInternal = defineComponent<
   {
-    etape: DeepReadonly<CoreEtapeCreationOrModification>
+    etape: CoreEtapeCreationOrModification
     documents: EtapeEditFormDocuments
-    setEtape: (etape: DeepReadonly<CoreEtapeCreationOrModification>, documents: EtapeEditFormDocuments) => void
-    alertesUpdate: (alertes: Omit<DeepReadonly<PerimetreInformations>, 'communes'>) => void
+    setEtape: (etape: CoreEtapeCreationOrModification, documents: EtapeEditFormDocuments) => void
+    alertesUpdate: (alertes: Omit<PerimetreInformations, 'communes'>) => void
   } & Omit<Props, 'etape'>
 >(props => {
   const documentsCompleteUpdate = (etapeDocuments: (EtapeDocument | TempEtapeDocument)[]) => {
@@ -513,7 +513,7 @@ const EtapeEditFormInternal = defineComponent<
     })
   }
 
-  const entrepriseDocumentsCompleteUpdate = (entrepriseDocuments: DeepReadonly<SelectedEntrepriseDocument[]>) => {
+  const entrepriseDocumentsCompleteUpdate = (entrepriseDocuments: SelectedEntrepriseDocument[]) => {
     props.setEtape(props.etape, { ...props.documents, entrepriseDocuments })
   }
 
@@ -541,7 +541,7 @@ const EtapeEditFormInternal = defineComponent<
     props.alertesUpdate({ superposition_alertes: perimetreInfos.superposition_alertes, sdomZoneIds: perimetreInfos.sdomZoneIds })
   }
 
-  const onEtapePerimetreHeritageChange = (perimetre: DeepReadonly<FlattenEtape['perimetre']>) => {
+  const onEtapePerimetreHeritageChange = (perimetre: FlattenEtape['perimetre']) => {
     props.setEtape(
       {
         ...props.etape,
@@ -568,11 +568,11 @@ const EtapeEditFormInternal = defineComponent<
   const onUpdateNotes = (notes: string) => {
     props.setEtape({ ...props.etape, note: { is_avertissement: props.etape.note.is_avertissement, valeur: notes } }, props.documents)
   }
-  const onUpdateNoteAvertissement = (isAvertissement: DeepReadonly<boolean>) => {
+  const onUpdateNoteAvertissement = (isAvertissement: boolean) => {
     props.setEtape({ ...props.etape, note: { valeur: props.etape.note.valeur, is_avertissement: isAvertissement } }, props.documents)
   }
 
-  const fondamentalesCompleteUpdate = (etapeFondamentale: DeepReadonly<EtapeFondamentaleEdit>) => {
+  const fondamentalesCompleteUpdate = (etapeFondamentale: EtapeFondamentaleEdit) => {
     props.setEtape({ ...props.etape, ...etapeFondamentale }, props.documents)
   }
 

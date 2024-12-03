@@ -5,7 +5,7 @@ import { titreEtapeHeritageContenuFind } from '../../../business/utils/titre-eta
 import { titreEtapesSortAscByOrdre, titreEtapesSortDescByOrdre } from '../../../business/utils/titre-etapes-sort'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
-import { DeepReadonly, getKeys, isNotNullNorUndefined, RecordPartial } from 'camino-common/src/typescript-tools'
+import { getKeys, isNotNullNorUndefined, RecordPartial } from 'camino-common/src/typescript-tools'
 import { getSections, Section } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections'
 import { ETAPE_HERITAGE_PROPS, isHeritageProps } from 'camino-common/src/heritage'
 import { EtapeTypeId, EtapesTypes } from 'camino-common/src/static/etapesTypes'
@@ -82,7 +82,7 @@ const titreEtapeHeritageContenuBuild = (
 
   titreEtapesFiltered.splice(0, 0, titreEtape)
 
-  const etapeSectionsDictionary = titreEtapesFiltered.reduce<RecordPartial<string, DeepReadonly<Section[]>>>((acc, e) => {
+  const etapeSectionsDictionary = titreEtapesFiltered.reduce<RecordPartial<string, Section[]>>((acc, e) => {
     acc[e.id] = getSections(titreTypeId, demarcheTypeId, e.typeId)
 
     return acc

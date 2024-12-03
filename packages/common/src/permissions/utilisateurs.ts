@@ -12,12 +12,12 @@ import {
   isAdministrationLecteur,
   isEntrepriseOrBureauDEtude,
 } from '../roles'
-import { DeepReadonly, isNotNullNorUndefinedNorEmpty } from '../typescript-tools'
+import { isNotNullNorUndefinedNorEmpty } from '../typescript-tools'
 
 export const canCreateEntreprise = (user: User): boolean => isSuper(user) || isAdministrationAdmin(user) || isAdministrationEditeur(user)
-export const canReadUtilisateurs = (user: DeepReadonly<User>): boolean => isSuper(user) || isAdministration(user) || isEntreprise(user) || isBureauDEtudes(user)
+export const canReadUtilisateurs = (user: User): boolean => isSuper(user) || isAdministration(user) || isEntreprise(user) || isBureauDEtudes(user)
 
-export const canReadUtilisateur = (user: DeepReadonly<User>, utilisateur: UserNotNull): boolean => {
+export const canReadUtilisateur = (user: User, utilisateur: UserNotNull): boolean => {
   if (user?.id === utilisateur.id) {
     return true
   }

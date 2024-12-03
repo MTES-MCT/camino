@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { NonEmptyArray, map } from '../typescript-tools'
+import { NonEmptyArray, map, toSorted } from '../typescript-tools'
 
 export interface DocumentType {
   id: DocumentTypeId
@@ -274,7 +274,10 @@ export const DocumentsTypes: { [key in DocumentTypeId | AutreDocumentTypeId]: De
   sir: { id: 'sir', nom: 'Avis de situation au répertoire Sirene' },
 }
 
-export const sortedEntrepriseDocumentTypes = map(EntrepriseDocumentTypeIds, id => DocumentsTypes[id]).sort((a, b) => a.nom.localeCompare(b.nom))
+export const sortedEntrepriseDocumentTypes = toSorted(
+  map(EntrepriseDocumentTypeIds, id => DocumentsTypes[id]),
+  (a, b) => a.nom.localeCompare(b.nom)
+)
 export const sortedDocumentTypes = IDS_WITHOUT_AUTRE.map(id => DocumentsTypes[id]).sort((a, b) => a.nom.localeCompare(b.nom))
 
 export const isDocumentTypeId = (documentTypeId: string | null | undefined): documentTypeId is DocumentTypeId => IDS_WITHOUT_AUTRE.includes(documentTypeId)

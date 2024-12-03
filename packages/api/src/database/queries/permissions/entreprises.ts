@@ -5,9 +5,8 @@ import { knex } from '../../../knex'
 import Entreprises from '../../models/entreprises'
 import { User } from 'camino-common/src/roles'
 import TitresEtapes from '../../models/titres-etapes'
-import { DeepReadonly } from 'camino-common/src/typescript-tools'
 
-export const entreprisesQueryModify = (q: QueryBuilder<Entreprises, Entreprises | Entreprises[]>, _user: DeepReadonly<User>): QueryBuilder<Entreprises, Entreprises | Entreprises[]> => {
+export const entreprisesQueryModify = (q: QueryBuilder<Entreprises, Entreprises | Entreprises[]>, _user: User): QueryBuilder<Entreprises, Entreprises | Entreprises[]> => {
   q.select('entreprises.*')
 
   return q

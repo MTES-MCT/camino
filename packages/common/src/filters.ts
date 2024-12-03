@@ -224,7 +224,7 @@ export const caminoFiltres = {
     name: string
     placeholder?: string
     validator: ZodType
-    elements?: unknown[]
+    elements?: Readonly<unknown[]>
     component?: 'FiltresLabel' | 'FiltresTypes' | 'FiltreDomaine' | 'FiltresTitresStatuts' | 'FiltresActivitesStatuts' | 'FiltresDemarchesStatuts'
     lazy?: boolean
   }

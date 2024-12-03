@@ -15,7 +15,7 @@ import { getDocuments } from '../static/titresTypes_demarchesTypes_etapesTypes/d
 import { getEntrepriseDocuments } from '../static/titresTypes_demarchesTypes_etapesTypes/entrepriseDocuments'
 import { documentTypeIdsBySdomZonesGet } from '../static/titresTypes_demarchesTypes_etapesTypes/sdom'
 import { getSections, getSectionsWithValue } from '../static/titresTypes_demarchesTypes_etapesTypes/sections'
-import { isNotNullNorUndefinedNorEmpty, DeepReadonly, onlyUnique, NonEmptyArray, isNonEmptyArray, isNullOrUndefinedOrEmpty, isNullOrUndefined, Nullable } from '../typescript-tools'
+import { isNotNullNorUndefinedNorEmpty, onlyUnique, NonEmptyArray, isNonEmptyArray, isNullOrUndefinedOrEmpty, isNullOrUndefined, Nullable } from '../typescript-tools'
 import { sectionsWithValueCompleteValidate } from './sections'
 import { canEditAmodiataires, canEditDuree, canEditPerimetre, canEditTitulaires } from './titres-etapes'
 import { machineIdFind } from '../machines'
@@ -24,10 +24,10 @@ import { FirstEtapeDate } from '../date'
 
 type ValidReturn = { valid: true } | { valid: false; errors: NonEmptyArray<string> }
 
-export const dateTypeStepIsVisible = (user: DeepReadonly<User>): boolean => {
+export const dateTypeStepIsVisible = (user: User): boolean => {
   return isSuper(user) || isAdministrationAdmin(user) || isAdministrationEditeur(user)
 }
-export const dateTypeStepIsComplete = (etape: DeepReadonly<Nullable<Pick<FlattenEtape, 'typeId' | 'date' | 'statutId'>>>, user: DeepReadonly<User>): ValidReturn => {
+export const dateTypeStepIsComplete = (etape: Nullable<Pick<FlattenEtape, 'typeId' | 'date' | 'statutId'>>, user: User): ValidReturn => {
   if (!dateTypeStepIsVisible(user)) {
     return { valid: true }
   }
@@ -57,10 +57,10 @@ export const fondamentaleStepIsVisible = (etapeTypeId: EtapeTypeId): boolean => 
 }
 
 export const fondamentaleStepIsComplete = (
-  flattened: DeepReadonly<Pick<FlattenEtape, 'typeId' | 'duree' | 'substances' | 'titulaires' | 'amodiataires'>>,
+  flattened: Pick<FlattenEtape, 'typeId' | 'duree' | 'substances' | 'titulaires' | 'amodiataires'>,
   demarcheTypeId: DemarcheTypeId,
   titreTypeId: TitreTypeId,
-  user: DeepReadonly<User>
+  user: User
 ): ValidReturn => {
   if (!fondamentaleStepIsVisible(flattened.typeId)) {
     return { valid: true }
@@ -96,7 +96,7 @@ export const fondamentaleStepIsComplete = (
 export const sectionsStepIsVisible = (etape: Pick<FlattenEtape, 'typeId'>, demarcheTypeId: DemarcheTypeId, titreTypeId: TitreTypeId): boolean => {
   return getSections(titreTypeId, demarcheTypeId, etape.typeId).length > 0
 }
-export const sectionsStepIsComplete = (etape: DeepReadonly<Pick<FlattenEtape, 'typeId' | 'contenu'>>, demarcheTypeId: DemarcheTypeId, titreTypeId: TitreTypeId): ValidReturn => {
+export const sectionsStepIsComplete = (etape: Pick<FlattenEtape, 'typeId' | 'contenu'>, demarcheTypeId: DemarcheTypeId, titreTypeId: TitreTypeId): ValidReturn => {
   if (!sectionsStepIsVisible(etape, demarcheTypeId, titreTypeId)) {
     return { valid: true }
   }
@@ -117,7 +117,7 @@ export const perimetreStepIsVisible = (etape: Pick<FlattenEtape, 'typeId'>, dema
 
   return editPerimetre.visibility === 'present'
 }
-export const perimetreStepIsComplete = (etape: DeepReadonly<Pick<FlattenEtape, 'typeId' | 'perimetre'>>, demarcheTypeId: DemarcheTypeId): ValidReturn => {
+export const perimetreStepIsComplete = (etape: Pick<FlattenEtape, 'typeId' | 'perimetre'>, demarcheTypeId: DemarcheTypeId): ValidReturn => {
   if (!perimetreStepIsVisible(etape, demarcheTypeId)) {
     return { valid: true }
   }
@@ -136,11 +136,11 @@ export const perimetreStepIsComplete = (etape: DeepReadonly<Pick<FlattenEtape, '
 }
 
 export const getDocumentsTypes = (
-  etape: DeepReadonly<Pick<FlattenEtape, 'typeId'>>,
+  etape: Pick<FlattenEtape, 'typeId'>,
   demarcheTypeId: DemarcheTypeId,
   titreTypeId: TitreTypeId,
   demarcheId: DemarcheId,
-  sdomZoneIds: DeepReadonly<SDOMZoneId[]>,
+  sdomZoneIds: SDOMZoneId[],
   isArmMecanise: boolean,
   firstEtapeDate: FirstEtapeDate
 ): (DocumentType | AutreDocumentType)[] => {
@@ -186,7 +186,7 @@ export const getAvisTypes = (
   demarcheTypeId: DemarcheTypeId,
   demarcheId: DemarcheId,
   firstEtapeDate: FirstEtapeDate,
-  communeIds: DeepReadonly<CommuneId[]>
+  communeIds: CommuneId[]
 ): { id: AvisTypeId; optionnel: boolean }[] => {
   const avis: { id: AvisTypeId; optionnel: boolean }[] = []
   if (etapeTypeId === ETAPES_TYPES.demande && titreTypeId === TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX) {
@@ -245,12 +245,12 @@ export const etapeDocumentsStepIsVisible = (): boolean => {
 }
 
 export const etapeDocumentsStepIsComplete = (
-  etape: DeepReadonly<Pick<FlattenEtape, 'typeId' | 'contenu' | 'isBrouillon'>>,
+  etape: Pick<FlattenEtape, 'typeId' | 'contenu' | 'isBrouillon'>,
   demarcheTypeId: DemarcheTypeId,
   titreTypeId: TitreTypeId,
   demarcheId: DemarcheId,
-  etapeDocuments: DeepReadonly<Pick<EtapeDocument | TempEtapeDocument, 'etape_document_type_id'>[]>,
-  sdomZoneIds: DeepReadonly<SDOMZoneId[]>,
+  etapeDocuments: Pick<EtapeDocument | TempEtapeDocument, 'etape_document_type_id'>[],
+  sdomZoneIds: SDOMZoneId[],
   firstEtapeDate: FirstEtapeDate
 ): ValidReturn => {
   const errors: string[] = []
@@ -275,19 +275,19 @@ export const etapeAvisStepIsVisible = (
   demarcheTypeId: DemarcheTypeId,
   demarcheId: DemarcheId,
   firstEtapeDate: FirstEtapeDate,
-  communeIds: DeepReadonly<CommuneId[]>
+  communeIds: CommuneId[]
 ): boolean => {
   return getAvisTypes(etape.typeId, titreTypeId, demarcheTypeId, demarcheId, firstEtapeDate, communeIds).length > 0
 }
 
 export const etapeAvisStepIsComplete = (
-  etape: DeepReadonly<Pick<FlattenEtape, 'typeId'>>,
-  etapeAvis: DeepReadonly<Pick<EtapeAvis | TempEtapeAvis, 'avis_type_id'>[]>,
+  etape: Pick<FlattenEtape, 'typeId'>,
+  etapeAvis: Pick<EtapeAvis | TempEtapeAvis, 'avis_type_id'>[],
   titreTypeId: TitreTypeId,
   demarcheTypeId: DemarcheTypeId,
   demarcheId: DemarcheId,
   firstEtapeDate: FirstEtapeDate,
-  communeIds: DeepReadonly<CommuneId[]>
+  communeIds: CommuneId[]
 ): ValidReturn => {
   if (!etapeAvisStepIsVisible(etape, titreTypeId, demarcheTypeId, demarcheId, firstEtapeDate, communeIds)) {
     return { valid: true }
@@ -305,10 +305,10 @@ export const entrepriseDocumentsStepIsVisible = (etape: Pick<FlattenEtape, 'type
   return getEntrepriseDocuments(titreTypeId, demarcheTypeId, etape.typeId).length > 0
 }
 export const entrepriseDocumentsStepIsComplete = (
-  etape: DeepReadonly<Pick<FlattenEtape, 'typeId' | 'contenu' | 'titulaires' | 'amodiataires'>>,
+  etape: Pick<FlattenEtape, 'typeId' | 'contenu' | 'titulaires' | 'amodiataires'>,
   demarcheTypeId: DemarcheTypeId,
   titreTypeId: TitreTypeId,
-  entreprisesDocuments: DeepReadonly<Pick<SelectedEntrepriseDocument, 'documentTypeId' | 'entrepriseId'>[]>
+  entreprisesDocuments: Pick<SelectedEntrepriseDocument, 'documentTypeId' | 'entrepriseId'>[]
 ): ValidReturn => {
   if (!entrepriseDocumentsStepIsVisible(etape, demarcheTypeId, titreTypeId)) {
     return { valid: true }

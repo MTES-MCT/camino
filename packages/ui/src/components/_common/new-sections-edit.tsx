@@ -1,4 +1,4 @@
-import { defineComponent, ref, watch, DeepReadonly, FunctionalComponent } from 'vue'
+import { defineComponent, ref, watch, FunctionalComponent } from 'vue'
 import { ElementWithValue, isNumberElement, isRadioElement, SectionWithValue } from 'camino-common/src/sections'
 import { exhaustiveCheck, isNonEmptyArray, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined } from 'camino-common/src/typescript-tools'
 import { numberFormat } from 'camino-common/src/number'
@@ -14,13 +14,13 @@ import { useState } from '../../utils/vue-tsx-utils'
 import { CaminoDate, dateAddDays, dateFormat } from 'camino-common/src/date'
 import { sectionDureeIds } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections'
 interface Props {
-  sectionsWithValue: DeepReadonly<SectionWithValue[]>
+  sectionsWithValue: SectionWithValue[]
   completeUpdate: (complete: boolean, newContenu: Props['sectionsWithValue']) => void
   etapeDate: CaminoDate | null
 }
 
 export const SectionsEdit = defineComponent<Props>(props => {
-  const [sectionsWithValue, setSectionsWithValue] = useState<DeepReadonly<SectionWithValue[]>>([])
+  const [sectionsWithValue, setSectionsWithValue] = useState<SectionWithValue[]>([])
 
   watch(
     () => props.sectionsWithValue,
@@ -31,8 +31,8 @@ export const SectionsEdit = defineComponent<Props>(props => {
     { immediate: true }
   )
 
-  const onValueChange = (elementIndex: number, sectionIndex: number) => (elementWithValue: DeepReadonly<ElementWithValue>) => {
-    const newSectionsWithValue: DeepReadonly<SectionWithValue[]> = sectionsWithValue.value.map((section, index) => {
+  const onValueChange = (elementIndex: number, sectionIndex: number) => (elementWithValue: ElementWithValue) => {
+    const newSectionsWithValue: SectionWithValue[] = sectionsWithValue.value.map((section, index) => {
       if (index === sectionIndex) {
         return {
           ...section,
@@ -78,13 +78,13 @@ export const SectionsEdit = defineComponent<Props>(props => {
 SectionsEdit.props = ['sectionsWithValue', 'completeUpdate', 'etapeDate']
 
 interface SectionElementEditProps {
-  element: DeepReadonly<ElementWithValue>
+  element: ElementWithValue
   onValueChange: (value: SectionElementEditProps['element']) => void
   sectionId: string
   etapeDate: CaminoDate | null
 }
 
-export const getInfo = (element: DeepReadonly<ElementWithValue>, sectionId: string, etapeDate: CaminoDate | null): string => {
+export const getInfo = (element: ElementWithValue, sectionId: string, etapeDate: CaminoDate | null): string => {
   if (isNotNullNorUndefined(element.value)) {
     if (element.id === 'volumeGranulatsExtrait' && isNumberElement(element)) {
       return `Soit l’équivalent de ${numberFormat(element.value * 1.5)} tonnes`
@@ -105,7 +105,7 @@ export const getInfo = (element: DeepReadonly<ElementWithValue>, sectionId: stri
 export const SectionElementEdit = defineComponent<SectionElementEditProps>(props => {
   const complete = ref<boolean>(sectionElementWithValueCompleteValidate(props.element))
 
-  const onValueChange = (value: DeepReadonly<ElementWithValue>) => {
+  const onValueChange = (value: ElementWithValue) => {
     complete.value = sectionElementWithValueCompleteValidate(value)
     props.onValueChange(value)
   }

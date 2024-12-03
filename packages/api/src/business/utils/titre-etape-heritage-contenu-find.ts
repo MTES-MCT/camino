@@ -1,6 +1,6 @@
 import { IContenuValeur, ITitreEtape } from '../../types'
 
-import { DeepReadonly, RecordPartial } from 'camino-common/src/typescript-tools'
+import { RecordPartial } from 'camino-common/src/typescript-tools'
 import { Section } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections'
 
 export const heritageContenuFind = (
@@ -53,7 +53,7 @@ export const heritageContenuFind = (
 export const titreEtapeHeritageContenuFind = (
   titreEtapes: Omit<ITitreEtape, 'titreDemarcheId' | 'isBrouillon'>[],
   titreEtape: Pick<ITitreEtape, 'id' | 'contenu' | 'heritageContenu'>,
-  etapeSectionsDictionary: RecordPartial<string, DeepReadonly<Section[]>>
+  etapeSectionsDictionary: RecordPartial<string, Section[]>
 ) => {
   const sections = etapeSectionsDictionary[titreEtape.id]
 

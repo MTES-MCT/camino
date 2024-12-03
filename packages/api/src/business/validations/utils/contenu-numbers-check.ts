@@ -1,9 +1,9 @@
 import { Section } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections'
-import { DeepReadonly, isNotNullNorUndefined, isNullOrUndefinedOrEmpty, RecordPartial } from 'camino-common/src/typescript-tools'
+import { isNotNullNorUndefined, isNullOrUndefinedOrEmpty, RecordPartial } from 'camino-common/src/typescript-tools'
 import { numberElementValueValidator } from 'camino-common/src/sections'
 import { FlattenedContenuElement } from 'camino-common/src/etape-form'
 
-export const contenuNumbersCheck = (sections: DeepReadonly<Section[]>, contenu: RecordPartial<string, RecordPartial<string, Pick<FlattenedContenuElement, 'value'>>>): string | null => {
+export const contenuNumbersCheck = (sections: Section[], contenu: RecordPartial<string, RecordPartial<string, Pick<FlattenedContenuElement, 'value'>>>): string | null => {
   const errors = sections.reduce((errors: string[], section) => {
     if (isNullOrUndefinedOrEmpty(section.elements)) return errors
 

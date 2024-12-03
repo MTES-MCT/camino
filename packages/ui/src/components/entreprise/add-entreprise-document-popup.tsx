@@ -8,7 +8,7 @@ import { InputFile } from '../_ui/dsfr-input-file'
 import { ApiClient } from '@/api/api-client'
 import { DsfrInput } from '../_ui/dsfr-input'
 import { DsfrSelect } from '../_ui/dsfr-select'
-import { DeepReadonly, map } from 'camino-common/src/typescript-tools'
+import { map } from 'camino-common/src/typescript-tools'
 
 interface Props {
   close: () => void
@@ -17,7 +17,7 @@ interface Props {
   apiClient: Pick<ApiClient, 'creerEntrepriseDocument' | 'uploadTempDocument'>
 }
 export const AddEntrepriseDocumentPopup = defineComponent<Props>(props => {
-  const entrepriseDocumentTypeId = ref<DeepReadonly<(typeof EntrepriseDocumentTypeIds)[number]> | null>(props.lockedEntrepriseDocumentTypeId ?? null)
+  const entrepriseDocumentTypeId = ref<(typeof EntrepriseDocumentTypeIds)[number] | null>(props.lockedEntrepriseDocumentTypeId ?? null)
   const documentDate = ref<CaminoDate | null>(null)
   const entrepriseDocumentFile = ref<File | null>(null)
   const documentDescription = ref<string>('')
@@ -36,7 +36,7 @@ export const AddEntrepriseDocumentPopup = defineComponent<Props>(props => {
 
   const documentsTypes = map(sortedEntrepriseDocumentTypes, edt => ({ id: edt.id, label: edt.nom }))
 
-  const typeChange = (e: DeepReadonly<EntrepriseDocumentTypeId> | null) => {
+  const typeChange = (e: EntrepriseDocumentTypeId | null) => {
     entrepriseDocumentTypeId.value = e
   }
   const content = () => (

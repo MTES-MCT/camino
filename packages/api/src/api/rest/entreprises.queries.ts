@@ -21,7 +21,7 @@ import {
 } from 'camino-common/src/entreprise'
 import { EntrepriseDocumentTypeId } from 'camino-common/src/static/documentsTypes'
 import { CaminoDate } from 'camino-common/src/date'
-import { DeepReadonly, NonEmptyArray, isNonEmptyArray, isNonEmptyArrayAndDeepReadonly, onlyUnique } from 'camino-common/src/typescript-tools'
+import { NonEmptyArray, isNonEmptyArray, onlyUnique } from 'camino-common/src/typescript-tools'
 import { Pool } from 'pg'
 import { canSeeEntrepriseDocuments } from 'camino-common/src/permissions/entreprises'
 import { roleValidator, User } from 'camino-common/src/roles'
@@ -31,16 +31,16 @@ import { CaminoError } from 'camino-common/src/zod-tools'
 
 const dummy = ['dummy'] as const
 export const getEntrepriseDocuments = (
-  entrepriseDocumentIds: DeepReadonly<EntrepriseDocumentId[]>,
+  entrepriseDocumentIds: EntrepriseDocumentId[],
   entrepriseIds: EntrepriseId[],
   pool: Pool,
-  user: DeepReadonly<User>
+  user: User
 ): Effect.Effect<EntrepriseDocument[], CaminoError<EffectDbQueryAndValidateErrors>> => {
   return pipe(
     effectDbQueryAndValidate(
       getEntrepriseDocumentsInternal,
       {
-        entrepriseDocumentIds: isNonEmptyArrayAndDeepReadonly(entrepriseDocumentIds) ? entrepriseDocumentIds : dummy,
+        entrepriseDocumentIds: isNonEmptyArray(entrepriseDocumentIds) ? entrepriseDocumentIds : dummy,
         entrepriseIds: isNonEmptyArray(entrepriseIds) ? entrepriseIds : dummy,
       },
       pool,
@@ -53,7 +53,7 @@ export const getEntrepriseDocuments = (
 const getEntrepriseDocumentsInternal = sql<
   Redefine<
     IGetEntrepriseDocumentsInternalQuery,
-    { entrepriseDocumentIds: DeepReadonly<NonEmptyArray<EntrepriseDocumentId>> | typeof dummy; entrepriseIds: DeepReadonly<NonEmptyArray<EntrepriseId>> | typeof dummy },
+    { entrepriseDocumentIds: NonEmptyArray<EntrepriseDocumentId> | typeof dummy; entrepriseIds: NonEmptyArray<EntrepriseId> | typeof dummy },
     EntrepriseDocument
   >
 >`
@@ -242,7 +242,7 @@ where
 const checkEntreprisesExistValidator = z.object({ id: entrepriseIdValidator })
 const entreprisesNonExistantes = "certaines entreprises n'existent pas" as const
 export type CheckEntreprisesExistErrors = EffectDbQueryAndValidateErrors | typeof entreprisesNonExistantes
-export const checkEntreprisesExist = (pool: Pool, entrepriseIds: DeepReadonly<EntrepriseId[]>): Effect.Effect<DeepReadonly<EntrepriseId[]>, CaminoError<CheckEntreprisesExistErrors>> => {
+export const checkEntreprisesExist = (pool: Pool, entrepriseIds: EntrepriseId[]): Effect.Effect<EntrepriseId[], CaminoError<CheckEntreprisesExistErrors>> => {
   if (entrepriseIds.length === 0) {
     return Effect.succeed(entrepriseIds)
   }
@@ -257,7 +257,7 @@ export const checkEntreprisesExist = (pool: Pool, entrepriseIds: DeepReadonly<En
   )
 }
 
-const checkEntreprisesExistQuery = sql<Redefine<ICheckEntreprisesExistQueryQuery, { entrepriseIds: DeepReadonly<EntrepriseId[]> }, z.infer<typeof checkEntreprisesExistValidator>>>`
+const checkEntreprisesExistQuery = sql<Redefine<ICheckEntreprisesExistQueryQuery, { entrepriseIds: EntrepriseId[] }, z.infer<typeof checkEntreprisesExistValidator>>>`
 SELECT
     id
 FROM

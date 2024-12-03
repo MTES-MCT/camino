@@ -2,7 +2,7 @@ import { useState } from '@/utils/vue-tsx-utils'
 import { CaminoDate } from 'camino-common/src/date'
 import { EtapeId } from 'camino-common/src/etape'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
-import { watch, DeepReadonly, defineComponent } from 'vue'
+import { watch, defineComponent } from 'vue'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { TypeEdit } from './type-edit'
 import { DemarcheId } from 'camino-common/src/demarche'
@@ -10,12 +10,12 @@ import { ApiClient } from '../../api/api-client'
 import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts'
 import { DsfrInput } from '../_ui/dsfr-input'
 
-export type EtapeDateTypeEdit = DeepReadonly<{
+export type EtapeDateTypeEdit = {
   statutId: EtapeStatutId | null
   typeId: EtapeTypeId | null
   id: EtapeId | null
   date: CaminoDate | null
-}>
+}
 
 export interface Props {
   etape: EtapeDateTypeEdit

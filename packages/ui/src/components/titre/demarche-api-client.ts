@@ -13,7 +13,6 @@ import { EntrepriseId } from 'camino-common/src/entreprise'
 import { SubstanceLegaleId } from 'camino-common/src/static/substancesLegales'
 import { TitreTypeTypeId } from 'camino-common/src/static/titresTypesTypes'
 import { deleteWithJson, getWithJson, newGetWithJson, newPostWithJson } from '../../api/client-rest'
-import { DeepReadonly } from 'vue'
 import { CaminoError } from 'camino-common/src/zod-tools'
 
 type InputDemarcheUpdation = DemarcheCreationInput & {
@@ -54,9 +53,9 @@ export interface DemarcheApiClient {
   createDemarche: (demarche: DemarcheCreationInput) => Promise<DemarcheCreationOutput | CaminoError<string>>
   updateDemarche: (demarche: InputDemarcheUpdation) => Promise<DemarcheSlug>
   deleteDemarche: (demarcheId: DemarcheId) => Promise<void>
-  getDemarcheByIdOrSlug: (demarcheIdOrSlug: DemarcheIdOrSlug) => Promise<DeepReadonly<GetDemarcheByIdOrSlug>>
-  getDemarcheMiseEnConcurrence: (demarcheId: DemarcheId) => Promise<DeepReadonly<GetDemarcheMiseEnConcurrence[]> | CaminoError<string>>
-  getResultatMiseEnConcurrence: (demarcheId: DemarcheId) => Promise<DeepReadonly<GetResultatMiseEnConcurrence | CaminoError<string>>>
+  getDemarcheByIdOrSlug: (demarcheIdOrSlug: DemarcheIdOrSlug) => Promise<GetDemarcheByIdOrSlug>
+  getDemarcheMiseEnConcurrence: (demarcheId: DemarcheId) => Promise<GetDemarcheMiseEnConcurrence[] | CaminoError<string>>
+  getResultatMiseEnConcurrence: (demarcheId: DemarcheId) => Promise<GetResultatMiseEnConcurrence | CaminoError<string>>
   getDemarches: (params: GetDemarchesParams) => Promise<{ elements: GetDemarchesDemarche[]; total: number }>
 }
 

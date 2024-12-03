@@ -2,7 +2,7 @@ import '../init'
 import { FiscaliteFrance, decimalValidator, fiscaliteValidator, type Fiscalite } from 'camino-common/src/validators/fiscalite'
 import { ICommune, IContenuValeur } from '../types'
 import { departementIdValidator, Departements, toDepartementId } from 'camino-common/src/static/departement'
-import { DeepReadonly, isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools'
+import { isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools'
 import { Commune, CommuneId, communeIdValidator, communeValidator } from 'camino-common/src/static/communes'
 import { CaminoAnnee } from 'camino-common/src/date'
 
@@ -161,7 +161,7 @@ export const getRawLines = (
           const production = conversion(substancesFiscale, activite.contenu.substancesFiscales?.[substancesFiscale.id] ?? null)
 
           if (production.value.greaterThan(0)) {
-            const communes: DeepReadonly<ICommune[]> = titre.communes
+            const communes: ICommune[] = titre.communes
             if (isNullOrUndefined(titresToBuild[titre.id])) {
               const surfaceTotale = titre.communes.reduce((value, commune) => value.add(commune.surface ?? 0), new Decimal(0))
 

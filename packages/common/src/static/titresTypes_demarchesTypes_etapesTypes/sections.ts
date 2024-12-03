@@ -3,7 +3,7 @@ import { DEMARCHES_TYPES_IDS, DemarcheTypeId } from '../demarchesTypes'
 import { TITRES_TYPES_IDS, TitreTypeId } from '../titresTypes'
 import { ETAPES_TYPES, ETAPES_WITH_AUTOMATIC_STATUTS, EtapeTypeId } from '../etapesTypes'
 import { TDEType } from './index'
-import { DeepReadonly, isNotNullNorUndefined, NonEmptyArray } from '../../typescript-tools'
+import { isNotNullNorUndefined, NonEmptyArray } from '../../typescript-tools'
 import { UniteId, uniteIdValidator, Unites } from '../unites'
 import { DeviseId, sortedDevises } from '../devise'
 import { z } from 'zod'
@@ -208,7 +208,7 @@ const EtapesTypesSections = {
       ],
     },
   ],
-} as const satisfies { [key in EtapeTypeId]?: DeepReadonly<Section[]> }
+} as const satisfies { [key in EtapeTypeId]?: Section[] }
 
 const proprietesDeLaConcession: Section[] = [
   {
@@ -959,7 +959,7 @@ const TDESections = {
 } as const satisfies {
   [titreKey in keyof TDEType]?: {
     [demarcheKey in keyof TDEType[titreKey]]?: {
-      [key in Extract<TDEType[titreKey][demarcheKey], readonly EtapeTypeId[]>[number]]?: DeepReadonly<Section[]>
+      [key in Extract<TDEType[titreKey][demarcheKey], readonly EtapeTypeId[]>[number]]?: Section[]
     }
   }
 }
@@ -1013,11 +1013,11 @@ const isEtapesTypesEtapesTypesSections = (etapeTypeId?: EtapeTypeId): etapeTypeI
   return Object.keys(EtapesTypesSections).includes(etapeTypeId)
 }
 
-export const getSections = (titreTypeId: TitreTypeId | undefined, demarcheTypeId: DemarcheTypeId | undefined, etapeTypeId: EtapeTypeId | undefined): DeepReadonly<Section[]> => {
+export const getSections = (titreTypeId: TitreTypeId | undefined, demarcheTypeId: DemarcheTypeId | undefined, etapeTypeId: EtapeTypeId | undefined): Section[] => {
   if (isNotNullNorUndefined(titreTypeId) && isNotNullNorUndefined(demarcheTypeId) && isNotNullNorUndefined(etapeTypeId)) {
-    const sections: DeepReadonly<Section>[] = []
+    const sections: Section[] = []
 
-    type TDESectionsTypesUnleashed = { [key in TitreTypeId]?: { [key in DemarcheTypeId]?: { [key in EtapeTypeId]?: DeepReadonly<Section[]> } } }
+    type TDESectionsTypesUnleashed = { [key in TitreTypeId]?: { [key in DemarcheTypeId]?: { [key in EtapeTypeId]?: Section[] } } }
 
     sections.push(...((TDESections as TDESectionsTypesUnleashed)[titreTypeId]?.[demarcheTypeId]?.[etapeTypeId] ?? []))
 
@@ -1035,7 +1035,7 @@ export const getSections = (titreTypeId: TitreTypeId | undefined, demarcheTypeId
   }
 }
 
-const getElementValeurs = (element: DeepReadonly<SelectElement>): DeepReadonly<{ id: string; nom: string }[]> => {
+const getElementValeurs = (element: SelectElement): { id: string; nom: string }[] => {
   return element.options
 }
 
@@ -1053,7 +1053,7 @@ export const getElementWithValue = (sectionsWithValue: SectionWithValue[], secti
   return null
 }
 
-export const getSectionsWithValue = (sections: DeepReadonly<Section[]>, contenu: Contenu | FlattenEtape['contenu']): SectionWithValue[] => {
+export const getSectionsWithValue = (sections: Section[], contenu: Contenu | FlattenEtape['contenu']): SectionWithValue[] => {
   const sectionsWithValue: SectionWithValue[] = []
 
   sections.forEach(section => {

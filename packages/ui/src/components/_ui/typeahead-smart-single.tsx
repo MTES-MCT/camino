@@ -1,26 +1,26 @@
 import { Ref, computed, defineComponent, ref } from 'vue'
 import { TypeAheadSingle } from './typeahead-single'
-import { DeepReadonly, isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
+import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 
 type Props<T extends string> = {
   alwaysOpen?: boolean
-  possibleValues: DeepReadonly<TypeaheadValue<T>>[]
-  initialValue?: DeepReadonly<NoInfer<T>>
-  valueIdSelected: (valueId: DeepReadonly<NoInfer<T>> | null) => void
+  possibleValues: TypeaheadValue<T>[]
+  initialValue?: NoInfer<T>
+  valueIdSelected: (valueId: NoInfer<T> | null) => void
 }
 
 type TypeaheadValue<T> = { id: T; nom: string }
 
 export const TypeaheadSmartSingle = defineComponent(<T extends string>(props: Props<T>) => {
-  const valueTypeSelected = ref<DeepReadonly<TypeaheadValue<T>> | null>(props.possibleValues.find(({ id }) => props.initialValue === id) ?? null) as Ref<DeepReadonly<TypeaheadValue<T>> | null>
-  const onValueUpdate = async (value: DeepReadonly<TypeaheadValue<T>> | undefined) => {
+  const valueTypeSelected = ref<TypeaheadValue<T> | null>(props.possibleValues.find(({ id }) => props.initialValue === id) ?? null) as Ref<TypeaheadValue<T> | null>
+  const onValueUpdate = async (value: TypeaheadValue<T> | undefined) => {
     valueTypeSelected.value = value ?? null
     props.valueIdSelected(isNotNullNorUndefined(value) ? value.id : null)
   }
 
-  const sortedByUs = computed<DeepReadonly<TypeaheadValue<T>>[]>(() => [...props.possibleValues].sort((a, b) => a.nom.localeCompare(b.nom)))
+  const sortedByUs = computed<TypeaheadValue<T>[]>(() => [...props.possibleValues].sort((a, b) => a.nom.localeCompare(b.nom)))
 
-  const valuesFiltered = ref<DeepReadonly<TypeaheadValue<T>>[]>(sortedByUs.value) as Ref<DeepReadonly<TypeaheadValue<T>>[]>
+  const valuesFiltered = ref<TypeaheadValue<T>[]>(sortedByUs.value) as Ref<TypeaheadValue<T>[]>
   const onInput = (search: string) => {
     const formatedSearch = search.trim().toLowerCase()
 

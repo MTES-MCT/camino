@@ -8,9 +8,9 @@ import { DemarcheId } from 'camino-common/src/demarche'
 import { Pool } from 'pg'
 import { TitreId } from 'camino-common/src/validators/titres'
 import { TitreEtapeForMachine, titreEtapeForMachineValidator } from '../rules-demarches/machine-common'
-import { DeepReadonly, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
+import { isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
 
-export const titresEtapesOrdreUpdate = async (pool: Pool, user: DeepReadonly<UserNotNull>, demarcheId?: DemarcheId): Promise<string[]> => {
+export const titresEtapesOrdreUpdate = async (pool: Pool, user: UserNotNull, demarcheId?: DemarcheId): Promise<string[]> => {
   console.info()
   console.info('ordre des étapes…')
 
@@ -20,7 +20,7 @@ export const titresEtapesOrdreUpdate = async (pool: Pool, user: DeepReadonly<Use
 }
 
 export const titresEtapesOrdreUpdateVisibleForTesting = async (
-  user: DeepReadonly<UserNotNull>,
+  user: UserNotNull,
   titresDemarches: {
     [key: DemarcheId]: {
       etapes: TitreEtapeForMachine[]

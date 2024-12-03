@@ -12,7 +12,7 @@ import {
   urlElementValidator,
 } from './static/titresTypes_demarchesTypes_etapesTypes/sections'
 import { z } from 'zod'
-import { DeepReadonly, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from './typescript-tools'
+import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from './typescript-tools'
 import { TitreTypeId } from './static/titresTypes'
 import { DemarcheTypeId } from './static/demarchesTypes'
 import { EtapeTypeId } from './static/etapesTypes'
@@ -51,10 +51,10 @@ const elementWithValueValidator = z.union([
 
 export type ElementWithValue = z.infer<typeof elementWithValueValidator>
 
-export const isNumberElement = (element: DeepReadonly<ElementWithValue>): element is DeepReadonly<NumberElementWithValue> => {
+export const isNumberElement = (element: ElementWithValue): element is NumberElementWithValue => {
   return element.type === 'number' || element.type === 'integer'
 }
-export const isRadioElement = (element: DeepReadonly<ElementWithValue>): element is DeepReadonly<RadioElementWithValue> => {
+export const isRadioElement = (element: ElementWithValue): element is RadioElementWithValue => {
   return element.type === 'radio'
 }
 

@@ -5,9 +5,8 @@ import TitresActivites from '../../models/titres-activites'
 import { administrationsTitresQuery } from './administrations'
 import { entreprisesTitresQuery } from './entreprises'
 import { isAdministration, isEntreprise, isSuper, User } from 'camino-common/src/roles'
-import { DeepReadonly } from 'camino-common/src/typescript-tools'
 
-export const titresActivitesQueryModify = (q: QueryBuilder<TitresActivites, TitresActivites | TitresActivites[]>, user: DeepReadonly<User>) => {
+export const titresActivitesQueryModify = (q: QueryBuilder<TitresActivites, TitresActivites | TitresActivites[]>, user: User) => {
   q.select('titresActivites.*')
 
   q.leftJoinRelated('titre')

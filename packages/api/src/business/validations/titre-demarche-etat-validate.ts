@@ -1,5 +1,5 @@
 // valide la date et la position de l'étape en fonction des autres étapes
-import { DeepReadonly, NonEmptyArray, isNonEmptyArray, isNotNullNorUndefined, isNullOrUndefined, isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools'
+import { NonEmptyArray, isNonEmptyArray, isNotNullNorUndefined, isNullOrUndefined, isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools'
 import type { ITitreEtape } from '../../types'
 
 import { Etape, TitreEtapeForMachine, titreEtapeForMachineValidator, toMachineEtapes } from '../rules-demarches/machine-common'
@@ -15,14 +15,14 @@ import { getEtapesTDE, isTDEExist } from 'camino-common/src/static/titresTypes_d
 import { etapeTypeDateFinCheck } from '../../api/_format/etapes-types'
 import { getEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStatuts'
 
-const titreDemarcheEtapesBuild = <T extends Pick<Partial<ITitreEtape>, 'id'>>(titreEtape: DeepReadonly<T>, suppression: boolean, titreDemarcheEtapes?: DeepReadonly<T[]> | null): DeepReadonly<T[]> => {
+const titreDemarcheEtapesBuild = <T extends Pick<Partial<ITitreEtape>, 'id'>>(titreEtape: T, suppression: boolean, titreDemarcheEtapes?: T[] | null): T[] => {
   if (isNullOrUndefinedOrEmpty(titreDemarcheEtapes)) {
     return [titreEtape]
   }
 
   // si nous n’ajoutons pas une nouvelle étape
   // on supprime l’étape en cours de modification ou de suppression
-  const titreEtapes = titreDemarcheEtapes.reduce((acc: DeepReadonly<T[]>, te) => {
+  const titreEtapes = titreDemarcheEtapes.reduce((acc: T[], te) => {
     if (te.id !== titreEtape.id) {
       acc = [...acc, te]
     }

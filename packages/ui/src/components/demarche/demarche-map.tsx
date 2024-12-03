@@ -1,4 +1,4 @@
-import { HTMLAttributes, defineComponent, onMounted, ref, Ref, computed, watch, onUnmounted, DeepReadonly } from 'vue'
+import { HTMLAttributes, defineComponent, onMounted, ref, Ref, computed, watch, onUnmounted } from 'vue'
 import { FullscreenControl, Map, NavigationControl, StyleSpecification, LayerSpecification, LngLatBounds, SourceSpecification, Popup } from 'maplibre-gl'
 import 'maplibre-gl/dist/maplibre-gl.css'
 import { FeatureCollectionForages, FeatureCollectionPoints, FeatureMultiPolygon, ForageType, featureForagePropertiesValidator } from 'camino-common/src/perimetre'
@@ -35,7 +35,7 @@ import {
 import { CaminoRouter } from '@/typings/vue-router'
 
 type Props = {
-  perimetre: DeepReadonly<{ geojson4326_perimetre: FeatureMultiPolygon; geojson4326_points: FeatureCollectionPoints; geojson4326_forages: FeatureCollectionForages | null }>
+  perimetre: { geojson4326_perimetre: FeatureMultiPolygon; geojson4326_points: FeatureCollectionPoints; geojson4326_forages: FeatureCollectionForages | null }
   maxMarkers: number
   style?: HTMLAttributes['style']
   class?: HTMLAttributes['class']
@@ -260,7 +260,7 @@ export const DemarcheMap = defineComponent<Props>(props => {
     return values
   })
 
-  const points = computed<DeepReadonly<FeatureCollectionPoints>>(() => {
+  const points = computed<FeatureCollectionPoints>(() => {
     return {
       type: 'FeatureCollection',
       features: props.perimetre.geojson4326_points.features.map(feature => {
@@ -269,7 +269,7 @@ export const DemarcheMap = defineComponent<Props>(props => {
     }
   })
 
-  const forages = computed<DeepReadonly<FeatureCollectionForages>>(() => {
+  const forages = computed<FeatureCollectionForages>(() => {
     return {
       type: 'FeatureCollection',
       features:

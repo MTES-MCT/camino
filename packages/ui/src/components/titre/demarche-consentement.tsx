@@ -1,6 +1,6 @@
 import { DemarcheConsentement, DemarcheEtape, DemarcheSlug } from 'camino-common/src/demarche'
 import { computed, defineComponent, FunctionalComponent } from 'vue'
-import { DeepReadonly, isNotNullNorUndefined, isNullOrUndefined, PickDistributive } from 'camino-common/src/typescript-tools'
+import { isNotNullNorUndefined, isNullOrUndefined, PickDistributive } from 'camino-common/src/typescript-tools'
 import { Alert } from '../_ui/alert'
 import { DsfrLink } from '../_ui/dsfr-button'
 import { ETAPE_TYPE_FOR_CONSENTEMENT_DATA, ETAPES_TYPES } from 'camino-common/src/static/etapesTypes'
@@ -43,7 +43,7 @@ export const DemarchesConsentement = defineComponent<Props>(props => {
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
 DemarchesConsentement.props = ['demarcheSlug', 'titre']
 
-const DemarchesConsentementLoaded: FunctionalComponent<{ demarches: DeepReadonly<DemarcheConsentement[]> }> = ({ demarches }) => {
+const DemarchesConsentementLoaded: FunctionalComponent<{ demarches: DemarcheConsentement[] }> = ({ demarches }) => {
   return (
     <>
       <span> Les titres suivants sont valides et concernent au moins une substance en commun avec cette demande :</span>

@@ -11,7 +11,7 @@ import { PaysId } from 'camino-common/src/static/pays'
 import { communeIdValidator } from 'camino-common/src/static/communes'
 import { z } from 'zod'
 import { ETAPE_IS_NOT_BROUILLON, etapeBrouillonValidator, etapeIdValidator } from 'camino-common/src/etape'
-import { DeepReadonly, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
+import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
 import { KM2, km2Validator } from 'camino-common/src/number'
 import { concurrenceValidator, Consentement, DemarcheVisibilite } from 'camino-common/src/etape-form'
 import { demarcheIdValidator } from 'camino-common/src/demarche'
@@ -73,7 +73,7 @@ export const titreEtapeForMachineValidator = z.object({
 
 export type TitreEtapeForMachine = z.infer<typeof titreEtapeForMachineValidator>
 
-export const toMachineEtapes = (etapes: DeepReadonly<(Pick<Partial<TitreEtapeForMachine>, 'ordre'> & Omit<TitreEtapeForMachine, 'id' | 'ordre'>)[]>): Etape[] => {
+export const toMachineEtapes = (etapes: (Pick<Partial<TitreEtapeForMachine>, 'ordre'> & Omit<TitreEtapeForMachine, 'id' | 'ordre'>)[]): Etape[] => {
   // TODO 2022-10-12 si on appelle titreEtapesSortAscByOrdre on se retrouve avec une grosse dépendance cyclique
   return etapes
     .filter(dbEtape => dbEtape.isBrouillon === ETAPE_IS_NOT_BROUILLON)
@@ -81,7 +81,7 @@ export const toMachineEtapes = (etapes: DeepReadonly<(Pick<Partial<TitreEtapeFor
     .map(dbEtape => toMachineEtape(dbEtape))
 }
 
-const toMachineEtape = (dbEtape: DeepReadonly<Omit<TitreEtapeForMachine, 'id' | 'ordre'>>): Etape => {
+const toMachineEtape = (dbEtape: Omit<TitreEtapeForMachine, 'id' | 'ordre'>): Etape => {
   let typeId
   if (isEtapeTypeId(dbEtape.typeId)) {
     typeId = dbEtape.typeId

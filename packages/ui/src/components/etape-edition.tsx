@@ -1,4 +1,4 @@
-import { DeepReadonly, computed, defineComponent, inject, onMounted, ref } from 'vue'
+import { computed, defineComponent, inject, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { ApiClient, apiClient } from '../api/api-client'
 import { DemarcheId, DemarcheIdOrSlug, demarcheIdOrSlugValidator } from 'camino-common/src/demarche'
@@ -84,7 +84,7 @@ const helpVisible = (user: User, titreTypeId: TitreTypeId, etapeTypeId: EtapeTyp
 }
 
 export const PureEtapeEdition = defineComponent<Props>(props => {
-  const [asyncData, setAsyncData] = useState<AsyncData<DeepReadonly<{ etape: EtapeEditFormProps['etape']; demarche: GetDemarcheByIdOrSlug; perimetre: PerimetreInformations }>>>({
+  const [asyncData, setAsyncData] = useState<AsyncData<{ etape: EtapeEditFormProps['etape']; demarche: GetDemarcheByIdOrSlug; perimetre: PerimetreInformations }>>({
     status: 'LOADING',
   })
 

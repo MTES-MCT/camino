@@ -7,7 +7,6 @@ import { z } from 'zod'
 import { tempDocumentNameValidator } from './document'
 import { autreAvisTypeIdValidator, avisStatutIdValidator, avisTypeIdSansAutreValidator, avisVisibilityIdValidator } from './static/avisTypes'
 import { FlattenEtape, GraphqlEtape } from './etape-form'
-import { DeepReadonly } from './typescript-tools'
 import { sectionDureeIds } from './static/titresTypes_demarchesTypes_etapesTypes/sections'
 
 export const etapeBrouillonValidator = z.boolean().brand('EtapeBrouillon')
@@ -130,7 +129,7 @@ export type EtapeDocumentModification = z.infer<typeof etapeDocumentModification
 export const etapeNoteValidator = z.object({ valeur: z.string(), is_avertissement: z.boolean() })
 export type EtapeNote = z.infer<typeof etapeNoteValidator>
 
-export const getStatutId = (etape: Pick<DeepReadonly<FlattenEtape>, 'date' | 'contenu' | 'typeId' | 'statutId'>, currentDate: CaminoDate): EtapeStatutId => {
+export const getStatutId = (etape: Pick<FlattenEtape, 'date' | 'contenu' | 'typeId' | 'statutId'>, currentDate: CaminoDate): EtapeStatutId => {
   if (!isEtapeWithAutomaticStatuts(etape.typeId)) {
     return etape.statutId
   }

@@ -11,7 +11,6 @@ import { newDemarcheId, newDemarcheSlug, newTitreId, newTitreSlug } from '../../
 import { CaminoError } from 'camino-common/src/zod-tools.js'
 import { ICreateTitreDemarcheInternalQuery, ICreateTitreInternalQuery } from './titre-demande.queries.types.js'
 import { TitreDemande } from 'camino-common/src/titres.js'
-import { DeepReadonly } from 'camino-common/src/typescript-tools.js'
 import { DemarcheId, DemarcheSlug } from 'camino-common/src/demarche.js'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes.js'
 
@@ -19,7 +18,7 @@ type CreateTitreInput = Omit<TitreDemande, 'titreFromIds' | 'entrepriseId'>
 
 const creationTitreImpossible = 'Création du titre impossible' as const
 export type CreateTitreErrors = DbQueryAccessError | ZodUnparseable | 'Accès interdit' | typeof creationTitreImpossible
-export const createTitre = (pool: Pool, user: DeepReadonly<User>, titreInput: DeepReadonly<CreateTitreInput>): Effect.Effect<TitreId, CaminoError<CreateTitreErrors>> =>
+export const createTitre = (pool: Pool, user: User, titreInput: CreateTitreInput): Effect.Effect<TitreId, CaminoError<CreateTitreErrors>> =>
   Effect.Do.pipe(
     Effect.filterOrFail(
       () => canCreateTitre(user, titreInput.titreTypeId),
@@ -36,7 +35,7 @@ export const createTitre = (pool: Pool, user: DeepReadonly<User>, titreInput: De
     Effect.map(({ id }) => id)
   )
 
-const createTitreInternal = sql<Redefine<ICreateTitreInternalQuery, DeepReadonly<{ id: TitreId; slug: TitreSlug; references: string } & Omit<CreateTitreInput, 'references'>>, void>>`
+const createTitreInternal = sql<Redefine<ICreateTitreInternalQuery, { id: TitreId; slug: TitreSlug; references: string } & Omit<CreateTitreInput, 'references'>, void>>`
 INSERT INTO titres (id, slug, nom, type_id, "references")
     VALUES ($ id !, $slug!, $ nom !, $ titreTypeId!, $references!)
 `
@@ -56,7 +55,7 @@ export const createDemarche = (pool: Pool, titreId: TitreId, demarcheTypeId: Dem
     Effect.map(({ id }) => id)
   )
 }
-const createTitreDemarcheInternal = sql<Redefine<ICreateTitreDemarcheInternalQuery, DeepReadonly<{ id: DemarcheId; slug: DemarcheSlug; titre_id: TitreId; demarcheTypeId: DemarcheTypeId }>, void>>`
+const createTitreDemarcheInternal = sql<Redefine<ICreateTitreDemarcheInternalQuery, { id: DemarcheId; slug: DemarcheSlug; titre_id: TitreId; demarcheTypeId: DemarcheTypeId }, void>>`
 INSERT INTO titres_demarches (id, slug, titre_id, type_id)
     VALUES ($ id !, $slug!, $ titre_id !, $demarcheTypeId)
 `

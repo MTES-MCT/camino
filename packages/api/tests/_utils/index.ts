@@ -25,7 +25,7 @@ import {
 import { z } from 'zod'
 import { newUtilisateurId } from '../../src/database/models/_format/id-create'
 import { idUserKeycloakRecognised } from '../keycloak'
-import { DeepReadonly, isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools'
+import { isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools'
 import { config } from '../../src/config/index'
 import { createUtilisateur, getUtilisateurById } from '../../src/database/queries/utilisateurs.queries'
 
@@ -87,7 +87,7 @@ export const restPostCall = async <Route extends PostRestRoutes>(
   caminoRestRoute: Route,
   params: CaminoRestParams<Route>,
   user: TestUser | undefined,
-  body: DeepReadonly<z.infer<(typeof CaminoRestRoutes)[Route]['post']['input']>>
+  body: z.infer<(typeof CaminoRestRoutes)[Route]['post']['input']>
 ): Promise<request.Test> => {
   const req = request(app(pool)).post(getRestRoute(caminoRestRoute, params)).send(body)
 
@@ -98,7 +98,7 @@ export const restNewPostCall = async <Route extends NewPostRestRoutes>(
   caminoRestRoute: Route,
   params: CaminoRestParams<Route>,
   user: TestUser | undefined,
-  body: DeepReadonly<z.infer<(typeof CaminoRestRoutes)[Route]['newPost']['input']>>
+  body: z.infer<(typeof CaminoRestRoutes)[Route]['newPost']['input']>
 ): Promise<request.Test> => {
   const req = request(app(pool)).post(getRestRoute(caminoRestRoute, params)).send(body)
 
@@ -110,7 +110,7 @@ export const restNewPutCall = async <Route extends NewPutRestRoutes>(
   path: Route,
   params: CaminoRestParams<Route>,
   user: TestUser | undefined,
-  body: DeepReadonly<z.infer<(typeof CaminoRestRoutes)[Route]['newPut']['input']>>
+  body: z.infer<(typeof CaminoRestRoutes)[Route]['newPut']['input']>
 ): Promise<request.Test> => {
   const req = request(app(pool)).put(getRestRoute(path, params)).send(body)
 

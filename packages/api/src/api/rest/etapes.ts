@@ -24,17 +24,7 @@ import { User, isBureauDEtudes, isEntreprise } from 'camino-common/src/roles'
 import { canCreateEtape, canDeposeEtape, canDeleteEtape, canEditEtape } from 'camino-common/src/permissions/titres-etapes'
 import { canBeBrouillon, ETAPES_TYPES, isEtapeTypeId } from 'camino-common/src/static/etapesTypes'
 
-import {
-  DeepReadonly,
-  NotNullableKeys,
-  getKeys,
-  isNonEmptyArray,
-  isNotNullNorUndefined,
-  isNotNullNorUndefinedNorEmpty,
-  isNullOrUndefined,
-  memoize,
-  onlyUnique,
-} from 'camino-common/src/typescript-tools'
+import { NotNullableKeys, getKeys, isNonEmptyArray, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined, memoize, onlyUnique } from 'camino-common/src/typescript-tools'
 import { Pool } from 'pg'
 import { EntrepriseDocument, EntrepriseDocumentId, EtapeEntrepriseDocument } from 'camino-common/src/entreprise'
 import {
@@ -229,7 +219,7 @@ export const deleteEtape =
   }
 export const getEtape =
   (_pool: Pool) =>
-  async (req: CaminoRequest, res: CustomResponse<DeepReadonly<FlattenEtape>>): Promise<void> => {
+  async (req: CaminoRequest, res: CustomResponse<FlattenEtape>): Promise<void> => {
     const user = req.auth
 
     const etapeId = etapeIdOrSlugValidator.safeParse(req.params.etapeIdOrSlug)
@@ -269,8 +259,8 @@ type ValidateAndGetEntrepriseDocumentsErrors = typeof documentDEntrepriseIncorre
 const validateAndGetEntrepriseDocuments = (
   pool: Pool,
   etape: Pick<FlattenEtape, 'titulaires' | 'amodiataires'>,
-  entrepriseDocumentIds: DeepReadonly<EntrepriseDocumentId[]>,
-  user: DeepReadonly<User>
+  entrepriseDocumentIds: EntrepriseDocumentId[],
+  user: User
 ): Effect.Effect<EntrepriseDocument[], CaminoError<ValidateAndGetEntrepriseDocumentsErrors>> =>
   Effect.Do.pipe(
     Effect.filterOrFail(
@@ -292,7 +282,7 @@ const validateAndGetEntrepriseDocuments = (
     Effect.catchTag("pas de documents d'entreprise", _myError => Effect.succeed([]))
   )
 
-export const arePointsOnPerimeter = (perimetre: DeepReadonly<FeatureMultiPolygon>, points: DeepReadonly<FeatureCollectionPoints>): boolean => {
+export const arePointsOnPerimeter = (perimetre: FeatureMultiPolygon, points: FeatureCollectionPoints): boolean => {
   const coordinatesSet = new Set()
 
   perimetre.geometry.coordinates.forEach(geometry => geometry.forEach(sub => sub.forEach(coordinate => coordinatesSet.add(`${coordinate[0]}-${coordinate[1]}`))))
@@ -321,7 +311,7 @@ const lespointsdoiventetresurleperimetreerror = 'les points doivent être sur le
 type PerimetreInfosError = typeof lespointsdoiventetresurleperimetreerror | ConvertPointsErrors | GetGeojsonInformationErrorMessages
 type PerimetreInfos = {
   secteursMaritime: SecteursMaritimes[]
-  sdomZones: DeepReadonly<SDOMZoneId[]>
+  sdomZones: SDOMZoneId[]
   surface: KM2 | null
 } & Pick<GraphqlEtape, 'geojson4326Forages' | 'geojsonOrigineForages'> &
   Pick<GetGeojsonInformation, 'communes' | 'forets'>
@@ -1040,7 +1030,7 @@ const demarcheEtapesTypesGet = (
   titreDemarcheId: DemarcheId,
   date: CaminoDate,
   titreEtapeId: EtapeId | null,
-  user: DeepReadonly<User>
+  user: User
 ): Effect.Effect<EtapeTypeEtapeStatutWithMainStep, CaminoError<DemarcheEtapesTypesGetErrors>> => {
   return Effect.Do.pipe(
     Effect.bind('titreDemarche', () =>

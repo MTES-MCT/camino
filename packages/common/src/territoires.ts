@@ -2,12 +2,12 @@ import { CommuneId } from './static/communes'
 import { FacadeComputed, FacadesMaritimes, getDepartementsBySecteurs, getFacade, getFacadesComputed, SecteursMaritimes } from './static/facades'
 import { DepartementId, DepartementLabel, Departements, toDepartementId } from './static/departement'
 import { RegionId, RegionLabel, Regions } from './static/region'
-import { DeepReadonly, onlyUnique, RecordPartial } from './typescript-tools'
+import { onlyUnique, RecordPartial } from './typescript-tools'
 import { PaysId } from './static/pays'
 
 export const territoiresFind = (
   communesWithName: RecordPartial<CommuneId, string>,
-  communes?: DeepReadonly<{ id: CommuneId; surface?: number | null }[]> | null | undefined,
+  communes?: { id: CommuneId; surface?: number | null }[] | null | undefined,
   secteursMaritime?: SecteursMaritimes[] | null | undefined
 ): { communes: { nom: string; surface: null | number }[]; departements: DepartementLabel[]; regions: RegionLabel[]; facades: FacadeComputed[] } => {
   const result: {
@@ -56,7 +56,7 @@ export const territoiresFind = (
 }
 
 export const territoiresIdFind = (
-  communes: DeepReadonly<{ id: CommuneId }[]>,
+  communes: { id: CommuneId }[],
   secteursMaritime: SecteursMaritimes[]
 ): { departements: DepartementId[]; regions: RegionId[]; facades: FacadesMaritimes[]; pays: PaysId[] } => {
   const departements: DepartementId[] = [...getDepartementsBySecteurs(secteursMaritime), ...communes.map(({ id }) => toDepartementId(id))].filter(onlyUnique)

@@ -41,7 +41,7 @@ import {
 import { join } from 'node:path'
 import { readFileSync } from 'node:fs'
 import { parseShp } from 'shpjs'
-import { DeepReadonly, isNotNullNorUndefined, isNullOrUndefined, memoize } from 'camino-common/src/typescript-tools'
+import { isNotNullNorUndefined, isNullOrUndefined, memoize } from 'camino-common/src/typescript-tools'
 import { SDOMZoneId } from 'camino-common/src/static/sdom'
 import { TitreSlug } from 'camino-common/src/validators/titres'
 import { canReadEtape } from './permissions/etapes'
@@ -194,7 +194,7 @@ type GeojsonImportErrorMessages =
   | GetGeojsonByGeoSystemeIdErrorMessages
   | GetGeojsonInformationErrorMessages
   | ConvertPointsErrors
-export const geojsonImport: RestNewPostCall<'/rest/geojson/import/:geoSystemeId'> = (rootPipe): Effect.Effect<DeepReadonly<GeojsonInformations>, CaminoApiError<GeojsonImportErrorMessages>> => {
+export const geojsonImport: RestNewPostCall<'/rest/geojson/import/:geoSystemeId'> = (rootPipe): Effect.Effect<GeojsonInformations, CaminoApiError<GeojsonImportErrorMessages>> => {
   return rootPipe.pipe(
     Effect.let('pathFrom', ({ body }) => join(process.cwd(), `/files/tmp/${body.tempDocumentName}`)),
     Effect.bind('result', ({ body, pathFrom, params }) => {
@@ -565,7 +565,7 @@ const getAlertesSuperposition = (
   geojson4326_perimetre: MultiPolygon | null,
   titreTypeId: TitreTypeId,
   titreSlug: TitreSlug,
-  user: DeepReadonly<User>,
+  user: User,
   pool: Pool
 ): Effect.Effect<GetTitresIntersectionWithGeojson[], CaminoError<ZodUnparseable | DbQueryAccessError>> => {
   if (titreTypeId === 'axm' && (isSuper(user) || isAdministrationAdmin(user) || isAdministrationEditeur(user)) && geojson4326_perimetre !== null) {

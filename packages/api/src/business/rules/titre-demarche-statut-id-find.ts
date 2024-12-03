@@ -9,8 +9,8 @@ import { TITRES_TYPES_IDS, TitreTypeId } from 'camino-common/src/static/titresTy
 import { DemarcheTypeId, TravauxIds } from 'camino-common/src/static/demarchesTypes'
 import { ETAPES_TYPES, EtapeTypeId } from 'camino-common/src/static/etapesTypes'
 import { isEtapeStatusRejete } from 'camino-common/src/static/etapesStatuts'
-import { isNotNullNorUndefined, RecordPartial } from 'camino-common/src/typescript-tools'
-import { CaminoMachines, machineFind } from '../rules-demarches/machines'
+import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, RecordPartial } from 'camino-common/src/typescript-tools'
+import { machineFind } from '../rules-demarches/machines'
 
 const titreEtapesDecisivesCommunesTypes: EtapeTypeId[] = ['css', 'abd', 'and']
 
@@ -281,7 +281,7 @@ const titreDemarcheTravauxStatutIdFind = (titreDemarcheEtapes: Pick<ITitreEtape,
 export const titreDemarcheStatutIdFind = (demarcheTypeId: DemarcheTypeId, titreDemarcheEtapes: TitreEtapeForMachine[], titreTypeId: TitreTypeId, demarcheId: DemarcheId): DemarcheStatutId => {
   // si la démarche ne contient pas d'étapes
   // -> le statut est indétrminé
-  if (!titreDemarcheEtapes.length) return DemarchesStatutsIds.Indetermine
+  if (!isNotNullNorUndefinedNorEmpty(titreDemarcheEtapes)) return DemarchesStatutsIds.Indetermine
 
   // si la démarche est pour des travaux
   if (titreDemarchesTravauxTypes.includes(demarcheTypeId)) {
@@ -290,10 +290,7 @@ export const titreDemarcheStatutIdFind = (demarcheTypeId: DemarcheTypeId, titreD
 
   const firstEtapeDate = demarcheEnregistrementDemandeDateFind(titreDemarcheEtapes)
 
-  let machine: CaminoMachines | undefined
-  if (isNotNullNorUndefined(firstEtapeDate)) {
-    machine = machineFind(titreTypeId, demarcheTypeId, demarcheId, firstEtapeDate)
-  }
+  const machine = machineFind(titreTypeId, demarcheTypeId, demarcheId, firstEtapeDate)
 
   if (isNotNullNorUndefined(machine)) {
     return machine.demarcheStatut(toMachineEtapes(titreDemarcheEtapes)).demarcheStatut

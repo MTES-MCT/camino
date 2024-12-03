@@ -182,7 +182,7 @@ export const Filters = defineComponent((props: Props) => {
       }
       if ((filterType.type === 'autocomplete' || filterType.type === 'checkboxes') && isNotNullNorUndefined(nonValidatedValues.value[filter])) {
         return nonValidatedValues.value[filterType.id].map<FormatedLabel>(v => {
-          let elements: { id: string; nom: string }[] = []
+          let elements: Readonly<{ id: string; nom: string }[]> = []
           if (filterType.id === 'titresIds') {
             elements = titresIds.elements
           } else if (filterType.id === 'entreprisesIds') {

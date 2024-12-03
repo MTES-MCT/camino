@@ -1,6 +1,6 @@
 import { computed, defineComponent, ref } from 'vue'
 import { FunctionalPopup } from '../_ui/functional-popup'
-import { AVIS_VISIBILITY_IDS, AvisTypeId, AvisTypes, AvisVisibilityId, AvisVisibilityIds } from 'camino-common/src/static/avisTypes'
+import { AVIS_VISIBILITY_IDS, AvisStatutId, AvisTypeId, AvisTypes, AvisVisibilityId, AvisVisibilityIds } from 'camino-common/src/static/avisTypes'
 import { InputFile } from '../_ui/dsfr-input-file'
 import { ApiClient } from '@/api/api-client'
 import { TempDocumentName } from 'camino-common/src/document'
@@ -28,7 +28,7 @@ export const AddEtapeAvisPopup = defineComponent<Props>(props => {
   const etapeAvisFile = ref<File | null>(null)
   const avisDescription = ref<string>(props.initialAvis?.description ?? '')
   const [avisDate, setAvisDate] = useState(props.initialAvis?.date ?? null)
-  const [avisStatutId, setAvisStatutId] = useState(props.initialAvis?.avis_statut_id ?? null)
+  const [avisStatutId, setAvisStatutId] = useState<AvisStatutId | null>(props.initialAvis?.avis_statut_id ?? null)
   const [avisVisibilityId, setAvisVisibilityId] = useState(props.initialAvis?.avis_visibility_id ?? null)
 
   const tempAvisName = ref<TempDocumentName | undefined>(isNotNullNorUndefined(props.initialAvis) && 'temp_document_name' in props.initialAvis ? props.initialAvis.temp_document_name : undefined)
@@ -87,7 +87,7 @@ export const AddEtapeAvisPopup = defineComponent<Props>(props => {
             legend={{ main: 'Statut' }}
             disabled={isNullOrUndefined(etapeAvisTypeId.value)}
             required={true}
-            items={map(etapeAvisTypeId.value ? AvisTypes[etapeAvisTypeId.value].statutIds : ['Non renseigné'], avis => ({ id: avis, label: avis }))}
+            items={map(etapeAvisTypeId.value ? AvisTypes[etapeAvisTypeId.value].statutIds : (['Non renseigné'] as NonEmptyArray<AvisStatutId>), avis => ({ id: avis, label: avis }))}
             initialValue={avisStatutId.value}
             valueChanged={setAvisStatutId}
           />

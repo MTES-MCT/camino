@@ -1,19 +1,19 @@
 import { NonEmptyArray, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
 import { isEventWithTarget, random } from '../../utils/vue-tsx-utils'
-import { DeepReadonly, HTMLAttributes } from 'vue'
+import { HTMLAttributes } from 'vue'
 import type { JSX } from 'vue/jsx-runtime'
 export type Item<T> = { id: T; label: string; disabled?: boolean }
-type Props<T, Items extends DeepReadonly<NonEmptyArray<Item<T>>>> = {
+type Props<T, Items extends Readonly<NonEmptyArray<Item<T>>>> = {
   id?: string
   items: Items
   legend: { main: string; visible?: boolean; description?: string; placeholder?: string }
   initialValue: Items[number]['id'] | null
   required?: boolean
   disabled?: boolean
-  valueChanged: (id: DeepReadonly<Items[number]['id'] | null>) => void
+  valueChanged: (id: NoInfer<Items>[number]['id'] | null) => void
 } & HTMLAttributes
 
-export const DsfrSelect = <T, Items extends DeepReadonly<NonEmptyArray<Item<T>>>>(props: Props<T, Items>): JSX.Element => {
+export const DsfrSelect = <T, Items extends Readonly<NonEmptyArray<Item<T>>>>(props: Props<T, Items>): JSX.Element => {
   const id = props.id ?? `select_${(random() * 1000).toFixed()}`
 
   return (
@@ -32,7 +32,7 @@ export const DsfrSelect = <T, Items extends DeepReadonly<NonEmptyArray<Item<T>>>
         disabled={props.disabled ?? false}
         name={id}
         value={props.initialValue}
-        onChange={event => (isEventWithTarget(event) ? props.valueChanged(event.target.value as DeepReadonly<Items[number]['id']>) : null)}
+        onChange={event => (isEventWithTarget(event) ? props.valueChanged(event.target.value as Items[number]['id']) : null)}
       >
         {props.items.map(({ id, label, disabled }) => (
           <option value={id} selected={props.initialValue === id} disabled={disabled}>

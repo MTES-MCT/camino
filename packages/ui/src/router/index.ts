@@ -5,7 +5,6 @@ import { Titres } from '../components/titres'
 import { isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools'
 import { CaminoRouteNames, routesDefinitions } from './routes'
 import { CaminoFiltre } from 'camino-common/src/filters'
-import { DeepReadonly } from 'vue'
 const PageIntrouvableAlert = async () => {
   const { PageIntrouvableAlert } = await import('@/components/_ui/alert')
 
@@ -127,7 +126,7 @@ declare module 'vue-router' {
   interface RouteMeta {
     menuSection: MenuSection | null
     title: string
-    filtres: DeepReadonly<CaminoFiltre[]>
+    filtres: Readonly<CaminoFiltre[]>
   }
 }
 const routes = {

@@ -1,22 +1,22 @@
 import { random } from '@/utils/vue-tsx-utils'
 import { DsfrInputCheckbox, Props as InputCheckboxProps } from './dsfr-input-checkbox'
 import { Ref, defineComponent, ref, watch } from 'vue'
-import { DeepReadonly, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
+import { isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
 
 type Props<T extends string> = {
   id?: string
   legend: { main: string; description?: string }
   disabled?: boolean
-  valueChanged: (values: DeepReadonly<T[]>) => void
+  valueChanged: (values: T[]) => void
   size?: 'sm' | 'md'
-  elements: (Omit<InputCheckboxProps, 'disabled' | 'id' | 'valueChanged' | 'initialValue'> & { itemId: DeepReadonly<T> })[]
-  initialCheckedValue: DeepReadonly<NoInfer<T>[]>
+  elements: (Omit<InputCheckboxProps, 'disabled' | 'id' | 'valueChanged' | 'initialValue'> & { itemId: T })[]
+  initialCheckedValue: NoInfer<T[]>
 }
 
 export const DsfrInputCheckboxes = defineComponent(<T extends string>(props: Props<T>) => {
   const id = props.id ?? `checkboxes_${(random() * 1000).toFixed()}`
 
-  const values = ref<DeepReadonly<T[]>>(props.elements.filter(element => props.initialCheckedValue.includes(element.itemId)).map(({ itemId }) => itemId)) as Ref<DeepReadonly<T[]>>
+  const values = ref<T[]>(props.elements.filter(element => props.initialCheckedValue.includes(element.itemId)).map(({ itemId }) => itemId)) as Ref<T[]>
   watch(
     () => props.elements,
     () => {
@@ -36,7 +36,7 @@ export const DsfrInputCheckboxes = defineComponent(<T extends string>(props: Pro
     { deep: true }
   )
 
-  const updateCheckbox = (itemId: DeepReadonly<T>) => (checked: boolean) => {
+  const updateCheckbox = (itemId: T) => (checked: boolean) => {
     if (checked) {
       values.value = [...values.value, itemId]
     } else {

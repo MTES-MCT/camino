@@ -11,7 +11,7 @@ import Entreprises from '../models/entreprises'
 import { entreprisesQueryModify } from './permissions/entreprises'
 import { User } from 'camino-common/src/roles'
 import { EntrepriseId } from 'camino-common/src/entreprise'
-import { DeepReadonly, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
+import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
 
 const entreprisesFiltersQueryModify = (
   {
@@ -47,7 +47,7 @@ const entreprisesFiltersQueryModify = (
   }
 }
 
-const entreprisesQueryBuild = ({ fields }: { fields?: FieldsEntreprise }, user: DeepReadonly<User>) => {
+const entreprisesQueryBuild = ({ fields }: { fields?: FieldsEntreprise }, user: User) => {
   const graph = fields ? graphBuild(fields, 'entreprises', fieldsFormat) : options.entreprises.graph
 
   const q = Entreprises.query().withGraphFetched(graph)
@@ -57,7 +57,7 @@ const entreprisesQueryBuild = ({ fields }: { fields?: FieldsEntreprise }, user: 
   return q
 }
 
-export const entrepriseGet = async (id: EntrepriseId, { fields }: { fields?: FieldsEntreprise }, user: DeepReadonly<User>): Promise<IEntreprise | undefined> => {
+export const entrepriseGet = async (id: EntrepriseId, { fields }: { fields?: FieldsEntreprise }, user: User): Promise<IEntreprise | undefined> => {
   const q = entreprisesQueryBuild({ fields }, user)
 
   return (await q.findById(id)) as IEntreprise

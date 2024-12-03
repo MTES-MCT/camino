@@ -8,7 +8,7 @@ import { canEditAmodiataires, canEditTitulaires, canEditDuree, canEditDates, Inp
 import { DomaineId } from 'camino-common/src/static/domaines'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
 import { getDomaineId, TitreTypeId } from 'camino-common/src/static/titresTypes'
-import { computed, ref, DeepReadonly, defineComponent } from 'vue'
+import { computed, ref, defineComponent } from 'vue'
 import { Entreprise, EntrepriseId } from 'camino-common/src/entreprise'
 import { User } from 'camino-common/src/roles'
 import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
@@ -18,11 +18,11 @@ import { ZERO_KM2 } from 'camino-common/src/number'
 
 export type EtapeFondamentaleEdit = Pick<FlattenEtape, 'typeId' | 'dateDebut' | 'dateFin' | 'duree' | 'titulaires' | 'amodiataires' | 'substances' | 'perimetre' | 'date' | 'titreDemarcheId'>
 interface Props {
-  etape: DeepReadonly<EtapeFondamentaleEdit>
+  etape: EtapeFondamentaleEdit
   demarcheTypeId: DemarcheTypeId
   titreTypeId: TitreTypeId
   user: User
-  entreprises: DeepReadonly<Entreprise[]>
+  entreprises: Entreprise[]
   completeUpdate: (etape: Props['etape']) => void
   firstEtapeDate: FirstEtapeDate
 }
@@ -47,7 +47,7 @@ export const FondamentalesEdit = defineComponent<Props>(props => {
   const dateFinChanged = (dateFin: CaminoDate | null) => {
     updateEtape({ dateFin: { ...editedEtape.value.dateFin, value: dateFin } })
   }
-  const substancesChanged = (substances: DeepReadonly<FlattenEtape['substances']>) => {
+  const substancesChanged = (substances: FlattenEtape['substances']) => {
     updateEtape({ substances })
   }
   const updateDureeHeritage = (duree: FlattenEtape['duree']) => {
@@ -59,10 +59,10 @@ export const FondamentalesEdit = defineComponent<Props>(props => {
   const updateDateFinHeritage = (dateFin: FlattenEtape['dateFin']) => {
     updateEtape({ dateFin })
   }
-  const updateTitulairesHeritage = (titulaires: DeepReadonly<FlattenEtape['titulaires']>) => {
+  const updateTitulairesHeritage = (titulaires: FlattenEtape['titulaires']) => {
     updateEtape({ titulaires })
   }
-  const updateAmodiatairesHeritage = (amodiataires: DeepReadonly<FlattenEtape['amodiataires']>) => {
+  const updateAmodiatairesHeritage = (amodiataires: FlattenEtape['amodiataires']) => {
     updateEtape({ amodiataires })
   }
 
@@ -100,11 +100,11 @@ export const FondamentalesEdit = defineComponent<Props>(props => {
 
   const domaineId = computed<DomaineId>(() => getDomaineId(props.titreTypeId))
 
-  const titulairesUpdate = (titulaireIds: DeepReadonly<EntrepriseId[]>) => {
+  const titulairesUpdate = (titulaireIds: EntrepriseId[]) => {
     updateEtape({ titulaires: { ...editedEtape.value.titulaires, value: titulaireIds } })
   }
 
-  const amodiatairesUpdate = (amodiataireIds: DeepReadonly<EntrepriseId[]>) => {
+  const amodiatairesUpdate = (amodiataireIds: EntrepriseId[]) => {
     updateEtape({ amodiataires: { ...editedEtape.value.amodiataires, value: amodiataireIds } })
   }
 

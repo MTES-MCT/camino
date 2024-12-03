@@ -1,6 +1,6 @@
 import { useState } from '@/utils/vue-tsx-utils'
 import { SubstancesLegales, SubstancesLegale, SubstanceLegaleId } from 'camino-common/src/static/substancesLegales'
-import { DeepReadonly, computed, defineComponent, watch } from 'vue'
+import { computed, defineComponent, watch } from 'vue'
 import { HeritageEdit } from '@/components/etape/heritage-edit'
 import { DomaineId } from 'camino-common/src/static/domaines'
 import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools'
@@ -11,20 +11,18 @@ import { capitalize } from 'camino-common/src/strings'
 import { FlattenEtape } from 'camino-common/src/etape-form'
 
 type Props = {
-  substances: DeepReadonly<FlattenEtape['substances']>
+  substances: FlattenEtape['substances']
   domaineId: DomaineId
-  updateSubstances: (substances: DeepReadonly<FlattenEtape['substances']>) => void
+  updateSubstances: (substances: FlattenEtape['substances']) => void
 }
 
 type SubstancesEditables = Pick<FlattenEtape['substances'], 'heritee' | 'etapeHeritee'> & { value: (SubstanceLegaleId | undefined)[] }
 export const SubstancesEdit = defineComponent<Props>(props => {
-  const [editedSubstances, setEditedSubstances] = useState<DeepReadonly<SubstancesEditables>>(
-    isNullOrUndefinedOrEmpty(props.substances.value) ? { ...props.substances, value: [undefined] } : props.substances
-  )
+  const [editedSubstances, setEditedSubstances] = useState<SubstancesEditables>(isNullOrUndefinedOrEmpty(props.substances.value) ? { ...props.substances, value: [undefined] } : props.substances)
 
   const substancesLength = computed<number>(() => editedSubstances.value.value.filter(isNotNullNorUndefined).length)
 
-  const updateHeritage = (substanceHeritageValue: DeepReadonly<FlattenEtape['substances']>) => {
+  const updateHeritage = (substanceHeritageValue: FlattenEtape['substances']) => {
     setEditedSubstances(substanceHeritageValue)
   }
 

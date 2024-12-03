@@ -35,7 +35,7 @@ import {
   IUpdateUtilisateurRoleDbQuery,
 } from './utilisateurs.queries.types'
 import { ZodUnparseable, callAndExit, zodParseEffect } from '../../tools/fp-tools'
-import { DeepReadonly, NonEmptyArray, Nullable, isNotNullNorUndefinedNorEmpty, isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools'
+import { NonEmptyArray, Nullable, isNotNullNorUndefinedNorEmpty, isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools'
 import { EntrepriseId, entrepriseIdValidator } from 'camino-common/src/entreprise'
 import { CaminoDate } from 'camino-common/src/date'
 import { TitreId } from 'camino-common/src/validators/titres'
@@ -54,11 +54,7 @@ const getUtilisateursValidator = z.object({
 export type GetUtilisateur = z.infer<typeof getUtilisateursValidator>
 
 type GetUtilisateursFilteredAndSortedErrors = DbQueryAccessError | ZodUnparseable | 'droits insuffisants'
-export const getUtilisateursFilteredAndSorted = (
-  pool: Pool,
-  user: DeepReadonly<User>,
-  searchParams: UtilisateursSearchParams
-): Effect.Effect<UserNotNull[], CaminoError<GetUtilisateursFilteredAndSortedErrors>> => {
+export const getUtilisateursFilteredAndSorted = (pool: Pool, user: User, searchParams: UtilisateursSearchParams): Effect.Effect<UserNotNull[], CaminoError<GetUtilisateursFilteredAndSortedErrors>> => {
   return Effect.Do.pipe(
     Effect.filterOrFail(
       () => canReadUtilisateurs(user),
@@ -164,17 +160,15 @@ export const getUtilisateurById = async (pool: Pool, id: UtilisateurId, user: Us
 }
 
 const userDbToUser = (
-  user: DeepReadonly<GetUtilisateur>
-): DeepReadonly<
-  Pick<UserNotNull, 'telephone_fixe' | 'telephone_mobile' | 'id' | 'nom' | 'prenom' | 'role' | 'email'> &
-    Nullable<Pick<AdminUserNotNull, 'administrationId'>> &
-    Pick<EntrepriseUserNotNull, 'entrepriseIds'>
-> => {
+  user: GetUtilisateur
+): Pick<UserNotNull, 'telephone_fixe' | 'telephone_mobile' | 'id' | 'nom' | 'prenom' | 'role' | 'email'> &
+  Nullable<Pick<AdminUserNotNull, 'administrationId'>> &
+  Pick<EntrepriseUserNotNull, 'entrepriseIds'> => {
   return { ...user, prenom: user.prenom ?? '', entrepriseIds: user.entreprise_ids ?? [], administrationId: user.administration_id }
 }
 
 export type GetUtilisateurByIdErrors = 'droits insuffisants' | DbQueryAccessError | ZodUnparseable
-export const newGetUtilisateurById = (pool: Pool, id: UtilisateurId, user: DeepReadonly<User>): Effect.Effect<UserNotNull, CaminoError<GetUtilisateurByIdErrors>> => {
+export const newGetUtilisateurById = (pool: Pool, id: UtilisateurId, user: User): Effect.Effect<UserNotNull, CaminoError<GetUtilisateurByIdErrors>> => {
   return pipe(
     effectDbQueryAndValidate(getUtilisateurByIdDb, { id }, pool, getUtilisateursValidator),
     Effect.filterOrFail(
@@ -338,7 +332,7 @@ const createUtilisateurEntrepriseDb = sql<Redefine<ICreateUtilisateurEntrepriseD
 const deleteUtilisateurEntrepriseDb = sql<Redefine<IDeleteUtilisateurEntrepriseDbQuery, { utilisateur_id: UtilisateurId }, void>>`
   delete from utilisateurs__entreprises where utilisateur_id = $utilisateur_id!`
 
-export const updateUtilisateur = async (pool: Pool, user: DeepReadonly<UserNotNull>): Promise<DeepReadonly<UserNotNull>> => {
+export const updateUtilisateur = async (pool: Pool, user: UserNotNull): Promise<UserNotNull> => {
   await dbQueryAndValidate(updateUtilisateurDb, user, pool, z.void())
 
   return user
@@ -348,7 +342,7 @@ const updateUtilisateurDb = sql<Redefine<IUpdateUtilisateurDbQuery, Pick<UserNot
   update utilisateurs set nom = $nom!, prenom = $prenom!, email = $email! where id = $id!
   `
 
-type UpdateUtilisateurRole = DeepReadonly<Pick<UserNotNull, 'id' | 'role'> & Nullable<Pick<AdminUserNotNull, 'administrationId'>> & Pick<EntrepriseUserNotNull, 'entrepriseIds'>>
+type UpdateUtilisateurRole = Pick<UserNotNull, 'id' | 'role'> & Nullable<Pick<AdminUserNotNull, 'administrationId'>> & Pick<EntrepriseUserNotNull, 'entrepriseIds'>
 export const updateUtilisateurRole = async (pool: Pool, user: UpdateUtilisateurRole): Promise<void> => {
   await dbQueryAndValidate(updateUtilisateurRoleDb, user, pool, z.void())
 

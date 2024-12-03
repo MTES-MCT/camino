@@ -6,7 +6,7 @@ import { canAdministrationEtapeTypeId } from '../static/administrationsTitresTyp
 import { TitreStatutId } from '../static/titresStatuts'
 import { EntrepriseDocument, EntrepriseId } from '../entreprise'
 import { SDOMZoneId } from '../static/sdom'
-import { DeepReadonly, NonEmptyArray, isNonEmptyArray } from '../typescript-tools'
+import { NonEmptyArray, isNonEmptyArray } from '../typescript-tools'
 import { ETAPE_IS_BROUILLON, EtapeAvis, EtapeBrouillon, EtapeDocument, TempEtapeAvis, TempEtapeDocument } from '../etape'
 import {
   dateTypeStepIsComplete,
@@ -34,7 +34,7 @@ type InputPresentRequired = { visibility: 'present'; required: true; message: st
 export type InputPresentOptional = { visibility: 'present'; required: false }
 export type InputPresence = InputAbsent | InputPresentRequired | InputPresentOptional
 
-export const canEditAmodiataires = (titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId, user: DeepReadonly<User>): InputPresence => {
+export const canEditAmodiataires = (titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId, user: User): InputPresence => {
   if (titreTypeId === TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX || titreTypeId === TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX) {
     return { visibility: 'absent', message: `une autorisation ${titreTypeId === 'arm' ? 'de recherche' : "d'exploitation"} ne peut pas inclure d'amodiataires` }
   }
@@ -69,7 +69,7 @@ export const canEditAmodiataires = (titreTypeId: TitreTypeId, demarcheTypeId: De
 const demarchesSansDatesNiDureePourLesEtapes = [DEMARCHES_TYPES_IDS.DeplacementDePerimetre, DEMARCHES_TYPES_IDS.Mutation, DEMARCHES_TYPES_IDS.ExtensionDePerimetre] as const
 
 // Attention les champs dates ne sont jamais obligatoires, si ils le deviennent il faudra faire des modifs dans la validation et dans l'ui
-export const canEditDates = (_titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId, etapeTypeId: EtapeTypeId, user: DeepReadonly<User>): InputAbsent | InputPresentOptional => {
+export const canEditDates = (_titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId, etapeTypeId: EtapeTypeId, user: User): InputAbsent | InputPresentOptional => {
   if (demarchesSansDatesNiDureePourLesEtapes.includes(demarcheTypeId)) {
     return { visibility: 'absent', message: `une démarche ${DemarchesTypes[demarcheTypeId].nom} ne peut pas inclure de date` }
   }
@@ -85,7 +85,7 @@ export const canEditDates = (_titreTypeId: TitreTypeId, demarcheTypeId: Demarche
   return { visibility: 'absent', message: 'droits insuffisants pour éditer les dates' }
 }
 
-export const canEditTitulaires = (_titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId, user: DeepReadonly<User>): InputPresence => {
+export const canEditTitulaires = (_titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId, user: User): InputPresence => {
   if (
     [
       DEMARCHES_TYPES_IDS.Fusion,
@@ -146,7 +146,7 @@ export const dureeIsValide = (
   return { valid: true }
 }
 
-export const canEditDuree = (_titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId, _user: DeepReadonly<User>): InputPresence => {
+export const canEditDuree = (_titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId, _user: User): InputPresence => {
   // par exemple, ne peut pas ajouter de durée à la démarche déplacement de périmètre
   if (demarchesSansDatesNiDureePourLesEtapes.includes(demarcheTypeId)) {
     return { visibility: 'absent', message: `une démarche ${DemarchesTypes[demarcheTypeId].nom} ne peut pas inclure de durée` }
@@ -210,7 +210,7 @@ export const canEditPerimetre = (demarcheTypeId: DemarcheTypeId, etapeTypeId: Et
 }
 
 export const canCreateEtape = (
-  user: DeepReadonly<User>,
+  user: User,
   etapeTypeId: EtapeTypeId,
   isBrouillon: EtapeBrouillon,
   titulaireIds: EntrepriseId[],
@@ -236,7 +236,7 @@ export const canDeleteEtape = (
 }
 
 export const canEditEtape = (
-  user: DeepReadonly<User>,
+  user: User,
   etapeTypeId: EtapeTypeId,
   isBrouillon: EtapeBrouillon,
   titulaireIds: EntrepriseId[],
@@ -248,7 +248,7 @@ export const canEditEtape = (
 }
 
 const canCreateOrEditEtape = (
-  user: DeepReadonly<User>,
+  user: User,
   etapeTypeId: EtapeTypeId,
   isBrouillon: EtapeBrouillon,
   titulaireIds: EntrepriseId[],
@@ -276,12 +276,12 @@ const canCreateOrEditEtape = (
   return false
 }
 
-export type IsEtapeCompleteEtape = DeepReadonly<Pick<FlattenEtape, 'typeId' | 'date' | 'statutId' | 'duree' | 'contenu' | 'substances' | 'perimetre' | 'isBrouillon' | 'titulaires' | 'amodiataires'>>
-export type IsEtapeCompleteDocuments = DeepReadonly<Pick<EtapeDocument | TempEtapeDocument, 'etape_document_type_id'>[]>
-export type IsEtapeCompleteEntrepriseDocuments = DeepReadonly<Pick<EntrepriseDocument, 'entreprise_document_type_id' | 'entreprise_id'>[]>
-type IsEtapeCompleteSdomZones = DeepReadonly<SDOMZoneId[]> | null | undefined
-type IsEtapeCompleteCommunes = DeepReadonly<CommuneId[]>
-export type IsEtapeCompleteEtapeAvis = DeepReadonly<Pick<EtapeAvis, 'avis_type_id'>[]>
+export type IsEtapeCompleteEtape = Pick<FlattenEtape, 'typeId' | 'date' | 'statutId' | 'duree' | 'contenu' | 'substances' | 'perimetre' | 'isBrouillon' | 'titulaires' | 'amodiataires'>
+export type IsEtapeCompleteDocuments = Pick<EtapeDocument | TempEtapeDocument, 'etape_document_type_id'>[]
+export type IsEtapeCompleteEntrepriseDocuments = Pick<EntrepriseDocument, 'entreprise_document_type_id' | 'entreprise_id'>[]
+type IsEtapeCompleteSdomZones = SDOMZoneId[] | null | undefined
+type IsEtapeCompleteCommunes = CommuneId[]
+export type IsEtapeCompleteEtapeAvis = Pick<EtapeAvis, 'avis_type_id'>[]
 
 export const isEtapeValid = (
   etape: IsEtapeCompleteEtape,
@@ -320,7 +320,7 @@ export const isEtapeComplete = (
   sdomZones: IsEtapeCompleteSdomZones,
   communes: IsEtapeCompleteCommunes,
   etapeAvis: IsEtapeCompleteEtapeAvis,
-  user: DeepReadonly<User>,
+  user: User,
   firstEtapeDate: FirstEtapeDate
 ): { valid: true } | { valid: false; errors: NonEmptyArray<string> } => {
   const isCompleteChecks = [
@@ -352,13 +352,13 @@ export const isEtapeComplete = (
   return { valid: true }
 }
 
-type IsEtapeDeposableEtapeAvis = DeepReadonly<Pick<EtapeAvis | TempEtapeAvis, 'avis_type_id'>[]>
+type IsEtapeDeposableEtapeAvis = Pick<EtapeAvis | TempEtapeAvis, 'avis_type_id'>[]
 export const isEtapeDeposable = (
   user: User,
   titreTypeId: TitreTypeId,
   demarcheId: DemarcheId,
   demarcheTypeId: DemarcheTypeId,
-  titreEtape: DeepReadonly<Pick<FlattenEtape, 'typeId' | 'date' | 'statutId' | 'duree' | 'contenu' | 'substances' | 'perimetre' | 'isBrouillon' | 'titulaires' | 'amodiataires'>>,
+  titreEtape: Pick<FlattenEtape, 'typeId' | 'date' | 'statutId' | 'duree' | 'contenu' | 'substances' | 'perimetre' | 'isBrouillon' | 'titulaires' | 'amodiataires'>,
   etapeDocuments: IsEtapeCompleteDocuments,
   entrepriseDocuments: IsEtapeCompleteEntrepriseDocuments,
   sdomZones: IsEtapeCompleteSdomZones,
@@ -390,7 +390,7 @@ export const canDeposeEtape = (
   },
   demarcheId: DemarcheId,
   demarcheTypeId: DemarcheTypeId,
-  titreEtape: DeepReadonly<Pick<FlattenEtape, 'typeId' | 'date' | 'statutId' | 'duree' | 'contenu' | 'substances' | 'perimetre' | 'isBrouillon' | 'titulaires' | 'amodiataires'>>,
+  titreEtape: Pick<FlattenEtape, 'typeId' | 'date' | 'statutId' | 'duree' | 'contenu' | 'substances' | 'perimetre' | 'isBrouillon' | 'titulaires' | 'amodiataires'>,
   etapeDocuments: Pick<EtapeDocument, 'etape_document_type_id'>[],
   entrepriseDocuments: Pick<EntrepriseDocument, 'entreprise_document_type_id' | 'entreprise_id'>[],
   sdomZones: SDOMZoneId[] | null | undefined,

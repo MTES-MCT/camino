@@ -6,7 +6,7 @@ import { UNITES, Unite, Unites } from 'camino-common/src/static/unites'
 import { ActiviteSectionElement, ActivitesTypes, isSubstancesFiscales } from 'camino-common/src/static/activitesTypes'
 import { getSectionsWithValue, sectionDureeIds } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections'
 import { SubstancesFiscale } from 'camino-common/src/static/substancesFiscales'
-import { DeepReadonly, NonEmptyArray } from 'camino-common/src/typescript-tools'
+import { NonEmptyArray } from 'camino-common/src/typescript-tools'
 
 const meta: Meta = {
   title: 'Components/Common/SectionsEdit',
@@ -524,7 +524,7 @@ export const ToutesLesActivites: StoryFn = () => (
                         ...section,
                         elements: [SubstancesFiscale.auru].map(sf => {
                           const unite = Unites[sf.uniteId]
-                          const element: DeepReadonly<ActiviteSectionElement> = {
+                          const element: ActiviteSectionElement = {
                             id: sf.id,
                             nom: `${sf.nom}`,
                             type: 'number',

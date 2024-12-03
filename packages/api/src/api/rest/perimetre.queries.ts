@@ -13,7 +13,7 @@ import { secteurDbIdValidator } from 'camino-common/src/static/facades'
 import { foretIdValidator } from 'camino-common/src/static/forets'
 import { sdomZoneIdValidator } from 'camino-common/src/static/sdom'
 import { KM2, M2, createM2Validator, km2Validator, m2Validator } from 'camino-common/src/number'
-import { DeepReadonly, isNullOrUndefined } from 'camino-common/src/typescript-tools'
+import { isNullOrUndefined } from 'camino-common/src/typescript-tools'
 import { ZodUnparseable, zodParseEffect, zodParseEffectCallback } from '../../tools/fp-tools'
 import { CaminoError } from 'camino-common/src/zod-tools'
 import { Effect, pipe } from 'effect'
@@ -35,7 +35,7 @@ const to4326GeoSystemeId: GeoSystemeId = GEO_SYSTEME_IDS.WGS84
 export const convertPoints = <T extends z.ZodTypeAny>(
   pool: Pool,
   fromGeoSystemeId: GeoSystemeId,
-  geojsonPoints: DeepReadonly<GenericFeatureCollection<T>>
+  geojsonPoints: GenericFeatureCollection<T>
 ): Effect.Effect<GenericFeatureCollection<T>, CaminoError<ConvertPointsErrors>> => {
   return pipe(
     Effect.try({
@@ -173,7 +173,7 @@ export const getTitresIntersectionWithGeojson = (
     getTitresIntersectionWithGeojsonValidator
   )
 }
-type GetTitresIntersectionWithGeojsonDb = DeepReadonly<{ titre_slug: TitreSlug; titre_statut_ids: TitreStatutId[]; geojson4326_perimetre: MultiPolygon; domaine_id: DomaineId }>
+type GetTitresIntersectionWithGeojsonDb = { titre_slug: TitreSlug; titre_statut_ids: TitreStatutId[]; geojson4326_perimetre: MultiPolygon; domaine_id: DomaineId }
 const getTitresIntersectionWithGeojsonDb = sql<Redefine<IGetTitresIntersectionWithGeojsonDbQuery, GetTitresIntersectionWithGeojsonDb, GetTitresIntersectionWithGeojson>>`
 select
     t.nom,
@@ -196,7 +196,7 @@ const m2ToKm2 = (value: M2): Effect.Effect<KM2, CaminoError<ZodUnparseable>> => 
 
 const requestError = 'Une erreur inattendue est survenue lors de la récupération des informations geojson en base' as const
 export type GetGeojsonInformationErrorMessages = ZodUnparseable | DbQueryAccessError | typeof requestError
-export const getGeojsonInformation = (pool: Pool, geojson4326_perimetre: DeepReadonly<MultiPolygon>): Effect.Effect<GetGeojsonInformation, CaminoError<GetGeojsonInformationErrorMessages>> => {
+export const getGeojsonInformation = (pool: Pool, geojson4326_perimetre: MultiPolygon): Effect.Effect<GetGeojsonInformation, CaminoError<GetGeojsonInformationErrorMessages>> => {
   return pipe(
     effectDbQueryAndValidate(getGeojsonInformationDb, { geojson4326_perimetre }, pool, getGeojsonInformationDbValidator),
     Effect.bind('response', result => (result.length === 1 ? Effect.succeed(result[0]) : Effect.fail({ message: requestError }))),
@@ -227,7 +227,7 @@ const getGeojsonInformationValidator = z.object({
 
 // Surface maximale acceptée pour un titre
 const SURFACE_M2_MAX = 100_000 * 1_000_000
-export type GetGeojsonInformation = DeepReadonly<z.infer<typeof getGeojsonInformationValidator>>
+export type GetGeojsonInformation = z.infer<typeof getGeojsonInformationValidator>
 const getGeojsonInformationCommuneDbValidator = z.object({ id: communeIdValidator, nom: z.string(), surface: m2Validator })
 
 const getGeojsonInformationDbValidator = z.object({
@@ -238,7 +238,7 @@ const getGeojsonInformationDbValidator = z.object({
   secteurs: z.array(secteurDbIdValidator).nullable().transform(nullToEmptyArray),
 })
 type GetGeojsonInformationDbValidator = z.infer<typeof getGeojsonInformationDbValidator>
-const getGeojsonInformationDb = sql<Redefine<IGetGeojsonInformationDbQuery, DeepReadonly<{ geojson4326_perimetre: MultiPolygon }>, GetGeojsonInformationDbValidator>>`
+const getGeojsonInformationDb = sql<Redefine<IGetGeojsonInformationDbQuery, { geojson4326_perimetre: MultiPolygon }, GetGeojsonInformationDbValidator>>`
 select
     (
         select

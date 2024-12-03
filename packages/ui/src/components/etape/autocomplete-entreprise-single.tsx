@@ -1,18 +1,18 @@
 import { useState } from '@/utils/vue-tsx-utils'
-import { DeepReadonly, computed, defineComponent, ref, watch } from 'vue'
+import { computed, defineComponent, ref, watch } from 'vue'
 import { EntrepriseId, Entreprise } from 'camino-common/src/entreprise'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { TypeAheadSingle } from '../_ui/typeahead-single'
 
 interface Props {
-  initialValue?: DeepReadonly<EntrepriseId | null>
-  items: DeepReadonly<Entreprise>[]
-  onUpdate: (entreprise: DeepReadonly<EntrepriseId | null>) => void
+  initialValue?: EntrepriseId | null
+  items: Entreprise[]
+  onUpdate: (entreprise: EntrepriseId | null) => void
   id?: string
 }
 
 export const AutocompleteEntrepriseSingle = defineComponent<Props>(props => {
-  const [currentEntrepriseId, setCurrentEntrepriseId] = useState<DeepReadonly<EntrepriseId | null>>(props.initialValue ?? null)
+  const [currentEntrepriseId, setCurrentEntrepriseId] = useState<EntrepriseId | null>(props.initialValue ?? null)
   const currentSearch = ref<string>('')
 
   watch(
@@ -35,7 +35,7 @@ export const AutocompleteEntrepriseSingle = defineComponent<Props>(props => {
     setCurrentEntrepriseId(entreprise?.id ?? null)
   }
 
-  const filteredItems = computed<DeepReadonly<Entreprise>[]>(() => {
+  const filteredItems = computed<Entreprise[]>(() => {
     if (currentSearch.value.length === 0) {
       return props.items
     }

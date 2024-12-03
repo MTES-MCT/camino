@@ -1,6 +1,6 @@
 import { dateFormat } from 'camino-common/src/date'
 import { HTMLAttributes } from 'vue'
-import { DeepReadonly, isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
+import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { DsfrToggle } from '../_ui/dsfr-toggle'
 import { EtapesTypes } from 'camino-common/src/static/etapesTypes'
 import { capitalize } from 'camino-common/src/strings'
@@ -19,7 +19,7 @@ type HeritagePossible =
   | FlattenEtape['substances']
   | FlattenedContenuElement
 
-type Props<T extends DeepReadonly<HeritagePossible>> = {
+type Props<T extends HeritagePossible> = {
   prop: T
   write: () => JSX.Element
   read: (heritagePropEtape?: NoInfer<T>['etapeHeritee']) => JSX.Element
@@ -29,7 +29,7 @@ type Props<T extends DeepReadonly<HeritagePossible>> = {
   updateHeritage: (update: NoInfer<T>) => void
 }
 
-export const HeritageEdit = <T extends DeepReadonly<HeritagePossible>>(props: Props<T>): JSX.Element => {
+export const HeritageEdit = <T extends HeritagePossible>(props: Props<T>): JSX.Element => {
   const updateHeritage = () => {
     const etapeHeritee = props.prop.etapeHeritee
     const newHeritage = !props.prop.heritee

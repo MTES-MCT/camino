@@ -8,7 +8,7 @@ import { getEtapesTDE } from '../static/titresTypes_demarchesTypes_etapesTypes/i
 import { DemarcheTypeId } from '../static/demarchesTypes'
 import { canCreateEtape } from './titres-etapes'
 import { TitreGetDemarche } from '../titres'
-import { DeepReadonly, isNotNullNorUndefinedNorEmpty, isNullOrUndefined } from '../typescript-tools'
+import { isNotNullNorUndefinedNorEmpty, isNullOrUndefined } from '../typescript-tools'
 import { ETAPE_IS_BROUILLON } from '../etape'
 import { demarcheEnregistrementDemandeDateFind, DemarcheEtape, DemarcheId } from '../demarche'
 import { machineIdFind } from '../machines'
@@ -20,7 +20,7 @@ const hasOneDemarcheWithoutPhase = (demarches: Pick<TitreGetDemarche, 'demarche_
   return isNotNullNorUndefinedNorEmpty(demarches) && demarches.length === 1 && isNullOrUndefined(demarches[0].demarche_date_debut)
 }
 export const canCreateDemarche = (
-  user: DeepReadonly<User>,
+  user: User,
   titreTypeId: TitreTypeId,
   titreStatutId: TitreStatutId,
   administrationsLocales: AdministrationId[],
@@ -29,7 +29,7 @@ export const canCreateDemarche = (
   return !hasOneDemarcheWithoutPhase(demarches) && canEditDemarche(user, titreTypeId, titreStatutId, administrationsLocales)
 }
 
-export const canEditDemarche = (user: DeepReadonly<User>, titreTypeId: TitreTypeId, titreStatutId: TitreStatutId, administrationsLocales: AdministrationId[]): boolean => {
+export const canEditDemarche = (user: User, titreTypeId: TitreTypeId, titreStatutId: TitreStatutId, administrationsLocales: AdministrationId[]): boolean => {
   if (isSuper(user)) {
     return true
   } else if (isAdministrationAdmin(user) || isAdministrationEditeur(user)) {
@@ -57,7 +57,7 @@ export const canDeleteDemarche = (user: User, titreTypeId: TitreTypeId, titreSta
   return false
 }
 
-export const canCreateTravaux = (user: DeepReadonly<User>, titreTypeId: TitreTypeId, administrations: AdministrationId[], demarches: Pick<TitreGetDemarche, 'demarche_date_debut'>[]): boolean => {
+export const canCreateTravaux = (user: User, titreTypeId: TitreTypeId, administrations: AdministrationId[], demarches: Pick<TitreGetDemarche, 'demarche_date_debut'>[]): boolean => {
   if (hasOneDemarcheWithoutPhase(demarches)) {
     return false
   }
@@ -89,7 +89,7 @@ export const canCreateEtapeByDemarche = (
 }
 
 export const canPublishResultatMiseEnConcurrence = (
-  user: DeepReadonly<User>,
+  user: User,
   titre_type_id: TitreTypeId,
   demarche_type_id: DemarcheTypeId,
   etapes: Pick<DemarcheEtape, 'etape_type_id' | 'demarche_id_en_concurrence' | 'date' | 'etape_statut_id'>[],

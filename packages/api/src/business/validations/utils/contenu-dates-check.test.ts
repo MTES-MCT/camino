@@ -1,10 +1,9 @@
 import { contenuDatesCheck } from './contenu-dates-check'
 import { describe, test, expect } from 'vitest'
 import { Section } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections'
-import { DeepReadonly } from 'camino-common/src/typescript-tools'
 import { CaminoDate } from 'camino-common/src/date'
 
-const sections: DeepReadonly<Section[]> = [
+const sections: Section[] = [
   {
     id: 'section',
     elements: [

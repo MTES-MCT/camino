@@ -1,4 +1,4 @@
-import { DeepReadonly, computed, defineComponent } from 'vue'
+import { computed, defineComponent } from 'vue'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
 import { getSections, getSectionsWithValue } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections'
@@ -8,18 +8,18 @@ import { SectionWithValue } from 'camino-common/src/sections'
 import { SectionElementWithValueEdit } from './section-element-with-value-edit'
 import { FlattenedContenuElement, FlattenEtape } from 'camino-common/src/etape-form'
 
-export type SectionsEditEtape = DeepReadonly<Pick<FlattenEtape, 'typeId' | 'contenu' | 'date'>>
+export type SectionsEditEtape = Pick<FlattenEtape, 'typeId' | 'contenu' | 'date'>
 type Props = {
   titreTypeId: TitreTypeId
   demarcheTypeId: DemarcheTypeId
-  etape: DeepReadonly<SectionsEditEtape>
+  etape: SectionsEditEtape
   completeUpdate: (etape: Props['etape']) => void
 }
 
 export const SectionsEdit = defineComponent<Props>(props => {
   const [editedEtape, setEditedEtape] = useState(props.etape)
 
-  const updateElement = (sectionId: string, elementId: string) => (element: DeepReadonly<FlattenedContenuElement>) => {
+  const updateElement = (sectionId: string, elementId: string) => (element: FlattenedContenuElement) => {
     updateEtape({ contenu: { ...editedEtape.value.contenu, [sectionId]: { ...editedEtape.value.contenu[sectionId], [elementId]: element } } })
   }
 
@@ -31,7 +31,7 @@ export const SectionsEdit = defineComponent<Props>(props => {
   const sections = computed(() => {
     return getSections(props.titreTypeId, props.demarcheTypeId, props.etape.typeId)
   })
-  const sectionsWithValue = computed<DeepReadonly<SectionWithValue[]>>(() => {
+  const sectionsWithValue = computed<SectionWithValue[]>(() => {
     if (isNotNullNorUndefined(editedEtape.value.contenu)) {
       return getSectionsWithValue(sections.value, editedEtape.value.contenu)
     }

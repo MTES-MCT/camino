@@ -3,13 +3,13 @@ import { titreEtapeHeritageContenuFind } from '../utils/titre-etape-heritage-con
 import { titreEtapesSortAscByOrdre, titreEtapesSortDescByOrdre } from '../utils/titre-etapes-sort'
 import { UserNotNull } from 'camino-common/src/roles'
 import { getSections, Section } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections'
-import { DeepReadonly, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
+import { isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
 import { DemarcheId } from 'camino-common/src/demarche'
 import { Pool } from 'pg'
 import { getDemarches } from './titres-etapes-heritage-contenu-update.queries'
 import { EtapeId } from 'camino-common/src/etape'
 
-export const titresEtapesHeritageContenuUpdate = async (pool: Pool, user: DeepReadonly<UserNotNull>, demarcheId?: DemarcheId): Promise<string[]> => {
+export const titresEtapesHeritageContenuUpdate = async (pool: Pool, user: UserNotNull, demarcheId?: DemarcheId): Promise<string[]> => {
   console.info()
   console.info('héritage des contenus des étapes…')
 
@@ -24,7 +24,7 @@ export const titresEtapesHeritageContenuUpdate = async (pool: Pool, user: DeepRe
   for (const titreDemarche of Object.values(titresDemarches)) {
     if (titreDemarche.etapes.length) {
       const etapeSectionsDictionary = titreDemarche.etapes.reduce<{
-        [etapeId in EtapeId]?: DeepReadonly<Section[]>
+        [etapeId in EtapeId]?: Section[]
       }>((acc, e) => {
         acc[e.id] = getSections(titreDemarche.titreTypeId, titreDemarche.typeId, e.typeId)
 

@@ -1,11 +1,11 @@
 import { computed, Ref, ref, watch, defineComponent } from 'vue'
 import styles from './typeahead.module.css'
 import { isEventWithTarget, random } from '@/utils/vue-tsx-utils'
-import { DeepReadonly, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
+import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
 import type { JSX } from 'vue/jsx-runtime'
 type TypeAheadRecord = Record<string | symbol | number, any>
 
-type Props<T extends DeepReadonly<TypeAheadRecord>, K extends keyof DeepReadonly<T>> = {
+type Props<T extends TypeAheadRecord, K extends keyof T> = {
   overrideItem: (Pick<T, K> & Partial<Omit<T, K>>) | null
   disabled?: boolean
   props: {
@@ -22,7 +22,7 @@ type Props<T extends DeepReadonly<TypeAheadRecord>, K extends keyof DeepReadonly
   }
 }
 
-export const TypeAheadSingle = defineComponent(<T extends DeepReadonly<TypeAheadRecord>, K extends keyof DeepReadonly<T>>(props: Props<T, K>) => {
+export const TypeAheadSingle = defineComponent(<T extends TypeAheadRecord, K extends keyof T>(props: Props<T, K>) => {
   const id = props.props.id ?? `typeahead_${(random() * 1000).toFixed()}`
   const wrapperId = computed(() => `${id}_wrapper`)
   const getItem = (item: (Pick<T, K> & Partial<Omit<T, K>>) | null): T | null =>

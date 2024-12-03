@@ -11,7 +11,7 @@ import { etapeTypeIdValidator } from 'camino-common/src/static/etapesTypes'
 import { geoSystemeIdValidator } from 'camino-common/src/static/geoSystemes'
 import { substanceLegaleIdValidator } from 'camino-common/src/static/substancesLegales'
 import { GetDemarcheByIdOrSlug } from 'camino-common/src/titres'
-import { DeepReadonly, Nullable } from 'camino-common/src/typescript-tools'
+import { Nullable } from 'camino-common/src/typescript-tools'
 import { CaminoError, nullToDefault } from 'camino-common/src/zod-tools'
 import gql from 'graphql-tag'
 import { DistributiveOmit } from 'maplibre-gl'
@@ -83,11 +83,11 @@ export interface EtapeApiClient {
   deleteEtape: (titreEtapeId: EtapeId) => Promise<void>
   deposeEtape: (titreEtapeId: EtapeId) => Promise<void>
   getEtapeDocumentsByEtapeId: (etapeId: EtapeId) => Promise<GetEtapeDocumentsByEtapeId>
-  getEtapeHeritagePotentiel: (etape: DeepReadonly<Pick<CoreEtapeCreationOrModification, 'id' | 'date' | 'typeId'>>, titreDemarcheId: DemarcheId) => Promise<DeepReadonly<GetEtapeHeritagePotentiel>>
+  getEtapeHeritagePotentiel: (etape: Pick<CoreEtapeCreationOrModification, 'id' | 'date' | 'typeId'>, titreDemarcheId: DemarcheId) => Promise<GetEtapeHeritagePotentiel>
   getEtapeAvisByEtapeId: (etapeId: EtapeId) => Promise<GetEtapeAvisByEtapeId>
-  getEtape: (etapeIdOrSlug: EtapeIdOrSlug) => Promise<DeepReadonly<{ etape: FlattenEtape; demarche: GetDemarcheByIdOrSlug }>>
-  etapeCreer: (etape: DeepReadonly<RestEtapeCreation>) => Promise<CaminoError<string> | { id: EtapeId }>
-  etapeModifier: (etape: DeepReadonly<RestEtapeModification>) => Promise<CaminoError<string> | { id: EtapeId }>
+  getEtape: (etapeIdOrSlug: EtapeIdOrSlug) => Promise<{ etape: FlattenEtape; demarche: GetDemarcheByIdOrSlug }>
+  etapeCreer: (etape: RestEtapeCreation) => Promise<CaminoError<string> | { id: EtapeId }>
+  etapeModifier: (etape: RestEtapeModification) => Promise<CaminoError<string> | { id: EtapeId }>
 }
 
 export const etapeApiClient: EtapeApiClient = {
@@ -189,7 +189,7 @@ export const etapeApiClient: EtapeApiClient = {
     })
 
     // TODO 2024-06-02 on a du code métier dans notre api, on fusionne étape avec l'héritage
-    const heritageData: DeepReadonly<z.infer<typeof heritageValidator>> = heritageValidator.parse(data)
+    const heritageData: z.infer<typeof heritageValidator> = heritageValidator.parse(data)
     return heritageData
   },
 

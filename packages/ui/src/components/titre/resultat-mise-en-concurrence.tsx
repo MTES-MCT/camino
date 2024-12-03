@@ -3,7 +3,7 @@ import { computed, defineComponent, watch } from 'vue'
 import { DsfrInputRadio } from '../_ui/dsfr-input-radio'
 import { useState } from '@/utils/vue-tsx-utils'
 import { DsfrButton, DsfrLink } from '../_ui/dsfr-button'
-import { DeepReadonly, isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools'
+import { isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools'
 import { DsfrPerimetre, TabId } from '../_common/dsfr-perimetre'
 import { DsfrInput } from '../_ui/dsfr-input'
 import { Entreprise, EntrepriseId } from 'camino-common/src/entreprise'
@@ -26,7 +26,7 @@ export type Props = {
   entreprises: Entreprise[]
   initDate?: CaminoDate
   initDecision?: 'acc' | 'rej'
-  pivot: DeepReadonly<GetResultatMiseEnConcurrence>
+  pivot: GetResultatMiseEnConcurrence
 }
 
 export const ResultatMiseEnConcurrence = defineComponent<Props>(props => {
@@ -40,19 +40,17 @@ export const ResultatMiseEnConcurrence = defineComponent<Props>(props => {
     return acc
   }, {})
 
-  const perimetre = computed<
-    DeepReadonly<{
-      geojson4326_perimetre: FeatureMultiPolygon
-      geojson4326_points: FeatureCollectionPoints | null
-      geojson_origine_geo_systeme_id: GeoSystemeId
-      geojson_origine_perimetre: FeatureMultiPolygon
-      geojson_origine_points: FeatureCollectionPoints | null
-      geojson4326_forages: FeatureCollectionForages | null
-      geojson_origine_forages: FeatureCollectionForages | null
-      surface: KM2 | null
-    }>
-  >(() => {
-    const toPerimetre = ({ geojson4326_perimetre, surface }: DeepReadonly<{ geojson4326_perimetre: FeatureMultiPolygon; surface: KM2 }>) => ({
+  const perimetre = computed<{
+    geojson4326_perimetre: FeatureMultiPolygon
+    geojson4326_points: FeatureCollectionPoints | null
+    geojson_origine_geo_systeme_id: GeoSystemeId
+    geojson_origine_perimetre: FeatureMultiPolygon
+    geojson_origine_points: FeatureCollectionPoints | null
+    geojson4326_forages: FeatureCollectionForages | null
+    geojson_origine_forages: FeatureCollectionForages | null
+    surface: KM2 | null
+  }>(() => {
+    const toPerimetre = ({ geojson4326_perimetre, surface }: { geojson4326_perimetre: FeatureMultiPolygon; surface: KM2 }) => ({
       geojson4326_perimetre,
       geojson4326_points: null,
       geojson_origine_geo_systeme_id: GEO_SYSTEME_IDS.WGS84,

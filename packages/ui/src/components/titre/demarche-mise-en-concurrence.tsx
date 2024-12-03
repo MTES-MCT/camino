@@ -3,7 +3,7 @@ import { AsyncData } from '@/api/client-rest'
 import { canHaveMiseEnConcurrence, demarcheEnregistrementDemandeDateFind, DemarcheEtape, DemarcheId, demarcheIdValidator, GetDemarcheMiseEnConcurrence } from 'camino-common/src/demarche'
 import { computed, defineComponent, FunctionalComponent, ref } from 'vue'
 import { LoadingElement } from '../_ui/functional-loader'
-import { DeepReadonly, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, PickDistributive } from 'camino-common/src/typescript-tools'
+import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, PickDistributive } from 'camino-common/src/typescript-tools'
 import { Alert } from '../_ui/alert'
 import { DsfrLink } from '../_ui/dsfr-button'
 import { ETAPE_TYPE_FOR_CONCURRENCY_DATA, ETAPES_TYPES } from 'camino-common/src/static/etapesTypes'
@@ -23,7 +23,7 @@ export type Props = {
   hasTitresFrom: boolean | 'LOADING'
 }
 export const DemarcheMiseEnConcurrence = defineComponent<Props>(props => {
-  type AsyncDemarches = AsyncData<DeepReadonly<GetDemarcheMiseEnConcurrence[]>>
+  type AsyncDemarches = AsyncData<GetDemarcheMiseEnConcurrence[]>
   type Conf = null | { type: 'hasAlert'; demarches: AsyncDemarches; demarcheId: DemarcheId } | { type: 'mayHaveAlert'; demarches: AsyncDemarches; demarcheId: DemarcheId }
 
   const conf = ref<Conf>({
@@ -170,7 +170,7 @@ export const DemarcheMiseEnConcurrence = defineComponent<Props>(props => {
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
 DemarcheMiseEnConcurrence.props = ['apiClient', 'titre', 'user', 'hasTitresFrom']
 
-const DemarcheMiseEnConcurrenceLoaded: FunctionalComponent<{ demarches: DeepReadonly<GetDemarcheMiseEnConcurrence[]> }> = ({ demarches }) => {
+const DemarcheMiseEnConcurrenceLoaded: FunctionalComponent<{ demarches: GetDemarcheMiseEnConcurrence[] }> = ({ demarches }) => {
   return (
     <>
       {demarches.length === 0 ? (

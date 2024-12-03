@@ -10,7 +10,7 @@ import { activitesTypesPays } from '../static/activitesTypesPays'
 import { canAdministrationModifyTitres } from '../static/administrationsTitresTypesTitresStatuts'
 import { TitreStatutId } from '../static/titresStatuts'
 import { territoiresIdFind } from '../territoires'
-import { DeepReadonly, isNotNullNorUndefinedNorEmpty, isNullOrUndefinedOrEmpty, SimplePromiseFn } from '../typescript-tools'
+import { isNotNullNorUndefinedNorEmpty, isNullOrUndefinedOrEmpty, SimplePromiseFn } from '../typescript-tools'
 import { SecteursMaritimes } from '../static/facades'
 import { EntrepriseId } from '../entreprise'
 import { TITRES_TYPES_TYPES_IDS } from '../static/titresTypesTypes'
@@ -37,7 +37,7 @@ export const getLinkConfig = (typeId: TitreTypeId, demarches: { demarche_type_id
   return null
 }
 
-export const canLinkTitres = (user: DeepReadonly<User>, administrationIds: AdministrationId[]): boolean => {
+export const canLinkTitres = (user: User, administrationIds: AdministrationId[]): boolean => {
   if (isSuper(user)) {
     return true
   }
@@ -51,7 +51,7 @@ export const canLinkTitres = (user: DeepReadonly<User>, administrationIds: Admin
 
 export const TITRES_TYPES_IDS_DEMAT = ['arm', 'axm']
 
-export const canCreateTitre = (user: DeepReadonly<User>, titreTypeId: TitreTypeId | null): boolean => {
+export const canCreateTitre = (user: User, titreTypeId: TitreTypeId | null): boolean => {
   if (isSuper(user)) {
     return true
   } else if (isAdministrationAdmin(user) || isAdministrationEditeur(user)) {
@@ -109,7 +109,7 @@ export const canDeleteTitre = (user: User): boolean => isSuper(user)
 
 interface TitreReduced {
   titreTypeId: TitreTypeId
-  communes: DeepReadonly<{ id: CommuneId }[]>
+  communes: { id: CommuneId }[]
   secteursMaritime: SecteursMaritimes[]
   demarches: unknown[]
 }

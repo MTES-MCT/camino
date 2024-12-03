@@ -8,7 +8,7 @@ import { titreSlugValidator } from './validators/titres'
 import { tempDocumentNameValidator } from './document'
 import { titreTypeIdValidator } from './static/titresTypes'
 import { perimetreFileUploadTypeValidator } from './static/documentsTypes'
-import { DeepReadonly, isNullOrUndefined } from './typescript-tools'
+import { isNullOrUndefined } from './typescript-tools'
 import { km2Validator } from './number'
 import { GeoSystemeId, geoSystemeIdValidator } from './static/geoSystemes'
 
@@ -122,7 +122,7 @@ export const geojsonInformationsValidator = z.object({
   geojson_origine_geo_systeme_id: geoSystemeIdValidator,
 })
 
-export type GeojsonInformations = DeepReadonly<z.infer<typeof geojsonInformationsValidator>>
+export type GeojsonInformations = z.infer<typeof geojsonInformationsValidator>
 
 export const perimetreInformationsValidator = geojsonInformationsValidator.pick({ superposition_alertes: true, sdomZoneIds: true }).extend({ communes: z.array(communeIdValidator) })
 export type PerimetreInformations = z.infer<typeof perimetreInformationsValidator>
@@ -146,7 +146,7 @@ export type GeojsonImportForagesBody = z.infer<typeof geojsonImportForagesBodyVa
 export const geojsonImportForagesResponseValidator = z.object({ geojson4326: featureCollectionForagesValidator, origin: featureCollectionForagesValidator })
 export type GeojsonImportForagesResponse = z.infer<typeof geojsonImportForagesResponseValidator>
 
-const internalEqualGeojson = (geo1: DeepReadonly<MultiPolygon>, geo2: DeepReadonly<MultiPolygon>): boolean => {
+const internalEqualGeojson = (geo1: MultiPolygon, geo2: MultiPolygon): boolean => {
   return geo1.coordinates.every((level1, indexLevel1) => {
     return level1.every((level2, indexLevel2) => {
       return level2.every((level3, indexLevel3) => {
@@ -156,7 +156,7 @@ const internalEqualGeojson = (geo1: DeepReadonly<MultiPolygon>, geo2: DeepReadon
   })
 }
 
-export const equalGeojson = (geo1: DeepReadonly<MultiPolygon> | null, geo2: DeepReadonly<MultiPolygon> | null | undefined): boolean => {
+export const equalGeojson = (geo1: MultiPolygon | null, geo2: MultiPolygon | null | undefined): boolean => {
   if (isNullOrUndefined(geo1) && isNullOrUndefined(geo2)) {
     return true
   }

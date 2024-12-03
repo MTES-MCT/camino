@@ -1,14 +1,4 @@
-import {
-  exhaustiveCheck,
-  isNonEmptyArrayAndDeepReadonly,
-  isNotNullNorUndefined,
-  isNotNullNorUndefinedNorEmpty,
-  isNullOrUndefinedOrEmpty,
-  memoize,
-  onlyUnique,
-  stringArrayEquals,
-  toSorted,
-} from './typescript-tools'
+import { exhaustiveCheck, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefinedOrEmpty, memoize, onlyUnique, stringArrayEquals, toSorted } from './typescript-tools'
 import { Role } from './roles'
 import { AdministrationId } from './static/administrations'
 import { Departements } from './static/departement'
@@ -49,11 +39,6 @@ test('isNotNullNorUndefinedNorEmpty', () => {
   expect(isNotNullNorUndefinedNorEmpty([1])).toBe(true)
   expect(isNotNullNorUndefinedNorEmpty('  ')).toBe(false)
   expect(isNotNullNorUndefinedNorEmpty(' a ')).toBe(true)
-})
-
-test('isNonEmptyArray', () => {
-  expect(isNonEmptyArrayAndDeepReadonly([])).toBe(false)
-  expect(isNonEmptyArrayAndDeepReadonly([1])).toBe(true)
 })
 
 test('onlyUnique', () => {

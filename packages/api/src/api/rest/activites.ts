@@ -17,7 +17,7 @@ import {
   activiteDeleteQuery,
 } from './activites.queries'
 import { NewDownload } from './fichiers'
-import { DeepReadonly, SimplePromiseFn, isNonEmptyArray, isNullOrUndefined, memoize } from 'camino-common/src/typescript-tools'
+import { SimplePromiseFn, isNonEmptyArray, isNullOrUndefined, memoize } from 'camino-common/src/typescript-tools'
 import { canEditActivite, isActiviteDeposable } from 'camino-common/src/permissions/activites'
 import { SectionWithValue } from 'camino-common/src/sections'
 import { Section, getSectionsWithValue } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections'
@@ -31,7 +31,7 @@ import { EntrepriseId } from 'camino-common/src/entreprise'
 import { getCurrent } from 'camino-common/src/date'
 import { createLargeObject } from '../../database/largeobjects'
 
-const extractContenuFromSectionWithValue = (sections: DeepReadonly<Section[]>, sectionsWithValue: SectionWithValue[]): Contenu => {
+const extractContenuFromSectionWithValue = (sections: Section[], sectionsWithValue: SectionWithValue[]): Contenu => {
   const contenu: Contenu = {}
   sections.forEach(section => {
     const currentContent: Record<string, unknown> = {}

@@ -7,9 +7,8 @@ import { userSuper } from '../../database/user-super'
 import { titreEtapesSortAscByOrdre } from '../utils/titre-etapes-sort'
 import { UserNotNull } from 'camino-common/src/roles'
 import { EtapesTypes } from 'camino-common/src/static/etapesTypes'
-import { DeepReadonly } from 'camino-common/src/typescript-tools'
 
-export const titresEtapesHeritagePropsUpdate = async (user: DeepReadonly<UserNotNull>, titresDemarchesIds?: string[]): Promise<string[]> => {
+export const titresEtapesHeritagePropsUpdate = async (user: UserNotNull, titresDemarchesIds?: string[]): Promise<string[]> => {
   console.info()
   console.info('héritage des propriétés des étapes…')
 
@@ -39,7 +38,7 @@ export const titresEtapesHeritagePropsUpdate = async (user: DeepReadonly<UserNot
       const { hasChanged, titreEtape: newTitreEtape } = titreEtapeHeritagePropsFind(titreEtape, titreEtapePrecedente)
 
       if (hasChanged) {
-        await titreEtapeUpsert(newTitreEtape as DeepReadonly<ITitreEtape>, user, titreDemarche.titreId)
+        await titreEtapeUpsert(newTitreEtape as ITitreEtape, user, titreDemarche.titreId)
 
         console.info('titre / démarche / étape : héritage des propriétés (mise à jour) ->', titreEtape.id)
 

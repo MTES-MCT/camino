@@ -18,7 +18,7 @@ import { capitalize } from './strings'
 import { foretIdValidator } from './static/forets'
 import { featureCollectionForagesValidator, featureCollectionPointsValidator, featureMultiPolygonValidator } from './perimetre'
 import { geoSystemeIdValidator } from './static/geoSystemes'
-import { DeepReadonly, isNotNullNorUndefined, isNullOrUndefinedOrEmpty, toSorted } from './typescript-tools'
+import { isNotNullNorUndefined, isNullOrUndefinedOrEmpty, NonEmptyArray, toSorted } from './typescript-tools'
 import { proprietesGeothermieForagesElementIds } from './static/titresTypes_demarchesTypes_etapesTypes/sections'
 import { titreIdValidator, titreSlugValidator } from './validators/titres'
 import { DEMARCHES_TYPES_IDS, DemarcheTypeId, demarcheTypeIdValidator } from './static/demarchesTypes'
@@ -280,7 +280,11 @@ export type DemarcheCreationOutput = z.infer<typeof demarcheCreationOutputValida
 
 // TODO 2024-12-02 quand on a viré le DeepReadonly, on peut re-essayer d'avoir un typage plus concret, avec : si on a un tableau non vide, alors on a forcément un FirstEtapeDate
 // T extends [any, ...any[]] ? FirstEtapeDate : FirstEtapeDate | null
-export const demarcheEnregistrementDemandeDateFind = (titreEtapes: DeepReadonly<{ date: CaminoDate; typeId: EtapeTypeId }[]> | undefined): null | FirstEtapeDate => {
+type DemarcheEnregistrementDemandeDateFindEtape = { date: CaminoDate; typeId: EtapeTypeId }
+export function demarcheEnregistrementDemandeDateFind<T extends DemarcheEnregistrementDemandeDateFindEtape[] | NonEmptyArray<DemarcheEnregistrementDemandeDateFindEtape>>(
+  titreEtapes: T | undefined
+): T extends [DemarcheEnregistrementDemandeDateFindEtape, ...DemarcheEnregistrementDemandeDateFindEtape[]] ? FirstEtapeDate : FirstEtapeDate | null
+export function demarcheEnregistrementDemandeDateFind(titreEtapes: DemarcheEnregistrementDemandeDateFindEtape[] | undefined): null | FirstEtapeDate {
   if (isNullOrUndefinedOrEmpty(titreEtapes)) {
     return null
   }

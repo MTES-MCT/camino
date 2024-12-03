@@ -4,14 +4,14 @@ import { UniteId, Unites } from 'camino-common/src/static/unites'
 import { getPeriode } from 'camino-common/src/static/frequence'
 import { ActivitesStatuts } from 'camino-common/src/static/activitesStatuts'
 import { Section } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections'
-import { DeepReadonly, isNullOrUndefined } from 'camino-common/src/typescript-tools'
+import { isNullOrUndefined } from 'camino-common/src/typescript-tools'
 import { Pool } from 'pg'
 import { getCommunesIndex } from '../../../database/queries/communes'
 import { ActivitesTypes } from 'camino-common/src/static/activitesTypes'
 import { getEntreprises } from '../entreprises.queries'
 import { EntrepriseId } from 'camino-common/src/entreprise'
 
-const titreActiviteContenuFormat = (contenu: IContenu, sections: DeepReadonly<Section[]>) =>
+const titreActiviteContenuFormat = (contenu: IContenu, sections: Section[]) =>
   sections.reduce((resSections: Index<IContenuValeur>, section) => {
     const r = section.elements!.reduce((resElements: Index<IContenuValeur>, element) => {
       let key = `${section.id}_${element.id}`

@@ -1,4 +1,4 @@
-import { HTMLAttributes, defineComponent, computed, DeepReadonly } from 'vue'
+import { HTMLAttributes, defineComponent, computed } from 'vue'
 import 'maplibre-gl/dist/maplibre-gl.css'
 import { DsfrSeparator } from '../_ui/dsfr-separator'
 import { useState } from '@/utils/vue-tsx-utils'
@@ -87,7 +87,7 @@ export const LayersControl = defineComponent<LayersControlProps>(props => {
     props.setLayer(layer)
   }
 
-  const checkboxValueChanged = (overlayLayerNames: DeepReadonly<OverlayName[]>) => {
+  const checkboxValueChanged = (overlayLayerNames: OverlayName[]) => {
     updateSelectedLayers(overlayLayerNames)
     props.selectedOverlayLayerNames(overlayLayerNames)
   }

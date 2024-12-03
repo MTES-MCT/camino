@@ -16,7 +16,7 @@ import {
   sectionsStepIsComplete,
   sectionsStepIsVisible,
 } from './etape-form'
-import { ETAPE_IS_BROUILLON, ETAPE_IS_NOT_BROUILLON, etapeDocumentIdValidator } from '../etape'
+import { ETAPE_IS_BROUILLON, ETAPE_IS_NOT_BROUILLON, EtapeDocument, TempEtapeDocument } from '../etape'
 import { firstEtapeDateValidator, toCaminoDate } from '../date'
 import { testBlankUser } from '../tests-utils'
 import { entrepriseIdValidator } from '../entreprise'
@@ -520,69 +520,36 @@ test('etapeDocumentsStepIsVisible', () => {
   expect(etapeDocumentsStepIsVisible()).toBe(true)
 })
 
-const axmDocumentsComplete = [
+const axmDocumentsComplete: Pick<EtapeDocument | TempEtapeDocument, 'etape_document_type_id'>[] = [
   {
-    description: "Plan à l'échelle 1/50 000ème ou 1/100 000ème",
-    id: etapeDocumentIdValidator.parse('idcar'),
     etape_document_type_id: 'car',
-    entreprises_lecture: true,
-    public_lecture: true,
   },
 
   {
-    description: null,
-    id: etapeDocumentIdValidator.parse('idlem'),
     etape_document_type_id: 'lem',
-    entreprises_lecture: true,
-    public_lecture: true,
   },
 
   {
-    description: '',
-    id: etapeDocumentIdValidator.parse('ididm'),
     etape_document_type_id: 'idm',
-    entreprises_lecture: true,
-    public_lecture: true,
   },
 
   {
-    description:
-      'la définition des mesures prévues par le pétitionnaire pour réhabiliter le site après exploitation, notamment la nature et les modalités de revégétalisation envisagée. (décret 2001-204, art. 5 bis)',
-    id: etapeDocumentIdValidator.parse('idmes'),
     etape_document_type_id: 'mes',
-    entreprises_lecture: true,
-    public_lecture: true,
   },
   {
-    description: "descriptif des méthodes envisagées pour l'exécution des travaux ((décret 2001-204, art. 6)",
-    id: etapeDocumentIdValidator.parse('idmet'),
     etape_document_type_id: 'met',
-    entreprises_lecture: true,
-    public_lecture: true,
   },
   {
-    description: null,
-    id: etapeDocumentIdValidator.parse('idnip'),
     etape_document_type_id: 'nip',
-    entreprises_lecture: true,
-    public_lecture: true,
   },
 
   {
-    description: 'Description du phasage et planigramme des travaux. (décret 2001-204, art. 5)',
-    id: etapeDocumentIdValidator.parse('idprg'),
     etape_document_type_id: 'prg',
-    entreprises_lecture: true,
-    public_lecture: true,
   },
   {
-    description: "le schéma de pénétration du massif forestier proposé par le pétitionnaire pour l'acheminement du matériel lourd et la desserte du chantier (décret 2001-204, art. 5 bis)",
-    id: etapeDocumentIdValidator.parse('idsch'),
     etape_document_type_id: 'sch',
-    entreprises_lecture: true,
-    public_lecture: true,
   },
-] as const
+]
 
 const entreprise1Id = entrepriseIdValidator.parse('id1')
 test('etapeDocumentsStepIsComplete', () => {

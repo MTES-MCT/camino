@@ -5,7 +5,7 @@ import { CaminoRequest, CustomResponse } from './express-type'
 import { userSuper } from '../../database/user-super'
 import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined, onlyUnique } from 'camino-common/src/typescript-tools'
 import { CaminoApiError } from '../../types'
-import { DeepReadonly, NotNullableKeys, isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools'
+import { NotNullableKeys, isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools'
 import TitresTitres from '../../database/models/titres--titres'
 import { titreAdministrationsGet } from '../_format/titres'
 import { canDeleteTitre, canEditTitre, canLinkTitres } from 'camino-common/src/permissions/titres'
@@ -266,7 +266,7 @@ export const postTitreLiaisons: RestNewPostCall<'/rest/titres/:id/titreLiaisons'
   )
 }
 
-const titreLinksGet = (titreId: string, link: 'titreToId' | 'titreFromId', user: DeepReadonly<User>): Effect.Effect<TitreLink[], CaminoError<DbQueryAccessError>> => {
+const titreLinksGet = (titreId: string, link: 'titreToId' | 'titreFromId', user: User): Effect.Effect<TitreLink[], CaminoError<DbQueryAccessError>> => {
   return pipe(
     Effect.tryPromise({
       try: async () => TitresTitres.query().where(link === 'titreToId' ? 'titreFromId' : 'titreToId', titreId),

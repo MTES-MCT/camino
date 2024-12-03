@@ -1,7 +1,6 @@
 import { administrationIdValidator } from './static/administrations'
 import { entrepriseIdValidator } from './entreprise'
 import { z } from 'zod'
-import { DeepReadonly } from './typescript-tools'
 
 export const ROLES = ['super', 'admin', 'editeur', 'lecteur', 'entreprise', "bureau d'études", 'defaut'] as const
 
@@ -57,22 +56,21 @@ export type EntrepriseUserNotNull = z.infer<typeof entrepriseUserNotNullValidato
 export const userNotNullValidator = z.discriminatedUnion('role', [superUserNotNullValidator, defautUserNotNullValidator, adminUserNotNullValidator, entrepriseUserNotNullValidator])
 export const userValidator = userNotNullValidator.nullable().optional()
 
-export const isSuper = (user: DeepReadonly<User>): user is UserSuper => userPermissionCheck(user, 'super')
+export const isSuper = (user: User): user is UserSuper => userPermissionCheck(user, 'super')
 
-export const isAdministration = (user: DeepReadonly<User>): user is UserLecteur | UserAdmin | UserEditeur =>
-  isAdministrationAdmin(user) || isAdministrationEditeur(user) || isAdministrationLecteur(user)
-export const isAdministrationAdmin = (user: DeepReadonly<User>): user is UserAdmin => userPermissionCheck(user, 'admin')
-export const isAdministrationEditeur = (user: DeepReadonly<User>): user is UserEditeur => userPermissionCheck(user, 'editeur')
-export const isAdministrationLecteur = (user: DeepReadonly<User>): user is UserLecteur => userPermissionCheck(user, 'lecteur')
-export const isEntrepriseOrBureauDEtude = (user: DeepReadonly<User>): user is UserEntreprise | UserBureaudEtudes => isEntreprise(user) || isBureauDEtudes(user)
+export const isAdministration = (user: User): user is UserLecteur | UserAdmin | UserEditeur => isAdministrationAdmin(user) || isAdministrationEditeur(user) || isAdministrationLecteur(user)
+export const isAdministrationAdmin = (user: User): user is UserAdmin => userPermissionCheck(user, 'admin')
+export const isAdministrationEditeur = (user: User): user is UserEditeur => userPermissionCheck(user, 'editeur')
+export const isAdministrationLecteur = (user: User): user is UserLecteur => userPermissionCheck(user, 'lecteur')
+export const isEntrepriseOrBureauDEtude = (user: User): user is UserEntreprise | UserBureaudEtudes => isEntreprise(user) || isBureauDEtudes(user)
 
-export const isEntreprise = (user: DeepReadonly<User>): user is UserEntreprise => userPermissionCheck(user, 'entreprise')
-export const isBureauDEtudes = (user: DeepReadonly<User>): user is UserBureaudEtudes => userPermissionCheck(user, "bureau d'études")
-export const isDefault = (user: DeepReadonly<User>): user is UserDefaut | undefined => !user || userPermissionCheck(user, 'defaut')
+export const isEntreprise = (user: User): user is UserEntreprise => userPermissionCheck(user, 'entreprise')
+export const isBureauDEtudes = (user: User): user is UserBureaudEtudes => userPermissionCheck(user, "bureau d'études")
+export const isDefault = (user: User): user is UserDefaut | undefined => !user || userPermissionCheck(user, 'defaut')
 
 export const isRole = (role: Role | string | undefined | null): role is Role => ROLES.includes(role)
 
-function userPermissionCheck(user: DeepReadonly<User>, role: Role) {
+function userPermissionCheck(user: User, role: Role) {
   return user?.role === role
 }
 

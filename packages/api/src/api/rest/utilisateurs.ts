@@ -11,7 +11,7 @@ import { idGenerate } from '../../database/models/_format/id-create'
 import { utilisateurUpdationValidate } from '../../business/validations/utilisateur-updation-validate'
 import { canDeleteUtilisateur } from 'camino-common/src/permissions/utilisateurs'
 import { Pool } from 'pg'
-import { DeepReadonly, isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools'
+import { isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools'
 import { config } from '../../config/index'
 import { Effect, Match } from 'effect'
 import { RestNewGetCall, RestNewPostCall } from '../../server/rest'
@@ -292,7 +292,7 @@ export const utilisateurs =
 
 type GetUtilisateursError = DbQueryAccessError | ZodUnparseable | "Impossible d'accéder à la liste des utilisateurs" | 'droits insuffisants'
 
-export const getUtilisateurs: RestNewGetCall<'/rest/utilisateurs'> = (rootPipe): Effect.Effect<DeepReadonly<UtilisateursTable>, CaminoApiError<GetUtilisateursError>> => {
+export const getUtilisateurs: RestNewGetCall<'/rest/utilisateurs'> = (rootPipe): Effect.Effect<UtilisateursTable, CaminoApiError<GetUtilisateursError>> => {
   return rootPipe.pipe(
     Effect.bind('utilisateurs', ({ pool, user, searchParams }) => getUtilisateursFilteredAndSorted(pool, user, searchParams)),
     Effect.map(({ utilisateurs, searchParams }) => {
@@ -313,7 +313,7 @@ export const getUtilisateurs: RestNewGetCall<'/rest/utilisateurs'> = (rootPipe):
 }
 
 type GetUtilisateurError = DbQueryAccessError | ZodUnparseable | 'droits insuffisants'
-export const getUtilisateur: RestNewGetCall<'/rest/utilisateurs/:id'> = (rootPipe): Effect.Effect<DeepReadonly<UserNotNull>, CaminoApiError<GetUtilisateurError>> => {
+export const getUtilisateur: RestNewGetCall<'/rest/utilisateurs/:id'> = (rootPipe): Effect.Effect<UserNotNull, CaminoApiError<GetUtilisateurError>> => {
   return rootPipe.pipe(
     Effect.flatMap(({ pool, params, user }) => newGetUtilisateurById(pool, params.id, user)),
     Effect.mapError(caminoError =>

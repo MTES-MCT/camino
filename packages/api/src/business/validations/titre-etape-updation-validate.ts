@@ -10,7 +10,7 @@ import { getSections } from 'camino-common/src/static/titresTypes_demarchesTypes
 import { EntrepriseDocument, EntrepriseId } from 'camino-common/src/entreprise'
 import { ETAPE_IS_NOT_BROUILLON, EtapeAvis, EtapeDocument } from 'camino-common/src/etape'
 import { CommuneId } from 'camino-common/src/static/communes'
-import { DeepReadonly, isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools'
+import { isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools'
 import { flattenContenuToSimpleContenu } from 'camino-common/src/sections'
 import { equalGeojson } from 'camino-common/src/perimetre'
 import { ApiFlattenEtape } from '../../api/_format/titres-etapes'
@@ -20,12 +20,12 @@ export const titreEtapeUpdationValidate = (
   etape: Pick<Partial<ApiFlattenEtape>, 'id'> & Omit<ApiFlattenEtape, 'id'>,
   titreDemarche: ITitreDemarche,
   titre: Pick<ITitre, 'typeId' | 'demarches'>,
-  documents: DeepReadonly<Pick<EtapeDocument, 'etape_document_type_id'>[]>,
-  etapeAvis: DeepReadonly<Pick<EtapeAvis, 'avis_type_id'>[]>,
+  documents: Pick<EtapeDocument, 'etape_document_type_id'>[],
+  etapeAvis: Pick<EtapeAvis, 'avis_type_id'>[],
   entrepriseDocuments: Pick<EntrepriseDocument, 'entreprise_document_type_id' | 'entreprise_id'>[],
-  sdomZones: DeepReadonly<SDOMZoneId[]> | null | undefined,
+  sdomZones: SDOMZoneId[] | null | undefined,
   communes: CommuneId[] | null | undefined,
-  user: DeepReadonly<User>,
+  user: User,
   firstEtapeDate: FirstEtapeDate,
   titreEtapeOld?: ITitreEtape
 ): string[] => {

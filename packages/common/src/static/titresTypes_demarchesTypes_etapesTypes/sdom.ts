@@ -1,4 +1,3 @@
-import { DeepReadonly } from '../../typescript-tools'
 import { DEMARCHES_TYPES_IDS, DemarcheTypeId } from '../demarchesTypes'
 import { DOCUMENTS_TYPES_IDS } from '../documentsTypes'
 import { ETAPES_TYPES, EtapeTypeId } from '../etapesTypes'
@@ -6,12 +5,7 @@ import { SDOMZoneId, SDOMZoneIds } from '../sdom'
 import { TITRES_TYPES_IDS, TitreTypeId } from '../titresTypes'
 
 type DocumentTypeIdsBySdomZonesGet = 'nir' | 'jeg' | 'nip'
-export const documentTypeIdsBySdomZonesGet = (
-  sdomZones: DeepReadonly<SDOMZoneId[]>,
-  titreTypeId: TitreTypeId,
-  demarcheTypeId: DemarcheTypeId,
-  etapeTypeId: EtapeTypeId
-): DocumentTypeIdsBySdomZonesGet[] => {
+export const documentTypeIdsBySdomZonesGet = (sdomZones: SDOMZoneId[], titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId, etapeTypeId: EtapeTypeId): DocumentTypeIdsBySdomZonesGet[] => {
   const documentTypeIds: DocumentTypeIdsBySdomZonesGet[] = []
 
   // Pour les demandes d'octroi d'AXM

@@ -6,7 +6,7 @@ import { titreUrlGet } from '../../../business/utils/urls-get'
 import { EmailAdministration } from '../../../tools/api-mailjet/types'
 import { UserNotNull } from 'camino-common/src/roles'
 import { EtapesTypes } from 'camino-common/src/static/etapesTypes'
-import { DeepReadonly, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
+import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
 import { ETAPE_IS_BROUILLON, ETAPE_IS_NOT_BROUILLON } from 'camino-common/src/etape'
 import { TitreId } from 'camino-common/src/validators/titres'
 import { TITRES_TYPES_IDS, TitreTypeId } from 'camino-common/src/static/titresTypes'
@@ -14,7 +14,7 @@ import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
 import { getUtilisateursByTitreId } from '../../../database/queries/utilisateurs.queries'
 import { Pool } from 'pg'
 
-const emailForAdministrationContentFormat = (titreTypeId: TitreTypeId, etapeNom: string, titreId: TitreId, user: DeepReadonly<UserNotNull>) => {
+const emailForAdministrationContentFormat = (titreTypeId: TitreTypeId, etapeNom: string, titreId: TitreId, user: UserNotNull) => {
   const titreUrl = titreUrlGet(titreId)
 
   return `
@@ -34,7 +34,7 @@ export const emailsForAdministrationsGet = (
   demarcheTypeId: string,
   titreId: TitreId,
   titreTypeId: TitreTypeId,
-  user: DeepReadonly<UserNotNull>,
+  user: UserNotNull,
   oldEtape?: Pick<ITitreEtape, 'statutId' | 'isBrouillon'>
 ): { subject: string; content: string; emails: string[] } | null => {
   if (!etape) {
@@ -69,7 +69,7 @@ export const titreEtapeAdministrationsEmailsSend = async (
   demarcheTypeId: DemarcheTypeId,
   titreId: TitreId,
   titreTypeId: TitreTypeId,
-  user: DeepReadonly<UserNotNull>,
+  user: UserNotNull,
   oldEtape?: ITitreEtape
 ): Promise<void> => {
   const emailsForAdministrations = emailsForAdministrationsGet(etape, demarcheTypeId, titreId, titreTypeId, user, oldEtape)

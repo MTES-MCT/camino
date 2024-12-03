@@ -4,7 +4,7 @@ import { getDomaineId, getTitreTypeType } from 'camino-common/src/static/titresT
 import { titresRechercherByReferences } from '@/api/titres'
 import { createDebounce } from '@/utils/debounce'
 import { useRouter } from 'vue-router'
-import { ref, FunctionalComponent, DeepReadonly, defineComponent } from 'vue'
+import { ref, FunctionalComponent, defineComponent } from 'vue'
 import { titreApiClient, TitreForTitresRerchercherByNom } from '../titre/titre-api-client'
 import { capitalize } from 'camino-common/src/strings'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
@@ -29,7 +29,7 @@ export const QuickAccessTitre = defineComponent<{ id: string; onSelectTitre: () 
     titres.value.splice(0, titres.value.length, ...searchTitres.elements)
   }
 
-  const onSelectedTitre = (titre: DeepReadonly<TitreForTitresRerchercherByNom> | undefined) => {
+  const onSelectedTitre = (titre: TitreForTitresRerchercherByNom | undefined) => {
     if (titre) {
       router.push({ name: 'titre', params: { id: titre.id } })
       props.onSelectTitre()
@@ -45,12 +45,12 @@ QuickAccessTitre.props = ['id', 'onSelectTitre']
 interface Props {
   id?: string
   titres: TitreForTitresRerchercherByNom[]
-  onSelectedTitre: (titre: DeepReadonly<TitreForTitresRerchercherByNom> | undefined) => void
+  onSelectedTitre: (titre: TitreForTitresRerchercherByNom | undefined) => void
   alwaysOpen?: boolean
   onSearch: (searchTerm: string) => void
 }
 interface DisplayTitreProps {
-  titre: DeepReadonly<Pick<TitreForTitresRerchercherByNom, 'nom' | 'typeId' | 'demarches'>>
+  titre: Pick<TitreForTitresRerchercherByNom, 'nom' | 'typeId' | 'demarches'>
 }
 export const DisplayTitre: FunctionalComponent<DisplayTitreProps> = props => {
   let annee: CaminoAnnee | null = null
@@ -73,12 +73,12 @@ export const DisplayTitre: FunctionalComponent<DisplayTitreProps> = props => {
 }
 
 export const PureQuickAccessTitre = defineComponent<Props>(props => {
-  const display = (titre: DeepReadonly<TitreForTitresRerchercherByNom>) => {
+  const display = (titre: TitreForTitresRerchercherByNom) => {
     return <DisplayTitre titre={titre} />
   }
 
   const overrideItem = ref<TitreForTitresRerchercherByNom | null>(null)
-  const selectItem = (item: DeepReadonly<TitreForTitresRerchercherByNom> | undefined) => {
+  const selectItem = (item: TitreForTitresRerchercherByNom | undefined) => {
     overrideItem.value = null
     props.onSelectedTitre(item)
   }

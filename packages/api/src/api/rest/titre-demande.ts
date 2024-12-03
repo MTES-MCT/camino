@@ -5,7 +5,7 @@ import { isEntrepriseOrBureauDEtude } from 'camino-common/src/roles'
 import { linkTitres } from '../../database/queries/titres-titres.queries'
 import { canCreateTitre } from 'camino-common/src/permissions/titres'
 import { checkTitreLinks } from '../../business/validations/titre-links-validate'
-import { DeepReadonly, isNotNullNorUndefinedNorEmpty, isNullOrUndefined, isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools'
+import { isNotNullNorUndefinedNorEmpty, isNullOrUndefined, isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools'
 import { createAutomaticallyEtapeWhenCreatingTitre, TitreDemandeOutput } from 'camino-common/src/titres'
 import { HTTP_STATUS } from 'camino-common/src/http'
 import { ETAPE_IS_BROUILLON } from 'camino-common/src/etape'
@@ -113,7 +113,7 @@ export const titreDemandeCreer: RestNewPostCall<'/rest/titres'> = (rootPipe): Ef
               if (isNullOrUndefinedOrEmpty(titreDemande.entrepriseId)) {
                 throw new Error('Ne devrait jamais se produire, réduction pour typescript qui ne voit pas le filterOrFail au dessus')
               }
-              const titreEtape: DeepReadonly<Omit<ITitreEtape, 'id' | 'concurrence' | 'hasTitreFrom'>> = {
+              const titreEtape: Omit<ITitreEtape, 'id' | 'concurrence' | 'hasTitreFrom'> = {
                 titreDemarcheId: demarcheId,
                 typeId: 'mfr',
                 statutId: 'fai',

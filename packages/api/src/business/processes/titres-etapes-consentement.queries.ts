@@ -12,7 +12,7 @@ import { sql } from '@pgtyped/runtime'
 import { shortCircuitError, ZodUnparseable } from '../../tools/fp-tools'
 import { etapeTypeIdValidator } from 'camino-common/src/static/etapesTypes'
 import { MultiPolygon, multiPolygonValidator } from 'camino-common/src/perimetre'
-import { DeepReadonly, isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
+import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { SubstanceLegaleId, substanceLegaleIdValidator } from 'camino-common/src/static/substancesLegales'
 
 type GetEtapeConsentement = Omit<GetEtapeConsentementDb, 'geojson4326_perimetre'> & { geojson4326_perimetre: MultiPolygon }
@@ -102,7 +102,7 @@ type GetDemarchesEnSuperpositionPourConsentement = z.infer<typeof getDemarchesEn
 const getDemarchesEnSuperpositionPourConsentementDb = sql<
   Redefine<
     IGetDemarchesEnSuperpositionPourConsentementDbQuery,
-    { dateDemande: CaminoDate; perimetreDemande: DeepReadonly<MultiPolygon>; substancesDemande: DeepReadonly<SubstanceLegaleId[]> },
+    { dateDemande: CaminoDate; perimetreDemande: MultiPolygon; substancesDemande: SubstanceLegaleId[] },
     GetDemarchesEnSuperpositionPourConsentement
   >
 >`
@@ -131,5 +131,5 @@ const demarcheIdArrayStringifyValidator = z
 type DemarcheIdArrayStringify = z.infer<typeof demarcheIdArrayStringifyValidator>
 
 const updateEtapeConsentementDb = sql<
-  Redefine<IUpdateEtapeConsentementDbQuery, { etapeId: EtapeId; demarcheIds: DeepReadonly<DemarcheIdArrayStringify> }, void>
+  Redefine<IUpdateEtapeConsentementDbQuery, { etapeId: EtapeId; demarcheIds: DemarcheIdArrayStringify }, void>
 >`UPDATE titres_etapes SET demarche_ids_consentement = $demarcheIds! WHERE id = $etapeId!`

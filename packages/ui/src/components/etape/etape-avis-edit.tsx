@@ -3,7 +3,7 @@ import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { ApiClient } from '../../api/api-client'
-import { DeepReadonly, FunctionalComponent, computed, defineComponent, onMounted, ref, watch } from 'vue'
+import { FunctionalComponent, computed, defineComponent, onMounted, ref, watch } from 'vue'
 import { isNonEmptyArray, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined, NonEmptyArray } from 'camino-common/src/typescript-tools'
 import { LoadingElement } from '../_ui/functional-loader'
 import { AsyncData } from '../../api/client-rest'
@@ -28,7 +28,7 @@ interface Props {
   }
   onChange: (etapeAvis: (EtapeAvis | TempEtapeAvis)[]) => void
   etapeId: EtapeId | null
-  communeIds: DeepReadonly<CommuneId[]>
+  communeIds: CommuneId[]
   apiClient: Pick<ApiClient, 'uploadTempDocument' | 'getEtapeAvisByEtapeId'>
   user: User
 }

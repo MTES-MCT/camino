@@ -1,6 +1,6 @@
 import { ActiviteDocumentsEdit } from './activite/activite-documents-edit'
 import { getPeriode } from 'camino-common/src/static/frequence'
-import { DeepReadonly, computed, defineComponent, onBeforeUnmount, onMounted, ref } from 'vue'
+import { computed, defineComponent, onBeforeUnmount, onMounted, ref } from 'vue'
 import { AsyncData } from '@/api/client-rest'
 import { Activite, ActiviteDocumentId, ActiviteId, ActiviteIdOrSlug, TempActiviteDocument, activiteIdOrSlugValidator } from 'camino-common/src/activite'
 import { useRouter } from 'vue-router'
@@ -55,7 +55,7 @@ export const PureActiviteEdition = defineComponent<Props>(props => {
     activiteDocumentIds: [],
     tempsDocuments: [],
   })
-  const sectionsComplete = ref<{ complete: boolean; sectionsWithValue: DeepReadonly<SectionWithValue[]> }>({ complete: false, sectionsWithValue: [] })
+  const sectionsComplete = ref<{ complete: boolean; sectionsWithValue: SectionWithValue[] }>({ complete: false, sectionsWithValue: [] })
 
   const data = ref<AsyncData<Activite>>({ status: 'LOADING' })
 
@@ -126,7 +126,7 @@ export const PureActiviteEdition = defineComponent<Props>(props => {
     documentsComplete.value = { complete, activiteDocumentIds, tempsDocuments }
   }
 
-  const sectionsUpdate = (complete: boolean, sectionsWithValue: DeepReadonly<SectionWithValue[]>) => {
+  const sectionsUpdate = (complete: boolean, sectionsWithValue: SectionWithValue[]) => {
     sectionsComplete.value = { complete, sectionsWithValue }
   }
 

@@ -1,4 +1,4 @@
-import { DeepReadonly, FunctionalComponent } from 'vue'
+import { FunctionalComponent } from 'vue'
 import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
 import { ElementWithValue } from 'camino-common/src/sections'
 import { HeritageEdit } from './heritage-edit'
@@ -9,8 +9,8 @@ import { CaminoDate } from 'camino-common/src/date'
 
 type Props = {
   sectionId: string
-  elementWithValue: DeepReadonly<ElementWithValue>
-  elementHeritage: DeepReadonly<FlattenedContenuElement>
+  elementWithValue: ElementWithValue
+  elementHeritage: FlattenedContenuElement
   updateElement: (etape: Props['elementHeritage']) => void
   etapeDate: CaminoDate
 }
@@ -20,7 +20,7 @@ export const SectionElementWithValueEdit: FunctionalComponent<Props> = props => 
     return <SectionElementEdit element={props.elementWithValue} onValueChange={updateValue} sectionId={props.sectionId} etapeDate={props.etapeDate} />
   }
 
-  const updateValue = (element: DeepReadonly<ElementWithValue>) => {
+  const updateValue = (element: ElementWithValue) => {
     props.updateElement({ ...props.elementHeritage, value: element.value })
   }
   const updateHeritage = (heritage: Props['elementHeritage']) => {

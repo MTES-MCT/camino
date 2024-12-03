@@ -1,18 +1,18 @@
 import { useState } from '@/utils/vue-tsx-utils'
-import { DeepReadonly, computed, defineComponent, watch } from 'vue'
+import { computed, defineComponent, watch } from 'vue'
 import { EntrepriseId, Entreprise } from 'camino-common/src/entreprise'
 import { isNullOrUndefinedOrEmpty, stringArrayEquals } from 'camino-common/src/typescript-tools'
 import { TypeAheadSmartMultiple } from '../_ui/typeahead-smart-multiple'
 
 interface Props {
-  nonSelectableEntities?: DeepReadonly<EntrepriseId[]>
-  selectedEntities?: DeepReadonly<EntrepriseId[]>
-  allEntities: DeepReadonly<Entreprise[]>
+  nonSelectableEntities?: EntrepriseId[]
+  selectedEntities?: EntrepriseId[]
+  allEntities: Entreprise[]
   name: 'titulaires' | 'amodiataires'
-  onEntreprisesUpdate: (entreprise: DeepReadonly<EntrepriseId[]>) => void
+  onEntreprisesUpdate: (entreprise: EntrepriseId[]) => void
 }
 export const AutocompleteEntreprises = defineComponent<Props>(props => {
-  const [mySelectedEntities, setMySelectedEntities] = useState<DeepReadonly<EntrepriseId[]>>(props.selectedEntities ?? [])
+  const [mySelectedEntities, setMySelectedEntities] = useState<EntrepriseId[]>(props.selectedEntities ?? [])
 
   watch(
     () => props.selectedEntities,

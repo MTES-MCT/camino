@@ -2,7 +2,7 @@ import { sql } from '@pgtyped/runtime'
 import { EffectDbQueryAndValidateErrors, Redefine, dbQueryAndValidate, effectDbQueryAndValidate } from '../../pg-database'
 import { IGetCommuneIdsInternalQuery, IGetCommunesInternalQuery, IInsertCommuneInternalQuery } from './communes.queries.types'
 import { CommuneId, Commune, communeValidator } from 'camino-common/src/static/communes'
-import { DeepReadonly, NonEmptyArray } from 'camino-common/src/typescript-tools'
+import { NonEmptyArray } from 'camino-common/src/typescript-tools'
 import { Pool } from 'pg'
 import { z } from 'zod'
 import { CaminoError } from 'camino-common/src/zod-tools'
@@ -12,7 +12,7 @@ export const getCommunes = (pool: Pool, params: { ids: NonEmptyArray<CommuneId> 
   return effectDbQueryAndValidate(getCommunesInternal, params, pool, communeValidator)
 }
 
-const getCommunesInternal = sql<Redefine<IGetCommunesInternalQuery, DeepReadonly<{ ids: NonEmptyArray<CommuneId> }>, Commune>>`
+const getCommunesInternal = sql<Redefine<IGetCommunesInternalQuery, { ids: NonEmptyArray<CommuneId> }, Commune>>`
 select
     id,
     nom

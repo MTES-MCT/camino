@@ -57,7 +57,7 @@ import { ZodType, z } from 'zod'
 import { getCommunes } from '../api/rest/communes'
 import { SendFileOptions } from 'express-serve-static-core'
 import { activiteDocumentDownload, getActivite, updateActivite, deleteActivite } from '../api/rest/activites'
-import { DeepReadonly, isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools'
+import { isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools'
 import { getDemarcheByIdOrSlug, demarcheSupprimer, demarcheCreer, getDemarchesEnConcurrence, getResultatEnConcurrence } from '../api/rest/demarches'
 import { geojsonImport, geojsonImportPoints, getPerimetreInfos, geojsonImportForages } from '../api/rest/perimetre'
 import { getDataGouvStats } from '../api/rest/statistiques/datagouv'
@@ -89,31 +89,31 @@ type IRestResolver = (
 ) => Promise<IRestResolverResult | null>
 
 type CaminoRestRoutesType = typeof CaminoRestRoutes
-type RestGetCall<Route extends GetRestRoutes> = (pool: Pool) => (req: CaminoRequest, res: CustomResponse<DeepReadonly<z.infer<CaminoRestRoutesType[Route]['get']['output']>>>) => Promise<void>
+type RestGetCall<Route extends GetRestRoutes> = (pool: Pool) => (req: CaminoRequest, res: CustomResponse<z.infer<CaminoRestRoutesType[Route]['get']['output']>>) => Promise<void>
 export type RestNewPostCall<Route extends NewPostRestRoutes> = (
   data: Effect.Effect<
     {
       pool: Pool
-      user: DeepReadonly<UserNotNull>
-      body: DeepReadonly<z.infer<CaminoRestRoutesType[Route]['newPost']['input']>>
-      params: DeepReadonly<z.infer<CaminoRestRoutesType[Route]['params']>>
+      user: UserNotNull
+      body: z.infer<CaminoRestRoutesType[Route]['newPost']['input']>
+      params: z.infer<CaminoRestRoutesType[Route]['params']>
     },
     never,
     never
   >
-) => Effect.Effect<DeepReadonly<z.infer<CaminoRestRoutesType[Route]['newPost']['output']>>, CaminoApiError<string>>
+) => Effect.Effect<z.infer<CaminoRestRoutesType[Route]['newPost']['output']>, CaminoApiError<string>>
 export type RestNewPutCall<Route extends NewPutRestRoutes> = (
   data: Effect.Effect<
     {
       pool: Pool
-      user: DeepReadonly<UserNotNull>
-      body: DeepReadonly<z.infer<CaminoRestRoutesType[Route]['newPut']['input']>>
-      params: DeepReadonly<z.infer<CaminoRestRoutesType[Route]['params']>>
+      user: UserNotNull
+      body: z.infer<CaminoRestRoutesType[Route]['newPut']['input']>
+      params: z.infer<CaminoRestRoutesType[Route]['params']>
     },
     never,
     never
   >
-) => Effect.Effect<DeepReadonly<z.infer<CaminoRestRoutesType[Route]['newPut']['output']>>, CaminoApiError<string>>
+) => Effect.Effect<z.infer<CaminoRestRoutesType[Route]['newPut']['output']>, CaminoApiError<string>>
 type SearchParams<Route extends NewGetRestRoutes> = CaminoRestRoutesType[Route]['newGet'] extends { searchParams: ZodType }
   ? z.infer<CaminoRestRoutesType[Route]['newGet']['searchParams']>
   : Record<never, string>
@@ -125,15 +125,15 @@ export type RestNewGetCall<Route extends NewGetRestRoutes> = (
   data: Effect.Effect<
     {
       pool: Pool
-      user: DeepReadonly<User>
-      params: DeepReadonly<z.infer<CaminoRestRoutesType[Route]['params']>>
+      user: User
+      params: z.infer<CaminoRestRoutesType[Route]['params']>
       searchParams: SearchParams<Route>
       cookie: CookieParams
     },
     never,
     never
   >
-) => Effect.Effect<DeepReadonly<z.infer<CaminoRestRoutesType[Route]['newGet']['output']>>, CaminoApiError<string>>
+) => Effect.Effect<z.infer<CaminoRestRoutesType[Route]['newGet']['output']>, CaminoApiError<string>>
 
 type RestPostCall<Route extends PostRestRoutes> = (pool: Pool) => (req: CaminoRequest, res: CustomResponse<z.infer<CaminoRestRoutesType[Route]['post']['output']>>) => Promise<void>
 type RestPutCall<Route extends PutRestRoutes> = (pool: Pool) => (req: CaminoRequest, res: CustomResponse<z.infer<CaminoRestRoutesType[Route]['put']['output']>>) => Promise<void>
@@ -269,23 +269,20 @@ export const restWithPool = (dbPool: Pool): Router => {
                 return { ...caminoError, status: HTTP_STATUS.BAD_REQUEST }
               }),
               // TODO 2024-06-26 ici, si on ne met pas les params et les searchParams à any, on se retrouve avec une typescript union hell qui fait tout planter
-              Effect.bind<'result', { searchParams: any; params: any }, DeepReadonly<z.infer<(typeof maRoute)['newGet']['output']>>, CaminoApiError<string>, never>(
-                'result',
-                ({ searchParams, params }) => {
-                  return maRoute.newGetCall(
-                    Effect.Do.pipe(
-                      Effect.let('user', () => req.auth),
-                      Effect.let('pool', () => dbPool),
-                      Effect.let('params', () => params),
-                      Effect.let('searchParams', () => searchParams),
-                      Effect.let('cookie', () => ({
-                        clearConnectedCookie: () => res.clearCookie('shouldBeConnected'),
-                        addConnectedCookie: () => res.cookie('shouldBeConnected', 'anyValueIsGood, We just check the presence of this cookie'),
-                      }))
-                    )
+              Effect.bind<'result', { searchParams: any; params: any }, z.infer<(typeof maRoute)['newGet']['output']>, CaminoApiError<string>, never>('result', ({ searchParams, params }) => {
+                return maRoute.newGetCall(
+                  Effect.Do.pipe(
+                    Effect.let('user', () => req.auth),
+                    Effect.let('pool', () => dbPool),
+                    Effect.let('params', () => params),
+                    Effect.let('searchParams', () => searchParams),
+                    Effect.let('cookie', () => ({
+                      clearConnectedCookie: () => res.clearCookie('shouldBeConnected'),
+                      addConnectedCookie: () => res.cookie('shouldBeConnected', 'anyValueIsGood, We just check the presence of this cookie'),
+                    }))
                   )
-                }
-              ),
+                )
+              }),
               Effect.bind('parsedResult', ({ result }) =>
                 pipe(
                   zodParseEffect(maRoute.newGet.output, result),
@@ -349,17 +346,15 @@ export const restWithPool = (dbPool: Pool): Router => {
                 return caminoError
               }),
               // TODO 2024-06-26 ici, si on ne met pas le body et params à any, on se retrouve avec une typescript union hell qui fait tout planter
-              Effect.bind<'result', { body: any; user: UserNotNull; params: any }, DeepReadonly<z.infer<(typeof maRoute)['newPost']['output']>>, CaminoApiError<string>, never>(
-                'result',
-                ({ user, body, params }) =>
-                  maRoute.newPostCall(
-                    Effect.Do.pipe(
-                      Effect.let('user', () => user),
-                      Effect.let('pool', () => dbPool),
-                      Effect.let('params', () => params),
-                      Effect.let('body', () => body)
-                    )
+              Effect.bind<'result', { body: any; user: UserNotNull; params: any }, z.infer<(typeof maRoute)['newPost']['output']>, CaminoApiError<string>, never>('result', ({ user, body, params }) =>
+                maRoute.newPostCall(
+                  Effect.Do.pipe(
+                    Effect.let('user', () => user),
+                    Effect.let('pool', () => dbPool),
+                    Effect.let('params', () => params),
+                    Effect.let('body', () => body)
                   )
+                )
               ),
               Effect.bind('parsedResult', ({ result }) =>
                 pipe(
@@ -422,17 +417,15 @@ export const restWithPool = (dbPool: Pool): Router => {
                 return caminoError
               }),
               // TODO 2024-06-26 ici, si on ne met pas le body et params à any, on se retrouve avec une typescript union hell qui fait tout planter
-              Effect.bind<'result', { body: any; user: UserNotNull; params: any }, DeepReadonly<z.infer<(typeof maRoute)['newPut']['output']>>, CaminoApiError<string>, never>(
-                'result',
-                ({ user, body, params }) =>
-                  maRoute.newPutCall(
-                    Effect.Do.pipe(
-                      Effect.let('user', () => user),
-                      Effect.let('pool', () => dbPool),
-                      Effect.let('params', () => params),
-                      Effect.let('body', () => body)
-                    )
+              Effect.bind<'result', { body: any; user: UserNotNull; params: any }, z.infer<(typeof maRoute)['newPut']['output']>, CaminoApiError<string>, never>('result', ({ user, body, params }) =>
+                maRoute.newPutCall(
+                  Effect.Do.pipe(
+                    Effect.let('user', () => user),
+                    Effect.let('pool', () => dbPool),
+                    Effect.let('params', () => params),
+                    Effect.let('body', () => body)
                   )
+                )
               ),
               Effect.bind('parsedResult', ({ result }) =>
                 pipe(

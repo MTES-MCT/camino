@@ -1,5 +1,5 @@
 import { dateFormat } from 'camino-common/src/date'
-import { DeepReadonly, FunctionalComponent, computed, defineComponent, onMounted, ref, watch } from 'vue'
+import { FunctionalComponent, computed, defineComponent, onMounted, ref, watch } from 'vue'
 import { EntrepriseDocument, EntrepriseDocumentId, EntrepriseId, entrepriseDocumentIdValidator, isEntrepriseId } from 'camino-common/src/entreprise'
 import { DocumentsTypes, EntrepriseDocumentType, EntrepriseDocumentTypeId } from 'camino-common/src/static/documentsTypes'
 import { getEntries, getEntriesHardcore, getKeys, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined, map, stringArrayEquals } from 'camino-common/src/typescript-tools'
@@ -26,7 +26,7 @@ interface Props {
     etapeTypeId: EtapeTypeId
   }
   completeUpdate: (etapeEntrepriseDocuments: SelectedEntrepriseDocument[]) => void
-  entreprises: DeepReadonly<Entreprise[]>
+  entreprises: Entreprise[]
   etapeId: EtapeId | null
   apiClient: Pick<ApiClient, 'creerEntrepriseDocument' | 'getEntrepriseDocuments' | 'getEtapeEntrepriseDocuments' | 'uploadTempDocument'>
 }

@@ -21,13 +21,12 @@ import { titresActivitesPropsUpdate } from './processes/titres-activites-props-u
 import { userSuper } from '../database/user-super'
 import type { UserNotNull } from 'camino-common/src/roles'
 import type { Pool } from 'pg'
-import { DeepReadonly } from 'camino-common/src/typescript-tools'
 import { callAndExit } from '../tools/fp-tools'
 import { etapeMiseEnConcurrenceUpdate } from './processes/titres-etapes-mise-en-concurrence'
 import { etapesFondamentaleIdUpdate } from './processes/titres-etapes-fondamentale-id-update'
 import { etapeConsentementUpdate } from './processes/titres-etapes-consentement'
 
-export const titreEtapeUpdateTask = async (pool: Pool, titreEtapeId: EtapeId | null, titreDemarcheId: DemarcheId, user: DeepReadonly<UserNotNull>): Promise<void> => {
+export const titreEtapeUpdateTask = async (pool: Pool, titreEtapeId: EtapeId | null, titreDemarcheId: DemarcheId, user: UserNotNull): Promise<void> => {
   try {
     console.info()
     console.info('- - -')

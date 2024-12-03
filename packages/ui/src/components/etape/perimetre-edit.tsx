@@ -1,6 +1,6 @@
 import { HeritageEdit } from './heritage-edit'
 import { PerimetreImportPopup } from './perimetre-import-popup'
-import { DeepReadonly, FunctionalComponent, HTMLAttributes, defineComponent, ref } from 'vue'
+import { FunctionalComponent, HTMLAttributes, defineComponent, ref } from 'vue'
 import { DsfrButton } from '../_ui/dsfr-button'
 import { ApiClient } from '@/api/api-client'
 import { FeatureCollectionForages, FeatureCollectionPoints, GeojsonInformations } from 'camino-common/src/perimetre'
@@ -20,7 +20,7 @@ import { FirstEtapeDate } from 'camino-common/src/date'
 
 export interface Props {
   apiClient: Pick<ApiClient, 'uploadTempDocument' | 'geojsonImport' | 'geojsonPointsImport' | 'geojsonForagesImport'>
-  etape: DeepReadonly<Pick<CoreEtapeCreationOrModification, 'perimetre' | 'date' | 'typeId' | 'titreDemarcheId'>>
+  etape: Pick<CoreEtapeCreationOrModification, 'perimetre' | 'date' | 'typeId' | 'titreDemarcheId'>
   titreTypeId: TitreTypeId
   demarcheTypeId: DemarcheTypeId
   titreSlug: TitreSlug

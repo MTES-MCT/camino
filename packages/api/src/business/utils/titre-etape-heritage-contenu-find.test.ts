@@ -4,7 +4,6 @@ import { objectClone } from '../../tools/index'
 
 import { heritageContenuFind, titreEtapeHeritageContenuFind } from './titre-etape-heritage-contenu-find'
 import { describe, test, expect } from 'vitest'
-import { DeepReadonly } from 'camino-common/src/typescript-tools'
 import { Section } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections'
 import { newEtapeId } from '../../database/models/_format/id-create'
 
@@ -158,7 +157,7 @@ describe('retourne le contenu de l’étape en fonction de son héritage', () =>
     } as ITitreEtape
     titreEtape.heritageContenu!.section!.element!.actif = true
 
-    const dictionary: Record<string, DeepReadonly<Section>[]> = {
+    const dictionary: Record<string, Section[]> = {
       [prevTitreEtape.id]: [
         {
           id: 'section',
@@ -198,7 +197,7 @@ describe('retourne le contenu de l’étape en fonction de son héritage', () =>
     } as ITitreEtape
     titreEtape.heritageContenu!.section!.element!.actif = true
 
-    const dictionary: Record<string, DeepReadonly<Section>[]> = {
+    const dictionary: Record<string, Section[]> = {
       [prevTitreEtape.id]: [{ id: 'section', elements: [{ id: 'element', type: 'text', optionnel: false }] }],
       [titreEtape.id]: [{ id: 'section', elements: [{ id: 'element', type: 'text', optionnel: false }] }],
     }
@@ -230,7 +229,7 @@ describe('retourne le contenu de l’étape en fonction de son héritage', () =>
     titreEtape.heritageContenu!.section!.element!.actif = true
     titreEtape.heritageContenu!.section!.element!.etapeId = newEtapeId('prevEtapeId')
 
-    const dictionary: Record<string, DeepReadonly<Section>[]> = {
+    const dictionary: Record<string, Section[]> = {
       [prevTitreEtape.id]: [{ id: 'section', elements: [{ id: 'element', type: 'text', optionnel: false }] }],
       [titreEtape.id]: [{ id: 'section', elements: [{ id: 'element', type: 'text', optionnel: false }] }],
     }
@@ -262,7 +261,7 @@ describe('retourne le contenu de l’étape en fonction de son héritage', () =>
     titreEtape.heritageContenu!.section!.element!.actif = true
     titreEtape.heritageContenu!.section!.element!.etapeId = newEtapeId('prevEtapeId')
 
-    const dictionary: Record<string, DeepReadonly<Section>[]> = {
+    const dictionary: Record<string, Section[]> = {
       [prevTitreEtape.id]: [{ id: 'section', elements: [{ id: 'element', type: 'text', optionnel: false }] }],
       [titreEtape.id]: [{ id: 'section', elements: [{ id: 'element', type: 'text', optionnel: false }] }],
     }
