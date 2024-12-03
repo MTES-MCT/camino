@@ -391,6 +391,16 @@ test('edge cases', () => {
                 { id: 'debit', type: 'number', value: 13, optionnel: false, uniteId: 'deg' },
                 { id: 'profondeurToitNappe', type: 'number', value: 13, optionnel: false, uniteId: 'deg' },
                 { id: 'profondeurBaseNappe', type: 'number', value: 13, optionnel: false, uniteId: 'deg' },
+                {
+                  id: proprietesGeothermieForagesElementIds['Horizons géologiques exploités'],
+                  type: 'checkboxes',
+                  value: ['Le Lutétien', 'Un autre horizon'],
+                  options: [
+                    { id: 'Le Lutétien', nom: 'Le lutétien' },
+                    { id: 'Un autre horizon', nom: 'Un autre horizon' },
+                  ],
+                  optionnel: true,
+                },
               ],
             },
           ],
@@ -400,7 +410,7 @@ test('edge cases', () => {
     )
   ).toMatchInlineSnapshot(`
     {
-      "": "13 undefined",
+      "": "Le Lutétien, Un autre horizon",
     }
   `)
 
@@ -434,6 +444,17 @@ test('getDemarcheContenu pxg', () => {
                   value: 20000,
                   description: 'm NGP',
                 },
+                {
+                  id: proprietesGeothermieForagesElementIds['Horizons géologiques exploités'],
+                  nom: proprietesGeothermieForagesElementIds['Horizons géologiques exploités'],
+                  type: 'checkboxes',
+                  value: ['Le Lutétien', 'Un autre horizon'],
+                  options: [
+                    { id: 'Le Lutétien', nom: 'Le lutétien' },
+                    { id: 'Un autre horizon', nom: 'Un autre horizon' },
+                  ],
+                  optionnel: true,
+                },
               ],
             },
           ],
@@ -447,6 +468,7 @@ test('getDemarcheContenu pxg', () => {
       "Débit volumique maximal de pompage": "300 m³/h",
       "Profondeur du toit de la nappe": "20000 m NGP",
       "Volume maximum de pompage": "3000000 m³",
+      "horizonsGeologiquesExploites": "Le Lutétien, Un autre horizon",
     }
   `)
 })

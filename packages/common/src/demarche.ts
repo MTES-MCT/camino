@@ -210,6 +210,7 @@ export const getDemarcheContenu = (etapes: (Pick<DemarcheEtapeCommon, 'sections_
   } else if (titreTypeId === TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_GEOTHERMIE) {
     let volume: unknown | null = null
     let debit: unknown | null = null
+    let horizon: unknown | null = null
     const profondeurNappeToit: unknown | null = null
     const profondeurNappeBase: unknown | null = null
     const contenu: Record<string, string> = {}
@@ -253,6 +254,13 @@ export const getDemarcheContenu = (etapes: (Pick<DemarcheEtapeCommon, 'sections_
           if (isNotNullNorUndefined(elementWithValue) && isNotNullNorUndefined(elementWithValue.value) && elementWithValue.type === 'number') {
             debit = elementWithValue.value
             contenu[elementWithValue.nom ?? ''] = `${debit} ${elementWithValue.description}`
+          }
+        }
+        if (horizon === null) {
+          const horizonElementWithValue = pxgSectionWithValue.elements.find(({ id }) => id === proprietesGeothermieForagesElementIds['Horizons géologiques exploités'])
+          if (isNotNullNorUndefined(horizonElementWithValue) && isNotNullNorUndefined(horizonElementWithValue.value) && horizonElementWithValue.type === 'checkboxes') {
+            horizon = horizonElementWithValue.value.join(', ')
+            contenu[horizonElementWithValue.nom ?? ''] = `${horizon}`
           }
         }
       }

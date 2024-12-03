@@ -249,8 +249,10 @@ export const proprietesGeothermieForagesElementIds = {
   'Puissance primaire': 'puissancePrimaire',
   'Profondeur du toit de la nappe': 'profondeurToitNappe',
   'Profondeur de la base de la nappe': 'profondeurBaseNappe',
+  'Horizons géologiques exploités': 'horizonsGeologiquesExploites',
 } as const
 
+const horizonsGeologiques = ['Le Lutétien', "L'Yprésien", 'La Craie du Campanien', "L'Albien / Néocomien", 'Le Dogger'] as const
 const proprietesGeothermieForages: (Section & { elements: { id: (typeof proprietesGeothermieForagesElementIds)[keyof typeof proprietesGeothermieForagesElementIds] }[] })[] = [
   {
     id: 'pxg',
@@ -261,6 +263,7 @@ const proprietesGeothermieForages: (Section & { elements: { id: (typeof propriet
       { id: 'puissancePrimaire', nom: 'Puissance primaire', type: 'number', optionnel: true, uniteId: 'kwa', description: `${Unites.kwa.symbole}` },
       { id: 'profondeurToitNappe', nom: 'Profondeur du toit de la nappe exploitée', type: 'number', optionnel: true, uniteId: 'met', description: `${Unites.met.symbole} NGF` },
       { id: 'profondeurBaseNappe', nom: 'Profondeur de la base de la nappe exploitée', type: 'number', optionnel: true, uniteId: 'met', description: `${Unites.met.symbole} NGF` },
+      { id: 'horizonsGeologiquesExploites', nom: 'Horizons géologiques exploités', type: 'checkboxes', optionnel: true, options: horizonsGeologiques.map(value => ({ id: value, nom: value })) },
     ],
   },
 ]
