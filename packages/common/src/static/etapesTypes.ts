@@ -5,13 +5,13 @@ import { EtapeBrouillon } from '../etape'
 
 // prettier-ignore
 
-const IDS = ["abd", "aca","aco","and","anf","def","dex","dim", "dpu", "ihi", "mfr","mod","mom","rca","rcb","rcd","rcm","rco","rcs","rie","rif","rim","rmc", "rpu","sco","acg","acf","apd","ape","apo","app","apu","cac","cim","css","dae","ddc","des","dma", "ede","edm","epu","esb", "ipc", "mca","mcb","mcd", "mci","mcm","mco","mcp","mcr","mcs","mec","men","meo","mie","mif","mim","mna","mnb","mnc","mnd","mni","mno","mns","mnv","mpb", "ncl","npp","pfc","pfd","ppu","pqr","rcg","rde","rno","rpe","sas","sca","scg","spe","spo","spp","vfc","vfd","wab","wae","wao","war","wau","wco","wda","wdc","wdd","wde","wfa","wfd","wfo","wmt","wpb","wpc","wpo","wpp","wps","wrc","wre","wrt","wse","wtp", "asc", "adc"] as const
+const IDS = ["abd", "aca","aco","and","anf","def","dex","dim", "dpu", "ihi", "mfr","mod","mom","rca","rcb","rcd","rcm","rco","rcs","rie","rif","rim","rmc", "rpu","sco","acg","acf","apd","ape","apo","app","apu","cac","cim","css","dae","ddc","des","dma", "ede","edm","epu","esb", "ipc", "mca","mcb","mcd", "mci","mcm","mco","mcp","mcr","mcs","mec","men","meo","mie","mif","mim","mna","mnb","mnc","mnd","mni","mno","mns","mnv","mpb", "ncl","npp","pfc","pfd","ppu","pqr","rcg","rde","rno","rpe","sas","sca","scg","spe","spo","spp","vfc","vfd","wab","wae","wao","war","wau","wda","wdc","wdd","wde","wfa","wfd","wfo","wmt","wpb","wpc","wpo","wpp","wps","wrc","wre","wrt","wse","wtp", "asc", "adc"] as const
 
 // prettier-ignore
 const FONDAMENTALES_IDS = ["abd", "aca","aco","and","anf","def","dex","dim", "dpu","ihi", "mfr","mod","mom","rca","rcb","rcd","rcm","rco","rcs","rie","rif","rim","rmc", "rpu","sco"] as const satisfies Readonly<EtapeTypeIdFondamentaleArray>
 
 // prettier-ignore
-const NON_FONDAMENTALES_IDS = ["acg", "acf","apd","ape","apo","app","apu","cac","cim","css","dae","ddc","des","dma", "ede","edm","epu","esb","ipc", "mca","mcb","mcd","mci", "mcm","mco","mcp","mcr", "mcs","mec","men","meo","mie","mif","mim","mna","mnb","mnc","mnd","mni","mno","mns","mnv","mpb", "ncl","npp","pfc","pfd","ppu","pqr","rcg","rde","rno", "rpe","sas","sca","scg","spe","spo","spp","vfc","vfd","wab","wae","wao","war","wau","wco","wda","wdc","wdd","wde","wfa","wfd","wfo","wmt","wpb","wpc","wpo","wpp","wps","wrc","wre","wrt","wse","wtp", "asc", "adc"] as const satisfies Readonly<EtapeTypeIdNonFondamentale[]>
+const NON_FONDAMENTALES_IDS = ["acg", "acf","apd","ape","apo","app","apu","cac","cim","css","dae","ddc","des","dma", "ede","edm","epu","esb","ipc", "mca","mcb","mcd","mci", "mcm","mco","mcp","mcr", "mcs","mec","men","meo","mie","mif","mim","mna","mnb","mnc","mnd","mni","mno","mns","mnv","mpb", "ncl","npp","pfc","pfd","ppu","pqr","rcg","rde","rno", "rpe","sas","sca","scg","spe","spo","spp","vfc","vfd","wab","wae","wao","war","wau","wda","wdc","wdd","wde","wfa","wfd","wfo","wmt","wpb","wpc","wpo","wpp","wps","wrc","wre","wrt","wse","wtp", "asc", "adc"] as const satisfies Readonly<EtapeTypeIdNonFondamentale[]>
 
 // Ceci est un test :)
 ;[...FONDAMENTALES_IDS, ...NON_FONDAMENTALES_IDS] as const satisfies typeof IDS
@@ -103,7 +103,6 @@ export const ETAPES_TYPES = {
   arreteDouvertureDesTravauxMiniers: 'wao',
   avisDeReception: 'war',
   avisDuDemandeurSurLesPrescriptionsProposees: 'wau',
-  receptionDeComplements_wco: 'wco',
   donneActeDeLaDeclaration_DOTM_: 'wda',
   demandeDeComplements_AOTMOuDOTM_: 'wdc',
   depotDeLaDemande_wdd: 'wdd',
@@ -160,7 +159,7 @@ export const EtapesTypes = {
     fondamentale: true,
     unique: false,
     date_fin: null,
-    public_lecture: false,
+    public_lecture: true,
     entreprises_lecture: true,
   },
   wpb: {
@@ -190,7 +189,7 @@ export const EtapesTypes = {
     fondamentale: true,
     unique: false,
     date_fin: null,
-    public_lecture: false,
+    public_lecture: true,
     entreprises_lecture: true,
   },
   mcs: {
@@ -200,7 +199,7 @@ export const EtapesTypes = {
     fondamentale: false,
     unique: false,
     date_fin: null,
-    public_lecture: false,
+    public_lecture: true,
     entreprises_lecture: true,
   },
   rca: {
@@ -210,7 +209,7 @@ export const EtapesTypes = {
     fondamentale: true,
     unique: false,
     date_fin: null,
-    public_lecture: false,
+    public_lecture: true,
     entreprises_lecture: true,
   },
   rcd: {
@@ -220,7 +219,7 @@ export const EtapesTypes = {
     fondamentale: true,
     unique: false,
     date_fin: null,
-    public_lecture: false,
+    public_lecture: true,
     entreprises_lecture: true,
   },
   rco: {
@@ -231,7 +230,7 @@ export const EtapesTypes = {
     fondamentale: true,
     unique: false,
     date_fin: null,
-    public_lecture: false,
+    public_lecture: true,
     entreprises_lecture: true,
   },
   anf: {
@@ -262,7 +261,7 @@ export const EtapesTypes = {
     fondamentale: false,
     unique: false,
     date_fin: null,
-    public_lecture: false,
+    public_lecture: true,
     entreprises_lecture: true,
   },
   rim: {
@@ -272,7 +271,7 @@ export const EtapesTypes = {
     fondamentale: true,
     unique: false,
     date_fin: null,
-    public_lecture: false,
+    public_lecture: true,
     entreprises_lecture: true,
   },
   cac: {
@@ -292,7 +291,7 @@ export const EtapesTypes = {
     fondamentale: true,
     unique: false,
     date_fin: null,
-    public_lecture: false,
+    public_lecture: true,
     entreprises_lecture: true,
   },
   mcd: {
@@ -302,7 +301,7 @@ export const EtapesTypes = {
     fondamentale: false,
     unique: false,
     date_fin: null,
-    public_lecture: false,
+    public_lecture: true,
     entreprises_lecture: true,
   },
   scg: {
@@ -323,7 +322,7 @@ export const EtapesTypes = {
     fondamentale: true,
     unique: false,
     date_fin: null,
-    public_lecture: false,
+    public_lecture: true,
     entreprises_lecture: true,
   },
   sas: {
@@ -681,7 +680,7 @@ export const EtapesTypes = {
     fondamentale: true,
     unique: false,
     date_fin: null,
-    public_lecture: false,
+    public_lecture: true,
     entreprises_lecture: true,
   },
   spo: {
@@ -712,7 +711,7 @@ export const EtapesTypes = {
     fondamentale: false,
     unique: false,
     date_fin: null,
-    public_lecture: false,
+    public_lecture: true,
     entreprises_lecture: true,
   },
   esb: {
@@ -803,8 +802,8 @@ export const EtapesTypes = {
     fondamentale: false,
     unique: false,
     date_fin: null,
-    public_lecture: false,
-    entreprises_lecture: false,
+    public_lecture: true,
+    entreprises_lecture: true,
   },
   ape: {
     id: 'ape',
@@ -865,7 +864,7 @@ export const EtapesTypes = {
     fondamentale: false,
     unique: false,
     date_fin: null,
-    public_lecture: false,
+    public_lecture: true,
     entreprises_lecture: true,
   },
   edm: {
@@ -905,7 +904,7 @@ export const EtapesTypes = {
     fondamentale: false,
     unique: false,
     date_fin: null,
-    public_lecture: false,
+    public_lecture: true,
     entreprises_lecture: true,
   },
   mno: {
@@ -925,7 +924,7 @@ export const EtapesTypes = {
     fondamentale: false,
     unique: false,
     date_fin: null,
-    public_lecture: false,
+    public_lecture: true,
     entreprises_lecture: true,
   },
   mcr: {
@@ -986,7 +985,7 @@ export const EtapesTypes = {
     fondamentale: false,
     unique: false,
     date_fin: null,
-    public_lecture: false,
+    public_lecture: true,
     entreprises_lecture: true,
   },
   dpu: {
@@ -1008,7 +1007,7 @@ export const EtapesTypes = {
     fondamentale: false,
     unique: false,
     date_fin: null,
-    public_lecture: false,
+    public_lecture: true,
     entreprises_lecture: true,
   },
   mfr: {
@@ -1021,16 +1020,6 @@ export const EtapesTypes = {
     date_fin: null,
     public_lecture: true,
     entreprises_lecture: true,
-  },
-  wco: {
-    id: 'wco',
-    nom: 'réponse à la demande de compléments',
-    description: '',
-    fondamentale: false,
-    unique: false,
-    date_fin: null,
-    public_lecture: false,
-    entreprises_lecture: false,
   },
   wfa: {
     id: 'wfa',
@@ -1079,8 +1068,8 @@ export const EtapesTypes = {
     fondamentale: false,
     unique: false,
     date_fin: null,
-    public_lecture: false,
-    entreprises_lecture: false,
+    public_lecture: true,
+    entreprises_lecture: true,
   },
   wrc: {
     id: 'wrc',
@@ -1089,8 +1078,8 @@ export const EtapesTypes = {
     fondamentale: false,
     unique: false,
     date_fin: null,
-    public_lecture: false,
-    entreprises_lecture: false,
+    public_lecture: true,
+    entreprises_lecture: true,
   },
   wre: {
     id: 'wre',
