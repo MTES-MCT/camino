@@ -45,7 +45,7 @@ const pool = new pg.Pool({
   idleTimeoutMillis: 60000,
 })
 
-consoleOverride()
+consoleOverride(config().LOG_LEVEL)
 filesInit()
 databaseInit(pool)
   .then(() => {

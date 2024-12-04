@@ -14,6 +14,8 @@ const JWT_ALGORITHMS = ['HS256', 'HS384', 'HS512', 'RS256', 'RS384', 'RS512', 'E
 
 const httpsProxyValidator = z.string().url().optional().transform(urlToSplit)
 
+const logLevelValidator = z.enum(['DEBUG', 'INFO', 'WARNING', 'ERROR'])
+export type LogLevel = z.infer<typeof logLevelValidator>
 const configValidator = caminoConfigValidator.extend({
   API_HOST: z.string(),
   KEYCLOAK_API_CLIENT_ID: z.string(),
@@ -47,6 +49,7 @@ const configValidator = caminoConfigValidator.extend({
   API_MAILJET_SECRET: z.string(),
   API_MAILJET_CONTACTS_LIST_ID: z.coerce.number(),
   API_MAILJET_EXPLOITANTS_GUYANE_LIST_ID: z.coerce.number(),
+  LOG_LEVEL: logLevelValidator.default('INFO'),
   HTTPS_PROXY: httpsProxyValidator,
 })
 

@@ -19,7 +19,7 @@ if (isNotNullNorUndefined(config().CAMINO_STAGE)) {
   const logger = new Console.Console({ stdout: output, stderr: output })
   // eslint-disable-next-line no-console
   console.log = logger.log
-  consoleOverride(false)
+  consoleOverride(config().LOG_LEVEL, false)
 }
 
 // Le pool ne doit être qu'aux entrypoints : le daily, le monthly, et l'application.
