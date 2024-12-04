@@ -14,6 +14,10 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noErrorTruncation": false,
+    // TODO 2024-12-04 mettre les deux options suivantes à true génère beaucoup d'erreurs
+    "noPropertyAccessFromIndexSignature": false,
+    "noUncheckedIndexedAccess": false,
+    "noUncheckedSideEffectImports": true,
     "lib": [
       "esnext",
       "dom",

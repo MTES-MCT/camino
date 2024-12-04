@@ -552,6 +552,52 @@ const axmDocumentsComplete: Pick<EtapeDocument | TempEtapeDocument, 'etape_docum
 ]
 
 const entreprise1Id = entrepriseIdValidator.parse('id1')
+test('etapeDocumentsStepIsComplete avec mecanisation', () => {
+  expect(
+    etapeDocumentsStepIsComplete(
+      { typeId: ETAPES_TYPES.demande, contenu: { arm: { mecanise: { value: true, etapeHeritee: null, heritee: false } } }, isBrouillon: ETAPE_IS_NOT_BROUILLON },
+      DEMARCHES_TYPES_IDS.Octroi,
+      TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX,
+      demarcheIdValidator.parse('demarcheId'),
+      [{ etape_document_type_id: 'dec' }],
+      [],
+      firstEtapeDateValidator.parse('2022-01-01')
+    )
+  ).toMatchInlineSnapshot(`
+    {
+      "errors": [
+        "le document "Documents cartographiques" (car) est obligatoire",
+        "le document "Décision cas par cas" (dep) est obligatoire",
+        "le document "Dossier "Loi sur l'eau"" (doe) est obligatoire",
+        "le document "Dossier de demande" (dom) est obligatoire",
+        "le document "Formulaire de demande" (for) est obligatoire",
+      ],
+      "valid": false,
+    }
+  `)
+
+  expect(
+    etapeDocumentsStepIsComplete(
+      { typeId: ETAPES_TYPES.demande, contenu: { arm: { mecanise: { value: false, etapeHeritee: null, heritee: false } } }, isBrouillon: ETAPE_IS_NOT_BROUILLON },
+      DEMARCHES_TYPES_IDS.Octroi,
+      TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX,
+      demarcheIdValidator.parse('demarcheId'),
+      [{ etape_document_type_id: 'dec' }],
+      [],
+      firstEtapeDateValidator.parse('2022-01-01')
+    )
+  ).toMatchInlineSnapshot(`
+    {
+      "errors": [
+        "le document "Documents cartographiques" (car) est obligatoire",
+        "le document "Dossier de demande" (dom) est obligatoire",
+        "le document "Formulaire de demande" (for) est obligatoire",
+      ],
+      "valid": false,
+    }
+  `)
+})
+
 test('etapeDocumentsStepIsComplete', () => {
   expect(
     etapeDocumentsStepIsComplete(

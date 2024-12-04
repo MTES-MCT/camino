@@ -254,7 +254,7 @@ export const etapeDocumentsStepIsComplete = (
   firstEtapeDate: FirstEtapeDate
 ): ValidReturn => {
   const errors: string[] = []
-  const documentTypes = getDocumentsTypes({ typeId: etape.typeId }, demarcheTypeId, titreTypeId, demarcheId, sdomZoneIds, etape.contenu.arm?.mecanise?.value === true, firstEtapeDate)
+  const documentTypes = getDocumentsTypes({ typeId: etape.typeId }, demarcheTypeId, titreTypeId, demarcheId, sdomZoneIds, etape.contenu['arm']?.['mecanise']?.value === true, firstEtapeDate)
 
   errors.push(
     ...documentTypes

@@ -22,7 +22,10 @@
     "resolveJsonModule": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noEmit": true
+    "noEmit": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noUncheckedIndexedAccess": true,
+    "noUncheckedSideEffectImports": true,
   },
   "exclude": ["vitest.config.ts"]
 }

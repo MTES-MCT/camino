@@ -134,7 +134,7 @@ export const getStatutId = (etape: Pick<FlattenEtape, 'date' | 'contenu' | 'type
     return etape.statutId
   }
 
-  const duree = etape.contenu[sectionDureeIds[etape.typeId]]?.duree?.value ?? 0
+  const duree = etape.contenu[sectionDureeIds[etape.typeId]]?.['duree']?.value ?? 0
 
   if (isBefore(currentDate, etape.date)) {
     return ETAPES_STATUTS.PROGRAMME

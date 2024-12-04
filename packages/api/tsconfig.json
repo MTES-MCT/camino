@@ -26,6 +26,10 @@
     "resolveJsonModule": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
+    // TODO 2024-12-04 mettre les deux options suivantes à true génère beaucoup d'erreurs
+    "noPropertyAccessFromIndexSignature": false,
+    "noUncheckedIndexedAccess": false,
+    "noUncheckedSideEffectImports": true,
     "noEmit": true,
     "paths": {
       "graphql-fields": ["./src/@types/graphql-fields"],
