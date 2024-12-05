@@ -21,7 +21,6 @@ docs/generate-schema:
 daily:
 ifdef CAMINO_STAGE
 	npm run daily -w packages/api
-	@curl -i -X POST -H 'Content-Type: application/json' -d "{\"message\": \":tada: daily fini sur ${ENV} :tada:\"}" ${TCHAP_HOOK}
 else
 	@echo 'lancement du daily en mode local avec la migration'
 	npm run db:migrate -w packages/api

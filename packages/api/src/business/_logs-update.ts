@@ -1,6 +1,6 @@
 import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
 import { Index, IEntrepriseEtablissement, IEntreprise } from '../types'
-
+export const dailySummaryMarker = 'tâches exécutées:' as const
 export const logsUpdate = ({
   titresEtapesStatusUpdated,
   titresEtapesOrdreUpdated,
@@ -43,10 +43,10 @@ export const logsUpdate = ({
   entreprisesUpdated?: IEntreprise[]
   etablissementsUpdated?: IEntrepriseEtablissement[]
   etablissementsDeleted?: string[]
-}) => {
+}): void => {
   console.info()
   console.info('-')
-  console.info('tâches exécutées:')
+  console.info(dailySummaryMarker)
 
   if (isNotNullNorUndefinedNorEmpty(titresEtapesStatusUpdated)) {
     console.info(`mise à jour: ${titresEtapesStatusUpdated.length} étape(s) (statut)`)

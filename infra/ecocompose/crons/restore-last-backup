@@ -17,4 +17,4 @@ docker exec -i camino_api_db pg_restore --clean --if-exists --no-owner --no-priv
 echo "Redémarrage de l'api et de keycloak"
 docker restart camino_api_app camino_keycloak camino_ui_app
 
-curl -i -X POST -H 'Content-Type: application/json' -d "{\"message\": \":tada: Dernier backup appliqué sur ${ENV} $(restic snapshots --no-lock | tail -3 | head -1 | cut -d' ' -f3) :tada:\"}" ${TCHAP_HOOK}
+curl -i -X POST -H 'Content-Type: application/json' -d "{\"message\": \":tada: Dernier backup appliqué sur ${ENV} $(restic snapshots --no-lock | tail -3 | head -1 | cut -d' ' -f3) :tada:\", \"message_format\": \"markdown\"}" ${TCHAP_HOOK}

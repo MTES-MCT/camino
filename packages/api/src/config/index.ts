@@ -51,6 +51,7 @@ const configValidator = caminoConfigValidator.extend({
   API_MAILJET_EXPLOITANTS_GUYANE_LIST_ID: z.coerce.number(),
   LOG_LEVEL: logLevelValidator.default('INFO'),
   HTTPS_PROXY: httpsProxyValidator,
+  TCHAP_HOOK: z.string().url().optional(),
 })
 
 let cacheConfig: z.infer<typeof configValidator>
