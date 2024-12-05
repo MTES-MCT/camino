@@ -279,6 +279,14 @@ const caracteristiquesARM: Section[] = [
   },
 ]
 
+const proprietesDeLaPublicationDeDecisionAuRAA: Section[] = [
+  {
+    id: 'praa',
+    nom: 'Propriétés de la publication',
+    elements: [{ id: 'numeroRAA', nom: 'Numéro de RAA ', type: 'text', optionnel: true }],
+  },
+]
+
 const TDESections = {
   [TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX]: {
     [DEMARCHES_TYPES_IDS.Octroi]: {
@@ -544,7 +552,7 @@ const TDESections = {
       [ETAPES_TYPES.decisionImplicite]: proprietesDeLaConcession,
       [ETAPES_TYPES.decisionDeLAutoriteAdministrative]: proprietesDeLaConcession,
       [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDeLaConcession,
-      [ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs]: proprietesDeLaConcession,
+      [ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs]: [...proprietesDeLaConcession, ...proprietesDeLaPublicationDeDecisionAuRAA],
       [ETAPES_TYPES.abrogationDeLaDecision]: proprietesDeLaConcession,
       [ETAPES_TYPES.decisionDuJugeAdministratif]: proprietesDeLaConcession,
       [ETAPES_TYPES.informationsHistoriquesIncompletes]: proprietesDeLaConcession,
@@ -956,7 +964,7 @@ const TDESections = {
     [DEMARCHES_TYPES_IDS.Octroi]: {
       [ETAPES_TYPES.demande]: proprietesGeothermieForages,
       [ETAPES_TYPES.decisionDeLAutoriteAdministrative]: proprietesGeothermieForages,
-      [ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs]: proprietesGeothermieForages,
+      [ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs]: [...proprietesGeothermieForages, ...proprietesDeLaPublicationDeDecisionAuRAA],
     },
   },
 } as const satisfies {

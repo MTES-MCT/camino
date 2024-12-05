@@ -24,6 +24,99 @@ test('getSections pas de surcharge mais pas de sections', () => {
   expect(getSections('apm', 'amo', 'asc')).toMatchInlineSnapshot('[]')
 })
 
+test('getSections retourne le numéro de RAA pour les publications de décision au RAA', () => {
+  expect(getSections('pxg', 'oct', 'rpu')).toMatchInlineSnapshot(`
+    [
+      {
+        "elements": [
+          {
+            "description": "(m³/h)",
+            "id": "debit",
+            "nom": "Débit volumique maximal de pompage",
+            "optionnel": true,
+            "type": "number",
+            "uniteId": "m3h",
+          },
+          {
+            "description": "(m³/an)",
+            "id": "volume",
+            "nom": "Volume annuel maximum de pompage",
+            "optionnel": true,
+            "type": "number",
+            "uniteId": "m3a",
+          },
+          {
+            "description": "kW",
+            "id": "puissancePrimaire",
+            "nom": "Puissance primaire",
+            "optionnel": true,
+            "type": "number",
+            "uniteId": "kwa",
+          },
+          {
+            "description": "m NGF",
+            "id": "profondeurToitNappe",
+            "nom": "Profondeur du toit de la nappe exploitée",
+            "optionnel": true,
+            "type": "number",
+            "uniteId": "met",
+          },
+          {
+            "description": "m NGF",
+            "id": "profondeurBaseNappe",
+            "nom": "Profondeur de la base de la nappe exploitée",
+            "optionnel": true,
+            "type": "number",
+            "uniteId": "met",
+          },
+          {
+            "id": "horizonsGeologiquesExploites",
+            "nom": "Horizons géologiques exploités",
+            "optionnel": true,
+            "options": [
+              {
+                "id": "Le Lutétien",
+                "nom": "Le Lutétien",
+              },
+              {
+                "id": "L'Yprésien",
+                "nom": "L'Yprésien",
+              },
+              {
+                "id": "La Craie du Campanien",
+                "nom": "La Craie du Campanien",
+              },
+              {
+                "id": "L'Albien / Néocomien",
+                "nom": "L'Albien / Néocomien",
+              },
+              {
+                "id": "Le Dogger",
+                "nom": "Le Dogger",
+              },
+            ],
+            "type": "checkboxes",
+          },
+        ],
+        "id": "pxg",
+        "nom": "Propriétés du permis d'exploitation",
+      },
+      {
+        "elements": [
+          {
+            "id": "numeroRAA",
+            "nom": "Numéro de RAA ",
+            "optionnel": true,
+            "type": "text",
+          },
+        ],
+        "id": "praa",
+        "nom": "Propriétés de la publication",
+      },
+    ]
+  `)
+})
+
 test('getSections surcharge', () => {
   expect(getSections('arm', 'oct', 'rde')).toMatchInlineSnapshot(`
     [
