@@ -74,7 +74,7 @@ describe('Common Storybook Tests', async () => {
         })
 
         await new Promise<void>(resolve => setTimeout(() => resolve(), 1))
-        expect(mounted.html()).toMatchFileSnapshot(`./${filePath.replace(/\.[^/.]+$/, '')}_snapshots_${value.name}.html`)
+        await expect(mounted.html()).toMatchFileSnapshot(`./${filePath.replace(/\.[^/.]+$/, '')}_snapshots_${value.name}.html`)
       } catch (e) {
         throw new Error(`le test ${name} du fichier ${filePath} plante ${e}`)
       }

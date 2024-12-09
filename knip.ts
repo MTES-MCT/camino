@@ -12,7 +12,6 @@ const config = {
         "@types/react",
         "@semantic-release/commit-analyzer",
         "@semantic-release/release-notes-generator",
-        "lint-staged"
       ],
     },
     "packages/api": {
@@ -24,22 +23,25 @@ const config = {
         "pg_restore",
         "pgtyped-config.ci.json",
         "pgtyped-config.json",
-        "scp",
         "tar",
       ],
       ignore: ["knexfile.ts", "src/**/*.queries.types.ts"],
       entry: [
+        "**/*.integration.ts",
+        "**/*.test.ts",
         "src/index.ts",
         "src/scripts/*",
         "src/tools/phases/tests-creation.ts",
         "src/knex/migration-stub.ts",
         "src/knex/migrations/*",
       ],
+      vitest: {
+        config: ["vitest.workspace.ts"]
+      },
       ignoreDependencies: [
         // TODO 2023-12-28 ces dépendances semblent être "shadow" par les définitions bourrines .d.ts qu'on a mise
         "graphql-scalars",
         "@vitest/coverage-v8",
-        "@pgtyped/cli",
         "eslint-config-prettier",
         "eslint-plugin-promise",
       ],
@@ -49,7 +51,6 @@ const config = {
         "vite",
         "@typescript-eslint/eslint-plugin",
         "@typescript-eslint/parser",
-        "node",
       ],
     },
     "packages/ui": {
@@ -67,7 +68,6 @@ const config = {
         "babel-preset-vite",
         "core-js",
         "eslint-plugin-node",
-        "node",
         "rollup"
       ],
     },

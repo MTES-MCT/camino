@@ -1,4 +1,4 @@
-FROM node:20.15.1-alpine as builder
+FROM node:22.12.0-alpine as builder
 
 RUN apk add -U make python3 py3-pip curl
 RUN python3 -m pip config set global.break-system-packages true
