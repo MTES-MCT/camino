@@ -147,11 +147,7 @@ describe('etapeConsentementUpdate', () => {
       }
     )
 
-    await expect(callAndExit(etapeConsentementUpdate(dbPool, etapeId))).resolves.toStrictEqual({
-      etapeId,
-      new: [],
-      old: [],
-    })
+    await expect(callAndExit(etapeConsentementUpdate(dbPool, etapeId))).resolves.toStrictEqual(null)
   })
 
   test("n'a pas de demande de consentement si périmetre totalement différent", async () => {
@@ -182,11 +178,7 @@ describe('etapeConsentementUpdate', () => {
       }
     )
 
-    await expect(callAndExit(etapeConsentementUpdate(dbPool, etapeId))).resolves.toStrictEqual({
-      etapeId,
-      new: [],
-      old: [],
-    })
+    await expect(callAndExit(etapeConsentementUpdate(dbPool, etapeId))).resolves.toStrictEqual(null)
   })
 
   test("n'a pas de demande de consentement si autre période", async () => {
@@ -232,10 +224,6 @@ describe('etapeConsentementUpdate', () => {
       }
     )
 
-    await expect(callAndExit(etapeConsentementUpdate(dbPool, etapeId))).resolves.toStrictEqual({
-      etapeId,
-      new: [],
-      old: [],
-    })
+    await expect(callAndExit(etapeConsentementUpdate(dbPool, etapeId))).resolves.toStrictEqual(null)
   })
 })

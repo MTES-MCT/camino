@@ -463,7 +463,7 @@ test("teste la complétude d'une demande d'AXM faite par un utilisateur entrepri
       },
       firstEtapeDateValidator.parse('2022-01-01')
     )
-  ).toStrictEqual({ valid: true })
+  ).toStrictEqual({ valid: true, errors: null })
 })
 
 test("teste la complétude d'une demande d'ARM", () => {
@@ -484,7 +484,7 @@ test("teste la complétude d'une demande d'ARM", () => {
       },
       firstEtapeDateValidator.parse('2022-01-01')
     )
-  ).toStrictEqual({ valid: true })
+  ).toStrictEqual({ valid: true, errors: null })
 })
 
 test.each<[SubstanceLegaleId[], EtapeTypeId, TitreTypeId, IsEtapeCompleteDocuments, IsEtapeCompleteEntrepriseDocuments]>([
@@ -636,7 +636,7 @@ test.each<[FeatureMultiPolygon | null, EtapeTypeId, TitreTypeId, IsEtapeComplete
     firstEtapeDateValidator.parse('2022-01-01')
   )
 
-  expect(result).toStrictEqual({ valid: true })
+  expect(result).toStrictEqual({ valid: true, errors: null })
 })
 
 test("une demande d'ARM mécanisée a des documents obligatoires supplémentaires", () => {
@@ -735,7 +735,7 @@ test.each<[number | null, EtapeTypeId, TitreTypeId, IsEtapeCompleteDocuments, Is
       throw new Error('test valide alors que non')
     }
   } else {
-    expect(result).toStrictEqual({ valid: true })
+    expect(result).toStrictEqual({ valid: true, errors: null })
   }
 })
 

@@ -49,7 +49,7 @@ const demarchesValidate = async () => {
   return errorsTotal
 }
 
-export const demarchesDefinitionsCheck = async (): Promise<void> => {
+export const demarchesDefinitionsCheck = async (): Promise<number> => {
   console.info()
   console.info('- - -')
   console.info('vérification des démarches')
@@ -63,4 +63,5 @@ export const demarchesDefinitionsCheck = async (): Promise<void> => {
   })
 
   console.info(`erreurs : ${errorsNb}`)
+  return errorsNb
 }

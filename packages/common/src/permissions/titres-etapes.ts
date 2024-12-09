@@ -322,7 +322,7 @@ export const isEtapeComplete = (
   etapeAvis: IsEtapeCompleteEtapeAvis,
   user: User,
   firstEtapeDate: FirstEtapeDate
-): { valid: true } | { valid: false; errors: NonEmptyArray<string> } => {
+): { valid: true; errors: null } | { valid: false; errors: NonEmptyArray<string> } => {
   const isCompleteChecks = [
     dateTypeStepIsComplete(etape, user),
     fondamentaleStepIsComplete(etape, demarcheTypeId, titreTypeId, user),
@@ -349,7 +349,7 @@ export const isEtapeComplete = (
     return { valid: false, errors }
   }
 
-  return { valid: true }
+  return { valid: true, errors: null }
 }
 
 type IsEtapeDeposableEtapeAvis = Pick<EtapeAvis | TempEtapeAvis, 'avis_type_id'>[]

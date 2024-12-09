@@ -68,7 +68,7 @@ export const titreEtapeUpdateTask = async (pool: Pool, titreEtapeId: EtapeId | n
       await titresEtapesAreasUpdate(pool, [titreEtapeId])
     }
 
-    const { titresEtapesAdministrationsLocalesUpdated = [] } = await titresEtapesAdministrationsLocalesUpdate(titreEtapeId ? [titreEtapeId] : undefined)
+    const titresEtapesAdministrationsLocalesUpdated = await titresEtapesAdministrationsLocalesUpdate(titreEtapeId ? [titreEtapeId] : undefined)
 
     const titresPropsEtapesIdsUpdated = await titresPropsEtapesIdsUpdate([titreId])
 

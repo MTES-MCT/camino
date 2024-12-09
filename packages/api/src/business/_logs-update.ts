@@ -2,6 +2,12 @@ import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-com
 import { Index, IEntrepriseEtablissement, IEntreprise } from '../types'
 export const dailySummaryMarker = 'tâches exécutées:' as const
 export const logsUpdate = ({
+  etapesCompletesErreurs,
+  tdeErreurs,
+  demarcheDefinitionsErreurs,
+  fondamentaleIdUpdated,
+  consentementUpdated,
+  misesEnConcurrenceUpdated,
   titresEtapesStatusUpdated,
   titresEtapesOrdreUpdated,
   titresEtapesHeritagePropsUpdated,
@@ -23,6 +29,12 @@ export const logsUpdate = ({
   etablissementsUpdated,
   etablissementsDeleted,
 }: {
+  etapesCompletesErreurs?: { surTitreValide: string[]; autre: string[]; etapesRecentes: string[] }
+  tdeErreurs?: number
+  demarcheDefinitionsErreurs?: number
+  fondamentaleIdUpdated?: number
+  consentementUpdated?: unknown[]
+  misesEnConcurrenceUpdated?: unknown[]
   titresEtapesStatusUpdated?: string[]
   titresEtapesOrdreUpdated?: string[]
   titresEtapesHeritagePropsUpdated?: string[]
@@ -48,9 +60,44 @@ export const logsUpdate = ({
   console.info('-')
   console.info(dailySummaryMarker)
 
+  console.info('tâches exécutées:')
+
+  if (isNotNullNorUndefined(etapesCompletesErreurs)) {
+    if (etapesCompletesErreurs.etapesRecentes.length > 0) {
+      console.warn(`${etapesCompletesErreurs.etapesRecentes.length} étapes récentes ne sont pas complètes`)
+    }
+    if (etapesCompletesErreurs.surTitreValide.length > 0) {
+      console.warn(`${etapesCompletesErreurs.surTitreValide.length} étapes sur des titres valides ne sont pas complètes`)
+    }
+    if (etapesCompletesErreurs.autre.length > 0) {
+      console.info(`${etapesCompletesErreurs.autre.length} étapes sur des titres non valides ne sont pas complètes`)
+    }
+  }
+
+  if (isNotNullNorUndefined(tdeErreurs) && tdeErreurs > 0) {
+    console.warn(`${tdeErreurs} erreurs TDE`)
+  }
+
+  if (isNotNullNorUndefined(demarcheDefinitionsErreurs) && demarcheDefinitionsErreurs > 0) {
+    console.warn(`${demarcheDefinitionsErreurs} erreurs sur les définitions des démarches`)
+  }
+
+  if (isNotNullNorUndefined(fondamentaleIdUpdated) && fondamentaleIdUpdated > 0) {
+    console.info(`mise à jour: ${fondamentaleIdUpdated} étapes(s) (fondamentale)`)
+  }
+
+  if (isNotNullNorUndefinedNorEmpty(consentementUpdated)) {
+    console.info(`mise à jour: ${consentementUpdated.length} étapes(s) (consentement)`)
+  }
+
+  if (isNotNullNorUndefinedNorEmpty(misesEnConcurrenceUpdated)) {
+    console.info(`mise à jour: ${misesEnConcurrenceUpdated.length} étapes(s) (concurrence)`)
+  }
+
   if (isNotNullNorUndefinedNorEmpty(titresEtapesStatusUpdated)) {
     console.info(`mise à jour: ${titresEtapesStatusUpdated.length} étape(s) (statut)`)
   }
+
   if (isNotNullNorUndefinedNorEmpty(titresEtapesOrdreUpdated)) {
     console.info(`mise à jour: ${titresEtapesOrdreUpdated.length} étape(s) (ordre)`)
   }

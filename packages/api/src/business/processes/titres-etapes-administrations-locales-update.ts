@@ -32,7 +32,7 @@ type AdministrationsByEtapeId = {
   titreEtapeId: string
   administrations: AdministrationId[]
 }
-export const titresEtapesAdministrationsLocalesUpdate = async (titresEtapesIds?: string[]): Promise<{ titresEtapesAdministrationsLocalesUpdated: AdministrationsByEtapeId[] }> => {
+export const titresEtapesAdministrationsLocalesUpdate = async (titresEtapesIds?: string[]): Promise<AdministrationsByEtapeId[]> => {
   console.info()
   console.info('administrations locales associées aux étapes…')
 
@@ -63,5 +63,5 @@ export const titresEtapesAdministrationsLocalesUpdate = async (titresEtapesIds?:
     }
   }
 
-  return { titresEtapesAdministrationsLocalesUpdated }
+  return titresEtapesAdministrationsLocalesUpdated
 }

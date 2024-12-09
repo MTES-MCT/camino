@@ -51,12 +51,13 @@ const demandeMiseEnConcurrenceUpdate = (
       })
     ),
     Effect.flatMap(demarcheConcurrence => updateDemarcheIdDeMiseEnConcurrence(pool, etapeId, demarcheConcurrence?.id ?? null)),
-    Effect.tap(result => {
+    Effect.map(result => {
       if (result.old !== result.new) {
         console.info(`maj démarche concurrente pour l'étape ${etapeId}: old: ${result.old}, new: ${result.new}`)
+        return { etapeId, ...result }
       }
+      return null
     }),
-    Effect.map(value => ({ etapeId, ...value })),
     Effect.catchTag('Pas de démarche en concurrence', () => Effect.succeed(null)),
     Effect.catchTag('Étape non concernée par la mise en concurrence', () => Effect.succeed(null))
   )

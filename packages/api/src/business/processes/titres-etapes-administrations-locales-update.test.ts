@@ -67,7 +67,7 @@ describe("administrations d'une étape", () => {
     ]
     titresEtapesGetMock.mockResolvedValue(titresEtapesCommunes)
 
-    const { titresEtapesAdministrationsLocalesUpdated } = await titresEtapesAdministrationsLocalesUpdate()
+    const titresEtapesAdministrationsLocalesUpdated = await titresEtapesAdministrationsLocalesUpdate()
 
     expect(titresEtapesAdministrationsLocalesUpdated.length).toEqual(2)
   })
@@ -94,7 +94,7 @@ describe("administrations d'une étape", () => {
 
     titresEtapesGetMock.mockResolvedValue(titresEtapesCommunesMemeCommune)
 
-    const { titresEtapesAdministrationsLocalesUpdated } = await titresEtapesAdministrationsLocalesUpdate()
+    const titresEtapesAdministrationsLocalesUpdated = await titresEtapesAdministrationsLocalesUpdate()
 
     expect(titresEtapesAdministrationsLocalesUpdated.length).toEqual(1)
   })
@@ -117,7 +117,7 @@ describe("administrations d'une étape", () => {
     ]
     titresEtapesGetMock.mockResolvedValue(titresEtapesCommunesVides)
 
-    const { titresEtapesAdministrationsLocalesUpdated } = await titresEtapesAdministrationsLocalesUpdate()
+    const titresEtapesAdministrationsLocalesUpdated = await titresEtapesAdministrationsLocalesUpdate()
 
     expect(titresEtapesAdministrationsLocalesUpdated.length).toEqual(0)
   })
@@ -138,7 +138,7 @@ describe("administrations d'une étape", () => {
     }
     titresEtapesGetMock.mockResolvedValue([titreEtape])
 
-    const { titresEtapesAdministrationsLocalesUpdated } = await titresEtapesAdministrationsLocalesUpdate()
+    const titresEtapesAdministrationsLocalesUpdated = await titresEtapesAdministrationsLocalesUpdate()
 
     expect(titresEtapesAdministrationsLocalesUpdated.length).toEqual(1)
     expect(titresEtapesAdministrationsLocalesUpdated[0].administrations).toHaveLength(0)
@@ -161,7 +161,7 @@ describe("administrations d'une étape", () => {
 
     titresEtapesGetMock.mockResolvedValue([titreEtape])
 
-    const { titresEtapesAdministrationsLocalesUpdated } = await titresEtapesAdministrationsLocalesUpdate()
+    const titresEtapesAdministrationsLocalesUpdated = await titresEtapesAdministrationsLocalesUpdate()
 
     expect(titresEtapesAdministrationsLocalesUpdated.length).toEqual(1)
   })

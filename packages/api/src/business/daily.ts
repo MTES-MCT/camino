@@ -24,6 +24,7 @@ import { callAndExit } from '../tools/fp-tools'
 import { allEtapesMiseEnConcurrenceUpdate } from './processes/titres-etapes-mise-en-concurrence'
 import { etapesFondamentaleIdUpdateForAll } from './processes/titres-etapes-fondamentale-id-update'
 import { allEtapesConsentementUpdate } from './processes/titres-etapes-consentement'
+import { etapesCompletesCheck } from '../tools/etapes/etapes-complete-check'
 
 export const daily = async (pool: Pool): Promise<void> => {
   try {
@@ -33,10 +34,10 @@ export const daily = async (pool: Pool): Promise<void> => {
 
     const titresEtapesStatusUpdated = await titresEtapesStatutUpdate(pool)
 
-    await callAndExit(allEtapesMiseEnConcurrenceUpdate(pool))
-    await callAndExit(allEtapesConsentementUpdate(pool))
+    const misesEnConcurrenceUpdated = await callAndExit(allEtapesMiseEnConcurrenceUpdate(pool))
+    const consentementUpdated = await callAndExit(allEtapesConsentementUpdate(pool))
     const titresEtapesOrdreUpdated = await titresEtapesOrdreUpdate(pool, userSuper)
-    await callAndExit(etapesFondamentaleIdUpdateForAll(pool))
+    const fondamentaleIdUpdated = await callAndExit(etapesFondamentaleIdUpdateForAll(pool))
     const titresEtapesHeritagePropsUpdated = await titresEtapesHeritagePropsUpdate(userSuper)
     const titresEtapesHeritageContenuUpdated = await titresEtapesHeritageContenuUpdate(pool, userSuper)
 
@@ -47,7 +48,7 @@ export const daily = async (pool: Pool): Promise<void> => {
 
     const titresStatutIdUpdated = await titresStatutIdsUpdate()
     const titresPublicUpdated = await titresPublicUpdate(pool)
-    const { titresEtapesAdministrationsLocalesUpdated } = await titresEtapesAdministrationsLocalesUpdate()
+    const titresEtapesAdministrationsLocalesUpdated = await titresEtapesAdministrationsLocalesUpdate()
     const titresPropsEtapesIdsUpdated = await titresPropsEtapesIdsUpdate()
 
     const titresActivitesCreated = await titresActivitesUpdate(pool)
@@ -56,10 +57,17 @@ export const daily = async (pool: Pool): Promise<void> => {
     const titresActivitesPropsUpdated = await titresActivitesPropsUpdate()
     const titresUpdatedIndex = await titresSlugsUpdate()
 
-    await demarchesDefinitionsCheck()
-    await titreTypeDemarcheTypeEtapeTypeCheck()
+    const demarcheDefinitionsErreurs = await demarchesDefinitionsCheck()
+    const tdeErreurs = await titreTypeDemarcheTypeEtapeTypeCheck()
+    const etapesCompletesErreurs = await etapesCompletesCheck(pool)
 
     logsUpdate({
+      etapesCompletesErreurs: etapesCompletesErreurs,
+      tdeErreurs,
+      demarcheDefinitionsErreurs,
+      fondamentaleIdUpdated,
+      consentementUpdated,
+      misesEnConcurrenceUpdated,
       titresEtapesStatusUpdated,
       titresEtapesOrdreUpdated,
       titresEtapesHeritagePropsUpdated,

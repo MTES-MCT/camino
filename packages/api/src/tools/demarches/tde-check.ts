@@ -6,7 +6,7 @@ import { isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/type
 import { CaminoMachineId, machineIdFind } from 'camino-common/src/machines'
 import { demarcheEnregistrementDemandeDateFind } from 'camino-common/src/demarche'
 
-export const titreTypeDemarcheTypeEtapeTypeCheck = async (): Promise<void> => {
+export const titreTypeDemarcheTypeEtapeTypeCheck = async (): Promise<number> => {
   console.info()
   console.info('- - -')
   console.info('vérification de TDE avec les démarches en bdd')
@@ -42,4 +42,5 @@ export const titreTypeDemarcheTypeEtapeTypeCheck = async (): Promise<void> => {
     }
   })
   console.info(`erreurs : ${errorsNb} TDE inconnus`)
+  return errorsNb
 }

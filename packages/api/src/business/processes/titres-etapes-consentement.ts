@@ -1,5 +1,5 @@
 import { EtapeId } from 'camino-common/src/etape'
-import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
+import { isNotNullNorUndefined, stringArrayEquals } from 'camino-common/src/typescript-tools'
 import { Pool } from 'pg'
 import { getAllDemandesProcedureSpecifique } from '../../api/rest/etapes.queries'
 import { Effect, pipe } from 'effect'
@@ -21,6 +21,13 @@ export const etapeConsentementUpdate = (pool: Pool, etapeId: EtapeId): Effect.Ef
       etape => shortCircuitError('Étape non concernée par le consentement', etape)
     ),
     Effect.flatMap(etape => updateEtapeConsentement(pool, etape.id, etape.date, etape.geojson4326_perimetre, etape.substances, etape.demarche_ids_consentement)),
+    Effect.map(result => {
+      if (!stringArrayEquals(result.new, result.old)) {
+        console.info(`maj des démarches concernées par le consentement pour l'étape ${result.etapeId}. old: ${result.old.join(',')}, new: ${result.new.join(',')}`)
+        return result
+      }
+      return null
+    }),
     Effect.catchTag('Étape non concernée par le consentement', () => Effect.succeed(null))
   )
 }
