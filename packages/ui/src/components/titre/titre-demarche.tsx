@@ -1,6 +1,6 @@
 import { FunctionalComponent, computed, defineComponent, ref } from 'vue'
 import { getMostRecentValuePropFromEtapeFondamentaleValide, TitreGet, TitreGetDemarche } from 'camino-common/src/titres'
-import { DemarcheEtapeFondamentale, DemarcheSlug, getDemarcheContenu } from 'camino-common/src/demarche'
+import { demarcheEnregistrementDemandeDateFind, DemarcheEtapeFondamentale, DemarcheSlug, getDemarcheContenu } from 'camino-common/src/demarche'
 import { DemarchesTypes, isTravaux } from 'camino-common/src/static/demarchesTypes'
 import { DemarcheStatut } from '@/components/_common/demarche-statut'
 import { isNonEmptyArray, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined, onlyUnique } from 'camino-common/src/typescript-tools'
@@ -25,7 +25,8 @@ import { isDemarcheStatutNonStatue, isDemarcheStatutNonValide } from 'camino-com
 import { capitalize } from 'camino-common/src/strings'
 import { CaminoRouter } from '@/typings/vue-router'
 import { Alert } from '../_ui/alert'
-import { CaminoDate } from 'camino-common/src/date'
+import { CaminoDate, firstEtapeDateValidator } from 'camino-common/src/date'
+import { machineIdFind } from 'camino-common/src/machines'
 
 type Props = {
   titre: Pick<TitreGet, 'id' | 'slug' | 'titre_type_id' | 'titre_statut_id' | 'nom'>
@@ -163,7 +164,13 @@ export const TitreDemarche = defineComponent<Props>(props => {
               <DsfrButtonIcon icon="fr-icon-pencil-line" style={{ marginRight: 0 }} class="fr-ml-2w" buttonType="secondary" title="Modifier la description" onClick={openEditDemarchePopup} />
             ) : null}
             {canDeleteDemarche(props.user, props.titre.titre_type_id, props.titre.titre_statut_id, administrations.value, demarche.value) ? (
-              <DsfrButtonIcon icon="fr-icon-delete-bin-line" class="fr-ml-2w" buttonType="secondary" title="Supprimer la démarche" onClick={openDeleteDemarchePopup} />
+              <DsfrButtonIcon
+                icon="fr-icon-delete-bin-line"
+                class="fr-ml-2w"
+                buttonType="secondary"
+                title={`Supprimer la démarche ${isNotNullNorUndefinedNorEmpty(orderedEtapes.value) ? (machineIdFind(props.titre.titre_type_id, demarche.value.demarche_type_id, demarche.value.id, demarcheEnregistrementDemandeDateFind(orderedEtapes.value.map(etape => ({ date: etape.date, typeId: etape.etape_type_id }))) ?? firstEtapeDateValidator.parse(orderedEtapes.value)) ?? 'TDE') : 'vide'}`}
+                onClick={openDeleteDemarchePopup}
+              />
             ) : null}
           </div>
 
