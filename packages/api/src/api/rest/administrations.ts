@@ -9,8 +9,7 @@ import { canReadAdministrations } from 'camino-common/src/permissions/administra
 import { deleteAdministrationActiviteTypeEmail, getActiviteTypeEmailsByAdministrationId, getUtilisateursByAdministrationId, insertAdministrationActiviteTypeEmail } from './administrations.queries'
 import { AdministrationActiviteTypeEmail } from 'camino-common/src/administrations'
 import { CaminoApiError } from '../../types'
-import { ZodUnparseable } from '../../tools/fp-tools'
-import { DbQueryAccessError } from '../../pg-database'
+import { EffectDbQueryAndValidateErrors } from '../../pg-database'
 import { Effect, Match } from 'effect'
 import { RestNewPostCall } from '../../server/rest'
 
@@ -62,7 +61,7 @@ export const getAdministrationActiviteTypeEmails =
 
 export const addAdministrationActiviteTypeEmails: RestNewPostCall<'/rest/administrations/:administrationId/activiteTypeEmails'> = (
   rootPipe
-): Effect.Effect<boolean, CaminoApiError<'Accès interdit' | ZodUnparseable | DbQueryAccessError>> => {
+): Effect.Effect<boolean, CaminoApiError<'Accès interdit' | EffectDbQueryAndValidateErrors>> => {
   return rootPipe.pipe(
     Effect.filterOrFail(
       ({ user }) => canReadAdministrations(user),
@@ -72,8 +71,10 @@ export const addAdministrationActiviteTypeEmails: RestNewPostCall<'/rest/adminis
     Effect.mapError(caminoError =>
       Match.value(caminoError.message).pipe(
         Match.when('Accès interdit', () => ({ ...caminoError, status: HTTP_STATUS.FORBIDDEN })),
-        Match.when('Problème de validation de données', () => ({ ...caminoError, status: HTTP_STATUS.BAD_REQUEST })),
-        Match.when("Impossible d'exécuter la requête dans la base de données", () => ({ ...caminoError, status: HTTP_STATUS.INTERNAL_SERVER_ERROR })),
+        Match.whenOr("Impossible d'exécuter la requête dans la base de données", 'Les données en base ne correspondent pas à ce qui est attendu', () => ({
+          ...caminoError,
+          status: HTTP_STATUS.INTERNAL_SERVER_ERROR,
+        })),
         Match.exhaustive
       )
     )
@@ -82,7 +83,7 @@ export const addAdministrationActiviteTypeEmails: RestNewPostCall<'/rest/adminis
 
 export const deleteAdministrationActiviteTypeEmails: RestNewPostCall<'/rest/administrations/:administrationId/activiteTypeEmails/delete'> = (
   rootPipe
-): Effect.Effect<boolean, CaminoApiError<'Accès interdit' | ZodUnparseable | DbQueryAccessError>> => {
+): Effect.Effect<boolean, CaminoApiError<'Accès interdit' | EffectDbQueryAndValidateErrors>> => {
   return rootPipe.pipe(
     Effect.filterOrFail(
       ({ user }) => canReadAdministrations(user),
@@ -92,8 +93,10 @@ export const deleteAdministrationActiviteTypeEmails: RestNewPostCall<'/rest/admi
     Effect.mapError(caminoError =>
       Match.value(caminoError.message).pipe(
         Match.when('Accès interdit', () => ({ ...caminoError, status: HTTP_STATUS.FORBIDDEN })),
-        Match.when('Problème de validation de données', () => ({ ...caminoError, status: HTTP_STATUS.BAD_REQUEST })),
-        Match.when("Impossible d'exécuter la requête dans la base de données", () => ({ ...caminoError, status: HTTP_STATUS.INTERNAL_SERVER_ERROR })),
+        Match.whenOr("Impossible d'exécuter la requête dans la base de données", 'Les données en base ne correspondent pas à ce qui est attendu', () => ({
+          ...caminoError,
+          status: HTTP_STATUS.INTERNAL_SERVER_ERROR,
+        })),
         Match.exhaustive
       )
     )

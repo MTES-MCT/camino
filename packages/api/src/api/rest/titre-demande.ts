@@ -167,13 +167,13 @@ export const titreDemandeCreer: RestNewPostCall<'/rest/titres'> = (rootPipe): Ef
         Match.whenOr(
           'Création du titre impossible',
           "Impossible d'exécuter la requête dans la base de données",
-          'Problème de validation de données',
           'Problème lors de la mise à jour des taches du titre',
           'Création de la démarche impossible',
           'Problème lors de la mise à jour des taches de la démarche',
           "Problème lors de la création de l'étape",
           "Problème lors de la mise à jour des tâches de l'étape",
           "Problème lors de l'abonnement de l'utilisateur au titre",
+          'Les données en base ne correspondent pas à ce qui est attendu',
           () => ({
             ...caminoError,
             status: HTTP_STATUS.INTERNAL_SERVER_ERROR,

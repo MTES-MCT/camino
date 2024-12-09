@@ -159,8 +159,10 @@ export const getDemarchesEnConcurrence: RestNewGetCall<'/rest/demarches/:demarch
     Effect.flatMap(({ pool, params, user }) => getDemarchesEnConcurrenceQuery(pool, params.demarcheId, user)),
     Effect.mapError(caminoError =>
       Match.value(caminoError.message).pipe(
-        Match.when('Problème de validation de données', () => ({ ...caminoError, status: HTTP_STATUS.BAD_REQUEST })),
-        Match.when("Impossible d'exécuter la requête dans la base de données", () => ({ ...caminoError, status: HTTP_STATUS.INTERNAL_SERVER_ERROR })),
+        Match.whenOr("Impossible d'exécuter la requête dans la base de données", 'Les données en base ne correspondent pas à ce qui est attendu', () => ({
+          ...caminoError,
+          status: HTTP_STATUS.INTERNAL_SERVER_ERROR,
+        })),
         Match.exhaustive
       )
     )
@@ -184,8 +186,11 @@ export const getResultatEnConcurrence: RestNewGetCall<'/rest/demarches/:demarche
     Effect.flatMap(({ pool, params, user }) => getDemarchePivotEnConcurrence(pool, params.demarcheId, user)),
     Effect.mapError(caminoError =>
       Match.value(caminoError.message).pipe(
-        Match.whenOr('Problème de validation de données', "La démarche n'existe pas", () => ({ ...caminoError, status: HTTP_STATUS.BAD_REQUEST })),
-        Match.when("Impossible d'exécuter la requête dans la base de données", () => ({ ...caminoError, status: HTTP_STATUS.INTERNAL_SERVER_ERROR })),
+        Match.whenOr("La démarche n'existe pas", () => ({ ...caminoError, status: HTTP_STATUS.BAD_REQUEST })),
+        Match.whenOr("Impossible d'exécuter la requête dans la base de données", 'Les données en base ne correspondent pas à ce qui est attendu', () => ({
+          ...caminoError,
+          status: HTTP_STATUS.INTERNAL_SERVER_ERROR,
+        })),
         Match.when('droits insuffisants', () => ({ ...caminoError, status: HTTP_STATUS.FORBIDDEN })),
         Match.exhaustive
       )

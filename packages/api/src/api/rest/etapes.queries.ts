@@ -2,7 +2,7 @@ import { EtapeDocumentId, EtapeId, EtapeIdOrSlug, etapeBrouillonValidator, etape
 import { ETAPE_TYPE_FOR_CONCURRENCY_DATA, etapeTypeIdValidator } from 'camino-common/src/static/etapesTypes'
 import { Pool } from 'pg'
 import { z } from 'zod'
-import { DBNotFound, DbQueryAccessError, EffectDbQueryAndValidateErrors, Redefine, dbNotFoundError, dbQueryAndValidate, effectDbQueryAndValidate } from '../../pg-database'
+import { DBNotFound, EffectDbQueryAndValidateErrors, Redefine, dbNotFoundError, dbQueryAndValidate, effectDbQueryAndValidate } from '../../pg-database'
 import { sql } from '@pgtyped/runtime'
 import {
   IGetAdministrationsLocalesByEtapeIdQuery,
@@ -27,7 +27,6 @@ import { canReadDocument } from './permissions/documents'
 import { memoize, Memoized } from 'camino-common/src/typescript-tools'
 import { etapeStatutIdValidator } from 'camino-common/src/static/etapesStatuts'
 import { CaminoError } from 'camino-common/src/zod-tools'
-import { ZodUnparseable } from '../../tools/fp-tools'
 import { Effect, pipe } from 'effect'
 import { DATE_DEBUT_PROCEDURE_SPECIFIQUE } from 'camino-common/src/machines'
 import { TitreId } from 'camino-common/src/validators/titres'
@@ -42,7 +41,7 @@ const getEtapeByIdValidator = z.object({
 })
 type GetEtapeByIdValidator = z.infer<typeof getEtapeByIdValidator>
 
-export const getEtapeById = (pool: Pool, etapeId: EtapeIdOrSlug): Effect.Effect<GetEtapeByIdValidator, CaminoError<DbQueryAccessError | ZodUnparseable | DBNotFound>> => {
+export const getEtapeById = (pool: Pool, etapeId: EtapeIdOrSlug): Effect.Effect<GetEtapeByIdValidator, CaminoError<EffectDbQueryAndValidateErrors | DBNotFound>> => {
   return pipe(
     effectDbQueryAndValidate(getEtapeByIdDb, { etapeId }, pool, getEtapeByIdValidator),
     Effect.flatMap(result => (result.length === 1 ? Effect.succeed(result[0]) : Effect.fail({ message: dbNotFoundError })))
@@ -228,7 +227,7 @@ const hasTitreFromDb = sql<Redefine<IHasTitreFromDbQuery, { titreId: TitreId }, 
   SELECT EXISTS(select 1 from titres__titres tt where tt.titre_to_id=$titreId!) as has_titre_from
   `
 
-export const getDemandesPotentialConcurrence = (pool: Pool): Effect.Effect<EtapeId[], CaminoError<DbQueryAccessError | ZodUnparseable>> => {
+export const getDemandesPotentialConcurrence = (pool: Pool): Effect.Effect<EtapeId[], CaminoError<EffectDbQueryAndValidateErrors>> => {
   return pipe(
     effectDbQueryAndValidate(
       getDemandesPotentialConcurrenceDb,
@@ -269,7 +268,7 @@ const getDemandesPotentialConcurrenceDb = sql<
     )
   `
 
-export const getAllDemandesProcedureSpecifique = (pool: Pool): Effect.Effect<EtapeId[], CaminoError<DbQueryAccessError | ZodUnparseable>> => {
+export const getAllDemandesProcedureSpecifique = (pool: Pool): Effect.Effect<EtapeId[], CaminoError<EffectDbQueryAndValidateErrors>> => {
   return pipe(
     effectDbQueryAndValidate(
       getAllDemandesProcedureSpecifiqueDb,

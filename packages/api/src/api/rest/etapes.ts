@@ -66,7 +66,7 @@ import { SecteursMaritimes, getSecteurMaritime } from 'camino-common/src/static/
 import { callAndExit, shortCircuitError, zodParseEffect } from '../../tools/fp-tools'
 import { RestNewGetCall, RestNewPostCall, RestNewPutCall } from '../../server/rest'
 import { Effect, Match } from 'effect'
-import { DbQueryAccessError, EffectDbQueryAndValidateErrors } from '../../pg-database'
+import { EffectDbQueryAndValidateErrors } from '../../pg-database'
 import { CaminoError } from 'camino-common/src/zod-tools'
 import { machineFind } from '../../business/rules-demarches/machines'
 import { TitreEtapeForMachine } from '../../business/rules-demarches/machine-common'
@@ -610,6 +610,7 @@ export const createEtape: RestNewPostCall<'/rest/etapes'> = (rootPipe): Effect.E
           'pas de démarche ou de titre chargé',
           "pas d'héritage chargé",
           'pas de slug',
+          'Les données en base ne correspondent pas à ce qui est attendu',
           () => ({ ...caminoError, status: HTTP_STATUS.INTERNAL_SERVER_ERROR })
         ),
         Match.exhaustive
@@ -856,6 +857,7 @@ export const updateEtape: RestNewPutCall<'/rest/etapes'> = (rootPipe): Effect.Ef
           'pas de démarche ou de titre chargé',
           "pas d'héritage chargé",
           'pas de slug',
+          'Les données en base ne correspondent pas à ce qui est attendu',
           () => ({ ...caminoError, status: HTTP_STATUS.INTERNAL_SERVER_ERROR })
         ),
         Match.exhaustive
@@ -1002,6 +1004,7 @@ export const getEtapesTypesEtapesStatusWithMainStep: RestNewGetCall<'/rest/etape
           "Impossible de récupérer les types d'étapes",
           "impossible de récupérer l'étape",
           'impossible de récupérer la démarche',
+          'Les données en base ne correspondent pas à ce qui est attendu',
           () => ({ ...caminoError, status: HTTP_STATUS.INTERNAL_SERVER_ERROR })
         ),
         Match.exhaustive
@@ -1018,7 +1021,7 @@ const demarcheInexistante = "la démarche n'existe pas" as const
 const impossibleDeRecupererLaDemarche = 'impossible de récupérer la démarche' as const
 const impossibleDeRecupererLEtape = "impossible de récupérer l'étape" as const
 type DemarcheEtapesTypesGetErrors =
-  | DbQueryAccessError
+  | EffectDbQueryAndValidateErrors
   | typeof impossibleDeRecupererLaDemarche
   | typeof demarcheInexistante
   | typeof demarcheIncomplete

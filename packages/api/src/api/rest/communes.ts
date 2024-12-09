@@ -11,8 +11,10 @@ export const getCommunes: RestNewGetCall<'/rest/communes'> = (rootPipe): Effect.
     Effect.flatMap(({ searchParams, pool }) => getCommunesQuery(pool, { ids: searchParams.ids })),
     Effect.mapError(caminoError =>
       Match.value(caminoError.message).pipe(
-        Match.when("Impossible d'exécuter la requête dans la base de données", () => ({ ...caminoError, status: HTTP_STATUS.INTERNAL_SERVER_ERROR })),
-        Match.whenOr('Problème de validation de données', () => ({ ...caminoError, status: HTTP_STATUS.BAD_REQUEST })),
+        Match.whenOr("Impossible d'exécuter la requête dans la base de données", 'Les données en base ne correspondent pas à ce qui est attendu', () => ({
+          ...caminoError,
+          status: HTTP_STATUS.INTERNAL_SERVER_ERROR,
+        })),
         Match.exhaustive
       )
     )

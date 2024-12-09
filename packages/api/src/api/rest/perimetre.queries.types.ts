@@ -19,6 +19,22 @@ export interface IConvertMultiPointDbQuery {
   result: IConvertMultiPointDbResult;
 }
 
+/** 'CheckIsValidDb' parameters type */
+export interface ICheckIsValidDbParams {
+  geojson: string;
+}
+
+/** 'CheckIsValidDb' return type */
+export interface ICheckIsValidDbResult {
+  is_valid: boolean | null;
+}
+
+/** 'CheckIsValidDb' query type */
+export interface ICheckIsValidDbQuery {
+  params: ICheckIsValidDbParams;
+  result: ICheckIsValidDbResult;
+}
+
 /** 'GetGeojsonByGeoSystemeIdDb' parameters type */
 export interface IGetGeojsonByGeoSystemeIdDbParams {
   fromGeoSystemeId: number;
@@ -29,7 +45,6 @@ export interface IGetGeojsonByGeoSystemeIdDbParams {
 /** 'GetGeojsonByGeoSystemeIdDb' return type */
 export interface IGetGeojsonByGeoSystemeIdDbResult {
   geojson: Json | null;
-  is_valid: boolean | null;
 }
 
 /** 'GetGeojsonByGeoSystemeIdDb' query type */

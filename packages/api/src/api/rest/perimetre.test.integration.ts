@@ -360,10 +360,9 @@ C;Point éç;-52,55;4,24113309117193`
     const tested = await restNewPostCall(dbPool, '/rest/geojson/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS.WGS84 }, userSuper, body)
     expect(tested.body).toMatchInlineSnapshot(`
       {
-        "detail": "La valeur du champ "surface" doit être un nombre plus petit ou égal à 100000000000.",
+        "detail": "Le périmètre ne doit pas excéder 100000000000M²",
         "message": "Problème de validation de données",
         "status": 400,
-        "zodErrorReadableMessage": "Validation error: Le périmètre ne doit pas excéder 100000000000M² at "[0].surface"",
       }
     `)
     expect(tested.statusCode).toBe(HTTP_STATUS.BAD_REQUEST)
@@ -510,6 +509,135 @@ C;Point éç;-52,55;4,24113309117193`
         "secteurMaritimeIds": [],
         "superposition_alertes": [],
         "surface": 1.03,
+      }
+    `)
+  })
+
+  test('fichier invalide geojson 4171', async () => {
+    const featureMultipolygon: FeatureCollection = {
+      type: 'FeatureCollection',
+      crs: { type: 'name', properties: { name: 'urn:ogc:def:crs:EPSG::4171' } },
+      properties: null,
+      features: [
+        {
+          type: 'Feature',
+          properties: {},
+          geometry: {
+            type: 'MultiPolygon',
+            coordinates: [
+              [
+                [
+                  [-61.7, 16.1],
+                  [-61.7166666666667, 16.0833333333333],
+                  [-61.7, 16.05],
+                  [-61.6833333333333, 16.05],
+                  [-61.6833333333333, 16.0833333333333],
+                  [-61.6833333333333, 16.0333333333333],
+                  [-61.6833333333333, 16.0333333333333],
+                  [-61.6833333333333, 15.9666666666667],
+                  [-61.75, 15.9666666666667],
+                  [-61.7833333333333, 16.05],
+                  [-61.7, 16.1],
+                  [-61.7, 16.1],
+                ],
+              ],
+            ],
+          },
+        },
+        { type: 'Feature', geometry: { type: 'Point', coordinates: [-61.7, 16.1] }, properties: { nom: 'A' } },
+        { type: 'Feature', geometry: { type: 'Point', coordinates: [-61.7166666666667, 16.0833333333333] }, properties: { nom: 'B' } },
+        { type: 'Feature', geometry: { type: 'Point', coordinates: [-61.7, 16.05] }, properties: { nom: 'C' } },
+        { type: 'Feature', geometry: { type: 'Point', coordinates: [-61.6833333333333, 16.05] }, properties: { nom: 'D' } },
+        { type: 'Feature', geometry: { type: 'Point', coordinates: [-61.6833333333333, 16.0833333333333] }, properties: { nom: 'E' } },
+        { type: 'Feature', geometry: { type: 'Point', coordinates: [-61.6833333333333, 16.0333333333333] }, properties: { nom: 'F' } },
+        { type: 'Feature', geometry: { type: 'Point', coordinates: [-61.6833333333333, 16.0333333333333] }, properties: { nom: 'G' } },
+        { type: 'Feature', geometry: { type: 'Point', coordinates: [-61.6833333333333, 15.9666666666667] }, properties: { nom: 'H' } },
+        { type: 'Feature', geometry: { type: 'Point', coordinates: [-61.75, 15.9666666666667] }, properties: { nom: 'I' } },
+        { type: 'Feature', geometry: { type: 'Point', coordinates: [-61.7833333333333, 16.05] }, properties: { nom: 'J' } },
+        { type: 'Feature', geometry: { type: 'Point', coordinates: [-61.7, 16.1] }, properties: { nom: 'K' } },
+      ],
+    }
+
+    const fileName = `existing_temp_file_${idGenerate()}.geojson`
+    mkdirSync(dir, { recursive: true })
+    writeFileSync(`${dir}/${fileName}`, JSON.stringify(featureMultipolygon))
+    const body: GeojsonImportBody = {
+      titreSlug: titreSlugValidator.parse('titre-slug'),
+      titreTypeId: 'arm',
+      tempDocumentName: tempDocumentNameValidator.parse(fileName),
+      fileType: 'geojson',
+    }
+
+    const tested = await restNewPostCall(dbPool, '/rest/geojson/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS.RGF93 }, userSuper, body)
+    expect(tested.body).toMatchInlineSnapshot(`
+      {
+        "detail": "Vérifiez que le Système géographique est le bon",
+        "extra": {
+          "fromGeoSystemeId": "4171",
+          "geojson": {
+            "geometry": {
+              "coordinates": [
+                [
+                  [
+                    [
+                      -61.7,
+                      16.1,
+                    ],
+                    [
+                      -61.7166666666667,
+                      16.0833333333333,
+                    ],
+                    [
+                      -61.7,
+                      16.05,
+                    ],
+                    [
+                      -61.6833333333333,
+                      16.05,
+                    ],
+                    [
+                      -61.6833333333333,
+                      16.0833333333333,
+                    ],
+                    [
+                      -61.6833333333333,
+                      16.0333333333333,
+                    ],
+                    [
+                      -61.6833333333333,
+                      16.0333333333333,
+                    ],
+                    [
+                      -61.6833333333333,
+                      15.9666666666667,
+                    ],
+                    [
+                      -61.75,
+                      15.9666666666667,
+                    ],
+                    [
+                      -61.7833333333333,
+                      16.05,
+                    ],
+                    [
+                      -61.7,
+                      16.1,
+                    ],
+                    [
+                      -61.7,
+                      16.1,
+                    ],
+                  ],
+                ],
+              ],
+              "type": "MultiPolygon",
+            },
+            "properties": {},
+            "type": "Feature",
+          },
+        },
+        "message": "Le périmètre n'est pas valide dans le référentiel donné",
+        "status": 400,
       }
     `)
   })

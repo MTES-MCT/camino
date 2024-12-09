@@ -4,8 +4,8 @@ import { Pool } from 'pg'
 import { getAllDemandesProcedureSpecifique } from '../../api/rest/etapes.queries'
 import { Effect, pipe } from 'effect'
 import { CaminoError } from 'camino-common/src/zod-tools'
-import { DBNotFound, DbQueryAccessError } from '../../pg-database'
-import { shortCircuitError, ZodUnparseable } from '../../tools/fp-tools'
+import { DBNotFound, EffectDbQueryAndValidateErrors } from '../../pg-database'
+import { shortCircuitError } from '../../tools/fp-tools'
 import { DemarcheId } from 'camino-common/src/demarche'
 import { getEtapeConsentement, updateEtapeConsentement } from './titres-etapes-consentement.queries'
 import { DOMAINES_IDS } from 'camino-common/src/static/domaines'
@@ -13,7 +13,7 @@ import { getDomaineId } from 'camino-common/src/static/titresTypes'
 import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes'
 
 type EtapeConsentementUpdateResult = { etapeId: EtapeId; old: DemarcheId[]; new: DemarcheId[] }
-export const etapeConsentementUpdate = (pool: Pool, etapeId: EtapeId): Effect.Effect<EtapeConsentementUpdateResult | null, CaminoError<DBNotFound | DbQueryAccessError | ZodUnparseable>> => {
+export const etapeConsentementUpdate = (pool: Pool, etapeId: EtapeId): Effect.Effect<EtapeConsentementUpdateResult | null, CaminoError<DBNotFound | EffectDbQueryAndValidateErrors>> => {
   return pipe(
     getEtapeConsentement(pool, etapeId),
     Effect.filterOrFail(
@@ -32,7 +32,7 @@ export const etapeConsentementUpdate = (pool: Pool, etapeId: EtapeId): Effect.Ef
   )
 }
 
-export const allEtapesConsentementUpdate = (pool: Pool): Effect.Effect<EtapeConsentementUpdateResult[], CaminoError<DBNotFound | DbQueryAccessError | ZodUnparseable>> => {
+export const allEtapesConsentementUpdate = (pool: Pool): Effect.Effect<EtapeConsentementUpdateResult[], CaminoError<DBNotFound | EffectDbQueryAndValidateErrors>> => {
   console.info('consentement des étapes…')
   return pipe(
     getAllDemandesProcedureSpecifique(pool),

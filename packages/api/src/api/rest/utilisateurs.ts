@@ -24,7 +24,7 @@ import {
   softDeleteUtilisateur,
   updateUtilisateurRole,
 } from '../../database/queries/utilisateurs.queries'
-import { DbQueryAccessError, EffectDbQueryAndValidateErrors } from '../../pg-database'
+import { EffectDbQueryAndValidateErrors } from '../../pg-database'
 import { callAndExit, shortCircuitError, zodParseEffect, ZodUnparseable } from '../../tools/fp-tools'
 import { z } from 'zod'
 import { getEntreprises } from './entreprises.queries'
@@ -50,10 +50,16 @@ export const isSubscribedToNewsletter: RestNewGetCall<'/rest/utilisateurs/:id/ne
     Effect.mapError(caminoError =>
       Match.value(caminoError.message).pipe(
         Match.when('droits insuffisants', () => ({ ...caminoError, status: HTTP_STATUS.FORBIDDEN })),
-        Match.whenOr("Impossible d'exécuter la requête dans la base de données", 'communication avec le serveur de mail impossible', 'Problème de validation de données', () => ({
-          ...caminoError,
-          status: HTTP_STATUS.INTERNAL_SERVER_ERROR,
-        })),
+        Match.whenOr(
+          "Impossible d'exécuter la requête dans la base de données",
+          'communication avec le serveur de mail impossible',
+          'Problème de validation de données',
+          'Les données en base ne correspondent pas à ce qui est attendu',
+          () => ({
+            ...caminoError,
+            status: HTTP_STATUS.INTERNAL_SERVER_ERROR,
+          })
+        ),
         Match.exhaustive
       )
     )
@@ -188,7 +194,9 @@ export const moi: RestNewGetCall<'/moi'> = (rootPipe): Effect.Effect<User, Camin
     Effect.mapError(caminoError =>
       Match.value(caminoError.message).pipe(
         Match.when('droits insuffisants', () => ({ ...caminoError, status: HTTP_STATUS.FORBIDDEN })),
+        Match.when('Les données en base ne correspondent pas à ce qui est attendu', () => ({ ...caminoError, status: HTTP_STATUS.INTERNAL_SERVER_ERROR })),
         Match.whenOr("Impossible d'exécuter la requête dans la base de données", 'Problème de validation de données', () => ({ ...caminoError, status: HTTP_STATUS.BAD_REQUEST })),
+
         Match.exhaustive
       )
     )
@@ -219,14 +227,17 @@ export const manageNewsletterSubscription =
     }
   }
 
-export const generateQgisToken: RestNewPostCall<'/rest/utilisateur/generateQgisToken'> = (rootPipe): Effect.Effect<QGISTokenRest, CaminoApiError<EffectDbQueryAndValidateErrors>> =>
+export const generateQgisToken: RestNewPostCall<'/rest/utilisateur/generateQgisToken'> = (rootPipe): Effect.Effect<QGISTokenRest, CaminoApiError<EffectDbQueryAndValidateErrors | ZodUnparseable>> =>
   rootPipe.pipe(
     Effect.bind('token', () => zodParseEffect(qgisTokenValidator, idGenerate())),
     Effect.tap(({ token, pool, user }) => updateQgisToken(pool, user, token)),
     Effect.map(({ token, user }) => ({ token, url: `https://${user.email.replace('@', '%40')}:${token}@${config().API_HOST}/titres_qgis?` })),
     Effect.mapError(caminoError =>
       Match.value(caminoError.message).pipe(
-        Match.whenOr("Impossible d'exécuter la requête dans la base de données", 'Problème de validation de données', () => ({ ...caminoError, status: HTTP_STATUS.INTERNAL_SERVER_ERROR })),
+        Match.whenOr("Impossible d'exécuter la requête dans la base de données", 'Problème de validation de données', 'Les données en base ne correspondent pas à ce qui est attendu', () => ({
+          ...caminoError,
+          status: HTTP_STATUS.INTERNAL_SERVER_ERROR,
+        })),
         Match.exhaustive
       )
     )
@@ -290,7 +301,7 @@ export const utilisateurs =
       : null
   }
 
-type GetUtilisateursError = DbQueryAccessError | ZodUnparseable | "Impossible d'accéder à la liste des utilisateurs" | 'droits insuffisants'
+type GetUtilisateursError = EffectDbQueryAndValidateErrors | ZodUnparseable | "Impossible d'accéder à la liste des utilisateurs" | 'droits insuffisants'
 
 export const getUtilisateurs: RestNewGetCall<'/rest/utilisateurs'> = (rootPipe): Effect.Effect<UtilisateursTable, CaminoApiError<GetUtilisateursError>> => {
   return rootPipe.pipe(
@@ -303,7 +314,10 @@ export const getUtilisateurs: RestNewGetCall<'/rest/utilisateurs'> = (rootPipe):
     }),
     Effect.mapError(caminoError =>
       Match.value(caminoError.message).pipe(
-        Match.when("Impossible d'exécuter la requête dans la base de données", () => ({ ...caminoError, status: HTTP_STATUS.INTERNAL_SERVER_ERROR })),
+        Match.whenOr("Impossible d'exécuter la requête dans la base de données", 'Les données en base ne correspondent pas à ce qui est attendu', () => ({
+          ...caminoError,
+          status: HTTP_STATUS.INTERNAL_SERVER_ERROR,
+        })),
         Match.when('droits insuffisants', () => ({ ...caminoError, status: HTTP_STATUS.FORBIDDEN })),
         Match.when('Problème de validation de données', () => ({ ...caminoError, status: HTTP_STATUS.BAD_REQUEST })),
         Match.exhaustive
@@ -312,13 +326,16 @@ export const getUtilisateurs: RestNewGetCall<'/rest/utilisateurs'> = (rootPipe):
   )
 }
 
-type GetUtilisateurError = DbQueryAccessError | ZodUnparseable | 'droits insuffisants'
+type GetUtilisateurError = EffectDbQueryAndValidateErrors | ZodUnparseable | 'droits insuffisants'
 export const getUtilisateur: RestNewGetCall<'/rest/utilisateurs/:id'> = (rootPipe): Effect.Effect<UserNotNull, CaminoApiError<GetUtilisateurError>> => {
   return rootPipe.pipe(
     Effect.flatMap(({ pool, params, user }) => newGetUtilisateurById(pool, params.id, user)),
     Effect.mapError(caminoError =>
       Match.value(caminoError.message).pipe(
-        Match.when("Impossible d'exécuter la requête dans la base de données", () => ({ ...caminoError, status: HTTP_STATUS.INTERNAL_SERVER_ERROR })),
+        Match.whenOr("Impossible d'exécuter la requête dans la base de données", 'Les données en base ne correspondent pas à ce qui est attendu', () => ({
+          ...caminoError,
+          status: HTTP_STATUS.INTERNAL_SERVER_ERROR,
+        })),
         Match.when('droits insuffisants', () => ({ ...caminoError, status: HTTP_STATUS.FORBIDDEN })),
         Match.when('Problème de validation de données', () => ({ ...caminoError, status: HTTP_STATUS.BAD_REQUEST })),
         Match.exhaustive

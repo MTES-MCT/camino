@@ -1,5 +1,5 @@
 import { Pool } from 'pg'
-import { DbQueryAccessError, Redefine, dbQueryAndValidate, effectDbQueryAndValidate } from '../../pg-database'
+import { EffectDbQueryAndValidateErrors, Redefine, dbQueryAndValidate, effectDbQueryAndValidate } from '../../pg-database'
 import { sql } from '@pgtyped/runtime'
 import { AdministrationId, administrationIdValidator } from 'camino-common/src/static/administrations'
 import { AdministrationActiviteTypeEmail, administrationActiviteTypeEmailValidator } from 'camino-common/src/administrations'
@@ -15,7 +15,6 @@ import { ActivitesTypesId } from 'camino-common/src/static/activitesTypes'
 import { NonEmptyArray } from 'camino-common/src/typescript-tools'
 import { z } from 'zod'
 import { CaminoError } from 'camino-common/src/zod-tools'
-import { ZodUnparseable } from '../../tools/fp-tools'
 import { Effect, pipe } from 'effect'
 
 export const getUtilisateursByAdministrationId = async (pool: Pool, administrationId: AdministrationId): Promise<AdminUserNotNull[]> => {
@@ -62,7 +61,7 @@ export const deleteAdministrationActiviteTypeEmail = (
   pool: Pool,
   administrationId: AdministrationId,
   administrationActiviteTypeEmail: AdministrationActiviteTypeEmail
-): Effect.Effect<boolean, CaminoError<ZodUnparseable | DbQueryAccessError>> => {
+): Effect.Effect<boolean, CaminoError<EffectDbQueryAndValidateErrors>> => {
   return pipe(
     effectDbQueryAndValidate(deleteAdministrationActiviteTypeEmailDb, { administrationId, ...administrationActiviteTypeEmail }, pool, z.void()),
     Effect.map(() => true)
@@ -82,7 +81,7 @@ export const insertAdministrationActiviteTypeEmail = (
   pool: Pool,
   administrationId: AdministrationId,
   administrationActiviteTypeEmail: AdministrationActiviteTypeEmail
-): Effect.Effect<boolean, CaminoError<ZodUnparseable | DbQueryAccessError>> => {
+): Effect.Effect<boolean, CaminoError<EffectDbQueryAndValidateErrors>> => {
   return pipe(
     effectDbQueryAndValidate(insertAdministrationActiviteTypeEmailDb, { administrationId, ...administrationActiviteTypeEmail }, pool, z.void()),
     Effect.map(() => true)

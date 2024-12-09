@@ -1,17 +1,16 @@
 import { sql } from '@pgtyped/runtime'
-import { DbQueryAccessError, effectDbQueryAndValidate, Redefine } from '../../pg-database'
+import { effectDbQueryAndValidate, EffectDbQueryAndValidateErrors, Redefine } from '../../pg-database'
 import { IGetDemarchesWithMiseEnConcurrenceDbQuery, IUpdateEtapeIdDeMiseEnConcurrenceInternalQuery } from './titres-etapes-mise-en-concurrence.queries.types'
 import { EtapeId, etapeIdValidator } from 'camino-common/src/etape'
 import { Effect, pipe } from 'effect'
 import { z } from 'zod'
 import { CaminoError } from 'camino-common/src/zod-tools'
 import { Pool } from 'pg'
-import { ZodUnparseable } from '../../tools/fp-tools'
 import { DemarcheId, demarcheIdValidator } from 'camino-common/src/demarche'
 import { ETAPE_TYPE_FOR_CONCURRENCY_DATA } from 'camino-common/src/static/etapesTypes'
 import { miseEnConcurrenceDureeId } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections'
 
-export type MiseEnConcurrenceErrors = DbQueryAccessError | ZodUnparseable | 'Plusieurs mises en concurrence pour le même périmètre'
+export type MiseEnConcurrenceErrors = EffectDbQueryAndValidateErrors | 'Plusieurs mises en concurrence pour le même périmètre'
 export const miseEnConcurrence = (pool: Pool, etapeDemandeId: EtapeId): Effect.Effect<GetDemarchesWithMiseEnConcurrence | null, CaminoError<MiseEnConcurrenceErrors>> => {
   return pipe(
     effectDbQueryAndValidate(
@@ -101,7 +100,7 @@ const getDemarchesWithMiseEnConcurrenceDb = sql<
 
 const mauvaisResultatsError = "La mise à jour de l'étape de mise en concurrence a échoué" as const
 const updateEtapeIdDeMiseEnConcurrenceValidator = z.object({ demarche_id_en_concurrence: demarcheIdValidator.nullable() })
-export type UpdateEtapeIdDeMiseEnConcurrenceErrors = DbQueryAccessError | ZodUnparseable | typeof mauvaisResultatsError
+export type UpdateEtapeIdDeMiseEnConcurrenceErrors = EffectDbQueryAndValidateErrors | typeof mauvaisResultatsError
 export const updateEtapeIdDeMiseEnConcurrence = (
   pool: Pool,
   titreEtapeId: EtapeId,

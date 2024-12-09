@@ -50,7 +50,7 @@ import xlsx from 'xlsx'
 import { ZodTypeAny, z } from 'zod'
 import { CommuneId } from 'camino-common/src/static/communes'
 import { CaminoApiError } from '../../types'
-import { DbQueryAccessError } from '../../pg-database'
+import { EffectDbQueryAndValidateErrors } from '../../pg-database'
 import { ZodUnparseable, callAndExit, zodParseEffect, zodParseEffectCallback } from '../../tools/fp-tools'
 import { CaminoError } from 'camino-common/src/zod-tools'
 import { RestNewPostCall } from '../../server/rest'
@@ -183,7 +183,7 @@ const extractionGeoJSONError = "Une erreur s'est produite lors de l'extraction d
 const extractionShapeError = "Une erreur s'est produite lors de l'extraction du multi-polygone du fichier shape" as const
 type GeojsonImportErrorMessages =
   | ZodUnparseable
-  | DbQueryAccessError
+  | EffectDbQueryAndValidateErrors
   | typeof ouvertureGeoJSONError
   | typeof ouvertureShapeError
   | typeof ouvertureCsvError
@@ -356,6 +356,7 @@ export const geojsonImport: RestNewPostCall<'/rest/geojson/import/:geoSystemeId'
           'Une erreur est survenue lors de la récupération des informations du CSV',
           'Une erreur inattendue est survenue lors de la récupération des informations geojson en base',
           "Impossible d'exécuter la requête dans la base de données",
+          'Les données en base ne correspondent pas à ce qui est attendu',
           () => ({ ...caminoError, status: HTTP_STATUS.INTERNAL_SERVER_ERROR })
         ),
         Match.whenOr(
@@ -435,7 +436,7 @@ const fileNameToCsv = (pathFrom: string): Effect.Effect<unknown[], CaminoError<t
 }
 
 const accesInterditError = 'Accès interdit' as const
-type GeosjsonImportPointsErrorMessages = ZodUnparseable | DbQueryAccessError | typeof accesInterditError | 'Fichier incorrect' | ConvertPointsErrors
+type GeosjsonImportPointsErrorMessages = ZodUnparseable | EffectDbQueryAndValidateErrors | typeof accesInterditError | 'Fichier incorrect' | ConvertPointsErrors
 
 export const geojsonImportPoints: RestNewPostCall<'/rest/geojson_points/import/:geoSystemeId'> = (
   rootPipe
@@ -465,7 +466,10 @@ export const geojsonImportPoints: RestNewPostCall<'/rest/geojson_points/import/:
     Effect.mapError(caminoError =>
       Match.value(caminoError.message).pipe(
         Match.when('Accès interdit', () => ({ ...caminoError, status: HTTP_STATUS.FORBIDDEN })),
-        Match.when("Impossible d'exécuter la requête dans la base de données", () => ({ ...caminoError, status: HTTP_STATUS.INTERNAL_SERVER_ERROR })),
+        Match.whenOr("Impossible d'exécuter la requête dans la base de données", 'Les données en base ne correspondent pas à ce qui est attendu', () => ({
+          ...caminoError,
+          status: HTTP_STATUS.INTERNAL_SERVER_ERROR,
+        })),
         Match.whenOr(
           'Fichier incorrect',
           'Impossible de transformer la feature collection',
@@ -481,7 +485,7 @@ export const geojsonImportPoints: RestNewPostCall<'/rest/geojson_points/import/:
   )
 }
 
-type GeosjsonImportForagesErrorMessages = ZodUnparseable | DbQueryAccessError | typeof ouvertureCsvError | typeof ouvertureShapeError | typeof ouvertureGeoJSONError | ConvertPointsErrors
+type GeosjsonImportForagesErrorMessages = ZodUnparseable | EffectDbQueryAndValidateErrors | typeof ouvertureCsvError | typeof ouvertureShapeError | typeof ouvertureGeoJSONError | ConvertPointsErrors
 export const geojsonImportForages: RestNewPostCall<'/rest/geojson_forages/import/:geoSystemeId'> = (
   rootPipe
 ): Effect.Effect<GeojsonImportForagesResponse, CaminoApiError<GeosjsonImportForagesErrorMessages>> => {
@@ -543,7 +547,10 @@ export const geojsonImportForages: RestNewPostCall<'/rest/geojson_forages/import
     }),
     Effect.mapError(caminoError =>
       Match.value(caminoError.message).pipe(
-        Match.when("Impossible d'exécuter la requête dans la base de données", () => ({ ...caminoError, status: HTTP_STATUS.INTERNAL_SERVER_ERROR })),
+        Match.whenOr("Impossible d'exécuter la requête dans la base de données", 'Les données en base ne correspondent pas à ce qui est attendu', () => ({
+          ...caminoError,
+          status: HTTP_STATUS.INTERNAL_SERVER_ERROR,
+        })),
         Match.whenOr(
           'Problème de validation de données',
           'Une erreur est survenue lors de la lecture du csv',
@@ -567,7 +574,7 @@ const getAlertesSuperposition = (
   titreSlug: TitreSlug,
   user: User,
   pool: Pool
-): Effect.Effect<GetTitresIntersectionWithGeojson[], CaminoError<ZodUnparseable | DbQueryAccessError>> => {
+): Effect.Effect<GetTitresIntersectionWithGeojson[], CaminoError<EffectDbQueryAndValidateErrors>> => {
   if (titreTypeId === 'axm' && (isSuper(user) || isAdministrationAdmin(user) || isAdministrationEditeur(user)) && geojson4326_perimetre !== null) {
     // vérifie qu’il n’existe pas de demandes de titres en cours sur ce périmètre
     return getTitresIntersectionWithGeojson(pool, geojson4326_perimetre, titreSlug)

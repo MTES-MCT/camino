@@ -2,21 +2,21 @@ import { EtapeId, etapeIdValidator } from 'camino-common/src/etape'
 import { CaminoError } from 'camino-common/src/zod-tools'
 import { Effect, pipe } from 'effect'
 import { Pool } from 'pg'
-import { DBNotFound, dbNotFoundError, DbQueryAccessError, effectDbQueryAndValidate, Redefine } from '../../pg-database'
+import { DBNotFound, dbNotFoundError, effectDbQueryAndValidate, EffectDbQueryAndValidateErrors, Redefine } from '../../pg-database'
 import { z } from 'zod'
 import { DemarcheId, demarcheIdValidator } from 'camino-common/src/demarche'
 import { CaminoDate, caminoDateValidator } from 'camino-common/src/date'
 import { titreTypeIdValidator } from 'camino-common/src/static/titresTypes'
 import { IGetDemarchesEnSuperpositionPourConsentementDbQuery, IGetEtapeConsentementDbQuery, IUpdateEtapeConsentementDbQuery } from './titres-etapes-consentement.queries.types'
 import { sql } from '@pgtyped/runtime'
-import { shortCircuitError, ZodUnparseable } from '../../tools/fp-tools'
+import { shortCircuitError } from '../../tools/fp-tools'
 import { etapeTypeIdValidator } from 'camino-common/src/static/etapesTypes'
 import { MultiPolygon, multiPolygonValidator } from 'camino-common/src/perimetre'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { SubstanceLegaleId, substanceLegaleIdValidator } from 'camino-common/src/static/substancesLegales'
 
 type GetEtapeConsentement = Omit<GetEtapeConsentementDb, 'geojson4326_perimetre'> & { geojson4326_perimetre: MultiPolygon }
-export const getEtapeConsentement = (pool: Pool, etapeId: EtapeId): Effect.Effect<GetEtapeConsentement | null, CaminoError<DBNotFound | DbQueryAccessError | ZodUnparseable>> => {
+export const getEtapeConsentement = (pool: Pool, etapeId: EtapeId): Effect.Effect<GetEtapeConsentement | null, CaminoError<DBNotFound | EffectDbQueryAndValidateErrors>> => {
   return pipe(
     effectDbQueryAndValidate(getEtapeConsentementDb, { etapeId }, pool, getEtapeConsentementDbValidator),
     Effect.filterOrFail(
@@ -69,7 +69,7 @@ export const updateEtapeConsentement = (
   perimetreDemande: MultiPolygon,
   substancesDemande: SubstanceLegaleId[],
   oldDemarcheIds: DemarcheId[]
-): Effect.Effect<UpdateEtapeConsentement, CaminoError<DbQueryAccessError | ZodUnparseable>> => {
+): Effect.Effect<UpdateEtapeConsentement, CaminoError<EffectDbQueryAndValidateErrors>> => {
   return pipe(
     effectDbQueryAndValidate(getDemarchesEnSuperpositionPourConsentementDb, { dateDemande, perimetreDemande, substancesDemande }, pool, getDemarchesEnSuperpositionPourConsentementValidator),
     Effect.filterOrFail(

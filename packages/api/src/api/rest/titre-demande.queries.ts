@@ -1,12 +1,11 @@
 import { sql } from '@pgtyped/runtime'
-import { DbQueryAccessError, Redefine, effectDbQueryAndValidate } from '../../pg-database.js'
+import { EffectDbQueryAndValidateErrors, Redefine, effectDbQueryAndValidate } from '../../pg-database.js'
 import { z } from 'zod'
 import { Pool } from 'pg'
 import { User } from 'camino-common/src/roles.js'
 import { canCreateTitre } from 'camino-common/src/permissions/titres.js'
 import { TitreId, TitreSlug } from 'camino-common/src/validators/titres.js'
 import { Effect } from 'effect'
-import { ZodUnparseable } from '../../tools/fp-tools.js'
 import { newDemarcheId, newDemarcheSlug, newTitreId, newTitreSlug } from '../../database/models/_format/id-create.js'
 import { CaminoError } from 'camino-common/src/zod-tools.js'
 import { ICreateTitreDemarcheInternalQuery, ICreateTitreInternalQuery } from './titre-demande.queries.types.js'
@@ -17,7 +16,7 @@ import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes.js'
 type CreateTitreInput = Omit<TitreDemande, 'titreFromIds' | 'entrepriseId'>
 
 const creationTitreImpossible = 'Création du titre impossible' as const
-export type CreateTitreErrors = DbQueryAccessError | ZodUnparseable | 'Accès interdit' | typeof creationTitreImpossible
+export type CreateTitreErrors = EffectDbQueryAndValidateErrors | 'Accès interdit' | typeof creationTitreImpossible
 export const createTitre = (pool: Pool, user: User, titreInput: CreateTitreInput): Effect.Effect<TitreId, CaminoError<CreateTitreErrors>> =>
   Effect.Do.pipe(
     Effect.filterOrFail(
@@ -41,7 +40,7 @@ INSERT INTO titres (id, slug, nom, type_id, "references")
 `
 
 const creationDemarcheImpossible = 'Création de la démarche impossible' as const
-export type CreateDemarcheErrors = DbQueryAccessError | ZodUnparseable | 'Accès interdit' | typeof creationDemarcheImpossible
+export type CreateDemarcheErrors = EffectDbQueryAndValidateErrors | 'Accès interdit' | typeof creationDemarcheImpossible
 export const createDemarche = (pool: Pool, titreId: TitreId, demarcheTypeId: DemarcheTypeId): Effect.Effect<DemarcheId, CaminoError<CreateDemarcheErrors>> => {
   return Effect.Do.pipe(
     Effect.bind('id', () => Effect.succeed(newDemarcheId())),

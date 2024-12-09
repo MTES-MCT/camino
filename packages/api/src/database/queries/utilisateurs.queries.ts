@@ -1,6 +1,6 @@
 import { sql } from '@pgtyped/runtime'
 import { Effect, pipe } from 'effect'
-import { DbQueryAccessError, Redefine, dbQueryAndValidate, effectDbQueryAndValidate } from '../../pg-database'
+import { EffectDbQueryAndValidateErrors, Redefine, dbQueryAndValidate, effectDbQueryAndValidate } from '../../pg-database'
 import {
   AdminUserNotNull,
   EntrepriseUserNotNull,
@@ -53,7 +53,7 @@ const getUtilisateursValidator = z.object({
 })
 export type GetUtilisateur = z.infer<typeof getUtilisateursValidator>
 
-type GetUtilisateursFilteredAndSortedErrors = DbQueryAccessError | ZodUnparseable | 'droits insuffisants'
+type GetUtilisateursFilteredAndSortedErrors = EffectDbQueryAndValidateErrors | ZodUnparseable | 'droits insuffisants'
 export const getUtilisateursFilteredAndSorted = (pool: Pool, user: User, searchParams: UtilisateursSearchParams): Effect.Effect<UserNotNull[], CaminoError<GetUtilisateursFilteredAndSortedErrors>> => {
   return Effect.Do.pipe(
     Effect.filterOrFail(
@@ -167,7 +167,7 @@ const userDbToUser = (
   return { ...user, prenom: user.prenom ?? '', entrepriseIds: user.entreprise_ids ?? [], administrationId: user.administration_id }
 }
 
-export type GetUtilisateurByIdErrors = 'droits insuffisants' | DbQueryAccessError | ZodUnparseable
+export type GetUtilisateurByIdErrors = 'droits insuffisants' | EffectDbQueryAndValidateErrors | ZodUnparseable
 export const newGetUtilisateurById = (pool: Pool, id: UtilisateurId, user: User): Effect.Effect<UserNotNull, CaminoError<GetUtilisateurByIdErrors>> => {
   return pipe(
     effectDbQueryAndValidate(getUtilisateurByIdDb, { id }, pool, getUtilisateursValidator),

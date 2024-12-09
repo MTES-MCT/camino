@@ -9,7 +9,7 @@ import { NotNullableKeys, isNullOrUndefinedOrEmpty } from 'camino-common/src/typ
 import TitresTitres from '../../database/models/titres--titres'
 import { titreAdministrationsGet } from '../_format/titres'
 import { canDeleteTitre, canEditTitre, canLinkTitres } from 'camino-common/src/permissions/titres'
-import { linkTitres, LinkTitresErrors } from '../../database/queries/titres-titres.queries'
+import { linkTitres } from '../../database/queries/titres-titres.queries'
 import { checkTitreLinks, CheckTitreLinksError } from '../../business/validations/titre-links-validate'
 import { titreEtapeForMachineValidator, toMachineEtapes } from '../../business/rules-demarches/machine-common'
 import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts'
@@ -27,7 +27,7 @@ import { titreIdValidator, titreIdOrSlugValidator, TitreId } from 'camino-common
 import { RestNewGetCall, RestNewPostCall } from '../../server/rest'
 import { Effect, Match, pipe } from 'effect'
 import { CaminoError } from 'camino-common/src/zod-tools'
-import { DbQueryAccessError, EffectDbQueryAndValidateErrors } from '../../pg-database'
+import { EffectDbQueryAndValidateErrors } from '../../pg-database'
 import { CaminoMachines, machineFind } from '../../business/rules-demarches/machines'
 import { demarcheEnregistrementDemandeDateFind } from 'camino-common/src/demarche'
 
@@ -183,7 +183,7 @@ export const titresAdministrations =
 
 const linkTitreError = 'Droit insuffisant pour lier des titres entre eux' as const
 const demarcheNonChargeesError = 'Les démarches ne sont pas chargées' as const
-type PostTitreLiaisonErrors = DbQueryAccessError | typeof droitInsuffisant | typeof linkTitreError | typeof demarcheNonChargeesError | LinkTitresErrors | CheckTitreLinksError
+type PostTitreLiaisonErrors = EffectDbQueryAndValidateErrors | typeof droitInsuffisant | typeof linkTitreError | typeof demarcheNonChargeesError | CheckTitreLinksError
 
 export const postTitreLiaisons: RestNewPostCall<'/rest/titres/:id/titreLiaisons'> = (rootPipe): Effect.Effect<TitreLinks, CaminoApiError<PostTitreLiaisonErrors>> => {
   return rootPipe.pipe(
@@ -248,25 +248,25 @@ export const postTitreLiaisons: RestNewPostCall<'/rest/titres/:id/titreLiaisons'
     }),
     Effect.mapError(caminoError =>
       Match.value(caminoError.message).pipe(
-        Match.whenOr("Impossible d'exécuter la requête dans la base de données", demarcheNonChargeesError, () => ({ ...caminoError, status: HTTP_STATUS.INTERNAL_SERVER_ERROR })),
+        Match.whenOr("Impossible d'exécuter la requête dans la base de données", demarcheNonChargeesError, 'Les données en base ne correspondent pas à ce qui est attendu', () => ({
+          ...caminoError,
+          status: HTTP_STATUS.INTERNAL_SERVER_ERROR,
+        })),
         Match.whenOr('Droit insuffisant pour accéder au titre ou titre inexistant', linkTitreError, 'droits insuffisants ou titre inexistant', () => ({
           ...caminoError,
           status: HTTP_STATUS.FORBIDDEN,
         })),
-        Match.whenOr(
-          'ce titre peut avoir un seul titre lié',
-          'ce titre ne peut pas être lié à d’autres titres',
-          'lien incompatible entre ces types de titre',
-          'Problème de validation de données',
-          () => ({ ...caminoError, status: HTTP_STATUS.BAD_REQUEST })
-        ),
+        Match.whenOr('ce titre peut avoir un seul titre lié', 'ce titre ne peut pas être lié à d’autres titres', 'lien incompatible entre ces types de titre', () => ({
+          ...caminoError,
+          status: HTTP_STATUS.BAD_REQUEST,
+        })),
         Match.exhaustive
       )
     )
   )
 }
 
-const titreLinksGet = (titreId: string, link: 'titreToId' | 'titreFromId', user: User): Effect.Effect<TitreLink[], CaminoError<DbQueryAccessError>> => {
+const titreLinksGet = (titreId: string, link: 'titreToId' | 'titreFromId', user: User): Effect.Effect<TitreLink[], CaminoError<EffectDbQueryAndValidateErrors>> => {
   return pipe(
     Effect.tryPromise({
       try: async () => TitresTitres.query().where(link === 'titreToId' ? 'titreFromId' : 'titreToId', titreId),
@@ -290,7 +290,7 @@ const titreLinksGet = (titreId: string, link: 'titreToId' | 'titreFromId', user:
 }
 
 const droitInsuffisant = 'Droit insuffisant pour accéder au titre ou titre inexistant' as const
-type GetTitreLiaisonErrors = DbQueryAccessError | typeof droitInsuffisant
+type GetTitreLiaisonErrors = EffectDbQueryAndValidateErrors | typeof droitInsuffisant
 export const getTitreLiaisons: RestNewGetCall<'/rest/titres/:id/titreLiaisons'> = (rootPipe): Effect.Effect<TitreLinks, CaminoApiError<GetTitreLiaisonErrors>> => {
   return rootPipe.pipe(
     Effect.bind('titre', ({ params, user }) =>
@@ -312,7 +312,10 @@ export const getTitreLiaisons: RestNewGetCall<'/rest/titres/:id/titreLiaisons'> 
     }),
     Effect.mapError(caminoError =>
       Match.value(caminoError.message).pipe(
-        Match.when("Impossible d'exécuter la requête dans la base de données", () => ({ ...caminoError, status: HTTP_STATUS.INTERNAL_SERVER_ERROR })),
+        Match.whenOr("Impossible d'exécuter la requête dans la base de données", 'Les données en base ne correspondent pas à ce qui est attendu', () => ({
+          ...caminoError,
+          status: HTTP_STATUS.INTERNAL_SERVER_ERROR,
+        })),
         Match.when('Droit insuffisant pour accéder au titre ou titre inexistant', () => ({ ...caminoError, status: HTTP_STATUS.FORBIDDEN })),
         Match.exhaustive
       )
@@ -408,9 +411,11 @@ export const getUtilisateurTitreAbonner: RestNewGetCall<'/rest/titres/:titreId/a
     Effect.flatMap(({ user, pool, params }) => getTitreUtilisateur(pool, params.titreId, user.id)),
     Effect.mapError(caminoError =>
       Match.value(caminoError.message).pipe(
-        Match.when("Impossible d'exécuter la requête dans la base de données", () => ({ ...caminoError, status: HTTP_STATUS.INTERNAL_SERVER_ERROR })),
+        Match.whenOr("Impossible d'exécuter la requête dans la base de données", 'Les données en base ne correspondent pas à ce qui est attendu', () => ({
+          ...caminoError,
+          status: HTTP_STATUS.INTERNAL_SERVER_ERROR,
+        })),
         Match.when('Droit insuffisant pour accéder au titre ou titre inexistant', () => ({ ...caminoError, status: HTTP_STATUS.FORBIDDEN })),
-        Match.when('Problème de validation de données', () => ({ ...caminoError, status: HTTP_STATUS.INTERNAL_SERVER_ERROR })),
         Match.exhaustive
       )
     )

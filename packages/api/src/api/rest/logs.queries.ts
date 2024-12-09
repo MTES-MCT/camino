@@ -1,11 +1,10 @@
 import { sql } from '@pgtyped/runtime'
-import { DbQueryAccessError, Redefine, effectDbQueryAndValidate } from '../../pg-database'
+import { EffectDbQueryAndValidateErrors, Redefine, effectDbQueryAndValidate } from '../../pg-database'
 import { Pool } from 'pg'
 import { z } from 'zod'
 import { IInsertLogInternalQuery } from './logs.queries.types'
 import { UtilisateurId } from 'camino-common/src/roles'
 import { CaminoError } from 'camino-common/src/zod-tools'
-import { ZodUnparseable } from '../../tools/fp-tools'
 import { Effect } from 'effect'
 
 type Log = {
@@ -14,7 +13,7 @@ type Log = {
   path: string
   body: any
 }
-export const addLog = (pool: Pool, utilisateur_id: UtilisateurId, method: string, path: string, body: unknown): Effect.Effect<void[], CaminoError<ZodUnparseable | DbQueryAccessError>> =>
+export const addLog = (pool: Pool, utilisateur_id: UtilisateurId, method: string, path: string, body: unknown): Effect.Effect<void[], CaminoError<EffectDbQueryAndValidateErrors>> =>
   effectDbQueryAndValidate(insertLogInternal, { utilisateur_id, method, path, body: JSON.stringify(body) }, pool, z.void())
 
 const insertLogInternal = sql<Redefine<IInsertLogInternalQuery, Log, void>>`
