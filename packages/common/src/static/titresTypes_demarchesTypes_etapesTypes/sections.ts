@@ -208,6 +208,13 @@ const EtapesTypesSections = {
       ],
     },
   ],
+  [ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs]: [
+    {
+      id: 'praa',
+      nom: 'Propriétés de la publication',
+      elements: [{ id: 'numeroRAA', nom: 'Numéro de RAA ', type: 'text', optionnel: true }],
+    },
+  ],
 } as const satisfies { [key in EtapeTypeId]?: Section[] }
 
 const proprietesDeLaConcession: Section[] = [
@@ -276,14 +283,6 @@ const caracteristiquesARM: Section[] = [
       { id: 'mecanise', nom: 'Prospection mécanisée', type: 'radio', description: '', optionnel: false },
       { id: 'franchissements', nom: "Franchissements de cours d'eau", type: 'integer', optionnel: true, description: "Nombre de franchissements de cours d'eau" },
     ],
-  },
-]
-
-const proprietesDeLaPublicationDeDecisionAuRAA: Section[] = [
-  {
-    id: 'praa',
-    nom: 'Propriétés de la publication',
-    elements: [{ id: 'numeroRAA', nom: 'Numéro de RAA ', type: 'text', optionnel: true }],
   },
 ]
 
@@ -552,7 +551,7 @@ const TDESections = {
       [ETAPES_TYPES.decisionImplicite]: proprietesDeLaConcession,
       [ETAPES_TYPES.decisionDeLAutoriteAdministrative]: proprietesDeLaConcession,
       [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDeLaConcession,
-      [ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs]: [...proprietesDeLaConcession, ...proprietesDeLaPublicationDeDecisionAuRAA],
+      [ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs]: proprietesDeLaConcession,
       [ETAPES_TYPES.abrogationDeLaDecision]: proprietesDeLaConcession,
       [ETAPES_TYPES.decisionDuJugeAdministratif]: proprietesDeLaConcession,
       [ETAPES_TYPES.informationsHistoriquesIncompletes]: proprietesDeLaConcession,
@@ -964,7 +963,7 @@ const TDESections = {
     [DEMARCHES_TYPES_IDS.Octroi]: {
       [ETAPES_TYPES.demande]: proprietesGeothermieForages,
       [ETAPES_TYPES.decisionDeLAutoriteAdministrative]: proprietesGeothermieForages,
-      [ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs]: [...proprietesGeothermieForages, ...proprietesDeLaPublicationDeDecisionAuRAA],
+      [ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs]: proprietesGeothermieForages,
     },
   },
 } as const satisfies {

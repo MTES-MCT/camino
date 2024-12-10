@@ -1,4 +1,7 @@
 import { isNumberElement } from '../../sections'
+import { DEMARCHES_TYPES_IDS } from '../demarchesTypes'
+import { ETAPES_TYPES } from '../etapesTypes'
+import { TITRES_TYPES_IDS } from '../titresTypes'
 import { getElementWithValue, getSections, getSectionsWithValue, sectionValidator } from './sections'
 import { test, expect, describe } from 'vitest'
 const activitesSectionsProd = require('./activites.sections.json') // eslint-disable-line
@@ -21,86 +24,12 @@ test('getSections erreurs', () => {
 })
 
 test('getSections pas de surcharge mais pas de sections', () => {
-  expect(getSections('apm', 'amo', 'asc')).toMatchInlineSnapshot('[]')
+  expect(getSections(TITRES_TYPES_IDS.AUTORISATION_DE_PROSPECTION_METAUX, DEMARCHES_TYPES_IDS.Amodiation, ETAPES_TYPES.avisDesServicesEtCommissionsConsultatives)).toMatchInlineSnapshot('[]')
 })
 
 test('getSections retourne le numéro de RAA pour les publications de décision au RAA', () => {
-  expect(getSections('pxg', 'oct', 'rpu')).toMatchInlineSnapshot(`
+  expect(getSections(TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX, DEMARCHES_TYPES_IDS.Octroi, ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs)).toMatchInlineSnapshot(`
     [
-      {
-        "elements": [
-          {
-            "description": "(m³/h)",
-            "id": "debit",
-            "nom": "Débit volumique maximal de pompage",
-            "optionnel": true,
-            "type": "number",
-            "uniteId": "m3h",
-          },
-          {
-            "description": "(m³/an)",
-            "id": "volume",
-            "nom": "Volume annuel maximum de pompage",
-            "optionnel": true,
-            "type": "number",
-            "uniteId": "m3a",
-          },
-          {
-            "description": "kW",
-            "id": "puissancePrimaire",
-            "nom": "Puissance primaire",
-            "optionnel": true,
-            "type": "number",
-            "uniteId": "kwa",
-          },
-          {
-            "description": "m NGF",
-            "id": "profondeurToitNappe",
-            "nom": "Profondeur du toit de la nappe exploitée",
-            "optionnel": true,
-            "type": "number",
-            "uniteId": "met",
-          },
-          {
-            "description": "m NGF",
-            "id": "profondeurBaseNappe",
-            "nom": "Profondeur de la base de la nappe exploitée",
-            "optionnel": true,
-            "type": "number",
-            "uniteId": "met",
-          },
-          {
-            "id": "horizonsGeologiquesExploites",
-            "nom": "Horizons géologiques exploités",
-            "optionnel": true,
-            "options": [
-              {
-                "id": "Le Lutétien",
-                "nom": "Le Lutétien",
-              },
-              {
-                "id": "L'Yprésien",
-                "nom": "L'Yprésien",
-              },
-              {
-                "id": "La Craie du Campanien",
-                "nom": "La Craie du Campanien",
-              },
-              {
-                "id": "L'Albien / Néocomien",
-                "nom": "L'Albien / Néocomien",
-              },
-              {
-                "id": "Le Dogger",
-                "nom": "Le Dogger",
-              },
-            ],
-            "type": "checkboxes",
-          },
-        ],
-        "id": "pxg",
-        "nom": "Propriétés du permis d'exploitation",
-      },
       {
         "elements": [
           {
@@ -118,7 +47,7 @@ test('getSections retourne le numéro de RAA pour les publications de décision 
 })
 
 test('getSections surcharge', () => {
-  expect(getSections('arm', 'oct', 'rde')).toMatchInlineSnapshot(`
+  expect(getSections(TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX, DEMARCHES_TYPES_IDS.Octroi, ETAPES_TYPES.recepisseDeDeclarationLoiSurLeau)).toMatchInlineSnapshot(`
     [
       {
         "elements": [
