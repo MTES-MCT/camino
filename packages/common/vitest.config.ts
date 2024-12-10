@@ -5,6 +5,7 @@ export default defineConfig({
   test: {
     environment: 'node',
     root: 'src/',
+    pool: 'threads',
     coverage: {
       provider: 'v8',
       enabled: true,

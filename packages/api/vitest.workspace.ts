@@ -8,6 +8,7 @@ export default defineWorkspace([
       setupFiles: path.resolve(__dirname, './tests/vitestSetup.ts'),
       env: testEnv,
       environment: 'node',
+      pool: 'threads',
       root: 'src',
       name: 'unit',
     },

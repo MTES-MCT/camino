@@ -208,12 +208,18 @@ interface ProcedureSpecifiqueContext extends CaminoCommonContext {
   paysId: 'inconnu' | PaysId
   surface: 'inconnu' | KM2
   consentement: 'inconnu' | Consentement
+  avisDuPrefetRendu: boolean
+  participationDuPublicFaite: boolean
+  decisionAdministrationFaite: boolean
 }
 const defaultDemarcheStatut = DemarchesStatutsIds.EnConstruction
 const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId) =>
   setup({
     types: {} as { context: ProcedureSpecifiqueContext; events: ProcedureSpecifiqueXStateEvent },
     guards: {
+      isParticipationDuPublicFaite: ({ context }) => context.participationDuPublicFaite,
+      isDecisionAdministrationFaite: ({ context }) => context.decisionAdministrationFaite,
+      avisDuPrefetRendu: ({ context }) => context.avisDuPrefetRendu,
       isARM: () => TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX === titreTypeId,
       isAxm: () => TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX === titreTypeId,
       isPerOuConcession: () => [TITRES_TYPES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES, TITRES_TYPES_TYPES_IDS.CONCESSION].includes(getTitreTypeType(titreTypeId)),
@@ -267,8 +273,27 @@ const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: De
       paysId: 'inconnu',
       demandeInformationEnCours: false,
       consentement: 'inconnu',
+      avisDuPrefetRendu: false,
+      participationDuPublicFaite: false,
+      decisionAdministrationFaite: false,
     },
     on: {
+      OUVRIR_PARTICIPATION_DU_PUBLIC: [
+        {
+          target: '#decisionAdministrationAFaire',
+          guard: and(['isARM', not('isDecisionAdministrationFaite'), 'avisDuPrefetRendu', not('isParticipationDuPublicFaite'), ({ event }) => event.status === ETAPES_STATUTS.TERMINE]),
+          actions: assign({ visibilite: 'publique' }),
+        },
+        {
+          target: '#decisionAdministrationAFaire',
+          guard: and(['isARM', not('isDecisionAdministrationFaite'), 'avisDuPrefetRendu', not('isParticipationDuPublicFaite'), ({ event }) => event.status === ETAPES_STATUTS.EN_COURS]),
+          actions: assign({ visibilite: 'publique' }),
+        },
+        {
+          target: '#decisionAdministrationAFaire',
+          guard: and(['isARM', not('isDecisionAdministrationFaite'), 'avisDuPrefetRendu', not('isParticipationDuPublicFaite'), ({ event }) => event.status === ETAPES_STATUTS.PROGRAMME]),
+        },
+      ],
       CLASSER_SANS_SUITE: {
         guard: 'isDemarcheEnInstruction',
         target: '.finDeMachine',
@@ -525,10 +550,11 @@ const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: De
               avisDuPrefetARendre: {
                 on: {
                   RENDRE_AVIS_PREFET: [
-                    { target: 'fin', guard: not('isOutreMer') },
+                    { target: 'fin', guard: not('isOutreMer'), actions: assign({ avisDuPrefetRendu: true }) },
                     {
                       target: 'avisCommissionDepartementaleDesMinesARendre',
                       guard: 'isOutreMer',
+                      actions: assign({ avisDuPrefetRendu: true }),
                     },
                   ],
                 },
@@ -548,7 +574,7 @@ const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: De
             states: {
               participationOuEnquetePublicAFaire: {
                 always: {
-                  guard: 'isARM',
+                  guard: and(['isARM', 'avisDuPrefetRendu']),
                   target: 'fin',
                 },
                 on: {
@@ -560,28 +586,29 @@ const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: De
                     },
                     {
                       target: 'enAttente',
-                      guard: ({ event }) => event.status === ETAPES_STATUTS.EN_COURS,
+                      guard: and([or(['isEnquetePubliqueRequired', 'isEnquetePubliquePossible']), ({ event }) => event.status === ETAPES_STATUTS.EN_COURS]),
                       actions: assign({ visibilite: 'publique' }),
                     },
                     {
                       target: 'enAttente',
-                      guard: ({ event }) => event.status === ETAPES_STATUTS.PROGRAMME,
+                      guard: and([or(['isEnquetePubliqueRequired', 'isEnquetePubliquePossible']), ({ event }) => event.status === ETAPES_STATUTS.PROGRAMME]),
                     },
                   ],
                   OUVRIR_PARTICIPATION_DU_PUBLIC: [
                     {
                       target: 'fin',
                       guard: and([not('isEnquetePubliqueRequired'), ({ event }) => event.status === ETAPES_STATUTS.TERMINE]),
-                      actions: assign({ visibilite: 'publique' }),
+                      actions: assign({ visibilite: 'publique', participationDuPublicFaite: true }),
                     },
                     {
                       target: 'enAttente',
                       guard: and([not('isEnquetePubliqueRequired'), ({ event }) => event.status === ETAPES_STATUTS.EN_COURS]),
-                      actions: assign({ visibilite: 'publique' }),
+                      actions: assign({ visibilite: 'publique', participationDuPublicFaite: true }),
                     },
                     {
                       target: 'enAttente',
                       guard: and([not('isEnquetePubliqueRequired'), ({ event }) => event.status === ETAPES_STATUTS.PROGRAMME]),
+                      actions: assign({ participationDuPublicFaite: true }),
                     },
                   ],
                 },
@@ -605,20 +632,22 @@ const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: De
         },
       },
       decisionAdministrationAFaire: {
+        id: 'decisionAdministrationAFaire',
         on: {
           RENDRE_DECISION_ADMINISTRATION_ACCEPTEE: {
             target: 'publicationAuRecueilDesActesAdministratifsOupublicationAuJORFOuMesuresDePubliciteMachine',
-            actions: assign({ demarcheStatut: DemarchesStatutsIds.Accepte, visibilite: 'publique' }),
+            actions: assign({ demarcheStatut: DemarchesStatutsIds.Accepte, visibilite: 'publique', decisionAdministrationFaite: true }),
           },
           RENDRE_DECISION_ADMINISTRATION_REJETEE: {
             target: 'notificationAuDemandeurApresDecisionRejetAFaire',
-            actions: assign({ visibilite: 'confidentielle' }),
+            actions: assign({ visibilite: 'confidentielle', decisionAdministrationFaite: true }),
           },
           RENDRE_DECISION_ADMINISTRATION_REJETEE_DECISION_IMPLICITE: {
             target: 'finDeMachine',
             actions: assign({
               demarcheStatut: DemarchesStatutsIds.Rejete,
               visibilite: 'publique',
+              decisionAdministrationFaite: true,
             }),
           },
         },
