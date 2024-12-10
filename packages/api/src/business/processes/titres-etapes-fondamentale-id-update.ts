@@ -46,5 +46,5 @@ export const etapesFondamentaleIdUpdateForAll = (pool: Pool): Effect.Effect<numb
   pipe(
     getDemarches(pool),
     Effect.flatMap(Effect.forEach(({ id }) => etapesFondamentaleIdUpdate(pool, id))),
-    Effect.map(demarches => demarches.length)
+    Effect.map(demarches => demarches.reduce((acc, value) => acc + value, 0))
   )

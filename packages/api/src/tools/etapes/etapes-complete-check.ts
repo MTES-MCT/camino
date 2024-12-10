@@ -117,6 +117,7 @@ const etapesValidate = async (pool: Pool, demarcheIds?: DemarcheId[]) => {
   return { surTitreValide: errorsTitresValides, autre: autreErrors, etapesRecentes }
 }
 
+const MAX_ERRORS_TO_DISPLAY = 20
 export const etapesCompletesCheck = async (pool: Pool, demarcheIds?: DemarcheId[]): Promise<{ surTitreValide: string[]; autre: string[]; etapesRecentes: string[] }> => {
   console.info()
   console.info('- - -')
@@ -127,21 +128,21 @@ export const etapesCompletesCheck = async (pool: Pool, demarcheIds?: DemarcheId[
   const { surTitreValide, autre, etapesRecentes } = await etapesValidate(pool, demarcheIds)
   etapesRecentes.forEach(e => {
     errorsNb++
-    if (errorsNb < 100) {
+    if (errorsNb < MAX_ERRORS_TO_DISPLAY) {
       console.warn(e)
     }
   })
 
   surTitreValide.forEach(e => {
     errorsNb++
-    if (errorsNb < 100) {
+    if (errorsNb < MAX_ERRORS_TO_DISPLAY) {
       console.warn(e)
     }
   })
 
   autre.forEach(e => {
     errorsNb++
-    if (errorsNb < 100) {
+    if (errorsNb < MAX_ERRORS_TO_DISPLAY) {
       console.warn(e)
     }
   })

@@ -60,8 +60,6 @@ export const logsUpdate = ({
   console.info('-')
   console.info(dailySummaryMarker)
 
-  console.info('tâches exécutées:')
-
   if (isNotNullNorUndefined(etapesCompletesErreurs)) {
     if (etapesCompletesErreurs.etapesRecentes.length > 0) {
       console.warn(`${etapesCompletesErreurs.etapesRecentes.length} étapes récentes ne sont pas complètes`)

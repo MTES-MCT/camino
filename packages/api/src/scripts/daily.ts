@@ -16,8 +16,9 @@ const envHttpProxyAgent = new EnvHttpProxyAgent()
 setGlobalDispatcher(envHttpProxyAgent)
 
 const logFile = '/tmp/cron.log'
-const output = createWriteStream(logFile)
-
+const output = createWriteStream(logFile, { flush: true, autoClose: true })
+// eslint-disable-next-line
+const oldConsole = console.log
 if (isNotNullNorUndefined(config().CAMINO_STAGE)) {
   const logger = new Console.Console({ stdout: output, stderr: output })
   // eslint-disable-next-line no-console
@@ -81,6 +82,7 @@ const tchapSend = async (markdown: string, url: string): Promise<void> => {
     },
   })
 }
+
 const tasks = async () => {
   console.info('Tâches quotidiennes : démarrage')
   // Réinitialise les logs qui seront envoyés par email
@@ -92,6 +94,11 @@ const tasks = async () => {
   }
 
   if (isNotNullNorUndefined(config().CAMINO_STAGE)) {
+    await new Promise<void>(resolve => {
+      output.end(() => resolve())
+    })
+    // eslint-disable-next-line
+    console.log = oldConsole
     const emailBody = `Résultats de ${config().ENV} \n${readFileSync(logFile).toString()}`
     try {
       const tchapHook = config().TCHAP_HOOK
@@ -106,6 +113,7 @@ const tasks = async () => {
       }
       console.error(errorMessage)
     }
+
     // TODO 2024-12-05 enlever le daily par email si il s'est bien envoyé via tchap
     await mailjetSend([config().ADMIN_EMAIL], {
       Subject: `[Camino][${config().ENV}] Résultats du daily`,
@@ -115,13 +123,17 @@ const tasks = async () => {
   console.info('Tâches quotidiennes : terminé')
 }
 
-tasks()
-  .then(() => {
-    output.end()
+// eslint-disable-next-line
+;(async () => {
+  try {
+    await tasks()
+    await new Promise<void>(resolve => {
+      output.end(() => resolve())
+    })
     process.exit()
-  })
-  .catch(e => {
+  } catch (e) {
     console.error('Erreur', e)
     output.end()
     process.exit(1)
-  })
+  }
+})()
