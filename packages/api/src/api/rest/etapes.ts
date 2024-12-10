@@ -315,7 +315,7 @@ type PerimetreInfos = {
   surface: KM2 | null
 } & Pick<GraphqlEtape, 'geojson4326Forages' | 'geojsonOrigineForages'> &
   Pick<GetGeojsonInformation, 'communes' | 'forets'>
-const getPerimetreInfosInternal = (
+export const getPerimetreInfosInternal = (
   pool: Pool,
   geojson4326Perimetre: GraphqlEtape['geojson4326Perimetre'],
   geojsonOriginePerimetre: GraphqlEtape['geojsonOriginePerimetre'],

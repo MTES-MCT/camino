@@ -28,7 +28,7 @@ type IPropValueArray = undefined | null | IEntreprise[] | SubstanceLegaleId[]
 
 type IPropValue = number | string | IPropValueArray | FeatureMultiPolygon
 
-const titreEtapePropCheck = (propId: string, oldValue?: IPropValue | null, newValue?: IPropValue | null) => {
+const titreEtapePropCheck = (propId: string, oldValue?: IPropValue | null, newValue?: IPropValue | null): boolean => {
   if (['titulaires', 'amodiataires', 'substances'].includes(propId)) {
     return propertyArrayCheck(oldValue as IPropValueArray, newValue as IPropValueArray, propId)
   }
@@ -78,26 +78,35 @@ export const titreEtapeHeritagePropsFind = (
 
     const etapeId = prevHeritage?.etapeId && prevHeritage.actif ? prevHeritage.etapeId : prevTitreEtape?.id
 
-    const getEtapePropId = (heritagePropId: EtapeHeritageProps): keyof ITitreEtape => {
+    const getEtapePropId = (heritagePropId: EtapeHeritageProps): (keyof ITitreEtape)[] => {
       if (heritagePropId === 'perimetre') {
-        return 'geojson4326Perimetre'
+        return ['geojson4326Perimetre', 'geojson4326Points', 'geojsonOrigineGeoSystemeId', 'geojsonOriginePoints', 'geojsonOriginePerimetre', 'geojsonOrigineForages', 'geojson4326Forages', 'surface']
       }
       if (heritagePropId === 'titulaires') {
-        return 'titulaireIds'
+        return ['titulaireIds']
       }
       if (heritagePropId === 'amodiataires') {
-        return 'amodiataireIds'
+        return ['amodiataireIds']
       }
 
-      return heritagePropId
+      return [heritagePropId]
     }
 
     if (heritage.actif) {
       if (prevTitreEtape) {
-        const oldValue = titreEtape[getEtapePropId(propId)] as IPropValue | undefined | null
-        const newValue = prevTitreEtape[getEtapePropId(propId)] as IPropValue | undefined | null
+        let newValue
+        let propChanged = false
+        for (let i = 0, propIds = getEtapePropId(propId); i < propIds.length; i += 1) {
+          const oldValue = titreEtape[propIds[i]] as IPropValue | undefined | null
+          newValue = prevTitreEtape[propIds[i]] as IPropValue | undefined | null
 
-        if (!titreEtapePropCheck(propId, oldValue, newValue)) {
+          if (!titreEtapePropCheck(propId, oldValue, newValue)) {
+            propChanged = true
+            break
+          }
+        }
+
+        if (propChanged) {
           hasChanged = true
           newTitreEtape = objectClone(newTitreEtape)
 
