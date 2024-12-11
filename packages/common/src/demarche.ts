@@ -18,7 +18,7 @@ import { capitalize } from './strings'
 import { foretIdValidator } from './static/forets'
 import { featureCollectionForagesValidator, featureCollectionPointsValidator, featureMultiPolygonValidator } from './perimetre'
 import { geoSystemeIdValidator } from './static/geoSystemes'
-import { isNotNullNorUndefined, isNullOrUndefinedOrEmpty, NonEmptyArray, toSorted } from './typescript-tools'
+import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefinedOrEmpty, NonEmptyArray, toSorted } from './typescript-tools'
 import { proprietesGeothermieForagesElementIds } from './static/titresTypes_demarchesTypes_etapesTypes/sections'
 import { titreIdValidator, titreSlugValidator } from './validators/titres'
 import { DEMARCHES_TYPES_IDS, DemarcheTypeId, demarcheTypeIdValidator } from './static/demarchesTypes'
@@ -258,7 +258,7 @@ export const getDemarcheContenu = (etapes: (Pick<DemarcheEtapeCommon, 'sections_
         }
         if (horizon === null) {
           const horizonElementWithValue = pxgSectionWithValue.elements.find(({ id }) => id === proprietesGeothermieForagesElementIds['Horizons géologiques exploités'])
-          if (isNotNullNorUndefined(horizonElementWithValue) && isNotNullNorUndefined(horizonElementWithValue.value) && horizonElementWithValue.type === 'checkboxes') {
+          if (isNotNullNorUndefined(horizonElementWithValue) && horizonElementWithValue.type === 'checkboxes' && isNotNullNorUndefinedNorEmpty(horizonElementWithValue.value)) {
             horizon = horizonElementWithValue.value.join(', ')
             contenu[horizonElementWithValue.nom ?? ''] = `${horizon}`
           }

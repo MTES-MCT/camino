@@ -35,6 +35,8 @@ export const globalGuards = {
   isVisibiliteConfidentielle: ({ context }) => context.visibilite === 'confidentielle',
   isDemarcheStatutAcceptee: ({ context }) => context.demarcheStatut === DemarchesStatutsIds.Accepte,
   isDemarcheStatutAccepteeEtPublie: ({ context }) => context.demarcheStatut === DemarchesStatutsIds.AccepteEtPublie,
+  isDemarcheStatutEnInstruction: ({ context }) => context.demarcheStatut === DemarchesStatutsIds.EnInstruction,
+  isDemarcheStatutEnConstruction: ({ context }) => context.demarcheStatut === DemarchesStatutsIds.EnConstruction,
 } as const satisfies Record<string, (value: { context: CaminoCommonContext }) => boolean>
 
 export interface CaminoCommonContext {
