@@ -28,9 +28,13 @@ type IPropValueArray = undefined | null | IEntreprise[] | SubstanceLegaleId[]
 
 type IPropValue = number | string | IPropValueArray | FeatureMultiPolygon
 
-const titreEtapePropCheck = (propId: string, oldValue?: IPropValue | null, newValue?: IPropValue | null): boolean => {
+const titreEtapePropCheck = (propId: string, realPropId: keyof ITitreEtape, oldValue?: IPropValue | null, newValue?: IPropValue | null): boolean => {
   if (['titulaires', 'amodiataires', 'substances'].includes(propId)) {
     return propertyArrayCheck(oldValue as IPropValueArray, newValue as IPropValueArray, propId)
+  }
+
+  if (realPropId === 'surface') {
+    return (oldValue ?? 0) === (newValue ?? 0)
   }
 
   if (propId === 'perimetre' && isNotNullNorUndefined(oldValue) && isNotNullNorUndefined(newValue)) {
@@ -100,7 +104,7 @@ export const titreEtapeHeritagePropsFind = (
           const oldValue = titreEtape[propIds[i]] as IPropValue | undefined | null
           newValue = prevTitreEtape[propIds[i]] as IPropValue | undefined | null
 
-          if (!titreEtapePropCheck(propId, oldValue, newValue)) {
+          if (!titreEtapePropCheck(propId, propIds[i], oldValue, newValue)) {
             propChanged = true
             break
           }

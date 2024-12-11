@@ -8,6 +8,7 @@ import { newEtapeId } from '../../database/models/_format/id-create'
 
 import { ETAPE_HERITAGE_PROPS, EtapeHeritageProps } from 'camino-common/src/heritage'
 import { EntrepriseId, entrepriseIdValidator } from 'camino-common/src/entreprise'
+import { km2Validator } from 'camino-common/src/number'
 
 describe('retourne l’étape en fonction de son héritage', () => {
   test('l’étape n’est pas modifiée si elle n’a pas d’étape précédente et qu’elle n’a aucun héritage d’actif', () => {
@@ -317,5 +318,32 @@ describe('retourne l’étape en fonction de son héritage', () => {
       hasChanged: true,
       titreEtape: newTitreEtape,
     })
+  })
+
+  test("l'héritage de la surface n'est pas considéré comme modifié quand null et 0", () => {
+    const titreEtapePrecedente = {
+      id: 'titreEtapePrecedenteId',
+      geojson4326Forages: undefined,
+      geojson4326Points: undefined,
+      geojsonOriginePoints: undefined,
+      geojsonOriginePerimetre: undefined,
+      geojsonOrigineGeoSystemeId: undefined,
+      geojsonOrigineForages: undefined,
+      surface: null,
+      geojson4326Perimetre: null,
+      heritageProps: ETAPE_HERITAGE_PROPS.reduce((acc, prop) => {
+        acc[prop] = { actif: false, etapeId: null }
+
+        return acc
+      }, {} as IHeritageProps),
+    } as ITitreEtape
+
+    const titreEtape = objectClone(titreEtapePrecedente) as ITitreEtape
+    titreEtape.surface = km2Validator.parse(0)
+    titreEtape.heritageProps!.perimetre.actif = true
+    titreEtape.id = newEtapeId('titreEtapeId')
+    ETAPE_HERITAGE_PROPS.forEach(prop => (titreEtape.heritageProps![prop].etapeId = titreEtapePrecedente.id))
+
+    expect(titreEtapeHeritagePropsFind(titreEtape, titreEtapePrecedente).hasChanged).toBe(false)
   })
 })
