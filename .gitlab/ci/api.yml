@@ -20,6 +20,7 @@ api/test/integration:
     - name: postgis/postgis:16-3.4
       alias: postgres
   stage: test
+  retry: 2
   script:
     - ./.gitlab/wait-for-it.sh -h ${PGHOST} -p ${PGPORT} -t 30 -- echo 'done'
     - make test/api-integration
@@ -42,6 +43,7 @@ api/check-queries:
     - name: postgis/postgis:16-3.4
       alias: postgres
   stage: test
+  retry: 2
   script:
     - set -a
     - source .env-example
