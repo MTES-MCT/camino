@@ -180,7 +180,6 @@ const EtapesTypesSections = {
     { id: 'paiement', nom: 'Informations sur le paiement', elements: [{ id: 'facture', nom: 'Facture ONF', type: 'text', optionnel: true, description: "Numéro de facture émise par l'ONF" }] },
   ],
   [ETAPES_TYPES.publicationDeDecisionAuJORF]: publicationAuJorf,
-  [ETAPES_TYPES.decisionDeLAutoriteAdministrative]: publication,
   [ETAPES_TYPES.avisDeMiseEnConcurrenceAuJORF]: [
     ...publicationAuJorf,
     {
