@@ -1,13 +1,14 @@
 import { ITitreEtape } from '../../types'
 
 import { titreDemarchePublicFind } from './titre-demarche-public-find'
-import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
+import { ETAPES_TYPES, EtapeTypeId } from 'camino-common/src/static/etapesTypes'
 import { newDemarcheId, newEtapeId, newTitreId } from '../../database/models/_format/id-create'
 import { toCaminoDate } from 'camino-common/src/date'
 import { describe, expect, test } from 'vitest'
-import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
+import { DEMARCHES_TYPES_IDS, DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
 import { ETAPE_IS_NOT_BROUILLON } from 'camino-common/src/etape'
 import { TITRES_TYPES_IDS } from 'camino-common/src/static/titresTypes'
+import { ETAPES_STATUTS } from 'camino-common/src/static/etapesStatuts'
 const etapesBuild = (etapesProps: Partial<ITitreEtape>[]) =>
   etapesProps.map(
     (etapeProps, i) =>
@@ -26,8 +27,15 @@ describe("publicité d'une démarche", () => {
   test("une démarche sans étape n'est pas publique", () => {
     expect(
       titreDemarchePublicFind(
-        { id: newDemarcheId(), typeId: 'oct', etapes: [], titreId: newTitreId('titreId'), demarcheDateDebut: toCaminoDate('2020-01-01'), demarcheDateFin: toCaminoDate('2021-01-01') },
-        'arm'
+        {
+          id: newDemarcheId(),
+          typeId: DEMARCHES_TYPES_IDS.Octroi,
+          etapes: [],
+          titreId: newTitreId('titreId'),
+          demarcheDateDebut: toCaminoDate('2020-01-01'),
+          demarcheDateFin: toCaminoDate('2021-01-01'),
+        },
+        TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX
       )
     ).toMatchObject({
       publicLecture: false,
@@ -40,8 +48,8 @@ describe("publicité d'une démarche", () => {
       titreDemarchePublicFind(
         {
           id: newDemarcheId(),
-          typeId: 'oct',
-          etapes: etapesBuild([{ typeId: 'dae' }]),
+          typeId: DEMARCHES_TYPES_IDS.Octroi,
+          etapes: etapesBuild([{ typeId: ETAPES_TYPES.decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_ }]),
           titreId: newTitreId('titreId'),
           demarcheDateDebut: toCaminoDate('2020-01-01'),
           demarcheDateFin: toCaminoDate('2021-01-01'),
@@ -55,14 +63,14 @@ describe("publicité d'une démarche", () => {
     expect(
       titreDemarchePublicFind(
         {
-          typeId: 'oct',
+          typeId: DEMARCHES_TYPES_IDS.Octroi,
           id: newDemarcheId(),
           demarcheDateDebut: toCaminoDate('2020-01-01'),
           demarcheDateFin: toCaminoDate('2021-01-01'),
-          etapes: etapesBuild([{ typeId: 'spp' }]),
+          etapes: etapesBuild([{ typeId: ETAPES_TYPES.saisineDuPrefet }]),
           titreId: newTitreId('titreId'),
         },
-        'apw'
+        TITRES_TYPES_IDS.AUTORISATION_DE_PROSPECTION_GRANULATS_MARINS
       )
     ).toMatchObject({ publicLecture: false, entreprisesLecture: false })
   })
@@ -71,11 +79,11 @@ describe("publicité d'une démarche", () => {
     expect(
       titreDemarchePublicFind(
         {
-          typeId: 'ret',
+          typeId: DEMARCHES_TYPES_IDS.Retrait,
           id: newDemarcheId(),
           demarcheDateDebut: toCaminoDate('2020-01-01'),
           demarcheDateFin: toCaminoDate('2021-01-01'),
-          etapes: etapesBuild([{ typeId: 'spp' }]),
+          etapes: etapesBuild([{ typeId: ETAPES_TYPES.saisineDuPrefet }]),
           titreId: newTitreId('titreId'),
         },
         TITRES_TYPES_IDS.AUTORISATION_DE_PROSPECTION_GRANULATS_MARINS
@@ -87,11 +95,11 @@ describe("publicité d'une démarche", () => {
     expect(
       titreDemarchePublicFind(
         {
-          typeId: 'dec',
+          typeId: DEMARCHES_TYPES_IDS.Decheance,
           id: newDemarcheId(),
           demarcheDateDebut: toCaminoDate('2020-01-01'),
           demarcheDateFin: toCaminoDate('2021-01-01'),
-          etapes: etapesBuild([{ typeId: 'spp' }]),
+          etapes: etapesBuild([{ typeId: ETAPES_TYPES.saisineDuPrefet }]),
           titreId: newTitreId('titreId'),
         },
         TITRES_TYPES_IDS.AUTORISATION_DE_PROSPECTION_GRANULATS_MARINS
@@ -103,11 +111,11 @@ describe("publicité d'une démarche", () => {
     expect(
       titreDemarchePublicFind(
         {
-          typeId: 'oct',
+          typeId: DEMARCHES_TYPES_IDS.Octroi,
           id: newDemarcheId(),
           demarcheDateDebut: toCaminoDate('2020-01-01'),
           demarcheDateFin: toCaminoDate('2021-01-01'),
-          etapes: etapesBuild([{ typeId: 'mfr' }]),
+          etapes: etapesBuild([{ typeId: ETAPES_TYPES.demande }]),
           titreId: newTitreId('titreId'),
         },
         TITRES_TYPES_IDS.AUTORISATION_DE_PROSPECTION_GRANULATS_MARINS
@@ -119,14 +127,14 @@ describe("publicité d'une démarche", () => {
     expect(
       titreDemarchePublicFind(
         {
-          typeId: 'oct',
+          typeId: DEMARCHES_TYPES_IDS.Octroi,
           id: newDemarcheId(),
           demarcheDateDebut: toCaminoDate('2023-01-01'),
           demarcheDateFin: toCaminoDate('2026-01-01'),
-          etapes: etapesBuild([{ typeId: 'dex', date: toCaminoDate('2023-01-01'), statutId: 'acc', isBrouillon: ETAPE_IS_NOT_BROUILLON }]),
+          etapes: etapesBuild([{ typeId: ETAPES_TYPES.decisionDeLAutoriteAdministrative, date: toCaminoDate('2023-01-01'), statutId: ETAPES_STATUTS.ACCEPTE, isBrouillon: ETAPE_IS_NOT_BROUILLON }]),
           titreId: newTitreId('titreId'),
         },
-        'arg'
+        TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_GEOTHERMIE
       )
     ).toMatchObject({ publicLecture: true, entreprisesLecture: true })
   })
@@ -135,11 +143,11 @@ describe("publicité d'une démarche", () => {
     expect(
       titreDemarchePublicFind(
         {
-          typeId: 'oct',
+          typeId: DEMARCHES_TYPES_IDS.Octroi,
           id: newDemarcheId(),
           demarcheDateDebut: toCaminoDate('2020-01-01'),
           demarcheDateFin: toCaminoDate('2021-01-01'),
-          etapes: etapesBuild([{ typeId: 'css' }, { typeId: 'mfr' }]),
+          etapes: etapesBuild([{ typeId: ETAPES_TYPES.classementSansSuite }, { typeId: ETAPES_TYPES.demande }]),
           titreId: newTitreId('titreId'),
         },
         TITRES_TYPES_IDS.AUTORISATION_DE_PROSPECTION_GRANULATS_MARINS
@@ -151,14 +159,14 @@ describe("publicité d'une démarche", () => {
     expect(
       titreDemarchePublicFind(
         {
-          typeId: 'oct',
+          typeId: DEMARCHES_TYPES_IDS.Octroi,
           id: newDemarcheId(),
           demarcheDateDebut: toCaminoDate('2020-01-01'),
           demarcheDateFin: toCaminoDate('2021-01-01'),
-          etapes: etapesBuild([{ typeId: 'mcr', date: toCaminoDate('2000-01-01') }, { typeId: 'css' }]),
+          etapes: etapesBuild([{ typeId: ETAPES_TYPES.recevabiliteDeLaDemande, date: toCaminoDate('2000-01-01') }, { typeId: ETAPES_TYPES.classementSansSuite }]),
           titreId: newTitreId('titreId'),
         },
-        'axm'
+        TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX
       )
     ).toMatchObject({ publicLecture: true })
   })
@@ -167,14 +175,17 @@ describe("publicité d'une démarche", () => {
     expect(
       titreDemarchePublicFind(
         {
-          typeId: 'oct',
+          typeId: DEMARCHES_TYPES_IDS.Octroi,
           id: newDemarcheId(),
           demarcheDateDebut: toCaminoDate('2020-01-01'),
           demarcheDateFin: toCaminoDate('2021-01-01'),
-          etapes: etapesBuild([{ typeId: 'sca', date: toCaminoDate('2000-01-01') }, { typeId: 'css' }]),
+          etapes: etapesBuild([
+            { typeId: ETAPES_TYPES.saisineDeLaCommissionDesAutorisationsDeRecherchesMinieres_CARM_, date: toCaminoDate('2000-01-01') },
+            { typeId: ETAPES_TYPES.classementSansSuite },
+          ]),
           titreId: newTitreId('titreId'),
         },
-        'arm'
+        TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX
       )
     ).toMatchObject({ publicLecture: true })
   })
@@ -183,14 +194,14 @@ describe("publicité d'une démarche", () => {
     expect(
       titreDemarchePublicFind(
         {
-          typeId: 'oct',
+          typeId: DEMARCHES_TYPES_IDS.Octroi,
           id: newDemarcheId(),
           demarcheDateDebut: toCaminoDate('2020-01-01'),
           demarcheDateFin: toCaminoDate('2021-01-01'),
-          etapes: etapesBuild([{ typeId: 'des', date: toCaminoDate('2000-01-01') }]),
+          etapes: etapesBuild([{ typeId: ETAPES_TYPES.desistementDuDemandeur, date: toCaminoDate('2000-01-01') }]),
           titreId: newTitreId('titreId'),
         },
-        'arm'
+        TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX
       )
     ).toMatchObject({ publicLecture: true })
   })
@@ -199,14 +210,14 @@ describe("publicité d'une démarche", () => {
     expect(
       titreDemarchePublicFind(
         {
-          typeId: 'oct',
+          typeId: DEMARCHES_TYPES_IDS.Octroi,
           id: newDemarcheId(),
           demarcheDateDebut: toCaminoDate('2020-01-01'),
           demarcheDateFin: toCaminoDate('2021-01-01'),
-          etapes: etapesBuild([{ typeId: 'des', date: toCaminoDate('2000-01-01') }]),
+          etapes: etapesBuild([{ typeId: ETAPES_TYPES.desistementDuDemandeur, date: toCaminoDate('2000-01-01') }]),
           titreId: newTitreId('titreId'),
         },
-        'axm'
+        TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX
       )
     ).toMatchObject({ publicLecture: true })
   })
@@ -215,11 +226,11 @@ describe("publicité d'une démarche", () => {
     expect(
       titreDemarchePublicFind(
         {
-          typeId: 'pr1',
+          typeId: DEMARCHES_TYPES_IDS.Prolongation1,
           id: newDemarcheId(),
           demarcheDateDebut: toCaminoDate('2020-01-01'),
           demarcheDateFin: toCaminoDate('2021-01-01'),
-          etapes: etapesBuild([{ typeId: 'mcr' }]),
+          etapes: etapesBuild([{ typeId: ETAPES_TYPES.recevabiliteDeLaDemande }]),
           titreId: newTitreId('titreId'),
         },
         TITRES_TYPES_IDS.AUTORISATION_DE_PROSPECTION_GRANULATS_MARINS
@@ -231,14 +242,14 @@ describe("publicité d'une démarche", () => {
     expect(
       titreDemarchePublicFind(
         {
-          typeId: 'oct',
+          typeId: DEMARCHES_TYPES_IDS.Octroi,
           id: newDemarcheId(),
           demarcheDateDebut: toCaminoDate('2020-01-01'),
           demarcheDateFin: toCaminoDate('2021-01-01'),
-          etapes: etapesBuild([{ typeId: 'mcr', date: toCaminoDate('2000-01-01') }]),
+          etapes: etapesBuild([{ typeId: ETAPES_TYPES.recevabiliteDeLaDemande, date: toCaminoDate('2000-01-01') }]),
           titreId: newTitreId('titreId'),
         },
-        'arm'
+        TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX
       )
     ).toMatchObject({ publicLecture: false })
   })
@@ -247,14 +258,14 @@ describe("publicité d'une démarche", () => {
     expect(
       titreDemarchePublicFind(
         {
-          typeId: 'oct',
+          typeId: DEMARCHES_TYPES_IDS.Octroi,
           id: newDemarcheId(),
           demarcheDateDebut: toCaminoDate('2020-01-01'),
           demarcheDateFin: toCaminoDate('2021-01-01'),
-          etapes: etapesBuild([{ typeId: 'mcr' }]),
+          etapes: etapesBuild([{ typeId: ETAPES_TYPES.recevabiliteDeLaDemande }]),
           titreId: newTitreId('titreId'),
         },
-        'cxg'
+        TITRES_TYPES_IDS.CONCESSION_GEOTHERMIE
       )
     ).toMatchObject({ publicLecture: false })
   })
@@ -263,11 +274,11 @@ describe("publicité d'une démarche", () => {
     expect(
       titreDemarchePublicFind(
         {
-          typeId: 'oct',
+          typeId: DEMARCHES_TYPES_IDS.Octroi,
           id: newDemarcheId(),
           demarcheDateDebut: toCaminoDate('2020-01-01'),
           demarcheDateFin: toCaminoDate('2021-01-01'),
-          etapes: etapesBuild([{ typeId: 'anf' }]),
+          etapes: etapesBuild([{ typeId: ETAPES_TYPES.avisDeMiseEnConcurrenceAuJORF }]),
           titreId: newTitreId('titreId'),
         },
         TITRES_TYPES_IDS.AUTORISATION_DE_PROSPECTION_GRANULATS_MARINS
@@ -279,11 +290,11 @@ describe("publicité d'une démarche", () => {
     expect(
       titreDemarchePublicFind(
         {
-          typeId: 'oct',
+          typeId: DEMARCHES_TYPES_IDS.Octroi,
           id: newDemarcheId(),
           demarcheDateDebut: toCaminoDate('2020-01-01'),
           demarcheDateFin: toCaminoDate('2021-01-01'),
-          etapes: etapesBuild([{ typeId: 'apu' }]),
+          etapes: etapesBuild([{ typeId: ETAPES_TYPES.publicationDeLavisDeDecisionImplicite }]),
           titreId: newTitreId('titreId'),
         },
         TITRES_TYPES_IDS.AUTORISATION_DE_PROSPECTION_GRANULATS_MARINS
@@ -295,11 +306,11 @@ describe("publicité d'une démarche", () => {
     expect(
       titreDemarchePublicFind(
         {
-          typeId: 'oct',
+          typeId: DEMARCHES_TYPES_IDS.Octroi,
           id: newDemarcheId(),
           demarcheDateDebut: toCaminoDate('2020-01-01'),
           demarcheDateFin: toCaminoDate('2021-01-01'),
-          etapes: etapesBuild([{ typeId: 'ppu' }]),
+          etapes: etapesBuild([{ typeId: ETAPES_TYPES.participationDuPublic }]),
           titreId: newTitreId('titreId'),
         },
         TITRES_TYPES_IDS.AUTORISATION_DE_PROSPECTION_GRANULATS_MARINS
@@ -311,14 +322,14 @@ describe("publicité d'une démarche", () => {
     expect(
       titreDemarchePublicFind(
         {
-          typeId: 'oct',
+          typeId: DEMARCHES_TYPES_IDS.Octroi,
           id: newDemarcheId(),
           demarcheDateDebut: toCaminoDate('2020-01-01'),
           demarcheDateFin: toCaminoDate('2021-01-01'),
-          etapes: etapesBuild([{ typeId: 'def', date: toCaminoDate('2000-01-01') }]),
+          etapes: etapesBuild([{ typeId: ETAPES_TYPES.decisionDeLOfficeNationalDesForets, date: toCaminoDate('2000-01-01') }]),
           titreId: newTitreId('titreId'),
         },
-        'arm'
+        TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX
       )
     ).toMatchObject({ publicLecture: true })
   })
@@ -327,14 +338,14 @@ describe("publicité d'une démarche", () => {
     expect(
       titreDemarchePublicFind(
         {
-          typeId: 'oct',
+          typeId: DEMARCHES_TYPES_IDS.Octroi,
           id: newDemarcheId(),
           demarcheDateDebut: toCaminoDate('2020-01-01'),
           demarcheDateFin: toCaminoDate('2021-01-01'),
-          etapes: etapesBuild([{ typeId: 'aca', date: toCaminoDate('2000-01-01') }]),
+          etapes: etapesBuild([{ typeId: ETAPES_TYPES.avisDeLaCommissionDesAutorisationsDeRecherchesMinieres_CARM_, date: toCaminoDate('2000-01-01') }]),
           titreId: newTitreId('titreId'),
         },
-        'arm'
+        TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX
       )
     ).toMatchObject({ publicLecture: true })
   })
@@ -343,14 +354,14 @@ describe("publicité d'une démarche", () => {
     expect(
       titreDemarchePublicFind(
         {
-          typeId: 'oct',
+          typeId: DEMARCHES_TYPES_IDS.Octroi,
           id: newDemarcheId(),
           demarcheDateDebut: toCaminoDate('2020-01-01'),
           demarcheDateFin: toCaminoDate('2021-01-01'),
-          etapes: etapesBuild([{ typeId: 'sca', date: toCaminoDate('2000-01-01') }]),
+          etapes: etapesBuild([{ typeId: ETAPES_TYPES.saisineDeLaCommissionDesAutorisationsDeRecherchesMinieres_CARM_, date: toCaminoDate('2000-01-01') }]),
           titreId: newTitreId('titreId'),
         },
-        'arm'
+        TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX
       )
     ).toMatchObject({ publicLecture: true })
   })
@@ -359,11 +370,11 @@ describe("publicité d'une démarche", () => {
     expect(
       titreDemarchePublicFind(
         {
-          typeId: 'oct',
+          typeId: DEMARCHES_TYPES_IDS.Octroi,
           id: newDemarcheId(),
           demarcheDateDebut: toCaminoDate('2020-01-01'),
           demarcheDateFin: toCaminoDate('2021-01-01'),
-          etapes: etapesBuild([{ typeId: 'dim', statutId: 'acc' }]),
+          etapes: etapesBuild([{ typeId: ETAPES_TYPES.decisionImplicite, statutId: ETAPES_STATUTS.ACCEPTE }]),
           titreId: newTitreId('titreId'),
         },
         TITRES_TYPES_IDS.AUTORISATION_DE_PROSPECTION_GRANULATS_MARINS
@@ -375,13 +386,13 @@ describe("publicité d'une démarche", () => {
     expect(
       titreDemarchePublicFind(
         {
-          typeId: 'oct',
+          typeId: DEMARCHES_TYPES_IDS.Octroi,
           id: newDemarcheId(),
           demarcheDateDebut: toCaminoDate('2020-01-01'),
           demarcheDateFin: toCaminoDate('2021-01-01'),
           etapes: etapesBuild([
-            { typeId: 'anf', statutId: 'fai', isBrouillon: ETAPE_IS_NOT_BROUILLON, date: toCaminoDate('2021-01-01') },
-            { typeId: 'dim', statutId: 'rej', isBrouillon: ETAPE_IS_NOT_BROUILLON, date: toCaminoDate('2021-01-02') },
+            { typeId: ETAPES_TYPES.avisDeMiseEnConcurrenceAuJORF, statutId: ETAPES_STATUTS.FAIT, isBrouillon: ETAPE_IS_NOT_BROUILLON, date: toCaminoDate('2021-01-01') },
+            { typeId: ETAPES_TYPES.decisionImplicite, statutId: ETAPES_STATUTS.REJETE, isBrouillon: ETAPE_IS_NOT_BROUILLON, date: toCaminoDate('2021-01-02') },
           ]),
           titreId: newTitreId('titreId'),
         },
@@ -394,11 +405,11 @@ describe("publicité d'une démarche", () => {
     expect(
       titreDemarchePublicFind(
         {
-          typeId: 'oct',
+          typeId: DEMARCHES_TYPES_IDS.Octroi,
           demarcheDateDebut: toCaminoDate('2020-01-01'),
           demarcheDateFin: toCaminoDate('2021-01-01'),
           id: newDemarcheId(),
-          etapes: etapesBuild([{ typeId: 'dex', statutId: 'rej' }]),
+          etapes: etapesBuild([{ typeId: ETAPES_TYPES.decisionDeLAutoriteAdministrative, statutId: ETAPES_STATUTS.REJETE }]),
           titreId: newTitreId('titreId'),
         },
         TITRES_TYPES_IDS.AUTORISATION_DE_PROSPECTION_GRANULATS_MARINS
@@ -410,17 +421,17 @@ describe("publicité d'une démarche", () => {
     expect(
       titreDemarchePublicFind(
         {
-          typeId: 'oct',
+          typeId: DEMARCHES_TYPES_IDS.Octroi,
           demarcheDateDebut: toCaminoDate('2020-01-01'),
           demarcheDateFin: toCaminoDate('2021-01-01'),
           id: newDemarcheId(),
           etapes: etapesBuild([
-            { typeId: 'mcr', date: toCaminoDate('2000-01-01') },
-            { typeId: 'dex', statutId: 'rej' },
+            { typeId: ETAPES_TYPES.recevabiliteDeLaDemande, date: toCaminoDate('2000-01-01') },
+            { typeId: ETAPES_TYPES.decisionDeLAutoriteAdministrative, statutId: ETAPES_STATUTS.REJETE },
           ]),
           titreId: newTitreId('titreId'),
         },
-        'axm'
+        TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX
       )
     ).toMatchObject({ publicLecture: true })
   })
@@ -429,14 +440,14 @@ describe("publicité d'une démarche", () => {
     expect(
       titreDemarchePublicFind(
         {
-          typeId: 'oct',
+          typeId: DEMARCHES_TYPES_IDS.Octroi,
           demarcheDateDebut: toCaminoDate('2020-01-01'),
           demarcheDateFin: toCaminoDate('2021-01-01'),
           id: newDemarcheId(),
-          etapes: etapesBuild([{ typeId: 'dex', statutId: 'acc', date: toCaminoDate('2000-01-01') }]),
+          etapes: etapesBuild([{ typeId: ETAPES_TYPES.decisionDeLAutoriteAdministrative, statutId: ETAPES_STATUTS.ACCEPTE, date: toCaminoDate('2000-01-01') }]),
           titreId: newTitreId('titreId'),
         },
-        'axm'
+        TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX
       )
     ).toMatchObject({ publicLecture: true })
   })
@@ -445,11 +456,11 @@ describe("publicité d'une démarche", () => {
     expect(
       titreDemarchePublicFind(
         {
-          typeId: 'oct',
+          typeId: DEMARCHES_TYPES_IDS.Octroi,
           demarcheDateDebut: toCaminoDate('2020-01-01'),
           demarcheDateFin: toCaminoDate('2021-01-01'),
           id: newDemarcheId(),
-          etapes: etapesBuild([{ typeId: 'dpu', statutId: 'acc' }]),
+          etapes: etapesBuild([{ typeId: ETAPES_TYPES.publicationDeDecisionAuJORF, statutId: ETAPES_STATUTS.ACCEPTE }]),
           titreId: newTitreId('titreId'),
         },
         TITRES_TYPES_IDS.AUTORISATION_DE_PROSPECTION_GRANULATS_MARINS
@@ -461,11 +472,11 @@ describe("publicité d'une démarche", () => {
     expect(
       titreDemarchePublicFind(
         {
-          typeId: 'oct',
+          typeId: DEMARCHES_TYPES_IDS.Octroi,
           demarcheDateDebut: toCaminoDate('2020-01-01'),
           demarcheDateFin: toCaminoDate('2021-01-01'),
           id: newDemarcheId(),
-          etapes: etapesBuild([{ typeId: 'dex' }]),
+          etapes: etapesBuild([{ typeId: ETAPES_TYPES.decisionDeLAutoriteAdministrative }]),
           titreId: newTitreId('titreId'),
         },
         TITRES_TYPES_IDS.AUTORISATION_DE_PROSPECTION_GRANULATS_MARINS
@@ -477,11 +488,11 @@ describe("publicité d'une démarche", () => {
     expect(
       titreDemarchePublicFind(
         {
-          typeId: 'oct',
+          typeId: DEMARCHES_TYPES_IDS.Octroi,
           demarcheDateDebut: toCaminoDate('2020-01-01'),
           demarcheDateFin: toCaminoDate('2021-01-01'),
           id: newDemarcheId(),
-          etapes: etapesBuild([{ typeId: 'dpu' }]),
+          etapes: etapesBuild([{ typeId: ETAPES_TYPES.publicationDeDecisionAuJORF }]),
           titreId: newTitreId('titreId'),
         },
         TITRES_TYPES_IDS.AUTORISATION_DE_PROSPECTION_GRANULATS_MARINS
@@ -493,11 +504,11 @@ describe("publicité d'une démarche", () => {
     expect(
       titreDemarchePublicFind(
         {
-          typeId: 'oct',
+          typeId: DEMARCHES_TYPES_IDS.Octroi,
           demarcheDateDebut: toCaminoDate('2020-01-01'),
           demarcheDateFin: toCaminoDate('2021-01-01'),
           id: newDemarcheId(),
-          etapes: etapesBuild([{ typeId: 'rpu' }]),
+          etapes: etapesBuild([{ typeId: ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs }]),
           titreId: newTitreId('titreId'),
         },
         TITRES_TYPES_IDS.AUTORISATION_DE_PROSPECTION_GRANULATS_MARINS
@@ -509,14 +520,14 @@ describe("publicité d'une démarche", () => {
     expect(
       titreDemarchePublicFind(
         {
-          typeId: 'oct',
+          typeId: DEMARCHES_TYPES_IDS.Octroi,
           demarcheDateDebut: toCaminoDate('2000-01-01'),
           demarcheDateFin: toCaminoDate('2001-01-01'),
           id: newDemarcheId(),
-          etapes: etapesBuild([{ typeId: 'sco', date: toCaminoDate('2000-01-01') }]),
+          etapes: etapesBuild([{ typeId: ETAPES_TYPES.signatureDeLautorisationDeRechercheMiniere, date: toCaminoDate('2000-01-01') }]),
           titreId: newTitreId('titreId'),
         },
-        'arm'
+        TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX
       )
     ).toMatchObject({ publicLecture: true })
   })
@@ -525,14 +536,14 @@ describe("publicité d'une démarche", () => {
     expect(
       titreDemarchePublicFind(
         {
-          typeId: 'oct',
+          typeId: DEMARCHES_TYPES_IDS.Octroi,
           demarcheDateDebut: toCaminoDate('2020-01-01'),
           demarcheDateFin: toCaminoDate('2021-01-01'),
           id: newDemarcheId(),
-          etapes: etapesBuild([{ typeId: 'sco', date: toCaminoDate('2000-01-01') }]),
+          etapes: etapesBuild([{ typeId: ETAPES_TYPES.signatureDeLautorisationDeRechercheMiniere, date: toCaminoDate('2000-01-01') }]),
           titreId: newTitreId('titreId'),
         },
-        'arm'
+        TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX
       )
     ).toMatchObject({ publicLecture: true })
   })
@@ -541,11 +552,11 @@ describe("publicité d'une démarche", () => {
     expect(
       titreDemarchePublicFind(
         {
-          typeId: 'oct',
+          typeId: DEMARCHES_TYPES_IDS.Octroi,
           demarcheDateDebut: toCaminoDate('2020-01-01'),
           demarcheDateFin: toCaminoDate('2021-01-01'),
           id: newDemarcheId(),
-          etapes: etapesBuild([{ typeId: 'and', statutId: 'fav' }]),
+          etapes: etapesBuild([{ typeId: ETAPES_TYPES.decisionDuJugeAdministratif, statutId: ETAPES_STATUTS.FAVORABLE }]),
           titreId: newTitreId('titreId'),
         },
         TITRES_TYPES_IDS.AUTORISATION_DE_PROSPECTION_GRANULATS_MARINS
@@ -557,11 +568,11 @@ describe("publicité d'une démarche", () => {
     expect(
       titreDemarchePublicFind(
         {
-          typeId: 'oct',
+          typeId: DEMARCHES_TYPES_IDS.Octroi,
           demarcheDateDebut: toCaminoDate('2020-01-01'),
           demarcheDateFin: toCaminoDate('2021-01-01'),
           id: newDemarcheId(),
-          etapes: etapesBuild([{ typeId: 'and', statutId: 'fai' }]),
+          etapes: etapesBuild([{ typeId: ETAPES_TYPES.decisionDuJugeAdministratif, statutId: ETAPES_STATUTS.FAIT }]),
           titreId: newTitreId('titreId'),
         },
         TITRES_TYPES_IDS.AUTORISATION_DE_PROSPECTION_GRANULATS_MARINS
@@ -569,183 +580,205 @@ describe("publicité d'une démarche", () => {
     ).toMatchObject({ publicLecture: false })
   })
 
-  test.each<DemarcheTypeId>(['rec', 'rep', 'pro'])("une démarche %s dont l'étape la plus récente est le dépot de la demande n'est pas publique", demarcheTypeId => {
-    expect(
-      titreDemarchePublicFind(
-        {
-          typeId: demarcheTypeId,
-          demarcheDateDebut: toCaminoDate('2020-01-01'),
-          demarcheDateFin: toCaminoDate('2021-01-01'),
-          id: newDemarcheId(),
-          etapes: etapesBuild([{ typeId: 'men', statutId: 'fai', date: toCaminoDate('2017-01-01'), isBrouillon: ETAPE_IS_NOT_BROUILLON }]),
-          titreId: newTitreId('titreId'),
-        },
-        'arm'
-      )
-    ).toMatchObject({ publicLecture: false })
-    expect(
-      titreDemarchePublicFind(
-        {
-          typeId: demarcheTypeId,
-          demarcheDateDebut: toCaminoDate('2020-01-01'),
-          demarcheDateFin: toCaminoDate('2021-01-01'),
-          id: newDemarcheId(),
-          etapes: etapesBuild([
-            { typeId: 'mfr', statutId: 'fai', date: toCaminoDate('2020-01-01'), isBrouillon: ETAPE_IS_NOT_BROUILLON },
-            { typeId: 'men', statutId: 'fai', date: toCaminoDate('2020-01-02'), isBrouillon: ETAPE_IS_NOT_BROUILLON },
-          ]),
-          titreId: newTitreId('titreId'),
-        },
-        'arm'
-      )
-    ).toMatchObject({ publicLecture: false })
-  })
+  test.each<DemarcheTypeId>([DEMARCHES_TYPES_IDS.RenonciationTotale, DEMARCHES_TYPES_IDS.RenonciationPartielle, DEMARCHES_TYPES_IDS.Prolongation])(
+    "une démarche %s dont l'étape la plus récente est le dépot de la demande n'est pas publique",
+    demarcheTypeId => {
+      expect(
+        titreDemarchePublicFind(
+          {
+            typeId: demarcheTypeId,
+            demarcheDateDebut: toCaminoDate('2020-01-01'),
+            demarcheDateFin: toCaminoDate('2021-01-01'),
+            id: newDemarcheId(),
+            etapes: etapesBuild([{ typeId: ETAPES_TYPES.enregistrementDeLaDemande, statutId: ETAPES_STATUTS.FAIT, date: toCaminoDate('2017-01-01'), isBrouillon: ETAPE_IS_NOT_BROUILLON }]),
+            titreId: newTitreId('titreId'),
+          },
+          TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX
+        )
+      ).toMatchObject({ publicLecture: false })
+      expect(
+        titreDemarchePublicFind(
+          {
+            typeId: demarcheTypeId,
+            demarcheDateDebut: toCaminoDate('2020-01-01'),
+            demarcheDateFin: toCaminoDate('2021-01-01'),
+            id: newDemarcheId(),
+            etapes: etapesBuild([
+              { typeId: ETAPES_TYPES.demande, statutId: ETAPES_STATUTS.FAIT, date: toCaminoDate('2020-01-01'), isBrouillon: ETAPE_IS_NOT_BROUILLON },
+              { typeId: ETAPES_TYPES.enregistrementDeLaDemande, statutId: ETAPES_STATUTS.FAIT, date: toCaminoDate('2020-01-02'), isBrouillon: ETAPE_IS_NOT_BROUILLON },
+            ]),
+            titreId: newTitreId('titreId'),
+          },
+          TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX
+        )
+      ).toMatchObject({ publicLecture: false })
+    }
+  )
 
-  test.each<DemarcheTypeId>(['rec', 'rep', 'pro'])("une démarche %s dont l'étape la plus récente est recevabilité de la demande est publique", demarcheTypeId => {
-    expect(
-      titreDemarchePublicFind(
-        {
-          typeId: demarcheTypeId,
-          demarcheDateDebut: toCaminoDate('2020-01-01'),
-          demarcheDateFin: toCaminoDate('2021-01-01'),
-          id: newDemarcheId(),
-          etapes: etapesBuild([{ typeId: 'mcr', date: toCaminoDate('2017-01-01'), isBrouillon: ETAPE_IS_NOT_BROUILLON }]),
-          titreId: newTitreId('titreId'),
-        },
-        'arm'
-      )
-    ).toMatchObject({ publicLecture: true })
+  test.each<DemarcheTypeId>([DEMARCHES_TYPES_IDS.RenonciationTotale, DEMARCHES_TYPES_IDS.RenonciationPartielle, DEMARCHES_TYPES_IDS.Prolongation])(
+    "une démarche %s dont l'étape la plus récente est recevabilité de la demande est publique",
+    demarcheTypeId => {
+      expect(
+        titreDemarchePublicFind(
+          {
+            typeId: demarcheTypeId,
+            demarcheDateDebut: toCaminoDate('2020-01-01'),
+            demarcheDateFin: toCaminoDate('2021-01-01'),
+            id: newDemarcheId(),
+            etapes: etapesBuild([{ typeId: ETAPES_TYPES.recevabiliteDeLaDemande, date: toCaminoDate('2017-01-01'), isBrouillon: ETAPE_IS_NOT_BROUILLON }]),
+            titreId: newTitreId('titreId'),
+          },
+          TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX
+        )
+      ).toMatchObject({ publicLecture: true })
 
-    expect(
-      titreDemarchePublicFind(
-        {
-          typeId: demarcheTypeId,
-          demarcheDateDebut: toCaminoDate('2020-01-01'),
-          demarcheDateFin: toCaminoDate('2021-01-01'),
-          id: newDemarcheId(),
-          etapes: etapesBuild([
-            { typeId: 'mfr', statutId: 'fai', date: toCaminoDate('2020-01-01'), isBrouillon: ETAPE_IS_NOT_BROUILLON },
-            { typeId: 'men', statutId: 'fai', date: toCaminoDate('2020-01-02'), isBrouillon: ETAPE_IS_NOT_BROUILLON },
-            { typeId: 'mcr', statutId: 'fav', date: toCaminoDate('2020-01-03'), isBrouillon: ETAPE_IS_NOT_BROUILLON },
-          ]),
-          titreId: newTitreId('titreId'),
-        },
-        'arm'
-      )
-    ).toMatchObject({ publicLecture: true })
-  })
+      expect(
+        titreDemarchePublicFind(
+          {
+            typeId: demarcheTypeId,
+            demarcheDateDebut: toCaminoDate('2020-01-01'),
+            demarcheDateFin: toCaminoDate('2021-01-01'),
+            id: newDemarcheId(),
+            etapes: etapesBuild([
+              { typeId: ETAPES_TYPES.demande, statutId: ETAPES_STATUTS.FAIT, date: toCaminoDate('2020-01-01'), isBrouillon: ETAPE_IS_NOT_BROUILLON },
+              { typeId: ETAPES_TYPES.enregistrementDeLaDemande, statutId: ETAPES_STATUTS.FAIT, date: toCaminoDate('2020-01-02'), isBrouillon: ETAPE_IS_NOT_BROUILLON },
+              { typeId: ETAPES_TYPES.recevabiliteDeLaDemande, statutId: ETAPES_STATUTS.FAVORABLE, date: toCaminoDate('2020-01-03'), isBrouillon: ETAPE_IS_NOT_BROUILLON },
+            ]),
+            titreId: newTitreId('titreId'),
+          },
+          TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX
+        )
+      ).toMatchObject({ publicLecture: true })
+    }
+  )
 
-  test.each<DemarcheTypeId>(['rep', 'rec', 'pro'])("une démarche %s dont l'étape la plus récente est l’expertise de l’onf est publique", demarcheTypeId => {
-    expect(
-      titreDemarchePublicFind(
-        {
-          typeId: demarcheTypeId,
-          demarcheDateDebut: toCaminoDate('2020-01-01'),
-          demarcheDateFin: toCaminoDate('2021-01-01'),
-          id: newDemarcheId(),
-          etapes: etapesBuild([
-            { typeId: 'mcr', date: toCaminoDate('2017-01-01'), isBrouillon: ETAPE_IS_NOT_BROUILLON },
-            { typeId: 'asc', date: toCaminoDate('2017-01-01'), isBrouillon: ETAPE_IS_NOT_BROUILLON },
-          ]),
-          titreId: newTitreId('titreId'),
-        },
-        'arm'
-      )
-    ).toMatchObject({ publicLecture: true })
-    expect(
-      titreDemarchePublicFind(
-        {
-          typeId: demarcheTypeId,
-          demarcheDateDebut: toCaminoDate('2020-01-01'),
-          demarcheDateFin: toCaminoDate('2021-01-01'),
-          id: newDemarcheId(),
-          etapes: etapesBuild([
-            { typeId: 'mfr', statutId: 'fai', date: toCaminoDate('2020-01-01'), isBrouillon: ETAPE_IS_NOT_BROUILLON },
-            { typeId: 'men', statutId: 'fai', date: toCaminoDate('2020-01-02'), isBrouillon: ETAPE_IS_NOT_BROUILLON },
-            { typeId: 'mcr', statutId: 'fav', date: toCaminoDate('2020-01-03'), isBrouillon: ETAPE_IS_NOT_BROUILLON },
-            { typeId: 'asc', statutId: 'fai', date: toCaminoDate('2020-01-05'), isBrouillon: ETAPE_IS_NOT_BROUILLON },
-          ]),
-          titreId: newTitreId('titreId'),
-        },
-        'arm'
-      )
-    ).toMatchObject({ publicLecture: true })
-  })
+  test.each<DemarcheTypeId>([DEMARCHES_TYPES_IDS.RenonciationTotale, DEMARCHES_TYPES_IDS.RenonciationPartielle, DEMARCHES_TYPES_IDS.Prolongation])(
+    "une démarche %s dont l'étape la plus récente est l’expertise de l’onf est publique",
+    demarcheTypeId => {
+      expect(
+        titreDemarchePublicFind(
+          {
+            typeId: demarcheTypeId,
+            demarcheDateDebut: toCaminoDate('2020-01-01'),
+            demarcheDateFin: toCaminoDate('2021-01-01'),
+            id: newDemarcheId(),
+            etapes: etapesBuild([
+              { typeId: ETAPES_TYPES.recevabiliteDeLaDemande, date: toCaminoDate('2017-01-01'), isBrouillon: ETAPE_IS_NOT_BROUILLON },
+              { typeId: ETAPES_TYPES.avisDesServicesEtCommissionsConsultatives, date: toCaminoDate('2017-01-01'), isBrouillon: ETAPE_IS_NOT_BROUILLON },
+            ]),
+            titreId: newTitreId('titreId'),
+          },
+          TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX
+        )
+      ).toMatchObject({ publicLecture: true })
+      expect(
+        titreDemarchePublicFind(
+          {
+            typeId: demarcheTypeId,
+            demarcheDateDebut: toCaminoDate('2020-01-01'),
+            demarcheDateFin: toCaminoDate('2021-01-01'),
+            id: newDemarcheId(),
+            etapes: etapesBuild([
+              { typeId: ETAPES_TYPES.demande, statutId: ETAPES_STATUTS.FAIT, date: toCaminoDate('2020-01-01'), isBrouillon: ETAPE_IS_NOT_BROUILLON },
+              { typeId: ETAPES_TYPES.enregistrementDeLaDemande, statutId: ETAPES_STATUTS.FAIT, date: toCaminoDate('2020-01-02'), isBrouillon: ETAPE_IS_NOT_BROUILLON },
+              { typeId: ETAPES_TYPES.recevabiliteDeLaDemande, statutId: ETAPES_STATUTS.FAVORABLE, date: toCaminoDate('2020-01-03'), isBrouillon: ETAPE_IS_NOT_BROUILLON },
+              { typeId: ETAPES_TYPES.avisDesServicesEtCommissionsConsultatives, statutId: ETAPES_STATUTS.FAIT, date: toCaminoDate('2020-01-05'), isBrouillon: ETAPE_IS_NOT_BROUILLON },
+            ]),
+            titreId: newTitreId('titreId'),
+          },
+          TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX
+        )
+      ).toMatchObject({ publicLecture: true })
+    }
+  )
 
-  test.each<DemarcheTypeId>(['rep', 'rec', 'pro'])("une démarche %s dont l'étape la plus récente est la décision de classement sans suite est publique", demarcheTypeId => {
-    expect(
-      titreDemarchePublicFind(
-        {
-          typeId: demarcheTypeId,
-          demarcheDateDebut: toCaminoDate('2020-01-01'),
-          demarcheDateFin: toCaminoDate('2021-01-01'),
-          id: newDemarcheId(),
-          etapes: etapesBuild([{ typeId: 'css', date: toCaminoDate('2017-01-01'), isBrouillon: ETAPE_IS_NOT_BROUILLON }]),
-          titreId: newTitreId('titreId'),
-        },
-        'arm'
-      )
-    ).toMatchObject({ publicLecture: true })
-    expect(
-      titreDemarchePublicFind(
-        {
-          typeId: demarcheTypeId,
-          demarcheDateDebut: toCaminoDate('2020-01-01'),
-          demarcheDateFin: toCaminoDate('2021-01-01'),
-          id: newDemarcheId(),
-          etapes: etapesBuild([
-            { typeId: 'mfr', statutId: 'fai', date: toCaminoDate('2020-01-01'), isBrouillon: ETAPE_IS_NOT_BROUILLON },
-            { typeId: 'men', statutId: 'fai', date: toCaminoDate('2020-01-02'), isBrouillon: ETAPE_IS_NOT_BROUILLON },
-            { typeId: 'mcr', statutId: 'fav', date: toCaminoDate('2020-01-03'), isBrouillon: ETAPE_IS_NOT_BROUILLON },
-            { typeId: 'css', statutId: 'fai', date: toCaminoDate('2020-01-05'), isBrouillon: ETAPE_IS_NOT_BROUILLON },
-          ]),
-          titreId: newTitreId('titreId'),
-        },
-        'arm'
-      )
-    ).toMatchObject({ publicLecture: true })
-  })
+  test.each<DemarcheTypeId>([DEMARCHES_TYPES_IDS.RenonciationTotale, DEMARCHES_TYPES_IDS.RenonciationPartielle, DEMARCHES_TYPES_IDS.Prolongation])(
+    "une démarche %s dont l'étape la plus récente est la décision de classement sans suite est publique",
+    demarcheTypeId => {
+      expect(
+        titreDemarchePublicFind(
+          {
+            typeId: demarcheTypeId,
+            demarcheDateDebut: toCaminoDate('2020-01-01'),
+            demarcheDateFin: toCaminoDate('2021-01-01'),
+            id: newDemarcheId(),
+            etapes: etapesBuild([{ typeId: ETAPES_TYPES.classementSansSuite, date: toCaminoDate('2017-01-01'), isBrouillon: ETAPE_IS_NOT_BROUILLON }]),
+            titreId: newTitreId('titreId'),
+          },
+          TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX
+        )
+      ).toMatchObject({ publicLecture: true })
+      expect(
+        titreDemarchePublicFind(
+          {
+            typeId: demarcheTypeId,
+            demarcheDateDebut: toCaminoDate('2020-01-01'),
+            demarcheDateFin: toCaminoDate('2021-01-01'),
+            id: newDemarcheId(),
+            etapes: etapesBuild([
+              { typeId: ETAPES_TYPES.demande, statutId: ETAPES_STATUTS.FAIT, date: toCaminoDate('2020-01-01'), isBrouillon: ETAPE_IS_NOT_BROUILLON },
+              { typeId: ETAPES_TYPES.enregistrementDeLaDemande, statutId: ETAPES_STATUTS.FAIT, date: toCaminoDate('2020-01-02'), isBrouillon: ETAPE_IS_NOT_BROUILLON },
+              { typeId: ETAPES_TYPES.recevabiliteDeLaDemande, statutId: ETAPES_STATUTS.FAVORABLE, date: toCaminoDate('2020-01-03'), isBrouillon: ETAPE_IS_NOT_BROUILLON },
+              { typeId: ETAPES_TYPES.classementSansSuite, statutId: ETAPES_STATUTS.FAIT, date: toCaminoDate('2020-01-05'), isBrouillon: ETAPE_IS_NOT_BROUILLON },
+            ]),
+            titreId: newTitreId('titreId'),
+          },
+          TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX
+        )
+      ).toMatchObject({ publicLecture: true })
+    }
+  )
 
-  test.each<DemarcheTypeId>(['rep', 'rec', 'pro'])("une démarche %s dont l'étape la plus récente est le désistement est publique", demarcheTypeId => {
-    // sans machine
-    expect(
-      titreDemarchePublicFind(
-        {
-          typeId: demarcheTypeId,
-          demarcheDateDebut: toCaminoDate('2017-01-01'),
-          demarcheDateFin: toCaminoDate('2021-01-01'),
-          id: newDemarcheId(),
-          etapes: etapesBuild([{ typeId: 'des', date: toCaminoDate('2017-01-01'), isBrouillon: ETAPE_IS_NOT_BROUILLON }]),
-          titreId: newTitreId('titreId'),
-        },
-        'arm'
-      )
-    ).toMatchObject({ publicLecture: true })
-    // avec machine
-    expect(
-      titreDemarchePublicFind(
-        {
-          typeId: demarcheTypeId,
-          demarcheDateDebut: toCaminoDate('2020-01-01'),
-          demarcheDateFin: toCaminoDate('2021-01-01'),
-          id: newDemarcheId(),
-          etapes: etapesBuild([
-            { typeId: 'mfr', statutId: 'fai', date: toCaminoDate('2020-01-01'), isBrouillon: ETAPE_IS_NOT_BROUILLON },
-            { typeId: 'men', statutId: 'fai', date: toCaminoDate('2020-01-02'), isBrouillon: ETAPE_IS_NOT_BROUILLON },
-            { typeId: 'des', statutId: 'fai', date: toCaminoDate('2020-01-05'), isBrouillon: ETAPE_IS_NOT_BROUILLON },
-          ]),
-          titreId: newTitreId('titreId'),
-        },
-        'arm'
-      )
-    ).toMatchObject({ publicLecture: true })
-  })
+  test.each<DemarcheTypeId>([DEMARCHES_TYPES_IDS.RenonciationTotale, DEMARCHES_TYPES_IDS.RenonciationPartielle, DEMARCHES_TYPES_IDS.Prolongation])(
+    "une démarche %s dont l'étape la plus récente est le désistement est publique",
+    demarcheTypeId => {
+      // sans machine
+      expect(
+        titreDemarchePublicFind(
+          {
+            typeId: demarcheTypeId,
+            demarcheDateDebut: toCaminoDate('2017-01-01'),
+            demarcheDateFin: toCaminoDate('2021-01-01'),
+            id: newDemarcheId(),
+            etapes: etapesBuild([{ typeId: ETAPES_TYPES.desistementDuDemandeur, date: toCaminoDate('2017-01-01'), isBrouillon: ETAPE_IS_NOT_BROUILLON }]),
+            titreId: newTitreId('titreId'),
+          },
+          TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX
+        )
+      ).toMatchObject({ publicLecture: true })
+      // avec machine
+      expect(
+        titreDemarchePublicFind(
+          {
+            typeId: demarcheTypeId,
+            demarcheDateDebut: toCaminoDate('2020-01-01'),
+            demarcheDateFin: toCaminoDate('2021-01-01'),
+            id: newDemarcheId(),
+            etapes: etapesBuild([
+              { typeId: ETAPES_TYPES.demande, statutId: ETAPES_STATUTS.FAIT, date: toCaminoDate('2020-01-01'), isBrouillon: ETAPE_IS_NOT_BROUILLON },
+              { typeId: ETAPES_TYPES.enregistrementDeLaDemande, statutId: ETAPES_STATUTS.FAIT, date: toCaminoDate('2020-01-02'), isBrouillon: ETAPE_IS_NOT_BROUILLON },
+              { typeId: ETAPES_TYPES.desistementDuDemandeur, statutId: ETAPES_STATUTS.FAIT, date: toCaminoDate('2020-01-05'), isBrouillon: ETAPE_IS_NOT_BROUILLON },
+            ]),
+            titreId: newTitreId('titreId'),
+          },
+          TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX
+        )
+      ).toMatchObject({ publicLecture: true })
+    }
+  )
 
-  test.each<EtapeTypeId>(['anf', 'dex', 'dpu', 'rpu', 'ppu', 'epu'])("une démarche d’un titre non énergétique dont l'étape la plus récente est %s est public", etapeTypeId => {
+  test.each<EtapeTypeId>([
+    ETAPES_TYPES.avisDeMiseEnConcurrenceAuJORF,
+    ETAPES_TYPES.decisionDeLAutoriteAdministrative,
+    ETAPES_TYPES.publicationDeDecisionAuJORF,
+    ETAPES_TYPES.participationDuPublic,
+    ETAPES_TYPES.enquetePublique,
+    ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs,
+  ])("une démarche d’un titre non énergétique dont l'étape la plus récente est %s est public", etapeTypeId => {
     expect(
       titreDemarchePublicFind(
         {
-          typeId: 'oct',
+          typeId: DEMARCHES_TYPES_IDS.Octroi,
           demarcheDateDebut: toCaminoDate('2020-01-01'),
           demarcheDateFin: toCaminoDate('2021-01-01'),
           id: newDemarcheId(),
@@ -762,16 +795,16 @@ describe("publicité d'une démarche", () => {
       titreDemarchePublicFind(
         {
           id: newDemarcheId(),
-          typeId: 'pr1',
+          typeId: DEMARCHES_TYPES_IDS.Prolongation1,
           demarcheDateDebut: toCaminoDate('2020-01-01'),
           demarcheDateFin: null,
           etapes: etapesBuild([
-            { typeId: 'mfr', isBrouillon: ETAPE_IS_NOT_BROUILLON },
-            { typeId: 'men', isBrouillon: ETAPE_IS_NOT_BROUILLON },
+            { typeId: ETAPES_TYPES.demande, isBrouillon: ETAPE_IS_NOT_BROUILLON },
+            { typeId: ETAPES_TYPES.enregistrementDeLaDemande, isBrouillon: ETAPE_IS_NOT_BROUILLON },
           ]),
           titreId: newTitreId('titreId'),
         },
-        'prm'
+        TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_METAUX
       )
     ).toMatchObject({ publicLecture: true })
   })
@@ -780,11 +813,11 @@ describe("publicité d'une démarche", () => {
     expect(
       titreDemarchePublicFind(
         {
-          typeId: 'oct',
+          typeId: DEMARCHES_TYPES_IDS.Octroi,
           demarcheDateDebut: toCaminoDate('2020-01-01'),
           demarcheDateFin: toCaminoDate('2021-01-01'),
           id: newDemarcheId(),
-          etapes: etapesBuild([{ typeId: 'dpu', isBrouillon: ETAPE_IS_NOT_BROUILLON }]),
+          etapes: etapesBuild([{ typeId: ETAPES_TYPES.publicationDeDecisionAuJORF, isBrouillon: ETAPE_IS_NOT_BROUILLON }]),
           titreId: newTitreId('WQaZgPfDcQw9tFliMgBIDH3Z'),
         },
         TITRES_TYPES_IDS.AUTORISATION_DE_PROSPECTION_GRANULATS_MARINS
@@ -797,13 +830,13 @@ describe("publicité d'une démarche", () => {
       titreDemarchePublicFind(
         {
           id: newDemarcheId(),
-          typeId: 'pr1',
+          typeId: DEMARCHES_TYPES_IDS.Prolongation1,
           demarcheDateDebut: toCaminoDate('2020-01-01'),
           demarcheDateFin: null,
-          etapes: etapesBuild([{ typeId: 'mfr', isBrouillon: ETAPE_IS_NOT_BROUILLON }]),
+          etapes: etapesBuild([{ typeId: ETAPES_TYPES.demande, isBrouillon: ETAPE_IS_NOT_BROUILLON }]),
           titreId: newTitreId('titreId'),
         },
-        'prm'
+        TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_METAUX
       )
     ).toMatchObject({ publicLecture: false })
   })
