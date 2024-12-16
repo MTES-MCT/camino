@@ -111,6 +111,10 @@ export const memoize = <T>(fn: SimplePromiseFn<T>): Memoized<T> => {
   }) as Memoized<T>
 }
 
+export const sleep = (ms: number): Promise<void> => {
+  return new Promise(resolve => setTimeout(resolve, ms))
+}
+
 export const stringArrayEquals = (array1: string[], array2: string[]): boolean => {
   return array1.length === array2.length && array1.every((value, index) => array2[index] === value)
 }

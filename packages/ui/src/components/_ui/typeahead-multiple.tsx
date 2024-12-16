@@ -1,6 +1,6 @@
 import { computed, Ref, ref, watch, defineComponent } from 'vue'
 import styles from './typeahead.module.css'
-import { isEventWithTarget, random } from '@/utils/vue-tsx-utils'
+import { isEventWithTarget, random, useState } from '@/utils/vue-tsx-utils'
 import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
 import { DsfrTag } from './tag'
 import type { JSX } from 'vue/jsx-runtime'
@@ -44,7 +44,7 @@ export const TypeAheadMultiple = defineComponent(<T extends TypeAheadRecord, K e
     selectedItems.value = selectedItems.value.filter(i => i[props.props.itemKey] !== itemKey)
     props.props.onSelectItems(selectedItems.value)
   }
-  const isInputFocused = ref<boolean>(false)
+  const [isInputFocused, setInputFocused] = useState<boolean>(false)
   const currentSelectionIndex = ref<number>(0)
 
   const isListVisible = computed<boolean>(() => {
@@ -58,6 +58,13 @@ export const TypeAheadMultiple = defineComponent(<T extends TypeAheadRecord, K e
       props.props.onInput?.(payload.target.value)
       input.value = payload.target.value
     }
+  }
+  const onBlur = () => {
+    setInputFocused(false)
+    input.value = ''
+  }
+  const onFocus = () => {
+    setInputFocused(true)
   }
 
   const scrollSelectionIntoView = () => {
@@ -144,8 +151,8 @@ export const TypeAheadMultiple = defineComponent(<T extends TypeAheadRecord, K e
           placeholder={props.props.placeholder}
           autocomplete="off"
           onInput={onInput}
-          onFocus={() => (isInputFocused.value = true)}
-          onBlur={() => (isInputFocused.value = false)}
+          onFocus={onFocus}
+          onBlur={onBlur}
           onKeydown={payload => {
             // TODO 2023-06-19 il doit bien y avoir une enum quelque part dans la lib du dom avec la liste des keys non ?
             // Oui --> https://github.com/Moh-Snoussi/keyboard-event-key-type

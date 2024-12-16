@@ -67,8 +67,6 @@ export const TypeAheadSmartMultiple = defineComponent(<ID extends string>(props:
 
   const updateHandler = (e: Element<ID>[]) => {
     selectedItems.value = e
-    // TODO 2022-04-08: ceci est pour le composant parent, une fois refactoré, utiliser uniquement le onSelectItems
-    props.filter.value = e.map(({ id }) => id)
     props.onSelectItems(e)
   }
 

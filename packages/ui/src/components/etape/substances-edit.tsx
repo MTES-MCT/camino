@@ -101,6 +101,8 @@ export const SubstancesEdit = defineComponent<Props>(props => {
           return substance
         }),
       })
+    } else {
+      setEditedSubstances({ ...editedSubstances.value, value: editedSubstances.value.value.filter((_substance, myIndex) => myIndex !== index) })
     }
   }
 

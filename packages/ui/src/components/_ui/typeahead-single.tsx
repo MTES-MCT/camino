@@ -1,7 +1,7 @@
 import { computed, Ref, ref, watch, defineComponent } from 'vue'
 import styles from './typeahead.module.css'
-import { isEventWithTarget, random } from '@/utils/vue-tsx-utils'
-import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
+import { isEventWithTarget, random, useState } from '@/utils/vue-tsx-utils'
+import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined } from 'camino-common/src/typescript-tools'
 import type { JSX } from 'vue/jsx-runtime'
 type TypeAheadRecord = Record<string | symbol | number, any>
 
@@ -19,6 +19,7 @@ type Props<T extends TypeAheadRecord, K extends keyof T> = {
     displayItemInList?: (item: NoInfer<T>) => JSX.Element
     onSelectItem: (item: NoInfer<T> | undefined) => void
     onInput?: (item: string) => void
+    clearAfterSelect?: boolean
   }
 }
 
@@ -44,7 +45,7 @@ export const TypeAheadSingle = defineComponent(<T extends TypeAheadRecord, K ext
     },
     { deep: true }
   )
-  const isInputFocused = ref<boolean>(false)
+  const [isInputFocused, setInputFocused] = useState<boolean>(false)
   const currentSelectionIndex = ref<number>(0)
 
   const isListVisible = computed<boolean>(() => {
@@ -59,7 +60,18 @@ export const TypeAheadSingle = defineComponent(<T extends TypeAheadRecord, K ext
       input.value = payload.target.value
     }
   }
+  const onFocus = () => {
+    setInputFocused(true)
+  }
+  const onBlur = () => {
+    setInputFocused(false)
 
+    setTimeout(() => {
+      if (isNullOrUndefined(selectedItem.value) || props.props.itemChipLabel(selectedItem.value) !== input.value) {
+        deleteSelection(true)
+      }
+    }, 100)
+  }
   const scrollSelectionIntoView = () => {
     setTimeout(() => {
       const listNode = document.querySelector<HTMLElement>(`#${wrapperId.value} .${styles['typeahead-list']}`)
@@ -92,9 +104,13 @@ export const TypeAheadSingle = defineComponent(<T extends TypeAheadRecord, K ext
     }
     scrollSelectionIntoView()
   }
-  const deleteSelection = () => {
+  const deleteSelection = (emptyInput: boolean) => {
     selectedItem.value = null
     props.props.onSelectItem(undefined)
+
+    if (emptyInput) {
+      input.value = ''
+    }
   }
   const notSelectedItems = computed(() => {
     const selectItemKey = selectedItem.value?.[props.props.itemKey]
@@ -113,6 +129,9 @@ export const TypeAheadSingle = defineComponent(<T extends TypeAheadRecord, K ext
     selectedItem.value = item
 
     props.props.onSelectItem(item)
+    if (props.props.clearAfterSelect === true) {
+      deleteSelection(true)
+    }
   }
   const myTypeaheadInput = ref<HTMLOrSVGElement | null>(null)
 
@@ -137,14 +156,14 @@ export const TypeAheadSingle = defineComponent(<T extends TypeAheadRecord, K ext
           placeholder={props.props.placeholder}
           autocomplete="off"
           onInput={onInput}
-          onFocus={() => (isInputFocused.value = true)}
-          onBlur={() => (isInputFocused.value = false)}
+          onFocus={onFocus}
+          onBlur={onBlur}
           onKeydown={payload => {
             // TODO 2023-06-19 il doit bien y avoir une enum quelque part dans la lib du dom avec la liste des keys non ?
             // Oui --> https://github.com/Moh-Snoussi/keyboard-event-key-type
             // Underlying issue: https://github.com/microsoft/TypeScript/issues/38886
             if (payload.key === 'Backspace') {
-              deleteSelection()
+              deleteSelection(false)
             }
             if (payload.key === 'ArrowDown') {
               onArrowDown()

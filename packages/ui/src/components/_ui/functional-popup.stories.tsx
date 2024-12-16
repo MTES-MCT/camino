@@ -1,6 +1,7 @@
 import { FunctionalPopup } from './functional-popup'
 import { Meta, StoryFn } from '@storybook/vue3'
 import { action } from '@storybook/addon-actions'
+import { sleep } from 'camino-common/src/typescript-tools'
 
 const meta: Meta = {
   title: 'Components/UI/Popup',
@@ -22,7 +23,7 @@ export const Main: StoryFn = () => (
       action: () => {
         doStuff()
 
-        return new Promise<void>(resolve => setTimeout(() => resolve(), 5000))
+        return sleep(5000)
       },
     }}
     content={() => (

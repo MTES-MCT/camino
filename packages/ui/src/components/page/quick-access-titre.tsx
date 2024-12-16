@@ -103,6 +103,7 @@ export const PureQuickAccessTitre = defineComponent<Props>(props => {
           onInput: event => debounce(() => props.onSearch(event)),
           displayItemInList: display,
           alwaysOpen: props.alwaysOpen ?? false,
+          clearAfterSelect: true,
         }}
       />
       <button class="fr-btn" title="Rechercher">

@@ -2,7 +2,7 @@
 import { DepartementId } from 'camino-common/src/static/departement'
 import { Administration, administrationIdValidator, administrationTypeIdValidator } from 'camino-common/src/static/administrations'
 import { config } from '../../config/index'
-import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
+import { isNotNullNorUndefined, sleep } from 'camino-common/src/typescript-tools'
 import { fetch } from 'undici'
 
 const MAX_CALLS_MINUTE = 200
@@ -46,7 +46,7 @@ const organismeFetch = async (departementId: DepartementId, nom: 'paris_ppp' | '
 
   // attend quelques secondes après chaque appel
   // pour ne pas dépasser les quotas
-  await new Promise(resolve => setTimeout(resolve, (60 / MAX_CALLS_MINUTE) * 1000))
+  await sleep((60 / MAX_CALLS_MINUTE) * 1000)
 
   return result
 }

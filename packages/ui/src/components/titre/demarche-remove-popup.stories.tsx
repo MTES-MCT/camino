@@ -2,6 +2,7 @@ import { DemarcheRemovePopup, Props } from './demarche-remove-popup'
 import { Meta, StoryFn } from '@storybook/vue3'
 import { action } from '@storybook/addon-actions'
 import { demarcheIdValidator } from 'camino-common/src/demarche'
+import { sleep } from 'camino-common/src/typescript-tools'
 
 const meta: Meta = {
   title: 'Components/Titre/DemarcheRemovePopup',
@@ -22,7 +23,7 @@ const apiClient: Props['apiClient'] = {
   deleteDemarche: demarcheId => {
     deleteAction(demarcheId)
 
-    return new Promise(resolve => setTimeout(() => resolve(), 1000))
+    return sleep(1000)
   },
 }
 

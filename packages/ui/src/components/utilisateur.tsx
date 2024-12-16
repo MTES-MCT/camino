@@ -9,7 +9,7 @@ import { canDeleteUtilisateur } from 'camino-common/src/permissions/utilisateurs
 import { PermissionDisplay } from './utilisateur/permission-edit'
 import { UtilisateurToEdit } from 'camino-common/src/utilisateur'
 import { Entreprise } from 'camino-common/src/entreprise'
-import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
+import { isNotNullNorUndefined, sleep } from 'camino-common/src/typescript-tools'
 
 import { entreprisesKey, userKey } from '@/moi'
 import { DsfrInputCheckbox } from './_ui/dsfr-input-checkbox'
@@ -136,7 +136,7 @@ export const PureUtilisateur = defineComponent<Props>(props => {
     try {
       await props.apiClient.updateUtilisateurNewsletter(utilisateurId, newsletterChecked)
       // Hack for mailjet latency
-      await new Promise(resolve => setTimeout(resolve, 500))
+      await sleep(500)
       subscription.value = {
         status: 'LOADED',
         value: newsletterChecked,

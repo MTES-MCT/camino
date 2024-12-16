@@ -5,7 +5,7 @@ import { IApiSirenQueryTypes, IApiSirenQueryToken, IApiSirenEtablissement, IApiS
 import { CaminoDate, dateAddDays, daysBetween, getCurrent } from 'camino-common/src/date'
 import { Siren } from 'camino-common/src/entreprise'
 import { config } from '../../config/index'
-import { isNotNullNorUndefinedNorEmpty, isNullOrUndefined } from 'camino-common/src/typescript-tools'
+import { isNotNullNorUndefinedNorEmpty, isNullOrUndefined, sleep } from 'camino-common/src/typescript-tools'
 import { fetch } from 'undici'
 
 const MAX_CALLS_MINUTE = 30
@@ -107,7 +107,7 @@ const typeFetch = async (type: 'siren' | 'siret', q: string) => {
 
     // attend quelques secondes après chaque appel
     // pour ne pas dépasser les quotas
-    await new Promise(resolve => setTimeout(resolve, (60 / MAX_CALLS_MINUTE) * 1000))
+    await sleep((60 / MAX_CALLS_MINUTE) * 1000)
 
     return result
   } catch (e: any) {

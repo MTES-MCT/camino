@@ -2,6 +2,7 @@ import { Header } from './header'
 import { Meta, StoryFn, StoryObj } from '@storybook/vue3'
 import { testBlankUser } from 'camino-common/src/tests-utils'
 import { expect, userEvent, within } from '@storybook/test'
+import { sleep } from 'camino-common/src/typescript-tools'
 
 const meta = {
   title: 'Components/Page/Header',
@@ -10,11 +11,6 @@ const meta = {
 } satisfies Meta<typeof Header>
 export default meta
 type Story = StoryObj<typeof meta>
-
-// Function to emulate pausing between interactions
-function sleep(ms: number) {
-  return new Promise(resolve => setTimeout(resolve, ms))
-}
 
 export const CanOpenAnnuaire: Story = {
   args: {

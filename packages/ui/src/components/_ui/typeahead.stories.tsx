@@ -1,8 +1,10 @@
-import { Meta, StoryFn } from '@storybook/vue3'
+import { Meta, StoryFn, StoryObj } from '@storybook/vue3'
 import { action } from '@storybook/addon-actions'
 import { TypeAheadSingle } from './typeahead-single'
 import { TypeAheadMultiple } from './typeahead-multiple'
 import { TypeaheadSmartSingle } from './typeahead-smart-single'
+import { expect, userEvent, within } from '@storybook/test'
+import { sleep } from 'camino-common/src/typescript-tools'
 
 const meta: Meta = {
   title: 'Components/UI/TypeAhead',
@@ -10,6 +12,7 @@ const meta: Meta = {
   component: TypeAheadSingle,
 }
 export default meta
+type Story = StoryObj<typeof meta>
 
 type Item = { id: string; titre: string }
 
@@ -92,6 +95,29 @@ export const SmartSingleWithInitialValue: StoryFn = () => (
     valueIdSelected={selectItems}
   />
 )
+
+const placeholder = "Tape le nom d'un développeur"
+export const VideLaSelectionAuChangementDeContexte: Story = {
+  args: {
+    props: {
+      itemKey: 'id',
+      placeholder,
+      items: [{ id: 'Anis' }, { id: 'Michael' }, { id: 'Vincent' }],
+      minInputLength: 1,
+      itemChipLabel: (value: { id: string }) => value.id,
+      onSelectItem: () => {},
+    },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const input: HTMLInputElement = canvas.getByPlaceholderText(placeholder)
+    await userEvent.type(input, 'toto')
+    expect(input.value).toBe('toto')
+    await userEvent.click(canvasElement)
+    await sleep(300)
+    expect(input.value).toBe('')
+  },
+}
 
 export const Multiple: StoryFn = () => (
   <TypeAheadMultiple

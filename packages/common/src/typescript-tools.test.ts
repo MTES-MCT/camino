@@ -1,4 +1,4 @@
-import { exhaustiveCheck, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefinedOrEmpty, memoize, onlyUnique, stringArrayEquals, toSorted } from './typescript-tools'
+import { exhaustiveCheck, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefinedOrEmpty, memoize, onlyUnique, sleep, stringArrayEquals, toSorted } from './typescript-tools'
 import { Role } from './roles'
 import { AdministrationId } from './static/administrations'
 import { Departements } from './static/departement'
@@ -48,6 +48,10 @@ test('onlyUnique', () => {
   const a = ['a', 1, 'a', 2, '1']
   const unique = a.filter(onlyUnique)
   expect(unique).toStrictEqual(['a', 1, 2, '1'])
+})
+
+test('sleep', async () => {
+  await expect(sleep(1)).resolves.toBe(undefined)
 })
 
 test('memoize', async () => {

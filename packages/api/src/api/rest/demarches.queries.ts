@@ -181,7 +181,7 @@ and td.archive is false
 const firstEtapeDateNotFoundError = 'Impossible de trouver la date de la première étape' as const
 type FirstEtapeDateNotFound = typeof firstEtapeDateNotFoundError
 export type GetFirstEtapeDateByDemarcheIdOrSlugErrors = EffectDbQueryAndValidateErrors | FirstEtapeDateNotFound
-export const getFirstEtapeDateByDemarcheIdOrSlug = (idOrSlug: DemarcheIdOrSlug, pool: Pool): Effect.Effect<FirstEtapeDate, CaminoError<GetFirstEtapeDateByDemarcheIdOrSlugErrors>> =>
+export const getFirstEtapeDateByDemarcheIdOrSlug = (idOrSlug: DemarcheIdOrSlug, pool: Pool): Effect.Effect<FirstEtapeDate | null, CaminoError<GetFirstEtapeDateByDemarcheIdOrSlugErrors>> =>
   pipe(
     effectDbQueryAndValidate(
       getFirstEtapeDateByDemarcheIdOrSlugDb,
@@ -196,7 +196,7 @@ export const getFirstEtapeDateByDemarcheIdOrSlug = (idOrSlug: DemarcheIdOrSlug, 
     Effect.map(result => result[0].first_etape_date)
   )
 
-const getFirstEtapeDateByDemarcheIdOrSlugDbValidator = z.object({ first_etape_date: firstEtapeDateValidator })
+const getFirstEtapeDateByDemarcheIdOrSlugDbValidator = z.object({ first_etape_date: firstEtapeDateValidator.nullable() })
 type GetFirstEtapeDateByDemarcheIdOrSlugDb = z.infer<typeof getFirstEtapeDateByDemarcheIdOrSlugDbValidator>
 const getFirstEtapeDateByDemarcheIdOrSlugDb = sql<
   Redefine<
@@ -293,7 +293,14 @@ export const getDemarchePivotEnConcurrence = (
       () => ({ message: "La démarche n'existe pas" as const })
     ),
     Effect.bind('pivot', ({ pivots }) => Effect.succeed(pivots[0])),
-    Effect.bind('firstEtapeDate', () => getFirstEtapeDateByDemarcheIdOrSlug(demarcheIdPivot, pool)),
+    Effect.bind('firstEtapeDate', () =>
+      getFirstEtapeDateByDemarcheIdOrSlug(demarcheIdPivot, pool).pipe(
+        Effect.filterOrFail(
+          result => isNotNullNorUndefined(result),
+          () => ({ message: firstEtapeDateNotFoundError, detail: "L'étape est null, il est fort probable que la démarche n'ait pas d'étape" })
+        )
+      )
+    ),
     Effect.bind('satellites', ({ pivot }) =>
       effectDbQueryAndValidate(getDemarchesSatellitesEnConcurrenceDb, { demarcheIdPivot, perimetrePivot: pivot.perimetreTotalGeojson4326 }, pool, getDemarchesSatellitesEnConcurrenceDbValidator)
     ),

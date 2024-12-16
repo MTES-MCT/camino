@@ -4,6 +4,7 @@ import { render } from '@testing-library/vue'
 import { composeStories } from '@storybook/vue3'
 import { h } from 'vue'
 import { setSeed } from '@/utils/vue-tsx-utils'
+import { sleep } from 'camino-common/src/typescript-tools'
 
 type StoryFile = {
   default: Meta
@@ -75,7 +76,7 @@ describe('Common Storybook Tests', async () => {
           },
         })
 
-        await new Promise<void>(resolve => setTimeout(() => resolve(), 1))
+        await sleep(1)
         html = mounted.html()
       } catch (e) {
         throw new Error(`le test ${name} du fichier ${filePath} plante ${e}`)
