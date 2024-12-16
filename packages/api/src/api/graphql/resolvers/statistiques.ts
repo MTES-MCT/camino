@@ -8,11 +8,12 @@ import { Statistiques } from 'camino-common/src/statistiques'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { DEMARCHES_TYPES_IDS } from 'camino-common/src/static/demarchesTypes'
 import { ACTIVITES_STATUTS_IDS } from 'camino-common/src/static/activitesStatuts'
-import { getAnnee, toCaminoDate } from 'camino-common/src/date'
+import { CaminoAnnee, getAnnee, toCaminoAnnee, toCaminoDate } from 'camino-common/src/date'
 import { isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools'
 import { getTitresModifiesByMonth } from '../../rest/journal.queries'
+import { callAndExit } from '../../../tools/fp-tools'
 
-const ACTIVITE_ANNEE_DEBUT = 2018
+const ACTIVITE_ANNEE_DEBUT = toCaminoAnnee(2018)
 
 export const statistiquesGlobales = async (_: unknown, { pool }: Context): Promise<Statistiques> => {
   try {
@@ -20,7 +21,7 @@ export const statistiquesGlobales = async (_: unknown, { pool }: Context): Promi
     const titresActivitesDepose = titresActivites.filter(titreActivite => titreActivite.annee >= ACTIVITE_ANNEE_DEBUT && titreActivite.activiteStatutId === ACTIVITES_STATUTS_IDS.DEPOSE).length
     const titresActivitesBeneficesEntreprise = Math.round((titresActivitesDepose * 2) / 7)
     const titresActivitesBeneficesAdministration = Math.round((titresActivitesDepose * 1) / 7)
-    const titresModifies = await getTitresModifiesByMonth(pool)
+    const titresModifies = await callAndExit(getTitresModifiesByMonth(pool))
     const demarches = titresActivites.filter(titreActivite => {
       const dateSaisie = titreActivite.dateSaisie
 
@@ -50,7 +51,7 @@ type TitreSurfaceIndex = {
   typeId: TitreTypeId
   surface: number
 }
-export const titresSurfaceIndexBuild = (titres: ITitre[], annee: number): TitreSurfaceIndex[] => {
+export const titresSurfaceIndexBuild = (titres: ITitre[], annee: CaminoAnnee): TitreSurfaceIndex[] => {
   const titresReduced: TitreSurfaceIndex[] = []
 
   for (const titre of titres) {
@@ -75,7 +76,7 @@ export const titresSurfaceIndexBuild = (titres: ITitre[], annee: number): TitreS
   return titresReduced
 }
 
-export const concessionsValidesBuild = (titres: ITitre[], annee: number): { quantite: number; surface: number } => {
+export const concessionsValidesBuild = (titres: ITitre[], annee: CaminoAnnee): { quantite: number; surface: number } => {
   return titres
     .filter(titre => titre.typeId === 'cxw' && titreValideCheck(titre.demarches!, toCaminoDate(`${annee}-01-01`), toCaminoDate(`${annee}-12-31`)))
     .reduce(

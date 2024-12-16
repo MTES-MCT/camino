@@ -1,4 +1,4 @@
-import { Index, ITitre } from '../../types'
+import { ITitre } from '../../types'
 
 import { titresGet } from '../../database/queries/titres'
 import { userSuper } from '../../database/user-super'
@@ -24,7 +24,7 @@ const titreSlugsUpdate = async (titre: ITitre) => {
   }
 }
 
-export const titresSlugsUpdate = async (titresIds?: string[]) => {
+export const titresSlugsUpdate = async (titresIds?: string[]): Promise<Record<string, string>> => {
   console.info()
   console.info('slugs de titres, démarches, étapes et activités')
 
@@ -43,7 +43,7 @@ export const titresSlugsUpdate = async (titresIds?: string[]) => {
     userSuper
   )
 
-  const titresUpdatedIndex = {} as Index<string>
+  const titresUpdatedIndex: Record<string, string> = {}
 
   for (const titre of titres) {
     const titreUpdatedIndex = await titreSlugsUpdate(titre)

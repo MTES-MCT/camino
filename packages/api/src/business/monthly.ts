@@ -4,7 +4,7 @@ import { updateTerritoires } from '../tools/territoires-update'
 import { subscribeUsersToGuyaneExploitants } from './entreprises-guyane'
 import { Pool } from 'pg'
 
-export const monthly = async (pool: Pool) => {
+export const monthly = async (pool: Pool): Promise<void> => {
   try {
     console.info()
     console.info('- - -')

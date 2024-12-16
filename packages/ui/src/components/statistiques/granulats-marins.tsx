@@ -4,7 +4,7 @@ import { ConfigurableChart } from '../_charts/configurable-chart'
 import { StatistiqueGranulatsMarinsStatAnnee, StatistiquesGranulatsMarins } from 'camino-common/src/statistiques.js'
 import { AsyncData, getWithJson } from '@/api/client-rest'
 import { LoadingElement } from '../_ui/functional-loader'
-import { CaminoDate, getAnnee, getCurrent, toCaminoDate } from 'camino-common/src/date'
+import { anneePrecedente, CaminoAnnee, CaminoDate, getAnnee, getCurrent, toCaminoAnnee, toCaminoDate } from 'camino-common/src/date'
 import type { ChartConfiguration } from 'chart.js'
 import { numberFormat } from 'camino-common/src/number'
 import styles from './statistiques.module.css'
@@ -39,7 +39,7 @@ const statsBarFormat = ({
   labelLine: string
 }): ChartConfiguration<'bar' | 'line'>['data'] =>
   annees.reduce<{
-    labels: number[]
+    labels: CaminoAnnee[]
     datasets: {
       type: 'line' | 'bar'
       label: string
@@ -123,15 +123,15 @@ export const PureGranulatsMarins = defineComponent<Props>(props => {
   const statistiquesGranulatsMarins = ref<
     AsyncData<{
       raw: StatistiquesGranulatsMarins
-      statistiques: Record<number, StatistiqueGranulatsMarinsStatAnnee>
+      statistiques: Record<CaminoAnnee, StatistiqueGranulatsMarinsStatAnnee>
       statsAnneesAfter2010: StatistiqueGranulatsMarinsStatAnnee[]
     }>
   >({ status: 'LOADING' })
-  const anneeActive = ref<number>(0)
   const currentDate = props.currentDate ? props.currentDate : getCurrent()
-  const anneeCurrent = Number(getAnnee(currentDate))
+  const anneeCurrent = getAnnee(currentDate)
+  const anneeActive = ref<CaminoAnnee>(anneePrecedente(anneeCurrent))
 
-  const anneeSelect = (annee: number | null) => {
+  const anneeSelect = (annee: CaminoAnnee | null) => {
     if (annee !== null) {
       anneeActive.value = annee
     }
@@ -146,7 +146,7 @@ export const PureGranulatsMarins = defineComponent<Props>(props => {
   }
 
   onMounted(async () => {
-    anneeActive.value = anneeCurrent - 2
+    anneeActive.value = anneePrecedente(anneePrecedente(anneeCurrent))
     try {
       const data = await props.getStatistiques()
 
@@ -156,7 +156,7 @@ export const PureGranulatsMarins = defineComponent<Props>(props => {
         return acc
       }, {})
 
-      const statsAnneesAfter2010 = data.annees.filter(annee => annee.annee >= 2010 && annee.annee < anneeCurrent)
+      const statsAnneesAfter2010 = data.annees.filter(annee => annee.annee >= toCaminoAnnee(2010) && annee.annee < anneeCurrent)
 
       // affichage des données de l'année n-2 à partir du 1er avril de l'année en cours
       const toggleDate = toCaminoDate(`${anneeCurrent}-04-01`)
@@ -167,7 +167,7 @@ export const PureGranulatsMarins = defineComponent<Props>(props => {
         value: {
           raw: data,
           statistiques,
-          statsAnneesAfter2010: beforeToggleDate ? statsAnneesAfter2010.filter(annee => annee.annee < anneeCurrent - 1) : statsAnneesAfter2010,
+          statsAnneesAfter2010: beforeToggleDate ? statsAnneesAfter2010.filter(annee => annee.annee < anneePrecedente(anneeCurrent)) : statsAnneesAfter2010,
         },
       }
     } catch (ex: any) {
@@ -386,7 +386,7 @@ export const PureGranulatsMarins = defineComponent<Props>(props => {
               return {
                 id,
                 nom: id.toString(),
-                enConstruction: id === anneeCurrent - 1, // l'année en cours n'étant pas affichée, seule l'année précédente est affichée à partir du 1er avril de l'année courante
+                enConstruction: id === anneePrecedente(anneeCurrent), // l'année en cours n'étant pas affichée, seule l'année précédente est affichée à partir du 1er avril de l'année courante
               }
             })
 
@@ -415,7 +415,7 @@ export const PureGranulatsMarins = defineComponent<Props>(props => {
           <div class="fr-grid-row">
             <div class="fr-col-12 fr-col-md-3 fr-mb-3w mt">
               <p class={['fr-display--xs', styles['donnee-importante']]}>
-                <LoadingElement data={statistiquesGranulatsMarins.value} renderItem={item => <>{item.statistiques[anneeCurrent - 1].titresPrw.quantite}</>} />
+                <LoadingElement data={statistiquesGranulatsMarins.value} renderItem={item => <>{item.statistiques[anneePrecedente(anneeCurrent)].titresPrw.quantite}</>} />
               </p>
               <p>Permis exclusifs de recherches octroyés l’an dernier</p>
             </div>
@@ -454,7 +454,7 @@ export const PureGranulatsMarins = defineComponent<Props>(props => {
                       <hr />
                       <div class="fr-grid-row">
                         <div class="fr-col-12 fr-col-md-3 fr-mb-3w mt">
-                          <p class={['fr-display--xs', styles['donnee-importante']]}>{statistiques[anneeCurrent - 1].titresPxw.quantite}</p>
+                          <p class={['fr-display--xs', styles['donnee-importante']]}>{statistiques[anneePrecedente(anneeCurrent)].titresPxw.quantite}</p>
                           <p>Permis d’exploitation octroyés l’an dernier</p>
                         </div>
                         <div class="fr-col-12 fr-col-md-9 relative fr-mb-3w">
@@ -487,7 +487,7 @@ export const PureGranulatsMarins = defineComponent<Props>(props => {
           <div class="fr-grid-row">
             <div class="fr-col-12 fr-col-md-3 fr-mb-3w mt">
               <p class={['fr-display--xs', styles['donnee-importante']]}>
-                <LoadingElement data={statistiquesGranulatsMarins.value} renderItem={item => <>{item.statistiques[anneeCurrent - 1].titresCxw.quantite}</>} />
+                <LoadingElement data={statistiquesGranulatsMarins.value} renderItem={item => <>{item.statistiques[anneePrecedente(anneeCurrent)].titresCxw.quantite}</>} />
               </p>
               <p>Concessions octroyées l’an dernier</p>
             </div>
@@ -517,7 +517,7 @@ export const PureGranulatsMarins = defineComponent<Props>(props => {
           <div class="fr-grid-row">
             <div class="fr-col-12 fr-col-md-3 fr-mb-3w mt">
               <p class={['fr-display--xs', styles['donnee-importante']]}>
-                <LoadingElement data={statistiquesGranulatsMarins.value} renderItem={item => <>{item.statistiques[anneeCurrent - 1].concessionsValides.quantite}</>} />
+                <LoadingElement data={statistiquesGranulatsMarins.value} renderItem={item => <>{item.statistiques[anneePrecedente(anneeCurrent)].concessionsValides.quantite}</>} />
               </p>
               <p>Concessions valides l’an dernier</p>
             </div>

@@ -9,7 +9,7 @@ export const administrationsTitresQuery = <M extends Model>(
   titreAlias: string,
   whereOperator: 'and' | `or`,
   etapePointAlias: string
-) => {
+): QueryBuilder<M, M | M[]> => {
   const query = (c: QueryBuilder<M, M | M[]>) => {
     const titreTypeIds: TitreTypeId[] = getTitreTypeIdsByAdministration(administrationId)
       .filter(att => {

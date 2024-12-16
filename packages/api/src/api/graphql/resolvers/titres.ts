@@ -1,6 +1,6 @@
 import { GraphQLResolveInfo } from 'graphql'
 
-import { Context, ITitreColonneId } from '../../../types'
+import { Context, ITitre, ITitreColonneId } from '../../../types'
 
 import { titresFormat } from '../../_format/titres'
 
@@ -55,7 +55,14 @@ export const titres = async (
   },
   { user }: Context,
   info: GraphQLResolveInfo
-) => {
+): Promise<{
+  elements: ITitre[]
+  intervalle?: number | null
+  page?: number | null
+  ordre?: 'asc' | 'desc' | null
+  colonne?: ITitreColonneId | null
+  total: number
+}> => {
   try {
     const fields = fieldsBuild(info).elements
 

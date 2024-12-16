@@ -74,6 +74,8 @@ export const anneePrecedente = (annee: CaminoAnnee): CaminoAnnee => toCaminoAnne
 
 export const caminoAnneeToNumber = (annee: CaminoAnnee): number => Number.parseInt(annee, 10)
 
+export function toCaminoAnnee(annee: CaminoDate): unknown
+export function toCaminoAnnee(annee: string | number): CaminoAnnee
 export function toCaminoAnnee(annee: string | number): CaminoAnnee {
   const parsed = caminoAnneeValidator.safeParse(annee)
   if (parsed.success) {

@@ -54,7 +54,7 @@ export const titresFiltersQueryModify = (
   q: QueryBuilder<Titres, Titres[]> | QueryBuilder<TitresDemarches, TitresDemarches[]> | QueryBuilder<TitresActivites, TitresActivites[]>,
   name: ITitreTableName = 'titres',
   root: ITitreRootName = 'titres'
-) => {
+): void => {
   if (isNotNullNorUndefinedNorEmpty(ids)) {
     q.whereIn(`${name}.id`, ids)
   }

@@ -7,7 +7,7 @@ import { concessionsValidesBuild, titresSurfaceIndexBuild } from '../../graphql/
 import { ACTIVITES_STATUTS_IDS } from 'camino-common/src/static/activitesStatuts'
 import { StatistiqueGranulatsMarinsStatAnnee, StatistiquesGranulatsMarins } from 'camino-common/src/statistiques'
 import { capitalize } from 'camino-common/src/strings'
-import { CaminoAnnee, caminoAnneeToNumber, intervalleAnnees, toCaminoAnnee } from 'camino-common/src/date'
+import { CaminoAnnee, intervalleAnnees, toCaminoAnnee } from 'camino-common/src/date'
 import { isTitreValide, TitresStatutIds } from 'camino-common/src/static/titresStatuts'
 import { TITRES_TYPES_IDS } from 'camino-common/src/static/titresTypes'
 
@@ -99,7 +99,7 @@ const statistiquesGranulatsMarinsInstantBuild = (titres: ITitre[]): Omit<Statist
   return statsInstant
 }
 
-const statistiquesGranulatsMarinsAnneeBuild = (titres: ITitre[], titresActivites: ITitreActivite[], annee: number): StatistiqueGranulatsMarinsStatAnnee => {
+const statistiquesGranulatsMarinsAnneeBuild = (titres: ITitre[], titresActivites: ITitreActivite[], annee: CaminoAnnee): StatistiqueGranulatsMarinsStatAnnee => {
   // les titres créés dans l'année et leur surface lors de l'octroi
   const titresFiltered = titresSurfaceIndexBuild(titres, annee)
 
@@ -159,7 +159,7 @@ export const statistiquesGranulatsMarins = async (annee: CaminoAnnee): Promise<S
     )
 
     return {
-      annees: annees.map(annee => statistiquesGranulatsMarinsAnneeBuild(titres, titresActivites, caminoAnneeToNumber(annee))),
+      annees: annees.map(annee => statistiquesGranulatsMarinsAnneeBuild(titres, titresActivites, annee)),
       ...statistiquesGranulatsMarinsInstantBuild(titres),
     }
   } catch (e) {

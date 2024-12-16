@@ -2,8 +2,9 @@ import { titresGet, titreUpdate } from '../../database/queries/titres'
 import { titreStatutIdFind } from '../rules/titre-statut-id-find'
 import { userSuper } from '../../database/user-super'
 import { getCurrent } from 'camino-common/src/date'
+import { TitreId } from 'camino-common/src/validators/titres'
 
-export const titresStatutIdsUpdate = async (titresIds?: string[]) => {
+export const titresStatutIdsUpdate = async (titresIds?: string[]): Promise<TitreId[]> => {
   console.info()
   console.info('statut des titres…')
 
@@ -19,7 +20,7 @@ export const titresStatutIdsUpdate = async (titresIds?: string[]) => {
     userSuper
   )
 
-  const titresUpdated = [] as string[]
+  const titresUpdated: TitreId[] = []
   const aujourdhui = getCurrent()
 
   for (const titre of titres) {

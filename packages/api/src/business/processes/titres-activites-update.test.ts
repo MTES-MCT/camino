@@ -15,6 +15,7 @@ import Titres from '../../database/models/titres'
 import { Pool } from 'pg'
 import { getEntrepriseUtilisateurs } from '../../api/rest/entreprises.queries'
 import { entrepriseIdValidator } from 'camino-common/src/entreprise'
+import { toCaminoAnnee } from 'camino-common/src/date'
 
 vi.mock('../../database/queries/titres', () => ({
   titresGet: vi.fn(),
@@ -98,7 +99,7 @@ describe("activités d'un titre", () => {
   test('met à jour un titre sans activité', async () => {
     titresGetMock.mockResolvedValue(titresSansActivite)
     titreActiviteTypeCheckMock.mockReturnValue(true)
-    anneesBuildMock.mockReturnValue([2018])
+    anneesBuildMock.mockReturnValue([toCaminoAnnee(2018)])
     titreActivitesBuildMock.mockReturnValue([{ titreId: titresSansActivite[0].id }] as ITitreActivite[])
     getEntrepriseUtilisateursMock.mockResolvedValue([
       { email: 'email', role: 'entreprise' },
@@ -119,7 +120,7 @@ describe("activités d'un titre", () => {
   test('ne met pas à jour un titre possédant déjà des activités', async () => {
     titresGetMock.mockResolvedValue(titresToutesActivites)
     titreActiviteTypeCheckMock.mockReturnValue(true)
-    anneesBuildMock.mockReturnValue([2018])
+    anneesBuildMock.mockReturnValue([toCaminoAnnee(2018)])
     titreActivitesBuildMock.mockReturnValue([])
 
     const titresActivitesNew = await titresActivitesUpdate(undefined as unknown as Pool)
@@ -136,7 +137,7 @@ describe("activités d'un titre", () => {
   test("ne met pas à jour un titre ne correspondant à aucun type d'activité", async () => {
     titresGetMock.mockResolvedValue(titresSansActivite)
     titreActiviteTypeCheckMock.mockReturnValue(false)
-    anneesBuildMock.mockReturnValue([2018])
+    anneesBuildMock.mockReturnValue([toCaminoAnnee(2018)])
 
     const titresActivitesNew = await titresActivitesUpdate(undefined as unknown as Pool)
 

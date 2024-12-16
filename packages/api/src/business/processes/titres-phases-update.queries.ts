@@ -6,7 +6,7 @@ import { IUpdateDatesDemarcheDbQuery } from './titres-phases-update.queries.type
 import { Pool } from 'pg'
 import { z } from 'zod'
 
-export const updateDatesDemarche = async (pool: Pool, params: { newDateDebut: CaminoDate | null; newDateFin: CaminoDate | null; demarcheId: DemarcheId }) =>
+export const updateDatesDemarche = async (pool: Pool, params: { newDateDebut: CaminoDate | null; newDateFin: CaminoDate | null; demarcheId: DemarcheId }): Promise<void[]> =>
   dbQueryAndValidate(updateDatesDemarcheDb, params, pool, z.void())
 const updateDatesDemarcheDb = sql<
   Redefine<IUpdateDatesDemarcheDbQuery, { newDateDebut: CaminoDate | null; newDateFin: CaminoDate | null; demarcheId: DemarcheId }, void>

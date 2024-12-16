@@ -147,6 +147,7 @@ const titresPublicLecture: { [key in TitreTypeId]: TitreStatutId[] } = {
   [TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_FOSSILES]: [],
 }
 
-export const titreTypesStatutsTitresPublicLecture: { titreTypeId: TitreTypeId; titreStatutId: TitreStatutId; publicLecture: boolean }[] = getKeys(titresPublicLecture, isTitreType)
+export type TitreTypesStatutsTitresPublicLecture = { titreTypeId: TitreTypeId; titreStatutId: TitreStatutId; publicLecture: boolean }
+export const titreTypesStatutsTitresPublicLecture: TitreTypesStatutsTitresPublicLecture[] = getKeys(titresPublicLecture, isTitreType)
   .flatMap(keyType => titresPublicLecture[keyType].map(statut => ({ titreTypeId: keyType, titreStatutId: statut, publicLecture: true })))
   .filter(isNotNullNorUndefined)

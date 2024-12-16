@@ -5,7 +5,7 @@ import { newTitreId, newUtilisateurId } from '../models/_format/id-create'
 import Titres from '../models/titres'
 import { UserNotNull } from 'camino-common/src/roles'
 import { beforeAll, expect, afterAll, test, describe, vi } from 'vitest'
-import { getCurrent } from 'camino-common/src/date'
+import { getCurrent, toCaminoAnnee } from 'camino-common/src/date'
 import { activiteIdValidator, activiteSlugValidator } from 'camino-common/src/activite'
 import { userSuper } from '../user-super'
 console.info = vi.fn()
@@ -39,7 +39,7 @@ describe('teste les requêtes sur les activités', () => {
       activiteStatutId: 'dep',
       periodeId: 1,
       sections: [],
-      annee: 2000,
+      annee: toCaminoAnnee(2000),
     })
 
     const adminDGALN: UserNotNull = {
@@ -80,7 +80,7 @@ describe('teste les requêtes sur les activités', () => {
       activiteStatutId: 'dep',
       periodeId: 1,
       sections: [],
-      annee: 2000,
+      annee: toCaminoAnnee(2000),
     })
     const titreActiviteId2 = activiteIdValidator.parse('titreActiviteId2')
     const titreActiviteSlug2 = activiteSlugValidator.parse('slug2')
@@ -93,7 +93,7 @@ describe('teste les requêtes sur les activités', () => {
       activiteStatutId: 'dep',
       periodeId: 1,
       sections: [],
-      annee: 2000,
+      annee: toCaminoAnnee(2000),
     })
 
     const newSlug = activiteSlugValidator.parse('new-slug')

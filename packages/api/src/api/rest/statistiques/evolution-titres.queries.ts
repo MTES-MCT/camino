@@ -18,7 +18,7 @@ interface GetDepotProps {
   titreTypeId?: TitreTypeId
 }
 // TODO 2023-09-26 utiliser left et right plutôt que substring et mettre des index comme pour packages/api/src/knex/migrations/20230926083529_add-index-on-left-right.ts
-export const getDepot = async (pool: Pool, params: GetDepotProps) => dbQueryAndValidate(getDepotDb, params, pool, anneeCountStatistiqueValidator)
+export const getDepot = async (pool: Pool, params: GetDepotProps): Promise<AnneeCountStatistique[]> => dbQueryAndValidate(getDepotDb, params, pool, anneeCountStatistiqueValidator)
 const getDepotDb = sql<Redefine<IGetDepotDbQuery, GetDepotProps, AnneeCountStatistique>>`
 select
     substring(et. "date", 0, 5) as annee,
@@ -52,7 +52,7 @@ interface GetOctroiProps {
   departements: DepartementId[]
   titreTypeId?: TitreTypeId
 }
-export const getOctroi = async (pool: Pool, params: GetOctroiProps) => dbQueryAndValidate(getOctroiDb, params, pool, anneeCountStatistiqueValidator)
+export const getOctroi = async (pool: Pool, params: GetOctroiProps): Promise<AnneeCountStatistique[]> => dbQueryAndValidate(getOctroiDb, params, pool, anneeCountStatistiqueValidator)
 
 const getOctroiDb = sql<Redefine<IGetOctroiDbQuery, GetOctroiProps, AnneeCountStatistique>>`
 select
@@ -84,7 +84,7 @@ interface GetSurfaceProps {
   departements: DepartementId[]
   titreTypeId?: TitreTypeId
 }
-export const getSurface = async (pool: Pool, params: GetSurfaceProps) => dbQueryAndValidate(getSurfaceDb, params, pool, anneeCountStatistiqueValidator)
+export const getSurface = async (pool: Pool, params: GetSurfaceProps): Promise<AnneeCountStatistique[]> => dbQueryAndValidate(getSurfaceDb, params, pool, anneeCountStatistiqueValidator)
 const getSurfaceDb = sql<Redefine<IGetSurfaceDbQuery, GetSurfaceProps, AnneeCountStatistique>>`
 select
     substring(td. "demarche_date_debut", 0, 5) as annee,
@@ -121,7 +121,7 @@ interface GetEtapesTypesDecisionRefusProps {
   titreTypeId?: TitreTypeId
 }
 
-export const getEtapesTypesDecisionRefus = async (pool: Pool, params: GetEtapesTypesDecisionRefusProps) =>
+export const getEtapesTypesDecisionRefus = async (pool: Pool, params: GetEtapesTypesDecisionRefusProps): Promise<AnneeCountStatistique[]> =>
   dbQueryAndValidate(getEtapesTypesDecisionRefusDb, params, pool, anneeCountStatistiqueValidator)
 
 const getEtapesTypesDecisionRefusDb = sql<Redefine<IGetEtapesTypesDecisionRefusDbQuery, GetEtapesTypesDecisionRefusProps, AnneeCountStatistique>>`

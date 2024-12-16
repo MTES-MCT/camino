@@ -15,9 +15,12 @@ export const TitresStatutIds = {
 
 export const titreStatutIdValidator = z.enum(TitresStatutKeys)
 export type TitreStatutId = z.infer<typeof titreStatutIdValidator>
-
+export type TitreStatut<T = TitreStatutId> = {
+  id: T
+  nom: string
+}
 export const TitresStatuts: {
-  [key in TitreStatutId]: Pick<Definition<key>, 'id' | 'nom'>
+  [key in TitreStatutId]: TitreStatut<key>
 } = {
   dmc: {
     id: 'dmc',

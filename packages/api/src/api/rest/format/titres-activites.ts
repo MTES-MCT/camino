@@ -10,6 +10,8 @@ import { getCommunesIndex } from '../../../database/queries/communes'
 import { ActivitesTypes } from 'camino-common/src/static/activitesTypes'
 import { getEntreprises } from '../entreprises.queries'
 import { EntrepriseId } from 'camino-common/src/entreprise'
+import { TitreSlug } from 'camino-common/src/validators/titres'
+import { CaminoAnnee } from 'camino-common/src/date'
 
 const titreActiviteContenuFormat = (contenu: IContenu, sections: Section[]) =>
   sections.reduce((resSections: Index<IContenuValeur>, section) => {
@@ -36,7 +38,20 @@ const titreActiviteContenuFormat = (contenu: IContenu, sections: Section[]) =>
     return Object.assign(resSections, r)
   }, {})
 
-export const titresActivitesFormatTable = async (pool: Pool, activites: ITitreActivite[]) => {
+type TitresActiviteFormatTable = {
+  // TODO 2024-12-12 :scream: un slug dans un id
+  id: string | undefined
+  titre_id: TitreSlug | undefined
+  titre_nom: string
+  type: string
+  statut: string
+  titulaires: string | undefined
+  communes: string | undefined
+  annee: CaminoAnnee
+  periode: string
+  periode_id: number
+}
+export const titresActivitesFormatTable = async (pool: Pool, activites: ITitreActivite[]): Promise<TitresActiviteFormatTable[]> => {
   const communesIndex = await getCommunesIndex(
     pool,
     activites.flatMap(({ titre }) => titre?.communes?.map(({ id }) => id) ?? [])

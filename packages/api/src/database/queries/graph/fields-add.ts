@@ -22,7 +22,7 @@ export const fieldsTitreAdd = <T extends { titre?: FieldsTitre }>(fields: T): T 
 
 // ajoute les démarches et les étapes sur une requête de titre
 // pour calculer ses sections en fonction des sections des étapes
-export const titresFieldsAdd = (fields: FieldsTitre) => {
+export const titresFieldsAdd = (fields: FieldsTitre): FieldsTitre => {
   if (fields.substances) {
     if (!fields.substancesEtape) {
       fields.substancesEtape = { id: {} }

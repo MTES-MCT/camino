@@ -5,8 +5,9 @@ import { titrePropTitreEtapeFind } from '../rules/titre-prop-etape-find'
 import { objectsDiffer } from '../../tools/index'
 import { userSuper } from '../../database/user-super'
 import { getCurrent } from 'camino-common/src/date'
+import { TitreId } from 'camino-common/src/validators/titres'
 
-export const titresPropsEtapesIdsUpdate = async (titresIds?: string[]) => {
+export const titresPropsEtapesIdsUpdate = async (titresIds?: string[]): Promise<TitreId[]> => {
   console.info()
   console.info('propriétés des titres (liens vers les étapes)…')
 
@@ -22,7 +23,7 @@ export const titresPropsEtapesIdsUpdate = async (titresIds?: string[]) => {
     userSuper
   )
 
-  const titresPropsEtapesIdsUpdated = [] as string[]
+  const titresPropsEtapesIdsUpdated: TitreId[] = []
 
   const aujourdhui = getCurrent()
 

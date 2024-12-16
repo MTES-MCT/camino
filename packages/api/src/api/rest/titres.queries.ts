@@ -1,6 +1,6 @@
 import { sql } from '@pgtyped/runtime'
 import { getMostRecentValuePropFromEtapeFondamentaleValide, TitreGet, TitreGetDemarche } from 'camino-common/src/titres'
-import { Redefine, dbQueryAndValidate } from '../../pg-database'
+import { EffectDbQueryAndValidateErrors, Redefine, dbQueryAndValidate, effectDbQueryAndValidate } from '../../pg-database'
 import {
   IGetAdministrationsLocalesByTitreIdDbQuery,
   IGetDemarchesByTitreIdQueryDbQuery,
@@ -51,6 +51,8 @@ import { AdministrationId } from 'camino-common/src/static/administrations'
 import { secteurMaritimeValidator } from 'camino-common/src/static/facades'
 import { getAvisTypes } from 'camino-common/src/permissions/etape-form'
 import { callAndExit } from '../../tools/fp-tools'
+import { Effect } from 'effect'
+import { CaminoError } from 'camino-common/src/zod-tools'
 
 type SuperEtapeDemarcheTitreGet = OmitDistributive<DemarcheEtape, 'etape_documents' | 'avis_documents'>
 type SuperDemarcheTitreGet = Omit<TitreGet['demarches'][0], 'etapes'> & { etapes: SuperEtapeDemarcheTitreGet[]; public_lecture: boolean; entreprises_lecture: boolean; titre_public_lecture: boolean }
@@ -62,10 +64,10 @@ export const getTitre = async (pool: Pool, user: User, idOrSlug: TitreIdOrSlug):
   } else {
     const titre = titres[0]
 
-    const titreDateLastModified = canSeeTitreLastModifiedDate(user) ? await getDateLastJournal(pool, titre.id) : null
+    const titreDateLastModified = canSeeTitreLastModifiedDate(user) ? await callAndExit(getDateLastJournal(pool, titre.id)) : null
     const titreDoublon = titre.titre_doublon_id !== null && titre.titre_doublon_nom !== null ? { id: titre.titre_doublon_id, nom: titre.titre_doublon_nom } : null
 
-    const demarchesFromDatabase = await getDemarchesByTitreId(pool, titre.id)
+    const demarchesFromDatabase = await callAndExit(getDemarchesByTitreId(pool, titre.id))
 
     const titreTypeId = memoize(() => Promise.resolve(titre.titre_type_id))
 
@@ -85,7 +87,7 @@ export const getTitre = async (pool: Pool, user: User, idOrSlug: TitreIdOrSlug):
 
         const entrepriseDocumentsTypes = getEntrepriseDocuments(titre.titre_type_id, demarche.demarche_type_id, etape.etape_type_id)
         if (entrepriseDocumentsTypes.length > 0) {
-          entrepriseDocuments.push(...(await getEntrepriseDocumentIdsByEtapeId({ titre_etape_id: etape.id }, pool, user)))
+          entrepriseDocuments.push(...(await callAndExit(getEntrepriseDocumentIdsByEtapeId({ titre_etape_id: etape.id }, pool, user))))
         }
 
         const etapeCommon: Omit<DemarcheEtapeCommon, 'etape_documents' | 'avis_documents'> = {
@@ -244,7 +246,9 @@ export const getTitre = async (pool: Pool, user: User, idOrSlug: TitreIdOrSlug):
             const documentsTypes = getDocuments(titre.titre_type_id, superDemarche.demarche_type_id, superEtape.etape_type_id)
             if (isNotNullNorUndefinedNorEmpty(documentsTypes)) {
               etape_documents.push(
-                ...(await getDocumentsByEtapeId(superEtape.id, pool, user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires, superEtape.etape_type_id, superDemarche))
+                ...(await callAndExit(
+                  getDocumentsByEtapeId(superEtape.id, pool, user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires, superEtape.etape_type_id, superDemarche)
+                ))
               )
             }
 
@@ -260,15 +264,8 @@ export const getTitre = async (pool: Pool, user: User, idOrSlug: TitreIdOrSlug):
               perimetre?.communes.map(({ id }) => id) ?? []
             )
             if (isNotNullNorUndefinedNorEmpty(avisTypes)) {
-              const avisWithLargeObjectId = await getEtapeAvisLargeObjectIdsByEtapeId(
-                superEtape.id,
-                pool,
-                user,
-                titreTypeId,
-                administrationsLocales,
-                entreprisesTitulairesOuAmodiataires,
-                superEtape.etape_type_id,
-                superDemarche
+              const avisWithLargeObjectId = await callAndExit(
+                getEtapeAvisLargeObjectIdsByEtapeId(superEtape.id, pool, user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires, superEtape.etape_type_id, superDemarche)
               )
 
               avis_documents.push(...avisWithLargeObjectId.map(a => ({ ...a, has_file: isNotNullNorUndefined(a.largeobject_id) })))
@@ -379,9 +376,9 @@ const getDemarchesByTitreIdQueryDbValidator = z.object({
 })
 type GetDemarchesByTitreIdQueryDb = z.infer<typeof getDemarchesByTitreIdQueryDbValidator>
 
-export const getDemarchesByTitreId = async (pool: Pool, titreId: TitreId): Promise<GetDemarchesByTitreIdQueryDb[]> => {
-  return dbQueryAndValidate(getDemarchesByTitreIdQueryDb, { titreId }, pool, getDemarchesByTitreIdQueryDbValidator)
-}
+export const getDemarchesByTitreId = (pool: Pool, titreId: TitreId): Effect.Effect<GetDemarchesByTitreIdQueryDb[], CaminoError<EffectDbQueryAndValidateErrors>> =>
+  effectDbQueryAndValidate(getDemarchesByTitreIdQueryDb, { titreId }, pool, getDemarchesByTitreIdQueryDbValidator)
+
 const getDemarchesByTitreIdQueryDb = sql<Redefine<IGetDemarchesByTitreIdQueryDbQuery, { titreId: TitreId }, GetDemarchesByTitreIdQueryDb>>`
 select
     d.id,

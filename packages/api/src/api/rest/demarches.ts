@@ -118,7 +118,7 @@ export const demarcheCreer: RestNewPostCall<'/rest/demarches'> = (rootPipe): Eff
             throw new Error('les administrations locales doivent être chargées')
           }
 
-          const demarches = await getDemarchesByTitreId(pool, demarche.titreId)
+          const demarches = await callAndExit(getDemarchesByTitreId(pool, demarche.titreId))
 
           if (isTravaux(demarche.typeId) && !canCreateTravaux(user, titre.typeId, titre.administrationsLocales ?? [], demarches)) {
             throw new Error('droits insuffisants')

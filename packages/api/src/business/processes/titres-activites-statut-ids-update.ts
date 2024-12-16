@@ -2,9 +2,10 @@ import { titreActiviteUpdate, titresActivitesGet } from '../../database/queries/
 import { titreActiviteStatutIdFind } from '../rules/titre-activite-statut-id-find'
 import { userSuper } from '../../database/user-super'
 import { getCurrent } from 'camino-common/src/date'
+import { ActiviteId } from 'camino-common/src/activite'
 
 // met à jour le statut des activités d'un titre
-export const titresActivitesStatutIdsUpdate = async () => {
+export const titresActivitesStatutIdsUpdate = async (): Promise<ActiviteId[]> => {
   console.info()
   console.info('statut des activités…')
 
@@ -12,7 +13,7 @@ export const titresActivitesStatutIdsUpdate = async () => {
 
   const aujourdhui = getCurrent()
 
-  const titresActivitesUpdated = [] as string[]
+  const titresActivitesUpdated: ActiviteId[] = []
   for (const titreActivite of titresActivites) {
     const activiteStatutId = titreActiviteStatutIdFind(titreActivite, aujourdhui)
 

@@ -20,7 +20,7 @@ export interface EntrepriseDocumentType {
   description?: string
 }
 
-interface Definition<T> {
+export interface DocumentTypeDefinition<T = DocumentTypeId | AutreDocumentTypeId> {
   id: T
   nom: string
   description?: string
@@ -175,7 +175,7 @@ export type DocumentTypeId = z.infer<typeof documentTypeIdValidator>
 export const autreDocumentTypeIdValidator = z.enum(AUTRE_IDS)
 export type AutreDocumentTypeId = z.infer<typeof autreDocumentTypeIdValidator>
 
-export const DocumentsTypes: { [key in DocumentTypeId | AutreDocumentTypeId]: Definition<key> } = {
+export const DocumentsTypes: { [key in DocumentTypeId | AutreDocumentTypeId]: DocumentTypeDefinition<key> } = {
   aut: { id: 'aut', nom: 'Autre document' },
   aac: { id: 'aac', nom: "Avis d'un service de l'administration centrale" },
   acc: { id: 'acc', nom: 'Accord du propriétaire du sol ou du gestionnaire' },

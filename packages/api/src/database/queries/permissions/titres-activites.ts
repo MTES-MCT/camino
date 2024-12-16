@@ -6,7 +6,7 @@ import { administrationsTitresQuery } from './administrations'
 import { entreprisesTitresQuery } from './entreprises'
 import { isAdministration, isEntreprise, isSuper, User } from 'camino-common/src/roles'
 
-export const titresActivitesQueryModify = (q: QueryBuilder<TitresActivites, TitresActivites | TitresActivites[]>, user: User) => {
+export const titresActivitesQueryModify = (q: QueryBuilder<TitresActivites, TitresActivites | TitresActivites[]>, user: User): QueryBuilder<TitresActivites, TitresActivites | TitresActivites[]> => {
   q.select('titresActivites.*')
 
   q.leftJoinRelated('titre')

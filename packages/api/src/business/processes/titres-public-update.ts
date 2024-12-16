@@ -5,7 +5,7 @@ import { Pool } from 'pg'
 import { NonEmptyArray } from 'camino-common/src/typescript-tools'
 
 // met à jour la publicité d'un titre
-export const titresPublicUpdate = async (pool: Pool, titresIds?: NonEmptyArray<TitreId>) => {
+export const titresPublicUpdate = async (pool: Pool, titresIds?: NonEmptyArray<TitreId>): Promise<TitreId[]> => {
   console.info()
   console.info('publicité des titres…')
 

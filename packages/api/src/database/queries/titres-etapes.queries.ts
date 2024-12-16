@@ -66,7 +66,7 @@ import { contenuValidator, heritageContenuValidator } from 'camino-common/src/et
 import { DemarcheTypeId, demarcheTypeIdValidator } from 'camino-common/src/static/demarchesTypes'
 import { Effect, Option, pipe } from 'effect'
 import { CaminoError } from 'camino-common/src/zod-tools'
-import { shortCircuitError } from '../../tools/fp-tools'
+import { shortCircuitError, zodParseEffect, ZodUnparseable } from '../../tools/fp-tools'
 import { TempDocumentName } from 'camino-common/src/document'
 import { DemarcheId } from 'camino-common/src/demarche'
 
@@ -111,11 +111,10 @@ where
     teed.titre_etape_id = $ titre_etape_id
 `
 
-export const getEntrepriseDocumentIdsByEtapeId = async (params: { titre_etape_id: EtapeId }, pool: Pool, user: User): Promise<EtapeEntrepriseDocument[]> => {
-  const result = await dbQueryAndValidate(getEntrepriseDocumentIdsByEtapeIdQuery, params, pool, etapeEntrepriseDocumentValidator)
-
-  return result.filter(r => canSeeEntrepriseDocuments(user, r.entreprise_id))
-}
+export const getEntrepriseDocumentIdsByEtapeId = (params: { titre_etape_id: EtapeId }, pool: Pool, user: User): Effect.Effect<EtapeEntrepriseDocument[], CaminoError<EffectDbQueryAndValidateErrors>> =>
+  effectDbQueryAndValidate(getEntrepriseDocumentIdsByEtapeIdQuery, params, pool, etapeEntrepriseDocumentValidator).pipe(
+    Effect.map(result => result.filter(r => canSeeEntrepriseDocuments(user, r.entreprise_id)))
+  )
 
 const entrepriseDocumentLargeObjectIdsValidator = entrepriseDocumentValidator
   .pick({ id: true, entreprise_id: true, entreprise_document_type_id: true })
@@ -135,11 +134,14 @@ where
     teed.titre_etape_id = $ titre_etape_id
 `
 
-export const getEntrepriseDocumentLargeObjectIdsByEtapeId = async (params: { titre_etape_id: EtapeId }, pool: Pool, user: User): Promise<EntrepriseDocumentLargeObjectId[]> => {
-  const result = await dbQueryAndValidate(getEntrepriseDocumentLargeObjectIdsByEtapeIdQuery, params, pool, entrepriseDocumentLargeObjectIdsValidator)
-
-  return result.filter(r => canSeeEntrepriseDocuments(user, r.entreprise_id))
-}
+export const getEntrepriseDocumentLargeObjectIdsByEtapeId = (
+  params: { titre_etape_id: EtapeId },
+  pool: Pool,
+  user: User
+): Effect.Effect<EntrepriseDocumentLargeObjectId[], CaminoError<EffectDbQueryAndValidateErrors>> =>
+  effectDbQueryAndValidate(getEntrepriseDocumentLargeObjectIdsByEtapeIdQuery, params, pool, entrepriseDocumentLargeObjectIdsValidator).pipe(
+    Effect.map(result => result.filter(r => canSeeEntrepriseDocuments(user, r.entreprise_id)))
+  )
 
 const erreurLargeObject = 'Impossible de créer le document en base' as const
 export type UpdateEtapeDocumentsErrors = EffectDbQueryAndValidateErrors | InsertEtapeDocumentsErrors | typeof erreurLargeObject
@@ -387,7 +389,10 @@ from
 where
     d.etape_id = $ titre_etape_id !
 `
-export const getEtapeDocumentLargeObjectIdsByEtapeId = async (
+
+const errorCanReadDocument = "une erreur s'est produite lors de la vérification des droits de lecture d'un document" as const
+type GetEtapeDocumentLargeObjectIdsByEtapeIdErrors = EffectDbQueryAndValidateErrors | typeof errorCanReadDocument
+export const getEtapeDocumentLargeObjectIdsByEtapeId = (
   titre_etape_id: EtapeId,
   pool: Pool,
   user: User,
@@ -396,19 +401,26 @@ export const getEtapeDocumentLargeObjectIdsByEtapeId = async (
   entreprisesTitulairesOuAmodiataires: SimplePromiseFn<EntrepriseId[]>,
   etapeTypeId: EtapeTypeId,
   demarche: CanReadDemarche
-): Promise<GetDocumentsByEtapeIdQuery[]> => {
-  const result = await dbQueryAndValidate(getDocumentsByEtapeIdQuery, { titre_etape_id }, pool, getDocumentsByEtapeIdQueryValidator)
+): Effect.Effect<GetDocumentsByEtapeIdQuery[], CaminoError<GetEtapeDocumentLargeObjectIdsByEtapeIdErrors>> =>
+  effectDbQueryAndValidate(getDocumentsByEtapeIdQuery, { titre_etape_id }, pool, getDocumentsByEtapeIdQueryValidator).pipe(
+    Effect.flatMap(result =>
+      Effect.tryPromise({
+        try: async () => {
+          const filteredDocuments: GetDocumentsByEtapeIdQuery[] = []
 
-  const filteredDocuments: GetDocumentsByEtapeIdQuery[] = []
+          for (const document of result) {
+            if (await canReadDocument(document, user, titreTypeId, titresAdministrationsLocales, entreprisesTitulairesOuAmodiataires, etapeTypeId, demarche)) {
+              filteredDocuments.push(document)
+            }
+          }
 
-  for (const document of result) {
-    if (await canReadDocument(document, user, titreTypeId, titresAdministrationsLocales, entreprisesTitulairesOuAmodiataires, etapeTypeId, demarche)) {
-      filteredDocuments.push(document)
-    }
-  }
+          return filteredDocuments
+        },
+        catch: e => ({ message: errorCanReadDocument, extra: e }),
+      })
+    )
+  )
 
-  return filteredDocuments
-}
 const etapeAvisDbValidator = z
   .discriminatedUnion('avis_type_id', [regularEtapeAvisValidator.pick({ avis_type_id: true, description: true }), autreEtapeAvisValidator.pick({ avis_type_id: true, description: true })])
   .and(
@@ -435,7 +447,10 @@ from
 where
     a.etape_id = $ titre_etape_id !
 `
-export const getEtapeAvisLargeObjectIdsByEtapeId = async (
+
+const errorCanReadAvis = "une erreur s'est produite lors de la vérification des droits de lecture d'un avis" as const
+type GetEtapeAvisLargeObjectIdsByEtapeIdErrors = EffectDbQueryAndValidateErrors | typeof errorCanReadAvis
+export const getEtapeAvisLargeObjectIdsByEtapeId = (
   titre_etape_id: EtapeId,
   pool: Pool,
   user: User,
@@ -444,19 +459,26 @@ export const getEtapeAvisLargeObjectIdsByEtapeId = async (
   entreprisesTitulairesOuAmodiataires: SimplePromiseFn<EntrepriseId[]>,
   etapeTypeId: EtapeTypeId,
   demarche: CanReadDemarche
-): Promise<EtapeAvisDb[]> => {
-  const result = await dbQueryAndValidate(getAvisByEtapeIdQuery, { titre_etape_id }, pool, etapeAvisDbValidator)
+): Effect.Effect<EtapeAvisDb[], CaminoError<GetEtapeAvisLargeObjectIdsByEtapeIdErrors>> =>
+  effectDbQueryAndValidate(getAvisByEtapeIdQuery, { titre_etape_id }, pool, etapeAvisDbValidator).pipe(
+    Effect.flatMap(result =>
+      Effect.tryPromise({
+        try: async () => {
+          const filteredAvis: EtapeAvisDb[] = []
 
-  const filteredAvis: EtapeAvisDb[] = []
+          for (const avis of result) {
+            if (await canReadAvis(avis, user, titreTypeId, titresAdministrationsLocales, entreprisesTitulairesOuAmodiataires, etapeTypeId, demarche)) {
+              filteredAvis.push(avis)
+            }
+          }
 
-  for (const avis of result) {
-    if (await canReadAvis(avis, user, titreTypeId, titresAdministrationsLocales, entreprisesTitulairesOuAmodiataires, etapeTypeId, demarche)) {
-      filteredAvis.push(avis)
-    }
-  }
+          return filteredAvis
+        },
+        catch: e => ({ message: errorCanReadAvis, extra: e }),
+      })
+    )
+  )
 
-  return filteredAvis
-}
 const loidByEtapeAvisIdValidator = z.object({
   largeobject_id: largeObjectIdValidator,
   etape_id: etapeIdValidator,
@@ -501,7 +523,7 @@ where
     d.id = $ etapeAvisId !
 LIMIT 1
 `
-export const getDocumentsByEtapeId = async (
+export const getDocumentsByEtapeId = (
   titre_etape_id: EtapeId,
   pool: Pool,
   user: User,
@@ -510,11 +532,10 @@ export const getDocumentsByEtapeId = async (
   entreprisesTitulairesOuAmodiataires: SimplePromiseFn<EntrepriseId[]>,
   etapeTypeId: EtapeTypeId,
   demarche: CanReadDemarche
-): Promise<EtapeDocument[]> => {
-  const result = await getEtapeDocumentLargeObjectIdsByEtapeId(titre_etape_id, pool, user, titreTypeId, titresAdministrationsLocales, entreprisesTitulairesOuAmodiataires, etapeTypeId, demarche)
-
-  return z.array(etapeDocumentValidator).parse(result)
-}
+): Effect.Effect<EtapeDocument[], CaminoError<GetEtapeDocumentLargeObjectIdsByEtapeIdErrors | ZodUnparseable>> =>
+  getEtapeDocumentLargeObjectIdsByEtapeId(titre_etape_id, pool, user, titreTypeId, titresAdministrationsLocales, entreprisesTitulairesOuAmodiataires, etapeTypeId, demarche).pipe(
+    Effect.flatMap(result => zodParseEffect(z.array(etapeDocumentValidator), result))
+  )
 
 const getEtapesWithAutomaticStatutValidator = z.object({
   id: etapeIdValidator,

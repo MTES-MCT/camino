@@ -12,13 +12,14 @@ import { GetEntrepriseUtilisateurs, getEntrepriseUtilisateurs } from '../../api/
 import { Pool } from 'pg'
 import { EntrepriseId } from 'camino-common/src/entreprise'
 import { isEntrepriseRole } from 'camino-common/src/roles'
+import { ActiviteId } from 'camino-common/src/activite'
 
 const ACTIVITES_DELAI_RELANCE_JOURS = 14
 
 const activiteStatutsIds: ActivitesStatutId[] = ['abs', 'enc']
 const activiteTypesIds: ActivitesTypesId[] = ['gra', 'grx', 'pma', 'pmb', 'pmc', 'pmd', 'wrp']
 
-export const titresActivitesRelanceSend = async (pool: Pool, aujourdhui = getCurrent()) => {
+export const titresActivitesRelanceSend = async (pool: Pool, aujourdhui = getCurrent()): Promise<ActiviteId[]> => {
   console.info()
   console.info('relance des activités des titres…')
 
@@ -40,7 +41,7 @@ export const checkDateAndSendEmail = async (
   getEmailsByEntrepriseId: (entrepriseId: EntrepriseId) => Promise<GetEntrepriseUtilisateurs[]>,
   aujourdhui: CaminoDate,
   activites: (Pick<ITitreActivite, 'date' | 'id'> & { titre?: { titulaireIds?: EntrepriseId[] | undefined | null } | undefined | null })[]
-) => {
+): Promise<ActiviteId[]> => {
   const dateDelai = dateAddDays(aujourdhui, ACTIVITES_DELAI_RELANCE_JOURS)
 
   const titresActivitesRelanceToSend = activites.filter(({ date }) => dateDelai === dateAddMonths(date, 3))

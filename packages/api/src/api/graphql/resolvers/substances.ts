@@ -1,3 +1,3 @@
-import { SubstancesLegales } from 'camino-common/src/static/substancesLegales'
+import { SubstanceLegale, SubstancesLegales } from 'camino-common/src/static/substancesLegales'
 
-export const substances = () => SubstancesLegales
+export const substances = (): Readonly<SubstanceLegale[]> => SubstancesLegales

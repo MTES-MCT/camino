@@ -1,11 +1,20 @@
 import { isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
 import { ITitreEtape, IPropId } from '../../types'
 
+export type PropValueFind =
+  | ITitreEtape['geojson4326Perimetre']
+  | ITitreEtape['titulaireIds']
+  | ITitreEtape['amodiataireIds']
+  | ITitreEtape['surface']
+  | ITitreEtape['substances']
+  | ITitreEtape['administrationsLocales']
+  | ITitreEtape['communes']
+  | ITitreEtape['forets']
 // TODO 2024-09-23 type return correctly
 export const propValueFind = (
   titreEtape: Pick<ITitreEtape, 'geojson4326Perimetre' | 'titulaireIds' | 'amodiataireIds' | 'surface' | 'substances' | 'administrationsLocales' | 'communes' | 'forets'>,
   propId: IPropId
-) => {
+): PropValueFind => {
   if (propId === 'points') {
     return titreEtape.geojson4326Perimetre
   }

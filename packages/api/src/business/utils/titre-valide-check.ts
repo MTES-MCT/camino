@@ -11,7 +11,7 @@ import { DemarchesTypes } from 'camino-common/src/static/demarchesTypes'
  * @param titreTypeId - id du type de titre
  * @param hasDemarcheDeposee - si un titre échu avec une démarche déposée doit être pris en compte
  */
-export const titreValideCheck = (titreDemarches: Pick<ITitreDemarche, 'typeId' | 'demarcheDateDebut' | 'demarcheDateFin'>[], dateDebut: CaminoDate, dateFin: CaminoDate) => {
+export const titreValideCheck = (titreDemarches: Pick<ITitreDemarche, 'typeId' | 'demarcheDateDebut' | 'demarcheDateFin'>[], dateDebut: CaminoDate, dateFin: CaminoDate): boolean => {
   const demarches = titreDemarches.filter(d => !DemarchesTypes[d.typeId].travaux)
 
   // si le titre a une phase entre dateDebut et dateFin

@@ -72,7 +72,7 @@ const entrepriseEtablissementFormat = (uniteLegale: IApiSirenUniteLegale, uniteL
   return etablissement
 }
 
-export const entrepriseEtablissementsFormat = (uniteLegale: IApiSirenUniteLegale) => {
+export const entrepriseEtablissementsFormat = (uniteLegale: IApiSirenUniteLegale): IEntrepriseEtablissement[] => {
   // periodesUniteLegale est un tableau
   // classé par ordre de fin chronologique décroissant
   if (isNullOrUndefinedOrEmpty(uniteLegale.periodesUniteLegale)) {

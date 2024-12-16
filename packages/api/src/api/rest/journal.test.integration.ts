@@ -8,6 +8,7 @@ import { idGenerate, newTitreId } from '../../database/models/_format/id-create'
 import { userGenerate } from '../../../tests/_utils/index'
 import { insertTitreGraph } from '../../../tests/integration-test-helper'
 import { TitreId } from 'camino-common/src/validators/titres'
+import { callAndExit } from '../../tools/fp-tools'
 
 console.info = vi.fn()
 console.error = vi.fn()
@@ -37,19 +38,19 @@ afterAll(async () => {
 
 describe('getTitresModifiesByMonth', async () => {
   test('ne prend pas en compte les modifications réalisées par l’utilisateur super', async () => {
-    let tested = await getTitresModifiesByMonth(dbPool)
+    let tested = await callAndExit(getTitresModifiesByMonth(dbPool))
 
     await knex.raw(
       `INSERT INTO public.journaux (id, utilisateur_id, date, element_id, operation, titre_id) VALUES ('${idGenerate()}', 'super', '2021-11-10 09:02:19.012000 +00:00', '${idGenerate()}', 'update', '${
         titreId
       }')`
     )
-    tested = await getTitresModifiesByMonth(dbPool)
+    tested = await callAndExit(getTitresModifiesByMonth(dbPool))
     expect(tested).toMatchInlineSnapshot('[]')
   })
 
   test('comptabilise chaque modifications sur chaque titres', async () => {
-    let tested = await getTitresModifiesByMonth(dbPool)
+    let tested = await callAndExit(getTitresModifiesByMonth(dbPool))
 
     const user = await userGenerate(dbPool, { role: 'defaut' })
     await knex.raw(
@@ -57,7 +58,7 @@ describe('getTitresModifiesByMonth', async () => {
         user.id
       }', '2021-11-10 09:02:19.012000 +00:00', '${idGenerate()}', 'update', '${titreId}')`
     )
-    tested = await getTitresModifiesByMonth(dbPool)
+    tested = await callAndExit(getTitresModifiesByMonth(dbPool))
     expect(tested).toMatchInlineSnapshot(`
       [
         {
@@ -72,7 +73,7 @@ describe('getTitresModifiesByMonth', async () => {
         user.id
       }', '2021-11-10 09:02:19.012000 +00:00', '${idGenerate()}', 'update', '${titreId}')`
     )
-    tested = await getTitresModifiesByMonth(dbPool)
+    tested = await callAndExit(getTitresModifiesByMonth(dbPool))
     expect(tested).toMatchInlineSnapshot(`
       [
         {

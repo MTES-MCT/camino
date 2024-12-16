@@ -6,7 +6,7 @@ const IDS = ["cfxx","selh","aloh","anti","arge","arse","auru","bery","bism","cad
 export const substanceLegaleIdValidator = z.enum(IDS)
 export type SubstanceLegaleId = z.infer<typeof substanceLegaleIdValidator>
 
-interface SubstanceLegale<T = SubstanceLegaleId> {
+export interface SubstanceLegale<T = SubstanceLegaleId> {
   id: T
   nom: string
   description?: string

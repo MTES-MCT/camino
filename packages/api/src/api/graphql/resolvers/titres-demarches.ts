@@ -14,6 +14,7 @@ import { titreDemarcheUpdateTask } from '../../../business/titre-demarche-update
 import { titreDemarcheUpdationValidate } from '../../../business/validations/titre-demarche-updation-validate'
 import { canEditDemarche } from 'camino-common/src/permissions/titres-demarches'
 import { isNullOrUndefined } from 'camino-common/src/typescript-tools'
+import { DemarcheSlug } from 'camino-common/src/demarche'
 
 export const demarches = async (
   {
@@ -56,7 +57,14 @@ export const demarches = async (
   },
   { user }: Context,
   info: GraphQLResolveInfo
-) => {
+): Promise<{
+  elements: ITitreDemarche[]
+  page: number
+  intervalle: number
+  ordre?: 'asc' | 'desc' | null
+  colonne?: ITitreDemarcheColonneId | null
+  total: number
+}> => {
   try {
     const fields = fieldsBuild(info)
 
@@ -128,7 +136,12 @@ export const demarches = async (
   }
 }
 
-export const demarcheModifier = async ({ demarche }: { demarche: ITitreDemarche }, { user, pool }: Context) => {
+export const demarcheModifier = async (
+  { demarche }: { demarche: ITitreDemarche },
+  { user, pool }: Context
+): Promise<{
+  slug: DemarcheSlug | undefined
+}> => {
   try {
     if (isNullOrUndefined(user)) throw new Error('droits insuffisants')
 

@@ -30,7 +30,7 @@ export const titresActivitesPropsUpdate = async (titresIds?: string[]): Promise<
     return (titre.activites ?? []).reduce<Pick<ITitreActivite, 'id' | 'suppression'>[]>((acc, titreActivite) => {
       const activiteType = ActivitesTypes[titreActivite.typeId]
 
-      const dateDebut = toCaminoDate(new Date(titreActivite.annee, getMonth(activiteType.frequenceId, titreActivite.periodeId), 1))
+      const dateDebut = toCaminoDate(new Date(parseInt(titreActivite.annee), getMonth(activiteType.frequenceId, titreActivite.periodeId), 1))
 
       const isActiviteInPhase: boolean = isNotNullNorUndefinedNorEmpty(titre.demarches) && titreValideCheck(titre.demarches, dateDebut, titreActivite.date)
 

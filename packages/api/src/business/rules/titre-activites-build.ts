@@ -7,7 +7,7 @@ import { Unites } from 'camino-common/src/static/unites'
 import { ACTIVITES_STATUTS_IDS } from 'camino-common/src/static/activitesStatuts'
 import { FrequenceId, Frequences, getNumberOfMonths } from 'camino-common/src/static/frequence'
 import { SubstanceLegaleId } from 'camino-common/src/static/substancesLegales'
-import { CaminoDate, toCaminoDate } from 'camino-common/src/date'
+import { CaminoAnnee, CaminoDate, toCaminoDate } from 'camino-common/src/date'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { isNotNullNorUndefinedNorEmpty, isNullOrUndefined } from 'camino-common/src/typescript-tools'
 import { ActiviteSection, ActiviteSectionElement, ActivitesTypes, ActivitesTypesId, isSubstancesFiscales } from 'camino-common/src/static/activitesTypes'
@@ -77,7 +77,7 @@ const titreActiviteSectionsBuild = (activiteTypeId: string, sections: ActiviteSe
   }, [])
 }
 
-const titreActiviteFind = (activiteTypeId: ActivitesTypesId, annee: number, periodeId: number, titreActivites?: ITitreActivite[] | null): boolean =>
+const titreActiviteFind = (activiteTypeId: ActivitesTypesId, annee: CaminoAnnee, periodeId: number, titreActivites?: ITitreActivite[] | null): boolean =>
   titreActivites?.some(a => a.typeId === activiteTypeId && a.annee === annee && a.periodeId === periodeId) ?? false
 
 /**
@@ -98,7 +98,7 @@ const titreActiviteBuild = (
   typeId: ActivitesTypesId,
   periodeId: number,
   activiteTypeSections: ActiviteSection[],
-  annee: number,
+  annee: CaminoAnnee,
   frequenceId: FrequenceId,
   aujourdhui: CaminoDate,
   titreId: TitreId,
@@ -112,7 +112,7 @@ const titreActiviteBuild = (
 
   // la date de fin de l'activité est le premier jour du mois
   // du début de la période suivante, en fonction de la fréquence
-  const date = toCaminoDate(new Date(annee, periodeId * getNumberOfMonths(frequenceId), 1))
+  const date = toCaminoDate(new Date(parseInt(annee), periodeId * getNumberOfMonths(frequenceId), 1))
 
   const titreActiviteIsValide = titreActiviteValideCheck(date, aujourdhui, periodeId, annee, getNumberOfMonths(frequenceId), titreDemarches)
 
@@ -147,7 +147,7 @@ const titreActiviteBuild = (
 
 export const titreActivitesBuild = (
   activiteTypeId: ActivitesTypesId,
-  annees: number[],
+  annees: CaminoAnnee[],
   aujourdhui: CaminoDate,
   titreId: TitreId,
   titreTypeId: TitreTypeId,

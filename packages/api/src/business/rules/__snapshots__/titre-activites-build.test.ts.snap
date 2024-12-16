@@ -4,7 +4,7 @@ exports[`construction des activités d'un titre > crée des activités 1`] = `
 [
   {
     "activiteStatutId": "abs",
-    "annee": 2018,
+    "annee": "2018",
     "date": "2019-01-01",
     "periodeId": 1,
     "sections": [
@@ -70,7 +70,7 @@ exports[`construction des activités d'un titre > crée des activités 2`] = `
 [
   {
     "activiteStatutId": "abs",
-    "annee": 2018,
+    "annee": "2018",
     "date": "2018-04-01",
     "periodeId": 1,
     "sections": [
@@ -256,7 +256,7 @@ exports[`construction des activités d'un titre > crée des activités 2`] = `
   },
   {
     "activiteStatutId": "abs",
-    "annee": 2018,
+    "annee": "2018",
     "date": "2018-07-01",
     "periodeId": 2,
     "sections": [
@@ -442,7 +442,7 @@ exports[`construction des activités d'un titre > crée des activités 2`] = `
   },
   {
     "activiteStatutId": "abs",
-    "annee": 2018,
+    "annee": "2018",
     "date": "2018-10-01",
     "periodeId": 3,
     "sections": [
@@ -628,7 +628,7 @@ exports[`construction des activités d'un titre > crée des activités 2`] = `
   },
   {
     "activiteStatutId": "abs",
-    "annee": 2018,
+    "annee": "2018",
     "date": "2019-01-01",
     "periodeId": 4,
     "sections": [

@@ -1,7 +1,7 @@
 import JSZip from 'jszip'
 import { createWriteStream } from 'node:fs'
 import { User } from 'camino-common/src/roles'
-import { DOWNLOAD_FORMATS, contentTypes } from 'camino-common/src/rest'
+import { DOWNLOAD_FORMATS, DownloadFormat, contentTypes } from 'camino-common/src/rest'
 import { Pool } from 'pg'
 import { EtapeId, etapeAvisIdValidator, etapeDocumentIdValidator } from 'camino-common/src/etape'
 import { getEntrepriseDocumentLargeObjectIdsByEtapeId, getEtapeDocumentLargeObjectIdsByEtapeId, getLargeobjectIdByEtapeAvisId } from '../../database/queries/titres-etapes.queries'
@@ -13,26 +13,29 @@ import { DocumentsTypes } from 'camino-common/src/static/documentsTypes'
 import { slugify } from 'camino-common/src/strings'
 import { getEtapeDataForEdition, getLargeobjectIdByEtapeDocumentId } from './etapes.queries'
 import { EtapesTypes } from 'camino-common/src/static/etapesTypes'
+import { callAndExit } from '../../tools/fp-tools'
 export type NewDownload = (params: Record<string, unknown>, user: User, pool: Pool) => Promise<{ loid: number | null; fileName: string }>
 
 export const DOWNLOADS_DIRECTORY = 'downloads'
 
 export const etapeTelecharger =
   (pool: Pool) =>
-  async ({ params: { etapeId } }: { params: { etapeId?: EtapeId } }, user: User) => {
+  async ({ params: { etapeId } }: { params: { etapeId?: EtapeId } }, user: User): Promise<{ nom: string; format: DownloadFormat; filePath: string }> => {
     if (!etapeId) {
       throw new Error("id d'étape absent")
     }
 
     const { etapeData, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires } = await getEtapeDataForEdition(pool, etapeId)
 
-    const documents = await getEtapeDocumentLargeObjectIdsByEtapeId(etapeId, pool, user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires, etapeData.etape_type_id, {
-      demarche_type_id: etapeData.demarche_type_id,
-      titre_public_lecture: etapeData.titre_public_lecture,
-      entreprises_lecture: etapeData.demarche_entreprises_lecture,
-      public_lecture: etapeData.demarche_public_lecture,
-    })
-    const entrepriseDocuments = await getEntrepriseDocumentLargeObjectIdsByEtapeId({ titre_etape_id: etapeId }, pool, user)
+    const documents = await callAndExit(
+      getEtapeDocumentLargeObjectIdsByEtapeId(etapeId, pool, user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires, etapeData.etape_type_id, {
+        demarche_type_id: etapeData.demarche_type_id,
+        titre_public_lecture: etapeData.titre_public_lecture,
+        entreprises_lecture: etapeData.demarche_entreprises_lecture,
+        public_lecture: etapeData.demarche_public_lecture,
+      })
+    )
+    const entrepriseDocuments = await callAndExit(getEntrepriseDocumentLargeObjectIdsByEtapeId({ titre_etape_id: etapeId }, pool, user))
 
     if (!documents.length && !entrepriseDocuments.length) {
       throw new Error(`aucun document n'a été trouvé pour l'étape "${EtapesTypes[etapeData.etape_type_id].nom}"`)

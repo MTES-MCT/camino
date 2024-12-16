@@ -17,6 +17,7 @@ import { EtapesTypes } from 'camino-common/src/static/etapesTypes'
 import { EntrepriseId } from 'camino-common/src/entreprise'
 import { GetEntreprises, getEntreprises } from '../entreprises.queries'
 import { ETAPE_IS_NOT_BROUILLON } from 'camino-common/src/etape'
+import { TitreSlug } from 'camino-common/src/validators/titres'
 
 const etapesDatesStatutsBuild = (titreDemarche: ITitreDemarche) => {
   if (isNullOrUndefinedOrEmpty(titreDemarche.etapes)) return null
@@ -48,8 +49,26 @@ const etapesDatesStatutsBuild = (titreDemarche: ITitreDemarche) => {
       return etapesDatesStatuts
     }, {} as Index<string>)
 }
-
-export const titresDemarchesFormatTable = async (pool: Pool, titresDemarches: ITitreDemarche[]) => {
+type TitreDemarcheFormatTable = {
+  titre_id: TitreSlug | undefined
+  titre_nom: string | undefined
+  titre_domaine: string
+  titre_type: string
+  titre_statut: string
+  type: string
+  statut: string
+  description: string | undefined
+  titre_references: string | undefined
+  titulaires_noms: string
+  titulaires_adresses: string
+  titulaires_legal: string
+  amodiataires_noms: string
+  amodiataires_adresses: string
+  amodiataires_legal: string
+  forets: string | undefined
+  communes: string | undefined
+}
+export const titresDemarchesFormatTable = async (pool: Pool, titresDemarches: ITitreDemarche[]): Promise<TitreDemarcheFormatTable[]> => {
   const communesIndex = await getCommunesIndex(
     pool,
     titresDemarches.flatMap(titreDemarche => titreDemarche.etapes?.flatMap(etape => etape.communes?.map(({ id }) => id) ?? []) ?? [])

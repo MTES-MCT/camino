@@ -20,7 +20,7 @@ import { EtapeTypeId, etapesTypes } from 'camino-common/src/static/etapesTypes'
  * @params user - utilisateur connecté
  * @returns une requête d'étape(s)
  */
-export const titresEtapesQueryModify = (q: QueryBuilder<TitresEtapes, TitresEtapes | TitresEtapes[]>, user: User) => {
+export const titresEtapesQueryModify = (q: QueryBuilder<TitresEtapes, TitresEtapes | TitresEtapes[]>, user: User): QueryBuilder<TitresEtapes, TitresEtapes | TitresEtapes[]> => {
   q.select('titresEtapes.*').where('titresEtapes.archive', false).leftJoinRelated('[demarche.titre]')
 
   if (!isSuper(user)) {

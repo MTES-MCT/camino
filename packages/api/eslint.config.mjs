@@ -81,7 +81,7 @@ export default [
       ],
 
       '@typescript-eslint/explicit-function-return-type': 0,
-      '@typescript-eslint/explicit-module-boundary-types': 'warn',
+      '@typescript-eslint/explicit-module-boundary-types': 'error',
       '@typescript-eslint/no-empty-interface': 0,
       '@typescript-eslint/no-explicit-any': 0,
       '@typescript-eslint/no-non-null-assertion': 0,

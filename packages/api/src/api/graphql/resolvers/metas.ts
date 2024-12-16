@@ -1,54 +1,55 @@
-import { sortedGeoSystemes } from 'camino-common/src/static/geoSystemes'
-import { UNITES } from 'camino-common/src/static/unites'
+import { GeoSysteme, sortedGeoSystemes } from 'camino-common/src/static/geoSystemes'
+import { Unite, UNITES } from 'camino-common/src/static/unites'
 import { Pays, PaysList } from 'camino-common/src/static/pays'
 import { Departement, Departements } from 'camino-common/src/static/departement'
 import { Region, Regions } from 'camino-common/src/static/region'
-import { EtapesStatuts } from 'camino-common/src/static/etapesStatuts'
-import { titresStatutsArray } from 'camino-common/src/static/titresStatuts'
-import { phasesStatuts as staticPhasesStatuts } from 'camino-common/src/static/phasesStatuts'
-import { sortedReferencesTypes } from 'camino-common/src/static/referencesTypes'
-import { sortedDemarchesTypes } from 'camino-common/src/static/demarchesTypes'
-import { sortedAdministrationTypes } from 'camino-common/src/static/administrations'
-import { sortedDomaines } from 'camino-common/src/static/domaines'
-import { sortedTitreTypesTypes } from 'camino-common/src/static/titresTypesTypes'
-import { sortedDocumentTypes } from 'camino-common/src/static/documentsTypes'
+import { EtapesStatuts, EtapeStatut } from 'camino-common/src/static/etapesStatuts'
+import { titresStatutsArray, TitreStatut } from 'camino-common/src/static/titresStatuts'
+import { PhaseDefinition, phasesStatuts as staticPhasesStatuts } from 'camino-common/src/static/phasesStatuts'
+import { ReferenceType, sortedReferencesTypes } from 'camino-common/src/static/referencesTypes'
+import { DemarcheType, sortedDemarchesTypes } from 'camino-common/src/static/demarchesTypes'
+import { AdministrationType, sortedAdministrationTypes } from 'camino-common/src/static/administrations'
+import { Domaine, sortedDomaines } from 'camino-common/src/static/domaines'
+import { sortedTitreTypesTypes, TitreTypeTypeId } from 'camino-common/src/static/titresTypesTypes'
+import { DocumentTypeDefinition, sortedDocumentTypes } from 'camino-common/src/static/documentsTypes'
 import { config } from '../../../config/index'
-import { titreTypesStatutsTitresPublicLecture } from 'camino-common/src/static/titresTypes_titresStatuts'
-import { TitresTypes } from 'camino-common/src/static/titresTypes'
-import { sortedDemarchesStatuts } from 'camino-common/src/static/demarchesStatuts'
-import { sortedDevises } from 'camino-common/src/static/devise'
-import { toDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/documents'
+import { TitreTypesStatutsTitresPublicLecture, titreTypesStatutsTitresPublicLecture } from 'camino-common/src/static/titresTypes_titresStatuts'
+import { TitresTypes, TitreType } from 'camino-common/src/static/titresTypes'
+import { DemarcheStatut, sortedDemarchesStatuts } from 'camino-common/src/static/demarchesStatuts'
+import { Devise, sortedDevises } from 'camino-common/src/static/devise'
+import { ToDocument, toDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/documents'
+import { Definition } from 'camino-common/src/definition'
 
-export const devises = () => sortedDevises
+export const devises = (): Devise[] => sortedDevises
 
-export const geoSystemes = () => sortedGeoSystemes
+export const geoSystemes = (): GeoSysteme[] => sortedGeoSystemes
 
-export const unites = () => UNITES
+export const unites = (): Unite[] => UNITES
 
-export const documentsTypes = () => sortedDocumentTypes
+export const documentsTypes = (): DocumentTypeDefinition[] => sortedDocumentTypes
 
-export const referencesTypes = () => sortedReferencesTypes
+export const referencesTypes = (): ReferenceType[] => sortedReferencesTypes
 
-export const domaines = () => sortedDomaines
+export const domaines = (): Domaine[] => sortedDomaines
 
-export const types = () => sortedTitreTypesTypes
+export const types = (): Definition<TitreTypeTypeId>[] => sortedTitreTypesTypes
 
-export const statuts = () => titresStatutsArray
+export const statuts = (): TitreStatut[] => titresStatutsArray
 
-export const demarchesTypes = () => sortedDemarchesTypes
+export const demarchesTypes = (): DemarcheType[] => sortedDemarchesTypes
 
-export const demarchesStatuts = () => sortedDemarchesStatuts
+export const demarchesStatuts = (): DemarcheStatut[] => sortedDemarchesStatuts
 
-export const etapesStatuts = () => Object.values(EtapesStatuts)
+export const etapesStatuts = (): EtapeStatut[] => Object.values(EtapesStatuts)
 
-export const version = () => config().APPLICATION_VERSION
+export const version = (): string => config().APPLICATION_VERSION
 
 /**
  * Retourne les types d'administrations
  *
  * @returns un tableau de types d'administrations
  */
-export const administrationsTypes = () => sortedAdministrationTypes
+export const administrationsTypes = (): AdministrationType[] => sortedAdministrationTypes
 
 export const pays = (): Pays[] => Object.values(PaysList)
 
@@ -56,10 +57,10 @@ export const departements = (): Departement[] => Object.values(Departements)
 
 export const regions = (): Region[] => Object.values(Regions)
 
-export const phasesStatuts = () => staticPhasesStatuts
+export const phasesStatuts = (): PhaseDefinition[] => staticPhasesStatuts
 
-export const titresTypes = () => Object.values(TitresTypes)
+export const titresTypes = (): TitreType[] => Object.values(TitresTypes)
 
-export const titresTypesTitresStatuts = () => titreTypesStatutsTitresPublicLecture
+export const titresTypesTitresStatuts = (): TitreTypesStatutsTitresPublicLecture[] => titreTypesStatutsTitresPublicLecture
 
-export const etapesTypesDocumentsTypes = () => toDocuments()
+export const etapesTypesDocumentsTypes = (): ToDocument[] => toDocuments()

@@ -6,7 +6,7 @@ exports[`peut récupérer les statistiques des granulats marins 1`] = `
     {
       "activitesDeposesQuantite": 0,
       "activitesDeposesRatio": 0,
-      "annee": 2006,
+      "annee": "2006",
       "concessionsValides": {
         "quantite": 0,
         "surface": 0,
@@ -29,7 +29,7 @@ exports[`peut récupérer les statistiques des granulats marins 1`] = `
     {
       "activitesDeposesQuantite": 0,
       "activitesDeposesRatio": 0,
-      "annee": 2007,
+      "annee": "2007",
       "concessionsValides": {
         "quantite": 0,
         "surface": 0,
@@ -52,7 +52,7 @@ exports[`peut récupérer les statistiques des granulats marins 1`] = `
     {
       "activitesDeposesQuantite": 0,
       "activitesDeposesRatio": 0,
-      "annee": 2008,
+      "annee": "2008",
       "concessionsValides": {
         "quantite": 0,
         "surface": 0,
@@ -75,7 +75,7 @@ exports[`peut récupérer les statistiques des granulats marins 1`] = `
     {
       "activitesDeposesQuantite": 0,
       "activitesDeposesRatio": 0,
-      "annee": 2009,
+      "annee": "2009",
       "concessionsValides": {
         "quantite": 0,
         "surface": 0,
@@ -98,7 +98,7 @@ exports[`peut récupérer les statistiques des granulats marins 1`] = `
     {
       "activitesDeposesQuantite": 0,
       "activitesDeposesRatio": 0,
-      "annee": 2010,
+      "annee": "2010",
       "concessionsValides": {
         "quantite": 0,
         "surface": 0,
@@ -121,7 +121,7 @@ exports[`peut récupérer les statistiques des granulats marins 1`] = `
     {
       "activitesDeposesQuantite": 0,
       "activitesDeposesRatio": 0,
-      "annee": 2011,
+      "annee": "2011",
       "concessionsValides": {
         "quantite": 0,
         "surface": 0,
@@ -144,7 +144,7 @@ exports[`peut récupérer les statistiques des granulats marins 1`] = `
     {
       "activitesDeposesQuantite": 0,
       "activitesDeposesRatio": 0,
-      "annee": 2012,
+      "annee": "2012",
       "concessionsValides": {
         "quantite": 0,
         "surface": 0,
@@ -167,7 +167,7 @@ exports[`peut récupérer les statistiques des granulats marins 1`] = `
     {
       "activitesDeposesQuantite": 0,
       "activitesDeposesRatio": 0,
-      "annee": 2013,
+      "annee": "2013",
       "concessionsValides": {
         "quantite": 0,
         "surface": 0,
@@ -190,7 +190,7 @@ exports[`peut récupérer les statistiques des granulats marins 1`] = `
     {
       "activitesDeposesQuantite": 0,
       "activitesDeposesRatio": 0,
-      "annee": 2014,
+      "annee": "2014",
       "concessionsValides": {
         "quantite": 0,
         "surface": 0,
@@ -213,7 +213,7 @@ exports[`peut récupérer les statistiques des granulats marins 1`] = `
     {
       "activitesDeposesQuantite": 0,
       "activitesDeposesRatio": 0,
-      "annee": 2015,
+      "annee": "2015",
       "concessionsValides": {
         "quantite": 0,
         "surface": 0,
@@ -236,7 +236,7 @@ exports[`peut récupérer les statistiques des granulats marins 1`] = `
     {
       "activitesDeposesQuantite": 0,
       "activitesDeposesRatio": 0,
-      "annee": 2016,
+      "annee": "2016",
       "concessionsValides": {
         "quantite": 0,
         "surface": 0,
@@ -259,7 +259,7 @@ exports[`peut récupérer les statistiques des granulats marins 1`] = `
     {
       "activitesDeposesQuantite": 0,
       "activitesDeposesRatio": 0,
-      "annee": 2017,
+      "annee": "2017",
       "concessionsValides": {
         "quantite": 0,
         "surface": 0,
@@ -282,7 +282,7 @@ exports[`peut récupérer les statistiques des granulats marins 1`] = `
     {
       "activitesDeposesQuantite": 0,
       "activitesDeposesRatio": 0,
-      "annee": 2018,
+      "annee": "2018",
       "concessionsValides": {
         "quantite": 0,
         "surface": 0,
@@ -305,7 +305,7 @@ exports[`peut récupérer les statistiques des granulats marins 1`] = `
     {
       "activitesDeposesQuantite": 0,
       "activitesDeposesRatio": 0,
-      "annee": 2019,
+      "annee": "2019",
       "concessionsValides": {
         "quantite": 0,
         "surface": 0,
@@ -328,7 +328,7 @@ exports[`peut récupérer les statistiques des granulats marins 1`] = `
     {
       "activitesDeposesQuantite": 0,
       "activitesDeposesRatio": 0,
-      "annee": 2020,
+      "annee": "2020",
       "concessionsValides": {
         "quantite": 0,
         "surface": 0,
@@ -351,7 +351,7 @@ exports[`peut récupérer les statistiques des granulats marins 1`] = `
     {
       "activitesDeposesQuantite": 0,
       "activitesDeposesRatio": 0,
-      "annee": 2021,
+      "annee": "2021",
       "concessionsValides": {
         "quantite": 0,
         "surface": 0,
@@ -374,7 +374,7 @@ exports[`peut récupérer les statistiques des granulats marins 1`] = `
     {
       "activitesDeposesQuantite": 0,
       "activitesDeposesRatio": 0,
-      "annee": 2022,
+      "annee": "2022",
       "concessionsValides": {
         "quantite": 0,
         "surface": 0,
@@ -397,7 +397,7 @@ exports[`peut récupérer les statistiques des granulats marins 1`] = `
     {
       "activitesDeposesQuantite": 0,
       "activitesDeposesRatio": 0,
-      "annee": 2023,
+      "annee": "2023",
       "concessionsValides": {
         "quantite": 0,
         "surface": 0,

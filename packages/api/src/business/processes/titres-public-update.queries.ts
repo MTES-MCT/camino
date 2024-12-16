@@ -18,8 +18,9 @@ const getTitrePublicUpdateDataDbValidator = z.object({
     .nullable()
     .transform(v => (v === null ? false : v)),
 })
+type GetTitrePublicUpdateDataDb = z.infer<typeof getTitrePublicUpdateDataDbValidator>
 
-export const getTitrePublicUpdateData = async (pool: Pool, titreIds: NonEmptyArray<TitreId> | null) => {
+export const getTitrePublicUpdateData = async (pool: Pool, titreIds: NonEmptyArray<TitreId> | null): Promise<GetTitrePublicUpdateDataDb[]> => {
   return dbQueryAndValidate(getTitrePublicUpdateDataDb, { titreIds: titreIds ?? (['all'] as const) }, pool, getTitrePublicUpdateDataDbValidator)
 }
 
@@ -40,7 +41,8 @@ where ('all' in $$ titreIds
 and titre.archive is false
 `
 
-export const updateTitrePublicLecture = async (pool: Pool, titreId: TitreId, publicLecture: boolean) => dbQueryAndValidate(updateTitrePublicLectureDb, { titreId, publicLecture }, pool, z.void())
+export const updateTitrePublicLecture = async (pool: Pool, titreId: TitreId, publicLecture: boolean): Promise<void[]> =>
+  dbQueryAndValidate(updateTitrePublicLectureDb, { titreId, publicLecture }, pool, z.void())
 
 const updateTitrePublicLectureDb = sql<
   Redefine<IUpdateTitrePublicLectureDbQuery, { titreId: TitreId; publicLecture: boolean }, void>

@@ -1,20 +1,19 @@
 import { sql } from '@pgtyped/runtime'
-import { TitreId } from 'camino-common/src/validators/titres'
-import { Redefine, dbQueryAndValidate } from '../../pg-database'
-import { IGetLastJournalInternalQuery, IGetTitresModifiesByMonthDbQuery } from './journal.queries.types'
 import { CaminoDate, caminoDateValidator } from 'camino-common/src/date'
-import { z } from 'zod'
-import { Pool } from 'pg'
 import { QuantiteParMois, quantitesParMoisValidator } from 'camino-common/src/statistiques'
+import { TitreId } from 'camino-common/src/validators/titres'
+import { CaminoError } from 'camino-common/src/zod-tools'
+import { Effect } from 'effect'
+import { Pool } from 'pg'
+import { z } from 'zod'
+import { EffectDbQueryAndValidateErrors, Redefine, effectDbQueryAndValidate } from '../../pg-database'
+import { IGetLastJournalInternalQuery, IGetTitresModifiesByMonthDbQuery } from './journal.queries.types'
 
 const lastJournalGetValidator = z.object({ date: caminoDateValidator })
 type LastJournalGet = z.infer<typeof lastJournalGetValidator>
 
-export const getDateLastJournal = async (pool: Pool, titreId: TitreId): Promise<CaminoDate | null> => {
-  const result = await dbQueryAndValidate(getLastJournalInternal, { titreId }, pool, lastJournalGetValidator)
-
-  return result.length > 0 ? result[0].date : null
-}
+export const getDateLastJournal = (pool: Pool, titreId: TitreId): Effect.Effect<CaminoDate | null, CaminoError<EffectDbQueryAndValidateErrors>> =>
+  effectDbQueryAndValidate(getLastJournalInternal, { titreId }, pool, lastJournalGetValidator).pipe(Effect.map(result => (result.length === 1 ? result[0].date : null)))
 
 const getLastJournalInternal = sql<Redefine<IGetLastJournalInternalQuery, { titreId: TitreId }, LastJournalGet>>`
 select
@@ -28,9 +27,8 @@ order by
 LIMIT 1
 `
 
-export const getTitresModifiesByMonth = async (pool: Pool): Promise<QuantiteParMois[]> => {
-  return dbQueryAndValidate(getTitresModifiesByMonthDb, undefined, pool, quantitesParMoisValidator)
-}
+export const getTitresModifiesByMonth = (pool: Pool): Effect.Effect<QuantiteParMois[], CaminoError<EffectDbQueryAndValidateErrors>> =>
+  effectDbQueryAndValidate(getTitresModifiesByMonthDb, undefined, pool, quantitesParMoisValidator)
 
 const getTitresModifiesByMonthDb = sql<Redefine<IGetTitresModifiesByMonthDbQuery, void, QuantiteParMois>>`
 select

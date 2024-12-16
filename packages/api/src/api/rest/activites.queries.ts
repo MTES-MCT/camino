@@ -37,7 +37,7 @@ import { SimplePromiseFn } from 'camino-common/src/typescript-tools'
 import { ActiviteDocumentTypeId } from 'camino-common/src/static/documentsTypes'
 import { sectionValidator } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections'
 
-export const titreTypeIdByActiviteId = async (activiteId: ActiviteIdOrSlug, pool: Pool) => {
+export const titreTypeIdByActiviteId = async (activiteId: ActiviteIdOrSlug, pool: Pool): Promise<TitreTypeId> => {
   const typeIds = await dbQueryAndValidate(getTitreTypeIdByActiviteId, { activiteId }, pool, titreTypeIdObjectValidator)
   if (typeIds.length === 0) {
     throw new Error(`Pas de type de titre trouvé pour l'activité ${activiteId}`)
@@ -97,7 +97,7 @@ export const getActiviteById = async (
   titreTypeId: SimplePromiseFn<TitreTypeId>,
   titresAdministrationsLocales: SimplePromiseFn<AdministrationId[]>,
   entreprisesTitulairesOuAmodiataires: SimplePromiseFn<EntrepriseId[]>
-) => {
+): Promise<(DbActivite & { suppression: boolean }) | null> => {
   const canRead = await canReadTitreActivites(user, titreTypeId, titresAdministrationsLocales, entreprisesTitulairesOuAmodiataires)
 
   if (!canRead) {
@@ -171,7 +171,7 @@ export const getActiviteDocumentsByActiviteId = async (activiteId: ActiviteId, p
   )
 }
 
-export const administrationsLocalesByActiviteId = async (activiteId: ActiviteIdOrSlug, pool: Pool) => {
+export const administrationsLocalesByActiviteId = async (activiteId: ActiviteIdOrSlug, pool: Pool): Promise<AdministrationId[]> => {
   const admins = await dbQueryAndValidate(getAdministrationsLocalesByActiviteId, { activiteId }, pool, administrationsLocalesValidator)
   if (admins.length > 1) {
     throw new Error(`Trop d'administrations locales trouvées pour l'activité ${activiteId}`)
@@ -208,7 +208,7 @@ where
     or ta.slug = $ activiteId !
 `
 
-export const entreprisesTitulairesOuAmoditairesByActiviteId = async (activiteId: ActiviteIdOrSlug, pool: Pool) => {
+export const entreprisesTitulairesOuAmoditairesByActiviteId = async (activiteId: ActiviteIdOrSlug, pool: Pool): Promise<EntrepriseId[]> => {
   const entreprises = await dbQueryAndValidate(getTitulairesAmodiatairesTitreActivite, { activiteId }, pool, entrepriseIdObjectValidator)
 
   return entreprises.map(({ id }) => id)
@@ -247,7 +247,7 @@ export const deleteActiviteDocument = async (
   activiteTypeId: ActivitesTypesId,
   activiteStatutId: ActivitesStatutId,
   pool: Pool
-) => {
+): Promise<void[]> => {
   if (!canDeleteActiviteDocument(activiteDocumentTypeId, activiteTypeId, activiteStatutId)) {
     throw new Error('droits insuffisants')
   }
@@ -270,7 +270,7 @@ export const insertActiviteDocument = async (
     description: string
     largeobject_id: number
   }
-) => dbQueryAndValidate(insertActiviteDocumentInternal, params, pool, z.object({ id: activiteDocumentIdValidator }))
+): Promise<{ id: ActiviteDocumentId }[]> => dbQueryAndValidate(insertActiviteDocumentInternal, params, pool, z.object({ id: activiteDocumentIdValidator }))
 
 const insertActiviteDocumentInternal = sql<
   Redefine<

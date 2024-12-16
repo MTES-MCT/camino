@@ -8,7 +8,7 @@ export const equalStringArrays = (arr1: string[], arr2: string[]): boolean =>
     return u === arr2[i]
   })
 
-export const dupFind = (key: string, ...arrays: Index<any>[][]) =>
+export const dupFind = (key: string, ...arrays: Index<any>[][]): Index<any>[] =>
   // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   arrays.reduce((result: Index<any>[], array) => result.filter(el => array.find(e => e[key] && e[key] === el[key])), arrays.pop() as Index<any>[])
 
@@ -37,4 +37,4 @@ export const objectsDiffer = (a: Index<any> | any, b: Index<any> | any): boolean
   return comparator(a, b) || comparator(b, a)
 }
 
-export const objectClone = (obj: any) => deserialize(serialize(obj))
+export const objectClone = <T>(obj: T): T => deserialize(serialize(obj))

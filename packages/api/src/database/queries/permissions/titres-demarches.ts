@@ -10,7 +10,7 @@ import { administrationsTitresQuery } from './administrations'
 import { entreprisesTitresQuery } from './entreprises'
 import { isSuper, isAdministration, isEntreprise, isBureauDEtudes, User } from 'camino-common/src/roles'
 
-export const titresDemarchesQueryModify = (q: QueryBuilder<TitresDemarches, TitresDemarches | TitresDemarches[]>, user: User) => {
+export const titresDemarchesQueryModify = (q: QueryBuilder<TitresDemarches, TitresDemarches | TitresDemarches[]>, user: User): QueryBuilder<TitresDemarches, TitresDemarches | TitresDemarches[]> => {
   q.select('titresDemarches.*').where('titresDemarches.archive', false).leftJoinRelated('titre')
 
   if (!isSuper(user)) {

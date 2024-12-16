@@ -81,7 +81,7 @@ export const getEtapeEntrepriseDocuments =
       res.sendStatus(HTTP_STATUS.BAD_REQUEST)
     } else {
       try {
-        const result = await getEntrepriseDocumentIdsByEtapeId({ titre_etape_id: etapeIdParsed.data }, pool, user)
+        const result = await callAndExit(getEntrepriseDocumentIdsByEtapeId({ titre_etape_id: etapeIdParsed.data }, pool, user))
         res.json(result)
       } catch (e) {
         res.sendStatus(HTTP_STATUS.INTERNAL_SERVER_ERROR)
@@ -102,12 +102,14 @@ export const getEtapeDocuments =
       try {
         const { etapeData, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires } = await getEtapeDataForEdition(pool, etapeIdParsed.data)
 
-        const result = await getDocumentsByEtapeId(etapeIdParsed.data, pool, user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires, etapeData.etape_type_id, {
-          demarche_type_id: etapeData.demarche_type_id,
-          entreprises_lecture: etapeData.demarche_entreprises_lecture,
-          public_lecture: etapeData.demarche_public_lecture,
-          titre_public_lecture: etapeData.titre_public_lecture,
-        })
+        const result = await callAndExit(
+          getDocumentsByEtapeId(etapeIdParsed.data, pool, user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires, etapeData.etape_type_id, {
+            demarche_type_id: etapeData.demarche_type_id,
+            entreprises_lecture: etapeData.demarche_entreprises_lecture,
+            public_lecture: etapeData.demarche_public_lecture,
+            titre_public_lecture: etapeData.titre_public_lecture,
+          })
+        )
 
         res.json({ etapeDocuments: result })
       } catch (e) {
@@ -129,12 +131,14 @@ export const getEtapeAvis =
       try {
         const { etapeData, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires } = await getEtapeDataForEdition(pool, etapeIdParsed.data)
 
-        const result = await getEtapeAvisLargeObjectIdsByEtapeId(etapeIdParsed.data, pool, user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires, etapeData.etape_type_id, {
-          demarche_type_id: etapeData.demarche_type_id,
-          entreprises_lecture: etapeData.demarche_entreprises_lecture,
-          public_lecture: etapeData.demarche_public_lecture,
-          titre_public_lecture: etapeData.titre_public_lecture,
-        })
+        const result = await callAndExit(
+          getEtapeAvisLargeObjectIdsByEtapeId(etapeIdParsed.data, pool, user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires, etapeData.etape_type_id, {
+            demarche_type_id: etapeData.demarche_type_id,
+            entreprises_lecture: etapeData.demarche_entreprises_lecture,
+            public_lecture: etapeData.demarche_public_lecture,
+            titre_public_lecture: etapeData.titre_public_lecture,
+          })
+        )
 
         const avis: GetEtapeAvisByEtapeId = result.map(a => ({ ...a, has_file: isNotNullNorUndefined(a.largeobject_id) }))
         res.json(getEtapeAvisByEtapeIdValidator.parse(avis))
@@ -920,22 +924,26 @@ export const deposeEtape =
         const entreprisesTitulairesOuAmodiataires = memoize(() => {
           return Promise.resolve([...(titre.titulaireIds ?? []), ...(titre.amodiataireIds ?? [])])
         })
-        const etapeDocuments = await getDocumentsByEtapeId(id, pool, user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires, titreEtape.typeId, {
-          demarche_type_id: titreDemarche.typeId,
-          entreprises_lecture: titreDemarche.entreprisesLecture ?? false,
-          public_lecture: titreDemarche.publicLecture ?? false,
-          titre_public_lecture: titre.publicLecture ?? false,
-        })
+        const etapeDocuments = await callAndExit(
+          getDocumentsByEtapeId(id, pool, user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires, titreEtape.typeId, {
+            demarche_type_id: titreDemarche.typeId,
+            entreprises_lecture: titreDemarche.entreprisesLecture ?? false,
+            public_lecture: titreDemarche.publicLecture ?? false,
+            titre_public_lecture: titre.publicLecture ?? false,
+          })
+        )
 
-        const entrepriseDocuments = await getEntrepriseDocumentIdsByEtapeId({ titre_etape_id: titreEtape.id }, pool, userSuper)
+        const entrepriseDocuments = await callAndExit(getEntrepriseDocumentIdsByEtapeId({ titre_etape_id: titreEtape.id }, pool, userSuper))
 
         // On utilise le userSuper pour charger tous les avis, car celui qui dépose ne peut peut-être pas voir tous les avis
-        const etapeAvis = await getEtapeAvisLargeObjectIdsByEtapeId(id, pool, userSuper, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires, titreEtape.typeId, {
-          demarche_type_id: titreDemarche.typeId,
-          entreprises_lecture: titreDemarche.entreprisesLecture ?? false,
-          public_lecture: titreDemarche.publicLecture ?? false,
-          titre_public_lecture: titre.publicLecture ?? false,
-        })
+        const etapeAvis = await callAndExit(
+          getEtapeAvisLargeObjectIdsByEtapeId(id, pool, userSuper, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires, titreEtape.typeId, {
+            demarche_type_id: titreDemarche.typeId,
+            entreprises_lecture: titreDemarche.entreprisesLecture ?? false,
+            public_lecture: titreDemarche.publicLecture ?? false,
+            titre_public_lecture: titre.publicLecture ?? false,
+          })
+        )
 
         // TODO 2023-06-14 TS 5.1 n’arrive pas réduire le type de titre
         const flattenEtape = await callAndExit(iTitreEtapeToFlattenEtape(titreEtape))

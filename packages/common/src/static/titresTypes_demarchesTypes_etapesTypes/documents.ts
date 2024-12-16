@@ -378,7 +378,8 @@ const TDEDocumentsTypes = {
 
 type TDEDocumentsTypesUnleashed = { [key in TitreTypeId]?: { [key in DemarcheTypeId]?: { [key in EtapeTypeId]?: { [key in DocumentTypeId]: { optionnel: boolean; description?: string } } } } }
 
-export const toDocuments = (): { etapeTypeId: EtapeTypeId; documentTypeId: DocumentTypeId; optionnel: boolean; description: string | null }[] => {
+export type ToDocument = { etapeTypeId: EtapeTypeId; documentTypeId: DocumentTypeId; optionnel: boolean; description: string | null }
+export const toDocuments = (): ToDocument[] => {
   return getEntriesHardcore(EtapesTypesDocumentsTypes).flatMap(([key, values]) =>
     values.map(value => ({ etapeTypeId: key, documentTypeId: value.documentTypeId, description: null, optionnel: value.optionnel }))
   )

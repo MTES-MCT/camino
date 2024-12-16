@@ -1,6 +1,7 @@
 import { PureGranulatsMarins } from './granulats-marins'
 import { Meta, StoryFn } from '@storybook/vue3'
-import { toCaminoDate } from 'camino-common/src/date'
+import { toCaminoAnnee, toCaminoDate } from 'camino-common/src/date'
+import { StatistiquesGranulatsMarins } from 'camino-common/src/statistiques'
 
 const meta: Meta = {
   title: 'Components/Statistiques/GranulatsMarins',
@@ -9,10 +10,10 @@ const meta: Meta = {
 }
 export default meta
 
-const data = {
+const data: StatistiquesGranulatsMarins = {
   annees: [
     {
-      annee: 2006,
+      annee: toCaminoAnnee(2006),
       titresPrw: { quantite: 1, surface: 36000 },
       titresPxw: { quantite: 0, surface: 0 },
       titresCxw: { quantite: 1, surface: 200 },
@@ -23,7 +24,7 @@ const data = {
       concessionsValides: { quantite: 8, surface: 3340 },
     },
     {
-      annee: 2007,
+      annee: toCaminoAnnee(2007),
       titresPrw: { quantite: 0, surface: 0 },
       titresPxw: { quantite: 1, surface: 66 },
       titresCxw: { quantite: 1, surface: 1000 },
@@ -34,7 +35,7 @@ const data = {
       concessionsValides: { quantite: 9, surface: 4340 },
     },
     {
-      annee: 2008,
+      annee: toCaminoAnnee(2008),
       titresPrw: { quantite: 0, surface: 0 },
       titresPxw: { quantite: 0, surface: 0 },
       titresCxw: { quantite: 2, surface: 977 },
@@ -45,7 +46,7 @@ const data = {
       concessionsValides: { quantite: 11, surface: 5317 },
     },
     {
-      annee: 2009,
+      annee: toCaminoAnnee(2009),
       titresPrw: { quantite: 0, surface: 0 },
       titresPxw: { quantite: 0, surface: 0 },
       titresCxw: { quantite: 0, surface: 0 },
@@ -56,7 +57,7 @@ const data = {
       concessionsValides: { quantite: 11, surface: 5317 },
     },
     {
-      annee: 2010,
+      annee: toCaminoAnnee(2010),
       titresPrw: { quantite: 1, surface: 5327 },
       titresPxw: { quantite: 0, surface: 0 },
       titresCxw: { quantite: 2, surface: 707 },
@@ -67,7 +68,7 @@ const data = {
       concessionsValides: { quantite: 12, surface: 5324 },
     },
     {
-      annee: 2011,
+      annee: toCaminoAnnee(2011),
       titresPrw: { quantite: 0, surface: 0 },
       titresPxw: { quantite: 0, surface: 0 },
       titresCxw: { quantite: 4, surface: 3528 },
@@ -78,7 +79,7 @@ const data = {
       concessionsValides: { quantite: 16, surface: 8852 },
     },
     {
-      annee: 2012,
+      annee: toCaminoAnnee(2012),
       titresPrw: { quantite: 0, surface: 0 },
       titresPxw: { quantite: 0, surface: 0 },
       titresCxw: { quantite: 1, surface: 5000 },
@@ -89,7 +90,7 @@ const data = {
       concessionsValides: { quantite: 16, surface: 13802 },
     },
     {
-      annee: 2013,
+      annee: toCaminoAnnee(2013),
       titresPrw: { quantite: 0, surface: 0 },
       titresPxw: { quantite: 0, surface: 0 },
       titresCxw: { quantite: 4, surface: 3696 },
@@ -100,7 +101,7 @@ const data = {
       concessionsValides: { quantite: 20, surface: 17498 },
     },
     {
-      annee: 2014,
+      annee: toCaminoAnnee(2014),
       titresPrw: { quantite: 0, surface: 0 },
       titresPxw: { quantite: 0, surface: 0 },
       titresCxw: { quantite: 0, surface: 0 },
@@ -111,7 +112,7 @@ const data = {
       concessionsValides: { quantite: 18, surface: 16521 },
     },
     {
-      annee: 2015,
+      annee: toCaminoAnnee(2015),
       titresPrw: { quantite: 0, surface: 0 },
       titresPxw: { quantite: 0, surface: 0 },
       titresCxw: { quantite: 1, surface: 400 },
@@ -122,7 +123,7 @@ const data = {
       concessionsValides: { quantite: 19, surface: 16921 },
     },
     {
-      annee: 2016,
+      annee: toCaminoAnnee(2016),
       titresPrw: { quantite: 1, surface: 43143 },
       titresPxw: { quantite: 0, surface: 0 },
       titresCxw: { quantite: 0, surface: 0 },
@@ -133,7 +134,7 @@ const data = {
       concessionsValides: { quantite: 19, surface: 16921 },
     },
     {
-      annee: 2017,
+      annee: toCaminoAnnee(2017),
       titresPrw: { quantite: 1, surface: 43240 },
       titresPxw: { quantite: 0, surface: 0 },
       titresCxw: { quantite: 2, surface: 920 },
@@ -144,7 +145,7 @@ const data = {
       concessionsValides: { quantite: 21, surface: 17841 },
     },
     {
-      annee: 2018,
+      annee: toCaminoAnnee(2018),
       titresPrw: { quantite: 0, surface: 0 },
       titresPxw: { quantite: 0, surface: 0 },
       titresCxw: { quantite: 0, surface: 0 },
@@ -155,7 +156,7 @@ const data = {
       concessionsValides: { quantite: 21, surface: 17841 },
     },
     {
-      annee: 2019,
+      annee: toCaminoAnnee(2019),
       titresPrw: { quantite: 0, surface: 0 },
       titresPxw: { quantite: 0, surface: 0 },
       titresCxw: { quantite: 1, surface: 1030 },
@@ -166,7 +167,7 @@ const data = {
       concessionsValides: { quantite: 21, surface: 18071 },
     },
     {
-      annee: 2020,
+      annee: toCaminoAnnee(2020),
       titresPrw: { quantite: 0, surface: 0 },
       titresPxw: { quantite: 0, surface: 0 },
       titresCxw: { quantite: 0, surface: 0 },
@@ -177,7 +178,7 @@ const data = {
       concessionsValides: { quantite: 21, surface: 18071 },
     },
     {
-      annee: 2021,
+      annee: toCaminoAnnee(2021),
       titresPrw: { quantite: 0, surface: 0 },
       titresPxw: { quantite: 0, surface: 0 },
       titresCxw: { quantite: 0, surface: 0 },
@@ -188,7 +189,7 @@ const data = {
       concessionsValides: { quantite: 21, surface: 18071 },
     },
     {
-      annee: 2022,
+      annee: toCaminoAnnee(2022),
       titresPrw: { quantite: 0, surface: 0 },
       titresPxw: { quantite: 0, surface: 0 },
       titresCxw: { quantite: 0, surface: 0 },
@@ -199,7 +200,7 @@ const data = {
       concessionsValides: { quantite: 20, surface: 17967 },
     },
     {
-      annee: 2023,
+      annee: toCaminoAnnee(2023),
       titresPrw: { quantite: 0, surface: 0 },
       titresPxw: { quantite: 0, surface: 0 },
       titresCxw: { quantite: 0, surface: 0 },
@@ -216,9 +217,6 @@ const data = {
   titresValPrw: 0,
   titresInstructionExploitation: 2,
   titresValCxw: 19,
-  titresDmiCxw: null,
-  titresModCxw: null,
-  titresModPrw: null,
 }
 
 export const DefaultNoSnapshot: StoryFn = () => <PureGranulatsMarins getStatistiques={() => Promise.resolve(data)} />

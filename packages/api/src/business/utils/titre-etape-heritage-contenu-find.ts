@@ -1,14 +1,20 @@
-import { IContenuValeur, ITitreEtape } from '../../types'
+import { IContenu, IContenuValeur, IHeritageContenu, ITitreEtape } from '../../types'
 
 import { RecordPartial } from 'camino-common/src/typescript-tools'
 import { Section } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections'
+import { EtapeId } from 'camino-common/src/etape'
 
 export const heritageContenuFind = (
   sectionId: string,
   elementId: string,
   titreEtape: Pick<ITitreEtape, 'contenu' | 'heritageContenu'>,
   prevTitreEtape?: Pick<ITitreEtape, 'id' | 'contenu' | 'heritageContenu'> | null
-) => {
+): {
+  hasChanged: boolean
+  value: IContenuValeur
+  etapeId: EtapeId | null | undefined
+  actif: boolean
+} => {
   let hasChanged = false
   let value = (titreEtape.contenu && titreEtape.contenu[sectionId] && titreEtape.contenu[sectionId][elementId]) as IContenuValeur
 
@@ -49,16 +55,20 @@ export const heritageContenuFind = (
 
   return { hasChanged, value, etapeId, actif }
 }
-
+type TitreEtapeHeritageContenuFind = {
+  contenu: IContenu | null | undefined
+  heritageContenu: IHeritageContenu | null | undefined
+  hasChanged: boolean
+}
 export const titreEtapeHeritageContenuFind = (
   titreEtapes: Omit<ITitreEtape, 'titreDemarcheId' | 'isBrouillon'>[],
   titreEtape: Pick<ITitreEtape, 'id' | 'contenu' | 'heritageContenu'>,
   etapeSectionsDictionary: RecordPartial<string, Section[]>
-) => {
+): TitreEtapeHeritageContenuFind => {
   const sections = etapeSectionsDictionary[titreEtape.id]
 
   return (
-    sections?.reduce(
+    sections?.reduce<TitreEtapeHeritageContenuFind>(
       ({ contenu, heritageContenu, hasChanged }, section) => {
         if (section.elements.length) {
           section.elements.forEach(element => {

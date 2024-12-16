@@ -45,37 +45,41 @@ const etapesValidate = async (pool: Pool, demarcheIds?: DemarcheId[]) => {
           }
           if (etape.isBrouillon === ETAPE_IS_NOT_BROUILLON) {
             const flattenEtape = await callAndExit(iTitreEtapeToFlattenEtape(etape))
-            const documents = await getDocumentsByEtapeId(
-              etape.id,
-              pool,
-              userSuper,
-              async () => titreTypeId,
-              async () => [],
-              async () => [],
-              etape.typeId,
-              {
-                demarche_type_id: demarche.typeId,
-                entreprises_lecture: demarche.entreprisesLecture ?? false,
-                public_lecture: demarche.publicLecture ?? false,
-                titre_public_lecture: demarche.titre!.publicLecture ?? false,
-              }
+            const documents = await callAndExit(
+              getDocumentsByEtapeId(
+                etape.id,
+                pool,
+                userSuper,
+                async () => titreTypeId,
+                async () => [],
+                async () => [],
+                etape.typeId,
+                {
+                  demarche_type_id: demarche.typeId,
+                  entreprises_lecture: demarche.entreprisesLecture ?? false,
+                  public_lecture: demarche.publicLecture ?? false,
+                  titre_public_lecture: demarche.titre!.publicLecture ?? false,
+                }
+              )
             )
 
-            const entrepriseDocuments = await getEntrepriseDocumentIdsByEtapeId({ titre_etape_id: etape.id }, pool, userSuper)
-            const etapeAvis = await getEtapeAvisLargeObjectIdsByEtapeId(
-              etape.id,
-              pool,
-              userSuper,
-              async () => titreTypeId,
-              async () => [],
-              async () => [],
-              etape.typeId,
-              {
-                demarche_type_id: demarche.typeId,
-                entreprises_lecture: demarche.entreprisesLecture ?? false,
-                public_lecture: demarche.publicLecture ?? false,
-                titre_public_lecture: demarche.titre!.publicLecture ?? false,
-              }
+            const entrepriseDocuments = await callAndExit(getEntrepriseDocumentIdsByEtapeId({ titre_etape_id: etape.id }, pool, userSuper))
+            const etapeAvis = await callAndExit(
+              getEtapeAvisLargeObjectIdsByEtapeId(
+                etape.id,
+                pool,
+                userSuper,
+                async () => titreTypeId,
+                async () => [],
+                async () => [],
+                etape.typeId,
+                {
+                  demarche_type_id: demarche.typeId,
+                  entreprises_lecture: demarche.entreprisesLecture ?? false,
+                  public_lecture: demarche.publicLecture ?? false,
+                  titre_public_lecture: demarche.titre!.publicLecture ?? false,
+                }
+              )
             )
             const { valid, errors } = isEtapeComplete(
               flattenEtape,

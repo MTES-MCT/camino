@@ -1,4 +1,4 @@
-export const fileNameCreate = (name: string, type: string) => {
+export const fileNameCreate = (name: string, type: string): string => {
   const d = new Date()
   const dd = d.getDate().toString().padStart(2, '0')
   const mm = (d.getMonth() + 1).toString().padStart(2, '0')

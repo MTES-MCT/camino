@@ -11,19 +11,21 @@ import { statistiquesGranulatsMarins } from './granulats-marins'
 import { caminoAnneeValidator, getCurrentAnnee } from 'camino-common/src/date'
 import type { Pool } from 'pg'
 
-export const getDGTMStats = (pool: Pool) => async (req: CaminoRequest, res: CustomResponse<StatistiquesDGTM>) => {
-  const user = req.auth
+export const getDGTMStats =
+  (pool: Pool) =>
+  async (req: CaminoRequest, res: CustomResponse<StatistiquesDGTM>): Promise<void> => {
+    const user = req.auth
 
-  const administrationId = ADMINISTRATION_IDS['DGTM - GUYANE']
+    const administrationId = ADMINISTRATION_IDS['DGTM - GUYANE']
 
-  if (!isAdministration(user) || user.administrationId !== administrationId) {
-    res.sendStatus(HTTP_STATUS.FORBIDDEN)
-  } else {
-    const result = await getDGTMStatsInside(pool)(administrationId)
+    if (!isAdministration(user) || user.administrationId !== administrationId) {
+      res.sendStatus(HTTP_STATUS.FORBIDDEN)
+    } else {
+      const result = await getDGTMStatsInside(pool)(administrationId)
 
-    res.json(result)
+      res.json(result)
+    }
   }
-}
 
 export const getMinerauxMetauxMetropolesStats =
   (pool: Pool) =>

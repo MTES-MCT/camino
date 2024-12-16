@@ -1,4 +1,4 @@
-import { Context } from '../../../types'
+import { Context, ITitreEtape } from '../../../types'
 
 import { titreDemarcheGet } from '../../../database/queries/titres-demarches'
 
@@ -12,7 +12,10 @@ import { titreEtapeFormatFields } from '../../_format/_fields'
 import { EtapeId } from 'camino-common/src/etape'
 import { DemarcheId } from 'camino-common/src/demarche'
 
-export const etapeHeritage = async ({ date, titreDemarcheId, typeId, etapeId }: { date: CaminoDate; titreDemarcheId: DemarcheId; typeId: EtapeTypeId; etapeId: EtapeId | null }, { user }: Context) => {
+export const etapeHeritage = async (
+  { date, titreDemarcheId, typeId, etapeId }: { date: CaminoDate; titreDemarcheId: DemarcheId; typeId: EtapeTypeId; etapeId: EtapeId | null },
+  { user }: Context
+): Promise<ITitreEtape> => {
   try {
     let titreDemarche = await titreDemarcheGet(titreDemarcheId, { fields: {} }, user)
 

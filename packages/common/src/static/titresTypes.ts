@@ -52,8 +52,9 @@ export const TitresTypesIds = Object.values(TITRES_TYPES_IDS)
 
 export const titreTypeIdValidator = z.enum(TITRES_TYPES_KEYS)
 export type TitreTypeId = z.infer<typeof titreTypeIdValidator>
+export type TitreType<T = TitreTypeId> = Definition<T>
 export const TitresTypes: {
-  [key in TitreTypeId]: Definition<key>
+  [key in TitreTypeId]: TitreType<key>
 } = {
   [TITRES_TYPES_IDS.AUTORISATION_DE_PROSPECTION_CARRIERES]: { id: 'apc', domaineId: 'c', typeId: 'ap' },
   [TITRES_TYPES_IDS.AUTORISATION_DE_PROSPECTION_HYDROCARBURE]: { id: 'aph', domaineId: 'h', typeId: 'ap' },

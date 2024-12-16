@@ -5,7 +5,7 @@ import { titreValideCheck } from '../utils/titre-valide-check'
 import { vi, describe, expect, test, afterEach } from 'vitest'
 import { titreIdValidator } from 'camino-common/src/validators/titres'
 import { ITitre, ITitreDemarche } from '../../types'
-import { toCaminoDate } from 'camino-common/src/date'
+import { toCaminoAnnee, toCaminoDate } from 'camino-common/src/date'
 import { activiteIdValidator } from 'camino-common/src/activite'
 
 vi.mock('../../database/queries/titres-activites', () => ({
@@ -46,7 +46,7 @@ describe("propriété des activités d'un titre", () => {
             sections: [],
             activiteStatutId: 'abs',
             date: toCaminoDate('2019-10-01'),
-            annee: 2019,
+            annee: toCaminoAnnee(2019),
             periodeId: 3,
             typeId: 'grp',
             suppression: true,
@@ -124,7 +124,7 @@ describe("propriété des activités d'un titre", () => {
             id: activiteIdValidator.parse('titre-activite-id-2019-03'),
             date: toCaminoDate('2019-10-01'),
             titreId: titreIdValidator.parse('titre-id'),
-            annee: 2019,
+            annee: toCaminoAnnee(2019),
             periodeId: 3,
             typeId: 'grp',
             activiteStatutId: 'abs',
@@ -145,7 +145,7 @@ describe("propriété des activités d'un titre", () => {
             id: activiteIdValidator.parse('titre-activite-id-2019-03'),
             titreId: titreIdValidator.parse('titre-id'),
             date: toCaminoDate('2019-10-01'),
-            annee: 2019,
+            annee: toCaminoAnnee(2019),
             activiteStatutId: 'abs',
             periodeId: 3,
             typeId: 'grp',

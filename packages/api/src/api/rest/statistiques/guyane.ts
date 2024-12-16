@@ -97,12 +97,12 @@ const statistiquesGuyaneInstantBuild = (titres: ITitre[]): Record<IStatsGuyaneTi
 }
 
 const statistiquesGuyaneAnneeBuild = (titres: ITitre[], titresActivites: ITitreActivite[], annee: CaminoAnnee) => {
-  const titresFiltered = titresSurfaceIndexBuild(titres, +annee)
+  const titresFiltered = titresSurfaceIndexBuild(titres, annee)
 
   const { titresArm, titresPrm, titresAxm, titresCxm } = statistiquesGuyaneTitresBuild(titresFiltered)
 
   // les activités de type grp de l'année
-  const titresActivitesGrpFiltered = titresActivites.filter(ta => ta.annee === +annee && ta.typeId === 'grp')
+  const titresActivitesGrpFiltered = titresActivites.filter(ta => ta.annee === annee && ta.typeId === 'grp')
   const statistiquesActivitesGrp = statistiquesGuyaneActivitesBuild('renseignements', titresActivitesGrpFiltered, {
     carburantConventionnel: 0,
     carburantDetaxe: 0,
@@ -113,7 +113,7 @@ const statistiquesGuyaneAnneeBuild = (titres: ITitre[], titresActivites: ITitreA
     rapportProductionOrCount: 0,
   })
   // les activités de type gra et grx de l'année
-  const titresActivitesGraFiltered = titresActivites.filter(ta => ta.annee === +annee && (ta.typeId === 'gra' || ta.typeId === 'grx'))
+  const titresActivitesGraFiltered = titresActivites.filter(ta => ta.annee === annee && (ta.typeId === 'gra' || ta.typeId === 'grx'))
   const statistiquesActivitesGra = statistiquesGuyaneActivitesBuild('substancesFiscales', titresActivitesGraFiltered, {
     auru: 0,
     activitesDeposesQuantiteCount: 0,

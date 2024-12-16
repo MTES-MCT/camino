@@ -145,7 +145,7 @@ export type StatistiquesGuyane = {
 }
 
 const statistiqueGranulatsMarinsStatAnneeValidator = z.object({
-  annee: z.number(),
+  annee: caminoAnneeValidator,
   titresPrw: z.object({
     quantite: z.number(),
     surface: z.number(),

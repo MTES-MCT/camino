@@ -6,7 +6,7 @@ import { roleValidator } from 'camino-common/src/roles'
 import { administrationIdValidator } from 'camino-common/src/static/administrations'
 import { IGetUtilisateursStatsDbQuery } from './datagouv.queries.types'
 
-export const getUtilisateursStats = async (pool: Pool) => dbQueryAndValidate(getUtilisateursStatsDb, undefined, pool, getUtilisateursStatsValidator)
+export const getUtilisateursStats = async (pool: Pool): Promise<GetUtilisateursStats[]> => dbQueryAndValidate(getUtilisateursStatsDb, undefined, pool, getUtilisateursStatsValidator)
 
 const getUtilisateursStatsValidator = z.object({ role: roleValidator, administration_id: administrationIdValidator.nullable() })
 type GetUtilisateursStats = z.infer<typeof getUtilisateursStatsValidator>

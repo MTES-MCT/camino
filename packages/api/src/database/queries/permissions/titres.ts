@@ -12,12 +12,12 @@ import TitresEtapes from '../../models/titres-etapes'
 import { isAdministration, isBureauDEtudes, isEntreprise, isSuper, User } from 'camino-common/src/roles'
 import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
 
-export const titresVisibleByEntrepriseQuery = (q: QueryBuilder<Titres, Titres | Titres[]>, entreprisesIds: string[]) => {
+export const titresVisibleByEntrepriseQuery = (q: QueryBuilder<Titres, Titres | Titres[]>, entreprisesIds: string[]): void => {
   // titres dont il est titulaire ou amodiataire
   q.whereExists(entreprisesTitresQuery(entreprisesIds, 'titres'))
 }
 
-export const titresArmEnDemandeQuery = (q: QueryBuilder<Titres, Titres | Titres[]>) => {
+export const titresArmEnDemandeQuery = (q: QueryBuilder<Titres, Titres | Titres[]>): void => {
   // Le titre doit être une ARM en demande initiale avec une « Recevabilité de la demande » favorable
   q.where('titres.typeId', 'arm')
   q.where('titres.titreStatutId', 'dmi')
@@ -37,7 +37,7 @@ export const titresArmEnDemandeQuery = (q: QueryBuilder<Titres, Titres | Titres[
   )
 }
 
-export const titresConfidentielSelect = (q: QueryBuilder<Titres, Titres | Titres[]>, entreprisesIds: string[]) =>
+export const titresConfidentielSelect = (q: QueryBuilder<Titres, Titres | Titres[]>, entreprisesIds: string[]): QueryBuilder<Titres, Titres | Titres[]> =>
   // ajoute la colonne « confidentiel » si la demande n’est normalement pas visible par l’entreprise mais l’est car
   // c’est une demande en cours
   q.select(
@@ -51,7 +51,7 @@ export const titresConfidentielSelect = (q: QueryBuilder<Titres, Titres | Titres
       .as('confidentiel')
   )
 
-export const titresQueryModify = (q: QueryBuilder<Titres, Titres | Titres[]>, user: User, demandeEnCours?: boolean | null) => {
+export const titresQueryModify = (q: QueryBuilder<Titres, Titres | Titres[]>, user: User, demandeEnCours?: boolean | null): QueryBuilder<Titres, Titres | Titres[]> => {
   q.select('titres.*').where('titres.archive', false)
 
   // si

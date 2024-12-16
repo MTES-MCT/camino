@@ -6,7 +6,7 @@ import { titreDemarcheFormatFields } from './_fields'
 import { FieldsDemarche } from '../../database/queries/_options'
 import { isNullOrUndefined } from 'camino-common/src/typescript-tools'
 
-export const titreDemarcheFormat = (titreDemarche: ITitreDemarche, fields: FieldsDemarche = titreDemarcheFormatFields) => {
+export const titreDemarcheFormat = (titreDemarche: ITitreDemarche, fields: FieldsDemarche = titreDemarcheFormatFields): ITitreDemarche => {
   if (isNullOrUndefined(fields)) return titreDemarche
 
   if (fields.titre && titreDemarche.titre) {

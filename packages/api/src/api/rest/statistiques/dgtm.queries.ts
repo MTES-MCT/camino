@@ -5,7 +5,8 @@ import { IGetProductionOrDbQuery } from './dgtm.queries.types'
 import { AnneeCountStatistique, anneeCountStatistiqueValidator } from 'camino-common/src/statistiques'
 import { Pool } from 'pg'
 
-export const getProductionOr = async (pool: Pool) => dbQueryAndValidate(getProductionOrDb, { substance: SUBSTANCES_FISCALES_IDS.or }, pool, anneeCountStatistiqueValidator)
+export const getProductionOr = async (pool: Pool): Promise<AnneeCountStatistique[]> =>
+  dbQueryAndValidate(getProductionOrDb, { substance: SUBSTANCES_FISCALES_IDS.or }, pool, anneeCountStatistiqueValidator)
 // On peut récupérer le nombre de producteurs d’or que à partir de l’année 2018. L’année à laquelle nous avons commencé à récolter les productions dans Camino
 const getProductionOrDb = sql<Redefine<IGetProductionOrDbQuery, { substance: SubstanceFiscaleId }, AnneeCountStatistique>>`
 select
