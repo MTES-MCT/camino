@@ -180,7 +180,7 @@ export const CaminoRestRoutes = {
   '/rest/titresAdministrations': { params: noParamsValidator, get: { output: z.array(titreAdministrationValidator) } },
   '/rest/titres/:id/titreLiaisons': { params: z.object({ id: titreIdValidator }), newGet: { output: titreLinksValidator }, newPost: { input: z.array(titreIdValidator), output: titreLinksValidator } },
   '/rest/demarches': { params: noParamsValidator, newPost: { input: demarcheCreationInputValidator, output: demarcheCreationOutputValidator } },
-  '/rest/demarches/:demarcheIdOrSlug': { params: z.object({ demarcheIdOrSlug: demarcheIdOrSlugValidator }), get: { output: getDemarcheByIdOrSlugValidator }, delete: true },
+  '/rest/demarches/:demarcheIdOrSlug': { params: z.object({ demarcheIdOrSlug: demarcheIdOrSlugValidator }), newGet: { output: getDemarcheByIdOrSlugValidator }, delete: true },
   '/rest/statistiques/dgtm': { params: noParamsValidator, get: { output: statistiquesDGTMValidator } },
 
   '/rest/entreprises/:entrepriseId/fiscalite/:annee': { params: z.object({ entrepriseId: entrepriseIdValidator, annee: caminoAnneeValidator }), get: { output: fiscaliteValidator } },

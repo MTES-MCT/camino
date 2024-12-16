@@ -46,6 +46,7 @@ describe('Common Storybook Tests', async () => {
         .filter(env => (name ?? '').includes('NoStoryshots') || !(env.name ?? '').includes('NoSnapshot'))
     )('$name', async value => {
       setSeed(12)
+      let html: string | undefined = undefined
       try {
         // @ts-ignore
         window.dsfr = null
@@ -65,6 +66,7 @@ describe('Common Storybook Tests', async () => {
         }
 
         global.ResizeObserver = ResizeObserver
+
         const storyComponent = value.story()
 
         const mounted = render('type' in storyComponent && typeof storyComponent.type === 'function' ? storyComponent.type() : storyComponent, {
@@ -74,9 +76,14 @@ describe('Common Storybook Tests', async () => {
         })
 
         await new Promise<void>(resolve => setTimeout(() => resolve(), 1))
-        await expect(mounted.html()).toMatchFileSnapshot(`./${filePath.replace(/\.[^/.]+$/, '')}_snapshots_${value.name}.html`)
+        html = mounted.html()
       } catch (e) {
         throw new Error(`le test ${name} du fichier ${filePath} plante ${e}`)
+      } finally {
+        if (html === undefined) {
+          throw new Error('le test ne génère pas de html')
+        }
+        await expect(html).toMatchFileSnapshot(`./${filePath.replace(/\.[^/.]+$/, '')}_snapshots_${value.name}.html`)
       }
     })
   })

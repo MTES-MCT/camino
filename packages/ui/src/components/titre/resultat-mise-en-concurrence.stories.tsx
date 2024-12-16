@@ -8,8 +8,10 @@ import { Entreprise, newEntrepriseId } from 'camino-common/src/entreprise'
 import { km2Validator } from 'camino-common/src/number'
 import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes'
 import { action } from '@storybook/addon-actions'
-import { etapeIdValidator } from 'camino-common/src/etape'
-import { toCaminoDate } from 'camino-common/src/date'
+import { firstEtapeDateValidator, toCaminoDate } from 'camino-common/src/date'
+import { ApiClient } from '@/api/api-client'
+import { tempDocumentNameValidator } from 'camino-common/src/document'
+import { testBlankUser } from 'camino-common/src/tests-utils'
 
 const meta: Meta = {
   title: 'Components/Titre/ResultatMiseEnConcurrence',
@@ -22,6 +24,8 @@ const demarcheId = demarcheIdValidator.parse('demarcheId')
 
 const getEtapesTypesEtapesStatutsAction = action('getEtapesTypesEtapesStatuts')
 const etapeCreerAction = action('etapeCreer')
+const uploadTempDocumentAction = action('uploadTempDocument')
+const getEtapeDocumentsByEtapeIdAction = action('getEtapeDocumentsByEtapeId')
 const geojson4326_perimetre: FeatureMultiPolygon = {
   type: 'Feature',
   properties: {},
@@ -76,6 +80,25 @@ const perimetreSatellite: Props['pivot']['perimetreSansSatellite'] = {
   surface: km2Validator.parse(5),
 }
 
+const firstEtapeDate = firstEtapeDateValidator.parse('2024-10-01')
+const apiClient: Pick<ApiClient, 'getEtapesTypesEtapesStatuts' | 'etapeCreer' | 'uploadTempDocument' | 'getEtapeDocumentsByEtapeId'> = {
+  getEtapeDocumentsByEtapeId: async etapeId => {
+    getEtapeDocumentsByEtapeIdAction(etapeId)
+    return { etapeDocuments: [] }
+  },
+  getEtapesTypesEtapesStatuts(titreDemarcheId, titreEtapeId, date) {
+    getEtapesTypesEtapesStatutsAction(titreDemarcheId, titreEtapeId, date)
+    return Promise.resolve({ [ETAPES_TYPES.resultatMiseEnConcurrence]: { etapeStatutIds: ['acc', 'rej'], mainStep: true } })
+  },
+  etapeCreer(etape) {
+    etapeCreerAction(etape)
+    return new Promise(() => ({}))
+  },
+  uploadTempDocument: async temp => {
+    uploadTempDocumentAction(temp)
+    return tempDocumentNameValidator.parse('plop')
+  },
+}
 export const Default: StoryFn = () => (
   <ResultatMiseEnConcurrence
     initTab="carte"
@@ -83,15 +106,9 @@ export const Default: StoryFn = () => (
     initDecision="acc"
     entreprises={entreprises}
     apiClient={{
-      getEtapesTypesEtapesStatuts(titreDemarcheId, titreEtapeId, date) {
-        getEtapesTypesEtapesStatutsAction(titreDemarcheId, titreEtapeId, date)
-        return Promise.resolve({ [ETAPES_TYPES.resultatMiseEnConcurrence]: { etapeStatutIds: ['acc', 'rej'], mainStep: true } })
-      },
-      etapeCreer(etape) {
-        etapeCreerAction(etape)
-        return new Promise(() => ({}))
-      },
+      ...apiClient,
     }}
+    user={{ ...testBlankUser, role: 'super' }}
     pivot={{
       demarcheId,
       demarcheTypeId: 'oct',
@@ -101,6 +118,7 @@ export const Default: StoryFn = () => (
       titulaireId: entrepriseId1,
       perimetreSansSatellite: perimetreSatellite,
       perimetreTotal: perimetre,
+      firstEtapeDate: firstEtapeDate,
     }}
   />
 )
@@ -111,14 +129,12 @@ export const Loading: StoryFn = () => (
     initDate={toCaminoDate('2024-10-16')}
     entreprises={entreprises}
     apiClient={{
+      ...apiClient,
       getEtapesTypesEtapesStatuts() {
         return new Promise(() => ({}))
       },
-      etapeCreer(etape) {
-        etapeCreerAction(etape)
-        return Promise.resolve({ id: etapeIdValidator.parse('etapeId') })
-      },
     }}
+    user={{ ...testBlankUser, role: 'super' }}
     pivot={{
       demarcheId,
       demarcheTypeId: 'oct',
@@ -128,6 +144,7 @@ export const Loading: StoryFn = () => (
       titulaireId: entrepriseId1,
       perimetreSansSatellite: perimetre,
       perimetreTotal: perimetre,
+      firstEtapeDate: firstEtapeDate,
     }}
   />
 )
@@ -138,14 +155,12 @@ export const WithError: StoryFn = () => (
     initDate={toCaminoDate('2024-10-16')}
     entreprises={entreprises}
     apiClient={{
+      ...apiClient,
       getEtapesTypesEtapesStatuts() {
         return Promise.resolve({ message: "Message d'erreur" })
       },
-      etapeCreer(etape) {
-        etapeCreerAction(etape)
-        return Promise.resolve({ id: etapeIdValidator.parse('etapeId') })
-      },
     }}
+    user={{ ...testBlankUser, role: 'super' }}
     pivot={{
       demarcheId,
       demarcheTypeId: 'oct',
@@ -155,6 +170,7 @@ export const WithError: StoryFn = () => (
       titulaireId: entrepriseId1,
       perimetreSansSatellite: perimetre,
       perimetreTotal: perimetre,
+      firstEtapeDate: firstEtapeDate,
     }}
   />
 )
@@ -165,16 +181,8 @@ export const PerimetreSansSatellite: StoryFn = () => (
     initDate={toCaminoDate('2024-10-16')}
     initDecision="acc"
     entreprises={entreprises}
-    apiClient={{
-      getEtapesTypesEtapesStatuts(titreDemarcheId, titreEtapeId, date) {
-        getEtapesTypesEtapesStatutsAction(titreDemarcheId, titreEtapeId, date)
-        return Promise.resolve({ [ETAPES_TYPES.resultatMiseEnConcurrence]: { etapeStatutIds: ['acc', 'rej'], mainStep: true } })
-      },
-      etapeCreer(etape) {
-        etapeCreerAction(etape)
-        return new Promise(() => ({}))
-      },
-    }}
+    apiClient={apiClient}
+    user={{ ...testBlankUser, role: 'super' }}
     pivot={{
       demarcheId,
       demarcheTypeId: 'oct',
@@ -184,6 +192,7 @@ export const PerimetreSansSatellite: StoryFn = () => (
       titulaireId: entrepriseId1,
       perimetreSansSatellite: { geojson4326_perimetre: null, surface: km2Validator.parse(0) },
       perimetreTotal: perimetre,
+      firstEtapeDate: firstEtapeDate,
     }}
   />
 )
@@ -194,16 +203,8 @@ export const PerimetreAvecSatelliteEquivalent: StoryFn = () => (
     initDate={toCaminoDate('2024-10-16')}
     initDecision="acc"
     entreprises={entreprises}
-    apiClient={{
-      getEtapesTypesEtapesStatuts(titreDemarcheId, titreEtapeId, date) {
-        getEtapesTypesEtapesStatutsAction(titreDemarcheId, titreEtapeId, date)
-        return Promise.resolve({ [ETAPES_TYPES.resultatMiseEnConcurrence]: { etapeStatutIds: ['acc', 'rej'], mainStep: true } })
-      },
-      etapeCreer(etape) {
-        etapeCreerAction(etape)
-        return new Promise(() => ({}))
-      },
-    }}
+    apiClient={apiClient}
+    user={{ ...testBlankUser, role: 'super' }}
     pivot={{
       demarcheId,
       demarcheTypeId: 'oct',
@@ -213,6 +214,7 @@ export const PerimetreAvecSatelliteEquivalent: StoryFn = () => (
       titulaireId: entrepriseId1,
       perimetreSansSatellite: perimetre,
       perimetreTotal: perimetre,
+      firstEtapeDate: firstEtapeDate,
     }}
   />
 )

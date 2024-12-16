@@ -50,7 +50,6 @@ export interface IGetEtapesByDemarcheIdDbQuery {
 
 /** 'GetDemarcheByIdOrSlugDb' parameters type */
 export interface IGetDemarcheByIdOrSlugDbParams {
-  enregistrementDeLaDemandeId: string;
   idOrSlug: string;
 }
 
@@ -61,7 +60,6 @@ export interface IGetDemarcheByIdOrSlugDbResult {
   demarche_slug: string | null;
   demarche_type_id: string;
   entreprises_lecture: boolean;
-  first_etape_date: string;
   public_lecture: boolean;
   titre_id: string;
   titre_nom: string;
@@ -73,6 +71,23 @@ export interface IGetDemarcheByIdOrSlugDbResult {
 export interface IGetDemarcheByIdOrSlugDbQuery {
   params: IGetDemarcheByIdOrSlugDbParams;
   result: IGetDemarcheByIdOrSlugDbResult;
+}
+
+/** 'GetFirstEtapeDateByDemarcheIdOrSlugDb' parameters type */
+export interface IGetFirstEtapeDateByDemarcheIdOrSlugDbParams {
+  enregistrementDeLaDemandeId: string;
+  idOrSlug: string;
+}
+
+/** 'GetFirstEtapeDateByDemarcheIdOrSlugDb' return type */
+export interface IGetFirstEtapeDateByDemarcheIdOrSlugDbResult {
+  first_etape_date: string;
+}
+
+/** 'GetFirstEtapeDateByDemarcheIdOrSlugDb' query type */
+export interface IGetFirstEtapeDateByDemarcheIdOrSlugDbQuery {
+  params: IGetFirstEtapeDateByDemarcheIdOrSlugDbParams;
+  result: IGetFirstEtapeDateByDemarcheIdOrSlugDbResult;
 }
 
 /** 'GetDemarchesEnConcurrenceDb' parameters type */

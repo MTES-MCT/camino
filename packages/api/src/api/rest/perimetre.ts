@@ -102,7 +102,7 @@ export const getPerimetreInfos =
             })
           } else {
             const demarche = await callAndExit(getDemarcheByIdOrSlug(pool, etape.demarche_id))
-            const titre = await getTitreByIdOrSlug(pool, demarche.titre_id)
+            const titre = await callAndExit(getTitreByIdOrSlug(pool, demarche.titre_id))
 
             const administrationsLocales = memoize(() => getAdministrationsLocalesByTitreId(pool, demarche.titre_id))
 

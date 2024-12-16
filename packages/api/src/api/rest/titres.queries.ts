@@ -407,9 +407,16 @@ const getTitreByIdOrSlugValidator = z.object({
 })
 type GetTitreByIdOrSlugValidator = z.infer<typeof getTitreByIdOrSlugValidator>
 
-export const getTitreByIdOrSlug = async (pool: Pool, idOrSlug: TitreIdOrSlug): Promise<z.infer<typeof getTitreByIdOrSlugValidator>> => {
-  return (await dbQueryAndValidate(getTitreByIdOrSlugDb, { idOrSlug }, pool, getTitreByIdOrSlugValidator))[0]
-}
+const titreNonTrouve = 'titre non trouvé en base' as const
+export type GetTitreByIdOrSlugErrors = EffectDbQueryAndValidateErrors | typeof titreNonTrouve
+export const getTitreByIdOrSlug = (pool: Pool, idOrSlug: TitreIdOrSlug): Effect.Effect<GetTitreByIdOrSlugValidator, CaminoError<GetTitreByIdOrSlugErrors>> =>
+  effectDbQueryAndValidate(getTitreByIdOrSlugDb, { idOrSlug }, pool, getTitreByIdOrSlugValidator).pipe(
+    Effect.filterOrFail(
+      value => value.length === 1,
+      () => ({ message: titreNonTrouve })
+    ),
+    Effect.map(result => result[0])
+  )
 
 const getTitreByIdOrSlugDb = sql<Redefine<IGetTitreByIdOrSlugDbQuery, { idOrSlug: TitreIdOrSlug }, GetTitreByIdOrSlugValidator>>`
 select

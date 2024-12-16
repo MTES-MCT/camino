@@ -85,7 +85,7 @@ export interface EtapeApiClient {
   getEtapeDocumentsByEtapeId: (etapeId: EtapeId) => Promise<GetEtapeDocumentsByEtapeId>
   getEtapeHeritagePotentiel: (etape: Pick<CoreEtapeCreationOrModification, 'id' | 'date' | 'typeId'>, titreDemarcheId: DemarcheId) => Promise<GetEtapeHeritagePotentiel>
   getEtapeAvisByEtapeId: (etapeId: EtapeId) => Promise<GetEtapeAvisByEtapeId>
-  getEtape: (etapeIdOrSlug: EtapeIdOrSlug) => Promise<{ etape: FlattenEtape; demarche: GetDemarcheByIdOrSlug }>
+  getEtape: (etapeIdOrSlug: EtapeIdOrSlug) => Promise<{ etape: FlattenEtape; demarche: GetDemarcheByIdOrSlug | CaminoError<string> }>
   etapeCreer: (etape: RestEtapeCreation) => Promise<CaminoError<string> | { id: EtapeId }>
   etapeModifier: (etape: RestEtapeModification) => Promise<CaminoError<string> | { id: EtapeId }>
 }
@@ -105,7 +105,7 @@ export const etapeApiClient: EtapeApiClient = {
 
   getEtape: async etapeIdOrSlug => {
     const etape = await getWithJson('/rest/etapes/:etapeIdOrSlug', { etapeIdOrSlug })
-    const demarche = await getWithJson('/rest/demarches/:demarcheIdOrSlug', { demarcheIdOrSlug: etape.titreDemarcheId })
+    const demarche = await newGetWithJson('/rest/demarches/:demarcheIdOrSlug', { demarcheIdOrSlug: etape.titreDemarcheId })
     return { etape, demarche }
   },
   getEtapeHeritagePotentiel: async (etape, titreDemarcheId) => {

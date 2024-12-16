@@ -12,7 +12,7 @@ import { DomaineId } from 'camino-common/src/static/domaines'
 import { EntrepriseId } from 'camino-common/src/entreprise'
 import { SubstanceLegaleId } from 'camino-common/src/static/substancesLegales'
 import { TitreTypeTypeId } from 'camino-common/src/static/titresTypesTypes'
-import { deleteWithJson, getWithJson, newGetWithJson, newPostWithJson } from '../../api/client-rest'
+import { deleteWithJson, newGetWithJson, newPostWithJson } from '../../api/client-rest'
 import { CaminoError } from 'camino-common/src/zod-tools'
 
 type InputDemarcheUpdation = DemarcheCreationInput & {
@@ -53,7 +53,7 @@ export interface DemarcheApiClient {
   createDemarche: (demarche: DemarcheCreationInput) => Promise<DemarcheCreationOutput | CaminoError<string>>
   updateDemarche: (demarche: InputDemarcheUpdation) => Promise<DemarcheSlug>
   deleteDemarche: (demarcheId: DemarcheId) => Promise<void>
-  getDemarcheByIdOrSlug: (demarcheIdOrSlug: DemarcheIdOrSlug) => Promise<GetDemarcheByIdOrSlug>
+  getDemarcheByIdOrSlug: (demarcheIdOrSlug: DemarcheIdOrSlug) => Promise<GetDemarcheByIdOrSlug | CaminoError<string>>
   getDemarcheMiseEnConcurrence: (demarcheId: DemarcheId) => Promise<GetDemarcheMiseEnConcurrence[] | CaminoError<string>>
   getResultatMiseEnConcurrence: (demarcheId: DemarcheId) => Promise<GetResultatMiseEnConcurrence | CaminoError<string>>
   getDemarches: (params: GetDemarchesParams) => Promise<{ elements: GetDemarchesDemarche[]; total: number }>
@@ -83,7 +83,7 @@ export const demarcheApiClient: DemarcheApiClient = {
   },
 
   getDemarcheByIdOrSlug: async (demarcheIdOrSlug: DemarcheIdOrSlug) => {
-    return getWithJson('/rest/demarches/:demarcheIdOrSlug', { demarcheIdOrSlug })
+    return newGetWithJson('/rest/demarches/:demarcheIdOrSlug', { demarcheIdOrSlug })
   },
   getDemarcheMiseEnConcurrence: async (demarcheId: DemarcheId) => {
     return newGetWithJson('/rest/demarches/:demarcheId/miseEnConcurrence', { demarcheId })

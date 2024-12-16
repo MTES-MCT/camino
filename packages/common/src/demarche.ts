@@ -329,6 +329,7 @@ export const commonTitreEnConcurrenceValidator = z.object({
   titreSlug: titreSlugValidator,
   titreTypeId: titreTypeIdValidator,
   titulaireId: entrepriseIdValidator,
+  firstEtapeDate: firstEtapeDateValidator,
 })
 
 const commonPerimetreValidator = z.object({ geojson4326_perimetre: featureMultiPolygonValidator, surface: km2Validator })

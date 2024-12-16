@@ -92,37 +92,44 @@ export const PureEtapeEdition = defineComponent<Props>(props => {
     try {
       if (isNotNullNorUndefined(props.etapeIdOrSlug)) {
         const { etape, demarche } = await props.apiClient.getEtape(props.etapeIdOrSlug)
-
-        const perimetre = await props.apiClient.getPerimetreInfosByEtapeId(etape.id)
-        setAsyncData({ status: 'LOADED', value: { etape, demarche, perimetre } })
+        if ('message' in demarche) {
+          setAsyncData({ status: 'NEW_ERROR', error: demarche })
+        } else {
+          const perimetre = await props.apiClient.getPerimetreInfosByEtapeId(etape.id)
+          setAsyncData({ status: 'LOADED', value: { etape, demarche, perimetre } })
+        }
       } else if (isNotNullNorUndefined(props.demarcheIdOrSlug)) {
         const demarche = await props.apiClient.getDemarcheByIdOrSlug(props.demarcheIdOrSlug)
-        const perimetre = await props.apiClient.getPerimetreInfosByDemarcheId(demarche.demarche_id)
-        setAsyncData({
-          status: 'LOADED',
-          value: {
-            etape: {
-              id: null,
-              contenu: {},
-              date: null,
-              typeId: null,
-              statutId: null,
-              isBrouillon: ETAPE_IS_NOT_BROUILLON,
-              note: { valeur: '', is_avertissement: false },
-              substances: { value: [], heritee: true, etapeHeritee: null },
-              titulaires: { value: [], heritee: true, etapeHeritee: null },
-              amodiataires: { value: [], heritee: true, etapeHeritee: null },
-              perimetre: { value: null, heritee: true, etapeHeritee: null },
-              duree: { value: null, heritee: true, etapeHeritee: null },
-              dateDebut: { value: null, heritee: true, etapeHeritee: null },
-              dateFin: { value: null, heritee: true, etapeHeritee: null },
-              slug: null,
-              titreDemarcheId: demarche.demarche_id,
+        if ('message' in demarche) {
+          setAsyncData({ status: 'NEW_ERROR', error: demarche })
+        } else {
+          const perimetre = await props.apiClient.getPerimetreInfosByDemarcheId(demarche.demarche_id)
+          setAsyncData({
+            status: 'LOADED',
+            value: {
+              etape: {
+                id: null,
+                contenu: {},
+                date: null,
+                typeId: null,
+                statutId: null,
+                isBrouillon: ETAPE_IS_NOT_BROUILLON,
+                note: { valeur: '', is_avertissement: false },
+                substances: { value: [], heritee: true, etapeHeritee: null },
+                titulaires: { value: [], heritee: true, etapeHeritee: null },
+                amodiataires: { value: [], heritee: true, etapeHeritee: null },
+                perimetre: { value: null, heritee: true, etapeHeritee: null },
+                duree: { value: null, heritee: true, etapeHeritee: null },
+                dateDebut: { value: null, heritee: true, etapeHeritee: null },
+                dateFin: { value: null, heritee: true, etapeHeritee: null },
+                slug: null,
+                titreDemarcheId: demarche.demarche_id,
+              },
+              demarche,
+              perimetre,
             },
-            demarche,
-            perimetre,
-          },
-        })
+          })
+        }
       }
     } catch (e: any) {
       console.error('error', e)

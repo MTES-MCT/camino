@@ -1,5 +1,13 @@
 import { sql } from '@pgtyped/runtime'
-import { commonTitreEnConcurrenceValidator, DemarcheId, DemarcheIdOrSlug, demarcheIdValidator, GetDemarcheMiseEnConcurrence, GetResultatMiseEnConcurrence } from 'camino-common/src/demarche'
+import {
+  commonTitreEnConcurrenceValidator,
+  DemarcheId,
+  DemarcheIdOrSlug,
+  demarcheIdValidator,
+  demarcheSlugValidator,
+  GetDemarcheMiseEnConcurrence,
+  GetResultatMiseEnConcurrence,
+} from 'camino-common/src/demarche'
 import { EffectDbQueryAndValidateErrors, Redefine, effectDbQueryAndValidate } from '../../pg-database'
 import {
   IGetDemarcheByIdOrSlugDbQuery,
@@ -7,11 +15,12 @@ import {
   IGetDemarchesEnConcurrenceDbQuery,
   IGetDemarchesSatellitesEnConcurrenceDbQuery,
   IGetEtapesByDemarcheIdDbQuery,
+  IGetFirstEtapeDateByDemarcheIdOrSlugDbQuery,
   IGetPerimetreSansSatelliteDbQuery,
 } from './demarches.queries.types'
 import { IGetDemarchesDbQuery } from './demarches.queries.types'
 import { z } from 'zod'
-import { caminoDateValidator } from 'camino-common/src/date'
+import { caminoDateValidator, FirstEtapeDate, firstEtapeDateValidator } from 'camino-common/src/date'
 import { communeValidator } from 'camino-common/src/static/communes'
 import { secteurMaritimeValidator } from 'camino-common/src/static/facades'
 import { substanceLegaleIdValidator } from 'camino-common/src/static/substancesLegales'
@@ -31,7 +40,6 @@ import {
   multiPolygonValidator,
 } from 'camino-common/src/perimetre'
 import { etapeHeritagePropsValidator } from 'camino-common/src/heritage'
-import { getDemarcheByIdOrSlugValidator as commonGetDemarcheByIdOrSlugValidator } from 'camino-common/src/titres'
 import { geoSystemeIdValidator } from 'camino-common/src/static/geoSystemes'
 import { entrepriseIdValidator } from 'camino-common/src/entreprise'
 import { KM2, km2Validator, m2toKm2, m2Validator } from 'camino-common/src/number'
@@ -39,6 +47,9 @@ import { Effect, pipe } from 'effect'
 import { CaminoError } from 'camino-common/src/zod-tools'
 import { isAdministration, isSuper, User } from 'camino-common/src/roles'
 import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined } from 'camino-common/src/typescript-tools'
+import { demarcheTypeIdValidator } from 'camino-common/src/static/demarchesTypes'
+import { titreTypeIdValidator } from 'camino-common/src/static/titresTypes'
+import { titreIdValidator, titreSlugValidator } from 'camino-common/src/validators/titres'
 
 const getEtapesByDemarcheIdDbValidator = z.object({
   id: etapeIdValidator,
@@ -122,7 +133,15 @@ order by
     date desc
 `
 
-const getDemarcheByIdOrSlugValidator = commonGetDemarcheByIdOrSlugValidator.extend({
+const getDemarcheByIdOrSlugValidator = z.object({
+  demarche_id: demarcheIdValidator,
+  demarche_slug: demarcheSlugValidator,
+  demarche_type_id: demarcheTypeIdValidator,
+  demarche_description: z.string().nullable(),
+  titre_id: titreIdValidator,
+  titre_slug: titreSlugValidator,
+  titre_type_id: titreTypeIdValidator,
+  titre_nom: z.string(),
   entreprises_lecture: z.boolean(),
   public_lecture: z.boolean(),
 })
@@ -132,7 +151,7 @@ type GetDemarcheByIdOrSlugValidator = z.infer<typeof getDemarcheByIdOrSlugValida
 export type GetDemarcheByIdOrSlugErrors = EffectDbQueryAndValidateErrors | "La démarche n'existe pas"
 export const getDemarcheByIdOrSlug = (pool: Pool, idOrSlug: DemarcheIdOrSlug): Effect.Effect<GetDemarcheByIdOrSlugValidator, CaminoError<GetDemarcheByIdOrSlugErrors>> =>
   pipe(
-    effectDbQueryAndValidate(getDemarcheByIdOrSlugDb, { idOrSlug, enregistrementDeLaDemandeId: ETAPES_TYPES.enregistrementDeLaDemande }, pool, getDemarcheByIdOrSlugValidator),
+    effectDbQueryAndValidate(getDemarcheByIdOrSlugDb, { idOrSlug }, pool, getDemarcheByIdOrSlugValidator),
     Effect.filterOrFail(
       demarches => isNotNullNorUndefinedNorEmpty(demarches),
       () => ({ message: "La démarche n'existe pas" as const })
@@ -140,9 +159,7 @@ export const getDemarcheByIdOrSlug = (pool: Pool, idOrSlug: DemarcheIdOrSlug): E
     Effect.map(demarches => demarches[0])
   )
 
-const getDemarcheByIdOrSlugDb = sql<
-  Redefine<IGetDemarcheByIdOrSlugDbQuery, { idOrSlug: DemarcheIdOrSlug; enregistrementDeLaDemandeId: typeof ETAPES_TYPES.enregistrementDeLaDemande }, GetDemarcheByIdOrSlugValidator>
->`
+const getDemarcheByIdOrSlugDb = sql<Redefine<IGetDemarcheByIdOrSlugDbQuery, { idOrSlug: DemarcheIdOrSlug }, GetDemarcheByIdOrSlugValidator>>`
 select
     td.id as demarche_id,
     td.slug as demarche_slug,
@@ -153,15 +170,51 @@ select
     t.id as titre_id,
     t.slug as titre_slug,
     t.type_id as titre_type_id,
-    t.nom as titre_nom,
-    te.date as first_etape_date
+    t.nom as titre_nom
 from
     titres_demarches td
-    left join titres_etapes te on te.titre_demarche_id = td.id AND (te.type_id = $enregistrementDeLaDemandeId! OR te.ordre = 1) AND te.archive IS FALSE
     join titres t on t.id = td.titre_id
 where (td.id = $ idOrSlug !
     or td.slug = $ idOrSlug !)
 and td.archive is false
+`
+const firstEtapeDateNotFoundError = 'Impossible de trouver la date de la première étape' as const
+type FirstEtapeDateNotFound = typeof firstEtapeDateNotFoundError
+export type GetFirstEtapeDateByDemarcheIdOrSlugErrors = EffectDbQueryAndValidateErrors | FirstEtapeDateNotFound
+export const getFirstEtapeDateByDemarcheIdOrSlug = (idOrSlug: DemarcheIdOrSlug, pool: Pool): Effect.Effect<FirstEtapeDate, CaminoError<GetFirstEtapeDateByDemarcheIdOrSlugErrors>> =>
+  pipe(
+    effectDbQueryAndValidate(
+      getFirstEtapeDateByDemarcheIdOrSlugDb,
+      { idOrSlug: idOrSlug, enregistrementDeLaDemandeId: ETAPES_TYPES.enregistrementDeLaDemande },
+      pool,
+      getFirstEtapeDateByDemarcheIdOrSlugDbValidator
+    ),
+    Effect.filterOrFail(
+      result => result.length === 1,
+      () => ({ message: firstEtapeDateNotFoundError })
+    ),
+    Effect.map(result => result[0].first_etape_date)
+  )
+
+const getFirstEtapeDateByDemarcheIdOrSlugDbValidator = z.object({ first_etape_date: firstEtapeDateValidator })
+type GetFirstEtapeDateByDemarcheIdOrSlugDb = z.infer<typeof getFirstEtapeDateByDemarcheIdOrSlugDbValidator>
+const getFirstEtapeDateByDemarcheIdOrSlugDb = sql<
+  Redefine<
+    IGetFirstEtapeDateByDemarcheIdOrSlugDbQuery,
+    { idOrSlug: DemarcheIdOrSlug; enregistrementDeLaDemandeId: typeof ETAPES_TYPES.enregistrementDeLaDemande },
+    GetFirstEtapeDateByDemarcheIdOrSlugDb
+  >
+>`
+select
+    te.date as first_etape_date
+from
+    titres_demarches td
+    left join titres_etapes te on te.titre_demarche_id = td.id AND (te.type_id = $enregistrementDeLaDemandeId! OR te.ordre = 1) AND te.archive IS FALSE
+where (td.id = $ idOrSlug !
+    or td.slug = $ idOrSlug !)
+and td.archive is false
+order by te.ordre desc
+LIMIT 1
 `
 
 const getDemarchesEnConcurrenceDbValidator = z.object({
@@ -225,7 +278,7 @@ export const getDemarchePivotEnConcurrence = (
   pool: Pool,
   demarcheIdPivot: DemarcheId,
   _user: User
-): Effect.Effect<GetResultatMiseEnConcurrence, CaminoError<EffectDbQueryAndValidateErrors | "La démarche n'existe pas">> => {
+): Effect.Effect<GetResultatMiseEnConcurrence, CaminoError<EffectDbQueryAndValidateErrors | "La démarche n'existe pas" | FirstEtapeDateNotFound>> => {
   return Effect.Do.pipe(
     Effect.bind('pivots', () =>
       effectDbQueryAndValidate(
@@ -240,10 +293,11 @@ export const getDemarchePivotEnConcurrence = (
       () => ({ message: "La démarche n'existe pas" as const })
     ),
     Effect.bind('pivot', ({ pivots }) => Effect.succeed(pivots[0])),
+    Effect.bind('firstEtapeDate', () => getFirstEtapeDateByDemarcheIdOrSlug(demarcheIdPivot, pool)),
     Effect.bind('satellites', ({ pivot }) =>
       effectDbQueryAndValidate(getDemarchesSatellitesEnConcurrenceDb, { demarcheIdPivot, perimetrePivot: pivot.perimetreTotalGeojson4326 }, pool, getDemarchesSatellitesEnConcurrenceDbValidator)
     ),
-    Effect.flatMap(({ pivot, satellites }) => {
+    Effect.flatMap(({ pivot, satellites, firstEtapeDate }) => {
       const initialAcc: {
         geojson_4326: MultiPolygon | null
         surface: KM2
@@ -269,7 +323,7 @@ export const getDemarchePivotEnConcurrence = (
         Effect.map(perimetreSansSatellite => {
           return {
             ...pivot,
-
+            firstEtapeDate,
             titulaireId: pivot.titulaireIds[0],
             perimetreTotal: {
               geojson4326_perimetre: multipolygontoFeatureMultipolygon(pivot.perimetreTotalGeojson4326),

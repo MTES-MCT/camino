@@ -9,7 +9,7 @@ import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { useRoute, useRouter } from 'vue-router'
 import { useState } from '@/utils/vue-tsx-utils'
 import { inject } from 'vue'
-import { entreprisesKey } from '@/moi'
+import { entreprisesKey, userKey } from '@/moi'
 
 export const DemarcheResultatMiseEnConcurrence = defineComponent(() => {
   const currentRoute = useRoute<'resultatMiseEnConcurrence'>()
@@ -24,13 +24,14 @@ export const DemarcheResultatMiseEnConcurrence = defineComponent(() => {
 
 type Props = {
   demarcheId: DemarcheId
-  apiClient: Pick<ApiClient, 'getResultatMiseEnConcurrence' | 'getEtapesTypesEtapesStatuts' | 'etapeCreer'>
+  apiClient: Pick<ApiClient, 'getResultatMiseEnConcurrence' | 'getEtapesTypesEtapesStatuts' | 'etapeCreer' | 'uploadTempDocument' | 'getEtapeDocumentsByEtapeId'>
 }
 
 const PureDemarcheResultatMiseEnConcurrence = defineComponent<Props>(props => {
   const [data, setData] = useState<AsyncData<GetResultatMiseEnConcurrence>>({ status: 'LOADING' })
 
   const entreprises = inject(entreprisesKey, ref([]))
+  const user = inject(userKey)
   const router = useRouter()
 
   onMounted(async () => {
@@ -58,6 +59,7 @@ const PureDemarcheResultatMiseEnConcurrence = defineComponent<Props>(props => {
               return value
             },
           }}
+          user={user}
           pivot={item}
           entreprises={entreprises.value}
         />

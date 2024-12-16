@@ -19,14 +19,18 @@ import { LoadingElement } from '../_ui/functional-loader'
 import { capitalize } from 'camino-common/src/strings'
 import { DemarchesTypes } from 'camino-common/src/static/demarchesTypes'
 import { ETAPES_STATUTS, EtapesStatuts } from 'camino-common/src/static/etapesStatuts'
+import { User } from 'camino-common/src/roles'
+import { ETAPE_IS_NOT_BROUILLON, EtapeDocument, TempEtapeDocument } from 'camino-common/src/etape'
+import { EtapeDocumentsEdit } from '../etape/etape-documents-edit'
 
 export type Props = {
-  apiClient: Pick<ApiClient, 'getEtapesTypesEtapesStatuts' | 'etapeCreer'>
+  apiClient: Pick<ApiClient, 'getEtapesTypesEtapesStatuts' | 'etapeCreer' | 'uploadTempDocument' | 'getEtapeDocumentsByEtapeId'>
   initTab?: TabId
   entreprises: Entreprise[]
   initDate?: CaminoDate
   initDecision?: 'acc' | 'rej'
   pivot: GetResultatMiseEnConcurrence
+  user: User
 }
 
 export const ResultatMiseEnConcurrence = defineComponent<Props>(props => {
@@ -35,10 +39,15 @@ export const ResultatMiseEnConcurrence = defineComponent<Props>(props => {
   const [date, setDate] = useState<CaminoDate | null>(props.initDate ?? getCurrent())
   const [possibleEtapes, setPossibleEtapes] = useState<AsyncData<boolean>>({ status: 'LOADING' })
   const [etapeCreation, setEtapeCreation] = useState<AsyncData<boolean>>({ status: 'LOADED', value: true })
+  const [document, setDocument] = useState<(EtapeDocument | TempEtapeDocument)[]>([])
   const entreprisesIndex = props.entreprises.reduce<Record<EntrepriseId, string>>((acc, entreprise) => {
     acc[entreprise.id] = entreprise.nom
     return acc
   }, {})
+
+  const onDocumentUpdate = (documents: (EtapeDocument | TempEtapeDocument)[]): void => {
+    setDocument(documents)
+  }
 
   const perimetre = computed<{
     geojson4326_perimetre: FeatureMultiPolygon
@@ -116,7 +125,7 @@ export const ResultatMiseEnConcurrence = defineComponent<Props>(props => {
         duree: null,
         entrepriseDocumentIds: [],
         etapeAvis: [],
-        etapeDocuments: [],
+        etapeDocuments: document.value.filter(isNotNullNorUndefined).filter(value => 'temp_document_name' in value),
         substances: [],
         titulaireIds: [],
         titreDemarcheId: props.pivot.demarcheId,
@@ -226,6 +235,22 @@ export const ResultatMiseEnConcurrence = defineComponent<Props>(props => {
                 </>
               ) : null}
             </>
+            <EtapeDocumentsEdit
+              apiClient={props.apiClient}
+              contenu={{}}
+              isBrouillon={ETAPE_IS_NOT_BROUILLON}
+              user={props.user}
+              sdomZoneIds={[]}
+              tde={{
+                demarcheId: props.pivot.demarcheId,
+                demarcheTypeId: props.pivot.demarcheTypeId,
+                titreTypeId: props.pivot.titreTypeId,
+                firstEtapeDate: props.pivot.firstEtapeDate,
+                etapeTypeId: ETAPES_TYPES.resultatMiseEnConcurrence,
+              }}
+              completeUpdate={onDocumentUpdate}
+              etapeId={null}
+            />
             {decision.value === 'rej' || (decision.value === 'acc' && updatePerimetre.value !== 'custom' && updatePerimetre.value !== null) ? (
               <div class="fr-mt-2w" style={{ display: 'flex', justifyContent: 'end', alignItems: 'center', gap: '1rem' }}>
                 <LoadingElement data={etapeCreation.value} renderItem={() => <></>} />
@@ -240,4 +265,4 @@ export const ResultatMiseEnConcurrence = defineComponent<Props>(props => {
 })
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-ResultatMiseEnConcurrence.props = ['initTab', 'pivot', 'entreprises', 'apiClient', 'initDate', 'initDecision']
+ResultatMiseEnConcurrence.props = ['initTab', 'pivot', 'entreprises', 'apiClient', 'initDate', 'initDecision', 'user']

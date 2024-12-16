@@ -4,6 +4,7 @@ exports[`getResultatEnConcurrence > Avec un seul satellite 1`] = `
 {
   "demarcheId": "demarcheIdPivotResultat",
   "demarcheTypeId": "oct",
+  "firstEtapeDate": "2400-01-03",
   "perimetreSansSatellite": {
     "geojson4326_perimetre": {
       "geometry": {

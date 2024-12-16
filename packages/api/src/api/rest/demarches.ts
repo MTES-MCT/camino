@@ -3,14 +3,16 @@ import { HTTP_STATUS } from 'camino-common/src/http'
 import { CaminoRequest, CustomResponse } from './express-type'
 import { DemarcheCreationOutput, demarcheIdOrSlugValidator, GetDemarcheMiseEnConcurrence, GetResultatMiseEnConcurrence } from 'camino-common/src/demarche'
 import {
-  getDemarcheByIdOrSlug as getDemarcheByIdOrSlugDb,
+  getDemarcheByIdOrSlug,
   GetDemarcheByIdOrSlugErrors,
   getDemarchePivotEnConcurrence,
   getDemarchesEnConcurrenceQuery,
   getEtapesByDemarcheId,
+  getFirstEtapeDateByDemarcheIdOrSlug,
+  GetFirstEtapeDateByDemarcheIdOrSlugErrors,
 } from './demarches.queries'
-import { GetDemarcheByIdOrSlug, getDemarcheByIdOrSlugValidator } from 'camino-common/src/titres'
-import { getAdministrationsLocalesByTitreId, getDemarchesByTitreId, getTitreByIdOrSlug, getTitulairesAmodiatairesByTitreId } from './titres.queries'
+import { GetDemarcheByIdOrSlug } from 'camino-common/src/titres'
+import { getAdministrationsLocalesByTitreId, getDemarchesByTitreId, getTitreByIdOrSlug, GetTitreByIdOrSlugErrors, getTitulairesAmodiatairesByTitreId } from './titres.queries'
 import { isNullOrUndefined, memoize } from 'camino-common/src/typescript-tools'
 import { canReadDemarche } from './permissions/demarches'
 import { titreDemarcheArchive, titreDemarcheCreate, titreDemarcheGet } from '../../database/queries/titres-demarches'
@@ -25,40 +27,55 @@ import { CaminoApiError } from '../../types'
 import { EffectDbQueryAndValidateErrors } from '../../pg-database'
 import { callAndExit } from '../../tools/fp-tools'
 
-export const getDemarcheByIdOrSlug =
-  (pool: Pool) =>
-  async (req: CaminoRequest, res: CustomResponse<GetDemarcheByIdOrSlug>): Promise<void> => {
-    try {
-      const demarcheIdOrSlugParsed = demarcheIdOrSlugValidator.safeParse(req.params.demarcheIdOrSlug)
-      const user = req.auth
-      if (!demarcheIdOrSlugParsed.success) {
-        res.sendStatus(HTTP_STATUS.BAD_REQUEST)
-      } else {
-        const demarche = await callAndExit(getDemarcheByIdOrSlugDb(pool, demarcheIdOrSlugParsed.data))
-        const titre = await getTitreByIdOrSlug(pool, demarche.titre_id)
+const canReadDemarcheError = 'impossible de savoir si on peut lire la démarche' as const
 
-        const administrationsLocales = memoize(() => getAdministrationsLocalesByTitreId(pool, demarche.titre_id))
-
-        if (
-          await canReadDemarche(
+const droitsInsuffisantPourLireDemarche = 'droits insuffisants pour lire la démarche' as const
+type GetDemarcheByIdOrSlugApiErrors =
+  | typeof canReadDemarcheError
+  | GetDemarcheByIdOrSlugErrors
+  | typeof droitsInsuffisantPourLireDemarche
+  | GetTitreByIdOrSlugErrors
+  | GetFirstEtapeDateByDemarcheIdOrSlugErrors
+export const getDemarcheByIdOrSlugApi: RestNewGetCall<'/rest/demarches/:demarcheIdOrSlug'> = (rootPipe): Effect.Effect<GetDemarcheByIdOrSlug, CaminoApiError<GetDemarcheByIdOrSlugApiErrors>> =>
+  rootPipe.pipe(
+    Effect.bind('demarche', ({ pool, params: { demarcheIdOrSlug } }) => getDemarcheByIdOrSlug(pool, demarcheIdOrSlug)),
+    Effect.bind('titre', ({ pool, demarche }) => getTitreByIdOrSlug(pool, demarche.titre_id)),
+    Effect.let('administrationsLocales', ({ pool, demarche }) => memoize(() => getAdministrationsLocalesByTitreId(pool, demarche.titre_id))),
+    Effect.bind('canReadDemarche', ({ demarche, titre, administrationsLocales, pool, user }) =>
+      Effect.tryPromise({
+        try: () =>
+          canReadDemarche(
             { ...demarche, titre_public_lecture: titre.public_lecture },
             user,
             memoize(() => Promise.resolve(titre.titre_type_id)),
             administrationsLocales,
             memoize(() => getTitulairesAmodiatairesByTitreId(pool, demarche.titre_id))
-          )
-        ) {
-          res.json(getDemarcheByIdOrSlugValidator.parse(demarche))
-        } else {
-          res.sendStatus(HTTP_STATUS.FORBIDDEN)
-        }
-      }
-    } catch (e) {
-      console.error(e)
+          ),
 
-      res.sendStatus(HTTP_STATUS.INTERNAL_SERVER_ERROR)
-    }
-  }
+        catch: e => ({ message: canReadDemarcheError, extra: e }),
+      })
+    ),
+    Effect.filterOrFail(
+      ({ canReadDemarche }) => canReadDemarche,
+      () => ({ message: droitsInsuffisantPourLireDemarche })
+    ),
+    Effect.bind('firstEtapeDate', ({ params: { demarcheIdOrSlug }, pool }) => getFirstEtapeDateByDemarcheIdOrSlug(demarcheIdOrSlug, pool)),
+    Effect.map(({ demarche, firstEtapeDate }) => ({ ...demarche, first_etape_date: firstEtapeDate })),
+    Effect.mapError(caminoError =>
+      Match.value(caminoError.message).pipe(
+        Match.whenOr(
+          'Impossible de trouver la date de la première étape',
+          "Impossible d'exécuter la requête dans la base de données",
+          'Les données en base ne correspondent pas à ce qui est attendu',
+          'impossible de savoir si on peut lire la démarche',
+          () => ({ ...caminoError, status: HTTP_STATUS.INTERNAL_SERVER_ERROR })
+        ),
+        Match.whenOr("La démarche n'existe pas", 'titre non trouvé en base', () => ({ ...caminoError, status: HTTP_STATUS.BAD_REQUEST })),
+        Match.whenOr('droits insuffisants pour lire la démarche', () => ({ ...caminoError, status: HTTP_STATUS.FORBIDDEN })),
+        Match.exhaustive
+      )
+    )
+  )
 
 export const demarcheSupprimer =
   (pool: Pool) =>
@@ -171,10 +188,10 @@ export const getDemarchesEnConcurrence: RestNewGetCall<'/rest/demarches/:demarch
 
 export const getResultatEnConcurrence: RestNewGetCall<'/rest/demarches/:demarcheId/resultatMiseEnConcurrence'> = (
   rootPipe
-): Effect.Effect<GetResultatMiseEnConcurrence, CaminoApiError<EffectDbQueryAndValidateErrors | GetDemarcheByIdOrSlugErrors | 'droits insuffisants'>> => {
+): Effect.Effect<GetResultatMiseEnConcurrence, CaminoApiError<EffectDbQueryAndValidateErrors | GetDemarcheByIdOrSlugErrors | 'droits insuffisants' | GetFirstEtapeDateByDemarcheIdOrSlugErrors>> => {
   return rootPipe.pipe(
     Effect.bind('etapes', ({ pool, params }) => getEtapesByDemarcheId(pool, params.demarcheId)),
-    Effect.bind('demarche', ({ pool, params }) => getDemarcheByIdOrSlugDb(pool, params.demarcheId)),
+    Effect.bind('demarche', ({ pool, params }) => getDemarcheByIdOrSlug(pool, params.demarcheId)),
     Effect.tap(({ etapes, demarche, user }) => {
       const result = canPublishResultatMiseEnConcurrence(user, demarche.titre_type_id, demarche.demarche_type_id, etapes, demarche.demarche_id)
       if (result.valid) {
@@ -186,7 +203,7 @@ export const getResultatEnConcurrence: RestNewGetCall<'/rest/demarches/:demarche
     Effect.flatMap(({ pool, params, user }) => getDemarchePivotEnConcurrence(pool, params.demarcheId, user)),
     Effect.mapError(caminoError =>
       Match.value(caminoError.message).pipe(
-        Match.whenOr("La démarche n'existe pas", () => ({ ...caminoError, status: HTTP_STATUS.BAD_REQUEST })),
+        Match.whenOr("La démarche n'existe pas", 'Impossible de trouver la date de la première étape', () => ({ ...caminoError, status: HTTP_STATUS.BAD_REQUEST })),
         Match.whenOr("Impossible d'exécuter la requête dans la base de données", 'Les données en base ne correspondent pas à ce qui est attendu', () => ({
           ...caminoError,
           status: HTTP_STATUS.INTERNAL_SERVER_ERROR,
