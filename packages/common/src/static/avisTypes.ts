@@ -6,7 +6,7 @@ interface Definition<T> {
   statutIds: AvisStatutId[]
 }
 // prettier-ignore
-const AVIS_TYPES_IDS_WITHOUT_AUTRE = [ "confirmationAccordProprietaireDuSol", "avisDirectionRegionaleDesAffairesCulturelles", "avisDirectionAlimentationAgricultureForet", "avisConseilDepartementalEnvironnementRisquesSanitairesTechnologiques", "avisDirectionsRégionalesEconomieEmploiTravailSolidarités", "avisDirectionRegionaleFinancesPubliques", "avisGendarmerieNationale", "avisParcNaturelMarin", "avisIFREMER", "avisInstitutNationalOrigineQualite", "avisEtatMajorOrpaillagePecheIllicite", "avisServiceAdministratifLocal", "avisAutoriteMilitaire", "avisParcNational", "avisDirectionDepartementaleTerritoiresMer", "avisAgenceRegionaleSante", "avisCaisseGeneraleSecuriteSociale", "avisServiceMilieuxNaturelsBiodiversiteSitesPaysages", "avisOfficeNationalDesForets", "expertiseOfficeNationalDesForets", "avisDUneCollectivite", "avisDeLaMissionAutoriteEnvironnementale", "avisProprietaireDuSol"] as const
+const AVIS_TYPES_IDS_WITHOUT_AUTRE = [ "confirmationAccordProprietaireDuSol", "avisDirectionRegionaleDesAffairesCulturelles", "avisDirectionAlimentationAgricultureForet", "avisConseilDepartementalEnvironnementRisquesSanitairesTechnologiques", "avisDirectionsRégionalesEconomieEmploiTravailSolidarités", "avisDirectionRegionaleFinancesPubliques", "avisGendarmerieNationale", "avisParcNaturelMarin", "avisIFREMER", "avisInstitutNationalOrigineQualite", "avisEtatMajorOrpaillagePecheIllicite", "avisServiceAdministratifLocal", "avisAutoriteMilitaire", "avisParcNational", "avisDirectionDepartementaleTerritoiresMer", "avisAgenceRegionaleSante", "avisCaisseGeneraleSecuriteSociale", "avisServiceMilieuxNaturelsBiodiversiteSitesPaysages", "avisOfficeNationalDesForets", "expertiseOfficeNationalDesForets", "avisDUneCollectivite", "avisDeLaMissionAutoriteEnvironnementale", "avisProprietaireDuSol", "avisCasParCas"] as const
 const AVIS_TYPE_IDS_AUTRE = ['autreAvis'] as const
 
 const AVIS_TYPES_IDS = [...AVIS_TYPES_IDS_WITHOUT_AUTRE, ...AVIS_TYPE_IDS_AUTRE] as const
@@ -66,6 +66,7 @@ export const AvisTypes = {
   avisDUneCollectivite: { id: 'avisDUneCollectivite', nom: "Avis d'une collectivité", statutIds: defaultStatutIds },
   avisDeLaMissionAutoriteEnvironnementale: { id: 'avisDeLaMissionAutoriteEnvironnementale', nom: 'avis de la mission autorité environnementale', statutIds: ['Exempté', 'Requis'] },
   avisProprietaireDuSol: { id: 'avisProprietaireDuSol', nom: 'avis du propriétaire du sol', statutIds: defaultStatutIds },
+  avisCasParCas: { id: 'avisCasParCas', nom: 'Décision au cas par cas', statutIds: ['Exempté', 'Requis'] },
   autreAvis: { id: 'autreAvis', nom: 'Autre avis', statutIds: defaultStatutIds },
 } as const satisfies { [key in AvisTypeId]: Definition<key> }
 

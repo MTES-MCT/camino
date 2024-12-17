@@ -162,7 +162,7 @@ const documents: EtapeDocument[] = [
   },
   {
     id: etapeDocumentIdValidator.parse('id2'),
-    etape_document_type_id: 'acm',
+    etape_document_type_id: 'acr',
     description: null,
     public_lecture: false,
     entreprises_lecture: true,

@@ -49,7 +49,7 @@ import { TitreIdOrSlug, titreIdValidator, titreSlugValidator, TitreId } from 'ca
 import { EntrepriseId, entrepriseIdValidator } from 'camino-common/src/entreprise'
 import { AdministrationId } from 'camino-common/src/static/administrations'
 import { secteurMaritimeValidator } from 'camino-common/src/static/facades'
-import { getAvisTypes } from 'camino-common/src/permissions/etape-form'
+import { getAvisTypes, isArmMecanise } from 'camino-common/src/permissions/etape-form'
 import { callAndExit } from '../../tools/fp-tools'
 import { Effect } from 'effect'
 import { CaminoError } from 'camino-common/src/zod-tools'
@@ -261,9 +261,10 @@ export const getTitre = async (pool: Pool, user: User, idOrSlug: TitreIdOrSlug):
               superDemarche.demarche_type_id,
               superDemarche.id,
               isNotNullNorUndefined(firstEtapeDate) ? firstEtapeDate : firstEtapeDateValidator.parse(superEtape.date),
-              perimetre?.communes.map(({ id }) => id) ?? []
+              perimetre?.communes.map(({ id }) => id) ?? [],
+              isArmMecanise(superEtape.sections_with_values)
             )
-            if (isNotNullNorUndefinedNorEmpty(avisTypes)) {
+            if (isNotNullNorUndefinedNorEmpty(Object.keys(avisTypes))) {
               const avisWithLargeObjectId = await callAndExit(
                 getEtapeAvisLargeObjectIdsByEtapeId(superEtape.id, pool, user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires, superEtape.etape_type_id, superDemarche)
               )

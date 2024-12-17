@@ -22,7 +22,7 @@ api/test/integration:
   stage: test
   retry: 2
   script:
-    - ./.gitlab/wait-for-it.sh -h ${PGHOST} -p ${PGPORT} -t 30 -- echo 'done'
+    - ./.gitlab/wait-for-it.sh -h ${PGHOST} -p ${PGPORT} -t 60 -- echo 'done'
     - make test/api-integration
 api/type:
   extends: .prepare-node-run
@@ -47,7 +47,7 @@ api/check-queries:
   script:
     - set -a
     - source .env-example
-    - ./.gitlab/wait-for-it.sh -h ${PGHOST} -p ${PGPORT} -t 30 -- make db/migrate
+    - ./.gitlab/wait-for-it.sh -h ${PGHOST} -p ${PGPORT} -t 60 -- make db/migrate
     - make db/check-queries
     - |
       if [ ! -z  "$(git status --porcelain)" ]; then

@@ -65,6 +65,7 @@ export const Empty: StoryFn = () => (
     tde={{ titreTypeId: 'arm', demarcheTypeId: 'oct', etapeTypeId: 'mfr', demarcheId: demarcheIdValidator.parse('demarcheId'), firstEtapeDate: firstEtapeDateValidator.parse('2022-01-01') }}
     onChange={completeUpdateAction}
     user={{ ...testBlankUser, role: 'super' }}
+    contenu={{}}
   />
 )
 export const Rempli: StoryFn = () => (
@@ -75,6 +76,18 @@ export const Rempli: StoryFn = () => (
     tde={{ titreTypeId: 'axm', demarcheTypeId: 'oct', etapeTypeId: 'asc', demarcheId: demarcheIdValidator.parse('demarcheId'), firstEtapeDate: firstEtapeDateValidator.parse('2022-01-01') }}
     onChange={completeUpdateAction}
     user={{ ...testBlankUser, role: 'super' }}
+    contenu={{}}
+  />
+)
+export const DemandeARMProcedureSpecifique: StoryFn = () => (
+  <EtapeAvisEdit
+    apiClient={apiClient}
+    etapeId={etapeIdValidator.parse('etapeId')}
+    communeIds={[]}
+    tde={{ titreTypeId: 'arm', demarcheTypeId: 'oct', etapeTypeId: 'mfr', demarcheId: demarcheIdValidator.parse('demarcheId'), firstEtapeDate: firstEtapeDateValidator.parse('2025-01-01') }}
+    onChange={completeUpdateAction}
+    user={{ ...testBlankUser, role: 'super' }}
+    contenu={{ arm: { mecanise: { value: true, heritee: false, etapeHeritee: null } } }}
   />
 )
 export const AvisEnGuyane: StoryFn = () => (
@@ -101,5 +114,6 @@ export const AvisEnGuyane: StoryFn = () => (
     tde={{ titreTypeId: 'arm', demarcheTypeId: 'oct', etapeTypeId: 'asc', demarcheId: demarcheIdValidator.parse('demarcheId'), firstEtapeDate: firstEtapeDateValidator.parse('2022-01-01') }}
     onChange={completeUpdateAction}
     user={{ ...testBlankUser, role: 'super' }}
+    contenu={{}}
   />
 )

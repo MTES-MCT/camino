@@ -152,7 +152,7 @@ export const Complet: StoryFn = () => (
 export const ArmMecanise: StoryFn = () => (
   <EtapeDocumentsEdit
     apiClient={apiClient}
-    contenu={{ arm: { mecanise: { value: true } } }}
+    contenu={{ arm: { mecanise: { value: true, heritee: false, etapeHeritee: null } } }}
     etapeId={etapeIdValidator.parse('etapeId')}
     sdomZoneIds={[]}
     tde={{ titreTypeId: 'arm', demarcheTypeId: 'oct', etapeTypeId: 'mfr', demarcheId, firstEtapeDate }}
@@ -171,7 +171,7 @@ export const ArmMecaniseDynamicNoSnapshot: StoryObj<{ mecanise: boolean }> = {
         <button onClick={() => setArgs({ mecanise: !args.mecanise })}> Change la mécanisation </button>
         <EtapeDocumentsEdit
           apiClient={apiClient}
-          contenu={{ arm: { mecanise: { value: args.mecanise } } }}
+          contenu={{ arm: { mecanise: { value: args.mecanise, heritee: false, etapeHeritee: null } } }}
           etapeId={etapeIdValidator.parse('etapeId')}
           sdomZoneIds={[]}
           tde={{ titreTypeId: 'arm', demarcheTypeId: 'oct', etapeTypeId: 'mfr', demarcheId, firstEtapeDate }}
@@ -190,7 +190,7 @@ export const ArmMecaniseDynamicNoSnapshot: StoryObj<{ mecanise: boolean }> = {
 export const EnConstruction: StoryFn = () => (
   <EtapeDocumentsEdit
     apiClient={apiClient}
-    contenu={{ arm: { mecanise: { value: true } } }}
+    contenu={{ arm: { mecanise: { value: true, heritee: false, etapeHeritee: null } } }}
     etapeId={etapeIdValidator.parse('etapeId')}
     sdomZoneIds={[]}
     tde={{ titreTypeId: 'arm', demarcheTypeId: 'oct', etapeTypeId: 'mfr', demarcheId, firstEtapeDate }}
@@ -286,7 +286,7 @@ export const OctroiAxmUtilisateurEntrepriseComplet: StoryFn = () => (
 export const SdomZone: StoryFn = () => (
   <EtapeDocumentsEdit
     apiClient={apiClient}
-    contenu={{ arm: { mecanise: { value: true } } }}
+    contenu={{ arm: { mecanise: { value: true, heritee: false, etapeHeritee: null } } }}
     etapeId={etapeIdValidator.parse('etapeId')}
     sdomZoneIds={['1', '2']}
     tde={{ titreTypeId: 'axm', demarcheTypeId: 'oct', etapeTypeId: 'mfr', demarcheId, firstEtapeDate }}

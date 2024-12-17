@@ -805,6 +805,7 @@ export const updateEtape: RestNewPutCall<'/rest/etapes'> = (rootPipe): Effect.Ef
         isBrouillon,
         etape.etapeAvis,
         etape.typeId,
+        flattenEtapeAndPerimetre.flattenEtape.contenu,
         titreTypeId,
         titreDemarche.typeId,
         titreDemarche.id,

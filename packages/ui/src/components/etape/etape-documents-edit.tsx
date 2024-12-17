@@ -13,9 +13,10 @@ import { DsfrButtonIcon } from '../_ui/dsfr-button'
 import { getVisibilityLabel, sortDocumentsColumn } from './etape-documents'
 import { AddEtapeDocumentPopup } from './add-etape-document-popup'
 import { User } from 'camino-common/src/roles'
-import { getDocumentsTypes } from 'camino-common/src/permissions/etape-form'
+import { getDocumentsTypes, isArmMecanise } from 'camino-common/src/permissions/etape-form'
 import { FirstEtapeDate } from 'camino-common/src/date'
 import { DemarcheId } from 'camino-common/src/demarche'
+import { FlattenedContenu } from 'camino-common/src/etape-form'
 
 interface Props {
   tde: {
@@ -30,7 +31,7 @@ interface Props {
   completeUpdate: (etapeDocuments: (EtapeDocument | TempEtapeDocument)[]) => void
   etapeId: EtapeId | null
   apiClient: Pick<ApiClient, 'uploadTempDocument' | 'getEtapeDocumentsByEtapeId'>
-  contenu: { arm?: { mecanise?: { value: boolean } } }
+  contenu: FlattenedContenu
   user: User
 }
 
@@ -88,7 +89,7 @@ const EtapeDocumentsLoaded = defineComponent<EtapeDocumentsLoadedProps>(props =>
       props.tde.titreTypeId,
       props.tde.demarcheId,
       props.sdomZoneIds,
-      props.contenu.arm?.mecanise?.value === true,
+      isArmMecanise(props.contenu),
       props.tde.firstEtapeDate
     )
   })

@@ -672,6 +672,7 @@ const EtapeEditFormInternal = defineComponent<
               firstEtapeDate: firstEtapeDate.value,
             }}
             etapeId={props.etape.id}
+            contenu={props.etape.contenu}
             communeIds={props.perimetre.communes}
             onChange={avisCompleteUpdate}
             user={props.user}

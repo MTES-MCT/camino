@@ -62,7 +62,7 @@ import { getEtapeDataForEdition } from '../../api/rest/etapes.queries'
 import { etapeAvisStepIsComplete } from 'camino-common/src/permissions/etape-form'
 import { CommuneId } from 'camino-common/src/static/communes'
 import { EtapeStatutId, etapeStatutIdValidator } from 'camino-common/src/static/etapesStatuts'
-import { contenuValidator, heritageContenuValidator } from 'camino-common/src/etape-form'
+import { contenuValidator, FlattenedContenu, heritageContenuValidator } from 'camino-common/src/etape-form'
 import { DemarcheTypeId, demarcheTypeIdValidator } from 'camino-common/src/static/demarchesTypes'
 import { Effect, Option, pipe } from 'effect'
 import { CaminoError } from 'camino-common/src/zod-tools'
@@ -298,6 +298,7 @@ export const updateEtapeAvis = (
   isBrouillon: EtapeBrouillon,
   etapeAvis: EtapeAvisModification[],
   etapeTypeId: EtapeTypeId,
+  etapeContenu: FlattenedContenu,
   titreTypeId: TitreTypeId,
   demarcheTypeId: DemarcheTypeId,
   demarcheId: DemarcheId,
@@ -306,7 +307,9 @@ export const updateEtapeAvis = (
 ): Effect.Effect<Option.Option<never>, CaminoError<UpdateEtapeAvisErrors>> => {
   return Effect.Do.pipe(
     Effect.filterOrFail(
-      () => isBrouillon === ETAPE_IS_BROUILLON || etapeAvisStepIsComplete({ typeId: etapeTypeId }, etapeAvis, titreTypeId, demarcheTypeId, demarcheId, firstEtapeDate, communeIds).valid,
+      () =>
+        isBrouillon === ETAPE_IS_BROUILLON ||
+        etapeAvisStepIsComplete({ typeId: etapeTypeId, contenu: etapeContenu }, etapeAvis, titreTypeId, demarcheTypeId, demarcheId, firstEtapeDate, communeIds).valid,
       () => ({ message: avisIncomplets })
     ),
     Effect.bind('avisInDb', () => effectDbQueryAndValidate(getAvisByEtapeIdQuery, { titre_etape_id }, pool, etapeAvisDbValidator)),
@@ -432,7 +435,7 @@ const etapeAvisDbValidator = z
       avis_visibility_id: avisVisibilityIdValidator,
     })
   )
-type EtapeAvisDb = z.infer<typeof etapeAvisDbValidator>
+export type EtapeAvisDb = z.infer<typeof etapeAvisDbValidator>
 const getAvisByEtapeIdQuery = sql<Redefine<IGetAvisByEtapeIdQueryQuery, { titre_etape_id: EtapeId }, EtapeAvisDb>>`
 select
     a.id,

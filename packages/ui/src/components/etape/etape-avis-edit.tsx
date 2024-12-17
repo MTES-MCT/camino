@@ -9,7 +9,7 @@ import { LoadingElement } from '../_ui/functional-loader'
 import { AsyncData } from '../../api/client-rest'
 import { DsfrButtonIcon } from '../_ui/dsfr-button'
 import { AddEtapeAvisPopup } from './add-etape-avis-popup'
-import { getAvisTypes } from 'camino-common/src/permissions/etape-form'
+import { getAvisTypes, isArmMecanise } from 'camino-common/src/permissions/etape-form'
 import { dateFormat, FirstEtapeDate } from 'camino-common/src/date'
 import { AvisStatut } from '../_common/etape-statut'
 import { AvisTypeId, AvisTypes } from 'camino-common/src/static/avisTypes'
@@ -17,6 +17,8 @@ import { CommuneId } from 'camino-common/src/static/communes'
 import { getAvisVisibilityLabel } from './etape-avis'
 import { User } from 'camino-common/src/roles'
 import { DemarcheId } from 'camino-common/src/demarche'
+import { FlattenedContenu } from 'camino-common/src/etape-form'
+import { capitalize } from 'camino-common/src/strings'
 
 interface Props {
   tde: {
@@ -28,6 +30,7 @@ interface Props {
   }
   onChange: (etapeAvis: (EtapeAvis | TempEtapeAvis)[]) => void
   etapeId: EtapeId | null
+  contenu: FlattenedContenu
   communeIds: CommuneId[]
   apiClient: Pick<ApiClient, 'uploadTempDocument' | 'getEtapeAvisByEtapeId'>
   user: User
@@ -79,7 +82,9 @@ const EtapeAvisLoaded = defineComponent<EtapeAvisLoadedProps>(props => {
   const addOrEditPopupOpen = ref<{ open: true; avisTypeIds: NonEmptyArray<AvisTypeId>; etapeAvis?: (EtapeAvis | TempEtapeAvis) & WithIndex } | { open: false }>({ open: false })
 
   const avisTypes = computed(() => {
-    return getAvisTypes(props.tde.etapeTypeId, props.tde.titreTypeId, props.tde.demarcheTypeId, props.tde.demarcheId, props.tde.firstEtapeDate, props.communeIds)
+    return Object.values(
+      getAvisTypes(props.tde.etapeTypeId, props.tde.titreTypeId, props.tde.demarcheTypeId, props.tde.demarcheId, props.tde.firstEtapeDate, props.communeIds, isArmMecanise(props.contenu))
+    )
   })
 
   const completeRequiredAvis = computed<PropsTable['avis']>(() => {
@@ -132,7 +137,7 @@ const EtapeAvisLoaded = defineComponent<EtapeAvisLoadedProps>(props => {
   }
 
   const getNom = (avisTypeId: AvisTypeId) => {
-    return AvisTypes[avisTypeId].nom
+    return capitalize(AvisTypes[avisTypeId].nom)
   }
 
   return () => (
@@ -238,7 +243,7 @@ const EtapeAvisTable: FunctionalComponent<PropsTable> = (props: PropsTable) => {
               <td>-</td>
               <td>-</td>
               <td style={{ display: 'flex', justifyContent: 'end' }}>
-                <DsfrButtonIcon icon="fr-icon-add-line" title={`Ajouter un document ${props.getNom(avisTypeId)}`} onClick={() => props.add(avisTypeId)} buttonType="secondary" buttonSize="sm" />
+                <DsfrButtonIcon icon="fr-icon-add-line" title={`Ajouter un document '${props.getNom(avisTypeId)}'`} onClick={() => props.add(avisTypeId)} buttonType="secondary" buttonSize="sm" />
               </td>
             </tr>
           ))}
@@ -249,6 +254,6 @@ const EtapeAvisTable: FunctionalComponent<PropsTable> = (props: PropsTable) => {
 }
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-EtapeAvisEdit.props = ['tde', 'onChange', 'etapeId', 'apiClient', 'communeIds', 'user']
+EtapeAvisEdit.props = ['tde', 'onChange', 'etapeId', 'contenu', 'apiClient', 'communeIds', 'user']
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-EtapeAvisLoaded.props = ['tde', 'onChange', 'etapeId', 'apiClient', 'avis', 'communeIds', 'user']
+EtapeAvisLoaded.props = ['tde', 'onChange', 'etapeId', 'contenu', 'apiClient', 'avis', 'communeIds', 'user']

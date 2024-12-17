@@ -11,6 +11,9 @@ import {
   fondamentaleStepIsVisible,
   getAvisTypes,
   getDocumentsTypes,
+  IS_ARM_MECANISE,
+  IS_ARM_NON_MECANISE,
+  isArmMecanise,
   perimetreStepIsComplete,
   perimetreStepIsVisible,
   sectionsStepIsComplete,
@@ -28,6 +31,8 @@ import { DEMARCHES_TYPES_IDS } from '../static/demarchesTypes'
 import { TITRES_TYPES_IDS } from '../static/titresTypes'
 import { ETAPES_TYPES } from '../static/etapesTypes'
 import { demarcheIdValidator } from '../demarche'
+import { DOCUMENTS_TYPES_IDS } from '../static/documentsTypes'
+import { ETAPES_STATUTS } from '../static/etapesStatuts'
 
 describe('dateTypeStepIsComplete', () => {
   test.each<User>([
@@ -39,8 +44,8 @@ describe('dateTypeStepIsComplete', () => {
       dateTypeStepIsComplete(
         {
           date: toCaminoDate('2024-01-01'),
-          typeId: 'mfr',
-          statutId: 'fai',
+          typeId: ETAPES_TYPES.demande,
+          statutId: ETAPES_STATUTS.FAIT,
         },
         user
       ).valid
@@ -51,8 +56,8 @@ describe('dateTypeStepIsComplete', () => {
     const result = dateTypeStepIsComplete(
       {
         date: toCaminoDate('2024-01-01'),
-        typeId: 'mfr',
-        statutId: 'fai',
+        typeId: ETAPES_TYPES.demande,
+        statutId: ETAPES_STATUTS.FAIT,
       },
       {
         ...testBlankUser,
@@ -66,8 +71,8 @@ describe('dateTypeStepIsComplete', () => {
     const result = dateTypeStepIsComplete(
       {
         date: toCaminoDate('2024-01-01'),
-        typeId: 'mfr',
-        statutId: 'fai',
+        typeId: ETAPES_TYPES.demande,
+        statutId: ETAPES_STATUTS.FAIT,
       },
       {
         ...testBlankUser,
@@ -96,8 +101,8 @@ describe('dateTypeStepIsComplete', () => {
 })
 
 test('fondamentaleStepIsVisible', () => {
-  expect(fondamentaleStepIsVisible('mfr')).toBe(true)
-  expect(fondamentaleStepIsVisible('acg')).toBe(false)
+  expect(fondamentaleStepIsVisible(ETAPES_TYPES.demande)).toBe(true)
+  expect(fondamentaleStepIsVisible(ETAPES_TYPES.avisDuConseilGeneralDeLeconomie_CGE_)).toBe(false)
 })
 
 test('fondamentaleStepIsComplete', () => {
@@ -106,12 +111,12 @@ test('fondamentaleStepIsComplete', () => {
       {
         duree: { value: 0, heritee: false, etapeHeritee: null },
         substances: { value: [], heritee: false, etapeHeritee: null },
-        typeId: 'acg',
+        typeId: ETAPES_TYPES.avisDuConseilGeneralDeLeconomie_CGE_,
         titulaires: { value: [], heritee: false, etapeHeritee: null },
         amodiataires: { value: [], heritee: false, etapeHeritee: null },
       },
-      'amo',
-      'prr',
+      DEMARCHES_TYPES_IDS.Amodiation,
+      TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_RADIOACTIF,
       { ...testBlankUser, role: 'super' }
     ).valid
   ).toBe(true)
@@ -121,12 +126,12 @@ test('fondamentaleStepIsComplete', () => {
       {
         duree: { value: 0, heritee: false, etapeHeritee: null },
         substances: { value: [], heritee: false, etapeHeritee: null },
-        typeId: 'dpu',
+        typeId: ETAPES_TYPES.publicationDeDecisionAuJORF,
         titulaires: { value: [], heritee: false, etapeHeritee: null },
         amodiataires: { value: [], heritee: false, etapeHeritee: null },
       },
-      'amo',
-      'prr',
+      DEMARCHES_TYPES_IDS.Amodiation,
+      TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_RADIOACTIF,
       { ...testBlankUser, role: 'super' }
     )
   ).toMatchInlineSnapshot(`
@@ -144,12 +149,12 @@ test('fondamentaleStepIsComplete', () => {
       {
         duree: { value: 0, heritee: false, etapeHeritee: null },
         substances: { value: [], heritee: false, etapeHeritee: null },
-        typeId: 'mfr',
+        typeId: ETAPES_TYPES.demande,
         titulaires: { value: [], heritee: false, etapeHeritee: null },
         amodiataires: { value: [], heritee: false, etapeHeritee: null },
       },
-      'amo',
-      'prr',
+      DEMARCHES_TYPES_IDS.Amodiation,
+      TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_RADIOACTIF,
       { ...testBlankUser, role: 'super' }
     )
   ).toMatchInlineSnapshot(`
@@ -168,12 +173,12 @@ test('fondamentaleStepIsComplete', () => {
       {
         duree: { value: 0, heritee: false, etapeHeritee: null },
         substances: { value: ['auru'], heritee: false, etapeHeritee: null },
-        typeId: 'mfr',
+        typeId: ETAPES_TYPES.demande,
         titulaires: { value: [], heritee: false, etapeHeritee: null },
         amodiataires: { value: [], heritee: false, etapeHeritee: null },
       },
-      'oct',
-      'prr',
+      DEMARCHES_TYPES_IDS.Octroi,
+      TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_RADIOACTIF,
       { ...testBlankUser, role: 'super' }
     )
   ).toMatchInlineSnapshot(`
@@ -190,12 +195,12 @@ test('fondamentaleStepIsComplete', () => {
       {
         duree: { value: 0, heritee: false, etapeHeritee: null },
         substances: { value: ['auru'], heritee: false, etapeHeritee: null },
-        typeId: 'mfr',
+        typeId: ETAPES_TYPES.demande,
         titulaires: { value: [entreprise1Id], heritee: false, etapeHeritee: null },
         amodiataires: { value: [], heritee: false, etapeHeritee: null },
       },
-      'oct',
-      'prr',
+      DEMARCHES_TYPES_IDS.Octroi,
+      TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_RADIOACTIF,
       { ...testBlankUser, role: 'super' }
     )
   ).toMatchInlineSnapshot(`
@@ -211,12 +216,12 @@ test('fondamentaleStepIsComplete', () => {
       {
         duree: { value: 2, heritee: false, etapeHeritee: null },
         substances: { value: ['auru'], heritee: false, etapeHeritee: null },
-        typeId: 'mfr',
+        typeId: ETAPES_TYPES.demande,
         titulaires: { value: [], heritee: false, etapeHeritee: null },
         amodiataires: { value: [], heritee: false, etapeHeritee: null },
       },
-      'oct',
-      'arm',
+      DEMARCHES_TYPES_IDS.Octroi,
+      TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX,
       { ...testBlankUser, role: 'super' }
     )
   ).toMatchInlineSnapshot(`
@@ -232,12 +237,12 @@ test('fondamentaleStepIsComplete', () => {
       {
         duree: { value: 0, heritee: false, etapeHeritee: null },
         substances: { value: ['auru'], heritee: false, etapeHeritee: null },
-        typeId: 'mfr',
+        typeId: ETAPES_TYPES.demande,
         titulaires: { value: [], heritee: false, etapeHeritee: null },
         amodiataires: { value: [], heritee: false, etapeHeritee: null },
       },
-      'oct',
-      'arm',
+      DEMARCHES_TYPES_IDS.Octroi,
+      TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX,
       { ...testBlankUser, role: 'super' }
     )
   ).toMatchInlineSnapshot(`
@@ -254,12 +259,12 @@ test('fondamentaleStepIsComplete', () => {
       {
         duree: { value: 2, heritee: false, etapeHeritee: null },
         substances: { value: [], heritee: false, etapeHeritee: null },
-        typeId: 'mfr',
+        typeId: ETAPES_TYPES.demande,
         titulaires: { value: [], heritee: false, etapeHeritee: null },
         amodiataires: { value: [], heritee: false, etapeHeritee: null },
       },
-      'oct',
-      'arm',
+      DEMARCHES_TYPES_IDS.Octroi,
+      TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX,
       { ...testBlankUser, role: 'super' }
     )
   ).toMatchInlineSnapshot(`
@@ -277,12 +282,12 @@ test('fondamentaleStepIsComplete', () => {
       {
         duree: { value: 2, heritee: false, etapeHeritee: null },
         substances: { value: ['auru'], heritee: false, etapeHeritee: null },
-        typeId: 'mfr',
+        typeId: ETAPES_TYPES.demande,
         titulaires: { value: [entreprise1Id], heritee: false, etapeHeritee: null },
         amodiataires: { value: [], heritee: false, etapeHeritee: null },
       },
-      'mut',
-      'arm',
+      DEMARCHES_TYPES_IDS.Mutation,
+      TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX,
       { ...testBlankUser, role: 'super' }
     )
   ).toMatchInlineSnapshot(`
@@ -295,12 +300,12 @@ test('fondamentaleStepIsComplete', () => {
       {
         duree: { value: 0, heritee: false, etapeHeritee: null },
         substances: { value: [], heritee: false, etapeHeritee: null },
-        typeId: 'mfr',
+        typeId: ETAPES_TYPES.demande,
         titulaires: { value: [], heritee: false, etapeHeritee: null },
         amodiataires: { value: [], heritee: false, etapeHeritee: null },
       },
-      'mut',
-      'arm',
+      DEMARCHES_TYPES_IDS.Mutation,
+      TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX,
       { ...testBlankUser, role: 'super' }
     )
   ).toMatchInlineSnapshot(`
@@ -317,12 +322,12 @@ test('fondamentaleStepIsComplete', () => {
       {
         duree: { value: 3, heritee: false, etapeHeritee: null },
         substances: { value: [SUBSTANCES_FISCALES_IDS.or], heritee: false, etapeHeritee: null },
-        typeId: 'mfr',
+        typeId: ETAPES_TYPES.demande,
         titulaires: { value: [entreprise1Id], heritee: false, etapeHeritee: null },
         amodiataires: { value: [], heritee: false, etapeHeritee: null },
       },
-      'oct',
-      'arm',
+      DEMARCHES_TYPES_IDS.Octroi,
+      TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX,
       { ...testBlankUser, role: 'entreprise', entrepriseIds: [entreprise1Id] }
     )
   ).toMatchInlineSnapshot(`
@@ -335,7 +340,7 @@ test('fondamentaleStepIsComplete', () => {
       {
         duree: { value: 2, heritee: false, etapeHeritee: null },
         substances: { value: [SUBSTANCES_FISCALES_IDS.or], heritee: false, etapeHeritee: null },
-        typeId: 'mfr',
+        typeId: ETAPES_TYPES.demande,
         titulaires: { value: [], heritee: false, etapeHeritee: null },
         amodiataires: { value: [entreprise1Id], heritee: false, etapeHeritee: null },
       },
@@ -353,7 +358,7 @@ test('fondamentaleStepIsComplete', () => {
       {
         duree: { value: 0, heritee: false, etapeHeritee: null },
         substances: { value: [SUBSTANCES_FISCALES_IDS.or], heritee: false, etapeHeritee: null },
-        typeId: 'mfr',
+        typeId: ETAPES_TYPES.demande,
         titulaires: { value: [], heritee: false, etapeHeritee: null },
         amodiataires: { value: [], heritee: false, etapeHeritee: null },
       },
@@ -372,28 +377,36 @@ test('fondamentaleStepIsComplete', () => {
   `)
 })
 test('sectionsStepIsVisible', () => {
-  expect(sectionsStepIsVisible({ typeId: 'mfr' }, 'oct', 'arm')).toBe(true)
-  expect(sectionsStepIsVisible({ typeId: 'aca' }, 'oct', 'axm')).toBe(false)
+  expect(sectionsStepIsVisible({ typeId: ETAPES_TYPES.demande }, DEMARCHES_TYPES_IDS.Octroi, TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX)).toBe(true)
+  expect(
+    sectionsStepIsVisible({ typeId: ETAPES_TYPES.avisDeLaCommissionDesAutorisationsDeRecherchesMinieres_CARM_ }, DEMARCHES_TYPES_IDS.Octroi, TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX)
+  ).toBe(false)
 })
 
 test('sectionsStepIsComplete', () => {
-  expect(sectionsStepIsComplete({ typeId: 'mfr', contenu: {} }, 'oct', 'arm').valid).toBe(false)
-  expect(sectionsStepIsComplete({ typeId: 'mfr', contenu: { arm: { mecanise: { value: true, heritee: false, etapeHeritee: null } } } }, 'oct', 'arm').valid).toBe(true)
+  expect(sectionsStepIsComplete({ typeId: ETAPES_TYPES.demande, contenu: {} }, DEMARCHES_TYPES_IDS.Octroi, TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX).valid).toBe(false)
+  expect(
+    sectionsStepIsComplete(
+      { typeId: ETAPES_TYPES.demande, contenu: { arm: { mecanise: { value: true, heritee: false, etapeHeritee: null } } } },
+      DEMARCHES_TYPES_IDS.Octroi,
+      TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX
+    ).valid
+  ).toBe(true)
 })
 
 test('perimetreStepIsVisible', () => {
-  expect(perimetreStepIsVisible({ typeId: 'mfr' }, DEMARCHES_TYPES_IDS.Octroi)).toBe(true)
-  expect(perimetreStepIsVisible({ typeId: 'acg' }, DEMARCHES_TYPES_IDS.Octroi)).toBe(false)
+  expect(perimetreStepIsVisible({ typeId: ETAPES_TYPES.demande }, DEMARCHES_TYPES_IDS.Octroi)).toBe(true)
+  expect(perimetreStepIsVisible({ typeId: ETAPES_TYPES.avisDuConseilGeneralDeLeconomie_CGE_ }, DEMARCHES_TYPES_IDS.Octroi)).toBe(false)
 
-  expect(perimetreStepIsVisible({ typeId: 'mfr' }, DEMARCHES_TYPES_IDS.Mutation)).toBe(false)
-  expect(perimetreStepIsVisible({ typeId: 'acg' }, DEMARCHES_TYPES_IDS.Mutation)).toBe(false)
+  expect(perimetreStepIsVisible({ typeId: ETAPES_TYPES.demande }, DEMARCHES_TYPES_IDS.Mutation)).toBe(false)
+  expect(perimetreStepIsVisible({ typeId: ETAPES_TYPES.avisDuConseilGeneralDeLeconomie_CGE_ }, DEMARCHES_TYPES_IDS.Mutation)).toBe(false)
 })
 
 test('perimetreStepIsComplete', () => {
   expect(
     perimetreStepIsComplete(
       {
-        typeId: 'mfr',
+        typeId: ETAPES_TYPES.demande,
         perimetre: {
           value: {
             geojson4326Perimetre: null,
@@ -422,7 +435,7 @@ test('perimetreStepIsComplete', () => {
   expect(
     perimetreStepIsComplete(
       {
-        typeId: 'mfr',
+        typeId: ETAPES_TYPES.demande,
         perimetre: {
           value: {
             geojson4326Perimetre: { type: 'Feature', properties: {}, geometry: { type: 'MultiPolygon', coordinates: [] } },
@@ -444,7 +457,7 @@ test('perimetreStepIsComplete', () => {
   expect(
     perimetreStepIsComplete(
       {
-        typeId: 'acg',
+        typeId: ETAPES_TYPES.avisDuConseilGeneralDeLeconomie_CGE_,
         perimetre: {
           value: {
             geojson4326Perimetre: null,
@@ -466,7 +479,7 @@ test('perimetreStepIsComplete', () => {
   expect(
     perimetreStepIsComplete(
       {
-        typeId: 'dpu',
+        typeId: ETAPES_TYPES.publicationDeDecisionAuJORF,
         perimetre: {
           value: {
             geojson4326Perimetre: null,
@@ -495,7 +508,7 @@ test('perimetreStepIsComplete', () => {
   expect(
     perimetreStepIsComplete(
       {
-        typeId: 'dpu',
+        typeId: ETAPES_TYPES.publicationDeDecisionAuJORF,
         perimetre: {
           value: {
             geojson4326Perimetre: { type: 'Feature', properties: {}, geometry: { type: 'MultiPolygon', coordinates: [] } },
@@ -522,32 +535,32 @@ test('etapeDocumentsStepIsVisible', () => {
 
 const axmDocumentsComplete: Pick<EtapeDocument | TempEtapeDocument, 'etape_document_type_id'>[] = [
   {
-    etape_document_type_id: 'car',
+    etape_document_type_id: DOCUMENTS_TYPES_IDS.documentsCartographiques,
   },
 
   {
-    etape_document_type_id: 'lem',
+    etape_document_type_id: DOCUMENTS_TYPES_IDS.lettreDeDemande,
   },
 
   {
-    etape_document_type_id: 'idm',
+    etape_document_type_id: DOCUMENTS_TYPES_IDS.identificationDeMateriel,
   },
 
   {
-    etape_document_type_id: 'mes',
+    etape_document_type_id: DOCUMENTS_TYPES_IDS.mesuresPrevuesPourRehabiliterLeSite,
   },
   {
-    etape_document_type_id: 'met',
+    etape_document_type_id: DOCUMENTS_TYPES_IDS.methodesPourLExecutionDesTravaux,
   },
   {
-    etape_document_type_id: 'nip',
+    etape_document_type_id: DOCUMENTS_TYPES_IDS.noticeDImpact,
   },
 
   {
-    etape_document_type_id: 'prg',
+    etape_document_type_id: DOCUMENTS_TYPES_IDS.programmeDesTravaux,
   },
   {
-    etape_document_type_id: 'sch',
+    etape_document_type_id: DOCUMENTS_TYPES_IDS.schemaDePenetrationDuMassifForestier,
   },
 ]
 
@@ -559,7 +572,7 @@ test('etapeDocumentsStepIsComplete avec mecanisation', () => {
       DEMARCHES_TYPES_IDS.Octroi,
       TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX,
       demarcheIdValidator.parse('demarcheId'),
-      [{ etape_document_type_id: 'dec' }],
+      [{ etape_document_type_id: DOCUMENTS_TYPES_IDS.decret }],
       [],
       firstEtapeDateValidator.parse('2022-01-01')
     )
@@ -582,7 +595,7 @@ test('etapeDocumentsStepIsComplete avec mecanisation', () => {
       DEMARCHES_TYPES_IDS.Octroi,
       TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX,
       demarcheIdValidator.parse('demarcheId'),
-      [{ etape_document_type_id: 'dec' }],
+      [{ etape_document_type_id: DOCUMENTS_TYPES_IDS.decret }],
       [],
       firstEtapeDateValidator.parse('2022-01-01')
     )
@@ -601,11 +614,11 @@ test('etapeDocumentsStepIsComplete avec mecanisation', () => {
 test('etapeDocumentsStepIsComplete', () => {
   expect(
     etapeDocumentsStepIsComplete(
-      { typeId: 'cac', contenu: {}, isBrouillon: ETAPE_IS_NOT_BROUILLON },
-      'oct',
-      'arm',
+      { typeId: ETAPES_TYPES.consultationDesAdministrationsCentrales, contenu: {}, isBrouillon: ETAPE_IS_NOT_BROUILLON },
+      DEMARCHES_TYPES_IDS.Octroi,
+      TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX,
       demarcheIdValidator.parse('demarcheId'),
-      [{ etape_document_type_id: 'dec' }],
+      [{ etape_document_type_id: DOCUMENTS_TYPES_IDS.decret }],
       [],
       firstEtapeDateValidator.parse('2022-01-01')
     )
@@ -620,9 +633,9 @@ test('etapeDocumentsStepIsComplete', () => {
 
   expect(
     etapeDocumentsStepIsComplete(
-      { typeId: 'mfr', contenu: {}, isBrouillon: ETAPE_IS_BROUILLON },
-      'oct',
-      'axm',
+      { typeId: ETAPES_TYPES.demande, contenu: {}, isBrouillon: ETAPE_IS_BROUILLON },
+      DEMARCHES_TYPES_IDS.Octroi,
+      TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX,
       demarcheIdValidator.parse('demarcheId'),
       axmDocumentsComplete,
       [],
@@ -636,9 +649,9 @@ test('etapeDocumentsStepIsComplete', () => {
 
   expect(
     etapeDocumentsStepIsComplete(
-      { typeId: 'pqr', contenu: {}, isBrouillon: ETAPE_IS_BROUILLON },
-      'oct',
-      'axm',
+      { typeId: ETAPES_TYPES.publicationDansUnJournalLocalOuNational, contenu: {}, isBrouillon: ETAPE_IS_BROUILLON },
+      DEMARCHES_TYPES_IDS.Octroi,
+      TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX,
       demarcheIdValidator.parse('demarcheId'),
       [],
       [],
@@ -652,41 +665,50 @@ test('etapeDocumentsStepIsComplete', () => {
 })
 
 test('entrepriseDocumentsStepIsVisible', () => {
-  expect(entrepriseDocumentsStepIsVisible({ typeId: 'cac' }, 'oct', 'axm')).toBe(false)
-  expect(entrepriseDocumentsStepIsVisible({ typeId: 'mfr' }, 'oct', 'axm')).toBe(true)
-  expect(entrepriseDocumentsStepIsVisible({ typeId: 'pqr' }, 'oct', 'axm')).toBe(false)
+  expect(entrepriseDocumentsStepIsVisible({ typeId: ETAPES_TYPES.consultationDesAdministrationsCentrales }, DEMARCHES_TYPES_IDS.Octroi, TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX)).toBe(
+    false
+  )
+  expect(entrepriseDocumentsStepIsVisible({ typeId: ETAPES_TYPES.demande }, DEMARCHES_TYPES_IDS.Octroi, TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX)).toBe(true)
+  expect(entrepriseDocumentsStepIsVisible({ typeId: ETAPES_TYPES.publicationDansUnJournalLocalOuNational }, DEMARCHES_TYPES_IDS.Octroi, TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX)).toBe(
+    false
+  )
 })
 test('entrepriseDocumentsStepIsComplete', () => {
   expect(
     entrepriseDocumentsStepIsComplete(
-      { typeId: 'cac', titulaires: { value: [], heritee: false, etapeHeritee: null }, amodiataires: { value: [], heritee: false, etapeHeritee: null }, contenu: {} },
-      'oct',
-      'axm',
+      {
+        typeId: ETAPES_TYPES.consultationDesAdministrationsCentrales,
+        titulaires: { value: [], heritee: false, etapeHeritee: null },
+        amodiataires: { value: [], heritee: false, etapeHeritee: null },
+        contenu: {},
+      },
+      DEMARCHES_TYPES_IDS.Octroi,
+      TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX,
       []
     ).valid
   ).toBe(true)
   expect(
     entrepriseDocumentsStepIsComplete(
-      { typeId: 'mfr', titulaires: { value: [], heritee: false, etapeHeritee: null }, amodiataires: { value: [], heritee: false, etapeHeritee: null }, contenu: {} },
-      'oct',
-      'axm',
+      { typeId: ETAPES_TYPES.demande, titulaires: { value: [], heritee: false, etapeHeritee: null }, amodiataires: { value: [], heritee: false, etapeHeritee: null }, contenu: {} },
+      DEMARCHES_TYPES_IDS.Octroi,
+      TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX,
       []
     ).valid
   ).toBe(false)
 
   expect(
     entrepriseDocumentsStepIsComplete(
-      { typeId: 'mfr', titulaires: { value: [entreprise1Id], heritee: false, etapeHeritee: null }, amodiataires: { value: [], heritee: false, etapeHeritee: null }, contenu: {} },
-      'oct',
-      'axm',
+      { typeId: ETAPES_TYPES.demande, titulaires: { value: [entreprise1Id], heritee: false, etapeHeritee: null }, amodiataires: { value: [], heritee: false, etapeHeritee: null }, contenu: {} },
+      DEMARCHES_TYPES_IDS.Octroi,
+      TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX,
       []
     ).valid
   ).toBe(false)
   expect(
     entrepriseDocumentsStepIsComplete(
-      { typeId: 'mfr', titulaires: { value: [], heritee: false, etapeHeritee: null }, amodiataires: { value: [entreprise1Id], heritee: false, etapeHeritee: null }, contenu: {} },
-      'oct',
-      'axm',
+      { typeId: ETAPES_TYPES.demande, titulaires: { value: [], heritee: false, etapeHeritee: null }, amodiataires: { value: [entreprise1Id], heritee: false, etapeHeritee: null }, contenu: {} },
+      DEMARCHES_TYPES_IDS.Octroi,
+      TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX,
       []
     ).valid
   ).toBe(false)
@@ -694,37 +716,37 @@ test('entrepriseDocumentsStepIsComplete', () => {
   expect(
     entrepriseDocumentsStepIsComplete(
       {
-        typeId: 'mfr',
+        typeId: ETAPES_TYPES.demande,
         titulaires: { value: [], heritee: false, etapeHeritee: null },
         amodiataires: { value: [entreprise1Id], heritee: false, etapeHeritee: null },
         contenu: { arm: { mecanise: { value: false, heritee: false, etapeHeritee: null } } },
       },
-      'oct',
-      'arm',
+      DEMARCHES_TYPES_IDS.Octroi,
+      TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX,
       [
         {
-          documentTypeId: 'atf',
+          documentTypeId: DOCUMENTS_TYPES_IDS.attestationFiscale,
           entrepriseId: entreprise1Id,
         },
         {
-          documentTypeId: 'cur',
+          documentTypeId: DOCUMENTS_TYPES_IDS.curriculumVitae,
           entrepriseId: entreprise1Id,
         },
 
         {
-          documentTypeId: 'jid',
+          documentTypeId: DOCUMENTS_TYPES_IDS.justificatifDIdentite,
           entrepriseId: entreprise1Id,
         },
         {
-          documentTypeId: 'jct',
+          documentTypeId: DOCUMENTS_TYPES_IDS.justificatifDesCapacitesTechniques,
           entrepriseId: entreprise1Id,
         },
         {
-          documentTypeId: 'kbi',
+          documentTypeId: DOCUMENTS_TYPES_IDS.kbis,
           entrepriseId: entreprise1Id,
         },
         {
-          documentTypeId: 'jcf',
+          documentTypeId: DOCUMENTS_TYPES_IDS.justificatifDesCapacitesFinancieres,
           entrepriseId: entreprise1Id,
         },
       ]
@@ -733,7 +755,17 @@ test('entrepriseDocumentsStepIsComplete', () => {
 })
 
 test('getDocumentsTypes', () => {
-  expect(getDocumentsTypes({ typeId: 'cac' }, 'oct', 'axm', demarcheIdValidator.parse('demarcheId'), [], false, firstEtapeDateValidator.parse('2022-01-01'))).toMatchInlineSnapshot(`
+  expect(
+    getDocumentsTypes(
+      { typeId: ETAPES_TYPES.consultationDesAdministrationsCentrales },
+      DEMARCHES_TYPES_IDS.Octroi,
+      TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX,
+      demarcheIdValidator.parse('demarcheId'),
+      [],
+      IS_ARM_NON_MECANISE,
+      firstEtapeDateValidator.parse('2022-01-01')
+    )
+  ).toMatchInlineSnapshot(`
     [
       {
         "id": "lcm",
@@ -748,7 +780,17 @@ test('getDocumentsTypes', () => {
     ]
   `)
 
-  expect(getDocumentsTypes({ typeId: 'mfr' }, 'oct', 'arm', demarcheIdValidator.parse('demarcheId'), [], false, firstEtapeDateValidator.parse('2022-01-01'))).toMatchInlineSnapshot(`
+  expect(
+    getDocumentsTypes(
+      { typeId: ETAPES_TYPES.demande },
+      DEMARCHES_TYPES_IDS.Octroi,
+      TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX,
+      demarcheIdValidator.parse('demarcheId'),
+      [],
+      IS_ARM_NON_MECANISE,
+      firstEtapeDateValidator.parse('2022-01-01')
+    )
+  ).toMatchInlineSnapshot(`
     [
       {
         "id": "cam",
@@ -849,7 +891,17 @@ test('getDocumentsTypes', () => {
     ]
   `)
 
-  expect(getDocumentsTypes({ typeId: 'mfr' }, 'oct', 'arm', demarcheIdValidator.parse('demarcheId'), [], true, firstEtapeDateValidator.parse('2022-01-01'))).toMatchInlineSnapshot(`
+  expect(
+    getDocumentsTypes(
+      { typeId: ETAPES_TYPES.demande },
+      DEMARCHES_TYPES_IDS.Octroi,
+      TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX,
+      demarcheIdValidator.parse('demarcheId'),
+      [],
+      IS_ARM_MECANISE,
+      firstEtapeDateValidator.parse('2022-01-01')
+    )
+  ).toMatchInlineSnapshot(`
     [
       {
         "id": "cam",
@@ -949,193 +1001,217 @@ test('getDocumentsTypes', () => {
       },
     ]
   `)
-
-  expect(getDocumentsTypes({ typeId: 'mfr' }, 'oct', 'axm', demarcheIdValidator.parse('demarcheId'), ['1'], false, firstEtapeDateValidator.parse('2022-01-01'))).toMatchSnapshot()
-  expect(getDocumentsTypes({ typeId: 'mfr' }, 'oct', 'axm', demarcheIdValidator.parse('demarcheId'), ['2'], false, firstEtapeDateValidator.parse('2022-01-01'))).toMatchSnapshot()
-  expect(getDocumentsTypes({ typeId: 'mfr' }, 'oct', 'axm', demarcheIdValidator.parse('demarcheId'), ['2'], false, firstEtapeDateValidator.parse('2024-12-01'))).toMatchSnapshot()
+  expect(
+    getDocumentsTypes(
+      { typeId: ETAPES_TYPES.demande },
+      DEMARCHES_TYPES_IDS.Octroi,
+      TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX,
+      demarcheIdValidator.parse('demarcheId'),
+      [],
+      IS_ARM_MECANISE,
+      firstEtapeDateValidator.parse('2024-10-01')
+    )
+  ).toMatchInlineSnapshot(`
+      [
+        {
+          "id": "cam",
+          "nom": "Contrat d'amodiation",
+          "optionnel": true,
+        },
+        {
+          "description": undefined,
+          "id": "car",
+          "nom": "Documents cartographiques",
+          "optionnel": false,
+        },
+        {
+          "id": "cnt",
+          "nom": "Contrat",
+          "optionnel": true,
+        },
+        {
+          "id": "cod",
+          "nom": "Compléments au dossier de demande",
+          "optionnel": true,
+        },
+        {
+          "description": undefined,
+          "id": "dep",
+          "nom": "Décision cas par cas",
+          "optionnel": true,
+        },
+        {
+          "description": undefined,
+          "id": "doe",
+          "nom": "Dossier "Loi sur l'eau"",
+          "optionnel": false,
+        },
+        {
+          "description": undefined,
+          "id": "dom",
+          "nom": "Dossier de demande",
+          "optionnel": false,
+        },
+        {
+          "id": "dos",
+          "nom": "Dossier",
+          "optionnel": true,
+        },
+        {
+          "id": "fac",
+          "nom": "Facture",
+          "optionnel": true,
+        },
+        {
+          "id": "fic",
+          "nom": "Fiche de complétude",
+          "optionnel": true,
+        },
+        {
+          "id": "fip",
+          "nom": "Fiche de présentation",
+          "optionnel": true,
+        },
+        {
+          "description": undefined,
+          "id": "for",
+          "nom": "Formulaire de demande",
+          "optionnel": false,
+        },
+        {
+          "description": undefined,
+          "id": "jpa",
+          "nom": "Justificatif de paiement",
+          "optionnel": true,
+        },
+        {
+          "id": "lem",
+          "nom": "Lettre de demande",
+          "optionnel": true,
+        },
+        {
+          "id": "let",
+          "nom": "Lettre",
+          "optionnel": true,
+        },
+        {
+          "id": "noi",
+          "nom": "Notice d'incidence",
+          "optionnel": true,
+        },
+        {
+          "id": "rec",
+          "nom": "Récépissé "Loi sur l'eau"",
+          "optionnel": true,
+        },
+        {
+          "id": "aut",
+          "nom": "Autre document",
+          "optionnel": true,
+        },
+      ]
+    `)
+  expect(
+    getDocumentsTypes(
+      { typeId: ETAPES_TYPES.demande },
+      DEMARCHES_TYPES_IDS.Octroi,
+      TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX,
+      demarcheIdValidator.parse('demarcheId'),
+      ['1'],
+      IS_ARM_NON_MECANISE,
+      firstEtapeDateValidator.parse('2022-01-01')
+    )
+  ).toMatchSnapshot()
+  expect(
+    getDocumentsTypes(
+      { typeId: ETAPES_TYPES.demande },
+      DEMARCHES_TYPES_IDS.Octroi,
+      TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX,
+      demarcheIdValidator.parse('demarcheId'),
+      ['2'],
+      IS_ARM_NON_MECANISE,
+      firstEtapeDateValidator.parse('2022-01-01')
+    )
+  ).toMatchSnapshot()
+  expect(
+    getDocumentsTypes(
+      { typeId: ETAPES_TYPES.demande },
+      DEMARCHES_TYPES_IDS.Octroi,
+      TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX,
+      demarcheIdValidator.parse('demarcheId'),
+      ['2'],
+      IS_ARM_NON_MECANISE,
+      firstEtapeDateValidator.parse('2024-12-01')
+    )
+  ).toMatchSnapshot()
 })
 
 const demarcheId = demarcheIdValidator.parse('demarcheId')
 const firstEtapeDate = firstEtapeDateValidator.parse('2022-01-01')
 test("getAvisType avis de l'office national des forêts est optionnel pour la procédure spécifique", () => {
-  const avis = getAvisTypes('asc', 'arm', 'oct', demarcheId, firstEtapeDateValidator.parse('2024-11-01'), [])
-  expect(avis.find(unAvis => unAvis.id === 'avisOfficeNationalDesForets' && unAvis.optionnel)).toMatchInlineSnapshot(`
-      {
-        "id": "avisOfficeNationalDesForets",
-        "nom": "Avis de l'Office National des Forêts",
-        "optionnel": true,
+  const avis = getAvisTypes(
+    ETAPES_TYPES.avisDesServicesEtCommissionsConsultatives,
+    TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX,
+    DEMARCHES_TYPES_IDS.Octroi,
+    demarcheId,
+    firstEtapeDateValidator.parse('2024-11-01'),
+    [],
+    IS_ARM_MECANISE
+  )
+  expect(avis.avisOfficeNationalDesForets?.optionnel).toBe(true)
+})
+test("getAvisType: avis au cas par cas et avis du propriétaire du sol sont obligatoires pour les demandes d'ARM mécanisée de la procédure spécifique", () => {
+  expect(getAvisTypes(ETAPES_TYPES.demande, TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX, DEMARCHES_TYPES_IDS.Octroi, demarcheId, firstEtapeDate, [], IS_ARM_MECANISE)).toMatchInlineSnapshot(`{}`)
+  expect(
+    getAvisTypes(ETAPES_TYPES.demande, TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX, DEMARCHES_TYPES_IDS.Octroi, demarcheId, firstEtapeDateValidator.parse('2025-01-01'), [], IS_ARM_MECANISE)
+  ).toMatchInlineSnapshot(`
+    {
+      "avisCasParCas": {
+        "id": "avisCasParCas",
+        "nom": "Décision au cas par cas",
+        "optionnel": false,
+        "statutIds": [
+          "Exempté",
+          "Requis",
+        ],
+      },
+      "avisProprietaireDuSol": {
+        "id": "avisProprietaireDuSol",
+        "nom": "avis du propriétaire du sol",
+        "optionnel": false,
         "statutIds": [
           "Favorable",
           "Défavorable",
           "Favorable avec réserves",
           "Non renseigné",
         ],
-      }
-    `)
+      },
+    }
+  `)
 })
 test('getAvisType', () => {
-  expect(getAvisTypes(ETAPES_TYPES.avisDesCollectivites, 'arm', 'oct', demarcheId, firstEtapeDate, [])).toMatchInlineSnapshot(`
-    [
+  expect(getAvisTypes(ETAPES_TYPES.avisDesCollectivites, TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX, DEMARCHES_TYPES_IDS.Octroi, demarcheId, firstEtapeDate, [], IS_ARM_MECANISE))
+    .toMatchInlineSnapshot(`
       {
-        "id": "avisDUneCollectivite",
-        "nom": "Avis d'une collectivité",
-        "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
-      },
-    ]
-  `)
-  expect(getAvisTypes('mfr', 'arm', 'oct', demarcheId, firstEtapeDate, [])).toMatchInlineSnapshot('[]')
-  expect(getAvisTypes('asc', 'arm', 'oct', demarcheId, firstEtapeDate, [])).toMatchInlineSnapshot(`
-    [
-      {
-        "id": "avisDirectionRegionaleDesAffairesCulturelles",
-        "nom": "Avis de la Direction Régionale Des Affaires Culturelles (DRAC)",
-        "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
-      },
-      {
-        "id": "avisConseilDepartementalEnvironnementRisquesSanitairesTechnologiques",
-        "nom": "Avis du Conseil Départemental de l'Environnement et des Risques Sanitaires et Technologiques (CODERST)",
-        "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
-      },
-      {
-        "id": "avisDirectionsRégionalesEconomieEmploiTravailSolidarités",
-        "nom": "Avis de la Direction régionale de l'économie, de l'emploi, du travail et des solidarités",
-        "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
-      },
-      {
-        "id": "avisDirectionRegionaleFinancesPubliques",
-        "nom": "Avis de la Direction Regionale Des Finances Publiques",
-        "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
-      },
-      {
-        "id": "avisGendarmerieNationale",
-        "nom": "Avis de la Gendarmerie Nationale",
-        "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
-      },
-      {
-        "id": "avisIFREMER",
-        "nom": "Avis de l'IFREMER",
-        "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
-      },
-      {
-        "id": "avisInstitutNationalOrigineQualite",
-        "nom": "Avis de l'Institut National de l'origine et de la Qualité",
-        "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
-      },
-      {
-        "id": "avisServiceAdministratifLocal",
-        "nom": "Avis d'un Service Administratif Local",
-        "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
-      },
-      {
-        "id": "avisAutoriteMilitaire",
-        "nom": "Avis de l'Autorité militaire",
-        "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
-      },
-      {
-        "id": "avisParcNational",
-        "nom": "Avis du Parc National",
-        "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
-      },
-      {
-        "id": "avisDirectionDepartementaleTerritoiresMer",
-        "nom": "Avis de la Direction Départementale des Territoires et de la Mer (DDTM)",
-        "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
-      },
-      {
-        "id": "avisAgenceRegionaleSante",
-        "nom": "Avis de l'Agence Régionale de Santé (ARS)",
-        "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
-      },
-      {
-        "id": "avisCaisseGeneraleSecuriteSociale",
-        "nom": "Avis de la Caisse Générale de Sécurité Sociale",
-        "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
-      },
-      {
+        "avisDUneCollectivite": {
+          "id": "avisDUneCollectivite",
+          "nom": "Avis d'une collectivité",
+          "optionnel": true,
+          "statutIds": [
+            "Favorable",
+            "Défavorable",
+            "Favorable avec réserves",
+            "Non renseigné",
+          ],
+        },
+      }
+    `)
+  expect(getAvisTypes(ETAPES_TYPES.demande, TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX, DEMARCHES_TYPES_IDS.Octroi, demarcheId, firstEtapeDate, [], IS_ARM_MECANISE)).toMatchInlineSnapshot(`{}`)
+  expect(
+    getAvisTypes(ETAPES_TYPES.avisDesServicesEtCommissionsConsultatives, TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX, DEMARCHES_TYPES_IDS.Octroi, demarcheId, firstEtapeDate, [], IS_ARM_MECANISE)
+  ).toMatchInlineSnapshot(`
+    {
+      "autreAvis": {
         "id": "autreAvis",
         "nom": "Autre avis",
         "optionnel": true,
@@ -1146,7 +1222,128 @@ test('getAvisType', () => {
           "Non renseigné",
         ],
       },
-      {
+      "avisAgenceRegionaleSante": {
+        "id": "avisAgenceRegionaleSante",
+        "nom": "Avis de l'Agence Régionale de Santé (ARS)",
+        "optionnel": true,
+        "statutIds": [
+          "Favorable",
+          "Défavorable",
+          "Favorable avec réserves",
+          "Non renseigné",
+        ],
+      },
+      "avisAutoriteMilitaire": {
+        "id": "avisAutoriteMilitaire",
+        "nom": "Avis de l'Autorité militaire",
+        "optionnel": true,
+        "statutIds": [
+          "Favorable",
+          "Défavorable",
+          "Favorable avec réserves",
+          "Non renseigné",
+        ],
+      },
+      "avisCaisseGeneraleSecuriteSociale": {
+        "id": "avisCaisseGeneraleSecuriteSociale",
+        "nom": "Avis de la Caisse Générale de Sécurité Sociale",
+        "optionnel": true,
+        "statutIds": [
+          "Favorable",
+          "Défavorable",
+          "Favorable avec réserves",
+          "Non renseigné",
+        ],
+      },
+      "avisConseilDepartementalEnvironnementRisquesSanitairesTechnologiques": {
+        "id": "avisConseilDepartementalEnvironnementRisquesSanitairesTechnologiques",
+        "nom": "Avis du Conseil Départemental de l'Environnement et des Risques Sanitaires et Technologiques (CODERST)",
+        "optionnel": true,
+        "statutIds": [
+          "Favorable",
+          "Défavorable",
+          "Favorable avec réserves",
+          "Non renseigné",
+        ],
+      },
+      "avisDirectionDepartementaleTerritoiresMer": {
+        "id": "avisDirectionDepartementaleTerritoiresMer",
+        "nom": "Avis de la Direction Départementale des Territoires et de la Mer (DDTM)",
+        "optionnel": true,
+        "statutIds": [
+          "Favorable",
+          "Défavorable",
+          "Favorable avec réserves",
+          "Non renseigné",
+        ],
+      },
+      "avisDirectionRegionaleDesAffairesCulturelles": {
+        "id": "avisDirectionRegionaleDesAffairesCulturelles",
+        "nom": "Avis de la Direction Régionale Des Affaires Culturelles (DRAC)",
+        "optionnel": true,
+        "statutIds": [
+          "Favorable",
+          "Défavorable",
+          "Favorable avec réserves",
+          "Non renseigné",
+        ],
+      },
+      "avisDirectionRegionaleFinancesPubliques": {
+        "id": "avisDirectionRegionaleFinancesPubliques",
+        "nom": "Avis de la Direction Regionale Des Finances Publiques",
+        "optionnel": true,
+        "statutIds": [
+          "Favorable",
+          "Défavorable",
+          "Favorable avec réserves",
+          "Non renseigné",
+        ],
+      },
+      "avisDirectionsRégionalesEconomieEmploiTravailSolidarités": {
+        "id": "avisDirectionsRégionalesEconomieEmploiTravailSolidarités",
+        "nom": "Avis de la Direction régionale de l'économie, de l'emploi, du travail et des solidarités",
+        "optionnel": true,
+        "statutIds": [
+          "Favorable",
+          "Défavorable",
+          "Favorable avec réserves",
+          "Non renseigné",
+        ],
+      },
+      "avisGendarmerieNationale": {
+        "id": "avisGendarmerieNationale",
+        "nom": "Avis de la Gendarmerie Nationale",
+        "optionnel": true,
+        "statutIds": [
+          "Favorable",
+          "Défavorable",
+          "Favorable avec réserves",
+          "Non renseigné",
+        ],
+      },
+      "avisIFREMER": {
+        "id": "avisIFREMER",
+        "nom": "Avis de l'IFREMER",
+        "optionnel": true,
+        "statutIds": [
+          "Favorable",
+          "Défavorable",
+          "Favorable avec réserves",
+          "Non renseigné",
+        ],
+      },
+      "avisInstitutNationalOrigineQualite": {
+        "id": "avisInstitutNationalOrigineQualite",
+        "nom": "Avis de l'Institut National de l'origine et de la Qualité",
+        "optionnel": true,
+        "statutIds": [
+          "Favorable",
+          "Défavorable",
+          "Favorable avec réserves",
+          "Non renseigné",
+        ],
+      },
+      "avisOfficeNationalDesForets": {
         "id": "avisOfficeNationalDesForets",
         "nom": "Avis de l'Office National des Forêts",
         "optionnel": false,
@@ -1157,132 +1354,7 @@ test('getAvisType', () => {
           "Non renseigné",
         ],
       },
-      {
-        "id": "expertiseOfficeNationalDesForets",
-        "nom": "Expertise de l'Office National des Forêts",
-        "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
-      },
-      {
-        "id": "avisParcNaturelMarin",
-        "nom": "Avis du Parc Naturel Marin",
-        "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
-      },
-    ]
-  `)
-  expect(getAvisTypes('asc', 'arm', 'oct', demarcheId, firstEtapeDate, [communeIdValidator.parse('97302')])).toMatchInlineSnapshot(`
-    [
-      {
-        "id": "avisDirectionRegionaleDesAffairesCulturelles",
-        "nom": "Avis de la Direction Régionale Des Affaires Culturelles (DRAC)",
-        "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
-      },
-      {
-        "id": "avisConseilDepartementalEnvironnementRisquesSanitairesTechnologiques",
-        "nom": "Avis du Conseil Départemental de l'Environnement et des Risques Sanitaires et Technologiques (CODERST)",
-        "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
-      },
-      {
-        "id": "avisDirectionsRégionalesEconomieEmploiTravailSolidarités",
-        "nom": "Avis de la Direction régionale de l'économie, de l'emploi, du travail et des solidarités",
-        "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
-      },
-      {
-        "id": "avisDirectionRegionaleFinancesPubliques",
-        "nom": "Avis de la Direction Regionale Des Finances Publiques",
-        "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
-      },
-      {
-        "id": "avisGendarmerieNationale",
-        "nom": "Avis de la Gendarmerie Nationale",
-        "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
-      },
-      {
-        "id": "avisIFREMER",
-        "nom": "Avis de l'IFREMER",
-        "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
-      },
-      {
-        "id": "avisInstitutNationalOrigineQualite",
-        "nom": "Avis de l'Institut National de l'origine et de la Qualité",
-        "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
-      },
-      {
-        "id": "avisServiceAdministratifLocal",
-        "nom": "Avis d'un Service Administratif Local",
-        "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
-      },
-      {
-        "id": "avisAutoriteMilitaire",
-        "nom": "Avis de l'Autorité militaire",
-        "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
-      },
-      {
+      "avisParcNational": {
         "id": "avisParcNational",
         "nom": "Avis du Parc National",
         "optionnel": true,
@@ -1293,9 +1365,9 @@ test('getAvisType', () => {
           "Non renseigné",
         ],
       },
-      {
-        "id": "avisDirectionDepartementaleTerritoiresMer",
-        "nom": "Avis de la Direction Départementale des Territoires et de la Mer (DDTM)",
+      "avisParcNaturelMarin": {
+        "id": "avisParcNaturelMarin",
+        "nom": "Avis du Parc Naturel Marin",
         "optionnel": true,
         "statutIds": [
           "Favorable",
@@ -1304,9 +1376,9 @@ test('getAvisType', () => {
           "Non renseigné",
         ],
       },
-      {
-        "id": "avisAgenceRegionaleSante",
-        "nom": "Avis de l'Agence Régionale de Santé (ARS)",
+      "avisServiceAdministratifLocal": {
+        "id": "avisServiceAdministratifLocal",
+        "nom": "Avis d'un Service Administratif Local",
         "optionnel": true,
         "statutIds": [
           "Favorable",
@@ -1315,9 +1387,9 @@ test('getAvisType', () => {
           "Non renseigné",
         ],
       },
-      {
-        "id": "avisCaisseGeneraleSecuriteSociale",
-        "nom": "Avis de la Caisse Générale de Sécurité Sociale",
+      "expertiseOfficeNationalDesForets": {
+        "id": "expertiseOfficeNationalDesForets",
+        "nom": "Expertise de l'Office National des Forêts",
         "optionnel": true,
         "statutIds": [
           "Favorable",
@@ -1326,7 +1398,21 @@ test('getAvisType', () => {
           "Non renseigné",
         ],
       },
-      {
+    }
+  `)
+  expect(
+    getAvisTypes(
+      ETAPES_TYPES.avisDesServicesEtCommissionsConsultatives,
+      TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX,
+      DEMARCHES_TYPES_IDS.Octroi,
+      demarcheId,
+      firstEtapeDate,
+      [communeIdValidator.parse('97302')],
+      IS_ARM_MECANISE
+    )
+  ).toMatchInlineSnapshot(`
+    {
+      "autreAvis": {
         "id": "autreAvis",
         "nom": "Autre avis",
         "optionnel": true,
@@ -1337,7 +1423,150 @@ test('getAvisType', () => {
           "Non renseigné",
         ],
       },
-      {
+      "avisAgenceRegionaleSante": {
+        "id": "avisAgenceRegionaleSante",
+        "nom": "Avis de l'Agence Régionale de Santé (ARS)",
+        "optionnel": true,
+        "statutIds": [
+          "Favorable",
+          "Défavorable",
+          "Favorable avec réserves",
+          "Non renseigné",
+        ],
+      },
+      "avisAutoriteMilitaire": {
+        "id": "avisAutoriteMilitaire",
+        "nom": "Avis de l'Autorité militaire",
+        "optionnel": true,
+        "statutIds": [
+          "Favorable",
+          "Défavorable",
+          "Favorable avec réserves",
+          "Non renseigné",
+        ],
+      },
+      "avisCaisseGeneraleSecuriteSociale": {
+        "id": "avisCaisseGeneraleSecuriteSociale",
+        "nom": "Avis de la Caisse Générale de Sécurité Sociale",
+        "optionnel": true,
+        "statutIds": [
+          "Favorable",
+          "Défavorable",
+          "Favorable avec réserves",
+          "Non renseigné",
+        ],
+      },
+      "avisConseilDepartementalEnvironnementRisquesSanitairesTechnologiques": {
+        "id": "avisConseilDepartementalEnvironnementRisquesSanitairesTechnologiques",
+        "nom": "Avis du Conseil Départemental de l'Environnement et des Risques Sanitaires et Technologiques (CODERST)",
+        "optionnel": true,
+        "statutIds": [
+          "Favorable",
+          "Défavorable",
+          "Favorable avec réserves",
+          "Non renseigné",
+        ],
+      },
+      "avisDirectionAlimentationAgricultureForet": {
+        "id": "avisDirectionAlimentationAgricultureForet",
+        "nom": "Avis de la Direction de l'Alimentation de l'Agriculture et de la Forêt (DRAF)",
+        "optionnel": true,
+        "statutIds": [
+          "Favorable",
+          "Défavorable",
+          "Favorable avec réserves",
+          "Non renseigné",
+        ],
+      },
+      "avisDirectionDepartementaleTerritoiresMer": {
+        "id": "avisDirectionDepartementaleTerritoiresMer",
+        "nom": "Avis de la Direction Départementale des Territoires et de la Mer (DDTM)",
+        "optionnel": true,
+        "statutIds": [
+          "Favorable",
+          "Défavorable",
+          "Favorable avec réserves",
+          "Non renseigné",
+        ],
+      },
+      "avisDirectionRegionaleDesAffairesCulturelles": {
+        "id": "avisDirectionRegionaleDesAffairesCulturelles",
+        "nom": "Avis de la Direction Régionale Des Affaires Culturelles (DRAC)",
+        "optionnel": true,
+        "statutIds": [
+          "Favorable",
+          "Défavorable",
+          "Favorable avec réserves",
+          "Non renseigné",
+        ],
+      },
+      "avisDirectionRegionaleFinancesPubliques": {
+        "id": "avisDirectionRegionaleFinancesPubliques",
+        "nom": "Avis de la Direction Regionale Des Finances Publiques",
+        "optionnel": true,
+        "statutIds": [
+          "Favorable",
+          "Défavorable",
+          "Favorable avec réserves",
+          "Non renseigné",
+        ],
+      },
+      "avisDirectionsRégionalesEconomieEmploiTravailSolidarités": {
+        "id": "avisDirectionsRégionalesEconomieEmploiTravailSolidarités",
+        "nom": "Avis de la Direction régionale de l'économie, de l'emploi, du travail et des solidarités",
+        "optionnel": true,
+        "statutIds": [
+          "Favorable",
+          "Défavorable",
+          "Favorable avec réserves",
+          "Non renseigné",
+        ],
+      },
+      "avisEtatMajorOrpaillagePecheIllicite": {
+        "id": "avisEtatMajorOrpaillagePecheIllicite",
+        "nom": "Avis de l'État-major Orpaillage et Pêche Illicite (EMOPI)",
+        "optionnel": true,
+        "statutIds": [
+          "Favorable",
+          "Défavorable",
+          "Favorable avec réserves",
+          "Non renseigné",
+        ],
+      },
+      "avisGendarmerieNationale": {
+        "id": "avisGendarmerieNationale",
+        "nom": "Avis de la Gendarmerie Nationale",
+        "optionnel": true,
+        "statutIds": [
+          "Favorable",
+          "Défavorable",
+          "Favorable avec réserves",
+          "Non renseigné",
+        ],
+      },
+      "avisIFREMER": {
+        "id": "avisIFREMER",
+        "nom": "Avis de l'IFREMER",
+        "optionnel": true,
+        "statutIds": [
+          "Favorable",
+          "Défavorable",
+          "Favorable avec réserves",
+          "Non renseigné",
+        ],
+      },
+      "avisInstitutNationalOrigineQualite": {
+        "id": "avisInstitutNationalOrigineQualite",
+        "nom": "Avis de l'Institut National de l'origine et de la Qualité",
+        "optionnel": true,
+        "statutIds": [
+          "Favorable",
+          "Défavorable",
+          "Favorable avec réserves",
+          "Non renseigné",
+        ],
+      },
+      "avisOfficeNationalDesForets": {
         "id": "avisOfficeNationalDesForets",
         "nom": "Avis de l'Office National des Forêts",
         "optionnel": false,
@@ -1348,154 +1577,7 @@ test('getAvisType', () => {
           "Non renseigné",
         ],
       },
-      {
-        "id": "expertiseOfficeNationalDesForets",
-        "nom": "Expertise de l'Office National des Forêts",
-        "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
-      },
-      {
-        "id": "avisParcNaturelMarin",
-        "nom": "Avis du Parc Naturel Marin",
-        "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
-      },
-      {
-        "id": "avisDirectionAlimentationAgricultureForet",
-        "nom": "Avis de la Direction de l'Alimentation de l'Agriculture et de la Forêt (DRAF)",
-        "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
-      },
-      {
-        "id": "avisEtatMajorOrpaillagePecheIllicite",
-        "nom": "Avis de l'État-major Orpaillage et Pêche Illicite (EMOPI)",
-        "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
-      },
-    ]
-  `)
-  expect(getAvisTypes('asc', 'axm', 'oct', demarcheId, firstEtapeDate, [communeIdValidator.parse('97302')])).toMatchInlineSnapshot(`
-    [
-      {
-        "id": "avisDirectionRegionaleDesAffairesCulturelles",
-        "nom": "Avis de la Direction Régionale Des Affaires Culturelles (DRAC)",
-        "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
-      },
-      {
-        "id": "avisConseilDepartementalEnvironnementRisquesSanitairesTechnologiques",
-        "nom": "Avis du Conseil Départemental de l'Environnement et des Risques Sanitaires et Technologiques (CODERST)",
-        "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
-      },
-      {
-        "id": "avisDirectionsRégionalesEconomieEmploiTravailSolidarités",
-        "nom": "Avis de la Direction régionale de l'économie, de l'emploi, du travail et des solidarités",
-        "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
-      },
-      {
-        "id": "avisDirectionRegionaleFinancesPubliques",
-        "nom": "Avis de la Direction Regionale Des Finances Publiques",
-        "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
-      },
-      {
-        "id": "avisGendarmerieNationale",
-        "nom": "Avis de la Gendarmerie Nationale",
-        "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
-      },
-      {
-        "id": "avisIFREMER",
-        "nom": "Avis de l'IFREMER",
-        "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
-      },
-      {
-        "id": "avisInstitutNationalOrigineQualite",
-        "nom": "Avis de l'Institut National de l'origine et de la Qualité",
-        "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
-      },
-      {
-        "id": "avisServiceAdministratifLocal",
-        "nom": "Avis d'un Service Administratif Local",
-        "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
-      },
-      {
-        "id": "avisAutoriteMilitaire",
-        "nom": "Avis de l'Autorité militaire",
-        "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
-      },
-      {
+      "avisParcNational": {
         "id": "avisParcNational",
         "nom": "Avis du Parc National",
         "optionnel": true,
@@ -1506,73 +1588,7 @@ test('getAvisType', () => {
           "Non renseigné",
         ],
       },
-      {
-        "id": "avisDirectionDepartementaleTerritoiresMer",
-        "nom": "Avis de la Direction Départementale des Territoires et de la Mer (DDTM)",
-        "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
-      },
-      {
-        "id": "avisAgenceRegionaleSante",
-        "nom": "Avis de l'Agence Régionale de Santé (ARS)",
-        "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
-      },
-      {
-        "id": "avisCaisseGeneraleSecuriteSociale",
-        "nom": "Avis de la Caisse Générale de Sécurité Sociale",
-        "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
-      },
-      {
-        "id": "autreAvis",
-        "nom": "Autre avis",
-        "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
-      },
-      {
-        "id": "avisOfficeNationalDesForets",
-        "nom": "Avis de l'Office National des Forêts",
-        "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
-      },
-      {
-        "id": "expertiseOfficeNationalDesForets",
-        "nom": "Expertise de l'Office National des Forêts",
-        "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
-      },
-      {
+      "avisParcNaturelMarin": {
         "id": "avisParcNaturelMarin",
         "nom": "Avis du Parc Naturel Marin",
         "optionnel": true,
@@ -1583,7 +1599,98 @@ test('getAvisType', () => {
           "Non renseigné",
         ],
       },
-      {
+      "avisServiceAdministratifLocal": {
+        "id": "avisServiceAdministratifLocal",
+        "nom": "Avis d'un Service Administratif Local",
+        "optionnel": true,
+        "statutIds": [
+          "Favorable",
+          "Défavorable",
+          "Favorable avec réserves",
+          "Non renseigné",
+        ],
+      },
+      "expertiseOfficeNationalDesForets": {
+        "id": "expertiseOfficeNationalDesForets",
+        "nom": "Expertise de l'Office National des Forêts",
+        "optionnel": true,
+        "statutIds": [
+          "Favorable",
+          "Défavorable",
+          "Favorable avec réserves",
+          "Non renseigné",
+        ],
+      },
+    }
+  `)
+  expect(
+    getAvisTypes(
+      ETAPES_TYPES.avisDesServicesEtCommissionsConsultatives,
+      TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX,
+      DEMARCHES_TYPES_IDS.Octroi,
+      demarcheId,
+      firstEtapeDate,
+      [communeIdValidator.parse('97302')],
+      IS_ARM_MECANISE
+    )
+  ).toMatchInlineSnapshot(`
+    {
+      "autreAvis": {
+        "id": "autreAvis",
+        "nom": "Autre avis",
+        "optionnel": true,
+        "statutIds": [
+          "Favorable",
+          "Défavorable",
+          "Favorable avec réserves",
+          "Non renseigné",
+        ],
+      },
+      "avisAgenceRegionaleSante": {
+        "id": "avisAgenceRegionaleSante",
+        "nom": "Avis de l'Agence Régionale de Santé (ARS)",
+        "optionnel": true,
+        "statutIds": [
+          "Favorable",
+          "Défavorable",
+          "Favorable avec réserves",
+          "Non renseigné",
+        ],
+      },
+      "avisAutoriteMilitaire": {
+        "id": "avisAutoriteMilitaire",
+        "nom": "Avis de l'Autorité militaire",
+        "optionnel": true,
+        "statutIds": [
+          "Favorable",
+          "Défavorable",
+          "Favorable avec réserves",
+          "Non renseigné",
+        ],
+      },
+      "avisCaisseGeneraleSecuriteSociale": {
+        "id": "avisCaisseGeneraleSecuriteSociale",
+        "nom": "Avis de la Caisse Générale de Sécurité Sociale",
+        "optionnel": true,
+        "statutIds": [
+          "Favorable",
+          "Défavorable",
+          "Favorable avec réserves",
+          "Non renseigné",
+        ],
+      },
+      "avisConseilDepartementalEnvironnementRisquesSanitairesTechnologiques": {
+        "id": "avisConseilDepartementalEnvironnementRisquesSanitairesTechnologiques",
+        "nom": "Avis du Conseil Départemental de l'Environnement et des Risques Sanitaires et Technologiques (CODERST)",
+        "optionnel": true,
+        "statutIds": [
+          "Favorable",
+          "Défavorable",
+          "Favorable avec réserves",
+          "Non renseigné",
+        ],
+      },
+      "avisDirectionAlimentationAgricultureForet": {
         "id": "avisDirectionAlimentationAgricultureForet",
         "nom": "Avis de la Direction de l'Alimentation de l'Agriculture et de la Forêt (DRAF)",
         "optionnel": true,
@@ -1594,7 +1701,51 @@ test('getAvisType', () => {
           "Non renseigné",
         ],
       },
-      {
+      "avisDirectionDepartementaleTerritoiresMer": {
+        "id": "avisDirectionDepartementaleTerritoiresMer",
+        "nom": "Avis de la Direction Départementale des Territoires et de la Mer (DDTM)",
+        "optionnel": true,
+        "statutIds": [
+          "Favorable",
+          "Défavorable",
+          "Favorable avec réserves",
+          "Non renseigné",
+        ],
+      },
+      "avisDirectionRegionaleDesAffairesCulturelles": {
+        "id": "avisDirectionRegionaleDesAffairesCulturelles",
+        "nom": "Avis de la Direction Régionale Des Affaires Culturelles (DRAC)",
+        "optionnel": true,
+        "statutIds": [
+          "Favorable",
+          "Défavorable",
+          "Favorable avec réserves",
+          "Non renseigné",
+        ],
+      },
+      "avisDirectionRegionaleFinancesPubliques": {
+        "id": "avisDirectionRegionaleFinancesPubliques",
+        "nom": "Avis de la Direction Regionale Des Finances Publiques",
+        "optionnel": true,
+        "statutIds": [
+          "Favorable",
+          "Défavorable",
+          "Favorable avec réserves",
+          "Non renseigné",
+        ],
+      },
+      "avisDirectionsRégionalesEconomieEmploiTravailSolidarités": {
+        "id": "avisDirectionsRégionalesEconomieEmploiTravailSolidarités",
+        "nom": "Avis de la Direction régionale de l'économie, de l'emploi, du travail et des solidarités",
+        "optionnel": true,
+        "statutIds": [
+          "Favorable",
+          "Défavorable",
+          "Favorable avec réserves",
+          "Non renseigné",
+        ],
+      },
+      "avisEtatMajorOrpaillagePecheIllicite": {
         "id": "avisEtatMajorOrpaillagePecheIllicite",
         "nom": "Avis de l'État-major Orpaillage et Pêche Illicite (EMOPI)",
         "optionnel": true,
@@ -1605,7 +1756,84 @@ test('getAvisType', () => {
           "Non renseigné",
         ],
       },
-      {
+      "avisGendarmerieNationale": {
+        "id": "avisGendarmerieNationale",
+        "nom": "Avis de la Gendarmerie Nationale",
+        "optionnel": true,
+        "statutIds": [
+          "Favorable",
+          "Défavorable",
+          "Favorable avec réserves",
+          "Non renseigné",
+        ],
+      },
+      "avisIFREMER": {
+        "id": "avisIFREMER",
+        "nom": "Avis de l'IFREMER",
+        "optionnel": true,
+        "statutIds": [
+          "Favorable",
+          "Défavorable",
+          "Favorable avec réserves",
+          "Non renseigné",
+        ],
+      },
+      "avisInstitutNationalOrigineQualite": {
+        "id": "avisInstitutNationalOrigineQualite",
+        "nom": "Avis de l'Institut National de l'origine et de la Qualité",
+        "optionnel": true,
+        "statutIds": [
+          "Favorable",
+          "Défavorable",
+          "Favorable avec réserves",
+          "Non renseigné",
+        ],
+      },
+      "avisOfficeNationalDesForets": {
+        "id": "avisOfficeNationalDesForets",
+        "nom": "Avis de l'Office National des Forêts",
+        "optionnel": true,
+        "statutIds": [
+          "Favorable",
+          "Défavorable",
+          "Favorable avec réserves",
+          "Non renseigné",
+        ],
+      },
+      "avisParcNational": {
+        "id": "avisParcNational",
+        "nom": "Avis du Parc National",
+        "optionnel": true,
+        "statutIds": [
+          "Favorable",
+          "Défavorable",
+          "Favorable avec réserves",
+          "Non renseigné",
+        ],
+      },
+      "avisParcNaturelMarin": {
+        "id": "avisParcNaturelMarin",
+        "nom": "Avis du Parc Naturel Marin",
+        "optionnel": true,
+        "statutIds": [
+          "Favorable",
+          "Défavorable",
+          "Favorable avec réserves",
+          "Non renseigné",
+        ],
+      },
+      "avisServiceAdministratifLocal": {
+        "id": "avisServiceAdministratifLocal",
+        "nom": "Avis d'un Service Administratif Local",
+        "optionnel": true,
+        "statutIds": [
+          "Favorable",
+          "Défavorable",
+          "Favorable avec réserves",
+          "Non renseigné",
+        ],
+      },
+      "confirmationAccordProprietaireDuSol": {
         "id": "confirmationAccordProprietaireDuSol",
         "nom": "Confirmation de l'accord du propriétaire du sol",
         "optionnel": true,
@@ -1616,11 +1844,32 @@ test('getAvisType', () => {
           "Non renseigné",
         ],
       },
-    ]
+      "expertiseOfficeNationalDesForets": {
+        "id": "expertiseOfficeNationalDesForets",
+        "nom": "Expertise de l'Office National des Forêts",
+        "optionnel": true,
+        "statutIds": [
+          "Favorable",
+          "Défavorable",
+          "Favorable avec réserves",
+          "Non renseigné",
+        ],
+      },
+    }
   `)
-  expect(getAvisTypes('cac', 'prw', 'oct', demarcheId, firstEtapeDate, [])).toMatchInlineSnapshot(`
-    [
-      {
+  expect(
+    getAvisTypes(
+      ETAPES_TYPES.consultationDesAdministrationsCentrales,
+      TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_GRANULATS_MARINS,
+      DEMARCHES_TYPES_IDS.Octroi,
+      demarcheId,
+      firstEtapeDate,
+      [],
+      IS_ARM_MECANISE
+    )
+  ).toMatchInlineSnapshot(`
+    {
+      "autreAvis": {
         "id": "autreAvis",
         "nom": "Autre avis",
         "optionnel": true,
@@ -1631,16 +1880,68 @@ test('getAvisType', () => {
           "Non renseigné",
         ],
       },
-    ]
+    }
   `)
 })
 
 test('etapeAvisStepIsVisible', () => {
-  expect(etapeAvisStepIsVisible({ typeId: 'mfr' }, 'arm', 'oct', demarcheId, firstEtapeDate, [])).toBe(false)
-  expect(etapeAvisStepIsVisible({ typeId: 'asc' }, 'arm', 'oct', demarcheId, firstEtapeDate, [])).toBe(true)
+  expect(etapeAvisStepIsVisible({ typeId: ETAPES_TYPES.demande, contenu: {} }, TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX, DEMARCHES_TYPES_IDS.Octroi, demarcheId, firstEtapeDate, [])).toBe(
+    false
+  )
+  expect(
+    etapeAvisStepIsVisible(
+      { typeId: ETAPES_TYPES.avisDesServicesEtCommissionsConsultatives, contenu: {} },
+      TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX,
+      DEMARCHES_TYPES_IDS.Octroi,
+      demarcheId,
+      firstEtapeDate,
+      []
+    )
+  ).toBe(true)
 })
 
 test('etapeAvisStepIsComplete', () => {
-  expect(etapeAvisStepIsComplete({ typeId: ETAPES_TYPES.avisDesServicesEtCommissionsConsultatives }, [{ avis_type_id: 'autreAvis' }], 'arm', 'oct', demarcheId, firstEtapeDate, []).valid).toBe(false)
-  expect(etapeAvisStepIsComplete({ typeId: ETAPES_TYPES.avisDesCollectivites }, [{ avis_type_id: 'autreAvis' }], 'arm', 'oct', demarcheId, firstEtapeDate, []).valid).toBe(true)
+  expect(
+    etapeAvisStepIsComplete(
+      { typeId: ETAPES_TYPES.avisDesServicesEtCommissionsConsultatives, contenu: {} },
+      [{ avis_type_id: 'autreAvis' }],
+      TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX,
+      DEMARCHES_TYPES_IDS.Octroi,
+      demarcheId,
+      firstEtapeDate,
+      []
+    ).valid
+  ).toBe(false)
+  expect(
+    etapeAvisStepIsComplete(
+      { typeId: ETAPES_TYPES.avisDesCollectivites, contenu: {} },
+      [{ avis_type_id: 'autreAvis' }],
+      TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX,
+      DEMARCHES_TYPES_IDS.Octroi,
+      demarcheId,
+      firstEtapeDate,
+      []
+    ).valid
+  ).toBe(true)
+})
+
+describe('isArmMecanise', () => {
+  test('retourne false pour un flattened contenu vide', () => {
+    expect(isArmMecanise({})).toBe(IS_ARM_NON_MECANISE)
+  })
+  test('retourne false pour une ARM non mécanisée (flattened contenu)', () => {
+    expect(isArmMecanise({ arm: { mecanise: { value: false, heritee: false, etapeHeritee: null } } })).toBe(IS_ARM_NON_MECANISE)
+  })
+  test('retourne true pour une ARM mécanisée (flattened contenu)', () => {
+    expect(isArmMecanise({ arm: { mecanise: { value: true, heritee: false, etapeHeritee: null } } })).toBe(IS_ARM_MECANISE)
+  })
+  test('retourne false pour des sections with value vides', () => {
+    expect(isArmMecanise([])).toBe(IS_ARM_NON_MECANISE)
+  })
+  test('retourne false pour une ARM non mécanisée (sections with value)', () => {
+    expect(isArmMecanise([{ id: 'arm', elements: [{ id: 'mecanise', type: 'checkbox', optionnel: false, value: false }] }])).toBe(IS_ARM_NON_MECANISE)
+  })
+  test('retourne true pour une ARM mécanisée (sections with value)', () => {
+    expect(isArmMecanise([{ id: 'arm', elements: [{ id: 'mecanise', type: 'checkbox', optionnel: false, value: true }] }])).toBe(IS_ARM_MECANISE)
+  })
 })

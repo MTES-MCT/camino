@@ -1,5 +1,5 @@
 import { EntrepriseDocumentId, EntrepriseId } from '../entreprise'
-import { FlattenEtape } from '../etape-form'
+import { FlattenedContenu, FlattenEtape } from '../etape-form'
 import { EtapeAvis, EtapeDocument, TempEtapeAvis, TempEtapeDocument } from '../etape'
 import { User, isAdministrationAdmin, isAdministrationEditeur, isSuper } from '../roles'
 import { AvisTypeId, AvisTypes } from '../static/avisTypes'
@@ -21,6 +21,8 @@ import { canEditAmodiataires, canEditDuree, canEditPerimetre, canEditTitulaires 
 import { machineIdFind } from '../machines'
 import { DemarcheId } from '../demarche'
 import { FirstEtapeDate } from '../date'
+import { z } from 'zod'
+import { SectionWithValue } from '../sections'
 
 type ValidReturn = { valid: true } | { valid: false; errors: NonEmptyArray<string> }
 
@@ -135,13 +137,19 @@ export const perimetreStepIsComplete = (etape: Pick<FlattenEtape, 'typeId' | 'pe
   return { valid: true }
 }
 
+const isArmMecaniseValidator = z.boolean().brand('ARM_MECANISE')
+type IsArmMecanise = z.infer<typeof isArmMecaniseValidator>
+
+export const IS_ARM_MECANISE = true as const as IsArmMecanise
+export const IS_ARM_NON_MECANISE = false as const as IsArmMecanise
+
 export const getDocumentsTypes = (
   etape: Pick<FlattenEtape, 'typeId'>,
   demarcheTypeId: DemarcheTypeId,
   titreTypeId: TitreTypeId,
   demarcheId: DemarcheId,
   sdomZoneIds: SDOMZoneId[],
-  isArmMecanise: boolean,
+  isArmMecanise: IsArmMecanise,
   firstEtapeDate: FirstEtapeDate
 ): (DocumentType | AutreDocumentType)[] => {
   const dts = getDocuments(titreTypeId, demarcheTypeId, etape.typeId)
@@ -160,9 +168,9 @@ export const getDocumentsTypes = (
     }
   }
   // si la démarche est mécanisée il faut ajouter des documents obligatoires
-  if (isArmMecanise) {
+  if (isArmMecanise === IS_ARM_MECANISE) {
     for (const documentType of dts) {
-      if ([DOCUMENTS_TYPES_IDS.dossierLoiSurLEau, DOCUMENTS_TYPES_IDS.decisionCasParCas].includes(documentType.id)) {
+      if ([DOCUMENTS_TYPES_IDS.dossierLoiSurLEau, machineId !== 'ProcedureSpecifique' ? DOCUMENTS_TYPES_IDS.decisionCasParCas : null].includes(documentType.id)) {
         documentType.optionnel = false
       }
     }
@@ -186,55 +194,56 @@ export const getAvisTypes = (
   demarcheTypeId: DemarcheTypeId,
   demarcheId: DemarcheId,
   firstEtapeDate: FirstEtapeDate,
-  communeIds: CommuneId[]
-): { id: AvisTypeId; optionnel: boolean }[] => {
-  const avis: { id: AvisTypeId; optionnel: boolean }[] = []
-  if (etapeTypeId === ETAPES_TYPES.demande && titreTypeId === TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX) {
-    avis.push({ ...AvisTypes.avisProprietaireDuSol, optionnel: false }, { ...AvisTypes.avisDeLaMissionAutoriteEnvironnementale, optionnel: false })
+  communeIds: CommuneId[],
+  isArmMecanise: IsArmMecanise
+): { [key in AvisTypeId]?: { id: key; optionnel: boolean } } => {
+  const avis: { [key in AvisTypeId]?: { id: key; optionnel: boolean } } = {}
+  const machineId = machineIdFind(titreTypeId, demarcheTypeId, demarcheId, firstEtapeDate)
+
+  if (etapeTypeId === ETAPES_TYPES.demande) {
+    if (titreTypeId === TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX) {
+      avis[AvisTypes.avisProprietaireDuSol.id] = { ...AvisTypes.avisProprietaireDuSol, optionnel: false }
+      avis[AvisTypes.avisDeLaMissionAutoriteEnvironnementale.id] = { ...AvisTypes.avisDeLaMissionAutoriteEnvironnementale, optionnel: false }
+    } else if (titreTypeId === TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX && machineId === 'ProcedureSpecifique') {
+      avis[AvisTypes.avisCasParCas.id] = { ...AvisTypes.avisCasParCas, optionnel: isArmMecanise === IS_ARM_NON_MECANISE }
+      avis[AvisTypes.avisProprietaireDuSol.id] = { ...AvisTypes.avisProprietaireDuSol, optionnel: false }
+    }
   }
+
   if (etapeTypeId === ETAPES_TYPES.avisDesCollectivites) {
-    avis.push({ ...AvisTypes.avisDUneCollectivite, optionnel: true })
+    avis[AvisTypes.avisDUneCollectivite.id] = { ...AvisTypes.avisDUneCollectivite, optionnel: true }
   } else if (etapeTypeId === ETAPES_TYPES.avisDesServicesEtCommissionsConsultatives) {
-    const machineId = machineIdFind(titreTypeId, demarcheTypeId, demarcheId, firstEtapeDate)
-    avis.push(
-      ...[
-        { ...AvisTypes.avisDirectionRegionaleDesAffairesCulturelles, optionnel: true },
-        { ...AvisTypes.avisConseilDepartementalEnvironnementRisquesSanitairesTechnologiques, optionnel: true },
-        { ...AvisTypes.avisDirectionsRégionalesEconomieEmploiTravailSolidarités, optionnel: true },
-        { ...AvisTypes.avisDirectionRegionaleFinancesPubliques, optionnel: true },
-        { ...AvisTypes.avisGendarmerieNationale, optionnel: true },
-        { ...AvisTypes.avisIFREMER, optionnel: true },
-        { ...AvisTypes.avisInstitutNationalOrigineQualite, optionnel: true },
-        { ...AvisTypes.avisServiceAdministratifLocal, optionnel: true },
-        { ...AvisTypes.avisAutoriteMilitaire, optionnel: true },
-        { ...AvisTypes.avisParcNational, optionnel: true },
-        { ...AvisTypes.avisDirectionDepartementaleTerritoiresMer, optionnel: true },
-        { ...AvisTypes.avisAgenceRegionaleSante, optionnel: true },
-        { ...AvisTypes.avisCaisseGeneraleSecuriteSociale, optionnel: true },
-        { ...AvisTypes.autreAvis, optionnel: true },
-        // L'avis de l'onf est obligatoire que pour les ARM
-        { ...AvisTypes.avisOfficeNationalDesForets, optionnel: machineId === 'ProcedureSpecifique' || titreTypeId !== 'arm' },
-        { ...AvisTypes.expertiseOfficeNationalDesForets, optionnel: true },
-        // TODO 2024-05-14: rendre obligatoire pour les PNMs quand ces derniers seront implémentés
-        { ...AvisTypes.avisParcNaturelMarin, optionnel: true },
-      ]
-    )
+    avis[AvisTypes.avisDirectionRegionaleDesAffairesCulturelles.id] = { ...AvisTypes.avisDirectionRegionaleDesAffairesCulturelles, optionnel: true }
+    avis[AvisTypes.avisConseilDepartementalEnvironnementRisquesSanitairesTechnologiques.id] = { ...AvisTypes.avisConseilDepartementalEnvironnementRisquesSanitairesTechnologiques, optionnel: true }
+    avis[AvisTypes.avisDirectionsRégionalesEconomieEmploiTravailSolidarités.id] = { ...AvisTypes.avisDirectionsRégionalesEconomieEmploiTravailSolidarités, optionnel: true }
+    avis[AvisTypes.avisDirectionRegionaleFinancesPubliques.id] = { ...AvisTypes.avisDirectionRegionaleFinancesPubliques, optionnel: true }
+    avis[AvisTypes.avisGendarmerieNationale.id] = { ...AvisTypes.avisGendarmerieNationale, optionnel: true }
+    avis[AvisTypes.avisIFREMER.id] = { ...AvisTypes.avisIFREMER, optionnel: true }
+    avis[AvisTypes.avisInstitutNationalOrigineQualite.id] = { ...AvisTypes.avisInstitutNationalOrigineQualite, optionnel: true }
+    avis[AvisTypes.avisServiceAdministratifLocal.id] = { ...AvisTypes.avisServiceAdministratifLocal, optionnel: true }
+    avis[AvisTypes.avisAutoriteMilitaire.id] = { ...AvisTypes.avisAutoriteMilitaire, optionnel: true }
+    avis[AvisTypes.avisParcNational.id] = { ...AvisTypes.avisParcNational, optionnel: true }
+    avis[AvisTypes.avisDirectionDepartementaleTerritoiresMer.id] = { ...AvisTypes.avisDirectionDepartementaleTerritoiresMer, optionnel: true }
+    avis[AvisTypes.avisAgenceRegionaleSante.id] = { ...AvisTypes.avisAgenceRegionaleSante, optionnel: true }
+    avis[AvisTypes.avisCaisseGeneraleSecuriteSociale.id] = { ...AvisTypes.avisCaisseGeneraleSecuriteSociale, optionnel: true }
+    avis[AvisTypes.autreAvis.id] = { ...AvisTypes.autreAvis, optionnel: true }
+    // L'avis de l'onf est obligatoire que pour les ARM
+    avis[AvisTypes.avisOfficeNationalDesForets.id] = { ...AvisTypes.avisOfficeNationalDesForets, optionnel: machineId === 'ProcedureSpecifique' || titreTypeId !== 'arm' }
+    avis[AvisTypes.expertiseOfficeNationalDesForets.id] = { ...AvisTypes.expertiseOfficeNationalDesForets, optionnel: true }
+    // TODO 2024-05-14: rendre obligatoire pour les PNMs quand ces derniers seront implémentés
+    avis[AvisTypes.avisParcNaturelMarin.id] = { ...AvisTypes.avisParcNaturelMarin, optionnel: true }
 
     if (communeIds.some(id => toDepartementId(id) === DEPARTEMENT_IDS.Guyane)) {
-      avis.push(
-        ...[
-          { ...AvisTypes.avisDirectionAlimentationAgricultureForet, optionnel: true },
-          { ...AvisTypes.avisEtatMajorOrpaillagePecheIllicite, optionnel: true },
-        ]
-      )
+      avis[AvisTypes.avisDirectionAlimentationAgricultureForet.id] = { ...AvisTypes.avisDirectionAlimentationAgricultureForet, optionnel: true }
+      avis[AvisTypes.avisEtatMajorOrpaillagePecheIllicite.id] = { ...AvisTypes.avisEtatMajorOrpaillagePecheIllicite, optionnel: true }
     }
 
     // TODO 2024-06-18 Normalement c'est obligatoire si avis propriétaire du sol est favorable avec réserve,  optionnel pour le moment
     if (TitresTypes[titreTypeId].typeId === TITRES_TYPES_TYPES_IDS.AUTORISATION_D_EXPLOITATION) {
-      avis.push({ ...AvisTypes.confirmationAccordProprietaireDuSol, optionnel: true })
+      avis[AvisTypes.confirmationAccordProprietaireDuSol.id] = { ...AvisTypes.confirmationAccordProprietaireDuSol, optionnel: true }
     }
   } else if (etapeTypeId === ETAPES_TYPES.consultationDesAdministrationsCentrales) {
-    avis.push({ ...AvisTypes.autreAvis, optionnel: true })
+    avis[AvisTypes.autreAvis.id] = { ...AvisTypes.autreAvis, optionnel: true }
   }
 
   return avis
@@ -242,6 +251,17 @@ export const getAvisTypes = (
 
 export const etapeDocumentsStepIsVisible = (): boolean => {
   return true // il y'a forcément au moins le document "Autre" que l'on peut saisir, donc si on a le droit d'éditer une étape, on peut voir les documents dans la page d'édition d'une étape
+}
+
+export const isArmMecanise = (contenu: FlattenedContenu | SectionWithValue[]): IsArmMecanise => {
+  let result: boolean = false
+  if (Array.isArray(contenu)) {
+    result = contenu.some(({ id, elements }) => id === 'arm' && elements.some(({ id: idElement, value }) => idElement === 'mecanise' && value === true))
+  } else {
+    result = contenu['arm']?.['mecanise']?.value === true
+  }
+
+  return isArmMecaniseValidator.parse(result)
 }
 
 export const etapeDocumentsStepIsComplete = (
@@ -254,7 +274,7 @@ export const etapeDocumentsStepIsComplete = (
   firstEtapeDate: FirstEtapeDate
 ): ValidReturn => {
   const errors: string[] = []
-  const documentTypes = getDocumentsTypes({ typeId: etape.typeId }, demarcheTypeId, titreTypeId, demarcheId, sdomZoneIds, etape.contenu['arm']?.['mecanise']?.value === true, firstEtapeDate)
+  const documentTypes = getDocumentsTypes({ typeId: etape.typeId }, demarcheTypeId, titreTypeId, demarcheId, sdomZoneIds, isArmMecanise(etape.contenu), firstEtapeDate)
 
   errors.push(
     ...documentTypes
@@ -270,18 +290,18 @@ export const etapeDocumentsStepIsComplete = (
 }
 
 export const etapeAvisStepIsVisible = (
-  etape: Pick<FlattenEtape, 'typeId'>,
+  etape: Pick<FlattenEtape, 'typeId' | 'contenu'>,
   titreTypeId: TitreTypeId,
   demarcheTypeId: DemarcheTypeId,
   demarcheId: DemarcheId,
   firstEtapeDate: FirstEtapeDate,
   communeIds: CommuneId[]
 ): boolean => {
-  return getAvisTypes(etape.typeId, titreTypeId, demarcheTypeId, demarcheId, firstEtapeDate, communeIds).length > 0
+  return Object.keys(getAvisTypes(etape.typeId, titreTypeId, demarcheTypeId, demarcheId, firstEtapeDate, communeIds, isArmMecanise(etape.contenu))).length > 0
 }
 
 export const etapeAvisStepIsComplete = (
-  etape: Pick<FlattenEtape, 'typeId'>,
+  etape: Pick<FlattenEtape, 'typeId' | 'contenu'>,
   etapeAvis: Pick<EtapeAvis | TempEtapeAvis, 'avis_type_id'>[],
   titreTypeId: TitreTypeId,
   demarcheTypeId: DemarcheTypeId,
@@ -293,8 +313,8 @@ export const etapeAvisStepIsComplete = (
     return { valid: true }
   }
 
-  const avisTypes = getAvisTypes(etape.typeId, titreTypeId, demarcheTypeId, demarcheId, firstEtapeDate, communeIds)
-  if (avisTypes.some(avisType => !avisType.optionnel && etapeAvis.every(avis => avis.avis_type_id !== avisType.id))) {
+  const avisTypes = getAvisTypes(etape.typeId, titreTypeId, demarcheTypeId, demarcheId, firstEtapeDate, communeIds, isArmMecanise(etape.contenu))
+  if (Object.values(avisTypes).some(avisType => !avisType.optionnel && etapeAvis.every(avis => avis.avis_type_id !== avisType.id))) {
     return { valid: false, errors: ['Il manque des avis obligatoires'] }
   }
 
