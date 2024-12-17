@@ -11,7 +11,7 @@ const apiUrl = '/apiUrl'
 const cache = new Cache()
 const loading = new Loading()
 
-const errorThrow = e => {
+const errorThrow = (e: any) => {
   if (e.message === 'aborted' || e.message === 'Fetch error.' || e.message === 'Response JSON parse error.') throw new Error('aborted')
 
   let message = e.message
@@ -21,7 +21,7 @@ const errorThrow = e => {
   throw new Error(message)
 }
 
-const graphQLCall = async (url, query, variables, cacheKey = query.definitions[0].name.value) => {
+const graphQLCall = async (url: string, query: any, variables: any, cacheKey: string = query.definitions[0].name.value) => {
   const abortController = new AbortController()
   const fetchOptions = fetchOptionsGraphQL({
     query: print(query),
@@ -57,16 +57,20 @@ const graphQLCall = async (url, query, variables, cacheKey = query.definitions[0
 
   return dataContent
 }
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export const apiGraphQLFetch = (query, cacheKey) => async variables => {
-  try {
-    return await graphQLCall(apiUrl, query, variables, cacheKey)
-  } catch (e) {
-    if (e.status === HTTP_STATUS.UNAUTHORIZED || e.message === `HTTP ${HTTP_STATUS.UNAUTHORIZED} status.`) {
-      // si la session est expirée on doit réauthentifier l’utilisateur
-      window.location.replace('/oauth2/sign_in?rd=' + encodeURIComponent(window.location.href))
-    } else {
-      errorThrow(e)
+
+export const apiGraphQLFetch =
+  // eslint-disable-next-line
+  (query: any, cacheKey?: any) =>
+    // eslint-disable-next-line
+    async (variables?: any): Promise<any> => {
+      try {
+        return await graphQLCall(apiUrl, query, variables, cacheKey)
+      } catch (e: any) {
+        if (e.status === HTTP_STATUS.UNAUTHORIZED || e.message === `HTTP ${HTTP_STATUS.UNAUTHORIZED} status.`) {
+          // si la session est expirée on doit réauthentifier l’utilisateur
+          window.location.replace('/oauth2/sign_in?rd=' + encodeURIComponent(window.location.href))
+        } else {
+          errorThrow(e)
+        }
+      }
     }
-  }
-}

@@ -99,6 +99,7 @@ export interface TitreApiClient {
     perimetre?: [number, number, number, number]
   }) => Promise<{ elements: TitreWithPerimetre[]; total: number }>
   titresRechercherByNom: (nom: string) => Promise<{ elements: TitreForTitresRerchercherByNom[] }>
+  titresRechercherByReferences: (params: { intervalle: number; references: string }) => Promise<{ elements: TitreForTitresRerchercherByNom[] }>
   getTitresByIds: (titreIds: TitreId[], cacheKey: string) => Promise<{ elements: Pick<TitreForTable, 'id' | 'nom'>[] }>
   createTitre: (titreDemande: TitreDemande) => Promise<CaminoError<string> | TitreDemandeOutput>
 }
@@ -275,6 +276,23 @@ export const titreApiClient: TitreApiClient = {
       }
     `)(params)
 
+    return result
+  },
+  titresRechercherByReferences: async ({ intervalle, references }) => {
+    const result = apiGraphQLFetch(
+      gql`
+        query Titres($intervalle: Int, $references: String) {
+          titres(intervalle: $intervalle, references: $references) {
+            elements {
+              id
+              nom
+              typeId
+            }
+          }
+        }
+      `,
+      'titresRechercherByReferences'
+    )({ intervalle, references })
     return result
   },
   titresRechercherByNom: async noms => {

@@ -1,7 +1,6 @@
 import { Domaine } from '@/components/_common/domaine'
 import { TitresTypesTypes } from 'camino-common/src/static/titresTypesTypes'
 import { getDomaineId, getTitreTypeType } from 'camino-common/src/static/titresTypes'
-import { titresRechercherByReferences } from '@/api/titres'
 import { createDebounce } from '@/utils/debounce'
 import { useRouter } from 'vue-router'
 import { ref, FunctionalComponent, defineComponent } from 'vue'
@@ -21,7 +20,7 @@ export const QuickAccessTitre = defineComponent<{ id: string; onSelectTitre: () 
     let searchTitres = await titreApiClient.titresRechercherByNom(searchTerm)
 
     if (searchTitres.elements.length === 0) {
-      searchTitres = await titresRechercherByReferences({
+      searchTitres = await titreApiClient.titresRechercherByReferences({
         intervalle,
         references: searchTerm,
       })

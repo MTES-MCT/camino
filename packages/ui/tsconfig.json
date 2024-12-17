@@ -31,7 +31,7 @@
         "./src/*"
       ]
     },
-    "allowJs": true
+    "allowJs": false
   },
   "exclude": ["node_modules", "**/node_modules/*", "dist"],
   "include": ["./src/**/*", "../common/src/**/*"],
