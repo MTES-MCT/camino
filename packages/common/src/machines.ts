@@ -155,6 +155,10 @@ export const demarchesDefinitions = [
   },
 ] as const satisfies readonly DemarcheDefinition[]
 
+export const isDemarcheIdException = (id: DemarcheId): boolean => {
+  return demarchesDefinitions.some(definitions => isNotNullNorUndefinedNorEmpty(definitions.demarcheIdExceptions) && definitions.demarcheIdExceptions.includes(id))
+}
+
 export const machineIdFind = (titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId, demarcheId: DemarcheId, date: FirstEtapeDate): CaminoMachineId | undefined => {
   const definition = toSorted(demarchesDefinitions, (a, b) => b.dateDebut.localeCompare(a.dateDebut)).find(
     d => (isNullOrUndefinedOrEmpty(date) || d.dateDebut <= date) && d.titreTypeIds.includes(titreTypeId) && d.demarcheTypeIds.includes(demarcheTypeId)

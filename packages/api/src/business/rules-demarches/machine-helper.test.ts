@@ -2,7 +2,63 @@ import { toCaminoDate } from 'camino-common/src/date'
 import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations'
 import { ArmOctMachine } from './arm/oct.machine'
 import { describe, expect, test } from 'vitest'
-const armOctMachine = new ArmOctMachine()
+import { TITRES_TYPES_IDS } from 'camino-common/src/static/titresTypes'
+import { DEMARCHES_TYPES_IDS } from 'camino-common/src/static/demarchesTypes'
+import { getPhase } from './machine-helper'
+import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts'
+const armOctMachine = new ArmOctMachine(TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX, DEMARCHES_TYPES_IDS.Octroi)
+describe('getPhase', () => {
+  test('ne retourne pas de phase en démarche sans phase', () => {
+    expect(getPhase({ demarcheStatut: DemarchesStatutsIds.Accepte, publique: true, demarcheTypeId: DEMARCHES_TYPES_IDS.DeclarationDOuvertureDeTravaux })).toStrictEqual(null)
+    expect(getPhase({ demarcheStatut: DemarchesStatutsIds.Accepte, publique: true, demarcheTypeId: DEMARCHES_TYPES_IDS.Retrait, demarcheDateEffet: toCaminoDate('2024-01-01') })).toStrictEqual(null)
+  })
+
+  test("retourne null si il n'y a ni date début, ni date fin", () => {
+    expect(
+      getPhase({
+        demarcheStatut: DemarchesStatutsIds.Accepte,
+        publique: true,
+        demarcheTypeId: DEMARCHES_TYPES_IDS.Octroi,
+        demarcheDateDebut: { dateDebut: null, dateEtape: null },
+        demarcheDateFin: { dateFin: null, duree: null },
+      })
+    ).toStrictEqual(null)
+  })
+
+  test('retourne les bonnes dates', () => {
+    expect(
+      getPhase({
+        demarcheStatut: DemarchesStatutsIds.Accepte,
+        publique: true,
+        demarcheTypeId: DEMARCHES_TYPES_IDS.Octroi,
+        demarcheDateDebut: { dateDebut: toCaminoDate('2024-01-01'), dateEtape: null },
+        demarcheDateFin: { dateFin: toCaminoDate('2025-01-12'), duree: null },
+      })
+    ).toMatchInlineSnapshot(`
+      {
+        "debut": "2024-01-01",
+        "fin": "2025-01-12",
+      }
+    `)
+  })
+
+  test('la date de fin est calculée à partir de la durée', () => {
+    expect(
+      getPhase({
+        demarcheStatut: DemarchesStatutsIds.Accepte,
+        publique: true,
+        demarcheTypeId: DEMARCHES_TYPES_IDS.Octroi,
+        demarcheDateDebut: { dateDebut: toCaminoDate('2024-01-01'), dateEtape: null },
+        demarcheDateFin: { dateFin: null, duree: 12 },
+      })
+    ).toMatchInlineSnapshot(`
+      {
+        "debut": "2024-01-01",
+        "fin": "2025-01-01",
+      }
+    `)
+  })
+})
 describe('isEtapesOk', () => {
   // On n'est pas certain de notre base de données, si ça impacte les perf,
   test('refuse si les étapes ne sont pas temporellement dans le bon ordre', () => {
@@ -275,10 +331,17 @@ describe('demarcheStatut', () => {
           date: toCaminoDate('2022-04-26'),
           etapeTypeId: 'sco',
           etapeStatutId: 'fai',
+          dateFin: toCaminoDate('2023-01-01'),
           contenu: { arm: { mecanise: true } },
         },
       ])
-    ).toStrictEqual({ demarcheStatut: 'acc', publique: true })
+    ).toStrictEqual({
+      demarcheStatut: 'acc',
+      publique: true,
+      demarcheTypeId: DEMARCHES_TYPES_IDS.Octroi,
+      demarcheDateDebut: { dateDebut: null, dateEtape: '2022-04-26' },
+      demarcheDateFin: { dateFin: '2023-01-01', duree: null },
+    })
   })
 })
 describe('whoIsBlocking', () => {

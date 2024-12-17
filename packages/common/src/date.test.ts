@@ -15,6 +15,7 @@ import {
   intervalleAnnees,
   caminoDateValidator,
   CaminoDate,
+  getDay,
 } from './date'
 import { test, expect } from 'vitest'
 
@@ -45,6 +46,12 @@ test('isAnnee', () => {
   expect(isAnnee('toto')).toBe(false)
   expect(isAnnee('12')).toBe(false)
   expect(isAnnee('20220')).toBe(false)
+})
+test('getDay', () => {
+  expect(getDay(toCaminoDate('2022-01-01'))).toBe(1)
+  expect(getDay(toCaminoDate('1812-12-26'))).toBe(26)
+  expect(getDay(toCaminoDate('2025-01-15'))).toBe(15)
+  expect(getDay(toCaminoDate('2024-12-31'))).toBe(31)
 })
 
 test('toCaminoAnnee', () => {
@@ -116,14 +123,16 @@ test("ajoute une date qui n'en est pas une", () => {
 })
 
 test.each([
-  ['2020-01-01', 1, '2020-02-01'],
-  ['2020-01-01', 12, '2021-01-01'],
-  ['2020-01-01', 3, '2020-04-01'],
-  ['2020-01-30', 3, '2020-04-30'],
-  ['2020-01-31', 3, '2020-05-01'],
-  ['2020-12-01', 3, '2021-03-01'],
-])('ajoute $months mois à la date $date', (date, months, result) => {
-  expect(dateAddMonths(toCaminoDate(date), months)).toBe(result)
+  { date: '2020-01-01', months: 1, expected: '2020-02-01' },
+  { date: '2020-01-01', months: 12, expected: '2021-01-01' },
+  { date: '2020-01-01', months: 3, expected: '2020-04-01' },
+  { date: '2020-01-30', months: 3, expected: '2020-04-30' },
+  { date: '2020-01-31', months: 3, expected: '2020-05-01' },
+  { date: '2020-12-01', months: 3, expected: '2021-03-01' },
+  { date: '2024-01-31', months: 1, expected: '2024-03-02' },
+  { date: '2029-01-31', months: 1, expected: '2029-03-03' },
+])('ajoute $months mois à la date $date, attendu $expected', ({ date, months, expected }) => {
+  expect(dateAddMonths(toCaminoDate(date), months)).toBe(expected)
 })
 
 test("la méthode dateAddMonths n'est pas idempotente", () => {
@@ -142,4 +151,6 @@ test('isBefore', () => {
   expect(isBefore(toCaminoDate('2022-01-31'), toCaminoDate('2022-01-03'))).toBe(false)
   expect(isBefore(toCaminoDate('2022-01-31'), toCaminoDate('2022-01-31'))).toBe(false)
   expect(isBefore(toCaminoDate('2022-01-31'), toCaminoDate('2022-01-01'))).toBe(false)
+  // @ts-ignore
+  expect(isBefore(toCaminoDate('2022-01-31'), null)).toBe(false)
 })

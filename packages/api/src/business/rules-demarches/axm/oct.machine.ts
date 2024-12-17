@@ -1,10 +1,12 @@
-import { assign, createMachine } from 'xstate'
+import { assign, setup } from 'xstate'
 import { CaminoMachine } from '../machine-helper'
-import { CaminoCommonContext, DBEtat, tags } from '../machine-common'
+import { CaminoCommonContext, DBEtat, getDemarcheDateDebut, getDemarcheDateFin, globalGuards, tags } from '../machine-common'
 import { EtapesTypesEtapesStatuts as ETES } from 'camino-common/src/static/etapesTypesEtapesStatuts'
 import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts'
 import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations'
 import { CaminoDate, dateAddMonths, daysBetween } from 'camino-common/src/date'
+import { TitreTypeId } from 'camino-common/src/static/titresTypes'
+import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
 
 type RendreAvisDesServicesEtCommissionsConsultatives = {
   date: CaminoDate
@@ -15,7 +17,13 @@ type RendreAvisDreal = {
   date: CaminoDate
   type: 'RENDRE_AVIS_DREAL'
 }
-
+type RendreDecisionAdministrationAcceptee = {
+  type: 'RENDRE_DECISION_ADMINISTRATION_ACCEPTE'
+  date: CaminoDate
+  dateDebut: CaminoDate | null
+  dateFin: CaminoDate | null
+  duree: number | null
+}
 type AXMOctXStateEvent =
   | { type: 'FAIRE_DEMANDE' }
   | { type: 'ENREGISTRER_DEMANDE' }
@@ -31,7 +39,7 @@ type AXMOctXStateEvent =
   | { type: 'RENDRE_AVIS_COMMISSION_DEPARTEMENTALE_DES_MINES' }
   | { type: 'RENDRE_AVIS_COMMISSION_DEPARTEMENTALE_DES_MINES_AJOURNE' }
   | { type: 'FAIRE_SAISINE_AUTORITE_SIGNATAIRE' }
-  | { type: 'RENDRE_DECISION_ADMINISTRATION_ACCEPTE' }
+  | RendreDecisionAdministrationAcceptee
   | { type: 'RENDRE_DECISION_ADMINISTRATION_REJETE' }
   | { type: 'NOTIFIER_DEMANDEUR' }
   | { type: 'PUBLIER_DECISIONS_RECUEIL_ACTES_ADMINISTRATIFS' }
@@ -113,8 +121,8 @@ const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
 
 // basé sur https://cacoo.com/diagrams/iUPEVBYNBjsiirfE/249D0
 export class AxmOctMachine extends CaminoMachine<AxmContext, AXMOctXStateEvent> {
-  constructor() {
-    super(axmOctMachine, trad)
+  constructor(titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId) {
+    super(axmOctMachine(titreTypeId, demarcheTypeId), trad)
   }
 
   override toPotentialCaminoXStateEvent(event: AXMOctXStateEvent['type'], date: CaminoDate): AXMOctXStateEvent[] {
@@ -146,342 +154,352 @@ const peutRendreAvisDREAL = ({ context, event }: { context: AxmContext; event: R
   return context.avisDesServicesEtCommissionsConsultatives.faite && daysBetween(dateAddMonths(context.avisDesServicesEtCommissionsConsultatives.date, 1), event.date) >= 0
 }
 
-const axmOctMachine = createMachine({
-  types: {} as { context: AxmContext; events: AXMOctXStateEvent },
-
-  id: 'AXMOct',
-  initial: 'demandeAFaire',
-  context: {
-    demarcheStatut: DemarchesStatutsIds.EnConstruction,
-    demandeFaite: false,
-    notificationDuDemandeurFaite: false,
-    notificationDesCollectivitesLocalesFaite: false,
-    publicationDecisionsRecueilActesAdministratifsFaite: false,
-    publicationDansUnJournalLocalOuNationalFaite: false,
-    avisDesCollectivitesFaite: false,
-    avisDesServicesEtCommissionsConsultatives: { faite: false },
-    visibilite: 'confidentielle',
-  },
-  on: {
-    FAIRE_DESISTEMENT_DEMANDEUR: {
-      guard: ({ context }) => context.demandeFaite && [DemarchesStatutsIds.EnConstruction, DemarchesStatutsIds.Depose, DemarchesStatutsIds.EnInstruction].includes(context.demarcheStatut),
-      target: '.desistementDuDemandeurRendu',
+const axmOctMachine = (_titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId) =>
+  setup({
+    types: {} as { context: AxmContext; events: AXMOctXStateEvent },
+    guards: { ...globalGuards },
+  }).createMachine({
+    id: 'AXMOct',
+    initial: 'demandeAFaire',
+    context: {
+      demarcheStatut: DemarchesStatutsIds.EnConstruction,
+      demarcheDateDebut: { dateDebut: null, dateEtape: null },
+      demarcheDateFin: { dateFin: null, duree: null },
+      demarcheDateEffet: null,
+      demarcheTypeId,
+      demandeFaite: false,
+      notificationDuDemandeurFaite: false,
+      notificationDesCollectivitesLocalesFaite: false,
+      publicationDecisionsRecueilActesAdministratifsFaite: false,
+      publicationDansUnJournalLocalOuNationalFaite: false,
+      avisDesCollectivitesFaite: false,
+      avisDesServicesEtCommissionsConsultatives: { faite: false },
+      visibilite: 'confidentielle',
     },
-    FAIRE_CLASSEMENT_SANS_SUITE: {
-      guard: ({ context }) => context.demandeFaite && [DemarchesStatutsIds.EnConstruction, DemarchesStatutsIds.Depose, DemarchesStatutsIds.EnInstruction].includes(context.demarcheStatut),
-      target: '.classementSansSuiteRendu',
-    },
-  },
-  states: {
-    demandeAFaire: {
-      on: {
-        FAIRE_DEMANDE: {
-          target: 'enregistrementDemandeAFaire',
-          actions: assign({ demandeFaite: true }),
-        },
+    on: {
+      FAIRE_DESISTEMENT_DEMANDEUR: {
+        guard: ({ context }) => context.demandeFaite && [DemarchesStatutsIds.EnConstruction, DemarchesStatutsIds.Depose, DemarchesStatutsIds.EnInstruction].includes(context.demarcheStatut),
+        target: '.desistementDuDemandeurRendu',
+      },
+      FAIRE_CLASSEMENT_SANS_SUITE: {
+        guard: ({ context }) => context.demandeFaite && [DemarchesStatutsIds.EnConstruction, DemarchesStatutsIds.Depose, DemarchesStatutsIds.EnInstruction].includes(context.demarcheStatut),
+        target: '.classementSansSuiteRendu',
       },
     },
-    enregistrementDemandeAFaire: {
-      tags: [tags.responsable[ADMINISTRATION_IDS['DGTM - GUYANE']]],
-      on: {
-        ENREGISTRER_DEMANDE: {
-          target: 'recevabiliteDeLaDemandeAFaire',
-          actions: assign({
-            demarcheStatut: DemarchesStatutsIds.Depose,
-          }),
+    states: {
+      demandeAFaire: {
+        on: {
+          FAIRE_DEMANDE: {
+            target: 'enregistrementDemandeAFaire',
+            actions: assign({ demandeFaite: true }),
+          },
         },
       },
-    },
-    recevabiliteDeLaDemandeAFaire: {
-      tags: [tags.responsable[ADMINISTRATION_IDS['DGTM - GUYANE']]],
-      on: {
-        DEMANDER_COMPLEMENTS_POUR_RECEVABILITE: 'complementsPourRecevabiliteAFaire',
-        FAIRE_RECEVABILITE_DEMANDE_FAVORABLE: {
-          target: 'saisinesAFairePuisRendreAvisDREAL',
-          actions: assign({
-            demarcheStatut: DemarchesStatutsIds.EnInstruction,
-            visibilite: 'publique',
-          }),
-        },
-        FAIRE_RECEVABILITE_DEMANDE_DEFAVORABLE: 'modificationDeLaDemandeAFaire',
-        RENDRE_DECISION_IMPLICITE_REJET: {
-          target: 'decisionAnnulationParJugeAdministratifAFaire',
-          actions: assign({
-            demarcheStatut: DemarchesStatutsIds.Rejete,
-            visibilite: 'publique',
-          }),
+      enregistrementDemandeAFaire: {
+        tags: [tags.responsable[ADMINISTRATION_IDS['DGTM - GUYANE']]],
+        on: {
+          ENREGISTRER_DEMANDE: {
+            target: 'recevabiliteDeLaDemandeAFaire',
+            actions: assign({
+              demarcheStatut: DemarchesStatutsIds.Depose,
+            }),
+          },
         },
       },
-    },
-    complementsPourRecevabiliteAFaire: {
-      on: {
-        RECEVOIR_COMPLEMENTS_POUR_RECEVABILITE: 'recevabiliteDeLaDemandeAFaire',
-        FAIRE_RECEVABILITE_DEMANDE_FAVORABLE: {
-          target: 'saisinesAFairePuisRendreAvisDREAL',
-          actions: assign({
-            demarcheStatut: DemarchesStatutsIds.EnInstruction,
-            visibilite: 'publique',
-          }),
+      recevabiliteDeLaDemandeAFaire: {
+        tags: [tags.responsable[ADMINISTRATION_IDS['DGTM - GUYANE']]],
+        on: {
+          DEMANDER_COMPLEMENTS_POUR_RECEVABILITE: 'complementsPourRecevabiliteAFaire',
+          FAIRE_RECEVABILITE_DEMANDE_FAVORABLE: {
+            target: 'saisinesAFairePuisRendreAvisDREAL',
+            actions: assign({
+              demarcheStatut: DemarchesStatutsIds.EnInstruction,
+              visibilite: 'publique',
+            }),
+          },
+          FAIRE_RECEVABILITE_DEMANDE_DEFAVORABLE: 'modificationDeLaDemandeAFaire',
+          RENDRE_DECISION_IMPLICITE_REJET: {
+            target: 'decisionAnnulationParJugeAdministratifAFaire',
+            actions: assign({
+              demarcheStatut: DemarchesStatutsIds.Rejete,
+              visibilite: 'publique',
+            }),
+          },
         },
-        FAIRE_RECEVABILITE_DEMANDE_DEFAVORABLE: 'modificationDeLaDemandeAFaire',
       },
-    },
-    modificationDeLaDemandeAFaire: {
-      on: {
-        MODIFIER_LA_DEMANDE: 'recevabiliteDeLaDemandeAFaire',
+      complementsPourRecevabiliteAFaire: {
+        on: {
+          RECEVOIR_COMPLEMENTS_POUR_RECEVABILITE: 'recevabiliteDeLaDemandeAFaire',
+          FAIRE_RECEVABILITE_DEMANDE_FAVORABLE: {
+            target: 'saisinesAFairePuisRendreAvisDREAL',
+            actions: assign({
+              demarcheStatut: DemarchesStatutsIds.EnInstruction,
+              visibilite: 'publique',
+            }),
+          },
+          FAIRE_RECEVABILITE_DEMANDE_DEFAVORABLE: 'modificationDeLaDemandeAFaire',
+        },
       },
-    },
-    saisinesAFairePuisRendreAvisDREAL: {
-      type: 'parallel',
-      states: {
-        rendreAvisDrealMachine: {
-          initial: 'rendreAvisDrealPasEncorePossible',
-          states: {
-            rendreAvisDrealPasEncorePossible: {
-              always: {
-                target: 'rendreAvisDrealAFaire',
-                guard: ({ context }) => context.avisDesServicesEtCommissionsConsultatives.faite && context.avisDesCollectivitesFaite,
+      modificationDeLaDemandeAFaire: {
+        on: {
+          MODIFIER_LA_DEMANDE: 'recevabiliteDeLaDemandeAFaire',
+        },
+      },
+      saisinesAFairePuisRendreAvisDREAL: {
+        type: 'parallel',
+        states: {
+          rendreAvisDrealMachine: {
+            initial: 'rendreAvisDrealPasEncorePossible',
+            states: {
+              rendreAvisDrealPasEncorePossible: {
+                always: {
+                  target: 'rendreAvisDrealAFaire',
+                  guard: ({ context }) => context.avisDesServicesEtCommissionsConsultatives.faite && context.avisDesCollectivitesFaite,
+                },
               },
-            },
-            rendreAvisDrealAFaire: {
-              tags: [tags.responsable[ADMINISTRATION_IDS['DGTM - GUYANE']]],
-              on: {
-                RENDRE_AVIS_DREAL: {
-                  guard: peutRendreAvisDREAL,
-                  target: '#saisineOuAvisCommissionDepartementaleDesMinesARendre',
+              rendreAvisDrealAFaire: {
+                tags: [tags.responsable[ADMINISTRATION_IDS['DGTM - GUYANE']]],
+                on: {
+                  RENDRE_AVIS_DREAL: {
+                    guard: peutRendreAvisDREAL,
+                    target: '#saisineOuAvisCommissionDepartementaleDesMinesARendre',
+                  },
                 },
               },
             },
           },
-        },
-        demandeInformationPourAvisDREALMachine: {
-          initial: 'demandeInformationPourAvisDREALAFaire',
-          states: {
-            demandeInformationPourAvisDREALAFaire: {
-              on: {
-                DEMANDER_INFORMATION_POUR_AVIS_DREAL: 'receptionInformationPourAvisDREALAFaire',
+          demandeInformationPourAvisDREALMachine: {
+            initial: 'demandeInformationPourAvisDREALAFaire',
+            states: {
+              demandeInformationPourAvisDREALAFaire: {
+                on: {
+                  DEMANDER_INFORMATION_POUR_AVIS_DREAL: 'receptionInformationPourAvisDREALAFaire',
+                },
               },
-            },
-            receptionInformationPourAvisDREALAFaire: {
-              on: {
-                RECEVOIR_INFORMATION_POUR_AVIS_DREAL: 'demandeInformationPourAvisDREALAFaire',
-              },
-            },
-          },
-        },
-        avisDesCollectivitesMachine: {
-          initial: 'avisDesCollectivitesARendre',
-          states: {
-            avisDesCollectivitesARendre: {
-              on: {
-                RENDRE_AVIS_DES_COLLECTIVITES: {
-                  target: 'avisDesCollectivitesRendu',
-                  guard: ({ context }) => !context.avisDesCollectivitesFaite,
-                  actions: assign({
-                    avisDesCollectivitesFaite: true,
-                  }),
+              receptionInformationPourAvisDREALAFaire: {
+                on: {
+                  RECEVOIR_INFORMATION_POUR_AVIS_DREAL: 'demandeInformationPourAvisDREALAFaire',
                 },
               },
             },
-            avisDesCollectivitesRendu: { type: 'final' },
           },
-        },
-        avisDesServicesEtCommissionsConsultativesMachine: {
-          initial: 'avisDesServicesEtCommissionsConsultativesAFaire',
-          states: {
-            avisDesServicesEtCommissionsConsultativesAFaire: {
-              on: {
-                RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES: {
-                  target: 'avisDesServicesEtCommissionsConsultativesRendu',
-                  guard: ({ context }) => !context.avisDesServicesEtCommissionsConsultatives.faite,
-                  actions: assign({
-                    avisDesServicesEtCommissionsConsultatives: ({ event }) => {
-                      return {
-                        faite: true,
-                        date: event.date,
-                      }
-                    },
-                  }),
+          avisDesCollectivitesMachine: {
+            initial: 'avisDesCollectivitesARendre',
+            states: {
+              avisDesCollectivitesARendre: {
+                on: {
+                  RENDRE_AVIS_DES_COLLECTIVITES: {
+                    target: 'avisDesCollectivitesRendu',
+                    guard: ({ context }) => !context.avisDesCollectivitesFaite,
+                    actions: assign({
+                      avisDesCollectivitesFaite: true,
+                    }),
+                  },
                 },
               },
+              avisDesCollectivitesRendu: { type: 'final' },
             },
-            avisDesServicesEtCommissionsConsultativesRendu: { type: 'final' },
           },
-        },
-      },
-    },
-    avisDREALARendre: {
-      tags: [tags.responsable[ADMINISTRATION_IDS['DGTM - GUYANE']]],
-      on: {
-        RENDRE_AVIS_DREAL: {
-          guard: peutRendreAvisDREAL,
-          target: 'saisineOuAvisCommissionDepartementaleDesMinesARendre',
-        },
-      },
-    },
-    saisineOuAvisCommissionDepartementaleDesMinesARendre: {
-      id: 'saisineOuAvisCommissionDepartementaleDesMinesARendre',
-      on: {
-        FAIRE_SAISINE_COMMISSION_DEPARTEMENTALE_DES_MINES: 'avisCommissionDepartementaleDesMinesARendre',
-        RENDRE_AVIS_COMMISSION_DEPARTEMENTALE_DES_MINES_AJOURNE: 'avisDREALARendre',
-        RENDRE_AVIS_COMMISSION_DEPARTEMENTALE_DES_MINES: 'saisineAutoriteSignataireOuDecisionAdministrationARendre',
-      },
-    },
-    avisCommissionDepartementaleDesMinesARendre: {
-      on: {
-        RENDRE_AVIS_COMMISSION_DEPARTEMENTALE_DES_MINES_AJOURNE: 'avisDREALARendre',
-        RENDRE_AVIS_COMMISSION_DEPARTEMENTALE_DES_MINES: 'saisineAutoriteSignataireOuDecisionAdministrationARendre',
-      },
-    },
-    saisineAutoriteSignataireOuDecisionAdministrationARendre: {
-      on: {
-        FAIRE_SAISINE_AUTORITE_SIGNATAIRE: 'decisionAdministrationARendre',
-        RENDRE_DECISION_ADMINISTRATION_ACCEPTE: {
-          target: 'decisionAdministrationRendue',
-          actions: assign({
-            demarcheStatut: DemarchesStatutsIds.Accepte,
-          }),
-        },
-        RENDRE_DECISION_ADMINISTRATION_REJETE: {
-          target: 'decisionAdministrationRendue',
-          actions: assign({
-            demarcheStatut: DemarchesStatutsIds.Rejete,
-          }),
-        },
-      },
-    },
-    decisionAdministrationARendre: {
-      on: {
-        RENDRE_DECISION_ADMINISTRATION_ACCEPTE: {
-          target: 'decisionAdministrationRendue',
-          actions: assign({
-            demarcheStatut: DemarchesStatutsIds.Accepte,
-          }),
-        },
-        RENDRE_DECISION_ADMINISTRATION_REJETE: {
-          target: 'decisionAdministrationRendue',
-          actions: assign({
-            demarcheStatut: DemarchesStatutsIds.Rejete,
-          }),
-        },
-      },
-    },
-    decisionAdministrationRendue: {
-      on: {
-        RENDRE_DECISION_ABROGATION: 'decisionAbrogationFaite',
-        RENDRE_DECISION_ANNULATION_PAR_JUGE_ADMINISTRATIF: {
-          target: 'decisionAnnulationParJugeAdministratifRendu',
-        },
-        NOTIFIER_DEMANDEUR: { target: 'publicationsEtNotificationsMachine', actions: assign({ notificationDuDemandeurFaite: true }) },
-        PUBLIER_DECISIONS_RECUEIL_ACTES_ADMINISTRATIFS: { target: 'publicationsEtNotificationsMachine', actions: assign({ publicationDecisionsRecueilActesAdministratifsFaite: true }) },
-        PUBLIER_DANS_UN_JOURNAL_LOCAL_OU_NATIONAL: { target: 'publicationsEtNotificationsMachine', actions: assign({ publicationDansUnJournalLocalOuNationalFaite: true }) },
-        NOTIFIER_COLLECTIVITES_LOCALES: { target: 'publicationsEtNotificationsMachine', actions: assign({ notificationDesCollectivitesLocalesFaite: true }) },
-      },
-    },
-    publicationsEtNotificationsMachine: {
-      type: 'parallel',
-      states: {
-        notificationDuDemandeurMachine: {
-          initial: 'notificationDuDemandeurAFaire',
-          states: {
-            notificationDuDemandeurAFaire: {
-              always: {
-                target: 'notificationDuDemandeurFaite',
-                guard: ({ context }) => {
-                  return context.notificationDuDemandeurFaite
+          avisDesServicesEtCommissionsConsultativesMachine: {
+            initial: 'avisDesServicesEtCommissionsConsultativesAFaire',
+            states: {
+              avisDesServicesEtCommissionsConsultativesAFaire: {
+                on: {
+                  RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES: {
+                    target: 'avisDesServicesEtCommissionsConsultativesRendu',
+                    guard: ({ context }) => !context.avisDesServicesEtCommissionsConsultatives.faite,
+                    actions: assign({
+                      avisDesServicesEtCommissionsConsultatives: ({ event }) => {
+                        return {
+                          faite: true,
+                          date: event.date,
+                        }
+                      },
+                    }),
+                  },
                 },
               },
-              on: { NOTIFIER_DEMANDEUR: { target: 'notificationDuDemandeurFaite', actions: assign({ notificationDuDemandeurFaite: true }) } },
+              avisDesServicesEtCommissionsConsultativesRendu: { type: 'final' },
             },
-            notificationDuDemandeurFaite: { type: 'final' },
           },
         },
-        publicationDecisionsRecueilActesAdministratifsMachine: {
-          initial: 'publicationDecisionsRecueilActesAdministratifsAFaire',
-          states: {
-            publicationDecisionsRecueilActesAdministratifsAFaire: {
-              always: {
-                target: 'publicationDecisionsRecueilActesAdministratifsFaite',
-                guard: ({ context }) => {
-                  return context.publicationDecisionsRecueilActesAdministratifsFaite
+      },
+      avisDREALARendre: {
+        tags: [tags.responsable[ADMINISTRATION_IDS['DGTM - GUYANE']]],
+        on: {
+          RENDRE_AVIS_DREAL: {
+            guard: peutRendreAvisDREAL,
+            target: 'saisineOuAvisCommissionDepartementaleDesMinesARendre',
+          },
+        },
+      },
+      saisineOuAvisCommissionDepartementaleDesMinesARendre: {
+        id: 'saisineOuAvisCommissionDepartementaleDesMinesARendre',
+        on: {
+          FAIRE_SAISINE_COMMISSION_DEPARTEMENTALE_DES_MINES: 'avisCommissionDepartementaleDesMinesARendre',
+          RENDRE_AVIS_COMMISSION_DEPARTEMENTALE_DES_MINES_AJOURNE: 'avisDREALARendre',
+          RENDRE_AVIS_COMMISSION_DEPARTEMENTALE_DES_MINES: 'saisineAutoriteSignataireOuDecisionAdministrationARendre',
+        },
+      },
+      avisCommissionDepartementaleDesMinesARendre: {
+        on: {
+          RENDRE_AVIS_COMMISSION_DEPARTEMENTALE_DES_MINES_AJOURNE: 'avisDREALARendre',
+          RENDRE_AVIS_COMMISSION_DEPARTEMENTALE_DES_MINES: 'saisineAutoriteSignataireOuDecisionAdministrationARendre',
+        },
+      },
+      saisineAutoriteSignataireOuDecisionAdministrationARendre: {
+        on: {
+          FAIRE_SAISINE_AUTORITE_SIGNATAIRE: 'decisionAdministrationARendre',
+          RENDRE_DECISION_ADMINISTRATION_ACCEPTE: {
+            target: 'decisionAdministrationRendue',
+            actions: assign({
+              demarcheStatut: DemarchesStatutsIds.Accepte,
+              demarcheDateDebut: ({ context, event }) => getDemarcheDateDebut(context.demarcheTypeId, context.demarcheDateDebut, event),
+              demarcheDateFin: ({ context, event }) => getDemarcheDateFin(context.demarcheTypeId, context.demarcheDateFin, event),
+            }),
+          },
+          RENDRE_DECISION_ADMINISTRATION_REJETE: {
+            target: 'decisionAdministrationRendue',
+            actions: assign({
+              demarcheStatut: DemarchesStatutsIds.Rejete,
+            }),
+          },
+        },
+      },
+      decisionAdministrationARendre: {
+        on: {
+          RENDRE_DECISION_ADMINISTRATION_ACCEPTE: {
+            target: 'decisionAdministrationRendue',
+            actions: assign({
+              demarcheStatut: DemarchesStatutsIds.Accepte,
+              demarcheDateDebut: ({ context, event }) => getDemarcheDateDebut(context.demarcheTypeId, context.demarcheDateDebut, event),
+              demarcheDateFin: ({ context, event }) => getDemarcheDateFin(context.demarcheTypeId, context.demarcheDateFin, event),
+            }),
+          },
+          RENDRE_DECISION_ADMINISTRATION_REJETE: {
+            target: 'decisionAdministrationRendue',
+            actions: assign({
+              demarcheStatut: DemarchesStatutsIds.Rejete,
+            }),
+          },
+        },
+      },
+      decisionAdministrationRendue: {
+        on: {
+          RENDRE_DECISION_ABROGATION: 'decisionAbrogationFaite',
+          RENDRE_DECISION_ANNULATION_PAR_JUGE_ADMINISTRATIF: {
+            target: 'decisionAnnulationParJugeAdministratifRendu',
+          },
+          NOTIFIER_DEMANDEUR: { target: 'publicationsEtNotificationsMachine', actions: assign({ notificationDuDemandeurFaite: true }) },
+          PUBLIER_DECISIONS_RECUEIL_ACTES_ADMINISTRATIFS: { target: 'publicationsEtNotificationsMachine', actions: assign({ publicationDecisionsRecueilActesAdministratifsFaite: true }) },
+          PUBLIER_DANS_UN_JOURNAL_LOCAL_OU_NATIONAL: { target: 'publicationsEtNotificationsMachine', actions: assign({ publicationDansUnJournalLocalOuNationalFaite: true }) },
+          NOTIFIER_COLLECTIVITES_LOCALES: { target: 'publicationsEtNotificationsMachine', actions: assign({ notificationDesCollectivitesLocalesFaite: true }) },
+        },
+      },
+      publicationsEtNotificationsMachine: {
+        type: 'parallel',
+        states: {
+          notificationDuDemandeurMachine: {
+            initial: 'notificationDuDemandeurAFaire',
+            states: {
+              notificationDuDemandeurAFaire: {
+                always: {
+                  target: 'notificationDuDemandeurFaite',
+                  guard: ({ context }) => {
+                    return context.notificationDuDemandeurFaite
+                  },
                 },
+                on: { NOTIFIER_DEMANDEUR: { target: 'notificationDuDemandeurFaite', actions: assign({ notificationDuDemandeurFaite: true }) } },
               },
-              on: {
-                PUBLIER_DECISIONS_RECUEIL_ACTES_ADMINISTRATIFS: {
+              notificationDuDemandeurFaite: { type: 'final' },
+            },
+          },
+          publicationDecisionsRecueilActesAdministratifsMachine: {
+            initial: 'publicationDecisionsRecueilActesAdministratifsAFaire',
+            states: {
+              publicationDecisionsRecueilActesAdministratifsAFaire: {
+                always: {
                   target: 'publicationDecisionsRecueilActesAdministratifsFaite',
-                  actions: assign({ publicationDecisionsRecueilActesAdministratifsFaite: true }),
+                  guard: ({ context }) => {
+                    return context.publicationDecisionsRecueilActesAdministratifsFaite
+                  },
+                },
+                on: {
+                  PUBLIER_DECISIONS_RECUEIL_ACTES_ADMINISTRATIFS: {
+                    target: 'publicationDecisionsRecueilActesAdministratifsFaite',
+                    actions: assign({ publicationDecisionsRecueilActesAdministratifsFaite: true }),
+                  },
                 },
               },
+              publicationDecisionsRecueilActesAdministratifsFaite: {
+                type: 'final',
+              },
             },
-            publicationDecisionsRecueilActesAdministratifsFaite: {
-              type: 'final',
+          },
+          publicationDansUnJournalLocalOuNationalMachine: {
+            initial: 'publicationDansUnJournalLocalOuNationalAFaire',
+            states: {
+              publicationDansUnJournalLocalOuNationalAFaire: {
+                always: {
+                  target: 'publicationDansUnJournalLocalOuNationalFaite',
+                  guard: ({ context }) => {
+                    return context.publicationDansUnJournalLocalOuNationalFaite
+                  },
+                },
+                on: {
+                  PUBLIER_DANS_UN_JOURNAL_LOCAL_OU_NATIONAL: { target: 'publicationDansUnJournalLocalOuNationalFaite', actions: assign({ publicationDansUnJournalLocalOuNationalFaite: true }) },
+                },
+              },
+              publicationDansUnJournalLocalOuNationalFaite: { type: 'final' },
+            },
+          },
+          notificationDesCollectivitesLocalesMachine: {
+            initial: 'notificationDesCollectivitesLocalesAFaire',
+            states: {
+              notificationDesCollectivitesLocalesAFaire: {
+                always: {
+                  target: 'notificationDesCollectivitesLocalesFaite',
+                  guard: ({ context }) => {
+                    return context.notificationDesCollectivitesLocalesFaite
+                  },
+                },
+                on: {
+                  NOTIFIER_COLLECTIVITES_LOCALES: { target: 'notificationDesCollectivitesLocalesFaite', actions: assign({ notificationDesCollectivitesLocalesFaite: true }) },
+                },
+              },
+              notificationDesCollectivitesLocalesFaite: { type: 'final' },
             },
           },
         },
-        publicationDansUnJournalLocalOuNationalMachine: {
-          initial: 'publicationDansUnJournalLocalOuNationalAFaire',
-          states: {
-            publicationDansUnJournalLocalOuNationalAFaire: {
-              always: {
-                target: 'publicationDansUnJournalLocalOuNationalFaite',
-                guard: ({ context }) => {
-                  return context.publicationDansUnJournalLocalOuNationalFaite
-                },
-              },
-              on: {
-                PUBLIER_DANS_UN_JOURNAL_LOCAL_OU_NATIONAL: { target: 'publicationDansUnJournalLocalOuNationalFaite', actions: assign({ publicationDansUnJournalLocalOuNationalFaite: true }) },
-              },
-            },
-            publicationDansUnJournalLocalOuNationalFaite: { type: 'final' },
-          },
-        },
-        notificationDesCollectivitesLocalesMachine: {
-          initial: 'notificationDesCollectivitesLocalesAFaire',
-          states: {
-            notificationDesCollectivitesLocalesAFaire: {
-              always: {
-                target: 'notificationDesCollectivitesLocalesFaite',
-                guard: ({ context }) => {
-                  return context.notificationDesCollectivitesLocalesFaite
-                },
-              },
-              on: {
-                NOTIFIER_COLLECTIVITES_LOCALES: { target: 'notificationDesCollectivitesLocalesFaite', actions: assign({ notificationDesCollectivitesLocalesFaite: true }) },
-              },
-            },
-            notificationDesCollectivitesLocalesFaite: { type: 'final' },
-          },
+      },
+      decisionAnnulationParJugeAdministratifAFaire: {
+        on: {
+          RENDRE_DECISION_ANNULATION_PAR_JUGE_ADMINISTRATIF: 'decisionAnnulationParJugeAdministratifRendu',
         },
       },
-    },
-    decisionAnnulationParJugeAdministratifAFaire: {
-      on: {
-        RENDRE_DECISION_ANNULATION_PAR_JUGE_ADMINISTRATIF: 'decisionAnnulationParJugeAdministratifRendu',
+      classementSansSuiteAFaire: {
+        id: 'classementSansSuiteAFaire',
+        tags: [tags.responsable[ADMINISTRATION_IDS['DGTM - GUYANE']]],
+        on: {
+          FAIRE_CLASSEMENT_SANS_SUITE: 'classementSansSuiteRendu',
+        },
+      },
+      decisionAbrogationFaite: { type: 'final' },
+      decisionAnnulationParJugeAdministratifRendu: {
+        type: 'final',
+        entry: assign({ demarcheStatut: DemarchesStatutsIds.Rejete }),
+      },
+      desistementDuDemandeurRendu: {
+        type: 'final',
+        entry: assign({
+          demarcheStatut: DemarchesStatutsIds.Desiste,
+        }),
+      },
+      classementSansSuiteRendu: {
+        type: 'final',
+        entry: assign({
+          demarcheStatut: DemarchesStatutsIds.ClasseSansSuite,
+        }),
       },
     },
-    classementSansSuiteAFaire: {
-      id: 'classementSansSuiteAFaire',
-      tags: [tags.responsable[ADMINISTRATION_IDS['DGTM - GUYANE']]],
-      on: {
-        FAIRE_CLASSEMENT_SANS_SUITE: 'classementSansSuiteRendu',
-      },
-    },
-    decisionAbrogationFaite: { type: 'final' },
-    decisionAnnulationParJugeAdministratifRendu: {
-      type: 'final',
-      entry: assign({ demarcheStatut: DemarchesStatutsIds.Rejete }),
-    },
-    desistementDuDemandeurRendu: {
-      type: 'final',
-      entry: assign({
-        demarcheStatut: DemarchesStatutsIds.Desiste,
-      }),
-    },
-    classementSansSuiteRendu: {
-      type: 'final',
-      entry: assign({
-        demarcheStatut: DemarchesStatutsIds.ClasseSansSuite,
-      }),
-    },
-  },
-})
+  })

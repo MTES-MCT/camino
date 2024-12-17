@@ -120,6 +120,11 @@ export const dateAddDays = (date: CaminoDate, days: number): CaminoDate => {
   return toCaminoDate(new Date(+y, +m - 1, +d + days))
 }
 
+export const getDay = (date: CaminoDate): number => {
+  const [_y, _m, d] = splitCaminoDate(date)
+
+  return parseInt(d, 10)
+}
 export const dateAddMonths = (date: CaminoDate, months: number): CaminoDate => {
   const [y, m, d] = splitCaminoDate(date)
 

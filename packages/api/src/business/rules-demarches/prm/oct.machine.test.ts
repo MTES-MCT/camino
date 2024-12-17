@@ -4,10 +4,11 @@ import { EtapesTypesEtapesStatuts as ETES } from 'camino-common/src/static/etape
 import { describe, expect, test } from 'vitest'
 import { PAYS_IDS } from 'camino-common/src/static/pays'
 import { km2Validator } from 'camino-common/src/number'
-const etapesProd = require('./2019-10-31-oct.cas.json') // eslint-disable-line
+import { TITRES_TYPES_IDS } from 'camino-common/src/static/titresTypes'
+import { DEMARCHES_TYPES_IDS } from 'camino-common/src/static/demarchesTypes'
 
 describe('vérifie l’arbre d’octroi de PRM', () => {
-  const prmOctMachine = new PrmOctMachine()
+  const prmOctMachine = new PrmOctMachine(TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_METAUX, DEMARCHES_TYPES_IDS.Octroi)
   test('peut créer une demande d’octroi de PRM complète en Métropole', () => {
     const { tree } = setDateAndOrderAndInterpretMachine(prmOctMachine, '2022-07-01', [
       ETES.demande.FAIT,
@@ -37,7 +38,7 @@ describe('vérifie l’arbre d’octroi de PRM', () => {
         "FAIRE_DEMANDE                                     (confidentielle, en construction        ) -> [ENREGISTRER_DEMANDE]",
         "ENREGISTRER_DEMANDE                               (confidentielle, déposé                 ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATIONS,DESISTER_PAR_LE_DEMANDEUR,FAIRE_SAISINE_PREFET,MODIFIER_DEMANDE,RECEVOIR_INFORMATIONS]",
         "FAIRE_SAISINE_PREFET                              (confidentielle, déposé                 ) -> [CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_POUR_RECEVABILITE,DEMANDER_INFORMATIONS,DESISTER_PAR_LE_DEMANDEUR,FAIRE_RECEVABILITE_DEMANDE_DEFAVORABLE,FAIRE_RECEVABILITE_DEMANDE_FAVORABLE,MODIFIER_DEMANDE,RECEVOIR_INFORMATIONS]",
-        "FAIRE_RECEVABILITE_DEMANDE_FAVORABLE              (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATIONS,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,RECEVOIR_INFORMATIONS,RENDRE_AVIS_DE_MISE_EN_CONCURRENCE_AU_JORF]",
+        "FAIRE_RECEVABILITE_DEMANDE_FAVORABLE              (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATIONS,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,RECEVOIR_INFORMATIONS,RENDRE_AVIS_DE_MISE_EN_CONCURRENCE_AU_JORF]",
         "RENDRE_AVIS_DE_MISE_EN_CONCURRENCE_AU_JORF        (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATIONS,DEPOSER_DEMANDE_CONCURRENTE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,RECEVOIR_INFORMATIONS,RENDRE_AVIS_SERVICES_ET_COMMISSIONS_CONSULTATIVES]",
         "RENDRE_AVIS_SERVICES_ET_COMMISSIONS_CONSULTATIVES (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATIONS,DEPOSER_DEMANDE_CONCURRENTE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,RECEVOIR_INFORMATIONS]",
         "RENDRE_RAPPORT_DREAL                              (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATIONS,DEPOSER_DEMANDE_CONCURRENTE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,OUVRIR_PARTICIPATION_DU_PUBLIC,RECEVOIR_INFORMATIONS,RENDRE_AVIS_PREFET]",
@@ -48,12 +49,19 @@ describe('vérifie l’arbre d’octroi de PRM', () => {
         "RENDRE_AVIS_CONSEIL_GENERAL_CHARGE_DES_MINES      (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATIONS,DESISTER_PAR_LE_DEMANDEUR,FAIRE_SAISINE_AUTORITE_SIGNATAIRE,MODIFIER_DEMANDE,RECEVOIR_INFORMATIONS]",
         "FAIRE_SAISINE_AUTORITE_SIGNATAIRE                 (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATIONS,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,RECEVOIR_INFORMATIONS,RENDRE_DECISION_ADMINISTRATION_ACCEPTE,RENDRE_DECISION_ADMINISTRATION_REJETE]",
         "RENDRE_DECISION_ADMINISTRATION_ACCEPTE            (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATIONS,DESISTER_PAR_LE_DEMANDEUR,FAIRE_PUBLICATION_AU_JORF,MODIFIER_DEMANDE,RECEVOIR_INFORMATIONS]",
+        "[2022-08-14 -> 2023-08-14]",
         "FAIRE_PUBLICATION_AU_JORF                         (publique      , accepté                ) -> [NOTIFIER_COLLECTIVITES_LOCALES,NOTIFIER_DEMANDEUR,PUBLIER_DANS_UN_JOURNAL_LOCAL_OU_NATIONAL,PUBLIER_DECISIONS_RECUEIL_ACTES_ADMINISTRATIFS,RENDRE_INFORMATION_DU_PREFET_ET_DES_COLLECTIVITES]",
+        "[2022-08-14 -> 2023-08-14]",
         "NOTIFIER_COLLECTIVITES_LOCALES                    (publique      , accepté                ) -> [NOTIFIER_DEMANDEUR,PUBLIER_DANS_UN_JOURNAL_LOCAL_OU_NATIONAL,PUBLIER_DECISIONS_RECUEIL_ACTES_ADMINISTRATIFS,RENDRE_INFORMATION_DU_PREFET_ET_DES_COLLECTIVITES]",
+        "[2022-08-14 -> 2023-08-14]",
         "PUBLIER_DECISIONS_RECUEIL_ACTES_ADMINISTRATIFS    (publique      , accepté                ) -> [NOTIFIER_DEMANDEUR,PUBLIER_DANS_UN_JOURNAL_LOCAL_OU_NATIONAL,RENDRE_INFORMATION_DU_PREFET_ET_DES_COLLECTIVITES]",
+        "[2022-08-14 -> 2023-08-14]",
         "PUBLIER_DANS_UN_JOURNAL_LOCAL_OU_NATIONAL         (publique      , accepté                ) -> [NOTIFIER_DEMANDEUR,RENDRE_INFORMATION_DU_PREFET_ET_DES_COLLECTIVITES]",
+        "[2022-08-14 -> 2023-08-14]",
         "NOTIFIER_DEMANDEUR                                (publique      , accepté                ) -> [RENDRE_INFORMATION_DU_PREFET_ET_DES_COLLECTIVITES]",
+        "[2022-08-14 -> 2023-08-14]",
         "RENDRE_INFORMATION_DU_PREFET_ET_DES_COLLECTIVITES (publique      , accepté                ) -> []",
+        "[2022-08-14 -> 2023-08-14]",
       ]
     `)
   })
@@ -92,7 +100,7 @@ describe('vérifie l’arbre d’octroi de PRM', () => {
         "FAIRE_DEMANDE                                     (confidentielle, en construction        ) -> [ENREGISTRER_DEMANDE]",
         "ENREGISTRER_DEMANDE                               (confidentielle, déposé                 ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATIONS,DESISTER_PAR_LE_DEMANDEUR,FAIRE_SAISINE_PREFET,MODIFIER_DEMANDE,RECEVOIR_INFORMATIONS]",
         "FAIRE_SAISINE_PREFET                              (confidentielle, déposé                 ) -> [CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_POUR_RECEVABILITE,DEMANDER_INFORMATIONS,DESISTER_PAR_LE_DEMANDEUR,FAIRE_RECEVABILITE_DEMANDE_DEFAVORABLE,FAIRE_RECEVABILITE_DEMANDE_FAVORABLE,MODIFIER_DEMANDE,RECEVOIR_INFORMATIONS]",
-        "FAIRE_RECEVABILITE_DEMANDE_FAVORABLE              (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATIONS,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,RECEVOIR_INFORMATIONS,RENDRE_AVIS_DE_MISE_EN_CONCURRENCE_AU_JORF]",
+        "FAIRE_RECEVABILITE_DEMANDE_FAVORABLE              (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATIONS,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,RECEVOIR_INFORMATIONS,RENDRE_AVIS_DE_MISE_EN_CONCURRENCE_AU_JORF]",
         "RENDRE_AVIS_DE_MISE_EN_CONCURRENCE_AU_JORF        (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATIONS,DEPOSER_DEMANDE_CONCURRENTE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,RECEVOIR_INFORMATIONS,RENDRE_AVIS_DES_COLLECTIVITES,RENDRE_AVIS_SERVICES_ET_COMMISSIONS_CONSULTATIVES]",
         "OUVRIR_PARTICIPATION_DU_PUBLIC                    (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATIONS,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,RECEVOIR_INFORMATIONS,RENDRE_AVIS_DES_COLLECTIVITES,RENDRE_AVIS_SERVICES_ET_COMMISSIONS_CONSULTATIVES]",
         "RENDRE_AVIS_SERVICES_ET_COMMISSIONS_CONSULTATIVES (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATIONS,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,RECEVOIR_INFORMATIONS,RENDRE_AVIS_DES_COLLECTIVITES]",
@@ -156,7 +164,7 @@ describe('vérifie l’arbre d’octroi de PRM', () => {
         "FAIRE_DEMANDE                                     (confidentielle, en construction        ) -> [ENREGISTRER_DEMANDE]",
         "ENREGISTRER_DEMANDE                               (confidentielle, déposé                 ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATIONS,DESISTER_PAR_LE_DEMANDEUR,FAIRE_SAISINE_PREFET,MODIFIER_DEMANDE,RECEVOIR_INFORMATIONS]",
         "FAIRE_SAISINE_PREFET                              (confidentielle, déposé                 ) -> [CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_POUR_RECEVABILITE,DEMANDER_INFORMATIONS,DESISTER_PAR_LE_DEMANDEUR,FAIRE_RECEVABILITE_DEMANDE_DEFAVORABLE,FAIRE_RECEVABILITE_DEMANDE_FAVORABLE,MODIFIER_DEMANDE,RECEVOIR_INFORMATIONS]",
-        "FAIRE_RECEVABILITE_DEMANDE_FAVORABLE              (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATIONS,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,RECEVOIR_INFORMATIONS,RENDRE_AVIS_DE_MISE_EN_CONCURRENCE_AU_JORF]",
+        "FAIRE_RECEVABILITE_DEMANDE_FAVORABLE              (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATIONS,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,RECEVOIR_INFORMATIONS,RENDRE_AVIS_DE_MISE_EN_CONCURRENCE_AU_JORF]",
         "RENDRE_AVIS_DE_MISE_EN_CONCURRENCE_AU_JORF        (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATIONS,DEPOSER_DEMANDE_CONCURRENTE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,RECEVOIR_INFORMATIONS,RENDRE_AVIS_SERVICES_ET_COMMISSIONS_CONSULTATIVES]",
         "RENDRE_AVIS_SERVICES_ET_COMMISSIONS_CONSULTATIVES (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATIONS,DEPOSER_DEMANDE_CONCURRENTE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,RECEVOIR_INFORMATIONS]",
         "OUVRIR_PARTICIPATION_DU_PUBLIC                    (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATIONS,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,RECEVOIR_INFORMATIONS,RENDRE_AVIS_CDM]",
@@ -178,7 +186,7 @@ describe('vérifie l’arbre d’octroi de PRM', () => {
       ETES.rapportEtAvisDeLaDREAL.FAVORABLE,
     ]
     expect(() => setDateAndOrderAndInterpretMachine(prmOctMachine, '2022-04-13', etapes)).toThrowErrorMatchingInlineSnapshot(
-      `[Error: Error: cannot execute step: '{"etapeTypeId":"apd","etapeStatutId":"fav","date":"2022-04-20"}' after '["mfr_fai","men_fai","spp_fai","mcr_fav","anf_ter","asc_fai"]'. The event {"type":"RENDRE_RAPPORT_DREAL","date":"2022-04-20","status":"fav"} should be one of 'CLASSER_SANS_SUITE,DEMANDER_INFORMATIONS,DEPOSER_DEMANDE_CONCURRENTE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,RECEVOIR_INFORMATIONS']`
+      `[Error: Error: cannot execute step: '{"duree":12,"etapeTypeId":"apd","etapeStatutId":"fav","date":"2022-04-20"}' after '["mfr_fai","men_fai","spp_fai","mcr_fav","anf_ter","asc_fai"]'. The event {"type":"RENDRE_RAPPORT_DREAL","date":"2022-04-20","status":"fav","duree":12} should be one of 'CLASSER_SANS_SUITE,DEMANDER_INFORMATIONS,DEPOSER_DEMANDE_CONCURRENTE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,RECEVOIR_INFORMATIONS']`
     )
   })
 
@@ -193,7 +201,7 @@ describe('vérifie l’arbre d’octroi de PRM', () => {
       ETES.avisDesServicesEtCommissionsConsultatives.FAIT,
     ]
     expect(() => setDateAndOrderAndInterpretMachine(prmOctMachine, '2022-04-12', etapes)).toThrowErrorMatchingInlineSnapshot(
-      `[Error: Error: cannot execute step: '{"etapeTypeId":"asc","etapeStatutId":"fai","date":"2022-04-19"}' after '["mfr_fai","men_fai","spp_fai","mcr_fav","anf_ter","asc_fai"]'. The event {"type":"RENDRE_AVIS_SERVICES_ET_COMMISSIONS_CONSULTATIVES","date":"2022-04-19","status":"fai"} should be one of 'CLASSER_SANS_SUITE,DEMANDER_INFORMATIONS,DEPOSER_DEMANDE_CONCURRENTE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,RECEVOIR_INFORMATIONS']`
+      `[Error: Error: cannot execute step: '{"duree":12,"etapeTypeId":"asc","etapeStatutId":"fai","date":"2022-04-19"}' after '["mfr_fai","men_fai","spp_fai","mcr_fav","anf_ter","asc_fai"]'. The event {"type":"RENDRE_AVIS_SERVICES_ET_COMMISSIONS_CONSULTATIVES","date":"2022-04-19","status":"fai","duree":12} should be one of 'CLASSER_SANS_SUITE,DEMANDER_INFORMATIONS,DEPOSER_DEMANDE_CONCURRENTE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,RECEVOIR_INFORMATIONS']`
     )
   })
 
@@ -207,7 +215,7 @@ describe('vérifie l’arbre d’octroi de PRM', () => {
       ETES.participationDuPublic.PROGRAMME,
     ]
     expect(() => setDateAndOrderAndInterpretMachine(prmOctMachine, '2022-04-13', etapes)).toThrowErrorMatchingInlineSnapshot(
-      `[Error: Error: cannot execute step: '{"etapeTypeId":"ppu","etapeStatutId":"pro","date":"2022-04-19"}' after '["mfr_fai","men_fai","spp_fai","mcr_fav","anf_ter"]'. The event {"type":"OUVRIR_PARTICIPATION_DU_PUBLIC","date":"2022-04-19","status":"pro"} should be one of 'CLASSER_SANS_SUITE,DEMANDER_INFORMATIONS,DEPOSER_DEMANDE_CONCURRENTE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,RECEVOIR_INFORMATIONS,RENDRE_AVIS_SERVICES_ET_COMMISSIONS_CONSULTATIVES']`
+      `[Error: Error: cannot execute step: '{"duree":12,"etapeTypeId":"ppu","etapeStatutId":"pro","date":"2022-04-19"}' after '["mfr_fai","men_fai","spp_fai","mcr_fav","anf_ter"]'. The event {"type":"OUVRIR_PARTICIPATION_DU_PUBLIC","date":"2022-04-19","status":"pro","duree":12} should be one of 'CLASSER_SANS_SUITE,DEMANDER_INFORMATIONS,DEPOSER_DEMANDE_CONCURRENTE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,RECEVOIR_INFORMATIONS,RENDRE_AVIS_SERVICES_ET_COMMISSIONS_CONSULTATIVES']`
     )
   })
 
@@ -233,17 +241,7 @@ describe('vérifie l’arbre d’octroi de PRM', () => {
     ]
 
     expect(() => setDateAndOrderAndInterpretMachine(prmOctMachine, '2022-04-13', etapes)).toThrowErrorMatchingInlineSnapshot(
-      `[Error: Error: cannot execute step: '{"etapeTypeId":"rpu","etapeStatutId":"fai","date":"2022-05-30"}' after '["mfr_fai","men_fai","spp_fai","mcr_fav","anf_ter","asc_fai","ppu_ter","apd_fav","app_fav","scg_fai","rcg_fav","acg_fav","sas_fai","dex_rej","ipc_fai","mno_fai"]'. The event {"type":"PUBLIER_DECISIONS_RECUEIL_ACTES_ADMINISTRATIFS","date":"2022-05-30","status":"fai"} should be one of 'RENDRE_DECISION_ABROGATION,RENDRE_DECISION_ANNULATION_PAR_JUGE_ADMINISTRATIF']`
+      `[Error: Error: cannot execute step: '{"duree":12,"etapeTypeId":"rpu","etapeStatutId":"fai","date":"2022-05-30"}' after '["mfr_fai","men_fai","spp_fai","mcr_fav","anf_ter","asc_fai","ppu_ter","apd_fav","app_fav","scg_fai","rcg_fav","acg_fav","sas_fai","dex_rej","ipc_fai","mno_fai"]'. The event {"type":"PUBLIER_DECISIONS_RECUEIL_ACTES_ADMINISTRATIFS","date":"2022-05-30","status":"fai","duree":12} should be one of 'RENDRE_DECISION_ABROGATION,RENDRE_DECISION_ANNULATION_PAR_JUGE_ADMINISTRATIF']`
     )
-  })
-
-  // pour regénérer le oct.cas.json: `npm run test:generate-data -w packages/api`
-  test.each(etapesProd as any[])('cas réel N°$id', demarche => {
-    // ici les étapes sont déjà ordonnées
-    prmOctMachine.interpretMachine(demarche.etapes)
-    expect(prmOctMachine.demarcheStatut(demarche.etapes)).toStrictEqual({
-      demarcheStatut: demarche.demarcheStatutId,
-      publique: demarche.demarchePublique,
-    })
   })
 })

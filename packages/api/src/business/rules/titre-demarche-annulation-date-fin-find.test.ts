@@ -1,71 +1,80 @@
 import { ITitreEtape } from '../../types'
 import { titreDemarcheAnnulationDateFinFind } from './titre-demarche-annulation-date-fin-find'
-import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes'
+import { ETAPES_TYPES, EtapeTypeId } from 'camino-common/src/static/etapesTypes'
 import { newDemarcheId, newEtapeId } from '../../database/models/_format/id-create'
 import { toCaminoDate } from 'camino-common/src/date'
 import { describe, expect, test } from 'vitest'
 import { ETAPE_IS_NOT_BROUILLON } from 'camino-common/src/etape'
+import { TITRES_TYPES_IDS } from 'camino-common/src/static/titresTypes'
+import { DEMARCHES_TYPES_IDS } from 'camino-common/src/static/demarchesTypes'
+import { titreIdValidator } from 'camino-common/src/validators/titres'
+import { NonEmptyArray } from 'camino-common/src/typescript-tools'
+import { ETAPES_STATUTS, EtapeStatutId } from 'camino-common/src/static/etapesStatuts'
 describe("date de fin d'une démarche d'annulation", () => {
-  test("retourne la date d'une démarche d'annulation si elle n'a pas de date de fin pour une décision de l'autorité administrative", () => {
-    const titreDemarcheAnnulationEtapes: ITitreEtape[] = [
+  test.each<{ typeId: EtapeTypeId; statutId: EtapeStatutId }>([
+    { typeId: ETAPES_TYPES.decisionDeLAutoriteAdministrative, statutId: ETAPES_STATUTS.ACCEPTE },
+    { typeId: ETAPES_TYPES.publicationDeDecisionAuJORF, statutId: ETAPES_STATUTS.FAIT },
+  ])("retourne la date d'une démarche d'annulation si elle n'a pas de date de fin pour une $typeId", etape => {
+    const titreDemarcheId = newDemarcheId('h-cx-courdemanges-1988-ret01')
+    const titreDemarcheAnnulationEtapes = [
       {
         id: newEtapeId('h-cx-courdemanges-1988-ret01-dex01'),
-        titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-ret01'),
-        typeId: ETAPES_TYPES.decisionDeLAutoriteAdministrative,
-        statutId: 'acc',
+        titreDemarcheId,
+        ...etape,
         isBrouillon: ETAPE_IS_NOT_BROUILLON,
         ordre: 1,
-        date: toCaminoDate('2013-05-21'),
+        date: toCaminoDate('1999-05-21'),
         concurrence: { amIFirst: true },
         hasTitreFrom: true,
         demarcheIdsConsentement: [],
       },
-    ]
-    expect(titreDemarcheAnnulationDateFinFind(titreDemarcheAnnulationEtapes)).toEqual('2013-05-21')
+    ] as const satisfies ITitreEtape[]
+    expect(
+      titreDemarcheAnnulationDateFinFind(TITRES_TYPES_IDS.CONCESSION_HYDROCARBURE, {
+        id: titreDemarcheId,
+        titreId: titreIdValidator.parse('titreId'),
+        typeId: DEMARCHES_TYPES_IDS.Retrait,
+        etapes: titreDemarcheAnnulationEtapes,
+      })
+    ).toEqual('1999-05-21')
   })
+  // TODO 2025-01-15 cet id est ignoré explicitement dans la machine pour utiliser TDE, test à virer quand on arrête de faire des avenant dans les octrois mais qu'on fait des prolongations (tache à POH)
+  const titreDemarcheIdExcluDesOctroisDArm = newDemarcheId('QauHUIPuv1a5neW3JqVEWh8n')
 
-  test("retourne la date de fin d'une démarche d'annulation si elle existe pour une décision de l'autorité administrative", () => {
-    const titreDemarcheAnnulationEtapesDateFin: ITitreEtape[] = [
+  test.each<{ typeId: EtapeTypeId; statutId: EtapeStatutId }>([
+    { typeId: ETAPES_TYPES.decisionDeLAutoriteAdministrative, statutId: ETAPES_STATUTS.ACCEPTE },
+  ])("retourne la date de fin d'une démarche d'annulation si elle existe pour une $typeId", etape => {
+    const titreDemarcheId = newDemarcheId('demarcheIdRetrait')
+    const titreDemarcheAnnulationEtapesDateFin: NonEmptyArray<ITitreEtape> = [
       {
-        id: newEtapeId('h-cx-courdemanges-1988-ret01-dex01'),
-        titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-ret01'),
-        typeId: ETAPES_TYPES.decisionDeLAutoriteAdministrative,
-        statutId: 'acc',
+        id: newEtapeId('etapeId'),
+        titreDemarcheId,
+        ...etape,
         isBrouillon: ETAPE_IS_NOT_BROUILLON,
         ordre: 1,
-        date: toCaminoDate('2013-05-21'),
+        date: toCaminoDate('1999-05-21'),
         dateFin: toCaminoDate('2013-05-25'),
         concurrence: { amIFirst: true },
         hasTitreFrom: true,
         demarcheIdsConsentement: [],
       },
     ]
-    expect(titreDemarcheAnnulationDateFinFind(titreDemarcheAnnulationEtapesDateFin)).toEqual('2013-05-25')
+    expect(
+      titreDemarcheAnnulationDateFinFind(TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX, {
+        id: titreDemarcheId,
+        titreId: titreIdValidator.parse('titreId'),
+        typeId: DEMARCHES_TYPES_IDS.Octroi,
+        etapes: titreDemarcheAnnulationEtapesDateFin,
+      })
+    ).toEqual('2013-05-25')
   })
 
-  test("retourne null si l'étape n'a ni date, ni date de fin", () => {
-    // TODO 2022-05-10, c'est étrange, on va à l'encontre de typescript ici. Soit le typage est faux, soit le test ne sert à rien
-    const titreDemarcheAnnulationEtapesSansDate: ITitreEtape[] = [
+  test("retourne la date de fin d'un Avenant à l'autorisation de recherche minière si elle existe", () => {
+    const titreDemarcheACOFaitEtapesDateFin: NonEmptyArray<ITitreEtape> = [
       {
         id: newEtapeId('h-cx-courdemanges-1988-ret01-dex01'),
-        titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-ret01'),
-        typeId: 'dex',
-        statutId: 'acc',
-        ordre: 1,
-
-        // @ts-ignore
-        date: null,
-      },
-    ]
-    expect(titreDemarcheAnnulationDateFinFind(titreDemarcheAnnulationEtapesSansDate)).toBeNull()
-  })
-
-  test("retourne la date de fin d'une ACO si elle existe", () => {
-    const titreDemarcheACOFaitEtapesDateFin: ITitreEtape[] = [
-      {
-        id: newEtapeId('h-cx-courdemanges-1988-ret01-dex01'),
-        titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-ret01'),
-        typeId: 'aco',
+        titreDemarcheId: titreDemarcheIdExcluDesOctroisDArm,
+        typeId: ETAPES_TYPES.avenantALautorisationDeRechercheMiniere,
         statutId: 'fai',
         isBrouillon: ETAPE_IS_NOT_BROUILLON,
         ordre: 1,
@@ -76,6 +85,13 @@ describe("date de fin d'une démarche d'annulation", () => {
         demarcheIdsConsentement: [],
       },
     ]
-    expect(titreDemarcheAnnulationDateFinFind(titreDemarcheACOFaitEtapesDateFin)).toEqual('2013-05-25')
+    expect(
+      titreDemarcheAnnulationDateFinFind(TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX, {
+        id: titreDemarcheIdExcluDesOctroisDArm,
+        titreId: titreIdValidator.parse('titreId'),
+        typeId: DEMARCHES_TYPES_IDS.Octroi,
+        etapes: titreDemarcheACOFaitEtapesDateFin,
+      })
+    ).toEqual('2013-05-25')
   })
 })

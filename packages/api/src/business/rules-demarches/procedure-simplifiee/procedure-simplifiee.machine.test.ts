@@ -1,12 +1,26 @@
 import { setDateAndOrderAndInterpretMachine } from '../machine-test-helper'
 import { EtapesTypesEtapesStatuts as ETES } from 'camino-common/src/static/etapesTypesEtapesStatuts'
 import { describe, expect, test } from 'vitest'
-import { ProcedureSimplifieeMachine } from './ps.machine'
+import { ProcedureSimplifieeMachine } from './procedure-simplifiee.machine'
+import { TITRES_TYPES_IDS } from 'camino-common/src/static/titresTypes'
+import { DEMARCHES_TYPES_IDS } from 'camino-common/src/static/demarchesTypes'
 
-const etapesProdProceduresHistoriques = require('../pxg-arg-cxr-inr-prr-pxr-cxf-prf-pxf-arc-apc-pcc/1717-01-09-amo-ces-con-dec-dep-exp-exs-fus-mut-oct-pr1-pr2-pre-pro-prr-rec-rep-res-ret-vct-vut.cas.json') // eslint-disable-line
-const psMachine = new ProcedureSimplifieeMachine()
+const psMachine = new ProcedureSimplifieeMachine(TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_GEOTHERMIE, DEMARCHES_TYPES_IDS.Octroi)
+const psRetMachine = new ProcedureSimplifieeMachine(TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_GEOTHERMIE, DEMARCHES_TYPES_IDS.RenonciationTotale)
 
 describe('vérifie l’arbre des procédures historiques et simplifiées', () => {
+  test('peut faire une renonciation totale', () => {
+    const { tree } = setDateAndOrderAndInterpretMachine(psRetMachine, '2024-10-10', [ETES.decisionDeLAutoriteAdministrative.ACCEPTE, ETES.publicationDeDecisionAuJORF.FAIT])
+    expect(tree).toMatchInlineSnapshot(`
+      [
+        "RIEN                                    (confidentielle, en construction        ) -> [FAIRE_DEMANDE,RENDRE_DECISION_ADMINISTRATION_ACCEPTEE]",
+        "RENDRE_DECISION_ADMINISTRATION_ACCEPTEE (publique      , accepté                ) -> [PUBLIER_DECISION_ACCEPTEE_AU_JORF,PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS]",
+        "2024-10-11",
+        "PUBLIER_DECISION_ACCEPTEE_AU_JORF       (publique      , accepté et publié      ) -> [FAIRE_ABROGATION]",
+        "2024-10-11",
+      ]
+    `)
+  })
   test('statut de la démarche simplifiee sans étape', () => {
     const { tree } = setDateAndOrderAndInterpretMachine(psMachine, '2024-10-10', [])
     expect(tree).toMatchInlineSnapshot(`
@@ -38,6 +52,7 @@ describe('vérifie l’arbre des procédures historiques et simplifiées', () =>
       [
         "RIEN                                     (confidentielle, en construction        ) -> [FAIRE_DEMANDE,PUBLIER_DECISION_ACCEPTEE_AU_JORF,PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS,RENDRE_DECISION_ADMINISTRATION_ACCEPTEE,RENDRE_DECISION_ADMINISTRATION_REJETEE,RENDRE_DECISION_ADMINISTRATION_REJETEE_DECISION_IMPLICITE,SAISIR_INFORMATION_HISTORIQUE_INCOMPLETE]",
         "SAISIR_INFORMATION_HISTORIQUE_INCOMPLETE (confidentielle, accepté                ) -> []",
+        "[1999-04-15 -> 2000-04-15]",
       ]
     `)
   })
@@ -48,6 +63,7 @@ describe('vérifie l’arbre des procédures historiques et simplifiées', () =>
       [
         "RIEN                              (confidentielle, en construction        ) -> [FAIRE_DEMANDE,PUBLIER_DECISION_ACCEPTEE_AU_JORF,PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS,RENDRE_DECISION_ADMINISTRATION_ACCEPTEE,RENDRE_DECISION_ADMINISTRATION_REJETEE,RENDRE_DECISION_ADMINISTRATION_REJETEE_DECISION_IMPLICITE,SAISIR_INFORMATION_HISTORIQUE_INCOMPLETE]",
         "PUBLIER_DECISION_ACCEPTEE_AU_JORF (publique      , accepté et publié      ) -> [FAIRE_ABROGATION]",
+        "[1999-04-15 -> 2000-04-15]",
       ]
     `)
   })
@@ -66,7 +82,7 @@ describe('vérifie l’arbre des procédures historiques et simplifiées', () =>
   test('ne peut pas faire deux dépôts de la demande', () => {
     const etapes = [ETES.demande.FAIT, ETES.enregistrementDeLaDemande.FAIT, ETES.enregistrementDeLaDemande.FAIT]
     expect(() => setDateAndOrderAndInterpretMachine(psMachine, '2022-04-12', etapes)).toThrowErrorMatchingInlineSnapshot(
-      `[Error: Error: cannot execute step: '{"etapeTypeId":"men","etapeStatutId":"fai","date":"2022-04-15"}' after '["mfr_fai","men_fai"]'. The event {"type":"ENREGISTRER_DEMANDE","date":"2022-04-15","status":"fai"} should be one of 'CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_PARTICIPATION_DU_PUBLIC,RECEVOIR_INFORMATION,RENDRE_AVIS_COLLECTIVITES,RENDRE_AVIS_SERVICES_COMMISSIONS,RENDRE_DECISION_ADMINISTRATION_ACCEPTEE,RENDRE_DECISION_ADMINISTRATION_REJETEE,RENDRE_DECISION_ADMINISTRATION_REJETEE_DECISION_IMPLICITE']`
+      `[Error: Error: cannot execute step: '{"duree":12,"etapeTypeId":"men","etapeStatutId":"fai","date":"2022-04-15"}' after '["mfr_fai","men_fai"]'. The event {"type":"ENREGISTRER_DEMANDE","date":"2022-04-15","status":"fai","duree":12} should be one of 'CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_PARTICIPATION_DU_PUBLIC,RECEVOIR_INFORMATION,RENDRE_AVIS_COLLECTIVITES,RENDRE_AVIS_SERVICES_COMMISSIONS,RENDRE_DECISION_ADMINISTRATION_ACCEPTEE,RENDRE_DECISION_ADMINISTRATION_REJETEE,RENDRE_DECISION_ADMINISTRATION_REJETEE_DECISION_IMPLICITE']`
     )
   })
 
@@ -103,6 +119,7 @@ describe('vérifie l’arbre des procédures historiques et simplifiées', () =>
       [
         "RIEN                                    (confidentielle, en construction        ) -> [FAIRE_DEMANDE,RENDRE_DECISION_ADMINISTRATION_ACCEPTEE,RENDRE_DECISION_ADMINISTRATION_REJETEE,RENDRE_DECISION_ADMINISTRATION_REJETEE_DECISION_IMPLICITE]",
         "RENDRE_DECISION_ADMINISTRATION_ACCEPTEE (publique      , accepté et publié      ) -> [PUBLIER_DECISION_ACCEPTEE_AU_JORF,PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS]",
+        "[2022-04-16 -> 2023-04-16]",
       ]
     `)
   })
@@ -115,7 +132,9 @@ describe('vérifie l’arbre des procédures historiques et simplifiées', () =>
         "RIEN                                                 (confidentielle, en construction        ) -> [FAIRE_DEMANDE,RENDRE_DECISION_ADMINISTRATION_ACCEPTEE,RENDRE_DECISION_ADMINISTRATION_REJETEE,RENDRE_DECISION_ADMINISTRATION_REJETEE_DECISION_IMPLICITE]",
         "FAIRE_DEMANDE                                        (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,ENREGISTRER_DEMANDE,OUVRIR_PARTICIPATION_DU_PUBLIC,RECEVOIR_INFORMATION,RENDRE_AVIS_COLLECTIVITES,RENDRE_AVIS_SERVICES_COMMISSIONS,RENDRE_DECISION_ADMINISTRATION_ACCEPTEE,RENDRE_DECISION_ADMINISTRATION_REJETEE,RENDRE_DECISION_ADMINISTRATION_REJETEE_DECISION_IMPLICITE]",
         "RENDRE_DECISION_ADMINISTRATION_ACCEPTEE              (publique      , accepté et publié      ) -> [PUBLIER_DECISION_ACCEPTEE_AU_JORF,PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS]",
+        "[2022-04-16 -> 2023-04-16]",
         "PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS (publique      , accepté et publié      ) -> [FAIRE_ABROGATION]",
+        "[2022-04-16 -> 2023-04-16]",
       ]
     `)
   })
@@ -156,14 +175,16 @@ describe('vérifie l’arbre des procédures historiques et simplifiées', () =>
     `)
   })
 
-  test("peut faire une décision de l'autorité administrative avant le 1er juillet 2024 qui termine la machine", () => {
+  test("peut faire une décision de l'autorité administrative avant le 1er juillet 2024", () => {
     const etapes = [ETES.decisionDeLAutoriteAdministrative.ACCEPTE, ETES.publicationDeDecisionAuJORF.FAIT]
     const { tree } = setDateAndOrderAndInterpretMachine(psMachine, '2022-04-14', etapes)
     expect(tree).toMatchInlineSnapshot(`
       [
         "RIEN                                    (confidentielle, en construction        ) -> [FAIRE_DEMANDE,RENDRE_DECISION_ADMINISTRATION_ACCEPTEE,RENDRE_DECISION_ADMINISTRATION_REJETEE,RENDRE_DECISION_ADMINISTRATION_REJETEE_DECISION_IMPLICITE]",
         "RENDRE_DECISION_ADMINISTRATION_ACCEPTEE (publique      , accepté et publié      ) -> [PUBLIER_DECISION_ACCEPTEE_AU_JORF,PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS]",
+        "[2022-04-15 -> 2023-04-15]",
         "PUBLIER_DECISION_ACCEPTEE_AU_JORF       (publique      , accepté et publié      ) -> [FAIRE_ABROGATION]",
+        "[2022-04-15 -> 2023-04-15]",
       ]
     `)
   })
@@ -175,6 +196,7 @@ describe('vérifie l’arbre des procédures historiques et simplifiées', () =>
       [
         "RIEN                                    (confidentielle, en construction        ) -> [FAIRE_DEMANDE,RENDRE_DECISION_ADMINISTRATION_ACCEPTEE]",
         "RENDRE_DECISION_ADMINISTRATION_ACCEPTEE (publique      , accepté                ) -> [PUBLIER_DECISION_ACCEPTEE_AU_JORF,PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS]",
+        "[2024-07-15 -> 2025-07-15]",
       ]
     `)
   })
@@ -193,6 +215,7 @@ describe('vérifie l’arbre des procédures historiques et simplifiées', () =>
         "RENDRE_AVIS_COLLECTIVITES               (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_PARTICIPATION_DU_PUBLIC,RECEVOIR_INFORMATION,RENDRE_AVIS_PREFET,RENDRE_AVIS_SERVICES_COMMISSIONS]",
         "RENDRE_AVIS_PREFET                      (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_PARTICIPATION_DU_PUBLIC,RECEVOIR_INFORMATION,RENDRE_DECISION_ADMINISTRATION_ACCEPTEE,RENDRE_DECISION_ADMINISTRATION_REJETEE,RENDRE_DECISION_ADMINISTRATION_REJETEE_DECISION_IMPLICITE]",
         "RENDRE_DECISION_ADMINISTRATION_ACCEPTEE (publique      , accepté et publié      ) -> [PUBLIER_DECISION_ACCEPTEE_AU_JORF,PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS]",
+        "[2022-04-19 -> 2023-04-19]",
       ]
     `)
   })
@@ -211,6 +234,7 @@ describe('vérifie l’arbre des procédures historiques et simplifiées', () =>
         "RENDRE_AVIS_SERVICES_COMMISSIONS        (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_PARTICIPATION_DU_PUBLIC,RECEVOIR_INFORMATION,RENDRE_AVIS_COLLECTIVITES,RENDRE_AVIS_PREFET]",
         "RENDRE_AVIS_PREFET                      (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_PARTICIPATION_DU_PUBLIC,RECEVOIR_INFORMATION,RENDRE_DECISION_ADMINISTRATION_ACCEPTEE,RENDRE_DECISION_ADMINISTRATION_REJETEE,RENDRE_DECISION_ADMINISTRATION_REJETEE_DECISION_IMPLICITE]",
         "RENDRE_DECISION_ADMINISTRATION_ACCEPTEE (publique      , accepté et publié      ) -> [PUBLIER_DECISION_ACCEPTEE_AU_JORF,PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS]",
+        "[2022-04-19 -> 2023-04-19]",
       ]
     `)
   })
@@ -290,9 +314,13 @@ describe('vérifie l’arbre des procédures historiques et simplifiées', () =>
         "ENREGISTRER_DEMANDE                                  (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_PARTICIPATION_DU_PUBLIC,RECEVOIR_INFORMATION,RENDRE_AVIS_COLLECTIVITES,RENDRE_AVIS_SERVICES_COMMISSIONS,RENDRE_DECISION_ADMINISTRATION_ACCEPTEE,RENDRE_DECISION_ADMINISTRATION_REJETEE,RENDRE_DECISION_ADMINISTRATION_REJETEE_DECISION_IMPLICITE]",
         "OUVRIR_PARTICIPATION_DU_PUBLIC                       (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,RECEVOIR_INFORMATION,RENDRE_AVIS_COLLECTIVITES,RENDRE_AVIS_SERVICES_COMMISSIONS,RENDRE_DECISION_ADMINISTRATION_ACCEPTEE,RENDRE_DECISION_ADMINISTRATION_REJETEE,RENDRE_DECISION_ADMINISTRATION_REJETEE_DECISION_IMPLICITE]",
         "RENDRE_DECISION_ADMINISTRATION_ACCEPTEE              (publique      , accepté et publié      ) -> [PUBLIER_DECISION_ACCEPTEE_AU_JORF,PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS]",
+        "[2022-04-18 -> 2023-04-18]",
         "PUBLIER_DECISION_ACCEPTEE_AU_JORF                    (publique      , accepté et publié      ) -> [FAIRE_ABROGATION]",
+        "[2022-04-18 -> 2023-04-18]",
         "FAIRE_ABROGATION                                     (publique      , accepté et publié      ) -> [PUBLIER_DECISION_ACCEPTEE_AU_JORF,PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS]",
+        "[2022-04-18 -> 2022-04-20]",
         "PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS (publique      , rejeté après abrogation) -> []",
+        "[2022-04-18 -> 2022-04-20]",
       ]
     `)
   })
@@ -304,9 +332,13 @@ describe('vérifie l’arbre des procédures historiques et simplifiées', () =>
       [
         "RIEN                                    (confidentielle, en construction        ) -> [FAIRE_DEMANDE,RENDRE_DECISION_ADMINISTRATION_ACCEPTEE,RENDRE_DECISION_ADMINISTRATION_REJETEE,RENDRE_DECISION_ADMINISTRATION_REJETEE_DECISION_IMPLICITE]",
         "RENDRE_DECISION_ADMINISTRATION_ACCEPTEE (publique      , accepté et publié      ) -> [PUBLIER_DECISION_ACCEPTEE_AU_JORF,PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS]",
+        "[2022-04-19 -> 2023-04-19]",
         "PUBLIER_DECISION_ACCEPTEE_AU_JORF       (publique      , accepté et publié      ) -> [FAIRE_ABROGATION]",
+        "[2022-04-19 -> 2023-04-19]",
         "FAIRE_ABROGATION                        (publique      , accepté et publié      ) -> [PUBLIER_DECISION_ACCEPTEE_AU_JORF,PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS]",
+        "[2022-04-19 -> 2022-04-21]",
         "PUBLIER_DECISION_ACCEPTEE_AU_JORF       (publique      , rejeté après abrogation) -> []",
+        "[2022-04-19 -> 2022-04-21]",
       ]
     `)
   })
@@ -351,16 +383,8 @@ describe('vérifie l’arbre des procédures historiques et simplifiées', () =>
       [
         "RIEN                              (confidentielle, en construction        ) -> [FAIRE_DEMANDE,PUBLIER_DECISION_ACCEPTEE_AU_JORF,PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS,RENDRE_DECISION_ADMINISTRATION_ACCEPTEE,RENDRE_DECISION_ADMINISTRATION_REJETEE,RENDRE_DECISION_ADMINISTRATION_REJETEE_DECISION_IMPLICITE,SAISIR_INFORMATION_HISTORIQUE_INCOMPLETE]",
         "PUBLIER_DECISION_ACCEPTEE_AU_JORF (publique      , accepté et publié      ) -> [FAIRE_ABROGATION]",
+        "[1999-01-02 -> 2000-01-02]",
       ]
     `)
-  })
-  // pour regénérer le oct.cas.json: `npm run test:generate-data -w packages/api`
-  test.each(etapesProdProceduresHistoriques as any[])('cas réel N°$id', demarche => {
-    // ici les étapes sont déjà ordonnées
-    psMachine.interpretMachine(demarche.etapes)
-    expect(psMachine.demarcheStatut(demarche.etapes)).toStrictEqual({
-      demarcheStatut: demarche.demarcheStatutId,
-      publique: demarche.demarchePublique,
-    })
   })
 })

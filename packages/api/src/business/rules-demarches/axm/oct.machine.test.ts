@@ -5,10 +5,11 @@ import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations'
 import { toCaminoDate } from 'camino-common/src/date'
 import { describe, expect, test } from 'vitest'
 import { onlyUnique } from 'camino-common/src/typescript-tools'
-const etapesProd = require('./2020-10-01-oct.cas.json') // eslint-disable-line
+import { TITRES_TYPES_IDS } from 'camino-common/src/static/titresTypes'
+import { DEMARCHES_TYPES_IDS } from 'camino-common/src/static/demarchesTypes'
 
 describe('vérifie l’arbre d’octroi d’AXM', () => {
-  const axmOctMachine = new AxmOctMachine()
+  const axmOctMachine = new AxmOctMachine(TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX, DEMARCHES_TYPES_IDS.Octroi)
   test('peut créer une "men" après une "mfr"', () => {
     const { tree, etapes } = setDateAndOrderAndInterpretMachine(axmOctMachine, '2020-01-01', [ETES.demande.FAIT, ETES.enregistrementDeLaDemande.FAIT])
     expect(tree).toMatchInlineSnapshot(`
@@ -139,7 +140,7 @@ describe('vérifie l’arbre d’octroi d’AXM', () => {
   test('ne peut pas faire deux fois la même étape à la même date', () => {
     const etapes = [{ ...ETES.demande.FAIT }, { ...ETES.demande.FAIT }]
     expect(() => setDateAndOrderAndInterpretMachine(axmOctMachine, '2022-04-01', etapes)).toThrowErrorMatchingInlineSnapshot(
-      `[Error: Error: cannot execute step: '{"etapeTypeId":"mfr","etapeStatutId":"fai","date":"2022-04-03"}' after '["mfr_fai"]'. The event {"type":"FAIRE_DEMANDE","date":"2022-04-03","status":"fai"} should be one of 'ENREGISTRER_DEMANDE,FAIRE_CLASSEMENT_SANS_SUITE,FAIRE_DESISTEMENT_DEMANDEUR']`
+      `[Error: Error: cannot execute step: '{"duree":12,"etapeTypeId":"mfr","etapeStatutId":"fai","date":"2022-04-03"}' after '["mfr_fai"]'. The event {"type":"FAIRE_DEMANDE","date":"2022-04-03","status":"fai","duree":12} should be one of 'ENREGISTRER_DEMANDE,FAIRE_CLASSEMENT_SANS_SUITE,FAIRE_DESISTEMENT_DEMANDEUR']`
     )
   })
 
@@ -182,10 +183,15 @@ describe('vérifie l’arbre d’octroi d’AXM', () => {
         "RENDRE_AVIS_COMMISSION_DEPARTEMENTALE_DES_MINES       (publique      , en instruction         ) -> [FAIRE_CLASSEMENT_SANS_SUITE,FAIRE_DESISTEMENT_DEMANDEUR,FAIRE_SAISINE_AUTORITE_SIGNATAIRE,RENDRE_DECISION_ADMINISTRATION_ACCEPTE,RENDRE_DECISION_ADMINISTRATION_REJETE]",
         "FAIRE_SAISINE_AUTORITE_SIGNATAIRE                     (publique      , en instruction         ) -> [FAIRE_CLASSEMENT_SANS_SUITE,FAIRE_DESISTEMENT_DEMANDEUR,RENDRE_DECISION_ADMINISTRATION_ACCEPTE,RENDRE_DECISION_ADMINISTRATION_REJETE]",
         "RENDRE_DECISION_ADMINISTRATION_ACCEPTE                (publique      , accepté                ) -> [NOTIFIER_COLLECTIVITES_LOCALES,NOTIFIER_DEMANDEUR,PUBLIER_DANS_UN_JOURNAL_LOCAL_OU_NATIONAL,PUBLIER_DECISIONS_RECUEIL_ACTES_ADMINISTRATIFS,RENDRE_DECISION_ABROGATION,RENDRE_DECISION_ANNULATION_PAR_JUGE_ADMINISTRATIF]",
+        "[2022-05-15 -> 2023-05-15]",
         "NOTIFIER_COLLECTIVITES_LOCALES                        (publique      , accepté                ) -> [NOTIFIER_DEMANDEUR,PUBLIER_DANS_UN_JOURNAL_LOCAL_OU_NATIONAL,PUBLIER_DECISIONS_RECUEIL_ACTES_ADMINISTRATIFS]",
+        "[2022-05-15 -> 2023-05-15]",
         "PUBLIER_DANS_UN_JOURNAL_LOCAL_OU_NATIONAL             (publique      , accepté                ) -> [NOTIFIER_DEMANDEUR,PUBLIER_DECISIONS_RECUEIL_ACTES_ADMINISTRATIFS]",
+        "[2022-05-15 -> 2023-05-15]",
         "PUBLIER_DECISIONS_RECUEIL_ACTES_ADMINISTRATIFS        (publique      , accepté                ) -> [NOTIFIER_DEMANDEUR]",
+        "[2022-05-15 -> 2023-05-15]",
         "NOTIFIER_DEMANDEUR                                    (publique      , accepté                ) -> []",
+        "[2022-05-15 -> 2023-05-15]",
       ]
     `)
   })
@@ -225,15 +231,5 @@ describe('vérifie l’arbre d’octroi d’AXM', () => {
         "FAIRE_DESISTEMENT_DEMANDEUR",
       ]
     `)
-  })
-
-  // pour regénérer le oct.cas.json: `npm run test:generate-data -w packages/api`
-  test.each(etapesProd as any[])('cas réel N°$id', demarche => {
-    // ici les étapes sont déjà ordonnées
-    axmOctMachine.interpretMachine(demarche.etapes)
-    expect(axmOctMachine.demarcheStatut(demarche.etapes)).toStrictEqual({
-      demarcheStatut: demarche.demarcheStatutId,
-      publique: demarche.demarchePublique,
-    })
   })
 })

@@ -3,10 +3,6 @@ import { describe, expect, test } from 'vitest'
 import { ProcedureSpecifiqueMachine } from './procedure-specifique.machine'
 import { EtapesTypesEtapesStatuts as ETES } from 'camino-common/src/static/etapesTypesEtapesStatuts'
 import { hectareToKm2, hectareValidator } from 'camino-common/src/number'
-import { CaminoMachines, machineFind } from '../machines'
-import { isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools'
-import { demarcheEnregistrementDemandeDateFind } from 'camino-common/src/demarche'
-const etapesProdSpecifiqueArmAxm = require('../arm-axm/2024-07-01-oct-pro-pr1-pr2-pre-exp-exs-prr.cas.json') // eslint-disable-line
 const psPccOctMachine = new ProcedureSpecifiqueMachine('pcc', 'oct')
 const psCxmOctMachine = new ProcedureSpecifiqueMachine('cxm', 'oct')
 const psPrmProMachine = new ProcedureSpecifiqueMachine('prm', 'pro')
@@ -194,7 +190,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
         ETES.notificationAuDemandeur.FAIT,
       ])
     ).toThrowErrorMatchingInlineSnapshot(
-      `[Error: Error: cannot execute step: '{"etapeTypeId":"mno","etapeStatutId":"fai","date":"1999-04-18"}' after '["mfr_fai","men_fai","mcr_fav"]'. The event {"type":"NOTIFIER_DEMANDEUR","date":"1999-04-18","status":"fai"} should be one of 'CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_MISE_EN_CONCURRENCE']`
+      `[Error: Error: cannot execute step: '{"duree":12,"etapeTypeId":"mno","etapeStatutId":"fai","date":"1999-04-18"}' after '["mfr_fai","men_fai","mcr_fav"]'. The event {"type":"NOTIFIER_DEMANDEUR","date":"1999-04-18","status":"fai","duree":12} should be one of 'CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_MISE_EN_CONCURRENCE']`
     )
   })
   test("après la recevabilité favorable la démarche reste confidentielle si il n'y a pas de mise en concurrence", () => {
@@ -399,7 +395,9 @@ describe('vérifie l’arbre des procédures spécifique', () => {
         "RENDRE_DECISION_ADMINISTRATION_ACCEPTEE (publique      , accepté                ) -> [PUBLIER_DECISION_ACCEPTEE_AU_JORF,PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS,RENDRE_MESURES_DE_PUBLICITE]",
         "RENDRE_MESURES_DE_PUBLICITE             (publique      , accepté                ) -> [PUBLIER_DECISION_ACCEPTEE_AU_JORF,PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS]",
         "PUBLIER_DECISION_ACCEPTEE_AU_JORF       (publique      , accepté et publié      ) -> [NOTIFIER_DEMANDEUR]",
+        "[1999-04-23 -> 2000-04-23]",
         "NOTIFIER_DEMANDEUR                      (publique      , accepté et publié      ) -> [FAIRE_ABROGATION]",
+        "[1999-04-23 -> 2000-04-23]",
       ]
     `)
   })
@@ -584,7 +582,16 @@ describe('vérifie l’arbre des procédures spécifique', () => {
     expect(machine.possibleNextEtapes(etapes, dateFin)).toStrictEqual([])
     expect(machine.demarcheStatut(etapes)).toMatchInlineSnapshot(`
       {
+        "demarcheDateDebut": {
+          "dateDebut": null,
+          "dateEtape": null,
+        },
+        "demarcheDateFin": {
+          "dateFin": null,
+          "duree": null,
+        },
         "demarcheStatut": "rej",
+        "demarcheTypeId": "pro",
         "publique": true,
       }
     `)
@@ -627,8 +634,11 @@ describe('vérifie l’arbre des procédures spécifique', () => {
         "RENDRE_DECISION_ADMINISTRATION_ACCEPTEE                    (publique      , accepté                ) -> [PUBLIER_DECISION_ACCEPTEE_AU_JORF,PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS,RENDRE_MESURES_DE_PUBLICITE]",
         "RENDRE_MESURES_DE_PUBLICITE                                (publique      , accepté                ) -> [PUBLIER_DECISION_ACCEPTEE_AU_JORF,PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS]",
         "PUBLIER_DECISION_ACCEPTEE_AU_JORF                          (publique      , accepté et publié      ) -> [NOTIFIER_DEMANDEUR]",
+        "[1999-04-25 -> 2000-04-25]",
         "NOTIFIER_DEMANDEUR                                         (publique      , accepté et publié      ) -> [FAIRE_ATTESTATION_DE_CONSTITUTION_DE_GARANTIES_FINANCIERES]",
+        "[1999-04-25 -> 2000-04-25]",
         "FAIRE_ATTESTATION_DE_CONSTITUTION_DE_GARANTIES_FINANCIERES (publique      , accepté et publié      ) -> [FAIRE_ABROGATION]",
+        "[1999-04-25 -> 2000-04-25]",
       ]
     `)
   })
@@ -673,14 +683,14 @@ describe('vérifie l’arbre des procédures spécifique', () => {
     ])
 
     expect(result.tree).toMatchInlineSnapshot(`
-        [
-          "RIEN                          (confidentielle, en construction        ) -> [FAIRE_DEMANDE]",
-          "FAIRE_DEMANDE                 (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,ENREGISTRER_DEMANDE]",
-          "ENREGISTRER_DEMANDE           (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_RECEVABILITE_DEFAVORABLE,FAIRE_RECEVABILITE_FAVORABLE]",
-          "FAIRE_RECEVABILITE_FAVORABLE  (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_DEMANDE_DE_CONSENTEMENT]",
-          "FAIRE_DEMANDE_DE_CONSENTEMENT (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_ENQUETE_PUBLIQUE,RENDRE_AVIS_COLLECTIVITES,RENDRE_AVIS_SERVICES_COMMISSIONS]",
-        ]
-      `)
+      [
+        "RIEN                          (confidentielle, en construction        ) -> [FAIRE_DEMANDE]",
+        "FAIRE_DEMANDE                 (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,ENREGISTRER_DEMANDE]",
+        "ENREGISTRER_DEMANDE           (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_RECEVABILITE_DEFAVORABLE,FAIRE_RECEVABILITE_FAVORABLE]",
+        "FAIRE_RECEVABILITE_FAVORABLE  (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_DEMANDE_DE_CONSENTEMENT]",
+        "FAIRE_DEMANDE_DE_CONSENTEMENT (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_ENQUETE_PUBLIQUE,RENDRE_AVIS_COLLECTIVITES,RENDRE_AVIS_SERVICES_COMMISSIONS]",
+      ]
+    `)
   })
 
   test('réalise une demande de concession granulats marins complète', () => {
@@ -735,9 +745,13 @@ describe('vérifie l’arbre des procédures spécifique', () => {
         "RENDRE_DECISION_ADMINISTRATION_ACCEPTEE           (publique      , accepté                ) -> [PUBLIER_DECISION_ACCEPTEE_AU_JORF,PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS,RENDRE_MESURES_DE_PUBLICITE]",
         "RENDRE_MESURES_DE_PUBLICITE                       (publique      , accepté                ) -> [PUBLIER_DECISION_ACCEPTEE_AU_JORF,PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS]",
         "PUBLIER_DECISION_ACCEPTEE_AU_JORF                 (publique      , accepté et publié      ) -> [NOTIFIER_DEMANDEUR]",
+        "[1999-05-02 -> 2000-05-02]",
         "NOTIFIER_DEMANDEUR                                (publique      , accepté et publié      ) -> [FAIRE_ABROGATION]",
+        "[1999-05-02 -> 2000-05-02]",
         "FAIRE_ABROGATION                                  (publique      , accepté et publié      ) -> [PUBLIER_DECISION_ACCEPTEE_AU_JORF,PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS]",
+        "[1999-05-02 -> 1999-05-04]",
         "PUBLIER_DECISION_ACCEPTEE_AU_JORF                 (publique      , rejeté après abrogation) -> []",
+        "[1999-05-02 -> 1999-05-04]",
       ]
     `)
   })
@@ -796,9 +810,13 @@ describe('vérifie l’arbre des procédures spécifique', () => {
         "RENDRE_DECISION_ADMINISTRATION_ACCEPTEE           (publique      , accepté                ) -> [PUBLIER_DECISION_ACCEPTEE_AU_JORF,PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS,RENDRE_MESURES_DE_PUBLICITE]",
         "RENDRE_MESURES_DE_PUBLICITE                       (publique      , accepté                ) -> [PUBLIER_DECISION_ACCEPTEE_AU_JORF,PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS]",
         "PUBLIER_DECISION_ACCEPTEE_AU_JORF                 (publique      , accepté et publié      ) -> [NOTIFIER_DEMANDEUR]",
+        "[1999-05-03 -> 2000-05-03]",
         "NOTIFIER_DEMANDEUR                                (publique      , accepté et publié      ) -> [FAIRE_ABROGATION]",
+        "[1999-05-03 -> 2000-05-03]",
         "FAIRE_ABROGATION                                  (publique      , accepté et publié      ) -> [PUBLIER_DECISION_ACCEPTEE_AU_JORF,PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS]",
+        "[1999-05-03 -> 1999-05-05]",
         "PUBLIER_DECISION_ACCEPTEE_AU_JORF                 (publique      , rejeté après abrogation) -> []",
+        "[1999-05-03 -> 1999-05-05]",
       ]
     `)
   })
@@ -835,10 +853,15 @@ describe('vérifie l’arbre des procédures spécifique', () => {
         "RENDRE_AVIS_PREFET                                   (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_PARTICIPATION_DU_PUBLIC,RENDRE_DECISION_ADMINISTRATION_ACCEPTEE,RENDRE_DECISION_ADMINISTRATION_REJETEE,RENDRE_DECISION_ADMINISTRATION_REJETEE_DECISION_IMPLICITE]",
         "RENDRE_DECISION_ADMINISTRATION_ACCEPTEE              (publique      , accepté                ) -> [PUBLIER_DECISION_ACCEPTEE_AU_JORF,PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS,RENDRE_MESURES_DE_PUBLICITE]",
         "PUBLIER_DECISION_ACCEPTEE_AU_JORF                    (publique      , accepté et publié      ) -> [NOTIFIER_DEMANDEUR,RENDRE_MESURES_DE_PUBLICITE]",
+        "[1999-04-22 -> 2000-04-22]",
         "RENDRE_MESURES_DE_PUBLICITE                          (publique      , accepté et publié      ) -> [NOTIFIER_DEMANDEUR]",
+        "[1999-04-22 -> 2000-04-22]",
         "NOTIFIER_DEMANDEUR                                   (publique      , accepté et publié      ) -> [FAIRE_ABROGATION]",
+        "[1999-04-22 -> 2000-04-22]",
         "FAIRE_ABROGATION                                     (publique      , accepté et publié      ) -> [PUBLIER_DECISION_ACCEPTEE_AU_JORF,PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS]",
+        "[1999-04-22 -> 1999-04-25]",
         "PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS (publique      , rejeté après abrogation) -> []",
+        "[1999-04-22 -> 1999-04-25]",
       ]
     `)
   })
@@ -860,34 +883,17 @@ describe('vérifie l’arbre des procédures spécifique', () => {
       ETES.declarationDIrrecevabilite.FAIT,
     ])
     expect(result.tree).toMatchInlineSnapshot(`
-          [
-            "RIEN                             (confidentielle, en construction        ) -> [FAIRE_DEMANDE]",
-            "FAIRE_DEMANDE                    (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,ENREGISTRER_DEMANDE]",
-            "ENREGISTRER_DEMANDE              (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_RECEVABILITE_DEFAVORABLE,FAIRE_RECEVABILITE_FAVORABLE]",
-            "FAIRE_RECEVABILITE_DEFAVORABLE   (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_DEMANDE_DE_COMPLEMENTS]",
-            "FAIRE_DEMANDE_DE_COMPLEMENTS     (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_DECLARATION_IRRECEVABILITE,RECEVOIR_COMPLEMENTS]",
-            "RECEVOIR_COMPLEMENTS             (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_DECLARATION_IRRECEVABILITE,FAIRE_RECEVABILITE_DEFAVORABLE,FAIRE_RECEVABILITE_FAVORABLE]",
-            "FAIRE_DECLARATION_IRRECEVABILITE (confidentielle, rejeté                 ) -> []",
-          ]
-        `)
+      [
+        "RIEN                             (confidentielle, en construction        ) -> [FAIRE_DEMANDE]",
+        "FAIRE_DEMANDE                    (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,ENREGISTRER_DEMANDE]",
+        "ENREGISTRER_DEMANDE              (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_RECEVABILITE_DEFAVORABLE,FAIRE_RECEVABILITE_FAVORABLE]",
+        "FAIRE_RECEVABILITE_DEFAVORABLE   (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_DEMANDE_DE_COMPLEMENTS]",
+        "FAIRE_DEMANDE_DE_COMPLEMENTS     (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_DECLARATION_IRRECEVABILITE,RECEVOIR_COMPLEMENTS]",
+        "RECEVOIR_COMPLEMENTS             (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_DECLARATION_IRRECEVABILITE,FAIRE_RECEVABILITE_DEFAVORABLE,FAIRE_RECEVABILITE_FAVORABLE]",
+        "FAIRE_DECLARATION_IRRECEVABILITE (confidentielle, rejeté                 ) -> []",
+      ]
+    `)
   })
 
-  // pour regénérer le oct.cas.json: `npm run test:generate-data -w packages/api`
-  test.each(etapesProdSpecifiqueArmAxm as any[])('cas réel N°$id', demarche => {
-    // ici les étapes sont déjà ordonnées
-    const firstEtapeDate = demarcheEnregistrementDemandeDateFind(demarche.etapes)
-    let machine: CaminoMachines | undefined
-    if (isNotNullNorUndefined(firstEtapeDate)) {
-      machine = machineFind(demarche.titreTypeId, demarche.demarcheTypeId, demarche.id, firstEtapeDate)
-    }
-    if (isNullOrUndefined(machine)) {
-      throw new Error('Impossible de trouver une machine')
-    }
-    machine.interpretMachine(demarche.etapes)
-    expect(machine.demarcheStatut(demarche.etapes)).toStrictEqual({
-      demarcheStatut: demarche.demarcheStatutId,
-      publique: demarche.demarchePublique,
-    })
-  })
   // FIXMACHINE tester que la participation du public peut-être optionnelle
 })

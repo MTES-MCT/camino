@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest'
 import { firstEtapeDateValidator } from './date'
-import { DATE_DEBUT_PROCEDURE_SPECIFIQUE, isMachineWithConsentement, machineIdFind } from './machines'
+import { DATE_DEBUT_PROCEDURE_SPECIFIQUE, isMachineWithConsentement, machineIdFind, isDemarcheIdException } from './machines'
 import { demarcheIdValidator } from './demarche'
 
 describe('machineFind', () => {
@@ -31,4 +31,9 @@ describe('isMachineWithConsentement', () => {
   test('autre machines', () => {
     expect(isMachineWithConsentement('ArmOct')).toBe(false)
   })
+})
+
+test('isDemarcheIdException', () => {
+  expect(isDemarcheIdException(demarcheIdValidator.parse('plop'))).toStrictEqual(false)
+  expect(isDemarcheIdException(demarcheIdValidator.parse('VWBvpOx3n4dN7WCQoYUEC6vM'))).toStrictEqual(true)
 })

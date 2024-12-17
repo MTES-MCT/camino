@@ -5,10 +5,11 @@ import { Etape } from '../machine-common'
 import { describe, expect, test } from 'vitest'
 import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes'
 import { ETAPES_STATUTS } from 'camino-common/src/static/etapesStatuts'
-const etapesProd = require('./2019-10-31-oct.cas.json') // eslint-disable-line
+import { TITRES_TYPES_IDS } from 'camino-common/src/static/titresTypes'
+import { DEMARCHES_TYPES_IDS } from 'camino-common/src/static/demarchesTypes'
 
 describe('vérifie l’arbre d’octroi d’ARM', () => {
-  const armOctMachine = new ArmOctMachine()
+  const armOctMachine = new ArmOctMachine(TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX, DEMARCHES_TYPES_IDS.Octroi)
   test('ne peut pas désister', () => {
     const { tree } = setDateAndOrderAndInterpretMachine(armOctMachine, '2020-01-01', [])
     expect(tree).toMatchInlineSnapshot(`
@@ -620,6 +621,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
         "PAYER_FRAIS_DE_DOSSIER_COMPLEMENTAIRES                (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,VALIDER_PAIEMENT_FRAIS_DE_DOSSIER_COMPLEMENTAIRES]",
         "VALIDER_PAIEMENT_FRAIS_DE_DOSSIER_COMPLEMENTAIRES     (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,SIGNER_AUTORISATION_DE_RECHERCHE_MINIERE]",
         "SIGNER_AUTORISATION_DE_RECHERCHE_MINIERE              (publique      , accepté                ) -> [FAIRE_AVENANT_ARM]",
+        "[2020-10-13 -> 2021-10-13]",
       ]
     `)
   })
@@ -781,9 +783,13 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
         "FAIRE_SAISINE_CARM                                    (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,RENDRE_AVIS_AJOURNE_CARM,RENDRE_AVIS_DEFAVORABLE_CARM,RENDRE_AVIS_FAVORABLE_CARM]",
         "RENDRE_AVIS_FAVORABLE_CARM                            (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,SIGNER_AUTORISATION_DE_RECHERCHE_MINIERE]",
         "SIGNER_AUTORISATION_DE_RECHERCHE_MINIERE              (publique      , accepté                ) -> [NOTIFIER_DEMANDEUR_SIGNATURE_ARM]",
+        "[2020-09-13 -> 2021-09-13]",
         "NOTIFIER_DEMANDEUR_SIGNATURE_ARM                      (publique      , accepté                ) -> [FAIRE_AVENANT_ARM]",
+        "[2020-09-13 -> 2021-09-13]",
         "FAIRE_AVENANT_ARM                                     (publique      , accepté                ) -> [NOTIFIER_AVENANT_ARM]",
+        "[2020-09-13 -> 2021-09-13]",
         "NOTIFIER_AVENANT_ARM                                  (publique      , accepté                ) -> [FAIRE_AVENANT_ARM]",
+        "[2020-09-13 -> 2021-09-13]",
       ]
     `)
   })
@@ -824,8 +830,11 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
         "PAYER_FRAIS_DE_DOSSIER_COMPLEMENTAIRES                (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,VALIDER_PAIEMENT_FRAIS_DE_DOSSIER_COMPLEMENTAIRES]",
         "VALIDER_PAIEMENT_FRAIS_DE_DOSSIER_COMPLEMENTAIRES     (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,SIGNER_AUTORISATION_DE_RECHERCHE_MINIERE]",
         "SIGNER_AUTORISATION_DE_RECHERCHE_MINIERE              (publique      , accepté                ) -> [FAIRE_AVENANT_ARM]",
+        "[2021-03-11 -> 2022-03-11]",
         "FAIRE_AVENANT_ARM                                     (publique      , accepté                ) -> [NOTIFIER_AVENANT_ARM]",
+        "[2021-03-11 -> 2022-03-11]",
         "NOTIFIER_AVENANT_ARM                                  (publique      , accepté                ) -> [FAIRE_AVENANT_ARM]",
+        "[2021-03-11 -> 2022-03-11]",
       ]
     `)
   })
@@ -1011,15 +1020,5 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
         "FAIRE_DEMANDE (confidentielle, en construction        ) -> [ENREGISTRER_DEMANDE,PAYER_FRAIS_DE_DOSSIER]",
       ]
     `)
-  })
-
-  // pour regénérer le oct.cas.json: `npm run test:generate-data -w packages/api`
-  test.each(etapesProd as any[])('cas réel N°$id', demarche => {
-    // ici les étapes sont déjà ordonnées
-    armOctMachine.interpretMachine(demarche.etapes)
-    expect(armOctMachine.demarcheStatut(demarche.etapes)).toStrictEqual({
-      demarcheStatut: demarche.demarcheStatutId,
-      publique: demarche.demarchePublique,
-    })
   })
 })

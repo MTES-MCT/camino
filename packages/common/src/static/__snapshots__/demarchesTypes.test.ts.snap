@@ -336,7 +336,7 @@ exports[`isDemarcheTypeProlongations 1`] = `
   "pr2 -> true",
   "pre -> true",
   "pro -> true",
-  "prr -> false",
+  "prr -> true",
   "rec -> false",
   "rep -> false",
   "res -> false",

@@ -11,10 +11,11 @@ import { PaysId } from 'camino-common/src/static/pays'
 import { communeIdValidator } from 'camino-common/src/static/communes'
 import { z } from 'zod'
 import { ETAPE_IS_NOT_BROUILLON, etapeBrouillonValidator, etapeIdValidator } from 'camino-common/src/etape'
-import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
+import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined, Nullable } from 'camino-common/src/typescript-tools'
 import { KM2, km2Validator } from 'camino-common/src/number'
 import { concurrenceValidator, Consentement, DemarcheVisibilite } from 'camino-common/src/etape-form'
 import { demarcheIdValidator } from 'camino-common/src/demarche'
+import { DemarcheTypeId, isDemarcheTypeAnnulation, isDemarcheTypeWithPhase } from 'camino-common/src/static/demarchesTypes'
 
 export type Concurrence = z.infer<typeof concurrenceValidator>
 export interface Etape {
@@ -22,6 +23,9 @@ export interface Etape {
   etapeTypeId: EtapeTypeId
   etapeStatutId: EtapeStatutId
   date: CaminoDate
+  dateDebut?: CaminoDate | null
+  dateFin?: CaminoDate | null
+  duree?: number | null
   contenu?: IContenu
   paysId?: PaysId
   surface?: KM2
@@ -41,7 +45,68 @@ export const globalGuards = {
 
 export interface CaminoCommonContext {
   demarcheStatut: DemarcheStatutId
+  demarcheTypeId: DemarcheTypeId
+  demarcheDateEffet: CaminoDate | null
+  demarcheDateDebut: CaminoMachineDateDebut
+  demarcheDateFin: CaminoMachineDateFin | CaminoMachineDateFinInfini
   visibilite: DemarcheVisibilite
+}
+
+export const getDemarcheDateEffet = (demarcheTypeId: DemarcheTypeId, oldDateEffet: CaminoDate | null, event: { date: CaminoDate }): CaminoDate | null => {
+  if (isDemarcheTypeAnnulation(demarcheTypeId)) {
+    return isNotNullNorUndefined(oldDateEffet) ? oldDateEffet : event.date
+  }
+
+  return null
+}
+
+export const isDemarcheDateFinInfinie = (demarcheDateFin: CaminoMachineDateFin | CaminoMachineDateFinInfini): demarcheDateFin is CaminoMachineDateFinInfini =>
+  demarcheDateFin.dateFin === 'TITRE_INFINI'
+export type CaminoMachineDateDebut = { dateDebut: CaminoDate; dateEtape: null } | { dateDebut: null; dateEtape: CaminoDate } | { dateDebut: null; dateEtape: null }
+export const getDemarcheDateDebut = (demarcheTypeId: DemarcheTypeId, oldDateDebut: CaminoMachineDateDebut, event: { date: CaminoDate; dateDebut: CaminoDate | null }): CaminoMachineDateDebut => {
+  if (!isDemarcheTypeWithPhase(demarcheTypeId)) {
+    return { dateDebut: null, dateEtape: null }
+  }
+
+  if (isNotNullNorUndefined(event.dateDebut)) {
+    return { dateDebut: event.dateDebut, dateEtape: null }
+  }
+
+  if (isNotNullNorUndefined(oldDateDebut.dateDebut)) {
+    return { dateDebut: oldDateDebut.dateDebut, dateEtape: null }
+  }
+
+  return { dateDebut: null, dateEtape: oldDateDebut.dateEtape ?? event.date }
+}
+type CaminoMachineDateFinInfini = { dateFin: 'TITRE_INFINI'; duree: null }
+export type CaminoMachineDateFin = { dateFin: CaminoDate; duree: null } | { dateFin: null; duree: number } | { dateFin: null; duree: null }
+export const getDemarcheDateFin = (
+  demarcheTypeId: DemarcheTypeId,
+  old: CaminoMachineDateFin | CaminoMachineDateFinInfini,
+  event: {
+    dateFin: CaminoDate | null
+    duree: number | null
+  }
+): CaminoMachineDateFin | CaminoMachineDateFinInfini => {
+  if (!isDemarcheTypeWithPhase(demarcheTypeId)) {
+    return { dateFin: null, duree: null }
+  }
+
+  if (isNullOrUndefined(event.dateFin) && isNullOrUndefined(event.duree)) {
+    if (isNullOrUndefined(old.dateFin) && isNullOrUndefined(old.duree)) {
+      return { dateFin: 'TITRE_INFINI', duree: null }
+    }
+
+    return old
+  }
+
+  if (isNotNullNorUndefined(event.dateFin)) {
+    return { dateFin: event.dateFin, duree: null }
+  }
+  if (isNotNullNorUndefined(event.duree)) {
+    return { dateFin: null, duree: event.duree }
+  }
+  throw new Error(`Impossible de calculer la date de fin de la démarche old: ${old}, event: ${event}`)
 }
 
 export const titreEtapeForMachineValidator = z.object({
@@ -50,32 +115,31 @@ export const titreEtapeForMachineValidator = z.object({
   typeId: etapeTypeIdValidator,
   statutId: etapeStatutIdValidator,
   date: caminoDateValidator,
+  duree: z.number().nullable().optional(),
+  dateDebut: caminoDateValidator.nullable().optional(),
+  dateFin: caminoDateValidator.nullable().optional(),
   //TODO 2024-10-02 ce validator est utilisé pour ITitreEtape donc nous sommes obligés de mettre tous les champs suivants optional et nullable
-  contenu: z.any().nullable().optional().default(null),
-  heritageContenu: z.any().nullable().optional().default(null),
+  contenu: z.any().nullable().optional(),
+  heritageContenu: z.any().nullable().optional(),
   concurrence: z
     .union([concurrenceValidator, z.literal('non-applicable')])
     .nullable()
-    .optional()
-    .default(null),
+    .optional(),
   demarcheIdsConsentement: z.array(demarcheIdValidator),
   communes: z
     .array(z.object({ id: communeIdValidator }))
     .nullable()
-    .optional()
-    .default(null),
-  surface: km2Validator.nullable().optional().default(null),
+    .optional(),
+  surface: km2Validator.nullable().optional(),
   isBrouillon: etapeBrouillonValidator,
   hasTitreFrom: z
     .union([z.boolean(), z.literal('non-applicable')])
     .nullable()
-    .optional()
-    .default(null),
+    .optional(),
 })
 
 export type TitreEtapeForMachine = z.infer<typeof titreEtapeForMachineValidator>
-
-export const toMachineEtapes = (etapes: (Pick<Partial<TitreEtapeForMachine>, 'ordre'> & Omit<TitreEtapeForMachine, 'id' | 'ordre'>)[]): Etape[] => {
+export const toMachineEtapes = (etapes: (Pick<Nullable<Partial<TitreEtapeForMachine>>, 'ordre'> & Omit<TitreEtapeForMachine, 'id' | 'ordre'>)[]): Etape[] => {
   // TODO 2022-10-12 si on appelle titreEtapesSortAscByOrdre on se retrouve avec une grosse dépendance cyclique
   return etapes
     .filter(dbEtape => dbEtape.isBrouillon === ETAPE_IS_NOT_BROUILLON)
@@ -100,6 +164,9 @@ const toMachineEtape = (dbEtape: Omit<TitreEtapeForMachine, 'id' | 'ordre'>): Et
 
   const machineEtape: Etape = {
     date: dbEtape.date,
+    dateDebut: dbEtape.dateDebut,
+    dateFin: dbEtape.dateFin,
+    duree: dbEtape.duree,
     etapeTypeId: typeId,
     etapeStatutId: statutId,
   }

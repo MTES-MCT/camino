@@ -258,9 +258,9 @@ export type ITitreEtape = {
   heritageProps?: IHeritageProps | null
   heritageContenu?: IHeritageContenu | null
   note?: EtapeNote
-  concurrence: TitreEtapeForMachine['concurrence']
+  concurrence?: TitreEtapeForMachine['concurrence']
   demarcheIdsConsentement: DemarcheId[]
-  hasTitreFrom: TitreEtapeForMachine['hasTitreFrom']
+  hasTitreFrom?: TitreEtapeForMachine['hasTitreFrom']
   demarcheIdEnConcurrence?: DemarcheId | null
 } & Partial<ITitreEtapePerimetre>
 

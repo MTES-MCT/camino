@@ -27,12 +27,15 @@ export interface IGetEtapesByDemarcheInternalResult {
   communes: Json;
   contenu: Json | null;
   date: string;
+  date_debut: string | null;
+  date_fin: string | null;
   demarche_concurrente_public_lecture: boolean;
   demarche_id: string;
   demarche_id_en_concurrence: string | null;
   demarche_ids_consentement: Json;
   demarche_statut_id: string;
   demarche_type_id: string;
+  duree: number | null;
   has_titre_from: boolean | null;
   heritage_contenu: Json | null;
   id: string;

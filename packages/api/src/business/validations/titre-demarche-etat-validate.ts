@@ -49,10 +49,30 @@ export const titreDemarcheUpdatedEtatValidate = (
   demarcheTypeId: DemarcheTypeId,
   titre: { typeId: TitreTypeId; demarches?: { id: DemarcheId }[] },
   titreEtape: Pick<Partial<ITitreEtape>, 'id'> &
-    Pick<ITitreEtape, 'statutId' | 'typeId' | 'date' | 'contenu' | 'surface' | 'communes' | 'isBrouillon' | 'hasTitreFrom' | 'concurrence' | 'demarcheIdsConsentement'>,
+    Pick<
+      ITitreEtape,
+      'statutId' | 'typeId' | 'date' | 'contenu' | 'surface' | 'communes' | 'isBrouillon' | 'hasTitreFrom' | 'concurrence' | 'demarcheIdsConsentement' | 'dateDebut' | 'dateFin' | 'duree'
+    >,
   demarcheId: DemarcheId,
   titreDemarcheEtapes?:
-    | Pick<ITitreEtape, 'id' | 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'communes' | 'surface' | 'isBrouillon' | 'hasTitreFrom' | 'concurrence' | 'demarcheIdsConsentement'>[]
+    | Pick<
+        ITitreEtape,
+        | 'id'
+        | 'statutId'
+        | 'typeId'
+        | 'date'
+        | 'ordre'
+        | 'contenu'
+        | 'communes'
+        | 'surface'
+        | 'isBrouillon'
+        | 'hasTitreFrom'
+        | 'concurrence'
+        | 'demarcheIdsConsentement'
+        | 'dateDebut'
+        | 'dateFin'
+        | 'duree'
+      >[]
     | null,
   suppression = false
 ): { valid: true; errors: null } | { valid: false; errors: NonEmptyArray<string> } => {
@@ -92,7 +112,20 @@ export const titreDemarcheUpdatedEtatValidate = (
   if (isNotNullNorUndefined(machine)) {
     // vérifie que toutes les étapes existent dans l’arbre
     try {
-      const ok = machine.isEtapesOk(machine.orderMachine(toMachineEtapes(titreDemarcheEtapesNew.map(etape => ({ ...etape, surface: etape.surface ?? null, communes: etape.communes ?? null })))))
+      const ok = machine.isEtapesOk(
+        machine.orderMachine(
+          toMachineEtapes(
+            titreDemarcheEtapesNew.map(etape => ({
+              ...etape,
+              dateDebut: etape.dateDebut ?? null,
+              dateFin: etape.dateFin ?? null,
+              duree: etape.duree ?? null,
+              surface: etape.surface ?? null,
+              communes: etape.communes ?? null,
+            }))
+          )
+        )
+      )
       if (!ok) {
         titreDemarchesErrors.push('la démarche machine n’est pas valide')
       }

@@ -36,33 +36,35 @@ const multiPolygonWith4Points: FeatureMultiPolygon = {
 }
 
 describe("phases d'une démarche", () => {
-  test("un titre qui a une démarche d'octroi avec une dex rejeté et une dpu faites n'a  pas de phase", () => {
+  test("un titre qui a une démarche d'octroi avec une dex rejeté et une dpu faite n'a pas de phase", () => {
     expect(
       titrePhasesFind(
         [
           {
             titreId: newTitreId('titreid'),
             id: newDemarcheId('demarcheId'),
-            typeId: 'oct',
-            statutId: 'rej',
+            typeId: DEMARCHES_TYPES_IDS.Octroi,
+            statutId: DemarchesStatutsIds.Rejete,
             etapes: [
               {
-                typeId: 'dpu',
-                statutId: 'fai',
-                ordre: 2,
-                isBrouillon: ETAPE_IS_NOT_BROUILLON,
-                date: toCaminoDate('2200-01-02'),
-                duree: 2 * 12,
-                titreDemarcheId: newDemarcheId('demarcheId'),
-              },
-              {
-                typeId: 'dex',
-                statutId: 'rej',
+                typeId: ETAPES_TYPES.decisionDeLAutoriteAdministrative,
+                statutId: ETAPES_STATUTS.REJETE,
                 ordre: 1,
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
-                date: toCaminoDate('2200-01-01'),
+                date: toCaminoDate('2000-01-01'),
                 duree: 2 * 12,
                 titreDemarcheId: newDemarcheId('demarcheId'),
+                demarcheIdsConsentement: [],
+              },
+              {
+                typeId: ETAPES_TYPES.publicationDeDecisionAuJORF,
+                statutId: ETAPES_STATUTS.FAIT,
+                ordre: 2,
+                isBrouillon: ETAPE_IS_NOT_BROUILLON,
+                date: toCaminoDate('2000-01-02'),
+                duree: 2 * 12,
+                titreDemarcheId: newDemarcheId('demarcheId'),
+                demarcheIdsConsentement: [],
               },
             ],
           },
@@ -90,6 +92,7 @@ describe("phases d'une démarche", () => {
                 date: toCaminoDate('2200-01-01'),
                 duree: 2 * 12,
                 titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-oct01'),
+                demarcheIdsConsentement: [],
               },
               {
                 typeId: 'dex',
@@ -99,6 +102,7 @@ describe("phases d'une démarche", () => {
                 date: toCaminoDate('2200-01-01'),
                 duree: 2 * 12,
                 titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-oct01'),
+                demarcheIdsConsentement: [],
               },
             ],
           },
@@ -130,7 +134,7 @@ describe("phases d'une démarche", () => {
     ).toEqual({})
   })
 
-  test("un titre AXM qui a une démarche d'octroi avec une dex a une phase", () => {
+  test("un titre PXG (démarche simplifiée) qui a une démarche d'octroi avec une dex a une phase", () => {
     expect(
       titrePhasesFind(
         [
@@ -148,11 +152,12 @@ describe("phases d'une démarche", () => {
                 date: toCaminoDate('2200-01-01'),
                 duree: 2 * 12,
                 titreDemarcheId: newDemarcheId('h-ax-courdemanges-1988-oct01'),
+                demarcheIdsConsentement: [],
               },
             ],
           },
         ],
-        'axm'
+        'pxg'
       )
     ).toEqual({
       'h-ax-courdemanges-1988-oct01': {
@@ -174,12 +179,13 @@ describe("phases d'une démarche", () => {
             etapes: [
               {
                 typeId: 'rpu',
-                statutId: 'acc',
+                statutId: 'fai',
                 ordre: 1,
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
-                date: toCaminoDate('2200-01-01'),
+                date: toCaminoDate('1999-01-01'),
                 dateFin: toCaminoDate('2200-01-02'),
                 titreDemarcheId: newDemarcheId('m-pr-courdemanges-1988-oct01'),
+                demarcheIdsConsentement: [],
               },
             ],
           },
@@ -188,7 +194,7 @@ describe("phases d'une démarche", () => {
       )
     ).toEqual({
       'm-pr-courdemanges-1988-oct01': {
-        dateDebut: '2200-01-01',
+        dateDebut: '1999-01-01',
         dateFin: '2200-01-02',
       },
     })
@@ -213,6 +219,7 @@ describe("phases d'une démarche", () => {
                 dateDebut: toCaminoDate('2200-01-02'),
                 duree: 2 * 12,
                 titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-oct01'),
+                demarcheIdsConsentement: [],
               },
               {
                 typeId: 'dex',
@@ -223,6 +230,7 @@ describe("phases d'une démarche", () => {
                 dateDebut: toCaminoDate('2200-01-02'),
                 duree: 2 * 12,
                 titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-oct01'),
+                demarcheIdsConsentement: [],
               },
             ],
           },
@@ -250,6 +258,7 @@ describe("phases d'une démarche", () => {
             etapes: [
               {
                 titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-oct01'),
+                demarcheIdsConsentement: [],
                 typeId: 'dpu',
                 statutId: 'acc',
                 ordre: 2,
@@ -259,6 +268,7 @@ describe("phases d'une démarche", () => {
               },
               {
                 titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-oct01'),
+                demarcheIdsConsentement: [],
                 typeId: 'dex',
                 statutId: 'acc',
                 ordre: 1,
@@ -277,6 +287,7 @@ describe("phases d'une démarche", () => {
             etapes: [
               {
                 titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-pro01'),
+                demarcheIdsConsentement: [],
                 typeId: 'dpu',
                 statutId: 'acc',
                 ordre: 2,
@@ -286,6 +297,7 @@ describe("phases d'une démarche", () => {
               },
               {
                 titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-pro01'),
+                demarcheIdsConsentement: [],
                 typeId: 'dex',
                 statutId: 'acc',
                 ordre: 1,
@@ -323,20 +335,22 @@ describe("phases d'une démarche", () => {
             etapes: [
               {
                 titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-oct01'),
-                typeId: 'dpu',
-                statutId: 'acc',
-                ordre: 2,
-                isBrouillon: ETAPE_IS_NOT_BROUILLON,
-                date: toCaminoDate('2000-01-02'),
-                duree: 20 * 12,
-              },
-              {
-                titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-oct01'),
+                demarcheIdsConsentement: [],
                 typeId: 'dex',
                 statutId: 'acc',
                 ordre: 1,
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 date: toCaminoDate('2000-01-01'),
+                duree: 20 * 12,
+              },
+              {
+                titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-oct01'),
+                demarcheIdsConsentement: [],
+                typeId: 'dpu',
+                statutId: 'acc',
+                ordre: 2,
+                isBrouillon: ETAPE_IS_NOT_BROUILLON,
+                date: toCaminoDate('2000-01-02'),
                 duree: 20 * 12,
               },
             ],
@@ -350,19 +364,21 @@ describe("phases d'une démarche", () => {
             etapes: [
               {
                 titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-ren01'),
-                typeId: 'dpu',
-                statutId: 'acc',
-                ordre: 2,
-                isBrouillon: ETAPE_IS_NOT_BROUILLON,
-                date: toCaminoDate('2019-01-03'),
-              },
-              {
-                titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-ren01'),
+                demarcheIdsConsentement: [],
                 typeId: 'dex',
                 statutId: 'acc',
                 ordre: 1,
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 date: toCaminoDate('2019-01-02'),
+              },
+              {
+                titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-ren01'),
+                demarcheIdsConsentement: [],
+                typeId: 'dpu',
+                statutId: 'fai',
+                ordre: 2,
+                isBrouillon: ETAPE_IS_NOT_BROUILLON,
+                date: toCaminoDate('2019-01-03'),
               },
             ],
           },
@@ -390,6 +406,7 @@ describe("phases d'une démarche", () => {
             etapes: [
               {
                 titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-oct01'),
+                demarcheIdsConsentement: [],
                 typeId: 'dpu',
                 statutId: 'acc',
                 ordre: 2,
@@ -399,6 +416,7 @@ describe("phases d'une démarche", () => {
               },
               {
                 titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-oct01'),
+                demarcheIdsConsentement: [],
                 typeId: 'dex',
                 statutId: 'acc',
                 ordre: 1,
@@ -417,6 +435,7 @@ describe("phases d'une démarche", () => {
             etapes: [
               {
                 titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-ren01'),
+                demarcheIdsConsentement: [],
                 typeId: 'dpu',
                 statutId: 'acc',
                 ordre: 2,
@@ -425,6 +444,7 @@ describe("phases d'une démarche", () => {
               },
               {
                 titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-ren01'),
+                demarcheIdsConsentement: [],
                 typeId: 'dex',
                 statutId: 'acc',
                 ordre: 1,
@@ -1736,6 +1756,7 @@ describe("phases d'une démarche", () => {
             etapes: [
               {
                 titreDemarcheId: demarcheId1,
+                demarcheIdsConsentement: [],
                 ordre: 2,
                 typeId: 'dpu',
                 duree: 36,
@@ -1746,6 +1767,7 @@ describe("phases d'une démarche", () => {
               },
               {
                 titreDemarcheId: demarcheId1,
+                demarcheIdsConsentement: [],
                 ordre: 1,
                 typeId: 'dex',
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
@@ -1763,6 +1785,7 @@ describe("phases d'une démarche", () => {
             etapes: [
               {
                 titreDemarcheId: demarcheId2,
+                demarcheIdsConsentement: [],
                 ordre: 5,
                 typeId: 'apd',
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
@@ -1771,6 +1794,7 @@ describe("phases d'une démarche", () => {
               },
               {
                 titreDemarcheId: demarcheId2,
+                demarcheIdsConsentement: [],
                 ordre: 11,
                 typeId: 'dex',
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
@@ -1779,6 +1803,7 @@ describe("phases d'une démarche", () => {
               },
               {
                 titreDemarcheId: demarcheId2,
+                demarcheIdsConsentement: [],
                 ordre: 9,
                 typeId: 'acg',
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
@@ -1787,6 +1812,7 @@ describe("phases d'une démarche", () => {
               },
               {
                 titreDemarcheId: demarcheId2,
+                demarcheIdsConsentement: [],
                 ordre: 1,
                 typeId: 'mfr',
                 duree: 60,
@@ -1796,6 +1822,7 @@ describe("phases d'une démarche", () => {
               },
               {
                 titreDemarcheId: demarcheId2,
+                demarcheIdsConsentement: [],
                 ordre: 10,
                 typeId: 'acg',
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
@@ -1804,6 +1831,7 @@ describe("phases d'une démarche", () => {
               },
               {
                 titreDemarcheId: demarcheId2,
+                demarcheIdsConsentement: [],
                 ordre: 6,
                 typeId: 'app',
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
@@ -1812,6 +1840,7 @@ describe("phases d'une démarche", () => {
               },
               {
                 titreDemarcheId: demarcheId2,
+                demarcheIdsConsentement: [],
                 ordre: 7,
                 typeId: 'scg',
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
@@ -1820,6 +1849,7 @@ describe("phases d'une démarche", () => {
               },
               {
                 titreDemarcheId: demarcheId2,
+                demarcheIdsConsentement: [],
                 ordre: 12,
                 typeId: 'dpu',
                 dateFin: toCaminoDate('2018-11-05'),
@@ -1829,6 +1859,7 @@ describe("phases d'une démarche", () => {
               },
               {
                 titreDemarcheId: demarcheId2,
+                demarcheIdsConsentement: [],
                 ordre: 3,
                 typeId: 'spp',
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
@@ -1837,6 +1868,7 @@ describe("phases d'une démarche", () => {
               },
               {
                 titreDemarcheId: demarcheId2,
+                demarcheIdsConsentement: [],
                 ordre: 2,
                 typeId: 'men',
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
@@ -1845,6 +1877,7 @@ describe("phases d'une démarche", () => {
               },
               {
                 titreDemarcheId: demarcheId2,
+                demarcheIdsConsentement: [],
                 ordre: 4,
                 typeId: 'apo',
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
@@ -1853,6 +1886,7 @@ describe("phases d'une démarche", () => {
               },
               {
                 titreDemarcheId: demarcheId2,
+                demarcheIdsConsentement: [],
                 ordre: 8,
                 typeId: 'rcg',
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
@@ -1870,6 +1904,7 @@ describe("phases d'une démarche", () => {
             etapes: [
               {
                 titreDemarcheId: demarcheId3,
+                demarcheIdsConsentement: [],
                 ordre: 2,
                 typeId: 'men',
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
@@ -1878,6 +1913,7 @@ describe("phases d'une démarche", () => {
               },
               {
                 titreDemarcheId: demarcheId3,
+                demarcheIdsConsentement: [],
                 ordre: 1,
                 typeId: 'mfr',
                 duree: 540,
@@ -1896,6 +1932,7 @@ describe("phases d'une démarche", () => {
             etapes: [
               {
                 titreDemarcheId: demarcheId4,
+                demarcheIdsConsentement: [],
                 ordre: 1,
                 typeId: 'mfr',
                 duree: 60,
@@ -1905,6 +1942,7 @@ describe("phases d'une démarche", () => {
               },
               {
                 titreDemarcheId: demarcheId4,
+                demarcheIdsConsentement: [],
                 ordre: 12,
                 typeId: 'apd',
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
@@ -1913,6 +1951,7 @@ describe("phases d'une démarche", () => {
               },
               {
                 titreDemarcheId: demarcheId4,
+                demarcheIdsConsentement: [],
                 ordre: 4,
                 typeId: 'mco',
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
@@ -1921,6 +1960,7 @@ describe("phases d'une démarche", () => {
               },
               {
                 titreDemarcheId: demarcheId4,
+                demarcheIdsConsentement: [],
                 ordre: 10,
                 typeId: 'asc',
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
@@ -1929,6 +1969,7 @@ describe("phases d'une démarche", () => {
               },
               {
                 titreDemarcheId: demarcheId4,
+                demarcheIdsConsentement: [],
                 ordre: 14,
                 typeId: 'apd',
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
@@ -1937,6 +1978,7 @@ describe("phases d'une démarche", () => {
               },
               {
                 titreDemarcheId: demarcheId4,
+                demarcheIdsConsentement: [],
                 ordre: 5,
                 typeId: 'rco',
                 duree: 60,
@@ -1946,6 +1988,7 @@ describe("phases d'une démarche", () => {
               },
               {
                 titreDemarcheId: demarcheId4,
+                demarcheIdsConsentement: [],
                 ordre: 2,
                 typeId: 'men',
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
@@ -1954,6 +1997,7 @@ describe("phases d'une démarche", () => {
               },
               {
                 titreDemarcheId: demarcheId4,
+                demarcheIdsConsentement: [],
                 ordre: 15,
                 typeId: 'ppu',
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
@@ -1962,6 +2006,7 @@ describe("phases d'une démarche", () => {
               },
               {
                 titreDemarcheId: demarcheId4,
+                demarcheIdsConsentement: [],
                 ordre: 6,
                 typeId: 'mco',
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
@@ -1970,6 +2015,7 @@ describe("phases d'une démarche", () => {
               },
               {
                 titreDemarcheId: demarcheId4,
+                demarcheIdsConsentement: [],
                 ordre: 3,
                 typeId: 'spp',
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
@@ -1978,6 +2024,7 @@ describe("phases d'une démarche", () => {
               },
               {
                 titreDemarcheId: demarcheId4,
+                demarcheIdsConsentement: [],
                 ordre: 8,
                 typeId: 'mcr',
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
@@ -1986,6 +2033,7 @@ describe("phases d'une démarche", () => {
               },
               {
                 titreDemarcheId: demarcheId4,
+                demarcheIdsConsentement: [],
                 ordre: 7,
                 typeId: 'rco',
                 duree: 60,
@@ -1995,6 +2043,7 @@ describe("phases d'une démarche", () => {
               },
               {
                 titreDemarcheId: demarcheId4,
+                demarcheIdsConsentement: [],
                 ordre: 13,
                 typeId: 'apo',
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
@@ -2037,6 +2086,7 @@ describe("phases d'une démarche", () => {
             etapes: [
               {
                 titreDemarcheId: newDemarcheId('demarcheIdOctroi'),
+                demarcheIdsConsentement: [],
                 ordre: 2,
                 typeId: 'dpu',
                 dateFin: toCaminoDate('2014-11-11'),
@@ -2049,6 +2099,7 @@ describe("phases d'une démarche", () => {
               },
               {
                 titreDemarcheId: newDemarcheId('demarcheIdOctroi'),
+                demarcheIdsConsentement: [],
                 ordre: 1,
                 typeId: 'dex',
                 dateFin: toCaminoDate('2014-11-11'),
@@ -2070,6 +2121,7 @@ describe("phases d'une démarche", () => {
             etapes: [
               {
                 titreDemarcheId: newDemarcheId('demarcheIdPr1'),
+                demarcheIdsConsentement: [],
                 ordre: 3,
                 typeId: 'spp',
                 dateFin: null,
@@ -2082,6 +2134,7 @@ describe("phases d'une démarche", () => {
               },
               {
                 titreDemarcheId: newDemarcheId('demarcheIdPr1'),
+                demarcheIdsConsentement: [],
                 ordre: 1,
                 typeId: 'mfr',
                 dateFin: null,
@@ -2094,6 +2147,7 @@ describe("phases d'une démarche", () => {
               },
               {
                 titreDemarcheId: newDemarcheId('demarcheIdPr1'),
+                demarcheIdsConsentement: [],
                 ordre: 4,
                 typeId: 'dex',
                 dateFin: null,
@@ -2106,6 +2160,7 @@ describe("phases d'une démarche", () => {
               },
               {
                 titreDemarcheId: newDemarcheId('demarcheIdPr1'),
+                demarcheIdsConsentement: [],
                 ordre: 2,
                 typeId: 'men',
                 dateFin: null,
@@ -2146,6 +2201,7 @@ describe("phases d'une démarche", () => {
             etapes: [
               {
                 titreDemarcheId: newDemarcheId('demarcheIdOctroi'),
+                demarcheIdsConsentement: [],
                 ordre: 2,
                 typeId: 'dpu',
                 dateFin: toCaminoDate('2009-11-17'),
@@ -2158,6 +2214,7 @@ describe("phases d'une démarche", () => {
               },
               {
                 titreDemarcheId: newDemarcheId('demarcheIdOctroi'),
+                demarcheIdsConsentement: [],
                 ordre: 1,
                 typeId: 'dex',
                 dateFin: toCaminoDate('2009-11-17'),
@@ -2179,6 +2236,7 @@ describe("phases d'une démarche", () => {
             etapes: [
               {
                 titreDemarcheId: newDemarcheId('demarcheIdPr1'),
+                demarcheIdsConsentement: [],
                 ordre: 1,
                 typeId: 'mfr',
                 dateFin: null,
@@ -2191,6 +2249,7 @@ describe("phases d'une démarche", () => {
               },
               {
                 titreDemarcheId: newDemarcheId('demarcheIdPr1'),
+                demarcheIdsConsentement: [],
                 ordre: 6,
                 typeId: 'app',
                 dateFin: null,
@@ -2203,6 +2262,7 @@ describe("phases d'une démarche", () => {
               },
               {
                 titreDemarcheId: newDemarcheId('demarcheIdPr1'),
+                demarcheIdsConsentement: [],
                 ordre: 3,
                 typeId: 'spp',
                 dateFin: null,
@@ -2215,6 +2275,7 @@ describe("phases d'une démarche", () => {
               },
               {
                 titreDemarcheId: newDemarcheId('demarcheIdPr1'),
+                demarcheIdsConsentement: [],
                 ordre: 2,
                 typeId: 'men',
                 dateFin: null,
@@ -2227,6 +2288,7 @@ describe("phases d'une démarche", () => {
               },
               {
                 titreDemarcheId: newDemarcheId('demarcheIdPr1'),
+                demarcheIdsConsentement: [],
                 ordre: 7,
                 typeId: 'des',
                 dateFin: null,
@@ -2239,6 +2301,7 @@ describe("phases d'une démarche", () => {
               },
               {
                 titreDemarcheId: newDemarcheId('demarcheIdPr1'),
+                demarcheIdsConsentement: [],
                 ordre: 5,
                 typeId: 'apo',
                 dateFin: null,
@@ -2251,6 +2314,7 @@ describe("phases d'une démarche", () => {
               },
               {
                 titreDemarcheId: newDemarcheId('demarcheIdPr1'),
+                demarcheIdsConsentement: [],
                 ordre: 4,
                 typeId: 'apd',
                 dateFin: null,
@@ -2291,6 +2355,7 @@ describe("phases d'une démarche", () => {
             etapes: [
               {
                 titreDemarcheId: newDemarcheId('demarcheIdOctroi'),
+                demarcheIdsConsentement: [],
                 ordre: 2,
                 typeId: 'dpu',
                 dateFin: toCaminoDate('2014-11-11'),
@@ -2303,6 +2368,7 @@ describe("phases d'une démarche", () => {
               },
               {
                 titreDemarcheId: newDemarcheId('demarcheIdOctroi'),
+                demarcheIdsConsentement: [],
                 ordre: 1,
                 typeId: 'dex',
                 dateFin: toCaminoDate('2014-11-11'),
@@ -2324,6 +2390,7 @@ describe("phases d'une démarche", () => {
             etapes: [
               {
                 titreDemarcheId: newDemarcheId('demarcheIdPr1'),
+                demarcheIdsConsentement: [],
                 ordre: 4,
                 typeId: 'dex',
                 dateFin: null,
@@ -2336,6 +2403,7 @@ describe("phases d'une démarche", () => {
               },
               {
                 titreDemarcheId: newDemarcheId('demarcheIdPr1'),
+                demarcheIdsConsentement: [],
                 ordre: 2,
                 typeId: 'men',
                 dateFin: null,
@@ -2376,6 +2444,7 @@ describe("phases d'une démarche", () => {
             etapes: [
               {
                 titreDemarcheId: newDemarcheId('demarcheIdOctroi'),
+                demarcheIdsConsentement: [],
                 ordre: 3,
                 typeId: 'dpu',
                 dateFin: toCaminoDate('2033-11-22'),
@@ -2387,6 +2456,7 @@ describe("phases d'une démarche", () => {
               },
               {
                 titreDemarcheId: newDemarcheId('demarcheIdOctroi'),
+                demarcheIdsConsentement: [],
                 ordre: 2,
                 typeId: 'dex',
                 dateFin: toCaminoDate('2033-11-22'),
@@ -2398,6 +2468,7 @@ describe("phases d'une démarche", () => {
               },
               {
                 titreDemarcheId: newDemarcheId('demarcheIdOctroi'),
+                demarcheIdsConsentement: [],
                 ordre: 1,
                 typeId: 'dex',
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
@@ -2433,6 +2504,7 @@ describe("phases d'une démarche", () => {
             etapes: [
               {
                 titreDemarcheId: newDemarcheId('demarcheIdOctroi'),
+                demarcheIdsConsentement: [],
                 ordre: 3,
                 typeId: 'dpu',
                 dateFin: toCaminoDate('2033-11-23'),
@@ -2444,6 +2516,7 @@ describe("phases d'une démarche", () => {
               },
               {
                 titreDemarcheId: newDemarcheId('demarcheIdOctroi'),
+                demarcheIdsConsentement: [],
                 ordre: 2,
                 typeId: 'dpu',
                 dateFin: toCaminoDate('2033-11-22'),
@@ -2455,6 +2528,7 @@ describe("phases d'une démarche", () => {
               },
               {
                 titreDemarcheId: newDemarcheId('demarcheIdOctroi'),
+                demarcheIdsConsentement: [],
                 ordre: 1,
                 typeId: 'dex',
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,

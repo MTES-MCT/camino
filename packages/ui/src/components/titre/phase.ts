@@ -6,7 +6,6 @@ import { isEtapeDecision } from 'camino-common/src/static/etapesTypes'
 import { isNotNullNorUndefined, isNullOrUndefined, isNullOrUndefinedOrEmpty, OmitDistributive } from 'camino-common/src/typescript-tools'
 import { DemarcheSlug } from 'camino-common/src/demarche'
 import { isTravaux } from 'camino-common/src/static/demarchesTypes'
-import { ETAPE_IS_BROUILLON } from 'camino-common/src/etape'
 import { demarcheStatutIdsSuccess } from 'camino-common/src/static/demarchesStatuts'
 
 type TitreTimelineEvents = TitreGetDemarche & { first_etape_date: CaminoDate | null }
@@ -39,8 +38,7 @@ export const phaseWithAlterations = (demarches: TitreGetDemarche[], currentDate:
         if (!isPhase(demarche) && demarcheStatutIdsSuccess.has(demarche.demarche_statut_id)) {
           let demarcheDate = demarche.demarche_date_debut
           if (isNullOrUndefined(demarcheDate)) {
-            demarcheDate =
-              [...demarche.etapes].sort((a, b) => b.ordre - a.ordre).find(etape => isEtapeDecision(etape.etape_type_id) === ETAPE_IS_BROUILLON && isEtapeStatusOk(etape.etape_statut_id))?.date ?? null
+            demarcheDate = [...demarche.etapes].sort((a, b) => b.ordre - a.ordre).find(etape => isEtapeDecision(etape.etape_type_id) && isEtapeStatusOk(etape.etape_statut_id))?.date ?? null
           }
 
           if (isNotNullNorUndefined(demarcheDate) && demarcheDate >= phase.demarche_date_debut && (isNullOrUndefined(phase.demarche_date_fin) || demarcheDate < phase.demarche_date_fin)) {

@@ -286,8 +286,6 @@ export const demarcheCreationOutputValidator = z.object({
 
 export type DemarcheCreationOutput = z.infer<typeof demarcheCreationOutputValidator>
 
-// TODO 2024-12-02 quand on a viré le DeepReadonly, on peut re-essayer d'avoir un typage plus concret, avec : si on a un tableau non vide, alors on a forcément un FirstEtapeDate
-// T extends [any, ...any[]] ? FirstEtapeDate : FirstEtapeDate | null
 type DemarcheEnregistrementDemandeDateFindEtape = { date: CaminoDate; typeId: EtapeTypeId }
 export function demarcheEnregistrementDemandeDateFind<T extends DemarcheEnregistrementDemandeDateFindEtape[] | NonEmptyArray<DemarcheEnregistrementDemandeDateFindEtape>>(
   titreEtapes: T | undefined

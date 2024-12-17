@@ -231,7 +231,7 @@ describe('valide l’étape avant de l’enregistrer', () => {
     )
     expect(errors).toMatchInlineSnapshot(`
       [
-        "les étapes de la démarche machine oct ne sont pas valides",
+        "les étapes de la démarche machine octArm ne sont pas valides",
       ]
     `)
   })

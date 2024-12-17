@@ -1,6 +1,15 @@
 import { getValues } from '../typescript-tools'
 import { sortedDemarchesStatuts } from './demarchesStatuts'
-import { DEMARCHES_TYPES_IDS, isDemarcheTypeId, isDemarcheTypeOctroi, isDemarcheTypeWithPhase, canImpactTitre, isDemarcheTypeProlongations, isTravaux } from './demarchesTypes'
+import {
+  DEMARCHES_TYPES_IDS,
+  isDemarcheTypeId,
+  isDemarcheTypeOctroi,
+  isDemarcheTypeWithPhase,
+  canImpactTitre,
+  isDemarcheTypeProlongations,
+  isTravaux,
+  isDemarcheTypeAnnulation,
+} from './demarchesTypes'
 import { test, expect } from 'vitest'
 
 test('isDemarcheTypeId', () => {
@@ -20,17 +29,72 @@ test('isDemarcheTypeOctroi', () => {
 })
 
 test('isDemarcheTypeWithPhase', () => {
-  for (const demarcheType of getValues(DEMARCHES_TYPES_IDS)) {
-    let expected = isDemarcheTypeOctroi(demarcheType)
-
-    if (!expected) {
-      expected = [DEMARCHES_TYPES_IDS.Prolongation, DEMARCHES_TYPES_IDS.Prolongation1, DEMARCHES_TYPES_IDS.Prolongation2, DEMARCHES_TYPES_IDS.ProlongationExceptionnelle].includes(demarcheType)
-    }
-
-    expect(isDemarcheTypeWithPhase(demarcheType)).toBe(expected)
-  }
+  const result = getValues(DEMARCHES_TYPES_IDS).flatMap(demarcheType => {
+    return `${demarcheType} -> ${isDemarcheTypeWithPhase(demarcheType)}`
+  })
+  expect(result).toMatchInlineSnapshot(`
+    [
+      "amo -> false",
+      "aom -> false",
+      "ces -> false",
+      "con -> false",
+      "dam -> false",
+      "dec -> false",
+      "dep -> false",
+      "dot -> false",
+      "exp -> false",
+      "exs -> false",
+      "fus -> true",
+      "mut -> false",
+      "oct -> true",
+      "pr1 -> true",
+      "pr2 -> true",
+      "pre -> true",
+      "pro -> true",
+      "prr -> true",
+      "rec -> false",
+      "rep -> false",
+      "res -> false",
+      "ret -> false",
+      "vct -> true",
+      "vut -> true",
+    ]
+  `)
 })
 
+test('isDemarcheTypeAnnulation', () => {
+  const result = getValues(DEMARCHES_TYPES_IDS).flatMap(demarcheType => {
+    return `${demarcheType} -> ${isDemarcheTypeAnnulation(demarcheType)}`
+  })
+  expect(result).toMatchInlineSnapshot(`
+    [
+      "amo -> false",
+      "aom -> false",
+      "ces -> false",
+      "con -> false",
+      "dam -> false",
+      "dec -> false",
+      "dep -> false",
+      "dot -> false",
+      "exp -> false",
+      "exs -> false",
+      "fus -> false",
+      "mut -> false",
+      "oct -> false",
+      "pr1 -> false",
+      "pr2 -> false",
+      "pre -> false",
+      "pro -> false",
+      "prr -> false",
+      "rec -> true",
+      "rep -> false",
+      "res -> false",
+      "ret -> true",
+      "vct -> false",
+      "vut -> false",
+    ]
+  `)
+})
 test('canImpactTitre', () => {
   const result = getValues(DEMARCHES_TYPES_IDS).flatMap(demarcheType => {
     return sortedDemarchesStatuts.map(demarcheStatus => {

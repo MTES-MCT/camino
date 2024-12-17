@@ -35,6 +35,9 @@ const getAllEtapeIdsDb = sql<Redefine<IGetAllEtapeIdsDbQuery, {}, z.infer<typeof
 const getEtapesByDemarcheValidator = z.object({
   contenu: z.any().nullable(),
   date: caminoDateValidator.nullable(),
+  date_debut: caminoDateValidator.nullable(),
+  date_fin: caminoDateValidator.nullable(),
+  duree: z.number().nullable(),
   demarche_id: demarcheIdValidator,
   demarche_statut_id: demarcheStatutIdValidator,
   demarche_type_id: demarcheTypeIdValidator,
@@ -94,7 +97,6 @@ export const getDemarches = (
             statutId: row.demarche_statut_id,
           }
         }
-
         if (
           isNotNullNorUndefined(row.id) &&
           isNotNullNorUndefined(row.ordre) &&
@@ -110,6 +112,9 @@ export const getDemarches = (
             statutId: row.statut_id,
             isBrouillon: row.is_brouillon,
             date: row.date,
+            dateDebut: row.date_debut,
+            dateFin: row.date_fin,
+            duree: row.duree,
             contenu: row.contenu,
             heritageContenu: row.heritage_contenu,
             communes: row.communes,
@@ -139,6 +144,9 @@ SELECT
     etape.type_id,
     etape.statut_id,
     etape.date,
+    etape.date_debut,
+    etape.date_fin,
+    etape.duree,
     etape.contenu,
     etape.surface,
     etape.is_brouillon,

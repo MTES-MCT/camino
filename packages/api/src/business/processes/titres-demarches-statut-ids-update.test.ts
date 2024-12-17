@@ -38,6 +38,9 @@ describe("statut des démarches d'un titre", () => {
               hasTitreFrom: 'non-applicable',
               isBrouillon: ETAPE_IS_NOT_BROUILLON,
               ordre: 2,
+              dateFin: null,
+              dateDebut: null,
+              duree: null,
               date: toCaminoDate('1988-03-11'),
               communes: [],
               contenu: {},
@@ -53,6 +56,9 @@ describe("statut des démarches d'un titre", () => {
               hasTitreFrom: 'non-applicable',
               isBrouillon: ETAPE_IS_NOT_BROUILLON,
               ordre: 1,
+              dateFin: null,
+              dateDebut: null,
+              duree: null,
               date: toCaminoDate('1988-03-06'),
               communes: [],
               contenu: {},
@@ -64,6 +70,7 @@ describe("statut des démarches d'un titre", () => {
         },
       })
     )
+
     const titresDemarchesStatutUpdated = await titresDemarchesStatutIdUpdate(undefined as unknown as Pool)
 
     expect(titresDemarchesStatutUpdated.length).toEqual(1)
@@ -88,6 +95,9 @@ describe("statut des démarches d'un titre", () => {
               isBrouillon: ETAPE_IS_NOT_BROUILLON,
               ordre: 2,
               date: toCaminoDate('1988-03-11'),
+              dateFin: null,
+              dateDebut: null,
+              duree: null,
               communes: [],
               contenu: {},
               heritageContenu: {},
@@ -103,6 +113,9 @@ describe("statut des démarches d'un titre", () => {
               isBrouillon: ETAPE_IS_NOT_BROUILLON,
               ordre: 1,
               date: toCaminoDate('1988-03-06'),
+              dateFin: null,
+              dateDebut: null,
+              duree: null,
               communes: [],
               contenu: {},
               heritageContenu: {},

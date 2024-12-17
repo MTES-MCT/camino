@@ -1,6 +1,6 @@
 import { CaminoCommonContext, Etape } from './machine-common'
 import { EventObject } from 'xstate'
-import { CaminoMachine } from './machine-helper'
+import { CaminoMachine, getPhase } from './machine-helper'
 import { CaminoDate, dateAddDays, toCaminoDate } from 'camino-common/src/date'
 import { EtapeTypeEtapeStatutValidPair } from 'camino-common/src/static/etapesTypesEtapesStatuts'
 import { isNotNullNorUndefined, onlyUnique } from 'camino-common/src/typescript-tools'
@@ -17,6 +17,7 @@ const getEventsTree = <T extends EventObject, C extends CaminoCommonContext>(mac
     {
       type: 'RIEN',
       visibilite: machine.demarcheStatut([]).publique ? 'publique' : 'confidentielle',
+      phase: null,
       demarcheStatut: DemarchesStatuts[machine.demarcheStatut([]).demarcheStatut].nom,
       events: passEvents,
     },
@@ -29,11 +30,20 @@ const getEventsTree = <T extends EventObject, C extends CaminoCommonContext>(mac
         .map(({ type }) => type)
         .filter(onlyUnique)
       const event = machine.eventFrom(etapesToLaunch[etapesToLaunch.length - 1])
-
+      const demarcheStatut = machine.demarcheStatut(etapesToLaunch)
+      let date = null
+      if ('demarcheDateEffet' in demarcheStatut && isNotNullNorUndefined(demarcheStatut.demarcheDateEffet)) {
+        date = demarcheStatut.demarcheDateEffet
+      }
+      const phase = getPhase(demarcheStatut)
+      if (isNotNullNorUndefined(phase)) {
+        date = `[${phase.debut} -> ${phase.fin}]`
+      }
       return {
         type: event.type,
-        visibilite: machine.demarcheStatut(etapesToLaunch).publique ? 'publique' : 'confidentielle',
-        demarcheStatut: DemarchesStatuts[machine.demarcheStatut(etapesToLaunch).demarcheStatut].nom,
+        visibilite: demarcheStatut.publique ? 'publique' : 'confidentielle',
+        phase: date,
+        demarcheStatut: DemarchesStatuts[demarcheStatut.demarcheStatut].nom,
         events: passEvents,
       }
     }),
@@ -41,8 +51,10 @@ const getEventsTree = <T extends EventObject, C extends CaminoCommonContext>(mac
 
   const maxPadType = Math.max(...steps.map(({ type }) => type.length))
 
-  return steps.map(step => {
-    return `${step.type.padEnd(maxPadType, ' ')} (${step.visibilite.padEnd(14, ' ')}, ${step.demarcheStatut.padEnd(23, ' ')}) -> [${step.events.join(',')}]`
+  return steps.flatMap(step => {
+    return [`${step.type.padEnd(maxPadType, ' ')} (${step.visibilite.padEnd(14, ' ')}, ${step.demarcheStatut.padEnd(23, ' ')}) -> [${step.events.join(',')}]`, step.phase].filter(
+      value => value !== null
+    )
   })
 }
 
@@ -66,7 +78,7 @@ export const setDateAndOrderAndInterpretMachine = <T extends EventObject, C exte
       index++
     }
 
-    return { ...etape, date: dateAddDays(firstDate, index) }
+    return { duree: 12, ...etape, date: dateAddDays(firstDate, index) }
   })
 
   machine.interpretMachine(fullEtapes)

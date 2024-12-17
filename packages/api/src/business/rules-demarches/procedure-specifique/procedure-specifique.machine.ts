@@ -1,10 +1,10 @@
 import { and, assign, not, or, setup } from 'xstate'
 import { CaminoMachine } from '../machine-helper'
-import { CaminoCommonContext, Concurrence, DBEtat, Etape, globalGuards } from '../machine-common'
+import { CaminoCommonContext, Concurrence, DBEtat, Etape, getDemarcheDateDebut, getDemarcheDateFin, globalGuards } from '../machine-common'
 import { EtapesTypesEtapesStatuts as ETES } from 'camino-common/src/static/etapesTypesEtapesStatuts'
 import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts'
 import { TITRES_TYPES_IDS, TitreTypeId, getTitreTypeType } from 'camino-common/src/static/titresTypes'
-import { DEMARCHES_TYPES_IDS, DemarcheTypeId, isDemarcheTypeProlongations } from 'camino-common/src/static/demarchesTypes'
+import { DEMARCHES_TYPES_IDS, DemarcheTypeId, isDemarcheTypeProlongations, isDemarcheTypeWithPhase } from 'camino-common/src/static/demarchesTypes'
 import { TITRES_TYPES_TYPES_IDS } from 'camino-common/src/static/titresTypesTypes'
 import { ETAPES_STATUTS, EtapeStatutId } from 'camino-common/src/static/etapesStatuts'
 import { hectareToKm2, hectareValidator, KM2, km2Validator } from 'camino-common/src/number'
@@ -40,6 +40,25 @@ type FaireRecevabiliteFavorable = {
   type: 'FAIRE_RECEVABILITE_FAVORABLE'
   hasTitreFrom: boolean
 }
+
+type PublierDecisionAccepteeAuJORF = {
+  type: 'PUBLIER_DECISION_ACCEPTEE_AU_JORF'
+  date: CaminoDate
+  dateDebut: CaminoDate | null
+  dateFin: CaminoDate | null
+  duree: number | null
+}
+type PublierDecisionAuRecueilDesActesAdministratifs = {
+  type: 'PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS'
+  date: CaminoDate
+  dateDebut: CaminoDate | null
+  dateFin: CaminoDate | null
+  duree: number | null
+}
+type FaireAbrogation = {
+  type: 'FAIRE_ABROGATION'
+  date: CaminoDate
+}
 type ProcedureSpecifiqueXStateEvent =
   | FaireDemande
   | { type: 'ENREGISTRER_DEMANDE' }
@@ -66,10 +85,10 @@ type ProcedureSpecifiqueXStateEvent =
   | { type: 'RENDRE_DECISION_ADMINISTRATION_ACCEPTEE' }
   | { type: 'RENDRE_DECISION_ADMINISTRATION_REJETEE' }
   | { type: 'RENDRE_DECISION_ADMINISTRATION_REJETEE_DECISION_IMPLICITE' }
-  | { type: 'PUBLIER_DECISION_ACCEPTEE_AU_JORF' }
-  | { type: 'PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS' }
+  | PublierDecisionAccepteeAuJORF
+  | PublierDecisionAuRecueilDesActesAdministratifs
   | { type: 'RENDRE_MESURES_DE_PUBLICITE' }
-  | { type: 'FAIRE_ABROGATION' }
+  | FaireAbrogation
   | { type: 'FAIRE_ATTESTATION_DE_CONSTITUTION_DE_GARANTIES_FINANCIERES' }
   | { type: 'CLASSER_SANS_SUITE' }
   | { type: 'DESISTER_PAR_LE_DEMANDEUR' }
@@ -162,6 +181,9 @@ export class ProcedureSpecifiqueMachine extends CaminoMachine<ProcedureSpecifiqu
         }
         return { type: eventFromEntry, concurrence: etape.concurrence, consentement: etape.consentement, paysId: etape.paysId, surface: etape.surface }
       }
+      case 'PUBLIER_DECISION_ACCEPTEE_AU_JORF':
+      case 'PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS':
+        return { type: eventFromEntry, date: etape.date, dateDebut: etape.dateDebut ?? null, dateFin: etape.dateFin ?? null, duree: etape.duree ?? null }
       case 'FAIRE_RECEVABILITE_FAVORABLE': {
         if (isNullOrUndefined(etape.hasTitreFrom)) {
           throw new Error("L'attribut hasTitreFrom est obligatoire pour faire la recevabilité")
@@ -268,6 +290,10 @@ const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: De
       surface: 'inconnu',
       demarcheStatut: defaultDemarcheStatut,
       visibilite: 'confidentielle',
+      demarcheDateDebut: { dateDebut: null, dateEtape: null },
+      demarcheTypeId,
+      demarcheDateFin: { dateFin: null, duree: null },
+      demarcheDateEffet: null,
       concurrence: 'inconnu',
       hasTitreFrom: 'inconnu',
       paysId: 'inconnu',
@@ -671,11 +697,19 @@ const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: De
                 on: {
                   PUBLIER_DECISION_ACCEPTEE_AU_JORF: {
                     target: 'notificationAuDemandeurAFaire',
-                    actions: assign({ demarcheStatut: DemarchesStatutsIds.AccepteEtPublie }),
+                    actions: assign({
+                      demarcheStatut: DemarchesStatutsIds.AccepteEtPublie,
+                      demarcheDateDebut: ({ context, event }) => getDemarcheDateDebut(demarcheTypeId, context.demarcheDateDebut, event),
+                      demarcheDateFin: ({ context, event }) => getDemarcheDateFin(demarcheTypeId, context.demarcheDateFin, event),
+                    }),
                   },
                   PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS: {
                     target: 'notificationAuDemandeurAFaire',
-                    actions: assign({ demarcheStatut: DemarchesStatutsIds.AccepteEtPublie }),
+                    actions: assign({
+                      demarcheStatut: DemarchesStatutsIds.AccepteEtPublie,
+                      demarcheDateDebut: ({ context, event }) => getDemarcheDateDebut(demarcheTypeId, context.demarcheDateDebut, event),
+                      demarcheDateFin: ({ context, event }) => getDemarcheDateFin(demarcheTypeId, context.demarcheDateFin, event),
+                    }),
                   },
                 },
               },
@@ -701,7 +735,10 @@ const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: De
       },
       abrogationAFaire: {
         on: {
-          FAIRE_ABROGATION: 'publicationsAFaire',
+          FAIRE_ABROGATION: {
+            target: 'publicationsAFaire',
+            actions: assign({ demarcheDateFin: ({ context, event }) => (isDemarcheTypeWithPhase(context.demarcheTypeId) ? { dateFin: event.date, duree: null } : context.demarcheDateFin) }),
+          },
         },
       },
       publicationsAFaire: {

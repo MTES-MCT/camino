@@ -1,10 +1,12 @@
-import { assign, createMachine } from 'xstate'
+import { assign, setup } from 'xstate'
 import { IContenu } from '../../../types'
 import { EtapesTypesEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStatuts'
 import { CaminoMachine } from '../machine-helper'
-import { CaminoCommonContext, DBEtat, Etape, tags } from '../machine-common'
+import { CaminoCommonContext, DBEtat, Etape, getDemarcheDateDebut, getDemarcheDateFin, globalGuards, tags } from '../machine-common'
 import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts'
 import { CaminoDate } from 'camino-common/src/date'
+import { TitreTypeId } from 'camino-common/src/static/titresTypes'
+import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
 
 type FaireDemandeEvent = {
   mecanise: boolean
@@ -26,13 +28,22 @@ type RefuserRDE = {
   type: 'REFUSER_RDE'
 }
 
+type SignerAutorisationDeRechercheMiniere = {
+  type: 'SIGNER_AUTORISATION_DE_RECHERCHE_MINIERE'
+  date: CaminoDate
+  dateDebut: CaminoDate | null
+  dateFin: CaminoDate | null
+  duree: number | null
+}
+
+type DemanderModificationDeLaDemande = { type: 'DEMANDER_MODIFICATION_DE_LA_DEMANDE' }
 type XStateEvent =
   | { type: 'ENREGISTRER_DEMANDE' }
   | { type: 'DESISTER_PAR_LE_DEMANDEUR' }
   | { type: 'CLASSER_SANS_SUITE' }
   | FaireDemandeEvent
   | { type: 'PAYER_FRAIS_DE_DOSSIER' }
-  | { type: 'DEMANDER_MODIFICATION_DE_LA_DEMANDE' }
+  | DemanderModificationDeLaDemande
   | { type: 'MODIFIER_DEMANDE' }
   | { type: 'EXEMPTER_DAE' }
   | { type: 'DEMANDER_COMPLEMENTS_DAE' }
@@ -61,7 +72,7 @@ type XStateEvent =
   | { type: 'NOTIFIER_DEMANDEUR_AVIS_DEFAVORABLE_CARM' }
   | { type: 'PAYER_FRAIS_DE_DOSSIER_COMPLEMENTAIRES' }
   | { type: 'VALIDER_PAIEMENT_FRAIS_DE_DOSSIER_COMPLEMENTAIRES' }
-  | { type: 'SIGNER_AUTORISATION_DE_RECHERCHE_MINIERE' }
+  | SignerAutorisationDeRechercheMiniere
   | { type: 'DEMANDER_INFORMATION_MCR' }
   | { type: 'RECEVOIR_INFORMATION_MCR' }
   | { type: 'DEMANDER_COMPLEMENTS_MCR' }
@@ -175,8 +186,8 @@ const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
 } as const
 
 export class ArmOctMachine extends CaminoMachine<OctARMContext, XStateEvent> {
-  constructor() {
-    super(armOctMachine, trad)
+  constructor(titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId) {
+    super(armOctMachine(titreTypeId, demarcheTypeId), trad)
   }
 
   override caminoXStateEventToEtapes(event: XStateEvent): (Omit<Etape, 'date' | 'titreTypeId' | 'demarcheTypeId'> & { mainStep: boolean; type: XStateEvent['type'] })[] {
@@ -222,6 +233,8 @@ export class ArmOctMachine extends CaminoMachine<OctARMContext, XStateEvent> {
 
         return { type: eventFromEntry, mecanise, franchissements }
       }
+      case 'SIGNER_AUTORISATION_DE_RECHERCHE_MINIERE':
+        return { type: eventFromEntry, date: etape.date, dateDebut: etape.dateDebut ?? null, dateFin: etape.dateFin ?? null, duree: etape.duree ?? null }
       case 'ACCEPTER_RDE':
       case 'REFUSER_RDE':
       case 'RECEVOIR_COMPLEMENTS_RDE': {
@@ -324,571 +337,587 @@ const validationFraisApresDesistementOuClassementSansSuite = [
   },
 ]
 
-const actionMecanisation = assign<OctARMContext, any, any, any, any>({
-  mecanisation: ({ context }) => {
-    if (isMecanise(context.mecanisation)) {
-      return context.mecanisation
-    }
+const armOctMachine = (_titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId) =>
+  setup({
+    types: {} as { context: OctARMContext; events: XStateEvent },
+    guards: { ...globalGuards },
+    actions: {
+      actionAccepterOuRefuserRDE: assign({
+        mecanisation: ({ context, event }) => {
+          if (event.type !== 'ACCEPTER_RDE' && event.type !== 'REFUSER_RDE') {
+            throw new Error(`Cette action ne peut être appelée que pour 'ACCEPTER_RDE' ou 'REFUSER_RDE', ${event.type}`)
+          }
+          if (event.franchissements === null || event.franchissements < 1) {
+            throw new Error('cas impossible')
+          }
+          if (isMecanise(context.mecanisation)) {
+            return {
+              ...context.mecanisation,
+              franchissementCoursEau: event.franchissements,
+            }
+          }
 
-    return {
-      mecanise: true,
-      paiementFraisDossierComplementaireValide: false,
-      franchissementCoursEau: 0,
-    }
-  },
-})
+          return {
+            mecanise: true,
+            paiementFraisDossierComplementaireValide: false,
+            franchissementCoursEau: event.franchissements,
+          }
+        },
+      }),
+      actionMecanisation: assign({
+        mecanisation: ({ context }) => {
+          if (isMecanise(context.mecanisation)) {
+            return context.mecanisation
+          }
 
-const actionAccepterOuRefuserRDE = assign<OctARMContext, AccepterRDE | RefuserRDE, any, any, any>({
-  mecanisation: ({ context, event }) => {
-    if (event.franchissements === null || event.franchissements < 1) {
-      throw new Error('cas impossible')
-    }
-    if (isMecanise(context.mecanisation)) {
-      return {
-        ...context.mecanisation,
-        franchissementCoursEau: event.franchissements,
-      }
-    }
+          return {
+            mecanise: true,
+            paiementFraisDossierComplementaireValide: false,
+            franchissementCoursEau: 0,
+          }
+        },
+      }),
+      recevoirComplementsRde: assign({
+        mecanisation: ({ context, event }) => {
+          if (event.type !== 'RECEVOIR_COMPLEMENTS_RDE') {
+            throw new Error(`Cette action ne peut être appelée que pour 'RECEVOIR_COMPLEMENTS_RDE', ${event.type}`)
+          }
+          if (event.franchissements === null) {
+            throw new Error('cas impossible')
+          }
+          if (isMecanise(context.mecanisation)) {
+            return {
+              ...context.mecanisation,
+              franchissementCoursEau: event.franchissements,
+            }
+          }
 
-    return {
-      mecanise: true,
-      paiementFraisDossierComplementaireValide: false,
-      franchissementCoursEau: event.franchissements,
-    }
-  },
-})
-
-const actionRecevoirComplementsRde = assign<OctARMContext, RecevoirComplementsRde, any, any, any>({
-  mecanisation: ({ context, event }) => {
-    if (event.franchissements === null) {
-      throw new Error('cas impossible')
-    }
-    if (isMecanise(context.mecanisation)) {
-      return {
-        ...context.mecanisation,
-        franchissementCoursEau: event.franchissements,
-      }
-    }
-
-    return {
-      mecanise: true,
-      paiementFraisDossierComplementaireValide: false,
-      franchissementCoursEau: event.franchissements,
-    }
-  },
-})
-
-const armOctMachine = createMachine({
-  types: {} as { context: OctARMContext; events: XStateEvent },
-  id: 'oct',
-  initial: 'demandeEnConstructionOuDeposeeOuEnInstructionMachine',
-  context: {
-    mecanisation: 'inconnu',
-    visibilite: 'confidentielle',
-    avisDesServicesEtCommissionsConsultativesFait: false,
-    demarcheStatut: DemarchesStatutsIds.EnConstruction,
-    paiementFraisDossierValide: false,
-  },
-  on: {
-    MODIFIER_DEMANDE: {
-      actions: () => ({}),
-      guard: ({ context }) => context.demarcheStatut === DemarchesStatutsIds.EnInstruction && context.visibilite === 'confidentielle',
-    },
-    DESISTER_PAR_LE_DEMANDEUR: {
-      target: '.desistementDuDemandeurFait',
-      guard: ({ context }) => context.demarcheStatut === DemarchesStatutsIds.EnInstruction,
-      actions: assign({
-        demarcheStatut: DemarchesStatutsIds.Desiste,
-        visibilite: 'publique',
+          return {
+            mecanise: true,
+            paiementFraisDossierComplementaireValide: false,
+            franchissementCoursEau: event.franchissements,
+          }
+        },
       }),
     },
-    CLASSER_SANS_SUITE: {
-      target: '.decisionDeClassementSansSuiteFait',
-      guard: ({ context }) => context.demarcheStatut === DemarchesStatutsIds.EnInstruction,
-      actions: assign({
-        demarcheStatut: DemarchesStatutsIds.ClasseSansSuite,
-        visibilite: 'publique',
-      }),
+  }).createMachine({
+    id: 'octArm',
+    initial: 'demandeEnConstructionOuDeposeeOuEnInstructionMachine',
+    context: {
+      mecanisation: 'inconnu',
+      visibilite: 'confidentielle',
+      avisDesServicesEtCommissionsConsultativesFait: false,
+      demarcheStatut: DemarchesStatutsIds.EnConstruction,
+      demarcheDateDebut: { dateDebut: null, dateEtape: null },
+      demarcheTypeId,
+      demarcheDateFin: { dateFin: null, duree: null },
+      demarcheDateEffet: null,
+      paiementFraisDossierValide: false,
     },
-  },
-  states: {
-    demandeEnConstructionOuDeposeeOuEnInstructionMachine: {
-      type: 'parallel',
-      onDone: {
-        target: 'saisineCommissionAutorisationsDeRecherchesMinieresAFaire',
+    on: {
+      MODIFIER_DEMANDE: {
+        actions: () => ({}),
+        guard: ({ context }) => context.demarcheStatut === DemarchesStatutsIds.EnInstruction && context.visibilite === 'confidentielle',
       },
-      states: {
-        pasRdeMachine: {
-          initial: 'demandeEnConstructionOuDeposeeMachine',
-          states: {
-            demandeEnConstructionOuDeposeeMachine: {
-              type: 'parallel',
-              states: {
-                demandeMachine: {
-                  initial: 'demandeAFaire',
-                  states: {
-                    demandeAFaire: {
-                      on: {
-                        FAIRE_DEMANDE: {
-                          target: 'demandeAEnregistrer',
-                          actions: assign({
-                            mecanisation: ({ context, event }): MecanisationInconnu => {
-                              if (isMecanise(context.mecanisation) && context.mecanisation.franchissementCoursEau > 0 && (event.franchissements === null || event.franchissements === 0)) {
-                                throw new Error("pas le droit d'avoir pas de franchissements alors qu'une rde a été faite")
-                              } else {
-                                return event.mecanise
-                                  ? {
-                                      mecanise: true,
-                                      paiementFraisDossierComplementaireValide: false,
-                                      franchissementCoursEau: event.franchissements ?? 0,
-                                    }
-                                  : { mecanise: false }
+      DESISTER_PAR_LE_DEMANDEUR: {
+        target: '.desistementDuDemandeurFait',
+        guard: ({ context }) => context.demarcheStatut === DemarchesStatutsIds.EnInstruction,
+        actions: assign({
+          demarcheStatut: DemarchesStatutsIds.Desiste,
+          visibilite: 'publique',
+        }),
+      },
+      CLASSER_SANS_SUITE: {
+        target: '.decisionDeClassementSansSuiteFait',
+        guard: ({ context }) => context.demarcheStatut === DemarchesStatutsIds.EnInstruction,
+        actions: assign({
+          demarcheStatut: DemarchesStatutsIds.ClasseSansSuite,
+          visibilite: 'publique',
+        }),
+      },
+    },
+    states: {
+      demandeEnConstructionOuDeposeeOuEnInstructionMachine: {
+        type: 'parallel',
+        onDone: {
+          target: 'saisineCommissionAutorisationsDeRecherchesMinieresAFaire',
+        },
+        states: {
+          pasRdeMachine: {
+            initial: 'demandeEnConstructionOuDeposeeMachine',
+            states: {
+              demandeEnConstructionOuDeposeeMachine: {
+                type: 'parallel',
+                states: {
+                  demandeMachine: {
+                    initial: 'demandeAFaire',
+                    states: {
+                      demandeAFaire: {
+                        on: {
+                          FAIRE_DEMANDE: {
+                            target: 'demandeAEnregistrer',
+                            actions: assign({
+                              mecanisation: ({ context, event }): MecanisationInconnu => {
+                                if (isMecanise(context.mecanisation) && context.mecanisation.franchissementCoursEau > 0 && (event.franchissements === null || event.franchissements === 0)) {
+                                  throw new Error("pas le droit d'avoir pas de franchissements alors qu'une rde a été faite")
+                                } else {
+                                  return event.mecanise
+                                    ? {
+                                        mecanise: true,
+                                        paiementFraisDossierComplementaireValide: false,
+                                        franchissementCoursEau: event.franchissements ?? 0,
+                                      }
+                                    : { mecanise: false }
+                                }
+                              },
+                            }),
+                            guard: ({ context, event }) => {
+                              if (isMecanise(context.mecanisation) && !event.mecanise) {
+                                return false
                               }
+
+                              if (isMecanise(context.mecanisation) && context.mecanisation.franchissementCoursEau > 0 && (event.franchissements === null || event.franchissements === 0)) {
+                                return false
+                              }
+
+                              return true
                             },
-                          }),
-                          guard: ({ context, event }) => {
-                            if (isMecanise(context.mecanisation) && !event.mecanise) {
-                              return false
-                            }
-
-                            if (isMecanise(context.mecanisation) && context.mecanisation.franchissementCoursEau > 0 && (event.franchissements === null || event.franchissements === 0)) {
-                              return false
-                            }
-
-                            return true
                           },
                         },
                       },
-                    },
-                    demandeAEnregistrer: {
-                      on: {
-                        ENREGISTRER_DEMANDE: {
-                          target: 'demandeEnregistree',
-                          actions: assign({
-                            demarcheStatut: DemarchesStatutsIds.EnInstruction,
-                          }),
+                      demandeAEnregistrer: {
+                        on: {
+                          ENREGISTRER_DEMANDE: {
+                            target: 'demandeEnregistree',
+                            actions: assign({
+                              demarcheStatut: DemarchesStatutsIds.EnInstruction,
+                            }),
+                          },
                         },
                       },
-                    },
-                    demandeEnregistree: {
-                      type: 'final',
-                    },
-                  },
-                },
-                paiementDesFraisDeDossierMachine: {
-                  initial: 'paiementDesFraisDeDossierAFaire',
-                  states: {
-                    paiementDesFraisDeDossierAFaire: {
-                      on: {
-                        PAYER_FRAIS_DE_DOSSIER: 'paiementDesFraisDeDossierFait',
+                      demandeEnregistree: {
+                        type: 'final',
                       },
                     },
-                    paiementDesFraisDeDossierFait: {
-                      type: 'final',
-                    },
                   },
-                },
-                decisionAutoriteEnvironnementaleMachine: {
-                  initial: 'decisionAutoriteEnvironnementaleAFaire',
-                  states: {
-                    decisionAutoriteEnvironnementaleAFaire: {
-                      always: {
-                        target: 'decisionAutoriteEnvironnementaleExemptee',
-                        guard: ({ context }) => isNonMecanise(context.mecanisation),
-                      },
-                      on: {
-                        DEMANDER_MODIFICATION_DE_LA_DEMANDE: {
-                          target: 'modificationDeLaDemandeAFaire',
-                          actions: actionMecanisation,
+                  paiementDesFraisDeDossierMachine: {
+                    initial: 'paiementDesFraisDeDossierAFaire',
+                    states: {
+                      paiementDesFraisDeDossierAFaire: {
+                        on: {
+                          PAYER_FRAIS_DE_DOSSIER: 'paiementDesFraisDeDossierFait',
                         },
-                        EXEMPTER_DAE: {
+                      },
+                      paiementDesFraisDeDossierFait: {
+                        type: 'final',
+                      },
+                    },
+                  },
+                  decisionAutoriteEnvironnementaleMachine: {
+                    initial: 'decisionAutoriteEnvironnementaleAFaire',
+                    states: {
+                      decisionAutoriteEnvironnementaleAFaire: {
+                        always: {
                           target: 'decisionAutoriteEnvironnementaleExemptee',
-                          actions: actionMecanisation,
+                          guard: ({ context }) => isNonMecanise(context.mecanisation),
                         },
-                        DEMANDER_COMPLEMENTS_DAE: {
-                          target: 'recevoirComplementDAEAFaire',
-                          guard: ({ context }) => context.demarcheStatut !== DemarchesStatutsIds.EnConstruction,
-                        },
-                      },
-                    },
-                    recevoirComplementDAEAFaire: {
-                      on: {
-                        RECEVOIR_COMPLEMENTS_DAE: 'decisionAutoriteEnvironnementaleAFaire',
-                        EXEMPTER_DAE: {
-                          target: 'decisionAutoriteEnvironnementaleExemptee',
-                          actions: actionMecanisation,
-                        },
-                        DEMANDER_MODIFICATION_DE_LA_DEMANDE: {
-                          target: 'modificationDeLaDemandeAFaire',
-                          actions: actionMecanisation,
+                        on: {
+                          DEMANDER_MODIFICATION_DE_LA_DEMANDE: {
+                            target: 'modificationDeLaDemandeAFaire',
+                            actions: 'actionMecanisation',
+                          },
+                          EXEMPTER_DAE: {
+                            target: 'decisionAutoriteEnvironnementaleExemptee',
+                            actions: 'actionMecanisation',
+                          },
+                          DEMANDER_COMPLEMENTS_DAE: {
+                            target: 'recevoirComplementDAEAFaire',
+                            guard: ({ context }) => context.demarcheStatut !== DemarchesStatutsIds.EnConstruction,
+                          },
                         },
                       },
-                    },
-                    modificationDeLaDemandeAFaire: {
-                      on: {
-                        MODIFIER_DEMANDE: 'modificationDeLaDemandeFaite',
+                      recevoirComplementDAEAFaire: {
+                        on: {
+                          RECEVOIR_COMPLEMENTS_DAE: 'decisionAutoriteEnvironnementaleAFaire',
+                          EXEMPTER_DAE: {
+                            target: 'decisionAutoriteEnvironnementaleExemptee',
+                            actions: 'actionMecanisation',
+                          },
+                          DEMANDER_MODIFICATION_DE_LA_DEMANDE: {
+                            target: 'modificationDeLaDemandeAFaire',
+                            actions: 'actionMecanisation',
+                          },
+                        },
                       },
+                      modificationDeLaDemandeAFaire: {
+                        on: {
+                          MODIFIER_DEMANDE: 'modificationDeLaDemandeFaite',
+                        },
+                      },
+                      decisionAutoriteEnvironnementaleExemptee: { type: 'final' },
+                      modificationDeLaDemandeFaite: { type: 'final' },
                     },
-                    decisionAutoriteEnvironnementaleExemptee: { type: 'final' },
-                    modificationDeLaDemandeFaite: { type: 'final' },
                   },
                 },
-              },
 
-              onDone: {
-                target: 'completudeDeLaDemandeAFaire',
+                onDone: {
+                  target: 'completudeDeLaDemandeAFaire',
+                },
               },
-            },
-            completudeDeLaDemandeAFaire: {
-              on: {
-                REFUSER_COMPLETUDE: 'demandeDeComplementsPourCompletudeAFaire',
-                ACCEPTER_COMPLETUDE: 'validationDesFraisDossierAFaire',
+              completudeDeLaDemandeAFaire: {
+                on: {
+                  REFUSER_COMPLETUDE: 'demandeDeComplementsPourCompletudeAFaire',
+                  ACCEPTER_COMPLETUDE: 'validationDesFraisDossierAFaire',
+                },
+                tags: [tags.responsable['dea-guyane-01']],
               },
-              tags: [tags.responsable['dea-guyane-01']],
-            },
-            demandeDeComplementsPourCompletudeAFaire: {
-              on: {
-                DEMANDER_COMPLEMENTS_COMPLETUDE: 'receptionDeComplementsPourCompletudeAFaire',
+              demandeDeComplementsPourCompletudeAFaire: {
+                on: {
+                  DEMANDER_COMPLEMENTS_COMPLETUDE: 'receptionDeComplementsPourCompletudeAFaire',
+                },
               },
-            },
-            receptionDeComplementsPourCompletudeAFaire: {
-              on: {
-                RECEVOIR_COMPLEMENTS_COMPLETUDE: 'completudeDeLaDemandeAFaire',
+              receptionDeComplementsPourCompletudeAFaire: {
+                on: {
+                  RECEVOIR_COMPLEMENTS_COMPLETUDE: 'completudeDeLaDemandeAFaire',
+                },
               },
-            },
-            validationDesFraisDossierAFaire: {
-              tags: [tags.responsable['dea-guyane-01']],
-              on: {
-                VALIDER_FRAIS_DE_DOSSIER: [
-                  {
-                    target: 'recevabiliteDeLaDemandeAFaire',
+              validationDesFraisDossierAFaire: {
+                tags: [tags.responsable['dea-guyane-01']],
+                on: {
+                  VALIDER_FRAIS_DE_DOSSIER: [
+                    {
+                      target: 'recevabiliteDeLaDemandeAFaire',
+                      actions: assign({
+                        paiementFraisDossierValide: true,
+                      }),
+                      guard: ({ context }) => context.demarcheStatut !== DemarchesStatutsIds.Desiste && context.demarcheStatut !== DemarchesStatutsIds.ClasseSansSuite,
+                    },
+                    {
+                      target: '#fini',
+                      guard: ({ context }) =>
+                        (context.demarcheStatut === DemarchesStatutsIds.Desiste || context.demarcheStatut === DemarchesStatutsIds.ClasseSansSuite) && isNonMecanise(context.mecanisation),
+                    },
+                    {
+                      target: '#validationDuPaiementDesFraisDeDossierComplementairesAFaire',
+                      guard: ({ context }) =>
+                        (context.demarcheStatut === DemarchesStatutsIds.Desiste || context.demarcheStatut === DemarchesStatutsIds.ClasseSansSuite) &&
+                        mustPayerFraisDossierComplementaire(context.mecanisation),
+                    },
+                  ],
+                },
+              },
+              recevabiliteDeLaDemandeAFaire: {
+                tags: [tags.responsable['dea-guyane-01']],
+                on: {
+                  DEMANDER_INFORMATION_MCR: 'receptionInformationPourLaRecevabiliteAFaire',
+                  DEMANDER_COMPLEMENTS_MCR: 'receptionComplementsPourLaRecevabiliteAFaire',
+                  DECLARER_DEMANDE_FAVORABLE: 'expertisesMachine',
+                  DECLARER_DEMANDE_DEFAVORABLE: 'avisDesServicesEtCommissionsConsultativesARendre',
+                },
+              },
+              receptionInformationPourLaRecevabiliteAFaire: {
+                on: {
+                  RECEVOIR_INFORMATION_MCR: 'recevabiliteDeLaDemandeAFaire',
+                  DECLARER_DEMANDE_FAVORABLE: 'expertisesMachine',
+                  DECLARER_DEMANDE_DEFAVORABLE: 'avisDesServicesEtCommissionsConsultativesARendre',
+                },
+              },
+              receptionComplementsPourLaRecevabiliteAFaire: {
+                on: {
+                  RECEVOIR_COMPLEMENTS_MCR: 'recevabiliteDeLaDemandeAFaire',
+                  DECLARER_DEMANDE_FAVORABLE: 'expertisesMachine',
+                  DECLARER_DEMANDE_DEFAVORABLE: 'avisDesServicesEtCommissionsConsultativesARendre',
+                },
+              },
+              expertisesMachine: {
+                type: 'parallel',
+                states: {
+                  expertiseMachine: {
+                    initial: 'expertiseAFaire',
+                    states: {
+                      expertiseAFaire: {
+                        on: {
+                          RECEVOIR_EXPERTISE: 'expertiseFaite',
+                        },
+                      },
+                      expertiseFaite: {
+                        type: 'final',
+                      },
+                    },
+                  },
+                  avisDesServicesEtCommissionsConsultativesMachine: {
+                    initial: 'avisDesServicesEtCommissionsConsultativesARendre',
+                    states: {
+                      avisDesServicesEtCommissionsConsultativesARendre: {
+                        on: {
+                          RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES: {
+                            target: 'avisDesServicesEtCommissionsConsultativesRendu',
+                            actions: assign({ avisDesServicesEtCommissionsConsultativesFait: true }),
+                          },
+                        },
+                      },
+                      avisDesServicesEtCommissionsConsultativesRendu: { type: 'final' },
+                    },
+                  },
+                },
+                on: {
+                  FAIRE_SAISINE_CARM: {
+                    target: '#avisCommissionAutorisationDeRecherchesMinieresAFaire',
                     actions: assign({
-                      paiementFraisDossierValide: true,
+                      visibilite: 'publique',
                     }),
-                    guard: ({ context }) => context.demarcheStatut !== DemarchesStatutsIds.Desiste && context.demarcheStatut !== DemarchesStatutsIds.ClasseSansSuite,
-                  },
-                  {
-                    target: '#fini',
-                    guard: ({ context }) =>
-                      (context.demarcheStatut === DemarchesStatutsIds.Desiste || context.demarcheStatut === DemarchesStatutsIds.ClasseSansSuite) && isNonMecanise(context.mecanisation),
-                  },
-                  {
-                    target: '#validationDuPaiementDesFraisDeDossierComplementairesAFaire',
-                    guard: ({ context }) =>
-                      (context.demarcheStatut === DemarchesStatutsIds.Desiste || context.demarcheStatut === DemarchesStatutsIds.ClasseSansSuite) &&
-                      mustPayerFraisDossierComplementaire(context.mecanisation),
-                  },
-                ],
-              },
-            },
-            recevabiliteDeLaDemandeAFaire: {
-              tags: [tags.responsable['dea-guyane-01']],
-              on: {
-                DEMANDER_INFORMATION_MCR: 'receptionInformationPourLaRecevabiliteAFaire',
-                DEMANDER_COMPLEMENTS_MCR: 'receptionComplementsPourLaRecevabiliteAFaire',
-                DECLARER_DEMANDE_FAVORABLE: 'expertisesMachine',
-                DECLARER_DEMANDE_DEFAVORABLE: 'avisDesServicesEtCommissionsConsultativesARendre',
-              },
-            },
-            receptionInformationPourLaRecevabiliteAFaire: {
-              on: {
-                RECEVOIR_INFORMATION_MCR: 'recevabiliteDeLaDemandeAFaire',
-                DECLARER_DEMANDE_FAVORABLE: 'expertisesMachine',
-                DECLARER_DEMANDE_DEFAVORABLE: 'avisDesServicesEtCommissionsConsultativesARendre',
-              },
-            },
-            receptionComplementsPourLaRecevabiliteAFaire: {
-              on: {
-                RECEVOIR_COMPLEMENTS_MCR: 'recevabiliteDeLaDemandeAFaire',
-                DECLARER_DEMANDE_FAVORABLE: 'expertisesMachine',
-                DECLARER_DEMANDE_DEFAVORABLE: 'avisDesServicesEtCommissionsConsultativesARendre',
-              },
-            },
-            expertisesMachine: {
-              type: 'parallel',
-              states: {
-                expertiseMachine: {
-                  initial: 'expertiseAFaire',
-                  states: {
-                    expertiseAFaire: {
-                      on: {
-                        RECEVOIR_EXPERTISE: 'expertiseFaite',
-                      },
-                    },
-                    expertiseFaite: {
-                      type: 'final',
-                    },
-                  },
-                },
-                avisDesServicesEtCommissionsConsultativesMachine: {
-                  initial: 'avisDesServicesEtCommissionsConsultativesARendre',
-                  states: {
-                    avisDesServicesEtCommissionsConsultativesARendre: {
-                      on: {
-                        RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES: {
-                          target: 'avisDesServicesEtCommissionsConsultativesRendu',
-                          actions: assign({ avisDesServicesEtCommissionsConsultativesFait: true }),
-                        },
-                      },
-                    },
-                    avisDesServicesEtCommissionsConsultativesRendu: { type: 'final' },
+                    guard: ({ context }) => context.avisDesServicesEtCommissionsConsultativesFait,
                   },
                 },
               },
-              on: {
-                FAIRE_SAISINE_CARM: {
-                  target: '#avisCommissionAutorisationDeRecherchesMinieresAFaire',
-                  actions: assign({
-                    visibilite: 'publique',
-                  }),
-                  guard: ({ context }) => context.avisDesServicesEtCommissionsConsultativesFait,
+              avisDesServicesEtCommissionsConsultativesARendre: {
+                on: {
+                  RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES: 'avisDesServicesEtCommissionsConsultativesRendu',
                 },
               },
+              avisDesServicesEtCommissionsConsultativesRendu: { type: 'final' },
             },
-            avisDesServicesEtCommissionsConsultativesARendre: {
-              on: {
-                RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES: 'avisDesServicesEtCommissionsConsultativesRendu',
-              },
-            },
-            avisDesServicesEtCommissionsConsultativesRendu: { type: 'final' },
           },
-        },
-        declarationLoiSurLEauMachine: {
-          initial: 'declarationLoiSurLEauAFaire',
-          states: {
-            declarationLoiSurLEauAFaire: {
-              always: {
-                target: 'declarationLoiSurLEauExemptee',
-                guard: ({ context }) => isNonMecanise(context.mecanisation) || (isMecanise(context.mecanisation) && !context.mecanisation.franchissementCoursEau) || isInconnu(context.mecanisation),
-              },
-              on: {
-                REFUSER_RDE: {
-                  target: 'declarationLoiSurLEauFaite',
-                  guard: ({ event }) => (event.franchissements ?? 0) > 0,
-                  actions: actionAccepterOuRefuserRDE,
+          declarationLoiSurLEauMachine: {
+            initial: 'declarationLoiSurLEauAFaire',
+            states: {
+              declarationLoiSurLEauAFaire: {
+                always: {
+                  target: 'declarationLoiSurLEauExemptee',
+                  guard: ({ context }) => isNonMecanise(context.mecanisation) || (isMecanise(context.mecanisation) && !context.mecanisation.franchissementCoursEau) || isInconnu(context.mecanisation),
                 },
-                ACCEPTER_RDE: {
-                  target: 'declarationLoiSurLEauFaite',
-                  guard: ({ event }) => (event.franchissements ?? 0) > 0,
-                  actions: actionAccepterOuRefuserRDE,
+                on: {
+                  REFUSER_RDE: {
+                    target: 'declarationLoiSurLEauFaite',
+                    guard: ({ event }) => (event.franchissements ?? 0) > 0,
+                    actions: 'actionAccepterOuRefuserRDE',
+                  },
+                  ACCEPTER_RDE: {
+                    target: 'declarationLoiSurLEauFaite',
+                    guard: ({ event }) => (event.franchissements ?? 0) > 0,
+                    actions: 'actionAccepterOuRefuserRDE',
+                  },
+                  DEMANDER_COMPLEMENTS_RDE: 'receptionDeComplementsAFaire',
                 },
-                DEMANDER_COMPLEMENTS_RDE: 'receptionDeComplementsAFaire',
               },
-            },
-            receptionDeComplementsAFaire: {
-              on: {
-                RECEVOIR_COMPLEMENTS_RDE: {
+              receptionDeComplementsAFaire: {
+                on: {
+                  RECEVOIR_COMPLEMENTS_RDE: {
+                    target: 'declarationLoiSurLEauAFaire',
+                    actions: 'recevoirComplementsRde',
+                  },
+                  REFUSER_RDE: {
+                    target: 'declarationLoiSurLEauFaite',
+                    guard: ({ context }) => isMecanise(context.mecanisation) && context.mecanisation.franchissementCoursEau > 0,
+                    actions: 'actionAccepterOuRefuserRDE',
+                  },
+                  ACCEPTER_RDE: {
+                    target: 'declarationLoiSurLEauFaite',
+                    guard: ({ context }) => isMecanise(context.mecanisation) && context.mecanisation.franchissementCoursEau > 0,
+                    actions: 'actionAccepterOuRefuserRDE',
+                  },
+                  DEMANDER_COMPLEMENTS_RDE: 'receptionDeComplementsAFaire',
+                },
+              },
+              declarationLoiSurLEauExemptee: {
+                always: {
                   target: 'declarationLoiSurLEauAFaire',
-                  actions: actionRecevoirComplementsRde,
-                },
-                REFUSER_RDE: {
-                  target: 'declarationLoiSurLEauFaite',
                   guard: ({ context }) => isMecanise(context.mecanisation) && context.mecanisation.franchissementCoursEau > 0,
-                  actions: actionAccepterOuRefuserRDE,
                 },
-                ACCEPTER_RDE: {
-                  target: 'declarationLoiSurLEauFaite',
-                  guard: ({ context }) => isMecanise(context.mecanisation) && context.mecanisation.franchissementCoursEau > 0,
-                  actions: actionAccepterOuRefuserRDE,
+                on: {
+                  DEMANDER_COMPLEMENTS_RDE: {
+                    target: 'receptionDeComplementsAFaire',
+                    guard: ({ context }) => (context.demarcheStatut === DemarchesStatutsIds.Depose || context.demarcheStatut === DemarchesStatutsIds.EnInstruction) && isMecanise(context.mecanisation),
+                  },
+                  REFUSER_RDE: {
+                    target: 'declarationLoiSurLEauFaite',
+                    guard: ({ context, event }) => (isInconnu(context.mecanisation) || isMecanise(context.mecanisation)) && (event.franchissements ?? 0) > 0,
+                    actions: 'actionAccepterOuRefuserRDE',
+                  },
+                  ACCEPTER_RDE: {
+                    target: 'declarationLoiSurLEauFaite',
+                    guard: ({ context, event }) => (isInconnu(context.mecanisation) || isMecanise(context.mecanisation)) && (event.franchissements ?? 0) > 0,
+                    actions: 'actionAccepterOuRefuserRDE',
+                  },
                 },
-                DEMANDER_COMPLEMENTS_RDE: 'receptionDeComplementsAFaire',
+                type: 'final',
               },
+              declarationLoiSurLEauFaite: { type: 'final' },
             },
-            declarationLoiSurLEauExemptee: {
-              always: {
-                target: 'declarationLoiSurLEauAFaire',
-                guard: ({ context }) => isMecanise(context.mecanisation) && context.mecanisation.franchissementCoursEau > 0,
-              },
-              on: {
-                DEMANDER_COMPLEMENTS_RDE: {
-                  target: 'receptionDeComplementsAFaire',
-                  guard: ({ context }) => (context.demarcheStatut === DemarchesStatutsIds.Depose || context.demarcheStatut === DemarchesStatutsIds.EnInstruction) && isMecanise(context.mecanisation),
-                },
-                REFUSER_RDE: {
-                  target: 'declarationLoiSurLEauFaite',
-                  guard: ({ context, event }) => (isInconnu(context.mecanisation) || isMecanise(context.mecanisation)) && (event.franchissements ?? 0) > 0,
-                  actions: actionAccepterOuRefuserRDE,
-                },
-                ACCEPTER_RDE: {
-                  target: 'declarationLoiSurLEauFaite',
-                  guard: ({ context, event }) => (isInconnu(context.mecanisation) || isMecanise(context.mecanisation)) && (event.franchissements ?? 0) > 0,
-                  actions: actionAccepterOuRefuserRDE,
-                },
-              },
-              type: 'final',
-            },
-            declarationLoiSurLEauFaite: { type: 'final' },
           },
         },
       },
-    },
-    saisineCommissionAutorisationsDeRecherchesMinieresAFaire: {
-      on: {
-        FAIRE_SAISINE_CARM: {
-          target: 'avisCommissionAutorisationDeRecherchesMinieresAFaire',
-          actions: assign({
-            visibilite: 'publique',
-          }),
+      saisineCommissionAutorisationsDeRecherchesMinieresAFaire: {
+        on: {
+          FAIRE_SAISINE_CARM: {
+            target: 'avisCommissionAutorisationDeRecherchesMinieresAFaire',
+            actions: assign({
+              visibilite: 'publique',
+            }),
+          },
+          DEMANDER_COMPLEMENTS_RDE: {
+            target: [
+              'demandeEnConstructionOuDeposeeOuEnInstructionMachine.declarationLoiSurLEauMachine.receptionDeComplementsAFaire',
+              'demandeEnConstructionOuDeposeeOuEnInstructionMachine.pasRdeMachine.avisDesServicesEtCommissionsConsultativesRendu',
+            ],
+            guard: ({ context }) => isMecanise(context.mecanisation) && !context.mecanisation.franchissementCoursEau,
+          },
+          REFUSER_RDE: {
+            target: 'saisineCommissionAutorisationsDeRecherchesMinieresAFaire',
+            guard: ({ context, event }) => isMecanise(context.mecanisation) && !context.mecanisation.franchissementCoursEau && (event.franchissements ?? 0) > 0,
+            actions: 'actionAccepterOuRefuserRDE',
+          },
+          ACCEPTER_RDE: {
+            target: 'saisineCommissionAutorisationsDeRecherchesMinieresAFaire',
+            guard: ({ context, event }) => isMecanise(context.mecanisation) && !context.mecanisation.franchissementCoursEau && (event.franchissements ?? 0) > 0,
+            actions: 'actionAccepterOuRefuserRDE',
+          },
         },
-        DEMANDER_COMPLEMENTS_RDE: {
-          target: [
-            'demandeEnConstructionOuDeposeeOuEnInstructionMachine.declarationLoiSurLEauMachine.receptionDeComplementsAFaire',
-            'demandeEnConstructionOuDeposeeOuEnInstructionMachine.pasRdeMachine.avisDesServicesEtCommissionsConsultativesRendu',
+      },
+      avisCommissionAutorisationDeRecherchesMinieresAFaire: {
+        id: 'avisCommissionAutorisationDeRecherchesMinieresAFaire',
+        on: {
+          RENDRE_AVIS_FAVORABLE_CARM: [
+            {
+              target: 'signatureAutorisationDeRechercheMiniereAFaire',
+              guard: ({ context }) => isNonMecanise(context.mecanisation),
+            },
+            {
+              target: 'notificationDuDemandeurFraisDeDossierComplementairesAFaire',
+              guard: ({ context }) => isMecanise(context.mecanisation),
+            },
           ],
-          guard: ({ context }) => isMecanise(context.mecanisation) && !context.mecanisation.franchissementCoursEau,
-        },
-        REFUSER_RDE: {
-          target: 'saisineCommissionAutorisationsDeRecherchesMinieresAFaire',
-          guard: ({ context, event }) => isMecanise(context.mecanisation) && !context.mecanisation.franchissementCoursEau && (event.franchissements ?? 0) > 0,
-          actions: actionAccepterOuRefuserRDE,
-        },
-        ACCEPTER_RDE: {
-          target: 'saisineCommissionAutorisationsDeRecherchesMinieresAFaire',
-          guard: ({ context, event }) => isMecanise(context.mecanisation) && !context.mecanisation.franchissementCoursEau && (event.franchissements ?? 0) > 0,
-          actions: actionAccepterOuRefuserRDE,
-        },
-      },
-    },
-    avisCommissionAutorisationDeRecherchesMinieresAFaire: {
-      id: 'avisCommissionAutorisationDeRecherchesMinieresAFaire',
-      on: {
-        RENDRE_AVIS_FAVORABLE_CARM: [
-          {
-            target: 'signatureAutorisationDeRechercheMiniereAFaire',
-            guard: ({ context }) => isNonMecanise(context.mecanisation),
-          },
-          {
-            target: 'notificationDuDemandeurFraisDeDossierComplementairesAFaire',
-            guard: ({ context }) => isMecanise(context.mecanisation),
-          },
-        ],
-        RENDRE_AVIS_DEFAVORABLE_CARM: {
-          target: 'notificationDuDemandeurAvisDefavorableCARMAFaire',
-          actions: assign({
-            demarcheStatut: DemarchesStatutsIds.Rejete,
-          }),
-        },
-        RENDRE_AVIS_AJOURNE_CARM: 'notificationDuDemandeurAvisAjourneCARMAFaire',
-      },
-    },
-    notificationDuDemandeurAvisAjourneCARMAFaire: {
-      on: { NOTIFIER_DEMANDEUR_AVIS_AJOURNE_CARM: 'saisineCARMAFaire' },
-    },
-    saisineCARMAFaire: {
-      on: {
-        DEMANDER_COMPLEMENT_SAISINE_CARM: 'receptionComplementSaisineCARMAFaire',
-        FAIRE_SAISINE_CARM: 'avisCommissionAutorisationDeRecherchesMinieresAFaire',
-      },
-    },
-    receptionComplementSaisineCARMAFaire: {
-      on: {
-        RECEVOIR_COMPLEMENT_SAISINE_CARM: 'saisineCARMAFaire',
-        FAIRE_SAISINE_CARM: 'avisCommissionAutorisationDeRecherchesMinieresAFaire',
-      },
-    },
-    notificationDuDemandeurAvisDefavorableCARMAFaire: {
-      on: {
-        NOTIFIER_DEMANDEUR_AVIS_DEFAVORABLE_CARM: {
-          target: 'fini',
-        },
-      },
-    },
-    notificationDuDemandeurFraisDeDossierComplementairesAFaire: {
-      on: {
-        NOTIFIER_DEMANDEUR_AVIS_FAVORABLE_CARM: 'paiementDesFraisDeDossierComplementairesAFaire',
-      },
-    },
-    paiementDesFraisDeDossierComplementairesAFaire: {
-      on: {
-        PAYER_FRAIS_DE_DOSSIER_COMPLEMENTAIRES: 'validationDuPaiementDesFraisDeDossierComplementairesAFaire',
-      },
-    },
-    validationDuPaiementDesFraisDeDossierComplementairesAFaire: {
-      tags: [tags.responsable['dea-guyane-01']],
-      id: 'validationDuPaiementDesFraisDeDossierComplementairesAFaire',
-      on: {
-        VALIDER_PAIEMENT_FRAIS_DE_DOSSIER_COMPLEMENTAIRES: [
-          {
-            target: 'signatureAutorisationDeRechercheMiniereAFaire',
+          RENDRE_AVIS_DEFAVORABLE_CARM: {
+            target: 'notificationDuDemandeurAvisDefavorableCARMAFaire',
             actions: assign({
-              mecanisation: ({ context }) => {
-                if (!isMecanise(context.mecanisation)) {
-                  throw new Error('cas impossible')
-                }
+              demarcheStatut: DemarchesStatutsIds.Rejete,
+            }),
+          },
+          RENDRE_AVIS_AJOURNE_CARM: 'notificationDuDemandeurAvisAjourneCARMAFaire',
+        },
+      },
+      notificationDuDemandeurAvisAjourneCARMAFaire: {
+        on: { NOTIFIER_DEMANDEUR_AVIS_AJOURNE_CARM: 'saisineCARMAFaire' },
+      },
+      saisineCARMAFaire: {
+        on: {
+          DEMANDER_COMPLEMENT_SAISINE_CARM: 'receptionComplementSaisineCARMAFaire',
+          FAIRE_SAISINE_CARM: 'avisCommissionAutorisationDeRecherchesMinieresAFaire',
+        },
+      },
+      receptionComplementSaisineCARMAFaire: {
+        on: {
+          RECEVOIR_COMPLEMENT_SAISINE_CARM: 'saisineCARMAFaire',
+          FAIRE_SAISINE_CARM: 'avisCommissionAutorisationDeRecherchesMinieresAFaire',
+        },
+      },
+      notificationDuDemandeurAvisDefavorableCARMAFaire: {
+        on: {
+          NOTIFIER_DEMANDEUR_AVIS_DEFAVORABLE_CARM: {
+            target: 'fini',
+          },
+        },
+      },
+      notificationDuDemandeurFraisDeDossierComplementairesAFaire: {
+        on: {
+          NOTIFIER_DEMANDEUR_AVIS_FAVORABLE_CARM: 'paiementDesFraisDeDossierComplementairesAFaire',
+        },
+      },
+      paiementDesFraisDeDossierComplementairesAFaire: {
+        on: {
+          PAYER_FRAIS_DE_DOSSIER_COMPLEMENTAIRES: 'validationDuPaiementDesFraisDeDossierComplementairesAFaire',
+        },
+      },
+      validationDuPaiementDesFraisDeDossierComplementairesAFaire: {
+        tags: [tags.responsable['dea-guyane-01']],
+        id: 'validationDuPaiementDesFraisDeDossierComplementairesAFaire',
+        on: {
+          VALIDER_PAIEMENT_FRAIS_DE_DOSSIER_COMPLEMENTAIRES: [
+            {
+              target: 'signatureAutorisationDeRechercheMiniereAFaire',
+              actions: assign({
+                mecanisation: ({ context }) => {
+                  if (!isMecanise(context.mecanisation)) {
+                    throw new Error('cas impossible')
+                  }
 
-                return {
-                  ...context.mecanisation,
-                  paiementFraisDossierComplementaireValide: true,
-                }
-              },
-            }),
-            guard: ({ context }) => context.demarcheStatut !== DemarchesStatutsIds.Desiste && context.demarcheStatut !== DemarchesStatutsIds.ClasseSansSuite,
-          },
-          {
-            target: '#fini',
-            actions: assign({
-              mecanisation: ({ context }) => {
-                if (!isMecanise(context.mecanisation)) {
-                  throw new Error('cas impossible')
-                }
+                  return {
+                    ...context.mecanisation,
+                    paiementFraisDossierComplementaireValide: true,
+                  }
+                },
+              }),
+              guard: ({ context }) => context.demarcheStatut !== DemarchesStatutsIds.Desiste && context.demarcheStatut !== DemarchesStatutsIds.ClasseSansSuite,
+            },
+            {
+              target: '#fini',
+              actions: assign({
+                mecanisation: ({ context }) => {
+                  if (!isMecanise(context.mecanisation)) {
+                    throw new Error('cas impossible')
+                  }
 
-                return {
-                  ...context.mecanisation,
-                  paiementFraisDossierComplementaireValide: true,
-                }
-              },
-            }),
-            guard: ({ context }) => context.demarcheStatut === DemarchesStatutsIds.Desiste || context.demarcheStatut === DemarchesStatutsIds.ClasseSansSuite,
-          },
-        ],
-      },
-    },
-    signatureAutorisationDeRechercheMiniereAFaire: {
-      on: {
-        SIGNER_AUTORISATION_DE_RECHERCHE_MINIERE: [
-          {
-            target: 'avenantARMAFaire',
-            actions: assign({
-              demarcheStatut: DemarchesStatutsIds.Accepte,
-            }),
-            guard: ({ context }) => isMecanise(context.mecanisation),
-          },
-          {
-            target: 'notificationSignatureARMAFaire',
-            actions: assign({
-              demarcheStatut: DemarchesStatutsIds.Accepte,
-            }),
-            guard: ({ context }) => isNonMecanise(context.mecanisation),
-          },
-        ],
-      },
-    },
-    notificationSignatureARMAFaire: {
-      on: { NOTIFIER_DEMANDEUR_SIGNATURE_ARM: 'avenantARMAFaire' },
-    },
-    avenantARMAFaire: {
-      on: { FAIRE_AVENANT_ARM: 'notificationAvenantARMAFaire' },
-    },
-    notificationAvenantARMAFaire: {
-      on: { NOTIFIER_AVENANT_ARM: 'avenantARMAFaire' },
-    },
-    desistementDuDemandeurFait: {
-      always: validationFraisApresDesistementOuClassementSansSuite,
-    },
-    decisionDeClassementSansSuiteFait: {
-      on: {
-        NOTIFIER_DEMANDEUR_CSS: {
-          target: 'notificationDuDemandeurApresClassementSansSuiteFait',
+                  return {
+                    ...context.mecanisation,
+                    paiementFraisDossierComplementaireValide: true,
+                  }
+                },
+              }),
+              guard: ({ context }) => context.demarcheStatut === DemarchesStatutsIds.Desiste || context.demarcheStatut === DemarchesStatutsIds.ClasseSansSuite,
+            },
+          ],
         },
       },
-    },
-    notificationDuDemandeurApresClassementSansSuiteFait: {
-      always: validationFraisApresDesistementOuClassementSansSuite,
-    },
+      signatureAutorisationDeRechercheMiniereAFaire: {
+        on: {
+          SIGNER_AUTORISATION_DE_RECHERCHE_MINIERE: [
+            {
+              target: 'avenantARMAFaire',
+              actions: assign({
+                demarcheStatut: DemarchesStatutsIds.Accepte,
+                demarcheDateDebut: ({ context, event }) => getDemarcheDateDebut(demarcheTypeId, context.demarcheDateDebut, event),
+                demarcheDateFin: ({ context, event }) => getDemarcheDateFin(demarcheTypeId, context.demarcheDateFin, event),
+              }),
+              guard: ({ context }) => isMecanise(context.mecanisation),
+            },
+            {
+              target: 'notificationSignatureARMAFaire',
+              actions: assign({
+                demarcheStatut: DemarchesStatutsIds.Accepte,
+                demarcheDateDebut: ({ context, event }) => getDemarcheDateDebut(demarcheTypeId, context.demarcheDateDebut, event),
+                demarcheDateFin: ({ context, event }) => getDemarcheDateFin(demarcheTypeId, context.demarcheDateFin, event),
+              }),
+              guard: ({ context }) => isNonMecanise(context.mecanisation),
+            },
+          ],
+        },
+      },
+      notificationSignatureARMAFaire: {
+        on: { NOTIFIER_DEMANDEUR_SIGNATURE_ARM: 'avenantARMAFaire' },
+      },
+      avenantARMAFaire: {
+        on: { FAIRE_AVENANT_ARM: 'notificationAvenantARMAFaire' },
+      },
+      notificationAvenantARMAFaire: {
+        on: { NOTIFIER_AVENANT_ARM: 'avenantARMAFaire' },
+      },
+      desistementDuDemandeurFait: {
+        always: validationFraisApresDesistementOuClassementSansSuite,
+      },
+      decisionDeClassementSansSuiteFait: {
+        on: {
+          NOTIFIER_DEMANDEUR_CSS: {
+            target: 'notificationDuDemandeurApresClassementSansSuiteFait',
+          },
+        },
+      },
+      notificationDuDemandeurApresClassementSansSuiteFait: {
+        always: validationFraisApresDesistementOuClassementSansSuite,
+      },
 
-    fini: {
-      id: 'fini',
-      type: 'final',
+      fini: {
+        id: 'fini',
+        type: 'final',
+      },
     },
-  },
-})
+  })

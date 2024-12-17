@@ -290,13 +290,18 @@ export type TravauxIds = FilterSettings
 
 export const isDemarcheTypeId = (demarcheTypeId: string | undefined | null): demarcheTypeId is DemarcheTypeId => IDS.includes(demarcheTypeId)
 
-export const isDemarcheTypeOctroi = (demarcheTypeId: DemarcheTypeId): boolean => {
-  const demarchesTypesOctroi: DemarcheTypeId[] = [DEMARCHES_TYPES_IDS.Octroi, DEMARCHES_TYPES_IDS.MutationPartielle, DEMARCHES_TYPES_IDS.Fusion, DEMARCHES_TYPES_IDS.DemandeDeTitreDExploitation]
+const demarchesTypesOctroi = [
+  DEMARCHES_TYPES_IDS.Octroi,
+  DEMARCHES_TYPES_IDS.MutationPartielle,
+  DEMARCHES_TYPES_IDS.Fusion,
+  DEMARCHES_TYPES_IDS.DemandeDeTitreDExploitation,
+] as const satisfies readonly DemarcheTypeId[]
 
-  return demarchesTypesOctroi.includes(demarcheTypeId)
-}
+export type DemarchesTypesOctroi = (typeof demarchesTypesOctroi)[number]
 
-export const isDemarcheTypeWithPhase = (demarcheTypeId: DemarcheTypeId): boolean => {
+export const isDemarcheTypeOctroi = (demarcheTypeId: DemarcheTypeId): boolean => demarchesTypesOctroi.includes(demarcheTypeId)
+
+export const isDemarcheTypeWithPhase = (demarcheTypeId: DemarcheTypeId): demarcheTypeId is DemarchesTypesOctroi | DemarchesTypesProlongation => {
   if (isDemarcheTypeOctroi(demarcheTypeId)) {
     return true
   }
@@ -310,8 +315,16 @@ export const isTravaux = (demarcheTypeId: DemarcheTypeId): boolean => {
   return DemarchesTypes[demarcheTypeId].travaux
 }
 
+const demarchesTypesProlongation = [
+  DEMARCHES_TYPES_IDS.Prolongation,
+  DEMARCHES_TYPES_IDS.Prolongation1,
+  DEMARCHES_TYPES_IDS.Prolongation2,
+  DEMARCHES_TYPES_IDS.ProlongationExceptionnelle,
+  DEMARCHES_TYPES_IDS.Prorogation,
+] as const satisfies readonly DemarcheTypeId[]
+export type DemarchesTypesProlongation = (typeof demarchesTypesProlongation)[number]
 export const isDemarcheTypeProlongations = (demarcheType: DemarcheTypeId): boolean => {
-  return [DEMARCHES_TYPES_IDS.Prolongation, DEMARCHES_TYPES_IDS.Prolongation1, DEMARCHES_TYPES_IDS.Prolongation2, DEMARCHES_TYPES_IDS.ProlongationExceptionnelle].includes(demarcheType)
+  return demarchesTypesProlongation.includes(demarcheType)
 }
 
 /**
@@ -319,3 +332,8 @@ export const isDemarcheTypeProlongations = (demarcheType: DemarcheTypeId): boole
  */
 export const canImpactTitre = (titreDemarcheTypeId: DemarcheTypeId, titreDemarcheStatutId: DemarcheStatutId): boolean =>
   demarcheStatutIdsSuccess.has(titreDemarcheStatutId) || isDemarcheTypeOctroi(titreDemarcheTypeId)
+
+export type DemarcheTypeAnnulation = typeof DEMARCHES_TYPES_IDS.RenonciationTotale | typeof DEMARCHES_TYPES_IDS.Retrait
+
+export const isDemarcheTypeAnnulation = (demarcheTypeId: DemarcheTypeId): demarcheTypeId is DemarcheTypeAnnulation =>
+  [DEMARCHES_TYPES_IDS.Retrait, DEMARCHES_TYPES_IDS.RenonciationTotale].includes(demarcheTypeId)

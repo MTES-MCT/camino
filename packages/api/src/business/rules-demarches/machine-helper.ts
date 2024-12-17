@@ -1,10 +1,54 @@
 import { AnyMachineSnapshot, createActor, EventObject, MachineSnapshot, StateMachine, Actor } from 'xstate'
-import { CaminoCommonContext, DBEtat, Etape, Intervenant, intervenants, tags } from './machine-common'
-import { DemarchesStatutsIds, DemarcheStatutId } from 'camino-common/src/static/demarchesStatuts'
-import { CaminoDate } from 'camino-common/src/date'
-import { isNotNullNorUndefined, OmitDistributive, onlyUnique } from 'camino-common/src/typescript-tools'
-
+import { CaminoCommonContext, CaminoMachineDateDebut, CaminoMachineDateFin, DBEtat, Etape, Intervenant, intervenants, isDemarcheDateFinInfinie, tags } from './machine-common'
+import { DemarcheStatutId } from 'camino-common/src/static/demarchesStatuts'
+import { CaminoDate, dateAddMonths, isBefore, toCaminoDate } from 'camino-common/src/date'
+import { isNotNullNorUndefined, isNullOrUndefined, OmitDistributive, onlyUnique } from 'camino-common/src/typescript-tools'
+import { DemarchesTypesOctroi, DemarchesTypesProlongation, DemarcheTypeId, DemarcheTypeAnnulation, isDemarcheTypeAnnulation, isDemarcheTypeWithPhase } from 'camino-common/src/static/demarchesTypes'
+const DATE_PAR_DEFAUT_TITRE_INFINI = toCaminoDate('2018-12-31')
 type CaminoState<CaminoContext extends CaminoCommonContext, CaminoEvent extends EventObject> = MachineSnapshot<CaminoContext, CaminoEvent, any, any, any, any, any, any>
+
+type DemarcheStatusPhase = {
+  demarcheStatut: DemarcheStatutId
+  publique: boolean
+  demarcheTypeId: DemarchesTypesOctroi[number] | DemarchesTypesProlongation[number]
+  demarcheDateDebut: CaminoMachineDateDebut
+  demarcheDateFin: CaminoMachineDateFin
+}
+
+type DemarcheStatusAnnulation = {
+  demarcheStatut: DemarcheStatutId
+  publique: boolean
+  demarcheTypeId: DemarcheTypeAnnulation
+  demarcheDateEffet: CaminoDate | null
+}
+
+type DemarcheStatusOther = {
+  demarcheStatut: DemarcheStatutId
+  publique: boolean
+  demarcheTypeId: Omit<DemarcheTypeId, DemarchesTypesOctroi | DemarchesTypesProlongation | DemarcheTypeAnnulation>
+}
+
+export type DemarcheStatus = DemarcheStatusPhase | DemarcheStatusAnnulation | DemarcheStatusOther
+
+export const getPhase = (demarcheStatus: DemarcheStatus): { debut: CaminoDate | null; fin: CaminoDate | null } | null => {
+  if ('demarcheDateDebut' in demarcheStatus) {
+    const demarcheDateDebut = demarcheStatus.demarcheDateDebut.dateDebut ?? demarcheStatus.demarcheDateDebut.dateEtape
+    let dateFin = demarcheStatus.demarcheDateFin.dateFin
+    if (isNullOrUndefined(dateFin) && isNotNullNorUndefined(demarcheDateDebut) && isNotNullNorUndefined(demarcheStatus.demarcheDateFin.duree)) {
+      dateFin = dateAddMonths(demarcheDateDebut, demarcheStatus.demarcheDateFin.duree)
+    }
+
+    if (isNullOrUndefined(demarcheDateDebut) && isNullOrUndefined(dateFin)) {
+      return null
+    }
+
+    return {
+      debut: demarcheDateDebut,
+      fin: dateFin,
+    }
+  }
+  return null
+}
 
 export abstract class CaminoMachine<CaminoContext extends CaminoCommonContext, CaminoEvent extends EventObject> {
   public readonly machine: StateMachine<CaminoContext, CaminoEvent, any, any, any, any, any, any, any, any, any, EventObject, any, any>
@@ -31,7 +75,7 @@ export abstract class CaminoMachine<CaminoContext extends CaminoCommonContext, C
     if (entry) {
       const eventFromEntr = entry[0]
 
-      return { ...this.eventFromEntry(eventFromEntr, etape), date: etape.date, status: etape.etapeStatutId }
+      return { ...this.eventFromEntry(eventFromEntr, etape), date: etape.date, status: etape.etapeStatutId, dateDebut: etape.dateDebut, dateFin: etape.dateFin, duree: etape.duree }
     }
     throw new Error(`no event from ${JSON.stringify(etape)}`)
   }
@@ -55,10 +99,10 @@ export abstract class CaminoMachine<CaminoContext extends CaminoCommonContext, C
   }
 
   // visibleForTesting
-  public toPotentialCaminoXStateEvent(event: CaminoEvent['type'], _date: CaminoDate): CaminoEvent[] {
+  public toPotentialCaminoXStateEvent(event: CaminoEvent['type'], date: CaminoDate): CaminoEvent[] {
     // related to https://github.com/microsoft/TypeScript/issues/46497  https://github.com/microsoft/TypeScript/issues/40803 :(
     // @ts-ignore
-    return [{ type: event }]
+    return [{ type: event, date: date, dateFin: date }]
   }
 
   // visibleForTesting
@@ -203,22 +247,41 @@ export abstract class CaminoMachine<CaminoContext extends CaminoCommonContext, C
     return service
   }
 
-  public demarcheStatut(etapes: readonly Etape[]): {
-    demarcheStatut: DemarcheStatutId
-    publique: boolean
-  } {
+  public demarcheStatut(etapes: readonly Etape[]): DemarcheStatus {
     const value = this.goTo(etapes)
     if (!value.valid) {
-      console.error(`impossible de trouver le demarcheStatus, cette liste d'étapes '${JSON.stringify(etapes)}' est incohérente à l'étape ${value.etapeIndex + 1}`)
+      throw new Error(`impossible de trouver le demarcheStatus, cette liste d'étapes '${JSON.stringify(etapes)}' est incohérente à l'étape ${value.etapeIndex + 1} pour la machine ${this.machine.id}`)
+    } else {
+      const demarcheStatut = value.state.context.demarcheStatut
+      const publique = value.state.context.visibilite === 'publique'
+
+      if (isDemarcheTypeWithPhase(value.state.context.demarcheTypeId)) {
+        if (
+          isDemarcheDateFinInfinie(value.state.context.demarcheDateFin) &&
+          isBefore(DATE_PAR_DEFAUT_TITRE_INFINI, value.state.context.demarcheDateDebut.dateDebut ?? value.state.context.demarcheDateDebut.dateEtape ?? DATE_PAR_DEFAUT_TITRE_INFINI)
+        ) {
+          throw new Error('La date de début de la démarche est APRÈS sa date de fin')
+        }
+        return {
+          demarcheStatut,
+          publique,
+          demarcheTypeId: value.state.context.demarcheTypeId,
+          demarcheDateFin: isDemarcheDateFinInfinie(value.state.context.demarcheDateFin) ? { dateFin: DATE_PAR_DEFAUT_TITRE_INFINI, duree: null } : value.state.context.demarcheDateFin,
+          demarcheDateDebut: value.state.context.demarcheDateDebut,
+        }
+      } else if (isDemarcheTypeAnnulation(value.state.context.demarcheTypeId)) {
+        return {
+          demarcheStatut,
+          publique,
+          demarcheTypeId: value.state.context.demarcheTypeId,
+          demarcheDateEffet: value.state.context.demarcheDateEffet,
+        }
+      }
 
       return {
-        demarcheStatut: DemarchesStatutsIds.Indetermine,
-        publique: false,
-      }
-    } else {
-      return {
-        demarcheStatut: value.state.context.demarcheStatut,
-        publique: value.state.context.visibilite === 'publique',
+        demarcheStatut,
+        publique,
+        demarcheTypeId: value.state.context.demarcheTypeId,
       }
     }
   }
