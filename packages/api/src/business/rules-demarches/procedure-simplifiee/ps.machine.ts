@@ -72,8 +72,8 @@ const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
   RECEVOIR_INFORMATION: { db: ETES.receptionDinformation, mainStep: false },
   FAIRE_ABROGATION: { db: ETES.abrogationDeLaDecision, mainStep: true },
   SAISIR_INFORMATION_HISTORIQUE_INCOMPLETE: { db: ETES.informationsHistoriquesIncompletes, mainStep: false },
-  RENDRE_AVIS_COLLECTIVITES: { db: ETES.avisDesCollectivites, mainStep: false },
-  RENDRE_AVIS_SERVICES_COMMISSIONS: { db: ETES.avisDesServicesEtCommissionsConsultatives, mainStep: false },
+  RENDRE_AVIS_COLLECTIVITES: { db: ETES.avisDesCollectivites, mainStep: true },
+  RENDRE_AVIS_SERVICES_COMMISSIONS: { db: ETES.avisDesServicesEtCommissionsConsultatives, mainStep: true },
   RENDRE_AVIS_PREFET: { db: ETES.avisDuPrefet, mainStep: true },
 }
 
