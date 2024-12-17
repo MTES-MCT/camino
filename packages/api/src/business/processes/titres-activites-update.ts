@@ -87,9 +87,13 @@ export const titresActivitesUpdate = async (pool: Pool, titresIds?: string[], au
 
     // envoi d’email aux opérateurs pour les prévenir de l’ouverture des déclarations
     if (emails.size) {
-      await emailsWithTemplateSend([...emails], EmailTemplateId.ACTIVITES_NOUVELLES, {
-        activitesUrl: activitesUrlGet({ activiteStatutsIds: ['abs', 'enc'] }),
-      })
+      try {
+        await emailsWithTemplateSend([...emails], EmailTemplateId.ACTIVITES_NOUVELLES, {
+          activitesUrl: activitesUrlGet({ activiteStatutsIds: ['abs', 'enc'] }),
+        })
+      } catch (error) {
+        console.warn(`envoi d'email aux opérateurs: ${error instanceof Error ? error.message : error}`)
+      }
     }
 
     console.info('titre / activités (création) ->', titresActivitesCreated.map(ta => ta.titreId).join(', '))
