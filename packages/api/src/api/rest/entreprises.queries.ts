@@ -26,7 +26,7 @@ import { Pool } from 'pg'
 import { canSeeEntrepriseDocuments } from 'camino-common/src/permissions/entreprises'
 import { roleValidator, User } from 'camino-common/src/roles'
 import { z } from 'zod'
-import { Effect, pipe } from 'effect'
+import { Effect, Option, pipe } from 'effect'
 import { CaminoError } from 'camino-common/src/zod-tools'
 
 const dummy = ['dummy'] as const
@@ -111,7 +111,7 @@ where
 LIMIT 1
 `
 
-export const insertEntrepriseDocument = async (
+export const insertEntrepriseDocument = (
   pool: Pool,
   params: {
     id: EntrepriseDocumentId
@@ -121,7 +121,8 @@ export const insertEntrepriseDocument = async (
     description: string
     largeobject_id: number
   }
-): Promise<{ id: EntrepriseDocumentId }[]> => dbQueryAndValidate(insertEntrepriseDocumentInternal, params, pool, z.object({ id: entrepriseDocumentIdValidator }))
+): Effect.Effect<{ id: EntrepriseDocumentId }[], CaminoError<EffectDbQueryAndValidateErrors>> =>
+  effectDbQueryAndValidate(insertEntrepriseDocumentInternal, params, pool, z.object({ id: entrepriseDocumentIdValidator }))
 const insertEntrepriseDocumentInternal = sql<
   Redefine<
     IInsertEntrepriseDocumentInternalQuery,
@@ -142,8 +143,11 @@ RETURNING
     id;
 `
 
-export const deleteEntrepriseDocument = async (pool: Pool, params: { id: EntrepriseDocumentId; entrepriseId: EntrepriseId }): Promise<void[]> =>
-  dbQueryAndValidate(deleteEntrepriseDocumentQuery, params, pool, z.void())
+export const deleteEntrepriseDocument = (
+  pool: Pool,
+  params: { id: EntrepriseDocumentId; entrepriseId: EntrepriseId }
+): Effect.Effect<Option.Option<never>, CaminoError<EffectDbQueryAndValidateErrors>> =>
+  effectDbQueryAndValidate(deleteEntrepriseDocumentQuery, params, pool, z.void()).pipe(Effect.map(() => Option.none()))
 const deleteEntrepriseDocumentQuery = sql<Redefine<IDeleteEntrepriseDocumentQueryQuery, { id: EntrepriseDocumentId; entrepriseId: EntrepriseId }, void>>`
 delete from entreprises_documents
 where id = $ id
@@ -169,14 +173,16 @@ const getEntrepriseValidor = getEntreprisesValidor.extend({
 export type GetEntreprises = z.infer<typeof getEntreprisesValidor>
 type GetEntreprise = z.infer<typeof getEntrepriseValidor>
 
-export const getEntreprise = async (pool: Pool, entreprise_id: EntrepriseId): Promise<GetEntreprise | null> => {
-  const result = await dbQueryAndValidate(getEntrepriseDb, { entreprise_id }, pool, getEntrepriseValidor)
-  if (result.length === 1) {
-    return result[0]
-  }
-
-  return null
-}
+const entrepriseNonTrouvee = "Impossible de trouver l'entreprise" as const
+export type GetEntrepriseErrors = EffectDbQueryAndValidateErrors | typeof entrepriseNonTrouvee
+export const getEntreprise = (pool: Pool, entreprise_id: EntrepriseId): Effect.Effect<GetEntreprise, CaminoError<GetEntrepriseErrors>> =>
+  effectDbQueryAndValidate(getEntrepriseDb, { entreprise_id }, pool, getEntrepriseValidor).pipe(
+    Effect.filterOrFail(
+      result => result.length === 1,
+      () => ({ message: entrepriseNonTrouvee })
+    ),
+    Effect.map(result => result[0])
+  )
 
 const getEntrepriseDb = sql<Redefine<IGetEntrepriseDbQuery, { entreprise_id: EntrepriseId }, GetEntreprise>>`
 select

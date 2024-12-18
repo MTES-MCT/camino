@@ -75,8 +75,9 @@ export const AddEntrepriseDocumentPopup = defineComponent<Props>(props => {
     action: async () => {
       if (entrepriseDocumentFile.value !== null) {
         const tempDocumentName = await props.apiClient.uploadTempDocument(entrepriseDocumentFile.value)
-        await props.apiClient.creerEntrepriseDocument(props.entrepriseId, uiEntrepriseDocumentInputValidator.parse(inputed.value), tempDocumentName)
+        return props.apiClient.creerEntrepriseDocument(props.entrepriseId, uiEntrepriseDocumentInputValidator.parse(inputed.value), tempDocumentName)
       }
+      return null
     },
   }
 

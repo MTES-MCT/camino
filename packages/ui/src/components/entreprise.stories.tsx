@@ -98,7 +98,7 @@ const apiClient: Pick<
   creerEntrepriseDocument: (entrepriseId, document) => {
     creerEntrepriseDocumentAction(entrepriseId, document)
 
-    return Promise.resolve(toEntrepriseDocumentId(document.date, document.typeId, '12345678'))
+    return Promise.resolve({ id: toEntrepriseDocumentId(document.date, document.typeId, '12345678') })
   },
   uploadTempDocument: document => {
     uploadTempDocumentAction(document)

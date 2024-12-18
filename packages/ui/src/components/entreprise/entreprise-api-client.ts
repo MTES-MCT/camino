@@ -1,15 +1,6 @@
-import { deleteWithJson, getWithJson, newPutWithJson, postWithJson } from '@/api/client-rest'
+import { getWithJson, newDeleteWithJson, newGetWithJson, newPostWithJson, newPutWithJson, postWithJson } from '@/api/client-rest'
 import { CaminoAnnee } from 'camino-common/src/date'
-import {
-  EntrepriseId,
-  EntrepriseType,
-  Siren,
-  EtapeEntrepriseDocument,
-  entrepriseDocumentInputValidator,
-  EntrepriseDocumentId,
-  entrepriseDocumentIdValidator,
-  EntrepriseDocument,
-} from 'camino-common/src/entreprise'
+import { EntrepriseId, EntrepriseType, Siren, EtapeEntrepriseDocument, entrepriseDocumentInputValidator, EntrepriseDocumentId, EntrepriseDocument } from 'camino-common/src/entreprise'
 import { TempDocumentName } from 'camino-common/src/document'
 import { EtapeId } from 'camino-common/src/etape'
 import { Fiscalite } from 'camino-common/src/validators/fiscalite'
@@ -20,15 +11,19 @@ export interface EntrepriseApiClient {
   getFiscaliteEntreprise: (annee: CaminoAnnee, entrepriseId: EntrepriseId) => Promise<Fiscalite>
   modifierEntreprise: (entreprise: { id: EntrepriseId; telephone?: string; email?: string; url?: string; archive?: boolean }) => Promise<CaminoError<string> | { id: EntrepriseId }>
   creerEntreprise: (siren: Siren) => Promise<void>
-  getEntreprise: (id: EntrepriseId) => Promise<EntrepriseType>
-  getEntrepriseDocuments: (id: EntrepriseId) => Promise<EntrepriseDocument[]>
+  getEntreprise: (id: EntrepriseId) => Promise<EntrepriseType | CaminoError<string>>
+  getEntrepriseDocuments: (id: EntrepriseId) => Promise<EntrepriseDocument[] | CaminoError<string>>
   getEtapeEntrepriseDocuments: (etapeId: EtapeId) => Promise<EtapeEntrepriseDocument[]>
-  creerEntrepriseDocument: (entrepriseId: EntrepriseId, entrepriseDocumentInput: UiEntrepriseDocumentInput, tempDocumentName: TempDocumentName) => Promise<EntrepriseDocumentId>
-  deleteEntrepriseDocument: (entrepriseId: EntrepriseId, documentId: EntrepriseDocumentId) => Promise<void>
+  creerEntrepriseDocument: (
+    entrepriseId: EntrepriseId,
+    entrepriseDocumentInput: UiEntrepriseDocumentInput,
+    tempDocumentName: TempDocumentName
+  ) => Promise<{ id: EntrepriseDocumentId } | CaminoError<string>>
+  deleteEntrepriseDocument: (entrepriseId: EntrepriseId, documentId: EntrepriseDocumentId) => Promise<CaminoError<string> | void>
 }
 export const uiEntrepriseDocumentInputValidator = entrepriseDocumentInputValidator.omit({ tempDocumentName: true })
 
-export type UiEntrepriseDocumentInput = z.infer<typeof uiEntrepriseDocumentInputValidator>
+type UiEntrepriseDocumentInput = z.infer<typeof uiEntrepriseDocumentInputValidator>
 
 export const entrepriseApiClient: EntrepriseApiClient = {
   getFiscaliteEntreprise: async (annee, entrepriseId): Promise<Fiscalite> => {
@@ -43,13 +38,13 @@ export const entrepriseApiClient: EntrepriseApiClient = {
   creerEntreprise: async (siren: Siren): Promise<void> => {
     return postWithJson('/rest/entreprises', {}, { siren })
   },
-  getEntreprise: async (entrepriseId: EntrepriseId): Promise<EntrepriseType> => {
-    return getWithJson('/rest/entreprises/:entrepriseId', {
+  getEntreprise: async (entrepriseId: EntrepriseId): Promise<EntrepriseType | CaminoError<string>> => {
+    return newGetWithJson('/rest/entreprises/:entrepriseId', {
       entrepriseId,
     })
   },
-  getEntrepriseDocuments: async (entrepriseId: EntrepriseId): Promise<EntrepriseDocument[]> => {
-    return getWithJson('/rest/entreprises/:entrepriseId/documents', {
+  getEntrepriseDocuments: async (entrepriseId: EntrepriseId): Promise<EntrepriseDocument[] | CaminoError<string>> => {
+    return newGetWithJson('/rest/entreprises/:entrepriseId/documents', {
       entrepriseId,
     })
   },
@@ -58,16 +53,14 @@ export const entrepriseApiClient: EntrepriseApiClient = {
       etapeId,
     })
   },
-  creerEntrepriseDocument: async (entrepriseId: EntrepriseId, uiEntrepriseDocumentInput: UiEntrepriseDocumentInput, tempDocumentName: TempDocumentName): Promise<EntrepriseDocumentId> => {
-    const createDocument = await postWithJson('/rest/entreprises/:entrepriseId/documents', { entrepriseId }, { ...uiEntrepriseDocumentInput, tempDocumentName })
-    const parsed = entrepriseDocumentIdValidator.safeParse(createDocument)
-    if (parsed.success) {
-      return parsed.data
-    } else {
-      throw createDocument
-    }
+  creerEntrepriseDocument: async (
+    entrepriseId: EntrepriseId,
+    uiEntrepriseDocumentInput: UiEntrepriseDocumentInput,
+    tempDocumentName: TempDocumentName
+  ): Promise<{ id: EntrepriseDocumentId } | CaminoError<string>> => {
+    return newPostWithJson('/rest/entreprises/:entrepriseId/documents', { entrepriseId }, { ...uiEntrepriseDocumentInput, tempDocumentName })
   },
-  deleteEntrepriseDocument: async (entrepriseId: EntrepriseId, entrepriseDocumentId: EntrepriseDocumentId): Promise<void> => {
-    return deleteWithJson('/rest/entreprises/:entrepriseId/documents/:entrepriseDocumentId', { entrepriseId, entrepriseDocumentId })
+  deleteEntrepriseDocument: async (entrepriseId: EntrepriseId, entrepriseDocumentId: EntrepriseDocumentId): Promise<CaminoError<string> | void> => {
+    return newDeleteWithJson('/rest/entreprises/:entrepriseId/documents/:entrepriseDocumentId', { entrepriseId, entrepriseDocumentId })
   },
 }

@@ -25,7 +25,7 @@ export const Loading: StoryFn = () => (
       creerEntrepriseDocument: async (entrepriseId, entrepriseDocumentInput) => {
         creerEntrepriseDocumentAction(entrepriseId, entrepriseDocumentInput)
 
-        return toEntrepriseDocumentId(toCaminoDate('2023-05-17'), 'arm', 'hash')
+        return { id: toEntrepriseDocumentId(toCaminoDate('2023-05-17'), 'arm', 'hash') }
       },
 
       getEntrepriseDocuments: () => new Promise(() => ({})),
@@ -53,7 +53,7 @@ export const ArmUneEntrepriseSansDocumentDEntreprise: StoryFn = () => (
       creerEntrepriseDocument: async (entrepriseId, entrepriseDocumentInput) => {
         creerEntrepriseDocumentAction(entrepriseId, entrepriseDocumentInput)
 
-        return toEntrepriseDocumentId(toCaminoDate('2023-05-17'), 'arm', 'hash')
+        return { id: toEntrepriseDocumentId(toCaminoDate('2023-05-17'), 'arm', 'hash') }
       },
 
       uploadTempDocument: document => {
@@ -152,7 +152,7 @@ export const ArmUneEntrepriseAvecDocumentDEntrepriseComplet: StoryFn = () => (
       creerEntrepriseDocument: async (entrepriseId, entrepriseDocumentInput) => {
         creerEntrepriseDocumentAction(entrepriseId, entrepriseDocumentInput)
 
-        return toEntrepriseDocumentId(toCaminoDate('2023-05-17'), 'arm', 'hash')
+        return { id: toEntrepriseDocumentId(toCaminoDate('2023-05-17'), 'arm', 'hash') }
       },
       uploadTempDocument: document => {
         uploadTempDocumentAction(document)
@@ -300,7 +300,7 @@ export const AxmDeuxEntreprisesDocumentDEntrepriseComplet: StoryFn = () => (
       creerEntrepriseDocument: async (entrepriseId, entrepriseDocumentInput) => {
         creerEntrepriseDocumentAction(entrepriseId, entrepriseDocumentInput)
 
-        return toEntrepriseDocumentId(toCaminoDate('2023-05-17'), 'arm', 'hash')
+        return { id: toEntrepriseDocumentId(toCaminoDate('2023-05-17'), 'arm', 'hash') }
       },
       uploadTempDocument: document => {
         uploadTempDocumentAction(document)
@@ -455,7 +455,7 @@ export const ArmDocumentOptionnel: StoryFn = () => (
       creerEntrepriseDocument: async (entrepriseId, entrepriseDocumentInput) => {
         creerEntrepriseDocumentAction(entrepriseId, entrepriseDocumentInput)
 
-        return toEntrepriseDocumentId(toCaminoDate('2023-05-17'), 'arm', 'hash')
+        return { id: toEntrepriseDocumentId(toCaminoDate('2023-05-17'), 'arm', 'hash') }
       },
       uploadTempDocument: document => {
         uploadTempDocumentAction(document)

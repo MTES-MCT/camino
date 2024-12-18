@@ -101,22 +101,21 @@ const InternalEntrepriseDocumentsEdit = defineComponent<Props & { etapeEntrepris
 
   const loadEntrepriseDocuments = async () => {
     entrepriseDocuments.value = { status: 'LOADING' }
-    try {
-      const loadingEntrepriseDocuments: Record<EntrepriseId, EntrepriseDocument[]> = {}
-      for (const entreprise of props.entreprises) {
-        loadingEntrepriseDocuments[entreprise.id] = await props.apiClient.getEntrepriseDocuments(entreprise.id)
-      }
-      entrepriseDocuments.value = { status: 'LOADED', value: loadingEntrepriseDocuments }
-
-      indexReset()
-      entreprisedocumentsReset()
-    } catch (e: any) {
-      console.error('error', e)
-      entrepriseDocuments.value = {
-        status: 'ERROR',
-        message: e.message ?? "Une erreur s'est produite",
+    const loadingEntrepriseDocuments: Record<EntrepriseId, EntrepriseDocument[]> = {}
+    for (const entreprise of props.entreprises) {
+      const documents = await props.apiClient.getEntrepriseDocuments(entreprise.id)
+      if ('message' in documents) {
+        entrepriseDocuments.value = { status: 'NEW_ERROR', error: documents }
+      } else {
+        loadingEntrepriseDocuments[entreprise.id] = documents
       }
     }
+    if (entrepriseDocuments.value.status !== 'NEW_ERROR') {
+      entrepriseDocuments.value = { status: 'LOADED', value: loadingEntrepriseDocuments }
+    }
+
+    indexReset()
+    entreprisedocumentsReset()
   }
 
   const indexReset = () => {
@@ -315,15 +314,18 @@ const InternalEntrepriseDocumentsEdit = defineComponent<Props & { etapeEntrepris
           apiClient={{
             ...props.apiClient,
             creerEntrepriseDocument: async (entrepriseId, entrepriseDocumentInput, tempDocumentName) => {
-              const newDocumentId = await props.apiClient.creerEntrepriseDocument(entrepriseId, entrepriseDocumentInput, tempDocumentName)
+              const newDocument = await props.apiClient.creerEntrepriseDocument(entrepriseId, entrepriseDocumentInput, tempDocumentName)
 
-              etapeEntrepriseDocumentIds.value.push(newDocumentId)
+              if ('message' in newDocument) {
+                return newDocument
+              }
+              etapeEntrepriseDocumentIds.value.push(newDocument.id)
               const documentsToUpdate = entreprisesEntrepriseDocumentsIndex.value[entrepriseId].filter(({ entrepriseDocumentType }) => entrepriseDocumentType.id === entrepriseDocumentInput.typeId)
 
               if (isNotNullNorUndefined(documentsToUpdate) && documentsToUpdate.length > 0) {
                 documentsToUpdate.forEach(({ documents }) =>
                   documents.push({
-                    id: newDocumentId,
+                    id: newDocument.id,
                     description: entrepriseDocumentInput.description,
                     date: entrepriseDocumentInput.date,
                     entreprise_document_type_id: entrepriseDocumentInput.typeId,
@@ -333,20 +335,20 @@ const InternalEntrepriseDocumentsEdit = defineComponent<Props & { etapeEntrepris
                 )
 
                 if (documentsToUpdate.length === 1) {
-                  documentsToUpdate[0].id = newDocumentId
+                  documentsToUpdate[0].id = newDocument.id
                 } else {
                   const documentNotSet = documentsToUpdate.find(({ id }) => id === '')
                   if (isNotNullNorUndefined(documentNotSet)) {
-                    documentNotSet.id = newDocumentId
+                    documentNotSet.id = newDocument.id
                   } else {
-                    documentsToUpdate[0].id = newDocumentId
+                    documentsToUpdate[0].id = newDocument.id
                   }
                 }
               }
 
               completeUpdate()
 
-              return newDocumentId
+              return newDocument
             },
           }}
           lockedEntrepriseDocumentTypeId={addPopup.value.entrepriseDocumentTypeId}

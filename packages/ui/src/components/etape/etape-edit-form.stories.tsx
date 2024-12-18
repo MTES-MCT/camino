@@ -1,15 +1,14 @@
 import { EtapeEditForm, Props } from './etape-edit-form'
 import { Meta, StoryFn } from '@storybook/vue3'
 import { ETAPE_IS_BROUILLON, ETAPE_IS_NOT_BROUILLON, EtapeId, etapeIdValidator, etapeSlugValidator } from 'camino-common/src/etape'
-import { Entreprise, EntrepriseDocumentId, EntrepriseId, EtapeEntrepriseDocument, entrepriseDocumentIdValidator, entrepriseIdValidator, newEntrepriseId } from 'camino-common/src/entreprise'
+import { Entreprise, EtapeEntrepriseDocument, entrepriseDocumentIdValidator, entrepriseIdValidator, newEntrepriseId } from 'camino-common/src/entreprise'
 import { CaminoDate, firstEtapeDateValidator, toCaminoDate } from 'camino-common/src/date'
 import { testBlankUser } from 'camino-common/src/tests-utils'
 import { action } from '@storybook/addon-actions'
 import { DemarcheId, demarcheIdValidator } from 'camino-common/src/demarche'
 import { titreSlugValidator } from 'camino-common/src/validators/titres'
 import { FeatureMultiPolygon } from 'camino-common/src/perimetre'
-import { TempDocumentName, tempDocumentNameValidator } from 'camino-common/src/document'
-import { UiEntrepriseDocumentInput } from '../entreprise/entreprise-api-client'
+import { tempDocumentNameValidator } from 'camino-common/src/document'
 
 const meta: Meta = {
   title: 'Components/Etape/EditForm',
@@ -223,10 +222,10 @@ const etapeEditFormApiClient: Props['apiClient'] = {
 
     return Promise.resolve([])
   },
-  creerEntrepriseDocument(entrepriseId: EntrepriseId, entrepriseDocumentInput: UiEntrepriseDocumentInput, tempDocumentName: TempDocumentName): Promise<EntrepriseDocumentId> {
+  creerEntrepriseDocument(entrepriseId, entrepriseDocumentInput, tempDocumentName) {
     creerEntrepriseDocumentAction(entrepriseId, entrepriseDocumentInput, tempDocumentName)
 
-    return Promise.resolve(entrepriseDocumentIdValidator.parse('entrepriseDocumentId'))
+    return Promise.resolve({ id: entrepriseDocumentIdValidator.parse('entrepriseDocumentId') })
   },
 }
 

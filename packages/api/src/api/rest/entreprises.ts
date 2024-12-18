@@ -14,13 +14,11 @@ import {
   EntrepriseType,
   sirenValidator,
   EntrepriseDocument,
-  entrepriseDocumentInputValidator,
   entrepriseDocumentIdValidator,
   EntrepriseDocumentId,
   newEntrepriseId,
   Entreprise,
   entrepriseValidator,
-  entrepriseTypeValidator,
   EntrepriseId,
 } from 'camino-common/src/entreprise'
 import { isSuper, User } from 'camino-common/src/roles'
@@ -32,21 +30,21 @@ import {
   deleteEntrepriseDocument as deleteEntrepriseDocumentQuery,
   getEntrepriseDocuments as getEntrepriseDocumentsQuery,
   getEntreprises,
-  getEntreprise as getEntrepriseQuery,
+  getEntreprise,
   getLargeobjectIdByEntrepriseDocumentId,
   insertEntrepriseDocument,
+  GetEntrepriseErrors,
 } from './entreprises.queries'
 import { newEnterpriseDocumentId } from '../../database/models/_format/id-create'
 import { NewDownload } from './fichiers'
 import Decimal from 'decimal.js'
 
-import { createLargeObject } from '../../database/largeobjects'
+import { createLargeObject, CreateLargeObjectError } from '../../database/largeobjects'
 import { z } from 'zod'
 import { getEntrepriseEtablissements } from './entreprises-etablissements.queries'
 import { RawLineMatrice, getRawLines } from '../../business/matrices'
-import { callAndExit } from '../../tools/fp-tools'
-import { RestNewPutCall } from '../../server/rest'
-import { Effect, Match } from 'effect'
+import { RestNewDeleteCall, RestNewGetCall, RestNewPostCall, RestNewPutCall } from '../../server/rest'
+import { Effect, Match, Option } from 'effect'
 import { EffectDbQueryAndValidateErrors } from '../../pg-database'
 import { CaminoApiError } from '../../types'
 
@@ -191,123 +189,121 @@ export const creerEntreprise =
       }
     }
   }
-export const getEntreprise =
-  (pool: Pool) =>
-  async (req: JWTRequest<User>, res: CustomResponse<EntrepriseType>): Promise<void> => {
-    const parsed = entrepriseIdValidator.safeParse(req.params.entrepriseId)
+type GetEntrepriseRestErrors = GetEntrepriseErrors
+export const getEntrepriseRest: RestNewGetCall<'/rest/entreprises/:entrepriseId'> = (rootPipe): Effect.Effect<EntrepriseType, CaminoApiError<GetEntrepriseRestErrors>> =>
+  rootPipe.pipe(
+    Effect.bind('entreprise', ({ pool, params: { entrepriseId } }) => getEntreprise(pool, entrepriseId)),
+    Effect.bind('etablissements', ({ pool, params: { entrepriseId } }) => getEntrepriseEtablissements(pool, entrepriseId)),
+    Effect.map(({ entreprise, etablissements }) => ({ ...entreprise, etablissements: etablissements ?? [] })),
+    Effect.mapError(caminoError =>
+      Match.value(caminoError.message).pipe(
+        Match.whenOr("Impossible de trouver l'entreprise", () => ({
+          ...caminoError,
+          status: HTTP_STATUS.NOT_FOUND,
+        })),
+        Match.whenOr("Impossible d'exécuter la requête dans la base de données", 'Les données en base ne correspondent pas à ce qui est attendu', () => ({
+          ...caminoError,
+          status: HTTP_STATUS.INTERNAL_SERVER_ERROR,
+        })),
+        Match.exhaustive
+      )
+    )
+  )
 
-    if (!parsed.success) {
-      console.warn(`l'entrepriseId est obligatoire`)
-      res.sendStatus(HTTP_STATUS.FORBIDDEN)
-    } else {
-      try {
-        const entreprise = await getEntrepriseQuery(pool, parsed.data)
-        if (isNullOrUndefined(entreprise)) {
-          res.sendStatus(HTTP_STATUS.NOT_FOUND)
-        } else {
-          const etablissements = await getEntrepriseEtablissements(pool, parsed.data)
-          const entrepriseType: EntrepriseType = {
-            ...entreprise,
-            etablissements: etablissements ?? [],
-          }
+const interditDeVoirLesDocumentsDeLEntreprise = "L'utilisateur n'a pas le droit de voir les documents de l'entreprise" as const
+export const getEntrepriseDocuments: RestNewGetCall<'/rest/entreprises/:entrepriseId/documents'> = (
+  rootPipe
+): Effect.Effect<EntrepriseDocument[], CaminoApiError<EffectDbQueryAndValidateErrors | typeof interditDeVoirLesDocumentsDeLEntreprise>> =>
+  rootPipe.pipe(
+    Effect.filterOrFail(
+      ({ user, params: { entrepriseId } }) => canSeeEntrepriseDocuments(user, entrepriseId),
+      ({ user, params: { entrepriseId } }) => ({ message: interditDeVoirLesDocumentsDeLEntreprise, detail: `utilisateur ${user} pour l'entreprise ${entrepriseId}` })
+    ),
+    Effect.flatMap(({ user, params: { entrepriseId }, pool }) => getEntrepriseDocumentsQuery([], [entrepriseId], pool, user)),
+    Effect.mapError(caminoError =>
+      Match.value(caminoError.message).pipe(
+        Match.whenOr(interditDeVoirLesDocumentsDeLEntreprise, () => ({
+          ...caminoError,
+          status: HTTP_STATUS.FORBIDDEN,
+        })),
+        Match.whenOr("Impossible d'exécuter la requête dans la base de données", 'Les données en base ne correspondent pas à ce qui est attendu', () => ({
+          ...caminoError,
+          status: HTTP_STATUS.INTERNAL_SERVER_ERROR,
+        })),
+        Match.exhaustive
+      )
+    )
+  )
 
-          res.json(entrepriseTypeValidator.parse(entrepriseType))
-        }
-      } catch (e) {
-        console.error(e)
+export const postEntrepriseDocument: RestNewPostCall<'/rest/entreprises/:entrepriseId/documents'> = (
+  rootPipe
+): Effect.Effect<{ id: EntrepriseDocumentId }, CaminoApiError<EffectDbQueryAndValidateErrors | typeof interditDeVoirLesDocumentsDeLEntreprise | CreateLargeObjectError>> =>
+  rootPipe.pipe(
+    Effect.filterOrFail(
+      ({ user, params: { entrepriseId } }) => canEditEntreprise(user, entrepriseId),
+      () => ({ message: interditDeVoirLesDocumentsDeLEntreprise })
+    ),
+    Effect.let('id', ({ body }) => newEnterpriseDocumentId(body.date, body.typeId)),
+    Effect.bind('oid', ({ pool, body }) => createLargeObject(pool, body.tempDocumentName)),
+    Effect.tap(({ pool, body, params: { entrepriseId }, oid, id }) =>
+      insertEntrepriseDocument(pool, {
+        id,
+        entreprise_document_type_id: body.typeId,
+        description: body.description,
+        date: body.date,
+        entreprise_id: entrepriseId,
+        largeobject_id: oid,
+      })
+    ),
+    Effect.mapError(caminoError =>
+      Match.value(caminoError.message).pipe(
+        Match.whenOr(interditDeVoirLesDocumentsDeLEntreprise, () => ({
+          ...caminoError,
+          status: HTTP_STATUS.FORBIDDEN,
+        })),
+        Match.whenOr("Impossible d'exécuter la requête dans la base de données", 'Les données en base ne correspondent pas à ce qui est attendu', "impossible d'insérer un fichier en base", () => ({
+          ...caminoError,
+          status: HTTP_STATUS.INTERNAL_SERVER_ERROR,
+        })),
+        Match.exhaustive
+      )
+    )
+  )
 
-        res.sendStatus(HTTP_STATUS.INTERNAL_SERVER_ERROR)
-      }
-    }
-  }
-
-export const getEntrepriseDocuments =
-  (pool: Pool) =>
-  async (req: JWTRequest<User>, res: CustomResponse<EntrepriseDocument[]>): Promise<void> => {
-    const user = req.auth
-
-    const entrepriseIdParsed = entrepriseIdValidator.safeParse(req.params.entrepriseId)
-    if (!entrepriseIdParsed.success) {
-      console.warn(`l'entrepriseId est obligatoire`)
-      res.sendStatus(HTTP_STATUS.FORBIDDEN)
-    } else if (!canSeeEntrepriseDocuments(user, entrepriseIdParsed.data)) {
-      console.warn(`l'utilisateur ${user} n'a pas le droit de voir les documents de l'entreprise ${entrepriseIdParsed.data}`)
-      res.sendStatus(HTTP_STATUS.FORBIDDEN)
-    } else {
-      const entrepriseDocuments = await callAndExit(getEntrepriseDocumentsQuery([], [entrepriseIdParsed.data], pool, user))
-      res.json(entrepriseDocuments)
-    }
-  }
-
-export const postEntrepriseDocument =
-  (pool: Pool) =>
-  async (req: JWTRequest<User>, res: CustomResponse<EntrepriseDocumentId | Error>): Promise<void> => {
-    const user = req.auth
-
-    const entrepriseIdParsed = entrepriseIdValidator.safeParse(req.params.entrepriseId)
-    if (!entrepriseIdParsed.success) {
-      console.warn(`l'entrepriseId est obligatoire`)
-      res.sendStatus(HTTP_STATUS.FORBIDDEN)
-    } else if (!canEditEntreprise(user, entrepriseIdParsed.data)) {
-      console.warn(`l'utilisateur ${user} n'a pas le droit de voir les documents de l'entreprise ${entrepriseIdParsed.data}`)
-      res.sendStatus(HTTP_STATUS.FORBIDDEN)
-    } else {
-      const entrepriseDocumentInput = entrepriseDocumentInputValidator.safeParse(req.body)
-
-      if (entrepriseDocumentInput.success) {
-        const id = newEnterpriseDocumentId(entrepriseDocumentInput.data.date, entrepriseDocumentInput.data.typeId)
-        try {
-          const oid = await createLargeObject(pool, entrepriseDocumentInput.data.tempDocumentName)
-
-          await insertEntrepriseDocument(pool, {
-            id,
-            entreprise_document_type_id: entrepriseDocumentInput.data.typeId,
-            description: entrepriseDocumentInput.data.description,
-            date: entrepriseDocumentInput.data.date,
-            entreprise_id: entrepriseIdParsed.data,
-            largeobject_id: oid,
-          })
-          res.json(id)
-        } catch (e: any) {
-          console.error(e)
-          res.status(HTTP_STATUS.BAD_REQUEST)
-          res.json(e)
-        }
-      } else {
-        res.status(HTTP_STATUS.BAD_REQUEST)
-        res.json(entrepriseDocumentInput.error)
-      }
-    }
-  }
-
-export const deleteEntrepriseDocument =
-  (pool: Pool) =>
-  async (req: JWTRequest<User>, res: CustomResponse<void | Error>): Promise<void> => {
-    const user = req.auth
-
-    const entrepriseIdParsed = entrepriseIdValidator.safeParse(req.params.entrepriseId)
-    const entrepriseDocumentIdParsed = entrepriseDocumentIdValidator.safeParse(req.params.entrepriseDocumentId)
-    if (!entrepriseIdParsed.success) {
-      console.warn(`l'entrepriseId est obligatoire`)
-      res.sendStatus(HTTP_STATUS.FORBIDDEN)
-    } else if (!entrepriseDocumentIdParsed.success) {
-      console.warn(`le documentId est obligatoire`)
-      res.sendStatus(HTTP_STATUS.FORBIDDEN)
-    } else if (!canEditEntreprise(user, entrepriseIdParsed.data)) {
-      console.warn(`l'utilisateur ${user} n'a pas le droit de supprimer les documents de l'entreprise ${entrepriseIdParsed.data}`)
-      res.sendStatus(HTTP_STATUS.FORBIDDEN)
-    } else {
-      const entrepriseDocuments = await callAndExit(getEntrepriseDocumentsQuery([], [entrepriseIdParsed.data], pool, user))
-      const entrepriseDocument = entrepriseDocuments.find(({ id }) => id === entrepriseDocumentIdParsed.data)
-
-      if (!entrepriseDocument || !entrepriseDocument.can_delete_document) {
-        res.sendStatus(HTTP_STATUS.FORBIDDEN)
-      } else {
-        await deleteEntrepriseDocumentQuery(pool, { id: entrepriseDocument.id, entrepriseId: entrepriseIdParsed.data })
-        res.sendStatus(HTTP_STATUS.NO_CONTENT)
-      }
-    }
-  }
+const droitsInsuffisantsPourSupprimerLeDocument = "droits insuffisants pour supprimer le document d'entreprise" as const
+export const deleteEntrepriseDocument: RestNewDeleteCall<'/rest/entreprises/:entrepriseId/documents/:entrepriseDocumentId'> = (
+  rootPipe
+): Effect.Effect<Option.Option<never>, CaminoApiError<typeof droitsInsuffisantsPourSupprimerLeDocument | EffectDbQueryAndValidateErrors>> =>
+  rootPipe.pipe(
+    Effect.filterOrFail(
+      ({ user, params: { entrepriseId } }) => canEditEntreprise(user, entrepriseId),
+      () => ({ message: droitsInsuffisantsPourSupprimerLeDocument })
+    ),
+    Effect.bind('documents', ({ pool, user, params: { entrepriseId } }) => getEntrepriseDocumentsQuery([], [entrepriseId], pool, user)),
+    Effect.bind('entrepriseDocument', ({ documents, params: { entrepriseDocumentId } }) =>
+      Effect.succeed(documents.find(({ id }) => id === entrepriseDocumentId)).pipe(
+        Effect.filterOrFail(
+          (document): document is NonNullable<typeof document> => isNotNullNorUndefined(document) && document.can_delete_document,
+          () => ({ message: droitsInsuffisantsPourSupprimerLeDocument, detail: 'document non trouvé ou non supprimable' })
+        )
+      )
+    ),
+    Effect.tap(({ pool, entrepriseDocument, params: { entrepriseId } }) => deleteEntrepriseDocumentQuery(pool, { id: entrepriseDocument.id, entrepriseId: entrepriseId })),
+    Effect.map(() => Option.none()),
+    Effect.mapError(caminoError =>
+      Match.value(caminoError.message).pipe(
+        Match.whenOr(droitsInsuffisantsPourSupprimerLeDocument, () => ({
+          ...caminoError,
+          status: HTTP_STATUS.FORBIDDEN,
+        })),
+        Match.whenOr("Impossible d'exécuter la requête dans la base de données", 'Les données en base ne correspondent pas à ce qui est attendu', () => ({
+          ...caminoError,
+          status: HTTP_STATUS.INTERNAL_SERVER_ERROR,
+        })),
+        Match.exhaustive
+      )
+    )
+  )
 
 export const fiscalite =
   (_pool: Pool) =>

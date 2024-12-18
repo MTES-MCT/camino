@@ -30,6 +30,7 @@ import { AdministrationId } from 'camino-common/src/static/administrations'
 import { EntrepriseId } from 'camino-common/src/entreprise'
 import { getCurrent } from 'camino-common/src/date'
 import { createLargeObject } from '../../database/largeobjects'
+import { callAndExit } from '../../tools/fp-tools'
 
 const extractContenuFromSectionWithValue = (sections: Section[], sectionsWithValue: SectionWithValue[]): Contenu => {
   const contenu: Contenu = {}
@@ -102,7 +103,7 @@ export const updateActivite =
             }
 
             for (const document of activiteDocumentsToCreate) {
-              const loid = await createLargeObject(pool, document.tempDocumentName)
+              const loid = await callAndExit(createLargeObject(pool, document.tempDocumentName))
 
               const date = getCurrent()
 

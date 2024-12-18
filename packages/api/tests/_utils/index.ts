@@ -21,6 +21,7 @@ import {
   NewPostRestRoutes,
   NewGetRestRoutes,
   NewPutRestRoutes,
+  NewDeleteRestRoutes,
 } from 'camino-common/src/rest'
 import { z } from 'zod'
 import { newUtilisateurId } from '../../src/database/models/_format/id-create'
@@ -113,6 +114,12 @@ export const restNewPutCall = async <Route extends NewPutRestRoutes>(
   body: z.infer<(typeof CaminoRestRoutes)[Route]['newPut']['input']>
 ): Promise<request.Test> => {
   const req = request(app(pool)).put(getRestRoute(path, params)).send(body)
+
+  return jwtSet(pool, req, user)
+}
+
+export const restNewDeleteCall = async <Route extends NewDeleteRestRoutes>(pool: Pool, path: Route, params: CaminoRestParams<Route>, user: TestUser | undefined): Promise<request.Test> => {
+  const req = request(app(pool)).delete(getRestRoute(path, params)).send()
 
   return jwtSet(pool, req, user)
 }

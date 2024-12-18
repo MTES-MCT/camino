@@ -74,6 +74,7 @@ type CaminoRoute<T extends string> = { params: ZodObjectParsUrlParams<T> } & {
   newPost?: { input: ZodType; output: ZodType }
   put?: { input: ZodType; output: ZodType }
   newPut?: { input: ZodType; output: ZodType }
+  newDelete?: true
   delete?: true
   download?: true
   newDownload?: true
@@ -187,16 +188,18 @@ export const CaminoRestRoutes = {
   '/rest/entreprises': { params: noParamsValidator, post: { input: z.object({ siren: sirenValidator }), output: z.void() }, get: { output: z.array(entrepriseValidator) } },
   '/rest/entreprises/:entrepriseId': {
     params: entrepriseIdParamsValidator,
-    get: { output: entrepriseTypeValidator },
+    newGet: { output: entrepriseTypeValidator },
     newPut: { input: entrepriseModificationValidator, output: z.object({ id: entrepriseIdValidator }) },
   },
   '/rest/entreprises/:entrepriseId/documents': {
     params: entrepriseIdParamsValidator,
-    // TODO 2024-01-31 ne pas retourner une erreur, mais thrower une exception et la catcher plutôt ?
-    post: { input: entrepriseDocumentInputValidator, output: z.union([entrepriseDocumentIdValidator, z.custom<Error>()]) },
-    get: { output: z.array(entrepriseDocumentValidator) },
+    newPost: { input: entrepriseDocumentInputValidator, output: z.object({ id: entrepriseDocumentIdValidator }) },
+    newGet: { output: z.array(entrepriseDocumentValidator) },
   },
-  '/rest/entreprises/:entrepriseId/documents/:entrepriseDocumentId': { params: z.object({ entrepriseId: entrepriseIdValidator, entrepriseDocumentId: entrepriseDocumentIdValidator }), delete: true },
+  '/rest/entreprises/:entrepriseId/documents/:entrepriseDocumentId': {
+    params: z.object({ entrepriseId: entrepriseIdValidator, entrepriseDocumentId: entrepriseDocumentIdValidator }),
+    newDelete: true,
+  },
   '/rest/administrations/:administrationId/utilisateurs': { params: administrationIdParamsValidator, get: { output: z.array(adminUserNotNullValidator) } },
   '/rest/administrations/:administrationId/activiteTypeEmails': {
     params: administrationIdParamsValidator,
@@ -302,6 +305,7 @@ export type PostRestRoutes = CaminoRestRouteList<typeof IDS, 'post'>[number]
 export type NewPostRestRoutes = CaminoRestRouteList<typeof IDS, 'newPost'>[number]
 export type NewPutRestRoutes = CaminoRestRouteList<typeof IDS, 'newPut'>[number]
 export type DeleteRestRoutes = CaminoRestRouteList<typeof IDS, 'delete'>[number]
+export type NewDeleteRestRoutes = CaminoRestRouteList<typeof IDS, 'newDelete'>[number]
 export type DownloadRestRoutes = CaminoRestRouteList<typeof IDS, 'download'>[number]
 export type NewDownloadRestRoutes = CaminoRestRouteList<typeof IDS, 'newDownload'>[number]
 export type PutRestRoutes = CaminoRestRouteList<typeof IDS, 'put'>[number]

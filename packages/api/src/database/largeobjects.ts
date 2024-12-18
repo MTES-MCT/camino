@@ -1,4 +1,6 @@
 import { TempDocumentName } from 'camino-common/src/document'
+import { CaminoError } from 'camino-common/src/zod-tools'
+import { Effect } from 'effect'
 import { createReadStream } from 'fs'
 import { join } from 'path'
 import { Pool } from 'pg'
@@ -9,7 +11,16 @@ const bufferSize = 16384
 
 export const largeObjectIdValidator = z.number().brand('LargeObjectId')
 export type LargeObjectId = z.infer<typeof largeObjectIdValidator>
-export const createLargeObject = async (pool: Pool, tmpFileName: TempDocumentName): Promise<LargeObjectId> => {
+
+const erreurLorsDeLInsertionDUnFichierEnBase = "impossible d'insérer un fichier en base" as const
+export type CreateLargeObjectError = typeof erreurLorsDeLInsertionDUnFichierEnBase
+export const createLargeObject = (pool: Pool, tmpFileName: TempDocumentName): Effect.Effect<LargeObjectId, CaminoError<CreateLargeObjectError>> =>
+  Effect.tryPromise({
+    try: async () => createLargeObjectPromise(pool, tmpFileName),
+    catch: e => ({ message: erreurLorsDeLInsertionDUnFichierEnBase, extra: e }),
+  })
+
+const createLargeObjectPromise = async (pool: Pool, tmpFileName: TempDocumentName): Promise<LargeObjectId> => {
   const client = await pool.connect()
   try {
     const man = new LargeObjectManager({ pg: client })

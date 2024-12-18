@@ -55,7 +55,7 @@ import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, SimplePromiseFn }
 import { CanReadDemarche } from '../../api/rest/permissions/demarches'
 import { newEtapeAvisId, newEtapeDocumentId } from '../models/_format/id-create'
 import { caminoDateValidator, FirstEtapeDate, getCurrent } from 'camino-common/src/date'
-import { createLargeObject, LargeObjectId, largeObjectIdValidator } from '../largeobjects'
+import { createLargeObject, CreateLargeObjectError, LargeObjectId, largeObjectIdValidator } from '../largeobjects'
 import { avisStatutIdValidator, avisVisibilityIdValidator } from 'camino-common/src/static/avisTypes'
 import { canReadAvis } from '../../api/rest/permissions/avis'
 import { getEtapeDataForEdition } from '../../api/rest/etapes.queries'
@@ -143,8 +143,7 @@ export const getEntrepriseDocumentLargeObjectIdsByEtapeId = (
     Effect.map(result => result.filter(r => canSeeEntrepriseDocuments(user, r.entreprise_id)))
   )
 
-const erreurLargeObject = 'Impossible de créer le document en base' as const
-export type UpdateEtapeDocumentsErrors = EffectDbQueryAndValidateErrors | InsertEtapeDocumentsErrors | typeof erreurLargeObject
+export type UpdateEtapeDocumentsErrors = EffectDbQueryAndValidateErrors | InsertEtapeDocumentsErrors | CreateLargeObjectError
 export const updateEtapeDocuments = (
   pool: Pool,
   titre_etape_id: EtapeId,
@@ -161,12 +160,7 @@ export const updateEtapeDocuments = (
             (document): document is EtapeDocumentWithFileModification & { temp_document_name: TempDocumentName } => isNotNullNorUndefined(document.temp_document_name),
             () => shortCircuitError('pas de document' as const)
           ),
-          Effect.flatMap(document =>
-            Effect.tryPromise({
-              try: () => createLargeObject(pool, document.temp_document_name),
-              catch: e => ({ message: erreurLargeObject, extra: e }),
-            })
-          ),
+          Effect.flatMap(document => createLargeObject(pool, document.temp_document_name)),
           Effect.tap(largeobject_id => effectDbQueryAndValidate(updateEtapeDocumentFileDb, { id: documentToUpdate.id, largeobject_id }, pool, z.void())),
           Effect.catchTag('pas de document', _ => Effect.succeed(null)),
           Effect.tap(() =>
@@ -221,18 +215,14 @@ delete from etapes_documents
 where id in $$ ids !
 `
 
-const largeObjectIdError = 'impossible de récupérer un large object id' as const
-export type InsertEtapeDocumentsErrors = EffectDbQueryAndValidateErrors | typeof largeObjectIdError
+export type InsertEtapeDocumentsErrors = EffectDbQueryAndValidateErrors | CreateLargeObjectError
 export const insertEtapeDocuments = (pool: Pool, titre_etape_id: EtapeId, etapeDocuments: TempEtapeDocument[]): Effect.Effect<true, CaminoError<InsertEtapeDocumentsErrors>> => {
   return Effect.Do.pipe(
     Effect.flatMap(() =>
       Effect.forEach(etapeDocuments, document => {
         const id = newEtapeDocumentId(getCurrent(), document.etape_document_type_id)
         return pipe(
-          Effect.tryPromise({
-            try: () => createLargeObject(pool, document.temp_document_name),
-            catch: () => ({ message: largeObjectIdError }),
-          }),
+          createLargeObject(pool, document.temp_document_name),
           Effect.flatMap(largeobject_id => effectDbQueryAndValidate(insertEtapeDocumentDb, { ...document, etape_id: titre_etape_id, id, largeobject_id }, pool, z.void()))
         )
       })
@@ -247,17 +237,18 @@ const insertEtapeDocumentDb = sql<
 insert into etapes_documents (id, etape_document_type_id, etape_id, description, public_lecture, entreprises_lecture, largeobject_id)
     values ($ id !, $ etape_document_type_id !, $ etape_id !, $ description, $ public_lecture !, $ entreprises_lecture !, $ largeobject_id !)
 `
-const impossibleDeCreerUnLargeObjectId = 'impossible de créer un large object id' as const
-export type InsertEtapeAvisErrors = EffectDbQueryAndValidateErrors | typeof impossibleDeCreerUnLargeObjectId
+export type InsertEtapeAvisErrors = EffectDbQueryAndValidateErrors | CreateLargeObjectError
 export const insertEtapeAvis = (pool: Pool, titre_etape_id: EtapeId, etapeAvis: TempEtapeAvis[]): Effect.Effect<true, CaminoError<InsertEtapeAvisErrors>> =>
   Effect.Do.pipe(
     Effect.flatMap(() =>
       Effect.forEach(etapeAvis, avis => {
         const id = newEtapeAvisId(avis.avis_type_id)
-        return pipe(
-          Effect.tryPromise({
-            try: async () => (isNotNullNorUndefined(avis.temp_document_name) ? createLargeObject(pool, avis.temp_document_name) : null),
-            catch: e => ({ message: impossibleDeCreerUnLargeObjectId, extra: e }),
+        return Effect.Do.pipe(
+          Effect.flatMap(() => {
+            if (isNotNullNorUndefined(avis.temp_document_name)) {
+              return createLargeObject(pool, avis.temp_document_name)
+            }
+            return Effect.succeed(null)
           }),
           Effect.flatMap(largeobject_id => insertEtapeAvisWithLargeObjectId(pool, titre_etape_id, avis, id, largeobject_id))
         )
@@ -291,7 +282,7 @@ delete from etape_avis
 where id in $$ ids !
 `
 const avisIncomplets = 'Impossible de mettre à jour les avis, car ils ne sont pas complets' as const
-export type UpdateEtapeAvisErrors = EffectDbQueryAndValidateErrors | typeof avisIncomplets | typeof erreurLargeObject | InsertEtapeAvisErrors
+export type UpdateEtapeAvisErrors = EffectDbQueryAndValidateErrors | typeof avisIncomplets | CreateLargeObjectError | InsertEtapeAvisErrors
 export const updateEtapeAvis = (
   pool: Pool,
   titre_etape_id: EtapeId,
@@ -331,12 +322,7 @@ export const updateEtapeAvis = (
             (avis): avis is EtapeAvisWithFileModification & { temp_document_name: TempDocumentName } => isNotNullNorUndefined(avis.temp_document_name),
             () => shortCircuitError('pas de document' as const)
           ),
-          Effect.flatMap(avis =>
-            Effect.tryPromise({
-              try: () => createLargeObject(pool, avis.temp_document_name),
-              catch: e => ({ message: erreurLargeObject, extra: e }),
-            })
-          ),
+          Effect.flatMap(avis => createLargeObject(pool, avis.temp_document_name)),
           Effect.tap(largeobject_id => effectDbQueryAndValidate(updateEtapeAvisFileDb, { id: avisToUpdate.id, largeobject_id }, pool, z.void())),
           Effect.catchTag('pas de document', _ => Effect.succeed(null)),
           Effect.tap(() => effectDbQueryAndValidate(updateEtapeAvisInfoDb, avisToUpdate, pool, z.void()))

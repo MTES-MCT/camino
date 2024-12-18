@@ -13,6 +13,7 @@ import {
   NewPostRestRoutes,
   NewGetRestRoutes,
   NewPutRestRoutes,
+  NewDeleteRestRoutes,
 } from 'camino-common/src/rest'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { CaminoError } from 'camino-common/src/zod-tools'
@@ -110,6 +111,29 @@ export const newGetWithJson = async <T extends NewGetRestRoutes>(...args: GetWit
       window.location.replace('/oauth2/sign_in?rd=' + encodeURIComponent(window.location.href))
     }
 
+    const bodyErrorResponse = await fetched.json()
+    return bodyErrorResponse
+  } catch (e: any) {
+    return { ...errorMessage, extra: e }
+  }
+}
+
+export const newDeleteWithJson = async <T extends NewDeleteRestRoutes>(path: T, params: CaminoRestParams<T>): Promise<CaminoError<string> | void> => {
+  try {
+    const url = getUiRestRoute(path, params, {})
+
+    const defaultOptions = {
+      method: 'delete',
+      headers: { 'Content-Type': 'application/json' },
+    }
+
+    const fetched = await fetch(url, defaultOptions)
+    if (fetched.ok) {
+      return undefined
+    }
+    if (fetched.status === HTTP_STATUS.UNAUTHORIZED) {
+      window.location.replace('/oauth2/sign_in?rd=' + encodeURIComponent(window.location.href))
+    }
     const bodyErrorResponse = await fetched.json()
     return bodyErrorResponse
   } catch (e: any) {

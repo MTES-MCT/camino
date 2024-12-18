@@ -11,7 +11,7 @@ import { getTitreLiaisons, postTitreLiaisons, removeTitre, titresAdministrations
 import {
   creerEntreprise,
   fiscalite,
-  getEntreprise,
+  getEntrepriseRest,
   modifierEntreprise,
   getEntrepriseDocuments,
   postEntrepriseDocument,
@@ -48,6 +48,7 @@ import {
   NewPostRestRoutes,
   NewGetRestRoutes,
   NewPutRestRoutes,
+  NewDeleteRestRoutes,
 } from 'camino-common/src/rest'
 import { CaminoConfig } from 'camino-common/src/static/config'
 import { CaminoRequest, CustomResponse } from '../api/rest/express-type'
@@ -67,7 +68,7 @@ import { config } from '../config/index'
 import { addLog } from '../api/rest/logs.queries'
 import { HTTP_STATUS } from 'camino-common/src/http'
 import { zodParseEffect } from '../tools/fp-tools'
-import { Cause, Effect, Exit, pipe } from 'effect'
+import { Cause, Effect, Exit, Option, pipe } from 'effect'
 
 interface IRestResolverResult {
   nom: string
@@ -135,6 +136,19 @@ export type RestNewGetCall<Route extends NewGetRestRoutes> = (
   >
 ) => Effect.Effect<z.infer<CaminoRestRoutesType[Route]['newGet']['output']>, CaminoApiError<string>>
 
+export type RestNewDeleteCall<Route extends NewDeleteRestRoutes> = (
+  data: Effect.Effect<
+    {
+      pool: Pool
+      user: User
+      params: z.infer<CaminoRestRoutesType[Route]['params']>
+      cookie: CookieParams
+    },
+    never,
+    never
+  >
+) => Effect.Effect<Option.Option<never>, CaminoApiError<string>>
+
 type RestPostCall<Route extends PostRestRoutes> = (pool: Pool) => (req: CaminoRequest, res: CustomResponse<z.infer<CaminoRestRoutesType[Route]['post']['output']>>) => Promise<void>
 type RestPutCall<Route extends PutRestRoutes> = (pool: Pool) => (req: CaminoRequest, res: CustomResponse<z.infer<CaminoRestRoutesType[Route]['put']['output']>>) => Promise<void>
 type RestDeleteCall = (pool: Pool) => (req: CaminoRequest, res: CustomResponse<void | Error>) => Promise<void>
@@ -147,6 +161,7 @@ type Transform<Route> = (Route extends GetRestRoutes ? { getCall: RestGetCall<Ro
   (Route extends NewPutRestRoutes ? { newPutCall: RestNewPutCall<Route> } : {}) &
   (Route extends PutRestRoutes ? { putCall: RestPutCall<Route> } : {}) &
   (Route extends DeleteRestRoutes ? { deleteCall: RestDeleteCall } : {}) &
+  (Route extends NewDeleteRestRoutes ? { newDeleteCall: RestNewDeleteCall<Route> } : {}) &
   (Route extends NewDownloadRestRoutes ? { newDownloadCall: NewDownload } : {}) &
   (Route extends DownloadRestRoutes ? { downloadCall: RestDownloadCall } : {})
 
@@ -210,9 +225,12 @@ const restRouteImplementations: Readonly<{ [key in CaminoRestRoute]: Transform<k
   '/rest/utilisateurs/:id': { newGetCall: getUtilisateur, ...CaminoRestRoutes['/rest/utilisateurs/:id'] },
   '/rest/utilisateurs': { newGetCall: getUtilisateurs, ...CaminoRestRoutes['/rest/utilisateurs'] },
   '/rest/entreprises/:entrepriseId/fiscalite/:annee': { getCall: fiscalite, ...CaminoRestRoutes['/rest/entreprises/:entrepriseId/fiscalite/:annee'] }, // UNTESTED YET
-  '/rest/entreprises/:entrepriseId': { getCall: getEntreprise, newPutCall: modifierEntreprise, ...CaminoRestRoutes['/rest/entreprises/:entrepriseId'] },
-  '/rest/entreprises/:entrepriseId/documents': { getCall: getEntrepriseDocuments, postCall: postEntrepriseDocument, ...CaminoRestRoutes['/rest/entreprises/:entrepriseId/documents'] },
-  '/rest/entreprises/:entrepriseId/documents/:entrepriseDocumentId': { deleteCall: deleteEntrepriseDocument, ...CaminoRestRoutes['/rest/entreprises/:entrepriseId/documents/:entrepriseDocumentId'] },
+  '/rest/entreprises/:entrepriseId': { newGetCall: getEntrepriseRest, newPutCall: modifierEntreprise, ...CaminoRestRoutes['/rest/entreprises/:entrepriseId'] },
+  '/rest/entreprises/:entrepriseId/documents': { newGetCall: getEntrepriseDocuments, newPostCall: postEntrepriseDocument, ...CaminoRestRoutes['/rest/entreprises/:entrepriseId/documents'] },
+  '/rest/entreprises/:entrepriseId/documents/:entrepriseDocumentId': {
+    newDeleteCall: deleteEntrepriseDocument,
+    ...CaminoRestRoutes['/rest/entreprises/:entrepriseId/documents/:entrepriseDocumentId'],
+  },
   '/rest/entreprises': { postCall: creerEntreprise, getCall: getAllEntreprises, ...CaminoRestRoutes['/rest/entreprises'] },
   '/rest/administrations/:administrationId/utilisateurs': { getCall: getAdministrationUtilisateurs, ...CaminoRestRoutes['/rest/administrations/:administrationId/utilisateurs'] },
   '/rest/administrations/:administrationId/activiteTypeEmails': {
@@ -308,12 +326,12 @@ export const restWithPool = (dbPool: Pool): Router => {
             const pipeline = await call
             if (Exit.isFailure(pipeline)) {
               if (!Cause.isFailType(pipeline.cause)) {
-                console.error('catching error on newPost route', route, pipeline.cause, req.body)
+                console.error('catching error on newGet route', route, pipeline.cause, req.body)
                 res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: "une erreur inattendue s'est produite", extra: pipeline.cause })
               }
             }
           } catch (e) {
-            console.error('catching error on newPost route', route, e, req.body)
+            console.error('catching error on newGet route', route, e, req.body)
             res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: "une erreur inattendue s'est produite", extra: e })
           }
         })
@@ -473,6 +491,55 @@ export const restWithPool = (dbPool: Pool): Router => {
       if ('deleteCall' in maRoute) {
         console.info(`delete ${route}`)
         rest.delete(route, restCatcherWithMutation('delete', maRoute.deleteCall(dbPool), dbPool)) // eslint-disable-line @typescript-eslint/no-misused-promises
+      }
+      if ('newDeleteCall' in maRoute) {
+        console.info(`DELETE ${route}`)
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises
+        rest.delete(route, async (req: CaminoRequest, res: express.Response, _next: express.NextFunction) => {
+          try {
+            const call = Effect.Do.pipe(
+              Effect.bind('params', () => zodParseEffect(maRoute.params, req.params)),
+              Effect.mapError(caminoError => {
+                return { ...caminoError, status: HTTP_STATUS.BAD_REQUEST }
+              }),
+              // TODO 2024-06-26 ici, si on ne met pas les params et les searchParams à any, on se retrouve avec une typescript union hell qui fait tout planter
+              Effect.bind<'result', { params: any }, Option.Option<never>, CaminoApiError<string>, never>('result', ({ params }) => {
+                return maRoute.newDeleteCall(
+                  Effect.Do.pipe(
+                    Effect.let('user', () => req.auth),
+                    Effect.let('pool', () => dbPool),
+                    Effect.let('params', () => params),
+                    Effect.let('cookie', () => ({
+                      clearConnectedCookie: () => res.clearCookie('shouldBeConnected'),
+                      addConnectedCookie: () => res.cookie('shouldBeConnected', 'anyValueIsGood, We just check the presence of this cookie'),
+                    }))
+                  )
+                )
+              }),
+              Effect.mapBoth({
+                onFailure: caminoError => {
+                  console.warn(`problem with route ${route}: ${caminoError.message}`)
+                  res.status(caminoError.status).json(caminoError)
+                },
+                onSuccess: () => {
+                  res.sendStatus(HTTP_STATUS.NO_CONTENT)
+                },
+              }),
+              Effect.runPromiseExit
+            )
+
+            const pipeline = await call
+            if (Exit.isFailure(pipeline)) {
+              if (!Cause.isFailType(pipeline.cause)) {
+                console.error('catching error on newDelete route', route, pipeline.cause, req.body)
+                res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: "une erreur inattendue s'est produite", extra: pipeline.cause })
+              }
+            }
+          } catch (e) {
+            console.error('catching error on newDelete route', route, e, req.body)
+            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: "une erreur inattendue s'est produite", extra: e })
+          }
+        })
       }
 
       if ('downloadCall' in maRoute) {

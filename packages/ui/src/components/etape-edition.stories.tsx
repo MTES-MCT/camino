@@ -1,17 +1,16 @@
 import { Meta, StoryFn } from '@storybook/vue3'
 import { action } from '@storybook/addon-actions'
 import { Props, PureEtapeEdition } from './etape-edition'
-import { EntrepriseDocumentId, EntrepriseId, EtapeEntrepriseDocument, entrepriseDocumentIdValidator, entrepriseIdValidator, toEntrepriseDocumentId } from 'camino-common/src/entreprise'
+import { EtapeEntrepriseDocument, entrepriseDocumentIdValidator, entrepriseIdValidator, toEntrepriseDocumentId } from 'camino-common/src/entreprise'
 import { DemarcheId, demarcheIdOrSlugValidator, demarcheIdValidator, demarcheSlugValidator } from 'camino-common/src/demarche'
 import { ETAPE_IS_BROUILLON, ETAPE_IS_NOT_BROUILLON, EtapeId, etapeDocumentIdValidator, etapeIdOrSlugValidator, etapeIdValidator, etapeSlugValidator } from 'camino-common/src/etape'
 import { titreIdValidator, titreSlugValidator } from 'camino-common/src/validators/titres'
 import { FeatureMultiPolygon, PerimetreInformations } from 'camino-common/src/perimetre'
 import { CaminoDate, caminoDateValidator, firstEtapeDateValidator, toCaminoDate } from 'camino-common/src/date'
 import { testBlankUser } from 'camino-common/src/tests-utils'
-import { UiEntrepriseDocumentInput } from './entreprise/entreprise-api-client'
 import { demarcheTypeIdValidator } from 'camino-common/src/static/demarchesTypes'
 import { FlattenEtape } from 'camino-common/src/etape-form'
-import { tempDocumentNameValidator, TempDocumentName } from 'camino-common/src/document'
+import { tempDocumentNameValidator } from 'camino-common/src/document'
 
 const meta: Meta = {
   title: 'Components/EtapeEdition',
@@ -238,10 +237,10 @@ const apiClient: Props['apiClient'] = {
 
     return Promise.resolve([])
   },
-  creerEntrepriseDocument(entrepriseId: EntrepriseId, entrepriseDocumentInput: UiEntrepriseDocumentInput, tempDocumentName: TempDocumentName): Promise<EntrepriseDocumentId> {
+  creerEntrepriseDocument(entrepriseId, entrepriseDocumentInput, tempDocumentName) {
     creerEntrepriseDocumentAction(entrepriseId, entrepriseDocumentInput, tempDocumentName)
 
-    return Promise.resolve(entrepriseDocumentIdValidator.parse('entrepriseDocumentId'))
+    return Promise.resolve({ id: entrepriseDocumentIdValidator.parse('entrepriseDocumentId') })
   },
   getEtape(etapeIdOrSlug) {
     getEtapeAction(etapeIdOrSlug)

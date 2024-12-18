@@ -26,17 +26,14 @@ export const EntrepriseDocuments = defineComponent<Props>(props => {
 
   const reloadDocuments = async () => {
     data.value = { status: 'LOADING' }
-    try {
-      const entrepriseDocuments = await props.apiClient.getEntrepriseDocuments(props.entrepriseId)
-
+    const entrepriseDocuments = await props.apiClient.getEntrepriseDocuments(props.entrepriseId)
+    if ('message' in entrepriseDocuments) {
+      data.value = { status: 'NEW_ERROR', error: entrepriseDocuments }
+    } else {
       data.value = { status: 'LOADED', value: entrepriseDocuments }
-    } catch (e: any) {
-      data.value = {
-        status: 'ERROR',
-        message: e.message ?? 'something wrong happened',
-      }
     }
   }
+
   onMounted(async () => {
     await reloadDocuments()
   })

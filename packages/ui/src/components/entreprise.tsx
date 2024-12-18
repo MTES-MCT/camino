@@ -86,14 +86,12 @@ export const PureEntreprise = defineComponent<Props>(props => {
   const editPopup = ref(false)
 
   const refreshEntreprise = async () => {
-    try {
-      entreprise.value = { status: 'LOADING' }
-      entreprise.value = { status: 'LOADED', value: await props.apiClient.getEntreprise(props.entrepriseId) }
-    } catch (e: any) {
-      entreprise.value = {
-        status: 'ERROR',
-        message: e.message ?? 'something wrong happened',
-      }
+    entreprise.value = { status: 'LOADING' }
+    const value = await props.apiClient.getEntreprise(props.entrepriseId)
+    if ('message' in value) {
+      entreprise.value = { status: 'NEW_ERROR', error: value }
+    } else {
+      entreprise.value = { status: 'LOADED', value }
     }
   }
   onMounted(async () => {

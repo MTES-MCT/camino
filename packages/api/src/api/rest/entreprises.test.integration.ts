@@ -1,7 +1,7 @@
 /* eslint-disable sql/no-unsafe-query */
 import { entrepriseDocumentIdValidator, EntrepriseDocumentInput, newEntrepriseId, Siren, sirenValidator } from 'camino-common/src/entreprise'
 import { dbManager } from '../../../tests/db-manager'
-import { restCall, restDeleteCall, restNewPutCall, restPostCall, userGenerate } from '../../../tests/_utils/index'
+import { restCall, restNewCall, restNewDeleteCall, restNewPostCall, restNewPutCall, restPostCall, userGenerate } from '../../../tests/_utils/index'
 import { entrepriseUpsert } from '../../database/queries/entreprises'
 import { afterAll, beforeAll, describe, test, expect, vi, beforeEach } from 'vitest'
 import { userSuper } from '../../database/user-super'
@@ -23,6 +23,7 @@ import { ETAPE_IS_NOT_BROUILLON } from 'camino-common/src/etape'
 import { etapeCreate } from './rest-test-utils'
 import { insertTitreGraph } from '../../../tests/integration-test-helper'
 import { callAndExit } from '../../tools/fp-tools'
+import { z } from 'zod'
 console.info = vi.fn()
 console.warn = vi.fn()
 console.error = vi.fn()
@@ -235,8 +236,7 @@ describe('getEntreprise', () => {
   test('peut récupérer une entreprise', async () => {
     const entrepriseId = newEntrepriseId('nouvelle-entreprise-id')
     await entrepriseUpsert({ id: entrepriseId, nom: entrepriseId })
-    const tested = await restCall(dbPool, '/rest/entreprises/:entrepriseId', { entrepriseId }, { ...testBlankUser, role: 'super' })
-    expect(tested.statusCode).toBe(HTTP_STATUS.OK)
+    const tested = await restNewCall(dbPool, '/rest/entreprises/:entrepriseId', { entrepriseId }, { ...testBlankUser, role: 'super' })
     expect(tested.body).toMatchInlineSnapshot(`
       {
         "adresse": null,
@@ -267,10 +267,16 @@ describe('postEntrepriseDocument', () => {
       description: 'desc',
       tempDocumentName: tempDocumentNameValidator.parse('notExistingFile'),
     }
-    const tested = await restPostCall(dbPool, '/rest/entreprises/:entrepriseId/documents', { entrepriseId }, { ...testBlankUser, role: 'super' }, documentToInsert)
-    expect(tested.statusCode).toBe(HTTP_STATUS.BAD_REQUEST)
+    const tested = await restNewPostCall(dbPool, '/rest/entreprises/:entrepriseId/documents', { entrepriseId }, { ...testBlankUser, role: 'super' }, documentToInsert)
+    expect(tested.body).toMatchInlineSnapshot(`
+      {
+        "extra": {},
+        "message": "impossible d'insérer un fichier en base",
+        "status": 500,
+      }
+    `)
 
-    const entrepriseDocumentsCall = await restCall(dbPool, '/rest/entreprises/:entrepriseId/documents', { entrepriseId }, { ...testBlankUser, role: 'super' })
+    const entrepriseDocumentsCall = await restNewCall(dbPool, '/rest/entreprises/:entrepriseId/documents', { entrepriseId }, { ...testBlankUser, role: 'super' })
     expect(entrepriseDocumentsCall.statusCode).toBe(HTTP_STATUS.OK)
     expect(entrepriseDocumentsCall.body).toMatchInlineSnapshot('[]')
   })
@@ -289,10 +295,10 @@ describe('postEntrepriseDocument', () => {
       tempDocumentName: tempDocumentNameValidator.parse(fileName),
     }
 
-    const tested = await restPostCall(dbPool, '/rest/entreprises/:entrepriseId/documents', { entrepriseId }, { ...testBlankUser, role: 'super' }, documentToInsert)
+    const tested = await restNewPostCall(dbPool, '/rest/entreprises/:entrepriseId/documents', { entrepriseId }, { ...testBlankUser, role: 'super' }, documentToInsert)
     expect(tested.statusCode).toBe(HTTP_STATUS.OK)
 
-    const entrepriseDocumentsCall = await restCall(dbPool, '/rest/entreprises/:entrepriseId/documents', { entrepriseId }, { ...testBlankUser, role: 'super' })
+    const entrepriseDocumentsCall = await restNewCall(dbPool, '/rest/entreprises/:entrepriseId/documents', { entrepriseId }, { ...testBlankUser, role: 'super' })
     expect(entrepriseDocumentsCall.statusCode).toBe(HTTP_STATUS.OK)
     expect(entrepriseDocumentsCall.body).toHaveLength(1)
     expect(entrepriseDocumentsCall.body[0]).toMatchObject({
@@ -346,7 +352,7 @@ describe('getEntrepriseDocument', () => {
       tempDocumentName: tempDocumentNameValidator.parse(fileName),
     }
 
-    const documentCall = await restPostCall(dbPool, '/rest/entreprises/:entrepriseId/documents', { entrepriseId }, { ...testBlankUser, role: 'super' }, documentToInsert)
+    const documentCall = await restNewPostCall(dbPool, '/rest/entreprises/:entrepriseId/documents', { entrepriseId }, { ...testBlankUser, role: 'super' }, documentToInsert)
     expect(documentCall.statusCode).toBe(HTTP_STATUS.OK)
 
     mkdirSync(dir, { recursive: true })
@@ -358,43 +364,43 @@ describe('getEntrepriseDocument', () => {
       tempDocumentName: tempDocumentNameValidator.parse(fileName),
     }
 
-    const secondDocumentCall = await restPostCall(dbPool, '/rest/entreprises/:entrepriseId/documents', { entrepriseId }, { ...testBlankUser, role: 'super' }, secondDocumentToInsert)
+    const secondDocumentCall = await restNewPostCall(dbPool, '/rest/entreprises/:entrepriseId/documents', { entrepriseId }, { ...testBlankUser, role: 'super' }, secondDocumentToInsert)
     expect(secondDocumentCall.statusCode).toBe(HTTP_STATUS.OK)
 
-    const entrepriseDocumentId = entrepriseDocumentIdValidator.parse(documentCall.body)
-    await callAndExit(insertTitreEtapeEntrepriseDocument(dbPool, { entreprise_document_id: entrepriseDocumentId, titre_etape_id: titreEtape.id }))
+    const entrepriseDocumentId = z.object({ id: entrepriseDocumentIdValidator }).parse(documentCall.body)
+    await callAndExit(insertTitreEtapeEntrepriseDocument(dbPool, { entreprise_document_id: entrepriseDocumentId.id, titre_etape_id: titreEtape.id }))
 
-    const tested = await restCall(dbPool, '/rest/entreprises/:entrepriseId/documents', { entrepriseId }, { ...testBlankUser, role: 'super' })
+    const tested = await restNewCall(dbPool, '/rest/entreprises/:entrepriseId/documents', { entrepriseId }, { ...testBlankUser, role: 'super' })
     expect(tested.statusCode).toBe(HTTP_STATUS.OK)
     expect(tested.body).toHaveLength(2)
     expect(tested.body[0]).toMatchObject({
       can_delete_document: false,
       date: '2023-01-12',
       description: 'desc',
-      id: documentCall.body,
+      id: entrepriseDocumentId.id,
       entreprise_document_type_id: 'atf',
     })
     expect(tested.body[1]).toMatchObject({
       can_delete_document: true,
       date: '2023-02-12',
       description: 'descSecondDocument',
-      id: secondDocumentCall.body,
+      id: secondDocumentCall.body.id,
       entreprise_document_type_id: 'kbi',
     })
 
-    const deletePossible = await restDeleteCall(
+    const deletePossible = await restNewDeleteCall(
       dbPool,
       '/rest/entreprises/:entrepriseId/documents/:entrepriseDocumentId',
-      { entrepriseId, entrepriseDocumentId: secondDocumentCall.body },
+      { entrepriseId, entrepriseDocumentId: secondDocumentCall.body.id },
       { ...testBlankUser, role: 'super' }
     )
 
     expect(deletePossible.statusCode).toBe(HTTP_STATUS.NO_CONTENT)
 
-    const deleteNotPossible = await restDeleteCall(
+    const deleteNotPossible = await restNewDeleteCall(
       dbPool,
       '/rest/entreprises/:entrepriseId/documents/:entrepriseDocumentId',
-      { entrepriseId, entrepriseDocumentId: documentCall.body },
+      { entrepriseId, entrepriseDocumentId: documentCall.body.id },
       { ...testBlankUser, role: 'super' }
     )
 
