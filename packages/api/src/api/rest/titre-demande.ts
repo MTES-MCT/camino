@@ -20,6 +20,9 @@ import { getCurrent } from 'camino-common/src/date'
 import { titreEtapeUpdateTask } from '../../business/titre-etape-update'
 import { utilisateurTitreCreate } from '../../database/queries/utilisateurs-titres'
 import { RestNewPostCall } from '../../server/rest'
+import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes'
+import { ETAPES_STATUTS } from 'camino-common/src/static/etapesStatuts'
+import { TITRES_TYPES_IDS } from 'camino-common/src/static/titresTypes'
 
 type TitreDemandeCreerErrors =
   | 'Accès interdit'
@@ -115,11 +118,11 @@ export const titreDemandeCreer: RestNewPostCall<'/rest/titres'> = (rootPipe): Ef
               }
               const titreEtape: Omit<ITitreEtape, 'id' | 'concurrence' | 'hasTitreFrom'> = {
                 titreDemarcheId: demarcheId,
-                typeId: 'mfr',
-                statutId: 'fai',
+                typeId: ETAPES_TYPES.demande,
+                statutId: ETAPES_STATUTS.FAIT,
                 isBrouillon: ETAPE_IS_BROUILLON,
                 date: getCurrent(),
-                duree: titreDemande.titreTypeId === 'arm' ? 4 : undefined,
+                duree: titreDemande.titreTypeId === TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX ? 4 : undefined,
                 titulaireIds: [titreDemande.entrepriseId],
                 demarcheIdsConsentement: [],
               }

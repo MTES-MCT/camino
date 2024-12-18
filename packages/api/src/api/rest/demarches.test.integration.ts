@@ -25,6 +25,10 @@ import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes'
 import { ETAPES_STATUTS } from 'camino-common/src/static/etapesStatuts'
 import { DEMARCHES_TYPES_IDS } from 'camino-common/src/static/demarchesTypes'
 import { DATE_DEBUT_PROCEDURE_SPECIFIQUE } from 'camino-common/src/machines'
+import { TITRES_TYPES_IDS } from 'camino-common/src/static/titresTypes'
+import { TitresStatutIds } from 'camino-common/src/static/titresStatuts'
+import { DOWNLOAD_FORMATS } from 'camino-common/src/rest'
+import { REFERENCES_TYPES_IDS } from 'camino-common/src/static/referencesTypes'
 
 console.info = vi.fn()
 console.error = vi.fn()
@@ -84,21 +88,21 @@ describe('downloadDemarches', () => {
     await Titres.query().insert({
       id: titreId,
       nom: 'mon titre',
-      typeId: 'axm',
-      titreStatutId: 'val',
+      typeId: TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX,
+      titreStatutId: TitresStatutIds.Valide,
       propsTitreEtapesIds: {
         titulaires: titulaireId,
         amodiataires: amodiataireId,
       },
       slug: titreSlugValidator.parse('slug'),
       archive: false,
-      references: [{ nom: 'Test', referenceTypeId: 'nus' }],
+      references: [{ nom: 'Test', referenceTypeId: REFERENCES_TYPES_IDS.NOM_USAGE }],
     })
 
     await TitresDemarches.query().insert({
       id: demarcheId,
       titreId,
-      typeId: 'oct',
+      typeId: DEMARCHES_TYPES_IDS.Octroi,
       description: 'description',
     })
 
@@ -106,8 +110,8 @@ describe('downloadDemarches', () => {
     await TitresEtapes.query().insert({
       id: etapeId,
       titreDemarcheId: demarcheId,
-      typeId: 'mfr',
-      statutId: 'fai',
+      typeId: ETAPES_TYPES.demande,
+      statutId: ETAPES_STATUTS.FAIT,
       date: toCaminoDate('2022-01-01'),
       ordre: 1,
       surface: km2Validator.parse(42),
@@ -162,8 +166,8 @@ slug,mon titre,minéraux et métaux,autorisation d'exploitation,valide,octroi,in
     await TitresEtapes.query().insert({
       id: etapeId2,
       titreDemarcheId: demarcheId,
-      typeId: 'mfr',
-      statutId: 'fai',
+      typeId: ETAPES_TYPES.demande,
+      statutId: ETAPES_STATUTS.FAIT,
       date: toCaminoDate('2023-01-01'),
       ordre: 2,
       surface: km2Validator.parse(102),
@@ -174,7 +178,7 @@ slug,mon titre,minéraux et métaux,autorisation d'exploitation,valide,octroi,in
       amodiataireIds: [amodiataireId2],
     })
 
-    const tested = await restDownloadCall(dbPool, '/demarches', {}, userSuper, { format: 'csv' })
+    const tested = await restDownloadCall(dbPool, '/demarches', {}, userSuper, { format: DOWNLOAD_FORMATS.Csv })
 
     expect(tested.statusCode).toBe(HTTP_STATUS.OK)
     expect(tested.headers['content-type']).toBe('text/csv; charset=utf-8')
@@ -222,13 +226,13 @@ describe('demarcheCreer', () => {
     await insertTitreGraph({
       id: titreId,
       nom: 'mon titre',
-      typeId: 'arm',
-      titreStatutId: 'ind',
+      typeId: TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX,
+      titreStatutId: TitresStatutIds.Indetermine,
       propsTitreEtapesIds: {},
       publicLecture: true,
     })
 
-    const res = await restNewPostCall(dbPool, '/rest/demarches', {}, undefined, { titreId, typeId: 'oct', description: '' })
+    const res = await restNewPostCall(dbPool, '/rest/demarches', {}, undefined, { titreId, typeId: DEMARCHES_TYPES_IDS.Octroi, description: '' })
 
     expect(res.status).toBe(HTTP_STATUS.FORBIDDEN)
   })
@@ -238,8 +242,8 @@ describe('demarcheCreer', () => {
     await insertTitreGraph({
       id: titreId,
       nom: 'mon titre',
-      typeId: 'arm',
-      titreStatutId: 'ind',
+      typeId: TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX,
+      titreStatutId: TitresStatutIds.Indetermine,
       propsTitreEtapesIds: {},
       publicLecture: true,
     })
@@ -252,7 +256,7 @@ describe('demarcheCreer', () => {
         role: 'editeur',
         administrationId: 'ope-onf-973-01',
       },
-      { titreId, typeId: 'oct', description: '' }
+      { titreId, typeId: DEMARCHES_TYPES_IDS.Octroi, description: '' }
     )
 
     expect(res.status).toBe(HTTP_STATUS.INTERNAL_SERVER_ERROR)
@@ -261,9 +265,9 @@ describe('demarcheCreer', () => {
 
   test('peut créer une démarche (utilisateur super)', async () => {
     const titreId = newTitreId()
-    await insertTitreGraph({ id: titreId, nom: 'titre', typeId: 'arm', titreStatutId: 'val', propsTitreEtapesIds: {} })
+    await insertTitreGraph({ id: titreId, nom: 'titre', typeId: TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX, titreStatutId: TitresStatutIds.Valide, propsTitreEtapesIds: {} })
 
-    const res = await restNewPostCall(dbPool, '/rest/demarches', {}, userSuper, { titreId, typeId: 'oct', description: '' })
+    const res = await restNewPostCall(dbPool, '/rest/demarches', {}, userSuper, { titreId, typeId: DEMARCHES_TYPES_IDS.Octroi, description: '' })
 
     expect(res.status).toBe(HTTP_STATUS.OK)
     expect(res.body).toMatchObject({ slug: {} })
@@ -278,7 +282,7 @@ describe('demarcheCreer', () => {
         role: 'admin',
         administrationId: 'ope-onf-973-01',
       },
-      { titreId: newTitreId('unknown'), typeId: 'oct', description: '' }
+      { titreId: newTitreId('unknown'), typeId: DEMARCHES_TYPES_IDS.Octroi, description: '' }
     )
     expect(res.status).toBe(HTTP_STATUS.INTERNAL_SERVER_ERROR)
     expect(res.body.message).toBe("le titre n'existe pas")
@@ -286,7 +290,7 @@ describe('demarcheCreer', () => {
 
   test('peut créer une démarche (utilisateur admin)', async () => {
     const titreId = newTitreId()
-    await insertTitreGraph({ id: titreId, nom: 'titre', typeId: 'arm', titreStatutId: 'val', propsTitreEtapesIds: {} })
+    await insertTitreGraph({ id: titreId, nom: 'titre', typeId: TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX, titreStatutId: TitresStatutIds.Valide, propsTitreEtapesIds: {} })
 
     const res = await restNewPostCall(
       dbPool,
@@ -296,7 +300,7 @@ describe('demarcheCreer', () => {
         role: 'admin',
         administrationId: ADMINISTRATION_IDS['DGTM - GUYANE'],
       },
-      { titreId, typeId: 'oct', description: '' }
+      { titreId, typeId: DEMARCHES_TYPES_IDS.Octroi, description: '' }
     )
 
     expect(res.status).toBe(HTTP_STATUS.OK)
@@ -308,8 +312,8 @@ describe('demarcheCreer', () => {
     await insertTitreGraph({
       id: titreId,
       nom: 'mon titre échu',
-      typeId: 'arm',
-      titreStatutId: 'ech',
+      typeId: TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX,
+      titreStatutId: TitresStatutIds.Echu,
       propsTitreEtapesIds: {},
     })
     const res = await restNewPostCall(
@@ -320,7 +324,7 @@ describe('demarcheCreer', () => {
         role: 'admin',
         administrationId: ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE'],
       },
-      { titreId, typeId: 'oct', description: '' }
+      { titreId, typeId: DEMARCHES_TYPES_IDS.Octroi, description: '' }
     )
 
     expect(res.status).toBe(HTTP_STATUS.INTERNAL_SERVER_ERROR)
@@ -344,8 +348,8 @@ describe('getDemarchesEnConcurrence', () => {
     await insertTitreGraph({
       id: titreIdPivot,
       nom: 'titre pivot',
-      typeId: 'arm',
-      titreStatutId: 'ind',
+      typeId: TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX,
+      titreStatutId: TitresStatutIds.Indetermine,
       propsTitreEtapesIds: {},
       demarches: [
         {
@@ -366,8 +370,8 @@ describe('getDemarchesEnConcurrence', () => {
     await insertTitreGraph({
       id: titreIdSatellite1,
       nom: 'titre satellite 1',
-      typeId: 'arm',
-      titreStatutId: 'ind',
+      typeId: TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX,
+      titreStatutId: TitresStatutIds.Indetermine,
       propsTitreEtapesIds: {},
       demarches: [
         {
@@ -394,8 +398,8 @@ describe('getDemarchesEnConcurrence', () => {
     await insertTitreGraph({
       id: titreIdSatellite2,
       nom: 'titre satellite 2',
-      typeId: 'arm',
-      titreStatutId: 'ind',
+      typeId: TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX,
+      titreStatutId: TitresStatutIds.Indetermine,
       propsTitreEtapesIds: {},
       demarches: [
         {
@@ -493,9 +497,9 @@ describe('getDemarcheByIdOrSlug', () => {
     await insertTitreGraph({
       id: titreId,
       nom: 'titre',
-      typeId: 'arm',
+      typeId: TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX,
       slug: titreSlugValidator.parse('slug-titre'),
-      titreStatutId: 'ind',
+      titreStatutId: TitresStatutIds.Indetermine,
       propsTitreEtapesIds: {},
       demarches: [
         {
@@ -606,9 +610,9 @@ describe('getResultatEnConcurrence', () => {
     await insertTitreGraph({
       id: titreIdPivot,
       nom: 'titre pivot',
-      typeId: 'arm',
+      typeId: TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX,
       slug: titreSlugValidator.parse('slug-pivot'),
-      titreStatutId: 'ind',
+      titreStatutId: TitresStatutIds.Indetermine,
       propsTitreEtapesIds: {},
       demarches: [
         {
@@ -654,9 +658,9 @@ describe('getResultatEnConcurrence', () => {
     await insertTitreGraph({
       id: titreIdSatellite1,
       nom: 'titre satellite 1',
-      typeId: 'arm',
+      typeId: TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX,
       slug: titreSlugValidator.parse('slug-satellite-1'),
-      titreStatutId: 'ind',
+      titreStatutId: TitresStatutIds.Indetermine,
       propsTitreEtapesIds: {},
       demarches: [
         {
@@ -694,12 +698,12 @@ const demarcheCreate = async () => {
   await insertTitreGraph({
     id: titreId,
     nom: 'mon titre',
-    typeId: 'arm',
-    titreStatutId: 'ind',
+    typeId: TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX,
+    titreStatutId: TitresStatutIds.Indetermine,
     propsTitreEtapesIds: {},
   })
 
-  const titreDemarche = await TitresDemarches.query().insertAndFetch({ titreId, typeId: 'oct' })
+  const titreDemarche = await TitresDemarches.query().insertAndFetch({ titreId, typeId: DEMARCHES_TYPES_IDS.Octroi })
 
   return {
     titreId,
