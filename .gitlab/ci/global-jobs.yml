@@ -9,3 +9,17 @@ lint_detect_deadcode:
   extends: .prepare-node-run
   stage: test
   script: make lint/detect-dead-code
+
+build_cron:
+  stage: build
+  needs: []
+  extends:
+    - .rule-build-and-push
+    - .prepare-docker-push
+  image:
+    name: gcr.io/kaniko-project/executor:debug
+    entrypoint: [""]
+  script:
+    - /kaniko/executor --context "$CI_PROJECT_DIR/infra/ecocompose/crons/" --build-arg BUILD_ENV=dev --dockerfile "$CI_PROJECT_DIR/Dockerfile.cron" --destination "caminofr/cron:${CI_COMMIT_SHA}-dev"  ${KANIKO_POST_PARAM}
+    - /kaniko/executor --context "$CI_PROJECT_DIR/infra/ecocompose/crons/" --build-arg BUILD_ENV=preprod --dockerfile "$CI_PROJECT_DIR/Dockerfile.cron" --destination "caminofr/cron:${CI_COMMIT_SHA}-preprod"  ${KANIKO_POST_PARAM}
+    - /kaniko/executor --context "$CI_PROJECT_DIR/infra/ecocompose/crons/" --build-arg BUILD_ENV=prod --dockerfile "$CI_PROJECT_DIR/Dockerfile.cron" --destination "caminofr/cron:${CI_COMMIT_SHA}-prod"  ${KANIKO_POST_PARAM}

@@ -284,13 +284,3 @@ nginx-proxy/build:
 
 nginx-proxy/push:
 	docker push caminofr/camino-nginx-proxy:1.6.1
-
-cron/build:
-	docker build -t caminofr/cron:1.0.0-dev --build-arg BUILD_ENV=dev -f Dockerfile.cron infra/ecocompose/crons/
-	docker build -t caminofr/cron:1.0.0-preprod --build-arg BUILD_ENV=preprod -f Dockerfile.cron infra/ecocompose/crons/
-	docker build -t caminofr/cron:1.0.0-prod --build-arg BUILD_ENV=prod -f Dockerfile.cron infra/ecocompose/crons/
-
-cron/push:
-	docker push caminofr/cron:1.0.0-dev
-	docker push caminofr/cron:1.0.0-preprod
-	docker push caminofr/cron:1.0.0-prod

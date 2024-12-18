@@ -69,7 +69,7 @@ services:
     restart: unless-stopped
   cron:
     container_name: camino_cron
-    image: caminofr/cron:1.0.0-${ENV}
+    image: caminofr/cron:${CAMINO_TAG}-${ENV}
     environment:
       ENV: ${ENV}
       TCHAP_HOOK: ${TCHAP_HOOK}
