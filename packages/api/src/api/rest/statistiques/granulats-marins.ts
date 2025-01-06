@@ -106,7 +106,7 @@ const statistiquesGranulatsMarinsAnneeBuild = (titres: ITitre[], titresActivites
   const { titresPrw, titresPxw, titresCxw } = statistiquesGranulatsMarinsTitresGet(titresFiltered)
 
   // les activités de l'année
-  const titresActivitesAnneeFiltered = titresActivites.filter(ta => ta.annee === annee)
+  const titresActivitesAnneeFiltered = titresActivites.filter(ta => ta.annee === parseInt(annee, 10))
   const statistiquesActivites = statistiquesGranulatsMarinsActivitesFind(titresActivitesAnneeFiltered, ['volumeGranulatsExtrait'])
 
   const activitesDeposesRatio = statistiquesActivites.rapportProductionCount

@@ -11,7 +11,7 @@ import { ActivitesTypes } from 'camino-common/src/static/activitesTypes'
 import { getEntreprises } from '../entreprises.queries'
 import { EntrepriseId } from 'camino-common/src/entreprise'
 import { TitreSlug } from 'camino-common/src/validators/titres'
-import { CaminoAnnee } from 'camino-common/src/date'
+import { CaminoAnnee, toCaminoAnnee } from 'camino-common/src/date'
 
 const titreActiviteContenuFormat = (contenu: IContenu, sections: Section[]) =>
   sections.reduce((resSections: Index<IContenuValeur>, section) => {
@@ -79,7 +79,7 @@ export const titresActivitesFormatTable = async (pool: Pool, activites: ITitreAc
       statut: ActivitesStatuts[activite.activiteStatutId].nom,
       titulaires: activite.titre.titulaireIds?.map(id => entreprisesIndex[id] ?? '').join(';'),
       communes: activite.titre.communes?.map(({ id }) => communesIndex[id]).join(';'),
-      annee: activite.annee,
+      annee: toCaminoAnnee(activite.annee),
       periode: getPeriode(activiteType.frequenceId, activite.periodeId),
       periode_id: activite.periodeId,
       ...contenu,

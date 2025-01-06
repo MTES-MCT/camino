@@ -12,6 +12,7 @@ exports[`peut récupérer les statistiques des métaux de métropole 1`] = `
       "2022": 0,
       "2023": 0,
       "2024": 0,
+      "2025": 0,
     },
     "octroiEtProlongation": {
       "2017": 0,
@@ -22,6 +23,7 @@ exports[`peut récupérer les statistiques des métaux de métropole 1`] = `
       "2022": 0,
       "2023": 0,
       "2024": 0,
+      "2025": 0,
     },
     "refusees": {
       "2017": 0,
@@ -32,6 +34,7 @@ exports[`peut récupérer les statistiques des métaux de métropole 1`] = `
       "2022": 0,
       "2023": 0,
       "2024": 0,
+      "2025": 0,
     },
     "surface": {
       "2017": 0,
@@ -42,6 +45,7 @@ exports[`peut récupérer les statistiques des métaux de métropole 1`] = `
       "2022": 0,
       "2023": 0,
       "2024": 0,
+      "2025": 0,
     },
   },
   "fiscaliteParSubstanceParAnnee": {
@@ -60,6 +64,7 @@ exports[`peut récupérer les statistiques des métaux de métropole 1`] = `
       "2022": 0,
       "2023": 0,
       "2024": 0,
+      "2025": 0,
     },
     "octroiEtProlongation": {
       "2017": 0,
@@ -70,6 +75,7 @@ exports[`peut récupérer les statistiques des métaux de métropole 1`] = `
       "2022": 0,
       "2023": 0,
       "2024": 0,
+      "2025": 0,
     },
     "refusees": {
       "2017": 0,
@@ -80,6 +86,7 @@ exports[`peut récupérer les statistiques des métaux de métropole 1`] = `
       "2022": 0,
       "2023": 0,
       "2024": 0,
+      "2025": 0,
     },
     "surface": {
       "2017": 0,
@@ -90,6 +97,7 @@ exports[`peut récupérer les statistiques des métaux de métropole 1`] = `
       "2022": 0,
       "2023": 0,
       "2024": 0,
+      "2025": 0,
     },
   },
   "substances": {

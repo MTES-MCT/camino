@@ -78,7 +78,7 @@ const titreActiviteSectionsBuild = (activiteTypeId: string, sections: ActiviteSe
 }
 
 const titreActiviteFind = (activiteTypeId: ActivitesTypesId, annee: CaminoAnnee, periodeId: number, titreActivites?: ITitreActivite[] | null): boolean =>
-  titreActivites?.some(a => a.typeId === activiteTypeId && a.annee === annee && a.periodeId === periodeId) ?? false
+  titreActivites?.some(a => a.typeId === activiteTypeId && a.annee === parseInt(annee, 10) && a.periodeId === periodeId) ?? false
 
 /**
  * Construit une activité (si elle n'existe pas déjà)
@@ -128,7 +128,7 @@ const titreActiviteBuild = (
     typeId,
     activiteStatutId: ACTIVITES_STATUTS_IDS.ABSENT,
     periodeId,
-    annee,
+    annee: parseInt(annee, 10),
     sections,
   } as ITitreActivite
 }

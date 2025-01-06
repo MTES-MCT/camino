@@ -10,7 +10,7 @@ import { DemarcheStatutId } from 'camino-common/src/static/demarchesStatuts'
 import { TitreStatutId } from 'camino-common/src/static/titresStatuts'
 import { TitreReference } from 'camino-common/src/titres-references'
 import { SecteursMaritimes } from 'camino-common/src/static/facades'
-import { CaminoAnnee, CaminoDate } from 'camino-common/src/date'
+import { CaminoDate } from 'camino-common/src/date'
 import { EntrepriseDocumentId, EntrepriseId } from 'camino-common/src/entreprise'
 import { RecordPartial } from 'camino-common/src/typescript-tools'
 import { SDOMZoneId } from 'camino-common/src/static/sdom'
@@ -195,7 +195,7 @@ export interface ITitreActivite {
   typeId: ActivitesTypesId
   activiteStatutId: ActivitesStatutId
   periodeId: number
-  annee: CaminoAnnee
+  annee: number
   utilisateurId?: string | null
   dateSaisie?: CaminoDate
   contenu?: IContenu | null

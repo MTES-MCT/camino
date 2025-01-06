@@ -28,7 +28,7 @@ class TitresActivites extends Model {
       typeId: { type: 'string', maxLength: 3 },
       activiteStatutId: { type: 'string', maxLength: 3 },
       periodeId: { type: 'integer' },
-      annee: { type: 'string' },
+      annee: { type: 'integer' },
       sections: {},
     },
   }

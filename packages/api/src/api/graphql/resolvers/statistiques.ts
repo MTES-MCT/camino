@@ -8,12 +8,12 @@ import { Statistiques } from 'camino-common/src/statistiques'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { DEMARCHES_TYPES_IDS } from 'camino-common/src/static/demarchesTypes'
 import { ACTIVITES_STATUTS_IDS } from 'camino-common/src/static/activitesStatuts'
-import { CaminoAnnee, getAnnee, toCaminoAnnee, toCaminoDate } from 'camino-common/src/date'
+import { CaminoAnnee, getAnnee, toCaminoDate } from 'camino-common/src/date'
 import { isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools'
 import { getTitresModifiesByMonth } from '../../rest/journal.queries'
 import { callAndExit } from '../../../tools/fp-tools'
 
-const ACTIVITE_ANNEE_DEBUT = toCaminoAnnee(2018)
+const ACTIVITE_ANNEE_DEBUT = 2018 as const
 
 export const statistiquesGlobales = async (_: unknown, { pool }: Context): Promise<Statistiques> => {
   try {
