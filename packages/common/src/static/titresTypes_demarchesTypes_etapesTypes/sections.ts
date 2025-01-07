@@ -58,7 +58,14 @@ const publicationAuJorf: Section[] = [
     id: 'publication',
     nom: 'Références Légifrance',
     elements: [
-      { id: 'jorf', nom: 'Numéro JORF', type: 'text', optionnel: false, description: '' },
+      {
+        id: 'jorf',
+        nom: 'Numéro JORF',
+        type: 'text',
+        optionnel: false,
+        description:
+          "Le numéro de JORF à rentrer est la dernière partie de l'URL du JORF. <br /> Par exemple dans l'URL https://www.legifrance.gouv.fr/jorf/id/JORFTEXTXXXXXXXXXX le numéro est <b>JORFTEXTXXXXXXXXXX</b>",
+      },
       { id: 'nor', nom: 'Numéro NOR', type: 'text', optionnel: true, description: '' },
     ],
   },
@@ -69,7 +76,14 @@ const publication: Section[] = [
     nom: 'Références Légifrance',
 
     elements: [
-      { id: 'jorf', nom: 'Numéro JORF', type: 'text', optionnel: true, description: '' },
+      {
+        id: 'jorf',
+        nom: 'Numéro JORF',
+        type: 'text',
+        optionnel: true,
+        description:
+          "Le numéro de JORF à rentrer est la dernière partie de l'URL du JORF. <br /> Par exemple dans l'URL https://www.legifrance.gouv.fr/jorf/id/JORFTEXTXXXXXXXXXX le numéro est <b>JORFTEXTXXXXXXXXXX</b>",
+      },
       { id: 'nor', nom: 'Numéro NOR', type: 'text', optionnel: true, description: '' },
     ],
   },
