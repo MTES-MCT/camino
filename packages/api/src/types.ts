@@ -41,7 +41,7 @@ export const TitreEtapesTravauxTypes = {
   DepotDemande: 'wdd',
   DemandeComplements: 'wdc',
   ReceptionComplements: 'wrc',
-  Recevabilite: 'wre',
+  RecevabiliteDeLaDemande: ETAPES_TYPES.recevabiliteDeLaDemande,
   AvisReception: 'war',
   SaisineAutoriteEnvironmentale: 'wse',
   AvisAutoriteEnvironmentale: 'wae',

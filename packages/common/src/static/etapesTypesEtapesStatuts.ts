@@ -223,10 +223,6 @@ export const EtapesTypesEtapesStatuts = {
   arretePrefectoralDePremierDonnerActe_DADT_: { FAIT: { etapeTypeId: 'wpp', etapeStatutId: 'fai' } },
   arretePrefectoralDeSursisAStatuer: { FAIT: { etapeTypeId: 'wps', etapeStatutId: 'fai' } },
   receptionDeComplements_wrc: { FAIT: { etapeTypeId: 'wrc', etapeStatutId: 'fai' } },
-  recevabilite: {
-    FAVORABLE: { etapeTypeId: 'wre', etapeStatutId: 'fav' },
-    DEFAVORABLE: { etapeTypeId: 'wre', etapeStatutId: 'def' },
-  },
   recolement: {
     FAVORABLE: { etapeTypeId: 'wrt', etapeStatutId: 'fav' },
     DEFAVORABLE: { etapeTypeId: 'wrt', etapeStatutId: 'def' },

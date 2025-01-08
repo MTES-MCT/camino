@@ -125,6 +125,7 @@ const EtapesTypesDocumentsTypes = {
   ],
   [ETAPES_TYPES.completudeDeLaDemande]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.ficheDeCompletude, optionnel: true }],
   [ETAPES_TYPES.recevabiliteDeLaDemande]: [
+    { documentTypeId: DOCUMENTS_TYPES_IDS.avis, optionnel: true },
     { documentTypeId: DOCUMENTS_TYPES_IDS.courrierDeNotificationDeLaRecevabilite, optionnel: true },
     { documentTypeId: DOCUMENTS_TYPES_IDS.facture, optionnel: true },
     { documentTypeId: DOCUMENTS_TYPES_IDS.lettre, optionnel: true },
@@ -301,11 +302,6 @@ const EtapesTypesDocumentsTypes = {
   [ETAPES_TYPES.receptionDeComplements_wrc]: [
     { documentTypeId: DOCUMENTS_TYPES_IDS.complementsAuDossierDeDemande, optionnel: true },
     { documentTypeId: DOCUMENTS_TYPES_IDS.documentsCartographiques, optionnel: true },
-  ],
-  [ETAPES_TYPES.recevabilite]: [
-    { documentTypeId: DOCUMENTS_TYPES_IDS.avis, optionnel: true },
-    { documentTypeId: DOCUMENTS_TYPES_IDS.courrierDeNotificationDeLaRecevabilite, optionnel: true },
-    { documentTypeId: DOCUMENTS_TYPES_IDS.rapportDeRecevabilite, optionnel: true },
   ],
   [ETAPES_TYPES.recolement]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.pvDeRecolement, optionnel: true }],
   [ETAPES_TYPES.saisineDeLautoriteEnvironnementale]: [

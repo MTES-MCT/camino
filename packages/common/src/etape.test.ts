@@ -11,7 +11,7 @@ test('documentIdValidator', () => {
 
 test('getStatutId', () => {
   expect(
-    getStatutId({ typeId: ETAPES_TYPES.recevabilite, date: caminoDateValidator.parse('2020-01-01'), statutId: ETAPES_STATUTS.ACCEPTE, contenu: {} }, caminoDateValidator.parse('2020-01-01'))
+    getStatutId({ typeId: ETAPES_TYPES.recevabiliteDeLaDemande, date: caminoDateValidator.parse('2020-01-01'), statutId: ETAPES_STATUTS.ACCEPTE, contenu: {} }, caminoDateValidator.parse('2020-01-01'))
   ).toBe(ETAPES_STATUTS.ACCEPTE)
 
   expect(

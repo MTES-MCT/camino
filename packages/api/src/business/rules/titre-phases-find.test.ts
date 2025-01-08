@@ -13,6 +13,7 @@ import { ETAPES_STATUTS } from 'camino-common/src/static/etapesStatuts'
 import { ETAPE_IS_BROUILLON, ETAPE_IS_NOT_BROUILLON, etapeSlugValidator } from 'camino-common/src/etape'
 import { FeatureMultiPolygon } from 'camino-common/src/perimetre'
 import { km2Validator } from 'camino-common/src/number'
+import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes'
 const titresProd = require('./titre-phases-find.cas.json') // eslint-disable-line
 
 export type TitrePhasesTest = [TitreTypeId, TitreDemarchePhaseFind[]]
@@ -589,7 +590,7 @@ describe("phases d'une démarche", () => {
             ordre: 2,
             isBrouillon: ETAPE_IS_NOT_BROUILLON,
             date: toCaminoDate('2014-08-25'),
-            typeId: 'wre',
+            typeId: ETAPES_TYPES.recevabiliteDeLaDemande,
             statutId: 'fav',
             concurrence: 'non-applicable',
             hasTitreFrom: 'non-applicable',

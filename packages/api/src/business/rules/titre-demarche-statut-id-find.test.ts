@@ -488,8 +488,8 @@ describe("statut d'une démarche", () => {
   test.each<[EtapeTypeId, EtapeStatutId, DemarcheStatutId]>([
     [Travaux.DemandeAutorisationOuverture, ETAPES_STATUTS.FAIT, Demarches.Depose],
     [Travaux.DepotDemande, ETAPES_STATUTS.FAIT, Demarches.Depose],
-    [Travaux.Recevabilite, ETAPES_STATUTS.DEFAVORABLE, Demarches.EnInstruction],
-    [Travaux.Recevabilite, ETAPES_STATUTS.FAVORABLE, Demarches.EnInstruction],
+    [Travaux.RecevabiliteDeLaDemande, ETAPES_STATUTS.DEFAVORABLE, Demarches.EnInstruction],
+    [Travaux.RecevabiliteDeLaDemande, ETAPES_STATUTS.FAVORABLE, Demarches.EnInstruction],
     [Travaux.DemandeComplements, ETAPES_STATUTS.FAIT, Demarches.EnInstruction],
     [Travaux.ReceptionComplements, ETAPES_STATUTS.FAIT, Demarches.EnInstruction],
     [Travaux.SaisineAutoriteEnvironmentale, ETAPES_STATUTS.FAIT, Demarches.EnInstruction],
@@ -511,8 +511,8 @@ describe("statut d'une démarche", () => {
   test.each<[EtapeTypeId, EtapeStatutId, DemarcheStatutId]>([
     [Travaux.DeclarationOuverture, ETAPES_STATUTS.FAIT, Demarches.Depose],
     [Travaux.DepotDemande, ETAPES_STATUTS.FAIT, Demarches.Depose],
-    [Travaux.Recevabilite, ETAPES_STATUTS.DEFAVORABLE, Demarches.EnInstruction],
-    [Travaux.Recevabilite, ETAPES_STATUTS.FAVORABLE, Demarches.EnInstruction],
+    [Travaux.RecevabiliteDeLaDemande, ETAPES_STATUTS.DEFAVORABLE, Demarches.EnInstruction],
+    [Travaux.RecevabiliteDeLaDemande, ETAPES_STATUTS.FAVORABLE, Demarches.EnInstruction],
     [Travaux.DemandeComplements, ETAPES_STATUTS.FAIT, Demarches.EnInstruction],
     [Travaux.ReceptionComplements, ETAPES_STATUTS.FAIT, Demarches.EnInstruction],
     [Travaux.AvisDesServicesEtCommissionsConsultatives, ETAPES_STATUTS.FAIT, Demarches.EnInstruction],
@@ -530,8 +530,8 @@ describe("statut d'une démarche", () => {
   test.each<[EtapeTypeId, EtapeStatutId, DemarcheStatutId]>([
     [Travaux.DeclarationArret, ETAPES_STATUTS.FAIT, Demarches.Depose],
     [Travaux.DepotDemande, ETAPES_STATUTS.FAIT, Demarches.Depose],
-    [Travaux.Recevabilite, ETAPES_STATUTS.DEFAVORABLE, Demarches.EnInstruction],
-    [Travaux.Recevabilite, ETAPES_STATUTS.FAVORABLE, Demarches.EnInstruction],
+    [Travaux.RecevabiliteDeLaDemande, ETAPES_STATUTS.DEFAVORABLE, Demarches.EnInstruction],
+    [Travaux.RecevabiliteDeLaDemande, ETAPES_STATUTS.FAVORABLE, Demarches.EnInstruction],
     [Travaux.AvisReception, ETAPES_STATUTS.FAVORABLE, Demarches.EnInstruction],
     [Travaux.AvisDesServicesEtCommissionsConsultatives, ETAPES_STATUTS.FAIT, Demarches.EnInstruction],
     [Travaux.ArretePrefectoralSursis, ETAPES_STATUTS.FAIT, Demarches.EnInstruction],

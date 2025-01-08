@@ -230,7 +230,7 @@ const statuts: RecordPartial<EtapeTypeId, DemarcheStatutId> = {
   [Travaux.DepotDemande]: DemarchesStatutsIds.Depose,
   [Travaux.DemandeComplements]: DemarchesStatutsIds.EnInstruction,
   [Travaux.ReceptionComplements]: DemarchesStatutsIds.EnInstruction,
-  [Travaux.Recevabilite]: DemarchesStatutsIds.EnInstruction,
+  [Travaux.RecevabiliteDeLaDemande]: DemarchesStatutsIds.EnInstruction,
   [Travaux.AvisReception]: DemarchesStatutsIds.EnInstruction,
   [Travaux.SaisineAutoriteEnvironmentale]: DemarchesStatutsIds.EnInstruction,
   [Travaux.AvisAutoriteEnvironmentale]: DemarchesStatutsIds.EnInstruction,
