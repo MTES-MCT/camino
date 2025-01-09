@@ -11,7 +11,6 @@ test('getEtapesTDE', () => {
       "mcd",
       "mcb",
       "dae",
-      "mom",
       "men",
       "mod",
       "pfd",

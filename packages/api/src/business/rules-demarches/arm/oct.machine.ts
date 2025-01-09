@@ -35,7 +35,6 @@ type XStateEvent =
   | { type: 'DEMANDER_MODIFICATION_DE_LA_DEMANDE' }
   | { type: 'MODIFIER_DEMANDE' }
   | { type: 'EXEMPTER_DAE' }
-  | { type: 'MODIFIER_DEMANDE_APRES_DAE' }
   | { type: 'DEMANDER_COMPLEMENTS_DAE' }
   | { type: 'RECEVOIR_COMPLEMENTS_DAE' }
   | { type: 'REFUSER_COMPLETUDE' }
@@ -95,7 +94,6 @@ const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
   CLASSER_SANS_SUITE: { db: EtapesTypesEtapesStatuts.classementSansSuite, mainStep: false },
   DEMANDER_COMPLEMENTS_DAE: { db: EtapesTypesEtapesStatuts.demandeDeComplements_DecisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_, mainStep: false },
   RECEVOIR_COMPLEMENTS_DAE: { db: EtapesTypesEtapesStatuts.receptionDeComplements_DecisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet__, mainStep: false },
-  MODIFIER_DEMANDE_APRES_DAE: { db: EtapesTypesEtapesStatuts.modificationDeLaDemande_DecisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_, mainStep: true },
   REFUSER_COMPLETUDE: {
     db: {
       INCOMPLETE: EtapesTypesEtapesStatuts.completudeDeLaDemande.INCOMPLETE,
@@ -530,7 +528,7 @@ const armOctMachine = createMachine({
                     },
                     modificationDeLaDemandeAFaire: {
                       on: {
-                        MODIFIER_DEMANDE_APRES_DAE: 'modificationDeLaDemandeFaite',
+                        MODIFIER_DEMANDE: 'modificationDeLaDemandeFaite',
                       },
                     },
                     decisionAutoriteEnvironnementaleExemptee: { type: 'final' },

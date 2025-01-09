@@ -401,7 +401,6 @@ const AdministrationsTitresTypesEtapesTypes: {
       [ETAPES_TYPES.demandeDinformations]: { lectureInterdit: false, creationInterdit: false, modificationInterdit: false },
       [ETAPES_TYPES.notificationAuDemandeur]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.modificationDeLaDemande]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
-      [ETAPES_TYPES.modificationDeLaDemande_DecisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.notificationDesCollectivitesLocales]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.publicationDansUnJournalLocalOuNational]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.receptionDeComplements_RecevabiliteDeLaDemande_]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },

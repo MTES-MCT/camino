@@ -5,10 +5,10 @@ import { EtapeBrouillon } from '../etape'
 
 // prettier-ignore
 
-const IDS = ["abd", "aca","aco","and","anf","def","dex","dim", "dpu", "ihi", "mfr","mod","mom","rca","rcb","rcd","rcm","rco","rcs","rie","rif","rim","rmc", "rpu","sco","acg","acf","apd","ape","apo","app","apu","cac","cim","css","dae","ddc","des","dma", "ede","edm","epu","esb", "ipc", "mca","mcb","mcd", "mci","mcm","mco","mcp","mcr","mcs","mec","men","meo","mie","mif","mim","mna","mnb","mnc","mnd","mni","mno","mns","mnv","mpb", "ncl","npp","pfc","pfd","ppu","pqr","rcg","rde","rno","rpe","sas","sca","scg","spe","spo","spp","vfc","vfd","wab","wae","wao","war","wau","wda","wdc","wdd","wde","wfa","wfd","wfo","wmt","wpb","wpc","wpo","wpp","wps","wrc","wrt","wse","wtp", "asc", "adc"] as const
+const IDS = ["abd", "aca","aco","and","anf","def","dex","dim", "dpu", "ihi", "mfr","mod","rca","rcb","rcd","rcm","rco","rcs","rie","rif","rim","rmc", "rpu","sco","acg","acf","apd","ape","apo","app","apu","cac","cim","css","dae","ddc","des","dma", "ede","edm","epu","esb", "ipc", "mca","mcb","mcd", "mci","mcm","mco","mcp","mcr","mcs","mec","men","meo","mie","mif","mim","mna","mnb","mnc","mnd","mni","mno","mns","mnv","mpb", "ncl","npp","pfc","pfd","ppu","pqr","rcg","rde","rno","rpe","sas","sca","scg","spe","spo","spp","vfc","vfd","wab","wae","wao","war","wau","wda","wdc","wdd","wde","wfa","wfd","wfo","wmt","wpb","wpc","wpo","wpp","wps","wrc","wrt","wse","wtp", "asc", "adc"] as const
 
 // prettier-ignore
-const FONDAMENTALES_IDS = ["abd", "aca","aco","and","anf","def","dex","dim", "dpu","ihi", "mfr","mod","mom","rca","rcb","rcd","rcm","rco","rcs","rie","rif","rim","rmc", "rpu","sco"] as const satisfies Readonly<EtapeTypeIdFondamentaleArray>
+const FONDAMENTALES_IDS = ["abd", "aca","aco","and","anf","def","dex","dim", "dpu","ihi", "mfr","mod","rca","rcb","rcd","rcm","rco","rcs","rie","rif","rim","rmc", "rpu","sco"] as const satisfies Readonly<EtapeTypeIdFondamentaleArray>
 
 // prettier-ignore
 const NON_FONDAMENTALES_IDS = ["acg", "acf","apd","ape","apo","app","apu","cac","cim","css","dae","ddc","des","dma", "ede","edm","epu","esb","ipc", "mca","mcb","mcd","mci", "mcm","mco","mcp","mcr", "mcs","mec","men","meo","mie","mif","mim","mna","mnb","mnc","mnd","mni","mno","mns","mnv","mpb", "ncl","npp","pfc","pfd","ppu","pqr","rcg","rde","rno", "rpe","sas","sca","scg","spe","spo","spp","vfc","vfd","wab","wae","wao","war","wau","wda","wdc","wdd","wde","wfa","wfd","wfo","wmt","wpb","wpc","wpo","wpp","wps","wrc","wrt","wse","wtp", "asc", "adc"] as const satisfies Readonly<EtapeTypeIdNonFondamentale[]>
@@ -67,7 +67,6 @@ export const ETAPES_TYPES = {
   notificationAuDemandeur_SignatureDeLautorisationDeRechercheMiniere_: 'mns',
   notificationAuDemandeur_SignatureDeLavenantALautorisationDeRechercheMiniere_: 'mnv',
   modificationDeLaDemande: 'mod',
-  modificationDeLaDemande_DecisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_: 'mom',
   notificationDesCollectivitesLocales: 'ncl',
   notificationAuPrefet: 'npp',
   paiementDesFraisDeDossierComplementaires: 'pfc',
@@ -170,16 +169,6 @@ export const EtapesTypes = {
     date_fin: null,
     public_lecture: false,
     entreprises_lecture: false,
-  },
-  mom: {
-    id: 'mom',
-    nom: 'modification de la demande (décision de la mission autorité environnementale (examen au cas par cas du projet)',
-    description: 'après une dae',
-    fondamentale: true,
-    unique: false,
-    date_fin: null,
-    public_lecture: true,
-    entreprises_lecture: true,
   },
   rcb: {
     id: 'rcb',

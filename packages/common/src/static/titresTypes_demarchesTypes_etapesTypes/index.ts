@@ -584,7 +584,6 @@ const TDE = {
       ETAPES_TYPES.demandeDeComplements_DecisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_,
       ETAPES_TYPES.demandeDeComplements_RecepisseDeDeclarationLoiSurLeau_,
       ETAPES_TYPES.decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_,
-      ETAPES_TYPES.modificationDeLaDemande_DecisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_,
       ETAPES_TYPES.enregistrementDeLaDemande,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.paiementDesFraisDeDossier,
