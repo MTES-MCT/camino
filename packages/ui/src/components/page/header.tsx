@@ -130,7 +130,7 @@ export const Header = defineComponent<Props>(props => {
   }
 
   return () => (
-    <header role="banner" class="fr-header">
+    <header role="banner" class="fr-header noprint">
       <div class="fr-header__body">
         <div class="fr-container">
           <div class="fr-header__body-row">

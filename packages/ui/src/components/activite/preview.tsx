@@ -87,7 +87,7 @@ export const Preview = defineComponent<Props>(props => {
       </nav>
       <div class="fr-grid-row fr-grid-row--top fr-mt-4w">
         <h1 class="fr-m-0">{activiteTitle}</h1>
-        <div class="fr-m-0" style={{ marginLeft: 'auto !important', display: 'flex', gap: '1rem' }}>
+        <div class="fr-m-0 noprint" style={{ marginLeft: 'auto !important', display: 'flex', gap: '1rem' }}>
           {props.activite.suppression ? <DsfrButtonIcon buttonType="tertiary" title="supprimer l'activité" onClick={removePopupOpen} icon="fr-icon-delete-bin-line" /> : null}
           {props.activite.modification ? (
             <>
