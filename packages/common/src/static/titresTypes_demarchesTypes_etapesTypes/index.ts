@@ -19,7 +19,7 @@ const travaux = {
     ETAPES_TYPES.transmissionDuProjetDePrescriptionsAuDemandeur,
     ETAPES_TYPES.avisDuDemandeurSurLesPrescriptionsProposees,
     ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs,
-    ETAPES_TYPES.abandonDeLaDemande,
+    ETAPES_TYPES.desistementDuDemandeur,
     ETAPES_TYPES.decisionDeLAutoriteAdministrative,
     ETAPES_TYPES.arreteDouvertureDesTravauxMiniers,
   ],
@@ -35,7 +35,7 @@ const travaux = {
     ETAPES_TYPES.transmissionDuProjetDePrescriptionsAuDemandeur,
     ETAPES_TYPES.avisDuDemandeurSurLesPrescriptionsProposees,
     ETAPES_TYPES.donneActeDeLaDeclaration_DOTM_,
-    ETAPES_TYPES.abandonDeLaDemande,
+    ETAPES_TYPES.desistementDuDemandeur,
   ],
   [DEMARCHES_TYPES_IDS.DeclarationDArretDefinitifDesTravaux]: [
     ETAPES_TYPES.declarationDarretDefinitifDeTravaux_DADT_,

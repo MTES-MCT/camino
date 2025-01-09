@@ -501,7 +501,7 @@ describe("statut d'une démarche", () => {
     [Travaux.AvisPrescriptionsDemandeur, ETAPES_STATUTS.FAIT, Demarches.EnInstruction],
     [Travaux.ArreteOuvertureTravauxMiniers, ETAPES_STATUTS.FAIT, Demarches.Accepte],
     [Travaux.PubliDecisionRecueilActesAdmin, ETAPES_STATUTS.FAIT, Demarches.Accepte],
-    [Travaux.Abandon, ETAPES_STATUTS.FAIT, Demarches.Desiste],
+    [Travaux.DesistementDuDemandeur, ETAPES_STATUTS.FAIT, Demarches.Desiste],
   ])("pour une démarche de travaux de type 'AutorisationDOuvertureDeTravaux' sur un titre, dont la dernière étape est '%s' au statut %s, le résultat est %s", (etapeTypeId, statutId, resultId) => {
     expect(
       titreDemarcheStatutIdFind(DEMARCHES_TYPES_IDS.AutorisationDOuvertureDeTravaux, etapesBuild([{ typeId: etapeTypeId, statutId }]), TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_METAUX, newDemarcheId())
@@ -520,7 +520,7 @@ describe("statut d'une démarche", () => {
     [Travaux.TransPrescriptionsDemandeur, ETAPES_STATUTS.FAIT, Demarches.EnInstruction],
     [Travaux.AvisPrescriptionsDemandeur, ETAPES_STATUTS.FAIT, Demarches.EnInstruction],
     [Travaux.DonneActeDeclaration, ETAPES_STATUTS.FAIT, Demarches.Accepte],
-    [Travaux.Abandon, ETAPES_STATUTS.FAIT, Demarches.Desiste],
+    [Travaux.DesistementDuDemandeur, ETAPES_STATUTS.FAIT, Demarches.Desiste],
   ])("pour une démarche de travaux de type 'DeclarationDOuvertureDeTravaux' sur un titre, dont la dernière étape est '%s' au statut %s, le résultat est %s", (etapeTypeId, statutId, resultId) => {
     expect(
       titreDemarcheStatutIdFind(DEMARCHES_TYPES_IDS.DeclarationDOuvertureDeTravaux, etapesBuild([{ typeId: etapeTypeId, statutId }]), TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_METAUX, newDemarcheId())
@@ -544,7 +544,7 @@ describe("statut d'une démarche", () => {
     [Travaux.ArretePrefectDonneActe2, ETAPES_STATUTS.ACCEPTE, Demarches.FinPoliceMines],
     [Travaux.PubliDecisionRecueilActesAdmin, ETAPES_STATUTS.FAIT, Demarches.FinPoliceMines],
     [Travaux.PorterAConnaissance, ETAPES_STATUTS.FAIT, Demarches.FinPoliceMines],
-    [Travaux.Abandon, ETAPES_STATUTS.FAIT, Demarches.Desiste],
+    [Travaux.DesistementDuDemandeur, ETAPES_STATUTS.FAIT, Demarches.Desiste],
   ])(
     "pour une démarche de travaux de type 'DeclarationDArretDefinitifDesTravaux' sur un titre, dont la dernière étape est '%s' au statut %s, le résultat est %s",
     (etapeTypeId, statutId, resultId) => {

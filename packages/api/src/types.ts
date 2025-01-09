@@ -58,7 +58,7 @@ export const TitreEtapesTravauxTypes = {
   ArreteOuvertureTravauxMiniers: 'wao',
   MemoireFinTravaux: 'wmt',
   Recolement: 'wrt',
-  Abandon: 'wab',
+  DesistementDuDemandeur: ETAPES_TYPES.desistementDuDemandeur,
   DecisionAdmin: ETAPES_TYPES.decisionDeLAutoriteAdministrative,
   PorterAConnaissance: 'wpb',
 } as const satisfies Record<string, EtapeTypeId>

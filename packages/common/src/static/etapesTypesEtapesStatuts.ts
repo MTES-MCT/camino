@@ -197,7 +197,6 @@ export const EtapesTypesEtapesStatuts = {
   saisineDuPrefet: { FAIT: { etapeTypeId: 'spp', etapeStatutId: 'fai' } },
   validationDuPaiementDesFraisDeDossierComplementaires: { FAIT: { etapeTypeId: 'vfc', etapeStatutId: 'fai' } },
   validationDuPaiementDesFraisDeDossier: { FAIT: { etapeTypeId: 'vfd', etapeStatutId: 'fai' } },
-  abandonDeLaDemande: { FAIT: { etapeTypeId: 'wab', etapeStatutId: 'fai' } },
   avisDeLautoriteEnvironnementale: {
     FAVORABLE: { etapeTypeId: 'wae', etapeStatutId: 'fav' },
     DEFAVORABLE: { etapeTypeId: 'wae', etapeStatutId: 'def' },

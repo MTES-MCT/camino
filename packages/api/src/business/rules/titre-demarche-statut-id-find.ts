@@ -246,7 +246,7 @@ const statuts: RecordPartial<EtapeTypeId, DemarcheStatutId> = {
   [Travaux.Recolement]: DemarchesStatutsIds.EnInstruction,
   [Travaux.ArreteOuvertureTravauxMiniers]: DemarchesStatutsIds.Accepte,
   [Travaux.DonneActeDeclaration]: DemarchesStatutsIds.Accepte,
-  [Travaux.Abandon]: DemarchesStatutsIds.Desiste,
+  [Travaux.DesistementDuDemandeur]: DemarchesStatutsIds.Desiste,
   [Travaux.ArretePrefectDonneActe2]: DemarchesStatutsIds.FinPoliceMines,
   [Travaux.PorterAConnaissance]: DemarchesStatutsIds.FinPoliceMines,
   [Travaux.DecisionAdmin]: DemarchesStatutsIds.Indetermine,

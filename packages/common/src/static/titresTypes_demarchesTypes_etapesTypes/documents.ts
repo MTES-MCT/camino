@@ -263,7 +263,6 @@ const EtapesTypesDocumentsTypes = {
     { documentTypeId: DOCUMENTS_TYPES_IDS.facture, optionnel: true },
     { documentTypeId: DOCUMENTS_TYPES_IDS.justificatifDePaiement, optionnel: true },
   ],
-  [ETAPES_TYPES.abandonDeLaDemande]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.courrier, optionnel: true }],
   [ETAPES_TYPES.avisDeLautoriteEnvironnementale]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.avis, optionnel: true }],
   [ETAPES_TYPES.arreteDouvertureDesTravauxMiniers]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.arretePrefectoral, optionnel: true }],
   [ETAPES_TYPES.avisDeReception]: [

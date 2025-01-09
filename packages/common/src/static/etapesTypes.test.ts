@@ -15,7 +15,6 @@ test('isEtapeTypeIdFondamentale', () => {
   }, {})
   expect(result).toMatchInlineSnapshot(`
     {
-      "abandonDeLaDemande": false,
       "abrogationDeLaDecision": true,
       "arreteDePrescriptionsComplementaires": false,
       "arreteDeSecondDonnerActe": false,
@@ -135,7 +134,6 @@ test('canBeBrouillon', () => {
   }, {})
   expect(result).toMatchInlineSnapshot(`
     {
-      "abandonDeLaDemande": false,
       "abrogationDeLaDecision": false,
       "arreteDePrescriptionsComplementaires": false,
       "arreteDeSecondDonnerActe": false,
@@ -255,7 +253,6 @@ test('isEtapeDecision', () => {
   }, {})
   expect(result).toMatchInlineSnapshot(`
     {
-      "abandonDeLaDemande": false,
       "abrogationDeLaDecision": false,
       "arreteDePrescriptionsComplementaires": false,
       "arreteDeSecondDonnerActe": false,
@@ -376,7 +373,6 @@ test('isEtapeWithAutomaticStatuts', () => {
   }, {})
   expect(result).toMatchInlineSnapshot(`
     {
-      "abandonDeLaDemande": false,
       "abrogationDeLaDecision": false,
       "arreteDePrescriptionsComplementaires": false,
       "arreteDeSecondDonnerActe": false,
