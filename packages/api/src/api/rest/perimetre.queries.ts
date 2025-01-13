@@ -9,14 +9,15 @@ import { TitreStatutId, TitresStatutIds, titreStatutIdValidator } from 'camino-c
 import { DOMAINES_IDS, DomaineId } from 'camino-common/src/static/domaines'
 import { TitreSlug, titreSlugValidator } from 'camino-common/src/validators/titres'
 import { communeIdValidator } from 'camino-common/src/static/communes'
-import { secteurDbIdValidator } from 'camino-common/src/static/facades'
+import { getDepartementsBySecteurs, getSecteurMaritime, secteurDbIdValidator } from 'camino-common/src/static/facades'
 import { foretIdValidator } from 'camino-common/src/static/forets'
 import { sdomZoneIdValidator } from 'camino-common/src/static/sdom'
 import { KM2, M2, km2Validator, m2Validator } from 'camino-common/src/number'
-import { isNullOrUndefined } from 'camino-common/src/typescript-tools'
+import { isNullOrUndefined, onlyUnique } from 'camino-common/src/typescript-tools'
 import { ZodUnparseable, zodParseEffect, zodParseEffectCallback } from '../../tools/fp-tools'
 import { CaminoError } from 'camino-common/src/zod-tools'
 import { Effect, pipe } from 'effect'
+import { departementIdValidator, toDepartementId } from 'camino-common/src/static/departement'
 
 const arrayTuple4326CoordinateValidator = z.array(z.tuple([z.number().min(-180).max(180), z.number().min(-90).max(90)]))
 const convertPointsStringifyError = 'Impossible de transformer la feature collection' as const
@@ -205,12 +206,16 @@ export const getGeojsonInformation = (pool: Pool, geojson4326_perimetre: MultiPo
     effectDbQueryAndValidate(getGeojsonInformationDb, { geojson4326_perimetre }, pool, getGeojsonInformationDbValidator),
     Effect.bind('response', result => (result.length === 1 ? Effect.succeed(result[0]) : Effect.fail({ message: requestError }))),
     Effect.bind('surface', result => m2ToKm2(result.response.surface)),
+    Effect.let('secteursMaritime', ({ response }) => response.secteurs.map(s => getSecteurMaritime(s))),
+    Effect.let('departements', ({ response, secteursMaritime }) => {
+      return [...getDepartementsBySecteurs(secteursMaritime), ...response.communes.map(c => toDepartementId(c.id))].filter(onlyUnique)
+    }),
     Effect.filterOrFail(
       ({ response }) => response.surface <= SURFACE_M2_MAX,
       () => ({ message: 'Problème de validation de données' as const, detail: `Le périmètre ne doit pas excéder ${SURFACE_M2_MAX}M²` })
     ),
-    Effect.map(({ response, surface }) => {
-      return { ...response, surface }
+    Effect.map(({ response, departements, surface }) => {
+      return { ...response, departements, surface }
     })
   )
 }
@@ -231,6 +236,7 @@ const getGeojsonInformationValidator = z.object({
     .nullable()
     .transform(nullToEmptyArray),
   secteurs: z.array(secteurDbIdValidator).nullable().transform(nullToEmptyArray),
+  departements: z.array(departementIdValidator).nullable().transform(nullToEmptyArray),
 })
 
 // Surface maximale acceptée pour un titre

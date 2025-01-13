@@ -17,7 +17,6 @@ interface GetDepotProps {
   etapeTypeId?: EtapeTypeId
   titreTypeId?: TitreTypeId
 }
-// TODO 2023-09-26 utiliser left et right plutôt que substring et mettre des index comme pour packages/api/src/knex/migrations/20230926083529_add-index-on-left-right.ts
 export const getDepot = async (pool: Pool, params: GetDepotProps): Promise<AnneeCountStatistique[]> => dbQueryAndValidate(getDepotDb, params, pool, anneeCountStatistiqueValidator)
 const getDepotDb = sql<Redefine<IGetDepotDbQuery, GetDepotProps, AnneeCountStatistique>>`
 select
@@ -34,14 +33,7 @@ where
     and td.type_id in $$ demarcheTypeIds
     and t.type_id = $ titreTypeId
     and substring(et. "date", 0, 5)::int >= $ anneeDepart
-    and exists (
-        select
-            *
-        from
-            jsonb_array_elements(etapes_communes.communes) as c
-        where (substring(c ->> 'id', 1, 2) != '97'
-            and substring(c ->> 'id', 1, 2) in $$ departements)
-        or substring(c ->> 'id', 1, 3) in $$ departements)
+    and etapes_communes.departements ?| $departements
 group by
     substring(et. "date", 0, 5)
 `
@@ -66,14 +58,7 @@ where
     td.type_id in $$ demarcheTypeIds
     and t.type_id = $ titreTypeId
     and substring(td. "demarche_date_debut", 0, 5)::int >= $ anneeDepart
-    and exists (
-        select
-            *
-        from
-            jsonb_array_elements(t_points.communes) as c
-        where (substring(c ->> 'id', 1, 2) != '97'
-            and substring(c ->> 'id', 1, 2) in $$ departements)
-        or substring(c ->> 'id', 1, 3) in $$ departements)
+    and t_points.departements ?| $ departements
 group by
     substring(td. "demarche_date_debut", 0, 5)
 `
@@ -97,14 +82,7 @@ where
     td.type_id in $$ demarcheTypeIds
     and t.type_id = $ titreTypeId
     and substring(td. "demarche_date_debut", 0, 5)::int >= $ anneeDepart
-    and exists (
-        select
-            *
-        from
-            jsonb_array_elements(t_points.communes) as c
-        where (substring(c ->> 'id', 1, 2) != '97'
-            and substring(c ->> 'id', 1, 2) in $$ departements)
-        or substring(c ->> 'id', 1, 3) in $$ departements)
+    and t_points.departements ?| $ departements
 group by
     substring(td. "demarche_date_debut", 0, 5)
 `
@@ -142,14 +120,7 @@ and td.type_id in $$ demarcheTypeIds
 and t.type_id = $ titreTypeId
 and td.statut_id in $$ demarcheStatutIds
 and substring(et. "date", 0, 5)::int >= $ anneeDepart
-and exists (
-    select
-        *
-    from
-        jsonb_array_elements(etapes_communes.communes) as c
-    where (substring(c ->> 'id', 1, 2) != '97'
-        and substring(c ->> 'id', 1, 2) in $$ departements)
-    or substring(c ->> 'id', 1, 3) in $$ departements)
+and etapes_communes.departements ?| $ departements
 group by
     substring(et. "date", 0, 5)
 `

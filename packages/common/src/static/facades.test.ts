@@ -1,12 +1,33 @@
-import { assertsFacade, assertsSecteur, getDepartementsBySecteurs, getSecteurMaritime, getSecteurs, secteurAJour } from './facades'
+import { DEPARTEMENT_IDS } from './departement'
+import { assertsFacade, assertsSecteur, getDepartementsBySecteurs, getSecteurMaritime, getSecteurs, getSecteursByDepartements, secteurAJour } from './facades'
 import { test, expect, describe } from 'vitest'
 
-describe('getDepartementsBySecteur()', () => {
+describe('getDepartementsBySecteur', () => {
   test('retourne la liste des départements pour un secteur donné', () => {
     expect(getDepartementsBySecteurs(["Golfe d'Ajaccio", 'Bretagne nord'])).toStrictEqual(['35', '22', '29'])
   })
 })
+describe('getSecteursByDepartements', () => {
+  test('retourne la liste des secteurs maritimes pour un département donnée', () => {
+    expect(getSecteursByDepartements([DEPARTEMENT_IDS.Nord])).toMatchInlineSnapshot(`
+      [
+        "Caps et détroit du Pas de Calais",
+      ]
+    `)
 
+    expect(getSecteursByDepartements([DEPARTEMENT_IDS.Finistère])).toMatchInlineSnapshot(`
+      [
+        "Plateau continental nord",
+        "Plateau continental central",
+        "Manche occidentale",
+        "Bretagne nord",
+        "Parc naturel marin d'Iroise",
+        "Rade de Brest",
+        "Bretagne sud",
+      ]
+    `)
+  })
+})
 describe('getSecteurMaritime()', () => {
   test("retourne le secteur maritime selon l'id", () => {
     expect(getSecteurMaritime(43)).toEqual('Riviera')

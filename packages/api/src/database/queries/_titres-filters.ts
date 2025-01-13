@@ -161,17 +161,17 @@ export const titresFiltersQueryModify = (
   }
 
   departementIds = departementIds.filter(onlyUnique).filter(isDepartementId)
+  if (isNotNullNorUndefinedNorEmpty(departementIds)) {
+    if (name === 'titre') {
+      q.leftJoinRelated('titre')
+    }
+    q.joinRaw(`join titres_etapes as departements_points_etapes on departements_points_etapes.id = ${name}."props_titre_etapes_ids" #>> '{points}'`)
 
-  if (departementIds.length > 0) {
-    q.joinRaw(`join titres_etapes as departements_points_etapes on departements_points_etapes.id = ${name}."props_titre_etapes_ids" #>> '{points}'`).whereRaw(
-      `exists (select 1 from jsonb_array_elements(departements_points_etapes.communes) departements_filter_communes where substring(departements_filter_communes ->> 'id', 1, 2) in (${departementIds
-        .map(() => '?')
-        .join(',')}) or substring(departements_filter_communes ->> 'id', 1, 3) in (${departementIds.map(() => '?').join(',')}))`,
-      [...departementIds, ...departementIds]
-    )
+    q.leftJoinRelated(jointureFormat(name, 'pointsEtape'))
+    q.whereRaw(`?? \\?| array['${departementIds.join("','")}']`, 'departements_points_etapes.departements')
   }
 
-  if (facadesMaritimes && facadesMaritimes.length > 0) {
+  if (isNotNullNorUndefinedNorEmpty(facadesMaritimes)) {
     const secteurs = facadesMaritimes.flatMap(facade => getSecteurs(facade))
     if (name === 'titre') {
       q.leftJoinRelated('titre')

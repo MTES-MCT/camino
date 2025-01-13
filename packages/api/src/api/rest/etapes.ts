@@ -318,7 +318,7 @@ type PerimetreInfos = {
   sdomZones: SDOMZoneId[]
   surface: KM2 | null
 } & Pick<GraphqlEtape, 'geojson4326Forages' | 'geojsonOrigineForages'> &
-  Pick<GetGeojsonInformation, 'communes' | 'forets'>
+  Pick<GetGeojsonInformation, 'communes' | 'forets' | 'departements'>
 export const getPerimetreInfosInternal = (
   pool: Pool,
   geojson4326Perimetre: GraphqlEtape['geojson4326Perimetre'],
@@ -340,11 +340,13 @@ export const getPerimetreInfosInternal = (
     ),
     Effect.bind('geojsonInformation', value => getGeojsonInformation(pool, value.geometry)),
     Effect.bind('forage', () => getForagesProperties(titreTypeId, geojsonOrigineGeoSystemeId, geojsonOrigineForages, pool)),
-    Effect.map(({ geojsonInformation: { surface, communes, forets, secteurs, sdom }, forage: { geojson4326Forages } }) => ({
+    Effect.let('secteursMaritime', ({ geojsonInformation: { secteurs } }) => secteurs.map(s => getSecteurMaritime(s))),
+    Effect.map(({ secteursMaritime, geojsonInformation: { departements, surface, communes, forets, sdom }, forage: { geojson4326Forages } }) => ({
       surface,
       communes,
       forets,
-      secteursMaritime: secteurs.map(s => getSecteurMaritime(s)),
+      secteursMaritime,
+      departements,
       sdomZones: sdom,
       geojson4326Forages,
       geojsonOrigineForages,
@@ -355,6 +357,7 @@ export const getPerimetreInfosInternal = (
         forets: [],
         secteursMaritime: [],
         sdomZones: [],
+        departements: [],
         surface: null,
         geojson4326Forages: null,
         geojsonOrigineForages: null,

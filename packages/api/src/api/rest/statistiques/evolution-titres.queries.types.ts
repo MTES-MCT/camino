@@ -1,10 +1,11 @@
 /** Types generated for queries found in "src/api/rest/statistiques/evolution-titres.queries.ts" */
+export type stringArray = (string)[];
 
 /** 'GetDepotDb' parameters type */
 export interface IGetDepotDbParams {
   anneeDepart?: number | null | void;
   demarcheTypeIds: readonly (string | null | void)[];
-  departements: readonly (string | null | void)[];
+  departements?: stringArray | null | void;
   etapeTypeId?: string | null | void;
   titreTypeId?: string | null | void;
 }
@@ -25,7 +26,7 @@ export interface IGetDepotDbQuery {
 export interface IGetOctroiDbParams {
   anneeDepart?: number | null | void;
   demarcheTypeIds: readonly (string | null | void)[];
-  departements: readonly (string | null | void)[];
+  departements?: stringArray | null | void;
   titreTypeId?: string | null | void;
 }
 
@@ -45,7 +46,7 @@ export interface IGetOctroiDbQuery {
 export interface IGetSurfaceDbParams {
   anneeDepart?: number | null | void;
   demarcheTypeIds: readonly (string | null | void)[];
-  departements: readonly (string | null | void)[];
+  departements?: stringArray | null | void;
   titreTypeId?: string | null | void;
 }
 
@@ -66,7 +67,7 @@ export interface IGetEtapesTypesDecisionRefusDbParams {
   anneeDepart?: number | null | void;
   demarcheStatutIds: readonly (string | null | void)[];
   demarcheTypeIds: readonly (string | null | void)[];
-  departements: readonly (string | null | void)[];
+  departements?: stringArray | null | void;
   etapeStatutFait?: string | null | void;
   etapeStatutRejet: readonly (string | null | void)[];
   etapesTypesDecisionRefus: readonly (string | null | void)[];

@@ -51,6 +51,7 @@ class TitresEtapes extends Model {
       titulaireIds: { type: ['array', 'null'] },
       amodiataireIds: { type: ['array', 'null'] },
       communes: { type: ['array', 'null'] },
+      departements: { type: ['array', 'null'] },
       forets: { type: ['array', 'null'] },
       secteursMaritime: { type: ['array', 'null'] },
       administrationsLocales: { type: ['array', 'null'] },

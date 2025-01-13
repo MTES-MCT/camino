@@ -12,6 +12,7 @@ import type { Pool } from 'pg'
 import { SDOMZoneId } from 'camino-common/src/static/sdom'
 import { M2 } from 'camino-common/src/number'
 import { callAndExit } from '../../tools/fp-tools'
+import { DepartementId } from 'camino-common/src/static/departement'
 
 /**
  * Met à jour tous les territoires d’une liste d’étapes
@@ -41,18 +42,29 @@ export const titresEtapesAreasUpdate = async (pool: Pool, titresEtapesIds?: stri
     }
     try {
       if (isNotNullNorUndefined(titreEtape.geojson4326Perimetre)) {
-        const { forets, sdom, secteurs, communes } = await callAndExit(getGeojsonInformation(pool, titreEtape.geojson4326Perimetre.geometry))
+        const { forets, sdom, secteurs, communes, departements } = await callAndExit(getGeojsonInformation(pool, titreEtape.geojson4326Perimetre.geometry))
 
         await intersectForets(titreEtape, forets)
         await intersectSdom(titreEtape, sdom)
         await intersectCommunes(titreEtape, communes)
         await intersectSecteursMaritime(titreEtape, secteurs)
+        await updateDepartements(titreEtape, departements)
       }
     } catch (e) {
       console.error(`Une erreur est survenue lors du traitement de l'étape ${titreEtape.id}`)
     }
   }
 }
+
+async function updateDepartements(titreEtape: Pick<ITitreEtape, 'id' | 'departements'>, departementIds: DepartementId[]) {
+  const sortedDepartementIds = departementIds.toSorted()
+
+  if (sortedDepartementIds.length !== titreEtape.departements?.length || titreEtape.departements.some((elem, index) => elem !== sortedDepartementIds[index])) {
+    console.info(`nouveaux départements pour l'étape ${titreEtape.id}. Anciens: ${JSON.stringify(titreEtape.departements)}, nouveaux: ${JSON.stringify(sortedDepartementIds)}`)
+    await knex.raw(`update titres_etapes set departements = '["${sortedDepartementIds.join('","')}"]' where id ='${titreEtape.id}'`)
+  }
+}
+
 async function intersectSdom(titreEtape: Pick<ITitreEtape, 'sdomZones' | 'id'>, sdomZonesIds: SDOMZoneId[]) {
   if (sdomZonesIds.length > 0) {
     const sortedSdomZonesIds = sdomZonesIds.toSorted()

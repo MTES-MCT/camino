@@ -25,6 +25,9 @@ exports[`titresEtapesAreasUpdate > met à jour les communes, forêts et zone du 
     "dateFin": null,
     "demarcheIdEnConcurrence": null,
     "demarcheIdsConsentement": [],
+    "departements": [
+      "973",
+    ],
     "duree": null,
     "etapeFondamentaleId": "titreEtapeIdUniquePourMiseAJourAreas",
     "forets": [
@@ -170,6 +173,9 @@ exports[`titresEtapesAreasUpdate > met à jour les communes, forêts et zone du 
       "dateFin": null,
       "demarcheIdEnConcurrence": null,
       "demarcheIdsConsentement": [],
+      "departements": [
+        "973",
+      ],
       "duree": null,
       "etapeFondamentaleId": "titreEtapeIdUniquePourMiseAJourAreas",
       "forets": [

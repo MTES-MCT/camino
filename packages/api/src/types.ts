@@ -1,5 +1,5 @@
 import { AdministrationId } from 'camino-common/src/static/administrations'
-import { CodePostal } from 'camino-common/src/static/departement'
+import { CodePostal, DepartementId } from 'camino-common/src/static/departement'
 import { User } from 'camino-common/src/roles'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
@@ -251,6 +251,7 @@ export type ITitreEtape = {
   entrepriseDocumentIds?: EntrepriseDocumentId[] | null
   etapeDocuments?: unknown[]
   communes?: ICommune[] | null
+  departements?: DepartementId[] | null
   forets?: ForetId[] | null
   sdomZones?: SDOMZoneId[] | null
   secteursMaritime?: SecteursMaritimes[] | null

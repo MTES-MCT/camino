@@ -103,15 +103,17 @@ describe('titresEtapesAreasUpdate', () => {
           { id: baisieuxId, surface: 12 },
           { id: saintElieId, surface: 12 },
         ],
+        departements: [],
         geojson4326Perimetre: multiPolygonWith4Points,
         geojsonOriginePerimetre: multiPolygonWith4Points,
         geojsonOrigineGeoSystemeId: '4326',
       },
     ])
-
+    expect((await TitresEtapes.query().where('id', titreEtapeId))[0].departements).toStrictEqual([])
     await titresEtapesAreasUpdate(dbPool, [titreEtapeId])
-
-    expect(await TitresEtapes.query().where('id', titreEtapeId)).toMatchSnapshot()
+    const newEtape = await TitresEtapes.query().where('id', titreEtapeId)
+    expect(newEtape[0].departements).toStrictEqual(['973'])
+    expect(newEtape).toMatchSnapshot()
     await Titres.query()
       .patch({ propsTitreEtapesIds: { points: titreEtapeId } })
       .where({ id: titreId })
