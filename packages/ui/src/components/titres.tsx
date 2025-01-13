@@ -205,7 +205,7 @@ export const Titres = defineComponent({
           />
         }
         content={
-          <>
+          <div style={{ position: 'sticky', top: '1.5rem' }}>
             <PageContentHeader
               nom="Titres miniers et autorisations"
               download={
@@ -238,7 +238,7 @@ export const Titres = defineComponent({
                 }}
               />
             ) : null}
-          </>
+          </div>
         }
       />
     )
