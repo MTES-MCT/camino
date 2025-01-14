@@ -12,13 +12,18 @@ import { PageContentHeader } from '../_common/page-header-content'
 import { DemandeTitreButton } from '../_common/demande-titre-button'
 import { Alert } from '../_ui/alert'
 import { DsfrLink } from '../_ui/dsfr-button'
+import { ACTIVITES_STATUTS_IDS } from 'camino-common/src/static/activitesStatuts'
+import { TitresStatutIds, TitreStatutId } from 'camino-common/src/static/titresStatuts'
+import { DsfrAccordion } from '../_ui/dsfr-accordion'
+import { canReadActivites } from 'camino-common/src/permissions/activites'
+import { canCreateTitre } from 'camino-common/src/permissions/titres'
+import { TitresTypesIds } from 'camino-common/src/static/titresTypes'
 
 interface Props {
   user: User
   entrepriseIds: EntrepriseId[]
   // TODO 2022-03-22: type the graphql
   apiClient: Pick<DashboardApiClient, 'getEntreprisesTitres'>
-  displayActivites: boolean
   allEntreprises: Entreprise[]
 }
 
@@ -32,6 +37,11 @@ const fiscaliteVisibleForAtLeastOneEntreprise = (user: User, entrepriseIds: Entr
   )
 }
 
+const nombreActivitesASaisir = (items: TitreEntreprise[]): number => items.reduce((acc, item) => acc + (item.activitesAbsentes ?? 0) + (item.activitesEnConstruction ?? 0), 0)
+
+const statutsValideEtEnCours: TitreStatutId[] = [TitresStatutIds.DemandeInitiale, TitresStatutIds.Valide, TitresStatutIds.ModificationEnInstance, TitresStatutIds.SurvieProvisoire] as const
+const titresValidesEtEnCours = (titres: TitreEntreprise[]): TitreEntreprise[] => titres.filter(titre => statutsValideEtEnCours.includes(titre.titreStatutId))
+const autresTitres = (titres: TitreEntreprise[]): TitreEntreprise[] => titres.filter(titre => !statutsValideEtEnCours.includes(titre.titreStatutId))
 export const PureEntrepriseDashboard = defineComponent<Props>(props => {
   const data = ref<AsyncData<TitreEntreprise[]>>({ status: 'LOADING' })
 
@@ -41,9 +51,17 @@ export const PureEntrepriseDashboard = defineComponent<Props>(props => {
     return acc
   }, {})
 
-  const entrepriseTitres = (entreprises: TitreEntreprise[]): TableRow[] => titresLignesBuild(entreprises, props.displayActivites, entreprisesIndex)
+  const entrepriseTitres = (entreprises: TitreEntreprise[]): TableRow[] => titresLignesBuild(entreprises, false, entreprisesIndex)
 
-  const columns = titresColonnes.filter(({ id }) => (props.displayActivites ? true : id !== 'activites'))
+  const columns = titresColonnes.filter(({ id }) => {
+    if (id === 'activites' || id === 'departements' || id === 'regions') {
+      return false
+    }
+    if (id === 'titulaires' && props.entrepriseIds.length === 1) {
+      return false
+    }
+    return true
+  })
 
   onMounted(async () => {
     try {
@@ -59,13 +77,50 @@ export const PureEntrepriseDashboard = defineComponent<Props>(props => {
 
   return () => (
     <div>
-      <PageContentHeader nom="Mes Titres" download={null} renderButton={() => <DemandeTitreButton user={props.user} />} />
+      <PageContentHeader
+        nom={props.entrepriseIds.length === 1 ? `Tableau de bord ${entreprisesIndex[props.entrepriseIds[0]]}` : 'Tableau de bord entreprises'}
+        download={null}
+        renderButton={() => <DemandeTitreButton user={props.user} />}
+      />
       <LoadingElement
         data={data.value}
-        renderItem={item => {
+        renderItem={titres => {
           return (
             <>
-              {fiscaliteVisibleForAtLeastOneEntreprise(props.user, props.entrepriseIds, item) ? (
+              {titres.length === 0 ? (
+                <Alert
+                  type="info"
+                  title="Vous n'avez pour le moment aucun titre"
+                  description={
+                    <>
+                      {TitresTypesIds.some(titreTypeId => canCreateTitre(props.user, titreTypeId)) ? (
+                        <>
+                          Vous pouvez <DsfrLink to={{ name: 'titreCreation', params: {} }} icon={null} disabled={false} title="demander un titre" />.
+                        </>
+                      ) : null}
+
+                      <p>Si vous pensez qu'il s'agit d'une erreur, contactez votre admninistration instructrice afin que les titres soient rajoutés à Camino.</p>
+                    </>
+                  }
+                />
+              ) : null}
+              {canReadActivites(props.user) && nombreActivitesASaisir(titres) > 0 ? (
+                <Alert
+                  type="warning"
+                  title={`Vous avez ${nombreActivitesASaisir(titres)} activité(s) à remplir`}
+                  description={
+                    <>
+                      <DsfrLink
+                        disabled={false}
+                        icon={null}
+                        to={{ name: 'activites', params: {}, query: { activiteStatutsIds: ACTIVITES_STATUTS_IDS.ABSENT } }}
+                        title="Voir toutes les activités non déposées"
+                      />
+                    </>
+                  }
+                />
+              ) : null}
+              {fiscaliteVisibleForAtLeastOneEntreprise(props.user, props.entrepriseIds, titres) ? (
                 <Alert
                   type="info"
                   title="Découvrez l'estimation de votre fiscalité minière."
@@ -88,7 +143,7 @@ export const PureEntrepriseDashboard = defineComponent<Props>(props => {
                               fiscaliteVisible(
                                 props.user,
                                 entrepriseId,
-                                item.map(({ typeId }) => ({ type_id: typeId }))
+                                titres.map(({ typeId }) => ({ type_id: typeId }))
                               )
                             )
                             .map(id => (
@@ -107,7 +162,18 @@ export const PureEntrepriseDashboard = defineComponent<Props>(props => {
                   }
                 />
               ) : null}
-              <TableAuto class="fr-table--no-caption" caption="Vos titres" columns={columns} rows={entrepriseTitres(item)} initialSort={{ colonne: 'statut', ordre: 'asc' }} />
+              {titresValidesEtEnCours(titres).length > 0 ? (
+                <TableAuto class="" caption="Titres en cours et valides" columns={columns} rows={entrepriseTitres(titresValidesEtEnCours(titres))} initialSort={{ colonne: 'statut', ordre: 'asc' }} />
+              ) : null}
+              {autresTitres(titres).length > 0 ? (
+                <DsfrAccordion
+                  expandedByDefault={titresValidesEtEnCours(titres).length === 0}
+                  title="Autres titres"
+                  content={
+                    <TableAuto class="fr-table--no-caption" caption="Autres titres" columns={columns} rows={entrepriseTitres(autresTitres(titres))} initialSort={{ colonne: 'statut', ordre: 'asc' }} />
+                  }
+                />
+              ) : null}
             </>
           )
         }}
@@ -117,4 +183,4 @@ export const PureEntrepriseDashboard = defineComponent<Props>(props => {
 })
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-PureEntrepriseDashboard.props = ['user', 'entrepriseIds', 'apiClient', 'displayActivites', 'allEntreprises']
+PureEntrepriseDashboard.props = ['user', 'entrepriseIds', 'apiClient', 'allEntreprises']

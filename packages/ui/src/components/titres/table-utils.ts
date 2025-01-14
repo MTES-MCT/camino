@@ -18,6 +18,7 @@ import { Column as AutoColumn } from '../_ui/table-auto'
 import { TitreStatut } from '../_common/titre-statut'
 import { TitreForTable } from '../titre/titre-api-client'
 import { EntrepriseId } from 'camino-common/src/entreprise'
+import { Badges } from '../_ui/badges'
 
 const ordreStatut: { [key in TitreStatutId]: number } = {
   dmi: 0,
@@ -189,7 +190,7 @@ export const titresLignesBuild = (titres: TitreForTable[], activitesCol: boolean
       type: typeCell(titre.typeId),
       statut: statutCell({ titre_statut_id: titre.titreStatutId }),
       substances: {
-        component: markRaw(List),
+        component: markRaw(Badges),
         props: {
           elements: titre.substances?.map(substanceId => SubstancesLegale[substanceId].nom) ?? [],
         },

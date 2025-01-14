@@ -73,7 +73,6 @@ const titres: TitreEntreprise[] = [
 export const Ok: StoryFn = () => (
   <PureEntrepriseDashboard
     user={{ role: 'super', ...testBlankUser }}
-    displayActivites={true}
     entrepriseIds={[newEntrepriseId('id')]}
     allEntreprises={allEntreprises}
     apiClient={{ getEntreprisesTitres: () => Promise.resolve(titres) }}
@@ -83,7 +82,6 @@ export const Ok: StoryFn = () => (
 export const OkWithMultipleEntreprises: StoryFn = () => (
   <PureEntrepriseDashboard
     user={{ role: 'super', ...testBlankUser }}
-    displayActivites={true}
     entrepriseIds={[newEntrepriseId('id'), newEntrepriseId('id2')]}
     allEntreprises={allEntreprises}
     apiClient={{ getEntreprisesTitres: () => Promise.resolve(titres) }}
@@ -93,7 +91,6 @@ export const OkWithMultipleEntreprises: StoryFn = () => (
 export const OkWithoutFiscalite: StoryFn = () => (
   <PureEntrepriseDashboard
     user={{ role: 'super', ...testBlankUser }}
-    displayActivites={true}
     entrepriseIds={[]}
     allEntreprises={allEntreprises}
     apiClient={{
@@ -128,18 +125,56 @@ export const OkWithoutFiscalite: StoryFn = () => (
 
 export const OkWithoutActivities: StoryFn = () => (
   <PureEntrepriseDashboard
-    user={{ role: 'super', ...testBlankUser }}
-    displayActivites={false}
+    user={{ role: "bureau d'études", ...testBlankUser, entrepriseIds: [] }}
     entrepriseIds={[newEntrepriseId('id')]}
     allEntreprises={allEntreprises}
     apiClient={{ getEntreprisesTitres: () => Promise.resolve(titres) }}
   />
 )
 
+export const WithoutTitres: StoryFn = () => (
+  <PureEntrepriseDashboard
+    user={{ role: "bureau d'études", ...testBlankUser, entrepriseIds: [] }}
+    entrepriseIds={[newEntrepriseId('id')]}
+    allEntreprises={allEntreprises}
+    apiClient={{ getEntreprisesTitres: () => Promise.resolve([]) }}
+  />
+)
+
+export const WithoutTitresValides: StoryFn = () => (
+  <PureEntrepriseDashboard
+    user={{ role: "bureau d'études", ...testBlankUser, entrepriseIds: [] }}
+    entrepriseIds={[newEntrepriseId('id')]}
+    allEntreprises={allEntreprises}
+    apiClient={{
+      getEntreprisesTitres: () =>
+        Promise.resolve([
+          {
+            id: titreIdValidator.parse('jp25TIfyQiXM987fAGc2DX4N'),
+            slug: 'm-cx-aachen-1810',
+            nom: 'Aachen',
+            typeId: 'cxm',
+            titreStatutId: 'ech',
+            substances: ['ferx'],
+            activitesEnConstruction: 2,
+            activitesAbsentes: 3,
+            titulaireIds: [entrepriseIdValidator.parse('fr-793025370')],
+            communes: [{ id: toCommuneId('57000') }],
+            references: [
+              {
+                referenceTypeId: 'rnt',
+                nom: '57TM0014',
+              },
+            ],
+          },
+        ]),
+    }}
+  />
+)
+
 export const Loading: StoryFn = () => (
   <PureEntrepriseDashboard
     user={{ role: 'super', ...testBlankUser }}
-    displayActivites={false}
     entrepriseIds={[newEntrepriseId('id')]}
     allEntreprises={allEntreprises}
     apiClient={{ getEntreprisesTitres: () => new Promise<TitreEntreprise[]>(_resolve => {}) }}
@@ -149,7 +184,6 @@ export const Loading: StoryFn = () => (
 export const WithError: StoryFn = () => (
   <PureEntrepriseDashboard
     user={{ role: 'super', ...testBlankUser }}
-    displayActivites={false}
     entrepriseIds={[newEntrepriseId('id')]}
     allEntreprises={allEntreprises}
     apiClient={{ getEntreprisesTitres: () => Promise.reject(new Error('because reasons')) }}
