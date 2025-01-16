@@ -47,10 +47,23 @@
     owner: camino
     group: users
   become: True
+- name: Supprime l'ancien jar keycloak france connect
+  ansible.builtin.file:
+    path: /srv/www/camino/keycloak-franceconnect-6.2.0.jar
+    state: absent
+  become: True
+- name: Installe le jar keycloak dsfr
+  ansible.builtin.copy:
+    src: keycloak-theme-for-kc-26-and-above.jar
+    dest: /srv/www/camino/keycloak-theme-for-kc-26-and-above.jar
+    mode: u=rwx,g=rw,o=r
+    owner: camino
+    group: users
+  become: True
 - name: Installe le jar keycloak france connect
   ansible.builtin.copy:
-    src: keycloak-franceconnect-6.2.0.jar
-    dest: /srv/www/camino/keycloak-franceconnect-6.2.0.jar
+    src: keycloak-franceconnect-7.0.0.jar
+    dest: /srv/www/camino/keycloak-franceconnect-7.0.0.jar
     mode: u=rwx,g=rw,o=r
     owner: camino
     group: users

@@ -274,10 +274,10 @@ endif
 
 # TODO 2024-10-21 une fois tout migré sur ecoCompose, il faudra supprimer tout ce qu'il y a dans infra sauf le dossier ecocompose
 keycloak/build:
-	docker build -t caminofr/camino-keycloak:25.0.5 -f Dockerfile.keycloak infra/ecocompose/keycloak/
+	docker build -t caminofr/camino-keycloak:26.1.0 -f Dockerfile.keycloak infra/ecocompose/keycloak/
 
 keycloak/push:
-	docker push caminofr/camino-keycloak:25.0.5
+	docker push caminofr/camino-keycloak:26.1.0
 
 nginx-proxy/build:
 	docker build -t caminofr/camino-nginx-proxy:1.6.1 -f Dockerfile.nginx-proxy infra/ecocompose/nginx-proxy/

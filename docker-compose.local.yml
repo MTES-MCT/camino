@@ -43,7 +43,7 @@ services:
       - ${UI_PORT}:${UI_PORT}
   oauth2:
     container_name: camino_oauth2
-    image: quay.io/oauth2-proxy/oauth2-proxy:v7.6.0
+    image: quay.io/oauth2-proxy/oauth2-proxy:v7.8.1
     environment:
       OAUTH2_PROXY_PROVIDER: 'keycloak-oidc'
       OAUTH2_PROXY_CLIENT_ID: ${KEYCLOAK_CLIENT_ID}
@@ -79,7 +79,7 @@ services:
       - ${OAUTH_PORT}:${OAUTH_PORT}
   keycloak:
     container_name: camino_keycloak
-    image: quay.io/keycloak/keycloak:25.0.5
+    image: quay.io/keycloak/keycloak:26.1.0
     depends_on:
       - db
     environment:
@@ -89,7 +89,8 @@ services:
       KC_DB_PASSWORD: "${PGPASSWORD}"
       KC_DB_USERNAME: "${PGUSER}"
     volumes:
-      - $PWD/infra/roles/camino/files/keycloak-franceconnect-6.2.0.jar:/opt/keycloak/providers/keycloak-franceconnect-6.2.0.jar
+      - $PWD/infra/roles/camino/files/keycloak-franceconnect-7.0.0.jar:/opt/keycloak/providers/keycloak-franceconnect-7.0.0.jar
+      - $PWD/infra/roles/camino/files/keycloak-theme-for-kc-26-and-above.jar:/opt/keycloak/providers/keycloak-theme-for-kc-26-and-above.jar
       - $PWD/infra/roles/camino/files/keycloak-bcrypt-1.6.0.jar:/opt/keycloak/providers/keycloak-bcrypt-1.6.0.jar
       - $PWD/infra/roles/camino/files/keycloak_theme/:/opt/keycloak/themes/camino/
     command:
