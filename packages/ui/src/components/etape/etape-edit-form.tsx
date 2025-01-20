@@ -217,7 +217,7 @@ const mergeFlattenEtapeWithNewHeritage = (
 }
 export const EtapeEditForm = defineComponent<Props>(props => {
   const [etape, setEtape] = useState<AsyncData<CoreEtapeCreationOrModification | null>>({ status: 'LOADED', value: null })
-  const [perimetreInfos, setPerimetreInfos] = useState<Omit<PerimetreInformations, 'communes'>>(props.perimetre)
+  const [perimetreInfos, setPerimetreInfos] = useState<PerimetreInformations>(props.perimetre)
 
   const [documents, setDocuments] = useState<EtapeEditFormDocuments>({
     etapeDocuments: [],
@@ -453,7 +453,7 @@ export const EtapeEditForm = defineComponent<Props>(props => {
           <>
             {isNotNullNorUndefined(etapeLoaded) ? (
               <>
-                <EtapeEditFormInternal {...props} etape={etapeLoaded} documents={documents.value} setEtape={setEtapeAndDocument} alertesUpdate={setPerimetreInfos} />
+                <EtapeEditFormInternal {...props} perimetre={perimetreInfos.value} etape={etapeLoaded} documents={documents.value} setEtape={setEtapeAndDocument} alertesUpdate={setPerimetreInfos} />
                 <PureFormSaveBtn
                   class="fr-mt-2w fr-pt-2w fr-pb-2w"
                   style={{ position: 'sticky', bottom: 0, background: 'white', zIndex: 100000 }}
@@ -492,7 +492,7 @@ const EtapeEditFormInternal = defineComponent<
     etape: CoreEtapeCreationOrModification
     documents: EtapeEditFormDocuments
     setEtape: (etape: CoreEtapeCreationOrModification, documents: EtapeEditFormDocuments) => void
-    alertesUpdate: (alertes: Omit<PerimetreInformations, 'communes'>) => void
+    alertesUpdate: (alertes: PerimetreInformations) => void
   } & Omit<Props, 'etape'>
 >(props => {
   const documentsCompleteUpdate = (etapeDocuments: (EtapeDocument | TempEtapeDocument)[]) => {
@@ -538,7 +538,7 @@ const EtapeEditFormInternal = defineComponent<
       props.documents
     )
 
-    props.alertesUpdate({ superposition_alertes: perimetreInfos.superposition_alertes, sdomZoneIds: perimetreInfos.sdomZoneIds })
+    props.alertesUpdate({ superposition_alertes: perimetreInfos.superposition_alertes, sdomZoneIds: perimetreInfos.sdomZoneIds, communes: perimetreInfos.communes.map(({ id }) => id) })
   }
 
   const onEtapePerimetreHeritageChange = (perimetre: FlattenEtape['perimetre']) => {
