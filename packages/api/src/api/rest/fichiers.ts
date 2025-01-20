@@ -4,7 +4,12 @@ import { User } from 'camino-common/src/roles'
 import { DOWNLOAD_FORMATS, DownloadFormat, contentTypes } from 'camino-common/src/rest'
 import { Pool } from 'pg'
 import { EtapeId, etapeAvisIdValidator, etapeDocumentIdValidator } from 'camino-common/src/etape'
-import { getEntrepriseDocumentLargeObjectIdsByEtapeId, getEtapeDocumentLargeObjectIdsByEtapeId, getLargeobjectIdByEtapeAvisId } from '../../database/queries/titres-etapes.queries'
+import {
+  getEntrepriseDocumentLargeObjectIdsByEtapeId,
+  getEtapeAvisLargeObjectIdsByEtapeId,
+  getEtapeDocumentLargeObjectIdsByEtapeId,
+  getLargeobjectIdByEtapeAvisId,
+} from '../../database/queries/titres-etapes.queries'
 import { LargeObjectManager } from 'pg-large-object'
 
 import express from 'express'
@@ -14,6 +19,8 @@ import { slugify } from 'camino-common/src/strings'
 import { getEtapeDataForEdition, getLargeobjectIdByEtapeDocumentId } from './etapes.queries'
 import { EtapesTypes } from 'camino-common/src/static/etapesTypes'
 import { callAndExit } from '../../tools/fp-tools'
+import { isNotNullNorUndefined, isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools'
+import { AvisTypes } from 'camino-common/src/static/avisTypes'
 export type NewDownload = (params: Record<string, unknown>, user: User, pool: Pool) => Promise<{ loid: number | null; fileName: string }>
 
 export const DOWNLOADS_DIRECTORY = 'downloads'
@@ -37,7 +44,15 @@ export const etapeTelecharger =
     )
     const entrepriseDocuments = await callAndExit(getEntrepriseDocumentLargeObjectIdsByEtapeId({ titre_etape_id: etapeId }, pool, user))
 
-    if (!documents.length && !entrepriseDocuments.length) {
+    const avisDocuments = await callAndExit(
+      getEtapeAvisLargeObjectIdsByEtapeId(etapeId, pool, user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires, etapeData.etape_type_id, {
+        demarche_type_id: etapeData.demarche_type_id,
+        titre_public_lecture: etapeData.titre_public_lecture,
+        entreprises_lecture: etapeData.demarche_entreprises_lecture,
+        public_lecture: etapeData.demarche_public_lecture,
+      })
+    )
+    if (isNullOrUndefinedOrEmpty(documents) && isNullOrUndefinedOrEmpty(entrepriseDocuments) && isNullOrUndefinedOrEmpty(avisDocuments)) {
       throw new Error(`aucun document n'a été trouvé pour l'étape "${EtapesTypes[etapeData.etape_type_id].nom}"`)
     }
 
@@ -63,6 +78,22 @@ export const etapeTelecharger =
         const [_size, stream] = await man.openAndReadableStreamAsync(entrepriseDocument.largeobject_id, bufferSize)
         const fileName = slugify(`${entrepriseDocument.id}-${DocumentsTypes[entrepriseDocument.entreprise_document_type_id].nom}`)
         zip.file(`${fileName}.pdf`, stream)
+      }
+
+      for (let i = 0; i < avisDocuments.length; i++) {
+        const avisDocument = avisDocuments[i]
+        if (isNotNullNorUndefined(avisDocument.largeobject_id)) {
+          await client.query('BEGIN')
+
+          const [_size, stream] = await man.openAndReadableStreamAsync(avisDocument.largeobject_id, bufferSize)
+
+          let fileName = slugify(`${avisDocument.id}-${avisDocument.date}-${avisDocument.avis_statut_id}`)
+          // On gère les anciens Ids à l'époque où certains avis étaient des documents
+          if (!avisDocument.id.startsWith('avis')) {
+            fileName = slugify(`avis-${AvisTypes[avisDocument.avis_type_id].nom}-${avisDocument.id}-${avisDocument.avis_statut_id}`)
+          }
+          zip.file(`${fileName}.pdf`, stream)
+        }
       }
       const nom = `documents-${etapeData.etape_slug}.zip`
 
