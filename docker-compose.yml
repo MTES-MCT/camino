@@ -136,6 +136,8 @@ services:
       KC_PROXY: "edge"
       VIRTUAL_HOST: ${KEYCLOAK_HOST}
       VIRTUAL_PORT: ${KEYCLOAK_PORT}
+      KC_PROXY_HEADERS: xforwarded
+      KC_HTTP_ENABLED: true
     command: "start"
     expose:
       - ${KEYCLOAK_PORT}
