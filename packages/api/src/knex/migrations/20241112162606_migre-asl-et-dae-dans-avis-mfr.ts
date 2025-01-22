@@ -1,7 +1,7 @@
 import { CaminoDate } from 'camino-common/src/date'
 import { DemarcheId } from 'camino-common/src/demarche'
 import { EtapeDocumentId, EtapeId } from 'camino-common/src/etape'
-import { AvisStatutId, AvisTypes, AvisVisibilityIds } from 'camino-common/src/static/avisTypes'
+import { AVIS_TYPES, AvisStatutId, AvisVisibilityIds } from 'camino-common/src/static/avisTypes'
 import { ETAPES_STATUTS, EtapeStatutId } from 'camino-common/src/static/etapesStatuts'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
@@ -46,7 +46,7 @@ export const up = async (knex: Knex): Promise<void> => {
 
     await knex.raw('UPDATE titres_etapes set etape_fondamentale_id=? where etape_fondamentale_id=?', [demande.id, etape.id])
 
-    const avisTypeId = etape.type_id === 'dae' ? AvisTypes.avisDeLaMissionAutoriteEnvironnementale.id : AvisTypes.avisProprietaireDuSol.id
+    const avisTypeId = etape.type_id === 'dae' ? AVIS_TYPES.avisDeLaMissionAutoriteEnvironnementale : AVIS_TYPES.avisProprietaireDuSol
 
     const description = isNotNullNorUndefined(etape.contenu?.mea?.arrete)
       ? `${etape.description}\nArrêté préfectoral: ${etape.contenu.mea.arrete}`

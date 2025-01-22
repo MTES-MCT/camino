@@ -12,7 +12,7 @@ import { AddEtapeAvisPopup } from './add-etape-avis-popup'
 import { getAvisTypes, isArmMecanise } from 'camino-common/src/permissions/etape-form'
 import { dateFormat, FirstEtapeDate } from 'camino-common/src/date'
 import { AvisStatut } from '../_common/etape-statut'
-import { AvisTypeId, AvisTypes } from 'camino-common/src/static/avisTypes'
+import { AvisTypeId, getAvisNom } from 'camino-common/src/static/avisTypes'
 import { CommuneId } from 'camino-common/src/static/communes'
 import { getAvisVisibilityLabel } from './etape-avis'
 import { User } from 'camino-common/src/roles'
@@ -79,7 +79,7 @@ const EtapeAvisLoaded = defineComponent<EtapeAvisLoadedProps>(props => {
     { deep: true }
   )
 
-  const addOrEditPopupOpen = ref<{ open: true; avisTypeIds: NonEmptyArray<AvisTypeId>; etapeAvis?: (EtapeAvis | TempEtapeAvis) & WithIndex } | { open: false }>({ open: false })
+  const addOrEditPopupOpen = ref<{ open: true; required: boolean; avisTypeIds: NonEmptyArray<AvisTypeId>; etapeAvis?: (EtapeAvis | TempEtapeAvis) & WithIndex } | { open: false }>({ open: false })
 
   const avisTypes = computed(() => {
     return Object.values(
@@ -106,7 +106,7 @@ const EtapeAvisLoaded = defineComponent<EtapeAvisLoadedProps>(props => {
   })
   const openAddPopupAdditionnalAvis = () => {
     if (isNonEmptyArray(additionnalAvisTypeIds.value)) {
-      addOrEditPopupOpen.value = { open: true, avisTypeIds: additionnalAvisTypeIds.value }
+      addOrEditPopupOpen.value = { open: true, required: false, avisTypeIds: additionnalAvisTypeIds.value }
     }
   }
   const closeAddPopup = (newAvis: EtapeAvisModification | null) => {
@@ -122,12 +122,19 @@ const EtapeAvisLoaded = defineComponent<EtapeAvisLoadedProps>(props => {
     addOrEditPopupOpen.value = { open: false }
   }
 
-  const addAvis = (avisTypeId: AvisTypeId) => {
-    addOrEditPopupOpen.value = { open: true, avisTypeIds: [avisTypeId] }
+  const addRequiredAvis = (avisTypeId: AvisTypeId) => {
+    addOrEditPopupOpen.value = { open: true, required: true, avisTypeIds: [avisTypeId] }
   }
-  const editAvis = (avisIndex: number) => {
+  const addOptionnalAvis = (avisTypeId: AvisTypeId) => {
+    addOrEditPopupOpen.value = { open: true, required: false, avisTypeIds: [avisTypeId] }
+  }
+  const editRequiredAvis = (avisIndex: number) => {
     const avis = etapeAvis.value[avisIndex]
-    addOrEditPopupOpen.value = { open: true, avisTypeIds: [avis.avis_type_id], etapeAvis: avis }
+    addOrEditPopupOpen.value = { open: true, required: true, avisTypeIds: [avis.avis_type_id], etapeAvis: avis }
+  }
+  const editOptionnalAvis = (avisIndex: number) => {
+    const avis = etapeAvis.value[avisIndex]
+    addOrEditPopupOpen.value = { open: true, required: false, avisTypeIds: [avis.avis_type_id], etapeAvis: avis }
   }
   const removeAvis = (avisIndex: number) => {
     etapeAvis.value.splice(avisIndex, 1)
@@ -137,19 +144,27 @@ const EtapeAvisLoaded = defineComponent<EtapeAvisLoadedProps>(props => {
   }
 
   const getNom = (avisTypeId: AvisTypeId) => {
-    return capitalize(AvisTypes[avisTypeId].nom)
+    return capitalize(getAvisNom(avisTypeId))
   }
 
   return () => (
     <>
       {isNotNullNorUndefinedNorEmpty(emptyRequiredAvis.value) || isNotNullNorUndefinedNorEmpty(completeRequiredAvis.value) ? (
-        <EtapeAvisTable getNom={getNom} add={addAvis} edit={editAvis} delete={removeAvis} caption="Avis obligatoires" emptyRequiredAvis={emptyRequiredAvis.value} avis={completeRequiredAvis.value} />
+        <EtapeAvisTable
+          getNom={getNom}
+          add={addRequiredAvis}
+          edit={editRequiredAvis}
+          delete={removeAvis}
+          caption="Avis obligatoires"
+          emptyRequiredAvis={emptyRequiredAvis.value}
+          avis={completeRequiredAvis.value}
+        />
       ) : null}
 
       {isNonEmptyArray(additionnalAvisTypeIds.value) ? (
         <>
           <div style={{ display: 'flex', flexDirection: 'column' }} class="fr-mt-3w">
-            <EtapeAvisTable getNom={getNom} add={addAvis} edit={editAvis} delete={removeAvis} caption="Avis complémentaires" emptyRequiredAvis={[]} avis={additionnalAvis.value} />
+            <EtapeAvisTable getNom={getNom} add={addOptionnalAvis} edit={editOptionnalAvis} delete={removeAvis} caption="Avis complémentaires" emptyRequiredAvis={[]} avis={additionnalAvis.value} />
             <DsfrButtonIcon
               style={{ alignSelf: 'end' }}
               class="fr-mt-1w"
@@ -165,6 +180,7 @@ const EtapeAvisLoaded = defineComponent<EtapeAvisLoadedProps>(props => {
       {addOrEditPopupOpen.value.open ? (
         <AddEtapeAvisPopup
           avisTypeIds={addOrEditPopupOpen.value.avisTypeIds}
+          required={addOrEditPopupOpen.value.required}
           user={props.user}
           apiClient={props.apiClient}
           close={closeAddPopup}

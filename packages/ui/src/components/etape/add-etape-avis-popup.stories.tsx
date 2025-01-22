@@ -5,8 +5,8 @@ import { ApiClient } from '@/api/api-client'
 import { AddEtapeAvisPopup } from './add-etape-avis-popup'
 import { toCaminoDate } from 'camino-common/src/date'
 import { etapeAvisIdValidator } from 'camino-common/src/etape'
-import { AvisTypeId, AvisTypes, AvisVisibilityIds, avisTypeIdValidator } from 'camino-common/src/static/avisTypes'
-import { NonEmptyArray, getKeys } from 'camino-common/src/typescript-tools'
+import { AVIS_TYPES, AvisTypeId, AvisVisibilityIds } from 'camino-common/src/static/avisTypes'
+import { NonEmptyArray } from 'camino-common/src/typescript-tools'
 import { testBlankUser } from 'camino-common/src/tests-utils'
 
 const meta: Meta = {
@@ -26,14 +26,15 @@ const apiClient: Pick<ApiClient, 'uploadTempDocument'> = {
     return Promise.resolve(tempDocumentNameValidator.parse(new Date().toISOString()))
   },
 }
-const avisTypeIds: NonEmptyArray<AvisTypeId> = getKeys(AvisTypes, (value): value is AvisTypeId => {
-  return avisTypeIdValidator.safeParse(value).success
-}) as NonEmptyArray<AvisTypeId>
-export const SansDocumentInitial: StoryFn = () => <AddEtapeAvisPopup close={close} user={{ ...testBlankUser, role: 'super' }} apiClient={apiClient} initialAvis={null} avisTypeIds={avisTypeIds} />
+const avisTypeIds: NonEmptyArray<AvisTypeId> = Object.values(AVIS_TYPES) as NonEmptyArray<AvisTypeId>
+export const SansDocumentInitial: StoryFn = () => (
+  <AddEtapeAvisPopup close={close} required={false} user={{ ...testBlankUser, role: 'super' }} apiClient={apiClient} initialAvis={null} avisTypeIds={avisTypeIds} />
+)
 
 export const DocumentInitialTemporaire: StoryFn = () => (
   <AddEtapeAvisPopup
     close={close}
+    required={false}
     initialAvis={{
       description: 'description',
       avis_type_id: 'autreAvis',
@@ -52,6 +53,7 @@ export const DocumentInitialTemporaire: StoryFn = () => (
 export const DocumentInitialDejaSauvegarde: StoryFn = () => (
   <AddEtapeAvisPopup
     close={close}
+    required={false}
     initialAvis={{
       description: 'description',
       avis_type_id: 'autreAvis',
@@ -67,9 +69,14 @@ export const DocumentInitialDejaSauvegarde: StoryFn = () => (
   />
 )
 
+export const AvisObligatoireSuppressionDuStatutNonRenseigne: StoryFn = () => (
+  <AddEtapeAvisPopup close={close} required={true} user={{ ...testBlankUser, role: 'super' }} apiClient={apiClient} initialAvis={null} avisTypeIds={['avisProprietaireDuSol']} />
+)
+
 export const AvisDeLaMissionAutoriteEnvironnementaleADesStatutsDifferents: StoryFn = () => (
   <AddEtapeAvisPopup
     close={close}
+    required={false}
     initialAvis={{
       description: 'description',
       avis_type_id: 'avisDeLaMissionAutoriteEnvironnementale',

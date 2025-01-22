@@ -1,6 +1,6 @@
 import { computed, defineComponent, ref } from 'vue'
 import { FunctionalPopup } from '../_ui/functional-popup'
-import { AVIS_VISIBILITY_IDS, AvisStatutId, AvisTypeId, AvisTypes, AvisVisibilityId, AvisVisibilityIds } from 'camino-common/src/static/avisTypes'
+import { AVIS_TYPES, AVIS_VISIBILITY_IDS, AvisStatutId, AvisTypeId, AvisVisibilityId, AvisVisibilityIds, getAvisNom, getAvisStatut } from 'camino-common/src/static/avisTypes'
 import { InputFile } from '../_ui/dsfr-input-file'
 import { ApiClient } from '@/api/api-client'
 import { TempDocumentName } from 'camino-common/src/document'
@@ -18,6 +18,7 @@ import { DsfrTextarea } from '../_ui/dsfr-textarea'
 interface Props {
   close: (document: EtapeAvisModification | null) => void
   avisTypeIds: NonEmptyArray<AvisTypeId>
+  required: boolean
   initialAvis: EtapeAvisModification | null
   apiClient: Pick<ApiClient, 'uploadTempDocument'>
   user: User
@@ -33,6 +34,9 @@ export const AddEtapeAvisPopup = defineComponent<Props>(props => {
 
   const tempAvisName = ref<TempDocumentName | undefined>(isNotNullNorUndefined(props.initialAvis) && 'temp_document_name' in props.initialAvis ? props.initialAvis.temp_document_name : undefined)
 
+  const avisStatuts = computed<Readonly<NonEmptyArray<{ id: AvisStatutId; label: string }>>>(() => {
+    return map(getAvisStatut(etapeAvisTypeId.value, props.required), id => ({ id, label: id }))
+  })
   const visibilityChoices = computed<{ itemId: AvisVisibilityId; legend: { main: string } }[]>(() => {
     return AVIS_VISIBILITY_IDS.filter(visibility => {
       if (isEntrepriseOrBureauDEtude(props.user) && visibility === AvisVisibilityIds.Administrations) {
@@ -63,7 +67,7 @@ export const AddEtapeAvisPopup = defineComponent<Props>(props => {
               <label class="fr-label" for="type">
                 Type d'avis
               </label>
-              <TypeaheadSmartSingle possibleValues={props.avisTypeIds.map(id => AvisTypes[id])} valueIdSelected={updateAvisTypeId} />
+              <TypeaheadSmartSingle possibleValues={props.avisTypeIds.map(id => ({ id: id, nom: getAvisNom(id) }))} valueIdSelected={updateAvisTypeId} />
             </div>
           </div>
         </fieldset>
@@ -87,7 +91,7 @@ export const AddEtapeAvisPopup = defineComponent<Props>(props => {
             legend={{ main: 'Statut' }}
             disabled={isNullOrUndefined(etapeAvisTypeId.value)}
             required={true}
-            items={map(etapeAvisTypeId.value ? AvisTypes[etapeAvisTypeId.value].statutIds : (['Non renseigné'] as NonEmptyArray<AvisStatutId>), avis => ({ id: avis, label: avis }))}
+            items={avisStatuts.value}
             initialValue={avisStatutId.value}
             valueChanged={setAvisStatutId}
           />
@@ -96,8 +100,8 @@ export const AddEtapeAvisPopup = defineComponent<Props>(props => {
         <div class="fr-fieldset__element">
           <DsfrInputRadio legend={{ main: 'Visibilité' }} required={true} elements={visibilityChoices.value} initialValue={avisVisibilityId.value} valueChanged={visibilityChange} />
         </div>
-        <div class="fr-fieldset__element" style={{ order: etapeAvisTypeId.value === AvisTypes.autreAvis.id ? -1 : undefined }}>
-          <DsfrTextarea required={etapeAvisTypeId.value === AvisTypes.autreAvis.id} legend={{ main: 'Description' }} initialValue={avisDescription.value} valueChanged={descriptionChange} />
+        <div class="fr-fieldset__element" style={{ order: etapeAvisTypeId.value === AVIS_TYPES.autreAvis ? -1 : undefined }}>
+          <DsfrTextarea required={etapeAvisTypeId.value === AVIS_TYPES.autreAvis} legend={{ main: 'Description' }} initialValue={avisDescription.value} valueChanged={descriptionChange} />
         </div>
       </fieldset>
     </form>
@@ -120,9 +124,9 @@ export const AddEtapeAvisPopup = defineComponent<Props>(props => {
     <FunctionalPopup
       title={
         isNotNullNorUndefined(props.initialAvis)
-          ? `Éditer ${AvisTypes[props.initialAvis.avis_type_id].nom}`
+          ? `Éditer ${getAvisNom(props.initialAvis.avis_type_id)}`
           : props.avisTypeIds.length === 1
-            ? `Ajouter ${AvisTypes[props.avisTypeIds[0]].nom}`
+            ? `Ajouter ${getAvisNom(props.avisTypeIds[0])}`
             : "Ajout d'un avis"
       }
       content={content}
@@ -151,4 +155,4 @@ export const AddEtapeAvisPopup = defineComponent<Props>(props => {
 })
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-AddEtapeAvisPopup.props = ['close', 'apiClient', 'avisTypeIds', 'initialAvis', 'user']
+AddEtapeAvisPopup.props = ['close', 'apiClient', 'avisTypeIds', 'initialAvis', 'user', 'required']

@@ -20,7 +20,7 @@ import { getEtapeDataForEdition, getLargeobjectIdByEtapeDocumentId } from './eta
 import { EtapesTypes } from 'camino-common/src/static/etapesTypes'
 import { callAndExit } from '../../tools/fp-tools'
 import { isNotNullNorUndefined, isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools'
-import { AvisTypes } from 'camino-common/src/static/avisTypes'
+import { getAvisNom } from 'camino-common/src/static/avisTypes'
 export type NewDownload = (params: Record<string, unknown>, user: User, pool: Pool) => Promise<{ loid: number | null; fileName: string }>
 
 export const DOWNLOADS_DIRECTORY = 'downloads'
@@ -90,7 +90,7 @@ export const etapeTelecharger =
           let fileName = slugify(`${avisDocument.id}-${avisDocument.date}-${avisDocument.avis_statut_id}`)
           // On gère les anciens Ids à l'époque où certains avis étaient des documents
           if (!avisDocument.id.startsWith('avis')) {
-            fileName = slugify(`avis-${AvisTypes[avisDocument.avis_type_id].nom}-${avisDocument.id}-${avisDocument.avis_statut_id}`)
+            fileName = slugify(`avis-${getAvisNom(avisDocument.avis_type_id)}-${avisDocument.id}-${avisDocument.avis_statut_id}`)
           }
           zip.file(`${fileName}.pdf`, stream)
         }

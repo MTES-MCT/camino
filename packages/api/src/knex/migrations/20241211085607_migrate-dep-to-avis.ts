@@ -2,7 +2,7 @@
 import { CaminoDate } from 'camino-common/src/date'
 import { etapeAvisIdValidator, EtapeDocumentId, EtapeId } from 'camino-common/src/etape'
 import { DATE_DEBUT_PROCEDURE_SPECIFIQUE_AXM_ARM } from 'camino-common/src/machines'
-import { AvisTypes, AvisVisibilityIds } from 'camino-common/src/static/avisTypes'
+import { AVIS_TYPES, AvisVisibilityIds } from 'camino-common/src/static/avisTypes'
 import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes'
 import { TITRES_TYPES_IDS } from 'camino-common/src/static/titresTypes'
 import { Knex } from 'knex'
@@ -29,7 +29,7 @@ export const up = async (knex: Knex): Promise<void> => {
       const avis: EtapeAvisDb & { etape_id: EtapeId } = {
         id: etapeAvisIdValidator.parse(document.id),
         etape_id: etape.id,
-        avis_type_id: AvisTypes.avisCasParCas.id,
+        avis_type_id: AVIS_TYPES.avisCasParCas,
         avis_statut_id: 'Exempté',
         avis_visibility_id: document.public_lecture ? AvisVisibilityIds.Public : document.entreprises_lecture ? AvisVisibilityIds.TitulairesEtAdministrations : AvisVisibilityIds.Administrations,
         description: document.description,

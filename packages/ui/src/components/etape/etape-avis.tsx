@@ -3,7 +3,7 @@ import { EtapeAvisId, EtapeAvis } from 'camino-common/src/etape'
 import { User, isAdministration, isSuper } from 'camino-common/src/roles'
 import { getDownloadRestRoute } from '../../api/client-rest'
 import { isNotNullNorUndefinedNorEmpty, isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools'
-import { AvisTypeId, AvisTypes, AvisVisibilityId } from 'camino-common/src/static/avisTypes'
+import { AvisTypeId, AvisVisibilityId, getAvisNom } from 'camino-common/src/static/avisTypes'
 import { AvisStatut } from '../_common/etape-statut'
 import { dateFormat } from 'camino-common/src/date'
 import { VisibilityLabel } from './etape-documents'
@@ -46,7 +46,7 @@ export const EtapeAvisTable: FunctionalComponent<Props> = props => {
           <tbody>
             {orderedAvis.map(item => (
               <tr>
-                <td>{item.has_file ? <EtapeAvisLink avisId={item.id} avisTypeId={item.avis_type_id} description={item.description} /> : AvisTypes[item.avis_type_id].nom}</td>
+                <td>{item.has_file ? <EtapeAvisLink avisId={item.id} avisTypeId={item.avis_type_id} description={item.description} /> : getAvisNom(item.avis_type_id)}</td>
                 <td>{dateFormat(item.date)}</td>
                 <td>
                   <AvisStatut avisStatutId={item.avis_statut_id} />
@@ -63,7 +63,7 @@ export const EtapeAvisTable: FunctionalComponent<Props> = props => {
 
 type EtapeAvisLinkProps = { avisId: EtapeAvisId; avisTypeId: AvisTypeId; description: string | null }
 const EtapeAvisLink: FunctionalComponent<EtapeAvisLinkProps> = props => {
-  const label = isNotNullNorUndefinedNorEmpty(props.description) ? props.description : AvisTypes[props.avisTypeId].nom
+  const label = isNotNullNorUndefinedNorEmpty(props.description) ? props.description : getAvisNom(props.avisTypeId)
   return (
     <a href={getDownloadRestRoute('/download/avisDocument/:etapeAvisId', { etapeAvisId: props.avisId })} title={`Télécharger l'avis ${label} - nouvelle fenêtre`} target="_blank">
       {label}

@@ -2,7 +2,7 @@ import { EntrepriseDocumentId, EntrepriseId } from '../entreprise'
 import { FlattenedContenu, FlattenEtape } from '../etape-form'
 import { EtapeAvis, EtapeDocument, TempEtapeAvis, TempEtapeDocument } from '../etape'
 import { User, isAdministrationAdmin, isAdministrationEditeur, isSuper } from '../roles'
-import { AvisTypeId, AvisTypes } from '../static/avisTypes'
+import { AVIS_TYPES, AvisTypeId } from '../static/avisTypes'
 import { CommuneId } from '../static/communes'
 import { DEMARCHES_TYPES_IDS, DemarcheTypeId } from '../static/demarchesTypes'
 import { DEPARTEMENT_IDS, toDepartementId } from '../static/departement'
@@ -202,48 +202,48 @@ export const getAvisTypes = (
 
   if (etapeTypeId === ETAPES_TYPES.demande) {
     if (titreTypeId === TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX) {
-      avis[AvisTypes.avisProprietaireDuSol.id] = { ...AvisTypes.avisProprietaireDuSol, optionnel: false }
-      avis[AvisTypes.avisDeLaMissionAutoriteEnvironnementale.id] = { ...AvisTypes.avisDeLaMissionAutoriteEnvironnementale, optionnel: false }
+      avis[AVIS_TYPES.avisProprietaireDuSol] = { id: AVIS_TYPES.avisProprietaireDuSol, optionnel: false }
+      avis[AVIS_TYPES.avisDeLaMissionAutoriteEnvironnementale] = { id: AVIS_TYPES.avisDeLaMissionAutoriteEnvironnementale, optionnel: false }
     } else if (titreTypeId === TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX && machineId === 'ProcedureSpecifique') {
-      avis[AvisTypes.avisCasParCas.id] = { ...AvisTypes.avisCasParCas, optionnel: isArmMecanise === IS_ARM_NON_MECANISE }
-      avis[AvisTypes.avisProprietaireDuSol.id] = { ...AvisTypes.avisProprietaireDuSol, optionnel: false }
+      avis[AVIS_TYPES.avisCasParCas] = { id: AVIS_TYPES.avisCasParCas, optionnel: isArmMecanise === IS_ARM_NON_MECANISE }
+      avis[AVIS_TYPES.avisProprietaireDuSol] = { id: AVIS_TYPES.avisProprietaireDuSol, optionnel: false }
     }
   }
 
   if (etapeTypeId === ETAPES_TYPES.avisDesCollectivites) {
-    avis[AvisTypes.avisDUneCollectivite.id] = { ...AvisTypes.avisDUneCollectivite, optionnel: true }
+    avis[AVIS_TYPES.avisDUneCollectivite] = { id: AVIS_TYPES.avisDUneCollectivite, optionnel: true }
   } else if (etapeTypeId === ETAPES_TYPES.avisDesServicesEtCommissionsConsultatives) {
-    avis[AvisTypes.avisDirectionRegionaleDesAffairesCulturelles.id] = { ...AvisTypes.avisDirectionRegionaleDesAffairesCulturelles, optionnel: true }
-    avis[AvisTypes.avisConseilDepartementalEnvironnementRisquesSanitairesTechnologiques.id] = { ...AvisTypes.avisConseilDepartementalEnvironnementRisquesSanitairesTechnologiques, optionnel: true }
-    avis[AvisTypes.avisDirectionsRégionalesEconomieEmploiTravailSolidarités.id] = { ...AvisTypes.avisDirectionsRégionalesEconomieEmploiTravailSolidarités, optionnel: true }
-    avis[AvisTypes.avisDirectionRegionaleFinancesPubliques.id] = { ...AvisTypes.avisDirectionRegionaleFinancesPubliques, optionnel: true }
-    avis[AvisTypes.avisGendarmerieNationale.id] = { ...AvisTypes.avisGendarmerieNationale, optionnel: true }
-    avis[AvisTypes.avisIFREMER.id] = { ...AvisTypes.avisIFREMER, optionnel: true }
-    avis[AvisTypes.avisInstitutNationalOrigineQualite.id] = { ...AvisTypes.avisInstitutNationalOrigineQualite, optionnel: true }
-    avis[AvisTypes.avisServiceAdministratifLocal.id] = { ...AvisTypes.avisServiceAdministratifLocal, optionnel: true }
-    avis[AvisTypes.avisAutoriteMilitaire.id] = { ...AvisTypes.avisAutoriteMilitaire, optionnel: true }
-    avis[AvisTypes.avisParcNational.id] = { ...AvisTypes.avisParcNational, optionnel: true }
-    avis[AvisTypes.avisDirectionDepartementaleTerritoiresMer.id] = { ...AvisTypes.avisDirectionDepartementaleTerritoiresMer, optionnel: true }
-    avis[AvisTypes.avisAgenceRegionaleSante.id] = { ...AvisTypes.avisAgenceRegionaleSante, optionnel: true }
-    avis[AvisTypes.avisCaisseGeneraleSecuriteSociale.id] = { ...AvisTypes.avisCaisseGeneraleSecuriteSociale, optionnel: true }
-    avis[AvisTypes.autreAvis.id] = { ...AvisTypes.autreAvis, optionnel: true }
+    avis[AVIS_TYPES.avisDirectionRegionaleDesAffairesCulturelles] = { id: AVIS_TYPES.avisDirectionRegionaleDesAffairesCulturelles, optionnel: true }
+    avis[AVIS_TYPES.avisConseilDepartementalEnvironnementRisquesSanitairesTechnologiques] = { id: AVIS_TYPES.avisConseilDepartementalEnvironnementRisquesSanitairesTechnologiques, optionnel: true }
+    avis[AVIS_TYPES.avisDirectionsRégionalesEconomieEmploiTravailSolidarités] = { id: AVIS_TYPES.avisDirectionsRégionalesEconomieEmploiTravailSolidarités, optionnel: true }
+    avis[AVIS_TYPES.avisDirectionRegionaleFinancesPubliques] = { id: AVIS_TYPES.avisDirectionRegionaleFinancesPubliques, optionnel: true }
+    avis[AVIS_TYPES.avisGendarmerieNationale] = { id: AVIS_TYPES.avisGendarmerieNationale, optionnel: true }
+    avis[AVIS_TYPES.avisIFREMER] = { id: AVIS_TYPES.avisIFREMER, optionnel: true }
+    avis[AVIS_TYPES.avisInstitutNationalOrigineQualite] = { id: AVIS_TYPES.avisInstitutNationalOrigineQualite, optionnel: true }
+    avis[AVIS_TYPES.avisServiceAdministratifLocal] = { id: AVIS_TYPES.avisServiceAdministratifLocal, optionnel: true }
+    avis[AVIS_TYPES.avisAutoriteMilitaire] = { id: AVIS_TYPES.avisAutoriteMilitaire, optionnel: true }
+    avis[AVIS_TYPES.avisParcNational] = { id: AVIS_TYPES.avisParcNational, optionnel: true }
+    avis[AVIS_TYPES.avisDirectionDepartementaleTerritoiresMer] = { id: AVIS_TYPES.avisDirectionDepartementaleTerritoiresMer, optionnel: true }
+    avis[AVIS_TYPES.avisAgenceRegionaleSante] = { id: AVIS_TYPES.avisAgenceRegionaleSante, optionnel: true }
+    avis[AVIS_TYPES.avisCaisseGeneraleSecuriteSociale] = { id: AVIS_TYPES.avisCaisseGeneraleSecuriteSociale, optionnel: true }
+    avis[AVIS_TYPES.autreAvis] = { id: AVIS_TYPES.autreAvis, optionnel: true }
     // L'avis de l'onf est obligatoire que pour les ARM
-    avis[AvisTypes.avisOfficeNationalDesForets.id] = { ...AvisTypes.avisOfficeNationalDesForets, optionnel: machineId === 'ProcedureSpecifique' || titreTypeId !== 'arm' }
-    avis[AvisTypes.expertiseOfficeNationalDesForets.id] = { ...AvisTypes.expertiseOfficeNationalDesForets, optionnel: true }
+    avis[AVIS_TYPES.avisOfficeNationalDesForets] = { id: AVIS_TYPES.avisOfficeNationalDesForets, optionnel: machineId === 'ProcedureSpecifique' || titreTypeId !== 'arm' }
+    avis[AVIS_TYPES.expertiseOfficeNationalDesForets] = { id: AVIS_TYPES.expertiseOfficeNationalDesForets, optionnel: true }
     // TODO 2024-05-14: rendre obligatoire pour les PNMs quand ces derniers seront implémentés
-    avis[AvisTypes.avisParcNaturelMarin.id] = { ...AvisTypes.avisParcNaturelMarin, optionnel: true }
+    avis[AVIS_TYPES.avisParcNaturelMarin] = { id: AVIS_TYPES.avisParcNaturelMarin, optionnel: true }
 
     if (communeIds.some(id => toDepartementId(id) === DEPARTEMENT_IDS.Guyane)) {
-      avis[AvisTypes.avisDirectionAlimentationAgricultureForet.id] = { ...AvisTypes.avisDirectionAlimentationAgricultureForet, optionnel: true }
-      avis[AvisTypes.avisEtatMajorOrpaillagePecheIllicite.id] = { ...AvisTypes.avisEtatMajorOrpaillagePecheIllicite, optionnel: true }
+      avis[AVIS_TYPES.avisDirectionAlimentationAgricultureForet] = { id: AVIS_TYPES.avisDirectionAlimentationAgricultureForet, optionnel: true }
+      avis[AVIS_TYPES.avisEtatMajorOrpaillagePecheIllicite] = { id: AVIS_TYPES.avisEtatMajorOrpaillagePecheIllicite, optionnel: true }
     }
 
     // TODO 2024-06-18 Normalement c'est obligatoire si avis propriétaire du sol est favorable avec réserve,  optionnel pour le moment
     if (TitresTypes[titreTypeId].typeId === TITRES_TYPES_TYPES_IDS.AUTORISATION_D_EXPLOITATION) {
-      avis[AvisTypes.confirmationAccordProprietaireDuSol.id] = { ...AvisTypes.confirmationAccordProprietaireDuSol, optionnel: true }
+      avis[AVIS_TYPES.confirmationAccordProprietaireDuSol] = { id: AVIS_TYPES.confirmationAccordProprietaireDuSol, optionnel: true }
     }
   } else if (etapeTypeId === ETAPES_TYPES.consultationDesAdministrationsCentrales) {
-    avis[AvisTypes.autreAvis.id] = { ...AvisTypes.autreAvis, optionnel: true }
+    avis[AVIS_TYPES.autreAvis] = { id: AVIS_TYPES.autreAvis, optionnel: true }
   }
 
   return avis

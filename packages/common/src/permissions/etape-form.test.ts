@@ -1168,23 +1168,11 @@ test("getAvisType: avis au cas par cas et avis du propriétaire du sol sont obli
     {
       "avisCasParCas": {
         "id": "avisCasParCas",
-        "nom": "Décision au cas par cas",
         "optionnel": false,
-        "statutIds": [
-          "Exempté",
-          "Requis",
-        ],
       },
       "avisProprietaireDuSol": {
         "id": "avisProprietaireDuSol",
-        "nom": "avis du propriétaire du sol",
         "optionnel": false,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
       },
     }
   `)
@@ -1195,14 +1183,7 @@ test('getAvisType', () => {
       {
         "avisDUneCollectivite": {
           "id": "avisDUneCollectivite",
-          "nom": "Avis d'une collectivité",
           "optionnel": true,
-          "statutIds": [
-            "Favorable",
-            "Défavorable",
-            "Favorable avec réserves",
-            "Non renseigné",
-          ],
         },
       }
     `)
@@ -1213,190 +1194,71 @@ test('getAvisType', () => {
     {
       "autreAvis": {
         "id": "autreAvis",
-        "nom": "Autre avis",
         "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
       },
       "avisAgenceRegionaleSante": {
         "id": "avisAgenceRegionaleSante",
-        "nom": "Avis de l'Agence Régionale de Santé (ARS)",
         "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
       },
       "avisAutoriteMilitaire": {
         "id": "avisAutoriteMilitaire",
-        "nom": "Avis de l'Autorité militaire",
         "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
       },
       "avisCaisseGeneraleSecuriteSociale": {
         "id": "avisCaisseGeneraleSecuriteSociale",
-        "nom": "Avis de la Caisse Générale de Sécurité Sociale",
         "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
       },
       "avisConseilDepartementalEnvironnementRisquesSanitairesTechnologiques": {
         "id": "avisConseilDepartementalEnvironnementRisquesSanitairesTechnologiques",
-        "nom": "Avis du Conseil Départemental de l'Environnement et des Risques Sanitaires et Technologiques (CODERST)",
         "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
       },
       "avisDirectionDepartementaleTerritoiresMer": {
         "id": "avisDirectionDepartementaleTerritoiresMer",
-        "nom": "Avis de la Direction Départementale des Territoires et de la Mer (DDTM)",
         "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
       },
       "avisDirectionRegionaleDesAffairesCulturelles": {
         "id": "avisDirectionRegionaleDesAffairesCulturelles",
-        "nom": "Avis de la Direction Régionale Des Affaires Culturelles (DRAC)",
         "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
       },
       "avisDirectionRegionaleFinancesPubliques": {
         "id": "avisDirectionRegionaleFinancesPubliques",
-        "nom": "Avis de la Direction Regionale Des Finances Publiques",
         "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
       },
       "avisDirectionsRégionalesEconomieEmploiTravailSolidarités": {
         "id": "avisDirectionsRégionalesEconomieEmploiTravailSolidarités",
-        "nom": "Avis de la Direction régionale de l'économie, de l'emploi, du travail et des solidarités",
         "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
       },
       "avisGendarmerieNationale": {
         "id": "avisGendarmerieNationale",
-        "nom": "Avis de la Gendarmerie Nationale",
         "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
       },
       "avisIFREMER": {
         "id": "avisIFREMER",
-        "nom": "Avis de l'IFREMER",
         "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
       },
       "avisInstitutNationalOrigineQualite": {
         "id": "avisInstitutNationalOrigineQualite",
-        "nom": "Avis de l'Institut National de l'origine et de la Qualité",
         "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
       },
       "avisOfficeNationalDesForets": {
         "id": "avisOfficeNationalDesForets",
-        "nom": "Avis de l'Office National des Forêts",
         "optionnel": false,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
       },
       "avisParcNational": {
         "id": "avisParcNational",
-        "nom": "Avis du Parc National",
         "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
       },
       "avisParcNaturelMarin": {
         "id": "avisParcNaturelMarin",
-        "nom": "Avis du Parc Naturel Marin",
         "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
       },
       "avisServiceAdministratifLocal": {
         "id": "avisServiceAdministratifLocal",
-        "nom": "Avis d'un Service Administratif Local",
         "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
       },
       "expertiseOfficeNationalDesForets": {
         "id": "expertiseOfficeNationalDesForets",
-        "nom": "Expertise de l'Office National des Forêts",
         "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
       },
     }
   `)
@@ -1414,212 +1276,79 @@ test('getAvisType', () => {
     {
       "autreAvis": {
         "id": "autreAvis",
-        "nom": "Autre avis",
         "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
       },
       "avisAgenceRegionaleSante": {
         "id": "avisAgenceRegionaleSante",
-        "nom": "Avis de l'Agence Régionale de Santé (ARS)",
         "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
       },
       "avisAutoriteMilitaire": {
         "id": "avisAutoriteMilitaire",
-        "nom": "Avis de l'Autorité militaire",
         "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
       },
       "avisCaisseGeneraleSecuriteSociale": {
         "id": "avisCaisseGeneraleSecuriteSociale",
-        "nom": "Avis de la Caisse Générale de Sécurité Sociale",
         "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
       },
       "avisConseilDepartementalEnvironnementRisquesSanitairesTechnologiques": {
         "id": "avisConseilDepartementalEnvironnementRisquesSanitairesTechnologiques",
-        "nom": "Avis du Conseil Départemental de l'Environnement et des Risques Sanitaires et Technologiques (CODERST)",
         "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
       },
       "avisDirectionAlimentationAgricultureForet": {
         "id": "avisDirectionAlimentationAgricultureForet",
-        "nom": "Avis de la Direction de l'Alimentation de l'Agriculture et de la Forêt (DRAF)",
         "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
       },
       "avisDirectionDepartementaleTerritoiresMer": {
         "id": "avisDirectionDepartementaleTerritoiresMer",
-        "nom": "Avis de la Direction Départementale des Territoires et de la Mer (DDTM)",
         "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
       },
       "avisDirectionRegionaleDesAffairesCulturelles": {
         "id": "avisDirectionRegionaleDesAffairesCulturelles",
-        "nom": "Avis de la Direction Régionale Des Affaires Culturelles (DRAC)",
         "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
       },
       "avisDirectionRegionaleFinancesPubliques": {
         "id": "avisDirectionRegionaleFinancesPubliques",
-        "nom": "Avis de la Direction Regionale Des Finances Publiques",
         "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
       },
       "avisDirectionsRégionalesEconomieEmploiTravailSolidarités": {
         "id": "avisDirectionsRégionalesEconomieEmploiTravailSolidarités",
-        "nom": "Avis de la Direction régionale de l'économie, de l'emploi, du travail et des solidarités",
         "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
       },
       "avisEtatMajorOrpaillagePecheIllicite": {
         "id": "avisEtatMajorOrpaillagePecheIllicite",
-        "nom": "Avis de l'État-major Orpaillage et Pêche Illicite (EMOPI)",
         "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
       },
       "avisGendarmerieNationale": {
         "id": "avisGendarmerieNationale",
-        "nom": "Avis de la Gendarmerie Nationale",
         "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
       },
       "avisIFREMER": {
         "id": "avisIFREMER",
-        "nom": "Avis de l'IFREMER",
         "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
       },
       "avisInstitutNationalOrigineQualite": {
         "id": "avisInstitutNationalOrigineQualite",
-        "nom": "Avis de l'Institut National de l'origine et de la Qualité",
         "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
       },
       "avisOfficeNationalDesForets": {
         "id": "avisOfficeNationalDesForets",
-        "nom": "Avis de l'Office National des Forêts",
         "optionnel": false,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
       },
       "avisParcNational": {
         "id": "avisParcNational",
-        "nom": "Avis du Parc National",
         "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
       },
       "avisParcNaturelMarin": {
         "id": "avisParcNaturelMarin",
-        "nom": "Avis du Parc Naturel Marin",
         "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
       },
       "avisServiceAdministratifLocal": {
         "id": "avisServiceAdministratifLocal",
-        "nom": "Avis d'un Service Administratif Local",
         "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
       },
       "expertiseOfficeNationalDesForets": {
         "id": "expertiseOfficeNationalDesForets",
-        "nom": "Expertise de l'Office National des Forêts",
         "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
       },
     }
   `)
@@ -1637,223 +1366,83 @@ test('getAvisType', () => {
     {
       "autreAvis": {
         "id": "autreAvis",
-        "nom": "Autre avis",
         "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
       },
       "avisAgenceRegionaleSante": {
         "id": "avisAgenceRegionaleSante",
-        "nom": "Avis de l'Agence Régionale de Santé (ARS)",
         "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
       },
       "avisAutoriteMilitaire": {
         "id": "avisAutoriteMilitaire",
-        "nom": "Avis de l'Autorité militaire",
         "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
       },
       "avisCaisseGeneraleSecuriteSociale": {
         "id": "avisCaisseGeneraleSecuriteSociale",
-        "nom": "Avis de la Caisse Générale de Sécurité Sociale",
         "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
       },
       "avisConseilDepartementalEnvironnementRisquesSanitairesTechnologiques": {
         "id": "avisConseilDepartementalEnvironnementRisquesSanitairesTechnologiques",
-        "nom": "Avis du Conseil Départemental de l'Environnement et des Risques Sanitaires et Technologiques (CODERST)",
         "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
       },
       "avisDirectionAlimentationAgricultureForet": {
         "id": "avisDirectionAlimentationAgricultureForet",
-        "nom": "Avis de la Direction de l'Alimentation de l'Agriculture et de la Forêt (DRAF)",
         "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
       },
       "avisDirectionDepartementaleTerritoiresMer": {
         "id": "avisDirectionDepartementaleTerritoiresMer",
-        "nom": "Avis de la Direction Départementale des Territoires et de la Mer (DDTM)",
         "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
       },
       "avisDirectionRegionaleDesAffairesCulturelles": {
         "id": "avisDirectionRegionaleDesAffairesCulturelles",
-        "nom": "Avis de la Direction Régionale Des Affaires Culturelles (DRAC)",
         "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
       },
       "avisDirectionRegionaleFinancesPubliques": {
         "id": "avisDirectionRegionaleFinancesPubliques",
-        "nom": "Avis de la Direction Regionale Des Finances Publiques",
         "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
       },
       "avisDirectionsRégionalesEconomieEmploiTravailSolidarités": {
         "id": "avisDirectionsRégionalesEconomieEmploiTravailSolidarités",
-        "nom": "Avis de la Direction régionale de l'économie, de l'emploi, du travail et des solidarités",
         "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
       },
       "avisEtatMajorOrpaillagePecheIllicite": {
         "id": "avisEtatMajorOrpaillagePecheIllicite",
-        "nom": "Avis de l'État-major Orpaillage et Pêche Illicite (EMOPI)",
         "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
       },
       "avisGendarmerieNationale": {
         "id": "avisGendarmerieNationale",
-        "nom": "Avis de la Gendarmerie Nationale",
         "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
       },
       "avisIFREMER": {
         "id": "avisIFREMER",
-        "nom": "Avis de l'IFREMER",
         "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
       },
       "avisInstitutNationalOrigineQualite": {
         "id": "avisInstitutNationalOrigineQualite",
-        "nom": "Avis de l'Institut National de l'origine et de la Qualité",
         "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
       },
       "avisOfficeNationalDesForets": {
         "id": "avisOfficeNationalDesForets",
-        "nom": "Avis de l'Office National des Forêts",
         "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
       },
       "avisParcNational": {
         "id": "avisParcNational",
-        "nom": "Avis du Parc National",
         "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
       },
       "avisParcNaturelMarin": {
         "id": "avisParcNaturelMarin",
-        "nom": "Avis du Parc Naturel Marin",
         "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
       },
       "avisServiceAdministratifLocal": {
         "id": "avisServiceAdministratifLocal",
-        "nom": "Avis d'un Service Administratif Local",
         "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
       },
       "confirmationAccordProprietaireDuSol": {
         "id": "confirmationAccordProprietaireDuSol",
-        "nom": "Confirmation de l'accord du propriétaire du sol",
         "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
       },
       "expertiseOfficeNationalDesForets": {
         "id": "expertiseOfficeNationalDesForets",
-        "nom": "Expertise de l'Office National des Forêts",
         "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
       },
     }
   `)
@@ -1871,14 +1460,7 @@ test('getAvisType', () => {
     {
       "autreAvis": {
         "id": "autreAvis",
-        "nom": "Autre avis",
         "optionnel": true,
-        "statutIds": [
-          "Favorable",
-          "Défavorable",
-          "Favorable avec réserves",
-          "Non renseigné",
-        ],
       },
     }
   `)

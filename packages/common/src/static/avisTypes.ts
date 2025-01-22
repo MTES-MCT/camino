@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { isNonEmptyArray, isNullOrUndefined, NonEmptyArray } from '../typescript-tools'
 
 interface Definition<T> {
   id: T
@@ -11,14 +12,42 @@ const AVIS_TYPE_IDS_AUTRE = ['autreAvis'] as const
 
 const AVIS_TYPES_IDS = [...AVIS_TYPES_IDS_WITHOUT_AUTRE, ...AVIS_TYPE_IDS_AUTRE] as const
 
-export const avisTypeIdValidator = z.enum(AVIS_TYPES_IDS)
+const avisTypeIdValidator = z.enum(AVIS_TYPES_IDS)
 export type AvisTypeId = z.infer<typeof avisTypeIdValidator>
 
 export const autreAvisTypeIdValidator = z.enum(AVIS_TYPE_IDS_AUTRE)
 export const avisTypeIdSansAutreValidator = z.enum(AVIS_TYPES_IDS_WITHOUT_AUTRE)
 
 const defaultStatutIds = ['Favorable', 'Défavorable', 'Favorable avec réserves', 'Non renseigné'] as const satisfies AvisStatutId[]
-export const AvisTypes = {
+
+export const AVIS_TYPES = {
+  confirmationAccordProprietaireDuSol: 'confirmationAccordProprietaireDuSol',
+  avisDirectionRegionaleDesAffairesCulturelles: 'avisDirectionRegionaleDesAffairesCulturelles',
+  avisDirectionAlimentationAgricultureForet: 'avisDirectionAlimentationAgricultureForet',
+  avisConseilDepartementalEnvironnementRisquesSanitairesTechnologiques: 'avisConseilDepartementalEnvironnementRisquesSanitairesTechnologiques',
+  avisServiceMilieuxNaturelsBiodiversiteSitesPaysages: 'avisServiceMilieuxNaturelsBiodiversiteSitesPaysages',
+  avisDirectionsRégionalesEconomieEmploiTravailSolidarités: 'avisDirectionsRégionalesEconomieEmploiTravailSolidarités',
+  avisDirectionRegionaleFinancesPubliques: 'avisDirectionRegionaleFinancesPubliques',
+  avisGendarmerieNationale: 'avisGendarmerieNationale',
+  avisParcNaturelMarin: 'avisParcNaturelMarin',
+  avisIFREMER: 'avisIFREMER',
+  avisOfficeNationalDesForets: 'avisOfficeNationalDesForets',
+  expertiseOfficeNationalDesForets: 'expertiseOfficeNationalDesForets',
+  avisInstitutNationalOrigineQualite: 'avisInstitutNationalOrigineQualite',
+  avisEtatMajorOrpaillagePecheIllicite: 'avisEtatMajorOrpaillagePecheIllicite',
+  avisServiceAdministratifLocal: 'avisServiceAdministratifLocal',
+  avisAutoriteMilitaire: 'avisAutoriteMilitaire',
+  avisParcNational: 'avisParcNational',
+  avisDirectionDepartementaleTerritoiresMer: 'avisDirectionDepartementaleTerritoiresMer',
+  avisAgenceRegionaleSante: 'avisAgenceRegionaleSante',
+  avisCaisseGeneraleSecuriteSociale: 'avisCaisseGeneraleSecuriteSociale',
+  avisDUneCollectivite: 'avisDUneCollectivite',
+  avisDeLaMissionAutoriteEnvironnementale: 'avisDeLaMissionAutoriteEnvironnementale',
+  avisProprietaireDuSol: 'avisProprietaireDuSol',
+  avisCasParCas: 'avisCasParCas',
+  autreAvis: 'autreAvis',
+} as const satisfies { [key in AvisTypeId]: AvisTypeId }
+const AvisTypes = {
   confirmationAccordProprietaireDuSol: { id: 'confirmationAccordProprietaireDuSol', nom: "Confirmation de l'accord du propriétaire du sol", statutIds: defaultStatutIds },
   avisDirectionRegionaleDesAffairesCulturelles: {
     id: 'avisDirectionRegionaleDesAffairesCulturelles',
@@ -70,6 +99,18 @@ export const AvisTypes = {
   autreAvis: { id: 'autreAvis', nom: 'Autre avis', statutIds: defaultStatutIds },
 } as const satisfies { [key in AvisTypeId]: Definition<key> }
 
+const nonRenseigneAvis: NonEmptyArray<AvisStatutId> = ['Non renseigné']
+export const getAvisNom = (id: AvisTypeId): string => AvisTypes[id].nom
+export const getAvisStatut = (id: AvisTypeId | null, required: boolean): NonEmptyArray<AvisStatutId> => {
+  if (isNullOrUndefined(id)) {
+    return nonRenseigneAvis
+  }
+  const statutIds = AvisTypes[id].statutIds
+  const removeNonRenseigneIfRequired = statutIds.filter(id => !required || id !== 'Non renseigné')
+
+  /* v8 ignore next */
+  return isNonEmptyArray(removeNonRenseigneIfRequired) ? removeNonRenseigneIfRequired : nonRenseigneAvis
+}
 // prettier-ignore
 const AvisStatutIds = [
   "Favorable",
@@ -79,6 +120,15 @@ const AvisStatutIds = [
   'Exempté',
   "Requis"
 ] as const
+
+export const AVIS_STATUTS = {
+  Favorable: 'Favorable',
+  Défavorable: 'Défavorable',
+  ['Favorable avec réserves']: 'Favorable avec réserves',
+  ['Non renseigné']: 'Non renseigné',
+  Exempté: 'Exempté',
+  Requis: 'Requis',
+} as const satisfies { [key in AvisStatutId]: key }
 
 export const avisStatutIdValidator = z.enum(AvisStatutIds)
 export type AvisStatutId = z.infer<typeof avisStatutIdValidator>
