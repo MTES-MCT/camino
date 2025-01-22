@@ -9,10 +9,9 @@ import { canDeleteUtilisateur } from 'camino-common/src/permissions/utilisateurs
 import { PermissionDisplay } from './utilisateur/permission-edit'
 import { UtilisateurToEdit } from 'camino-common/src/utilisateur'
 import { Entreprise } from 'camino-common/src/entreprise'
-import { isNotNullNorUndefined, sleep } from 'camino-common/src/typescript-tools'
+import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 
 import { entreprisesKey, userKey } from '@/moi'
-import { DsfrInputCheckbox } from './_ui/dsfr-input-checkbox'
 import { UtilisateurId, utilisateurIdValidator, User, UserNotNull } from 'camino-common/src/roles'
 import { Alert } from './_ui/alert'
 import { DsfrLink, DsfrButtonIcon } from './_ui/dsfr-button'
@@ -73,7 +72,7 @@ export const Utilisateur = defineComponent({
 export interface Props {
   user: User
   utilisateurId: UtilisateurId
-  apiClient: Pick<UtilisateurApiClient, 'getQGISToken' | 'getUtilisateur' | 'removeUtilisateur' | 'getUtilisateurNewsletter' | 'updateUtilisateur' | 'updateUtilisateurNewsletter'>
+  apiClient: Pick<UtilisateurApiClient, 'getQGISToken' | 'getUtilisateur' | 'removeUtilisateur' | 'updateUtilisateur'>
   entreprises: Entreprise[]
   passwordUpdate: () => void
 }
@@ -89,7 +88,6 @@ export const PureUtilisateur = defineComponent<Props>(props => {
     await get()
   })
 
-  const subscription = ref<AsyncData<boolean>>({ status: 'LOADING' })
   const utilisateur = ref<AsyncData<UserNotNull>>({ status: 'LOADING' })
   const removePopup = ref<boolean>(false)
   const isMe = computed<boolean>(() => {
@@ -109,45 +107,11 @@ export const PureUtilisateur = defineComponent<Props>(props => {
         value: utilisateurFromApi,
       }
     }
-
-    if (isMe.value) {
-      const value = await props.apiClient.getUtilisateurNewsletter(props.utilisateurId)
-      if ('message' in value) {
-        subscription.value = {
-          status: 'NEW_ERROR',
-          error: value,
-        }
-      } else {
-        subscription.value = {
-          status: 'LOADED',
-          value: value.subscribed,
-        }
-      }
-    }
   }
 
   const updateUtilisateur = async (utilisateur: UtilisateurToEdit) => {
     await props.apiClient.updateUtilisateur(utilisateur)
     await get()
-  }
-
-  const updateSubscription = async (utilisateurId: UtilisateurId, newsletterChecked: boolean) => {
-    subscription.value = { status: 'LOADING' }
-    try {
-      await props.apiClient.updateUtilisateurNewsletter(utilisateurId, newsletterChecked)
-      // Hack for mailjet latency
-      await sleep(500)
-      subscription.value = {
-        status: 'LOADED',
-        value: newsletterChecked,
-      }
-    } catch (e: any) {
-      console.error('error', e)
-      subscription.value = {
-        status: 'ERROR',
-        message: e.message ?? "Une erreur s'est produite",
-      }
-    }
   }
 
   return () => (
@@ -191,20 +155,7 @@ export const PureUtilisateur = defineComponent<Props>(props => {
                 item={isNotNullNorUndefined(item.telephone_mobile) ? <DsfrLink disabled={false} href={`tel:${item.telephone_mobile}`} icon={null} title={item.telephone_mobile} /> : <span>–</span>}
               />
               <PermissionDisplay user={props.user} utilisateur={item} apiClient={{ ...props.apiClient, updateUtilisateur }} entreprises={props.entreprises} />
-              {isMe.value ? (
-                <>
-                  <LabelWithValue
-                    title="Newsletter"
-                    item={
-                      <LoadingElement
-                        data={subscription.value}
-                        renderItem={item => <DsfrInputCheckbox legend={{ main: '' }} valueChanged={checked => updateSubscription(props.utilisateurId, checked)} initialValue={item} />}
-                      />
-                    }
-                  />
-                  <LabelWithValue title="QGis" item={<QGisToken apiClient={props.apiClient} />} />{' '}
-                </>
-              ) : null}
+              {isMe.value ? <LabelWithValue title="QGis" item={<QGisToken apiClient={props.apiClient} />} /> : null}
             </div>
           </>
         )}

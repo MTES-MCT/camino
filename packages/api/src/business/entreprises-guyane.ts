@@ -2,7 +2,7 @@ import { toDepartementId, Departements, CodePostal } from 'camino-common/src/sta
 import { PAYS_IDS } from 'camino-common/src/static/pays'
 import { Regions } from 'camino-common/src/static/region'
 import { knex } from '../knex'
-import { exploitantsGuyaneSubscriberUpdate } from '../tools/api-mailjet/newsletter'
+import { exploitantsGuyaneSubscriberUpdate } from '../tools/api-mailjet/guyane'
 import { isNullOrUndefined } from 'camino-common/src/typescript-tools'
 
 interface Result {

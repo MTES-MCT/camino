@@ -166,18 +166,6 @@ describe('utilisateurCreer', () => {
   })
 })
 
-describe('registerToNewsletter', () => {
-  test("abonne l'email donné à la newsletter s'il n'est pas encore abonné", async () => {
-    const tested = await restNewCall(dbPool, '/rest/utilisateurs/registerToNewsletter', {}, undefined, { email: 'jean@dupont.fr' })
-    expect(tested.statusCode).toBe(200)
-    expect(tested.body).toBe(true)
-  })
-  test("ne fonctionne pas si l'email est invalide", async () => {
-    const tested = await restNewCall(dbPool, '/rest/utilisateurs/registerToNewsletter', {}, undefined)
-    expect(tested.statusCode).toBe(400)
-  })
-})
-
 describe('getUtilisateurs', () => {
   test('retourne la liste ordonnée des utilisateurs', async () => {
     const id = utilisateurIdValidator.parse('id')

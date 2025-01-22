@@ -47,7 +47,6 @@ const configValidator = caminoConfigValidator.extend({
   API_ADMINISTRATION_URL: z.string().url(),
   API_MAILJET_KEY: z.string(),
   API_MAILJET_SECRET: z.string(),
-  API_MAILJET_CONTACTS_LIST_ID: z.coerce.number(),
   API_MAILJET_EXPLOITANTS_GUYANE_LIST_ID: z.coerce.number(),
   LOG_LEVEL: logLevelValidator.default('INFO'),
   HTTPS_PROXY: httpsProxyValidator,

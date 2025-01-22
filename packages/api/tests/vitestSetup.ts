@@ -8,11 +8,6 @@ vi.mock('../src/tools/api-mailjet/emails', () => ({
   emailsWithTemplateSend: vi.fn().mockImplementation(a => a),
 }))
 
-vi.mock('../src/tools/api-mailjet/newsletter', () => ({
-  __esModule: true,
-  newsletterSubscriberUpdate: vi.fn().mockImplementation(() => 'email inscrit à la newsletter'),
-}))
-
 function assertObject(stuff: unknown): asserts stuff is object {
   if (typeof stuff !== 'object') {
     throw new Error(`${stuff} n'est pas un objet`)

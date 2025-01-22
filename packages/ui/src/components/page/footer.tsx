@@ -1,10 +1,8 @@
 import { FunctionalComponent } from 'vue'
-import { NewsletterForm } from './footer/newsletter-form'
 import { CaminoRouterLink } from '@/router/camino-router-link'
 
 interface Props {
   version: string
-  displayNewsletter: boolean
 }
 
 export const Footer: FunctionalComponent<Props> = (props: Props) => (
@@ -85,7 +83,6 @@ export const Footer: FunctionalComponent<Props> = (props: Props) => (
             </a>
           </div>
           <div class="fr-footer__content">
-            {props.displayNewsletter ? <NewsletterForm class="fr-footer__content-desc" /> : null}
             <ul class="fr-footer__content-list">
               <li class="fr-footer__content-item">
                 <a class="fr-footer__content-link" target="_blank" href="https://economie.gouv.fr" rel="noopener noreferrer" title="Site du ministère de l’économie - lien externe">

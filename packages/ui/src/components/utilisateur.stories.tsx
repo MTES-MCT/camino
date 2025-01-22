@@ -17,8 +17,6 @@ const deleteUtilisateur = action('deleteUtilisateur')
 const updateUtilisateur = action('updateUtilisateur')
 const passwordUpdate = action('passwordUpdate')
 
-const editNewsletter = action('editNewsletter')
-
 const apiClientMock: Props['apiClient'] = {
   getUtilisateur: () =>
     Promise.resolve({
@@ -30,7 +28,6 @@ const apiClientMock: Props['apiClient'] = {
       telephone_fixe: null,
       telephone_mobile: null,
     }),
-  getUtilisateurNewsletter: () => Promise.resolve({ subscribed: true }),
   removeUtilisateur: params => {
     deleteUtilisateur(params)
 
@@ -38,11 +35,6 @@ const apiClientMock: Props['apiClient'] = {
   },
   updateUtilisateur: params => {
     updateUtilisateur(params)
-
-    return Promise.resolve()
-  },
-  updateUtilisateurNewsletter: (...values) => {
-    editNewsletter(values)
 
     return Promise.resolve()
   },
@@ -80,7 +72,6 @@ export const error: StoryFn = () => (
     passwordUpdate={passwordUpdate}
     apiClient={{
       ...apiClientMock,
-      getUtilisateurNewsletter: () => Promise.reject(new Error('Cassé')),
       getUtilisateur: () => Promise.resolve({ message: 'Cassé' }),
     }}
   />

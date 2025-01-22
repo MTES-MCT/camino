@@ -1,12 +1,11 @@
 import { CaminoRequest, CustomResponse } from './express-type'
 import { CaminoApiError } from '../../types'
 import { HTTP_STATUS } from 'camino-common/src/http'
-import { isSubscribedToNewsLetter, newsletterSubscriberUpdate } from '../../tools/api-mailjet/newsletter'
 import { User, UserNotNull, utilisateurIdValidator } from 'camino-common/src/roles'
 import { utilisateursFormatTable } from './format/utilisateurs'
 import { tableConvert } from './_convert'
 import { fileNameCreate } from '../../tools/file-name-create'
-import { newsletterAbonnementValidator, QGISTokenRest, qgisTokenValidator, utilisateursSearchParamsValidator, UtilisateursTable, utilisateurToEdit } from 'camino-common/src/utilisateur'
+import { QGISTokenRest, qgisTokenValidator, utilisateursSearchParamsValidator, UtilisateursTable, utilisateurToEdit } from 'camino-common/src/utilisateur'
 import { idGenerate } from '../../database/models/_format/id-create'
 import { utilisateurUpdationValidate } from '../../business/validations/utilisateur-updation-validate'
 import { canDeleteUtilisateur } from 'camino-common/src/permissions/utilisateurs'
@@ -30,40 +29,6 @@ import { z } from 'zod'
 import { getEntreprises } from './entreprises.queries'
 import { fetch } from 'undici'
 import { updateQgisToken } from './utilisateurs.queries'
-
-const mailjetError = 'communication avec le serveur de mail impossible' as const
-type IsSubscribedToNewsletterErrors = GetUtilisateurByIdErrors | typeof mailjetError
-export const isSubscribedToNewsletter: RestNewGetCall<'/rest/utilisateurs/:id/newsletter'> = (rootPipe): Effect.Effect<{ subscribed: boolean }, CaminoApiError<IsSubscribedToNewsletterErrors>> =>
-  rootPipe.pipe(
-    Effect.filterOrFail(
-      ({ user }) => isNotNullNorUndefined(user),
-      () => ({ message: 'droits insuffisants' as const })
-    ),
-    Effect.flatMap(({ pool, params, user }) => newGetUtilisateurById(pool, params.id, user)),
-    Effect.flatMap(utilisateur =>
-      Effect.tryPromise({
-        try: () => isSubscribedToNewsLetter(utilisateur.email),
-        catch: e => ({ message: mailjetError, extra: e }),
-      })
-    ),
-    Effect.map(subscribed => ({ subscribed })),
-    Effect.mapError(caminoError =>
-      Match.value(caminoError.message).pipe(
-        Match.when('droits insuffisants', () => ({ ...caminoError, status: HTTP_STATUS.FORBIDDEN })),
-        Match.whenOr(
-          "Impossible d'exécuter la requête dans la base de données",
-          'communication avec le serveur de mail impossible',
-          'Problème de validation de données',
-          'Les données en base ne correspondent pas à ce qui est attendu',
-          () => ({
-            ...caminoError,
-            status: HTTP_STATUS.INTERNAL_SERVER_ERROR,
-          })
-        ),
-        Match.exhaustive
-      )
-    )
-  )
 
 export const updateUtilisateurPermission =
   (pool: Pool) =>
@@ -203,30 +168,6 @@ export const moi: RestNewGetCall<'/moi'> = (rootPipe): Effect.Effect<User, Camin
   )
 }
 
-export const manageNewsletterSubscription =
-  (pool: Pool) =>
-  async (req: CaminoRequest, res: CustomResponse<boolean>): Promise<void> => {
-    const user = req.auth
-
-    if (!req.params.id) {
-      res.sendStatus(HTTP_STATUS.FORBIDDEN)
-    } else {
-      const utilisateur = await getUtilisateurById(pool, utilisateurIdValidator.parse(req.params.id), user)
-
-      if (!user || !utilisateur) {
-        res.sendStatus(HTTP_STATUS.FORBIDDEN)
-      } else {
-        const subscriptionParsed = newsletterAbonnementValidator.safeParse(req.body)
-        if (subscriptionParsed.success) {
-          await newsletterSubscriberUpdate(utilisateur.email, subscriptionParsed.data.newsletter)
-          res.sendStatus(HTTP_STATUS.NO_CONTENT)
-        } else {
-          res.sendStatus(HTTP_STATUS.BAD_REQUEST)
-        }
-      }
-    }
-  }
-
 export const generateQgisToken: RestNewPostCall<'/rest/utilisateur/generateQgisToken'> = (rootPipe): Effect.Effect<QGISTokenRest, CaminoApiError<EffectDbQueryAndValidateErrors | ZodUnparseable>> =>
   rootPipe.pipe(
     Effect.bind('token', () => zodParseEffect(qgisTokenValidator, idGenerate())),
@@ -242,37 +183,6 @@ export const generateQgisToken: RestNewPostCall<'/rest/utilisateur/generateQgisT
       )
     )
   )
-
-export const registerToNewsletter: RestNewGetCall<'/rest/utilisateurs/registerToNewsletter'> = (rootPipe): Effect.Effect<boolean, CaminoApiError<"Impossible de s'enregistrer à la newsletter">> => {
-  return rootPipe.pipe(
-    Effect.flatMap(({ searchParams }) =>
-      Effect.tryPromise({
-        try: async () => {
-          await newsletterSubscriberUpdate(searchParams.email, true)
-
-          return true
-        },
-        catch: e => {
-          let extra = ''
-          if (typeof e === 'string') {
-            extra = e.toUpperCase()
-          } else if (e instanceof Error) {
-            extra = e.message
-          }
-
-          return { message: "Impossible de s'enregistrer à la newsletter" as const, extra }
-        },
-      })
-    ),
-    Effect.mapError(caminoError =>
-      Match.value(caminoError.message).pipe(
-        Match.when("Impossible de s'enregistrer à la newsletter", () => ({ ...caminoError, status: HTTP_STATUS.INTERNAL_SERVER_ERROR })),
-        Match.exhaustive
-      )
-    )
-  )
-}
-
 export const utilisateurs =
   (pool: Pool) =>
   async (

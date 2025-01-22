@@ -7,7 +7,7 @@ import { Footer } from './components/page/footer'
 import { MapPattern } from './components/_map/pattern'
 
 import { RouterView, useRoute } from 'vue-router'
-import { isNullOrUndefined, isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools'
+import { isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools'
 import { userKey } from './moi'
 export const App = defineComponent(() => {
   const route = useRoute()
@@ -29,10 +29,6 @@ export const App = defineComponent(() => {
     return applicationVersion
   })
 
-  const displayNewsletter = computed<boolean>(() => {
-    return isNullOrUndefined(user)
-  })
-
   return () => (
     <div>
       <MapPattern />
@@ -43,7 +39,7 @@ export const App = defineComponent(() => {
         <div class={hasGutter.value ? ['fr-container', 'fr-py-3w'] : null}>{loaded.value ? <RouterView /> : null}</div>
       </main>
 
-      <Footer displayNewsletter={displayNewsletter.value} version={version.value} />
+      <Footer version={version.value} />
     </div>
   )
 })

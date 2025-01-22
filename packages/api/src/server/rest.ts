@@ -19,18 +19,7 @@ import {
   entrepriseDocumentDownload,
   getAllEntreprises,
 } from '../api/rest/entreprises'
-import {
-  deleteUtilisateur,
-  generateQgisToken,
-  isSubscribedToNewsletter,
-  manageNewsletterSubscription,
-  moi,
-  updateUtilisateurPermission,
-  utilisateurs,
-  registerToNewsletter,
-  getUtilisateurs,
-  getUtilisateur,
-} from '../api/rest/utilisateurs'
+import { deleteUtilisateur, generateQgisToken, moi, updateUtilisateurPermission, utilisateurs, getUtilisateurs, getUtilisateur } from '../api/rest/utilisateurs'
 import { logout, resetPassword } from '../api/rest/keycloak'
 import { getDGTMStats, getGranulatsMarinsStats, getGuyaneStats, getMinerauxMetauxMetropolesStats } from '../api/rest/statistiques/index'
 import {
@@ -217,11 +206,9 @@ const restRouteImplementations: Readonly<{ [key in CaminoRestRoute]: Transform<k
   '/rest/demarches/:demarcheIdOrSlug': { newGetCall: getDemarcheByIdOrSlugApi, deleteCall: demarcheSupprimer, ...CaminoRestRoutes['/rest/demarches/:demarcheIdOrSlug'] },
   '/rest/demarches/:demarcheId/miseEnConcurrence': { newGetCall: getDemarchesEnConcurrence, ...CaminoRestRoutes['/rest/demarches/:demarcheId/miseEnConcurrence'] },
   '/rest/demarches/:demarcheId/resultatMiseEnConcurrence': { newGetCall: getResultatEnConcurrence, ...CaminoRestRoutes['/rest/demarches/:demarcheId/resultatMiseEnConcurrence'] },
-  '/rest/utilisateurs/registerToNewsletter': { newGetCall: registerToNewsletter, ...CaminoRestRoutes['/rest/utilisateurs/registerToNewsletter'] },
   '/rest/utilisateur/generateQgisToken': { newPostCall: generateQgisToken, ...CaminoRestRoutes['/rest/utilisateur/generateQgisToken'] },
   '/rest/utilisateurs/:id/permission': { postCall: updateUtilisateurPermission, ...CaminoRestRoutes['/rest/utilisateurs/:id/permission'] },
   '/rest/utilisateurs/:id/delete': { getCall: deleteUtilisateur, ...CaminoRestRoutes['/rest/utilisateurs/:id/delete'] },
-  '/rest/utilisateurs/:id/newsletter': { newGetCall: isSubscribedToNewsletter, postCall: manageNewsletterSubscription, ...CaminoRestRoutes['/rest/utilisateurs/:id/newsletter'] }, // UNTESTED YET
   '/rest/utilisateurs/:id': { newGetCall: getUtilisateur, ...CaminoRestRoutes['/rest/utilisateurs/:id'] },
   '/rest/utilisateurs': { newGetCall: getUtilisateurs, ...CaminoRestRoutes['/rest/utilisateurs'] },
   '/rest/entreprises/:entrepriseId/fiscalite/:annee': { getCall: fiscalite, ...CaminoRestRoutes['/rest/entreprises/:entrepriseId/fiscalite/:annee'] }, // UNTESTED YET

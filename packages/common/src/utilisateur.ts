@@ -18,12 +18,6 @@ export const utilisateurToEdit = z.object({
 
 export type UtilisateurToEdit = z.infer<typeof utilisateurToEdit>
 
-export const newsletterAbonnementValidator = z.object({ newsletter: z.boolean() })
-
-export const newsletterRegistrationValidator = z.object({
-  email: z.string(),
-})
-
 export const utilisateursTableValidator = z.object({
   elements: z.array(userNotNullValidator),
   total: z.number(),

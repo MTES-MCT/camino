@@ -18,7 +18,7 @@ import {
   getDemarcheMiseEnConcurrenceValidator,
   getResultatMiseEnConcurrenceValidator,
 } from './demarche'
-import { newsletterAbonnementValidator, newsletterRegistrationValidator, qgisTokenRestValidator, utilisateurToEdit, utilisateursSearchParamsValidator, utilisateursTableValidator } from './utilisateur'
+import { qgisTokenRestValidator, utilisateurToEdit, utilisateursSearchParamsValidator, utilisateursTableValidator } from './utilisateur'
 import {
   editableTitreValidator,
   getDemarcheByIdOrSlugValidator,
@@ -83,8 +83,6 @@ type CaminoRoute<T extends string> = { params: ZodObjectParsUrlParams<T> } & {
 const IDS = [
   '/config',
   '/moi',
-  '/rest/utilisateurs/registerToNewsletter',
-  '/rest/utilisateurs/:id/newsletter',
   '/rest/utilisateurs/:id/delete',
   '/rest/utilisateurs/:id/permission',
   '/rest/utilisateurs/:id',
@@ -158,13 +156,7 @@ const geoSystemIdParamsValidator = z.object({ geoSystemeId: geoSystemeIdValidato
 export const CaminoRestRoutes = {
   '/config': { params: noParamsValidator, newGet: { output: caminoConfigValidator } },
   '/moi': { params: noParamsValidator, newGet: { output: userValidator } },
-  '/rest/utilisateurs/:id/newsletter': {
-    params: utilisateurIdParamsValidator,
-    newGet: { output: z.object({ subscribed: z.boolean() }) },
-    post: { input: newsletterAbonnementValidator, output: z.boolean() },
-  },
   '/rest/utilisateurs/:id': { params: utilisateurIdParamsValidator, newGet: { output: userNotNullValidator } },
-  '/rest/utilisateurs/registerToNewsletter': { params: noParamsValidator, newGet: { output: z.boolean(), searchParams: newsletterRegistrationValidator } },
   // On passe par un http get plutot qu'un http delete car nous terminons par une redirection vers la deconnexion de oauth2, qui se traduit mal sur certains navigateurs et essaie de faire un delete sur une route get
   '/rest/utilisateurs/:id/delete': { params: utilisateurIdParamsValidator, get: { output: z.void() } },
   '/rest/utilisateurs/:id/permission': { params: utilisateurIdParamsValidator, post: { input: utilisateurToEdit, output: z.void() } },
