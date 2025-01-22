@@ -621,8 +621,8 @@ const categoriesForTaxeAurifereGuyane = {
       reference: 'https://www.legifrance.gouv.fr/codes/id/LEGIARTI000048046958/2023-09-07',
     },
     '2024': {
-      value: new Decimal(549.88),
-      reference: 'https://www.legifrance.gouv.fr/codes/id/LEGIARTI000048046958/2024-09-07',
+      value: new Decimal(577.19),
+      reference: 'https://www.legifrance.gouv.fr/codes/id/LEGIARTI000048046958/2024-12-06',
     },
   },
   autre: {
@@ -655,8 +655,8 @@ const categoriesForTaxeAurifereGuyane = {
       reference: 'https://www.legifrance.gouv.fr/codes/id/LEGIARTI000048046958/2023-09-07',
     },
     '2024': {
-      value: new Decimal(1099.77),
-      reference: 'https://www.legifrance.gouv.fr/codes/id/LEGIARTI000048046958/2024-09-07',
+      value: new Decimal(1154.38),
+      reference: 'https://www.legifrance.gouv.fr/codes/id/LEGIARTI000048046958/2024-12-06',
     },
   },
 } as const satisfies Record<EntrepriseCategory, Record<AnneeData, { value: Decimal; reference: string }>>
