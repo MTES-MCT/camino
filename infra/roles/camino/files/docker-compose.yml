@@ -1,0 +1,138 @@
+version: '3'
+
+services:
+  api:
+    container_name: camino_api_app
+    image: caminofr/camino-api:${CAMINO_TAG}
+    depends_on:
+      - db
+    environment:
+      CAMINO_STAGE: ${ENV}
+      APPLICATION_VERSION: ${CAMINO_TAG}
+      VIRTUAL_HOST: ${API_HOST}
+      VIRTUAL_PORT: ${API_PORT}
+      LETSENCRYPT_HOST: ${API_HOST}
+      LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL}
+      PGHOST: db
+    expose:
+      - ${API_PORT}
+    volumes:
+      - ./files:/project/packages/api/files
+      - ./.env:/project/.env
+    networks:
+      - default
+      - nginx-proxy
+    restart: unless-stopped
+  db:
+    container_name: camino_api_db
+    image: postgis/postgis:16-3.4
+    environment:
+      PGUSER: ${PGUSER}
+      POSTGRES_USER: ${PGUSER}
+      POSTGRES_PASSWORD: ${PGPASSWORD}
+      POSTGRES_DB: ${PGDATABASE}
+    expose:
+      - ${PGPORT}
+    networks:
+      - default
+    volumes:
+      - ./postgresql:/var/lib/postgresql/data
+      - /srv/backups/dump/:/dump/
+    restart: unless-stopped
+  docs:
+    container_name: camino_docs
+    image: caminofr/camino-docs:${CAMINO_TAG}
+    environment:
+      VIRTUAL_HOST: ${DOC_HOST}
+      VIRTUAL_PORT: ${DOC_PORT}
+      LETSENCRYPT_HOST: ${DOC_HOST}
+      LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL}
+    expose:
+      - ${DOC_PORT}
+    networks:
+      - default
+      - nginx-proxy
+    restart: unless-stopped
+  ui:
+    container_name: camino_ui_app
+    image: caminofr/camino-ui:${CAMINO_TAG}
+    environment:
+      APPLICATION_VERSION: ${CAMINO_TAG}
+      UI_PORT: ${UI_PORT}
+      API_URL: http://api:${API_PORT}
+      API_MATOMO_URL: ${API_MATOMO_URL}
+      ENV: ${ENV}
+    expose:
+      - ${UI_PORT}
+    networks:
+      - default
+      - nginx-proxy
+    restart: unless-stopped
+  oauth2:
+    container_name: camino_oauth2
+    image: quay.io/oauth2-proxy/oauth2-proxy:v7.8.1
+    depends_on:
+      - ui
+      - keycloak
+    environment:
+      VIRTUAL_HOST: ${OAUTH_HOST}
+      VIRTUAL_PORT: ${OAUTH_PORT}
+      LETSENCRYPT_HOST: ${OAUTH_HOST}
+      LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL}
+      OAUTH2_PROXY_PROVIDER: 'keycloak-oidc'
+      OAUTH2_PROXY_CLIENT_ID: ${KEYCLOAK_CLIENT_ID}
+      OAUTH2_PROXY_CLIENT_SECRET: ${KEYCLOAK_CLIENT_SECRET}
+      OAUTH2_PROXY_COOKIE_SECRET: ${OAUTH2_COOKIE_SECRET}
+      OAUTH2_PROXY_OIDC_ISSUER_URL: https://${KEYCLOAK_HOST}/realms/Camino
+      OAUTH2_PROXY_REDIRECT_URL: https://${OAUTH_HOST}
+      OAUTH2_PROXY_HTTP_ADDRESS: 0.0.0.0:${OAUTH_PORT}
+      OAUTH2_PROXY_UPSTREAMS: http://ui:${UI_PORT}
+      OAUTH2_PROXY_EMAIL_DOMAINS: "*"
+      OAUTH2_PROXY_SKIP_PROVIDER_BUTTON: true
+      OAUTH2_PROXY_PASS_ACCESS_TOKEN: true
+      OAUTH2_PROXY_SKIP_AUTH_ROUTES: "/*"
+      # nécessaire pour garder le basic auth
+      OAUTH2_PROXY_PASS_BASIC_AUTH: true
+      OAUTH2_PROXY_SKIP_AUTH_STRIP_HEADERS: false
+      # l’access token de keycloak a une durée de vie de 5min
+      OAUTH2_PROXY_COOKIE_REFRESH: 4m
+      OAUTH2_PROXY_COOKIE_SAMESITE: lax
+      # l'url de logout de keycloak, utilisé par utilisateur.tsx pour se déconnect de oauth2_proxy ET keycloak
+      OAUTH2_PROXY_WHITELIST_DOMAINS: ${KEYCLOAK_HOST},${OAUTH_HOST}
+      OAUTH2_PROXY_PASS_AUTHORIZATION_HEADER: true
+    expose:
+      - ${OAUTH_PORT}
+    restart: unless-stopped
+    networks:
+      - default
+      - nginx-proxy
+  keycloak:
+    container_name: camino_keycloak
+    image: caminofr/camino-keycloak:26.1.0
+    depends_on:
+      - db
+    environment:
+      KC_DB: "postgres"
+      KC_DB_URL: jdbc:postgresql://db:${PGPORT}/${PGDATABASE}
+      KC_DB_SCHEMA: keycloak
+      KC_DB_PASSWORD: "${PGPASSWORD}"
+      KC_DB_USERNAME: "${PGUSER}"
+      KC_HOSTNAME:  ${KEYCLOAK_HOST}
+      KC_PROXY: "edge"
+      VIRTUAL_HOST: ${KEYCLOAK_HOST}
+      VIRTUAL_PORT: ${KEYCLOAK_PORT}
+      LETSENCRYPT_HOST: ${KEYCLOAK_HOST}
+      LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL}
+      KC_PROXY_HEADERS: xforwarded
+      KC_HTTP_ENABLED: true
+    command: "start"
+    expose:
+      - ${KEYCLOAK_PORT}
+    restart: unless-stopped
+    networks:
+      - default
+      - nginx-proxy
+
+networks:
+  nginx-proxy:
+    external: true

@@ -32,7 +32,7 @@ export const userLoader =
         let user: User = await getUtilisateurByKeycloakId(pool, reqUser.sub)
         if (isNullOrUndefined(user)) {
           if (isNullOrUndefined(reqUser.family_name) || isNullOrUndefined(reqUser.given_name)) {
-            next(new Error('utilisateur inconnu'))
+            next(new Error(`utilisateur inconnu ${reqUser.family_name} ${reqUser.given_name}`))
 
             return
           }

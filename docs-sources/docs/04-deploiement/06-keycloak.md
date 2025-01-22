@@ -16,13 +16,18 @@ Dans l'administration de Keycloak, dans le realm Camino
 
 Une fois sauvegardé, de nouvelles options apparaissent.
 
-Pour les scopes, on a mis 'openid profile email siret'
+Pour les scopes, on a mis 'openid profile email siret given_name usual_name'
 
 On coche 'trust email'
 
 Pour le First login flow override, on a notre propre flow qui s'appelle 'CaminoIdentityProviderFlow'
 
-Dans les mapper, on ajoute un attribute importer siret, il faut mettre siret partout en gros...
+Dans les mapper:
+- on ajoute un attribute importer siret, il faut mettre siret partout en gros...
+- on ajoute un attribute importer usual_name, il faut le mapper sur lastName
+- on ajoute un attribute importer given_name, il faut le mapper sur firstName
+
+
 
 
 Ensuite il faut aller dans le client (par exemple 'camino-local' pour le développement)
