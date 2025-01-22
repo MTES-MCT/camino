@@ -2,9 +2,11 @@ import { FunctionalComponent } from 'vue'
 import { FunctionalPopup } from '../_ui/functional-popup'
 import { Alert } from '@/components/_ui/alert'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
+import { EtapeId } from 'camino-common/src/etape'
+import { CaminoError } from 'camino-common/src/zod-tools'
 interface Props {
   close: () => void
-  deposeEtape: () => Promise<void>
+  deposeEtape: () => Promise<{ id: EtapeId } | CaminoError<string>>
   etapeTypeId: EtapeTypeId
 }
 

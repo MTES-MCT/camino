@@ -380,7 +380,7 @@ where
 `
 
 const errorCanReadDocument = "une erreur s'est produite lors de la vérification des droits de lecture d'un document" as const
-type GetEtapeDocumentLargeObjectIdsByEtapeIdErrors = EffectDbQueryAndValidateErrors | typeof errorCanReadDocument
+export type GetEtapeDocumentLargeObjectIdsByEtapeIdErrors = EffectDbQueryAndValidateErrors | typeof errorCanReadDocument
 export const getEtapeDocumentLargeObjectIdsByEtapeId = (
   titre_etape_id: EtapeId,
   pool: Pool,
@@ -438,7 +438,7 @@ where
 `
 
 const errorCanReadAvis = "une erreur s'est produite lors de la vérification des droits de lecture d'un avis" as const
-type GetEtapeAvisLargeObjectIdsByEtapeIdErrors = EffectDbQueryAndValidateErrors | typeof errorCanReadAvis
+export type GetEtapeAvisLargeObjectIdsByEtapeIdErrors = EffectDbQueryAndValidateErrors | typeof errorCanReadAvis
 export const getEtapeAvisLargeObjectIdsByEtapeId = (
   titre_etape_id: EtapeId,
   pool: Pool,

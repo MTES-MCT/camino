@@ -99,7 +99,9 @@ export const FunctionalPopup = defineComponent(<T,>(props: Props<T>) => {
                     </h1>
                     <div class="fr-container">
                       {props.content()}
-                      {validateProcess.value.status === 'ERROR' || validateProcess.value.status === 'NEW_ERROR' ? <LoadingElement data={validateProcess.value} renderItem={() => null} /> : null}
+                      {validateProcess.value.status === 'ERROR' || validateProcess.value.status === 'NEW_ERROR' ? (
+                        <LoadingElement class="fr-mt-4v" data={validateProcess.value} renderItem={() => null} />
+                      ) : null}
                     </div>
                   </div>
 

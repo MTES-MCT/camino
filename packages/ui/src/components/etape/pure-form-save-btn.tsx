@@ -7,6 +7,7 @@ import { LoadingElement } from '../_ui/functional-loader'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
 import { CaminoError } from 'camino-common/src/zod-tools'
 import { EtapeId } from 'camino-common/src/etape'
+import { DeposeEtapePopup } from '../demarche/depose-etape-popup'
 
 export type EtapeAlerte = { message: string; url?: string }
 type Props = {
@@ -16,11 +17,20 @@ type Props = {
   showDepose: boolean
   initialContext?: AsyncData<undefined>
   save: () => Promise<{ id: EtapeId } | null | CaminoError<string>>
-  depose: () => void
+  depose: () => Promise<{ id: EtapeId } | CaminoError<string>>
   etapeTypeId: EtapeTypeId
 } & Pick<HTMLAttributes, 'class' | 'style'>
 export const PureFormSaveBtn = defineComponent<Props>(props => {
   const saveContext = ref<AsyncData<undefined>>(isNotNullNorUndefined(props.initialContext) ? props.initialContext : { status: 'LOADED', value: undefined })
+
+  const showDeposeEtapePopup = ref<boolean>(false)
+  const showDeposePopup = () => {
+    showDeposeEtapePopup.value = true
+  }
+
+  const closeDeposePopup = () => {
+    showDeposeEtapePopup.value = false
+  }
 
   const save = async () => {
     saveContext.value = { status: 'LOADING' }
@@ -41,52 +51,56 @@ export const PureFormSaveBtn = defineComponent<Props>(props => {
   }
 
   return () => (
-    <div class={props.class} style={props.style}>
-      <div style={{ display: 'flex', flexDirection: 'column' }}>
-        {props.alertes?.map(alerte => (
-          <Alert
-            key={alerte.message}
-            small={true}
-            type="warning"
-            title={
-              <>
-                {isNotNullNorUndefinedNorEmpty(alerte.url) ? (
-                  <DsfrLink disabled={false} icon={null} title={alerte.message} href={alerte.url} target="_blank">
-                    {alerte.url}
-                  </DsfrLink>
-                ) : (
-                  alerte.message
-                )}
-              </>
-            }
-          />
-        ))}
+    <>
+      {showDeposeEtapePopup.value === true ? <DeposeEtapePopup close={closeDeposePopup} deposeEtape={props.depose} etapeTypeId={props.etapeTypeId} /> : null}
 
-        <div style={{ display: 'flex', justifyContent: 'end', alignItems: 'center' }} class="fr-mt-2w">
-          {saveContext.value.status === 'LOADING' ? <LoadingElement data={saveContext.value} renderItem={() => null} /> : null}
-
-          <DsfrButton
-            buttonType={props.showDepose ? 'secondary' : 'primary'}
-            class="fr-ml-2w"
-            type={props.showDepose ? 'button' : 'submit'}
-            disabled={!props.canSave || saveContext.value.status === 'LOADING'}
-            onClick={save}
-            title="Enregistrer l'étape"
-          />
-          {props.showDepose ? (
-            <DsfrButton
-              buttonType="primary"
-              type="submit"
-              class="fr-ml-2w"
-              title="Enregistrer puis finaliser l'étape"
-              disabled={!props.canDepose || saveContext.value.status === 'LOADING'}
-              onClick={props.depose}
+      <div class={props.class} style={props.style}>
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+          {props.alertes?.map(alerte => (
+            <Alert
+              key={alerte.message}
+              small={true}
+              type="warning"
+              title={
+                <>
+                  {isNotNullNorUndefinedNorEmpty(alerte.url) ? (
+                    <DsfrLink disabled={false} icon={null} title={alerte.message} href={alerte.url} target="_blank">
+                      {alerte.url}
+                    </DsfrLink>
+                  ) : (
+                    alerte.message
+                  )}
+                </>
+              }
             />
-          ) : null}
+          ))}
+
+          <div style={{ display: 'flex', justifyContent: 'end', alignItems: 'center' }} class="fr-mt-2w">
+            {saveContext.value.status === 'LOADING' ? <LoadingElement data={saveContext.value} renderItem={() => null} /> : null}
+
+            <DsfrButton
+              buttonType={props.showDepose ? 'secondary' : 'primary'}
+              class="fr-ml-2w"
+              type={props.showDepose ? 'button' : 'submit'}
+              disabled={!props.canSave || saveContext.value.status === 'LOADING'}
+              onClick={save}
+              title="Enregistrer l'étape"
+            />
+            {props.showDepose ? (
+              <DsfrButton
+                buttonType="primary"
+                type="submit"
+                class="fr-ml-2w"
+                title="Enregistrer puis finaliser l'étape"
+                disabled={!props.canDepose || saveContext.value.status === 'LOADING'}
+                onClick={showDeposePopup}
+              />
+            ) : null}
+          </div>
+          {saveContext.value.status !== 'LOADING' ? <LoadingElement data={saveContext.value} renderItem={() => null} /> : null}
         </div>
-        {saveContext.value.status !== 'LOADING' ? <LoadingElement data={saveContext.value} renderItem={() => null} /> : null}
       </div>
-    </div>
+    </>
   )
 })
 

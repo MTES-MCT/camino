@@ -32,6 +32,8 @@ import {
   getDocumentsByEtapeId,
   getEntrepriseDocumentIdsByEtapeId,
   getEtapeAvisLargeObjectIdsByEtapeId,
+  GetEtapeAvisLargeObjectIdsByEtapeIdErrors,
+  GetEtapeDocumentLargeObjectIdsByEtapeIdErrors,
   insertEtapeAvis,
   InsertEtapeAvisErrors,
   insertEtapeDocuments,
@@ -44,7 +46,6 @@ import {
 } from '../../database/queries/titres-etapes.queries'
 import { getEtapeDataForEdition, hasTitreFrom } from './etapes.queries'
 import { SDOMZoneId } from 'camino-common/src/static/sdom'
-import { objectClone } from '../../tools/index'
 import { titreEtapeAdministrationsEmailsSend, titreEtapeUtilisateursEmailsSend } from '../graphql/resolvers/_titre-etape-email'
 import { ConvertPointsErrors, GetGeojsonInformation, GetGeojsonInformationErrorMessages, convertPoints, getGeojsonInformation } from './perimetre.queries'
 import { titreEtapeUpdateTask } from '../../business/titre-etape-update'
@@ -871,86 +872,138 @@ export const updateEtape: RestNewPutCall<'/rest/etapes'> = (rootPipe): Effect.Ef
   )
 }
 
-export const deposeEtape =
-  (pool: Pool) =>
-  async (req: CaminoRequest, res: CustomResponse<void>): Promise<void> => {
-    const user = req.auth
-
-    const etapeId = etapeIdValidator.safeParse(req.params.etapeId)
-    if (!etapeId.success) {
-      res.sendStatus(HTTP_STATUS.BAD_REQUEST)
-    } else {
-      try {
-        const id = etapeId.data
-
-        if (!user) {
-          throw new Error("l'étape n'existe pas")
-        }
-
-        const titreEtape = await titreEtapeGet(id, { fields: { id: {} }, fetchHeritage: true }, user)
-
-        if (isNullOrUndefined(titreEtape)) throw new Error("l'étape n'existe pas")
-        const titreEtapeOld = objectClone(titreEtape)
-
-        const titreDemarche = await titreDemarcheGet(
-          titreEtape.titreDemarcheId,
-          {
-            fields: {
-              titre: { pointsEtape: { id: {} }, titulairesEtape: { id: {} }, amodiatairesEtape: { id: {} } },
+const demarcheNonExistante = "La démarche n'existe pas" as const
+const slugEtapeNonExistant = "Le slug de l'étape est obligatoire" as const
+const titreNonExistant = "Le titre n'est pas chargé" as const
+const administrationsLocalesNonChargees = 'Les administrations locales du titre ne sont pas chargées' as const
+const titulairesNonExistants = 'Les titulaires du titre ne sont pas chargés' as const
+const amodiatairesNonExistants = 'Les amodiataires du titre ne sont pas chargés' as const
+const droitsInsuffisantsDeposeEtape = 'Droits insuffisants pour déposer cette étape' as const
+const brouillonInterdit = "Cette étape n'est pas un brouillon et ne peut pas être redéposée" as const
+const impossibleDeRecupererLEtapeApresMaj = "Impossible de récupérer l'étape après mise à jour" as const
+const impossibleDeMajLEtape = "Impossible de mettre à jour l'étape" as const
+type DeposeEtapeErrors =
+  | typeof etapeNonExistante
+  | typeof demarcheNonExistante
+  | typeof slugEtapeNonExistant
+  | typeof titreNonExistant
+  | typeof administrationsLocalesNonChargees
+  | typeof titulairesNonExistants
+  | typeof amodiatairesNonExistants
+  | typeof droitsInsuffisantsDeposeEtape
+  | typeof brouillonInterdit
+  | typeof tachesAnnexes
+  | typeof impossibleDeRecupererLEtapeApresMaj
+  | typeof impossibleDeMajLEtape
+  | typeof envoieMails
+  | EffectDbQueryAndValidateErrors
+  | GetGeojsonInformationErrorMessages
+  | TitreEtapeToFlattenEtapeErrors
+  | GetEtapeDocumentLargeObjectIdsByEtapeIdErrors
+  | GetEtapeAvisLargeObjectIdsByEtapeIdErrors
+export const deposeEtape: RestNewPutCall<'/rest/etapes/:etapeId/depot'> = (rootPipe): Effect.Effect<{ id: EtapeId }, CaminoApiError<DeposeEtapeErrors>> => {
+  return rootPipe.pipe(
+    Effect.bind('titreEtape', ({ params, user }) =>
+      Effect.tryPromise({
+        try: () => titreEtapeGet(params.etapeId, { fields: { id: {} }, fetchHeritage: true }, user),
+        catch: e => ({ message: etapeNonExistante, extra: e }),
+      }).pipe(
+        Effect.filterOrFail(
+          (titreEtape: ITitreEtape | null): titreEtape is ITitreEtape => isNotNullNorUndefined(titreEtape),
+          () => ({ message: etapeNonExistante })
+        ),
+        Effect.filterOrFail(
+          titreEtape => isNotNullNorUndefined(titreEtape.slug),
+          () => ({ message: slugEtapeNonExistant })
+        )
+      )
+    ),
+    Effect.bind('titreDemarche', ({ titreEtape }) =>
+      Effect.tryPromise({
+        try: () =>
+          titreDemarcheGet(
+            titreEtape.titreDemarcheId,
+            {
+              fields: {
+                titre: { pointsEtape: { id: {} }, titulairesEtape: { id: {} }, amodiatairesEtape: { id: {} } },
+              },
             },
-          },
-          userSuper
+            userSuper
+          ),
+        catch: e => ({ message: demarcheNonExistante, extra: e }),
+      }).pipe(
+        Effect.filterOrFail(
+          (result: ITitreDemarche | undefined): result is ITitreDemarche => isNotNullNorUndefined(result),
+          () => ({ message: demarcheNonExistante })
         )
-
-        if (!titreDemarche) throw new Error("la démarche n'existe pas")
-
-        const titre = titreDemarche.titre
-        if (isNullOrUndefined(titre)) throw new Error("le titre n'est pas chargé")
-        if (isNullOrUndefined(titre.administrationsLocales)) throw new Error('les administrations locales du titre ne sont pas chargées')
-
-        if (isNullOrUndefined(titre.titulaireIds)) throw new Error('les titulaires du titre ne sont pas chargés')
-        if (isNullOrUndefined(titre.amodiataireIds)) throw new Error('les amodiataires du titre ne sont pas chargés')
-        if (isNullOrUndefined(titreEtape.slug)) throw new Error("le slug de l'étape est obligatoire")
-
-        const sdomZones: SDOMZoneId[] = []
-        const communes: CommuneId[] = []
-        if (isNotNullNorUndefined(titreEtape.geojson4326Perimetre)) {
-          const { sdom, communes: communeFromGeoJson } = await callAndExit(getGeojsonInformation(pool, titreEtape.geojson4326Perimetre.geometry))
-
-          communes.push(...communeFromGeoJson.map(({ id }) => id))
-          sdomZones.push(...sdom)
+      )
+    ),
+    Effect.bind('titre', ({ titreDemarche }) =>
+      Effect.succeed(titreDemarche.titre).pipe(
+        Effect.filterOrFail(
+          titre => isNotNullNorUndefined(titre),
+          () => ({ message: titreNonExistant })
+        ),
+        Effect.filterOrFail(
+          titre => isNotNullNorUndefined(titre.administrationsLocales),
+          () => ({ message: administrationsLocalesNonChargees })
+        ),
+        Effect.filterOrFail(
+          titre => isNotNullNorUndefined(titre.titulaireIds),
+          () => ({ message: titulairesNonExistants })
+        ),
+        Effect.filterOrFail(
+          titre => isNotNullNorUndefined(titre.amodiataireIds),
+          () => ({ message: amodiatairesNonExistants })
+        )
+      )
+    ),
+    Effect.let('titreProps', ({ titre }) => ({
+      titreTypeId: memoize(() => Promise.resolve(titre.typeId)),
+      administrationsLocales: memoize(() => Promise.resolve(titre.administrationsLocales ?? [])),
+      entreprisesTitulairesOuAmodiataires: memoize(() => Promise.resolve([...(titre.titulaireIds ?? []), ...(titre.amodiataireIds ?? [])])),
+    })),
+    Effect.bind('etapeDocuments', ({ pool, user, titre, titreEtape, titreDemarche, titreProps }) => {
+      return getDocumentsByEtapeId(titreEtape.id, pool, user, titreProps.titreTypeId, titreProps.administrationsLocales, titreProps.entreprisesTitulairesOuAmodiataires, titreEtape.typeId, {
+        demarche_type_id: titreDemarche.typeId,
+        entreprises_lecture: titreDemarche.entreprisesLecture ?? false,
+        public_lecture: titreDemarche.publicLecture ?? false,
+        titre_public_lecture: titre.publicLecture ?? false,
+      })
+    }),
+    Effect.bind('entrepriseDocuments', ({ pool, titreEtape }) => getEntrepriseDocumentIdsByEtapeId({ titre_etape_id: titreEtape.id }, pool, userSuper)),
+    Effect.bind('etapeAvis', ({ pool, titreEtape, titreDemarche, titreProps, titre }) =>
+      getEtapeAvisLargeObjectIdsByEtapeId(
+        titreEtape.id,
+        pool,
+        userSuper,
+        titreProps.titreTypeId,
+        titreProps.administrationsLocales,
+        titreProps.entreprisesTitulairesOuAmodiataires,
+        titreEtape.typeId,
+        {
+          demarche_type_id: titreDemarche.typeId,
+          entreprises_lecture: titreDemarche.entreprisesLecture ?? false,
+          public_lecture: titreDemarche.publicLecture ?? false,
+          titre_public_lecture: titre.publicLecture ?? false,
         }
-        const titreTypeId = memoize(() => Promise.resolve(titre.typeId))
-        const administrationsLocales = memoize(() => Promise.resolve(titre.administrationsLocales ?? []))
-        const entreprisesTitulairesOuAmodiataires = memoize(() => {
-          return Promise.resolve([...(titre.titulaireIds ?? []), ...(titre.amodiataireIds ?? [])])
-        })
-        const etapeDocuments = await callAndExit(
-          getDocumentsByEtapeId(id, pool, user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires, titreEtape.typeId, {
-            demarche_type_id: titreDemarche.typeId,
-            entreprises_lecture: titreDemarche.entreprisesLecture ?? false,
-            public_lecture: titreDemarche.publicLecture ?? false,
-            titre_public_lecture: titre.publicLecture ?? false,
-          })
+      )
+    ),
+    Effect.bind('flattenEtape', ({ titreEtape }) => iTitreEtapeToFlattenEtape(titreEtape)),
+    Effect.let('firstEtapeDate', ({ titreDemarche }) => demarcheEnregistrementDemandeDateFind(titreDemarche.etapes)),
+    Effect.let('date', ({ user, titreEtape }) => (isEntreprise(user) || isBureauDEtudes(user) ? getCurrent() : titreEtape.date)),
+    Effect.bind('sdomEtCommunes', ({ titreEtape, pool }) => {
+      if (isNotNullNorUndefined(titreEtape.geojson4326Perimetre)) {
+        return getGeojsonInformation(pool, titreEtape.geojson4326Perimetre.geometry).pipe(
+          Effect.map(({ sdom, communes: communesFromGeoJson }) => ({ sdomZones: sdom, communes: communesFromGeoJson.map(({ id }) => id) }))
         )
-
-        const entrepriseDocuments = await callAndExit(getEntrepriseDocumentIdsByEtapeId({ titre_etape_id: titreEtape.id }, pool, userSuper))
-
-        // On utilise le userSuper pour charger tous les avis, car celui qui dépose ne peut peut-être pas voir tous les avis
-        const etapeAvis = await callAndExit(
-          getEtapeAvisLargeObjectIdsByEtapeId(id, pool, userSuper, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires, titreEtape.typeId, {
-            demarche_type_id: titreDemarche.typeId,
-            entreprises_lecture: titreDemarche.entreprisesLecture ?? false,
-            public_lecture: titreDemarche.publicLecture ?? false,
-            titre_public_lecture: titre.publicLecture ?? false,
-          })
-        )
-
-        // TODO 2023-06-14 TS 5.1 n’arrive pas réduire le type de titre
-        const flattenEtape = await callAndExit(iTitreEtapeToFlattenEtape(titreEtape))
-        const firstEtapeDate = demarcheEnregistrementDemandeDateFind(titreDemarche.etapes)
-        const date = isEntreprise(user) || isBureauDEtudes(user) ? getCurrent() : titreEtape.date
-        const deposable = canDeposeEtape(
+      }
+      const emptyResult: { sdomZones: SDOMZoneId[]; communes: CommuneId[] } = { sdomZones: [], communes: [] }
+      return Effect.succeed(emptyResult)
+    }),
+    Effect.filterOrFail(
+      ({ user, titre, titreDemarche, flattenEtape, etapeDocuments, entrepriseDocuments, sdomEtCommunes, etapeAvis, firstEtapeDate, date }) =>
+        canDeposeEtape(
           user,
           { ...titre, titulaires: titre.titulaireIds ?? [], administrationsLocales: titre.administrationsLocales ?? [] },
           titreDemarche.id,
@@ -958,45 +1011,96 @@ export const deposeEtape =
           flattenEtape,
           etapeDocuments,
           entrepriseDocuments,
-          sdomZones,
-          communes,
+          sdomEtCommunes.sdomZones,
+          sdomEtCommunes.communes,
           etapeAvis,
           isNotNullNorUndefined(firstEtapeDate) ? firstEtapeDate : firstEtapeDateValidator.parse(date)
+        ),
+      () => ({ message: droitsInsuffisantsDeposeEtape })
+    ),
+    Effect.filterOrFail(
+      ({ titreEtape }) => canBeBrouillon(titreEtape.typeId) === ETAPE_IS_BROUILLON,
+      () => ({ message: brouillonInterdit })
+    ),
+    Effect.tap(({ titreEtape, date, user, titreDemarche }) =>
+      Effect.tryPromise({
+        try: () =>
+          titreEtapeUpdate(
+            titreEtape.id,
+            {
+              date,
+              isBrouillon: ETAPE_IS_NOT_BROUILLON,
+            },
+            user,
+            titreDemarche.titreId
+          ),
+        catch: e => ({ message: impossibleDeMajLEtape, extra: e }),
+      })
+    ),
+    Effect.bind('etapeUpdated', ({ titreEtape, user }) =>
+      Effect.tryPromise({
+        try: () =>
+          titreEtapeGet(
+            titreEtape.id,
+            {
+              fields: { id: {} },
+            },
+            user
+          ),
+        catch: e => ({ message: impossibleDeRecupererLEtapeApresMaj, extra: e }),
+      }).pipe(
+        Effect.filterOrFail(
+          etapeUpdated => isNotNullNorUndefined(etapeUpdated),
+          () => ({ message: impossibleDeRecupererLEtapeApresMaj })
         )
-        if (!deposable) throw new Error('droits insuffisants')
-
-        if (canBeBrouillon(titreEtape.typeId) === ETAPE_IS_NOT_BROUILLON) {
-          throw new Error('cette étape ne peut-être déposée')
-        }
-
-        await titreEtapeUpdate(
-          titreEtape.id,
-          {
-            date,
-            isBrouillon: ETAPE_IS_NOT_BROUILLON,
-          },
-          user,
-          titreDemarche.titreId
-        )
-        const etapeUpdated = await titreEtapeGet(
-          titreEtape.id,
-          {
-            fields: { id: {} },
-          },
-          user
-        )
-
-        await titreEtapeUpdateTask(pool, etapeUpdated.id, etapeUpdated.titreDemarcheId, user)
-
-        await titreEtapeAdministrationsEmailsSend(etapeUpdated, titreDemarche.typeId, titreDemarche.titreId, titreDemarche.titre!.typeId, user!, titreEtapeOld)
-
-        res.sendStatus(HTTP_STATUS.NO_CONTENT)
-      } catch (e) {
-        res.sendStatus(HTTP_STATUS.INTERNAL_SERVER_ERROR)
-        console.error(e)
-      }
-    }
-  }
+      )
+    ),
+    Effect.tap(({ pool, etapeUpdated, user }) =>
+      Effect.tryPromise({
+        try: () => titreEtapeUpdateTask(pool, etapeUpdated.id, etapeUpdated.titreDemarcheId, user),
+        catch: e => ({ message: tachesAnnexes, extra: e }),
+      })
+    ),
+    Effect.tap(({ etapeUpdated, titreDemarche, user, titreEtape }) =>
+      Effect.tryPromise({
+        try: () => titreEtapeAdministrationsEmailsSend(etapeUpdated, titreDemarche.typeId, titreDemarche.titreId, titreDemarche.titre!.typeId, user!, titreEtape),
+        catch: e => ({ message: envoieMails, extra: e }),
+      })
+    ),
+    Effect.map(({ titreEtape }) => ({ id: titreEtape.id })),
+    Effect.mapError(caminoError =>
+      Match.value(caminoError.message).pipe(
+        Match.whenOr('Droits insuffisants pour déposer cette étape', () => ({ ...caminoError, status: HTTP_STATUS.FORBIDDEN })),
+        Match.whenOr("l'étape n'existe pas", () => ({ ...caminoError, status: HTTP_STATUS.NOT_FOUND })),
+        Match.whenOr("Cette étape n'est pas un brouillon et ne peut pas être redéposée", () => ({ ...caminoError, status: HTTP_STATUS.BAD_REQUEST })),
+        Match.whenOr(
+          "La démarche n'existe pas",
+          "Le slug de l'étape est obligatoire",
+          "Le titre n'est pas chargé",
+          'Les administrations locales du titre ne sont pas chargées',
+          'Les titulaires du titre ne sont pas chargés',
+          'Les amodiataires du titre ne sont pas chargés',
+          "Impossible d'exécuter la requête dans la base de données",
+          "Impossible de mettre à jour l'étape",
+          "Impossible de récupérer l'étape après mise à jour",
+          'Les données en base ne correspondent pas à ce qui est attendu',
+          'Problème de validation de données',
+          'Une erreur inattendue est survenue lors de la récupération des informations geojson en base',
+          "pas d'héritage chargé",
+          'pas de démarche chargée',
+          'pas de démarche ou de titre chargé',
+          'pas de slug',
+          'une erreur est survenue lors des envois de mail',
+          'une erreur est survenue lors des tâches annexes',
+          "une erreur s'est produite lors de la vérification des droits de lecture d'un avis",
+          "une erreur s'est produite lors de la vérification des droits de lecture d'un document",
+          () => ({ ...caminoError, status: HTTP_STATUS.INTERNAL_SERVER_ERROR })
+        ),
+        Match.exhaustive
+      )
+    )
+  )
+}
 
 export const getEtapesTypesEtapesStatusWithMainStep: RestNewGetCall<'/rest/etapesTypes/:demarcheId/:date'> = (
   rootPipe

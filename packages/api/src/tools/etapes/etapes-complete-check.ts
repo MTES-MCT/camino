@@ -1,6 +1,6 @@
 import { titresDemarchesGet } from '../../database/queries/titres-demarches'
 import { userSuper } from '../../database/user-super'
-import { isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
+import { isNotNullNorUndefinedNorEmpty, isNullOrUndefined } from 'camino-common/src/typescript-tools'
 import { demarcheEnregistrementDemandeDateFind, DemarcheId } from 'camino-common/src/demarche'
 import { isEtapeComplete } from 'camino-common/src/permissions/titres-etapes'
 import { iTitreEtapeToFlattenEtape } from '../../api/_format/titres-etapes'
@@ -40,7 +40,12 @@ const etapesValidate = async (pool: Pool, demarcheIds?: DemarcheId[]) => {
           let etape = etapeSansHeritage
           if (EtapesTypes[etapeSansHeritage.typeId].fondamentale) {
             if (ETAPE_HERITAGE_PROPS.some(prop => etapeSansHeritage.heritageProps?.[prop].actif ?? false)) {
-              etape = await titreEtapeGet(etapeSansHeritage.id, { fetchHeritage: true, fields: { id: {} } }, userSuper)
+              const etapeLoaded = await titreEtapeGet(etapeSansHeritage.id, { fetchHeritage: true, fields: { id: {} } }, userSuper)
+              if (isNullOrUndefined(etapeLoaded)) {
+                throw new Error(`Impossible de récupérer une étape héritée ${etapeSansHeritage.id}`)
+              }
+
+              etape = etapeLoaded
             }
           }
           if (etape.isBrouillon === ETAPE_IS_NOT_BROUILLON) {

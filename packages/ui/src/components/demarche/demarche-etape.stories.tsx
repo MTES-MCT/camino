@@ -49,7 +49,9 @@ const apiClient: Pick<ApiClient, 'deleteEtape' | 'deposeEtape' | 'getEtapesTypes
   deposeEtape: etapeId => {
     deposeEtapeAction(etapeId)
 
-    return Promise.resolve()
+    return Promise.resolve({
+      id: etapeId,
+    })
   },
   getEtapesTypesEtapesStatuts: () => {
     getEtapesTypesEtapesStatutsAction()

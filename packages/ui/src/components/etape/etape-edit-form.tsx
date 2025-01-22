@@ -1,4 +1,4 @@
-import { computed, defineComponent, onMounted, ref } from 'vue'
+import { computed, defineComponent, onMounted } from 'vue'
 import { Bloc } from './bloc'
 import { EtapeFondamentaleEdit, FondamentalesEdit } from './fondamentales-edit'
 import { PerimetreEdit } from './perimetre-edit'
@@ -38,7 +38,6 @@ import {
 } from 'camino-common/src/permissions/etape-form'
 import { EtapeAlerte, PureFormSaveBtn } from './pure-form-save-btn'
 import { TitresStatuts } from 'camino-common/src/static/titresStatuts'
-import { DeposeEtapePopup } from '../demarche/depose-etape-popup'
 import { EtapeAvisEdit } from './etape-avis-edit'
 import { EtapeTypeId, canBeBrouillon } from 'camino-common/src/static/etapesTypes'
 import { CoreEtapeCreationOrModification, GetEtapeHeritagePotentiel } from './etape-api-client'
@@ -417,13 +416,22 @@ export const EtapeEditForm = defineComponent<Props>(props => {
     return etapeId
   }
 
-  const showDeposeEtapePopup = ref<boolean>(false)
-  const depose = () => {
-    showDeposeEtapePopup.value = canDepose.value
-  }
+  const saveDeposeAndReroute = async () => {
+    const etapeId = await save()
+    if (isNotNullNorUndefined(etapeId)) {
+      if ('message' in etapeId) {
+        return etapeId
+      }
 
-  const closeDeposePopup = () => {
-    showDeposeEtapePopup.value = false
+      const value = await props.apiClient.deposeEtape(etapeId.id)
+      if ('message' in value) {
+        return value
+      }
+
+      props.goToDemarche(props.demarcheId)
+    }
+
+    return { message: "L'étape ne peut pas être sauvegardée" }
   }
 
   return () => (
@@ -462,22 +470,9 @@ export const EtapeEditForm = defineComponent<Props>(props => {
                   canDepose={canDepose.value}
                   showDepose={etapeLoaded.isBrouillon}
                   save={saveAndReroute}
-                  depose={depose}
+                  depose={saveDeposeAndReroute}
                   etapeTypeId={etapeLoaded.typeId}
                 />
-                {showDeposeEtapePopup.value === true ? (
-                  <DeposeEtapePopup
-                    close={closeDeposePopup}
-                    deposeEtape={async () => {
-                      const etapeIdToDepose = await save()
-                      if (isNotNullNorUndefined(etapeIdToDepose) && !('message' in etapeIdToDepose)) {
-                        await props.apiClient.deposeEtape(etapeIdToDepose.id)
-                        props.goToDemarche(props.demarcheId)
-                      }
-                    }}
-                    etapeTypeId={etapeLoaded.typeId}
-                  />
-                ) : null}
               </>
             ) : null}{' '}
           </>

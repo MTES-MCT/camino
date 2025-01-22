@@ -127,7 +127,9 @@ const etapeEditFormApiClient: Props['apiClient'] = {
   deposeEtape(etapeId) {
     deposeEtapeAction(etapeId)
 
-    return Promise.resolve(undefined)
+    return Promise.resolve({
+      id: etapeId,
+    })
   },
   etapeCreer(etape) {
     etapeCreerAction(etape)

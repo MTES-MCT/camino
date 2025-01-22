@@ -246,7 +246,7 @@ const restRouteImplementations: Readonly<{ [key in CaminoRestRoute]: Transform<k
   '/rest/etapes/:etapeId/geojson': { getCall: getPerimetreInfos, ...CaminoRestRoutes['/rest/etapes/:etapeId/geojson'] },
   '/rest/etapes/:etapeIdOrSlug': { deleteCall: deleteEtape, getCall: getEtape, ...CaminoRestRoutes['/rest/etapes/:etapeIdOrSlug'] },
   '/rest/etapes': { newPostCall: createEtape, newPutCall: updateEtape, ...CaminoRestRoutes['/rest/etapes'] },
-  '/rest/etapes/:etapeId/depot': { putCall: deposeEtape, ...CaminoRestRoutes['/rest/etapes/:etapeId/depot'] },
+  '/rest/etapes/:etapeId/depot': { newPutCall: deposeEtape, ...CaminoRestRoutes['/rest/etapes/:etapeId/depot'] },
   '/rest/etapes/:etapeId/entrepriseDocuments': { getCall: getEtapeEntrepriseDocuments, ...CaminoRestRoutes['/rest/etapes/:etapeId/entrepriseDocuments'] },
   '/rest/etapes/:etapeId/etapeDocuments': { getCall: getEtapeDocuments, ...CaminoRestRoutes['/rest/etapes/:etapeId/etapeDocuments'] },
   '/rest/etapes/:etapeId/etapeAvis': { getCall: getEtapeAvis, ...CaminoRestRoutes['/rest/etapes/:etapeId/etapeAvis'] },

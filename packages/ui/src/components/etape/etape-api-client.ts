@@ -1,5 +1,5 @@
 import { apiGraphQLFetch } from '@/api/_client'
-import { deleteWithJson, getWithJson, newGetWithJson, newPostWithJson, newPutWithJson, putWithJson } from '@/api/client-rest'
+import { deleteWithJson, getWithJson, newGetWithJson, newPostWithJson, newPutWithJson } from '@/api/client-rest'
 import { CaminoDate, caminoDateValidator } from 'camino-common/src/date'
 import { DemarcheId } from 'camino-common/src/demarche'
 import { entrepriseIdValidator } from 'camino-common/src/entreprise'
@@ -81,7 +81,7 @@ export type CoreEtapeCreationOrModification = Pick<Nullable<FlattenEtape>, 'id' 
 export interface EtapeApiClient {
   getEtapesTypesEtapesStatuts: (titreDemarcheId: DemarcheId, titreEtapeId: EtapeId | null, date: CaminoDate) => Promise<EtapeTypeEtapeStatutWithMainStep | CaminoError<string>>
   deleteEtape: (titreEtapeId: EtapeId) => Promise<void>
-  deposeEtape: (titreEtapeId: EtapeId) => Promise<void>
+  deposeEtape: (titreEtapeId: EtapeId) => Promise<{ id: EtapeId } | CaminoError<string>>
   getEtapeDocumentsByEtapeId: (etapeId: EtapeId) => Promise<GetEtapeDocumentsByEtapeId>
   getEtapeHeritagePotentiel: (etape: Pick<CoreEtapeCreationOrModification, 'id' | 'date' | 'typeId'>, titreDemarcheId: DemarcheId) => Promise<GetEtapeHeritagePotentiel>
   getEtapeAvisByEtapeId: (etapeId: EtapeId) => Promise<GetEtapeAvisByEtapeId>
@@ -96,9 +96,7 @@ export const etapeApiClient: EtapeApiClient = {
   deleteEtape: async etapeIdOrSlug => {
     await deleteWithJson('/rest/etapes/:etapeIdOrSlug', { etapeIdOrSlug })
   },
-  deposeEtape: async etapeId => {
-    await putWithJson('/rest/etapes/:etapeId/depot', { etapeId }, undefined)
-  },
+  deposeEtape: async etapeId => newPutWithJson('/rest/etapes/:etapeId/depot', { etapeId }, {}),
 
   getEtapeDocumentsByEtapeId: async etapeId => getWithJson('/rest/etapes/:etapeId/etapeDocuments', { etapeId }),
   getEtapeAvisByEtapeId: async etapeId => getWithJson('/rest/etapes/:etapeId/etapeAvis', { etapeId }),
@@ -193,11 +191,6 @@ export const etapeApiClient: EtapeApiClient = {
     return heritageData
   },
 
-  etapeCreer: async etape => {
-    return newPostWithJson('/rest/etapes', {}, restEtapeCreationValidator.parse(etape))
-  },
-
-  etapeModifier: async etape => {
-    return newPutWithJson('/rest/etapes', {}, restEtapeModificationValidator.parse(etape))
-  },
+  etapeCreer: async etape => newPostWithJson('/rest/etapes', {}, restEtapeCreationValidator.parse(etape)),
+  etapeModifier: async etape => newPutWithJson('/rest/etapes', {}, restEtapeModificationValidator.parse(etape)),
 }

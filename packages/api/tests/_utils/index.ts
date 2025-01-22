@@ -158,7 +158,6 @@ export const userGenerate = async (pool: Pool, user: TestUser): Promise<UserNotN
   const id = newUtilisateurId(idToBuild)
 
   const userInDb = await getUtilisateurById(pool, id, userSuper)
-
   if (isNullOrUndefined(userInDb)) {
     const newUser = await createUtilisateur(pool, {
       ...user,

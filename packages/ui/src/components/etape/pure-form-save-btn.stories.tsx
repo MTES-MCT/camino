@@ -1,8 +1,9 @@
 import { PureFormSaveBtn } from './pure-form-save-btn'
 import { Meta, StoryFn } from '@storybook/vue3'
 import { action } from '@storybook/addon-actions'
-import { EtapeId } from 'camino-common/src/etape'
+import { EtapeId, etapeIdValidator } from 'camino-common/src/etape'
 import { CaminoError } from 'camino-common/src/zod-tools'
+import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes'
 
 const meta: Meta = {
   title: 'Components/Etape/FormSaveBtn',
@@ -23,10 +24,12 @@ const onSave = () => {
   )
 }
 const onDepose = () => {
-  return new Promise<void>(resolve =>
+  return new Promise<{ id: EtapeId } | CaminoError<string>>(resolve =>
     setTimeout(() => {
       onDeposeAction()
-      resolve(undefined)
+      resolve({
+        id: etapeIdValidator.parse('etapeId'),
+      })
     }, 1000)
   )
 }
@@ -41,23 +44,39 @@ export const DemandeEnConstructionIncomplete: StoryFn = () => (
     ]}
     save={onSave}
     depose={onDepose}
-    etapeTypeId="mfr"
+    etapeTypeId={ETAPES_TYPES.demande}
   />
 )
 
 export const DemandeEnConstructionComplete: StoryFn = () => (
-  <PureFormSaveBtn canSave={true} showDepose={true} canDepose={true} alertes={[{ message: 'alerte', url: 'google.com' }]} save={onSave} depose={onDepose} etapeTypeId="mfr" />
+  <PureFormSaveBtn canSave={true} showDepose={true} canDepose={true} alertes={[{ message: 'alerte', url: 'google.com' }]} save={onSave} depose={onDepose} etapeTypeId={ETAPES_TYPES.demande} />
 )
 
 export const CompletudeDeLaDemandeImcomplete: StoryFn = () => (
-  <PureFormSaveBtn canSave={false} showDepose={false} canDepose={true} alertes={[{ message: 'alerte', url: 'google.com' }]} save={onSave} depose={onDepose} etapeTypeId="mcp" />
+  <PureFormSaveBtn
+    canSave={false}
+    showDepose={false}
+    canDepose={true}
+    alertes={[{ message: 'alerte', url: 'google.com' }]}
+    save={onSave}
+    depose={onDepose}
+    etapeTypeId={ETAPES_TYPES.completudeDeLaDemande}
+  />
 )
 
 export const CompletudeDeLaDemandeComplete: StoryFn = () => (
-  <PureFormSaveBtn canSave={true} showDepose={false} canDepose={true} alertes={[{ message: 'alerte', url: 'google.com' }]} save={onSave} depose={onDepose} etapeTypeId="mcp" />
+  <PureFormSaveBtn
+    canSave={true}
+    showDepose={false}
+    canDepose={true}
+    alertes={[{ message: 'alerte', url: 'google.com' }]}
+    save={onSave}
+    depose={onDepose}
+    etapeTypeId={ETAPES_TYPES.completudeDeLaDemande}
+  />
 )
 
-export const SansMessage: StoryFn = () => <PureFormSaveBtn alertes={[]} canSave={true} showDepose={true} canDepose={true} save={onSave} depose={onDepose} etapeTypeId="mfr" />
+export const SansMessage: StoryFn = () => <PureFormSaveBtn alertes={[]} canSave={true} showDepose={true} canDepose={true} save={onSave} depose={onDepose} etapeTypeId={ETAPES_TYPES.demande} />
 
 export const WithError: StoryFn = () => (
   <PureFormSaveBtn
@@ -67,13 +86,15 @@ export const WithError: StoryFn = () => (
     canDepose={true}
     save={onSave}
     depose={onDepose}
-    etapeTypeId="mfr"
+    etapeTypeId={ETAPES_TYPES.demande}
     initialContext={{ status: 'ERROR', message: 'Une erreur sauvage apparait' }}
   />
 )
 
 export const EnregistrementEnCours: StoryFn = () => (
-  <PureFormSaveBtn alertes={[]} canSave={true} showDepose={true} canDepose={true} save={onSave} depose={onDepose} etapeTypeId="mfr" initialContext={{ status: 'LOADING' }} />
+  <PureFormSaveBtn alertes={[]} canSave={true} showDepose={true} canDepose={true} save={onSave} depose={onDepose} etapeTypeId={ETAPES_TYPES.demande} initialContext={{ status: 'LOADING' }} />
 )
 
-export const AvisComplet: StoryFn = () => <PureFormSaveBtn alertes={[]} canSave={true} showDepose={true} canDepose={true} save={onSave} depose={onDepose} etapeTypeId="asc" />
+export const AvisComplet: StoryFn = () => (
+  <PureFormSaveBtn alertes={[]} canSave={true} showDepose={true} canDepose={true} save={onSave} depose={onDepose} etapeTypeId={ETAPES_TYPES.avisDesServicesEtCommissionsConsultatives} />
+)

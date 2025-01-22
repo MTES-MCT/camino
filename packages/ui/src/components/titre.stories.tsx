@@ -320,7 +320,9 @@ const apiClient: PropsApiClient = {
   deposeEtape: etapeId => {
     deposerEtapeAction(etapeId)
 
-    return Promise.resolve()
+    return Promise.resolve({
+      id: etapeId,
+    })
   },
   getDemarcheMiseEnConcurrence: demarcheId => {
     getDemarcheMiseEnConcurrenceAction(demarcheId)

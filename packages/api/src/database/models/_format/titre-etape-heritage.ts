@@ -1,9 +1,8 @@
 import { IHeritageProps, IHeritageContenu } from '../../../types'
 import { userSuper } from '../../user-super'
 import { titreEtapeGet } from '../../queries/titres-etapes'
-import { newEtapeId } from './id-create'
 import { isHeritageProps } from 'camino-common/src/heritage'
-import { getKeys } from 'camino-common/src/typescript-tools'
+import { getKeys, isNullOrUndefined } from 'camino-common/src/typescript-tools'
 import { FieldsEtape } from '../../queries/_options'
 
 export const heritagePropsFormat = async (heritageProps: IHeritageProps): Promise<IHeritageProps> => {
@@ -11,8 +10,10 @@ export const heritagePropsFormat = async (heritageProps: IHeritageProps): Promis
     if (heritageProps[propId].etapeId) {
       const fields: FieldsEtape = { id: {} }
 
-      const titreEtape = await titreEtapeGet(newEtapeId(heritageProps[propId].etapeId!), { fields }, userSuper)
-
+      const titreEtape = await titreEtapeGet(heritageProps[propId].etapeId, { fields }, userSuper)
+      if (isNullOrUndefined(titreEtape)) {
+        throw new Error(`Impossible de récupérer l'héritage d'une étape qui n'existe pas ${heritageProps[propId].etapeId}`)
+      }
       heritageProps[propId].etape = titreEtape
     }
   }
@@ -26,8 +27,10 @@ export const heritageContenuFormat = async (heritageContenu: IHeritageContenu): 
     if (heritageContenu[sectionId]) {
       for (const elementId of Object.keys(heritageContenu[sectionId])) {
         if (heritageContenu[sectionId][elementId]?.etapeId) {
-          const titreEtape = await titreEtapeGet(newEtapeId(heritageContenu[sectionId][elementId].etapeId!), { fields }, userSuper)
-
+          const titreEtape = await titreEtapeGet(heritageContenu[sectionId][elementId].etapeId, { fields }, userSuper)
+          if (isNullOrUndefined(titreEtape)) {
+            throw new Error(`Impossible de récupérer le contenu de l'héritage d'une étape qui n'existe pas ${heritageContenu[sectionId][elementId].etapeId}`)
+          }
           heritageContenu[sectionId][elementId].etape = titreEtape
         }
       }

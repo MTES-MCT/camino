@@ -22,7 +22,7 @@ const titresEtapesQueryBuild = ({ fields }: { fields?: FieldsEtape }, user: User
 }
 
 // utilisé dans le daily et le resolver des documents uniquement
-export const titreEtapeGet = async (titreEtapeId: EtapeIdOrSlug, { fields, fetchHeritage }: { fields?: FieldsEtape; fetchHeritage?: boolean }, user: User): Promise<ITitreEtape> => {
+export const titreEtapeGet = async (titreEtapeId: EtapeIdOrSlug, { fields, fetchHeritage }: { fields?: FieldsEtape; fetchHeritage?: boolean }, user: User): Promise<ITitreEtape | null> => {
   const q = titresEtapesQueryBuild({ fields }, user)
 
   q.context({ fetchHeritage })

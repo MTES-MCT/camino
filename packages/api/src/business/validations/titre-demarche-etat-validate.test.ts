@@ -612,7 +612,7 @@ describe('titreDemarcheUpdatedEtatValidate', () => {
     ).toMatchInlineSnapshot(`
       {
         "errors": [
-          "les étapes de la démarche machine ne sont pas valides",
+          "les étapes de la démarche machine AXMOct ne sont pas valides",
         ],
         "valid": false,
       }
@@ -662,7 +662,7 @@ describe('titreDemarcheUpdatedEtatValidate', () => {
     ).toMatchInlineSnapshot(`
       {
         "errors": [
-          "les étapes de la démarche machine ne sont pas valides",
+          "les étapes de la démarche machine AXMOct ne sont pas valides",
         ],
         "valid": false,
       }

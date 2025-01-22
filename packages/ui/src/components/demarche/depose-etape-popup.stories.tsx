@@ -1,6 +1,7 @@
 import { action } from '@storybook/addon-actions'
 import { Meta, StoryFn } from '@storybook/vue3'
 import { DeposeEtapePopup } from './depose-etape-popup'
+import { etapeIdValidator } from 'camino-common/src/etape'
 
 const meta: Meta = {
   title: 'Components/Demarche/DeposeEtapePopup',
@@ -15,7 +16,7 @@ export const Depot: StoryFn = () => (
   <DeposeEtapePopup
     deposeEtape={async () => {
       deposeEtape()
-      return Promise.resolve()
+      return Promise.resolve({ id: etapeIdValidator.parse('etapeId') })
     }}
     close={close}
     etapeTypeId="mfr"
@@ -26,7 +27,7 @@ export const Finalisation: StoryFn = () => (
   <DeposeEtapePopup
     deposeEtape={async () => {
       deposeEtape()
-      return Promise.resolve()
+      return Promise.resolve({ id: etapeIdValidator.parse('etapeId') })
     }}
     close={close}
     etapeTypeId="asc"

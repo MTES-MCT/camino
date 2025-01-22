@@ -79,7 +79,7 @@ export const titreDemarcheUpdatedEtatValidate = (
     const statutPossiblesPourCetteEtape = etapeTypesWithStatusPossibles[titreEtape.typeId]
     if (isNullOrUndefined(statutPossiblesPourCetteEtape) || !statutPossiblesPourCetteEtape.etapeStatutIds.includes(titreEtape.statutId)) {
       if (isNotNullNorUndefined(machine)) {
-        return { valid: false, errors: ['les étapes de la démarche machine ne sont pas valides'] }
+        return { valid: false, errors: [`les étapes de la démarche machine ${machine.machine.id} ne sont pas valides`] }
       } else {
         return { valid: false, errors: ['les étapes de la démarche TDE ne sont pas valides'] }
       }

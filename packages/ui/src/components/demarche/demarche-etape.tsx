@@ -289,9 +289,7 @@ export const DemarcheEtape = defineComponent<Props>(props => {
     }
   }
 
-  const deposeEtape = async () => {
-    await props.apiClient.deposeEtape(props.etape.id)
-  }
+  const deposeEtape = () => props.apiClient.deposeEtape(props.etape.id)
 
   return () => (
     <div class="fr-pb-2w fr-pl-2w fr-pr-2w fr-tile--shadow" style={{ border: '1px solid var(--grey-900-175)' }}>

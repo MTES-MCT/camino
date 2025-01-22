@@ -228,9 +228,14 @@ export const PureTitre = defineComponent<Props>(props => {
     },
     deposeEtape: async titreEtapeId => {
       if (titreData.value.status === 'LOADED') {
-        await props.apiClient.deposeEtape(titreEtapeId)
+        const value = await props.apiClient.deposeEtape(titreEtapeId)
+        if ('message' in value) {
+          return value
+        }
         await retrieveTitre()
+        return value
       }
+      return { message: "Le titre n'est pas chargé" as const }
     },
   }))
 
