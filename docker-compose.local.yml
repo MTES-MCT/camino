@@ -79,7 +79,7 @@ services:
       - ${OAUTH_PORT}:${OAUTH_PORT}
   keycloak:
     container_name: camino_keycloak
-    image: quay.io/keycloak/keycloak:26.1.0
+    image: caminofr/camino-keycloak:26.1.0
     depends_on:
       - db
     environment:
@@ -88,11 +88,6 @@ services:
       KC_DB_SCHEMA: keycloak
       KC_DB_PASSWORD: "${PGPASSWORD}"
       KC_DB_USERNAME: "${PGUSER}"
-    volumes:
-      - $PWD/infra/roles/camino/files/keycloak-franceconnect-7.0.0.jar:/opt/keycloak/providers/keycloak-franceconnect-7.0.0.jar
-      - $PWD/infra/roles/camino/files/keycloak-theme-for-kc-26-and-above.jar:/opt/keycloak/providers/keycloak-theme-for-kc-26-and-above.jar
-      - $PWD/infra/roles/camino/files/keycloak-bcrypt-1.6.0.jar:/opt/keycloak/providers/keycloak-bcrypt-1.6.0.jar
-      - $PWD/infra/roles/camino/files/keycloak_theme/:/opt/keycloak/themes/camino/
     command:
       - '/opt/keycloak/bin/kc.sh build && /opt/keycloak/bin/kc.sh start-dev --hostname=127.0.0.1 --spi-theme-static-max-age=-1 --spi-theme-cache-themes=false --spi-theme-cache-templates=false'
     entrypoint: "/bin/bash -c"
