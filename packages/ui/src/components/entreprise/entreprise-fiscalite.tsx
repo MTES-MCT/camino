@@ -89,7 +89,7 @@ const FiscaliteByAnnee: FunctionalComponent<FiscaliteProps> = props => {
   return (
     <>
       {props.annees[props.annees.length - 1] === props.tabId ? (
-        <Alert small={true} type="info" title={`Estimation effectuée sur la base des tarifs et des productions déclarées pour l'année ${Number.parseInt(props.tabId) - 1}`} class="fr-mb-1w" />
+        <Alert small={true} type="info" title={`estimation effectuée sur la base des tarifs et des productions déclarées pour l'année ${Number.parseInt(props.tabId) - 1}`} class="fr-mb-1w" />
       ) : null}
       <strong>Cotisations</strong>
       <div class={styles['fiscalite-table']}>

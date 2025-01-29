@@ -1,3 +1,4 @@
+import { capitalize } from 'camino-common/src/strings'
 import type { CaminoError } from 'camino-common/src/zod-tools'
 import type { FunctionalComponent, HTMLAttributes } from 'vue'
 import type { JSX } from 'vue/jsx-runtime'
@@ -17,7 +18,7 @@ export const Alert: FunctionalComponent<Props> = props => {
   if ('small' in props) {
     return (
       <div class={['fr-alert', `fr-alert--${props.type}`, 'fr-alert--sm']}>
-        <p>{props.title}</p>
+        <p>{typeof props.title === 'string' ? capitalize(props.title) : props.title}</p>
       </div>
     )
   } else {
@@ -38,7 +39,7 @@ export const CaminoApiAlert: FunctionalComponent<{ caminoApiError: CaminoError<s
     return (
       <Alert
         type="error"
-        title={props.caminoApiError.message}
+        title={capitalize(props.caminoApiError.message)}
         description={
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             <div>{props.caminoApiError.detail}</div>
@@ -51,9 +52,9 @@ export const CaminoApiAlert: FunctionalComponent<{ caminoApiError: CaminoError<s
       />
     )
   } else if ('zodErrorReadableMessage' in props.caminoApiError) {
-    return <Alert type="error" title={props.caminoApiError.message} description={props.caminoApiError.zodErrorReadableMessage} />
+    return <Alert type="error" title={capitalize(props.caminoApiError.message)} description={props.caminoApiError.zodErrorReadableMessage} />
   } else {
-    return <Alert type="error" title={props.caminoApiError.message} description={props.caminoApiError.detail} />
+    return <Alert type="error" title={capitalize(props.caminoApiError.message)} description={props.caminoApiError.detail} />
   }
 }
 

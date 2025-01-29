@@ -1,12 +1,11 @@
 import { CaminoAnnee } from 'camino-common/src/date'
 import { SubstanceFiscaleId, SUBSTANCES_FISCALES_IDS } from 'camino-common/src/static/substancesFiscales'
-import { RecordPartial } from 'camino-common/src/typescript-tools'
+import { isNullOrUndefined, RecordPartial } from 'camino-common/src/typescript-tools'
 import Decimal from 'decimal.js'
 import { z } from 'zod'
 
 const anneeData = ['2017', '2018', '2019', '2020', '2021', '2022', '2023', '2024'] as const
-const anneeDataValidator = z.enum(anneeData)
-type AnneeData = z.infer<typeof anneeDataValidator>
+type AnneeData = (typeof anneeData)[number]
 const redevanceCommunale = {
   '2017': {
     auru: new Decimal(141.2),
@@ -666,8 +665,7 @@ export const sipIdValidator = z.enum(SIP_IDS)
 export type Sip = z.infer<typeof sipIdValidator>
 export const isSip = (value: string): value is Sip => sipIdValidator.safeParse(value).success
 export const getSips = (annee: CaminoAnnee): RecordPartial<Sip, { nom: string; communes: string[] }> => {
-  const anneeData = anneeDataValidator.parse(annee)
-  if (anneeData < '2024') {
+  if (annee < '2024') {
     return oldSips
   } else {
     return newSips
@@ -749,56 +747,48 @@ const newSips = {
 } as const satisfies RecordPartial<Sip, { nom: string; communes: string[] }>
 
 export const getRedevanceCommunale = (annee: CaminoAnnee, substanceId: SubstanceFiscaleId): Decimal => {
-  const { success, data } = anneeDataValidator.safeParse(annee)
-  if (!success) {
-    if (annee <= anneeData[0]) {
-      throw new Error('Impossible de calculer la redevance pour cette année (données absentes)')
-    }
-
+  if (annee < anneeData[0]) {
+    throw new Error('Impossible de calculer la redevance pour cette année (données absentes)')
+  }
+  const anneeFound = anneeData.find(value => value === annee)
+  if (isNullOrUndefined(anneeFound)) {
     return redevanceCommunale[anneeData[anneeData.length - 1]][substanceId]
   } else {
-    return redevanceCommunale[data][substanceId]
+    return redevanceCommunale[anneeFound][substanceId]
   }
 }
 
 export const getRedevanceDepartementale = (annee: CaminoAnnee, substanceId: SubstanceFiscaleId): Decimal => {
-  const { success, data } = anneeDataValidator.safeParse(annee)
-  if (!success) {
-    if (annee <= anneeData[0]) {
-      throw new Error('Impossible de calculer la redevance pour cette année (données absentes)')
-    }
-
+  if (annee < anneeData[0]) {
+    throw new Error('Impossible de calculer la redevance pour cette année (données absentes)')
+  }
+  const anneeFound = anneeData.find(value => value === annee)
+  if (isNullOrUndefined(anneeFound)) {
     return redevanceDepartementale[anneeData[anneeData.length - 1]][substanceId]
   } else {
-    return redevanceDepartementale[data][substanceId]
+    return redevanceDepartementale[anneeFound][substanceId]
   }
 }
 
 export const getCategoriesForTaxeAurifereGuyane = (annee: CaminoAnnee, category: EntrepriseCategory): Decimal => {
-  const { success, data } = anneeDataValidator.safeParse(annee)
-  if (!success) {
-    if (annee <= anneeData[0]) {
-      throw new Error('Impossible de calculer la redevance pour cette année (données absentes)')
-    }
+  if (annee < anneeData[0]) {
+    throw new Error('Impossible de calculer la redevance pour cette année (données absentes)')
+  }
 
+  const anneeFound = anneeData.find(value => value === annee)
+  if (isNullOrUndefined(anneeFound)) {
     return categoriesForTaxeAurifereGuyane[category][anneeData[anneeData.length - 1]].value
   } else {
-    return categoriesForTaxeAurifereGuyane[category][data].value
+    return categoriesForTaxeAurifereGuyane[category][anneeFound].value
   }
 }
 
 type TarifsBySubstances = Record<SubstanceFiscaleId, { tarifDepartemental: Decimal; tarifCommunal: Decimal }>
 export const getAllTarifsBySubstances = (annee: CaminoAnnee): TarifsBySubstances => {
-  const anneeParsed = anneeDataValidator.safeParse(annee)
-  let data: AnneeData | null = null
-  if (!anneeParsed.success) {
-    if (annee <= anneeData[0]) {
-      throw new Error('Impossible de calculer la redevance pour cette année (données absentes)')
-    }
-
-    data = anneeData[anneeData.length - 1]
-  } else {
-    data = anneeParsed.data
+  const anneeFound = anneeData.find(value => value === annee)
+  const data: AnneeData = isNullOrUndefined(anneeFound) ? anneeData[anneeData.length - 1] : anneeFound
+  if (annee < anneeData[0]) {
+    throw new Error('Impossible de calculer la redevance pour cette année (données absentes)')
   }
 
   return {
