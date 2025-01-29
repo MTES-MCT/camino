@@ -635,6 +635,8 @@ const TDE = {
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
       ETAPES_TYPES.classementSansSuite,
+      ETAPES_TYPES.demandeDeComplements,
+      ETAPES_TYPES.receptionDeComplements,
     ],
     [DEMARCHES_TYPES_IDS.Octroi]: [
       ETAPES_TYPES.demande,
