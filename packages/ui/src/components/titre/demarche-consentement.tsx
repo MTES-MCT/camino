@@ -46,7 +46,7 @@ DemarchesConsentement.props = ['demarcheSlug', 'titre']
 const DemarchesConsentementLoaded: FunctionalComponent<{ demarches: DemarcheConsentement[] }> = ({ demarches }) => {
   return (
     <>
-      <span> Les titres suivants sont valides et concernent au moins une substance en commun avec cette demande :</span>
+      <span>Les titres suivants sont valides et concernent d'autres substances :</span>
       <ul>
         {demarches.map(demarche => (
           <li>

@@ -4,6 +4,8 @@ import { DemarcheTypeId, DEMARCHES_TYPES_IDS, DemarchesTypes } from './static/de
 import { TitreTypeId } from './static/titresTypes'
 import { NonEmptyArray, isNullOrUndefinedOrEmpty, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, toSorted } from './typescript-tools'
 
+// TODO 2025-01-29 attention le jour où on met à jour la date de début de la procédure spécifique
+// TODO 2025-01-29 pour le consentement, il faudrait que l'on calcule le consentement pour toutes les étapes avec un périmètre, et qu'on aille chercher le consentement lié au titre.props_etape_id
 export const DATE_DEBUT_PROCEDURE_SPECIFIQUE = toCaminoDate('2400-01-01')
 export const DATE_DEBUT_PROCEDURE_SPECIFIQUE_AXM_ARM = toCaminoDate('2024-07-01')
 
@@ -163,3 +165,5 @@ export const machineIdFind = (titreTypeId: TitreTypeId, demarcheTypeId: Demarche
 
   return definition?.machineId
 }
+
+export const isMachineWithConsentement = (machineId: CaminoMachineId | undefined): boolean => machineId === 'ProcedureSpecifique'

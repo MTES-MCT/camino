@@ -296,7 +296,6 @@ const prmOctMachine = createMachine({
           target: 'avisDeMiseEnConcurrenceAuJORFAFaire',
           actions: assign({
             demarcheStatut: DemarchesStatutsIds.EnInstruction,
-            visibilite: 'publique',
           }),
         },
         FAIRE_RECEVABILITE_DEMANDE_DEFAVORABLE: 'recevabiliteDeLaDemandeAFaire',
@@ -309,7 +308,6 @@ const prmOctMachine = createMachine({
           target: 'avisDeMiseEnConcurrenceAuJORFAFaire',
           actions: assign({
             demarcheStatut: DemarchesStatutsIds.EnInstruction,
-            visibilite: 'publique',
           }),
         },
         FAIRE_RECEVABILITE_DEMANDE_DEFAVORABLE: 'complementsPourRecevabiliteAFaire',
@@ -318,6 +316,9 @@ const prmOctMachine = createMachine({
     avisDeMiseEnConcurrenceAuJORFAFaire: {
       always: {
         guard: estExempteDeLaMiseEnConcurrence,
+        actions: assign({
+          visibilite: 'publique',
+        }),
         target: 'saisinesEtMiseEnConcurrence',
       },
       on: {
@@ -327,6 +328,7 @@ const prmOctMachine = createMachine({
             dateAvisMiseEnConcurrentJorf: ({ event }) => {
               return event.date
             },
+            visibilite: 'publique',
           }),
         },
       },

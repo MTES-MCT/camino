@@ -1,7 +1,7 @@
 import { computed, defineComponent, onMounted, ref, watch, inject } from 'vue'
 import { useRouter } from 'vue-router'
 import { LoadingElement } from './_ui/functional-loader'
-import { DemarcheEtapeFondamentale, DemarcheSlug, demarcheSlugValidator } from 'camino-common/src/demarche'
+import { demarcheEnregistrementDemandeDateFind, DemarcheEtapeFondamentale, DemarcheSlug, demarcheSlugValidator } from 'camino-common/src/demarche'
 import { AsyncData } from '@/api/client-rest'
 import { User, isAdministration, isEntrepriseOrBureauDEtude, isSuper } from 'camino-common/src/roles'
 import { capitalize } from 'camino-common/src/strings'
@@ -44,6 +44,7 @@ import { ModifiedDate } from './_common/modified-date'
 import { DemarcheMiseEnConcurrence } from './titre/demarche-mise-en-concurrence'
 import { DemarchesConsentement } from './titre/demarche-consentement'
 import { useState } from '@/utils/vue-tsx-utils'
+import { isMachineWithConsentement, machineIdFind } from 'camino-common/src/machines'
 
 const activitesSort: TableSortEvent = {
   colonne: activitesColonneIdAnnee,
@@ -335,6 +336,26 @@ export const PureTitre = defineComponent<Props>(props => {
     addDemarchePopup.value = false
   }
 
+  const machineId = computed(() => {
+    if (titreData.value.status !== 'LOADED') {
+      return undefined
+    }
+    if (isNullOrUndefined(props.currentDemarcheSlug)) {
+      return undefined
+    }
+    const titre = titreData.value.value
+    const demarche = titre.demarches.find(({ slug }) => slug === props.currentDemarcheSlug)
+    if (isNullOrUndefined(demarche)) {
+      return undefined
+    }
+    const firstEtapeDate = demarcheEnregistrementDemandeDateFind(demarche.etapes.map(etape => ({ ...etape, typeId: etape.etape_type_id })))
+
+    if (isNullOrUndefined(firstEtapeDate)) {
+      return undefined
+    }
+    return machineIdFind(titre.titre_type_id, demarche.demarche_type_id, demarche.id, firstEtapeDate)
+  })
+
   return () => (
     <div>
       <LoadingElement
@@ -446,7 +467,7 @@ export const PureTitre = defineComponent<Props>(props => {
             </div>
 
             <DemarcheMiseEnConcurrence apiClient={props.apiClient} titre={titre} user={props.user ?? null} hasTitresFrom={hasTitresFrom.value} />
-            {isNotNullNorUndefined(props.currentDemarcheSlug) ? <DemarchesConsentement titre={titre} demarcheSlug={props.currentDemarcheSlug} /> : null}
+            {isNotNullNorUndefined(props.currentDemarcheSlug) && isMachineWithConsentement(machineId.value) ? <DemarchesConsentement titre={titre} demarcheSlug={props.currentDemarcheSlug} /> : null}
             <DsfrSeparator />
             {hasNoPhases.value ? <DsfrButton style={{ marginLeft: 'auto' }} buttonType="primary" title="Ajouter une démarche" onClick={openAddDemarchePopup} /> : null}
             {props.currentDemarcheSlug !== null ? (

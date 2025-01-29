@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest'
 import { firstEtapeDateValidator } from './date'
-import { DATE_DEBUT_PROCEDURE_SPECIFIQUE, machineIdFind } from './machines'
+import { DATE_DEBUT_PROCEDURE_SPECIFIQUE, isMachineWithConsentement, machineIdFind } from './machines'
 import { demarcheIdValidator } from './demarche'
 
 describe('machineFind', () => {
@@ -22,5 +22,13 @@ describe('machineFind', () => {
 
   test('demarcheDefinitionFind retourne ProcedureSpecfique dès sa date de début', () => {
     expect(machineIdFind('arm', 'oct', demarcheIdValidator.parse('Anything'), firstEtapeDateValidator.parse(DATE_DEBUT_PROCEDURE_SPECIFIQUE))).toBe('ProcedureSpecifique')
+  })
+})
+describe('isMachineWithConsentement', () => {
+  test('procedure specifique', () => {
+    expect(isMachineWithConsentement('ProcedureSpecifique')).toBe(true)
+  })
+  test('autre machines', () => {
+    expect(isMachineWithConsentement('ArmOct')).toBe(false)
   })
 })
