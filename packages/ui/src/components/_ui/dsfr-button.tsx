@@ -1,5 +1,6 @@
 import { FunctionalComponent, ButtonHTMLAttributes, HTMLAttributes } from 'vue'
-import { DsfrIcon } from './dsfrIconSpriteType'
+import { FrIconClassName } from '@codegouvfr/react-dsfr'
+
 import { CaminoRouterLink } from '../../router/camino-router-link'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { CaminoRouteNames, CaminoVueRoute } from '@/router/routes'
@@ -14,7 +15,7 @@ type DsfrButtonProps = {
   onClick: () => void
   title: string
   label?: string
-  icon?: DsfrIcon
+  icon?: FrIconClassName
   disabled?: boolean
   buttonType?: ButtonType
   buttonSize?: ButtonSize
@@ -45,7 +46,7 @@ export const DsfrButton: FunctionalComponent<DsfrButtonProps> = (props: DsfrButt
   )
 }
 
-type DsfrButtonIconProps = DsfrButtonProps & { icon: DsfrIcon }
+type DsfrButtonIconProps = DsfrButtonProps & { icon: FrIconClassName }
 
 export const DsfrButtonIcon: FunctionalComponent<DsfrButtonIconProps> = (props: DsfrButtonIconProps) => {
   return (
@@ -66,7 +67,7 @@ type DsfrLinkProps<T extends CaminoRouteNames> = {
   label?: string | null
   buttonType?: ButtonType
   breadcrumb?: true
-  icon: DsfrIcon | null
+  icon: FrIconClassName | null
   style?: HTMLAttributes['style']
   class?: HTMLAttributes['class']
 } & ({ to: CaminoVueRoute<T>; disabled: false } | { href: HTMLAnchorElement['href']; download?: HTMLAnchorElement['download']; target?: HTMLAnchorElement['target']; rel?: HTMLAnchorElement['rel'] })

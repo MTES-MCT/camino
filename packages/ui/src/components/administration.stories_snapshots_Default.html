@@ -18,31 +18,35 @@ CS 76003
     <p class="fr-text--lg">Un utilisateur d'une <b>administration locale</b> peut créer et modifier le contenu des titres du territoire concerné.</p>
   </div>
   <div>
-    <div style="overflow-x: auto;">
-      <div class="fr-table">
-        <table style="display: table;">
-          <caption>Utilisateurs</caption>
-          <thead>
-            <tr>
-              <th scope="col" class="nowrap"><a class="fr-link fr-link--icon-right fr-icon-arrow-down-fill" title="Trier par la colonne Nom par ordre descendant" aria-label="Trier par la colonne Nom par ordre descendant" href="#!">Nom</a></th>
-              <th scope="col" class="nowrap"><a class="fr-link" title="Trier par la colonne Prénom" aria-label="Trier par la colonne Prénom" href="#!">Prénom</a></th>
-              <th scope="col" class="nowrap"><a class="fr-link" title="Trier par la colonne Email" aria-label="Trier par la colonne Email" href="#!">Email</a></th>
-              <th scope="col" class="nowrap"><a class="fr-link" title="Trier par la colonne Rôle" aria-label="Trier par la colonne Rôle" href="#!">Rôle</a></th>
-              <th scope="col" class="nowrap">
-                <div class="fr-text--md">Lien</div>
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td class=""><a class="fr-link" to="{name:utilisateur,params:{id:jeanmichel}}" type="primary"><span class="">Michel</span></a></td>
-              <td class=""><span class="">Jean</span></td>
-              <td class=""><span class="h6">jean.michel@gmail.com</span></td>
-              <td class=""><span class="bg-neutral color-bg pill py-xs px-s small bold">admin</span></td>
-              <td class=""><span class="mb--xs"><ul><li class="fr-text--xs">BRGM</li></ul></span></td>
-            </tr>
-          </tbody>
-        </table>
+    <div>
+      <div class="fr-table fr-table--no-scroll" style="overflow: auto;">
+        <div class="fr-table__wrapper" style="width: auto;">
+          <div class="fr-table__container">
+            <div class="fr-table__content">
+              <table style="display: table; width: 100%;">
+                <caption>Utilisateurs</caption>
+                <thead>
+                  <tr>
+                    <th scope="col">Nom</th>
+                    <th scope="col">Prénom</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Rôle</th>
+                    <th scope="col">Lien</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><a class="fr-link" to="{name:utilisateur,params:{id:jeanmichel}}" type="primary"><span class="">Michel</span></a></td>
+                    <td><span class="">Jean</span></td>
+                    <td><span class="h6">jean.michel@gmail.com</span></td>
+                    <td><span class="bg-neutral color-bg pill py-xs px-s small bold">admin</span></td>
+                    <td><span class="mb--xs"><ul><li class="fr-text--xs">BRGM</li></ul></span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -58,49 +62,62 @@ CS 76003
     </div>
     <hr>
     <div>
-      <div class="overflow-scroll-x fr-table fr-table--no-caption">
-        <table style="display: table;">
-          <thead>
-            <th>Type d'activité</th>
-            <th>Email</th>
-            <th>Actions</th>
-          </thead>
-          <tr>
-            <td>
-              <div class="fr-select-group"><label class="fr-label" for="select_74">Activité
-                  <!---->
-                </label><select class="fr-select" id="select_74" aria-label="Activité" name="select_74">
-                  <option value="gra">Rapport d'exploitation (permis et concessions M) (GRA)</option>
-                  <option value="grp">Rapport trimestriel d'exploitation d'or en Guyane (GRP)</option>
-                  <option value="grx">Rapport d'exploitation (autorisations M) (GRX)</option>
-                  <option value="pma">Rapport d'intensité d'exploration (PMA)</option>
-                  <option value="pmb">Rapport financier d'exploration (PMB)</option>
-                  <option value="pmc">Rapport environnemental d'exploration (PMC)</option>
-                  <option value="pmd">Rapport social et économique d'exploration (PMD)</option>
-                  <option value="wrp">Rapport d'exploitation (permis et concessions W) (WRP)</option>
-                  <option selected="" disabled="" hidden="" value="">Selectionnez une option</option>
-                </select></div>
-            </td>
-            <td>
-              <div class="fr-input-group" style="margin-bottom: 0px;"><label class="fr-label" for="input_670">Email
-                  <!---->
-                  <!---->
-                </label><input class="fr-input" name="input_670" id="input_670" type="email">
-                <!---->
+      <div>
+        <div class="fr-table fr-table--no-caption fr-table--no-scroll" style="overflow: auto;">
+          <div class="fr-table__wrapper" style="width: auto;">
+            <div class="fr-table__container">
+              <div class="fr-table__content">
+                <table style="display: table; width: 100%;">
+                  <caption></caption>
+                  <thead>
+                    <tr>
+                      <th scope="col">Type d'activité</th>
+                      <th scope="col">Email</th>
+                      <th scope="col" class="fr-cell--bottom">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>
+                        <div class="fr-select-group"><label class="fr-label" for="select_271">Activité
+                            <!---->
+                          </label><select class="fr-select" id="select_271" aria-label="Activité" name="select_271">
+                            <option value="gra">Rapport d'exploitation (permis et concessions M) (GRA)</option>
+                            <option value="grp">Rapport trimestriel d'exploitation d'or en Guyane (GRP)</option>
+                            <option value="grx">Rapport d'exploitation (autorisations M) (GRX)</option>
+                            <option value="pma">Rapport d'intensité d'exploration (PMA)</option>
+                            <option value="pmb">Rapport financier d'exploration (PMB)</option>
+                            <option value="pmc">Rapport environnemental d'exploration (PMC)</option>
+                            <option value="pmd">Rapport social et économique d'exploration (PMD)</option>
+                            <option value="wrp">Rapport d'exploitation (permis et concessions W) (WRP)</option>
+                            <option selected="" disabled="" hidden="" value="">Selectionnez une option</option>
+                          </select></div>
+                      </td>
+                      <td>
+                        <div class="fr-input-group" style="margin-bottom: 0px;"><label class="fr-label" for="input_670">Email
+                            <!---->
+                            <!---->
+                          </label><input class="fr-input" name="input_670" id="input_670" type="email">
+                          <!---->
+                        </div>
+                      </td>
+                      <td class="fr-cell--bottom"><button class="fr-btn fr-btn--primary fr-btn--md fr-icon-add-line" disabled="" title="Ajouter un email pour un type d'activité" aria-label="Ajouter un email pour un type d'activité" type="button">
+                          <!---->
+                        </button></td>
+                    </tr>
+                    <tr>
+                      <td><span class="">Rapport d'exploitation (autorisations M) (GRX)</span></td>
+                      <td><span class="">toto@toto.com</span></td>
+                      <td class="fr-cell--bottom"><button class="fr-btn fr-btn--secondary fr-btn--md fr-icon-delete-bin-line" title="Supprimer un email pour un type d’activité" aria-label="Supprimer un email pour un type d’activité" type="button">
+                          <!---->
+                        </button></td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
-            </td>
-            <td style="vertical-align: bottom;"><button class="fr-btn fr-btn--primary fr-btn--md fr-icon-add-line" disabled="" title="Ajouter un email pour un type d'activité" aria-label="Ajouter un email pour un type d'activité" type="button">
-                <!---->
-              </button></td>
-          </tr>
-          <tr>
-            <td><span>Rapport d'exploitation (autorisations M) (GRX)</span></td>
-            <td>toto@toto.com</td>
-            <td style="vertical-align: bottom;"><button class="fr-btn fr-btn--secondary fr-btn--md fr-icon-delete-bin-line" title="Supprimer un email pour un type d’activité" aria-label="Supprimer un email pour un type d’activité" type="button">
-                <!---->
-              </button></td>
-          </tr>
-        </table>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -116,61 +133,59 @@ CS 76003
           </ul>
         </div>
         <hr>
-        <div style="overflow-x: auto;">
-          <div class="fr-table">
-            <table style="display: table;">
-              <caption></caption>
-              <thead>
-                <tr>
-                  <th scope="col" class="nowrap">
-                    <div class="fr-text--md">Domaine</div>
-                  </th>
-                  <th scope="col" class="nowrap">
-                    <div class="fr-text--md">Type de titre</div>
-                  </th>
-                  <th scope="col" class="nowrap">
-                    <div class="fr-text--md">Gestionnaire</div>
-                  </th>
-                  <th scope="col" class="nowrap">
-                    <div class="fr-text--md">Associée</div>
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td class="">
-                    <p class="fr-tag fr-tag--md mono" title="Domaine géothermie" aria-label="Domaine géothermie" style="min-width: 2rem; color: black;">G</p>
-                  </td>
-                  <td class=""><span class="">Autorisation de recherches</span></td>
-                  <td class=""><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Est gestionnaire de ce type de titre"></span></td>
-                  <td class=""><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="N’est pas associée à ce type de titre"></span></td>
-                </tr>
-                <tr>
-                  <td class="">
-                    <p class="fr-tag fr-tag--md mono" title="Domaine géothermie" aria-label="Domaine géothermie" style="min-width: 2rem; color: black;">G</p>
-                  </td>
-                  <td class=""><span class="">Permis d'exploitation</span></td>
-                  <td class=""><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Est gestionnaire de ce type de titre"></span></td>
-                  <td class=""><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="N’est pas associée à ce type de titre"></span></td>
-                </tr>
-                <tr>
-                  <td class="">
-                    <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
-                  </td>
-                  <td class=""><span class="">Autorisation d'exploitation</span></td>
-                  <td class=""><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Est gestionnaire de ce type de titre"></span></td>
-                  <td class=""><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="N’est pas associée à ce type de titre"></span></td>
-                </tr>
-                <tr>
-                  <td class="">
-                    <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
-                  </td>
-                  <td class=""><span class="">Autorisation de recherches</span></td>
-                  <td class=""><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Est gestionnaire de ce type de titre"></span></td>
-                  <td class=""><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="N’est pas associée à ce type de titre"></span></td>
-                </tr>
-              </tbody>
-            </table>
+        <div>
+          <div class="fr-table fr-table--no-caption fr-table--no-scroll" style="overflow: auto;">
+            <div class="fr-table__wrapper" style="width: auto;">
+              <div class="fr-table__container">
+                <div class="fr-table__content">
+                  <table style="display: table; width: 100%;">
+                    <caption></caption>
+                    <thead>
+                      <tr>
+                        <th scope="col">Domaine</th>
+                        <th scope="col">Type de titre</th>
+                        <th scope="col">Gestionnaire</th>
+                        <th scope="col">Associée</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>
+                          <p class="fr-tag fr-tag--md mono" title="Domaine géothermie" aria-label="Domaine géothermie" style="min-width: 2rem; color: black;">G</p>
+                        </td>
+                        <td><span class="">Permis d'exploitation</span></td>
+                        <td><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Est gestionnaire de ce type de titre"></span></td>
+                        <td><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="N’est pas associée à ce type de titre"></span></td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <p class="fr-tag fr-tag--md mono" title="Domaine géothermie" aria-label="Domaine géothermie" style="min-width: 2rem; color: black;">G</p>
+                        </td>
+                        <td><span class="">Autorisation de recherches</span></td>
+                        <td><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Est gestionnaire de ce type de titre"></span></td>
+                        <td><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="N’est pas associée à ce type de titre"></span></td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
+                        </td>
+                        <td><span class="">Autorisation de recherches</span></td>
+                        <td><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Est gestionnaire de ce type de titre"></span></td>
+                        <td><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="N’est pas associée à ce type de titre"></span></td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
+                        </td>
+                        <td><span class="">Autorisation d'exploitation</span></td>
+                        <td><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Est gestionnaire de ce type de titre"></span></td>
+                        <td><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="N’est pas associée à ce type de titre"></span></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -185,119 +200,113 @@ CS 76003
           <p>Restreint ces droits par domaine / type de titre / statut de titre.</p>
         </div>
         <hr>
-        <div style="overflow-x: auto;">
-          <div class="fr-table">
-            <table style="display: table;">
-              <caption></caption>
-              <thead>
-                <tr>
-                  <th scope="col" class="nowrap">
-                    <div class="fr-text--md">Domaine</div>
-                  </th>
-                  <th scope="col" class="nowrap">
-                    <div class="fr-text--md">Type de titre</div>
-                  </th>
-                  <th scope="col" class="nowrap">
-                    <div class="fr-text--md">Statut de titre</div>
-                  </th>
-                  <th scope="col" class="nowrap">
-                    <div class="fr-text--md">Titres</div>
-                  </th>
-                  <th scope="col" class="nowrap">
-                    <div class="fr-text--md">Démarches</div>
-                  </th>
-                  <th scope="col" class="nowrap">
-                    <div class="fr-text--md">Étapes</div>
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td class="">
-                    <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
-                  </td>
-                  <td class=""><span class="">Concession</span></td>
-                  <td class="">
-                    <p style="z-index: unset; margin-bottom: 0px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;" class="fr-badge fr-badge--md fr-badge--green-bourgeon" title="valide" aria-label="valide">valide</p>
-                  </td>
-                  <td class=""><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="La modification des titres est interdite"></span></td>
-                  <td class=""><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="La modification des démarches est interdite"></span></td>
-                  <td class=""><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="La modification des étapes est autorisée"></span></td>
-                </tr>
-                <tr>
-                  <td class="">
-                    <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
-                  </td>
-                  <td class=""><span class="">Concession</span></td>
-                  <td class="">
-                    <p style="z-index: unset; margin-bottom: 0px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;" class="fr-badge fr-badge--md fr-badge--green-bourgeon" title="valide - survie provisoire" aria-label="valide - survie provisoire">valide - survie provisoire</p>
-                  </td>
-                  <td class=""><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="La modification des titres est interdite"></span></td>
-                  <td class=""><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="La modification des démarches est interdite"></span></td>
-                  <td class=""><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="La modification des étapes est autorisée"></span></td>
-                </tr>
-                <tr>
-                  <td class="">
-                    <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
-                  </td>
-                  <td class=""><span class="">Concession</span></td>
-                  <td class="">
-                    <p style="z-index: unset; margin-bottom: 0px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;" class="fr-badge fr-badge--md fr-badge--green-bourgeon" title="valide - modification en instance" aria-label="valide - modification en instance">valide - modification en instance</p>
-                  </td>
-                  <td class=""><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="La modification des titres est interdite"></span></td>
-                  <td class=""><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="La modification des démarches est interdite"></span></td>
-                  <td class=""><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="La modification des étapes est autorisée"></span></td>
-                </tr>
-                <tr>
-                  <td class="">
-                    <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
-                  </td>
-                  <td class=""><span class="">Concession</span></td>
-                  <td class="">
-                    <p style="z-index: unset; margin-bottom: 0px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;" class="fr-badge fr-badge--md fr-badge--beige-gris-galet" title="indéterminé" aria-label="indéterminé">indéterminé</p>
-                  </td>
-                  <td class=""><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="La modification des titres est interdite"></span></td>
-                  <td class=""><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="La modification des démarches est interdite"></span></td>
-                  <td class=""><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="La modification des étapes est autorisée"></span></td>
-                </tr>
-                <tr>
-                  <td class="">
-                    <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
-                  </td>
-                  <td class=""><span class="">Concession</span></td>
-                  <td class="">
-                    <p style="z-index: unset; margin-bottom: 0px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;" class="fr-badge fr-badge--md fr-badge--beige-gris-galet" title="échu" aria-label="échu">échu</p>
-                  </td>
-                  <td class=""><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="La modification des titres est interdite"></span></td>
-                  <td class=""><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="La modification des démarches est interdite"></span></td>
-                  <td class=""><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="La modification des étapes est autorisée"></span></td>
-                </tr>
-                <tr>
-                  <td class="">
-                    <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
-                  </td>
-                  <td class=""><span class="">Concession</span></td>
-                  <td class="">
-                    <p style="z-index: unset; margin-bottom: 0px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;" class="fr-badge fr-badge--md fr-badge--orange-terre-battue" title="demande initiale" aria-label="demande initiale">demande initiale</p>
-                  </td>
-                  <td class=""><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="La modification des titres est interdite"></span></td>
-                  <td class=""><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="La modification des démarches est interdite"></span></td>
-                  <td class=""><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="La modification des étapes est autorisée"></span></td>
-                </tr>
-                <tr>
-                  <td class="">
-                    <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
-                  </td>
-                  <td class=""><span class="">Concession</span></td>
-                  <td class="">
-                    <p style="z-index: unset; margin-bottom: 0px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;" class="fr-badge fr-badge--md fr-badge--beige-gris-galet" title="demande classée" aria-label="demande classée">demande classée</p>
-                  </td>
-                  <td class=""><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="La modification des titres est interdite"></span></td>
-                  <td class=""><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="La modification des démarches est interdite"></span></td>
-                  <td class=""><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="La modification des étapes est autorisée"></span></td>
-                </tr>
-              </tbody>
-            </table>
+        <div>
+          <div class="fr-table fr-table--no-caption fr-table--no-scroll" style="overflow: auto;">
+            <div class="fr-table__wrapper" style="width: auto;">
+              <div class="fr-table__container">
+                <div class="fr-table__content">
+                  <table style="display: table; width: 100%;">
+                    <caption></caption>
+                    <thead>
+                      <tr>
+                        <th scope="col">Domaine</th>
+                        <th scope="col">Type de titre</th>
+                        <th scope="col">Statut de titre</th>
+                        <th scope="col">Titres</th>
+                        <th scope="col">Démarches</th>
+                        <th scope="col">Étapes</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>
+                          <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
+                        </td>
+                        <td><span class="">Concession</span></td>
+                        <td>
+                          <p style="z-index: unset; margin-bottom: 0px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;" class="fr-badge fr-badge--md fr-badge--beige-gris-galet" title="demande classée" aria-label="demande classée">demande classée</p>
+                        </td>
+                        <td><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="La modification des titres est interdite"></span></td>
+                        <td><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="La modification des démarches est interdite"></span></td>
+                        <td><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="La modification des étapes est autorisée"></span></td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
+                        </td>
+                        <td><span class="">Concession</span></td>
+                        <td>
+                          <p style="z-index: unset; margin-bottom: 0px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;" class="fr-badge fr-badge--md fr-badge--orange-terre-battue" title="demande initiale" aria-label="demande initiale">demande initiale</p>
+                        </td>
+                        <td><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="La modification des titres est interdite"></span></td>
+                        <td><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="La modification des démarches est interdite"></span></td>
+                        <td><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="La modification des étapes est autorisée"></span></td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
+                        </td>
+                        <td><span class="">Concession</span></td>
+                        <td>
+                          <p style="z-index: unset; margin-bottom: 0px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;" class="fr-badge fr-badge--md fr-badge--beige-gris-galet" title="échu" aria-label="échu">échu</p>
+                        </td>
+                        <td><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="La modification des titres est interdite"></span></td>
+                        <td><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="La modification des démarches est interdite"></span></td>
+                        <td><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="La modification des étapes est autorisée"></span></td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
+                        </td>
+                        <td><span class="">Concession</span></td>
+                        <td>
+                          <p style="z-index: unset; margin-bottom: 0px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;" class="fr-badge fr-badge--md fr-badge--beige-gris-galet" title="indéterminé" aria-label="indéterminé">indéterminé</p>
+                        </td>
+                        <td><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="La modification des titres est interdite"></span></td>
+                        <td><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="La modification des démarches est interdite"></span></td>
+                        <td><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="La modification des étapes est autorisée"></span></td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
+                        </td>
+                        <td><span class="">Concession</span></td>
+                        <td>
+                          <p style="z-index: unset; margin-bottom: 0px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;" class="fr-badge fr-badge--md fr-badge--green-bourgeon" title="valide - modification en instance" aria-label="valide - modification en instance">valide - modification en instance</p>
+                        </td>
+                        <td><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="La modification des titres est interdite"></span></td>
+                        <td><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="La modification des démarches est interdite"></span></td>
+                        <td><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="La modification des étapes est autorisée"></span></td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
+                        </td>
+                        <td><span class="">Concession</span></td>
+                        <td>
+                          <p style="z-index: unset; margin-bottom: 0px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;" class="fr-badge fr-badge--md fr-badge--green-bourgeon" title="valide - survie provisoire" aria-label="valide - survie provisoire">valide - survie provisoire</p>
+                        </td>
+                        <td><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="La modification des titres est interdite"></span></td>
+                        <td><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="La modification des démarches est interdite"></span></td>
+                        <td><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="La modification des étapes est autorisée"></span></td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
+                        </td>
+                        <td><span class="">Concession</span></td>
+                        <td>
+                          <p style="z-index: unset; margin-bottom: 0px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;" class="fr-badge fr-badge--md fr-badge--green-bourgeon" title="valide" aria-label="valide">valide</p>
+                        </td>
+                        <td><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="La modification des titres est interdite"></span></td>
+                        <td><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="La modification des démarches est interdite"></span></td>
+                        <td><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="La modification des étapes est autorisée"></span></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -308,415 +317,409 @@ CS 76003
           <p>Restreint ces droits par domaine / type de titre / type d'étape.</p>
         </div>
         <hr>
-        <div style="overflow-x: auto;">
-          <div class="fr-table">
-            <table style="display: table;">
-              <caption></caption>
-              <thead>
-                <tr>
-                  <th scope="col" class="nowrap">
-                    <div class="fr-text--md">Domaine</div>
-                  </th>
-                  <th scope="col" class="nowrap">
-                    <div class="fr-text--md">Type de titre</div>
-                  </th>
-                  <th scope="col" class="nowrap">
-                    <div class="fr-text--md">Type d'étape</div>
-                  </th>
-                  <th scope="col" class="nowrap">
-                    <div class="fr-text--md">Visibilité</div>
-                  </th>
-                  <th scope="col" class="nowrap">
-                    <div class="fr-text--md">Modification</div>
-                  </th>
-                  <th scope="col" class="nowrap">
-                    <div class="fr-text--md">Création</div>
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td class="">
-                    <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
-                  </td>
-                  <td class=""><span class="">Permis exclusif de recherches</span></td>
-                  <td class=""><span class="">Saisine du préfet</span></td>
-                  <td class=""><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="Le type d’étape est visible"></span></td>
-                  <td class=""><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Le type d’étape n’est pas modifiable"></span></td>
-                  <td class=""><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Ne peut créer d’étape de ce type"></span></td>
-                </tr>
-                <tr>
-                  <td class="">
-                    <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
-                  </td>
-                  <td class=""><span class="">Permis exclusif de recherches</span></td>
-                  <td class=""><span class="">Saisine du conseil général de l'économie (CGE)</span></td>
-                  <td class=""><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="Le type d’étape est visible"></span></td>
-                  <td class=""><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Le type d’étape n’est pas modifiable"></span></td>
-                  <td class=""><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Ne peut créer d’étape de ce type"></span></td>
-                </tr>
-                <tr>
-                  <td class="">
-                    <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
-                  </td>
-                  <td class=""><span class="">Permis exclusif de recherches</span></td>
-                  <td class=""><span class="">Saisine de l'autorité signataire</span></td>
-                  <td class=""><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="Le type d’étape est visible"></span></td>
-                  <td class=""><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Le type d’étape n’est pas modifiable"></span></td>
-                  <td class=""><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Ne peut créer d’étape de ce type"></span></td>
-                </tr>
-                <tr>
-                  <td class="">
-                    <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
-                  </td>
-                  <td class=""><span class="">Permis exclusif de recherches</span></td>
-                  <td class=""><span class="">Rapport du conseil général de l'économie (CGE)</span></td>
-                  <td class=""><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="Le type d’étape est visible"></span></td>
-                  <td class=""><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Le type d’étape n’est pas modifiable"></span></td>
-                  <td class=""><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Ne peut créer d’étape de ce type"></span></td>
-                </tr>
-                <tr>
-                  <td class="">
-                    <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
-                  </td>
-                  <td class=""><span class="">Permis exclusif de recherches</span></td>
-                  <td class=""><span class="">Participation du public</span></td>
-                  <td class=""><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="Le type d’étape est visible"></span></td>
-                  <td class=""><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Le type d’étape n’est pas modifiable"></span></td>
-                  <td class=""><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Ne peut créer d’étape de ce type"></span></td>
-                </tr>
-                <tr>
-                  <td class="">
-                    <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
-                  </td>
-                  <td class=""><span class="">Permis exclusif de recherches</span></td>
-                  <td class=""><span class="">Notification au préfet</span></td>
-                  <td class=""><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="Le type d’étape est visible"></span></td>
-                  <td class=""><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Le type d’étape n’est pas modifiable"></span></td>
-                  <td class=""><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Ne peut créer d’étape de ce type"></span></td>
-                </tr>
-                <tr>
-                  <td class="">
-                    <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
-                  </td>
-                  <td class=""><span class="">Permis exclusif de recherches</span></td>
-                  <td class=""><span class="">Demande</span></td>
-                  <td class=""><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="Le type d’étape est visible"></span></td>
-                  <td class=""><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Le type d’étape n’est pas modifiable"></span></td>
-                  <td class=""><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Ne peut créer d’étape de ce type"></span></td>
-                </tr>
-                <tr>
-                  <td class="">
-                    <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
-                  </td>
-                  <td class=""><span class="">Permis exclusif de recherches</span></td>
-                  <td class=""><span class="">Enregistrement de la demande</span></td>
-                  <td class=""><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="Le type d’étape est visible"></span></td>
-                  <td class=""><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Le type d’étape n’est pas modifiable"></span></td>
-                  <td class=""><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Ne peut créer d’étape de ce type"></span></td>
-                </tr>
-                <tr>
-                  <td class="">
-                    <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
-                  </td>
-                  <td class=""><span class="">Permis exclusif de recherches</span></td>
-                  <td class=""><span class="">Avis de demande concurrente</span></td>
-                  <td class=""><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="Le type d’étape est visible"></span></td>
-                  <td class=""><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Le type d’étape n’est pas modifiable"></span></td>
-                  <td class=""><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Ne peut créer d’étape de ce type"></span></td>
-                </tr>
-                <tr>
-                  <td class="">
-                    <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
-                  </td>
-                  <td class=""><span class="">Permis exclusif de recherches</span></td>
-                  <td class=""><span class="">Publication de décision au JORF</span></td>
-                  <td class=""><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="Le type d’étape est visible"></span></td>
-                  <td class=""><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Le type d’étape n’est pas modifiable"></span></td>
-                  <td class=""><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Ne peut créer d’étape de ce type"></span></td>
-                </tr>
-                <tr>
-                  <td class="">
-                    <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
-                  </td>
-                  <td class=""><span class="">Permis exclusif de recherches</span></td>
-                  <td class=""><span class="">Décision implicite</span></td>
-                  <td class=""><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="Le type d’étape est visible"></span></td>
-                  <td class=""><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Le type d’étape n’est pas modifiable"></span></td>
-                  <td class=""><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Ne peut créer d’étape de ce type"></span></td>
-                </tr>
-                <tr>
-                  <td class="">
-                    <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
-                  </td>
-                  <td class=""><span class="">Permis exclusif de recherches</span></td>
-                  <td class=""><span class="">Décision de l'autorité administrative</span></td>
-                  <td class=""><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="Le type d’étape est visible"></span></td>
-                  <td class=""><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Le type d’étape n’est pas modifiable"></span></td>
-                  <td class=""><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Ne peut créer d’étape de ce type"></span></td>
-                </tr>
-                <tr>
-                  <td class="">
-                    <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
-                  </td>
-                  <td class=""><span class="">Permis exclusif de recherches</span></td>
-                  <td class=""><span class="">Désistement du demandeur</span></td>
-                  <td class=""><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="Le type d’étape est visible"></span></td>
-                  <td class=""><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Le type d’étape n’est pas modifiable"></span></td>
-                  <td class=""><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Ne peut créer d’étape de ce type"></span></td>
-                </tr>
-                <tr>
-                  <td class="">
-                    <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
-                  </td>
-                  <td class=""><span class="">Permis exclusif de recherches</span></td>
-                  <td class=""><span class="">Classement sans suite</span></td>
-                  <td class=""><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="Le type d’étape est visible"></span></td>
-                  <td class=""><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Le type d’étape n’est pas modifiable"></span></td>
-                  <td class=""><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Ne peut créer d’étape de ce type"></span></td>
-                </tr>
-                <tr>
-                  <td class="">
-                    <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
-                  </td>
-                  <td class=""><span class="">Permis exclusif de recherches</span></td>
-                  <td class=""><span class="">Publication de l'avis de décision implicite</span></td>
-                  <td class=""><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="Le type d’étape est visible"></span></td>
-                  <td class=""><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Le type d’étape n’est pas modifiable"></span></td>
-                  <td class=""><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Ne peut créer d’étape de ce type"></span></td>
-                </tr>
-                <tr>
-                  <td class="">
-                    <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
-                  </td>
-                  <td class=""><span class="">Permis exclusif de recherches</span></td>
-                  <td class=""><span class="">Décision du juge administratif</span></td>
-                  <td class=""><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="Le type d’étape est visible"></span></td>
-                  <td class=""><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Le type d’étape n’est pas modifiable"></span></td>
-                  <td class=""><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Ne peut créer d’étape de ce type"></span></td>
-                </tr>
-                <tr>
-                  <td class="">
-                    <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
-                  </td>
-                  <td class=""><span class="">Permis exclusif de recherches</span></td>
-                  <td class=""><span class="">Avis du CGE et de l'IGEDD</span></td>
-                  <td class=""><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="Le type d’étape est visible"></span></td>
-                  <td class=""><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Le type d’étape n’est pas modifiable"></span></td>
-                  <td class=""><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Ne peut créer d’étape de ce type"></span></td>
-                </tr>
-                <tr>
-                  <td class="">
-                    <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
-                  </td>
-                  <td class=""><span class="">Permis exclusif de recherches</span></td>
-                  <td class=""><span class="">Abrogation de la décision</span></td>
-                  <td class=""><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="Le type d’étape est visible"></span></td>
-                  <td class=""><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Le type d’étape n’est pas modifiable"></span></td>
-                  <td class=""><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Ne peut créer d’étape de ce type"></span></td>
-                </tr>
-                <tr>
-                  <td class="">
-                    <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
-                  </td>
-                  <td class=""><span class="">Concession</span></td>
-                  <td class=""><span class="">Saisine du préfet</span></td>
-                  <td class=""><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="Le type d’étape est visible"></span></td>
-                  <td class=""><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Le type d’étape n’est pas modifiable"></span></td>
-                  <td class=""><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Ne peut créer d’étape de ce type"></span></td>
-                </tr>
-                <tr>
-                  <td class="">
-                    <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
-                  </td>
-                  <td class=""><span class="">Concession</span></td>
-                  <td class=""><span class="">Saisine du Conseil d'Etat</span></td>
-                  <td class=""><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="Le type d’étape est visible"></span></td>
-                  <td class=""><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Le type d’étape n’est pas modifiable"></span></td>
-                  <td class=""><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Ne peut créer d’étape de ce type"></span></td>
-                </tr>
-                <tr>
-                  <td class="">
-                    <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
-                  </td>
-                  <td class=""><span class="">Concession</span></td>
-                  <td class=""><span class="">Saisine du conseil général de l'économie (CGE)</span></td>
-                  <td class=""><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="Le type d’étape est visible"></span></td>
-                  <td class=""><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Le type d’étape n’est pas modifiable"></span></td>
-                  <td class=""><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Ne peut créer d’étape de ce type"></span></td>
-                </tr>
-                <tr>
-                  <td class="">
-                    <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
-                  </td>
-                  <td class=""><span class="">Concession</span></td>
-                  <td class=""><span class="">Saisine de l'autorité signataire</span></td>
-                  <td class=""><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="Le type d’étape est visible"></span></td>
-                  <td class=""><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Le type d’étape n’est pas modifiable"></span></td>
-                  <td class=""><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Ne peut créer d’étape de ce type"></span></td>
-                </tr>
-                <tr>
-                  <td class="">
-                    <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
-                  </td>
-                  <td class=""><span class="">Concession</span></td>
-                  <td class=""><span class="">Rapport du Conseil d'État</span></td>
-                  <td class=""><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="Le type d’étape est visible"></span></td>
-                  <td class=""><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Le type d’étape n’est pas modifiable"></span></td>
-                  <td class=""><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Ne peut créer d’étape de ce type"></span></td>
-                </tr>
-                <tr>
-                  <td class="">
-                    <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
-                  </td>
-                  <td class=""><span class="">Concession</span></td>
-                  <td class=""><span class="">Rapport du conseil général de l'économie (CGE)</span></td>
-                  <td class=""><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="Le type d’étape est visible"></span></td>
-                  <td class=""><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Le type d’étape n’est pas modifiable"></span></td>
-                  <td class=""><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Ne peut créer d’étape de ce type"></span></td>
-                </tr>
-                <tr>
-                  <td class="">
-                    <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
-                  </td>
-                  <td class=""><span class="">Concession</span></td>
-                  <td class=""><span class="">Participation du public</span></td>
-                  <td class=""><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="Le type d’étape est visible"></span></td>
-                  <td class=""><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Le type d’étape n’est pas modifiable"></span></td>
-                  <td class=""><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Ne peut créer d’étape de ce type"></span></td>
-                </tr>
-                <tr>
-                  <td class="">
-                    <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
-                  </td>
-                  <td class=""><span class="">Concession</span></td>
-                  <td class=""><span class="">Notification au préfet</span></td>
-                  <td class=""><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="Le type d’étape est visible"></span></td>
-                  <td class=""><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Le type d’étape n’est pas modifiable"></span></td>
-                  <td class=""><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Ne peut créer d’étape de ce type"></span></td>
-                </tr>
-                <tr>
-                  <td class="">
-                    <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
-                  </td>
-                  <td class=""><span class="">Concession</span></td>
-                  <td class=""><span class="">Demande</span></td>
-                  <td class=""><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="Le type d’étape est visible"></span></td>
-                  <td class=""><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Le type d’étape n’est pas modifiable"></span></td>
-                  <td class=""><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Ne peut créer d’étape de ce type"></span></td>
-                </tr>
-                <tr>
-                  <td class="">
-                    <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
-                  </td>
-                  <td class=""><span class="">Concession</span></td>
-                  <td class=""><span class="">Enregistrement de la demande</span></td>
-                  <td class=""><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="Le type d’étape est visible"></span></td>
-                  <td class=""><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Le type d’étape n’est pas modifiable"></span></td>
-                  <td class=""><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Ne peut créer d’étape de ce type"></span></td>
-                </tr>
-                <tr>
-                  <td class="">
-                    <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
-                  </td>
-                  <td class=""><span class="">Concession</span></td>
-                  <td class=""><span class="">Avis de demande concurrente</span></td>
-                  <td class=""><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="Le type d’étape est visible"></span></td>
-                  <td class=""><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Le type d’étape n’est pas modifiable"></span></td>
-                  <td class=""><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Ne peut créer d’étape de ce type"></span></td>
-                </tr>
-                <tr>
-                  <td class="">
-                    <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
-                  </td>
-                  <td class=""><span class="">Concession</span></td>
-                  <td class=""><span class="">Publication de décision au JORF</span></td>
-                  <td class=""><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="Le type d’étape est visible"></span></td>
-                  <td class=""><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Le type d’étape n’est pas modifiable"></span></td>
-                  <td class=""><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Ne peut créer d’étape de ce type"></span></td>
-                </tr>
-                <tr>
-                  <td class="">
-                    <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
-                  </td>
-                  <td class=""><span class="">Concession</span></td>
-                  <td class=""><span class="">Décision implicite</span></td>
-                  <td class=""><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="Le type d’étape est visible"></span></td>
-                  <td class=""><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Le type d’étape n’est pas modifiable"></span></td>
-                  <td class=""><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Ne peut créer d’étape de ce type"></span></td>
-                </tr>
-                <tr>
-                  <td class="">
-                    <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
-                  </td>
-                  <td class=""><span class="">Concession</span></td>
-                  <td class=""><span class="">Décision de l'autorité administrative</span></td>
-                  <td class=""><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="Le type d’étape est visible"></span></td>
-                  <td class=""><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Le type d’étape n’est pas modifiable"></span></td>
-                  <td class=""><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Ne peut créer d’étape de ce type"></span></td>
-                </tr>
-                <tr>
-                  <td class="">
-                    <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
-                  </td>
-                  <td class=""><span class="">Concession</span></td>
-                  <td class=""><span class="">Désistement du demandeur</span></td>
-                  <td class=""><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="Le type d’étape est visible"></span></td>
-                  <td class=""><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Le type d’étape n’est pas modifiable"></span></td>
-                  <td class=""><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Ne peut créer d’étape de ce type"></span></td>
-                </tr>
-                <tr>
-                  <td class="">
-                    <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
-                  </td>
-                  <td class=""><span class="">Concession</span></td>
-                  <td class=""><span class="">Classement sans suite</span></td>
-                  <td class=""><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="Le type d’étape est visible"></span></td>
-                  <td class=""><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Le type d’étape n’est pas modifiable"></span></td>
-                  <td class=""><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Ne peut créer d’étape de ce type"></span></td>
-                </tr>
-                <tr>
-                  <td class="">
-                    <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
-                  </td>
-                  <td class=""><span class="">Concession</span></td>
-                  <td class=""><span class="">Avis du Conseil d'Etat</span></td>
-                  <td class=""><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="Le type d’étape est visible"></span></td>
-                  <td class=""><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Le type d’étape n’est pas modifiable"></span></td>
-                  <td class=""><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Ne peut créer d’étape de ce type"></span></td>
-                </tr>
-                <tr>
-                  <td class="">
-                    <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
-                  </td>
-                  <td class=""><span class="">Concession</span></td>
-                  <td class=""><span class="">Décision du juge administratif</span></td>
-                  <td class=""><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="Le type d’étape est visible"></span></td>
-                  <td class=""><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Le type d’étape n’est pas modifiable"></span></td>
-                  <td class=""><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Ne peut créer d’étape de ce type"></span></td>
-                </tr>
-                <tr>
-                  <td class="">
-                    <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
-                  </td>
-                  <td class=""><span class="">Concession</span></td>
-                  <td class=""><span class="">Avis du CGE et de l'IGEDD</span></td>
-                  <td class=""><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="Le type d’étape est visible"></span></td>
-                  <td class=""><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Le type d’étape n’est pas modifiable"></span></td>
-                  <td class=""><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Ne peut créer d’étape de ce type"></span></td>
-                </tr>
-                <tr>
-                  <td class="">
-                    <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
-                  </td>
-                  <td class=""><span class="">Concession</span></td>
-                  <td class=""><span class="">Abrogation de la décision</span></td>
-                  <td class=""><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="Le type d’étape est visible"></span></td>
-                  <td class=""><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Le type d’étape n’est pas modifiable"></span></td>
-                  <td class=""><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Ne peut créer d’étape de ce type"></span></td>
-                </tr>
-              </tbody>
-            </table>
+        <div>
+          <div class="fr-table fr-table--no-caption fr-table--no-scroll" style="overflow: auto;">
+            <div class="fr-table__wrapper" style="width: auto;">
+              <div class="fr-table__container">
+                <div class="fr-table__content">
+                  <table style="display: table; width: 100%;">
+                    <caption></caption>
+                    <thead>
+                      <tr>
+                        <th scope="col">Domaine</th>
+                        <th scope="col">Type de titre</th>
+                        <th scope="col">Type d'étape</th>
+                        <th scope="col">Visibilité</th>
+                        <th scope="col">Modification</th>
+                        <th scope="col">Création</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>
+                          <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
+                        </td>
+                        <td><span class="">Concession</span></td>
+                        <td><span class="">Abrogation de la décision</span></td>
+                        <td><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="Le type d’étape est visible"></span></td>
+                        <td><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Le type d’étape n’est pas modifiable"></span></td>
+                        <td><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Ne peut créer d’étape de ce type"></span></td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
+                        </td>
+                        <td><span class="">Concession</span></td>
+                        <td><span class="">Avis du CGE et de l'IGEDD</span></td>
+                        <td><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="Le type d’étape est visible"></span></td>
+                        <td><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Le type d’étape n’est pas modifiable"></span></td>
+                        <td><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Ne peut créer d’étape de ce type"></span></td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
+                        </td>
+                        <td><span class="">Concession</span></td>
+                        <td><span class="">Décision du juge administratif</span></td>
+                        <td><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="Le type d’étape est visible"></span></td>
+                        <td><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Le type d’étape n’est pas modifiable"></span></td>
+                        <td><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Ne peut créer d’étape de ce type"></span></td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
+                        </td>
+                        <td><span class="">Concession</span></td>
+                        <td><span class="">Avis du Conseil d'Etat</span></td>
+                        <td><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="Le type d’étape est visible"></span></td>
+                        <td><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Le type d’étape n’est pas modifiable"></span></td>
+                        <td><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Ne peut créer d’étape de ce type"></span></td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
+                        </td>
+                        <td><span class="">Concession</span></td>
+                        <td><span class="">Classement sans suite</span></td>
+                        <td><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="Le type d’étape est visible"></span></td>
+                        <td><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Le type d’étape n’est pas modifiable"></span></td>
+                        <td><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Ne peut créer d’étape de ce type"></span></td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
+                        </td>
+                        <td><span class="">Concession</span></td>
+                        <td><span class="">Désistement du demandeur</span></td>
+                        <td><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="Le type d’étape est visible"></span></td>
+                        <td><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Le type d’étape n’est pas modifiable"></span></td>
+                        <td><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Ne peut créer d’étape de ce type"></span></td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
+                        </td>
+                        <td><span class="">Concession</span></td>
+                        <td><span class="">Décision de l'autorité administrative</span></td>
+                        <td><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="Le type d’étape est visible"></span></td>
+                        <td><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Le type d’étape n’est pas modifiable"></span></td>
+                        <td><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Ne peut créer d’étape de ce type"></span></td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
+                        </td>
+                        <td><span class="">Concession</span></td>
+                        <td><span class="">Décision implicite</span></td>
+                        <td><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="Le type d’étape est visible"></span></td>
+                        <td><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Le type d’étape n’est pas modifiable"></span></td>
+                        <td><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Ne peut créer d’étape de ce type"></span></td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
+                        </td>
+                        <td><span class="">Concession</span></td>
+                        <td><span class="">Publication de décision au JORF</span></td>
+                        <td><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="Le type d’étape est visible"></span></td>
+                        <td><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Le type d’étape n’est pas modifiable"></span></td>
+                        <td><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Ne peut créer d’étape de ce type"></span></td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
+                        </td>
+                        <td><span class="">Concession</span></td>
+                        <td><span class="">Avis de demande concurrente</span></td>
+                        <td><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="Le type d’étape est visible"></span></td>
+                        <td><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Le type d’étape n’est pas modifiable"></span></td>
+                        <td><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Ne peut créer d’étape de ce type"></span></td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
+                        </td>
+                        <td><span class="">Concession</span></td>
+                        <td><span class="">Enregistrement de la demande</span></td>
+                        <td><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="Le type d’étape est visible"></span></td>
+                        <td><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Le type d’étape n’est pas modifiable"></span></td>
+                        <td><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Ne peut créer d’étape de ce type"></span></td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
+                        </td>
+                        <td><span class="">Concession</span></td>
+                        <td><span class="">Demande</span></td>
+                        <td><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="Le type d’étape est visible"></span></td>
+                        <td><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Le type d’étape n’est pas modifiable"></span></td>
+                        <td><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Ne peut créer d’étape de ce type"></span></td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
+                        </td>
+                        <td><span class="">Concession</span></td>
+                        <td><span class="">Notification au préfet</span></td>
+                        <td><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="Le type d’étape est visible"></span></td>
+                        <td><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Le type d’étape n’est pas modifiable"></span></td>
+                        <td><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Ne peut créer d’étape de ce type"></span></td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
+                        </td>
+                        <td><span class="">Concession</span></td>
+                        <td><span class="">Participation du public</span></td>
+                        <td><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="Le type d’étape est visible"></span></td>
+                        <td><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Le type d’étape n’est pas modifiable"></span></td>
+                        <td><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Ne peut créer d’étape de ce type"></span></td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
+                        </td>
+                        <td><span class="">Concession</span></td>
+                        <td><span class="">Rapport du conseil général de l'économie (CGE)</span></td>
+                        <td><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="Le type d’étape est visible"></span></td>
+                        <td><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Le type d’étape n’est pas modifiable"></span></td>
+                        <td><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Ne peut créer d’étape de ce type"></span></td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
+                        </td>
+                        <td><span class="">Concession</span></td>
+                        <td><span class="">Rapport du Conseil d'État</span></td>
+                        <td><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="Le type d’étape est visible"></span></td>
+                        <td><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Le type d’étape n’est pas modifiable"></span></td>
+                        <td><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Ne peut créer d’étape de ce type"></span></td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
+                        </td>
+                        <td><span class="">Concession</span></td>
+                        <td><span class="">Saisine de l'autorité signataire</span></td>
+                        <td><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="Le type d’étape est visible"></span></td>
+                        <td><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Le type d’étape n’est pas modifiable"></span></td>
+                        <td><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Ne peut créer d’étape de ce type"></span></td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
+                        </td>
+                        <td><span class="">Concession</span></td>
+                        <td><span class="">Saisine du conseil général de l'économie (CGE)</span></td>
+                        <td><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="Le type d’étape est visible"></span></td>
+                        <td><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Le type d’étape n’est pas modifiable"></span></td>
+                        <td><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Ne peut créer d’étape de ce type"></span></td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
+                        </td>
+                        <td><span class="">Concession</span></td>
+                        <td><span class="">Saisine du Conseil d'Etat</span></td>
+                        <td><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="Le type d’étape est visible"></span></td>
+                        <td><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Le type d’étape n’est pas modifiable"></span></td>
+                        <td><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Ne peut créer d’étape de ce type"></span></td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
+                        </td>
+                        <td><span class="">Concession</span></td>
+                        <td><span class="">Saisine du préfet</span></td>
+                        <td><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="Le type d’étape est visible"></span></td>
+                        <td><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Le type d’étape n’est pas modifiable"></span></td>
+                        <td><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Ne peut créer d’étape de ce type"></span></td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
+                        </td>
+                        <td><span class="">Permis exclusif de recherches</span></td>
+                        <td><span class="">Abrogation de la décision</span></td>
+                        <td><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="Le type d’étape est visible"></span></td>
+                        <td><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Le type d’étape n’est pas modifiable"></span></td>
+                        <td><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Ne peut créer d’étape de ce type"></span></td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
+                        </td>
+                        <td><span class="">Permis exclusif de recherches</span></td>
+                        <td><span class="">Avis du CGE et de l'IGEDD</span></td>
+                        <td><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="Le type d’étape est visible"></span></td>
+                        <td><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Le type d’étape n’est pas modifiable"></span></td>
+                        <td><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Ne peut créer d’étape de ce type"></span></td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
+                        </td>
+                        <td><span class="">Permis exclusif de recherches</span></td>
+                        <td><span class="">Décision du juge administratif</span></td>
+                        <td><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="Le type d’étape est visible"></span></td>
+                        <td><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Le type d’étape n’est pas modifiable"></span></td>
+                        <td><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Ne peut créer d’étape de ce type"></span></td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
+                        </td>
+                        <td><span class="">Permis exclusif de recherches</span></td>
+                        <td><span class="">Publication de l'avis de décision implicite</span></td>
+                        <td><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="Le type d’étape est visible"></span></td>
+                        <td><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Le type d’étape n’est pas modifiable"></span></td>
+                        <td><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Ne peut créer d’étape de ce type"></span></td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
+                        </td>
+                        <td><span class="">Permis exclusif de recherches</span></td>
+                        <td><span class="">Classement sans suite</span></td>
+                        <td><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="Le type d’étape est visible"></span></td>
+                        <td><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Le type d’étape n’est pas modifiable"></span></td>
+                        <td><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Ne peut créer d’étape de ce type"></span></td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
+                        </td>
+                        <td><span class="">Permis exclusif de recherches</span></td>
+                        <td><span class="">Désistement du demandeur</span></td>
+                        <td><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="Le type d’étape est visible"></span></td>
+                        <td><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Le type d’étape n’est pas modifiable"></span></td>
+                        <td><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Ne peut créer d’étape de ce type"></span></td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
+                        </td>
+                        <td><span class="">Permis exclusif de recherches</span></td>
+                        <td><span class="">Décision de l'autorité administrative</span></td>
+                        <td><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="Le type d’étape est visible"></span></td>
+                        <td><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Le type d’étape n’est pas modifiable"></span></td>
+                        <td><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Ne peut créer d’étape de ce type"></span></td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
+                        </td>
+                        <td><span class="">Permis exclusif de recherches</span></td>
+                        <td><span class="">Décision implicite</span></td>
+                        <td><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="Le type d’étape est visible"></span></td>
+                        <td><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Le type d’étape n’est pas modifiable"></span></td>
+                        <td><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Ne peut créer d’étape de ce type"></span></td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
+                        </td>
+                        <td><span class="">Permis exclusif de recherches</span></td>
+                        <td><span class="">Publication de décision au JORF</span></td>
+                        <td><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="Le type d’étape est visible"></span></td>
+                        <td><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Le type d’étape n’est pas modifiable"></span></td>
+                        <td><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Ne peut créer d’étape de ce type"></span></td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
+                        </td>
+                        <td><span class="">Permis exclusif de recherches</span></td>
+                        <td><span class="">Avis de demande concurrente</span></td>
+                        <td><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="Le type d’étape est visible"></span></td>
+                        <td><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Le type d’étape n’est pas modifiable"></span></td>
+                        <td><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Ne peut créer d’étape de ce type"></span></td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
+                        </td>
+                        <td><span class="">Permis exclusif de recherches</span></td>
+                        <td><span class="">Enregistrement de la demande</span></td>
+                        <td><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="Le type d’étape est visible"></span></td>
+                        <td><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Le type d’étape n’est pas modifiable"></span></td>
+                        <td><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Ne peut créer d’étape de ce type"></span></td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
+                        </td>
+                        <td><span class="">Permis exclusif de recherches</span></td>
+                        <td><span class="">Demande</span></td>
+                        <td><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="Le type d’étape est visible"></span></td>
+                        <td><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Le type d’étape n’est pas modifiable"></span></td>
+                        <td><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Ne peut créer d’étape de ce type"></span></td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
+                        </td>
+                        <td><span class="">Permis exclusif de recherches</span></td>
+                        <td><span class="">Notification au préfet</span></td>
+                        <td><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="Le type d’étape est visible"></span></td>
+                        <td><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Le type d’étape n’est pas modifiable"></span></td>
+                        <td><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Ne peut créer d’étape de ce type"></span></td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
+                        </td>
+                        <td><span class="">Permis exclusif de recherches</span></td>
+                        <td><span class="">Participation du public</span></td>
+                        <td><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="Le type d’étape est visible"></span></td>
+                        <td><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Le type d’étape n’est pas modifiable"></span></td>
+                        <td><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Ne peut créer d’étape de ce type"></span></td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
+                        </td>
+                        <td><span class="">Permis exclusif de recherches</span></td>
+                        <td><span class="">Rapport du conseil général de l'économie (CGE)</span></td>
+                        <td><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="Le type d’étape est visible"></span></td>
+                        <td><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Le type d’étape n’est pas modifiable"></span></td>
+                        <td><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Ne peut créer d’étape de ce type"></span></td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
+                        </td>
+                        <td><span class="">Permis exclusif de recherches</span></td>
+                        <td><span class="">Saisine de l'autorité signataire</span></td>
+                        <td><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="Le type d’étape est visible"></span></td>
+                        <td><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Le type d’étape n’est pas modifiable"></span></td>
+                        <td><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Ne peut créer d’étape de ce type"></span></td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
+                        </td>
+                        <td><span class="">Permis exclusif de recherches</span></td>
+                        <td><span class="">Saisine du conseil général de l'économie (CGE)</span></td>
+                        <td><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="Le type d’étape est visible"></span></td>
+                        <td><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Le type d’étape n’est pas modifiable"></span></td>
+                        <td><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Ne peut créer d’étape de ce type"></span></td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
+                        </td>
+                        <td><span class="">Permis exclusif de recherches</span></td>
+                        <td><span class="">Saisine du préfet</span></td>
+                        <td><span class="fr-icon-close-line fr-icon--md" role="img" aria-label="Le type d’étape est visible"></span></td>
+                        <td><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Le type d’étape n’est pas modifiable"></span></td>
+                        <td><span class="fr-icon-check-line fr-icon--md" role="img" aria-label="Ne peut créer d’étape de ce type"></span></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

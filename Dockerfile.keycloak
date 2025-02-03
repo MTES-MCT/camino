@@ -5,4 +5,3 @@ FROM quay.io/keycloak/keycloak:26.1.0
 COPY keycloak-franceconnect-7.0.0.jar /opt/keycloak/providers/keycloak-franceconnect-7.0.0.jar
 COPY keycloak-theme-for-kc-26-and-above.jar /opt/keycloak/providers/keycloak-theme-for-kc-26-and-above.jar
 COPY keycloak-bcrypt-1.6.0.jar /opt/keycloak/providers/keycloak-bcrypt-1.6.0.jar
-COPY keycloak_theme/ /opt/keycloak/themes/camino/

@@ -5,21 +5,21 @@ import { AsyncData } from '../../api/client-rest'
 import { DemarcheIdOrSlug } from 'camino-common/src/demarche'
 import { NonEmptyArray } from 'camino-common/src/typescript-tools'
 import type { JSX } from 'vue/jsx-runtime'
-import { CaminoRouteLocation } from '@/router/routes'
+import { CaminoRouteLocation, CaminoRouteNames, CaminoVueRoute } from '@/router/routes'
+import { fr } from '@codegouvfr/react-dsfr'
 type SortOrder = 'asc' | 'desc'
 
-export interface TableSortEvent {
-  colonne: string
+export interface InitialSort<ColumnId> {
+  colonne: ColumnId
   ordre: SortOrder
 }
-
-// TODO 2023-12-06 merge with TableSortEvent
-export interface InitialSort {
-  colonne: string
-  ordre: SortOrder
+export interface JSXElementColumnData {
+  type: 'jsx'
+  jsxElement: JSX.Element
+  value: string | string[] | number | undefined
 }
-
 export interface ComponentColumnData {
+  type: 'component'
   component: unknown
   props: { [key in string]: unknown }
   class?: string
@@ -27,6 +27,7 @@ export interface ComponentColumnData {
 }
 
 export interface TextColumnData {
+  type: 'text'
   value: string
   class?: string[]
 }
@@ -44,27 +45,35 @@ export interface TableRow<T extends string = string> {
   class?: NonEmptyArray<string>
   link: TableRouterLink | null
   columns: {
-    [key in T]: ComponentColumnData | TextColumnData
+    [key in T]: JSXElementColumnData | ComponentColumnData | TextColumnData
   }
 }
 
 export interface Column<T = string> {
   id: T
-  name: string
+  contentTitle: string | JSX.Element
   noSort?: boolean
+  class?: string[]
 }
 
-const isComponentColumnData = (columnRow: ComponentColumnData | TextColumnData): columnRow is ComponentColumnData => {
-  return 'component' in columnRow
-}
-
-interface Props<ColumnId> {
-  route: CaminoRouteLocation
+type CommonProps<ColumnId extends string> = {
   columns: readonly Column<ColumnId>[]
   rows: AsyncData<{ rows: TableRow[]; total: number }>
-  caption: string
+  caption: {
+    value: string
+    visible: boolean
+  }
+}
+type RouteProps<ColumnId extends string> = {
+  sortType: 'route'
+  route: CaminoRouteLocation
   updateParams: (column: ColumnId, order: 'asc' | 'desc') => void
 }
+type AutoSortProps = {
+  sortType: 'noSort'
+}
+
+type Props<ColumnId extends string> = CommonProps<ColumnId> & (RouteProps<ColumnId> | AutoSortProps)
 
 const isColumnId = <ColumnId extends string>(columns: readonly Column<ColumnId>[], value: string): value is ColumnId => {
   return columns.some(({ id }) => value === id)
@@ -86,103 +95,122 @@ export const getSortOrderFromRoute = (route: Pick<CaminoRouteLocation, 'query'>)
 
   return value
 }
-export const Table = defineComponent(
-  <ColumnId extends string>(props: Props<ColumnId>) => {
-    const sortParams = computed<{ order: 'asc' | 'desc'; column: ColumnId }>(() => {
-      return { order: getSortOrderFromRoute(props.route), column: getSortColumnFromRoute(props.route, props.columns) }
-    })
+export const Table = defineComponent(<ColumnId extends string>(props: Props<ColumnId>) => {
+  const sortParams = computed<InitialSort<ColumnId> | 'noSort'>(() => {
+    return props.sortType === 'noSort' ? 'noSort' : { ordre: getSortOrderFromRoute(props.route), colonne: getSortColumnFromRoute<ColumnId>(props.route, props.columns) }
+  })
 
-    onBeforeRouteLeave(() => {
-      stop()
-    })
+  onBeforeRouteLeave(() => {
+    stop()
+  })
 
-    const stop = watch(sortParams, (newSortParams, old) => {
-      if (newSortParams.column !== old.column || newSortParams.order !== old.order) {
-        return props.updateParams(newSortParams.column, newSortParams.order)
+  const stop = watch(sortParams, (newSortParams, old) => {
+    if (newSortParams !== 'noSort' && old !== 'noSort') {
+      if ('updateParams' in props && (newSortParams.colonne !== old.colonne || newSortParams.ordre !== old.ordre)) {
+        return props.updateParams(newSortParams.colonne, newSortParams.ordre)
       }
-    })
+    }
+  })
 
-    return () => (
-      <div>
-        <div class="fr-table fr-table--no-caption" style={{ overflow: 'auto' }}>
-          <table style={{ display: 'table', minWidth: '100%' }}>
-            <caption>{props.caption}</caption>
-            <thead>
-              <tr>
-                {props.columns.map(col => (
-                  <th key={col.id} scope="col" class="nowrap">
-                    {col.noSort !== undefined && col.noSort ? (
-                      <div class="fr-text--md">{col.name === '' ? '-' : col.name}</div>
-                    ) : sortParams.value.column === col.id ? (
-                      <CaminoRouterLink
-                        class={['fr-link', 'fr-link--icon-right', sortParams.value.order === 'asc' ? 'fr-icon-arrow-down-fill' : 'fr-icon-arrow-up-fill']}
-                        to={{
-                          name: props.route.name ?? undefined,
-                          query: { ...props.route.query, page: 1, ordre: sortParams.value.order === 'asc' ? 'desc' : 'asc' },
-                          params: props.route.params,
-                        }}
-                        isDisabled={false}
-                        title={sortParams.value.order === 'asc' ? `Trier par la colonne ${col.name} par ordre descendant` : `Trier par la colonne ${col.name} par ordre ascendant`}
-                      >
-                        {col.name}
-                      </CaminoRouterLink>
-                    ) : (
-                      <CaminoRouterLink
-                        class={['fr-link']}
-                        isDisabled={false}
-                        to={{
-                          name: props.route.name ?? undefined,
-                          query: { ...props.route.query, page: 1, colonne: col.id, ordre: 'asc' },
-                          params: props.route.params,
-                        }}
-                        title={`Trier par la colonne ${col.name}`}
-                      >
-                        {col.name === '' ? '-' : col.name}
-                      </CaminoRouterLink>
-                    )}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {props.rows.status === 'LOADED' ? (
-                <>
-                  {props.rows.value.rows.map(row => (
-                    <tr key={row.id} class={row.class}>
-                      {props.columns.map((col, index) => (
-                        <td key={col.id}>
-                          {index === 0 && row.link !== null ? (
-                            <router-link class="fr-link" to={row.link}>
-                              <DisplayColumn data={row.columns[col.id]} />
-                            </router-link>
+  const routeOrderClick = computed<CaminoVueRoute<CaminoRouteNames>>(() => {
+    if (props.sortType === 'route' && sortParams.value !== 'noSort') {
+      return {
+        name: props.route.name,
+        query: { ...props.route.query, page: 1, ordre: sortParams.value.ordre === 'asc' ? 'desc' : 'asc' },
+        params: props.route.params,
+      }
+    }
+    return { name: 'erreur', query: {}, params: {} }
+  })
+
+  const routeNewColumnClick = (colId: ColumnId): CaminoVueRoute<CaminoRouteNames> => {
+    if (props.sortType === 'route' && sortParams.value !== 'noSort') {
+      return {
+        name: props.route.name,
+        query: { ...props.route.query, page: 1, colonne: colId, ordre: sortParams.value.ordre === 'asc' ? 'desc' : 'asc' },
+        params: props.route.params,
+      }
+    }
+    return { name: 'erreur', query: {}, params: {} }
+  }
+  return () => (
+    <div>
+      <div class={[fr.cx('fr-table'), props.caption.visible ? null : fr.cx('fr-table--no-caption'), fr.cx('fr-table--no-scroll')]} style={{ overflow: 'auto' }}>
+        <div class={[fr.cx('fr-table__wrapper')]} style={{ width: 'auto' }}>
+          <div class={[fr.cx('fr-table__container')]}>
+            <div class={[fr.cx('fr-table__content')]}>
+              <table style={{ display: 'table', width: '100%' }}>
+                <caption>{props.caption.value}</caption>
+                <thead>
+                  <tr>
+                    {props.columns.map(col => (
+                      <th key={col.id} scope="col" class={col.class}>
+                        {(col.noSort !== undefined && col.noSort) || sortParams.value === 'noSort' ? (
+                          col.contentTitle === '' ? (
+                            '-'
                           ) : (
-                            <DisplayColumn data={row.columns[col.id]} />
-                          )}
-                        </td>
-                      ))}
-                    </tr>
-                  ))}
-                </>
-              ) : (
-                [...Array(10).keys()].map(index => (
-                  <tr key={index}>
-                    {props.columns.map((col, _index) => (
-                      <td key={col.id}>...</td>
+                            col.contentTitle
+                          )
+                        ) : sortParams.value.colonne === col.id ? (
+                          <CaminoRouterLink
+                            class={[fr.cx('fr-link'), fr.cx('fr-link--icon-right'), sortParams.value.ordre === 'asc' ? fr.cx('fr-icon-arrow-down-fill') : fr.cx('fr-icon-arrow-up-fill')]}
+                            to={routeOrderClick.value}
+                            isDisabled={false}
+                            title={sortParams.value.ordre === 'asc' ? `Trier par la colonne ${col.contentTitle} par ordre descendant` : `Trier par la colonne ${col.contentTitle} par ordre ascendant`}
+                          >
+                            {col.contentTitle}
+                          </CaminoRouterLink>
+                        ) : (
+                          <CaminoRouterLink class={[fr.cx('fr-link')]} isDisabled={false} to={routeNewColumnClick(col.id)} title={`Trier par la colonne ${col.contentTitle}`}>
+                            {col.contentTitle === '' ? '-' : col.contentTitle}
+                          </CaminoRouterLink>
+                        )}
+                      </th>
                     ))}
                   </tr>
-                ))
-              )}
-            </tbody>
-          </table>
+                </thead>
+                <tbody>
+                  {props.rows.status === 'LOADED' ? (
+                    <>
+                      {props.rows.value.rows.map(row => (
+                        <tr key={row.id} class={row.class}>
+                          {props.columns.map((col, index) => (
+                            <td key={col.id} class={col.class}>
+                              {index === 0 && row.link !== null ? (
+                                <router-link class={[fr.cx('fr-link')]} to={row.link}>
+                                  <DisplayColumn data={row.columns[col.id]} />
+                                </router-link>
+                              ) : (
+                                <DisplayColumn data={row.columns[col.id]} />
+                              )}
+                            </td>
+                          ))}
+                        </tr>
+                      ))}
+                    </>
+                  ) : (
+                    [...Array(10).keys()].map(index => (
+                      <tr key={index}>
+                        {props.columns.map((col, _index) => (
+                          <td key={col.id}>...</td>
+                        ))}
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
       </div>
-    )
-  },
-  { props: ['columns', 'rows', 'route', 'caption', 'updateParams'] }
-)
+    </div>
+  )
+})
+// @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
+Table.props = ['columns', 'rows', 'route', 'caption', 'updateParams', 'sortType', 'initialSort']
 
-export const DisplayColumn = (props: { data: ComponentColumnData | TextColumnData }): JSX.Element => {
-  if (isComponentColumnData(props.data)) {
+const DisplayColumn = (props: { data: JSXElementColumnData | ComponentColumnData | TextColumnData }): JSX.Element => {
+  if (props.data.type === 'component') {
     // @ts-ignore 2024-09-12 typescript ne voit pas que le composant est utilisé juste en dessous dans le TSX, mais ça fonctionne quand même...
     const myComp = props.data.component
 
@@ -195,6 +223,8 @@ export const DisplayColumn = (props: { data: ComponentColumnData | TextColumnDat
     } else {
       return <myComp {...props.data.props} class={props.data.class ?? ''} />
     }
+  } else if (props.data.type === 'jsx') {
+    return props.data.jsxElement
   }
 
   return <span class={(props.data.class ?? []).join(' ') ?? ''}>{props.data.value}</span>

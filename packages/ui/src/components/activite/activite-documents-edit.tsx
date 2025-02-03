@@ -4,11 +4,13 @@ import { DocumentsTypes } from 'camino-common/src/static/documentsTypes'
 import { ApiClient } from '@/api/api-client'
 import { ActiviteDocumentLink } from './preview'
 import { DsfrButtonIcon } from '../_ui/dsfr-button'
-import { defineComponent, ref, watch } from 'vue'
+import { computed, defineComponent, ref, watch } from 'vue'
 import { isActiviteDocumentsComplete } from 'camino-common/src/permissions/activites'
 import { AddActiviteDocumentPopup } from './add-activite-document-popup'
 import { activitesTypesDocumentsTypes } from 'camino-common/src/static/activitesTypesDocumentsTypes'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
+import { Column, TableSimple } from '../_ui/table-simple'
+import { TableRow } from '../_ui/table'
 
 interface Props {
   apiClient: Pick<ApiClient, 'uploadTempDocument'>
@@ -18,7 +20,9 @@ interface Props {
 }
 
 const isTempActiviteDocument = (activiteDocument: ActiviteDocument | TempActiviteDocument): activiteDocument is TempActiviteDocument => 'tempDocumentName' in activiteDocument
+
 const isActiviteDocument = (activiteDocument: ActiviteDocument | TempActiviteDocument): activiteDocument is ActiviteDocument => !isTempActiviteDocument(activiteDocument)
+type ColumnId = 'nom' | 'description' | 'add'
 export const ActiviteDocumentsEdit = defineComponent<Props>(props => {
   const addPopup = ref<boolean>(false)
 
@@ -43,50 +47,43 @@ export const ActiviteDocumentsEdit = defineComponent<Props>(props => {
   }
   notifyChange()
 
+  const columns: Column<ColumnId>[] = [
+    { id: 'nom', contentTitle: 'Nom' },
+    { id: 'description', contentTitle: 'Description' },
+    { id: 'add', contentTitle: <DsfrButtonIcon icon="fr-icon-add-line" title="Ajouter un document" onClick={() => (addPopup.value = true)} /> },
+  ]
+  const rows = computed(() => {
+    return documents.value.map<TableRow<ColumnId>>((item, index) => {
+      return {
+        id: `${index}`,
+        link: null,
+        columns: {
+          nom: isTempActiviteDocument(item)
+            ? { type: 'text', value: DocumentsTypes[item.activite_document_type_id].nom }
+            : { type: 'jsx', jsxElement: <ActiviteDocumentLink activiteDocumentId={item.id} activiteDocumentTypeId={item.activite_document_type_id} />, value: item.activite_document_type_id },
+          description: { type: 'text', value: item.description ?? '' },
+          add: {
+            type: 'jsx',
+            jsxElement: (
+              <DsfrButtonIcon
+                icon="fr-icon-delete-bin-line"
+                buttonType="secondary"
+                title={`Supprimer le document ${DocumentsTypes[item.activite_document_type_id].nom}`}
+                onClick={() => {
+                  documents.value.splice(index, 1)
+                  notifyChange()
+                }}
+              />
+            ),
+            value: `Supprimer le document ${index}`,
+          },
+        },
+      }
+    })
+  })
   return () => (
-    <div style={{ overflowX: 'auto' }}>
-      {hasDocumentTypes ? (
-        <div class="fr-table">
-          <table style={{ display: 'table' }}>
-            <caption>Documents de l'activité {isNotMandatory ? '' : '*'}</caption>
-            <thead>
-              <tr>
-                <th scope="col">Nom</th>
-                <th scope="col">Description</th>
-                <th scope="col" style={{ display: 'flex', justifyContent: 'end' }}>
-                  <DsfrButtonIcon icon="fr-icon-add-line" title="Ajouter un document" onClick={() => (addPopup.value = true)} />
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {documents.value.map((item, index) => (
-                <tr>
-                  <td>
-                    {isTempActiviteDocument(item) ? (
-                      <>{DocumentsTypes[item.activite_document_type_id].nom}</>
-                    ) : (
-                      <ActiviteDocumentLink activiteDocumentId={item.id} activiteDocumentTypeId={item.activite_document_type_id} />
-                    )}
-                  </td>
-                  <td>{item.description}</td>
-                  <td>
-                    <DsfrButtonIcon
-                      icon="fr-icon-delete-bin-line"
-                      buttonType="secondary"
-                      title={`Supprimer le document ${DocumentsTypes[item.activite_document_type_id].nom}`}
-                      onClick={() => {
-                        documents.value.splice(index, 1)
-                        notifyChange()
-                      }}
-                    />
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      ) : null}
-
+    <div>
+      {hasDocumentTypes ? <TableSimple caption={{ value: `Documents de l'activité${isNotMandatory ? ' (optionnel)' : ''}`, visible: true }} columns={columns} rows={rows.value} /> : null}
       {addPopup.value ? (
         <AddActiviteDocumentPopup
           apiClient={props.apiClient}

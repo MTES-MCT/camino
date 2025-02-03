@@ -1,4 +1,4 @@
-import { defineComponent, inject, markRaw, ref } from 'vue'
+import { defineComponent, inject, ref } from 'vue'
 import { Liste, Params } from '../_common/liste'
 import { Column, TableRow } from '../_ui/table'
 import { useRouter } from 'vue-router'
@@ -21,13 +21,13 @@ import { CaminoRouter } from '@/typings/vue-router'
 import { DemarcheStatut } from '../_common/demarche-statut'
 
 const demarchesColonnes = [
-  { id: 'titreNom', name: 'Titre' },
-  { id: 'titreDomaine', name: '' },
-  { id: 'titreType', name: 'Type de titre' },
-  { id: 'titreStatut', name: 'Statut de titre' },
-  { id: 'type', name: 'Type' },
-  { id: 'statut', name: 'Statut' },
-  { id: 'references', name: 'Références', noSort: true },
+  { id: 'titreNom', contentTitle: 'Titre' },
+  { id: 'titreDomaine', contentTitle: '' },
+  { id: 'titreType', contentTitle: 'Type de titre' },
+  { id: 'titreStatut', contentTitle: 'Statut de titre' },
+  { id: 'type', contentTitle: 'Type' },
+  { id: 'statut', contentTitle: 'Statut' },
+  { id: 'references', contentTitle: 'Références', noSort: true },
 ] as const satisfies readonly Column[]
 
 type Props = Pick<PureProps, 'travaux' | 'filtres'>
@@ -46,43 +46,36 @@ const demarchesLignesBuild = (demarches: GetDemarchesDemarche[]): TableRow[] =>
     const domaineId = getDomaineId(demarche.titre.typeId)
     const titreTypeType = TitresTypesTypes[getTitreTypeType(demarche.titre.typeId)]
     const demarcheType = DemarchesTypes[demarche.typeId]
-    const columns = {
-      titreNom: { value: demarche.titre.nom },
+    const columns: TableRow['columns'] = {
+      titreNom: { type: 'text', value: demarche.titre.nom },
       titreDomaine: {
-        component: markRaw(CaminoDomaine),
-        props: { domaineId },
+        type: 'jsx',
+        jsxElement: <CaminoDomaine domaineId={domaineId} />,
         value: domaineId,
       },
       titreType: {
-        component: markRaw(Nom),
-        props: { nom: titreTypeType.nom },
+        type: 'jsx',
+        jsxElement: <Nom nom={titreTypeType.nom} />,
         value: titreTypeType.nom,
       },
       titreStatut: {
-        component: markRaw(TitreStatut),
-        props: {
-          titreStatutId: demarche.titre.titreStatutId,
-        },
+        type: 'jsx',
+        jsxElement: <TitreStatut titreStatutId={demarche.titre.titreStatutId} />,
         value: demarche.titre.titreStatutId,
       },
       type: {
-        component: markRaw(Nom),
-        props: { nom: demarcheType.nom },
+        type: 'jsx',
+        jsxElement: <Nom nom={demarcheType.nom} />,
         value: demarcheType.nom,
       },
       statut: {
-        component: markRaw(DemarcheStatut),
-        props: {
-          demarcheStatutId: demarche.statutId,
-        },
+        type: 'jsx',
+        jsxElement: <DemarcheStatut demarcheStatutId={demarche.statutId} />,
         value: DemarchesStatuts[demarche.statutId].nom,
       },
       references: {
-        component: markRaw(List),
-        props: {
-          elements: demarche.titre.references.map(ref => `${ReferencesTypes[ref.referenceTypeId].nom} : ${ref.nom}`),
-          mini: true,
-        },
+        type: 'jsx',
+        jsxElement: <List elements={demarche.titre.references.map(ref => `${ReferencesTypes[ref.referenceTypeId].nom} : ${ref.nom}`)} mini={true} />,
         value: demarche.titre.references.map(ref => `${ReferencesTypes[ref.referenceTypeId].nom} : ${ref.nom}`),
       },
     }

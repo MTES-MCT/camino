@@ -1,6 +1,6 @@
 import { Journaux as JournauxData } from 'camino-common/src/journaux'
-import { defineComponent, markRaw } from 'vue'
-import { TableRow } from './_ui/table'
+import { defineComponent } from 'vue'
+import { Column, TableRow } from './_ui/table'
 import { useRouter } from 'vue-router'
 import { Liste, Params } from './_common/liste'
 import { ApiClient, apiClient } from '@/api/api-client'
@@ -22,37 +22,39 @@ interface Props {
 }
 
 const colonnesData = [
-  { id: 'date', name: 'Date', noSort: true },
-  { id: 'titre', name: 'Titre', noSort: true },
-  { id: 'utilisateur', name: 'Utilisateur', noSort: true },
-  { id: 'operation', name: 'Action', noSort: true },
-  { id: 'differences', name: 'Modifications', noSort: true },
-] as const
+  { id: 'date', contentTitle: 'Date', noSort: true },
+  { id: 'titre', contentTitle: 'Titre', noSort: true },
+  { id: 'utilisateur', contentTitle: 'Utilisateur', noSort: true },
+  { id: 'operation', contentTitle: 'Action', noSort: true },
+  { id: 'differences', contentTitle: 'Modifications', noSort: true },
+] as const satisfies Column[]
 
 type ColonneId = (typeof colonnesData)[number]['id']
 
 const lignes = (journaux: JournauxData): TableRow<ColonneId>[] => {
   return journaux.elements.map(journal => {
     const date = new Date(Number.parseInt(journal.date))
-    const columns = {
+    const columns: TableRow<ColonneId>['columns'] = {
       date: {
+        type: 'text',
         value: date.toLocaleString('fr-FR', { timeZone: 'Europe/Paris', dateStyle: 'short', timeStyle: 'medium' }),
       },
       titre: {
+        type: 'text',
         value: journal.titre?.nom,
       },
       utilisateur: {
+        type: 'text',
         value: isNotNullNorUndefined(journal.utilisateur) ? `${journal.utilisateur.nom} ${journal.utilisateur.prenom}` : 'Système',
       },
       operation: {
+        type: 'text',
         value: journal.operation,
       },
       differences: {
-        component: markRaw(Differences),
+        type: 'jsx',
+        jsxElement: <Differences journal={journal} />,
         value: journal.id,
-        props: {
-          journal,
-        },
       },
     }
 

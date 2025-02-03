@@ -56,7 +56,6 @@ const checkEventSource = () => {
 
 checkEventSource()
 Promise.resolve().then(async (): Promise<void> => {
-  import('./styles/dsfr/dsfr.css')
   const [configFromJson, user, entreprises]: [CaminoConfig | CaminoError<string>, User | CaminoError<string>, Entreprise[]] = await Promise.all([
     newGetWithJson('/config', {}),
     newGetWithJson('/moi', {}),

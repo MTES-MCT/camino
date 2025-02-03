@@ -7,6 +7,7 @@ import { toCaminoDate } from 'camino-common/src/date'
 
 const meta: Meta = {
   title: 'Components/Etape/EtapeDocuments',
+  // @ts-ignore
   component: EtapeDocuments,
 }
 export default meta

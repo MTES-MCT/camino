@@ -3,7 +3,7 @@ import { GeoSysteme, GeoSystemes, GeoSystemeId } from 'camino-common/src/static/
 import { defineComponent, FunctionalComponent } from 'vue'
 import { DsfrLink } from '../_ui/dsfr-button'
 import { TableRow, TextColumnData } from '../_ui/table'
-import { TableAuto, Column } from '../_ui/table-auto'
+import { TableSimple, Column } from '../_ui/table-simple'
 import { FeatureCollectionForages, FeatureCollectionPoints, FeatureMultiPolygon } from 'camino-common/src/perimetre'
 import { TitreSlug } from 'camino-common/src/validators/titres'
 import { capitalize } from 'camino-common/src/strings'
@@ -31,11 +31,11 @@ const geoJsonToArray = (perimetre: FeatureCollectionPoints | FeatureCollectionFo
     const x_deg = toDegresMinutes(feature.geometry.coordinates[0])
     const y_deg = toDegresMinutes(feature.geometry.coordinates[1])
 
-    let foragesProperties
+    let foragesProperties: TableRow<string>['columns'] = {}
     if ('profondeur' in feature.properties) {
       foragesProperties = {
-        profondeur: { value: `${feature.properties.profondeur}` },
-        type: { value: capitalize(feature.properties.type) },
+        profondeur: { type: 'text', value: `${feature.properties.profondeur}` },
+        type: { type: 'text', value: capitalize(feature.properties.type) },
       }
     }
 
@@ -43,12 +43,12 @@ const geoJsonToArray = (perimetre: FeatureCollectionPoints | FeatureCollectionFo
       id: `${index}`,
       link: null,
       columns: {
-        description: { value: feature.properties.description ?? '' },
-        nom: { value: feature.properties.nom ?? '' },
-        x: { value: `${feature.geometry.coordinates[0]}` },
-        y: { value: `${feature.geometry.coordinates[1]}` },
-        x_deg: { value: `${x_deg.degres}°${Intl.NumberFormat('fr-FR').format(x_deg.minutes)}'` },
-        y_deg: { value: `${y_deg.degres}°${Intl.NumberFormat('fr-FR').format(y_deg.minutes)}'` },
+        description: { type: 'text', value: feature.properties.description ?? '' },
+        nom: { type: 'text', value: feature.properties.nom ?? '' },
+        x: { type: 'text', value: `${feature.geometry.coordinates[0]}` },
+        y: { type: 'text', value: `${feature.geometry.coordinates[1]}` },
+        x_deg: { type: 'text', value: `${x_deg.degres}°${Intl.NumberFormat('fr-FR').format(x_deg.minutes)}'` },
+        y_deg: { type: 'text', value: `${y_deg.degres}°${Intl.NumberFormat('fr-FR').format(y_deg.minutes)}'` },
         ...foragesProperties,
       },
     }
@@ -59,14 +59,14 @@ const TablePoints: FunctionalComponent<Pick<Props, 'geo_systeme_id' | 'geojson_o
   const uniteId = GeoSystemes[props.geo_systeme_id].uniteId
 
   const columns: Column<string>[] = [
-    { id: 'nom', name: 'Nom du point', noSort: true },
-    { id: 'description', name: 'Description', noSort: true },
-    { id: 'x', name: capitalize(labels[uniteId].x), noSort: true },
-    { id: 'y', name: capitalize(labels[uniteId].y), noSort: true },
+    { id: 'nom', contentTitle: 'Nom du point' },
+    { id: 'description', contentTitle: 'Description' },
+    { id: 'x', contentTitle: capitalize(labels[uniteId].x) },
+    { id: 'y', contentTitle: capitalize(labels[uniteId].y) },
   ]
 
   if (uniteId === 'deg') {
-    columns.push({ id: 'x_deg', name: 'Longitude (E)', noSort: true }, { id: 'y_deg', name: 'Latitude (N)', noSort: true })
+    columns.push({ id: 'x_deg', contentTitle: 'Longitude (E)' }, { id: 'y_deg', contentTitle: 'Latitude (N)' })
   }
 
   const currentRows = geoJsonToArray(props.geojson_origine_points)
@@ -82,7 +82,7 @@ const TablePoints: FunctionalComponent<Pick<Props, 'geo_systeme_id' | 'geojson_o
       id: `${props.maxRows + 1}`,
       link: null,
       columns: columns.reduce<Record<string, TextColumnData>>((acc, { id }) => {
-        acc[id] = { value: '...' }
+        acc[id] = { type: 'text', value: '...' }
 
         return acc
       }, {}),
@@ -91,7 +91,7 @@ const TablePoints: FunctionalComponent<Pick<Props, 'geo_systeme_id' | 'geojson_o
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column' }}>
-      <TableAuto caption={props.caption} class="fr-mb-1w" columns={columns} rows={rowsToDisplay} initialSort="noSort" />
+      <TableSimple caption={{ value: props.caption, visible: true }} class="fr-mb-1w" columns={columns} rows={rowsToDisplay} />
 
       <div style={{ display: 'flex' }}>
         {isNotNullNorUndefined(props.surface) ? <div class="fr-text--md">Surface : {props.surface} Km²</div> : null}
@@ -113,12 +113,12 @@ const TableForages: FunctionalComponent<NotNullableKeys<Pick<Props, 'geo_systeme
   const uniteId = GeoSystemes[props.geo_systeme_id].uniteId
 
   const columns: Column<string>[] = [
-    { id: 'nom', name: 'Nom', noSort: true },
-    { id: 'description', name: 'Description', noSort: true },
-    { id: 'profondeur', name: 'Profondeur (NGF)', noSort: true },
-    { id: 'type', name: 'Type', noSort: true },
-    { id: 'x', name: capitalize(labels[uniteId].x), noSort: true },
-    { id: 'y', name: capitalize(labels[uniteId].y), noSort: true },
+    { id: 'nom', contentTitle: 'Nom' },
+    { id: 'description', contentTitle: 'Description' },
+    { id: 'profondeur', contentTitle: 'Profondeur (NGF)' },
+    { id: 'type', contentTitle: 'Type' },
+    { id: 'x', contentTitle: capitalize(labels[uniteId].x) },
+    { id: 'y', contentTitle: capitalize(labels[uniteId].y) },
   ]
 
   const currentRows = geoJsonToArray(props.geojson_origine_forages)
@@ -129,7 +129,7 @@ const TableForages: FunctionalComponent<NotNullableKeys<Pick<Props, 'geo_systeme
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column' }}>
-      <TableAuto caption="Forages" class="fr-mb-1w" columns={columns} rows={currentRows} initialSort="noSort" />
+      <TableSimple caption={{ value: 'Forages', visible: true }} class="fr-mb-1w" columns={columns} rows={currentRows} />
 
       <DsfrLink
         style={{ alignSelf: 'end' }}

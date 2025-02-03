@@ -1,30 +1,30 @@
 import { List } from '../_ui/list'
 import { UserNotNull, isAdministration, isBureauDEtudes, isEntreprise } from 'camino-common/src/roles'
 import { Administrations } from 'camino-common/src/static/administrations'
-import { Column, ComponentColumnData, TableRow, TextColumnData } from '../_ui/table'
+import { Column, ComponentColumnData, JSXElementColumnData, TableRow, TextColumnData } from '../_ui/table'
 import { markRaw } from 'vue'
 import { Entreprise, EntrepriseId } from 'camino-common/src/entreprise'
 
 export const utilisateursColonnes = [
   {
     id: 'nom',
-    name: 'Nom',
+    contentTitle: 'Nom',
   },
   {
     id: 'prenom',
-    name: 'Prénom',
+    contentTitle: 'Prénom',
   },
   {
     id: 'email',
-    name: 'Email',
+    contentTitle: 'Email',
   },
   {
     id: 'role',
-    name: 'Rôle',
+    contentTitle: 'Rôle',
   },
   {
     id: 'lien',
-    name: 'Lien',
+    contentTitle: 'Lien',
     noSort: true,
   },
 ] as const satisfies readonly Column[]
@@ -45,9 +45,10 @@ export const utilisateursLignesBuild = (utilisateurs: UserNotNull[], entreprises
       elements = utilisateur.entrepriseIds?.map(id => entreprisesIndex[id].nom)
     }
 
-    const lien: ComponentColumnData | TextColumnData =
+    const lien: JSXElementColumnData | ComponentColumnData | TextColumnData =
       elements && elements.length
         ? {
+            type: 'component',
             component: markRaw(List),
             props: {
               elements,
@@ -56,13 +57,14 @@ export const utilisateursLignesBuild = (utilisateurs: UserNotNull[], entreprises
             class: 'mb--xs',
             value: elements.join(', '),
           }
-        : { value: '' }
+        : { type: 'text', value: '' }
 
     const columns: TableRow['columns'] = {
-      prenom: { value: utilisateur.prenom || '–' },
-      nom: { value: utilisateur.nom || '–' },
-      email: { value: utilisateur.email || '–', class: ['h6'] },
+      prenom: { type: 'text', value: utilisateur.prenom || '–' },
+      nom: { type: 'text', value: utilisateur.nom || '–' },
+      email: { type: 'text', value: utilisateur.email || '–', class: ['h6'] },
       role: {
+        type: 'text',
         value: utilisateur.role,
         class: ['bg-neutral', 'color-bg', 'pill', 'py-xs', 'px-s', 'small', 'bold'],
       },

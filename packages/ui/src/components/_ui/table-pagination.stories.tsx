@@ -19,23 +19,23 @@ export default meta
 const columns: Column[] = [
   {
     id: 'nom',
-    name: 'Nom',
+    contentTitle: 'Nom',
   },
   {
     id: 'domaine',
-    name: '',
+    contentTitle: '',
   },
   {
     id: 'type',
-    name: 'Type',
+    contentTitle: 'Type',
   },
   {
     id: 'statut',
-    name: 'Statut',
+    contentTitle: 'Statut',
   },
   {
     id: 'test',
-    name: 'Test',
+    contentTitle: 'Test',
   },
 ]
 
@@ -55,6 +55,7 @@ const rows: AsyncData<{ total: number; rows: TableRow[] }> = {
         },
         columns: {
           nom: {
+            type: 'component',
             component: markRaw(TitreNom),
             props: {
               nom: `220222_${row}`,
@@ -62,6 +63,7 @@ const rows: AsyncData<{ total: number; rows: TableRow[] }> = {
             value: `220222_${row}`,
           },
           domaine: {
+            type: 'component',
             component: markRaw(Domaine),
             props: {
               domaineId: 'm',
@@ -69,18 +71,18 @@ const rows: AsyncData<{ total: number; rows: TableRow[] }> = {
             value: 'm',
           },
           type: {
+            type: 'component',
             component: markRaw(TitreTypeTypeNom),
             props: { titreTypeId: 'arm' },
             value: 'arm',
           },
           statut: {
-            component: markRaw(DemarcheStatut),
-            props: {
-              demarcheStatutId: 'acc',
-            },
+            type: 'jsx',
+            jsxElement: <DemarcheStatut demarcheStatutId="acc" />,
             value: `Demande initiale ${row}`,
           },
           test: {
+            type: 'text',
             value: `Test value ${row}`,
           },
         },
@@ -93,7 +95,7 @@ export const Loading: StoryFn = () => (
   <TablePagination
     columns={columns}
     data={{ status: 'LOADING' }}
-    caption="Test de pagination"
+    caption={{ value: 'Test de pagination', visible: true }}
     route={{ query: { page: '3', intervalle: '10' }, name: 'dashboard', params: {} }}
     updateParams={action('updateParams')}
   />
@@ -103,39 +105,57 @@ export const WithError: StoryFn = () => (
   <TablePagination
     columns={columns}
     data={{ status: 'ERROR', message: 'une erreur' }}
-    caption="Test de pagination"
+    caption={{ value: 'Test de pagination', visible: true }}
     route={{ query: { page: '3', intervalle: '10' }, name: 'dashboard', params: {} }}
     updateParams={action('updateParams')}
   />
 )
 
 export const Pagination: StoryFn = () => (
-  <TablePagination columns={columns} data={rows} caption="Test de pagination" route={{ query: { page: '3', intervalle: '10' }, name: 'dashboard', params: {} }} updateParams={action('updateParams')} />
+  <TablePagination
+    columns={columns}
+    data={rows}
+    caption={{ value: 'Test de pagination', visible: true }}
+    route={{ query: { page: '3', intervalle: '10' }, name: 'dashboard', params: {} }}
+    updateParams={action('updateParams')}
+  />
 )
 
 export const PaginationAuDebut: StoryFn = () => (
-  <TablePagination columns={columns} data={rows} caption="Test de pagination" route={{ query: { page: '1', intervalle: '10' }, name: 'dashboard', params: {} }} updateParams={action('updateParams')} />
+  <TablePagination
+    columns={columns}
+    data={rows}
+    caption={{ value: 'Test de pagination', visible: true }}
+    route={{ query: { page: '1', intervalle: '10' }, name: 'dashboard', params: {} }}
+    updateParams={action('updateParams')}
+  />
 )
 
 export const PaginationALaFin: StoryFn = () => (
   <TablePagination
     columns={columns}
     data={rows}
-    caption="Test de pagination"
+    caption={{ value: 'Test de pagination', visible: true }}
     route={{ query: { page: '20', intervalle: '10' }, name: 'dashboard', params: {} }}
     updateParams={action('updateParams')}
   />
 )
 
 export const PaginationAuMilieu: StoryFn = () => (
-  <TablePagination columns={columns} data={rows} caption="Test de pagination" route={{ query: { page: '8', intervalle: '10' }, name: 'dashboard', params: {} }} updateParams={action('updateParams')} />
+  <TablePagination
+    columns={columns}
+    data={rows}
+    caption={{ value: 'Test de pagination', visible: true }}
+    route={{ query: { page: '8', intervalle: '10' }, name: 'dashboard', params: {} }}
+    updateParams={action('updateParams')}
+  />
 )
 
 export const NeCassePasSiPasPaginationFausse: StoryFn = () => (
   <TablePagination
     columns={columns}
     data={{ status: 'LOADED', value: { total: 1, rows: [rows.value.rows[0]] } }}
-    caption="Test de pagination"
+    caption={{ value: 'Test de pagination', visible: true }}
     route={{ query: { page: '5', intervalle: '10' }, name: 'dashboard', params: {} }}
     updateParams={action('updateParams')}
   />
@@ -145,7 +165,7 @@ export const PetitePagination: StoryFn = () => (
   <TablePagination
     columns={columns}
     data={{ status: 'LOADED', value: { total: 16, rows: rows.value.rows.slice(0, 10) } }}
-    caption="Test de pagination"
+    caption={{ value: 'Test de pagination', visible: true }}
     route={{ query: { page: '1', intervalle: '10' }, name: 'dashboard', params: {} }}
     updateParams={action('updateParams')}
   />

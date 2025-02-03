@@ -1,6 +1,6 @@
 import { Meta, StoryFn } from '@storybook/vue3'
 import { DsfrIcon } from './icon'
-import { icons as dsfrIcons } from './dsfrIconSpriteType'
+import { FrIconClassName } from '@codegouvfr/react-dsfr/fr/generatedFromCss/classNames'
 
 const meta: Meta = {
   title: 'Components/Ui/Icons',
@@ -8,7 +8,8 @@ const meta: Meta = {
 }
 export default meta
 
-export const AllDsfrIcons: StoryFn = () => (
+const iconsSamples: FrIconClassName[] = ['fr-icon-download-line', 'fr-icon-add-line', 'fr-icon-earth-fill']
+export const DsfrIconsSizes: StoryFn = () => (
   <div style="height:100%;width:100%;background:white">
     <table>
       <tr>
@@ -17,17 +18,17 @@ export const AllDsfrIcons: StoryFn = () => (
         <th>MD</th>
         <th>LG</th>
       </tr>
-      {dsfrIcons.map(iconName => (
+      {iconsSamples.map(iconName => (
         <tr>
           <td>{iconName}</td>
           <td>
-            <DsfrIcon name={`fr-icon-${iconName}`} size="sm" aria-hidden="true" />
+            <DsfrIcon name={iconName} size="sm" aria-hidden="true" />
           </td>
           <td>
-            <DsfrIcon name={`fr-icon-${iconName}`} size="md" aria-hidden="true" />
+            <DsfrIcon name={iconName} size="md" aria-hidden="true" />
           </td>
           <td>
-            <DsfrIcon name={`fr-icon-${iconName}`} size="lg" aria-hidden="true" />
+            <DsfrIcon name={iconName} size="lg" aria-hidden="true" />
           </td>
         </tr>
       ))}

@@ -1,4 +1,4 @@
-import { defineComponent, inject, markRaw, ref } from 'vue'
+import { defineComponent, inject, ref } from 'vue'
 import { Liste, Params } from './_common/liste'
 import { getPeriode } from 'camino-common/src/static/frequence'
 import { ActivitesStatuts } from 'camino-common/src/static/activitesStatuts'
@@ -24,29 +24,29 @@ export const activitesColonneIdAnnee = 'annee'
 const activitesColonnes = [
   {
     id: 'titre',
-    name: 'Titre',
+    contentTitle: 'Titre',
   },
   {
     id: 'titulaires',
-    name: 'Titulaires',
+    contentTitle: 'Titulaires',
     noSort: true,
   },
   {
     id: activitesColonneIdAnnee,
-    name: 'Année',
+    contentTitle: 'Année',
   },
   {
     id: 'periode',
-    name: 'Période',
+    contentTitle: 'Période',
   },
   {
     id: 'activite_type',
-    name: 'Type de rapport',
+    contentTitle: 'Type de rapport',
     noSort: true,
   },
   {
     id: 'statut',
-    name: 'Statut',
+    contentTitle: 'Statut',
   },
 ] as const satisfies readonly Column[]
 
@@ -59,27 +59,22 @@ const activitesLignesBuild = (activites: UiGraphqlActivite[], entreprises: Entre
 
   return activites.map(activite => {
     const activiteStatut = ActivitesStatuts[activite.activiteStatutId]
-    const columns = {
-      titre: { value: activite.titre.nom },
+    const columns: TableRow['columns'] = {
+      titre: { type: 'text', value: activite.titre.nom },
       titulaires: {
-        component: markRaw(List),
-        props: {
-          elements: activite.titre.titulaireIds.map(id => entreprisesIndex[id]),
-          mini: true,
-        },
-        class: 'mb--xs',
+        type: 'jsx',
+        jsxElement: <List elements={activite.titre.titulaireIds.map(id => entreprisesIndex[id])} mini={true} />,
         value: activite.titre.titulaireIds.map(id => entreprisesIndex[id]).join(', '),
       },
-      annee: { value: activite.annee },
-      activite_type: { value: capitalize(ActivitesTypes[activite.typeId].nom) },
+      annee: { type: 'text', value: activite.annee },
+      activite_type: { type: 'text', value: capitalize(ActivitesTypes[activite.typeId].nom) },
       periode: {
+        type: 'text',
         value: getPeriode(ActivitesTypes[activite.typeId].frequenceId, activite.periodeId),
       },
       statut: {
-        component: markRaw(ActiviteStatut),
-        props: {
-          activiteStatutId: activiteStatut.id,
-        },
+        type: 'jsx',
+        jsxElement: <ActiviteStatut activiteStatutId={activiteStatut.id} />,
         value: activiteStatut.nom,
       },
     }

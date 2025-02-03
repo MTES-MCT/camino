@@ -98,7 +98,7 @@ export const Liste = defineComponent(<ColumnId extends string, Columns extends C
         <>
           <PageContentHeader nom={props.nom} download={props.download} renderButton={props.renderButton} />
 
-          <TablePagination data={tableData.value} columns={props.colonnes} caption={props.nom} route={props.route} updateParams={paramsTableUpdate} />
+          <TablePagination data={tableData.value} columns={props.colonnes} caption={{ value: props.nom, visible: false }} route={props.route} updateParams={paramsTableUpdate} />
         </>
       }
       filtres={

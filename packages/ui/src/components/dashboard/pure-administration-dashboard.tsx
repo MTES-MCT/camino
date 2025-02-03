@@ -1,13 +1,13 @@
-import { computed, defineComponent, markRaw, onMounted, ref } from 'vue'
-import { TableAuto } from '../_ui/table-auto'
+import { computed, defineComponent, onMounted, ref } from 'vue'
+import { TableSimple } from '../_ui/table-simple'
 import { List } from '../_ui/list'
 import { PureDGTMStats } from './pure-dgtm-stats'
-import { nomColumn, nomCell, referencesColumn, titulairesColumn, statutCell, referencesCell, titulairesCell, typeColumn, typeCell, statutAutoColumn } from '@/components/titres/table-utils'
+import { nomColumn, nomCell, referencesColumn, titulairesColumn, statutCell, referencesCell, titulairesCell, typeColumn, typeCell, statutColumn } from '@/components/titres/table-utils'
 import { CommonTitreAdministration } from 'camino-common/src/titres'
 import { LoadingElement } from '@/components/_ui/functional-loader'
 import { AsyncData } from '@/api/client-rest'
 import { EtapesTypes } from 'camino-common/src/static/etapesTypes'
-import { Column, ComponentColumnData, TableRow, TextColumnData } from '../_ui/table'
+import { Column, ComponentColumnData, JSXElementColumnData, TableRow, TextColumnData } from '../_ui/table'
 import { DashboardApiClient } from './dashboard-api-client'
 import { AdminUserNotNull, isAdministrationAdmin, isAdministrationEditeur } from 'camino-common/src/roles'
 import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations'
@@ -24,17 +24,19 @@ interface Props {
 
 const derniereEtapeColumn: Column<'derniereEtape'> = {
   id: 'derniereEtape',
-  name: 'Dernière étape',
+  contentTitle: 'Dernière étape',
 }
 
 const prochainesEtapesColumn: Column<'prochainesEtapes'> = {
   id: 'prochainesEtapes',
-  name: 'Prochaines étapes',
+  contentTitle: 'Prochaines étapes',
 }
 
-const columns = [nomColumn, typeColumn, statutAutoColumn, referencesColumn, titulairesColumn, derniereEtapeColumn] as const
+const columns = [nomColumn, typeColumn, statutColumn, referencesColumn, titulairesColumn, derniereEtapeColumn] as const
+type ColumnId = (typeof columns)[number]['id']
 
-const columnsEnAttente = [nomColumn, typeColumn, statutAutoColumn, titulairesColumn, derniereEtapeColumn, prochainesEtapesColumn] as const
+const columnsEnAttente = [nomColumn, typeColumn, statutColumn, titulairesColumn, derniereEtapeColumn, prochainesEtapesColumn] as const
+type ColumnEnAttenteId = (typeof columnsEnAttente)[number]['id']
 
 export const PureAdministrationDashboard = defineComponent<Props>(props => {
   const isDGTM = computed<boolean>(() => {
@@ -43,27 +45,22 @@ export const PureAdministrationDashboard = defineComponent<Props>(props => {
 
   const data = ref<
     AsyncData<{
-      administrationTitres: TableRow[]
-      administrationTitresBloques: TableRow[]
+      administrationTitres: TableRow<ColumnId>[]
+      administrationTitresBloques: TableRow<ColumnEnAttenteId>[]
     }>
   >({ status: 'LOADING' })
-  const initialColumnId = columns[3].id
 
   type Columns = (typeof columns)[number]['id'] | (typeof columnsEnAttente)[number]['id']
 
-  const prochainesEtapesCell = (titre: CommonTitreAdministration) => ({
-    component: markRaw(List),
-    props: {
-      elements: titre.prochainesEtapes?.map(id => EtapesTypes[id].nom),
-      mini: true,
-    },
-    class: 'mb--xs',
+  const prochainesEtapesCell = (titre: CommonTitreAdministration): JSXElementColumnData => ({
+    type: 'jsx',
+    jsxElement: <List elements={titre.prochainesEtapes?.map(id => EtapesTypes[id].nom)} mini={true} />,
     value: titre.prochainesEtapes?.map(id => EtapesTypes[id].nom).join(', '),
   })
   const titresLignesBuild = (titres: CommonTitreAdministration[], entreprisesIndex: Record<EntrepriseId, string>): TableRow<Columns>[] => {
     return titres.map(titre => {
       const columns: {
-        [key in Columns]: ComponentColumnData | TextColumnData
+        [key in Columns]: JSXElementColumnData | ComponentColumnData | TextColumnData
       } = {
         nom: nomCell(titre),
         type: typeCell(titre.type_id),
@@ -71,6 +68,7 @@ export const PureAdministrationDashboard = defineComponent<Props>(props => {
         references: referencesCell(titre),
         titulaires: titulairesCell(titre, entreprisesIndex),
         derniereEtape: {
+          type: 'text',
           value: titre.derniereEtape ? `${EtapesTypes[titre.derniereEtape.etapeTypeId].nom} (${titre.derniereEtape.date})` : '',
         },
         prochainesEtapes: prochainesEtapesCell(titre),
@@ -135,23 +133,13 @@ export const PureAdministrationDashboard = defineComponent<Props>(props => {
         data={data.value}
         renderItem={item => {
           if (item.administrationTitresBloques.length) {
-            return (
-              <TableAuto
-                caption="Titres en attente de votre administration"
-                columns={columnsEnAttente}
-                rows={item.administrationTitresBloques}
-                initialSort={{ colonne: initialColumnId, ordre: 'asc' }}
-              />
-            )
+            return <TableSimple caption={{ value: 'Titres en attente de votre administration', visible: true }} columns={columnsEnAttente} rows={item.administrationTitresBloques} />
           }
 
           return null
         }}
       />
-      <LoadingElement
-        data={data.value}
-        renderItem={item => <TableAuto caption="Titres en cours d’instruction" columns={columns} rows={item.administrationTitres} initialSort={{ colonne: initialColumnId, ordre: 'asc' }} />}
-      />
+      <LoadingElement data={data.value} renderItem={item => <TableSimple caption={{ value: 'Titres en cours d’instruction', visible: true }} columns={columns} rows={item.administrationTitres} />} />
     </div>
   )
 })

@@ -1,7 +1,7 @@
-import { defineComponent, markRaw } from 'vue'
+import { defineComponent } from 'vue'
 import { Liste, Params } from './_common/liste'
 import { ADMINISTRATION_TYPES, Administrations as Adms } from 'camino-common/src/static/administrations'
-import { Column, ComponentColumnData, TableRow, TextColumnData } from './_ui/table'
+import { Column, ComponentColumnData, JSXElementColumnData, TableRow, TextColumnData } from './_ui/table'
 import { useRoute, useRouter } from 'vue-router'
 import { DsfrTag } from './_ui/tag'
 import { apiClient } from '../api/api-client'
@@ -11,15 +11,15 @@ import { routesDefinitions } from '@/router/routes'
 const colonnes = [
   {
     id: 'abreviation',
-    name: 'Abréviation',
+    contentTitle: 'Abréviation',
   },
   {
     id: 'nom',
-    name: 'Nom',
+    contentTitle: 'Nom',
   },
   {
     id: 'type',
-    name: 'Type',
+    contentTitle: 'Type',
   },
 ] as const satisfies readonly Column[]
 
@@ -73,12 +73,12 @@ export const Administrations = defineComponent({
         .map(administration => {
           const type = ADMINISTRATION_TYPES[administration.typeId]
 
-          const columns: Record<string, ComponentColumnData | TextColumnData> = {
-            abreviation: { value: administration.abreviation },
-            nom: { value: administration.nom },
+          const columns: Record<string, JSXElementColumnData | ComponentColumnData | TextColumnData> = {
+            abreviation: { type: 'text', value: administration.abreviation },
+            nom: { type: 'text', value: administration.nom },
             type: {
-              component: markRaw(DsfrTag),
-              props: { ariaLabel: type.nom },
+              type: 'jsx',
+              jsxElement: <DsfrTag ariaLabel={type.nom} />,
               value: type.nom,
             },
           }

@@ -17,6 +17,9 @@ import { getDocumentsTypes, isArmMecanise } from 'camino-common/src/permissions/
 import { FirstEtapeDate } from 'camino-common/src/date'
 import { DemarcheId } from 'camino-common/src/demarche'
 import { FlattenedContenu } from 'camino-common/src/etape-form'
+import { fr } from '@codegouvfr/react-dsfr'
+import { Column, TableSimple } from '../_ui/table-simple'
+import { TableRow } from '../_ui/table'
 
 interface Props {
   tde: {
@@ -227,67 +230,68 @@ const EtapeDocumentsTable: FunctionalComponent<PropsTable> = (props: PropsTable)
   const sortedDocuments = computed(() => sortDocumentsColumn(props.documents.map(d => ({ ...d, document_type_id: d.etape_document_type_id }))))
   const sortedEmptyRequiredDocuments = computed(() => [...props.emptyRequiredDocuments].sort((a, b) => DocumentsTypes[a].nom.localeCompare(DocumentsTypes[b].nom)))
 
-  return (
-    <div class="fr-table fr-mb-0">
-      <table style={{ display: 'table' }}>
-        <caption>{props.caption}</caption>
-        <thead>
-          <tr>
-            <th scope="col">Nom</th>
-            <th scope="col">Description</th>
-            <th scope="col">Visibilité</th>
-            <th scope="col" style={{ display: 'flex', justifyContent: 'end' }}>
-              Action
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {sortedDocuments.value.map(document => (
-            <tr>
-              <td>{props.getNom(document.etape_document_type_id)}</td>
-              <td style={{ whiteSpace: 'pre-line' }}>{document.description}</td>
-              <td>{getVisibilityLabel(document)}</td>
-              <td>
-                <div style={{ display: 'flex', justifyContent: 'end', alignItems: 'center' }}>
-                  <DsfrButtonIcon
-                    icon="fr-icon-edit-line"
-                    title={`Modifier le document de ${props.getNom(document.etape_document_type_id)}`}
-                    onClick={editDocument(document.index)}
-                    buttonType="secondary"
-                    buttonSize="sm"
-                  />
-                  <DsfrButtonIcon
-                    icon="fr-icon-delete-bin-line"
-                    class="fr-ml-1w"
-                    title={`Supprimer le document de ${props.getNom(document.etape_document_type_id)}`}
-                    onClick={deleteDocument(document.index)}
-                    buttonType="secondary"
-                    buttonSize="sm"
-                  />
-                </div>
-              </td>
-            </tr>
-          ))}
-          {sortedEmptyRequiredDocuments.value.map(documentTypeId => (
-            <tr>
-              <td class="fr-label--disabled">{props.getNom(documentTypeId)}</td>
-              <td>-</td>
-              <td>-</td>
-              <td style={{ display: 'flex', justifyContent: 'end' }}>
-                <DsfrButtonIcon
-                  icon="fr-icon-add-line"
-                  title={`Ajouter un document ${props.getNom(documentTypeId)}`}
-                  onClick={() => props.add(documentTypeId)}
-                  buttonType="secondary"
-                  buttonSize="sm"
-                />
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+  type ColumnId = 'nom' | 'description' | 'visibilite' | 'actions'
+
+  const columns: Column<ColumnId>[] = [
+    { id: 'nom', contentTitle: 'Nom' },
+    { id: 'description', contentTitle: 'Description' },
+    { id: 'visibilite', contentTitle: 'Visibilité' },
+    { id: 'actions', contentTitle: 'Action', class: [fr.cx('fr-cell--right')] },
+  ]
+
+  const rows: TableRow<ColumnId>[] = sortedDocuments.value.map<TableRow<ColumnId>>(document => ({
+    id: `${document.index}`,
+    link: null,
+    columns: {
+      nom: { type: 'text', value: props.getNom(document.etape_document_type_id) },
+      description: { type: 'text', value: document.description ?? '' },
+      visibilite: { type: 'text', value: getVisibilityLabel(document) },
+      actions: {
+        type: 'jsx',
+        value: document.index,
+        jsxElement: (
+          <div style={{ display: 'flex', justifyContent: 'end', alignItems: 'center' }}>
+            <DsfrButtonIcon
+              icon="fr-icon-edit-line"
+              title={`Modifier le document de ${props.getNom(document.etape_document_type_id)}`}
+              onClick={editDocument(document.index)}
+              buttonType="secondary"
+              buttonSize="sm"
+            />
+            <DsfrButtonIcon
+              icon="fr-icon-delete-bin-line"
+              class="fr-ml-1w"
+              title={`Supprimer le document de ${props.getNom(document.etape_document_type_id)}`}
+              onClick={deleteDocument(document.index)}
+              buttonType="secondary"
+              buttonSize="sm"
+            />
+          </div>
+        ),
+      },
+    },
+  }))
+
+  rows.push(
+    ...sortedEmptyRequiredDocuments.value.map<TableRow<ColumnId>>(documentTypeId => ({
+      id: documentTypeId,
+      link: null,
+      columns: {
+        nom: { type: 'text', value: props.getNom(documentTypeId), class: [fr.cx('fr-label--disabled')] },
+        description: { type: 'text', value: '-' },
+        visibilite: { type: 'text', value: '-' },
+        actions: {
+          type: 'jsx',
+          value: documentTypeId,
+          jsxElement: (
+            <DsfrButtonIcon icon="fr-icon-add-line" title={`Ajouter un document ${props.getNom(documentTypeId)}`} onClick={() => props.add(documentTypeId)} buttonType="secondary" buttonSize="sm" />
+          ),
+        },
+      },
+    }))
   )
+
+  return <TableSimple caption={{ value: props.caption, visible: true }} columns={columns} rows={rows} />
 }
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833

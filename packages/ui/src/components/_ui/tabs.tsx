@@ -1,10 +1,11 @@
 import { Ref, computed, defineComponent, onBeforeUnmount, onMounted, ref } from 'vue'
 
-import { DsfrIcon } from './dsfrIconSpriteType'
+import { FrIconClassName } from '@codegouvfr/react-dsfr'
+
 import { NonEmptyArray, isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { random } from '../../utils/vue-tsx-utils'
 import type { JSX } from 'vue/jsx-runtime'
-export type Tab<TabId extends string> = { icon: DsfrIcon | null; title: string; id: TabId; renderContent: () => JSX.Element }
+export type Tab<TabId extends string> = { icon: FrIconClassName | null; title: string; id: TabId; renderContent: () => JSX.Element }
 
 type Props<TabId extends string> = {
   tabsTitle: string

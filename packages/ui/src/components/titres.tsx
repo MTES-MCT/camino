@@ -180,7 +180,7 @@ export const Titres = defineComponent({
               paramsForTable.value = params
               await reloadTitres('table')
             }}
-            caption="Tableau des titres"
+            caption={{ value: 'Tableau des titres', visible: false }}
           />
         ),
       },

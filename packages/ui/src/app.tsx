@@ -1,5 +1,7 @@
-import '@gouvfr/dsfr/dist/core/core.module'
-import '@gouvfr/dsfr/dist/component/navigation/navigation.module'
+import '@codegouvfr/react-dsfr/main.css'
+import '@codegouvfr/react-dsfr/dsfr/core/core.module'
+import '@codegouvfr/react-dsfr/dsfr/component/navigation/navigation.module'
+import '@codegouvfr/react-dsfr/dsfr/component/table/table.module'
 
 import { defineComponent, computed, ref, onMounted, inject } from 'vue'
 import { Header } from './components/page/header'

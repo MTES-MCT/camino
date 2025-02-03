@@ -135,44 +135,48 @@
       </div>
       <div>
         <div>
-          <div class="fr-table fr-table--no-caption" style="overflow: auto;">
-            <table style="display: table; min-width: 100%;">
-              <caption>utilisateurs</caption>
-              <thead>
-                <tr>
-                  <th scope="col" class="nowrap"><a href="/mocked-href" title="Trier par la colonne Nom par ordre descendant" class="fr-link fr-link--icon-right fr-icon-arrow-down-fill" aria-label="Trier par la colonne Nom par ordre descendant">Nom</a></th>
-                  <th scope="col" class="nowrap"><a href="/mocked-href" title="Trier par la colonne Prénom" class="fr-link" aria-label="Trier par la colonne Prénom">Prénom</a></th>
-                  <th scope="col" class="nowrap"><a href="/mocked-href" title="Trier par la colonne Email" class="fr-link" aria-label="Trier par la colonne Email">Email</a></th>
-                  <th scope="col" class="nowrap"><a href="/mocked-href" title="Trier par la colonne Rôle" class="fr-link" aria-label="Trier par la colonne Rôle">Rôle</a></th>
-                  <th scope="col" class="nowrap">
-                    <div class="fr-text--md">Lien</div>
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td><a class="fr-link" to="{name:utilisateur,params:{id:id}}" type="primary"><span class="">nom1</span></a></td>
-                  <td><span class="">prenom1</span></td>
-                  <td><span class="h6">unknown1@emailunkown.com</span></td>
-                  <td><span class="bg-neutral color-bg pill py-xs px-s small bold">super</span></td>
-                  <td><span class=""></span></td>
-                </tr>
-                <tr>
-                  <td><a class="fr-link" to="{name:utilisateur,params:{id:id2}}" type="primary"><span class="">nom2</span></a></td>
-                  <td><span class="">prenom2</span></td>
-                  <td><span class="h6">unknown2@emailunkown.com</span></td>
-                  <td><span class="bg-neutral color-bg pill py-xs px-s small bold">entreprise</span></td>
-                  <td><span class="mb--xs"><ul><li class="fr-text--xs">Entreprise1</li></ul></span></td>
-                </tr>
-                <tr>
-                  <td><a class="fr-link" to="{name:utilisateur,params:{id:id3}}" type="primary"><span class="">nom3</span></a></td>
-                  <td><span class="">prenom3</span></td>
-                  <td><span class="h6">unknown3@emailunkown.com</span></td>
-                  <td><span class="bg-neutral color-bg pill py-xs px-s small bold">admin</span></td>
-                  <td><span class="mb--xs"><ul><li class="fr-text--xs">MRAE Guyane</li></ul></span></td>
-                </tr>
-              </tbody>
-            </table>
+          <div class="fr-table fr-table--no-caption fr-table--no-scroll" style="overflow: auto;">
+            <div class="fr-table__wrapper" style="width: auto;">
+              <div class="fr-table__container">
+                <div class="fr-table__content">
+                  <table style="display: table; width: 100%;">
+                    <caption>utilisateurs</caption>
+                    <thead>
+                      <tr>
+                        <th scope="col"><a href="/mocked-href" title="Trier par la colonne Nom par ordre descendant" class="fr-link fr-link--icon-right fr-icon-arrow-down-fill" aria-label="Trier par la colonne Nom par ordre descendant">Nom</a></th>
+                        <th scope="col"><a href="/mocked-href" title="Trier par la colonne Prénom" class="fr-link" aria-label="Trier par la colonne Prénom">Prénom</a></th>
+                        <th scope="col"><a href="/mocked-href" title="Trier par la colonne Email" class="fr-link" aria-label="Trier par la colonne Email">Email</a></th>
+                        <th scope="col"><a href="/mocked-href" title="Trier par la colonne Rôle" class="fr-link" aria-label="Trier par la colonne Rôle">Rôle</a></th>
+                        <th scope="col">Lien</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td><a class="fr-link" to="{name:utilisateur,params:{id:id}}" type="primary"><span class="">nom1</span></a></td>
+                        <td><span class="">prenom1</span></td>
+                        <td><span class="h6">unknown1@emailunkown.com</span></td>
+                        <td><span class="bg-neutral color-bg pill py-xs px-s small bold">super</span></td>
+                        <td><span class=""></span></td>
+                      </tr>
+                      <tr>
+                        <td><a class="fr-link" to="{name:utilisateur,params:{id:id2}}" type="primary"><span class="">nom2</span></a></td>
+                        <td><span class="">prenom2</span></td>
+                        <td><span class="h6">unknown2@emailunkown.com</span></td>
+                        <td><span class="bg-neutral color-bg pill py-xs px-s small bold">entreprise</span></td>
+                        <td><span class="mb--xs"><ul><li class="fr-text--xs">Entreprise1</li></ul></span></td>
+                      </tr>
+                      <tr>
+                        <td><a class="fr-link" to="{name:utilisateur,params:{id:id3}}" type="primary"><span class="">nom3</span></a></td>
+                        <td><span class="">prenom3</span></td>
+                        <td><span class="h6">unknown3@emailunkown.com</span></td>
+                        <td><span class="bg-neutral color-bg pill py-xs px-s small bold">admin</span></td>
+                        <td><span class="mb--xs"><ul><li class="fr-text--xs">MRAE Guyane</li></ul></span></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
         <nav role="navigation" class="fr-pagination" aria-label="Pagination">

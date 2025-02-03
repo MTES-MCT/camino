@@ -5,7 +5,7 @@ import { Entreprise, EntrepriseId, TitreEntreprise } from 'camino-common/src/ent
 import { titresColonnes, titresLignesBuild } from '@/components/titres/table-utils'
 import { LoadingElement } from '../_ui/functional-loader'
 import { AsyncData } from '@/api/client-rest'
-import { TableAuto } from '../_ui/table-auto'
+import { TableSimple } from '../_ui/table-simple'
 import { TableRow } from '../_ui/table'
 import { DashboardApiClient } from './dashboard-api-client'
 import { PageContentHeader } from '../_common/page-header-content'
@@ -163,15 +163,13 @@ export const PureEntrepriseDashboard = defineComponent<Props>(props => {
                 />
               ) : null}
               {titresValidesEtEnCours(titres).length > 0 ? (
-                <TableAuto class="" caption="Titres en cours et valides" columns={columns} rows={entrepriseTitres(titresValidesEtEnCours(titres))} initialSort={{ colonne: 'statut', ordre: 'asc' }} />
+                <TableSimple caption={{ value: 'Titres en cours et valides', visible: true }} columns={columns} rows={entrepriseTitres(titresValidesEtEnCours(titres))} />
               ) : null}
               {autresTitres(titres).length > 0 ? (
                 <DsfrAccordion
                   expandedByDefault={titresValidesEtEnCours(titres).length === 0}
                   title="Autres titres"
-                  content={
-                    <TableAuto class="fr-table--no-caption" caption="Autres titres" columns={columns} rows={entrepriseTitres(autresTitres(titres))} initialSort={{ colonne: 'statut', ordre: 'asc' }} />
-                  }
+                  content={<TableSimple caption={{ value: 'Autres titres', visible: false }} columns={columns} rows={entrepriseTitres(autresTitres(titres))} />}
                 />
               ) : null}
             </>

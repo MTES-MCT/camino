@@ -1,9 +1,10 @@
 import { ActivitesTypesEmails } from './activites-types-emails'
 import { Meta, StoryFn } from '@storybook/vue3'
 import { ACTIVITES_TYPES_IDS } from 'camino-common/src/static/activitesTypes'
-import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations'
+import { ADMINISTRATION_IDS, AdministrationId } from 'camino-common/src/static/administrations'
 import { testBlankUser } from 'camino-common/src/tests-utils'
 import { action } from '@storybook/addon-actions'
+import { AdministrationActiviteTypeEmail } from 'camino-common/src/administrations'
 
 const meta: Meta = {
   title: 'Components/Administration/ActivitesTypesEmails',
@@ -23,12 +24,15 @@ const activitesTypesEmails = [
   },
 ]
 
-const emailUpdate = async () => {
-  action('emailUpdate')
+const emailUpdateAction = action('emailUpdate')
+const emailDeleteAction = action('emailDelete')
+
+const emailUpdate = async (administrationId: AdministrationId, administrationActiviteTypeEmail: AdministrationActiviteTypeEmail) => {
+  emailUpdateAction(administrationId, administrationActiviteTypeEmail)
   return Promise.resolve()
 }
-const emailDelete = async () => {
-  action('emailDelete')
+const emailDelete = async (administrationId: AdministrationId, administrationActiviteTypeEmail: AdministrationActiviteTypeEmail) => {
+  emailDeleteAction(administrationId, administrationActiviteTypeEmail)
   return Promise.resolve()
 }
 export const EmailLectureVisible: StoryFn = () => (

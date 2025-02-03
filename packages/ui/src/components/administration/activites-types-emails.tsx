@@ -11,6 +11,9 @@ import { DsfrInput } from '../_ui/dsfr-input'
 import { useState } from '@/utils/vue-tsx-utils'
 import { DsfrButtonIcon } from '../_ui/dsfr-button'
 import { DsfrSelect } from '../_ui/dsfr-select'
+import { Column, TableSimple } from '../_ui/table-simple'
+import { TableRow } from '../_ui/table'
+import { fr } from '@codegouvfr/react-dsfr'
 
 interface Props {
   administrationId: AdministrationId
@@ -28,6 +31,7 @@ const activiteTypeIdLabelize = (activiteTypeId: ActivitesTypesId) => {
 
   return activiteTypeLabelize(activiteType)
 }
+type ColumnId = 'type' | 'email' | 'action'
 export const ActivitesTypesEmails = defineComponent<Props>(props => {
   const administration = computed<Administration>(() => Administrations[props.administrationId])
 
@@ -54,12 +58,13 @@ export const ActivitesTypesEmails = defineComponent<Props>(props => {
   })
 
   const activiteTypeEmailUpdate = () => {
-    if (!activiteTypeNewActive.value) return
-    const { email, activiteTypeId } = activiteType.value
-    if (email !== null && activiteTypeId !== null) {
-      props.emailUpdate(props.administrationId, { activite_type_id: activiteTypeId, email })
+    if (isNotNullNorUndefined(activiteTypeNewActive.value)) {
+      const { email, activiteTypeId } = activiteType.value
+      if (email !== null && activiteTypeId !== null) {
+        props.emailUpdate(props.administrationId, { activite_type_id: activiteTypeId, email })
+      }
+      setActiviteType({ activiteTypeId: null, email: null })
     }
-    setActiviteType({ activiteTypeId: null, email: null })
   }
 
   const activiteTypeEmailDelete = async (administrationActiviteTypeEmail: AdministrationActiviteTypeEmail) => {
@@ -73,6 +78,67 @@ export const ActivitesTypesEmails = defineComponent<Props>(props => {
     setActiviteType({ activiteTypeId, email: activiteType.value.email })
   }
 
+  const columns = computed<Column<ColumnId>[]>(() => {
+    const staticColumns: Column<ColumnId>[] = [
+      { id: 'type', contentTitle: "Type d'activité" },
+      { id: 'email', contentTitle: 'Email' },
+    ]
+    if (canEditEmailsComp.value) {
+      staticColumns.push({ id: 'action', contentTitle: 'Actions', class: [fr.cx('fr-cell--bottom')] })
+    }
+    return staticColumns
+  })
+
+  const rows = computed<TableRow<ColumnId>[]>(() => {
+    const myRows: TableRow<ColumnId>[] = []
+
+    if (canEditEmailsComp.value) {
+      myRows.push({
+        id: 'add',
+        link: null,
+        columns: {
+          type: {
+            type: 'jsx',
+            jsxElement: <DsfrSelect legend={{ main: 'Activité' }} items={activitesTypes} valueChanged={updateActiviteTypeId} initialValue={activiteType.value.activiteTypeId} />,
+            value: 'type',
+          },
+          email: {
+            type: 'jsx',
+            jsxElement: <DsfrInput type={{ type: 'email' }} legend={{ main: 'Email' }} valueChanged={updateActiviteTypeEmail} initialValue={activiteType.value.email} />,
+            value: 'email',
+          },
+          action: {
+            type: 'jsx',
+            jsxElement: <DsfrButtonIcon icon="fr-icon-add-line" title="Ajouter un email pour un type d'activité" onClick={activiteTypeEmailUpdate} disabled={!activiteTypeNewActive.value} />,
+            value: 'action',
+          },
+        },
+      })
+    }
+
+    myRows.push(
+      ...props.activitesTypesEmails.map<TableRow<ColumnId>>(activiteTypeEmail => {
+        return {
+          id: activiteTypeEmail.activite_type_id + activiteTypeEmail.email,
+          link: null,
+          columns: {
+            type: { type: 'text', value: activiteTypeIdLabelize(activiteTypeEmail.activite_type_id) },
+            email: { type: 'text', value: activiteTypeEmail.email },
+            action: {
+              type: 'jsx',
+              jsxElement: canEditEmailsComp.value ? (
+                <DsfrButtonIcon icon="fr-icon-delete-bin-line" title="Supprimer un email pour un type d’activité" onClick={() => activiteTypeEmailDelete(activiteTypeEmail)} buttonType="secondary" />
+              ) : (
+                <div></div>
+              ),
+              value: activiteTypeEmail.activite_type_id + activiteTypeEmail.email,
+            },
+          },
+        }
+      })
+    )
+    return myRows
+  })
   return () => (
     <div>
       <h3>Emails à notifier lors du dépôt d’un type d’activité</h3>
@@ -94,47 +160,7 @@ export const ActivitesTypesEmails = defineComponent<Props>(props => {
       <hr />
 
       <div>
-        <div class="overflow-scroll-x fr-table fr-table--no-caption">
-          <table style={{ display: 'table' }}>
-            <thead>
-              <th>Type d'activité</th>
-              <th>Email</th>
-              {canEditEmailsComp.value ? <th>Actions</th> : null}
-            </thead>
-            {canEditEmailsComp.value ? (
-              <tr>
-                <td>
-                  <DsfrSelect legend={{ main: 'Activité' }} items={activitesTypes} valueChanged={updateActiviteTypeId} initialValue={activiteType.value.activiteTypeId} />
-                </td>
-                <td>
-                  <DsfrInput type={{ type: 'email' }} legend={{ main: 'Email' }} valueChanged={updateActiviteTypeEmail} initialValue={activiteType.value.email} />
-                </td>
-                <td style={{ 'vertical-align': 'bottom' }}>
-                  <DsfrButtonIcon icon="fr-icon-add-line" title="Ajouter un email pour un type d'activité" onClick={activiteTypeEmailUpdate} disabled={!activiteTypeNewActive.value} />
-                </td>
-              </tr>
-            ) : null}
-
-            {props.activitesTypesEmails.map(activiteTypeEmail => (
-              <tr key={activiteTypeEmail.activite_type_id + activiteTypeEmail.email}>
-                <td>
-                  <span>{activiteTypeIdLabelize(activiteTypeEmail.activite_type_id)}</span>
-                </td>
-                <td>{activiteTypeEmail.email}</td>
-                {canEditEmailsComp.value ? (
-                  <td style={{ 'vertical-align': 'bottom' }}>
-                    <DsfrButtonIcon
-                      icon="fr-icon-delete-bin-line"
-                      title="Supprimer un email pour un type d’activité"
-                      onClick={() => activiteTypeEmailDelete(activiteTypeEmail)}
-                      buttonType="secondary"
-                    />
-                  </td>
-                ) : null}
-              </tr>
-            ))}
-          </table>
-        </div>
+        <TableSimple caption={{ value: '', visible: false }} columns={columns.value} rows={rows.value} />
       </div>
     </div>
   )

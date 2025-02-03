@@ -9,83 +9,48 @@ import { Departement, Departements, toDepartementId } from 'camino-common/src/st
 import { onlyUnique } from 'camino-common/src/typescript-tools'
 import { Regions } from 'camino-common/src/static/region'
 import { SubstancesLegale } from 'camino-common/src/static/substancesLegales'
-import { titresStatutsArray, TitresStatuts, TitreStatutId } from 'camino-common/src/static/titresStatuts'
+import { TitresStatuts, TitreStatutId } from 'camino-common/src/static/titresStatuts'
 import { ReferencesTypes, ReferenceTypeId } from 'camino-common/src/static/referencesTypes'
 import { getDomaineId, TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { getDepartementsBySecteurs } from 'camino-common/src/static/facades'
 import { ComponentColumnData, TableRow, TextColumnData, Column } from '../_ui/table'
-import { Column as AutoColumn } from '../_ui/table-auto'
 import { TitreStatut } from '../_common/titre-statut'
 import { TitreForTable } from '../titre/titre-api-client'
 import { EntrepriseId } from 'camino-common/src/entreprise'
 import { Badges } from '../_ui/badges'
 
-const ordreStatut: { [key in TitreStatutId]: number } = {
-  dmi: 0,
-  mod: 1,
-  sup: 2,
-  val: 3,
-  dmc: 4,
-  ech: 5,
-  ind: 6,
-}
-
-const ordreFromStatut = (entry: string) => {
-  const titreStatut = titresStatutsArray.find(({ nom }) => nom === entry)
-  if (titreStatut) {
-    return ordreStatut[titreStatut.id]
-  }
-
-  return -1
-}
-
-const isTitreStatut = (entry: string | number | string[] | undefined): entry is string => {
-  return titresStatutsArray.some(({ nom }) => nom === entry)
-}
-
 export const nomColumn: Column<'nom'> = {
   id: 'nom',
-  name: 'Nom',
+  contentTitle: 'Nom',
 }
 const domaineColumn: Column<'domaine'> = {
   id: 'domaine',
-  name: '',
+  contentTitle: '',
 }
 export const typeColumn: Column<'type'> = {
   id: 'type',
-  name: 'Type',
+  contentTitle: 'Type',
 }
 
 const activiteColumn: Column<'activites'> = {
   id: 'activites',
-  name: 'Activités',
+  contentTitle: 'Activités',
   noSort: true,
 }
 
-const statutColumn: Column<'statut'> = {
+export const statutColumn: Column<'statut'> = {
   id: 'statut',
-  name: 'Statut',
+  contentTitle: 'Statut',
 }
-export const statutAutoColumn: AutoColumn<'statut'> = {
-  ...statutColumn,
-  sort: (statut1: TableRow, statut2: TableRow) => {
-    const row1Statut = statut1.columns.statut.value
-    const row2Statut = statut2.columns.statut.value
-    if (isTitreStatut(row1Statut) && isTitreStatut(row2Statut)) {
-      return ordreFromStatut(row1Statut) - ordreFromStatut(row2Statut)
-    }
 
-    return 0
-  },
-}
 export const referencesColumn: Column<'references'> = {
   id: 'references',
-  name: 'Références',
+  contentTitle: 'Références',
   noSort: true,
 }
 export const titulairesColumn: Column<'titulaires'> = {
   id: 'titulaires',
-  name: 'Titulaires',
+  contentTitle: 'Titulaires',
   noSort: true,
 }
 export const titresColonnes = [
@@ -96,24 +61,25 @@ export const titresColonnes = [
   activiteColumn,
   {
     id: 'substances',
-    name: 'Substances',
+    contentTitle: 'Substances',
     noSort: true,
   },
   titulairesColumn,
   {
     id: 'regions',
-    name: 'Régions',
+    contentTitle: 'Régions',
     noSort: true,
   },
   {
     id: 'departements',
-    name: 'Départements',
+    contentTitle: 'Départements',
     noSort: true,
   },
   referencesColumn,
 ] as const satisfies readonly Column[]
 
 export const nomCell = (titre: { nom: string }): ComponentColumnData => ({
+  type: 'component',
   component: markRaw(TitreNom),
   props: { nom: titre.nom },
   value: titre.nom,
@@ -122,6 +88,7 @@ export const statutCell = (titre: { titre_statut_id: TitreStatutId }): Component
   const statut = TitresStatuts[titre.titre_statut_id]
 
   return {
+    type: 'component',
     component: markRaw(TitreStatut),
     props: {
       titreStatutId: titre.titre_statut_id,
@@ -134,6 +101,7 @@ export const referencesCell = (titre: { references?: { nom: string; referenceTyp
   const references = titre.references?.map(ref => `${ReferencesTypes[ref.referenceTypeId].nom} : ${ref.nom}`)
 
   return {
+    type: 'component',
     component: List,
     props: {
       elements: references,
@@ -145,6 +113,7 @@ export const referencesCell = (titre: { references?: { nom: string; referenceTyp
 }
 export const titulairesCell = (titre: { titulaireIds?: EntrepriseId[] }, entreprisesIndex: Record<EntrepriseId, string>): ComponentColumnData => {
   return {
+    type: 'component',
     component: markRaw(List),
     props: {
       elements: titre.titulaireIds?.map(id => entreprisesIndex[id]),
@@ -154,7 +123,8 @@ export const titulairesCell = (titre: { titulaireIds?: EntrepriseId[] }, entrepr
     value: titre.titulaireIds?.map(id => entreprisesIndex[id] ?? '').join(', '),
   }
 }
-const domaineCell = (titre: { domaineId: DomaineId }) => ({
+const domaineCell = (titre: { domaineId: DomaineId }): ComponentColumnData => ({
+  type: 'component',
   component: markRaw(CaminoDomaine),
   props: { domaineId: titre.domaineId },
   value: titre.domaineId,
@@ -162,12 +132,14 @@ const domaineCell = (titre: { domaineId: DomaineId }) => ({
 
 export const typeCell = (typeId: TitreTypeId): ComponentColumnData => {
   return {
+    type: 'component',
     component: markRaw(TitreTypeTypeNom),
     props: { titreTypeId: typeId },
     value: typeId,
   }
 }
-const activitesCell = (titre: { activitesAbsentes: number | null; activitesEnConstruction: number | null }) => ({
+const activitesCell = (titre: { activitesAbsentes: number | null; activitesEnConstruction: number | null }): ComponentColumnData => ({
+  type: 'component',
   component: markRaw(ActivitesPills),
   props: {
     activitesAbsentes: titre.activitesAbsentes,
@@ -190,6 +162,7 @@ export const titresLignesBuild = (titres: TitreForTable[], activitesCol: boolean
       type: typeCell(titre.typeId),
       statut: statutCell({ titre_statut_id: titre.titreStatutId }),
       substances: {
+        type: 'component',
         component: markRaw(Badges),
         props: {
           elements: titre.substances?.map(substanceId => SubstancesLegale[substanceId].nom) ?? [],
@@ -198,6 +171,7 @@ export const titresLignesBuild = (titres: TitreForTable[], activitesCol: boolean
       },
       titulaires: titulairesCell(titre, entreprisesIndex),
       regions: {
+        type: 'component',
         component: markRaw(List),
         props: {
           elements: regionNoms,
@@ -206,6 +180,7 @@ export const titresLignesBuild = (titres: TitreForTable[], activitesCol: boolean
         value: regionNoms,
       },
       departements: {
+        type: 'component',
         component: markRaw(List),
         props: {
           elements: departementNoms,

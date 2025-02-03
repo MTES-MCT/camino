@@ -14,7 +14,6 @@ import { DsfrButton, DsfrButtonIcon, DsfrLink } from './_ui/dsfr-button'
 import { TitreStatut } from './_common/titre-statut'
 import { caminoFiltres } from 'camino-common/src/filters'
 import { ReferencesTypes } from 'camino-common/src/static/referencesTypes'
-import { TableSortEvent } from './_ui/table'
 import { activitesColonneIdAnnee } from './activites'
 import { CaminoDate, getCurrent } from 'camino-common/src/date'
 import { Alert } from './_ui/alert'
@@ -45,8 +44,9 @@ import { DemarcheMiseEnConcurrence } from './titre/demarche-mise-en-concurrence'
 import { DemarchesConsentement } from './titre/demarche-consentement'
 import { useState } from '@/utils/vue-tsx-utils'
 import { isMachineWithConsentement, machineIdFind } from 'camino-common/src/machines'
+import { InitialSort } from './_ui/table'
 
-const activitesSort: TableSortEvent = {
+const activitesSort: InitialSort<string> = {
   colonne: activitesColonneIdAnnee,
   ordre: 'desc',
 }

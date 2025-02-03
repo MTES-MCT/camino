@@ -1,4 +1,4 @@
-import { FunctionalComponent, computed } from 'vue'
+import { FunctionalComponent, computed, defineComponent } from 'vue'
 import { EtapeDocument, EtapeDocumentId } from 'camino-common/src/etape'
 import { User, isAdministration, isSuper } from 'camino-common/src/roles'
 import { AutreDocumentTypeId, DocumentTypeId, DocumentsTypes } from 'camino-common/src/static/documentsTypes'
@@ -6,6 +6,9 @@ import { getDownloadRestRoute } from '../../api/client-rest'
 import { Entreprise, EntrepriseId, EtapeEntrepriseDocument } from 'camino-common/src/entreprise'
 import { EntrepriseDocumentLink } from '../entreprise/entreprise-documents'
 import { isNotNullNorUndefinedNorEmpty, isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools'
+import { fr } from '@codegouvfr/react-dsfr'
+import { Column, TableSimple } from '../_ui/table-simple'
+import { TableRow } from '../_ui/table'
 
 interface Props {
   etapeDocuments: EtapeDocument[]
@@ -44,11 +47,8 @@ export const sortDocumentsColumn = <T extends { document_type_id: DocumentTypeId
   })
 }
 
-export const EtapeDocuments: FunctionalComponent<Props> = props => {
-  if (isNullOrUndefinedOrEmpty(props.etapeDocuments) && isNullOrUndefinedOrEmpty(props.entrepriseDocuments)) {
-    return null
-  }
-
+type ColumnId = 'nom' | 'description' | 'visibilite'
+export const EtapeDocuments = defineComponent<Props>(props => {
   const sortedEtapeDocuments = computed(() => sortDocumentsColumn(props.etapeDocuments.map(d => ({ ...d, document_type_id: d.etape_document_type_id }))))
   const sortedEntrepriseDocuments = computed(() => sortDocumentsColumn(props.entrepriseDocuments.map(d => ({ ...d, document_type_id: d.entreprise_document_type_id }))))
 
@@ -60,47 +60,64 @@ export const EtapeDocuments: FunctionalComponent<Props> = props => {
 
   const hasEntrepriseDocumentsWithDescription = computed<boolean>(() => sortedEntrepriseDocuments.value.some(({ description }) => isNotNullNorUndefinedNorEmpty(description)))
 
-  return (
-    <div style={{ overflowX: 'auto' }}>
-      <div class=" fr-table fr-m-0">
-        <table style={{ display: 'table' }} class="fr-table--no-caption fr-m-0">
-          <caption>Documents</caption>
-          <thead>
-            <tr>
-              <th scope="col">Nom</th>
-              {hasEntrepriseDocumentsWithDescription.value ? <th>Description</th> : null}
-              {isSuper(props.user) || isAdministration(props.user) ? <th scope="col">Visibilité</th> : null}
-            </tr>
-          </thead>
-          <tbody>
-            {sortedEtapeDocuments.value.map(item => (
-              <tr>
-                <td>
-                  <EtapeDocumentLink documentId={item.id} documentTypeId={item.etape_document_type_id} description={item.description} />
-                </td>
-                {hasEntrepriseDocumentsWithDescription.value ? <td></td> : null}
-                {isSuper(props.user) || isAdministration(props.user) ? <td>{getVisibilityLabel(item)}</td> : null}
-              </tr>
-            ))}
-            {sortedEntrepriseDocuments.value.map(item => (
-              <tr>
-                <td>
-                  <EntrepriseDocumentLink
-                    documentId={item.id}
-                    documentTypeId={item.entreprise_document_type_id}
-                    label={`${entreprisesIndex[item.entreprise_id] ?? ''} - ${DocumentsTypes[item.entreprise_document_type_id].nom} - (${item.date})`}
-                  />
-                </td>
-                {hasEntrepriseDocumentsWithDescription.value ? <td style={{ whiteSpace: 'pre-line' }}>{item.description}</td> : null}
-                {isSuper(props.user) || isAdministration(props.user) ? <td>Visible seulement par les entreprises titulaires</td> : null}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
+  const columns = computed<Column<ColumnId>[]>(() => {
+    const rawColumn: Column<ColumnId>[] = [{ id: 'nom', contentTitle: 'Nom' }]
+    if (hasEntrepriseDocumentsWithDescription.value) {
+      rawColumn.push({ id: 'description', contentTitle: 'Description' })
+    }
+    if (isSuper(props.user) || isAdministration(props.user)) {
+      rawColumn.push({ id: 'visibilite', contentTitle: 'Visibilité' })
+    }
+    return rawColumn
+  })
+
+  const rows = computed<TableRow<ColumnId>[]>(() => {
+    const myRows: TableRow<ColumnId>[] = []
+    myRows.push(
+      ...sortedEtapeDocuments.value.map<TableRow<ColumnId>>(item => ({
+        id: item.id,
+        link: null,
+        columns: {
+          nom: { type: 'jsx', jsxElement: <EtapeDocumentLink documentId={item.id} documentTypeId={item.etape_document_type_id} description={item.description} />, value: item.id },
+          description: { type: 'text', value: '' },
+          visibilite: { type: 'text', value: isSuper(props.user) || isAdministration(props.user) ? getVisibilityLabel(item) : '' },
+        },
+      }))
+    )
+    myRows.push(
+      ...sortedEntrepriseDocuments.value.map<TableRow<ColumnId>>(item => ({
+        id: item.id,
+        link: null,
+        columns: {
+          nom: {
+            type: 'jsx',
+            value: item.id,
+            jsxElement: (
+              <EntrepriseDocumentLink
+                documentId={item.id}
+                documentTypeId={item.entreprise_document_type_id}
+                label={`${entreprisesIndex[item.entreprise_id] ?? ''} - ${DocumentsTypes[item.entreprise_document_type_id].nom} - (${item.date})`}
+              />
+            ),
+          },
+          description: { type: 'text', value: item.description ?? '' },
+          visibilite: { type: 'text', value: isSuper(props.user) || isAdministration(props.user) ? 'Visible seulement par les entreprises titulaires' : '' },
+        },
+      }))
+    )
+    return myRows
+  })
+  return () => (
+    <>
+      {isNullOrUndefinedOrEmpty(props.etapeDocuments) && isNullOrUndefinedOrEmpty(props.entrepriseDocuments) ? null : (
+        <TableSimple class={[fr.cx('fr-mb-0')]} caption={{ value: 'Documents', visible: false }} columns={columns.value} rows={rows.value} />
+      )}
+    </>
   )
-}
+})
+
+// @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
+EtapeDocuments.props = ['etapeDocuments', 'entrepriseDocuments', 'entreprises', 'user']
 
 type EtapeDocumentLinkProps = { documentId: EtapeDocumentId; documentTypeId: DocumentTypeId | AutreDocumentTypeId; description: string | null }
 const EtapeDocumentLink: FunctionalComponent<EtapeDocumentLinkProps> = props => {

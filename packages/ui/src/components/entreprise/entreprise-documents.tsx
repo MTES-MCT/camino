@@ -1,4 +1,4 @@
-import { FunctionalComponent, defineComponent, onMounted, ref } from 'vue'
+import { FunctionalComponent, computed, defineComponent, onMounted, ref } from 'vue'
 import { LoadingElement } from '@/components/_ui/functional-loader'
 import { AsyncData, getDownloadRestRoute } from '@/api/client-rest'
 import { EntrepriseDocument, EntrepriseDocumentId, EntrepriseId } from 'camino-common/src/entreprise'
@@ -11,12 +11,17 @@ import { RemoveEntrepriseDocumentPopup } from './remove-entreprise-document-popu
 import { ApiClient } from '@/api/api-client'
 import { DsfrButtonIcon } from '../_ui/dsfr-button'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
+import { fr } from '@codegouvfr/react-dsfr'
+import { Column, TableSimple } from '../_ui/table-simple'
+import { TableRow } from '../_ui/table'
 
 interface Props {
   apiClient: Pick<ApiClient, 'getEntrepriseDocuments' | 'creerEntrepriseDocument' | 'deleteEntrepriseDocument' | 'uploadTempDocument'>
   user: User
   entrepriseId: EntrepriseId
 }
+type ColumnId = 'nom' | 'date' | 'description' | 'actions'
+
 export const EntrepriseDocuments = defineComponent<Props>(props => {
   const data = ref<AsyncData<EntrepriseDocument[]>>({ status: 'LOADING' })
 
@@ -38,64 +43,66 @@ export const EntrepriseDocuments = defineComponent<Props>(props => {
     await reloadDocuments()
   })
 
+  const columns = computed<Column<ColumnId>[]>(() => {
+    const rawColumns: Column<ColumnId>[] = [
+      { id: 'nom', contentTitle: 'Nom' },
+      { id: 'date', contentTitle: 'Date' },
+      { id: 'description', contentTitle: 'Description' },
+    ]
+
+    if (canEditEntreprise(props.user, props.entrepriseId)) {
+      rawColumns.push({
+        id: 'actions',
+        class: [fr.cx('fr-cell--right')],
+        contentTitle: (
+          <DsfrButtonIcon
+            icon="fr-icon-add-line"
+            buttonType="primary"
+            title="Ajouter un document"
+            onClick={() => {
+              addPopup.value = true
+            }}
+          />
+        ),
+      })
+    }
+
+    return rawColumns
+  })
+
+  const rows = (items: EntrepriseDocument[]): TableRow<ColumnId>[] => {
+    return items.map<TableRow<ColumnId>>(item => ({
+      id: item.id,
+      link: null,
+      columns: {
+        nom: { type: 'jsx', jsxElement: <EntrepriseDocumentLink documentId={item.id} documentTypeId={item.entreprise_document_type_id} />, value: item.id },
+        date: { type: 'text', value: dateFormat(item.date) },
+        description: { type: 'text', value: item.description ?? '' },
+        actions: {
+          type: 'jsx',
+          jsxElement: item.can_delete_document ? (
+            <DsfrButtonIcon
+              icon="fr-icon-delete-line"
+              buttonType="secondary"
+              class={[fr.cx('fr-mb-0')]}
+              title={`Supprimer le document ${DocumentsTypes[item.entreprise_document_type_id].nom}`}
+              onClick={() => {
+                deleteDocument.value = { nom: DocumentsTypes[item.entreprise_document_type_id].nom, id: item.id }
+                deletePopup.value = true
+              }}
+            />
+          ) : (
+            <div></div>
+          ),
+          value: item.id,
+        },
+      },
+    }))
+  }
+
   return () => (
     <div style={{ overflowX: 'auto' }}>
-      <div class="fr-container">
-        <div class="fr-table">
-          <table style={{ display: 'table' }}>
-            <caption>Documents de l'entreprise</caption>
-            <thead>
-              <tr>
-                <th scope="col">Nom</th>
-                <th scope="col">Date</th>
-                <th scope="col">Description</th>
-                <th scope="col" style={{ display: 'flex', justifyContent: 'end' }}>
-                  {canEditEntreprise(props.user, props.entrepriseId) ? (
-                    <DsfrButtonIcon
-                      icon="fr-icon-add-line"
-                      buttonType="primary"
-                      title="Ajouter un document"
-                      onClick={() => {
-                        addPopup.value = true
-                      }}
-                    />
-                  ) : null}
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <LoadingElement
-                data={data.value}
-                renderItem={items => (
-                  <>
-                    {items.map(item => (
-                      <tr>
-                        <td>
-                          <EntrepriseDocumentLink documentId={item.id} documentTypeId={item.entreprise_document_type_id} />
-                        </td>
-                        <td>{dateFormat(item.date)}</td>
-                        <td>{item.description}</td>
-                        <td>
-                          {item.can_delete_document ? (
-                            <button
-                              class={['fr-btn', 'fr-icon-delete-line', 'fr-btn--secondary', 'fr-mb-0']}
-                              title={`Supprimer le document ${DocumentsTypes[item.entreprise_document_type_id].nom}`}
-                              onClick={() => {
-                                deleteDocument.value = { nom: DocumentsTypes[item.entreprise_document_type_id].nom, id: item.id }
-                                deletePopup.value = true
-                              }}
-                            />
-                          ) : null}
-                        </td>
-                      </tr>
-                    ))}
-                  </>
-                )}
-              />
-            </tbody>
-          </table>
-        </div>
-      </div>
+      <LoadingElement data={data.value} renderItem={items => <TableSimple caption={{ value: "Documents de l'entreprise", visible: true }} columns={columns.value} rows={rows(items)} />} />
       {addPopup.value ? (
         <AddEntrepriseDocumentPopup
           apiClient={{

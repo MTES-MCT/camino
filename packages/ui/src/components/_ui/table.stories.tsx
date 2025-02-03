@@ -1,6 +1,5 @@
 import { Column, Table, TableRow } from './table'
 import { Meta, StoryFn } from '@storybook/vue3'
-import { markRaw } from 'vue'
 import { TitreNom } from '../_common/titre-nom'
 import { Domaine } from '../_common/domaine'
 import { TitreTypeTypeNom } from '../_common/titre-type-type-nom'
@@ -17,23 +16,23 @@ export default meta
 const columns: Column[] = [
   {
     id: 'nom',
-    name: 'Nom',
+    contentTitle: 'Nom',
   },
   {
     id: 'domaine',
-    name: '',
+    contentTitle: '',
   },
   {
     id: 'type',
-    name: 'Type',
+    contentTitle: 'Type',
   },
   {
     id: 'statut',
-    name: 'Statut',
+    contentTitle: 'Statut',
   },
   {
     id: 'test',
-    name: 'Test',
+    contentTitle: 'Test',
   },
 ]
 
@@ -49,32 +48,27 @@ const rows: TableRow[] = [0, 1, 2, 3].map(row => {
     },
     columns: {
       nom: {
-        component: markRaw(TitreNom),
-        props: {
-          nom: `220222_${row}`,
-        },
+        type: 'jsx',
+        jsxElement: <TitreNom nom={`220222_${row}`} />,
         value: `220222_${row}`,
       },
       domaine: {
-        component: markRaw(Domaine),
-        props: {
-          domaineId: 'm',
-        },
+        type: 'jsx',
+        jsxElement: <Domaine domaineId="m" />,
         value: 'm',
       },
       type: {
-        component: markRaw(TitreTypeTypeNom),
-        props: { titreTypeId: 'arm' },
+        type: 'jsx',
+        jsxElement: <TitreTypeTypeNom titreTypeId="arm" />,
         value: 'arm',
       },
       statut: {
-        component: markRaw(DemarcheStatut),
-        props: {
-          demarcheStatutId: 'eco',
-        },
+        type: 'jsx',
+        jsxElement: <DemarcheStatut demarcheStatutId="eco" />,
         value: `Demande initiale ${row}`,
       },
       test: {
+        type: 'text',
         value: `Test value ${row}`,
       },
     },
@@ -82,4 +76,24 @@ const rows: TableRow[] = [0, 1, 2, 3].map(row => {
 })
 
 const update = action('update')
-export const Simple: StoryFn = () => <Table route={{ query: { page: '1', intervalle: '10' }, name: 'dashboard' }} rows={rows} columns={columns} caption="Caption cachée" updateParams={update} />
+export const Simple: StoryFn = () => (
+  <Table
+    route={{ query: { page: '1', intervalle: '10' }, name: 'dashboard', params: {} }}
+    rows={{ value: { rows, total: rows.length }, status: 'LOADED' }}
+    columns={columns}
+    caption={{ value: 'Caption cachée', visible: false }}
+    updateParams={update}
+    sortType="route"
+  />
+)
+
+export const SimpleWithCaption: StoryFn = () => (
+  <Table
+    route={{ query: { page: '1', intervalle: '10' }, name: 'dashboard', params: {} }}
+    rows={{ value: { rows, total: rows.length }, status: 'LOADED' }}
+    columns={columns}
+    caption={{ value: 'Caption visible', visible: true }}
+    updateParams={update}
+    sortType="route"
+  />
+)

@@ -9,115 +9,111 @@ import { FunctionalComponent } from 'vue'
 import { getAdministrationTitresTypesTitresStatuts } from 'camino-common/src/static/administrationsTitresTypesTitresStatuts'
 import { getAdministrationTitresTypesEtapesTypes } from 'camino-common/src/static/administrationsTitresTypesEtapesTypes'
 import { TitreStatut } from '../_common/titre-statut'
-import { Column, TableAuto } from '../_ui/table-auto'
+import { Column, TableSimple } from '../_ui/table-simple'
 import { TableRow } from '../_ui/table'
 import { capitalize } from 'camino-common/src/strings'
-import type { DsfrIcon as DsfrIconType } from '../_ui/dsfrIconSpriteType'
+
+import { FrIconClassName } from '@codegouvfr/react-dsfr'
+
 interface Props {
   administrationId: AdministrationId
 }
 const restrictionEditionColonnes = [
   {
     id: 'domaine',
-    name: 'Domaine',
-    noSort: true,
+    contentTitle: 'Domaine',
   },
   {
     id: 'titreTypeId',
-    name: 'Type de titre',
-    noSort: true,
+    contentTitle: 'Type de titre',
   },
   {
     id: 'titreStatutId',
-    name: 'Statut de titre',
-    noSort: true,
+    contentTitle: 'Statut de titre',
   },
   {
     id: 'titres',
-    name: 'Titres',
-    noSort: true,
+    contentTitle: 'Titres',
   },
   {
     id: 'demarches',
-    name: 'Démarches',
-    noSort: true,
+    contentTitle: 'Démarches',
   },
   {
     id: 'etapes',
-    name: 'Étapes',
-    noSort: true,
+    contentTitle: 'Étapes',
   },
 ] as const satisfies readonly Column[]
 const restrictionVisibiliteColonnes = [
   {
     id: 'domaine',
-    name: 'Domaine',
-    noSort: true,
+    contentTitle: 'Domaine',
   },
   {
     id: 'titreTypeId',
-    name: 'Type de titre',
-    noSort: true,
+    contentTitle: 'Type de titre',
   },
   {
     id: 'etapeTypeId',
-    name: "Type d'étape",
-    noSort: true,
+    contentTitle: "Type d'étape",
   },
   {
     id: 'visibilite',
-    name: 'Visibilité',
-    noSort: true,
+    contentTitle: 'Visibilité',
   },
   {
     id: 'modification',
-    name: 'Modification',
-    noSort: true,
+    contentTitle: 'Modification',
   },
   {
     id: 'creation',
-    name: 'Création',
-    noSort: true,
+    contentTitle: 'Création',
   },
 ] as const satisfies readonly Column[]
 
-export const checkboxCheckedIcon: DsfrIconType = 'fr-icon-check-line'
-export const checkboxBlankIcon: DsfrIconType = 'fr-icon-close-line'
+export const checkboxCheckedIcon: FrIconClassName = 'fr-icon-check-line'
+export const checkboxBlankIcon: FrIconClassName = 'fr-icon-close-line'
 
 const restrictionEditionRows = (entries: ReturnType<typeof getAdministrationTitresTypesTitresStatuts>): TableRow[] =>
   entries.map(ttts => {
     const columns: TableRow['columns'] = {
-      domaine: { component: CaminoDomaine, props: { domaineId: TT[ttts.titreTypeId].domaineId }, value: TT[ttts.titreTypeId].domaineId },
-      titreTypeId: { value: capitalize(TitresTypesTypes[TT[ttts.titreTypeId].typeId].nom) },
-      titreStatutId: { component: TitreStatut, props: { titreStatutId: ttts.titreStatutId }, value: ttts.titreStatutId },
+      domaine: { type: 'jsx', jsxElement: <CaminoDomaine domaineId={TT[ttts.titreTypeId].domaineId} />, value: TT[ttts.titreTypeId].domaineId },
+      titreTypeId: { type: 'text', value: capitalize(TitresTypesTypes[TT[ttts.titreTypeId].typeId].nom) },
+      titreStatutId: { type: 'jsx', jsxElement: <TitreStatut titreStatutId={ttts.titreStatutId} />, value: ttts.titreStatutId },
       titres: {
-        component: DsfrIcon,
-        props: {
-          name: ttts.titresModificationInterdit ? checkboxCheckedIcon : checkboxBlankIcon,
-          size: 'md',
-          role: 'img',
-          'aria-label': ttts.titresModificationInterdit ? 'La modification des titres est interdite' : 'La modification des titres est autorisée',
-        },
+        type: 'jsx',
+        jsxElement: (
+          <DsfrIcon
+            name={ttts.titresModificationInterdit ? checkboxCheckedIcon : checkboxBlankIcon}
+            size="md"
+            role="img"
+            aria-label={ttts.titresModificationInterdit ? 'La modification des titres est interdite' : 'La modification des titres est autorisée'}
+          />
+        ),
         value: `${ttts.titresModificationInterdit}`,
       },
       demarches: {
-        component: DsfrIcon,
-        props: {
-          name: ttts.demarchesModificationInterdit ? checkboxCheckedIcon : checkboxBlankIcon,
-          size: 'md',
-          role: 'img',
-          'aria-label': ttts.demarchesModificationInterdit ? 'La modification des démarches est interdite' : 'La modification des démarches est autorisée',
-        },
+        type: 'jsx',
+        jsxElement: (
+          <DsfrIcon
+            name={ttts.demarchesModificationInterdit ? checkboxCheckedIcon : checkboxBlankIcon}
+            size="md"
+            role="img"
+            aria-label={ttts.demarchesModificationInterdit ? 'La modification des démarches est interdite' : 'La modification des démarches est autorisée'}
+          />
+        ),
         value: `${ttts.demarchesModificationInterdit}`,
       },
       etapes: {
-        component: DsfrIcon,
-        props: {
-          name: ttts.etapesModificationInterdit ? checkboxCheckedIcon : checkboxBlankIcon,
-          size: 'md',
-          role: 'img',
-          'aria-label': ttts.etapesModificationInterdit ? 'La modification des étapes est interdite' : 'La modification des étapes est autorisée',
-        },
+        type: 'jsx',
+        jsxElement: (
+          <DsfrIcon
+            name={ttts.etapesModificationInterdit ? checkboxCheckedIcon : checkboxBlankIcon}
+            size="md"
+            role="img"
+            aria-label={ttts.etapesModificationInterdit ? 'La modification des étapes est interdite' : 'La modification des étapes est autorisée'}
+          />
+        ),
         value: `${ttts.etapesModificationInterdit}`,
       },
     }
@@ -131,37 +127,44 @@ const restrictionEditionRows = (entries: ReturnType<typeof getAdministrationTitr
 const restrictionVisibiliteRows = (entries: ReturnType<typeof getAdministrationTitresTypesEtapesTypes>): TableRow[] => {
   return entries.map(ttet => {
     const columns: TableRow['columns'] = {
-      domaine: { component: CaminoDomaine, props: { domaineId: TT[ttet.titreTypeId].domaineId }, value: TT[ttet.titreTypeId].domaineId },
-      titreTypeId: { value: capitalize(TitresTypesTypes[TT[ttet.titreTypeId].typeId].nom) },
-      etapeTypeId: { value: capitalize(EtapesTypes[ttet.etapeTypeId].nom) },
+      domaine: { type: 'jsx', jsxElement: <CaminoDomaine domaineId={TT[ttet.titreTypeId].domaineId} />, value: TT[ttet.titreTypeId].domaineId },
+      titreTypeId: { type: 'text', value: capitalize(TitresTypesTypes[TT[ttet.titreTypeId].typeId].nom) },
+      etapeTypeId: { type: 'text', value: capitalize(EtapesTypes[ttet.etapeTypeId].nom) },
       visibilite: {
-        component: DsfrIcon,
-        props: {
-          name: ttet.lectureInterdit ? checkboxCheckedIcon : checkboxBlankIcon,
-          size: 'md',
-          role: 'img',
-          'aria-label': ttet.lectureInterdit ? 'Le type d’étape n’est pas visible' : 'Le type d’étape est visible',
-        },
+        type: 'jsx',
+        jsxElement: (
+          <DsfrIcon
+            name={ttet.lectureInterdit ? checkboxCheckedIcon : checkboxBlankIcon}
+            size="md"
+            role="img"
+            aria-label={ttet.lectureInterdit ? 'Le type d’étape n’est pas visible' : 'Le type d’étape est visible'}
+          />
+        ),
         value: `${ttet.lectureInterdit}`,
       },
       modification: {
-        component: DsfrIcon,
-        props: {
-          name: ttet.modificationInterdit ? checkboxCheckedIcon : checkboxBlankIcon,
-          size: 'md',
-          role: 'img',
-          'aria-label': ttet.modificationInterdit ? 'Le type d’étape n’est pas modifiable' : 'Le type d’étape est modifiable',
-        },
+        type: 'jsx',
+
+        jsxElement: (
+          <DsfrIcon
+            name={ttet.modificationInterdit ? checkboxCheckedIcon : checkboxBlankIcon}
+            size="md"
+            role="img"
+            aria-label={ttet.modificationInterdit ? 'Le type d’étape n’est pas modifiable' : 'Le type d’étape est modifiable'}
+          />
+        ),
         value: `${ttet.modificationInterdit}`,
       },
       creation: {
-        component: DsfrIcon,
-        props: {
-          name: ttet.creationInterdit ? checkboxCheckedIcon : checkboxBlankIcon,
-          size: 'md',
-          role: 'img',
-          'aria-label': ttet.creationInterdit ? 'Ne peut créer d’étape de ce type' : 'Peut créer une étape de ce type',
-        },
+        type: 'jsx',
+        jsxElement: (
+          <DsfrIcon
+            name={ttet.creationInterdit ? checkboxCheckedIcon : checkboxBlankIcon}
+            size="md"
+            role="img"
+            aria-label={ttet.creationInterdit ? 'Ne peut créer d’étape de ce type' : 'Peut créer une étape de ce type'}
+          />
+        ),
         value: `${ttet.creationInterdit}`,
       },
     }
@@ -193,7 +196,7 @@ export const Permissions: FunctionalComponent<Props> = props => {
           <p>Restreint ces droits par domaine / type de titre / statut de titre.</p>
         </div>
         <hr />
-        <TableAuto caption="" columns={restrictionEditionColonnes} rows={restrictionEditionRows(titresTypesTitresStatuts)} initialSort={'firstColumnAsc'} />
+        <TableSimple caption={{ value: '', visible: false }} columns={restrictionEditionColonnes} rows={restrictionEditionRows(titresTypesTitresStatuts)} />
       </div>
 
       <div>
@@ -205,7 +208,7 @@ export const Permissions: FunctionalComponent<Props> = props => {
         </div>
 
         <hr />
-        <TableAuto caption="" columns={restrictionVisibiliteColonnes} rows={restrictionVisibiliteRows(titresTypesEtapesTypes)} initialSort={'firstColumnAsc'} />
+        <TableSimple caption={{ value: '', visible: false }} columns={restrictionVisibiliteColonnes} rows={restrictionVisibiliteRows(titresTypesEtapesTypes)} />
       </div>
     </div>
   )

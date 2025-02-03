@@ -1,8 +1,9 @@
 import type { Preview, Decorator } from '@storybook/vue3'
 import '../src/styles/styles.css'
-import '../src/styles/dsfr/dsfr.css'
-import '@gouvfr/dsfr/dist/core/core.module'
-import '@gouvfr/dsfr/dist/component/navigation/navigation.module'
+import "@codegouvfr/react-dsfr/main.css";
+import '@codegouvfr/react-dsfr/dsfr/core/core.module'
+import '@codegouvfr/react-dsfr/dsfr/component/navigation/navigation.module'
+import '@codegouvfr/react-dsfr/dsfr/component/table/table.module'
 
 import { setup } from '@storybook/vue3'
 import { h } from 'vue'

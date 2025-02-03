@@ -5,7 +5,7 @@ import { QuickAccessTitre } from '@/components/page/quick-access-titre'
 import { DsfrButtonIcon } from '../_ui/dsfr-button'
 import { isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
 import { MenuSection } from '../../router'
-
+import { fr } from '@codegouvfr/react-dsfr'
 interface Props {
   user: User
   currentMenuSection: MenuSection | null
@@ -36,24 +36,20 @@ const HeaderLinks: FunctionalComponent<Pick<Props, 'user' | 'routePath'> & { use
   const logoutUrl = '/apiUrl/deconnecter'
 
   return (
-    <div class="fr-btns-group">
+    <div class={[fr.cx('fr-btns-group')]}>
       {props.user ? (
         <>
-          <div>
-            <router-link class="fr-btn fr-icon-account-fill" to={`/utilisateurs/${props.user.id}`} onClick={props.userLinkClicked}>
-              {`${props.user.nom} ${props.user.prenom}`}
-            </router-link>
-          </div>
-          <div>
-            <a class="fr-btn fr-icon-lock-line" href={logoutUrl}>
-              Se déconnecter
-            </a>
-          </div>
+          <router-link class={[fr.cx('fr-btns-group--inline'), fr.cx('fr-btn'), fr.cx('fr-icon-account-fill')]} to={`/utilisateurs/${props.user.id}`} onClick={props.userLinkClicked}>
+            {`${props.user.nom} ${props.user.prenom}`}
+          </router-link>
+          <a class={[fr.cx('fr-btns-group--inline'), fr.cx('fr-btn'), fr.cx('fr-icon-lock-line')]} href={logoutUrl}>
+            Se déconnecter
+          </a>
         </>
       ) : (
         <div>
-          <a class="fr-btn fr-icon-lock-fill" href={loginUrl}>
-            Se connecter / S’enregistrer
+          <a class={[fr.cx('fr-btn'), fr.cx('fr-icon-lock-fill')]} href={loginUrl}>
+            Se connecter / S'enregistrer
           </a>
         </div>
       )}

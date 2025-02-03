@@ -19,12 +19,12 @@ import { CaminoRouter } from '@/typings/vue-router'
 const entreprisesColonnes = [
   {
     id: 'nom',
-    name: 'Nom',
+    contentTitle: 'Nom',
     noSort: true,
   },
   {
     id: 'siren',
-    name: 'Siren',
+    contentTitle: 'Siren',
     noSort: true,
   },
 ] as const satisfies readonly Column[]
@@ -58,12 +58,10 @@ export const PureEntreprises = defineComponent<Props>(props => {
 
         return true
       })
-      .map(entreprise => {
-        const columns = {
-          nom: { value: entreprise.nom },
-          siren: {
-            value: entreprise.legal_siren ?? '–',
-          },
+      .map<TableRow>(entreprise => {
+        const columns: TableRow['columns'] = {
+          nom: { type: 'text', value: entreprise.nom },
+          siren: { type: 'text', value: entreprise.legal_siren ?? '–' },
         }
 
         return {

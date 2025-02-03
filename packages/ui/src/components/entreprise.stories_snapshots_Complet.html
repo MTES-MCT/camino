@@ -17,37 +17,45 @@
     <div class="fr-grid-row"><span class="fr-col-3 fr-h6" style="margin: 0px;">Utilisateurs de l'entreprise</span><span class="fr-col"><a href="/mocked-href" title="Voir les utilisateurs" class="fr-link" aria-label="Voir les utilisateurs">Voir les utilisateurs</a></span></div>
     <div class="fr-grid-row"><span class="fr-col-3 fr-h6" style="margin: 0px;">Titres de l'entreprise</span><span class="fr-col"><a href="/mocked-href" title="Voir les titres" class="fr-link" aria-label="Voir les titres">Voir les titres</a></span></div>
     <div style="overflow-x: auto;">
-      <div class="fr-container">
-        <div class="fr-table">
-          <table style="display: table;">
-            <caption>Documents de l'entreprise</caption>
-            <thead>
-              <tr>
-                <th scope="col">Nom</th>
-                <th scope="col">Date</th>
-                <th scope="col">Description</th>
-                <th scope="col" style="display: flex; justify-content: end;"><button class="fr-btn fr-btn--primary fr-btn--md fr-icon-add-line" title="Ajouter un document" aria-label="Ajouter un document" type="button">
-                    <!---->
-                  </button></th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><a href="/apiUrl/download/entrepriseDocuments/2019-08-26-kbi-12345678" title="Télécharger le document Kbis - nouvelle fenêtre" target="_blank">Kbis</a></td>
-                <td>26-08-2019</td>
-                <td>Kbis</td>
-                <td><button class="fr-btn fr-icon-delete-line fr-btn--secondary fr-mb-0" title="Supprimer le document Kbis"></button></td>
-              </tr>
-              <tr>
-                <td><a href="/apiUrl/download/entrepriseDocuments/2019-08-26-idm-12345678" title="Télécharger le document Identification de matériel - nouvelle fenêtre" target="_blank">Identification de matériel</a></td>
-                <td>26-08-2019</td>
-                <td>Identification pelle mécanique</td>
-                <td>
-                  <!---->
-                </td>
-              </tr>
-            </tbody>
-          </table>
+      <div>
+        <div class="fr-table fr-table--no-scroll" style="overflow: auto;">
+          <div class="fr-table__wrapper" style="width: auto;">
+            <div class="fr-table__container">
+              <div class="fr-table__content">
+                <table style="display: table; width: 100%;">
+                  <caption>Documents de l'entreprise</caption>
+                  <thead>
+                    <tr>
+                      <th scope="col">Nom</th>
+                      <th scope="col">Date</th>
+                      <th scope="col">Description</th>
+                      <th scope="col" class="fr-cell--right"><button class="fr-btn fr-btn--primary fr-btn--md fr-icon-add-line" title="Ajouter un document" aria-label="Ajouter un document" type="button">
+                          <!---->
+                        </button></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><a href="/apiUrl/download/entrepriseDocuments/2019-08-26-kbi-12345678" title="Télécharger le document Kbis - nouvelle fenêtre" target="_blank">Kbis</a></td>
+                      <td><span class="">26-08-2019</span></td>
+                      <td><span class="">Kbis</span></td>
+                      <td class="fr-cell--right"><button class="fr-btn fr-btn--secondary fr-btn--md fr-icon-delete-line fr-mb-0" title="Supprimer le document Kbis" aria-label="Supprimer le document Kbis" type="button">
+                          <!---->
+                        </button></td>
+                    </tr>
+                    <tr>
+                      <td><a href="/apiUrl/download/entrepriseDocuments/2019-08-26-idm-12345678" title="Télécharger le document Identification de matériel - nouvelle fenêtre" target="_blank">Identification de matériel</a></td>
+                      <td><span class="">26-08-2019</span></td>
+                      <td><span class="">Identification pelle mécanique</span></td>
+                      <td class="fr-cell--right">
+                        <div></div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <!---->

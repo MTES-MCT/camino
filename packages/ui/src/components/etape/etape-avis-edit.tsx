@@ -19,6 +19,9 @@ import { User } from 'camino-common/src/roles'
 import { DemarcheId } from 'camino-common/src/demarche'
 import { FlattenedContenu } from 'camino-common/src/etape-form'
 import { capitalize } from 'camino-common/src/strings'
+import { fr } from '@codegouvfr/react-dsfr'
+import { Column, TableSimple } from '../_ui/table-simple'
+import { TableRow } from '../_ui/table'
 
 interface Props {
   tde: {
@@ -210,63 +213,69 @@ const EtapeAvisTable: FunctionalComponent<PropsTable> = (props: PropsTable) => {
 
   const orderedAvis = [...props.avis].sort((a, b) => b.date.localeCompare(a.date))
 
-  return (
-    <div class="fr-table fr-mb-0">
-      <table style={{ display: 'table' }}>
-        <caption>{props.caption}</caption>
-        <thead>
-          <tr>
-            <th scope="col">Nom</th>
-            <th scope="col">Date</th>
-            <th scope="col">Description</th>
-            <th scope="col">Statut</th>
-            <th scope="col">Visibilité</th>
-            <th scope="col" style={{ display: 'flex', justifyContent: 'end' }}>
-              Action
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {orderedAvis.map(avis => (
-            <tr>
-              <td>{props.getNom(avis.avis_type_id)}</td>
-              <td>{dateFormat(avis.date)}</td>
-              <td style={{ whiteSpace: 'pre-line' }}>{avis.description}</td>
-              <td>
-                <AvisStatut avisStatutId={avis.avis_statut_id} />
-              </td>
-              <td>{getAvisVisibilityLabel(avis.avis_visibility_id)}</td>
-              <td>
-                <div style={{ display: 'flex', justifyContent: 'end', alignItems: 'center' }}>
-                  <DsfrButtonIcon icon="fr-icon-edit-line" title={`Modifier l’avis de ${props.getNom(avis.avis_type_id)}`} onClick={editAvis(avis.index)} buttonType="secondary" buttonSize="sm" />
-                  <DsfrButtonIcon
-                    icon="fr-icon-delete-bin-line"
-                    class="fr-ml-1w"
-                    title={`Supprimer l’avis de ${props.getNom(avis.avis_type_id)}`}
-                    onClick={deleteAvis(avis.index)}
-                    buttonType="secondary"
-                    buttonSize="sm"
-                  />
-                </div>
-              </td>
-            </tr>
-          ))}
-          {props.emptyRequiredAvis.map(avisTypeId => (
-            <tr>
-              <td class="fr-label--disabled">{props.getNom(avisTypeId)}</td>
-              <td>-</td>
-              <td>-</td>
-              <td>-</td>
-              <td>-</td>
-              <td style={{ display: 'flex', justifyContent: 'end' }}>
-                <DsfrButtonIcon icon="fr-icon-add-line" title={`Ajouter un document '${props.getNom(avisTypeId)}'`} onClick={() => props.add(avisTypeId)} buttonType="secondary" buttonSize="sm" />
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+  type ColumnId = 'nom' | 'date' | 'description' | 'statut' | 'visibilite' | 'actions'
+
+  const columns: Column<ColumnId>[] = [
+    { id: 'nom', contentTitle: 'Nom' },
+    { id: 'date', contentTitle: 'Date' },
+    { id: 'description', contentTitle: 'Description' },
+    { id: 'statut', contentTitle: 'Statut' },
+    { id: 'visibilite', contentTitle: 'Visibilité' },
+    { id: 'actions', contentTitle: 'Action', class: [fr.cx('fr-cell--right')] },
+  ]
+  const rows: TableRow<ColumnId>[] = orderedAvis.map<TableRow<ColumnId>>(avis => {
+    return {
+      id: `${avis.index}`,
+      link: null,
+      columns: {
+        nom: { type: 'text', value: props.getNom(avis.avis_type_id) },
+        date: { type: 'text', value: dateFormat(avis.date) },
+        description: { type: 'text', value: avis.description },
+        statut: { type: 'jsx', value: avis.index, jsxElement: <AvisStatut avisStatutId={avis.avis_statut_id} /> },
+        visibilite: { type: 'text', value: getAvisVisibilityLabel(avis.avis_visibility_id) },
+        actions: {
+          type: 'jsx',
+          value: avis.index,
+          jsxElement: (
+            <div style={{ display: 'flex', justifyContent: 'end', alignItems: 'center' }}>
+              <DsfrButtonIcon icon="fr-icon-edit-line" title={`Modifier l’avis de ${props.getNom(avis.avis_type_id)}`} onClick={editAvis(avis.index)} buttonType="secondary" buttonSize="sm" />
+              <DsfrButtonIcon
+                icon="fr-icon-delete-bin-line"
+                class="fr-ml-1w"
+                title={`Supprimer l’avis de ${props.getNom(avis.avis_type_id)}`}
+                onClick={deleteAvis(avis.index)}
+                buttonType="secondary"
+                buttonSize="sm"
+              />
+            </div>
+          ),
+        },
+      },
+    }
+  })
+
+  rows.push(
+    ...props.emptyRequiredAvis.map<TableRow<ColumnId>>((avisTypeId, index) => ({
+      id: `${avisTypeId}-${index}`,
+      link: null,
+      columns: {
+        nom: { type: 'text', value: props.getNom(avisTypeId), class: [fr.cx('fr-label--disabled')] },
+        date: { type: 'text', value: '-' },
+        description: { type: 'text', value: '-' },
+        statut: { type: 'text', value: '-' },
+        visibilite: { type: 'text', value: '-' },
+        actions: {
+          type: 'jsx',
+          value: avisTypeId,
+          jsxElement: (
+            <DsfrButtonIcon icon="fr-icon-add-line" title={`Ajouter un document '${props.getNom(avisTypeId)}'`} onClick={() => props.add(avisTypeId)} buttonType="secondary" buttonSize="sm" />
+          ),
+        },
+      },
+    }))
   )
+
+  return <TableSimple caption={{ value: props.caption, visible: true }} rows={rows} columns={columns} />
 }
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833

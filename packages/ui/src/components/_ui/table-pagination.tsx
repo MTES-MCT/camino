@@ -13,7 +13,7 @@ interface Props<ColumnId> {
     total: number
   }>
   route: CaminoRouteLocation
-  caption: string
+  caption: { value: string; visible: boolean }
   updateParams: (params: Params<ColumnId>) => void
 }
 
@@ -53,7 +53,7 @@ export const TablePagination = defineComponent(<ColumnId extends string>(props: 
 
   return () => (
     <div>
-      <Table route={props.route} caption={props.caption} columns={props.columns} rows={props.data} updateParams={updateSort} />
+      <Table route={props.route} sortType="route" caption={props.caption} columns={props.columns} rows={props.data} updateParams={updateSort} />
 
       <LoadingElement data={props.data} renderItem={item => <>{item.total > item.rows.length ? <Pagination route={props.route} totalNumberOfPages={totalNumberOfPages(item.total)} /> : null}</>} />
     </div>

@@ -6,7 +6,7 @@ import { TitresTypes as TT, TitreTypeId } from 'camino-common/src/static/titresT
 import { TitresTypesTypes } from 'camino-common/src/static/titresTypesTypes'
 import { Domaine as CaminoDomaine } from '@/components/_common/domaine'
 import { DsfrIcon } from '@/components/_ui/icon'
-import { Column, TableAuto } from '../_ui/table-auto'
+import { Column, TableSimple } from '../_ui/table-simple'
 import { TableRow } from '../_ui/table'
 import { capitalize } from 'camino-common/src/strings'
 import { checkboxBlankIcon, checkboxCheckedIcon } from './permissions'
@@ -37,49 +37,49 @@ const titresTypes = (administrationId: AdministrationId): AdministrationTitresTy
 const colonnes = [
   {
     id: 'domaine',
-    name: 'Domaine',
-    noSort: true,
+    contentTitle: 'Domaine',
   },
   {
     id: 'titreTypeId',
-    name: 'Type de titre',
-    noSort: true,
+    contentTitle: 'Type de titre',
   },
   {
     id: 'gestionnaire',
-    name: 'Gestionnaire',
-    noSort: true,
+    contentTitle: 'Gestionnaire',
   },
   {
     id: 'associee',
-    name: 'Associée',
-    noSort: true,
+    contentTitle: 'Associée',
   },
 ] as const satisfies readonly Column[]
 
 const rows = (entries: AdministrationTitresTypes[]): TableRow[] =>
   entries.map(titreType => {
     const columns: TableRow['columns'] = {
-      domaine: { component: CaminoDomaine, props: { domaineId: TT[titreType.titreTypeId].domaineId }, value: TT[titreType.titreTypeId].domaineId },
-      titreTypeId: { value: capitalize(TitresTypesTypes[TT[titreType.titreTypeId].typeId].nom) },
+      domaine: { type: 'jsx', jsxElement: <CaminoDomaine domaineId={TT[titreType.titreTypeId].domaineId} />, value: TT[titreType.titreTypeId].domaineId },
+      titreTypeId: { type: 'text', value: capitalize(TitresTypesTypes[TT[titreType.titreTypeId].typeId].nom) },
       gestionnaire: {
-        component: DsfrIcon,
-        props: {
-          name: titreType.gestionnaire ? checkboxCheckedIcon : checkboxBlankIcon,
-          size: 'md',
-          role: 'img',
-          'aria-label': titreType.gestionnaire ? 'Est gestionnaire de ce type de titre' : 'N’est pas gestionnaire de ce type de titre',
-        },
+        type: 'jsx',
+        jsxElement: (
+          <DsfrIcon
+            name={titreType.gestionnaire ? checkboxCheckedIcon : checkboxBlankIcon}
+            size="md"
+            role="img"
+            aria-label={titreType.gestionnaire ? 'Est gestionnaire de ce type de titre' : 'N’est pas gestionnaire de ce type de titre'}
+          />
+        ),
         value: `${titreType.gestionnaire}`,
       },
       associee: {
-        component: DsfrIcon,
-        props: {
-          name: titreType.associee ? checkboxCheckedIcon : checkboxBlankIcon,
-          size: 'md',
-          role: 'img',
-          'aria-label': titreType.associee ? 'Est associée à ce type de titre' : 'N’est pas associée à ce type de titre',
-        },
+        type: 'jsx',
+        jsxElement: (
+          <DsfrIcon
+            name={titreType.associee ? checkboxCheckedIcon : checkboxBlankIcon}
+            size="md"
+            role="img"
+            aria-label={titreType.associee ? 'Est associée à ce type de titre' : 'N’est pas associée à ce type de titre'}
+          />
+        ),
         value: `${titreType.associee}`,
       },
     }
@@ -106,6 +106,6 @@ export const TitresTypes: FunctionalComponent<Props> = props => (
     </div>
 
     <hr />
-    <TableAuto caption="" columns={colonnes} rows={rows(titresTypes(props.administrationId))} initialSort={'firstColumnAsc'} />
+    <TableSimple caption={{ value: '', visible: false }} columns={colonnes} rows={rows(titresTypes(props.administrationId))} />
   </div>
 )

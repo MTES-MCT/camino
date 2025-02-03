@@ -16,6 +16,9 @@ import { Alert } from '../_ui/alert'
 import { DsfrButtonIcon, DsfrLink } from '../_ui/dsfr-button'
 import { DsfrSelect, Item } from '../_ui/dsfr-select'
 import { SelectedEntrepriseDocument } from 'camino-common/src/permissions/etape-form'
+import { Column, TableSimple } from '../_ui/table-simple'
+import { TableRow } from '../_ui/table'
+import { fr } from '@codegouvfr/react-dsfr'
 
 type Entreprise = { id: EntrepriseId; nom: string }
 
@@ -171,7 +174,7 @@ const InternalEntrepriseDocumentsEdit = defineComponent<Props & { etapeEntrepris
     }
   }
 
-  const entreprisedocumentRemove = (entrepriseId: EntrepriseId, index: number) => {
+  const entreprisedocumentRemove = (entrepriseId: EntrepriseId, index: number) => () => {
     const documentToRemove = entreprisesEntrepriseDocumentsIndex.value[entrepriseId][index]
     const docsOfSameTypeFound = entreprisesEntrepriseDocumentsIndex.value[entrepriseId].filter(({ entrepriseDocumentType }) => entrepriseDocumentType === documentToRemove.entrepriseDocumentType)
     if (docsOfSameTypeFound.length > 1) {
@@ -225,81 +228,99 @@ const InternalEntrepriseDocumentsEdit = defineComponent<Props & { etapeEntrepris
     }
   }
 
+  type ColumnId = 'nom' | 'select' | 'actions'
+
+  const columns: Column<ColumnId>[] = [
+    { id: 'nom', contentTitle: 'Nom' },
+    { id: 'select', contentTitle: 'Document selectionné' },
+    { id: 'actions', contentTitle: 'Action' },
+  ]
+
+  const rows = (eId: EntrepriseId, entrepriseDocuments: InnerEntrepriseDocument[]): TableRow<ColumnId>[] => {
+    const myRows: TableRow<ColumnId>[] = entrepriseDocuments.map<TableRow<ColumnId>>((j, index) => ({
+      id: `${index}`,
+      link: null,
+      columns: {
+        nom: {
+          type: 'jsx',
+          value: index,
+          jsxElement: (
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'start' }} key={j.id}>
+              {isNotNullNorUndefined(j.id) && j.id !== '' ? (
+                <DsfrLink
+                  icon={null}
+                  href={getDownloadRestRoute('/download/entrepriseDocuments/:documentId', { documentId: j.id })}
+                  title={`Télécharger le document ${j.entrepriseDocumentType.nom} - nouvelle fenêtre`}
+                  target="_blank"
+                  label={j.entrepriseDocumentType.nom}
+                />
+              ) : (
+                <div class="fr-text--md">{j.entrepriseDocumentType.nom}</div>
+              )}
+              {isNotNullNorUndefined(j.entrepriseDocumentType.description) ? (
+                <span class={[fr.cx('fr-text--xs')]} style={{ maxWidth: '300px' }}>
+                  {j.entrepriseDocumentType.description}
+                </span>
+              ) : null}
+            </div>
+          ),
+        },
+        select: {
+          type: 'jsx',
+          value: index,
+          jsxElement: <EntrepriseSelect entrepriseDocuments={j} onEntrepriseDocumentSelect={entreprisedocumentsUpdate(j, eId)} etapeEntrepriseDocumentIds={etapeEntrepriseDocumentIds.value} />,
+        },
+        actions: {
+          type: 'jsx',
+          value: index,
+          jsxElement:
+            isNotNullNorUndefined(j.id) && j.id !== '' ? (
+              <DsfrButtonIcon
+                icon="fr-icon-delete-bin-line"
+                class="fr-ml-1w"
+                title={`Supprimer le document d’entreprise ${j.entrepriseDocumentType.nom}`}
+                onClick={entreprisedocumentRemove(eId, index)}
+                buttonType="secondary"
+                buttonSize="sm"
+              />
+            ) : (
+              <div></div>
+            ),
+        },
+      },
+    }))
+
+    if (isNotNullNorUndefinedNorEmpty(tdeEntrepriseDocuments.value)) {
+      myRows.push({
+        id: `add${eId}`,
+        link: null,
+        columns: {
+          nom: {
+            type: 'jsx',
+            value: 'addEid',
+            jsxElement: (
+              <DsfrSelect
+                items={map(tdeEntrepriseDocuments.value, ({ id, nom }) => ({ id, label: nom }))}
+                legend={{ main: 'Ajouter un nouveau type de document', visible: false }}
+                valueChanged={addEntrepriseDocumentType(eId)}
+                initialValue={null}
+              />
+            ),
+          },
+          actions: { type: 'text', value: '' },
+          select: { type: 'text', value: '' },
+        },
+      })
+    }
+
+    return myRows
+  }
   return () => (
     <>
       {props.entreprises.length ? (
         <div>
           {getEntries(entreprisesEntrepriseDocumentsIndex.value, isEntrepriseId).map(([eId, e]) => (
-            <div key={eId} class="fr-table fr-mb-0">
-              <table style={{ display: 'table' }}>
-                <caption>{entreprisesNoms.value[eId]}</caption>
-                <thead>
-                  <tr>
-                    <th scope="col">Nom</th>
-                    <th scope="col"></th>
-                    <th scope="col" style={{ display: 'flex', justifyContent: 'end' }}>
-                      Action
-                    </th>
-                  </tr>
-                </thead>
-
-                <tbody>
-                  {e.map((j, index) => (
-                    <tr key={j.id}>
-                      <td>
-                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'start' }}>
-                          {isNotNullNorUndefined(j.id) && j.id !== '' ? (
-                            <DsfrLink
-                              icon={null}
-                              href={getDownloadRestRoute('/download/entrepriseDocuments/:documentId', { documentId: j.id })}
-                              title={`Télécharger le document ${j.entrepriseDocumentType.nom} - nouvelle fenêtre`}
-                              target="_blank"
-                              label={j.entrepriseDocumentType.nom}
-                            />
-                          ) : (
-                            <div class="fr-text--md">{j.entrepriseDocumentType.nom}</div>
-                          )}
-                          {isNotNullNorUndefined(j.entrepriseDocumentType.description) ? (
-                            <span class="fr-text--xs" style={{ maxWidth: '300px' }}>
-                              {j.entrepriseDocumentType.description}
-                            </span>
-                          ) : null}
-                        </div>
-                      </td>
-                      <td>
-                        <EntrepriseSelect entrepriseDocuments={j} onEntrepriseDocumentSelect={entreprisedocumentsUpdate(j, eId)} etapeEntrepriseDocumentIds={etapeEntrepriseDocumentIds.value} />
-                      </td>
-                      <td style={{ textAlign: 'right' }}>
-                        {isNotNullNorUndefined(j.id) && j.id !== '' ? (
-                          <DsfrButtonIcon
-                            icon="fr-icon-delete-bin-line"
-                            class="fr-ml-1w"
-                            title={`Supprimer le document d’entreprise ${j.entrepriseDocumentType.nom}`}
-                            onClick={() => entreprisedocumentRemove(eId, index)}
-                            buttonType="secondary"
-                            buttonSize="sm"
-                          />
-                        ) : null}
-                      </td>
-                    </tr>
-                  ))}
-                  {isNotNullNorUndefinedNorEmpty(tdeEntrepriseDocuments.value) ? (
-                    <tr>
-                      <td>
-                        <DsfrSelect
-                          items={map(tdeEntrepriseDocuments.value, ({ id, nom }) => ({ id, label: nom }))}
-                          legend={{ main: 'Ajouter un nouveau type de document', visible: false }}
-                          valueChanged={addEntrepriseDocumentType(eId)}
-                          initialValue={null}
-                        />
-                      </td>
-                      <td></td>
-                      <td></td>
-                    </tr>
-                  ) : null}
-                </tbody>
-              </table>
-            </div>
+            <TableSimple key={eId} caption={{ value: entreprisesNoms.value[eId], visible: true }} columns={columns} rows={rows(eId, e)} />
           ))}
         </div>
       ) : (

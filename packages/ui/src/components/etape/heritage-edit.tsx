@@ -8,6 +8,7 @@ import type { JSX } from 'vue/jsx-runtime'
 import { DsfrInput } from '@/components/_ui/dsfr-input'
 import { random } from '../../utils/vue-tsx-utils'
 import { FlattenedContenuElement, FlattenEtape } from 'camino-common/src/etape-form'
+import { fr } from '@codegouvfr/react-dsfr'
 
 type HeritagePossible =
   | FlattenEtape['perimetre']
@@ -67,7 +68,7 @@ export const HeritageEdit = <T extends HeritagePossible>(props: Props<T>): JSX.E
       )}
 
       {isNotNullNorUndefined(etapeHeritee) ? (
-        <div>
+        <div class={[fr.cx('fr-pt-2w'), fr.cx('fr-pb-2w')]}>
           <DsfrToggle
             initialValue={props.prop.heritee}
             valueChanged={updateHeritage}

@@ -1,10 +1,10 @@
-import type { DsfrIcon as DsfrIconType } from './dsfrIconSpriteType'
 import { FunctionalComponent, HTMLAttributes } from 'vue'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import type { JSX } from 'vue/jsx-runtime'
+import { FrIconClassName } from '@codegouvfr/react-dsfr'
 
 type DsfrIconProps = {
-  name: DsfrIconType
+  name: FrIconClassName
   size?: 'sm' | 'md' | 'lg'
   color?: 'text-title-blue-france' | 'text-title-white-france'
 } & Pick<HTMLAttributes, 'class'> &
@@ -12,7 +12,6 @@ type DsfrIconProps = {
 
 export const DsfrIcon: FunctionalComponent<DsfrIconProps> = (props): JSX.Element => {
   const iconClass = props.size ? `fr-icon--${props.size}` : null
-
   let additionnalAttributes: { 'aria-hidden': 'true' } | { role: 'img'; 'aria-label': string }
   if ('aria-hidden' in props) {
     additionnalAttributes = { 'aria-hidden': props['aria-hidden'] }

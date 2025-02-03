@@ -133,7 +133,9 @@ export const DemarcheEtape = defineComponent<Props>(props => {
     deposePopupVisible.value = !deposePopupVisible.value
   }
 
-  const canDownloadZip = computed<boolean>(() => props.etape.entreprises_documents.length + props.etape.etape_documents.length > 1)
+  const canDownloadZip = computed<boolean>(() => {
+    return props.etape.avis_documents.length + props.etape.entreprises_documents.length + props.etape.etape_documents.length > 1
+  })
 
   const canDelete = computed<boolean>(() =>
     canDeleteEtape(props.user, props.etape.etape_type_id, props.etape.is_brouillon, props.demarche.titulaireIds, props.demarche.administrationsLocales, props.demarche.demarche_type_id, props.titre)

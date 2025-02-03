@@ -1,4 +1,5 @@
 import { random } from '@/utils/vue-tsx-utils'
+import { fr } from '@codegouvfr/react-dsfr'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { defineComponent, ref } from 'vue'
 
@@ -25,13 +26,13 @@ export const DsfrToggle = defineComponent<Props>(props => {
   const extraInputProps = isNotNullNorUndefined(props.legendHint) ? { 'aria-describedby': hintId } : {}
 
   return () => (
-    <div class="fr-toggle">
-      <input type="checkbox" class="fr-toggle__input" checked={toggled.value} {...extraInputProps} id={id} onClick={updateFromEvent} />
-      <label class="fr-toggle__label" for={id} data-fr-checked-label="Activé" data-fr-unchecked-label="Désactivé">
+    <div class={[fr.cx('fr-toggle')]}>
+      <input type="checkbox" class={[fr.cx('fr-toggle__input')]} checked={toggled.value} {...extraInputProps} id={id} onClick={updateFromEvent} />
+      <label class={[fr.cx('fr-toggle__label')]} for={id} data-fr-checked-label="Activé" data-fr-unchecked-label="Désactivé">
         <span class=" fr-ml-4w">{props.legendLabel}</span>
       </label>
       {isNotNullNorUndefined(props.legendHint) ? (
-        <p class="fr-hint-text" id={hintId}>
+        <p class={[fr.cx('fr-hint-text')]} id={hintId}>
           {props.legendHint}
         </p>
       ) : null}

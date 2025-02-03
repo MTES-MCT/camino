@@ -1,7 +1,7 @@
 import { apiClient, ApiClient } from '@/api/api-client'
 import { useRoute } from 'vue-router'
 
-import { TableAuto } from './_ui/table-auto'
+import { TableSimple } from './_ui/table-simple'
 import { LoadingElement } from './_ui/functional-loader'
 import { Permissions } from './administration/permissions'
 import { ActivitesTypesEmails } from './administration/activites-types-emails'
@@ -170,7 +170,7 @@ export const PureAdministration = defineComponent<Props>(props => {
           data={utilisateurs.value}
           renderItem={item => (
             <div>
-              <TableAuto caption="Utilisateurs" columns={utilisateursColonnes} rows={utilisateursLignesBuild(item, props.entreprises)} initialSort={'firstColumnAsc'} />
+              <TableSimple caption={{ value: 'Utilisateurs', visible: true }} columns={utilisateursColonnes} rows={utilisateursLignesBuild(item, props.entreprises)} />
             </div>
           )}
         />

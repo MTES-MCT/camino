@@ -4,7 +4,7 @@ import { getPeriode } from 'camino-common/src/static/frequence'
 import { ACTIVITES_STATUTS_IDS } from 'camino-common/src/static/activitesStatuts'
 import { ActiviteType, ActivitesTypes } from 'camino-common/src/static/activitesTypes'
 import { Sections } from '../_common/new-section'
-import { Column, TableAuto } from '../_ui/table-auto'
+import { Column, TableSimple } from '../_ui/table-simple'
 import { getDownloadRestRoute } from '../../api/client-rest'
 import { ActiviteDocumentTypeId, DocumentsTypes } from 'camino-common/src/static/documentsTypes'
 import { DsfrButton, DsfrButtonIcon, DsfrLink } from '../_ui/dsfr-button'
@@ -15,6 +15,7 @@ import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { capitalize } from 'camino-common/src/strings'
 import { ActiviteStatut } from '../_common/activite-statut'
 import { ModifiedDate } from '../_common/modified-date'
+import { TableRow } from '../_ui/table'
 
 interface Props {
   activite: Activite
@@ -22,8 +23,8 @@ interface Props {
 }
 
 const documentColumns = [
-  { id: 'activiteDocumentTypeId', name: 'Nom', noSort: true },
-  { id: 'description', name: 'Description', noSort: true },
+  { id: 'activiteDocumentTypeId', contentTitle: 'Nom' },
+  { id: 'description', contentTitle: 'Description' },
 ] as const satisfies readonly Column[]
 
 // TODO 2024-07-02 Supprimer la notion de deposable dans l'API, et faire comme pour le dépôt d'une étape
@@ -45,16 +46,16 @@ export const Preview = defineComponent<Props>(props => {
 
   const activiteType = computed<ActiviteType>(() => ActivitesTypes[props.activite.type_id])
 
-  const documentRows = props.activite.activite_documents.map(document => ({
+  const documentRows = props.activite.activite_documents.map<TableRow>(document => ({
     id: document.id,
     link: null,
     columns: {
       activiteDocumentTypeId: {
-        component: ActiviteDocumentLink,
-        props: { activiteDocumentId: document.id, activiteDocumentTypeId: document.activite_document_type_id },
+        type: 'jsx',
+        jsxElement: <ActiviteDocumentLink activiteDocumentId={document.id} activiteDocumentTypeId={document.activite_document_type_id} />,
         value: document.activite_document_type_id,
       },
-      description: { value: document.description ?? '' },
+      description: { type: 'text', value: document.description ?? '' },
     },
   }))
 
@@ -117,7 +118,7 @@ export const Preview = defineComponent<Props>(props => {
 
           <Sections sections={props.activite.sections_with_value} />
 
-          {documentRows.length > 0 ? <TableAuto caption={'Documents de l’activité'} columns={documentColumns} rows={documentRows} initialSort={'firstColumnAsc'} /> : null}
+          {documentRows.length > 0 ? <TableSimple caption={{ value: "Documents de l'activité", visible: true }} columns={documentColumns} rows={documentRows} /> : null}
         </div>
       </div>
       {deposePopupVisible.value ? <ActiviteDeposePopup close={closeDeposePopup} activite={props.activite} apiClient={props.apiClient} /> : null}
