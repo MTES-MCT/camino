@@ -53,15 +53,17 @@ export const PureEntrepriseDashboard = defineComponent<Props>(props => {
 
   const entrepriseTitres = (entreprises: TitreEntreprise[]): TableRow[] => titresLignesBuild(entreprises, false, entreprisesIndex)
 
-  const columns = titresColonnes.filter(({ id }) => {
-    if (id === 'activites' || id === 'departements' || id === 'regions') {
-      return false
-    }
-    if (id === 'titulaires' && props.entrepriseIds.length === 1) {
-      return false
-    }
-    return true
-  })
+  const columns = titresColonnes
+    .map(value => ({ ...value, noSort: true }))
+    .filter(({ id }) => {
+      if (id === 'activites' || id === 'departements' || id === 'regions') {
+        return false
+      }
+      if (id === 'titulaires' && props.entrepriseIds.length === 1) {
+        return false
+      }
+      return true
+    })
 
   onMounted(async () => {
     try {

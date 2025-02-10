@@ -19,6 +19,7 @@ import { CaminoRouteLocation, CaminoRouteNames, CaminoVueRoute } from '@/router/
 import { CaminoRouter } from '@/typings/vue-router'
 import { DsfrButton } from '../dsfr-button'
 import { createDebounce } from '@/utils/debounce'
+import { fr } from '@codegouvfr/react-dsfr'
 
 type FormatedLabel = { id: CaminoFiltre; name: string; value: string | string[] | FilterEtapeValue; valueName?: string | string[] }
 
@@ -96,6 +97,10 @@ export const getInitialFiltres = (route: CaminoRouteLocation, filters: readonly 
   return allValues
 }
 
+const getId = (filtreId: CaminoFiltre): string => {
+  const filtre = caminoFiltres[filtreId]
+  return `filtres_${filtre.type}_${filtre.id}`
+}
 export const Filters = defineComponent((props: Props) => {
   const urlQuery = computed<CaminoVueRoute<CaminoRouteNames>>(() => {
     const filtres = { ...nonValidatedValues.value }
@@ -207,41 +212,51 @@ export const Filters = defineComponent((props: Props) => {
     })
   }
 
+  const sortedFilters = computed(() => {
+    return props.filters
+      .map((filter, index) => ({ filter, order: isNotNullNorUndefinedNorEmpty(initialFiltres[filter]) ? -1 : index }))
+      .sort((a, b) => a.order - b.order)
+      .map(({ filter }) => filter)
+  })
   return () => (
-    <nav class="fr-sidemenu fr-pr-2w" aria-labelledby="fr-sidemenu-title">
-      <div class="fr-sidemenu__inner fr-pt-3w fr-pl-2w fr-pb-3w fr-pr-2w">
-        <button class="fr-sidemenu__btn" aria-controls="fr-sidemenu-wrapper" aria-expanded="false">
-          Filtres
-        </button>
-        <div class="fr-collapse" id="fr-sidemenu-wrapper">
-          <div class="fr-sidemenu__title" id="fr-sidemenu-title">
-            Filtres {props.subtitle}
-          </div>
+    <form class="fr-pl-2w fr-pr-2w fr-pb-3w fr-pt-3w">
+      <h1 class="fr-sidemenu__title" id="fr-sidemenu-title">
+        Filtres {props.subtitle}
+      </h1>
 
-          <ul class="fr-sidemenu__list" style={{ display: 'flex', flexDirection: 'column' }}>
-            {props.filters.map((filter, index) => (
-              <li class="fr-sidemenu__item" key={filter} style={{ order: isNotNullNorUndefinedNorEmpty(initialFiltres[filter]) ? -1 : index }}>
-                <button class="fr-sidemenu__btn" aria-expanded={index < 6 || isNotNullNorUndefinedNorEmpty(nonValidatedValues.value[filter])} aria-controls={`fr-sidemenu-item-${filter}`}>
+      <div style={{ display: 'flex', flexDirection: 'column' }}>
+        {sortedFilters.value.map(filter => (
+          <>
+            {caminoFiltres[filter].type === 'checkboxes' ? (
+              <fieldset class={fr.cx('fr-fieldset')} aria-labelledby={getId(filter)}>
+                <legend class={[fr.cx('fr-fieldset__legend--regular', 'fr-fieldset__legend', 'fr-text--bold', 'fr-pb-0')]} id={getId(filter)}>
                   {caminoFiltres[filter].name}
-                </button>
-                <div class={['fr-collapse', 'filter-collapsable']} id={`fr-sidemenu-item-${filter}`}>
-                  <DisplayFiltre filtre={filter} nonValidatedValues={nonValidatedValues} apiClient={props.apiClient} entreprises={props.entreprises} />
+                </legend>
+                <DisplayFiltre id={getId(filter)} filtre={filter} nonValidatedValues={nonValidatedValues} apiClient={props.apiClient} entreprises={props.entreprises} />
+              </fieldset>
+            ) : (
+              <div>
+                <div class={[fr.cx('fr-mb-1w', 'fr-text--bold', 'fr-text--md')]}>
+                  <label for={getId(filter)}>{caminoFiltres[filter].name}</label>
                 </div>
-              </li>
-            ))}
-          </ul>
-          <div style={{ display: 'flex', justifyContent: 'end' }} class="fr-mt-2w">
-            <DsfrButton buttonType="secondary" icon={undefined} title="Réinitialiser les filtres" onClick={labelsReset} />
-          </div>
-        </div>
+                <DisplayFiltre id={getId(filter)} filtre={filter} nonValidatedValues={nonValidatedValues} apiClient={props.apiClient} entreprises={props.entreprises} />
+              </div>
+            )}
+          </>
+        ))}
       </div>
-    </nav>
+
+      <div style={{ display: 'flex', justifyContent: 'end' }} class="fr-mt-2w">
+        <DsfrButton buttonType="secondary" icon={undefined} title="Réinitialiser les filtres" onClick={labelsReset} />
+      </div>
+    </form>
   )
 })
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
 Filters.props = ['filters', 'subtitle', 'validate', 'class', 'route', 'updateUrlQuery', 'apiClient', 'entreprises']
 type MyProp = {
+  id: string
   filtre: CaminoFiltre
   nonValidatedValues: Ref<{ [key in CaminoFiltre]: (typeof caminoFiltres)[key]['validator']['_output'] }>
   apiClient: Pick<ApiClient, 'titresRechercherByNom' | 'getTitresByIds'>
@@ -254,9 +269,10 @@ const DisplayFiltre: FunctionalComponent<MyProp> = props => {
   }
 
   return (
-    <div class="fr-py-2w">
+    <div class={[fr.cx('fr-pb-2w', 'fr-fieldset__element', 'fr-mb-0', 'fr-pt-0')]}>
       {isInputCaminoFiltre(props.filtre) ? (
         <FiltersInput
+          id={props.id}
           filter={props.filtre}
           initialValue={props.nonValidatedValues.value[props.filtre]}
           onFilterInput={value => {
@@ -266,6 +282,7 @@ const DisplayFiltre: FunctionalComponent<MyProp> = props => {
       ) : null}
       {isAutocompleteCaminoFiltre(props.filtre) ? (
         <InputAutocomplete
+          id={props.id}
           entreprises={props.entreprises}
           filter={props.filtre}
           apiClient={props.apiClient}

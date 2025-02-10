@@ -14,19 +14,22 @@
         <div class="fr-grid-row">
           <div class="fr-col-12 fr-col-xl-6">
             <div class="fr-input-group" style="margin-bottom: 0px;"><label class="fr-label" for="input_271">Date
+                <!----><span class="fr-hint-text">au format jj/mm/yyyy</span>
                 <!---->
-                <!---->
-              </label><input class="fr-input" name="input_271" id="input_271" type="date" value="2023-02-01">
+              </label><input class="fr-input" name="input_271" id="input_271" required="" type="date" value="2023-02-01">
               <!---->
             </div>
             <div class="fr-mt-2w">
-              <div class="fr-input-group"><label class="fr-label fr-mb-1w" for="select-etape-type">Type *</label>
+              <div class="fr-input-group"><label class="fr-label fr-mb-1w" for="select-etape-type">Type</label>
                 <div id="select-etape-type_wrapper" class="_typeahead_8eddf1">
-                  <div class="flex"><input id="select-etape-type" type="text" name="select-etape-type" disabled="" class="fr-input" placeholder="" autocomplete="off" value="demande"></div>
-                  <!---->
+                  <div class="flex"><input id="select-etape-type" type="text" title="" name="select-etape-type" disabled="" class="fr-input" placeholder="" autocomplete="off" role="combobox" aria-controls="select-etape-type-control" aria-activedescendant="select-etape-type-control" aria-expanded="false" aria-autocomplete="list" value="demande"></div>
+                  <ul class="_typeahead-list_8eddf1 " tabindex="-1" id="select-etape-type-control" role="listbox">
+                    <li class="_typeahead-list-item_8eddf1 _typeahead-list-item-active_8eddf1" aria-selected="false" id="select-etape-type-control-0"><strong>Modification de la demande</strong></li>
+                    <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="select-etape-type-control-1"><strong>Enregistrement de la demande</strong></li>
+                  </ul>
                 </div>
               </div>
-              <div class="fr-select-group"><label class="fr-label" for="select-etape-statut-id">Statut *
+              <div class="fr-select-group"><label class="fr-label" for="select-etape-statut-id">Statut
                   <!---->
                 </label><select class="fr-select" id="select-etape-statut-id" aria-label="Statut" name="select-etape-statut-id" value="fai">
                   <option selected="" disabled="" value="fai">fait</option>
@@ -50,16 +53,18 @@
             <div class="fr-col-12 fr-col-xl-6">
               <div class="fr-mb-1w">
                 <div style="display: flex;">
-                  <div class="fr-input-group" style="margin-bottom: 0px;"><label class="fr-label" for="input_74">Durée (années) *
+                  <div class="fr-input-group" style="margin-bottom: 0px;"><label class="fr-label" for="input_74">Durée (années)
                       <!---->
                       <!---->
-                    </label><input class="fr-input" name="input_74" id="input_74" type="number" value="0">
+                      <!---->
+                    </label><input class="fr-input" name="input_74" id="input_74" required="" type="number" value="0">
                     <!---->
                   </div>
-                  <div class="fr-input-group fr-ml-2w" style="margin-bottom: 0px;"><label class="fr-label" for="input_878">Durée (mois) *
+                  <div class="fr-input-group fr-ml-2w" style="margin-bottom: 0px;"><label class="fr-label" for="input_878">Durée (mois)
                       <!---->
                       <!---->
-                    </label><input class="fr-input" name="input_878" id="input_878" type="number" value="6">
+                      <!---->
+                    </label><input class="fr-input" name="input_878" id="input_878" required="" type="number" value="6">
                     <!---->
                   </div>
                 </div>
@@ -67,23 +72,121 @@
               </div>
               <!---->
               <div class="fr-mb-1w">
-                <div class="fr-input-group fr-mb-0"><label class="fr-label" for="filters_autocomplete_titulaires">Titulaires *</label>
+                <div class="fr-input-group fr-mb-0"><label class="fr-label" for="filters_autocomplete_titulaires">Titulaires</label>
                   <div id="filters_autocomplete_titulaires_wrapper" class="_typeahead_8eddf1 fr-mt-1w">
-                    <div style="display: flex; max-height: unset; flex-wrap: wrap; gap: 8px; outline-offset: 2px; outline-width: 2px; outline-color: rgb(10, 118, 246);" class="fr-input _fake-input_8eddf1"><button class="fr-tag fr-tag--sm fr-tag--dismiss" title="10 A" aria-label="10 A">10 A</button><input id="filters_autocomplete_titulaires" type="text" name="filters_autocomplete_titulaires" style="outline: none;" placeholder="titulaires" autocomplete="off" value=""></div>
-                    <!---->
+                    <div style="display: flex; max-height: unset; flex-wrap: wrap; gap: 8px; outline-offset: 2px; outline-width: 2px; outline-color: rgb(10, 118, 246);" class="fr-input _fake-input_8eddf1"><button class="fr-tag fr-tag--sm fr-tag--dismiss" title="Supprimer 10 A" aria-label="Supprimer 10 A">10 A</button><input id="filters_autocomplete_titulaires" type="text" name="filters_autocomplete_titulaires" style="outline: none;" placeholder="titulaires" autocomplete="off" role="combobox" aria-controls="filters_autocomplete_titulaires-control" aria-activedescendant="filters_autocomplete_titulaires-control" aria-expanded="false" aria-autocomplete="list" value=""></div>
+                    <ul class="_typeahead-list_8eddf1 " tabindex="-1" id="filters_autocomplete_titulaires-control" role="listbox">
+                      <li class="_typeahead-list-item_8eddf1 _typeahead-list-item-active_8eddf1" aria-selected="false" id="filters_autocomplete_titulaires-control-0"><span>2GRE</span></li>
+                      <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="filters_autocomplete_titulaires-control-1"><span>45-8 AVANT-MONTS</span></li>
+                      <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="filters_autocomplete_titulaires-control-2"><span>45-8 FONTS-BOUILLANTS</span></li>
+                      <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="filters_autocomplete_titulaires-control-3"><span>6EME SENS IMMOBILIER ENTREPRISES</span></li>
+                      <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="filters_autocomplete_titulaires-control-4"><span>8 communes de la vallée de Vicdessos</span></li>
+                      <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="filters_autocomplete_titulaires-control-5"><span>Aboeka Alphonse</span></li>
+                      <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="filters_autocomplete_titulaires-control-6"><span>ABOEKA METAL</span></li>
+                      <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="filters_autocomplete_titulaires-control-7"><span>Aboeka Thomas</span></li>
+                      <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="filters_autocomplete_titulaires-control-8"><span>ABOUNAMI GOLD</span></li>
+                    </ul>
                   </div>
                 </div>
                 <!---->
               </div>
               <!---->
               <div class="fr-mb-1w">
-                <div class="fr-input-group fr-mb-0"><label class="fr-label" for="typeahead_substances_0">Substances *</label>
+                <div class="fr-input-group fr-mb-0"><label class="fr-label" for="typeahead_substances_0">Substances</label>
                   <div style="display: flex; flex-direction: column;">
                     <div>
                       <div style="display: flex;" class="fr-mt-1w">
                         <div id="typeahead_substances_0_wrapper" class="_typeahead_8eddf1">
-                          <div class="flex"><input id="typeahead_substances_0" type="text" name="typeahead_substances_0" class="fr-input" placeholder="" autocomplete="off" value="argent"></div>
-                          <!---->
+                          <div class="flex"><input id="typeahead_substances_0" type="text" title="" name="typeahead_substances_0" class="fr-input" placeholder="" autocomplete="off" role="combobox" aria-controls="typeahead_substances_0-control" aria-activedescendant="typeahead_substances_0-control" aria-expanded="false" aria-autocomplete="list" value="argent"></div>
+                          <ul class="_typeahead-list_8eddf1 " tabindex="-1" id="typeahead_substances_0-control" role="listbox">
+                            <li class="_typeahead-list-item_8eddf1 _typeahead-list-item-active_8eddf1" aria-selected="false" id="typeahead_substances_0-control-0"><span>alun</span></li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_substances_0-control-1"><span>antimoine</span></li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_substances_0-control-2"><span>arsenic</span></li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_substances_0-control-3"><span>autres éléments de terres rares</span></li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_substances_0-control-4"><span>bauxite</span></li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_substances_0-control-5"><span>béryllium</span></li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_substances_0-control-6"><span>bismuth</span></li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_substances_0-control-7"><span>cadmium</span></li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_substances_0-control-8"><span>calcaires bitumineux</span></li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_substances_0-control-9"><span>cérium</span></li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_substances_0-control-10"><span>césium</span></li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_substances_0-control-11"><span>chrome</span></li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_substances_0-control-12"><span>cobalt</span></li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_substances_0-control-13"><span>cuivre</span></li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_substances_0-control-14"><span>diamant</span></li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_substances_0-control-15"><span>dysprosium</span></li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_substances_0-control-16"><span>erbium</span></li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_substances_0-control-17"><span>étain</span></li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_substances_0-control-18"><span>europium</span></li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_substances_0-control-19"><span>fer</span></li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_substances_0-control-20"><span>fluorine</span></li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_substances_0-control-21"><span>gadolinium</span></li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_substances_0-control-22"><span>gallium</span></li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_substances_0-control-23"><span>gaz carbonique</span></li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_substances_0-control-24"><span>germanium</span></li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_substances_0-control-25"><span>graphite</span></li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_substances_0-control-26"><span>hafnium</span></li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_substances_0-control-27"><span>hélium</span></li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_substances_0-control-28"><span>holmium</span></li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_substances_0-control-29"><span>hydrogène</span></li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_substances_0-control-30"><span>indium</span></li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_substances_0-control-31"><span>iridium</span></li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_substances_0-control-32"><span>lanthane</span></li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_substances_0-control-33"><span>lithium</span></li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_substances_0-control-34"><span>lutécium</span></li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_substances_0-control-35"><span>manganèse</span></li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_substances_0-control-36"><span>mercure</span></li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_substances_0-control-37"><span>métaux connexes</span></li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_substances_0-control-38"><span>métaux de base</span></li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_substances_0-control-39"><span>métaux de la mine du platine</span></li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_substances_0-control-40"><span>métaux précieux</span></li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_substances_0-control-41"><span>minerais</span></li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_substances_0-control-42"><span>molybdène</span></li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_substances_0-control-43"><span>néodyme</span></li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_substances_0-control-44"><span>nickel</span></li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_substances_0-control-45"><span>niobium</span></li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_substances_0-control-46"><span>non précisée(s)</span></li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_substances_0-control-47"><span>or</span></li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_substances_0-control-48"><span>osmium</span></li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_substances_0-control-49"><span>palladium</span></li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_substances_0-control-50"><span>phosphates</span></li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_substances_0-control-51"><span>pierres précieuses</span></li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_substances_0-control-52"><span>platine</span></li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_substances_0-control-53"><span>plomb</span></li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_substances_0-control-54"><span>praséodyme</span></li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_substances_0-control-55"><span>prométhium</span></li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_substances_0-control-56"><span>puits d'eau salée</span></li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_substances_0-control-57"><span>pyrite</span></li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_substances_0-control-58"><span>rhénium</span></li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_substances_0-control-59"><span>rhodium</span></li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_substances_0-control-60"><span>rubidium</span></li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_substances_0-control-61"><span>ruthénium</span></li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_substances_0-control-62"><span>samarium</span></li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_substances_0-control-63"><span>scandium</span></li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_substances_0-control-64"><span>sel</span></li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_substances_0-control-65"><span>sel gemme</span></li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_substances_0-control-66"><span>sélénium</span></li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_substances_0-control-67"><span>sels</span></li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_substances_0-control-68"><span>sels de potassium</span></li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_substances_0-control-69"><span>sels de sodium</span></li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_substances_0-control-70"><span>soufre</span></li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_substances_0-control-71"><span>sources d'eau salée</span></li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_substances_0-control-72"><span>substances connexes</span></li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_substances_0-control-73"><span>sulfates autres que les sulfates alcalino-terreux</span></li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_substances_0-control-74"><span>tantale</span></li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_substances_0-control-75"><span>tellure</span></li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_substances_0-control-76"><span>terbium</span></li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_substances_0-control-77"><span>thallium</span></li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_substances_0-control-78"><span>thulium</span></li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_substances_0-control-79"><span>titane</span></li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_substances_0-control-80"><span>tous métaux associés</span></li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_substances_0-control-81"><span>tungstène</span></li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_substances_0-control-82"><span>vanadium</span></li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_substances_0-control-83"><span>ytterbium</span></li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_substances_0-control-84"><span>yttrium</span></li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_substances_0-control-85"><span>zinc</span></li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_substances_0-control-86"><span>zirconium</span></li>
+                          </ul>
                         </div>
                         <!---->
                         <!----><button class="fr-btn fr-btn--secondary fr-btn--md fr-icon-delete-bin-line fr-ml-2w" title="Supprimer la substance argent" aria-label="Supprimer la substance argent" type="button">
@@ -118,7 +221,7 @@
                 <div class="fr-mb-1w">
                   <div>
                     <fieldset class="fr-fieldset" id="mecanise" aria-labelledby="mecanise-legend" style="flex-direction: column; align-items: flex-start;">
-                      <legend class="fr-fieldset__legend--regular fr-fieldset__legend" id="mecanise-legend">Prospection mécanisée *
+                      <legend class="fr-fieldset__legend--regular fr-fieldset__legend" id="mecanise-legend">Prospection mécanisée
                         <!---->
                       </legend>
                       <div class="fr-fieldset__element">
@@ -137,7 +240,7 @@
                 </div>
                 <div class="fr-mb-1w">
                   <div>
-                    <div class="fr-input-group" style="margin-bottom: 0px;"><label class="fr-label" for="input_453">Franchissements de cours d'eau
+                    <div class="fr-input-group" style="margin-bottom: 0px;"><label class="fr-label" for="input_453">Franchissements de cours d'eau (optionnel)
                         <!----><span class="fr-hint-text">Nombre de franchissements de cours d'eau</span>
                       </label><input class="fr-input" name="input_453" id="input_453" type="number" min="0" value="9">
                       <!---->
@@ -176,8 +279,78 @@
                       <div id="tabpanel-points-487-panel" class="fr-tabs__panel fr-tabs__panel--selected" role="tabpanel" aria-labelledby="tabpanel-points-487" tabindex="0">
                         <div style="display: flex; flex-direction: column;">
                           <div id="typeahead_796_wrapper" class="_typeahead_8eddf1">
-                            <div class="flex"><input id="typeahead_796" type="text" name="typeahead_796" disabled="" class="fr-input" placeholder="" autocomplete="off" value="WGS84 - (4326)"></div>
-                            <!---->
+                            <div class="flex"><input id="typeahead_796" type="text" title="" name="typeahead_796" disabled="" class="fr-input" placeholder="" autocomplete="off" role="combobox" aria-controls="typeahead_796-control" aria-activedescendant="typeahead_796-control" aria-expanded="false" aria-autocomplete="list" value="WGS84 - (4326)"></div>
+                            <ul class="_typeahead-list_8eddf1 " tabindex="-1" id="typeahead_796-control" role="listbox">
+                              <li class="_typeahead-list-item_8eddf1 _typeahead-list-item-active_8eddf1" aria-selected="false" id="typeahead_796-control-0">
+                                <div style="display: flex; flex-direction: column;" class="fr-pl-2w"><span class="fr-text--bold">Mayotte 2004 / UTM zone 38S - (4471)</span><span class="fr-text">Mayotte - à terre et extraterritorial</span></div>
+                              </li>
+                              <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_796-control-1">
+                                <div style="display: flex; flex-direction: column;" class="fr-pl-2w"><span class="fr-text--bold">Réunion / UTM zone 40S - (2975)</span><span class="fr-text">Réunion</span></div>
+                              </li>
+                              <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_796-control-2">
+                                <div style="display: flex; flex-direction: column;" class="fr-pl-2w"><span class="fr-text--bold">RGAF09 / UTM zone 20N - (5490)</span><span class="fr-text">Antilles françaises à terre et extraterritorial à l'ouest du méridien 60° Ouest - Guadeloupe (incluant Grande Terre, Basse Terre, Marie Galante, Les Saintes, Iles de la Petite Terre, La Desirade, St Barthélemy, partie nord de St Martin) et Martinique.</span></div>
+                              </li>
+                              <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_796-control-3">
+                                <div style="display: flex; flex-direction: column;" class="fr-pl-2w"><span class="fr-text--bold">RGF93 / Lambert-93 - (2154)</span><span class="fr-text">France - à terre et extraterritorial - continentale et Corse.</span></div>
+                              </li>
+                              <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_796-control-4">
+                                <div style="display: flex; flex-direction: column;" class="fr-pl-2w"><span class="fr-text--bold">RGFG95 / UTM zone 22N - (2972)</span><span class="fr-text">Guyane française - à terre et extraterritorial.</span></div>
+                              </li>
+                              <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_796-control-5">
+                                <div style="display: flex; flex-direction: column;" class="fr-pl-2w"><span class="fr-text--bold">St Pierre et Miquelon / UTM zone 21N - (4467)</span><span class="fr-text">St Pierre et Miquelon à terre et extraterritorial</span></div>
+                              </li>
+                              <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_796-control-6">
+                                <div style="display: flex; flex-direction: column;" class="fr-pl-2w"><span class="">ED50 - (4230)</span><span class="fr-text">Europe</span></div>
+                              </li>
+                              <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_796-control-7">
+                                <div style="display: flex; flex-direction: column;" class="fr-pl-2w"><span class="">Guadeloupe 1948 / UTM zone 20N - (2970)</span><span class="fr-text">Guadeloupe - à terre - Basse-Terre, Grande-Terre, La Desirade, Marie-Galante, Les Saintes.</span></div>
+                              </li>
+                              <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_796-control-8">
+                                <div style="display: flex; flex-direction: column;" class="fr-pl-2w"><span class="">NTF (Greenwich) - (4275)</span><span class="fr-text">France - à terre - continentale et Corse.</span></div>
+                              </li>
+                              <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_796-control-9">
+                                <div style="display: flex; flex-direction: column;" class="fr-pl-2w"><span class="">NTF (Paris) - (4807)</span><span class="fr-text">France - à terre - continentale et Corse.</span></div>
+                              </li>
+                              <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_796-control-10">
+                                <div style="display: flex; flex-direction: column;" class="fr-pl-2w"><span class="">NTF (Paris) / Lambert Nord France - (27561)</span><span class="fr-text">France - continentale au nord de  53,5 grades North (48°09'N).</span></div>
+                              </li>
+                              <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_796-control-11">
+                                <div style="display: flex; flex-direction: column;" class="fr-pl-2w"><span class="">NTF (Paris) / Lambert Sud france - (27563)</span><span class="fr-text">France - continentale au sud de 50,5 grades nord (45°27'N).</span></div>
+                              </li>
+                              <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_796-control-12">
+                                <div style="display: flex; flex-direction: column;" class="fr-pl-2w"><span class="">NTF (Paris) / Lambert zone I - (27571)</span><span class="fr-text">France - continentale au nord de 53,5 grades nord (48°09'N).</span></div>
+                              </li>
+                              <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_796-control-13">
+                                <div style="display: flex; flex-direction: column;" class="fr-pl-2w"><span class="">NTF (Paris) / Lambert zone II - (27572)</span><span class="fr-text">France - continentale entre 45°27'N et 48°09'N.</span></div>
+                              </li>
+                              <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_796-control-14">
+                                <div style="display: flex; flex-direction: column;" class="fr-pl-2w"><span class="">NTF (Paris) / Lambert zone III - (27573)</span><span class="fr-text">France - continentale au sud de 50,5 grades nord (45°27'N).</span></div>
+                              </li>
+                              <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_796-control-15">
+                                <div style="display: flex; flex-direction: column;" class="fr-pl-2w"><span class="">RGF93 - (4171)</span><span class="fr-text">France - à terre et extraterritorial - continentale et Corse.</span></div>
+                              </li>
+                              <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_796-control-16">
+                                <div style="display: flex; flex-direction: column;" class="fr-pl-2w"><span class="">RGF93 / CC49 - (3949)</span><span class="fr-text">France - continentale entre 48°N et 50°N.</span></div>
+                              </li>
+                              <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_796-control-17">
+                                <div style="display: flex; flex-direction: column;" class="fr-pl-2w"><span class="">RGFG95 - (4624)</span><span class="fr-text">Guyane Française - à terre et extraterritorial.</span></div>
+                              </li>
+                              <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_796-control-18">
+                                <div style="display: flex; flex-direction: column;" class="fr-pl-2w"><span class="">RGFG95 / UTM zone 21N - (3313)</span><span class="fr-text">Guyane française - à terre et extraterritorial.</span></div>
+                              </li>
+                              <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_796-control-19">
+                                <div style="display: flex; flex-direction: column;" class="fr-pl-2w"><span class="">WGS84 / UTM zone 20N - (32620)</span><span class="fr-text">Hémisphère Nord - entre 66°W et 60°W</span></div>
+                              </li>
+                              <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_796-control-20">
+                                <div style="display: flex; flex-direction: column;" class="fr-pl-2w"><span class="">WGS84 / UTM zone 21N - (32621)</span><span class="fr-text">Hémisphère Nord - entre 60°W et 54°W</span></div>
+                              </li>
+                              <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_796-control-21">
+                                <div style="display: flex; flex-direction: column;" class="fr-pl-2w"><span class="">WGS84 / UTM zone 22N - (32622)</span><span class="fr-text">Hémisphère Nord - entre 54°W et 48°W</span></div>
+                              </li>
+                              <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_796-control-22">
+                                <div style="display: flex; flex-direction: column;" class="fr-pl-2w"><span class="">WGS84 / UTM zone 30N - (32630)</span><span class="fr-text">Hémisphère Nord - entre 6°W et 0°W</span></div>
+                              </li>
+                            </ul>
                           </div>
                           <div style="display: flex; flex-direction: column;">
                             <div class="fr-mb-1w">
@@ -186,7 +359,7 @@
                                   <div class="fr-table__container">
                                     <div class="fr-table__content">
                                       <table style="display: table; width: 100%;">
-                                        <caption></caption>
+                                        <caption>Points</caption>
                                         <thead>
                                           <tr>
                                             <th scope="col">Nom du point</th>
@@ -570,8 +743,7 @@
           <!---->
         </div>
       </div>
-      <div class="fr-input-group fr-mt-2w" style="flex-grow: 1;"><label class="fr-label" for="textarea_216">Notes
-          <!---->
+      <div class="fr-input-group fr-mt-2w" style="flex-grow: 1;"><label class="fr-label" for="textarea_216">Notes (optionnel)
           <!---->
         </label><textarea class="fr-input" name="textarea_216" id="textarea_216" value=""></textarea></div>
       <div class="fr-checkbox-group"><input name="archive" id="checkbox_482" type="checkbox"><label class="fr-label" for="checkbox_482">Cette note est un avertissement<span class="fr-hint-text">Apparait sur le résumé de la démarche</span></label></div>

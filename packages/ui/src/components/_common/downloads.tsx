@@ -46,6 +46,7 @@ export const PureDownloads = defineComponent(<T extends DownloadRestRoutes>(prop
       <div style={{ display: 'flex' }}>
         {props.formats.length > 1 ? (
           <DsfrSelect
+            required={false}
             id={props.id}
             class="fr-mr-1v"
             items={items}

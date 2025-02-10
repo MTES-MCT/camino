@@ -30,6 +30,7 @@ type Props<T extends CaminoRouteNames> = {
   title: string
   class?: LinkHTMLAttributes['class']
   anchorHTMLAttributes?: AnchorHTMLAttributes
+  tabindex?: LinkHTMLAttributes['tabindex']
 } & ({ isDisabled: true; to: '' } | { isDisabled: false; to: CaminoVueRoute<T> })
 export const CaminoRouterLink = defineComponent(<T extends CaminoRouteNames>(props: Props<T>, ctx: SetupContext) => {
   const { href, navigate } = useLink(props)
@@ -42,11 +43,11 @@ export const CaminoRouterLink = defineComponent(<T extends CaminoRouteNames>(pro
   })
 
   return () => (
-    <a {...props.anchorHTMLAttributes} {...formatedProps.value} title={props.title} class={props.class} aria-label={props.title}>
+    <a {...props.anchorHTMLAttributes} tabindex={props.tabindex} {...formatedProps.value} title={props.title} class={props.class} aria-label={props.title}>
       {ctx.slots.default ? ctx.slots.default() : null}
     </a>
   )
 })
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-CaminoRouterLink.props = ['to', 'title', 'class', 'isDisabled', 'anchorHTMLAttributes']
+CaminoRouterLink.props = ['to', 'title', 'class', 'isDisabled', 'anchorHTMLAttributes', 'tabindex']

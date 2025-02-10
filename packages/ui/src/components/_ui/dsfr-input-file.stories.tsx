@@ -10,5 +10,6 @@ const meta: Meta = {
 export default meta
 const uploadFile = action('uploadFile')
 
-export const PdfOnly: StoryFn = () => <InputFile accept={['pdf']} uploadFile={uploadFile} />
-export const ManyFormats: StoryFn = () => <InputFile accept={['pdf', 'csv']} uploadFile={uploadFile} />
+export const PdfOnly: StoryFn = () => <InputFile required={false} accept={['pdf']} uploadFile={uploadFile} />
+export const ManyFormats: StoryFn = () => <InputFile required={false} accept={['pdf', 'csv']} uploadFile={uploadFile} />
+export const Required: StoryFn = () => <InputFile required={true} accept={['pdf', 'csv']} uploadFile={uploadFile} />

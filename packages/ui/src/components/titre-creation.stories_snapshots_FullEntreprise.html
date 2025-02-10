@@ -1,26 +1,28 @@
 <div>
   <h1>Demande de titre</h1>
   <form>
-    <div class="fr-mb-3w"><label class="fr-label fr-mb-1w" for="input_entreprise">Entreprise *</label>
+    <div class="fr-mb-3w"><label class="fr-label fr-mb-1w" for="input_entreprise">Entreprise</label>
       <div id="input_entreprise_wrapper" class="_typeahead_8eddf1">
-        <div class="flex"><input id="input_entreprise" type="text" name="input_entreprise" class="fr-input" placeholder="" autocomplete="off" value="entreprise 1"></div>
-        <!---->
+        <div class="flex"><input id="input_entreprise" type="text" title="" name="input_entreprise" class="fr-input" placeholder="" autocomplete="off" role="combobox" aria-controls="input_entreprise-control" aria-activedescendant="input_entreprise-control" aria-expanded="false" aria-autocomplete="list" value="entreprise 1"></div>
+        <ul class="_typeahead-list_8eddf1 " tabindex="-1" id="input_entreprise-control" role="listbox"></ul>
       </div>
     </div>
-    <div class="fr-select-group"><label class="fr-label" for="select_271">Domaine *
+    <div class="fr-select-group"><label class="fr-label" for="select_271">Domaine
         <!---->
       </label><select class="fr-select" id="select_271" aria-label="Domaine" name="select_271" value="m">
         <option selected="" value="m">minéraux et métaux</option>
         <option disabled="" hidden="" value="">Selectionnez une option</option>
       </select></div>
-    <div class="fr-select-group"><label class="fr-label" for="select_670">Type *
+    <div class="fr-select-group"><label class="fr-label" for="select_670">Type
         <!---->
       </label><select class="fr-select" id="select_670" aria-label="Type" name="select_670" value="ax">
         <option value="ar">autorisation de recherches</option>
         <option selected="" value="ax">autorisation d'exploitation</option>
         <option disabled="" hidden="" value="">Selectionnez une option</option>
       </select></div>
-    <div class="fr-input-group" style="margin-bottom: 0px;"><label class="fr-label" for="input_74">Nom du titre *
+    <div class="fr-input-group" style="margin-bottom: 0px;"><label class="fr-label" for="input_74">Nom du titre
+        <!---->
+        <!---->
         <!---->
       </label><input class="fr-input" name="input_74" id="input_74" required="" type="text" value="Titre full">
       <!---->
@@ -28,8 +30,19 @@
     <!---->
     <div class="fr-mt-3w"><label class="fr-label fr-mb-1w">Titre à l’origine de cette nouvelle demande</label>
       <div id="titre-link-typeahead_wrapper" class="_typeahead_8eddf1">
-        <div class="flex"><input id="titre-link-typeahead" type="text" name="titre-link-typeahead" class="fr-input" placeholder="Lier un titre" autocomplete="off" value="Affluent Crique Saint Bernard"></div>
-        <!---->
+        <div class="flex"><input id="titre-link-typeahead" type="text" title="Lier un titre" name="titre-link-typeahead" class="fr-input" placeholder="Lier un titre" autocomplete="off" role="combobox" aria-controls="titre-link-typeahead-control" aria-activedescendant="titre-link-typeahead-control" aria-expanded="false" aria-autocomplete="list" value="Affluent Crique Saint Bernard"></div>
+        <ul class="_typeahead-list_8eddf1 " tabindex="-1" id="titre-link-typeahead-control" role="listbox">
+          <li class="_typeahead-list-item_8eddf1 _typeahead-list-item-active_8eddf1" aria-selected="false" id="titre-link-typeahead-control-0">
+            <div class="flex flex-center">
+              <p style="z-index: unset; margin-bottom: 0px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;" class="fr-badge fr-badge--md fr-badge--beige-gris-galet" title="échu" aria-label="échu">échu</p><span class="bold ml-m">Abttis Coucou</span><span class="ml-m" style="margin-left: auto;">2016-10-28 - 2017-03-17</span>
+            </div>
+          </li>
+          <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="titre-link-typeahead-control-1">
+            <div class="flex flex-center">
+              <p style="z-index: unset; margin-bottom: 0px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;" class="fr-badge fr-badge--md fr-badge--beige-gris-galet" title="échu" aria-label="échu">échu</p><span class="bold ml-m">Nouveau titre</span><span class="ml-m" style="margin-left: auto;">2008-11-30 - 2019-02-27</span>
+            </div>
+          </li>
+        </ul>
       </div>
     </div>
     <div style="display: flex; align-items: center;" class="fr-mt-3w"><button class="fr-btn fr-btn--primary fr-btn--md fr-mr-1w" title="Enregistrer" aria-label="Enregistrer" type="submit">Enregistrer</button>

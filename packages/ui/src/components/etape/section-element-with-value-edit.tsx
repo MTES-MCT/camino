@@ -32,8 +32,9 @@ export const SectionElementWithValueEdit: FunctionalComponent<Props> = props => 
 
   return (
     <HeritageEdit
+      required={props.elementWithValue.optionnel}
       prop={props.elementHeritage}
-      label={`${props.elementWithValue.nom ?? ''} ${props.elementWithValue.optionnel ? '' : ' *'}`}
+      label={props.elementWithValue.nom ?? ''}
       hasHeritageValue={hasHeritageValue}
       read={etape => {
         if (isNotNullNorUndefined(etape)) {

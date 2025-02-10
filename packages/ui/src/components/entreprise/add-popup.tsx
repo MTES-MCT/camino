@@ -17,8 +17,8 @@ export const EntrepriseAddPopup = defineComponent<Props>(props => {
   }
   const content = () => (
     <form>
-      <DsfrInput legend={{ main: 'Pays' }} disabled={true} valueChanged={() => {}} initialValue={'France'} type={{ type: 'text' }} />
-      <DsfrInput legend={{ main: 'Siren' }} valueChanged={sirenChange} type={{ type: 'text' }} />
+      <DsfrInput required={true} legend={{ main: 'Pays' }} disabled={true} valueChanged={() => {}} initialValue={'France'} type={{ type: 'text' }} />
+      <DsfrInput required={true} legend={{ main: 'Siren' }} valueChanged={sirenChange} type={{ type: 'text' }} />
     </form>
   )
 

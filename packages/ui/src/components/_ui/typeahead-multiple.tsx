@@ -4,6 +4,7 @@ import { isEventWithTarget, random, useState } from '@/utils/vue-tsx-utils'
 import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
 import { DsfrTag } from './tag'
 import type { JSX } from 'vue/jsx-runtime'
+import { fr } from '@codegouvfr/react-dsfr'
 type TypeAheadRecord = Record<string | symbol | number, any>
 
 type Props<T extends TypeAheadRecord, K extends keyof T> = {
@@ -88,7 +89,7 @@ export const TypeAheadMultiple = defineComponent(<T extends TypeAheadRecord, K e
   }
 
   const onArrowDown = () => {
-    if (isListVisible.value && currentSelectionIndex.value < props.props.items.length - 1) {
+    if (isListVisible.value && currentSelectionIndex.value < notSelectedItems.value.length - 1) {
       currentSelectionIndex.value++
     }
     scrollSelectionIntoView()
@@ -117,7 +118,7 @@ export const TypeAheadMultiple = defineComponent(<T extends TypeAheadRecord, K e
     input.value = ''
 
     currentSelectionIndex.value = 0
-    document.getElementById(id)?.blur()
+    document.getElementById(id)?.focus()
 
     selectedItems.value.push(item)
 
@@ -134,11 +135,22 @@ export const TypeAheadMultiple = defineComponent(<T extends TypeAheadRecord, K e
     myTypeaheadInput?.value?.focus?.()
   }
 
+  const focusInput = (event: MouseEvent) => {
+    myTypeaheadInput?.value?.focus?.()
+    event.stopPropagation()
+  }
+
   return () => (
     <div id={wrapperId.value} class={[styles.typeahead]}>
-      <div style={{ display: 'flex', maxHeight: 'unset', flexWrap: 'wrap', gap: '8px', outlineOffset: '2px', outlineWidth: '2px', outlineColor: '#0a76f6' }} class={['fr-input', styles['fake-input']]}>
+      <div
+        style={{ display: 'flex', maxHeight: 'unset', flexWrap: 'wrap', gap: '8px', outlineOffset: '2px', outlineWidth: '2px', outlineColor: '#0a76f6' }}
+        class={[fr.cx('fr-input'), styles['fake-input']]}
+        onClick={focusInput}
+      >
         {selectedItems.value.map(item => {
-          return <DsfrTag key={item[props.props.itemKey]} ariaLabel={props.props.itemChipLabel(item)} tagSize="sm" onClicked={unselectItem(item)} />
+          return (
+            <DsfrTag key={item[props.props.itemKey]} label={props.props.itemChipLabel(item)} ariaLabel={`Supprimer ${props.props.itemChipLabel(item)}`} tagSize="sm" onClicked={unselectItem(item)} />
+          )
         })}
 
         <input
@@ -153,6 +165,11 @@ export const TypeAheadMultiple = defineComponent(<T extends TypeAheadRecord, K e
           onInput={onInput}
           onFocus={onFocus}
           onBlur={onBlur}
+          role="combobox"
+          aria-controls={`${id}-control`}
+          aria-activedescendant={isListVisible.value ? `${id}-control-${currentSelectionIndex.value}` : `${id}-control`}
+          aria-expanded={isListVisible.value}
+          aria-autocomplete="list"
           onKeydown={payload => {
             // TODO 2023-06-19 il doit bien y avoir une enum quelque part dans la lib du dom avec la liste des keys non ?
             // Oui --> https://github.com/Moh-Snoussi/keyboard-event-key-type
@@ -182,23 +199,23 @@ export const TypeAheadMultiple = defineComponent(<T extends TypeAheadRecord, K e
           }}
         />
       </div>
-      {isListVisible.value ? (
-        <div class={styles['typeahead-list']}>
-          {notSelectedItems.value.map((item, index) => {
-            return (
-              <div
-                key={index}
-                class={`${styles['typeahead-list-item']} ${currentSelectionIndex.value === index ? styles['typeahead-list-item-active'] : ''}`}
-                onMousedown={payload => payload.preventDefault()}
-                onClick={() => selectItem(item)}
-                onMouseenter={() => (currentSelectionIndex.value = index)}
-              >
-                {props.props.displayItemInList ? props.props.displayItemInList(item) : <span>{props.props.itemChipLabel(item)}</span>}
-              </div>
-            )
-          })}
-        </div>
-      ) : null}
+      <ul class={`${styles['typeahead-list']} ${isListVisible.value ? styles['typeahead-list--visible'] : ''}`} tabindex="-1" id={`${id}-control`} role="listbox">
+        {notSelectedItems.value.map((item, index) => {
+          return (
+            <li
+              key={index}
+              class={`${styles['typeahead-list-item']} ${currentSelectionIndex.value === index ? styles['typeahead-list-item-active'] : ''}`}
+              onMousedown={payload => payload.preventDefault()}
+              onClick={() => selectItem(item)}
+              onMouseenter={() => (currentSelectionIndex.value = index)}
+              aria-selected={isListVisible.value && currentSelectionIndex.value === index}
+              id={`${id}-control-${index}`}
+            >
+              {props.props.displayItemInList ? props.props.displayItemInList(item) : <span>{props.props.itemChipLabel(item)}</span>}
+            </li>
+          )
+        })}
+      </ul>
     </div>
   )
 })

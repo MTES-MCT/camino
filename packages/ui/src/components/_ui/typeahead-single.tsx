@@ -93,7 +93,7 @@ export const TypeAheadSingle = defineComponent(<T extends TypeAheadRecord, K ext
   }
 
   const onArrowDown = () => {
-    if (isListVisible.value && currentSelectionIndex.value < props.props.items.length - 1) {
+    if (isListVisible.value && currentSelectionIndex.value < props.props.items.length - 1 - (selectedItem.value !== null ? 1 : 0)) {
       currentSelectionIndex.value++
     }
     scrollSelectionIntoView()
@@ -124,7 +124,7 @@ export const TypeAheadSingle = defineComponent(<T extends TypeAheadRecord, K ext
     input.value = props.props.itemChipLabel(item)
 
     currentSelectionIndex.value = 0
-    document.getElementById(id)?.blur()
+    document.getElementById(id)?.focus()
 
     selectedItem.value = item
 
@@ -150,6 +150,7 @@ export const TypeAheadSingle = defineComponent(<T extends TypeAheadRecord, K ext
           ref={myTypeaheadInput}
           value={input.value}
           type="text"
+          title={props.props.placeholder}
           name={id}
           disabled={props.disabled}
           class={'fr-input'}
@@ -158,6 +159,11 @@ export const TypeAheadSingle = defineComponent(<T extends TypeAheadRecord, K ext
           onInput={onInput}
           onFocus={onFocus}
           onBlur={onBlur}
+          role="combobox"
+          aria-controls={`${id}-control`}
+          aria-activedescendant={isListVisible.value ? `${id}-control-${currentSelectionIndex.value}` : `${id}-control`}
+          aria-expanded={isListVisible.value}
+          aria-autocomplete="list"
           onKeydown={payload => {
             // TODO 2023-06-19 il doit bien y avoir une enum quelque part dans la lib du dom avec la liste des keys non ?
             // Oui --> https://github.com/Moh-Snoussi/keyboard-event-key-type
@@ -187,23 +193,23 @@ export const TypeAheadSingle = defineComponent(<T extends TypeAheadRecord, K ext
           }}
         />
       </div>
-      {isListVisible.value ? (
-        <div class={styles['typeahead-list']}>
-          {notSelectedItems.value.map((item, index) => {
-            return (
-              <div
-                key={index}
-                class={`${styles['typeahead-list-item']} ${currentSelectionIndex.value === index ? styles['typeahead-list-item-active'] : ''}`}
-                onMousedown={payload => payload.preventDefault()}
-                onClick={() => selectItem(item)}
-                onMouseenter={() => (currentSelectionIndex.value = index)}
-              >
-                {props.props.displayItemInList ? props.props.displayItemInList(item) : <span>{props.props.itemChipLabel(item)}</span>}
-              </div>
-            )
-          })}
-        </div>
-      ) : null}
+      <ul class={`${styles['typeahead-list']} ${isListVisible.value ? styles['typeahead-list--visible'] : ''}`} tabindex="-1" id={`${id}-control`} role="listbox">
+        {notSelectedItems.value.map((item, index) => {
+          return (
+            <li
+              key={index}
+              class={`${styles['typeahead-list-item']} ${currentSelectionIndex.value === index ? styles['typeahead-list-item-active'] : ''}`}
+              onMousedown={payload => payload.preventDefault()}
+              onClick={() => selectItem(item)}
+              onMouseenter={() => (currentSelectionIndex.value = index)}
+              aria-selected={isListVisible.value && currentSelectionIndex.value === index}
+              id={`${id}-control-${index}`}
+            >
+              {props.props.displayItemInList ? props.props.displayItemInList(item) : <span>{props.props.itemChipLabel(item)}</span>}
+            </li>
+          )
+        })}
+      </ul>
     </div>
   )
 })

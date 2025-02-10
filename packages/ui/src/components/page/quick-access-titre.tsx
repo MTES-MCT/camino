@@ -85,8 +85,8 @@ export const PureQuickAccessTitre = defineComponent<Props>(props => {
   const debounce = createDebounce()
 
   return () => (
-    <div class="fr-search-bar" id="search-473" role="search">
-      <label class="fr-label" for="search-473-input">
+    <div class="fr-search-bar" id="search-quick-access-titre" role="search">
+      <label class="fr-label" for={props.id}>
         Rechercher
       </label>
       <TypeAheadSingle

@@ -168,7 +168,7 @@ export const ResultatMiseEnConcurrence = defineComponent<Props>(props => {
 
       <h1 class="fr-mt-4w">{capitalize(EtapesTypes[ETAPES_TYPES.resultatMiseEnConcurrence].nom)}</h1>
 
-      <DsfrInput class="fr-pb-2w" legend={{ main: 'Date' }} type={{ type: 'date' }} initialValue={date.value} valueChanged={(newDate: CaminoDate | null) => setDate(newDate)} />
+      <DsfrInput required={true} class="fr-pb-2w" legend={{ main: 'Date' }} type={{ type: 'date' }} initialValue={date.value} valueChanged={(newDate: CaminoDate | null) => setDate(newDate)} />
       <LoadingElement
         data={possibleEtapes.value}
         renderItem={() => (

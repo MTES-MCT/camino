@@ -168,6 +168,7 @@ const PermissionEdit = defineComponent<PermissionEditProps>(props => {
               title="Entreprises"
               item={
                 <TypeAheadSmartMultiple
+                  id="entreprises-role"
                   filter={{
                     name: 'Entreprises',
                     value: updatingUtilisateur.value.entrepriseIds,
@@ -185,6 +186,7 @@ const PermissionEdit = defineComponent<PermissionEditProps>(props => {
               title="Administration"
               item={
                 <DsfrSelect
+                  required={true}
                   items={map(sortedAdministrations, admin => ({ id: admin.id, label: admin.abreviation }))}
                   initialValue={updatingUtilisateur.value.administrationId}
                   legend={{ main: '' }}

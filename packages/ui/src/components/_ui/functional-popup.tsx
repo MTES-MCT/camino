@@ -3,6 +3,8 @@ import { Teleport, computed, defineComponent, onBeforeUnmount, onMounted, ref } 
 import { LoadingElement } from './functional-loader'
 import type { JSX } from 'vue/jsx-runtime'
 import { CaminoError } from 'camino-common/src/zod-tools'
+import { createFocusTrap, FocusTrap } from 'focus-trap'
+import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 
 interface Props<T> {
   id?: string
@@ -20,7 +22,8 @@ export const FunctionalPopup = defineComponent(<T,>(props: Props<T>) => {
   const canValidate = computed<boolean>(() => {
     return props.canValidate
   })
-
+  const dialogRef = ref<HTMLDialogElement | null>(null)
+  const trap = ref<FocusTrap | null>(null)
   const id = props.id ?? 'monId'
   const text = props.validate.text ?? 'Enregistrer'
 
@@ -66,10 +69,21 @@ export const FunctionalPopup = defineComponent(<T,>(props: Props<T>) => {
 
   onMounted(async () => {
     document.addEventListener('keyup', keyUp)
+    if (isNotNullNorUndefined(dialogRef.value)) {
+      if (!devMode) {
+        trap.value = createFocusTrap(dialogRef.value)
+        trap.value.activate()
+      }
+    } else {
+      console.error("Impossible de mettre en place focus-trap, le composant de dialogue n'est pas présent")
+    }
   })
 
   onBeforeUnmount(() => {
     document.removeEventListener('keyup', keyUp)
+    if (isNotNullNorUndefined(trap.value)) {
+      trap.value.deactivate()
+    }
   })
 
   const stopPropagation = (e: Event) => {
@@ -82,7 +96,7 @@ export const FunctionalPopup = defineComponent(<T,>(props: Props<T>) => {
     // TODO 2023-11-28 ici on interdit le teleport dans le cas de vitest pour que les snapshots soient présentes. On a pas trouvé mieux à cette date
     <Teleport to="body" disabled={devMode}>
       <div>
-        <dialog id={id} class="fr-modal fr-modal--opened" open={true} aria-modal={true} role="dialog" aria-labelledby={`${id}-title`} onClick={props.close} style={{ zIndex: 1000001 }}>
+        <dialog ref={dialogRef} id={id} class="fr-modal fr-modal--opened" open={true} aria-modal={true} role="dialog" aria-labelledby={`${id}-title`} onClick={props.close} style={{ zIndex: 1000001 }}>
           <div class="fr-container fr-container--fluid fr-container-md" onClick={stopPropagation}>
             <div class="fr-grid-row fr-grid-row--center">
               <div class="fr-col-12 fr-col-md-8 fr-col-lg-6">

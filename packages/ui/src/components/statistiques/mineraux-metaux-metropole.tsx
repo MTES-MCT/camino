@@ -26,20 +26,20 @@ const bauxiteChartConfiguration = (data: StatistiquesMinerauxMetauxMetropole): C
     labels: annees,
     datasets: [
       {
-        type: 'line',
-        yAxisID: 'fiscalite',
-        label: 'Fiscalité',
-        backgroundColor: CHART_COLORS.blue,
-        borderColor: CHART_COLORS.blue,
-        borderDash: [5, 5],
-        data: annees.map(annee => data.fiscaliteParSubstanceParAnnee[SUBSTANCES_FISCALES_IDS.bauxite]?.[annee] ?? Number.NaN),
-      },
-      {
         type: 'bar',
         yAxisID: 'production',
         label: 'Production',
         data: annees.map(annee => data.substances.aloh[annee] ?? 0),
-        backgroundColor: 'rgb(118, 182, 189)',
+        backgroundColor: CHART_COLORS.blue,
+      },
+      {
+        type: 'line',
+        yAxisID: 'fiscalite',
+        label: 'Fiscalité',
+        backgroundColor: CHART_COLORS.orange,
+        borderColor: CHART_COLORS.orange,
+        borderDash: [5, 5],
+        data: annees.map(annee => data.fiscaliteParSubstanceParAnnee[SUBSTANCES_FISCALES_IDS.bauxite]?.[annee] ?? null),
       },
     ],
   }
@@ -112,8 +112,8 @@ const selsChartConfiguration = (data: StatistiquesMinerauxMetauxMetropole): Char
         type: 'line',
         yAxisID: 'fiscalite',
         label: 'Fiscalité',
-        backgroundColor: CHART_COLORS.blue,
-        borderColor: CHART_COLORS.blue,
+        backgroundColor: CHART_COLORS.black,
+        borderColor: CHART_COLORS.black,
         borderDash: [5, 5],
         data: annees.map(
           annee =>
@@ -178,28 +178,28 @@ const perChartConfiguration = (data: StatistiquesMinerauxMetauxMetropole): Chart
         label: 'Demandes de PER déposées (octroi et prolongation)',
         yAxisID: 'demandes',
         data: annees.map(annee => data.prm.depot[annee] ?? 0),
-        backgroundColor: CHART_COLORS.green,
+        backgroundColor: CHART_COLORS.blue,
       },
       {
         type: 'bar',
         label: 'Demandes de PER octroyées et prolongées',
         yAxisID: 'demandes',
         data: annees.map(annee => data.prm.octroiEtProlongation[annee] ?? 0),
-        backgroundColor: CHART_COLORS.blue,
+        backgroundColor: CHART_COLORS.yellow,
       },
       {
         type: 'bar',
         label: 'Demandes de PER refusées (octroi et prolongation)',
         yAxisID: 'demandes',
         data: annees.map(annee => data.prm.refusees[annee] ?? 0),
-        backgroundColor: CHART_COLORS.purple,
+        backgroundColor: CHART_COLORS.red,
       },
       {
         type: 'line',
         label: 'Surface cumulée des permis de recherche (ha) accordés',
         yAxisID: 'surface',
         data: annees.map(annee => data.prm.surface[annee] ?? 0),
-        backgroundColor: CHART_COLORS.blue,
+        backgroundColor: CHART_COLORS.black,
       },
     ],
   }
@@ -247,28 +247,28 @@ const concessionChartConfiguration = (data: StatistiquesMinerauxMetauxMetropole)
         label: 'Demandes de concessions déposées (octroi et prolongation)',
         yAxisID: 'demandes',
         data: annees.map(annee => data.cxm.depot[annee] ?? 0),
-        backgroundColor: CHART_COLORS.green,
+        backgroundColor: CHART_COLORS.blue,
       },
       {
         type: 'bar',
         label: 'Demandes de concessions octroyées et prolongées',
         yAxisID: 'demandes',
         data: annees.map(annee => data.cxm.octroiEtProlongation[annee] ?? 0),
-        backgroundColor: CHART_COLORS.blue,
+        backgroundColor: CHART_COLORS.yellow,
       },
       {
         type: 'bar',
         label: 'Demandes de concessions refusées (octroi et prolongation)',
         yAxisID: 'demandes',
         data: annees.map(annee => data.cxm.refusees[annee] ?? 0),
-        backgroundColor: CHART_COLORS.purple,
+        backgroundColor: CHART_COLORS.red,
       },
       {
         type: 'line',
         label: 'Surface cumulée des concessions (ha) accordées',
         yAxisID: 'surface',
         data: annees.map(annee => data.cxm.surface[annee] ?? 0),
-        backgroundColor: CHART_COLORS.blue,
+        backgroundColor: CHART_COLORS.black,
       },
     ],
   }
@@ -488,11 +488,16 @@ export const PureMinerauxMetauxMetropole = defineComponent<Props>(props => {
       <div class={styles['grid-container']}>
         <div style="grid-column-end: span 2">
           <h3>Bauxite</h3>
-          <ChartWithExport data={data.value} getConfiguration={item => bauxiteChartConfiguration(item)} />
+          <ChartWithExport data={data.value} getConfiguration={item => bauxiteChartConfiguration(item)} a11yDescription="autoyearlytable" description="Bauxite" />
         </div>
         <div style="grid-column-end: span 2">
           <h3>Sels (sel de sodium, sel de potassium, sel gemme…)</h3>
-          <ChartWithExport data={data.value} getConfiguration={item => selsChartConfiguration(item)} />
+          <ChartWithExport
+            data={data.value}
+            getConfiguration={item => selsChartConfiguration(item)}
+            a11yDescription="autoyearlytable"
+            description="Sels (sel de sodium, sel de potassium, sel gemme…)"
+          />
         </div>
 
         <div style="grid-column-end: span 2">
@@ -513,12 +518,12 @@ export const PureMinerauxMetauxMetropole = defineComponent<Props>(props => {
       <div class="fr-mb-3w">
         <h3>Permis Exclusif de Recherche (PER)</h3>
         <hr />
-        <ChartWithExport data={data.value} getConfiguration={item => perChartConfiguration(item)} />
+        <ChartWithExport data={data.value} getConfiguration={item => perChartConfiguration(item)} a11yDescription="autoyearlytable" description="Permis Exclusif de Recherche (PER)" />
       </div>
       <div class="fr-mb-3w">
         <h3>Concession</h3>
         <hr />
-        <ChartWithExport data={data.value} getConfiguration={item => concessionChartConfiguration(item)} />
+        <ChartWithExport data={data.value} getConfiguration={item => concessionChartConfiguration(item)} a11yDescription="autoyearlytable" description="Concession" />
       </div>
     </div>
   )

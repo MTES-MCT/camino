@@ -8,7 +8,7 @@ type Props<T, Items extends Readonly<NonEmptyArray<Item<T>>>> = {
   items: Items
   legend: { main: string; visible?: boolean; description?: string; placeholder?: string }
   initialValue: Items[number]['id'] | null
-  required?: boolean
+  required: boolean
   disabled?: boolean
   valueChanged: (id: NoInfer<Items>[number]['id'] | null) => void
 } & HTMLAttributes
@@ -20,7 +20,7 @@ export const DsfrSelect = <T, Items extends Readonly<NonEmptyArray<Item<T>>>>(pr
     <div class={['fr-select-group', (props.disabled ?? false) ? 'fr-select-group--disabled' : null]}>
       {(props.legend.visible ?? true) ? (
         <label class="fr-label" for={id}>
-          {props.legend.main} {(props.required ?? false) ? ' *' : ''}
+          {props.legend.main} {props.required ? '' : ' (optionnel)'}
           {isNotNullNorUndefinedNorEmpty(props.legend.description) ? <span class="fr-hint-text">{props.legend.description}</span> : null}
         </label>
       ) : null}

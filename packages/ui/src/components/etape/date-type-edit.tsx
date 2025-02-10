@@ -50,7 +50,7 @@ export const DateTypeEdit = defineComponent<Props>(props => {
   return () => (
     <div class="fr-grid-row">
       <div class="fr-col-12 fr-col-xl-6">
-        <DsfrInput type={{ type: 'date' }} valueChanged={onDateChanged} initialValue={props.etape.date} legend={{ main: 'Date' }} />
+        <DsfrInput required={true} type={{ type: 'date' }} valueChanged={onDateChanged} initialValue={props.etape.date} legend={{ main: 'Date' }} />
         {isNotNullNorUndefined(date.value) ? (
           <TypeEdit class="fr-mt-2w" etape={{ ...props.etape, date: date.value }} demarcheId={props.demarcheId} apiClient={props.apiClient} onEtapeChange={onEtapeTypeChange} />
         ) : null}

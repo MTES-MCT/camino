@@ -8,6 +8,7 @@ import { caminoFiltres } from 'camino-common/src/filters'
 
 export type InputAutocompleteValues = (typeof caminoFiltres)[AutocompleteCaminoFiltres]['validator']['_output']
 type Props = {
+  id: string
   filter: AutocompleteCaminoFiltres
   initialValue: InputAutocompleteValues
   entreprises: Entreprise[]
@@ -62,8 +63,8 @@ export const InputAutocomplete = defineComponent<Props>(props => {
     props.onFilterAutocomplete(items.map(({ id }) => id))
   }
 
-  return () => <TypeAheadSmartMultiple filter={filterFull.value} onSelectItems={onSelectItems} />
+  return () => <TypeAheadSmartMultiple id={props.id} filter={filterFull.value} onSelectItems={onSelectItems} />
 })
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-InputAutocomplete.props = ['filter', 'entreprises', 'initialValue', 'onFilterAutocomplete', 'apiClient']
+InputAutocomplete.props = ['filter', 'entreprises', 'initialValue', 'onFilterAutocomplete', 'apiClient', 'id']

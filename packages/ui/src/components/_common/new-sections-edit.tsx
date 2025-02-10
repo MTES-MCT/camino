@@ -19,7 +19,7 @@ interface Props {
   etapeDate: CaminoDate | null
 }
 
-export const SectionsEdit = defineComponent<Props>(props => {
+export const NewSectionsEdit = defineComponent<Props>(props => {
   const [sectionsWithValue, setSectionsWithValue] = useState<SectionWithValue[]>([])
 
   watch(
@@ -75,7 +75,7 @@ export const SectionsEdit = defineComponent<Props>(props => {
   )
 })
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-SectionsEdit.props = ['sectionsWithValue', 'completeUpdate', 'etapeDate']
+NewSectionsEdit.props = ['sectionsWithValue', 'completeUpdate', 'etapeDate']
 
 interface SectionElementEditProps {
   element: ElementWithValue

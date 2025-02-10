@@ -41,7 +41,7 @@ export const PointsImportPopup = defineComponent<Props>(props => {
       </fieldset>
       <fieldset class="fr-fieldset" id="fichier">
         <div class="fr-fieldset__element">
-          <InputFile accept={['geojson']} uploadFile={fileChange} />
+          <InputFile required={true} accept={['geojson']} uploadFile={fileChange} />
         </div>
       </fieldset>
     </form>

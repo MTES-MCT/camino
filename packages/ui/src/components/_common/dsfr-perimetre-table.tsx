@@ -149,7 +149,7 @@ export const TabCaminoTable = defineComponent<Props>(props => {
     <div style={{ display: 'flex', flexDirection: 'column' }}>
       <GeoSystemeTypeahead disabled={true} geoSystemeId={props.geo_systeme_id} />
 
-      <TablePoints caption={isNotNullNorUndefined(props.geojson_origine_forages) ? 'Points' : ''} {...props} />
+      <TablePoints caption="Points" {...props} />
 
       {isNotNullNorUndefined(props.geojson_origine_forages) ? (
         <TableForages geo_systeme_id={props.geo_systeme_id} geojson_origine_forages={props.geojson_origine_forages} titreSlug={props.titreSlug} />

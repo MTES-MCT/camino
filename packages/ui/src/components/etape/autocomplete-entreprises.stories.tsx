@@ -12,11 +12,12 @@ export default meta
 
 const onEntreprisesUpdate = action('onEntreprisesUpdate')
 export const Default: StoryFn = () => (
-  <AutocompleteEntreprises name="titulaires" allEntities={[{ id: newEntrepriseId('optionId1'), nom: 'optionNom1', legal_siren: null }]} onEntreprisesUpdate={onEntreprisesUpdate} />
+  <AutocompleteEntreprises id="titulaires" name="titulaires" allEntities={[{ id: newEntrepriseId('optionId1'), nom: 'optionNom1', legal_siren: null }]} onEntreprisesUpdate={onEntreprisesUpdate} />
 )
 
 export const WithEntitiesAlreadyPresent: StoryFn = () => (
   <AutocompleteEntreprises
+    id="amodiataires"
     name="amodiataires"
     allEntities={[
       { id: newEntrepriseId('optionId1'), nom: 'optionNom1', legal_siren: null },

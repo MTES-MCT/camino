@@ -173,7 +173,7 @@ const AboutCard: FunctionalComponent<{ title: string; description: string; imgSr
         </div>
         <div class={{ 'fr-card__header': true, 'fr-pt-4w': props.isSvg }} style={props.isSvg ? { display: 'flex', alignItems: 'center', justifyContent: 'center' } : {}}>
           <div class="fr-card__img">
-            <img class="fr-responsive-img" src={props.imgSrc} alt={props.imgAlt ?? props.title} style={props.isSvg ? { width: 'auto', height: '100%' } : {}} />
+            <img class="fr-responsive-img" src={props.imgSrc} alt="" style={props.isSvg ? { width: 'auto', height: '100%' } : {}} />
           </div>
         </div>
       </div>

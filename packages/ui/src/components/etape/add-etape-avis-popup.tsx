@@ -76,6 +76,7 @@ export const AddEtapeAvisPopup = defineComponent<Props>(props => {
       <fieldset class="fr-fieldset" id="text">
         <div class="fr-fieldset__element">
           <InputFile
+            required={false}
             accept={['pdf']}
             uploadFile={file => {
               etapeAvisFile.value = file

@@ -72,7 +72,7 @@ export const ForagesImportPopup = defineComponent<Props>(props => {
 
           <fieldset class="fr-fieldset" id="fichier">
             <div class="fr-fieldset__element">
-              <InputFile accept={[fileType.value]} uploadFile={fileChange} />
+              <InputFile required={true} accept={[fileType.value]} uploadFile={fileChange} />
             </div>
           </fieldset>
         </>

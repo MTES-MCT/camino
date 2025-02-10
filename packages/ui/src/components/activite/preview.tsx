@@ -109,7 +109,7 @@ export const Preview = defineComponent<Props>(props => {
         </div>
       </div>
       <div>
-        <h3>{props.activite.titre.nom}</h3>
+        <h2>{props.activite.titre.nom}</h2>
 
         <ActiviteStatut activiteStatutId={props.activite.activite_statut_id} />
         {isNotNullNorUndefined(props.activite.date_saisie) ? <ModifiedDate class="fr-pt-1w" modified_date={props.activite.date_saisie} /> : null}

@@ -15,6 +15,7 @@ import { PageContentHeader } from '../_common/page-header-content'
 import { CaminoRouterLink } from '../../router/camino-router-link'
 import { DsfrSeparator } from '../_ui/dsfr-separator'
 import { Entreprise, EntrepriseId } from 'camino-common/src/entreprise'
+import { capitalize } from 'camino-common/src/strings'
 
 interface Props {
   apiClient: Pick<DashboardApiClient, 'getAdministrationTitres' | 'getDgtmStats'>
@@ -69,7 +70,7 @@ export const PureAdministrationDashboard = defineComponent<Props>(props => {
         titulaires: titulairesCell(titre, entreprisesIndex),
         derniereEtape: {
           type: 'text',
-          value: titre.derniereEtape ? `${EtapesTypes[titre.derniereEtape.etapeTypeId].nom} (${titre.derniereEtape.date})` : '',
+          value: titre.derniereEtape ? `${capitalize(EtapesTypes[titre.derniereEtape.etapeTypeId].nom)} (${titre.derniereEtape.date})` : '',
         },
         prochainesEtapes: prochainesEtapesCell(titre),
       }

@@ -9,4 +9,4 @@ const meta: Meta = {
 }
 export default meta
 
-export const Administrations: StoryFn = () => <FiltersInput filter="nomsAdministration" initialValue="Plop" onFilterInput={action('onFilterInput')} />
+export const Administrations: StoryFn = () => <FiltersInput id="nomsAdministration" filter="nomsAdministration" initialValue="Plop" onFilterInput={action('onFilterInput')} />

@@ -298,9 +298,9 @@ export const DemarcheEtape = defineComponent<Props>(props => {
       <div class={`${styles.sticky} fr-pt-1w`}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div style={{ display: 'flex' }}>
-            <div class="fr-text--lg fr-mb-0" style={{ color: 'var(--text-title-blue-france)', fontWeight: '500' }}>
+            <h4 class="fr-text--lg fr-mb-0" style={{ color: 'var(--text-title-blue-france)', fontWeight: '500' }}>
               {capitalize(EtapesTypes[props.etape.etape_type_id].nom)}
-            </div>
+            </h4>
             {isBrouillon.value ? <Badge class="fr-ml-1w" systemLevel="new" ariaLabel={`Brouillon de l'étape ${EtapesTypes[props.etape.etape_type_id].nom}`} label="Brouillon" /> : null}
           </div>
 
@@ -396,7 +396,7 @@ export const DemarcheEtape = defineComponent<Props>(props => {
                             ) : (
                               <p>
                                 {element.id === 'jorf' && element.value !== null && element.value !== '' ? (
-                                  <a target="_blank" rel="noopener noreferrer" href={`https://www.legifrance.gouv.fr/jorf/id/${valeurFind(element)}`} title={`Légifrance - Lien externe`}>
+                                  <a target="_blank" rel="noopener noreferrer" href={`https://www.legifrance.gouv.fr/jorf/id/${valeurFind(element)}`} title={`Numéro JORF Légifrance - Lien externe`}>
                                     {valeurFind(element)}
                                   </a>
                                 ) : (

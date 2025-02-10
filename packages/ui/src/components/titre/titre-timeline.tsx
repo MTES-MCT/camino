@@ -64,7 +64,42 @@ export const TitreTimeline: FunctionalComponent<Props> = props => {
     <>
       <div>
         <h2>Phases</h2>
-        <div style={{ overflowX: 'auto' }}>
+        <ul>
+          {props.phasesWithAlterations.map((phaseWithAlterations, phaseIndex) => (
+            <div key={phaseIndex}>
+              {phaseWithAlterations.map((demarche, demarcheIndex) => (
+                <Fragment key={demarche.slug}>
+                  <li class={style.hidden}>
+                    <CaminoRouterLink
+                      {...getAriaCurrent(demarche.slug, props.currentDemarcheSlug)}
+                      tab-index={-1}
+                      to={{ name: 'titre', params: { id: props.titreSlug }, query: { demarcheSlug: demarche.slug } }}
+                      isDisabled={false}
+                      title={`Voir la phase ${capitalize(DemarchesTypes[demarche.demarche_type_id].nom)} du ${datePhasesWithAlterations[phaseIndex][demarcheIndex]}`}
+                    >
+                      Voir la phase {capitalize(DemarchesTypes[demarche.demarche_type_id].nom)} du {datePhasesWithAlterations[phaseIndex][demarcheIndex]}
+                    </CaminoRouterLink>
+                  </li>
+                  {demarche.events.map(event => (
+                    <li class={style.hidden}>
+                      <CaminoRouterLink
+                        {...getAriaCurrent(event.slug, props.currentDemarcheSlug)}
+                        tab-index={-1}
+                        to={{ name: 'titre', params: { id: props.titreSlug }, query: { demarcheSlug: event.slug } }}
+                        isDisabled={false}
+                        title={`Voir l'événement ${capitalize(DemarchesTypes[event.demarche_type_id].nom)} du ${event.first_etape_date} lié à la phase ${capitalize(DemarchesTypes[demarche.demarche_type_id].nom)}`}
+                      >
+                        Voir l'événement {capitalize(DemarchesTypes[event.demarche_type_id].nom)} du {dateFormat(event.first_etape_date)} lié à la phase{' '}
+                        {capitalize(DemarchesTypes[demarche.demarche_type_id].nom)}
+                      </CaminoRouterLink>
+                    </li>
+                  ))}
+                </Fragment>
+              ))}
+            </div>
+          ))}
+        </ul>
+        <div style={{ overflowX: 'auto' }} aria-hidden="true" tabindex={-1}>
           <div class="fr-mx-4w">
             <div style={{ display: 'flex', gap: '14px' }}>
               {datePhasesWithAlterations.map((datePhases, i) => (
@@ -141,6 +176,7 @@ export const TitreTimeline: FunctionalComponent<Props> = props => {
                     <div style={{ flex: 1, minWidth: `${minWidth}px` }}>
                       <CaminoRouterLink
                         {...getAriaCurrent(demarche.slug, props.currentDemarcheSlug)}
+                        tabindex={-1}
                         key={demarche.slug}
                         to={{ name: 'titre', params: { id: props.titreSlug }, query: { demarcheSlug: demarche.slug } }}
                         isDisabled={false}
@@ -196,6 +232,7 @@ const DemarchePhase = defineComponent<{
       {...getAriaCurrent(props.phase.slug, props.currentDemarcheSlug)}
       to={{ name: 'titre', params: { id: props.titreSlug }, query: { demarcheSlug: props.phase.slug } }}
       isDisabled={false}
+      tabindex={-1}
       title={capitalize(DemarchesTypes[props.phase.demarche_type_id].nom)}
       style={{ minWidth: `${minWidth}px` }}
       class={`${style.phase} ${isOntoRootElement.value && !isOntoChildElement.value ? style.phaseHover : ''}`}
@@ -239,11 +276,11 @@ const DemarcheEvent: FunctionalComponent<{
   return (
     <>
       {isTravaux(props.demarche.demarche_type_id) ? (
-        <CaminoRouterLink {...commonProps}>
+        <CaminoRouterLink {...commonProps} tabindex={-1}>
           <TravauxIcone selected={props.demarche.slug === props.currentDemarcheSlug} />
         </CaminoRouterLink>
       ) : (
-        <CaminoRouterLink {...commonProps} class={style.event} />
+        <CaminoRouterLink {...commonProps} class={style.event} tabindex={-1} />
       )}
     </>
   )

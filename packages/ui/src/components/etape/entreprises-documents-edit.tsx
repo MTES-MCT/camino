@@ -300,6 +300,7 @@ const InternalEntrepriseDocumentsEdit = defineComponent<Props & { etapeEntrepris
             value: 'addEid',
             jsxElement: (
               <DsfrSelect
+                required={false}
                 items={map(tdeEntrepriseDocuments.value, ({ id, nom }) => ({ id, label: nom }))}
                 legend={{ main: 'Ajouter un nouveau type de document', visible: false }}
                 valueChanged={addEntrepriseDocumentType(eId)}
@@ -402,6 +403,7 @@ const EntrepriseSelect: FunctionalComponent<{
     <>
       {isNotNullNorUndefinedNorEmpty(options) ? (
         <DsfrSelect
+          required={true}
           initialValue={props.entrepriseDocuments.id === '' ? entrepriseDocumentIdValidator.parse('') : props.entrepriseDocuments.id}
           items={options}
           legend={{ main: legend, visible: false }}

@@ -11,6 +11,8 @@ import { MapPattern } from './components/_map/pattern'
 import { RouterView, useRoute } from 'vue-router'
 import { isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools'
 import { userKey } from './moi'
+import { FunctionalComponent } from 'vue'
+import { PAGE_IDS } from './utils/page-ids'
 export const App = defineComponent(() => {
   const route = useRoute()
 
@@ -33,18 +35,50 @@ export const App = defineComponent(() => {
 
   return () => (
     <div>
+      <Skiplink />
       <MapPattern />
-
       <Header user={user} currentMenuSection={currentMenuSection.value} routePath={route.fullPath} />
-
-      <main role="main">
+      <main role="main" id={PAGE_IDS.contenu.id}>
         <div class={hasGutter.value ? ['fr-container', 'fr-py-3w'] : null}>{loaded.value ? <RouterView /> : null}</div>
       </main>
-
       <Footer version={version.value} />
     </div>
   )
 })
+
+const Skiplink: FunctionalComponent = () => {
+  return (
+    <div class="fr-skiplinks">
+      <nav role="navigation" aria-label="Accès rapide" class="fr-container">
+        <ul class="fr-skiplinks__list">
+          <li>
+            <a class="fr-link" href={`#${PAGE_IDS.contenu.id}`}>
+              {PAGE_IDS.contenu.label}
+            </a>
+          </li>
+
+          <li>
+            <a class="fr-link" href={`#${PAGE_IDS.menu.id}`}>
+              {PAGE_IDS.menu.label}
+            </a>
+          </li>
+
+          <li>
+            <a class="fr-link" href={`#${PAGE_IDS.search.id}`}>
+              {PAGE_IDS.search.label}
+            </a>
+          </li>
+
+          <li>
+            <a class="fr-link" href={`#${PAGE_IDS.footer.id}`}>
+              {PAGE_IDS.footer.label}
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  )
+}
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
 App.props = ['user']

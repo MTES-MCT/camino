@@ -1,3 +1,24 @@
+.hidden {
+  position: absolute;
+  list-style: none;
+  height: 1px;
+  overflow: hidden;
+  word-wrap: normal !important;
+  clip-path: inset(50%);
+  clip: rect(1px, 1px, 1px, 1px);
+  margin: -1px;
+}
+
+.hidden:has(a:focus) {
+  position: relative;
+  height: auto;
+  width: auto;
+  overflow: initial;
+  margin: 0;
+  clip: unset;
+  clip-path: unset;
+}
+
 .datesContainer {
   display: flex;
   flex-direction: row;

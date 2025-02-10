@@ -15,7 +15,7 @@ export const GranulatsMarinsActivite: FunctionalComponent<Props> = props => (
 
     <div class="fr-grid-row">
       <div class="fr-col-12 fr-col-md-6 fr-mb-3w">
-        <h4 class="text-center">Production nette en volume</h4>
+        <h3 class="text-center">Production nette en volume</h3>
         {props.statistiqueGranulatsMarins.activitesDeposesQuantite > 3 ? (
           <div>
             <p class={['fr-display--xs', styles['donnee-importante']]}>{numberFormat(props.statistiqueGranulatsMarins.volume)} m³</p>
@@ -27,7 +27,7 @@ export const GranulatsMarinsActivite: FunctionalComponent<Props> = props => (
         )}
       </div>
       <div class="fr-col-12 fr-col-md-6 fr-mb-3w">
-        <h4 class="text-center">Production nette en masse</h4>
+        <h3 class="text-center">Production nette en masse</h3>
         {props.statistiqueGranulatsMarins.activitesDeposesQuantite > 3 ? (
           <div>
             <p class={['fr-display--xs', styles['donnee-importante']]}>{numberFormat(props.statistiqueGranulatsMarins.masse)} t</p>
@@ -41,12 +41,12 @@ export const GranulatsMarinsActivite: FunctionalComponent<Props> = props => (
     </div>
     <div class="fr-grid-row">
       <div class="fr-col-12 fr-col-md-6 fr-mb-3w">
-        <h4 class="text-center">Sources des données</h4>
+        <h3 class="text-center">Sources des données</h3>
         <p class={['fr-display--xs', styles['donnee-importante']]}>{numberFormat(props.statistiqueGranulatsMarins.activitesDeposesQuantite)}</p>
         <p>Rapports d’activité de production collectés via Camino utilisés pour consolider ces statistiques.</p>
       </div>
       <div class="fr-col-12 fr-col-md-6 fr-mb-3w">
-        <h4 class="text-center">Taux de collecte</h4>
+        <h3 class="text-center">Taux de collecte</h3>
         <p class={['fr-display--xs', styles['donnee-importante']]}>{props.statistiqueGranulatsMarins.activitesDeposesRatio} %</p>
         <p>Des rapports d’activité de production attendus ont été déposés par les opérateurs miniers pour consolider ces statistiques.</p>
       </div>

@@ -30,6 +30,7 @@ export const AddActiviteDocumentPopup = defineComponent<Props>(props => {
       <fieldset class="fr-fieldset" id="text">
         <div class="fr-fieldset__element">
           <InputFile
+            required={true}
             accept={['pdf']}
             uploadFile={file => {
               activiteDocumentFile.value = file
@@ -37,7 +38,7 @@ export const AddActiviteDocumentPopup = defineComponent<Props>(props => {
           />
         </div>
         <div class="fr-fieldset__element">
-          <DsfrInput legend={{ main: 'Description' }} initialValue={documentDescription.value} type={{ type: 'text' }} valueChanged={descriptionChange} />
+          <DsfrInput required={false} legend={{ main: 'Description' }} initialValue={documentDescription.value} type={{ type: 'text' }} valueChanged={descriptionChange} />
         </div>
       </fieldset>
     </form>

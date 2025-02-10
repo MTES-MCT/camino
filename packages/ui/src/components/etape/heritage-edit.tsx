@@ -23,6 +23,7 @@ type HeritagePossible =
 type Props<T extends HeritagePossible> = {
   prop: T
   write: () => JSX.Element
+  required: boolean
   read: (heritagePropEtape?: NoInfer<T>['etapeHeritee']) => JSX.Element
   label: string | null
   hasHeritageValue: boolean
@@ -59,6 +60,7 @@ export const HeritageEdit = <T extends HeritagePossible>(props: Props<T>): JSX.E
               key={dummyKey}
               type={{ type: 'text' }}
               disabled={true}
+              required={props.required}
               initialValue={'Non renseigné'}
               legend={{ main: props.label ?? '', visible: props.label !== null }}
               valueChanged={dummyValueChanged}

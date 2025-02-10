@@ -20,11 +20,14 @@ const apiClient: Pick<ApiClient, 'titresRechercherByNom' | 'getTitresByIds'> = {
   },
 }
 
-export const Default: StoryFn = () => <InputAutocomplete entreprises={[]} apiClient={apiClient} filter="substancesIds" initialValue={['aloh']} onFilterAutocomplete={action('onFilterAutocomplete')} />
+export const Default: StoryFn = () => (
+  <InputAutocomplete id="substances" entreprises={[]} apiClient={apiClient} filter="substancesIds" initialValue={['aloh']} onFilterAutocomplete={action('onFilterAutocomplete')} />
+)
 
 const entrepriseId = entrepriseIdValidator.parse('id1')
 export const Entreprises: StoryFn = () => (
   <InputAutocomplete
+    id="entreprises"
     entreprises={[{ id: entrepriseIdValidator.parse('id1'), nom: 'Nom', legal_siren: '12' }]}
     apiClient={apiClient}
     filter="entreprisesIds"

@@ -389,7 +389,7 @@ export const PureTitre = defineComponent<Props>(props => {
               </div>
             </div>
             <div class="fr-grid-row fr-grid-row--middle fr-mt-1w">
-              <h3 class="fr-m-0">{capitalize(TitresTypesTypes[TitresTypes[titre.titre_type_id].typeId].nom)}</h3>
+              <p class="fr-h3 fr-m-0">{capitalize(TitresTypesTypes[TitresTypes[titre.titre_type_id].typeId].nom)}</p>
               <Domaine class="fr-ml-2w" domaineId={TitresTypes[titre.titre_type_id].domaineId} />
             </div>
             {titre.references.length > 0 ? (

@@ -33,7 +33,7 @@ export const DsfrInputRadio = defineComponent(<T extends string>(props: Props<T>
     >
       {isNotNullNorUndefinedNorEmpty(props.legend.main) ? (
         <legend class="fr-fieldset__legend--regular fr-fieldset__legend" id={`${id}-legend`}>
-          {props.legend.main} {isNotNullNorUndefined(props.required) && props.required ? ' *' : ''}
+          {props.legend.main} {isNotNullNorUndefined(props.required) && props.required ? '' : ' (optionnel)'}
           {isNotNullNorUndefined(props.legend.description) && props.legend.description !== '' ? <span class="fr-hint-text">{props.legend.description}</span> : null}
         </legend>
       ) : null}

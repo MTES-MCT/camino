@@ -1,35 +1,18 @@
-import { computed, defineComponent, FunctionalComponent, onMounted, ref } from 'vue'
-import { Role, User } from 'camino-common/src/roles'
-import { canReadActivites } from 'camino-common/src/permissions/activites'
+import { defineComponent, FunctionalComponent, onMounted, ref } from 'vue'
+import { User } from 'camino-common/src/roles'
 import { QuickAccessTitre } from '@/components/page/quick-access-titre'
 import { DsfrButtonIcon } from '../_ui/dsfr-button'
 import { isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
 import { MenuSection } from '../../router'
 import { fr } from '@codegouvfr/react-dsfr'
+import { PAGE_IDS } from '@/utils/page-ids'
+import { LinkList, Link, isDirectLink, linksByRole } from './menu'
+
 interface Props {
   user: User
   currentMenuSection: MenuSection | null
   routePath: string
 }
-
-type Link = { label: string; path: MenuSection }
-type LinkList = { label: string; sublinks: Link[] }
-const links = {
-  TITRES_ET_AUTORISATIONS: { label: 'Titres et autorisations', path: 'titres' },
-  DEMARCHES: { label: 'Démarches', path: 'demarches' },
-  TRAVAUX: { label: 'Travaux', path: 'travaux' },
-  ACTIVITES: { label: 'Activités', path: 'activites' },
-  STATISTIQUES: { label: 'Statistiques', path: 'statistiques' },
-  ENTREPRISES: { label: 'Entreprises', path: 'entreprises' },
-  UTILISATEURS: { label: 'Utilisateurs', path: 'utilisateurs' },
-  ADMINISTRATIONS: { label: 'Administrations', path: 'administrations' },
-  JOURNAUX: { label: 'Journaux', path: 'journaux' },
-  TABLEAU_DE_BORD: { label: 'Tableau de bord', path: 'dashboard' },
-} as const satisfies Record<string, Link>
-
-const isDirectLink = (link: Link | LinkList): link is Link => Object.prototype.hasOwnProperty.call(link, 'path')
-
-const ANNUAIRE = { label: 'Annuaire', sublinks: [links.ENTREPRISES, links.ADMINISTRATIONS, links.UTILISATEURS] }
 
 const HeaderLinks: FunctionalComponent<Pick<Props, 'user' | 'routePath'> & { userLinkClicked: () => void }> = props => {
   const loginUrl = '/oauth2/sign_in?rd=' + encodeURIComponent(`${window.location.origin}${props.routePath}`)
@@ -77,7 +60,6 @@ export const Header = defineComponent<Props>(props => {
 
   const navigationModalId = 'headerNavigationModalId'
   const searchModalId = 'headerSearchModalId'
-  const navigationId = 'headerNavigationId'
 
   const linkClick = () => {
     // On ferme la modale
@@ -86,7 +68,7 @@ export const Header = defineComponent<Props>(props => {
 
   const sublinkClick = () => {
     // On ferme le menu déroulant d’annuaire
-    const navigationElement = document.getElementById(navigationId)
+    const navigationElement = document.getElementById(PAGE_IDS.menu.id)
     if (navigationElement) {
       const members = dsfr(navigationElement).navigation.members
       if (isNotNullNorUndefinedNorEmpty(members)) {
@@ -95,19 +77,6 @@ export const Header = defineComponent<Props>(props => {
     }
     linkClick()
   }
-  const linksByRole = computed<Record<Role, (Link | LinkList)[]>>(() => {
-    const linkActivites = canReadActivites(props.user) ? [links.ACTIVITES] : []
-
-    return {
-      super: [links.TITRES_ET_AUTORISATIONS, links.DEMARCHES, links.TRAVAUX, ...linkActivites, links.STATISTIQUES, ANNUAIRE, links.JOURNAUX],
-      admin: [links.TABLEAU_DE_BORD, links.TITRES_ET_AUTORISATIONS, links.DEMARCHES, links.TRAVAUX, ...linkActivites, links.STATISTIQUES, ANNUAIRE],
-      editeur: [links.TABLEAU_DE_BORD, links.TITRES_ET_AUTORISATIONS, links.DEMARCHES, links.TRAVAUX, ...linkActivites, links.STATISTIQUES, ANNUAIRE],
-      lecteur: [links.TITRES_ET_AUTORISATIONS, links.DEMARCHES, links.TRAVAUX, links.STATISTIQUES, ANNUAIRE],
-      entreprise: [links.TABLEAU_DE_BORD, links.TITRES_ET_AUTORISATIONS, links.DEMARCHES, ...linkActivites, links.STATISTIQUES, ANNUAIRE],
-      "bureau d'études": [links.TABLEAU_DE_BORD, links.TITRES_ET_AUTORISATIONS, links.DEMARCHES, links.STATISTIQUES, ANNUAIRE],
-      defaut: [links.TITRES_ET_AUTORISATIONS, links.DEMARCHES, links.STATISTIQUES, { label: 'Annuaire', sublinks: [links.ENTREPRISES, links.ADMINISTRATIONS] }],
-    }
-  })
 
   const modalMenuOpened = ref<boolean>(false)
   const modalSearchOpened = ref<boolean>(false)
@@ -126,41 +95,62 @@ export const Header = defineComponent<Props>(props => {
   }
 
   return () => (
-    <header role="banner" class="fr-header noprint">
+    <header role="banner" class={[fr.cx('fr-header'), 'noprint']} id="header">
       <div class="fr-header__body">
-        <div class="fr-container">
-          <div class="fr-header__body-row">
+        <div class={fr.cx('fr-container')}>
+          <div class={fr.cx('fr-header__body-row')}>
             <div class="fr-header__brand fr-enlarge-link">
-              <div class="fr-header__brand-top">
-                <div class="fr-header__logo">
-                  <p class="fr-logo">
+              <div class={fr.cx('fr-header__brand-top')}>
+                <div class={fr.cx('fr-header__logo')}>
+                  <p class={fr.cx('fr-logo')}>
                     République
                     <br />
                     française
                   </p>
                 </div>
-                <nav class="fr-header__navbar" role="navigation">
-                  <button class="fr-btn--search fr-btn" data-fr-opened="false" onClick={openModalSearch} aria-controls={searchModalId} aria-haspopup="dialog" id="button-search" title="Rechercher">
+                <nav class={fr.cx('fr-header__navbar')} role="navigation">
+                  <button
+                    class={[fr.cx('fr-btn--search'), fr.cx('fr-btn')]}
+                    data-fr-opened="false"
+                    onClick={openModalSearch}
+                    aria-controls={searchModalId}
+                    aria-haspopup="dialog"
+                    id="button-search"
+                    title="Rechercher"
+                  >
                     Rechercher
                   </button>
-                  <button class="fr-btn--menu fr-btn" data-fr-opened="false" onClick={openModalMenu} aria-controls={navigationModalId} aria-haspopup="dialog" id="button-menu" title="Menu">
+                  <button
+                    class={[fr.cx('fr-btn--menu'), fr.cx('fr-btn')]}
+                    data-fr-opened="false"
+                    onClick={openModalMenu}
+                    aria-controls={navigationModalId}
+                    aria-haspopup="dialog"
+                    id="button-menu"
+                    title="Menu"
+                  >
                     Menu
                   </button>
                 </nav>
               </div>
-              <div class="fr-header__service">
+              <div class={fr.cx('fr-header__service')}>
                 <router-link to={{ name: 'homepage' }} title="Accueil - Camino - République Française">
-                  <p class="fr-header__service-title">Camino</p>
+                  <p class={fr.cx('fr-header__service-title')}>Camino</p>
                 </router-link>
-                <p class="fr-header__service-tagline">Le cadastre minier numérique</p>
+                <p class={fr.cx('fr-header__service-tagline')}>Le cadastre minier numérique</p>
               </div>
             </div>
-            <div class="fr-header__tools">
-              <div class="fr-header__tools-links">
+            <div class={fr.cx('fr-header__tools')}>
+              <div class={fr.cx('fr-header__tools-links')}>
                 <HeaderLinks user={props.user} routePath={props.routePath} userLinkClicked={closeModals} />
               </div>
-              <div class={`fr-header__search fr-modal ${modalSearchOpened.value ? 'fr-modal--opened' : ''}`} id={searchModalId} aria-labelledby="button-search" aria-label="Recherche dans le site">
-                <div class="fr-container">
+              <div
+                class={[fr.cx('fr-header__search'), fr.cx('fr-modal'), modalSearchOpened.value ? fr.cx('fr-modal--opened') : null]}
+                id={searchModalId}
+                aria-labelledby="button-search"
+                aria-label="Recherche dans le site"
+              >
+                <div class={fr.cx('fr-container')}>
                   <DsfrButtonIcon
                     icon="fr-icon-close-line"
                     buttonType="tertiary-no-outline"
@@ -168,17 +158,22 @@ export const Header = defineComponent<Props>(props => {
                     aria-controls={searchModalId}
                     title="Fermer la fenêtre de dialogue"
                     label="Fermer"
-                    class="fr-btn--close"
+                    class={fr.cx('fr-btn--close')}
                   />
-                  <QuickAccessTitre id="search-473-input" onSelectTitre={closeModals} />
+                  <QuickAccessTitre id={PAGE_IDS.search.id} onSelectTitre={closeModals} />
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <div class={`fr-header__menu fr-modal ${modalMenuOpened.value ? 'fr-modal--opened' : ''}`} id={navigationModalId} aria-labelledby="button-menu" aria-label="Connexion et menu de navigation">
-        <div class="fr-container">
+      <div
+        class={[fr.cx('fr-header__menu'), fr.cx('fr-modal'), modalMenuOpened.value ? fr.cx('fr-modal--opened') : null]}
+        id={navigationModalId}
+        aria-labelledby="button-menu"
+        aria-label="Connexion et menu de navigation"
+      >
+        <div class={fr.cx('fr-container')}>
           <DsfrButtonIcon
             icon="fr-icon-close-line"
             buttonType="tertiary-no-outline"
@@ -186,29 +181,29 @@ export const Header = defineComponent<Props>(props => {
             aria-controls={searchModalId}
             title="Fermer la fenêtre de dialogue"
             label="Fermer"
-            class="fr-btn--close"
+            class={fr.cx('fr-btn--close')}
           />
-          <div class="fr-header__menu-links">
+          <div class={fr.cx('fr-header__menu-links')}>
             <HeaderLinks user={props.user} routePath={props.routePath} userLinkClicked={closeModals} />
           </div>
-          <nav class="fr-nav" id={navigationId} role="navigation" aria-label="Menu principal">
-            <ul class="fr-nav__list">
-              {linksByRole.value[props.user?.role ?? 'defaut'].map((link, index) => (
-                <li key={link.label} class="fr-nav__item">
+          <nav class={fr.cx('fr-nav')} id={PAGE_IDS.menu.id} role="navigation" aria-label="Menu principal">
+            <ul class={fr.cx('fr-nav__list')}>
+              {linksByRole(props.user)[props.user?.role ?? 'defaut'].map((link, index) => (
+                <li key={link.label} class={fr.cx('fr-nav__item')}>
                   {isDirectLink(link) ? (
-                    <router-link class="fr-nav__link" to={{ name: link.path }} target="_self" onClick={linkClick} {...getAriaPage(link)}>
+                    <router-link class={fr.cx('fr-nav__link')} to={{ name: link.path }} target="_self" onClick={linkClick} {...getAriaPage(link)}>
                       {link.label}
                     </router-link>
                   ) : (
                     <>
-                      <button class="fr-nav__btn" aria-expanded="false" aria-controls={`collapse-${index}`} {...getAriaCurrent(link)}>
+                      <button class={fr.cx('fr-nav__btn')} aria-expanded="false" aria-controls={`collapse-${index}`} {...getAriaCurrent(link)}>
                         {link.label}
                       </button>
-                      <div class="fr-collapse fr-menu" id={`collapse-${index}`}>
-                        <ul class="fr-menu__list">
+                      <div class={[fr.cx('fr-collapse'), fr.cx('fr-menu')]} id={`collapse-${index}`}>
+                        <ul class={fr.cx('fr-menu__list')}>
                           {link.sublinks.map((sublink, subIndex) => (
                             <li key={sublink.label}>
-                              <router-link onClick={sublinkClick} class="fr-nav__link" to={{ name: sublink.path }} target="_self" id={`nav-${index}-${subIndex}`}>
+                              <router-link onClick={sublinkClick} class={fr.cx('fr-nav__link')} to={{ name: sublink.path }} target="_self" id={`nav-${index}-${subIndex}`}>
                                 {sublink.label}
                               </router-link>
                             </li>

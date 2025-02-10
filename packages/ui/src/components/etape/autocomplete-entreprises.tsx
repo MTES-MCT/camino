@@ -5,6 +5,7 @@ import { isNullOrUndefinedOrEmpty, stringArrayEquals } from 'camino-common/src/t
 import { TypeAheadSmartMultiple } from '../_ui/typeahead-smart-multiple'
 
 interface Props {
+  id: string
   nonSelectableEntities?: EntrepriseId[]
   selectedEntities?: EntrepriseId[]
   allEntities: Entreprise[]
@@ -39,6 +40,7 @@ export const AutocompleteEntreprises = defineComponent<Props>(props => {
 
   return () => (
     <TypeAheadSmartMultiple
+      id={props.id}
       filter={{
         name: props.name,
         value: mySelectedEntities.value.map(id => id),
@@ -51,4 +53,4 @@ export const AutocompleteEntreprises = defineComponent<Props>(props => {
 })
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-AutocompleteEntreprises.props = ['onEntreprisesUpdate', 'nonSelectableEntities', 'selectedEntities', 'allEntities', 'name']
+AutocompleteEntreprises.props = ['id', 'onEntreprisesUpdate', 'nonSelectableEntities', 'selectedEntities', 'allEntities', 'name']

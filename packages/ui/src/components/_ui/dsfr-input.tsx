@@ -21,7 +21,7 @@ type BaseProps = {
   id?: string
   legend: { main: string; visible?: boolean; description?: string; placeholder?: string; info?: { type: 'info' | 'error'; value: string } }
   disabled?: boolean
-  required?: boolean
+  required: boolean
 }
 
 type Props = BaseProps & (TextProps | NumberProps | DateProps)
@@ -83,7 +83,9 @@ export const DsfrInput = defineComponent<Props>(props => {
     >
       {(props.legend.visible ?? true) ? (
         <label class="fr-label" for={id}>
-          {props.legend.main} {isNotNullNorUndefined(props.required) && props.required ? ' *' : null}
+          {props.legend.main}
+          {!props.required ? ' (optionnel)' : null}
+          {props.type.type === 'date' ? <span class="fr-hint-text">au format jj/mm/yyyy</span> : null}
           {isNotNullNorUndefined(props.legend.description) ? <span class="fr-hint-text" v-html={props.legend.description}></span> : null}
         </label>
       ) : null}
@@ -95,7 +97,7 @@ export const DsfrInput = defineComponent<Props>(props => {
         name={id}
         id={id}
         disabled={props.disabled ?? false}
-        required={props.required ?? false}
+        required={props.required}
         {...(props.type ?? { type: 'text' })}
         aria-describedby={isNotNullNorUndefined(props.legend.info) && props.legend.info.value !== '' ? `${id}-info` : undefined}
       />

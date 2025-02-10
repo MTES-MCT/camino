@@ -9,7 +9,7 @@ import { ActivitesTypes } from 'camino-common/src/static/activitesTypes'
 import { ActiviteDeposePopup } from './activite/depose-popup'
 import { SectionWithValue } from 'camino-common/src/sections'
 import { ApiClient, apiClient } from '../api/api-client'
-import { SectionsEdit } from './_common/new-sections-edit'
+import { NewSectionsEdit } from './_common/new-sections-edit'
 import { DsfrButton, DsfrLink } from './_ui/dsfr-button'
 import { capitalize } from 'camino-common/src/strings'
 import { Alert } from './_ui/alert'
@@ -176,7 +176,7 @@ export const PureActiviteEdition = defineComponent<Props>(props => {
 
                 {ActivitesTypes[activite.type_id].description !== undefined ? <div class="h6" v-html={ActivitesTypes[activite.type_id].description} /> : null}
 
-                <SectionsEdit sectionsWithValue={activite.sections_with_value} completeUpdate={sectionsUpdate} etapeDate={null} />
+                <NewSectionsEdit sectionsWithValue={activite.sections_with_value} completeUpdate={sectionsUpdate} etapeDate={null} />
 
                 <ActiviteDocumentsEdit apiClient={props.apiClient} activiteDocuments={activite.activite_documents} activiteTypeId={activite.type_id} completeUpdate={activiteDocumentsCompleteUpdate} />
 

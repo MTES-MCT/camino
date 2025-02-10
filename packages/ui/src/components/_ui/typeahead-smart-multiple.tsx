@@ -22,6 +22,7 @@ export type Filter<T extends string> = {
   name: string
 } & (LocalFilter | RemoteFilter<T>)
 type Props<T extends string> = {
+  id: string
   filter: Filter<T>
   onSelectItems: (e: Element<T>[]) => void
 }
@@ -105,7 +106,7 @@ export const TypeAheadSmartMultiple = defineComponent(<ID extends string>(props:
     <TypeAheadMultiple
       overrideItems={overrideItems.value}
       props={{
-        id: 'filters_autocomplete_' + props.filter.name,
+        id: props.id,
         itemKey: 'id',
         placeholder: props.filter.name,
         items: items.value,
@@ -119,4 +120,4 @@ export const TypeAheadSmartMultiple = defineComponent(<ID extends string>(props:
 })
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-TypeAheadSmartMultiple.props = ['filter', 'onSelectItems']
+TypeAheadSmartMultiple.props = ['id', 'filter', 'onSelectItems']

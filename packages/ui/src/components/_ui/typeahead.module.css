@@ -2,6 +2,9 @@
   position: relative;
   width: 100%;
 }
+.fake-input {
+  cursor: text;
+}
 
 .fake-input:focus-within {
   outline-style: solid;
@@ -9,13 +12,26 @@
 
 .typeahead .typeahead-list {
   position: absolute;
-  width: 100%;
   border: none;
-  max-height: 400px;
-  overflow-y: auto;
   border-bottom: 1px solid var(--grey-900-175);
   z-index: 100001;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  width: 1px;
+  height: 1px;
+  visibility: hidden;
+  overflow: hidden;
 }
+
+.typeahead .typeahead-list--visible {
+  visibility: visible;
+  width: 100%;
+  height: auto;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
 .typeahead .typeahead-list .typeahead-list-item {
   cursor: pointer;
   background-color: var(--grey-1000-50);

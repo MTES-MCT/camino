@@ -1,10 +1,11 @@
 import { isEventWithTarget, random } from '@/utils/vue-tsx-utils'
 import { isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
 import { defineComponent } from 'vue'
+import { JSX } from 'vue/jsx-runtime'
 
 export type Props = {
   id?: string
-  legend: { main: string; description?: string }
+  legend: { main: string | JSX.Element; description?: string }
   size?: 'sm' | 'md'
   disabled?: boolean
   valueChanged: (value: boolean) => void

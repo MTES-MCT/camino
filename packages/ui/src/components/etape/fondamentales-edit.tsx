@@ -15,6 +15,7 @@ import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-com
 import { DsfrInput } from '../_ui/dsfr-input'
 import { FlattenEtape } from 'camino-common/src/etape-form'
 import { ZERO_KM2 } from 'camino-common/src/number'
+import { fr } from '@codegouvfr/react-dsfr'
 
 export type EtapeFondamentaleEdit = Pick<FlattenEtape, 'typeId' | 'dateDebut' | 'dateFin' | 'duree' | 'titulaires' | 'amodiataires' | 'substances' | 'perimetre' | 'date' | 'titreDemarcheId'>
 interface Props {
@@ -81,19 +82,22 @@ export const FondamentalesEdit = defineComponent<Props>(props => {
   )
 
   const datesEdit = computed<InputAbsent | InputPresentOptional>(() => canEditDates(props.titreTypeId, props.demarcheTypeId, props.etape.typeId, props.user))
+  const datesRequiredCheck = computed<boolean>(() => datesEdit.value.visibility === 'present' && datesEdit.value.required)
 
   const titulairesEdit = computed<InputPresence>(() => canEditTitulaires(props.titreTypeId, props.demarcheTypeId, props.user))
   const titulairesLabel = computed<string>(() => {
     if (titulairesEdit.value.visibility === 'present') {
-      return titulairesEdit.value.required ? 'Titulaires *' : 'Titulaires'
+      return 'Titulaires'
     }
     return ''
   })
+  const titulairesRequiredCheck = computed<boolean>(() => titulairesEdit.value.visibility === 'present' && titulairesEdit.value.required)
+  const amodiatairesRequiredCheck = computed<boolean>(() => amodiatairesEdit.value.visibility === 'present' && amodiatairesEdit.value.required)
 
   const amodiatairesEdit = computed<InputPresence>(() => canEditAmodiataires(props.titreTypeId, props.demarcheTypeId, props.user))
   const amodiatairesLabel = computed<string>(() => {
     if (amodiatairesEdit.value.visibility === 'present') {
-      return amodiatairesEdit.value.required ? 'Amodiataires *' : 'Amodiataires'
+      return 'Amodiataires'
     }
     return ''
   })
@@ -137,10 +141,11 @@ export const FondamentalesEdit = defineComponent<Props>(props => {
   }
 
   return () => (
-    <div class="fr-grid-row">
-      <div class="fr-col-12 fr-col-xl-6">
+    <div class={fr.cx('fr-grid-row')}>
+      <div class={[fr.cx('fr-col-12'), fr.cx('fr-col-xl-6')]}>
         {dureeEdit.value.visibility === 'present' ? (
           <HeritageEdit
+            required={!dureeOptionalCheck.value}
             updateHeritage={updateDureeHeritage}
             hasHeritageValue={isNotNullNorUndefined(props.etape.duree.etapeHeritee?.value)}
             prop={editedEtape.value.duree}
@@ -148,36 +153,40 @@ export const FondamentalesEdit = defineComponent<Props>(props => {
             write={() => (
               <div style={{ display: 'flex' }}>
                 <DsfrInput
-                  legend={{ main: `Durée (années)${!dureeOptionalCheck.value ? ' *' : ''}`, info: !dureeValid.value.valid ? { type: 'error', value: dureeValid.value.message } : undefined }}
+                  legend={{ main: 'Durée (années)', info: !dureeValid.value.valid ? { type: 'error', value: dureeValid.value.message } : undefined }}
+                  required={!dureeOptionalCheck.value}
                   type={{ type: 'number' }}
                   valueChanged={updateAnsDuree}
                   initialValue={ans.value}
                 />
                 <DsfrInput
-                  legend={{ main: `Durée (mois)${!dureeOptionalCheck.value ? ' *' : ''}` }}
+                  legend={{ main: 'Durée (mois)' }}
+                  required={!dureeOptionalCheck.value}
                   type={{ type: 'number' }}
                   valueChanged={updateMoisDuree}
                   initialValue={mois.value}
-                  class="fr-ml-2w"
+                  class={fr.cx('fr-ml-2w')}
                 />
               </div>
             )}
             read={heritagePropEtape => (
               <div style={{ display: 'flex' }}>
                 <DsfrInput
-                  legend={{ main: `Durée (années)${!dureeOptionalCheck.value ? ' *' : ''}` }}
+                  legend={{ main: 'Durée (années)' }}
+                  required={!dureeOptionalCheck.value}
                   type={{ type: 'number' }}
                   valueChanged={() => {}}
                   disabled={true}
                   initialValue={dureeToAns(heritagePropEtape?.value)}
                 />
                 <DsfrInput
-                  legend={{ main: `Durée (mois)${!dureeOptionalCheck.value ? ' *' : ''}` }}
+                  legend={{ main: 'Durée (mois)' }}
+                  required={!dureeOptionalCheck.value}
                   type={{ type: 'number' }}
                   valueChanged={() => {}}
                   initialValue={dureeToMois(heritagePropEtape?.value)}
                   disabled={true}
-                  class="fr-ml-2w"
+                  class={fr.cx('fr-ml-2w')}
                 />
               </div>
             )}
@@ -187,37 +196,63 @@ export const FondamentalesEdit = defineComponent<Props>(props => {
         {datesEdit.value.visibility === 'present' ? (
           <>
             <HeritageEdit
+              required={datesRequiredCheck.value}
               updateHeritage={updateDateDebutHeritage}
               hasHeritageValue={isNotNullNorUndefined(props.etape.dateDebut.etapeHeritee?.value)}
               prop={editedEtape.value.dateDebut}
               label="Date de début"
-              write={() => <DsfrInput type={{ type: 'date' }} legend={{ main: 'Date de début' }} initialValue={props.etape.dateDebut.value} valueChanged={dateDebutChanged} />}
-              read={heritagePropEtape => <DsfrInput type={{ type: 'date' }} legend={{ main: 'Date de début' }} initialValue={heritagePropEtape?.value} valueChanged={() => {}} disabled={true} />}
+              write={() => (
+                <DsfrInput required={datesRequiredCheck.value} type={{ type: 'date' }} legend={{ main: 'Date de début' }} initialValue={props.etape.dateDebut.value} valueChanged={dateDebutChanged} />
+              )}
+              read={heritagePropEtape => (
+                <DsfrInput
+                  required={datesRequiredCheck.value}
+                  type={{ type: 'date' }}
+                  legend={{ main: 'Date de début' }}
+                  initialValue={heritagePropEtape?.value}
+                  valueChanged={() => {}}
+                  disabled={true}
+                />
+              )}
             />
             <HeritageEdit
+              required={datesRequiredCheck.value}
               updateHeritage={updateDateFinHeritage}
               hasHeritageValue={isNotNullNorUndefined(props.etape.dateFin.etapeHeritee?.value)}
               prop={editedEtape.value.dateFin}
               label="Date d’échéance"
-              write={() => <DsfrInput type={{ type: 'date' }} legend={{ main: 'Date d’échéance' }} initialValue={props.etape.dateFin.value} valueChanged={dateFinChanged} />}
-              read={heritagePropEtape => <DsfrInput type={{ type: 'date' }} legend={{ main: 'Date d’échéance' }} initialValue={heritagePropEtape?.value} valueChanged={() => {}} disabled={true} />}
+              write={() => (
+                <DsfrInput required={datesRequiredCheck.value} type={{ type: 'date' }} legend={{ main: 'Date d’échéance' }} initialValue={props.etape.dateFin.value} valueChanged={dateFinChanged} />
+              )}
+              read={heritagePropEtape => (
+                <DsfrInput
+                  required={datesRequiredCheck.value}
+                  type={{ type: 'date' }}
+                  legend={{ main: 'Date d’échéance' }}
+                  initialValue={heritagePropEtape?.value}
+                  valueChanged={() => {}}
+                  disabled={true}
+                />
+              )}
             />
           </>
         ) : null}
 
         {titulairesEdit.value.visibility === 'present' ? (
           <HeritageEdit
+            required={titulairesRequiredCheck.value}
             updateHeritage={updateTitulairesHeritage}
             hasHeritageValue={isNotNullNorUndefinedNorEmpty(props.etape.titulaires.etapeHeritee?.value)}
             prop={editedEtape.value.titulaires}
             label={titulairesLabel.value}
             write={() => (
-              <div class="fr-input-group fr-mb-0">
-                <label class="fr-label" for="filters_autocomplete_titulaires">
+              <div class={[fr.cx('fr-input-group'), fr.cx('fr-mb-0')]}>
+                <label class={fr.cx('fr-label')} for="filters_autocomplete_titulaires">
                   {titulairesLabel.value}
                 </label>
                 <AutocompleteEntreprises
-                  class="fr-mt-1w"
+                  id="filters_autocomplete_titulaires"
+                  class={fr.cx('fr-mt-1w')}
                   allEntities={props.entreprises}
                   selectedEntities={editedEtape.value.titulaires.value}
                   nonSelectableEntities={editedEtape.value.amodiataires.value}
@@ -227,9 +262,9 @@ export const FondamentalesEdit = defineComponent<Props>(props => {
               </div>
             )}
             read={heritagePropEtape => (
-              <div class="fr-input-group fr-input-group--disabled fr-mb-0">
-                <label class="fr-label">{titulairesLabel.value}</label>
-                <div class="fr-mt-1w">{heritagePropEtape?.value.map(id => <DsfrTag key={id} class="fr-mr-1w" ariaLabel={getEntrepriseNom(id)} />)}</div>
+              <div class={[fr.cx('fr-input-group'), fr.cx('fr-input-group--disabled'), fr.cx('fr-mb-0')]}>
+                <label class={[fr.cx('fr-label')]}>{titulairesLabel.value}</label>
+                <div class={[fr.cx('fr-mt-1w')]}>{heritagePropEtape?.value.map(id => <DsfrTag key={id} class={fr.cx('fr-mr-1w')} ariaLabel={getEntrepriseNom(id)} />)}</div>
               </div>
             )}
           />
@@ -237,17 +272,19 @@ export const FondamentalesEdit = defineComponent<Props>(props => {
 
         {amodiatairesEdit.value.visibility === 'present' ? (
           <HeritageEdit
+            required={amodiatairesRequiredCheck.value}
             updateHeritage={updateAmodiatairesHeritage}
             hasHeritageValue={isNotNullNorUndefinedNorEmpty(props.etape.amodiataires.etapeHeritee?.value)}
             prop={editedEtape.value.amodiataires}
             label={amodiatairesLabel.value}
             write={() => (
-              <div class="fr-input-group fr-mb-0">
-                <label class="fr-label" for="filters_autocomplete_amodiataires">
+              <div class={[fr.cx('fr-input-group'), fr.cx('fr-mb-0')]}>
+                <label class={[fr.cx('fr-label')]} for="filters_autocomplete_amodiataires">
                   {amodiatairesLabel.value}
                 </label>
                 <AutocompleteEntreprises
-                  class="fr-mt-1w"
+                  id="filters_autocomplete_amodiataires"
+                  class={[fr.cx('fr-mt-1w')]}
                   allEntities={props.entreprises}
                   selectedEntities={editedEtape.value.amodiataires.value}
                   nonSelectableEntities={editedEtape.value.titulaires.value}
@@ -257,9 +294,9 @@ export const FondamentalesEdit = defineComponent<Props>(props => {
               </div>
             )}
             read={heritagePropEtape => (
-              <div class="fr-input-group fr-input-group--disabled fr-mb-0">
-                <label class="fr-label">{amodiatairesLabel.value}</label>
-                <div class="fr-mt-1w">{heritagePropEtape?.value.map(id => <DsfrTag key={id} class="fr-mr-1w" ariaLabel={getEntrepriseNom(id)} />)}</div>
+              <div class={[fr.cx('fr-input-group'), fr.cx('fr-input-group--disabled'), fr.cx('fr-mb-0')]}>
+                <label class={[fr.cx('fr-label')]}>{amodiatairesLabel.value}</label>
+                <div class={[fr.cx('fr-mt-1w')]}>{heritagePropEtape?.value.map(id => <DsfrTag key={id} class={[fr.cx('fr-mr-1w')]} ariaLabel={getEntrepriseNom(id)} />)}</div>
               </div>
             )}
           />

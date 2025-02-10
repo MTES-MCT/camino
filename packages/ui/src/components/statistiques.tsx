@@ -47,5 +47,10 @@ export const Statistiques = defineComponent(() => {
   const initTab: TabId = initTabIdParsed.success ? initTabIdParsed.data : 'globales'
   routerReplaceTabId(initTab, router)
 
-  return () => <Tabs tabsTitle="Statistiques" tabs={tabs} initTab={initTab} tabClicked={tabId => routerReplaceTabId(tabId, router)} />
+  return () => (
+    <>
+      <h1>Statistiques</h1>
+      <Tabs tabsTitle="Statistiques" tabs={tabs} initTab={initTab} tabClicked={tabId => routerReplaceTabId(tabId, router)} />
+    </>
+  )
 })

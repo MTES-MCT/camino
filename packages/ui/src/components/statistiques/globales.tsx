@@ -15,10 +15,6 @@ import { CaminoStatistiquesDataGouvId } from 'camino-common/src/static/statistiq
 const pieConfiguration = (data: ChartConfiguration<'pie'>['data']): ChartConfiguration<'pie'> => ({
   type: 'pie',
   data,
-  options: {
-    locale: 'fr-FR',
-    aspectRatio: 1.33,
-  },
 })
 
 const lineConfiguration = (data: ChartConfiguration<'line'>['data']): ChartConfiguration<'line'> => ({
@@ -60,8 +56,8 @@ const statsLineFormat = ({ stats, labelY }: { stats: QuantiteParMois[]; labelY: 
           data: [],
           fill: 'start',
           tension: 0.5,
-          backgroundColor: 'rgba(118, 182, 189, 0.2)',
-          borderColor: 'rgb(118, 182, 189)',
+          backgroundColor: 'rgb(54, 162, 235, 0.4)',
+          borderColor: 'rgb(54, 162, 235)',
         },
       ],
     }
@@ -177,7 +173,7 @@ export const PureGlobales: FunctionalComponent<Props> = props => {
           </div>
           <div class="fr-col-12 fr-col-md-8 flex" style="justify-content: center">
             <div style="width: 70%">
-              <ConfigurableChart chartConfiguration={pieConfiguration(utilisateurs)} />
+              <ConfigurableChart chartConfiguration={pieConfiguration(utilisateurs)} ariaHidden={true} />
             </div>
           </div>
         </div>
@@ -194,7 +190,18 @@ export const PureGlobales: FunctionalComponent<Props> = props => {
           </div>
           <div class="fr-col-12 fr-col-md-8 flex" style="justify-content: center">
             <div style="width: 70%">
-              <ConfigurableChart chartConfiguration={pieConfiguration(utilisateursAdminChart)} />
+              <ConfigurableChart
+                chartConfiguration={pieConfiguration(utilisateursAdminChart)}
+                a11yDescription={
+                  <ul>
+                    {utilisateursAdminChart.datasets[0].data.map((utilisateurData, index) => (
+                      <li>
+                        {utilisateursAdminChart.labels[index]} : {utilisateurData}
+                      </li>
+                    ))}
+                  </ul>
+                }
+              />
             </div>
           </div>
         </div>
@@ -220,6 +227,25 @@ export const PureGlobales: FunctionalComponent<Props> = props => {
                   labelY: 'titres modifiés',
                 })
               )}
+              a11yDescription={
+                <table>
+                  <caption>Nombre de titres modifiés par mois</caption>
+                  <thead>
+                    <tr>
+                      <th>Mois</th>
+                      <th>Nombre de titres modifiés</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {props.statistiques.titresModifies.map(titre => (
+                      <tr>
+                        <td>{titre.mois}</td>
+                        <td>{titre.quantite}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              }
             />
           </div>
         </div>

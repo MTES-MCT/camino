@@ -31,7 +31,7 @@ const travauxFiltres = [
 const administrationsFiltres: readonly CaminoFiltre[] = ['nomsAdministration', 'administrationTypesIds'] as const
 
 // prettier-ignore
-const ROUTES = ['dashboard','statsDGTM','titres','titreCreation','titre','demarches','demarche','travaux','etape','etapeCreation','etapeEdition','resultatMiseEnConcurrence','utilisateurs','utilisateur','entreprises','entreprise','administrations','administration','activites','activite','activiteEdition','statistiques','journaux','statistiquesbetagouv','aPropos','homepage','erreur' ] as const
+const ROUTES = ['dashboard','statsDGTM','titres','titreCreation','titre','demarches','demarche','travaux','etape','etapeCreation','etapeEdition','resultatMiseEnConcurrence','utilisateurs','utilisateur','entreprises','entreprise','administrations','administration','activites','activite','activiteEdition','statistiques','journaux','statistiquesbetagouv','aPropos','plan', 'homepage','erreur' ] as const
 type CaminoRoute<T extends CaminoRouteNames> = Pick<RouteRecordRaw, 'path'> & { name: T; meta: RouteMeta }
 export const routesDefinitions = {
   dashboard: {
@@ -75,7 +75,7 @@ export const routesDefinitions = {
     path: '/titres/:id',
     name: 'titre',
     meta: {
-      title: 'Détail du titre',
+      title: 'Détail du titre {{ id }}',
       menuSection: 'titres',
       filtres: [],
     },
@@ -93,7 +93,7 @@ export const routesDefinitions = {
     path: '/demarches/:demarcheId',
     name: 'demarche',
     meta: {
-      title: 'Détail de la démarche',
+      title: 'Détail de la démarche {{ demarcheId }}',
       menuSection: 'demarches',
       filtres: [],
     },
@@ -102,7 +102,7 @@ export const routesDefinitions = {
     path: '/demarches/:demarcheId/resultat-mise-en-concurrence',
     name: 'resultatMiseEnConcurrence',
     meta: {
-      title: 'Résultat de la mise en concurrence',
+      title: 'Résultat de la mise en concurrence {{ demarcheId }}',
       filtres: [],
       menuSection: null,
     },
@@ -120,7 +120,7 @@ export const routesDefinitions = {
     path: '/etapes/:id',
     name: 'etape',
     meta: {
-      title: "Détail d'une étape",
+      title: "Détail de l'étape {{ id }}",
       filtres: [],
       menuSection: 'titres',
     },
@@ -138,7 +138,7 @@ export const routesDefinitions = {
     path: '/etapes/:id/edition',
     name: 'etapeEdition',
     meta: {
-      title: "Édition d'une étape",
+      title: "Édition de l'étape {{ id }}",
       menuSection: 'titres',
       filtres: [],
     },
@@ -156,7 +156,7 @@ export const routesDefinitions = {
     path: '/utilisateurs/:id',
     name: 'utilisateur',
     meta: {
-      title: "Détail d'un utilisateur",
+      title: "Détail de l'utilisateur {{ id }}",
       menuSection: 'utilisateurs',
       filtres: [],
     },
@@ -174,7 +174,7 @@ export const routesDefinitions = {
     path: '/entreprises/:id',
     name: 'entreprise',
     meta: {
-      title: "Détail d'une entreprise",
+      title: "Détail de l'entreprise {{ id }}",
       menuSection: 'entreprises',
       filtres: [],
     },
@@ -192,7 +192,7 @@ export const routesDefinitions = {
     path: '/administrations/:id',
     name: 'administration',
     meta: {
-      title: "Détail d'une administration",
+      title: "Détail d'une administration {{ id }}",
       menuSection: 'administrations',
       filtres: [],
     },
@@ -210,7 +210,7 @@ export const routesDefinitions = {
     path: '/activites/:activiteId',
     name: 'activite',
     meta: {
-      title: "Détail d'une activité",
+      title: "Détail de l'activité {{ activiteId }}",
       menuSection: 'activites',
       filtres: [],
     },
@@ -219,7 +219,7 @@ export const routesDefinitions = {
     path: '/activites/:activiteId/edition',
     name: 'activiteEdition',
     meta: {
-      title: "Édition de l'activité",
+      title: "Édition de l'activité {{ activiteId }}",
       menuSection: 'activites',
       filtres: [],
     },
@@ -229,7 +229,7 @@ export const routesDefinitions = {
     name: 'statistiques',
     meta: {
       menuSection: null,
-      title: 'Statistiques',
+      title: 'Statistiques {{ tabId }}',
       filtres: [],
     },
   },
@@ -258,6 +258,15 @@ export const routesDefinitions = {
     name: 'aPropos',
     meta: {
       title: 'À propos',
+      menuSection: null,
+      filtres: [],
+    },
+  },
+  plan: {
+    path: '/plan',
+    name: 'plan',
+    meta: {
+      title: 'Plan du site',
       menuSection: null,
       filtres: [],
     },

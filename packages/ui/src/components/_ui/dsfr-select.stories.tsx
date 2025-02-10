@@ -15,13 +15,22 @@ const items = [
   { id: 'id2', label: 'second label' },
 ] as const
 
-export const Default: StoryFn = () => <DsfrSelect id="select" legend={{ main: 'label de cadix' }} items={items} initialValue={null} valueChanged={onvalueChangedAction} />
+export const Default: StoryFn = () => <DsfrSelect required={true} id="select" legend={{ main: 'label de cadix' }} items={items} initialValue={null} valueChanged={onvalueChangedAction} />
 export const WithDescriptionAndPlaceholder: StoryFn = () => (
-  <DsfrSelect id="select" legend={{ main: 'label de cadix', description: 'Description', placeholder: 'Placeholder custom' }} items={items} initialValue={null} valueChanged={onvalueChangedAction} />
+  <DsfrSelect
+    required={true}
+    id="select"
+    legend={{ main: 'label de cadix', description: 'Description', placeholder: 'Placeholder custom' }}
+    items={items}
+    initialValue={null}
+    valueChanged={onvalueChangedAction}
+  />
 )
-export const AlreadySelectedItem: StoryFn = () => <DsfrSelect id="select" legend={{ main: 'label de cadix' }} items={items} initialValue={'id1'} valueChanged={onvalueChangedAction} />
+export const AlreadySelectedItem: StoryFn = () => <DsfrSelect required={true} id="select" legend={{ main: 'label de cadix' }} items={items} initialValue={'id1'} valueChanged={onvalueChangedAction} />
 
-export const Disabled: StoryFn = () => <DsfrSelect id="select" disabled={true} legend={{ main: 'label de cadix' }} items={items} initialValue={'id1'} valueChanged={onvalueChangedAction} />
+export const Disabled: StoryFn = () => (
+  <DsfrSelect required={true} id="select" disabled={true} legend={{ main: 'label de cadix' }} items={items} initialValue={'id1'} valueChanged={onvalueChangedAction} />
+)
 export const Required: StoryFn = () => <DsfrSelect id="select" required={true} legend={{ main: 'label de cadix' }} items={items} initialValue={'id1'} valueChanged={onvalueChangedAction} />
 
 export const ElementDisabled: StoryFn = () => (
@@ -38,3 +47,5 @@ export const ElementDisabled: StoryFn = () => (
     valueChanged={onvalueChangedAction}
   />
 )
+
+export const Optional: StoryFn = () => <DsfrSelect id="select" required={false} legend={{ main: 'label de cadix' }} items={items} initialValue={'id1'} valueChanged={onvalueChangedAction} />

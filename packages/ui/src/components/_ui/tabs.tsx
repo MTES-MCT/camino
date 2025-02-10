@@ -20,6 +20,7 @@ export const Tabs = defineComponent(<TabId extends string>(props: Props<TabId>) 
 
   const idSuffix = `${(random() * 1000).toFixed()}`
   const getHtmlTabId = (tabId: TabId) => `tabpanel-${tabId}-${idSuffix}-panel`
+  const getButtonTabId = (tabId: TabId) => `tabpanel-${tabId}-${idSuffix}`
 
   const panelHeight = ref<number>(0)
 
@@ -39,6 +40,16 @@ export const Tabs = defineComponent(<TabId extends string>(props: Props<TabId>) 
 
   const tabsIndex = props.tabs.reduce<Record<TabId, number>>((acc, tab, index) => ({ ...acc, [tab.id]: index }), {} as Record<TabId, number>)
 
+  const changeTabOnArrowKey = (event: KeyboardEvent) => {
+    if (event.code === 'ArrowRight') {
+      const nextIndex = tabsIndex[currentTabId.value] + 1
+      onTabClick(props.tabs[nextIndex % props.tabs.length].id)()
+    }
+    if (event.code === 'ArrowLeft') {
+      const nextIndex = tabsIndex[currentTabId.value] - 1
+      onTabClick(props.tabs[nextIndex >= 0 ? nextIndex : props.tabs.length - 1].id)()
+    }
+  }
   const observeCurrentTab = () => {
     const currentTabRef = document.getElementById(getHtmlTabId(currentTabId.value))
     if (isNotNullNorUndefined(currentTabRef)) {
@@ -48,8 +59,10 @@ export const Tabs = defineComponent(<TabId extends string>(props: Props<TabId>) 
   const onTabClick = (tabId: TabId) => () => {
     observer.disconnect()
     currentTabId.value = tabId
+    const buttonTabRef = document.getElementById(getButtonTabId(currentTabId.value))
     props.tabClicked(tabId)
     observeCurrentTab()
+    buttonTabRef?.focus()
   }
 
   onMounted(() => {
@@ -67,11 +80,12 @@ export const Tabs = defineComponent(<TabId extends string>(props: Props<TabId>) 
           {props.tabs.map(tab => (
             <li role="presentation">
               <button
-                id={`tabpanel-${tab.id}-${idSuffix}`}
+                id={getButtonTabId(tab.id)}
                 class={['fr-tabs__tab', tab.icon, tab.icon !== null ? 'fr-tabs__tab--icon-left' : '']}
                 tabindex={currentTabId.value === tab.id ? '0' : '-1'}
                 role="tab"
                 onClick={onTabClick(tab.id)}
+                onKeydown={changeTabOnArrowKey}
                 aria-label={tab.title}
                 aria-selected={currentTabId.value === tab.id ? 'true' : 'false'}
                 aria-controls={`tabpanel-${tab.id}-${idSuffix}-panel`}

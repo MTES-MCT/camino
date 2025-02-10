@@ -110,11 +110,12 @@ export const SubstancesEdit = defineComponent<Props>(props => {
     <HeritageEdit
       prop={{ ...editedSubstances.value, value: editedSubstances.value.value.filter(isNotNullNorUndefined) }}
       hasHeritageValue={isNotNullNorUndefinedNorEmpty(editedSubstances.value.etapeHeritee?.value)}
-      label="Substances *"
+      required={true}
+      label="Substances"
       write={() => (
         <div class="fr-input-group fr-mb-0">
           <label class="fr-label" for={`typeahead_substances_${editedSubstances.value.value.length - 1}`}>
-            Substances *
+            Substances
           </label>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             {editedSubstances.value.value.map((substance, n) => (
@@ -165,7 +166,7 @@ export const SubstancesEdit = defineComponent<Props>(props => {
       )}
       read={() => (
         <div class="fr-input-group fr-input-group--disabled fr-mb-0">
-          <label class="fr-label">Substances *</label>
+          <label class="fr-label">Substances</label>
           <div class="fr-mt-1w">
             {substanceNoms.value.map(sub => (
               <DsfrTag class="fr-mr-1w" ariaLabel={capitalize(sub)} />

@@ -65,4 +65,4 @@ export const DsfrInputCheckboxes = defineComponent(<T extends string>(props: Pro
 })
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-DsfrInputCheckboxes.props = ['id', 'valueChanged', 'legend', 'disabled', 'elements', 'size', 'initialCheckedValue']
+DsfrInputCheckboxes.props = ['id', 'valueChanged', 'legend', 'disabled', 'elements', 'size', 'initialCheckedValue', 'required']

@@ -16,7 +16,6 @@ interface Props {
   anneeCourante: CaminoAnnee
   annees: Readonly<NonEmptyArray<CaminoAnnee>>
 }
-// TODO 2024-05-02: passer en DSFR
 export const EntrepriseFiscalite = defineComponent<Props>(props => {
   const tabId = ref<CaminoAnnee>(props.anneeCourante)
   const data = ref<AsyncData<Fiscalite>>({ status: 'LOADING' })
@@ -67,7 +66,7 @@ export const EntrepriseFiscalite = defineComponent<Props>(props => {
     <div>
       {isVisible.value ? (
         <>
-          <h3>Fiscalité</h3>
+          <h2>Fiscalité</h2>
           Calcul, à titre indicatif, du montant de l'imposition minière de votre entreprise (redevance départementale et communale des mines pour les substances non énergétiques et taxe aurifère)
           <Tabs class="fr-mt-2w" tabs={tabs.value} tabsTitle="Années" initTab={tabId.value} tabClicked={tabUpdate} />
         </>

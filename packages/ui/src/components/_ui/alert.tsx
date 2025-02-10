@@ -1,3 +1,4 @@
+import { fr } from '@codegouvfr/react-dsfr'
 import { capitalize } from 'camino-common/src/strings'
 import type { CaminoError } from 'camino-common/src/zod-tools'
 import type { FunctionalComponent, HTMLAttributes } from 'vue'
@@ -12,19 +13,20 @@ type ClassicProps = {
 type Props = {
   type: 'warning' | 'success' | 'error' | 'info'
   title: string | JSX.Element
+  role?: 'alert'
 } & (SmallProps | ClassicProps) & { class?: HTMLAttributes['class']; style?: HTMLAttributes['style'] }
 
 export const Alert: FunctionalComponent<Props> = props => {
   if ('small' in props) {
     return (
-      <div class={['fr-alert', `fr-alert--${props.type}`, 'fr-alert--sm']}>
+      <div class={[fr.cx('fr-alert'), fr.cx(`fr-alert--${props.type}`), fr.cx('fr-alert--sm')]} role={props.role}>
         <p>{typeof props.title === 'string' ? capitalize(props.title) : props.title}</p>
       </div>
     )
   } else {
     return (
-      <div class={['fr-alert', `fr-alert--${props.type}`]}>
-        <h3 class="fr-alert__title">{props.title}</h3>
+      <div class={[fr.cx('fr-alert'), fr.cx(`fr-alert--${props.type}`)]} role={props.role}>
+        <h3 class={[fr.cx('fr-alert__title')]}>{typeof props.title === 'string' ? capitalize(props.title) : props.title}</h3>
         {props.description !== undefined ? props.description : null}
       </div>
     )
@@ -34,12 +36,13 @@ export const Alert: FunctionalComponent<Props> = props => {
 export const CaminoApiAlert: FunctionalComponent<{ caminoApiError: CaminoError<string>; class?: HTMLAttributes['class'] }> = props => {
   const small = !('zodErrorReadableMessage' in props.caminoApiError || 'detail' in props.caminoApiError)
   if (small) {
-    return <Alert small={small} type="error" title={props.caminoApiError.message} />
+    return <Alert small={small} type="error" role="alert" title={props.caminoApiError.message} />
   } else if ('zodErrorReadableMessage' in props.caminoApiError && 'detail' in props.caminoApiError) {
     return (
       <Alert
         type="error"
         title={capitalize(props.caminoApiError.message)}
+        role="alert"
         description={
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             <div>{props.caminoApiError.detail}</div>
@@ -52,14 +55,14 @@ export const CaminoApiAlert: FunctionalComponent<{ caminoApiError: CaminoError<s
       />
     )
   } else if ('zodErrorReadableMessage' in props.caminoApiError) {
-    return <Alert type="error" title={capitalize(props.caminoApiError.message)} description={props.caminoApiError.zodErrorReadableMessage} />
+    return <Alert type="error" role="alert" title={capitalize(props.caminoApiError.message)} description={props.caminoApiError.zodErrorReadableMessage} />
   } else {
-    return <Alert type="error" title={capitalize(props.caminoApiError.message)} description={props.caminoApiError.detail} />
+    return <Alert type="error" role="alert" title={capitalize(props.caminoApiError.message)} description={props.caminoApiError.detail} />
   }
 }
 
 export const PageIntrouvableAlert: FunctionalComponent = () => {
-  return <Alert type="error" title="Page Introuvable" small={true} />
+  return <Alert type="error" role="alert" title="Page Introuvable" small={true} />
 }
 // Demandé par le router car utilisé dans un import asynchrone /shrug
 PageIntrouvableAlert.displayName = 'Page introuvable'

@@ -123,7 +123,7 @@ export const TypeEdit = defineComponent<Props>(props => {
             <div class={props.class}>
               <div class="fr-input-group">
                 <label class="fr-label fr-mb-1w" for="select-etape-type">
-                  Type *
+                  Type
                 </label>
                 <TypeAheadSingle
                   overrideItem={etapeTypeExistante.value}
@@ -164,7 +164,7 @@ export const TypeEdit = defineComponent<Props>(props => {
               )}
             </div>
           ) : (
-            <Alert type="warning" class="fr-mt-2w" title={noItemsText.value} description="Veuillez modifier la date pour pouvoir choisir une étape." />
+            <Alert type="warning" role="alert" class="fr-mt-2w" title={noItemsText.value} description="Veuillez modifier la date pour pouvoir choisir une étape." />
           )}
         </>
       )}

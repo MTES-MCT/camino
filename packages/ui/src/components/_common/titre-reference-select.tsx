@@ -44,8 +44,22 @@ export const TitreReferenceSelect = defineComponent<Props>(props => {
       </label>
       {references.value.map((reference, index) => (
         <div key={index} class="fr-grid-row fr-grid-row--middle fr-mb-3v">
-          <DsfrSelect class="fr-col fr-mb-0" legend={{ main: '', visible: false }} initialValue={reference.referenceTypeId} items={referencesTypes} valueChanged={onReferenceChanged(index)} />
-          <DsfrInput class="fr-col fr-ml-2v fr-mb-0" type={{ type: 'text' }} legend={{ main: '', visible: false }} initialValue={reference.nom} valueChanged={onReferenceValueChanged(index)} />
+          <DsfrSelect
+            class="fr-col fr-mb-0"
+            required={true}
+            legend={{ main: '', visible: false }}
+            initialValue={reference.referenceTypeId}
+            items={referencesTypes}
+            valueChanged={onReferenceChanged(index)}
+          />
+          <DsfrInput
+            required={true}
+            class="fr-col fr-ml-2v fr-mb-0"
+            type={{ type: 'text' }}
+            legend={{ main: '', visible: false }}
+            initialValue={reference.nom}
+            valueChanged={onReferenceValueChanged(index)}
+          />
           <DsfrButtonIcon class="fr-ml-2v" icon="fr-icon-delete-bin-line" onClick={referenceRemove(index)} title={`Supprimer la référence ${index + 1}`} buttonType="tertiary" />
         </div>
       ))}

@@ -23,7 +23,7 @@ export const SectionElement: FunctionalComponent<Props> = (props: Props): JSX.El
         ) : (
           <span>
             {props.element.id === 'jorf' && props.element.value !== null && props.element.value !== '' ? (
-              <a target="_blank" rel="noopener noreferrer" href={`https://www.legifrance.gouv.fr/jorf/id/${valeurFind(props.element)}`} title={`Légifrance - Lien externe`}>
+              <a target="_blank" rel="noopener noreferrer" href={`https://www.legifrance.gouv.fr/jorf/id/${valeurFind(props.element)}`} title={`Numéro JORF Légifrance - Lien externe`}>
                 {valeurFind(props.element)}
               </a>
             ) : (

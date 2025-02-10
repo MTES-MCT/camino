@@ -19,7 +19,17 @@ interface Props {
 export const DGTMStatsFull = defineComponent<Props>(props => {
   const data = ref<AsyncData<StatistiquesDGTM>>({ status: 'LOADING' })
 
-  const charts = [sdomChartConfiguration, depotChartConfiguration, delaiChartConfiguration, delaiPerConcessionChartConfiguration, producteursOrChartConfiguration, avisAXMChartConfiguration]
+  const charts = [
+    {
+      description: 'nombre de titres déposés ou octroyés en zones du SDOM par année',
+      configuration: sdomChartConfiguration,
+    },
+    { description: 'Nombre de titres et AEX par année', configuration: depotChartConfiguration },
+    { description: "Délais d'instruction, de CDM et de décision du préfet pour les AEX par année", configuration: delaiChartConfiguration },
+    { description: "Délais moyens d'instruction des PER et concessions par année", configuration: delaiPerConcessionChartConfiguration },
+    { description: "Nombre d'entreprises produisant de l'or par année", configuration: producteursOrChartConfiguration },
+    { description: "Nombre d'avis AEX par année", configuration: avisAXMChartConfiguration },
+  ]
 
   onMounted(async () => {
     try {
@@ -43,7 +53,7 @@ export const DGTMStatsFull = defineComponent<Props>(props => {
     <div class="fr-py-3w">
       <div style="display: grid; grid-template-columns: 1fr 1fr 1fr">
         {charts.map(chart => (
-          <ChartWithExport data={data.value} getConfiguration={data => chart(data)} />
+          <ChartWithExport data={data.value} getConfiguration={data => chart.configuration(data)} a11yDescription="autoyearlytable" description={chart.description} />
         ))}
       </div>
     </div>

@@ -11,6 +11,7 @@ import type { JSX } from 'vue/jsx-runtime'
 import { DsfrButton } from '../dsfr-button'
 import { ActiviteStatut } from '@/components/_common/activite-statut'
 import { DsfrInputCheckbox } from '../dsfr-input-checkbox'
+import { fr } from '@codegouvfr/react-dsfr'
 
 type Props = {
   filter: CheckboxesCaminoFiltres
@@ -18,7 +19,7 @@ type Props = {
   initialValues: (typeof caminoFiltres)[CheckboxesCaminoFiltres]['validator']['_output']
 } & Pick<HTMLAttributes, 'class'>
 
-function DrawComponent(filter: CheckboxesCaminoFiltres, index: number): JSX.Element | null {
+function DrawComponent(filter: CheckboxesCaminoFiltres, index: number): JSX.Element {
   const fullFilter = caminoFiltres[filter]
 
   const component = fullFilter.component
@@ -27,7 +28,7 @@ function DrawComponent(filter: CheckboxesCaminoFiltres, index: number): JSX.Elem
       return (
         <div style={{ display: 'flex', alignItems: 'baseline' }}>
           <DomaineComp domaineId={fullFilter.elements[index].id} tagSize="sm" />
-          <div class="h6 bold fr-pl-1w">{capitalize(fullFilter.elements[index].nom)}</div>
+          <div class="fr-pl-1w">{capitalize(fullFilter.elements[index].nom)}</div>
         </div>
       )
     case 'FiltresTypes':
@@ -39,11 +40,11 @@ function DrawComponent(filter: CheckboxesCaminoFiltres, index: number): JSX.Elem
     case 'FiltresDemarchesStatuts':
       return <DemarcheStatut demarcheStatutId={fullFilter.elements[index].id} />
     case 'FiltresLabel':
-      return <span class="h6 bold">{capitalize(fullFilter.elements[index].nom)}</span>
+      return <>{capitalize(fullFilter.elements[index].nom)}</>
     default:
       exhaustiveCheck(component)
 
-      return null
+      throw new Error('Cas impossible')
   }
 }
 
@@ -90,18 +91,37 @@ export const FiltersCheckboxes = defineComponent((props: Props) => {
 
   return () => (
     <div>
-      <ul style={{ listStyleType: 'none', paddingLeft: 0, fontWeight: 'normal' }} class="fr-pb-1w">
+      <ul class={fr.cx('fr-pb-1w', 'fr-pl-0')} style={{ listStyleType: 'none', fontWeight: 'normal' }}>
         {fullFilter.elements.map((element, index) => (
-          <li key={element.id} class="fr-p-1v">
-            <label style={{ display: 'flex', flexDirection: 'row' }}>
-              <DsfrInputCheckbox legend={{ main: '' }} initialValue={selectedValues.value.includes(element.id)} valueChanged={checkboxToggle(element.id)} />
-              {DrawComponent(props.filter, index)}
-            </label>
+          <li key={element.id} class={fr.cx('fr-p-1v')}>
+            <div style={{ display: 'flex', flexDirection: 'row' }}>
+              <DsfrInputCheckbox legend={{ main: DrawComponent(props.filter, index) }} initialValue={selectedValues.value.includes(element.id)} valueChanged={checkboxToggle(element.id)} />
+            </div>
           </li>
         ))}
       </ul>
-      <DsfrButton title="Aucun" class="fr-mr-1w" buttonType="tertiary" buttonSize="sm" onClick={() => checkboxesSelect('none')} />
-      <DsfrButton title="Tous" buttonType="tertiary" buttonSize="sm" onClick={() => checkboxesSelect('all')} />
+      <ul class={[fr.cx('fr-btns-group', 'fr-btns-group--sm', 'fr-btns-group--inline')]}>
+        <li>
+          <DsfrButton
+            label="Aucun"
+            title={`Décocher toutes les cases à cocher ${fullFilter.name}`}
+            buttonType="tertiary"
+            buttonSize="sm"
+            onClick={() => checkboxesSelect('none')}
+            class={fr.cx('fr-mb-0')}
+          />
+        </li>
+        <li>
+          <DsfrButton
+            label="Tous"
+            title={`Cocher toutes les cases à cocher ${fullFilter.name}`}
+            buttonType="tertiary"
+            buttonSize="sm"
+            onClick={() => checkboxesSelect('all')}
+            class={fr.cx('fr-mb-0')}
+          />
+        </li>
+      </ul>
     </div>
   )
 })

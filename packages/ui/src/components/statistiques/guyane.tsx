@@ -70,28 +70,28 @@ const armChartConfiguration = (data: StatistiquesGuyaneData): ChartConfiguration
         label: "Demandes d'octroi ARM déposées",
         yAxisID: 'demandes',
         data: annees.map(annee => data.arm.depot[annee] ?? 0),
-        backgroundColor: CHART_COLORS.green,
+        backgroundColor: CHART_COLORS.blue,
       },
       {
         type: 'bar',
         label: "Demandes d'ARM octroyées",
         yAxisID: 'demandes',
         data: annees.map(annee => data.arm.octroiEtProlongation[annee] ?? 0),
-        backgroundColor: CHART_COLORS.blue,
+        backgroundColor: CHART_COLORS.yellow,
       },
       {
         type: 'bar',
         label: "Demandes d'octroi d'ARM refusées",
         yAxisID: 'demandes',
         data: annees.map(annee => data.arm.refusees[annee] ?? 0),
-        backgroundColor: CHART_COLORS.purple,
+        backgroundColor: CHART_COLORS.red,
       },
       {
         type: 'line',
         label: 'Surface cumulée des autorisations de recherche (ha)',
         yAxisID: 'surface',
         data: annees.map(annee => data.arm.surface[annee] ?? 0),
-        backgroundColor: CHART_COLORS.blue,
+        backgroundColor: CHART_COLORS.black,
       },
     ],
   }
@@ -109,28 +109,28 @@ const prmChartConfiguration = (data: StatistiquesGuyaneData): ChartConfiguration
         label: 'Demandes de PER déposées (octroi et prolongation)',
         yAxisID: 'demandes',
         data: annees.map(annee => data.prm.depot[annee] ?? 0),
-        backgroundColor: CHART_COLORS.green,
+        backgroundColor: CHART_COLORS.blue,
       },
       {
         type: 'bar',
         label: 'Demandes de PER octroyées et prolongées',
         yAxisID: 'demandes',
         data: annees.map(annee => data.prm.octroiEtProlongation[annee] ?? 0),
-        backgroundColor: CHART_COLORS.blue,
+        backgroundColor: CHART_COLORS.yellow,
       },
       {
         type: 'bar',
         label: 'Demandes de PER refusées (octroi et prolongation)',
         yAxisID: 'demandes',
         data: annees.map(annee => data.prm.refusees[annee] ?? 0),
-        backgroundColor: CHART_COLORS.purple,
+        backgroundColor: CHART_COLORS.red,
       },
       {
         type: 'line',
         label: 'Surface cumulée des permis de recherche (ha) accordés',
         yAxisID: 'surface',
         data: annees.map(annee => data.prm.surface[annee] ?? 0),
-        backgroundColor: CHART_COLORS.blue,
+        backgroundColor: CHART_COLORS.black,
       },
     ],
   }
@@ -148,28 +148,28 @@ const axmChartConfiguration = (data: StatistiquesGuyaneData): ChartConfiguration
         label: "Demandes d'AEX déposées (octroi et prolongation)",
         yAxisID: 'demandes',
         data: annees.map(annee => data.axm.depot[annee] ?? 0),
-        backgroundColor: CHART_COLORS.green,
+        backgroundColor: CHART_COLORS.blue,
       },
       {
         type: 'bar',
         label: "Demandes d'AEX octroyées et prolongées",
         yAxisID: 'demandes',
         data: annees.map(annee => data.axm.octroiEtProlongation[annee] ?? 0),
-        backgroundColor: CHART_COLORS.blue,
+        backgroundColor: CHART_COLORS.yellow,
       },
       {
         type: 'bar',
         label: "Demandes d'AEX refusées (octroi et prolongation)",
         yAxisID: 'demandes',
         data: annees.map(annee => data.axm.refusees[annee] ?? 0),
-        backgroundColor: CHART_COLORS.purple,
+        backgroundColor: CHART_COLORS.red,
       },
       {
         type: 'line',
         label: "Surface cumulée des autorisations d'exploitation (ha) accordés",
         yAxisID: 'surface',
         data: annees.map(annee => data.axm.surface[annee] ?? 0),
-        backgroundColor: CHART_COLORS.blue,
+        backgroundColor: CHART_COLORS.black,
       },
     ],
   }
@@ -187,28 +187,28 @@ const cxmChartConfiguration = (data: StatistiquesGuyaneData): ChartConfiguration
         label: 'Demandes de concessions déposées (octroi et prolongation)',
         yAxisID: 'demandes',
         data: annees.map(annee => data.cxm.depot[annee] ?? 0),
-        backgroundColor: CHART_COLORS.green,
+        backgroundColor: CHART_COLORS.blue,
       },
       {
         type: 'bar',
         label: 'Demandes de concessions octroyées et prolongées',
         yAxisID: 'demandes',
         data: annees.map(annee => data.cxm.octroiEtProlongation[annee] ?? 0),
-        backgroundColor: CHART_COLORS.blue,
+        backgroundColor: CHART_COLORS.yellow,
       },
       {
         type: 'bar',
         label: 'Demandes de concessions refusées (octroi et prolongation)',
         yAxisID: 'demandes',
         data: annees.map(annee => data.cxm.refusees[annee] ?? 0),
-        backgroundColor: CHART_COLORS.purple,
+        backgroundColor: CHART_COLORS.red,
       },
       {
         type: 'line',
         label: 'Surface cumulée des concessions (ha) accordés',
         yAxisID: 'surface',
         data: annees.map(annee => data.cxm.surface[annee] ?? 0),
-        backgroundColor: CHART_COLORS.blue,
+        backgroundColor: CHART_COLORS.black,
       },
     ],
   }
@@ -434,22 +434,38 @@ export const PureGuyane = defineComponent<Props>(props => {
         <div class="fr-mb-3w">
           <h3>Autorisations de recherche</h3>
           <hr />
-          <LoadingElement data={data.value} renderItem={item => <ConfigurableChart chartConfiguration={armChartConfiguration(item.data)} />} />
+          <LoadingElement
+            data={data.value}
+            renderItem={item => (
+              <ConfigurableChart chartConfiguration={armChartConfiguration(item.data)} description="Nombre d'autorisations de recherche par année" a11yDescription="autoyearlytable" />
+            )}
+          />
         </div>
         <div class="fr-mb-3w">
           <h3>Permis de recherches</h3>
           <hr />
-          <LoadingElement data={data.value} renderItem={item => <ConfigurableChart chartConfiguration={prmChartConfiguration(item.data)} />} />
+          <LoadingElement
+            data={data.value}
+            renderItem={item => <ConfigurableChart chartConfiguration={prmChartConfiguration(item.data)} description="Nombre de permis de recherches par année" a11yDescription="autoyearlytable" />}
+          />
         </div>
         <div class="fr-mb-3w">
           <h3>Autorisations d'exploitation</h3>
           <hr />
-          <LoadingElement data={data.value} renderItem={item => <ConfigurableChart chartConfiguration={axmChartConfiguration(item.data)} />} />
+          <LoadingElement
+            data={data.value}
+            renderItem={item => (
+              <ConfigurableChart chartConfiguration={axmChartConfiguration(item.data)} description="Nombre d'autorisations d\'exploitation par année" a11yDescription="autoyearlytable" />
+            )}
+          />
         </div>
         <div class="fr-mb-3w">
           <h3>Concessions</h3>
           <hr />
-          <LoadingElement data={data.value} renderItem={item => <ConfigurableChart chartConfiguration={cxmChartConfiguration(item.data)} />} />
+          <LoadingElement
+            data={data.value}
+            renderItem={item => <ConfigurableChart chartConfiguration={cxmChartConfiguration(item.data)} description="Nombre de concessions par année" a11yDescription="autoyearlytable" />}
+          />
         </div>
       </div>
     </div>

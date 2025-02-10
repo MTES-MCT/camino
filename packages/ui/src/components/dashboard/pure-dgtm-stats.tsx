@@ -27,9 +27,19 @@ export const PureDGTMStats = defineComponent<Props>(props => {
 
   return () => (
     <div style="display: grid; grid-template-columns: 1fr 1fr 1fr">
-      <ChartWithExport data={data.value} getConfiguration={data => sdomChartConfiguration(data)} />
-      <ChartWithExport data={data.value} getConfiguration={data => depotChartConfiguration(data)} />
-      <ChartWithExport data={data.value} getConfiguration={data => delaiChartConfiguration(data)} />
+      <ChartWithExport
+        data={data.value}
+        getConfiguration={data => sdomChartConfiguration(data)}
+        a11yDescription="autoyearlytable"
+        description="Nombre de titres déposés ou octroyés en zones du SDOM par année"
+      />
+      <ChartWithExport data={data.value} getConfiguration={data => depotChartConfiguration(data)} a11yDescription="autoyearlytable" description="Nombre de titres et AEX par année" />
+      <ChartWithExport
+        data={data.value}
+        getConfiguration={data => delaiChartConfiguration(data)}
+        a11yDescription="autoyearlytable"
+        description="Délais d'instruction, de CDM et de décision du préfet pour les AEX par année"
+      />
     </div>
   )
 })

@@ -7,7 +7,7 @@ type Props = {
   legend: { main: string; description?: string }
   valueChanged: (value: string) => void
   initialValue?: string | null
-  required?: boolean
+  required: boolean
 }
 
 export const DsfrTextarea = defineComponent<Props>(props => {
@@ -22,10 +22,10 @@ export const DsfrTextarea = defineComponent<Props>(props => {
   return () => (
     <div class="fr-input-group">
       <label class="fr-label" for={id}>
-        {props.legend.main} {(props.required ?? false) ? ' *' : null}
+        {props.legend.main} {!props.required ? (isNotNullNorUndefinedNorEmpty(props.legend.main) ? ' (optionnel)' : 'Champ optionnel') : null}
         {isNotNullNorUndefinedNorEmpty(props.legend.description) ? <span class="fr-hint-text" v-html={props.legend.description}></span> : null}
       </label>
-      <textarea onInput={updateFromEvent} value={props.initialValue ?? undefined} class="fr-input" name={id} id={id} required={props.required ?? false} />
+      <textarea onInput={updateFromEvent} value={props.initialValue ?? undefined} class="fr-input" name={id} id={id} required={props.required} />
     </div>
   )
 })

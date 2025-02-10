@@ -1,6 +1,6 @@
 import { action } from '@storybook/addon-actions'
 import { Meta, StoryFn } from '@storybook/vue3'
-import { SectionsEdit } from './new-sections-edit'
+import { NewSectionsEdit } from './new-sections-edit'
 import { caminoDateValidator, toCaminoDate } from 'camino-common/src/date'
 import { UNITES, Unite, Unites } from 'camino-common/src/static/unites'
 import { ActiviteSectionElement, ActivitesTypes, isSubstancesFiscales } from 'camino-common/src/static/activitesTypes'
@@ -11,13 +11,13 @@ import { NonEmptyArray } from 'camino-common/src/typescript-tools'
 const meta: Meta = {
   title: 'Components/Common/SectionsEdit',
   // @ts-ignore @storybook/vue3 n'aime pas les composants tsx
-  component: SectionsEdit,
+  component: NewSectionsEdit,
 }
 export default meta
 
 const completeUpdateAction = action('completeUpdate')
 export const Default: StoryFn = () => (
-  <SectionsEdit
+  <NewSectionsEdit
     completeUpdate={(complete, newContent) => {
       completeUpdateAction(complete, newContent)
     }}
@@ -96,7 +96,7 @@ export const Default: StoryFn = () => (
 )
 
 export const TousLesElementsVidesOptionnels: StoryFn = () => (
-  <SectionsEdit
+  <NewSectionsEdit
     completeUpdate={(complete, newContent) => {
       completeUpdateAction(complete, newContent)
     }}
@@ -197,7 +197,7 @@ export const TousLesElementsVidesOptionnels: StoryFn = () => (
 )
 
 export const TousLesElementsRequis: StoryFn = () => (
-  <SectionsEdit
+  <NewSectionsEdit
     completeUpdate={(complete, newContent) => {
       completeUpdateAction(complete, newContent)
     }}
@@ -298,7 +298,7 @@ export const TousLesElementsRequis: StoryFn = () => (
 )
 
 export const TousLesElementsRemplis: StoryFn = () => (
-  <SectionsEdit
+  <NewSectionsEdit
     completeUpdate={(complete, newContent) => {
       completeUpdateAction(complete, newContent)
     }}
@@ -399,7 +399,7 @@ export const TousLesElementsRemplis: StoryFn = () => (
   />
 )
 export const VolumeGranulatsExtrait: StoryFn = () => (
-  <SectionsEdit
+  <NewSectionsEdit
     completeUpdate={(complete, newContent) => {
       completeUpdateAction(complete, newContent)
     }}
@@ -423,7 +423,7 @@ export const VolumeGranulatsExtrait: StoryFn = () => (
 )
 
 export const ParticipationDuPublic: StoryFn = () => (
-  <SectionsEdit
+  <NewSectionsEdit
     completeUpdate={(complete, newContent) => {
       completeUpdateAction(complete, newContent)
     }}
@@ -447,7 +447,7 @@ export const ParticipationDuPublic: StoryFn = () => (
 )
 
 export const Date: StoryFn = () => (
-  <SectionsEdit
+  <NewSectionsEdit
     completeUpdate={(complete, newContent) => {
       completeUpdateAction(complete, newContent)
     }}
@@ -471,7 +471,7 @@ export const Date: StoryFn = () => (
 )
 
 export const Checkboxes: StoryFn = () => (
-  <SectionsEdit
+  <NewSectionsEdit
     completeUpdate={(complete, newContent) => {
       completeUpdateAction(complete, newContent)
     }}
@@ -513,7 +513,7 @@ export const ToutesLesActivites: StoryFn = () => (
             <td>{activiteType.nom}</td>
 
             <td>
-              <SectionsEdit
+              <NewSectionsEdit
                 completeUpdate={(complete, newContent) => {
                   completeUpdateAction(complete, newContent)
                 }}

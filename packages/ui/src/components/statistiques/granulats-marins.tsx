@@ -11,6 +11,7 @@ import styles from './statistiques.module.css'
 import { DsfrSelect } from '../_ui/dsfr-select'
 import { isNonEmptyArray, map } from 'camino-common/src/typescript-tools'
 import { DsfrSeparator } from '../_ui/dsfr-separator'
+import { CHART_COLORS } from '../_charts/utils'
 
 const ids = ['titresPrw', 'titresPxw', 'titresCxw', 'concessionsValides'] as const
 
@@ -68,17 +69,16 @@ const statsBarFormat = ({
           label: labelLine,
           data: [],
           yAxisID: 'line',
-          fill: 'start',
           tension: 0.5,
-          backgroundColor: 'rgba(55, 111, 170, 0.2)',
-          borderColor: 'rgb(55, 111, 170)',
+          backgroundColor: CHART_COLORS.orange,
+          borderColor: CHART_COLORS.orange,
         },
         {
           type: 'bar',
           label: labelBar,
           yAxisID: 'bar',
           data: [],
-          backgroundColor: 'rgb(118, 182, 189)',
+          backgroundColor: CHART_COLORS.blue,
         },
       ],
     }
@@ -369,6 +369,8 @@ export const PureGranulatsMarins = defineComponent<Props>(props => {
                     }),
                     Math.max(...statsAnneesAfter2010.map(annee => annee.volume))
                   )}
+                  description="Production de granulats marins par année"
+                  a11yDescription="autoyearlytable"
                 />
               )
             }}
@@ -394,7 +396,7 @@ export const PureGranulatsMarins = defineComponent<Props>(props => {
               const anneesLabel = map(annees, annee => ({ id: annee.id, label: annee.nom }))
               return (
                 <>
-                  <DsfrSelect legend={{ main: 'Sélectionner une année' }} items={anneesLabel} initialValue={anneeActive.value} valueChanged={anneeSelect} />
+                  <DsfrSelect required={true} legend={{ main: 'Sélectionner une année' }} items={anneesLabel} initialValue={anneeActive.value} valueChanged={anneeSelect} />
                   <GranulatsMarinsActivite statistiqueGranulatsMarins={item.statistiques[anneeActive.value]} enConstruction={annees.find(t => t.id === anneeActive.value)?.enConstruction} />
                 </>
               )
@@ -435,6 +437,8 @@ export const PureGranulatsMarins = defineComponent<Props>(props => {
                       }),
                       suggestedMaxTitres('titresPrw', item.raw.annees)
                     )}
+                    description="Nombre de permis exclusifs de recherche par année"
+                    a11yDescription="autoyearlytable"
                   />
                 )}
               />
@@ -470,6 +474,8 @@ export const PureGranulatsMarins = defineComponent<Props>(props => {
                               }),
                               suggestedMaxTitres('titresPxw', raw.annees)
                             )}
+                            description="Nombre de permis d'exploitation par année"
+                            a11yDescription="autoyearlytable"
                           />
                         </div>
                       </div>
@@ -507,6 +513,8 @@ export const PureGranulatsMarins = defineComponent<Props>(props => {
                       }),
                       suggestedMaxTitres('titresCxw', item.raw.annees)
                     )}
+                    description="Nombre de concessions octroyées par année"
+                    a11yDescription="autoyearlytable"
                   />
                 )}
               />
@@ -537,6 +545,8 @@ export const PureGranulatsMarins = defineComponent<Props>(props => {
                       }),
                       suggestedMaxTitres('concessionsValides', item.raw.annees)
                     )}
+                    description="Nombre de concessions valides par année"
+                    a11yDescription="autoyearlytable"
                   />
                 )}
               />

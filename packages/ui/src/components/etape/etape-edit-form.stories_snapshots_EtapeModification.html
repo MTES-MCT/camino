@@ -10,19 +10,24 @@
       <div class="fr-grid-row">
         <div class="fr-col-12 fr-col-xl-6">
           <div class="fr-input-group" style="margin-bottom: 0px;"><label class="fr-label" for="input_271">Date
+              <!----><span class="fr-hint-text">au format jj/mm/yyyy</span>
               <!---->
-              <!---->
-            </label><input class="fr-input" name="input_271" id="input_271" type="date" value="2022-02-02">
+            </label><input class="fr-input" name="input_271" id="input_271" required="" type="date" value="2022-02-02">
             <!---->
           </div>
           <div class="fr-mt-2w">
-            <div class="fr-input-group"><label class="fr-label fr-mb-1w" for="select-etape-type">Type *</label>
+            <div class="fr-input-group"><label class="fr-label fr-mb-1w" for="select-etape-type">Type</label>
               <div id="select-etape-type_wrapper" class="_typeahead_8eddf1">
-                <div class="flex"><input id="select-etape-type" type="text" name="select-etape-type" disabled="" class="fr-input" placeholder="" autocomplete="off" value="demande"></div>
-                <!---->
+                <div class="flex"><input id="select-etape-type" type="text" title="" name="select-etape-type" disabled="" class="fr-input" placeholder="" autocomplete="off" role="combobox" aria-controls="select-etape-type-control" aria-activedescendant="select-etape-type-control" aria-expanded="false" aria-autocomplete="list" value="demande"></div>
+                <ul class="_typeahead-list_8eddf1 " tabindex="-1" id="select-etape-type-control" role="listbox">
+                  <li class="_typeahead-list-item_8eddf1 _typeahead-list-item-active_8eddf1" aria-selected="false" id="select-etape-type-control-0"><strong>Consultation des administrations centrales</strong></li>
+                  <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="select-etape-type-control-1"><strong>Avis de la commission des autorisations de recherches minières (CARM)</strong></li>
+                  <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="select-etape-type-control-2"><strong>Avis des services et commissions consultatives</strong></li>
+                  <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="select-etape-type-control-3"><strong>Enregistrement de la demande</strong></li>
+                </ul>
               </div>
             </div>
-            <div class="fr-select-group"><label class="fr-label" for="select-etape-statut-id">Statut *
+            <div class="fr-select-group"><label class="fr-label" for="select-etape-statut-id">Statut
                 <!---->
               </label><select class="fr-select" id="select-etape-statut-id" aria-label="Statut" name="select-etape-statut-id" value="fai">
                 <option selected="" disabled="" value="fai">fait</option>
@@ -46,16 +51,18 @@
           <div class="fr-col-12 fr-col-xl-6">
             <div class="fr-mb-1w">
               <div style="display: flex;">
-                <div class="fr-input-group" style="margin-bottom: 0px;"><label class="fr-label" for="input_74">Durée (années) *
+                <div class="fr-input-group" style="margin-bottom: 0px;"><label class="fr-label" for="input_74">Durée (années)
                     <!---->
                     <!---->
-                  </label><input class="fr-input" name="input_74" id="input_74" type="number" value="0">
+                    <!---->
+                  </label><input class="fr-input" name="input_74" id="input_74" required="" type="number" value="0">
                   <!---->
                 </div>
-                <div class="fr-input-group fr-ml-2w" style="margin-bottom: 0px;"><label class="fr-label" for="input_878">Durée (mois) *
+                <div class="fr-input-group fr-ml-2w" style="margin-bottom: 0px;"><label class="fr-label" for="input_878">Durée (mois)
                     <!---->
                     <!---->
-                  </label><input class="fr-input" name="input_878" id="input_878" type="number" value="4">
+                    <!---->
+                  </label><input class="fr-input" name="input_878" id="input_878" required="" type="number" value="4">
                   <!---->
                 </div>
               </div>
@@ -67,10 +74,18 @@
             </div>
             <!---->
             <div class="fr-mb-1w">
-              <div class="fr-input-group fr-mb-0"><label class="fr-label" for="filters_autocomplete_titulaires">Titulaires *</label>
+              <div class="fr-input-group fr-mb-0"><label class="fr-label" for="filters_autocomplete_titulaires">Titulaires</label>
                 <div id="filters_autocomplete_titulaires_wrapper" class="_typeahead_8eddf1 fr-mt-1w">
-                  <div style="display: flex; max-height: unset; flex-wrap: wrap; gap: 8px; outline-offset: 2px; outline-width: 2px; outline-color: rgb(10, 118, 246);" class="fr-input _fake-input_8eddf1"><input id="filters_autocomplete_titulaires" type="text" name="filters_autocomplete_titulaires" style="outline: none;" placeholder="titulaires" autocomplete="off" value=""></div>
-                  <!---->
+                  <div style="display: flex; max-height: unset; flex-wrap: wrap; gap: 8px; outline-offset: 2px; outline-width: 2px; outline-color: rgb(10, 118, 246);" class="fr-input _fake-input_8eddf1"><input id="filters_autocomplete_titulaires" type="text" name="filters_autocomplete_titulaires" style="outline: none;" placeholder="titulaires" autocomplete="off" role="combobox" aria-controls="filters_autocomplete_titulaires-control" aria-activedescendant="filters_autocomplete_titulaires-control" aria-expanded="false" aria-autocomplete="list" value=""></div>
+                  <ul class="_typeahead-list_8eddf1 " tabindex="-1" id="filters_autocomplete_titulaires-control" role="listbox">
+                    <li class="_typeahead-list-item_8eddf1 _typeahead-list-item-active_8eddf1" aria-selected="false" id="filters_autocomplete_titulaires-control-0"><span>Nom de l'entreprise 3</span></li>
+                    <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="filters_autocomplete_titulaires-control-1"><span>Nom de l'entreprise 4</span></li>
+                    <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="filters_autocomplete_titulaires-control-2"><span>Nom de l'entreprise 5</span></li>
+                    <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="filters_autocomplete_titulaires-control-3"><span>Nom de l'entreprise 6</span></li>
+                    <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="filters_autocomplete_titulaires-control-4"><span>Nom de l'entreprise 7</span></li>
+                    <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="filters_autocomplete_titulaires-control-5"><span>Nom de l'entreprise 8</span></li>
+                    <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="filters_autocomplete_titulaires-control-6"><span>Nom de l'entreprise 9</span></li>
+                  </ul>
                 </div>
               </div>
               <!---->
@@ -93,7 +108,7 @@
             </div>
             <div class="fr-mb-1w">
               <div>
-                <div class="fr-input-group fr-input-group--disabled fr-mb-0"><label class="fr-label">Substances *</label>
+                <div class="fr-input-group fr-input-group--disabled fr-mb-0"><label class="fr-label">Substances</label>
                   <div class="fr-mt-1w">
                     <p class="fr-tag fr-tag--md fr-mr-1w" title="Argent" aria-label="Argent">Argent</p>
                   </div>
@@ -123,7 +138,7 @@
               <h3>Propriétés de la concession</h3>
               <div class="fr-mb-1w">
                 <div>
-                  <div class="fr-input-group" style="margin-bottom: 0px;"><label class="fr-label" for="input_796">Volume
+                  <div class="fr-input-group" style="margin-bottom: 0px;"><label class="fr-label" for="input_796">Volume (optionnel)
                       <!---->
                       <!---->
                     </label><input class="fr-input" name="input_796" id="input_796" type="number" min="0">
@@ -134,7 +149,7 @@
               </div>
               <div class="fr-mb-1w">
                 <div>
-                  <div class="fr-select-group"><label class="fr-label" for="select_482">Unité du volume
+                  <div class="fr-select-group"><label class="fr-label" for="select_482">Unité du volume (optionnel)
                       <!---->
                     </label><select class="fr-select" id="select_482" aria-label="Unité du volume" name="select_482">
                       <option value="deg">degré</option>
@@ -189,8 +204,78 @@
                     <div id="tabpanel-points-759-panel" class="fr-tabs__panel fr-tabs__panel--selected" role="tabpanel" aria-labelledby="tabpanel-points-759" tabindex="0">
                       <div style="display: flex; flex-direction: column;">
                         <div id="typeahead_58_wrapper" class="_typeahead_8eddf1">
-                          <div class="flex"><input id="typeahead_58" type="text" name="typeahead_58" disabled="" class="fr-input" placeholder="" autocomplete="off" value="WGS84 - (4326)"></div>
-                          <!---->
+                          <div class="flex"><input id="typeahead_58" type="text" title="" name="typeahead_58" disabled="" class="fr-input" placeholder="" autocomplete="off" role="combobox" aria-controls="typeahead_58-control" aria-activedescendant="typeahead_58-control" aria-expanded="false" aria-autocomplete="list" value="WGS84 - (4326)"></div>
+                          <ul class="_typeahead-list_8eddf1 " tabindex="-1" id="typeahead_58-control" role="listbox">
+                            <li class="_typeahead-list-item_8eddf1 _typeahead-list-item-active_8eddf1" aria-selected="false" id="typeahead_58-control-0">
+                              <div style="display: flex; flex-direction: column;" class="fr-pl-2w"><span class="fr-text--bold">Mayotte 2004 / UTM zone 38S - (4471)</span><span class="fr-text">Mayotte - à terre et extraterritorial</span></div>
+                            </li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_58-control-1">
+                              <div style="display: flex; flex-direction: column;" class="fr-pl-2w"><span class="fr-text--bold">Réunion / UTM zone 40S - (2975)</span><span class="fr-text">Réunion</span></div>
+                            </li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_58-control-2">
+                              <div style="display: flex; flex-direction: column;" class="fr-pl-2w"><span class="fr-text--bold">RGAF09 / UTM zone 20N - (5490)</span><span class="fr-text">Antilles françaises à terre et extraterritorial à l'ouest du méridien 60° Ouest - Guadeloupe (incluant Grande Terre, Basse Terre, Marie Galante, Les Saintes, Iles de la Petite Terre, La Desirade, St Barthélemy, partie nord de St Martin) et Martinique.</span></div>
+                            </li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_58-control-3">
+                              <div style="display: flex; flex-direction: column;" class="fr-pl-2w"><span class="fr-text--bold">RGF93 / Lambert-93 - (2154)</span><span class="fr-text">France - à terre et extraterritorial - continentale et Corse.</span></div>
+                            </li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_58-control-4">
+                              <div style="display: flex; flex-direction: column;" class="fr-pl-2w"><span class="fr-text--bold">RGFG95 / UTM zone 22N - (2972)</span><span class="fr-text">Guyane française - à terre et extraterritorial.</span></div>
+                            </li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_58-control-5">
+                              <div style="display: flex; flex-direction: column;" class="fr-pl-2w"><span class="fr-text--bold">St Pierre et Miquelon / UTM zone 21N - (4467)</span><span class="fr-text">St Pierre et Miquelon à terre et extraterritorial</span></div>
+                            </li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_58-control-6">
+                              <div style="display: flex; flex-direction: column;" class="fr-pl-2w"><span class="">ED50 - (4230)</span><span class="fr-text">Europe</span></div>
+                            </li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_58-control-7">
+                              <div style="display: flex; flex-direction: column;" class="fr-pl-2w"><span class="">Guadeloupe 1948 / UTM zone 20N - (2970)</span><span class="fr-text">Guadeloupe - à terre - Basse-Terre, Grande-Terre, La Desirade, Marie-Galante, Les Saintes.</span></div>
+                            </li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_58-control-8">
+                              <div style="display: flex; flex-direction: column;" class="fr-pl-2w"><span class="">NTF (Greenwich) - (4275)</span><span class="fr-text">France - à terre - continentale et Corse.</span></div>
+                            </li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_58-control-9">
+                              <div style="display: flex; flex-direction: column;" class="fr-pl-2w"><span class="">NTF (Paris) - (4807)</span><span class="fr-text">France - à terre - continentale et Corse.</span></div>
+                            </li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_58-control-10">
+                              <div style="display: flex; flex-direction: column;" class="fr-pl-2w"><span class="">NTF (Paris) / Lambert Nord France - (27561)</span><span class="fr-text">France - continentale au nord de  53,5 grades North (48°09'N).</span></div>
+                            </li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_58-control-11">
+                              <div style="display: flex; flex-direction: column;" class="fr-pl-2w"><span class="">NTF (Paris) / Lambert Sud france - (27563)</span><span class="fr-text">France - continentale au sud de 50,5 grades nord (45°27'N).</span></div>
+                            </li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_58-control-12">
+                              <div style="display: flex; flex-direction: column;" class="fr-pl-2w"><span class="">NTF (Paris) / Lambert zone I - (27571)</span><span class="fr-text">France - continentale au nord de 53,5 grades nord (48°09'N).</span></div>
+                            </li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_58-control-13">
+                              <div style="display: flex; flex-direction: column;" class="fr-pl-2w"><span class="">NTF (Paris) / Lambert zone II - (27572)</span><span class="fr-text">France - continentale entre 45°27'N et 48°09'N.</span></div>
+                            </li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_58-control-14">
+                              <div style="display: flex; flex-direction: column;" class="fr-pl-2w"><span class="">NTF (Paris) / Lambert zone III - (27573)</span><span class="fr-text">France - continentale au sud de 50,5 grades nord (45°27'N).</span></div>
+                            </li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_58-control-15">
+                              <div style="display: flex; flex-direction: column;" class="fr-pl-2w"><span class="">RGF93 - (4171)</span><span class="fr-text">France - à terre et extraterritorial - continentale et Corse.</span></div>
+                            </li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_58-control-16">
+                              <div style="display: flex; flex-direction: column;" class="fr-pl-2w"><span class="">RGF93 / CC49 - (3949)</span><span class="fr-text">France - continentale entre 48°N et 50°N.</span></div>
+                            </li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_58-control-17">
+                              <div style="display: flex; flex-direction: column;" class="fr-pl-2w"><span class="">RGFG95 - (4624)</span><span class="fr-text">Guyane Française - à terre et extraterritorial.</span></div>
+                            </li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_58-control-18">
+                              <div style="display: flex; flex-direction: column;" class="fr-pl-2w"><span class="">RGFG95 / UTM zone 21N - (3313)</span><span class="fr-text">Guyane française - à terre et extraterritorial.</span></div>
+                            </li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_58-control-19">
+                              <div style="display: flex; flex-direction: column;" class="fr-pl-2w"><span class="">WGS84 / UTM zone 20N - (32620)</span><span class="fr-text">Hémisphère Nord - entre 66°W et 60°W</span></div>
+                            </li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_58-control-20">
+                              <div style="display: flex; flex-direction: column;" class="fr-pl-2w"><span class="">WGS84 / UTM zone 21N - (32621)</span><span class="fr-text">Hémisphère Nord - entre 60°W et 54°W</span></div>
+                            </li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_58-control-21">
+                              <div style="display: flex; flex-direction: column;" class="fr-pl-2w"><span class="">WGS84 / UTM zone 22N - (32622)</span><span class="fr-text">Hémisphère Nord - entre 54°W et 48°W</span></div>
+                            </li>
+                            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="typeahead_58-control-22">
+                              <div style="display: flex; flex-direction: column;" class="fr-pl-2w"><span class="">WGS84 / UTM zone 30N - (32630)</span><span class="fr-text">Hémisphère Nord - entre 6°W et 0°W</span></div>
+                            </li>
+                          </ul>
                         </div>
                         <div style="display: flex; flex-direction: column;">
                           <div class="fr-mb-1w">
@@ -199,7 +284,7 @@
                                 <div class="fr-table__container">
                                   <div class="fr-table__content">
                                     <table style="display: table; width: 100%;">
-                                      <caption></caption>
+                                      <caption>Points</caption>
                                       <thead>
                                         <tr>
                                           <th scope="col">Nom du point</th>
@@ -434,8 +519,7 @@
         <!---->
       </div>
     </div>
-    <div class="fr-input-group fr-mt-2w" style="flex-grow: 1;"><label class="fr-label" for="textarea_661">Notes
-        <!---->
+    <div class="fr-input-group fr-mt-2w" style="flex-grow: 1;"><label class="fr-label" for="textarea_661">Notes (optionnel)
         <!---->
       </label><textarea class="fr-input" name="textarea_661" id="textarea_661" value="Super notes de cette story"></textarea></div>
     <div class="fr-checkbox-group"><input name="archive" id="checkbox_684" type="checkbox"><label class="fr-label" for="checkbox_684">Cette note est un avertissement<span class="fr-hint-text">Apparait sur le résumé de la démarche</span></label></div>

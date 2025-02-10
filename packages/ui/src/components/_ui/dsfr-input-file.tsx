@@ -5,6 +5,7 @@ import { defineComponent, ref } from 'vue'
 interface Props {
   accept: FileUploadType[]
   uploadFile: (file: File) => void
+  required: boolean
 }
 
 const isDragEvent = (e: Event): e is DragEvent => {
@@ -49,7 +50,7 @@ export const InputFile = defineComponent<Props>(props => {
   return () => (
     <div class="fr-upload-group" style={{ opacity: dragHover.value ? '20%' : '100%' }} onDragover={onDragHover} onDragleave={onDragLeave} onDrop={dropFile}>
       <label class="fr-label" for="file-upload">
-        Ajouter un fichier
+        Ajouter un fichier {!props.required ? ' (optionnel)' : null}
         <span class="fr-hint-text">
           Taille maximale : 100 Mo. Format{props.accept.length > 1 ? 's' : null} supporté{props.accept.length > 1 ? 's' : null} : {props.accept.join(', ')}.
         </span>
@@ -61,4 +62,4 @@ export const InputFile = defineComponent<Props>(props => {
 })
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-InputFile.props = ['accept', 'uploadFile']
+InputFile.props = ['accept', 'uploadFile', 'required']

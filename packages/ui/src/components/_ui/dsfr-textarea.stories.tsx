@@ -10,7 +10,8 @@ const meta: Meta = {
 export default meta
 const valueChangedAction = action('valueChanged')
 
-export const Default: StoryFn = () => <DsfrTextarea id="textarea1" legend={{ main: 'Légende' }} valueChanged={valueChangedAction} />
-export const WithDescriptionAndPlaceholder: StoryFn = () => <DsfrTextarea id="textarea3" legend={{ main: 'Légende', description: 'une URL' }} valueChanged={valueChangedAction} />
-export const WithValue: StoryFn = () => <DsfrTextarea id="textarea4" legend={{ main: 'Légende' }} initialValue={'valeur initiale'} valueChanged={valueChangedAction} />
-export const Required: StoryFn = () => <DsfrTextarea id="textarea6" required={true} legend={{ main: 'Légende' }} initialValue={'valeur initiale'} valueChanged={valueChangedAction} />
+export const Default: StoryFn = () => <DsfrTextarea required={true} id="textarea1" legend={{ main: 'Légende' }} valueChanged={valueChangedAction} />
+export const WithDescriptionAndPlaceholder: StoryFn = () => <DsfrTextarea required={true} id="textarea3" legend={{ main: 'Légende', description: 'une URL' }} valueChanged={valueChangedAction} />
+export const WithValue: StoryFn = () => <DsfrTextarea required={true} id="textarea4" legend={{ main: 'Légende' }} initialValue={'valeur initiale'} valueChanged={valueChangedAction} />
+export const Required: StoryFn = () => <DsfrTextarea required={true} id="textarea6" legend={{ main: 'Légende' }} initialValue={'valeur initiale'} valueChanged={valueChangedAction} />
+export const Optional: StoryFn = () => <DsfrTextarea id="textarea6" required={false} legend={{ main: 'Légende' }} initialValue={'valeur initiale'} valueChanged={valueChangedAction} />

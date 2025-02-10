@@ -2,9 +2,10 @@ import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 
 import { Dashboard } from '../components/dashboard'
 import { Titres } from '../components/titres'
-import { isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools'
+import { isNotNullNorUndefinedNorEmpty, isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools'
 import { CaminoRouteNames, routesDefinitions } from './routes'
 import { CaminoFiltre } from 'camino-common/src/filters'
+import { PlanDuSite } from '@/components/page/plan'
 const PageIntrouvableAlert = async () => {
   const { PageIntrouvableAlert } = await import('@/components/_ui/alert')
 
@@ -120,7 +121,7 @@ const About = async () => {
   return About
 }
 
-export type MenuSection = 'dashboard' | 'titres' | 'demarches' | 'travaux' | 'activites' | 'administrations' | 'entreprises' | 'utilisateurs' | 'metas' | 'statistiques' | 'journaux'
+export type MenuSection = 'dashboard' | 'titres' | 'demarches' | 'travaux' | 'activites' | 'administrations' | 'entreprises' | 'utilisateurs' | 'statistiques' | 'journaux'
 
 declare module 'vue-router' {
   interface RouteMeta {
@@ -230,6 +231,10 @@ const routes = {
     ...routesDefinitions.aPropos,
     component: About,
   },
+  plan: {
+    ...routesDefinitions.plan,
+    component: PlanDuSite,
+  },
   resultatMiseEnConcurrence: {
     ...routesDefinitions.resultatMiseEnConcurrence,
     component: DemarcheResultatMiseEnConcurrence,
@@ -252,7 +257,11 @@ const router = createRouter({
   linkActiveClass: 'active',
   linkExactActiveClass: 'exact-active',
   scrollBehavior(to, from, savedPosition) {
-    if (savedPosition) {
+    if (isNotNullNorUndefinedNorEmpty(to.hash)) {
+      return {
+        el: to.hash,
+      }
+    } else if (savedPosition) {
       return new Promise(resolve => {
         setTimeout(() => {
           resolve(savedPosition)
@@ -271,10 +280,17 @@ const router = createRouter({
 router.isReady().then(async () => {})
 
 router.beforeEach(async (to, from, next) => {
-  document.title = typeof to.meta.title === 'string' ? `${to.meta.title} - Camino` : 'le cadastre minier numérique ouvert - Camino'
+  let title = typeof to.meta.title === 'string' ? `${to.meta.title} - Camino` : 'le cadastre minier numérique ouvert - Camino'
+  for (const param of Object.keys(to.params)) {
+    const paramValue = to.params[param]
+
+    title = title.replaceAll(`{{ ${param} }}`, Array.isArray(paramValue) ? paramValue.join(', ') : paramValue)
+  }
+
+  document.title = title
   // Ceci est pour empêcher de nettoyer les filtres quand on clique sur le menu.
   // Par exemple sur "titres et autorisations" , après avoir rajouter des filtres, si on clique à nouveau sur le menu, on perd tous les filtres
-  if (from.name === to.name && JSON.stringify(to.params) === JSON.stringify(from.params) && isNullOrUndefinedOrEmpty(Object.keys(to.query))) {
+  if (from.name === to.name && JSON.stringify(to.params) === JSON.stringify(from.params) && isNullOrUndefinedOrEmpty(Object.keys(to.query)) && from.hash === to.hash) {
     next(false)
   } else {
     next()
