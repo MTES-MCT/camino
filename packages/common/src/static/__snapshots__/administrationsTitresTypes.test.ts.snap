@@ -156,8 +156,8 @@ exports[`vérifie les administrations gestionnaire d'un type de titre 1`] = `
   ],
   "cxr": [
     {
-      "administrationId": "min-mtes-dgpr-01",
-      "associee": false,
+      "administrationId": "min-mtes-dgaln-01",
+      "associee": true,
     },
   ],
   "cxs": [
@@ -180,8 +180,8 @@ exports[`vérifie les administrations gestionnaire d'un type de titre 1`] = `
   ],
   "inr": [
     {
-      "administrationId": "min-mtes-dgpr-01",
-      "associee": false,
+      "administrationId": "min-mtes-dgaln-01",
+      "associee": true,
     },
   ],
   "pcc": [
@@ -224,8 +224,8 @@ exports[`vérifie les administrations gestionnaire d'un type de titre 1`] = `
   ],
   "prr": [
     {
-      "administrationId": "min-mtes-dgpr-01",
-      "associee": false,
+      "administrationId": "min-mtes-dgaln-01",
+      "associee": true,
     },
   ],
   "prs": [
@@ -338,8 +338,8 @@ exports[`vérifie les administrations gestionnaire d'un type de titre 1`] = `
   ],
   "pxr": [
     {
-      "administrationId": "min-mtes-dgpr-01",
-      "associee": false,
+      "administrationId": "min-mtes-dgaln-01",
+      "associee": true,
     },
   ],
   "pxw": [
@@ -1293,24 +1293,24 @@ exports[`vérifie si l'administration est associée par rapport au titreType 1`]
     "cxg": true,
     "cxh": true,
     "cxm": true,
-    "cxr": false,
+    "cxr": true,
     "cxs": true,
     "cxw": true,
     "inm": true,
-    "inr": false,
+    "inr": true,
     "pcc": true,
     "prf": true,
     "prg": true,
     "prh": true,
     "prm": true,
-    "prr": false,
+    "prr": true,
     "prs": true,
     "prw": true,
     "pxf": true,
     "pxg": true,
     "pxh": true,
     "pxm": true,
-    "pxr": false,
+    "pxr": true,
     "pxw": true,
   },
   "ope-brgm-01": {
@@ -4807,7 +4807,7 @@ exports[`vérifie si l'administration est gestionnaire 1`] = `
   "min-mctrct-dgcl-01": false,
   "min-mtes-dgaln-01": true,
   "min-mtes-dgec-01": true,
-  "min-mtes-dgpr-01": true,
+  "min-mtes-dgpr-01": false,
   "ope-brgm-01": false,
   "ope-cacem-01": false,
   "ope-onf-973-01": false,
@@ -5657,24 +5657,24 @@ exports[`vérifie si l'administration est gestionnaire par rapport au titreType 
     "cxg": false,
     "cxh": false,
     "cxm": true,
-    "cxr": false,
+    "cxr": true,
     "cxs": false,
     "cxw": true,
     "inm": true,
-    "inr": false,
+    "inr": true,
     "pcc": true,
     "prf": false,
     "prg": false,
     "prh": false,
     "prm": true,
-    "prr": false,
+    "prr": true,
     "prs": false,
     "prw": true,
     "pxf": false,
     "pxg": false,
     "pxh": false,
     "pxm": true,
-    "pxr": false,
+    "pxr": true,
     "pxw": true,
   },
   "min-mtes-dgec-01": {
@@ -5723,24 +5723,24 @@ exports[`vérifie si l'administration est gestionnaire par rapport au titreType 
     "cxg": false,
     "cxh": false,
     "cxm": false,
-    "cxr": true,
+    "cxr": false,
     "cxs": false,
     "cxw": false,
     "inm": false,
-    "inr": true,
+    "inr": false,
     "pcc": false,
     "prf": false,
     "prg": false,
     "prh": false,
     "prm": false,
-    "prr": true,
+    "prr": false,
     "prs": false,
     "prw": false,
     "pxf": false,
     "pxg": false,
     "pxh": false,
     "pxm": false,
-    "pxr": true,
+    "pxr": false,
     "pxw": false,
   },
   "ope-brgm-01": {
@@ -9755,7 +9755,7 @@ exports[`vérifie tous les droits sur les types de titre pour l'administration 1
     },
     {
       "associee": true,
-      "gestionnaire": false,
+      "gestionnaire": true,
       "titreTypeId": "cxr",
     },
     {
@@ -9775,7 +9775,7 @@ exports[`vérifie tous les droits sur les types de titre pour l'administration 1
     },
     {
       "associee": true,
-      "gestionnaire": false,
+      "gestionnaire": true,
       "titreTypeId": "inr",
     },
     {
@@ -9805,7 +9805,7 @@ exports[`vérifie tous les droits sur les types de titre pour l'administration 1
     },
     {
       "associee": true,
-      "gestionnaire": false,
+      "gestionnaire": true,
       "titreTypeId": "prr",
     },
     {
@@ -9840,7 +9840,7 @@ exports[`vérifie tous les droits sur les types de titre pour l'administration 1
     },
     {
       "associee": true,
-      "gestionnaire": false,
+      "gestionnaire": true,
       "titreTypeId": "pxr",
     },
     {
@@ -10068,8 +10068,8 @@ exports[`vérifie tous les droits sur les types de titre pour l'administration 1
       "titreTypeId": "cxm",
     },
     {
-      "associee": false,
-      "gestionnaire": true,
+      "associee": true,
+      "gestionnaire": false,
       "titreTypeId": "cxr",
     },
     {
@@ -10088,8 +10088,8 @@ exports[`vérifie tous les droits sur les types de titre pour l'administration 1
       "titreTypeId": "inm",
     },
     {
-      "associee": false,
-      "gestionnaire": true,
+      "associee": true,
+      "gestionnaire": false,
       "titreTypeId": "inr",
     },
     {
@@ -10118,8 +10118,8 @@ exports[`vérifie tous les droits sur les types de titre pour l'administration 1
       "titreTypeId": "prm",
     },
     {
-      "associee": false,
-      "gestionnaire": true,
+      "associee": true,
+      "gestionnaire": false,
       "titreTypeId": "prr",
     },
     {
@@ -10153,8 +10153,8 @@ exports[`vérifie tous les droits sur les types de titre pour l'administration 1
       "titreTypeId": "pxm",
     },
     {
-      "associee": false,
-      "gestionnaire": true,
+      "associee": true,
+      "gestionnaire": false,
       "titreTypeId": "pxr",
     },
     {
