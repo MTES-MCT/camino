@@ -79,8 +79,6 @@ export const EtapesTypesEtapesStatuts = {
     REJETE: { etapeTypeId: 'apu', etapeStatutId: 'rej' },
   },
   consultationDesAdministrationsCentrales: { FAIT: { etapeTypeId: 'cac', etapeStatutId: 'fai' } },
-  concertationInterministerielle: { FAIT: { etapeTypeId: 'cim', etapeStatutId: 'fai' } },
-
   classementSansSuite: { FAIT: { etapeTypeId: 'css', etapeStatutId: 'fai' } },
   decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_: {
     EXEMPTE: { etapeTypeId: 'dae', etapeStatutId: 'exe' },

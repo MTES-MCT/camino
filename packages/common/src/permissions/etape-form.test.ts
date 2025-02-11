@@ -625,7 +625,7 @@ test('etapeDocumentsStepIsComplete', () => {
   ).toMatchInlineSnapshot(`
     {
       "errors": [
-        "le document "Lettre de saisine des services civils et militaires" (lcm) est obligatoire",
+        "le document "Lettre de saisine des services de l'administration centrale" (lac) est obligatoire",
       ],
       "valid": false,
     }
@@ -768,8 +768,8 @@ test('getDocumentsTypes', () => {
   ).toMatchInlineSnapshot(`
     [
       {
-        "id": "lcm",
-        "nom": "Lettre de saisine des services civils et militaires",
+        "id": "lac",
+        "nom": "Lettre de saisine des services de l'administration centrale",
         "optionnel": false,
       },
       {
